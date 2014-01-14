@@ -9,13 +9,16 @@
   -->
 
 <div ng-controller="PODController">
+
+  <h2 openlmis-message="header.proof.of.delivery"></h2>
   <ng-include src="'/public/pages/logistics/pod/partials/header.html'"></ng-include>
-  <div class="rnr-table">
+  <div ng-hide="pod.podLineItems.length" class="alert alert-info" openlmis-message="label.no.products"></div>
+  <div ng-show="pod.podLineItems.length" class="rnr-table">
     <table id="podTable" class="table table-bordered" fixed-table-header>
       <thead>
       <tr>
         <th class="col-{{column.name}}" ng-repeat="column in columns">
-          <span ng-bind="column.label"></span>
+          <span openlmis-message="column.label"></span>
         </th>
       </tr>
       </thead>
@@ -23,7 +26,7 @@
       <tbody ng-repeat="podLineItem in pod.podLineItems">
       <tr>
         <td class="productCategory" id="category_{{$index}}" colspan="{{columns.length}}"
-            ng-show="showCategory($index)"
+            ng-show="isCategorySameAsPreviousLineItem($index)"
             ng-bind="podLineItem.productCategory">
         </td>
       </tr>

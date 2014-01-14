@@ -10,14 +10,14 @@
 
 function PODController($scope, OrderPOD, $routeParams) {
   $scope.columns = [
-    {label: "Full Supply", name: "fullSupply"},
-    {label: "Product Code", name: "productCode"},
-    {label: "Product Name", name: "productName"},
-    {label: "Unit Of Issue", name: "dispensingUnit"},
-    {label: "Packs To Ship", name: "packsToShip"},
-    {label: "Quantity Shipped", name: "quantityShipped"},
-    {label: "Quantity Received", name: "quantityReceived"},
-    {label: "Notes", name: "notes"}
+    {label: "header.full.supply", name: "fullSupply"},
+    {label: "header.product.code", name: "productCode"},
+    {label: "header.product.name", name: "productName"},
+    {label: "header.unit.of.issue", name: "dispensingUnit"},
+    {label: "header.packs.to.ship", name: "packsToShip"},
+    {label: "header.quantity.shipped", name: "quantityShipped"},
+    {label: "header.quantity.received", name: "quantityReceived"},
+    {label: "header.notes", name: "notes"}
   ];
 
   if (!$scope.$parent.pod) {
@@ -28,7 +28,7 @@ function PODController($scope, OrderPOD, $routeParams) {
     }, {});
   }
 
-  $scope.showCategory = function (index) {
+  $scope.isCategorySameAsPreviousLineItem = function (index) {
     return !((index > 0 ) && ($scope.pod.podLineItems[index].productCategory == $scope.pod.podLineItems[index - 1].productCategory));
   };
 
