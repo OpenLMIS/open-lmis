@@ -221,6 +221,21 @@ public class E2EDistributionTest extends TestCaseHelper {
     verifyRefrigeratorProblemDataNullInDatabase("GR-J287PGHV", facilityCodeFirst);
     verifyGeneralObservationsDataInDatabase(facilityCodeFirst,"Some observations","samuel","Doe","Verifier","XYZ");
     verifyFullCoveragesDataInDatabase(5,7,0,9999999,facilityCodeFirst);
+
+
+    testWebDriver.sleep(1000);
+    distributionPage = homePage.navigateToDistributionWhenOnline();
+    distributionPage.deleteDistribution();
+    distributionPage.clickOk();
+
+    distributionPage.selectValueFromDeliveryZone(deliveryZoneNameFirst);
+    distributionPage.selectValueFromProgram(programFirst);
+    distributionPage.clickInitiateDistribution();
+    distributionPage.clickOk();
+
+    facilityListPage = distributionPage.clickRecordData(1);
+    assertFalse(facilityListPage.getAllFacilitiesFromDropDown().contains(programFirst));
+
   }
 
   @AfterMethod(groups = {"offline"})
