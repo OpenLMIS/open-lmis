@@ -31,7 +31,7 @@ public interface PODMapper {
   @Options(useGeneratedKeys = true)
   void insertPODLineItem(OrderPODLineItem orderPodLineItem);
 
-  @Select("SELECT * FROM pod_line_items WHERE podId = #{podId} ORDER BY productCategoryDisplayOrder, productCategory, productCode")
+  @Select("SELECT * FROM pod_line_items WHERE podId = #{podId} ORDER BY productCategoryDisplayOrder, LOWER(productCategory), LOWER(productCode)")
   List<OrderPODLineItem> getPODLineItemsByPODId(Long podId);
 
   @Insert({"INSERT INTO pod (orderId, facilityId, programId, periodId, receivedDate, createdBy, modifiedBy) VALUES ",

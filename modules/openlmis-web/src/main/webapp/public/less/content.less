@@ -537,7 +537,7 @@ span[class^="tpl-"] {
 
   th {
     min-width: 123px;
-    padding: 3px 6px;
+    padding: 9px 6px 4px;
     font-size: 0.8em;
     font-weight: bold;
     line-height: 14px;
@@ -2531,6 +2531,26 @@ input[rnr-validator="positiveInteger"] {
   }
 }
 
-.text-right-align {
-  text-align: right;
+#podTable {
+  .col-fullSupply {
+    min-width: 50px;
+  }
+  .col-packsToShip, .col-quantityShipped {
+    min-width: 150px;
+  }
+  td.col-packsToShip, td.col-quantityShipped {
+    span {
+      display: block;
+      text-align: right;
+    }
+  }
+  .col-quantityReceived {
+    min-width: 150px;
+    input {
+      width: 93%;
+    }
+  }
+  .col-notes {
+    min-width: 300px;
+  }
 }

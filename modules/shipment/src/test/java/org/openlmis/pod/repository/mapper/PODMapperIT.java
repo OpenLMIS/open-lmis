@@ -98,7 +98,7 @@ public class PODMapperIT extends ApplicationTestContext {
     orderPod.setOrderId(order.getId());
     podMapper.insertPOD(orderPod);
     String productCode1 = "productCode 1";
-    String productCode2 = "productCode 2";
+    String productCode2 = "ProductCode 2";
     insertProduct(productCode1);
     insertProduct(productCode2);
     String productCategory = "product Category";
