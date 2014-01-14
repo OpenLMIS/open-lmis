@@ -35,7 +35,7 @@ public interface EpiUseMapper {
 
   @Update({"UPDATE epi_use_line_items SET received = #{received}, distributed = #{distributed}, loss = #{loss},",
     "stockAtFirstOfMonth = #{stockAtFirstOfMonth}, stockAtEndOfMonth = #{stockAtEndOfMonth}, expirationDate = #{expirationDate},",
-    "modifiedBy = #{modifiedBy} WHERE id = #{id}"})
+    "modifiedBy = #{modifiedBy}, modifiedDate = DEFAULT WHERE id = #{id}"})
   public void updateLineItem(EpiUseLineItem epiUseLineItem);
 
   @Select({"SELECT * FROM epi_use_line_items WHERE facilityVisitId = #{facilityVisitId} ORDER BY LOWER(productGroupName)"})
