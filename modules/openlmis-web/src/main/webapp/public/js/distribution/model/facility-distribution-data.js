@@ -10,6 +10,8 @@
 
 function FacilityDistribution(facilityDistribution) {
 
+  $.extend(true, this, facilityDistribution);
+
   this.facilityVisitId = facilityDistribution.facilityVisit.id;
   this.epiUse = new EpiUse(facilityDistribution.epiUse);
   this.epiInventory = new EpiInventory(facilityDistribution.epiInventory);

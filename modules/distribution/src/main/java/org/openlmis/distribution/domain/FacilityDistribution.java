@@ -29,6 +29,7 @@ import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPT
 @JsonSerialize(include = NON_EMPTY)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class FacilityDistribution {
+  private Long facilityId;
   private String facilityCode;
   private String facilityName;
   private Long population;
@@ -56,6 +57,7 @@ public class FacilityDistribution {
   }
 
   public void setFacility(Facility facility) {
+    this.facilityId = facility.getId();
     this.facilityCode = facility.getCode();
     this.facilityName = facility.getName();
     this.population = facility.getCatchmentPopulation();
