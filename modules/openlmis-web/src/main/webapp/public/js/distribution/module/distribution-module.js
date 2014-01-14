@@ -59,7 +59,7 @@ distributionModule.config(['$routeProvider', function ($routeProvider) {
         }
       }
 
-      return {response: responseHandler}
+      return {response: responseHandler};
     };
     $httpProvider.interceptors.push(interceptor);
   });
