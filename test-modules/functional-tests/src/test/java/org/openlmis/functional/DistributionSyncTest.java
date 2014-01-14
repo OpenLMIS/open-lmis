@@ -83,6 +83,8 @@ public class DistributionSyncTest extends TestCaseHelper {
     dbWrapper.updateActiveStatusOfProgram("VACCINES", true);
     dbWrapper.updateActiveStatusOfProduct("Product5", "true");
     dbWrapper.updateActiveStatusOfProduct("Product6", "true");
+    dbWrapper.updateActiveStatusOfProduct("P10","true");
+    dbWrapper.updateActiveStatusOfProduct("P11","true");
   }
 
   @Test(groups = {"distribution"})
@@ -368,6 +370,51 @@ public class DistributionSyncTest extends TestCaseHelper {
     //dbWrapper.updateActiveStatusOfProduct("Product5", "true");
     //dbWrapper.updateActiveStatusOfProduct("Product6", "true");
   }
+
+  @Test(groups = {"distribution"})
+  public void shouldCheckSyncWhenAllProductsAreInactive() throws Exception {
+    dbWrapper.updateActiveStatusOfProduct("P10","false");
+    dbWrapper.updateActiveStatusOfProduct("P11","false");
+    dbWrapper.updateActiveStatusOfProduct("Product5","false");
+    dbWrapper.updateActiveStatusOfProduct("Product6","false");
+    HomePage homePage = loginPage.loginAs(distributionTestData.get(USER), distributionTestData.get(PASSWORD));
+    initiateDistribution(distributionTestData.get(FIRST_DELIVERY_ZONE_NAME), distributionTestData.get(VACCINES_PROGRAM));
+    FacilityListPage facilityListPage = new FacilityListPage(testWebDriver);
+    RefrigeratorPage refrigeratorPage = facilityListPage.selectFacility(distributionTestData.get(FIRST_FACILITY_CODE));
+
+    refrigeratorPage.clickShowForRefrigerator1();
+    refrigeratorPage.enterValueInRefrigeratorTemperature("3");
+    refrigeratorPage.clickFunctioningCorrectlyYesRadio();
+    refrigeratorPage.enterValueInLowAlarmEvents("2");
+    refrigeratorPage.enterValueInHighAlarmEvents("5");
+    refrigeratorPage.clickProblemSinceLastVisitNR();
+    refrigeratorPage.verifyRefrigeratorColor("overall", "GREEN");
+    refrigeratorPage.verifyRefrigeratorColor("individual", "GREEN");
+    refrigeratorPage.clickDone();
+
+    GeneralObservationPage generalObservationPage = refrigeratorPage.navigateToGeneralObservations();
+    generalObservationPage.enterData("Some observations", "samuel D", "Doe Abc", "Verifier", "Verifier Title");
+
+    CoveragePage coveragePage = generalObservationPage.navigateToCoverage();
+    coveragePage.clickApplyNRToAll();
+
+    facilityListPage.verifyFacilityIndicatorColor("Overall", "GREEN");
+
+    homePage.navigateHomePage();
+    DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
+    distributionPage.syncDistribution(1);
+    distributionPage.syncDistributionMessageDone();
+
+    verifyGeneralObservationsDataInDatabase(distributionTestData.get(FIRST_FACILITY_CODE),"Some observations", "samuel D", "Doe Abc", "Verifier", "Verifier Title");
+    verifyRefrigeratorProblemDataNullInDatabase("GNR7878",distributionTestData.get(FIRST_FACILITY_CODE));
+    verifyRefrigeratorReadingDataInDatabase(distributionTestData.get(FIRST_FACILITY_CODE), "GNR7878", 3.0F, "Y", 2, 5, null, null);
+    verifyFullCoveragesDataInDatabase(null,null,null,null,distributionTestData.get(FIRST_FACILITY_CODE));
+    dbWrapper.updateActiveStatusOfProduct("P10","true");
+    dbWrapper.updateActiveStatusOfProduct("P11","true");
+    dbWrapper.updateActiveStatusOfProduct("Product5","true");
+    dbWrapper.updateActiveStatusOfProduct("Product6","true");
+  }
+
 
   public void setupDataForDistributionTest(String userSIC, String deliveryZoneCodeFirst, String deliveryZoneCodeSecond,
                                            String deliveryZoneNameFirst, String deliveryZoneNameSecond,
