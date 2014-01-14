@@ -153,7 +153,7 @@ public class E2EDistributionTest extends TestCaseHelper {
     refrigeratorPage.verifyRefrigeratorColor("overall", "GREEN");
     refrigeratorPage.verifyRefrigeratorColor("individual", "GREEN");
 
-    epiUsePage.navigate();
+    refrigeratorPage.navigateToEpiUse();
     epiUsePage.verifyIndicator("GREEN");
 
     epiUsePage.verifyTotal("30", 1);

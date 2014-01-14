@@ -39,7 +39,6 @@ public class DownloadOrderFile extends TestCaseHelper {
   public String userSICUserName = "storeIncharge";
   public String[] csvRows = null;
 
-  @Before
   @BeforeMethod(groups = "requisition")
   public void setUp() throws Exception {
     super.setup();
@@ -186,7 +185,6 @@ public class DownloadOrderFile extends TestCaseHelper {
     downloadOrderFile();
   }
 
-  @After
   @AfterMethod(groups = "requisition")
   public void tearDown() throws Exception {
     testWebDriver.sleep(500);

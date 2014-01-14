@@ -180,7 +180,6 @@ public class ManagePod extends TestCaseHelper {
   }
 
   @AfterMethod(groups = "requisition")
-  @cucumber.api.java.After
   public void tearDown() throws Exception {
     testWebDriver.sleep(500);
     if (!testWebDriver.getElementById("username").isDisplayed()) {

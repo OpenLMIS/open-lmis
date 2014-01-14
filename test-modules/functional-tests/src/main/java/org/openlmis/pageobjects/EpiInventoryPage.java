@@ -125,4 +125,8 @@ public class EpiInventoryPage extends DistributionTab {
   public String getDataEpiInventory() {
     return testWebDriver.findElement(By.id("epiInventoryTable")).getText();
   }
+
+  public boolean getDeliveredQuantityStatus(int rowNumber) {
+    return testWebDriver.findElement(By.id("deliveredQuantity" + (rowNumber - 1))).isEnabled();
+  }
 }

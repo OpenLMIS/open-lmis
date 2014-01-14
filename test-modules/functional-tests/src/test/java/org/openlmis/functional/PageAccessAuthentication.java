@@ -11,8 +11,6 @@
 package org.openlmis.functional;
 
 
-import cucumber.api.java.After;
-import cucumber.api.java.Before;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import org.openlmis.UiUtils.CaptureScreenshotOnFailureListener;
@@ -27,40 +25,23 @@ import static com.thoughtworks.selenium.SeleneseTestBase.assertEquals;
 
 public class PageAccessAuthentication extends TestCaseHelper {
 
-  @Before
-  public void setUp() throws Exception {
-    super.setup();
+  @When("^I access initiate requisition page through URL$")
+  public void accessInitiateRequisitionPageThroughURL() throws Exception {
+    testWebDriver.waitForElementToAppear(new HomePage(testWebDriver).getLogoutLink());
+    testWebDriver.getUrl(baseUrlGlobal + "public/pages/logistics/rnr/index.html#/init-rnr");
+    testWebDriver.sleep(2000);
   }
 
-    @When("^I access initiate requisition page through URL$")
-    public void accessInitiateRequisitionPageThroughURL() throws Exception {
-        testWebDriver.waitForElementToAppear(new HomePage(testWebDriver).getLogoutLink());
-        testWebDriver.getUrl(baseUrlGlobal + "public/pages/logistics/rnr/index.html#/init-rnr");
-        testWebDriver.sleep(2000);
-    }
-
-    @When("^I access create facility page through URL$")
-    public void accessCreateFacilityPageThroughURL() throws Exception {
-        testWebDriver.waitForElementToAppear(new HomePage(testWebDriver).getLogoutLink());
-        testWebDriver.getUrl(baseUrlGlobal + "public/pages/admin/facility/index.html#/create-facility");
-        testWebDriver.sleep(2000);
-    }
-
-    @Then("^I should see unauthorized access message$")
-    public void verifyUnauthorizedAccessPage() throws Exception {
-        assertEquals("You are not authorized to view the requested page.", new AccessDeniedPage(testWebDriver).getAccessDeniedText());
-    }
-
-  @After
-  public void tearDown() throws Exception {
-      if (!testWebDriver.getElementById("username").isDisplayed()) {
-          HomePage homePage = new HomePage(testWebDriver);
-          homePage.logout(baseUrlGlobal);
-        dbWrapper.deleteData();
-        dbWrapper.closeConnection();
-      }
-
+  @When("^I access create facility page through URL$")
+  public void accessCreateFacilityPageThroughURL() throws Exception {
+    testWebDriver.waitForElementToAppear(new HomePage(testWebDriver).getLogoutLink());
+    testWebDriver.getUrl(baseUrlGlobal + "public/pages/admin/facility/index.html#/create-facility");
+    testWebDriver.sleep(2000);
   }
 
+  @Then("^I should see unauthorized access message$")
+  public void verifyUnauthorizedAccessPage() throws Exception {
+    assertEquals("You are not authorized to view the requested page.", new AccessDeniedPage(testWebDriver).getAccessDeniedText());
+  }
 }
 

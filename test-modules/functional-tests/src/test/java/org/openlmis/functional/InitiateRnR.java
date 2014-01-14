@@ -62,7 +62,7 @@ public class InitiateRnR extends TestCaseHelper {
   public InitiateRnRPage initiateRnRPage;
 
   @BeforeMethod(groups = "requisition")
-  @Before
+  //@Before
   public void setUp() throws Exception {
     super.setup();
     dbWrapper.deleteData();
@@ -1053,7 +1053,7 @@ public class InitiateRnR extends TestCaseHelper {
   }
 
   @AfterMethod(groups = "requisition")
-  @After
+  //@After
   public void tearDown() throws Exception {
     testWebDriver.sleep(500);
     if (!testWebDriver.getElementById("username").isDisplayed()) {

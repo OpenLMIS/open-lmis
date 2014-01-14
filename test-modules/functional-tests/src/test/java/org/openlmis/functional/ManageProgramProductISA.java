@@ -21,7 +21,6 @@ import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.pageobjects.HomePage;
 import org.openlmis.pageobjects.LoginPage;
 import org.openlmis.pageobjects.ProgramProductISAPage;
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.testng.annotations.*;
 
@@ -41,7 +40,6 @@ public class ManageProgramProductISA extends TestCaseHelper {
 
 
   @BeforeMethod(groups = "admin")
-  @Before
   public void setUp() throws Exception {
     super.setup();
   }
@@ -57,25 +55,27 @@ public class ManageProgramProductISA extends TestCaseHelper {
 
   @Given("^I access program product ISA page for \"([^\"]*)\"$")
   public void accessProgramProductISAPage(String program) throws IOException {
+    programProductISAPage = PageFactory.getInstanceOfProgramProductIsaPage(testWebDriver);
     programProductISAPage = navigateProgramProductISAPage(program);
   }
 
   @When("^I type ratio \"([^\"]*)\" dosesPerYear \"([^\"]*)\" wastage \"([^\"]*)\" bufferPercentage \"([^\"]*)\" adjustmentValue \"([^\"]*)\" minimumValue \"([^\"]*)\" maximumValue \"([^\"]*)\"$")
   public void fillProgramProductISA(String ratio, String dosesPerYear, String wastage, String bufferPercentage,
                                     String adjustmentValue, String minimumValue, String maximumValue) throws IOException {
+    programProductISAPage = PageFactory.getInstanceOfProgramProductIsaPage(testWebDriver);
     programProductISAPage.fillProgramProductISA(ratio, dosesPerYear, wastage, bufferPercentage, adjustmentValue, minimumValue, maximumValue);
   }
 
-  @Then("^I verify calculated ISA value having population \"([^\"]*)\" ratio \"([^\"]*)\" dosesPerYear \"([^\"]*)\" wastage \"([^\"]*)\" bufferPercentage \"([^\"]*)\" adjustmentValue \"([^\"]*)\" minimumValue \"([^\"]*)\" maximumValue \"([^\"]*)\"$")
-  public void verifyCalculatedISA(String population, String ratio, String dosesPerYear, String wastage, String bufferPercentage,
-                                  String adjustmentValue, String minimumValue, String maximumValue) throws IOException, SQLException {
+  @Then("^I verify calculated ISA value having population \"([^\"]*)\" as \"([^\"]*)\"$")
+  public void verifyTestCalculatedISA(String population, String expectedISA) throws IOException, SQLException {
+    programProductISAPage = PageFactory.getInstanceOfProgramProductIsaPage(testWebDriver);
     String actualISA = programProductISAPage.calculateISA(population);
-    String expectedISA = String.valueOf(calculateISA(ratio, dosesPerYear, wastage, bufferPercentage, adjustmentValue, minimumValue, maximumValue, population));
     assertEquals(expectedISA, actualISA);
   }
 
   @Then("^I click cancel$")
   public void clickCancel() throws IOException {
+    programProductISAPage = PageFactory.getInstanceOfProgramProductIsaPage(testWebDriver);
     programProductISAPage.cancelISA();
   }
 
@@ -236,7 +236,7 @@ public class ManageProgramProductISA extends TestCaseHelper {
 
   private ProgramProductISAPage navigateConfigureProductISAPage() throws IOException {
     HomePage homePage = new HomePage(testWebDriver);
-    ProgramProductISAPage programProductISAPage = homePage.navigateProgramProductISA();
+    programProductISAPage = homePage.navigateProgramProductISA();
     return programProductISAPage;
   }
 
@@ -298,7 +298,6 @@ public class ManageProgramProductISA extends TestCaseHelper {
 
 
   @AfterMethod(groups = "admin")
-  @After
   public void tearDown() throws Exception {
     testWebDriver.sleep(500);
     if (!testWebDriver.getElementById("username").isDisplayed()) {

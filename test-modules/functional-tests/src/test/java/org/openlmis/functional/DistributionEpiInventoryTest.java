@@ -202,6 +202,9 @@ public class DistributionEpiInventoryTest extends TestCaseHelper {
     facilityListPage.verifyFacilityIndicatorColor("Overall", "AMBER");
 
     epiInventoryPage.applyNRToAll();
+    assertTrue(epiInventoryPage.getDeliveredQuantityStatus(1));
+    assertTrue(epiInventoryPage.getDeliveredQuantityStatus(2));
+    assertTrue(epiInventoryPage.getDeliveredQuantityStatus(3));
 
     epiInventoryPage.toggleExistingQuantityNR(1);
     epiInventoryPage.fillExistingQuantity(1, "5");

@@ -13,12 +13,14 @@
 package org.openlmis.functional;
 
 import cucumber.api.java.After;
+import cucumber.api.java.Before;
 import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.pageobjects.ApprovePage;
 import org.openlmis.pageobjects.HomePage;
 import org.openlmis.pageobjects.InitiateRnRPage;
 import org.openlmis.pageobjects.LoginPage;
 import org.openlmis.pageobjects.edi.ConvertOrderPage;
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -41,6 +43,7 @@ public class TestCalculationsForRnR extends TestCaseHelper {
   public String program = "HIV", userSIC = "storeInCharge", password = "Admin123";
 
   @BeforeMethod(groups = "requisition")
+  //@Before
   public void setUp() throws Exception {
     super.setup();
     List<String> rightsList = asList("CREATE_REQUISITION", "VIEW_REQUISITION", "AUTHORIZE_REQUISITION");
@@ -740,7 +743,7 @@ public class TestCalculationsForRnR extends TestCaseHelper {
     verifyCalculationForEmergencyForGivenNumberOfMonths(3);
   }
 
-  @After
+  @AfterMethod(groups = "requisition")
   public void tearDown() throws Exception {
     testWebDriver.sleep(500);
     if (!testWebDriver.getElementById("username").isDisplayed()) {

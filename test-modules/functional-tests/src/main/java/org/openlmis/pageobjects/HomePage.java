@@ -203,7 +203,7 @@ public class HomePage extends Page {
     testWebDriver.keyPress(AdministrationMenuItem);
     testWebDriver.waitForElementToAppear(manageFacilityMenuItem);
     testWebDriver.keyPress(manageFacilityMenuItem);
-    return new ManageFacilityPage(testWebDriver);
+    return ManageFacilityPage.getInstance(testWebDriver);
   }
 
   public void clickCreateFacilityButton() {
@@ -327,7 +327,7 @@ public class HomePage extends Page {
     testWebDriver.keyPress(manageLink);
     testWebDriver.waitForElementToAppear(facilitiesTab);
     facilitiesTab.click();
-    return new ManageFacilityPage(testWebDriver);
+    return ManageFacilityPage.getInstance(testWebDriver);
   }
 
 

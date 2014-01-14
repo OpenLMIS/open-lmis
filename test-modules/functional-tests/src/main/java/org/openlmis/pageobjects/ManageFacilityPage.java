@@ -218,12 +218,21 @@ public class ManageFacilityPage extends Page {
   @FindBy(how = XPATH, using = "//a[@id='remove0']")
   private static WebElement removeFirstProgramSupportedLink = null;
 
+  private static ManageFacilityPage instance;
+
   public void verifyNewFacilityHeader(String headerToBeVerified) {
     testWebDriver.waitForElementToAppear(facilityHeader);
     assertEquals(facilityHeader.getText().trim(), headerToBeVerified);
   }
 
-  public ManageFacilityPage(TestWebDriver driver) throws IOException {
+  public static ManageFacilityPage getInstance(TestWebDriver testWebDriver) {
+    if (instance == null) {
+      instance = new ManageFacilityPage(testWebDriver);
+    }
+    return instance;
+  }
+
+  public ManageFacilityPage(TestWebDriver driver) {
     super(driver);
     PageFactory.initElements(new AjaxElementLocatorFactory(TestWebDriver.getDriver(), 10), this);
     testWebDriver.setImplicitWait(10);

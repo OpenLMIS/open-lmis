@@ -57,7 +57,7 @@ public class E2EInitiateRnR extends TestCaseHelper {
   public String passwordUsers = "TQskzK3iiLfbRVHeM1muvBCiiKriibfl6lh8ipo91hb74G3OvsybvkzpPI4S3KIeWTXAiiwlUU0iiSxWii4wSuS8mokSAieie";
   public String userSICUserName = "storeInCharge";
 
-  @Before
+  //@Before
   public void setUp() throws Exception {
     super.setup();
   }
@@ -76,9 +76,9 @@ public class E2EInitiateRnR extends TestCaseHelper {
 
   @When("^I create \"([^\"]*)\" program supported facility$")
   public void createFacilityForProgram(String program) throws Exception {
-    ManageFacilityPage ManageFacilityPage = new ManageFacilityPage(testWebDriver);
+    ManageFacilityPage manageFacilityPage = ManageFacilityPage.getInstance(testWebDriver);
 
-    date_time = ManageFacilityPage.enterValuesInFacilityAndClickSave(facilityCodePrefix, facilityNamePrefix, program,
+    date_time = manageFacilityPage.enterValuesInFacilityAndClickSave(facilityCodePrefix, facilityNamePrefix, program,
       geoZone, facilityType, operatedBy, catchmentPopulation);
     facility_code = facilityCodePrefix + date_time;
     facility_name = facilityNamePrefix + date_time;
@@ -543,7 +543,7 @@ public class E2EInitiateRnR extends TestCaseHelper {
     return round(ans);
   }
 
-  @After
+  //@After
   public void tearDown() throws Exception {
     testWebDriver.sleep(500);
     if (!testWebDriver.getElementById("username").isDisplayed()) {

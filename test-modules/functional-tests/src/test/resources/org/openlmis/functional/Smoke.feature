@@ -272,18 +272,17 @@ Feature: Smoke Tests
     And I am logged in as Admin
     When I access program product ISA page for "VACCINES"
     And I type ratio "3.9" dosesPerYear "3" wastage "10" bufferPercentage "25" adjustmentValue "0" minimumValue "10" maximumValue "1000"
-    Then I verify calculated ISA value having population "1000" ratio "3.9" dosesPerYear "3" wastage "10" bufferPercentage "25" adjustmentValue "0" minimumValue "10" maximumValue "1000"
+    Then I verify calculated ISA value having population "1000" as "122"
     And I click cancel
-    And I access home page
 
   @smokeDistribution
   Scenario: User should able to initiate & delete distribution
     Given I have the following data for distribution:
       | userSIC       | deliveryZoneCodeFirst | deliveryZoneCodeSecond | deliveryZoneNameFirst | deliveryZoneNameSecond | facilityCodeFirst | facilityCodeSecond | programFirst | programSecond | schedule |
-      | storeIncharge | DZ1                   | DZ2                    | Delivery Zone First   | Delivery Zone Second   | F10               | F11                | VACCINES     | TB            | M        |
-    And I have data available for "Multiple" facilities attached to delivery zones
-    And I assign delivery zone "DZ1" to user "storeIncharge" having role "store in-charge"
-    And I am logged in as "storeIncharge"
+      | storeInCharge | DZ1                   | DZ2                    | Delivery Zone First   | Delivery Zone Second   | F10               | F11                | VACCINES     | TB            | M        |
+    And I have data available for "Single" facilities attached to delivery zones
+    And I assign delivery zone "DZ1" to user "storeInCharge" having role "store in-charge"
+    And I am logged in as "storeInCharge"
     And I access plan my distribution page
     Then I see no distribution in cache
     When I select delivery zone "Delivery Zone First"
@@ -304,19 +303,20 @@ Feature: Smoke Tests
   Scenario: User should able to fetch program period on manage distribution screen
     Given I have the following data for distribution:
       | userSIC       | deliveryZoneCodeFirst | deliveryZoneCodeSecond | deliveryZoneNameFirst | deliveryZoneNameSecond | facilityCodeFirst | facilityCodeSecond | programFirst | programSecond | schedule |
-      | storeIncharge | DZ1                   | DZ2                    | Delivery Zone First   | Delivery Zone Second   | F10               | F11                | VACCINES     | TB            | M        |
+      | storeInCharge | DZ1                   | DZ2                    | Delivery Zone First   | Delivery Zone Second   | F10               | F11                | VACCINES     | TB            | M        |
     And I have data available for "Multiple" facilities attached to delivery zones
-    And I am logged in as "storeIncharge"
+    And I am logged in as "storeInCharge"
     And I access plan my distribution page
     Then I verify fields
     And I should see deliveryZone "--None Assigned--"
-    When I assign delivery zone "DZ1" to user "storeIncharge" having role "store in-charge"
+    When I assign delivery zone "DZ1" to user "storeInCharge" having role "store in-charge"
     And I access plan my distribution page
     And I select delivery zone "Delivery Zone First"
     Then I should see program "VACCINES,TB"
     And I select program "VACCINES"
     Then I should see period "Period14"
     And I click view load amount
+
 
   @smokeDistribution
   Scenario: User should able to override ISA
@@ -333,6 +333,7 @@ Feature: Smoke Tests
     Then I should see save successfully
     When I search facility
     Then I should see overridden ISA "24"
+
 
   @smokeDistribution
   Scenario: Distribution user should view ISA, Override ISA and NoRecords for different delivery zone, program & period combination
@@ -351,7 +352,7 @@ Feature: Smoke Tests
     And I select delivery zone "Delivery Zone First"
     And I select program "VACCINES"
     And I select period "Period14"
-    And I click load amount
+    And I click view load amount
     Then I should see ISA values as per delivery zone facilities
     And  I verify ISA values for Product1 as:
       | Facility1 | Facility2 |
@@ -364,8 +365,9 @@ Feature: Smoke Tests
     And I select delivery zone "Delivery Zone Second"
     And I select program "TB"
     And I select period "Period14"
-    And I click load amount
+    And I click view load amount
     Then I should see message "No records found"
+
 
   @smokeDistribution
   Scenario: Distribution user should view aggregate ISA for delivery zone
@@ -377,23 +379,23 @@ Feature: Smoke Tests
       | F10           | VACCINES | P11     | 2000 |
       | F11           | VACCINES | P10     | 3000 |
       | F11           | VACCINES | P11     | 4000 |
-    And I have role assigned to delivery zones
+    And I have role assigned to delivery zone first
     When I am logged in as "fieldCoordinator"
     And I access plan my distribution page
     And I select delivery zone "Delivery Zone First"
     And I select program "VACCINES"
     And I select period "Period14"
-    And I click load amount
+    And I click view load amount
     Then I should see aggregate ISA values as per multiple facilities in one delivery zone
 
   @smokeDistribution
   Scenario: User should see facility list/ selection page
     Given I have the following data for distribution:
       | userSIC       | deliveryZoneCodeFirst | deliveryZoneCodeSecond | deliveryZoneNameFirst | deliveryZoneNameSecond | facilityCodeFirst | facilityCodeSecond | programFirst | programSecond | schedule |
-      | storeIncharge | DZ1                   | DZ2                    | Delivery Zone First   | Delivery Zone Second   | F10               | F11                | VACCINES     | TB            | M        |
+      | storeInCharge | DZ1                   | DZ2                    | Delivery Zone First   | Delivery Zone Second   | F10               | F11                | VACCINES     | TB            | M        |
     And I have data available for "Multiple" facilities attached to delivery zones
-    And I assign delivery zone "DZ1" to user "storeIncharge" having role "store in-charge"
-    And I am logged in as "storeIncharge"
+    And I assign delivery zone "DZ1" to user "storeInCharge" having role "store in-charge"
+    And I am logged in as "storeInCharge"
     And I access plan my distribution page
     When I select delivery zone "Delivery Zone First"
     And I select program "VACCINES"
@@ -409,14 +411,15 @@ Feature: Smoke Tests
     And  I should verify facility name "Village Dispensary" in the header
     And I verify legends
 
+
   @smokeDistribution
   Scenario: User should be able to add/edit/delete refrigerator
     Given I have the following data for distribution:
       | userSIC       | deliveryZoneCodeFirst | deliveryZoneCodeSecond | deliveryZoneNameFirst | deliveryZoneNameSecond | facilityCodeFirst | facilityCodeSecond | programFirst | programSecond | schedule |
-      | storeIncharge | DZ1                   | DZ2                    | Delivery Zone First   | Delivery Zone Second   | F10               | F11                | VACCINES     | TB            | M        |
+      | storeInCharge | DZ1                   | DZ2                    | Delivery Zone First   | Delivery Zone Second   | F10               | F11                | VACCINES     | TB            | M        |
     And I have data available for "Multiple" facilities attached to delivery zones
-    And I assign delivery zone "DZ1" to user "storeIncharge" having role "store in-charge"
-    And I am logged in as "storeIncharge"
+    And I assign delivery zone "DZ1" to user "storeInCharge" having role "store in-charge"
+    And I am logged in as "storeInCharge"
     And I access plan my distribution page
     When I select delivery zone "Delivery Zone First"
     And I select program "VACCINES"
@@ -463,10 +466,10 @@ Feature: Smoke Tests
   Scenario: User should fill general observation data
     Given I have the following data for distribution:
       | userSIC       | deliveryZoneCodeFirst | deliveryZoneCodeSecond | deliveryZoneNameFirst | deliveryZoneNameSecond | facilityCodeFirst | facilityCodeSecond | programFirst | programSecond | schedule |
-      | storeIncharge | DZ1                   | DZ2                    | Delivery Zone First   | Delivery Zone Second   | F10               | F11                | VACCINES     | TB            | M        |
+      | storeInCharge | DZ1                   | DZ2                    | Delivery Zone First   | Delivery Zone Second   | F10               | F11                | VACCINES     | TB            | M        |
     And I have data available for "Multiple" facilities attached to delivery zones
-    And I assign delivery zone "DZ1" to user "storeIncharge" having role "store in-charge"
-    When I am logged in as "storeIncharge"
+    And I assign delivery zone "DZ1" to user "storeInCharge" having role "store in-charge"
+    When I am logged in as "storeInCharge"
     And I access plan my distribution page
     And I select delivery zone "Delivery Zone First"
     And I select program "VACCINES"
@@ -488,15 +491,16 @@ Feature: Smoke Tests
       | observations     | confirmedByName | confirmedByTitle | verifiedByName | verifiedByTitle |
       | some observation | samuel          | fc               | Verifier       | X YZ            |
 
+
   @smokeDistribution
   Scenario: User should fill EPI use data
     Given I have the following data for distribution:
       | userSIC       | deliveryZoneCodeFirst | deliveryZoneCodeSecond | deliveryZoneNameFirst | deliveryZoneNameSecond | facilityCodeFirst | facilityCodeSecond | programFirst | programSecond | schedule |
-      | storeIncharge | DZ1                   | DZ2                    | Delivery Zone First   | Delivery Zone Second   | F10               | F11                | VACCINES     | TB            | M        |
+      | storeInCharge | DZ1                   | DZ2                    | Delivery Zone First   | Delivery Zone Second   | F10               | F11                | VACCINES     | TB            | M        |
     And I update product "P10" to have product group "penta"
     And I have data available for "Multiple" facilities attached to delivery zones
-    And I assign delivery zone "DZ1" to user "storeIncharge" having role "store in-charge"
-    When I am logged in as "storeIncharge"
+    And I assign delivery zone "DZ1" to user "storeInCharge" having role "store in-charge"
+    When I am logged in as "storeInCharge"
     And I access plan my distribution page
     And I select delivery zone "Delivery Zone First"
     And I select program "VACCINES"
@@ -527,11 +531,11 @@ Feature: Smoke Tests
   Scenario: User should fill EPI Inventory data
     Given I have the following data for distribution:
       | userSIC       | deliveryZoneCodeFirst | deliveryZoneCodeSecond | deliveryZoneNameFirst | deliveryZoneNameSecond | facilityCodeFirst | facilityCodeSecond | programFirst | programSecond | schedule |
-      | storeIncharge | DZ1                   | DZ2                    | Delivery Zone First   | Delivery Zone Second   | F10               | F11                | VACCINES     | TB            | M        |
+      | storeInCharge | DZ1                   | DZ2                    | Delivery Zone First   | Delivery Zone Second   | F10               | F11                | VACCINES     | TB            | M        |
     And I update product "P10" to have product group "penta"
     And I have data available for "Multiple" facilities attached to delivery zones
-    And I assign delivery zone "DZ1" to user "storeIncharge" having role "store in-charge"
-    When I am logged in as "storeIncharge"
+    And I assign delivery zone "DZ1" to user "storeInCharge" having role "store in-charge"
+    When I am logged in as "storeInCharge"
     And I access plan my distribution page
     And I select delivery zone "Delivery Zone First"
     And I select program "VACCINES"
@@ -552,21 +556,16 @@ Feature: Smoke Tests
       | existingQuantity | deliveredQuantity | spoiledQuantity |
       | 20               | 100               | 10              |
       | 10               | 5                 | 10              |
-    When I access plan my distribution page
-    When I record data for distribution "1"
-    And I choose facility "F10"
-    Then Verify "epi inventory" indicator should be "GREEN"
 
 
   @smokeDistribution
   Scenario: User should fill Coverage data
     Given I have the following data for distribution:
       | userSIC       | deliveryZoneCodeFirst | deliveryZoneCodeSecond | deliveryZoneNameFirst | deliveryZoneNameSecond | facilityCodeFirst | facilityCodeSecond | programFirst | programSecond | schedule |
-      | storeIncharge | DZ1                   | DZ2                    | Delivery Zone First   | Delivery Zone Second   | F10               | F11                | VACCINES     | TB            | M        |
-    And I update product "P10" to have product group "penta"
+      | storeInCharge | DZ1                   | DZ2                    | Delivery Zone First   | Delivery Zone Second   | F10               | F11                | VACCINES     | TB            | M        |
     And I have data available for "Multiple" facilities attached to delivery zones
-    And I assign delivery zone "DZ1" to user "storeIncharge" having role "store in-charge"
-    When I am logged in as "storeIncharge"
+    And I assign delivery zone "DZ1" to user "storeInCharge" having role "store in-charge"
+    When I am logged in as "storeInCharge"
     And I access plan my distribution page
     And I select delivery zone "Delivery Zone First"
     And I select program "VACCINES"
@@ -585,21 +584,18 @@ Feature: Smoke Tests
     And I verify saved "coverage" values:
       | coverage | femaleHealthCenter | femaleMobileBrigade | maleHealthCenter | maleMobileBrigade |
       | female   | 123                | 22                  | 23               | 500              |
-    When I access plan my distribution page
-    When I record data for distribution "1"
-    And I choose facility "F10"
-    Then Verify "coverage" indicator should be "GREEN"
+
 
   @smokeDistribution
   Scenario: User should verify facility and sync status
     Given I have the following data for distribution:
       | userSIC       | deliveryZoneCodeFirst | deliveryZoneCodeSecond | deliveryZoneNameFirst | deliveryZoneNameSecond | facilityCodeFirst | facilityCodeSecond | programFirst | programSecond | schedule |
-      | storeIncharge | DZ1                   | DZ2                    | Delivery Zone First   | Delivery Zone Second   | F10               | F11                | VACCINES     | TB            | M        |
+      | storeInCharge | DZ1                   | DZ2                    | Delivery Zone First   | Delivery Zone Second   | F10               | F11                | VACCINES     | TB            | M        |
     And I update product "P10" to have product group "penta"
     And I have data available for "Multiple" facilities attached to delivery zones
-    And I assign delivery zone "DZ1" to user "storeIncharge" having role "store in-charge"
+    And I assign delivery zone "DZ1" to user "storeInCharge" having role "store in-charge"
     And I disassociate "F11" from delivery zone
-    When I am logged in as "storeIncharge"
+    When I am logged in as "storeInCharge"
     And I access plan my distribution page
     And I select delivery zone "Delivery Zone First"
     And I select program "VACCINES"
@@ -615,7 +611,6 @@ Feature: Smoke Tests
     And I enter Serial Number "GR-J287PGHV"
     And I access done
     Then I see "Overall" facility icon as "RED"
-    And I see "Individual" facility icon as "RED"
     When I access plan my distribution page
     When I try to sync recorded data
     Then I verify sync message as "No facility for the chosen zone, program and period is ready to be sync"
@@ -628,7 +623,7 @@ Feature: Smoke Tests
     And I enter low alarm events "1"
     And I enter high alarm events "0"
     And I verify "No" that there is a problem with refrigerator since last visit
-
+       #
     And I navigate to general observations tab
     And I Enter "general observation" values:
       | observations     | confirmedByName | confirmedByTitle | verifiedByName | verifiedByTitle |
@@ -650,7 +645,6 @@ Feature: Smoke Tests
       | 20               | 100               | 5               |
       | 10               | 50                | 3               |
     Then I see "Overall" facility icon as "GREEN"
-    And I see "Individual" facility icon as "GREEN"
     When I access plan my distribution page
 
     When I sync recorded data
@@ -672,7 +666,6 @@ Feature: Smoke Tests
     When I record data for distribution "1"
     And I choose facility "F10"
     Then I see "Overall" facility icon as "BLUE"
-    And I see "Individual" facility icon as "BLUE"
     When I navigate to general observations tab
     Then I see general observations fields disabled
     When I navigate to EPI Use tab
@@ -694,8 +687,6 @@ Feature: Smoke Tests
     And I try to choose facility
     Then I should not see already cached facility "F10"
 
-    And I logout
-    And I am logged in as "storeIncharge"
     And I access plan my distribution page
     And I select delivery zone "Delivery Zone First"
     And I select program "VACCINES"
@@ -704,10 +695,5 @@ Feature: Smoke Tests
     When I record data for distribution "2"
     And I choose facility "F10"
     Then I see "Overall" facility icon as "RED"
-    And I see "Individual" facility icon as "RED"
     And I see "overall" refrigerator icon as "RED"
     And I verify the refrigerator "LG;800 LITRES;GR-J287PGHV" present
-
-
-
-

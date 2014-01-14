@@ -42,7 +42,6 @@ public class ConfigureBudgetTemplate extends TestCaseHelper {
   public static final String CONFIGURE_EDI_INDEX_PAGE = "public/pages/admin/edi/index.html#/configure-edi-file";
 
   @BeforeMethod(groups = "admin")
-  @Before
   public void setUp() throws Exception {
     super.setup();
   }
@@ -187,7 +186,6 @@ public class ConfigureBudgetTemplate extends TestCaseHelper {
     assertEquals(configureBudgetPage.getPeriodStartDatePosition(), "523");
   }
 
-  @After
   @AfterMethod(groups = "admin")
   public void tearDown() throws Exception {
     testWebDriver.sleep(500);
