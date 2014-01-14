@@ -31,8 +31,8 @@ public class BudgetLineItemTransformer extends LineItemTransformer {
 
   private BigDecimal getAllocatedBudget(Integer rowNumber, String allocatedBudget) {
     try {
-      Double budget = Double.valueOf(allocatedBudget);
-      if (budget < 0) {
+      BigDecimal budget = new BigDecimal(allocatedBudget);
+      if (budget.compareTo(new BigDecimal(0)) == -1) {
         throw new DataException("budget.allocated.negative");
       }
       DecimalFormat decimalFormat = new DecimalFormat("#0.##");
