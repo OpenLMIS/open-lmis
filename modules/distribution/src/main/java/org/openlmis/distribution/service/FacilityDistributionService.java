@@ -101,6 +101,7 @@ public class FacilityDistributionService {
       epiUseService.save(facilityDistribution.getEpiUse());
       distributionRefrigeratorsService.save(facilityDistribution.getFacilityVisit().getFacilityId(), facilityDistribution.getRefrigerators());
       vaccinationCoverageService.save(facilityDistribution.getCoverage());
+      epiInventoryService.save(facilityDistribution.getEpiInventory());
     }
     return canSync;
   }

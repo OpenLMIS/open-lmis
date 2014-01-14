@@ -154,7 +154,7 @@ public class EpiInventoryMapperIT {
   }
 
   @Test
-  public void shouldSaveEpiInventoryLineItems() throws Exception {
+  public void shouldInsertEpiInventoryLineItems() throws Exception {
 
     EpiInventoryLineItem lineItem = new EpiInventoryLineItem();
     lineItem.setFacilityVisitId(facilityVisit.getId());
@@ -179,8 +179,8 @@ public class EpiInventoryMapperIT {
     lineItem2.setIdealQuantity(76);
     lineItem2.setCreatedBy(1L);
 
-    mapper.saveLineItem(lineItem);
-    mapper.saveLineItem(lineItem2);
+    mapper.insertLineItem(lineItem);
+    mapper.insertLineItem(lineItem2);
 
     List list;
     try (ResultSet resultSet = queryExecutor.execute("SELECT * FROM epi_inventory_line_items WHERE facilityVisitId = ?", facilityVisit.getId())) {
@@ -188,6 +188,38 @@ public class EpiInventoryMapperIT {
     }
 
     assertThat(list.size(), is(2));
+  }
+
+  @Test
+  public void shouldUpdateEpiInventoryLineItems() throws Exception {
+
+    EpiInventoryLineItem lineItem = new EpiInventoryLineItem();
+    lineItem.setFacilityVisitId(facilityVisit.getId());
+    lineItem.setProgramProductId(programProduct.getId());
+    lineItem.setProductName("name name");
+    lineItem.setProductCode("code 1");
+    lineItem.setProductDisplayOrder(2);
+    lineItem.setIdealQuantity(76);
+    lineItem.setExistingQuantity(66);
+    lineItem.setDeliveredQuantity(56);
+    lineItem.setSpoiledQuantity(777);
+    lineItem.setCreatedBy(1L);
+    mapper.insertLineItem(lineItem);
+
+    lineItem.setSpoiledQuantity(6767);
+    lineItem.setExistingQuantity(77);
+    lineItem.setDeliveredQuantity(78);
+    lineItem.setModifiedBy(3L);
+
+    mapper.updateLineItem(lineItem);
+
+    List<EpiInventoryLineItem> updatedLineItems = mapper.getLineItemsBy(facilityVisit.getId());
+
+    assertThat(updatedLineItems.size(), is(1));
+    assertThat(updatedLineItems.get(0).getSpoiledQuantity(), is(lineItem.getSpoiledQuantity()));
+    assertThat(updatedLineItems.get(0).getExistingQuantity(), is(lineItem.getExistingQuantity()));
+    assertThat(updatedLineItems.get(0).getDeliveredQuantity(), is(lineItem.getDeliveredQuantity()));
+    assertThat(updatedLineItems.get(0).getModifiedBy(), is(lineItem.getModifiedBy()));
   }
 
   @Test
@@ -215,8 +247,8 @@ public class EpiInventoryMapperIT {
     lineItem2.setIdealQuantity(76);
     lineItem2.setCreatedBy(1L);
 
-    mapper.saveLineItem(lineItem);
-    mapper.saveLineItem(lineItem2);
+    mapper.insertLineItem(lineItem);
+    mapper.insertLineItem(lineItem2);
 
     List<EpiInventoryLineItem> lineItems = mapper.getLineItemsBy(facilityVisit.getId());
 

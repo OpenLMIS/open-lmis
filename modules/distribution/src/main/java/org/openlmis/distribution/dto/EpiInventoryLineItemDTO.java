@@ -8,50 +8,42 @@
  *  You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
  */
 
+
 package org.openlmis.distribution.dto;
+
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
-import org.openlmis.distribution.domain.FacilityDistribution;
-import org.openlmis.distribution.domain.FacilityVisit;
+import org.openlmis.core.domain.BaseModel;
+import org.openlmis.distribution.domain.EpiInventoryLineItem;
 
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonSerialize(include = NON_EMPTY)
-public class FacilityDistributionDTO {
+@EqualsAndHashCode(callSuper = false)
+public class EpiInventoryLineItemDTO extends BaseModel {
 
-  private FacilityVisit facilityVisit;
-  private EpiUseDTO epiUse;
-  private EpiInventoryDTO epiInventory;
-  private DistributionRefrigeratorsDTO refrigerators;
-  private VaccinationCoverageDTO coverage;
+  private Long facilityVisitId;
+  private Reading existingQuantity;
+  private Reading spoiledQuantity;
+  private Integer deliveredQuantity;
 
-  public FacilityDistribution transform() {
-    return new FacilityDistribution(this.facilityVisit, this.epiUse.transform(), this.refrigerators.transform(), this.epiInventory.transform(), this.coverage.transform());
+  public EpiInventoryLineItem transform() {
+    EpiInventoryLineItem lineItem = new EpiInventoryLineItem(this.facilityVisitId,
+      this.existingQuantity.parsePositiveInt(),
+      this.spoiledQuantity.parsePositiveInt(),
+      this.deliveredQuantity);
+
+    lineItem.setId(this.id);
+    lineItem.setModifiedBy(this.modifiedBy);
+    return lineItem;
   }
-
-
-  public void setDistributionId(Long distributionId) {
-    facilityVisit.setDistributionId(distributionId);
-  }
-
-  public void setFacilityId(Long facilityId) {
-    facilityVisit.setFacilityId(facilityId);
-  }
-
-  public void setModifiedBy(Long modifiedBy) {
-    facilityVisit.setModifiedBy(modifiedBy);
-    epiUse.setModifiedBy(modifiedBy);
-    refrigerators.setCreatedBy(modifiedBy);
-    refrigerators.setModifiedBy(modifiedBy);
-    coverage.setModifiedBy(modifiedBy);
-  }
-
 }

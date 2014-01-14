@@ -13,33 +13,24 @@ package org.openlmis.distribution.dto;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.openlmis.db.categories.UnitTests;
-import org.openlmis.distribution.domain.EpiUse;
-import org.openlmis.distribution.domain.EpiUseLineItem;
+import org.openlmis.distribution.domain.EpiInventoryLineItem;
 
-import java.util.List;
-
-import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.*;
 
 @Category(UnitTests.class)
-public class EpiUseDTOTest {
+public class EpiInventoryLineItemDTOTest {
 
   @Test
-  public void shouldReturnEpiUse() throws Exception {
+  public void shouldTransformEpiInventoryLineItemDTOToEpiInventoryLineItem() throws Exception {
 
-    Long modifiedBy = 2L;
-    EpiUseLineItemDTO epiUseLineItemDTO = mock(EpiUseLineItemDTO.class);
-    List<EpiUseLineItemDTO> epiUseLineItemDTOList = asList(epiUseLineItemDTO);
-    EpiUseDTO epiUseDTO = new EpiUseDTO(epiUseLineItemDTOList);
-    epiUseDTO.setModifiedBy(modifiedBy);
-    EpiUseLineItem epiUseLineItem = new EpiUseLineItem();
-    when(epiUseLineItemDTO.transform()).thenReturn(epiUseLineItem);
+    EpiInventoryLineItemDTO epiInventoryLineItemDTO = new EpiInventoryLineItemDTO(1L, new Reading("34", false), new Reading(null, true), 56);
+    EpiInventoryLineItem epiInventoryLineItem = epiInventoryLineItemDTO.transform();
 
-    EpiUse epiUse = epiUseDTO.transform();
-
-    assertThat(epiUse.getLineItems(), is(asList(epiUseLineItem)));
-    verify(epiUseLineItemDTO).setModifiedBy(modifiedBy);
+    assertThat(epiInventoryLineItem.getDeliveredQuantity(), is(56));
+    assertThat(epiInventoryLineItem.getExistingQuantity(), is(34));
+    assertThat(epiInventoryLineItem.getSpoiledQuantity(), is(nullValue()));
+    assertThat(epiInventoryLineItem.getFacilityVisitId(), is(1L));
   }
 }

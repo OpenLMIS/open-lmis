@@ -13,6 +13,7 @@ package org.openlmis.distribution.repository.mapper;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 import org.openlmis.distribution.domain.EpiInventoryLineItem;
 import org.springframework.stereotype.Repository;
 
@@ -25,8 +26,12 @@ public interface EpiInventoryMapper {
   @Insert({"INSERT INTO epi_inventory_line_items (facilityVisitId, programProductId, productCode, productName, productDisplayOrder, idealQuantity, createdBy, modifiedBy) VALUES ",
     "(#{facilityVisitId}, #{programProductId}, #{productCode}, #{productName}, #{productDisplayOrder}, #{idealQuantity}, #{createdBy}, #{modifiedBy})"})
   @Options(useGeneratedKeys = true)
-  void saveLineItem(EpiInventoryLineItem lineItem);
+  void insertLineItem(EpiInventoryLineItem lineItem);
 
   @Select({"SELECT * FROM epi_inventory_line_items WHERE facilityVisitId = #{facilityVisitId} ORDER BY productDisplayOrder, LOWER(productCode)"})
   List<EpiInventoryLineItem> getLineItemsBy(Long facilityVisitId);
+
+  @Update({"UPDATE epi_inventory_line_items SET spoiledQuantity = #{spoiledQuantity}, deliveredQuantity = #{deliveredQuantity},",
+    "existingQuantity = #{existingQuantity}, modifiedBy = #{modifiedBy}, modifiedDate = DEFAULT WHERE id = #{id}"})
+  void updateLineItem(EpiInventoryLineItem lineItem);
 }

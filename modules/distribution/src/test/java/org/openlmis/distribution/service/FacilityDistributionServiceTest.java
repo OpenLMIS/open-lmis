@@ -191,9 +191,9 @@ public class FacilityDistributionServiceTest {
     verify(facilityVisitService).save(facilityVisit);
     verify(epiUseService).save(epiUse);
     verify(vaccinationCoverageService).save(vaccinationCoverage);
+    verify(epiInventoryService).save(epiInventory);
     assertTrue(saveStatus);
   }
-
 
   @Test
   public void shouldGetDataForADistribution() throws Exception {
@@ -236,6 +236,5 @@ public class FacilityDistributionServiceTest {
 
     assertThat(facilityDistributionMap.size(), is(1));
     assertThat(facilityDistributionMap.get(facilityVisit.getFacilityId()), is(facilityDistribution));
-
   }
 }

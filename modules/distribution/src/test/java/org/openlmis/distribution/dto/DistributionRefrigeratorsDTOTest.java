@@ -10,7 +10,6 @@
 
 package org.openlmis.distribution.dto;
 
-import org.apache.tools.ant.util.CollectionUtils;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.openlmis.db.categories.UnitTests;
@@ -20,6 +19,7 @@ import org.openlmis.distribution.domain.RefrigeratorReading;
 import java.util.List;
 
 import static java.util.Arrays.asList;
+import static org.apache.tools.ant.util.CollectionUtils.EMPTY_LIST;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
@@ -36,8 +36,7 @@ public class DistributionRefrigeratorsDTOTest {
     when(refrigeratorReadingDTO1.transform()).thenReturn(reading1);
     when(refrigeratorReadingDTO2.transform()).thenReturn(reading2);
     List<RefrigeratorReadingDTO> readings = asList(refrigeratorReadingDTO1, refrigeratorReadingDTO2);
-    Long facilityVisitId = 3L;
-    DistributionRefrigeratorsDTO refrigeratorsDTO = new DistributionRefrigeratorsDTO(facilityVisitId, readings);
+    DistributionRefrigeratorsDTO refrigeratorsDTO = new DistributionRefrigeratorsDTO(readings);
 
     refrigeratorsDTO.transform();
 
@@ -47,9 +46,8 @@ public class DistributionRefrigeratorsDTOTest {
 
   @Test
   public void shouldTransformRefrigeratorsDTOIntoRefrigeratorsWithBlankReadingsIfNotProvided() throws Exception {
-    Long facilityVisitId = 3L;
-    List<RefrigeratorReading> refrigeratorReadings = CollectionUtils.EMPTY_LIST;
-    DistributionRefrigeratorsDTO refrigeratorsDTO = new DistributionRefrigeratorsDTO(facilityVisitId, CollectionUtils.EMPTY_LIST);
+    List<RefrigeratorReading> refrigeratorReadings = EMPTY_LIST;
+    DistributionRefrigeratorsDTO refrigeratorsDTO = new DistributionRefrigeratorsDTO(EMPTY_LIST);
 
     DistributionRefrigerators distributionRefrigerators = refrigeratorsDTO.transform();
 
