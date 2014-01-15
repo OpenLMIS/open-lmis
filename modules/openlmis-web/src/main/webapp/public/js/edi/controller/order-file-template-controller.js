@@ -8,7 +8,7 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-  function OrderFileTemplateController($scope, orderFileTemplate, OrderFileTemplate, dateFormats) {
+function OrderFileTemplateController($scope, orderFileTemplate, OrderFileTemplate, dateFormats) {
 
   $scope.orderFileTemplate = orderFileTemplate;
   $scope.orderDateFormats = _.pluck(_.where(dateFormats, {"orderDate": true}), "format");
@@ -34,12 +34,12 @@
     $scope.newOrderFileColumn.openLmisField = false;
     $scope.newOrderFileColumn.position = $scope.orderFileColumns.length + 1;
     $scope.orderFileColumns.push($scope.newOrderFileColumn);
-    $scope.newOrderFileColumn = {includeInOrderFile:true, dataFieldLabel: "label.not.applicable"};
+    $scope.newOrderFileColumn = {includeInOrderFile: true, dataFieldLabel: "label.not.applicable"};
     $("html, body").animate({ scrollTop: $(document).height() }, 300);
   };
 
   $scope.removeOrderFileColumn = function (index) {
-    $scope.orderFileColumns.splice(index-1, 1);
+    $scope.orderFileColumns.splice(index, 1);
     updatePosition();
   };
 
@@ -61,7 +61,7 @@ OrderFileTemplateController.resolve = {
     return deferred.promise;
   },
 
-  dateFormats: function($q, $timeout, DateFormats) {
+  dateFormats: function ($q, $timeout, DateFormats) {
     var deferred = $q.defer();
     $timeout(function () {
       DateFormats.get({}, function (data) {
