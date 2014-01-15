@@ -47,12 +47,12 @@ describe('ManagePODController', function () {
     var orderId = 1;
     data = {
       orderPOD: {id: 1},
-      order : {emergency : true}
+      order: {emergency: true}
     };
 
-    $httpBackend.expect('GET', '/pod-orders/1.json').respond(200, data);
+    $httpBackend.expect('POST', '/pod-orders.json', orderId).respond(200, data);
 
-    scope.getPOD(orderId);
+    scope.createPOD(orderId);
     $httpBackend.flush();
 
     expect(scope.$parent.pod).toEqual(data.orderPOD);

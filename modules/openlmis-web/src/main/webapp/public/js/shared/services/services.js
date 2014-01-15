@@ -301,5 +301,5 @@ services.factory('EnabledWarehouse', function ($resource) {
 });
 
 services.factory('OrderPOD', function ($resource) {
-  return $resource('/pod-orders/:orderId.json', {}, {});
+  return $resource('/pod-orders/:orderId.json', {}, {post: {method: 'POST'}});
 });

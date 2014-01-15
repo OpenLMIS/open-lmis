@@ -19,14 +19,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpServletRequest;
 import java.text.ParseException;
 
 import static org.openlmis.web.response.OpenLmisResponse.response;
-import static org.springframework.web.bind.annotation.RequestMethod.GET;
+import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 @Controller
 public class PODController extends BaseController {
@@ -40,10 +40,10 @@ public class PODController extends BaseController {
   @Autowired
   private OrderService orderService;
 
-  @RequestMapping(value = "/pod-orders/{orderId}", method = GET)
+  @RequestMapping(value = "/pod-orders", method = POST, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'MANAGE_POD')")
-  public ResponseEntity<OpenLmisResponse> getPOD(HttpServletRequest request, @PathVariable("orderId") Long orderId) throws ParseException {
-    OrderPOD pod = service.getPOD(orderId, loggedInUserId(request));
+  public ResponseEntity<OpenLmisResponse> getPOD(HttpServletRequest request, @RequestBody Long orderId) throws ParseException {
+    OrderPOD pod = service.createPOD(orderId, loggedInUserId(request));
     OrderPODDTO orderPODDTO = OrderPODDTO.getOrderDetailsForPOD(orderService.getOrder(orderId));
     ResponseEntity<OpenLmisResponse> response = response(ORDER_POD, pod);
     response.getBody().addData(ORDER, orderPODDTO);

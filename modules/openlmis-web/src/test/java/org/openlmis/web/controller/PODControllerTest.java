@@ -73,7 +73,7 @@ public class PODControllerTest {
     OrderPOD orderPOD = new OrderPOD();
     mockStatic(OrderPODDTO.class);
 
-    when(service.getPOD(orderId, USER_ID)).thenReturn(orderPOD);
+    when(service.createPOD(orderId, USER_ID)).thenReturn(orderPOD);
 
     Order order = new Order();
     when(orderService.getOrder(orderId)).thenReturn(order);
@@ -83,7 +83,7 @@ public class PODControllerTest {
 
     ResponseEntity<OpenLmisResponse> response = controller.getPOD(request, orderId);
 
-    verify(service).getPOD(orderId, USER_ID);
+    verify(service).createPOD(orderId, USER_ID);
     assertThat((OrderPOD) response.getBody().getData().get(ORDER_POD), is(orderPOD));
     assertThat((OrderPODDTO) response.getBody().getData().get(ORDER), is(orderPODDTO));
     assertThat(response.getStatusCode(), is(HttpStatus.OK));

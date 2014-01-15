@@ -32,12 +32,12 @@ function ManagePODController($scope, OrdersForManagePOD, messageService, OrderPO
       {field: 'emergency', displayName: messageService.get("requisition.type.emergency"),
         cellTemplate: '<div class="ngCellText checked"><i ng-class="{\'icon-ok\': row.entity.rnr.emergency}"></i></div>',
         width: 90 },
-      {cellTemplate: "<div class='ngCellText'><a ng-click='getPOD({{row.entity.id}})' openlmis-message='link.update.pod'></a></div>", width: 180}
+      {cellTemplate: "<div class='ngCellText'><a ng-click='createPOD({{row.entity.id}})' openlmis-message='link.update.pod'></a></div>", width: 180}
     ]
   };
 
-  $scope.getPOD = function (orderId) {
-    OrderPOD.get({orderId: orderId}, function (data) {
+  $scope.createPOD = function (orderId) {
+    OrderPOD.save({}, orderId, function (data) {
       $scope.$parent.pod = data.orderPOD;
       $scope.$parent.order = data.order;
       $scope.$parent.requisitionType = $scope.order.emergency ? "requisition.type.emergency" : "requisition.type.regular";

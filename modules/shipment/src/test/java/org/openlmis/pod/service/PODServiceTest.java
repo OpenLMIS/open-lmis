@@ -117,7 +117,7 @@ public class PODServiceTest {
     doNothing().when(spyOrderPod).fillPOD(requisition);
     doNothing().when(spyOrderPod).fillPodLineItems(requisition.getAllLineItems());
 
-    podService.getPOD(orderId, userId);
+    podService.createPOD(orderId, userId);
 
     verify(podRepository).insertPOD(spyOrderPod);
     verify(podRepository).getPODByOrderId(orderId);
@@ -150,7 +150,7 @@ public class PODServiceTest {
     when(order.getSupplyingFacility()).thenReturn(supplyingFacility);
     when(fulfillmentPermissionService.hasPermission(userId, facilityId, MANAGE_POD)).thenReturn(true);
 
-    podService.getPOD(orderId, userId);
+    podService.createPOD(orderId, userId);
 
     verify(podRepository).getPODByOrderId(orderId);
     verify(podRepository).getPODWithLineItemsByOrderId(orderId);
@@ -181,6 +181,6 @@ public class PODServiceTest {
     expectedException.expect(DataException.class);
     expectedException.expectMessage("error.permission.denied");
 
-    podService.getPOD(orderId, userId);
+    podService.createPOD(orderId, userId);
   }
 }

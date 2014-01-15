@@ -47,7 +47,7 @@ public class PODService {
   private FulfillmentPermissionService fulfillmentPermissionService;
 
   @Transactional
-  public OrderPOD getPOD(Long orderId, Long userId) {
+  public OrderPOD createPOD(Long orderId, Long userId) {
     save(orderId, userId);
     return podRepository.getPODWithLineItemsByOrderId(orderId);
   }
