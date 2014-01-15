@@ -74,6 +74,12 @@ function DistributionController(DeliveryZoneFacilities, Refrigerators, deliveryZ
         if (status == 201) {
           distributionDefer.resolve(data.distribution);
         } else {
+          if (!data.distribution.facilityDistributions) {
+            referenceDataDefer.reject();
+            $scope.message = messageService.get("message.no.facility.available", $scope.selectedProgram.name,
+              $scope.selectedZone.name);
+            return;
+          }
           distribution = data.distribution;
           var dialogOpts = {
             id: "distributionInitiated",

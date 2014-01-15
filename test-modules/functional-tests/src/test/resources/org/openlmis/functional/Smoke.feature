@@ -623,7 +623,6 @@ Feature: Smoke Tests
     And I enter low alarm events "1"
     And I enter high alarm events "0"
     And I verify "No" that there is a problem with refrigerator since last visit
-       #
     And I navigate to general observations tab
     And I Enter "general observation" values:
       | observations     | confirmedByName | confirmedByTitle | verifiedByName | verifiedByTitle |
@@ -678,21 +677,20 @@ Feature: Smoke Tests
 
     And I access plan my distribution page
     And I delete already cached data for distribution
-    And I access plan my distribution page
-    And I select delivery zone "Delivery Zone First"
-    And I select program "VACCINES"
-    And I select period "Period14"
-    And I initiate already cached distribution
-    When I record data for distribution "1"
-    And I try to choose facility
-    Then I should not see already cached facility "F10"
-
-    And I access plan my distribution page
+#    And I access plan my distribution page
+#    And I select delivery zone "Delivery Zone First"
+#    And I select program "VACCINES"
+#    And I select period "Period14"
+#    And I initiate already cached distribution
+#    When I record data for distribution "1"
+#    And I try to choose facility
+#    Then I should not see already cached facility "F10"
+#    And I access plan my distribution page
     And I select delivery zone "Delivery Zone First"
     And I select program "VACCINES"
     And I select period "Period13"
     And I initiate distribution
-    When I record data for distribution "2"
+    When I record data for distribution "1"
     And I choose facility "F10"
     Then I see "Overall" facility icon as "RED"
     And I see "overall" refrigerator icon as "RED"

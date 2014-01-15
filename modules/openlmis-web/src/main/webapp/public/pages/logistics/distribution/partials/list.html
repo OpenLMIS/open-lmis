@@ -95,8 +95,7 @@
           <div ng-repeat="result in syncResult[SYNCED]">
           <span class="is-synced">
             <span class="status-icon"></span>
-            <span ng-bind="result.facilityCode"></span>-
-            <span class="facility-name" ng-bind="result.facilityName"></span>
+            <span ng-bind="result.facilityCode"></span>-<span class="facility-name" ng-bind="result.facilityName"></span>
           </span>
           </div>
         </div>
@@ -107,8 +106,7 @@
           <div ng-repeat="result in syncResult[DUPLICATE]">
           <span class="is-duplicate">
             <span class="status-icon"></span>
-            <span ng-bind="result.facilityCode"></span>-
-            <span class="facility-name" ng-bind="result.facilityName"></span>
+            <span ng-bind="result.facilityCode"></span>-<span class="facility-name" ng-bind="result.facilityName"></span>
           </span>
           </div>
         </div>
@@ -118,8 +116,7 @@
 
           <div ng-repeat="result in syncResult[COMPLETE]">
             <i class="icon icon-exclamation-sign"></i>
-            <span ng-bind="result.facilityCode"></span>-
-            <span class="facility-name" ng-bind="result.facilityName"></span>
+            <span ng-bind="result.facilityCode"></span>-<span class="facility-name" ng-bind="result.facilityName"></span>
           </div>
         </div>
       </div>
