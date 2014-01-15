@@ -82,7 +82,6 @@ function DistributionController($scope, deliveryZones, DeliveryZoneActiveProgram
 
     function onInitSuccess(data, status) {
       var message = data.success;
-      distribution = data.distribution;
 
       if (!distribution.facilityDistributions) {
         $scope.message = messageService.get("message.no.facility.available", $scope.selectedProgram.name,
@@ -94,7 +93,7 @@ function DistributionController($scope, deliveryZones, DeliveryZoneActiveProgram
         return;
       }
 
-      distributionService.put(distribution);
+      distributionService.put(data.distribution);
       $scope.message = message;
     }
   };

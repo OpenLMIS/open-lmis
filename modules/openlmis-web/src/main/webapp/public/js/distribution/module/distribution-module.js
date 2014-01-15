@@ -47,7 +47,7 @@ distributionModule.config(['$routeProvider', function ($routeProvider) {
   }]).config(function (IndexedDBProvider) {
     IndexedDBProvider
       .setDbName("open_lmis")
-      .migration(4, migrationFunc);
+      .migration(5, migrationFunc);
   }).config(function ($httpProvider) {        //#1261
     var interceptor = function (loginConfig) {
       function responseHandler(response) {
