@@ -8,15 +8,11 @@
 -- You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
 --
 
-\i ../../test-data/sql/products.sql
-\i ../../test-data/sql/facilities.sql
-\i ../../test-data/sql/rnr_template.sql
-\i ../../test-data/sql/users.sql
-\i ../../test-data/sql/processing_schedules.sql
-\i ../../test-data/sql/requisition_groups.sql
-\i ../../test-data/sql/regimens.sql
+CREATE TABLE coverage_vaccination_products (
+  id            SERIAL PRIMARY KEY,
+  vaccination   VARCHAR(255) NOT NULL,
+  productCode   VARCHAR(50)  NOT NULL REFERENCES products (code),
+  childCoverage BOOLEAN      NOT NULL,
+  UNIQUE (vaccination, productCode)
+);
 
-\i ../../test-data/sql/delivery_zones.sql
-\i ../../test-data/sql/allocation_users.sql
-\i ../../test-data/sql/budget.sql
-\i ../../test-data/sql/coverage_vaccination_products.sql
