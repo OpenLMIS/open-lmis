@@ -305,7 +305,6 @@ public class RequisitionPage extends Page {
 
   public void clickAuthorizeButton() {
     testWebDriver.waitForElementToAppear(AuthorizeButton);
-
     AuthorizeButton.click();
   }
 

@@ -215,6 +215,7 @@ public class ManageDistribution extends TestCaseHelper {
 
   @Then("^I see \"([^\"]*)\" facility icon as \"([^\"]*)\"$")
   public void verifyOverAllFacilityIndicator(String whichIcon, String color) throws IOException {
+    testWebDriver.setImplicitWait(500);
     facilityListPage = PageFactory.getInstanceOfFacilityListPage(testWebDriver);
     facilityListPage.verifyFacilityIndicatorColor(whichIcon, color);
   }

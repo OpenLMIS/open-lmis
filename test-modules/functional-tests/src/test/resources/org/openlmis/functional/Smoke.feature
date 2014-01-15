@@ -577,7 +577,7 @@ Feature: Smoke Tests
     Then Verify "coverage" indicator should be "RED"
     And I Enter "coverage" values:
       | coverage | femaleHealthCenter | femaleMobileBrigade | maleHealthCenter | maleMobileBrigade |
-      | female   | 123                | 22                  | 23               | #{nil}                 |
+      | female   | 123                | 22                  | 23               |                   |
     Then Verify "coverage" indicator should be "AMBER"
     When I enter coverage maleMobileBrigade as "500"
     Then Verify "coverage" indicator should be "GREEN"
