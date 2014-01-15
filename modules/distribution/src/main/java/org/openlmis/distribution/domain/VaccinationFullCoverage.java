@@ -20,6 +20,6 @@ import org.openlmis.core.domain.BaseModel;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-public class VaccinationCoverage extends BaseModel {
+public class VaccinationFullCoverage extends BaseModel {
   private FullCoverage fullCoverage;
 }

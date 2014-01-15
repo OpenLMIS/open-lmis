@@ -142,8 +142,8 @@ public class FacilityDistributionServiceTest {
     List<Refrigerator> refrigerators = asList(new Refrigerator(), new Refrigerator());
     Facility facility1 = new Facility(9l);
     Facility facility2 = new Facility(12L);
-    FacilityDistribution facilityDistribution1 = new FacilityDistribution(new FacilityVisit(), new EpiUse(), null, null, new VaccinationCoverage());
-    FacilityDistribution facilityDistribution2 = new FacilityDistribution(new FacilityVisit(), new EpiUse(), null, null, new VaccinationCoverage());
+    FacilityDistribution facilityDistribution1 = new FacilityDistribution(new FacilityVisit(), new EpiUse(), null, null, new VaccinationFullCoverage());
+    FacilityDistribution facilityDistribution2 = new FacilityDistribution(new FacilityVisit(), new EpiUse(), null, null, new VaccinationFullCoverage());
     FacilityDistributionService service = spy(facilityDistributionService);
 
     when(refrigeratorService.getRefrigeratorsForADeliveryZoneAndProgram(4L, 16L)).thenReturn(refrigerators);
@@ -185,15 +185,15 @@ public class FacilityDistributionServiceTest {
     FacilityVisit facilityVisit = new FacilityVisit();
     DistributionRefrigerators distributionRefrigerators = new DistributionRefrigerators();
     EpiInventory epiInventory = new EpiInventory();
-    VaccinationCoverage vaccinationCoverage = new VaccinationCoverage();
-    FacilityDistribution facilityDistribution = new FacilityDistribution(facilityVisit, epiUse, distributionRefrigerators, epiInventory, vaccinationCoverage);
+    VaccinationFullCoverage vaccinationFullCoverage = new VaccinationFullCoverage();
+    FacilityDistribution facilityDistribution = new FacilityDistribution(facilityVisit, epiUse, distributionRefrigerators, epiInventory, vaccinationFullCoverage);
 
     when(facilityVisitService.save(facilityVisit)).thenReturn(true);
     boolean saveStatus = facilityDistributionService.save(facilityDistribution);
 
     verify(facilityVisitService).save(facilityVisit);
     verify(epiUseService).save(epiUse);
-    verify(vaccinationCoverageService).save(vaccinationCoverage);
+    verify(vaccinationCoverageService).save(vaccinationFullCoverage);
     verify(epiInventoryService).save(epiInventory);
     assertTrue(saveStatus);
   }
@@ -222,8 +222,8 @@ public class FacilityDistributionServiceTest {
     EpiInventory epiInventory = new EpiInventory();
     when(epiInventoryService.getBy(facilityVisit.getId())).thenReturn(epiInventory);
 
-    VaccinationCoverage vaccinationCoverage = new VaccinationCoverage();
-    when(vaccinationCoverageService.getBy(facilityVisit.getId())).thenReturn(vaccinationCoverage);
+    VaccinationFullCoverage vaccinationFullCoverage = new VaccinationFullCoverage();
+    when(vaccinationCoverageService.getBy(facilityVisit.getId())).thenReturn(vaccinationFullCoverage);
 
     Refrigerator refrigerator = new Refrigerator();
     refrigerator.setFacilityId(2L);
@@ -235,7 +235,7 @@ public class FacilityDistributionServiceTest {
     whenNew(DistributionRefrigerators.class).withArguments(asList(refrigeratorReading)).thenReturn(distributionRefrigerators);
 
     FacilityDistribution facilityDistribution = new FacilityDistribution();
-    whenNew(FacilityDistribution.class).withArguments(facilityVisit, epiUse, distributionRefrigerators, epiInventory, vaccinationCoverage).thenReturn(facilityDistribution);
+    whenNew(FacilityDistribution.class).withArguments(facilityVisit, epiUse, distributionRefrigerators, epiInventory, vaccinationFullCoverage).thenReturn(facilityDistribution);
 
     Map<Long, FacilityDistribution> facilityDistributionMap = facilityDistributionService.get(distribution);
 

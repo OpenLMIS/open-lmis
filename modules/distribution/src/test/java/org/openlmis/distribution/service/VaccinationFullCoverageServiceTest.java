@@ -18,14 +18,14 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.distribution.domain.FullCoverage;
-import org.openlmis.distribution.domain.VaccinationCoverage;
+import org.openlmis.distribution.domain.VaccinationFullCoverage;
 import org.openlmis.distribution.repository.VaccinationCoverageRepository;
 
 import static org.mockito.Mockito.verify;
 
 @Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
-public class VaccinationCoverageServiceTest {
+public class VaccinationFullCoverageServiceTest {
 
   @Mock
   private VaccinationCoverageRepository repository;
@@ -37,8 +37,8 @@ public class VaccinationCoverageServiceTest {
   public void shouldSaveFullCoverageData() throws Exception {
     FullCoverage fullCoverage = new FullCoverage();
 
-    VaccinationCoverage vaccinationCoverage = new VaccinationCoverage(fullCoverage);
-    service.save(vaccinationCoverage);
+    VaccinationFullCoverage vaccinationFullCoverage = new VaccinationFullCoverage(fullCoverage);
+    service.save(vaccinationFullCoverage);
 
     verify(repository).saveFullCoverage(fullCoverage);
   }

@@ -14,14 +14,14 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.distribution.domain.FullCoverage;
-import org.openlmis.distribution.domain.VaccinationCoverage;
+import org.openlmis.distribution.domain.VaccinationFullCoverage;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
 
 @Category(UnitTests.class)
-public class VaccinationCoverageDTOTest {
+public class VaccinationFullCoverageDTOTest {
 
   @Test
   public void shouldTransformCoverageDTOIntoCoverage() throws Exception {
@@ -30,9 +30,9 @@ public class VaccinationCoverageDTOTest {
     when(fullCoverageDTO.transform()).thenReturn(expectedFullCoverage);
     VaccinationCoverageDTO coverageDTO = new VaccinationCoverageDTO(fullCoverageDTO);
 
-    VaccinationCoverage vaccinationCoverage = coverageDTO.transform();
+    VaccinationFullCoverage vaccinationFullCoverage = coverageDTO.transform();
 
     verify(fullCoverageDTO).transform();
-    assertThat(vaccinationCoverage.getFullCoverage(), is(expectedFullCoverage));
+    assertThat(vaccinationFullCoverage.getFullCoverage(), is(expectedFullCoverage));
   }
 }

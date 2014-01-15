@@ -38,7 +38,7 @@ public class FacilityDistribution {
   private EpiUse epiUse;
   private DistributionRefrigerators refrigerators;
   private EpiInventory epiInventory;
-  private VaccinationCoverage coverage;
+  private VaccinationFullCoverage fullCoverage;
 
   public FacilityDistribution(FacilityVisit facilityVisit, Facility facility, Distribution distribution, List<RefrigeratorReading> readings) {
     this.setFacility(facility);
@@ -48,12 +48,12 @@ public class FacilityDistribution {
     this.epiInventory = new EpiInventory(facilityVisit, facility, distribution);
   }
 
-  public FacilityDistribution(FacilityVisit facilityVisit, EpiUse epiUse, DistributionRefrigerators refrigerators, EpiInventory epiInventory, VaccinationCoverage coverage) {
+  public FacilityDistribution(FacilityVisit facilityVisit, EpiUse epiUse, DistributionRefrigerators refrigerators, EpiInventory epiInventory, VaccinationFullCoverage fullCoverage) {
     this.facilityVisit = facilityVisit;
     this.epiUse = epiUse;
     this.refrigerators = refrigerators;
     this.epiInventory = epiInventory;
-    this.coverage = coverage;
+    this.fullCoverage = fullCoverage;
   }
 
   public void setFacility(Facility facility) {

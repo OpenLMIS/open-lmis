@@ -39,8 +39,8 @@ public class FacilityDistributionDTOTest {
     DistributionRefrigerators distributionRefrigerators = mock(DistributionRefrigerators.class);
     when(distributionRefrigeratorsDTO.transform()).thenReturn(distributionRefrigerators);
 
-    VaccinationCoverage vaccinationCoverage = new VaccinationCoverage();
-    when(coverageDTO.transform()).thenReturn(vaccinationCoverage);
+    VaccinationFullCoverage vaccinationFullCoverage = new VaccinationFullCoverage();
+    when(coverageDTO.transform()).thenReturn(vaccinationFullCoverage);
 
     EpiInventory epiInventory = new EpiInventory();
     when(epiInventoryDTO.transform()).thenReturn(epiInventory);
@@ -50,7 +50,7 @@ public class FacilityDistributionDTOTest {
     assertThat(facilityDistribution.getFacilityVisit(), is(facilityDistributionDTO.getFacilityVisit()));
     assertThat(facilityDistribution.getEpiUse(), is(epiUse));
     assertThat(facilityDistribution.getRefrigerators(), is(distributionRefrigerators));
-    assertThat(facilityDistribution.getCoverage(), is(vaccinationCoverage));
+    assertThat(facilityDistribution.getFullCoverage(), is(vaccinationFullCoverage));
     assertThat(facilityDistribution.getEpiInventory(), is(epiInventory));
   }
 }
