@@ -1271,6 +1271,14 @@ public class DBWrapper {
       "(Select id from facilities where code ='%s'));", productGroupCode, facilityCode).get(0);
   }
 
+  public ResultSet getEpiInventoryDetails(String productCode, String facilityCode) throws SQLException {
+    ResultSet resultSet= query("SELECT * FROM epi_inventory_line_items WHERE productCode = '%s'" +
+      "AND facilityVisitId=(Select id from facility_visits where facilityId=" +
+      "(Select id from facilities where code ='%s'));", productCode, facilityCode);
+    resultSet.next();
+    return  resultSet;
+  }
+
   public Map<String, String> getFullCoveragesDetails(String facilityCode) throws SQLException {
     return select("SELECT * FROM full_coverages WHERE facilityVisitId=(Select id from facility_visits where facilityId=" +
       "(Select id from facilities where code ='%s'));", facilityCode).get(0);
