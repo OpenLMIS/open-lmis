@@ -40,17 +40,17 @@
                 <td id="femaleHeader" openlmis-message="label.coverage.females"></td>
                 <td class="col-health-center">
                   <div>
-                    <input id="femaleHealthCenter" type="text"
-                           ng-model="facilityData.fullCoverage.femaleHealthCenterReading.value"
-                           name="coverageFemaleHC"
-                           numeric-validator="positiveInteger" maxlength="7"
-                           error-holder="coverageFemaleHCError"/>
-                  </div>
-                  <div class="error">
-              <span id="coverageFemaleHCError"
-                    class="rnr-form-error"
-                    openlmis-message="error.number.only"
-                    style="display: none"></span>
+                    <span class="input-error-parent-cell">
+                      <input id="femaleHealthCenter" type="text"
+                             ng-model="facilityData.fullCoverage.femaleHealthCenterReading.value"
+                             name="coverageFemaleHC"
+                             numeric-validator="positiveInteger" maxlength="7"
+                             error-holder="coverageFemaleHCError"/>
+                      <span id="coverageFemaleHCError"
+                            class="rnr-form-error"
+                            openlmis-message="error.number.only"
+                            style="display: none"></span>
+                    </span>
                   </div>
                   <input id="coverageFemaleHC" type="checkbox"
                          ng-model="facilityData.fullCoverage.femaleHealthCenterReading.notRecorded"
@@ -60,17 +60,17 @@
                          openlmis-message="label.not.recorded"></label>
                 <td class="col-mobile-brigade">
                   <div>
-                    <input id="femaleMobileBrigade" type="text"
-                           ng-model="facilityData.fullCoverage.femaleMobileBrigadeReading.value"
-                           name="coverageFemaleMB"
-                           numeric-validator="positiveInteger" maxlength="7"
-                           error-holder="coverageFemaleMBError"/>
-                  </div>
-                  <div class="error">
-              <span id="coverageFemaleMBError"
-                    class="rnr-form-error"
-                    openlmis-message="error.number.only"
-                    style="display: none"></span>
+                    <span class="input-error-parent-cell">
+                      <input id="femaleMobileBrigade" type="text"
+                             ng-model="facilityData.fullCoverage.femaleMobileBrigadeReading.value"
+                             name="coverageFemaleMB"
+                             numeric-validator="positiveInteger" maxlength="7"
+                             error-holder="coverageFemaleMBError"/>
+                      <span id="coverageFemaleMBError"
+                            class="rnr-form-error"
+                            openlmis-message="error.number.only"
+                            style="display: none"></span>
+                    </span>
                   </div>
                   <input id="coverageFemaleMB" type="checkbox"
                          ng-model="facilityData.fullCoverage.femaleMobileBrigadeReading.notRecorded"
@@ -84,17 +84,17 @@
                 <td id="maleHeader" openlmis-message="label.coverage.males"></td>
                 <td class="col-health-center">
                   <div>
-                    <input id="maleHealthCenter" type="text"
-                           ng-model="facilityData.fullCoverage.maleHealthCenterReading.value"
-                           name="coverageMaleHC"
-                           numeric-validator="positiveInteger" maxlength="7"
-                           error-holder="coverageMaleHCError"/>
-                  </div>
-                  <div class="error">
-              <span id="coverageMaleHCError"
-                    class="rnr-form-error"
-                    openlmis-message="error.number.only"
-                    style="display: none"></span>
+                    <span class="input-error-parent-cell">
+                      <input id="maleHealthCenter" type="text"
+                             ng-model="facilityData.fullCoverage.maleHealthCenterReading.value"
+                             name="coverageMaleHC"
+                             numeric-validator="positiveInteger" maxlength="7"
+                             error-holder="coverageMaleHCError"/>
+                      <span id="coverageMaleHCError"
+                            class="rnr-form-error"
+                            openlmis-message="error.number.only"
+                            style="display: none"></span>
+                    </span>
                   </div>
                   <input id="coverageMaleHC" type="checkbox"
                          ng-model="facilityData.fullCoverage.maleHealthCenterReading.notRecorded"
@@ -104,17 +104,17 @@
                          openlmis-message="label.not.recorded"></label>
                 <td class="col-health-center">
                   <div>
-                    <input id="maleMobileBrigade" type="text"
-                           ng-model="facilityData.fullCoverage.maleMobileBrigadeReading.value"
-                           name="coverageMaleMB"
-                           numeric-validator="positiveInteger" maxlength="7"
-                           error-holder="coverageMaleMBError"/>
-                  </div>
-                  <div class="error">
-              <span id="coverageMaleMBError"
-                    class="rnr-form-error"
-                    openlmis-message="error.number.only"
-                    style="display: none"></span>
+                    <span class="input-error-parent-cell">
+                      <input id="maleMobileBrigade" type="text"
+                             ng-model="facilityData.fullCoverage.maleMobileBrigadeReading.value"
+                             name="coverageMaleMB"
+                             numeric-validator="positiveInteger" maxlength="7"
+                             error-holder="coverageMaleMBError"/>
+                      <span id="coverageMaleMBError"
+                            class="rnr-form-error"
+                            openlmis-message="error.number.only"
+                            style="display: none"></span>
+                    </span>
                   </div>
                   <input id="coverageMaleMB" type="checkbox"
                          ng-model="facilityData.fullCoverage.maleMobileBrigadeReading.notRecorded"
