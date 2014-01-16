@@ -23,9 +23,12 @@ import java.util.List;
 import java.util.Set;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
+import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
 import static org.junit.matchers.JUnitMatchers.hasItems;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 import static org.openlmis.core.builder.FacilityBuilder.*;
 import static org.openlmis.core.builder.ProgramSupportedBuilder.defaultProgramSupported;
 import static org.openlmis.core.builder.ProgramSupportedBuilder.supportedProgram;
@@ -158,4 +161,13 @@ public class FacilityTest {
     assertFalse(facility.isValid(null));
   }
 
+  @Test
+  public void shouldReturnWhoRatioForFirstAndOnlySupportedProgram() throws Exception {
+    ProgramSupported programSupported = mock(ProgramSupported.class);
+    Double whoRatio = 127D;
+    when(programSupported.getWhoRatioFor("BCG")).thenReturn(whoRatio);
+    Facility facility = make(a(defaultFacility, with(programSupportedList, asList(programSupported))));
+
+    assertThat(facility.getWhoRatioFor("BCG"), is(whoRatio));
+  }
 }

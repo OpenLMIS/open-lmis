@@ -127,4 +127,50 @@ public class FacilityProgramProductTest {
     assertThat(facilityProgramProduct.calculateIsa(null, 5), is(nullValue()));
 
   }
+
+  @Test
+  public void shouldReturnWhoCode() throws Exception {
+    String productCode = "BCG";
+    FacilityProgramProduct facilityProgramProduct = new FacilityProgramProduct();
+
+    Product product = mock(Product.class);
+    when(product.getCode()).thenReturn(productCode);
+    facilityProgramProduct.setProduct(product);
+
+    ProgramProductISA programProductISA = mock(ProgramProductISA.class);
+    when(programProductISA.getWhoRatio()).thenReturn(1234D);
+
+    facilityProgramProduct.setProgramProductIsa(programProductISA);
+
+    assertThat(facilityProgramProduct.getWhoRatio(productCode), is(1234D));
+  }
+
+  @Test
+  public void shouldReturnNullWhoRatioIfProgramProductIsaIsNull() throws Exception {
+    String productCode = "BCG";
+    FacilityProgramProduct facilityProgramProduct = new FacilityProgramProduct();
+
+    Product product = mock(Product.class);
+    when(product.getCode()).thenReturn(productCode);
+    facilityProgramProduct.setProduct(product);
+
+    assertThat(facilityProgramProduct.getWhoRatio(productCode), is(nullValue()));
+  }
+
+  @Test
+  public void shouldReturnNullWhoRatioIfProductCodeInvalid() throws Exception {
+    String productCode = "BCG";
+    FacilityProgramProduct facilityProgramProduct = new FacilityProgramProduct();
+
+    Product product = mock(Product.class);
+    when(product.getCode()).thenReturn(productCode);
+    facilityProgramProduct.setProduct(product);
+
+    ProgramProductISA programProductISA = mock(ProgramProductISA.class);
+    when(programProductISA.getWhoRatio()).thenReturn(1234D);
+
+    facilityProgramProduct.setProgramProductIsa(programProductISA);
+
+    assertThat(facilityProgramProduct.getWhoRatio("invalidProductCode"), is(nullValue()));
+  }
 }

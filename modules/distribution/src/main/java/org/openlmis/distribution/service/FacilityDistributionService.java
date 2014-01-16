@@ -61,8 +61,7 @@ public class FacilityDistributionService {
 
     List<Facility> facilities = facilityService.getAllForDeliveryZoneAndProgram(deliveryZoneId, programId);
     List<Refrigerator> distributionRefrigerators = refrigeratorService.getRefrigeratorsForADeliveryZoneAndProgram(deliveryZoneId, programId);
-    Boolean isChildCoverage = true;
-    List<VaccinationProduct> vaccinationProducts = vaccinationCoverageService.getReferenceData(isChildCoverage);
+    List<VaccinationProduct> vaccinationProducts = vaccinationCoverageService.getReferenceData(true);
 
     for (Facility facility : facilities) {
       facilityDistributions.put(facility.getId(), createDistributionData(facility, distribution, distributionRefrigerators, vaccinationProducts));
