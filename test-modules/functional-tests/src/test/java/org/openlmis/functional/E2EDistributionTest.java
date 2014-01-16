@@ -221,7 +221,9 @@ public class E2EDistributionTest extends TestCaseHelper {
     verifyRefrigeratorProblemDataNullInDatabase("GR-J287PGHV", facilityCodeFirst);
     verifyGeneralObservationsDataInDatabase(facilityCodeFirst,"Some observations","samuel","Doe","Verifier","XYZ");
     verifyFullCoveragesDataInDatabase(5,7,0,9999999,facilityCodeFirst);
-
+    verifyEpiInventoryDataInDatabase(null,"10",null, "P10",facilityCodeFirst);
+    verifyEpiInventoryDataInDatabase(null,"20",null, "Product6",facilityCodeFirst);
+    verifyEpiInventoryDataInDatabase(null,"30",null, "P11",facilityCodeFirst);
 
     testWebDriver.sleep(1000);
     distributionPage = homePage.navigateToDistributionWhenOnline();
