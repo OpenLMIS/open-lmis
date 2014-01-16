@@ -406,6 +406,13 @@ public class ManageDistribution extends TestCaseHelper {
     }
   }
 
+  @And("^I view epi inventory readings in DB for facility \"([^\"]*)\" for product \"([^\"]*)\":$")
+  public void verifyEpiInventoryDataInDB(String facilityCode,String productCode,DataTable tableData) throws SQLException {
+    List<Map<String, String>> data = tableData.asMaps();
+    for (Map map : data) {
+      verifyEpiInventoryDataInDatabase(map.get("existingQuantity").toString(),map.get("deliveredQuantity").toString(),map.get("spoiledQuantity").toString(),productCode,facilityCode);
+    }
+  }
   @Then("^I verify no record present in refrigerator problem table for refrigerator serial number \"([^\"]*)\" and facility \"([^\"]*)\"$")
   public void verifyNoRecordAddedToRefrigeratorProblemsTable(String refrigeratorSerialNumber, String facilityCode) throws SQLException {
     verifyRefrigeratorProblemDataNullInDatabase(refrigeratorSerialNumber, facilityCode);

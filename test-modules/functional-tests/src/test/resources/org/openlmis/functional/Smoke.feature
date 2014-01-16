@@ -661,6 +661,12 @@ Feature: Smoke Tests
     And I view full coverage readings in DB for facility "F10":
       | femaleHealthCenterReading | femaleMobileBrigadeReading | maleHealthCenterReading | maleMobileBrigadeReading |
       | 123                       | 22                         | 23                      | 242                      |
+    And I view epi inventory readings in DB for facility "F10" for product "P10":
+      | existingQuantity | deliveredQuantity | spoiledQuantity |
+      | 20               | 100               | 5               |
+    And I view epi inventory readings in DB for facility "F10" for product "P11":
+      | existingQuantity | deliveredQuantity | spoiledQuantity |
+      | 10               | 50                | 3               |
     And I verify no record present in refrigerator problem table for refrigerator serial number "GR-J287PGHV" and facility "F10"
     When I record data for distribution "1"
     And I choose facility "F10"
