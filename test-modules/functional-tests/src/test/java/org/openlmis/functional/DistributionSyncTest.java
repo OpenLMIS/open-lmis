@@ -11,7 +11,6 @@
 package org.openlmis.functional;
 
 
-import com.thoughtworks.selenium.SeleneseTestBase;
 import org.openlmis.UiUtils.CaptureScreenshotOnFailureListener;
 import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.UiUtils.TestWebDriver;
@@ -29,6 +28,7 @@ import java.util.Map;
 import static com.thoughtworks.selenium.SeleneseTestBase.assertFalse;
 import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
 import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertTrue;
+import static org.testng.Assert.assertNull;
 
 @Listeners(CaptureScreenshotOnFailureListener.class)
 
@@ -118,7 +118,7 @@ public class DistributionSyncTest extends TestCaseHelper {
 
     facilityListPage.verifyFacilityIndicatorColor("Overall", "RED");
 
-    fillFacilityData(facilityListPage,distributionTestData.get(FIRST_FACILITY_CODE));
+    fillFacilityData();
 
     facilityListPage.verifyFacilityIndicatorColor("Overall", "GREEN");
 
@@ -174,7 +174,6 @@ public class DistributionSyncTest extends TestCaseHelper {
     verifyEpiInventoryDataInDatabase(null,"2",null, "P10", distributionTestData.get(SECOND_FACILITY_CODE));
     verifyEpiInventoryDataInDatabase(null,"4",null, "Product6",distributionTestData.get(SECOND_FACILITY_CODE));
     verifyEpiInventoryDataInDatabase(null,"6",null, "P11", distributionTestData.get(SECOND_FACILITY_CODE));
-
 
     verifySyncedDataInDatabase(distributionTestData.get(FIRST_FACILITY_CODE));
   }
@@ -237,8 +236,11 @@ public class DistributionSyncTest extends TestCaseHelper {
     distributionPage.clickOk();
 
     facilityListPage = distributionPage.clickRecordData(1);
-    assertFalse(facilityListPage.getAllFacilitiesFromDropDown().contains(distributionTestData.get(FIRST_FACILITY_CODE)));
-    fillFacilityData(facilityListPage, distributionTestData.get(SECOND_FACILITY_CODE));
+    assertFalse(facilityListPage.getFacilitiesInDropDown().contains(distributionTestData.get(FIRST_FACILITY_CODE)));
+
+    facilityListPage.selectFacility(distributionTestData.get(SECOND_FACILITY_CODE));
+
+    fillFacilityData();
 
     homePage.navigateHomePage();
     homePage.navigateToDistributionWhenOnline();
@@ -262,23 +264,41 @@ public class DistributionSyncTest extends TestCaseHelper {
 
     initiateDistribution(distributionTestData.get(FIRST_DELIVERY_ZONE_NAME), distributionTestData.get(VACCINES_PROGRAM));
     FacilityListPage facilityListPage = new FacilityListPage(testWebDriver);
+
+    dbWrapper.updateActiveStatusOfFacility(distributionTestData.get(FIRST_FACILITY_CODE), "false");
+
+    //assertTrue(facilityListPage.getFacilitiesInDropDown().contains(distributionTestData.get(FIRST_FACILITY_CODE)));
+    //deleteDistribution();
+
+    //initiateNextDistributionForSamePeriod(distributionTestData.get(FIRST_DELIVERY_ZONE_NAME), distributionTestData.get(VACCINES_PROGRAM));
+    assertTrue(facilityListPage.getFacilitiesInDropDown().contains(distributionTestData.get(FIRST_FACILITY_CODE)));
+
     facilityListPage.selectFacility(distributionTestData.get(FIRST_FACILITY_CODE));
+    verifyProductsAreDisplayed();
 
     facilityListPage.verifyFacilityIndicatorColor("Overall", "RED");
 
-    dbWrapper.updateActiveStatusOfFacility("F10", "false");
+    fillFacilityData();
 
-    fillFacilityData(facilityListPage, distributionTestData.get(FIRST_FACILITY_CODE));
-
-    DistributionPage distributionPage=homePage.navigateToDistributionWhenOnline();
+    DistributionPage distributionPage= homePage.navigateToDistributionWhenOnline();
     distributionPage.syncDistribution(1);
     assertTrue(distributionPage.getSyncMessage().contains("F10-Village Dispensary"));
     distributionPage.syncDistributionMessageDone();
 
     verifySyncedDataInDatabase(distributionTestData.get(FIRST_FACILITY_CODE));
 
+    deleteDistribution();
+
+    initiateNextDistributionForSamePeriod(distributionTestData.get(FIRST_DELIVERY_ZONE_NAME), distributionTestData.get(VACCINES_PROGRAM));
+    assertFalse(facilityListPage.getFacilitiesInDropDown().contains(distributionTestData.get(FIRST_FACILITY_CODE)));
+    deleteDistribution();
+
+    initiateNextDistributionForGivenPeriod(distributionTestData.get(FIRST_DELIVERY_ZONE_NAME), distributionTestData.get(VACCINES_PROGRAM), "Period13");
+    assertFalse(facilityListPage.getFacilitiesInDropDown().contains(distributionTestData.get(FIRST_FACILITY_CODE)));
+
     //dbWrapper.updateActiveStatusOfFacility("F10", "true");
   }
+
 
   @Test(groups = {"distribution"})
   public void testSyncWhenFacilityDisabledAfterCaching() throws Exception {
@@ -286,13 +306,22 @@ public class DistributionSyncTest extends TestCaseHelper {
 
     initiateDistribution(distributionTestData.get(FIRST_DELIVERY_ZONE_NAME), distributionTestData.get(VACCINES_PROGRAM));
     FacilityListPage facilityListPage = new FacilityListPage(testWebDriver);
+
+    dbWrapper.updateFacilityFieldBYCode("enabled", "false", "F10");
+    dbWrapper.updateActiveStatusOfFacility(distributionTestData.get(FIRST_FACILITY_CODE), "false");
+
+    //assertTrue(facilityListPage.getFacilitiesInDropDown().contains(distributionTestData.get(FIRST_FACILITY_CODE)));
+    //deleteDistribution();
+
+    //initiateNextDistributionForSamePeriod(distributionTestData.get(FIRST_DELIVERY_ZONE_NAME), distributionTestData.get(VACCINES_PROGRAM));
+    assertTrue(facilityListPage.getFacilitiesInDropDown().contains(distributionTestData.get(FIRST_FACILITY_CODE)));
+
     facilityListPage.selectFacility(distributionTestData.get(FIRST_FACILITY_CODE));
+    verifyProductsAreDisplayed();
 
     facilityListPage.verifyFacilityIndicatorColor("Overall", "RED");
 
-    dbWrapper.updateFacilityFieldBYCode("enabled", "false", "F10");
-
-    fillFacilityData(facilityListPage, distributionTestData.get(FIRST_FACILITY_CODE));
+    fillFacilityData();
 
     DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
     distributionPage.syncDistribution(1);
@@ -301,7 +330,17 @@ public class DistributionSyncTest extends TestCaseHelper {
 
     verifySyncedDataInDatabase(distributionTestData.get(FIRST_FACILITY_CODE));
 
+    deleteDistribution();
+
+    initiateNextDistributionForSamePeriod(distributionTestData.get(FIRST_DELIVERY_ZONE_NAME), distributionTestData.get(VACCINES_PROGRAM));
+    assertFalse(facilityListPage.getFacilitiesInDropDown().contains(distributionTestData.get(FIRST_FACILITY_CODE)));
+    deleteDistribution();
+
+    initiateNextDistributionForGivenPeriod(distributionTestData.get(FIRST_DELIVERY_ZONE_NAME), distributionTestData.get(VACCINES_PROGRAM), "Period13");
+    assertFalse(facilityListPage.getFacilitiesInDropDown().contains(distributionTestData.get(FIRST_FACILITY_CODE)));
+
     //dbWrapper.updateFacilityFieldBYCode("enabled", "true", "F10");
+    //dbWrapper.updateActiveStatusOfFacility(distributionTestData.get(FIRST_FACILITY_CODE), "true");
   }
 
   @Test(groups = {"distribution"})
@@ -310,13 +349,17 @@ public class DistributionSyncTest extends TestCaseHelper {
 
     initiateDistribution(distributionTestData.get(FIRST_DELIVERY_ZONE_NAME), distributionTestData.get(VACCINES_PROGRAM));
     FacilityListPage facilityListPage = new FacilityListPage(testWebDriver);
-    facilityListPage.selectFacility(distributionTestData.get(FIRST_FACILITY_CODE));
-
-    facilityListPage.verifyFacilityIndicatorColor("Overall", "RED");
 
     dbWrapper.updateActiveStatusOfProgram("VACCINES", false);
 
-    fillFacilityData(facilityListPage, distributionTestData.get(FIRST_FACILITY_CODE));
+    assertTrue(facilityListPage.getFacilitiesInDropDown().contains(distributionTestData.get(FIRST_FACILITY_CODE)));
+
+    facilityListPage.selectFacility(distributionTestData.get(FIRST_FACILITY_CODE));
+    verifyProductsAreDisplayed();
+
+    facilityListPage.verifyFacilityIndicatorColor("Overall", "RED");
+
+    fillFacilityData();
 
     DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
     distributionPage.syncDistribution(1);
@@ -324,6 +367,11 @@ public class DistributionSyncTest extends TestCaseHelper {
     distributionPage.syncDistributionMessageDone();
 
     verifySyncedDataInDatabase(distributionTestData.get(FIRST_FACILITY_CODE));
+
+    deleteDistribution();
+
+    distributionPage.selectValueFromDeliveryZone(distributionTestData.get(FIRST_DELIVERY_ZONE_NAME));
+    assertFalse(distributionPage.getAllSelectOptionsFromProgram().contains(distributionTestData.get(VACCINES_PROGRAM)));
 
     //dbWrapper.updateActiveStatusOfProgram("VACCINES", true);
   }
@@ -334,13 +382,16 @@ public class DistributionSyncTest extends TestCaseHelper {
 
     initiateDistribution(distributionTestData.get(FIRST_DELIVERY_ZONE_NAME), distributionTestData.get(VACCINES_PROGRAM));
     FacilityListPage facilityListPage = new FacilityListPage(testWebDriver);
-    facilityListPage.selectFacility(distributionTestData.get(FIRST_FACILITY_CODE));
-
-    facilityListPage.verifyFacilityIndicatorColor("Overall", "RED");
 
     dbWrapper.deleteProgramToFacilityMapping("VACCINES");
 
-    fillFacilityData(facilityListPage, distributionTestData.get(FIRST_FACILITY_CODE));
+    assertTrue(facilityListPage.getFacilitiesInDropDown().contains(distributionTestData.get(FIRST_FACILITY_CODE)));
+    facilityListPage.selectFacility(distributionTestData.get(FIRST_FACILITY_CODE));
+
+    facilityListPage.verifyFacilityIndicatorColor("Overall", "RED");
+    verifyProductsAreDisplayed();
+
+    fillFacilityData();
 
     DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
     distributionPage.syncDistribution(1);
@@ -348,22 +399,36 @@ public class DistributionSyncTest extends TestCaseHelper {
     distributionPage.syncDistributionMessageDone();
 
     verifySyncedDataInDatabase(distributionTestData.get(FIRST_FACILITY_CODE));
+
+    deleteDistribution();
+
+    distributionPage.selectValueFromDeliveryZone(distributionTestData.get(FIRST_DELIVERY_ZONE_NAME));
+    assertFalse(distributionPage.getAllSelectOptionsFromProgram().contains(distributionTestData.get(VACCINES_PROGRAM)));
   }
 
   @Test(groups = {"distribution"})
-  public void testEpiUsePageSyncWhenAllProductsInactiveAfterCaching() throws Exception {
+  public void testSyncWhenAllProductsInactiveAfterCaching() throws Exception {
     HomePage homePage = loginPage.loginAs(distributionTestData.get(USER), distributionTestData.get(PASSWORD));
 
     initiateDistribution(distributionTestData.get(FIRST_DELIVERY_ZONE_NAME), distributionTestData.get(VACCINES_PROGRAM));
     FacilityListPage facilityListPage = new FacilityListPage(testWebDriver);
-    facilityListPage.selectFacility(distributionTestData.get(FIRST_FACILITY_CODE));
-
-    facilityListPage.verifyFacilityIndicatorColor("Overall", "RED");
 
     dbWrapper.updateActiveStatusOfProduct("Product5", "false");
     dbWrapper.updateActiveStatusOfProduct("Product6", "false");
+    dbWrapper.updateActiveStatusOfProduct("P10", "false");
+    dbWrapper.updateActiveStatusOfProduct("P11", "false");
 
-    fillFacilityData(facilityListPage, distributionTestData.get(FIRST_FACILITY_CODE));
+    assertTrue(facilityListPage.getFacilitiesInDropDown().contains(distributionTestData.get(FIRST_FACILITY_CODE)));
+    deleteDistribution();
+
+    initiateNextDistributionForSamePeriod(distributionTestData.get(FIRST_DELIVERY_ZONE_NAME), distributionTestData.get(VACCINES_PROGRAM));
+    assertTrue(facilityListPage.getFacilitiesInDropDown().contains(distributionTestData.get(FIRST_FACILITY_CODE)));
+    facilityListPage.selectFacility(distributionTestData.get(FIRST_FACILITY_CODE));
+
+    facilityListPage.verifyFacilityIndicatorColor("Overall", "RED");
+    verifyProductsAreDisplayed();
+
+    fillFacilityData();
 
     DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
     distributionPage.syncDistribution(1);
@@ -372,16 +437,35 @@ public class DistributionSyncTest extends TestCaseHelper {
 
     verifySyncedDataInDatabase(distributionTestData.get(FIRST_FACILITY_CODE));
 
+    deleteDistribution();
+
+    initiateNextDistributionForSamePeriod(distributionTestData.get(FIRST_DELIVERY_ZONE_NAME), distributionTestData.get(VACCINES_PROGRAM));
+    assertFalse(facilityListPage.getFacilitiesInDropDown().contains(distributionTestData.get(FIRST_FACILITY_CODE)));
+    deleteDistribution();
+
+    initiateNextDistributionForGivenPeriod(distributionTestData.get(FIRST_DELIVERY_ZONE_NAME), distributionTestData.get(VACCINES_PROGRAM), "Period13");
+    assertTrue(facilityListPage.getFacilitiesInDropDown().contains(distributionTestData.get(FIRST_FACILITY_CODE)));
+    RefrigeratorPage refrigeratorPage = facilityListPage.selectFacility(distributionTestData.get(FIRST_FACILITY_CODE));
+    facilityListPage.verifyFacilityIndicatorColor("Overall", "AMBER");
+    verifyProductsAreNotDisplayed();
+
+    refrigeratorPage.navigateToRefrigerators();
+    ManageRefrigerator manageRefrigerator = new ManageRefrigerator();
+    manageRefrigerator.verifyRefrigeratorAdded("SAM;800L;GNR7876");
+
     //dbWrapper.updateActiveStatusOfProduct("Product5", "true");
     //dbWrapper.updateActiveStatusOfProduct("Product6", "true");
+    //dbWrapper.updateActiveStatusOfProduct("P10", "true");
+    //dbWrapper.updateActiveStatusOfProduct("P11", "true");
   }
 
   @Test(groups = {"distribution"})
-  public void shouldCheckSyncWhenAllProductsAreInactive() throws Exception {
+  public void testSyncWhenAllProductsAreInactive() throws Exception {
     dbWrapper.updateActiveStatusOfProduct("P10","false");
     dbWrapper.updateActiveStatusOfProduct("P11","false");
     dbWrapper.updateActiveStatusOfProduct("Product5","false");
     dbWrapper.updateActiveStatusOfProduct("Product6","false");
+
     HomePage homePage = loginPage.loginAs(distributionTestData.get(USER), distributionTestData.get(PASSWORD));
     initiateDistribution(distributionTestData.get(FIRST_DELIVERY_ZONE_NAME), distributionTestData.get(VACCINES_PROGRAM));
     FacilityListPage facilityListPage = new FacilityListPage(testWebDriver);
@@ -403,6 +487,8 @@ public class DistributionSyncTest extends TestCaseHelper {
     CoveragePage coveragePage = generalObservationPage.navigateToCoverage();
     coveragePage.clickApplyNRToAll();
 
+    verifyProductsAreNotDisplayed();
+
     facilityListPage.verifyFacilityIndicatorColor("Overall", "GREEN");
 
     homePage.navigateHomePage();
@@ -410,14 +496,126 @@ public class DistributionSyncTest extends TestCaseHelper {
     distributionPage.syncDistribution(1);
     distributionPage.syncDistributionMessageDone();
 
-    verifyGeneralObservationsDataInDatabase(distributionTestData.get(FIRST_FACILITY_CODE),"Some observations", "samuel D", "Doe Abc", "Verifier", "Verifier Title");
-    verifyRefrigeratorProblemDataNullInDatabase("GNR7878",distributionTestData.get(FIRST_FACILITY_CODE));
+    verifyGeneralObservationsDataInDatabase(distributionTestData.get(FIRST_FACILITY_CODE), "Some observations", "samuel D", "Doe Abc", "Verifier", "Verifier Title");
+    verifyRefrigeratorProblemDataNullInDatabase("GNR7878", distributionTestData.get(FIRST_FACILITY_CODE));
     verifyRefrigeratorReadingDataInDatabase(distributionTestData.get(FIRST_FACILITY_CODE), "GNR7878", 3.0F, "Y", 2, 5, null, null);
-    verifyFullCoveragesDataInDatabase(null,null,null,null,distributionTestData.get(FIRST_FACILITY_CODE));
-    dbWrapper.updateActiveStatusOfProduct("P10","true");
-    dbWrapper.updateActiveStatusOfProduct("P11","true");
-    dbWrapper.updateActiveStatusOfProduct("Product5","true");
-    dbWrapper.updateActiveStatusOfProduct("Product6","true");
+    verifyFullCoveragesDataInDatabase(null, null, null, null, distributionTestData.get(FIRST_FACILITY_CODE));
+
+    //dbWrapper.updateActiveStatusOfProduct("P10","true");
+    //dbWrapper.updateActiveStatusOfProduct("P11","true");
+    //dbWrapper.updateActiveStatusOfProduct("Product5","true");
+    //dbWrapper.updateActiveStatusOfProduct("Product6","true");
+  }
+
+  @Test(groups = {"distribution"})
+  public void testSyncWhenProductGroupAddedAfterCaching() throws Exception {
+    HomePage homePage = loginPage.loginAs(distributionTestData.get(USER), distributionTestData.get(PASSWORD));
+
+    initiateDistribution(distributionTestData.get(FIRST_DELIVERY_ZONE_NAME), distributionTestData.get(VACCINES_PROGRAM));
+    FacilityListPage facilityListPage = new FacilityListPage(testWebDriver);
+
+    dbWrapper.insertProductGroup("PG2");
+    dbWrapper.insertProductWithGroup("Product7", "ProductName7", "PG2", true);
+    dbWrapper.insertProgramProduct("Product7", distributionTestData.get(VACCINES_PROGRAM), "10", "true");
+
+    assertTrue(facilityListPage.getFacilitiesInDropDown().contains(distributionTestData.get(FIRST_FACILITY_CODE)));
+    deleteDistribution();
+
+    initiateNextDistributionForSamePeriod(distributionTestData.get(FIRST_DELIVERY_ZONE_NAME), distributionTestData.get(VACCINES_PROGRAM));
+    assertTrue(facilityListPage.getFacilitiesInDropDown().contains(distributionTestData.get(FIRST_FACILITY_CODE)));
+    RefrigeratorPage refrigeratorPage = facilityListPage.selectFacility(distributionTestData.get(FIRST_FACILITY_CODE));
+
+    facilityListPage.verifyFacilityIndicatorColor("Overall", "RED");
+    verifyProductsAreDisplayed();
+
+    fillFacilityData();
+
+    DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
+    distributionPage.syncDistribution(1);
+    assertTrue(distributionPage.getSyncMessage().contains("F10-Village Dispensary"));
+    distributionPage.syncDistributionMessageDone();
+
+    verifyEpiUseDataInDatabase(10, 20, 30, 40, 50, "10/2011", distributionTestData.get(PRODUCT_GROUP_CODE), distributionTestData.get(FIRST_FACILITY_CODE));
+
+    deleteDistribution();
+
+    initiateNextDistributionForSamePeriod(distributionTestData.get(FIRST_DELIVERY_ZONE_NAME), distributionTestData.get(VACCINES_PROGRAM));
+    assertFalse(facilityListPage.getFacilitiesInDropDown().contains(distributionTestData.get(FIRST_FACILITY_CODE)));
+    deleteDistribution();
+
+    initiateNextDistributionForGivenPeriod(distributionTestData.get(FIRST_DELIVERY_ZONE_NAME), distributionTestData.get(VACCINES_PROGRAM), "Period13");
+    assertTrue(facilityListPage.getFacilitiesInDropDown().contains(distributionTestData.get(FIRST_FACILITY_CODE)));
+    facilityListPage.selectFacility(distributionTestData.get(FIRST_FACILITY_CODE));
+    facilityListPage.verifyFacilityIndicatorColor("Overall", "RED");
+
+    EPIUsePage epiUsePage= refrigeratorPage.navigateToEpiUse();
+    assertTrue(epiUsePage.getProductGroup(1).equals("PG1-Name"));
+    assertTrue(epiUsePage.getProductGroup(2).equals("PG2-Name"));
+    //TODO assert null
+
+    EpiInventoryPage epiInventoryPage = epiUsePage.navigateToEpiInventory();
+    assertTrue(epiInventoryPage.getProductName(1).equals( "antibiotic"));
+    assertTrue(epiInventoryPage.getProductName(2).equals("ProductName6"));
+    assertTrue(epiInventoryPage.getProductName(3).equals("ProductName7"));
+    assertTrue(epiInventoryPage.getProductName(4).equals("antibiotic"));
+    //assertNull(epiInventoryPage.getNoProductsAddedMessage());
+
+    epiInventoryPage.navigateToRefrigerators();
+    ManageRefrigerator manageRefrigerator = new ManageRefrigerator();
+    manageRefrigerator.verifyRefrigeratorAdded("SAM;800L;GNR7876");
+  }
+
+  @Test(groups = {"distribution"})
+  public void testSyncWhenProductWithNoProductGroupAddedAfterCaching() throws Exception {
+    HomePage homePage = loginPage.loginAs(distributionTestData.get(USER), distributionTestData.get(PASSWORD));
+
+    initiateDistribution(distributionTestData.get(FIRST_DELIVERY_ZONE_NAME), distributionTestData.get(VACCINES_PROGRAM));
+    FacilityListPage facilityListPage = new FacilityListPage(testWebDriver);
+
+    dbWrapper.insertProducts("Product7", "Product8");
+    dbWrapper.insertProductWithGroup("Product9", "Product9","PG1",true);
+    dbWrapper.insertProgramProduct("Product7", "VACCINES", "10", "true");
+    dbWrapper.insertProgramProduct("Product9", distributionTestData.get(VACCINES_PROGRAM), "10", "true");
+
+    //assertTrue(facilityListPage.getFacilitiesInDropDown().contains(distributionTestData.get(FIRST_FACILITY_CODE)));
+    //deleteDistribution();
+
+    //initiateNextDistributionForSamePeriod(distributionTestData.get(FIRST_DELIVERY_ZONE_NAME), distributionTestData.get(VACCINES_PROGRAM));
+    assertTrue(facilityListPage.getFacilitiesInDropDown().contains(distributionTestData.get(FIRST_FACILITY_CODE)));
+    RefrigeratorPage refrigeratorPage = facilityListPage.selectFacility(distributionTestData.get(FIRST_FACILITY_CODE));
+
+    facilityListPage.verifyFacilityIndicatorColor("Overall", "RED");
+    verifyProductsAreDisplayed();
+
+    fillFacilityData();
+
+    DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
+    distributionPage.syncDistribution(1);
+    assertTrue(distributionPage.getSyncMessage().contains("F10-Village Dispensary"));
+    distributionPage.syncDistributionMessageDone();
+
+    verifyEpiUseDataInDatabase(10, 20, 30, 40, 50, "10/2011", distributionTestData.get(PRODUCT_GROUP_CODE), distributionTestData.get(FIRST_FACILITY_CODE));
+
+    deleteDistribution();
+
+    initiateNextDistributionForSamePeriod(distributionTestData.get(FIRST_DELIVERY_ZONE_NAME), distributionTestData.get(VACCINES_PROGRAM));
+    assertFalse(facilityListPage.getFacilitiesInDropDown().contains(distributionTestData.get(FIRST_FACILITY_CODE)));
+    deleteDistribution();
+
+    initiateNextDistributionForGivenPeriod(distributionTestData.get(FIRST_DELIVERY_ZONE_NAME), distributionTestData.get(VACCINES_PROGRAM), "Period13");
+    assertTrue(facilityListPage.getFacilitiesInDropDown().contains(distributionTestData.get(FIRST_FACILITY_CODE)));
+    facilityListPage.selectFacility(distributionTestData.get(FIRST_FACILITY_CODE));
+    facilityListPage.verifyFacilityIndicatorColor("Overall", "RED");
+
+    EPIUsePage epiUsePage= refrigeratorPage.navigateToEpiUse();
+    assertTrue(epiUsePage.getProductGroup(1).equals("PG1-Name"));
+    //assertNull(epiUsePage.getProductGroup(2));
+    //TODO assert null
+
+    EpiInventoryPage epiInventoryPage = epiUsePage.navigateToEpiInventory();
+    assertTrue(epiInventoryPage.getProductName(1).equals( "antibiotic"));
+    assertTrue(epiInventoryPage.getProductName(2).equals("Product9"));
+    //assertNull(epiInventoryPage.getNoProductsAddedMessage());
   }
 
 
@@ -440,8 +638,9 @@ public class DistributionSyncTest extends TestCaseHelper {
     dbWrapper.insertProgramProduct("Product6", programFirst, "10", "true");
   }
 
-  private GeneralObservationPage fillFacilityData(FacilityListPage facilityListPage, String facilityCode) {
-    RefrigeratorPage refrigeratorPage = facilityListPage.selectFacility(facilityCode);
+  private GeneralObservationPage fillFacilityData() {
+    RefrigeratorPage refrigeratorPage = new RefrigeratorPage(testWebDriver);
+    refrigeratorPage.navigateToRefrigerators();
     refrigeratorPage.clickDelete();
     refrigeratorPage.clickOKButton();
 
@@ -503,6 +702,60 @@ public class DistributionSyncTest extends TestCaseHelper {
     distributionPage.selectValueFromProgram(programFirst);
     distributionPage.clickInitiateDistribution();
     distributionPage.clickRecordData(1);
+  }
+
+  public void initiateNextDistributionForGivenPeriod(String deliveryZoneNameFirst, String programFirst, String period) throws IOException {
+    DistributionPage distributionPage = new DistributionPage(testWebDriver);
+    distributionPage.selectValueFromDeliveryZone(deliveryZoneNameFirst);
+    distributionPage.selectValueFromProgram(programFirst);
+    distributionPage.selectValueFromPeriod(period);
+    distributionPage.clickInitiateDistribution();
+    distributionPage.clickRecordData(1);
+  }
+
+  private void initiateNextDistributionForSamePeriod(String deliveryZoneNameFirst, String programFirst) throws IOException {
+    DistributionPage distributionPage = new DistributionPage(testWebDriver);
+    distributionPage.selectValueFromDeliveryZone(deliveryZoneNameFirst);
+    distributionPage.selectValueFromProgram(programFirst);
+    distributionPage.clickInitiateDistribution();
+    distributionPage.clickOk();
+    distributionPage.clickRecordData(1);
+  }
+
+  private void deleteDistribution() throws IOException {
+    HomePage homePage = new HomePage(testWebDriver);
+    DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
+    distributionPage.deleteDistribution();
+    distributionPage.clickOk();
+  }
+
+  private void verifyProductsAreDisplayed(){
+    RefrigeratorPage refrigeratorPage = new RefrigeratorPage(testWebDriver);
+    EPIUsePage epiUsePage= refrigeratorPage.navigateToEpiUse();
+    assertTrue(epiUsePage.getProductGroup(1).equals("PG1-Name"));
+    //assertNull(epiUsePage.getProductGroup(2));
+    //TODO assertNull
+    EpiInventoryPage epiInventoryPage = epiUsePage.navigateToEpiInventory();
+    assertTrue(epiInventoryPage.getProductName(1).equals( "antibiotic"));
+    assertTrue(epiInventoryPage.getProductName(2).equals("ProductName6"));
+    assertTrue(epiInventoryPage.getProductName(3).equals("antibiotic"));
+    //assertNull(epiInventoryPage.getProductName(4));
+    //assertNull(epiInventoryPage.getNoProductsAddedMessage());
+  }
+
+  private void verifyProductsAreNotDisplayed(){
+    RefrigeratorPage refrigeratorPage = new RefrigeratorPage(testWebDriver);
+    EPIUsePage epiUsePage= refrigeratorPage.navigateToEpiUse();
+    //assertNull(epiUsePage.getProductGroup(1));
+    //assertNull(epiUsePage.getProductGroup(2));
+    //TODO verify no products msg on Epi use
+    epiUsePage.verifyIndicator("GREEN");
+    EpiInventoryPage epiInventoryPage = epiUsePage.navigateToEpiInventory();
+    //assertNull(epiInventoryPage.getProductName(1));
+    //assertNull(epiInventoryPage.getProductName(2));
+    //assertNull(epiInventoryPage.getProductName(3));
+    assertTrue(epiInventoryPage.getNoProductsAddedMessage().contains("No products added"));
+    epiInventoryPage.verifyIndicator("GREEN");
   }
 
   private void verifyAllFieldsDisabled() {

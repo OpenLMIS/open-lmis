@@ -340,6 +340,12 @@ public class EPIUsePage extends DistributionTab {
     return noLineItems.getText();
   }
 
+  public String getProductGroup(int rowNumber) {
+    WebElement productGroupLbl = testWebDriver.getElementByXpath(".//*[@id='epiUseTable']/form/table/tbody/tr[" + rowNumber + "]/td[1]/span");
+    testWebDriver.waitForElementToAppear(productGroupLbl);
+    return productGroupLbl.getText();
+  }
+
   @Override
   public void verifyData(Map<String, String> epiData) {
     verifyDistributed(epiData.get("distributed"), 1);
