@@ -461,9 +461,9 @@ public class HomePage extends Page {
   }
 
   public void navigateRnr() throws IOException {
-    testWebDriver.waitForElementToAppear(requisitionsLink);
+    testWebDriver.waitForElementToBeEnabled(requisitionsLink);
     testWebDriver.keyPress(requisitionsLink);
-    testWebDriver.waitForElementToAppear(createLink);
+    testWebDriver.waitForElementToBeEnabled(createLink);
     testWebDriver.sleep(1000);
     testWebDriver.keyPress(createLink);
     testWebDriver.sleep(1000);
