@@ -85,7 +85,7 @@ public class FacilityDistributionServiceTest {
     when(facilityService.getAllForDeliveryZoneAndProgram(1L, 3L)).thenReturn(facilities);
     when(refrigeratorService.getRefrigeratorsForADeliveryZoneAndProgram(1L, 3L)).thenReturn(refrigerators);
 
-    doReturn(facilityDistribution).when(spyFacilityDistributionService).createDistributionData(facility, distribution, refrigerators);
+    doReturn(facilityDistribution).when(spyFacilityDistributionService).createDistributionData(facility, distribution, refrigerators, null);
 
     Map<Long, FacilityDistribution> facilityDistributionDataMap = spyFacilityDistributionService.createFor(distribution);
 
@@ -108,7 +108,7 @@ public class FacilityDistributionServiceTest {
     whenNew(FacilityVisit.class).withArguments(facility, distribution).thenReturn(facilityVisit);
     whenNew(FacilityDistribution.class).withArguments(facilityVisit, facility, distribution, asList(refrigeratorReading)).thenReturn(mock(FacilityDistribution.class));
 
-    FacilityDistribution distributionData = facilityDistributionService.createDistributionData(facility, distribution, refrigerators);
+    FacilityDistribution distributionData = facilityDistributionService.createDistributionData(facility, distribution, refrigerators, null);
 
     verify(epiUseService).save(distributionData.getEpiUse());
     verify(facilityVisitService).save(facilityVisit);
@@ -129,7 +129,7 @@ public class FacilityDistributionServiceTest {
     whenNew(FacilityDistribution.class).withArguments(facilityVisit, facility, distribution, refrigerators).thenReturn(distributionData);
     when(distributionData.getEpiInventory()).thenReturn(epiInventory);
 
-    facilityDistributionService.createDistributionData(facility, distribution, refrigerators);
+    facilityDistributionService.createDistributionData(facility, distribution, refrigerators, null);
 
     verify(epiInventoryService).save(epiInventory);
   }
@@ -148,8 +148,8 @@ public class FacilityDistributionServiceTest {
 
     when(refrigeratorService.getRefrigeratorsForADeliveryZoneAndProgram(4L, 16L)).thenReturn(refrigerators);
     when(facilityService.getAllForDeliveryZoneAndProgram(4L, 16L)).thenReturn(asList(facility1, facility2));
-    doReturn(facilityDistribution1).when(service).createDistributionData(facility1, distribution, refrigerators);
-    doReturn(facilityDistribution2).when(service).createDistributionData(facility2, distribution, refrigerators);
+    doReturn(facilityDistribution1).when(service).createDistributionData(facility1, distribution, refrigerators, null);
+    doReturn(facilityDistribution2).when(service).createDistributionData(facility2, distribution, refrigerators, null);
 
     Map<Long, FacilityDistribution> facilityDistributions = service.createFor(distribution);
 
@@ -173,7 +173,7 @@ public class FacilityDistributionServiceTest {
     whenNew(FacilityVisit.class).withArguments(facility, distribution).thenReturn(facilityVisit);
     whenNew(FacilityDistribution.class).withArguments(facilityVisit, facility, distribution, asList(facilityRefReading)).thenReturn(expectedFacilityDistribution);
 
-    FacilityDistribution facilityDistribution = facilityDistributionService.createDistributionData(facility, distribution, refrigerators);
+    FacilityDistribution facilityDistribution = facilityDistributionService.createDistributionData(facility, distribution, refrigerators, null);
 
     verifyNew(FacilityDistribution.class).withArguments(facilityVisit, facility, distribution, asList(facilityRefReading));
     assertThat(facilityDistribution, is(expectedFacilityDistribution));

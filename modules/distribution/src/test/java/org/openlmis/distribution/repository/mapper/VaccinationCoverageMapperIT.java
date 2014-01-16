@@ -14,6 +14,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
+import org.openlmis.core.builder.ProductBuilder;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.query.QueryExecutor;
 import org.openlmis.core.repository.mapper.*;
@@ -21,6 +22,7 @@ import org.openlmis.db.categories.IntegrationTests;
 import org.openlmis.distribution.domain.Distribution;
 import org.openlmis.distribution.domain.FacilityVisit;
 import org.openlmis.distribution.domain.FullCoverage;
+import org.openlmis.distribution.domain.VaccinationProduct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -28,6 +30,7 @@ import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.ResultSet;
+import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static junit.framework.Assert.assertTrue;
@@ -75,6 +78,9 @@ public class VaccinationCoverageMapperIT {
   @Autowired
   VaccinationCoverageMapper mapper;
 
+  @Autowired
+  private ProductMapper productMapper;
+
   Distribution distribution;
   DeliveryZone zone;
   Program program1;
@@ -108,14 +114,10 @@ public class VaccinationCoverageMapperIT {
 
     facilityVisit = new FacilityVisit(facility, distribution);
     facilityVisitMapper.insert(facilityVisit);
-
   }
-
 
   @Test
   public void shouldSaveVaccinationFullCoverage() throws Exception {
-
-
     FullCoverage fullCoverage = new FullCoverage(34, 78, 11, 666);
     fullCoverage.setFacilityVisitId(facilityVisit.getId());
     fullCoverage.setCreatedBy(1L);
@@ -140,5 +142,24 @@ public class VaccinationCoverageMapperIT {
     FullCoverage savedFullCoverage = mapper.getBy(facilityVisit.getId());
 
     assertThat(savedFullCoverage, is(fullCoverage));
+  }
+
+  @Test
+  public void shouldReturnVaccinationCoverageProductMappings() throws Exception {
+    Product product = make(a(ProductBuilder.defaultProduct));
+
+    productMapper.insert(product);
+    VaccinationProduct vaccinationProduct = new VaccinationProduct("BCG", product.getCode(), true);
+
+    queryExecutor.executeUpdate("INSERT INTO coverage_vaccination_products (vaccination, productCode, childCoverage) VALUES (?, ?, ?)",
+      vaccinationProduct.getVaccination(), vaccinationProduct.getProductCode(), vaccinationProduct.getChildCoverage());
+
+    List<VaccinationProduct> vaccinationProducts = mapper.getVaccinationProducts(true);
+
+    assertThat(vaccinationProducts.size(), is(1));
+    VaccinationProduct vaccinationProductFromDB = vaccinationProducts.get(0);
+    assertThat(vaccinationProductFromDB.getVaccination(), is(vaccinationProduct.getVaccination()));
+    assertThat(vaccinationProductFromDB.getProductCode(), is(vaccinationProduct.getProductCode()));
+    assertThat(vaccinationProductFromDB.getChildCoverage(), is(vaccinationProduct.getChildCoverage()));
   }
 }

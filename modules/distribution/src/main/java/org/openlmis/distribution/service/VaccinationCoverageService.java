@@ -11,10 +11,14 @@
 package org.openlmis.distribution.service;
 
 import org.openlmis.distribution.domain.FullCoverage;
+import org.openlmis.distribution.domain.VaccinationChildCoverage;
 import org.openlmis.distribution.domain.VaccinationFullCoverage;
+import org.openlmis.distribution.domain.VaccinationProduct;
 import org.openlmis.distribution.repository.VaccinationCoverageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class VaccinationCoverageService {
@@ -29,5 +33,9 @@ public class VaccinationCoverageService {
 
   public VaccinationFullCoverage getBy(Long facilityVisitId) {
     return repository.getBy(facilityVisitId);
+  }
+
+  public List<VaccinationProduct> getReferenceData(Boolean isChildCoverage) {
+    return repository.getVaccinationProducts(isChildCoverage);
   }
 }

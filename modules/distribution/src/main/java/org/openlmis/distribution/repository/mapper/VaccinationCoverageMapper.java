@@ -14,20 +14,25 @@ import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Select;
 import org.openlmis.distribution.domain.FullCoverage;
+import org.openlmis.distribution.domain.VaccinationChildCoverage;
+import org.openlmis.distribution.domain.VaccinationProduct;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 @Repository
 public interface VaccinationCoverageMapper {
-
 
   @Insert({"INSERT into full_coverages (facilityVisitId, femaleHealthCenterReading, femaleMobileBrigadeReading, maleHealthCenterReading, maleMobileBrigadeReading,",
     "createdBy, modifiedBy)",
     "VALUES (#{facilityVisitId}, #{femaleHealthCenterReading}, #{femaleMobileBrigadeReading}, #{maleHealthCenterReading}, #{maleMobileBrigadeReading},",
     "#{createdBy}, #{createdBy})"})
   @Options(useGeneratedKeys = true)
-  public void insertFullVaccinationCoverage(FullCoverage fullCoverage);
-
+  void insertFullVaccinationCoverage(FullCoverage fullCoverage);
 
   @Select({"SELECT * FROM full_coverages WHERE facilityVisitId = #{facilityVisitId}"})
   FullCoverage getBy(Long facilityVisitId);
+
+  @Select({"SELECT * FROM coverage_vaccination_products WHERE childCoverage = #{isChildCoverage}"})
+  List<VaccinationProduct> getVaccinationProducts(Boolean isChildCoverage);
 }

@@ -13,6 +13,6 @@ CREATE TABLE coverage_vaccination_products (
   vaccination   VARCHAR(255) NOT NULL,
   productCode   VARCHAR(50)  NOT NULL REFERENCES products (code),
   childCoverage BOOLEAN      NOT NULL,
-  UNIQUE (vaccination, productCode)
+  UNIQUE (vaccination, productCode, childCoverage)
 );
 
