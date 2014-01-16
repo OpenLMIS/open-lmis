@@ -50,6 +50,7 @@ import static org.powermock.api.mockito.PowerMockito.when;
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({DateTime.class})
 public class FacilityRepositoryTest {
+
   @Rule
   public ExpectedException expectedEx = ExpectedException.none();
 
