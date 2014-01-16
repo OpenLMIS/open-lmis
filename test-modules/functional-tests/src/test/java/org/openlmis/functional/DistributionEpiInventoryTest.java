@@ -237,8 +237,8 @@ public class DistributionEpiInventoryTest extends TestCaseHelper {
     EpiInventoryPage epiInventoryPage = refrigeratorPage.navigateToEpiInventory();
     epiInventoryPage .verifyIndicator("RED");
 
-    epiInventoryPage.fillExistingQuantity(1,"1");
-    epiInventoryPage.fillDeliveredQuantity(1,"2");
+    epiInventoryPage.fillExistingQuantity(1, "1");
+    epiInventoryPage.fillDeliveredQuantity(1, "2");
     epiInventoryPage.fillSpoiledQuantity(1,"3");
 
     epiInventoryPage.verifyIndicator("AMBER");
@@ -271,6 +271,31 @@ public class DistributionEpiInventoryTest extends TestCaseHelper {
     verifyEpiInventoryDataInDatabase("11","12","13", "Product6", epiInventoryData.get(FIRST_FACILITY_CODE));
     verifyEpiInventoryDataInDatabase("21","22","23", "P11", epiInventoryData.get(FIRST_FACILITY_CODE));
   }
+
+
+  @Test(groups = {"distribution"})
+  public void testEpiInventoryPageSyncWhenProductAddedAfterCaching() throws Exception {
+    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+    HomePage homePage = loginPage.loginAs(epiInventoryData.get(USER), epiInventoryData.get(PASSWORD));
+
+    initiateDistribution(epiInventoryData.get(FIRST_DELIVERY_ZONE_NAME), epiInventoryData.get(VACCINES_PROGRAM));
+
+    dbWrapper.insertProducts("Product7", "Product8");
+    dbWrapper.insertProgramProduct("Product7", "VACCINES", "10", "true");
+    dbWrapper.insertProgramProduct("Product8", "VACCINES", "10", "true");
+
+    FacilityListPage facilityListPage = new FacilityListPage(testWebDriver);
+    RefrigeratorPage refrigeratorPage = facilityListPage.selectFacility(epiInventoryData.get(FIRST_FACILITY_CODE));
+
+    EpiInventoryPage epiInventoryPage= refrigeratorPage.navigateToEpiInventory();
+    epiInventoryPage.applyNRToAll();
+    epiInventoryPage.fillDeliveredQuantity(1, "10");
+    epiInventoryPage.fillDeliveredQuantity(2, "20");
+    epiInventoryPage.fillDeliveredQuantity(3, "30");
+
+    SeleneseTestBase.assertFalse(epiInventoryPage.getDataEpiInventory().contains("ProductName7"));
+  }
+
 
   @Test(groups = {"distribution"})
   public void testEpiInventoryPageSyncWhenApplyNRAll() throws Exception {
