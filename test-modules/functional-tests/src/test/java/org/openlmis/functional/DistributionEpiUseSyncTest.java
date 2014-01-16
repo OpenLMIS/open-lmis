@@ -17,6 +17,7 @@ import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.UiUtils.TestWebDriver;
 import org.openlmis.pageobjects.*;
 import org.openqa.selenium.JavascriptExecutor;
+import org.testng.AssertJUnit;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -391,6 +392,30 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
     verifyEpiUseDataInDatabase(null, null, null, null, 4, "12/2031", epiUseData.get(PRODUCT_GROUP_CODE), epiUseData.get(FIRST_FACILITY_CODE));
     verifyEpiUseDataInDatabase(10, 20, 30, 40, 50, "10/2011", "PG2", epiUseData.get(FIRST_FACILITY_CODE));
   }
+
+  @Test(groups = {"distribution"})
+  public void shouldDisplayNoProductsAddedMessageWhOnEpiUsePageWhenNoActiveProducts() throws Exception {
+    dbWrapper.updateActiveStatusOfProduct("P10", "false");
+    dbWrapper.updateActiveStatusOfProduct("P11", "false");
+    dbWrapper.updateActiveStatusOfProduct("Product6", "false");
+
+    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+    HomePage homePage = loginPage.loginAs(epiUseData.get(USER), epiUseData.get(PASSWORD));
+    DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
+    distributionPage.initiate(epiUseData.get(FIRST_DELIVERY_ZONE_NAME), epiUseData.get(VACCINES_PROGRAM));
+
+    FacilityListPage facilityListPage = distributionPage.clickRecordData(1);
+    EPIUsePage epiUsePage = facilityListPage.selectFacility(epiUseData.get(FIRST_FACILITY_CODE)).navigateToEpiUse();
+
+    assertTrue(epiUsePage.getNoProductsAddedMessage().contains("No products added"));
+    epiUsePage.verifyIndicator("GREEN");
+
+    dbWrapper.updateActiveStatusOfProduct("P10", "true");
+    dbWrapper.updateActiveStatusOfProduct("P11", "true");
+    dbWrapper.updateActiveStatusOfProduct("Product6", "true");
+
+  }
+
 
   public void setupDataForDistributionTest(String userSIC, String deliveryZoneCodeFirst, String deliveryZoneCodeSecond,
                                            String deliveryZoneNameFirst, String deliveryZoneNameSecond,

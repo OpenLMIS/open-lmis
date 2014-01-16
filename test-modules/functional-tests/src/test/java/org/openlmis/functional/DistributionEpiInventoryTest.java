@@ -274,7 +274,7 @@ public class DistributionEpiInventoryTest extends TestCaseHelper {
 
 
   @Test(groups = {"distribution"})
-  public void testEpiInventoryPageSyncWhenProductAddedAfterCaching() throws Exception {
+  public void testEpiInventoryPageWhenProductAddedAfterCaching() throws Exception {
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(epiInventoryData.get(USER), epiInventoryData.get(PASSWORD));
 

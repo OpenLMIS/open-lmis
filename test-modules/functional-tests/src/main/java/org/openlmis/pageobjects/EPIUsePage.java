@@ -76,6 +76,9 @@ public class EPIUsePage extends DistributionTab {
   @FindBy(how = NAME, using = "expirationDate0")
   private static WebElement textBoxExpirationDate0=null;
 
+  @FindBy(how = ID, using = "noLineItems")
+  private static WebElement noLineItems = null;
+
   public EPIUsePage(TestWebDriver driver) {
     super(driver);
   }
@@ -331,6 +334,10 @@ public class EPIUsePage extends DistributionTab {
   public void verifyTotal(String total, int rowNumber) {
     WebElement totalLbl = testWebDriver.getElementByXpath(".//*[@id='epiUseTable']/form/table/tbody/tr[" + rowNumber + "]/td[4]/span");
     assertEquals(total, totalLbl.getText());
+  }
+
+  public String getNoProductsAddedMessage() {
+    return noLineItems.getText();
   }
 
   @Override
