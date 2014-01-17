@@ -31,10 +31,10 @@ describe('Distribution', function () {
     expect(epiInventory.setNotRecorded).toHaveBeenCalled();
   });
 
-  it('should set all Not Recorded flags to true for Coverage', function () {
+  it('should set all Not Recorded flags to true for FullCoverage', function () {
     var facilityId = '4';
-    var coverage = jasmine.createSpyObj('Coverage', ['setNotRecorded']);
-    var distribution = new Distribution({facilityDistributions: {4: {coverage: coverage, facilityVisit: {id: 1}}}});
+    var coverage = jasmine.createSpyObj('FullCoverage', ['setNotRecorded']);
+    var distribution = new Distribution({facilityDistributions: {4: {fullCoverage: coverage, facilityVisit: {id: 1}}}});
 
     distribution.setCoverageNotRecorded(facilityId);
 

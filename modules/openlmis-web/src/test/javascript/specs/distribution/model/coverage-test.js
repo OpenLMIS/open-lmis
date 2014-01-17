@@ -8,56 +8,56 @@
  *   You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
  */
 
-describe('Coverage', function () {
+describe('FullCoverage', function () {
   var facilityVisitId = 1;
-  it('should set status as empty if coverage form is empty', function () {
-    var coverage = new Coverage(facilityVisitId, {fullCoverage: {}});
+  it('should set status as empty if fullCoverage form is empty', function () {
+    var fullCoverage = new FullCoverage(facilityVisitId, {});
 
-    var status = coverage.computeStatus();
+    var status = fullCoverage.computeStatus();
 
     expect(status).toEqual(DistributionStatus.EMPTY);
   });
 
-  it('should set status as complete if coverage form is valid and filled', function () {
-    var coverage = new Coverage(facilityVisitId, {fullCoverage: {
+  it('should set status as complete if fullCoverage form is valid and filled', function () {
+    var fullCoverage = new FullCoverage(facilityVisitId, {
       femaleHealthCenterReading: {value: 123}, femaleMobileBrigadeReading: {value: 5432}, maleHealthCenterReading: {value: 3}, maleMobileBrigadeReading: {value: 23}
-    }});
+    });
 
-    var status = coverage.computeStatus();
+    var status = fullCoverage.computeStatus();
 
     expect(status).toEqual(DistributionStatus.COMPLETE);
   });
 
   it('should set status as complete if the form is valid', function () {
-    var coverage = new Coverage(facilityVisitId, {fullCoverage: {
+    var fullCoverage = new FullCoverage(facilityVisitId, {
       femaleHealthCenterReading: {notRecorded: true}, femaleMobileBrigadeReading: {value: 5432}, maleHealthCenterReading: {value: 3}, maleMobileBrigadeReading: {value: 23}
-    }});
+    });
 
-    var status = coverage.computeStatus();
+    var status = fullCoverage.computeStatus();
 
     expect(status).toEqual(DistributionStatus.COMPLETE);
   });
 
   it('should set status as incomplete if the only last form field valid', function () {
-    var coverage = new Coverage(facilityVisitId, {fullCoverage: {
+    var fullCoverage = new FullCoverage(facilityVisitId, {
       femaleHealthCenterReading: {value: 1210}, femaleMobileBrigadeReading: {value: 5432}
-    }});
+    });
 
-    var status = coverage.computeStatus();
+    var status = fullCoverage.computeStatus();
 
     expect(status).toEqual(DistributionStatus.INCOMPLETE);
   });
 
   it('should set not recorded checkbox for epi use', function () {
-    var coverage = new Coverage(facilityVisitId, {fullCoverage: {
+    var fullCoverage = new FullCoverage(facilityVisitId, {
       femaleHealthCenterReading: {notRecorded: true}, femaleMobileBrigadeReading: {value: 5432}, maleHealthCenterReading: {value: 3}, maleMobileBrigadeReading: {value: 23}
-    }});
+    });
 
-    coverage.setNotRecorded();
+    fullCoverage.setNotRecorded();
 
-    expect(coverage.fullCoverage.femaleHealthCenterReading.notRecorded).toBeTruthy();
-    expect(coverage.fullCoverage.femaleMobileBrigadeReading.notRecorded).toBeTruthy();
-    expect(coverage.fullCoverage.maleHealthCenterReading.notRecorded).toBeTruthy();
-    expect(coverage.fullCoverage.maleMobileBrigadeReading.notRecorded).toBeTruthy();
+    expect(fullCoverage.femaleHealthCenterReading.notRecorded).toBeTruthy();
+    expect(fullCoverage.femaleMobileBrigadeReading.notRecorded).toBeTruthy();
+    expect(fullCoverage.maleHealthCenterReading.notRecorded).toBeTruthy();
+    expect(fullCoverage.maleMobileBrigadeReading.notRecorded).toBeTruthy();
   });
 });

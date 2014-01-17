@@ -45,7 +45,6 @@ public class VaccinationCoverageRepository {
   }
 
   public VaccinationChildCoverage getChildCoverageBy(Long facilityVisitId) {
-    List<ChildCoverageLineItem> childCoverageLineItems = mapper.getChildCoverageLineItemsBy(facilityVisitId);
-    return new VaccinationChildCoverage(childCoverageLineItems);
+    return new VaccinationChildCoverage(mapper.getChildCoverageLineItemsBy(facilityVisitId));
   }
 }

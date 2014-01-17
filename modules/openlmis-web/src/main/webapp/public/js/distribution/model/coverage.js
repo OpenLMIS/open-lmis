@@ -9,33 +9,30 @@
  */
 
 
-function Coverage(facilityVisitId, coverage) {
+function FullCoverage(facilityVisitId, fullCoverage) {
+  $.extend(true, this, fullCoverage);
+  this.facilityVisitId = facilityVisitId;
+
   var fieldList = ['femaleHealthCenterReading', 'femaleMobileBrigadeReading', 'maleHealthCenterReading', 'maleMobileBrigadeReading'];
 
-
   function init() {
-    $.extend(true, this, coverage);
-
-    var fullCoverage = this.fullCoverage || {facilityVisitId: facilityVisitId};
+    var _this = this;
     $(fieldList).each(function (i, fieldName) {
-      fullCoverage[fieldName] = fullCoverage[fieldName] || {};
+      if (!isUndefined(fullCoverage)) {
+        _this[fieldName] = fullCoverage[fieldName] || {};
+      }
     });
-    this.fullCoverage = fullCoverage;
   }
 
   init.call(this);
 
-  Coverage.prototype.computeStatus = function () {
+  FullCoverage.prototype.computeStatus = function () {
     var _this = this;
-
-    var fullCoverage = this.fullCoverage;
-
-    function isEmpty(fieldName) {
-      return (isUndefined(fullCoverage[fieldName].value) && !fullCoverage[fieldName].notRecorded);
-    }
-
     var status;
 
+    function isEmpty(fieldName) {
+      return (isUndefined(_this[fieldName]) || (isUndefined(_this[fieldName].value) && !_this[fieldName].notRecorded));
+    }
 
     $(fieldList).each(function (i, fieldName) {
       if (!isEmpty(fieldName) && (status == DistributionStatus.COMPLETE || !status)) {
@@ -54,12 +51,10 @@ function Coverage(facilityVisitId, coverage) {
     return status;
   };
 
-
-  Coverage.prototype.setNotRecorded = function () {
-    var fullCoverage = this.fullCoverage;
+  FullCoverage.prototype.setNotRecorded = function () {
+    var _this = this;
     $(fieldList).each(function (j, fieldName) {
-      fullCoverage[fieldName].notRecorded = true;
+      _this[fieldName].notRecorded = true;
     });
-    this.fullCoverage = fullCoverage;
   };
 }
