@@ -583,7 +583,7 @@ Feature: Smoke Tests
     Then Verify "coverage" indicator should be "GREEN"
     And I verify saved "coverage" values:
       | coverage | femaleHealthCenter | femaleMobileBrigade | maleHealthCenter | maleMobileBrigade |
-      | female   | 123                | 22                  | 23               | 500              |
+      | female   | 123                | 22                  | 23               | 500               |
 
 
   @smokeDistribution
@@ -659,8 +659,8 @@ Feature: Smoke Tests
       | temperature | functioningCorrectly | lowAlarmEvents | highAlarmEvents | problemSinceLastTime | notes |
       | 3.0         | Y                    | 1              | 0               | N                    | null  |
     And I view full coverage readings in DB for facility "F10":
-      | femaleHealthCenterReading | femaleMobileBrigadeReading | maleHealthCenterReading | maleMobileBrigadeReading |
-      | 123                       | 22                         | 23                      | 242                      |
+      | femaleHealthCenter | femaleOutreach | maleHealthCenter | maleOutreach |
+      | 123                | 22             | 23               | 242          |
     And I view epi inventory readings in DB for facility "F10" for product "P10":
       | existingQuantity | deliveredQuantity | spoiledQuantity |
       | 20               | 100               | 5               |
