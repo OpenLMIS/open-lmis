@@ -399,10 +399,10 @@ public class ManageDistribution extends TestCaseHelper {
     List<Map<String, String>> data = tableData.asMaps();
     Map<String, String> fullCoveragesDetails = dbWrapper.getFullCoveragesDetails(facilityCode);
     for (Map map : data) {
-      assertEquals(map.get("femaleHealthCenterReading").toString(), fullCoveragesDetails.get("femalehealthcenterreading"));
-      assertEquals(map.get("femaleMobileBrigadeReading").toString(), fullCoveragesDetails.get("femalemobilebrigadereading"));
-      assertEquals(map.get("maleHealthCenterReading").toString(), fullCoveragesDetails.get("malehealthcenterreading"));
-      assertEquals(map.get("maleMobileBrigadeReading").toString(), fullCoveragesDetails.get("malemobilebrigadereading"));
+      assertEquals(map.get("femaleHealthCenter").toString(), fullCoveragesDetails.get("femalehealthcenter"));
+      assertEquals(map.get("femaleOutreach").toString(), fullCoveragesDetails.get("femaleoutreach"));
+      assertEquals(map.get("maleHealthCenter").toString(), fullCoveragesDetails.get("malehealthcenter"));
+      assertEquals(map.get("maleOutreach").toString(), fullCoveragesDetails.get("maleoutreach"));
     }
   }
 
