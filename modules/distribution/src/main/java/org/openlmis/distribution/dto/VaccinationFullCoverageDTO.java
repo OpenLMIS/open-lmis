@@ -8,30 +8,37 @@
  *  You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
  */
 
-package org.openlmis.distribution.domain;
+package org.openlmis.distribution.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.openlmis.core.domain.BaseModel;
+import org.openlmis.distribution.domain.VaccinationFullCoverage;
+
+import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 
 @Data
 @NoArgsConstructor
-@EqualsAndHashCode(callSuper = false)
 @AllArgsConstructor
-public class FullCoverage extends BaseModel {
+@JsonSerialize(include = NON_EMPTY)
+@JsonIgnoreProperties(ignoreUnknown = true)
+@EqualsAndHashCode(callSuper = false)
+public class VaccinationFullCoverageDTO extends BaseModel {
 
   private Long facilityVisitId;
-  private Integer femaleHealthCenterReading;
-  private Integer femaleMobileBrigadeReading;
-  private Integer maleHealthCenterReading;
-  private Integer maleMobileBrigadeReading;
+  private Reading femaleHealthCenterReading;
+  private Reading femaleMobileBrigadeReading;
+  private Reading maleHealthCenterReading;
+  private Reading maleMobileBrigadeReading;
 
-  public FullCoverage(Integer femaleHealthCenterReading, Integer femaleMobileBrigadeReading, Integer maleHealthCenterReading, Integer maleMobileBrigadeReading) {
-    this.femaleHealthCenterReading = femaleHealthCenterReading;
-    this.femaleMobileBrigadeReading = femaleMobileBrigadeReading;
-    this.maleHealthCenterReading = maleHealthCenterReading;
-    this.maleMobileBrigadeReading = maleMobileBrigadeReading;
+  public VaccinationFullCoverage transform() {
+    return new VaccinationFullCoverage(this.facilityVisitId, this.femaleHealthCenterReading.parsePositiveInt(),
+      this.femaleMobileBrigadeReading.parsePositiveInt(),
+      this.maleHealthCenterReading.parsePositiveInt(),
+      this.maleMobileBrigadeReading.parsePositiveInt());
   }
 }

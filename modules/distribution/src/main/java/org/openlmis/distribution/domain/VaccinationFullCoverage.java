@@ -18,8 +18,20 @@ import org.openlmis.core.domain.BaseModel;
 
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
+@AllArgsConstructor
 public class VaccinationFullCoverage extends BaseModel {
-  private FullCoverage fullCoverage;
+
+  private Long facilityVisitId;
+  private Integer femaleHealthCenterReading;
+  private Integer femaleMobileBrigadeReading;
+  private Integer maleHealthCenterReading;
+  private Integer maleMobileBrigadeReading;
+
+  public VaccinationFullCoverage(Integer femaleHealthCenterReading, Integer femaleMobileBrigadeReading, Integer maleHealthCenterReading, Integer maleMobileBrigadeReading) {
+    this.femaleHealthCenterReading = femaleHealthCenterReading;
+    this.femaleMobileBrigadeReading = femaleMobileBrigadeReading;
+    this.maleHealthCenterReading = maleHealthCenterReading;
+    this.maleMobileBrigadeReading = maleMobileBrigadeReading;
+  }
 }

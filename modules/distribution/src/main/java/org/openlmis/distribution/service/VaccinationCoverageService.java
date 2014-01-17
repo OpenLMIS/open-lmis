@@ -10,7 +10,6 @@
 
 package org.openlmis.distribution.service;
 
-import org.openlmis.distribution.domain.FullCoverage;
 import org.openlmis.distribution.domain.VaccinationChildCoverage;
 import org.openlmis.distribution.domain.VaccinationFullCoverage;
 import org.openlmis.distribution.domain.VaccinationProduct;
@@ -26,8 +25,7 @@ public class VaccinationCoverageService {
   @Autowired
   private VaccinationCoverageRepository repository;
 
-  public void saveFullCoverage(VaccinationFullCoverage coverage) {
-    FullCoverage fullCoverage = coverage.getFullCoverage();
+  public void saveFullCoverage(VaccinationFullCoverage fullCoverage) {
     repository.saveFullCoverage(fullCoverage);
   }
 

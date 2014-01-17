@@ -115,12 +115,12 @@ public class VaccinationCoverageMapperIT {
 
   @Test
   public void shouldSaveVaccinationFullCoverage() throws Exception {
-    FullCoverage fullCoverage = new FullCoverage(34, 78, 11, 666);
-    fullCoverage.setFacilityVisitId(facilityVisit.getId());
-    fullCoverage.setCreatedBy(1L);
-    mapper.insertFullVaccinationCoverage(fullCoverage);
+    VaccinationFullCoverage vaccinationFullCoverage = new VaccinationFullCoverage(34, 78, 11, 666);
+    vaccinationFullCoverage.setFacilityVisitId(facilityVisit.getId());
+    vaccinationFullCoverage.setCreatedBy(1L);
+    mapper.insertFullVaccinationCoverage(vaccinationFullCoverage);
 
-    ResultSet resultSet = queryExecutor.execute("SELECT * FROM full_coverages WHERE id = " + fullCoverage.getId());
+    ResultSet resultSet = queryExecutor.execute("SELECT * FROM full_coverages WHERE id = " + vaccinationFullCoverage.getId());
     assertTrue(resultSet.next());
     assertThat(resultSet.getLong("facilityVisitId"), is(facilityVisit.getId()));
     assertThat(resultSet.getInt("femaleHealthCenterReading"), is(34));
@@ -132,13 +132,13 @@ public class VaccinationCoverageMapperIT {
 
   @Test
   public void shouldGetFullCoverageByFacilityVisitId() {
-    FullCoverage fullCoverage = new FullCoverage(34, 78, 11, 666);
-    fullCoverage.setFacilityVisitId(facilityVisit.getId());
-    mapper.insertFullVaccinationCoverage(fullCoverage);
+    VaccinationFullCoverage vaccinationFullCoverage = new VaccinationFullCoverage(34, 78, 11, 666);
+    vaccinationFullCoverage.setFacilityVisitId(facilityVisit.getId());
+    mapper.insertFullVaccinationCoverage(vaccinationFullCoverage);
 
-    FullCoverage savedFullCoverage = mapper.getFullCoverageBy(facilityVisit.getId());
+    VaccinationFullCoverage savedVaccinationFullCoverage = mapper.getFullCoverageBy(facilityVisit.getId());
 
-    assertThat(savedFullCoverage, is(fullCoverage));
+    assertThat(savedVaccinationFullCoverage, is(vaccinationFullCoverage));
   }
 
   @Test

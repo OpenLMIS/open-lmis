@@ -28,7 +28,7 @@ public class FacilityDistributionDTOTest {
     FacilityVisit facilityVisit = new FacilityVisit();
     EpiUseDTO epiUseDTO = mock(EpiUseDTO.class);
     DistributionRefrigeratorsDTO distributionRefrigeratorsDTO = mock(DistributionRefrigeratorsDTO.class);
-    VaccinationCoverageDTO coverageDTO = mock(VaccinationCoverageDTO.class);
+    VaccinationFullCoverageDTO coverageDTO = mock(VaccinationFullCoverageDTO.class);
     EpiInventoryDTO epiInventoryDTO = mock(EpiInventoryDTO.class);
 
     FacilityDistributionDTO facilityDistributionDTO = new FacilityDistributionDTO(facilityVisit, epiUseDTO, epiInventoryDTO, distributionRefrigeratorsDTO, coverageDTO);

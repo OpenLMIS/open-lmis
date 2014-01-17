@@ -13,26 +13,27 @@ package org.openlmis.distribution.dto;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.openlmis.db.categories.UnitTests;
-import org.openlmis.distribution.domain.FullCoverage;
-import org.openlmis.distribution.domain.VaccinationFullCoverage;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
 @Category(UnitTests.class)
 public class VaccinationFullCoverageDTOTest {
 
   @Test
-  public void shouldTransformCoverageDTOIntoCoverage() throws Exception {
-    FullCoverage expectedFullCoverage = mock(FullCoverage.class);
-    FullCoverageDTO fullCoverageDTO = mock(FullCoverageDTO.class);
-    when(fullCoverageDTO.transform()).thenReturn(expectedFullCoverage);
-    VaccinationCoverageDTO coverageDTO = new VaccinationCoverageDTO(fullCoverageDTO);
+  public void shouldTransformFullCoverageDTO() throws Exception {
+    Long facilityVisitId = 1L;
+    Reading femaleHealthCenterReading = mock(Reading.class);
+    Reading femaleMobileBrigadeReading = mock(Reading.class);
+    Reading maleMobileBrigadeReading = mock(Reading.class);
+    Reading maleHealthCenterReading = mock(Reading.class);
 
-    VaccinationFullCoverage vaccinationFullCoverage = coverageDTO.transform();
+    VaccinationFullCoverageDTO vaccinationFullCoverageDTO = new VaccinationFullCoverageDTO(facilityVisitId, femaleHealthCenterReading, femaleMobileBrigadeReading, maleHealthCenterReading, maleMobileBrigadeReading);
+    vaccinationFullCoverageDTO.transform();
 
-    verify(fullCoverageDTO).transform();
-    assertThat(vaccinationFullCoverage.getFullCoverage(), is(expectedFullCoverage));
+    verify(femaleHealthCenterReading).parsePositiveInt();
+    verify(femaleMobileBrigadeReading).parsePositiveInt();
+    verify(maleHealthCenterReading).parsePositiveInt();
+    verify(maleMobileBrigadeReading).parsePositiveInt();
   }
 }
