@@ -311,5 +311,9 @@ public class ApprovePage extends RequisitionPage {
       return (quantityApproved2.isEnabled());
   }
 
+  public String getPacksToShip(){
+    return packsToShip.getText();
+  }
+
 
 }

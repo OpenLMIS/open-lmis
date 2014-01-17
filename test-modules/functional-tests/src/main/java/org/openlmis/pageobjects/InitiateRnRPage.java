@@ -508,7 +508,7 @@ public class InitiateRnRPage extends RequisitionPage {
 
     if(expectedPacksToShip>0 || (expectedPacksToShip==0 && !roundToZeroFlag)){
       Integer packRoundingThreshold =Integer.parseInt(dbWrapper.getAttributeFromTable("products", "packRoundingThreshold", "code", "P10")) ;
-      if(remainingQuantity>=packRoundingThreshold){
+      if(remainingQuantity>=packRoundingThreshold || expectedPacksToShip==0){
           expectedPacksToShip++;
       }
     }
@@ -902,5 +902,9 @@ public class InitiateRnRPage extends RequisitionPage {
   public String getBudgetWarningMessageOnFooter() {
     testWebDriver.waitForElementToAppear(budgetWarningMessageOnFooter);
     return budgetWarningMessageOnFooter.getText();
+  }
+
+  public String getPacksToShip(){
+    return packsToShip.getText();
   }
 }
