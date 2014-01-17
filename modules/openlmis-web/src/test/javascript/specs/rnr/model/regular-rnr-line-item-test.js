@@ -383,16 +383,15 @@ describe('RegularRnrLineItem', function () {
       ];
     });
 
-    it('should calculate packsToShip when calculated quantity is available and requested quantity is null',
-        function () {
-          var regularRnrLineItem = new RegularRnrLineItem(null, null, null, 'INITIATED');
-          regularRnrLineItem.calculatedOrderQuantity = 8;
+    it('should calculate packsToShip when calculated quantity is available and requested quantity is null', function () {
+      var regularRnrLineItem = new RegularRnrLineItem(null, null, null, 'INITIATED');
+      regularRnrLineItem.calculatedOrderQuantity = 8;
 
-          spyOn(regularRnrLineItem, 'calculatePacksToShip');
+      spyOn(regularRnrLineItem, 'calculatePacksToShip');
 
-          regularRnrLineItem.fillPacksToShip();
-          expect(regularRnrLineItem.calculatePacksToShip).toHaveBeenCalledWith(8);
-        });
+      regularRnrLineItem.fillPacksToShip();
+      expect(regularRnrLineItem.calculatePacksToShip).toHaveBeenCalledWith(8);
+    });
 
     it('should calculate packsToShip for the given quantity', function () {
       var lineItem = {"packSize": 12};

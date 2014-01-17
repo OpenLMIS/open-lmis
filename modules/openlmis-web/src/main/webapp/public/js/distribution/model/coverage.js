@@ -21,6 +21,9 @@ function FullCoverage(facilityVisitId, fullCoverage) {
       if (!isUndefined(fullCoverage)) {
         _this[fieldName] = fullCoverage[fieldName] || {};
       }
+      else {
+        _this[fieldName] = {fieldName: {}};
+      }
     });
   }
 
