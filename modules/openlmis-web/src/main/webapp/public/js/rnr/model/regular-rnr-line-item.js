@@ -141,14 +141,13 @@ var RegularRnrLineItem = base2.Base.extend({
     this.updateTotalLossesAndAdjustment(lossAndAdjustment.quantity, lossAndAdjustment.type.additive);
   },
 
-// TODO: This function should encapsulate the logic to calculate packs to ship based on status
   calculatePacksToShip: function (quantity) {
     if (!utils.isNumber(quantity)) {
       this.packsToShip = null;
       return;
     }
     if (quantity === 0) {
-      this.packsToShip = 0;
+      this.packsToShip = this.roundToZero ? 0 : 1;
       return;
     }
     this.packsToShip = Math.floor(quantity / utils.parseIntWithBaseTen(this.packSize));

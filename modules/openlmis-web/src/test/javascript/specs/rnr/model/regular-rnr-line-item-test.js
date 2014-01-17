@@ -182,30 +182,30 @@ describe('RegularRnrLineItem', function () {
     });
 
     it('should calculate normalized consumption when facility is stocked out for the entire reporting period',
-      function () {
-        var lineItem = {"beginningBalance": 1, "quantityReceived": 10, "quantityDispensed": 13,
-          "totalLossesAndAdjustments": 4, "stockOutDays": 90, "newPatientCount": 10, "dosesPerMonth": 30, "dosesPerDispensingUnit": 28,
-          "reportingDays": 90};
-        var regularRnrLineItem = new RegularRnrLineItem({}, rnr, programRnrColumnList);
-        jQuery.extend(regularRnrLineItem, lineItem);
+        function () {
+          var lineItem = {"beginningBalance": 1, "quantityReceived": 10, "quantityDispensed": 13,
+            "totalLossesAndAdjustments": 4, "stockOutDays": 90, "newPatientCount": 10, "dosesPerMonth": 30, "dosesPerDispensingUnit": 28,
+            "reportingDays": 90};
+          var regularRnrLineItem = new RegularRnrLineItem({}, rnr, programRnrColumnList);
+          jQuery.extend(regularRnrLineItem, lineItem);
 
-        regularRnrLineItem.calculateNormalizedConsumption();
+          regularRnrLineItem.calculateNormalizedConsumption();
 
-        expect(regularRnrLineItem.normalizedConsumption).toEqual(23);
-      });
+          expect(regularRnrLineItem.normalizedConsumption).toEqual(23);
+        });
 
     it('should calculate normalized consumption when reporting days are less than stock out days',
-      function () {
-        var lineItem = {"beginningBalance": 1, "quantityReceived": 10, "quantityDispensed": 13,
-          "totalLossesAndAdjustments": 4, "stockOutDays": 90, "newPatientCount": 0, "dosesPerMonth": 30, "dosesPerDispensingUnit": 28,
-          "reportingDays": 80};
-        var regularRnrLineItem = new RegularRnrLineItem({}, rnr, programRnrColumnList);
-        jQuery.extend(regularRnrLineItem, lineItem);
+        function () {
+          var lineItem = {"beginningBalance": 1, "quantityReceived": 10, "quantityDispensed": 13,
+            "totalLossesAndAdjustments": 4, "stockOutDays": 90, "newPatientCount": 0, "dosesPerMonth": 30, "dosesPerDispensingUnit": 28,
+            "reportingDays": 80};
+          var regularRnrLineItem = new RegularRnrLineItem({}, rnr, programRnrColumnList);
+          jQuery.extend(regularRnrLineItem, lineItem);
 
-        regularRnrLineItem.calculateNormalizedConsumption();
+          regularRnrLineItem.calculateNormalizedConsumption();
 
-        expect(regularRnrLineItem.normalizedConsumption).toEqual(13);
-      });
+          expect(regularRnrLineItem.normalizedConsumption).toEqual(13);
+        });
 
     it('should calculate normalized consumption when newPatientCount is not in the template', function () {
       programRnrColumnList = [
@@ -250,15 +250,15 @@ describe('RegularRnrLineItem', function () {
     });
 
     it('should calculate AMC when 2 previous normalized consumption are available',
-      function () {
-        var regularRnrLineItem = new RegularRnrLineItem({}, 2, null, 'INITIATED');
-        regularRnrLineItem.normalizedConsumption = 10;
-        regularRnrLineItem.previousNormalizedConsumptions = [12, 7];
+        function () {
+          var regularRnrLineItem = new RegularRnrLineItem({}, 2, null, 'INITIATED');
+          regularRnrLineItem.normalizedConsumption = 10;
+          regularRnrLineItem.previousNormalizedConsumptions = [12, 7];
 
-        regularRnrLineItem.calculateAMC();
+          regularRnrLineItem.calculateAMC();
 
-        expect(regularRnrLineItem.amc).toEqual(10);
-      });
+          expect(regularRnrLineItem.amc).toEqual(10);
+        });
 
     it('should calculate AMC when number of months in a period is 1', function () {
       var regularRnrLineItem = new RegularRnrLineItem({}, 1, null, 'INITIATED');
@@ -271,15 +271,15 @@ describe('RegularRnrLineItem', function () {
     });
 
     it('should calculate AMC when number of months in a period is 1 and only one of the two previous normalized consumption is available',
-      function () {
-        var regularRnrLineItem = new RegularRnrLineItem({}, 1, null, 'INITIATED');
-        regularRnrLineItem.normalizedConsumption = 10;
-        regularRnrLineItem.previousNormalizedConsumptions = [14];
+        function () {
+          var regularRnrLineItem = new RegularRnrLineItem({}, 1, null, 'INITIATED');
+          regularRnrLineItem.normalizedConsumption = 10;
+          regularRnrLineItem.previousNormalizedConsumptions = [14];
 
-        regularRnrLineItem.calculateAMC();
+          regularRnrLineItem.calculateAMC();
 
-        expect(regularRnrLineItem.amc).toEqual(12);
-      });
+          expect(regularRnrLineItem.amc).toEqual(12);
+        });
 
     it('should reset AMC to null when normalized consumption is not present', function () {
       var lineItem = {"normalizedConsumption": null};
@@ -384,15 +384,15 @@ describe('RegularRnrLineItem', function () {
     });
 
     it('should calculate packsToShip when calculated quantity is available and requested quantity is null',
-      function () {
-        var regularRnrLineItem = new RegularRnrLineItem(null, null, null, 'INITIATED');
-        regularRnrLineItem.calculatedOrderQuantity = 8;
+        function () {
+          var regularRnrLineItem = new RegularRnrLineItem(null, null, null, 'INITIATED');
+          regularRnrLineItem.calculatedOrderQuantity = 8;
 
-        spyOn(regularRnrLineItem, 'calculatePacksToShip');
+          spyOn(regularRnrLineItem, 'calculatePacksToShip');
 
-        regularRnrLineItem.fillPacksToShip();
-        expect(regularRnrLineItem.calculatePacksToShip).toHaveBeenCalledWith(8);
-      });
+          regularRnrLineItem.fillPacksToShip();
+          expect(regularRnrLineItem.calculatePacksToShip).toHaveBeenCalledWith(8);
+        });
 
     it('should calculate packsToShip for the given quantity', function () {
       var lineItem = {"packSize": 12};
@@ -404,6 +404,26 @@ describe('RegularRnrLineItem', function () {
 
       expect(regularRnrLineItem.packsToShip).toEqual(2);
       expect(regularRnrLineItem.applyRoundingRulesToPacksToShip).toHaveBeenCalledWith(25);
+    });
+
+    it('should return zero packs to ship if ordered quantity is Zero and roundToZero flag is true', function () {
+      var lineItem = {roundToZero: true};
+      var regularRnrLineItem = new RegularRnrLineItem({}, null, null);
+      jQuery.extend(regularRnrLineItem, lineItem);
+
+      regularRnrLineItem.calculatePacksToShip(0);
+
+      expect(regularRnrLineItem.packsToShip).toEqual(0);
+    });
+
+    it('should return one packs to ship if ordered quantity is Zero and roundToZero flag is false', function () {
+      var lineItem = {roundToZero: false};
+      var regularRnrLineItem = new RegularRnrLineItem({}, null, null);
+      jQuery.extend(regularRnrLineItem, lineItem);
+
+      regularRnrLineItem.calculatePacksToShip(0);
+
+      expect(regularRnrLineItem.packsToShip).toEqual(1);
     });
   });
 
@@ -429,26 +449,26 @@ describe('RegularRnrLineItem', function () {
     });
 
     it('should increment packsToShip by one when number of remaining items is greater than packRoundingThreshold ',
-      function () {
-        var lineItem = {"packsToShip": 2, "packSize": 12, "packRoundingThreshold": 7};
-        var regularRnrLineItem = new RegularRnrLineItem({}, null, null);
-        jQuery.extend(regularRnrLineItem, lineItem);
+        function () {
+          var lineItem = {"packsToShip": 2, "packSize": 12, "packRoundingThreshold": 7};
+          var regularRnrLineItem = new RegularRnrLineItem({}, null, null);
+          jQuery.extend(regularRnrLineItem, lineItem);
 
-        regularRnrLineItem.applyRoundingRulesToPacksToShip(8);
+          regularRnrLineItem.applyRoundingRulesToPacksToShip(8);
 
-        expect(regularRnrLineItem.packsToShip).toEqual(3);
-      });
+          expect(regularRnrLineItem.packsToShip).toEqual(3);
+        });
 
     it('should not increment packsToShip when number of remaining items is greater than packRoundingThreshold ',
-      function () {
-        var lineItem = {"packsToShip": 2, "packSize": 12, "packRoundingThreshold": 7};
-        var regularRnrLineItem = new RegularRnrLineItem({}, null, null);
-        jQuery.extend(regularRnrLineItem, lineItem);
+        function () {
+          var lineItem = {"packsToShip": 2, "packSize": 12, "packRoundingThreshold": 7};
+          var regularRnrLineItem = new RegularRnrLineItem({}, null, null);
+          jQuery.extend(regularRnrLineItem, lineItem);
 
-        regularRnrLineItem.applyRoundingRulesToPacksToShip(6);
+          regularRnrLineItem.applyRoundingRulesToPacksToShip(6);
 
-        expect(regularRnrLineItem.packsToShip).toEqual(2);
-      });
+          expect(regularRnrLineItem.packsToShip).toEqual(2);
+        });
   });
 
   describe('Calculate Cost', function () {
@@ -507,18 +527,18 @@ describe('RegularRnrLineItem', function () {
 
   describe('Losses and adjustment for line item', function () {
     it('should create losses and adjustment object out of losses and adjustment json data when RegularRnrLineItem Is Created',
-      function () {
-        var lossAndAdjustment1 = {"type": {"name": "Loss1", "additive": true}, "quantity": 45};
-        var lossAndAdjustment2 = {"type": {"name": "Adjust1", "additive": false}, "quantity": 55};
-        var lineItem = {"id": 1, "lossesAndAdjustments": [lossAndAdjustment1, lossAndAdjustment2]};
+        function () {
+          var lossAndAdjustment1 = {"type": {"name": "Loss1", "additive": true}, "quantity": 45};
+          var lossAndAdjustment2 = {"type": {"name": "Adjust1", "additive": false}, "quantity": 55};
+          var lineItem = {"id": 1, "lossesAndAdjustments": [lossAndAdjustment1, lossAndAdjustment2]};
 
-        var regularRnrLineItem = new RegularRnrLineItem(lineItem);
+          var regularRnrLineItem = new RegularRnrLineItem(lineItem);
 
-        expect(regularRnrLineItem.lossesAndAdjustments.length).toEqual(2);
+          expect(regularRnrLineItem.lossesAndAdjustments.length).toEqual(2);
 
-        expect("isQuantityValid" in regularRnrLineItem.lossesAndAdjustments[0]).toBeTruthy();
-        expect("isQuantityValid" in regularRnrLineItem.lossesAndAdjustments[1]).toBeTruthy();
-      });
+          expect("isQuantityValid" in regularRnrLineItem.lossesAndAdjustments[0]).toBeTruthy();
+          expect("isQuantityValid" in regularRnrLineItem.lossesAndAdjustments[1]).toBeTruthy();
+        });
 
     it("should re evaluate total losses and adjustments for line item", function () {
       var rnr = new Object();
@@ -598,13 +618,13 @@ describe('RegularRnrLineItem', function () {
     });
 
     it('should return true on validate losses and adjustments if no losses and adjustments present in the regularRnrLineItem',
-      function () {
-        var rnr = new Object();
-        var programRnrColumnList = new Object();
-        var regularRnrLineItem = new RegularRnrLineItem({"id": "1"}, rnr, programRnrColumnList);
+        function () {
+          var rnr = new Object();
+          var programRnrColumnList = new Object();
+          var regularRnrLineItem = new RegularRnrLineItem({"id": "1"}, rnr, programRnrColumnList);
 
-        expect(regularRnrLineItem.validateLossesAndAdjustments()).toBeTruthy();
-      });
+          expect(regularRnrLineItem.validateLossesAndAdjustments()).toBeTruthy();
+        });
 
     it('should return false if any loss and adjustment is not valid', function () {
       var rnr = new Object();
@@ -679,13 +699,13 @@ describe('RegularRnrLineItem', function () {
 
     it("should not give error if line item is skipped", function () {
       var regularRnrLineItem = new RegularRnrLineItem(
-        {"id": "1",
-          "beginningBalance": 3,
-          "quantityReceived": 3,
-          "quantityDispensed": 3,
-          "stockInHand": 3,
-          "skipped": true}
-        , null, programRnrColumnList);
+          {"id": "1",
+            "beginningBalance": 3,
+            "quantityReceived": 3,
+            "quantityDispensed": 3,
+            "stockInHand": 3,
+            "skipped": true}
+          , null, programRnrColumnList);
 
       spyOn(regularRnrLineItem, 'arithmeticallyInvalid').andReturn("error");
       var errorMsg = regularRnrLineItem.getErrorMessage();
@@ -695,8 +715,8 @@ describe('RegularRnrLineItem', function () {
 
     it("should give error message for negative stock in hand", function () {
       var regularRnrLineItem = new RegularRnrLineItem(
-        {"id": "1", "stockInHand": -3},
-        null, programRnrColumnList);
+          {"id": "1", "stockInHand": -3},
+          null, programRnrColumnList);
 
       var errorMsg = regularRnrLineItem.getErrorMessage();
 
@@ -775,17 +795,17 @@ describe('RegularRnrLineItem', function () {
     });
 
     it('should test execution flow when packs to ship gets filled and order quantity is quantity requested',
-      function () {
-        regularRnrLineItem.quantityRequested = 31;
+        function () {
+          regularRnrLineItem.quantityRequested = 31;
 
-        spyOn(regularRnrLineItem, "calculatePacksToShip");
-        spyOn(regularRnrLineItem, "calculateCost");
+          spyOn(regularRnrLineItem, "calculatePacksToShip");
+          spyOn(regularRnrLineItem, "calculateCost");
 
-        regularRnrLineItem.fillPacksToShip();
+          regularRnrLineItem.fillPacksToShip();
 
-        expect(regularRnrLineItem.calculatePacksToShip).toHaveBeenCalledWith(31);
-        expect(regularRnrLineItem.calculateCost).toHaveBeenCalled();
-      });
+          expect(regularRnrLineItem.calculatePacksToShip).toHaveBeenCalledWith(31);
+          expect(regularRnrLineItem.calculateCost).toHaveBeenCalled();
+        });
 
     it('should test execution flow when packs to ship gets filled and order quantity is not present', function () {
       regularRnrLineItem.quantityRequested = null;
@@ -821,17 +841,17 @@ describe('RegularRnrLineItem', function () {
     });
 
     xit('should test execution flow when rnr line item cost gets filled when it is of non-full supply type',
-      function () {
-        regularRnrLineItem.fullSupply = false;
+        function () {
+          regularRnrLineItem.fullSupply = false;
 
-        spyOn(regularRnrLineItem, "calculateCost");
-        spyOn(regularRnrLineItem, "calculateNonFullSupplyItemsSubmittedCost");
+          spyOn(regularRnrLineItem, "calculateCost");
+          spyOn(regularRnrLineItem, "calculateNonFullSupplyItemsSubmittedCost");
 
-        regularRnrLineItem.fillCost();
+          regularRnrLineItem.fillCost();
 
-        expect(regularRnrLineItem.calculateCost).toHaveBeenCalled();
-        expect(regularRnrLineItem.calculateNonFullSupplyItemsSubmittedCost).toHaveBeenCalled();
-      });
+          expect(regularRnrLineItem.calculateCost).toHaveBeenCalled();
+          expect(regularRnrLineItem.calculateNonFullSupplyItemsSubmittedCost).toHaveBeenCalled();
+        });
 
     it('should test execution flow when amc gets filled', function () {
       spyOn(regularRnrLineItem, "calculateAMC");
