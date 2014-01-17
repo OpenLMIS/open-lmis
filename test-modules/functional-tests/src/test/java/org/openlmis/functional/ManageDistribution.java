@@ -109,6 +109,7 @@ public class ManageDistribution extends TestCaseHelper {
   @And("^I update product \"([^\"]*)\" to have product group \"([^\"]*)\"$")
   public void setupProductAndProductGroup(String product, String productGroup) throws Exception {
     updateProductWithGroup(product, productGroup);
+    dbWrapper.updateActiveStatusOfProduct("P10","false");
   }
 
   @And("^I disassociate \"([^\"]*)\" from delivery zone$")
@@ -130,8 +131,8 @@ public class ManageDistribution extends TestCaseHelper {
     DistributionTab tab = tabMap.get(tabName);
     tab.navigate();
     Map<String, String> data = tableData.asMaps().get(0);
-
     tab.verifyData(data);
+
   }
 
   @Then("^I should see program \"([^\"]*)\"$")

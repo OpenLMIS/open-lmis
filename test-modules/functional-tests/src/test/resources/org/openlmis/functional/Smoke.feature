@@ -547,14 +547,12 @@ Feature: Smoke Tests
     Then Verify "epi inventory" indicator should be "RED"
     And I Enter "epi inventory" values:
       | existingQuantity | deliveredQuantity | spoiledQuantity |
-      | 20               | 100               | 5               |
       | 10               |                   | 10              |
     Then Verify "epi inventory" indicator should be "AMBER"
-    When I enter EPI Inventory deliveredQuantity of Row "2" as "5"
+    When I enter EPI Inventory deliveredQuantity of Row "1" as "5"
     Then Verify "epi inventory" indicator should be "GREEN"
     And I verify saved "epi inventory" values:
       | existingQuantity | deliveredQuantity | spoiledQuantity |
-      | 20               | 100               | 10              |
       | 10               | 5                 | 10              |
 
 
@@ -576,14 +574,14 @@ Feature: Smoke Tests
     And I navigate to Coverage tab
     Then Verify "coverage" indicator should be "RED"
     And I Enter "coverage" values:
-      | coverage | femaleHealthCenter | femaleMobileBrigade | maleHealthCenter | maleMobileBrigade |
-      | female   | 123                | 22                  | 23               |                   |
+      | femaleHealthCenter | femaleMobileBrigade | maleHealthCenter | maleMobileBrigade |
+      | 123                | 22                  | 23               |                   |
     Then Verify "coverage" indicator should be "AMBER"
     When I enter coverage maleMobileBrigade as "500"
     Then Verify "coverage" indicator should be "GREEN"
     And I verify saved "coverage" values:
-      | coverage | femaleHealthCenter | femaleMobileBrigade | maleHealthCenter | maleMobileBrigade |
-      | female   | 123                | 22                  | 23               | 500               |
+      | femaleHealthCenter | femaleMobileBrigade | maleHealthCenter | maleMobileBrigade |
+      | 123                | 22                  | 23               | 500               |
 
 
   @smokeDistribution

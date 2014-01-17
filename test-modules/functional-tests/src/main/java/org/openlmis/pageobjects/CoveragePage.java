@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
 import static org.openqa.selenium.support.How.ID;
 public class CoveragePage extends DistributionTab {
 
@@ -110,8 +111,11 @@ public class CoveragePage extends DistributionTab {
   }
 
   @Override
-  public void verifyData(Map<String, String> map) {
-    //To change body of implemented methods use File | Settings | File Templates.
+  public void verifyData(Map<String, String> data) {
+    assertEquals(coveragePageElements.get("femaleHealthCenter").getAttribute("value"), data.get("femaleHealthCenter"));
+    assertEquals(coveragePageElements.get("femaleMobileBrigade").getAttribute("value"), data.get("femaleMobileBrigade"));
+    assertEquals(coveragePageElements.get("maleHealthCenter").getAttribute("value"), data.get("maleHealthCenter"));
+    assertEquals(coveragePageElements.get("maleMobileBrigade").getAttribute("value"), data.get("maleMobileBrigade"));
   }
 
   @Override
