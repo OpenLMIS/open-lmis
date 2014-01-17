@@ -572,10 +572,10 @@ public class TestCaseHelper {
                                                 Integer maleHealthCenterReading, Integer maleMobileBrigadeReading, String facilityCode) throws SQLException {
     Map<String, String> fullCoveragesDetails = dbWrapper.getFullCoveragesDetails(facilityCode);
 
-    assertEquals(femaleHealthCenterReading, fullCoveragesDetails.get("femalehealthcenterreading"));
-    assertEquals(femaleMobileBrigadeReading, fullCoveragesDetails.get("femalemobilebrigadereading"));
-    assertEquals(maleHealthCenterReading, fullCoveragesDetails.get("malehealthcenterreading"));
-    assertEquals(maleMobileBrigadeReading, fullCoveragesDetails.get("malemobilebrigadereading"));
+    assertEquals(femaleHealthCenterReading, fullCoveragesDetails.get("femalehealthcenter"));
+    assertEquals(femaleMobileBrigadeReading, fullCoveragesDetails.get("femaleoutreach"));
+    assertEquals(maleHealthCenterReading, fullCoveragesDetails.get("malehealthcenter"));
+    assertEquals(maleMobileBrigadeReading, fullCoveragesDetails.get("maleoutreach"));
   }
 
 }

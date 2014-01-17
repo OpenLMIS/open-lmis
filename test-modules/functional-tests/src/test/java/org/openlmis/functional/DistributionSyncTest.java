@@ -16,7 +16,10 @@ import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.UiUtils.TestWebDriver;
 import org.openlmis.pageobjects.*;
 import org.openqa.selenium.JavascriptExecutor;
-import org.testng.annotations.*;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Listeners;
+import org.testng.annotations.Test;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -28,7 +31,6 @@ import java.util.Map;
 import static com.thoughtworks.selenium.SeleneseTestBase.assertFalse;
 import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
 import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertTrue;
-import static org.testng.Assert.assertNull;
 
 @Listeners(CaptureScreenshotOnFailureListener.class)
 
@@ -83,8 +85,8 @@ public class DistributionSyncTest extends TestCaseHelper {
     dbWrapper.updateActiveStatusOfProgram("VACCINES", true);
     dbWrapper.updateActiveStatusOfProduct("Product5", "true");
     dbWrapper.updateActiveStatusOfProduct("Product6", "true");
-    dbWrapper.updateActiveStatusOfProduct("P10","true");
-    dbWrapper.updateActiveStatusOfProduct("P11","true");
+    dbWrapper.updateActiveStatusOfProduct("P10", "true");
+    dbWrapper.updateActiveStatusOfProduct("P11", "true");
   }
 
   @Test(groups = {"distribution"})
@@ -169,11 +171,11 @@ public class DistributionSyncTest extends TestCaseHelper {
     distributionPage.clickOk();
 
     verifyEpiUseDataInDatabase(70, 80, 90, 100, 9999999, "10/2011", "PG1", distributionTestData.get(SECOND_FACILITY_CODE));
-    verifyGeneralObservationsDataInDatabase(distributionTestData.get(SECOND_FACILITY_CODE),"Some observations", "samuel D", "Doe Abc", "Verifier", "Verifier Title");
-    verifyFullCoveragesDataInDatabase(null,null,null,null,distributionTestData.get(SECOND_FACILITY_CODE));
-    verifyEpiInventoryDataInDatabase(null,"2",null, "P10", distributionTestData.get(SECOND_FACILITY_CODE));
-    verifyEpiInventoryDataInDatabase(null,"4",null, "Product6",distributionTestData.get(SECOND_FACILITY_CODE));
-    verifyEpiInventoryDataInDatabase(null,"6",null, "P11", distributionTestData.get(SECOND_FACILITY_CODE));
+    verifyGeneralObservationsDataInDatabase(distributionTestData.get(SECOND_FACILITY_CODE), "Some observations", "samuel D", "Doe Abc", "Verifier", "Verifier Title");
+    verifyFullCoveragesDataInDatabase(null, null, null, null, distributionTestData.get(SECOND_FACILITY_CODE));
+    verifyEpiInventoryDataInDatabase(null, "2", null, "P10", distributionTestData.get(SECOND_FACILITY_CODE));
+    verifyEpiInventoryDataInDatabase(null, "4", null, "Product6", distributionTestData.get(SECOND_FACILITY_CODE));
+    verifyEpiInventoryDataInDatabase(null, "6", null, "P11", distributionTestData.get(SECOND_FACILITY_CODE));
 
     verifySyncedDataInDatabase(distributionTestData.get(FIRST_FACILITY_CODE));
   }
@@ -219,13 +221,13 @@ public class DistributionSyncTest extends TestCaseHelper {
     distributionPage.syncDistributionMessageDone();
 
     verifyEpiUseDataInDatabase(70, 80, 90, 100, 9999999, "10/2011", "PG1", distributionTestData.get(FIRST_FACILITY_CODE));
-    verifyGeneralObservationsDataInDatabase(distributionTestData.get(FIRST_FACILITY_CODE),"Some observations", "samuel D", "Doe Abc", "Verifier", "Verifier Title");
-    verifyRefrigeratorProblemDataNullInDatabase("GNR7878",distributionTestData.get(FIRST_FACILITY_CODE));
+    verifyGeneralObservationsDataInDatabase(distributionTestData.get(FIRST_FACILITY_CODE), "Some observations", "samuel D", "Doe Abc", "Verifier", "Verifier Title");
+    verifyRefrigeratorProblemDataNullInDatabase("GNR7878", distributionTestData.get(FIRST_FACILITY_CODE));
     verifyRefrigeratorReadingDataInDatabase(distributionTestData.get(FIRST_FACILITY_CODE), "GNR7878", 3.0F, "Y", 2, 5, null, null);
-    verifyFullCoveragesDataInDatabase(null,null,null,null,distributionTestData.get(FIRST_FACILITY_CODE));
-    verifyEpiInventoryDataInDatabase(null,"2",null, "P10", distributionTestData.get(FIRST_FACILITY_CODE));
-    verifyEpiInventoryDataInDatabase(null,"4",null, "Product6",distributionTestData.get(FIRST_FACILITY_CODE));
-    verifyEpiInventoryDataInDatabase(null,"6",null, "P11", distributionTestData.get(FIRST_FACILITY_CODE));
+    verifyFullCoveragesDataInDatabase(null, null, null, null, distributionTestData.get(FIRST_FACILITY_CODE));
+    verifyEpiInventoryDataInDatabase(null, "2", null, "P10", distributionTestData.get(FIRST_FACILITY_CODE));
+    verifyEpiInventoryDataInDatabase(null, "4", null, "Product6", distributionTestData.get(FIRST_FACILITY_CODE));
+    verifyEpiInventoryDataInDatabase(null, "6", null, "P11", distributionTestData.get(FIRST_FACILITY_CODE));
 
     distributionPage.deleteDistribution();
     distributionPage.clickOk();
@@ -251,8 +253,8 @@ public class DistributionSyncTest extends TestCaseHelper {
     distributionPage.syncDistributionMessageDone();
 
     verifyEpiUseDataInDatabase(70, 80, 90, 100, 9999999, "10/2011", "PG1", distributionTestData.get(FIRST_FACILITY_CODE));
-    verifyGeneralObservationsDataInDatabase(distributionTestData.get(FIRST_FACILITY_CODE),"Some observations", "samuel D", "Doe Abc", "Verifier", "Verifier Title");
-    verifyRefrigeratorProblemDataNullInDatabase("GNR7878",distributionTestData.get(FIRST_FACILITY_CODE));
+    verifyGeneralObservationsDataInDatabase(distributionTestData.get(FIRST_FACILITY_CODE), "Some observations", "samuel D", "Doe Abc", "Verifier", "Verifier Title");
+    verifyRefrigeratorProblemDataNullInDatabase("GNR7878", distributionTestData.get(FIRST_FACILITY_CODE));
     verifyRefrigeratorReadingDataInDatabase(distributionTestData.get(FIRST_FACILITY_CODE), "GNR7878", 3.0F, "Y", 2, 5, null, null);
 
     verifySyncedDataInDatabase(distributionTestData.get(SECOND_FACILITY_CODE));
@@ -280,7 +282,7 @@ public class DistributionSyncTest extends TestCaseHelper {
 
     fillFacilityData();
 
-    DistributionPage distributionPage= homePage.navigateToDistributionWhenOnline();
+    DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
     distributionPage.syncDistribution(1);
     assertTrue(distributionPage.getSyncMessage().contains("F10-Village Dispensary"));
     distributionPage.syncDistributionMessageDone();
@@ -461,10 +463,10 @@ public class DistributionSyncTest extends TestCaseHelper {
 
   @Test(groups = {"distribution"})
   public void testSyncWhenAllProductsAreInactive() throws Exception {
-    dbWrapper.updateActiveStatusOfProduct("P10","false");
-    dbWrapper.updateActiveStatusOfProduct("P11","false");
-    dbWrapper.updateActiveStatusOfProduct("Product5","false");
-    dbWrapper.updateActiveStatusOfProduct("Product6","false");
+    dbWrapper.updateActiveStatusOfProduct("P10", "false");
+    dbWrapper.updateActiveStatusOfProduct("P11", "false");
+    dbWrapper.updateActiveStatusOfProduct("Product5", "false");
+    dbWrapper.updateActiveStatusOfProduct("Product6", "false");
 
     HomePage homePage = loginPage.loginAs(distributionTestData.get(USER), distributionTestData.get(PASSWORD));
     initiateDistribution(distributionTestData.get(FIRST_DELIVERY_ZONE_NAME), distributionTestData.get(VACCINES_PROGRAM));
@@ -548,13 +550,13 @@ public class DistributionSyncTest extends TestCaseHelper {
     facilityListPage.selectFacility(distributionTestData.get(FIRST_FACILITY_CODE));
     facilityListPage.verifyFacilityIndicatorColor("Overall", "RED");
 
-    EPIUsePage epiUsePage= refrigeratorPage.navigateToEpiUse();
+    EPIUsePage epiUsePage = refrigeratorPage.navigateToEpiUse();
     assertTrue(epiUsePage.getProductGroup(1).equals("PG1-Name"));
     assertTrue(epiUsePage.getProductGroup(2).equals("PG2-Name"));
     //TODO assert null
 
     EpiInventoryPage epiInventoryPage = epiUsePage.navigateToEpiInventory();
-    assertTrue(epiInventoryPage.getProductName(1).equals( "antibiotic"));
+    assertTrue(epiInventoryPage.getProductName(1).equals("antibiotic"));
     assertTrue(epiInventoryPage.getProductName(2).equals("ProductName6"));
     assertTrue(epiInventoryPage.getProductName(3).equals("ProductName7"));
     assertTrue(epiInventoryPage.getProductName(4).equals("antibiotic"));
@@ -573,7 +575,7 @@ public class DistributionSyncTest extends TestCaseHelper {
     FacilityListPage facilityListPage = new FacilityListPage(testWebDriver);
 
     dbWrapper.insertProducts("Product7", "Product8");
-    dbWrapper.insertProductWithGroup("Product9", "Product9","PG1",true);
+    dbWrapper.insertProductWithGroup("Product9", "Product9", "PG1", true);
     dbWrapper.insertProgramProduct("Product7", "VACCINES", "10", "true");
     dbWrapper.insertProgramProduct("Product9", distributionTestData.get(VACCINES_PROGRAM), "10", "true");
 
@@ -607,13 +609,13 @@ public class DistributionSyncTest extends TestCaseHelper {
     facilityListPage.selectFacility(distributionTestData.get(FIRST_FACILITY_CODE));
     facilityListPage.verifyFacilityIndicatorColor("Overall", "RED");
 
-    EPIUsePage epiUsePage= refrigeratorPage.navigateToEpiUse();
+    EPIUsePage epiUsePage = refrigeratorPage.navigateToEpiUse();
     assertTrue(epiUsePage.getProductGroup(1).equals("PG1-Name"));
     //assertNull(epiUsePage.getProductGroup(2));
     //TODO assert null
 
     EpiInventoryPage epiInventoryPage = epiUsePage.navigateToEpiInventory();
-    assertTrue(epiInventoryPage.getProductName(1).equals( "antibiotic"));
+    assertTrue(epiInventoryPage.getProductName(1).equals("antibiotic"));
     assertTrue(epiInventoryPage.getProductName(2).equals("Product9"));
     //assertNull(epiInventoryPage.getNoProductsAddedMessage());
   }
@@ -658,7 +660,7 @@ public class DistributionSyncTest extends TestCaseHelper {
     refrigeratorPage.verifyRefrigeratorColor("individual", "GREEN");
 
     EPIUsePage epiUsePage = refrigeratorPage.navigateToEpiUse();
-    epiUsePage.enterData(10, 20, 30, 40, 50, "10/2011",1);
+    epiUsePage.enterData(10, 20, 30, 40, 50, "10/2011", 1);
 
     GeneralObservationPage generalObservationPage = epiUsePage.navigateToGeneralObservations();
     generalObservationPage.enterData("Some observations", "samuel", "Doe", "Verifier", "XYZ");
@@ -673,18 +675,18 @@ public class DistributionSyncTest extends TestCaseHelper {
   }
 
   private void verifySyncedDataInDatabase(String facilityCode) throws SQLException {
-    verifyRefrigeratorProblemDataNullInDatabase("GNR7876",facilityCode);
+    verifyRefrigeratorProblemDataNullInDatabase("GNR7876", facilityCode);
     verifyRefrigeratorReadingDataInDatabase(facilityCode, "GNR7876", 3.0F, "Y", 2, 5, null, null);
 
     verifyEpiUseDataInDatabase(10, 20, 30, 40, 50, "10/2011", "PG1", facilityCode);
 
-    verifyGeneralObservationsDataInDatabase(facilityCode,"Some observations", "samuel", "Doe", "Verifier", "XYZ");
+    verifyGeneralObservationsDataInDatabase(facilityCode, "Some observations", "samuel", "Doe", "Verifier", "XYZ");
 
-    verifyFullCoveragesDataInDatabase(23,66,77,45,facilityCode);
+    verifyFullCoveragesDataInDatabase(23, 66, 77, 45, facilityCode);
 
-    verifyEpiInventoryDataInDatabase(null,"2",null, "P10",facilityCode);
-    verifyEpiInventoryDataInDatabase(null,"4",null, "Product6",facilityCode);
-    verifyEpiInventoryDataInDatabase(null,"6",null, "P11",facilityCode);
+    verifyEpiInventoryDataInDatabase(null, "2", null, "P10", facilityCode);
+    verifyEpiInventoryDataInDatabase(null, "4", null, "Product6", facilityCode);
+    verifyEpiInventoryDataInDatabase(null, "6", null, "P11", facilityCode);
   }
 
   public void fillEpiInventoryWithOnlyDeliveredQuantity(EpiInventoryPage epiInventoryPage, String deliveredQuantity1, String deliveredQuantity2, String deliveredQuantity3) {
@@ -729,23 +731,23 @@ public class DistributionSyncTest extends TestCaseHelper {
     distributionPage.clickOk();
   }
 
-  private void verifyProductsAreDisplayed(){
+  private void verifyProductsAreDisplayed() {
     RefrigeratorPage refrigeratorPage = new RefrigeratorPage(testWebDriver);
-    EPIUsePage epiUsePage= refrigeratorPage.navigateToEpiUse();
+    EPIUsePage epiUsePage = refrigeratorPage.navigateToEpiUse();
     assertTrue(epiUsePage.getProductGroup(1).equals("PG1-Name"));
     //assertNull(epiUsePage.getProductGroup(2));
     //TODO assertNull
     EpiInventoryPage epiInventoryPage = epiUsePage.navigateToEpiInventory();
-    assertTrue(epiInventoryPage.getProductName(1).equals( "antibiotic"));
+    assertTrue(epiInventoryPage.getProductName(1).equals("antibiotic"));
     assertTrue(epiInventoryPage.getProductName(2).equals("ProductName6"));
     assertTrue(epiInventoryPage.getProductName(3).equals("antibiotic"));
     //assertNull(epiInventoryPage.getProductName(4));
     //assertNull(epiInventoryPage.getNoProductsAddedMessage());
   }
 
-  private void verifyProductsAreNotDisplayed(){
+  private void verifyProductsAreNotDisplayed() {
     RefrigeratorPage refrigeratorPage = new RefrigeratorPage(testWebDriver);
-    EPIUsePage epiUsePage= refrigeratorPage.navigateToEpiUse();
+    EPIUsePage epiUsePage = refrigeratorPage.navigateToEpiUse();
     //assertNull(epiUsePage.getProductGroup(1));
     //assertNull(epiUsePage.getProductGroup(2));
     //TODO verify no products msg on Epi use
@@ -775,7 +777,7 @@ public class DistributionSyncTest extends TestCaseHelper {
     assertFalse(coveragePage.getStatusForField("maleHealthCenter"));
     assertFalse(coveragePage.getStatusForField("maleMobileBrigade"));
 
-    EpiInventoryPage epiInventoryPage=coveragePage.navigateToEpiInventory();
+    EpiInventoryPage epiInventoryPage = coveragePage.navigateToEpiInventory();
     assertFalse(epiInventoryPage.getExistingQuantityStatus(1));
     assertFalse(epiInventoryPage.getExistingQuantityStatus(2));
     assertFalse(epiInventoryPage.getExistingQuantityStatus(3));
