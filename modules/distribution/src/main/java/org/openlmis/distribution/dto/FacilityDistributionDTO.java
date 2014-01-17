@@ -34,7 +34,7 @@ public class FacilityDistributionDTO {
   private VaccinationCoverageDTO coverage;
 
   public FacilityDistribution transform() {
-    return new FacilityDistribution(this.facilityVisit, this.epiUse.transform(), this.refrigerators.transform(), this.epiInventory.transform(), this.coverage.transform());
+    return new FacilityDistribution(this.facilityVisit, this.epiUse.transform(), this.refrigerators.transform(), this.epiInventory.transform(), this.coverage.transform(), null);
   }
 
 

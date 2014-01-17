@@ -38,7 +38,7 @@ public class VaccinationFullCoverageServiceTest {
     FullCoverage fullCoverage = new FullCoverage();
 
     VaccinationFullCoverage vaccinationFullCoverage = new VaccinationFullCoverage(fullCoverage);
-    service.save(vaccinationFullCoverage);
+    service.saveFullCoverage(vaccinationFullCoverage);
 
     verify(repository).saveFullCoverage(fullCoverage);
   }

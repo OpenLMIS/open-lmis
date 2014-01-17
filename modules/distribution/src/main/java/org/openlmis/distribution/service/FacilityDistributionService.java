@@ -78,6 +78,7 @@ public class FacilityDistributionService {
     FacilityDistribution facilityDistribution = new FacilityDistribution(facilityVisit, facility, distribution, refrigeratorReadings, vaccinationProducts);
     epiUseService.save(facilityDistribution.getEpiUse());
     epiInventoryService.save(facilityDistribution.getEpiInventory());
+    vaccinationCoverageService.saveChildCoverage(facilityDistribution.getChildCoverage());
     return facilityDistribution;
   }
 
@@ -101,7 +102,7 @@ public class FacilityDistributionService {
     if (canSync) {
       epiUseService.save(facilityDistribution.getEpiUse());
       distributionRefrigeratorsService.save(facilityDistribution.getFacilityVisit().getFacilityId(), facilityDistribution.getRefrigerators());
-      vaccinationCoverageService.save(facilityDistribution.getFullCoverage());
+      vaccinationCoverageService.saveFullCoverage(facilityDistribution.getFullCoverage());
       epiInventoryService.save(facilityDistribution.getEpiInventory());
     }
     return canSync;
@@ -126,9 +127,10 @@ public class FacilityDistributionService {
     Facility facility = facilityService.getById(facilityVisit.getFacilityId());
 
     EpiInventory epiInventory = epiInventoryService.getBy(facilityVisit.getId());
-    VaccinationFullCoverage coverage = vaccinationCoverageService.getBy(facilityVisit.getId());
+    VaccinationFullCoverage coverage = vaccinationCoverageService.getFullCoverageBy(facilityVisit.getId());
+    VaccinationChildCoverage childCoverage = vaccinationCoverageService.getChildCoverageBy(facilityVisit.getId());
 
-    FacilityDistribution facilityDistribution = new FacilityDistribution(facilityVisit, epiUse, distributionRefrigerators, epiInventory, coverage);
+    FacilityDistribution facilityDistribution = new FacilityDistribution(facilityVisit, epiUse, distributionRefrigerators, epiInventory, coverage, childCoverage);
     facilityDistribution.setFacility(facility);
     return facilityDistribution;
   }

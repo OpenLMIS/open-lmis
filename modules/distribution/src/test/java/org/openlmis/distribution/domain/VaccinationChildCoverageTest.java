@@ -30,16 +30,14 @@ public class VaccinationChildCoverageTest {
   public void shouldCreateVaccinationChildCoverage() throws Exception {
     Facility facility = mock(Facility.class);
     FacilityVisit facilityVisit = new FacilityVisit();
-    facilityVisit.setId(1234L);
 
     VaccinationProduct vaccinationProduct = new VaccinationProduct();
     List<VaccinationProduct> vaccinationProducts = asList(vaccinationProduct);
     ChildCoverageLineItem lineItem = new ChildCoverageLineItem();
 
-    whenNew(ChildCoverageLineItem.class).withArguments(facility, vaccinationProduct).thenReturn(lineItem);
+    whenNew(ChildCoverageLineItem.class).withArguments(facilityVisit, facility, vaccinationProduct).thenReturn(lineItem);
     VaccinationChildCoverage vaccinationChildCoverage = new VaccinationChildCoverage(facilityVisit, facility, vaccinationProducts);
 
-    assertThat(vaccinationChildCoverage.getFacilityVisitId(), is(facilityVisit.getId()));
     assertThat(vaccinationChildCoverage.getChildCoverageLineItems().size(), is(1));
   }
 }

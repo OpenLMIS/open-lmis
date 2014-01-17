@@ -10,20 +10,25 @@
 
 package org.openlmis.distribution.domain;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.openlmis.core.domain.BaseModel;
 import org.openlmis.core.domain.Facility;
 
 import static java.lang.Math.round;
 
 @Data
 @NoArgsConstructor
-public class ChildCoverageLineItem {
+@AllArgsConstructor
+public class ChildCoverageLineItem extends BaseModel {
 
+  private Long facilityVisitId;
   private String vaccination;
   private Integer targetGroup;
 
-  public ChildCoverageLineItem(Facility facility, VaccinationProduct vaccinationProduct) {
+  public ChildCoverageLineItem(FacilityVisit facilityVisit, Facility facility, VaccinationProduct vaccinationProduct) {
+    this.facilityVisitId = facilityVisit.getId();
     this.targetGroup = calculateTargetGroup(facility.getWhoRatioFor(vaccinationProduct.getProductCode()),
       facility.getCatchmentPopulation());
     this.vaccination = vaccinationProduct.getVaccination();

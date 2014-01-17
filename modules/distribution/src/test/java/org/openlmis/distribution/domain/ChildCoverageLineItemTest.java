@@ -14,12 +14,9 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.openlmis.core.builder.FacilityBuilder;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.db.categories.UnitTests;
 
-import static com.natpryce.makeiteasy.MakeItEasy.a;
-import static com.natpryce.makeiteasy.MakeItEasy.make;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNull.nullValue;
 import static org.junit.Assert.assertThat;
@@ -33,56 +30,68 @@ public class ChildCoverageLineItemTest {
   @Test
   public void shouldCreateChildCoverageLineItem() throws Exception {
     Facility facility = mock(Facility.class);
+    FacilityVisit facilityVisit = new FacilityVisit();
+    facilityVisit.setId(3L);
     VaccinationProduct vaccinationProduct = new VaccinationProduct("BCG", "BCG", true);
 
     when(facility.getWhoRatioFor("BCG")).thenReturn(2.4);
     when(facility.getCatchmentPopulation()).thenReturn((long) 8);
 
-    ChildCoverageLineItem childCoverageLineItem = new ChildCoverageLineItem(facility, vaccinationProduct);
+    ChildCoverageLineItem childCoverageLineItem = new ChildCoverageLineItem(facilityVisit, facility, vaccinationProduct);
 
     assertThat(childCoverageLineItem.getVaccination(), is("BCG"));
     assertThat(childCoverageLineItem.getTargetGroup(), is(19));
+    assertThat(childCoverageLineItem.getFacilityVisitId(), is(3L));
   }
 
   @Test
   public void shouldRoundTargetGroupCorrectly() throws Exception {
     Facility facility = mock(Facility.class);
+    FacilityVisit facilityVisit = new FacilityVisit();
+    facilityVisit.setId(3L);
     VaccinationProduct vaccinationProduct = new VaccinationProduct("BCG", "BCG", true);
 
     when(facility.getWhoRatioFor("BCG")).thenReturn(2.6);
     when(facility.getCatchmentPopulation()).thenReturn((long) 8);
 
-    ChildCoverageLineItem childCoverageLineItem = new ChildCoverageLineItem(facility, vaccinationProduct);
+    ChildCoverageLineItem childCoverageLineItem = new ChildCoverageLineItem(facilityVisit, facility, vaccinationProduct);
 
     assertThat(childCoverageLineItem.getVaccination(), is("BCG"));
     assertThat(childCoverageLineItem.getTargetGroup(), is(21));
+    assertThat(childCoverageLineItem.getFacilityVisitId(), is(3L));
   }
 
   @Test
   public void shouldSetTargetGroupNullIfWhoRatioIsNull() throws Exception {
     Facility facility = mock(Facility.class);
+    FacilityVisit facilityVisit = new FacilityVisit();
+    facilityVisit.setId(3L);
     VaccinationProduct vaccinationProduct = new VaccinationProduct("BCG", "BCG", true);
 
     when(facility.getWhoRatioFor("BCG")).thenReturn(null);
     when(facility.getCatchmentPopulation()).thenReturn((long) 8);
 
-    ChildCoverageLineItem childCoverageLineItem = new ChildCoverageLineItem(facility, vaccinationProduct);
+    ChildCoverageLineItem childCoverageLineItem = new ChildCoverageLineItem(facilityVisit, facility, vaccinationProduct);
 
     assertThat(childCoverageLineItem.getVaccination(), is("BCG"));
     assertThat(childCoverageLineItem.getTargetGroup(), is(nullValue()));
+    assertThat(childCoverageLineItem.getFacilityVisitId(), is(3L));
   }
 
   @Test
   public void shouldSetTargetGroupNullIfCatchmentPopulationIsNull() throws Exception {
     Facility facility = mock(Facility.class);
+    FacilityVisit facilityVisit = new FacilityVisit();
+    facilityVisit.setId(3L);
     VaccinationProduct vaccinationProduct = new VaccinationProduct("BCG", "BCG", true);
 
-    when(facility.getWhoRatioFor("BCG")).thenReturn(Double.valueOf(2));
+    when(facility.getWhoRatioFor("BCG")).thenReturn((double) 2);
     when(facility.getCatchmentPopulation()).thenReturn(null);
 
-    ChildCoverageLineItem childCoverageLineItem = new ChildCoverageLineItem(facility, vaccinationProduct);
+    ChildCoverageLineItem childCoverageLineItem = new ChildCoverageLineItem(facilityVisit, facility, vaccinationProduct);
 
     assertThat(childCoverageLineItem.getVaccination(), is("BCG"));
     assertThat(childCoverageLineItem.getTargetGroup(), is(nullValue()));
+    assertThat(childCoverageLineItem.getFacilityVisitId(), is(3L));
   }
 }

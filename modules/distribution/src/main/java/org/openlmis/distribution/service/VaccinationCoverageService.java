@@ -26,16 +26,24 @@ public class VaccinationCoverageService {
   @Autowired
   private VaccinationCoverageRepository repository;
 
-  public void save(VaccinationFullCoverage coverage) {
+  public void saveFullCoverage(VaccinationFullCoverage coverage) {
     FullCoverage fullCoverage = coverage.getFullCoverage();
     repository.saveFullCoverage(fullCoverage);
   }
 
-  public VaccinationFullCoverage getBy(Long facilityVisitId) {
-    return repository.getBy(facilityVisitId);
+  public VaccinationFullCoverage getFullCoverageBy(Long facilityVisitId) {
+    return repository.getFullCoverageBy(facilityVisitId);
   }
 
   public List<VaccinationProduct> getReferenceData(Boolean isChildCoverage) {
     return repository.getVaccinationProducts(isChildCoverage);
+  }
+
+  public void saveChildCoverage(VaccinationChildCoverage childCoverage) {
+    repository.saveChildCoverage(childCoverage);
+  }
+
+  public VaccinationChildCoverage getChildCoverageBy(Long facilityVisitId) {
+    return repository.getChildCoverageBy(facilityVisitId);
   }
 }

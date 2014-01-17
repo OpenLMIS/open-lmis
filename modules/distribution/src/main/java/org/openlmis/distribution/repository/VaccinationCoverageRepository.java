@@ -10,10 +10,7 @@
 
 package org.openlmis.distribution.repository;
 
-import org.openlmis.distribution.domain.FullCoverage;
-import org.openlmis.distribution.domain.VaccinationChildCoverage;
-import org.openlmis.distribution.domain.VaccinationFullCoverage;
-import org.openlmis.distribution.domain.VaccinationProduct;
+import org.openlmis.distribution.domain.*;
 import org.openlmis.distribution.repository.mapper.VaccinationCoverageMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -30,11 +27,22 @@ public class VaccinationCoverageRepository {
     mapper.insertFullVaccinationCoverage(fullCoverage);
   }
 
-  public VaccinationFullCoverage getBy(Long facilityVisitId) {
-    return new VaccinationFullCoverage(mapper.getBy(facilityVisitId));
+  public VaccinationFullCoverage getFullCoverageBy(Long facilityVisitId) {
+    return new VaccinationFullCoverage(mapper.getFullCoverageBy(facilityVisitId));
   }
 
   public List<VaccinationProduct> getVaccinationProducts(Boolean isChildCoverage) {
     return mapper.getVaccinationProducts(isChildCoverage);
+  }
+
+  public void saveChildCoverage(VaccinationChildCoverage childCoverage) {
+    for (ChildCoverageLineItem childCoverageLineItem : childCoverage.getChildCoverageLineItems()) {
+      mapper.insertChildVaccinationCoverageLineItem(childCoverageLineItem);
+    }
+  }
+
+  public VaccinationChildCoverage getChildCoverageBy(Long facilityVisitId) {
+    List<ChildCoverageLineItem> childCoverageLineItems = mapper.getChildCoverageLineItemsBy(facilityVisitId);
+    return new VaccinationChildCoverage(childCoverageLineItems);
   }
 }

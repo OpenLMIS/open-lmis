@@ -143,7 +143,7 @@ public class DistributionControllerTest {
     distribution.setId(1L);
     FacilityDistributionDTO facilityDistributionDTO = spy(new FacilityDistributionDTO());
     facilityDistributionDTO.setFacilityVisit(new FacilityVisit());
-    FacilityDistribution facilityDistributionData = new FacilityDistribution(null, null, new DistributionRefrigerators(EMPTY_LIST), null, null);
+    FacilityDistribution facilityDistributionData = new FacilityDistribution(null, null, new DistributionRefrigerators(EMPTY_LIST), null, null, null);
 
     when(service.sync(facilityDistributionData)).thenReturn(true);
     doReturn(facilityDistributionData).when(facilityDistributionDTO).transform();

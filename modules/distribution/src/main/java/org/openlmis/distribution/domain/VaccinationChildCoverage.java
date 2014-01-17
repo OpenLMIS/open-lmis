@@ -10,22 +10,24 @@
 
 package org.openlmis.distribution.domain;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.Facility;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class VaccinationChildCoverage {
 
-  private Long facilityVisitId;
   private List<ChildCoverageLineItem> childCoverageLineItems = new ArrayList<>();
 
   public VaccinationChildCoverage(FacilityVisit facilityVisit, Facility facility, List<VaccinationProduct> vaccinationProducts) {
-    this.facilityVisitId = facilityVisit.getId();
     for(VaccinationProduct vaccinationProduct : vaccinationProducts) {
-      ChildCoverageLineItem childCoverageLineItem = new ChildCoverageLineItem(facility, vaccinationProduct);
+      ChildCoverageLineItem childCoverageLineItem = new ChildCoverageLineItem(facilityVisit, facility, vaccinationProduct);
       this.childCoverageLineItems.add(childCoverageLineItem);
     }
   }
