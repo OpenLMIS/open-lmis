@@ -15,8 +15,8 @@ import org.openlmis.UiUtils.TestWebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
-import java.util.List;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
@@ -181,21 +181,6 @@ public class CoveragePage extends DistributionTab {
   public String getTextOfCoverageHeader(){
     testWebDriver.waitForElementToAppear(coverageHeader);
     return coverageHeader.getText();
-  }
-
-  public String getTextOfFullTab(){
-    testWebDriver.waitForElementToAppear(fullTab);
-    return fullTab.getText();
-  }
-
-  public String getTextOfChildrenTab(){
-    testWebDriver.waitForElementToAppear(childrenTab);
-    return childrenTab.getText();
-  }
-
-  public String getTextOfAdultsTab(){
-    testWebDriver.waitForElementToAppear(adultsTab);
-    return adultsTab.getText();
   }
 
   public String getTextOfCompletelyVaccinatedHeader(){
