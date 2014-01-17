@@ -553,7 +553,7 @@ public class DistributionSyncTest extends TestCaseHelper {
     EPIUsePage epiUsePage = refrigeratorPage.navigateToEpiUse();
     assertTrue(epiUsePage.getProductGroup(1).equals("PG1-Name"));
     assertTrue(epiUsePage.getProductGroup(2).equals("PG2-Name"));
-    //TODO assert null
+    //assertNull(epiUsePage.getNoProductsAddedMessage());
 
     EpiInventoryPage epiInventoryPage = epiUsePage.navigateToEpiInventory();
     assertTrue(epiInventoryPage.getProductName(1).equals("antibiotic"));
@@ -612,7 +612,7 @@ public class DistributionSyncTest extends TestCaseHelper {
     EPIUsePage epiUsePage = refrigeratorPage.navigateToEpiUse();
     assertTrue(epiUsePage.getProductGroup(1).equals("PG1-Name"));
     //assertNull(epiUsePage.getProductGroup(2));
-    //TODO assert null
+    //assertNull(epiUsePage.getNoProductsAddedMessage());
 
     EpiInventoryPage epiInventoryPage = epiUsePage.navigateToEpiInventory();
     assertTrue(epiInventoryPage.getProductName(1).equals("antibiotic"));
@@ -736,7 +736,7 @@ public class DistributionSyncTest extends TestCaseHelper {
     EPIUsePage epiUsePage = refrigeratorPage.navigateToEpiUse();
     assertTrue(epiUsePage.getProductGroup(1).equals("PG1-Name"));
     //assertNull(epiUsePage.getProductGroup(2));
-    //TODO assertNull
+    //assertNull(epiUsePage.getNoProductsAddedMessage());
     EpiInventoryPage epiInventoryPage = epiUsePage.navigateToEpiInventory();
     assertTrue(epiInventoryPage.getProductName(1).equals("antibiotic"));
     assertTrue(epiInventoryPage.getProductName(2).equals("ProductName6"));
@@ -750,7 +750,7 @@ public class DistributionSyncTest extends TestCaseHelper {
     EPIUsePage epiUsePage = refrigeratorPage.navigateToEpiUse();
     //assertNull(epiUsePage.getProductGroup(1));
     //assertNull(epiUsePage.getProductGroup(2));
-    //TODO verify no products msg on Epi use
+    assertTrue(epiUsePage.getNoProductsAddedMessage().contains("No products added"));
     epiUsePage.verifyIndicator("GREEN");
     EpiInventoryPage epiInventoryPage = epiUsePage.navigateToEpiInventory();
     //assertNull(epiInventoryPage.getProductName(1));

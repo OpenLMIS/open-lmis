@@ -512,6 +512,13 @@ public class ManageDistribution extends TestCaseHelper {
     distributionPage.clickOk();
   }
 
+  @Then("^I verify distribution not initiated$")
+  public void verifyDistributionNotInitiated() throws IOException {
+    distributionPage = PageFactory.getInstanceOfDistributionPage(testWebDriver);
+    distributionPage.verifyFacilityNotSupportedMessage("VACCINES","Delivery Zone First");
+    distributionPage.verifyNoDistributionCachedMessage();
+  }
+
   private void verifyElementsInTable(String deliveryZoneNameFirst, String programFirst, String periodDisplayedByDefault) {
     SeleneseTestNgHelper.assertEquals(testWebDriver.getElementByXpath("//div[@id='cachedDistributions']/div[2]/" +
       "div[1]/div[1]/div").getText(), deliveryZoneNameFirst);
