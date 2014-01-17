@@ -123,10 +123,10 @@ public class VaccinationCoverageMapperIT {
     ResultSet resultSet = queryExecutor.execute("SELECT * FROM full_coverages WHERE id = " + vaccinationFullCoverage.getId());
     assertTrue(resultSet.next());
     assertThat(resultSet.getLong("facilityVisitId"), is(facilityVisit.getId()));
-    assertThat(resultSet.getInt("femaleHealthCenterReading"), is(34));
-    assertThat(resultSet.getInt("femaleMobileBrigadeReading"), is(78));
-    assertThat(resultSet.getInt("maleHealthCenterReading"), is(11));
-    assertThat(resultSet.getInt("maleMobileBrigadeReading"), is(666));
+    assertThat(resultSet.getInt("femaleHealthCenter"), is(34));
+    assertThat(resultSet.getInt("femaleOutreach"), is(78));
+    assertThat(resultSet.getInt("maleHealthCenter"), is(11));
+    assertThat(resultSet.getInt("maleOutreach"), is(666));
     assertThat(resultSet.getLong("createdBy"), is(1L));
   }
 

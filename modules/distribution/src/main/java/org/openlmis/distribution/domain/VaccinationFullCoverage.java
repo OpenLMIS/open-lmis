@@ -23,15 +23,15 @@ import org.openlmis.core.domain.BaseModel;
 public class VaccinationFullCoverage extends BaseModel {
 
   private Long facilityVisitId;
-  private Integer femaleHealthCenterReading;
-  private Integer femaleMobileBrigadeReading;
-  private Integer maleHealthCenterReading;
-  private Integer maleMobileBrigadeReading;
+  private Integer femaleHealthCenter;
+  private Integer femaleOutreach;
+  private Integer maleHealthCenter;
+  private Integer maleOutreach;
 
   public VaccinationFullCoverage(Integer femaleHealthCenterReading, Integer femaleMobileBrigadeReading, Integer maleHealthCenterReading, Integer maleMobileBrigadeReading) {
-    this.femaleHealthCenterReading = femaleHealthCenterReading;
-    this.femaleMobileBrigadeReading = femaleMobileBrigadeReading;
-    this.maleHealthCenterReading = maleHealthCenterReading;
-    this.maleMobileBrigadeReading = maleMobileBrigadeReading;
+    this.femaleHealthCenter = femaleHealthCenterReading;
+    this.femaleOutreach = femaleMobileBrigadeReading;
+    this.maleHealthCenter = maleHealthCenterReading;
+    this.maleOutreach = maleMobileBrigadeReading;
   }
 }

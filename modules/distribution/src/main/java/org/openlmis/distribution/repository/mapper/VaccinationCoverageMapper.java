@@ -23,9 +23,9 @@ import java.util.List;
 @Repository
 public interface VaccinationCoverageMapper {
 
-  @Insert({"INSERT INTO full_coverages (facilityVisitId, femaleHealthCenterReading, femaleMobileBrigadeReading, maleHealthCenterReading, maleMobileBrigadeReading,",
+  @Insert({"INSERT INTO full_coverages (facilityVisitId, femaleHealthCenter, femaleOutreach, maleHealthCenter, maleOutreach,",
     "createdBy, modifiedBy)",
-    "VALUES (#{facilityVisitId}, #{femaleHealthCenterReading}, #{femaleMobileBrigadeReading}, #{maleHealthCenterReading}, #{maleMobileBrigadeReading},",
+    "VALUES (#{facilityVisitId}, #{femaleHealthCenter}, #{femaleOutreach}, #{maleHealthCenter}, #{maleOutreach},",
     "#{createdBy}, #{createdBy})"})
   @Options(useGeneratedKeys = true)
   void insertFullVaccinationCoverage(VaccinationFullCoverage vaccinationFullCoverage);
