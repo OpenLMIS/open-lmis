@@ -42,9 +42,10 @@ System Requirement
       - **export NODE_PATH="/usr/local/bin/node"**
       - **export PATH="/usr/local/share/npm/bin:$PATH"**  
   
-- Grunt.js (used for linting JS, LESS files, minifying JS files etc.)
+- NPM dependencies (used for linting JS, LESS files, minifying JS files & running jasmine specs etc.)
   * Install Grunt command-line runner by running (after installing Node.js as mentioned in aformentioned step) ```npm install -g grunt-cli```
   * Install project-specific grunt dependencies by navigating to ```modules/openlmis-web``` from project root directory and run ```npm install``` (one-time activity)
+  * Install karma test runner with karma coverage by running ```npm install -g karma karma-coverage```
   * Grunt tasks available can be found in ```modules/openlmis-web/Gruntfile.js``` 
 
 Source code 
