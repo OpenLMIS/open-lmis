@@ -101,6 +101,10 @@ public class UserRepository {
     return userMapper.getUserWithSearchedName(userSearchParam);
   }
 
+  public List<User> getAllUsers() {
+    return userMapper.getAllUsers();
+  }
+
   public User getById(Long id) {
     return userMapper.getById(id);
   }

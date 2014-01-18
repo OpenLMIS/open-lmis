@@ -70,7 +70,10 @@ public class UserService {
   }
 
   public List<User> searchUser(String userSearchParam) {
-    return userRepository.searchUser(userSearchParam);
+      if( userSearchParam != null && !userSearchParam.isEmpty() )
+        return userRepository.searchUser(userSearchParam);
+      else
+        return userRepository.getAllUsers();
   }
 
   public User getById(Long id) {
