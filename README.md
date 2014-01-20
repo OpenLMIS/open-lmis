@@ -57,8 +57,9 @@ Source code
 
 IntelliJ IDEA Setup
 -------------------
-1. Run ```gradle idea``` to create the intellij project files
-2. Open the open-lmis.ipr file
+1. Run ```gradle idea``` to create the IntelliJ project files (may take some time downloading dependencies)
+2. Open the open-lmis.ipr file (may take some time indexing files, first time only)
+3. Install Lombok plugin according to the IntelliJ version.
 
  
 Running App on embedded Jetty server
