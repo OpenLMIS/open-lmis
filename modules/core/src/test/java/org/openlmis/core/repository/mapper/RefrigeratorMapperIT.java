@@ -122,12 +122,18 @@ public class RefrigeratorMapperIT {
     enabledRefrigerator2.setModifiedBy(1L);
     mapper.insert(enabledRefrigerator2);
 
+    Facility inactiveFacility = insertMemberFacility(deliveryZone, program, "F10B", "facility", 10l, false);
+    Refrigerator refrigeratorForInactiveFacility = new Refrigerator("SAM4", "AUO4", "SAM4", inactiveFacility.getId(), true);
+    refrigeratorForInactiveFacility.setCreatedBy(1L);
+    refrigeratorForInactiveFacility.setModifiedBy(1L);
+    mapper.insert(refrigeratorForInactiveFacility);
+
     Program unsupportedProgram = new Program();
     unsupportedProgram.setId(2l);
 
     List<Refrigerator> refrigerators = mapper.getRefrigeratorsForADeliveryZoneAndProgram(deliveryZone.getId(), program.getId());
 
-    assertThat(refrigerators.size(), is(2));
+    assertThat(refrigerators.size(), is(3));
     assertThat(refrigerators.get(0).getSerialNumber(), is(enabledRefrigerator2.getSerialNumber()));
     assertThat(refrigerators.get(1).getSerialNumber(), is(enabledRefrigerator1.getSerialNumber()));
     assertThat(refrigerators.get(0).getEnabled(), is(true));
