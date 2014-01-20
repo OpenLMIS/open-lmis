@@ -32,7 +32,7 @@ function ManagePODController($scope, OrdersForManagePOD, messageService, OrderPO
       {field: 'emergency', displayName: messageService.get("requisition.type.emergency"),
         cellTemplate: '<div class="ngCellText checked"><i ng-class="{\'icon-ok\': row.entity.rnr.emergency}"></i></div>',
         width: 90 },
-      {cellTemplate: "<div class='ngCellText'><a ng-click='createPOD({{row.entity.id}})' openlmis-message='link.update.pod'></a></div>", width: 180}
+      {cellTemplate: "<div class='ngCellText'><a ng-click='createPOD({{row.entity.id}})' id='updatePod{{row.entity.id}}' openlmis-message='link.update.pod'></a></div>", width: 180}
     ]
   };
 
