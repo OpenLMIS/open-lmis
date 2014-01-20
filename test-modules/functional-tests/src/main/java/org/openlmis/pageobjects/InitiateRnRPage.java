@@ -28,6 +28,7 @@ import java.util.Map;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.*;
 import static java.lang.Float.parseFloat;
+import static org.openlmis.UiUtils.TestCaseHelper.parsePostgresBoolean;
 import static org.openqa.selenium.support.How.*;
 
 
@@ -115,10 +116,16 @@ public class InitiateRnRPage extends RequisitionPage {
   private static WebElement totalCost = null;
 
   @FindBy(how = ID, using = "price_0")
-  private static WebElement pricePerPack = null;
+  private static WebElement pricePerPackForFirstProduct = null;
+
+  @FindBy(how = ID, using = "price_1")
+  private static WebElement pricePerPackForSecondProduct = null;
 
   @FindBy(how = ID, using = "packsToShip_0")
-  private static WebElement packsToShip = null;
+  private static WebElement packsToShipForFirstProduct = null;
+
+  @FindBy(how = ID, using = "packsToShip_1")
+  private static WebElement packsToShipForSecondProduct = null;
 
   @FindBy(how = ID, using = "price_0")
   private static WebElement pricePerPackNonFullSupply = null;
@@ -305,6 +312,8 @@ public class InitiateRnRPage extends RequisitionPage {
     put("quantityDispensedFirstProduct", quantityDispensedFirstProduct);
     put("totalStockOutDaysFirstProduct", totalStockOutDaysFirstProduct);
     put("requestedQuantityFirstProduct", requestedQuantityFirstProduct);
+    put("packsToShipForFirstProduct", packsToShipForFirstProduct);
+    put("pricePerPackForFirstProduct", pricePerPackForFirstProduct);
 
     put("beginningBalanceSecondProduct", beginningBalanceSecondProduct);
     put("stockInHandSecondProduct", stockInHandSecondProduct);
@@ -313,6 +322,9 @@ public class InitiateRnRPage extends RequisitionPage {
     put("quantityDispensedSecondProduct", quantityDispensedSecondProduct);
     put("totalStockOutDaysSecondProduct", totalStockOutDaysSecondProduct);
     put("requestedQuantitySecondProduct", requestedQuantitySecondProduct);
+    put("packsToShipForSecondProduct", packsToShipForSecondProduct);
+    put("pricePerPackForSecondProduct", pricePerPackForSecondProduct);
+
     put("allocatedBudgetAmount", allocatedBudgetAmount);
   }};
 
@@ -488,28 +500,28 @@ public class InitiateRnRPage extends RequisitionPage {
   }
 
   public void verifyPacksToShip(Integer packSize) throws IOException, SQLException {
-    testWebDriver.waitForElementToAppear(packsToShip);
-    String actualPacksToShip = testWebDriver.getText(packsToShip);
+    testWebDriver.waitForElementToAppear(packsToShipForFirstProduct);
+    String actualPacksToShip = testWebDriver.getText(packsToShipForFirstProduct);
     int expectedPacksToShip;
     Integer remainingQuantity;
 
     if (requestedQuantityFirstProduct.getAttribute("value").isEmpty()) {
       Integer actualCalculatedOrderQuantity = Integer.parseInt(testWebDriver.getText(calculatedOrderQuantity));
-      expectedPacksToShip = (int) Math.floor((float)actualCalculatedOrderQuantity / packSize);
+      expectedPacksToShip = (int) Math.floor((float) actualCalculatedOrderQuantity / packSize);
       remainingQuantity = (actualCalculatedOrderQuantity % packSize);
     } else {
       Integer actualRequestedQuantity = Integer.parseInt(requestedQuantityFirstProduct.getAttribute("value"));
-      expectedPacksToShip = (int) Math.floor((float)actualRequestedQuantity / packSize);
+      expectedPacksToShip = (int) Math.floor((float) actualRequestedQuantity / packSize);
       remainingQuantity = (actualRequestedQuantity % packSize);
     }
 
     DBWrapper dbWrapper = new DBWrapper();
-    boolean roundToZeroFlag = Boolean.parseBoolean(dbWrapper.getAttributeFromTable("products","roundToZero","code","P10"));
+    boolean roundToZeroFlag = parsePostgresBoolean(dbWrapper.getAttributeFromTable("requisition_line_items", "roundToZero", "productCode", "P10"));
 
-    if(expectedPacksToShip>0 || (expectedPacksToShip==0 && !roundToZeroFlag)){
-      Integer packRoundingThreshold =Integer.parseInt(dbWrapper.getAttributeFromTable("products", "packRoundingThreshold", "code", "P10")) ;
-      if(remainingQuantity>=packRoundingThreshold || expectedPacksToShip==0){
-          expectedPacksToShip++;
+    if (expectedPacksToShip > 0 || (expectedPacksToShip == 0 && !roundToZeroFlag)) {
+      Integer packRoundingThreshold = Integer.parseInt(dbWrapper.getAttributeFromTable("requisition_line_items", "packRoundingThreshold", "productCode", "P10"));
+      if (remainingQuantity >= packRoundingThreshold || expectedPacksToShip == 0) {
+        expectedPacksToShip++;
       }
     }
 
@@ -518,16 +530,24 @@ public class InitiateRnRPage extends RequisitionPage {
   }
 
   public void calculateAndVerifyTotalCost() {
-    actualTotalCostFullSupply = calculateTotalCost();
+    actualTotalCostFullSupply = calculateTotalCostForProduct("FirstProduct");
     assertEquals(actualTotalCostFullSupply.toString() + "0", totalCost.getText().substring(1));
     testWebDriver.sleep(500);
   }
 
-  public float calculateTotalCost() {
+  public float calculateTotalCostForProduct(String product) {
+    WebElement packsToShip = elementsMap.get("packsToShipFor" + product);
+    WebElement pricePerPack = elementsMap.get("pricePerPackFor" + product);
+
     testWebDriver.waitForElementToAppear(packsToShip);
     String actualPacksToShip = testWebDriver.getText(packsToShip);
     testWebDriver.waitForElementToAppear(pricePerPack);
-    String actualPricePerPack = testWebDriver.getText(pricePerPack).substring(1);
+    String actualPricePerPack = pricePerPack.getText().substring(1);
+
+    return calculateTotalCost(actualPacksToShip, actualPricePerPack);
+  }
+
+  private float calculateTotalCost(String actualPacksToShip, String actualPricePerPack) {
     if (actualPacksToShip.trim().equals(""))
       return parseFloat("0");
     else
@@ -541,8 +561,8 @@ public class InitiateRnRPage extends RequisitionPage {
   }
 
   public float calculateTotalCostNonFullSupply() {
-    testWebDriver.waitForElementToAppear(packsToShip);
-    String actualPacksToShip = testWebDriver.getText(packsToShip);
+    testWebDriver.waitForElementToAppear(packsToShipForFirstProduct);
+    String actualPacksToShip = testWebDriver.getText(packsToShipForFirstProduct);
     testWebDriver.waitForElementToAppear(pricePerPackNonFullSupply);
     String actualPricePerPack = testWebDriver.getText(pricePerPackNonFullSupply).substring(1);
     return parseFloat(actualPacksToShip.trim()) * parseFloat(actualPricePerPack.trim());
@@ -557,7 +577,7 @@ public class InitiateRnRPage extends RequisitionPage {
     assertEquals(actualTotalCost.toString(), totalCostFooter.getText().trim().substring(1));
     fullSupplyTab.click();
     testWebDriver.sleep(500);
-    actualTotalCostFullSupply = calculateTotalCost();
+    actualTotalCostFullSupply = calculateTotalCostForProduct("FirstProduct") + calculateTotalCostForProduct("SecondProduct");
     assertEquals(totalCostFooter.getText().trim().substring(1),
       new BigDecimal(actualTotalCostFullSupply + actualTotalCostNonFullSupply).setScale(2,
         BigDecimal.ROUND_HALF_UP).toString());
@@ -904,7 +924,7 @@ public class InitiateRnRPage extends RequisitionPage {
     return budgetWarningMessageOnFooter.getText();
   }
 
-  public String getPacksToShip(){
-    return packsToShip.getText();
+  public String getPacksToShip() {
+    return packsToShipForFirstProduct.getText();
   }
 }
