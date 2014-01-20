@@ -19,7 +19,7 @@ function RefrigeratorReading(facilityVisitId, refrigeratorReading) {
 
     function isEmpty(field) {
       if (field === "temperature" && !(isUndefined(_this[field].value)) &&
-        _this[field].value.toString().trim() === "-" && _this[field].value.toString().trim() === ".") {
+        ( _this[field].value.toString().trim() === "-" || _this[field].value.toString().trim() === ".")) {
         return true;
       }
       if (isUndefined(_this[field])) {
