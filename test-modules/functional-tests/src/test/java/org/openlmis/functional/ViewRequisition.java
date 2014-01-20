@@ -108,7 +108,7 @@ public class ViewRequisition extends TestCaseHelper {
 
   @When("^I update approved quantity \"([^\"]*)\"$")
   public void updateApprovedQuantity(String quantity) throws IOException, SQLException {
-    dbWrapper.insertApprovedQuantity(Integer.parseInt(quantity));
+    dbWrapper.updateFieldValue("requisition_line_items", "quantityApproved", Integer.parseInt(quantity));
   }
 
   @Then("^I should see requisition status as \"([^\"]*)\"$")
@@ -162,7 +162,7 @@ public class ViewRequisition extends TestCaseHelper {
     viewRequisitionPage.enterViewSearchCriteria();
     viewRequisitionPage.clickSearch();
     viewRequisitionPage.verifyNoRequisitionFound();
-    dbWrapper.insertApprovedQuantity(10);
+    dbWrapper.updateFieldValue("requisition_line_items", "quantityApproved", 10);
     dbWrapper.updateRequisitionStatus(AUTHORIZED, userSIC, "HIV");
     viewRequisitionPage.clickSearch();
     viewRequisitionPage.clickRnRList();

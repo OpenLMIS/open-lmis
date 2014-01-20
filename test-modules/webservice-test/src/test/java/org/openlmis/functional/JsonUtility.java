@@ -60,7 +60,7 @@ public class JsonUtility extends TestCaseHelper {
     dbWrapper.insertRequisitions(1, program, true, "2012-12-01", "2015-12-01", "F10");
     dbWrapper.updateRequisitionStatus("SUBMITTED", userName, program);
     dbWrapper.updateRequisitionStatus("APPROVED", userName, program);
-    dbWrapper.insertApprovedQuantity(1);
+    dbWrapper.updateFieldValue("requisition_line_items", "quantityApproved", 1);
     dbWrapper.insertFulfilmentRoleAssignment(userName, "store in-charge", "F10");
     dbWrapper.insertOrders(status, userName, program);
     dbWrapper.updatePacksToShip("1");
@@ -145,7 +145,7 @@ public class JsonUtility extends TestCaseHelper {
     dbWrapper.assignRight("store in-charge", "MANAGE_POD");
     dbWrapper.setupUserForFulfillmentRole("commTrack", STORE_IN_CHARGE, "F10");
     dbWrapper.updateRequisitionStatus("APPROVED", "commTrack", "HIV");
-    dbWrapper.insertApprovedQuantity(10);
+    dbWrapper.updateFieldValue("requisition_line_items", "quantityApproved", 10);
     dbWrapper.insertOrders("RELEASED", userName, program);
     dbWrapper.updatePacksToShip("1");
     String id = String.valueOf(dbWrapper.getMaxRnrID());

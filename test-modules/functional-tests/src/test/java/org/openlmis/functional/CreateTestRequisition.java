@@ -72,7 +72,7 @@ public class CreateTestRequisition extends TestCaseHelper {
     dbWrapper.insertValuesInRegimenLineItems(patientsOnTreatment, patientsToInitiateTreatment, patientsStoppedTreatment,
             remarks);
     dbWrapper.updateRequisitionStatusByRnrId(SUBMITTED, userSIC, dbWrapper.getMaxRnrID());
-    dbWrapper.insertApprovedQuantity(10);
+    dbWrapper.updateFieldValue("requisition_line_items", "quantityApproved", 10);
     dbWrapper.updateRequisitionStatusByRnrId(AUTHORIZED, userSIC, dbWrapper.getMaxRnrID());
     dbWrapper.updateRequisitionStatusByRnrId(IN_APPROVAL, userSIC, dbWrapper.getMaxRnrID());
     ApprovePage approvePageTopSNUser = homePage.navigateToApprove();
@@ -94,7 +94,7 @@ public class CreateTestRequisition extends TestCaseHelper {
     dbWrapper.insertValuesInRegimenLineItems(patientsOnTreatment, patientsToInitiateTreatment, patientsStoppedTreatment,
               remarks);
     dbWrapper.updateRequisitionStatusByRnrId(SUBMITTED, userSIC, dbWrapper.getMaxRnrID());
-    dbWrapper.insertApprovedQuantity(10);
+    dbWrapper.updateFieldValue("requisition_line_items", "quantityApproved", 10);
     dbWrapper.updateRequisitionStatusByRnrId(AUTHORIZED, userSIC, dbWrapper.getMaxRnrID());
     dbWrapper.updateRequisitionStatusByRnrId(IN_APPROVAL, userSIC, dbWrapper.getMaxRnrID());
 
@@ -107,7 +107,7 @@ public class CreateTestRequisition extends TestCaseHelper {
     dbWrapper.insertValuesInRegimenLineItems(patientsOnTreatment, patientsToInitiateTreatment, patientsStoppedTreatment,
               remarks);
     dbWrapper.updateRequisitionStatusByRnrId(SUBMITTED, userSIC, dbWrapper.getMaxRnrID());
-    dbWrapper.insertApprovedQuantity(10);
+    dbWrapper.updateFieldValue("requisition_line_items", "quantityApproved", 10);
     dbWrapper.updateRequisitionStatusByRnrId(AUTHORIZED, userSIC, dbWrapper.getMaxRnrID());
 
 

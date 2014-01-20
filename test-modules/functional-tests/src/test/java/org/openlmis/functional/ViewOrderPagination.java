@@ -40,7 +40,7 @@ public class ViewOrderPagination extends TestCaseHelper {
     dbWrapper.updateRequisitionStatus("SUBMITTED", userSIC, "TB");
     dbWrapper.updateRequisitionStatus("APPROVED", userSIC, "MALARIA");
     dbWrapper.updateRequisitionStatus("APPROVED", userSIC, "TB");
-    dbWrapper.insertApprovedQuantity(10);
+    dbWrapper.updateFieldValue("requisition_line_items", "quantityApproved", 10);
     dbWrapper.updatePacksToShip("1");
     dbWrapper.insertFulfilmentRoleAssignment(userSIC, "store in-charge", "F10");
     dbWrapper.insertOrders("RELEASED", userSIC, "MALARIA");

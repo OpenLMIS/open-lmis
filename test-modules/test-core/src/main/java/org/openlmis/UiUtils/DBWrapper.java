@@ -756,8 +756,8 @@ public class DBWrapper {
       "', patientsStoppedTreatment='" + patientsStoppedTreatment + "',remarks='" + remarks + "';");
   }
 
-  public void insertApprovedQuantity(Integer quantity) throws IOException, SQLException {
-    update("update requisition_line_items set quantityApproved=" + quantity);
+  public void updateFieldValue(String tableName, String fieldName, Integer quantity) throws IOException, SQLException {
+    update("update " + tableName + " set " + fieldName + "=" + quantity);
   }
 
   public void updateRequisitionStatus(String status, String username, String program) throws IOException, SQLException {
@@ -1272,11 +1272,11 @@ public class DBWrapper {
   }
 
   public ResultSet getEpiInventoryDetails(String productCode, String facilityCode) throws SQLException {
-    ResultSet resultSet= query("SELECT * FROM epi_inventory_line_items WHERE productCode = '%s'" +
+    ResultSet resultSet = query("SELECT * FROM epi_inventory_line_items WHERE productCode = '%s'" +
       "AND facilityVisitId=(Select id from facility_visits where facilityId=" +
       "(Select id from facilities where code ='%s'));", productCode, facilityCode);
     resultSet.next();
-    return  resultSet;
+    return resultSet;
   }
 
   public Map<String, String> getFullCoveragesDetails(String facilityCode) throws SQLException {

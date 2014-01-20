@@ -11,22 +11,17 @@
 package org.openlmis.functional;
 
 import cucumber.api.DataTable;
-import cucumber.api.java.Before;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.When;
 import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.pageobjects.*;
-import org.testng.annotations.BeforeMethod;
 
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import static java.util.Arrays.asList;
 
 
 public class CommonSteps extends TestCaseHelper {
@@ -79,6 +74,6 @@ public class CommonSteps extends TestCaseHelper {
   }
   @And("^I have approved quantity \"([^\"]*)\"$")
     public void insertApprovedQuantity(int approvedQuantity) throws Exception {
-    dbWrapper.insertApprovedQuantity(approvedQuantity);
+    dbWrapper.updateFieldValue("requisition_line_items", "quantityApproved", approvedQuantity);
   }
 }
