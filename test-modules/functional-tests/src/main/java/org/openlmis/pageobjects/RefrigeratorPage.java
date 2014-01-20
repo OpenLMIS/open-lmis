@@ -193,7 +193,7 @@ public class RefrigeratorPage extends DistributionTab {
   }
 
   @Override
-  public void verifyData(Map<String, String> map) {
+  public void verifyData(List<Map<String, String>> map) {
     //To change body of implemented methods use File | Settings | File Templates.
   }
 

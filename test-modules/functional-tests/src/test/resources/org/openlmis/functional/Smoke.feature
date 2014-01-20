@@ -547,12 +547,14 @@ Feature: Smoke Tests
     Then Verify "epi inventory" indicator should be "RED"
     And I Enter "epi inventory" values:
       | existingQuantity | deliveredQuantity | spoiledQuantity |
+      | 100              | 50                | 100             |
       | 10               |                   | 10              |
     Then Verify "epi inventory" indicator should be "AMBER"
-    When I enter EPI Inventory deliveredQuantity of Row "1" as "5"
+    When I enter EPI Inventory deliveredQuantity of Row "2" as "5"
     Then Verify "epi inventory" indicator should be "GREEN"
     And I verify saved "epi inventory" values:
       | existingQuantity | deliveredQuantity | spoiledQuantity |
+      | 100              | 50                | 100             |
       | 10               | 5                 | 10              |
 
 

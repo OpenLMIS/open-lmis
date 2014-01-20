@@ -21,6 +21,7 @@ import java.util.Map;
 
 import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
 import static org.openqa.selenium.support.How.ID;
+
 public class CoveragePage extends DistributionTab {
 
   @FindBy(how = ID, using = "coverageTabLabel")
@@ -86,12 +87,13 @@ public class CoveragePage extends DistributionTab {
   @FindBy(how = ID, using = "coverageMaleMB")
   public static WebElement maleMobileBrigadeNR = null;
 
-  private Map<String, WebElement> coveragePageElements = new HashMap<String, WebElement>(){{
+  private Map<String, WebElement> coveragePageElements = new HashMap<String, WebElement>() {{
     put("femaleHealthCenter", femaleHealthCenterField);
     put("femaleMobileBrigade", femaleMobileBrigadeField);
     put("maleHealthCenter", maleHealthCenterField);
     put("maleMobileBrigade", maleMobileBrigadeField);
   }};
+
   public CoveragePage(TestWebDriver driver) {
     super(driver);
   }
@@ -111,11 +113,14 @@ public class CoveragePage extends DistributionTab {
   }
 
   @Override
-  public void verifyData(Map<String, String> data) {
-    assertEquals(coveragePageElements.get("femaleHealthCenter").getAttribute("value"), data.get("femaleHealthCenter"));
-    assertEquals(coveragePageElements.get("femaleMobileBrigade").getAttribute("value"), data.get("femaleMobileBrigade"));
-    assertEquals(coveragePageElements.get("maleHealthCenter").getAttribute("value"), data.get("maleHealthCenter"));
-    assertEquals(coveragePageElements.get("maleMobileBrigade").getAttribute("value"), data.get("maleMobileBrigade"));
+  public void verifyData(List<Map<String, String>> data) {
+    for (int i = 0; i < data.size(); ++i) {
+      Map<String, String> coverageData = data.get(i);
+      assertEquals(coveragePageElements.get("femaleHealthCenter").getAttribute("value"), coverageData.get("femaleHealthCenter"));
+      assertEquals(coveragePageElements.get("femaleMobileBrigade").getAttribute("value"), coverageData.get("femaleMobileBrigade"));
+      assertEquals(coveragePageElements.get("maleHealthCenter").getAttribute("value"), coverageData.get("maleHealthCenter"));
+      assertEquals(coveragePageElements.get("maleMobileBrigade").getAttribute("value"), coverageData.get("maleMobileBrigade"));
+    }
   }
 
   @Override
@@ -152,75 +157,75 @@ public class CoveragePage extends DistributionTab {
     enterMaleMobileBrigade(maleMobileBrigade);
   }
 
-  public void clickApplyNRToAll(){
+  public void clickApplyNRToAll() {
     testWebDriver.waitForElementToAppear(coverageFormApplyNRToAll);
     coverageFormApplyNRToAll.click();
     clickOkButton();
   }
 
-  public void toggleApplyNRToFemaleHealthCenter(){
+  public void toggleApplyNRToFemaleHealthCenter() {
     testWebDriver.waitForElementToAppear(femaleHealthCenterNR);
     femaleHealthCenterNR.click();
   }
 
-  public void toggleApplyNRToMaleHealthCenter(){
+  public void toggleApplyNRToMaleHealthCenter() {
     testWebDriver.waitForElementToAppear(maleHealthCenterNR);
     maleHealthCenterNR.click();
   }
 
-  public void toggleApplyNRToFemaleMobileBrigade(){
+  public void toggleApplyNRToFemaleMobileBrigade() {
     testWebDriver.waitForElementToAppear(femaleMobileBrigadeNR);
     femaleMobileBrigadeNR.click();
   }
 
-  public void toggleApplyNRToMaleMobileBrigade(){
+  public void toggleApplyNRToMaleMobileBrigade() {
     testWebDriver.waitForElementToAppear(maleMobileBrigadeNR);
     maleMobileBrigadeNR.click();
   }
 
-  public String getTextOfCoverageHeader(){
+  public String getTextOfCoverageHeader() {
     testWebDriver.waitForElementToAppear(coverageHeader);
     return coverageHeader.getText();
   }
 
-  public String getTextOfCompletelyVaccinatedHeader(){
+  public String getTextOfCompletelyVaccinatedHeader() {
     testWebDriver.waitForElementToAppear(completeVaccinatedHeader);
     return completeVaccinatedHeader.getText();
   }
 
-  public String getTextOfFemaleHeader(){
+  public String getTextOfFemaleHeader() {
     testWebDriver.waitForElementToAppear(femaleHeader);
     return femaleHeader.getText();
   }
 
-  public String getTextOfMaleHeader(){
+  public String getTextOfMaleHeader() {
     testWebDriver.waitForElementToAppear(maleHeader);
     return maleHeader.getText();
   }
 
-  public String getTextOfHealthCenterHeader(){
+  public String getTextOfHealthCenterHeader() {
     testWebDriver.waitForElementToAppear(healthCenterHeader);
     return healthCenterHeader.getText();
   }
 
-  public String getTextOfMobileBrigadeHeader(){
+  public String getTextOfMobileBrigadeHeader() {
     testWebDriver.waitForElementToAppear(mobileBrigadeHeader);
     return mobileBrigadeHeader.getText();
   }
 
-  public boolean getStatusForField(String fieldName){
+  public boolean getStatusForField(String fieldName) {
     WebElement field = coveragePageElements.get(fieldName);
     testWebDriver.waitForElementToAppear(field);
     return field.isEnabled();
   }
 
-  public String getValueForField(String fieldName){
+  public String getValueForField(String fieldName) {
     WebElement field = coveragePageElements.get(fieldName);
     testWebDriver.waitForElementToAppear(field);
     return field.getAttribute("value");
   }
 
-  private void clickOkButton(){
+  private void clickOkButton() {
     testWebDriver.waitForElementToAppear(okButton);
     okButton.click();
   }

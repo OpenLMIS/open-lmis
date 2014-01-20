@@ -51,10 +51,13 @@ public class EpiInventoryPage extends DistributionTab {
   }
 
   @Override
-  public void verifyData(Map<String, String> data) {
-    assertEquals(getDeliveredQuantity(1), data.get("deliveredQuantity"));
-    assertEquals(getExistingQuantity(1), data.get("existingQuantity"));
-    assertEquals(getSpoiledQuantity(1), data.get("spoiledQuantity"));
+  public void verifyData(List<Map<String, String>> data) {
+    for (int i = 0; i < data.size(); ++i) {
+      Map<String, String> epiInventoryData = data.get(i);
+      assertEquals(getDeliveredQuantity(i+1), epiInventoryData.get("deliveredQuantity"));
+      assertEquals(getExistingQuantity(i+1), epiInventoryData.get("existingQuantity"));
+      assertEquals(getSpoiledQuantity(i+1), epiInventoryData.get("spoiledQuantity"));
+    }
   }
 
   public void navigate() {

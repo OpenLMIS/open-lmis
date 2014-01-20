@@ -25,6 +25,7 @@ import org.testng.annotations.*;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Map;
 
 @Listeners(CaptureScreenshotOnFailureListener.class)
@@ -61,7 +62,7 @@ public class RecordEPIUse extends TestCaseHelper {
     epiUsePage = PageFactory.getInstanceOfEpiUsePage(testWebDriver);
     epiUsePage.navigateToRefrigerators();
     epiUsePage.navigateToEpiUse();
-    Map<String, String> epiData = tableData.asMaps().get(0);
+    List<Map<String, String>> epiData = tableData.asMaps();
 
     epiUsePage.verifyData(epiData);
   }

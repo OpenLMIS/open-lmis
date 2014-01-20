@@ -35,25 +35,25 @@ public class GeneralObservationPage extends DistributionTab {
   public static final String VALUE = "value";
 
   @FindBy(how = How.XPATH, using = "//div[1]/div/div/ng-include/div/ul/li[6]/a")
-  private static WebElement generalObservationTab=null;
+  private static WebElement generalObservationTab = null;
 
   @FindBy(how = XPATH, using = "//div[@class='left-navigation ng-scope']/ul/li[6]/a/span[1][@class='status-icon']")
-  public static WebElement generalObservationsIndicator=null;
+  public static WebElement generalObservationsIndicator = null;
 
   @FindBy(how = ID, using = OBSERVATIONS)
-  public static WebElement observationsField=null;
+  public static WebElement observationsField = null;
 
   @FindBy(how = ID, using = VERIFIED_BY_NAME)
-  public static WebElement verifiedByNameField=null;
+  public static WebElement verifiedByNameField = null;
 
   @FindBy(how = ID, using = VERIFIED_BY_TITLE)
-  public static WebElement verifiedByTitleField=null;
+  public static WebElement verifiedByTitleField = null;
 
   @FindBy(how = ID, using = CONFIRMED_BY_NAME)
-  public static WebElement confirmedByNameField=null;
+  public static WebElement confirmedByNameField = null;
 
   @FindBy(how = ID, using = CONFIRMED_BY_TITLE)
-  public static WebElement confirmedByTitleField=null;
+  public static WebElement confirmedByTitleField = null;
 
   public Map<String, WebElement> fieldMap = new HashMap<String, WebElement>() {{
     put(OBSERVATIONS, observationsField);
@@ -88,12 +88,15 @@ public class GeneralObservationPage extends DistributionTab {
   }
 
   @Override
-  public void verifyData(Map<String, String> data) {
-    assertEquals(fieldMap.get(OBSERVATIONS).getAttribute(VALUE), data.get(OBSERVATIONS));
-    assertEquals(fieldMap.get(VERIFIED_BY_NAME).getAttribute(VALUE), data.get(VERIFIED_BY_NAME));
-    assertEquals(fieldMap.get(VERIFIED_BY_TITLE).getAttribute(VALUE), data.get(VERIFIED_BY_TITLE));
-    assertEquals(fieldMap.get(CONFIRMED_BY_NAME).getAttribute(VALUE), data.get(CONFIRMED_BY_NAME));
-    assertEquals(fieldMap.get(CONFIRMED_BY_TITLE).getAttribute(VALUE), data.get(CONFIRMED_BY_TITLE));
+  public void verifyData(List<Map<String, String>> data) {
+    for (int i = 0; i < data.size(); ++i) {
+      Map<String, String> generalObservationData = data.get(i);
+      assertEquals(fieldMap.get(OBSERVATIONS).getAttribute(VALUE), generalObservationData.get(OBSERVATIONS));
+      assertEquals(fieldMap.get(VERIFIED_BY_NAME).getAttribute(VALUE), generalObservationData.get(VERIFIED_BY_NAME));
+      assertEquals(fieldMap.get(VERIFIED_BY_TITLE).getAttribute(VALUE), generalObservationData.get(VERIFIED_BY_TITLE));
+      assertEquals(fieldMap.get(CONFIRMED_BY_NAME).getAttribute(VALUE), generalObservationData.get(CONFIRMED_BY_NAME));
+      assertEquals(fieldMap.get(CONFIRMED_BY_TITLE).getAttribute(VALUE), generalObservationData.get(CONFIRMED_BY_TITLE));
+    }
   }
 
   public void enterObservations(String observations) {
