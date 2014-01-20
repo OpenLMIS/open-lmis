@@ -13,8 +13,6 @@ package org.openlmis.functional;
 
 import com.thoughtworks.selenium.SeleneseTestBase;
 import cucumber.api.DataTable;
-import cucumber.api.java.After;
-import cucumber.api.java.Before;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
@@ -823,7 +821,7 @@ public class InitiateRnR extends TestCaseHelper {
     InitiateRnRPage initiateRnRPage = new InitiateRnRPage(testWebDriver);
     initiateRnRPage.enterValue(100, "requestedQuantityFirstProduct");
     initiateRnRPage.calculateAndVerifyTotalCost();
-    initiateRnRPage.verifyCostOnFooter();
+    initiateRnRPage.verifyCostOnFooterForProducts(1);
 
     initiateRnRPage.skipSingleProduct(1);
     initiateRnRPage.verifyAllFieldsDisabled();
@@ -854,7 +852,7 @@ public class InitiateRnR extends TestCaseHelper {
     initiateRnRPage.clickOk();
     initiateRnRPage.verifySubmitRnrSuccessMsg();
     initiateRnRPage.calculateAndVerifyTotalCost();
-    initiateRnRPage.verifyCostOnFooter();
+    initiateRnRPage.verifyCostOnFooterForProducts(1);
     assertEquals("125.0", Float.parseFloat(dbWrapper.getAttributeFromTable("requisitions", "fullSupplyItemsSubmittedCost", "id", String.valueOf(dbWrapper.getMaxRnrID()))));
   }
 
@@ -890,7 +888,7 @@ public class InitiateRnR extends TestCaseHelper {
     initiateRnRPage.unSkipAllProduct();
     initiateRnRPage.skipSingleProduct(2);
     initiateRnRPage.calculateAndVerifyTotalCost();
-    initiateRnRPage.verifyCostOnFooter();
+    initiateRnRPage.verifyCostOnFooterForProducts(1);
     initiateRnRPage.clickAuthorizeButton();
     initiateRnRPage.clickOk();
     initiateRnRPage.verifyAuthorizeRnrSuccessMsg();
@@ -938,7 +936,7 @@ public class InitiateRnR extends TestCaseHelper {
     initiateRnRPage.unSkipAllProduct();
     initiateRnRPage.skipSingleProduct(2);
     initiateRnRPage.calculateAndVerifyTotalCost();
-    initiateRnRPage.verifyCostOnFooter();
+    initiateRnRPage.verifyCostOnFooterForProducts(1);
     initiateRnRPage.clickAuthorizeButton();
     initiateRnRPage.clickOk();
     initiateRnRPage.verifyAuthorizeRnrSuccessMsg();

@@ -12,8 +12,6 @@ package org.openlmis.functional;
 
 
 import cucumber.api.DataTable;
-import cucumber.api.java.After;
-import cucumber.api.java.Before;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
@@ -277,7 +275,7 @@ public class E2EInitiateRnR extends TestCaseHelper {
     InitiateRnRPage initiateRnRPage = new InitiateRnRPage(testWebDriver);
     initiateRnRPage.addNonFullSupplyLineItems("99", "Due to unforeseen event", "antibiotic", "P11", "Antibiotics");
     initiateRnRPage.calculateAndVerifyTotalCostNonFullSupply();
-    initiateRnRPage.verifyCostOnFooter();
+    initiateRnRPage.verifyCostOnFooterForProducts(1);
   }
 
   @And("^I authorize RnR$")

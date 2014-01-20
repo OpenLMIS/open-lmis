@@ -12,8 +12,6 @@ package org.openlmis.functional;
 
 
 import com.thoughtworks.selenium.SeleneseTestNgHelper;
-import cucumber.api.java.After;
-import cucumber.api.java.Before;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import org.openlmis.UiUtils.CaptureScreenshotOnFailureListener;
@@ -285,7 +283,7 @@ public class ViewRequisition extends TestCaseHelper {
     initiateRnRPage.enterValue(0, "quantityReceivedSecondProduct");
     initiateRnRPage.enterValue(0, "quantityDispensedSecondProduct");
     initiateRnRPage.calculateAndVerifyTotalCost();
-    initiateRnRPage.verifyCostOnFooter();
+    initiateRnRPage.verifyCostOnFooterForProducts(2);
     initiateRnRPage.skipAllProduct();
     initiateRnRPage.verifyAllFieldsDisabled();
     initiateRnRPage.calculateAndVerifyTotalCost();

@@ -568,7 +568,7 @@ public class InitiateRnRPage extends RequisitionPage {
     return parseFloat(actualPacksToShip.trim()) * parseFloat(actualPricePerPack.trim());
   }
 
-  public void verifyCostOnFooter() {
+  public void verifyCostOnFooterForProducts(int numberOfProducts) {
     testWebDriver.waitForElementToAppear(showRnrCostDetailsIcon);
     showRnrCostDetailsIcon.click();
     String totalCostFullSupplyFooterValue = testWebDriver.getText(totalCostFullSupplyFooter);
@@ -577,12 +577,20 @@ public class InitiateRnRPage extends RequisitionPage {
     assertEquals(actualTotalCost.toString(), totalCostFooter.getText().trim().substring(1));
     fullSupplyTab.click();
     testWebDriver.sleep(500);
-    actualTotalCostFullSupply = calculateTotalCostForProduct("FirstProduct") + calculateTotalCostForProduct("SecondProduct");
+    actualTotalCostFullSupply = getCostForAllItems(numberOfProducts);
     assertEquals(totalCostFooter.getText().trim().substring(1),
       new BigDecimal(actualTotalCostFullSupply + actualTotalCostNonFullSupply).setScale(2,
         BigDecimal.ROUND_HALF_UP).toString());
     showRnrCostDetailsIcon.click();
     testWebDriver.sleep(500);
+  }
+
+  private float getCostForAllItems(int numberOfProducts) {
+    if(numberOfProducts == 1)
+    return calculateTotalCostForProduct("FirstProduct");
+    if(numberOfProducts == 2)
+    return calculateTotalCostForProduct("FirstProduct") + calculateTotalCostForProduct("SecondProduct");
+    return 0;
   }
 
   public String getTotalCostFooter() {
