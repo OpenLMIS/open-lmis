@@ -19,7 +19,7 @@ public class UpdatePodPage extends Page {
 
   @FindBy(how = ID, using = "requisition-header")
   private WebElement updatePodScreenHeader = null;
-  ;
+
 
   @FindBy(how = XPATH, using = "//div/h2[@openlmis-message='header.proof.of.delivery']")
   private WebElement podPageTitle = null;
@@ -66,10 +66,10 @@ public class UpdatePodPage extends Page {
     testWebDriver.findElement(By.id("notes_" + (rowNumber - 1))).sendKeys(notes);
   }
 
-  public void selectRequisitionToUpdatePod(int whichRequisition) {
+  public void selectRequisitionToUpdatePod(int rowNumber) {
     testWebDriver.waitForAjax();
-    testWebDriver.waitForElementToAppear(testWebDriver.findElement(By.xpath("//a[@openlmis-message='link.update.pod']")));
-    testWebDriver.findElement(By.xpath("//a[@openlmis-message='link.update.pod']")).click();
+    testWebDriver.waitForElementToAppear(testWebDriver.findElement(By.id("updatePod"+(rowNumber-1))));
+    testWebDriver.findElement(By.id("updatePod"+(rowNumber-1))).click();
   }
 
   public String getTitle() {
