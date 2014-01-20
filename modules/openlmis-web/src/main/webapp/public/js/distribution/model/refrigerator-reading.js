@@ -18,7 +18,8 @@ function RefrigeratorReading(facilityVisitId, refrigeratorReading) {
     var _this = this;
 
     function isEmpty(field) {
-      if (field === "temperature" && !(isUndefined(_this[field].value)) && _this[field].value.toString().trim() === "-") {
+      if (field === "temperature" && !(isUndefined(_this[field].value)) &&
+        _this[field].value.toString().trim() === "-" && _this[field].value.toString().trim() === ".") {
         return true;
       }
       if (isUndefined(_this[field])) {
