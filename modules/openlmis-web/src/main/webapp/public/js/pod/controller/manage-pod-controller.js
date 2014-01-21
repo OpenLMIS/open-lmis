@@ -21,7 +21,7 @@ function ManagePODController($scope, OrdersForManagePOD, messageService, OrderPO
     enableColumnResize: true,
     enableSorting: false,
     afterSelectionChange: function (rowItem, event) {
-      $scope.openPOD();
+      $scope.createPOD(rowItem.entity.id);
     },
     columnDefs: [
       {field: 'id', displayName: messageService.get("label.order.no"), width: 70 },
@@ -46,10 +46,6 @@ function ManagePODController($scope, OrdersForManagePOD, messageService, OrderPO
       $scope.$parent.requisitionType = $scope.order.emergency ? "requisition.type.emergency" : "requisition.type.regular";
       $location.url('/pod-orders/' + orderId);
     }, {});
-  };
-
-  $scope.openPOD = function () {
-
   };
 
   $scope.getStatus = function (status) {
