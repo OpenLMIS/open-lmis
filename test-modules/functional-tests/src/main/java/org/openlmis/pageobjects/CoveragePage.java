@@ -114,8 +114,7 @@ public class CoveragePage extends DistributionTab {
 
   @Override
   public void verifyData(List<Map<String, String>> data) {
-    for (int i = 0; i < data.size(); ++i) {
-      Map<String, String> coverageData = data.get(i);
+    for (Map<String, String> coverageData : data) {
       assertEquals(coveragePageElements.get("femaleHealthCenter").getAttribute("value"), coverageData.get("femaleHealthCenter"));
       assertEquals(coveragePageElements.get("femaleMobileBrigade").getAttribute("value"), coverageData.get("femaleMobileBrigade"));
       assertEquals(coveragePageElements.get("maleHealthCenter").getAttribute("value"), coverageData.get("maleHealthCenter"));

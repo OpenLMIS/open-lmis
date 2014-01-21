@@ -89,8 +89,7 @@ public class GeneralObservationPage extends DistributionTab {
 
   @Override
   public void verifyData(List<Map<String, String>> data) {
-    for (int i = 0; i < data.size(); ++i) {
-      Map<String, String> generalObservationData = data.get(i);
+    for (Map<String, String> generalObservationData : data) {
       assertEquals(fieldMap.get(OBSERVATIONS).getAttribute(VALUE), generalObservationData.get(OBSERVATIONS));
       assertEquals(fieldMap.get(VERIFIED_BY_NAME).getAttribute(VALUE), generalObservationData.get(VERIFIED_BY_NAME));
       assertEquals(fieldMap.get(VERIFIED_BY_TITLE).getAttribute(VALUE), generalObservationData.get(VERIFIED_BY_TITLE));

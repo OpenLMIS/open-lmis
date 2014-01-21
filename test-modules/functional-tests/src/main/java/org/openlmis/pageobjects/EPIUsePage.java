@@ -348,8 +348,7 @@ public class EPIUsePage extends DistributionTab {
 
   @Override
   public void verifyData(List<Map<String, String>> data) {
-    for (int i = 0; i < data.size(); ++i) {
-      Map<String, String> epiData = data.get(i);
+    for (Map<String, String> epiData : data) {
       verifyDistributed(epiData.get("distributed"), 1);
       verifyLoss(epiData.get("loss"), 1);
       verifyExpirationDate(epiData.get("expirationDate"), 1);
