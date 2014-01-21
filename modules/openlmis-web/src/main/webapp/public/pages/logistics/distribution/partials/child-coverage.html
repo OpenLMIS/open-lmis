@@ -156,8 +156,10 @@
               </td>
               <td></td>
               <td></td>
-              <td>
-                <div>
+              <td class="opened-vials" ng-hide="hideCell('{{lineItem.vaccination}}')"
+                  rowspan="{{productsMap[lineItem.vaccination].rowSpan}}">
+                <div id="{{product}}Container" ng-repeat="product in productsMap[lineItem.vaccination].products">
+                  <span ng-bind="product"></span>
                   <span class="input-error-parent-cell">
                     <input id="openedVials{{$index}}" type="text" ng-model="lineItem.openedVials.value"
                            name="openedVials{{$index}}"
@@ -175,8 +177,9 @@
                 <label class="checkbox-label" for="openedVialsNR{{$index}}"
                        openlmis-message="label.not.recorded"></label>
               </td>
-              <td>
-                <span></span>
+              <td ng-hide="hideCell('{{lineItem.vaccination}}')"
+                  rowspan="{{productsMap[lineItem.vaccination].rowSpan}}">
+              <span></span>
               </td>
             </tr>
             </tbody>

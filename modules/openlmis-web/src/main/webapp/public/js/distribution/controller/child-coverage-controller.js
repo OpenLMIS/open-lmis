@@ -31,10 +31,41 @@ function ChildCoverageController($scope, $routeParams, distributionService) {
     openedVialsWastageRate: "label.child.coverage.opened.vials.wastage.rate"
   };
 
+  $scope.productsMap = {
+    "BCG": {
+      products: ['BCG'],
+      rowSpan: 1
+    },
+    "Polio (Newborn)": {
+      products: ['Polio10', 'Polio20'],
+      rowSpan: 4
+    },
+    "Penta 1st dose": {
+      products: ['Penta1', 'Penta10'],
+      rowSpan: 3
+    },
+    "PCV10 1st dose": {
+      products: ['PCV'],
+      rowSpan: 3
+    },
+    "Measles": {
+      products: ['Measles'],
+      rowSpan: 1
+    }
+  }
+
   $scope.applyNRAll = function () {
     distributionService.applyNR(function (distribution) {
       distribution.setChildCoverageNotRecorded($routeParams.facility);
     });
   };
 
+  var list = ["BCG", "Polio (Newborn)", "Penta 1st dose", "PCV10 1st dose", "Measles"];
+
+  $scope.hideCell = function (vaccination) {
+    if (list.indexOf(vaccination) !== -1)
+      return false;
+    else
+      return true;
+  }
 }
