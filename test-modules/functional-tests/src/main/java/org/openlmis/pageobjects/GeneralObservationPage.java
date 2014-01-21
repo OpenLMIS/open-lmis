@@ -34,10 +34,10 @@ public class GeneralObservationPage extends DistributionTab {
   public static final String OBSERVATIONS = "observations";
   public static final String VALUE = "value";
 
-  @FindBy(how = How.XPATH, using = "//div[1]/div/div/ng-include/div/ul/li[6]/a")
+  @FindBy(how = How.XPATH, using = "//div[1]/div/div/ng-include/div/ul/li[7]/a")
   private static WebElement generalObservationTab = null;
 
-  @FindBy(how = XPATH, using = "//div[@class='left-navigation ng-scope']/ul/li[6]/a/span[1][@class='status-icon']")
+  @FindBy(how = XPATH, using = "//div[@class='left-navigation ng-scope']/ul/li[7]/a/span[1][@class='status-icon']")
   public static WebElement generalObservationsIndicator = null;
 
   @FindBy(how = ID, using = OBSERVATIONS)
