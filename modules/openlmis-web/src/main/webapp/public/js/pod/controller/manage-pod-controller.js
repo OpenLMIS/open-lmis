@@ -20,6 +20,9 @@ function ManagePODController($scope, OrdersForManagePOD, messageService, OrderPO
     showFilter: false,
     enableColumnResize: true,
     enableSorting: false,
+    afterSelectionChange: function (rowItem, event) {
+      $scope.openPOD();
+    },
     columnDefs: [
       {field: 'id', displayName: messageService.get("label.order.no"), width: 70 },
       {field: 'supplyLine.supplyingFacility.name', displayName: messageService.get("label.supplying.depot")},
@@ -43,6 +46,10 @@ function ManagePODController($scope, OrdersForManagePOD, messageService, OrderPO
       $scope.$parent.requisitionType = $scope.order.emergency ? "requisition.type.emergency" : "requisition.type.regular";
       $location.url('/pod-orders/' + orderId);
     }, {});
+  };
+
+  $scope.openPOD = function () {
+
   };
 
   $scope.getStatus = function (status) {
