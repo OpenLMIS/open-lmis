@@ -263,6 +263,8 @@ Feature: Smoke Tests
     And I access convert to order
     When I access Manage POD page
     Then I should see list of orders to manage POD for Rnr
+    When I click on update Pod link for Row "1"
+    Then I should see all products to update pod
 
 # DISTRIBUTION SMOKE TESTS
 

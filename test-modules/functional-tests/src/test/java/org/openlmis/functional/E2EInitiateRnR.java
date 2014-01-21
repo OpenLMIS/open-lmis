@@ -505,11 +505,6 @@ public class E2EInitiateRnR extends TestCaseHelper {
     UpdatePodPage updatePodPage = new UpdatePodPage(testWebDriver);
     SeleneseTestBase.assertTrue(updatePodPage.getProductCode(1).contains("P10"));
     SeleneseTestBase.assertTrue(updatePodPage.getProductName(1).contains("antibiotic"));
-    SeleneseTestBase.assertTrue(updatePodPage.getPacksToShip(1).contains("10"));
-    SeleneseTestBase.assertTrue(updatePodPage.getUnitOfIssue(1).contains("Strip"));
-    SeleneseTestBase.assertTrue(updatePodPage.getQuantityReceived(1).contains(""));
-    SeleneseTestBase.assertTrue(updatePodPage.getQuantityShipped(1).contains(""));
-    SeleneseTestBase.assertTrue(updatePodPage.getNotes(1).contains(""));
     SeleneseTestBase.assertFalse(updatePodPage.getProductCode(1).contains("P11"));
   }
 
