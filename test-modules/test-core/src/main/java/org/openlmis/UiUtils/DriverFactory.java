@@ -47,7 +47,7 @@ public class DriverFactory {
     String Separator = getProperty("file.separator");
     File parentDir = new File(getProperty("user.dir"));
 
-    CHROME_FOLDER = parentDir.getParentFile().getParentFile().getPath() + Separator  + "test-core" + Separator + "src" + Separator + "main" + Separator + "java" + Separator + "org" + Separator + "openlmis" + Separator + "UiUtils" + Separator;
+    CHROME_FOLDER = parentDir.getParentFile().getParentFile().getPath() + Separator + "test-core" + Separator + "src" + Separator + "main" + Separator + "java" + Separator + "org" + Separator + "openlmis" + Separator + "UiUtils" + Separator;
     OUTPUT_FOLDER = parentDir.getPath() + Separator + "test-modules" + Separator + "test-core" + Separator + "src" + Separator + "main" + Separator + "java" + Separator + "org" + Separator + "openlmis" + Separator + "UiUtils" + Separator;
     INPUT_ZIP_FILE_IEDRIVER = OUTPUT_FOLDER + "IEDriverServer_Win32_2.39.0.zip";
     INPUT_ZIP_FILE_CHROMEDRIVER = OUTPUT_FOLDER + "chromedriver_win32.zip";
@@ -90,14 +90,14 @@ public class DriverFactory {
         driverType = getProperty("webdriver.chrome.driver");
         return createChromeDriver();
 
-        case "chromeM":
-            //ToDO: To run offline test on Jenkins change CHROME_FOLDER to OUTPUT_FOLDER
-            //unZip = new Unzip();
-            //unZip.unZipIt(INPUT_ZIP_FILE_CHROMEDRIVER_MAC, CHROME_FOLDER);
-            //Thread.sleep(10000);
-            driverType = setProperty("webdriver.chrome.driver", CHROME_FOLDER + "chromedriver");
-            driverType = getProperty("webdriver.chrome.driver");
-            return createChromeDriver();
+      case "chromeM":
+        //ToDO: To run offline test on Jenkins change CHROME_FOLDER to OUTPUT_FOLDER
+        //unZip = new Unzip();
+        //unZip.unZipIt(INPUT_ZIP_FILE_CHROMEDRIVER_MAC, CHROME_FOLDER);
+        //Thread.sleep(10000);
+        driverType = setProperty("webdriver.chrome.driver", CHROME_FOLDER + "chromedriver");
+        driverType = getProperty("webdriver.chrome.driver");
+        return createChromeDriver();
 
       case "HTMLUnit":
         return new HtmlUnitDriver(BrowserVersion.INTERNET_EXPLORER_8);
@@ -114,20 +114,19 @@ public class DriverFactory {
     profile.setAcceptUntrustedCertificates(true);
     profile.setPreference("signed.applets.codebase_principal_support", true);
     profile.setPreference("javascript.enabled", enableJavascript);
-    profile.setPreference("browser.helperApps.neverAsk.saveToDisk","text/csv");
-    profile.setPreference("browser.download.dir",new File(System.getProperty("user.dir")).getParent());
+    profile.setPreference("browser.helperApps.neverAsk.saveToDisk", "text/csv");
+    profile.setPreference("browser.download.dir", new File(System.getProperty("user.dir")).getParent());
     profile.setPreference("browser.download.folderList", 2);
     profile.setPreference("dom.storage.enabled", true);
     profile.setPreference("device.storage.enabled", true);
     //profile.setPreference("network.manage-offline-status", true);
-    if ((getProperty("os.name").toLowerCase().indexOf("mac") >= 0) && headless){
-        File binaryFile = new File(LOCAL_FIREFOX_X11_PATH);
-        FirefoxBinary binary = new FirefoxBinary(binaryFile);
-        binary.setEnvironmentProperty("DISPLAY", LOCAL_X11_DISPLAY);
-        return new FirefoxDriver(binary, profile);
-    }
-    else
-        return new FirefoxDriver(profile);
+    if ((getProperty("os.name").toLowerCase().indexOf("mac") >= 0) && headless) {
+      File binaryFile = new File(LOCAL_FIREFOX_X11_PATH);
+      FirefoxBinary binary = new FirefoxBinary(binaryFile);
+      binary.setEnvironmentProperty("DISPLAY", LOCAL_X11_DISPLAY);
+      return new FirefoxDriver(binary, profile);
+    } else
+      return new FirefoxDriver(profile);
   }
 
   private WebDriver createInternetExplorerDriver() throws IOException {
@@ -140,11 +139,13 @@ public class DriverFactory {
 
   private WebDriver createChromeDriver() {
     DesiredCapabilities capabilities = DesiredCapabilities.chrome();
-      Map<String, String> prefs = new Hashtable<>();
-      prefs.put("download.prompt_for_download", "false");
-      prefs.put("download.default_directory", "C:\\Users\\openlmis\\Downloads");
 
-    String[] switches = {"--start-maximized","--ignore-certificate-errors"};
+    Map<String, String> prefs = new Hashtable<>();
+    prefs.put("download.prompt_for_download", "false");
+    prefs.put("download.default_directory", "C:\\Users\\openlmis\\Downloads");
+
+    String[] switches = {"--start-maximized", "--ignore-certificate-errors"};
+    capabilities.setJavascriptEnabled(true);
     capabilities.setCapability("chrome.prefs", prefs);
     capabilities.setCapability("chrome.switches", Arrays.asList(switches));
 

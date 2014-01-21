@@ -18,12 +18,16 @@ import org.openqa.selenium.remote.UnreachableBrowserException;
 
 import java.io.*;
 import java.math.BigDecimal;
+import java.net.NetworkInterface;
+import java.net.SocketException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import static com.thoughtworks.selenium.SeleneseTestBase.*;
+import static com.thoughtworks.selenium.SeleneseTestBase.assertFalse;
+import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
 import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
 import static java.lang.System.getProperty;
 import static java.util.Arrays.asList;
@@ -404,30 +408,43 @@ public class TestCaseHelper {
       throw new IllegalArgumentException("Delete: deletion failed");
   }
 
-  public void switchOffNetwork() throws IOException {
-    Runtime.getRuntime().exec("sudo ifconfig en1 down");
+  public void switchOffNetworkInterface(String wifiInterfaceName) throws IOException {
+    Runtime.getRuntime().exec("sudo -S ifconfig " + wifiInterfaceName + " down");
     testWebDriver.sleep(2000);
   }
 
-  public void switchOnNetwork() throws IOException {
-    Runtime.getRuntime().exec("sudo ifconfig en1 up");
+  public void switchOnNetworkInterface(String interfaceToSwitchOn) throws IOException {
+    Runtime.getRuntime().exec("sudo -S ifconfig " + interfaceToSwitchOn + " up");
     testWebDriver.sleep(2000);
+  }
+
+  protected String getWiFiInterface() throws SocketException {
+    List networkInterfaces = Collections.list(NetworkInterface.getNetworkInterfaces());
+    if (networkInterfaces.size() > 2) {
+      throw new IllegalStateException("More than two active interfaces found, probably you need to remove the ethernet cable for the test to run");
+    }
+
+    NetworkInterface wifiInterface = NetworkInterface.getNetworkInterfaces().nextElement();
+    return wifiInterface.getDisplayName();
   }
 
   public void waitForAppCacheComplete() {
     int count = 0;
     JavascriptExecutor driver = (JavascriptExecutor) TestWebDriver.getDriver();
 
-    driver.executeScript("if(!window.localStorage[\"appCached\"]) window.localStorage.setItem(\"appCached\",\"false\");");
-    driver.executeScript("window.applicationCache.oncached = function (e) {window.localStorage.setItem(\"appCached\",\"true\");};");
-    while ((driver.executeScript("return window.localStorage.getItem(\"appCached\");")).toString().equals("false")) {
-      testWebDriver.sleep(2000);
+    try {
+      driver.executeScript("if(!window.localStorage[\"appCached\"]) window.localStorage.setItem(\"appCached\",\"false\");");
       driver.executeScript("window.applicationCache.oncached = function (e) {window.localStorage.setItem(\"appCached\",\"true\");};");
-      count++;
-      if (count > 10) {
-        fail("Appcache not working in 20 sec.");
-        break;
+      while ((driver.executeScript("return window.localStorage.getItem(\"appCached\");")).toString().equals("false")) {
+        testWebDriver.sleep(2000);
+        driver.executeScript("window.applicationCache.oncached = function (e) {window.localStorage.setItem(\"appCached\",\"true\");};");
+        count++;
+        if (count > 10) {
+          throw new IllegalStateException("Appcache not working in 20 sec.");
+        }
       }
+    } catch (Exception e) {
+      e.printStackTrace();
     }
   }
 

@@ -20,7 +20,6 @@ import org.testng.annotations.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.assertFalse;
 import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
@@ -31,11 +30,14 @@ import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
 public class E2EDistributionTest extends TestCaseHelper {
 
   public String userSIC, password;
+  private RefrigeratorPage refrigeratorPage;
+  private String wifiInterface;
 
 
   @BeforeMethod(groups = {"offline"})
   public void setUp() throws Exception {
     super.setup();
+    wifiInterface = getWiFiInterface();
   }
 
   @Test(groups = {"offline"}, dataProvider = "Data-Provider-Function")
@@ -70,7 +72,9 @@ public class E2EDistributionTest extends TestCaseHelper {
     distributionPage.clickInitiateDistribution();
 
     waitForAppCacheComplete();
-    switchOffNetwork();
+
+    switchOffNetworkInterface(wifiInterface);
+
     testWebDriver.sleep(3000);
     homePage.navigateHomePage();
     homePage.navigateOfflineDistribution();
@@ -160,21 +164,21 @@ public class E2EDistributionTest extends TestCaseHelper {
     epiUsePage.verifyStockAtFirstOfMonth("10", 1);
     epiUsePage.verifyReceived("20", 1);
     epiUsePage.verifyDistributed("30", 1);
-    epiUsePage.verifyLoss(null, 1);
-    epiUsePage.verifyLossStatus(false,1);
+    epiUsePage.verifyLoss("", 1);
+    epiUsePage.verifyLossStatus(false, 1);
     epiUsePage.verifyStockAtEndOfMonth("50", 1);
     epiUsePage.verifyExpirationDate("10/2011", 1);
 
     EpiInventoryPage epiInventoryPage = epiUsePage.navigateToEpiInventory();
     epiInventoryPage.applyNRToAll();
-    epiInventoryPage.fillDeliveredQuantity(1,"10");
-    epiInventoryPage.fillDeliveredQuantity(2,"20");
-    epiInventoryPage.fillDeliveredQuantity(3,"30");
+    epiInventoryPage.fillDeliveredQuantity(1, "10");
+    epiInventoryPage.fillDeliveredQuantity(2, "20");
+    epiInventoryPage.fillDeliveredQuantity(3, "30");
 
     epiInventoryPage.verifyIndicator("GREEN");
 
     CoveragePage coveragePage = epiInventoryPage.navigateToCoverage();
-    coveragePage.enterData(5,7,0,"9999999");
+    coveragePage.enterData(5, 7, 0, "9999999");
     coveragePage.verifyIndicator("GREEN");
 
     facilityListPage.verifyFacilityIndicatorColor("Overall", "GREEN");
@@ -182,24 +186,26 @@ public class E2EDistributionTest extends TestCaseHelper {
     homePage.navigateHomePage();
     homePage.navigateOfflineDistribution();
 
-    switchOnNetwork();
+    switchOnNetworkInterface(wifiInterface);
     testWebDriver.sleep(5000);
 
     distributionPage.syncDistribution(1);
     assertTrue("Incorrect Sync Facility", distributionPage.getSyncMessage().contains("F10-Village Dispensary"));
 
-    Map<String, String> facilityVisitDetails = dbWrapper.getFacilityVisitDetails(facilityCodeFirst);
-
-    assertEquals(facilityVisitDetails.get("observations"), "Some observations");
-    assertEquals(facilityVisitDetails.get("confirmedByName"), "samuel");
-    assertEquals(facilityVisitDetails.get("confirmedByTitle"), "Doe");
-    assertEquals(facilityVisitDetails.get("verifiedByName"), "Verifier");
-    assertEquals(facilityVisitDetails.get("verifiedByTitle"), "XYZ");
-
     distributionPage.syncDistributionMessageDone();
     distributionPage.clickRecordData(1);
     facilityListPage.selectFacility(facilityCodeFirst);
     facilityListPage.verifyFacilityIndicatorColor("Overall", "BLUE");
+
+    verifyEpiUseDataInDatabase(10, 20, 30, null, 50, "10/2011", "PG1", facilityCodeFirst);
+    verifyRefrigeratorReadingDataInDatabase(facilityCodeFirst, "GR-J287PGHV", 3F, "Y", 1, 0, "D", "miscellaneous");
+    verifyRefrigeratorProblemDataNullInDatabase("GR-J287PGHV", facilityCodeFirst);
+    verifyGeneralObservationsDataInDatabase(facilityCodeFirst, "some observations", "samuel", "Doe", "Verifier", "XYZ");
+    verifyFullCoveragesDataInDatabase(5, 7, 0, 9999999, facilityCodeFirst);
+    verifyEpiInventoryDataInDatabase(null, "10", null, "P10", facilityCodeFirst);
+    verifyEpiInventoryDataInDatabase(null, "20", null, "Product6", facilityCodeFirst);
+    verifyEpiInventoryDataInDatabase(null, "30", null, "P11", facilityCodeFirst);
+
     refrigeratorPage.navigateToGeneralObservations();
     generalObservationPage.verifyAllFieldsDisabled();
 
@@ -216,16 +222,11 @@ public class E2EDistributionTest extends TestCaseHelper {
     assertFalse(coveragePage.getStatusForField("maleHealthCenter"));
     assertFalse(coveragePage.getStatusForField("maleMobileBrigade"));
 
-    verifyEpiUseDataInDatabase(10, 20, 30, null, 50, "10/2011", "PG1", facilityCodeFirst);
-    verifyRefrigeratorReadingDataInDatabase(facilityCodeFirst, "GR-J287PGHV",3F,"Y",1,0,"D","miscellaneous");
-    verifyRefrigeratorProblemDataNullInDatabase("GR-J287PGHV", facilityCodeFirst);
-    verifyGeneralObservationsDataInDatabase(facilityCodeFirst,"Some observations","samuel","Doe","Verifier","XYZ");
-    verifyFullCoveragesDataInDatabase(5,7,0,9999999,facilityCodeFirst);
-    verifyEpiInventoryDataInDatabase(null,"10",null, "P10",facilityCodeFirst);
-    verifyEpiInventoryDataInDatabase(null,"20",null, "Product6",facilityCodeFirst);
-    verifyEpiInventoryDataInDatabase(null,"30",null, "P11",facilityCodeFirst);
-
+    loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     testWebDriver.sleep(1000);
+    homePage = loginPage.loginAs(userSIC, password);
+    testWebDriver.sleep(1000);
+
     distributionPage = homePage.navigateToDistributionWhenOnline();
     distributionPage.deleteDistribution();
     distributionPage.clickOk();
@@ -233,16 +234,11 @@ public class E2EDistributionTest extends TestCaseHelper {
     distributionPage.selectValueFromDeliveryZone(deliveryZoneNameFirst);
     distributionPage.selectValueFromProgram(programFirst);
     distributionPage.clickInitiateDistribution();
-    distributionPage.clickOk();
-
-    facilityListPage = distributionPage.clickRecordData(1);
-    assertFalse(facilityListPage.getAllFacilitiesFromDropDown().contains(programFirst));
-
   }
 
   @AfterMethod(groups = {"offline"})
   public void tearDownNew() throws Exception {
-    switchOnNetwork();
+    switchOnNetworkInterface(wifiInterface);
     testWebDriver.sleep(5000);
     dbWrapper.deleteData();
     dbWrapper.closeConnection();

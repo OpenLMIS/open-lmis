@@ -44,7 +44,7 @@ public class DistributionPage extends Page {
   @FindBy(how = ID, using = "saveSuccessMsgDiv")
   private WebElement saveSuccessMessageDiv = null;
 
-  @FindBy(how = XPATH, using = "//div[@id='cachedDistributions']/div[2]/div/div[7]/i[@class='icon-remove-sign']")
+  @FindBy(how = ID, using = "deleteDistribution0")
   private WebElement deleteDistributionIcon = null;
 
   @FindBy(how = ID, using = "button_Cancel")
@@ -249,7 +249,7 @@ public class DistributionPage extends Page {
   }
 
   public void deleteDistribution() {
-    testWebDriver.waitForElementToAppear(deleteDistributionIcon);
+    testWebDriver.waitForElementToBeEnabled(deleteDistributionIcon);
     deleteDistributionIcon.click();
   }
 

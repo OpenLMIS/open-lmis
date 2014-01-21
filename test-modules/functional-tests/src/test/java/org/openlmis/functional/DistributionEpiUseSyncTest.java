@@ -17,7 +17,6 @@ import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.UiUtils.TestWebDriver;
 import org.openlmis.pageobjects.*;
 import org.openqa.selenium.JavascriptExecutor;
-import org.testng.AssertJUnit;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -93,7 +92,7 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
     generalObservationPage.enterData("some observations", "samuel", "Doe", "Verifier", "XYZ");
 
     CoveragePage coveragePage = generalObservationPage.navigateToCoverage();
-    coveragePage.enterData(12, 34, 45,"56");
+    coveragePage.enterData(12, 34, 45, "56");
 
     EpiInventoryPage epiInventoryPage = generalObservationPage.navigateToEpiInventory();
     fillEpiInventoryWithOnlyDeliveredQuantity(epiInventoryPage, "2", "4", "6");
@@ -118,7 +117,7 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
     EPIUsePage epiUsePage = refrigeratorPage.navigateToEpiUse();
     epiUsePage.verifyProductGroup("PG1-Name", 1);
     epiUsePage.verifyIndicator("RED");
-    epiUsePage.enterValueInLoss("0",1);
+    epiUsePage.enterValueInLoss("0", 1);
     epiUsePage.verifyIndicator("AMBER");
     epiUsePage.enterData(10, 20, 30, 40, 50, "10/2011", 1);
     epiUsePage.verifyIndicator("GREEN");
@@ -185,7 +184,7 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
     generalObservationPage.enterData("some observations", "samuel", "Doe", "Verifier", "XYZ");
 
     CoveragePage coveragePage = generalObservationPage.navigateToCoverage();
-    coveragePage.enterData(12, 34, 45,"56");
+    coveragePage.enterData(12, 34, 45, "56");
 
     EpiInventoryPage epiInventoryPage = generalObservationPage.navigateToEpiInventory();
     fillEpiInventoryWithOnlyDeliveredQuantity(epiInventoryPage, "2", "4", "6");
@@ -217,7 +216,7 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
     generalObservationPage.enterData("some observations", "samuel", "Doe", "Verifier", "XYZ");
 
     CoveragePage coveragePage = generalObservationPage.navigateToCoverage();
-    coveragePage.enterData(12, 34, 45,"56");
+    coveragePage.enterData(12, 34, 45, "56");
 
     EpiInventoryPage epiInventoryPage = generalObservationPage.navigateToEpiInventory();
     fillEpiInventoryWithOnlyDeliveredQuantity(epiInventoryPage, "2", "4", "6");
@@ -258,7 +257,7 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
     generalObservationPage.enterData("some observations", "samuel", "Doe", "Verifier", "XYZ");
 
     CoveragePage coveragePage = generalObservationPage.navigateToCoverage();
-    coveragePage.enterData(12, 34, 45,"56");
+    coveragePage.enterData(12, 34, 45, "56");
 
     EpiInventoryPage epiInventoryPage = generalObservationPage.navigateToEpiInventory();
     fillEpiInventoryWithOnlyDeliveredQuantity(epiInventoryPage, "2", "4", "6");
@@ -305,11 +304,11 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
     generalObservationPage.enterData("some observations", "samuel", "Doe", "Verifier", "XYZ");
 
     CoveragePage coveragePage = generalObservationPage.navigateToCoverage();
-    coveragePage.enterData(12, 34, 45,"56");
+    coveragePage.enterData(12, 34, 45, "56");
 
     EpiInventoryPage epiInventoryPage = generalObservationPage.navigateToEpiInventory();
     fillEpiInventoryWithOnlyDeliveredQuantity(epiInventoryPage, "2", "4", "6");
-    epiInventoryPage.fillDeliveredQuantity(4,"8");
+    epiInventoryPage.fillDeliveredQuantity(4, "8");
 
     DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
     distributionPage.syncDistribution(1);
