@@ -3,9 +3,7 @@ package org.openlmis.functional;
 import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.pageobjects.HomePage;
 import org.openlmis.pageobjects.LoginPage;
-
 import org.openlmis.pageobjects.UpdatePodPage;
-import org.openqa.selenium.By;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
@@ -14,7 +12,7 @@ import org.testng.annotations.Test;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.thoughtworks.selenium.SeleneseTestBase.*;
+import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
 
 public class UpdatePod extends TestCaseHelper {
 
@@ -33,7 +31,9 @@ public class UpdatePod extends TestCaseHelper {
   }
 
   @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-RnR")
-  public void testVerifyManagePODValidFlowForRegularRnR(String program, String userSIC, String password) throws Exception {
+  public void testVerifyManagePODValidFlowForRegularRnR(String program,
+                                                        String userSIC,
+                                                        String password) throws Exception {
     setUpData(program, userSIC);
 
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
@@ -63,8 +63,8 @@ public class UpdatePod extends TestCaseHelper {
     assertTrue(podTableDetails.contains("Full Supply"));
     assertTrue(podTableDetails.contains("Product Code"));
     assertTrue(podTableDetails.contains("Product Name"));
-    assertTrue(podTableDetails.contains("Unit Of Issue"));
-    assertTrue(podTableDetails.contains("Packs To Ship"));
+    assertTrue(podTableDetails.contains("Unit of Issue"));
+    assertTrue(podTableDetails.contains("Packs to Ship"));
     assertTrue(podTableDetails.contains("Quantity Shipped"));
     assertTrue(podTableDetails.contains("Quantity Received"));
     assertTrue(podTableDetails.contains("Notes"));
@@ -82,7 +82,7 @@ public class UpdatePod extends TestCaseHelper {
   }
 
   private void verifyTitleOnUpdatePODScreen(UpdatePodPage updatePodPage) {
-    assertTrue(updatePodPage.getTitle().contains("Proof Of Delivery"));
+    assertTrue(updatePodPage.getTitle().contains("Proof of Delivery"));
   }
 
   private void setUpData(String program, String userSIC) throws Exception {
@@ -125,8 +125,6 @@ public class UpdatePod extends TestCaseHelper {
 
   @DataProvider(name = "Data-Provider-Function-RnR")
   public Object[][] parameterIntTestProviderRnR() {
-    return new Object[][]{
-      {"HIV", "storeIncharge", "Admin123"}
-    };
+    return new Object[][]{{"HIV", "storeIncharge", "Admin123"}};
   }
 }
