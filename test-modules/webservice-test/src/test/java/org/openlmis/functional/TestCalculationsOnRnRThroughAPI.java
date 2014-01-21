@@ -460,7 +460,7 @@ public class TestCalculationsOnRnRThroughAPI extends JsonUtility {
     dbWrapper.deleteRnrData();
     dbWrapper.deletePeriod("Period1");
     dbWrapper.deletePeriod("Period2");
-    dbWrapper.insertRequisitions(1, "HIV", false, "2013-01-16", "2013-01-29", "V10");
+    dbWrapper.insertRequisitions(1, "HIV", false, "2013-01-16", "2013-01-29", "V10", false);
 
     Long id = submitRnRThroughApi("V10", "HIV", "P10", null, 4, null, 10, null, null);
     assertEquals("10", dbWrapper.getRequisitionLineItemFieldValue(id, "beginningBalance", "P10"));

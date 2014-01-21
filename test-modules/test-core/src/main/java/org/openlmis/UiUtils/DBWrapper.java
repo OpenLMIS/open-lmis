@@ -200,7 +200,7 @@ public class DBWrapper {
 
   public void insertRequisitions(int numberOfRequisitions,
                                  String program,
-                                 boolean withSupplyLine, String periodStartDate, String periodEndDate, String facilityCode) throws SQLException, IOException {
+                                 boolean withSupplyLine, String periodStartDate, String periodEndDate, String facilityCode, boolean emergency) throws SQLException, IOException {
     int numberOfRequisitionsAlreadyPresent = 0;
     boolean flag = true;
     ResultSet rs = query("select count(*) from requisitions");
@@ -213,7 +213,7 @@ public class DBWrapper {
       update("insert into requisitions (facilityId, programId, periodId, status, emergency, " +
         "fullSupplyItemsSubmittedCost, nonFullSupplyItemsSubmittedCost, supervisoryNodeId) " +
         "values ((Select id from facilities where code='" + facilityCode + "'),(Select id from programs where code='" + program + "')," +
-        "(Select id from processing_periods where name='PeriodName" + i + "'), 'APPROVED', 'false', 50.0000, 0.0000, " +
+        "(Select id from processing_periods where name='PeriodName" + i + "'), 'APPROVED', '" + emergency + "', 50.0000, 0.0000, " +
         "(select id from supervisory_nodes where code='N1'))");
 
       update("INSERT INTO requisition_line_items " +
@@ -760,6 +760,14 @@ public class DBWrapper {
     update("update " + tableName + " set " + fieldName + "=" + quantity);
   }
 
+  public void updateFieldValue(String tableName, String fieldName, String value) throws IOException, SQLException {
+    update("update " + tableName + " set " + fieldName + "='" + value + "'");
+  }
+
+  public void updateFieldValue(String tableName, String fieldName, Boolean value) throws IOException, SQLException {
+    update("update " + tableName + " set " + fieldName + "=" + value);
+  }
+
   public void updateRequisitionStatus(String status, String username, String program) throws IOException, SQLException {
     update("update requisitions set status='" + status + "';");
     ResultSet rs = query("select id from requisitions where programId = (select id from programs where code='" + program + "');");
@@ -1244,7 +1252,7 @@ public class DBWrapper {
   }
 
   public void updateProductsByField(String field, String fieldValue, String productCode) throws SQLException {
-    update("update products set " + field + "=" + fieldValue + " where code='" + productCode + "';");
+    update("update products set " + field + "= '" + fieldValue + "' where code='" + productCode + "';");
   }
 
   public void updateSupervisoryNodeForRequisitionGroup(String requisitionGroup,
@@ -1363,4 +1371,6 @@ public class DBWrapper {
   public Integer getRequisitionGroupId(String facilityCode) throws SQLException {
     return Integer.parseInt(getAttributeFromTable("requisition_group_members", "requisitionGroupId", "facilityId", getAttributeFromTable("facilities", "id", "code", facilityCode)));
   }
+
+
 }

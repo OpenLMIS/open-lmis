@@ -20,9 +20,14 @@ public class UpdatePodPage extends Page {
   @FindBy(how = ID, using = "requisition-header")
   private WebElement updatePodScreenHeader = null;
 
-
   @FindBy(how = XPATH, using = "//div/h2[@openlmis-message='header.proof.of.delivery']")
   private WebElement podPageTitle = null;
+
+  @FindBy(how = XPATH, using = "//div[@class='alert alert-info']")
+  private WebElement noProductsMessage = null;
+
+  @FindBy(how = XPATH, using = "//div//i[@class='icon-ok']")
+  private WebElement fullSupplyTickIcon= null;
 
   public UpdatePodPage(TestWebDriver testWebDriver) {
     super(testWebDriver);
@@ -82,9 +87,18 @@ public class UpdatePodPage extends Page {
     return testWebDriver.getText(updatePodScreenHeader);
   }
 
-  public String getPodTableHeaders() {
+  public String getPodTableData() {
     testWebDriver.waitForAjax();
     return testWebDriver.getText(podTable);
   }
 
+  public String getNoProductsMessage() {
+    testWebDriver.waitForAjax();
+    return testWebDriver.getText(noProductsMessage);
+  }
+
+  public Boolean getFullSupplyTickIcon() {
+    testWebDriver.waitForAjax();
+    return fullSupplyTickIcon.isDisplayed();
+  }
 }
