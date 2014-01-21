@@ -104,6 +104,8 @@ Feature: End to end requisition flow
     Then I should see ordered list with download link
     When I access Manage POD page
     Then I should see list of orders to manage POD for "Emergency" Rnr
+    When I click on update Pod link for Row "2"
+    Then I should see all products to update pod
     When I do not have anything to pack to ship
     And I access view orders page
     Then I should see ordered list without download link

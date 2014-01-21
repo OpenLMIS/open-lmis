@@ -11,6 +11,7 @@
 package org.openlmis.functional;
 
 
+import com.thoughtworks.selenium.SeleneseTestBase;
 import cucumber.api.DataTable;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Then;
@@ -490,6 +491,28 @@ public class E2EInitiateRnR extends TestCaseHelper {
       assertTrue(testWebDriver.findElement(By.xpath("//i[@class='icon-ok']")).isDisplayed());
     }
   }
+
+  @When("^I click on update Pod link for Row \"([^\"]*)\"$")
+  public void navigateUploadPodPage(Integer rowNumber) throws Exception {
+    HomePage homePage = new HomePage(testWebDriver);
+    homePage.navigateManagePOD();
+    UpdatePodPage updatePodPage = new UpdatePodPage(testWebDriver);
+    updatePodPage.selectRequisitionToUpdatePod(rowNumber);
+  }
+
+  @Then("^I should see all products to update pod$")
+  public void verifyUpdatePodPage() throws Exception {
+    UpdatePodPage updatePodPage = new UpdatePodPage(testWebDriver);
+    SeleneseTestBase.assertTrue(updatePodPage.getProductCode(1).contains("P10"));
+    SeleneseTestBase.assertTrue(updatePodPage.getProductName(1).contains("antibiotic"));
+    SeleneseTestBase.assertTrue(updatePodPage.getPacksToShip(1).contains("10"));
+    SeleneseTestBase.assertTrue(updatePodPage.getUnitOfIssue(1).contains("Strip"));
+    SeleneseTestBase.assertTrue(updatePodPage.getQuantityReceived(1).contains(""));
+    SeleneseTestBase.assertTrue(updatePodPage.getQuantityShipped(1).contains(""));
+    SeleneseTestBase.assertTrue(updatePodPage.getNotes(1).contains(""));
+    SeleneseTestBase.assertFalse(updatePodPage.getProductCode(1).contains("P11"));
+  }
+
 
   private void createUserAndAssignRoles(HomePage homePage, String passwordUsers, String userEmail,
                                         String userFirstName, String userLastName, String userUserName,
