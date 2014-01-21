@@ -10,7 +10,11 @@
 
 package org.openlmis.core.domain;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.openlmis.upload.Importable;
@@ -196,4 +200,8 @@ public class Facility extends BaseModel implements Importable {
     return this.goDownDate == null ? null : new SimpleDateFormat("dd-MM-yyyy").format(this.goDownDate);
   }
 
+  @JsonIgnore
+  public Double getWhoRatioFor(String productCode) {
+    return this.getSupportedPrograms().get(0).getWhoRatioFor(productCode);
+  }
 }

@@ -40,9 +40,10 @@ System Requirement
       - **export NODE_PATH="/usr/local/bin/node"**
       - **export PATH="/usr/local/share/npm/bin:$PATH"**  
   
-- Grunt.js (used for linting JS, LESS files, minifying JS files etc.)
+- NPM dependencies (used for linting JS, LESS files, minifying JS files & running jasmine specs etc.)
   * Install Grunt command-line runner by running (after installing Node.js as mentioned in aformentioned step) ```npm install -g grunt-cli```
   * Install project-specific grunt dependencies by navigating to ```modules/openlmis-web``` from project root directory and run ```npm install``` (one-time activity)
+  * Install karma test runner with karma coverage by running ```npm install -g karma karma-coverage```
   * Grunt tasks available can be found in ```modules/openlmis-web/Gruntfile.js``` 
 
 Source code 
@@ -54,8 +55,9 @@ Source code
 
 IntelliJ IDEA Setup
 -------------------
-1. Run ```gradle idea``` to create the intellij project files
-2. Open the open-lmis.ipr file
+1. Run ```gradle idea``` to create the IntelliJ project files (may take some time downloading dependencies)
+2. Open the open-lmis.ipr file (may take some time indexing files, first time only)
+3. Install Lombok plugin according to the IntelliJ version.
 
  
 Running App on embedded Jetty server

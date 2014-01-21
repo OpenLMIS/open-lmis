@@ -229,7 +229,7 @@ public class RnrLineItem extends LineItem {
   public void calculatePacksToShip() {
     Integer orderQuantity = getOrderQuantity();
     if (allNotNull(orderQuantity, packSize)) {
-      packsToShip = ((orderQuantity == 0) ? 0 : round(orderQuantity));
+      packsToShip = ((orderQuantity == 0) ? (roundToZero ? 0 : 1) : applyRoundingRules(orderQuantity));
     }
   }
 
@@ -473,7 +473,7 @@ public class RnrLineItem extends LineItem {
     else return calculatedOrderQuantity;
   }
 
-  private Integer round(Integer orderQuantity) {
+  private Integer applyRoundingRules(Integer orderQuantity) {
     Double packsToShip = floor(orderQuantity / packSize);
     Integer remainderQuantity = orderQuantity % packSize;
     if (remainderQuantity >= packRoundingThreshold) {

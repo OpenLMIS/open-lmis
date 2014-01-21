@@ -68,7 +68,7 @@ describe("RecordFacilityDataController", function () {
   });
 
   it('should change the route path for a selected facility', function () {
-    scope.facilitySelected = {id: 2};
+    scope.facilitySelected = {facilityId: 2};
     spyOn(location, 'path');
     scope.chooseFacility();
     expect(location.path).toHaveBeenCalledWith('record-facility-data/3/2/refrigerator-data')

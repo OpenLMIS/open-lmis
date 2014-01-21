@@ -275,10 +275,6 @@ services.factory('UpdatePassword', function ($resource) {
   return $resource('/admin/resetPassword/:userId.json', {}, update);
 });
 
-services.factory('Refrigerators', function ($resource) {
-  return $resource('/deliveryZone/:deliveryZoneId/program/:programId/refrigerators.json', {}, {});
-});
-
 services.factory('OrderFileTemplate', function ($resource) {
   return $resource('/order-file-template.json', {}, {post: {method: 'POST', isArray: true}});
 });
@@ -298,4 +294,8 @@ services.factory('BudgetFileTemplate', function ($resource) {
 
 services.factory('EnabledWarehouse', function ($resource) {
   return $resource('/enabledWarehouses.json', {}, {});
+});
+
+services.factory('OrderPOD', function ($resource) {
+  return $resource('/pod-orders/:orderId.json', {}, {post: {method: 'POST'}});
 });

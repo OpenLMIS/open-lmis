@@ -99,6 +99,11 @@ public class FacilityListPage extends RequisitionPage {
     testWebDriver.setImplicitWait(10);
   }
 
+  public String getFacilitiesInDropDown(){
+    testWebDriver.waitForElementToAppear(facilityListDropDown);
+    return facilityListDropDown.getText();
+  }
+
   public void verifyNoFacilitySelected() {
     testWebDriver.waitForElementToAppear(noFacilitySelectedHeader);
     assertTrue("noFacilitySelectedHeader should show", noFacilitySelectedHeader.isDisplayed());

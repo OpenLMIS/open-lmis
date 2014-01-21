@@ -59,7 +59,7 @@ abstract public class DistributionTab extends Page {
 
   abstract public void enterValues(List<Map<String, String>> dataMapList);
 
-  abstract public void verifyData(Map<String, String> map);
+  abstract public void verifyData(List<Map<String, String>> map);
 
   abstract public void navigate();
 

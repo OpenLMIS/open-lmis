@@ -193,7 +193,7 @@ public class RefrigeratorPage extends DistributionTab {
   }
 
   @Override
-  public void verifyData(Map<String, String> map) {
+  public void verifyData(List<Map<String, String>> map) {
     //To change body of implemented methods use File | Settings | File Templates.
   }
 
@@ -267,6 +267,8 @@ public class RefrigeratorPage extends DistributionTab {
 
     assertFalse("notesTextArea enabled.", notesTextArea.isEnabled());
 
+    assertFalse("Add new button enabled", addNewButton.isEnabled());
+    assertFalse("Delete button enabled", deleteButton.isEnabled());
   }
 
   public void clickProblemSinceLastVisitNoRadio() {

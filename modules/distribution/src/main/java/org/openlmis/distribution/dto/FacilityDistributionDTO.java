@@ -29,11 +29,12 @@ public class FacilityDistributionDTO {
 
   private FacilityVisit facilityVisit;
   private EpiUseDTO epiUse;
+  private EpiInventoryDTO epiInventory;
   private DistributionRefrigeratorsDTO refrigerators;
-  private VaccinationCoverageDTO coverage;
+  private VaccinationFullCoverageDTO fullCoverage;
 
   public FacilityDistribution transform() {
-    return new FacilityDistribution(this.facilityVisit, this.epiUse.transform(), this.refrigerators.transform(), null, this.coverage.transform());
+    return new FacilityDistribution(this.facilityVisit, this.epiUse.transform(), this.refrigerators.transform(), this.epiInventory.transform(), this.fullCoverage.transform(), null);
   }
 
 
@@ -41,16 +42,13 @@ public class FacilityDistributionDTO {
     facilityVisit.setDistributionId(distributionId);
   }
 
-  public void setFacilityId(Long facilityId) {
-    facilityVisit.setFacilityId(facilityId);
-  }
-
   public void setModifiedBy(Long modifiedBy) {
     facilityVisit.setModifiedBy(modifiedBy);
     epiUse.setModifiedBy(modifiedBy);
+    epiInventory.setModifiedBy(modifiedBy);
     refrigerators.setCreatedBy(modifiedBy);
     refrigerators.setModifiedBy(modifiedBy);
-    coverage.setModifiedBy(modifiedBy);
+    fullCoverage.setModifiedBy(modifiedBy);
   }
 
 }

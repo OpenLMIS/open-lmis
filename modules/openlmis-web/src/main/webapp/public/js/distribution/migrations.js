@@ -21,7 +21,6 @@ var migrationFunc = function (event) {
     //TODO remove drop database logic before release
     dropDatastores();
     createDistributionStore();
-    createDistributionReferenceData();
   }
 
   function createDistributionStore() {
@@ -29,8 +28,4 @@ var migrationFunc = function (event) {
     distributionStore.createIndex("index_zpp", "zpp", {"unique": true});
   }
 
-  function createDistributionReferenceData() {
-    var distributionReferenceDataStore = connection.createObjectStore("distributionReferenceData", {"keyPath": "distributionId"});
-    distributionReferenceDataStore.createIndex("index_reference_data", "distributionId", {"unique": true});
-  }
 };

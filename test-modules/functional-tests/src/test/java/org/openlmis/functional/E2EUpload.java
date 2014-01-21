@@ -492,6 +492,10 @@ public class E2EUpload extends TestCaseHelper {
     uploadPage.verifyErrorMessageOnUploadScreen();
     uploadPage.validateErrorMessageOnUploadScreen("Invalid Pack size in Record No");
     assertEquals(dbWrapper.getRowsCountFromDB(tableName), "0");
+    uploadPage.uploadProductsInvalidScenarios("QA_Products_Invalid_PackSize_Zero.csv");
+    uploadPage.verifyErrorMessageOnUploadScreen();
+    uploadPage.validateErrorMessageOnUploadScreen("Invalid Pack size in Record No");
+    assertEquals(dbWrapper.getRowsCountFromDB(tableName), "0");
 
   }
 

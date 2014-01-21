@@ -35,7 +35,6 @@ import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPT
 @EqualsAndHashCode(callSuper = false)
 public class DistributionRefrigeratorsDTO extends BaseModel {
 
-  Long facilityVisitId;
   List<RefrigeratorReadingDTO> readings;
 
   public DistributionRefrigerators transform() {

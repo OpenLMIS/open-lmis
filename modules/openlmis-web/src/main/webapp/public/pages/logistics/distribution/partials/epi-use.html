@@ -9,10 +9,10 @@
  -->
 
 <ng-include
-    src="'/public/pages/logistics/distribution/partials/record-facility-data.html'"></ng-include>
+  src="'/public/pages/logistics/distribution/partials/record-facility-data.html'"></ng-include>
 <div class="clearfix facility-container">
   <ng-include
-      src="'/public/pages/logistics/distribution/partials/record-facility-menu.html'"></ng-include>
+    src="'/public/pages/logistics/distribution/partials/record-facility-menu.html'"></ng-include>
 
   <div class="facility-info" ng-init="facilityData = distribution.facilityDistributions[selectedFacilityId]">
     <div class="refrigerator-container" disable-form="{{facilityData.isDisabled()}}">
@@ -24,7 +24,7 @@
       </h3>
 
       <div class="clearfix"></div>
-      <div class="alert alert-info" id="noRefrigerators"
+      <div class="alert alert-info" id="noLineItems"
            ng-hide="facilityData.epiUse.lineItems.length">
         <span openlmis-message="message.no.product.groups"></span>
       </div>
@@ -61,17 +61,17 @@
               </td>
               <td class="col-starting-stock">
                 <div>
-                  <input type="text"
-                         ng-model="lineItem.stockAtFirstOfMonth.value"
-                         name="stockAtFirstOfMonth{{$index}}"
-                         numeric-validator="positiveInteger" maxlength="7"
-                         error-holder="stockAtFirstOfMonthError{{$index}}"/>
-                </div>
-                <div class="error">
+                  <span class="input-error-parent-cell">
+                    <input type="text"
+                           ng-model="lineItem.stockAtFirstOfMonth.value"
+                           name="stockAtFirstOfMonth{{$index}}"
+                           numeric-validator="positiveInteger" maxlength="7"
+                           error-holder="stockAtFirstOfMonthError{{$index}}"/>
                     <span id="stockAtFirstOfMonthError{{$index}}"
                           class="rnr-form-error"
                           openlmis-message="error.number.only"
                           style="display: none"></span>
+                  </span>
                 </div>
                 <input id="stockAtFirstOfMonth{{$index}}" type="checkbox"
                        ng-model="lineItem.stockAtFirstOfMonth.notRecorded"
@@ -82,17 +82,17 @@
               </td>
               <td class="col-received">
                 <div>
-                  <input type="text"
-                         ng-model="lineItem.received.value"
-                         name="received{{$index}}"
-                         numeric-validator="positiveInteger" maxlength="7"
-                         error-holder="receivedError{{$index}}"/>
-                </div>
-                <div class="error">
+                  <span class="input-error-parent-cell">
+                    <input type="text"
+                           ng-model="lineItem.received.value"
+                           name="received{{$index}}"
+                           numeric-validator="positiveInteger" maxlength="7"
+                           error-holder="receivedError{{$index}}"/>
                     <span id="receivedError{{$index}}"
                           class="rnr-form-error"
                           openlmis-message="error.number.only"
                           style="display: none"></span>
+                  </span>
                 </div>
                 <input id="received{{$index}}" type="checkbox"
                        ng-model="lineItem.received.notRecorded"
@@ -105,18 +105,17 @@
               </td>
               <td class="col-distributed">
                 <div>
-                  <input type="text"
-                         ng-model="lineItem.distributed.value"
-                         name="distributed{{$index}}"
-                         numeric-validator="positiveInteger" maxlength="7"
-                         error-holder="distributedError{{$index}}"/>
-                </div>
-
-                <div class="error">
+                  <span class="input-error-parent-cell">
+                    <input type="text"
+                           ng-model="lineItem.distributed.value"
+                           name="distributed{{$index}}"
+                           numeric-validator="positiveInteger" maxlength="7"
+                           error-holder="distributedError{{$index}}"/>
                     <span id="distributedError{{$index}}"
                           class="rnr-form-error"
                           openlmis-message="error.number.only"
                           style="display: none"></span>
+                  </span>
                 </div>
                 <input id="distributed{{$index}}" type="checkbox"
                        ng-model="lineItem.distributed.notRecorded"
@@ -126,17 +125,16 @@
               </td>
               <td class="col-loss">
                 <div>
-                  <input type="text"
-                         ng-model="lineItem.loss.value"
-                         name="loss{{$index}}" maxlength="7"
-                         numeric-validator="positiveInteger"
-                         error-holder="lossError{{$index}}"/>
-                </div>
-
-                <div class="error">
+                  <span class="input-error-parent-cell">
+                    <input type="text"
+                           ng-model="lineItem.loss.value"
+                           name="loss{{$index}}" maxlength="7"
+                           numeric-validator="positiveInteger"
+                           error-holder="lossError{{$index}}"/>
                     <span id="lossError{{$index}}" class="rnr-form-error"
                           openlmis-message="error.number.only"
                           style="display: none"></span>
+                  </span>
                 </div>
                 <input id="loss{{$index}}" type="checkbox"
                        ng-model="lineItem.loss.notRecorded"
@@ -146,17 +144,17 @@
               </td>
               <td class="col-ending-stock">
                 <div>
-                  <input type="text"
-                         ng-model="lineItem.stockAtEndOfMonth.value"
-                         name="stockAtEndOfMonth{{$index}}"
-                         numeric-validator="positiveInteger" maxlength="7"
-                         error-holder="stockAtEndOfMonthError{{$index}}"/>
-                </div>
-                <div class="error">
+                  <span class="input-error-parent-cell">
+                    <input type="text"
+                           ng-model="lineItem.stockAtEndOfMonth.value"
+                           name="stockAtEndOfMonth{{$index}}"
+                           numeric-validator="positiveInteger" maxlength="7"
+                           error-holder="stockAtEndOfMonthError{{$index}}"/>
                     <span id="stockAtEndOfMonthError{{$index}}"
                           class="rnr-form-error"
                           openlmis-message="error.number.only"
                           style="display: none"></span>
+                  </span>
                 </div>
                 <input id="stockAtEndOfMonth{{$index}}" type="checkbox"
                        ng-model="lineItem.stockAtEndOfMonth.notRecorded"
@@ -167,20 +165,19 @@
               </td>
               <td class="expiration-date">
                 <div>
-                  <input type="text"
-                         ng-model="lineItem.expirationDate.value"
-                         name="expirationDate{{$index}}"
-                         date-validator="date"
-                         showError="inputClass"
-                         error-holder="expirationDateError{{$index}}"
-                         maxlength="7"/>
-                </div>
-
-                <div class="error">
+                  <span class="input-error-parent-cell">
+                    <input type="text"
+                           ng-model="lineItem.expirationDate.value"
+                           name="expirationDate{{$index}}"
+                           date-validator="date"
+                           showError="inputClass"
+                           error-holder="expirationDateError{{$index}}"
+                           maxlength="7"/>
                     <span class="alert alert-warning warning-alert"
                           id="expirationDateError{{$index}}"
                           style="display:none;"
                           openlmis-message="error.invalid.date.format"></span>
+                  </span>
                 </div>
                 <input id="expirationDate{{$index}}" type="checkbox"
                        ng-model="lineItem.expirationDate.notRecorded"
@@ -199,9 +196,9 @@
 
   <div class="facility-info facility-toolbar">
     <a href="" class="pull-left">&laquo; <span
-        openlmis-message="link.previous"></span></a>
+      openlmis-message="link.previous"></span></a>
     <a href="" class="pull-right"><span
-        openlmis-message="link.next"></span> &raquo;</a>
+      openlmis-message="link.next"></span> &raquo;</a>
   </div>
 
 </div>

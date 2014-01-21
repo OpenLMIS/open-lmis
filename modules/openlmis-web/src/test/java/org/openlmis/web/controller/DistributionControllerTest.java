@@ -26,6 +26,7 @@ import org.openlmis.db.categories.UnitTests;
 import org.openlmis.distribution.domain.Distribution;
 import org.openlmis.distribution.domain.DistributionRefrigerators;
 import org.openlmis.distribution.domain.FacilityDistribution;
+import org.openlmis.distribution.domain.FacilityVisit;
 import org.openlmis.distribution.dto.FacilityDistributionDTO;
 import org.openlmis.distribution.service.DistributionService;
 import org.openlmis.distribution.service.FacilityDistributionService;
@@ -141,12 +142,12 @@ public class DistributionControllerTest {
     Distribution distribution = new Distribution();
     distribution.setId(1L);
     FacilityDistributionDTO facilityDistributionDTO = spy(new FacilityDistributionDTO());
-    FacilityDistribution facilityDistributionData = new FacilityDistribution(null, null, new DistributionRefrigerators(EMPTY_LIST), null, null);
+    facilityDistributionDTO.setFacilityVisit(new FacilityVisit());
+    FacilityDistribution facilityDistributionData = new FacilityDistribution(null, null, new DistributionRefrigerators(EMPTY_LIST), null, null, null);
 
     when(service.sync(facilityDistributionData)).thenReturn(true);
     doReturn(facilityDistributionData).when(facilityDistributionDTO).transform();
     doNothing().when(facilityDistributionDTO).setModifiedBy(USER_ID);
-    doNothing().when(facilityDistributionDTO).setFacilityId(facility.getId());
     doNothing().when(facilityDistributionDTO).setDistributionId(distribution.getId());
 
     ResponseEntity<OpenLmisResponse> response = controller.sync(facilityDistributionDTO, distribution.getId(), facility.getId(), httpServletRequest);
@@ -155,7 +156,6 @@ public class DistributionControllerTest {
     assertTrue((boolean) response.getBody().getData().get("syncStatus"));
     verify(service).sync(facilityDistributionData);
     verify(facilityDistributionDTO).setModifiedBy(USER_ID);
-    verify(facilityDistributionDTO).setFacilityId(facility.getId());
     verify(facilityDistributionDTO).setDistributionId(distribution.getId());
   }
 

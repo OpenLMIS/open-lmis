@@ -11,6 +11,7 @@ import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 import java.util.List;
 import java.util.Map;
 
+import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
 import static org.openqa.selenium.support.How.ID;
 
 public class EpiInventoryPage extends DistributionTab {
@@ -50,11 +51,18 @@ public class EpiInventoryPage extends DistributionTab {
   }
 
   @Override
-  public void verifyData(Map<String, String> map) {
+  public void verifyData(List<Map<String, String>> data) {
+    for (int i = 0; i < data.size(); ++i) {
+      Map<String, String> epiInventoryData = data.get(i);
+      assertEquals(getDeliveredQuantity(i+1), epiInventoryData.get("deliveredQuantity"));
+      assertEquals(getExistingQuantity(i+1), epiInventoryData.get("existingQuantity"));
+      assertEquals(getSpoiledQuantity(i+1), epiInventoryData.get("spoiledQuantity"));
+    }
   }
 
-  @Override
   public void navigate() {
+    testWebDriver.waitForElementToAppear(epiInventoryStatusIcon);
+    epiInventoryStatusIcon.click();
   }
 
   public void fillDeliveredQuantity(int rowNumber, String deliveredQuantity) {
@@ -125,4 +133,25 @@ public class EpiInventoryPage extends DistributionTab {
   public String getDataEpiInventory() {
     return testWebDriver.findElement(By.id("epiInventoryTable")).getText();
   }
+
+  public boolean getDeliveredQuantityStatus(int rowNumber) {
+    return testWebDriver.findElement(By.id("deliveredQuantity" + (rowNumber - 1))).isEnabled();
+  }
+
+  public boolean getExistingQuantityStatus(int rowNumber) {
+    return testWebDriver.findElement(By.id("existingQuantity" + (rowNumber - 1))).isEnabled();
+  }
+
+  public boolean getSpoiledQuantityStatus(int rowNumber) {
+    return testWebDriver.findElement(By.id("spoiledQuantity" + (rowNumber - 1))).isEnabled();
+  }
+
+  public String getSpoiledQuantity(int rowNumber) {
+    return testWebDriver.findElement(By.id("spoiledQuantity" + (rowNumber - 1))).getAttribute("value");
+  }
+
+  public String getExistingQuantity(int rowNumber) {
+    return testWebDriver.findElement(By.id("existingQuantity" + (rowNumber - 1))).getAttribute("value");
+  }
+
 }

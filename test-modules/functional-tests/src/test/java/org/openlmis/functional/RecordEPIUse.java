@@ -25,6 +25,7 @@ import org.testng.annotations.*;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Map;
 
 @Listeners(CaptureScreenshotOnFailureListener.class)
@@ -32,6 +33,7 @@ import java.util.Map;
 public class RecordEPIUse extends TestCaseHelper {
 
   public String userSIC, password;
+  EPIUsePage epiUsePage;
 
   @BeforeMethod(groups = {"distribution"})
   public void setUp() throws Exception {
@@ -40,56 +42,57 @@ public class RecordEPIUse extends TestCaseHelper {
 
   @Then("^I should see product group \"([^\"]*)\"")
   public void verifyProductGroup(String productGroup) {
-    new EPIUsePage(testWebDriver).verifyProductGroup(productGroup, 1);
+    epiUsePage = PageFactory.getInstanceOfEpiUsePage(testWebDriver);
+    epiUsePage.verifyProductGroup(productGroup, 1);
   }
 
   @When("^I Enter EPI values without end of month:$")
   public void enterEPIValues(DataTable tableData) {
-    EPIUsePage epiUse = new EPIUsePage(testWebDriver);
     Map<String, String> epiData = tableData.asMaps().get(0);
-
-    epiUse.enterValueInDistributed(epiData.get("distributed"), 1);
-    epiUse.enterValueInExpirationDate(epiData.get("expirationDate"), 1);
-    epiUse.enterValueInLoss(epiData.get("loss"), 1);
-    epiUse.enterValueInReceived(epiData.get("received"), 1);
-    epiUse.enterValueInStockAtFirstOfMonth(epiData.get("firstOfMonth"), 1);
+    epiUsePage = PageFactory.getInstanceOfEpiUsePage(testWebDriver);
+    epiUsePage.enterValueInDistributed(epiData.get("distributed"), 1);
+    epiUsePage.enterValueInExpirationDate(epiData.get("expirationDate"), 1);
+    epiUsePage.enterValueInLoss(epiData.get("loss"), 1);
+    epiUsePage.enterValueInReceived(epiData.get("received"), 1);
+    epiUsePage.enterValueInStockAtFirstOfMonth(epiData.get("firstOfMonth"), 1);
   }
 
   @When("^I verify saved EPI values:$")
   public void verifySavedEPIValues(DataTable tableData) {
-    new RefrigeratorPage(testWebDriver).navigateToRefrigeratorTab();
-    EPIUsePage epiUse = new EPIUsePage(testWebDriver);
-    epiUse.navigate();
-    Map<String, String> epiData = tableData.asMaps().get(0);
+    epiUsePage = PageFactory.getInstanceOfEpiUsePage(testWebDriver);
+    epiUsePage.navigateToRefrigerators();
+    epiUsePage.navigateToEpiUse();
+    List<Map<String, String>> epiData = tableData.asMaps();
 
-    epiUse.verifyData(epiData);
+    epiUsePage.verifyData(epiData);
   }
 
   @And("^I verify total is \"([^\"]*)\"$")
   public void verifyTotalField(String total) {
-    new EPIUsePage(testWebDriver).verifyTotal(total, 1);
+    epiUsePage = PageFactory.getInstanceOfEpiUsePage(testWebDriver);
+    epiUsePage.verifyTotal(total, 1);
   }
 
 
-  @Then("^Navigate to EPI tab$")
-  public void navigateToEpiTab() throws IOException {
-    EPIUsePage epiUse = new EPIUsePage(testWebDriver);
-    epiUse.navigate();
+  @Then("^I navigate to EPI Use tab$")
+  public void navigateToEpiUseTab() throws IOException {
+    epiUsePage = PageFactory.getInstanceOfEpiUsePage(testWebDriver);
+    epiUsePage.navigateToEpiUse();
   }
 
   @Then("^Verify indicator should be \"([^\"]*)\"$")
   public void shouldVerifyIndicatorColor(String color) throws IOException, SQLException {
-    EPIUsePage epiUse = new EPIUsePage(testWebDriver);
-    epiUse.verifyIndicator(color);
+    epiUsePage = PageFactory.getInstanceOfEpiUsePage(testWebDriver);
+    epiUsePage.verifyIndicator(color);
   }
 
   @When("^I enter EPI end of month as \"([^\"]*)\"")
   public void enterEPIEndOfMonth(String endOfMonth) throws InterruptedException {
-    new EPIUsePage(testWebDriver).enterValueInStockAtEndOfMonth(endOfMonth, 1);
+    epiUsePage = PageFactory.getInstanceOfEpiUsePage(testWebDriver);
+    epiUsePage.enterValueInStockAtEndOfMonth(endOfMonth, 1);
   }
 
   @AfterMethod(groups = {"distribution"})
-  @After
   public void tearDown() throws Exception {
     testWebDriver.sleep(250);
     if (!testWebDriver.getElementById("username").isDisplayed()) {

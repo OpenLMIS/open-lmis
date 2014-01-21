@@ -8,17 +8,17 @@
  *  You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
  */
 
-package org.openlmis.distribution.dto;
+package org.openlmis.distribution.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.openlmis.core.domain.BaseModel;
-import org.openlmis.distribution.domain.FullCoverage;
+import org.openlmis.core.domain.Facility;
 
+import static java.lang.Math.round;
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 
 @Data
@@ -26,19 +26,24 @@ import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPT
 @AllArgsConstructor
 @JsonSerialize(include = NON_EMPTY)
 @JsonIgnoreProperties(ignoreUnknown = true)
-@EqualsAndHashCode(callSuper = false)
-public class FullCoverageDTO extends BaseModel {
+public class ChildCoverageLineItem extends BaseModel {
 
   private Long facilityVisitId;
-  private Reading femaleHealthCenterReading;
-  private Reading femaleMobileBrigadeReading;
-  private Reading maleHealthCenterReading;
-  private Reading maleMobileBrigadeReading;
+  private String vaccination;
+  private Integer targetGroup;
 
-  public FullCoverage transform() {
-    return new FullCoverage(this.facilityVisitId, this.femaleHealthCenterReading.parsePositiveInt(),
-      this.femaleMobileBrigadeReading.parsePositiveInt(),
-      this.maleHealthCenterReading.parsePositiveInt(),
-      this.maleMobileBrigadeReading.parsePositiveInt());
+  public ChildCoverageLineItem(FacilityVisit facilityVisit, Facility facility, VaccinationProduct vaccinationProduct) {
+    this.facilityVisitId = facilityVisit.getId();
+    this.targetGroup = calculateTargetGroup(facility.getWhoRatioFor(vaccinationProduct.getProductCode()),
+      facility.getCatchmentPopulation());
+    this.vaccination = vaccinationProduct.getVaccination();
+  }
+
+  private Integer calculateTargetGroup(Double whoRatio, Long catchmentPopulation) {
+    Integer targetGroup = null;
+    if (whoRatio != null && catchmentPopulation != null) {
+      targetGroup = (int) round(catchmentPopulation * whoRatio);
+    }
+    return targetGroup;
   }
 }

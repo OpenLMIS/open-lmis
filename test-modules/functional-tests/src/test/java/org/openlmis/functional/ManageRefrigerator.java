@@ -44,16 +44,16 @@ import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
 public class ManageRefrigerator extends TestCaseHelper {
 
   public String userSIC, password;
+  RefrigeratorPage refrigeratorPage;
 
   @BeforeMethod(groups = "distribution")
-  @Before
   public void setUp() throws Exception {
     super.setup();
   }
 
   @When("^I add new refrigerator$")
   public void clickAddNewButton() throws IOException, SQLException {
-    RefrigeratorPage refrigeratorPage = new RefrigeratorPage(testWebDriver);
+    refrigeratorPage = PageFactory.getInstanceOfRefrigeratorPage(testWebDriver);
     refrigeratorPage.clickAddNew();
   }
 
@@ -64,25 +64,25 @@ public class ManageRefrigerator extends TestCaseHelper {
 
   @When("^I enter Brand \"([^\"]*)\"$")
   public void enterBrand(String brand) throws IOException, SQLException {
-    RefrigeratorPage refrigeratorPage = new RefrigeratorPage(testWebDriver);
+    refrigeratorPage = PageFactory.getInstanceOfRefrigeratorPage(testWebDriver);
     refrigeratorPage.enterValueInBrandModal(brand);
   }
 
   @And("^I enter Modal \"([^\"]*)\"$")
   public void enterModal(String modal) throws IOException, SQLException {
-    RefrigeratorPage refrigeratorPage = new RefrigeratorPage(testWebDriver);
+    refrigeratorPage = PageFactory.getInstanceOfRefrigeratorPage(testWebDriver);
     refrigeratorPage.enterValueInModelModal(modal);
   }
 
   @And("^I enter Serial Number \"([^\"]*)\"$")
   public void enterSerialNumber(String serial) throws IOException, SQLException {
-    RefrigeratorPage refrigeratorPage = new RefrigeratorPage(testWebDriver);
+    refrigeratorPage = PageFactory.getInstanceOfRefrigeratorPage(testWebDriver);
     refrigeratorPage.enterValueInManufacturingSerialNumberModal(serial);
   }
 
   @And("^I access done$")
   public void clickDoneOnModal() throws IOException, SQLException {
-    RefrigeratorPage refrigeratorPage = new RefrigeratorPage(testWebDriver);
+    refrigeratorPage = PageFactory.getInstanceOfRefrigeratorPage(testWebDriver);
     refrigeratorPage.clickDoneOnModal();
   }
 
@@ -98,19 +98,19 @@ public class ManageRefrigerator extends TestCaseHelper {
 
   @And("^I delete refrigerator")
   public void clickDelete() throws IOException, SQLException {
-    RefrigeratorPage refrigeratorPage = new RefrigeratorPage(testWebDriver);
+    refrigeratorPage = PageFactory.getInstanceOfRefrigeratorPage(testWebDriver);
     refrigeratorPage.clickDelete();
   }
 
   @And("^I edit refrigerator")
   public void clickEdit() throws IOException, SQLException {
-    RefrigeratorPage refrigeratorPage = new RefrigeratorPage(testWebDriver);
+    refrigeratorPage = PageFactory.getInstanceOfRefrigeratorPage(testWebDriver);
     refrigeratorPage.clickShowForRefrigerator1();
   }
 
   @When("^I confirm delete$")
   public void clickOK() throws IOException, SQLException {
-    RefrigeratorPage refrigeratorPage = new RefrigeratorPage(testWebDriver);
+    refrigeratorPage = PageFactory.getInstanceOfRefrigeratorPage(testWebDriver);
     refrigeratorPage.clickOKButton();
   }
 
@@ -128,37 +128,37 @@ public class ManageRefrigerator extends TestCaseHelper {
 
   @And("^I enter refrigerator temperature \"([^\"]*)\"$")
   public void enterRefrigeratorTemperature(String temperature) throws IOException, SQLException {
-    RefrigeratorPage refrigeratorPage = new RefrigeratorPage(testWebDriver);
+    refrigeratorPage = PageFactory.getInstanceOfRefrigeratorPage(testWebDriver);
     refrigeratorPage.enterValueInRefrigeratorTemperature(temperature);
   }
 
   @And("^I enter low alarm events \"([^\"]*)\"$")
   public void enterLowEvents(String event) throws IOException, SQLException {
-    RefrigeratorPage refrigeratorPage = new RefrigeratorPage(testWebDriver);
+    refrigeratorPage = PageFactory.getInstanceOfRefrigeratorPage(testWebDriver);
     refrigeratorPage.enterValueInLowAlarmEvents(event);
   }
 
   @And("^I enter high alarm events \"([^\"]*)\"$")
   public void enterHighEvents(String event) throws IOException, SQLException {
-    RefrigeratorPage refrigeratorPage = new RefrigeratorPage(testWebDriver);
+    refrigeratorPage = PageFactory.getInstanceOfRefrigeratorPage(testWebDriver);
     refrigeratorPage.enterValueInHighAlarmEvents(event);
   }
 
   @And("^I enter Notes \"([^\"]*)\"$")
   public void enterNotes(String notes) throws IOException, SQLException {
-    RefrigeratorPage refrigeratorPage = new RefrigeratorPage(testWebDriver);
+    refrigeratorPage = PageFactory.getInstanceOfRefrigeratorPage(testWebDriver);
     refrigeratorPage.enterValueInNotesTextArea(notes);
   }
 
   @And("^I add refrigerator$")
   public void clickDone() throws IOException, SQLException {
-    RefrigeratorPage refrigeratorPage = new RefrigeratorPage(testWebDriver);
+    refrigeratorPage = PageFactory.getInstanceOfRefrigeratorPage(testWebDriver);
     refrigeratorPage.clickDone();
   }
 
   @Then("^I see \"([^\"]*)\" refrigerator icon as \"([^\"]*)\"$")
   public void verifyIndividualRefrigeratorColor(String whichIcon, String color) throws IOException, SQLException {
-    RefrigeratorPage refrigeratorPage = new RefrigeratorPage(testWebDriver);
+    refrigeratorPage = PageFactory.getInstanceOfRefrigeratorPage(testWebDriver);
     refrigeratorPage.verifyRefrigeratorColor(whichIcon, color);
   }
 
@@ -174,8 +174,8 @@ public class ManageRefrigerator extends TestCaseHelper {
 
   @And("^I verify \"([^\"]*)\" it was working correctly when I left$")
   public void clickFunctioningCorrectly(String flag) throws InterruptedException {
+    refrigeratorPage = PageFactory.getInstanceOfRefrigeratorPage(testWebDriver);
     Thread.sleep(1000);
-    RefrigeratorPage refrigeratorPage = new RefrigeratorPage(testWebDriver);
     if (flag.equalsIgnoreCase("Yes"))
       refrigeratorPage.clickFunctioningCorrectlyYesRadio();
     else if (flag.equalsIgnoreCase("No"))
@@ -188,7 +188,7 @@ public class ManageRefrigerator extends TestCaseHelper {
 
   @And("^I verify \"([^\"]*)\" that there is a problem with refrigerator since last visit$")
   public void clickProblemSinceLastVisit(String flag) throws IOException, SQLException {
-    RefrigeratorPage refrigeratorPage = new RefrigeratorPage(testWebDriver);
+    refrigeratorPage = PageFactory.getInstanceOfRefrigeratorPage(testWebDriver);
     if (flag.equalsIgnoreCase("Yes"))
       refrigeratorPage.clickProblemSinceLastVisitYesRadio();
     else if (flag.equalsIgnoreCase("No"))
@@ -201,13 +201,13 @@ public class ManageRefrigerator extends TestCaseHelper {
 
   @Then("^I should see Refrigerators screen")
   public void onRefrigeratorScreen() throws IOException, SQLException {
-    RefrigeratorPage refrigeratorPage = new RefrigeratorPage(testWebDriver);
+    refrigeratorPage = PageFactory.getInstanceOfRefrigeratorPage(testWebDriver);
     refrigeratorPage.onRefrigeratorScreen();
   }
 
   @Then("^I should see refrigerator details as refrigerator temperature \"([^\"]*)\" low alarm events \"([^\"]*)\" high alarm events \"([^\"]*)\" notes \"([^\"]*)\"")
   public void verifyRefrigeratorDetails(String temperature, String low, String high, String notes) throws IOException, SQLException {
-    RefrigeratorPage refrigeratorPage = new RefrigeratorPage(testWebDriver);
+    refrigeratorPage = PageFactory.getInstanceOfRefrigeratorPage(testWebDriver);
     assertEquals(refrigeratorPage.getRefrigeratorTemperateTextFieldValue(), temperature);
     assertEquals(refrigeratorPage.getNotesTextAreaValue(), notes);
     assertEquals(refrigeratorPage.getLowAlarmEventsTextFieldValue(), low);
@@ -237,7 +237,6 @@ public class ManageRefrigerator extends TestCaseHelper {
   }
 
   @AfterMethod(groups = "distribution")
-  @After
   public void tearDown() throws Exception {
     testWebDriver.sleep(250);
     if (!testWebDriver.getElementById("username").isDisplayed()) {

@@ -11,14 +11,14 @@
 <div class="record-facility-data" ng-controller="RecordFacilityDataController">
   <div class="row-fluid facility-heading">
     <div class="span5" ng-show="facilitySelected">
-      <span ng-class="distribution.facilityDistributions[facilitySelected.id].computeStatus()">
+      <span ng-class="distribution.facilityDistributions[facilitySelected.facilityId].computeStatus()">
         <div id="facilityIndicator" class="status-icon pull-left position-fixing"></div>
       </span>
 
       <h2>
         <span openlmis-message="heading.health.center"></span>
         <span>:</span>
-        <span openlmis-message="facilitySelected.name"></span>
+        <span openlmis-message="facilitySelected.facilityName"></span>
       </h2>
     </div>
 
@@ -50,21 +50,19 @@
   </div>
   <div class="info-box">
     <div class="row-fluid">
-      <select ui-select2="{formatResult: format}" openlmis-message="label" id="selectFacility" class="span3"
-              ng-model="facilitySelected.id"
+      <select ui-select2="{formatResult: format}" openlmis-message="label" id="selectFacility" class="span3" ng-model="facilitySelected.facilityId"
               ng-change="chooseFacility()">
         <option value=""></option>
-        <optgroup ng-repeat="zone in geographicZones | orderBy: 'code'" label="{{ zone.code }}">
-          <option ng-repeat="facility in zoneFacilityMap[zone.code] | orderBy: 'name'" value="{{ facility.id }}"
+        <optgroup ng-repeat="zone in geographicZones" label="{{ zone }}">
+          <option ng-repeat="facility in zoneFacilityMap[zone] | orderBy: 'facilityName'" value="{{ facility.facilityId }}"
                   ng-class="distribution.facilityDistributions[facility.id].computeStatus()">
-            {{ facility.code }} - {{ facility.name }}
+            {{ facility.facilityCode }} - {{ facility.facilityName }}
           </option>
         </optgroup>
       </select>
 
       <div class="span3 offset1 info-box-labels">
-        <strong openlmis-message="label.delivery.zone"> </strong> :&nbsp;<span
-        ng-bind="distribution.deliveryZone.name"></span>
+        <strong openlmis-message="label.delivery.zone"> </strong> :&nbsp;<span ng-bind="distribution.deliveryZone.name"></span>
       </div>
       <div class="span3 info-box-labels">
         <strong openlmis-message="label.program"></strong> :&nbsp;<span ng-bind="distribution.program.name"></span>

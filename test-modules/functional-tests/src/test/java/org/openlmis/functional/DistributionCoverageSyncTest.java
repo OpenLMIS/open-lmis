@@ -86,9 +86,6 @@ public class DistributionCoverageSyncTest extends TestCaseHelper {
     coveragePage.verifyIndicator("RED");
 
     assertEquals("Coverage", coveragePage.getTextOfCoverageHeader());
-    assertEquals("Full", coveragePage.getTextOfFullTab());
-    assertEquals("Adults", coveragePage.getTextOfAdultsTab());
-    assertEquals("Children", coveragePage.getTextOfChildrenTab());
     assertEquals("Completely Vaccinated Children(doses)", coveragePage.getTextOfCompletelyVaccinatedHeader());
     assertEquals("Females", coveragePage.getTextOfFemaleHeader());
     assertEquals("Males", coveragePage.getTextOfMaleHeader());
@@ -118,7 +115,7 @@ public class DistributionCoverageSyncTest extends TestCaseHelper {
     distributionPage.syncDistribution(1);
     assertTrue(distributionPage.getSyncMessage().contains("F10-Village Dispensary"));
     distributionPage.syncDistributionMessageDone();
-    //TODO verify data in db
+    verifyFullCoveragesDataInDatabase(null, null, null, null, coverageData.get(FIRST_FACILITY_CODE));
   }
 
   @Test(groups = {"distribution"})
@@ -144,7 +141,7 @@ public class DistributionCoverageSyncTest extends TestCaseHelper {
     coveragePage.toggleApplyNRToMaleHealthCenter();
     coveragePage.toggleApplyNRToMaleHealthCenter();
     coveragePage.enterMaleHealthCenter(10);
-    coveragePage.enterMaleMobileBrigade(0);
+    coveragePage.enterMaleMobileBrigade("0");
     coveragePage.toggleApplyNRToMaleMobileBrigade();
 
     coveragePage.verifyIndicator("GREEN");
@@ -181,11 +178,7 @@ public class DistributionCoverageSyncTest extends TestCaseHelper {
 
     refrigeratorPage.navigateToCoverage();
     verifyAllFieldsDisabled(coveragePage);
-    //TODO verify data in db
-  }
-
-  private void verifyAllFieldsDisabled(CoveragePage coveragePage) {
-    verifyEnableStatusOfFields(coveragePage, false, false, false, false);
+    verifyFullCoveragesDataInDatabase(9999999, null, 10, null, coverageData.get(FIRST_FACILITY_CODE));
   }
 
   @Test(groups = {"distribution"})
@@ -203,7 +196,7 @@ public class DistributionCoverageSyncTest extends TestCaseHelper {
 
     CoveragePage coveragePage = refrigeratorPage.navigateToCoverage();
     coveragePage.verifyIndicator("RED");
-    coveragePage.enterData(12, 34, 45, 56);
+    coveragePage.enterData(12, 34, 45, "56");
     coveragePage.verifyIndicator("GREEN");
 
     EPIUsePage epiUsePage = coveragePage.navigateToEpiUse();
@@ -221,7 +214,7 @@ public class DistributionCoverageSyncTest extends TestCaseHelper {
     distributionPage.syncDistribution(1);
     assertTrue(distributionPage.getSyncMessage().contains("F10-Village Dispensary"));
     distributionPage.syncDistributionMessageDone();
-    //TODO verify data in db
+    verifyFullCoveragesDataInDatabase(12, 34, 45, 56, coverageData.get(FIRST_FACILITY_CODE));
   }
 
   @Test(groups = {"distribution"})
@@ -241,7 +234,7 @@ public class DistributionCoverageSyncTest extends TestCaseHelper {
     coveragePage.verifyIndicator("RED");
     coveragePage.enterMaleHealthCenter(33);
     coveragePage.enterFemaleHealthCenter(67);
-    coveragePage.enterMaleMobileBrigade(0);
+    coveragePage.enterMaleMobileBrigade("0");
     coveragePage.toggleApplyNRToMaleMobileBrigade();
     coveragePage.verifyIndicator("AMBER");
 
@@ -305,6 +298,10 @@ public class DistributionCoverageSyncTest extends TestCaseHelper {
     assertEquals(femaleMobileBrigadeValue, coveragePage.getValueForField("femaleMobileBrigade"));
     assertEquals(maleHealthCenterValue, coveragePage.getValueForField("maleHealthCenter"));
     assertEquals(maleMobileBrigadeValue, coveragePage.getValueForField("maleMobileBrigade"));
+  }
+
+  private void verifyAllFieldsDisabled(CoveragePage coveragePage) {
+    verifyEnableStatusOfFields(coveragePage, false, false, false, false);
   }
 
   @AfterMethod(groups = "distribution")

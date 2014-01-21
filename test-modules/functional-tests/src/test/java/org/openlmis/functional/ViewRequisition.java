@@ -12,8 +12,6 @@ package org.openlmis.functional;
 
 
 import com.thoughtworks.selenium.SeleneseTestNgHelper;
-import cucumber.api.java.After;
-import cucumber.api.java.Before;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import org.openlmis.UiUtils.CaptureScreenshotOnFailureListener;
@@ -52,7 +50,6 @@ public class ViewRequisition extends TestCaseHelper {
 
 
   @BeforeMethod(groups = "requisition")
-  @Before
   public void setUp() throws Exception {
     super.setup();
   }
@@ -111,7 +108,7 @@ public class ViewRequisition extends TestCaseHelper {
 
   @When("^I update approved quantity \"([^\"]*)\"$")
   public void updateApprovedQuantity(String quantity) throws IOException, SQLException {
-    dbWrapper.insertApprovedQuantity(Integer.parseInt(quantity));
+    dbWrapper.updateFieldValue("requisition_line_items", "quantityApproved", Integer.parseInt(quantity));
   }
 
   @Then("^I should see requisition status as \"([^\"]*)\"$")
@@ -165,7 +162,7 @@ public class ViewRequisition extends TestCaseHelper {
     viewRequisitionPage.enterViewSearchCriteria();
     viewRequisitionPage.clickSearch();
     viewRequisitionPage.verifyNoRequisitionFound();
-    dbWrapper.insertApprovedQuantity(10);
+    dbWrapper.updateFieldValue("requisition_line_items", "quantityApproved", 10);
     dbWrapper.updateRequisitionStatus(AUTHORIZED, userSIC, "HIV");
     viewRequisitionPage.clickSearch();
     viewRequisitionPage.clickRnRList();
@@ -286,7 +283,7 @@ public class ViewRequisition extends TestCaseHelper {
     initiateRnRPage.enterValue(0, "quantityReceivedSecondProduct");
     initiateRnRPage.enterValue(0, "quantityDispensedSecondProduct");
     initiateRnRPage.calculateAndVerifyTotalCost();
-    initiateRnRPage.verifyCostOnFooter();
+    initiateRnRPage.verifyCostOnFooterForProducts(2);
     initiateRnRPage.skipAllProduct();
     initiateRnRPage.verifyAllFieldsDisabled();
     initiateRnRPage.calculateAndVerifyTotalCost();
@@ -313,7 +310,6 @@ public class ViewRequisition extends TestCaseHelper {
 
 
   @AfterMethod(groups = "requisition")
-  @After
   public void tearDown() throws Exception {
     testWebDriver.sleep(500);
     if (!testWebDriver.getElementById("username").isDisplayed()) {

@@ -259,7 +259,7 @@
         <span ng-switch-when="stockInHand"
               ng-class="getCellErrorClass(rnrLineItem)">
           <span id="{{getId(column.name, $parent)}}" ng-bind="rnrLineItem[column.name]"
-                class="cell-text text-right-align display-block"> </span>
+                class="cell-text right-justified display-block"> </span>
           <span class="row-specific-error" ng-show="rnrLineItem.getErrorMessage()">
             <span openlmis-message="lineItemErrorMessage(rnrLineItem)"></span>
             <span class="beak-down"></span>

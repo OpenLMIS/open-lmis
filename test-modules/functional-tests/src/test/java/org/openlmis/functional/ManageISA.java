@@ -24,6 +24,7 @@ import org.openlmis.pageobjects.LoginPage;
 import org.openlmis.pageobjects.ManageFacilityPage;
 import org.testng.annotations.*;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -41,13 +42,12 @@ public class ManageISA extends TestCaseHelper {
   private static String facilityNamePrefix = "FCname";
   public String user, program, product, productName, category, whoRatio, dosesPerYear, wastageFactor,
     bufferPercentage, minimumValue, maximumValue, adjustmentValue, date_time;
+  static ManageFacilityPage manageFacilityPage;
 
   @BeforeMethod(groups = "admin")
-  @Before
   public void setUp() throws Exception {
     super.setup();
   }
-
 
   @Given("^I have the following data for override ISA:$")
   public void theFollowingDataExist(DataTable tableData) throws Exception {
@@ -68,33 +68,29 @@ public class ManageISA extends TestCaseHelper {
 
       setupProgramProductTestDataWithCategories(product, productName, category, program);
       setupProgramProductISA(program, product, whoRatio, dosesPerYear, wastageFactor, bufferPercentage, minimumValue, maximumValue, adjustmentValue);
-
     }
   }
 
   @When("^I create facility$")
   public void createFacility() throws Exception {
-    ManageFacilityPage manageFacilityPage = new ManageFacilityPage(testWebDriver);
-    date_time = manageFacilityPage.enterValuesInFacility(facilityCodePrefix, facilityNamePrefix,
+    manageFacilityPage = PageFactory.getInstanceOfManageFacilityPage(testWebDriver);
+    date_time = ManageFacilityPage.getInstance(testWebDriver).enterValuesInFacility(facilityCodePrefix, facilityNamePrefix,
       program, geoZone, facilityType, operatedBy, valueOf(333), true);
   }
 
   @And("^I override ISA \"([^\"]*)\"$")
   public void overrideISA(String isaValue) throws Exception {
-    ManageFacilityPage manageFacilityPage = new ManageFacilityPage(testWebDriver);
-    manageFacilityPage.overrideIsa(isaValue, 1);
+    PageFactory.getInstanceOfManageFacilityPage(testWebDriver).overrideIsa(isaValue, 1);
   }
 
   @Then("^I should see calculated ISA \"([^\"]*)\"$")
   public void verifyCalculatedISA(String isaValue) throws Exception {
-    ManageFacilityPage manageFacilityPage = new ManageFacilityPage(testWebDriver);
-    manageFacilityPage.verifyCalculatedIsa(Integer.parseInt(isaValue));
+    PageFactory.getInstanceOfManageFacilityPage(testWebDriver).verifyCalculatedIsa(Integer.parseInt(isaValue));
   }
 
   @When("^I click ISA done$")
   public void clickISADone() throws Exception {
-    ManageFacilityPage manageFacilityPage = new ManageFacilityPage(testWebDriver);
-    manageFacilityPage.clickIsaDoneButton();
+    PageFactory.getInstanceOfManageFacilityPage(testWebDriver).clickIsaDoneButton();
   }
 
   @When("^I save facility$")
@@ -104,20 +100,19 @@ public class ManageISA extends TestCaseHelper {
 
   @Then("^I should see save successfully$")
   public void verifySaveSuccessfully() throws Exception {
-    ManageFacilityPage manageFacilityPage = new ManageFacilityPage(testWebDriver);
-    manageFacilityPage.verifySuccessMessage();
+    ManageFacilityPage.getInstance(testWebDriver).verifySuccessMessage();
   }
 
   @When("^I search facility$")
   public void searchFacility() throws Exception {
-    ManageFacilityPage manageFacilityPage = new ManageFacilityPage(testWebDriver);
+    manageFacilityPage = PageFactory.getInstanceOfManageFacilityPage(testWebDriver);
     manageFacilityPage.searchFacility(date_time);
-    manageFacilityPage.clickFacilityList(date_time);
+    ManageFacilityPage.getInstance(testWebDriver).clickFacilityList(date_time);
   }
 
   @Then("^I should see overridden ISA \"([^\"]*)\"$")
   public void verifyOverriddenISA(String isa) throws Exception {
-    ManageFacilityPage manageFacilityPage = new ManageFacilityPage(testWebDriver);
+    manageFacilityPage = PageFactory.getInstanceOfManageFacilityPage(testWebDriver);
     manageFacilityPage.verifyOverriddenIsa(isa);
   }
 
@@ -127,8 +122,8 @@ public class ManageISA extends TestCaseHelper {
     setupProgramProductISA(program, "P1", "1", "2", "3", "100", "100", "1000", "5");
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     loginPage.loginAs(userSIC, password);
-    HomePage homePage=new HomePage(testWebDriver);
-    ManageFacilityPage manageFacilityPage = homePage.navigateManageFacility();
+    HomePage homePage = new HomePage(testWebDriver);
+    manageFacilityPage = homePage.navigateManageFacility();
     homePage.clickCreateFacilityButton();
 
     String date_time = manageFacilityPage.enterValuesInFacility(facilityCodePrefix, facilityNamePrefix,
@@ -174,12 +169,12 @@ public class ManageISA extends TestCaseHelper {
   @AfterMethod(groups = "admin")
   public void tearDown() throws Exception {
     testWebDriver.sleep(500);
-    if(!testWebDriver.getElementById("username").isDisplayed()) {
+    if (!testWebDriver.getElementById("username").isDisplayed()) {
       HomePage homePage = new HomePage(testWebDriver);
       homePage.logout(baseUrlGlobal);
     }
-      dbWrapper.deleteData();
-      dbWrapper.closeConnection();
+    dbWrapper.deleteData();
+    dbWrapper.closeConnection();
   }
 
 

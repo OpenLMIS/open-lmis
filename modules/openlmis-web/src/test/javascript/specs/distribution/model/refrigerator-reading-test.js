@@ -113,5 +113,21 @@ describe('RefrigeratorReading', function () {
     expect(status).toEqual(DistributionStatus.INCOMPLETE);
   });
 
+  it('should return red status class if no fields are filled and temperature if filled with negative sign', function () {
+    refrigeratorReading = new RefrigeratorReading(facilityVisitId, {temperature: {value: "-"}});
+
+    var status = refrigeratorReading.computeStatus();
+
+    expect(status).toEqual(DistributionStatus.EMPTY);
+  });
+
+  it('should return red status class if no fields are filled and temperature if filled with decimal sign', function () {
+    refrigeratorReading = new RefrigeratorReading(facilityVisitId, {temperature: {value: "."}});
+
+    var status = refrigeratorReading.computeStatus();
+
+    expect(status).toEqual(DistributionStatus.EMPTY);
+  });
+
 
 });

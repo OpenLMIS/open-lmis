@@ -29,7 +29,11 @@ function Distribution(distributionJson) {
   };
 
   Distribution.prototype.setCoverageNotRecorded = function (facilityId) {
-    this.facilityDistributions[facilityId].coverage.setNotRecorded();
+    this.facilityDistributions[facilityId].fullCoverage.setNotRecorded();
+  };
+
+  Distribution.prototype.setChildCoverageNotRecorded = function (facilityId) {
+    this.facilityDistributions[facilityId].childCoverage.setNotRecorded();
   };
 
   return this;

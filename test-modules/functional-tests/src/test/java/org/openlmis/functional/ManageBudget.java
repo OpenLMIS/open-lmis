@@ -28,7 +28,7 @@ public class ManageBudget extends TestCaseHelper{
 
 
   @BeforeMethod(groups = "requisition")
-  @cucumber.api.java.Before
+  //@cucumber.api.java.Before
   public void setUp() throws Exception {
     super.setup();
     dbWrapper.deleteData();
@@ -471,7 +471,7 @@ public class ManageBudget extends TestCaseHelper{
   }
 
   @AfterMethod(groups = "requisition")
-  @cucumber.api.java.After
+  //@cucumber.api.java.After
   public void tearDown() throws Exception {
     testWebDriver.sleep(500);
     if (!testWebDriver.getElementById("username").isDisplayed()) {

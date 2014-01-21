@@ -518,6 +518,15 @@ public class TestCaseHelper {
     assertEquals(expirationDate, epiDetails.get("expirationdate"));
   }
 
+  public void verifyEpiInventoryDataInDatabase(String existingQuantity, String deliveredQuantity, String spoiledQuantity,
+                                               String productCode, String facilityCode) throws SQLException {
+    ResultSet epiInventoryDetails = dbWrapper.getEpiInventoryDetails(productCode, facilityCode);
+
+    assertEquals(existingQuantity, epiInventoryDetails.getString("existingQuantity"));
+    assertEquals(deliveredQuantity, epiInventoryDetails.getString("deliveredQuantity"));
+    assertEquals(spoiledQuantity, epiInventoryDetails.getString("spoiledQuantity"));
+  }
+
   public void verifyRefrigeratorReadingDataInDatabase(String facilityCode, String refrigeratorSerialNumber, Float temperature, String functioningCorrectly, Integer lowAlarmEvents,
                                                       Integer highAlarmEvents, String problemSinceLastTime, String notes) throws SQLException {
     ResultSet resultSet = dbWrapper.getRefrigeratorReadings(refrigeratorSerialNumber, facilityCode);
@@ -557,6 +566,24 @@ public class TestCaseHelper {
     assertEquals(thermostatSetting, resultSet.getBoolean("thermostatSetting"));
     assertEquals(other, resultSet.getBoolean("other"));
     assertEquals(otherProblemExplanation, resultSet.getString("otherProblemExplanation"));
+  }
+
+  public void verifyFullCoveragesDataInDatabase(Integer femaleHealthCenterReading, Integer femaleMobileBrigadeReading,
+                                                Integer maleHealthCenterReading, Integer maleMobileBrigadeReading, String facilityCode) throws SQLException {
+    Map<String, String> fullCoveragesDetails = dbWrapper.getFullCoveragesDetails(facilityCode);
+
+    assertEquals(femaleHealthCenterReading, fullCoveragesDetails.get("femalehealthcenter"));
+    assertEquals(femaleMobileBrigadeReading, fullCoveragesDetails.get("femaleoutreach"));
+    assertEquals(maleHealthCenterReading, fullCoveragesDetails.get("malehealthcenter"));
+    assertEquals(maleMobileBrigadeReading, fullCoveragesDetails.get("maleoutreach"));
+  }
+
+  public static Boolean parsePostgresBoolean(String value) {
+    value = value.toLowerCase();
+    if (!(value.equals("t") || value.equals("f") || value.equals("true") || value.equals("false"))) {
+      throw new IllegalArgumentException("Value can not be parsed into a boolean flag");
+    }
+    return (value.equals("t") || value.equals("true")) ? Boolean.TRUE : Boolean.FALSE;
   }
 
 }

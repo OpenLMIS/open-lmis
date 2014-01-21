@@ -8,31 +8,36 @@
  *  You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
  */
 
-package org.openlmis.distribution.dto;
+package org.openlmis.distribution.service;
 
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.db.categories.UnitTests;
-import org.openlmis.distribution.domain.FullCoverage;
-import org.openlmis.distribution.domain.VaccinationCoverage;
+import org.openlmis.distribution.domain.VaccinationFullCoverage;
+import org.openlmis.distribution.repository.VaccinationCoverageRepository;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
 
 @Category(UnitTests.class)
-public class VaccinationCoverageDTOTest {
+@RunWith(MockitoJUnitRunner.class)
+public class VaccinationFullCoverageServiceTest {
+
+  @Mock
+  private VaccinationCoverageRepository repository;
+
+  @InjectMocks
+  private VaccinationCoverageService service;
 
   @Test
-  public void shouldTransformCoverageDTOIntoCoverage() throws Exception {
-    FullCoverage expectedFullCoverage = mock(FullCoverage.class);
-    FullCoverageDTO fullCoverageDTO = mock(FullCoverageDTO.class);
-    when(fullCoverageDTO.transform()).thenReturn(expectedFullCoverage);
-    VaccinationCoverageDTO coverageDTO = new VaccinationCoverageDTO(fullCoverageDTO);
+  public void shouldSaveFullCoverageData() throws Exception {
+    VaccinationFullCoverage fullCoverage = new VaccinationFullCoverage();
 
-    VaccinationCoverage vaccinationCoverage = coverageDTO.transform();
+    service.saveFullCoverage(fullCoverage);
 
-    verify(fullCoverageDTO).transform();
-    assertThat(vaccinationCoverage.getFullCoverage(), is(expectedFullCoverage));
+    verify(repository).saveFullCoverage(fullCoverage);
   }
 }

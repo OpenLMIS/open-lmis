@@ -33,7 +33,6 @@ public class ForgotPassword extends TestCaseHelper {
   ForgotPasswordPage forgotPasswordPage;
 
   @BeforeMethod(groups = "admin")
-  @Before
   public void setUp() throws Exception {
     super.setup();
   }
@@ -172,7 +171,6 @@ public class ForgotPassword extends TestCaseHelper {
 
 
   @AfterMethod(groups = "admin")
-  @After
   public void tearDown() throws Exception {
     try{
     if(!testWebDriver.getElementById("username").isDisplayed()) {

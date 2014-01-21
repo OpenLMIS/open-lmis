@@ -14,13 +14,12 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
+import org.openlmis.core.builder.ProductBuilder;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.query.QueryExecutor;
 import org.openlmis.core.repository.mapper.*;
 import org.openlmis.db.categories.IntegrationTests;
-import org.openlmis.distribution.domain.Distribution;
-import org.openlmis.distribution.domain.FacilityVisit;
-import org.openlmis.distribution.domain.FullCoverage;
+import org.openlmis.distribution.domain.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -28,6 +27,7 @@ import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.ResultSet;
+import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static junit.framework.Assert.assertTrue;
@@ -75,6 +75,9 @@ public class VaccinationCoverageMapperIT {
   @Autowired
   VaccinationCoverageMapper mapper;
 
+  @Autowired
+  private ProductMapper productMapper;
+
   Distribution distribution;
   DeliveryZone zone;
   Program program1;
@@ -108,37 +111,91 @@ public class VaccinationCoverageMapperIT {
 
     facilityVisit = new FacilityVisit(facility, distribution);
     facilityVisitMapper.insert(facilityVisit);
-
   }
-
 
   @Test
   public void shouldSaveVaccinationFullCoverage() throws Exception {
+    VaccinationFullCoverage vaccinationFullCoverage = new VaccinationFullCoverage(34, 78, 11, 666);
+    vaccinationFullCoverage.setFacilityVisitId(facilityVisit.getId());
+    vaccinationFullCoverage.setCreatedBy(1L);
+    mapper.insertFullVaccinationCoverage(vaccinationFullCoverage);
 
-
-    FullCoverage fullCoverage = new FullCoverage(34, 78, 11, 666);
-    fullCoverage.setFacilityVisitId(facilityVisit.getId());
-    fullCoverage.setCreatedBy(1L);
-    mapper.insertFullVaccinationCoverage(fullCoverage);
-
-    ResultSet resultSet = queryExecutor.execute("SELECT * FROM full_coverages WHERE id = " + fullCoverage.getId());
+    ResultSet resultSet = queryExecutor.execute("SELECT * FROM full_coverages WHERE id = " + vaccinationFullCoverage.getId());
     assertTrue(resultSet.next());
     assertThat(resultSet.getLong("facilityVisitId"), is(facilityVisit.getId()));
-    assertThat(resultSet.getInt("femaleHealthCenterReading"), is(34));
-    assertThat(resultSet.getInt("femaleMobileBrigadeReading"), is(78));
-    assertThat(resultSet.getInt("maleHealthCenterReading"), is(11));
-    assertThat(resultSet.getInt("maleMobileBrigadeReading"), is(666));
+    assertThat(resultSet.getInt("femaleHealthCenter"), is(34));
+    assertThat(resultSet.getInt("femaleOutreach"), is(78));
+    assertThat(resultSet.getInt("maleHealthCenter"), is(11));
+    assertThat(resultSet.getInt("maleOutreach"), is(666));
     assertThat(resultSet.getLong("createdBy"), is(1L));
   }
 
   @Test
   public void shouldGetFullCoverageByFacilityVisitId() {
-    FullCoverage fullCoverage = new FullCoverage(34, 78, 11, 666);
-    fullCoverage.setFacilityVisitId(facilityVisit.getId());
-    mapper.insertFullVaccinationCoverage(fullCoverage);
+    VaccinationFullCoverage vaccinationFullCoverage = new VaccinationFullCoverage(34, 78, 11, 666);
+    vaccinationFullCoverage.setFacilityVisitId(facilityVisit.getId());
+    mapper.insertFullVaccinationCoverage(vaccinationFullCoverage);
 
-    FullCoverage savedFullCoverage = mapper.getBy(facilityVisit.getId());
+    VaccinationFullCoverage savedVaccinationFullCoverage = mapper.getFullCoverageBy(facilityVisit.getId());
 
-    assertThat(savedFullCoverage, is(fullCoverage));
+    assertThat(savedVaccinationFullCoverage, is(vaccinationFullCoverage));
+  }
+
+  @Test
+  public void shouldReturnVaccinationCoverageProductMappings() throws Exception {
+    Product product = make(a(ProductBuilder.defaultProduct));
+
+    productMapper.insert(product);
+    VaccinationProduct vaccinationProduct = new VaccinationProduct("BCG", product.getCode(), true);
+
+    queryExecutor.executeUpdate("INSERT INTO coverage_vaccination_products (vaccination, productCode, childCoverage) VALUES (?, ?, ?)",
+      vaccinationProduct.getVaccination(), vaccinationProduct.getProductCode(), vaccinationProduct.getChildCoverage());
+
+    List<VaccinationProduct> vaccinationProducts = mapper.getVaccinationProducts(true);
+
+    assertThat(vaccinationProducts.size(), is(1));
+    VaccinationProduct vaccinationProductFromDB = vaccinationProducts.get(0);
+    assertThat(vaccinationProductFromDB.getVaccination(), is(vaccinationProduct.getVaccination()));
+    assertThat(vaccinationProductFromDB.getProductCode(), is(vaccinationProduct.getProductCode()));
+    assertThat(vaccinationProductFromDB.getChildCoverage(), is(vaccinationProduct.getChildCoverage()));
+  }
+
+  @Test
+  public void shouldInsertChildVaccinationCoverage() throws Exception {
+    Product product = make(a(ProductBuilder.defaultProduct));
+
+    productMapper.insert(product);
+    VaccinationProduct vaccinationProduct = new VaccinationProduct("BCG", product.getCode(), true);
+
+    queryExecutor.executeUpdate("INSERT INTO coverage_vaccination_products (vaccination, productCode, childCoverage) VALUES (?, ?, ?)",
+      vaccinationProduct.getVaccination(), vaccinationProduct.getProductCode(), vaccinationProduct.getChildCoverage());
+
+    ChildCoverageLineItem childCoverageLineItem = new ChildCoverageLineItem(facilityVisit.getId(), "BCG", 56);
+    mapper.insertChildVaccinationCoverageLineItem(childCoverageLineItem);
+
+    ResultSet resultSet = queryExecutor.execute("SELECT * FROM vaccination_child_coverage_line_items WHERE facilityVisitId = " + childCoverageLineItem.getFacilityVisitId());
+    assertTrue(resultSet.next());
+    assertThat(resultSet.getLong("facilityVisitId"), is(facilityVisit.getId()));
+    assertThat(resultSet.getInt("targetGroup"), is(56));
+    assertThat(resultSet.getString("vaccination"), is("BCG"));
+  }
+
+  @Test
+  public void shouldGetChildCoverageLineItemByFacilityVisitId() throws Exception {
+    Product product = make(a(ProductBuilder.defaultProduct));
+
+    productMapper.insert(product);
+    VaccinationProduct vaccinationProduct = new VaccinationProduct("BCG", product.getCode(), true);
+
+    queryExecutor.executeUpdate("INSERT INTO coverage_vaccination_products (vaccination, productCode, childCoverage) VALUES (?, ?, ?)",
+      vaccinationProduct.getVaccination(), vaccinationProduct.getProductCode(), vaccinationProduct.getChildCoverage());
+
+    ChildCoverageLineItem childCoverageLineItem = new ChildCoverageLineItem(facilityVisit.getId(), "BCG", 56);
+    mapper.insertChildVaccinationCoverageLineItem(childCoverageLineItem);
+
+    List<ChildCoverageLineItem> fetchedChildCoverageLineItems = mapper.getChildCoverageLineItemsBy(facilityVisit.getId());
+
+    assertThat(fetchedChildCoverageLineItems.size(), is(1));
+    assertThat(fetchedChildCoverageLineItems.get(0).getFacilityVisitId(), is(facilityVisit.getId()));
   }
 }

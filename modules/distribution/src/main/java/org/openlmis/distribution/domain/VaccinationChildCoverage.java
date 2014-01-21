@@ -12,26 +12,23 @@ package org.openlmis.distribution.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import org.openlmis.core.domain.BaseModel;
+import org.openlmis.core.domain.Facility;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
-@EqualsAndHashCode(callSuper = false)
 @AllArgsConstructor
-public class FullCoverage extends BaseModel {
+public class VaccinationChildCoverage {
 
-  private Long facilityVisitId;
-  private Integer femaleHealthCenterReading;
-  private Integer femaleMobileBrigadeReading;
-  private Integer maleHealthCenterReading;
-  private Integer maleMobileBrigadeReading;
+  private List<ChildCoverageLineItem> childCoverageLineItems = new ArrayList<>();
 
-  public FullCoverage(Integer femaleHealthCenterReading, Integer femaleMobileBrigadeReading, Integer maleHealthCenterReading, Integer maleMobileBrigadeReading) {
-    this.femaleHealthCenterReading = femaleHealthCenterReading;
-    this.femaleMobileBrigadeReading = femaleMobileBrigadeReading;
-    this.maleHealthCenterReading = maleHealthCenterReading;
-    this.maleMobileBrigadeReading = maleMobileBrigadeReading;
+  public VaccinationChildCoverage(FacilityVisit facilityVisit, Facility facility, List<VaccinationProduct> vaccinationProducts) {
+    for(VaccinationProduct vaccinationProduct : vaccinationProducts) {
+      ChildCoverageLineItem childCoverageLineItem = new ChildCoverageLineItem(facilityVisit, facility, vaccinationProduct);
+      this.childCoverageLineItems.add(childCoverageLineItem);
+    }
   }
 }

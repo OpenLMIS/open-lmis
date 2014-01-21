@@ -8,7 +8,7 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-function DistributionController(DeliveryZoneFacilities, Refrigerators, deliveryZones, DeliveryZoneActivePrograms, messageService, DeliveryZoneProgramPeriods, navigateBackService, $http, $dialog, $scope, $location, $q, distributionService) {
+function DistributionController($scope, deliveryZones, DeliveryZoneActivePrograms, messageService, DeliveryZoneProgramPeriods, navigateBackService, $http, $dialog, $location, distributionService) {
   $scope.deliveryZones = deliveryZones;
   var DELIVERY_ZONE_LABEL = messageService.get('label.select.deliveryZone');
   var NONE_ASSIGNED_LABEL = messageService.get('label.noneAssigned');
@@ -53,74 +53,50 @@ function DistributionController(DeliveryZoneFacilities, Refrigerators, deliveryZ
     return optionMessage($scope.periods, DEFAULT_PERIOD_MESSAGE);
   };
 
-  $scope.initiateDistribution = function () {
+  function confirmCaching(data, message) {
+    var dialogOpts = {
+      id: "distributionInitiated",
+      header: 'label.distribution.initiated',
+      body: data.message
+    };
+    OpenLmisDialog.newDialog(dialogOpts, callback, $dialog);
 
-    var message;
+    function callback(result) {
+      if (result) {
+        distributionService.put(data.distribution);
+        $scope.message = message;
+      }
+    }
+  }
+
+  $scope.initiateDistribution = function () {
     var distribution = {deliveryZone: $scope.selectedZone, program: $scope.selectedProgram, period: $scope.selectedPeriod};
 
     if (distributionService.isCached(distribution)) {
-      $scope.message = messageService.get("message.distribution.already.cached",
-        $scope.selectedZone.name, $scope.selectedProgram.name, $scope.selectedPeriod.name);
+      $scope.message = messageService.get("message.distribution.already.cached", $scope.selectedZone.name,
+        $scope.selectedProgram.name, $scope.selectedPeriod.name);
       return;
     }
 
-    var distributionDefer = $q.defer();
+    $http.post('/distributions.json', distribution).success(onInitSuccess);
 
-    (function cacheDistribution() {
-      $http.post('/distributions.json', distribution).success(onInitSuccess);
+    function onInitSuccess(data, status) {
+      var message = data.success;
+      distribution = data.distribution;
 
-      function onInitSuccess(data, status) {
-        message = data.success;
-        if (status == 201) {
-          distributionDefer.resolve(data.distribution);
-        } else {
-          distribution = data.distribution;
-          var dialogOpts = {
-            id: "distributionInitiated",
-            header: 'label.distribution.initiated',
-            body: data.message
-          };
-          OpenLmisDialog.newDialog(dialogOpts, callback(), $dialog);
-        }
-      }
-
-      function callback() {
-        return function (result) {
-          if (result) {
-            distributionDefer.resolve(distribution);
-          } else {
-            distributionDefer.reject();
-          }
-        };
-      }
-    })();
-
-    var referenceDataDefer = $q.defer();
-
-    DeliveryZoneFacilities.get({"programId": $scope.selectedProgram.id, "deliveryZoneId": $scope.selectedZone.id }, onDeliveryZoneFacilitiesGetSuccess, {});
-
-    function onDeliveryZoneFacilitiesGetSuccess(data) {
-      if (data.facilities.length > 0) {
-        var referenceData = {facilities: data.facilities};
-        Refrigerators.get({"deliveryZoneId": $scope.selectedZone.id, "programId": $scope.selectedProgram.id}, function (data) {
-          referenceData.refrigerators = data.refrigerators;
-          referenceDataDefer.resolve(referenceData);
-        }, {});
-      } else {
-        referenceDataDefer.reject();
+      if (!distribution.facilityDistributions) {
         $scope.message = messageService.get("message.no.facility.available", $scope.selectedProgram.name,
           $scope.selectedZone.name);
+        return;
       }
-    }
+      if (status === 200) {
+        confirmCaching(data, message);
+        return;
+      }
 
-    $q.all([distributionDefer.promise, referenceDataDefer.promise]).then(function (resolved) {
-      var distribution = resolved[0];
-      var referenceData = resolved[1];
-
-      distributionService.put(distribution, referenceData);
-
+      distributionService.put(distribution);
       $scope.message = message;
-    });
+    }
   };
 
   var optionMessage = function (entity, defaultMessage) {

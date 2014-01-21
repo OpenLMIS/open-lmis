@@ -33,19 +33,17 @@ import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPT
 @EqualsAndHashCode(callSuper = false)
 public class EpiUseDTO extends BaseModel {
 
-  Long facilityVisitId;
-  List<EpiUseLineItemDTO> lineItems;
+  List<EpiUseLineItemDTO> lineItems = new ArrayList<>();
 
   public EpiUse transform() {
     List<EpiUseLineItem> epiUseLineItems = new ArrayList<>();
 
     for (EpiUseLineItemDTO epiUseLineItemDTO : this.lineItems) {
-      epiUseLineItemDTO.setFacilityVisitId(facilityVisitId);
+      epiUseLineItemDTO.setFacilityVisitId(epiUseLineItemDTO.getFacilityVisitId());
       epiUseLineItemDTO.setModifiedBy(this.modifiedBy);
       epiUseLineItems.add(epiUseLineItemDTO.transform());
     }
 
-    EpiUse epiUse = new EpiUse(epiUseLineItems);
-    return epiUse;
+    return new EpiUse(epiUseLineItems);
   }
 }

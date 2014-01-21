@@ -14,21 +14,27 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.openlmis.core.domain.BaseModel;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.message.OpenLmisMessage;
 import org.openlmis.rnr.domain.RnrLineItem;
 
 import static org.apache.commons.lang3.StringUtils.isEmpty;
+import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
+@JsonSerialize(include = Inclusion.NON_EMPTY)
 public class OrderPODLineItem extends BaseModel {
 
   private Long podId;
   private String productCode;
+  private String productCategory;
+  private Integer productCategoryDisplayOrder;
+  private Integer productDisplayOrder;
   private Integer quantityReceived;
   private String productName;
   private String dispensingUnit;
@@ -56,6 +62,9 @@ public class OrderPODLineItem extends BaseModel {
   public static OrderPODLineItem createFrom(RnrLineItem rnrLineItem) {
     OrderPODLineItem orderPODLineItem = new OrderPODLineItem();
     orderPODLineItem.setProductCode(rnrLineItem.getProductCode());
+    orderPODLineItem.setProductCategory(rnrLineItem.getProductCategory());
+    orderPODLineItem.setProductCategoryDisplayOrder(rnrLineItem.getProductCategoryDisplayOrder());
+    orderPODLineItem.setProductDisplayOrder(rnrLineItem.getProductDisplayOrder());
     orderPODLineItem.setProductName(rnrLineItem.getProduct());
     orderPODLineItem.setDispensingUnit(rnrLineItem.getDispensingUnit());
     orderPODLineItem.setPacksToShip(rnrLineItem.getPacksToShip());

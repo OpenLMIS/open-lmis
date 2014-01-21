@@ -47,6 +47,7 @@ import static org.powermock.api.mockito.PowerMockito.*;
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(PODService.class)
 public class PODServiceTest {
+
   @Mock
   private PODRepository podRepository;
 
@@ -86,7 +87,7 @@ public class PODServiceTest {
   }
 
   @Test
-  public void shouldGetPODWithLineItems() throws Exception {
+  public void shouldInsertAndGetPODWithLineItems() throws Exception {
     OrderPODLineItem orderPodLineItem1 = mock(OrderPODLineItem.class);
     OrderPODLineItem orderPodLineItem2 = mock(OrderPODLineItem.class);
 
@@ -99,6 +100,8 @@ public class PODServiceTest {
 
     when(orderService.getOrder(orderId)).thenReturn(order);
     when(spyOrderPod.getOrderId()).thenReturn(orderId);
+
+    when(podRepository.getPODByOrderId(orderId)).thenReturn(null);
 
     SupplyLine supplyLine = new SupplyLine();
     Facility supplyingFacility = new Facility(facilityId);
@@ -114,11 +117,42 @@ public class PODServiceTest {
     doNothing().when(spyOrderPod).fillPOD(requisition);
     doNothing().when(spyOrderPod).fillPodLineItems(requisition.getAllLineItems());
 
-    podService.getPOD(orderId, userId);
+    podService.createPOD(orderId, userId);
 
     verify(podRepository).insertPOD(spyOrderPod);
+    verify(podRepository).getPODByOrderId(orderId);
     verify(podRepository).insertPODLineItem(orderPodLineItem1);
     verify(podRepository).insertPODLineItem(orderPodLineItem2);
+    verify(podRepository).getPODWithLineItemsByOrderId(orderId);
+  }
+
+  @Test
+  public void shouldGetPODWithLineItemsIfExists() throws Exception {
+    OrderPODLineItem orderPodLineItem1 = mock(OrderPODLineItem.class);
+    OrderPODLineItem orderPodLineItem2 = mock(OrderPODLineItem.class);
+
+    OrderPOD spyOrderPod = spy(orderPod);
+    spyOrderPod.setPodLineItems(asList(orderPodLineItem1, orderPodLineItem2));
+
+    Order order = mock(Order.class);
+    whenNew(Order.class).withArguments(orderId).thenReturn(order);
+
+    when(orderService.getOrder(orderId)).thenReturn(order);
+    when(spyOrderPod.getOrderId()).thenReturn(orderId);
+
+    when(podRepository.getPODByOrderId(orderId)).thenReturn(spyOrderPod);
+
+    SupplyLine supplyLine = new SupplyLine();
+    Facility supplyingFacility = new Facility(facilityId);
+    supplyLine.setSupplyingFacility(supplyingFacility);
+    order.setSupplyLine(supplyLine);
+
+    when(order.getSupplyingFacility()).thenReturn(supplyingFacility);
+    when(fulfillmentPermissionService.hasPermission(userId, facilityId, MANAGE_POD)).thenReturn(true);
+
+    podService.createPOD(orderId, userId);
+
+    verify(podRepository).getPODByOrderId(orderId);
     verify(podRepository).getPODWithLineItemsByOrderId(orderId);
   }
 
@@ -147,6 +181,6 @@ public class PODServiceTest {
     expectedException.expect(DataException.class);
     expectedException.expectMessage("error.permission.denied");
 
-    podService.getPOD(orderId, userId);
+    podService.createPOD(orderId, userId);
   }
 }

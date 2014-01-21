@@ -14,6 +14,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.Predicate;
+import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.openlmis.core.exception.DataException;
@@ -67,5 +70,16 @@ public class ProgramSupported extends BaseModel implements Importable {
   public String getStringStartDate() throws ParseException {
     SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
     return this.startDate == null ? null : simpleDateFormat.format(this.startDate);
+  }
+
+  @JsonIgnore
+  public Double getWhoRatioFor(final String productCode) {
+    FacilityProgramProduct facilityProgramProduct = (FacilityProgramProduct) CollectionUtils.find(this.getProgramProducts(), new Predicate() {
+      @Override
+      public boolean evaluate(Object o) {
+        return ((FacilityProgramProduct) o).getProduct().getCode().equals(productCode);
+      }
+    });
+    return (facilityProgramProduct == null) ? null : facilityProgramProduct.getWhoRatio(productCode);
   }
 }

@@ -47,7 +47,7 @@ public class PODService {
   private FulfillmentPermissionService fulfillmentPermissionService;
 
   @Transactional
-  public OrderPOD getPOD(Long orderId, Long userId) {
+  public OrderPOD createPOD(Long orderId, Long userId) {
     save(orderId, userId);
     return podRepository.getPODWithLineItemsByOrderId(orderId);
   }
@@ -59,8 +59,11 @@ public class PODService {
     orderPOD.setModifiedBy(userId);
 
     checkPermissions(orderPOD);
-    insertOrderPOD(orderPOD);
-    insertLineItems(orderPOD);
+
+    if (podRepository.getPODByOrderId(orderId) == null) {
+      insertOrderPOD(orderPOD);
+      insertLineItems(orderPOD);
+    }
   }
 
   public void updateOrderStatus(OrderPOD orderPod) {

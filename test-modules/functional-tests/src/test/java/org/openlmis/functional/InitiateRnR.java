@@ -13,8 +13,6 @@ package org.openlmis.functional;
 
 import com.thoughtworks.selenium.SeleneseTestBase;
 import cucumber.api.DataTable;
-import cucumber.api.java.After;
-import cucumber.api.java.Before;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
@@ -62,7 +60,7 @@ public class InitiateRnR extends TestCaseHelper {
   public InitiateRnRPage initiateRnRPage;
 
   @BeforeMethod(groups = "requisition")
-  @Before
+  //@Before
   public void setUp() throws Exception {
     super.setup();
     dbWrapper.deleteData();
@@ -300,7 +298,7 @@ public class InitiateRnR extends TestCaseHelper {
     dbWrapper.insertValuesInRequisition(false);
     dbWrapper.insertValuesInRegimenLineItems("100", "200", "300", "testing");
     dbWrapper.updateRequisitionStatus(SUBMITTED, userSIC, "HIV");
-    dbWrapper.insertApprovedQuantity(10);
+    dbWrapper.updateFieldValue("requisition_line_items", "quantityApproved", 10);
     dbWrapper.updateRequisitionStatus(AUTHORIZED, userSIC, "HIV");
 
     ApprovePage approvePageLowerSNUser = homePage.navigateToApprove();
@@ -329,7 +327,7 @@ public class InitiateRnR extends TestCaseHelper {
     dbWrapper.insertValuesInRequisition(false);
     dbWrapper.insertValuesInRegimenLineItems("100", "200", "300", "testing");
     dbWrapper.updateRequisitionStatus(SUBMITTED, userSIC, "HIV");
-    dbWrapper.insertApprovedQuantity(10);
+    dbWrapper.updateFieldValue("requisition_line_items", "quantityApproved", 10);
     dbWrapper.updateRequisitionStatus(AUTHORIZED, userSIC, "HIV");
 
     ApprovePage approvePageLowerSNUser = homePage.navigateToApprove();
@@ -823,7 +821,7 @@ public class InitiateRnR extends TestCaseHelper {
     InitiateRnRPage initiateRnRPage = new InitiateRnRPage(testWebDriver);
     initiateRnRPage.enterValue(100, "requestedQuantityFirstProduct");
     initiateRnRPage.calculateAndVerifyTotalCost();
-    initiateRnRPage.verifyCostOnFooter();
+    initiateRnRPage.verifyCostOnFooterForProducts(1);
 
     initiateRnRPage.skipSingleProduct(1);
     initiateRnRPage.verifyAllFieldsDisabled();
@@ -854,7 +852,7 @@ public class InitiateRnR extends TestCaseHelper {
     initiateRnRPage.clickOk();
     initiateRnRPage.verifySubmitRnrSuccessMsg();
     initiateRnRPage.calculateAndVerifyTotalCost();
-    initiateRnRPage.verifyCostOnFooter();
+    initiateRnRPage.verifyCostOnFooterForProducts(1);
     assertEquals("125.0", Float.parseFloat(dbWrapper.getAttributeFromTable("requisitions", "fullSupplyItemsSubmittedCost", "id", String.valueOf(dbWrapper.getMaxRnrID()))));
   }
 
@@ -890,7 +888,7 @@ public class InitiateRnR extends TestCaseHelper {
     initiateRnRPage.unSkipAllProduct();
     initiateRnRPage.skipSingleProduct(2);
     initiateRnRPage.calculateAndVerifyTotalCost();
-    initiateRnRPage.verifyCostOnFooter();
+    initiateRnRPage.verifyCostOnFooterForProducts(1);
     initiateRnRPage.clickAuthorizeButton();
     initiateRnRPage.clickOk();
     initiateRnRPage.verifyAuthorizeRnrSuccessMsg();
@@ -938,7 +936,7 @@ public class InitiateRnR extends TestCaseHelper {
     initiateRnRPage.unSkipAllProduct();
     initiateRnRPage.skipSingleProduct(2);
     initiateRnRPage.calculateAndVerifyTotalCost();
-    initiateRnRPage.verifyCostOnFooter();
+    initiateRnRPage.verifyCostOnFooterForProducts(1);
     initiateRnRPage.clickAuthorizeButton();
     initiateRnRPage.clickOk();
     initiateRnRPage.verifyAuthorizeRnrSuccessMsg();
@@ -1053,7 +1051,7 @@ public class InitiateRnR extends TestCaseHelper {
   }
 
   @AfterMethod(groups = "requisition")
-  @After
+  //@After
   public void tearDown() throws Exception {
     testWebDriver.sleep(500);
     if (!testWebDriver.getElementById("username").isDisplayed()) {

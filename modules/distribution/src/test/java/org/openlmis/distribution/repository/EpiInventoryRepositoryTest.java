@@ -22,8 +22,7 @@ import org.openlmis.distribution.domain.EpiInventoryLineItem;
 import org.openlmis.distribution.repository.mapper.EpiInventoryMapper;
 
 import static java.util.Arrays.asList;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 @Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
@@ -42,9 +41,28 @@ public class EpiInventoryRepositoryTest {
     EpiInventoryLineItem lineItem2 = mock(EpiInventoryLineItem.class);
     epiInventory.setLineItems(asList(lineItem1, lineItem2));
 
+    when(lineItem1.getId()).thenReturn(null);
+    when(lineItem2.getId()).thenReturn(null);
+
     repository.save(epiInventory);
 
-    verify(mapper).saveLineItem(lineItem1);
-    verify(mapper).saveLineItem(lineItem2);
+    verify(mapper).insertLineItem(lineItem1);
+    verify(mapper).insertLineItem(lineItem2);
+  }
+
+  @Test
+  public void shouldUpdateEpiInventoryWithLineItemsIfAlreadyExists() throws Exception {
+    EpiInventory epiInventory = new EpiInventory();
+    EpiInventoryLineItem lineItem1 = mock(EpiInventoryLineItem.class);
+    EpiInventoryLineItem lineItem2 = mock(EpiInventoryLineItem.class);
+    epiInventory.setLineItems(asList(lineItem1, lineItem2));
+
+    when(lineItem1.getId()).thenReturn(1L);
+    when(lineItem2.getId()).thenReturn(2L);
+
+    repository.save(epiInventory);
+
+    verify(mapper).updateLineItem(lineItem1);
+    verify(mapper).updateLineItem(lineItem2);
   }
 }

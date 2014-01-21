@@ -18,7 +18,6 @@ import cucumber.api.java.Before;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
-import cucumber.api.java.en.When;
 import org.openlmis.UiUtils.CaptureScreenshotOnFailureListener;
 import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.UiUtils.TestWebDriver;
@@ -59,10 +58,9 @@ public class ViewWarehouseLoadAmount extends TestCaseHelper {
   public String programSecond = "TB";
   public String schedule = "M";
   public String product = "P10";
-  public String product2 = "P11";
+  WarehouseLoadAmountPage warehouseLoadAmountPage;
 
   @BeforeMethod(groups = "distribution")
-  @Before
   public void setUp() throws Exception {
     super.setup();
   }
@@ -109,6 +107,11 @@ public class ViewWarehouseLoadAmount extends TestCaseHelper {
     dbWrapper.insertRoleAssignmentForDistribution(userSIC, "store in-charge", deliveryZoneCodeSecond);
   }
 
+  @And("^I have role assigned to delivery zone first$")
+  public void setupRoleAssignmentForDeliveryZoneFirst() throws Exception {
+    dbWrapper.insertRoleAssignmentForDistribution(userSIC, "store in-charge", deliveryZoneCodeFirst);
+  }
+
   @And("^I have following ISA values:$")
   public void setProgramProductISA(DataTable tableData) throws Exception {
     for (Map<String, String> map : tableData.asMaps()) {
@@ -126,15 +129,9 @@ public class ViewWarehouseLoadAmount extends TestCaseHelper {
     }
   }
 
-  @When("^I click load amount$")
-  public void clickDistributionLoadAmount() throws Exception {
-    DistributionPage distributionPage = new DistributionPage(testWebDriver);
-    distributionPage.clickViewLoadAmount();
-  }
-
   @Then("^I should see aggregate ISA values as per multiple facilities in one delivery zone$")
   public void verifyISAAndOverrideISAValuesAggregatedForMultipleFacilities() throws Exception {
-    WarehouseLoadAmountPage warehouseLoadAmountPage = new WarehouseLoadAmountPage(testWebDriver);
+    warehouseLoadAmountPage = PageFactory.getInstanceOfWarehouseLoadAmountPage(testWebDriver);
     assertEquals(String.valueOf(Integer.parseInt(warehouseLoadAmountPage.getFacilityPopulation(1, 1)) + Integer.parseInt(warehouseLoadAmountPage.getFacilityPopulation(2, 1))), warehouseLoadAmountPage.getFacilityPopulation(3, 1));
     assertEquals(String.valueOf(Integer.parseInt(warehouseLoadAmountPage.getProduct1Isa(1, 1)) + Integer.parseInt(warehouseLoadAmountPage.getProduct1Isa(2, 1))), warehouseLoadAmountPage.getProduct1Isa(3, 1));
     assertEquals(String.valueOf(Integer.parseInt(warehouseLoadAmountPage.getProduct2Isa(1, 1)) + Integer.parseInt(warehouseLoadAmountPage.getProduct2Isa(2, 1))), warehouseLoadAmountPage.getProduct2Isa(3, 1));
@@ -156,18 +153,18 @@ public class ViewWarehouseLoadAmount extends TestCaseHelper {
 
   @Then("^I should see ISA values as per delivery zone facilities$")
   public void verifyISAAndOverrideISA() throws Exception {
-    WarehouseLoadAmountPage warehouseLoadAmountPage = new WarehouseLoadAmountPage(testWebDriver);
+    warehouseLoadAmountPage = PageFactory.getInstanceOfWarehouseLoadAmountPage(testWebDriver);
     assertEquals(facilityCodeSecond, warehouseLoadAmountPage.getFacilityCode(1, 1));
-    assertEquals(dbWrapper.getAttributeFromTable("facilities", "name", "code", facilityCodeSecond), warehouseLoadAmountPage.getFacilityName(1, 1));
-    assertEquals(dbWrapper.getAttributeFromTable("facilities", "catchmentPopulation", "code", facilityCodeSecond), warehouseLoadAmountPage.getFacilityPopulation(1, 1));
+    assertEquals("Central Hospital", warehouseLoadAmountPage.getFacilityName(1, 1));
+    assertEquals("333", warehouseLoadAmountPage.getFacilityPopulation(1, 1));
 
-    assertEquals(getISAForProgramProduct(programFirst, product, warehouseLoadAmountPage.getFacilityPopulation(1, 1)), warehouseLoadAmountPage.getProduct1Isa(1, 1));
-    assertEquals(dbWrapper.getOverriddenIsa(facilityCodeSecond, programFirst, product2, periodDisplayedByDefault), warehouseLoadAmountPage.getProduct2Isa(1, 1));
+    assertEquals("31", warehouseLoadAmountPage.getProduct1Isa(1, 1));
+    assertEquals("101", warehouseLoadAmountPage.getProduct2Isa(1, 1));
   }
 
   @And("^I verify ISA values for Product1 as:$")
   public void verifyISAForProduct1(DataTable dataTable) throws IOException {
-    WarehouseLoadAmountPage warehouseLoadAmountPage = new WarehouseLoadAmountPage(testWebDriver);
+    warehouseLoadAmountPage = PageFactory.getInstanceOfWarehouseLoadAmountPage(testWebDriver);
     List<Map<String, String>> facilityProductISAMaps = dataTable.asMaps();
     for (Map<String, String> facilityProductISAMap : facilityProductISAMaps) {
       assertEquals(facilityProductISAMap.get("Facility1"), warehouseLoadAmountPage.getProduct1Isa(1, 1));
@@ -177,7 +174,7 @@ public class ViewWarehouseLoadAmount extends TestCaseHelper {
 
   @And("^I verify ISA values for Product2 as:$")
   public void verifyISAForProduct2(DataTable dataTable) throws IOException {
-    WarehouseLoadAmountPage warehouseLoadAmountPage = new WarehouseLoadAmountPage(testWebDriver);
+    warehouseLoadAmountPage = PageFactory.getInstanceOfWarehouseLoadAmountPage(testWebDriver);
     List<Map<String, String>> facilityProductISAMaps = dataTable.asMaps();
     for (Map<String, String> facilityProductISAMap : facilityProductISAMaps) {
       assertEquals(facilityProductISAMap.get("Facility1"), warehouseLoadAmountPage.getProduct2Isa(1, 1));
@@ -187,7 +184,7 @@ public class ViewWarehouseLoadAmount extends TestCaseHelper {
 
   @And("^I should not see inactive products on view load amount$")
   public void verifyInactiveProductsNotDisplayedOnViewLoadAmount() throws IOException {
-    WarehouseLoadAmountPage warehouseLoadAmountPage = new WarehouseLoadAmountPage(testWebDriver);
+    warehouseLoadAmountPage = PageFactory.getInstanceOfWarehouseLoadAmountPage(testWebDriver);
     assertFalse(warehouseLoadAmountPage.getAggregateTableData().contains("ProductName6"));
     assertFalse(warehouseLoadAmountPage.getTable1Data().contains("ProductName6"));
 
@@ -200,7 +197,7 @@ public class ViewWarehouseLoadAmount extends TestCaseHelper {
 
   @Then("^I should see message \"([^\"]*)\"$")
   public void verifyNoRecordFoundMessage(String message) throws Exception {
-    WarehouseLoadAmountPage warehouseLoadAmountPage = new WarehouseLoadAmountPage(testWebDriver);
+    warehouseLoadAmountPage = PageFactory.getInstanceOfWarehouseLoadAmountPage(testWebDriver);
     assertEquals(message, warehouseLoadAmountPage.getNoRecordFoundMessage());
   }
 
@@ -250,7 +247,8 @@ public class ViewWarehouseLoadAmount extends TestCaseHelper {
     distributionPage.selectValueFromPeriod(periodDisplayedByDefault);
     distributionPage.clickViewLoadAmount();
 
-    WarehouseLoadAmountPage warehouseLoadAmountPage = new WarehouseLoadAmountPage(testWebDriver);
+    warehouseLoadAmountPage = PageFactory.getInstanceOfWarehouseLoadAmountPage(testWebDriver);
+
     assertEquals(warehouseLoadAmountPage.getFacilityPopulation(1, 1), warehouseLoadAmountPage.getFacilityPopulation(3, 1));
     assertEquals("--", warehouseLoadAmountPage.getProduct1Isa(3, 1));
     assertEquals("--", warehouseLoadAmountPage.getProduct1Isa(2, 1));
@@ -309,7 +307,7 @@ public class ViewWarehouseLoadAmount extends TestCaseHelper {
     distributionPage.selectValueFromPeriod(periodDisplayedByDefault);
     distributionPage.clickViewLoadAmount();
 
-    WarehouseLoadAmountPage warehouseLoadAmountPage = new WarehouseLoadAmountPage(testWebDriver);
+    warehouseLoadAmountPage = PageFactory.getInstanceOfWarehouseLoadAmountPage(testWebDriver);
 
     verifyWarehouseLoadAmountHeader(deliveryZoneNameFirst, programFirst, periodDisplayedByDefault);
     assertEquals(facilityCodeSecond, warehouseLoadAmountPage.getFacilityCode(1, 1));
@@ -359,7 +357,6 @@ public class ViewWarehouseLoadAmount extends TestCaseHelper {
   }
 
   @AfterMethod(groups = "distribution")
-  @After
   public void tearDown() throws Exception {
     testWebDriver.sleep(500);
     if (!testWebDriver.getElementById("username").isDisplayed()) {

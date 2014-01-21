@@ -44,7 +44,6 @@ describe('DistributionListController', function () {
         distributionService = _distributionService_;
         spyOn(distributionService, 'deleteDistribution');
         spyOn(distributionService, 'save');
-        spyOn(distributionService, 'getReferenceData');
         q = $q;
         location = $location;
 
@@ -52,14 +51,14 @@ describe('DistributionListController', function () {
         }};
 
         var facilityDistribution1 = new FacilityDistribution(
-          {'epiUse': {'productGroups': [
+          {facilityId: 44,'epiUse': {'productGroups': [
             {'id': 3, 'code': 'penta', 'name': 'penta', 'reading': {'stockAtFirstOfMonth': {'notRecorded': true}, 'received': {'notRecorded': true}, 'distributed': {'notRecorded': false},
               'loss': {'notRecorded': true}, 'stockAtEndOfMonth': {'notRecorded': true}, 'expirationDate': {'notRecorded': true}}, '$$hashKey': '02A'}
           ], 'status': 'is-complete'}, 'refrigerators': {'refrigeratorReadings': []},
             'facilityVisit': {id: 1, 'status': 'is-complete', 'observations': '212', 'verifiedBy': {'name': '12', 'title': '12'}, 'confirmedBy': {'title': '1', 'name': '2'}}});
 
         var facilityDistribution2 = new FacilityDistribution(
-          {status: 'is-complete', 'epiUse': {'productGroups': [
+          {facilityId: 45, status: 'is-complete', 'epiUse': {'productGroups': [
             {'id': 3, 'code': 'penta', 'name': 'penta', 'reading': {'stockAtFirstOfMonth': {'notRecorded': true}, 'received': {'notRecorded': true}, 'distributed': {'notRecorded': true}, 'loss': {'notRecorded': true}, 'stockAtEndOfMonth': {'notRecorded': true}, 'expirationDate': {'notRecorded': true}}, '$$hashKey': '0B5'}
           ], 'status': 'is-complete'}, 'refrigerators': {'refrigeratorReadings': []},
             'facilityVisit': {id: 1, 'status': 'is-complete', 'observations': 'e', 'verifiedBy': {'name': 'e', 'title': 'e'}, 'confirmedBy': {'name': 'e', 'title': 'e'}}});
@@ -98,8 +97,6 @@ describe('DistributionListController', function () {
 
   function getSyncFacilitiesFunction() {
     scope.syncDistribution(1);
-    var syncFacilitiesFunction = distributionService.getReferenceData.calls[0].args[1];
-    return syncFacilitiesFunction;
   }
 
   it('should set distributions in scope', function () {
@@ -110,20 +107,11 @@ describe('DistributionListController', function () {
     expect(sharedDistribution.update).toHaveBeenCalled();
   });
 
-  it('should get facilities for distribution', function () {
-    scope.syncDistribution(2);
-    expect(distributionService.getReferenceData.calls[0].args).toEqual([2, jasmine.any(Function)]);
-  });
-
   it('should sync facility data if any complete', function () {
 
     $httpBackend.expect('PUT', '/distributions/1/facilities/45.json', distribution.facilityDistributions[45]).respond(200, {syncStatus: true});
 
     var syncFacilitiesFunction = getSyncFacilitiesFunction();
-
-    syncFacilitiesFunction([
-      {id: 45, code: 'abcd', name: 'xyz'}
-    ]);
 
     $httpBackend.flush();
 
@@ -138,10 +126,6 @@ describe('DistributionListController', function () {
 
     var syncFacilitiesFunction = getSyncFacilitiesFunction();
 
-    syncFacilitiesFunction([
-      {id: 45, code: 'abcd', name: 'xyz'}
-    ]);
-
     $httpBackend.flush();
 
     expect(scope.progressValue).toEqual(100);
@@ -151,10 +135,6 @@ describe('DistributionListController', function () {
     $httpBackend.expect('PUT', '/distributions/1/facilities/45.json', distribution.facilityDistributions[45]).respond(200);
 
     var syncFacilitiesFunction = getSyncFacilitiesFunction();
-
-    syncFacilitiesFunction({facilities: [
-      {id: 45, code: 'abcd', name: 'xyz'}
-    ]});
 
     $httpBackend.flush();
 
@@ -171,12 +151,6 @@ describe('DistributionListController', function () {
     scope.distributionData = distribution;
 
     var syncFacilitiesFunction = getSyncFacilitiesFunction();
-
-    syncFacilitiesFunction({facilities: [
-      {id: 45, code: 'abcd', name: 'xyz'},
-      {id: 44, code: 'abcd', name: 'xyz'},
-      {id: 46, code: 'abcd', name: 'xyz'}
-    ]});
 
     $httpBackend.flush();
 
@@ -208,10 +182,7 @@ describe('DistributionListController', function () {
 
     $httpBackend.expect('PUT', '/distributions/1/facilities/45.json', distribution.facilityDistributions[45]).respond(200, {syncStatus: false});
 
-    var syncFacilitiesFunction = getSyncFacilitiesFunction();
-    syncFacilitiesFunction({facilities: [
-      {id: 45, code: 'abcd', name: 'xyz'}
-    ]});
+    getSyncFacilitiesFunction();
 
     $httpBackend.flush();
 
@@ -219,7 +190,7 @@ describe('DistributionListController', function () {
 
     scope.$apply();
 
-    expect(scope.syncResult[DistributionStatus.DUPLICATE][0].facilityDistribution).toEqual(distribution.facilityDistributions[45]);
+    expect(scope.syncResult[DistributionStatus.DUPLICATE][0]).toEqual(distribution.facilityDistributions[45]);
     expect(distributionService.save).toHaveBeenCalledWith(distribution);
   });
 

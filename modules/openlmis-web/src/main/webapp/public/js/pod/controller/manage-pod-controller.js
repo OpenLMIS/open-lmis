@@ -8,7 +8,7 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-function ManagePODController($scope, OrdersForManagePOD, messageService) {
+function ManagePODController($scope, OrdersForManagePOD, messageService, OrderPOD, $location) {
 
   OrdersForManagePOD.get({}, function (data) {
     $scope.orders = data.ordersForPOD || [];
@@ -20,6 +20,9 @@ function ManagePODController($scope, OrdersForManagePOD, messageService) {
     showFilter: false,
     enableColumnResize: true,
     enableSorting: false,
+    afterSelectionChange: function (rowItem, event) {
+      $scope.createPOD(rowItem.entity.id);
+    },
     columnDefs: [
       {field: 'id', displayName: messageService.get("label.order.no"), width: 70 },
       {field: 'supplyLine.supplyingFacility.name', displayName: messageService.get("label.supplying.depot")},
@@ -32,8 +35,17 @@ function ManagePODController($scope, OrdersForManagePOD, messageService) {
       {field: 'emergency', displayName: messageService.get("requisition.type.emergency"),
         cellTemplate: '<div class="ngCellText checked"><i ng-class="{\'icon-ok\': row.entity.rnr.emergency}"></i></div>',
         width: 90 },
-      {cellTemplate: "<div class='ngCellText'><a ng-href='javascript:void(0)' openlmis-message='link.update.pod'></a></div>", width: 180}
+      {cellTemplate: "<div class='ngCellText'><a ng-click='createPOD({{row.entity.id}})' id='updatePod{{row.rowIndex}}' openlmis-message='link.update.pod'></a></div>", width: 180}
     ]
+  };
+
+  $scope.createPOD = function (orderId) {
+    OrderPOD.save({}, orderId, function (data) {
+      $scope.$parent.pod = data.orderPOD;
+      $scope.$parent.order = data.order;
+      $scope.$parent.requisitionType = $scope.order.emergency ? "requisition.type.emergency" : "requisition.type.regular";
+      $location.url('/pod-orders/' + orderId);
+    }, {});
   };
 
   $scope.getStatus = function (status) {

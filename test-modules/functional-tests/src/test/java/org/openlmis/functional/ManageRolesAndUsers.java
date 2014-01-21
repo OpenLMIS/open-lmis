@@ -51,7 +51,6 @@ public class ManageRolesAndUsers extends TestCaseHelper {
   public static final String warehouseRole = "SHIPMENT";
 
   @BeforeMethod(groups = {"admin"})
-  @Before
   public void setUp() throws Exception {
     super.setup();
   }
@@ -72,7 +71,8 @@ public class ManageRolesAndUsers extends TestCaseHelper {
     HomePage homePage = new HomePage(testWebDriver);
     UserPage userPage = homePage.navigateToUser();
     userPage.searchUser(user);
-    userPage.clickUserList();
+    userPage.clickEditUserButton();
+    //userPage.clickUserList();
     userPage.clickDisableButton();
   }
 
@@ -433,7 +433,6 @@ public class ManageRolesAndUsers extends TestCaseHelper {
 
 
   @AfterMethod(groups = "functional2")
-  @After
   public void tearDown() throws Exception {
     testWebDriver.sleep(500);
     if (!testWebDriver.getElementById("username").isDisplayed()) {

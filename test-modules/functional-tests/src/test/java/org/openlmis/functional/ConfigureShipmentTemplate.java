@@ -84,7 +84,6 @@ public class ConfigureShipmentTemplate extends TestCaseHelper {
   private static final String password = "Admin123";
 
   @BeforeMethod(groups = "admin")
-  @Before
   public void setUp() throws Exception {
     super.setup();
     dbWrapper.setupShipmentFileConfiguration("false");
@@ -213,7 +212,6 @@ public class ConfigureShipmentTemplate extends TestCaseHelper {
     configureShipmentPage.clickSaveButton();
   }
 
-  @After
   @AfterMethod(groups = "admin")
   public void tearDown() throws Exception {
     if (!testWebDriver.getElementById("username").isDisplayed()) {

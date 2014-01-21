@@ -58,4 +58,13 @@ public class FacilityProgramProduct extends ProgramProduct {
     idealQuantity = Math.round(idealQuantity * ((float) numberOfMonthsInPeriod / this.getProduct().getPackSize()));
     return idealQuantity < 0 ? 0 : idealQuantity;
   }
+
+  @JsonIgnore
+  public Double getWhoRatio(String productCode) {
+    ProgramProductISA programProductIsa = this.getProgramProductIsa();
+    if (this.getProduct().getCode().equals(productCode) && programProductIsa != null) {
+      return programProductIsa.getWhoRatio();
+    }
+    return null;
+  }
 }

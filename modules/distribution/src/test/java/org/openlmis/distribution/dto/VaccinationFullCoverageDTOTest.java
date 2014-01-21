@@ -18,7 +18,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
 @Category(UnitTests.class)
-public class FullCoverageDTOTest {
+public class VaccinationFullCoverageDTOTest {
 
   @Test
   public void shouldTransformFullCoverageDTO() throws Exception {
@@ -28,8 +28,8 @@ public class FullCoverageDTOTest {
     Reading maleMobileBrigadeReading = mock(Reading.class);
     Reading maleHealthCenterReading = mock(Reading.class);
 
-    FullCoverageDTO fullCoverageDTO = new FullCoverageDTO(facilityVisitId, femaleHealthCenterReading, femaleMobileBrigadeReading, maleHealthCenterReading, maleMobileBrigadeReading);
-    fullCoverageDTO.transform();
+    VaccinationFullCoverageDTO vaccinationFullCoverageDTO = new VaccinationFullCoverageDTO(facilityVisitId, femaleHealthCenterReading, femaleMobileBrigadeReading, maleHealthCenterReading, maleMobileBrigadeReading);
+    vaccinationFullCoverageDTO.transform();
 
     verify(femaleHealthCenterReading).parsePositiveInt();
     verify(femaleMobileBrigadeReading).parsePositiveInt();

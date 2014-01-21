@@ -153,7 +153,7 @@ public class E2EDistributionTest extends TestCaseHelper {
     refrigeratorPage.verifyRefrigeratorColor("overall", "GREEN");
     refrigeratorPage.verifyRefrigeratorColor("individual", "GREEN");
 
-    epiUsePage.navigate();
+    refrigeratorPage.navigateToEpiUse();
     epiUsePage.verifyIndicator("GREEN");
 
     epiUsePage.verifyTotal("30", 1);
@@ -174,7 +174,7 @@ public class E2EDistributionTest extends TestCaseHelper {
     epiInventoryPage.verifyIndicator("GREEN");
 
     CoveragePage coveragePage = epiInventoryPage.navigateToCoverage();
-    coveragePage.enterData(5,7,0,9999999);
+    coveragePage.enterData(5,7,0,"9999999");
     coveragePage.verifyIndicator("GREEN");
 
     facilityListPage.verifyFacilityIndicatorColor("Overall", "GREEN");
@@ -220,6 +220,24 @@ public class E2EDistributionTest extends TestCaseHelper {
     verifyRefrigeratorReadingDataInDatabase(facilityCodeFirst, "GR-J287PGHV",3F,"Y",1,0,"D","miscellaneous");
     verifyRefrigeratorProblemDataNullInDatabase("GR-J287PGHV", facilityCodeFirst);
     verifyGeneralObservationsDataInDatabase(facilityCodeFirst,"Some observations","samuel","Doe","Verifier","XYZ");
+    verifyFullCoveragesDataInDatabase(5,7,0,9999999,facilityCodeFirst);
+    verifyEpiInventoryDataInDatabase(null,"10",null, "P10",facilityCodeFirst);
+    verifyEpiInventoryDataInDatabase(null,"20",null, "Product6",facilityCodeFirst);
+    verifyEpiInventoryDataInDatabase(null,"30",null, "P11",facilityCodeFirst);
+
+    testWebDriver.sleep(1000);
+    distributionPage = homePage.navigateToDistributionWhenOnline();
+    distributionPage.deleteDistribution();
+    distributionPage.clickOk();
+
+    distributionPage.selectValueFromDeliveryZone(deliveryZoneNameFirst);
+    distributionPage.selectValueFromProgram(programFirst);
+    distributionPage.clickInitiateDistribution();
+    distributionPage.clickOk();
+
+    facilityListPage = distributionPage.clickRecordData(1);
+    assertFalse(facilityListPage.getAllFacilitiesFromDropDown().contains(programFirst));
+
   }
 
   @AfterMethod(groups = {"offline"})

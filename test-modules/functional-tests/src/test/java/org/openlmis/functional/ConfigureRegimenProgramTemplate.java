@@ -55,7 +55,6 @@ public class ConfigureRegimenProgramTemplate extends TestCaseHelper {
   public String expectedProgramsString;
 
   @BeforeMethod(groups = "admin")
-  @Before
   public void setUp() throws Exception {
     super.setup();
   }
@@ -438,7 +437,6 @@ public class ConfigureRegimenProgramTemplate extends TestCaseHelper {
   }
 
   @AfterMethod(groups = "admin")
-  @After
   public void tearDown() throws Exception {
     testWebDriver.sleep(500);
       if (!testWebDriver.getElementById("username").isDisplayed()) {

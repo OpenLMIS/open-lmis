@@ -545,6 +545,43 @@ public class RnrLineItemTest {
   }
 
   @Test
+  public void shouldReturnOnePackToShipIfOrderQuantityIsZeroAndRoundToZeroFalse() throws Exception {
+    RnrLineItem lineItem = new RnrLineItem();
+    lineItem.setCalculatedOrderQuantity(0);
+    lineItem.setPackSize(10);
+    lineItem.setRoundToZero(false);
+
+    lineItem.calculatePacksToShip();
+
+    assertThat(lineItem.getPacksToShip(), is(1));
+  }
+
+  @Test
+  public void shouldReturnZeroPackToShipIfOrderQuantityIsZeroAndRoundToZeroTrue() throws Exception {
+    RnrLineItem lineItem = new RnrLineItem();
+    lineItem.setCalculatedOrderQuantity(0);
+    lineItem.setPackSize(10);
+    lineItem.setRoundToZero(true);
+
+    lineItem.calculatePacksToShip();
+
+    assertThat(lineItem.getPacksToShip(), is(0));
+  }
+
+  @Test
+  public void shouldReturnZeroPackToShipIfOrderQuantityIsOneAndRoundToZeroTrueWithPackSizeTen() throws Exception {
+    RnrLineItem lineItem = new RnrLineItem();
+    lineItem.setCalculatedOrderQuantity(1);
+    lineItem.setPackSize(10);
+    lineItem.setPackRoundingThreshold(7);
+    lineItem.setRoundToZero(true);
+
+    lineItem.calculatePacksToShip();
+
+    assertThat(lineItem.getPacksToShip(), is(0));
+  }
+
+  @Test
   public void shouldCalculateMaxStockQuantity() throws Exception {
     RnrLineItem lineItem = new RnrLineItem();
     lineItem.setMaxMonthsOfStock(2);

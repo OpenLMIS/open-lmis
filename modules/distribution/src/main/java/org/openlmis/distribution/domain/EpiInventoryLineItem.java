@@ -23,6 +23,9 @@ public class EpiInventoryLineItem extends BaseModel {
 
   private Long facilityVisitId;
   private Integer idealQuantity;
+  private Integer existingQuantity;
+  private Integer spoiledQuantity;
+  private Integer deliveredQuantity;
   private Long programProductId;
   private String productCode;
   private String productName;
@@ -36,5 +39,12 @@ public class EpiInventoryLineItem extends BaseModel {
     this.productCode = facilityProgramProduct.getProduct().getCode();
     this.productDisplayOrder = facilityProgramProduct.getProduct().getDisplayOrder();
 
+  }
+
+  public EpiInventoryLineItem(Long facilityVisitId, Integer existingQuantity, Integer spoiledQuantity, Integer deliveredQuantity) {
+    this.facilityVisitId = facilityVisitId;
+    this.existingQuantity = existingQuantity;
+    this.spoiledQuantity = spoiledQuantity;
+    this.deliveredQuantity = deliveredQuantity;
   }
 }

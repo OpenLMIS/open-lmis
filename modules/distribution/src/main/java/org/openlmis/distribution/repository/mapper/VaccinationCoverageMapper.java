@@ -13,21 +13,34 @@ package org.openlmis.distribution.repository.mapper;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Select;
-import org.openlmis.distribution.domain.FullCoverage;
+import org.openlmis.distribution.domain.ChildCoverageLineItem;
+import org.openlmis.distribution.domain.VaccinationFullCoverage;
+import org.openlmis.distribution.domain.VaccinationProduct;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 @Repository
 public interface VaccinationCoverageMapper {
 
-
-  @Insert({"INSERT into full_coverages (facilityVisitId, femaleHealthCenterReading, femaleMobileBrigadeReading, maleHealthCenterReading, maleMobileBrigadeReading,",
+  @Insert({"INSERT INTO full_coverages (facilityVisitId, femaleHealthCenter, femaleOutreach, maleHealthCenter, maleOutreach,",
     "createdBy, modifiedBy)",
-    "VALUES (#{facilityVisitId}, #{femaleHealthCenterReading}, #{femaleMobileBrigadeReading}, #{maleHealthCenterReading}, #{maleMobileBrigadeReading},",
+    "VALUES (#{facilityVisitId}, #{femaleHealthCenter}, #{femaleOutreach}, #{maleHealthCenter}, #{maleOutreach},",
     "#{createdBy}, #{createdBy})"})
   @Options(useGeneratedKeys = true)
-  public void insertFullVaccinationCoverage(FullCoverage fullCoverage);
-
+  void insertFullVaccinationCoverage(VaccinationFullCoverage vaccinationFullCoverage);
 
   @Select({"SELECT * FROM full_coverages WHERE facilityVisitId = #{facilityVisitId}"})
-  FullCoverage getBy(Long facilityVisitId);
+  VaccinationFullCoverage getFullCoverageBy(Long facilityVisitId);
+
+  @Select({"SELECT * FROM coverage_vaccination_products WHERE childCoverage = #{isChildCoverage}"})
+  List<VaccinationProduct> getVaccinationProducts(Boolean isChildCoverage);
+
+  @Insert({"INSERT INTO vaccination_child_coverage_line_items (facilityVisitId, vaccination, targetGroup)",
+    "VALUES (#{facilityVisitId}, #{vaccination}, #{targetGroup})"})
+  @Options(useGeneratedKeys = true)
+  void insertChildVaccinationCoverageLineItem(ChildCoverageLineItem childCoverageLineItem);
+
+  @Select({"SELECT * FROM vaccination_child_coverage_line_items WHERE facilityVisitId = #{facilityVisitId}"})
+  List<ChildCoverageLineItem> getChildCoverageLineItemsBy(Long facilityVisitId);
 }

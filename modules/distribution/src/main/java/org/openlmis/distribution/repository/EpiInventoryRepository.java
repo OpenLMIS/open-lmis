@@ -24,7 +24,11 @@ public class EpiInventoryRepository {
 
   public void save(EpiInventory epiInventory) {
     for (EpiInventoryLineItem lineItem : epiInventory.getLineItems()) {
-      mapper.saveLineItem(lineItem);
+      if (lineItem.getId() != null) {
+        mapper.updateLineItem(lineItem);
+      } else {
+        mapper.insertLineItem(lineItem);
+      }
     }
   }
 

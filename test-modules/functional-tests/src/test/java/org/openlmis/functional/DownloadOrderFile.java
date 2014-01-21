@@ -12,8 +12,6 @@ package org.openlmis.functional;
 
 
 import cucumber.api.DataTable;
-import cucumber.api.java.After;
-import cucumber.api.java.Before;
 import cucumber.api.java.en.And;
 import org.openlmis.UiUtils.CaptureScreenshotOnFailureListener;
 import org.openlmis.UiUtils.TestCaseHelper;
@@ -39,7 +37,6 @@ public class DownloadOrderFile extends TestCaseHelper {
   public String userSICUserName = "storeIncharge";
   public String[] csvRows = null;
 
-  @Before
   @BeforeMethod(groups = "requisition")
   public void setUp() throws Exception {
     super.setup();
@@ -170,7 +167,7 @@ public class DownloadOrderFile extends TestCaseHelper {
     dbWrapper.insertValuesInRegimenLineItems("100", "200", "300", "Regimens data filled");
     dbWrapper.updateRequisitionStatus("SUBMITTED", userSICUserName, "HIV");
     dbWrapper.updateRequisitionStatus("AUTHORIZED", userSICUserName, "HIV");
-    dbWrapper.insertApprovedQuantity(10);
+    dbWrapper.updateFieldValue("requisition_line_items", "quantityApproved", 10);
     dbWrapper.updateRequisitionStatus("APPROVED", userSICUserName, "HIV");
 
     homePage.logout(baseUrlGlobal);
@@ -186,7 +183,6 @@ public class DownloadOrderFile extends TestCaseHelper {
     downloadOrderFile();
   }
 
-  @After
   @AfterMethod(groups = "requisition")
   public void tearDown() throws Exception {
     testWebDriver.sleep(500);

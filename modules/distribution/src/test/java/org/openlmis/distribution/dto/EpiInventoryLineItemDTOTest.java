@@ -8,38 +8,29 @@
  *  You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
  */
 
-package org.openlmis.distribution.service;
+package org.openlmis.distribution.dto;
 
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
-import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.db.categories.UnitTests;
-import org.openlmis.distribution.domain.FullCoverage;
-import org.openlmis.distribution.domain.VaccinationCoverage;
-import org.openlmis.distribution.repository.VaccinationCoverageRepository;
+import org.openlmis.distribution.domain.EpiInventoryLineItem;
 
-import static org.mockito.Mockito.verify;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.junit.Assert.assertThat;
 
 @Category(UnitTests.class)
-@RunWith(MockitoJUnitRunner.class)
-public class VaccinationCoverageServiceTest {
-
-  @Mock
-  private VaccinationCoverageRepository repository;
-
-  @InjectMocks
-  private VaccinationCoverageService service;
+public class EpiInventoryLineItemDTOTest {
 
   @Test
-  public void shouldSaveFullCoverageData() throws Exception {
-    FullCoverage fullCoverage = new FullCoverage();
+  public void shouldTransformEpiInventoryLineItemDTOToEpiInventoryLineItem() throws Exception {
 
-    VaccinationCoverage vaccinationCoverage = new VaccinationCoverage(fullCoverage);
-    service.save(vaccinationCoverage);
+    EpiInventoryLineItemDTO epiInventoryLineItemDTO = new EpiInventoryLineItemDTO(1L, new Reading("34", false), new Reading(null, true), 56);
+    EpiInventoryLineItem epiInventoryLineItem = epiInventoryLineItemDTO.transform();
 
-    verify(repository).saveFullCoverage(fullCoverage);
+    assertThat(epiInventoryLineItem.getDeliveredQuantity(), is(56));
+    assertThat(epiInventoryLineItem.getExistingQuantity(), is(34));
+    assertThat(epiInventoryLineItem.getSpoiledQuantity(), is(nullValue()));
+    assertThat(epiInventoryLineItem.getFacilityVisitId(), is(1L));
   }
 }

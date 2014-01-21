@@ -16,7 +16,7 @@ describe('Facility Distribution data', function () {
     refrigerators = facilityDistributions.refrigerators;
     facilityVisit = facilityDistributions.facilityVisit;
     epiInventory = facilityDistributions.epiInventory;
-    coverage = facilityDistributions.coverage;
+    coverage = facilityDistributions.fullCoverage;
   });
 
   it("should compute status as complete when all the forms for the facility are COMPLETE", function () {

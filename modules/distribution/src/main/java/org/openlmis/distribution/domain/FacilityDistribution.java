@@ -12,7 +12,6 @@
 
 package org.openlmis.distribution.domain;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -24,24 +23,47 @@ import java.util.List;
 
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 
-@EqualsAndHashCode(callSuper = false)
-@JsonIgnoreProperties(ignoreUnknown = true)
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
+@EqualsAndHashCode(callSuper = false)
 @JsonSerialize(include = NON_EMPTY)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class FacilityDistribution {
-
+  private Long facilityId;
+  private String facilityCode;
+  private String facilityName;
+  private Long population;
+  private String geographicZone;
   private FacilityVisit facilityVisit;
   private EpiUse epiUse;
   private DistributionRefrigerators refrigerators;
   private EpiInventory epiInventory;
-  private VaccinationCoverage coverage;
+  private VaccinationFullCoverage fullCoverage;
+  private VaccinationChildCoverage childCoverage;
 
-  public FacilityDistribution(FacilityVisit facilityVisit, Facility facility, Distribution distribution, List<RefrigeratorReading> readings) {
+  public FacilityDistribution(FacilityVisit facilityVisit, Facility facility, Distribution distribution, List<RefrigeratorReading> readings, List<VaccinationProduct> vaccinationProducts) {
+    this.setFacility(facility);
     this.facilityVisit = facilityVisit;
     this.epiUse = new EpiUse(facility, facilityVisit);
     this.refrigerators = new DistributionRefrigerators(facilityVisit, readings);
     this.epiInventory = new EpiInventory(facilityVisit, facility, distribution);
+    this.childCoverage = new VaccinationChildCoverage(facilityVisit, facility, vaccinationProducts);
+  }
+
+  public FacilityDistribution(FacilityVisit facilityVisit, EpiUse epiUse, DistributionRefrigerators refrigerators, EpiInventory epiInventory, VaccinationFullCoverage fullCoverage, VaccinationChildCoverage childCoverage) {
+    this.facilityVisit = facilityVisit;
+    this.epiUse = epiUse;
+    this.refrigerators = refrigerators;
+    this.epiInventory = epiInventory;
+    this.fullCoverage = fullCoverage;
+    this.childCoverage = childCoverage;
+  }
+
+  public void setFacility(Facility facility) {
+    this.facilityId = facility.getId();
+    this.facilityCode = facility.getCode();
+    this.facilityName = facility.getName();
+    this.population = facility.getCatchmentPopulation();
+    this.geographicZone = facility.getGeographicZone().getName();
   }
 }

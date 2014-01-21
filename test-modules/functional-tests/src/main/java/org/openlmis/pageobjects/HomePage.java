@@ -203,7 +203,7 @@ public class HomePage extends Page {
     testWebDriver.keyPress(AdministrationMenuItem);
     testWebDriver.waitForElementToAppear(manageFacilityMenuItem);
     testWebDriver.keyPress(manageFacilityMenuItem);
-    return new ManageFacilityPage(testWebDriver);
+    return ManageFacilityPage.getInstance(testWebDriver);
   }
 
   public void clickCreateFacilityButton() {
@@ -327,7 +327,7 @@ public class HomePage extends Page {
     testWebDriver.keyPress(manageLink);
     testWebDriver.waitForElementToAppear(facilitiesTab);
     facilitiesTab.click();
-    return new ManageFacilityPage(testWebDriver);
+    return ManageFacilityPage.getInstance(testWebDriver);
   }
 
 
@@ -461,9 +461,9 @@ public class HomePage extends Page {
   }
 
   public void navigateRnr() throws IOException {
-    testWebDriver.waitForElementToAppear(requisitionsLink);
+    testWebDriver.waitForElementToBeEnabled(requisitionsLink);
     testWebDriver.keyPress(requisitionsLink);
-    testWebDriver.waitForElementToAppear(createLink);
+    testWebDriver.waitForElementToBeEnabled(createLink);
     testWebDriver.sleep(1000);
     testWebDriver.keyPress(createLink);
     testWebDriver.sleep(1000);

@@ -30,9 +30,9 @@ import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
 @Listeners(CaptureScreenshotOnFailureListener.class)
 
 public class ConfigureOrderTemplate extends TestCaseHelper {
+  ConfigureOrderPage configureOrderPage;
 
   @BeforeMethod(groups = "admin")
-  @Before
   public void setUp() throws Exception {
     super.setup();
     dbWrapper.setupOrderFileConfiguration("O", "TRUE");
@@ -48,37 +48,37 @@ public class ConfigureOrderTemplate extends TestCaseHelper {
 
   @Then("^I should see order file prefix \"([^\"]*)\"$")
   public void verifyOrderPrefix(String prefix) throws Exception {
-    ConfigureOrderPage configureOrderPage = new ConfigureOrderPage(testWebDriver);
+    configureOrderPage = PageFactory.getInstanceOfConfigureOrderPage(testWebDriver);
     assertEquals(configureOrderPage.getOrderPrefix(), prefix);
   }
 
   @And("^I should see include column header as \"([^\"]*)\"$")
   public void verifyIncludeColumnHeader(String indicator) throws Exception {
-    ConfigureOrderPage configureOrderPage = new ConfigureOrderPage(testWebDriver);
+    configureOrderPage = PageFactory.getInstanceOfConfigureOrderPage(testWebDriver);
     assertEquals(String.valueOf(configureOrderPage.getIncludeOrderHeader()), indicator);
   }
 
   @And("^I should see all column headers disabled$")
   public void verifyAllColumnsDisabled() throws Exception {
-    ConfigureOrderPage configureOrderPage = new ConfigureOrderPage(testWebDriver);
+    configureOrderPage = PageFactory.getInstanceOfConfigureOrderPage(testWebDriver);
     configureOrderPage.verifyColumnHeadersDisabled();
   }
 
   @And("^I should see include checkbox \"([^\"]*)\" for all column headers$")
   public void verifyAllColumnsDisabled(String flag) throws Exception {
-    ConfigureOrderPage configureOrderPage = new ConfigureOrderPage(testWebDriver);
+    configureOrderPage = PageFactory.getInstanceOfConfigureOrderPage(testWebDriver);
     configureOrderPage.verifyIncludeCheckboxForAllColumnHeaders(flag);
   }
 
   @When("^I save order file format$")
   public void clickSave() throws Exception {
-    ConfigureOrderPage configureOrderPage = new ConfigureOrderPage(testWebDriver);
+    configureOrderPage = PageFactory.getInstanceOfConfigureOrderPage(testWebDriver);
     configureOrderPage.clickSaveButton();
   }
 
   @Then("^I should see \"([^\"]*)\"$")
   public void verifySaveSuccessfullyMessage(String message) throws Exception {
-    ConfigureOrderPage configureOrderPage = new ConfigureOrderPage(testWebDriver);
+    configureOrderPage = PageFactory.getInstanceOfConfigureOrderPage(testWebDriver);
     configureOrderPage.verifySuccessMessage(message);
   }
 
@@ -207,7 +207,6 @@ public class ConfigureOrderTemplate extends TestCaseHelper {
   }
 
 
-  @After
   @AfterMethod(groups = "admin")
   public void tearDown() throws Exception {
     testWebDriver.sleep(500);

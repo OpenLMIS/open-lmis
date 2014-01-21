@@ -16,12 +16,16 @@ import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.authentication.web.UserAuthenticationSuccessHandler;
 import org.openlmis.db.categories.UnitTests;
+import org.openlmis.order.domain.Order;
+import org.openlmis.order.dto.OrderPODDTO;
+import org.openlmis.order.service.OrderService;
 import org.openlmis.pod.domain.OrderPOD;
 import org.openlmis.pod.service.PODService;
 import org.openlmis.web.response.OpenLmisResponse;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -29,12 +33,14 @@ import org.springframework.mock.web.MockHttpSession;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
+import static org.openlmis.web.controller.PODController.ORDER;
 import static org.openlmis.web.controller.PODController.ORDER_POD;
+import static org.powermock.api.mockito.PowerMockito.mockStatic;
 
 @Category(UnitTests.class)
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(PowerMockRunner.class)
+@PrepareForTest(OrderPODDTO.class)
 public class PODControllerTest {
 
   private static final Long USER_ID = 1L;
@@ -43,6 +49,9 @@ public class PODControllerTest {
 
   @Mock
   private PODService service;
+
+  @Mock
+  private OrderService orderService;
 
   @InjectMocks
   private PODController controller;
@@ -62,11 +71,21 @@ public class PODControllerTest {
     Long orderId = 1L;
 
     OrderPOD orderPOD = new OrderPOD();
-    when(service.getPOD(orderId, USER_ID)).thenReturn(orderPOD);
-    ResponseEntity<OpenLmisResponse> response = controller.updatePOD(request, orderId);
+    mockStatic(OrderPODDTO.class);
 
-    verify(service).getPOD(orderId, USER_ID);
+    when(service.createPOD(orderId, USER_ID)).thenReturn(orderPOD);
+
+    Order order = new Order();
+    when(orderService.getOrder(orderId)).thenReturn(order);
+
+    OrderPODDTO orderPODDTO = mock(OrderPODDTO.class);
+    when(OrderPODDTO.getOrderDetailsForPOD(order)).thenReturn(orderPODDTO);
+
+    ResponseEntity<OpenLmisResponse> response = controller.getPOD(request, orderId);
+
+    verify(service).createPOD(orderId, USER_ID);
     assertThat((OrderPOD) response.getBody().getData().get(ORDER_POD), is(orderPOD));
+    assertThat((OrderPODDTO) response.getBody().getData().get(ORDER), is(orderPODDTO));
     assertThat(response.getStatusCode(), is(HttpStatus.OK));
   }
 }

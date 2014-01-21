@@ -8,24 +8,17 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-function RecordFacilityDataController($scope, $location, $routeParams, IndexedDB, distributionService) {
+function RecordFacilityDataController($scope, $location, $routeParams, distributionService) {
   $scope.label = $routeParams.facility ? 'label.change.facility' : "label.select.facility";
 
   $scope.distribution = distributionService.distribution;
-
-  IndexedDB.get('distributionReferenceData', utils.parseIntWithBaseTen($routeParams.distribution), function (event) {
-    var facilities = event.target.result.facilities;
-    facilities = facilities.filter(function (facility) {
-      return (facility.id in $scope.distribution.facilityDistributions);
-    });
-    $scope.zoneFacilityMap = _.groupBy(facilities, function (facility) {
-      return facility.geographicZone.code;
-    });
-    $scope.geographicZones = _.uniq(_.pluck(facilities, 'geographicZone'), function (zone) {
-      return zone.code;
-    });
-    $scope.facilitySelected = _.findWhere(facilities, {id: utils.parseIntWithBaseTen($routeParams.facility)});
-  }, {});
+  $scope.geographicZones = _.sortBy(_.uniq(_.pluck($scope.distribution.facilityDistributions, 'geographicZone')), function(zone){
+    return zone;
+  });
+  $scope.zoneFacilityMap = _.groupBy($scope.distribution.facilityDistributions, function (facility) {
+    return facility.geographicZone;
+  });
+  $scope.facilitySelected = $scope.distribution.facilityDistributions[$routeParams.facility];
 
   $scope.format = function (dropDownObj) {
     if (dropDownObj.element[0].value) {
@@ -39,7 +32,7 @@ function RecordFacilityDataController($scope, $location, $routeParams, IndexedDB
   };
 
   $scope.chooseFacility = function () {
-    if ($routeParams.facility != $scope.facilitySelected.id)
-      $location.path('record-facility-data/' + $routeParams.distribution + '/' + $scope.facilitySelected.id + '/refrigerator-data');
+    if ($routeParams.facility != $scope.facilitySelected.facilityId)
+      $location.path('record-facility-data/' + $routeParams.distribution + '/' + $scope.facilitySelected.facilityId + '/refrigerator-data');
   };
 }

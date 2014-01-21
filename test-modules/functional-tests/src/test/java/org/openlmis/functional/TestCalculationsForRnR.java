@@ -13,12 +13,14 @@
 package org.openlmis.functional;
 
 import cucumber.api.java.After;
+import cucumber.api.java.Before;
 import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.pageobjects.ApprovePage;
 import org.openlmis.pageobjects.HomePage;
 import org.openlmis.pageobjects.InitiateRnRPage;
 import org.openlmis.pageobjects.LoginPage;
 import org.openlmis.pageobjects.edi.ConvertOrderPage;
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -41,11 +43,209 @@ public class TestCalculationsForRnR extends TestCaseHelper {
   public String program = "HIV", userSIC = "storeInCharge", password = "Admin123";
 
   @BeforeMethod(groups = "requisition")
+  //@Before
   public void setUp() throws Exception {
     super.setup();
-    List<String> rightsList = asList("CREATE_REQUISITION", "VIEW_REQUISITION", "AUTHORIZE_REQUISITION");
+    List<String> rightsList = asList("CREATE_REQUISITION", "VIEW_REQUISITION", "AUTHORIZE_REQUISITION", "APPROVE_REQUISITION");
     setupTestDataToInitiateRnR(true, program, userSIC, "200", rightsList);
     dbWrapper.updateProductFullSupplyFlag(true, "P11");
+  }
+
+  @Test(groups = "requisition")
+  public void testEffectOfChangingPackSize() throws IOException, SQLException {
+    dbWrapper.updateProductFullSupplyFlag(false, "P11");
+    dbWrapper.updateProductsByField("packSize", "5", "P10");
+    dbWrapper.updateProductsByField("packSize","15","P11");
+
+    HomePage homePage = new LoginPage(testWebDriver, baseUrlGlobal).loginAs(userSIC, password);
+
+    homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Regular");
+    InitiateRnRPage initiateRnRPage = homePage.clickProceed();
+
+    enterDetailsForFirstProduct(10, 5, null, 14, 0, 5);
+    assertEquals("18",initiateRnRPage.getPacksToShip());
+    initiateRnRPage.verifyPacksToShip(5);
+
+    initiateRnRPage.addNonFullSupplyLineItems("95","reason","antibiotic","P11","Antibiotics");
+    assertEquals("7",initiateRnRPage.getPacksToShip());
+
+    initiateRnRPage.submitRnR();
+    initiateRnRPage.clickOk();
+
+    dbWrapper.updateProductsByField("packSize", "100", "P10");
+    dbWrapper.updateProductsByField("packSize", "50", "P10");
+
+    initiateRnRPage.authorizeRnR();
+    initiateRnRPage.clickOk();
+
+    ApprovePage approvePage = homePage.navigateToApprove();
+    approvePage.clickRequisitionPresentForApproval();
+    approvePage.editFullSupplyApproveQuantity("100");
+    assertEquals("20",approvePage.getPacksToShip());
+    approvePage.editNonFullSupplyApproveQuantity("75");
+    assertEquals("5",approvePage.getPacksToShip());
+    approvePage.clickApproveButton();
+    approvePage.clickOk();
+
+    Long rnrId = (long) dbWrapper.getMaxRnrID();
+    assertEquals("20", dbWrapper.getRequisitionLineItemFieldValue(rnrId, "packsToShip", "P10"));
+    assertEquals("5", dbWrapper.getRequisitionLineItemFieldValue(rnrId, "packsToShip", "P11"));
+  }
+
+  @Test(groups = "requisition")
+  public void testEffectOfChangingDosesPerDispensingUnit() throws IOException, SQLException {
+    dbWrapper.updateProductFullSupplyFlag(false, "P11");
+    dbWrapper.updateProductsByField("dosesPerDispensingUnit", "5", "P10");
+
+    HomePage homePage = new LoginPage(testWebDriver, baseUrlGlobal).loginAs(userSIC, password);
+
+    homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Regular");
+    InitiateRnRPage initiateRnRPage = homePage.clickProceed();
+
+    enterDetailsForFirstProduct(10, 5, null, 14, 0, 5);
+    assertEquals("14",initiateRnRPage.getPacksToShip());
+    initiateRnRPage.verifyPacksToShip(10);
+
+    initiateRnRPage.submitRnR();
+    initiateRnRPage.clickOk();
+
+    dbWrapper.updateProductsByField("dosesPerDispensingUnit", "15", "P10");
+    //initiateRnRPage.enterValue(6,"newPatientFirstProduct");
+
+    initiateRnRPage.authorizeRnR();
+    initiateRnRPage.clickOk();
+
+    ApprovePage approvePage = homePage.navigateToApprove();
+    approvePage.clickRequisitionPresentForApproval();
+    assertEquals("14",approvePage.getPacksToShip());
+    approvePage.clickApproveButton();
+    approvePage.clickOk();
+
+    Long rnrId = (long) dbWrapper.getMaxRnrID();
+    assertEquals("14", dbWrapper.getRequisitionLineItemFieldValue(rnrId, "packsToShip", "P10"));
+  }
+
+  @Test(groups = "requisition")
+  public void testEffectOfChangingRoundToZeroFlagWhenTrueInitially() throws IOException, SQLException {
+    dbWrapper.updateProductFullSupplyFlag(false, "P11");
+    dbWrapper.updateProductsByField("roundToZero","true", "P10");
+    dbWrapper.updateProductsByField("roundToZero","true","P11");
+
+    HomePage homePage = new LoginPage(testWebDriver, baseUrlGlobal).loginAs(userSIC, password);
+
+    homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Regular");
+    InitiateRnRPage initiateRnRPage = homePage.clickProceed();
+
+    enterDetailsForFirstProduct(0, 0, null, 0, 0, 0);
+    assertEquals("0",initiateRnRPage.getPacksToShip());
+    initiateRnRPage.verifyPacksToShip(10);
+
+    initiateRnRPage.addNonFullSupplyLineItems("0","reason","antibiotic","P11","Antibiotics");
+    assertEquals("0",initiateRnRPage.getPacksToShip());
+
+    initiateRnRPage.submitRnR();
+    initiateRnRPage.clickOk();
+
+    dbWrapper.updateProductsByField("roundToZero","false", "P10");
+    dbWrapper.updateProductsByField("roundToZero","false","P11");
+
+    initiateRnRPage.authorizeRnR();
+    initiateRnRPage.clickOk();
+
+    ApprovePage approvePage = homePage.navigateToApprove();
+    approvePage.clickRequisitionPresentForApproval();
+    approvePage.editFullSupplyApproveQuantity("0");
+    assertEquals("0",approvePage.getPacksToShip());
+    approvePage.editNonFullSupplyApproveQuantity("0");
+    assertEquals("0",approvePage.getPacksToShip());
+    approvePage.clickApproveButton();
+    approvePage.clickOk();
+
+    Long rnrId = (long) dbWrapper.getMaxRnrID();
+    assertEquals("0", dbWrapper.getRequisitionLineItemFieldValue(rnrId, "packsToShip", "P10"));
+    assertEquals("0", dbWrapper.getRequisitionLineItemFieldValue(rnrId, "packsToShip", "P11"));
+  }
+
+  @Test(groups = "requisition")
+  public void testEffectOfChangingRoundToZeroFlagWhenFalseInitially() throws IOException, SQLException {
+    dbWrapper.updateProductFullSupplyFlag(false, "P11");
+    dbWrapper.updateProductsByField("roundToZero","false", "P10");
+    dbWrapper.updateProductsByField("roundToZero","false","P11");
+
+    HomePage homePage = new LoginPage(testWebDriver, baseUrlGlobal).loginAs(userSIC, password);
+
+    homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Regular");
+    InitiateRnRPage initiateRnRPage = homePage.clickProceed();
+
+    enterDetailsForFirstProduct(0, 0, null, 0, 0, 0);
+    assertEquals("1",initiateRnRPage.getPacksToShip());
+    initiateRnRPage.verifyPacksToShip(10);
+
+    initiateRnRPage.addNonFullSupplyLineItems("0","reason","antibiotic","P11","Antibiotics");
+    assertEquals("1",initiateRnRPage.getPacksToShip());
+
+    initiateRnRPage.submitRnR();
+    initiateRnRPage.clickOk();
+
+    dbWrapper.updateProductsByField("roundToZero","true", "P10");
+    dbWrapper.updateProductsByField("roundToZero","true","P11");
+
+    initiateRnRPage.authorizeRnR();
+    initiateRnRPage.clickOk();
+
+    ApprovePage approvePage = homePage.navigateToApprove();
+    approvePage.clickRequisitionPresentForApproval();
+    approvePage.editFullSupplyApproveQuantity("0");
+    assertEquals("1",approvePage.getPacksToShip());
+    approvePage.editNonFullSupplyApproveQuantity("0");
+    assertEquals("1",approvePage.getPacksToShip());
+    approvePage.clickApproveButton();
+    approvePage.clickOk();
+
+    Long rnrId = (long) dbWrapper.getMaxRnrID();
+    assertEquals("1", dbWrapper.getRequisitionLineItemFieldValue(rnrId, "packsToShip", "P10"));
+    assertEquals("1", dbWrapper.getRequisitionLineItemFieldValue(rnrId, "packsToShip", "P11"));
+  }
+
+  @Test(groups = "requisition")
+  public void testEffectOfChangingPackRoundingThreshold() throws IOException, SQLException {
+    dbWrapper.updateProductFullSupplyFlag(false, "P11");
+    dbWrapper.updateProductsByField("packRoundingThreshold","5", "P10");
+    dbWrapper.updateProductsByField("packRoundingThreshold","7","P11");
+
+    HomePage homePage = new LoginPage(testWebDriver, baseUrlGlobal).loginAs(userSIC, password);
+
+    homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Regular");
+    InitiateRnRPage initiateRnRPage = homePage.clickProceed();
+
+    enterDetailsForFirstProduct(10, 5, null, 14, 0, 5);
+    assertEquals("9",initiateRnRPage.getPacksToShip());
+    initiateRnRPage.verifyPacksToShip(10);
+
+    initiateRnRPage.addNonFullSupplyLineItems("98","reason","antibiotic","P11","Antibiotics");
+    assertEquals("10",initiateRnRPage.getPacksToShip());
+
+    initiateRnRPage.submitRnR();
+    initiateRnRPage.clickOk();
+
+    dbWrapper.updateProductsByField("packRoundingThreshold","7", "P10");
+    dbWrapper.updateProductsByField("packRoundingThreshold","9","P11");
+
+    initiateRnRPage.authorizeRnR();
+    initiateRnRPage.clickOk();
+
+    ApprovePage approvePage = homePage.navigateToApprove();
+    approvePage.clickRequisitionPresentForApproval();
+    approvePage.editFullSupplyApproveQuantity("86");
+    assertEquals("9",approvePage.getPacksToShip());
+    approvePage.editNonFullSupplyApproveQuantity("98");
+    assertEquals("10",approvePage.getPacksToShip());
+    approvePage.clickApproveButton();
+    approvePage.clickOk();
+
+    Long rnrId = (long) dbWrapper.getMaxRnrID();
+    assertEquals("9", dbWrapper.getRequisitionLineItemFieldValue(rnrId, "packsToShip", "P10"));
+    assertEquals("10", dbWrapper.getRequisitionLineItemFieldValue(rnrId, "packsToShip", "P11"));
   }
 
   @Test(groups = "requisition")
@@ -506,7 +706,6 @@ public class TestCalculationsForRnR extends TestCaseHelper {
     dbWrapper.updateConfigureTemplateValidationFlag("HIV", "false");
     dbWrapper.updateProductFullSupplyFlag(false, "P11");
     dbWrapper.insertProcessingPeriod("feb13", "feb13", "2013-01-31", "2013-02-28", 2, "M");
-    dbWrapper.assignRight("store in-charge", "APPROVE_REQUISITION");
     dbWrapper.insertRole("fulfilment", "convert to order");
     dbWrapper.assignRight("fulfilment", "CONVERT_TO_ORDER");
     dbWrapper.insertRoleAssignment(dbWrapper.getAttributeFromTable("users", "id", "userName", userSIC), "store in-charge");
@@ -740,7 +939,7 @@ public class TestCalculationsForRnR extends TestCaseHelper {
     verifyCalculationForEmergencyForGivenNumberOfMonths(3);
   }
 
-  @After
+  @AfterMethod(groups = "requisition")
   public void tearDown() throws Exception {
     testWebDriver.sleep(500);
     if (!testWebDriver.getElementById("username").isDisplayed()) {

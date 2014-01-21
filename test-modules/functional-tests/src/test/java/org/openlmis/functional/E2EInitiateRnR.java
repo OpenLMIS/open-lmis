@@ -11,9 +11,8 @@
 package org.openlmis.functional;
 
 
+import com.thoughtworks.selenium.SeleneseTestBase;
 import cucumber.api.DataTable;
-import cucumber.api.java.After;
-import cucumber.api.java.Before;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
@@ -57,7 +56,7 @@ public class E2EInitiateRnR extends TestCaseHelper {
   public String passwordUsers = "TQskzK3iiLfbRVHeM1muvBCiiKriibfl6lh8ipo91hb74G3OvsybvkzpPI4S3KIeWTXAiiwlUU0iiSxWii4wSuS8mokSAieie";
   public String userSICUserName = "storeInCharge";
 
-  @Before
+  //@Before
   public void setUp() throws Exception {
     super.setup();
   }
@@ -76,9 +75,9 @@ public class E2EInitiateRnR extends TestCaseHelper {
 
   @When("^I create \"([^\"]*)\" program supported facility$")
   public void createFacilityForProgram(String program) throws Exception {
-    ManageFacilityPage ManageFacilityPage = new ManageFacilityPage(testWebDriver);
+    ManageFacilityPage manageFacilityPage = ManageFacilityPage.getInstance(testWebDriver);
 
-    date_time = ManageFacilityPage.enterValuesInFacilityAndClickSave(facilityCodePrefix, facilityNamePrefix, program,
+    date_time = manageFacilityPage.enterValuesInFacilityAndClickSave(facilityCodePrefix, facilityNamePrefix, program,
       geoZone, facilityType, operatedBy, catchmentPopulation);
     facility_code = facilityCodePrefix + date_time;
     facility_name = facilityNamePrefix + date_time;
@@ -277,7 +276,7 @@ public class E2EInitiateRnR extends TestCaseHelper {
     InitiateRnRPage initiateRnRPage = new InitiateRnRPage(testWebDriver);
     initiateRnRPage.addNonFullSupplyLineItems("99", "Due to unforeseen event", "antibiotic", "P11", "Antibiotics");
     initiateRnRPage.calculateAndVerifyTotalCostNonFullSupply();
-    initiateRnRPage.verifyCostOnFooter();
+    initiateRnRPage.verifyCostOnFooterForProducts(1);
   }
 
   @And("^I authorize RnR$")
@@ -493,6 +492,23 @@ public class E2EInitiateRnR extends TestCaseHelper {
     }
   }
 
+  @When("^I click on update Pod link for Row \"([^\"]*)\"$")
+  public void navigateUploadPodPage(Integer rowNumber) throws Exception {
+    HomePage homePage = new HomePage(testWebDriver);
+    homePage.navigateManagePOD();
+    UpdatePodPage updatePodPage = new UpdatePodPage(testWebDriver);
+    updatePodPage.selectRequisitionToUpdatePod(rowNumber);
+  }
+
+  @Then("^I should see all products to update pod$")
+  public void verifyUpdatePodPage() throws Exception {
+    UpdatePodPage updatePodPage = new UpdatePodPage(testWebDriver);
+    SeleneseTestBase.assertTrue(updatePodPage.getProductCode(1).contains("P10"));
+    SeleneseTestBase.assertTrue(updatePodPage.getProductName(1).contains("antibiotic"));
+    SeleneseTestBase.assertFalse(updatePodPage.getProductCode(1).contains("P11"));
+  }
+
+
   private void createUserAndAssignRoles(HomePage homePage, String passwordUsers, String userEmail,
                                         String userFirstName, String userLastName, String userUserName,
                                         String facility, String program, String supervisoryNode, String role,
@@ -543,7 +559,7 @@ public class E2EInitiateRnR extends TestCaseHelper {
     return round(ans);
   }
 
-  @After
+  //@After
   public void tearDown() throws Exception {
     testWebDriver.sleep(500);
     if (!testWebDriver.getElementById("username").isDisplayed()) {

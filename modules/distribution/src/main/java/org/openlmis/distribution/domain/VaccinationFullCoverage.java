@@ -8,34 +8,30 @@
  *  You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
  */
 
-package org.openlmis.distribution.dto;
+package org.openlmis.distribution.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import org.codehaus.jackson.annotate.JsonIgnoreProperties;
-import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.openlmis.core.domain.BaseModel;
-import org.openlmis.distribution.domain.VaccinationCoverage;
-
-import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
-@JsonSerialize(include = NON_EMPTY)
-@JsonIgnoreProperties(ignoreUnknown = true)
 @EqualsAndHashCode(callSuper = false)
-public class VaccinationCoverageDTO extends BaseModel {
+@AllArgsConstructor
+public class VaccinationFullCoverage extends BaseModel {
 
-  private FullCoverageDTO fullCoverage;
+  private Long facilityVisitId;
+  private Integer femaleHealthCenter;
+  private Integer femaleOutreach;
+  private Integer maleHealthCenter;
+  private Integer maleOutreach;
 
-  public VaccinationCoverage transform() {
-    return new VaccinationCoverage(fullCoverage.transform());
-  }
-
-  public void setModifiedBy(Long modifiedBy) {
-    fullCoverage.setModifiedBy(modifiedBy);
+  public VaccinationFullCoverage(Integer femaleHealthCenterReading, Integer femaleMobileBrigadeReading, Integer maleHealthCenterReading, Integer maleMobileBrigadeReading) {
+    this.femaleHealthCenter = femaleHealthCenterReading;
+    this.femaleOutreach = femaleMobileBrigadeReading;
+    this.maleHealthCenter = maleHealthCenterReading;
+    this.maleOutreach = maleMobileBrigadeReading;
   }
 }
