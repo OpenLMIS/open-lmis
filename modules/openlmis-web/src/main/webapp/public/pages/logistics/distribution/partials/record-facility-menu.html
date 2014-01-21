@@ -34,10 +34,16 @@
         <span id="epiUseTabLabel" openlmis-message="label.epi.use"></span>
       </a>
     </li>
-    <li ng-class="[distributionData.fullCoverage.computeStatus(), isSelected('fullCoverage')]">
-    <a id="coverageTab" href="" ng-click="changeRoute('fullCoverage')">
+    <li ng-class="[distributionData.fullCoverage.computeStatus(), isSelected('full-coverage')]">
+      <a id="coverageTab" href="" ng-click="changeRoute('full-coverage')">
         <span id="coverageTabIcon" class="status-icon"></span>
-        <span id="coverageTabLabel" openlmis-message="label.coverage"></span>
+        <span id="coverageTabLabel" openlmis-message="label.coverage.full"></span>
+      </a>
+    </li>
+    <li class="is-empty">
+      <a id="childCoverageTab" href="" ng-click="changeRoute('child-coverage')">
+        <span id="childCoverageTabIcon" class="status-icon"></span>
+        <span id="childCoverageTabLabel" openlmis-message="label.coverage.children"></span>
       </a>
     </li>
     <li ng-class="[distributionData.facilityVisit.computeStatus(), isSelected('facility-visit')]">

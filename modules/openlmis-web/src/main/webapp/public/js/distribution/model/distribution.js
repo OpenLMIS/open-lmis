@@ -32,6 +32,10 @@ function Distribution(distributionJson) {
     this.facilityDistributions[facilityId].fullCoverage.setNotRecorded();
   };
 
+  Distribution.prototype.setChildCoverageNotRecorded = function (facilityId) {
+    this.facilityDistributions[facilityId].childCoverage.setNotRecorded();
+  };
+
   return this;
 }
 

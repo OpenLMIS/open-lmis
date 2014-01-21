@@ -1,0 +1,188 @@
+<!--
+  ~ This program is part of the OpenLMIS logistics management information system platform software.
+  ~ Copyright © 2013 VillageReach
+  ~
+  ~  This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+  ~
+  ~  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+  ~  You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
+  -->
+<ng-include
+    src="'/public/pages/logistics/distribution/partials/record-facility-data.html'"></ng-include>
+<div class="clearfix facility-container">
+  <ng-include
+      src="'/public/pages/logistics/distribution/partials/record-facility-menu.html'"></ng-include>
+
+  <div class="facility-info" ng-init="facilityData = distribution.facilityDistributions[selectedFacilityId]">
+    <div id="coverageContainer" class="refrigerator-container" disable-form="{{facilityData.isDisabled()}}">
+      <h3 id="coverageHeader" openlmis-message="label.coverage.children"></h3>
+
+      <div id="childCoverageTable" class="facility-distribution-form-table"
+           disable-form="{{facilityData.isDisabled()}}">
+        <!--<div id="applyNRContainer" class="clearfix">-->
+        <!--<input id="CoverageFormApplyNRToAll" type="button" ng-click="applyNRAll()"-->
+        <!--class="pull-right btn"-->
+        <!--openlmis-message="button.apply.nr.all"/>-->
+        <!--</div>-->
+        <form auto-save="distribution" object-store="distributions">
+          <table class="table table-bordered">
+            <thead>
+            <tr>
+              <th class="col-complete-vaccinated" id="vaccination" rowspan="2"
+                  openlmis-message={{columns.vaccination}}></th>
+              <th class="col-complete-vaccinated" id="targetGroup" rowspan="2"
+                  openlmis-message={{columns.targetGroup}}></th>
+              <th class="col-complete-vaccinated center-justified" id="childrenAgeGroup1" colspan="3"
+                  openlmis-message={{columns.childrenAgeGroup0To11}}></th>
+              <th class="col-complete-vaccinated" id="coverageRate" rowspan="2"
+                  openlmis-message={{columns.coverageRate}}></th>
+              <th class="col-complete-vaccinated center-justified" id="childrenAgeGroup2" colspan="3"
+                  openlmis-message={{columns.childrenAgeGroup12To23}}></th>
+              <th class="col-complete-vaccinated" id="totalVaccination" rowspan="2"
+                  openlmis-message={{columns.totalVaccination}}></th>
+              <th class="col-complete-vaccinated" id="openedVials" rowspan="2"
+                  openlmis-message={{columns.openedVials}}></th>
+              <th class="col-complete-vaccinated" id="openedVialsWastageRate" rowspan="2"
+                  openlmis-message={{columns.openedVialsWastageRate}}></th>
+            </tr>
+            <tr>
+              <th class="col-complete-vaccinated" id="categoryOneHealthCenter"
+                  openlmis-message={{columns.categoryOneHealthCenter}}></th>
+              <th class="col-complete-vaccinated" id="categoryOneMobileBrigade"
+                  openlmis-message={{columns.categoryOneMobileBrigade}}></th>
+              <th class="col-complete-vaccinated" id="categoryOneTotal"
+                  openlmis-message={{columns.categoryOneTotal}}></th>
+              <th class="col-complete-vaccinated" id="categoryTwoHealthCenter"
+                  openlmis-message={{columns.categoryTwoHealthCenter}}></th>
+              <th class="col-complete-vaccinated" id="categoryTwoMobileBrigade"
+                  openlmis-message={{columns.categoryTwoMobileBrigade}}></th>
+              <th class="col-complete-vaccinated" id="categoryTwoTotal"
+                  openlmis-message={{columns.categoryTwoTotal}}></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="lineItem in childCoverage.childCoverageLineItems">
+              <td>
+                <span ng-bind="lineItem.vaccination"></span>
+              </td>
+              <td>
+                <span ng-bind="lineItem.targetGroup"></span>
+              </td>
+              <td>
+                <div>
+                  <span class="input-error-parent-cell">
+                    <input id="healthCenterCategoryOne{{$index}}" type="text"
+                           ng-model="lineItem.healthCenterCategoryOne.value"
+                           name="healthCenterCategoryOne{{$index}}"
+                           numeric-validator="positiveInteger" maxlength="7"
+                           error-holder="healthCenterCategoryOneError{{$index}}"/>
+                    <span id="healthCenterCategoryOneError{{$index}}"
+                          class="rnr-form-error"
+                          openlmis-message="error.number.only"
+                          style="display: none"></span>
+                  </span>
+                </div>
+                <input id="healthCenterCategoryOneNR{{$index}}" type="checkbox"
+                       ng-model="lineItem.healthCenterCategoryOne.notRecorded"
+                       not-recorded/>
+                <label class="checkbox-label" for="healthCenterCategoryOneNR{{$index}}"
+                       openlmis-message="label.not.recorded"></label>
+              </td>
+              <td>
+                <div>
+                  <span class="input-error-parent-cell">
+                    <input id="outReachCategoryOne{{$index}}" type="text"
+                           ng-model="lineItem.outReachCategoryOne.value"
+                           name="outReachCategoryOne{{$index}}"
+                           numeric-validator="positiveInteger" maxlength="7"
+                           error-holder="outReachCategoryOneError{{$index}}"/>
+                    <span id="outReachCategoryOneError{{$index}}"
+                          class="rnr-form-error"
+                          openlmis-message="error.number.only"
+                          style="display: none"></span>
+                  </span>
+                </div>
+                <input id="outReachCategoryOneNR{{$index}}" type="checkbox"
+                       ng-model="lineItem.outReachCategoryOne.notRecorded"
+                       not-recorded/>
+                <label class="checkbox-label" for="outReachCategoryOneNR{{$index}}"
+                       openlmis-message="label.not.recorded"></label>
+              </td>
+              <td></td>
+              <td></td>
+              <td>
+                <span ng-hide="lineItem.vaccination == 'Polio (Newborn)'">
+                  <div>
+                    <span class="input-error-parent-cell">
+                      <input id="healthCenterCategoryTwo{{$index}}" type="text"
+                             ng-model="lineItem.healthCenterCategoryTwo.value"
+                             name="healthCenterCategoryTwo{{$index}}"
+                             numeric-validator="positiveInteger" maxlength="7"
+                             error-holder="healthCenterCategoryTwoError{{$index}}"/>
+                      <span id="healthCenterCategoryTwoError{{$index}}"
+                            class="rnr-form-error"
+                            openlmis-message="error.number.only"
+                            style="display: none"></span>
+                    </span>
+                  </div>
+                  <input id="healthCenterCategoryTwoNR{{$index}}" type="checkbox"
+                         ng-model="lineItem.healthCenterCategoryTwo.notRecorded"
+                         not-recorded/>
+                  <label class="checkbox-label" for="healthCenterCategoryTwoNR{{$index}}"
+                         openlmis-message="label.not.recorded"></label>
+                </span>
+              </td>
+              <td>
+                <span ng-hide="lineItem.vaccination == 'Polio (Newborn)'">
+                  <div>
+                    <span class="input-error-parent-cell">
+                      <input id="outReachCategoryTwo{{$index}}" type="text"
+                             ng-model="lineItem.outReachCategoryTwo.value"
+                             name="outReachCategoryTwo{{$index}}"
+                             numeric-validator="positiveInteger" maxlength="7"
+                             error-holder="outReachCategoryTwoError{{$index}}"/>
+                      <span id="outReachCategoryTwoError{{$index}}"
+                            class="rnr-form-error"
+                            openlmis-message="error.number.only"
+                            style="display: none"></span>
+                    </span>
+                  </div>
+                  <input id="outReachCategoryTwoNR{{$index}}" type="checkbox"
+                         ng-model="lineItem.outReachCategoryTwo.notRecorded"
+                         not-recorded/>
+                  <label class="checkbox-label" for="outReachCategoryTwoNR{{$index}}"
+                         openlmis-message="label.not.recorded"></label>
+                </span>
+              </td>
+              <td></td>
+              <td></td>
+              <td>
+                <div>
+                  <span class="input-error-parent-cell">
+                    <input id="openedVials{{$index}}" type="text" ng-model="lineItem.openedVials.value"
+                           name="openedVials{{$index}}"
+                           numeric-validator="positiveInteger" maxlength="7"
+                           error-holder="openedVialsError{{$index}}"/>
+                    <span id="openedVialsError{{$index}}"
+                          class="rnr-form-error"
+                          openlmis-message="error.number.only"
+                          style="display: none"></span>
+                  </span>
+                </div>
+                <input id="openedVialsNR{{$index}}" type="checkbox"
+                       ng-model="lineItem.openedVials.notRecorded"
+                       not-recorded/>
+                <label class="checkbox-label" for="openedVialsNR{{$index}}"
+                       openlmis-message="label.not.recorded"></label>
+              </td>
+              <td>
+                <span></span>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

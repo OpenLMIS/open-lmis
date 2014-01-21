@@ -10,7 +10,6 @@
 
 describe('Distribution Service', function () {
 
-
   var distributionService;
   var indexedDB;
   beforeEach(module('distribution'));
