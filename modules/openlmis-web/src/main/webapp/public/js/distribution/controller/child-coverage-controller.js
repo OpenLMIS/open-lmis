@@ -52,7 +52,7 @@ function ChildCoverageController($scope, $routeParams, distributionService) {
       products: ['Measles'],
       rowSpan: 1
     }
-  }
+  };
 
   $scope.applyNRAll = function () {
     distributionService.applyNR(function (distribution) {
@@ -63,9 +63,6 @@ function ChildCoverageController($scope, $routeParams, distributionService) {
   var list = ["BCG", "Polio (Newborn)", "Penta 1st dose", "PCV10 1st dose", "Measles"];
 
   $scope.hideCell = function (vaccination) {
-    if (list.indexOf(vaccination) !== -1)
-      return false;
-    else
-      return true;
-  }
+    return list.indexOf(vaccination) === -1;
+  };
 }
