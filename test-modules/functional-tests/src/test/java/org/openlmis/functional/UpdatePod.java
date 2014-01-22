@@ -114,42 +114,6 @@ public class UpdatePod extends TestCaseHelper {
     assertFalse(updatePodPage.getPodTableData().contains("Strip"));
   }
 
-//  @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-RnR")
-  public void testVerifyManagePODWhenSomeProductsAreSkipped(String program, String userSIC, String password) throws Exception {
-    setUpData(program, userSIC);
-    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
-    HomePage homePage = loginPage.loginAs(userSIC, password);
-    homePage.navigateAndInitiateRnr("MALARIA");
-    InitiateRnRPage initiateRnRPage = homePage.clickProceed();
-    initiateRnRPage.enterValue(100, "beginningBalanceFirstProduct");
-    initiateRnRPage.enterValue(100, "quantityReceivedFirstProduct");
-    initiateRnRPage.enterValue(100, "quantityDispensedFirstProduct");
-    initiateRnRPage.skipSingleProduct(2);
-    initiateRnRPage.submitRnR();
-    initiateRnRPage.clickOk();
-
-    dbWrapper.updateRequisitionStatus("AUTHORIZED", userSIC, "MALARIA");
-    dbWrapper.updateFieldValue("requisition_line_items", "packsToShip", 100);
-    dbWrapper.updateRequisitionStatus("APPROVED", userSIC, "MALARIA");
-    dbWrapper.insertFulfilmentRoleAssignment("storeIncharge", "store in-charge", "F10");
-    dbWrapper.insertOrders("RELEASED", userSIC, "MALARIA");
-    dbWrapper.updateRequisitionStatus("RELEASED", userSIC, "MALARIA");
-
-    homePage.navigateManagePOD();
-    UpdatePodPage updatePodPage = new UpdatePodPage(testWebDriver);
-    updatePodPage.selectRequisitionToUpdatePod(1);
-
-    assertTrue(updatePodPage.getPodTableData().contains("P11"));
-    assertTrue(updatePodPage.getPodTableData().contains("antibiotic Capsule 300/200/600 mg"));
-    assertTrue(updatePodPage.getPodTableData().contains("100"));
-    assertTrue(updatePodPage.getPodTableData().contains("Strip"));
-
-    assertFalse(updatePodPage.getPodTableData().contains("P11"));
-    assertFalse(updatePodPage.getPodTableData().contains("antibiotic Capsule 300/200/600 mg"));
-    assertFalse(updatePodPage.getPodTableData().contains("100"));
-    assertFalse(updatePodPage.getPodTableData().contains("Strip"));
-  }
-
   private void verifyMessageOnPodScreen(UpdatePodPage updatePodPage) {
     assertTrue(updatePodPage.getNoProductsMessage().contains("No products."));
   }
