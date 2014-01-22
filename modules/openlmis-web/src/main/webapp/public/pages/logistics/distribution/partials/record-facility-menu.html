@@ -40,7 +40,7 @@
         <span id="coverageTabLabel" openlmis-message="label.coverage.full"></span>
       </a>
     </li>
-    <li class="is-empty">
+    <li class="is-empty" ng-class="[isSelected('child-coverage')]">
       <a id="childCoverageTab" href="" ng-click="changeRoute('child-coverage')">
         <span id="childCoverageTabIcon" class="status-icon"></span>
         <span id="childCoverageTabLabel" openlmis-message="label.coverage.children"></span>
