@@ -164,8 +164,8 @@
                     <input id="openedVials{{$index}}" type="text" ng-model="lineItem.openedVials.value"
                            name="openedVials{{$index}}"
                            numeric-validator="positiveInteger" maxlength="7"
-                           error-holder="openedVialsError{{$index}}"/>
-                    <span id="openedVialsError{{$index}}"
+                           error-holder="{{product}}OpenedVialsError"/>
+                    <span id="{{product}}OpenedVialsError"
                           class="rnr-form-error"
                           openlmis-message="error.number.only"
                           style="display: none"></span>
