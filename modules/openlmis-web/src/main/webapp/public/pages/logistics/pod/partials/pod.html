@@ -52,17 +52,16 @@
           <span ng-bind="podLineItem.quantityShipped" id="quantityShipped_{{$index}}"></span>
         </td>
         <td class="cell-input col-quantityReceived">
-          <div>
-            <input id="quantityReceived{{$index}}" type="text"
-                   ng-model="podLineItem.quantityReceived"
-                   numeric-validator="positiveInteger" maxlength="8"
-                   error-holder="receivedQuantityError{{$index}}"/>
-          </div>
-          <div class="error">
-                <span id="receivedQuantityError{{$index}}"
-                      class="rnr-form-error"
-                      openlmis-message="error.number.only"
-                      style="display: none"></span>
+          <input id="quantityReceived{{$index}}" type="text"
+                 ng-model="podLineItem.quantityReceived"
+                 numeric-validator="positiveInteger" maxlength="8"
+                 error-holder="receivedQuantityError{{$index}}"/>
+
+          <div class="input-error-parent-cell">
+            <span id="receivedQuantityError{{$index}}"
+                  class="rnr-form-error"
+                  openlmis-message="error.number.only"
+                  style="display: none"></span>
           </div>
         </td>
         <td class="cell-input">

@@ -38,7 +38,7 @@
                 <input type="text" ng-model="regimenLineItem[regimenColumn.name]" class="cell-text"
                        ng-disabled="formDisabled" maxlength="255">
               </span>
-              <span ng-switch-default>
+              <span ng-switch-default class="input-error-parent-cell">
                 <input ng-required="true"
                        ng-class="{'required-error':!regimenLineItem[regimenColumn.name] && $parent.regimenLineItemInValid}"
                        id="{{getId(regimenColumn.name, $parent)}}"
