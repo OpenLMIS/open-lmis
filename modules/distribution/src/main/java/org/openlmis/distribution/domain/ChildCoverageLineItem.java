@@ -42,7 +42,7 @@ public class ChildCoverageLineItem extends BaseModel {
   private Integer calculateTargetGroup(Double whoRatio, Long catchmentPopulation) {
     Integer targetGroup = null;
     if (whoRatio != null && catchmentPopulation != null) {
-      targetGroup = (int) round(catchmentPopulation * whoRatio);
+      targetGroup = (int) round(catchmentPopulation * whoRatio / 100);
     }
     return targetGroup;
   }

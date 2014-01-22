@@ -35,12 +35,12 @@ public class ChildCoverageLineItemTest {
     VaccinationProduct vaccinationProduct = new VaccinationProduct("BCG", "BCG", true);
 
     when(facility.getWhoRatioFor("BCG")).thenReturn(2.4);
-    when(facility.getCatchmentPopulation()).thenReturn((long) 8);
+    when(facility.getCatchmentPopulation()).thenReturn((long) 80);
 
     ChildCoverageLineItem childCoverageLineItem = new ChildCoverageLineItem(facilityVisit, facility, vaccinationProduct);
 
     assertThat(childCoverageLineItem.getVaccination(), is("BCG"));
-    assertThat(childCoverageLineItem.getTargetGroup(), is(19));
+    assertThat(childCoverageLineItem.getTargetGroup(), is(2));
     assertThat(childCoverageLineItem.getFacilityVisitId(), is(3L));
   }
 
@@ -52,12 +52,12 @@ public class ChildCoverageLineItemTest {
     VaccinationProduct vaccinationProduct = new VaccinationProduct("BCG", "BCG", true);
 
     when(facility.getWhoRatioFor("BCG")).thenReturn(2.6);
-    when(facility.getCatchmentPopulation()).thenReturn((long) 8);
+    when(facility.getCatchmentPopulation()).thenReturn((long) 80);
 
     ChildCoverageLineItem childCoverageLineItem = new ChildCoverageLineItem(facilityVisit, facility, vaccinationProduct);
 
     assertThat(childCoverageLineItem.getVaccination(), is("BCG"));
-    assertThat(childCoverageLineItem.getTargetGroup(), is(21));
+    assertThat(childCoverageLineItem.getTargetGroup(), is(2));
     assertThat(childCoverageLineItem.getFacilityVisitId(), is(3L));
   }
 
