@@ -33,6 +33,14 @@ public class ShipmentLineItemBuilder {
 
   public static Property<? super ShipmentLineItem, Date> packedDate = new Property<>();
 
+  public static Property<? super ShipmentLineItem, String> productName = new Property<>();
+
+  public static Property<? super ShipmentLineItem, String> dispensingUnit = new Property<>();
+
+  public static Property<? super ShipmentLineItem, String> productCategory = new Property<>();
+
+  public static Property<? super ShipmentLineItem, Integer> packsToShip = new Property<>();
+
 
   public static final Instantiator<ShipmentLineItem> defaultShipmentLineItem = new Instantiator<ShipmentLineItem>() {
 
@@ -48,6 +56,10 @@ public class ShipmentLineItemBuilder {
       lineItem.setCost(lookup.valueOf(cost, nullCost));
       lineItem.setShippedDate(lookup.valueOf(shippedDate, new Date()));
       lineItem.setPackedDate(lookup.valueOf(packedDate, new Date()));
+      lineItem.setProductName(lookup.valueOf(productName, "P123 Product 123"));
+      lineItem.setDispensingUnit(lookup.valueOf(dispensingUnit, "Tablet"));
+      lineItem.setProductCategory(lookup.valueOf(productCategory, "Antibiotics"));
+      lineItem.setPacksToShip(lookup.valueOf(packsToShip, 100));
       return lineItem;
     }
   };

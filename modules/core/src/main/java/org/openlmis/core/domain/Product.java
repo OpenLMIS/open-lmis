@@ -178,4 +178,16 @@ public class Product extends BaseModel implements Importable {
       throw new DataException("error.invalid.pack.size");
     }
   }
+
+  public String getName() {
+    StringBuffer stringBuffer = new StringBuffer();
+
+    stringBuffer
+      .append(getPrimaryName() == null ? "" : getPrimaryName()).append(" ")
+      .append(getForm().getCode() == null ? "" : getForm().getCode()).append(" ")
+      .append(getStrength() == null ? "" : getStrength()).append(" ")
+      .append(getDosageUnit().getCode() == null ? "" : getDosageUnit().getCode());
+
+    return stringBuffer.toString();
+  }
 }

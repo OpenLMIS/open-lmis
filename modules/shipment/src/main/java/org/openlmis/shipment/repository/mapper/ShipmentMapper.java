@@ -24,10 +24,10 @@ import java.util.Date;
 @Repository
 public interface ShipmentMapper {
 
-  @Insert({"INSERT INTO shipment_line_items ",
-    "(orderId, productCode, quantityShipped, cost, packedDate, shippedDate)",
-    "VALUES",
-    "(#{orderId}, #{productCode}, #{quantityShipped}, #{cost}, #{packedDate}, #{shippedDate})"})
+  @Insert({"INSERT INTO shipment_line_items",
+    "(orderId, productCode, quantityShipped, cost, packedDate, shippedDate, productName, dispensingUnit, productCategory, packsToShip) VALUES",
+    "(#{orderId}, #{productCode}, #{quantityShipped}, #{cost}, #{packedDate}, #{shippedDate}, #{productName}, #{dispensingUnit}, #{productCategory},",
+    "#{packsToShip})"})
   @Options(useGeneratedKeys = true)
   public void insertShippedLineItem(ShipmentLineItem shipmentLineItem);
 

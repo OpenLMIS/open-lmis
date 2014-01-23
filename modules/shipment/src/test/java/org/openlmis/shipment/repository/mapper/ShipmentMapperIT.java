@@ -94,6 +94,11 @@ public class ShipmentMapperIT {
     assertThat(shipmentFileInfoResultSet.getLong("orderId"), is(shipmentLineItem.getOrderId()));
     assertThat(shipmentFileInfoResultSet.getString("productCode"), is(shipmentLineItem.getProductCode()));
     assertThat(shipmentFileInfoResultSet.getInt("quantityShipped"), is(shipmentLineItem.getQuantityShipped()));
+
+    assertThat(shipmentFileInfoResultSet.getString("productName"), is(shipmentLineItem.getProductName()));
+    assertThat(shipmentFileInfoResultSet.getString("dispensingUnit"), is(shipmentLineItem.getDispensingUnit()));
+    assertThat(shipmentFileInfoResultSet.getString("productCategory"), is(shipmentLineItem.getProductCategory()));
+    assertThat(shipmentFileInfoResultSet.getInt("packsToShip"), is(shipmentLineItem.getPacksToShip()));
   }
 
   private ShipmentLineItem createShippedLineItem() {
