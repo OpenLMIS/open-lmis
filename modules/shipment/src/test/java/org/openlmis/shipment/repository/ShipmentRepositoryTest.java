@@ -24,10 +24,11 @@ import org.openlmis.shipment.domain.ShipmentLineItem;
 import org.openlmis.shipment.repository.mapper.ShipmentMapper;
 import org.springframework.dao.DataIntegrityViolationException;
 
+import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static org.junit.rules.ExpectedException.none;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 import static org.openlmis.core.matchers.Matchers.dataExceptionMatcher;
+import static org.openlmis.shipment.builder.ShipmentLineItemBuilder.*;
 
 @Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
@@ -42,9 +43,17 @@ public class ShipmentRepositoryTest {
   private ShipmentRepository shipmentRepository;
 
   @Test
-  public void shouldInsertShipment() throws Exception {
-    ShipmentLineItem shipmentLineItem = new ShipmentLineItem();
-    shipmentRepository.insertShippedLineItem(shipmentLineItem);
+  public void shouldInsertShipmentIfNewLineItem() throws Exception {
+    ShipmentLineItem shipmentLineItem = make(a(defaultShipmentLineItem,
+      with(productCode, "P10"),
+      with(orderId, 1L),
+      with(quantityShipped, 500)));
+
+    when(shipmentMapper.getShippedLineItem(shipmentLineItem)).thenReturn(null);
+
+    shipmentRepository.save(shipmentLineItem);
+
+    verify(shipmentMapper).getShippedLineItem(shipmentLineItem);
     verify(shipmentMapper).insertShippedLineItem(shipmentLineItem);
   }
 
@@ -55,7 +64,6 @@ public class ShipmentRepositoryTest {
     verify(shipmentMapper).insertShipmentFileInfo(shipmentFileInfo);
   }
 
-
   @Test
   public void shouldThrowExceptionIfShipmentFileHasIncorrectDataLength() throws Exception {
     ShipmentLineItem shipmentLineItem = new ShipmentLineItem();
@@ -64,13 +72,21 @@ public class ShipmentRepositoryTest {
 
     expectedException.expect(dataExceptionMatcher("error.incorrect.length"));
 
-    shipmentRepository.insertShippedLineItem(shipmentLineItem);
+    shipmentRepository.save(shipmentLineItem);
   }
 
   @Test
   public void shouldUpdateShippedLineItem() throws Exception {
-    ShipmentLineItem shipmentLineItem = new ShipmentLineItem();
-    shipmentRepository.updateShippedLineItem(shipmentLineItem);
+    ShipmentLineItem shipmentLineItem = make(a(defaultShipmentLineItem,
+      with(productCode, "P10"),
+      with(orderId, 1L),
+      with(quantityShipped, 500)));
+
+    when(shipmentMapper.getShippedLineItem(shipmentLineItem)).thenReturn(new ShipmentLineItem());
+
+    shipmentRepository.save(shipmentLineItem);
+
+    verify(shipmentMapper).getShippedLineItem(shipmentLineItem);
     verify(shipmentMapper).updateShippedLineItem(shipmentLineItem);
   }
 

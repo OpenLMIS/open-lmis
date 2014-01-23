@@ -30,23 +30,19 @@ public class ShipmentRepository {
     this.shipmentMapper = shipmentMapper;
   }
 
-  public void insertShippedLineItem(ShipmentLineItem shipmentLineItem) {
-    try {
-      shipmentMapper.insertShippedLineItem(shipmentLineItem);
-    } catch (DataIntegrityViolationException exception) {
-      throw new DataException("error.incorrect.length");
-    }
-  }
-
   public void insertShipmentFileInfo(ShipmentFileInfo shipmentFileInfo) {
     shipmentMapper.insertShipmentFileInfo(shipmentFileInfo);
   }
 
-  public ShipmentLineItem getShippedLineItem(ShipmentLineItem shipmentLineItem) {
-    return shipmentMapper.getShippedLineItem(shipmentLineItem);
-  }
-
-  public void updateShippedLineItem(ShipmentLineItem shipmentLineItem) {
-    shipmentMapper.updateShippedLineItem(shipmentLineItem);
+  public void save(ShipmentLineItem shipmentLineItem) {
+    try {
+      if (shipmentMapper.getShippedLineItem(shipmentLineItem) == null) {
+        shipmentMapper.insertShippedLineItem(shipmentLineItem);
+        return;
+      }
+      shipmentMapper.updateShippedLineItem(shipmentLineItem);
+    } catch (DataIntegrityViolationException exception) {
+      throw new DataException("error.incorrect.length");
+    }
   }
 }

@@ -13,6 +13,7 @@ package org.openlmis.shipment.service;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.ProductService;
+import org.openlmis.rnr.service.RequisitionService;
 import org.openlmis.shipment.domain.ShipmentFileInfo;
 import org.openlmis.shipment.domain.ShipmentLineItem;
 import org.openlmis.shipment.repository.ShipmentRepository;
@@ -28,26 +29,18 @@ public class ShipmentService {
   @Autowired
   private ProductService productService;
 
+  @Autowired
+  private RequisitionService requisitionService;
 
-  public void insertOrUpdate(ShipmentLineItem shipmentLineItem) {
-    validateForSave(shipmentLineItem);
-    validateShipment(shipmentLineItem);
-    if (shipmentRepository.getShippedLineItem(shipmentLineItem) == null) {
-      shipmentRepository.insertShippedLineItem(shipmentLineItem);
-    } else {
-      shipmentRepository.updateShippedLineItem(shipmentLineItem);
-    }
-  }
 
-  private void validateShipment(ShipmentLineItem shipmentLineItem) {
-    if (productService.getIdForCode(shipmentLineItem.getProductCode()) == null) {
-      throw new DataException("error.unknown.product");
-    }
-  }
-
-  private void validateForSave(ShipmentLineItem shipmentLineItem) {
+  public void save(ShipmentLineItem shipmentLineItem) {
     if (shipmentLineItem.getQuantityShipped() < 0) {
       throw new DataException("error.negative.shipped.quantity");
+    }
+    shipmentRepository.save(shipmentLineItem);
+
+    if (productService.getIdForCode(shipmentLineItem.getProductCode()) == null) {
+      throw new DataException("error.unknown.product");
     }
   }
 

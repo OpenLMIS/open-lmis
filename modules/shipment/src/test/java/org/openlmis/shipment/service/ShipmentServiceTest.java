@@ -49,39 +49,15 @@ public class ShipmentServiceTest {
   public ExpectedException exException = ExpectedException.none();
 
   @Test
-  public void shouldInsertShipmentIfNewLineItem() throws Exception {
+  public void shouldSaveShipmentLineItem() throws Exception {
     ShipmentLineItem shipmentLineItem = make(a(defaultShipmentLineItem,
       with(productCode, "P10"),
       with(orderId, 1L),
       with(quantityShipped, 500)));
 
+    shipmentService.save(shipmentLineItem);
 
-    when(productService.getIdForCode("P10")).thenReturn(1l);
-    when(shipmentRepository.getShippedLineItem(shipmentLineItem)).thenReturn(null);
-
-    shipmentService.insertOrUpdate(shipmentLineItem);
-
-    verify(productService).getIdForCode("P10");
-    verify(shipmentRepository).getShippedLineItem(shipmentLineItem);
-    verify(shipmentRepository).insertShippedLineItem(shipmentLineItem);
-  }
-
-  @Test
-  public void shouldUpdateShipmentIfComesAgainInSameFile() throws Exception {
-    ShipmentLineItem shipmentLineItem = make(a(defaultShipmentLineItem,
-      with(productCode, "P10"),
-      with(orderId, 1L),
-      with(quantityShipped, 500)));
-
-
-    when(productService.getIdForCode("P10")).thenReturn(1l);
-    when(shipmentRepository.getShippedLineItem(shipmentLineItem)).thenReturn(shipmentLineItem);
-
-    shipmentService.insertOrUpdate(shipmentLineItem);
-
-    verify(productService).getIdForCode("P10");
-    verify(shipmentRepository).getShippedLineItem(shipmentLineItem);
-    verify(shipmentRepository).updateShippedLineItem(shipmentLineItem);
+    verify(shipmentRepository).save(shipmentLineItem);
   }
 
   @Test
@@ -98,7 +74,7 @@ public class ShipmentServiceTest {
     exException.expect(DataException.class);
     exException.expectMessage("error.unknown.product");
 
-    shipmentService.insertOrUpdate(shipmentLineItem);
+    shipmentService.save(shipmentLineItem);
   }
 
   @Test
@@ -112,7 +88,7 @@ public class ShipmentServiceTest {
     exException.expect(DataException.class);
     exException.expectMessage("error.negative.shipped.quantity");
 
-    shipmentService.insertOrUpdate(shipmentLineItem);
+    shipmentService.save(shipmentLineItem);
   }
 
   @Test

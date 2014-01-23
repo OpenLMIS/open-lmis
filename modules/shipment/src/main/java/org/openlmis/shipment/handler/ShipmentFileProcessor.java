@@ -155,7 +155,7 @@ public class ShipmentFileProcessor {
     boolean savedSuccessfully = true;
     try {
       ShipmentLineItem lineItem = transformer.transform(dto, packedDateFormat, shippedDateFormat, creationDate);
-      shipmentService.insertOrUpdate(lineItem);
+      shipmentService.save(lineItem);
     } catch (DataException e) {
       logger.warn("Error in processing shipment file for orderId: " + dto.getOrderId(), e);
       savedSuccessfully = false;
