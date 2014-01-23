@@ -352,7 +352,8 @@ public class DBWrapper {
     update("delete from refrigerator_problems");
     update("delete from refrigerator_readings");
     update("delete from full_coverages");
-
+    update("delete from vaccination_child_coverage_line_items;");
+    update("delete from coverage_vaccination_products;");
     update("delete from facility_visits");
     update("delete from distributions");
     update("delete from refrigerators");
@@ -363,6 +364,7 @@ public class DBWrapper {
     update("delete from facility_approved_products");
     update("delete from facility_program_products");
     update("delete from program_products");
+    update("delete from coverage_vaccination_products");
     update("delete from products");
     update("delete from product_categories");
     update("delete from product_groups");
@@ -1373,4 +1375,33 @@ public class DBWrapper {
   }
 
 
+  public void setUpDataForChildCoverage() throws SQLException {
+    update("INSERT INTO products\n" +
+      "(code,    alternateItemCode,  manufacturer,       manufacturerCode,  manufacturerBarcode,   mohBarcode,   gtin,   type,         primaryName,    fullName,       genericName,    alternateName,    description,      strength,    formId,  dosageUnitId, dispensingUnit,  dosesPerDispensingUnit,  packSize,  alternatePackSize,  storeRefrigerated,   storeRoomTemperature,   hazardous,  flammable,   controlledSubstance,  lightSensitive,  approvedByWho,  contraceptiveCyp,  packLength,  packWidth, packHeight,  packWeight,  packsPerCarton, cartonLength,  cartonWidth,   cartonHeight, cartonsPerPallet,  expectedShelfLife,  specialStorageInstructions, specialTransportInstructions, active,  fullSupply, tracer,   packRoundingThreshold,  roundToZero,  archived, displayOrder, categoryId) values\n" +
+      "('Measles',   'a',            'Glaxo and Smith',  'a',              'a',                    'a',          'a',    'antibiotic', 'Measles',   'TDF/FTC/EFV',  'TDF/FTC/EFV',  'TDF/FTC/EFV',    'TDF/FTC/EFV',  '300/200/600',  2,        1,            'Strip',           10,                     10,        30,                   TRUE,                  TRUE,                TRUE,       TRUE,         TRUE,                 TRUE,             TRUE,               1,          2.2,            2,          2,            2,            2,            2,              2,              2,              2,                    2,                    'a',                          'a',          TRUE,     TRUE,       TRUE,         1,                    FALSE,      TRUE,    1, (Select id from product_categories where code='C1')),\n" +
+      "('BCG',       'a',            'Glaxo and Smith',  'a',              'a',                    'a',          'a',    'antibiotic', 'BCG',   'TDF/FTC/EFV',  'TDF/FTC/EFV',  'TDF/FTC/EFV',    'TDF/FTC/EFV',  '300/200/600',  2,        1,            'Strip',           10,                     10,        30,                   TRUE,                  TRUE,                TRUE,       TRUE,         TRUE,                 TRUE,             TRUE,               1,          2.2,            2,          2,            2,            2,            2,              2,              2,              2,                    2,                    'a',                          'a',          TRUE,     FALSE,       TRUE,         1,                    FALSE,      TRUE,   5, (Select id from product_categories where code='C1')),\n" +
+      "('polio10dose','a',           'Glaxo and Smith',  'a',              'a',                    'a',          'a',    'antibiotic', 'polio10dose',   'TDF/FTC/EFV',  'TDF/FTC/EFV',  'TDF/FTC/EFV',    'TDF/FTC/EFV',  '300/200/600',  2,        1,            'Strip',           10,                     10,        30,                   TRUE,                  TRUE,                TRUE,       TRUE,         TRUE,                 TRUE,             TRUE,               1,          2.2,            2,          2,            2,            2,            2,              2,              2,              2,                    2,                    'a',                          'a',          TRUE,     TRUE,       TRUE,         1,                    FALSE,      TRUE,    1, (Select id from product_categories where code='C1')),\n" +
+      "('polio20dose','a',           'Glaxo and Smith',  'a',              'a',                    'a',          'a',    'antibiotic', 'polio20dose',   'TDF/FTC/EFV',  'TDF/FTC/EFV',  'TDF/FTC/EFV',    'TDF/FTC/EFV',  '300/200/600',  2,        1,            'Strip',           10,                     10,        30,                   TRUE,                  TRUE,                TRUE,       TRUE,         TRUE,                 TRUE,             TRUE,               1,          2.2,            2,          2,            2,            2,            2,              2,              2,              2,                    2,                    'a',                          'a',          TRUE,     FALSE,       TRUE,         1,                    FALSE,      TRUE,   5, (Select id from product_categories where code='C1')),\n" +
+      "('penta1',     'a',           'Glaxo and Smith',  'a',              'a',                    'a',          'a',    'antibiotic', 'penta1',   'TDF/FTC/EFV',  'TDF/FTC/EFV',  'TDF/FTC/EFV',    'TDF/FTC/EFV',  '300/200/600',  2,        1,            'Strip',           10,                     10,        30,                   TRUE,                  TRUE,                TRUE,       TRUE,         TRUE,                 TRUE,             TRUE,               1,          2.2,            2,          2,            2,            2,            2,              2,              2,              2,                    2,                    'a',                          'a',          TRUE,     TRUE,       TRUE,         1,                    FALSE,      TRUE,    1, (Select id from product_categories where code='C1')),\n" +
+      "('penta10',    'a',           'Glaxo and Smith',  'a',              'a',                    'a',          'a',    'antibiotic', 'penta10',   'TDF/FTC/EFV',  'TDF/FTC/EFV',  'TDF/FTC/EFV',    'TDF/FTC/EFV',  '300/200/600',  2,        1,            'Strip',           10,                     10,        30,                   TRUE,                  TRUE,                TRUE,       TRUE,         TRUE,                 TRUE,             TRUE,               1,          2.2,            2,          2,            2,            2,            2,              2,              2,              2,                    2,                    'a',                          'a',          TRUE,     FALSE,       TRUE,         1,                    FALSE,      TRUE,   5, (Select id from product_categories where code='C1'));\n");
+
+  }
+
+
+  public void insertRegimenProductMapping() throws SQLException {
+    update("INSERT INTO coverage_vaccination_products\n" +
+      "(vaccination, productCode, childCoverage) values\n" +
+      "('BCG', 'BCG', TRUE),\n" +
+      "('Polio (Newborn)', 'polio10dose',TRUE),\n" +
+      "('Polio 1st dose', 'polio20dose' ,TRUE),\n" +
+      "('Polio 2nd dose', 'polio10dose' ,TRUE),\n" +
+      "('Polio 3rd dose', 'polio20dose' ,TRUE),\n" +
+      "('Penta 1st dose', 'penta1',TRUE),\n" +
+      "('Penta 2nd dose', 'penta10',TRUE),\n" +
+      "('Penta 3rd dose', 'penta1',TRUE),\n" +
+      "('PCV10 1st dose', 'P10',TRUE),\n" +
+      "('PCV10 2nd dose', 'P10', TRUE),\n" +
+      "('PCV10 3rd dose', 'P10', TRUE),\n" +
+      "('Measles', 'Measles',TRUE);\n");
+  }
 }
