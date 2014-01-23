@@ -74,8 +74,14 @@ public class DistributionPage extends Page {
   @FindBy(how = ID, using = "duplicateFacilities")
   private WebElement facilityAlreadySyncMessage = null;
 
+  @FindBy(how = ID, using = "failedFacilityHeader")
+  private WebElement facilitySyncFailedMessage = null;
+
   @FindBy(how = ID, using = "distributionInitiated")
   private WebElement distributionAlreadyInitiatedMessage = null;
+
+  @FindBy(how = ID, using = "retryButton")
+  private WebElement retryButton = null;
 
 
   public DistributionPage(TestWebDriver driver) throws IOException {
@@ -279,5 +285,15 @@ public class DistributionPage extends Page {
     selectValueFromDeliveryZone(deliveryZoneName);
     selectValueFromProgram(programName);
     clickInitiateDistribution();
+  }
+
+  public boolean isFacilitySyncFailed() {
+    testWebDriver.waitForElementToAppear(facilitySyncFailedMessage);
+    return facilitySyncFailedMessage.isDisplayed();
+  }
+
+  public void clickRetryButton() {
+    testWebDriver.waitForElementToAppear(retryButton);
+    retryButton.click();
   }
 }

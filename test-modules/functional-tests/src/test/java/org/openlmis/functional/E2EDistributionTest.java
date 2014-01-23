@@ -186,10 +186,13 @@ public class E2EDistributionTest extends TestCaseHelper {
     homePage.navigateHomePage();
     homePage.navigateOfflineDistribution();
 
-    switchOnNetworkInterface(wifiInterface);
-    testWebDriver.sleep(5000);
-
     distributionPage.syncDistribution(1);
+    assertTrue(distributionPage.isFacilitySyncFailed());
+
+    switchOnNetworkInterface(wifiInterface);
+    testWebDriver.sleep(7000);
+
+    distributionPage.clickRetryButton();
     assertTrue("Incorrect Sync Facility", distributionPage.getSyncMessage().contains("F10-Village Dispensary"));
 
     distributionPage.syncDistributionMessageDone();
@@ -228,12 +231,31 @@ public class E2EDistributionTest extends TestCaseHelper {
     testWebDriver.sleep(1000);
 
     distributionPage = homePage.navigateToDistributionWhenOnline();
+    testWebDriver.sleep(1000);
     distributionPage.deleteDistribution();
     distributionPage.clickOk();
 
     distributionPage.selectValueFromDeliveryZone(deliveryZoneNameFirst);
     distributionPage.selectValueFromProgram(programFirst);
     distributionPage.clickInitiateDistribution();
+
+    testWebDriver.sleep(1000);
+    distributionPage.selectValueFromPeriod("Period13");
+    distributionPage.clickInitiateDistribution();
+
+    waitForAppCacheComplete();
+
+    distributionPage.clickRecordData(1);
+    assertTrue(facilityListPage.getFacilitiesInDropDown().contains("F10"));
+    refrigeratorPage = facilityListPage.selectFacility(facilityCodeFirst);
+    facilityListPage.verifyFacilityIndicatorColor("Overall", "RED");
+
+    refrigeratorPage.verifyIndicator("RED");
+
+    String data = "LG;800 LITRES;GR-J287PGHV";
+    String[] refrigeratorDetailsOnUI = data.split(";");
+    for (int i = 0; i < refrigeratorDetails.length; i++)
+      assertEquals(testWebDriver.getElementByXpath("//div[@class='list-row ng-scope']/ng-include/form/div[1]/div[" + (i + 2) + "]").getText(), refrigeratorDetailsOnUI[i]);
   }
 
   @AfterMethod(groups = {"offline"})
