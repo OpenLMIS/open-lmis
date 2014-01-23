@@ -2,6 +2,7 @@ package org.openlmis.pageobjects;
 
 
 import org.openlmis.UiUtils.TestWebDriver;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
@@ -299,4 +300,10 @@ public class ChildCoveragePage extends DistributionTab {
     testWebDriver.waitForElementToAppear(OpenedVialsMeasles);
     return OpenedVialsMeasles.getText();
   }
+
+  public String getTextOfTargetGroupValue(int rowNumber) {
+    testWebDriver.waitForElementToAppear(testWebDriver.findElement(By.id("target"+ (rowNumber-1))));
+    return testWebDriver.findElement(By.id("target"+ (rowNumber-1))).getText() ;
+  }
+
 }

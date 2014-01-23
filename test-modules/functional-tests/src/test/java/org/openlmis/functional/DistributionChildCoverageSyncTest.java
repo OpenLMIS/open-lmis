@@ -7,16 +7,14 @@ import org.openqa.selenium.JavascriptExecutor;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import static com.thoughtworks.selenium.SeleneseTestBase.assertEquals;
-import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
+
 
 public class DistributionChildCoverageSyncTest extends TestCaseHelper {
 
@@ -62,7 +60,7 @@ public class DistributionChildCoverageSyncTest extends TestCaseHelper {
 
 
   @Test(groups = {"distribution"})
-  public void testShouldVerifyLabels() throws IOException, SQLException {
+  public void testShouldVerifyAllLabels() throws IOException, SQLException {
 
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(childCoverageData.get(USER), childCoverageData.get(PASSWORD));
@@ -80,6 +78,84 @@ public class DistributionChildCoverageSyncTest extends TestCaseHelper {
     verifyRegimentsPresent(childCoveragePage);
     verifyHeadersPresent(childCoveragePage);
     verifyOpenVialsPresent(childCoveragePage);
+  }
+
+  @Test(groups = {"distribution"})
+  public void testShouldVerifyTargetGroupIfCatchmentPopulationAndWhoRatioPresent() throws IOException, SQLException {
+
+    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+    HomePage homePage = loginPage.loginAs("Admin123", "Admin123");
+
+    ProgramProductISAPage programProductISAPage = homePage.navigateProgramProductISA();
+    programProductISAPage.fillProgramProductISA(childCoverageData.get(VACCINES_PROGRAM), "90", "1", "50", "30", "0", "100", "2000", "333");
+    homePage.logout();
+
+    loginPage.loginAs(childCoverageData.get(USER), childCoverageData.get(PASSWORD));
+
+    DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
+    distributionPage.initiate(childCoverageData.get(FIRST_DELIVERY_ZONE_NAME), childCoverageData.get(VACCINES_PROGRAM));
+    FacilityListPage facilityListPage = distributionPage.clickRecordData(1);
+    RefrigeratorPage refrigeratorPage = facilityListPage.selectFacility(childCoverageData.get(FIRST_FACILITY_CODE));
+
+    ChildCoveragePage childCoveragePage = refrigeratorPage.navigateToChildCoverage();
+    assertEquals(childCoveragePage.getTextOfTargetGroupValue(9), "300");
+    assertEquals(childCoveragePage.getTextOfTargetGroupValue(10), "300");
+    assertEquals(childCoveragePage.getTextOfTargetGroupValue(11), "300");
+    assertEquals(childCoveragePage.getTextOfTargetGroupValue(1), "");
+    assertEquals(childCoveragePage.getTextOfTargetGroupValue(12), "");
+
+  }
+
+  @Test(groups = {"distribution"})
+  public void testShouldVerifyTargetGroupIfOnlyCatchmentPopulationPresent() throws IOException, SQLException {
+
+    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+    HomePage homePage = loginPage.loginAs(childCoverageData.get(USER), childCoverageData.get(PASSWORD));
+
+    DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
+    distributionPage.initiate(childCoverageData.get(FIRST_DELIVERY_ZONE_NAME), childCoverageData.get(VACCINES_PROGRAM));
+    FacilityListPage facilityListPage = distributionPage.clickRecordData(1);
+    RefrigeratorPage refrigeratorPage = facilityListPage.selectFacility(childCoverageData.get(FIRST_FACILITY_CODE));
+
+    ChildCoveragePage childCoveragePage = refrigeratorPage.navigateToChildCoverage();
+    assertEquals(childCoveragePage.getTextOfTargetGroupValue(9), "");
+    assertEquals(childCoveragePage.getTextOfTargetGroupValue(10), "");
+    assertEquals(childCoveragePage.getTextOfTargetGroupValue(11), "");
+    assertEquals(childCoveragePage.getTextOfTargetGroupValue(1), "");
+    assertEquals(childCoveragePage.getTextOfTargetGroupValue(12), "");
+  }
+
+  @Test(groups = {"distribution"})
+  public void testShouldVerifyTargetGroupIfOnlyWhoRatioPresent() throws IOException, SQLException {
+
+    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+    HomePage homePage = loginPage.loginAs("Admin123", "Admin123");
+
+    ProgramProductISAPage programProductISAPage = homePage.navigateProgramProductISA();
+    programProductISAPage.fillProgramProductISA(childCoverageData.get(VACCINES_PROGRAM), "90", "1", "50", "30", "0", "100", "2000", "333");
+
+    ManageFacilityPage manageFacilityPage = homePage.navigateManageFacility();
+    homePage.navigateSearchFacility();
+    manageFacilityPage.searchFacility("F10");
+    manageFacilityPage.clickFacilityList("F10");
+    manageFacilityPage.editPopulation("");
+    manageFacilityPage.saveFacility();
+    homePage.logout();
+
+
+    loginPage.loginAs(childCoverageData.get(USER), childCoverageData.get(PASSWORD));
+
+    DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
+    distributionPage.initiate(childCoverageData.get(FIRST_DELIVERY_ZONE_NAME), childCoverageData.get(VACCINES_PROGRAM));
+    FacilityListPage facilityListPage = distributionPage.clickRecordData(1);
+    RefrigeratorPage refrigeratorPage = facilityListPage.selectFacility(childCoverageData.get(FIRST_FACILITY_CODE));
+
+    ChildCoveragePage childCoveragePage = refrigeratorPage.navigateToChildCoverage();
+    assertEquals(childCoveragePage.getTextOfTargetGroupValue(9), "");
+    assertEquals(childCoveragePage.getTextOfTargetGroupValue(10), "");
+    assertEquals(childCoveragePage.getTextOfTargetGroupValue(11), "");
+    assertEquals(childCoveragePage.getTextOfTargetGroupValue(1), "");
+    assertEquals(childCoveragePage.getTextOfTargetGroupValue(12), "");
   }
 
   private void verifyOpenVialsPresent(ChildCoveragePage childCoveragePage) {
