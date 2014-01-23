@@ -492,5 +492,9 @@ public class RequisitionService {
       requisition.setSubmittedDate(getOperationDateFor(requisition.getId(), SUBMITTED.toString()));
     }
   }
+
+  public RnrLineItem getLineItem(Long rnrId, String productCode) {
+    return requisitionRepository.getLineItem(rnrId, productCode);
+  }
 }
 

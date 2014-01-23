@@ -215,5 +215,9 @@ public class RequisitionRepository {
   public List<RnrLineItem> getAuthorizedRegularUnSkippedLineItems(String productCode, Rnr rnr, Integer n, Date startDate) {
     return rnrLineItemMapper.getAuthorizedRegularUnSkippedLineItems(productCode, rnr, n, startDate);
   }
+
+  public RnrLineItem getLineItem(Long rnrId, String productCode) {
+    return rnrLineItemMapper.getLineItem(rnrId, productCode);
+  }
 }
 

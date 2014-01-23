@@ -1399,6 +1399,16 @@ public class RequisitionServiceTest {
     spyRequisitionService.authorize(rnr);
   }
 
+  @Test
+  public void shouldGetLineItemWithRnrIdAndProductCode() throws Exception {
+    RnrLineItem expectedLineItem = new RnrLineItem();
+    when(requisitionRepository.getLineItem(3L, "P100")).thenReturn(expectedLineItem);
+
+    RnrLineItem lineItem = requisitionService.getLineItem(3L, "P100");
+
+    assertThat(lineItem, is(expectedLineItem));
+  }
+
   private void setupForInitRnr() {
     when(requisitionPermissionService.hasPermission(USER_ID, FACILITY, PROGRAM, CREATE_REQUISITION)).thenReturn(true);
     when(rnrTemplateService.fetchProgramTemplateForRequisition(PROGRAM.getId())).thenReturn(new ProgramRnrTemplate(getRnrColumns()));
