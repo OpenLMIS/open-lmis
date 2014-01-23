@@ -13,6 +13,7 @@ package org.openlmis.core.domain;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.upload.Importable;
@@ -179,15 +180,11 @@ public class Product extends BaseModel implements Importable {
     }
   }
 
+  @JsonIgnore
   public String getName() {
-    StringBuffer stringBuffer = new StringBuffer();
-
-    stringBuffer
-      .append(getPrimaryName() == null ? "" : getPrimaryName()).append(" ")
-      .append(getForm().getCode() == null ? "" : getForm().getCode()).append(" ")
-      .append(getStrength() == null ? "" : getStrength()).append(" ")
-      .append(getDosageUnit().getCode() == null ? "" : getDosageUnit().getCode());
-
-    return stringBuffer.toString();
+    return (getPrimaryName() == null ? "" : getPrimaryName())
+      + " " + (getForm().getCode() == null ? "" : getForm().getCode())
+      + " " + (getStrength() == null ? "" : getStrength())
+      + " " + (getDosageUnit().getCode() == null ? "" : getDosageUnit().getCode());
   }
 }
