@@ -85,7 +85,7 @@ public class DistributionCoverageSyncTest extends TestCaseHelper {
     CoveragePage coveragePage = refrigeratorPage.navigateToCoverage();
     coveragePage.verifyIndicator("RED");
 
-    assertEquals("Coverage", coveragePage.getTextOfCoverageHeader());
+    assertEquals("Full Coverage", coveragePage.getTextOfCoverageHeader());
     assertEquals("Completely Vaccinated Children(doses)", coveragePage.getTextOfCompletelyVaccinatedHeader());
     assertEquals("Females", coveragePage.getTextOfFemaleHeader());
     assertEquals("Males", coveragePage.getTextOfMaleHeader());
