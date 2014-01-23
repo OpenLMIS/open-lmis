@@ -48,11 +48,11 @@ public class PODService {
 
   @Transactional
   public OrderPOD createPOD(Long orderId, Long userId) {
-    save(orderId, userId);
-    return podRepository.getPODWithLineItemsByOrderId(orderId);
+    OrderPOD orderPOD = save(orderId, userId);
+    return podRepository.getPODWithLineItemsById(orderPOD.getId());
   }
 
-  private void save(Long orderId, Long userId) {
+  private OrderPOD save(Long orderId, Long userId) {
     OrderPOD orderPOD = new OrderPOD();
     orderPOD.setOrderId(orderId);
     orderPOD.setCreatedBy(userId);
@@ -60,10 +60,13 @@ public class PODService {
 
     checkPermissions(orderPOD);
 
-    if (podRepository.getPODByOrderId(orderId) == null) {
+    OrderPOD savedPOD = podRepository.getPODByOrderId(orderId);
+    if (savedPOD == null) {
       insertOrderPOD(orderPOD);
       insertLineItems(orderPOD);
-    }
+      return orderPOD;
+    } else
+      return savedPOD;
   }
 
   public void updateOrderStatus(OrderPOD orderPod) {
@@ -109,5 +112,9 @@ public class PODService {
     orderPod.fillPOD(requisition);
     orderPod.fillPodLineItems(requisition.getAllLineItems());
     insertPOD(orderPod);
+  }
+
+  public OrderPOD getPodById(Long podId) {
+    return podRepository.getPODWithLineItemsById(podId);
   }
 }

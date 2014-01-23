@@ -42,10 +42,7 @@ public class PODRepository {
     return podMapper.getNPodLineItems(productCode, requisition, n, startDate);
   }
 
-  public OrderPOD getPODWithLineItemsByOrderId(Long orderId) {
-    OrderPOD orderPOD = podMapper.getPODByOrderId(orderId);
-    List<OrderPODLineItem> podLineItems = podMapper.getPODLineItemsByPODId(orderPOD.getId());
-    orderPOD.setPodLineItems(podLineItems);
-    return orderPOD;
+  public OrderPOD getPODWithLineItemsById(Long podId) {
+    return podMapper.getPODById(podId);
   }
 }

@@ -123,7 +123,7 @@ public class PODServiceTest {
     verify(podRepository).getPODByOrderId(orderId);
     verify(podRepository).insertPODLineItem(orderPodLineItem1);
     verify(podRepository).insertPODLineItem(orderPodLineItem2);
-    verify(podRepository).getPODWithLineItemsByOrderId(orderId);
+    verify(podRepository).getPODWithLineItemsById(podId);
   }
 
   @Test
@@ -153,7 +153,7 @@ public class PODServiceTest {
     podService.createPOD(orderId, userId);
 
     verify(podRepository).getPODByOrderId(orderId);
-    verify(podRepository).getPODWithLineItemsByOrderId(orderId);
+    verify(podRepository).getPODWithLineItemsById(podId);
   }
 
   @Test
@@ -182,5 +182,11 @@ public class PODServiceTest {
     expectedException.expectMessage("error.permission.denied");
 
     podService.createPOD(orderId, userId);
+  }
+
+  @Test
+  public void shouldGetPODWithLineItemsById() throws Exception {
+    podService.getPodById(podId);
+    verify(podRepository).getPODWithLineItemsById(podId);
   }
 }

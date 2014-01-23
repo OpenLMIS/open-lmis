@@ -164,4 +164,20 @@ public class PODMapperIT extends ApplicationTestContext {
 
     assertThat(nOrderPodLineItems, hasItems(orderPodLineItem));
   }
+
+  @Test
+  public void shouldGetPODWithLineItemsByPODId() throws Exception {
+    OrderPOD expectedOrderPod = new OrderPOD();
+    expectedOrderPod.setOrderId(order.getId());
+    podMapper.insertPOD(expectedOrderPod);
+
+    OrderPODLineItem lineItem1 = new OrderPODLineItem(expectedOrderPod.getId(), productCode, productCategory,
+      productCategoryDisplayOrder, productDisplayOrder, 100, productName, dispensingUnit, 10, null, true, null);
+    podMapper.insertPODLineItem(lineItem1);
+
+    OrderPOD orderPOD = podMapper.getPODById(expectedOrderPod.getId());
+
+    assertThat(orderPOD.getPodLineItems().size(), is(1));
+    assertThat(orderPOD.getPodLineItems().get(0), is(lineItem1));
+  }
 }

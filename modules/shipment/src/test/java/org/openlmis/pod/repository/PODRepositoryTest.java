@@ -38,7 +38,6 @@ public class PODRepositoryTest {
 
   @Test
   public void shouldInsertPODLineItem() {
-
     OrderPODLineItem orderPodLineItem = new OrderPODLineItem();
     podRepository.insertPODLineItem(orderPodLineItem);
     verify(podMapper).insertPODLineItem(orderPodLineItem);
@@ -63,22 +62,18 @@ public class PODRepositoryTest {
 
   @Test
   public void shouldGetPODWithLineItemsByOrderId() throws Exception {
-    Long orderId = 1L;
     Long podId = 2L;
     OrderPOD expectedOrderPOD = new OrderPOD();
     expectedOrderPOD.setId(podId);
     OrderPODLineItem lineItem = new OrderPODLineItem();
     lineItem.setPodId(podId);
 
-    when(podMapper.getPODByOrderId(orderId)).thenReturn(expectedOrderPOD);
+    when(podMapper.getPODById(podId)).thenReturn(expectedOrderPOD);
     expectedOrderPOD.setPodLineItems(asList(lineItem));
 
-    when(podMapper.getPODLineItemsByPODId(podId)).thenReturn(asList(lineItem));
+    OrderPOD orderPod = podRepository.getPODWithLineItemsById(podId);
 
-    OrderPOD orderPod = podRepository.getPODWithLineItemsByOrderId(orderId);
-
-    verify(podMapper).getPODByOrderId(orderId);
-    verify(podMapper).getPODLineItemsByPODId(podId);
+    verify(podMapper).getPODById(podId);
     assertThat(orderPod, is(expectedOrderPOD));
   }
 }
