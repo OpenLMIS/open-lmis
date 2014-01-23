@@ -133,7 +133,7 @@
         <div class="modal-footer" ng-hide="requestInProgress">
             <input type="button" class="btn btn-primary" openlmis-message="button.done"
                    ng-click="synchronizationModal = false" ng-hide="syncResult[COMPLETE].length"/>
-            <input type="button" class="btn btn-primary" openlmis-message="button.retry"
+            <input id="retryButton" type="button" class="btn btn-primary" openlmis-message="button.retry"
                    ng-show="syncResult[COMPLETE].length"
                    ng-click="syncDistribution(distributionData.id)"/>
             <input type="button" class="btn btn-cancel" openlmis-message="button.cancel"
