@@ -1374,6 +1374,17 @@ public class DBWrapper {
     return Integer.parseInt(getAttributeFromTable("requisition_group_members", "requisitionGroupId", "facilityId", getAttributeFromTable("facilities", "id", "code", facilityCode)));
   }
 
+  public void insertOneProduct(String product) throws SQLException, IOException {
+    update("INSERT INTO products\n" +
+      "(code,    alternateItemCode,  manufacturer,       manufacturerCode,  manufacturerBarcode,   mohBarcode,   gtin,   type,         primaryName,    fullName,       genericName,    alternateName,    description,      strength,    formId,  dosageUnitId, dispensingUnit,  dosesPerDispensingUnit,  packSize,  alternatePackSize,  storeRefrigerated,   storeRoomTemperature,   hazardous,  flammable,   controlledSubstance,  lightSensitive,  approvedByWho,  contraceptiveCyp,  packLength,  packWidth, packHeight,  packWeight,  packsPerCarton, cartonLength,  cartonWidth,   cartonHeight, cartonsPerPallet,  expectedShelfLife,  specialStorageInstructions, specialTransportInstructions, active,  fullSupply, tracer,   packRoundingThreshold,  roundToZero,  archived, displayOrder, categoryId) values\n" +
+      "('" + product + "',  'a',                'Glaxo and Smith',  'a',              'a',                    'a',          'a',    'antibiotic', 'antibiotic',   'TDF/FTC/EFV',  'TDF/FTC/EFV',  'TDF/FTC/EFV',    'TDF/FTC/EFV',  '300/200/600',  2,        1,            'Strip',           10,                     10,        30,                   TRUE,                  TRUE,                TRUE,       TRUE,         TRUE,                 TRUE,             TRUE,               1,          2.2,            2,          2,            2,            2,            2,              2,              2,              2,                    2,                    'a',                          'a',          TRUE,     FALSE,       TRUE,         1,                    FALSE,      TRUE,   5, (Select id from product_categories where code='C1'));\n");
+  }
+
+  public void deleteAllProducts() throws SQLException {
+    update("delete from facility_approved_products;");
+    update("delete from program_products;");
+    update("delete from products;");
+  }
 
   public void setUpDataForChildCoverage() throws SQLException {
     update("INSERT INTO products\n" +

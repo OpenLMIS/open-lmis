@@ -54,9 +54,9 @@ public class EpiInventoryPage extends DistributionTab {
   public void verifyData(List<Map<String, String>> data) {
     for (int i = 0; i < data.size(); ++i) {
       Map<String, String> epiInventoryData = data.get(i);
-      assertEquals(getDeliveredQuantity(i+1), epiInventoryData.get("deliveredQuantity"));
-      assertEquals(getExistingQuantity(i+1), epiInventoryData.get("existingQuantity"));
-      assertEquals(getSpoiledQuantity(i+1), epiInventoryData.get("spoiledQuantity"));
+      assertEquals(getDeliveredQuantity(i + 1), epiInventoryData.get("deliveredQuantity"));
+      assertEquals(getExistingQuantity(i + 1), epiInventoryData.get("existingQuantity"));
+      assertEquals(getSpoiledQuantity(i + 1), epiInventoryData.get("spoiledQuantity"));
     }
   }
 
@@ -78,6 +78,9 @@ public class EpiInventoryPage extends DistributionTab {
   }
 
   public String getNoProductsAddedMessage() {
+    if (noLineItems.getSize().getHeight() == 0 && noLineItems.getSize().getWidth() == 0) {
+      return null;
+    }
     return noLineItems.getText();
   }
 

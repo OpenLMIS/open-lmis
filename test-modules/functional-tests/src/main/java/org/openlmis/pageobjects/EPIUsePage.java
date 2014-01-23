@@ -337,6 +337,9 @@ public class EPIUsePage extends DistributionTab {
   }
 
   public String getNoProductsAddedMessage() {
+    if (noLineItems.getSize().getHeight() == 0 && noLineItems.getSize().getWidth() == 0) {
+      return null;
+    }
     return noLineItems.getText();
   }
 
