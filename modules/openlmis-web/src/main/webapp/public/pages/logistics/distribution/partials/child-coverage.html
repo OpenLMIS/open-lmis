@@ -63,7 +63,7 @@
             <tbody>
             <tr ng-repeat="lineItem in childCoverage.childCoverageLineItems">
               <td class="col-complete-vaccinated">
-                <span ng-bind="lineItem.vaccination"></span>
+                <span id="col{{lineItem.vaccination}}" ng-bind="lineItem.vaccination"></span>
               </td>
               <td class="col-complete-vaccinated col-target-group">
                 <span ng-bind="lineItem.targetGroup"></span>
