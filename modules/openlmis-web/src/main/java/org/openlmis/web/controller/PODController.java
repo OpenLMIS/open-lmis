@@ -20,8 +20,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 import java.text.ParseException;
@@ -44,7 +44,7 @@ public class PODController extends BaseController {
 
   @RequestMapping(value = "/pod-orders", method = POST, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'MANAGE_POD')")
-  public ResponseEntity<OpenLmisResponse> createPOD(HttpServletRequest request, @RequestBody Long orderId) throws ParseException {
+  public ResponseEntity<OpenLmisResponse> createPOD(HttpServletRequest request, @RequestParam Long orderId) throws ParseException {
     OrderPOD orderPOD = service.createPOD(orderId, loggedInUserId(request));
     OrderPODDTO orderPODDTO = OrderPODDTO.getOrderDetailsForPOD(orderService.getOrder(orderId));
     ResponseEntity<OpenLmisResponse> response = response(ORDER_POD, orderPOD);
@@ -52,9 +52,9 @@ public class PODController extends BaseController {
     return response;
   }
 
-  @RequestMapping(value = "/pod-orders/{podId}", method = GET, headers = ACCEPT_JSON)
+  @RequestMapping(value = "/pod-orders/{id}", method = GET, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'MANAGE_POD')")
-  public ResponseEntity<OpenLmisResponse> getPOD(@PathVariable("podId") Long podId) throws ParseException {
+  public ResponseEntity<OpenLmisResponse> getPOD(@PathVariable("id") Long podId) throws ParseException {
     OrderPOD orderPOD = service.getPodById(podId);
     OrderPODDTO orderPODDTO = OrderPODDTO.getOrderDetailsForPOD(orderService.getOrder(orderPOD.getOrderId()));
     ResponseEntity<OpenLmisResponse> response = response(ORDER_POD, orderPOD);

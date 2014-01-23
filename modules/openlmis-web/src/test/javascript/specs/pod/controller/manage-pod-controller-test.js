@@ -50,7 +50,7 @@ describe('ManagePODController', function () {
       order: {emergency: true}
     };
 
-    $httpBackend.expect('POST', '/pod-orders.json', orderId).respond(200, data);
+    $httpBackend.expectPOST('/pod-orders.json?orderId=1').respond(200, data);
 
     scope.createPOD(orderId);
     $httpBackend.flush();

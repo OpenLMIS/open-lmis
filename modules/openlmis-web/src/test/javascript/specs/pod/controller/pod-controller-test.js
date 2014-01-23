@@ -13,13 +13,13 @@ describe('PODController', function () {
 
   beforeEach(module('openlmis.services'));
   beforeEach(inject(function ($rootScope, $controller, _$httpBackend_) {
-    var orderId = '1234';
+    var podId = '1234';
 
     scope = $rootScope.$new();
     controller = $controller;
     $httpBackend = _$httpBackend_;
 
-    routeParams = { orderId: orderId};
+    routeParams = { id: podId};
     scope.$parent.pod = undefined;
     responseData = {
       orderPOD: {
@@ -34,7 +34,7 @@ describe('PODController', function () {
         emergency: true
       }
     };
-    $httpBackend.expect('GET', '/pod-orders/' + orderId + '.json').respond(200, responseData);
+    $httpBackend.expect('GET', '/pod-orders/' + podId + '.json').respond(200, responseData);
     controller(PODController, {$scope: scope, $routeParams: routeParams});
     $httpBackend.flush();
   }));

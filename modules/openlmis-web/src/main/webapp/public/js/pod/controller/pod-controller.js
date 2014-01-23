@@ -21,7 +21,7 @@ function PODController($scope, OrderPOD, $routeParams) {
   ];
 
   if (!$scope.$parent.pod) {
-    OrderPOD.get({orderId: $routeParams.orderId}, function (data) {
+    OrderPOD.get({id: $routeParams.id}, function (data) {
       $scope.pod = data.orderPOD;
       $scope.order = data.order;
       $scope.requisitionType = $scope.order.emergency ? "requisition.type.emergency" : "requisition.type.regular";

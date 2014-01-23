@@ -11,6 +11,6 @@
 angular.module('pod', ['openlmis', 'ngGrid', 'ui.bootstrap']).config(['$routeProvider', function ($routeProvider) {
   $routeProvider.
       when('/manage-pod-orders', {controller: ManagePODController, templateUrl: 'partials/manage-pod.html'}).
-      when('/pod-orders/:orderId', {controller: PODController, templateUrl: 'partials/pod.html'}).
+      when('/pod-orders/:id', {controller: PODController, templateUrl: 'partials/pod.html'}).
       otherwise({redirectTo: '/manage-pod-orders'});
 }]);
