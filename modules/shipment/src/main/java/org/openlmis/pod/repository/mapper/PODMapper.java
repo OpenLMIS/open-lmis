@@ -56,5 +56,10 @@ public interface PODMapper {
                                           @Param("n") Integer n, @Param("startDate") Date startDate);
 
   @Select({"SELECT * FROM pod WHERE orderId = #{orderId}"})
+  @Results(value = {
+    @Result(column = "id", property = "id"),
+    @Result(property = "podLineItems", javaType = List.class, column = "id",
+      many = @Many(select = "org.openlmis.pod.repository.mapper.PODMapper.getPODLineItemsByPODId")),
+  })
   OrderPOD getPODByOrderId(Long orderId);
 }

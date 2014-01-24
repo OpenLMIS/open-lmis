@@ -15,6 +15,8 @@ import org.junit.rules.ExpectedException;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.rnr.builder.RnrLineItemBuilder;
 import org.openlmis.rnr.domain.RnrLineItem;
+import org.openlmis.shipment.builder.ShipmentLineItemBuilder;
+import org.openlmis.shipment.domain.ShipmentLineItem;
 
 import static com.natpryce.makeiteasy.MakeItEasy.a;
 import static com.natpryce.makeiteasy.MakeItEasy.make;
@@ -60,12 +62,25 @@ public class OrderPODLineItemTest {
   public void shouldCreateOrderPODLineItemFromRnrLineItem() throws Exception {
     RnrLineItem rnrLineItem = make(a(RnrLineItemBuilder.defaultRnrLineItem));
 
-    OrderPODLineItem orderPODLineItem = OrderPODLineItem.createFrom(rnrLineItem);
+    OrderPODLineItem orderPODLineItem = new OrderPODLineItem(rnrLineItem);
 
     assertThat(orderPODLineItem.getProductCode(), is(rnrLineItem.getProductCode()));
     assertThat(orderPODLineItem.getProductName(), is(rnrLineItem.getProduct()));
     assertThat(orderPODLineItem.getPacksToShip(), is(rnrLineItem.getPacksToShip()));
     assertThat(orderPODLineItem.getDispensingUnit(), is(rnrLineItem.getDispensingUnit()));
     assertThat(orderPODLineItem.getFullSupply(), is(rnrLineItem.getFullSupply()));
+  }
+
+  @Test
+  public void shouldCreateOrderPODLineItemFromShipmentLineItem() throws Exception {
+    ShipmentLineItem shipmentLineItem = make(a(ShipmentLineItemBuilder.defaultShipmentLineItem));
+
+    OrderPODLineItem orderPODLineItem = new OrderPODLineItem(shipmentLineItem);
+
+    assertThat(orderPODLineItem.getProductCode(), is(shipmentLineItem.getProductCode()));
+    assertThat(orderPODLineItem.getProductName(), is(shipmentLineItem.getProductName()));
+    assertThat(orderPODLineItem.getPacksToShip(), is(shipmentLineItem.getPacksToShip()));
+    assertThat(orderPODLineItem.getDispensingUnit(), is(shipmentLineItem.getDispensingUnit()));
+//    assertThat(orderPODLineItem.getFullSupply(), is(shipmentLineItem.getFullSupply()));
   }
 }

@@ -45,7 +45,7 @@ import java.util.Set;
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.openlmis.core.builder.FacilityBuilder.*;
@@ -349,7 +349,22 @@ public class OrderServiceTest {
     assertThat(orderService.isShippable(orderId), is(true));
 
     verify(orderRepository).getStatus(123L);
+  }
 
+  @Test
+  public void shouldReturnTrueIfOrderInOneOfTheStatuses() throws Exception {
+    long orderId = 123L;
+    when(orderRepository.getStatus(orderId)).thenReturn(RELEASED);
+
+    assertTrue(orderService.hasStatus(orderId, PACKED, RELEASED));
+  }
+
+  @Test
+  public void shouldReturnFalseIfOrderInOneOfTheStatuses() throws Exception {
+    long orderId = 123L;
+    when(orderRepository.getStatus(orderId)).thenReturn(RELEASED);
+
+    assertFalse(orderService.hasStatus(orderId, PACKED, TRANSFER_FAILED));
   }
 
   @Test

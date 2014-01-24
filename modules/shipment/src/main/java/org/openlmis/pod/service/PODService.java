@@ -22,6 +22,8 @@ import org.openlmis.pod.domain.OrderPODLineItem;
 import org.openlmis.pod.repository.PODRepository;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.service.RequisitionService;
+import org.openlmis.shipment.domain.ShipmentLineItem;
+import org.openlmis.shipment.service.ShipmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,6 +32,7 @@ import java.util.Date;
 import java.util.List;
 
 import static org.openlmis.core.domain.Right.MANAGE_POD;
+import static org.openlmis.order.domain.OrderStatus.*;
 
 @Service
 public class PODService {
@@ -46,27 +49,22 @@ public class PODService {
   @Autowired
   private FulfillmentPermissionService fulfillmentPermissionService;
 
+  @Autowired
+  private ShipmentService shipmentService;
+
   @Transactional
-  public OrderPOD createPOD(Long orderId, Long userId) {
-    OrderPOD orderPOD = save(orderId, userId);
-    return podRepository.getPODWithLineItemsById(orderPOD.getId());
-  }
-
-  private OrderPOD save(Long orderId, Long userId) {
-    OrderPOD orderPOD = new OrderPOD();
-    orderPOD.setOrderId(orderId);
-    orderPOD.setCreatedBy(userId);
-    orderPOD.setModifiedBy(userId);
-
+  public OrderPOD createPOD(OrderPOD orderPOD) {
     checkPermissions(orderPOD);
 
-    OrderPOD savedPOD = podRepository.getPODByOrderId(orderId);
-    if (savedPOD == null) {
-      insertOrderPOD(orderPOD);
-      insertLineItems(orderPOD);
-      return orderPOD;
-    } else
-      return savedPOD;
+    if (orderService.hasStatus(orderPOD.getOrderId(), RELEASED, READY_TO_PACK, TRANSFER_FAILED)) {
+      Rnr requisition = requisitionService.getFullRequisitionById(orderPOD.getOrderId());
+      orderPOD.fillPODWithRequisition(requisition);
+    } else if (orderService.hasStatus(orderPOD.getOrderId(), PACKED)) {
+      List<ShipmentLineItem> shipmentLineItems = shipmentService.getLineItems(orderPOD.getOrderId());
+      orderPOD.fillPodLineItems(shipmentLineItems);
+    }
+
+    return podRepository.insert(orderPOD);
   }
 
   public void updateOrderStatus(OrderPOD orderPod) {
@@ -85,7 +83,7 @@ public class PODService {
   }
 
   public void checkPermissions(OrderPOD orderPod) {
-    if (!fulfillmentPermissionService.hasPermission(orderPod.getCreatedBy(), getWarehouseForOrder(orderPod.getOrderId()), MANAGE_POD)) {
+    if (!fulfillmentPermissionService.hasPermission(orderPod.getCreatedBy(), orderPod.getOrderId(), MANAGE_POD)) {
       throw new DataException("error.permission.denied");
     }
   }
@@ -100,18 +98,6 @@ public class PODService {
 
   public void insertPOD(OrderPOD orderPod) {
     podRepository.insertPOD(orderPod);
-  }
-
-  private Long getWarehouseForOrder(Long orderId) {
-    Order order = orderService.getOrder(orderId);
-    return order.getSupplyingFacility().getId();
-  }
-
-  private void insertOrderPOD(OrderPOD orderPod) {
-    Rnr requisition = requisitionService.getFullRequisitionById(orderPod.getOrderId());
-    orderPod.fillPOD(requisition);
-    orderPod.fillPodLineItems(requisition.getAllLineItems());
-    insertPOD(orderPod);
   }
 
   public OrderPOD getPodById(Long podId) {

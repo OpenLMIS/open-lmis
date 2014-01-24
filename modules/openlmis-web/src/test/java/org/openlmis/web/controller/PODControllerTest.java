@@ -33,14 +33,16 @@ import org.springframework.mock.web.MockHttpSession;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.MockitoAnnotations.initMocks;
 import static org.openlmis.web.controller.PODController.ORDER;
 import static org.openlmis.web.controller.PODController.ORDER_POD;
-import static org.powermock.api.mockito.PowerMockito.mockStatic;
+import static org.powermock.api.mockito.PowerMockito.*;
 
 @Category(UnitTests.class)
 @RunWith(PowerMockRunner.class)
-@PrepareForTest(OrderPODDTO.class)
+@PrepareForTest({OrderPODDTO.class, PODController.class})
 public class PODControllerTest {
 
   private static final Long USER_ID = 1L;
@@ -58,6 +60,7 @@ public class PODControllerTest {
 
   @Before
   public void setUp() throws Exception {
+    initMocks(this);
     request = new MockHttpServletRequest();
     MockHttpSession session = new MockHttpSession();
     session.setAttribute(UserAuthenticationSuccessHandler.USER, USER);
@@ -71,21 +74,27 @@ public class PODControllerTest {
     Long orderId = 1L;
 
     OrderPOD orderPOD = new OrderPOD();
-    mockStatic(OrderPODDTO.class);
+    OrderPOD createdPOD = new OrderPOD();
 
-    when(service.createPOD(orderId, USER_ID)).thenReturn(orderPOD);
+    whenNew(OrderPOD.class).withArguments(orderId, USER_ID).thenReturn(orderPOD);
+    when(service.getPODByOrderId(orderId)).thenReturn(null);
+    when(service.createPOD(orderPOD)).thenReturn(createdPOD);
 
-    Order order = new Order();
-    when(orderService.getOrder(orderId)).thenReturn(order);
+    ResponseEntity<OpenLmisResponse> response = controller.createPOD(orderId, request);
 
-    OrderPODDTO orderPODDTO = mock(OrderPODDTO.class);
-    when(OrderPODDTO.getOrderDetailsForPOD(order)).thenReturn(orderPODDTO);
-
-    ResponseEntity<OpenLmisResponse> response = controller.createPOD(request, orderId);
-
-    verify(service).createPOD(orderId, USER_ID);
+    verify(service).createPOD(orderPOD);
     assertThat((OrderPOD) response.getBody().getData().get(ORDER_POD), is(orderPOD));
-    assertThat((OrderPODDTO) response.getBody().getData().get(ORDER), is(orderPODDTO));
+    assertThat(response.getStatusCode(), is(HttpStatus.CREATED));
+  }
+
+  @Test
+  public void shouldGetPODIfAlreadyExistsForOrder() throws Exception {
+    OrderPOD existingPOD = new OrderPOD();
+    when(service.getPODByOrderId(2L)).thenReturn(existingPOD);
+
+    ResponseEntity<OpenLmisResponse> response = controller.createPOD(2L, request);
+
+    assertThat((OrderPOD) response.getBody().getData().get(PODController.ORDER_POD), is(existingPOD));
     assertThat(response.getStatusCode(), is(HttpStatus.OK));
   }
 

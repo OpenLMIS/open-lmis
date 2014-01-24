@@ -76,4 +76,24 @@ public class PODRepositoryTest {
     verify(podMapper).getPODById(podId);
     assertThat(orderPod, is(expectedOrderPOD));
   }
+
+  @Test
+  public void shouldInsertPODWithLineItems() throws Exception {
+    OrderPOD orderPOD = new OrderPOD();
+    Long podId = 12345L;
+    orderPOD.setId(podId);
+    OrderPODLineItem lineItem = new OrderPODLineItem();
+    OrderPODLineItem lineItem2 = new OrderPODLineItem();
+    lineItem2.setDispensingUnit("unit");
+    orderPOD.setPodLineItems(asList(lineItem, lineItem2));
+    lineItem.setPodId(podId);
+
+    podRepository.insert(orderPOD);
+
+    verify(podMapper).insertPOD(orderPOD);
+    verify(podMapper).insertPODLineItem(lineItem);
+    verify(podMapper).insertPODLineItem(lineItem2);
+    assertThat(lineItem.getPodId(), is(podId));
+    assertThat(lineItem2.getPodId(), is(podId));
+  }
 }

@@ -18,7 +18,9 @@ import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.openlmis.core.domain.BaseModel;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.message.OpenLmisMessage;
+import org.openlmis.rnr.domain.LineItem;
 import org.openlmis.rnr.domain.RnrLineItem;
+import org.openlmis.shipment.domain.ShipmentLineItem;
 
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
@@ -49,6 +51,14 @@ public class OrderPODLineItem extends BaseModel {
     this.quantityReceived = quantityReceived;
   }
 
+  public OrderPODLineItem(LineItem lineItem) {
+    if (lineItem.isRnrLineItem()) {
+      create((RnrLineItem) lineItem);
+      return;
+    }
+    create((ShipmentLineItem) lineItem);
+  }
+
   public void validate() {
     if (isEmpty(productCode) || quantityReceived == null) {
       throw new DataException("error.mandatory.fields.missing");
@@ -58,17 +68,25 @@ public class OrderPODLineItem extends BaseModel {
     }
   }
 
-  //Factory Pattern
-  public static OrderPODLineItem createFrom(RnrLineItem rnrLineItem) {
-    OrderPODLineItem orderPODLineItem = new OrderPODLineItem();
-    orderPODLineItem.setProductCode(rnrLineItem.getProductCode());
-    orderPODLineItem.setProductCategory(rnrLineItem.getProductCategory());
-    orderPODLineItem.setProductCategoryDisplayOrder(rnrLineItem.getProductCategoryDisplayOrder());
-    orderPODLineItem.setProductDisplayOrder(rnrLineItem.getProductDisplayOrder());
-    orderPODLineItem.setProductName(rnrLineItem.getProduct());
-    orderPODLineItem.setDispensingUnit(rnrLineItem.getDispensingUnit());
-    orderPODLineItem.setPacksToShip(rnrLineItem.getPacksToShip());
-    orderPODLineItem.setFullSupply(rnrLineItem.getFullSupply());
-    return orderPODLineItem;
+  private void create(RnrLineItem rnrLineItem) {
+    this.setProductCode(rnrLineItem.getProductCode());
+    this.setProductCategory(rnrLineItem.getProductCategory());
+    this.setProductCategoryDisplayOrder(rnrLineItem.getProductCategoryDisplayOrder());
+    this.setProductDisplayOrder(rnrLineItem.getProductDisplayOrder());
+    this.setProductName(rnrLineItem.getProduct());
+    this.setDispensingUnit(rnrLineItem.getDispensingUnit());
+    this.setPacksToShip(rnrLineItem.getPacksToShip());
+    this.setFullSupply(rnrLineItem.getFullSupply());
+  }
+
+  private void create(ShipmentLineItem shipmentLineItem) {
+    this.setProductCode(shipmentLineItem.getProductCode());
+    this.setProductCategory(shipmentLineItem.getProductCategory());
+//    this.setProductCategoryDisplayOrder(shipmentLineItem.getProductCategoryDisplayOrder());
+//    this.setProductDisplayOrder(shipmentLineItem.getProductDisplayOrder());
+    this.setProductName(shipmentLineItem.getProductName());
+    this.setDispensingUnit(shipmentLineItem.getDispensingUnit());
+    this.setPacksToShip(shipmentLineItem.getPacksToShip());
+//    this.setFullSupply(shipmentLineItem.getFullSupply());
   }
 }

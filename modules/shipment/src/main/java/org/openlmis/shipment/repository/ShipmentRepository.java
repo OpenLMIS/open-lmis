@@ -19,6 +19,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 @NoArgsConstructor
 public class ShipmentRepository {
@@ -44,5 +46,9 @@ public class ShipmentRepository {
     } catch (DataIntegrityViolationException exception) {
       throw new DataException("error.incorrect.length");
     }
+  }
+
+  public List<ShipmentLineItem> getLineItems(Long orderId) {
+    return shipmentMapper.getLineItems(orderId);
   }
 }

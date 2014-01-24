@@ -19,6 +19,7 @@ import org.openlmis.shipment.domain.ShipmentLineItem;
 import org.springframework.stereotype.Repository;
 
 import java.util.Date;
+import java.util.List;
 
 
 @Repository
@@ -51,4 +52,7 @@ public interface ShipmentMapper {
 
   @Select("SELECT modifiedDate FROM shipment_line_items WHERE orderId = #{orderId} LIMIT 1")
   Date getProcessedTimeStamp(ShipmentLineItem shipmentLineItem);
+
+  @Select({"SELECT * FROM shipment_line_items WHERE orderId = #{orderId}"})
+  List<ShipmentLineItem> getLineItems(Long orderId);
 }

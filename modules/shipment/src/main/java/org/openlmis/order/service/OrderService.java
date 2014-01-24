@@ -41,6 +41,7 @@ import java.util.TreeSet;
 import static java.util.Arrays.asList;
 import static java.util.Collections.sort;
 import static org.apache.commons.collections.CollectionUtils.collect;
+import static org.apache.commons.lang.ArrayUtils.contains;
 import static org.openlmis.order.domain.OrderStatus.*;
 
 @Service
@@ -155,8 +156,7 @@ public class OrderService {
   }
 
   public boolean isShippable(Long orderId) {
-    List<OrderStatus> shippableOrderStatuses = asList(RELEASED);
-    return shippableOrderStatuses.contains(orderRepository.getStatus(orderId));
+    return hasStatus(orderId, RELEASED);
   }
 
   public Integer getNumberOfPages() {
@@ -201,5 +201,9 @@ public class OrderService {
       }
     }
     return lineItemsForOrder;
+  }
+
+  public boolean hasStatus(Long orderId, OrderStatus... statuses) {
+    return contains(statuses, orderRepository.getStatus(orderId));
   }
 }

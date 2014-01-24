@@ -45,4 +45,14 @@ public class PODRepository {
   public OrderPOD getPODWithLineItemsById(Long podId) {
     return podMapper.getPODById(podId);
   }
+
+  public OrderPOD insert(OrderPOD orderPOD) {
+    podMapper.insertPOD(orderPOD);
+    for (OrderPODLineItem orderPodLineItem : orderPOD.getPodLineItems()) {
+      orderPodLineItem.setPodId(orderPOD.getId());
+      podMapper.insertPODLineItem(orderPodLineItem);
+    }
+
+    return orderPOD;
+  }
 }

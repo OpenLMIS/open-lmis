@@ -22,6 +22,8 @@ import org.openlmis.shipment.repository.ShipmentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @NoArgsConstructor
 public class ShipmentService {
@@ -57,4 +59,7 @@ public class ShipmentService {
     shipmentRepository.insertShipmentFileInfo(shipmentFileInfo);
   }
 
+  public List<ShipmentLineItem> getLineItems(long orderId) {
+    return shipmentRepository.getLineItems(orderId);
+  }
 }

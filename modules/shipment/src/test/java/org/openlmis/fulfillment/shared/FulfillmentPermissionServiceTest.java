@@ -17,19 +17,21 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.Right;
 import org.openlmis.core.service.RoleRightsService;
 import org.openlmis.db.categories.IntegrationTests;
+import org.openlmis.order.domain.Order;
+import org.openlmis.order.service.OrderService;
 
 import java.util.HashSet;
 import java.util.Set;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static org.openlmis.core.domain.Right.FACILITY_FILL_SHIPMENT;
-import static org.openlmis.core.domain.Right.MANAGE_POD;
-import static org.openlmis.core.domain.Right.VIEW_ORDER;
+import static org.openlmis.core.domain.Right.*;
 
 @Category(IntegrationTests.class)
 @RunWith(MockitoJUnitRunner.class)
@@ -37,6 +39,9 @@ public class FulfillmentPermissionServiceTest {
 
   @Mock
   private RoleRightsService roleRightsService;
+
+  @Mock
+  private OrderService orderService;
 
   @InjectMocks
   private FulfillmentPermissionService fulfillmentPermissionService;
@@ -47,9 +52,15 @@ public class FulfillmentPermissionServiceTest {
       add(MANAGE_POD);
       add(FACILITY_FILL_SHIPMENT);
     }};
-    when(roleRightsService.getRightsForUserAndWarehouse(1l, 2l)).thenReturn(rights);
+    long userId = 1L;
+    long orderId = 2L;
+    long facilityID = 12345L;
+    when(roleRightsService.getRightsForUserAndWarehouse(userId, facilityID)).thenReturn(rights);
+    Order order = mock(Order.class);
+    when(order.getSupplyingFacility()).thenReturn(new Facility(facilityID));
+    when(orderService.getOrder(2l)).thenReturn(order);
 
-    Boolean hasRight = fulfillmentPermissionService.hasPermission(1l, 2l, MANAGE_POD);
+    Boolean hasRight = fulfillmentPermissionService.hasPermission(userId, orderId, MANAGE_POD);
 
     assertThat(hasRight, is(true));
   }
@@ -60,9 +71,16 @@ public class FulfillmentPermissionServiceTest {
       add(VIEW_ORDER);
       add(FACILITY_FILL_SHIPMENT);
     }};
-    when(roleRightsService.getRightsForUserAndWarehouse(1l, 2l)).thenReturn(rights);
+    long userId = 1l;
+    long orderId = 2L;
+    long facilityID = 12345L;
 
-    Boolean hasRight = fulfillmentPermissionService.hasPermission(1l, 2l, MANAGE_POD);
+    when(roleRightsService.getRightsForUserAndWarehouse(userId, orderId)).thenReturn(rights);
+    Order order = mock(Order.class);
+    when(order.getSupplyingFacility()).thenReturn(new Facility(facilityID));
+    when(orderService.getOrder(orderId)).thenReturn(order);
+
+    Boolean hasRight = fulfillmentPermissionService.hasPermission(userId, orderId, MANAGE_POD);
 
     assertThat(hasRight, is(false));
   }

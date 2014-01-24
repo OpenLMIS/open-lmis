@@ -29,7 +29,12 @@ import org.openlmis.shipment.domain.ShipmentFileInfo;
 import org.openlmis.shipment.domain.ShipmentLineItem;
 import org.openlmis.shipment.repository.ShipmentRepository;
 
+import java.util.List;
+
 import static com.natpryce.makeiteasy.MakeItEasy.*;
+import static java.util.Arrays.asList;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
 import static org.openlmis.core.builder.ProductBuilder.defaultProduct;
 import static org.openlmis.rnr.builder.RnrLineItemBuilder.defaultRnrLineItem;
@@ -147,4 +152,15 @@ public class ShipmentServiceTest {
     verify(shipmentRepository).insertShipmentFileInfo(shipmentFileInfo);
   }
 
+  @Test
+  public void shouldGetAllShipmentLineItemsForAnOrder() throws Exception {
+    Long orderId = 12345L;
+
+    List<ShipmentLineItem> expectedLineItems = asList(new ShipmentLineItem());
+    when(shipmentRepository.getLineItems(orderId)).thenReturn(expectedLineItems);
+
+    List<ShipmentLineItem> lineItems = shipmentService.getLineItems(orderId);
+
+    assertThat(lineItems, is(expectedLineItems));
+  }
 }
