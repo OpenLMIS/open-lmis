@@ -367,12 +367,12 @@ public class ManageDistribution extends TestCaseHelper {
     List<Map<String, String>> data = tableData.asMaps();
     Map<String, String> epiDetails = dbWrapper.getEpiUseDetails(productGroupCode, facilityCode);
     for (Map map : data) {
-      assertEquals(map.get("firstOfMonth").toString(), epiDetails.get("stockAtFirstOfMonth"));
+      assertEquals(map.get("firstOfMonth").toString(), epiDetails.get("stockatfirstofmonth"));
       assertEquals(map.get("received").toString(), epiDetails.get("received"));
       assertEquals(map.get("distributed").toString(), epiDetails.get("distributed"));
       assertEquals(map.get("loss").toString(), epiDetails.get("loss"));
-      assertEquals(map.get("endOfMonth").toString(), epiDetails.get("stockAtEndOfMonth"));
-      assertEquals(map.get("expirationDate").toString(), epiDetails.get("expirationDate"));
+      assertEquals(map.get("endOfMonth").toString(), epiDetails.get("stockatendofmonth"));
+      assertEquals(map.get("expirationDate").toString(), epiDetails.get("expirationdate"));
     }
   }
 
@@ -399,10 +399,10 @@ public class ManageDistribution extends TestCaseHelper {
     List<Map<String, String>> data = tableData.asMaps();
     Map<String, String> fullCoveragesDetails = dbWrapper.getFullCoveragesDetails(facilityCode);
     for (Map map : data) {
-      assertEquals(map.get("femaleHealthCenter").toString(), fullCoveragesDetails.get("femaleHealthCenter"));
-      assertEquals(map.get("femaleOutreach").toString(), fullCoveragesDetails.get("femaleOutReach"));
-      assertEquals(map.get("maleHealthCenter").toString(), fullCoveragesDetails.get("maleHealthCenter"));
-      assertEquals(map.get("maleOutreach").toString(), fullCoveragesDetails.get("maleOutReach"));
+      assertEquals(map.get("femaleHealthCenter").toString(), fullCoveragesDetails.get("femalehealthcenter"));
+      assertEquals(map.get("femaleOutreach").toString(), fullCoveragesDetails.get("femaleoutreach"));
+      assertEquals(map.get("maleHealthCenter").toString(), fullCoveragesDetails.get("malehealthcenter"));
+      assertEquals(map.get("maleOutreach").toString(), fullCoveragesDetails.get("maleoutreach"));
     }
   }
 
