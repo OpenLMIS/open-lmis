@@ -11,6 +11,7 @@
 package org.openlmis.functional;
 
 
+import com.thoughtworks.selenium.SeleneseTestBase;
 import org.openlmis.UiUtils.CaptureScreenshotOnFailureListener;
 import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.UiUtils.TestWebDriver;
@@ -18,6 +19,8 @@ import org.openlmis.pageobjects.*;
 import org.openqa.selenium.JavascriptExecutor;
 import org.testng.annotations.*;
 
+import java.io.IOException;
+import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,6 +51,7 @@ public class E2EDistributionTest extends TestCaseHelper {
 
     List<String> rightsList = new ArrayList<String>();
     rightsList.add("MANAGE_DISTRIBUTION");
+    rightsList.add("ADMIN");
     setupTestDataToInitiateRnRAndDistribution(facilityCodeFirst, facilityCodeSecond, true, programFirst, userSIC, "200", rightsList, programSecond, "District1", "Ngorongoro", "Ngorongoro");
     setupDataForDeliveryZone(true, deliveryZoneCodeFirst, deliveryZoneCodeSecond,
       deliveryZoneNameFirst, deliveryZoneNameSecond,
@@ -61,6 +65,9 @@ public class E2EDistributionTest extends TestCaseHelper {
     dbWrapper.insertProgramProduct("Product5", programFirst, "10", "false");
     dbWrapper.insertProgramProduct("Product6", programFirst, "10", "true");
     dbWrapper.deleteDeliveryZoneMembers(facilityCodeSecond);
+    dbWrapper.setUpDataForChildCoverage();
+    dbWrapper.insertRegimenProductMapping();
+    configureISA();
 
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     testWebDriver.sleep(1000);
@@ -143,6 +150,16 @@ public class E2EDistributionTest extends TestCaseHelper {
 
     GeneralObservationPage generalObservationPage = epiUsePage.navigateToGeneralObservations();
     generalObservationPage.enterData("some observations", "samuel", "Doe", "Verifier", "XYZ");
+
+    ChildCoveragePage childCoveragePage=generalObservationPage.navigateToChildCoverage();
+    SeleneseTestBase.assertEquals(childCoveragePage.getTextOfTargetGroupValue(9), "300");
+    SeleneseTestBase.assertEquals(childCoveragePage.getTextOfTargetGroupValue(10), "300");
+    SeleneseTestBase.assertEquals(childCoveragePage.getTextOfTargetGroupValue(11), "300");
+    SeleneseTestBase.assertEquals(childCoveragePage.getTextOfTargetGroupValue(1), "");
+    SeleneseTestBase.assertEquals(childCoveragePage.getTextOfTargetGroupValue(12), "");
+
+    ResultSet childCoverageDetails = dbWrapper.getChildCoverageDetails(childCoveragePage.getTextOfRegimenPCV10Dose1(),"F10");
+    SeleneseTestBase.assertEquals("300", childCoverageDetails.getInt("targetGroup"));
 
     homePage.navigateHomePage();
     homePage.navigateOfflineDistribution();
@@ -256,6 +273,16 @@ public class E2EDistributionTest extends TestCaseHelper {
     String[] refrigeratorDetailsOnUI = data.split(";");
     for (int i = 0; i < refrigeratorDetails.length; i++)
       assertEquals(testWebDriver.getElementByXpath("//div[@class='list-row ng-scope']/ng-include/form/div[1]/div[" + (i + 2) + "]").getText(), refrigeratorDetailsOnUI[i]);
+  }
+
+  private void configureISA() throws IOException {
+
+    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+    HomePage homePage = loginPage.loginAs("Admin123", "Admin123");
+
+    ProgramProductISAPage programProductISAPage = homePage.navigateProgramProductISA();
+    programProductISAPage.fillProgramProductISA("VACCINES", "90", "1", "50", "30", "0", "100", "2000", "333");
+    homePage.logout();
   }
 
   @AfterMethod(groups = {"offline"})
