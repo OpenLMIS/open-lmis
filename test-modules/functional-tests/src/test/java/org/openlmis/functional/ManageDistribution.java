@@ -367,12 +367,12 @@ public class ManageDistribution extends TestCaseHelper {
     List<Map<String, String>> data = tableData.asMaps();
     Map<String, String> epiDetails = dbWrapper.getEpiUseDetails(productGroupCode, facilityCode);
     for (Map map : data) {
-      assertEquals(map.get("firstOfMonth").toString(), epiDetails.get("stockatfirstofmonth"));
+      assertEquals(map.get("firstOfMonth").toString(), epiDetails.get("stockAtFirstOfMonth"));
       assertEquals(map.get("received").toString(), epiDetails.get("received"));
       assertEquals(map.get("distributed").toString(), epiDetails.get("distributed"));
       assertEquals(map.get("loss").toString(), epiDetails.get("loss"));
-      assertEquals(map.get("endOfMonth").toString(), epiDetails.get("stockatendofmonth"));
-      assertEquals(map.get("expirationDate").toString(), epiDetails.get("expirationdate"));
+      assertEquals(map.get("endOfMonth").toString(), epiDetails.get("stockAtEndOfMonth"));
+      assertEquals(map.get("expirationDate").toString(), epiDetails.get("expirationDate"));
     }
   }
 
@@ -399,10 +399,10 @@ public class ManageDistribution extends TestCaseHelper {
     List<Map<String, String>> data = tableData.asMaps();
     Map<String, String> fullCoveragesDetails = dbWrapper.getFullCoveragesDetails(facilityCode);
     for (Map map : data) {
-      assertEquals(map.get("femaleHealthCenter").toString(), fullCoveragesDetails.get("femalehealthcenter"));
-      assertEquals(map.get("femaleOutreach").toString(), fullCoveragesDetails.get("femaleoutreach"));
-      assertEquals(map.get("maleHealthCenter").toString(), fullCoveragesDetails.get("malehealthcenter"));
-      assertEquals(map.get("maleOutreach").toString(), fullCoveragesDetails.get("maleoutreach"));
+      assertEquals(map.get("femaleHealthCenter").toString(), fullCoveragesDetails.get("femaleHealthCenter"));
+      assertEquals(map.get("femaleOutreach").toString(), fullCoveragesDetails.get("femaleOutReach"));
+      assertEquals(map.get("maleHealthCenter").toString(), fullCoveragesDetails.get("maleHealthCenter"));
+      assertEquals(map.get("maleOutreach").toString(), fullCoveragesDetails.get("maleOutReach"));
     }
   }
 
@@ -514,7 +514,7 @@ public class ManageDistribution extends TestCaseHelper {
   @Then("^I verify distribution not initiated$")
   public void verifyDistributionNotInitiated() throws IOException {
     distributionPage = PageFactory.getInstanceOfDistributionPage(testWebDriver);
-    distributionPage.verifyFacilityNotSupportedMessage("VACCINES","Delivery Zone First");
+    distributionPage.verifyFacilityNotSupportedMessage("VACCINES", "Delivery Zone First");
     distributionPage.verifyNoDistributionCachedMessage();
   }
 
@@ -543,8 +543,7 @@ public class ManageDistribution extends TestCaseHelper {
                                                   String deliveryZoneCodeSecond,
                                                   String deliveryZoneNameFirst, String deliveryZoneNameSecond,
                                                   String facilityCodeFirst, String facilityCodeSecond,
-                                                  String programFirst, String programSecond, String schedule,
-                                                  String period, Integer totalNumberOfPeriods) throws Exception {
+                                                  String programFirst, String programSecond, String schedule) throws Exception {
 
     List<String> rightsList = new ArrayList<>();
     rightsList.add("MANAGE_DISTRIBUTION");
@@ -807,8 +806,7 @@ public class ManageDistribution extends TestCaseHelper {
                                                                                       String deliveryZoneCodeSecond,
                                                                                       String deliveryZoneNameFirst, String deliveryZoneNameSecond,
                                                                                       String facilityCodeFirst, String facilityCodeSecond,
-                                                                                      String programFirst, String programSecond, String schedule,
-                                                                                      String period, Integer totalNumberOfPeriods) throws Exception {
+                                                                                      String programFirst, String programSecond, String schedule) throws Exception {
 
     List<String> rightsList = new ArrayList<>();
     rightsList.add("MANAGE_DISTRIBUTION");
@@ -827,7 +825,7 @@ public class ManageDistribution extends TestCaseHelper {
     dbWrapper.insertProductWithGroup("Product6", "ProductName6", productGroupCode, true);
     dbWrapper.insertProgramProduct("Product5", programFirst, "10", "false");
     dbWrapper.insertProgramProduct("Product6", programFirst, "10", "true");
-    dbWrapper.updateActiveStatusOfProduct("Product6","false");
+    dbWrapper.updateActiveStatusOfProduct("Product6", "false");
 
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(userSIC, password);
