@@ -22,25 +22,16 @@ import java.util.Map;
 import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
 import static org.openqa.selenium.support.How.ID;
 
-public class CoveragePage extends DistributionTab {
+public class FullCoveragePage extends DistributionTab {
 
   @FindBy(how = ID, using = "coverageTabLabel")
-  private static WebElement coverageTab = null;
+  private static WebElement fullCoverageTabLabel = null;
 
   @FindBy(how = ID, using = "coverageTabIcon")
-  public static WebElement coverageIndicator = null;
+  public static WebElement fullCoverageIndicator = null;
 
   @FindBy(how = ID, using = "coverageHeader")
-  public static WebElement coverageHeader = null;
-
-  @FindBy(how = ID, using = "fullTab")
-  public static WebElement fullTab = null;
-
-  @FindBy(how = ID, using = "childrenTab")
-  public static WebElement childrenTab = null;
-
-  @FindBy(how = ID, using = "adultsTab")
-  public static WebElement adultsTab = null;
+  public static WebElement fullCoverageHeader = null;
 
   @FindBy(how = ID, using = "completeVaccinatedHeader")
   public static WebElement completeVaccinatedHeader = null;
@@ -70,7 +61,7 @@ public class CoveragePage extends DistributionTab {
   public static WebElement maleMobileBrigadeField = null;
 
   @FindBy(how = ID, using = "CoverageFormApplyNRToAll")
-  public static WebElement coverageFormApplyNRToAll = null;
+  public static WebElement fullCoverageFormApplyNRToAll = null;
 
   @FindBy(how = ID, using = "coverageFemaleHC")
   public static WebElement femaleHealthCenterNR = null;
@@ -87,20 +78,20 @@ public class CoveragePage extends DistributionTab {
   @FindBy(how = ID, using = "coverageMaleMB")
   public static WebElement maleMobileBrigadeNR = null;
 
-  private Map<String, WebElement> coveragePageElements = new HashMap<String, WebElement>() {{
+  private Map<String, WebElement> fullCoveragePageElements = new HashMap<String, WebElement>() {{
     put("femaleHealthCenter", femaleHealthCenterField);
     put("femaleMobileBrigade", femaleMobileBrigadeField);
     put("maleHealthCenter", maleHealthCenterField);
     put("maleMobileBrigade", maleMobileBrigadeField);
   }};
 
-  public CoveragePage(TestWebDriver driver) {
+  public FullCoveragePage(TestWebDriver driver) {
     super(driver);
   }
 
   @Override
   public void verifyIndicator(String color) {
-    verifyOverallIndicator(coverageIndicator, color);
+    verifyOverallIndicator(fullCoverageIndicator, color);
   }
 
   @Override
@@ -114,25 +105,27 @@ public class CoveragePage extends DistributionTab {
 
   @Override
   public void verifyData(List<Map<String, String>> data) {
-    for (Map<String, String> coverageData : data) {
-      assertEquals(coveragePageElements.get("femaleHealthCenter").getAttribute("value"), coverageData.get("femaleHealthCenter"));
-      assertEquals(coveragePageElements.get("femaleMobileBrigade").getAttribute("value"), coverageData.get("femaleMobileBrigade"));
-      assertEquals(coveragePageElements.get("maleHealthCenter").getAttribute("value"), coverageData.get("maleHealthCenter"));
-      assertEquals(coveragePageElements.get("maleMobileBrigade").getAttribute("value"), coverageData.get("maleMobileBrigade"));
+    for (Map<String, String> fullCoverageData : data) {
+      assertEquals(fullCoveragePageElements.get("femaleHealthCenter").getAttribute("value"), fullCoverageData.get("femaleHealthCenter"));
+      assertEquals(fullCoveragePageElements.get("femaleMobileBrigade").getAttribute("value"), fullCoverageData.get("femaleMobileBrigade"));
+      assertEquals(fullCoveragePageElements.get("maleHealthCenter").getAttribute("value"), fullCoverageData.get("maleHealthCenter"));
+      assertEquals(fullCoveragePageElements.get("maleMobileBrigade").getAttribute("value"), fullCoverageData.get("maleMobileBrigade"));
     }
   }
 
   @Override
   public void navigate() {
-    coverageTab.click();
+    fullCoverageTabLabel.click();
   }
 
+  public String getFullCoverageTabLabel() {
+    return fullCoverageTabLabel.getText();
+  }
 
   public void enterFemaleHealthCenter(Integer femaleHealthCenter) {
     testWebDriver.waitForElementToAppear(femaleHealthCenterField);
     sendKeys(femaleHealthCenterField, femaleHealthCenter.toString());
   }
-
 
   public void enterFemaleMobileBrigade(Integer femaleMobileBrigade) {
     testWebDriver.waitForElementToAppear(femaleMobileBrigadeField);
@@ -157,8 +150,8 @@ public class CoveragePage extends DistributionTab {
   }
 
   public void clickApplyNRToAll() {
-    testWebDriver.waitForElementToAppear(coverageFormApplyNRToAll);
-    coverageFormApplyNRToAll.click();
+    testWebDriver.waitForElementToAppear(fullCoverageFormApplyNRToAll);
+    fullCoverageFormApplyNRToAll.click();
     clickOkButton();
   }
 
@@ -182,9 +175,9 @@ public class CoveragePage extends DistributionTab {
     maleMobileBrigadeNR.click();
   }
 
-  public String getTextOfCoverageHeader() {
-    testWebDriver.waitForElementToAppear(coverageHeader);
-    return coverageHeader.getText();
+  public String getTextOfFullCoverageHeader() {
+    testWebDriver.waitForElementToAppear(fullCoverageHeader);
+    return fullCoverageHeader.getText();
   }
 
   public String getTextOfCompletelyVaccinatedHeader() {
@@ -213,13 +206,13 @@ public class CoveragePage extends DistributionTab {
   }
 
   public boolean getStatusForField(String fieldName) {
-    WebElement field = coveragePageElements.get(fieldName);
+    WebElement field = fullCoveragePageElements.get(fieldName);
     testWebDriver.waitForElementToAppear(field);
     return field.isEnabled();
   }
 
   public String getValueForField(String fieldName) {
-    WebElement field = coveragePageElements.get(fieldName);
+    WebElement field = fullCoveragePageElements.get(fieldName);
     testWebDriver.waitForElementToAppear(field);
     return field.getAttribute("value");
   }

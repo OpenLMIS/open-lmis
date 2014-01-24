@@ -28,7 +28,7 @@ import java.util.Map;
 import static com.thoughtworks.selenium.SeleneseTestBase.assertEquals;
 import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
 
-public class DistributionCoverageSyncTest extends TestCaseHelper {
+public class DistributionFullCoverageSyncTest extends TestCaseHelper {
   public static final String USER = "user";
   public static final String PASSWORD = "password";
   public static final String FIRST_DELIVERY_ZONE_CODE = "firstDeliveryZoneCode";
@@ -42,7 +42,7 @@ public class DistributionCoverageSyncTest extends TestCaseHelper {
   public static final String SCHEDULE = "schedule";
   public static final String PRODUCT_GROUP_CODE = "productGroupName";
 
-  public final Map<String, String> coverageData = new HashMap<String, String>() {{
+  public final Map<String, String> fullCoverageData = new HashMap<String, String>() {{
     put(USER, "fieldCoordinator");
     put(PASSWORD, "Admin123");
     put(FIRST_DELIVERY_ZONE_CODE, "DZ1");
@@ -61,7 +61,7 @@ public class DistributionCoverageSyncTest extends TestCaseHelper {
   public void setUp() throws Exception {
     super.setup();
 
-    Map<String, String> dataMap = coverageData;
+    Map<String, String> dataMap = fullCoverageData;
 
     setupDataForDistributionTest(dataMap.get(USER), dataMap.get(FIRST_DELIVERY_ZONE_CODE), dataMap.get(SECOND_DELIVERY_ZONE_CODE),
       dataMap.get(FIRST_DELIVERY_ZONE_NAME), dataMap.get(SECOND_DELIVERY_ZONE_NAME), dataMap.get(FIRST_FACILITY_CODE),
@@ -73,34 +73,35 @@ public class DistributionCoverageSyncTest extends TestCaseHelper {
   public void shouldVerifyLabelsAndTestApplyNRToAllAndSync() throws IOException, SQLException {
 
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
-    HomePage homePage = loginPage.loginAs(coverageData.get(USER), coverageData.get(PASSWORD));
+    HomePage homePage = loginPage.loginAs(fullCoverageData.get(USER), fullCoverageData.get(PASSWORD));
 
     DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
-    distributionPage.initiate(coverageData.get(FIRST_DELIVERY_ZONE_NAME), coverageData.get(VACCINES_PROGRAM));
+    distributionPage.initiate(fullCoverageData.get(FIRST_DELIVERY_ZONE_NAME), fullCoverageData.get(VACCINES_PROGRAM));
     FacilityListPage facilityListPage = distributionPage.clickRecordData(1);
-    RefrigeratorPage refrigeratorPage = facilityListPage.selectFacility(coverageData.get(FIRST_FACILITY_CODE));
+    RefrigeratorPage refrigeratorPage = facilityListPage.selectFacility(fullCoverageData.get(FIRST_FACILITY_CODE));
 
     facilityListPage.verifyFacilityIndicatorColor("Overall", "AMBER");
 
-    CoveragePage coveragePage = refrigeratorPage.navigateToCoverage();
-    coveragePage.verifyIndicator("RED");
+    FullCoveragePage fullCoveragePage = refrigeratorPage.navigateToFullCoverage();
+    fullCoveragePage.verifyIndicator("RED");
 
-    assertEquals("Full Coverage", coveragePage.getTextOfCoverageHeader());
-    assertEquals("Completely Vaccinated Children(doses)", coveragePage.getTextOfCompletelyVaccinatedHeader());
-    assertEquals("Females", coveragePage.getTextOfFemaleHeader());
-    assertEquals("Males", coveragePage.getTextOfMaleHeader());
-    assertEquals("Health Center", coveragePage.getTextOfHealthCenterHeader());
-    assertEquals("Mobile Brigade", coveragePage.getTextOfMobileBrigadeHeader());
+    assertEquals("Full Coverage", fullCoveragePage.getFullCoverageTabLabel());
+    assertEquals("Full Coverage", fullCoveragePage.getTextOfFullCoverageHeader());
+    assertEquals("Completely Vaccinated Children(doses)", fullCoveragePage.getTextOfCompletelyVaccinatedHeader());
+    assertEquals("Females", fullCoveragePage.getTextOfFemaleHeader());
+    assertEquals("Males", fullCoveragePage.getTextOfMaleHeader());
+    assertEquals("Health Center", fullCoveragePage.getTextOfHealthCenterHeader());
+    assertEquals("Mobile Brigade", fullCoveragePage.getTextOfMobileBrigadeHeader());
 
-    coveragePage.enterFemaleHealthCenter(5);
-    coveragePage.clickApplyNRToAll();
-    coveragePage.clickApplyNRToAll(); //just checking reapplying NR to all doesn't deselect NR check boxes
-    coveragePage.verifyIndicator("GREEN");
+    fullCoveragePage.enterFemaleHealthCenter(5);
+    fullCoveragePage.clickApplyNRToAll();
+    fullCoveragePage.clickApplyNRToAll(); //just checking reapplying NR to all doesn't deselect NR check boxes
+    fullCoveragePage.verifyIndicator("GREEN");
 
-    verifyAllFieldsDisabled(coveragePage);
-    verifyDataOnCoveragePage(coveragePage, "", "", "", "");
+    verifyAllFieldsDisabled(fullCoveragePage);
+    verifyDataOnFullCoveragePage(fullCoveragePage, "", "", "", "");
 
-    EPIUsePage epiUsePage = coveragePage.navigateToEpiUse();
+    EPIUsePage epiUsePage = fullCoveragePage.navigateToEpiUse();
     epiUsePage.enterData(10, 20, 30, 40, 50, "10/2011", 1);
 
     GeneralObservationPage generalObservationPage = epiUsePage.navigateToGeneralObservations();
@@ -115,43 +116,43 @@ public class DistributionCoverageSyncTest extends TestCaseHelper {
     distributionPage.syncDistribution(1);
     assertTrue(distributionPage.getSyncMessage().contains("F10-Village Dispensary"));
     distributionPage.syncDistributionMessageDone();
-    verifyFullCoveragesDataInDatabase(null, null, null, null, coverageData.get(FIRST_FACILITY_CODE));
+    verifyFullCoveragesDataInDatabase(null, null, null, null, fullCoverageData.get(FIRST_FACILITY_CODE));
   }
 
   @Test(groups = {"distribution"})
-  public void shouldTestCoverageAndFacilityIconStatusAndSync() throws IOException, SQLException {
+  public void shouldTestFullCoverageAndFacilityIconStatusAndSync() throws IOException, SQLException {
     dbWrapper.addRefrigeratorToFacility("brand", "model", "serial", "F10");
 
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
-    HomePage homePage = loginPage.loginAs(coverageData.get(USER), coverageData.get(PASSWORD));
+    HomePage homePage = loginPage.loginAs(fullCoverageData.get(USER), fullCoverageData.get(PASSWORD));
 
     DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
-    distributionPage.initiate(coverageData.get(FIRST_DELIVERY_ZONE_NAME), coverageData.get(VACCINES_PROGRAM));
+    distributionPage.initiate(fullCoverageData.get(FIRST_DELIVERY_ZONE_NAME), fullCoverageData.get(VACCINES_PROGRAM));
     FacilityListPage facilityListPage = distributionPage.clickRecordData(1);
-    RefrigeratorPage refrigeratorPage = facilityListPage.selectFacility(coverageData.get(FIRST_FACILITY_CODE));
+    RefrigeratorPage refrigeratorPage = facilityListPage.selectFacility(fullCoverageData.get(FIRST_FACILITY_CODE));
 
     facilityListPage.verifyFacilityIndicatorColor("Overall", "RED");
 
-    CoveragePage coveragePage = refrigeratorPage.navigateToCoverage();
-    coveragePage.verifyIndicator("RED");
-    coveragePage.toggleApplyNRToFemaleMobileBrigade();
-    coveragePage.verifyIndicator("AMBER");
+    FullCoveragePage fullCoveragePage = refrigeratorPage.navigateToFullCoverage();
+    fullCoveragePage.verifyIndicator("RED");
+    fullCoveragePage.toggleApplyNRToFemaleMobileBrigade();
+    fullCoveragePage.verifyIndicator("AMBER");
 
-    coveragePage.enterFemaleHealthCenter(9999999);
-    coveragePage.toggleApplyNRToMaleHealthCenter();
-    coveragePage.toggleApplyNRToMaleHealthCenter();
-    coveragePage.enterMaleHealthCenter(10);
-    coveragePage.enterMaleMobileBrigade("0");
-    coveragePage.toggleApplyNRToMaleMobileBrigade();
+    fullCoveragePage.enterFemaleHealthCenter(9999999);
+    fullCoveragePage.toggleApplyNRToMaleHealthCenter();
+    fullCoveragePage.toggleApplyNRToMaleHealthCenter();
+    fullCoveragePage.enterMaleHealthCenter(10);
+    fullCoveragePage.enterMaleMobileBrigade("0");
+    fullCoveragePage.toggleApplyNRToMaleMobileBrigade();
 
-    coveragePage.verifyIndicator("GREEN");
+    fullCoveragePage.verifyIndicator("GREEN");
 
-    verifyEnableStatusOfFields(coveragePage, true, false, true, false);
-    verifyDataOnCoveragePage(coveragePage, "9999999", "", "10", "");
+    verifyEnableStatusOfFields(fullCoveragePage, true, false, true, false);
+    verifyDataOnFullCoveragePage(fullCoveragePage, "9999999", "", "10", "");
 
     facilityListPage.verifyFacilityIndicatorColor("Overall", "AMBER");
 
-    EPIUsePage epiUsePage = coveragePage.navigateToEpiUse();
+    EPIUsePage epiUsePage = fullCoveragePage.navigateToEpiUse();
     epiUsePage.enterData(10, 20, 30, 40, 50, "10/2011", 1);
 
     GeneralObservationPage generalObservationPage = epiUsePage.navigateToGeneralObservations();
@@ -172,34 +173,34 @@ public class DistributionCoverageSyncTest extends TestCaseHelper {
     distributionPage.syncDistributionMessageDone();
 
     distributionPage.clickRecordData(1);
-    facilityListPage.selectFacility(coverageData.get(FIRST_FACILITY_CODE));
+    facilityListPage.selectFacility(fullCoverageData.get(FIRST_FACILITY_CODE));
 
     facilityListPage.verifyFacilityIndicatorColor("Overall", "BLUE");
 
-    refrigeratorPage.navigateToCoverage();
-    verifyAllFieldsDisabled(coveragePage);
-    verifyFullCoveragesDataInDatabase(9999999, null, 10, null, coverageData.get(FIRST_FACILITY_CODE));
+    refrigeratorPage.navigateToFullCoverage();
+    verifyAllFieldsDisabled(fullCoveragePage);
+    verifyFullCoveragesDataInDatabase(9999999, null, 10, null, fullCoverageData.get(FIRST_FACILITY_CODE));
   }
 
   @Test(groups = {"distribution"})
-  public void shouldTestFillCoverageFormAndSync() throws IOException, SQLException {
+  public void shouldTestFillFullCoverageFormAndSync() throws IOException, SQLException {
 
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
-    HomePage homePage = loginPage.loginAs(coverageData.get(USER), coverageData.get(PASSWORD));
+    HomePage homePage = loginPage.loginAs(fullCoverageData.get(USER), fullCoverageData.get(PASSWORD));
 
     DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
-    distributionPage.initiate(coverageData.get(FIRST_DELIVERY_ZONE_NAME), coverageData.get(VACCINES_PROGRAM));
+    distributionPage.initiate(fullCoverageData.get(FIRST_DELIVERY_ZONE_NAME), fullCoverageData.get(VACCINES_PROGRAM));
     FacilityListPage facilityListPage = distributionPage.clickRecordData(1);
-    RefrigeratorPage refrigeratorPage = facilityListPage.selectFacility(coverageData.get(FIRST_FACILITY_CODE));
+    RefrigeratorPage refrigeratorPage = facilityListPage.selectFacility(fullCoverageData.get(FIRST_FACILITY_CODE));
 
     facilityListPage.verifyFacilityIndicatorColor("Overall", "AMBER");
 
-    CoveragePage coveragePage = refrigeratorPage.navigateToCoverage();
-    coveragePage.verifyIndicator("RED");
-    coveragePage.enterData(12, 34, 45, "56");
-    coveragePage.verifyIndicator("GREEN");
+    FullCoveragePage fullCoveragePage = refrigeratorPage.navigateToFullCoverage();
+    fullCoveragePage.verifyIndicator("RED");
+    fullCoveragePage.enterData(12, 34, 45, "56");
+    fullCoveragePage.verifyIndicator("GREEN");
 
-    EPIUsePage epiUsePage = coveragePage.navigateToEpiUse();
+    EPIUsePage epiUsePage = fullCoveragePage.navigateToEpiUse();
     epiUsePage.enterData(10, 20, 30, 40, 50, "10/2011", 1);
 
     GeneralObservationPage generalObservationPage = epiUsePage.navigateToGeneralObservations();
@@ -214,39 +215,39 @@ public class DistributionCoverageSyncTest extends TestCaseHelper {
     distributionPage.syncDistribution(1);
     assertTrue(distributionPage.getSyncMessage().contains("F10-Village Dispensary"));
     distributionPage.syncDistributionMessageDone();
-    verifyFullCoveragesDataInDatabase(12, 34, 45, 56, coverageData.get(FIRST_FACILITY_CODE));
+    verifyFullCoveragesDataInDatabase(12, 34, 45, 56, fullCoverageData.get(FIRST_FACILITY_CODE));
   }
 
   @Test(groups = {"distribution"})
-  public void shouldTestSyncIncompleteCoverageFormUnsuccessful() throws IOException, SQLException {
+  public void shouldTestSyncIncompleteFullCoverageFormUnsuccessful() throws IOException, SQLException {
 
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
-    HomePage homePage = loginPage.loginAs(coverageData.get(USER), coverageData.get(PASSWORD));
+    HomePage homePage = loginPage.loginAs(fullCoverageData.get(USER), fullCoverageData.get(PASSWORD));
 
     DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
-    distributionPage.initiate(coverageData.get(FIRST_DELIVERY_ZONE_NAME), coverageData.get(VACCINES_PROGRAM));
+    distributionPage.initiate(fullCoverageData.get(FIRST_DELIVERY_ZONE_NAME), fullCoverageData.get(VACCINES_PROGRAM));
     FacilityListPage facilityListPage = distributionPage.clickRecordData(1);
-    RefrigeratorPage refrigeratorPage = facilityListPage.selectFacility(coverageData.get(FIRST_FACILITY_CODE));
+    RefrigeratorPage refrigeratorPage = facilityListPage.selectFacility(fullCoverageData.get(FIRST_FACILITY_CODE));
 
     facilityListPage.verifyFacilityIndicatorColor("Overall", "AMBER");
 
-    CoveragePage coveragePage = refrigeratorPage.navigateToCoverage();
-    coveragePage.verifyIndicator("RED");
-    coveragePage.enterMaleHealthCenter(33);
-    coveragePage.enterFemaleHealthCenter(67);
-    coveragePage.enterMaleMobileBrigade("0");
-    coveragePage.toggleApplyNRToMaleMobileBrigade();
-    coveragePage.verifyIndicator("AMBER");
+    FullCoveragePage fullCoveragePage = refrigeratorPage.navigateToFullCoverage();
+    fullCoveragePage.verifyIndicator("RED");
+    fullCoveragePage.enterMaleHealthCenter(33);
+    fullCoveragePage.enterFemaleHealthCenter(67);
+    fullCoveragePage.enterMaleMobileBrigade("0");
+    fullCoveragePage.toggleApplyNRToMaleMobileBrigade();
+    fullCoveragePage.verifyIndicator("AMBER");
 
-    EPIUsePage epiUsePage = coveragePage.navigateToEpiUse();
+    EPIUsePage epiUsePage = fullCoveragePage.navigateToEpiUse();
     epiUsePage.enterData(10, 20, 30, 40, 50, "10/2011", 1);
 
     GeneralObservationPage generalObservationPage = epiUsePage.navigateToGeneralObservations();
     generalObservationPage.enterData("some observations", "samuel", "Doe", "Verifier", "XYZ");
 
-    generalObservationPage.navigateToCoverage();
-    verifyDataOnCoveragePage(coveragePage, "67", "", "33", "");
-    verifyEnableStatusOfFields(coveragePage, true, true, true, false);
+    generalObservationPage.navigateToFullCoverage();
+    verifyDataOnFullCoveragePage(fullCoveragePage, "67", "", "33", "");
+    verifyEnableStatusOfFields(fullCoveragePage, true, true, true, false);
 
     EpiInventoryPage epiInventoryPage = refrigeratorPage.navigateToEpiInventory();
     fillEpiInventoryWithOnlyDeliveredQuantity(epiInventoryPage, "2", "4", "6");
@@ -284,24 +285,24 @@ public class DistributionCoverageSyncTest extends TestCaseHelper {
     epiInventoryPage.fillDeliveredQuantity(3, deliveredQuantity3);
   }
 
-  private void verifyEnableStatusOfFields(CoveragePage coveragePage, boolean femaleHealthCenterFieldStatus, boolean femaleMobileBrigadeFieldStatus,
+  private void verifyEnableStatusOfFields(FullCoveragePage fullCoveragePage, boolean femaleHealthCenterFieldStatus, boolean femaleMobileBrigadeFieldStatus,
                                           boolean maleHealthCenterFieldStatus, boolean maleMobileBrigadeFieldStatus) {
-    assertEquals(femaleHealthCenterFieldStatus, coveragePage.getStatusForField("femaleHealthCenter"));
-    assertEquals(femaleMobileBrigadeFieldStatus, coveragePage.getStatusForField("femaleMobileBrigade"));
-    assertEquals(maleHealthCenterFieldStatus, coveragePage.getStatusForField("maleHealthCenter"));
-    assertEquals(maleMobileBrigadeFieldStatus, coveragePage.getStatusForField("maleMobileBrigade"));
+    assertEquals(femaleHealthCenterFieldStatus, fullCoveragePage.getStatusForField("femaleHealthCenter"));
+    assertEquals(femaleMobileBrigadeFieldStatus, fullCoveragePage.getStatusForField("femaleMobileBrigade"));
+    assertEquals(maleHealthCenterFieldStatus, fullCoveragePage.getStatusForField("maleHealthCenter"));
+    assertEquals(maleMobileBrigadeFieldStatus, fullCoveragePage.getStatusForField("maleMobileBrigade"));
   }
 
-  private void verifyDataOnCoveragePage(CoveragePage coveragePage, String femaleHealthCenterValue,
-                                        String femaleMobileBrigadeValue, String maleHealthCenterValue, String maleMobileBrigadeValue) {
-    assertEquals(femaleHealthCenterValue, coveragePage.getValueForField("femaleHealthCenter"));
-    assertEquals(femaleMobileBrigadeValue, coveragePage.getValueForField("femaleMobileBrigade"));
-    assertEquals(maleHealthCenterValue, coveragePage.getValueForField("maleHealthCenter"));
-    assertEquals(maleMobileBrigadeValue, coveragePage.getValueForField("maleMobileBrigade"));
+  private void verifyDataOnFullCoveragePage(FullCoveragePage fullCoveragePage, String femaleHealthCenterValue,
+                                            String femaleMobileBrigadeValue, String maleHealthCenterValue, String maleMobileBrigadeValue) {
+    assertEquals(femaleHealthCenterValue, fullCoveragePage.getValueForField("femaleHealthCenter"));
+    assertEquals(femaleMobileBrigadeValue, fullCoveragePage.getValueForField("femaleMobileBrigade"));
+    assertEquals(maleHealthCenterValue, fullCoveragePage.getValueForField("maleHealthCenter"));
+    assertEquals(maleMobileBrigadeValue, fullCoveragePage.getValueForField("maleMobileBrigade"));
   }
 
-  private void verifyAllFieldsDisabled(CoveragePage coveragePage) {
-    verifyEnableStatusOfFields(coveragePage, false, false, false, false);
+  private void verifyAllFieldsDisabled(FullCoveragePage fullCoveragePage) {
+    verifyEnableStatusOfFields(fullCoveragePage, false, false, false, false);
   }
 
   @AfterMethod(groups = "distribution")

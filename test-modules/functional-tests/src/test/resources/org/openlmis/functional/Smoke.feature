@@ -479,7 +479,7 @@ Feature: Smoke Tests
     And I initiate distribution
     And I record data for distribution "1"
     And I choose facility "F10"
-    And I navigate to general observations tab
+    And I navigate to "general observation" tab
     Then Verify "general observation" indicator should be "RED"
     When I Enter "general observation" values:
       | observations     | confirmedByName | confirmedByTitle | verifiedByName | verifiedByTitle |
@@ -510,7 +510,7 @@ Feature: Smoke Tests
     And I initiate distribution
     And I record data for distribution "1"
     And I choose facility "F10"
-    And I navigate to EPI Use tab
+    And I navigate to "epi use" tab
     Then Verify "epi use" indicator should be "RED"
     Then I should see product group "penta-Name"
     When I Enter "epi use" values:
@@ -545,7 +545,7 @@ Feature: Smoke Tests
     And I initiate distribution
     And I record data for distribution "1"
     And I choose facility "F10"
-    And I navigate to EPI Inventory tab
+    And I navigate to "epi inventory" tab
     Then Verify "epi inventory" indicator should be "RED"
     And I Enter "epi inventory" values:
       | existingQuantity | deliveredQuantity | spoiledQuantity |
@@ -561,7 +561,7 @@ Feature: Smoke Tests
 
 
   @smokeDistribution
-  Scenario: User should fill Coverage data
+  Scenario: User should fill Full Coverage data
     Given I have the following data for distribution:
       | userSIC       | deliveryZoneCodeFirst | deliveryZoneCodeSecond | deliveryZoneNameFirst | deliveryZoneNameSecond | facilityCodeFirst | facilityCodeSecond | programFirst | programSecond | schedule |
       | storeInCharge | DZ1                   | DZ2                    | Delivery Zone First   | Delivery Zone Second   | F10               | F11                | VACCINES     | TB            | M        |
@@ -575,15 +575,15 @@ Feature: Smoke Tests
     And I initiate distribution
     And I record data for distribution "1"
     And I choose facility "F10"
-    And I navigate to Coverage tab
-    Then Verify "coverage" indicator should be "RED"
-    And I Enter "coverage" values:
+    And I navigate to "full coverage" tab
+    Then Verify "full coverage" indicator should be "RED"
+    And I Enter "full coverage" values:
       | femaleHealthCenter | femaleMobileBrigade | maleHealthCenter | maleMobileBrigade |
       | 123                | 22                  | 23               |                   |
-    Then Verify "coverage" indicator should be "AMBER"
+    Then Verify "full coverage" indicator should be "AMBER"
     When I enter coverage maleMobileBrigade as "500"
-    Then Verify "coverage" indicator should be "GREEN"
-    And I verify saved "coverage" values:
+    Then Verify "full coverage" indicator should be "GREEN"
+    And I verify saved "full coverage" values:
       | femaleHealthCenter | femaleMobileBrigade | maleHealthCenter | maleMobileBrigade |
       | 123                | 22                  | 23               | 500               |
 
@@ -625,22 +625,22 @@ Feature: Smoke Tests
     And I enter low alarm events "1"
     And I enter high alarm events "0"
     And I verify "No" that there is a problem with refrigerator since last visit
-    And I navigate to general observations tab
+    And I navigate to "general observation" tab
     And I Enter "general observation" values:
       | observations     | confirmedByName | confirmedByTitle | verifiedByName | verifiedByTitle |
       | some observation | samuel          | fc               | Verifier       | XYZ             |
 
-    And I navigate to EPI Use tab
+    And I navigate to "epi use" tab
     And I Enter "epi use" values:
       | distributed | expirationDate | loss | received | firstOfMonth | endOfMonth |
       | 16          | 11/2012        | 1    | 10       | 12           |            |
     And I enter EPI end of month as "5"
 
-    And I navigate to Coverage tab
-    And I Enter "coverage" values:
+    And I navigate to "full coverage" tab
+    And I Enter "full coverage" values:
       | femaleHealthCenter | femaleMobileBrigade | maleHealthCenter | maleMobileBrigade |
       | 123                | 22                  | 23               | 242               |
-    And I navigate to EPI Inventory tab
+    And I navigate to "epi inventory" tab
     And I Enter "epi inventory" values:
       | existingQuantity | deliveredQuantity | spoiledQuantity |
       | 20               | 100               | 5               |
@@ -673,13 +673,13 @@ Feature: Smoke Tests
     When I record data for distribution "1"
     And I choose facility "F10"
     Then I see "Overall" facility icon as "BLUE"
-    When I navigate to general observations tab
+    When I navigate to "general observation" tab
     Then I see general observations fields disabled
-    When I navigate to EPI Use tab
+    When I navigate to "epi use" tab
     Then I see EPI Use fields disabled
-    When I navigate to Coverage tab
+    When I navigate to "full coverage" tab
     Then I see full coverage fields disabled
-    When I navigate to refrigerator tab
+    When I navigate to "refrigerator" tab
     And I access show
     Then I see refrigerator fields disabled
 

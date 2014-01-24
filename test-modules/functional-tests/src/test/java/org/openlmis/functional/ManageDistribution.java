@@ -60,11 +60,11 @@ public class ManageDistribution extends TestCaseHelper {
   FacilityListPage facilityListPage;
   RefrigeratorPage refrigeratorPage;
   GeneralObservationPage observation;
-  CoveragePage coveragePage;
+  FullCoveragePage fullCoveragePage;
   EPIUsePage epiUsePage;
   EpiInventoryPage epiInventoryPage;
 
-  String productGroupCode="PG1" ;
+  String productGroupCode = "PG1";
 
   @BeforeMethod(groups = "distribution")
   @Before
@@ -73,14 +73,17 @@ public class ManageDistribution extends TestCaseHelper {
     dbWrapper.deleteData();
     epiUsePage = PageFactory.getInstanceOfEpiUsePage(testWebDriver);
     observation = PageFactory.getInstanceOfObservation(testWebDriver);
-    coveragePage = PageFactory.getInstanceOfCoveragePage(testWebDriver);
+    fullCoveragePage = PageFactory.getInstanceOfCoveragePage(testWebDriver);
     epiInventoryPage = PageFactory.getInstanceOfEpiInventoryPage(testWebDriver);
+    refrigeratorPage = PageFactory.getInstanceOfRefrigeratorPage(testWebDriver);
 
     tabMap = new HashMap<String, DistributionTab>() {{
       put("epi use", epiUsePage);
       put("general observation", observation);
-      put("coverage", coveragePage);
+      put("full coverage", fullCoveragePage);
       put("epi inventory", epiInventoryPage);
+      put("refrigerator", refrigeratorPage);
+
     }};
   }
 
@@ -132,6 +135,13 @@ public class ManageDistribution extends TestCaseHelper {
     List<Map<String, String>> data = tableData.asMaps();
     tab.verifyData(data);
 
+  }
+
+  @And("^I navigate to \"([^\"]*)\" tab")
+  public void navigateToTab(String tabName) {
+    testWebDriver.sleep(1000);
+    DistributionTab tab = tabMap.get(tabName);
+    tab.navigate();
   }
 
   @Then("^I should see program \"([^\"]*)\"$")
@@ -232,18 +242,6 @@ public class ManageDistribution extends TestCaseHelper {
     facilityListPage.verifyNoFacilitySelected();
   }
 
-  @Then("^I navigate to general observations tab$")
-  public void navigateToGeneralObservationsTab() throws IOException {
-    observation = PageFactory.getInstanceOfObservation(testWebDriver);
-    observation.navigateToGeneralObservations();
-  }
-
-  @Then("^I navigate to refrigerator tab$")
-  public void navigateToRefrigeratorTab() throws IOException {
-    refrigeratorPage = PageFactory.getInstanceOfRefrigeratorPage(testWebDriver);
-    refrigeratorPage.navigateToRefrigeratorTab();
-  }
-
   @Then("^I access show$")
   public void accessShow() throws IOException {
     refrigeratorPage = PageFactory.getInstanceOfRefrigeratorPage(testWebDriver);
@@ -264,11 +262,11 @@ public class ManageDistribution extends TestCaseHelper {
 
   @Then("^I see full coverage fields disabled$")
   public void verifyFullCoverageFieldsDisabled() throws IOException {
-    coveragePage = PageFactory.getInstanceOfCoveragePage(testWebDriver);
-    assertFalse(coveragePage.getStatusForField("femaleHealthCenter"));
-    assertFalse(coveragePage.getStatusForField("femaleMobileBrigade"));
-    assertFalse(coveragePage.getStatusForField("maleHealthCenter"));
-    assertFalse(coveragePage.getStatusForField("maleMobileBrigade"));
+    fullCoveragePage = PageFactory.getInstanceOfCoveragePage(testWebDriver);
+    assertFalse(fullCoveragePage.getStatusForField("femaleHealthCenter"));
+    assertFalse(fullCoveragePage.getStatusForField("femaleMobileBrigade"));
+    assertFalse(fullCoveragePage.getStatusForField("maleHealthCenter"));
+    assertFalse(fullCoveragePage.getStatusForField("maleMobileBrigade"));
   }
 
   @Then("^I see EPI Use fields disabled$")
@@ -407,12 +405,13 @@ public class ManageDistribution extends TestCaseHelper {
   }
 
   @And("^I view epi inventory readings in DB for facility \"([^\"]*)\" for product \"([^\"]*)\":$")
-  public void verifyEpiInventoryDataInDB(String facilityCode,String productCode,DataTable tableData) throws SQLException {
+  public void verifyEpiInventoryDataInDB(String facilityCode, String productCode, DataTable tableData) throws SQLException {
     List<Map<String, String>> data = tableData.asMaps();
     for (Map map : data) {
-      verifyEpiInventoryDataInDatabase(map.get("existingQuantity").toString(),map.get("deliveredQuantity").toString(),map.get("spoiledQuantity").toString(),productCode,facilityCode);
+      verifyEpiInventoryDataInDatabase(map.get("existingQuantity").toString(), map.get("deliveredQuantity").toString(), map.get("spoiledQuantity").toString(), productCode, facilityCode);
     }
   }
+
   @Then("^I verify no record present in refrigerator problem table for refrigerator serial number \"([^\"]*)\" and facility \"([^\"]*)\"$")
   public void verifyNoRecordAddedToRefrigeratorProblemsTable(String refrigeratorSerialNumber, String facilityCode) throws SQLException {
     verifyRefrigeratorProblemDataNullInDatabase(refrigeratorSerialNumber, facilityCode);
@@ -480,14 +479,14 @@ public class ManageDistribution extends TestCaseHelper {
 
   @When("I enter EPI Inventory deliveredQuantity of Row \"([^\"]*)\" as \"([^\"]*)\"$")
   public void enterDeliveredQuantity(Integer rowNumber, String deliveredQuantity) throws IOException {
-   epiInventoryPage = PageFactory.getInstanceOfEpiInventoryPage(testWebDriver);
-   epiInventoryPage.fillDeliveredQuantity(rowNumber,deliveredQuantity);
+    epiInventoryPage = PageFactory.getInstanceOfEpiInventoryPage(testWebDriver);
+    epiInventoryPage.fillDeliveredQuantity(rowNumber, deliveredQuantity);
   }
 
   @When("I enter coverage maleMobileBrigade as \"([^\"]*)\"$")
   public void enterCoverageMaleMobileBrigade(String maleMobileBrigade) throws IOException {
-    coveragePage = PageFactory.getInstanceOfCoveragePage(testWebDriver);
-    coveragePage.enterMaleMobileBrigade(maleMobileBrigade);
+    fullCoveragePage = PageFactory.getInstanceOfCoveragePage(testWebDriver);
+    fullCoveragePage.enterMaleMobileBrigade(maleMobileBrigade);
   }
 
 
@@ -514,7 +513,7 @@ public class ManageDistribution extends TestCaseHelper {
   @Then("^I verify distribution not initiated$")
   public void verifyDistributionNotInitiated() throws IOException {
     distributionPage = PageFactory.getInstanceOfDistributionPage(testWebDriver);
-    distributionPage.verifyFacilityNotSupportedMessage("VACCINES","Delivery Zone First");
+    distributionPage.verifyFacilityNotSupportedMessage("VACCINES", "Delivery Zone First");
     distributionPage.verifyNoDistributionCachedMessage();
   }
 
@@ -804,11 +803,11 @@ public class ManageDistribution extends TestCaseHelper {
 
   @Test(groups = {"distribution"}, dataProvider = "Data-Provider-Function")
   public void testVerifyOnlyActiveProductsDisplayedOnViewLoadAmountScreenDistribution(String userSIC, String password, String deliveryZoneCodeFirst,
-                                                  String deliveryZoneCodeSecond,
-                                                  String deliveryZoneNameFirst, String deliveryZoneNameSecond,
-                                                  String facilityCodeFirst, String facilityCodeSecond,
-                                                  String programFirst, String programSecond, String schedule,
-                                                  String period, Integer totalNumberOfPeriods) throws Exception {
+                                                                                      String deliveryZoneCodeSecond,
+                                                                                      String deliveryZoneNameFirst, String deliveryZoneNameSecond,
+                                                                                      String facilityCodeFirst, String facilityCodeSecond,
+                                                                                      String programFirst, String programSecond, String schedule,
+                                                                                      String period, Integer totalNumberOfPeriods) throws Exception {
 
     List<String> rightsList = new ArrayList<>();
     rightsList.add("MANAGE_DISTRIBUTION");
@@ -827,7 +826,7 @@ public class ManageDistribution extends TestCaseHelper {
     dbWrapper.insertProductWithGroup("Product6", "ProductName6", productGroupCode, true);
     dbWrapper.insertProgramProduct("Product5", programFirst, "10", "false");
     dbWrapper.insertProgramProduct("Product6", programFirst, "10", "true");
-    dbWrapper.updateActiveStatusOfProduct("Product6","false");
+    dbWrapper.updateActiveStatusOfProduct("Product6", "false");
 
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(userSIC, password);
@@ -895,16 +894,6 @@ public class ManageDistribution extends TestCaseHelper {
     assertFalse(warehouseLoadAmountPage.getTable1Data().contains("PG1-Name"));
   }
 
-  @And("^I navigate to Coverage tab$")
-  public void navigateToCoverageTab() throws Throwable {
-    coveragePage.navigateToCoverage();
-  }
-
-  @And("^I navigate to EPI Inventory tab$")
-  public void navigateToEpiInventoryTab() {
-    epiInventoryPage.navigateToEpiInventory();
-  }
-
   @AfterMethod(groups = "distribution")
   @After
   public void tearDown() throws Exception {
@@ -913,8 +902,8 @@ public class ManageDistribution extends TestCaseHelper {
       HomePage homePage = new HomePage(testWebDriver);
       homePage.logout(baseUrlGlobal);
     }
-      dbWrapper.deleteData();
-      dbWrapper.closeConnection();
+    dbWrapper.deleteData();
+    dbWrapper.closeConnection();
 
     ((JavascriptExecutor) TestWebDriver.getDriver()).executeScript("indexedDB.deleteDatabase('open_lmis')");
   }

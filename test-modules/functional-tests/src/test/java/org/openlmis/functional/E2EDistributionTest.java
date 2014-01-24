@@ -177,9 +177,9 @@ public class E2EDistributionTest extends TestCaseHelper {
 
     epiInventoryPage.verifyIndicator("GREEN");
 
-    CoveragePage coveragePage = epiInventoryPage.navigateToCoverage();
-    coveragePage.enterData(5, 7, 0, "9999999");
-    coveragePage.verifyIndicator("GREEN");
+    FullCoveragePage fullCoveragePage = epiInventoryPage.navigateToFullCoverage();
+    fullCoveragePage.enterData(5, 7, 0, "9999999");
+    fullCoveragePage.verifyIndicator("GREEN");
 
     facilityListPage.verifyFacilityIndicatorColor("Overall", "GREEN");
 
@@ -219,11 +219,11 @@ public class E2EDistributionTest extends TestCaseHelper {
     refrigeratorPage.clickShowForRefrigerator1();
     refrigeratorPage.verifyAllFieldsDisabled();
 
-    refrigeratorPage.navigateToCoverage();
-    assertFalse(coveragePage.getStatusForField("femaleHealthCenter"));
-    assertFalse(coveragePage.getStatusForField("femaleMobileBrigade"));
-    assertFalse(coveragePage.getStatusForField("maleHealthCenter"));
-    assertFalse(coveragePage.getStatusForField("maleMobileBrigade"));
+    refrigeratorPage.navigateToFullCoverage();
+    assertFalse(fullCoveragePage.getStatusForField("femaleHealthCenter"));
+    assertFalse(fullCoveragePage.getStatusForField("femaleMobileBrigade"));
+    assertFalse(fullCoveragePage.getStatusForField("maleHealthCenter"));
+    assertFalse(fullCoveragePage.getStatusForField("maleMobileBrigade"));
 
     loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     testWebDriver.sleep(1000);

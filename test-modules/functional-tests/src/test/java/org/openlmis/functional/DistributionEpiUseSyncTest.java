@@ -91,8 +91,8 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
     GeneralObservationPage generalObservationPage = epiUsePage.navigateToGeneralObservations();
     generalObservationPage.enterData("some observations", "samuel", "Doe", "Verifier", "XYZ");
 
-    CoveragePage coveragePage = generalObservationPage.navigateToCoverage();
-    coveragePage.enterData(12, 34, 45, "56");
+    FullCoveragePage fullCoveragePage = generalObservationPage.navigateToFullCoverage();
+    fullCoveragePage.enterData(12, 34, 45, "56");
 
     EpiInventoryPage epiInventoryPage = generalObservationPage.navigateToEpiInventory();
     fillEpiInventoryWithOnlyDeliveredQuantity(epiInventoryPage, "2", "4", "6");
@@ -183,8 +183,8 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
     GeneralObservationPage generalObservationPage = epiUsePage.navigateToGeneralObservations();
     generalObservationPage.enterData("some observations", "samuel", "Doe", "Verifier", "XYZ");
 
-    CoveragePage coveragePage = generalObservationPage.navigateToCoverage();
-    coveragePage.enterData(12, 34, 45, "56");
+    FullCoveragePage fullCoveragePage = generalObservationPage.navigateToFullCoverage();
+    fullCoveragePage.enterData(12, 34, 45, "56");
 
     EpiInventoryPage epiInventoryPage = generalObservationPage.navigateToEpiInventory();
     fillEpiInventoryWithOnlyDeliveredQuantity(epiInventoryPage, "2", "4", "6");
@@ -215,8 +215,8 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
     GeneralObservationPage generalObservationPage = epiUsePage.navigateToGeneralObservations();
     generalObservationPage.enterData("some observations", "samuel", "Doe", "Verifier", "XYZ");
 
-    CoveragePage coveragePage = generalObservationPage.navigateToCoverage();
-    coveragePage.enterData(12, 34, 45, "56");
+    FullCoveragePage fullCoveragePage = generalObservationPage.navigateToFullCoverage();
+    fullCoveragePage.enterData(12, 34, 45, "56");
 
     EpiInventoryPage epiInventoryPage = generalObservationPage.navigateToEpiInventory();
     fillEpiInventoryWithOnlyDeliveredQuantity(epiInventoryPage, "2", "4", "6");
@@ -256,8 +256,8 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
     GeneralObservationPage generalObservationPage = epiUsePage.navigateToGeneralObservations();
     generalObservationPage.enterData("some observations", "samuel", "Doe", "Verifier", "XYZ");
 
-    CoveragePage coveragePage = generalObservationPage.navigateToCoverage();
-    coveragePage.enterData(12, 34, 45, "56");
+    FullCoveragePage fullCoveragePage = generalObservationPage.navigateToFullCoverage();
+    fullCoveragePage.enterData(12, 34, 45, "56");
 
     EpiInventoryPage epiInventoryPage = generalObservationPage.navigateToEpiInventory();
     fillEpiInventoryWithOnlyDeliveredQuantity(epiInventoryPage, "2", "4", "6");
@@ -303,8 +303,8 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
     GeneralObservationPage generalObservationPage = epiUsePage.navigateToGeneralObservations();
     generalObservationPage.enterData("some observations", "samuel", "Doe", "Verifier", "XYZ");
 
-    CoveragePage coveragePage = generalObservationPage.navigateToCoverage();
-    coveragePage.enterData(12, 34, 45, "56");
+    FullCoveragePage fullCoveragePage = generalObservationPage.navigateToFullCoverage();
+    fullCoveragePage.enterData(12, 34, 45, "56");
 
     EpiInventoryPage epiInventoryPage = generalObservationPage.navigateToEpiInventory();
     fillEpiInventoryWithOnlyDeliveredQuantity(epiInventoryPage, "2", "4", "6");

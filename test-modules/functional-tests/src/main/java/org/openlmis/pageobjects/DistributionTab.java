@@ -86,9 +86,9 @@ abstract public class DistributionTab extends Page {
     return new EpiInventoryPage(testWebDriver);
   }
 
-  public CoveragePage navigateToCoverage() {
+  public FullCoveragePage navigateToFullCoverage() {
     coverageTab.click();
-    return new CoveragePage(testWebDriver);
+    return new FullCoveragePage(testWebDriver);
   }
 
   public GeneralObservationPage navigateToGeneralObservations() {

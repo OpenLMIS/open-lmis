@@ -106,10 +106,10 @@ public class DistributionSyncTest extends TestCaseHelper {
     GeneralObservationPage generalObservationPage = epiUsePage.navigateToGeneralObservations();
     generalObservationPage.enterData("Some observations", "samuel D", "Doe Abc", "Verifier", "Verifier Title");
 
-    CoveragePage coveragePage = generalObservationPage.navigateToCoverage();
-    coveragePage.clickApplyNRToAll();
+    FullCoveragePage fullCoveragePage = generalObservationPage.navigateToFullCoverage();
+    fullCoveragePage.clickApplyNRToAll();
 
-    EpiInventoryPage epiInventoryPage = coveragePage.navigateToEpiInventory();
+    EpiInventoryPage epiInventoryPage = fullCoveragePage.navigateToEpiInventory();
     fillEpiInventoryWithOnlyDeliveredQuantity(epiInventoryPage, "2", "4", "6");
 
     facilityListPage.verifyFacilityIndicatorColor("Overall", "GREEN");
@@ -208,10 +208,10 @@ public class DistributionSyncTest extends TestCaseHelper {
     GeneralObservationPage generalObservationPage = epiUsePage.navigateToGeneralObservations();
     generalObservationPage.enterData("Some observations", "samuel D", "Doe Abc", "Verifier", "Verifier Title");
 
-    CoveragePage coveragePage = generalObservationPage.navigateToCoverage();
-    coveragePage.clickApplyNRToAll();
+    FullCoveragePage fullCoveragePage = generalObservationPage.navigateToFullCoverage();
+    fullCoveragePage.clickApplyNRToAll();
 
-    EpiInventoryPage epiInventoryPage = coveragePage.navigateToEpiInventory();
+    EpiInventoryPage epiInventoryPage = fullCoveragePage.navigateToEpiInventory();
     fillEpiInventoryWithOnlyDeliveredQuantity(epiInventoryPage, "2", "4", "6");
 
     facilityListPage.verifyFacilityIndicatorColor("Overall", "GREEN");
@@ -491,8 +491,8 @@ public class DistributionSyncTest extends TestCaseHelper {
     GeneralObservationPage generalObservationPage = refrigeratorPage.navigateToGeneralObservations();
     generalObservationPage.enterData("Some observations", "samuel D", "Doe Abc", "Verifier", "Verifier Title");
 
-    CoveragePage coveragePage = generalObservationPage.navigateToCoverage();
-    coveragePage.clickApplyNRToAll();
+    FullCoveragePage fullCoveragePage = generalObservationPage.navigateToFullCoverage();
+    fullCoveragePage.clickApplyNRToAll();
 
     verifyProductsAreNotDisplayed();
 
@@ -676,8 +676,8 @@ public class DistributionSyncTest extends TestCaseHelper {
     EpiInventoryPage epiInventoryPage = generalObservationPage.navigateToEpiInventory();
     fillEpiInventoryWithOnlyDeliveredQuantity(epiInventoryPage, "2", "4", "6");
 
-    CoveragePage coveragePage = epiInventoryPage.navigateToCoverage();
-    coveragePage.enterData(23, 66, 77, "45");
+    FullCoveragePage fullCoveragePage = epiInventoryPage.navigateToFullCoverage();
+    fullCoveragePage.enterData(23, 66, 77, "45");
 
     return generalObservationPage;
   }
@@ -779,13 +779,13 @@ public class DistributionSyncTest extends TestCaseHelper {
     EPIUsePage epiUsePage = generalObservationPage.navigateToEpiUse();
     epiUsePage.verifyAllFieldsDisabled();
 
-    CoveragePage coveragePage = epiUsePage.navigateToCoverage();
-    assertFalse(coveragePage.getStatusForField("femaleHealthCenter"));
-    assertFalse(coveragePage.getStatusForField("femaleMobileBrigade"));
-    assertFalse(coveragePage.getStatusForField("maleHealthCenter"));
-    assertFalse(coveragePage.getStatusForField("maleMobileBrigade"));
+    FullCoveragePage fullCoveragePage = epiUsePage.navigateToFullCoverage();
+    assertFalse(fullCoveragePage.getStatusForField("femaleHealthCenter"));
+    assertFalse(fullCoveragePage.getStatusForField("femaleMobileBrigade"));
+    assertFalse(fullCoveragePage.getStatusForField("maleHealthCenter"));
+    assertFalse(fullCoveragePage.getStatusForField("maleMobileBrigade"));
 
-    EpiInventoryPage epiInventoryPage = coveragePage.navigateToEpiInventory();
+    EpiInventoryPage epiInventoryPage = fullCoveragePage.navigateToEpiInventory();
     assertFalse(epiInventoryPage.getExistingQuantityStatus(1));
     assertFalse(epiInventoryPage.getExistingQuantityStatus(2));
     assertFalse(epiInventoryPage.getExistingQuantityStatus(3));
