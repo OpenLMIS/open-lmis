@@ -7,12 +7,15 @@ import org.openqa.selenium.JavascriptExecutor;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+
 import java.io.IOException;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import static com.thoughtworks.selenium.SeleneseTestBase.assertEquals;
 
 
@@ -104,6 +107,8 @@ public class DistributionChildCoverageSyncTest extends TestCaseHelper {
     assertEquals(childCoveragePage.getTextOfTargetGroupValue(1), "");
     assertEquals(childCoveragePage.getTextOfTargetGroupValue(12), "");
 
+    ResultSet childCoverageDetails = dbWrapper.getChildCoverageDetails(childCoveragePage.getTextOfRegimenPCV10Dose1(),"F10");
+    assertEquals("300",childCoverageDetails.getInt("targetGroup"));
   }
 
   @Test(groups = {"distribution"})

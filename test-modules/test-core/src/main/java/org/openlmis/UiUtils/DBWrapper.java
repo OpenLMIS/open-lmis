@@ -1415,4 +1415,12 @@ public class DBWrapper {
       "('PCV10 3rd dose', 'P10', TRUE),\n" +
       "('Measles', 'Measles',TRUE);\n");
   }
+
+  public ResultSet getChildCoverageDetails(String vaccination, String facilityCode) throws SQLException {
+    ResultSet resultSet = query("SELECT * FROM vaccination_child_coverage_line_items WHERE vaccination = '%s'" +
+      "AND facilityVisitId=(Select id from facility_visits where facilityId=" +
+      "(Select id from facilities where code ='%s'));", vaccination, facilityCode);
+    resultSet.next();
+    return resultSet;
+  }
 }
