@@ -25,6 +25,7 @@ public class PageFactory {
   private static GeneralObservationPage instanceOfObservation;
   private static FullCoveragePage instanceOfFullCoveragePage;
   private static EPIUsePage instanceOfEpiUsePage;
+  private static ChildCoveragePage instanceOfChildCoveragePage;
   private static EpiInventoryPage instanceOfEpiInventoryPage;
   private static WarehouseLoadAmountPage instanceOfWarehouseLoadAmountPage;
   private static ProgramProductISAPage instanceOfProgramProductISAPage;
@@ -84,6 +85,13 @@ public class PageFactory {
       instanceOfEpiInventoryPage = new EpiInventoryPage(testWebDriver);
     }
     return instanceOfEpiInventoryPage;
+  }
+
+  public static ChildCoveragePage getInstanceOfChildCoveragePage(TestWebDriver testWebDriver) {
+    if (instanceOfChildCoveragePage == null) {
+      instanceOfChildCoveragePage = new ChildCoveragePage(testWebDriver);
+    }
+    return instanceOfChildCoveragePage;
   }
 
   public static WarehouseLoadAmountPage getInstanceOfWarehouseLoadAmountPage(TestWebDriver testWebDriver) throws IOException {

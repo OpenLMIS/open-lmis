@@ -587,6 +587,23 @@ Feature: Smoke Tests
       | femaleHealthCenter | femaleMobileBrigade | maleHealthCenter | maleMobileBrigade |
       | 123                | 22                  | 23               | 500               |
 
+  @smokeDistribution
+  Scenario: User should fill Child Coverage data
+    Given I have the following data for distribution:
+      | userSIC       | deliveryZoneCodeFirst | deliveryZoneCodeSecond | deliveryZoneNameFirst | deliveryZoneNameSecond | facilityCodeFirst | facilityCodeSecond | programFirst | programSecond | schedule |
+      | storeInCharge | DZ1                   | DZ2                    | Delivery Zone First   | Delivery Zone Second   | F10               | F11                | VACCINES     | TB            | M        |
+    And I have data available for "Multiple" facilities attached to delivery zones
+    And I assign delivery zone "DZ1" to user "storeInCharge" having role "store in-charge"
+    When I am logged in as "storeInCharge"
+    And I access plan my distribution page
+    And I select delivery zone "Delivery Zone First"
+    And I select program "VACCINES"
+    And I select period "Period14"
+    And I initiate distribution
+    And I record data for distribution "1"
+    And I choose facility "F10"
+    And I navigate to Child Coverage tab
+    Then Verify "child coverage" indicator should be "RED"
 
   @smokeDistribution
   Scenario: User should verify facility and sync status

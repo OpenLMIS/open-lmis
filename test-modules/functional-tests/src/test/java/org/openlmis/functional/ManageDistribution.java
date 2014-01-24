@@ -63,7 +63,7 @@ public class ManageDistribution extends TestCaseHelper {
   FullCoveragePage fullCoveragePage;
   EPIUsePage epiUsePage;
   EpiInventoryPage epiInventoryPage;
-
+  ChildCoveragePage childCoveragePage;
   String productGroupCode = "PG1";
 
   @BeforeMethod(groups = "distribution")
@@ -75,6 +75,7 @@ public class ManageDistribution extends TestCaseHelper {
     observation = PageFactory.getInstanceOfObservation(testWebDriver);
     fullCoveragePage = PageFactory.getInstanceOfCoveragePage(testWebDriver);
     epiInventoryPage = PageFactory.getInstanceOfEpiInventoryPage(testWebDriver);
+    childCoveragePage = PageFactory.getInstanceOfChildCoveragePage(testWebDriver);
     refrigeratorPage = PageFactory.getInstanceOfRefrigeratorPage(testWebDriver);
 
     tabMap = new HashMap<String, DistributionTab>() {{
@@ -84,6 +85,7 @@ public class ManageDistribution extends TestCaseHelper {
       put("epi inventory", epiInventoryPage);
       put("refrigerator", refrigeratorPage);
 
+      put("child coverage", childCoveragePage);
     }};
   }
 
@@ -405,13 +407,12 @@ public class ManageDistribution extends TestCaseHelper {
   }
 
   @And("^I view epi inventory readings in DB for facility \"([^\"]*)\" for product \"([^\"]*)\":$")
-  public void verifyEpiInventoryDataInDB(String facilityCode, String productCode, DataTable tableData) throws SQLException {
+  public void verifyEpiInventoryDataInDB(String facilityCode,String productCode,DataTable tableData) throws SQLException {
     List<Map<String, String>> data = tableData.asMaps();
     for (Map map : data) {
-      verifyEpiInventoryDataInDatabase(map.get("existingQuantity").toString(), map.get("deliveredQuantity").toString(), map.get("spoiledQuantity").toString(), productCode, facilityCode);
+      verifyEpiInventoryDataInDatabase(map.get("existingQuantity").toString(),map.get("deliveredQuantity").toString(),map.get("spoiledQuantity").toString(),productCode,facilityCode);
     }
   }
-
   @Then("^I verify no record present in refrigerator problem table for refrigerator serial number \"([^\"]*)\" and facility \"([^\"]*)\"$")
   public void verifyNoRecordAddedToRefrigeratorProblemsTable(String refrigeratorSerialNumber, String facilityCode) throws SQLException {
     verifyRefrigeratorProblemDataNullInDatabase(refrigeratorSerialNumber, facilityCode);
@@ -513,7 +514,7 @@ public class ManageDistribution extends TestCaseHelper {
   @Then("^I verify distribution not initiated$")
   public void verifyDistributionNotInitiated() throws IOException {
     distributionPage = PageFactory.getInstanceOfDistributionPage(testWebDriver);
-    distributionPage.verifyFacilityNotSupportedMessage("VACCINES", "Delivery Zone First");
+    distributionPage.verifyFacilityNotSupportedMessage("VACCINES","Delivery Zone First");
     distributionPage.verifyNoDistributionCachedMessage();
   }
 
@@ -826,7 +827,7 @@ public class ManageDistribution extends TestCaseHelper {
     dbWrapper.insertProductWithGroup("Product6", "ProductName6", productGroupCode, true);
     dbWrapper.insertProgramProduct("Product5", programFirst, "10", "false");
     dbWrapper.insertProgramProduct("Product6", programFirst, "10", "true");
-    dbWrapper.updateActiveStatusOfProduct("Product6", "false");
+    dbWrapper.updateActiveStatusOfProduct("Product6","false");
 
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(userSIC, password);
@@ -894,6 +895,21 @@ public class ManageDistribution extends TestCaseHelper {
     assertFalse(warehouseLoadAmountPage.getTable1Data().contains("PG1-Name"));
   }
 
+  @And("^I navigate to Coverage tab$")
+  public void navigateToCoverageTab() throws Throwable {
+    fullCoveragePage.navigateToFullCoverage();
+  }
+
+  @And("^I navigate to Child Coverage tab$")
+  public void navigateToChildCoverageTab() throws Throwable {
+    childCoveragePage.navigateToChildCoverage();
+  }
+
+  @And("^I navigate to EPI Inventory tab$")
+  public void navigateToEpiInventoryTab() {
+    epiInventoryPage.navigateToEpiInventory();
+  }
+
   @AfterMethod(groups = "distribution")
   @After
   public void tearDown() throws Exception {
@@ -902,8 +918,8 @@ public class ManageDistribution extends TestCaseHelper {
       HomePage homePage = new HomePage(testWebDriver);
       homePage.logout(baseUrlGlobal);
     }
-    dbWrapper.deleteData();
-    dbWrapper.closeConnection();
+      dbWrapper.deleteData();
+      dbWrapper.closeConnection();
 
     ((JavascriptExecutor) TestWebDriver.getDriver()).executeScript("indexedDB.deleteDatabase('open_lmis')");
   }
