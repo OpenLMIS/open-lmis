@@ -543,8 +543,8 @@ public class ManageDistribution extends TestCaseHelper {
                                                   String deliveryZoneCodeSecond,
                                                   String deliveryZoneNameFirst, String deliveryZoneNameSecond,
                                                   String facilityCodeFirst, String facilityCodeSecond,
-                                                  String programFirst, String programSecond, String schedule) throws Exception {
-
+                                                  String programFirst, String programSecond, String schedule,
+                                                  String period, Integer totalNumberOfPeriods) throws Exception {
     List<String> rightsList = new ArrayList<>();
     rightsList.add("MANAGE_DISTRIBUTION");
     setupTestDataToInitiateRnRAndDistribution("F10", "F11", true, programFirst, userSIC, "200", rightsList,
@@ -806,7 +806,8 @@ public class ManageDistribution extends TestCaseHelper {
                                                                                       String deliveryZoneCodeSecond,
                                                                                       String deliveryZoneNameFirst, String deliveryZoneNameSecond,
                                                                                       String facilityCodeFirst, String facilityCodeSecond,
-                                                                                      String programFirst, String programSecond, String schedule) throws Exception {
+                                                                                      String programFirst, String programSecond, String schedule,
+                                                                                      String period, Integer totalNumberOfPeriods) throws Exception {
 
     List<String> rightsList = new ArrayList<>();
     rightsList.add("MANAGE_DISTRIBUTION");
