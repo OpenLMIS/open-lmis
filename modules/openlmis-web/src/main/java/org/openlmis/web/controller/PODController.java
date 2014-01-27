@@ -46,13 +46,18 @@ public class PODController extends BaseController {
   @RequestMapping(value = "/pod-orders", method = POST, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'MANAGE_POD')")
   public ResponseEntity<OpenLmisResponse> createPOD(@RequestParam Long orderId, HttpServletRequest request) throws ParseException {
+    OrderPODDTO orderPODDTO = OrderPODDTO.getOrderDetailsForPOD(orderService.getOrder(orderId));
     OrderPOD existingPOD = service.getPODByOrderId(orderId);
+    ResponseEntity<OpenLmisResponse> response;
     if (existingPOD != null) {
-      return response(ORDER_POD, existingPOD);
+      response = response(ORDER_POD, existingPOD);
+    } else {
+      OrderPOD orderPOD = new OrderPOD(orderId, loggedInUserId(request));
+      OrderPOD createdPOD = service.createPOD(orderPOD);
+      response = response(ORDER_POD, createdPOD, HttpStatus.CREATED);
     }
-
-    OrderPOD orderPOD = new OrderPOD(orderId, loggedInUserId(request));
-    return response(ORDER_POD, service.createPOD(orderPOD), HttpStatus.CREATED);
+    response.getBody().addData(ORDER, orderPODDTO);
+    return response;
   }
 
   @RequestMapping(value = "/pod-orders/{id}", method = GET, headers = ACCEPT_JSON)

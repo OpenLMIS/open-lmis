@@ -75,26 +75,39 @@ public class PODControllerTest {
 
     OrderPOD orderPOD = new OrderPOD();
     OrderPOD createdPOD = new OrderPOD();
+    mockStatic(OrderPODDTO.class);
 
     whenNew(OrderPOD.class).withArguments(orderId, USER_ID).thenReturn(orderPOD);
     when(service.getPODByOrderId(orderId)).thenReturn(null);
     when(service.createPOD(orderPOD)).thenReturn(createdPOD);
+    Order order = new Order(orderId);
+    OrderPODDTO orderPODDTO = mock(OrderPODDTO.class);
+    when(orderService.getOrder(orderId)).thenReturn(order);
+    when(OrderPODDTO.getOrderDetailsForPOD(order)).thenReturn(orderPODDTO);
 
     ResponseEntity<OpenLmisResponse> response = controller.createPOD(orderId, request);
 
     verify(service).createPOD(orderPOD);
     assertThat((OrderPOD) response.getBody().getData().get(ORDER_POD), is(orderPOD));
+    assertThat((OrderPODDTO) response.getBody().getData().get(ORDER), is(orderPODDTO));
     assertThat(response.getStatusCode(), is(HttpStatus.CREATED));
   }
 
   @Test
   public void shouldGetPODIfAlreadyExistsForOrder() throws Exception {
+    Long orderId = 2L;
     OrderPOD existingPOD = new OrderPOD();
+    mockStatic(OrderPODDTO.class);
+    Order order = new Order(orderId);
+    OrderPODDTO orderPODDTO = mock(OrderPODDTO.class);
+    when(orderService.getOrder(orderId)).thenReturn(order);
+    when(OrderPODDTO.getOrderDetailsForPOD(order)).thenReturn(orderPODDTO);
     when(service.getPODByOrderId(2L)).thenReturn(existingPOD);
 
     ResponseEntity<OpenLmisResponse> response = controller.createPOD(2L, request);
 
     assertThat((OrderPOD) response.getBody().getData().get(PODController.ORDER_POD), is(existingPOD));
+    assertThat((OrderPODDTO) response.getBody().getData().get(ORDER), is(orderPODDTO));
     assertThat(response.getStatusCode(), is(HttpStatus.OK));
   }
 
