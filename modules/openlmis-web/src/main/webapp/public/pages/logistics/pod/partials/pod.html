@@ -8,12 +8,12 @@
   ~  You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
   -->
 
-<div ng-controller="PODController">
+<div>
 
   <h2 openlmis-message="header.proof.of.delivery"></h2>
   <ng-include src="'/public/pages/logistics/pod/partials/header.html'"></ng-include>
-  <div ng-hide="pod.podLineItems.length" class="alert alert-info" openlmis-message="label.no.products"></div>
-  <div ng-show="pod.podLineItems.length" class="rnr-table">
+  <div ng-hide="pageLineItems.length" class="alert alert-info" openlmis-message="label.no.products"></div>
+  <div ng-show="pageLineItems.length" class="rnr-table">
     <table id="podTable" class="table table-bordered" fixed-table-header>
       <thead>
       <tr>
@@ -23,7 +23,7 @@
       </tr>
       </thead>
 
-      <tbody ng-repeat="podLineItem in pod.podLineItems">
+      <tbody ng-repeat="podLineItem in pageLineItems">
       <tr>
         <td class="productCategory" id="category_{{$index}}" colspan="{{columns.length}}"
             ng-show="isCategorySameAsPreviousLineItem($index)"
@@ -71,5 +71,8 @@
       </tr>
       </tbody>
     </table>
+    <div>
+      <openlmis-pagination num-pages="numberOfPages" current-page="currentPage" max-size="10"></openlmis-pagination>
+    </div>
   </div>
 </div>

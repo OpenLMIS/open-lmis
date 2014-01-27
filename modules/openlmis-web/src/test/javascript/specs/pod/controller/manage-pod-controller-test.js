@@ -58,6 +58,6 @@ describe('ManagePODController', function () {
     expect(scope.$parent.pod).toEqual(data.orderPOD);
     expect(scope.$parent.order).toEqual(data.order);
     expect(scope.$parent.requisitionType).toEqual("requisition.type.emergency");
-    expect(location.url).toHaveBeenCalledWith('/pod-orders/' + orderId);
+    expect(location.url).toHaveBeenCalledWith('/pod-orders/' + orderId + '?page=1');
   });
 });

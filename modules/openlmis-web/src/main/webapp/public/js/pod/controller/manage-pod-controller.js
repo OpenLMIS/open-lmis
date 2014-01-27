@@ -20,7 +20,7 @@ function ManagePODController($scope, OrdersForManagePOD, messageService, OrderPO
     showFilter: false,
     enableColumnResize: true,
     enableSorting: false,
-    afterSelectionChange: function (rowItem, event) {
+    afterSelectionChange: function (rowItem) {
       $scope.createPOD(rowItem.entity.id);
     },
     columnDefs: [
@@ -35,7 +35,7 @@ function ManagePODController($scope, OrdersForManagePOD, messageService, OrderPO
       {field: 'emergency', displayName: messageService.get("requisition.type.emergency"),
         cellTemplate: '<div class="ngCellText checked"><i ng-class="{\'icon-ok\': row.entity.rnr.emergency}"></i></div>',
         width: 90 },
-      {cellTemplate: "<div class='ngCellText'><a ng-click='createPOD({{row.entity.id}})' id='updatePod{{row.rowIndex}}' openlmis-message='link.update.pod'></a></div>", width: 180}
+      {cellTemplate: "<div class='ngCellText'><a href='' id='updatePod{{row.rowIndex}}' openlmis-message='link.update.pod'></a></div>", width: 180}
     ]
   };
 
@@ -44,7 +44,7 @@ function ManagePODController($scope, OrdersForManagePOD, messageService, OrderPO
       $scope.$parent.pod = data.orderPOD;
       $scope.$parent.order = data.order;
       $scope.$parent.requisitionType = $scope.order.emergency ? "requisition.type.emergency" : "requisition.type.regular";
-      $location.url('/pod-orders/' + $scope.pod.id);
+      $location.url('/pod-orders/' + $scope.pod.id + '?page=1');
     }, {});
   };
 

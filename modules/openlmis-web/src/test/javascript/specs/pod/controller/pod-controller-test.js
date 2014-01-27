@@ -9,40 +9,81 @@
  */
 
 describe('PODController', function () {
-  var scope, controller, $httpBackend, routeParams, responseData;
+  var scope, controller, $httpBackend, routeParams, response, location;
 
   beforeEach(module('openlmis.services'));
-  beforeEach(inject(function ($rootScope, $controller, _$httpBackend_) {
+  beforeEach(inject(function ($rootScope, $controller, _$httpBackend_, _$location_) {
     var podId = '1234';
 
     scope = $rootScope.$new();
     controller = $controller;
     $httpBackend = _$httpBackend_;
+    location = _$location_;
 
     routeParams = { id: podId};
     scope.$parent.pod = undefined;
-    responseData = {
+    response = {
       orderPOD: {
         podLineItems: [
-          {productCode: 'P10',
-            productCategory: 'antibiotics'},
-          {productCode: 'P11',
-            productCategory: 'anti-fungal'}
+          {productCode: 'P10', productCategory: 'antibiotics'},
+          {productCode: 'P11', productCategory: 'anti-fungal'},
+          {productCode: 'P12', productCategory: 'anti-histamine'},
+          {productCode: 'P13', productCategory: 'anti-septic'},
+          {productCode: 'P15', productCategory: 'pain-relief'}
         ]
       },
-      order: { facilityCode: 'F10',
-        emergency: true
-      }
+      order: { facilityCode: 'F10', emergency: true}
     };
-    $httpBackend.expect('GET', '/pod-orders/' + podId + '.json').respond(200, responseData);
-    controller(PODController, {$scope: scope, $routeParams: routeParams});
-    $httpBackend.flush();
+
+    controller(PODController, {$scope: scope, $routeParams: routeParams, $location: location, orderPOD: response, pageSize: 2});
   }));
 
-  it('should set order, pod in scope if not present in parent scope', function () {
-    expect(scope.pod).toEqual(responseData.orderPOD);
-    expect(scope.order).toEqual(responseData.order);
+  it('should set pageSize in scope', function () {
+    expect(scope.pageSize).toEqual(2);
+  });
+
+  it('should calculate and set number of pages in scope', function () {
+    expect(scope.numberOfPages).toEqual(3);
+  });
+
+  it('should calculate and set current page in scope', function () {
+    expect(scope.currentPage).toEqual(1);
+  });
+
+  it('should set lineItems in current page', function () {
+    expect(scope.pageLineItems).toEqual([
+      {productCode: 'P10', productCategory: 'antibiotics'},
+      {productCode: 'P11', productCategory: 'anti-fungal'}
+    ]);
+  });
+
+  it('should set order, pod and requisition type in scope', function () {
+    expect(scope.pod).toEqual(response.orderPOD);
+    expect(scope.order).toEqual(response.order);
     expect(scope.requisitionType).toEqual("requisition.type.emergency");
+  });
+
+  it('should update page number in url when current page is updated', function () {
+    scope.currentPage = 3;
+    spyOn(location, 'search');
+
+    scope.$apply();
+
+    expect(location.search).toHaveBeenCalledWith('page', 3);
+  });
+
+  it('should update line items in page when page in url is updated', function () {
+    routeParams.page = 2;
+    spyOn(location, 'search');
+
+    scope.$broadcast('$routeUpdate');
+
+    expect(scope.currentPage).toEqual(2);
+    expect(scope.pageLineItems).toEqual([
+      {productCode: 'P12', productCategory: 'anti-histamine'},
+      {productCode: 'P13', productCategory: 'anti-septic'}
+    ]);
+    expect(location.search).toHaveBeenCalledWith('page', 2);
   });
 
   it('should return false if category is same for the current and previous line item same', function () {

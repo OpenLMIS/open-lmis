@@ -8,9 +8,9 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-angular.module('pod', ['openlmis', 'ngGrid', 'ui.bootstrap']).config(['$routeProvider', function ($routeProvider) {
+var podModule = angular.module('pod', ['openlmis', 'ngGrid', 'ui.bootstrap']).config(['$routeProvider', function ($routeProvider) {
   $routeProvider.
       when('/manage-pod-orders', {controller: ManagePODController, templateUrl: 'partials/manage-pod.html'}).
-      when('/pod-orders/:id', {controller: PODController, templateUrl: 'partials/pod.html'}).
+      when('/pod-orders/:id', {controller: PODController, templateUrl: 'partials/pod.html', resolve: PODController.resolve, reloadOnSearch: false}).
       otherwise({redirectTo: '/manage-pod-orders'});
 }]);

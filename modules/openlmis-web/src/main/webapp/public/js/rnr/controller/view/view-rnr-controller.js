@@ -65,10 +65,10 @@ ViewRnrController.resolve = {
     return deferred.promise;
   },
 
-  pageSize: function ($q, $timeout, LineItemPageSize) {
+  pageSize: function ($q, $timeout, LineItemsPerPage) {
     var deferred = $q.defer();
     $timeout(function () {
-      LineItemPageSize.get({}, function (data) {
+      LineItemsPerPage.get({}, function (data) {
         deferred.resolve(data.pageSize);
       }, {});
     }, 100);
