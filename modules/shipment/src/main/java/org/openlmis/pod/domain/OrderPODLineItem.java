@@ -82,11 +82,11 @@ public class OrderPODLineItem extends BaseModel {
   private void create(ShipmentLineItem shipmentLineItem) {
     this.setProductCode(shipmentLineItem.getProductCode());
     this.setProductCategory(shipmentLineItem.getProductCategory());
-//    this.setProductCategoryDisplayOrder(shipmentLineItem.getProductCategoryDisplayOrder());
-//    this.setProductDisplayOrder(shipmentLineItem.getProductDisplayOrder());
+    this.setProductCategoryDisplayOrder(shipmentLineItem.getProductCategoryDisplayOrder());
+    this.setProductDisplayOrder(shipmentLineItem.getProductDisplayOrder());
     this.setProductName(shipmentLineItem.getProductName());
     this.setDispensingUnit(shipmentLineItem.getDispensingUnit());
     this.setPacksToShip(shipmentLineItem.getPacksToShip());
-//    this.setFullSupply(shipmentLineItem.getFullSupply());
+    this.setFullSupply(shipmentLineItem.getFullSupply());
   }
 }
