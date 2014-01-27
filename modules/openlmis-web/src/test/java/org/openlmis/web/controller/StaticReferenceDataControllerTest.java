@@ -39,7 +39,7 @@ public class StaticReferenceDataControllerTest {
   @Test
   public void shouldGetPageSize() throws Exception {
 
-    when(service.getPropertyValue(StaticReferenceDataController.RNR_LINEITEM_PAGE_SIZE)).thenReturn("2");
+    when(service.getPropertyValue(StaticReferenceDataController.LINE_ITEMS_PER_PAGE)).thenReturn("2");
 
     ResponseEntity<OpenLmisResponse> response = staticReferenceDataController.getPageSize();
 
