@@ -51,7 +51,6 @@ public class E2EDistributionTest extends TestCaseHelper {
 
     List<String> rightsList = new ArrayList<String>();
     rightsList.add("MANAGE_DISTRIBUTION");
-    rightsList.add("ADMIN");
     setupTestDataToInitiateRnRAndDistribution(facilityCodeFirst, facilityCodeSecond, true, programFirst, userSIC, "200", rightsList, programSecond, "District1", "Ngorongoro", "Ngorongoro");
     setupDataForDeliveryZone(true, deliveryZoneCodeFirst, deliveryZoneCodeSecond,
       deliveryZoneNameFirst, deliveryZoneNameSecond,
@@ -151,15 +150,12 @@ public class E2EDistributionTest extends TestCaseHelper {
     GeneralObservationPage generalObservationPage = epiUsePage.navigateToGeneralObservations();
     generalObservationPage.enterData("some observations", "samuel", "Doe", "Verifier", "XYZ");
 
-    ChildCoveragePage childCoveragePage=generalObservationPage.navigateToChildCoverage();
+    ChildCoveragePage childCoveragePage = generalObservationPage.navigateToChildCoverage();
     SeleneseTestBase.assertEquals(childCoveragePage.getTextOfTargetGroupValue(9), "300");
     SeleneseTestBase.assertEquals(childCoveragePage.getTextOfTargetGroupValue(10), "300");
     SeleneseTestBase.assertEquals(childCoveragePage.getTextOfTargetGroupValue(11), "300");
     SeleneseTestBase.assertEquals(childCoveragePage.getTextOfTargetGroupValue(1), "");
     SeleneseTestBase.assertEquals(childCoveragePage.getTextOfTargetGroupValue(12), "");
-
-    ResultSet childCoverageDetails = dbWrapper.getChildCoverageDetails(childCoveragePage.getTextOfRegimenPCV10Dose1(),"F10");
-    SeleneseTestBase.assertEquals("300", childCoverageDetails.getInt("targetGroup"));
 
     homePage.navigateHomePage();
     homePage.navigateOfflineDistribution();
@@ -225,6 +221,9 @@ public class E2EDistributionTest extends TestCaseHelper {
     verifyEpiInventoryDataInDatabase(null, "10", null, "P10", facilityCodeFirst);
     verifyEpiInventoryDataInDatabase(null, "20", null, "Product6", facilityCodeFirst);
     verifyEpiInventoryDataInDatabase(null, "30", null, "P11", facilityCodeFirst);
+
+    ResultSet childCoverageDetails = dbWrapper.getChildCoverageDetails("PCV10 1st dose", "F10");
+    SeleneseTestBase.assertEquals("300", childCoverageDetails.getInt("targetGroup"));
 
     refrigeratorPage.navigateToGeneralObservations();
     generalObservationPage.verifyAllFieldsDisabled();

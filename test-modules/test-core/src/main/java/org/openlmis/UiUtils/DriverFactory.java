@@ -47,7 +47,7 @@ public class DriverFactory {
     String Separator = getProperty("file.separator");
     File parentDir = new File(getProperty("user.dir"));
 
-    CHROME_FOLDER = parentDir.getParentFile().getParentFile().getPath() + Separator + "test-core" + Separator + "src" + Separator + "main" + Separator + "java" + Separator + "org" + Separator + "openlmis" + Separator + "UiUtils" + Separator;
+    CHROME_FOLDER = "/Users/pranjali/open-lmis/test-modules/test-core/src/main/java/org/openlmis/UiUtils/";
     OUTPUT_FOLDER = parentDir.getPath() + Separator + "test-modules" + Separator + "test-core" + Separator + "src" + Separator + "main" + Separator + "java" + Separator + "org" + Separator + "openlmis" + Separator + "UiUtils" + Separator;
     INPUT_ZIP_FILE_IEDRIVER = OUTPUT_FOLDER + "IEDriverServer_Win32_2.39.0.zip";
     INPUT_ZIP_FILE_CHROMEDRIVER = OUTPUT_FOLDER + "chromedriver_win32.zip";

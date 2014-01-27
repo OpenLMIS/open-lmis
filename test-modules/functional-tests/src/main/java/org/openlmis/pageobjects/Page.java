@@ -33,7 +33,9 @@ public abstract class Page {
   }
 
   public LoginPage logout() throws IOException {
+    testWebDriver.sleep(500);
     logoutLink.click();
+    testWebDriver.sleep(500);
     return new LoginPage(testWebDriver);
   }
 
