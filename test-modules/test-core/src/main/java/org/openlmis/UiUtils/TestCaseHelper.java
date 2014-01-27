@@ -11,7 +11,6 @@
 package org.openlmis.UiUtils;
 
 
-import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.UnreachableBrowserException;
@@ -177,11 +176,14 @@ public class TestCaseHelper {
     dbWrapper.insertProgramProductsWithCategory(product, program);
   }
 
-  public void setupProgramProductISA(String program, String product, String whoratio, String dosesperyear, String wastageFactor, String bufferpercentage, String minimumvalue, String maximumvalue, String adjustmentvalue) throws IOException, SQLException {
-    dbWrapper.insertProgramProductISA(program, product, whoratio, dosesperyear, wastageFactor, bufferpercentage, minimumvalue, maximumvalue, adjustmentvalue);
+  public void setupProgramProductISA(String program, String product, String whoRatio, String dosesPerYear, String wastageFactor,
+                                     String bufferPercentage, String minimumValue, String maximumValue, String adjustmentValue) throws IOException, SQLException {
+    dbWrapper.insertProgramProductISA(program, product, whoRatio, dosesPerYear, wastageFactor, bufferPercentage, minimumValue,
+      maximumValue, adjustmentValue);
   }
 
-  public void setupRequisitionGroupData(String RGCode1, String RGCode2, String SupervisoryNodeCode1, String SupervisoryNodeCode2, String Facility1, String Facility2) throws IOException, SQLException {
+  public void setupRequisitionGroupData(String RGCode1, String RGCode2, String SupervisoryNodeCode1, String SupervisoryNodeCode2,
+                                        String Facility1, String Facility2) throws IOException, SQLException {
     dbWrapper.insertRequisitionGroups(RGCode1, RGCode2, SupervisoryNodeCode1, SupervisoryNodeCode2);
     dbWrapper.insertRequisitionGroupMembers(Facility1, Facility2);
     dbWrapper.insertRequisitionGroupProgramSchedule();
@@ -189,7 +191,6 @@ public class TestCaseHelper {
 
   public void setupTestRoleRightsData(String roleName, String roleRight) throws IOException, SQLException {
     dbWrapper.insertRole(roleName, "");
-
     for (String aRight : roleRight.split(",")) {
       dbWrapper.assignRight(roleName, aRight);
     }
@@ -203,7 +204,7 @@ public class TestCaseHelper {
       setupRnRTestDataRnRForCommTrack(true, "HIV", "commTrack", "700", rightsList);
   }
 
-  public void setupDataRequisitionApprover() throws IOException, SQLException {
+  public void setupDataRequisitionApprove() throws IOException, SQLException {
     List<String> rightsList = asList("APPROVE_REQUISITION", "CONVERT_TO_ORDER");
     setupTestDataToApproveRnR("commTrack1", "701", rightsList);
   }
@@ -227,8 +228,8 @@ public class TestCaseHelper {
   }
 
   public void addOnDataSetupForDeliveryZoneForMultipleFacilitiesAttachedWithSingleDeliveryZone(String deliveryZoneCodeFirst,
-                                                                                               String facilityCodeThird,
-                                                                                               String facilityCodeFourth, String geoZone1, String geoZone2, String parentGeoZone) throws IOException, SQLException {
+                                                                                               String facilityCodeThird, String facilityCodeFourth, String geoZone1, String geoZone2,
+                                                                                               String parentGeoZone) throws IOException, SQLException {
     dbWrapper.insertGeographicZone(geoZone1, geoZone2, parentGeoZone);
     dbWrapper.insertFacilitiesWithDifferentGeoZones(facilityCodeThird, facilityCodeFourth, geoZone1, geoZone2);
     dbWrapper.insertDeliveryZoneMembers(deliveryZoneCodeFirst, facilityCodeThird);
@@ -236,8 +237,8 @@ public class TestCaseHelper {
   }
 
   public void setupTestDataToInitiateRnRAndDistribution(String facilityCode1, String facilityCode2, boolean configureTemplate, String program, String user, String userId,
-                                                        List<String> rightsList, String programCode,
-                                                        String geoLevel1, String geoLevel2, String parentGeoLevel) throws Exception {
+                                                        List<String> rightsList, String programCode, String geoLevel1, String geoLevel2,
+                                                        String parentGeoLevel) throws Exception {
     setupProductTestData("P10", "P11", program, "lvl3_hospital");
     dbWrapper.insertGeographicZone(geoLevel1, geoLevel1, parentGeoLevel);
     dbWrapper.insertFacilitiesWithDifferentGeoZones(facilityCode1, facilityCode2, geoLevel2, geoLevel1);
@@ -308,32 +309,27 @@ public class TestCaseHelper {
     return (new BigDecimal(calculatedISA).setScale(0, BigDecimal.ROUND_CEILING)).intValue();
   }
 
-  public void setupDeliveryZoneRolesAndRights(String deliveryZoneCodeFirst, String deliveryZoneCodeSecond,
-                                              String deliveryZoneNameFirst, String deliveryZoneNameSecond,
-                                              String facilityCodeFirst, String facilityCodeSecond, String programFirst,
-                                              String programSecond, String schedule, String roleName)
-    throws IOException, SQLException {
-
+  public void setupDeliveryZoneRolesAndRights(String deliveryZoneCodeFirst, String deliveryZoneCodeSecond, String deliveryZoneNameFirst,
+                                              String deliveryZoneNameSecond, String facilityCodeFirst, String facilityCodeSecond,
+                                              String programFirst, String programSecond, String schedule, String roleName) throws IOException, SQLException {
     dbWrapper.insertFacilities(facilityCodeFirst, facilityCodeSecond);
     dbWrapper.insertSchedule(schedule, "Monthly", "Month");
     setupTestRoleRightsData(roleName, "MANAGE_DISTRIBUTION");
-    setupDataForDeliveryZone(true, deliveryZoneCodeFirst, deliveryZoneCodeSecond, deliveryZoneNameFirst,
-      deliveryZoneNameSecond, facilityCodeFirst, facilityCodeSecond, programFirst, programSecond, schedule);
+    setupDataForDeliveryZone(true, deliveryZoneCodeFirst, deliveryZoneCodeSecond, deliveryZoneNameFirst, deliveryZoneNameSecond,
+      facilityCodeFirst, facilityCodeSecond, programFirst, programSecond, schedule);
   }
 
   public void setupDeliveryZoneRolesAndRightsAfterWarehouse(String deliveryZoneCodeFirst, String deliveryZoneCodeSecond,
                                                             String deliveryZoneNameFirst, String deliveryZoneNameSecond,
-                                                            String facilityCodeFirst, String facilityCodeSecond,
-                                                            String programFirst, String programSecond, String schedule,
-                                                            String roleName) throws IOException, SQLException {
+                                                            String facilityCodeFirst, String facilityCodeSecond, String programFirst,
+                                                            String programSecond, String schedule, String roleName) throws IOException, SQLException {
     setupTestRoleRightsData(roleName, "MANAGE_DISTRIBUTION");
     setupDataForDeliveryZone(true, deliveryZoneCodeFirst, deliveryZoneCodeSecond, deliveryZoneNameFirst,
       deliveryZoneNameSecond, facilityCodeFirst, facilityCodeSecond, programFirst, programSecond, schedule);
   }
 
-  public void setupWarehouseRolesAndRights(String facilityCodeFirst, String facilityCodeSecond,
-                                           String programName,
-                                           String schedule, String roleName) throws IOException, SQLException {
+  public void setupWarehouseRolesAndRights(String facilityCodeFirst, String facilityCodeSecond, String programName, String schedule,
+                                           String roleName) throws IOException, SQLException {
     dbWrapper.insertFacilities(facilityCodeFirst, facilityCodeSecond);
     dbWrapper.insertSchedule(schedule, "Monthly", "Month");
     setupTestRoleRightsData(roleName, "FACILITY_FILL_SHIPMENT");
@@ -476,8 +472,8 @@ public class TestCaseHelper {
       numberOfPages = numberOfPages + 1;
     }
     for (int i = 1; i <= numberOfPages; i++) {
-      testWebDriver.waitForElementToAppear(testWebDriver.findElement(By.id(String.valueOf(i))));
-      assertTrue(testWebDriver.findElement(By.id(String.valueOf(i))).isDisplayed());
+      testWebDriver.waitForElementToAppear(testWebDriver.getElementById(String.valueOf(i)));
+      assertTrue(testWebDriver.getElementById(String.valueOf(i)).isDisplayed());
     }
   }
 
@@ -511,10 +507,9 @@ public class TestCaseHelper {
     assertEquals(testWebDriver.getElementById("previousPageLink").getCssValue("color"), "rgba(204, 204, 204, 1)");
   }
 
-  public void verifyGeneralObservationsDataInDatabase(String facilityCode, String observation, String confirmedByName, String confirmedByTitle,
-                                                      String verifiedByName, String verifiedByTitle) throws SQLException {
+  public void verifyGeneralObservationsDataInDatabase(String facilityCode, String observation, String confirmedByName,
+                                                      String confirmedByTitle, String verifiedByName, String verifiedByTitle) throws SQLException {
     Map<String, String> generalObservations = dbWrapper.getFacilityVisitDetails(facilityCode);
-
     assertEquals(observation, generalObservations.get("observations"));
     assertEquals(confirmedByName, generalObservations.get("confirmedByName"));
     assertEquals(confirmedByTitle, generalObservations.get("confirmedByTitle"));
@@ -522,9 +517,8 @@ public class TestCaseHelper {
     assertEquals(verifiedByTitle, generalObservations.get("verifiedByTitle"));
   }
 
-  public void verifyEpiUseDataInDatabase(Integer stockAtFirstOfMonth, Integer receivedValue, Integer distributedValue,
-                                         Integer loss, Integer stockAtEndOfMonth, String expirationDate, String productGroupCode,
-                                         String facilityCode) throws SQLException {
+  public void verifyEpiUseDataInDatabase(Integer stockAtFirstOfMonth, Integer receivedValue, Integer distributedValue, Integer loss,
+                                         Integer stockAtEndOfMonth, String expirationDate, String productGroupCode, String facilityCode) throws SQLException {
     Map<String, String> epiDetails = dbWrapper.getEpiUseDetails(productGroupCode, facilityCode);
 
     assertEquals(stockAtFirstOfMonth, epiDetails.get("stockatfirstofmonth"));
@@ -544,8 +538,9 @@ public class TestCaseHelper {
     assertEquals(spoiledQuantity, epiInventoryDetails.getString("spoiledQuantity"));
   }
 
-  public void verifyRefrigeratorReadingDataInDatabase(String facilityCode, String refrigeratorSerialNumber, Float temperature, String functioningCorrectly, Integer lowAlarmEvents,
-                                                      Integer highAlarmEvents, String problemSinceLastTime, String notes) throws SQLException {
+  public void verifyRefrigeratorReadingDataInDatabase(String facilityCode, String refrigeratorSerialNumber, Float temperature,
+                                                      String functioningCorrectly, Integer lowAlarmEvents, Integer highAlarmEvents,
+                                                      String problemSinceLastTime, String notes) throws SQLException {
     ResultSet resultSet = dbWrapper.getRefrigeratorReadings(refrigeratorSerialNumber, facilityCode);
     assertEquals(temperature, resultSet.getString("temperature"));
     assertEquals(functioningCorrectly, resultSet.getString("functioningCorrectly"));
@@ -570,8 +565,9 @@ public class TestCaseHelper {
     assertFalse(resultSet.next());
   }
 
-  public void verifyRefrigeratorProblemDataInDatabase(String facilityCode, String refrigeratorSerialNumber, Boolean operatorError, Boolean burnerProblem, Boolean gasLeakage,
-                                                      Boolean egpFault, Boolean thermostatSetting, Boolean other, String otherProblemExplanation) throws SQLException {
+  public void verifyRefrigeratorProblemDataInDatabase(String facilityCode, String refrigeratorSerialNumber, Boolean operatorError,
+                                                      Boolean burnerProblem, Boolean gasLeakage, Boolean egpFault,
+                                                      Boolean thermostatSetting, Boolean other, String otherProblemExplanation) throws SQLException {
     ResultSet resultSet = dbWrapper.getRefrigeratorReadings(refrigeratorSerialNumber, facilityCode);
     Long readingId = resultSet.getLong("id");
     resultSet = dbWrapper.getRefrigeratorProblems(readingId);

@@ -29,43 +29,40 @@ public class WarehouseLoadAmountPage extends Page {
   @FindBy(how = How.XPATH, using = "//div[@class='facilities-isa-amount-table']")
   private WebElement Table1 = null;
 
-  @FindBy(how = How.ID, using = "geoZone1")
-  private WebElement Table2 = null;
-
-  @FindBy(how= How.ID, using = "warehouseLoadAmountLabel")
+  @FindBy(how = How.ID, using = "warehouseLoadAmountLabel")
   private WebElement warehouseLoadAmountLabel = null;
 
-  @FindBy(how= How.ID, using = "deliveryZoneLabel")
+  @FindBy(how = How.ID, using = "deliveryZoneLabel")
   private WebElement deliveryZoneLabel = null;
 
-  @FindBy(how= How.ID, using = "deliveryZoneName")
+  @FindBy(how = How.ID, using = "deliveryZoneName")
   private WebElement deliveryZoneName = null;
 
-  @FindBy(how= How.ID, using = "programLabel")
+  @FindBy(how = How.ID, using = "programLabel")
   private WebElement programLabel = null;
 
-  @FindBy(how= How.ID, using = "programName")
+  @FindBy(how = How.ID, using = "programName")
   private WebElement programName = null;
 
-  @FindBy(how= How.ID, using = "periodLabel")
+  @FindBy(how = How.ID, using = "periodLabel")
   private WebElement periodLabel = null;
 
-  @FindBy(how= How.ID, using = "periodName")
+  @FindBy(how = How.ID, using = "periodName")
   private WebElement periodName = null;
 
-  @FindBy(how= How.ID, using = "deliveryZoneNameLabel")
+  @FindBy(how = How.ID, using = "deliveryZoneNameLabel")
   private WebElement deliveryZoneNameLabel = null;
 
-  @FindBy(how= How.ID, using = "totalLabel")
+  @FindBy(how = How.ID, using = "totalLabel")
   private WebElement totalLabel = null;
 
-  @FindBy(how= How.ID, using = "geoZoneLevelName")
+  @FindBy(how = How.ID, using = "geoZoneLevelName")
   private WebElement geoZoneLevelName = null;
 
-  @FindBy(how= How.ID, using = "aggregatePopulationLabel")
+  @FindBy(how = How.ID, using = "aggregatePopulationLabel")
   private WebElement aggregatePopulationLabel = null;
 
-  @FindBy(how= How.ID, using = "zoneTotalLabel")
+  @FindBy(how = How.ID, using = "zoneTotalLabel")
   private WebElement zoneTotalLabel = null;
 
   public WarehouseLoadAmountPage(TestWebDriver driver) throws IOException {
@@ -75,64 +72,64 @@ public class WarehouseLoadAmountPage extends Page {
 
   }
 
-  public String getPageHeader(){
+  public String getPageHeader() {
     testWebDriver.waitForElementToAppear(warehouseLoadAmountLabel);
     return warehouseLoadAmountLabel.getText();
   }
 
-  public String getDeliveryZoneLabelInHeader(){
+  public String getDeliveryZoneLabelInHeader() {
     testWebDriver.waitForElementToAppear(deliveryZoneLabel);
     return deliveryZoneLabel.getText();
   }
 
-  public String getDeliveryZoneNameInHeader(){
+  public String getDeliveryZoneNameInHeader() {
     testWebDriver.waitForElementToAppear(deliveryZoneName);
     return deliveryZoneName.getText();
   }
 
-  public String getProgramLabelInHeader(){
+  public String getProgramLabelInHeader() {
     testWebDriver.waitForElementToAppear(programLabel);
     return programLabel.getText();
   }
 
-  public String getProgramNameInHeader(){
+  public String getProgramNameInHeader() {
     testWebDriver.waitForElementToAppear(programName);
     return programName.getText();
   }
 
-  public String getPeriodLabelInHeader(){
+  public String getPeriodLabelInHeader() {
     testWebDriver.waitForElementToAppear(periodLabel);
     return periodLabel.getText();
   }
 
-  public String getPeriodNameInHeader(){
+  public String getPeriodNameInHeader() {
     testWebDriver.waitForElementToAppear(periodName);
     return periodName.getText();
   }
 
-  public String getDeliveryZoneName(){
-     testWebDriver.waitForElementToAppear(deliveryZoneNameLabel);
-    return deliveryZoneNameLabel.getText()+" "+totalLabel.getText();
+  public String getDeliveryZoneName() {
+    testWebDriver.waitForElementToAppear(deliveryZoneNameLabel);
+    return deliveryZoneNameLabel.getText() + " " + totalLabel.getText();
   }
 
-  public String getGeoZoneLevelHeaderForAggregatedTable(){
+  public String getGeoZoneLevelHeaderForAggregatedTable() {
     testWebDriver.waitForElementToAppear(geoZoneLevelName);
     return geoZoneLevelName.getText();
   }
 
-  public String getPopulationHeaderForAggregatedTable(){
+  public String getPopulationHeaderForAggregatedTable() {
     testWebDriver.waitForElementToAppear(aggregatePopulationLabel);
     return aggregatePopulationLabel.getText();
   }
 
-  public String getProductGroupHeaderForAggregatedTable(int productNumber){
-    WebElement productGroupHeader= testWebDriver.getElementById("productGroupAggregated"+(productNumber-1));
+  public String getProductGroupHeaderForAggregatedTable(int productNumber) {
+    WebElement productGroupHeader = testWebDriver.getElementById("productGroupAggregated" + (productNumber - 1));
     testWebDriver.waitForElementToAppear(productGroupHeader);
     return productGroupHeader.getText();
   }
 
-  public String getProductNameHeaderForAggregatedTable(int productNumber){
-    WebElement productName = testWebDriver.getElementById("aggregateProductName"+(productNumber-1));
+  public String getProductNameHeaderForAggregatedTable(int productNumber) {
+    WebElement productName = testWebDriver.getElementById("aggregateProductName" + (productNumber - 1));
     testWebDriver.waitForElementToAppear(productName);
     return productName.getText();
   }
@@ -155,13 +152,13 @@ public class WarehouseLoadAmountPage extends Page {
   }
 
   public String getAggregateTablePopulation(int rowNumber) {
-    WebElement population = testWebDriver.getElementById("populationForGeoZone" + (rowNumber-1));
+    WebElement population = testWebDriver.getElementById("populationForGeoZone" + (rowNumber - 1));
     testWebDriver.waitForElementToAppear(population);
     return population.getText();
   }
 
   public String getAggregateTableProductIsa(int rowNumber, int productNumber) {
-    WebElement productIsa = testWebDriver.getElementById("productIsaForGeoZone" + (rowNumber-1) +(productNumber-1));
+    WebElement productIsa = testWebDriver.getElementById("productIsaForGeoZone" + (rowNumber - 1) + (productNumber - 1));
     testWebDriver.waitForElementToAppear(productIsa);
     return productIsa.getText();
   }
@@ -173,84 +170,84 @@ public class WarehouseLoadAmountPage extends Page {
   }
 
   public String getAggregateTableTotalProductIsa(int productNumber) {
-    WebElement totalProductIsa = testWebDriver.getElementById("productIsaAggregate" +(productNumber-1));
+    WebElement totalProductIsa = testWebDriver.getElementById("productIsaAggregate" + (productNumber - 1));
     testWebDriver.waitForElementToAppear(totalProductIsa);
     return totalProductIsa.getText();
   }
 
 
-  public String getGeoZoneTitleForTable(int tableNumber){
-    WebElement geoZoneTitle= testWebDriver.getElementById("geoZoneTitle"+(tableNumber-1));
+  public String getGeoZoneTitleForTable(int tableNumber) {
+    WebElement geoZoneTitle = testWebDriver.getElementById("geoZoneTitle" + (tableNumber - 1));
     testWebDriver.waitForElementToAppear(geoZoneTitle);
     return geoZoneTitle.getText();
   }
 
-  public String getFacilityHeaderForTable(int tableNumber){
-    WebElement facilityHeader= testWebDriver.getElementById("facilityLabel"+(tableNumber-1));
+  public String getFacilityHeaderForTable(int tableNumber) {
+    WebElement facilityHeader = testWebDriver.getElementById("facilityLabel" + (tableNumber - 1));
     testWebDriver.waitForElementToAppear(facilityHeader);
     return facilityHeader.getText();
   }
 
-  public String getPopulationHeaderForTable(int tableNumber){
-    WebElement populationLabel= testWebDriver.getElementById("populationLabel"+(tableNumber-1));
+  public String getPopulationHeaderForTable(int tableNumber) {
+    WebElement populationLabel = testWebDriver.getElementById("populationLabel" + (tableNumber - 1));
     testWebDriver.waitForElementToAppear(populationLabel);
     return populationLabel.getText();
   }
 
-  public String getProductGroupHeaderForTable(int tableNumber, int productNumber){
-    WebElement productGroupHeader= testWebDriver.getElementById("productGroup"+(tableNumber-1)+(productNumber-1));
+  public String getProductGroupHeaderForTable(int tableNumber, int productNumber) {
+    WebElement productGroupHeader = testWebDriver.getElementById("productGroup" + (tableNumber - 1) + (productNumber - 1));
     testWebDriver.waitForElementToAppear(productGroupHeader);
     return productGroupHeader.getText();
   }
 
-  public String getProductNameHeaderForTable(int tableNumber, int productNumber){
-    WebElement productName= testWebDriver.getElementById("product"+(tableNumber-1)+(productNumber-1));
+  public String getProductNameHeaderForTable(int tableNumber, int productNumber) {
+    WebElement productName = testWebDriver.getElementById("product" + (tableNumber - 1) + (productNumber - 1));
     testWebDriver.waitForElementToAppear(productName);
     return productName.getText();
   }
 
   public String getFacilityName(int tableNumber, int rowNumber) {
-    WebElement facilityName = testWebDriver.getElementById("facilityName" + (tableNumber-1) + (rowNumber-1));
+    WebElement facilityName = testWebDriver.getElementById("facilityName" + (tableNumber - 1) + (rowNumber - 1));
     testWebDriver.waitForElementToAppear(facilityName);
     return facilityName.getText();
   }
 
   public String getFacilityCode(int tableNumber, int rowNumber) {
-    WebElement facilityCode = testWebDriver.getElementById("facilityCode" + (tableNumber-1) + (rowNumber-1));
+    WebElement facilityCode = testWebDriver.getElementById("facilityCode" + (tableNumber - 1) + (rowNumber - 1));
     testWebDriver.waitForElementToAppear(facilityCode);
     return facilityCode.getText();
   }
 
   public String getFacilityPopulation(int tableNumber, int rowNumber) {
-    WebElement population = testWebDriver.getElementById("population" + (tableNumber-1) + (rowNumber-1));
+    WebElement population = testWebDriver.getElementById("population" + (tableNumber - 1) + (rowNumber - 1));
     testWebDriver.waitForElementToAppear(population);
     return population.getText();
   }
 
   public String getProductIsa(int tableNumber, int rowNumber, int productNumber) {
-    WebElement productIsa = testWebDriver.getElementById("isaAmount" + (tableNumber-1) + (rowNumber-1) + (productNumber-1));
+    WebElement productIsa = testWebDriver.getElementById("isaAmount" + (tableNumber - 1) + (rowNumber - 1) + (productNumber - 1));
     testWebDriver.waitForElementToAppear(productIsa);
     return productIsa.getText();
   }
 
   public String getTotalProductIsa(int tableNumber, int productNumber) {
-    WebElement totalProductIsa = testWebDriver.getElementById("isaAmountTotal" + (tableNumber-1) + (productNumber-1));
+    WebElement totalProductIsa = testWebDriver.getElementById("isaAmountTotal" + (tableNumber - 1) + (productNumber - 1));
     testWebDriver.waitForElementToAppear(totalProductIsa);
     return totalProductIsa.getText();
   }
 
   public String getTotalPopulation(int tableNumber) {
-    WebElement totalProductIsa = testWebDriver.getElementById("population" + (tableNumber-1));
+    WebElement totalProductIsa = testWebDriver.getElementById("population" + (tableNumber - 1));
     testWebDriver.waitForElementToAppear(totalProductIsa);
     return totalProductIsa.getText();
   }
 
   public String getTableTotalCaption(int tableNumber) {
-    WebElement geoZoneCaption = testWebDriver.getElementById("geoZoneNameLabel"+(tableNumber-1));
-    WebElement totalCaption = testWebDriver.getElementById("totalLabel"+(tableNumber-1));
+    WebElement geoZoneCaption = testWebDriver.getElementById("geoZoneNameLabel" + (tableNumber - 1));
+    WebElement totalCaption = testWebDriver.getElementById("totalLabel" + (tableNumber - 1));
     testWebDriver.waitForElementToAppear(geoZoneCaption);
     testWebDriver.waitForElementToAppear(totalCaption);
-    return geoZoneCaption.getText() +" " + totalCaption.getText();
+    return geoZoneCaption.getText() + " " + totalCaption.getText();
   }
 
   public String getNoRecordFoundMessage() {
@@ -259,16 +256,12 @@ public class WarehouseLoadAmountPage extends Page {
     return noRecordFoundMessage.getText();
   }
 
-  public String getAggregateTableData(){
-  return aggregateTable.getText();
+  public String getAggregateTableData() {
+    return aggregateTable.getText();
   }
 
-  public String getTable1Data(){
+  public String getTable1Data() {
     return Table1.getText();
-  }
-
-  public String getTable2Data(){
-    return Table2.getText();
   }
 
 }

@@ -28,15 +28,15 @@ public class ApproveRequisitionTest extends JsonUtility {
   public static final String FULL_JSON_APPROVE_TXT_FILE_NAME = "ReportJsonApprove.txt";
   public static final String FULL_JSON_MULTIPLE_PRODUCTS_APPROVE_TXT_FILE_NAME = "ReportJsonMultipleProductsApprove.txt";
 
-  @BeforeMethod(groups = {"webservice","webserviceSmoke"})
+  @BeforeMethod(groups = {"webservice", "webserviceSmoke"})
   public void setUp() throws Exception {
     super.setup();
     super.setupTestData(false);
-    super.setupDataRequisitionApprover();
+    super.setupDataRequisitionApprove();
     dbWrapper.updateRestrictLogin("commTrack", true);
   }
 
-  @AfterMethod(groups = {"webservice","webserviceSmoke"})
+  @AfterMethod(groups = {"webservice", "webserviceSmoke"})
   public void tearDown() throws IOException, SQLException {
     dbWrapper.deleteData();
     dbWrapper.closeConnection();
@@ -58,11 +58,11 @@ public class ApproveRequisitionTest extends JsonUtility {
     reportFromJson.setApproverName("some random name");
 
     ResponseEntity responseEntity =
-        client.SendJSON(getJsonStringFor(reportFromJson),
-            "http://localhost:9091/rest-api/requisitions/" + id + "/approve",
-            "PUT",
-            "commTrack",
-            "Admin123");
+      client.SendJSON(getJsonStringFor(reportFromJson),
+        "http://localhost:9091/rest-api/requisitions/" + id + "/approve",
+        "PUT",
+        "commTrack",
+        "Admin123");
 
     String response = responseEntity.getResponse();
 
@@ -94,8 +94,8 @@ public class ApproveRequisitionTest extends JsonUtility {
     reportFromJson.setApproverName("some random name");
 
     ResponseEntity responseEntity = client.SendJSON(getJsonStringFor(reportFromJson),
-        "http://localhost:9091/rest-api/requisitions/" + id + "/approve", "PUT",
-        "commTrack100", "Admin123");
+      "http://localhost:9091/rest-api/requisitions/" + id + "/approve", "PUT",
+      "commTrack100", "Admin123");
     client.SendJSON("", "http://localhost:9091/", "GET", "", "");
 
     assertEquals(401, responseEntity.getStatus());
@@ -118,11 +118,11 @@ public class ApproveRequisitionTest extends JsonUtility {
     reportFromJson.setApproverName("some random name");
 
     ResponseEntity responseEntity =
-        client.SendJSON(getJsonStringFor(reportFromJson),
-            "http://localhost:9091/rest-api/requisitions/" + id + "/approve",
-            "PUT",
-            "commTrack",
-            "Admin123");
+      client.SendJSON(getJsonStringFor(reportFromJson),
+        "http://localhost:9091/rest-api/requisitions/" + id + "/approve",
+        "PUT",
+        "commTrack",
+        "Admin123");
 
     String response = responseEntity.getResponse();
     assertEquals(400, responseEntity.getStatus());
@@ -146,11 +146,11 @@ public class ApproveRequisitionTest extends JsonUtility {
     reportFromJson.setApproverName("some random name");
 
     ResponseEntity responseEntity =
-        client.SendJSON(getJsonStringFor(reportFromJson),
-            "http://localhost:9091/rest-api/requisitions/" + id + "/approve",
-            "PUT",
-            "commTrack",
-            "Admin123");
+      client.SendJSON(getJsonStringFor(reportFromJson),
+        "http://localhost:9091/rest-api/requisitions/" + id + "/approve",
+        "PUT",
+        "commTrack",
+        "Admin123");
 
     String response = responseEntity.getResponse();
     assertEquals(400, responseEntity.getStatus());
@@ -174,10 +174,10 @@ public class ApproveRequisitionTest extends JsonUtility {
     reportFromJson.setApproverName("some random name");
 
     ResponseEntity responseEntity = client.SendJSON(getJsonStringFor(reportFromJson),
-        "http://localhost:9091/rest-api/requisitions/" + id + "/approve",
-        "PUT",
-        "commTrack",
-        "Admin123");
+      "http://localhost:9091/rest-api/requisitions/" + id + "/approve",
+      "PUT",
+      "commTrack",
+      "Admin123");
 
     String response = responseEntity.getResponse();
     assertEquals(200, responseEntity.getStatus());
@@ -205,10 +205,10 @@ public class ApproveRequisitionTest extends JsonUtility {
     reportFromJson.setApproverName("some random name");
 
     ResponseEntity responseEntity = client.SendJSON(getJsonStringFor(reportFromJson),
-        "http://localhost:9091/rest-api/requisitions/" + id + "/approve",
-        "PUT",
-        "commTrack",
-        "Admin123");
+      "http://localhost:9091/rest-api/requisitions/" + id + "/approve",
+      "PUT",
+      "commTrack",
+      "Admin123");
 
     String response = responseEntity.getResponse();
     assertEquals(200, responseEntity.getStatus());
@@ -235,10 +235,10 @@ public class ApproveRequisitionTest extends JsonUtility {
     reportFromJson.setApproverName("some random name");
 
     ResponseEntity responseEntity = client.SendJSON(getJsonStringFor(reportFromJson),
-        "http://localhost:9091/rest-api/requisitions/" + id + "/approve",
-        "PUT",
-        "commTrack",
-        "Admin123");
+      "http://localhost:9091/rest-api/requisitions/" + id + "/approve",
+      "PUT",
+      "commTrack",
+      "Admin123");
 
     String response = responseEntity.getResponse();
     assertEquals(200, responseEntity.getStatus());
@@ -263,10 +263,10 @@ public class ApproveRequisitionTest extends JsonUtility {
     reportFromJson.setApproverName("some random name");
 
     ResponseEntity responseEntity = client.SendJSON(getJsonStringFor(reportFromJson),
-        "http://localhost:9091/rest-api/requisitions/" + id + "/approve",
-        "PUT",
-        "commTrack",
-        "Admin123");
+      "http://localhost:9091/rest-api/requisitions/" + id + "/approve",
+      "PUT",
+      "commTrack",
+      "Admin123");
 
     String response = responseEntity.getResponse();
     assertEquals(400, responseEntity.getStatus());
@@ -289,8 +289,8 @@ public class ApproveRequisitionTest extends JsonUtility {
     reportFromJson.setApproverName("some random name");
 
     ResponseEntity responseEntity = client.SendJSON(getJsonStringFor(reportFromJson),
-        "http://localhost:9091/rest-api/requisitions/" + requisitionId + "/approve", "PUT",
-        "commTrack", "Admin123");
+      "http://localhost:9091/rest-api/requisitions/" + requisitionId + "/approve", "PUT",
+      "commTrack", "Admin123");
     String response = responseEntity.getResponse();
     client.SendJSON("", "http://localhost:9091/", "GET", "", "");
     assertEquals(400, responseEntity.getStatus());
@@ -313,12 +313,12 @@ public class ApproveRequisitionTest extends JsonUtility {
     reportFromJson.setApproverName("some random name");
 
     ResponseEntity responseEntity =
-        client.SendJSON(
-            getJsonStringFor(reportFromJson),
-            "http://localhost:9091/rest-api/requisitions/" + id + "/approve",
-            "PUT",
-            "commTrack",
-            "Admin123");
+      client.SendJSON(
+        getJsonStringFor(reportFromJson),
+        "http://localhost:9091/rest-api/requisitions/" + id + "/approve",
+        "PUT",
+        "commTrack",
+        "Admin123");
 
     String response = responseEntity.getResponse();
     client.SendJSON("", "http://localhost:9091/", "GET", "", "");
@@ -370,11 +370,11 @@ public class ApproveRequisitionTest extends JsonUtility {
     reportFromJson.setApproverName("some random name");
 
     ResponseEntity responseEntity =
-        client.SendJSON(getJsonStringFor(reportFromJson),
-            "http://localhost:9091/rest-api/requisitions/" + id + "/approve",
-            "PUT",
-            "commTrack",
-            "Admin123");
+      client.SendJSON(getJsonStringFor(reportFromJson),
+        "http://localhost:9091/rest-api/requisitions/" + id + "/approve",
+        "PUT",
+        "commTrack",
+        "Admin123");
 
     String response = responseEntity.getResponse();
 
@@ -401,11 +401,11 @@ public class ApproveRequisitionTest extends JsonUtility {
     reportFromJson.setApproverName("some random name");
 
     ResponseEntity responseEntity =
-        client.SendJSON(getJsonStringFor(reportFromJson),
-            "http://localhost:9091/rest-api/requisitions/" + id + "/approve",
-            "PUT",
-            "commTrack",
-            "Admin123");
+      client.SendJSON(getJsonStringFor(reportFromJson),
+        "http://localhost:9091/rest-api/requisitions/" + id + "/approve",
+        "PUT",
+        "commTrack",
+        "Admin123");
 
     String response = responseEntity.getResponse();
 
@@ -418,10 +418,10 @@ public class ApproveRequisitionTest extends JsonUtility {
   public void testApproveRequisitionValidRnRWithRemarksAndRnaSubmissionThroughAPI() throws Exception {
     HttpClient client = new HttpClient();
     client.createContext();
-    createVirtualFacilityThroughApi("V100","F10");
-    dbWrapper.insertProcessingPeriod("Current", "current", "2013-05-01","2016-01-01",1,"M");
+    createVirtualFacilityThroughApi("V100", "F10");
+    dbWrapper.insertProcessingPeriod("Current", "current", "2013-05-01", "2016-01-01", 1, "M");
     dbWrapper.insertRoleAssignmentForSupervisoryNodeForProgramId1("700", "store in-charge", "N1");
-    submitRnRThroughApi("V100","HIV","P10",1,10,1,4,0,2);
+    submitRnRThroughApi("V100", "HIV", "P10", 1, 10, 1, 4, 0, 2);
     String id = String.valueOf(dbWrapper.getMaxRnrID());
 
     Report reportFromJson = JsonUtility.readObjectFromFile(FULL_JSON_APPROVE_TXT_FILE_NAME, Report.class);
@@ -467,7 +467,7 @@ public class ApproveRequisitionTest extends JsonUtility {
 
     ResponseEntity responseEntity =
       client.SendJSON(wrongJson,
-        "http://localhost:9091/rest-api/requisitions/"+id+"/approve.json",
+        "http://localhost:9091/rest-api/requisitions/" + id + "/approve.json",
         "PUT",
         "commTrack",
         "Admin123");

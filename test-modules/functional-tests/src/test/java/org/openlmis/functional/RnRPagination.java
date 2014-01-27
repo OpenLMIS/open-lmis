@@ -41,7 +41,7 @@ public class RnRPagination extends TestCaseHelper {
     dbWrapper.setupMultipleProducts(program, "Lvl3 Hospital", 11, false);
     dbWrapper.insertFacilities("F10", "F11");
     dbWrapper.configureTemplate(program);
-    List<String> rightsList = new ArrayList<String>();
+    List<String> rightsList = new ArrayList<>();
     rightsList.add("CREATE_REQUISITION");
     rightsList.add("VIEW_REQUISITION");
     setupTestUserRoleRightsData("200", userSIC, rightsList);
@@ -119,7 +119,7 @@ public class RnRPagination extends TestCaseHelper {
     dbWrapper.setupMultipleProducts(program, "Lvl3 Hospital", 11, true);
     dbWrapper.insertFacilities("F10", "F11");
     dbWrapper.configureTemplate(program);
-    List<String> rightsList = new ArrayList<String>();
+    List<String> rightsList = new ArrayList<>();
     rightsList.add("CREATE_REQUISITION");
     rightsList.add("VIEW_REQUISITION");
     setupTestUserRoleRightsData("200", userSIC, rightsList);
@@ -134,7 +134,7 @@ public class RnRPagination extends TestCaseHelper {
 
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(userSIC, password);
-    String periodDetails = homePage.navigateAndInitiateRnr(program);
+    homePage.navigateAndInitiateRnr(program);
     InitiateRnRPage initiateRnRPage = homePage.clickProceed();
 
     verifyDefaultDisplayOrderFullSupply(initiateRnRPage);
@@ -148,7 +148,7 @@ public class RnRPagination extends TestCaseHelper {
     dbWrapper.setupMultipleCategoryProducts(program, "Lvl3 Hospital", 11, false);
     dbWrapper.insertFacilities("F10", "F11");
     dbWrapper.configureTemplate(program);
-    List<String> rightsList = new ArrayList<String>();
+    List<String> rightsList = new ArrayList<>();
     rightsList.add("CREATE_REQUISITION");
     rightsList.add("VIEW_REQUISITION");
     setupTestUserRoleRightsData("200", userSIC, rightsList);
@@ -163,7 +163,7 @@ public class RnRPagination extends TestCaseHelper {
 
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(userSIC, password);
-    String periodDetails = homePage.navigateAndInitiateRnr(program);
+    homePage.navigateAndInitiateRnr(program);
     InitiateRnRPage initiateRnRPage = homePage.clickProceed();
 
     verifyCategoryDisplayOrder(initiateRnRPage, 10);
@@ -178,7 +178,7 @@ public class RnRPagination extends TestCaseHelper {
     dbWrapper.setupMultipleCategoryProducts(program, "Lvl3 Hospital", 11, true);
     dbWrapper.insertFacilities("F10", "F11");
     dbWrapper.configureTemplate(program);
-    List<String> rightsList = new ArrayList<String>();
+    List<String> rightsList = new ArrayList<>();
     rightsList.add("CREATE_REQUISITION");
     rightsList.add("VIEW_REQUISITION");
     setupTestUserRoleRightsData("200", userSIC, rightsList);
@@ -202,7 +202,7 @@ public class RnRPagination extends TestCaseHelper {
     verifyCategoryDefaultDisplayOrderNonFullSupply(initiateRnRPage);
   }
 
-  
+
   public void verifyDisplayOrderFullSupply(int numberOfLineItemsPerPage) throws Exception {
     for (int i = 0; i < numberOfLineItemsPerPage; i++) {
       testWebDriver.waitForElementToAppear(testWebDriver.getElementByXpath(FULL_SUPPLY_BASE_LOCATOR + "/tbody[" + (i + 1) + "]/tr[2]/td[1]/ng-switch/span/ng-switch/span"));

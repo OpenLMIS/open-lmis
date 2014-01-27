@@ -122,7 +122,7 @@ public class E2EInitiateRnR extends TestCaseHelper {
   @And("^I update user$")
   public void updateUser() throws Exception {
     UserPage userPage = new UserPage(testWebDriver);
-    userPage.saveUser();
+    userPage.clickSaveButton();
   }
 
   @And("^I assign warehouse \"([^\"]*)\" and role \"([^\"]*)\" to user$")
@@ -520,7 +520,7 @@ public class E2EInitiateRnR extends TestCaseHelper {
     userPage.enterMyFacilityAndMySupervisedFacilityData(facility, program,
       supervisoryNode, role, roleType);
     userPage.assignWarehouse(warehouse, warehouseRole);
-    userPage.saveUser();
+    userPage.clickSaveButton();
     userPage.verifyUserUpdated(userFirstName, userLastName);
   }
 

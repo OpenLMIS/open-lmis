@@ -12,8 +12,6 @@ package org.openlmis.functional;
 
 
 import cucumber.api.DataTable;
-import cucumber.api.java.After;
-import cucumber.api.java.Before;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
@@ -163,7 +161,7 @@ public class ManageRolesAndUsers extends TestCaseHelper {
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
     RolesPage rolesPage = homePage.navigateRoleAssignments();
-    List<String> userRoleList = new ArrayList<String>();
+    List<String> userRoleList = new ArrayList<>();
     userRoleList.add("Uploads");
     rolesPage.createRole(ADMIN, ADMIN, userRoleList, false);
     assertEquals("Duplicate Role found", rolesPage.getSaveErrorMsgDiv().getText().trim());
@@ -190,7 +188,7 @@ public class ManageRolesAndUsers extends TestCaseHelper {
   public void testE2EManageRolesAndFacility(String user, String program, String[] credentials, String deliveryZoneCodeFirst, String deliveryZoneCodeSecond,
                                             String deliveryZoneNameFirst, String deliveryZoneNameSecond,
                                             String facilityCodeFirst, String facilityCodeSecond,
-                                            String programFirst, String programSecond, String schedule, String rolename) throws Exception {
+                                            String programFirst, String programSecond, String schedule, String roleName) throws Exception {
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
 
     dbWrapper.insertUser("200", user, "Ag/myf1Whs0fxr1FFfK8cs3q/VJ1qMs3yuMLDTeEcZEGzstj/waaUsQNQTIKk1U5JRzrDbPLCzCO1/vB5YGaEQ==", "F10", "Jane_Doe@openlmis.com");
@@ -225,13 +223,13 @@ public class ManageRolesAndUsers extends TestCaseHelper {
     String warehouseName = dbWrapper.getAttributeFromTable("facilities", "name", "code", facilityCodeFirst);
     createUserAndAssignRoles(homePage, passwordUsers, "Jasmine_Doe@openlmis.com", "Jasmine", "Doe", LAB_IN_CHARGE, facility_code, program, "Node 1", LAB_IN_CHARGE, "REQUISITION");
     userPage.assignWarehouse(warehouseName, warehouseRole);
-    userPage.saveUser();
+    userPage.clickSaveButton();
     userPage.verifyUserUpdated("Jasmine", "Doe");
     setupDeliveryZoneRolesAndRightsAfterWarehouse(deliveryZoneCodeFirst, deliveryZoneCodeSecond, deliveryZoneNameFirst,
       deliveryZoneNameSecond, facilityCodeFirst, facilityCodeSecond, programFirst, programSecond, schedule,
-      rolename);
+      roleName);
     userPage.clickViewHere();
-    userPage.enterDeliveryZoneData(deliveryZoneNameFirst, programFirst, rolename);
+    userPage.enterDeliveryZoneData(deliveryZoneNameFirst, programFirst, roleName);
     userPage.clickSaveButton();
     userPage.clickViewHere();
     userPage.clickDeliveryZonesAccordion();
@@ -283,8 +281,8 @@ public class ManageRolesAndUsers extends TestCaseHelper {
   public void testCreateUserAndVerifyOnManageDistributionScreen(String user, String program, String[] credentials, String deliveryZoneCodeFirst, String deliveryZoneCodeSecond,
                                                                 String deliveryZoneNameFirst, String deliveryZoneNameSecond,
                                                                 String facilityCodeFirst, String facilityCodeSecond,
-                                                                String programFirst, String programSecond, String schedule, String rolename) throws Exception {
-    setupDeliveryZoneRolesAndRights(deliveryZoneCodeFirst, deliveryZoneCodeSecond, deliveryZoneNameFirst, deliveryZoneNameSecond, facilityCodeFirst, facilityCodeSecond, programFirst, programSecond, schedule, rolename);
+                                                                String programFirst, String programSecond, String schedule, String roleName) throws Exception {
+    setupDeliveryZoneRolesAndRights(deliveryZoneCodeFirst, deliveryZoneCodeSecond, deliveryZoneNameFirst, deliveryZoneNameSecond, facilityCodeFirst, facilityCodeSecond, programFirst, programSecond, schedule, roleName);
 
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
 
@@ -318,7 +316,7 @@ public class ManageRolesAndUsers extends TestCaseHelper {
     dbWrapper.updateUser(passwordUsers, email);
     userPage.clickViewHere();
     userPage.clickRestrictLoginYes();
-    userPage.saveUser();
+    userPage.clickSaveButton();
     homePage.logout(baseUrlGlobal);
     loginPage.loginAs(LAB_IN_CHARGE, credentials[1]);
     assertEquals(loginPage.getLoginErrorMessage(),
@@ -329,7 +327,7 @@ public class ManageRolesAndUsers extends TestCaseHelper {
     userPage.searchUser(LAB_IN_CHARGE);
     userPage.clickUserList();
     userPage.clickRestrictLoginNo();
-    userPage.saveUser();
+    userPage.clickSaveButton();
     homePage.logout(baseUrlGlobal);
     loginPage.loginAs(LAB_IN_CHARGE, credentials[1]);
     homePage.verifyLoggedInUser(LAB_IN_CHARGE);

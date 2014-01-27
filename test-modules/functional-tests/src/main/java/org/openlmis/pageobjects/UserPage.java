@@ -302,22 +302,22 @@ public class UserPage extends Page {
   }
 
   public void ExpandAll() {
-    testWebDriver.waitForElementToBeEnabled(expandAllOption);
+    testWebDriver.waitForElementToAppear(expandAllOption);
     expandAllOption.click();
   }
 
   public void collapseAll() {
-    testWebDriver.waitForElementToBeEnabled(collapseAllOption);
+    testWebDriver.waitForElementToAppear(collapseAllOption);
     collapseAllOption.click();
   }
 
   public void clickRestrictLoginYes() {
-    testWebDriver.waitForElementToBeEnabled(restrictLoginYesOption);
+    testWebDriver.waitForElementToAppear(restrictLoginYesOption);
     restrictLoginYesOption.click();
   }
 
   public void clickRestrictLoginNo() {
-    testWebDriver.waitForElementToBeEnabled(restrictLoginNoOption);
+    testWebDriver.waitForElementToAppear(restrictLoginNoOption);
     restrictLoginNoOption.click();
   }
 
@@ -336,9 +336,9 @@ public class UserPage extends Page {
     testWebDriver.waitForElementToAppear(searchFacility);
     if (!roleType.equals("ADMIN")) {
       enterUserHomeFacility(facilityCode);
-      testWebDriver.waitForElementToBeEnabled(selectFacility);
+      testWebDriver.waitForElementToAppear(selectFacility);
       selectFacility.click();
-      testWebDriver.waitForElementToBeEnabled(homeFacilityRolesAccordion);
+      testWebDriver.waitForAjax();
       homeFacilityRolesAccordion.click();
       testWebDriver.selectByVisibleText(homeFacilityPrograms, program1);
       testWebDriver.waitForElementToAppear(roleInputFieldHomeFacility);
@@ -356,7 +356,7 @@ public class UserPage extends Page {
       testWebDriver.selectByVisibleText(supervisoryNodeToSupervise, node);
       testWebDriver.sleep(1000);
       testWebDriver.handleScroll();
-      testWebDriver.waitForElementToBeEnabled(rolesInputFieldSupervisoryRole);
+      testWebDriver.waitForElementToAppear(rolesInputFieldSupervisoryRole);
       rolesInputFieldSupervisoryRole.click();
       rolesInputFieldSupervisoryRole.clear();
       rolesInputFieldSupervisoryRole.sendKeys(role);
@@ -365,37 +365,30 @@ public class UserPage extends Page {
 
       assertEquals(testWebDriver.getFirstSelectedOption(supervisoryNodeToSupervise).getText(), node);
       assertEquals(testWebDriver.getFirstSelectedOption(programsToSupervise).getText(), program1);
-      testWebDriver.waitForElementToBeEnabled(addSupervisoryRoleButton);
+      testWebDriver.waitForElementToAppear(addSupervisoryRoleButton);
       addSupervisoryRoleButton.click();
 
     } else {
       testWebDriver.handleScroll();
-      testWebDriver.waitForElementToBeEnabled(adminAndGeneralOperationsRolesAccordion);
+      testWebDriver.waitForElementToAppear(adminAndGeneralOperationsRolesAccordion);
       adminAndGeneralOperationsRolesAccordion.click();
-      testWebDriver.waitForElementToBeEnabled(adminRolesInputField);
+      testWebDriver.waitForElementToAppear(adminRolesInputField);
       adminRolesInputField.click();
       adminRolesInputField.clear();
       adminRolesInputField.sendKeys(role);
       testWebDriver.waitForElementToAppear(rolesSelectFieldSupervisoryRole);
       rolesSelectFieldSupervisoryRole.click();
     }
-
-  }
-
-  public void saveUser() {
-    testWebDriver.waitForElementToBeEnabled(saveButton);
-    saveButton.click();
   }
 
   public void verifyUserUpdated(String firstName, String lastName) {
     testWebDriver.sleep(1000);
     assertTrue("User '" + firstName + " " + lastName + "' has been successfully updated message is not getting displayed",
       successMessage.isDisplayed());
-
   }
 
   public void assignWarehouse(String warehouse, String role) {
-    testWebDriver.waitForElementToBeEnabled(warehouseRolesAccordion);
+    testWebDriver.waitForElementToAppear(warehouseRolesAccordion);
     warehouseRolesAccordion.click();
     testWebDriver.waitForElementToAppear(warehouseToSelect);
     testWebDriver.selectByVisibleText(warehouseToSelect, warehouse);
@@ -406,11 +399,11 @@ public class UserPage extends Page {
     testWebDriver.waitForElementToAppear(rolesSelectFieldWarehouse);
     rolesSelectFieldSupervisoryRole.click();
     assertEquals(testWebDriver.getFirstSelectedOption(warehouseToSelect).getText(), warehouse);
-    testWebDriver.waitForElementToBeEnabled(addWarehouseRoleButton);
+    testWebDriver.waitForElementToAppear(addWarehouseRoleButton);
     addWarehouseRoleButton.click();
     testWebDriver.sleep(1000);
     verifyWarehouseSelectedNotAvailable(warehouse);
-    testWebDriver.waitForElementToBeEnabled(warehouseRolesAccordion);
+    testWebDriver.waitForElementToAppear(warehouseRolesAccordion);
     warehouseRolesAccordion.click();
   }
 
@@ -426,7 +419,7 @@ public class UserPage extends Page {
     testWebDriver.selectByVisibleText(zoneToDelivery, deliveryZoneCode);
     testWebDriver.waitForElementToAppear(programToDeliver);
     testWebDriver.selectByVisibleText(programToDeliver, program);
-    testWebDriver.waitForElementToBeEnabled(rolesInputFieldMDeliveryZone);
+    testWebDriver.waitForElementToAppear(rolesInputFieldMDeliveryZone);
     rolesInputFieldMDeliveryZone.click();
     rolesInputFieldMDeliveryZone.clear();
     rolesInputFieldMDeliveryZone.sendKeys(role);
@@ -446,7 +439,7 @@ public class UserPage extends Page {
     rolesInputFieldDeliveryZone.clear();
     rolesInputFieldDeliveryZone.sendKeys(role);
     rolesInputFieldDeliveryZone.sendKeys(Keys.RETURN);
-    testWebDriver.waitForElementToBeEnabled(addDeliveryZoneRoleButton);
+    testWebDriver.waitForElementToAppear(addDeliveryZoneRoleButton);
     addDeliveryZoneRoleButton.click();
   }
 
@@ -471,18 +464,18 @@ public class UserPage extends Page {
   }
 
   public void clickSaveButton() {
-    testWebDriver.waitForElementToAppear(saveButton);
+    testWebDriver.waitForElementToBeEnabled(saveButton);
     saveButton.click();
   }
 
   public void clickDisableButton() {
-    testWebDriver.waitForElementToAppear(disableButton);
+    testWebDriver.waitForElementToBeEnabled(disableButton);
     disableButton.click();
     clickOk();
   }
 
   public void clickEnableButton() {
-    testWebDriver.waitForElementToAppear(enableButton);
+    testWebDriver.waitForElementToBeEnabled(enableButton);
     enableButton.click();
     clickOk();
   }
