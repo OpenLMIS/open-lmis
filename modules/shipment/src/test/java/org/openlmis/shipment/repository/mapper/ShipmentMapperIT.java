@@ -26,6 +26,7 @@ import org.openlmis.order.repository.mapper.OrderMapper;
 import org.openlmis.rnr.builder.RequisitionBuilder;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.repository.mapper.RequisitionMapper;
+import org.openlmis.shipment.builder.ShipmentLineItemBuilder;
 import org.openlmis.shipment.domain.ShipmentFileInfo;
 import org.openlmis.shipment.domain.ShipmentLineItem;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -101,6 +102,10 @@ public class ShipmentMapperIT {
     assertThat(shipmentFileInfoResultSet.getString("dispensingUnit"), is(shipmentLineItem.getDispensingUnit()));
     assertThat(shipmentFileInfoResultSet.getString("productCategory"), is(shipmentLineItem.getProductCategory()));
     assertThat(shipmentFileInfoResultSet.getInt("packsToShip"), is(shipmentLineItem.getPacksToShip()));
+    assertThat(shipmentFileInfoResultSet.getInt("productCategoryDisplayOrder"),
+      is(shipmentLineItem.getProductCategoryDisplayOrder()));
+    assertThat(shipmentFileInfoResultSet.getInt("productDisplayOrder"), is(shipmentLineItem.getProductDisplayOrder()));
+    assertThat(shipmentFileInfoResultSet.getBoolean("fullSupply"), is(shipmentLineItem.getFullSupply()));
   }
 
   private ShipmentLineItem createShippedLineItem() {
@@ -110,11 +115,13 @@ public class ShipmentMapperIT {
     ProcessingSchedule processingSchedule = make(a(ProcessingScheduleBuilder.defaultProcessingSchedule));
     processingScheduleMapper.insert(processingSchedule);
 
-    ProcessingPeriod period = make(a(ProcessingPeriodBuilder.defaultProcessingPeriod, with(ProcessingPeriodBuilder.scheduleId, processingSchedule.getId())));
+    ProcessingPeriod period = make(a(ProcessingPeriodBuilder.defaultProcessingPeriod,
+      with(ProcessingPeriodBuilder.scheduleId, processingSchedule.getId())));
     processingPeriodMapper.insert(period);
     Program program = make(a(defaultProgram));
     programMapper.insert(program);
-    Rnr requisition = make(a(defaultRequisition, with(RequisitionBuilder.facility, facility), with(RequisitionBuilder.periodId, period.getId())));
+    Rnr requisition = make(a(defaultRequisition, with(RequisitionBuilder.facility, facility),
+      with(RequisitionBuilder.periodId, period.getId())));
     requisitionMapper.insert(requisition);
 
     Order order = new Order(requisition);
@@ -125,12 +132,8 @@ public class ShipmentMapperIT {
 
     productMapper.insert(product);
 
-    return make(a(defaultShipmentLineItem,
-        with(productCode, product.getCode()),
-        with(orderId, order.getId()),
-        with(quantityShipped, 23),
-        with(shippedDate, new Date()),
-        with(packedDate, new Date())));
+    return make(a(defaultShipmentLineItem, with(productCode, product.getCode()), with(orderId, order.getId()),
+      with(quantityShipped, 23), with(shippedDate, new Date()), with(packedDate, new Date())));
 
   }
 
@@ -195,6 +198,30 @@ public class ShipmentMapperIT {
     ShipmentLineItem shipmentLineItemFromDB = mapper.getShippedLineItem(shipmentLineItem);
 
     assertThat(shipmentLineItemFromDB.getQuantityShipped(), is(10));
+  }
+
+  @Test
+  public void shouldNotUpdateProductRelatedFieldsShippedLineItemFields() throws Exception {
+    ShipmentLineItem shipmentLineItem = createShippedLineItem();
+
+    mapper.insertShippedLineItem(shipmentLineItem);
+
+    shipmentLineItem.setQuantityShipped(10);
+    shipmentLineItem.setProductCategoryDisplayOrder(100);
+    shipmentLineItem.setProductDisplayOrder(200);
+    shipmentLineItem.setFullSupply(false);
+    shipmentLineItem.setProductCategory("New Category");
+
+    mapper.updateShippedLineItem(shipmentLineItem);
+
+    ShipmentLineItem shipmentLineItemFromDB = mapper.getShippedLineItem(shipmentLineItem);
+
+    assertThat(shipmentLineItemFromDB.getQuantityShipped(), is(10));
+    assertThat(shipmentLineItemFromDB.getProductCategoryDisplayOrder(),
+      is(ShipmentLineItemBuilder.defaultProductCategoryDisplayOrder));
+    assertThat(shipmentLineItemFromDB.getProductDisplayOrder(), is(ShipmentLineItemBuilder.defaultProductDisplayOrder));
+    assertThat(shipmentLineItemFromDB.getFullSupply(), is(ShipmentLineItemBuilder.defaultFullSupply));
+    assertThat(shipmentLineItemFromDB.getProductCategory(), is(ShipmentLineItemBuilder.defaultProductCategory));
   }
 
   @Test

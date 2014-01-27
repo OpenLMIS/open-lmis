@@ -47,19 +47,37 @@ public class ShipmentLineItem extends LineItem {
 
   private Date shippedDate;
 
-  private void setReferenceFields(String productName, String dispensingUnit, String productCategory, Integer packsToShip) {
+  private Integer productCategoryDisplayOrder;
+
+  private Integer productDisplayOrder;
+
+  private Boolean fullSupply;
+
+  private void setReferenceFields(String productName,
+                                  String dispensingUnit,
+                                  String productCategory,
+                                  Integer packsToShip,
+                                  Integer productCategoryDisplayOrder,
+                                  Integer productDisplayOrder,
+                                  Boolean fullSupply) {
     this.productName = productName;
     this.dispensingUnit = dispensingUnit;
     this.productCategory = productCategory;
     this.packsToShip = packsToShip;
+    this.productCategoryDisplayOrder = productCategoryDisplayOrder;
+    this.productDisplayOrder = productDisplayOrder;
+    this.fullSupply = fullSupply;
   }
 
   public void fillReferenceFields(Product product) {
-    this.setReferenceFields(product.getName(), product.getDispensingUnit(), product.getCategory().getName(), null);
+    this.setReferenceFields(product.getName(), product.getDispensingUnit(), product.getCategory().getName(), null,
+      product.getCategory().getDisplayOrder(), product.getDisplayOrder(), product.getFullSupply());
   }
 
   public void fillReferenceFields(RnrLineItem lineItem) {
-    this.setReferenceFields(lineItem.getProduct(), lineItem.getDispensingUnit(), lineItem.getProductCategory(), lineItem.getPacksToShip());
+    this.setReferenceFields(lineItem.getProduct(), lineItem.getDispensingUnit(), lineItem.getProductCategory(),
+      lineItem.getPacksToShip(), lineItem.getProductCategoryDisplayOrder(), lineItem.getProductDisplayOrder(),
+      lineItem.getFullSupply());
   }
 
   @Override
