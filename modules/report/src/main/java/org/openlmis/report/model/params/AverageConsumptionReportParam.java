@@ -12,9 +12,11 @@ package org.openlmis.report.model.params;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.service.*;
 import org.openlmis.report.mapper.lookup.FacilityTypeReportMapper;
+import org.openlmis.report.model.ReportParameter;
 import org.openlmis.report.model.dto.Product;
 import org.openlmis.report.service.lookup.ReportLookupService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +31,8 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Component
-public class AverageConsumptionReportParam {
+public class AverageConsumptionReportParam
+   implements ReportParameter {
 
   @Autowired
   private ProductCategoryService productCategoryService;
@@ -51,10 +54,6 @@ public class AverageConsumptionReportParam {
 
   @Autowired
   private FacilityService facilityService;
-
-
-  //top filters
-  private int userId;
 
   // period selections
   private String periodType;

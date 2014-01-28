@@ -13,23 +13,19 @@ import org.apache.ibatis.mapping.ResultSetType;
 import org.apache.ibatis.session.RowBounds;
 import org.openlmis.report.builder.OrderFillRateQueryBuilder;
 import org.openlmis.report.model.ReportData;
+import org.openlmis.report.model.ReportParameter;
 import org.openlmis.report.model.report.OrderFillRateReport;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Map;
 
-/**
- * User: Hassan
- * Date: 7/27/13
- * Time: 4:47 PM
- */
 @Repository
 public interface OrderFillRateReportMapper {
 
     @SelectProvider(type=OrderFillRateQueryBuilder.class, method="getQuery")
     @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize=10,timeout=0,useCache=true,flushCache=true)
-    public List<OrderFillRateReport> getReport(@Param("filterCriteria") ReportData filterCriteria,
+    public List<OrderFillRateReport> getReport(@Param("filterCriteria") ReportParameter filterCriteria,
                                                @Param("SortCriteria") Map<String, String[]> SortCriteria,
                                                @Param("RowBounds") RowBounds rowBounds);
 

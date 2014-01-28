@@ -12,13 +12,17 @@ package org.openlmis.report.model.params;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.openlmis.report.model.ReportData;
+import org.openlmis.report.model.ReportParameter;
 
 @Data
 @AllArgsConstructor
+@EqualsAndHashCode(callSuper=false)
 @NoArgsConstructor
-public class OrderReportParam implements ReportData {
+public class OrderReportParam
+  extends BaseParam implements ReportParameter {
 
   private Long orderId;
 
@@ -39,17 +43,16 @@ public class OrderReportParam implements ReportData {
   private int scheduleId;
   private String schedule;
 
-    @Override
-    public String toString(){
+  @Override
+  public String toString() {
 
-        StringBuilder filtersValue = new StringBuilder("");
-        filtersValue.append("Program: ").append(this.program).append("\n").
-                append("Period: ").append(this.period).append("\n").
-                append("Product/s: ").append(this.product).append("\n");
+    StringBuilder filtersValue = new StringBuilder("");
+    filtersValue.append("Program: ").append(this.program).append("\n").
+      append("Period: ").append(this.period).append("\n").
+      append("Product/s: ").append(this.product).append("\n");
 
-        return filtersValue.toString();
-    }
-
+    return filtersValue.toString();
+  }
 
 
 }

@@ -12,44 +12,23 @@ package org.openlmis.report.model.params;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.openlmis.report.model.ReportData;
-import org.openlmis.report.model.ReportParameter;
+
+import java.text.DateFormat;
+import java.util.Date;
 
 @Data
 @NoArgsConstructor
-@EqualsAndHashCode(callSuper=false)
 @AllArgsConstructor
-public class DistrictSummaryReportParam
-  extends BaseParam implements ReportParameter {
+public class BaseParam  {
 
-  private int rgroupId;
-  private String rgroup;
-  private int programId;
-  private String program;
-  private int scheduleId;
-  private String schedule;
-  private int periodId;
-  private String period;
-  private Integer year;
-  private Integer zoneId;
-  private String zone;
-  // private int geographicLevelId;
-  //private String geographicLevel;
+    private int userId;
 
+    private int page;
 
-  @Override
-  public String toString() {
+    private int pageSize;
 
-    StringBuilder filtersValue = new StringBuilder("");
-    filtersValue.append("Period : ").append(this.period).append("\n").
-      append("Schedule : ").append(this.schedule).append("\n").
-      append("Program : ").append(this.program).append("\n").
-      // append("Geographic Level : ").append(this.geographicLevel).append("\n").
-        append("District : ").append(this.zone).append("\n");
+    private int max;
 
-
-    return filtersValue.toString();
-  }
 }

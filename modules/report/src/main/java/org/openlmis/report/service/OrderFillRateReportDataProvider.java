@@ -15,6 +15,7 @@ import org.apache.ibatis.session.RowBounds;
 import org.openlmis.core.service.ConfigurationSettingService;
 import org.openlmis.report.mapper.OrderFillRateReportMapper;
 import org.openlmis.report.model.ReportData;
+import org.openlmis.report.model.ReportParameter;
 import org.openlmis.report.model.params.OrderFillRateReportParam;
 import org.openlmis.report.util.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,7 +49,7 @@ public class OrderFillRateReportDataProvider extends ReportDataProvider {
     return reportMapper.getReport(getReportFilterData(filterCriteria), SortCriteria, rowBounds);
   }
 
-  public ReportData getReportFilterData(Map<String, String[]> filterCriteria) {
+  public ReportParameter getReportFilterData(Map<String, String[]> filterCriteria) {
     OrderFillRateReportParam orderFillRateReportParam = null;
 
     if (filterCriteria != null) {

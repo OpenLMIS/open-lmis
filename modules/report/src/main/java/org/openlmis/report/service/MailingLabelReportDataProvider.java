@@ -76,7 +76,7 @@ public class MailingLabelReportDataProvider extends ReportDataProvider {
       mailingLabelReportSorter.setCode(sorterCriteria.get("code") == null ? "" : sorterCriteria.get("code")[0]);
       mailingLabelReportSorter.setFacilityType(sorterCriteria.get("facilityType") == null ? "ASC" : sorterCriteria.get("facilityType")[0]);
     }
-    return mailingLabelReportMapper.SelectFilteredSortedPagedFacilities(getReportFilterData(filterCriteria), mailingLabelReportSorter, rowBounds);
+    return mailingLabelReportMapper.SelectFilteredSortedPagedFacilities(getReportFilterData(filterCriteria), rowBounds);
   }
 
   public MailingLabelReportParam getReportFilterData(Map<String, String[]> filterCriteria) {

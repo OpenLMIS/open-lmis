@@ -12,21 +12,25 @@ package org.openlmis.report.model.params;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.openlmis.report.model.ReportData;
+import org.openlmis.report.model.ReportParameter;
 
 @Data
 @NoArgsConstructor
+@EqualsAndHashCode(callSuper=false)
 @AllArgsConstructor
-public class FacilityReportParam implements ReportData {
+public class FacilityReportParam
+  extends BaseParam implements ReportParameter {
 
-    //top filters
-    private String facilityCodeId;
-    private String facilityNameId;
-    private int facilityTypeId;
-    private int zoneId;
-    private Boolean statusId;
-    private int rgId;
-    private String rgroup;
+  //top filters
+  private String facilityCodeId;
+  private String facilityNameId;
+  private int facilityTypeId;
+  private int zoneId;
+  private Boolean statusId;
+  private int rgId;
+  private String rgroup;
 
 }

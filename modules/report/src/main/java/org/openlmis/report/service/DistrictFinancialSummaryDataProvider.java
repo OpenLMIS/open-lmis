@@ -16,6 +16,7 @@ import org.apache.ibatis.session.RowBounds;
 import org.openlmis.core.service.ConfigurationSettingService;
 import org.openlmis.report.mapper.DistrictFinancialSummaryMapper;
 import org.openlmis.report.model.ReportData;
+import org.openlmis.report.model.ReportParameter;
 import org.openlmis.report.model.params.DistrictSummaryReportParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -48,7 +49,7 @@ public class DistrictFinancialSummaryDataProvider extends ReportDataProvider {
     return reportMapper.getReport(getReportFilterData(filterCriteria), SortCriteria, rowBounds);
   }
 
-  public ReportData getReportFilterData(Map<String, String[]> filterCriteria) {
+  public ReportParameter getReportFilterData(Map<String, String[]> filterCriteria) {
     DistrictSummaryReportParam regimenSummaryReportFilter = null;
 
     if (filterCriteria != null) {

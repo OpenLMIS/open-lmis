@@ -12,66 +12,70 @@ package org.openlmis.report.model.params;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.openlmis.report.model.ReportData;
+import org.openlmis.report.model.ReportParameter;
 
 import java.text.DateFormat;
 import java.util.Date;
 
 @Data
 @NoArgsConstructor
+@EqualsAndHashCode(callSuper=false)
 @AllArgsConstructor
-public class StockedOutReportParam implements ReportData {
+public class StockedOutReportParam
+  extends BaseParam implements ReportParameter {
 
 
-    private String periodType;
-    private int yearFrom;
-    private int yearTo;
-    private int monthFrom;
-    private int monthTo;
-    private Date startDate;
-    private Date endDate;
-    private int quarterFrom;
-    private int quarterTo;
-    private int semiAnnualFrom;
-    private int semiAnnualTo;
+  private String periodType;
+  private int yearFrom;
+  private int yearTo;
+  private int monthFrom;
+  private int monthTo;
+  private Date startDate;
+  private Date endDate;
+  private int quarterFrom;
+  private int quarterTo;
+  private int semiAnnualFrom;
+  private int semiAnnualTo;
 
 
-    private int programId;
-    private String program;
-    private int rgroupId;
-    private String rgroup;
-    private int productCategoryId;
-    private String productCategory;
-    private int productId;
-    private String product;
-    private int facilityTypeId;
-    private String facilityType;
-    private int facilityId;
-    private String facility;
-    private int zoneId;
-    private String zone;
+  private int programId;
+  private String program;
+  private int rgroupId;
+  private String rgroup;
+  private int productCategoryId;
+  private String productCategory;
+  private int productId;
+  private String product;
+  private int facilityTypeId;
+  private String facilityType;
+  private int facilityId;
+  private String facility;
+  private int zoneId;
+  private String zone;
 
-    @Override
-    public String toString(){
+  @Override
+  public String toString() {
 
-        DateFormat dateFormatter = DateFormat.getDateInstance(DateFormat.DEFAULT);
+    DateFormat dateFormatter = DateFormat.getDateInstance(DateFormat.DEFAULT);
 
-        StringBuilder filtersValue = new StringBuilder("");
+    StringBuilder filtersValue = new StringBuilder("");
 
-        filtersValue.
-                append("Period : ").append(dateFormatter.format(this.getStartDate())).append("-").append(dateFormatter.format(this.getEndDate())).append("\n").
-                append("Program : ").append(this.getProgram()).append("\n").
-                append("Requisition Group : ").append(this.getRgroup()).append("\n").
-                append("Product Category : ").append(this.getProductCategory()).append("\n").
-                append("Product : ").append(this.getProduct()).append("\n").
-                append("Zone : ").append(this.getZone()).append("\n").
-                append("Facility Types : ").append(this.getFacilityType()).append("\n").
-                append("Facility : ").append(this.getFacility()).append("\n");
-        return filtersValue.toString();
+    filtersValue.
+      append("Period : ").append(dateFormatter.format(this.getStartDate())).append("-").append(dateFormatter.format(this.getEndDate())).append("\n").
+      append("Program : ").append(this.getProgram()).append("\n").
+      append("Requisition Group : ").append(this.getRgroup()).append("\n").
+      append("Product Category : ").append(this.getProductCategory()).append("\n").
+      append("Product : ").append(this.getProduct()).append("\n").
+      append("Zone : ").append(this.getZone()).append("\n").
+      append("Facility Types : ").append(this.getFacilityType()).append("\n").
+      append("Facility : ").append(this.getFacility()).append("\n");
+    return filtersValue.toString();
 
 
-    }
+  }
 
 
 }

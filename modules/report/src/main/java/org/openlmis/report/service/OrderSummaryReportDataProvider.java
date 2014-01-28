@@ -49,7 +49,7 @@ public class OrderSummaryReportDataProvider extends ReportDataProvider {
   @Override
   public List<? extends ReportData> getMainReportData(Map<String, String[]> filterCriteria, Map<String, String[]> SortCriteria, int page, int pageSize) {
     RowBounds rowBounds = new RowBounds((page - 1) * pageSize, pageSize);
-    return reportMapper.getFilteredSortedPagedOrderSummaryReport(getReportFilterData(filterCriteria), SortCriteria, rowBounds);
+    return reportMapper.getOrderSummaryReport(getReportFilterData(filterCriteria), SortCriteria, rowBounds);
   }
 
   public OrderReportParam getReportFilterData(Map<String, String[]> filterCriteria) {

@@ -12,18 +12,20 @@ package org.openlmis.report.model.params;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.openlmis.report.model.ReportData;
+import org.openlmis.report.model.ReportParameter;
 
 import java.text.DateFormat;
 import java.util.Date;
 
 @Data
 @NoArgsConstructor
+@EqualsAndHashCode(callSuper=false)
 @AllArgsConstructor
-public class AdjustmentSummaryReportParam implements ReportData {
-
-    private int userId;
+public class AdjustmentSummaryReportParam
+        extends BaseParam implements ReportParameter {
 
     private String periodType;
     private int yearFrom;

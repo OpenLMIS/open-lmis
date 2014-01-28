@@ -17,6 +17,7 @@ import org.apache.ibatis.mapping.ResultSetType;
 import org.apache.ibatis.session.RowBounds;
 import org.openlmis.report.builder.OrderSummaryQueryBuilder;
 import org.openlmis.report.model.ReportData;
+import org.openlmis.report.model.ReportParameter;
 import org.openlmis.report.model.report.OrderSummaryReport;
 import org.springframework.stereotype.Repository;
 
@@ -25,13 +26,13 @@ import java.util.Map;
 
 @Repository
 public interface OrderSummaryReportMapper {
-    @SelectProvider(type=OrderSummaryQueryBuilder.class, method="SelectFilteredSortedPagedRecords")
-    @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize=10,timeout=0,useCache=true,flushCache=true)
-    public List<OrderSummaryReport> getFilteredSortedPagedOrderSummaryReport(
-            @Param("filterCriteria") ReportData filterCriteria,
-            @Param("sortCriteria") Map params,
-            @Param("RowBounds") RowBounds rowBounds
-    );
+  @SelectProvider(type = OrderSummaryQueryBuilder.class, method = "SelectFilteredSortedPagedRecords")
+  @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize = 10, timeout = 0, useCache = true, flushCache = true)
+  public List<OrderSummaryReport> getOrderSummaryReport(
+    @Param("filterCriteria") ReportParameter filterCriteria,
+    @Param("sortCriteria") Map params,
+    @Param("RowBounds") RowBounds rowBounds
+  );
 
 
 }

@@ -12,33 +12,37 @@ package org.openlmis.report.model.params;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.openlmis.report.model.ReportData;
+import org.openlmis.report.model.ReportParameter;
 
 import java.util.Date;
 
 
 @Data
 @NoArgsConstructor
+@EqualsAndHashCode(callSuper=false)
 @AllArgsConstructor
-public class ConsumptionReportParam implements ReportData {
+public class ConsumptionReportParam
+  extends BaseParam implements ReportParameter {
 
-    //top filters
-    private int userId;
+  //top filters
+  private int userId;
 
-    // period selections
-    //private String periodType;
-    private int yearFrom;
-    private int yearTo;
-    private int monthFrom;
-    private int monthTo;
+  // period selections
+  //private String periodType;
+  private int yearFrom;
+  private int yearTo;
+  private int monthFrom;
+  private int monthTo;
 
-    private int facilityTypeId;
-    private int zoneId;
-    private int productId;
-    private int facilityId;
+  private int facilityTypeId;
+  private int zoneId;
+  private int productId;
+  private int facilityId;
 
-    private Date startDate;
-    private Date endDate;
+  private Date startDate;
+  private Date endDate;
 
 }

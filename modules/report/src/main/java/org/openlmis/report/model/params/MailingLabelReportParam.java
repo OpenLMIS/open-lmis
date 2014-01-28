@@ -12,29 +12,33 @@ package org.openlmis.report.model.params;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.openlmis.report.model.ReportData;
+import org.openlmis.report.model.ReportParameter;
 
 @Data
 @NoArgsConstructor
+@EqualsAndHashCode(callSuper=false)
 @AllArgsConstructor
-public class MailingLabelReportParam implements ReportData {
+public class MailingLabelReportParam
+  extends BaseParam implements ReportParameter {
 
-    //top filters
-    private int facilityTypeId;
-    private String facilityType;
-    private int rgroupId;
-    private String rgroup;
+  //top filters
+  private int facilityTypeId;
+  private String facilityType;
+  private int rgroupId;
+  private String rgroup;
 
-    @Override
-    public String toString(){
-        if(this == null ) return null;
-        StringBuilder filterDescription = new StringBuilder("");
-        filterDescription.append("Facility Type : ").append(facilityTypeId != 0 ? facilityType : "All Facility Types ").append("\n").
-                         append("Requisition Group : ").append(rgroupId != 0 ? rgroup : "All Requisition Groups");
+  @Override
+  public String toString() {
+    if (this == null) return null;
+    StringBuilder filterDescription = new StringBuilder("");
+    filterDescription.append("Facility Type : ").append(facilityTypeId != 0 ? facilityType : "All Facility Types ").append("\n").
+      append("Requisition Group : ").append(rgroupId != 0 ? rgroup : "All Requisition Groups");
 
-        return filterDescription.toString().isEmpty() ? null : filterDescription.toString();
-    }
+    return filterDescription.toString().isEmpty() ? null : filterDescription.toString();
+  }
 
 }
 

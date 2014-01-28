@@ -12,44 +12,47 @@ package org.openlmis.report.model.params;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.openlmis.report.model.ReportData;
+import org.openlmis.report.model.ReportParameter;
 
 @Data
 @AllArgsConstructor
+@EqualsAndHashCode(callSuper=false)
 @NoArgsConstructor
-public class RnRFeedbackReportParam implements ReportData {
+public class RnRFeedbackReportParam
+  extends BaseParam implements ReportParameter {
 
-    private int facilityTypeId;
-    private String facilityType;
-    private String facility;
-    private int facilityId;
-    private int productId;
-    private String product;
-    private int productCategoryId;
-    private int programId;
-    private String program;
-    private String orderType;
-    private int periodId;
-    private String period;
-    private int scheduleId;
-    private String schedule;
-    private int rgroupId;
-    private String rgroup;
+  private int facilityTypeId;
+  private String facilityType;
+  private String facility;
+  private int facilityId;
+  private int productId;
+  private String product;
+  private int productCategoryId;
+  private int programId;
+  private String program;
+  private String orderType;
+  private int periodId;
+  private String period;
+  private int scheduleId;
+  private String schedule;
+  private int rgroupId;
+  private String rgroup;
 
 
-    @Override
-    public String toString(){
+  @Override
+  public String toString() {
 
-        StringBuilder filtersValue = new StringBuilder("");
-        filtersValue.append("Program : ").append(this.program).append("\n").
-                     append("Schedule : ").append(this.schedule).append("\n").
-                     append("Period : ").append(this.period).append("\n").
-                     append("Requisition Group : ").append(this.rgroup).append("\n").
-                     append("Product : ").append(this.product).append("\n");
-        return filtersValue.toString();
-    }
-
+    StringBuilder filtersValue = new StringBuilder("");
+    filtersValue.append("Program : ").append(this.program).append("\n").
+      append("Schedule : ").append(this.schedule).append("\n").
+      append("Period : ").append(this.period).append("\n").
+      append("Requisition Group : ").append(this.rgroup).append("\n").
+      append("Product : ").append(this.product).append("\n");
+    return filtersValue.toString();
+  }
 
 
 }

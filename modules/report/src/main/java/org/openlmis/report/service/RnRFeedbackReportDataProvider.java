@@ -45,7 +45,7 @@ public class RnRFeedbackReportDataProvider extends ReportDataProvider {
   @Override
   public List<? extends ReportData> getMainReportData(Map<String, String[]> filterCriteria, Map<String, String[]> SortCriteria, int page, int pageSize) {
     RowBounds rowBounds = new RowBounds((page - 1) * pageSize, pageSize);
-    return reportMapper.getFilteredSortedPagedRnRFeedbackReport(getReportFilterData(filterCriteria), SortCriteria, rowBounds);
+    return reportMapper.getRnRFeedbackReport(getReportFilterData(filterCriteria), SortCriteria, rowBounds);
   }
 
   public RnRFeedbackReportParam getReportFilterData(Map<String, String[]> filterCriteria) {
