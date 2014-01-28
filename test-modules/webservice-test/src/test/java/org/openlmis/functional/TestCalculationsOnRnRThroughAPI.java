@@ -388,7 +388,7 @@ public class TestCalculationsOnRnRThroughAPI extends JsonUtility {
     submitRnRThroughApi("V10", "HIV", "P10", null, 10, null, null, null, null);
     id = submitRnRThroughApi("V10", "HIV", "P10", null, 5, null, null, null, null);
     convertToOrderAndUpdatePOD("commTrack", "HIV", 5);
-    dbWrapper.updateCreatedDateInPODLineItems("2010-02-11", id);
+    dbWrapper.updateFieldValue("pod","createdDate","2010-02-11","orderId",id.toString());
     id = submitRnRThroughApi("V10", "HIV", "P10", null, 4, null, null, null, null);
     assertEquals("5", dbWrapper.getRequisitionLineItemFieldValue(id, "beginningBalance", "P10"));
     assertEquals("4", dbWrapper.getRequisitionLineItemFieldValue(id, "stockInHand", "P10"));

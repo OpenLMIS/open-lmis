@@ -1217,10 +1217,6 @@ public class DBWrapper {
     update("update requisition_status_changes SET createdDate= '" + newDate + "' WHERE rnrId=" + rnrId + ";");
   }
 
-  public void updateCreatedDateInPODLineItems(String newDate, Long rnrId) throws SQLException {
-    update("update pod SET createdDate= '" + newDate + "' WHERE orderId=" + rnrId + ";");
-  }
-
   public void updateSupervisoryNodeForRequisitionGroup(String requisitionGroup,
                                                        String supervisoryNodeCode) throws SQLException {
     update("update requisition_groups set supervisoryNodeId=(select id from supervisory_nodes where code='" + supervisoryNodeCode +
