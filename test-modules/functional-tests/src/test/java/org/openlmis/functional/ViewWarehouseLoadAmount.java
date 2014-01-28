@@ -217,9 +217,8 @@ public class ViewWarehouseLoadAmount extends TestCaseHelper {
     dbWrapper.insertProgramProducts(product1, product2, programFirst);
     dbWrapper.insertFacilityApprovedProduct(product1, programFirst, "lvl3_hospital");
     dbWrapper.insertFacilityApprovedProduct(product2, programFirst, "lvl3_hospital");
-
-    dbWrapper.updateProductsByField("packSize", "4", product1);
-    dbWrapper.updateProductsByField("packSize", "5", product2);
+    dbWrapper.updateFieldValue("products","packSize", "4","code",product1);
+    dbWrapper.updateFieldValue("products","packSize", "5","code",product2);
     dbWrapper.updateProcessingPeriodByField("numberOfMonths", "2", periodDisplayedByDefault, schedule);
 
 

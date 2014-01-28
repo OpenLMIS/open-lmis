@@ -1241,10 +1241,6 @@ public class DBWrapper {
     update("update pod SET createdDate= '" + newDate + "' WHERE orderId=" + rnrId + ";");
   }
 
-  public void updateProductsByField(String field, String fieldValue, String productCode) throws SQLException {
-    update("update products set " + field + "= '" + fieldValue + "' where code='" + productCode + "';");
-  }
-
   public void updateSupervisoryNodeForRequisitionGroup(String requisitionGroup,
                                                        String supervisoryNodeCode) throws SQLException {
     update("update requisition_groups set supervisoryNodeId=(select id from supervisory_nodes where code='" + supervisoryNodeCode +
