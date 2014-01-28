@@ -1262,14 +1262,6 @@ public class DBWrapper {
       "') where code='" + requisitionGroup + "';");
   }
 
-  public void updateOrderStatus() throws IOException, SQLException {
-    update("update orders set status='RECEIVED'");
-  }
-
-  public void updateRequisitionToEmergency() throws IOException, SQLException {
-    update("update requisitions set Emergency=true");
-  }
-
   public void deleteSupplyLine() throws IOException, SQLException {
     update("delete from supply_lines where description='supplying node for MALARIA'");
   }
@@ -1302,10 +1294,6 @@ public class DBWrapper {
     update(
       "INSERT INTO budget_line_items VALUES (1,(select id from processing_periods where name='current Period'),1,'01/01/2013',200,'hjhj',200,'12/12/2013',200,'12/12/2013',(select id from facilities where code='F10'),1);");
 
-  }
-
-  public void updateBudgetLineItemsByField(String field, String newValue) throws SQLException {
-    update("UPDATE budget_line_items SET " + field + " ='" + newValue + "';");
   }
 
   public void addRefrigeratorToFacility(String brand, String model, String serialNumber, String facilityCode) throws SQLException {

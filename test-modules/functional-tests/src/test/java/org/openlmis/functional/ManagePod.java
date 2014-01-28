@@ -70,7 +70,7 @@ public class ManagePod extends TestCaseHelper {
   @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-RnR")
   public void testVerifyManagePODValidFlowForEmergencyRnR(String program, String userSIC, String password) throws Exception {
     setUpData(program, userSIC);
-    dbWrapper.updateRequisitionToEmergency();
+    dbWrapper.updateFieldValue("requisitions","Emergency",true);
 
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(userSIC, password);
@@ -102,7 +102,7 @@ public class ManagePod extends TestCaseHelper {
     HomePage homePage = loginPage.loginAs(userSIC, password);
     dbWrapper.insertOrders("RELEASED", userSIC, "MALARIA");
     ManagePodPage managePodPage = homePage.navigateManagePOD();
-    dbWrapper.updateOrderStatus();
+    dbWrapper.updateFieldValue("orders","status","RECEIVED");
     homePage.navigateHomePage();
     homePage.navigateManagePOD();
     managePodPage.verifyMessageOnManagePodScreen();

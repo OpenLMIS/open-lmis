@@ -338,8 +338,7 @@ public class ManageBudget extends TestCaseHelper{
     InitiateRnR initiateRnR = new InitiateRnR();
     initiateRnR.verifyBudgetAmountPresentOnFooter("$200.00");
     initiateRnR.checkWhetherBudgetExceedWarningPresent(true);
-
-    dbWrapper.updateBudgetLineItemsByField("allocatedBudget","300");
+    dbWrapper.updateFieldValue("budget_line_items","allocatedBudget","300");
     testWebDriver.refresh();
 
     initiateRnR.verifyBudgetAmountPresentOnFooter("$200.00");
