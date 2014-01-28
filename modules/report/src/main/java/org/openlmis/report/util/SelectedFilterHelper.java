@@ -8,7 +8,7 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-package org.openlmis.report.model.filter;
+package org.openlmis.report.util;
 
 import lombok.NoArgsConstructor;
 import org.openlmis.core.repository.ProcessingPeriodRepository;

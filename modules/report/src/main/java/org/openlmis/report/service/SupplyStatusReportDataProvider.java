@@ -15,8 +15,7 @@ import org.apache.ibatis.session.RowBounds;
 import org.openlmis.core.service.ConfigurationSettingService;
 import org.openlmis.report.mapper.SupplyStatusReportMapper;
 import org.openlmis.report.model.ReportData;
-import org.openlmis.report.model.filter.SelectedFilterHelper;
-import org.openlmis.report.util.Constants;
+import org.openlmis.report.util.SelectedFilterHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
