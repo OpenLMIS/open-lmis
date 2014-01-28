@@ -42,7 +42,7 @@ describe('Facility Visit', function () {
   });
 
   it('should return complete if visit details valid', function () {
-    var facilityVisit = new FacilityVisit({observations: "blah blah blah", verifiedBy: {name: 'Pintu', title: 'title'}, confirmedBy: {name: 'something', title: 'title'}});
+    var facilityVisit = new FacilityVisit({observations: "blah blah blah", verifiedBy: {name: 'Pint', title: 'title'}, confirmedBy: {name: 'something', title: 'title'}});
 
     var status = facilityVisit.computeStatus();
 
@@ -50,10 +50,34 @@ describe('Facility Visit', function () {
   });
 
   it('should retain its status', function () {
-    var facilityVisit = new FacilityVisit({observations: "blah blah blah", verifiedBy: {name: 'Pintu', title: 'title'}, confirmedBy: {name: 'something', title: 'title'}});
+    var facilityVisit = new FacilityVisit({observations: "blah blah blah", verifiedBy: {name: 'Pint', title: 'title'}, confirmedBy: {name: 'something', title: 'title'}});
 
     facilityVisit.computeStatus();
 
     expect(facilityVisit.status).toEqual(DistributionStatus.COMPLETE);
+  });
+
+  it('should return is-empty if facility visited not filled', function () {
+    var facilityVisit = new FacilityVisit({});
+
+    expect(facilityVisit.computeStatus(true)).toEqual(DistributionStatus.EMPTY);
+  });
+
+  it('should return is-incomplete if facility visited partially filled', function () {
+    var facilityVisit = new FacilityVisit({visited: true});
+
+    expect(facilityVisit.computeStatus(true)).toEqual(DistributionStatus.INCOMPLETE);
+  });
+
+  it('should return is-complete if facility visited fully filled', function () {
+    var facilityVisit = new FacilityVisit({visited: true, visitDate: new Date(), observations: "blah blah blah", verifiedBy: {name: 'Pint', title: 'title'}, confirmedBy: {name: 'something', title: 'title'}});
+
+    expect(facilityVisit.computeStatus(true)).toEqual(DistributionStatus.COMPLETE);
+  });
+
+  it('should return is-incomplete if visit info filled but observation data not filled', function () {
+    var facilityVisit = new FacilityVisit({visited: true, visitDate: new Date()});
+
+    expect(facilityVisit.computeStatus(true)).toEqual(DistributionStatus.INCOMPLETE);
   });
 });

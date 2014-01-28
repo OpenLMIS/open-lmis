@@ -11,8 +11,8 @@
 <div class="left-navigation" ng-controller="RecordFacilityMenuController">
   <ul>
     <li id="facilityVisitStatus"
-        ng-class="[distributionData.facilityVisit.computeStatus(), isSelected('visit-info')]">
-      <a id="facilityVisitTab" href="" ng-click="changeRoute('visit-info')">
+        ng-class="[distributionData.facilityVisit.computeStatus(true), isSelected('visit-info')]">
+    <a id="facilityVisitTab" href="" ng-click="changeRoute('visit-info')">
         <span id="facilityVisitTabIcon" class="status-icon"></span>
         <span id="facilityVisitTabLabel" openlmis-message="label.visit.information"></span>
       </a>

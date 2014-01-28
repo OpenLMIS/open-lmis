@@ -12,12 +12,25 @@ function FacilityVisit(facilityVisitJson) {
   $.extend(true, this, facilityVisitJson);
   var mandatoryList = ['observations', 'verifiedBy', 'confirmedBy'];
 
-  FacilityVisit.prototype.computeStatus = function () {
-    var _this = this;
+  FacilityVisit.prototype.computeStatus = function (useFacilityVisitedFlag) {
+    if (!useFacilityVisitedFlag)
+      return computeStatusForGeneralObservation.call(this);
+
+    if (this.visited === null || this.visited === undefined)
+      return DistributionStatus.EMPTY;
+
+    if (!this.visitDate)
+      return DistributionStatus.INCOMPLETE;
+
+    return computeStatusForGeneralObservation.call(this) === DistributionStatus.COMPLETE ? DistributionStatus.COMPLETE : DistributionStatus.INCOMPLETE;
+  };
+
+  function computeStatusForGeneralObservation() {
     var status;
+    var _this = this;
 
     function isValid(fieldName) {
-      if(!_this[fieldName]) return false;
+      if (!_this[fieldName]) return false;
 
       if (fieldName === 'observations') return !isUndefined(_this[fieldName]);
 
@@ -25,7 +38,7 @@ function FacilityVisit(facilityVisitJson) {
     }
 
     function isEmpty(fieldName) {
-      if(!_this[fieldName]) return true;
+      if (!_this[fieldName]) return true;
 
       if (fieldName === 'observations') return isUndefined(_this[fieldName]);
 
@@ -44,8 +57,9 @@ function FacilityVisit(facilityVisitJson) {
       return true;
     });
 
-    _this.status = status;
+    this.status = status;
 
-    return status;
-  };
+    return this.status;
+  }
+
 }
