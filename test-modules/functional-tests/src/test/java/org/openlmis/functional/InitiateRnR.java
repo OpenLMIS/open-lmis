@@ -21,7 +21,6 @@ import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.pageobjects.*;
 import org.openlmis.pageobjects.edi.ConvertOrderPage;
 import org.openqa.selenium.By;
-import org.testng.AssertJUnit;
 import org.testng.annotations.*;
 
 import java.io.IOException;
@@ -385,7 +384,7 @@ public class InitiateRnR extends TestCaseHelper {
                                                                   String password) throws Exception {
     List<String> rightsList = asList(CREATE_REQUISITION, VIEW_REQUISITION);
     setupTestDataToInitiateRnR(true, program, userSIC, "200", rightsList);
-    dbWrapper.deletePeriod("Period2");
+    dbWrapper.deleteRowFromTable("processing_periods","name","Period2");
 
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(userSIC, password);
@@ -398,7 +397,7 @@ public class InitiateRnR extends TestCaseHelper {
                                                                 String password) throws Exception {
     List<String> rightsList = asList(AUTHORIZE_REQUISITION, VIEW_REQUISITION);
     setupTestDataToInitiateRnR(true, program, userSIC, "200", rightsList);
-    dbWrapper.deletePeriod("Period2");
+    dbWrapper.deleteRowFromTable("processing_periods","name","Period2");
 
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(userSIC, password);
@@ -435,8 +434,8 @@ public class InitiateRnR extends TestCaseHelper {
   public void shouldVerifyRequisitionAlreadySubmittedMessage(String program, String userSIC, String password) throws Exception {
     List<String> rightsList = asList(CREATE_REQUISITION, AUTHORIZE_REQUISITION, VIEW_REQUISITION);
     setupTestDataToInitiateRnR(true, program, userSIC, "200", rightsList);
-    dbWrapper.deletePeriod("Period1");
-    dbWrapper.deletePeriod("Period2");
+    dbWrapper.deleteRowFromTable("processing_periods","name","Period1");
+    dbWrapper.deleteRowFromTable("processing_periods","name","Period2");
     dbWrapper.insertProcessingPeriod("current Period", "current Period", "2013-10-03", "2014-01-30", 1, "M");
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(userSIC, password);
@@ -466,9 +465,8 @@ public class InitiateRnR extends TestCaseHelper {
 
     List<String> rightsList1 = asList(AUTHORIZE_REQUISITION, VIEW_REQUISITION);
     createUserAndAssignRoleRights("201", "mo", "Maar_Doe@openlmis.com", "F10", "district pharmacist", rightsList1);
-
-    dbWrapper.deletePeriod("Period1");
-    dbWrapper.deletePeriod("Period2");
+    dbWrapper.deleteRowFromTable("processing_periods","name","Period1");
+    dbWrapper.deleteRowFromTable("processing_periods","name","Period2");
     dbWrapper.insertProcessingPeriod("current Period", "current Period", "2013-10-03", "2014-01-30", 1, "M");
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(userSIC, password);
@@ -552,8 +550,8 @@ public class InitiateRnR extends TestCaseHelper {
     List<String> rightsList3 = asList(CONVERT_TO_ORDER, VIEW_ORDER);
     createUserAndAssignRoleRights("401", userName, "Jaan_V_Doe@openlmis.com", "F10", roleName, rightsList3);
 
-    dbWrapper.deletePeriod("Period1");
-    dbWrapper.deletePeriod("Period2");
+    dbWrapper.deleteRowFromTable("processing_periods","name","Period1");
+    dbWrapper.deleteRowFromTable("processing_periods","name","Period2");
     String periodStartDate = "2013-10-03";
     String periodEndDate = "2014-01-30";
     dbWrapper.insertProcessingPeriod("current Period", "current Period", periodStartDate, periodEndDate, 1, "M");
@@ -638,8 +636,8 @@ public class InitiateRnR extends TestCaseHelper {
   public void testValidationsOnStockOnHandRnRField(String program, String userSIC, String password) throws Exception {
     List<String> rightsList = asList(CREATE_REQUISITION, VIEW_REQUISITION);
     setupTestDataToInitiateRnR(true, program, userSIC, "200", rightsList);
-    dbWrapper.deletePeriod("Period1");
-    dbWrapper.deletePeriod("Period2");
+    dbWrapper.deleteRowFromTable("processing_periods","name","Period1");
+    dbWrapper.deleteRowFromTable("processing_periods","name","Period2");
     dbWrapper.insertProcessingPeriod("current Period", "current Period", "2013-10-03", "2014-01-30", 1, "M");
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(userSIC, password);
@@ -657,8 +655,8 @@ public class InitiateRnR extends TestCaseHelper {
   public void testValidationsOnTotalConsumedQuantityRnRField(String program, String userSIC, String password) throws Exception {
     List<String> rightsList = asList(CREATE_REQUISITION, VIEW_REQUISITION);
     setupTestDataToInitiateRnR(true, program, userSIC, "200", rightsList);
-    dbWrapper.deletePeriod("Period1");
-    dbWrapper.deletePeriod("Period2");
+    dbWrapper.deleteRowFromTable("processing_periods","name","Period1");
+    dbWrapper.deleteRowFromTable("processing_periods","name","Period2");
     dbWrapper.insertProcessingPeriod("current Period", "current Period", "2013-10-03", "2014-01-30", 1, "M");
     dbWrapper.updateSourceOfAProgramTemplate("HIV", "Total Consumed Quantity", "C");
     dbWrapper.updateSourceOfAProgramTemplate("HIV", "Stock on Hand", "U");
@@ -679,8 +677,8 @@ public class InitiateRnR extends TestCaseHelper {
   public void testVerifyAllStatusOfRequisitions(String program, String userSIC, String password) throws Exception {
     List<String> rightsList = asList(CREATE_REQUISITION, VIEW_REQUISITION);
     setupTestDataToInitiateRnR(true, program, userSIC, "200", rightsList);
-    dbWrapper.deletePeriod("Period1");
-    dbWrapper.deletePeriod("Period2");
+    dbWrapper.deleteRowFromTable("processing_periods","name","Period1");
+    dbWrapper.deleteRowFromTable("processing_periods","name","Period2");
     dbWrapper.insertProcessingPeriod("current Period", "current Period", "2013-10-03", "2014-01-30", 1, "M");
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(userSIC, password);
@@ -704,9 +702,8 @@ public class InitiateRnR extends TestCaseHelper {
 
     createUserAndAssignRoleRights("201", "mo", "Maar_Doe@openlmis.com", "F10", "district pharmacist",
       asList(AUTHORIZE_REQUISITION, VIEW_REQUISITION));
-
-    dbWrapper.deletePeriod("Period1");
-    dbWrapper.deletePeriod("Period2");
+    dbWrapper.deleteRowFromTable("processing_periods","name","Period1");
+    dbWrapper.deleteRowFromTable("processing_periods","name","Period2");
     dbWrapper.insertProcessingPeriod("current Period", "current Period", "2013-10-03", "2014-01-30", 1, "M");
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(userSIC, password);
@@ -747,8 +744,8 @@ public class InitiateRnR extends TestCaseHelper {
     List<String> rightsList = asList(AUTHORIZE_REQUISITION, VIEW_REQUISITION);
     setupTestDataToInitiateRnR(true, program, userSIC, "200", rightsList);
 
-    dbWrapper.deletePeriod("Period1");
-    dbWrapper.deletePeriod("Period2");
+    dbWrapper.deleteRowFromTable("processing_periods","name","Period1");
+    dbWrapper.deleteRowFromTable("processing_periods","name","Period2");
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(userSIC, password);
     homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Regular");
@@ -764,7 +761,7 @@ public class InitiateRnR extends TestCaseHelper {
     List<String> rightsList = asList(CREATE_REQUISITION, VIEW_REQUISITION);
 
     setupTestDataToInitiateRnR(true, program, userSIC, "200", rightsList);
-    dbWrapper.deleteProcessingPeriods();
+    dbWrapper.deleteTable("processing_periods");
     dbWrapper.insertProcessingPeriod("Period1", "first period", "2012-12-01", "2013-01-15", 1, "M");
 
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
@@ -811,8 +808,8 @@ public class InitiateRnR extends TestCaseHelper {
   public void testSkipProductRnRField(String program, String userSIC, String password) throws Exception {
     List<String> rightsList = asList(CREATE_REQUISITION, VIEW_REQUISITION);
     setupTestDataToInitiateRnR(true, program, userSIC, "200", rightsList);
-    dbWrapper.deletePeriod("Period1");
-    dbWrapper.deletePeriod("Period2");
+    dbWrapper.deleteRowFromTable("processing_periods","name","Period1");
+    dbWrapper.deleteRowFromTable("processing_periods","name","Period2");
     dbWrapper.insertProcessingPeriod("current Period", "current Period", "2013-10-03", "2014-01-30", 1, "M");
     dbWrapper.updateFieldValue("products","fullSupply","true","code","P11");
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
@@ -862,8 +859,8 @@ public class InitiateRnR extends TestCaseHelper {
   public void testSkipProductRnRAuthorizeApproveForRegularRnR(String program, String userSIC, String password) throws Exception {
     List<String> rightsList = asList(CREATE_REQUISITION, VIEW_REQUISITION, AUTHORIZE_REQUISITION, APPROVE_REQUISITION);
     setupTestDataToInitiateRnR(true, program, userSIC, "200", rightsList);
-    dbWrapper.deletePeriod("Period1");
-    dbWrapper.deletePeriod("Period2");
+    dbWrapper.deleteRowFromTable("processing_periods","name","Period1");
+    dbWrapper.deleteRowFromTable("processing_periods","name","Period2");
     dbWrapper.insertProcessingPeriod("current Period", "current Period", "2013-10-03", "2014-01-30", 1, "M");
     dbWrapper.updateFieldValue("products","fullSupply","true","code","P11");
 
@@ -909,8 +906,8 @@ public class InitiateRnR extends TestCaseHelper {
   public void testSkipProductRnRAuthorizeApproveUpdatePodForEmergencyRnR(String program, String userSIC, String password) throws Exception {
     List<String> rightsList = asList(CREATE_REQUISITION, VIEW_REQUISITION, AUTHORIZE_REQUISITION, APPROVE_REQUISITION, CONVERT_TO_ORDER, MANAGE_POD);
     setupTestDataToInitiateRnR(true, program, userSIC, "200", rightsList);
-    dbWrapper.deletePeriod("Period1");
-    dbWrapper.deletePeriod("Period2");
+    dbWrapper.deleteRowFromTable("processing_periods","name","Period1");
+    dbWrapper.deleteRowFromTable("processing_periods","name","Period2");
     dbWrapper.insertProcessingPeriod("current Period", "current Period", "2013-10-03", "2014-01-30", 1, "M");
     dbWrapper.updateFieldValue("products","fullSupply","true","code","P11");
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);

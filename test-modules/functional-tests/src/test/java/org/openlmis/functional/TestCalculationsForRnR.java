@@ -12,8 +12,6 @@
 
 package org.openlmis.functional;
 
-import cucumber.api.java.After;
-import cucumber.api.java.Before;
 import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.pageobjects.ApprovePage;
 import org.openlmis.pageobjects.HomePage;
@@ -272,7 +270,7 @@ public class TestCalculationsForRnR extends TestCaseHelper {
   public void testCalculationWhenNoPreviousPeriod() throws IOException, SQLException {
     dbWrapper.updateConfigureTemplate("HIV", "source", "U", "true", "quantityDispensed");
     dbWrapper.updateConfigureTemplate("HIV", "source", "C", "true", "stockInHand");
-    dbWrapper.deletePeriod("Period2");
+    dbWrapper.deleteRowFromTable("processing_periods","name","Period2");
     dbWrapper.insertProcessingPeriod("currentPeriod", "current period", "2013-01-31", "2016-01-31", 1, "M");
     dbWrapper.updateFieldValue("products","fullSupply","false","code","P11");
 
@@ -459,7 +457,7 @@ public class TestCalculationsForRnR extends TestCaseHelper {
   @Test(groups = "requisition")
   public void testCalculationTrackingOfAmcWhenMIs2() throws IOException, SQLException {
     dbWrapper.updateFieldValue("products","fullSupply","false","code","P11");
-    dbWrapper.deletePeriod("Period2");
+    dbWrapper.deleteRowFromTable("processing_periods","name","Period2");
     dbWrapper.insertProcessingPeriod("feb13", "feb13", "2013-01-31", "2013-02-28", 2, "M");
     dbWrapper.insertProcessingPeriod("mar13", "mar13", "2013-03-01", "2013-03-31", 2, "M");
     dbWrapper.insertProcessingPeriod("apr13", "apr13", "2013-04-01", "2013-04-30", 2, "M");
@@ -505,7 +503,7 @@ public class TestCalculationsForRnR extends TestCaseHelper {
   @Test(groups = "requisition")
   public void testCalculationTrackingOfAmcWhenMIs3() throws IOException, SQLException {
     dbWrapper.updateFieldValue("products","fullSupply","false","code","P11");
-    dbWrapper.deletePeriod("Period2");
+    dbWrapper.deleteRowFromTable("processing_periods","name","Period2");
     dbWrapper.insertProcessingPeriod("feb13", "feb13", "2013-01-31", "2013-02-28", 3, "M");
     dbWrapper.insertProcessingPeriod("mar13", "mar13", "2013-03-01", "2013-03-31", 3, "M");
     dbWrapper.insertProcessingPeriod("apr13", "apr13", "2013-04-01", "2013-04-30", 3, "M");
@@ -538,7 +536,7 @@ public class TestCalculationsForRnR extends TestCaseHelper {
   @Test(groups = "requisition")
   public void testCalculationTrackingOfAmcWhenMIs5() throws IOException, SQLException {
     dbWrapper.updateFieldValue("products","fullSupply","false","code","P11");
-    dbWrapper.deletePeriod("Period2");
+    dbWrapper.deleteRowFromTable("processing_periods","name","Period2");
     dbWrapper.insertProcessingPeriod("feb13", "feb13", "2013-01-31", "2013-02-28", 5, "M");
     dbWrapper.insertProcessingPeriod("mar13", "mar13", "2013-03-01", "2013-03-31", 5, "M");
     dbWrapper.insertProcessingPeriod("apr13", "apr13", "2013-04-01", "2013-04-30", 5, "M");
@@ -628,7 +626,7 @@ public class TestCalculationsForRnR extends TestCaseHelper {
   @Test(groups = "requisition")
   public void testCalculationAmcNoTrackingForMoreThan2MWhenMIs2() throws IOException, SQLException {
     dbWrapper.updateFieldValue("products","fullSupply","false","code","P11");
-    dbWrapper.deletePeriod("Period2");
+    dbWrapper.deleteRowFromTable("processing_periods","name","Period2");
     dbWrapper.insertProcessingPeriod("feb13", "feb13", "2013-01-31", "2013-02-28", 2, "M");
     dbWrapper.insertProcessingPeriod("mar13", "mar13", "2013-03-01", "2013-03-31", 2, "M");
     dbWrapper.insertProcessingPeriod("apr13", "apr13", "2013-04-01", "2013-04-30", 2, "M");
@@ -948,7 +946,7 @@ public class TestCalculationsForRnR extends TestCaseHelper {
 
   private void verifyCalculationForEmergencyForGivenNumberOfMonths(int numberOfMonths) throws SQLException, IOException, ParseException {
     dbWrapper.deleteCurrentPeriod();
-    dbWrapper.deletePeriod("Period2");
+    dbWrapper.deleteRowFromTable("processing_periods","name","Period2");
     dbWrapper.insertProcessingPeriod("current", "current period", "2013-10-01", "2016-01-30", numberOfMonths, "M");
 
     HomePage homePage = new LoginPage(testWebDriver, baseUrlGlobal).loginAs(userSIC, password);

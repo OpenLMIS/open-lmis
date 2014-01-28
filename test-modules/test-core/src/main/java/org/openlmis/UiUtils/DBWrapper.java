@@ -100,10 +100,6 @@ public class DBWrapper {
     insertProcessingPeriod(period, period, "2013-09-29", "2020-09-30", 66, schedule);
   }
 
-  public void deleteProcessingPeriods() throws SQLException, IOException {
-    update("delete from processing_periods");
-  }
-
   public List<String> getProductDetailsForProgram(String programCode) throws SQLException {
     List<String> prodDetails = new ArrayList<>();
 
@@ -289,8 +285,8 @@ public class DBWrapper {
       "(SELECT id FROM facilities WHERE code = '" + facilityCode + "'),NOW(),NOW())");
   }
 
-  public void deletePeriod(String periodName) throws IOException, SQLException {
-    update("delete from processing_periods where name='" + periodName + "';");
+  public void deleteRowFromTable(String tableName, String queryParam, String queryValue) throws IOException, SQLException {
+    update("delete from " + tableName + " where " + queryParam + "='" + queryValue + "';");
   }
 
   public void insertFacilitiesWithDifferentGeoZones(String facility1, String facility2, String geoZone1, String geoZone2) throws IOException, SQLException {
@@ -569,10 +565,6 @@ public class DBWrapper {
         "(SELECT id from products WHERE code = '" + product + "'))," + whoRatio + "," + dosesPerYear + "," + wastageFactor + "," + bufferPercentage + "," + minimumValue + "," + maximumValue + "," + adjustmentValue + ");");
   }
 
-  public void deleteFacilityApprovedProducts() throws SQLException {
-    update("DELETE FROM facility_approved_products");
-  }
-
   public void insertFacilityApprovedProduct(String productCode, String programCode, String facilityTypeCode) throws Exception {
     String facilityTypeIdQuery = format("(SELECT id FROM facility_types WHERE code = '%s')", facilityTypeCode);
     String productIdQuery = format("(SELECT id FROM products WHERE  code = '%s')", productCode);
@@ -749,15 +741,15 @@ public class DBWrapper {
     update("update " + tableName + " set " + fieldName + "=" + quantity + ";");
   }
 
-  public void updateFieldValue(String tableName, String fieldName, String value, String fieldName2, String value2) throws IOException, SQLException {
-    if (fieldName2 == null)
+  public void updateFieldValue(String tableName, String fieldName, String value, String queryParam, String queryValue) throws IOException, SQLException {
+    if (queryParam == null)
       update("update " + tableName + " set " + fieldName + "='" + value + "';");
     else
-    update("update " + tableName + " set " + fieldName + "='" + value + "' where " + fieldName2 + "='" + value2 + "';");
+      update("update " + tableName + " set " + fieldName + "='" + value + "' where " + queryParam + "='" + queryValue + "';");
   }
 
   public void updateFieldValue(String tableName, String fieldName, Boolean value) throws IOException, SQLException {
-    update("update " + tableName + " set " + fieldName + "=" + value +";");
+    update("update " + tableName + " set " + fieldName + "=" + value + ";");
   }
 
   public void updateRequisitionStatus(String status, String username, String program) throws IOException, SQLException {
@@ -1041,10 +1033,6 @@ public class DBWrapper {
       "includeInOrderFile='" + includeInOrderFile + "', columnLabel='" + columnLabel + "', position=" + position + ", format='" + Format + "' where dataFieldLabel='" + dataFieldLabel + "'");
   }
 
-  public void deleteOrderFileNonOpenLMISColumns() throws SQLException {
-    update("DELETE FROM order_file_columns where openLMISField = FALSE");
-  }
-
   public void setupOrderFileNonOpenLMISColumns(String dataFieldLabel, String includeInOrderFile, String columnLabel, int position) throws IOException, SQLException {
     update("INSERT INTO order_file_columns (dataFieldLabel, includeInOrderFile, columnLabel, position, openLMISField) " +
       "VALUES ('" + dataFieldLabel + "','" + includeInOrderFile + "','" + columnLabel + "'," + position + ", FALSE)");
@@ -1151,7 +1139,7 @@ public class DBWrapper {
     return date;
   }
 
- public void deleteCurrentPeriod() throws SQLException {
+  public void deleteCurrentPeriod() throws SQLException {
     update("delete from processing_periods where endDate>=NOW()");
   }
 
@@ -1377,20 +1365,20 @@ public class DBWrapper {
       "(Select id from processing_periods where name='Period1'), 'APPROVED', '" + emergency + "', 50.0000, 0.0000, " +
       "(select id from supervisory_nodes where code='N1'))");
 
-    String insertSql="INSERT INTO requisition_line_items (rnrId, productCode,product,productDisplayOrder,productCategory," +
+    String insertSql = "INSERT INTO requisition_line_items (rnrId, productCode,product,productDisplayOrder,productCategory," +
       "productCategoryDisplayOrder, beginningBalance, quantityReceived, quantityDispensed, stockInHand, dispensingUnit, maxMonthsOfStock, " +
       "dosesPerMonth, dosesPerDispensingUnit, packSize, fullSupply,totalLossesAndAdjustments,newPatientCount,stockOutDays,price," +
       "roundToZero,packRoundingThreshold,packsToShip) VALUES";
 
     for (int i = 0; i < numberOfLineItems; i++) {
-      String productDisplayOrder = getAttributeFromTable("products", "displayOrder", "code", "F" + i );
-      String categoryId = getAttributeFromTable("products", "categoryId", "code", "F" + i );
+      String productDisplayOrder = getAttributeFromTable("products", "displayOrder", "code", "F" + i);
+      String categoryId = getAttributeFromTable("products", "categoryId", "code", "F" + i);
       String categoryCode = getAttributeFromTable("product_categories", "code", "id", categoryId);
       String categoryDisplayOrder = getAttributeFromTable("product_categories", "displayOrder", "id", categoryId);
       update(insertSql + "((SELECT max(id) FROM requisitions), 'F" + i + "','antibiotic Capsule 300/200/600 mg', %s, '%s', %s, '0', '11' , " +
-        "'1', '10' ,'Strip','3', '30', '10', '10','t',0,0,0,12.5000,'f',1,5);", productDisplayOrder,categoryCode ,categoryDisplayOrder);
+        "'1', '10' ,'Strip','3', '30', '10', '10','t',0,0,0,12.5000,'f',1,5);", productDisplayOrder, categoryCode, categoryDisplayOrder);
       update(insertSql + "((SELECT max(id) FROM requisitions), 'NF" + i + "','antibiotic Capsule 300/200/600 mg', %s, '%s', %s, '0', '11' ," +
-        " '1', '10' ,'Strip','3', '30', '10', '10','f',0,0,0,12.5000,'f',1,5);", productDisplayOrder,categoryCode ,categoryDisplayOrder);
+        " '1', '10' ,'Strip','3', '30', '10', '10','f',0,0,0,12.5000,'f',1,5);", productDisplayOrder, categoryCode, categoryDisplayOrder);
     }
     if (withSupplyLine) {
       ResultSet rs1 = query("select * from supply_lines where supervisoryNodeId = " +
@@ -1416,5 +1404,9 @@ public class DBWrapper {
     Integer userId = Integer.valueOf(getAttributeFromTable("users", "id", "username", "Admin123"));
     update("INSERT INTO orders(id, status, ftpComment, supplyLineId, createdBy, modifiedBy) VALUES (%d, '%s', %s, %d, %d, %d)", maxRnrID,
       orderStatus, null, supplyingLineId, userId, userId);
+  }
+
+  public void deleteTable(String tableName) throws IOException, SQLException {
+    update("delete from " + tableName);
   }
 }

@@ -33,7 +33,7 @@ public class ManageBudget extends TestCaseHelper{
     super.setup();
     dbWrapper.deleteData();
     setUpData(program, userSIC);
-    dbWrapper.deleteProcessingPeriods();
+    dbWrapper.deleteTable("processing_periods");
     dbWrapper.insertProcessingPeriod("current Period", "current Period", "2013-10-03", "2016-01-30", 1, "M");
 
   }

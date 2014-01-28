@@ -266,8 +266,8 @@ public class ViewRequisition extends TestCaseHelper {
     rightsList.add("APPROVE_REQUISITION");
     rightsList.add("VIEW_REQUISITION");
     setupTestDataToInitiateRnR(true, program, userSIC, "200", rightsList);
-    dbWrapper.deletePeriod("Period1");
-    dbWrapper.deletePeriod("Period2");
+    dbWrapper.deleteRowFromTable("processing_periods","name","Period1");
+    dbWrapper.deleteRowFromTable("processing_periods","name","Period2");
     dbWrapper.insertProcessingPeriod("current Period", "current Period", "2013-10-03", "2014-01-30", 1, "M");
     dbWrapper.updateFieldValue("products","fullSupply","true","code","P11");
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);

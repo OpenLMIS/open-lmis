@@ -36,7 +36,7 @@ public class ConfigureOrderTemplate extends TestCaseHelper {
   public void setUp() throws Exception {
     super.setup();
     dbWrapper.setupOrderFileConfiguration("O", "TRUE");
-    dbWrapper.deleteOrderFileNonOpenLMISColumns();
+    dbWrapper.deleteRowFromTable("order_file_columns","openLMISField","false");
   }
 
   @And("^I access configure order page$")

@@ -56,7 +56,7 @@ public class DownloadOrderFile extends TestCaseHelper {
 
   @And("^I configure non openlmis order file columns:$")
   public void setupOrderFileNonOpenLMISColumns(DataTable userTable) throws Exception {
-    dbWrapper.deleteOrderFileNonOpenLMISColumns();
+    dbWrapper.deleteRowFromTable("order_file_columns","openLMISField","false");
     List<Map<String, String>> data = userTable.asMaps();
     for (Map map : data)
       dbWrapper.setupOrderFileNonOpenLMISColumns(map.get("Data Field Label").toString(), map.get("Include In Order File").toString(), map.get("Column Label").toString(), Integer.parseInt(map.get("Position").toString()));
@@ -113,7 +113,7 @@ public class DownloadOrderFile extends TestCaseHelper {
     dbWrapper.setupOrderFileOpenLMISColumns("header.product.code", "TRUE", "Product code", 3, "");
     dbWrapper.setupOrderFileOpenLMISColumns("header.order.date", "TRUE", "Order date", 4, "MM-dd-yyyy");
     dbWrapper.setupOrderFileOpenLMISColumns("label.period", "TRUE", "Period", 6, "yyyy-MM");
-    dbWrapper.deleteOrderFileNonOpenLMISColumns();
+    dbWrapper.deleteRowFromTable("order_file_columns","openLMISField","false");
     dbWrapper.setupOrderFileNonOpenLMISColumns("Not Applicable", "TRUE", "Extra 1", 1);
     dbWrapper.setupOrderFileNonOpenLMISColumns("Not Applicable", "TRUE", "", 8);
 

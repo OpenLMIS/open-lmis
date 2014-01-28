@@ -166,7 +166,7 @@ public class TestCaseHelper {
   public void setupProductTestData(String product1, String product2, String program, String facilityTypeCode) throws Exception {
     dbWrapper.insertProducts(product1, product2);
     dbWrapper.insertProgramProducts(product1, product2, program);
-    dbWrapper.deleteFacilityApprovedProducts();
+    dbWrapper.deleteTable("facility_approved_products");
     dbWrapper.insertFacilityApprovedProduct(product1, program, facilityTypeCode);
     dbWrapper.insertFacilityApprovedProduct(product2, program, facilityTypeCode);
   }
