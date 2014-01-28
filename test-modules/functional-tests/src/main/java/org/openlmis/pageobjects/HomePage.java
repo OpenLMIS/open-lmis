@@ -200,16 +200,16 @@ public class HomePage extends Page {
 
   public ManageFacilityPage navigateManageFacility() throws IOException {
     testWebDriver.waitForElementToAppear(AdministrationMenuItem);
-    testWebDriver.keyPress(AdministrationMenuItem);
+    AdministrationMenuItem.click();
     testWebDriver.waitForElementToAppear(manageFacilityMenuItem);
-    testWebDriver.keyPress(manageFacilityMenuItem);
+    manageFacilityMenuItem.click();
     return ManageFacilityPage.getInstance(testWebDriver);
   }
 
   public void clickCreateFacilityButton() {
     testWebDriver.waitForElementToAppear(createFacility);
     testWebDriver.sleep(1000);
-    testWebDriver.keyPress(createFacility);
+    createFacility.click();
   }
 
   public void verifyHeader(String headingToVerify) {
