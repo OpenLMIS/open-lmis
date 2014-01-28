@@ -243,12 +243,14 @@ public class UserPage extends Page {
   public void resetPassword(String newPassword, String confirmPassword) {
     firstUserLink.sendKeys(Keys.TAB);
     selectFirstEditUser.sendKeys(Keys.TAB);
-
+    testWebDriver.waitForElementToBeEnabled(selectFirstResetPassword);
     selectFirstResetPassword.click();
     testWebDriver.waitForElementToAppear(newPasswordField);
     newPasswordField.sendKeys(newPassword);
     confirmPasswordField.sendKeys(confirmPassword);
+    testWebDriver.waitForElementToBeEnabled(resetPasswordDone);
     resetPasswordDone.click();
+    testWebDriver.waitForElementToBeEnabled(resetPasswordOkButton);
     resetPasswordOkButton.click();
   }
 
@@ -259,17 +261,19 @@ public class UserPage extends Page {
     testWebDriver.waitForElementToAppear(userNameField);
     userNameField.clear();
     userNameField.sendKeys(userName);
+    testWebDriver.waitForElementToAppear(emailField);
     emailField.clear();
     emailField.sendKeys(email);
+    testWebDriver.waitForElementToAppear(firstNameField);
     firstNameField.clear();
     firstNameField.sendKeys(firstName);
+    testWebDriver.waitForElementToAppear(lastNameField);
     lastNameField.clear();
     lastNameField.sendKeys(lastName);
     testWebDriver.handleScroll();
     clickRestrictLoginNo();
     testWebDriver.waitForElementToAppear(saveButton);
     saveButton.click();
-    testWebDriver.sleep(1000);
     testWebDriver.waitForElementToAppear(viewHereLink);
   }
 
@@ -298,18 +302,22 @@ public class UserPage extends Page {
   }
 
   public void ExpandAll() {
+    testWebDriver.waitForElementToAppear(expandAllOption);
     expandAllOption.click();
   }
 
   public void collapseAll() {
+    testWebDriver.waitForElementToAppear(collapseAllOption);
     collapseAllOption.click();
   }
 
   public void clickRestrictLoginYes() {
+    testWebDriver.waitForElementToAppear(restrictLoginYesOption);
     restrictLoginYesOption.click();
   }
 
   public void clickRestrictLoginNo() {
+    testWebDriver.waitForElementToAppear(restrictLoginNoOption);
     restrictLoginNoOption.click();
   }
 
@@ -324,16 +332,16 @@ public class UserPage extends Page {
     assertFalse(warehouseToSelect.isDisplayed());
   }
 
-  public void enterMyFacilityAndMySupervisedFacilityData(String facilityCode, String program1,
-                                                         String node, String role, String roleType) {
+  public void enterMyFacilityAndMySupervisedFacilityData(String facilityCode, String program1, String node, String role, String roleType) {
     testWebDriver.waitForElementToAppear(searchFacility);
     if (!roleType.equals("ADMIN")) {
       enterUserHomeFacility(facilityCode);
-      testWebDriver.sleep(500);
+      testWebDriver.waitForElementToAppear(selectFacility);
       selectFacility.click();
+      testWebDriver.waitForAjax();
       homeFacilityRolesAccordion.click();
-      testWebDriver.sleep(500);
       testWebDriver.selectByVisibleText(homeFacilityPrograms, program1);
+      testWebDriver.waitForElementToAppear(roleInputFieldHomeFacility);
       roleInputFieldHomeFacility.click();
       roleInputFieldHomeFacility.clear();
       roleInputFieldHomeFacility.sendKeys(role);
@@ -342,13 +350,13 @@ public class UserPage extends Page {
       addHomeFacilityRolesButton.click();
       testWebDriver.waitForElementToAppear(supervisoryRolesAccordion);
       supervisoryRolesAccordion.click();
-      testWebDriver.sleep(500);
+      testWebDriver.waitForElementToAppear(programsToSupervise);
       testWebDriver.selectByVisibleText(programsToSupervise, program1);
-      testWebDriver.sleep(1000);
+      testWebDriver.waitForElementToAppear(supervisoryNodeToSupervise);
       testWebDriver.selectByVisibleText(supervisoryNodeToSupervise, node);
       testWebDriver.sleep(1000);
       testWebDriver.handleScroll();
-      testWebDriver.sleep(500);
+      testWebDriver.waitForElementToAppear(rolesInputFieldSupervisoryRole);
       rolesInputFieldSupervisoryRole.click();
       rolesInputFieldSupervisoryRole.clear();
       rolesInputFieldSupervisoryRole.sendKeys(role);
@@ -357,37 +365,32 @@ public class UserPage extends Page {
 
       assertEquals(testWebDriver.getFirstSelectedOption(supervisoryNodeToSupervise).getText(), node);
       assertEquals(testWebDriver.getFirstSelectedOption(programsToSupervise).getText(), program1);
-
-
+      testWebDriver.waitForElementToAppear(addSupervisoryRoleButton);
       addSupervisoryRoleButton.click();
 
     } else {
       testWebDriver.handleScroll();
-      testWebDriver.sleep(500);
+      testWebDriver.waitForElementToAppear(adminAndGeneralOperationsRolesAccordion);
       adminAndGeneralOperationsRolesAccordion.click();
+      testWebDriver.waitForElementToAppear(adminRolesInputField);
       adminRolesInputField.click();
       adminRolesInputField.clear();
       adminRolesInputField.sendKeys(role);
       testWebDriver.waitForElementToAppear(rolesSelectFieldSupervisoryRole);
       rolesSelectFieldSupervisoryRole.click();
     }
-
-  }
-
-  public void saveUser() {
-    saveButton.click();
   }
 
   public void verifyUserUpdated(String firstName, String lastName) {
     testWebDriver.sleep(1000);
     assertTrue("User '" + firstName + " " + lastName + "' has been successfully updated message is not getting displayed",
       successMessage.isDisplayed());
-
   }
 
   public void assignWarehouse(String warehouse, String role) {
+    testWebDriver.waitForElementToAppear(warehouseRolesAccordion);
     warehouseRolesAccordion.click();
-    testWebDriver.sleep(500);
+    testWebDriver.waitForElementToAppear(warehouseToSelect);
     testWebDriver.selectByVisibleText(warehouseToSelect, warehouse);
     testWebDriver.waitForElementToAppear(rolesInputFieldWarehouse);
     rolesInputFieldWarehouse.click();
@@ -396,27 +399,27 @@ public class UserPage extends Page {
     testWebDriver.waitForElementToAppear(rolesSelectFieldWarehouse);
     rolesSelectFieldSupervisoryRole.click();
     assertEquals(testWebDriver.getFirstSelectedOption(warehouseToSelect).getText(), warehouse);
-
+    testWebDriver.waitForElementToAppear(addWarehouseRoleButton);
     addWarehouseRoleButton.click();
     testWebDriver.sleep(1000);
     verifyWarehouseSelectedNotAvailable(warehouse);
+    testWebDriver.waitForElementToAppear(warehouseRolesAccordion);
     warehouseRolesAccordion.click();
   }
 
   public void verifyMessage(String message) {
-    testWebDriver.sleep(500);
+    testWebDriver.waitForElementToAppear(userUpdateSuccessMessage);
     assertEquals(userUpdateSuccessMessage.getText(), message);
   }
 
   public void enterDeliveryZoneData(String deliveryZoneCode, String program, String role) {
     testWebDriver.handleScroll();
     testWebDriver.getElementByXpath("//a[contains(text(),'Delivery zones')]").click();
-    testWebDriver.sleep(500);
     testWebDriver.waitForElementToAppear(zoneToDelivery);
     testWebDriver.selectByVisibleText(zoneToDelivery, deliveryZoneCode);
-    testWebDriver.sleep(1000);
+    testWebDriver.waitForElementToAppear(programToDeliver);
     testWebDriver.selectByVisibleText(programToDeliver, program);
-    testWebDriver.sleep(1000);
+    testWebDriver.waitForElementToAppear(rolesInputFieldMDeliveryZone);
     rolesInputFieldMDeliveryZone.click();
     rolesInputFieldMDeliveryZone.clear();
     rolesInputFieldMDeliveryZone.sendKeys(role);
@@ -427,16 +430,16 @@ public class UserPage extends Page {
   public void enterDeliveryZoneDataWithoutHomeAndSupervisoryRolesAssigned(String deliveryZoneCode, String program, String role) {
     testWebDriver.handleScroll();
     deliveryZonesAccordion.click();
-    testWebDriver.sleep(500);
     testWebDriver.waitForElementToAppear(zoneToDelivery);
     testWebDriver.selectByVisibleText(zoneToDelivery, deliveryZoneCode);
-    testWebDriver.sleep(1000);
+    testWebDriver.waitForElementToAppear(programToDeliver);
     testWebDriver.selectByVisibleText(programToDeliver, program);
-    testWebDriver.sleep(1000);
+    testWebDriver.waitForElementToAppear(rolesInputFieldDeliveryZone);
     rolesInputFieldDeliveryZone.click();
     rolesInputFieldDeliveryZone.clear();
     rolesInputFieldDeliveryZone.sendKeys(role);
     rolesInputFieldDeliveryZone.sendKeys(Keys.RETURN);
+    testWebDriver.waitForElementToAppear(addDeliveryZoneRoleButton);
     addDeliveryZoneRoleButton.click();
   }
 
@@ -461,18 +464,18 @@ public class UserPage extends Page {
   }
 
   public void clickSaveButton() {
-    testWebDriver.waitForElementToAppear(saveButton);
+    testWebDriver.waitForElementToBeEnabled(saveButton);
     saveButton.click();
   }
 
   public void clickDisableButton() {
-    testWebDriver.waitForElementToAppear(disableButton);
+    testWebDriver.waitForElementToBeEnabled(disableButton);
     disableButton.click();
     clickOk();
   }
 
   public void clickEnableButton() {
-    testWebDriver.waitForElementToAppear(enableButton);
+    testWebDriver.waitForElementToBeEnabled(enableButton);
     enableButton.click();
     clickOk();
   }
@@ -498,10 +501,12 @@ public class UserPage extends Page {
   }
 
   public String getAllProgramsToSupervise() {
+    testWebDriver.waitForElementToAppear(programsToSupervise);
     return programsToSupervise.getText();
   }
 
   public String getAllProgramsHomeFacility() {
+    testWebDriver.waitForElementToAppear(homeFacilityPrograms);
     return homeFacilityPrograms.getText();
   }
 
@@ -543,26 +548,32 @@ public class UserPage extends Page {
   }
 
   public String getAddedDeliveryZoneLabel() {
+    testWebDriver.waitForElementToAppear(addedDeliveryZoneLabel);
     return addedDeliveryZoneLabel.getText();
   }
 
   public String getVerifiedLabel() {
+    testWebDriver.waitForElementToAppear(verifiedLabel);
     return verifiedLabel.getText();
   }
 
   public void clickWarehouseRolesAccordion() {
+    testWebDriver.waitForElementToAppear(warehouseRolesAccordion);
     warehouseRolesAccordion.click();
   }
 
   public void clickHomeFacilityRolesAccordion() {
+    testWebDriver.waitForElementToAppear(homeFacilityRolesAccordion);
     homeFacilityRolesAccordion.click();
   }
 
   public void clickSupervisoryRolesAccordion() {
+    testWebDriver.waitForElementToAppear(supervisoryRolesAccordion);
     supervisoryRolesAccordion.click();
   }
 
   public void clickDeliveryZonesAccordion() {
+    testWebDriver.waitForElementToAppear(deliveryZonesAccordion);
     deliveryZonesAccordion.click();
   }
 
@@ -572,6 +583,7 @@ public class UserPage extends Page {
 
   public void clickEditUserButton() {
     focusOnFirstUserLink();
+    testWebDriver.waitForElementToAppear(selectFirstEditUser);
     selectFirstEditUser.click();
   }
 }

@@ -33,17 +33,17 @@ function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, reg
     resetFlags();
     var rnr = removeExtraDataForPostFromRnr();
     Requisitions.update({id: $scope.rnr.id, operation: "save"},
-      rnr, function (data) {
-        deferred.resolve();
-        if (preventMessage === true) return;
-        $scope.message = data.success;
-        $scope.error = "";
-        $scope.approvalForm.$setPristine();
-      }, function (data) {
-        deferred.reject();
-        $scope.error = data.data.error;
-        $scope.message = "";
-      });
+        rnr, function (data) {
+          deferred.resolve();
+          if (preventMessage === true) return;
+          $scope.message = data.success;
+          $scope.error = "";
+          $scope.approvalForm.$setPristine();
+        }, function (data) {
+          deferred.reject();
+          $scope.error = data.data.error;
+          $scope.message = "";
+        });
 
     return deferred.promise;
   };
@@ -128,7 +128,7 @@ function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, reg
 
   $scope.checkErrorOnPage = function (page) {
     return $scope.visibleTab === NON_FULL_SUPPLY ?
-      _.contains($scope.errorPages.nonFullSupply, page) : _.contains($scope.errorPages.fullSupply, page);
+        _.contains($scope.errorPages.nonFullSupply, page) : _.contains($scope.errorPages.fullSupply, page);
   };
 
   function resetFlags() {
@@ -160,10 +160,10 @@ ApproveRnrController.resolve = {
     return deferred.promise;
   },
 
-  pageSize: function ($q, $timeout, LineItemPageSize) {
+  pageSize: function ($q, $timeout, LineItemsPerPage) {
     var deferred = $q.defer();
     $timeout(function () {
-      LineItemPageSize.get({}, function (data) {
+      LineItemsPerPage.get({}, function (data) {
         deferred.resolve(data.pageSize);
       }, {});
     }, 100);

@@ -21,6 +21,7 @@ import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.pageobjects.*;
 import org.openlmis.pageobjects.edi.ConvertOrderPage;
 import org.openqa.selenium.By;
+import org.testng.AssertJUnit;
 import org.testng.annotations.*;
 
 import java.io.IOException;
@@ -44,6 +45,7 @@ import static org.openlmis.UiUtils.DBWrapper.DEFAULT_MAX_MONTH_OF_STOCK;
 @Listeners(CaptureScreenshotOnFailureListener.class)
 public class InitiateRnR extends TestCaseHelper {
 
+  public static final String MANAGE_POD = "MANAGE_POD";
   public static final String APPROVE_REQUISITION = "APPROVE_REQUISITION";
   public static final String CONVERT_TO_ORDER = "CONVERT_TO_ORDER";
   public static final String CREATE_REQUISITION = "CREATE_REQUISITION";
@@ -868,7 +870,8 @@ public class InitiateRnR extends TestCaseHelper {
     HomePage homePage = new LoginPage(testWebDriver, baseUrlGlobal).loginAs(userSIC, password);
 
     homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Regular");
-    InitiateRnRPage initiateRnRPage = homePage.clickProceed();
+    homePage.clickProceed();
+    InitiateRnRPage initiateRnRPage = new InitiateRnRPage(testWebDriver);
     initiateRnRPage.enterValue(10, "beginningBalanceFirstProduct");
     initiateRnRPage.enterValue(0, "quantityReceivedFirstProduct");
     initiateRnRPage.enterValue(0, "quantityDispensedFirstProduct");
@@ -903,8 +906,8 @@ public class InitiateRnR extends TestCaseHelper {
   }
 
   @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-RnR")
-  public void testSkipProductRnRAuthorizeApproveForEmergencyRnR(String program, String userSIC, String password) throws Exception {
-    List<String> rightsList = asList(CREATE_REQUISITION, VIEW_REQUISITION, AUTHORIZE_REQUISITION, APPROVE_REQUISITION);
+  public void testSkipProductRnRAuthorizeApproveUpdatePodForEmergencyRnR(String program, String userSIC, String password) throws Exception {
+    List<String> rightsList = asList(CREATE_REQUISITION, VIEW_REQUISITION, AUTHORIZE_REQUISITION, APPROVE_REQUISITION, CONVERT_TO_ORDER, MANAGE_POD);
     setupTestDataToInitiateRnR(true, program, userSIC, "200", rightsList);
     dbWrapper.deletePeriod("Period1");
     dbWrapper.deletePeriod("Period2");
@@ -948,6 +951,20 @@ public class InitiateRnR extends TestCaseHelper {
     approvePage.clickApproveButton();
     approvePage.clickOk();
     approvePage.verifyNoRequisitionPendingMessage();
+
+    dbWrapper.insertFulfilmentRoleAssignment("storeIncharge", "store in-charge", "F10");
+    dbWrapper.insertOrders("RELEASED", userSIC, program);
+    dbWrapper.updateRequisitionStatus("RELEASED", userSIC, program);
+
+    UpdatePodPage updatePodPage = new UpdatePodPage(testWebDriver);
+    homePage.navigateManagePOD();
+    updatePodPage.selectRequisitionToUpdatePod(1);
+
+    assertTrue(updatePodPage.getPodTableData().contains("P10"));
+    assertTrue(updatePodPage.getPodTableData().contains("antibiotic Capsule 300/200/600 mg"));
+    assertTrue(updatePodPage.getPodTableData().contains("Strip"));
+
+    assertFalse(updatePodPage.getPodTableData().contains("P11"));
   }
 
   private void verifyRegimenFieldsPresentOnRegimenTab(String regimenCode, String regimenName,

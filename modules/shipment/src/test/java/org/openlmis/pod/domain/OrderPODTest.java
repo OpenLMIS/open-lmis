@@ -23,6 +23,8 @@ import org.openlmis.core.exception.DataException;
 import org.openlmis.db.categories.IntegrationTests;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.domain.RnrLineItem;
+import org.openlmis.shipment.builder.ShipmentLineItemBuilder;
+import org.openlmis.shipment.domain.ShipmentLineItem;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
@@ -33,14 +35,15 @@ import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.openlmis.rnr.builder.RnrLineItemBuilder.defaultRnrLineItem;
 import static org.openlmis.rnr.builder.RnrLineItemBuilder.packsToShip;
-import static org.powermock.api.mockito.PowerMockito.mockStatic;
+import static org.powermock.api.mockito.PowerMockito.whenNew;
 
 @Category(IntegrationTests.class)
 @RunWith(PowerMockRunner.class)
-@PrepareForTest(OrderPODLineItem.class)
+@PrepareForTest(OrderPOD.class)
 public class OrderPODTest {
 
   @Rule
@@ -111,18 +114,28 @@ public class OrderPODTest {
 
   @Test
   public void shouldFillPODLineItemsOnlyWithNonZeroPackToShip() throws Exception {
-    RnrLineItem rnrLineItem1 = make(a(defaultRnrLineItem));
+    RnrLineItem rnrLineItem1 = make(a(defaultRnrLineItem, with(packsToShip, 10)));
     RnrLineItem rnrLineItem2 = make(a(defaultRnrLineItem, with(packsToShip, 0)));
-
     List<RnrLineItem> rnrLineItems = asList(rnrLineItem1, rnrLineItem2);
+
+    whenNew(OrderPODLineItem.class).withArguments(rnrLineItem1).thenReturn(mock(OrderPODLineItem.class));
+
     OrderPOD orderPOD = new OrderPOD();
     orderPOD.fillPodLineItems(rnrLineItems);
 
-    mockStatic(OrderPODLineItem.class);
-    OrderPODLineItem orderPODLineItem = mock(OrderPODLineItem.class);
-    when(OrderPODLineItem.createFrom(rnrLineItem1)).thenReturn(orderPODLineItem);
+    assertThat(orderPOD.getPodLineItems().size(), is(1));
+  }
+
+  @Test
+  public void shouldCreatePODLineItemsWithShipmentLineItemEvenIfPackSize0() throws Exception {
+    ShipmentLineItem shipmentLineItem = make(a(ShipmentLineItemBuilder.defaultShipmentLineItem));
+    shipmentLineItem.setPacksToShip(0);
+    List<ShipmentLineItem> shipmentLineItems = asList(shipmentLineItem);
+    OrderPOD orderPOD = new OrderPOD();
+    orderPOD.fillPodLineItems(shipmentLineItems);
+
+    whenNew(OrderPODLineItem.class).withArguments(shipmentLineItem).thenReturn(mock(OrderPODLineItem.class));
 
     assertThat(orderPOD.getPodLineItems().size(), is(1));
-    verify(OrderPODLineItem.createFrom(rnrLineItem1));
   }
 }

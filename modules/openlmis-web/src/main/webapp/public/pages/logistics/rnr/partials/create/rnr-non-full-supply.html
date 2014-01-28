@@ -41,7 +41,8 @@
       </thead>
       <tbody ng-repeat="rnrLineItem in page.nonFullSupply">
       <tr>
-        <td id="category_{{ $index }}" class="productCategory" colspan="{{visibleColumns.nonFullSupply.scrollable.length}}"
+        <td id="category_{{ $index }}" class="productCategory"
+            colspan="{{visibleColumns.nonFullSupply.scrollable.length}}"
             ng-show="showCategory($index)"
             ng-bind="rnrLineItem.productCategory"></td>
       </tr>
@@ -77,7 +78,7 @@
                        maxlength="250"/>
               </span>
 
-              <span ng-switch-when="quantityRequested">
+              <span ng-switch-when="quantityRequested" class="input-error-parent-cell">
                 <input ng-disabled="formDisabled" id="{{getId(column.name, $parent)}}" type="text"
                        name="quantityRequested{{rnrLineItem['productCode']}}"
                        ng-model="rnrLineItem.quantityRequested"

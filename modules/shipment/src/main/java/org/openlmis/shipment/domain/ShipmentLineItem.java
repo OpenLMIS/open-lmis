@@ -14,7 +14,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import org.openlmis.core.domain.BaseModel;
+import org.openlmis.core.domain.Product;
+import org.openlmis.rnr.domain.LineItem;
+import org.openlmis.rnr.domain.RnrLineItem;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -23,7 +25,7 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-public class ShipmentLineItem extends BaseModel {
+public class ShipmentLineItem extends LineItem {
 
   private Long orderId;
 
@@ -39,6 +41,14 @@ public class ShipmentLineItem extends BaseModel {
 
   private Integer quantityShipped;
 
+  private String productName;
+
+  private String dispensingUnit;
+
+  private String productCategory;
+
+  private Integer packsToShip;
+
   private BigDecimal cost;
 
   private String substitutedProductCode;
@@ -52,4 +62,40 @@ public class ShipmentLineItem extends BaseModel {
   private Date packedDate;
 
   private Date shippedDate;
+
+  private void setReferenceFields(String productName, String dispensingUnit, String productCategory, Integer packsToShip) {
+    this.productName = productName;
+    this.dispensingUnit = dispensingUnit;
+    this.productCategory = productCategory;
+    this.packsToShip = packsToShip;
+  }
+
+  public void fillReferenceFields(Product product) {
+    this.setReferenceFields(product.getName(), product.getDispensingUnit(), product.getCategory().getName(), null);
+  }
+
+  public void fillReferenceFields(RnrLineItem lineItem) {
+    this.setReferenceFields(lineItem.getProduct(), lineItem.getDispensingUnit(), lineItem.getProductCategory(), lineItem.getPacksToShip());
+  }
+
+  @Override
+  public boolean compareCategory(LineItem lineItem) {
+    return false;
+  }
+
+  @Override
+  public String getCategoryName() {
+    return null;
+  }
+
+  @Override
+  public String getValue(String columnName) throws NoSuchFieldException, IllegalAccessException {
+    return null;
+  }
+
+  @Override
+  public boolean isRnrLineItem() {
+    return false;
+  }
 }
+

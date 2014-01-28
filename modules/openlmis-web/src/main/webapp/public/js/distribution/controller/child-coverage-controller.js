@@ -54,15 +54,8 @@ function ChildCoverageController($scope, $routeParams, distributionService) {
     }
   };
 
-  $scope.applyNRAll = function () {
-    distributionService.applyNR(function (distribution) {
-      distribution.setChildCoverageNotRecorded($routeParams.facility);
-    });
-  };
-
-  var list = ["BCG", "Polio (Newborn)", "Penta 1st dose", "PCV10 1st dose", "Measles"];
 
   $scope.hideCell = function (vaccination) {
-    return list.indexOf(vaccination) === -1;
+    return Object.keys($scope.productsMap).indexOf(vaccination) === -1;
   };
 }

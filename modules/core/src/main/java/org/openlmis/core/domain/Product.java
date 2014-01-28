@@ -13,6 +13,7 @@ package org.openlmis.core.domain;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.upload.Importable;
@@ -187,6 +188,14 @@ public class Product extends BaseModel implements Importable {
     if (this.packSize <= 0) {
       throw new DataException("error.invalid.pack.size");
     }
+  }
+
+  @JsonIgnore
+  public String getName() {
+    return (getPrimaryName() == null ? "" : getPrimaryName())
+      + " " + (getForm().getCode() == null ? "" : getForm().getCode())
+      + " " + (getStrength() == null ? "" : getStrength())
+      + " " + (getDosageUnit().getCode() == null ? "" : getDosageUnit().getCode());
   }
 
   private String programName;

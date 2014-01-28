@@ -33,14 +33,16 @@ import org.springframework.mock.web.MockHttpSession;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.MockitoAnnotations.initMocks;
 import static org.openlmis.web.controller.PODController.ORDER;
 import static org.openlmis.web.controller.PODController.ORDER_POD;
-import static org.powermock.api.mockito.PowerMockito.mockStatic;
+import static org.powermock.api.mockito.PowerMockito.*;
 
 @Category(UnitTests.class)
 @RunWith(PowerMockRunner.class)
-@PrepareForTest(OrderPODDTO.class)
+@PrepareForTest({OrderPODDTO.class, PODController.class})
 public class PODControllerTest {
 
   private static final Long USER_ID = 1L;
@@ -58,6 +60,7 @@ public class PODControllerTest {
 
   @Before
   public void setUp() throws Exception {
+    initMocks(this);
     request = new MockHttpServletRequest();
     MockHttpSession session = new MockHttpSession();
     session.setAttribute(UserAuthenticationSuccessHandler.USER, USER);
@@ -67,13 +70,57 @@ public class PODControllerTest {
   }
 
   @Test
-  public void shouldGetOrderPODGivenAnOrderId() throws Exception {
+  public void shouldCreateOrderPODGivenAnOrderId() throws Exception {
     Long orderId = 1L;
 
     OrderPOD orderPOD = new OrderPOD();
+    OrderPOD createdPOD = new OrderPOD();
     mockStatic(OrderPODDTO.class);
 
-    when(service.createPOD(orderId, USER_ID)).thenReturn(orderPOD);
+    whenNew(OrderPOD.class).withArguments(orderId, USER_ID).thenReturn(orderPOD);
+    when(service.getPODByOrderId(orderId)).thenReturn(null);
+    when(service.createPOD(orderPOD)).thenReturn(createdPOD);
+    Order order = new Order(orderId);
+    OrderPODDTO orderPODDTO = mock(OrderPODDTO.class);
+    when(orderService.getOrder(orderId)).thenReturn(order);
+    when(OrderPODDTO.getOrderDetailsForPOD(order)).thenReturn(orderPODDTO);
+
+    ResponseEntity<OpenLmisResponse> response = controller.createPOD(orderId, request);
+
+    verify(service).createPOD(orderPOD);
+    assertThat((OrderPOD) response.getBody().getData().get(ORDER_POD), is(orderPOD));
+    assertThat((OrderPODDTO) response.getBody().getData().get(ORDER), is(orderPODDTO));
+    assertThat(response.getStatusCode(), is(HttpStatus.CREATED));
+  }
+
+  @Test
+  public void shouldGetPODIfAlreadyExistsForOrder() throws Exception {
+    Long orderId = 2L;
+    OrderPOD existingPOD = new OrderPOD();
+    mockStatic(OrderPODDTO.class);
+    Order order = new Order(orderId);
+    OrderPODDTO orderPODDTO = mock(OrderPODDTO.class);
+    when(orderService.getOrder(orderId)).thenReturn(order);
+    when(OrderPODDTO.getOrderDetailsForPOD(order)).thenReturn(orderPODDTO);
+    when(service.getPODByOrderId(2L)).thenReturn(existingPOD);
+
+    ResponseEntity<OpenLmisResponse> response = controller.createPOD(2L, request);
+
+    assertThat((OrderPOD) response.getBody().getData().get(PODController.ORDER_POD), is(existingPOD));
+    assertThat((OrderPODDTO) response.getBody().getData().get(ORDER), is(orderPODDTO));
+    assertThat(response.getStatusCode(), is(HttpStatus.OK));
+  }
+
+  @Test
+  public void shouldGetOrderPODByPodId() throws Exception {
+    Long podId = 1L;
+    Long orderId = 2L;
+
+    OrderPOD orderPOD = new OrderPOD();
+    orderPOD.setOrderId(orderId);
+    mockStatic(OrderPODDTO.class);
+
+    when(service.getPodById(podId)).thenReturn(orderPOD);
 
     Order order = new Order();
     when(orderService.getOrder(orderId)).thenReturn(order);
@@ -81,9 +128,9 @@ public class PODControllerTest {
     OrderPODDTO orderPODDTO = mock(OrderPODDTO.class);
     when(OrderPODDTO.getOrderDetailsForPOD(order)).thenReturn(orderPODDTO);
 
-    ResponseEntity<OpenLmisResponse> response = controller.getPOD(request, orderId);
+    ResponseEntity<OpenLmisResponse> response = controller.getPOD(podId);
 
-    verify(service).createPOD(orderId, USER_ID);
+    verify(service).getPodById(podId);
     assertThat((OrderPOD) response.getBody().getData().get(ORDER_POD), is(orderPOD));
     assertThat((OrderPODDTO) response.getBody().getData().get(ORDER), is(orderPODDTO));
     assertThat(response.getStatusCode(), is(HttpStatus.OK));

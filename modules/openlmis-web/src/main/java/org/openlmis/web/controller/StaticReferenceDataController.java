@@ -14,11 +14,12 @@ import lombok.NoArgsConstructor;
 import org.openlmis.core.service.StaticReferenceDataService;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+
+import static org.springframework.http.HttpStatus.OK;
 
 
 @Controller
@@ -26,15 +27,15 @@ import org.springframework.web.bind.annotation.RequestMethod;
 public class StaticReferenceDataController extends BaseController {
 
   public static final String PAGE_SIZE = "pageSize";
-  public static final String RNR_LINEITEM_PAGE_SIZE = "rnr.lineitem.page.size";
+  public static final String LINE_ITEMS_PER_PAGE = "line.items.per.page";
 
   @Autowired
   StaticReferenceDataService service;
 
-  @RequestMapping(value = "/reference-data/lineitem/pagesize", method = RequestMethod.GET)
+  @RequestMapping(value = "/reference-data/pageSize", method = RequestMethod.GET)
   public ResponseEntity<OpenLmisResponse> getPageSize() {
-    OpenLmisResponse response = new OpenLmisResponse(PAGE_SIZE, service.getPropertyValue(RNR_LINEITEM_PAGE_SIZE));
-    return new ResponseEntity(response, HttpStatus.OK);
+    OpenLmisResponse response = new OpenLmisResponse(PAGE_SIZE, service.getPropertyValue(LINE_ITEMS_PER_PAGE));
+    return new ResponseEntity(response, OK);
   }
 
 }

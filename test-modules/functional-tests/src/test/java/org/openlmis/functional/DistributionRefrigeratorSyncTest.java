@@ -112,10 +112,10 @@ public class DistributionRefrigeratorSyncTest extends TestCaseHelper {
     GeneralObservationPage generalObservationPage = epiUsePage.navigateToGeneralObservations();
     generalObservationPage.enterData("some observations", "samuel", "Doe", "Verifier", "XYZ");
 
-    CoveragePage coveragePage = generalObservationPage.navigateToCoverage();
-    coveragePage.enterData(45, 67, 89,"90");
+    FullCoveragePage fullCoveragePage = generalObservationPage.navigateToFullCoverage();
+    fullCoveragePage.enterData(45, 67, 89, "90");
 
-    EpiInventoryPage epiInventoryPage = coveragePage.navigateToEpiInventory();
+    EpiInventoryPage epiInventoryPage = fullCoveragePage.navigateToEpiInventory();
     fillEpiInventoryWithOnlyDeliveredQuantity(epiInventoryPage, "2", "4", "6");
 
     DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
@@ -161,10 +161,10 @@ public class DistributionRefrigeratorSyncTest extends TestCaseHelper {
     GeneralObservationPage generalObservationPage = epiUsePage.navigateToGeneralObservations();
     generalObservationPage.enterData("some observations", "samuel", "Doe", "Verifier", "XYZ");
 
-    CoveragePage coveragePage = generalObservationPage.navigateToCoverage();
-    coveragePage.enterData(67, 44, 22,"11");
+    FullCoveragePage fullCoveragePage = generalObservationPage.navigateToFullCoverage();
+    fullCoveragePage.enterData(67, 44, 22, "11");
 
-    EpiInventoryPage epiInventoryPage = coveragePage.navigateToEpiInventory();
+    EpiInventoryPage epiInventoryPage = fullCoveragePage.navigateToEpiInventory();
     fillEpiInventoryWithOnlyDeliveredQuantity(epiInventoryPage, "2", "4", "6");
 
     DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
@@ -210,10 +210,10 @@ public class DistributionRefrigeratorSyncTest extends TestCaseHelper {
     GeneralObservationPage generalObservationPage = epiUsePage.navigateToGeneralObservations();
     generalObservationPage.enterData("some observations", "samuel", "Doe", "Verifier", "XYZ");
 
-    CoveragePage coveragePage = generalObservationPage.navigateToCoverage();
-    coveragePage.enterData(77, 56, 78,"34");
+    FullCoveragePage fullCoveragePage = generalObservationPage.navigateToFullCoverage();
+    fullCoveragePage.enterData(77, 56, 78, "34");
 
-    EpiInventoryPage epiInventoryPage = coveragePage.navigateToEpiInventory();
+    EpiInventoryPage epiInventoryPage = fullCoveragePage.navigateToEpiInventory();
     fillEpiInventoryWithOnlyDeliveredQuantity(epiInventoryPage, "2", "4", "6");
 
     DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
@@ -250,13 +250,13 @@ public class DistributionRefrigeratorSyncTest extends TestCaseHelper {
     EPIUsePage epiUsePage = refrigeratorPage.navigateToEpiUse();
     epiUsePage.enterData(10, 20, 30, 40, 50, "10/2011", 1);
 
-    GeneralObservationPage generalObservationPage =epiUsePage.navigateToGeneralObservations();
+    GeneralObservationPage generalObservationPage = epiUsePage.navigateToGeneralObservations();
     generalObservationPage.enterData("some observations", "samuel", "Doe", "Verifier", "XYZ");
 
-    CoveragePage coveragePage = generalObservationPage.navigateToCoverage();
-    coveragePage.enterData(78, 67, 34,"12");
+    FullCoveragePage fullCoveragePage = generalObservationPage.navigateToFullCoverage();
+    fullCoveragePage.enterData(78, 67, 34, "12");
 
-    EpiInventoryPage epiInventoryPage = coveragePage.navigateToEpiInventory();
+    EpiInventoryPage epiInventoryPage = fullCoveragePage.navigateToEpiInventory();
     fillEpiInventoryWithOnlyDeliveredQuantity(epiInventoryPage, "2", "4", "6");
 
     DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
@@ -294,10 +294,10 @@ public class DistributionRefrigeratorSyncTest extends TestCaseHelper {
     epiUsePage.navigateToGeneralObservations();
     generalObservationPage.enterData("some observations", "samuel", "Doe", "Verifier", "XYZ");
 
-    generalObservationPage.navigateToCoverage();
-    coveragePage.enterData(78, 67, 34,"12");
+    generalObservationPage.navigateToFullCoverage();
+    fullCoveragePage.enterData(78, 67, 34, "12");
 
-    coveragePage.navigateToEpiInventory();
+    fullCoveragePage.navigateToEpiInventory();
     fillEpiInventoryWithOnlyDeliveredQuantity(epiInventoryPage, "2", "4", "6");
 
     homePage.navigateToDistributionWhenOnline();
@@ -344,16 +344,16 @@ public class DistributionRefrigeratorSyncTest extends TestCaseHelper {
     refrigeratorPage.verifyRefrigeratorColor("individual", "GREEN");
     refrigeratorPage.clickDone();
 
-    EPIUsePage epiUsePage =refrigeratorPage.navigateToEpiUse();
+    EPIUsePage epiUsePage = refrigeratorPage.navigateToEpiUse();
     epiUsePage.enterData(10, 20, 30, 40, 50, "10/2011", 1);
 
-    CoveragePage coveragePage = epiUsePage.navigateToCoverage();
-    coveragePage.enterData(12, 34, 45,"56");
+    FullCoveragePage fullCoveragePage = epiUsePage.navigateToFullCoverage();
+    fullCoveragePage.enterData(12, 34, 45, "56");
 
-    GeneralObservationPage generalObservationPage = coveragePage.navigateToGeneralObservations();
+    GeneralObservationPage generalObservationPage = fullCoveragePage.navigateToGeneralObservations();
     generalObservationPage.enterData("some observations", "samuel", "Doe", "Verifier", "XYZ");
 
-    EpiInventoryPage epiInventoryPage = coveragePage.navigateToEpiInventory();
+    EpiInventoryPage epiInventoryPage = fullCoveragePage.navigateToEpiInventory();
     fillEpiInventoryWithOnlyDeliveredQuantity(epiInventoryPage, "2", "4", "6");
 
     DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
@@ -403,10 +403,10 @@ public class DistributionRefrigeratorSyncTest extends TestCaseHelper {
     GeneralObservationPage generalObservationPage = epiUse.navigateToGeneralObservations();
     generalObservationPage.enterData("some observations", "samuel", "Doe", "Verifier", "XYZ");
 
-    CoveragePage coveragePage = generalObservationPage.navigateToCoverage();
-    coveragePage.enterData(67, 8, 33,"54");
+    FullCoveragePage fullCoveragePage = generalObservationPage.navigateToFullCoverage();
+    fullCoveragePage.enterData(67, 8, 33, "54");
 
-    EpiInventoryPage epiInventoryPage = coveragePage.navigateToEpiInventory();
+    EpiInventoryPage epiInventoryPage = fullCoveragePage.navigateToEpiInventory();
     fillEpiInventoryWithOnlyDeliveredQuantity(epiInventoryPage, "2", "4", "6");
 
     DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();

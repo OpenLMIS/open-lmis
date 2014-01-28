@@ -165,13 +165,13 @@ public class RefrigeratorPage extends DistributionTab {
   public static WebElement duplicateRefrigeratorMessage = null;
 
   @FindBy(how = ID, using = "gasLeakage0")
-  private static WebElement problemGasLeak= null;
+  private static WebElement problemGasLeak = null;
 
   @FindBy(how = ID, using = "other0")
-  private static WebElement problemOther= null;
+  private static WebElement problemOther = null;
 
   @FindBy(how = ID, using = "otherTextbox")
-  private static WebElement problemOtherTextBox= null;
+  private static WebElement problemOtherTextBox = null;
 
   @FindBy(how = ID, using = "noRefrigerators")
   private static WebElement noRefrigeratorAddedMessage = null;
@@ -199,7 +199,8 @@ public class RefrigeratorPage extends DistributionTab {
 
   @Override
   public void navigate() {
-    //To change body of implemented methods use File | Settings | File Templates.
+    testWebDriver.waitForElementToAppear(refrigeratorTab);
+    refrigeratorTab.click();
   }
 
   public void enterValueInRefrigeratorTemperature(String value) {

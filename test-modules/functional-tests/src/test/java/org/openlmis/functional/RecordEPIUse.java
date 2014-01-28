@@ -12,16 +12,19 @@ package org.openlmis.functional;
 
 
 import cucumber.api.DataTable;
-import cucumber.api.java.After;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import org.openlmis.UiUtils.CaptureScreenshotOnFailureListener;
 import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.UiUtils.TestWebDriver;
-import org.openlmis.pageobjects.*;
+import org.openlmis.pageobjects.EPIUsePage;
+import org.openlmis.pageobjects.HomePage;
 import org.openqa.selenium.JavascriptExecutor;
-import org.testng.annotations.*;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.DataProvider;
+import org.testng.annotations.Listeners;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -71,13 +74,6 @@ public class RecordEPIUse extends TestCaseHelper {
   public void verifyTotalField(String total) {
     epiUsePage = PageFactory.getInstanceOfEpiUsePage(testWebDriver);
     epiUsePage.verifyTotal(total, 1);
-  }
-
-
-  @Then("^I navigate to EPI Use tab$")
-  public void navigateToEpiUseTab() throws IOException {
-    epiUsePage = PageFactory.getInstanceOfEpiUsePage(testWebDriver);
-    epiUsePage.navigateToEpiUse();
   }
 
   @Then("^Verify indicator should be \"([^\"]*)\"$")

@@ -10,10 +10,7 @@
 
 package org.openlmis.pod.repository.mapper;
 
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Options;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 import org.openlmis.pod.domain.OrderPOD;
 import org.openlmis.pod.domain.OrderPODLineItem;
 import org.openlmis.rnr.domain.Rnr;
@@ -41,8 +38,13 @@ public interface PODMapper {
   @Options(useGeneratedKeys = true)
   void insertPOD(OrderPOD orderPod);
 
-  @Select("SELECT * FROM pod WHERE orderId = #{orderId}")
-  OrderPOD getPODByOrderId(Long orderId);
+  @Select({"SELECT * FROM pod WHERE id = #{id}"})
+  @Results(value = {
+    @Result(column = "id", property = "id"),
+    @Result(property = "podLineItems", javaType = List.class, column = "id",
+      many = @Many(select = "org.openlmis.pod.repository.mapper.PODMapper.getPODLineItemsByPODId")),
+  })
+  OrderPOD getPODById(Long id);
 
   @Select({"SELECT PLI.* FROM pod_line_items PLI INNER JOIN pod P ON PLI.podId = P.id " +
     "WHERE P.facilityId = #{requisition.facility.id} ",
@@ -52,4 +54,12 @@ public interface PODMapper {
     "ORDER BY p.createdDate DESC LIMIT #{n}"})
   List<OrderPODLineItem> getNPodLineItems(@Param("productCode") String productCode, @Param("requisition") Rnr requisition,
                                           @Param("n") Integer n, @Param("startDate") Date startDate);
+
+  @Select({"SELECT * FROM pod WHERE orderId = #{orderId}"})
+  @Results(value = {
+    @Result(column = "id", property = "id"),
+    @Result(property = "podLineItems", javaType = List.class, column = "id",
+      many = @Many(select = "org.openlmis.pod.repository.mapper.PODMapper.getPODLineItemsByPODId")),
+  })
+  OrderPOD getPODByOrderId(Long orderId);
 }

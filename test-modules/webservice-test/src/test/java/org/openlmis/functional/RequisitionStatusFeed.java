@@ -38,7 +38,7 @@ public class RequisitionStatusFeed extends JsonUtility {
   public void setUp() throws Exception {
     super.setup();
     super.setupTestData(false);
-    super.setupDataRequisitionApprover();
+    super.setupDataRequisitionApprove();
     createVirtualFacilityThroughApi("V10", "F10");
     dbWrapper.insertProcessingPeriod("current", "current period", "2013-01-30", "2016-01-30", 1, "M");
     dbWrapper.insertRoleAssignmentForSupervisoryNodeForProgramId1("700", "store in-charge", "N1");

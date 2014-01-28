@@ -16,15 +16,16 @@ import org.openlmis.pageobjects.edi.ConfigureOrderPage;
 
 import java.io.IOException;
 
-public class PageFactory{
+public class PageFactory {
 
   private static ManageFacilityPage instanceOfManageFacilityPage;
   private static DistributionPage instanceOfDistributionPage;
   private static FacilityListPage instanceOfFacilityListPage;
   private static RefrigeratorPage instanceOfRefrigeratorPage;
   private static GeneralObservationPage instanceOfObservation;
-  private static CoveragePage instanceOfCoveragePage;
+  private static FullCoveragePage instanceOfFullCoveragePage;
   private static EPIUsePage instanceOfEpiUsePage;
+  private static ChildCoveragePage instanceOfChildCoveragePage;
   private static EpiInventoryPage instanceOfEpiInventoryPage;
   private static WarehouseLoadAmountPage instanceOfWarehouseLoadAmountPage;
   private static ProgramProductISAPage instanceOfProgramProductISAPage;
@@ -65,11 +66,11 @@ public class PageFactory{
     return instanceOfObservation;
   }
 
-  public static CoveragePage getInstanceOfCoveragePage(TestWebDriver testWebDriver) {
-    if (instanceOfCoveragePage == null) {
-      instanceOfCoveragePage = new CoveragePage(testWebDriver);
+  public static FullCoveragePage getInstanceOfCoveragePage(TestWebDriver testWebDriver) {
+    if (instanceOfFullCoveragePage == null) {
+      instanceOfFullCoveragePage = new FullCoveragePage(testWebDriver);
     }
-    return instanceOfCoveragePage;
+    return instanceOfFullCoveragePage;
   }
 
   public static EPIUsePage getInstanceOfEpiUsePage(TestWebDriver testWebDriver) {
@@ -84,6 +85,13 @@ public class PageFactory{
       instanceOfEpiInventoryPage = new EpiInventoryPage(testWebDriver);
     }
     return instanceOfEpiInventoryPage;
+  }
+
+  public static ChildCoveragePage getInstanceOfChildCoveragePage(TestWebDriver testWebDriver) {
+    if (instanceOfChildCoveragePage == null) {
+      instanceOfChildCoveragePage = new ChildCoveragePage(testWebDriver);
+    }
+    return instanceOfChildCoveragePage;
   }
 
   public static WarehouseLoadAmountPage getInstanceOfWarehouseLoadAmountPage(TestWebDriver testWebDriver) throws IOException {

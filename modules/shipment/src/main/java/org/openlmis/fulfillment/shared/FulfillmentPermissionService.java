@@ -12,6 +12,8 @@ package org.openlmis.fulfillment.shared;
 
 import org.openlmis.core.domain.Right;
 import org.openlmis.core.service.RoleRightsService;
+import org.openlmis.order.domain.Order;
+import org.openlmis.order.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,9 +26,17 @@ public class FulfillmentPermissionService {
   @Autowired
   private RoleRightsService roleRightsService;
 
+  @Autowired
+  private OrderService orderService;
 
-  public Boolean hasPermission(Long userId, Long facilityId, Right right) {
-    Set<Right> userRights = roleRightsService.getRightsForUserAndWarehouse(userId, facilityId);
+
+  public Boolean hasPermission(Long userId, Long orderId, Right right) {
+    Set<Right> userRights = roleRightsService.getRightsForUserAndWarehouse(userId, getWarehouseForOrder(orderId));
     return userRights.contains(right);
+  }
+
+  private Long getWarehouseForOrder(Long orderId) {
+    Order order = orderService.getOrder(orderId);
+    return order.getSupplyingFacility().getId();
   }
 }

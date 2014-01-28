@@ -10,12 +10,12 @@
 
 package org.openlmis.pod.domain;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.BaseModel;
 import org.openlmis.core.exception.DataException;
+import org.openlmis.rnr.domain.LineItem;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.domain.RnrLineItem;
 
@@ -24,7 +24,6 @@ import java.util.List;
 
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 public class OrderPOD extends BaseModel {
 
@@ -36,6 +35,12 @@ public class OrderPOD extends BaseModel {
 
   public OrderPOD(Long id) {
     this.id = id;
+  }
+
+  public OrderPOD(Long orderId, Long userId) {
+    this.orderId = orderId;
+    this.createdBy = userId;
+    this.modifiedBy = userId;
   }
 
   public void validate() {
@@ -53,13 +58,21 @@ public class OrderPOD extends BaseModel {
     this.periodId = requisition.getPeriod().getId();
   }
 
-  public void fillPodLineItems(List<RnrLineItem> rnrLineItems) {
-    List<OrderPODLineItem> orderPODLineItems = new ArrayList<>();
-    for (RnrLineItem rnrLineItem : rnrLineItems) {
-      if (rnrLineItem.getPacksToShip() > 0) {
-        orderPODLineItems.add(OrderPODLineItem.createFrom(rnrLineItem));
-      }
+  public void fillPodLineItems(List<? extends LineItem> lineItems) {
+    this.podLineItems = new ArrayList<>();
+    for (LineItem lineItem : lineItems) {
+      if (!validPacksToShip(lineItem))
+        continue;
+      this.podLineItems.add(new OrderPODLineItem(lineItem));
     }
-    this.setPodLineItems(orderPODLineItems);
+  }
+
+  public void fillPODWithRequisition(Rnr requisition) {
+    fillPOD(requisition);
+    fillPodLineItems(requisition.getAllLineItems());
+  }
+
+  private boolean validPacksToShip(LineItem lineItem) {
+    return !lineItem.isRnrLineItem() || ((RnrLineItem) lineItem).getPacksToShip() > 0;
   }
 }

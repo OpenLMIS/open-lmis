@@ -11,13 +11,18 @@
 package org.openlmis.shipment.service;
 
 import lombok.NoArgsConstructor;
+import org.openlmis.core.domain.Product;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.ProductService;
+import org.openlmis.rnr.domain.RnrLineItem;
+import org.openlmis.rnr.service.RequisitionService;
 import org.openlmis.shipment.domain.ShipmentFileInfo;
 import org.openlmis.shipment.domain.ShipmentLineItem;
 import org.openlmis.shipment.repository.ShipmentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @NoArgsConstructor
@@ -28,31 +33,33 @@ public class ShipmentService {
   @Autowired
   private ProductService productService;
 
+  @Autowired
+  private RequisitionService requisitionService;
 
-  public void insertOrUpdate(ShipmentLineItem shipmentLineItem) {
-    validateForSave(shipmentLineItem);
-    validateShipment(shipmentLineItem);
-    if (shipmentRepository.getShippedLineItem(shipmentLineItem) == null) {
-      shipmentRepository.insertShippedLineItem(shipmentLineItem);
-    } else {
-      shipmentRepository.updateShippedLineItem(shipmentLineItem);
-    }
-  }
 
-  private void validateShipment(ShipmentLineItem shipmentLineItem) {
-    if (productService.getIdForCode(shipmentLineItem.getProductCode()) == null) {
-      throw new DataException("error.unknown.product");
-    }
-  }
-
-  private void validateForSave(ShipmentLineItem shipmentLineItem) {
+  public void save(ShipmentLineItem shipmentLineItem) {
     if (shipmentLineItem.getQuantityShipped() < 0) {
       throw new DataException("error.negative.shipped.quantity");
     }
+    RnrLineItem lineItem;
+    if ((lineItem = requisitionService.getLineItem(shipmentLineItem.getOrderId(), shipmentLineItem.getProductCode())) != null) {
+      shipmentLineItem.fillReferenceFields(lineItem);
+    } else {
+      Product product = productService.getByCode(shipmentLineItem.getProductCode());
+      if (product == null) {
+        throw new DataException("error.unknown.product");
+      }
+      shipmentLineItem.fillReferenceFields(product);
+    }
+
+    shipmentRepository.save(shipmentLineItem);
   }
 
   public void insertShipmentFileInfo(ShipmentFileInfo shipmentFileInfo) {
     shipmentRepository.insertShipmentFileInfo(shipmentFileInfo);
   }
 
+  public List<ShipmentLineItem> getLineItems(long orderId) {
+    return shipmentRepository.getLineItems(orderId);
+  }
 }

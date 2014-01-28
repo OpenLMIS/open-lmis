@@ -42,10 +42,17 @@ public class PODRepository {
     return podMapper.getNPodLineItems(productCode, requisition, n, startDate);
   }
 
-  public OrderPOD getPODWithLineItemsByOrderId(Long orderId) {
-    OrderPOD orderPOD = podMapper.getPODByOrderId(orderId);
-    List<OrderPODLineItem> podLineItems = podMapper.getPODLineItemsByPODId(orderPOD.getId());
-    orderPOD.setPodLineItems(podLineItems);
+  public OrderPOD getPODWithLineItemsById(Long podId) {
+    return podMapper.getPODById(podId);
+  }
+
+  public OrderPOD insert(OrderPOD orderPOD) {
+    podMapper.insertPOD(orderPOD);
+    for (OrderPODLineItem orderPodLineItem : orderPOD.getPodLineItems()) {
+      orderPodLineItem.setPodId(orderPOD.getId());
+      podMapper.insertPODLineItem(orderPodLineItem);
+    }
+
     return orderPOD;
   }
 }

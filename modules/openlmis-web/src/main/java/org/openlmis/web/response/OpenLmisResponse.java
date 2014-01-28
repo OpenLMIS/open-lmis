@@ -99,6 +99,10 @@ public class OpenLmisResponse {
     return new ResponseEntity<>(new OpenLmisResponse(key, value), OK);
   }
 
+  public static ResponseEntity<OpenLmisResponse> response(String key, Object value, HttpStatus status) {
+    return new ResponseEntity<>(new OpenLmisResponse(key, value), status);
+  }
+
   public static ResponseEntity<OpenLmisResponse> response(Map<String, String> messages, HttpStatus status) {
     return response(messages, status, APPLICATION_JSON_VALUE);
   }

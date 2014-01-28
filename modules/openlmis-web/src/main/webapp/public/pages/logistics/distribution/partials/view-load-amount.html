@@ -9,7 +9,7 @@
   -->
 
 <div>
-  <h2 openlmis-message="label.warehouse.load.amount"></h2>
+  <h2 id="warehouseLoadAmountLabel" openlmis-message="label.warehouse.load.amount"></h2>
 
 
   <div class="alert alert-info" ng-show="message"><span openlmis-message="message"></span></div>
@@ -17,18 +17,18 @@
     <div class="info-box">
       <div class="row-fluid">
         <div class="span3">
-          <strong openlmis-message="label.delivery.zone"> </strong> :&nbsp;<span ng-bind="deliveryZone.name"></span>
+          <strong id="deliveryZoneLabel" openlmis-message="label.delivery.zone"> </strong> :&nbsp;<span id="deliveryZoneName" ng-bind="deliveryZone.name"></span>
         </div>
         <div class="span3">
-          <strong openlmis-message="label.program"></strong> :&nbsp;<span ng-bind="program.name"></span>
+          <strong id="programLabel" openlmis-message="label.program"></strong> :&nbsp;<span id="programName" ng-bind="program.name"></span>
         </div>
         <div class="span3">
-          <strong openlmis-message="label.period"> </strong> :&nbsp;<span ng-bind="period.name"></span>
+          <strong id="periodLabel" openlmis-message="label.period"> </strong> :&nbsp;<span id="periodName" ng-bind="period.name"></span>
         </div>
       </div>
     </div>
     <div class="geo-zone-facility-list">
-      <h3><span ng-bind="deliveryZone.name"></span>&nbsp;<span openlmis-message="label.total"></span></h3>
+      <h3><span id="deliveryZoneNameLabel" ng-bind="deliveryZone.name"></span>&nbsp;<span id="totalLabel" openlmis-message="label.total"></span></h3>
 
       <div>
 
@@ -41,42 +41,42 @@
               <th class="main-heading"
                   ng-repeat="productGroup in facilityMap[sortedGeoZoneKeys[0]][0].supportedPrograms[0].sortedProductGroup"
                   colspan="{{facilityMap[sortedGeoZoneKeys[0]][0].supportedPrograms[0].programProductMap[productGroup].length}}">
-                <span ng-bind="productGroup"></span>
+                <span id="productGroupAggregated{{$index}}" ng-bind="productGroup"></span>
               </th>
             </tr>
             <tr>
               <th>
-                <span ng-bind="geoZoneLevelName"></span>
+                <span id="geoZoneLevelName" ng-bind="geoZoneLevelName"></span>
               </th>
               <th>
-                <span openlmis-message="label.population"></span>
+                <span id="aggregatePopulationLabel" openlmis-message="label.population"></span>
               </th>
               <th ng-repeat="programProduct in getProgramProducts(facilityMap[sortedGeoZoneKeys[0]][0])">
-                <span ng-bind="programProduct.product.primaryName"></span>
+                <span id="aggregateProductName{{$index}}" ng-bind="programProduct.product.primaryName"></span>
               </th>
             </tr>
             </thead>
             <tbody>
             <tr ng-repeat="geoZoneName in sortedGeoZoneKeys" >
               <td>
-                <span ng-bind="geoZoneName"></span>
+                <span id="geoZoneName{{$index}}" ng-bind="geoZoneName"></span>
               </td>
               <td>
-                <span ng-bind="aggregateMap[geoZoneName].totalPopulation"></span>
+                <span id="populationForGeoZone{{$index}}" ng-bind="aggregateMap[geoZoneName].totalPopulation"></span>
               </td>
               <td ng-repeat="programProduct in getProgramProductsForAggregateRow(geoZoneName)">
-                <span ng-bind="programProduct.isaAmount"></span>
+                <span id="productIsaForGeoZone{{$parent.$index}}{{$index}}" ng-bind="programProduct.isaAmount"></span>
               </td>
             </tr>
             <tr>
               <td>
-                <span openlmis-message="label.zone.total"></span>
+                <span id="zoneTotalLabel" openlmis-message="label.zone.total"></span>
               </td>
               <td>
-                <span ng-bind="zonesTotal.totalPopulation"></span>
+                <span id="zonesPopulationTotal" ng-bind="zonesTotal.totalPopulation"></span>
               </td>
               <td ng-repeat="productIsa in getProgramProductsForAggregateRow(geoZoneName,true)">
-                <span ng-bind="productIsa.isaAmount"></span>
+                <span id="productIsaAggregate{{$index}}"ng-bind="productIsa.isaAmount"></span>
               </td>
             </tr>
             </tbody>
@@ -87,7 +87,7 @@
     </div>
 
     <div class="geo-zone-facility-list" ng-repeat="geoZoneName in sortedGeoZoneKeys">
-      <h3><span ng-bind="geoZoneName"></span></h3>
+      <h3><span id="geoZoneTitle{{$index}}" ng-bind="geoZoneName"></span></h3>
 
 
       <div class="facilities-isa-amount-table">
@@ -99,44 +99,44 @@
             <th class="main-heading"
                 ng-repeat="productGroup in facilityMap[geoZoneName][0].supportedPrograms[0].sortedProductGroup"
                 colspan="{{facilityMap[geoZoneName][0].supportedPrograms[0].programProductMap[productGroup].length}}">
-              <span ng-bind="productGroup"></span>
+              <span id="productGroup{{$parent.$index}}{{$index}}" ng-bind="productGroup"></span>
             </th>
           </tr>
           <tr>
             <th>
-              <span openlmis-message="label.facility"></span>
+              <span id="facilityLabel{{$index}}" openlmis-message="label.facility"></span>
             </th>
             <th>
-              <span openlmis-message="label.population"></span>
+              <span id="populationLabel{{$index}}" openlmis-message="label.population"></span>
             </th>
             <th ng-repeat="programProduct in getProgramProducts(facilityMap[geoZoneName][0])">
-              <span ng-bind="programProduct.product.primaryName"></span>
+              <span id="product{{$parent.$index}}{{$index}}" ng-bind="programProduct.product.primaryName"></span>
             </th>
           </tr>
           </thead>
           <tbody>
           <tr ng-repeat="facility in facilityMap[geoZoneName]">
             <td>
-              <span ng-bind="facility.name"></span>
-              <span ng-bind="facility.code"></span>
+              <span id="facilityName{{$parent.$index}}{{$index}}"ng-bind="facility.name"></span>
+              <span id="facilityCode{{$parent.$index}}{{$index}}"ng-bind="facility.code"></span>
             </td>
             <td>
-              <span ng-bind="facility.catchmentPopulation"></span>
+              <span id="population{{$parent.$index}}{{$index}}" ng-bind="facility.catchmentPopulation"></span>
             </td>
             <td ng-repeat="programProduct in getProgramProducts(facility)">
-              <span ng-bind="programProduct.isaAmount"></span>
+              <span id="isaAmount{{$parent.$parent.$index}}{{$parent.$index}}{{$index}}" ng-bind="programProduct.isaAmount"></span>
             </td>
           </tr>
           <tr>
             <td>
-              <span ng-bind="geoZoneName"></span>
-              <span openlmis-message="label.total"></span>
+              <span id="geoZoneNameLabel{{$index}}" ng-bind="geoZoneName"></span>
+              <span id="totalLabel{{$index}}" openlmis-message="label.total"></span>
             </td>
             <td>
-              <span ng-bind="aggregateMap[geoZoneName]['totalPopulation']"></span>
+              <span id="population{{$index}}" ng-bind="aggregateMap[geoZoneName]['totalPopulation']"></span>
             </td>
             <td ng-repeat="programProduct in getProgramProductsForAggregateRow(geoZoneName)">
-              <span ng-bind="programProduct.isaAmount"></span>
+              <span id="isaAmountTotal{{$parent.$index}}{{$index}}"ng-bind="programProduct.isaAmount"></span>
             </td>
           </tr>
           </tbody>

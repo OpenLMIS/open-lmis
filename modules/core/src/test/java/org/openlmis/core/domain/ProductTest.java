@@ -14,8 +14,14 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
+import org.openlmis.core.builder.ProductBuilder;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.db.categories.UnitTests;
+
+import static com.natpryce.makeiteasy.MakeItEasy.a;
+import static com.natpryce.makeiteasy.MakeItEasy.make;
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertThat;
 
 @Category(UnitTests.class)
 public class ProductTest {
@@ -43,5 +49,11 @@ public class ProductTest {
     expectedException.expectMessage("error.invalid.pack.size");
 
     product.validate();
+  }
+
+  @Test
+  public void shouldReturnProductName() throws Exception {
+    Product product = make(a(ProductBuilder.defaultProduct));
+    assertThat(product.getName(), is("Primary Name Tablet strength mg"));
   }
 }

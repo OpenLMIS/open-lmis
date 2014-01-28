@@ -33,7 +33,6 @@ import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.*;
 import static org.junit.matchers.JUnitMatchers.hasItem;
 import static org.mockito.Mockito.*;
-import static org.mockito.MockitoAnnotations.initMocks;
 import static org.openlmis.core.builder.FacilityApprovedProductBuilder.defaultFacilityApprovedProduct;
 import static org.openlmis.core.builder.ProgramProductBuilder.defaultProgramProduct;
 import static org.openlmis.core.builder.ProgramProductBuilder.productCode;
@@ -53,7 +52,6 @@ public class RnrTest {
 
   @Before
   public void setUp() throws Exception {
-    initMocks(this);
     rnr = make(a(defaultRequisition));
     rnrTemplate = mock(ProgramRnrTemplate.class);
     regimenTemplate = new RegimenTemplate(rnr.getProgram().getId(), new ArrayList<RegimenColumn>());

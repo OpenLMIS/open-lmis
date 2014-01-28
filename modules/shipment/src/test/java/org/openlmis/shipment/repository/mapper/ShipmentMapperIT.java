@@ -36,11 +36,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.ResultSet;
 import java.util.Date;
+import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
+import static org.junit.matchers.JUnitMatchers.hasItem;
 import static org.openlmis.core.builder.FacilityBuilder.defaultFacility;
 import static org.openlmis.core.builder.ProductBuilder.defaultProduct;
 import static org.openlmis.core.builder.ProgramBuilder.defaultProgram;
@@ -94,6 +96,11 @@ public class ShipmentMapperIT {
     assertThat(shipmentFileInfoResultSet.getLong("orderId"), is(shipmentLineItem.getOrderId()));
     assertThat(shipmentFileInfoResultSet.getString("productCode"), is(shipmentLineItem.getProductCode()));
     assertThat(shipmentFileInfoResultSet.getInt("quantityShipped"), is(shipmentLineItem.getQuantityShipped()));
+
+    assertThat(shipmentFileInfoResultSet.getString("productName"), is(shipmentLineItem.getProductName()));
+    assertThat(shipmentFileInfoResultSet.getString("dispensingUnit"), is(shipmentLineItem.getDispensingUnit()));
+    assertThat(shipmentFileInfoResultSet.getString("productCategory"), is(shipmentLineItem.getProductCategory()));
+    assertThat(shipmentFileInfoResultSet.getInt("packsToShip"), is(shipmentLineItem.getPacksToShip()));
   }
 
   private ShipmentLineItem createShippedLineItem() {
@@ -202,5 +209,14 @@ public class ShipmentMapperIT {
     assertThat(date, is(shipmentLineItemFromDB.getModifiedDate()));
   }
 
+  @Test
+  public void shouldReturnLineItemsForAnOrder() throws Exception {
+    ShipmentLineItem shipmentLineItem = createShippedLineItem();
+    mapper.insertShippedLineItem(shipmentLineItem);
 
+    Long orderId = shipmentLineItem.getOrderId();
+    List<ShipmentLineItem> lineItems = mapper.getLineItems(orderId);
+
+    assertThat(lineItems, hasItem(shipmentLineItem));
+  }
 }

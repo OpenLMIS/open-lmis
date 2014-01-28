@@ -19,6 +19,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 @NoArgsConstructor
 public class ShipmentRepository {
@@ -30,23 +32,23 @@ public class ShipmentRepository {
     this.shipmentMapper = shipmentMapper;
   }
 
-  public void insertShippedLineItem(ShipmentLineItem shipmentLineItem) {
+  public void insertShipmentFileInfo(ShipmentFileInfo shipmentFileInfo) {
+    shipmentMapper.insertShipmentFileInfo(shipmentFileInfo);
+  }
+
+  public void save(ShipmentLineItem shipmentLineItem) {
     try {
-      shipmentMapper.insertShippedLineItem(shipmentLineItem);
+      if (shipmentMapper.getShippedLineItem(shipmentLineItem) == null) {
+        shipmentMapper.insertShippedLineItem(shipmentLineItem);
+        return;
+      }
+      shipmentMapper.updateShippedLineItem(shipmentLineItem);
     } catch (DataIntegrityViolationException exception) {
       throw new DataException("error.incorrect.length");
     }
   }
 
-  public void insertShipmentFileInfo(ShipmentFileInfo shipmentFileInfo) {
-    shipmentMapper.insertShipmentFileInfo(shipmentFileInfo);
-  }
-
-  public ShipmentLineItem getShippedLineItem(ShipmentLineItem shipmentLineItem) {
-    return shipmentMapper.getShippedLineItem(shipmentLineItem);
-  }
-
-  public void updateShippedLineItem(ShipmentLineItem shipmentLineItem) {
-    shipmentMapper.updateShippedLineItem(shipmentLineItem);
+  public List<ShipmentLineItem> getLineItems(Long orderId) {
+    return shipmentMapper.getLineItems(orderId);
   }
 }

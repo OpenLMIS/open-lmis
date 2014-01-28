@@ -113,7 +113,7 @@ public class ManageSchedulePage extends Page {
   }
 
   public PeriodsPage navigatePeriods() throws IOException {
-    testWebDriver.waitForElementToAppear(addPeriodButton);
+    testWebDriver.waitForElementToBeEnabled(addPeriodButton);
     addPeriodButton.click();
     testWebDriver.sleep(1500);
     testWebDriver.waitForElementToAppear(namePeriod);

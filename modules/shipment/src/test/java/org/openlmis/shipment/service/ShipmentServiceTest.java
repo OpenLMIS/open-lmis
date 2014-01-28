@@ -19,16 +19,25 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.openlmis.core.domain.Product;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.ProductService;
 import org.openlmis.db.categories.UnitTests;
+import org.openlmis.rnr.domain.RnrLineItem;
+import org.openlmis.rnr.service.RequisitionService;
 import org.openlmis.shipment.domain.ShipmentFileInfo;
 import org.openlmis.shipment.domain.ShipmentLineItem;
 import org.openlmis.shipment.repository.ShipmentRepository;
 
+import java.util.List;
+
 import static com.natpryce.makeiteasy.MakeItEasy.*;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static java.util.Arrays.asList;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.*;
+import static org.openlmis.core.builder.ProductBuilder.defaultProduct;
+import static org.openlmis.rnr.builder.RnrLineItemBuilder.defaultRnrLineItem;
 import static org.openlmis.shipment.builder.ShipmentLineItemBuilder.*;
 
 @Category(UnitTests.class)
@@ -42,6 +51,9 @@ public class ShipmentServiceTest {
   @Mock
   private ProductService productService;
 
+  @Mock
+  private RequisitionService requisitionService;
+
   @InjectMocks
   private ShipmentService shipmentService;
 
@@ -49,39 +61,16 @@ public class ShipmentServiceTest {
   public ExpectedException exException = ExpectedException.none();
 
   @Test
-  public void shouldInsertShipmentIfNewLineItem() throws Exception {
+  public void shouldSaveShipmentLineItem() throws Exception {
     ShipmentLineItem shipmentLineItem = make(a(defaultShipmentLineItem,
       with(productCode, "P10"),
       with(orderId, 1L),
       with(quantityShipped, 500)));
 
+    when(requisitionService.getLineItem(1L, "P10")).thenReturn(new RnrLineItem());
+    shipmentService.save(shipmentLineItem);
 
-    when(productService.getIdForCode("P10")).thenReturn(1l);
-    when(shipmentRepository.getShippedLineItem(shipmentLineItem)).thenReturn(null);
-
-    shipmentService.insertOrUpdate(shipmentLineItem);
-
-    verify(productService).getIdForCode("P10");
-    verify(shipmentRepository).getShippedLineItem(shipmentLineItem);
-    verify(shipmentRepository).insertShippedLineItem(shipmentLineItem);
-  }
-
-  @Test
-  public void shouldUpdateShipmentIfComesAgainInSameFile() throws Exception {
-    ShipmentLineItem shipmentLineItem = make(a(defaultShipmentLineItem,
-      with(productCode, "P10"),
-      with(orderId, 1L),
-      with(quantityShipped, 500)));
-
-
-    when(productService.getIdForCode("P10")).thenReturn(1l);
-    when(shipmentRepository.getShippedLineItem(shipmentLineItem)).thenReturn(shipmentLineItem);
-
-    shipmentService.insertOrUpdate(shipmentLineItem);
-
-    verify(productService).getIdForCode("P10");
-    verify(shipmentRepository).getShippedLineItem(shipmentLineItem);
-    verify(shipmentRepository).updateShippedLineItem(shipmentLineItem);
+    verify(shipmentRepository).save(shipmentLineItem);
   }
 
   @Test
@@ -98,7 +87,7 @@ public class ShipmentServiceTest {
     exException.expect(DataException.class);
     exException.expectMessage("error.unknown.product");
 
-    shipmentService.insertOrUpdate(shipmentLineItem);
+    shipmentService.save(shipmentLineItem);
   }
 
   @Test
@@ -112,7 +101,48 @@ public class ShipmentServiceTest {
     exException.expect(DataException.class);
     exException.expectMessage("error.negative.shipped.quantity");
 
-    shipmentService.insertOrUpdate(shipmentLineItem);
+    shipmentService.save(shipmentLineItem);
+  }
+
+  @Test
+  public void shouldFillProductInfoFromRequisitionIfLineItemExists() throws Exception {
+    ShipmentLineItem shipmentLineItem = spy(make(a(defaultShipmentLineItem, with(productCode, "P10"), with(orderId, 1L),
+      with(quantityShipped, 20))));
+
+    RnrLineItem lineItem = make(a(defaultRnrLineItem));
+    when(requisitionService.getLineItem(shipmentLineItem.getOrderId(), "P10")).thenReturn(lineItem);
+
+    shipmentService.save(shipmentLineItem);
+
+    verify(shipmentLineItem).fillReferenceFields(lineItem);
+  }
+
+  @Test
+  public void shouldFillProductInfoFromProductsIfLineItemDoesNotExist() throws Exception {
+    ShipmentLineItem shipmentLineItem = spy(make(a(defaultShipmentLineItem, with(productCode, "P10"), with(orderId, 1L),
+      with(quantityShipped, 20))));
+
+    when(requisitionService.getLineItem(shipmentLineItem.getOrderId(), "P10")).thenReturn(null);
+    Product product = make(a(defaultProduct));
+    when(productService.getByCode("P10")).thenReturn(product);
+
+    shipmentService.save(shipmentLineItem);
+
+    verify(shipmentLineItem).fillReferenceFields(product);
+  }
+
+  @Test
+  public void shouldThrowExceptionIfInvalidProductCode() throws Exception {
+    ShipmentLineItem shipmentLineItem = spy(make(a(defaultShipmentLineItem, with(productCode, "P10"), with(orderId, 1L),
+      with(quantityShipped, 20))));
+
+    when(requisitionService.getLineItem(shipmentLineItem.getOrderId(), "P10")).thenReturn(null);
+    when(productService.getByCode("P10")).thenReturn(null);
+
+    exException.expect(DataException.class);
+    exException.expectMessage("error.unknown.product");
+
+    shipmentService.save(shipmentLineItem);
   }
 
   @Test
@@ -122,4 +152,15 @@ public class ShipmentServiceTest {
     verify(shipmentRepository).insertShipmentFileInfo(shipmentFileInfo);
   }
 
+  @Test
+  public void shouldGetAllShipmentLineItemsForAnOrder() throws Exception {
+    Long orderId = 12345L;
+
+    List<ShipmentLineItem> expectedLineItems = asList(new ShipmentLineItem());
+    when(shipmentRepository.getLineItems(orderId)).thenReturn(expectedLineItems);
+
+    List<ShipmentLineItem> lineItems = shipmentService.getLineItems(orderId);
+
+    assertThat(lineItems, is(expectedLineItems));
+  }
 }

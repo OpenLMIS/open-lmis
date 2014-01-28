@@ -36,7 +36,7 @@ public class PODTest extends JsonUtility {
   public void setUp() throws Exception {
     super.setup();
     super.setupTestData(false);
-    super.setupDataRequisitionApprover();
+    super.setupDataRequisitionApprove();
     dbWrapper.updateRestrictLogin("commTrack", true);
   }
 

@@ -393,21 +393,9 @@ public class RnrLineItem extends LineItem {
     this.packSize = product.getPackSize();
     this.roundToZero = product.getRoundToZero();
     this.packRoundingThreshold = product.getPackRoundingThreshold();
-    this.product = productName(product);
+    this.product = product.getName();
     this.fullSupply = product.getFullSupply();
     this.productDisplayOrder = product.getDisplayOrder();
-  }
-
-  private String productName(Product product) {
-    StringBuilder stringBuilder = new StringBuilder();
-
-    stringBuilder
-      .append(product.getPrimaryName() == null ? "" : product.getPrimaryName()).append(" ")
-      .append(product.getForm().getCode() == null ? "" : product.getForm().getCode()).append(" ")
-      .append(product.getStrength() == null ? "" : product.getStrength()).append(" ")
-      .append(product.getDosageUnit().getCode() == null ? "" : product.getDosageUnit().getCode());
-
-    return stringBuilder.toString();
   }
 
   private void requestedQuantityConditionalValidation(ProgramRnrTemplate template) {

@@ -44,7 +44,7 @@ public class DistributionPage extends Page {
   @FindBy(how = ID, using = "saveSuccessMsgDiv")
   private WebElement saveSuccessMessageDiv = null;
 
-  @FindBy(how = XPATH, using = "//div[@id='cachedDistributions']/div[2]/div/div[7]/i[@class='icon-remove-sign']")
+  @FindBy(how = ID, using = "deleteDistribution0")
   private WebElement deleteDistributionIcon = null;
 
   @FindBy(how = ID, using = "button_Cancel")
@@ -74,8 +74,14 @@ public class DistributionPage extends Page {
   @FindBy(how = ID, using = "duplicateFacilities")
   private WebElement facilityAlreadySyncMessage = null;
 
+  @FindBy(how = ID, using = "failedFacilityHeader")
+  private WebElement facilitySyncFailedMessage = null;
+
   @FindBy(how = ID, using = "distributionInitiated")
   private WebElement distributionAlreadyInitiatedMessage = null;
+
+  @FindBy(how = ID, using = "retryButton")
+  private WebElement retryButton = null;
 
 
   public DistributionPage(TestWebDriver driver) throws IOException {
@@ -249,7 +255,7 @@ public class DistributionPage extends Page {
   }
 
   public void deleteDistribution() {
-    testWebDriver.waitForElementToAppear(deleteDistributionIcon);
+    testWebDriver.waitForElementToBeEnabled(deleteDistributionIcon);
     deleteDistributionIcon.click();
   }
 
@@ -279,5 +285,15 @@ public class DistributionPage extends Page {
     selectValueFromDeliveryZone(deliveryZoneName);
     selectValueFromProgram(programName);
     clickInitiateDistribution();
+  }
+
+  public boolean isFacilitySyncFailed() {
+    testWebDriver.waitForElementToAppear(facilitySyncFailedMessage);
+    return facilitySyncFailedMessage.isDisplayed();
+  }
+
+  public void clickRetryButton() {
+    testWebDriver.waitForElementToAppear(retryButton);
+    retryButton.click();
   }
 }

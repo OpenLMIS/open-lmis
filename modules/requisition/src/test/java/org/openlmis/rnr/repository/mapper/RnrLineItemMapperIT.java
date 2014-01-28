@@ -545,6 +545,21 @@ public class RnrLineItemMapperIT {
   }
 
   @Test
+  public void shouldGetLineItemWithRnrIdAndProductCode() throws Exception {
+    requisitionMapper.insert(rnr);
+    RnrLineItem lineItem = new RnrLineItem(rnr.getId(), facilityTypeApprovedProduct, MODIFIED_BY, 1L);
+    lineItem.setPacksToShip(20);
+    lineItem.setBeginningBalance(5);
+    lineItem.setFullSupply(true);
+    lineItem.setReportingDays(10);
+    rnrLineItemMapper.insert(lineItem, lineItem.getPreviousNormalizedConsumptions().toString());
+
+    RnrLineItem actualLineItem = rnrLineItemMapper.getLineItem(rnr.getId(), facilityTypeApprovedProduct.getProgramProduct().getProduct().getCode());
+
+    assertThat(actualLineItem, is(lineItem));
+  }
+
+  @Test
   public void shouldNotIncludeEmergencyRnrWhileFetchingPreviousNC() throws Exception {
     requisitionMapper.insert(rnr);
 

@@ -235,31 +235,31 @@ public class DistributionEpiInventoryTest extends TestCaseHelper {
     RefrigeratorPage refrigeratorPage = facilityListPage.selectFacility(epiInventoryData.get(FIRST_FACILITY_CODE));
 
     EpiInventoryPage epiInventoryPage = refrigeratorPage.navigateToEpiInventory();
-    epiInventoryPage .verifyIndicator("RED");
+    epiInventoryPage.verifyIndicator("RED");
 
     epiInventoryPage.fillExistingQuantity(1, "1");
     epiInventoryPage.fillDeliveredQuantity(1, "2");
-    epiInventoryPage.fillSpoiledQuantity(1,"3");
+    epiInventoryPage.fillSpoiledQuantity(1, "3");
 
     epiInventoryPage.verifyIndicator("AMBER");
 
-    epiInventoryPage.fillExistingQuantity(2,"11");
-    epiInventoryPage.fillDeliveredQuantity(2,"12");
-    epiInventoryPage.fillSpoiledQuantity(2,"13");
+    epiInventoryPage.fillExistingQuantity(2, "11");
+    epiInventoryPage.fillDeliveredQuantity(2, "12");
+    epiInventoryPage.fillSpoiledQuantity(2, "13");
 
-    epiInventoryPage.fillExistingQuantity(3,"21");
-    epiInventoryPage.fillDeliveredQuantity(3,"22");
-    epiInventoryPage.fillSpoiledQuantity(3,"23");
+    epiInventoryPage.fillExistingQuantity(3, "21");
+    epiInventoryPage.fillDeliveredQuantity(3, "22");
+    epiInventoryPage.fillSpoiledQuantity(3, "23");
 
-    epiInventoryPage .verifyIndicator("GREEN");
+    epiInventoryPage.verifyIndicator("GREEN");
 
     GeneralObservationPage generalObservationPage = epiInventoryPage.navigateToGeneralObservations();
     generalObservationPage.enterData("some observations", "samuel", "Doe", "Verifier", "XYZ");
 
-    CoveragePage coveragePage = generalObservationPage.navigateToCoverage();
-    coveragePage.enterData(12, 34, 45, "56");
+    FullCoveragePage fullCoveragePage = generalObservationPage.navigateToFullCoverage();
+    fullCoveragePage.enterData(12, 34, 45, "56");
 
-    EPIUsePage epiUsePage = coveragePage.navigateToEpiUse();
+    EPIUsePage epiUsePage = fullCoveragePage.navigateToEpiUse();
     epiUsePage.enterData(70, 80, 90, 100, 9999999, "10/2011", 1);
 
     DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
@@ -267,9 +267,9 @@ public class DistributionEpiInventoryTest extends TestCaseHelper {
     SeleneseTestBase.assertTrue(distributionPage.getSyncMessage().contains("F10-Village Dispensary"));
     distributionPage.syncDistributionMessageDone();
 
-    verifyEpiInventoryDataInDatabase("1","2","3", "P10", epiInventoryData.get(FIRST_FACILITY_CODE));
-    verifyEpiInventoryDataInDatabase("11","12","13", "Product6", epiInventoryData.get(FIRST_FACILITY_CODE));
-    verifyEpiInventoryDataInDatabase("21","22","23", "P11", epiInventoryData.get(FIRST_FACILITY_CODE));
+    verifyEpiInventoryDataInDatabase("1", "2", "3", "P10", epiInventoryData.get(FIRST_FACILITY_CODE));
+    verifyEpiInventoryDataInDatabase("11", "12", "13", "Product6", epiInventoryData.get(FIRST_FACILITY_CODE));
+    verifyEpiInventoryDataInDatabase("21", "22", "23", "P11", epiInventoryData.get(FIRST_FACILITY_CODE));
   }
 
 
@@ -287,7 +287,7 @@ public class DistributionEpiInventoryTest extends TestCaseHelper {
     FacilityListPage facilityListPage = new FacilityListPage(testWebDriver);
     RefrigeratorPage refrigeratorPage = facilityListPage.selectFacility(epiInventoryData.get(FIRST_FACILITY_CODE));
 
-    EpiInventoryPage epiInventoryPage= refrigeratorPage.navigateToEpiInventory();
+    EpiInventoryPage epiInventoryPage = refrigeratorPage.navigateToEpiInventory();
     epiInventoryPage.applyNRToAll();
     epiInventoryPage.fillDeliveredQuantity(1, "10");
     epiInventoryPage.fillDeliveredQuantity(2, "20");
@@ -308,25 +308,25 @@ public class DistributionEpiInventoryTest extends TestCaseHelper {
     RefrigeratorPage refrigeratorPage = facilityListPage.selectFacility(epiInventoryData.get(FIRST_FACILITY_CODE));
 
     EpiInventoryPage epiInventoryPage = refrigeratorPage.navigateToEpiInventory();
-    epiInventoryPage .verifyIndicator("RED");
+    epiInventoryPage.verifyIndicator("RED");
 
     epiInventoryPage.applyNRToAll();
 
     epiInventoryPage.verifyIndicator("AMBER");
 
-    epiInventoryPage.fillDeliveredQuantity(1,"1");
-    epiInventoryPage.fillDeliveredQuantity(2,"2");
-    epiInventoryPage.fillDeliveredQuantity(3,"3");
+    epiInventoryPage.fillDeliveredQuantity(1, "1");
+    epiInventoryPage.fillDeliveredQuantity(2, "2");
+    epiInventoryPage.fillDeliveredQuantity(3, "3");
 
-    epiInventoryPage .verifyIndicator("GREEN");
+    epiInventoryPage.verifyIndicator("GREEN");
 
     GeneralObservationPage generalObservationPage = epiInventoryPage.navigateToGeneralObservations();
     generalObservationPage.enterData("some observations", "samuel", "Doe", "Verifier", "XYZ");
 
-    CoveragePage coveragePage = generalObservationPage.navigateToCoverage();
-    coveragePage.enterData(12, 34, 45, "56");
+    FullCoveragePage fullCoveragePage = generalObservationPage.navigateToFullCoverage();
+    fullCoveragePage.enterData(12, 34, 45, "56");
 
-    EPIUsePage epiUsePage = coveragePage.navigateToEpiUse();
+    EPIUsePage epiUsePage = fullCoveragePage.navigateToEpiUse();
     epiUsePage.enterData(70, 80, 90, 100, 9999999, "10/2011", 1);
 
     DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
@@ -334,9 +334,9 @@ public class DistributionEpiInventoryTest extends TestCaseHelper {
     SeleneseTestBase.assertTrue(distributionPage.getSyncMessage().contains("F10-Village Dispensary"));
     distributionPage.syncDistributionMessageDone();
 
-    verifyEpiInventoryDataInDatabase(null,"1",null, "P10", epiInventoryData.get(FIRST_FACILITY_CODE));
-    verifyEpiInventoryDataInDatabase(null,"2",null, "Product6", epiInventoryData.get(FIRST_FACILITY_CODE));
-    verifyEpiInventoryDataInDatabase(null,"3",null, "P11", epiInventoryData.get(FIRST_FACILITY_CODE));
+    verifyEpiInventoryDataInDatabase(null, "1", null, "P10", epiInventoryData.get(FIRST_FACILITY_CODE));
+    verifyEpiInventoryDataInDatabase(null, "2", null, "Product6", epiInventoryData.get(FIRST_FACILITY_CODE));
+    verifyEpiInventoryDataInDatabase(null, "3", null, "P11", epiInventoryData.get(FIRST_FACILITY_CODE));
   }
 
   @Test(groups = {"distribution"})
@@ -350,30 +350,30 @@ public class DistributionEpiInventoryTest extends TestCaseHelper {
     RefrigeratorPage refrigeratorPage = facilityListPage.selectFacility(epiInventoryData.get(FIRST_FACILITY_CODE));
 
     EpiInventoryPage epiInventoryPage = refrigeratorPage.navigateToEpiInventory();
-    epiInventoryPage .verifyIndicator("RED");
+    epiInventoryPage.verifyIndicator("RED");
 
     epiInventoryPage.applyNRToAll();
 
     epiInventoryPage.verifyIndicator("AMBER");
 
-    epiInventoryPage.fillDeliveredQuantity(1,"1");
-    epiInventoryPage.fillDeliveredQuantity(2,"2");
-    epiInventoryPage.fillDeliveredQuantity(3,"3");
+    epiInventoryPage.fillDeliveredQuantity(1, "1");
+    epiInventoryPage.fillDeliveredQuantity(2, "2");
+    epiInventoryPage.fillDeliveredQuantity(3, "3");
     epiInventoryPage.toggleExistingQuantityNR(1);
-    epiInventoryPage.fillExistingQuantity(1,"77");
+    epiInventoryPage.fillExistingQuantity(1, "77");
     epiInventoryPage.toggleSpoiledQuantityNR(3);
-    epiInventoryPage.fillSpoiledQuantity(3,"99");
+    epiInventoryPage.fillSpoiledQuantity(3, "99");
 
 
-    epiInventoryPage .verifyIndicator("GREEN");
+    epiInventoryPage.verifyIndicator("GREEN");
 
     GeneralObservationPage generalObservationPage = epiInventoryPage.navigateToGeneralObservations();
     generalObservationPage.enterData("some observations", "samuel", "Doe", "Verifier", "XYZ");
 
-    CoveragePage coveragePage = generalObservationPage.navigateToCoverage();
-    coveragePage.enterData(12, 34, 45, "56");
+    FullCoveragePage fullCoveragePage = generalObservationPage.navigateToFullCoverage();
+    fullCoveragePage.enterData(12, 34, 45, "56");
 
-    EPIUsePage epiUsePage = coveragePage.navigateToEpiUse();
+    EPIUsePage epiUsePage = fullCoveragePage.navigateToEpiUse();
     epiUsePage.enterData(70, 80, 90, 100, 9999999, "10/2011", 1);
 
     DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
@@ -381,9 +381,9 @@ public class DistributionEpiInventoryTest extends TestCaseHelper {
     SeleneseTestBase.assertTrue(distributionPage.getSyncMessage().contains("F10-Village Dispensary"));
     distributionPage.syncDistributionMessageDone();
 
-    verifyEpiInventoryDataInDatabase("77","1",null, "P10", epiInventoryData.get(FIRST_FACILITY_CODE));
-    verifyEpiInventoryDataInDatabase(null,"2",null, "Product6", epiInventoryData.get(FIRST_FACILITY_CODE));
-    verifyEpiInventoryDataInDatabase(null,"3","99", "P11", epiInventoryData.get(FIRST_FACILITY_CODE));
+    verifyEpiInventoryDataInDatabase("77", "1", null, "P10", epiInventoryData.get(FIRST_FACILITY_CODE));
+    verifyEpiInventoryDataInDatabase(null, "2", null, "Product6", epiInventoryData.get(FIRST_FACILITY_CODE));
+    verifyEpiInventoryDataInDatabase(null, "3", "99", "P11", epiInventoryData.get(FIRST_FACILITY_CODE));
   }
 
   public void initiateDistribution(String deliveryZoneNameFirst, String programFirst) throws IOException {

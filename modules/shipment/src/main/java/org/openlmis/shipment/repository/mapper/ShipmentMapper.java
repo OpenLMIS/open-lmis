@@ -19,15 +19,16 @@ import org.openlmis.shipment.domain.ShipmentLineItem;
 import org.springframework.stereotype.Repository;
 
 import java.util.Date;
+import java.util.List;
 
 
 @Repository
 public interface ShipmentMapper {
 
   @Insert({"INSERT INTO shipment_line_items ",
-    "(orderId, concatenatedOrderId, facilityCode, programCode, productCode, quantityOrdered, quantityShipped, cost, substitutedProductCode, substitutedProductName, substitutedProductQuantityShipped, packSize, packedDate, shippedDate)",
+    "(orderId, concatenatedOrderId, facilityCode, programCode, productCode, quantityOrdered, quantityShipped, cost, substitutedProductCode, substitutedProductName, substitutedProductQuantityShipped, packSize, packedDate, shippedDate, productName, dispensingUnit, productCategory, packsToShip)",
     "VALUES",
-    "(#{orderId}, #{concatenatedOrderId}, #{facilityCode}, #{programCode}, #{productCode}, #{quantityOrdered}, #{quantityShipped}, #{cost}, #{substitutedProductCode}, #{substitutedProductName}, #{substitutedProductQuantityShipped}, #{packSize}, #{packedDate}, #{shippedDate})"})
+    "(#{orderId}, #{concatenatedOrderId}, #{facilityCode}, #{programCode}, #{productCode}, #{quantityOrdered}, #{quantityShipped}, #{cost}, #{substitutedProductCode}, #{substitutedProductName}, #{substitutedProductQuantityShipped}, #{packSize}, #{packedDate}, #{shippedDate}, #{productName}, #{dispensingUnit}, #{productCategory})"})
   @Options(useGeneratedKeys = true)
   public void insertShippedLineItem(ShipmentLineItem shipmentLineItem);
 
@@ -38,8 +39,7 @@ public interface ShipmentMapper {
   @Select("SELECT * FROM shipment_file_info WHERE id = #{id}")
   ShipmentFileInfo getShipmentFileInfo(Long id);
 
-  @Select({"SELECT * FROM shipment_line_items",
-    "WHERE orderId = #{orderId} AND productCode=#{productCode}"})
+  @Select({"SELECT * FROM shipment_line_items WHERE orderId = #{orderId} AND productCode=#{productCode}"})
   ShipmentLineItem getShippedLineItem(ShipmentLineItem shipmentLineItem);
 
   @Update({"UPDATE shipment_line_items ",
@@ -52,4 +52,7 @@ public interface ShipmentMapper {
 
   @Select("SELECT modifiedDate FROM shipment_line_items WHERE orderId = #{orderId} LIMIT 1")
   Date getProcessedTimeStamp(ShipmentLineItem shipmentLineItem);
+
+  @Select({"SELECT * FROM shipment_line_items WHERE orderId = #{orderId}"})
+  List<ShipmentLineItem> getLineItems(Long orderId);
 }

@@ -11,10 +11,7 @@
 package org.openlmis.functional;
 
 
-import com.thoughtworks.selenium.SeleneseTestNgHelper;
 import cucumber.api.DataTable;
-import cucumber.api.java.After;
-import cucumber.api.java.Before;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
@@ -26,7 +23,6 @@ import org.openlmis.pageobjects.HomePage;
 import org.openlmis.pageobjects.LoginPage;
 import org.openlmis.pageobjects.WarehouseLoadAmountPage;
 import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.WebElement;
 import org.testng.annotations.*;
 
 import java.io.IOException;
@@ -67,7 +63,7 @@ public class ViewWarehouseLoadAmount extends TestCaseHelper {
 
   @Given("^I have data available for distribution load amount$")
   public void setupDataForDistributionLoadAmount() throws Exception {
-    String productGroupCode="PG1" ;
+    String productGroupCode = "PG1";
     List<String> rightsList = new ArrayList<>();
     rightsList.add("MANAGE_DISTRIBUTION");
     setupTestDataToInitiateRnRAndDistribution(facilityCodeFirst, facilityCodeSecond, true,
@@ -77,7 +73,7 @@ public class ViewWarehouseLoadAmount extends TestCaseHelper {
     dbWrapper.insertProductWithGroup("Product6", "ProductName6", productGroupCode, true);
     dbWrapper.insertProgramProduct("Product5", programFirst, "10", "false");
     dbWrapper.insertProgramProduct("Product6", programFirst, "10", "true");
-    dbWrapper.updateActiveStatusOfProduct("Product6","false");
+    dbWrapper.updateActiveStatusOfProduct("Product6", "false");
 
   }
 
@@ -132,23 +128,17 @@ public class ViewWarehouseLoadAmount extends TestCaseHelper {
   @Then("^I should see aggregate ISA values as per multiple facilities in one delivery zone$")
   public void verifyISAAndOverrideISAValuesAggregatedForMultipleFacilities() throws Exception {
     warehouseLoadAmountPage = PageFactory.getInstanceOfWarehouseLoadAmountPage(testWebDriver);
-    assertEquals(String.valueOf(Integer.parseInt(warehouseLoadAmountPage.getFacilityPopulation(1, 1)) + Integer.parseInt(warehouseLoadAmountPage.getFacilityPopulation(2, 1))), warehouseLoadAmountPage.getFacilityPopulation(3, 1));
-    assertEquals(String.valueOf(Integer.parseInt(warehouseLoadAmountPage.getProduct1Isa(1, 1)) + Integer.parseInt(warehouseLoadAmountPage.getProduct1Isa(2, 1))), warehouseLoadAmountPage.getProduct1Isa(3, 1));
-    assertEquals(String.valueOf(Integer.parseInt(warehouseLoadAmountPage.getProduct2Isa(1, 1)) + Integer.parseInt(warehouseLoadAmountPage.getProduct2Isa(2, 1))), warehouseLoadAmountPage.getProduct2Isa(3, 1));
+    assertEquals(String.valueOf(Integer.parseInt(warehouseLoadAmountPage.getFacilityPopulation(1, 1)) + Integer.parseInt(warehouseLoadAmountPage.getFacilityPopulation(1, 2))), warehouseLoadAmountPage.getTotalPopulation(1));
+    assertEquals(String.valueOf(Integer.parseInt(warehouseLoadAmountPage.getProductIsa(1, 1, 1)) + Integer.parseInt(warehouseLoadAmountPage.getProductIsa(1, 2, 1))), warehouseLoadAmountPage.getTotalProductIsa(1, 1));
+    assertEquals(String.valueOf(Integer.parseInt(warehouseLoadAmountPage.getProductIsa(1, 1, 2)) + Integer.parseInt(warehouseLoadAmountPage.getProductIsa(1, 2, 2))), warehouseLoadAmountPage.getTotalProductIsa(1, 2));
 
-    assertEquals(warehouseLoadAmountPage.getAggregatePopulation(1), String.valueOf(Integer.parseInt(warehouseLoadAmountPage.getFacilityPopulation(1, 1)) + Integer.parseInt(warehouseLoadAmountPage.getFacilityPopulation(2, 1))));
-    assertEquals(warehouseLoadAmountPage.getAggregateProduct1Isa(1), String.valueOf(Integer.parseInt(warehouseLoadAmountPage.getProduct1Isa(1, 1)) + Integer.parseInt(warehouseLoadAmountPage.getProduct1Isa(2, 1))));
-    assertEquals(warehouseLoadAmountPage.getAggregateProduct2Isa(1), String.valueOf(Integer.parseInt(warehouseLoadAmountPage.getProduct2Isa(1, 1)) + Integer.parseInt(warehouseLoadAmountPage.getProduct2Isa(2, 1))));
+    assertEquals(warehouseLoadAmountPage.getAggregateTablePopulation(1), warehouseLoadAmountPage.getTotalPopulation(1));
+    assertEquals(warehouseLoadAmountPage.getAggregateTableProductIsa(1, 1), warehouseLoadAmountPage.getTotalProductIsa(1, 1));
+    assertEquals(warehouseLoadAmountPage.getAggregateTableProductIsa(1, 2), warehouseLoadAmountPage.getTotalProductIsa(1, 2));
 
-    assertEquals(warehouseLoadAmountPage.getAggregateProduct2Isa(1), warehouseLoadAmountPage.getAggregateProduct2Isa(2));
-    assertEquals(warehouseLoadAmountPage.getAggregateProduct1Isa(1), warehouseLoadAmountPage.getAggregateProduct1Isa(2));
-    assertEquals(warehouseLoadAmountPage.getAggregatePopulation(1), warehouseLoadAmountPage.getAggregatePopulation(2));
-
-    assertEquals(String.valueOf(Integer.parseInt(warehouseLoadAmountPage.getFacilityPopulation(1, 1)) + Integer.parseInt(warehouseLoadAmountPage.getFacilityPopulation(2, 1))), warehouseLoadAmountPage.getAggregatePopulation(2));
-    assertEquals(String.valueOf(Integer.parseInt(warehouseLoadAmountPage.getProduct1Isa(1, 1)) + Integer.parseInt(warehouseLoadAmountPage.getProduct1Isa(2, 1))), warehouseLoadAmountPage.getAggregateProduct1Isa(2));
-    assertEquals(String.valueOf(Integer.parseInt(warehouseLoadAmountPage.getProduct2Isa(1, 1)) + Integer.parseInt(warehouseLoadAmountPage.getProduct2Isa(2, 1))), warehouseLoadAmountPage.getAggregateProduct2Isa(2));
-
-
+    assertEquals(warehouseLoadAmountPage.getAggregateTableProductIsa(1, 1), warehouseLoadAmountPage.getAggregateTableTotalProductIsa(1));
+    assertEquals(warehouseLoadAmountPage.getAggregateTableProductIsa(1, 2), warehouseLoadAmountPage.getAggregateTableTotalProductIsa(2));
+    assertEquals(warehouseLoadAmountPage.getAggregateTablePopulation(1), warehouseLoadAmountPage.getAggregateTableTotalPopulation());
   }
 
   @Then("^I should see ISA values as per delivery zone facilities$")
@@ -158,8 +148,8 @@ public class ViewWarehouseLoadAmount extends TestCaseHelper {
     assertEquals("Central Hospital", warehouseLoadAmountPage.getFacilityName(1, 1));
     assertEquals("333", warehouseLoadAmountPage.getFacilityPopulation(1, 1));
 
-    assertEquals("31", warehouseLoadAmountPage.getProduct1Isa(1, 1));
-    assertEquals("101", warehouseLoadAmountPage.getProduct2Isa(1, 1));
+    assertEquals("31", warehouseLoadAmountPage.getProductIsa(1, 1, 1));
+    assertEquals("101", warehouseLoadAmountPage.getProductIsa(1, 1, 2));
   }
 
   @And("^I verify ISA values for Product1 as:$")
@@ -167,8 +157,8 @@ public class ViewWarehouseLoadAmount extends TestCaseHelper {
     warehouseLoadAmountPage = PageFactory.getInstanceOfWarehouseLoadAmountPage(testWebDriver);
     List<Map<String, String>> facilityProductISAMaps = dataTable.asMaps();
     for (Map<String, String> facilityProductISAMap : facilityProductISAMaps) {
-      assertEquals(facilityProductISAMap.get("Facility1"), warehouseLoadAmountPage.getProduct1Isa(1, 1));
-      assertEquals(facilityProductISAMap.get("Facility2"), warehouseLoadAmountPage.getProduct1Isa(2, 1));
+      assertEquals(facilityProductISAMap.get("Facility1"), warehouseLoadAmountPage.getProductIsa(1, 1, 1));
+      assertEquals(facilityProductISAMap.get("Facility2"), warehouseLoadAmountPage.getProductIsa(1, 2, 1));
     }
   }
 
@@ -177,8 +167,8 @@ public class ViewWarehouseLoadAmount extends TestCaseHelper {
     warehouseLoadAmountPage = PageFactory.getInstanceOfWarehouseLoadAmountPage(testWebDriver);
     List<Map<String, String>> facilityProductISAMaps = dataTable.asMaps();
     for (Map<String, String> facilityProductISAMap : facilityProductISAMaps) {
-      assertEquals(facilityProductISAMap.get("Facility1"), warehouseLoadAmountPage.getProduct2Isa(1, 1));
-      assertEquals(facilityProductISAMap.get("Facility2"), warehouseLoadAmountPage.getProduct2Isa(2, 1));
+      assertEquals(facilityProductISAMap.get("Facility1"), warehouseLoadAmountPage.getProductIsa(1, 1, 2));
+      assertEquals(facilityProductISAMap.get("Facility2"), warehouseLoadAmountPage.getProductIsa(1, 2, 2));
     }
   }
 
@@ -209,16 +199,23 @@ public class ViewWarehouseLoadAmount extends TestCaseHelper {
 
     List<String> rightsList = new ArrayList<>();
     rightsList.add("MANAGE_DISTRIBUTION");
-    setupTestDataToInitiateRnRAndDistribution(facilityCodeFirst, facilityCodeSecond, true, programFirst,
-      userSIC, "200", rightsList, programSecond, district1, district1, parentGeoZone1);
+    setupTestDataToInitiateRnRAndDistribution(facilityCodeFirst, facilityCodeSecond, true, programFirst, userSIC, "200",
+      rightsList, programSecond, district1, district1, parentGeoZone1);
 
-    setupDataForDeliveryZone(false, deliveryZoneCodeFirst, deliveryZoneCodeSecond,
-      deliveryZoneNameFirst, deliveryZoneNameSecond,
-      facilityCodeFirst, facilityCodeSecond,
-      programFirst, programSecond, schedule);
+    setupDataForDeliveryZone(false, deliveryZoneCodeFirst, deliveryZoneCodeSecond, deliveryZoneNameFirst, deliveryZoneNameSecond,
+      facilityCodeFirst, facilityCodeSecond, programFirst, programSecond, schedule);
 
-    addOnDataSetupForDeliveryZoneForMultipleFacilitiesAttachedWithSingleDeliveryZone(deliveryZoneCodeFirst,
-      facilityCodeThird, facilityCodeFourth, district2, district2, parentGeoZone);
+    addOnDataSetupForDeliveryZoneForMultipleFacilitiesAttachedWithSingleDeliveryZone(deliveryZoneCodeFirst, facilityCodeThird,
+      facilityCodeFourth, district2, district2, parentGeoZone);
+
+    dbWrapper.deleteAllProducts();
+    dbWrapper.insertProductGroup("PG1");
+    dbWrapper.insertProductGroup("PG2");
+    dbWrapper.insertProductWithGroup(product1, "antibiotic", "PG1", true);
+    dbWrapper.insertProductWithGroup(product2, "antibiotic", "PG2", true);
+    dbWrapper.insertProgramProducts(product1, product2, programFirst);
+    dbWrapper.insertFacilityApprovedProduct(product1, programFirst, "lvl3_hospital");
+    dbWrapper.insertFacilityApprovedProduct(product2, programFirst, "lvl3_hospital");
 
     dbWrapper.updateProductsByField("packSize", "4", product1);
     dbWrapper.updateProductsByField("packSize", "5", product2);
@@ -249,29 +246,38 @@ public class ViewWarehouseLoadAmount extends TestCaseHelper {
 
     warehouseLoadAmountPage = PageFactory.getInstanceOfWarehouseLoadAmountPage(testWebDriver);
 
-    assertEquals(warehouseLoadAmountPage.getFacilityPopulation(1, 1), warehouseLoadAmountPage.getFacilityPopulation(3, 1));
-    assertEquals("--", warehouseLoadAmountPage.getProduct1Isa(3, 1));
-    assertEquals("--", warehouseLoadAmountPage.getProduct1Isa(2, 1));
-    assertEquals("--", warehouseLoadAmountPage.getProduct1Isa(1, 1));
-    assertEquals("4355555", warehouseLoadAmountPage.getProduct2Isa(3, 1));
-    assertEquals("4000000", warehouseLoadAmountPage.getProduct2Isa(2, 1));
-    assertEquals("355555", warehouseLoadAmountPage.getProduct2Isa(1, 1));
-    assertEquals("--", warehouseLoadAmountPage.getFacilityPopulation(2, 1));
+    assertEquals(warehouseLoadAmountPage.getFacilityPopulation(1, 1), warehouseLoadAmountPage.getTotalPopulation(1));
+    assertEquals("--", warehouseLoadAmountPage.getTotalProductIsa(1, 1));
+    assertEquals("--", warehouseLoadAmountPage.getProductIsa(1, 1, 1));
+    assertEquals("--", warehouseLoadAmountPage.getProductIsa(1, 2, 1));
+    assertEquals("4355555", warehouseLoadAmountPage.getTotalProductIsa(1, 2));
+    assertEquals("4000000", warehouseLoadAmountPage.getProductIsa(1, 2, 2));
+    assertEquals("355555", warehouseLoadAmountPage.getProductIsa(1, 1, 2));
+    assertEquals("--", warehouseLoadAmountPage.getFacilityPopulation(1, 2));
     assertEquals("333", warehouseLoadAmountPage.getFacilityPopulation(1, 1));
-    assertEquals(String.valueOf(Integer.parseInt(warehouseLoadAmountPage.getProduct2Isa(1, 1)) + Integer.parseInt(warehouseLoadAmountPage.getProduct2Isa(2, 1))), warehouseLoadAmountPage.getProduct2Isa(3, 1));
+    assertEquals("333", warehouseLoadAmountPage.getTotalPopulation(1));
+    assertEquals(String.valueOf(Integer.parseInt(warehouseLoadAmountPage.getProductIsa(1, 1, 2)) + Integer.parseInt(warehouseLoadAmountPage.getProductIsa(1, 2, 2))), warehouseLoadAmountPage.getTotalProductIsa(1, 2));
 
-    assertEquals(Integer.parseInt(warehouseLoadAmountPage.getFacilityPopulation(1, 2)) + Integer.parseInt(warehouseLoadAmountPage.getFacilityPopulation(2, 2)), warehouseLoadAmountPage.getFacilityPopulation(3, 2));
-    assertEquals("--", warehouseLoadAmountPage.getProduct1Isa(1, 2));
-    assertEquals("23", warehouseLoadAmountPage.getProduct2Isa(1, 2));
-    assertEquals("20", warehouseLoadAmountPage.getProduct2Isa(2, 2));
-    assertEquals("26", warehouseLoadAmountPage.getProduct1Isa(2, 2));
-    assertEquals(warehouseLoadAmountPage.getProduct1Isa(2, 2), warehouseLoadAmountPage.getProduct1Isa(3, 2));
-    assertEquals(String.valueOf(Integer.parseInt(warehouseLoadAmountPage.getProduct2Isa(1, 2)) + Integer.parseInt(warehouseLoadAmountPage.getProduct2Isa(2, 2))), warehouseLoadAmountPage.getProduct2Isa(3, 2));
+    assertEquals(Integer.parseInt(warehouseLoadAmountPage.getFacilityPopulation(2, 1)) + Integer.parseInt(warehouseLoadAmountPage.getFacilityPopulation(2, 2)), warehouseLoadAmountPage.getTotalPopulation(2));
+    assertEquals("--", warehouseLoadAmountPage.getProductIsa(2, 1, 1));
+    assertEquals("23", warehouseLoadAmountPage.getProductIsa(2, 1, 2));
+    assertEquals("20", warehouseLoadAmountPage.getProductIsa(2, 2, 2));
+    assertEquals("26", warehouseLoadAmountPage.getProductIsa(2, 2, 1));
+    assertEquals(warehouseLoadAmountPage.getProductIsa(2, 2, 1), warehouseLoadAmountPage.getTotalProductIsa(2, 1));
+    assertEquals(String.valueOf(Integer.parseInt(warehouseLoadAmountPage.getProductIsa(2, 1, 2)) + Integer.parseInt(warehouseLoadAmountPage.getProductIsa(2, 2, 2))), warehouseLoadAmountPage.getTotalProductIsa(2, 2));
 
-    assertEquals(warehouseLoadAmountPage.getAggregatePopulation(3), String.valueOf(Integer.parseInt(warehouseLoadAmountPage.getFacilityPopulation(1, 1)) + Integer.parseInt(warehouseLoadAmountPage.getFacilityPopulation(1, 2)) + Integer.parseInt(warehouseLoadAmountPage.getFacilityPopulation(2, 2))));
-    assertEquals(warehouseLoadAmountPage.getAggregateProduct2Isa(3), String.valueOf(Integer.parseInt(warehouseLoadAmountPage.getProduct2Isa(1, 1)) + Integer.parseInt(warehouseLoadAmountPage.getProduct2Isa(2, 1)) + Integer.parseInt(warehouseLoadAmountPage.getProduct2Isa(2, 2)) + Integer.parseInt(warehouseLoadAmountPage.getProduct2Isa(1, 2))));
-    assertEquals(warehouseLoadAmountPage.getAggregateProduct1Isa(3), warehouseLoadAmountPage.getProduct1Isa(2, 2));
-    assertEquals("--", warehouseLoadAmountPage.getAggregateProduct1Isa(1));
+    assertEquals(warehouseLoadAmountPage.getAggregateTableTotalPopulation(), String.valueOf(Integer.parseInt(warehouseLoadAmountPage.getFacilityPopulation(1, 1)) + Integer.parseInt(warehouseLoadAmountPage.getFacilityPopulation(2, 1)) + Integer.parseInt(warehouseLoadAmountPage.getFacilityPopulation(2, 2))));
+    assertEquals(warehouseLoadAmountPage.getAggregateTableTotalProductIsa(2), String.valueOf(Integer.parseInt(warehouseLoadAmountPage.getProductIsa(1, 1, 2)) + Integer.parseInt(warehouseLoadAmountPage.getProductIsa(1, 2, 2)) + Integer.parseInt(warehouseLoadAmountPage.getProductIsa(2, 1, 2)) + Integer.parseInt(warehouseLoadAmountPage.getProductIsa(2, 2, 2))));
+    assertEquals(warehouseLoadAmountPage.getAggregateTableTotalProductIsa(1), warehouseLoadAmountPage.getProductIsa(2, 2, 1));
+    assertEquals("--", warehouseLoadAmountPage.getTotalProductIsa(1, 1));
+
+    assertEquals(warehouseLoadAmountPage.getAggregateTableProductIsa(1, 1), warehouseLoadAmountPage.getTotalProductIsa(1, 1));
+    assertEquals(warehouseLoadAmountPage.getAggregateTableProductIsa(1, 2), warehouseLoadAmountPage.getTotalProductIsa(1, 2));
+    assertEquals(warehouseLoadAmountPage.getAggregateTableProductIsa(2, 1), warehouseLoadAmountPage.getTotalProductIsa(2, 1));
+    assertEquals(warehouseLoadAmountPage.getAggregateTableProductIsa(2, 2), warehouseLoadAmountPage.getTotalProductIsa(2, 2));
+
+    assertEquals(warehouseLoadAmountPage.getAggregateTablePopulation(1), warehouseLoadAmountPage.getTotalPopulation(1));
+    assertEquals(warehouseLoadAmountPage.getAggregateTablePopulation(2), warehouseLoadAmountPage.getTotalPopulation(2));
 
     verifyCaptionsAndLabels(deliveryZoneNameFirst, warehouseLoadAmountPage);
   }
@@ -285,11 +291,10 @@ public class ViewWarehouseLoadAmount extends TestCaseHelper {
 
     List<String> rightsList = new ArrayList<>();
     rightsList.add("MANAGE_DISTRIBUTION");
-    setupTestDataToInitiateRnRAndDistribution(facilityCodeFirst, facilityCodeSecond, true, programFirst, userSIC, "200", rightsList, programSecond, district1, parentGeoZone, parentGeoZone);
-    setupDataForDeliveryZone(false, deliveryZoneCodeFirst, deliveryZoneCodeSecond,
-      deliveryZoneNameFirst, deliveryZoneNameSecond,
-      facilityCodeFirst, facilityCodeSecond,
-      programFirst, programSecond, schedule);
+    setupTestDataToInitiateRnRAndDistribution(facilityCodeFirst, facilityCodeSecond, true, programFirst, userSIC, "200",
+      rightsList, programSecond, district1, parentGeoZone, parentGeoZone);
+    setupDataForDeliveryZone(false, deliveryZoneCodeFirst, deliveryZoneCodeSecond, deliveryZoneNameFirst, deliveryZoneNameSecond,
+      facilityCodeFirst, facilityCodeSecond, programFirst, programSecond, schedule);
 
     dbWrapper.insertRoleAssignmentForDistribution(userSIC, "store in-charge", deliveryZoneCodeFirst);
     dbWrapper.insertRoleAssignmentForDistribution(userSIC, "store in-charge", deliveryZoneCodeSecond);
@@ -313,14 +318,14 @@ public class ViewWarehouseLoadAmount extends TestCaseHelper {
     assertEquals(facilityCodeSecond, warehouseLoadAmountPage.getFacilityCode(1, 1));
     assertEquals("Central Hospital", warehouseLoadAmountPage.getFacilityName(1, 1));
     assertEquals("333", warehouseLoadAmountPage.getFacilityPopulation(1, 1));
-    assertEquals("300", warehouseLoadAmountPage.getProduct1Isa(1, 1));
-    assertEquals("0", warehouseLoadAmountPage.getProduct2Isa(1, 1));
+    assertEquals("300", warehouseLoadAmountPage.getProductIsa(1, 1, 1));
+    assertEquals("0", warehouseLoadAmountPage.getProductIsa(1, 1, 2));
 
-    assertEquals(facilityCodeFirst, warehouseLoadAmountPage.getFacilityCode(1, 2));
-    assertEquals("Village Dispensary", warehouseLoadAmountPage.getFacilityName(1, 2));
-    assertEquals("333", warehouseLoadAmountPage.getFacilityPopulation(1, 2));
-    assertEquals("100", warehouseLoadAmountPage.getProduct1Isa(1, 2));
-    assertEquals("200", warehouseLoadAmountPage.getProduct2Isa(1, 2));
+    assertEquals(facilityCodeFirst, warehouseLoadAmountPage.getFacilityCode(2, 1));
+    assertEquals("Village Dispensary", warehouseLoadAmountPage.getFacilityName(2, 1));
+    assertEquals("333", warehouseLoadAmountPage.getFacilityPopulation(2, 1));
+    assertEquals("100", warehouseLoadAmountPage.getProductIsa(2, 1, 1));
+    assertEquals("200", warehouseLoadAmountPage.getProductIsa(2, 1, 2));
 
     dbWrapper.updatePopulationOfFacility(facilityCodeFirst, null);
     dbWrapper.updateOverriddenIsa(facilityCodeFirst, programFirst, product, null);
@@ -329,31 +334,53 @@ public class ViewWarehouseLoadAmount extends TestCaseHelper {
     distributionPage.selectValueFromProgram(programFirst);
     distributionPage.selectValueFromPeriod(periodDisplayedByDefault);
     distributionPage.clickViewLoadAmount();
-    assertEquals("--", warehouseLoadAmountPage.getFacilityPopulation(1, 2));
-    assertEquals("--", warehouseLoadAmountPage.getProduct1Isa(1, 2));
+    assertEquals("--", warehouseLoadAmountPage.getFacilityPopulation(2, 1));
+    assertEquals("--", warehouseLoadAmountPage.getProductIsa(2, 1, 1));
 
   }
 
   private void verifyWarehouseLoadAmountHeader(String deliverZone, String program, String period) {
-    WebElement deliverZoneElement = testWebDriver.getElementByXpath("(//div[2]/div/div/div/span)[1]");
-    WebElement programElement = testWebDriver.getElementByXpath("(//div[2]/div/div/div/span)[2]");
-    WebElement periodElement = testWebDriver.getElementByXpath("(//div[2]/div/div/div/span)[3]");
-    testWebDriver.waitForElementToAppear(deliverZoneElement);
-    SeleneseTestNgHelper.assertEquals(deliverZoneElement.getText(), deliverZone);
-    SeleneseTestNgHelper.assertEquals(programElement.getText(), program);
-    SeleneseTestNgHelper.assertEquals(periodElement.getText(), period);
+    assertEquals("Warehouse load amount", warehouseLoadAmountPage.getPageHeader());
+    assertEquals("Delivery Zone", warehouseLoadAmountPage.getDeliveryZoneLabelInHeader());
+    assertEquals(deliverZone, warehouseLoadAmountPage.getDeliveryZoneNameInHeader());
+    assertEquals("Program", warehouseLoadAmountPage.getProgramLabelInHeader());
+    assertEquals(program, warehouseLoadAmountPage.getProgramNameInHeader());
+    assertEquals("Period", warehouseLoadAmountPage.getPeriodLabelInHeader());
+    assertEquals(period, warehouseLoadAmountPage.getPeriodNameInHeader());
   }
 
   private void verifyCaptionsAndLabels(String deliveryZoneNameFirst, WarehouseLoadAmountPage warehouseLoadAmountPage) {
-    assertEquals(warehouseLoadAmountPage.getGeoZoneNameTitle(1), testWebDriver.getElementByXpath("//h3/span[contains(text(),'" + district1 + "')]").getText());
-    assertEquals(warehouseLoadAmountPage.getGeoZoneNameTitle(2), testWebDriver.getElementByXpath("//h3/span[contains(text(),'" + district2 + "')]").getText());
-    assertEquals(deliveryZoneNameFirst, testWebDriver.getElementByXpath("//h3/span[contains(text(),'" + deliveryZoneNameFirst + "')]").getText());
-    assertEquals("Zone Total", warehouseLoadAmountPage.getAggregateTableCaption());
-    assertEquals(district1, warehouseLoadAmountPage.getGeoZoneTotalCaption(1));
-    assertEquals(district2, warehouseLoadAmountPage.getGeoZoneTotalCaption(2));
-    assertEquals(district1, warehouseLoadAmountPage.getCitiesFromAggregatedTable(1));
-    assertEquals(district2, warehouseLoadAmountPage.getCitiesFromAggregatedTable(2));
+    assertEquals("District1", warehouseLoadAmountPage.getGeoZoneTitleForTable(1));
+    assertEquals("District2", warehouseLoadAmountPage.getGeoZoneTitleForTable(2));
+    assertEquals(deliveryZoneNameFirst + " Total", warehouseLoadAmountPage.getDeliveryZoneName());
+    assertEquals("Zone Total", warehouseLoadAmountPage.getAggregateTableTotalCaption());
+    assertEquals(district1, warehouseLoadAmountPage.getAggregateTableGeoZoneTotalCaption(1));
+    assertEquals(district2, warehouseLoadAmountPage.getAggregateTableGeoZoneTotalCaption(2));
+    assertEquals(district1, warehouseLoadAmountPage.getGeoZonesFromAggregatedTable(1));
+    assertEquals(district2, warehouseLoadAmountPage.getGeoZonesFromAggregatedTable(2));
+    assertEquals("District", warehouseLoadAmountPage.getGeoZoneLevelHeaderForAggregatedTable());
 
+    assertEquals("Population", warehouseLoadAmountPage.getPopulationHeaderForAggregatedTable());
+    assertEquals("PG1-Name", warehouseLoadAmountPage.getProductGroupHeaderForAggregatedTable(1));
+    assertEquals("PG2-Name", warehouseLoadAmountPage.getProductGroupHeaderForAggregatedTable(2));
+    assertEquals("antibiotic", warehouseLoadAmountPage.getProductNameHeaderForAggregatedTable(1));
+    assertEquals("antibiotic", warehouseLoadAmountPage.getProductNameHeaderForAggregatedTable(2));
+
+    assertEquals("Facility", warehouseLoadAmountPage.getFacilityHeaderForTable(1));
+    assertEquals("Population", warehouseLoadAmountPage.getPopulationHeaderForTable(1));
+    assertEquals("PG1-Name", warehouseLoadAmountPage.getProductGroupHeaderForTable(1, 1));
+    assertEquals("PG2-Name", warehouseLoadAmountPage.getProductGroupHeaderForTable(1, 2));
+    assertEquals("antibiotic", warehouseLoadAmountPage.getProductNameHeaderForTable(1, 1));
+    assertEquals("antibiotic", warehouseLoadAmountPage.getProductNameHeaderForTable(1, 2));
+    assertEquals("District1 Total", warehouseLoadAmountPage.getTableTotalCaption(1));
+
+    assertEquals("Facility", warehouseLoadAmountPage.getFacilityHeaderForTable(2));
+    assertEquals("Population", warehouseLoadAmountPage.getPopulationHeaderForTable(2));
+    assertEquals("PG1-Name", warehouseLoadAmountPage.getProductGroupHeaderForTable(2, 1));
+    assertEquals("PG2-Name", warehouseLoadAmountPage.getProductGroupHeaderForTable(2, 2));
+    assertEquals("antibiotic", warehouseLoadAmountPage.getProductNameHeaderForTable(2, 1));
+    assertEquals("antibiotic", warehouseLoadAmountPage.getProductNameHeaderForTable(2, 2));
+    assertEquals("District2 Total", warehouseLoadAmountPage.getTableTotalCaption(2));
   }
 
   @AfterMethod(groups = "distribution")

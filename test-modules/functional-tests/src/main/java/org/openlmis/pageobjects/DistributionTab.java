@@ -49,6 +49,9 @@ abstract public class DistributionTab extends Page {
   @FindBy(how = ID, using = "coverageTab")
   private static WebElement coverageTab = null;
 
+  @FindBy(how = ID, using = "childCoverageTabLabel")
+  private static WebElement childCoverageTab = null;
+
   public DistributionTab(TestWebDriver driver) {
     super(driver);
     PageFactory.initElements(new AjaxElementLocatorFactory(TestWebDriver.getDriver(), 10), this);
@@ -83,13 +86,18 @@ abstract public class DistributionTab extends Page {
     return new EpiInventoryPage(testWebDriver);
   }
 
-  public CoveragePage navigateToCoverage() {
+  public FullCoveragePage navigateToFullCoverage() {
     coverageTab.click();
-    return new CoveragePage(testWebDriver);
+    return new FullCoveragePage(testWebDriver);
   }
 
   public GeneralObservationPage navigateToGeneralObservations() {
     generalObservationTab.click();
     return new GeneralObservationPage(testWebDriver);
+  }
+
+  public ChildCoveragePage navigateToChildCoverage() {
+    childCoverageTab.click();
+    return new ChildCoveragePage(testWebDriver);
   }
 }

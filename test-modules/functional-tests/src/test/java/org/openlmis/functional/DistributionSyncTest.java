@@ -31,6 +31,7 @@ import java.util.Map;
 import static com.thoughtworks.selenium.SeleneseTestBase.assertFalse;
 import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
 import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertTrue;
+import static org.testng.Assert.assertNull;
 
 @Listeners(CaptureScreenshotOnFailureListener.class)
 
@@ -105,10 +106,10 @@ public class DistributionSyncTest extends TestCaseHelper {
     GeneralObservationPage generalObservationPage = epiUsePage.navigateToGeneralObservations();
     generalObservationPage.enterData("Some observations", "samuel D", "Doe Abc", "Verifier", "Verifier Title");
 
-    CoveragePage coveragePage = generalObservationPage.navigateToCoverage();
-    coveragePage.clickApplyNRToAll();
+    FullCoveragePage fullCoveragePage = generalObservationPage.navigateToFullCoverage();
+    fullCoveragePage.clickApplyNRToAll();
 
-    EpiInventoryPage epiInventoryPage = coveragePage.navigateToEpiInventory();
+    EpiInventoryPage epiInventoryPage = fullCoveragePage.navigateToEpiInventory();
     fillEpiInventoryWithOnlyDeliveredQuantity(epiInventoryPage, "2", "4", "6");
 
     facilityListPage.verifyFacilityIndicatorColor("Overall", "GREEN");
@@ -207,10 +208,10 @@ public class DistributionSyncTest extends TestCaseHelper {
     GeneralObservationPage generalObservationPage = epiUsePage.navigateToGeneralObservations();
     generalObservationPage.enterData("Some observations", "samuel D", "Doe Abc", "Verifier", "Verifier Title");
 
-    CoveragePage coveragePage = generalObservationPage.navigateToCoverage();
-    coveragePage.clickApplyNRToAll();
+    FullCoveragePage fullCoveragePage = generalObservationPage.navigateToFullCoverage();
+    fullCoveragePage.clickApplyNRToAll();
 
-    EpiInventoryPage epiInventoryPage = coveragePage.navigateToEpiInventory();
+    EpiInventoryPage epiInventoryPage = fullCoveragePage.navigateToEpiInventory();
     fillEpiInventoryWithOnlyDeliveredQuantity(epiInventoryPage, "2", "4", "6");
 
     facilityListPage.verifyFacilityIndicatorColor("Overall", "GREEN");
@@ -269,10 +270,10 @@ public class DistributionSyncTest extends TestCaseHelper {
 
     dbWrapper.updateActiveStatusOfFacility(distributionTestData.get(FIRST_FACILITY_CODE), "false");
 
-    //assertTrue(facilityListPage.getFacilitiesInDropDown().contains(distributionTestData.get(FIRST_FACILITY_CODE)));
-    //deleteDistribution();
+    assertTrue(facilityListPage.getFacilitiesInDropDown().contains(distributionTestData.get(FIRST_FACILITY_CODE)));
+    deleteDistribution();
 
-    //initiateNextDistributionForSamePeriod(distributionTestData.get(FIRST_DELIVERY_ZONE_NAME), distributionTestData.get(VACCINES_PROGRAM));
+    initiateNextDistributionForSamePeriod(distributionTestData.get(FIRST_DELIVERY_ZONE_NAME), distributionTestData.get(VACCINES_PROGRAM));
     assertTrue(facilityListPage.getFacilitiesInDropDown().contains(distributionTestData.get(FIRST_FACILITY_CODE)));
 
     facilityListPage.selectFacility(distributionTestData.get(FIRST_FACILITY_CODE));
@@ -312,10 +313,10 @@ public class DistributionSyncTest extends TestCaseHelper {
     dbWrapper.updateFacilityFieldBYCode("enabled", "false", "F10");
     dbWrapper.updateActiveStatusOfFacility(distributionTestData.get(FIRST_FACILITY_CODE), "false");
 
-    //assertTrue(facilityListPage.getFacilitiesInDropDown().contains(distributionTestData.get(FIRST_FACILITY_CODE)));
-    //deleteDistribution();
+    assertTrue(facilityListPage.getFacilitiesInDropDown().contains(distributionTestData.get(FIRST_FACILITY_CODE)));
+    deleteDistribution();
 
-    //initiateNextDistributionForSamePeriod(distributionTestData.get(FIRST_DELIVERY_ZONE_NAME), distributionTestData.get(VACCINES_PROGRAM));
+    initiateNextDistributionForSamePeriod(distributionTestData.get(FIRST_DELIVERY_ZONE_NAME), distributionTestData.get(VACCINES_PROGRAM));
     assertTrue(facilityListPage.getFacilitiesInDropDown().contains(distributionTestData.get(FIRST_FACILITY_CODE)));
 
     facilityListPage.selectFacility(distributionTestData.get(FIRST_FACILITY_CODE));
@@ -452,8 +453,12 @@ public class DistributionSyncTest extends TestCaseHelper {
     verifyProductsAreNotDisplayed();
 
     refrigeratorPage.navigateToRefrigerators();
-    ManageRefrigerator manageRefrigerator = new ManageRefrigerator();
-    manageRefrigerator.verifyRefrigeratorAdded("SAM;800L;GNR7876");
+    String data = "SAM;800L;GNR7876";
+    String[] refrigeratorDetails = data.split(";");
+
+    for (int i = 0; i < refrigeratorDetails.length; i++) {
+      assertEquals(testWebDriver.getElementByXpath("//div[@class='list-row ng-scope']/ng-include/form/div[1]/div[" + (i + 2) + "]").getText(), refrigeratorDetails[i]);
+    }
 
     //dbWrapper.updateActiveStatusOfProduct("Product5", "true");
     //dbWrapper.updateActiveStatusOfProduct("Product6", "true");
@@ -486,8 +491,8 @@ public class DistributionSyncTest extends TestCaseHelper {
     GeneralObservationPage generalObservationPage = refrigeratorPage.navigateToGeneralObservations();
     generalObservationPage.enterData("Some observations", "samuel D", "Doe Abc", "Verifier", "Verifier Title");
 
-    CoveragePage coveragePage = generalObservationPage.navigateToCoverage();
-    coveragePage.clickApplyNRToAll();
+    FullCoveragePage fullCoveragePage = generalObservationPage.navigateToFullCoverage();
+    fullCoveragePage.clickApplyNRToAll();
 
     verifyProductsAreNotDisplayed();
 
@@ -553,14 +558,14 @@ public class DistributionSyncTest extends TestCaseHelper {
     EPIUsePage epiUsePage = refrigeratorPage.navigateToEpiUse();
     assertTrue(epiUsePage.getProductGroup(1).equals("PG1-Name"));
     assertTrue(epiUsePage.getProductGroup(2).equals("PG2-Name"));
-    //assertNull(epiUsePage.getNoProductsAddedMessage());
+    assertNull(epiUsePage.getNoProductsAddedMessage());
 
     EpiInventoryPage epiInventoryPage = epiUsePage.navigateToEpiInventory();
     assertTrue(epiInventoryPage.getProductName(1).equals("antibiotic"));
     assertTrue(epiInventoryPage.getProductName(2).equals("ProductName6"));
     assertTrue(epiInventoryPage.getProductName(3).equals("ProductName7"));
     assertTrue(epiInventoryPage.getProductName(4).equals("antibiotic"));
-    //assertNull(epiInventoryPage.getNoProductsAddedMessage());
+    assertNull(epiInventoryPage.getNoProductsAddedMessage());
 
     epiInventoryPage.navigateToRefrigerators();
     ManageRefrigerator manageRefrigerator = new ManageRefrigerator();
@@ -574,15 +579,15 @@ public class DistributionSyncTest extends TestCaseHelper {
     initiateDistribution(distributionTestData.get(FIRST_DELIVERY_ZONE_NAME), distributionTestData.get(VACCINES_PROGRAM));
     FacilityListPage facilityListPage = new FacilityListPage(testWebDriver);
 
-    dbWrapper.insertProducts("Product7", "Product8");
+    dbWrapper.insertOneProduct("Product7");
     dbWrapper.insertProductWithGroup("Product9", "Product9", "PG1", true);
     dbWrapper.insertProgramProduct("Product7", "VACCINES", "10", "true");
     dbWrapper.insertProgramProduct("Product9", distributionTestData.get(VACCINES_PROGRAM), "10", "true");
 
-    //assertTrue(facilityListPage.getFacilitiesInDropDown().contains(distributionTestData.get(FIRST_FACILITY_CODE)));
-    //deleteDistribution();
+    assertTrue(facilityListPage.getFacilitiesInDropDown().contains(distributionTestData.get(FIRST_FACILITY_CODE)));
+    deleteDistribution();
 
-    //initiateNextDistributionForSamePeriod(distributionTestData.get(FIRST_DELIVERY_ZONE_NAME), distributionTestData.get(VACCINES_PROGRAM));
+    initiateNextDistributionForSamePeriod(distributionTestData.get(FIRST_DELIVERY_ZONE_NAME), distributionTestData.get(VACCINES_PROGRAM));
     assertTrue(facilityListPage.getFacilitiesInDropDown().contains(distributionTestData.get(FIRST_FACILITY_CODE)));
     RefrigeratorPage refrigeratorPage = facilityListPage.selectFacility(distributionTestData.get(FIRST_FACILITY_CODE));
 
@@ -612,12 +617,15 @@ public class DistributionSyncTest extends TestCaseHelper {
     EPIUsePage epiUsePage = refrigeratorPage.navigateToEpiUse();
     assertTrue(epiUsePage.getProductGroup(1).equals("PG1-Name"));
     //assertNull(epiUsePage.getProductGroup(2));
-    //assertNull(epiUsePage.getNoProductsAddedMessage());
+    assertNull(epiUsePage.getNoProductsAddedMessage());
 
     EpiInventoryPage epiInventoryPage = epiUsePage.navigateToEpiInventory();
     assertTrue(epiInventoryPage.getProductName(1).equals("antibiotic"));
-    assertTrue(epiInventoryPage.getProductName(2).equals("Product9"));
-    //assertNull(epiInventoryPage.getNoProductsAddedMessage());
+    assertTrue(epiInventoryPage.getProductName(2).equals("ProductName6"));
+    assertTrue(epiInventoryPage.getProductName(3).equals("Product9"));
+    assertTrue(epiInventoryPage.getProductName(4).equals("antibiotic"));
+    assertTrue(epiInventoryPage.getProductName(5).equals("antibiotic"));
+    assertNull(epiInventoryPage.getNoProductsAddedMessage());
   }
 
 
@@ -668,8 +676,8 @@ public class DistributionSyncTest extends TestCaseHelper {
     EpiInventoryPage epiInventoryPage = generalObservationPage.navigateToEpiInventory();
     fillEpiInventoryWithOnlyDeliveredQuantity(epiInventoryPage, "2", "4", "6");
 
-    CoveragePage coveragePage = epiInventoryPage.navigateToCoverage();
-    coveragePage.enterData(23, 66, 77, "45");
+    FullCoveragePage fullCoveragePage = epiInventoryPage.navigateToFullCoverage();
+    fullCoveragePage.enterData(23, 66, 77, "45");
 
     return generalObservationPage;
   }
@@ -736,13 +744,13 @@ public class DistributionSyncTest extends TestCaseHelper {
     EPIUsePage epiUsePage = refrigeratorPage.navigateToEpiUse();
     assertTrue(epiUsePage.getProductGroup(1).equals("PG1-Name"));
     //assertNull(epiUsePage.getProductGroup(2));
-    //assertNull(epiUsePage.getNoProductsAddedMessage());
+    assertNull(epiUsePage.getNoProductsAddedMessage());
     EpiInventoryPage epiInventoryPage = epiUsePage.navigateToEpiInventory();
     assertTrue(epiInventoryPage.getProductName(1).equals("antibiotic"));
     assertTrue(epiInventoryPage.getProductName(2).equals("ProductName6"));
     assertTrue(epiInventoryPage.getProductName(3).equals("antibiotic"));
     //assertNull(epiInventoryPage.getProductName(4));
-    //assertNull(epiInventoryPage.getNoProductsAddedMessage());
+    assertNull(epiInventoryPage.getNoProductsAddedMessage());
   }
 
   private void verifyProductsAreNotDisplayed() {
@@ -771,13 +779,13 @@ public class DistributionSyncTest extends TestCaseHelper {
     EPIUsePage epiUsePage = generalObservationPage.navigateToEpiUse();
     epiUsePage.verifyAllFieldsDisabled();
 
-    CoveragePage coveragePage = epiUsePage.navigateToCoverage();
-    assertFalse(coveragePage.getStatusForField("femaleHealthCenter"));
-    assertFalse(coveragePage.getStatusForField("femaleMobileBrigade"));
-    assertFalse(coveragePage.getStatusForField("maleHealthCenter"));
-    assertFalse(coveragePage.getStatusForField("maleMobileBrigade"));
+    FullCoveragePage fullCoveragePage = epiUsePage.navigateToFullCoverage();
+    assertFalse(fullCoveragePage.getStatusForField("femaleHealthCenter"));
+    assertFalse(fullCoveragePage.getStatusForField("femaleMobileBrigade"));
+    assertFalse(fullCoveragePage.getStatusForField("maleHealthCenter"));
+    assertFalse(fullCoveragePage.getStatusForField("maleMobileBrigade"));
 
-    EpiInventoryPage epiInventoryPage = coveragePage.navigateToEpiInventory();
+    EpiInventoryPage epiInventoryPage = fullCoveragePage.navigateToEpiInventory();
     assertFalse(epiInventoryPage.getExistingQuantityStatus(1));
     assertFalse(epiInventoryPage.getExistingQuantityStatus(2));
     assertFalse(epiInventoryPage.getExistingQuantityStatus(3));
