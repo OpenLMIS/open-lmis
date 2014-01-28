@@ -37,25 +37,19 @@ public class SupplyStatusReportDataProvider extends ReportDataProvider {
   private SelectedFilterHelper filterHelper;
 
   @Override
-  protected List<? extends ReportData> getBeanCollectionReportData(Map<String, String[]> filterCriteria) {
-      RowBounds rowBounds = new RowBounds(RowBounds.NO_ROW_OFFSET,RowBounds.NO_ROW_LIMIT);
-      return reportMapper.getSupplyStatus(filterCriteria, rowBounds);
-  }
-
-  @Override
   protected List<? extends ReportData> getResultSetReportData(Map<String, String[]> filterCriteria) {
-      return null;
+    return null;
   }
 
   @Override
   public List<? extends ReportData> getReportDataByFilterCriteriaAndPagingAndSorting(Map<String, String[]> filterCriteria, Map<String, String[]> SortCriteria, int page, int pageSize) {
-      RowBounds rowBounds = new RowBounds((page-1) * pageSize,pageSize);
-      return reportMapper.getSupplyStatus(filterCriteria, rowBounds);
+    RowBounds rowBounds = new RowBounds((page - 1) * pageSize, pageSize);
+    return reportMapper.getSupplyStatus(filterCriteria, rowBounds);
   }
 
   @Override
-  public String getFilterSummary(Map<String, String[]> params){
-     return filterHelper.getSelectedFilterString( params );
+  public String getFilterSummary(Map<String, String[]> params) {
+    return filterHelper.getSelectedFilterString(params);
   }
 
 }

@@ -23,50 +23,44 @@ import java.util.*;
 @NoArgsConstructor
 public class SummaryReportDataProvider extends ReportDataProvider {
 
-    @Autowired
-    private SummaryReportMapper reportMapper;
+  @Autowired
+  private SummaryReportMapper reportMapper;
 
-    @Override
-    protected List<? extends ReportData> getBeanCollectionReportData(Map<String, String[]> filterCriteria) {
-        RowBounds rowBounds = new RowBounds(RowBounds.NO_ROW_OFFSET,RowBounds.NO_ROW_LIMIT);
-        return reportMapper.getReport(filterCriteria, rowBounds);
+  @Override
+  protected List<? extends ReportData> getResultSetReportData(Map<String, String[]> filterCriteria) {
+    return null;  //To change body of implemented methods use File | Settings | File Templates.0
+  }
+
+  @Override
+  public List<? extends ReportData> getReportDataByFilterCriteriaAndPagingAndSorting(Map<String, String[]> filterCriteria, Map<String, String[]> SortCriteria, int page, int pageSize) {
+    RowBounds rowBounds = new RowBounds((page - 1) * pageSize, pageSize);
+    return reportMapper.getReport(filterCriteria, rowBounds);
+  }
+
+  @Override
+  public String getFilterSummary(Map<String, String[]> params) {
+    String facilityTypeId = params.get("facilityTypeId")[0];
+    String rgroupId = params.get("rgroupId")[0];
+    String facilityType = "";
+    String rgroup = "";
+
+    if (facilityTypeId != null && !facilityTypeId.isEmpty()) {
+      if (facilityTypeId.equals("-1") || facilityTypeId.equals(""))
+        facilityType = "All Facility Types";
+      else
+        facilityType = params.get("facilityType")[0];
     }
 
-    @Override
-    protected List<? extends ReportData> getResultSetReportData(Map<String, String[]> filterCriteria) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.0
+    if (rgroupId != null && !rgroupId.isEmpty()) {
+      if (rgroupId.equals("-1"))
+        rgroup = "All Reporting Groups";
+      else
+        rgroup = params.get("rgroup")[0];
     }
+    String finalFacilityType = facilityType;
+    String finalRgroup = rgroup;
 
-    @Override
-    public List<? extends ReportData> getReportDataByFilterCriteriaAndPagingAndSorting(Map<String, String[]> filterCriteria, Map<String, String[]> SortCriteria, int page, int pageSize) {
-        RowBounds rowBounds = new RowBounds((page-1) * pageSize,pageSize);
-        return reportMapper.getReport(filterCriteria, rowBounds);
-    }
+    return finalFacilityType + "\n" + finalRgroup + "\n";
 
-    @Override
-    public String getFilterSummary(Map<String, String[]> params) {
-        String facilityTypeId =  params.get("facilityTypeId")[0];
-        String rgroupId =     params.get("rgroupId")[0];
-        String facilityType =  "";
-        String rgroup = "";
-
-        if(facilityTypeId != null && !facilityTypeId.isEmpty()){
-            if(facilityTypeId.equals("-1") || facilityTypeId.equals(""))
-                facilityType = "All Facility Types";
-            else
-                facilityType = params.get("facilityType")[0];
-        }
-
-        if(rgroupId != null && !rgroupId.isEmpty()){
-            if(rgroupId.equals("-1"))
-                rgroup = "All Reporting Groups";
-            else
-                rgroup = params.get("rgroup")[0];
-        }
-        String finalFacilityType = facilityType;
-        String finalRgroup = rgroup;
-
-        return finalFacilityType +"\n"+ finalRgroup +"\n";
-
-    }
+  }
 }

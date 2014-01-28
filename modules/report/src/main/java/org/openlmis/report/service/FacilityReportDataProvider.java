@@ -36,31 +36,26 @@ public class FacilityReportDataProvider extends ReportDataProvider {
   @Autowired
   private FacilityReportMapper facilityReportMapper;
 
-  private FacilityReportFilter facilityReportFilter = null ;
+  private FacilityReportFilter facilityReportFilter = null;
 
 
-  private ReportData getFacilityReport(Facility facility){
-      if(facility == null) return null;
+  private ReportData getFacilityReport(Facility facility) {
+    if (facility == null) return null;
 
-      return new FacilityReport(facility.getCode(),facility.getName(),facility.getFacilityType() != null ? facility.getFacilityType().getName() : null,facility.getActive(),facility.getAddress1(),facility.getOperatedBy() != null ? facility.getOperatedBy().getText() : null ,null,null,facility.getMainPhone(),null,null,null);
+    return new FacilityReport(facility.getCode(), facility.getName(), facility.getFacilityType() != null ? facility.getFacilityType().getName() : null, facility.getActive(), facility.getAddress1(), facility.getOperatedBy() != null ? facility.getOperatedBy().getText() : null, null, null, facility.getMainPhone(), null, null, null);
   }
 
-  private List<ReportData> getListFacilityReport(List<Facility> facilityList){
+  private List<ReportData> getListFacilityReport(List<Facility> facilityList) {
 
-      if (facilityList == null) return null;
+    if (facilityList == null) return null;
 
-      List<ReportData> facilityReportList = new ArrayList<>(facilityList.size());
+    List<ReportData> facilityReportList = new ArrayList<>(facilityList.size());
 
-      for(Facility facility: facilityList){
-          facilityReportList.add(getFacilityReport(facility));
-      }
+    for (Facility facility : facilityList) {
+      facilityReportList.add(getFacilityReport(facility));
+    }
 
-      return facilityReportList;
-  }
-
-  @Override
-  protected List<? extends ReportData> getBeanCollectionReportData(Map<String, String[]> params) {
-     return getReportDataByFilterCriteriaAndPagingAndSorting(params,null,RowBounds.NO_ROW_OFFSET, RowBounds.NO_ROW_LIMIT);
+    return facilityReportList;
   }
 
   @Override
@@ -70,33 +65,33 @@ public class FacilityReportDataProvider extends ReportDataProvider {
 
   @Override
   public List<? extends ReportData> getReportDataByFilterCriteriaAndPagingAndSorting(Map<String, String[]> filterCriteria, Map<String, String[]> sortCriteria, int page, int pageSize) {
-    RowBounds rowBounds = new RowBounds((page-1)*pageSize,pageSize);
+    RowBounds rowBounds = new RowBounds((page - 1) * pageSize, pageSize);
 
     FacilityReportSorter facilityReportSorter = null;
-    if(sortCriteria != null){
-        facilityReportSorter = new FacilityReportSorter();
-        facilityReportSorter.setFacilityName(sortCriteria.get("facilityName") == null ? "" : sortCriteria.get("facilityName")[0]);
-        facilityReportSorter.setCode(sortCriteria.get("code") == null ? "ASC" : sortCriteria.get("code")[0]);
-        facilityReportSorter.setFacilityType(sortCriteria.get("facilityType") == null ? "ASC" : sortCriteria.get("facilityType")[0]);
+    if (sortCriteria != null) {
+      facilityReportSorter = new FacilityReportSorter();
+      facilityReportSorter.setFacilityName(sortCriteria.get("facilityName") == null ? "" : sortCriteria.get("facilityName")[0]);
+      facilityReportSorter.setCode(sortCriteria.get("code") == null ? "ASC" : sortCriteria.get("code")[0]);
+      facilityReportSorter.setFacilityType(sortCriteria.get("facilityType") == null ? "ASC" : sortCriteria.get("facilityType")[0]);
     }
-    return facilityReportMapper.SelectFilteredSortedPagedFacilities(getReportFilterData(filterCriteria),facilityReportSorter,rowBounds);
+    return facilityReportMapper.SelectFilteredSortedPagedFacilities(getReportFilterData(filterCriteria), facilityReportSorter, rowBounds);
   }
 
 
   public FacilityReportFilter getReportFilterData(Map<String, String[]> filterCriteria) {
-    if(filterCriteria != null){
-        facilityReportFilter =  new FacilityReportFilter();
-        facilityReportFilter.setZoneId(filterCriteria.get("zoneId") == null ? 0 : Integer.parseInt(filterCriteria.get("zoneId")[0]));  //defaults to 0
-        facilityReportFilter.setFacilityTypeId(filterCriteria.get("facilityTypeId") == null ? 0 : Integer.parseInt(filterCriteria.get("facilityTypeId")[0])); //defaults to 0
-        facilityReportFilter.setStatusId(filterCriteria.get("statusId") == null || filterCriteria.get("statusId")[0].isEmpty() ? null : Boolean.valueOf(filterCriteria.get("statusId")[0]));
-        facilityReportFilter.setRgroup( (filterCriteria.get("rgroup") == null || filterCriteria.get("rgroup")[0].equals("")) ? "All Reporting Groups" : filterCriteria.get("rgroup")[0]);
-        facilityReportFilter.setRgId(filterCriteria.get("rgroupId") == null ? 0 : Integer.parseInt(filterCriteria.get("rgroupId")[0])); //defaults to 0
+    if (filterCriteria != null) {
+      facilityReportFilter = new FacilityReportFilter();
+      facilityReportFilter.setZoneId(filterCriteria.get("zoneId") == null ? 0 : Integer.parseInt(filterCriteria.get("zoneId")[0]));  //defaults to 0
+      facilityReportFilter.setFacilityTypeId(filterCriteria.get("facilityTypeId") == null ? 0 : Integer.parseInt(filterCriteria.get("facilityTypeId")[0])); //defaults to 0
+      facilityReportFilter.setStatusId(filterCriteria.get("statusId") == null || filterCriteria.get("statusId")[0].isEmpty() ? null : Boolean.valueOf(filterCriteria.get("statusId")[0]));
+      facilityReportFilter.setRgroup((filterCriteria.get("rgroup") == null || filterCriteria.get("rgroup")[0].equals("")) ? "All Reporting Groups" : filterCriteria.get("rgroup")[0]);
+      facilityReportFilter.setRgId(filterCriteria.get("rgroupId") == null ? 0 : Integer.parseInt(filterCriteria.get("rgroupId")[0])); //defaults to 0
     }
     return facilityReportFilter;
   }
 
   @Override
-  public String getFilterSummary(Map<String, String[]> params){
+  public String getFilterSummary(Map<String, String[]> params) {
     return getReportFilterData(params).toString();
   }
 }

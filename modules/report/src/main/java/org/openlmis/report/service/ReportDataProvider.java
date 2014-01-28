@@ -20,21 +20,12 @@ import java.util.Map;
 public abstract class ReportDataProvider {
 
   public final List<? extends ReportData> getReportDataByFilterCriteria(Map<String, String[]> params, DataSourceType dataSourceType){
-
-      if(dataSourceType.equals(DataSourceType.BEAN_COLLECTION_DATA_SOURCE)){
-          return getBeanCollectionReportData(params);
-      }else if (dataSourceType.equals(DataSourceType.RESULT_SET_DATA_SOURCE)){
-          return getResultSetReportData(params);
-      }
-
-      return null;
+    return getResultSetReportData(params);
   }
 
   public final List<? extends ReportData> getReportDataByFilterCriteria(Map<String, String[]> params){
       return getReportDataByFilterCriteria(params, DataSourceType.BEAN_COLLECTION_DATA_SOURCE);
   }
-
-  protected abstract List<? extends ReportData> getBeanCollectionReportData(Map<String, String[]> params);
 
   protected abstract List<? extends ReportData> getResultSetReportData(Map<String, String[]> params);
 

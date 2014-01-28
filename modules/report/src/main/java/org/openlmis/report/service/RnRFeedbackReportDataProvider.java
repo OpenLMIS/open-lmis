@@ -39,50 +39,45 @@ public class RnRFeedbackReportDataProvider extends ReportDataProvider {
   private RnRFeedbackReportFilter feedbackReportFilter = null;
 
   @Override
-  protected List<? extends ReportData> getBeanCollectionReportData(Map<String, String[]> filterCriteria) {
-      return getReportDataByFilterCriteriaAndPagingAndSorting(filterCriteria,filterCriteria,RowBounds.NO_ROW_OFFSET, RowBounds.NO_ROW_LIMIT);
-  }
-
-  @Override
   protected List<? extends ReportData> getResultSetReportData(Map<String, String[]> filterCriteria) {
-      return getReportDataByFilterCriteriaAndPagingAndSorting(filterCriteria,filterCriteria,RowBounds.NO_ROW_OFFSET, RowBounds.NO_ROW_LIMIT);
+    return getReportDataByFilterCriteriaAndPagingAndSorting(filterCriteria, filterCriteria, RowBounds.NO_ROW_OFFSET, RowBounds.NO_ROW_LIMIT);
   }
 
   @Override
   public List<? extends ReportData> getReportDataByFilterCriteriaAndPagingAndSorting(Map<String, String[]> filterCriteria, Map<String, String[]> SortCriteria, int page, int pageSize) {
-      RowBounds rowBounds = new RowBounds((page-1)*pageSize,pageSize);
-      return reportMapper.getFilteredSortedPagedRnRFeedbackReport(getReportFilterData(filterCriteria),SortCriteria, rowBounds);
+    RowBounds rowBounds = new RowBounds((page - 1) * pageSize, pageSize);
+    return reportMapper.getFilteredSortedPagedRnRFeedbackReport(getReportFilterData(filterCriteria), SortCriteria, rowBounds);
   }
 
   public RnRFeedbackReportFilter getReportFilterData(Map<String, String[]> filterCriteria) {
 
-    if(filterCriteria != null ){
-        feedbackReportFilter = new RnRFeedbackReportFilter();
-        Calendar originalStart = Calendar.getInstance();
-        Calendar originalEnd = Calendar.getInstance();
+    if (filterCriteria != null) {
+      feedbackReportFilter = new RnRFeedbackReportFilter();
+      Calendar originalStart = Calendar.getInstance();
+      Calendar originalEnd = Calendar.getInstance();
 
-        feedbackReportFilter.setFacilityTypeId(filterCriteria.get("facilityTypeId") == null ? 0 : Integer.parseInt(filterCriteria.get("facilityTypeId")[0])); //defaults to 0
-        feedbackReportFilter.setFacilityId(filterCriteria.get("facilityId") == null ? 0 : Integer.parseInt(filterCriteria.get("facilityId")[0])); //defaults to 0
-        feedbackReportFilter.setFacilityType((filterCriteria.get("facilityType") == null || filterCriteria.get("facilityType")[0].equals("")) ? "All Facilities" : filterCriteria.get("facilityType")[0]);
-        feedbackReportFilter.setProductId(filterCriteria.get("productId") == null ? 0 : Integer.parseInt(filterCriteria.get("productId")[0])); //defaults to 0
-        if(feedbackReportFilter.getProductId() == 0){
-            feedbackReportFilter.setProduct("All Products");
-        }else if(feedbackReportFilter.getProductId() == -1){
+      feedbackReportFilter.setFacilityTypeId(filterCriteria.get("facilityTypeId") == null ? 0 : Integer.parseInt(filterCriteria.get("facilityTypeId")[0])); //defaults to 0
+      feedbackReportFilter.setFacilityId(filterCriteria.get("facilityId") == null ? 0 : Integer.parseInt(filterCriteria.get("facilityId")[0])); //defaults to 0
+      feedbackReportFilter.setFacilityType((filterCriteria.get("facilityType") == null || filterCriteria.get("facilityType")[0].equals("")) ? "All Facilities" : filterCriteria.get("facilityType")[0]);
+      feedbackReportFilter.setProductId(filterCriteria.get("productId") == null ? 0 : Integer.parseInt(filterCriteria.get("productId")[0])); //defaults to 0
+      if (feedbackReportFilter.getProductId() == 0) {
+        feedbackReportFilter.setProduct("All Products");
+      } else if (feedbackReportFilter.getProductId() == -1) {
         //Indicator Products
-            feedbackReportFilter.setProduct(configurationService.getConfigurationStringValue(Constants.CONF_INDICATOR_PRODUCTS).isEmpty() ? "Indicator Products" : configurationService.getConfigurationStringValue(Constants.CONF_INDICATOR_PRODUCTS));
-        }else {
-            feedbackReportFilter.setProduct(filterCriteria.get("product")[0]);
-        }
+        feedbackReportFilter.setProduct(configurationService.getConfigurationStringValue(Constants.CONF_INDICATOR_PRODUCTS).isEmpty() ? "Indicator Products" : configurationService.getConfigurationStringValue(Constants.CONF_INDICATOR_PRODUCTS));
+      } else {
+        feedbackReportFilter.setProduct(filterCriteria.get("product")[0]);
+      }
 
-        feedbackReportFilter.setOrderType(filterCriteria.get("orderType") == null ? "" : filterCriteria.get("orderType")[0]);
-        feedbackReportFilter.setPeriodId(filterCriteria.get("periodId") == null ? 0 : Integer.parseInt(filterCriteria.get("periodId")[0])); //defaults to 0
-        feedbackReportFilter.setScheduleId(filterCriteria.get("scheduleId") == null ? 0 : Integer.parseInt(filterCriteria.get("scheduleId")[0])); //defaults to 0
-        feedbackReportFilter.setSchedule(filterCriteria.get("schedule")[0]);
-        feedbackReportFilter.setRgroupId(filterCriteria.get("rgroupId") == null ? 0 : Integer.parseInt(filterCriteria.get("rgroupId")[0])); //defaults to 0
-        feedbackReportFilter.setRgroup( StringUtils.isBlank(filterCriteria.get("rgroup")[0]) ? "All Reporting Groups" : filterCriteria.get("rgroup")[0]);
-        feedbackReportFilter.setPeriod(filterCriteria.get("period")[0]);
-        feedbackReportFilter.setProgramId(filterCriteria.get("programId") == null ? 0 : Integer.parseInt(filterCriteria.get("programId")[0])); //defaults to 0
-        feedbackReportFilter.setProgram(filterCriteria.get("program")[0]);
+      feedbackReportFilter.setOrderType(filterCriteria.get("orderType") == null ? "" : filterCriteria.get("orderType")[0]);
+      feedbackReportFilter.setPeriodId(filterCriteria.get("periodId") == null ? 0 : Integer.parseInt(filterCriteria.get("periodId")[0])); //defaults to 0
+      feedbackReportFilter.setScheduleId(filterCriteria.get("scheduleId") == null ? 0 : Integer.parseInt(filterCriteria.get("scheduleId")[0])); //defaults to 0
+      feedbackReportFilter.setSchedule(filterCriteria.get("schedule")[0]);
+      feedbackReportFilter.setRgroupId(filterCriteria.get("rgroupId") == null ? 0 : Integer.parseInt(filterCriteria.get("rgroupId")[0])); //defaults to 0
+      feedbackReportFilter.setRgroup(StringUtils.isBlank(filterCriteria.get("rgroup")[0]) ? "All Reporting Groups" : filterCriteria.get("rgroup")[0]);
+      feedbackReportFilter.setPeriod(filterCriteria.get("period")[0]);
+      feedbackReportFilter.setProgramId(filterCriteria.get("programId") == null ? 0 : Integer.parseInt(filterCriteria.get("programId")[0])); //defaults to 0
+      feedbackReportFilter.setProgram(filterCriteria.get("program")[0]);
 
     }
     return feedbackReportFilter;
