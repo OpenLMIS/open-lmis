@@ -12,8 +12,7 @@ describe('Approve Requisition controller', function () {
 
   var scope, ctrl, httpBackend, location, routeParams, controller, requisition, regimenTemplate,
     programRnrColumnList, nonFullSupplyLineItems, lineItems, regimenLineItems, dialog, rnrLineItem, regimenColumns, requisitionService, pageSize;
-  beforeEach(module('openlmis.services'));
-  beforeEach(module('openlmis.localStorage'));
+  beforeEach(module('openlmis'));
   beforeEach(module('ui.bootstrap.dialog'));
 
   beforeEach(inject(function ($httpBackend, $rootScope, $location, $controller, _messageService_, _requisitionService_) {

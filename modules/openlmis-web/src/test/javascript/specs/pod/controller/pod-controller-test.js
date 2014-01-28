@@ -11,7 +11,7 @@
 describe('PODController', function () {
   var scope, controller, $httpBackend, routeParams, response, location;
 
-  beforeEach(module('openlmis.services'));
+  beforeEach(module('openlmis'));
   beforeEach(inject(function ($rootScope, $controller, _$httpBackend_, _$location_) {
     var podId = '1234';
 

@@ -16,6 +16,7 @@ module.exports = function (config) {
       'lib/jquery/jquery-1.8.2.min.js',
       'lib/jquery/jquery-ui-1.9.2.custom.min.js',
       'lib/angular/angular.min.js',
+      'lib/angular/angular-route.min.js',
       'lib/angular/angular-resource.min.js',
       'lib/angular/angular-cookies.min.js',
       'lib/angular-ui/ng-grid-1.6.3.js',

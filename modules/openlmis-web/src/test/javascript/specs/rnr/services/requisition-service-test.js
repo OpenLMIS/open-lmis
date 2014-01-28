@@ -10,10 +10,7 @@
 
 describe("requisitionService", function () {
 
-  beforeEach(module('openlmis.services'));
-
-  beforeEach(module('openlmis.localStorage'));
-
+  beforeEach(module('openlmis'));
 
   var scope, requisitionService, location, routeParams, messageService;
   var columns = [

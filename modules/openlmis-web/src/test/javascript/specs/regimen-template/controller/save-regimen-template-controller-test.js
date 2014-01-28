@@ -12,8 +12,7 @@ describe('Save Regimen Template Controller', function () {
 
   var scope, ctrl, $httpBackend, location, messageService, regimenList1, regimenList2, program, newRegimenForm, regimenColumns;
 
-  beforeEach(module('openlmis.services'));
-  beforeEach(module('openlmis.localStorage'));
+  beforeEach(module('openlmis'));
 
   beforeEach(inject(function ($rootScope, _$httpBackend_, $controller, $location, _messageService_) {
     scope = $rootScope.$new();

@@ -10,8 +10,7 @@
 
 describe("User", function () {
 
-  beforeEach(module('openlmis.services'));
-  beforeEach(module('openlmis.localStorage'));
+  beforeEach(module('openlmis'));
   beforeEach(module('ui.bootstrap.dialog'));
 
   describe("User Controller", function () {
@@ -355,7 +354,7 @@ describe("User", function () {
     var deferredObject;
     var user = {"id": 123, "userName": "User420"};
 
-    beforeEach(module('openlmis.services'));
+    beforeEach(module('openlmis'));
 
     beforeEach(inject(function (_$httpBackend_, $controller, _$timeout_) {
       httpBackend = _$httpBackend_;

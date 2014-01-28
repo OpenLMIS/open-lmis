@@ -11,8 +11,7 @@
 describe('ManagePODController', function () {
   var scope, controller, messageService, $httpBackend, location;
 
-  beforeEach(module('openlmis.services'));
-  beforeEach(module('openlmis.localStorage'));
+  beforeEach(module('openlmis'));
   beforeEach(inject(function ($rootScope, $controller, _messageService_, _$httpBackend_, $location) {
     scope = $rootScope.$new();
     location = $location;

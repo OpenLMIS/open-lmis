@@ -10,9 +10,7 @@
 
 describe("LoginController", function () {
 
-  beforeEach(module('openlmis.services'));
-
-  beforeEach(module('openlmis.localStorage'));
+  beforeEach(module('openlmis'));
 
   var scope, ctrl, httpBackend, messageService, controller;
 
@@ -50,7 +48,7 @@ describe("LoginController", function () {
 
 
     spyOn(messageService, 'populate');
-    httpBackend.when('POST', '/j_spring_security_check').respond(403, {'error': 'error msg'});
+    httpBackend.when('POST', '/j_spring_security_check').respond(401, {'error': 'error msg'});
 
     scope.doLogin();
     httpBackend.flush();
@@ -82,7 +80,7 @@ describe("LoginController", function () {
     scope.password = "john-password";
 
     spyOn(messageService, 'populate');
-    httpBackend.when('POST', '/j_spring_security_check').respond(403, {'error': 'error msg'});
+    httpBackend.when('POST', '/j_spring_security_check').respond(401, {'error': 'error msg'});
 
     scope.doLogin();
     httpBackend.flush();

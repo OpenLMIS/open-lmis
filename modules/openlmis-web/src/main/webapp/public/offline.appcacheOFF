@@ -5,6 +5,7 @@ CACHE:
 /favicon.ico
 /public/lib/jquery/jquery-1.8.2.min.js
 /public/lib/angular/angular.min.js
+/public/lib/angular/angular-route.min.js
 /public/lib/angular/angular-resource.min.js
 /public/lib/bootstrap/js/bootstrap.min.js
 /public/lib/bootstrap/css/bootstrap.min.css

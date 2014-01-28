@@ -12,8 +12,7 @@ describe("ResetPasswordController", function () {
 
   var scope, $httpBackend, messageService, route, controller;
 
-  beforeEach(module('openlmis.services'));
-  beforeEach(module('openlmis.localStorage'));
+  beforeEach(module('openlmis'));
   beforeEach(inject(function ($rootScope, _$httpBackend_, $controller, $route, _messageService_) {
     scope = $rootScope.$new();
     $httpBackend = _$httpBackend_;

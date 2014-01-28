@@ -11,8 +11,7 @@
 describe('ViewOrderListController', function () {
   var data, scope, controller, messageService, $routeParams, $location, $httpBackend;
 
-  beforeEach(module('openlmis.services'));
-  beforeEach(module('openlmis.localStorage'));
+  beforeEach(module('openlmis'));
   beforeEach(inject(function ($rootScope, $controller, _messageService_, _$routeParams_, _$location_, _$httpBackend_) {
     scope = $rootScope.$new();
     scope.currentPage = 1;

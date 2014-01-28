@@ -9,8 +9,7 @@
  */
 
 describe("Period", function () {
-  beforeEach(module('openlmis.services'));
-  beforeEach(module('openlmis.localStorage'));
+  beforeEach(module('openlmis'));
 
   describe("View Schedule Periods", function () {
     var scheduleId = 123;

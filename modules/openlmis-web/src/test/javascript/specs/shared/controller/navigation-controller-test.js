@@ -10,9 +10,7 @@
 
 describe("Navigation", function () {
 
-    beforeEach(module('openlmis.services'));
-
-    beforeEach(module('openlmis.localStorage'));
+    beforeEach(module('openlmis'));
 
     describe("NavigationController", function () {
 

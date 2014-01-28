@@ -8,8 +8,8 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-function ResetPasswordController($scope, UpdateUserPassword, $location, $route, tokenValid,messageService) {
-  if(!tokenValid) {
+function ResetPasswordController($scope, UpdateUserPassword, $location, $route, tokenValid, messageService) {
+  if (!tokenValid) {
     window.location = 'access-denied.html';
   }
 
@@ -17,8 +17,7 @@ function ResetPasswordController($scope, UpdateUserPassword, $location, $route, 
     var reWhiteSpace = new RegExp("\\s");
     var digits = new RegExp("\\d");
     if ($scope.password1.length < 8 || $scope.password1.length > 16 || !digits.test($scope.password1) ||
-      reWhiteSpace.test($scope.password1))
-    {
+      reWhiteSpace.test($scope.password1)) {
       $scope.error = messageService.get("error.password.invalid");
       return;
     }
@@ -27,7 +26,7 @@ function ResetPasswordController($scope, UpdateUserPassword, $location, $route, 
       return;
     }
 
-    UpdateUserPassword.update({token:$route.current.params.token}, $scope.password1, function (data) {
+    UpdateUserPassword.update({token: $route.current.params.token}, $scope.password1, function (data) {
       $location.path('/reset/password/complete');
     }, function (data) {
       window.location = 'access-denied.html';
@@ -48,10 +47,10 @@ function ResetCompleteController($scope) {
 
 ValidateTokenController.resolve = {
 
-  tokenValid:function ($q, $timeout, ValidatePasswordToken, $route, $location) {
+  tokenValid: function ($q, $timeout, ValidatePasswordToken, $route, $location) {
     var deferred = $q.defer();
     $timeout(function () {
-      ValidatePasswordToken.get({token:$route.current.params.token }, function (data) {
+      ValidatePasswordToken.get({token: $route.current.params.token }, function (data) {
         $location.path('/reset/' + $route.current.params.token);
       }, function (data) {
         window.location = 'access-denied.html';
@@ -62,12 +61,12 @@ ValidateTokenController.resolve = {
 };
 
 ResetPasswordController.resolve = {
-  tokenValid:function ($q, $timeout, ValidatePasswordToken, $route, $location) {
+  tokenValid: function ($q, $timeout, ValidatePasswordToken, $route) {
     var deferred = $q.defer();
     $timeout(function () {
-      ValidatePasswordToken.get({token:$route.current.params.token }, function (data) {
-          deferred.resolve(data.TOKEN_VALID);
-      }, function (data) {
+      ValidatePasswordToken.get({token: $route.current.params.token }, function (data) {
+        deferred.resolve(data.TOKEN_VALID);
+      }, function () {
         window.location = 'access-denied.html';
       });
     }, 100);

@@ -10,7 +10,7 @@
 
 describe('program product controller', function () {
 
-  beforeEach(module('openlmis.services'));
+  beforeEach(module('openlmis'));
   var scope, ctrl, $httpBackend;
   var programProducts;
 

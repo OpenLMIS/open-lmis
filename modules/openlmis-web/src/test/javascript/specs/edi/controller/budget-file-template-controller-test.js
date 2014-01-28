@@ -11,8 +11,7 @@
 describe("Budget File Template Controller", function () {
   var scope, controller, httpBackend, messageService, budgetFileTemplate, $q, timeout, deferredObject, dateFormats;
 
-  beforeEach(module('openlmis.services'));
-  beforeEach(module('openlmis.localStorage'));
+  beforeEach(module('openlmis'));
 
   beforeEach(inject(function ($rootScope, $controller, $httpBackend, _messageService_) {
     messageService = _messageService_;

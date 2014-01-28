@@ -9,7 +9,7 @@
  */
 
 describe("ISA Controller", function () {
-  beforeEach(module('openlmis.services'));
+  beforeEach(module('openlmis'));
 
   describe("Override ISA", function () {
     var scope, httpBackend, ctrl, routeParams;
