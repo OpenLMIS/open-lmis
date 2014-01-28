@@ -32,7 +32,7 @@ public class ManagePodPage extends Page {
   private static WebElement orderStatusDetailsOnManagePodScreen  = null;
 
   @FindBy(how = XPATH, using = "//div/a[contains(text(),'Update POD')]")
-  private static WebElement UpdatePodLinkOnManagePodScreen  = null;
+  private static WebElement updatePodLinkOnManagePodScreen = null;
 
   @FindBy(how = XPATH, using = "//div[@class='ngHeaderText ng-binding colt0']")
   private static WebElement headerOrderNoOnManagePodScreen  = null;
@@ -128,7 +128,13 @@ public class ManagePodPage extends Page {
   }
 
   public String getUpdatePodLink() {
-    return testWebDriver.getText(UpdatePodLinkOnManagePodScreen);
+    return testWebDriver.getText(updatePodLinkOnManagePodScreen);
+  }
+
+  public UpdatePodPage clickUpdatePODLink() {
+    testWebDriver.waitForElementToAppear(updatePodLinkOnManagePodScreen);
+    updatePodLinkOnManagePodScreen.click();
+    return new UpdatePodPage(testWebDriver);
   }
 
   public void verifyMessageOnManagePodScreen() {

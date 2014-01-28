@@ -198,9 +198,8 @@ public class DBWrapper {
     update("update users set restrictLogin = '%s' where userName = '%s'", status, userName);
   }
 
-  public void insertRequisitions(int numberOfRequisitions,
-                                 String program,
-                                 boolean withSupplyLine, String periodStartDate, String periodEndDate, String facilityCode, boolean emergency) throws SQLException, IOException {
+  public void insertRequisitions(int numberOfRequisitions, String program, boolean withSupplyLine, String periodStartDate,
+                                 String periodEndDate, String facilityCode, boolean emergency) throws SQLException, IOException {
     int numberOfRequisitionsAlreadyPresent = 0;
     boolean flag = true;
     ResultSet rs = query("select count(*) from requisitions");
@@ -1193,8 +1192,8 @@ public class DBWrapper {
 
   public void deleteProductAvailableAtFacility(String productCode, String programCode, String facilityCode) throws SQLException {
     update("delete from facility_approved_products where facilityTypeId=(select typeId from facilities where code='" + facilityCode + "') " +
-      "and programproductid=(select id from program_products where programId=(select id from programs where code='" + programCode + "')" +
-      "and productid=(select id from products where code='" + productCode + "'));");
+      "and programProductId=(select id from program_products where programId=(select id from programs where code='" + programCode + "')" +
+      "and productId=(select id from products where code='" + productCode + "'));");
   }
 
   public void updateProductFullSupplyStatus(String productCode, boolean fullSupply) throws SQLException {
@@ -1422,5 +1421,46 @@ public class DBWrapper {
       "(Select id from facilities where code ='%s'));", vaccination, facilityCode);
     resultSet.next();
     return resultSet;
+  }
+
+  public void insertRequisitionWithMultipleLineItems(int numberOfLineItems, String program, boolean withSupplyLine, String facilityCode,
+                                                     boolean emergency) throws SQLException, IOException {
+    boolean flag = true;
+    update("insert into requisitions (facilityId, programId, periodId, status, emergency, fullSupplyItemsSubmittedCost, " +
+      "nonFullSupplyItemsSubmittedCost, supervisoryNodeId) " +
+      "values ((Select id from facilities where code='" + facilityCode + "'),(Select id from programs where code='" + program + "')," +
+      "(Select id from processing_periods where name='Period1'), 'APPROVED', '" + emergency + "', 50.0000, 0.0000, " +
+      "(select id from supervisory_nodes where code='N1'))");
+
+    for (int i = 0; i < numberOfLineItems; i++) {
+      update("INSERT INTO requisition_line_items " +
+        "(rnrId, productCode,product,productDisplayOrder,productCategory,productCategoryDisplayOrder, beginningBalance, quantityReceived, quantityDispensed, stockInHand, " +
+        "dispensingUnit, maxMonthsOfStock, dosesPerMonth, dosesPerDispensingUnit, packSize,fullSupply,totalLossesAndAdjustments,newPatientCount,stockOutDays,price,roundToZero,packRoundingThreshold,packsToShip) VALUES" +
+        "((SELECT max(id) FROM requisitions), 'F" + i + "','antibiotic Capsule 300/200/600 mg',1,'Antibiotics',1, '0', '11' , '1', '10' ,'Strip','3', '30', '10', '10','t',0,0,0,12.5000,'f',1,5);");
+    }
+    if (withSupplyLine) {
+      ResultSet rs1 = query("select * from supply_lines where supervisoryNodeId = " +
+        "(select id from supervisory_nodes where code = 'N1') and programId = " +
+        "(select id from programs where code='" + program + "') and supplyingFacilityId = " +
+        "(select id from facilities where code = 'F10')");
+
+      if (rs1.next()) {
+        flag = false;
+      }
+    }
+    if (withSupplyLine) {
+      if (flag) {
+        insertSupplyLines("N1", program, "F10", true);
+      }
+    }
+  }
+
+  public void convertRequisitionToOrder(int maxRnrID, String orderStatus) throws SQLException {
+    update("update requisitions set status = 'RELEASED' where id = %d", maxRnrID);
+    String supervisoryNodeId = getAttributeFromTable("supervisory_nodes", "id", "code", "N1");
+    Integer supplyingLineId = Integer.valueOf(getAttributeFromTable("supply_lines", "id", "supervisoryNodeId", supervisoryNodeId));
+    Integer userId = Integer.valueOf(getAttributeFromTable("users", "id", "username", "Admin123"));
+    update("INSERT INTO orders(id, status, ftpComment, supplyLineId, createdBy, modifiedBy) VALUES (%d, '%s', %s, %d, %d, %d)", maxRnrID,
+      orderStatus, null, supplyingLineId, userId, userId);
   }
 }
