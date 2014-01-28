@@ -45,7 +45,7 @@ public class ApproveRequisitionTest extends JsonUtility {
   @Test(groups = {"webserviceSmoke"})
   public void testApproveRequisitionValidRnR() throws Exception {
     HttpClient client = new HttpClient();
-    dbWrapper.updateVirtualPropertyOfFacility("F10", "true");
+    dbWrapper.updateFieldValue("facilities","virtualFacility","true","code","F10");
     client.createContext();
     //TODO
     submitRequisition("commTrack1", "HIV");
@@ -81,7 +81,7 @@ public class ApproveRequisitionTest extends JsonUtility {
   public void testApproveRequisitionUnauthorizedAccess() throws Exception {
     HttpClient client = new HttpClient();
     client.createContext();
-    dbWrapper.updateVirtualPropertyOfFacility("F10", "true");
+    dbWrapper.updateFieldValue("facilities","virtualFacility","true","code","F10");
 
     submitRequisition("commTrack1", "HIV");
     Long id = (long) dbWrapper.getMaxRnrID();
@@ -105,7 +105,7 @@ public class ApproveRequisitionTest extends JsonUtility {
   public void testApproveRequisitionProductNotAvailableInSystem() throws Exception {
     HttpClient client = new HttpClient();
     client.createContext();
-    dbWrapper.updateVirtualPropertyOfFacility("F10", "true");
+    dbWrapper.updateFieldValue("facilities","virtualFacility","true","code","F10");
 
     submitRequisition("commTrack1", "HIV");
     Long id = (long) dbWrapper.getMaxRnrID();
@@ -133,7 +133,7 @@ public class ApproveRequisitionTest extends JsonUtility {
   public void testApproveRequisitionProductNotAvailableInRnR() throws Exception {
     HttpClient client = new HttpClient();
     client.createContext();
-    dbWrapper.updateVirtualPropertyOfFacility("F10", "true");
+    dbWrapper.updateFieldValue("facilities","virtualFacility","true","code","F10");
 
     submitRequisition("commTrack1", "HIV");
     Long id = (long) dbWrapper.getMaxRnrID();
@@ -161,7 +161,7 @@ public class ApproveRequisitionTest extends JsonUtility {
   public void testApproveRequisitionProgramProductsInactive() throws Exception {
     HttpClient client = new HttpClient();
     client.createContext();
-    dbWrapper.updateVirtualPropertyOfFacility("F10", "true");
+    dbWrapper.updateFieldValue("facilities","virtualFacility","true","code","F10");
 
     submitRequisition("commTrack1", "HIV");
     String id = String.valueOf(dbWrapper.getMaxRnrID());
@@ -191,7 +191,7 @@ public class ApproveRequisitionTest extends JsonUtility {
   public void testApproveRequisitionProgramInactive() throws Exception {
     HttpClient client = new HttpClient();
     client.createContext();
-    dbWrapper.updateVirtualPropertyOfFacility("F10", "true");
+    dbWrapper.updateFieldValue("facilities","virtualFacility","true","code","F10");
 
     submitRequisition("commTrack1", "HIV");
     String id = String.valueOf(dbWrapper.getMaxRnrID());
@@ -222,12 +222,12 @@ public class ApproveRequisitionTest extends JsonUtility {
   public void testApproveRequisitionProductInactive() throws Exception {
     HttpClient client = new HttpClient();
     client.createContext();
-    dbWrapper.updateVirtualPropertyOfFacility("F10", "true");
+    dbWrapper.updateFieldValue("facilities","virtualFacility","true","code","F10");
 
     submitRequisition("commTrack1", "HIV");
     String id = String.valueOf(dbWrapper.getMaxRnrID());
     dbWrapper.updateRequisitionStatus("AUTHORIZED", "commTrack", "HIV");
-    dbWrapper.updateFieldValue("products","active","false","code","P10");
+    dbWrapper.updateFieldValue("products","active","false","code","P");
     Report reportFromJson = JsonUtility.readObjectFromFile(FULL_JSON_APPROVE_TXT_FILE_NAME, Report.class);
 
     reportFromJson.getProducts().get(0).setProductCode("P10");
@@ -277,7 +277,7 @@ public class ApproveRequisitionTest extends JsonUtility {
   public void testApproveRequisitionInvalidRequisitionId() throws Exception {
     HttpClient client = new HttpClient();
     client.createContext();
-    dbWrapper.updateVirtualPropertyOfFacility("F10", "true");
+    dbWrapper.updateFieldValue("facilities","virtualFacility","true","code","F10");
 
     submitRequisition("commTrack1", "HIV");
     Long requisitionId = 999999L;
@@ -301,7 +301,7 @@ public class ApproveRequisitionTest extends JsonUtility {
   public void testApproveRequisitionBlankQuantityApproved() throws Exception {
     HttpClient client = new HttpClient();
     client.createContext();
-    dbWrapper.updateVirtualPropertyOfFacility("F10", "true");
+    dbWrapper.updateFieldValue("facilities","virtualFacility","true","code","F10");
 
     submitRequisition("commTrack1", "HIV");
     Long id = (long) dbWrapper.getMaxRnrID();
@@ -330,7 +330,7 @@ public class ApproveRequisitionTest extends JsonUtility {
   public void testApproveRequisitionBlankQuantityApproverName() throws Exception {
     HttpClient client = new HttpClient();
     client.createContext();
-    dbWrapper.updateVirtualPropertyOfFacility("F10", "true");
+    dbWrapper.updateFieldValue("facilities","virtualFacility","true","code","F10");
 
     submitRequisition("commTrack1", "HIV");
     Long id = (long) dbWrapper.getMaxRnrID();
@@ -357,7 +357,7 @@ public class ApproveRequisitionTest extends JsonUtility {
   @Test(groups = {"webservice"})
   public void testApproveRequisitionOnIncorrectRequisitionStatus() throws Exception {
     HttpClient client = new HttpClient();
-    dbWrapper.updateVirtualPropertyOfFacility("F10", "true");
+    dbWrapper.updateFieldValue("facilities","virtualFacility","true","code","F10");
     client.createContext();
 
     submitRequisition("commTrack1", "HIV");
@@ -385,7 +385,7 @@ public class ApproveRequisitionTest extends JsonUtility {
   @Test(groups = {"webservice"})
   public void testApproveRequisitionProductCountMismatch() throws Exception {
     HttpClient client = new HttpClient();
-    dbWrapper.updateVirtualPropertyOfFacility("F10", "true");
+    dbWrapper.updateFieldValue("facilities","virtualFacility","true","code","F10");
     client.createContext();
 
     submitRequisition("commTrack1", "HIV");
@@ -449,7 +449,7 @@ public class ApproveRequisitionTest extends JsonUtility {
   public void testShowErrorMessageForUnrecognizedFieldInAPI() throws Exception {
     HttpClient client = new HttpClient();
     client.createContext();
-    dbWrapper.updateVirtualPropertyOfFacility("F10", "true");
+    dbWrapper.updateFieldValue("facilities","virtualFacility","true","code","F10");
     submitRequisition("commTrack1", "HIV");
     Long id = (long) dbWrapper.getMaxRnrID();
     dbWrapper.updateRequisitionStatus("AUTHORIZED", "commTrack", "HIV");

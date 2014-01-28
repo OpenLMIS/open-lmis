@@ -247,7 +247,7 @@ public class ViewRequisition extends TestCaseHelper {
     rightsList.add("CREATE_REQUISITION");
     rightsList.add("VIEW_REQUISITION");
     setupTestDataToInitiateRnR(true, program, userSIC, "200", rightsList);
-    dbWrapper.updateVirtualPropertyOfFacility("F10", "True");
+    dbWrapper.updateFieldValue("facilities","virtualFacility","true","code","F10");
     dbWrapper.insertRoleAssignmentForSupervisoryNodeForProgramId1("200", "store in-charge", "N1");
 
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);

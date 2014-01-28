@@ -200,7 +200,7 @@ public class GetRequisitionDetailsAPI extends JsonUtility {
     checkOrderDetailsNotPresent(responseEntity);
 
     dbWrapper.setExportOrdersFlagInSupplyLinesTable(false, "F10");
-    dbWrapper.updateVirtualPropertyOfFacility("F10", "true");
+    dbWrapper.updateFieldValue("facilities","virtualFacility","true","code","F10");
     dbWrapper.setupUserForFulfillmentRole("commTrack", "store in-charge", "F10");
     dbWrapper.updateRestrictLogin("commTrack", false);
     approveRequisition(id, 65);
@@ -224,7 +224,7 @@ public class GetRequisitionDetailsAPI extends JsonUtility {
     checkOrderDetailsNotPresent(responseEntity);
 
     dbWrapper.setExportOrdersFlagInSupplyLinesTable(true, "F10");
-    dbWrapper.updateVirtualPropertyOfFacility("F10", "true");
+    dbWrapper.updateFieldValue("facilities","virtualFacility","true","code","F10");
     dbWrapper.setupUserForFulfillmentRole("commTrack", "store in-charge", "F10");
     approveRequisition(id, 65);
     dbWrapper.updateRestrictLogin("commTrack", false);
@@ -249,7 +249,7 @@ public class GetRequisitionDetailsAPI extends JsonUtility {
 
     dbWrapper.setExportOrdersFlagInSupplyLinesTable(true, "F10");
     dbWrapper.enterValidDetailsInFacilityFtpDetailsTable("F10");
-    dbWrapper.updateVirtualPropertyOfFacility("F10", "true");
+    dbWrapper.updateFieldValue("facilities","virtualFacility","true","code","F10");
     dbWrapper.setupUserForFulfillmentRole("commTrack", "store in-charge", "F10");
 
     approveRequisition(id, 65);
@@ -274,7 +274,7 @@ public class GetRequisitionDetailsAPI extends JsonUtility {
     checkRequisitionStatus("AUTHORIZED", responseEntity);
     checkOrderDetailsNotPresent(responseEntity);
 
-    dbWrapper.updateVirtualPropertyOfFacility("F10", "true");
+    dbWrapper.updateFieldValue("facilities","virtualFacility","true","code","F10");
     dbWrapper.setupUserForFulfillmentRole("commTrack", "store in-charge", "F10");
 
     approveRequisition(id, 65);

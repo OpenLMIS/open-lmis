@@ -63,7 +63,7 @@ public class CreateUpdateCHW extends JsonUtility {
 
   @Test(groups = {"webservice"}, dataProvider = "Data-Provider-Function-Positive")
   public void shouldNotShowVirtualFacilityOnManageUserScreen(String user, String program, String[] credentials) throws Exception {
-    dbWrapper.updateVirtualPropertyOfFacility(DEFAULT_PARENT_FACILITY_CODE, ACTIVE_STATUS);
+    dbWrapper.updateFieldValue("facilities","virtualFacility",ACTIVE_STATUS,"code",DEFAULT_PARENT_FACILITY_CODE);
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
 
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
@@ -439,7 +439,7 @@ public class CreateUpdateCHW extends JsonUtility {
 
   @Test(groups = {"webservice"})
   public void testCreateChwFeedWithParentFacilityCodeAsVirtualFacility() throws Exception {
-    dbWrapper.updateVirtualPropertyOfFacility(DEFAULT_PARENT_FACILITY_CODE, ACTIVE_STATUS);
+    dbWrapper.updateFieldValue("facilities","virtualFacility",ACTIVE_STATUS,"code",DEFAULT_PARENT_FACILITY_CODE);
     HttpClient client = new HttpClient();
     client.createContext();
     Agent agentJson = readObjectFromFile(FULL_JSON_TXT_FILE_NAME, Agent.class);
@@ -477,7 +477,7 @@ public class CreateUpdateCHW extends JsonUtility {
       commTrackUser,
       "Admin123");
 
-    dbWrapper.updateVirtualPropertyOfFacility(facilityCode, ACTIVE_STATUS);
+    dbWrapper.updateFieldValue("facilities","virtualFacility",ACTIVE_STATUS,"code",DEFAULT_PARENT_FACILITY_CODE);
 
     ResponseEntity responseEntityUpdated = client.SendJSON(getJsonStringFor(agentJson),
       UPDATE_URL + DEFAULT_AGENT_CODE + JSON_EXTENSION,

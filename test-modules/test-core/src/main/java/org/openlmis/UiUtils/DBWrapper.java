@@ -176,10 +176,6 @@ public class DBWrapper {
     return codeName;
   }
 
-  public void updateVirtualPropertyOfFacility(String facilityCode, String flag) throws SQLException, IOException {
-    update("UPDATE facilities SET virtualFacility='%s' WHERE code='%s'", flag, facilityCode);
-  }
-
   public void deleteDeliveryZoneMembers(String facilityCode) throws SQLException, IOException {
     update("delete from delivery_zone_members where facilityId in (select id from facilities where code ='%s')",
       facilityCode);

@@ -797,7 +797,7 @@ public class InitiateRnR extends TestCaseHelper {
   public void testRestrictVirtualFacilityFromRnRScreen(String program, String userSIC, String password) throws Exception {
     List<String> rightsList = asList(CREATE_REQUISITION, VIEW_REQUISITION);
     setupTestDataToInitiateRnR(true, program, userSIC, "200", rightsList);
-    dbWrapper.updateVirtualPropertyOfFacility("F10", "True");
+    dbWrapper.updateFieldValue("facilities","virtualFacility","true","code","F10");
     dbWrapper.insertRoleAssignmentForSupervisoryNodeForProgramId1("200", "store in-charge", "N1");
 
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
