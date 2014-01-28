@@ -420,7 +420,7 @@ public class ManageRolesAndUsers extends TestCaseHelper {
     userPage.clickViewHere();
     userPage.clickWarehouseRolesAccordion();
     assertFalse(userPage.getAllWarehouseToSelect().contains(warehouseName));
-    dbWrapper.enableFacility(warehouseName);
+    dbWrapper.updateFieldValue("facilities","enabled","true","name",warehouseName);
     dbWrapper.updateActiveStatusOfFacility(FacilityCode, "true");
     userPage.clickSaveButton();
     userPage.clickViewHere();

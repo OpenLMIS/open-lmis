@@ -1092,10 +1092,6 @@ public class DBWrapper {
     }
   }
 
-  public void enableFacility(String warehouseName) throws SQLException {
-    update("UPDATE facilities SET enabled='true' WHERE name='" + warehouseName + "';");
-  }
-
   public int getPODLineItemQuantityReceived(long orderId, String productCode) throws Exception {
     try (ResultSet rs1 = query("SELECT id FROM pod WHERE OrderId = %d", orderId)) {
       if (rs1.next()) {
