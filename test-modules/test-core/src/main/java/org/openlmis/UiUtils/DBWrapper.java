@@ -1092,10 +1092,6 @@ public class DBWrapper {
     }
   }
 
-  public void disableFacility(String warehouseName) throws SQLException {
-    update("UPDATE facilities SET enabled='false' WHERE name='" + warehouseName + "';");
-  }
-
   public void enableFacility(String warehouseName) throws SQLException {
     update("UPDATE facilities SET enabled='true' WHERE name='" + warehouseName + "';");
   }
