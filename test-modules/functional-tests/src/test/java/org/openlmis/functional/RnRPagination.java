@@ -37,7 +37,7 @@ public class RnRPagination extends TestCaseHelper {
   }
 
   @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-Positive", enabled = false)
-  public void testRnRPaginationAndSpecificDisplayOrder(String program, String userSIC, String userMO, String password, String[] credentials) throws Exception {
+  public void testRnRPaginationAndSpecificDisplayOrder(String program, String userSIC, String password) throws Exception {
     dbWrapper.setupMultipleProducts(program, "Lvl3 Hospital", 11, false);
     dbWrapper.insertFacilities("F10", "F11");
     dbWrapper.configureTemplate(program);
@@ -109,13 +109,11 @@ public class RnRPagination extends TestCaseHelper {
     testWebDriver.getElementByXpath("//a[contains(text(), '2') and @class='ng-binding']").click();
     assertEquals(testWebDriver.getElementByXpath(NON_FULL_SUPPLY_BASE_LOCATOR + "/tbody/tr[1]/td").getText(), "Antibiotics");
 
-
     verifyPageLinksFromLastPage();
-
   }
 
   @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-Positive")
-  public void testProductDefaultDisplayOrder(String program, String userSIC, String userMO, String password, String[] credentials) throws Exception {
+  public void testProductDefaultDisplayOrder(String program, String userSIC, String password) throws Exception {
     dbWrapper.setupMultipleProducts(program, "Lvl3 Hospital", 11, true);
     dbWrapper.insertFacilities("F10", "F11");
     dbWrapper.configureTemplate(program);
@@ -144,7 +142,7 @@ public class RnRPagination extends TestCaseHelper {
   }
 
   @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-Positive")
-  public void testCategoryDisplayOrder(String program, String userSIC, String userMO, String password, String[] credentials) throws Exception {
+  public void testCategoryDisplayOrder(String program, String userSIC, String password) throws Exception {
     dbWrapper.setupMultipleCategoryProducts(program, "Lvl3 Hospital", 11, false);
     dbWrapper.insertFacilities("F10", "F11");
     dbWrapper.configureTemplate(program);
@@ -168,13 +166,12 @@ public class RnRPagination extends TestCaseHelper {
 
     verifyCategoryDisplayOrder(initiateRnRPage, 10);
 
-
     initiateRnRPage.addMultipleNonFullSupplyLineItems(11, true);
     verifyCategoryDisplayOrder(initiateRnRPage, 10);
   }
 
   @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-Positive")
-  public void testCategoryDefaultDisplayOrder(String program, String userSIC, String userMO, String password, String[] credentials) throws Exception {
+  public void testCategoryDefaultDisplayOrder(String program, String userSIC, String password) throws Exception {
     dbWrapper.setupMultipleCategoryProducts(program, "Lvl3 Hospital", 11, true);
     dbWrapper.insertFacilities("F10", "F11");
     dbWrapper.configureTemplate(program);
@@ -278,7 +275,7 @@ public class RnRPagination extends TestCaseHelper {
   @DataProvider(name = "Data-Provider-Function-Positive")
   public Object[][] parameterIntTestProviderPositive() {
     return new Object[][]{
-      {"HIV", "storeIncharge", "medicalofficer", "Admin123", new String[]{"Admin123", "Admin123"}}
+      {"HIV", "storeInCharge", "Admin123"}
     };
 
   }

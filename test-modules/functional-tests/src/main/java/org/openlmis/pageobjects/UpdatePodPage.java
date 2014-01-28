@@ -1,7 +1,6 @@
 package org.openlmis.pageobjects;
 
 
-import com.thoughtworks.selenium.SeleneseTestNgHelper;
 import org.openlmis.UiUtils.TestWebDriver;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -9,6 +8,7 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 
+import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
 import static org.openqa.selenium.support.How.ID;
 import static org.openqa.selenium.support.How.XPATH;
 
@@ -18,7 +18,7 @@ public class UpdatePodPage extends Page {
   private WebElement podTable = null;
 
   @FindBy(how = ID, using = "requisition-header")
-  private WebElement updatePodScreenHeader = null;
+  private WebElement updatePodPageHeader = null;
 
   @FindBy(how = XPATH, using = "//div/h2[@openlmis-message='header.proof.of.delivery']")
   private WebElement podPageTitle = null;
@@ -29,6 +29,18 @@ public class UpdatePodPage extends Page {
   @FindBy(how = XPATH, using = "//div//i[@class='icon-ok']")
   private WebElement fullSupplyTickIcon= null;
 
+  @FindBy(how = ID, using = "firstPageLink")
+  private WebElement firstPageLink = null;
+
+  @FindBy(how = ID, using = "previousPageLink")
+  private WebElement previousPageLink = null;
+
+  @FindBy(how = ID, using = "nextPageLink")
+  private WebElement nextPageLink = null;
+
+  @FindBy(how = ID, using = "lastPageLink")
+  private WebElement lastPageLink = null;
+
   public UpdatePodPage(TestWebDriver testWebDriver) {
     super(testWebDriver);
     PageFactory.initElements(new AjaxElementLocatorFactory(TestWebDriver.getDriver(), 10), this);
@@ -36,7 +48,9 @@ public class UpdatePodPage extends Page {
   }
 
   public String getProductCode(int rowNumber) {
-    return testWebDriver.findElement(By.id("productCode_" + (rowNumber - 1))).getText();
+    WebElement productCode = testWebDriver.findElement(By.id("productCode_" + (rowNumber - 1)));
+    testWebDriver.waitForElementToAppear(productCode);
+    return productCode.getText();
   }
 
   public String getProductName(int rowNumber) {
@@ -84,7 +98,7 @@ public class UpdatePodPage extends Page {
 
   public String getHeaders() {
     testWebDriver.waitForAjax();
-    return testWebDriver.getText(updatePodScreenHeader);
+    return testWebDriver.getText(updatePodPageHeader);
   }
 
   public String getPodTableData() {
@@ -100,5 +114,65 @@ public class UpdatePodPage extends Page {
   public Boolean getFullSupplyTickIcon() {
     testWebDriver.waitForAjax();
     return fullSupplyTickIcon.isDisplayed();
+  }
+
+  public boolean isFirstPageLinkEnabled(){
+    testWebDriver.waitForElementToAppear(firstPageLink);
+    return firstPageLink.getCssValue("color").contains( "rgba(119, 119, 119, 1)");
+  }
+
+  public boolean isFirstPageLinkDisplayed(){
+    testWebDriver.waitForElementToAppear(firstPageLink);
+    return firstPageLink.isDisplayed();
+  }
+
+  public boolean isPreviousPageLinkEnabled(){
+    testWebDriver.waitForElementToAppear(previousPageLink);
+    return previousPageLink.getCssValue("color").contains( "rgba(119, 119, 119, 1)");
+  }
+
+  public boolean isPreviousPageLinkDisplayed(){
+    testWebDriver.waitForElementToAppear(previousPageLink);
+    return previousPageLink.isDisplayed();
+  }
+
+  public boolean isNextPageLinkEnabled(){
+    testWebDriver.waitForElementToAppear(nextPageLink);
+    return nextPageLink.getCssValue("color").contains( "rgba(119, 119, 119, 1)");
+  }
+
+  public boolean isNextPageLinkDisplayed(){
+    testWebDriver.waitForElementToAppear(nextPageLink);
+    return nextPageLink.isDisplayed();
+  }
+
+  public boolean isLastPageLinkEnabled(){
+    testWebDriver.waitForElementToAppear(lastPageLink);
+    return lastPageLink.getCssValue("color").contains( "rgba(119, 119, 119, 1)");
+  }
+
+  public boolean isLastPageLinkDisplayed(){
+    testWebDriver.waitForElementToAppear(lastPageLink);
+    return lastPageLink.isDisplayed();
+  }
+
+  public void navigateToNextPage() {
+    testWebDriver.waitForElementToAppear(nextPageLink);
+    nextPageLink.click();
+  }
+
+  public void navigateToFirstPage() {
+    testWebDriver.waitForElementToAppear(firstPageLink);
+    firstPageLink.click();
+  }
+
+  public void navigateToLastPage() {
+    testWebDriver.waitForElementToAppear(lastPageLink);
+    lastPageLink.click();
+  }
+
+  public void navigateToPreviousPage() {
+    testWebDriver.waitForElementToAppear(previousPageLink);
+    previousPageLink.click();
   }
 }
