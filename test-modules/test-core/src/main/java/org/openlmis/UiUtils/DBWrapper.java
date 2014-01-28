@@ -991,10 +991,6 @@ public class DBWrapper {
     }
   }
 
-  public void updateActiveStatusOfProgram(String programCode, boolean status) throws SQLException {
-    update("update programs SET active=" + status + " where code='" + programCode + "';");
-  }
-
   public void insertRegimenTemplateColumnsForProgram(String programName) throws SQLException {
     update("INSERT INTO program_regimen_columns(name, programId, label, visible, dataType) values\n" +
       "('code',(SELECT id FROM programs WHERE name='" + programName + "'), 'header.code',true,'regimen.reporting.dataType.text'),\n" +

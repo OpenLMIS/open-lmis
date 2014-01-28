@@ -197,7 +197,7 @@ public class ApproveRequisitionTest extends JsonUtility {
     String id = String.valueOf(dbWrapper.getMaxRnrID());
 
     dbWrapper.updateRequisitionStatus("AUTHORIZED", "commTrack", "HIV");
-    dbWrapper.updateActiveStatusOfProgram("HIV", false);
+    dbWrapper.updateFieldValue("programs","active","false","code","HIV");
     Report reportFromJson = JsonUtility.readObjectFromFile(FULL_JSON_APPROVE_TXT_FILE_NAME, Report.class);
 
     reportFromJson.getProducts().get(0).setProductCode("P10");
@@ -215,7 +215,7 @@ public class ApproveRequisitionTest extends JsonUtility {
     assertTrue(response.contains("{\"success\":"));
     assertEquals("APPROVED", dbWrapper.getAttributeFromTable("requisitions", "status", "id", id));
     assertEquals("some random name", dbWrapper.getAttributeFromTable("requisition_status_changes", "name", "rnrId", id));
-    dbWrapper.updateActiveStatusOfProgram("HIV", true);
+    dbWrapper.updateFieldValue("programs","active","true","code","HIV");
   }
 
   @Test(groups = {"webservice"})

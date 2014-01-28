@@ -233,7 +233,7 @@ public class SubmitReportTest extends JsonUtility {
 
   @Test(groups = {"webservice"})
   public void testSubmitReportWhenProgramGloballyInactive() throws Exception {
-    dbWrapper.updateActiveStatusOfProgram("HIV", false);
+    dbWrapper.updateFieldValue("programs","active","false","code","HIV");
     HttpClient client = new HttpClient();
     client.createContext();
     Report reportFromJson = JsonUtility.readObjectFromFile(FULL_JSON_TXT_FILE_NAME, Report.class);
@@ -248,7 +248,7 @@ public class SubmitReportTest extends JsonUtility {
 
     assertEquals(400, responseEntity.getStatus());
     assertEquals("{\"error\":\"User does not have permission\"}", responseEntity.getResponse());
-    dbWrapper.updateActiveStatusOfProgram("HIV", true);
+    dbWrapper.updateFieldValue("programs","active","true","code","HIV");
   }
 
   @Test(groups = {"webservice"})
