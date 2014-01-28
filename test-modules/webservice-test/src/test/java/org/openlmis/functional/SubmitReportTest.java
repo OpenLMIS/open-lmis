@@ -176,7 +176,7 @@ public class SubmitReportTest extends JsonUtility {
 
   @Test(groups = {"webservice"})
   public void testSubmitReportWhenVirtualFacilityInactive() throws Exception {
-    dbWrapper.updateActiveStatusOfFacility("V10", "false");
+    dbWrapper.updateFieldValue("facilities","active","false","code","V10");
     HttpClient client = new HttpClient();
     client.createContext();
     Report reportFromJson = JsonUtility.readObjectFromFile(FULL_JSON_TXT_FILE_NAME, Report.class);
@@ -214,7 +214,7 @@ public class SubmitReportTest extends JsonUtility {
 
   @Test(groups = {"webservice"})
   public void testSubmitReportWhenParentFacilityInactive() throws Exception {
-    dbWrapper.updateActiveStatusOfFacility("V10", "false");
+    dbWrapper.updateFieldValue("facilities","active","false","code","V10");
     HttpClient client = new HttpClient();
     client.createContext();
     Report reportFromJson = JsonUtility.readObjectFromFile(FULL_JSON_TXT_FILE_NAME, Report.class);
@@ -292,7 +292,7 @@ public class SubmitReportTest extends JsonUtility {
 
   @Test(groups = {"webservice"})
   public void testSubmitReportWhenTemplateNotConfigured() throws Exception {
-    dbWrapper.deleteRnrTemplate();
+    dbWrapper.deleteTable("program_rnr_columns");
     HttpClient client = new HttpClient();
     client.createContext();
     Report reportFromJson = JsonUtility.readObjectFromFile(FULL_JSON_TXT_FILE_NAME, Report.class);

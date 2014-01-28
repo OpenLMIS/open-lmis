@@ -942,15 +942,6 @@ public class DBWrapper {
     update("delete from programs_supported where programId in (select id from programs where code='" + programCode + "');");
   }
 
-  public void updateActiveStatusOfFacility(String facilityCode, String active) throws SQLException, IOException {
-    update("update facilities set active='" + active + "' where code='" + facilityCode + "';");
-  }
-
-  public void updatePopulationOfFacility(String facility, String population) throws SQLException, IOException {
-
-    update("update facilities set catchmentPopulation=" + population + " where code='" + facility + "';");
-  }
-
   public void insertDeliveryZone(String code, String name) throws SQLException {
     update("INSERT INTO delivery_zones ( code ,name)values\n" +
       "('" + code + "','" + name + "');");
@@ -1040,10 +1031,6 @@ public class DBWrapper {
 
   public void updateProductToHaveGroup(String product, String productGroup) throws SQLException {
     update("UPDATE products set productGroupId = (SELECT id from product_groups where code = '" + productGroup + "') where code = '" + product + "'");
-  }
-
-  public void deleteReport(String reportName) throws SQLException {
-    update("DELETE FROM report_templates where name = '" + reportName + "'");
   }
 
   public void insertOrders(String status, String username, String program) throws IOException, SQLException {
@@ -1149,10 +1136,6 @@ public class DBWrapper {
 
   public void deleteSupervisoryRoleFromRoleAssignment() throws SQLException {
     update("delete from role_assignments where supervisoryNodeId is not null;");
-  }
-
-  public void deleteRnrTemplate() throws SQLException {
-    update("delete from program_rnr_columns");
   }
 
   public void deleteProductAvailableAtFacility(String productCode, String programCode, String facilityCode) throws SQLException {

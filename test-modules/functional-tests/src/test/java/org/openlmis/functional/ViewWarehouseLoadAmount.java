@@ -73,7 +73,7 @@ public class ViewWarehouseLoadAmount extends TestCaseHelper {
     dbWrapper.insertProductWithGroup("Product6", "ProductName6", productGroupCode, true);
     dbWrapper.insertProgramProduct("Product5", programFirst, "10", "false");
     dbWrapper.insertProgramProduct("Product6", programFirst, "10", "true");
-    dbWrapper.updateFieldValue("products","active","false","code","Product6");
+    dbWrapper.updateFieldValue("products", "active", "false", "code", "Product6");
 
 
   }
@@ -95,7 +95,7 @@ public class ViewWarehouseLoadAmount extends TestCaseHelper {
 
   @And("^I update population of facility \"([^\"]*)\" as \"([^\"]*)\"$")
   public void updatePopulationOfFacility(String facilityCode, String population) throws IOException, SQLException {
-    dbWrapper.updatePopulationOfFacility(facilityCode, population);
+    dbWrapper.updateFieldValue("facilities", "catchmentPopulation",population, "code", facilityCode);
   }
 
   @And("^I have role assigned to delivery zones$")
@@ -217,8 +217,8 @@ public class ViewWarehouseLoadAmount extends TestCaseHelper {
     dbWrapper.insertProgramProducts(product1, product2, programFirst);
     dbWrapper.insertFacilityApprovedProduct(product1, programFirst, "lvl3_hospital");
     dbWrapper.insertFacilityApprovedProduct(product2, programFirst, "lvl3_hospital");
-    dbWrapper.updateFieldValue("products","packSize", "4","code",product1);
-    dbWrapper.updateFieldValue("products","packSize", "5","code",product2);
+    dbWrapper.updateFieldValue("products", "packSize", "4", "code", product1);
+    dbWrapper.updateFieldValue("products", "packSize", "5", "code", product2);
     dbWrapper.updateProcessingPeriodByField("numberOfMonths", "2", periodDisplayedByDefault, schedule);
 
 
@@ -231,7 +231,7 @@ public class ViewWarehouseLoadAmount extends TestCaseHelper {
     dbWrapper.InsertOverriddenIsa(facilityCodeThird, programFirst, product1, 51);
     dbWrapper.InsertOverriddenIsa(facilityCodeThird, programFirst, product2, 51);
     dbWrapper.InsertOverriddenIsa(facilityCodeFourth, programFirst, product2, 57);
-    dbWrapper.updatePopulationOfFacility(facilityCodeFirst, null);
+    dbWrapper.updateFieldValue("facilities", "catchmentPopulation", null, "code", facilityCodeFirst);
     dbWrapper.updateOverriddenIsa(facilityCodeFirst, programFirst, product1, null);
     dbWrapper.updateOverriddenIsa(facilityCodeSecond, programFirst, product1, null);
 
@@ -327,7 +327,7 @@ public class ViewWarehouseLoadAmount extends TestCaseHelper {
     assertEquals("100", warehouseLoadAmountPage.getProductIsa(2, 1, 1));
     assertEquals("200", warehouseLoadAmountPage.getProductIsa(2, 1, 2));
 
-    dbWrapper.updatePopulationOfFacility(facilityCodeFirst, null);
+    dbWrapper.updateFieldValue("facilities", "catchmentPopulation", null, "code", facilityCodeFirst);
     dbWrapper.updateOverriddenIsa(facilityCodeFirst, programFirst, product, null);
     homePage.navigateToDistributionWhenOnline();
     distributionPage.selectValueFromDeliveryZone(deliveryZoneNameFirst);

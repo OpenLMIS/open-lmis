@@ -162,7 +162,7 @@ public class ManageReport extends TestCaseHelper {
     HomePage homePage = new HomePage(testWebDriver);
     homePage.logout(baseUrlGlobal);
     dbWrapper.deleteData();
-    dbWrapper.deleteReport(reportName);
+    dbWrapper.deleteRowFromTable("report_templates","name",reportName);
     dbWrapper.closeConnection();
   }
 

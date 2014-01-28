@@ -753,8 +753,8 @@ public class ManageDistribution extends TestCaseHelper {
 
     dbWrapper.insertRoleAssignmentForDistribution(userSIC, "store in-charge", deliveryZoneCodeFirst);
     dbWrapper.insertRoleAssignmentForDistribution(userSIC, "store in-charge", deliveryZoneCodeSecond);
-    dbWrapper.updateActiveStatusOfFacility(facilityCodeFirst, "false");
-    dbWrapper.updateActiveStatusOfFacility(facilityCodeSecond, "false");
+    dbWrapper.updateFieldValue("facilities","active","false","code",facilityCodeFirst);
+    dbWrapper.updateFieldValue("facilities","active","false","code",facilityCodeSecond);
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(userSIC, password);
     DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
