@@ -1155,11 +1155,7 @@ public class DBWrapper {
     return date;
   }
 
-  public void changeVirtualFacilityTypeId(String facilityCode, int facilityTypeId) throws SQLException {
-    update("UPDATE facilities SET typeid=" + facilityTypeId + "WHERE code='" + facilityCode + "';");
-  }
-
-  public void deleteCurrentPeriod() throws SQLException {
+ public void deleteCurrentPeriod() throws SQLException {
     update("delete from processing_periods where endDate>=NOW()");
   }
 
