@@ -374,7 +374,7 @@ public class ManageBudget extends TestCaseHelper{
     dbWrapper.insertBudgetData();
     dbWrapper.insertRegimenTemplateColumnsForProgram(program);
     dbWrapper.insertRegimenTemplateConfiguredForProgram(program, "ADULTS", "Regimen", "Regimen1", true);
-    dbWrapper.setRegimenTemplateConfiguredForAllPrograms(true);
+    dbWrapper.updateFieldValue("programs", "regimenTemplateConfigured", "true", null, null);
 
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(userSIC, password);

@@ -634,7 +634,7 @@ public class SubmitReportTest extends JsonUtility {
   public void testInvalidSubmitReportRnRWithoutFillingRegimen() throws Exception {
     dbWrapper.insertRegimenTemplateColumnsForProgram("HIV");
     dbWrapper.insertRegimenTemplateConfiguredForProgram("HIV", "ADULTS", "Regimen", "Regimen1", true);
-    dbWrapper.setRegimenTemplateConfiguredForAllPrograms(true);
+    dbWrapper.updateFieldValue("programs", "regimenTemplateConfigured", "true", null, null);
     HttpClient client = new HttpClient();
     client.createContext();
 
@@ -660,7 +660,7 @@ public class SubmitReportTest extends JsonUtility {
   public void testSubmitReportRnRWithoutFillingInactiveRegimen() throws Exception {
     dbWrapper.insertRegimenTemplateColumnsForProgram("HIV");
     dbWrapper.insertRegimenTemplateConfiguredForProgram("HIV", "ADULTS", "Regimen", "Regimen1", false);
-    dbWrapper.setRegimenTemplateConfiguredForAllPrograms(true);
+    dbWrapper.updateFieldValue("programs", "regimenTemplateConfigured", "true", null, null);
     HttpClient client = new HttpClient();
     client.createContext();
 
@@ -687,7 +687,7 @@ public class SubmitReportTest extends JsonUtility {
   public void testSubmitReportRnRWithRegimen() throws Exception {
     dbWrapper.insertRegimenTemplateColumnsForProgram("HIV");
     dbWrapper.insertRegimenTemplateConfiguredForProgram("HIV", "ADULTS", "Regimen", "Regimen1", true);
-    dbWrapper.setRegimenTemplateConfiguredForAllPrograms(true);
+    dbWrapper.updateFieldValue("programs", "regimenTemplateConfigured", "true", null, null);
     HttpClient client = new HttpClient();
     client.createContext();
 
@@ -724,7 +724,7 @@ public class SubmitReportTest extends JsonUtility {
   public void testSubmitReportRnRWithRegimenHavingExtraFields() throws Exception {
     dbWrapper.insertRegimenTemplateColumnsForProgram("HIV");
     dbWrapper.insertRegimenTemplateConfiguredForProgram("HIV", "ADULTS", "Regimen", "Regimen1", true);
-    dbWrapper.setRegimenTemplateConfiguredForAllPrograms(true);
+    dbWrapper.updateFieldValue("programs", "regimenTemplateConfigured", "true", null, null);
     HttpClient client = new HttpClient();
     client.createContext();
 
@@ -762,7 +762,7 @@ public class SubmitReportTest extends JsonUtility {
   public void testSubmitReportRnRWithRegimenMissingMandatoryFields() throws Exception {
     dbWrapper.insertRegimenTemplateColumnsForProgram("HIV");
     dbWrapper.insertRegimenTemplateConfiguredForProgram("HIV", "ADULTS", "Regimen", "Regimen1", true);
-    dbWrapper.setRegimenTemplateConfiguredForAllPrograms(true);
+    dbWrapper.updateFieldValue("programs", "regimenTemplateConfigured", "true", null, null);
     HttpClient client = new HttpClient();
     client.createContext();
 
@@ -798,7 +798,7 @@ public class SubmitReportTest extends JsonUtility {
   public void testInvalidSubmitReportRnRWithExtraRegimenLineItem() throws Exception {
     dbWrapper.insertRegimenTemplateColumnsForProgram("HIV");
     dbWrapper.insertRegimenTemplateConfiguredForProgram("HIV", "ADULTS", "Regimen", "Regimen1", true);
-    dbWrapper.setRegimenTemplateConfiguredForAllPrograms(true);
+    dbWrapper.updateFieldValue("programs", "regimenTemplateConfigured", "true", null, null);
     HttpClient client = new HttpClient();
     client.createContext();
 
@@ -847,7 +847,8 @@ public class SubmitReportTest extends JsonUtility {
     dbWrapper.insertRegimenTemplateColumnsForProgram("HIV");
     dbWrapper.insertRegimenTemplateConfiguredForProgram("HIV", "ADULTS", "Regimen", "Regimen1", true);
     dbWrapper.insertRegimenTemplateConfiguredForProgram("HIV", "ADULTS", "Regimen2", "Regimen12", true);
-    dbWrapper.setRegimenTemplateConfiguredForAllPrograms(true);
+    dbWrapper.updateFieldValue("programs", "regimenTemplateConfigured", "true", null, null);
+
     HttpClient client = new HttpClient();
     client.createContext();
 

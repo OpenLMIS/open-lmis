@@ -1013,10 +1013,6 @@ public class DBWrapper {
       "  '" + code + "','" + name + "','" + active + "',1);");
   }
 
-  public void setRegimenTemplateConfiguredForAllPrograms(boolean flag) throws SQLException {
-    update("update programs set regimenTemplateConfigured='" + flag + "';");
-  }
-
   public String getAllActivePrograms() throws SQLException {
     String programsString = "";
     ResultSet rs = query("select * from programs where active=true;");

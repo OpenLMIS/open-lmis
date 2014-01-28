@@ -59,92 +59,96 @@ public class ConfigureRegimenProgramTemplate extends TestCaseHelper {
     super.setup();
   }
 
-    @Given("^I have data available for programs configured$")
-    public void setupDataForRegimenTemplateConfiguration() throws Exception {
-        dbWrapper.setRegimenTemplateConfiguredForAllPrograms(false);
-        expectedProgramsString = dbWrapper.getAllActivePrograms();
-    }
-    @When("^I access regimen configuration page$")
-    public void navigatesToRegimenConfigurationPage() throws Exception {
-        HomePage homePage = new HomePage(testWebDriver);
-        homePage.navigateToRegimenConfigTemplate();
-    }
-    @Then("^I should see configured program list$")
-    public void verifyProgramsListedOnManageRegimenTemplate() throws Exception {
-        List<String> programsList = getProgramsListedOnRegimeScreen();
-        verifyProgramsListedOnManageRegimenTemplateScreen(programsList, expectedProgramsString);
-    }
+  @Given("^I have data available for programs configured$")
+  public void setupDataForRegimenTemplateConfiguration() throws Exception {
+    dbWrapper.updateFieldValue("programs", "regimenTemplateConfigured", "false", null, null);
+    expectedProgramsString = dbWrapper.getAllActivePrograms();
+  }
 
-    @When("^I configure program \"([^\"]*)\" for regimen template$")
-    public void createProgramForRegimenTemplate(String program) throws Exception {
-        RegimenTemplateConfigPage regimenTemplateConfigPage = new RegimenTemplateConfigPage(testWebDriver);
-        regimenTemplateConfigPage.configureProgram(program);
-    }
-    @When("^I edit program \"([^\"]*)\" for regimen template$")
-    public void editProgramForRegimenTemplate(String program) throws Exception {
-        RegimenTemplateConfigPage regimenTemplateConfigPage = new RegimenTemplateConfigPage(testWebDriver);
-        regimenTemplateConfigPage.clickEditProgram(program);
-    }
+  @When("^I access regimen configuration page$")
+  public void navigatesToRegimenConfigurationPage() throws Exception {
+    HomePage homePage = new HomePage(testWebDriver);
+    homePage.navigateToRegimenConfigTemplate();
+  }
 
-    @When("^I add new regimen:$")
-    public void addRegimen(DataTable regimenTable) throws Exception {
-        RegimenTemplateConfigPage regimenTemplateConfigPage = new RegimenTemplateConfigPage(testWebDriver);
-        List<Map<String, String>> data=regimenTable.asMaps();
-        for(Map map:data)
-            regimenTemplateConfigPage.AddNewRegimen(map.get("Category").toString(), map.get("Code").toString(), map.get("Name").toString(), Boolean.parseBoolean(map.get("Active").toString()));
-    }
+  @Then("^I should see configured program list$")
+  public void verifyProgramsListedOnManageRegimenTemplate() throws Exception {
+    List<String> programsList = getProgramsListedOnRegimeScreen();
+    verifyProgramsListedOnManageRegimenTemplateScreen(programsList, expectedProgramsString);
+  }
 
-    @And("^I save regimen$")
-    public void saveRegimen() throws Exception {
-        RegimenTemplateConfigPage regimenTemplateConfigPage = new RegimenTemplateConfigPage(testWebDriver);
-        regimenTemplateConfigPage.SaveRegime();
-    }
+  @When("^I configure program \"([^\"]*)\" for regimen template$")
+  public void createProgramForRegimenTemplate(String program) throws Exception {
+    RegimenTemplateConfigPage regimenTemplateConfigPage = new RegimenTemplateConfigPage(testWebDriver);
+    regimenTemplateConfigPage.configureProgram(program);
+  }
 
-    @Then("^I should see regimen created message$")
-    public void verifyRegimenSuccessMessage() throws Exception {
-        RegimenTemplateConfigPage regimenTemplateConfigPage = new RegimenTemplateConfigPage(testWebDriver);
-        verifySuccessMessage(regimenTemplateConfigPage);
-    }
-    @And("^I access regimen reporting fields tab$")
-    public void accessRegimenReportingField() throws Exception {
-        RegimenTemplateConfigPage regimenTemplateConfigPage = new RegimenTemplateConfigPage(testWebDriver);
-        regimenTemplateConfigPage.clickReportingFieldTab();
-    }
+  @When("^I edit program \"([^\"]*)\" for regimen template$")
+  public void editProgramForRegimenTemplate(String program) throws Exception {
+    RegimenTemplateConfigPage regimenTemplateConfigPage = new RegimenTemplateConfigPage(testWebDriver);
+    regimenTemplateConfigPage.clickEditProgram(program);
+  }
 
-    @Then("^I should see regimen reporting fields$")
-    public void verifyDefaultRegimenReportingFields() throws Exception {
-        RegimenTemplateConfigPage regimenTemplateConfigPage = new RegimenTemplateConfigPage(testWebDriver);
-        verifyDefaultRegimenReportingFieldsValues(regimenTemplateConfigPage);
-    }
+  @When("^I add new regimen:$")
+  public void addRegimen(DataTable regimenTable) throws Exception {
+    RegimenTemplateConfigPage regimenTemplateConfigPage = new RegimenTemplateConfigPage(testWebDriver);
+    List<Map<String, String>> data = regimenTable.asMaps();
+    for (Map map : data)
+      regimenTemplateConfigPage.AddNewRegimen(map.get("Category").toString(), map.get("Code").toString(), map.get("Name").toString(), Boolean.parseBoolean(map.get("Active").toString()));
+  }
 
-    @When("^I add new regimen reporting field:$")
-    public void addRegimenReportingField(DataTable regimenReportingTable) throws Exception {
-        RegimenTemplateConfigPage regimenTemplateConfigPage = new RegimenTemplateConfigPage(testWebDriver);
-        List<Map<String, String>> data=regimenReportingTable.asMaps();
-        for(Map map:data){
-            regimenTemplateConfigPage.NoOfPatientsOnTreatmentCheckBox(Boolean.parseBoolean(map.get("NoOfPatientsOnTreatment").toString()));
-            regimenTemplateConfigPage.setValueRemarksTextField(map.get("Remarks").toString());
-        }
-    }
+  @And("^I save regimen$")
+  public void saveRegimen() throws Exception {
+    RegimenTemplateConfigPage regimenTemplateConfigPage = new RegimenTemplateConfigPage(testWebDriver);
+    regimenTemplateConfigPage.SaveRegime();
+  }
 
-    @Then("^I should see created regimen and reporting fields:$")
-    public void verifyRegimenAndReportingFields(DataTable dataTable) throws Exception
-        {
-            List<Map<String, String>> data=dataTable.asMaps();
-            for(Map map:data)
-                verifyProgramDetailsSaved(map.get("Code").toString(), map.get("Name").toString(), map.get("Remarks").toString());
-        }
-    @When("^I activate Number Of Patients On Treatment$")
-    public void activeNoOfPatientsOnTreatment() throws Exception {
-      RegimenTemplateConfigPage regimenTemplateConfigPage = new RegimenTemplateConfigPage(testWebDriver);
-        regimenTemplateConfigPage.NoOfPatientsOnTreatmentCheckBox(true);
+  @Then("^I should see regimen created message$")
+  public void verifyRegimenSuccessMessage() throws Exception {
+    RegimenTemplateConfigPage regimenTemplateConfigPage = new RegimenTemplateConfigPage(testWebDriver);
+    verifySuccessMessage(regimenTemplateConfigPage);
+  }
+
+  @And("^I access regimen reporting fields tab$")
+  public void accessRegimenReportingField() throws Exception {
+    RegimenTemplateConfigPage regimenTemplateConfigPage = new RegimenTemplateConfigPage(testWebDriver);
+    regimenTemplateConfigPage.clickReportingFieldTab();
+  }
+
+  @Then("^I should see regimen reporting fields$")
+  public void verifyDefaultRegimenReportingFields() throws Exception {
+    RegimenTemplateConfigPage regimenTemplateConfigPage = new RegimenTemplateConfigPage(testWebDriver);
+    verifyDefaultRegimenReportingFieldsValues(regimenTemplateConfigPage);
+  }
+
+  @When("^I add new regimen reporting field:$")
+  public void addRegimenReportingField(DataTable regimenReportingTable) throws Exception {
+    RegimenTemplateConfigPage regimenTemplateConfigPage = new RegimenTemplateConfigPage(testWebDriver);
+    List<Map<String, String>> data = regimenReportingTable.asMaps();
+    for (Map map : data) {
+      regimenTemplateConfigPage.NoOfPatientsOnTreatmentCheckBox(Boolean.parseBoolean(map.get("NoOfPatientsOnTreatment").toString()));
+      regimenTemplateConfigPage.setValueRemarksTextField(map.get("Remarks").toString());
     }
+  }
+
+  @Then("^I should see created regimen and reporting fields:$")
+  public void verifyRegimenAndReportingFields(DataTable dataTable) throws Exception {
+    List<Map<String, String>> data = dataTable.asMaps();
+    for (Map map : data)
+      verifyProgramDetailsSaved(map.get("Code").toString(), map.get("Name").toString(), map.get("Remarks").toString());
+  }
+
+  @When("^I activate Number Of Patients On Treatment$")
+  public void activeNoOfPatientsOnTreatment() throws Exception {
+    RegimenTemplateConfigPage regimenTemplateConfigPage = new RegimenTemplateConfigPage(testWebDriver);
+    regimenTemplateConfigPage.NoOfPatientsOnTreatmentCheckBox(true);
+  }
 
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider")
   public void testVerifyAtLeastOneColumnChecked(String program, String[] credentials) throws Exception {
 
-    dbWrapper.setRegimenTemplateConfiguredForAllPrograms(false);
+    dbWrapper.updateFieldValue("programs", "regimenTemplateConfigured", "false", null, null);
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
     RegimenTemplateConfigPage regimenTemplateConfigPage = homePage.navigateToRegimenConfigTemplate();
@@ -162,10 +166,10 @@ public class ConfigureRegimenProgramTemplate extends TestCaseHelper {
   }
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function-Positive")
-  public void testVerifyAlteredRegimensColumnsOnRnRScreen(String program,String adminUser, String userSIC, String categoryCode, String password, String regimenCode, String regimenName, String regimenCode2, String regimenName2) throws Exception {
+  public void testVerifyAlteredRegimensColumnsOnRnRScreen(String program, String adminUser, String userSIC, String categoryCode, String password, String regimenCode, String regimenName, String regimenCode2, String regimenName2) throws Exception {
     String newRemarksHeading = "Testing column";
 
-    dbWrapper.setRegimenTemplateConfiguredForAllPrograms(false);
+    dbWrapper.updateFieldValue("programs", "regimenTemplateConfigured", "false", null, null);
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(adminUser, adminUser);
     RegimenTemplateConfigPage regimenTemplateConfigPage = homePage.navigateToRegimenConfigTemplate();
@@ -200,7 +204,7 @@ public class ConfigureRegimenProgramTemplate extends TestCaseHelper {
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider")
   public void testVerifyMultipleCategoriesAddition(String program, String[] credentials) throws Exception {
-    dbWrapper.setRegimenTemplateConfiguredForAllPrograms(false);
+    dbWrapper.updateFieldValue("programs", "regimenTemplateConfigured", "false", null, null);
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
     RegimenTemplateConfigPage regimenTemplateConfigPage = homePage.navigateToRegimenConfigTemplate();
@@ -214,7 +218,7 @@ public class ConfigureRegimenProgramTemplate extends TestCaseHelper {
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider")
   public void testVerifyDuplicateCategoriesInterCategory(String program, String[] credentials) throws Exception {
-    dbWrapper.setRegimenTemplateConfiguredForAllPrograms(false);
+    dbWrapper.updateFieldValue("programs", "regimenTemplateConfigured", "false", null, null);
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
     RegimenTemplateConfigPage regimenTemplateConfigPage = homePage.navigateToRegimenConfigTemplate();
@@ -227,7 +231,7 @@ public class ConfigureRegimenProgramTemplate extends TestCaseHelper {
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider")
   public void testVerifyDuplicateCategoriesAdditionForSameCategory(String program, String[] credentials) throws Exception {
-    dbWrapper.setRegimenTemplateConfiguredForAllPrograms(false);
+    dbWrapper.updateFieldValue("programs", "regimenTemplateConfigured", "false", null, null);
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
     RegimenTemplateConfigPage regimenTemplateConfigPage = homePage.navigateToRegimenConfigTemplate();
@@ -239,7 +243,7 @@ public class ConfigureRegimenProgramTemplate extends TestCaseHelper {
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Multiple-Programs")
   public void testVerifyDuplicateCategoriesInterPrograms(String program1, String program2, String[] credentials) throws Exception {
-    dbWrapper.setRegimenTemplateConfiguredForAllPrograms(false);
+    dbWrapper.updateFieldValue("programs", "regimenTemplateConfigured", "false", null, null);
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
     RegimenTemplateConfigPage regimenTemplateConfigPage = homePage.navigateToRegimenConfigTemplate();
@@ -258,7 +262,7 @@ public class ConfigureRegimenProgramTemplate extends TestCaseHelper {
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider")
   public void testVerifyEditCategory(String program, String[] credentials) throws Exception {
-    dbWrapper.setRegimenTemplateConfiguredForAllPrograms(false);
+    dbWrapper.updateFieldValue("programs", "regimenTemplateConfigured", "false", null, null);
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
     RegimenTemplateConfigPage regimenTemplateConfigPage = homePage.navigateToRegimenConfigTemplate();
@@ -283,7 +287,7 @@ public class ConfigureRegimenProgramTemplate extends TestCaseHelper {
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider")
   public void testVerifyDuplicateCategoryOnDone(String program, String[] credentials) throws Exception {
-    dbWrapper.setRegimenTemplateConfiguredForAllPrograms(false);
+    dbWrapper.updateFieldValue("programs", "regimenTemplateConfigured", "false", null, null);
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
     RegimenTemplateConfigPage regimenTemplateConfigPage = homePage.navigateToRegimenConfigTemplate();
@@ -300,7 +304,7 @@ public class ConfigureRegimenProgramTemplate extends TestCaseHelper {
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider")
   public void testVerifyCategoryErrorOnDone(String program, String[] credentials) throws Exception {
-    dbWrapper.setRegimenTemplateConfiguredForAllPrograms(false);
+    dbWrapper.updateFieldValue("programs", "regimenTemplateConfigured", "false", null, null);
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
     RegimenTemplateConfigPage regimenTemplateConfigPage = homePage.navigateToRegimenConfigTemplate();
@@ -317,7 +321,7 @@ public class ConfigureRegimenProgramTemplate extends TestCaseHelper {
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider")
   public void testVerifyCancelButtonFunctionality(String program, String[] credentials) throws Exception {
-    dbWrapper.setRegimenTemplateConfiguredForAllPrograms(false);
+    dbWrapper.updateFieldValue("programs", "regimenTemplateConfigured", "false", null, null);
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
     RegimenTemplateConfigPage regimenTemplateConfigPage = homePage.navigateToRegimenConfigTemplate();
@@ -439,12 +443,12 @@ public class ConfigureRegimenProgramTemplate extends TestCaseHelper {
   @AfterMethod(groups = "admin")
   public void tearDown() throws Exception {
     testWebDriver.sleep(500);
-      if (!testWebDriver.getElementById("username").isDisplayed()) {
-          HomePage homePage = new HomePage(testWebDriver);
-          homePage.logout(baseUrlGlobal);
-          dbWrapper.deleteData();
-          dbWrapper.closeConnection();
-      }
+    if (!testWebDriver.getElementById("username").isDisplayed()) {
+      HomePage homePage = new HomePage(testWebDriver);
+      homePage.logout(baseUrlGlobal);
+      dbWrapper.deleteData();
+      dbWrapper.closeConnection();
+    }
 
   }
 
@@ -467,7 +471,7 @@ public class ConfigureRegimenProgramTemplate extends TestCaseHelper {
   @DataProvider(name = "Data-Provider-Function-Positive")
   public Object[][] parameterIntTestProviderPositive() {
     return new Object[][]{
-      {"HIV","Admin123", "storeIncharge", "ADULTS", "Admin123", "RegimenCode1", "RegimenName1", "RegimenCode2", "RegimenName2"}
+      {"HIV", "Admin123", "storeIncharge", "ADULTS", "Admin123", "RegimenCode1", "RegimenName1", "RegimenCode2", "RegimenName2"}
     };
 
 
