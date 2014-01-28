@@ -16,6 +16,7 @@ import org.openlmis.pageobjects.LoginPage;
 import org.openlmis.pageobjects.ManagePodPage;
 import org.openlmis.pageobjects.UpdatePodPage;
 import org.openqa.selenium.WebElement;
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -25,6 +26,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.*;
+import static com.thoughtworks.selenium.SeleneseTestBase.assertEquals;
 
 public class PODPagination extends TestCaseHelper{
 
@@ -79,21 +81,24 @@ public class PODPagination extends TestCaseHelper{
     verifyNextAndLastPageLinksEnabled();
     verifyFirstAndPreviousPageLinksDisabled();
     verifyNumberOfProductsVisibleOnPage(10);
-    verifyDisplayOrderOnPage(10, new String[]{"F0", "F1", "F10", "F2", "F3", "F4", "F5", "F6", "F7", "F8"});
+    verifyProductDisplayOrderOnPage(new String[]{"F0", "F1", "F10", "F2", "F3", "F4", "F5", "F6", "F7", "F8"});
+    verifyCategoryDisplayOrderOnPage(new String[]{"C1", "", "", "", "", "", "", "", "", ""});
 
     navigateToPage(2);
     verifyPageNumberSelected(2);
     verifyNextAndLastPageLinksEnabled();
     verifyFirstAndPreviousPageLinksEnabled();
     verifyNumberOfProductsVisibleOnPage(10);
-    verifyDisplayOrderOnPage(10, new String[]{"F9", "NF0", "NF1", "NF10", "NF2", "NF3", "NF4", "NF5", "NF6", "NF7"});
+    verifyProductDisplayOrderOnPage(new String[]{"F9", "NF0", "NF1", "NF10", "NF2", "NF3", "NF4", "NF5", "NF6", "NF7"});
+    verifyCategoryDisplayOrderOnPage(new String[]{"C1","","","","","","","","",""});
 
     updatePodPage.navigateToNextPage();
     verifyPageNumberSelected(3);
     verifyNextAndLastPageLinksDisabled();
     verifyFirstAndPreviousPageLinksEnabled();
     verifyNumberOfProductsVisibleOnPage(2);
-    verifyDisplayOrderOnPage(2, new String[]{"NF8", "NF9"});
+    verifyProductDisplayOrderOnPage(new String[]{"NF8", "NF9"});
+    verifyCategoryDisplayOrderOnPage(new String[]{"C1",""});
 
     updatePodPage.navigateToFirstPage();
     verifyPageNumberSelected(1);
@@ -114,10 +119,76 @@ public class PODPagination extends TestCaseHelper{
     verifyNumberOfProductsVisibleOnPage(10);
   }
 
-  private void verifyDisplayOrderOnPage(int numberOfProducts, String[] productCodes) {
-    for (int i = 1; i < numberOfProducts; i++) {
-      assertEquals(productCodes[i-1],updatePodPage.getProductCode(i));
-    }
+  @Test(groups = {"requisition"})
+  public void testRnRPaginationAndSpecificDisplayOrder() throws Exception {
+    dbWrapper.setupMultipleProducts(podPaginationData.get(PROGRAM), "Lvl3 Hospital", 11, false);
+    dbWrapper.insertRequisitionWithMultipleLineItems(11, podPaginationData.get(PROGRAM), true, "F10", false);
+    dbWrapper.convertRequisitionToOrder(dbWrapper.getMaxRnrID(), "READY_TO_PACK");
+
+    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+    HomePage homePage = loginPage.loginAs(podPaginationData.get(USER), podPaginationData.get(PASSWORD));
+    ManagePodPage managePodPage = homePage.navigateManagePOD();
+    managePodPage.clickUpdatePODLink();
+    verifyNumberOFPageLinksDisplayed(25,10);
+    verifyPageNumberLinksDisplayed();
+    verifyProductDisplayOrderOnPage(new String[]{"F0", "NF0", "F1", "NF1", "F2", "NF2", "F3", "NF3", "F4", "NF4"});
+    verifyCategoryDisplayOrderOnPage(new String[]{"C1","","","","","","","","",""});
+
+    navigateToPage(2);
+    verifyProductDisplayOrderOnPage(new String[]{"F5", "NF5", "F6", "NF6", "F7", "NF7", "F8", "NF8", "F9", "NF9"});
+    verifyCategoryDisplayOrderOnPage(new String[]{"C1","","","","","","","","",""});
+
+    updatePodPage.navigateToNextPage();
+    verifyProductDisplayOrderOnPage(new String[]{"F10", "NF10"});
+    verifyCategoryDisplayOrderOnPage(new String[]{"C1",""});
+  }
+
+  @Test(groups = {"requisition"})
+  public void testCategoryDefaultDisplayOrder() throws Exception {
+    dbWrapper.setupMultipleCategoryProducts(podPaginationData.get(PROGRAM), "Lvl3 Hospital", 11, true);
+    dbWrapper.insertRequisitionWithMultipleLineItems(11, podPaginationData.get(PROGRAM), true, "F10", false);
+    dbWrapper.convertRequisitionToOrder(dbWrapper.getMaxRnrID(), "READY_TO_PACK");
+
+    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+    HomePage homePage = loginPage.loginAs(podPaginationData.get(USER), podPaginationData.get(PASSWORD));
+    ManagePodPage managePodPage = homePage.navigateManagePOD();
+    managePodPage.clickUpdatePODLink();
+    verifyNumberOFPageLinksDisplayed(25,10);
+    verifyPageNumberLinksDisplayed();
+    verifyProductDisplayOrderOnPage(new String[]{"F0", "NF0", "F1", "NF1", "F10", "NF10", "F2", "NF2", "F3", "NF3"});
+    verifyCategoryDisplayOrderOnPage(new String[]{"C0","", "C1","", "C10","", "C2", "","C3",""});
+
+    navigateToPage(2);
+    verifyProductDisplayOrderOnPage(new String[]{"F4", "NF4", "F5", "NF5", "F6", "NF6", "F7", "NF7", "F8", "NF8"});
+    verifyCategoryDisplayOrderOnPage(new String[]{"C4","", "C5","", "C6","", "C7","", "C8",""});
+
+    updatePodPage.navigateToNextPage();
+    verifyProductDisplayOrderOnPage(new String[]{"F9", "NF9"});
+    verifyCategoryDisplayOrderOnPage(new String[]{"C9",""});
+  }
+
+  @Test(groups = {"requisition"})
+  public void testCategorySpecificDisplayOrder() throws Exception {
+    dbWrapper.setupMultipleCategoryProducts(podPaginationData.get(PROGRAM), "Lvl3 Hospital", 11, false);
+    dbWrapper.insertRequisitionWithMultipleLineItems(11, podPaginationData.get(PROGRAM), true, "F10", false);
+    dbWrapper.convertRequisitionToOrder(dbWrapper.getMaxRnrID(), "READY_TO_PACK");
+
+    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+    HomePage homePage = loginPage.loginAs(podPaginationData.get(USER), podPaginationData.get(PASSWORD));
+    ManagePodPage managePodPage = homePage.navigateManagePOD();
+    managePodPage.clickUpdatePODLink();
+    verifyNumberOFPageLinksDisplayed(25,10);
+    verifyPageNumberLinksDisplayed();
+    verifyProductDisplayOrderOnPage(new String[]{"F0", "NF0", "F1", "NF1", "F2", "NF2", "F3", "NF3", "F4", "NF4"});
+    verifyCategoryDisplayOrderOnPage(new String[]{"C0","", "C1", "","C2","", "C3","", "C4",""});
+
+    navigateToPage(2);
+    verifyProductDisplayOrderOnPage(new String[]{"F5", "NF5", "F6", "NF6", "F7", "NF7", "F8", "NF8", "F9", "NF9"});
+    verifyCategoryDisplayOrderOnPage(new String[]{"C5","", "C6","", "C7","", "C8","", "C9",""});
+
+    updatePodPage.navigateToNextPage();
+    verifyProductDisplayOrderOnPage(new String[]{"F10", "NF10"});
+    verifyCategoryDisplayOrderOnPage(new String[]{"C10",""});
   }
 
   private void verifyNextAndLastPageLinksDisabled() {
@@ -174,6 +245,26 @@ public class PODPagination extends TestCaseHelper{
       testWebDriver.waitForElementToAppear(page);
       assertTrue(page.isDisplayed());
     }
+  }
+
+  private void verifyProductDisplayOrderOnPage(String[] productCodes) {
+    for (int i = 1; i < productCodes.length; i++) {
+      assertEquals(productCodes[i-1],updatePodPage.getProductCode(i));
+    }
+  }
+
+  private void verifyCategoryDisplayOrderOnPage(String[] categoryCodes) {
+    for (int i = 1; i < categoryCodes.length; i++) {
+      assertEquals(categoryCodes[i-1],updatePodPage.getCategoryName(i));
+    }
+  }
+
+  @AfterMethod(groups = {"requisition"})
+  public void tearDown() throws Exception {
+    HomePage homePage = new HomePage(testWebDriver);
+    homePage.logout(baseUrlGlobal);
+    dbWrapper.deleteData();
+    dbWrapper.closeConnection();
   }
 
 }

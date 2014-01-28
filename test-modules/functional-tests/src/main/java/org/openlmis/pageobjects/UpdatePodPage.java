@@ -57,6 +57,10 @@ public class UpdatePodPage extends Page {
     return testWebDriver.findElement(By.id("productName_" + (rowNumber - 1))).getText();
   }
 
+  public String getCategoryName(int rowNumber) {
+    return testWebDriver.findElement(By.id("category_" + (rowNumber - 1))).getText();
+  }
+
   public String getUnitOfIssue(int rowNumber) {
     return testWebDriver.findElement(By.id("dispensingUnit_" + (rowNumber - 1))).getText();
   }

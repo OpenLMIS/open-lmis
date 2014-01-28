@@ -820,7 +820,13 @@ public class DBWrapper {
     }
 
     String insertSql;
-    insertSql = "INSERT INTO products (code, alternateItemCode, manufacturer, manufacturerCode, manufacturerBarcode, mohBarcode, gtin, type, primaryName, fullName, genericName, alternateName, description, strength, formId, dosageUnitId, dispensingUnit, dosesPerDispensingUnit, packSize, alternatePackSize, storeRefrigerated, storeRoomTemperature, hazardous, flammable, controlledSubstance, lightSensitive, approvedByWho, contraceptiveCyp, packLength, packWidth, packHeight, packWeight, packsPerCarton, cartonLength, cartonWidth, cartonHeight, cartonsPerPallet, expectedShelfLife, specialStorageInstructions, specialTransportInstructions, active, fullSupply, tracer, packRoundingThreshold, roundToZero, archived, displayOrder, categoryId) values";
+    insertSql = "INSERT INTO products (code, alternateItemCode, manufacturer, manufacturerCode, manufacturerBarcode, mohBarcode, gtin, " +
+      "type, primaryName, fullName, genericName, alternateName, description, strength, formId, dosageUnitId, dispensingUnit, " +
+      "dosesPerDispensingUnit, packSize, alternatePackSize, storeRefrigerated, storeRoomTemperature, hazardous, flammable, " +
+      "controlledSubstance, lightSensitive, approvedByWho, contraceptiveCyp, packLength, packWidth, packHeight, packWeight, " +
+      "packsPerCarton, cartonLength, cartonWidth, cartonHeight, cartonsPerPallet, expectedShelfLife, specialStorageInstructions, " +
+      "specialTransportInstructions, active, fullSupply, tracer, packRoundingThreshold, roundToZero, archived, displayOrder, categoryId) " +
+      "values";
 
     for (int i = 0; i < numberOfProductsOfEachType; i++) {
       if (defaultDisplayOrder) {
@@ -1399,15 +1405,20 @@ public class DBWrapper {
       "(Select id from processing_periods where name='Period1'), 'APPROVED', '" + emergency + "', 50.0000, 0.0000, " +
       "(select id from supervisory_nodes where code='N1'))");
 
+    String insertSql="INSERT INTO requisition_line_items (rnrId, productCode,product,productDisplayOrder,productCategory," +
+      "productCategoryDisplayOrder, beginningBalance, quantityReceived, quantityDispensed, stockInHand, dispensingUnit, maxMonthsOfStock, " +
+      "dosesPerMonth, dosesPerDispensingUnit, packSize, fullSupply,totalLossesAndAdjustments,newPatientCount,stockOutDays,price," +
+      "roundToZero,packRoundingThreshold,packsToShip) VALUES";
+
     for (int i = 0; i < numberOfLineItems; i++) {
-      update("INSERT INTO requisition_line_items " +
-        "(rnrId, productCode,product,productDisplayOrder,productCategory,productCategoryDisplayOrder, beginningBalance, quantityReceived, quantityDispensed, stockInHand, " +
-        "dispensingUnit, maxMonthsOfStock, dosesPerMonth, dosesPerDispensingUnit, packSize,fullSupply,totalLossesAndAdjustments,newPatientCount,stockOutDays,price,roundToZero,packRoundingThreshold,packsToShip) VALUES" +
-        "((SELECT max(id) FROM requisitions), 'F" + i + "','antibiotic Capsule 300/200/600 mg',1,'Antibiotics',1, '0', '11' , '1', '10' ,'Strip','3', '30', '10', '10','t',0,0,0,12.5000,'f',1,5);");
-      update("INSERT INTO requisition_line_items " +
-        "(rnrId, productCode,product,productDisplayOrder,productCategory,productCategoryDisplayOrder, beginningBalance, quantityReceived, quantityDispensed, stockInHand, " +
-        "dispensingUnit, maxMonthsOfStock, dosesPerMonth, dosesPerDispensingUnit, packSize,fullSupply,totalLossesAndAdjustments,newPatientCount,stockOutDays,price,roundToZero,packRoundingThreshold,packsToShip) VALUES" +
-        "((SELECT max(id) FROM requisitions), 'NF" + i + "','antibiotic Capsule 300/200/600 mg',1,'Antibiotics',1, '0', '11' , '1', '10' ,'Strip','3', '30', '10', '10','t',0,0,0,12.5000,'f',1,5);");
+      String productDisplayOrder = getAttributeFromTable("products", "displayOrder", "code", "F" + i );
+      String categoryId = getAttributeFromTable("products", "categoryId", "code", "F" + i );
+      String categoryCode = getAttributeFromTable("product_categories", "code", "id", categoryId);
+      String categoryDisplayOrder = getAttributeFromTable("product_categories", "displayOrder", "id", categoryId);
+      update(insertSql + "((SELECT max(id) FROM requisitions), 'F" + i + "','antibiotic Capsule 300/200/600 mg', %s, '%s', %s, '0', '11' , " +
+        "'1', '10' ,'Strip','3', '30', '10', '10','t',0,0,0,12.5000,'f',1,5);", productDisplayOrder,categoryCode ,categoryDisplayOrder);
+      update(insertSql + "((SELECT max(id) FROM requisitions), 'NF" + i + "','antibiotic Capsule 300/200/600 mg', %s, '%s', %s, '0', '11' ," +
+        " '1', '10' ,'Strip','3', '30', '10', '10','f',0,0,0,12.5000,'f',1,5);", productDisplayOrder,categoryCode ,categoryDisplayOrder);
     }
     if (withSupplyLine) {
       ResultSet rs1 = query("select * from supply_lines where supervisoryNodeId = " +
