@@ -286,8 +286,11 @@ public class OrderServiceTest {
     lineItems.add(rnrLineItem);
     rnr.setFullSupplyLineItems(lineItems);
     rnr.setNonFullSupplyLineItems(lineItems);
-    order.setRnr(rnr);
+    rnr.setProgram(new Program());
+    rnr.getProgram().setId(1L);
 
+    order.setRnr(rnr);
+    when(programService.getById(rnr.getProgram().getId())).thenReturn(rnr.getProgram());
     when(orderRepository.getById(orderId)).thenReturn(order);
     when(requisitionService.getFullRequisitionById(rnr.getId())).thenReturn(rnr);
 

@@ -28,7 +28,7 @@ public interface ShipmentMapper {
   @Insert({"INSERT INTO shipment_line_items ",
     "(orderId, concatenatedOrderId, facilityCode, programCode, productCode, quantityOrdered, quantityShipped, cost, substitutedProductCode, substitutedProductName, substitutedProductQuantityShipped, packSize, packedDate, shippedDate, productName, dispensingUnit, productCategory, packsToShip)",
     "VALUES",
-    "(#{orderId}, #{concatenatedOrderId}, #{facilityCode}, #{programCode}, #{productCode}, #{quantityOrdered}, #{quantityShipped}, #{cost}, #{substitutedProductCode}, #{substitutedProductName}, #{substitutedProductQuantityShipped}, #{packSize}, #{packedDate}, #{shippedDate}, #{productName}, #{dispensingUnit}, #{productCategory})"})
+    "(#{orderId}, #{concatenatedOrderId}, #{facilityCode}, #{programCode}, #{productCode}, #{quantityOrdered}, #{quantityShipped}, #{cost}, #{substitutedProductCode}, #{substitutedProductName}, #{substitutedProductQuantityShipped}, #{packSize}, #{packedDate}, #{shippedDate}, #{productName}, #{dispensingUnit}, #{productCategory}, #{packsToShip})"})
   @Options(useGeneratedKeys = true)
   public void insertShippedLineItem(ShipmentLineItem shipmentLineItem);
 
