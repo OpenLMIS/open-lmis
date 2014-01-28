@@ -1268,10 +1268,6 @@ public class DBWrapper {
       "(Select id from facilities where code ='%s'));", facilityCode).get(0);
   }
 
-  public void updateBudgetFlag(String ProgramName, Boolean Flag) throws IOException, SQLException {
-    update("update programs set budgetingApplies ='" + Flag + "' where name ='" + ProgramName + "';");
-  }
-
   public void insertBudgetData() throws IOException, SQLException {
     update("INSERT INTO budget_file_info VALUES (1,'abc.csv','f',200,'12/12/13',200,'12/12/13');");
     update(

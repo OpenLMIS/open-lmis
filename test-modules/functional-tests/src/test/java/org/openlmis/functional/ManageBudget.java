@@ -40,7 +40,7 @@ public class ManageBudget extends TestCaseHelper{
 
   @Test(groups = {"requisition"})
   public void testVerifyBudgetWhenRegularRnRIsCreatedAndBudgetFlagIsTrueAndContainsBudgetInformation() throws Exception {
-    dbWrapper.updateBudgetFlag(program, true);
+    dbWrapper.updateFieldValue("programs","budgetingApplies","true","name",program);
     dbWrapper.insertBudgetData();
 
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
@@ -90,7 +90,7 @@ public class ManageBudget extends TestCaseHelper{
 
   @Test(groups = {"requisition"})
   public void testVerifyBudgetWhenRegularRnRIsCreatedAndBudgetFlagIsTrueAndDoNotContainsBudgetInformation() throws Exception {
-    dbWrapper.updateBudgetFlag(program, true);
+    dbWrapper.updateFieldValue("programs","budgetingApplies","true","name",program);
 
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(userSIC, password);
@@ -134,7 +134,7 @@ public class ManageBudget extends TestCaseHelper{
 
   @Test(groups = {"requisition"})
   public void testVerifyBudgetWhenRegularRnRIsCreatedAndBudgetFlagIsFalseAndBudgetFilePresent() throws Exception {
-    dbWrapper.updateBudgetFlag(program, false);
+    dbWrapper.updateFieldValue("programs","budgetingApplies","false","name",program);
     dbWrapper.insertBudgetData();
 
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
@@ -180,7 +180,7 @@ public class ManageBudget extends TestCaseHelper{
 
   @Test(groups = {"requisition"})
   public void testVerifyBudgetWhenEmergencyRnRIsCreatedWhenBudgetFlagIsTrueAndBudgetInformationPresent() throws Exception {
-    dbWrapper.updateBudgetFlag(program, true);
+    dbWrapper.updateFieldValue("programs","budgetingApplies","true","name",program);
     dbWrapper.insertBudgetData();
 
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
@@ -224,8 +224,7 @@ public class ManageBudget extends TestCaseHelper{
 
   @Test(groups = {"requisition"})
   public void testVerifyBudgetWhenEmergencyRnRIsCreatedWhenBudgetFlagIsFalseAndBudgetInformationNotPresent() throws Exception {
-    dbWrapper.updateBudgetFlag(program,false);
-
+    dbWrapper.updateFieldValue("programs","budgetingApplies","false","name",program);
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(userSIC, password);
     homePage.navigateHomePage();
@@ -267,7 +266,7 @@ public class ManageBudget extends TestCaseHelper{
 
   @Test(groups = {"requisition"})
   public void testVerifyBudgetWhenRegularRnRIsCreatedAndBudgetFlagIsTrueAndContainsBudgetInformationForDifferentPeriod() throws Exception {
-    dbWrapper.updateBudgetFlag(program, true);
+    dbWrapper.updateFieldValue("programs","budgetingApplies","true","name",program);
     dbWrapper.insertBudgetData();
     dbWrapper.insertProcessingPeriod("PastPeriod", "past period","2013-09-01","2013-10-02",1,"M" );
 
@@ -321,7 +320,7 @@ public class ManageBudget extends TestCaseHelper{
 
   @Test(groups = {"requisition"})
   public void testVerifyBudgetWhenRegularRnRIsCreatedAndBudgetFlagIsTrueAndContainsBudgetInformationAndUpdated() throws Exception {
-    dbWrapper.updateBudgetFlag(program, true);
+    dbWrapper.updateFieldValue("programs","budgetingApplies","true","name",program);
     dbWrapper.insertBudgetData();
 
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
@@ -371,7 +370,7 @@ public class ManageBudget extends TestCaseHelper{
 
   @Test(groups = {"requisition"})
   public void testVerifyBudgetWhenNonFullSupplyProductAndRegimenPresentInRegularRnR() throws Exception {
-    dbWrapper.updateBudgetFlag(program, true);
+    dbWrapper.updateFieldValue("programs","budgetingApplies","true","name",program);
     dbWrapper.insertBudgetData();
     dbWrapper.insertRegimenTemplateColumnsForProgram(program);
     dbWrapper.insertRegimenTemplateConfiguredForProgram(program, "ADULTS", "Regimen", "Regimen1", true);
