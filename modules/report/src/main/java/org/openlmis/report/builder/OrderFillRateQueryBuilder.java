@@ -1,6 +1,6 @@
 package org.openlmis.report.builder;
 
-import org.openlmis.report.model.filter.OrderFillRateReportFilter;
+import org.openlmis.report.model.params.OrderFillRateReportParam;
 import org.openlmis.report.model.report.OrderFillRateReport;
 
 import java.util.Map;
@@ -26,7 +26,7 @@ public class OrderFillRateQueryBuilder {
 
     public static String getQuery(Map params){
 
-        OrderFillRateReportFilter filter  = (OrderFillRateReportFilter)params.get("filterCriteria");
+        OrderFillRateReportParam filter  = (OrderFillRateReportParam)params.get("filterCriteria");
         Map sortCriteria = (Map) params.get("SortCriteria");
         BEGIN();
         SELECT("distinct supplyingfacility as supplyingFacility ,CASE  WHEN (approved::numeric > 0) AND (err_qty_received > 0) THEN round((receipts)::numeric  / (approved)::numeric * 100::numeric, 0)\n" +
@@ -40,7 +40,7 @@ public class OrderFillRateQueryBuilder {
         return sql;
 
     }
-    private static void writePredicates(OrderFillRateReportFilter filter){
+    private static void writePredicates(OrderFillRateReportParam filter){
 
         WHERE("periodid = cast( #{filterCriteria.periodId} as int4) ");
         WHERE("scheduleid = cast(#{filterCriteria.scheduleId} as int4) ");//required param

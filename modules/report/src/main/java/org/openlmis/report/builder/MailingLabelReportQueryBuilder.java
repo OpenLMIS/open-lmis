@@ -9,22 +9,19 @@
  */
 package org.openlmis.report.builder;
 
-import org.openlmis.report.model.filter.MailingLabelReportFilter;
-import org.openlmis.report.model.report.MailingLabelReport;
-import org.openlmis.report.model.report.StockImbalanceReport;
+import org.openlmis.report.model.params.MailingLabelReportParam;
 import org.openlmis.report.model.sorter.MailingLabelReportSorter;
 
 import java.util.Map;
 
 import static org.apache.ibatis.jdbc.SqlBuilder.*;
-import static org.apache.ibatis.jdbc.SqlBuilder.ORDER_BY;
 import static org.apache.ibatis.jdbc.SqlBuilder.SQL;
 
 public class MailingLabelReportQueryBuilder {
 
     public static String SelectFilteredSortedPagedMailingLabelsSql(Map params){
 
-        MailingLabelReportFilter filter  =(MailingLabelReportFilter)params.get("filterCriteria");
+        MailingLabelReportParam filter  =(MailingLabelReportParam)params.get("filterCriteria");
         MailingLabelReportSorter sorter = (MailingLabelReportSorter)params.get("SortCriteria");
         BEGIN();
         SELECT("F.id, F.code, F.name, F.active as active, F.address1, F.address2 , FT.name as facilityType, GZ.name as region, FO.code as owner, F.latitude::text ||',' ||  F.longitude::text  ||', ' || F.altitude::text gpsCoordinates, CASE WHEN U.officePhone IS NULL THEN '' ELSE U.officePhone || ' ,' END || CASE WHEN U.cellPhone IS NULL THEN '' ELSE U.cellPhone || ' ,' END || F.mainPhone as phoneNumber, U.email email, F.fax as fax, U.firstName || ' ' || U.lastName || ', ' || jobtitle contact ");

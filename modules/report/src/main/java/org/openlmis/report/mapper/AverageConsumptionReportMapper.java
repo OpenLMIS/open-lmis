@@ -16,10 +16,7 @@ import org.apache.ibatis.annotations.SelectProvider;
 import org.apache.ibatis.mapping.ResultSetType;
 import org.apache.ibatis.session.RowBounds;
 import org.openlmis.report.builder.AverageConsumptionQueryBuilder;
-import org.openlmis.report.builder.NonReportingFacilityQueryBuilder;
-import org.openlmis.report.model.ReportData;
-import org.openlmis.report.model.dto.NameCount;
-import org.openlmis.report.model.filter.AverageConsumptionReportFilter;
+import org.openlmis.report.model.params.AverageConsumptionReportParam;
 import org.openlmis.report.model.report.AverageConsumptionReport;
 import org.springframework.stereotype.Repository;
 
@@ -38,7 +35,7 @@ public interface AverageConsumptionReportMapper {
     @SelectProvider(type=AverageConsumptionQueryBuilder.class, method="SelectFilteredSortedPagedAverageConsumptionSql")
     @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize=10,timeout=0,useCache=true,flushCache=true)
     public List<AverageConsumptionReport> getFilteredSortedPagedAverageConsumptionReport(
-            @Param("filterCriteria") AverageConsumptionReportFilter filterCriteria,
+            @Param("filterCriteria") AverageConsumptionReportParam filterCriteria,
             @Param("SortCriteria") Map<String, String[]> SortCriteria ,
             @Param("RowBounds")RowBounds rowBounds
     );

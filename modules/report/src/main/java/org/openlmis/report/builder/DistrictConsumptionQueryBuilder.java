@@ -10,18 +10,15 @@
 
 package org.openlmis.report.builder;
 
-import org.openlmis.report.model.filter.DistrictConsumptionReportFilter;
+import org.openlmis.report.model.params.DistrictConsumptionReportParam;
 
 import java.util.Map;
-
-import static org.apache.ibatis.jdbc.SqlBuilder.*;
-import static org.apache.ibatis.jdbc.SqlBuilder.WHERE;
 
 public class DistrictConsumptionQueryBuilder {
 
     public static String SelectFilteredSortedPagedRecords(Map params){
 
-     DistrictConsumptionReportFilter filter  = (DistrictConsumptionReportFilter)params.get("filterCriteria");
+     DistrictConsumptionReportParam filter  = (DistrictConsumptionReportParam)params.get("filterCriteria");
 
      String query = "WITH temp AS (select product,zone_name, SUM(normalizedconsumption) normalizedconsumption "+
 
@@ -40,7 +37,7 @@ public class DistrictConsumptionQueryBuilder {
 
     return query;
 }
-    private static String writePredicates(DistrictConsumptionReportFilter filter){
+    private static String writePredicates(DistrictConsumptionReportParam filter){
         String predicate = "";
         if(filter != null){
             if (filter.getZoneId() != 0) {

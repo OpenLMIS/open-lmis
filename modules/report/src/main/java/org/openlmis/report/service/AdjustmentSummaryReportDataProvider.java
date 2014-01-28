@@ -15,7 +15,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.ibatis.session.RowBounds;
 import org.openlmis.report.mapper.AdjustmentSummaryReportMapper;
 import org.openlmis.report.model.ReportData;
-import org.openlmis.report.model.filter.AdjustmentSummaryReportFilter;
+import org.openlmis.report.model.params.AdjustmentSummaryReportParam;
 import org.openlmis.report.util.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -32,7 +32,7 @@ public class AdjustmentSummaryReportDataProvider extends ReportDataProvider {
   @Autowired
   private AdjustmentSummaryReportMapper reportMapper;
 
-  private AdjustmentSummaryReportFilter adjustmentSummaryReportFilter = null;
+  private AdjustmentSummaryReportParam adjustmentSummaryReportParam = null;
 
 
   @Override
@@ -47,78 +47,78 @@ public class AdjustmentSummaryReportDataProvider extends ReportDataProvider {
   }
 
 
-  public AdjustmentSummaryReportFilter getReportFilterData(Map<String, String[]> filterCriteria) {
+  public AdjustmentSummaryReportParam getReportFilterData(Map<String, String[]> filterCriteria) {
 
     if (filterCriteria != null) {
-      adjustmentSummaryReportFilter = new AdjustmentSummaryReportFilter();
+      adjustmentSummaryReportParam = new AdjustmentSummaryReportParam();
       Date originalStart = new Date();
       Date originalEnd = new Date();
 
-      adjustmentSummaryReportFilter.setZoneId(StringUtils.isBlank(filterCriteria.get("zoneId")[0]) ? 0 : Integer.parseInt(filterCriteria.get("zoneId")[0]));  //defaults to 0
-      adjustmentSummaryReportFilter.setFacilityTypeId(StringUtils.isBlank(filterCriteria.get("facilityTypeId")[0]) ? 0 : Integer.parseInt(filterCriteria.get("facilityTypeId")[0])); //defaults to 0
-      adjustmentSummaryReportFilter.setFacilityType(StringUtils.isBlank(filterCriteria.get("facilityType")[0]) ? "All Facilities" : filterCriteria.get("facilityType")[0]);
-      adjustmentSummaryReportFilter.setRgroup(StringUtils.isBlank(filterCriteria.get("rgroup")[0]) ? "All Reporting Groups" : filterCriteria.get("rgroup")[0]);
+      adjustmentSummaryReportParam.setZoneId(StringUtils.isBlank(filterCriteria.get("zoneId")[0]) ? 0 : Integer.parseInt(filterCriteria.get("zoneId")[0]));  //defaults to 0
+      adjustmentSummaryReportParam.setFacilityTypeId(StringUtils.isBlank(filterCriteria.get("facilityTypeId")[0]) ? 0 : Integer.parseInt(filterCriteria.get("facilityTypeId")[0])); //defaults to 0
+      adjustmentSummaryReportParam.setFacilityType(StringUtils.isBlank(filterCriteria.get("facilityType")[0]) ? "All Facilities" : filterCriteria.get("facilityType")[0]);
+      adjustmentSummaryReportParam.setRgroup(StringUtils.isBlank(filterCriteria.get("rgroup")[0]) ? "All Reporting Groups" : filterCriteria.get("rgroup")[0]);
 
 
-      adjustmentSummaryReportFilter.setProductCategoryId(StringUtils.isBlank(filterCriteria.get("productCategoryId")[0]) ? 0 : Integer.parseInt(filterCriteria.get("productCategoryId")[0])); //defaults to 0
-      adjustmentSummaryReportFilter.setProductId(StringUtils.isBlank(filterCriteria.get("productId")[0]) ? 0 : Integer.parseInt(filterCriteria.get("productId")[0])); //defaults to 0
-      adjustmentSummaryReportFilter.setRgroupId(StringUtils.isBlank(filterCriteria.get("rgroupId")[0]) ? 0 : Integer.parseInt(filterCriteria.get("rgroupId")[0])); //defaults to 0
-      adjustmentSummaryReportFilter.setProgramId(StringUtils.isBlank(filterCriteria.get("programId")[0]) ? 0 : Integer.parseInt(filterCriteria.get("programId")[0])); //defaults to 0
-      adjustmentSummaryReportFilter.setAdjustmentTypeId(StringUtils.isBlank(filterCriteria.get("adjustmentTypeId")[0]) ? "" : filterCriteria.get("adjustmentTypeId")[0]);
-      adjustmentSummaryReportFilter.setAdjustmentType(StringUtils.isBlank(filterCriteria.get("adjustmentType")[0]) ? "All Adjustment Types" : filterCriteria.get("adjustmentType")[0]);
+      adjustmentSummaryReportParam.setProductCategoryId(StringUtils.isBlank(filterCriteria.get("productCategoryId")[0]) ? 0 : Integer.parseInt(filterCriteria.get("productCategoryId")[0])); //defaults to 0
+      adjustmentSummaryReportParam.setProductId(StringUtils.isBlank(filterCriteria.get("productId")[0]) ? 0 : Integer.parseInt(filterCriteria.get("productId")[0])); //defaults to 0
+      adjustmentSummaryReportParam.setRgroupId(StringUtils.isBlank(filterCriteria.get("rgroupId")[0]) ? 0 : Integer.parseInt(filterCriteria.get("rgroupId")[0])); //defaults to 0
+      adjustmentSummaryReportParam.setProgramId(StringUtils.isBlank(filterCriteria.get("programId")[0]) ? 0 : Integer.parseInt(filterCriteria.get("programId")[0])); //defaults to 0
+      adjustmentSummaryReportParam.setAdjustmentTypeId(StringUtils.isBlank(filterCriteria.get("adjustmentTypeId")[0]) ? "" : filterCriteria.get("adjustmentTypeId")[0]);
+      adjustmentSummaryReportParam.setAdjustmentType(StringUtils.isBlank(filterCriteria.get("adjustmentType")[0]) ? "All Adjustment Types" : filterCriteria.get("adjustmentType")[0]);
 
-      adjustmentSummaryReportFilter.setYearFrom(StringUtils.isBlank(filterCriteria.get("fromYear")[0]) ? originalStart.getYear() : Integer.parseInt(filterCriteria.get("fromYear")[0])); //defaults to 0
-      adjustmentSummaryReportFilter.setYearTo(StringUtils.isBlank(filterCriteria.get("toYear")[0]) ? originalEnd.getYear() : Integer.parseInt(filterCriteria.get("toYear")[0])); //defaults to 0
-      adjustmentSummaryReportFilter.setMonthFrom(StringUtils.isBlank(filterCriteria.get("fromMonth")[0]) ? originalStart.getMonth() : Integer.parseInt(filterCriteria.get("fromMonth")[0])); //defaults to 0
-      adjustmentSummaryReportFilter.setMonthTo(StringUtils.isBlank(filterCriteria.get("toMonth")[0]) ? originalEnd.getMonth() : Integer.parseInt(filterCriteria.get("toMonth")[0])); //defaults to 0
-      adjustmentSummaryReportFilter.setPeriodType(StringUtils.isBlank(filterCriteria.get("periodType")[0]) ? "" : filterCriteria.get("periodType")[0].toString());
-      adjustmentSummaryReportFilter.setQuarterFrom(StringUtils.isBlank(filterCriteria.get("fromQuarter")[0]) ? 1 : Integer.parseInt(filterCriteria.get("fromQuarter")[0]));
-      adjustmentSummaryReportFilter.setQuarterTo(StringUtils.isBlank(filterCriteria.get("toQuarter")[0]) ? 1 : Integer.parseInt(filterCriteria.get("toQuarter")[0]));
-      adjustmentSummaryReportFilter.setSemiAnnualFrom(StringUtils.isBlank(filterCriteria.get("fromSemiAnnual")[0]) ? 1 : Integer.parseInt(filterCriteria.get("fromSemiAnnual")[0]));
-      adjustmentSummaryReportFilter.setSemiAnnualTo(StringUtils.isBlank(filterCriteria.get("toSemiAnnual")[0]) ? 1 : Integer.parseInt(filterCriteria.get("toSemiAnnual")[0]));
+      adjustmentSummaryReportParam.setYearFrom(StringUtils.isBlank(filterCriteria.get("fromYear")[0]) ? originalStart.getYear() : Integer.parseInt(filterCriteria.get("fromYear")[0])); //defaults to 0
+      adjustmentSummaryReportParam.setYearTo(StringUtils.isBlank(filterCriteria.get("toYear")[0]) ? originalEnd.getYear() : Integer.parseInt(filterCriteria.get("toYear")[0])); //defaults to 0
+      adjustmentSummaryReportParam.setMonthFrom(StringUtils.isBlank(filterCriteria.get("fromMonth")[0]) ? originalStart.getMonth() : Integer.parseInt(filterCriteria.get("fromMonth")[0])); //defaults to 0
+      adjustmentSummaryReportParam.setMonthTo(StringUtils.isBlank(filterCriteria.get("toMonth")[0]) ? originalEnd.getMonth() : Integer.parseInt(filterCriteria.get("toMonth")[0])); //defaults to 0
+      adjustmentSummaryReportParam.setPeriodType(StringUtils.isBlank(filterCriteria.get("periodType")[0]) ? "" : filterCriteria.get("periodType")[0].toString());
+      adjustmentSummaryReportParam.setQuarterFrom(StringUtils.isBlank(filterCriteria.get("fromQuarter")[0]) ? 1 : Integer.parseInt(filterCriteria.get("fromQuarter")[0]));
+      adjustmentSummaryReportParam.setQuarterTo(StringUtils.isBlank(filterCriteria.get("toQuarter")[0]) ? 1 : Integer.parseInt(filterCriteria.get("toQuarter")[0]));
+      adjustmentSummaryReportParam.setSemiAnnualFrom(StringUtils.isBlank(filterCriteria.get("fromSemiAnnual")[0]) ? 1 : Integer.parseInt(filterCriteria.get("fromSemiAnnual")[0]));
+      adjustmentSummaryReportParam.setSemiAnnualTo(StringUtils.isBlank(filterCriteria.get("toSemiAnnual")[0]) ? 1 : Integer.parseInt(filterCriteria.get("toSemiAnnual")[0]));
 
       int monthFrom = 0;
       int monthTo = 0;
 
-      String periodType = adjustmentSummaryReportFilter.getPeriodType();
+      String periodType = adjustmentSummaryReportParam.getPeriodType();
 
       if (periodType.equals(Constants.PERIOD_TYPE_QUARTERLY)) {
-        monthFrom = 3 * (adjustmentSummaryReportFilter.getQuarterFrom() - 1);
-        monthTo = 3 * adjustmentSummaryReportFilter.getQuarterTo() - 1;
+        monthFrom = 3 * (adjustmentSummaryReportParam.getQuarterFrom() - 1);
+        monthTo = 3 * adjustmentSummaryReportParam.getQuarterTo() - 1;
 
       } else if (periodType.equals(Constants.PERIOD_TYPE_MONTHLY)) {
-        monthFrom = adjustmentSummaryReportFilter.getMonthFrom();
-        monthTo = adjustmentSummaryReportFilter.getMonthTo();
+        monthFrom = adjustmentSummaryReportParam.getMonthFrom();
+        monthTo = adjustmentSummaryReportParam.getMonthTo();
 
       } else if (periodType.equals(Constants.PERIOD_TYPE_SEMI_ANNUAL)) {
-        monthFrom = 6 * (adjustmentSummaryReportFilter.getSemiAnnualFrom() - 1);
-        monthTo = 6 * adjustmentSummaryReportFilter.getSemiAnnualTo() - 1;
+        monthFrom = 6 * (adjustmentSummaryReportParam.getSemiAnnualFrom() - 1);
+        monthTo = 6 * adjustmentSummaryReportParam.getSemiAnnualTo() - 1;
       } else if (periodType.equals(Constants.PERIOD_TYPE_ANNUAL)) {
         monthFrom = 0;
         monthTo = 11;
       }
 
       Calendar calendar = Calendar.getInstance();
-      calendar.set(Calendar.YEAR, adjustmentSummaryReportFilter.getYearFrom());
+      calendar.set(Calendar.YEAR, adjustmentSummaryReportParam.getYearFrom());
       calendar.set(Calendar.MONTH, monthFrom - 1);
       calendar.set(Calendar.DAY_OF_MONTH, 1);
       calendar.set(Calendar.HOUR, 0);
       calendar.set(Calendar.MINUTE, 0);
       calendar.set(Calendar.SECOND, 0);
       calendar.set(Calendar.MILLISECOND, 0);
-      adjustmentSummaryReportFilter.setStartDate(calendar.getTime());
+      adjustmentSummaryReportParam.setStartDate(calendar.getTime());
 
-      calendar.set(Calendar.YEAR, adjustmentSummaryReportFilter.getYearTo());
+      calendar.set(Calendar.YEAR, adjustmentSummaryReportParam.getYearTo());
       calendar.set(Calendar.MONTH, monthTo - 1);
       calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMaximum(Calendar.DAY_OF_MONTH));
       calendar.set(Calendar.HOUR, 12);
       calendar.set(Calendar.MINUTE, 59);
       calendar.set(Calendar.SECOND, 59);
       calendar.set(Calendar.MILLISECOND, 0);
-      adjustmentSummaryReportFilter.setEndDate(calendar.getTime());
+      adjustmentSummaryReportParam.setEndDate(calendar.getTime());
 
     }
-    return adjustmentSummaryReportFilter;
+    return adjustmentSummaryReportParam;
 
   }
 

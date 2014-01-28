@@ -8,7 +8,7 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-package org.openlmis.report.model.filter;
+package org.openlmis.report.model.params;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -29,7 +29,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Component
-public class AverageConsumptionReportFilter {
+public class AverageConsumptionReportParam {
 
   @Autowired
   private ProductCategoryService productCategoryService;

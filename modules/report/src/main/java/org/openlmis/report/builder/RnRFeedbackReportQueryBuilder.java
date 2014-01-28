@@ -10,11 +10,9 @@
 
 package org.openlmis.report.builder;
 
-import org.openlmis.report.model.report.RnRFeedbackReport;
-import org.openlmis.report.model.filter.RnRFeedbackReportFilter;
+import org.openlmis.report.model.params.RnRFeedbackReportParam;
 
 
-import java.util.Calendar;
 import java.util.Map;
 
 import static org.apache.ibatis.jdbc.SqlBuilder.*;
@@ -23,7 +21,7 @@ public class RnRFeedbackReportQueryBuilder {
     public static String SelectFilteredSortedPagedRecords(Map params){
 
 
-        RnRFeedbackReportFilter filter  = (RnRFeedbackReportFilter)params.get("filterCriteria");
+        RnRFeedbackReportParam filter  = (RnRFeedbackReportParam)params.get("filterCriteria");
         Map sortCriteria = (Map) params.get("sortCriteria");
         String orderType =   filter.getOrderType() == null ? null : filter.getOrderType();
 
@@ -67,7 +65,7 @@ public class RnRFeedbackReportQueryBuilder {
         }
     }
 
-    private static void writePredicates(RnRFeedbackReportFilter  filter){
+    private static void writePredicates(RnRFeedbackReportParam filter){
         WHERE("req_status = 'RELEASED'");
         WHERE("program_id = "+filter.getProgramId());
         if(filter.getRgroupId() != 0){

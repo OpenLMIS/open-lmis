@@ -16,7 +16,7 @@ import org.apache.ibatis.session.RowBounds;
 import org.openlmis.core.service.ConfigurationSettingService;
 import org.openlmis.report.mapper.RnRFeedbackReportMapper;
 import org.openlmis.report.model.ReportData;
-import org.openlmis.report.model.filter.RnRFeedbackReportFilter;
+import org.openlmis.report.model.params.RnRFeedbackReportParam;
 import org.openlmis.report.util.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -35,7 +35,7 @@ public class RnRFeedbackReportDataProvider extends ReportDataProvider {
   @Autowired
   private ConfigurationSettingService configurationService;
 
-  private RnRFeedbackReportFilter feedbackReportFilter = null;
+  private RnRFeedbackReportParam feedbackReportFilter = null;
 
   @Override
   protected List<? extends ReportData> getResultSetReportData(Map<String, String[]> filterCriteria) {
@@ -48,10 +48,10 @@ public class RnRFeedbackReportDataProvider extends ReportDataProvider {
     return reportMapper.getFilteredSortedPagedRnRFeedbackReport(getReportFilterData(filterCriteria), SortCriteria, rowBounds);
   }
 
-  public RnRFeedbackReportFilter getReportFilterData(Map<String, String[]> filterCriteria) {
+  public RnRFeedbackReportParam getReportFilterData(Map<String, String[]> filterCriteria) {
 
     if (filterCriteria != null) {
-      feedbackReportFilter = new RnRFeedbackReportFilter();
+      feedbackReportFilter = new RnRFeedbackReportParam();
       Calendar originalStart = Calendar.getInstance();
       Calendar originalEnd = Calendar.getInstance();
 

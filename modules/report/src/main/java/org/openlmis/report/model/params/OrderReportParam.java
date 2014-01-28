@@ -8,20 +8,17 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-package org.openlmis.report.model.filter;
+package org.openlmis.report.model.params;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.openlmis.report.model.ReportData;
 
-import java.text.DateFormat;
-import java.util.Date;
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class OrderReportFilter implements ReportData {
+public class OrderReportParam implements ReportData {
 
   private Long orderId;
 

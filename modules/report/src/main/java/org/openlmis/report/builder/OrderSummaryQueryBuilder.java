@@ -11,10 +11,9 @@
 package org.openlmis.report.builder;
 
 
-import org.openlmis.report.model.filter.OrderReportFilter;
+import org.openlmis.report.model.params.OrderReportParam;
 import org.openlmis.report.model.report.OrderSummaryReport;
 
-import java.util.Calendar;
 import java.util.Map;
 
 import static org.apache.ibatis.jdbc.SqlBuilder.*;
@@ -23,7 +22,7 @@ public class OrderSummaryQueryBuilder {
   public static String SelectFilteredSortedPagedRecords(Map params){
 
 
-      OrderReportFilter filter  = (OrderReportFilter)params.get("filterCriteria");
+      OrderReportParam filter  = (OrderReportParam)params.get("filterCriteria");
       Map sortCriteria = (Map) params.get("sortCriteria");
       String orderType =   filter.getOrderType() == null ? null : filter.getOrderType();
 
@@ -56,7 +55,7 @@ public class OrderSummaryQueryBuilder {
       }
   }
 
-  private static void writePredicates(OrderReportFilter  filter){
+  private static void writePredicates(OrderReportParam filter){
     WHERE("req_status = 'RELEASED'");
     WHERE("packstoship is not null and packstoship > 0");
 

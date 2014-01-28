@@ -11,7 +11,7 @@
 
 package org.openlmis.report.builder;
 
-import org.openlmis.report.model.filter.AverageConsumptionReportFilter;
+import org.openlmis.report.model.params.AverageConsumptionReportParam;
 
 import java.util.Map;
 
@@ -27,7 +27,7 @@ public class AverageConsumptionQueryBuilder {
 
     public static String SelectFilteredSortedPagedAverageConsumptionSql(Map params){
 
-        AverageConsumptionReportFilter filter  = (AverageConsumptionReportFilter)params.get("filterCriteria");
+        AverageConsumptionReportParam filter  = (AverageConsumptionReportParam)params.get("filterCriteria");
         Map<String, String[]> sorter = ( Map<String, String[]>)params.get("SortCriteria");
         BEGIN();
 

@@ -4,7 +4,7 @@
  * The U.S. Agency for International Development (USAID) funded this section of the application development under the terms of the USAID | DELIVER PROJECT contract no. GPO-I-00-06-00007-00.
  */
 
-package org.openlmis.report.model.filter;
+package org.openlmis.report.model.params;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -12,15 +12,10 @@ import lombok.NoArgsConstructor;
 import org.openlmis.report.model.ReportData;
 
 
-/**
- * User: Hassan
- * Date: 11/25/13
- * Time: 6:51 AM
- */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class RegimenSummaryReportFilter implements ReportData {
+public class RegimenSummaryReportParam implements ReportData {
 
     private int regimenCategoryId;
     private String regimenCategory;

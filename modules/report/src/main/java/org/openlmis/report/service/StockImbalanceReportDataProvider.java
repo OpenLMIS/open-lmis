@@ -15,7 +15,7 @@ import org.apache.ibatis.session.RowBounds;
 import org.openlmis.core.service.ConfigurationSettingService;
 import org.openlmis.report.mapper.StockImbalanceReportMapper;
 import org.openlmis.report.model.ReportData;
-import org.openlmis.report.model.filter.StockImbalanceReportFilter;
+import org.openlmis.report.model.params.StockImbalanceReportParam;
 import org.openlmis.report.util.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,7 +33,7 @@ public class StockImbalanceReportDataProvider extends ReportDataProvider {
   @Autowired
   private ConfigurationSettingService configurationService;
 
-  private StockImbalanceReportFilter stockImbalanceReportFilter = null;
+  private StockImbalanceReportParam stockImbalanceReportParam = null;
 
   @Override
   protected List<? extends ReportData> getResultSetReportData(Map<String, String[]> filterCriteria) {
@@ -47,43 +47,43 @@ public class StockImbalanceReportDataProvider extends ReportDataProvider {
     return reportMapper.getReport(getReportFilterData(filterCriteria), SortCriteria, rowBounds);
   }
 
-  public StockImbalanceReportFilter getReportFilterData(Map<String, String[]> filterCriteria) {
+  public StockImbalanceReportParam getReportFilterData(Map<String, String[]> filterCriteria) {
 
     if (filterCriteria != null) {
-      stockImbalanceReportFilter = new StockImbalanceReportFilter();
+      stockImbalanceReportParam = new StockImbalanceReportParam();
 
-      stockImbalanceReportFilter.setFacilityTypeId(filterCriteria.get("facilityTypeId") == null ? 0 : Integer.parseInt(filterCriteria.get("facilityTypeId")[0])); //defaults to 0
-      stockImbalanceReportFilter.setFacilityType((filterCriteria.get("facilityType") == null || filterCriteria.get("facilityType")[0].equals("")) ? "All Facilities" : filterCriteria.get("facilityType")[0]);
-      stockImbalanceReportFilter.setFacility(filterCriteria.get("facility") == null ? "" : filterCriteria.get("facility")[0]);
+      stockImbalanceReportParam.setFacilityTypeId(filterCriteria.get("facilityTypeId") == null ? 0 : Integer.parseInt(filterCriteria.get("facilityTypeId")[0])); //defaults to 0
+      stockImbalanceReportParam.setFacilityType((filterCriteria.get("facilityType") == null || filterCriteria.get("facilityType")[0].equals("")) ? "All Facilities" : filterCriteria.get("facilityType")[0]);
+      stockImbalanceReportParam.setFacility(filterCriteria.get("facility") == null ? "" : filterCriteria.get("facility")[0]);
 
-      stockImbalanceReportFilter.setRgroup((filterCriteria.get("rgroup") == null || filterCriteria.get("rgroup")[0].equals("")) ? "All Reporting Groups" : filterCriteria.get("rgroup")[0]);
+      stockImbalanceReportParam.setRgroup((filterCriteria.get("rgroup") == null || filterCriteria.get("rgroup")[0].equals("")) ? "All Reporting Groups" : filterCriteria.get("rgroup")[0]);
 
-      stockImbalanceReportFilter.setProductCategoryId(filterCriteria.get("productCategoryId") == null ? 0 : Integer.parseInt(filterCriteria.get("productCategoryId")[0])); //defaults to 0
-      stockImbalanceReportFilter.setProductCategory((filterCriteria.get("productCategory") == null || filterCriteria.get("productCategory")[0].equals("")) ? "All Product Categories" : filterCriteria.get("productCategory")[0]);
-      stockImbalanceReportFilter.setProductId(filterCriteria.get("productId") == null ? 0 : Integer.parseInt(filterCriteria.get("productId")[0])); //defaults to 0
+      stockImbalanceReportParam.setProductCategoryId(filterCriteria.get("productCategoryId") == null ? 0 : Integer.parseInt(filterCriteria.get("productCategoryId")[0])); //defaults to 0
+      stockImbalanceReportParam.setProductCategory((filterCriteria.get("productCategory") == null || filterCriteria.get("productCategory")[0].equals("")) ? "All Product Categories" : filterCriteria.get("productCategory")[0]);
+      stockImbalanceReportParam.setProductId(filterCriteria.get("productId") == null ? 0 : Integer.parseInt(filterCriteria.get("productId")[0])); //defaults to 0
 
-      if (stockImbalanceReportFilter.getProductId() == 0)
-        stockImbalanceReportFilter.setProduct("All Products");
-      else if (stockImbalanceReportFilter.getProductId() == -1)//Indicator Products
-        stockImbalanceReportFilter.setProduct(configurationService.getConfigurationStringValue(Constants.CONF_INDICATOR_PRODUCTS).isEmpty() ? "Indicator Products" : configurationService.getConfigurationStringValue(Constants.CONF_INDICATOR_PRODUCTS));
+      if (stockImbalanceReportParam.getProductId() == 0)
+        stockImbalanceReportParam.setProduct("All Products");
+      else if (stockImbalanceReportParam.getProductId() == -1)//Indicator Products
+        stockImbalanceReportParam.setProduct(configurationService.getConfigurationStringValue(Constants.CONF_INDICATOR_PRODUCTS).isEmpty() ? "Indicator Products" : configurationService.getConfigurationStringValue(Constants.CONF_INDICATOR_PRODUCTS));
       else
-        stockImbalanceReportFilter.setProduct(filterCriteria.get("product")[0]);
+        stockImbalanceReportParam.setProduct(filterCriteria.get("product")[0]);
 
-      stockImbalanceReportFilter.setRgroupId(filterCriteria.get("rgroupId") == null ? 0 : Integer.parseInt(filterCriteria.get("rgroupId")[0])); //defaults to 0
-      stockImbalanceReportFilter.setProgramId(filterCriteria.get("programId") == null ? 0 : Integer.parseInt(filterCriteria.get("programId")[0]));
+      stockImbalanceReportParam.setRgroupId(filterCriteria.get("rgroupId") == null ? 0 : Integer.parseInt(filterCriteria.get("rgroupId")[0])); //defaults to 0
+      stockImbalanceReportParam.setProgramId(filterCriteria.get("programId") == null ? 0 : Integer.parseInt(filterCriteria.get("programId")[0]));
 
-      if (stockImbalanceReportFilter.getProgramId() == 0 || stockImbalanceReportFilter.getProgramId() == -1)
-        stockImbalanceReportFilter.setProgram("All Programs");
+      if (stockImbalanceReportParam.getProgramId() == 0 || stockImbalanceReportParam.getProgramId() == -1)
+        stockImbalanceReportParam.setProgram("All Programs");
       else
-        stockImbalanceReportFilter.setProgram(filterCriteria.get("program")[0]);
+        stockImbalanceReportParam.setProgram(filterCriteria.get("program")[0]);
 
-      stockImbalanceReportFilter.setScheduleId(filterCriteria.get("scheduleId") == null ? 0 : Integer.parseInt(filterCriteria.get("scheduleId")[0]));
-      stockImbalanceReportFilter.setSchedule(filterCriteria.get("schedule") == null ? "" : filterCriteria.get("schedule")[0]);
-      stockImbalanceReportFilter.setPeriod(filterCriteria.get("period") == null ? "" : filterCriteria.get("period")[0]);
-      stockImbalanceReportFilter.setPeriodId(filterCriteria.get("periodId") == null ? 0 : Integer.parseInt(filterCriteria.get("periodId")[0]));
-      stockImbalanceReportFilter.setYear(filterCriteria.get("year") == null ? 0 : Integer.parseInt(filterCriteria.get("year")[0]));
+      stockImbalanceReportParam.setScheduleId(filterCriteria.get("scheduleId") == null ? 0 : Integer.parseInt(filterCriteria.get("scheduleId")[0]));
+      stockImbalanceReportParam.setSchedule(filterCriteria.get("schedule") == null ? "" : filterCriteria.get("schedule")[0]);
+      stockImbalanceReportParam.setPeriod(filterCriteria.get("period") == null ? "" : filterCriteria.get("period")[0]);
+      stockImbalanceReportParam.setPeriodId(filterCriteria.get("periodId") == null ? 0 : Integer.parseInt(filterCriteria.get("periodId")[0]));
+      stockImbalanceReportParam.setYear(filterCriteria.get("year") == null ? 0 : Integer.parseInt(filterCriteria.get("year")[0]));
     }
-    return stockImbalanceReportFilter;
+    return stockImbalanceReportParam;
   }
 
   @Override

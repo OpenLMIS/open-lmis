@@ -12,12 +12,10 @@
 
 package org.openlmis.report.builder;
 
-import org.openlmis.report.model.filter.RegimenSummaryReportFilter;
+import org.openlmis.report.model.params.RegimenSummaryReportParam;
 
 
 import java.util.Map;
-
-import static org.apache.ibatis.jdbc.SqlBuilder.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -30,7 +28,7 @@ public class RegimenSummaryQueryBuilder {
 
     public static String getQuery(Map params){
 
-    RegimenSummaryReportFilter filter  = (RegimenSummaryReportFilter)params.get("filterCriteria");
+    RegimenSummaryReportParam filter  = (RegimenSummaryReportParam)params.get("filterCriteria");
 
        String sql ="WITH temp as ( select district,regimen,\n" +
                "\n" +
@@ -61,7 +59,7 @@ public class RegimenSummaryQueryBuilder {
         return sql;
     }
 
-   private static String writePredicates(RegimenSummaryReportFilter filter){
+   private static String writePredicates(RegimenSummaryReportParam filter){
         String predicate="";
        predicate = " WHERE status in ('APPROVED','RELEASED') ";
      if(filter != null){

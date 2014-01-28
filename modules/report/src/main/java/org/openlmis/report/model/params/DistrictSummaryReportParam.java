@@ -8,51 +8,44 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-package org.openlmis.report.model.filter;
+package org.openlmis.report.model.params;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.openlmis.report.model.ReportData;
 
-import java.text.DateFormat;
-import java.util.Date;
-
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
-public class RnRFeedbackReportFilter implements ReportData {
+@AllArgsConstructor
+public class DistrictSummaryReportParam implements ReportData {
 
-    private int facilityTypeId;
-    private String facilityType;
-    private String facility;
-    private int facilityId;
-    private int productId;
-    private String product;
-    private int productCategoryId;
-    private int programId;
-    private String program;
-    private String orderType;
-    private int periodId;
-    private String period;
-    private int scheduleId;
-    private String schedule;
     private int rgroupId;
     private String rgroup;
+    private int programId;
+    private String program;
+    private int scheduleId;
+    private String schedule;
+    private int periodId;
+    private String period;
+    private Integer year;
+    private Integer zoneId;
+    private String zone;
+   // private int geographicLevelId;
+    //private String geographicLevel;
 
 
     @Override
     public String toString(){
 
         StringBuilder filtersValue = new StringBuilder("");
-        filtersValue.append("Program : ").append(this.program).append("\n").
-                     append("Schedule : ").append(this.schedule).append("\n").
-                     append("Period : ").append(this.period).append("\n").
-                     append("Requisition Group : ").append(this.rgroup).append("\n").
-                     append("Product : ").append(this.product).append("\n");
+        filtersValue.append("Period : ").append(this.period).append("\n").
+                append("Schedule : ").append(this.schedule).append("\n").
+                append("Program : ").append(this.program).append("\n").
+               // append("Geographic Level : ").append(this.geographicLevel).append("\n").
+                append("District : ").append(this.zone).append("\n");
+
+
         return filtersValue.toString();
     }
-
-
-
 }

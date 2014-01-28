@@ -9,7 +9,7 @@
  */
 package org.openlmis.report.builder;
 
-import org.openlmis.report.model.filter.FacilityReportFilter;
+import org.openlmis.report.model.params.FacilityReportParam;
 import org.openlmis.report.model.sorter.FacilityReportSorter;
 
 import java.util.Map;
@@ -20,7 +20,7 @@ public class FacilityReportQueryBuilder {
 
     public static String SelectFilteredSortedPagedFacilitiesSql(Map params){//ReportData filterCriteria,ReportData SortCriteria ,int page,int pageSize) {
 
-        FacilityReportFilter filter  = (FacilityReportFilter)params.get("filterCriteria");
+        FacilityReportParam filter  = (FacilityReportParam)params.get("filterCriteria");
         FacilityReportSorter sorter = (FacilityReportSorter)params.get("SortCriteria");
         BEGIN();
         SELECT("F.id, F.code, F.name, F.active as active, FT.name as facilityType, GZ.name as region, FO.code as owner,F.latitude::text ||',' ||  F.longitude::text  ||', ' || F.altitude::text gpsCoordinates,F.mainphone as phoneNumber, F.fax as fax, U.firstName || ' ' || U.lastName contact ");

@@ -8,26 +8,27 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-package org.openlmis.report.model.filter;
+package org.openlmis.report.model.params;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.openlmis.report.model.ReportData;
 
-
-/**
- * User: Hassan
- * Date: 11/25/13
- * Time: 6:51 AM
- */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class DistrictSummaryReportFilter implements ReportData {
+public class StockImbalanceReportParam implements ReportData {
 
+    private int facilityTypeId;
+    private String facilityType;
+    private int productId;
+    private String product;
+    private int productCategoryId;
+    private String productCategory;
     private int rgroupId;
     private String rgroup;
+    private String facility;
     private int programId;
     private String program;
     private int scheduleId;
@@ -35,11 +36,6 @@ public class DistrictSummaryReportFilter implements ReportData {
     private int periodId;
     private String period;
     private Integer year;
-    private Integer zoneId;
-    private String zone;
-   // private int geographicLevelId;
-    //private String geographicLevel;
-
 
     @Override
     public String toString(){
@@ -48,9 +44,10 @@ public class DistrictSummaryReportFilter implements ReportData {
         filtersValue.append("Period : ").append(this.period).append("\n").
                 append("Schedule : ").append(this.schedule).append("\n").
                 append("Program : ").append(this.program).append("\n").
-               // append("Geographic Level : ").append(this.geographicLevel).append("\n").
-                append("District : ").append(this.zone).append("\n");
-
+                append("Product Category : ").append(this.productCategory).append("\n").
+                append("Product : ").append(this.product).append("\n").
+                append("Facility Types : ").append(this.getFacilityType()).append("\n").
+                append("Reporting Groups : ").append(this.getRgroup());
 
         return filtersValue.toString();
     }

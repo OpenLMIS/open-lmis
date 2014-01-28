@@ -11,14 +11,13 @@
 package org.openlmis.report.builder;
 
 import org.apache.ibatis.jdbc.SqlBuilder;
-import org.openlmis.report.model.filter.ConsumptionReportFilter;
+import org.openlmis.report.model.params.ConsumptionReportParam;
 
 import java.util.Map;
-import org.apache.ibatis.type.JdbcType;
+
 import static org.apache.ibatis.jdbc.SqlBuilder.*;
 import static org.apache.ibatis.jdbc.SqlBuilder.FROM;
 import static org.apache.ibatis.jdbc.SqlBuilder.WHERE;
-import java.util.Date;
 
 public class ConsumptionQueryBuilder {
 
@@ -43,7 +42,7 @@ public class ConsumptionQueryBuilder {
 
     public static String SelectFilteredSortedPagedConsumptionSql(Map params){
 
-        ConsumptionReportFilter filter  = (ConsumptionReportFilter)params.get("filterCriteria");
+        ConsumptionReportParam filter  = (ConsumptionReportParam)params.get("filterCriteria");
         //ConsumptionReportSorter sorter = (ConsumptionReportSorter)params.get("SortCriteria");
         BEGIN();
 

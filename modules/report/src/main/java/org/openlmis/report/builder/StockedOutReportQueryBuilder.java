@@ -10,7 +10,7 @@
 
 package org.openlmis.report.builder;
 
-import org.openlmis.report.model.filter.StockedOutReportFilter;
+import org.openlmis.report.model.params.StockedOutReportParam;
 import org.openlmis.report.model.report.StockedOutReport;
 
 import java.util.Map;
@@ -22,7 +22,7 @@ public class StockedOutReportQueryBuilder {
 
     public static String getQuery(Map params){
 
-        StockedOutReportFilter filter  = (StockedOutReportFilter)params.get("filterCriteria");
+        StockedOutReportParam filter  = (StockedOutReportParam)params.get("filterCriteria");
         Map sortCriteria = (Map) params.get("SortCriteria");
         BEGIN();
         SELECT("DISTINCT supplyingfacility,facilitycode, facility, product, facilitytypename, location, processing_period_name");
@@ -36,7 +36,7 @@ public class StockedOutReportQueryBuilder {
 
 
     }
-    private static void writePredicates(StockedOutReportFilter filter){
+    private static void writePredicates(StockedOutReportParam filter){
         WHERE("req_status in ('APPROVED','RELEASED')");
         if(filter != null){
             if (filter.getFacilityTypeId() != 0 && filter.getFacilityTypeId() != -1) {
@@ -73,7 +73,7 @@ public class StockedOutReportQueryBuilder {
 
     public static String getTotalFacilities(Map params){
 
-        StockedOutReportFilter filter  = (StockedOutReportFilter)params.get("filterCriteria");
+        StockedOutReportParam filter  = (StockedOutReportParam)params.get("filterCriteria");
 
         BEGIN();
         SELECT("COUNT(*) facilityCount");
@@ -84,7 +84,7 @@ public class StockedOutReportQueryBuilder {
 
     public static String getTotalStockedoutFacilities(Map params){
 
-        StockedOutReportFilter filter  = (StockedOutReportFilter)params.get("filterCriteria");
+        StockedOutReportParam filter  = (StockedOutReportParam)params.get("filterCriteria");
 
         BEGIN();
         SELECT("COUNT(*) facilityCount");

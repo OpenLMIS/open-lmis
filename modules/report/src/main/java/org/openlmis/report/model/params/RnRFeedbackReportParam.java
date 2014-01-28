@@ -8,7 +8,7 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-package org.openlmis.report.model.filter;
+package org.openlmis.report.model.params;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -16,39 +16,40 @@ import lombok.NoArgsConstructor;
 import org.openlmis.report.model.ReportData;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
-public class StockImbalanceReportFilter implements ReportData {
+@NoArgsConstructor
+public class RnRFeedbackReportParam implements ReportData {
 
     private int facilityTypeId;
     private String facilityType;
+    private String facility;
+    private int facilityId;
     private int productId;
     private String product;
     private int productCategoryId;
-    private String productCategory;
-    private int rgroupId;
-    private String rgroup;
-    private String facility;
     private int programId;
     private String program;
-    private int scheduleId;
-    private String schedule;
+    private String orderType;
     private int periodId;
     private String period;
-    private Integer year;
+    private int scheduleId;
+    private String schedule;
+    private int rgroupId;
+    private String rgroup;
+
 
     @Override
     public String toString(){
 
         StringBuilder filtersValue = new StringBuilder("");
-        filtersValue.append("Period : ").append(this.period).append("\n").
-                append("Schedule : ").append(this.schedule).append("\n").
-                append("Program : ").append(this.program).append("\n").
-                append("Product Category : ").append(this.productCategory).append("\n").
-                append("Product : ").append(this.product).append("\n").
-                append("Facility Types : ").append(this.getFacilityType()).append("\n").
-                append("Reporting Groups : ").append(this.getRgroup());
-
+        filtersValue.append("Program : ").append(this.program).append("\n").
+                     append("Schedule : ").append(this.schedule).append("\n").
+                     append("Period : ").append(this.period).append("\n").
+                     append("Requisition Group : ").append(this.rgroup).append("\n").
+                     append("Product : ").append(this.product).append("\n");
         return filtersValue.toString();
     }
+
+
+
 }

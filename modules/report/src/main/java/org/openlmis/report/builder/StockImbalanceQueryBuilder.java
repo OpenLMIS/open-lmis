@@ -10,7 +10,7 @@
 
 package org.openlmis.report.builder;
 
-import org.openlmis.report.model.filter.StockImbalanceReportFilter;
+import org.openlmis.report.model.params.StockImbalanceReportParam;
 import org.openlmis.report.model.report.StockImbalanceReport;
 
 import java.util.Map;
@@ -21,7 +21,7 @@ public class StockImbalanceQueryBuilder {
     public static String getQuery(Map params){
 
 
-        StockImbalanceReportFilter filter  = (StockImbalanceReportFilter)params.get("filterCriteria");
+        StockImbalanceReportParam filter  = (StockImbalanceReportParam)params.get("filterCriteria");
         Map sortCriteria = (Map) params.get("SortCriteria");
         BEGIN();
         SELECT("distinct supplyingfacility,  facility,  product,  stockinhand physicalCount,  amc,  mos months,  required orderQuantity, CASE WHEN status = 'SO' THEN  'Stocked Out' WHEN status ='US' then  'Below Minimum' WHEN status ='OS' then  'Over Stocked' END AS status ");
@@ -31,7 +31,7 @@ public class StockImbalanceQueryBuilder {
         return SQL();
 
         }
-    private static void writePredicates(StockImbalanceReportFilter filter){
+    private static void writePredicates(StockImbalanceReportParam filter){
         WHERE("status <> 'SP'");
         WHERE("req_status in ('APPROVED','RELEASED')");
         WHERE("periodid = #{filterCriteria.periodId}");//required param

@@ -15,7 +15,7 @@ import org.apache.ibatis.session.RowBounds;
 import org.openlmis.core.service.ConfigurationSettingService;
 import org.openlmis.report.mapper.OrderSummaryReportMapper;
 import org.openlmis.report.model.ReportData;
-import org.openlmis.report.model.filter.OrderReportFilter;
+import org.openlmis.report.model.params.OrderReportParam;
 import org.openlmis.report.service.lookup.ReportLookupService;
 import org.openlmis.report.util.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +38,7 @@ public class OrderSummaryReportDataProvider extends ReportDataProvider {
   @Autowired
   private ReportLookupService reportLookupService;
 
-  private OrderReportFilter orderReportFilter;
+  private OrderReportParam orderReportParam;
 
 
   @Override
@@ -52,41 +52,41 @@ public class OrderSummaryReportDataProvider extends ReportDataProvider {
     return reportMapper.getFilteredSortedPagedOrderSummaryReport(getReportFilterData(filterCriteria), SortCriteria, rowBounds);
   }
 
-  public OrderReportFilter getReportFilterData(Map<String, String[]> filterCriteria) {
+  public OrderReportParam getReportFilterData(Map<String, String[]> filterCriteria) {
 
     if (filterCriteria != null) {
-      orderReportFilter = new OrderReportFilter();
+      orderReportParam = new OrderReportParam();
 
       if (filterCriteria.containsKey("orderId")) {
-        orderReportFilter.setOrderId(Long.parseLong(filterCriteria.get("orderId")[0]));
+        orderReportParam.setOrderId(Long.parseLong(filterCriteria.get("orderId")[0]));
 
-        orderReportFilter.setFacility(reportLookupService.getFacilityNameForRnrId(orderReportFilter.getOrderId()));
-        orderReportFilter.setPeriod(reportLookupService.getPeriodTextForRnrId(orderReportFilter.getOrderId()));
-        orderReportFilter.setProgram(reportLookupService.getProgramNameForRnrId(orderReportFilter.getOrderId()));
-        orderReportFilter.setProduct("All products");
+        orderReportParam.setFacility(reportLookupService.getFacilityNameForRnrId(orderReportParam.getOrderId()));
+        orderReportParam.setPeriod(reportLookupService.getPeriodTextForRnrId(orderReportParam.getOrderId()));
+        orderReportParam.setProgram(reportLookupService.getProgramNameForRnrId(orderReportParam.getOrderId()));
+        orderReportParam.setProduct("All products");
       } else {
 
-        orderReportFilter.setFacilityTypeId(filterCriteria.get("facilityTypeId") == null ? 0 : Integer.parseInt(filterCriteria.get("facilityTypeId")[0])); //defaults to 0
-        orderReportFilter.setFacilityId(filterCriteria.get("facilityId") == null ? 0 : Integer.parseInt(filterCriteria.get("facilityId")[0])); //defaults to 0
-        orderReportFilter.setFacilityType((filterCriteria.get("facilityType") == null || filterCriteria.get("facilityType")[0].equals("")) ? "ALL Facilities" : filterCriteria.get("facilityType")[0]);
+        orderReportParam.setFacilityTypeId(filterCriteria.get("facilityTypeId") == null ? 0 : Integer.parseInt(filterCriteria.get("facilityTypeId")[0])); //defaults to 0
+        orderReportParam.setFacilityId(filterCriteria.get("facilityId") == null ? 0 : Integer.parseInt(filterCriteria.get("facilityId")[0])); //defaults to 0
+        orderReportParam.setFacilityType((filterCriteria.get("facilityType") == null || filterCriteria.get("facilityType")[0].equals("")) ? "ALL Facilities" : filterCriteria.get("facilityType")[0]);
 
-        orderReportFilter.setScheduleId(filterCriteria.get("scheduleId") == null ? 0 : Integer.parseInt(filterCriteria.get("scheduleId")[0])); //defaults to 0
-        orderReportFilter.setSchedule(filterCriteria.get("schedule")[0]);
+        orderReportParam.setScheduleId(filterCriteria.get("scheduleId") == null ? 0 : Integer.parseInt(filterCriteria.get("scheduleId")[0])); //defaults to 0
+        orderReportParam.setSchedule(filterCriteria.get("schedule")[0]);
 
-        orderReportFilter.setProductId(filterCriteria.get("productId") == null ? 0 : Integer.parseInt(filterCriteria.get("productId")[0])); //defaults to 0
-        if (orderReportFilter.getProductId() == 0) {
-          orderReportFilter.setProduct("All Products");
-        } else if (orderReportFilter.getProductId() == -1) {
-          orderReportFilter.setProduct(configurationService.getConfigurationStringValue(Constants.CONF_INDICATOR_PRODUCTS).isEmpty() ? "Indicator Products" : configurationService.getConfigurationStringValue(Constants.CONF_INDICATOR_PRODUCTS));
+        orderReportParam.setProductId(filterCriteria.get("productId") == null ? 0 : Integer.parseInt(filterCriteria.get("productId")[0])); //defaults to 0
+        if (orderReportParam.getProductId() == 0) {
+          orderReportParam.setProduct("All Products");
+        } else if (orderReportParam.getProductId() == -1) {
+          orderReportParam.setProduct(configurationService.getConfigurationStringValue(Constants.CONF_INDICATOR_PRODUCTS).isEmpty() ? "Indicator Products" : configurationService.getConfigurationStringValue(Constants.CONF_INDICATOR_PRODUCTS));
         }
-        orderReportFilter.setOrderType(filterCriteria.get("orderType") == null ? "" : filterCriteria.get("orderType")[0]);
-        orderReportFilter.setPeriodId(filterCriteria.get("periodId") == null ? 0 : Integer.parseInt(filterCriteria.get("periodId")[0])); //defaults to 0
-        orderReportFilter.setPeriod(filterCriteria.get("period")[0]);
-        orderReportFilter.setProgramId(filterCriteria.get("programId") == null ? 0 : Integer.parseInt(filterCriteria.get("programId")[0])); //defaults to 0
-        orderReportFilter.setProgram(filterCriteria.get("program")[0]);
+        orderReportParam.setOrderType(filterCriteria.get("orderType") == null ? "" : filterCriteria.get("orderType")[0]);
+        orderReportParam.setPeriodId(filterCriteria.get("periodId") == null ? 0 : Integer.parseInt(filterCriteria.get("periodId")[0])); //defaults to 0
+        orderReportParam.setPeriod(filterCriteria.get("period")[0]);
+        orderReportParam.setProgramId(filterCriteria.get("programId") == null ? 0 : Integer.parseInt(filterCriteria.get("programId")[0])); //defaults to 0
+        orderReportParam.setProgram(filterCriteria.get("program")[0]);
       }
     }
-    return orderReportFilter;
+    return orderReportParam;
   }
 
   @Override

@@ -15,8 +15,7 @@ import org.apache.ibatis.session.RowBounds;
 import org.openlmis.core.service.ConfigurationSettingService;
 import org.openlmis.report.mapper.OrderFillRateReportMapper;
 import org.openlmis.report.model.ReportData;
-import org.openlmis.report.model.filter.OrderFillRateReportFilter;
-import org.openlmis.report.model.report.MasterReport;
+import org.openlmis.report.model.params.OrderFillRateReportParam;
 import org.openlmis.report.util.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -50,47 +49,47 @@ public class OrderFillRateReportDataProvider extends ReportDataProvider {
   }
 
   public ReportData getReportFilterData(Map<String, String[]> filterCriteria) {
-    OrderFillRateReportFilter orderFillRateReportFilter = null;
+    OrderFillRateReportParam orderFillRateReportParam = null;
 
     if (filterCriteria != null) {
 
 
-      orderFillRateReportFilter = new OrderFillRateReportFilter();
+      orderFillRateReportParam = new OrderFillRateReportParam();
 
-      orderFillRateReportFilter.setFacilityTypeId(filterCriteria.get("facilityTypeId") == null ? 0 : Integer.parseInt(filterCriteria.get("facilityTypeId")[0])); //defaults to 0
-      orderFillRateReportFilter.setFacilityType((filterCriteria.get("facilityType") == null || filterCriteria.get("facilityType")[0].equals("")) ? "All Facility Types" : filterCriteria.get("facilityType")[0]);
-      orderFillRateReportFilter.setFacility(filterCriteria.get("facility") == null ? "" : filterCriteria.get("facility")[0]);
+      orderFillRateReportParam.setFacilityTypeId(filterCriteria.get("facilityTypeId") == null ? 0 : Integer.parseInt(filterCriteria.get("facilityTypeId")[0])); //defaults to 0
+      orderFillRateReportParam.setFacilityType((filterCriteria.get("facilityType") == null || filterCriteria.get("facilityType")[0].equals("")) ? "All Facility Types" : filterCriteria.get("facilityType")[0]);
+      orderFillRateReportParam.setFacility(filterCriteria.get("facility") == null ? "" : filterCriteria.get("facility")[0]);
 
-      orderFillRateReportFilter.setRgroup((filterCriteria.get("rgroup") == null || filterCriteria.get("rgroup")[0].equals("")) ? "All Reporting Groups" : filterCriteria.get("rgroup")[0]);
-      orderFillRateReportFilter.setFacilityId(filterCriteria.get("facilityId") == null ? 0 : Integer.parseInt(filterCriteria.get("facilityId")[0]));
+      orderFillRateReportParam.setRgroup((filterCriteria.get("rgroup") == null || filterCriteria.get("rgroup")[0].equals("")) ? "All Reporting Groups" : filterCriteria.get("rgroup")[0]);
+      orderFillRateReportParam.setFacilityId(filterCriteria.get("facilityId") == null ? 0 : Integer.parseInt(filterCriteria.get("facilityId")[0]));
 
 
-      orderFillRateReportFilter.setProductCategoryId(filterCriteria.get("productCategoryId") == null ? 0 : Integer.parseInt(filterCriteria.get("productCategoryId")[0])); //defaults to 0
-      orderFillRateReportFilter.setProductCategory((filterCriteria.get("productCategory") == null || filterCriteria.get("productCategory")[0].equals("")) ? "All Product Categories" : filterCriteria.get("productCategory")[0]);
-      orderFillRateReportFilter.setProductId(filterCriteria.get("productId") == null ? 0 : Integer.parseInt(filterCriteria.get("productId")[0])); //defaults to 0
+      orderFillRateReportParam.setProductCategoryId(filterCriteria.get("productCategoryId") == null ? 0 : Integer.parseInt(filterCriteria.get("productCategoryId")[0])); //defaults to 0
+      orderFillRateReportParam.setProductCategory((filterCriteria.get("productCategory") == null || filterCriteria.get("productCategory")[0].equals("")) ? "All Product Categories" : filterCriteria.get("productCategory")[0]);
+      orderFillRateReportParam.setProductId(filterCriteria.get("productId") == null ? 0 : Integer.parseInt(filterCriteria.get("productId")[0])); //defaults to 0
 
-      if (orderFillRateReportFilter.getProductId() == 0)
-        orderFillRateReportFilter.setProduct("All Products");
-      else if (orderFillRateReportFilter.getProductId() == -1)//Indicator Products
-        orderFillRateReportFilter.setProduct(configurationService.getConfigurationStringValue(Constants.CONF_INDICATOR_PRODUCTS).isEmpty() ? "Indicator Products" : configurationService.getConfigurationStringValue(Constants.CONF_INDICATOR_PRODUCTS));
+      if (orderFillRateReportParam.getProductId() == 0)
+        orderFillRateReportParam.setProduct("All Products");
+      else if (orderFillRateReportParam.getProductId() == -1)//Indicator Products
+        orderFillRateReportParam.setProduct(configurationService.getConfigurationStringValue(Constants.CONF_INDICATOR_PRODUCTS).isEmpty() ? "Indicator Products" : configurationService.getConfigurationStringValue(Constants.CONF_INDICATOR_PRODUCTS));
       else
-        orderFillRateReportFilter.setProduct(filterCriteria.get("product")[0]);
+        orderFillRateReportParam.setProduct(filterCriteria.get("product")[0]);
 
-      orderFillRateReportFilter.setRgroupId(filterCriteria.get("rgroupId") == null ? 0 : Integer.parseInt(filterCriteria.get("rgroupId")[0])); //defaults to 0
-      orderFillRateReportFilter.setProgramId(filterCriteria.get("programId") == null ? 0 : Integer.parseInt(filterCriteria.get("programId")[0]));
+      orderFillRateReportParam.setRgroupId(filterCriteria.get("rgroupId") == null ? 0 : Integer.parseInt(filterCriteria.get("rgroupId")[0])); //defaults to 0
+      orderFillRateReportParam.setProgramId(filterCriteria.get("programId") == null ? 0 : Integer.parseInt(filterCriteria.get("programId")[0]));
 
-      if (orderFillRateReportFilter.getProgramId() == 0 || orderFillRateReportFilter.getProgramId() == -1)
-        orderFillRateReportFilter.setProgram("All Programs");
+      if (orderFillRateReportParam.getProgramId() == 0 || orderFillRateReportParam.getProgramId() == -1)
+        orderFillRateReportParam.setProgram("All Programs");
       else
-        orderFillRateReportFilter.setProgram(filterCriteria.get("program")[0]);
+        orderFillRateReportParam.setProgram(filterCriteria.get("program")[0]);
 
-      orderFillRateReportFilter.setScheduleId(filterCriteria.get("scheduleId") == null ? 0 : Integer.parseInt(filterCriteria.get("scheduleId")[0]));
-      orderFillRateReportFilter.setSchedule(filterCriteria.get("schedule") == null ? "" : filterCriteria.get("schedule")[0]);
-      orderFillRateReportFilter.setPeriod(filterCriteria.get("period") == null ? "" : filterCriteria.get("period")[0]);
-      orderFillRateReportFilter.setPeriodId(filterCriteria.get("periodId") == null ? 0 : Integer.parseInt(filterCriteria.get("periodId")[0]));
-      orderFillRateReportFilter.setYear(filterCriteria.get("year") == null ? 0 : Integer.parseInt(filterCriteria.get("year")[0]));
+      orderFillRateReportParam.setScheduleId(filterCriteria.get("scheduleId") == null ? 0 : Integer.parseInt(filterCriteria.get("scheduleId")[0]));
+      orderFillRateReportParam.setSchedule(filterCriteria.get("schedule") == null ? "" : filterCriteria.get("schedule")[0]);
+      orderFillRateReportParam.setPeriod(filterCriteria.get("period") == null ? "" : filterCriteria.get("period")[0]);
+      orderFillRateReportParam.setPeriodId(filterCriteria.get("periodId") == null ? 0 : Integer.parseInt(filterCriteria.get("periodId")[0]));
+      orderFillRateReportParam.setYear(filterCriteria.get("year") == null ? 0 : Integer.parseInt(filterCriteria.get("year")[0]));
     }
-    return orderFillRateReportFilter;
+    return orderFillRateReportParam;
   }
 
   @Override

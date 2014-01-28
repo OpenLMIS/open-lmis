@@ -9,7 +9,7 @@
  */
 package org.openlmis.report.builder;
 
-import org.openlmis.report.model.filter.AdjustmentSummaryReportFilter;
+import org.openlmis.report.model.params.AdjustmentSummaryReportParam;
 
 import java.util.Map;
 
@@ -22,7 +22,7 @@ public class AdjustmentSummaryQueryBuilder {
 
   public static String getData(Map params) {
 
-    AdjustmentSummaryReportFilter filter = (AdjustmentSummaryReportFilter) params.get("filterCriteria");
+    AdjustmentSummaryReportParam filter = (AdjustmentSummaryReportParam) params.get("filterCriteria");
     Map<String, String[]> sorter = (Map<String, String[]>) params.get("SortCriteria");
     BEGIN();
     SELECT("processing_periods_name as period, product productDescription, product_category_name category, facility_type_name facilityType,facility_name facilityName, adjustment_type adjustmentType, adjutment_qty adjustment, adjutment_qty * case when adjustment_additive  = 't' then 1 else -1 end AS signedadjustment, supplying_facility_name supplyingFacility");
@@ -32,7 +32,7 @@ public class AdjustmentSummaryQueryBuilder {
     return SQL();
   }
 
-  private static void writePredicates(AdjustmentSummaryReportFilter filter) {
+  private static void writePredicates(AdjustmentSummaryReportParam filter) {
     WHERE("req_status in ('APPROVED','RELEASED')");
     if (filter != null) {
       if (filter.getFacilityTypeId() != 0) {

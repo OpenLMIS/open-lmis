@@ -8,7 +8,7 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-package org.openlmis.report.model.filter;
+package org.openlmis.report.model.params;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -21,9 +21,8 @@ import java.util.Date;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class AdjustmentSummaryReportFilter implements ReportData {
+public class StockedOutReportParam implements ReportData {
 
-    private int userId;
 
     private String periodType;
     private int yearFrom;
@@ -37,31 +36,42 @@ public class AdjustmentSummaryReportFilter implements ReportData {
     private int semiAnnualFrom;
     private int semiAnnualTo;
 
-    private int facilityTypeId;
-    private String facilityType;
-    private int zoneId;
-    private int productId;
-    private int productCategoryId;
+
+    private int programId;
+    private String program;
     private int rgroupId;
     private String rgroup;
-    private int programId;
-    private String  adjustmentTypeId;
-    private String adjustmentType;
-
+    private int productCategoryId;
+    private String productCategory;
+    private int productId;
+    private String product;
+    private int facilityTypeId;
+    private String facilityType;
+    private int facilityId;
+    private String facility;
+    private int zoneId;
+    private String zone;
 
     @Override
     public String toString(){
-         if(this.getStartDate() != null && this.getEndDate() != null){
-            DateFormat dateFormatter = DateFormat.getDateInstance(DateFormat.DEFAULT);
-            StringBuilder filtersValue = new StringBuilder("");
-            filtersValue.append("Period : ").append(dateFormatter.format(this.getStartDate())).append("-").append(dateFormatter.format(this.getEndDate())).append("\n").
-                    append("Facility Types : ").append(this.getFacilityType()).append("\n").
-                    append("Adjustment Types : ").append(this.getAdjustmentType()).append("\n").
-                    append("Reporting Groups : ").append(this.getRgroup());
 
-            return filtersValue.toString();
-         }   else{
-           return "No filters selected";
-         }
+        DateFormat dateFormatter = DateFormat.getDateInstance(DateFormat.DEFAULT);
+
+        StringBuilder filtersValue = new StringBuilder("");
+
+        filtersValue.
+                append("Period : ").append(dateFormatter.format(this.getStartDate())).append("-").append(dateFormatter.format(this.getEndDate())).append("\n").
+                append("Program : ").append(this.getProgram()).append("\n").
+                append("Requisition Group : ").append(this.getRgroup()).append("\n").
+                append("Product Category : ").append(this.getProductCategory()).append("\n").
+                append("Product : ").append(this.getProduct()).append("\n").
+                append("Zone : ").append(this.getZone()).append("\n").
+                append("Facility Types : ").append(this.getFacilityType()).append("\n").
+                append("Facility : ").append(this.getFacility()).append("\n");
+        return filtersValue.toString();
+
+
     }
+
+
 }

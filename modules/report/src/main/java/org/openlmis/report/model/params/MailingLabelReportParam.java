@@ -8,7 +8,7 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-package org.openlmis.report.model.filter;
+package org.openlmis.report.model.params;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -18,15 +18,24 @@ import org.openlmis.report.model.ReportData;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class FacilityReportFilter implements ReportData {
+public class MailingLabelReportParam implements ReportData {
 
     //top filters
-    private String facilityCodeId;
-    private String facilityNameId;
     private int facilityTypeId;
-    private int zoneId;
-    private Boolean statusId;
-    private int rgId;
+    private String facilityType;
+    private int rgroupId;
     private String rgroup;
 
+    @Override
+    public String toString(){
+        if(this == null ) return null;
+        StringBuilder filterDescription = new StringBuilder("");
+        filterDescription.append("Facility Type : ").append(facilityTypeId != 0 ? facilityType : "All Facility Types ").append("\n").
+                         append("Requisition Group : ").append(rgroupId != 0 ? rgroup : "All Requisition Groups");
+
+        return filterDescription.toString().isEmpty() ? null : filterDescription.toString();
+    }
+
 }
+
+

@@ -15,7 +15,7 @@ import org.apache.ibatis.session.RowBounds;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.service.FacilityService;
 import org.openlmis.report.mapper.MailingLabelReportMapper;
-import org.openlmis.report.model.filter.MailingLabelReportFilter;
+import org.openlmis.report.model.params.MailingLabelReportParam;
 import org.openlmis.report.model.report.MailingLabelReport;
 import org.openlmis.report.model.ReportData;
 import org.openlmis.report.model.sorter.MailingLabelReportSorter;
@@ -36,7 +36,7 @@ public class MailingLabelReportDataProvider extends ReportDataProvider {
   @Autowired
   private MailingLabelReportMapper mailingLabelReportMapper;
 
-  private MailingLabelReportFilter mailingLabelReportFilter = null;
+  private MailingLabelReportParam mailingLabelReportParam = null;
 
   private ReportData getMailingLabelReport(Facility facility) {
     if (facility == null) return null;
@@ -79,13 +79,13 @@ public class MailingLabelReportDataProvider extends ReportDataProvider {
     return mailingLabelReportMapper.SelectFilteredSortedPagedFacilities(getReportFilterData(filterCriteria), mailingLabelReportSorter, rowBounds);
   }
 
-  public MailingLabelReportFilter getReportFilterData(Map<String, String[]> filterCriteria) {
+  public MailingLabelReportParam getReportFilterData(Map<String, String[]> filterCriteria) {
     if (filterCriteria != null) {
-      mailingLabelReportFilter = new MailingLabelReportFilter();
-      mailingLabelReportFilter.setFacilityTypeId((filterCriteria.get("facilityTypeId") == null ? 0 : Integer.parseInt(filterCriteria.get("facilityTypeId")[0])));
-      mailingLabelReportFilter.setRgroupId((filterCriteria.get("rgroupId") == null ? 0 : Integer.parseInt(filterCriteria.get("rgroupId")[0])));
+      mailingLabelReportParam = new MailingLabelReportParam();
+      mailingLabelReportParam.setFacilityTypeId((filterCriteria.get("facilityTypeId") == null ? 0 : Integer.parseInt(filterCriteria.get("facilityTypeId")[0])));
+      mailingLabelReportParam.setRgroupId((filterCriteria.get("rgroupId") == null ? 0 : Integer.parseInt(filterCriteria.get("rgroupId")[0])));
     }
-    return mailingLabelReportFilter;
+    return mailingLabelReportParam;
   }
 
   @Override

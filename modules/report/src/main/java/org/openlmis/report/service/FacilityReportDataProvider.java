@@ -15,7 +15,7 @@ import org.apache.ibatis.session.RowBounds;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.service.FacilityService;
 import org.openlmis.report.mapper.FacilityReportMapper;
-import org.openlmis.report.model.filter.FacilityReportFilter;
+import org.openlmis.report.model.params.FacilityReportParam;
 import org.openlmis.report.model.report.FacilityReport;
 import org.openlmis.report.model.ReportData;
 import org.openlmis.report.model.sorter.FacilityReportSorter;
@@ -36,7 +36,7 @@ public class FacilityReportDataProvider extends ReportDataProvider {
   @Autowired
   private FacilityReportMapper facilityReportMapper;
 
-  private FacilityReportFilter facilityReportFilter = null;
+  private FacilityReportParam facilityReportParam = null;
 
 
   private ReportData getFacilityReport(Facility facility) {
@@ -78,16 +78,16 @@ public class FacilityReportDataProvider extends ReportDataProvider {
   }
 
 
-  public FacilityReportFilter getReportFilterData(Map<String, String[]> filterCriteria) {
+  public FacilityReportParam getReportFilterData(Map<String, String[]> filterCriteria) {
     if (filterCriteria != null) {
-      facilityReportFilter = new FacilityReportFilter();
-      facilityReportFilter.setZoneId(filterCriteria.get("zoneId") == null ? 0 : Integer.parseInt(filterCriteria.get("zoneId")[0]));  //defaults to 0
-      facilityReportFilter.setFacilityTypeId(filterCriteria.get("facilityTypeId") == null ? 0 : Integer.parseInt(filterCriteria.get("facilityTypeId")[0])); //defaults to 0
-      facilityReportFilter.setStatusId(filterCriteria.get("statusId") == null || filterCriteria.get("statusId")[0].isEmpty() ? null : Boolean.valueOf(filterCriteria.get("statusId")[0]));
-      facilityReportFilter.setRgroup((filterCriteria.get("rgroup") == null || filterCriteria.get("rgroup")[0].equals("")) ? "All Reporting Groups" : filterCriteria.get("rgroup")[0]);
-      facilityReportFilter.setRgId(filterCriteria.get("rgroupId") == null ? 0 : Integer.parseInt(filterCriteria.get("rgroupId")[0])); //defaults to 0
+      facilityReportParam = new FacilityReportParam();
+      facilityReportParam.setZoneId(filterCriteria.get("zoneId") == null ? 0 : Integer.parseInt(filterCriteria.get("zoneId")[0]));  //defaults to 0
+      facilityReportParam.setFacilityTypeId(filterCriteria.get("facilityTypeId") == null ? 0 : Integer.parseInt(filterCriteria.get("facilityTypeId")[0])); //defaults to 0
+      facilityReportParam.setStatusId(filterCriteria.get("statusId") == null || filterCriteria.get("statusId")[0].isEmpty() ? null : Boolean.valueOf(filterCriteria.get("statusId")[0]));
+      facilityReportParam.setRgroup((filterCriteria.get("rgroup") == null || filterCriteria.get("rgroup")[0].equals("")) ? "All Reporting Groups" : filterCriteria.get("rgroup")[0]);
+      facilityReportParam.setRgId(filterCriteria.get("rgroupId") == null ? 0 : Integer.parseInt(filterCriteria.get("rgroupId")[0])); //defaults to 0
     }
-    return facilityReportFilter;
+    return facilityReportParam;
   }
 
   @Override

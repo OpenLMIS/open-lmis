@@ -12,12 +12,10 @@
 
 package org.openlmis.report.builder;
 
-import org.openlmis.report.model.filter.DistrictSummaryReportFilter;
+import org.openlmis.report.model.params.DistrictSummaryReportParam;
 
 
 import java.util.Map;
-
-import static org.apache.ibatis.jdbc.SqlBuilder.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -30,7 +28,7 @@ public class DistrictFinancialSummaryQueryBuilder {
 
     public static String getQuery(Map params){
 
-        DistrictSummaryReportFilter filter  = (DistrictSummaryReportFilter)params.get("filterCriteria");
+        DistrictSummaryReportParam filter  = (DistrictSummaryReportParam)params.get("filterCriteria");
 
         String sql="";
         sql = "WITH temp as (\n" +
@@ -47,7 +45,7 @@ public class DistrictFinancialSummaryQueryBuilder {
         return sql;
     }
 
-    private static String writePredicates(DistrictSummaryReportFilter filter){
+    private static String writePredicates(DistrictSummaryReportParam filter){
         String predicate="";
         predicate = " WHERE status in ('IN_APPROVAL','APPROVED','RELEASED') ";
 

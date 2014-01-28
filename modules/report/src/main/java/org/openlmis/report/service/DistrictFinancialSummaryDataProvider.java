@@ -16,7 +16,7 @@ import org.apache.ibatis.session.RowBounds;
 import org.openlmis.core.service.ConfigurationSettingService;
 import org.openlmis.report.mapper.DistrictFinancialSummaryMapper;
 import org.openlmis.report.model.ReportData;
-import org.openlmis.report.model.filter.DistrictSummaryReportFilter;
+import org.openlmis.report.model.params.DistrictSummaryReportParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -49,10 +49,10 @@ public class DistrictFinancialSummaryDataProvider extends ReportDataProvider {
   }
 
   public ReportData getReportFilterData(Map<String, String[]> filterCriteria) {
-    DistrictSummaryReportFilter regimenSummaryReportFilter = null;
+    DistrictSummaryReportParam regimenSummaryReportFilter = null;
 
     if (filterCriteria != null) {
-      regimenSummaryReportFilter = new DistrictSummaryReportFilter();
+      regimenSummaryReportFilter = new DistrictSummaryReportParam();
 
       regimenSummaryReportFilter.setZoneId(StringUtils.isBlank(filterCriteria.get("zoneId")[0]) ? 0 : Integer.parseInt(filterCriteria.get("zoneId")[0]));  //defaults to 0
       regimenSummaryReportFilter.setZone(StringUtils.isBlank(filterCriteria.get("zone")[0]) ? "All Geographic Zones" : filterCriteria.get("zone")[0]);
