@@ -2531,12 +2531,17 @@ input[rnr-validator="positiveInteger"] {
   }
 }
 
-#podTable {
+#pod {
   .col-fullSupply {
     min-width: 50px;
+    width: 75px;
   }
   .col-packsToShip, .col-quantityShipped {
-    min-width: 150px;
+    width: 150px;
+  }
+  .col-productName {
+    width: 482px;
+    min-width: 250px;
   }
   td.col-packsToShip, td.col-quantityShipped {
     span {
@@ -2545,12 +2550,12 @@ input[rnr-validator="positiveInteger"] {
     }
   }
   .col-quantityReceived {
-    min-width: 150px;
+    width: 150px;
     input {
       width: 93%;
     }
   }
   .col-notes {
-    min-width: 300px;
+    width: 300px;
   }
 }
