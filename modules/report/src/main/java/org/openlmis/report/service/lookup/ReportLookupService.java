@@ -83,202 +83,206 @@ public class ReportLookupService {
   @Autowired
   private ReportRequisitionMapper requisitionMapper;
 
-  public List<Product> getAllProducts(){
-      return productMapper.getAll();
+  public List<Product> getAllProducts() {
+    return productMapper.getAll();
   }
 
-  public List<RegimenCategory>getAllRegimenCategory(){
-      return regimenCategoryReportMapper.getAll();
+  public List<RegimenCategory> getAllRegimenCategory() {
+    return regimenCategoryReportMapper.getAll();
   }
 
   //For created for future
-  public List<RegimenCategory>getRegimenCategoryById(Long id){
-      return regimenCategoryReportMapper.getById(id);
+  public List<RegimenCategory> getRegimenCategoryById(Long id) {
+    return regimenCategoryReportMapper.getById(id);
   }
-  public List<Regimen>getRegimenByProgram(){
-     return regimenReportMapper.getByProgram();
+
+  public List<Regimen> getRegimenByProgram() {
+    return regimenReportMapper.getByProgram();
   }
-  public List<Regimen>getAllRegimens(){
+
+  public List<Regimen> getAllRegimens() {
     return regimenReportMapper.getAll();
   }
-  public List<GeographicZone>getGeographicLevelById(Long geographicLevelId) {
-      return geographicZoneMapper.getGeographicZoneByLevel(geographicLevelId);
+
+  public List<GeographicZone> getGeographicLevelById(Long geographicLevelId) {
+    return geographicZoneMapper.getGeographicZoneByLevel(geographicLevelId);
   }
 
-  public List<Regimen>getRegimenByCategory(Long regimenCategoryId){
+  public List<Regimen> getRegimenByCategory(Long regimenCategoryId) {
     return regimenReportMapper.getRegimenByCategory(regimenCategoryId);
   }
-  public List<Product> getProductsActiveUnderProgram(Long programId){
-      if(configurationService.getBoolValue("ALLOW_PRODUCT_CATEGORY_PER_PROGRAM")){
-        return productMapper.getProductsForProgramPickCategoryFromProgramProduct(programId);
-      }
-      return productMapper.getProductsForProgram(programId);
+
+  public List<Product> getProductsActiveUnderProgram(Long programId) {
+    if (configurationService.getBoolValue("ALLOW_PRODUCT_CATEGORY_PER_PROGRAM")) {
+      return productMapper.getProductsForProgramPickCategoryFromProgramProduct(programId);
+    }
+    return productMapper.getProductsForProgram(programId);
   }
 
-  public List<Product> getProductListByCategory(Integer categoryId){
-      if(categoryId == null || categoryId == -1 || categoryId == 0){
-          return productMapper.getAll();
-      }
-      return productMapper.getProductListByCategory(categoryId);
+  public List<Product> getProductListByCategory(Integer categoryId) {
+    if (categoryId == null || categoryId == -1 || categoryId == 0) {
+      return productMapper.getAll();
+    }
+    return productMapper.getProductListByCategory(categoryId);
   }
 
-  public List<ProductList> getFullProductList(){
-      return productMapper.getFullProductList();
+  public List<ProductList> getFullProductList() {
+    return productMapper.getFullProductList();
   }
 
-  public Product getProductByCode(String code){
-      return productMapper.getProductByCode(code);
+  public Product getProductByCode(String code) {
+    return productMapper.getProductByCode(code);
   }
 
-  public List<FacilityType> getFacilityTypes(){
-      return facilityTypeMapper.getAll();
+  public List<FacilityType> getFacilityTypes() {
+    return facilityTypeMapper.getAll();
   }
 
-  public List<RequisitionGroup> getAllRequisitionGroups(){
-      return this.rgMapper.getAll();
+  public List<RequisitionGroup> getAllRequisitionGroups() {
+    return this.rgMapper.getAll();
   }
 
-  public List<RequisitionGroup> getRequisitionGroupsByProgramAndSchedule(int program, int schedule){
-      return this.rgMapper.getByProgramAndSchedule(program, schedule);
+  public List<RequisitionGroup> getRequisitionGroupsByProgramAndSchedule(int program, int schedule) {
+    return this.rgMapper.getByProgramAndSchedule(program, schedule);
   }
 
-  public List<RequisitionGroup> getRequisitionGroupsByProgram(int program){
+  public List<RequisitionGroup> getRequisitionGroupsByProgram(int program) {
     return this.rgMapper.getByProgram(program);
   }
 
-  public List<ProductCategory> getAllProductCategories(){
-      return this.productCategoryMapper.getAll();
+  public List<ProductCategory> getAllProductCategories() {
+    return this.productCategoryMapper.getAll();
   }
 
-  public List<ProductCategory> getCategoriesForProgram(int programId){
-    if(configurationService.getBoolValue("ALLOW_PRODUCT_CATEGORY_PER_PROGRAM")){
+  public List<ProductCategory> getCategoriesForProgram(int programId) {
+    if (configurationService.getBoolValue("ALLOW_PRODUCT_CATEGORY_PER_PROGRAM")) {
       return this.productCategoryMapper.getForProgramUsingProgramProductCategory(programId);
     }
     return this.productCategoryMapper.getForProgram(programId);
   }
 
-  public List<AdjustmentType> getAllAdjustmentTypes(){
-      return adjustmentTypeReportMapper.getAll();
+  public List<AdjustmentType> getAllAdjustmentTypes() {
+    return adjustmentTypeReportMapper.getAll();
   }
 
-  public List<Integer> getOperationYears(){
+  public List<Integer> getOperationYears() {
 
 
-      int startYear = configurationService.getConfigurationIntValue(Constants.START_YEAR);
+    int startYear = configurationService.getConfigurationIntValue(Constants.START_YEAR);
 
-      Calendar calendar = Calendar.getInstance();
+    Calendar calendar = Calendar.getInstance();
 
-      int now = calendar.get(Calendar.YEAR);
+    int now = calendar.get(Calendar.YEAR);
 
-      List<Integer> years = new ArrayList<>();
+    List<Integer> years = new ArrayList<>();
 
-      if(startYear == 0 || startYear > now)  {
-          years.add(now);
-          return years;
-      }
+    if (startYear == 0 || startYear > now) {
+      years.add(now);
+      return years;
+    }
 
-      for (int year = startYear; year <= now; year++){
+    for (int year = startYear; year <= now; year++) {
 
-          years.add(year);
-      }
+      years.add(year);
+    }
 
-       return years;
+    return years;
 
   }
 
-  public List<Object> getAllMonths(){
+  public List<Object> getAllMonths() {
 
-      return configurationService.getConfigurationListValue(Constants.MONTHS,",");
+    return configurationService.getConfigurationListValue(Constants.MONTHS, ",");
   }
 
-  public List<Program> getAllPrograms(){
-      return programMapper.getAll();
+  public List<Program> getAllPrograms() {
+    return programMapper.getAll();
   }
 
-  public Program getProgramByCode(String code){
-      return programMapper.getProgramByCode(code);
+  public Program getProgramByCode(String code) {
+    return programMapper.getProgramByCode(code);
   }
 
   //It return all programs only with regimen
-  public List<Program> getAllRegimenPrograms(){
-      return  programMapper.getAllRegimenPrograms();
+  public List<Program> getAllRegimenPrograms() {
+    return programMapper.getAllRegimenPrograms();
   }
 
 
-    public List<Schedule> getAllSchedules(){
-      return scheduleMapper.getAll();
+  public List<Schedule> getAllSchedules() {
+    return scheduleMapper.getAll();
   }
 
   //TODO: implement this method
   public List<org.openlmis.report.model.dto.GeographicZone> getAllZones() {
-      return geographicZoneMapper.getAll();
+    return geographicZoneMapper.getAll();
   }
 
   public List<GeographicLevel> getAllGeographicLevels() {
-      return geographicLevelMapper.getAll();
+    return geographicLevelMapper.getAll();
   }
 
-  public List<DosageUnit> getDosageUnits(){
-      return dosageUnitMapper.getAll();
+  public List<DosageUnit> getDosageUnits() {
+    return dosageUnitMapper.getAll();
   }
 
-  public List<Facility> getAllFacilities(){
-      return facilityReportMapper.getAll();
+  public List<Facility> getAllFacilities() {
+    return facilityReportMapper.getAll();
   }
 
-  public Facility getFacilityByCode(String code){
-      return facilityReportMapper.getFacilityByCode(code);
+  public Facility getFacilityByCode(String code) {
+    return facilityReportMapper.getFacilityByCode(code);
   }
 
-  public List<Facility> getFacilities(Long program, Long schedule, Long type){
+  public List<Facility> getFacilities(Long program, Long schedule, Long type) {
     // this method does not work if no program is specified
-    if(program == 0){
+    if (program == 0) {
       return null;
     }
 
-    if(schedule == 0 && type == 0){
+    if (schedule == 0 && type == 0) {
       return facilityReportMapper.getFacilitiesByProgram(program);
     }
 
-    if(type == 0){
+    if (type == 0) {
       return facilityReportMapper.getFacilitiesByProgramSchedule(program, schedule);
     }
 
-    return facilityReportMapper.getFacilitiesByPrgraomScheduleType(program,schedule,type);
+    return facilityReportMapper.getFacilitiesByPrgraomScheduleType(program, schedule, type);
   }
 
-  public List<ProcessingPeriod> getAllProcessingPeriods(){
+  public List<ProcessingPeriod> getAllProcessingPeriods() {
+    return processingPeriodMapper.getAll();
+  }
+
+  public List<ProcessingPeriod> getFilteredPeriods(Date startDate, Date endDate) {
+    if (startDate == null && endDate == null) {
       return processingPeriodMapper.getAll();
+    }
+    return processingPeriodMapper.getFilteredPeriods(startDate, endDate);
   }
 
-  public List<ProcessingPeriod> getFilteredPeriods(Date startDate, Date endDate){
-      if(startDate == null && endDate == null){
-          return processingPeriodMapper.getAll();
-      }
-      return processingPeriodMapper.getFilteredPeriods(startDate, endDate);
+  public List<ProductGroup> getAllProductGroups() {
+    return productGroupReportMapper.getAll();
   }
 
-  public List<ProductGroup> getAllProductGroups(){
-      return productGroupReportMapper.getAll();
-  }
-
-  public List<ProductForm> getAllProductForm(){
-      return productFormReportMapper.getAll();
+  public List<ProductForm> getAllProductForm() {
+    return productFormReportMapper.getAll();
   }
 
   public List<Product> getListOfProducts(String productIds) {
     return productMapper.getSelectedProducts(productIds);
   }
 
-  public String getFacilityNameForRnrId(Long rnrId){
-     return requisitionMapper.getFacilityNameForRnrId(rnrId);
+  public String getFacilityNameForRnrId(Long rnrId) {
+    return requisitionMapper.getFacilityNameForRnrId(rnrId);
   }
 
-  public String getPeriodTextForRnrId(Long rnrId){
+  public String getPeriodTextForRnrId(Long rnrId) {
     return requisitionMapper.getPeriodTextForRnrId(rnrId);
   }
 
-  public String getProgramNameForRnrId(Long rnrId){
+  public String getProgramNameForRnrId(Long rnrId) {
     return requisitionMapper.getProgramNameForRnrId(rnrId);
   }
 }
