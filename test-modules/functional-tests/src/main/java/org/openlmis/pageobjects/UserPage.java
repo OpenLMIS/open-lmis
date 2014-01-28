@@ -89,7 +89,7 @@ public class UserPage extends Page {
   @FindBy(how = How.ID, using = "searchFacility")
   private static WebElement searchFacility = null;
 
-  @FindBy(how = How.XPATH, using = "//a[@ng-click='setSelectedFacility(facility)']")
+  @FindBy(how = How.ID, using = "result0")
   private static WebElement selectFacility = null;
 
   @FindBy(how = How.XPATH, using = "//form[@id='create-user']/div/div[1]/div[7]/div/ng-switch/span")

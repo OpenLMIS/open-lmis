@@ -167,7 +167,8 @@
           <div class="facility-list" ng-show="query.length > 2">
             <ul>
               <li ng-repeat="facility in filteredFacilities">
-                <a href="" ng-click="setSelectedFacility(facility)">{{facility.code}} - {{facility.name}}</a>
+                <a href="" id="result{{$index}}" ng-click="setSelectedFacility(facility)">{{facility.code}} -
+                  {{facility.name}}</a>
               </li>
               <li ng-show="resultCount == 0">
                 <a href="" openlmis-message="msg.no.matches|query"></a>
