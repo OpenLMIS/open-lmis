@@ -94,7 +94,7 @@ public class DistributionEpiInventoryTest extends TestCaseHelper {
 
   @Test(groups = {"distribution"})
   public void shouldDisplayAllActiveFullAndNonFullSupplyProductsWithIdealQuantityOnEpiInventoryPage() throws Exception {
-    dbWrapper.updateProductFullSupplyStatus("P10", false);
+    dbWrapper.updateFieldValue("products","fullSupply","false","code","P10");
 
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs("Admin123", "Admin123");
@@ -128,7 +128,7 @@ public class DistributionEpiInventoryTest extends TestCaseHelper {
 
     assertFalse(epiInventoryPage.getDataEpiInventory().contains("ProductName5"));
 
-    dbWrapper.updateProductFullSupplyStatus("P10", true);
+    dbWrapper.updateFieldValue("products","fullSupply","true","code","P10");
   }
 
   @Test(groups = {"distribution"})

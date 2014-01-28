@@ -1185,10 +1185,6 @@ public class DBWrapper {
       "and productId=(select id from products where code='" + productCode + "'));");
   }
 
-  public void updateProductFullSupplyStatus(String productCode, boolean fullSupply) throws SQLException {
-    update("UPDATE products SET fullSupply=" + fullSupply + " WHERE code='" + productCode + "';");
-  }
-
   public void updateConfigureTemplateValidationFlag(String programCode, String flag) throws SQLException {
     update("UPDATE program_rnr_columns set formulaValidationRequired ='" + flag + "' WHERE programId=" +
       "(SELECT id from programs where code='" + programCode + "');");
