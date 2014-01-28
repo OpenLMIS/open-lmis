@@ -10,7 +10,7 @@
 
 describe("User Search Controller", function () {
 
-  var scope, $httpBackend, ctrl, navigateBackService, location, messageService;
+  var scope, $httpBackend, ctrl, navigateBackService, location, messageService, userList;
   beforeEach(module('openlmis.services'));
   beforeEach(module('openlmis.localStorage'))
   beforeEach(module('openlmis.localStorage'));
@@ -25,7 +25,7 @@ describe("User Search Controller", function () {
     location = $location;
     ctrl = $controller;
     messageService = _messageService_;
-    ctrl('UserSearchController', {$scope: scope, messageService: messageService});
+    ctrl('UserSearchController', {$scope: scope, userList: userList , messageService: messageService});
   }));
 
   it('should get all users depending on search criteria when three characters are entered in search', function () {
@@ -85,7 +85,7 @@ describe("User Search Controller", function () {
     navigateBackService.setData({query: query});
     $httpBackend.expect('GET', '/users.json?param=lok').respond(200, {});
 
-    ctrl('UserSearchController', {$scope: scope});
+    ctrl('UserSearchController', {$scope: scope, userList:userList });
 
     $httpBackend.flush();
     expect(query).toEqual(scope.query);

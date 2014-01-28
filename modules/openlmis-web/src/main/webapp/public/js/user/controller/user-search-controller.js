@@ -8,12 +8,9 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-function UserSearchController($scope, $location, Users, navigateBackService, UpdatePassword, messageService) {
+function UserSearchController($scope, $location, Users, userList, navigateBackService, UpdatePassword, messageService) {
 
-    // show the list of users by a deault
-    Users.get({param: ''}, function(data){
-       $scope.users = data.userList;
-    });
+    $scope.users = userList;
 
     $scope.showUserSearchResults = function () {
     var query = $scope.query;
@@ -109,3 +106,17 @@ function UserSearchController($scope, $location, Users, navigateBackService, Upd
   };  
   
 }
+
+UserSearchController.resolve = {
+  userList: function ($q, $timeout, Users) {
+    var deferred = $q.defer();
+    $timeout(function () {
+      // show the list of users by a default
+      Users.get({param: ''}, function(data){
+        deferred.resolve( data.userList );
+      },{});
+
+    }, 100);
+    return deferred.promise;
+  }
+};
