@@ -716,10 +716,6 @@ public class DBWrapper {
     return isaParams;
   }
 
-  public void updateFacilityFieldBYCode(String field, String value, String code) throws IOException, SQLException {
-    update("update facilities set " + field + "='" + value + "' where code='" + code + "';");
-  }
-
   public void insertSupplyLines(String supervisoryNode, String programCode, String facilityCode, boolean exportOrders) throws IOException, SQLException {
     update("insert into supply_lines (description, supervisoryNodeId, programId, supplyingFacilityId,exportOrders) values" +
       "('supplying node for " + programCode + "', " +

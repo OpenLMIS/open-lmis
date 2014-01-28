@@ -82,7 +82,7 @@ public class DistributionSyncTest extends TestCaseHelper {
     dbWrapper.addRefrigeratorToFacility("LG", "800L", "GNR7878", "F10");
 
     dbWrapper.updateActiveStatusOfFacility("F10", "true");
-    dbWrapper.updateFacilityFieldBYCode("enabled", "true", "F10");
+    dbWrapper.updateFieldValue("facilities","enabled","true","code","F10");
     dbWrapper.updateActiveStatusOfProgram("VACCINES", true);
     dbWrapper.updateFieldValue("products","active","true","code","P10");
     dbWrapper.updateFieldValue("products","active","true","code","P11");
@@ -310,7 +310,7 @@ public class DistributionSyncTest extends TestCaseHelper {
     initiateDistribution(distributionTestData.get(FIRST_DELIVERY_ZONE_NAME), distributionTestData.get(VACCINES_PROGRAM));
     FacilityListPage facilityListPage = new FacilityListPage(testWebDriver);
 
-    dbWrapper.updateFacilityFieldBYCode("enabled", "false", "F10");
+    dbWrapper.updateFieldValue("facilities","enabled","false","code","F10");
     dbWrapper.updateActiveStatusOfFacility(distributionTestData.get(FIRST_FACILITY_CODE), "false");
 
     assertTrue(facilityListPage.getFacilitiesInDropDown().contains(distributionTestData.get(FIRST_FACILITY_CODE)));

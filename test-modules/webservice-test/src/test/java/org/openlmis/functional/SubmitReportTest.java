@@ -195,7 +195,7 @@ public class SubmitReportTest extends JsonUtility {
 
   @Test(groups = {"webservice"})
   public void testSubmitReportWhenVirtualFacilityDisabled() throws Exception {
-    dbWrapper.updateFacilityFieldBYCode("enabled", "false", "V10");
+    dbWrapper.updateFieldValue("facilities","enabled","false","code","V10");
     HttpClient client = new HttpClient();
     client.createContext();
     Report reportFromJson = JsonUtility.readObjectFromFile(FULL_JSON_TXT_FILE_NAME, Report.class);
@@ -272,7 +272,7 @@ public class SubmitReportTest extends JsonUtility {
 
   @Test(groups = {"webservice"})
   public void testSubmitReportWhenParentFacilityDisabled() throws Exception {
-    dbWrapper.updateFacilityFieldBYCode("enabled", "false", "F10");
+    dbWrapper.updateFieldValue("facilities","enabled","false","code","F10");
     HttpClient client = new HttpClient();
     client.createContext();
     Report reportFromJson = JsonUtility.readObjectFromFile(FULL_JSON_TXT_FILE_NAME, Report.class);
@@ -287,7 +287,7 @@ public class SubmitReportTest extends JsonUtility {
 
     assertEquals(400, responseEntity.getStatus());
     assertEquals("{\"error\":\"Facility is inoperative\"}", responseEntity.getResponse());
-    dbWrapper.updateFacilityFieldBYCode("enabled", "true", "F10");
+    dbWrapper.updateFieldValue("facilities","enabled","true","code","F10");
   }
 
   @Test(groups = {"webservice"})

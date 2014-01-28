@@ -190,8 +190,7 @@ public class CreateUpdateCHW extends JsonUtility {
       "Admin123");
 
     assertTrue("Showing response as : " + responseEntityUpdated.getResponse(), responseEntityUpdated.getResponse().contains("{\"success\":\"CHW updated successfully\"}"));
-
-    dbWrapper.updateFacilityFieldBYCode("enabled", "false", DEFAULT_AGENT_CODE);
+    dbWrapper.updateFieldValue("facilities","enabled","false","code",DEFAULT_AGENT_CODE);
 
     ResponseEntity responseEntityEnabledFalse = client.SendJSON(getJsonStringFor(agentJson),
       UPDATE_URL + DEFAULT_AGENT_CODE + JSON_EXTENSION,
