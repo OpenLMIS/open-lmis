@@ -136,7 +136,7 @@ public class FacilityListPage extends RequisitionPage {
     facilityListSelectField.click();
     testWebDriver.sleep(250);
 
-    return new RefrigeratorPage(testWebDriver);
+    return new RefrigeratorPage(testWebDriver).navigateToRefrigerators();
   }
 
   public void clickFacilityListDropDown() {

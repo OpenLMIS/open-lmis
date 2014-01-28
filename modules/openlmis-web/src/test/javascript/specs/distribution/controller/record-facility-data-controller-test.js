@@ -71,7 +71,7 @@ describe("RecordFacilityDataController", function () {
     scope.facilitySelected = {facilityId: 2};
     spyOn(location, 'path');
     scope.chooseFacility();
-    expect(location.path).toHaveBeenCalledWith('record-facility-data/3/2/refrigerator-data')
+    expect(location.path).toHaveBeenCalledWith('record-facility-data/3/2/visit-info')
   });
 
   it('should format append each facility with its status icon', function () {
