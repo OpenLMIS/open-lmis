@@ -61,9 +61,5 @@ function ViewOrderListController($scope, Orders, messageService, $location, $rou
     $location.search('page', $scope.currentPage);
   });
 
-  $timeout(function () {
-    $(window).trigger("resize");
-  });
-
 }
 

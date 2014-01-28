@@ -18,7 +18,7 @@ services.factory('Programs', function ($resource) {
 });
 
 services.factory('RnRColumnList', function ($resource) {
-  return $resource('/program/:programId/rnr-template.json', {}, {post: {isArray: true, method: 'POST'}});
+  return $resource('/program/:programId/rnr-template.json', {}, {});
 });
 
 services.factory('ProgramRnRColumnList', function ($resource) {

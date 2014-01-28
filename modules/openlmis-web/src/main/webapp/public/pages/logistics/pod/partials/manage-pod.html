@@ -17,8 +17,6 @@
     <div class="alert alert-info" id="noOrdersPresent" ng-hide="orders && orders.length">
       <span openlmis-message="message.no.order"></span>
     </div>
-    <div ng-show="orders && orders.length">
-      <div class="gridStyle" ng-grid="gridOptions"></div>
-    </div>
+    <div ng-show="orders && orders.length" class="gridStyle" ng-grid="gridOptions"></div>
   </div>
 </div>

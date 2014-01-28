@@ -107,7 +107,7 @@
                            ng-repeat = "right in adminRights" tab-scroll>
                         <input id = "{{right.right}}" type = "checkbox"
                                ng-checked = "contains(right.right)"
-                               ng-click = "updateRights(checked,right)"
+                               ng-change = "updateRights(checked,right)"
                                ng-model = "checked"
                                ng-disabled = "areRelatedFieldsSelected(right) || currentRightType != 'ADMIN'"/>
                         <label for = "{{right.right}}"><span
@@ -129,7 +129,7 @@
                         <input id = "{{allocationRight.right}}"
                                type = "checkbox"
                                ng-checked = "contains(allocationRight.right)"
-                               ng-click = "updateRights(checked,allocationRight)"
+                               ng-change = "updateRights(checked,allocationRight)"
                                ng-model = "checked"
                                ng-disabled = "areRelatedFieldsSelected(allocationRight) || currentRightType != 'ALLOCATION'"/>
                         <label for = "{{allocationRight.right}}"><span
@@ -151,7 +151,7 @@
                         <input id = "{{requisitionRight.right}}"
                                type = "checkbox"
                                ng-checked = "contains(requisitionRight.right)"
-                               ng-click = "updateRights(checked,requisitionRight)"
+                               ng-change = "updateRights(checked,requisitionRight)"
                                ng-model = "checked"
                                ng-disabled = "areRelatedFieldsSelected(requisitionRight) || currentRightType != 'REQUISITION'"/>
                         <label for = "{{requisitionRight.right}}"><span
@@ -172,7 +172,7 @@
                            tab-scroll>
                         <input id = "{{fulfillmentRight.right}}" type = "checkbox"
                                ng-checked = "contains(fulfillmentRight.right)"
-                               ng-click = "updateRights(checked,fulfillmentRight)"
+                               ng-change = "updateRights(checked,fulfillmentRight)"
                                ng-model = "checked"
                                ng-disabled = "areRelatedFieldsSelected(fulfillmentRight) || currentRightType != 'FULFILLMENT'"/>
                         <label for = "{{fulfillmentRight.right}}"><span
