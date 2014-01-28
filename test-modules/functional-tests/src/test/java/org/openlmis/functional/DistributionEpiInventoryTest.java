@@ -133,7 +133,7 @@ public class DistributionEpiInventoryTest extends TestCaseHelper {
 
   @Test(groups = {"distribution"})
   public void shouldNotDisplayGloballyInactiveProductsOnEpiInventoryPage() throws Exception {
-    dbWrapper.updateActiveStatusOfProduct("Product6", "false");
+    dbWrapper.updateFieldValue("products","active","false","code","Product6");
 
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(epiInventoryData.get(USER), epiInventoryData.get(PASSWORD));
@@ -153,15 +153,14 @@ public class DistributionEpiInventoryTest extends TestCaseHelper {
 
     assertFalse(epiInventoryPage.getDataEpiInventory().contains("ProductName6"));
 
-    dbWrapper.updateActiveStatusOfProduct("Product6", "true");
+    dbWrapper.updateFieldValue("products","active","true","code","Product6");
   }
 
   @Test(groups = {"distribution"})
   public void shouldDisplayNoProductsAddedMessageWhOnEpiInventoryPageWhenNoActiveProducts() throws Exception {
-    dbWrapper.updateActiveStatusOfProduct("P10", "false");
-    dbWrapper.updateActiveStatusOfProduct("P11", "false");
-    dbWrapper.updateActiveStatusOfProduct("Product6", "false");
-
+    dbWrapper.updateFieldValue("products","active","false","code","P10");
+    dbWrapper.updateFieldValue("products","active","false","code","P11");
+    dbWrapper.updateFieldValue("products","active","false","code","Product6");
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(epiInventoryData.get(USER), epiInventoryData.get(PASSWORD));
     DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
@@ -173,9 +172,9 @@ public class DistributionEpiInventoryTest extends TestCaseHelper {
     assertTrue(epiInventoryPage.getNoProductsAddedMessage().contains("No products added"));
     epiInventoryPage.verifyIndicator("GREEN");
 
-    dbWrapper.updateActiveStatusOfProduct("P10", "true");
-    dbWrapper.updateActiveStatusOfProduct("P11", "true");
-    dbWrapper.updateActiveStatusOfProduct("Product6", "true");
+    dbWrapper.updateFieldValue("products","active","true","code","P10");
+    dbWrapper.updateFieldValue("products","active","true","code","P11");
+    dbWrapper.updateFieldValue("products","active","true","code","Product6");
 
   }
 

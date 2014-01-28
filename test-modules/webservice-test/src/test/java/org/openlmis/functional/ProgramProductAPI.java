@@ -167,7 +167,7 @@ public class ProgramProductAPI extends JsonUtility {
     String programCode = "HIV";
     String productCode = "P10";
 
-    dbWrapper.updateActiveStatusOfProduct(productCode, "false");
+    dbWrapper.updateFieldValue("products","active","false","code",productCode);
 
     ResponseEntity responseEntity = client.SendJSON("", URL + "?programCode=" + programCode, GET, commTrackUser, "Admin123");
 

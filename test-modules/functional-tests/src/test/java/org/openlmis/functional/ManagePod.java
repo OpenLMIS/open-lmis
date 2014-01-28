@@ -102,7 +102,7 @@ public class ManagePod extends TestCaseHelper {
     HomePage homePage = loginPage.loginAs(userSIC, password);
     dbWrapper.insertOrders("RELEASED", userSIC, "MALARIA");
     ManagePodPage managePodPage = homePage.navigateManagePOD();
-    dbWrapper.updateFieldValue("orders","status","RECEIVED");
+    dbWrapper.updateFieldValue("orders","status","RECEIVED",null,null);
     homePage.navigateHomePage();
     homePage.navigateManagePOD();
     managePodPage.verifyMessageOnManagePodScreen();

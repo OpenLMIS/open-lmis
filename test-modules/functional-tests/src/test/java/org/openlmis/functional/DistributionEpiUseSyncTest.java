@@ -321,9 +321,9 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
 
   @Test(groups = {"distribution"})
   public void shouldDisplayNoProductsAddedMessageWhOnEpiUsePageWhenNoActiveProducts() throws Exception {
-    dbWrapper.updateActiveStatusOfProduct("P10", "false");
-    dbWrapper.updateActiveStatusOfProduct("P11", "false");
-    dbWrapper.updateActiveStatusOfProduct("Product6", "false");
+    dbWrapper.updateFieldValue("products","active","false","code","P10");
+    dbWrapper.updateFieldValue("products","active","false","code","P11");
+    dbWrapper.updateFieldValue("products","active","false","code","Product6");
 
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(epiUseData.get(USER), epiUseData.get(PASSWORD));
@@ -336,9 +336,9 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
     assertTrue(epiUsePage.getNoProductsAddedMessage().contains("No products added"));
     epiUsePage.verifyIndicator("GREEN");
 
-    dbWrapper.updateActiveStatusOfProduct("P10", "true");
-    dbWrapper.updateActiveStatusOfProduct("P11", "true");
-    dbWrapper.updateActiveStatusOfProduct("Product6", "true");
+    dbWrapper.updateFieldValue("products","active","true","code","P10");
+    dbWrapper.updateFieldValue("products","active","true","code","P11");
+    dbWrapper.updateFieldValue("products","active","true","code","Product6");
 
   }
 

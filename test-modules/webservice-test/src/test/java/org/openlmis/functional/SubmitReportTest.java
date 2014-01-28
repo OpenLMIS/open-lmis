@@ -437,7 +437,7 @@ public class SubmitReportTest extends JsonUtility {
 
   @Test(groups = {"webservice"})
   public void testGloballyInactiveProductSubmitReport() throws Exception {
-    dbWrapper.updateActiveStatusOfProduct("P10", "False");
+    dbWrapper.updateFieldValue("products","active","false","code","P10");
     HttpClient client = new HttpClient();
     client.createContext();
 
@@ -455,7 +455,7 @@ public class SubmitReportTest extends JsonUtility {
 
     assertEquals(400, responseEntity.getStatus());
     assertEquals("{\"error\":\"Invalid product codes [P10]\"}", responseEntity.getResponse());
-    dbWrapper.updateActiveStatusOfProduct("P10", "True");
+    dbWrapper.updateFieldValue("products","active","true","code","P10");
   }
 
   @Test(groups = {"webservice"})

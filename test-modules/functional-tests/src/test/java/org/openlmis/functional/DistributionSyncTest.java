@@ -84,10 +84,10 @@ public class DistributionSyncTest extends TestCaseHelper {
     dbWrapper.updateActiveStatusOfFacility("F10", "true");
     dbWrapper.updateFacilityFieldBYCode("enabled", "true", "F10");
     dbWrapper.updateActiveStatusOfProgram("VACCINES", true);
-    dbWrapper.updateActiveStatusOfProduct("Product5", "true");
-    dbWrapper.updateActiveStatusOfProduct("Product6", "true");
-    dbWrapper.updateActiveStatusOfProduct("P10", "true");
-    dbWrapper.updateActiveStatusOfProduct("P11", "true");
+    dbWrapper.updateFieldValue("products","active","true","code","P10");
+    dbWrapper.updateFieldValue("products","active","true","code","P11");
+    dbWrapper.updateFieldValue("products","active","true","code","Product6");
+    dbWrapper.updateFieldValue("products","active","true","code","Product5");
   }
 
   @Test(groups = {"distribution"})
@@ -416,10 +416,10 @@ public class DistributionSyncTest extends TestCaseHelper {
     initiateDistribution(distributionTestData.get(FIRST_DELIVERY_ZONE_NAME), distributionTestData.get(VACCINES_PROGRAM));
     FacilityListPage facilityListPage = new FacilityListPage(testWebDriver);
 
-    dbWrapper.updateActiveStatusOfProduct("Product5", "false");
-    dbWrapper.updateActiveStatusOfProduct("Product6", "false");
-    dbWrapper.updateActiveStatusOfProduct("P10", "false");
-    dbWrapper.updateActiveStatusOfProduct("P11", "false");
+    dbWrapper.updateFieldValue("products","active","false","code","P10");
+    dbWrapper.updateFieldValue("products","active","false","code","P11");
+    dbWrapper.updateFieldValue("products","active","false","code","Product6");
+    dbWrapper.updateFieldValue("products","active","false","code","Product5");
 
     assertTrue(facilityListPage.getFacilitiesInDropDown().contains(distributionTestData.get(FIRST_FACILITY_CODE)));
     deleteDistribution();
@@ -468,10 +468,10 @@ public class DistributionSyncTest extends TestCaseHelper {
 
   @Test(groups = {"distribution"})
   public void testSyncWhenAllProductsAreInactive() throws Exception {
-    dbWrapper.updateActiveStatusOfProduct("P10", "false");
-    dbWrapper.updateActiveStatusOfProduct("P11", "false");
-    dbWrapper.updateActiveStatusOfProduct("Product5", "false");
-    dbWrapper.updateActiveStatusOfProduct("Product6", "false");
+    dbWrapper.updateFieldValue("products","active","false","code","P10");
+    dbWrapper.updateFieldValue("products","active","false","code","P11");
+    dbWrapper.updateFieldValue("products","active","false","code","Product6");
+    dbWrapper.updateFieldValue("products","active","false","code","Product5");
 
     HomePage homePage = loginPage.loginAs(distributionTestData.get(USER), distributionTestData.get(PASSWORD));
     initiateDistribution(distributionTestData.get(FIRST_DELIVERY_ZONE_NAME), distributionTestData.get(VACCINES_PROGRAM));

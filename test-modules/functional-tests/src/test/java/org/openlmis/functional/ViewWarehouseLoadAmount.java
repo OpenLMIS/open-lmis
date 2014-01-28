@@ -73,7 +73,8 @@ public class ViewWarehouseLoadAmount extends TestCaseHelper {
     dbWrapper.insertProductWithGroup("Product6", "ProductName6", productGroupCode, true);
     dbWrapper.insertProgramProduct("Product5", programFirst, "10", "false");
     dbWrapper.insertProgramProduct("Product6", programFirst, "10", "true");
-    dbWrapper.updateActiveStatusOfProduct("Product6", "false");
+    dbWrapper.updateFieldValue("products","active","false","code","Product6");
+
 
   }
 

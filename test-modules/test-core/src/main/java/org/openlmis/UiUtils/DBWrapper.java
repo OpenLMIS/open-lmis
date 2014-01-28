@@ -149,10 +149,6 @@ public class DBWrapper {
     return prodDetails;
   }
 
-  public void updateActiveStatusOfProduct(String productCode, String active) throws SQLException {
-    update("update products set active='%s' where code='%s'", active, productCode);
-  }
-
   public void updateActiveStatusOfProgramProduct(String productCode, String programCode, String active) throws SQLException {
     update("update program_products set active='%s' WHERE" +
       " programId = (select id from programs where code='%s')  AND" +
@@ -758,15 +754,18 @@ public class DBWrapper {
   }
 
   public void updateFieldValue(String tableName, String fieldName, Integer quantity) throws IOException, SQLException {
-    update("update " + tableName + " set " + fieldName + "=" + quantity);
+    update("update " + tableName + " set " + fieldName + "=" + quantity + ";");
   }
 
-  public void updateFieldValue(String tableName, String fieldName, String value) throws IOException, SQLException {
-    update("update " + tableName + " set " + fieldName + "='" + value + "'");
+  public void updateFieldValue(String tableName, String fieldName, String value, String fieldName2, String value2) throws IOException, SQLException {
+    if (fieldName2 == null)
+      update("update " + tableName + " set " + fieldName + "='" + value + "';");
+    else
+    update("update " + tableName + " set " + fieldName + "='" + value + "' where " + fieldName2 + "='" + value2 + "';");
   }
 
   public void updateFieldValue(String tableName, String fieldName, Boolean value) throws IOException, SQLException {
-    update("update " + tableName + " set " + fieldName + "=" + value);
+    update("update " + tableName + " set " + fieldName + "=" + value +";");
   }
 
   public void updateRequisitionStatus(String status, String username, String program) throws IOException, SQLException {
