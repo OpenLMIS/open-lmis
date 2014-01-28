@@ -44,6 +44,8 @@ distributionModule.config(['$routeProvider', function ($routeProvider) {
           {controller: ChildCoverageController, templateUrl: 'partials/child-coverage.html', resolve: ResolveDistribution}).
           when('/record-facility-data/:distribution/:facility/facility-visit',
           {controller: FacilityVisitController, templateUrl: 'partials/facility-visit.html', resolve: ResolveDistribution}).
+          when('/record-facility-data/:distribution/:facility/visit-info',
+          {controller: VisitInfoController, templateUrl: 'partials/visit-info.html', resolve: ResolveDistribution}).
           otherwise({redirectTo: '/manage'});
 
     }]).config(function (IndexedDBProvider) {
