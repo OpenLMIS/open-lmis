@@ -46,7 +46,7 @@ public class MailingLabelReportDataProvider extends ReportDataProvider {
   @Override
   protected List<? extends ReportData> getResultSetReportData(Map<String, String[]> params) {
 
-    return getReportDataByFilterCriteriaAndPagingAndSorting(params, null, RowBounds.NO_ROW_OFFSET, RowBounds.NO_ROW_LIMIT);
+    return getMainReportData(params, null, RowBounds.NO_ROW_OFFSET, RowBounds.NO_ROW_LIMIT);
 
   }
 
@@ -64,7 +64,7 @@ public class MailingLabelReportDataProvider extends ReportDataProvider {
   }
 
   @Override
-  public List<? extends ReportData> getReportDataByFilterCriteriaAndPagingAndSorting(Map<String, String[]> filterCriteria, Map<String, String[]> sorterCriteria, int page, int pageSize) {
+  public List<? extends ReportData> getMainReportData(Map<String, String[]> filterCriteria, Map<String, String[]> sorterCriteria, int page, int pageSize) {
 
     RowBounds rowBounds = new RowBounds((page - 1) * pageSize, pageSize);
 

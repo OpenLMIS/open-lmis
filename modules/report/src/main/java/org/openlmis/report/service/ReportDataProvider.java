@@ -29,7 +29,7 @@ public abstract class ReportDataProvider {
 
   protected abstract List<? extends ReportData> getResultSetReportData(Map<String, String[]> params);
 
-  public abstract List<? extends ReportData> getReportDataByFilterCriteriaAndPagingAndSorting(Map<String, String[]> filter , Map<String, String[]> sorter ,int page,int pageSize);
+  public abstract List<? extends ReportData> getMainReportData(Map<String, String[]> filter, Map<String, String[]> sorter, int page, int pageSize);
 
   public HashMap<String,String> getAdditionalReportData(Map params){
       return null;

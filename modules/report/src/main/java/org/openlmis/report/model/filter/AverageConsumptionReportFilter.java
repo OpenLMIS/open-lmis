@@ -16,8 +16,7 @@ import lombok.NoArgsConstructor;
 import org.openlmis.core.service.*;
 import org.openlmis.report.mapper.lookup.FacilityTypeReportMapper;
 import org.openlmis.report.model.dto.Product;
-import org.openlmis.report.model.dto.ProductList;
-import org.openlmis.report.service.ReportLookupService;
+import org.openlmis.report.service.lookup.ReportLookupService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

@@ -15,7 +15,6 @@ import org.openlmis.report.Report;
 import org.openlmis.report.ReportManager;
 import org.openlmis.report.model.Pages;
 import org.openlmis.report.model.report.*;
-import org.openlmis.report.service.ReportLookupService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -44,7 +43,7 @@ public class InteractiveReportController extends BaseController {
   ) {
 
     Report report = reportManager.getReportByKey("facilities");
-    List<FacilityReport> facilityReportList = (List<FacilityReport>) report.getReportDataProvider().getReportDataByFilterCriteriaAndPagingAndSorting(request.getParameterMap(), request.getParameterMap(), page, max);
+    List<FacilityReport> facilityReportList = (List<FacilityReport>) report.getReportDataProvider().getMainReportData(request.getParameterMap(), request.getParameterMap(), page, max);
 
     return new Pages(page, max, facilityReportList);
   }
@@ -58,7 +57,7 @@ public class InteractiveReportController extends BaseController {
   ) {
 
     Report report = reportManager.getReportByKey("mailinglabels");
-    List<MailingLabelReport> mailingLabelReports = (List<MailingLabelReport>) report.getReportDataProvider().getReportDataByFilterCriteriaAndPagingAndSorting(request.getParameterMap(), request.getParameterMap(), page, max);
+    List<MailingLabelReport> mailingLabelReports = (List<MailingLabelReport>) report.getReportDataProvider().getMainReportData(request.getParameterMap(), request.getParameterMap(), page, max);
     return new Pages(page, max, mailingLabelReports);
   }
 
@@ -74,7 +73,7 @@ public class InteractiveReportController extends BaseController {
 
     Report report = reportManager.getReportByKey("consumption");
     List<ConsumptionReport> consumptionReportList =
-      (List<ConsumptionReport>) report.getReportDataProvider().getReportDataByFilterCriteriaAndPagingAndSorting(request.getParameterMap(), request.getParameterMap(), page, max);
+      (List<ConsumptionReport>) report.getReportDataProvider().getMainReportData(request.getParameterMap(), request.getParameterMap(), page, max);
     return new Pages(page, max, consumptionReportList);
   }
 
@@ -89,7 +88,7 @@ public class InteractiveReportController extends BaseController {
 
     Report report = reportManager.getReportByKey("average_consumption");
     List<AverageConsumptionReport> averageConsumptionReportList =
-      (List<AverageConsumptionReport>) report.getReportDataProvider().getReportDataByFilterCriteriaAndPagingAndSorting(request.getParameterMap(), request.getParameterMap(), page, max);
+      (List<AverageConsumptionReport>) report.getReportDataProvider().getMainReportData(request.getParameterMap(), request.getParameterMap(), page, max);
 
     return new Pages(page, max, averageConsumptionReportList);
   }
@@ -106,7 +105,7 @@ public class InteractiveReportController extends BaseController {
 
     Report report = reportManager.getReportByKey("summary");
     List<SummaryReport> reportList =
-      (List<SummaryReport>) report.getReportDataProvider().getReportDataByFilterCriteriaAndPagingAndSorting(request.getParameterMap(), request.getParameterMap(), page, max);
+      (List<SummaryReport>) report.getReportDataProvider().getMainReportData(request.getParameterMap(), request.getParameterMap(), page, max);
 
     return new Pages(page, max, reportList);
   }
@@ -123,7 +122,7 @@ public class InteractiveReportController extends BaseController {
 
     Report report = reportManager.getReportByKey("non_reporting");
     List<MasterReport> reportList =
-      (List<MasterReport>) report.getReportDataProvider().getReportDataByFilterCriteriaAndPagingAndSorting(request.getParameterMap(), request.getParameterMap(), page, max);
+      (List<MasterReport>) report.getReportDataProvider().getMainReportData(request.getParameterMap(), request.getParameterMap(), page, max);
 
     return new Pages(page, max, reportList);
   }
@@ -137,7 +136,7 @@ public class InteractiveReportController extends BaseController {
   ) {
 
     Report report = reportManager.getReportByKey("adjustment_summary");
-    List<AdjustmentSummaryReport> adjustmentSummaryReportList = (List<AdjustmentSummaryReport>) report.getReportDataProvider().getReportDataByFilterCriteriaAndPagingAndSorting(request.getParameterMap(), request.getParameterMap(), page, max);
+    List<AdjustmentSummaryReport> adjustmentSummaryReportList = (List<AdjustmentSummaryReport>) report.getReportDataProvider().getMainReportData(request.getParameterMap(), request.getParameterMap(), page, max);
 
     return new Pages(page, max, adjustmentSummaryReportList);
   }
@@ -152,7 +151,7 @@ public class InteractiveReportController extends BaseController {
 
     Report report = reportManager.getReportByKey("district_consumption");
     List<DistrictConsumptionReport> districtConsumptionReportList =
-      (List<DistrictConsumptionReport>) report.getReportDataProvider().getReportDataByFilterCriteriaAndPagingAndSorting(request.getParameterMap(), request.getParameterMap(), page, max);
+      (List<DistrictConsumptionReport>) report.getReportDataProvider().getMainReportData(request.getParameterMap(), request.getParameterMap(), page, max);
 
     return new Pages(page, max, districtConsumptionReportList);
   }
@@ -169,7 +168,7 @@ public class InteractiveReportController extends BaseController {
 
     Report report = reportManager.getReportByKey("order_summary");
     List<OrderSummaryReport> orderReportList =
-      (List<OrderSummaryReport>) report.getReportDataProvider().getReportDataByFilterCriteriaAndPagingAndSorting(request.getParameterMap(), request.getParameterMap(), page, max);
+      (List<OrderSummaryReport>) report.getReportDataProvider().getMainReportData(request.getParameterMap(), request.getParameterMap(), page, max);
 
     return new Pages(page, max, orderReportList);
   }
@@ -186,7 +185,7 @@ public class InteractiveReportController extends BaseController {
 
     Report report = reportManager.getReportByKey("supply_status");
     List<SupplyStatusReport> supplyStatusReportList =
-      (List<SupplyStatusReport>) report.getReportDataProvider().getReportDataByFilterCriteriaAndPagingAndSorting(request.getParameterMap(), request.getParameterMap(), page, max);
+      (List<SupplyStatusReport>) report.getReportDataProvider().getMainReportData(request.getParameterMap(), request.getParameterMap(), page, max);
 
     return new Pages(page, max, supplyStatusReportList);
   }
@@ -202,7 +201,7 @@ public class InteractiveReportController extends BaseController {
 
     Report report = reportManager.getReportByKey("stock_imbalance");
     List<StockImbalanceReport> stockImbalanceReportList =
-      (List<StockImbalanceReport>) report.getReportDataProvider().getReportDataByFilterCriteriaAndPagingAndSorting(request.getParameterMap(), request.getParameterMap(), page, max);
+      (List<StockImbalanceReport>) report.getReportDataProvider().getMainReportData(request.getParameterMap(), request.getParameterMap(), page, max);
     return new Pages(page, max, stockImbalanceReportList);
   }
 
@@ -219,7 +218,7 @@ public class InteractiveReportController extends BaseController {
 
     Report report = reportManager.getReportByKey("stocked_out");
     List<StockedOutReport> stockedOutReportList =
-      (List<StockedOutReport>) report.getReportDataProvider().getReportDataByFilterCriteriaAndPagingAndSorting(request.getParameterMap(), request.getParameterMap(), page, max);
+      (List<StockedOutReport>) report.getReportDataProvider().getMainReportData(request.getParameterMap(), request.getParameterMap(), page, max);
 
     return new Pages(page, max, stockedOutReportList);
   }
@@ -235,7 +234,7 @@ public class InteractiveReportController extends BaseController {
 
     Report report = reportManager.getReportByKey("rnr_feedback");
     List<RnRFeedbackReport> rnRFeedbackReports =
-      (List<RnRFeedbackReport>) report.getReportDataProvider().getReportDataByFilterCriteriaAndPagingAndSorting(request.getParameterMap(), request.getParameterMap(), page, max);
+      (List<RnRFeedbackReport>) report.getReportDataProvider().getMainReportData(request.getParameterMap(), request.getParameterMap(), page, max);
     return new Pages(page, max, rnRFeedbackReports);
   }
 
@@ -251,7 +250,7 @@ public class InteractiveReportController extends BaseController {
 
     Report report = reportManager.getReportByKey("order_fill_rate");
     List<OrderFillRateReport> orderFillRateReportList =
-      (List<OrderFillRateReport>) report.getReportDataProvider().getReportDataByFilterCriteriaAndPagingAndSorting(request.getParameterMap(), request.getParameterMap(), page, max);
+      (List<OrderFillRateReport>) report.getReportDataProvider().getMainReportData(request.getParameterMap(), request.getParameterMap(), page, max);
     return new Pages(page, max, orderFillRateReportList);
   }
 
@@ -266,7 +265,7 @@ public class InteractiveReportController extends BaseController {
 
     Report report = reportManager.getReportByKey("regimen_summary");
     List<RegimenSummaryReport> regimenSummaryReportList =
-      (List<RegimenSummaryReport>) report.getReportDataProvider().getReportDataByFilterCriteriaAndPagingAndSorting(request.getParameterMap(), request.getParameterMap(), page, max);
+      (List<RegimenSummaryReport>) report.getReportDataProvider().getMainReportData(request.getParameterMap(), request.getParameterMap(), page, max);
     return new Pages(page, max, regimenSummaryReportList);
   }
 
@@ -279,7 +278,7 @@ public class InteractiveReportController extends BaseController {
   ) {
     Report report = reportManager.getReportByKey("district_financial_summary");
     List<DistrictSummaryReport> districtSummaryReportList =
-      (List<DistrictSummaryReport>) report.getReportDataProvider().getReportDataByFilterCriteriaAndPagingAndSorting(request.getParameterMap(), request.getParameterMap(), page, max);
+      (List<DistrictSummaryReport>) report.getReportDataProvider().getMainReportData(request.getParameterMap(), request.getParameterMap(), page, max);
     return new Pages(page, max, districtSummaryReportList);
   }
 }

@@ -12,9 +12,8 @@ package org.openlmis.web.controller;
 
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.ProgramProduct;
-import org.openlmis.core.domain.ProgramProductPrice;
 import org.openlmis.core.service.ProgramProductService;
-import org.openlmis.report.service.ProgramProductPriceListDataProvider;
+import org.openlmis.report.service.lookup.ProgramProductPriceListDataProvider;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

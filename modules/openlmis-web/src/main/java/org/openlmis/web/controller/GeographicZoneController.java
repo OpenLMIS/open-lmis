@@ -14,7 +14,7 @@ import org.openlmis.core.domain.GeographicZone;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.GeographicZoneService;
 import org.openlmis.core.service.GeographicZoneServiceExtension;
-import org.openlmis.report.service.ReportLookupService;
+import org.openlmis.report.service.lookup.ReportLookupService;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

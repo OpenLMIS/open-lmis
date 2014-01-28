@@ -8,12 +8,11 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-package org.openlmis.report.service;
+package org.openlmis.report.service.lookup;
 
 import lombok.NoArgsConstructor;
-import org.openlmis.core.domain.Product;
-import org.openlmis.report.mapper.ProductListMapper;
-import org.openlmis.report.model.dto.ProductList;
+import org.openlmis.report.mapper.lookup.ProgramProductPriceListMapper;
+import org.openlmis.report.model.dto.ProgramProductPriceList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,34 +23,22 @@ import java.util.List;
  * User: mahmed
  * Date: 6/19/13
  * Time: 3:58 PM
- * To change this template use File | Settings | File Templates.
+ * To change this template use File | Settings | File Templates..
  */
+
 @NoArgsConstructor
 @Service
-public class ProductListDataProvider {
+public class ProgramProductPriceListDataProvider {
 
-  @Autowired
-   private ProductListMapper productListMapper;
+    @Autowired
+   private ProgramProductPriceListMapper programProductPriceListMapper;
 
-    // mahmed 07.11.2013 full product list
-    public List<ProductList> getProductList() {
-        return productListMapper.getList();
+    public List<ProgramProductPriceList> getByProductId(Long productId){
+        return programProductPriceListMapper.getByProductId(productId);
     }
 
-    // mahmed - 07.11.2013 delete product
-    public void deleteById(Long productId) {
-        productListMapper.deleteById(productId);
+    public List<ProgramProductPriceList> getAllPrices(){
+        return programProductPriceListMapper.getAllPrices();
     }
-
-    // mahmed - 07.11.2013 delete product
-    public void restoreById(Long productId) {
-        productListMapper.restoreById(productId);
-    }
-
-    // mahmed - 07.11.2013 delete product
-    public Product get(Long id) {
-        return productListMapper.getProductById(id);
-    }
-
 
 }

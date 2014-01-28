@@ -11,7 +11,7 @@
 package org.openlmis.restapi.controller;
 
 import lombok.NoArgsConstructor;
-import org.openlmis.report.service.ReportLookupService;
+import org.openlmis.report.service.lookup.ReportLookupService;
 import org.openlmis.restapi.response.RestResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

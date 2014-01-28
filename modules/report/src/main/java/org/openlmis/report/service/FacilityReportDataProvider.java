@@ -64,7 +64,7 @@ public class FacilityReportDataProvider extends ReportDataProvider {
   }
 
   @Override
-  public List<? extends ReportData> getReportDataByFilterCriteriaAndPagingAndSorting(Map<String, String[]> filterCriteria, Map<String, String[]> sortCriteria, int page, int pageSize) {
+  public List<? extends ReportData> getMainReportData(Map<String, String[]> filterCriteria, Map<String, String[]> sortCriteria, int page, int pageSize) {
     RowBounds rowBounds = new RowBounds((page - 1) * pageSize, pageSize);
 
     FacilityReportSorter facilityReportSorter = null;
