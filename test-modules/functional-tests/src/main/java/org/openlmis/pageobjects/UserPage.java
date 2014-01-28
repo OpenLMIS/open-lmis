@@ -337,6 +337,7 @@ public class UserPage extends Page {
     if (!roleType.equals("ADMIN")) {
       enterUserHomeFacility(facilityCode);
       testWebDriver.waitForElementToAppear(selectFacility);
+      testWebDriver.scrollToElement(selectFacility);
       selectFacility.click();
       testWebDriver.waitForAjax();
       homeFacilityRolesAccordion.click();

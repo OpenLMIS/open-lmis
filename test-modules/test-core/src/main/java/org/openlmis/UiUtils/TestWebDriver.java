@@ -249,7 +249,11 @@ public class TestWebDriver {
   }
 
   public void moveToElement(WebElement element) {
-    new Actions(this.driver).moveToElement(element).perform();
-    return;
+    new Actions(driver).moveToElement(element).perform();
+  }
+
+  public void scrollToElement(WebElement elementToClick) {
+    // Scroll the browser to the element's Y position
+    ((org.openqa.selenium.JavascriptExecutor) driver).executeScript(String.format("window.scrollTo(0, %s);", elementToClick.getLocation().getY()));
   }
 }
