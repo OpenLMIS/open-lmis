@@ -39,7 +39,7 @@ public class TestCalculationsOnRnRThroughAPI extends JsonUtility {
     dbWrapper.insertProcessingPeriod("current", "current period", "2013-01-30", "2016-01-30", 1, "M");
     dbWrapper.insertRoleAssignmentForSupervisoryNodeForProgramId1("700", "store in-charge", "N1");
     dbWrapper.updateRestrictLogin("commTrack", true);
-    dbWrapper.updateProductFullSupplyFlag(true, "P11");
+    dbWrapper.updateFieldValue("products","fullSupply","true","code","P11");
   }
 
   @AfterMethod(groups = {"webservice","webserviceSmoke"})

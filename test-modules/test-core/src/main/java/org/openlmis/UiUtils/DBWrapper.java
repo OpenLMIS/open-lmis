@@ -1213,10 +1213,6 @@ public class DBWrapper {
     return value;
   }
 
-  public void updateProductFullSupplyFlag(boolean isFullSupply, String productCode) throws SQLException {
-    update("UPDATE products SET fullSupply = %b WHERE code = '%s'", isFullSupply, productCode);
-  }
-
   public void insertRoleAssignmentForSupervisoryNode(String userID, String roleName, String supervisoryNode, String programCode) throws SQLException {
     update(" INSERT INTO role_assignments\n" +
       "            (userId, roleId, programId, supervisoryNodeId) VALUES \n" +

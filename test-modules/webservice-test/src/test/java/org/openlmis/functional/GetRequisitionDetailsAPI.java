@@ -61,7 +61,7 @@ public class GetRequisitionDetailsAPI extends JsonUtility {
 
   @Test(groups = {"webserviceSmoke"})
   public void testGetRequisitionDetailsWithMultipleProducts() throws Exception {
-    dbWrapper.updateProductFullSupplyFlag(true, "P11");
+    dbWrapper.updateFieldValue("products","fullSupply","true","code","P11");
 
     long id = submitRnRThroughApi("V10", "HIV", "P10", 1, 10, 1, 0, 0, 2);
     HttpClient client = new HttpClient();
@@ -70,7 +70,7 @@ public class GetRequisitionDetailsAPI extends JsonUtility {
     ResponseEntity responseEntity = client.SendJSON("", URL + id, "GET", "commTrack", "Admin123");
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"productCode\":\"P11\""));
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"skipped\":true"));
-    dbWrapper.updateProductFullSupplyFlag(false, "P11");
+    dbWrapper.updateFieldValue("products","fullSupply","false","code","P11");
   }
 
   @Test(groups = {"webservice"})

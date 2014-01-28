@@ -48,12 +48,13 @@ public class TestCalculationsForRnR extends TestCaseHelper {
     super.setup();
     List<String> rightsList = asList("CREATE_REQUISITION", "VIEW_REQUISITION", "AUTHORIZE_REQUISITION", "APPROVE_REQUISITION");
     setupTestDataToInitiateRnR(true, program, userSIC, "200", rightsList);
-    dbWrapper.updateProductFullSupplyFlag(true, "P11");
+    dbWrapper.updateFieldValue("products","fullSupply","true","code","P11");
+
   }
 
   @Test(groups = "requisition")
   public void testEffectOfChangingPackSize() throws IOException, SQLException {
-    dbWrapper.updateProductFullSupplyFlag(false, "P11");
+    dbWrapper.updateFieldValue("products","fullSupply","false","code","P11");
     dbWrapper.updateFieldValue("products","packSize", "5","code","P10");
     dbWrapper.updateFieldValue("products","packSize", "15","code","P11");
 
@@ -94,7 +95,7 @@ public class TestCalculationsForRnR extends TestCaseHelper {
 
   @Test(groups = "requisition")
   public void testEffectOfChangingDosesPerDispensingUnit() throws IOException, SQLException {
-    dbWrapper.updateProductFullSupplyFlag(false, "P11");
+    dbWrapper.updateFieldValue("products","fullSupply","false","code","P11");
     dbWrapper.updateFieldValue("products","dosesPerDispensingUnit", "5","code","P10");
     HomePage homePage = new LoginPage(testWebDriver, baseUrlGlobal).loginAs(userSIC, password);
 
@@ -125,7 +126,7 @@ public class TestCalculationsForRnR extends TestCaseHelper {
 
   @Test(groups = "requisition")
   public void testEffectOfChangingRoundToZeroFlagWhenTrueInitially() throws IOException, SQLException {
-    dbWrapper.updateProductFullSupplyFlag(false, "P11");
+    dbWrapper.updateFieldValue("products","fullSupply","false","code","P11");
     dbWrapper.updateFieldValue("products","roundToZero","true","code","P10");
     dbWrapper.updateFieldValue("products","roundToZero","true","code","P10");
     HomePage homePage = new LoginPage(testWebDriver, baseUrlGlobal).loginAs(userSIC, password);
@@ -165,7 +166,7 @@ public class TestCalculationsForRnR extends TestCaseHelper {
 
   @Test(groups = "requisition")
   public void testEffectOfChangingRoundToZeroFlagWhenFalseInitially() throws IOException, SQLException {
-    dbWrapper.updateProductFullSupplyFlag(false, "P11");
+    dbWrapper.updateFieldValue("products","fullSupply","false","code","P11");
     dbWrapper.updateFieldValue("products","roundToZero","false","code","P10");
     dbWrapper.updateFieldValue("products","roundToZero","false","code","P11");
 
@@ -206,7 +207,7 @@ public class TestCalculationsForRnR extends TestCaseHelper {
 
   @Test(groups = "requisition")
   public void testEffectOfChangingPackRoundingThreshold() throws IOException, SQLException {
-    dbWrapper.updateProductFullSupplyFlag(false, "P11");
+    dbWrapper.updateFieldValue("products","fullSupply","false","code","P11");
     dbWrapper.updateFieldValue("products","packRoundingThreshold", "5","code","P10");
     dbWrapper.updateFieldValue("products","packRoundingThreshold", "7","code","P11");
 
@@ -250,7 +251,7 @@ public class TestCalculationsForRnR extends TestCaseHelper {
     dbWrapper.updateConfigureTemplate("HIV", "source", "U", "true", "quantityDispensed");
     dbWrapper.updateConfigureTemplate("HIV", "source", "C", "true", "stockInHand");
     dbWrapper.updateFieldValue("products","dosesPerDispensingUnit", "0","code","P10");
-    dbWrapper.updateProductFullSupplyFlag(false, "P11");
+    dbWrapper.updateFieldValue("products","fullSupply","false","code","P11");
 
     HomePage homePage = new LoginPage(testWebDriver, baseUrlGlobal).loginAs(userSIC, password);
 
@@ -273,7 +274,7 @@ public class TestCalculationsForRnR extends TestCaseHelper {
     dbWrapper.updateConfigureTemplate("HIV", "source", "C", "true", "stockInHand");
     dbWrapper.deletePeriod("Period2");
     dbWrapper.insertProcessingPeriod("currentPeriod", "current period", "2013-01-31", "2016-01-31", 1, "M");
-    dbWrapper.updateProductFullSupplyFlag(false, "P11");
+    dbWrapper.updateFieldValue("products","fullSupply","false","code","P11");
 
     HomePage homePage = new LoginPage(testWebDriver, baseUrlGlobal).loginAs(userSIC, password);
 
@@ -304,7 +305,7 @@ public class TestCalculationsForRnR extends TestCaseHelper {
     dbWrapper.updateConfigureTemplate("ESS_MEDS", "source", "C", "false", "amc");
     dbWrapper.insertRequisitionGroupProgramScheduleForProgram("RG1", "ESS_MEDS", "M");
     dbWrapper.insertRoleAssignmentForSupervisoryNode(dbWrapper.getAttributeFromTable("users", "id", "userName", userSIC), "store in-charge", null, "ESS_MEDS");
-    dbWrapper.updateProductFullSupplyFlag(false, "P11");
+    dbWrapper.updateFieldValue("products","fullSupply","false","code","P11");
 
     HomePage homePage = new LoginPage(testWebDriver, baseUrlGlobal).loginAs(userSIC, password);
     homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Regular");
@@ -366,7 +367,7 @@ public class TestCalculationsForRnR extends TestCaseHelper {
     dbWrapper.updateConfigureTemplate("HIV", "source", "U", "true", "quantityDispensed");
     dbWrapper.updateConfigureTemplate("HIV", "source", "U", "true", "stockInHand");
     dbWrapper.updateConfigureTemplateValidationFlag("HIV", "false");
-    dbWrapper.updateProductFullSupplyFlag(false, "P11");
+    dbWrapper.updateFieldValue("products","fullSupply","false","code","P11");
 
     HomePage homePage = new LoginPage(testWebDriver, baseUrlGlobal).loginAs(userSIC, password);
 
@@ -398,7 +399,7 @@ public class TestCalculationsForRnR extends TestCaseHelper {
 
   @Test(groups = "requisition")
   public void testCalculationOfAmcTrackingWhenMIs1() throws IOException, SQLException {
-    dbWrapper.updateProductFullSupplyFlag(false, "P11");
+    dbWrapper.updateFieldValue("products","fullSupply","false","code","P11");
     dbWrapper.insertProcessingPeriod("feb13", "feb13", "2013-01-31", "2013-02-28", 1, "M");
     dbWrapper.insertProcessingPeriod("mar13", "mar13", "2013-03-01", "2013-03-31", 1, "M");
     dbWrapper.insertProcessingPeriod("apr13", "apr13", "2013-04-01", "2013-04-30", 1, "M");
@@ -457,7 +458,7 @@ public class TestCalculationsForRnR extends TestCaseHelper {
 
   @Test(groups = "requisition")
   public void testCalculationTrackingOfAmcWhenMIs2() throws IOException, SQLException {
-    dbWrapper.updateProductFullSupplyFlag(false, "P11");
+    dbWrapper.updateFieldValue("products","fullSupply","false","code","P11");
     dbWrapper.deletePeriod("Period2");
     dbWrapper.insertProcessingPeriod("feb13", "feb13", "2013-01-31", "2013-02-28", 2, "M");
     dbWrapper.insertProcessingPeriod("mar13", "mar13", "2013-03-01", "2013-03-31", 2, "M");
@@ -503,7 +504,7 @@ public class TestCalculationsForRnR extends TestCaseHelper {
 
   @Test(groups = "requisition")
   public void testCalculationTrackingOfAmcWhenMIs3() throws IOException, SQLException {
-    dbWrapper.updateProductFullSupplyFlag(false, "P11");
+    dbWrapper.updateFieldValue("products","fullSupply","false","code","P11");
     dbWrapper.deletePeriod("Period2");
     dbWrapper.insertProcessingPeriod("feb13", "feb13", "2013-01-31", "2013-02-28", 3, "M");
     dbWrapper.insertProcessingPeriod("mar13", "mar13", "2013-03-01", "2013-03-31", 3, "M");
@@ -536,7 +537,7 @@ public class TestCalculationsForRnR extends TestCaseHelper {
 
   @Test(groups = "requisition")
   public void testCalculationTrackingOfAmcWhenMIs5() throws IOException, SQLException {
-    dbWrapper.updateProductFullSupplyFlag(false, "P11");
+    dbWrapper.updateFieldValue("products","fullSupply","false","code","P11");
     dbWrapper.deletePeriod("Period2");
     dbWrapper.insertProcessingPeriod("feb13", "feb13", "2013-01-31", "2013-02-28", 5, "M");
     dbWrapper.insertProcessingPeriod("mar13", "mar13", "2013-03-01", "2013-03-31", 5, "M");
@@ -569,7 +570,7 @@ public class TestCalculationsForRnR extends TestCaseHelper {
 
   @Test(groups = "requisition")
   public void testCalculationOfAmcNoTrackingForMoreThan5PeriodsWhenMIs1() throws IOException, SQLException {
-    dbWrapper.updateProductFullSupplyFlag(false, "P11");
+    dbWrapper.updateFieldValue("products","fullSupply","false","code","P11");
     dbWrapper.insertProcessingPeriod("feb13", "feb13", "2013-01-31", "2013-02-28", 1, "M");
     dbWrapper.insertProcessingPeriod("mar13", "mar13", "2013-03-01", "2013-03-31", 1, "M");
     dbWrapper.insertProcessingPeriod("apr13", "apr13", "2013-04-01", "2013-04-30", 1, "M");
@@ -626,7 +627,7 @@ public class TestCalculationsForRnR extends TestCaseHelper {
 
   @Test(groups = "requisition")
   public void testCalculationAmcNoTrackingForMoreThan2MWhenMIs2() throws IOException, SQLException {
-    dbWrapper.updateProductFullSupplyFlag(false, "P11");
+    dbWrapper.updateFieldValue("products","fullSupply","false","code","P11");
     dbWrapper.deletePeriod("Period2");
     dbWrapper.insertProcessingPeriod("feb13", "feb13", "2013-01-31", "2013-02-28", 2, "M");
     dbWrapper.insertProcessingPeriod("mar13", "mar13", "2013-03-01", "2013-03-31", 2, "M");
@@ -701,7 +702,7 @@ public class TestCalculationsForRnR extends TestCaseHelper {
     dbWrapper.updateConfigureTemplate("HIV", "source", "U", "true", "quantityDispensed");
     dbWrapper.updateConfigureTemplate("HIV", "source", "U", "true", "stockInHand");
     dbWrapper.updateConfigureTemplateValidationFlag("HIV", "false");
-    dbWrapper.updateProductFullSupplyFlag(false, "P11");
+    dbWrapper.updateFieldValue("products","fullSupply","false","code","P11");
     dbWrapper.insertProcessingPeriod("feb13", "feb13", "2013-01-31", "2013-02-28", 2, "M");
     dbWrapper.insertRole("fulfilment", "convert to order");
     dbWrapper.assignRight("fulfilment", "CONVERT_TO_ORDER");
