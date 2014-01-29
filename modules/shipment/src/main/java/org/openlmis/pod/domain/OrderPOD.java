@@ -61,9 +61,8 @@ public class OrderPOD extends BaseModel {
   public void fillPodLineItems(List<? extends LineItem> lineItems) {
     this.podLineItems = new ArrayList<>();
     for (LineItem lineItem : lineItems) {
-      if (!validPacksToShip(lineItem))
-        continue;
-      this.podLineItems.add(new OrderPODLineItem(lineItem));
+      if (!validPacksToShip(lineItem)) continue;
+      this.podLineItems.add(new OrderPODLineItem(lineItem, this.createdBy));
     }
   }
 

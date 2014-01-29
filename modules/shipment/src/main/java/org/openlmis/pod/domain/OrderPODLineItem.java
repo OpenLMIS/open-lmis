@@ -51,12 +51,12 @@ public class OrderPODLineItem extends BaseModel {
     this.quantityReceived = quantityReceived;
   }
 
-  public OrderPODLineItem(LineItem lineItem) {
+  public OrderPODLineItem(LineItem lineItem, Long createdBy) {
     if (lineItem.isRnrLineItem()) {
-      create((RnrLineItem) lineItem);
+      create((RnrLineItem) lineItem, createdBy);
       return;
     }
-    create((ShipmentLineItem) lineItem);
+    create((ShipmentLineItem) lineItem, createdBy);
   }
 
   public void validate() {
@@ -68,7 +68,7 @@ public class OrderPODLineItem extends BaseModel {
     }
   }
 
-  private void create(RnrLineItem rnrLineItem) {
+  private void create(RnrLineItem rnrLineItem, Long createdBy) {
     this.setProductCode(rnrLineItem.getProductCode());
     this.setProductCategory(rnrLineItem.getProductCategory());
     this.setProductCategoryDisplayOrder(rnrLineItem.getProductCategoryDisplayOrder());
@@ -77,9 +77,11 @@ public class OrderPODLineItem extends BaseModel {
     this.setDispensingUnit(rnrLineItem.getDispensingUnit());
     this.setPacksToShip(rnrLineItem.getPacksToShip());
     this.setFullSupply(rnrLineItem.getFullSupply());
+    this.setCreatedBy(createdBy);
+    this.setModifiedBy(createdBy);
   }
 
-  private void create(ShipmentLineItem shipmentLineItem) {
+  private void create(ShipmentLineItem shipmentLineItem, Long createdBy) {
     this.setProductCode(shipmentLineItem.getProductCode());
     this.setProductCategory(shipmentLineItem.getProductCategory());
     this.setProductCategoryDisplayOrder(shipmentLineItem.getProductCategoryDisplayOrder());
@@ -88,5 +90,8 @@ public class OrderPODLineItem extends BaseModel {
     this.setDispensingUnit(shipmentLineItem.getDispensingUnit());
     this.setPacksToShip(shipmentLineItem.getPacksToShip());
     this.setFullSupply(shipmentLineItem.getFullSupply());
+    this.setQuantityShipped(shipmentLineItem.getQuantityShipped());
+    this.setCreatedBy(createdBy);
+    this.setModifiedBy(createdBy);
   }
 }

@@ -114,11 +114,12 @@ public class OrderPODTest {
 
   @Test
   public void shouldFillPODLineItemsOnlyWithNonZeroPackToShip() throws Exception {
+    Long createdBy = 1L;
     RnrLineItem rnrLineItem1 = make(a(defaultRnrLineItem, with(packsToShip, 10)));
     RnrLineItem rnrLineItem2 = make(a(defaultRnrLineItem, with(packsToShip, 0)));
     List<RnrLineItem> rnrLineItems = asList(rnrLineItem1, rnrLineItem2);
 
-    whenNew(OrderPODLineItem.class).withArguments(rnrLineItem1).thenReturn(mock(OrderPODLineItem.class));
+    whenNew(OrderPODLineItem.class).withArguments(rnrLineItem1, createdBy).thenReturn(mock(OrderPODLineItem.class));
 
     OrderPOD orderPOD = new OrderPOD();
     orderPOD.fillPodLineItems(rnrLineItems);
@@ -128,13 +129,14 @@ public class OrderPODTest {
 
   @Test
   public void shouldCreatePODLineItemsWithShipmentLineItemEvenIfPackSize0() throws Exception {
+    Long createdBy = 1L;
     ShipmentLineItem shipmentLineItem = make(a(ShipmentLineItemBuilder.defaultShipmentLineItem));
     shipmentLineItem.setPacksToShip(0);
     List<ShipmentLineItem> shipmentLineItems = asList(shipmentLineItem);
     OrderPOD orderPOD = new OrderPOD();
     orderPOD.fillPodLineItems(shipmentLineItems);
 
-    whenNew(OrderPODLineItem.class).withArguments(shipmentLineItem).thenReturn(mock(OrderPODLineItem.class));
+    whenNew(OrderPODLineItem.class).withArguments(shipmentLineItem, createdBy).thenReturn(mock(OrderPODLineItem.class));
 
     assertThat(orderPOD.getPodLineItems().size(), is(1));
   }
