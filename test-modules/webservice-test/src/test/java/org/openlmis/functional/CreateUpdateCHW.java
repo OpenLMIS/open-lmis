@@ -46,12 +46,14 @@ public class CreateUpdateCHW extends JsonUtility {
   public static final String TRUE_FLAG = "t";
   public static final String JSON_EXTENSION = ".json";
 
+  LoginPage loginPage;
 
   @BeforeMethod(groups = {"webservice", "webserviceSmoke"})
   public void setUp() throws Exception {
     super.setup();
     super.setupTestData(true);
     dbWrapper.updateRestrictLogin("commTrack", true);
+    loginPage = PageFactory.getInstanceOfLoginPage(testWebDriver, baseUrlGlobal);
   }
 
   @AfterMethod(groups = {"webservice", "webserviceSmoke"})
@@ -62,9 +64,8 @@ public class CreateUpdateCHW extends JsonUtility {
   }
 
   @Test(groups = {"webservice"}, dataProvider = "Data-Provider-Function-Positive")
-  public void shouldNotShowVirtualFacilityOnManageUserScreen(String user, String program, String[] credentials) throws Exception {
-    dbWrapper.updateFieldValue("facilities","virtualFacility",ACTIVE_STATUS,"code",DEFAULT_PARENT_FACILITY_CODE);
-    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+  public void shouldNotShowVirtualFacilityOnManageUserScreen(String[] credentials) throws Exception {
+    dbWrapper.updateFieldValue("facilities", "virtualFacility", ACTIVE_STATUS, "code", DEFAULT_PARENT_FACILITY_CODE);
 
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
     UserPage userPage = homePage.navigateToUser();
@@ -76,9 +77,7 @@ public class CreateUpdateCHW extends JsonUtility {
   }
 
   @Test(groups = {"webservice"}, dataProvider = "Data-Provider-Function-Positive")
-  public void shouldVerifyFacilityUpload(String user, String program, String[] credentials) throws Exception {
-    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
-
+  public void shouldVerifyFacilityUpload(String[] credentials) throws Exception {
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
     UploadPage uploadPage = homePage.navigateUploads();
     uploadPage.uploadAndVerifyGeographicZone("QA_Geographic_Data_WebService.csv");
@@ -90,7 +89,7 @@ public class CreateUpdateCHW extends JsonUtility {
   }
 
   @Test(groups = {"webservice"}, dataProvider = "Data-Provider-Function-Positive")
-  public void shouldManageFacility(String user, String program, String[] credentials) throws Exception {
+  public void shouldManageFacility(String[] credentials) throws Exception {
     HttpClient client = new HttpClient();
     client.createContext();
     Agent agentJson = readObjectFromFile(FULL_JSON_TXT_FILE_NAME, Agent.class);
@@ -106,8 +105,6 @@ public class CreateUpdateCHW extends JsonUtility {
       POST,
       commTrackUser,
       "Admin123");
-
-    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
 
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
     ManageFacilityPage manageFacilityPage = homePage.navigateSearchFacility();
@@ -190,7 +187,7 @@ public class CreateUpdateCHW extends JsonUtility {
       "Admin123");
 
     assertTrue("Showing response as : " + responseEntityUpdated.getResponse(), responseEntityUpdated.getResponse().contains("{\"success\":\"CHW updated successfully\"}"));
-    dbWrapper.updateFieldValue("facilities","enabled","false","code",DEFAULT_AGENT_CODE);
+    dbWrapper.updateFieldValue("facilities", "enabled", "false", "code", DEFAULT_AGENT_CODE);
 
     ResponseEntity responseEntityEnabledFalse = client.SendJSON(getJsonStringFor(agentJson),
       UPDATE_URL + DEFAULT_AGENT_CODE + JSON_EXTENSION,
@@ -438,7 +435,7 @@ public class CreateUpdateCHW extends JsonUtility {
 
   @Test(groups = {"webservice"})
   public void testCreateChwFeedWithParentFacilityCodeAsVirtualFacility() throws Exception {
-    dbWrapper.updateFieldValue("facilities","virtualFacility",ACTIVE_STATUS,"code",DEFAULT_PARENT_FACILITY_CODE);
+    dbWrapper.updateFieldValue("facilities", "virtualFacility", ACTIVE_STATUS, "code", DEFAULT_PARENT_FACILITY_CODE);
     HttpClient client = new HttpClient();
     client.createContext();
     Agent agentJson = readObjectFromFile(FULL_JSON_TXT_FILE_NAME, Agent.class);
@@ -476,7 +473,7 @@ public class CreateUpdateCHW extends JsonUtility {
       commTrackUser,
       "Admin123");
 
-    dbWrapper.updateFieldValue("facilities","virtualFacility",ACTIVE_STATUS,"code",DEFAULT_PARENT_FACILITY_CODE);
+    dbWrapper.updateFieldValue("facilities", "virtualFacility", ACTIVE_STATUS, "code", DEFAULT_PARENT_FACILITY_CODE);
 
     ResponseEntity responseEntityUpdated = client.SendJSON(getJsonStringFor(agentJson),
       UPDATE_URL + DEFAULT_AGENT_CODE + JSON_EXTENSION,
@@ -1156,7 +1153,7 @@ public class CreateUpdateCHW extends JsonUtility {
   @DataProvider(name = "Data-Provider-Function-Positive")
   public Object[][] parameterIntTestProviderPositive() {
     return new Object[][]{
-      {"User123", "HIV", new String[]{"Admin123", "Admin123"}}
+      {new String[]{"Admin123", "Admin123"}}
     };
   }
 }

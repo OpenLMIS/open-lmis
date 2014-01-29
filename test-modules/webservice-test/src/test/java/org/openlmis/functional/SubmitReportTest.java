@@ -176,7 +176,7 @@ public class SubmitReportTest extends JsonUtility {
 
   @Test(groups = {"webservice"})
   public void testSubmitReportWhenVirtualFacilityInactive() throws Exception {
-    dbWrapper.updateFieldValue("facilities","active","false","code","V10");
+    dbWrapper.updateFieldValue("facilities", "active", "false", "code", "V10");
     HttpClient client = new HttpClient();
     client.createContext();
     Report reportFromJson = JsonUtility.readObjectFromFile(FULL_JSON_TXT_FILE_NAME, Report.class);
@@ -195,7 +195,7 @@ public class SubmitReportTest extends JsonUtility {
 
   @Test(groups = {"webservice"})
   public void testSubmitReportWhenVirtualFacilityDisabled() throws Exception {
-    dbWrapper.updateFieldValue("facilities","enabled","false","code","V10");
+    dbWrapper.updateFieldValue("facilities", "enabled", "false", "code", "V10");
     HttpClient client = new HttpClient();
     client.createContext();
     Report reportFromJson = JsonUtility.readObjectFromFile(FULL_JSON_TXT_FILE_NAME, Report.class);
@@ -214,7 +214,7 @@ public class SubmitReportTest extends JsonUtility {
 
   @Test(groups = {"webservice"})
   public void testSubmitReportWhenParentFacilityInactive() throws Exception {
-    dbWrapper.updateFieldValue("facilities","active","false","code","V10");
+    dbWrapper.updateFieldValue("facilities", "active", "false", "code", "V10");
     HttpClient client = new HttpClient();
     client.createContext();
     Report reportFromJson = JsonUtility.readObjectFromFile(FULL_JSON_TXT_FILE_NAME, Report.class);
@@ -233,7 +233,7 @@ public class SubmitReportTest extends JsonUtility {
 
   @Test(groups = {"webservice"})
   public void testSubmitReportWhenProgramGloballyInactive() throws Exception {
-    dbWrapper.updateFieldValue("programs","active","false","code","HIV");
+    dbWrapper.updateFieldValue("programs", "active", "false", "code", "HIV");
     HttpClient client = new HttpClient();
     client.createContext();
     Report reportFromJson = JsonUtility.readObjectFromFile(FULL_JSON_TXT_FILE_NAME, Report.class);
@@ -248,7 +248,7 @@ public class SubmitReportTest extends JsonUtility {
 
     assertEquals(400, responseEntity.getStatus());
     assertEquals("{\"error\":\"User does not have permission\"}", responseEntity.getResponse());
-    dbWrapper.updateFieldValue("programs","active","true","code","HIV");
+    dbWrapper.updateFieldValue("programs", "active", "true", "code", "HIV");
   }
 
   @Test(groups = {"webservice"})
@@ -272,7 +272,7 @@ public class SubmitReportTest extends JsonUtility {
 
   @Test(groups = {"webservice"})
   public void testSubmitReportWhenParentFacilityDisabled() throws Exception {
-    dbWrapper.updateFieldValue("facilities","enabled","false","code","F10");
+    dbWrapper.updateFieldValue("facilities", "enabled", "false", "code", "F10");
     HttpClient client = new HttpClient();
     client.createContext();
     Report reportFromJson = JsonUtility.readObjectFromFile(FULL_JSON_TXT_FILE_NAME, Report.class);
@@ -287,7 +287,7 @@ public class SubmitReportTest extends JsonUtility {
 
     assertEquals(400, responseEntity.getStatus());
     assertEquals("{\"error\":\"Facility is inoperative\"}", responseEntity.getResponse());
-    dbWrapper.updateFieldValue("facilities","enabled","true","code","F10");
+    dbWrapper.updateFieldValue("facilities", "enabled", "true", "code", "F10");
   }
 
   @Test(groups = {"webservice"})
@@ -437,7 +437,7 @@ public class SubmitReportTest extends JsonUtility {
 
   @Test(groups = {"webservice"})
   public void testGloballyInactiveProductSubmitReport() throws Exception {
-    dbWrapper.updateFieldValue("products","active","false","code","P10");
+    dbWrapper.updateFieldValue("products", "active", "false", "code", "P10");
     HttpClient client = new HttpClient();
     client.createContext();
 
@@ -455,7 +455,7 @@ public class SubmitReportTest extends JsonUtility {
 
     assertEquals(400, responseEntity.getStatus());
     assertEquals("{\"error\":\"Invalid product codes [P10]\"}", responseEntity.getResponse());
-    dbWrapper.updateFieldValue("products","active","true","code","P10");
+    dbWrapper.updateFieldValue("products", "active", "true", "code", "P10");
   }
 
   @Test(groups = {"webservice"})

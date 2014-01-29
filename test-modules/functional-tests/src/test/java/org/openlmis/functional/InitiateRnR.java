@@ -775,7 +775,7 @@ public class InitiateRnR extends TestCaseHelper {
     InitiateRnRPage initiateRnRPage = new InitiateRnRPage(testWebDriver);
     initiateRnRPage.submitRnR();
     initiateRnRPage.clickOk();
-    dbWrapper.updateRequisitionStatus("AUTHORIZED", "storeIncharge", "HIV");
+    dbWrapper.updateRequisitionStatus("AUTHORIZED", "storeInCharge", "HIV");
 
     dbWrapper.insertProcessingPeriod("Period2", "second period", "2013-01-16", "2016-01-30", 1, "M");
     dbWrapper.insertValuesInRequisition(false);
@@ -949,7 +949,7 @@ public class InitiateRnR extends TestCaseHelper {
     approvePage.clickOk();
     approvePage.verifyNoRequisitionPendingMessage();
 
-    dbWrapper.insertFulfilmentRoleAssignment("storeIncharge", "store in-charge", "F10");
+    dbWrapper.insertFulfilmentRoleAssignment("storeInCharge", "store in-charge", "F10");
     dbWrapper.insertOrders("RELEASED", userSIC, program);
     dbWrapper.updateRequisitionStatus("RELEASED", userSIC, program);
 
@@ -1078,14 +1078,14 @@ public class InitiateRnR extends TestCaseHelper {
   @DataProvider(name = "Data-Provider-Function-Positive")
   public Object[][] parameterIntTestProviderPositive() {
     return new Object[][]{
-      {"HIV", "storeIncharge", "ADULTS", "Admin123", "RegimenCode1", "RegimenName1", "RegimenCode2", "RegimenName2"}
+      {"HIV", "storeInCharge", "ADULTS", "Admin123", "RegimenCode1", "RegimenName1", "RegimenCode2", "RegimenName2"}
     };
   }
 
   @DataProvider(name = "Data-Provider-Function-RnR")
   public Object[][] parameterIntTestProviderRnR() {
     return new Object[][]{
-      {"HIV", "storeIncharge", "Admin123"}
+      {"HIV", "storeInCharge", "Admin123"}
     };
   }
 

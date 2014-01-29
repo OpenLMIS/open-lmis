@@ -15,7 +15,6 @@ import org.openlmis.UiUtils.CaptureScreenshotOnFailureListener;
 import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.pageobjects.HomePage;
 import org.openlmis.pageobjects.InitiateRnRPage;
-import org.openlmis.pageobjects.LoginPage;
 import org.testng.annotations.*;
 
 import java.util.List;
@@ -37,14 +36,14 @@ public class ManageRights extends TestCaseHelper {
     setupTestDataToInitiateRnR(true, program, userSIC, "200", rightsList);
 
     String[] expectedMenuItem = {"Create / Authorize", "View"};
-    HomePage homePage = new LoginPage(testWebDriver, baseUrlGlobal).loginAs(userSIC, password);
+    HomePage homePage = PageFactory.getInstanceOfLoginPage(testWebDriver, baseUrlGlobal).loginAs(userSIC, password);
 
     homePage.clickRequisitionSubMenuItem();
     homePage.verifySubMenuItems(expectedMenuItem);
     homePage.navigateAndInitiateRnr(program);
     homePage.clickProceed();
 
-    InitiateRnRPage initiateRnRPage = new InitiateRnRPage(testWebDriver);
+    InitiateRnRPage initiateRnRPage = PageFactory.getInstanceOfInitiateRnRPage(testWebDriver);
     initiateRnRPage.enterValue(10, "beginningBalanceFirstProduct");
     initiateRnRPage.enterValue(10, "quantityDispensedFirstProduct");
     initiateRnRPage.enterValue(10, "quantityReceivedFirstProduct");
@@ -58,7 +57,7 @@ public class ManageRights extends TestCaseHelper {
 
   @AfterMethod(groups = {"admin"})
   public void tearDown() throws Exception {
-    HomePage homePage = new HomePage(testWebDriver);
+    HomePage homePage = PageFactory.getInstanceOfHomePage(testWebDriver);
     homePage.logout(baseUrlGlobal);
     dbWrapper.deleteData();
     dbWrapper.closeConnection();
@@ -67,7 +66,7 @@ public class ManageRights extends TestCaseHelper {
   @DataProvider(name = "Data-Provider-Function-Positive")
   public Object[][] parameterIntTestProviderPositive() {
     return new Object[][]{
-      {"HIV", "storeIncharge", "Admin123"}
+      {"HIV", "storeInCharge", "Admin123"}
     };
   }
 }

@@ -240,7 +240,7 @@ public class ManageRefrigerator extends TestCaseHelper {
   public void tearDown() throws Exception {
     testWebDriver.sleep(250);
     if (!testWebDriver.getElementById("username").isDisplayed()) {
-      HomePage homePage = new HomePage(testWebDriver);
+      HomePage homePage = PageFactory.getInstanceOfHomePage(testWebDriver);
       homePage.logout(baseUrlGlobal);
       dbWrapper.deleteData();
       dbWrapper.closeConnection();

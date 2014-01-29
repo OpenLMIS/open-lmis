@@ -251,7 +251,7 @@ public class TestCaseHelper {
     dbWrapper.insertSchedule("M", "Monthly", "Month");
     setupRequisitionGroupData("RG1", "RG2", "N1", "N2", facilityCode1, facilityCode2);
     dbWrapper.insertSupplyLines("N1", program, facilityCode1, true);
-    dbWrapper.updateFieldValue("programs","active","true","code",programCode);
+    dbWrapper.updateFieldValue("programs", "active", "true", "code", programCode);
   }
 
   public void updateProductWithGroup(String product, String productGroup) throws IOException, SQLException {
@@ -271,11 +271,6 @@ public class TestCaseHelper {
     for (int i = 0; i < length; i++)
       locator.sendKeys("\u0008");
     locator.sendKeys(value);
-  }
-
-  public String getISAForProgramProduct(String program, String product, String population) throws IOException, SQLException {
-    String[] isaParams = dbWrapper.getProgramProductISA(program, product);
-    return String.valueOf(Math.round((float) calculateISA(isaParams[0], isaParams[1], isaParams[2], isaParams[3], isaParams[4], isaParams[5], isaParams[6], population) / 10));
   }
 
   public Integer calculateISA(String ratioValue, String dosesPerYearValue, String wastageValue, String bufferPercentageValue, String adjustmentValue,

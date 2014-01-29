@@ -18,7 +18,6 @@ import org.openqa.selenium.support.How;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,9 +26,6 @@ import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
 import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
 
 public class RolesPage extends Page {
-
-
-  private Map<String, WebElement> webElementMap = new HashMap();
 
   @FindBy(how = How.ID, using = "role-add-new")
   private static WebElement createNewRoleButton=null;
@@ -118,7 +114,9 @@ public class RolesPage extends Page {
   @FindBy(how = How.ID, using = "MANAGE_POD")
   private static WebElement rightManagePOD=null;
 
-  public RolesPage(TestWebDriver driver) throws IOException {
+  private Map<String, WebElement> webElementMap = new HashMap<>();
+
+  public RolesPage(TestWebDriver driver) {
     super(driver);
 
     PageFactory.initElements(new AjaxElementLocatorFactory(TestWebDriver.getDriver(), 10), this);
@@ -159,12 +157,17 @@ public class RolesPage extends Page {
   public void createRole(String roleName, String roleDesc, List<String> rights, String roleType) {
     testWebDriver.waitForElementToAppear(createNewRoleButton);
     createNewRoleButton.click();
-      if (roleType.equals("Requisition"))
-          clickProgramRole();
-      else if (roleType.equals("Admin"))
-          clickAdminRole();
-      else if (roleType.equals("Fulfillment"))
-          facilityBasedRoleType.click();
+    switch (roleType) {
+      case "Requisition":
+        clickProgramRole();
+        break;
+      case "Admin":
+        clickAdminRole();
+        break;
+      case "Fulfillment":
+        facilityBasedRoleType.click();
+        break;
+    }
 
     clickContinueButton();
     testWebDriver.sleep(1000);

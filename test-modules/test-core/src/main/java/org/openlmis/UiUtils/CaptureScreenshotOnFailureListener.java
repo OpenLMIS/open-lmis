@@ -25,9 +25,9 @@ import java.util.Date;
 
 public class CaptureScreenshotOnFailureListener extends TestListenerAdapter {
 
-  Date dObjnew = new Date();
-  SimpleDateFormat formatternew = new SimpleDateFormat("yyyyMMdd");
-  String dateFolder = formatternew.format(dObjnew);
+  Date dObjNew = new Date();
+  SimpleDateFormat formatterNew = new SimpleDateFormat("yyyyMMdd");
+  String dateFolder = formatterNew.format(dObjNew);
   String screenShotsFolder = null;
 
   private void createDirectory() {

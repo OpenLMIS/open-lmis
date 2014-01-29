@@ -331,7 +331,7 @@ public class HomePage extends Page {
   }
 
 
-  public RolesPage navigateRoleAssignments() throws IOException {
+  public RolesPage navigateRoleAssignments() {
     testWebDriver.waitForElementToAppear(AdministrationMenuItem);
     testWebDriver.keyPress(AdministrationMenuItem);
     testWebDriver.waitForElementToAppear(manageLink);

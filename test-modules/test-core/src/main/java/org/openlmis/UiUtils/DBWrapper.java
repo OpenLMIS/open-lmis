@@ -126,12 +126,12 @@ public class DBWrapper {
   public List<String> getProductDetailsForProgramAndFacilityType(String programCode, String facilityCode) throws SQLException {
     List<String> prodDetails = new ArrayList<>();
 
-    ResultSet rs = query("select prog.code as programCode, prog.name as programName, prod.code as productCode, " +
-      "prod.primaryName as productName, prod.description as desc, prod.dosesPerDispensingUnit as unit, " +
-      "pg.name as pgName from products prod, programs prog, program_products pp, product_categories pg, " +
-      "facility_approved_products fap, facility_types ft where prog.id=pp.programId and pp.productId=prod.id and " +
-      "pg.id = prod.categoryId and fap. programProductId = pp.id and ft.id=fap.facilityTypeId and prog.code='" +
-      programCode + "' and ft.code='" + facilityCode + "' " + "and prod.active='true' and pp.active='true'");
+    ResultSet rs = query("select program.code as programCode, program.name as programName, product.code as productCode, " +
+      "product.primaryName as productName, product.description as desc, product.dosesPerDispensingUnit as unit, " +
+      "pg.name as pgName from products product, programs program, program_products pp, product_categories pg, " +
+      "facility_approved_products fap, facility_types ft where program.id=pp.programId and pp.productId=product.id and " +
+      "pg.id = product.categoryId and fap. programProductId = pp.id and ft.id=fap.facilityTypeId and program.code='" +
+      programCode + "' and ft.code='" + facilityCode + "' " + "and product.active='true' and pp.active='true'");
 
     while (rs.next()) {
       String programName = rs.getString(2);
@@ -415,8 +415,8 @@ public class DBWrapper {
       update("delete from requisition_groups;");
     }
     update("INSERT INTO requisition_groups ( code ,name,description,supervisoryNodeId )values\n" +
-      "('" + code2 + "','Requistion Group 2','Supports EM(Q1M)',(select id from  supervisory_nodes where code ='" + supervisoryNodeCode2 + "')),\n" +
-      "('" + code1 + "','Requistion Group 1','Supports EM(Q2M)',(select id from  supervisory_nodes where code ='" + supervisoryNodeCode1 + "'))");
+      "('" + code2 + "','Requisition Group 2','Supports EM(Q1M)',(select id from  supervisory_nodes where code ='" + supervisoryNodeCode2 + "')),\n" +
+      "('" + code1 + "','Requisition Group 1','Supports EM(Q2M)',(select id from  supervisory_nodes where code ='" + supervisoryNodeCode1 + "'))");
   }
 
   public void insertRequisitionGroupMembers(String RG1facility, String RG2facility) throws SQLException, IOException {
@@ -658,23 +658,6 @@ public class DBWrapper {
       "(24, (select id from programs where code = '" + program + "'), true, 'U', 23, 'Remarks');");
   }
 
-  public Integer getOverriddenIsa(String facilityCode, String program, String product, String period) throws IOException, SQLException {
-    Integer overriddenIsa = 0;
-    float numberOfMonths = 0;
-    ResultSet rs2 = query("SELECT numberOfMonths FROM processing_periods where name ='" + period + "';");
-    if (rs2.next()) {
-      numberOfMonths = rs2.getFloat("numberOfMonths");
-    }
-    ResultSet rs = query("select overriddenIsa from facility_program_products " +
-      "where facilityId = '" + getAttributeFromTable("facilities", "id", "code", facilityCode) + "' and programProductId = " +
-      "(select id from program_products where programId='" + getAttributeFromTable("programs", "id", "code", program) + "' and productId='" + getAttributeFromTable("products", "id", "code", product) + "');");
-
-    if (rs.next()) {
-      overriddenIsa = Math.round(rs.getFloat("overriddenIsa") * numberOfMonths / Integer.parseInt(getAttributeFromTable("products", "packSize", "code", product)));
-    }
-    return overriddenIsa;
-  }
-
   public void InsertOverriddenIsa(String facilityCode, String program, String product, int overriddenIsa) throws IOException, SQLException {
     update("INSERT INTO facility_program_products (facilityId, programProductId,overriddenIsa) VALUES  (" +
       getAttributeFromTable("facilities", "id", "code", facilityCode) + ", (select id from program_products where programId='" +
@@ -687,25 +670,6 @@ public class DBWrapper {
       getAttributeFromTable("facilities", "id", "code", facilityCode) + "' and programProductId = (select id from program_products where programId='" +
       getAttributeFromTable("programs", "id", "code", program) + "' and productId='" +
       getAttributeFromTable("products", "id", "code", product) + "');");
-  }
-
-  public String[] getProgramProductISA(String program, String product) throws IOException, SQLException {
-    String isaParams[] = new String[7];
-    ResultSet rs = query("select * from program_product_Isa where " +
-      " programProductId = (select id from program_products where programId='" +
-      getAttributeFromTable("programs", "id", "code", program) + "' and productId='" +
-      getAttributeFromTable("products", "id", "code", product) + "');");
-
-    if (rs.next()) {
-      isaParams[0] = rs.getString("whoRatio");
-      isaParams[1] = rs.getString("dosesPerYear");
-      isaParams[2] = rs.getString("wastageFactor");
-      isaParams[3] = rs.getString("bufferPercentage");
-      isaParams[4] = rs.getString("adjustmentValue");
-      isaParams[5] = rs.getString("minimumValue");
-      isaParams[6] = rs.getString("maximumValue");
-    }
-    return isaParams;
   }
 
   public void insertSupplyLines(String supervisoryNode, String programCode, String facilityCode, boolean exportOrders) throws IOException, SQLException {

@@ -15,9 +15,6 @@ public class UpdatePodPage extends Page {
   @FindBy(how = ID, using = "podTable")
   private WebElement podTable = null;
 
-  @FindBy(how = ID, using = "requisition-header")
-  private WebElement updatePodPageHeader = null;
-
   @FindBy(how = ID, using = "PODPageTitle")
   private WebElement podPageTitle = null;
 
@@ -123,11 +120,6 @@ public class UpdatePodPage extends Page {
   public String getTitle() {
     testWebDriver.waitForAjax();
     return testWebDriver.getText(podPageTitle);
-  }
-
-  public String getHeaders() {
-    testWebDriver.waitForAjax();
-    return testWebDriver.getText(updatePodPageHeader);
   }
 
   public String getPodTableData() {

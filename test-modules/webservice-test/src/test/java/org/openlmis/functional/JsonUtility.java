@@ -84,7 +84,7 @@ public class JsonUtility extends TestCaseHelper {
   }
 
   public static void convertToOrder(String userName, String password) throws Exception {
-    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+    LoginPage loginPage = PageFactory.getInstanceOfLoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(userName, password);
     ConvertOrderPage convertOrderPage = homePage.navigateConvertToOrder();
     convertOrderPage.convertToOrder();

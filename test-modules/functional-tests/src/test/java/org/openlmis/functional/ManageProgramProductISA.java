@@ -35,9 +35,14 @@ public class ManageProgramProductISA extends TestCaseHelper {
   public String program, userSIC, password;
   public ProgramProductISAPage programProductISAPage;
 
+  HomePage homePage;
+  LoginPage loginPage;
+
   @BeforeMethod(groups = "admin")
   public void setUp() throws Exception {
     super.setup();
+    homePage = PageFactory.getInstanceOfHomePage(testWebDriver);
+    loginPage = PageFactory.getInstanceOfLoginPage(testWebDriver, baseUrlGlobal);
   }
 
   @When("^I have data available for program product ISA$")
@@ -85,7 +90,6 @@ public class ManageProgramProductISA extends TestCaseHelper {
     String expectedISA = String.valueOf(calculateISA("1", "2", "3", "4", "5", "10", "1000", "1"));
     assertEquals(expectedISA, actualISA);
     programProductISAPage.cancelISA();
-    HomePage homePage = new HomePage(testWebDriver);
     homePage.navigateHomePage();
   }
 
@@ -99,7 +103,6 @@ public class ManageProgramProductISA extends TestCaseHelper {
     String expectedISA = String.valueOf(calculateISA("1", "2", "3", "4", "55", "10", "50", "1"));
     assertEquals(expectedISA, actualISA);
     programProductISAPage.cancelISA();
-    HomePage homePage = new HomePage(testWebDriver);
     homePage.navigateHomePage();
   }
 
@@ -113,7 +116,6 @@ public class ManageProgramProductISA extends TestCaseHelper {
     String expectedISA = String.valueOf(calculateISA("1", "2", "3", "4", "5", "5", "1000", "1"));
     assertEquals(expectedISA, actualISA);
     programProductISAPage.cancelISA();
-    HomePage homePage = new HomePage(testWebDriver);
     homePage.navigateHomePage();
   }
 
@@ -130,7 +132,6 @@ public class ManageProgramProductISA extends TestCaseHelper {
     verifyProgramNameIsDisplayedOnConfigureISAFormulaWindow(programProductISAPage);
     programProductISAPage.saveISA();
     verifyISAFormula(programProductISAPage, isaFormula);
-    HomePage homePage = new HomePage(testWebDriver);
     homePage.navigateHomePage();
   }
 
@@ -142,7 +143,6 @@ public class ManageProgramProductISA extends TestCaseHelper {
     programProductISAPage.selectProgram(program);
     programProductISAPage.searchProduct(productName);
     verifySearchResults(programProductISAPage);
-    HomePage homePage = new HomePage(testWebDriver);
     homePage.navigateHomePage();
   }
 
@@ -159,7 +159,6 @@ public class ManageProgramProductISA extends TestCaseHelper {
 
     dbWrapper.updateProgramToAPushType(program2, true);
 
-    HomePage homePage = new HomePage(testWebDriver);
     homePage.navigateHomePage();
     homePage.navigateProgramProductISA();
     valuesPresentInDropDown = programProductISAPage.getAllSelectOptionsFromProgramDropDown();
@@ -170,9 +169,8 @@ public class ManageProgramProductISA extends TestCaseHelper {
   }
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function-Multiple-Programs")
-  public void testProgramProductsMappings(String userSIC, String password, String program1, String program2,
-                                          String product1, String product2,
-                                          String product3, String product4) throws Exception {
+  public void testProgramProductsMappings(String userSIC, String password, String program1, String program2, String product1,
+                                          String product2, String product3, String product4) throws Exception {
     setUpTestDataForProgramProductISA();
     Login(userSIC, password);
     ProgramProductISAPage programProductISAPage = navigateConfigureProductISAPage();
@@ -184,7 +182,6 @@ public class ManageProgramProductISA extends TestCaseHelper {
 
     dbWrapper.updateProgramToAPushType(program2, true);
 
-    HomePage homePage = new HomePage(testWebDriver);
     homePage.navigateHomePage();
     homePage.navigateProgramProductISA();
     programProductISAPage.selectValueFromProgramDropDown(program2);
@@ -212,12 +209,10 @@ public class ManageProgramProductISA extends TestCaseHelper {
     programProductISAPage.fillProgramProductISA("1", "2", "3", "4", "0", "10", "10");
     verifyMonthlyRestockAmountPresent(programProductISAPage);
     programProductISAPage.cancelISA();
-    HomePage homePage = new HomePage(testWebDriver);
     homePage.navigateHomePage();
   }
 
   private ProgramProductISAPage navigateProgramProductISAPage(String program) throws IOException {
-    HomePage homePage = new HomePage(testWebDriver);
     ProgramProductISAPage programProductISAPage = homePage.navigateProgramProductISA();
     programProductISAPage.selectProgram(program);
     programProductISAPage.editFormula();
@@ -225,13 +220,11 @@ public class ManageProgramProductISA extends TestCaseHelper {
   }
 
   private ProgramProductISAPage navigateConfigureProductISAPage() throws IOException {
-    HomePage homePage = new HomePage(testWebDriver);
     programProductISAPage = homePage.navigateProgramProductISA();
     return programProductISAPage;
   }
 
   private HomePage Login(String userSIC, String password) throws IOException {
-    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     return loginPage.loginAs(userSIC, password);
   }
 

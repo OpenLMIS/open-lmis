@@ -49,16 +49,14 @@ public class UpdatePod extends TestCaseHelper {
     super.setup();
     dbWrapper.deleteData();
     setUpData(updatePODData.get(PROGRAM), updatePODData.get(USER));
-    updatePodPage = new UpdatePodPage(testWebDriver);
+    updatePodPage = PageFactory.getInstanceOfUpdatePodPage(testWebDriver);
   }
 
   @Test(groups = {"requisition"})
   public void testVerifyManagePODValidFlowForRegularRnR() throws Exception {
     initiateRnrAndConvertToOrder(false, 100);
 
-    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(updatePODData.get(USER), updatePODData.get(PASSWORD));
-
     ManagePodPage managePodPage = homePage.navigateManagePOD();
     UpdatePodPage updatePodPage = managePodPage.selectRequisitionToUpdatePod(1);
 
@@ -76,9 +74,7 @@ public class UpdatePod extends TestCaseHelper {
   public void testVerifyManagePODValidFlowForEmergencyRnR() throws Exception {
     initiateRnrAndConvertToOrder(true, 100);
 
-    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(updatePODData.get(USER), updatePODData.get(PASSWORD));
-
     ManagePodPage managePodPage = homePage.navigateManagePOD();
     managePodPage.selectRequisitionToUpdatePod(1);
 
@@ -89,9 +85,7 @@ public class UpdatePod extends TestCaseHelper {
   public void testVerifyManagePODWhenPacksToShipIsZero() throws Exception {
     initiateRnrAndConvertToOrder(false, 0);
 
-    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(updatePODData.get(USER), updatePODData.get(PASSWORD));
-
     ManagePodPage managePodPage = homePage.navigateManagePOD();
     UpdatePodPage updatePodPage = managePodPage.selectRequisitionToUpdatePod(1);
 
@@ -109,9 +103,7 @@ public class UpdatePod extends TestCaseHelper {
     dbWrapper.insertRequisitionWithMultipleLineItems(1, updatePODData.get(PROGRAM), true, "F10", false);
     dbWrapper.convertRequisitionToOrder(dbWrapper.getMaxRnrID(), "READY_TO_PACK", updatePODData.get(USER));
 
-    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(updatePODData.get(USER), updatePODData.get(PASSWORD));
-
     ManagePodPage managePodPage = homePage.navigateManagePOD();
     managePodPage.selectRequisitionToUpdatePod(1);
 
@@ -149,7 +141,6 @@ public class UpdatePod extends TestCaseHelper {
 
   private void verifyHeadersWithValuesOnUpdatePODScreen() throws IOException, SQLException {
     Integer id = dbWrapper.getMaxRnrID();
-
     assertEquals("Order No.: " + id, updatePodPage.getOrderNumberLabel() + ": " + updatePodPage.getOrderId());
     assertEquals("Facility: F10 - Village Dispensary", updatePodPage.getFacilityLabel() + ": " + updatePodPage.getFacilityCode());
     assertTrue((updatePodPage.getOrderDateTimeLabel() + ": " + updatePodPage.getOrderCreatedDate()).contains("Order Date/Time: " + new SimpleDateFormat("dd/MM/yyyy").format(new Date())));
@@ -166,7 +157,6 @@ public class UpdatePod extends TestCaseHelper {
       assertEquals("rgba(210, 95, 91, 1)", updatePodPage.getRequisitionTypeColor());
     }
   }
-
 
   private void setUpData(String program, String userSIC) throws Exception {
     setupProductTestData("P10", "P11", program, "lvl3_hospital");
@@ -189,7 +179,7 @@ public class UpdatePod extends TestCaseHelper {
   public void tearDown() throws Exception {
     testWebDriver.sleep(500);
     if (!testWebDriver.getElementById("username").isDisplayed()) {
-      HomePage homePage = new HomePage(testWebDriver);
+      HomePage homePage = PageFactory.getInstanceOfHomePage(testWebDriver);
       homePage.logout(baseUrlGlobal);
       dbWrapper.deleteData();
       dbWrapper.closeConnection();

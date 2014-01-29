@@ -39,7 +39,7 @@ public class LoginPage extends Page {
   private static WebElement langEnglish=null;
 
   @FindBy(how=How.ID, using = "locale_pt")
-  private static WebElement langPortugues=null;
+  private static WebElement langPortuguese =null;
 
   @FindBy(how = How.XPATH, using = "//div[3][@class='alert alert-error ng-binding']")
   private static WebElement loginErrorLabel=null;
@@ -88,8 +88,8 @@ public class LoginPage extends Page {
 
     {
         testWebDriver.sleep(1500);
-        testWebDriver.waitForElementToAppear(langPortugues);
-        return langPortugues.getCssValue("color");
+        testWebDriver.waitForElementToAppear(langPortuguese);
+        return langPortuguese.getCssValue("color");
     }
 
     public void setLangAsEnglish()
@@ -102,8 +102,8 @@ public class LoginPage extends Page {
     public void setLangAsPortugues()
     {
         testWebDriver.sleep(1000);
-        testWebDriver.waitForElementToAppear(langPortugues);
-        langPortugues.click();
+        testWebDriver.waitForElementToAppear(langPortuguese);
+        langPortuguese.click();
     }
 
     public String getPageIdentifierOnLoginPageText()

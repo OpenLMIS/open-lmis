@@ -26,7 +26,7 @@ public class ReportData extends TestCaseHelper {
 
   static String separator = System.getProperty("file.separator");
 
-  private static String downloadedFilePath = new File(System.getProperty("user.dir")).getParent()+separator+"csv";
+  private static String downloadedFilePath = new File(System.getProperty("user.dir")).getParent() + separator + "csv";
 
   @BeforeMethod(groups = {"distribution"})
   public void setUp() throws Exception {
@@ -35,10 +35,10 @@ public class ReportData extends TestCaseHelper {
 
   @Test(dataProvider = "Data-Provider-Function-Positive")
   public void testVerifyReport(String[] credentials) throws Exception {
-    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+    LoginPage loginPage = PageFactory.getInstanceOfLoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
     homePage.navigateReportScreen();
-    String[] str=getReportData(1);
+    getReportData(1);
     deleteFile(downloadedFilePath);
   }
 
@@ -51,9 +51,8 @@ public class ReportData extends TestCaseHelper {
 
   @AfterMethod(groups = {"distribution"})
   public void tearDown() throws Exception {
-    HomePage homePage = new HomePage(testWebDriver);
+    HomePage homePage = PageFactory.getInstanceOfHomePage(testWebDriver);
     homePage.logout(baseUrlGlobal);
-//    dbWrapper.deleteData();
     dbWrapper.closeConnection();
   }
 

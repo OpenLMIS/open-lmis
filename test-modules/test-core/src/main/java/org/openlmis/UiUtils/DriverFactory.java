@@ -33,13 +33,11 @@ import static java.lang.System.setProperty;
 public class DriverFactory {
 
   private String driverType;
-  private String INPUT_ZIP_FILE_IEDRIVER = null;
-  private String INPUT_ZIP_FILE_CHROMEDRIVER = null;
+  private String INPUT_ZIP_FILE_IE_DRIVER = null;
+  private String INPUT_ZIP_FILE_CHROME_DRIVER = null;
   private String CHROME_FOLDER = null;
   private String OUTPUT_FOLDER = null;
 
-  private String LOCAL_FIREFOX_X11_PATH = "/opt/local/bin/firefox-x11";
-  private String LOCAL_X11_DISPLAY = ":5";
   Unzip unZip;
 
   public WebDriver loadDriver(String browser) throws InterruptedException, IOException {
@@ -47,10 +45,10 @@ public class DriverFactory {
     String Separator = getProperty("file.separator");
     File parentDir = new File(getProperty("user.dir"));
 
-    CHROME_FOLDER = "/Users/pranjali/open-lmis/test-modules/test-core/src/main/java/org/openlmis/UiUtils/";
+    CHROME_FOLDER = parentDir.getParentFile().getParentFile().getPath() + Separator + "test-core" + Separator + "src" + Separator + "main" + Separator + "java" + Separator + "org" + Separator + "openlmis" + Separator + "UiUtils" + Separator;
     OUTPUT_FOLDER = parentDir.getPath() + Separator + "test-modules" + Separator + "test-core" + Separator + "src" + Separator + "main" + Separator + "java" + Separator + "org" + Separator + "openlmis" + Separator + "UiUtils" + Separator;
-    INPUT_ZIP_FILE_IEDRIVER = OUTPUT_FOLDER + "IEDriverServer_Win32_2.39.0.zip";
-    INPUT_ZIP_FILE_CHROMEDRIVER = OUTPUT_FOLDER + "chromedriver_win32.zip";
+    INPUT_ZIP_FILE_IE_DRIVER = OUTPUT_FOLDER + "IEDriverServer_Win32_2.39.0.zip";
+    INPUT_ZIP_FILE_CHROME_DRIVER = OUTPUT_FOLDER + "chromedriver_win32.zip";
 
     return loadDriver(true, browser);
   }
@@ -65,7 +63,6 @@ public class DriverFactory {
     unZip.deleteFile(OUTPUT_FOLDER + "chromedriver.exe");
   }
 
-
   private WebDriver loadDriver(boolean enableJavascript, String browser) throws InterruptedException, IOException {
     switch (browser) {
       case "firefox":
@@ -74,17 +71,16 @@ public class DriverFactory {
 
       case "ie":
         unZip = new Unzip();
-        unZip.unZipIt(INPUT_ZIP_FILE_IEDRIVER, OUTPUT_FOLDER);
+        unZip.unZipIt(INPUT_ZIP_FILE_IE_DRIVER, OUTPUT_FOLDER);
         Thread.sleep(1500);
         driverType = setProperty("webdriver.ie.driver", OUTPUT_FOLDER + "IEDriverServer.exe");
         driverType = getProperty("webdriver.ie.driver");
 
         return createInternetExplorerDriver();
 
-
       case "chrome":
         unZip = new Unzip();
-        unZip.unZipIt(INPUT_ZIP_FILE_CHROMEDRIVER, OUTPUT_FOLDER);
+        unZip.unZipIt(INPUT_ZIP_FILE_CHROME_DRIVER, OUTPUT_FOLDER);
         Thread.sleep(1500);
         driverType = setProperty("webdriver.chrome.driver", OUTPUT_FOLDER + "chromedriver.exe");
         driverType = getProperty("webdriver.chrome.driver");
@@ -93,7 +89,7 @@ public class DriverFactory {
       case "chromeM":
         //ToDO: To run offline test on Jenkins change CHROME_FOLDER to OUTPUT_FOLDER
         //unZip = new Unzip();
-        //unZip.unZipIt(INPUT_ZIP_FILE_CHROMEDRIVER_MAC, CHROME_FOLDER);
+        //unZip.unZipIt(INPUT_ZIP_FILE_CHROME_DRIVER_MAC, CHROME_FOLDER);
         //Thread.sleep(10000);
         driverType = setProperty("webdriver.chrome.driver", CHROME_FOLDER + "chromedriver");
         driverType = getProperty("webdriver.chrome.driver");
@@ -121,8 +117,10 @@ public class DriverFactory {
     profile.setPreference("device.storage.enabled", true);
     //profile.setPreference("network.manage-offline-status", true);
     if ((getProperty("os.name").toLowerCase().indexOf("mac") >= 0) && headless) {
+      String LOCAL_FIREFOX_X11_PATH = "/opt/local/bin/firefox-x11";
       File binaryFile = new File(LOCAL_FIREFOX_X11_PATH);
       FirefoxBinary binary = new FirefoxBinary(binaryFile);
+      String LOCAL_X11_DISPLAY = ":5";
       binary.setEnvironmentProperty("DISPLAY", LOCAL_X11_DISPLAY);
       return new FirefoxDriver(binary, profile);
     } else
@@ -135,7 +133,6 @@ public class DriverFactory {
     ieCapabilities.setCapability("ignoreZoomSetting", true);
     return new InternetExplorerDriver(ieCapabilities);
   }
-
 
   private WebDriver createChromeDriver() {
     DesiredCapabilities capabilities = DesiredCapabilities.chrome();

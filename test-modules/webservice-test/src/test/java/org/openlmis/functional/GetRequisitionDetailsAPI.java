@@ -61,7 +61,7 @@ public class GetRequisitionDetailsAPI extends JsonUtility {
 
   @Test(groups = {"webserviceSmoke"})
   public void testGetRequisitionDetailsWithMultipleProducts() throws Exception {
-    dbWrapper.updateFieldValue("products","fullSupply","true","code","P11");
+    dbWrapper.updateFieldValue("products", "fullSupply", "true", "code", "P11");
 
     long id = submitRnRThroughApi("V10", "HIV", "P10", 1, 10, 1, 0, 0, 2);
     HttpClient client = new HttpClient();
@@ -70,7 +70,7 @@ public class GetRequisitionDetailsAPI extends JsonUtility {
     ResponseEntity responseEntity = client.SendJSON("", URL + id, "GET", "commTrack", "Admin123");
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"productCode\":\"P11\""));
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"skipped\":true"));
-    dbWrapper.updateFieldValue("products","fullSupply","false","code","P11");
+    dbWrapper.updateFieldValue("products", "fullSupply", "false", "code", "P11");
   }
 
   @Test(groups = {"webservice"})
@@ -200,7 +200,7 @@ public class GetRequisitionDetailsAPI extends JsonUtility {
     checkOrderDetailsNotPresent(responseEntity);
 
     dbWrapper.setExportOrdersFlagInSupplyLinesTable(false, "F10");
-    dbWrapper.updateFieldValue("facilities","virtualFacility","true","code","F10");
+    dbWrapper.updateFieldValue("facilities", "virtualFacility", "true", "code", "F10");
     dbWrapper.setupUserForFulfillmentRole("commTrack", "store in-charge", "F10");
     dbWrapper.updateRestrictLogin("commTrack", false);
     approveRequisition(id, 65);
@@ -224,7 +224,7 @@ public class GetRequisitionDetailsAPI extends JsonUtility {
     checkOrderDetailsNotPresent(responseEntity);
 
     dbWrapper.setExportOrdersFlagInSupplyLinesTable(true, "F10");
-    dbWrapper.updateFieldValue("facilities","virtualFacility","true","code","F10");
+    dbWrapper.updateFieldValue("facilities", "virtualFacility", "true", "code", "F10");
     dbWrapper.setupUserForFulfillmentRole("commTrack", "store in-charge", "F10");
     approveRequisition(id, 65);
     dbWrapper.updateRestrictLogin("commTrack", false);
@@ -249,7 +249,7 @@ public class GetRequisitionDetailsAPI extends JsonUtility {
 
     dbWrapper.setExportOrdersFlagInSupplyLinesTable(true, "F10");
     dbWrapper.enterValidDetailsInFacilityFtpDetailsTable("F10");
-    dbWrapper.updateFieldValue("facilities","virtualFacility","true","code","F10");
+    dbWrapper.updateFieldValue("facilities", "virtualFacility", "true", "code", "F10");
     dbWrapper.setupUserForFulfillmentRole("commTrack", "store in-charge", "F10");
 
     approveRequisition(id, 65);
@@ -274,7 +274,7 @@ public class GetRequisitionDetailsAPI extends JsonUtility {
     checkRequisitionStatus("AUTHORIZED", responseEntity);
     checkOrderDetailsNotPresent(responseEntity);
 
-    dbWrapper.updateFieldValue("facilities","virtualFacility","true","code","F10");
+    dbWrapper.updateFieldValue("facilities", "virtualFacility", "true", "code", "F10");
     dbWrapper.setupUserForFulfillmentRole("commTrack", "store in-charge", "F10");
 
     approveRequisition(id, 65);

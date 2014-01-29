@@ -30,6 +30,14 @@ public class PageFactory {
   private static WarehouseLoadAmountPage instanceOfWarehouseLoadAmountPage;
   private static ProgramProductISAPage instanceOfProgramProductISAPage;
   private static ConfigureOrderPage instanceOfConfigureOrderPage;
+  private static RegimenTemplateConfigPage instanceOfRegimenTemplateConfigPage;
+  private static LoginPage instanceOfLoginPage;
+  private static HomePage instanceOfHomePage;
+  private static InitiateRnRPage instanceOfInitiateRnRPage;
+  private static ViewRequisitionPage instanceOfViewRequisitionPage;
+  private static UpdatePodPage instanceOfUpdatePodPage;
+  private static UserPage instanceOfUserPage;
+  private static RolesPage instanceOfRolesPage;
 
   public static ManageFacilityPage getInstanceOfManageFacilityPage(TestWebDriver testWebDriver) {
     if (instanceOfManageFacilityPage == null) {
@@ -113,5 +121,61 @@ public class PageFactory {
       instanceOfConfigureOrderPage = new ConfigureOrderPage(testWebDriver);
     }
     return instanceOfConfigureOrderPage;
+  }
+
+  public static RegimenTemplateConfigPage getInstanceOfRegimenTemplateConfigPage(TestWebDriver testWebDriver) throws IOException {
+    if (instanceOfRegimenTemplateConfigPage == null) {
+      instanceOfRegimenTemplateConfigPage = new RegimenTemplateConfigPage(testWebDriver);
+    }
+    return instanceOfRegimenTemplateConfigPage;
+  }
+
+  public static LoginPage getInstanceOfLoginPage(TestWebDriver testWebDriver, String baseUrlGlobal) throws IOException {
+    if (instanceOfLoginPage == null) {
+      instanceOfLoginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+    }
+    return instanceOfLoginPage;
+  }
+
+  public static HomePage getInstanceOfHomePage(TestWebDriver testWebDriver) throws IOException {
+    if (instanceOfHomePage == null) {
+      instanceOfHomePage = new HomePage(testWebDriver);
+    }
+    return instanceOfHomePage;
+  }
+
+  public static InitiateRnRPage getInstanceOfInitiateRnRPage(TestWebDriver testWebDriver) throws IOException {
+    if (instanceOfInitiateRnRPage == null) {
+      instanceOfInitiateRnRPage = new InitiateRnRPage(testWebDriver);
+    }
+    return instanceOfInitiateRnRPage;
+  }
+
+  public static ViewRequisitionPage getInstanceOfViewRequisitionPage(TestWebDriver testWebDriver) throws IOException {
+    if (instanceOfViewRequisitionPage == null) {
+      instanceOfViewRequisitionPage = new ViewRequisitionPage(testWebDriver);
+    }
+    return instanceOfViewRequisitionPage;
+  }
+
+  public static UpdatePodPage getInstanceOfUpdatePodPage(TestWebDriver testWebDriver) throws IOException {
+    if (instanceOfUpdatePodPage == null) {
+      instanceOfUpdatePodPage = new UpdatePodPage(testWebDriver);
+    }
+    return instanceOfUpdatePodPage;
+  }
+
+  public static UserPage getInstanceOfUserPage(TestWebDriver testWebDriver) throws IOException {
+    if (instanceOfUserPage == null) {
+      instanceOfUserPage = new UserPage(testWebDriver);
+    }
+    return instanceOfUserPage;
+  }
+
+  public static RolesPage getInstanceOfRolesPage(TestWebDriver testWebDriver) {
+    if (instanceOfRolesPage == null) {
+      instanceOfRolesPage = new RolesPage(testWebDriver);
+    }
+    return instanceOfRolesPage;
   }
 }
