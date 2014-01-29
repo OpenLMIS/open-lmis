@@ -19,7 +19,7 @@
     </div>
     <div class="alert alert-info" id="noOrders" ng-show="downloadMessage" openlmis-message="downloadMessage">
     </div>
-      <div ng-show="orders && orders.length" class="gridStyle" ng-grid="gridOptions"></div>
+      <div ng-show="orders && orders.length" id="ordersGrid" class="gridStyle" ng-grid="gridOptions"></div>
       <div ng-show="orders && orders.length">
         <openlmis-pagination num-pages="numberOfPages" current-page="currentPage" max-size="10"></openlmis-pagination>
       </div>
