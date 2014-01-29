@@ -27,11 +27,11 @@ import org.testng.annotations.*;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
 import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
+import static java.util.Arrays.asList;
 
 @Listeners(CaptureScreenshotOnFailureListener.class)
 
@@ -97,7 +97,6 @@ public class ConvertToOrderPagination extends TestCaseHelper {
     verifyNextAndLastLinksEnabled();
     verifyPreviousAndFirstLinksDisabled();
 
-
     clickPageNumberLink(2);
     verifyPageLinksFromLastPage();
     verifyPreviousAndFirstLinksEnabled();
@@ -112,7 +111,7 @@ public class ConvertToOrderPagination extends TestCaseHelper {
 
     ViewOrdersPage viewOrdersPage = homePage.navigateViewOrders();
     int numberOfLineItems = viewOrdersPage.getNumberOfLineItems();
-    assertTrue("Number of line items on view order screen should be equal to 1", numberOfLineItems == 1);
+    assertTrue("Number of line items on view order screen should be equal to 1, but found " + numberOfLineItems, numberOfLineItems == 1);
     viewOrdersPage.verifyProgram(1, "MALARIA");
   }
 
@@ -138,7 +137,6 @@ public class ConvertToOrderPagination extends TestCaseHelper {
     homePage.navigateHomePage();
     homePage.navigateConvertToOrder();
     verifyNumberOfPageLinks(51, 50);
-
   }
 
   @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-Positive")
@@ -159,7 +157,6 @@ public class ConvertToOrderPagination extends TestCaseHelper {
     homePage.navigateHomePage();
     homePage.navigateConvertToOrder();
     verifyNumberOfPageLinks(51, 50);
-
   }
 
   @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-Positive")
@@ -207,9 +204,7 @@ public class ConvertToOrderPagination extends TestCaseHelper {
     setupProductTestData("P10", "P11", program, "lvl3_hospital");
     dbWrapper.insertFacilities("F10", "F11");
     dbWrapper.configureTemplate(program);
-    List<String> rightsList = new ArrayList<>();
-    rightsList.add("CONVERT_TO_ORDER");
-    rightsList.add("VIEW_ORDER");
+    List<String> rightsList = asList("CONVERT_TO_ORDER", "VIEW_ORDER");
 
     setupTestUserRoleRightsData("200", userSIC, rightsList);
     dbWrapper.insertSupervisoryNode("F10", "N1", "Node 1", "null");
@@ -221,7 +216,6 @@ public class ConvertToOrderPagination extends TestCaseHelper {
     setupRequisitionGroupData("RG1", "RG2", "N1", "N2", "F10", "F11");
     dbWrapper.insertSupplyLines("N1", program, "F10", true);
   }
-
 
   private void convertToOrder(ConvertOrderPage convertOrderPage) {
     convertOrderPage.clickConvertToOrderButton();
@@ -296,16 +290,13 @@ public class ConvertToOrderPagination extends TestCaseHelper {
       dbWrapper.deleteData();
       dbWrapper.closeConnection();
     }
-
   }
-
 
   @DataProvider(name = "Data-Provider-Function-Positive")
   public Object[][] parameterIntTestProviderPositive() {
     return new Object[][]{
       {"HIV", "storeIncharge", "Admin123"}
     };
-
   }
 }
 

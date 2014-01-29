@@ -10,9 +10,7 @@
 
 package org.openlmis.pageobjects.edi;
 
-
 import com.thoughtworks.selenium.SeleneseTestNgHelper;
-import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.UiUtils.TestWebDriver;
 import org.openlmis.pageobjects.RequisitionPage;
 import org.openqa.selenium.WebElement;
@@ -28,51 +26,49 @@ import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
 import static com.thoughtworks.selenium.SeleneseTestCase.assertEquals;
 import static org.openqa.selenium.support.How.XPATH;
 
-
 public class ConvertOrderPage extends RequisitionPage {
 
   @FindBy(how = How.XPATH, using = "//div[@class='ngCellText ng-scope col1 colt1']/span")
-  private static WebElement programOnOrderScreen=null;
+  private static WebElement programOnOrderScreen = null;
 
   @FindBy(how = How.XPATH, using = "//div[@class='ngCellText ng-scope col2 colt2']/span")
-  private static WebElement facilityCodeOnOrderScreen=null;
+  private static WebElement facilityCodeOnOrderScreen = null;
 
   @FindBy(how = How.XPATH, using = "//div[@class='ngCellText ng-scope col3 colt3']/span")
-  private static WebElement facilityNameOnOrderScreen=null;
+  private static WebElement facilityNameOnOrderScreen = null;
 
   @FindBy(how = How.XPATH, using = "//div[@class='ngCellText ng-scope col4 colt4']/span")
-  private static WebElement periodStartDateOnOrderScreen=null;
+  private static WebElement periodStartDateOnOrderScreen = null;
 
   @FindBy(how = How.XPATH, using = "//div[@class='ngCellText ng-scope col5 colt5']/span")
-  private static WebElement periodEndDateOnOrderScreen=null;
+  private static WebElement periodEndDateOnOrderScreen = null;
 
   @FindBy(how = How.XPATH, using = "//div[@class='ngCellText ng-scope col8 colt8']/span")
-  private static WebElement supplyDepotOnOrderScreen=null;
+  private static WebElement supplyDepotOnOrderScreen = null;
 
   @FindBy(how = How.XPATH, using = "//input[@class='ngSelectionCheckbox']")
-  private static WebElement checkboxOnOrderScreen=null;
+  private static WebElement checkboxOnOrderScreen = null;
 
   @FindBy(how = How.XPATH, using = "//input[@value='Convert To Order']")
-  private static WebElement convertToOrderButton=null;
+  private static WebElement convertToOrderButton = null;
 
   @FindBy(how = How.XPATH, using = "//div[@id='noRequisitionSelectedMsgDiv']")
-  private static WebElement noRequisitonSelectedDiv=null;
+  private static WebElement noRequisitionSelectedDiv = null;
 
   @FindBy(how = How.XPATH, using = "//div[@class='input-append input-prepend']/input")
-  private static WebElement searchTextBox=null;
+  private static WebElement searchTextBox = null;
 
   @FindBy(how = How.XPATH, using = "//button[@ng-click='updateSearchParams()']")
-  private static WebElement searchButton=null;
+  private static WebElement searchButton = null;
 
   @FindBy(how = How.XPATH, using = "//div[@class='input-append input-prepend']/div/button")
-  private static WebElement searchOptionButton=null;
+  private static WebElement searchOptionButton = null;
 
   @FindBy(how = XPATH, using = "//i[@class='icon-ok']")
-  private static WebElement emergencyIcon=null;
+  private static WebElement emergencyIcon = null;
 
   @FindBy(how = XPATH, using = "//span[@openlmis-message='message.no.requisitions.for.conversion']")
-  private static WebElement noRequisitionPending=null;
-
+  private static WebElement noRequisitionPending = null;
 
   public ConvertOrderPage(TestWebDriver driver) throws IOException {
     super(driver);
@@ -95,12 +91,10 @@ public class ConvertOrderPage extends RequisitionPage {
     convertToOrderButton.click();
   }
 
-  public void verifyNoRequisitionPendingMessage()
-  {
+  public void verifyNoRequisitionPendingMessage() {
     testWebDriver.waitForPageToLoad();
     noRequisitionPending.isDisplayed();
   }
-
 
   public void clickCheckBoxConvertToOrder() {
     testWebDriver.waitForElementToAppear(checkboxOnOrderScreen);
@@ -109,7 +103,7 @@ public class ConvertOrderPage extends RequisitionPage {
 
   public void verifyMessageOnOrderScreen(String message) {
     testWebDriver.sleep(500);
-    SeleneseTestNgHelper.assertTrue(message, noRequisitonSelectedDiv.isDisplayed());
+    SeleneseTestNgHelper.assertTrue(message, noRequisitionSelectedDiv.isDisplayed());
   }
 
   public void convertToOrder() throws IOException {
@@ -143,20 +137,21 @@ public class ConvertOrderPage extends RequisitionPage {
     testWebDriver.waitForElementToAppear(searchOptionButton);
     searchOptionButton.click();
     testWebDriver.sleep(500);
-    testWebDriver.waitForElementToAppear(testWebDriver.getElementByXpath("html/body/div[1]/div/div[4]/div/div/div/ul/li["+index+"]/a"));
-    testWebDriver.getElementByXpath("html/body/div[1]/div/div[4]/div/div/div/ul/li["+index+"]/a").click();
+    testWebDriver.waitForElementToAppear(testWebDriver.getElementByXpath("html/body/div[1]/div/div[4]/div/div/div/ul/li[" + index + "]/a"));
+    testWebDriver.getElementByXpath("html/body/div[1]/div/div[4]/div/div/div/ul/li[" + index + "]/a").click();
     sendKeys(searchTextBox, searchString);
     searchButton.click();
     testWebDriver.sleep(1000);
   }
-    public String getNoRequisitionPendingMessage() {
-        return noRequisitionPending.getText();
-    }
 
-  public void selectRequisitionToBeConvertedToOrder(int whichRequisition) {
+  public String getNoRequisitionPendingMessage() {
+    return noRequisitionPending.getText();
+  }
+
+  public void selectRequisitionToBeConvertedToOrder(int requisitionNumber) {
     testWebDriver.waitForAjax();
-    List<WebElement> x = testWebDriver.getElementsByXpath("//div[@id='convertToOrderGrid']//input[@class='ngSelectionCheckbox']");
-    testWebDriver.waitForElementToAppear(x.get(whichRequisition - 1));
-    x.get(whichRequisition - 1).click();
+    List<WebElement> requisitionsToBeConverted = testWebDriver.getElementsByXpath("//div[@id='convertToOrderGrid']//input[@class='ngSelectionCheckbox']");
+    testWebDriver.waitForElementToAppear(requisitionsToBeConverted.get(requisitionNumber - 1));
+    requisitionsToBeConverted.get(requisitionNumber - 1).click();
   }
 }

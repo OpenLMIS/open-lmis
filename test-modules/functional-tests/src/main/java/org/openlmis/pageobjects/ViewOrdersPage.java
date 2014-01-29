@@ -10,7 +10,6 @@
 
 package org.openlmis.pageobjects;
 
-
 import com.thoughtworks.selenium.SeleneseTestNgHelper;
 import org.openlmis.UiUtils.TestWebDriver;
 import org.openqa.selenium.By;
@@ -25,7 +24,6 @@ import java.io.IOException;
 import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
 import static org.openqa.selenium.support.How.ID;
 import static org.openqa.selenium.support.How.XPATH;
-
 
 public class ViewOrdersPage extends RequisitionPage {
 
@@ -104,6 +102,7 @@ public class ViewOrdersPage extends RequisitionPage {
   }
 
   public int getNumberOfLineItems() throws IOException {
+    testWebDriver.waitForElementToAppear(ordersGrid);
     return ordersGrid.findElements(By.className("ngRow")).size();
   }
 
@@ -112,6 +111,4 @@ public class ViewOrdersPage extends RequisitionPage {
     String actualProgram = testWebDriver.getElementByXpath("(//div[@class='ngCellText ng-scope col2 colt2']/span)[" + row + "]").getText();
     SeleneseTestNgHelper.assertEquals(actualProgram, program);
   }
-
-
 }
