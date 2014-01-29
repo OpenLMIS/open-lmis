@@ -8,7 +8,7 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-function ViewOrderListController($scope, Orders, messageService, $location, $routeParams, $timeout) {
+function ViewOrderListController($scope, Orders, messageService, $location, $routeParams) {
 
   function refreshGrid() {
     $scope.currentPage = $routeParams.page ? utils.parseIntWithBaseTen($routeParams.page) : 1;
