@@ -10,7 +10,6 @@
 
 package org.openlmis.functional;
 
-
 import org.openlmis.UiUtils.CaptureScreenshotOnFailureListener;
 import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.pageobjects.HomePage;
@@ -22,11 +21,9 @@ import java.util.ArrayList;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.*;
 
-
 @Listeners(CaptureScreenshotOnFailureListener.class)
 
 public class ManageFacility extends TestCaseHelper {
-
 
   @BeforeMethod(groups = {"admin"})
   public void setUp() throws Exception {
@@ -35,9 +32,7 @@ public class ManageFacility extends TestCaseHelper {
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function-Positive")
   public void testE2EManageFacility(String user, String program, String[] credentials) throws Exception {
-
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
-
     dbWrapper.insertUser("200", user, "Ag/myf1Whs0fxr1FFfK8cs3q/VJ1qMs3yuMLDTeEcZEGzstj/waaUsQNQTIKk1U5JRzrDbPLCzCO1/vB5YGaEQ==", "F10", "Jane_Doe@openlmis.com");
 
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
@@ -87,9 +82,7 @@ public class ManageFacility extends TestCaseHelper {
     ArrayList<String> programsSupported = new ArrayList<String>();
     programsSupported.add("HIV");
     programsSupported.add("ESSENTIAL MEDICINES");
-    manageFacilityPageEdit.verifyProgramSupported(programsSupported, date_time);
-
-
+    manageFacilityPageEdit.verifyProgramSupported(programsSupported);
   }
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function-Positive")
@@ -121,7 +114,6 @@ public class ManageFacility extends TestCaseHelper {
 
     assertEquals(facilityType, manageFacilityPage.getFacilityType());
     assertEquals(geoZone, manageFacilityPage.getGeographicZone());
-
   }
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function-Positive")
@@ -191,7 +183,6 @@ public class ManageFacility extends TestCaseHelper {
     assertEquals("VACCINES", manageFacilityPage.getProgramSupported(2));
     assertFalse("Program supported flag incorrect", manageFacilityPage.getProgramSupportedActive(2));
     assertEquals(dbWrapper.getRequisitionGroupId("F10"), dbWrapper.getRequisitionGroupId("V10"));
-
   }
 
   @AfterMethod(groups = {"admin"})

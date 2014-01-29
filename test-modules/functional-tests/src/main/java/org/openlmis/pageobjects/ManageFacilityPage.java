@@ -24,6 +24,7 @@ import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
 import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
@@ -31,9 +32,7 @@ import static java.lang.String.valueOf;
 import static org.openqa.selenium.support.How.ID;
 import static org.openqa.selenium.support.How.XPATH;
 
-
 public class ManageFacilityPage extends Page {
-
 
   @FindBy(how = How.ID, using = "searchFacility")
   private static WebElement searchFacilityTextField = null;
@@ -245,10 +244,9 @@ public class ManageFacilityPage extends Page {
 
   public String enterValuesInFacilityAndClickSave(String facilityCodePrefix, String facilityNamePrefix,
                                                   String program, String geoZone, String facilityTypeValue, String operatedByValue, String population) {
+
     String date_time = enterValuesInFacility(facilityCodePrefix, facilityNamePrefix, program, geoZone, facilityTypeValue, operatedByValue, population, false);
-
     SaveButton.click();
-
     return date_time;
   }
 
@@ -360,7 +358,6 @@ public class ManageFacilityPage extends Page {
     assertTrue("Save success message should show up", saveSuccessMsgDiv.isDisplayed());
   }
 
-
   public void overrideIsa(String overriddenIsa, int rowNumber) {
     modifyIsaValueLink.click();
     testWebDriver.waitForElementToAppear(overrideIsaTable);
@@ -395,7 +392,6 @@ public class ManageFacilityPage extends Page {
     useCalculatedIsabutton.click();
   }
 
-
   public void verifyOverriddenIsa(String expectedIsa) {
     testWebDriver.handleScrollByPixels(0, 1000);
     testWebDriver.waitForElementToAppear(modifyIsaValueLink);
@@ -413,7 +409,6 @@ public class ManageFacilityPage extends Page {
     testWebDriver.waitForElementToAppear(saveSuccessMsgDiv);
   }
 
-
   public void searchFacility(String facilityCodeValue) {
     testWebDriver.waitForElementToAppear(searchFacilityTextField);
     sendKeys(searchFacilityTextField, facilityCodeValue);
@@ -425,7 +420,6 @@ public class ManageFacilityPage extends Page {
     testWebDriver.getElementByXpath("//a[contains(text(),'" + facility + "')]").click();
     testWebDriver.waitForElementToAppear(facilityCode);
   }
-
 
   public void disableFacility(String facilityCodeValue, String facilityNameValue) {
     String expectedMessageOnAlert = String.format("\"%s\" / \"%s\" will be disabled in the system.", facilityNameValue, facilityCodeValue);
@@ -469,7 +463,6 @@ public class ManageFacilityPage extends Page {
   }
 
   public void verifyEnabledFacility() {
-
     testWebDriver.sleep(1000);
     String enableValue = enabledFlag.getText();
     assertEquals(enableValue.trim(), "Yes");
@@ -481,7 +474,6 @@ public class ManageFacilityPage extends Page {
     testWebDriver.sleep(1000);
     enableButton.click();
     testWebDriver.waitForElementToAppear(enableMessageOnAlert);
-
 
     testWebDriver.sleep(1000);
     okLink.click();
@@ -528,18 +520,17 @@ public class ManageFacilityPage extends Page {
     assertTrue(removeSupportedProgram.isDisplayed());
   }
 
-  public HomePage verifyProgramSupported(java.util.ArrayList<String> programsSupported, String date_time) throws IOException {
-    int i = 1;
+  public HomePage verifyProgramSupported(List<String> programsSupported) throws IOException {
     verifyEditFacilityHeader("Edit facility");
     testWebDriver.waitForElementToAppear(disableButton);
     testWebDriver.sleep(1500);
-    for (String program : programsSupported) {
-      WebElement programsSupportedElement = testWebDriver.getElementByXpath("//table[@class='table table-striped table-bordered']/tbody/tr[" + i + "]/td[1]");
-      WebElement programsActiveElement = testWebDriver.getElementByXpath("//table[@class='table table-striped table-bordered']/tbody/tr[" + i + "]/td[2]/input");
+    String program;
+    for (int i = 0; i < programsSupported.size(); i++) {
+      program = programsSupported.get(i);
+      WebElement programsSupportedElement = testWebDriver.getElementByXpath("//table[@class='table table-striped table-bordered']/tbody/tr[" + (i + 1) + "]/td[1]");
+      WebElement programsActiveElement = testWebDriver.getElementByXpath("//table[@class='table table-striped table-bordered']/tbody/tr[" + (i + 1) + "]/td[2]/input");
       assertEquals(programsSupportedElement.getText().trim(), program);
-      assertTrue("Program " + i + " should be active", programsActiveElement.isSelected());
-
-      i++;
+      assertTrue("Program " + (i + 1) + " should be active", programsActiveElement.isSelected());
     }
     assertTrue(removeSupportedProgram.isDisplayed());
 
