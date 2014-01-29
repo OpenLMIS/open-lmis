@@ -11,7 +11,7 @@
 rnrModule.directive('adjustHeight', function ($timeout) {
   return {
     restrict: 'A',
-    link: function (scope, element, attrs) {
+    link: function (scope, element) {
       var previousWindowWidth = window.innerWidth;
       var timeoutId;
       var adjustHeight = function () {

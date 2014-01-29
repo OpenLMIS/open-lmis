@@ -26,7 +26,6 @@ CACHE:
 /public/js/shared/directives/tab-scroll.js
 /public/js/shared/directives/modal-events.js
 /public/js/shared/directives/fade-out.js
-/public/js/shared/directives/auto-save.js
 
 /public/css/app.css
 /public/js/shared/services/services.js
@@ -53,6 +52,7 @@ CACHE:
 /public/pages/logistics/distribution/partials/full-coverage.html
 /public/pages/logistics/distribution/partials/child-coverage.html
 
+/public/js/distribution/directives/auto-save.js
 /public/js/distribution/resolve/distribution-resolve.js
 /public/js/distribution/module/distribution-module.js
 /public/js/distribution/migrations.js
