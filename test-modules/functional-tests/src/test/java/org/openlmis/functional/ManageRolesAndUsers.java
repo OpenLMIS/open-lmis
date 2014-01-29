@@ -256,7 +256,9 @@ public class ManageRolesAndUsers extends TestCaseHelper {
     testWebDriver.sleep(500);
     userPage.verifyRoleNotPresent(LAB_IN_CHARGE);
     userPage.verifyRemoveNotPresent();
-    verifyPUSHProgramNotAvailableForHomeFacilityRolesAndSupervisoryRoles(userPage);
+    assertFalse(userPage.getAllProgramsHomeFacility().contains("VACCINES"));
+    userPage.clickSupervisoryRolesAccordion();
+    assertFalse(userPage.getAllProgramsToSupervise().contains("VACCINES"));
     userPage.clickWarehouseRolesAccordion();
     testWebDriver.sleep(500);
     userPage.verifyRoleNotPresent(warehouseRole);
@@ -396,11 +398,6 @@ public class ManageRolesAndUsers extends TestCaseHelper {
     RolesPage rolesPage = homePage.navigateRoleAssignments();
     rolesPage.createRole(roleName, roleDescription, userRoleList, programDependent);
     rolesPage.verifyCreatedRoleMessage(roleName);
-  }
-
-  private void verifyPUSHProgramNotAvailableForHomeFacilityRolesAndSupervisoryRoles(UserPage userPage) throws IOException, SQLException {
-    assertFalse(userPage.getAllProgramsHomeFacility().contains("VACCINES"));
-    assertFalse(userPage.getAllProgramsToSupervise().contains("VACCINES"));
   }
 
   private void verifyWarehouseAvailableForWarehouseRoles(String FacilityCode, String warehouseName) throws IOException, SQLException {
