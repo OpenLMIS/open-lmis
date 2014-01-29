@@ -222,8 +222,6 @@ Feature: Smoke Tests
     And I access initiate emergency requisition page
     Then I should verify "currentPeriod" with status "Not yet started" in row "1"
     When I access proceed
-    And I access home page
-    And I access initiate requisition page
     And I access initiate emergency requisition page
     Then I should verify "currentPeriod" with status "INITIATED" in row "2"
     And I should verify "currentPeriod" with status "Not yet started" in row "1"
