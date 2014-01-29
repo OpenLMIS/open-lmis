@@ -2,22 +2,24 @@ package org.openlmis.functional;
 
 import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.pageobjects.HomePage;
-import org.openlmis.pageobjects.InitiateRnRPage;
 import org.openlmis.pageobjects.LoginPage;
+import org.openlmis.pageobjects.ManagePodPage;
 import org.openlmis.pageobjects.UpdatePodPage;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import java.io.IOException;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
+import static java.util.Arrays.asList;
+import static org.testng.AssertJUnit.assertEquals;
 import static org.testng.AssertJUnit.assertFalse;
 
 public class UpdatePod extends TestCaseHelper {
@@ -31,140 +33,146 @@ public class UpdatePod extends TestCaseHelper {
   public static final String SUBMITTED = "SUBMITTED";
   public LoginPage loginPage;
 
+  public static final String USER = "user";
+  public static final String PASSWORD = "password";
+  public static final String PROGRAM = "program";
+  UpdatePodPage updatePodPage;
+
+  public Map<String, String> updatePODData = new HashMap<String, String>() {{
+    put(USER, "storeInCharge");
+    put(PASSWORD, "Admin123");
+    put(PROGRAM, "HIV");
+  }};
+
   @BeforeMethod(groups = "requisition")
   public void setUp() throws Exception {
     super.setup();
     dbWrapper.deleteData();
+    setUpData(updatePODData.get(PROGRAM), updatePODData.get(USER));
+    updatePodPage = new UpdatePodPage(testWebDriver);
   }
 
-  @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-RnR")
-  public void testVerifyManagePODValidFlowForRegularRnR(String program,
-                                                        String userSIC,
-                                                        String password) throws Exception {
-    setUpData(program, userSIC);
-    dbWrapper.insertRequisitions(1, "MALARIA", true, "2012-12-01", "2015-12-01", "F10", false);
-    dbWrapper.updateRequisitionStatus("SUBMITTED", userSIC, "MALARIA");
-    dbWrapper.updateRequisitionStatus("AUTHORIZED", userSIC, "MALARIA");
-    dbWrapper.updateFieldValue("requisition_line_items", "packsToShip", 100);
-    dbWrapper.updateRequisitionStatus("APPROVED", userSIC, "MALARIA");
-    dbWrapper.insertFulfilmentRoleAssignment("storeIncharge", "store in-charge", "F10");
-    dbWrapper.insertOrders("RELEASED", userSIC, "MALARIA");
-    dbWrapper.updateRequisitionStatus("RELEASED", userSIC, "MALARIA");
+  @Test(groups = {"requisition"})
+  public void testVerifyManagePODValidFlowForRegularRnR() throws Exception {
+    initiateRnrAndConvertToOrder(false, 100);
 
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
-    HomePage homePage = loginPage.loginAs(userSIC, password);
+    HomePage homePage = loginPage.loginAs(updatePODData.get(USER), updatePODData.get(PASSWORD));
 
-    homePage.navigateManagePOD();
-    UpdatePodPage updatePodPage = new UpdatePodPage(testWebDriver);
-    updatePodPage.selectRequisitionToUpdatePod(1);
+    ManagePodPage managePodPage = homePage.navigateManagePOD();
+    UpdatePodPage updatePodPage = managePodPage.selectRequisitionToUpdatePod(1);
 
-    verifyTitleOnUpdatePODScreen(updatePodPage);
-    verifyHeadersWithValuesOnUpdatePODScreen(updatePodPage);
-    verifyHeadersOfPodTableOnUpdatePODScreen(updatePodPage);
-    verifyValuesOfPodTableOnUpdatePODScreen(updatePodPage);
-    assertTrue(updatePodPage.getFullSupplyTickIcon());
+    assertEquals("Proof of Delivery", updatePodPage.getTitle());
+    verifyHeadersWithValuesOnUpdatePODScreen();
+    verifyHeadersOfPodTableOnUpdatePODScreen();
+    verifyValuesOfPodTableOnUpdatePODScreen(1, "P10", "antibiotic Capsule 300/200/600 mg", "100", "Strip", "");
+    assertEquals("", updatePodPage.getQuantityReceived(1));
+    assertEquals("", updatePodPage.getNotes(1));
+    assertTrue(updatePodPage.isFullSupplyTickIconDisplayed(1));
+    verifyRequisitionTypeAndColor("regular");
   }
 
-  @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-RnR")
-  public void testVerifyManagePODValidFlowForEmergencyRnR(String program, String userSIC, String password) throws Exception {
-    setUpData(program, userSIC);
-    dbWrapper.insertRequisitions(1, "MALARIA", true, "2012-12-01", "2015-12-01", "F10", true);
-    dbWrapper.updateRequisitionStatus("SUBMITTED", userSIC, "MALARIA");
-    dbWrapper.updateRequisitionStatus("AUTHORIZED", userSIC, "MALARIA");
-    dbWrapper.updateFieldValue("requisition_line_items", "packsToShip", 100);
-    dbWrapper.updateRequisitionStatus("APPROVED", userSIC, "MALARIA");
-    dbWrapper.insertFulfilmentRoleAssignment("storeIncharge", "store in-charge", "F10");
-    dbWrapper.insertOrders("RELEASED", userSIC, "MALARIA");
-    dbWrapper.updateRequisitionStatus("RELEASED", userSIC, "MALARIA");
+  @Test(groups = {"requisition"})
+  public void testVerifyManagePODValidFlowForEmergencyRnR() throws Exception {
+    initiateRnrAndConvertToOrder(true, 100);
 
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
-    HomePage homePage = loginPage.loginAs(userSIC, password);
+    HomePage homePage = loginPage.loginAs(updatePODData.get(USER), updatePODData.get(PASSWORD));
 
-    homePage.navigateManagePOD();
-    UpdatePodPage updatePodPage = new UpdatePodPage(testWebDriver);
-    updatePodPage.selectRequisitionToUpdatePod(1);
-    assertTrue(updatePodPage.getHeaders().contains("Emergency"));
+    ManagePodPage managePodPage = homePage.navigateManagePOD();
+    managePodPage.selectRequisitionToUpdatePod(1);
+
+    verifyRequisitionTypeAndColor("emergency");
   }
 
-  @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-RnR")
-  public void testVerifyManagePODWhenPacksToShipIsZero(String program, String userSIC, String password) throws Exception {
-    setUpData(program, userSIC);
-    dbWrapper.insertRequisitions(1, "MALARIA", true, "2012-12-01", "2015-12-01", "F10", false);
-    dbWrapper.updateRequisitionStatus("SUBMITTED", userSIC, "MALARIA");
-    dbWrapper.updateRequisitionStatus("AUTHORIZED", userSIC, "MALARIA");
-    dbWrapper.updateFieldValue("requisition_line_items", "packsToShip", 0);
-    dbWrapper.updateRequisitionStatus("APPROVED", userSIC, "MALARIA");
-    dbWrapper.insertFulfilmentRoleAssignment("storeIncharge", "store in-charge", "F10");
-    dbWrapper.insertOrders("RELEASED", userSIC, "MALARIA");
-    dbWrapper.updateRequisitionStatus("RELEASED", userSIC, "MALARIA");
+  @Test(groups = {"requisition"})
+  public void testVerifyManagePODWhenPacksToShipIsZero() throws Exception {
+    initiateRnrAndConvertToOrder(false, 0);
 
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
-    HomePage homePage = loginPage.loginAs(userSIC, password);
+    HomePage homePage = loginPage.loginAs(updatePODData.get(USER), updatePODData.get(PASSWORD));
 
-    homePage.navigateManagePOD();
-    UpdatePodPage updatePodPage = new UpdatePodPage(testWebDriver);
-    updatePodPage.selectRequisitionToUpdatePod(1);
+    ManagePodPage managePodPage = homePage.navigateManagePOD();
+    UpdatePodPage updatePodPage = managePodPage.selectRequisitionToUpdatePod(1);
 
-    verifyTitleOnUpdatePODScreen(updatePodPage);
-    verifyHeadersWithValuesOnUpdatePODScreen(updatePodPage);
-    verifyMessageOnPodScreen(updatePodPage);
+    assertEquals("No products.", updatePodPage.getNoProductsMessage());
     assertFalse(updatePodPage.getPodTableData().contains("P10"));
     assertFalse(updatePodPage.getPodTableData().contains("antibiotic Capsule 300/200/600 mg"));
     assertFalse(updatePodPage.getPodTableData().contains("100"));
     assertFalse(updatePodPage.getPodTableData().contains("Strip"));
+    verifyRequisitionTypeAndColor("regular");
   }
 
-  private void verifyMessageOnPodScreen(UpdatePodPage updatePodPage) {
-    assertTrue(updatePodPage.getNoProductsMessage().contains("No products."));
+  @Test(groups = {"requisition"})
+  public void testVerifyManagePODWhenMultipleProducts() throws Exception {
+    dbWrapper.setupMultipleProducts(updatePODData.get(PROGRAM), "Lvl3 Hospital", 1, true);
+    dbWrapper.insertRequisitionWithMultipleLineItems(1, updatePODData.get(PROGRAM), true, "F10", false);
+    dbWrapper.convertRequisitionToOrder(dbWrapper.getMaxRnrID(), "READY_TO_PACK", updatePODData.get(USER));
+
+    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+    HomePage homePage = loginPage.loginAs(updatePODData.get(USER), updatePODData.get(PASSWORD));
+
+    ManagePodPage managePodPage = homePage.navigateManagePOD();
+    managePodPage.selectRequisitionToUpdatePod(1);
+
+    verifyValuesOfPodTableOnUpdatePODScreen(1, "F0", "antibiotic Capsule 300/200/600 mg", "5", "Strip", "");
+    verifyValuesOfPodTableOnUpdatePODScreen(2, "NF0", "antibiotic Capsule 300/200/600 mg", "50", "Strip", "");
+    verifyRequisitionTypeAndColor("regular");
   }
 
-  private void verifyValuesOfPodTableOnUpdatePODScreen(UpdatePodPage updatePodPage) {
-    assertTrue(updatePodPage.getProductCode(1).contains("P10"));
-    assertTrue(updatePodPage.getProductName(1).contains("antibiotic Capsule 300/200/600 mg"));
-    assertTrue(updatePodPage.getPacksToShip(1).contains("100"));
-    assertTrue(updatePodPage.getUnitOfIssue(1).contains("Strip"));
-    assertTrue(updatePodPage.getQuantityReceived(1).contains(""));
-    assertTrue(updatePodPage.getQuantityShipped(1).contains(""));
-    assertTrue(updatePodPage.getNotes(1).contains(""));
+  private void initiateRnrAndConvertToOrder(boolean isEmergencyRegular, int packsToShip) throws IOException, SQLException {
+    dbWrapper.insertRequisitions(1, "MALARIA", true, "2012-12-01", "2015-12-01", "F10", isEmergencyRegular);
+    dbWrapper.updateRequisitionStatus("APPROVED", updatePODData.get(USER), "MALARIA");
+    dbWrapper.updateFieldValue("requisition_line_items", "packsToShip", packsToShip);
+    dbWrapper.convertRequisitionToOrder(dbWrapper.getMaxRnrID(), "READY_TO_PACK", updatePODData.get(USER));
   }
 
-  private void verifyHeadersOfPodTableOnUpdatePODScreen(UpdatePodPage updatePodPage) {
-    String podTableDetails = updatePodPage.getPodTableData();
-    assertTrue(podTableDetails.contains("Full Supply"));
-    assertTrue(podTableDetails.contains("Product Code"));
-    assertTrue(podTableDetails.contains("Product Name"));
-    assertTrue(podTableDetails.contains("Unit of Issue"));
-    assertTrue(podTableDetails.contains("Packs to Ship"));
-    assertTrue(podTableDetails.contains("Quantity Shipped"));
-    assertTrue(podTableDetails.contains("Quantity Received"));
-    assertTrue(podTableDetails.contains("Notes"));
+  private void verifyValuesOfPodTableOnUpdatePODScreen(int rowNumber, String productCode, String productName, String packsToShip,
+                                                       String unitOfIssue, String quantityShipped) {
+    assertEquals(productCode, updatePodPage.getProductCode(rowNumber));
+    assertEquals(productName, updatePodPage.getProductName(rowNumber));
+    assertEquals(packsToShip, updatePodPage.getPacksToShip(rowNumber));
+    assertEquals(unitOfIssue, updatePodPage.getUnitOfIssue(rowNumber));
+    assertEquals(quantityShipped, updatePodPage.getQuantityShipped(rowNumber));
   }
 
-  private void verifyHeadersWithValuesOnUpdatePODScreen(UpdatePodPage updatePodPage) throws IOException, SQLException {
-    String headerDetails = updatePodPage.getHeaders();
+  private void verifyHeadersOfPodTableOnUpdatePODScreen() {
+    assertEquals("Full Supply", testWebDriver.getElementByXpath("//table[@id='podTable']/thead/tr/th[1]/span").getText());
+    assertEquals("Product Code", testWebDriver.getElementByXpath("//table[@id='podTable']/thead/tr/th[2]/span").getText());
+    assertEquals("Product Name", testWebDriver.getElementByXpath("//table[@id='podTable']/thead/tr/th[3]/span").getText());
+    assertEquals("Unit of Issue", testWebDriver.getElementByXpath("//table[@id='podTable']/thead/tr/th[4]/span").getText());
+    assertEquals("Packs to Ship", testWebDriver.getElementByXpath("//table[@id='podTable']/thead/tr/th[5]/span").getText());
+    assertEquals("Quantity Shipped", testWebDriver.getElementByXpath("//table[@id='podTable']/thead/tr/th[6]/span").getText());
+    assertEquals("Quantity Received", testWebDriver.getElementByXpath("//table[@id='podTable']/thead/tr/th[7]/span").getText());
+    assertEquals("Notes", testWebDriver.getElementByXpath("//table[@id='podTable']/thead/tr/th[8]/span").getText());
+  }
+
+  private void verifyHeadersWithValuesOnUpdatePODScreen() throws IOException, SQLException {
     Integer id = dbWrapper.getMaxRnrID();
-    assertTrue(headerDetails.contains("Order No.: " + id));
-    assertTrue(headerDetails.contains("Facility:  F10 - Village Dispensary"));
-    assertTrue(headerDetails.contains("Order Date/Time:"));
-    assertTrue(headerDetails.contains("Supplying Depot:  Village Dispensary\n"));
-    assertTrue(headerDetails.contains("Reporting Period: 01/12/2012 - 01/12/2015"));
-    assertTrue(headerDetails.contains(new SimpleDateFormat("dd/MM/yyyy").format(new Date())));
-    assertTrue(headerDetails.contains("Regular"));
+
+    assertEquals("Order No.: " + id, updatePodPage.getOrderNumberLabel() + ": " + updatePodPage.getOrderId());
+    assertEquals("Facility: F10 - Village Dispensary", updatePodPage.getFacilityLabel() + ": " + updatePodPage.getFacilityCode());
+    assertTrue((updatePodPage.getOrderDateTimeLabel() + ": " + updatePodPage.getOrderCreatedDate()).contains("Order Date/Time: " + new SimpleDateFormat("dd/MM/yyyy").format(new Date())));
+    assertEquals("Supplying Depot: Village Dispensary", updatePodPage.getSupplyingDepotLabel() + ": " + updatePodPage.getSupplyingDepot());
+    assertEquals("Reporting Period: 01/12/2012 - 01/12/2015", updatePodPage.getReportingPeriodLabel() + ": " + updatePodPage.getPeriodStartDate());
   }
 
-  private void verifyTitleOnUpdatePODScreen(UpdatePodPage updatePodPage) {
-    assertTrue(updatePodPage.getTitle().contains("Proof of Delivery"));
+  private void verifyRequisitionTypeAndColor(String requisitionType) {
+    if (requisitionType.equals("regular")) {
+      assertEquals("Regular", updatePodPage.getRequisitionType());
+      assertEquals("rgba(219, 219, 219, 1)", updatePodPage.getRequisitionTypeColor());
+    } else if (requisitionType.equals("emergency")) {
+      assertEquals("Emergency", updatePodPage.getRequisitionType());
+      assertEquals("rgba(210, 95, 91, 1)", updatePodPage.getRequisitionTypeColor());
+    }
   }
+
 
   private void setUpData(String program, String userSIC) throws Exception {
     setupProductTestData("P10", "P11", program, "lvl3_hospital");
     dbWrapper.insertFacilities("F10", "F11");
     dbWrapper.configureTemplate(program);
-    List<String> rightsList = new ArrayList<>();
-    rightsList.add(CREATE_REQUISITION);
-    rightsList.add(CONVERT_TO_ORDER);
-    rightsList.add(VIEW_ORDER);
-    rightsList.add(MANAGE_POD);
+    List<String> rightsList = asList(CREATE_REQUISITION, CONVERT_TO_ORDER, VIEW_ORDER, MANAGE_POD);
     setupTestUserRoleRightsData("200", userSIC, rightsList);
     dbWrapper.insertSupervisoryNode("F10", "N1", "Node 1", "null");
     dbWrapper.insertRoleAssignment("200", "store in-charge");
@@ -174,6 +182,7 @@ public class UpdatePod extends TestCaseHelper {
     dbWrapper.insertProcessingPeriod("Period2", "second period", "2013-01-16", "2013-01-30", 1, "M");
     setupRequisitionGroupData("RG1", "RG2", "N1", "N2", "F10", "F11");
     dbWrapper.insertSupplyLines("N1", program, "F10", true);
+    dbWrapper.insertFulfilmentRoleAssignment("storeInCharge", "store in-charge", "F10");
   }
 
   @AfterMethod(groups = "requisition")
@@ -185,10 +194,5 @@ public class UpdatePod extends TestCaseHelper {
       dbWrapper.deleteData();
       dbWrapper.closeConnection();
     }
-  }
-
-  @DataProvider(name = "Data-Provider-Function-RnR")
-  public Object[][] parameterIntTestProviderRnR() {
-    return new Object[][]{{"HIV", "storeIncharge", "Admin123"}};
   }
 }

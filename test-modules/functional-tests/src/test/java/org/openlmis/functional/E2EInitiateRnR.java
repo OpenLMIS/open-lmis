@@ -495,9 +495,8 @@ public class E2EInitiateRnR extends TestCaseHelper {
   @When("^I click on update Pod link for Row \"([^\"]*)\"$")
   public void navigateUploadPodPage(Integer rowNumber) throws Exception {
     HomePage homePage = new HomePage(testWebDriver);
-    homePage.navigateManagePOD();
-    UpdatePodPage updatePodPage = new UpdatePodPage(testWebDriver);
-    updatePodPage.selectRequisitionToUpdatePod(rowNumber);
+    ManagePodPage managePodPage = homePage.navigateManagePOD();
+    UpdatePodPage updatePodPage = managePodPage.selectRequisitionToUpdatePod(1);
   }
 
   @Then("^I should see all products to update pod$")

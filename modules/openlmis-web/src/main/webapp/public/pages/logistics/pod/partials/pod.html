@@ -10,9 +10,9 @@
 
 <div>
 
-  <h2 openlmis-message="header.proof.of.delivery"></h2>
+  <h2 id="PODPageTitle" openlmis-message="header.proof.of.delivery"></h2>
   <ng-include src="'/public/pages/logistics/pod/partials/header.html'"></ng-include>
-  <div ng-hide="pageLineItems.length" class="alert alert-info" openlmis-message="label.no.products"></div>
+  <div ng-hide="pageLineItems.length" class="alert alert-info" id="noProductsLabel" openlmis-message="label.no.products"></div>
   <div id="pod" ng-show="pageLineItems.length" class="rnr-table">
     <table id="podTable" class="table table-bordered" fixed-table-header>
       <thead>
@@ -33,7 +33,7 @@
       <tr>
         <td class="cell-input">
           <div class="checked ngCellText">
-            <i ng-class="{'icon-ok': podLineItem.fullSupply}"></i>
+            <i id="tickIcon{{$index}}" ng-class="{'icon-ok': podLineItem.fullSupply}"></i>
           </div>
         </td>
         <td class="cell-input col-productCode">

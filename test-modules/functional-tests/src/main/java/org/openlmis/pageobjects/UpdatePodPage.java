@@ -8,9 +8,7 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 
-import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
 import static org.openqa.selenium.support.How.ID;
-import static org.openqa.selenium.support.How.XPATH;
 
 public class UpdatePodPage extends Page {
 
@@ -20,14 +18,11 @@ public class UpdatePodPage extends Page {
   @FindBy(how = ID, using = "requisition-header")
   private WebElement updatePodPageHeader = null;
 
-  @FindBy(how = XPATH, using = "//div/h2[@openlmis-message='header.proof.of.delivery']")
+  @FindBy(how = ID, using = "PODPageTitle")
   private WebElement podPageTitle = null;
 
-  @FindBy(how = XPATH, using = "//div[@class='alert alert-info']")
+  @FindBy(how = ID, using = "noProductsLabel")
   private WebElement noProductsMessage = null;
-
-  @FindBy(how = XPATH, using = "//div//i[@class='icon-ok']")
-  private WebElement fullSupplyTickIcon= null;
 
   @FindBy(how = ID, using = "firstPageLink")
   private WebElement firstPageLink = null;
@@ -40,6 +35,42 @@ public class UpdatePodPage extends Page {
 
   @FindBy(how = ID, using = "lastPageLink")
   private WebElement lastPageLink = null;
+
+  @FindBy(how = ID, using = "requisitionTypeClass")
+  private WebElement requisitionTypeClass = null;
+
+  @FindBy(how = ID, using = "requisitionType")
+  private WebElement requisitionType = null;
+
+  @FindBy(how = ID, using = "orderNumberLabel")
+  private WebElement orderNumberLabel = null;
+
+  @FindBy(how = ID, using = "orderId")
+  private WebElement orderId = null;
+
+  @FindBy(how = ID, using = "facilityLabel")
+  private WebElement facilityLabel = null;
+
+  @FindBy(how = ID, using = "facilityCode")
+  private WebElement facilityCode = null;
+
+  @FindBy(how = ID, using = "orderDateTimeLabel")
+  private WebElement orderDateTimeLabel = null;
+
+  @FindBy(how = ID, using = "orderCreatedDate")
+  private WebElement orderCreatedDate = null;
+
+  @FindBy(how = ID, using = "supplyingDepotLabel")
+  private WebElement supplyingDepotLabel = null;
+
+  @FindBy(how = ID, using = "supplyingDepot")
+  private WebElement supplyingDepot = null;
+
+  @FindBy(how = ID, using = "reportingPeriodLabel")
+  private WebElement reportingPeriodLabel = null;
+
+  @FindBy(how = ID, using = "periodStartDate")
+  private WebElement periodStartDate = null;
 
   public UpdatePodPage(TestWebDriver testWebDriver) {
     super(testWebDriver);
@@ -89,12 +120,6 @@ public class UpdatePodPage extends Page {
     testWebDriver.findElement(By.id("notes_" + (rowNumber - 1))).sendKeys(notes);
   }
 
-  public void selectRequisitionToUpdatePod(int rowNumber) {
-    testWebDriver.waitForAjax();
-    testWebDriver.waitForElementToAppear(testWebDriver.findElement(By.id("updatePod"+(rowNumber-1))));
-    testWebDriver.findElement(By.id("updatePod"+(rowNumber-1))).click();
-  }
-
   public String getTitle() {
     testWebDriver.waitForAjax();
     return testWebDriver.getText(podPageTitle);
@@ -115,9 +140,11 @@ public class UpdatePodPage extends Page {
     return testWebDriver.getText(noProductsMessage);
   }
 
-  public Boolean getFullSupplyTickIcon() {
+  public Boolean isFullSupplyTickIconDisplayed(int rowNumber) {
     testWebDriver.waitForAjax();
-    return fullSupplyTickIcon.isDisplayed();
+    WebElement tickIcon = testWebDriver.getElementById("tickIcon"+(rowNumber-1));
+    testWebDriver.waitForElementToAppear(tickIcon);
+    return tickIcon.isDisplayed();
   }
 
   public boolean isFirstPageLinkEnabled(){
@@ -132,7 +159,7 @@ public class UpdatePodPage extends Page {
 
   public boolean isPreviousPageLinkEnabled(){
     testWebDriver.waitForElementToAppear(previousPageLink);
-    return previousPageLink.getCssValue("color").contains( "rgba(119, 119, 119, 1)");
+    return previousPageLink.getCssValue("color").contains("rgba(119, 119, 119, 1)");
   }
 
   public boolean isPreviousPageLinkDisplayed(){
@@ -142,7 +169,7 @@ public class UpdatePodPage extends Page {
 
   public boolean isNextPageLinkEnabled(){
     testWebDriver.waitForElementToAppear(nextPageLink);
-    return nextPageLink.getCssValue("color").contains( "rgba(119, 119, 119, 1)");
+    return nextPageLink.getCssValue("color").contains("rgba(119, 119, 119, 1)");
   }
 
   public boolean isNextPageLinkDisplayed(){
@@ -152,7 +179,7 @@ public class UpdatePodPage extends Page {
 
   public boolean isLastPageLinkEnabled(){
     testWebDriver.waitForElementToAppear(lastPageLink);
-    return lastPageLink.getCssValue("color").contains( "rgba(119, 119, 119, 1)");
+    return lastPageLink.getCssValue("color").contains("rgba(119, 119, 119, 1)");
   }
 
   public boolean isLastPageLinkDisplayed(){
@@ -178,5 +205,65 @@ public class UpdatePodPage extends Page {
   public void navigateToPreviousPage() {
     testWebDriver.waitForElementToAppear(previousPageLink);
     previousPageLink.click();
+  }
+
+  public String getRequisitionTypeColor(){
+    testWebDriver.waitForElementToAppear(requisitionTypeClass);
+    return requisitionTypeClass.getCssValue("background-color");
+  }
+
+  public String getRequisitionType(){
+    testWebDriver.waitForElementToAppear(requisitionType);
+    return requisitionType.getText();
+  }
+
+  public String getOrderNumberLabel(){
+    testWebDriver.waitForElementToAppear(orderNumberLabel);
+    return orderNumberLabel.getText();
+  }
+
+  public String getOrderId(){
+    testWebDriver.waitForElementToAppear(orderId);
+    return orderId.getText();
+  }
+
+  public String getOrderDateTimeLabel(){
+    testWebDriver.waitForElementToAppear(orderDateTimeLabel);
+    return orderDateTimeLabel.getText();
+  }
+
+  public String getOrderCreatedDate(){
+    testWebDriver.waitForElementToAppear(orderCreatedDate);
+    return orderCreatedDate.getText();
+  }
+
+  public String getSupplyingDepotLabel(){
+    testWebDriver.waitForElementToAppear(supplyingDepotLabel);
+    return supplyingDepotLabel.getText();
+  }
+
+  public String getSupplyingDepot(){
+    testWebDriver.waitForElementToAppear(supplyingDepot);
+    return supplyingDepot.getText();
+  }
+
+  public String getFacilityLabel(){
+    testWebDriver.waitForElementToAppear(facilityLabel);
+    return facilityLabel.getText();
+  }
+
+  public String getFacilityCode(){
+    testWebDriver.waitForElementToAppear(facilityCode);
+    return facilityCode.getText();
+  }
+
+  public String getReportingPeriodLabel(){
+    testWebDriver.waitForElementToAppear(reportingPeriodLabel);
+    return reportingPeriodLabel.getText();
+  }
+
+  public String getPeriodStartDate(){
+    testWebDriver.waitForElementToAppear(periodStartDate);
+    return periodStartDate.getText();
   }
 }

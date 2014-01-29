@@ -20,16 +20,14 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.*;
-import static com.thoughtworks.selenium.SeleneseTestBase.assertEquals;
+import static java.util.Arrays.asList;
 
 public class PODPagination extends TestCaseHelper{
-
 
   public static final String USER = "user";
   public static final String PASSWORD = "password";
@@ -50,8 +48,7 @@ public class PODPagination extends TestCaseHelper{
 
     dbWrapper.insertFacilities("F10", "F11");
     dbWrapper.configureTemplate(podPaginationData.get(PROGRAM));
-    List<String> rightsList = new ArrayList<>();
-    rightsList.add("MANAGE_POD");
+    List<String> rightsList = asList("MANAGE_POD");
 
     setupTestUserRoleRightsData("200", podPaginationData.get(USER), rightsList);
     dbWrapper.insertSupervisoryNode("F10", "N1", "Node 1", "null");
@@ -69,12 +66,12 @@ public class PODPagination extends TestCaseHelper{
   public void testRnRPaginationAndDefaultDisplayOrder() throws Exception {
     dbWrapper.setupMultipleProducts(podPaginationData.get(PROGRAM), "Lvl3 Hospital", 11, true);
     dbWrapper.insertRequisitionWithMultipleLineItems(11, podPaginationData.get(PROGRAM), true, "F10", false);
-    dbWrapper.convertRequisitionToOrder(dbWrapper.getMaxRnrID(), "READY_TO_PACK");
+    dbWrapper.convertRequisitionToOrder(dbWrapper.getMaxRnrID(), "READY_TO_PACK",podPaginationData.get(USER) );
 
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(podPaginationData.get(USER), podPaginationData.get(PASSWORD));
     ManagePodPage managePodPage = homePage.navigateManagePOD();
-    managePodPage.clickUpdatePODLink();
+    managePodPage.selectRequisitionToUpdatePod(1);
     verifyNumberOFPageLinksDisplayed(25,10);
     verifyPageNumberLinksDisplayed();
     verifyPageNumberSelected(1);
@@ -123,12 +120,12 @@ public class PODPagination extends TestCaseHelper{
   public void testRnRPaginationAndSpecificDisplayOrder() throws Exception {
     dbWrapper.setupMultipleProducts(podPaginationData.get(PROGRAM), "Lvl3 Hospital", 11, false);
     dbWrapper.insertRequisitionWithMultipleLineItems(11, podPaginationData.get(PROGRAM), true, "F10", false);
-    dbWrapper.convertRequisitionToOrder(dbWrapper.getMaxRnrID(), "READY_TO_PACK");
+    dbWrapper.convertRequisitionToOrder(dbWrapper.getMaxRnrID(), "READY_TO_PACK",podPaginationData.get(USER) );
 
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(podPaginationData.get(USER), podPaginationData.get(PASSWORD));
     ManagePodPage managePodPage = homePage.navigateManagePOD();
-    managePodPage.clickUpdatePODLink();
+    managePodPage.selectRequisitionToUpdatePod(1);
     verifyNumberOFPageLinksDisplayed(25,10);
     verifyPageNumberLinksDisplayed();
     verifyProductDisplayOrderOnPage(new String[]{"F0", "NF0", "F1", "NF1", "F2", "NF2", "F3", "NF3", "F4", "NF4"});
@@ -147,12 +144,12 @@ public class PODPagination extends TestCaseHelper{
   public void testCategoryDefaultDisplayOrder() throws Exception {
     dbWrapper.setupMultipleCategoryProducts(podPaginationData.get(PROGRAM), "Lvl3 Hospital", 11, true);
     dbWrapper.insertRequisitionWithMultipleLineItems(11, podPaginationData.get(PROGRAM), true, "F10", false);
-    dbWrapper.convertRequisitionToOrder(dbWrapper.getMaxRnrID(), "READY_TO_PACK");
+    dbWrapper.convertRequisitionToOrder(dbWrapper.getMaxRnrID(), "READY_TO_PACK",podPaginationData.get(USER) );
 
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(podPaginationData.get(USER), podPaginationData.get(PASSWORD));
     ManagePodPage managePodPage = homePage.navigateManagePOD();
-    managePodPage.clickUpdatePODLink();
+    managePodPage.selectRequisitionToUpdatePod(1);
     verifyNumberOFPageLinksDisplayed(25,10);
     verifyPageNumberLinksDisplayed();
     verifyProductDisplayOrderOnPage(new String[]{"F0", "NF0", "F1", "NF1", "F10", "NF10", "F2", "NF2", "F3", "NF3"});
@@ -171,12 +168,12 @@ public class PODPagination extends TestCaseHelper{
   public void testCategorySpecificDisplayOrder() throws Exception {
     dbWrapper.setupMultipleCategoryProducts(podPaginationData.get(PROGRAM), "Lvl3 Hospital", 11, false);
     dbWrapper.insertRequisitionWithMultipleLineItems(11, podPaginationData.get(PROGRAM), true, "F10", false);
-    dbWrapper.convertRequisitionToOrder(dbWrapper.getMaxRnrID(), "READY_TO_PACK");
+    dbWrapper.convertRequisitionToOrder(dbWrapper.getMaxRnrID(), "READY_TO_PACK",podPaginationData.get(USER) );
 
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(podPaginationData.get(USER), podPaginationData.get(PASSWORD));
     ManagePodPage managePodPage = homePage.navigateManagePOD();
-    managePodPage.clickUpdatePODLink();
+    managePodPage.selectRequisitionToUpdatePod(1);
     verifyNumberOFPageLinksDisplayed(25,10);
     verifyPageNumberLinksDisplayed();
     verifyProductDisplayOrderOnPage(new String[]{"F0", "NF0", "F1", "NF1", "F2", "NF2", "F3", "NF3", "F4", "NF4"});

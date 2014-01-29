@@ -953,9 +953,8 @@ public class InitiateRnR extends TestCaseHelper {
     dbWrapper.insertOrders("RELEASED", userSIC, program);
     dbWrapper.updateRequisitionStatus("RELEASED", userSIC, program);
 
-    UpdatePodPage updatePodPage = new UpdatePodPage(testWebDriver);
-    homePage.navigateManagePOD();
-    updatePodPage.selectRequisitionToUpdatePod(1);
+    ManagePodPage managePodPage = homePage.navigateManagePOD();
+    UpdatePodPage updatePodPage = managePodPage.selectRequisitionToUpdatePod(1);
 
     assertTrue(updatePodPage.getPodTableData().contains("P10"));
     assertTrue(updatePodPage.getPodTableData().contains("antibiotic Capsule 300/200/600 mg"));

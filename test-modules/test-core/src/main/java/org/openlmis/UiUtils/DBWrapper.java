@@ -1358,10 +1358,12 @@ public class DBWrapper {
       String categoryId = getAttributeFromTable("products", "categoryId", "code", "F" + i);
       String categoryCode = getAttributeFromTable("product_categories", "code", "id", categoryId);
       String categoryDisplayOrder = getAttributeFromTable("product_categories", "displayOrder", "id", categoryId);
+
       update(insertSql + "((SELECT max(id) FROM requisitions), 'F" + i + "','antibiotic Capsule 300/200/600 mg', %s, '%s', %s, '0', '11' , " +
         "'1', '10' ,'Strip','3', '30', '10', '10','t',0,0,0,12.5000,'f',1,5);", productDisplayOrder, categoryCode, categoryDisplayOrder);
+
       update(insertSql + "((SELECT max(id) FROM requisitions), 'NF" + i + "','antibiotic Capsule 300/200/600 mg', %s, '%s', %s, '0', '11' ," +
-        " '1', '10' ,'Strip','3', '30', '10', '10','f',0,0,0,12.5000,'f',1,5);", productDisplayOrder, categoryCode, categoryDisplayOrder);
+        " '1', '10' ,'Strip','3', '30', '10', '10','f',0,0,0,12.5000,'f',1,50);", productDisplayOrder, categoryCode, categoryDisplayOrder);
     }
     if (withSupplyLine) {
       ResultSet rs1 = query("select * from supply_lines where supervisoryNodeId = " +
@@ -1380,11 +1382,11 @@ public class DBWrapper {
     }
   }
 
-  public void convertRequisitionToOrder(int maxRnrID, String orderStatus) throws SQLException {
+  public void convertRequisitionToOrder(int maxRnrID, String orderStatus, String userName) throws SQLException {
     update("update requisitions set status = 'RELEASED' where id = %d", maxRnrID);
     String supervisoryNodeId = getAttributeFromTable("supervisory_nodes", "id", "code", "N1");
     Integer supplyingLineId = Integer.valueOf(getAttributeFromTable("supply_lines", "id", "supervisoryNodeId", supervisoryNodeId));
-    Integer userId = Integer.valueOf(getAttributeFromTable("users", "id", "username", "Admin123"));
+    Integer userId = Integer.valueOf(getAttributeFromTable("users", "id", "username", userName));
     update("INSERT INTO orders(id, status, ftpComment, supplyLineId, createdBy, modifiedBy) VALUES (%d, '%s', %s, %d, %d, %d)", maxRnrID,
       orderStatus, null, supplyingLineId, userId, userId);
   }
