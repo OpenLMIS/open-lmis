@@ -18,8 +18,8 @@
       </h3>
 
       <form auto-save="distribution" object-store="distributions" disable-form="{{facilityData.isDisabled()}}">
-        <span id="wasFacilityVisited"
-              openlmis-message="label.was.facility.visited|facilityData.facilityName|distribution.period.name"></span>
+        <label id="wasFacilityVisited"
+               openlmis-message="label.was.facility.visited|facilityData.facilityName|distribution.period.name"></label>
 
         <div class="form-row">
           <input id="facilityVisitedYes" type="radio" ng-model="facilityData.facilityVisit.visited" ng-value="true">
