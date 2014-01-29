@@ -29,17 +29,17 @@
         </div>
 
         <div ng-show="facilityData.facilityVisit.visited">
-          <div class="row-fluid">
-            <div class="span2">
+          <div>
+            <span id="visitDateContainer">
               <label for="visitDate" openlmis-message="label.visit.date"></label>
               <input id="visitDate" type="text" ui-date="{dateFormat: 'dd/mm/yy', changeYear: true}"
                      readonly ng-model="facilityData.facilityVisit.visitDate"/>
-            </div>
+            </span>
 
-            <div class="span2">
+            <span id="vehicleIdContainer">
               <label for="vehicleId" openlmis-message="label.vehicle.id"></label>
               <input id="vehicleId" maxlength="20" type="text" ng-model="facilityData.facilityVisit.vehicleId"/>
-            </div>
+            </span>
           </div>
 
           <h3>
