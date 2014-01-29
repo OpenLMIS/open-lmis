@@ -95,7 +95,7 @@ public class ViewWarehouseLoadAmount extends TestCaseHelper {
 
   @And("^I update population of facility \"([^\"]*)\" as \"([^\"]*)\"$")
   public void updatePopulationOfFacility(String facilityCode, String population) throws IOException, SQLException {
-    dbWrapper.updateFieldValue("facilities", "catchmentPopulation",population, "code", facilityCode);
+    dbWrapper.updatePopulationOfFacility(facilityCode,population);
   }
 
   @And("^I have role assigned to delivery zones$")
@@ -231,7 +231,7 @@ public class ViewWarehouseLoadAmount extends TestCaseHelper {
     dbWrapper.InsertOverriddenIsa(facilityCodeThird, programFirst, product1, 51);
     dbWrapper.InsertOverriddenIsa(facilityCodeThird, programFirst, product2, 51);
     dbWrapper.InsertOverriddenIsa(facilityCodeFourth, programFirst, product2, 57);
-    dbWrapper.updateFieldValue("facilities", "catchmentPopulation", null, "code", facilityCodeFirst);
+    dbWrapper.updatePopulationOfFacility(facilityCodeFirst,null);
     dbWrapper.updateOverriddenIsa(facilityCodeFirst, programFirst, product1, null);
     dbWrapper.updateOverriddenIsa(facilityCodeSecond, programFirst, product1, null);
 
@@ -326,8 +326,7 @@ public class ViewWarehouseLoadAmount extends TestCaseHelper {
     assertEquals("333", warehouseLoadAmountPage.getFacilityPopulation(2, 1));
     assertEquals("100", warehouseLoadAmountPage.getProductIsa(2, 1, 1));
     assertEquals("200", warehouseLoadAmountPage.getProductIsa(2, 1, 2));
-
-    dbWrapper.updateFieldValue("facilities", "catchmentPopulation", null, "code", facilityCodeFirst);
+    dbWrapper.updatePopulationOfFacility(facilityCodeFirst,null);
     dbWrapper.updateOverriddenIsa(facilityCodeFirst, programFirst, product, null);
     homePage.navigateToDistributionWhenOnline();
     distributionPage.selectValueFromDeliveryZone(deliveryZoneNameFirst);

@@ -1392,4 +1392,8 @@ public class DBWrapper {
   public void deleteTable(String tableName) throws IOException, SQLException {
     update("delete from " + tableName);
   }
+
+  public void updatePopulationOfFacility(String facility, String population) throws SQLException, IOException {
+    update("update facilities set catchmentPopulation=" + population + " where code='" + facility + "';");
+  }
 }
