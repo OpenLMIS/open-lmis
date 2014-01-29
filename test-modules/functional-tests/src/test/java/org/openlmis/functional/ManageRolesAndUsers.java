@@ -29,6 +29,7 @@ import java.util.Map;
 import static com.thoughtworks.selenium.SeleneseTestBase.assertFalse;
 import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
 import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
+import static java.util.Arrays.asList;
 
 @Listeners(CaptureScreenshotOnFailureListener.class)
 
@@ -70,7 +71,6 @@ public class ManageRolesAndUsers extends TestCaseHelper {
     UserPage userPage = homePage.navigateToUser();
     userPage.searchUser(user);
     userPage.clickEditUserButton();
-    //userPage.clickUserList();
     userPage.clickDisableButton();
   }
 
@@ -181,7 +181,6 @@ public class ManageRolesAndUsers extends TestCaseHelper {
     HomePage homePage = loginPage.loginAs(userName, password);
     assertTrue(homePage.isHomeMenuTabDisplayed());
     assertFalse(homePage.isRequisitionsMenuTabDisplayed());
-
   }
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function-Positive")
@@ -202,12 +201,8 @@ public class ManageRolesAndUsers extends TestCaseHelper {
     String facility_name = facilityNamePrefix + date_time;
     manageFacilityPage.verifyMessageOnFacilityScreen(facility_name, "created");
 
-    List<String> userRoleList = new ArrayList<>();
-    userRoleList.add(CREATE_REQUISITION);
-    userRoleList.add(AUTHORIZE_REQUISITION);
-    userRoleList.add(APPROVE_REQUISITION);
+    List<String> userRoleList = asList(CREATE_REQUISITION, AUTHORIZE_REQUISITION, APPROVE_REQUISITION);
     createRoleAndAssignRights(homePage, userRoleList, LAB_IN_CHARGE, LAB_IN_CHARGE, "Requisition");
-
 
     RolesPage rolesPage = new RolesPage(testWebDriver);
     rolesPage.clickARole(LAB_IN_CHARGE);
@@ -274,7 +269,6 @@ public class ManageRolesAndUsers extends TestCaseHelper {
     userPage.clickRemoveButtonWithOk(1);
     userPage.clickSaveButton();
     testVerifyTabsForUserWithoutRights(LAB_IN_CHARGE, "Admin123");
-
   }
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function-Positive")
@@ -301,7 +295,6 @@ public class ManageRolesAndUsers extends TestCaseHelper {
 
     assertEquals(deliveryZoneNameFirst, dbWrapper.getDeliveryZoneNameAssignedToUser(LAB_IN_CHARGE));
     assertEquals(FIELD_COORDINATOR, dbWrapper.getRoleNameAssignedToUser(LAB_IN_CHARGE));
-
   }
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Role-Function")
@@ -399,7 +392,6 @@ public class ManageRolesAndUsers extends TestCaseHelper {
     userPage.enterMyFacilityAndMySupervisedFacilityData(facility, program, supervisoryNode, role, roleType);
   }
 
-
   private void createRoleAndAssignRights(HomePage homePage, List<String> userRoleList, String roleName, String roleDescription, String programDependent) throws IOException {
     RolesPage rolesPage = homePage.navigateRoleAssignments();
     rolesPage.createRole(roleName, roleDescription, userRoleList, programDependent);
@@ -428,7 +420,6 @@ public class ManageRolesAndUsers extends TestCaseHelper {
     assertTrue(userPage.getAllWarehouseToSelect().contains(warehouseName));
   }
 
-
   @AfterMethod(groups = "functional2")
   public void tearDown() throws Exception {
     testWebDriver.sleep(500);
@@ -438,7 +429,6 @@ public class ManageRolesAndUsers extends TestCaseHelper {
       dbWrapper.deleteData();
       dbWrapper.closeConnection();
     }
-
   }
 
   @DataProvider(name = "Data-Provider-Function")

@@ -205,7 +205,6 @@ public class UserPage extends Page {
     super(driver);
     PageFactory.initElements(new AjaxElementLocatorFactory(TestWebDriver.getDriver(), 1), this);
     testWebDriver.setImplicitWait(1);
-
   }
 
   public void searchUser(String user) {
@@ -336,6 +335,7 @@ public class UserPage extends Page {
     testWebDriver.waitForElementToAppear(searchFacility);
     if (!roleType.equals("ADMIN")) {
       enterUserHomeFacility(facilityCode);
+      testWebDriver.sleep(500);
       testWebDriver.waitForElementToAppear(selectFacility);
       testWebDriver.scrollToElement(selectFacility);
       selectFacility.click();
@@ -444,7 +444,6 @@ public class UserPage extends Page {
     addDeliveryZoneRoleButton.click();
   }
 
-
   public void removeRole(int indexOfCancelIcon, boolean adminRole) {
     int counter = 1;
     List<WebElement> closeButtons = testWebDriver.getElementsByXpath("//a[@class='select2-search-choice-close']");
@@ -515,7 +514,6 @@ public class UserPage extends Page {
     testWebDriver.waitForElementToAppear(warehouseToSelect);
     return warehouseToSelect.getText();
   }
-
 
   public void clickViewHere() {
     testWebDriver.waitForElementToAppear(viewHereLink);
