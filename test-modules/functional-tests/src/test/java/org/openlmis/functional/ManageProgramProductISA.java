@@ -10,9 +10,6 @@
 
 package org.openlmis.functional;
 
-
-import cucumber.api.java.After;
-import cucumber.api.java.Before;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
@@ -37,7 +34,6 @@ public class ManageProgramProductISA extends TestCaseHelper {
 
   public String program, userSIC, password;
   public ProgramProductISAPage programProductISAPage;
-
 
   @BeforeMethod(groups = "admin")
   public void setUp() throws Exception {
@@ -121,7 +117,6 @@ public class ManageProgramProductISA extends TestCaseHelper {
     homePage.navigateHomePage();
   }
 
-
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function")
   public void testISAFormula(String userSIC, String password, String program) throws Exception {
     setUpTestDataForProgramProductISA();
@@ -134,11 +129,10 @@ public class ManageProgramProductISA extends TestCaseHelper {
     assertEquals(expectedISAFormula, isaFormula);
     verifyProgramNameIsDisplayedOnConfigureISAFormulaWindow(programProductISAPage);
     programProductISAPage.saveISA();
-    verifyISAFormula(programProductISAPage,isaFormula);
+    verifyISAFormula(programProductISAPage, isaFormula);
     HomePage homePage = new HomePage(testWebDriver);
     homePage.navigateHomePage();
   }
-
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function-Search")
   public void testSearchBox(String userSIC, String password, String program, String productName) throws Exception {
@@ -147,7 +141,7 @@ public class ManageProgramProductISA extends TestCaseHelper {
     ProgramProductISAPage programProductISAPage = navigateConfigureProductISAPage();
     programProductISAPage.selectProgram(program);
     programProductISAPage.searchProduct(productName);
-    verifySearchResults(programProductISAPage,productName);
+    verifySearchResults(programProductISAPage);
     HomePage homePage = new HomePage(testWebDriver);
     homePage.navigateHomePage();
   }
@@ -159,7 +153,7 @@ public class ManageProgramProductISA extends TestCaseHelper {
     ProgramProductISAPage programProductISAPage = navigateConfigureProductISAPage();
 
     List<WebElement> valuesPresentInDropDown = programProductISAPage.getAllSelectOptionsFromProgramDropDown();
-    List<String> programValuesToBeVerified = new ArrayList<String>();
+    List<String> programValuesToBeVerified = new ArrayList<>();
     programValuesToBeVerified.add(program1);
     verifyAllSelectFieldValues(programValuesToBeVerified, valuesPresentInDropDown);
 
@@ -169,11 +163,10 @@ public class ManageProgramProductISA extends TestCaseHelper {
     homePage.navigateHomePage();
     homePage.navigateProgramProductISA();
     valuesPresentInDropDown = programProductISAPage.getAllSelectOptionsFromProgramDropDown();
-    List<String> programValuesToBeVerifiedAfterUpdate = new ArrayList<String>();
+    List<String> programValuesToBeVerifiedAfterUpdate = new ArrayList<>();
     programValuesToBeVerifiedAfterUpdate.add(program1);
     programValuesToBeVerifiedAfterUpdate.add(program2);
     verifyAllSelectFieldValues(programValuesToBeVerifiedAfterUpdate, valuesPresentInDropDown);
-
   }
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function-Multiple-Programs")
@@ -198,7 +191,6 @@ public class ManageProgramProductISA extends TestCaseHelper {
     productsList = programProductISAPage.getProductsDisplayingOnConfigureProgramISAPage();
     assertTrue("Product " + product3 + " should be displayed", productsList.contains(product3));
     assertTrue("Product " + product4 + " should be displayed", productsList.contains(product4));
-
   }
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function")
@@ -211,7 +203,6 @@ public class ManageProgramProductISA extends TestCaseHelper {
     programProductISAPage.saveISA();
     verifyErrorMessageDiv(programProductISAPage);
   }
-
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function")
   public void testVerifyMonthlyRestockAmountFieldAvailability(String userSIC, String password, String program) throws Exception {
@@ -233,7 +224,6 @@ public class ManageProgramProductISA extends TestCaseHelper {
     return programProductISAPage;
   }
 
-
   private ProgramProductISAPage navigateConfigureProductISAPage() throws IOException {
     HomePage homePage = new HomePage(testWebDriver);
     programProductISAPage = homePage.navigateProgramProductISA();
@@ -242,8 +232,7 @@ public class ManageProgramProductISA extends TestCaseHelper {
 
   private HomePage Login(String userSIC, String password) throws IOException {
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
-    HomePage homePage = loginPage.loginAs(userSIC, password);
-    return homePage;
+    return loginPage.loginAs(userSIC, password);
   }
 
   private void verifyAllSelectFieldValues(List<String> valuesToBeVerified, List<WebElement> valuesPresentInDropDown) {
@@ -261,41 +250,39 @@ public class ManageProgramProductISA extends TestCaseHelper {
     } else {
       fail("Values in select field are not same in number as values to be verified");
     }
-
   }
 
-  public void verifyProgramNameIsDisplayedOnConfigureISAFormulaWindow(ProgramProductISAPage programProductISAPage){
+  public void verifyProgramNameIsDisplayedOnConfigureISAFormulaWindow(ProgramProductISAPage programProductISAPage) {
     assertTrue(programProductISAPage.getProgramNameDisplayedOnModalHeaderOFConfigureISAFormulaWindow().contains("ISA formula for antibiotic1"));
     assertTrue(programProductISAPage.getProgramNameDisplayedOnPopulationLabelOFConfigureISAFormulaWindow().contains("doses of antibiotic1 per month"));
- }
-
-  public void verifyISAFormula(ProgramProductISAPage programProductISAPage,String ISAFormula) {
-    assertEquals(programProductISAPage.verifyISAFormula(),ISAFormula);
   }
 
-  public void verifyFieldsOnISAModalWindow(ProgramProductISAPage programProductISAPage){
-   assertTrue(programProductISAPage.verifyRatioTextBoxFieldOnISAModalWindowIsDisplayed());
-   assertTrue(programProductISAPage.verifyDosesPerYearTextBoxFieldOnISAModalWindowIsDisplayed());
-   assertTrue(programProductISAPage.verifyBufferPercentageTextBoxFieldOnISAModalWindowIsDisplayed());
-   assertTrue(programProductISAPage.verifyWastageRateTextBoxFieldOnISAModalWindowIsDisplayed());
-   assertTrue(programProductISAPage.verifyProgramProductISACancelButtonFieldOnISAModalWindowIsDisplayed());
-   assertTrue(programProductISAPage.verifyProgramProductISASaveButtonFieldOnISAModalWindowIsDisplayed());
-   assertTrue(programProductISAPage.verifyISAPopulationTextFieldOnISAModalWindowIsDisplayed());
-   assertTrue(programProductISAPage.verifyAdjustmentValueTextBoxFieldOnISAModalWindowIsDisplayed());
+  public void verifyISAFormula(ProgramProductISAPage programProductISAPage, String ISAFormula) {
+    assertEquals(programProductISAPage.verifyISAFormula(), ISAFormula);
   }
 
-  public void verifyErrorMessageDiv(ProgramProductISAPage programProductISAPage){
+  public void verifyFieldsOnISAModalWindow(ProgramProductISAPage programProductISAPage) {
+    assertTrue(programProductISAPage.verifyRatioTextBoxFieldOnISAModalWindowIsDisplayed());
+    assertTrue(programProductISAPage.verifyDosesPerYearTextBoxFieldOnISAModalWindowIsDisplayed());
+    assertTrue(programProductISAPage.verifyBufferPercentageTextBoxFieldOnISAModalWindowIsDisplayed());
+    assertTrue(programProductISAPage.verifyWastageRateTextBoxFieldOnISAModalWindowIsDisplayed());
+    assertTrue(programProductISAPage.verifyProgramProductISACancelButtonFieldOnISAModalWindowIsDisplayed());
+    assertTrue(programProductISAPage.verifyProgramProductISASaveButtonFieldOnISAModalWindowIsDisplayed());
+    assertTrue(programProductISAPage.verifyISAPopulationTextFieldOnISAModalWindowIsDisplayed());
+    assertTrue(programProductISAPage.verifyAdjustmentValueTextBoxFieldOnISAModalWindowIsDisplayed());
+  }
+
+  public void verifyErrorMessageDiv(ProgramProductISAPage programProductISAPage) {
     assertTrue(programProductISAPage.verifyErrorMessageDiv());
   }
 
-  public void verifySearchResults(ProgramProductISAPage programProductISAPage,String productName){
-    assertTrue(programProductISAPage.verifySearchResults(productName));
+  private void verifySearchResults(ProgramProductISAPage programProductISAPage) {
+    assertTrue(programProductISAPage.verifySearchResults());
   }
 
-  public void verifyMonthlyRestockAmountPresent(ProgramProductISAPage programProductISAPage){
+  public void verifyMonthlyRestockAmountPresent(ProgramProductISAPage programProductISAPage) {
     assertTrue(programProductISAPage.verifyMonthlyRestockAmountPresent());
   }
-
 
   @AfterMethod(groups = "admin")
   public void tearDown() throws Exception {
@@ -306,16 +293,13 @@ public class ManageProgramProductISA extends TestCaseHelper {
       dbWrapper.deleteData();
       dbWrapper.closeConnection();
     }
-
   }
-
 
   @DataProvider(name = "Data-Provider-Function")
   public Object[][] parameterIntTestProviderPositive() {
     return new Object[][]{
       {"Admin123", "Admin123", "VACCINES"}
     };
-
   }
 
   @DataProvider(name = "Data-Provider-Function-Search")
@@ -323,7 +307,6 @@ public class ManageProgramProductISA extends TestCaseHelper {
     return new Object[][]{
       {"Admin123", "Admin123", "VACCINES", "antibiotic1"}
     };
-
   }
 
   @DataProvider(name = "Data-Provider-Function-Verify-Push-Type-Program")
@@ -331,7 +314,6 @@ public class ManageProgramProductISA extends TestCaseHelper {
     return new Object[][]{
       {"Admin123", "Admin123", "VACCINES", "TB"}
     };
-
   }
 
   @DataProvider(name = "Data-Provider-Function-Multiple-Programs")
@@ -339,7 +321,5 @@ public class ManageProgramProductISA extends TestCaseHelper {
     return new Object[][]{
       {"Admin123", "Admin123", "VACCINES", "TB", "antibiotic1", "antibiotic2", "antibiotic3", "antibiotic4"}
     };
-
   }
 }
-

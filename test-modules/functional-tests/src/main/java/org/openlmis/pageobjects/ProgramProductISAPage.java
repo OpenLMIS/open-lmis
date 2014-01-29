@@ -16,8 +16,10 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
+
 import java.io.IOException;
 import java.util.List;
+
 import static org.openqa.selenium.support.How.ID;
 import static org.openqa.selenium.support.How.XPATH;
 
@@ -25,80 +27,79 @@ import static org.openqa.selenium.support.How.XPATH;
 public class ProgramProductISAPage extends Page {
 
   @FindBy(how = ID, using = "program")
-  private static WebElement selectProgramSelectBox=null;
+  private static WebElement selectProgramSelectBox = null;
 
   @FindBy(how = XPATH, using = "//span[contains(text(),'Product name')]")
-  private static WebElement productNameColumn=null;
+  private static WebElement productNameColumn = null;
 
   @FindBy(how = ID, using = "searchProduct")
-  private static WebElement searchProductTextBox=null;
+  private static WebElement searchProductTextBox = null;
 
   @FindBy(how = XPATH, using = "//div[@id='wrap']/div[@class='content']/div/div[@class='ng-scope']/div[2]/div[4][@class='list-container']/div[1][@class='row-fluid list-row ng-scope']/div[3][@class='span2 offset2']/input[@class='btn btn-small btn-primary']")
-  private static WebElement editFormulaButton=null;
+  private static WebElement editFormulaButton = null;
 
   @FindBy(how = ID, using = "who-ratio")
-  private static WebElement ratioTextBox=null;
+  private static WebElement ratioTextBox = null;
 
   @FindBy(how = ID, using = "doses-per-year")
-  private static WebElement dosesPerYearTextBox=null;
+  private static WebElement dosesPerYearTextBox = null;
 
   @FindBy(how = ID, using = "wastage-factor")
-  private static WebElement wastageRateTextBox=null;
+  private static WebElement wastageRateTextBox = null;
 
   @FindBy(how = ID, using = "buffer-percentage")
-  private static WebElement bufferPercentageTextBox=null;
+  private static WebElement bufferPercentageTextBox = null;
 
   @FindBy(how = ID, using = "adjustment-value")
-  private static WebElement adjustmentValueTextBox=null;
+  private static WebElement adjustmentValueTextBox = null;
 
   @FindBy(how = ID, using = "minimum-value")
-  private static WebElement minimumValueTextBox=null;
+  private static WebElement minimumValueTextBox = null;
 
   @FindBy(how = ID, using = "maximum-value")
-  private static WebElement maximumValueTextBox=null;
+  private static WebElement maximumValueTextBox = null;
 
   @FindBy(how = XPATH, using = "//div[@id='ISA-population']/input")
-  private static WebElement ISAPopulationTextField=null;
+  private static WebElement ISAPopulationTextField = null;
 
   @FindBy(how = XPATH, using = "//div[@id='ISA-population']/span[@ng-bind='isaValue']")
-  private static WebElement isaValueLabel=null;
+  private static WebElement isaValueLabel = null;
 
-  @FindBy(how = XPATH, using = "//div[@id='ISA-population' and @class='calculatedAmount']/input[@class='ng-pristine ng-valid']")
-  private static WebElement populationTextBox=null;
+  @FindBy(how = ID, using = "catchmentPopulation")
+  private static WebElement populationTextBox = null;
 
   @FindBy(how = XPATH, using = "//div[@id='programProductISA' and @class='modal in']/div[3][@class='modal-footer']/input[1][@class='btn btn-primary save-button']")
-  private static WebElement programProductISASaveButton=null;
+  private static WebElement programProductISASaveButton = null;
 
   @FindBy(how = XPATH, using = "//input[@value='Cancel']")
-  private static WebElement programProductISACancelButton=null;
+  private static WebElement programProductISACancelButton = null;
 
   @FindBy(how = ID, using = "calculateButton")
-  private static WebElement testCalculationButton=null;
+  private static WebElement testCalculationButton = null;
 
   @FindBy(how = ID, using = "saveFailMessage")
-  private static WebElement saveFailMessage=null;
+  private static WebElement saveFailMessage = null;
 
   @FindBy(how = ID, using = "searchProduct")
-  private static WebElement searchProduct=null;
+  private static WebElement searchProduct = null;
 
   @FindBy(how = XPATH, using = "(//div[@id='programProductFormula'])[1]")
-  private static WebElement ISAFormulaFromConfigureProgramISAModalWindow=null;
+  private static WebElement ISAFormulaFromConfigureProgramISAModalWindow = null;
 
   @FindBy(how = XPATH, using = "//div[@id='monthlyRestockAmount']/span[@class='ng-binding']")
-  private static WebElement ISAFormulaFromISAFormulaModal=null;
+  private static WebElement ISAFormulaFromISAFormulaModal = null;
 
   @FindBy(how = XPATH, using = "//span[contains(text(),'Monthly restock amount')]")
-  private static WebElement monthlyRestockAmountLabel=null;
+  private static WebElement monthlyRestockAmountLabel = null;
 
   @FindBy(how = ID, using = "productPrimaryName")
-  private static WebElement productPrimaryName=null;
+  private static WebElement productPrimaryName = null;
 
   @FindBy(how = XPATH, using = "//div[@class='modal-header']")
-  private static WebElement programNameOnModalHeaderOFConfigureISAFormulaWindow =null;
+  private static WebElement programNameOnModalHeaderOFConfigureISAFormulaWindow = null;
 
   @FindBy(how = XPATH, using = "//div[@id='ISA-population']")
-  private static WebElement programNameOnPopulationLabelOFConfigureISAFormulaWindow =null;
-
+  private static WebElement programNameOnPopulationLabelOFConfigureISAFormulaWindow = null;
 
 
   public ProgramProductISAPage(TestWebDriver driver) throws IOException {
@@ -177,8 +178,7 @@ public class ProgramProductISAPage extends Page {
   public String verifyISAFormula() {
     testWebDriver.sleep(500);
     testWebDriver.waitForElementToAppear(ISAFormulaFromConfigureProgramISAModalWindow);
-    String formulaConfigureProgramWindow = ISAFormulaFromConfigureProgramISAModalWindow.getText();
-    return (formulaConfigureProgramWindow);
+    return ISAFormulaFromConfigureProgramISAModalWindow.getText();
   }
 
   public String getISAFormulaFromISAFormulaModal() {
@@ -193,13 +193,12 @@ public class ProgramProductISAPage extends Page {
 
 
   public String getProductsDisplayingOnConfigureProgramISAPage() {
-    String productsLocator="//div[@id='productPrimaryName']";
-    String productsListValue="";
+    String productsLocator = "//div[@id='productPrimaryName']";
+    String productsListValue = "";
     testWebDriver.waitForElementToAppear(productNameColumn);
-    List<WebElement> productsList=testWebDriver.getElementsByXpath(productsLocator);
-    for(WebElement product: productsList)
-    {
-      productsListValue=productsListValue+product.getText();
+    List<WebElement> productsList = testWebDriver.getElementsByXpath(productsLocator);
+    for (WebElement product : productsList) {
+      productsListValue = productsListValue + product.getText();
     }
     return productsListValue;
   }
@@ -236,7 +235,7 @@ public class ProgramProductISAPage extends Page {
     searchProductTextBox.sendKeys(product);
   }
 
-  public boolean verifySearchResults(String product) {
+  public boolean verifySearchResults() {
     testWebDriver.waitForElementToAppear(productPrimaryName);
     return productPrimaryName.isDisplayed();
   }
@@ -250,11 +249,11 @@ public class ProgramProductISAPage extends Page {
     return expectedISAValue;
   }
 
-  public String getProgramNameDisplayedOnModalHeaderOFConfigureISAFormulaWindow(){
+  public String getProgramNameDisplayedOnModalHeaderOFConfigureISAFormulaWindow() {
     return programNameOnModalHeaderOFConfigureISAFormulaWindow.getText();
   }
 
-  public String getProgramNameDisplayedOnPopulationLabelOFConfigureISAFormulaWindow(){
+  public String getProgramNameDisplayedOnPopulationLabelOFConfigureISAFormulaWindow() {
     return programNameOnPopulationLabelOFConfigureISAFormulaWindow.getText();
   }
 
