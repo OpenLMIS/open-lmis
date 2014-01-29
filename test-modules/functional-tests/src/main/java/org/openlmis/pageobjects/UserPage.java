@@ -337,20 +337,20 @@ public class UserPage extends Page {
       enterUserHomeFacility(facilityCode);
       testWebDriver.sleep(500);
       testWebDriver.waitForElementToAppear(selectFacility);
-      testWebDriver.scrollToElement(selectFacility);
-      selectFacility.click();
+      testWebDriver.scrollAndClick(selectFacility);
       testWebDriver.waitForAjax();
-      homeFacilityRolesAccordion.click();
+      testWebDriver.scrollAndClick(homeFacilityRolesAccordion);
+      testWebDriver.scrollToElement(homeFacilityPrograms);
       testWebDriver.selectByVisibleText(homeFacilityPrograms, program1);
       testWebDriver.waitForElementToAppear(roleInputFieldHomeFacility);
-      roleInputFieldHomeFacility.click();
+      testWebDriver.scrollAndClick(roleInputFieldHomeFacility);
       roleInputFieldHomeFacility.clear();
       roleInputFieldHomeFacility.sendKeys(role);
       testWebDriver.waitForElementToAppear(rolesSelectFieldHomeFacility);
-      rolesSelectFieldHomeFacility.click();
-      addHomeFacilityRolesButton.click();
+      testWebDriver.scrollAndClick(rolesSelectFieldHomeFacility);
+      testWebDriver.scrollAndClick(addHomeFacilityRolesButton);
       testWebDriver.waitForElementToAppear(supervisoryRolesAccordion);
-      supervisoryRolesAccordion.click();
+      testWebDriver.scrollAndClick(supervisoryRolesAccordion);
       testWebDriver.waitForElementToAppear(programsToSupervise);
       testWebDriver.selectByVisibleText(programsToSupervise, program1);
       testWebDriver.waitForElementToAppear(supervisoryNodeToSupervise);
@@ -358,27 +358,27 @@ public class UserPage extends Page {
       testWebDriver.sleep(1000);
       testWebDriver.handleScroll();
       testWebDriver.waitForElementToAppear(rolesInputFieldSupervisoryRole);
-      rolesInputFieldSupervisoryRole.click();
+      testWebDriver.scrollAndClick(rolesInputFieldSupervisoryRole);
       rolesInputFieldSupervisoryRole.clear();
       rolesInputFieldSupervisoryRole.sendKeys(role);
       testWebDriver.waitForElementToAppear(rolesSelectFieldSupervisoryRole);
-      rolesSelectFieldSupervisoryRole.click();
+      testWebDriver.scrollAndClick(rolesSelectFieldSupervisoryRole);
 
       assertEquals(testWebDriver.getFirstSelectedOption(supervisoryNodeToSupervise).getText(), node);
       assertEquals(testWebDriver.getFirstSelectedOption(programsToSupervise).getText(), program1);
       testWebDriver.waitForElementToAppear(addSupervisoryRoleButton);
-      addSupervisoryRoleButton.click();
+      testWebDriver.scrollAndClick(addSupervisoryRoleButton);
 
     } else {
       testWebDriver.handleScroll();
       testWebDriver.waitForElementToAppear(adminAndGeneralOperationsRolesAccordion);
-      adminAndGeneralOperationsRolesAccordion.click();
+      testWebDriver.scrollAndClick(adminAndGeneralOperationsRolesAccordion);
       testWebDriver.waitForElementToAppear(adminRolesInputField);
-      adminRolesInputField.click();
+      testWebDriver.scrollAndClick(adminRolesInputField);
       adminRolesInputField.clear();
       adminRolesInputField.sendKeys(role);
       testWebDriver.waitForElementToAppear(rolesSelectFieldSupervisoryRole);
-      rolesSelectFieldSupervisoryRole.click();
+      testWebDriver.scrollAndClick(rolesSelectFieldSupervisoryRole);
     }
   }
 

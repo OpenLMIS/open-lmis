@@ -496,7 +496,7 @@ public class E2EInitiateRnR extends TestCaseHelper {
   public void navigateUploadPodPage(Integer rowNumber) throws Exception {
     HomePage homePage = new HomePage(testWebDriver);
     ManagePodPage managePodPage = homePage.navigateManagePOD();
-    UpdatePodPage updatePodPage = managePodPage.selectRequisitionToUpdatePod(1);
+    managePodPage.selectRequisitionToUpdatePod(rowNumber);
   }
 
   @Then("^I should see all products to update pod$")
@@ -507,7 +507,6 @@ public class E2EInitiateRnR extends TestCaseHelper {
     SeleneseTestBase.assertFalse(updatePodPage.getProductCode(1).contains("P11"));
   }
 
-
   private void createUserAndAssignRoles(HomePage homePage, String passwordUsers, String userEmail,
                                         String userFirstName, String userLastName, String userUserName,
                                         String facility, String program, String supervisoryNode, String role,
@@ -516,8 +515,7 @@ public class E2EInitiateRnR extends TestCaseHelper {
     userPage.enterUserDetails(userUserName, userEmail, userFirstName, userLastName);
     userPage.clickViewHere();
     dbWrapper.updateUser(passwordUsers, userEmail);
-    userPage.enterMyFacilityAndMySupervisedFacilityData(facility, program,
-      supervisoryNode, role, roleType);
+    userPage.enterMyFacilityAndMySupervisedFacilityData(facility, program, supervisoryNode, role, roleType);
     userPage.assignWarehouse(warehouse, warehouseRole);
     userPage.clickSaveButton();
     userPage.verifyUserUpdated(userFirstName, userLastName);

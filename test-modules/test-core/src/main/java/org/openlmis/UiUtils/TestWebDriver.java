@@ -220,6 +220,12 @@ public class TestWebDriver {
     action.click(element).perform();
   }
 
+  public void scrollAndClick(final WebElement element) {
+    //Due to chrome bug where clicking on element present in DOM but not on screen requires scrolling
+    scrollToElement(element);
+    click(element);
+  }
+
   public void clickForRadio(final WebElement element) {
     element.click();
     if (!element.isSelected()) {
