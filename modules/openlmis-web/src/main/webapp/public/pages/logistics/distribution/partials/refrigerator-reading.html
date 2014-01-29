@@ -20,7 +20,7 @@
     <div class="span3">
       <span class="pull-right">
         <a id="editReading{{$index}}" href="" class="btn btn-small btn-primary"
-           ng-click="setEdit(refrigeratorReading.refrigerator.serialNumber, {{$index}})"
+           ng-click="setEdit(refrigeratorReading.refrigerator.serialNumber, $index)"
            ng-hide="edit[refrigeratorReading.refrigerator.serialNumber]"
            openlmis-message="button.show"></a>
         <input type="button" class="btn btn-small btn-danger" openlmis-message="button.delete"
@@ -117,7 +117,7 @@
               <label openlmis-message="label.problem.last.visit"></label>
 
               <input type="radio" id="problemSinceLastVisitYes{{ $index }}" name="problemSinceLastVisit{{$index}}"
-                     value="Y" onchange="showProblemsDiv('problemSinceLastVisitYes{{ $index }}')"
+                     value="Y" ng-change="showProblemsDiv('problemSinceLastVisitYes' + $index)"
                      ng-model="refrigeratorReading.problemSinceLastTime.value"/>
               <label class="radio-label" for="problemSinceLastVisitYes{{ $index }}"
                      openlmis-message="label.yes"></label>
