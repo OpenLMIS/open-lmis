@@ -11,7 +11,6 @@
 package org.openlmis.functional;
 
 
-import com.thoughtworks.selenium.SeleneseTestNgHelper;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import org.openlmis.UiUtils.CaptureScreenshotOnFailureListener;
@@ -58,9 +57,14 @@ public class ViewRequisition extends TestCaseHelper {
     initiateRnRPage = PageFactory.getInstanceOfInitiateRnRPage(testWebDriver);
   }
 
-  @When("^I populate Regimen data as patientsOnTreatment \"([^\"]*)\" patientsToInitiateTreatment \"([^\"]*)\" patientsStoppedTreatment \"([^\"]*)\" remarks \"([^\"]*)\"$")
-  public void enterValuesFromDB(String patientsOnTreatment, String patientsToInitiateTreatment, String patientsStoppedTreatment, String remarks) throws IOException, SQLException {
-    dbWrapper.insertValuesInRegimenLineItems(patientsOnTreatment, patientsToInitiateTreatment, patientsStoppedTreatment, remarks);
+  @When(
+    "^I populate Regimen data as patientsOnTreatment \"([^\"]*)\" patientsToInitiateTreatment \"([^\"]*)\" patientsStoppedTreatment \"([^\"]*)\" remarks \"([^\"]*)\"$")
+  public void enterValuesFromDB(String patientsOnTreatment,
+                                String patientsToInitiateTreatment,
+                                String patientsStoppedTreatment,
+                                String remarks) throws IOException, SQLException {
+    dbWrapper.insertValuesInRegimenLineItems(patientsOnTreatment, patientsToInitiateTreatment, patientsStoppedTreatment,
+      remarks);
   }
 
   @When("^I access home page")
@@ -133,13 +137,24 @@ public class ViewRequisition extends TestCaseHelper {
     viewRequisitionPage.verifyTotalFieldPostAuthorize();
   }
 
-  @Then("^I verify values on regimen page as patientsOnTreatment \"([^\"]*)\" patientsToInitiateTreatment \"([^\"]*)\" patientsStoppedTreatment \"([^\"]*)\" remarks \"([^\"]*)\"$")
-  public void verifyValuesONRegimenPage(String patientsOnTreatment, String patientsToInitiateTreatment, String patientsStoppedTreatment, String remarks) throws IOException {
+  @Then(
+    "^I verify values on regimen page as patientsOnTreatment \"([^\"]*)\" patientsToInitiateTreatment \"([^\"]*)\" patientsStoppedTreatment \"([^\"]*)\" remarks \"([^\"]*)\"$")
+  public void verifyValuesONRegimenPage(String patientsOnTreatment,
+                                        String patientsToInitiateTreatment,
+                                        String patientsStoppedTreatment,
+                                        String remarks) throws IOException {
     verifyValuesOnRegimenScreen(patientsOnTreatment, patientsToInitiateTreatment, patientsStoppedTreatment, remarks);
   }
 
   @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-Including-Regimen")
-  public void testViewRequisitionRegimenAndEmergencyStatus(String program, String userSIC, String categoryCode, String password, String regimenCode, String regimenName, String regimenCode2, String regimenName2) throws Exception {
+  public void testViewRequisitionRegimenAndEmergencyStatus(String program,
+                                                           String userSIC,
+                                                           String categoryCode,
+                                                           String password,
+                                                           String regimenCode,
+                                                           String regimenName,
+                                                           String regimenCode2,
+                                                           String regimenName2) throws Exception {
     List<String> rightsList = asList("CREATE_REQUISITION", "VIEW_REQUISITION");
 
     setupTestDataToInitiateRnR(true, program, userSIC, "200", rightsList);
@@ -159,7 +174,8 @@ public class ViewRequisition extends TestCaseHelper {
     ViewRequisitionPage viewRequisitionPage = homePage1.navigateViewRequisition();
     viewRequisitionPage.verifyElementsOnViewRequisitionScreen();
     dbWrapper.insertValuesInRequisition(true);
-    dbWrapper.insertValuesInRegimenLineItems(patientsOnTreatment, patientsToInitiateTreatment, patientsStoppedTreatment, remarks);
+    dbWrapper.insertValuesInRegimenLineItems(patientsOnTreatment, patientsToInitiateTreatment, patientsStoppedTreatment,
+      remarks);
     dbWrapper.updateRequisitionStatus(SUBMITTED, userSIC, "HIV");
     viewRequisitionPage.enterViewSearchCriteria();
     viewRequisitionPage.clickSearch();
@@ -235,8 +251,11 @@ public class ViewRequisition extends TestCaseHelper {
     viewOrdersPage.verifyEmergencyStatus();
   }
 
-  private void verifyValuesOnRegimenScreen(String patientsOnTreatment, String patientsToInitiateTreatment, String patientsStoppedTreatment,
+  private void verifyValuesOnRegimenScreen(String patientsOnTreatment,
+                                           String patientsToInitiateTreatment,
+                                           String patientsStoppedTreatment,
                                            String remarks) {
+    initiateRnRPage = PageFactory.getInstanceOfInitiateRnRPage(testWebDriver);
     assertEquals(patientsOnTreatment, initiateRnRPage.getPatientsOnTreatmentValue());
     assertEquals(patientsToInitiateTreatment, initiateRnRPage.getPatientsToInitiateTreatmentValue());
     assertEquals(patientsStoppedTreatment, initiateRnRPage.getPatientsStoppedTreatmentValue());
@@ -244,7 +263,9 @@ public class ViewRequisition extends TestCaseHelper {
   }
 
   @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-RnR")
-  public void testViewVirtualFacilityFromRnRViewScreen(String program, String userSIC, String password) throws Exception {
+  public void testViewVirtualFacilityFromRnRViewScreen(String program,
+                                                       String userSIC,
+                                                       String password) throws Exception {
     List<String> rightsList = new ArrayList<>();
     rightsList.add("CREATE_REQUISITION");
     rightsList.add("VIEW_REQUISITION");
@@ -288,8 +309,8 @@ public class ViewRequisition extends TestCaseHelper {
     initiateRnRPage.skipAllProduct();
     initiateRnRPage.verifyAllFieldsDisabled();
     initiateRnRPage.calculateAndVerifyTotalCost();
-    SeleneseTestNgHelper.assertEquals(initiateRnRPage.getTotalCostFooter(), "0.00");
-    SeleneseTestNgHelper.assertEquals(initiateRnRPage.getFullySupplyCostFooter(), "0.00");
+    assertEquals(initiateRnRPage.getTotalCostFooter(), "0.00");
+    assertEquals(initiateRnRPage.getFullySupplyCostFooter(), "0.00");
 
     initiateRnRPage.unSkipAllProduct();
     assertTrue(initiateRnRPage.isEnableBeginningBalanceForFirstProduct());
@@ -322,16 +343,12 @@ public class ViewRequisition extends TestCaseHelper {
 
   @DataProvider(name = "Data-Provider-Function-RnR")
   public Object[][] parameterIntTestProviderRnR() {
-    return new Object[][]{
-      {"HIV", "storeInCharge", "Admin123"}
-    };
+    return new Object[][]{{"HIV", "storeInCharge", "Admin123"}};
   }
 
   @DataProvider(name = "Data-Provider-Function-Including-Regimen")
   public Object[][] parameterIntTest() {
-    return new Object[][]{
-      {"HIV", "storeInCharge", "ADULTS", "Admin123", "RegimenCode1", "RegimenName1", "RegimenCode2", "RegimenName2"}
-    };
+    return new Object[][]{{"HIV", "storeInCharge", "ADULTS", "Admin123", "RegimenCode1", "RegimenName1", "RegimenCode2", "RegimenName2"}};
   }
 }
 

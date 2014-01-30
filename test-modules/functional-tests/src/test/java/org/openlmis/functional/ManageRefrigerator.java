@@ -11,8 +11,6 @@
 package org.openlmis.functional;
 
 
-import cucumber.api.java.After;
-import cucumber.api.java.Before;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
@@ -118,7 +116,8 @@ public class ManageRefrigerator extends TestCaseHelper {
   public void shouldSeeRefrigeratorDeleted(String refrigeratorData) throws IOException, SQLException {
     String[] data = refrigeratorData.split(";");
     for (String aData : data)
-      assertFalse("Refrigerator with data :" + aData + " should not exist", testWebDriver.getPageSource().contains(aData));
+      assertFalse("Refrigerator with data :" + aData + " should not exist",
+        testWebDriver.getPageSource().contains(aData));
   }
 
   @Then("^I should see confirmation for delete$")
@@ -176,27 +175,19 @@ public class ManageRefrigerator extends TestCaseHelper {
   public void clickFunctioningCorrectly(String flag) throws InterruptedException {
     refrigeratorPage = PageFactory.getInstanceOfRefrigeratorPage(testWebDriver);
     Thread.sleep(1000);
-    if (flag.equalsIgnoreCase("Yes"))
-      refrigeratorPage.clickFunctioningCorrectlyYesRadio();
-    else if (flag.equalsIgnoreCase("No"))
-      refrigeratorPage.clickFunctioningCorrectlyNoRadio();
-    else if (flag.equalsIgnoreCase("Dont know"))
-      refrigeratorPage.clickFunctioningCorrectlyDontKnowRadio();
-    else
-      refrigeratorPage.clickFunctioningCorrectlyNR();
+    if (flag.equalsIgnoreCase("Yes")) refrigeratorPage.clickFunctioningCorrectlyYesRadio();
+    else if (flag.equalsIgnoreCase("No")) refrigeratorPage.clickFunctioningCorrectlyNoRadio();
+    else if (flag.equalsIgnoreCase("Dont know")) refrigeratorPage.clickFunctioningCorrectlyDontKnowRadio();
+    else refrigeratorPage.clickFunctioningCorrectlyNR();
   }
 
   @And("^I verify \"([^\"]*)\" that there is a problem with refrigerator since last visit$")
   public void clickProblemSinceLastVisit(String flag) throws IOException, SQLException {
     refrigeratorPage = PageFactory.getInstanceOfRefrigeratorPage(testWebDriver);
-    if (flag.equalsIgnoreCase("Yes"))
-      refrigeratorPage.clickProblemSinceLastVisitYesRadio();
-    else if (flag.equalsIgnoreCase("No"))
-      refrigeratorPage.clickProblemSinceLastVisitNoRadio();
-    else if (flag.equalsIgnoreCase("Dont know"))
-      refrigeratorPage.clickProblemSinceLastVisitDontKnowRadio();
-    else
-      refrigeratorPage.clickProblemSinceLastVisitNR();
+    if (flag.equalsIgnoreCase("Yes")) refrigeratorPage.clickProblemSinceLastVisitYesRadio();
+    else if (flag.equalsIgnoreCase("No")) refrigeratorPage.clickProblemSinceLastVisitNoRadio();
+    else if (flag.equalsIgnoreCase("Dont know")) refrigeratorPage.clickProblemSinceLastVisitDontKnowRadio();
+    else refrigeratorPage.clickProblemSinceLastVisitNR();
   }
 
   @Then("^I should see Refrigerators screen")
@@ -205,8 +196,12 @@ public class ManageRefrigerator extends TestCaseHelper {
     refrigeratorPage.onRefrigeratorScreen();
   }
 
-  @Then("^I should see refrigerator details as refrigerator temperature \"([^\"]*)\" low alarm events \"([^\"]*)\" high alarm events \"([^\"]*)\" notes \"([^\"]*)\"")
-  public void verifyRefrigeratorDetails(String temperature, String low, String high, String notes) throws IOException, SQLException {
+  @Then(
+    "^I should see refrigerator details as refrigerator temperature \"([^\"]*)\" low alarm events \"([^\"]*)\" high alarm events \"([^\"]*)\" notes \"([^\"]*)\"")
+  public void verifyRefrigeratorDetails(String temperature,
+                                        String low,
+                                        String high,
+                                        String notes) throws IOException, SQLException {
     refrigeratorPage = PageFactory.getInstanceOfRefrigeratorPage(testWebDriver);
     assertEquals(refrigeratorPage.getRefrigeratorTemperateTextFieldValue(), temperature);
     assertEquals(refrigeratorPage.getNotesTextAreaValue(), notes);
@@ -215,11 +210,13 @@ public class ManageRefrigerator extends TestCaseHelper {
   }
 
   public void verifyNewRefrigeratorModalWindowExist() {
-    assertTrue("New Refrigerator modal window should show up", RefrigeratorPage.newRefrigeratorHeaderOnModal.isDisplayed());
+    assertTrue("New Refrigerator modal window should show up",
+      RefrigeratorPage.newRefrigeratorHeaderOnModal.isDisplayed());
   }
 
   public void verifyShouldNotSeeRefrigeratorSection() {
-    assertFalse("Refrigerator details section should not show up", RefrigeratorPage.refrigeratorTemperatureTextField.isDisplayed());
+    assertFalse("Refrigerator details section should not show up",
+      RefrigeratorPage.refrigeratorTemperatureTextField.isDisplayed());
   }
 
   public void verifyConfirmationPopUp() {
@@ -232,7 +229,9 @@ public class ManageRefrigerator extends TestCaseHelper {
     String[] refrigeratorDetails = data.split(";");
 
     for (int i = 0; i < refrigeratorDetails.length; i++) {
-      assertEquals(testWebDriver.getElementByXpath("//div[@class='list-row ng-scope']/ng-include/form/div[1]/div[" + (i + 2) + "]").getText(), refrigeratorDetails[i]);
+      assertEquals(testWebDriver.getElementByXpath(
+        "//div[@class='list-row ng-scope']/ng-include/form/div[1]/div[" + (i + 2) + "]").getText(),
+        refrigeratorDetails[i]);
     }
   }
 
@@ -250,9 +249,6 @@ public class ManageRefrigerator extends TestCaseHelper {
 
   @DataProvider(name = "Data-Provider-Function")
   public Object[][] parameterIntTestProviderPositive() {
-    return new Object[][]{
-      {"storeIncharge", "Admin123", "DZ1", "DZ2", "Delivery Zone First", "Delivery Zone Second",
-        "F10", "F11", "VACCINES", "TB", "M", "Period", 14}
-    };
+    return new Object[][]{{"storeInCharge", "Admin123", "DZ1", "DZ2", "Delivery Zone First", "Delivery Zone Second", "F10", "F11", "VACCINES", "TB", "M", "Period", 14}};
   }
 }

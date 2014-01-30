@@ -3,10 +3,10 @@ Feature: Smoke Tests
   @smokeRequisition
   Scenario: User should be able to save and submit regimen data
     Given I have the following data for regimen:
-      | HIV | storeIncharge | ADULTS | RegimenCode1 | RegimenName1 | RegimenCode2 | RegimenName2 |
-    And I have "storeIncharge" user with "CREATE_REQUISITION,VIEW_REQUISITION" rights and data to initiate requisition
+      | HIV | storeInCharge | ADULTS | RegimenCode1 | RegimenName1 | RegimenCode2 | RegimenName2 |
+    And I have "storeInCharge" user with "CREATE_REQUISITION,VIEW_REQUISITION" rights and data to initiate requisition
     And I have regimen template configured
-    And I am logged in as "storeIncharge"
+    And I am logged in as "storeInCharge"
     And I access initiate requisition page
     When I click proceed
     And I populate RnR data
@@ -26,10 +26,10 @@ Feature: Smoke Tests
   @smokeRequisition
   Scenario: User should view requisition and regimen after authorization
     Given I have the following data for regimen:
-      | HIV | storeIncharge | ADULTS | RegimenCode1 | RegimenName1 | RegimenCode2 | RegimenName2 |
-    And I have "storeIncharge" user with "CREATE_REQUISITION,VIEW_REQUISITION" rights and data to initiate requisition
+      | HIV | storeInCharge | ADULTS | RegimenCode1 | RegimenName1 | RegimenCode2 | RegimenName2 |
+    And I have "storeInCharge" user with "CREATE_REQUISITION,VIEW_REQUISITION" rights and data to initiate requisition
     And I have regimen template configured
-    And I am logged in as "storeIncharge"
+    And I am logged in as "storeInCharge"
     And I access initiate requisition page
     When I click proceed
     And I populate RnR data
@@ -106,8 +106,8 @@ Feature: Smoke Tests
 
   @smokeRequisition
   Scenario: Requisition user should not access admin Page
-    Given I have "storeIncharge" user with "CREATE_REQUISITION,VIEW_REQUISITION" rights
-    And I am logged in as "storeIncharge"
+    Given I have "storeInCharge" user with "CREATE_REQUISITION,VIEW_REQUISITION" rights
+    And I am logged in as "storeInCharge"
     When I access create facility page through URL
     Then I should see unauthorized access message
 
@@ -162,7 +162,7 @@ Feature: Smoke Tests
   @smokeRequisition
   Scenario: User should download order file and verify
     Given I have the following data for regimen:
-      | HIV | storeIncharge | ADULTS | RegimenCode1 | RegimenName1 | RegimenCode2 | RegimenName2 |
+      | HIV | storeInCharge | ADULTS | RegimenCode1 | RegimenName1 | RegimenCode2 | RegimenName2 |
     And I configure order file:
       | File Prefix | Header In File |
       | O           | TRUE           |
@@ -181,14 +181,14 @@ Feature: Smoke Tests
       | NOT APPLICABLE   | TRUE                  |              | 7        |
       | NOT APPLICABLE   | TRUE                  | Dummy        | 8        |
 
-    And I have "storeIncharge" user with "CREATE_REQUISITION,VIEW_REQUISITION,APPROVE_REQUISITION" rights and data to initiate requisition
+    And I have "storeInCharge" user with "CREATE_REQUISITION,VIEW_REQUISITION,APPROVE_REQUISITION" rights and data to initiate requisition
     And I have "lmu" role having "ADMIN" based "CONVERT_TO_ORDER,VIEW_ORDER" rights
     And I have users:
       | UserId | Email                 | FirstName | LastName | UserName | Role | FacilityCode |
       | 111    | Jake_Doe@openlmis.com | Jake      | Doe      | lmu      | lmu  | F10          |
     And I have fulfillment data for user "lmu" role "lmu" and facility "F10"
     And I have regimen template configured
-    And I am logged in as "storeIncharge"
+    And I am logged in as "storeInCharge"
     And I access initiate requisition page
     When I click proceed
     And I populate RnR data
@@ -212,9 +212,9 @@ Feature: Smoke Tests
   @smokeRequisition
   Scenario: User should be able to initiate and submit emergency RnR
     Given I have the following data for regimen:
-      | HIV | storeIncharge | ADULTS | RegimenCode1 | RegimenName1 | RegimenCode2 | RegimenName2 |
-    Given I have "storeIncharge" user with "CREATE_REQUISITION,VIEW_REQUISITION" rights and data to initiate requisition
-    And I am logged in as "storeIncharge"
+      | HIV | storeInCharge | ADULTS | RegimenCode1 | RegimenName1 | RegimenCode2 | RegimenName2 |
+    Given I have "storeInCharge" user with "CREATE_REQUISITION,VIEW_REQUISITION" rights and data to initiate requisition
+    And I am logged in as "storeInCharge"
     And I access initiate emergency requisition page
     Then I got error message "No current period defined. Please contact the Admin."
     When I have period "currentPeriod" associated with schedule "M"
@@ -244,7 +244,7 @@ Feature: Smoke Tests
   @smokeRequisition
   Scenario: Selected requisitions across pages should not convert to order
     Given I have "51" requisitions for convert to order
-    And I am logged in as "storeIncharge"
+    And I am logged in as "storeInCharge"
     When I access convert to order page
     And I select "1" requisition on page "1"
     And I select "1" requisition on page "2"
@@ -253,9 +253,9 @@ Feature: Smoke Tests
 
   @smokeRequisition
   Scenario: User should able to see list of orders to update POD
-    Given I have "storeIncharge" user with "MANAGE_POD" rights
+    Given I have "storeInCharge" user with "MANAGE_POD" rights
     And I have "5" requisitions for convert to order
-    And I am logged in as "storeIncharge"
+    And I am logged in as "storeInCharge"
     And I access convert to order page
     And I select "1" requisition on page "1"
     And I access convert to order
