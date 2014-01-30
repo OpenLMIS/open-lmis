@@ -9,7 +9,7 @@
  */
 
 function browserIE() {
-  return (navigator.appName.indexOf("Internet Explorer") != -1)
+  return (navigator.appName.indexOf("Internet Explorer") != -1);
 }
 
 app.directive('fullScreen', function () {
