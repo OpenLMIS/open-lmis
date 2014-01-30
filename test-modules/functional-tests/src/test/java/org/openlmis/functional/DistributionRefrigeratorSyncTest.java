@@ -22,12 +22,12 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
+import static java.util.Arrays.asList;
 
 public class DistributionRefrigeratorSyncTest extends TestCaseHelper {
 
@@ -43,7 +43,9 @@ public class DistributionRefrigeratorSyncTest extends TestCaseHelper {
   public static final String TB_PROGRAM = "secondProgram";
   public static final String SCHEDULE = "schedule";
   public static final String PRODUCT_GROUP_CODE = "productGroupName";
+
   LoginPage loginPage;
+  FacilityListPage facilityListPage;
 
   public Map<String, String> refrigeratorTestData = new HashMap<String, String>() {{
     put(USER, "fieldCoordinator");
@@ -64,9 +66,9 @@ public class DistributionRefrigeratorSyncTest extends TestCaseHelper {
   public void setUp() throws Exception {
     super.setup();
     loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+    facilityListPage = new FacilityListPage(testWebDriver);
 
     Map<String, String> dataMap = refrigeratorTestData;
-
     setupDataForDistributionTest(dataMap.get(USER), dataMap.get(FIRST_DELIVERY_ZONE_CODE), dataMap.get(SECOND_DELIVERY_ZONE_CODE),
       dataMap.get(FIRST_DELIVERY_ZONE_NAME), dataMap.get(SECOND_DELIVERY_ZONE_NAME), dataMap.get(FIRST_FACILITY_CODE),
       dataMap.get(SECOND_FACILITY_CODE), dataMap.get(VACCINES_PROGRAM), dataMap.get(TB_PROGRAM), dataMap.get(SCHEDULE),
@@ -78,9 +80,7 @@ public class DistributionRefrigeratorSyncTest extends TestCaseHelper {
     dbWrapper.addRefrigeratorToFacility("LG", "800L1", "TGNR7878", "F10");
 
     HomePage homePage = loginPage.loginAs(refrigeratorTestData.get(USER), refrigeratorTestData.get(PASSWORD));
-
     initiateDistribution(refrigeratorTestData.get(FIRST_DELIVERY_ZONE_NAME), refrigeratorTestData.get(VACCINES_PROGRAM));
-    FacilityListPage facilityListPage = new FacilityListPage(testWebDriver);
     RefrigeratorPage refrigeratorPage = facilityListPage.selectFacility(refrigeratorTestData.get(FIRST_FACILITY_CODE));
 
     refrigeratorPage.clickShowForRefrigerator1();
@@ -115,8 +115,8 @@ public class DistributionRefrigeratorSyncTest extends TestCaseHelper {
     FullCoveragePage fullCoveragePage = generalObservationPage.navigateToFullCoverage();
     fullCoveragePage.enterData(45, 67, 89, "90");
 
-    EpiInventoryPage epiInventoryPage = fullCoveragePage.navigateToEpiInventory();
-    fillEpiInventoryWithOnlyDeliveredQuantity(epiInventoryPage, "2", "4", "6");
+    fullCoveragePage.navigateToEpiInventory();
+    fillEpiInventoryWithOnlyDeliveredQuantity("2", "4", "6");
 
     DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
     distributionPage.syncDistribution(1);
@@ -125,18 +125,14 @@ public class DistributionRefrigeratorSyncTest extends TestCaseHelper {
 
     verifyRefrigeratorReadingDataInDatabase(refrigeratorTestData.get(FIRST_FACILITY_CODE), "GNR7878", 999.9F, "Y", 1, 0, "D", "miscellaneous");
     verifyRefrigeratorProblemDataNullInDatabase("GNR7878", refrigeratorTestData.get(FIRST_FACILITY_CODE));
-
     verifyRefrigeratorReadingDataInDatabase(refrigeratorTestData.get(FIRST_FACILITY_CODE), "TGNR7878", 5F, "N", 10, 5, "N", null);
     verifyRefrigeratorProblemDataNullInDatabase("TGNR7878", refrigeratorTestData.get(FIRST_FACILITY_CODE));
   }
 
   @Test(groups = {"distribution"})
   public void testRefrigeratorSyncWhenRefrigeratorHasProblem() throws Exception {
-
     HomePage homePage = loginPage.loginAs(refrigeratorTestData.get(USER), refrigeratorTestData.get(PASSWORD));
-
     initiateDistribution(refrigeratorTestData.get(FIRST_DELIVERY_ZONE_NAME), refrigeratorTestData.get(VACCINES_PROGRAM));
-    FacilityListPage facilityListPage = new FacilityListPage(testWebDriver);
     RefrigeratorPage refrigeratorPage = facilityListPage.selectFacility(refrigeratorTestData.get(FIRST_FACILITY_CODE));
 
     refrigeratorPage.clickShowForRefrigerator1();
@@ -164,8 +160,8 @@ public class DistributionRefrigeratorSyncTest extends TestCaseHelper {
     FullCoveragePage fullCoveragePage = generalObservationPage.navigateToFullCoverage();
     fullCoveragePage.enterData(67, 44, 22, "11");
 
-    EpiInventoryPage epiInventoryPage = fullCoveragePage.navigateToEpiInventory();
-    fillEpiInventoryWithOnlyDeliveredQuantity(epiInventoryPage, "2", "4", "6");
+    fullCoveragePage.navigateToEpiInventory();
+    fillEpiInventoryWithOnlyDeliveredQuantity("2", "4", "6");
 
     DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
     distributionPage.syncDistribution(1);
@@ -178,11 +174,8 @@ public class DistributionRefrigeratorSyncTest extends TestCaseHelper {
 
   @Test(groups = {"distribution"})
   public void testRefrigeratorSyncWhenProblemIsSelectedAndAppliedNRBeforeSync() throws Exception {
-
     HomePage homePage = loginPage.loginAs(refrigeratorTestData.get(USER), refrigeratorTestData.get(PASSWORD));
-
     initiateDistribution(refrigeratorTestData.get(FIRST_DELIVERY_ZONE_NAME), refrigeratorTestData.get(VACCINES_PROGRAM));
-    FacilityListPage facilityListPage = new FacilityListPage(testWebDriver);
     RefrigeratorPage refrigeratorPage = facilityListPage.selectFacility(refrigeratorTestData.get(FIRST_FACILITY_CODE));
 
     refrigeratorPage.clickShowForRefrigerator1();
@@ -213,8 +206,8 @@ public class DistributionRefrigeratorSyncTest extends TestCaseHelper {
     FullCoveragePage fullCoveragePage = generalObservationPage.navigateToFullCoverage();
     fullCoveragePage.enterData(77, 56, 78, "34");
 
-    EpiInventoryPage epiInventoryPage = fullCoveragePage.navigateToEpiInventory();
-    fillEpiInventoryWithOnlyDeliveredQuantity(epiInventoryPage, "2", "4", "6");
+    fullCoveragePage.navigateToEpiInventory();
+    fillEpiInventoryWithOnlyDeliveredQuantity("2", "4", "6");
 
     DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
     distributionPage.syncDistribution(1);
@@ -227,11 +220,8 @@ public class DistributionRefrigeratorSyncTest extends TestCaseHelper {
 
   @Test(groups = {"distribution"})
   public void testRefrigeratorSyncWhenRefrigeratorIsDeletedBeforeSync() throws Exception {
-
     HomePage homePage = loginPage.loginAs(refrigeratorTestData.get(USER), refrigeratorTestData.get(PASSWORD));
-
     initiateDistribution(refrigeratorTestData.get(FIRST_DELIVERY_ZONE_NAME), refrigeratorTestData.get(VACCINES_PROGRAM));
-    FacilityListPage facilityListPage = new FacilityListPage(testWebDriver);
     RefrigeratorPage refrigeratorPage = facilityListPage.selectFacility(refrigeratorTestData.get(FIRST_FACILITY_CODE));
 
     refrigeratorPage.clickShowForRefrigerator1();
@@ -256,8 +246,8 @@ public class DistributionRefrigeratorSyncTest extends TestCaseHelper {
     FullCoveragePage fullCoveragePage = generalObservationPage.navigateToFullCoverage();
     fullCoveragePage.enterData(78, 67, 34, "12");
 
-    EpiInventoryPage epiInventoryPage = fullCoveragePage.navigateToEpiInventory();
-    fillEpiInventoryWithOnlyDeliveredQuantity(epiInventoryPage, "2", "4", "6");
+    fullCoveragePage.navigateToEpiInventory();
+    fillEpiInventoryWithOnlyDeliveredQuantity("2", "4", "6");
 
     DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
     distributionPage.syncDistribution(1);
@@ -266,7 +256,6 @@ public class DistributionRefrigeratorSyncTest extends TestCaseHelper {
 
     initiateDistributionForPeriod("Period13");
     distributionPage.clickRecordData(2);
-    facilityListPage = new FacilityListPage(testWebDriver);
     facilityListPage.selectFacility(refrigeratorTestData.get(FIRST_FACILITY_CODE));
     facilityListPage.verifyFacilityIndicatorColor("Overall", "RED");
 
@@ -298,7 +287,7 @@ public class DistributionRefrigeratorSyncTest extends TestCaseHelper {
     fullCoveragePage.enterData(78, 67, 34, "12");
 
     fullCoveragePage.navigateToEpiInventory();
-    fillEpiInventoryWithOnlyDeliveredQuantity(epiInventoryPage, "2", "4", "6");
+    fillEpiInventoryWithOnlyDeliveredQuantity("2", "4", "6");
 
     homePage.navigateToDistributionWhenOnline();
     distributionPage.syncDistribution(2);
@@ -306,34 +295,27 @@ public class DistributionRefrigeratorSyncTest extends TestCaseHelper {
     distributionPage.syncDistributionMessageDone();
 
     verifyRefrigeratorsDataInDatabase("F10", "GNR7878", "LG", "800L", "f");
-
   }
 
   @Test(groups = {"distribution"})
   public void testAddingDuplicateRefrigeratorForSameFacility() throws Exception {
     loginPage.loginAs(refrigeratorTestData.get(USER), refrigeratorTestData.get(PASSWORD));
-
     initiateDistribution(refrigeratorTestData.get(FIRST_DELIVERY_ZONE_NAME), refrigeratorTestData.get(VACCINES_PROGRAM));
-    FacilityListPage facilityListPage = new FacilityListPage(testWebDriver);
     RefrigeratorPage refrigeratorPage = facilityListPage.selectFacility(refrigeratorTestData.get(FIRST_FACILITY_CODE));
 
     refrigeratorPage.clickAddNew();
     refrigeratorPage.addNewRefrigerator("LG", "800L1", "GNR7878");
     refrigeratorPage.verifyDuplicateErrorMessage("Duplicate Manufacturer Serial Number");
-
   }
 
   @Test(groups = {"distribution"})
   public void testAddingDuplicateRefrigeratorForDifferentFacility() throws Exception {
     HomePage homePage = loginPage.loginAs(refrigeratorTestData.get(USER), refrigeratorTestData.get(PASSWORD));
-
     initiateDistribution(refrigeratorTestData.get(FIRST_DELIVERY_ZONE_NAME), refrigeratorTestData.get(VACCINES_PROGRAM));
-    FacilityListPage facilityListPage = new FacilityListPage(testWebDriver);
     RefrigeratorPage refrigeratorPage = facilityListPage.selectFacility(refrigeratorTestData.get(SECOND_FACILITY_CODE));
 
     refrigeratorPage.clickAddNew();
     refrigeratorPage.addNewRefrigerator("LG22", "800L22", "GNR7878");
-
     refrigeratorPage.clickShowForRefrigerator1();
     refrigeratorPage.enterValueInRefrigeratorTemperature("3");
     refrigeratorPage.clickFunctioningCorrectlyYesRadio();
@@ -353,8 +335,8 @@ public class DistributionRefrigeratorSyncTest extends TestCaseHelper {
     GeneralObservationPage generalObservationPage = fullCoveragePage.navigateToGeneralObservations();
     generalObservationPage.enterData("some observations", "samuel", "Doe", "Verifier", "XYZ");
 
-    EpiInventoryPage epiInventoryPage = fullCoveragePage.navigateToEpiInventory();
-    fillEpiInventoryWithOnlyDeliveredQuantity(epiInventoryPage, "2", "4", "6");
+    fullCoveragePage.navigateToEpiInventory();
+    fillEpiInventoryWithOnlyDeliveredQuantity("2", "4", "6");
 
     DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
     distributionPage.syncDistribution(1);
@@ -365,16 +347,13 @@ public class DistributionRefrigeratorSyncTest extends TestCaseHelper {
 
     verifyRefrigeratorReadingDataInDatabase(refrigeratorTestData.get(SECOND_FACILITY_CODE), "GNR7878", 3.0f, "Y", 2, 2, null, null);
     verifyRefrigeratorProblemDataNullInDatabase("GNR7878", refrigeratorTestData.get(SECOND_FACILITY_CODE));
-
     verifyRefrigeratorsDataInDatabase("F11", "GNR7878", "LG22", "800L22", "t");
   }
 
   @Test(groups = {"distribution"})
   public void testUpdatingRefrigeratorAndSync() throws Exception {
     HomePage homePage = loginPage.loginAs(refrigeratorTestData.get(USER), refrigeratorTestData.get(PASSWORD));
-
     initiateDistribution(refrigeratorTestData.get(FIRST_DELIVERY_ZONE_NAME), refrigeratorTestData.get(VACCINES_PROGRAM));
-    FacilityListPage facilityListPage = new FacilityListPage(testWebDriver);
     RefrigeratorPage refrigeratorPage = facilityListPage.selectFacility(refrigeratorTestData.get(FIRST_FACILITY_CODE));
 
     refrigeratorPage.clickDelete();
@@ -406,8 +385,8 @@ public class DistributionRefrigeratorSyncTest extends TestCaseHelper {
     FullCoveragePage fullCoveragePage = generalObservationPage.navigateToFullCoverage();
     fullCoveragePage.enterData(67, 8, 33, "54");
 
-    EpiInventoryPage epiInventoryPage = fullCoveragePage.navigateToEpiInventory();
-    fillEpiInventoryWithOnlyDeliveredQuantity(epiInventoryPage, "2", "4", "6");
+    fullCoveragePage.navigateToEpiInventory();
+    fillEpiInventoryWithOnlyDeliveredQuantity("2", "4", "6");
 
     DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
     distributionPage.syncDistribution(1);
@@ -417,11 +396,10 @@ public class DistributionRefrigeratorSyncTest extends TestCaseHelper {
     verifyRefrigeratorReadingDataInDatabase(refrigeratorTestData.get(FIRST_FACILITY_CODE), "GNR7878", 3.0f, "Y", 2, 2, null, null);
     verifyRefrigeratorProblemDataNullInDatabase("GNR7878", refrigeratorTestData.get(FIRST_FACILITY_CODE));
     verifyRefrigeratorsDataInDatabase("F10", "GNR7878", "LG", "800L1", "t");
-
   }
 
   private void initiateDistributionForPeriod(String periodName) throws IOException {
-    DistributionPage distributionPage = new DistributionPage(testWebDriver);
+    DistributionPage distributionPage = PageFactory.getInstanceOfDistributionPage(testWebDriver);
     distributionPage.selectValueFromDeliveryZone(refrigeratorTestData.get(FIRST_DELIVERY_ZONE_NAME));
     distributionPage.selectValueFromProgram(refrigeratorTestData.get(VACCINES_PROGRAM));
     distributionPage.selectValueFromPeriod(periodName);
@@ -429,13 +407,12 @@ public class DistributionRefrigeratorSyncTest extends TestCaseHelper {
   }
 
   public void setupDataForDistributionTest(String userSIC, String deliveryZoneCodeFirst, String deliveryZoneCodeSecond,
-                                           String deliveryZoneNameFirst, String deliveryZoneNameSecond,
-                                           String facilityCodeFirst, String facilityCodeSecond,
-                                           String programFirst, String programSecond, String schedule, String productGroupCode) throws Exception {
-    List<String> rightsList = new ArrayList<>();
-    rightsList.add("MANAGE_DISTRIBUTION");
-    setupTestDataToInitiateRnRAndDistribution(facilityCodeFirst, facilityCodeSecond, true, programFirst, userSIC, "200", rightsList, programSecond,
-      "District1", "Ngorongoro", "Ngorongoro");
+                                           String deliveryZoneNameFirst, String deliveryZoneNameSecond, String facilityCodeFirst,
+                                           String facilityCodeSecond, String programFirst, String programSecond, String schedule,
+                                           String productGroupCode) throws Exception {
+    List<String> rightsList = asList("MANAGE_DISTRIBUTION");
+    setupTestDataToInitiateRnRAndDistribution(facilityCodeFirst, facilityCodeSecond, true, programFirst, userSIC, "200", rightsList,
+      programSecond, "District1", "Ngorongoro", "Ngorongoro");
     setupDataForDeliveryZone(true, deliveryZoneCodeFirst, deliveryZoneCodeSecond, deliveryZoneNameFirst, deliveryZoneNameSecond,
       facilityCodeFirst, facilityCodeSecond, programFirst, programSecond, schedule);
     dbWrapper.insertRoleAssignmentForDistribution(userSIC, "store in-charge", deliveryZoneCodeFirst);
@@ -449,8 +426,7 @@ public class DistributionRefrigeratorSyncTest extends TestCaseHelper {
   }
 
   public void initiateDistribution(String deliveryZoneNameFirst, String programFirst) throws IOException {
-
-    HomePage homePage = new HomePage(testWebDriver);
+    HomePage homePage = PageFactory.getInstanceOfHomePage(testWebDriver);
     DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
     distributionPage.selectValueFromDeliveryZone(deliveryZoneNameFirst);
     distributionPage.selectValueFromProgram(programFirst);
@@ -458,7 +434,8 @@ public class DistributionRefrigeratorSyncTest extends TestCaseHelper {
     distributionPage.clickRecordData(1);
   }
 
-  public void fillEpiInventoryWithOnlyDeliveredQuantity(EpiInventoryPage epiInventoryPage, String deliveredQuantity1, String deliveredQuantity2, String deliveredQuantity3) {
+  public void fillEpiInventoryWithOnlyDeliveredQuantity(String deliveredQuantity1, String deliveredQuantity2, String deliveredQuantity3) {
+    EpiInventoryPage epiInventoryPage = PageFactory.getInstanceOfEpiInventoryPage(testWebDriver);
     epiInventoryPage.applyNRToAll();
     epiInventoryPage.fillDeliveredQuantity(1, deliveredQuantity1);
     epiInventoryPage.fillDeliveredQuantity(2, deliveredQuantity2);
@@ -469,7 +446,7 @@ public class DistributionRefrigeratorSyncTest extends TestCaseHelper {
   public void tearDown() throws Exception {
     testWebDriver.sleep(500);
     if (!testWebDriver.getElementById("username").isDisplayed()) {
-      HomePage homePage = new HomePage(testWebDriver);
+      HomePage homePage = PageFactory.getInstanceOfHomePage(testWebDriver);
       homePage.logout(baseUrlGlobal);
       dbWrapper.deleteData();
       dbWrapper.closeConnection();

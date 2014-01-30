@@ -11,7 +11,6 @@
 package org.openlmis.functional;
 
 
-import com.thoughtworks.selenium.SeleneseTestNgHelper;
 import cucumber.api.DataTable;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
@@ -49,11 +48,13 @@ public class ConfigureRegimenProgramTemplate extends TestCaseHelper {
 
   public String expectedProgramsString;
   RegimenTemplateConfigPage regimenTemplateConfigPage;
+  LoginPage loginPage;
 
   @BeforeMethod(groups = "admin")
   public void setUp() throws Exception {
     super.setup();
     regimenTemplateConfigPage = PageFactory.getInstanceOfRegimenTemplateConfigPage(testWebDriver);
+    loginPage = PageFactory.getInstanceOfLoginPage(testWebDriver, baseUrlGlobal);
   }
 
   @Given("^I have data available for programs configured$")
@@ -64,13 +65,14 @@ public class ConfigureRegimenProgramTemplate extends TestCaseHelper {
 
   @When("^I access regimen configuration page$")
   public void navigatesToRegimenConfigurationPage() throws Exception {
-    HomePage homePage = new HomePage(testWebDriver);
+    HomePage homePage = PageFactory.getInstanceOfHomePage(testWebDriver);
     homePage.navigateToRegimenConfigTemplate();
   }
 
   @Then("^I should see configured program list$")
   public void verifyProgramsListedOnManageRegimenTemplate() throws Exception {
     List<String> programsList = getProgramsListedOnRegimeScreen();
+    expectedProgramsString = dbWrapper.getAllActivePrograms();
     verifyProgramsListedOnManageRegimenTemplateScreen(programsList, expectedProgramsString);
   }
 
@@ -144,12 +146,12 @@ public class ConfigureRegimenProgramTemplate extends TestCaseHelper {
   public void testVerifyAtLeastOneColumnChecked(String program, String[] credentials) throws Exception {
 
     dbWrapper.updateFieldValue("programs", "regimenTemplateConfigured", "false", null, null);
-    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
     RegimenTemplateConfigPage regimenTemplateConfigPage = homePage.navigateToRegimenConfigTemplate();
     regimenTemplateConfigPage.configureProgram(program);
     regimenTemplateConfigPage.clickReportingFieldTab();
     verifyDefaultRegimenReportingFieldsValues();
+
     regimenTemplateConfigPage.NoOfPatientsOnTreatmentCheckBox(false);
     regimenTemplateConfigPage.NoOfPatientsStoppedTreatmentCheckBox(false);
     regimenTemplateConfigPage.NoOfPatientsToInitiateTreatmentCheckBox(false);
@@ -163,9 +165,8 @@ public class ConfigureRegimenProgramTemplate extends TestCaseHelper {
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function-Positive")
   public void testVerifyAlteredRegimensColumnsOnRnRScreen(String program, String adminUser, String userSIC, String password) throws Exception {
     String newRemarksHeading = "Testing column";
-
     dbWrapper.updateFieldValue("programs", "regimenTemplateConfigured", "false", null, null);
-    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+
     HomePage homePage = loginPage.loginAs(adminUser, adminUser);
     RegimenTemplateConfigPage regimenTemplateConfigPage = homePage.navigateToRegimenConfigTemplate();
     regimenTemplateConfigPage.configureProgram(program);
@@ -177,10 +178,9 @@ public class ConfigureRegimenProgramTemplate extends TestCaseHelper {
     homePage.logout(baseUrlGlobal);
     setUpDataForInitiateRnR(program, userSIC);
 
-    LoginPage loginPage1 = new LoginPage(testWebDriver, baseUrlGlobal);
-    HomePage homePage1 = loginPage1.loginAs(userSIC, password);
-    homePage1.navigateAndInitiateRnr(program);
-    InitiateRnRPage initiateRnRPage = homePage1.clickProceed();
+    homePage = loginPage.loginAs(userSIC, password);
+    homePage.navigateAndInitiateRnr(program);
+    InitiateRnRPage initiateRnRPage = homePage.clickProceed();
 
     testWebDriver.sleep(2000);
     initiateRnRPage.clickRegimenTab();
@@ -195,13 +195,12 @@ public class ConfigureRegimenProgramTemplate extends TestCaseHelper {
     initiateRnRPage.verifyColumnsHeadingPresent(tableXpathTillTr, newRemarksHeading, columns);
   }
 
-
   @Test(groups = {"admin"}, dataProvider = "Data-Provider")
   public void testVerifyMultipleCategoriesAddition(String program, String[] credentials) throws Exception {
     dbWrapper.updateFieldValue("programs", "regimenTemplateConfigured", "false", null, null);
-    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
     RegimenTemplateConfigPage regimenTemplateConfigPage = homePage.navigateToRegimenConfigTemplate();
+
     regimenTemplateConfigPage.configureProgram(program);
     regimenTemplateConfigPage.AddNewRegimen(adultsRegimen, CODE1, NAME1, true);
     regimenTemplateConfigPage.AddNewRegimen(paediatricsRegimen, CODE2, NAME1, true);
@@ -213,22 +212,21 @@ public class ConfigureRegimenProgramTemplate extends TestCaseHelper {
   @Test(groups = {"admin"}, dataProvider = "Data-Provider")
   public void testVerifyDuplicateCategoriesInterCategory(String program, String[] credentials) throws Exception {
     dbWrapper.updateFieldValue("programs", "regimenTemplateConfigured", "false", null, null);
-    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
     RegimenTemplateConfigPage regimenTemplateConfigPage = homePage.navigateToRegimenConfigTemplate();
+
     regimenTemplateConfigPage.configureProgram(program);
     regimenTemplateConfigPage.AddNewRegimen(adultsRegimen, CODE1, NAME1, true);
     regimenTemplateConfigPage.AddNewRegimen(paediatricsRegimen, CODE1, NAME2, true);
     verifyErrorMessage(duplicateErrorMessageSave);
   }
 
-
   @Test(groups = {"admin"}, dataProvider = "Data-Provider")
   public void testVerifyDuplicateCategoriesAdditionForSameCategory(String program, String[] credentials) throws Exception {
     dbWrapper.updateFieldValue("programs", "regimenTemplateConfigured", "false", null, null);
-    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
     RegimenTemplateConfigPage regimenTemplateConfigPage = homePage.navigateToRegimenConfigTemplate();
+
     regimenTemplateConfigPage.configureProgram(program);
     regimenTemplateConfigPage.AddNewRegimen(adultsRegimen, CODE1, NAME1, true);
     regimenTemplateConfigPage.AddNewRegimen(adultsRegimen, CODE1, NAME2, true);
@@ -238,9 +236,9 @@ public class ConfigureRegimenProgramTemplate extends TestCaseHelper {
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Multiple-Programs")
   public void testVerifyDuplicateCategoriesInterPrograms(String program1, String program2, String[] credentials) throws Exception {
     dbWrapper.updateFieldValue("programs", "regimenTemplateConfigured", "false", null, null);
-    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
     RegimenTemplateConfigPage regimenTemplateConfigPage = homePage.navigateToRegimenConfigTemplate();
+
     regimenTemplateConfigPage.configureProgram(program1);
     regimenTemplateConfigPage.AddNewRegimen(adultsRegimen, CODE1, NAME1, true);
     regimenTemplateConfigPage.SaveRegime();
@@ -257,9 +255,9 @@ public class ConfigureRegimenProgramTemplate extends TestCaseHelper {
   @Test(groups = {"admin"}, dataProvider = "Data-Provider")
   public void testVerifyEditCategory(String program, String[] credentials) throws Exception {
     dbWrapper.updateFieldValue("programs", "regimenTemplateConfigured", "false", null, null);
-    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
     RegimenTemplateConfigPage regimenTemplateConfigPage = homePage.navigateToRegimenConfigTemplate();
+
     regimenTemplateConfigPage.configureProgram(program);
     regimenTemplateConfigPage.AddNewRegimen(adultsRegimen, CODE1, NAME1, false);
     regimenTemplateConfigPage.SaveRegime();
@@ -282,9 +280,9 @@ public class ConfigureRegimenProgramTemplate extends TestCaseHelper {
   @Test(groups = {"admin"}, dataProvider = "Data-Provider")
   public void testVerifyDuplicateCategoryOnDone(String program, String[] credentials) throws Exception {
     dbWrapper.updateFieldValue("programs", "regimenTemplateConfigured", "false", null, null);
-    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
     RegimenTemplateConfigPage regimenTemplateConfigPage = homePage.navigateToRegimenConfigTemplate();
+
     regimenTemplateConfigPage.configureProgram(program);
     regimenTemplateConfigPage.AddNewRegimen(adultsRegimen, CODE1, NAME1, false);
     regimenTemplateConfigPage.AddNewRegimen(adultsRegimen, CODE2, NAME1, true);
@@ -299,9 +297,9 @@ public class ConfigureRegimenProgramTemplate extends TestCaseHelper {
   @Test(groups = {"admin"}, dataProvider = "Data-Provider")
   public void testVerifyCategoryErrorOnDone(String program, String[] credentials) throws Exception {
     dbWrapper.updateFieldValue("programs", "regimenTemplateConfigured", "false", null, null);
-    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
     RegimenTemplateConfigPage regimenTemplateConfigPage = homePage.navigateToRegimenConfigTemplate();
+
     regimenTemplateConfigPage.configureProgram(program);
     regimenTemplateConfigPage.AddNewRegimen(adultsRegimen, CODE1, NAME1, true);
     regimenTemplateConfigPage.AddNewRegimen(adultsRegimen, CODE2, NAME1, true);
@@ -317,9 +315,9 @@ public class ConfigureRegimenProgramTemplate extends TestCaseHelper {
   @Test(groups = {"admin"}, dataProvider = "Data-Provider")
   public void testVerifyCancelButtonFunctionality(String program, String[] credentials) throws Exception {
     dbWrapper.updateFieldValue("programs", "regimenTemplateConfigured", "false", null, null);
-    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
     RegimenTemplateConfigPage regimenTemplateConfigPage = homePage.navigateToRegimenConfigTemplate();
+
     regimenTemplateConfigPage.configureProgram(program);
     regimenTemplateConfigPage.CancelRegime(program);
     assertTrue("Clicking Cancel button should be redirected to Regimen Template screen", testWebDriver.getElementById(program).isDisplayed());
@@ -340,7 +338,6 @@ public class ConfigureRegimenProgramTemplate extends TestCaseHelper {
     assertEquals("Numeric", regimenTemplateConfigPage.getTextNoOfPatientsStoppedTreatmentDataType());
     assertEquals("Numeric", regimenTemplateConfigPage.getTextNoOfPatientsToInitiateTreatmentDataType());
     assertEquals("Text", regimenTemplateConfigPage.getTextRemarksDataType());
-
   }
 
   private void verifyErrorMessage(String expectedErrorMessage) {
@@ -373,8 +370,7 @@ public class ConfigureRegimenProgramTemplate extends TestCaseHelper {
 
   private void verifyProgramsListedOnManageRegimenTemplateScreen(List<String> actualProgramsString, String expectedProgramsString) {
     for (String program : actualProgramsString)
-      SeleneseTestNgHelper.assertTrue("Program " + program + " not present in expected string : " + expectedProgramsString, expectedProgramsString.contains(program));
-
+      assertTrue("Program " + program + " not present in expected string : " + expectedProgramsString, expectedProgramsString.contains(program));
   }
 
   private List<String> getProgramsListedOnRegimeScreen() {
@@ -425,7 +421,7 @@ public class ConfigureRegimenProgramTemplate extends TestCaseHelper {
   public void tearDown() throws Exception {
     testWebDriver.sleep(500);
     if (!testWebDriver.getElementById("username").isDisplayed()) {
-      HomePage homePage = new HomePage(testWebDriver);
+      HomePage homePage = PageFactory.getInstanceOfHomePage(testWebDriver);
       homePage.logout(baseUrlGlobal);
       dbWrapper.deleteData();
       dbWrapper.closeConnection();

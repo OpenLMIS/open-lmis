@@ -53,7 +53,7 @@ public class CreateUpdateCHW extends JsonUtility {
     super.setup();
     super.setupTestData(true);
     dbWrapper.updateRestrictLogin("commTrack", true);
-    loginPage = PageFactory.getInstanceOfLoginPage(testWebDriver, baseUrlGlobal);
+    loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
   }
 
   @AfterMethod(groups = {"webservice", "webserviceSmoke"})

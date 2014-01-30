@@ -1,6 +1,5 @@
 package org.openlmis.functional;
 
-import com.thoughtworks.selenium.SeleneseTestBase;
 import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.pageobjects.HomePage;
 import org.openlmis.pageobjects.LoginPage;
@@ -12,10 +11,10 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.*;
+import static java.util.Arrays.asList;
 
 public class ManagePod extends TestCaseHelper {
 
@@ -31,13 +30,13 @@ public class ManagePod extends TestCaseHelper {
   public void setUp() throws Exception {
     super.setup();
     dbWrapper.deleteData();
+    loginPage = PageFactory.getInstanceOfLoginPage(testWebDriver, baseUrlGlobal);
   }
 
   @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-RnR")
   public void testVerifyManagePODValidFlowForRegularRnR(String program, String userSIC, String password) throws Exception {
     setUpData(program, userSIC);
 
-    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(userSIC, password);
     ConvertOrderPage convertOrderPage = homePage.navigateConvertToOrder();
     convertOrderPage.selectRequisitionToBeConvertedToOrder(1);
@@ -48,13 +47,11 @@ public class ManagePod extends TestCaseHelper {
     verifyValuesOnManagePODScreen(managePodPage);
   }
 
-
   @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-RnR")
   public void testVerifyManagePODWhenSupplyLineMissing(String program, String userSIC, String password) throws Exception {
     setUpData(program, userSIC);
     dbWrapper.deleteSupplyLine();
 
-    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(userSIC, password);
     ConvertOrderPage convertOrderPage = homePage.navigateConvertToOrder();
     convertOrderPage.selectRequisitionToBeConvertedToOrder(1);
@@ -70,9 +67,8 @@ public class ManagePod extends TestCaseHelper {
   @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-RnR")
   public void testVerifyManagePODValidFlowForEmergencyRnR(String program, String userSIC, String password) throws Exception {
     setUpData(program, userSIC);
-    dbWrapper.updateFieldValue("requisitions","Emergency",true);
+    dbWrapper.updateFieldValue("requisitions", "Emergency", true);
 
-    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(userSIC, password);
     ConvertOrderPage convertOrderPage = homePage.navigateConvertToOrder();
     convertOrderPage.selectRequisitionToBeConvertedToOrder(1);
@@ -88,7 +84,6 @@ public class ManagePod extends TestCaseHelper {
   public void testManagePODWhenRequisitionNotConvertedToOrder(String program, String userSIC, String password) throws Exception {
     setUpData(program, userSIC);
 
-    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(userSIC, password);
     ManagePodPage managePodPage = homePage.navigateManagePOD();
     managePodPage.verifyMessageOnManagePodScreen();
@@ -98,11 +93,10 @@ public class ManagePod extends TestCaseHelper {
   public void testManagePODWhenPodAlreadySubmitted(String program, String userSIC, String password) throws Exception {
     setUpData(program, userSIC);
 
-    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(userSIC, password);
     dbWrapper.insertOrders("RELEASED", userSIC, "MALARIA");
     ManagePodPage managePodPage = homePage.navigateManagePOD();
-    dbWrapper.updateFieldValue("orders","status","RECEIVED",null,null);
+    dbWrapper.updateFieldValue("orders", "status", "RECEIVED", null, null);
     homePage.navigateHomePage();
     homePage.navigateManagePOD();
     managePodPage.verifyMessageOnManagePodScreen();
@@ -113,8 +107,7 @@ public class ManagePod extends TestCaseHelper {
     setupProductTestData("P10", "P11", program, "lvl3_hospital");
     dbWrapper.insertFacilities("F10", "F11");
     dbWrapper.configureTemplate(program);
-    List<String> rightsList = new ArrayList<>();
-    rightsList.add(VIEW_REQUISITION);
+    List<String> rightsList = asList(VIEW_REQUISITION);
     setupTestUserRoleRightsData("200", userSIC, rightsList);
     dbWrapper.insertSupervisoryNode("F10", "N1", "Node 1", "null");
     dbWrapper.insertRoleAssignment("200", "store in-charge");
@@ -128,7 +121,7 @@ public class ManagePod extends TestCaseHelper {
     dbWrapper.updateRequisitionStatus("SUBMITTED", userSIC, "MALARIA");
     dbWrapper.updateRequisitionStatus("AUTHORIZED", userSIC, "MALARIA");
     dbWrapper.updateRequisitionStatus("APPROVED", userSIC, "MALARIA");
-    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+
     HomePage homePage = loginPage.loginAs(userSIC, password);
     homePage.navigateHomePage();
     testWebDriver.sleep(1000);
@@ -136,32 +129,29 @@ public class ManagePod extends TestCaseHelper {
   }
 
   private void verifyValuesOnManagePODScreen(ManagePodPage managePodPage) {
-    SeleneseTestBase.assertEquals("F10 - Village Dispensary", managePodPage.getFacilityCodeName());
-    SeleneseTestBase.assertEquals("Village Dispensary", managePodPage.getSupplyingDepotName());
-    SeleneseTestBase.assertEquals("MALARIA", managePodPage.getProgramCodeName());
-    SeleneseTestBase.assertEquals("Transfer failed", managePodPage.getOrderStatusDetails());
-    SeleneseTestBase.assertEquals("PeriodName1 (01/12/2012 - 01/12/2015)", managePodPage.getPeriodDetails());
-    SeleneseTestBase.assertEquals("Update POD", managePodPage.getUpdatePodLink());
+    assertEquals("F10 - Village Dispensary", managePodPage.getFacilityCodeName());
+    assertEquals("Village Dispensary", managePodPage.getSupplyingDepotName());
+    assertEquals("MALARIA", managePodPage.getProgramCodeName());
+    assertEquals("Transfer failed", managePodPage.getOrderStatusDetails());
+    assertEquals("PeriodName1 (01/12/2012 - 01/12/2015)", managePodPage.getPeriodDetails());
+    assertEquals("Update POD", managePodPage.getUpdatePodLink());
   }
 
   private void verifyHeadersOnManagePODScreen(ManagePodPage managePodPage) {
-    SeleneseTestBase.assertEquals("Order No.", managePodPage.getHeaderOrderNo());
-    SeleneseTestBase.assertEquals("Supplying Depot", managePodPage.getHeaderSupplyingDepotName());
-    SeleneseTestBase.assertEquals("Program", managePodPage.getHeaderProgramCodeName());
-    SeleneseTestBase.assertEquals("Period", managePodPage.getHeaderPeriodDetails());
-    SeleneseTestBase.assertEquals("Order Date/Time", managePodPage.getHeaderOrderDateTimeDetails());
-    SeleneseTestBase.assertEquals("Order Status", managePodPage.getHeaderOrderStatusDetails());
-    SeleneseTestBase.assertEquals("Emergency", managePodPage.getHeaderEmergency());
+    assertEquals("Order No.", managePodPage.getHeaderOrderNo());
+    assertEquals("Supplying Depot", managePodPage.getHeaderSupplyingDepotName());
+    assertEquals("Program", managePodPage.getHeaderProgramCodeName());
+    assertEquals("Period", managePodPage.getHeaderPeriodDetails());
+    assertEquals("Order Date/Time", managePodPage.getHeaderOrderDateTimeDetails());
+    assertEquals("Order Status", managePodPage.getHeaderOrderStatusDetails());
+    assertEquals("Emergency", managePodPage.getHeaderEmergency());
   }
 
   private void setUpData(String program, String userSIC) throws Exception {
     setupProductTestData("P10", "P11", program, "lvl3_hospital");
     dbWrapper.insertFacilities("F10", "F11");
     dbWrapper.configureTemplate(program);
-    List<String> rightsList = new ArrayList<>();
-    rightsList.add(CONVERT_TO_ORDER);
-    rightsList.add(VIEW_ORDER);
-    rightsList.add(MANAGE_POD);
+    List<String> rightsList = asList(CONVERT_TO_ORDER, VIEW_ORDER, MANAGE_POD);
     setupTestUserRoleRightsData("200", userSIC, rightsList);
     dbWrapper.insertSupervisoryNode("F10", "N1", "Node 1", "null");
     dbWrapper.insertRoleAssignment("200", "store in-charge");
@@ -175,14 +165,14 @@ public class ManagePod extends TestCaseHelper {
     dbWrapper.updateRequisitionStatus("SUBMITTED", userSIC, "MALARIA");
     dbWrapper.updateRequisitionStatus("AUTHORIZED", userSIC, "MALARIA");
     dbWrapper.updateRequisitionStatus("APPROVED", userSIC, "MALARIA");
-    dbWrapper.insertFulfilmentRoleAssignment("storeIncharge", "store in-charge", "F10");
+    dbWrapper.insertFulfilmentRoleAssignment("storeInCharge", "store in-charge", "F10");
   }
 
   @AfterMethod(groups = "requisition")
   public void tearDown() throws Exception {
     testWebDriver.sleep(500);
     if (!testWebDriver.getElementById("username").isDisplayed()) {
-      HomePage homePage = new HomePage(testWebDriver);
+      HomePage homePage = PageFactory.getInstanceOfHomePage(testWebDriver);
       homePage.logout(baseUrlGlobal);
       dbWrapper.deleteData();
       dbWrapper.closeConnection();
@@ -192,7 +182,7 @@ public class ManagePod extends TestCaseHelper {
   @DataProvider(name = "Data-Provider-Function-RnR")
   public Object[][] parameterIntTestProviderRnR() {
     return new Object[][]{
-      {"HIV", "storeIncharge", "Admin123"}
+      {"HIV", "storeInCharge", "Admin123"}
     };
   }
 }

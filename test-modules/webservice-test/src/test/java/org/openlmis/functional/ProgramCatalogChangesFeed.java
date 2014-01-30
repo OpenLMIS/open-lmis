@@ -35,7 +35,7 @@ public class ProgramCatalogChangesFeed extends JsonUtility {
   public void setUp() throws Exception {
     super.setup();
     super.setupTestData(true);
-    loginPage = PageFactory.getInstanceOfLoginPage(testWebDriver, baseUrlGlobal);
+    loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
   }
 
   @AfterMethod(groups = {"webservice", "webserviceSmoke"})

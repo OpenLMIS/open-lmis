@@ -20,8 +20,9 @@ import org.openlmis.pageobjects.LoginPage;
 import org.openlmis.pageobjects.edi.ConvertOrderPage;
 import org.testng.annotations.*;
 
-import java.util.ArrayList;
 import java.util.List;
+
+import static java.util.Arrays.asList;
 
 @Listeners(CaptureScreenshotOnFailureListener.class)
 
@@ -48,10 +49,7 @@ public class CreateTestRequisition extends TestCaseHelper {
 
   @Test(groups = {"createTestRequisition"}, dataProvider = "Data-Provider-Function-Including-Regimen")
   public void testCreateRequisitionWithEmergencyStatus(String program, String userSIC, String categoryCode, String password, String regimenCode, String regimenName, String regimenCode2, String regimenName2) throws Exception {
-    List<String> rightsList = new ArrayList<>();
-    rightsList.add("CREATE_REQUISITION");
-    rightsList.add("VIEW_REQUISITION");
-
+    List<String> rightsList = asList("CREATE_REQUISITION", "VIEW_REQUISITION");
     setupTestDataToInitiateRnR(true, program, userSIC, "200", rightsList);
     dbWrapper.insertRegimenTemplateConfiguredForProgram(program, categoryCode, regimenCode, regimenName, true);
     dbWrapper.insertRegimenTemplateConfiguredForProgram(program, categoryCode, regimenCode2, regimenName2, false);
@@ -61,84 +59,77 @@ public class CreateTestRequisition extends TestCaseHelper {
     dbWrapper.assignRight(STORE_IN_CHARGE, VIEW_ORDER);
     dbWrapper.insertFulfilmentRoleAssignment(userSIC, STORE_IN_CHARGE, "F10");
 
-    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+    LoginPage loginPage = PageFactory.getInstanceOfLoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(userSIC, password);
-
 
     homePage.navigateAndInitiateRnr(program);
     InitiateRnRPage initiateRnRPage = homePage.clickProceed();
     initiateRnRPage.clickHome();
+
     dbWrapper.insertValuesInRequisition(true);
     dbWrapper.insertValuesInRegimenLineItems(patientsOnTreatment, patientsToInitiateTreatment, patientsStoppedTreatment,
-            remarks);
+      remarks);
     dbWrapper.updateRequisitionStatusByRnrId(SUBMITTED, userSIC, dbWrapper.getMaxRnrID());
     dbWrapper.updateFieldValue("requisition_line_items", "quantityApproved", 10);
     dbWrapper.updateRequisitionStatusByRnrId(AUTHORIZED, userSIC, dbWrapper.getMaxRnrID());
     dbWrapper.updateRequisitionStatusByRnrId(IN_APPROVAL, userSIC, dbWrapper.getMaxRnrID());
-    ApprovePage approvePageTopSNUser = homePage.navigateToApprove();
-    approvePageTopSNUser.clickRequisitionPresentForApproval();
-    approvePageTopSNUser.verifyNoRequisitionMessage();
-    approvePageTopSNUser.editFullSupplyApproveQuantity("20");
-    approvePageTopSNUser.clickRegimenTab();
-    approvePageTopSNUser.approveRequisition();
-    approvePageTopSNUser.clickOk();
+
+    ApprovePage approvePage = homePage.navigateToApprove();
+    approvePage.clickRequisitionPresentForApproval();
+    approvePage.verifyNoRequisitionMessage();
+    approvePage.editFullSupplyApproveQuantity("20");
+    approvePage.clickRegimenTab();
+    approvePage.approveRequisition();
+    approvePage.clickOk();
+
     ConvertOrderPage convertOrderPage = homePage.navigateConvertToOrder();
     convertOrderPage.convertToOrder();
 
-
     initiateRnRPage.clickHome();
     homePage.navigateAndInitiateRnr(program);
     homePage.clickProceed();
     initiateRnRPage.clickHome();
+
     dbWrapper.insertValuesInRequisition(true);
-    dbWrapper.insertValuesInRegimenLineItems(patientsOnTreatment, patientsToInitiateTreatment, patientsStoppedTreatment,
-              remarks);
+    dbWrapper.insertValuesInRegimenLineItems(patientsOnTreatment, patientsToInitiateTreatment, patientsStoppedTreatment, remarks);
     dbWrapper.updateRequisitionStatusByRnrId(SUBMITTED, userSIC, dbWrapper.getMaxRnrID());
     dbWrapper.updateFieldValue("requisition_line_items", "quantityApproved", 10);
     dbWrapper.updateRequisitionStatusByRnrId(AUTHORIZED, userSIC, dbWrapper.getMaxRnrID());
     dbWrapper.updateRequisitionStatusByRnrId(IN_APPROVAL, userSIC, dbWrapper.getMaxRnrID());
 
-
     initiateRnRPage.clickHome();
     homePage.navigateAndInitiateRnr(program);
     homePage.clickProceed();
     initiateRnRPage.clickHome();
     dbWrapper.insertValuesInRequisition(true);
-    dbWrapper.insertValuesInRegimenLineItems(patientsOnTreatment, patientsToInitiateTreatment, patientsStoppedTreatment,
-              remarks);
+    dbWrapper.insertValuesInRegimenLineItems(patientsOnTreatment, patientsToInitiateTreatment, patientsStoppedTreatment, remarks);
     dbWrapper.updateRequisitionStatusByRnrId(SUBMITTED, userSIC, dbWrapper.getMaxRnrID());
     dbWrapper.updateFieldValue("requisition_line_items", "quantityApproved", 10);
     dbWrapper.updateRequisitionStatusByRnrId(AUTHORIZED, userSIC, dbWrapper.getMaxRnrID());
-
 
     initiateRnRPage.clickHome();
     homePage.navigateAndInitiateRnr(program);
     homePage.clickProceed();
     dbWrapper.insertValuesInRequisition(false);
-    dbWrapper.insertValuesInRegimenLineItems(patientsOnTreatment, patientsToInitiateTreatment, patientsStoppedTreatment,
-              remarks);
+    dbWrapper.insertValuesInRegimenLineItems(patientsOnTreatment, patientsToInitiateTreatment, patientsStoppedTreatment, remarks);
     dbWrapper.updateRequisitionStatusByRnrId(SUBMITTED, userSIC, dbWrapper.getMaxRnrID());
-
   }
 
-    @AfterMethod(groups = "createTestRequisition")
-    public void tearDown() throws Exception {
-        testWebDriver.sleep(500);
-        if (!testWebDriver.getElementById("username").isDisplayed()) {
-            HomePage homePage = new HomePage(testWebDriver);
-            homePage.logout(baseUrlGlobal);
-            dbWrapper.closeConnection();
-        }
-
+  @AfterMethod(groups = "createTestRequisition")
+  public void tearDown() throws Exception {
+    testWebDriver.sleep(500);
+    if (!testWebDriver.getElementById("username").isDisplayed()) {
+      HomePage homePage = PageFactory.getInstanceOfHomePage(testWebDriver);
+      homePage.logout(baseUrlGlobal);
+      dbWrapper.closeConnection();
     }
+  }
 
   @DataProvider(name = "Data-Provider-Function-Including-Regimen")
   public Object[][] parameterIntTest() {
     return new Object[][]{
-      {"HIV", "storeIncharge", "ADULTS", "Admin123", "RegimenCode1", "RegimenName1", "RegimenCode2", "RegimenName2"}
+      {"HIV", "storeInCharge", "ADULTS", "Admin123", "RegimenCode1", "RegimenName1", "RegimenCode2", "RegimenName2"}
     };
-
-
   }
 }
 

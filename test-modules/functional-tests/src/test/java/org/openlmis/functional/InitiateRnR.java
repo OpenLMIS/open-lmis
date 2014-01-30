@@ -28,7 +28,6 @@ import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -59,12 +58,15 @@ public class InitiateRnR extends TestCaseHelper {
 
   public LoginPage loginPage;
   public InitiateRnRPage initiateRnRPage;
+  HomePage homePage;
 
   @BeforeMethod(groups = "requisition")
-  //@Before
   public void setUp() throws Exception {
     super.setup();
     dbWrapper.deleteData();
+    loginPage = PageFactory.getInstanceOfLoginPage(testWebDriver, baseUrlGlobal);
+    initiateRnRPage = PageFactory.getInstanceOfInitiateRnRPage(testWebDriver);
+    homePage = PageFactory.getInstanceOfHomePage(testWebDriver);
   }
 
   @Given("^I have the following data for regimen:$")
@@ -80,44 +82,44 @@ public class InitiateRnR extends TestCaseHelper {
   }
 
   @Given("^I have regimen template configured$")
-  public void configureRegimenTemplate() throws IOException, SQLException {
+  public void configureRegimenTemplate() throws SQLException {
     dbWrapper.insertRegimenTemplateConfiguredForProgram(program, categoryCode, regimenCode, regimenName, true);
     dbWrapper.insertRegimenTemplateConfiguredForProgram(program, categoryCode, regimenCode2, regimenName2, false);
     dbWrapper.insertRegimenTemplateColumnsForProgram(program);
   }
 
   @Given("^I access initiate requisition page$")
-  public void onInitiateRnRScreen() throws IOException, SQLException {
-    HomePage homePage = new HomePage(testWebDriver);
+  public void onInitiateRnRScreen() {
+    homePage = PageFactory.getInstanceOfHomePage(testWebDriver);
     homePage.navigateAndInitiateRnr(program);
   }
 
   @Given("^I access initiate emergency requisition page$")
-  public void onInitiateEmergencyRnRScreen() throws IOException, SQLException {
-    HomePage homePage = new HomePage(testWebDriver);
+  public void onInitiateEmergencyRnRScreen() {
+    homePage = PageFactory.getInstanceOfHomePage(testWebDriver);
     homePage.navigateAndInitiateEmergencyRnr(program);
   }
 
   @Then("I should see no period available$")
-  public void verifyPeriodNotAvailable() throws IOException {
-    HomePage homePage = new HomePage(testWebDriver);
+  public void verifyPeriodNotAvailable() {
+    homePage = PageFactory.getInstanceOfHomePage(testWebDriver);
     assertEquals("No current period defined. Please contact the Admin.", homePage.getFirstPeriod());
   }
 
   @Then("^I should verify \"([^\"]*)\" with status \"([^\"]*)\" in row \"([^\"]*)\"$")
-  public void verifyPeriodNotAvailable(String period, String status, String row) throws IOException {
+  public void verifyPeriodNotAvailable(String period, String status, String row) {
     verifyRnRsInGrid(period, status, row);
   }
 
   @Given("I have \"([^\"]*)\" user with \"([^\"]*)\" rights and data to initiate requisition$")
-  public void setupUserWithRightsAndInitiateRequisitionData(String user, String rights) throws Exception {
+  public void setupUserWithRightsAndInitiateRequisitionData(String user, String rights) throws IOException, SQLException {
     String[] rightList = rights.split(",");
     setupTestDataToInitiateRnR(true, program, user, "200", asList(rightList));
   }
 
   @When("^I click proceed$")
   public void clickOnProceed() throws IOException {
-    HomePage homePage = new HomePage(testWebDriver);
+    homePage = PageFactory.getInstanceOfHomePage(testWebDriver);
     homePage.navigateAndInitiateRnr(program);
     initiateRnRPage = homePage.clickProceed();
     testWebDriver.sleep(2000);
@@ -130,102 +132,111 @@ public class InitiateRnR extends TestCaseHelper {
 
   @When("^I access regimen tab$")
   public void clickRegimenTab() throws IOException, SQLException {
+    initiateRnRPage = PageFactory.getInstanceOfInitiateRnRPage(testWebDriver);
     initiateRnRPage.clickRegimenTab();
   }
 
   @When("^I enter beginning balance \"([^\"]*)\"$")
   public void enterBeginningBalance(String beginningBalance) throws IOException, SQLException {
-    InitiateRnRPage initiateRnRPage = new InitiateRnRPage(testWebDriver);
+    initiateRnRPage = PageFactory.getInstanceOfInitiateRnRPage(testWebDriver);
     initiateRnRPage.enterValue(valueOf(beginningBalance), "beginningBalanceFirstProduct");
   }
 
   @When("^I enter quantity received \"([^\"]*)\"$")
   public void enterQuantityReceived(String quantityReceived) throws IOException, SQLException {
-    InitiateRnRPage initiateRnRPage = new InitiateRnRPage(testWebDriver);
+    initiateRnRPage = PageFactory.getInstanceOfInitiateRnRPage(testWebDriver);
     initiateRnRPage.enterValue(valueOf(quantityReceived), "quantityReceivedFirstProduct");
   }
 
   @When("^I enter quantity dispensed \"([^\"]*)\"$")
   public void enterQuantityDispensed(String quantityDispensed) throws IOException, SQLException {
-    InitiateRnRPage initiateRnRPage = new InitiateRnRPage(testWebDriver);
+    initiateRnRPage = PageFactory.getInstanceOfInitiateRnRPage(testWebDriver);
     initiateRnRPage.enterValue(valueOf(quantityDispensed), "quantityDispensedFirstProduct");
   }
 
   @Then("^I validate beginning balance \"([^\"]*)\"$")
   public void validateBeginningBalance(String beginningBalance) throws IOException, SQLException {
-    InitiateRnRPage initiateRnRPage = new InitiateRnRPage(testWebDriver);
+    initiateRnRPage = PageFactory.getInstanceOfInitiateRnRPage(testWebDriver);
     initiateRnRPage.verifyBeginningBalanceForFirstProduct(parseInt(beginningBalance));
   }
 
   @Then("^I validate quantity received \"([^\"]*)\"$")
   public void validateQuantityReceived(String quantityReceived) throws IOException, SQLException {
-    InitiateRnRPage initiateRnRPage = new InitiateRnRPage(testWebDriver);
+    initiateRnRPage = PageFactory.getInstanceOfInitiateRnRPage(testWebDriver);
     initiateRnRPage.verifyQuantityReceivedForFirstProduct(parseInt(quantityReceived));
   }
 
   @Then("^I validate quantity dispensed \"([^\"]*)\"$")
   public void validateQuantityDispensed(String quantityDispensed) throws IOException, SQLException {
-    InitiateRnRPage initiateRnRPage = new InitiateRnRPage(testWebDriver);
+    initiateRnRPage = PageFactory.getInstanceOfInitiateRnRPage(testWebDriver);
     initiateRnRPage.verifyQuantityDispensedForFirstProduct(parseInt(quantityDispensed));
   }
 
   @Then("^I should see regimen fields$")
   public void shouldSeeRegimenFields() {
-    verifyRegimenFieldsPresentOnRegimenTab(regimenCode, regimenName, initiateRnRPage);
+    initiateRnRPage = PageFactory.getInstanceOfInitiateRnRPage(testWebDriver);
+    verifyRegimenFieldsPresentOnRegimenTab(regimenCode, regimenName);
   }
 
   @When("^I type patients on treatment \"([^\"]*)\"$")
   public void typePatientsOnTreatment(String value) {
+    initiateRnRPage = PageFactory.getInstanceOfInitiateRnRPage(testWebDriver);
     initiateRnRPage.enterValuesOnRegimenScreen(3, 2, value);
   }
 
   @When("^I type patients initiated treatment \"([^\"]*)\"$")
   public void typePatientsInitiatedTreatment(String value) {
+    initiateRnRPage = PageFactory.getInstanceOfInitiateRnRPage(testWebDriver);
     initiateRnRPage.enterValuesOnRegimenScreen(4, 2, value);
   }
 
   @When("^I type patients stopped treatment \"([^\"]*)\"$")
   public void typePatientsStoppedTreatment(String value) {
+    initiateRnRPage = PageFactory.getInstanceOfInitiateRnRPage(testWebDriver);
     initiateRnRPage.enterValuesOnRegimenScreen(5, 2, value);
   }
 
   @When("^I type remarks \"([^\"]*)\"$")
   public void typeRemarks(String value) {
+    initiateRnRPage = PageFactory.getInstanceOfInitiateRnRPage(testWebDriver);
     initiateRnRPage.enterValuesOnRegimenScreen(6, 2, value);
   }
 
   @When("^I click save$")
   public void clickSave() {
+    initiateRnRPage = PageFactory.getInstanceOfInitiateRnRPage(testWebDriver);
     initiateRnRPage.clickSaveButton();
   }
 
   @When("^I should see saved successfully$")
   public void shouldSeeSavedSuccessfully() {
+    initiateRnRPage = PageFactory.getInstanceOfInitiateRnRPage(testWebDriver);
     initiateRnRPage.verifySaveSuccessMsg();
   }
 
   @When("^I click submit$")
-  public void clickSubmit() throws IOException {
-    InitiateRnRPage initiateRnRPage = new InitiateRnRPage(testWebDriver);
+  public void clickSubmit() {
+    initiateRnRPage = PageFactory.getInstanceOfInitiateRnRPage(testWebDriver);
     initiateRnRPage.clickSubmitButton();
     testWebDriver.sleep(250);
   }
 
   @When("^I click ok$")
-  public void clickOk() throws IOException {
-    InitiateRnRPage initiateRnRPage = new InitiateRnRPage(testWebDriver);
+  public void clickOk() {
+    initiateRnRPage = PageFactory.getInstanceOfInitiateRnRPage(testWebDriver);
     testWebDriver.sleep(1000);
     initiateRnRPage.clickOk();
   }
 
   @When("^I should see submit successfully$")
   public void shouldSeeSubmitSuccessfully() {
+    initiateRnRPage = PageFactory.getInstanceOfInitiateRnRPage(testWebDriver);
     initiateRnRPage.verifySubmitSuccessMsg();
   }
 
   @Then("^I got error message \"([^\"]*)\"$")
   public void shouldSeeSubmitSuccessfully(String errorMsg) throws IOException {
-    HomePage homePage = new HomePage(testWebDriver);
+    homePage = PageFactory.getInstanceOfHomePage(testWebDriver);
     assertEquals(homePage.getErrorMessage(), errorMsg);
   }
 
@@ -242,74 +253,67 @@ public class InitiateRnR extends TestCaseHelper {
   @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-Positive")
   public void testSubmitAndAuthorizeRegimen(String program, String userSIC, String categoryCode, String password,
                                             String regimenCode, String regimenName, String regimenCode2, String regimenName2) throws Exception {
-    List<String> rightsList = new ArrayList<>();
-    rightsList.add(CREATE_REQUISITION);
-    rightsList.add(VIEW_REQUISITION);
-    rightsList.add(AUTHORIZE_REQUISITION);
+    List<String> rightsList = asList(CREATE_REQUISITION, VIEW_REQUISITION, AUTHORIZE_REQUISITION);
     setupTestDataToInitiateRnR(true, program, userSIC, "200", rightsList);
     dbWrapper.insertRegimenTemplateConfiguredForProgram(program, categoryCode, regimenCode, regimenName, true);
     dbWrapper.insertRegimenTemplateConfiguredForProgram(program, categoryCode, regimenCode2, regimenName2, false);
     dbWrapper.insertRegimenTemplateColumnsForProgram(program);
-    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
-    HomePage homePage = loginPage.loginAs(userSIC, password);
+
     homePage.navigateAndInitiateRnr(program);
-    InitiateRnRPage initiateRnRPage = homePage.clickProceed();
+    initiateRnRPage = homePage.clickProceed();
+
     dbWrapper.insertValuesInRequisition(false);
     homePage.navigateAndInitiateRnr(program);
-    InitiateRnRPage initiateRnRPage1 = homePage.clickProceed();
-    initiateRnRPage1.clickRegimenTab();
+    initiateRnRPage = homePage.clickProceed();
+    initiateRnRPage.clickRegimenTab();
 
-    verifyRegimenFieldsPresentOnRegimenTab(regimenCode, regimenName, initiateRnRPage);
-    initiateRnRPage1.enterValuesOnRegimenScreen(3, 2, "100");
-    initiateRnRPage1.enterValuesOnRegimenScreen(4, 2, "200");
-    initiateRnRPage1.enterValuesOnRegimenScreen(6, 2, "400");
+    verifyRegimenFieldsPresentOnRegimenTab(regimenCode, regimenName);
+    initiateRnRPage.enterValuesOnRegimenScreen(3, 2, "100");
+    initiateRnRPage.enterValuesOnRegimenScreen(4, 2, "200");
+    initiateRnRPage.enterValuesOnRegimenScreen(6, 2, "400");
 
-    initiateRnRPage1.clickSubmitButton();
-    initiateRnRPage1.verifySubmitRnrErrorMsg();
-    initiateRnRPage1.enterValuesOnRegimenScreen(5, 2, "300");
-    initiateRnRPage1.clickSubmitButton();
-    initiateRnRPage1.clickOk();
-    initiateRnRPage1.verifySubmitSuccessMsg();
+    initiateRnRPage.clickSubmitButton();
+    initiateRnRPage.verifySubmitRnrErrorMsg();
+    initiateRnRPage.enterValuesOnRegimenScreen(5, 2, "300");
+    initiateRnRPage.clickSubmitButton();
+    initiateRnRPage.clickOk();
+    initiateRnRPage.verifySubmitSuccessMsg();
 
     homePage.navigateAndInitiateRnr(program);
-    InitiateRnRPage initiateRnRPage2 = homePage.clickProceed();
-    initiateRnRPage2.clickRegimenTab();
-    verifyValuesOnAuthorizeRegimenScreen(initiateRnRPage2, "100", "200", "300", "400");
-    initiateRnRPage2.clickAuthorizeButton();
-    initiateRnRPage2.clickOk();
-    initiateRnRPage2.verifyAuthorizeRnrSuccessMsg();
+    initiateRnRPage = homePage.clickProceed();
+    initiateRnRPage.clickRegimenTab();
+    verifyValuesOnAuthorizeRegimenScreen("100", "200", "300", "400");
+    initiateRnRPage.clickAuthorizeButton();
+    initiateRnRPage.clickOk();
+    initiateRnRPage.verifyAuthorizeRnrSuccessMsg();
   }
 
   @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-Positive")
   public void testApproveRegimen(String program, String userSIC, String categoryCode, String password,
                                  String regimenCode, String regimenName, String regimenCode2, String regimenName2) throws Exception {
-    List<String> rightsList = new ArrayList<>();
-    rightsList.add(CREATE_REQUISITION);
-    rightsList.add(VIEW_REQUISITION);
-    rightsList.add(AUTHORIZE_REQUISITION);
-    rightsList.add(APPROVE_REQUISITION);
+    List<String> rightsList = asList(CREATE_REQUISITION, VIEW_REQUISITION, AUTHORIZE_REQUISITION, APPROVE_REQUISITION);
     setupTestDataToInitiateRnR(true, program, userSIC, "200", rightsList);
     dbWrapper.insertRegimenTemplateConfiguredForProgram(program, categoryCode, regimenCode, regimenName, true);
     dbWrapper.insertRegimenTemplateConfiguredForProgram(program, categoryCode, regimenCode2, regimenName2, false);
     dbWrapper.insertRegimenTemplateColumnsForProgram(program);
-    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
-    HomePage homePage = loginPage.loginAs(userSIC, password);
+
+    homePage = loginPage.loginAs(userSIC, password);
     homePage.navigateAndInitiateRnr(program);
-    InitiateRnRPage initiateRnRPage = homePage.clickProceed();
+    initiateRnRPage = homePage.clickProceed();
     dbWrapper.insertValuesInRequisition(false);
     dbWrapper.insertValuesInRegimenLineItems("100", "200", "300", "testing");
     dbWrapper.updateRequisitionStatus(SUBMITTED, userSIC, "HIV");
     dbWrapper.updateFieldValue("requisition_line_items", "quantityApproved", 10);
     dbWrapper.updateRequisitionStatus(AUTHORIZED, userSIC, "HIV");
 
-    ApprovePage approvePageLowerSNUser = homePage.navigateToApprove();
-    approvePageLowerSNUser.clickRequisitionPresentForApproval();
-    approvePageLowerSNUser.clickRegimenTab();
-    verifyValuesOnRegimenScreen(initiateRnRPage, "100", "200", "300", "testing");
-    approvePageLowerSNUser.clickSaveButton();
-    approvePageLowerSNUser.clickApproveButton();
-    approvePageLowerSNUser.clickOk();
-    approvePageLowerSNUser.verifyNoRequisitionPendingMessage();
+    ApprovePage approvePage = homePage.navigateToApprove();
+    approvePage.clickRequisitionPresentForApproval();
+    approvePage.clickRegimenTab();
+    verifyValuesOnRegimenScreen("100", "200", "300", "testing");
+    approvePage.clickSaveButton();
+    approvePage.clickApproveButton();
+    approvePage.clickOk();
+    approvePage.verifyNoRequisitionPendingMessage();
   }
 
   @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-Positive")
@@ -320,8 +324,8 @@ public class InitiateRnR extends TestCaseHelper {
     dbWrapper.insertRegimenTemplateConfiguredForProgram(program, categoryCode, regimenCode, regimenName, true);
     dbWrapper.insertRegimenTemplateConfiguredForProgram(program, categoryCode, regimenCode2, regimenName2, false);
     dbWrapper.insertRegimenTemplateColumnsForProgram(program);
-    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
-    HomePage homePage = loginPage.loginAs(userSIC, password);
+
+    homePage = loginPage.loginAs(userSIC, password);
     homePage.navigateAndInitiateRnr(program);
     homePage.clickProceed();
 
@@ -331,14 +335,14 @@ public class InitiateRnR extends TestCaseHelper {
     dbWrapper.updateFieldValue("requisition_line_items", "quantityApproved", 10);
     dbWrapper.updateRequisitionStatus(AUTHORIZED, userSIC, "HIV");
 
-    ApprovePage approvePageLowerSNUser = homePage.navigateToApprove();
-    approvePageLowerSNUser.clickRequisitionPresentForApproval();
-    approvePageLowerSNUser.editFullSupplyApproveQuantity("");
-    approvePageLowerSNUser.clickApproveButton();
-    approvePageLowerSNUser.editFullSupplyApproveQuantity("100");
-    approvePageLowerSNUser.clickApproveButton();
-    approvePageLowerSNUser.clickOk();
-    approvePageLowerSNUser.verifyNoRequisitionPendingMessage();
+    ApprovePage approvePage = homePage.navigateToApprove();
+    approvePage.clickRequisitionPresentForApproval();
+    approvePage.editFullSupplyApproveQuantity("");
+    approvePage.clickApproveButton();
+    approvePage.editFullSupplyApproveQuantity("100");
+    approvePage.clickApproveButton();
+    approvePage.clickOk();
+    approvePage.verifyNoRequisitionPendingMessage();
   }
 
   @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-Positive")
@@ -351,10 +355,10 @@ public class InitiateRnR extends TestCaseHelper {
     dbWrapper.insertRegimenTemplateConfiguredForProgram(program, categoryCode, regimenCode2, regimenName2, false);
     dbWrapper.insertRegimenTemplateColumnsForProgram(program);
     dbWrapper.updateProgramRegimenColumns(program, "remarks", false);
-    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
-    HomePage homePage = loginPage.loginAs(userSIC, password);
+
+    homePage = loginPage.loginAs(userSIC, password);
     homePage.navigateAndInitiateRnr(program);
-    InitiateRnRPage initiateRnRPage = homePage.clickProceed();
+    initiateRnRPage = homePage.clickProceed();
 
     testWebDriver.sleep(2000);
     initiateRnRPage.clickRegimenTab();
@@ -370,10 +374,10 @@ public class InitiateRnR extends TestCaseHelper {
     dbWrapper.insertRegimenTemplateConfiguredForProgram(program, categoryCode, regimenCode, regimenName, false);
     dbWrapper.insertRegimenTemplateConfiguredForProgram(program, categoryCode, regimenCode2, regimenName2, false);
     dbWrapper.insertRegimenTemplateColumnsForProgram(program);
-    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
-    HomePage homePage = loginPage.loginAs(userSIC, password);
+
+    homePage = loginPage.loginAs(userSIC, password);
     homePage.navigateAndInitiateRnr(program);
-    InitiateRnRPage initiateRnRPage = homePage.clickProceed();
+    initiateRnRPage = homePage.clickProceed();
 
     testWebDriver.sleep(2000);
     assertFalse("Regimen tab should not be displayed.", initiateRnRPage.existRegimenTab());
@@ -384,10 +388,9 @@ public class InitiateRnR extends TestCaseHelper {
                                                                   String password) throws Exception {
     List<String> rightsList = asList(CREATE_REQUISITION, VIEW_REQUISITION);
     setupTestDataToInitiateRnR(true, program, userSIC, "200", rightsList);
-    dbWrapper.deleteRowFromTable("processing_periods","name","Period2");
+    dbWrapper.deleteRowFromTable("processing_periods", "name", "Period2");
 
-    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
-    HomePage homePage = loginPage.loginAs(userSIC, password);
+    homePage = loginPage.loginAs(userSIC, password);
     homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Regular");
     verifyErrorMessages("No current period defined. Please contact the Admin.");
   }
@@ -397,10 +400,9 @@ public class InitiateRnR extends TestCaseHelper {
                                                                 String password) throws Exception {
     List<String> rightsList = asList(AUTHORIZE_REQUISITION, VIEW_REQUISITION);
     setupTestDataToInitiateRnR(true, program, userSIC, "200", rightsList);
-    dbWrapper.deleteRowFromTable("processing_periods","name","Period2");
+    dbWrapper.deleteRowFromTable("processing_periods", "name", "Period2");
 
-    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
-    HomePage homePage = loginPage.loginAs(userSIC, password);
+    homePage = loginPage.loginAs(userSIC, password);
     homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Regular");
     verifyErrorMessages("No current period defined. Please contact the Admin.");
   }
@@ -411,8 +413,7 @@ public class InitiateRnR extends TestCaseHelper {
     List<String> rightsList = asList(AUTHORIZE_REQUISITION, VIEW_REQUISITION);
     setupTestDataToInitiateRnR(true, program, userSIC, "200", rightsList);
 
-    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
-    HomePage homePage = loginPage.loginAs(userSIC, password);
+    homePage = loginPage.loginAs(userSIC, password);
     homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Emergency");
     verifyErrorMessages("No current period defined. Please contact the Admin.");
   }
@@ -422,9 +423,9 @@ public class InitiateRnR extends TestCaseHelper {
     List<String> rightsList = asList(CREATE_REQUISITION, VIEW_REQUISITION);
     setupTestDataToInitiateRnR(true, program, userSIC, "200", rightsList);
 
-    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
-    HomePage homePage = loginPage.loginAs(userSIC, password);
+    homePage = loginPage.loginAs(userSIC, password);
     homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Emergency");
+
     verifyErrorMessages("No current period defined. Please contact the Admin.");
     homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Regular");
     homePage.clickProceed();
@@ -434,21 +435,22 @@ public class InitiateRnR extends TestCaseHelper {
   public void shouldVerifyRequisitionAlreadySubmittedMessage(String program, String userSIC, String password) throws Exception {
     List<String> rightsList = asList(CREATE_REQUISITION, AUTHORIZE_REQUISITION, VIEW_REQUISITION);
     setupTestDataToInitiateRnR(true, program, userSIC, "200", rightsList);
-    dbWrapper.deleteRowFromTable("processing_periods","name","Period1");
-    dbWrapper.deleteRowFromTable("processing_periods","name","Period2");
+    dbWrapper.deleteRowFromTable("processing_periods", "name", "Period1");
+    dbWrapper.deleteRowFromTable("processing_periods", "name", "Period2");
     dbWrapper.insertProcessingPeriod("current Period", "current Period", "2013-10-03", "2014-01-30", 1, "M");
-    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
-    HomePage homePage = loginPage.loginAs(userSIC, password);
+
+    homePage = loginPage.loginAs(userSIC, password);
     homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Regular");
     homePage.clickProceed();
+
     dbWrapper.insertValuesInRequisition(false);
     homePage.navigateAndInitiateRnr(program);
-    InitiateRnRPage initiateRnRPage1 = homePage.clickProceed();
-    initiateRnRPage1.clickSubmitButton();
-    initiateRnRPage1.clickOk();
+    initiateRnRPage = homePage.clickProceed();
+    initiateRnRPage.clickSubmitButton();
+    initiateRnRPage.clickOk();
 
-    initiateRnRPage1.clickAuthorizeButton();
-    initiateRnRPage1.clickOk();
+    initiateRnRPage.clickAuthorizeButton();
+    initiateRnRPage.clickOk();
 
     homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Regular");
 
@@ -465,15 +467,14 @@ public class InitiateRnR extends TestCaseHelper {
 
     List<String> rightsList1 = asList(AUTHORIZE_REQUISITION, VIEW_REQUISITION);
     createUserAndAssignRoleRights("201", "mo", "Maar_Doe@openlmis.com", "F10", "district pharmacist", rightsList1);
-    dbWrapper.deleteRowFromTable("processing_periods","name","Period1");
-    dbWrapper.deleteRowFromTable("processing_periods","name","Period2");
+    dbWrapper.deleteRowFromTable("processing_periods", "name", "Period1");
+    dbWrapper.deleteRowFromTable("processing_periods", "name", "Period2");
     dbWrapper.insertProcessingPeriod("current Period", "current Period", "2013-10-03", "2014-01-30", 1, "M");
-    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
-    HomePage homePage = loginPage.loginAs(userSIC, password);
 
+    homePage = loginPage.loginAs(userSIC, password);
     homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Emergency");
     homePage.clickProceed();
-    InitiateRnRPage initiateRnRPage = new InitiateRnRPage(testWebDriver);
+
     initiateRnRPage.enterValue(100, "beginningBalanceFirstProduct");
     initiateRnRPage.enterValue(0, "quantityReceivedFirstProduct");
     initiateRnRPage.enterValue(100, "quantityDispensedFirstProduct");
@@ -498,9 +499,8 @@ public class InitiateRnR extends TestCaseHelper {
     verifyRnRsInGrid("current Period", "SUBMITTED", "2");
 
     homePage.logout(baseUrlGlobal);
-
-    HomePage homePage1 = loginPage.loginAs("mo", password);
-    homePage1.navigateAndInitiateEmergencyRnr(program);
+    homePage = loginPage.loginAs("mo", password);
+    homePage.navigateAndInitiateEmergencyRnr(program);
 
     verifyRnRsInGrid("current Period", "Not yet started", "1");
     verifyRnRsInGrid("current Period", "INITIATED", "3");
@@ -517,16 +517,16 @@ public class InitiateRnR extends TestCaseHelper {
     initiateRnRPage1.clickOk();
     initiateRnRPage1.verifyAuthorizeRnrSuccessMsg();
 
-    homePage1.navigateAndInitiateEmergencyRnr(program);
+    homePage.navigateAndInitiateEmergencyRnr(program);
 
     verifyRnRsInGrid("current Period", "Not yet started", "1");
     verifyRnRsInGrid("current Period", "INITIATED", "2");
 
-    homePage1.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Regular");
+    homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Regular");
     clickProceed(1);
     verifyErrorMessages("Requisition not initiated yet");
 
-    ViewRequisitionPage viewRequisitionPage = homePage1.navigateViewRequisition();
+    ViewRequisitionPage viewRequisitionPage = homePage.navigateViewRequisition();
     viewRequisitionPage.enterViewSearchCriteria();
     viewRequisitionPage.clickSearch();
     viewRequisitionPage.verifyEmergencyStatus();
@@ -550,14 +550,13 @@ public class InitiateRnR extends TestCaseHelper {
     List<String> rightsList3 = asList(CONVERT_TO_ORDER, VIEW_ORDER);
     createUserAndAssignRoleRights("401", userName, "Jaan_V_Doe@openlmis.com", "F10", roleName, rightsList3);
 
-    dbWrapper.deleteRowFromTable("processing_periods","name","Period1");
-    dbWrapper.deleteRowFromTable("processing_periods","name","Period2");
+    dbWrapper.deleteRowFromTable("processing_periods", "name", "Period1");
+    dbWrapper.deleteRowFromTable("processing_periods", "name", "Period2");
     String periodStartDate = "2013-10-03";
     String periodEndDate = "2014-01-30";
     dbWrapper.insertProcessingPeriod("current Period", "current Period", periodStartDate, periodEndDate, 1, "M");
 
-    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
-    HomePage homePage = loginPage.loginAs(userSIC, password);
+    homePage = loginPage.loginAs(userSIC, password);
 
     Integer quantityDispensed = 100;
     Integer beginningBalance = 1;
@@ -565,24 +564,23 @@ public class InitiateRnR extends TestCaseHelper {
 
     homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Emergency");
     homePage.clickProceed();
-    InitiateRnRPage initiateRnRPage1 = new InitiateRnRPage(testWebDriver);
-    initiateRnRPage1.enterValue(beginningBalance, "beginningBalanceFirstProduct");
-    initiateRnRPage1.enterValue(quantityReceived, "quantityReceivedFirstProduct");
-    initiateRnRPage1.enterValue(quantityDispensed, "quantityDispensedFirstProduct");
-    initiateRnRPage1.clickSubmitButton();
-    initiateRnRPage1.clickOk();
-    initiateRnRPage1.verifyBeginningBalanceForFirstProduct(beginningBalance);
-    initiateRnRPage1.verifyQuantityReceivedForFirstProduct(quantityReceived);
-    initiateRnRPage1.verifyQuantityDispensedForFirstProduct(quantityDispensed);
+
+    initiateRnRPage.enterValue(beginningBalance, "beginningBalanceFirstProduct");
+    initiateRnRPage.enterValue(quantityReceived, "quantityReceivedFirstProduct");
+    initiateRnRPage.enterValue(quantityDispensed, "quantityDispensedFirstProduct");
+    initiateRnRPage.clickSubmitButton();
+    initiateRnRPage.clickOk();
+    initiateRnRPage.verifyBeginningBalanceForFirstProduct(beginningBalance);
+    initiateRnRPage.verifyQuantityReceivedForFirstProduct(quantityReceived);
+    initiateRnRPage.verifyQuantityDispensedForFirstProduct(quantityDispensed);
     homePage.logout(baseUrlGlobal);
 
     homePage = loginPage.loginAs("mo", password);
     homePage.navigateAndInitiateEmergencyRnr(program);
 
     clickProceed(2);
-    initiateRnRPage1.clickAuthorizeButton();
-    initiateRnRPage1.clickOk();
-
+    initiateRnRPage.clickAuthorizeButton();
+    initiateRnRPage.clickOk();
     homePage.logout(baseUrlGlobal);
 
     homePage = loginPage.loginAs("lmu", password);
@@ -604,6 +602,7 @@ public class InitiateRnR extends TestCaseHelper {
     assertEquals(AMC.toString(), approvePage.getAMC());
     assertEquals(maxStockQuantity.toString(), approvePage.getMaxStockQuantity());
     assertEquals(calculatedOrderQuantity.toString(), approvePage.getCalculatedOrderQuantity());
+
     approvePage.editFullSupplyApproveQuantity("");
     approvePage.approveRequisition();
     approvePage.verifyApproveErrorDiv();
@@ -613,22 +612,21 @@ public class InitiateRnR extends TestCaseHelper {
     approvePage.verifyNoRequisitionPendingMessage();
 
     homePage.logout(baseUrlGlobal);
-
-    HomePage homePage3 = loginPage.loginAs(userName, password);
-    ConvertOrderPage convertOrderPage = homePage3.navigateConvertToOrder();
+    homePage = loginPage.loginAs(userName, password);
+    ConvertOrderPage convertOrderPage = homePage.navigateConvertToOrder();
     convertOrderPage.verifyNoRequisitionPendingMessage();
 
-    ViewOrdersPage viewOrdersPage = homePage3.navigateViewOrders();
+    ViewOrdersPage viewOrdersPage = homePage.navigateViewOrders();
     viewOrdersPage.verifyNoRequisitionReleasedAsOrderMessage();
 
     dbWrapper.insertFulfilmentRoleAssignment(userName, roleName, "F10");
-    homePage3.navigateHomePage();
-    homePage3.navigateConvertToOrder();
+    homePage.navigateHomePage();
+    homePage.navigateConvertToOrder();
     convertOrderPage.verifyOrderListElements(program, "F10", "Village Dispensary", "03/10/2013", "30/01/2014", "Village Dispensary");
     convertOrderPage.convertToOrder();
 
-    homePage3.navigateHomePage();
-    ViewOrdersPage viewOrdersPage1 = homePage3.navigateViewOrders();
+    homePage.navigateHomePage();
+    ViewOrdersPage viewOrdersPage1 = homePage.navigateViewOrders();
     viewOrdersPage1.isFirstRowPresent();
   }
 
@@ -636,15 +634,14 @@ public class InitiateRnR extends TestCaseHelper {
   public void testValidationsOnStockOnHandRnRField(String program, String userSIC, String password) throws Exception {
     List<String> rightsList = asList(CREATE_REQUISITION, VIEW_REQUISITION);
     setupTestDataToInitiateRnR(true, program, userSIC, "200", rightsList);
-    dbWrapper.deleteRowFromTable("processing_periods","name","Period1");
-    dbWrapper.deleteRowFromTable("processing_periods","name","Period2");
+    dbWrapper.deleteRowFromTable("processing_periods", "name", "Period1");
+    dbWrapper.deleteRowFromTable("processing_periods", "name", "Period2");
     dbWrapper.insertProcessingPeriod("current Period", "current Period", "2013-10-03", "2014-01-30", 1, "M");
-    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
-    HomePage homePage = loginPage.loginAs(userSIC, password);
 
+    homePage = loginPage.loginAs(userSIC, password);
     homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Emergency");
     homePage.clickProceed();
-    InitiateRnRPage initiateRnRPage = new InitiateRnRPage(testWebDriver);
+
     initiateRnRPage.enterValue(100, "beginningBalanceFirstProduct");
     initiateRnRPage.enterValue(0, "quantityReceivedFirstProduct");
     initiateRnRPage.enterValue(1000, "quantityDispensedFirstProduct");
@@ -655,17 +652,16 @@ public class InitiateRnR extends TestCaseHelper {
   public void testValidationsOnTotalConsumedQuantityRnRField(String program, String userSIC, String password) throws Exception {
     List<String> rightsList = asList(CREATE_REQUISITION, VIEW_REQUISITION);
     setupTestDataToInitiateRnR(true, program, userSIC, "200", rightsList);
-    dbWrapper.deleteRowFromTable("processing_periods","name","Period1");
-    dbWrapper.deleteRowFromTable("processing_periods","name","Period2");
+    dbWrapper.deleteRowFromTable("processing_periods", "name", "Period1");
+    dbWrapper.deleteRowFromTable("processing_periods", "name", "Period2");
     dbWrapper.insertProcessingPeriod("current Period", "current Period", "2013-10-03", "2014-01-30", 1, "M");
     dbWrapper.updateSourceOfAProgramTemplate("HIV", "Total Consumed Quantity", "C");
     dbWrapper.updateSourceOfAProgramTemplate("HIV", "Stock on Hand", "U");
 
-    HomePage homePage = new LoginPage(testWebDriver, baseUrlGlobal).loginAs(userSIC, password);
-
+    homePage = loginPage.loginAs(userSIC, password);
     homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Emergency");
     homePage.clickProceed();
-    InitiateRnRPage initiateRnRPage = new InitiateRnRPage(testWebDriver);
+
     initiateRnRPage.enterValue(100, "beginningBalanceFirstProduct");
     initiateRnRPage.enterValue(0, "quantityReceivedFirstProduct");
     initiateRnRPage.enterValue(1000, "stockInHandFirstProduct");
@@ -677,14 +673,13 @@ public class InitiateRnR extends TestCaseHelper {
   public void testVerifyAllStatusOfRequisitions(String program, String userSIC, String password) throws Exception {
     List<String> rightsList = asList(CREATE_REQUISITION, VIEW_REQUISITION);
     setupTestDataToInitiateRnR(true, program, userSIC, "200", rightsList);
-    dbWrapper.deleteRowFromTable("processing_periods","name","Period1");
-    dbWrapper.deleteRowFromTable("processing_periods","name","Period2");
+    dbWrapper.deleteRowFromTable("processing_periods", "name", "Period1");
+    dbWrapper.deleteRowFromTable("processing_periods", "name", "Period2");
     dbWrapper.insertProcessingPeriod("current Period", "current Period", "2013-10-03", "2014-01-30", 1, "M");
-    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
-    HomePage homePage = loginPage.loginAs(userSIC, password);
 
+    homePage = loginPage.loginAs(userSIC, password);
     homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Emergency");
-    InitiateRnRPage initiateRnRPage = homePage.clickProceed();
+    initiateRnRPage = homePage.clickProceed();
     initiateRnRPage.enterValue(100, "beginningBalanceFirstProduct");
     initiateRnRPage.enterValue(100, "quantityReceivedFirstProduct");
     initiateRnRPage.enterValue(100, "quantityDispensedFirstProduct");
@@ -702,27 +697,26 @@ public class InitiateRnR extends TestCaseHelper {
 
     createUserAndAssignRoleRights("201", "mo", "Maar_Doe@openlmis.com", "F10", "district pharmacist",
       asList(AUTHORIZE_REQUISITION, VIEW_REQUISITION));
-    dbWrapper.deleteRowFromTable("processing_periods","name","Period1");
-    dbWrapper.deleteRowFromTable("processing_periods","name","Period2");
+    dbWrapper.deleteRowFromTable("processing_periods", "name", "Period1");
+    dbWrapper.deleteRowFromTable("processing_periods", "name", "Period2");
     dbWrapper.insertProcessingPeriod("current Period", "current Period", "2013-10-03", "2014-01-30", 1, "M");
-    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
-    HomePage homePage = loginPage.loginAs(userSIC, password);
+
+    homePage = loginPage.loginAs(userSIC, password);
     homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Regular");
     homePage.clickProceed();
     dbWrapper.insertValuesInRequisition(false);
     homePage.navigateAndInitiateRnr(program);
-    InitiateRnRPage initiateRnRPage1 = homePage.clickProceed();
-    initiateRnRPage1.clickSubmitButton();
-    initiateRnRPage1.clickOk();
-
+    initiateRnRPage = homePage.clickProceed();
+    initiateRnRPage.clickSubmitButton();
+    initiateRnRPage.clickOk();
     homePage.logout(baseUrlGlobal);
 
     homePage = loginPage.loginAs("mo", password);
     homePage.navigateAndInitiateRnr(program);
-    InitiateRnRPage initiateRnRPage2 = homePage.clickProceed();
+    initiateRnRPage = homePage.clickProceed();
 
-    initiateRnRPage2.clickAuthorizeButton();
-    initiateRnRPage2.clickOk();
+    initiateRnRPage.clickAuthorizeButton();
+    initiateRnRPage.clickOk();
 
     homePage.logout(baseUrlGlobal);
     homePage = loginPage.loginAs(userSIC, password);
@@ -732,7 +726,6 @@ public class InitiateRnR extends TestCaseHelper {
     testWebDriver.sleep(1000);
 
     testWebDriver.selectByVisibleText(testWebDriver.getElementByXpath("//select[@id='programListMyFacility']"), program);
-
     verifyErrorMessages("R&R for current period already submitted");
 
     homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Emergency");
@@ -743,11 +736,10 @@ public class InitiateRnR extends TestCaseHelper {
   public void shouldVerifyNoCurrentPeriodDefinedMessage(String program, String userSIC, String password) throws Exception {
     List<String> rightsList = asList(AUTHORIZE_REQUISITION, VIEW_REQUISITION);
     setupTestDataToInitiateRnR(true, program, userSIC, "200", rightsList);
+    dbWrapper.deleteRowFromTable("processing_periods", "name", "Period1");
+    dbWrapper.deleteRowFromTable("processing_periods", "name", "Period2");
 
-    dbWrapper.deleteRowFromTable("processing_periods","name","Period1");
-    dbWrapper.deleteRowFromTable("processing_periods","name","Period2");
-    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
-    HomePage homePage = loginPage.loginAs(userSIC, password);
+    homePage = loginPage.loginAs(userSIC, password);
     homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Regular");
 
     String errorMessage = "No current period defined. Please contact the Admin.";
@@ -759,20 +751,18 @@ public class InitiateRnR extends TestCaseHelper {
   @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-RnR")
   public void testRnRBeginningBalance(String program, String userSIC, String password) throws Exception {
     List<String> rightsList = asList(CREATE_REQUISITION, VIEW_REQUISITION);
-
     setupTestDataToInitiateRnR(true, program, userSIC, "200", rightsList);
     dbWrapper.deleteTable("processing_periods");
     dbWrapper.insertProcessingPeriod("Period1", "first period", "2012-12-01", "2013-01-15", 1, "M");
 
-    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
-    HomePage homePage = loginPage.loginAs(userSIC, password);
+    homePage = loginPage.loginAs(userSIC, password);
     homePage.navigateAndInitiateRnr(program);
     homePage.clickProceed();
 
     dbWrapper.insertValuesInRequisition(false);
     homePage.navigateAndInitiateRnr(program);
     homePage.clickProceed();
-    InitiateRnRPage initiateRnRPage = new InitiateRnRPage(testWebDriver);
+    initiateRnRPage = new InitiateRnRPage(testWebDriver);
     initiateRnRPage.submitRnR();
     initiateRnRPage.clickOk();
     dbWrapper.updateRequisitionStatus("AUTHORIZED", "storeInCharge", "HIV");
@@ -794,11 +784,10 @@ public class InitiateRnR extends TestCaseHelper {
   public void testRestrictVirtualFacilityFromRnRScreen(String program, String userSIC, String password) throws Exception {
     List<String> rightsList = asList(CREATE_REQUISITION, VIEW_REQUISITION);
     setupTestDataToInitiateRnR(true, program, userSIC, "200", rightsList);
-    dbWrapper.updateFieldValue("facilities","virtualFacility","true","code","F10");
+    dbWrapper.updateFieldValue("facilities", "virtualFacility", "true", "code", "F10");
     dbWrapper.insertRoleAssignmentForSupervisoryNodeForProgramId1("200", "store in-charge", "N1");
 
-    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
-    HomePage homePage = loginPage.loginAs(userSIC, password);
+    homePage = loginPage.loginAs(userSIC, password);
     homePage.navigateAndInitiateRnrForSupervisedFacility(program);
     String str = homePage.getFacilityDropDownList();
     assertFalse(str.contains("F10"));
@@ -808,16 +797,15 @@ public class InitiateRnR extends TestCaseHelper {
   public void testSkipProductRnRField(String program, String userSIC, String password) throws Exception {
     List<String> rightsList = asList(CREATE_REQUISITION, VIEW_REQUISITION);
     setupTestDataToInitiateRnR(true, program, userSIC, "200", rightsList);
-    dbWrapper.deleteRowFromTable("processing_periods","name","Period1");
-    dbWrapper.deleteRowFromTable("processing_periods","name","Period2");
+    dbWrapper.deleteRowFromTable("processing_periods", "name", "Period1");
+    dbWrapper.deleteRowFromTable("processing_periods", "name", "Period2");
     dbWrapper.insertProcessingPeriod("current Period", "current Period", "2013-10-03", "2014-01-30", 1, "M");
-    dbWrapper.updateFieldValue("products","fullSupply","true","code","P11");
-    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
-    HomePage homePage = loginPage.loginAs(userSIC, password);
+    dbWrapper.updateFieldValue("products", "fullSupply", "true", "code", "P11");
 
+    homePage = loginPage.loginAs(userSIC, password);
     homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Emergency");
     homePage.clickProceed();
-    InitiateRnRPage initiateRnRPage = new InitiateRnRPage(testWebDriver);
+
     initiateRnRPage.enterValue(100, "requestedQuantityFirstProduct");
     initiateRnRPage.calculateAndVerifyTotalCost();
     initiateRnRPage.verifyCostOnFooterForProducts(1);
@@ -859,16 +847,15 @@ public class InitiateRnR extends TestCaseHelper {
   public void testSkipProductRnRAuthorizeApproveForRegularRnR(String program, String userSIC, String password) throws Exception {
     List<String> rightsList = asList(CREATE_REQUISITION, VIEW_REQUISITION, AUTHORIZE_REQUISITION, APPROVE_REQUISITION);
     setupTestDataToInitiateRnR(true, program, userSIC, "200", rightsList);
-    dbWrapper.deleteRowFromTable("processing_periods","name","Period1");
-    dbWrapper.deleteRowFromTable("processing_periods","name","Period2");
+    dbWrapper.deleteRowFromTable("processing_periods", "name", "Period1");
+    dbWrapper.deleteRowFromTable("processing_periods", "name", "Period2");
     dbWrapper.insertProcessingPeriod("current Period", "current Period", "2013-10-03", "2014-01-30", 1, "M");
-    dbWrapper.updateFieldValue("products","fullSupply","true","code","P11");
+    dbWrapper.updateFieldValue("products", "fullSupply", "true", "code", "P11");
 
-    HomePage homePage = new LoginPage(testWebDriver, baseUrlGlobal).loginAs(userSIC, password);
-
+    homePage = new LoginPage(testWebDriver, baseUrlGlobal).loginAs(userSIC, password);
     homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Regular");
     homePage.clickProceed();
-    InitiateRnRPage initiateRnRPage = new InitiateRnRPage(testWebDriver);
+
     initiateRnRPage.enterValue(10, "beginningBalanceFirstProduct");
     initiateRnRPage.enterValue(0, "quantityReceivedFirstProduct");
     initiateRnRPage.enterValue(0, "quantityDispensedFirstProduct");
@@ -892,6 +879,7 @@ public class InitiateRnR extends TestCaseHelper {
     initiateRnRPage.clickAuthorizeButton();
     initiateRnRPage.clickOk();
     initiateRnRPage.verifyAuthorizeRnrSuccessMsg();
+
     ApprovePage approvePage = homePage.navigateToApprove();
     approvePage.clickRequisitionPresentForApproval();
     assertTrue(approvePage.approveQuantityVisible(1));
@@ -906,16 +894,15 @@ public class InitiateRnR extends TestCaseHelper {
   public void testSkipProductRnRAuthorizeApproveUpdatePodForEmergencyRnR(String program, String userSIC, String password) throws Exception {
     List<String> rightsList = asList(CREATE_REQUISITION, VIEW_REQUISITION, AUTHORIZE_REQUISITION, APPROVE_REQUISITION, CONVERT_TO_ORDER, MANAGE_POD);
     setupTestDataToInitiateRnR(true, program, userSIC, "200", rightsList);
-    dbWrapper.deleteRowFromTable("processing_periods","name","Period1");
-    dbWrapper.deleteRowFromTable("processing_periods","name","Period2");
+    dbWrapper.deleteRowFromTable("processing_periods", "name", "Period1");
+    dbWrapper.deleteRowFromTable("processing_periods", "name", "Period2");
     dbWrapper.insertProcessingPeriod("current Period", "current Period", "2013-10-03", "2014-01-30", 1, "M");
-    dbWrapper.updateFieldValue("products","fullSupply","true","code","P11");
-    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
-    HomePage homePage = loginPage.loginAs(userSIC, password);
+    dbWrapper.updateFieldValue("products", "fullSupply", "true", "code", "P11");
 
+    homePage = loginPage.loginAs(userSIC, password);
     homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Emergency");
     homePage.clickProceed();
-    InitiateRnRPage initiateRnRPage = new InitiateRnRPage(testWebDriver);
+
     initiateRnRPage.enterValue(10, "beginningBalanceFirstProduct");
     initiateRnRPage.enterValue(0, "quantityReceivedFirstProduct");
     initiateRnRPage.enterValue(0, "quantityDispensedFirstProduct");
@@ -940,6 +927,7 @@ public class InitiateRnR extends TestCaseHelper {
     initiateRnRPage.clickAuthorizeButton();
     initiateRnRPage.clickOk();
     initiateRnRPage.verifyAuthorizeRnrSuccessMsg();
+
     ApprovePage approvePage = homePage.navigateToApprove();
     approvePage.clickRequisitionPresentForApproval();
     assertTrue(approvePage.approveQuantityVisible(1));
@@ -963,8 +951,7 @@ public class InitiateRnR extends TestCaseHelper {
     assertFalse(updatePodPage.getPodTableData().contains("P11"));
   }
 
-  private void verifyRegimenFieldsPresentOnRegimenTab(String regimenCode, String regimenName,
-                                                      InitiateRnRPage initiateRnRPage) {
+  private void verifyRegimenFieldsPresentOnRegimenTab(String regimenCode, String regimenName) {
     assertTrue("Regimen tab should be displayed.", initiateRnRPage.existRegimenTab());
     assertEquals(initiateRnRPage.getRegimenTableRowCount(), 2);
 
@@ -986,16 +973,16 @@ public class InitiateRnR extends TestCaseHelper {
         message));
   }
 
-  private void verifyValuesOnRegimenScreen(InitiateRnRPage initiateRnRPage, String patientsOnTreatment,
-                                           String patientsToInitiateTreatment, String patientsStoppedTreatment, String remarks) {
+  private void verifyValuesOnRegimenScreen(String patientsOnTreatment, String patientsToInitiateTreatment,
+                                           String patientsStoppedTreatment, String remarks) {
     assertEquals(patientsOnTreatment, initiateRnRPage.getPatientsOnTreatmentValue());
     assertEquals(patientsToInitiateTreatment, initiateRnRPage.getPatientsToInitiateTreatmentValue());
     assertEquals(patientsStoppedTreatment, initiateRnRPage.getPatientsStoppedTreatmentValue());
     assertEquals(remarks, initiateRnRPage.getRemarksValue());
   }
 
-  private void verifyValuesOnAuthorizeRegimenScreen(InitiateRnRPage initiateRnRPage, String patientsOnTreatment,
-                                                    String patientsToInitiateTreatment, String patientsStoppedTreatment, String remarks) {
+  private void verifyValuesOnAuthorizeRegimenScreen(String patientsOnTreatment, String patientsToInitiateTreatment,
+                                                    String patientsStoppedTreatment, String remarks) {
     assertEquals(patientsOnTreatment, initiateRnRPage.getPatientsOnTreatmentInputValue());
     assertEquals(patientsToInitiateTreatment, initiateRnRPage.getPatientsToInitiateTreatmentInputValue());
     assertEquals(patientsStoppedTreatment, initiateRnRPage.getPatientsStoppedTreatmentInputValue());
@@ -1024,8 +1011,7 @@ public class InitiateRnR extends TestCaseHelper {
     testWebDriver.getElementByXpath("(//input[@value='Proceed'])[" + row + "]").click();
   }
 
-  public void verifyBudgetAmountPresentOnFooter(String budgetAmount) throws IOException {
-    InitiateRnRPage initiateRnRPage = new InitiateRnRPage(testWebDriver);
+  public void verifyBudgetAmountPresentOnFooter(String budgetAmount) {
     assertTrue(initiateRnRPage.isAllocatedBudgetLabelDisplayed());
     assertEquals(ALLOCATED_BUDGET, initiateRnRPage.getAllocatedBudgetLabel());
     assertTrue(initiateRnRPage.isAllocatedBudgetAmountDisplayed());
@@ -1033,8 +1019,7 @@ public class InitiateRnR extends TestCaseHelper {
     assertFalse(initiateRnRPage.isBudgetNotAllocatedDisplayed());
   }
 
-  public void verifyBudgetAmountNotAllocated() throws IOException {
-    InitiateRnRPage initiateRnRPage = new InitiateRnRPage(testWebDriver);
+  public void verifyBudgetAmountNotAllocated() {
     assertTrue(initiateRnRPage.isAllocatedBudgetLabelDisplayed());
     assertEquals(ALLOCATED_BUDGET, initiateRnRPage.getAllocatedBudgetLabel());
     assertTrue(initiateRnRPage.isBudgetNotAllocatedDisplayed());
@@ -1042,15 +1027,13 @@ public class InitiateRnR extends TestCaseHelper {
     assertFalse(initiateRnRPage.isAllocatedBudgetAmountDisplayed());
   }
 
-  public void verifyBudgetNotDisplayed() throws IOException {
-    InitiateRnRPage initiateRnRPage = new InitiateRnRPage(testWebDriver);
+  public void verifyBudgetNotDisplayed() {
     assertFalse(initiateRnRPage.isAllocatedBudgetLabelDisplayed());
     assertFalse(initiateRnRPage.isAllocatedBudgetAmountDisplayed());
     assertFalse(initiateRnRPage.isBudgetNotAllocatedDisplayed());
   }
 
   public void checkWhetherBudgetExceedWarningPresent(boolean isWarningPresentFlag) throws IOException {
-    InitiateRnRPage initiateRnRPage = new InitiateRnRPage(testWebDriver);
     boolean flag = false;
     if (isWarningPresentFlag) {
       assertEquals("The total cost exceeds the allocated budget", initiateRnRPage.getBudgetWarningMessage());
@@ -1064,11 +1047,10 @@ public class InitiateRnR extends TestCaseHelper {
   }
 
   @AfterMethod(groups = "requisition")
-  //@After
   public void tearDown() throws Exception {
     testWebDriver.sleep(500);
     if (!testWebDriver.getElementById("username").isDisplayed()) {
-      HomePage homePage = new HomePage(testWebDriver);
+      HomePage homePage = PageFactory.getInstanceOfHomePage(testWebDriver);
       homePage.logout(baseUrlGlobal);
       dbWrapper.deleteData();
       dbWrapper.closeConnection();
