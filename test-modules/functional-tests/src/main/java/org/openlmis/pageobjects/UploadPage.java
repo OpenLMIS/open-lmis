@@ -41,7 +41,6 @@ public class UploadPage extends Page {
   @FindBy(how = How.ID, using = "saveErrorMsgDiv")
   private static WebElement saveErrorMsgDiv = null;
 
-
   private int implicitWait = 2000;
 
   public UploadPage(TestWebDriver driver) {
@@ -49,12 +48,10 @@ public class UploadPage extends Page {
 
     PageFactory.initElements(new AjaxElementLocatorFactory(TestWebDriver.getDriver(), 10), this);
     testWebDriver.setImplicitWait(30);
-    testWebDriver.waitForElementToAppear(uploadButton);
-    verifyUploadPage();
   }
 
-
-  private void verifyUploadPage() {
+  public void verifyUploadPage() {
+    testWebDriver.waitForElementToAppear(uploadButton);
     assertTrue(uploadButton.isDisplayed());
     assertTrue(uploadDropDown.isDisplayed());
   }
@@ -64,14 +61,12 @@ public class UploadPage extends Page {
     testWebDriver.selectByVisibleText(uploadDropDown, uploadType);
   }
 
-
   public void uploadFile(String fileName) {
     uploadFilePath = this.getClass().getClassLoader().getResource(fileName).getFile();
     setCsvPath.sendKeys(uploadFilePath);
     uploadButton.click();
     testWebDriver.sleep(500);
   }
-
 
   public void verifySuccessMessageOnUploadScreen() {
     testWebDriver.waitForElementsToAppear(saveSuccessMsgDiv, saveErrorMsgDiv);
@@ -281,6 +276,4 @@ public class UploadPage extends Page {
     uploadFile(uploadFileNameWithExtension);
     testWebDriver.sleep(250);
   }
-
-
 }

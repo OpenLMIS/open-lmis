@@ -51,10 +51,12 @@ public class E2EUpload extends TestCaseHelper {
   public void uploadCSVFiles(String[] credentials) throws Exception {
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
     RolesPage rolesPage = homePage.navigateRoleAssignments();
+    assertTrue(rolesPage.isCreateNewRoleButtonDisplayed());
     List<String> userRoleList = asList("Create Requisition");
     rolesPage.createRole("User", "User", userRoleList, "Requisition");
 
     UploadPage uploadPage = homePage.navigateUploads();
+    uploadPage.verifyUploadPage();
     verifyValidUserUpload();
     verifyInValidUserUpload();
 

@@ -182,6 +182,7 @@ public class ManageRolesAndUsers extends TestCaseHelper {
   }
 
   public void testVerifyTabsForUserWithoutRights(String userName, String password) throws Exception {
+    LoginPage loginPage = PageFactory.getInstanceOfLoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(userName, password);
     assertTrue(homePage.isHomeMenuTabDisplayed());
     assertFalse(homePage.isRequisitionsMenuTabDisplayed());
@@ -257,10 +258,7 @@ public class ManageRolesAndUsers extends TestCaseHelper {
     testWebDriver.sleep(500);
     userPage.verifyRoleNotPresent(LAB_IN_CHARGE);
     userPage.verifyRemoveNotPresent();
-    verifyPUSHProgramNotAvailableForHomeFacilityRolesAndSupervisoryRoles();
-    assertFalse(userPage.getAllProgramsHomeFacility().contains("VACCINES"));
-    userPage.clickSupervisoryRolesAccordion();
-    assertFalse(userPage.getAllProgramsToSupervise().contains("VACCINES"));
+    verifyPushProgramNotAvailableForHomeFacilityRolesAndSupervisoryRoles();
     userPage.clickWarehouseRolesAccordion();
     testWebDriver.sleep(500);
     userPage.verifyRoleNotPresent(warehouseRole);
@@ -396,8 +394,9 @@ public class ManageRolesAndUsers extends TestCaseHelper {
     rolesPage.verifyCreatedRoleMessage(roleName);
   }
 
-  private void verifyPUSHProgramNotAvailableForHomeFacilityRolesAndSupervisoryRoles() throws IOException, SQLException {
+  private void verifyPushProgramNotAvailableForHomeFacilityRolesAndSupervisoryRoles() throws IOException, SQLException {
     assertFalse(userPage.getAllProgramsHomeFacility().contains("VACCINES"));
+    userPage.clickSupervisoryRolesAccordion();
     assertFalse(userPage.getAllProgramsToSupervise().contains("VACCINES"));
   }
 

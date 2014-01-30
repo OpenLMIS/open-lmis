@@ -121,8 +121,6 @@ public class RolesPage extends Page {
 
     PageFactory.initElements(new AjaxElementLocatorFactory(TestWebDriver.getDriver(), 10), this);
     testWebDriver.setImplicitWait(10);
-    testWebDriver.waitForElementToAppear(createNewRoleButton);
-    assertTrue(createNewRoleButton.isDisplayed());
     webElementMap.put("Configure Template", rightConfigureTemplate);
     webElementMap.put("Manage Facilities", rightManageFacilities);
     webElementMap.put("Manage Roles", rightManageRoles);
@@ -284,5 +282,10 @@ public class RolesPage extends Page {
     testWebDriver.waitForElementToAppear(cancelButtonOnModal);
     cancelButtonOnModal.click();
     testWebDriver.waitForElementToAppear(addNewRoleHeader);
+  }
+
+  public boolean isCreateNewRoleButtonDisplayed() {
+    testWebDriver.waitForElementToAppear(createNewRoleButton);
+    return createNewRoleButton.isDisplayed();
   }
 }
