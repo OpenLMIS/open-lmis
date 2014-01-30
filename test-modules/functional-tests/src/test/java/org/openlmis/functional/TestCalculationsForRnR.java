@@ -61,7 +61,6 @@ public class TestCalculationsForRnR extends TestCaseHelper {
     dbWrapper.updateFieldValue("products", "packSize", "15", "code", "P11");
 
     HomePage homePage = loginPage.loginAs(userSIC, password);
-
     homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Regular");
     InitiateRnRPage initiateRnRPage = homePage.clickProceed();
 
@@ -99,8 +98,8 @@ public class TestCalculationsForRnR extends TestCaseHelper {
   public void testEffectOfChangingDosesPerDispensingUnit() throws IOException, SQLException {
     dbWrapper.updateFieldValue("products", "fullSupply", "false", "code", "P11");
     dbWrapper.updateFieldValue("products", "dosesPerDispensingUnit", "5", "code", "P10");
-    HomePage homePage = loginPage.loginAs(userSIC, password);
 
+    HomePage homePage = loginPage.loginAs(userSIC, password);
     homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Regular");
     InitiateRnRPage initiateRnRPage = homePage.clickProceed();
 
@@ -130,8 +129,8 @@ public class TestCalculationsForRnR extends TestCaseHelper {
     dbWrapper.updateFieldValue("products", "fullSupply", "false", "code", "P11");
     dbWrapper.updateFieldValue("products", "roundToZero", "true", "code", "P10");
     dbWrapper.updateFieldValue("products", "roundToZero", "true", "code", "P11");
-    HomePage homePage = loginPage.loginAs(userSIC, password);
 
+    HomePage homePage = loginPage.loginAs(userSIC, password);
     homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Regular");
     InitiateRnRPage initiateRnRPage = homePage.clickProceed();
 
@@ -172,7 +171,6 @@ public class TestCalculationsForRnR extends TestCaseHelper {
     dbWrapper.updateFieldValue("products", "roundToZero", "false", "code", "P11");
 
     HomePage homePage = loginPage.loginAs(userSIC, password);
-
     homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Regular");
     InitiateRnRPage initiateRnRPage = homePage.clickProceed();
 
@@ -213,7 +211,6 @@ public class TestCalculationsForRnR extends TestCaseHelper {
     dbWrapper.updateFieldValue("products", "packRoundingThreshold", "7", "code", "P11");
 
     HomePage homePage = loginPage.loginAs(userSIC, password);
-
     homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Regular");
     InitiateRnRPage initiateRnRPage = homePage.clickProceed();
 
@@ -255,7 +252,6 @@ public class TestCalculationsForRnR extends TestCaseHelper {
     dbWrapper.updateFieldValue("products", "fullSupply", "false", "code", "P11");
 
     HomePage homePage = loginPage.loginAs(userSIC, password);
-
     homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Regular");
     InitiateRnRPage initiateRnRPage = homePage.clickProceed();
 
@@ -278,7 +274,6 @@ public class TestCalculationsForRnR extends TestCaseHelper {
     dbWrapper.updateFieldValue("products", "fullSupply", "false", "code", "P11");
 
     HomePage homePage = loginPage.loginAs(userSIC, password);
-
     homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Regular");
     InitiateRnRPage initiateRnRPage = homePage.clickProceed();
 
@@ -335,7 +330,6 @@ public class TestCalculationsForRnR extends TestCaseHelper {
     dbWrapper.insertProcessingPeriod("period3", "feb2013", "2013-01-31", "2013-02-28", 1, "M");
 
     HomePage homePage = loginPage.loginAs(userSIC, password);
-
     homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Regular");
     InitiateRnRPage initiateRnRPage = homePage.clickProceed();
 
@@ -371,7 +365,6 @@ public class TestCalculationsForRnR extends TestCaseHelper {
     dbWrapper.updateFieldValue("products", "fullSupply", "false", "code", "P11");
 
     HomePage homePage = loginPage.loginAs(userSIC, password);
-
     homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Regular");
     InitiateRnRPage initiateRnRPage = homePage.clickProceed();
 
@@ -409,7 +402,6 @@ public class TestCalculationsForRnR extends TestCaseHelper {
     dbWrapper.insertProcessingPeriod("current", "current", "2013-07-01", "2016-02-28", 4, "M");
 
     HomePage homePage = loginPage.loginAs(userSIC, password);
-
     homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Regular");
     InitiateRnRPage initiateRnRPage = homePage.clickProceed();
 
@@ -467,7 +459,6 @@ public class TestCalculationsForRnR extends TestCaseHelper {
     dbWrapper.insertProcessingPeriod("may13", "may13", "2013-05-01", "2013-05-31", 2, "M");
 
     HomePage homePage = loginPage.loginAs(userSIC, password);
-
     homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Regular");
     InitiateRnRPage initiateRnRPage = homePage.clickProceed();
 
@@ -512,7 +503,6 @@ public class TestCalculationsForRnR extends TestCaseHelper {
     dbWrapper.insertProcessingPeriod("apr13", "apr13", "2013-04-01", "2013-04-30", 3, "M");
 
     HomePage homePage = loginPage.loginAs(userSIC, password);
-
     homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Regular");
     InitiateRnRPage initiateRnRPage = homePage.clickProceed();
 
@@ -545,7 +535,6 @@ public class TestCalculationsForRnR extends TestCaseHelper {
     dbWrapper.insertProcessingPeriod("apr13", "apr13", "2013-04-01", "2013-04-30", 5, "M");
 
     HomePage homePage = loginPage.loginAs(userSIC, password);
-
     homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Regular");
     InitiateRnRPage initiateRnRPage = homePage.clickProceed();
 
@@ -636,7 +625,6 @@ public class TestCalculationsForRnR extends TestCaseHelper {
     dbWrapper.insertProcessingPeriod("may13", "may13", "2013-05-01", "2013-05-31", 2, "M");
 
     HomePage homePage = loginPage.loginAs(userSIC, password);
-
     homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Regular");
     InitiateRnRPage initiateRnRPage = homePage.clickProceed();
 
@@ -674,7 +662,6 @@ public class TestCalculationsForRnR extends TestCaseHelper {
     dbWrapper.insertProcessingPeriod("period3", "feb2013", "2013-01-31", "2013-02-28", 1, "M");
 
     HomePage homePage = loginPage.loginAs(userSIC, password);
-
     homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Regular");
     InitiateRnRPage initiateRnRPage = homePage.clickProceed();
 
@@ -711,7 +698,6 @@ public class TestCalculationsForRnR extends TestCaseHelper {
     dbWrapper.insertFulfilmentRoleAssignment(userSIC, "fulfilment", "F10");
 
     HomePage homePage = loginPage.loginAs(userSIC, password);
-
     homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Regular");
     InitiateRnRPage initiateRnRPage = homePage.clickProceed();
 
@@ -785,8 +771,8 @@ public class TestCalculationsForRnR extends TestCaseHelper {
     dbWrapper.updateConfigureTemplate("HIV", "source", "C", "false", "calculatedOrderQuantity");
     dbWrapper.insertProcessingPeriod("current", "current period", periodStartDate, "2016-01-30", 1, "M");
     dbWrapper.updateFieldValue("products", "dosesPerDispensingUnit", "11", "code", "P10");
-    HomePage homePage = loginPage.loginAs(userSIC, password);
 
+    HomePage homePage = loginPage.loginAs(userSIC, password);
     homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Emergency");
     InitiateRnRPage initiateRnRPage = homePage.clickProceed();
     int stockOutDays = calculateReportingDays(periodStartDate) + 10;
@@ -948,6 +934,7 @@ public class TestCalculationsForRnR extends TestCaseHelper {
     dbWrapper.deleteRowFromTable("processing_periods", "name", "Period2");
     dbWrapper.insertProcessingPeriod("current", "current period", "2013-10-01", "2016-01-30", numberOfMonths, "M");
 
+    HomePage homePage = loginPage.loginAs(userSIC, password);
     homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Regular");
     InitiateRnRPage initiateRnRPage = homePage.clickProceed();
 
