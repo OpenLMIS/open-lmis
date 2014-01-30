@@ -242,7 +242,7 @@ public class UserPage extends Page {
   public void resetPassword(String newPassword, String confirmPassword) {
     firstUserLink.sendKeys(Keys.TAB);
     selectFirstEditUser.sendKeys(Keys.TAB);
-    testWebDriver.waitForElementToBeEnabled(selectFirstResetPassword);
+    testWebDriver.moveToElement(firstUserLink);
     selectFirstResetPassword.click();
     testWebDriver.waitForElementToAppear(newPasswordField);
     newPasswordField.sendKeys(newPassword);
