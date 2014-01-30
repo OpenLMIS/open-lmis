@@ -176,7 +176,7 @@ public class ManageFacilityPage extends Page {
   private static WebElement addSupportedProgram = null;
 
   @FindBy(how = ID, using = "save-button")
-  public static WebElement SaveButton = null;
+  public static WebElement saveButton = null;
 
   @FindBy(how = XPATH, using = "//div[@id='saveSuccessMsgDiv']/span")
   private static WebElement saveSuccessMsgDiv = null;
@@ -246,7 +246,7 @@ public class ManageFacilityPage extends Page {
                                                   String program, String geoZone, String facilityTypeValue, String operatedByValue, String population) {
 
     String date_time = enterValuesInFacility(facilityCodePrefix, facilityNamePrefix, program, geoZone, facilityTypeValue, operatedByValue, population, false);
-    SaveButton.click();
+    saveButton.click();
     return date_time;
   }
 
@@ -404,8 +404,8 @@ public class ManageFacilityPage extends Page {
   }
 
   public void saveFacility() {
-    testWebDriver.waitForElementToAppear(SaveButton);
-    SaveButton.click();
+    testWebDriver.waitForElementToAppear(saveButton);
+    saveButton.click();
     testWebDriver.waitForElementToAppear(saveSuccessMsgDiv);
   }
 
@@ -506,7 +506,7 @@ public class ManageFacilityPage extends Page {
     okAlert.click();
     testWebDriver.sleep(500);
     addSupportedProgram.click();
-    SaveButton.click();
+    saveButton.click();
 
     return new HomePage(testWebDriver);
   }

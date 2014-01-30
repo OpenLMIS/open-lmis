@@ -60,7 +60,7 @@ public class ViewOrdersPage extends RequisitionPage {
   @FindBy(how = XPATH, using = "//span[@openlmis-message='message.no.order']")
   private static WebElement noRequisitionReleasedAsOrderYet = null;
 
-  public ViewOrdersPage(TestWebDriver driver) throws IOException {
+  public ViewOrdersPage(TestWebDriver driver) {
     super(driver);
     PageFactory.initElements(new AjaxElementLocatorFactory(TestWebDriver.getDriver(), 10), this);
     testWebDriver.setImplicitWait(10);

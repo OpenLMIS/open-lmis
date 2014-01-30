@@ -70,7 +70,7 @@ public class ConvertOrderPage extends RequisitionPage {
   @FindBy(how = XPATH, using = "//span[@openlmis-message='message.no.requisitions.for.conversion']")
   private static WebElement noRequisitionPending = null;
 
-  public ConvertOrderPage(TestWebDriver driver) throws IOException {
+  public ConvertOrderPage(TestWebDriver driver) {
     super(driver);
     PageFactory.initElements(new AjaxElementLocatorFactory(TestWebDriver.getDriver(), 10), this);
     testWebDriver.setImplicitWait(2);

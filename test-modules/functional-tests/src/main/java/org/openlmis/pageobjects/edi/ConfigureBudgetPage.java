@@ -18,8 +18,6 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 
-import java.io.IOException;
-
 import static com.thoughtworks.selenium.SeleneseTestBase.*;
 import static org.openqa.selenium.support.How.ID;
 import static org.openqa.selenium.support.How.XPATH;
@@ -86,13 +84,12 @@ public class ConfigureBudgetPage extends Page {
   private static WebElement periodStartDateSelectBoxDefaultSelected = null;
 
 
-  public ConfigureBudgetPage(TestWebDriver driver) throws IOException {
+  public ConfigureBudgetPage(TestWebDriver driver) {
     super(driver);
     PageFactory.initElements(new AjaxElementLocatorFactory(TestWebDriver.getDriver(), 10), this);
     testWebDriver.setImplicitWait(10);
     testWebDriver.waitForElementToAppear(includeHeaders);
   }
-
 
   public String getPeriodStartDateFormat() {
     testWebDriver.waitForElementToAppear(periodStartDateSelectBoxDefaultSelected);
@@ -210,7 +207,6 @@ public class ConfigureBudgetPage extends Page {
     assertFalse("programCodeCheckBox should be disabled", programCodeCheckBox.isEnabled());
     assertTrue("notesCheckBox should be enabled", notesCheckBox.isEnabled());
     assertFalse("periodStartDateCheckBox should be enabled", periodStartDateCheckBox.isEnabled());
-
   }
 
   public void verifyDefaultPositionValues() {

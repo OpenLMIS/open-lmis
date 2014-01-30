@@ -182,7 +182,7 @@ public class HomePage extends Page {
   @FindBy(how = XPATH, using = "//h2[contains(text(),'Manage Proof of Delivery')]")
   private static WebElement viewManagePODHeader = null;
 
-  public HomePage(TestWebDriver driver) throws IOException {
+  public HomePage(TestWebDriver driver) {
     super(driver);
     PageFactory.initElements(new AjaxElementLocatorFactory(TestWebDriver.getDriver(), 10), this);
     testWebDriver.setImplicitWait(10);
@@ -198,7 +198,7 @@ public class HomePage extends Page {
     return new LoginPage(testWebDriver, baseUrl);
   }
 
-  public ManageFacilityPage navigateManageFacility() throws IOException {
+  public ManageFacilityPage navigateManageFacility() {
     testWebDriver.waitForElementToAppear(AdministrationMenuItem);
     AdministrationMenuItem.click();
     testWebDriver.waitForElementToAppear(manageFacilityMenuItem);
@@ -264,7 +264,7 @@ public class HomePage extends Page {
     return new RegimenTemplateConfigPage(testWebDriver);
   }
 
-  public String navigateAndInitiateRnr(String program) throws IOException {
+  public String navigateAndInitiateRnr(String program) {
     navigateRnr();
     myFacilityRadioButton.click();
     testWebDriver.sleep(2000);
@@ -447,7 +447,7 @@ public class HomePage extends Page {
     assertEquals(loggedInUserLabel.getText(), Username);
   }
 
-  public void navigateAndInitiateEmergencyRnr(String program) throws IOException {
+  public void navigateAndInitiateEmergencyRnr(String program) {
     navigateRnr();
     myFacilityRadioButton.click();
     testWebDriver.sleep(1000);
@@ -460,7 +460,7 @@ public class HomePage extends Page {
     return firstPeriodLabel.getText().trim();
   }
 
-  public void navigateRnr() throws IOException {
+  public void navigateRnr() {
     testWebDriver.waitForElementToBeEnabled(requisitionsLink);
     testWebDriver.keyPress(requisitionsLink);
     testWebDriver.waitForElementToBeEnabled(createLink);
@@ -501,7 +501,7 @@ public class HomePage extends Page {
     return testWebDriver.findElement(By.name("selectFacility")).getText();
   }
 
-  public ManagePodPage  navigateManagePOD() throws IOException {
+  public ManagePodPage navigateManagePOD() throws IOException {
     testWebDriver.sleep(1000);
     testWebDriver.waitForElementToAppear(ordersMenuItem);
     testWebDriver.keyPress(ordersMenuItem);

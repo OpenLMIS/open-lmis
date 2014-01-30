@@ -19,7 +19,6 @@ import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 
 import java.io.FileNotFoundException;
-import java.io.IOException;
 
 import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertTrue;
 
@@ -28,24 +27,24 @@ public class UploadPage extends Page {
   String uploadFilePath = null;
 
   @FindBy(how = How.XPATH, using = "//input[@value='Upload']")
-  private static WebElement uploadButton=null;
+  private static WebElement uploadButton = null;
 
   @FindBy(how = How.XPATH, using = "//input[@value='Choose CSV File to upload']")
-  private static WebElement setCsvPath=null;
+  private static WebElement setCsvPath = null;
 
   @FindBy(how = How.XPATH, using = "//select[@id='model']")
-  private static WebElement uploadDropDown=null;
+  private static WebElement uploadDropDown = null;
 
   @FindBy(how = How.ID, using = "saveSuccessMsgDiv")
-  private static WebElement saveSuccessMsgDiv=null;
+  private static WebElement saveSuccessMsgDiv = null;
 
   @FindBy(how = How.ID, using = "saveErrorMsgDiv")
-  private static WebElement saveErrorMsgDiv=null;
+  private static WebElement saveErrorMsgDiv = null;
 
 
   private int implicitWait = 2000;
 
-  public UploadPage(TestWebDriver driver) throws IOException {
+  public UploadPage(TestWebDriver driver) {
     super(driver);
 
     PageFactory.initElements(new AjaxElementLocatorFactory(TestWebDriver.getDriver(), 10), this);

@@ -328,7 +328,7 @@ public class InitiateRnRPage extends RequisitionPage {
     put("allocatedBudgetAmount", allocatedBudgetAmount);
   }};
 
-  public InitiateRnRPage(TestWebDriver driver) throws IOException {
+  public InitiateRnRPage(TestWebDriver driver) {
     super(driver);
     PageFactory.initElements(new AjaxElementLocatorFactory(TestWebDriver.getDriver(), 1), this);
     testWebDriver.setImplicitWait(2);
@@ -586,10 +586,10 @@ public class InitiateRnRPage extends RequisitionPage {
   }
 
   private float getCostForAllItems(int numberOfProducts) {
-    if(numberOfProducts == 1)
-    return calculateTotalCostForProduct("FirstProduct");
-    if(numberOfProducts == 2)
-    return calculateTotalCostForProduct("FirstProduct") + calculateTotalCostForProduct("SecondProduct");
+    if (numberOfProducts == 1)
+      return calculateTotalCostForProduct("FirstProduct");
+    if (numberOfProducts == 2)
+      return calculateTotalCostForProduct("FirstProduct") + calculateTotalCostForProduct("SecondProduct");
     return 0;
   }
 

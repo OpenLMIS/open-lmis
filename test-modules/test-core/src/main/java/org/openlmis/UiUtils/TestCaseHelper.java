@@ -92,7 +92,7 @@ public class TestCaseHelper {
     testWebDriver = new TestWebDriver(driverFactory.loadDriver(browser));
   }
 
-  public void setupTestDataToInitiateRnR(boolean configureTemplate, String program, String user, String userId, List<String> rightsList) throws Exception {
+  public void setupTestDataToInitiateRnR(boolean configureTemplate, String program, String user, String userId, List<String> rightsList) throws IOException, SQLException {
     setupProductTestData("P10", "P11", program, "lvl3_hospital");
     dbWrapper.insertFacilities("F10", "F11");
     if (configureTemplate)
@@ -109,7 +109,7 @@ public class TestCaseHelper {
     dbWrapper.insertSupplyLines("N1", program, "F10", true);
   }
 
-  public void setupTestUserRoleRightsData(String userId, String userSIC, List<String> rightsList) throws IOException, SQLException {
+  public void setupTestUserRoleRightsData(String userId, String userSIC, List<String> rightsList) throws SQLException {
     dbWrapper.insertRole("store in-charge", "");
     dbWrapper.insertRole("district pharmacist", "");
     for (String rights : rightsList) {
@@ -130,7 +130,7 @@ public class TestCaseHelper {
   }
 
   public void setupRnRTestDataRnRForCommTrack(boolean configureGenericTemplate, String program, String user,
-                                              String userId, List<String> rightsList) throws Exception {
+                                              String userId, List<String> rightsList) throws SQLException, IOException {
     setupProductTestData("P10", "P11", program, "lvl3_hospital");
     dbWrapper.insertFacilities("F10", "F11");
 
@@ -162,7 +162,7 @@ public class TestCaseHelper {
     dbWrapper.insertRoleAssignmentForSupervisoryNodeForProgramId1(userId, "store in-charge", "N1");
   }
 
-  public void setupProductTestData(String product1, String product2, String program, String facilityTypeCode) throws Exception {
+  public void setupProductTestData(String product1, String product2, String program, String facilityTypeCode) throws SQLException {
     dbWrapper.insertProducts(product1, product2);
     dbWrapper.insertProgramProducts(product1, product2, program);
     dbWrapper.deleteTable("facility_approved_products");
@@ -170,32 +170,32 @@ public class TestCaseHelper {
     dbWrapper.insertFacilityApprovedProduct(product2, program, facilityTypeCode);
   }
 
-  public void setupProgramProductTestDataWithCategories(String product, String productName, String category, String program) throws IOException, SQLException {
+  public void setupProgramProductTestDataWithCategories(String product, String productName, String category, String program) throws SQLException {
     dbWrapper.insertProductWithCategory(product, productName, category);
     dbWrapper.insertProgramProductsWithCategory(product, program);
   }
 
   public void setupProgramProductISA(String program, String product, String whoRatio, String dosesPerYear, String wastageFactor,
-                                     String bufferPercentage, String minimumValue, String maximumValue, String adjustmentValue) throws IOException, SQLException {
+                                     String bufferPercentage, String minimumValue, String maximumValue, String adjustmentValue) throws SQLException {
     dbWrapper.insertProgramProductISA(program, product, whoRatio, dosesPerYear, wastageFactor, bufferPercentage, minimumValue,
       maximumValue, adjustmentValue);
   }
 
   public void setupRequisitionGroupData(String RGCode1, String RGCode2, String SupervisoryNodeCode1, String SupervisoryNodeCode2,
-                                        String Facility1, String Facility2) throws IOException, SQLException {
+                                        String Facility1, String Facility2) throws SQLException {
     dbWrapper.insertRequisitionGroups(RGCode1, RGCode2, SupervisoryNodeCode1, SupervisoryNodeCode2);
     dbWrapper.insertRequisitionGroupMembers(Facility1, Facility2);
     dbWrapper.insertRequisitionGroupProgramSchedule();
   }
 
-  public void setupTestRoleRightsData(String roleName, String roleRight) throws IOException, SQLException {
+  public void setupTestRoleRightsData(String roleName, String roleRight) throws SQLException {
     dbWrapper.insertRole(roleName, "");
     for (String aRight : roleRight.split(",")) {
       dbWrapper.assignRight(roleName, aRight);
     }
   }
 
-  public void setupTestData(boolean isPreviousPeriodRnRRequired) throws Exception {
+  public void setupTestData(boolean isPreviousPeriodRnRRequired) throws IOException, SQLException {
     List<String> rightsList = asList("CREATE_REQUISITION", "VIEW_REQUISITION", "AUTHORIZE_REQUISITION");
     if (isPreviousPeriodRnRRequired)
       setupRnRTestDataRnRForCommTrack(false, "HIV", "commTrack", "700", rightsList);

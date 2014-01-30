@@ -27,60 +27,60 @@ import static org.openqa.selenium.support.How.*;
 public class ViewRequisitionPage extends RequisitionPage {
 
   @FindBy(how = NAME, using = "selectFacility")
-  private static WebElement selectFacilityDropDown=null;
+  private static WebElement selectFacilityDropDown = null;
 
   @FindBy(how = NAME, using = "selectProgram")
-  private static WebElement selectProgramDropDown=null;
+  private static WebElement selectProgramDropDown = null;
 
   @FindBy(how = ID, using = "startDate")
-  private static WebElement startDate=null;
+  private static WebElement startDate = null;
 
   @FindBy(how = ID, using = "endDate")
-  private static WebElement endDate=null;
+  private static WebElement endDate = null;
 
   @FindBy(how = XPATH, using = "//input[@value='Search']")
-  private static WebElement searchButton=null;
+  private static WebElement searchButton = null;
 
   @FindBy(how = XPATH, using = "//div[contains(text(),'No Requisitions found')]")
-  private static WebElement noRequisitionFoundDiv=null;
+  private static WebElement noRequisitionFoundDiv = null;
 
   @FindBy(how = XPATH, using = "//div[@class='ngCellText ng-scope col7 colt7']/span")
-  private static WebElement status=null;
+  private static WebElement status = null;
 
   @FindBy(how = ID, using = "emergency0")
-  private static WebElement emergencyIcon=null;
+  private static WebElement emergencyIcon = null;
 
   @FindBy(how = XPATH, using = "//select[@data-handler='selectYear']")
-  private static WebElement yearChanger=null;
+  private static WebElement yearChanger = null;
 
   @FindBy(how = XPATH, using = "//span[contains(text(),'Next')]")
-  private static WebElement nextCalender=null;
+  private static WebElement nextCalender = null;
 
   @FindBy(how = XPATH, using = "//a[contains(text(),'25')]")
-  private static WebElement startDateCalender=null;
+  private static WebElement startDateCalender = null;
 
   @FindBy(how = XPATH, using = "//a[contains(text(),'26')]")
-  private static WebElement endDateCalender=null;
+  private static WebElement endDateCalender = null;
 
   @FindBy(how = ID, using = "cost_0")
-  private static WebElement totalCostPreApproval=null;
+  private static WebElement totalCostPreApproval = null;
 
   @FindBy(how = ID, using = "cost_0")
-  private static WebElement totalCostPostApproval=null;
+  private static WebElement totalCostPostApproval = null;
 
   @FindBy(how = ID, using = "newPatientCount_0")
-  private static WebElement newPatient=null;
+  private static WebElement newPatient = null;
 
   @FindBy(how = ID, using = "quantityApproved_0")
-  private static WebElement approveQuantity=null;
+  private static WebElement approveQuantity = null;
 
   @FindBy(how = ID, using = "nonFullSupplyTab")
-  private static WebElement nonFullSupplyTab=null;
+  private static WebElement nonFullSupplyTab = null;
 
   @FindBy(how = ID, using = "fullSupplyTab")
-  private static WebElement fullSupplyTab=null;
+  private static WebElement fullSupplyTab = null;
 
-  public ViewRequisitionPage(TestWebDriver driver) throws IOException {
+  public ViewRequisitionPage(TestWebDriver driver) {
     super(driver);
     PageFactory.initElements(new AjaxElementLocatorFactory(TestWebDriver.getDriver(), 1), this);
     testWebDriver.setImplicitWait(1);

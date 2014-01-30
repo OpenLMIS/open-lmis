@@ -17,7 +17,6 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 
-import java.io.IOException;
 import java.util.List;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
@@ -87,7 +86,7 @@ public class FacilityListPage extends RequisitionPage {
   @FindBy(how = XPATH, using = "//div[@id='legend']/span[5]/span[1]")
   private static WebElement legendCannotSynchronizedIcon = null;
 
-  public FacilityListPage(TestWebDriver driver) throws IOException {
+  public FacilityListPage(TestWebDriver driver) {
     super(driver);
     PageFactory.initElements(new AjaxElementLocatorFactory(TestWebDriver.getDriver(), 10), this);
     testWebDriver.setImplicitWait(10);

@@ -201,7 +201,7 @@ public class UserPage extends Page {
   @FindBy(how = How.ID, using = "resetPasswordOk")
   private static WebElement resetPasswordOkButton = null;
 
-  public UserPage(TestWebDriver driver) throws IOException {
+  public UserPage(TestWebDriver driver) {
     super(driver);
     PageFactory.initElements(new AjaxElementLocatorFactory(TestWebDriver.getDriver(), 1), this);
     testWebDriver.setImplicitWait(1);

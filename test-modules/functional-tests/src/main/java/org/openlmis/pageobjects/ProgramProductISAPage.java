@@ -17,7 +17,6 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 
-import java.io.IOException;
 import java.util.List;
 
 import static org.openqa.selenium.support.How.ID;
@@ -102,7 +101,7 @@ public class ProgramProductISAPage extends Page {
   private static WebElement programNameOnPopulationLabelOFConfigureISAFormulaWindow = null;
 
 
-  public ProgramProductISAPage(TestWebDriver driver) throws IOException {
+  public ProgramProductISAPage(TestWebDriver driver) {
     super(driver);
     PageFactory.initElements(new AjaxElementLocatorFactory(TestWebDriver.getDriver(), 10), this);
     testWebDriver.setImplicitWait(10);

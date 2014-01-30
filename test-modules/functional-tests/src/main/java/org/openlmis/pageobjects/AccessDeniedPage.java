@@ -22,20 +22,17 @@ import java.io.IOException;
 
 public class AccessDeniedPage extends Page {
 
-
   @FindBy(how = How.XPATH, using = "//h3[@class='access-denied']")
-  private static WebElement accessDeniedHeader=null;
-
+  private static WebElement accessDeniedHeader = null;
 
   public AccessDeniedPage(TestWebDriver driver) throws IOException {
     super(driver);
     PageFactory.initElements(new AjaxElementLocatorFactory(TestWebDriver.getDriver(), 10), this);
     testWebDriver.setImplicitWait(10);
-    }
+  }
 
-
-  public String getAccessDeniedText()  {
-    return accessDeniedHeader.getText() ;
+  public String getAccessDeniedText() {
+    return accessDeniedHeader.getText();
   }
 
 }
