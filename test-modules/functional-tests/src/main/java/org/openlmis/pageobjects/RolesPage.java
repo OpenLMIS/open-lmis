@@ -28,91 +28,91 @@ import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
 public class RolesPage extends Page {
 
   @FindBy(how = How.ID, using = "role-add-new")
-  private static WebElement createNewRoleButton=null;
+  private static WebElement createNewRoleButton = null;
 
   @FindBy(how = How.ID, using = "name")
-  private static WebElement roleNameField=null;
+  private static WebElement roleNameField = null;
 
   @FindBy(how = How.ID, using = "description")
-  private static WebElement roleDescription=null;
+  private static WebElement roleDescription = null;
 
   @FindBy(how = How.XPATH, using = "//div[@id='rights-CONFIGURE_RNR")
-  private static WebElement rightConfigureTemplate=null;
+  private static WebElement rightConfigureTemplate = null;
 
   @FindBy(how = How.XPATH, using = "//div[@id='rights-MANAGE_FACILITY']/input")
-  private static WebElement rightManageFacilities=null;
+  private static WebElement rightManageFacilities = null;
 
   @FindBy(how = How.XPATH, using = "//div[@id='rights-MANAGE_ROLE']/input")
-  private static WebElement rightManageRoles=null;
+  private static WebElement rightManageRoles = null;
 
   @FindBy(how = How.XPATH, using = "//div[@id='allocationRights-MANAGE_DISTRIBUTION']/input")
-  private static WebElement rightManageDistribution=null;
+  private static WebElement rightManageDistribution = null;
 
   @FindBy(how = How.XPATH, using = "//div[@id='rights-MANAGE_SCHEDULE']/input")
-  private static WebElement rightManageSchedules=null;
+  private static WebElement rightManageSchedules = null;
 
   @FindBy(how = How.XPATH, using = "//div[@id='rights-UPLOADS']/input")
-  private static WebElement rightUploads=null;
+  private static WebElement rightUploads = null;
 
   @FindBy(how = How.XPATH, using = "//div[@id='requisitionRights-CREATE_REQUISITION']/input")
-  private static WebElement rightCreateRequisition=null;
+  private static WebElement rightCreateRequisition = null;
 
   @FindBy(how = How.XPATH, using = "//div[@id='requisitionRights-AUTHORIZE_REQUISITION']/input")
-  private static WebElement rightAuthorizeRequisition=null;
+  private static WebElement rightAuthorizeRequisition = null;
 
   @FindBy(how = How.XPATH, using = "//div[@id='requisitionRights-APPROVE_REQUISITION']/input")
-  private static WebElement rightApproveRequisition=null;
+  private static WebElement rightApproveRequisition = null;
 
   @FindBy(how = How.ID, using = "CONVERT_TO_ORDER")
-  private static WebElement rightConvertToOrderRequisition=null;
+  private static WebElement rightConvertToOrderRequisition = null;
 
   @FindBy(how = How.ID, using = "VIEW_ORDER")
-  private static WebElement rightViewOrders=null;
+  private static WebElement rightViewOrders = null;
 
   @FindBy(how = How.XPATH, using = "//input[@value='Save']")
-  private static WebElement saveButton=null;
+  private static WebElement saveButton = null;
 
   @FindBy(how = How.XPATH, using = "//a[contains(text(),'Cancel')]")
-  private static WebElement cancelButton=null;
+  private static WebElement cancelButton = null;
 
   @FindBy(how = How.ID, using = "button_Cancel")
-  private static WebElement cancelButtonOnModal=null;
+  private static WebElement cancelButtonOnModal = null;
 
   @FindBy(how = How.ID, using = "saveSuccessMsgDiv")
-  private static WebElement saveSuccessMsgDiv=null;
+  private static WebElement saveSuccessMsgDiv = null;
 
   @FindBy(how = How.ID, using = "saveFailMessage")
-  private static WebElement saveErrorMsgDiv=null;
+  private static WebElement saveErrorMsgDiv = null;
 
   @FindBy(how = How.ID, using = "requisitionRoleType")
-  private static WebElement requisitionRoleType=null;
+  private static WebElement requisitionRoleType = null;
 
   @FindBy(how = How.ID, using = "adminRoleType")
-  private static WebElement adminRoleType=null;
+  private static WebElement adminRoleType = null;
 
   @FindBy(how = How.ID, using = "allocationRoleType")
-  private static WebElement allocationRoleType=null;
+  private static WebElement allocationRoleType = null;
 
   @FindBy(how = How.ID, using = "button_OK")
-  private static WebElement continueButton=null;
+  private static WebElement continueButton = null;
 
   @FindBy(how = How.XPATH, using = "//h2[contains(text(),'Edit role')]")
-  private static WebElement editRoleHeader=null;
+  private static WebElement editRoleHeader = null;
 
   @FindBy(how = How.XPATH, using = "//h2/span[contains(text(),'Roles')]")
-  private static WebElement rolesHeader=null;
+  private static WebElement rolesHeader = null;
 
   @FindBy(how = How.XPATH, using = "//h2[contains(text(),'Add new role')]")
-  private static WebElement addNewRoleHeader=null;
+  private static WebElement addNewRoleHeader = null;
 
   @FindBy(how = How.ID, using = "fulfillmentRoleType")
-  private static WebElement facilityBasedRoleType=null;
+  private static WebElement facilityBasedRoleType = null;
 
   @FindBy(how = How.XPATH, using = "//input[@id='FACILITY_FILL_SHIPMENT']")
-  private static WebElement rightFillShipment=null;
+  private static WebElement rightFillShipment = null;
 
   @FindBy(how = How.ID, using = "MANAGE_POD")
-  private static WebElement rightManagePOD=null;
+  private static WebElement rightManagePOD = null;
 
   private Map<String, WebElement> webElementMap = new HashMap<>();
 
@@ -165,7 +165,9 @@ public class RolesPage extends Page {
         clickAdminRole();
         break;
       case "Fulfillment":
+        testWebDriver.waitForElementToAppear(facilityBasedRoleType);
         facilityBasedRoleType.click();
+        testWebDriver.sleep(100);
         break;
     }
 
@@ -177,8 +179,7 @@ public class RolesPage extends Page {
       webElementMap.get(right).click();
     }
     for (String right : rights) {
-      if (!webElementMap.get(right).isSelected())
-        testWebDriver.click(webElementMap.get(right));
+      if (!webElementMap.get(right).isSelected()) testWebDriver.click(webElementMap.get(right));
     }
     roleNameField.sendKeys(roleName);
     roleDescription.sendKeys(roleDesc);
@@ -206,7 +207,7 @@ public class RolesPage extends Page {
     saveButton.click();
 
     testWebDriver.waitForElementToAppear(saveSuccessMsgDiv);
-   }
+  }
 
   public void createRole(String roleName, String roleDesc, List<String> rights, boolean programDependant) {
     testWebDriver.waitForElementToAppear(createNewRoleButton);
@@ -222,8 +223,7 @@ public class RolesPage extends Page {
       webElementMap.get(right).click();
     }
     for (String right : rights) {
-      if (!webElementMap.get(right).isSelected())
-        testWebDriver.click(webElementMap.get(right));
+      if (!webElementMap.get(right).isSelected()) testWebDriver.click(webElementMap.get(right));
     }
     roleNameField.sendKeys(roleName);
     roleDescription.sendKeys(roleDesc);
