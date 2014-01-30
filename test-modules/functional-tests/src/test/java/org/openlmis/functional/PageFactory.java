@@ -142,6 +142,8 @@ public class PageFactory {
   public static LoginPage getInstanceOfLoginPage(TestWebDriver testWebDriver, String baseUrlGlobal) {
     if (instanceOfLoginPage == null) {
       instanceOfLoginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+    } else {
+      testWebDriver.setBaseURL(baseUrlGlobal);
     }
     return instanceOfLoginPage;
   }
