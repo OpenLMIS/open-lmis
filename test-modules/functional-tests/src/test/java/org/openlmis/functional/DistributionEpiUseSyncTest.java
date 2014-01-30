@@ -306,7 +306,7 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
   }
 
   @Test(groups = {"distribution"})
-  public void shouldDisplayNoProductsAddedMessageWhOnEpiUsePageWhenNoActiveProducts() throws Exception {
+  public void shouldDisplayNoProductsAddedMessageOnEpiUsePageWhenNoActiveProducts() throws Exception {
     dbWrapper.updateFieldValue("products", "active", "false", "code", "P10");
     dbWrapper.updateFieldValue("products", "active", "false", "code", "P11");
     dbWrapper.updateFieldValue("products", "active", "false", "code", "Product6");
@@ -314,6 +314,7 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
     HomePage homePage = loginPage.loginAs(epiUseData.get(USER), epiUseData.get(PASSWORD));
     DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
     distributionPage.initiate(epiUseData.get(FIRST_DELIVERY_ZONE_NAME), epiUseData.get(VACCINES_PROGRAM));
+    FacilityListPage facilityListPage = distributionPage.clickRecordData(1);
     EPIUsePage epiUsePage = facilityListPage.selectFacility(epiUseData.get(FIRST_FACILITY_CODE)).navigateToEpiUse();
 
     assertTrue(epiUsePage.getNoProductsAddedMessage().contains("No products added"));

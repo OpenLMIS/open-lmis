@@ -767,6 +767,7 @@ public class ManageDistribution extends TestCaseHelper {
   }
 
   private void verifyElementsPresent() {
+    distributionPage = PageFactory.getInstanceOfDistributionPage(testWebDriver);
     assertTrue("selectDeliveryZoneSelectBox should be present", distributionPage.IsDisplayedSelectDeliveryZoneSelectBox());
     assertTrue("selectProgramSelectBox should be present", distributionPage.IsDisplayedSelectProgramSelectBox());
     assertTrue("selectPeriodSelectBox should be present", distributionPage.IsDisplayedSelectPeriodSelectBox());
