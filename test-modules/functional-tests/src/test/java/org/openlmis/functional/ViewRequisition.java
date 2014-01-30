@@ -298,12 +298,12 @@ public class ViewRequisition extends TestCaseHelper {
     homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Emergency");
     homePage.clickProceed();
     InitiateRnRPage initiateRnRPage = PageFactory.getInstanceOfInitiateRnRPage(testWebDriver);
-    initiateRnRPage.enterValue(1, "beginningBalanceFirstProduct");
-    initiateRnRPage.enterValue(1, "quantityDispensedFirstProduct");
-    initiateRnRPage.enterValue(2, "quantityReceivedFirstProduct");
-    initiateRnRPage.enterValue(10, "beginningBalanceSecondProduct");
-    initiateRnRPage.enterValue(0, "quantityReceivedSecondProduct");
-    initiateRnRPage.enterValue(0, "quantityDispensedSecondProduct");
+    initiateRnRPage.enterValueIfNotNull(1, "beginningBalanceFirstProduct");
+    initiateRnRPage.enterValueIfNotNull(1, "quantityDispensedFirstProduct");
+    initiateRnRPage.enterValueIfNotNull(2, "quantityReceivedFirstProduct");
+    initiateRnRPage.enterValueIfNotNull(10, "beginningBalanceSecondProduct");
+    initiateRnRPage.enterValueIfNotNull(0, "quantityReceivedSecondProduct");
+    initiateRnRPage.enterValueIfNotNull(0, "quantityDispensedSecondProduct");
     initiateRnRPage.calculateAndVerifyTotalCost();
     initiateRnRPage.verifyCostOnFooterForProducts(2);
     initiateRnRPage.skipAllProduct();

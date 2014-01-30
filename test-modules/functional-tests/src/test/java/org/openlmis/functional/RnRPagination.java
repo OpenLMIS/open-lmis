@@ -45,6 +45,7 @@ public class RnRPagination extends TestCaseHelper {
 
   @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-Positive", enabled = false)
   public void testRnRPaginationAndSpecificDisplayOrder(String program, String userSIC, String password) throws Exception {
+    dbWrapper.setupMultipleProducts(program, "Lvl3 Hospital", 11, false);
     setupData(program, userSIC);
 
     HomePage homePage = loginPage.loginAs(userSIC, password);
@@ -105,7 +106,6 @@ public class RnRPagination extends TestCaseHelper {
   }
 
   private void setupData(String program, String userSIC) throws IOException, SQLException {
-    dbWrapper.setupMultipleProducts(program, "Lvl3 Hospital", 11, false);
     dbWrapper.insertFacilities("F10", "F11");
     dbWrapper.configureTemplate(program);
     List<String> rightsList = asList("CREATE_REQUISITION", "VIEW_REQUISITION");
@@ -122,6 +122,7 @@ public class RnRPagination extends TestCaseHelper {
 
   @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-Positive")
   public void testProductDefaultDisplayOrder(String program, String userSIC, String password) throws Exception {
+    dbWrapper.setupMultipleProducts(program, "Lvl3 Hospital", 11, true);
     setupData(program, userSIC);
 
     HomePage homePage = loginPage.loginAs(userSIC, password);
@@ -136,6 +137,7 @@ public class RnRPagination extends TestCaseHelper {
 
   @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-Positive")
   public void testCategoryDisplayOrder(String program, String userSIC, String password) throws Exception {
+    dbWrapper.setupMultipleCategoryProducts(program, "Lvl3 Hospital", 11, false);
     setupData(program, userSIC);
 
     HomePage homePage = loginPage.loginAs(userSIC, password);
@@ -150,6 +152,7 @@ public class RnRPagination extends TestCaseHelper {
 
   @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-Positive")
   public void testCategoryDefaultDisplayOrder(String program, String userSIC, String password) throws Exception {
+    dbWrapper.setupMultipleCategoryProducts(program, "Lvl3 Hospital", 11, true);
     setupData(program, userSIC);
 
     HomePage homePage = loginPage.loginAs(userSIC, password);

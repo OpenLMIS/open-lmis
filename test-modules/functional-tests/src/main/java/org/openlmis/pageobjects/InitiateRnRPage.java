@@ -166,7 +166,6 @@ public class InitiateRnRPage extends RequisitionPage {
   @FindBy(how = XPATH, using = "//div[@class='adjustment-field']/div[@class='row-fluid']/div[@class='span5']/select")
   private static WebElement lossesAndAdjustmentSelect = null;
 
-
   @FindBy(how = XPATH, using = "//input[@ng-model='lossAndAdjustment.quantity']")
   private static WebElement quantityAdj = null;
 
@@ -304,28 +303,29 @@ public class InitiateRnRPage extends RequisitionPage {
 
   Float actualTotalCostFullSupply = 0.0f;
   Float actualTotalCostNonFullSupply = 0.0f;
-  private Map<String, WebElement> elementsMap = new HashMap<String, WebElement>() {{
-    put("beginningBalanceFirstProduct", beginningBalanceFirstProduct);
-    put("stockInHandFirstProduct", stockInHandFirstProduct);
-    put("newPatientFirstProduct", newPatientFirstProduct);
-    put("quantityReceivedFirstProduct", quantityReceivedFirstProduct);
-    put("quantityDispensedFirstProduct", quantityDispensedFirstProduct);
-    put("totalStockOutDaysFirstProduct", totalStockOutDaysFirstProduct);
-    put("requestedQuantityFirstProduct", requestedQuantityFirstProduct);
-    put("packsToShipForFirstProduct", packsToShipForFirstProduct);
-    put("pricePerPackForFirstProduct", pricePerPackForFirstProduct);
 
-    put("beginningBalanceSecondProduct", beginningBalanceSecondProduct);
-    put("stockInHandSecondProduct", stockInHandSecondProduct);
-    put("newPatientSecondProduct", newPatientSecondProduct);
-    put("quantityReceivedSecondProduct", quantityReceivedSecondProduct);
-    put("quantityDispensedSecondProduct", quantityDispensedSecondProduct);
-    put("totalStockOutDaysSecondProduct", totalStockOutDaysSecondProduct);
-    put("requestedQuantitySecondProduct", requestedQuantitySecondProduct);
-    put("packsToShipForSecondProduct", packsToShipForSecondProduct);
-    put("pricePerPackForSecondProduct", pricePerPackForSecondProduct);
+  private Map<String, String> elementNameIdMap = new HashMap<String, String>() {{
+    put("beginningBalanceFirstProduct", "beginningBalance_0");
+    put("stockInHandFirstProduct", "stockInHand_0");
+    put("newPatientFirstProduct", "newPatientCount_0");
+    put("quantityReceivedFirstProduct", "quantityReceived_0");
+    put("quantityDispensedFirstProduct", "quantityDispensed_0");
+    put("totalStockOutDaysFirstProduct", "stockOutDays_0");
+    put("requestedQuantityFirstProduct", "quantityRequested_0");
+    put("packsToShipForFirstProduct", "packsToShip_0");
+    put("pricePerPackForFirstProduct", "price_0");
 
-    put("allocatedBudgetAmount", allocatedBudgetAmount);
+    put("beginningBalanceSecondProduct", "beginningBalance_1");
+    put("stockInHandSecondProduct", "stockInHand_1");
+    put("newPatientSecondProduct", "newPatientCount_1");
+    put("quantityReceivedSecondProduct", "quantityReceived_1");
+    put("quantityDispensedSecondProduct", "quantityDispensed_1");
+    put("totalStockOutDaysSecondProduct", "stockOutDays_1");
+    put("requestedQuantitySecondProduct", "quantityRequested_1");
+    put("packsToShipForSecondProduct", "packsToShip_1");
+    put("pricePerPackForSecondProduct", "price_1");
+
+    put("allocatedBudgetAmount", "allocatedBudgetAmount");
   }};
 
   public InitiateRnRPage(TestWebDriver driver) {
@@ -364,19 +364,19 @@ public class InitiateRnRPage extends RequisitionPage {
     skipNoneLink.click();
   }
 
-  public HomePage clickHome() throws IOException {
+  public HomePage clickHome() {
     testWebDriver.sleep(1000);
     testWebDriver.waitForElementToAppear(homeMenuItem);
     testWebDriver.keyPress(homeMenuItem);
     return new HomePage(testWebDriver);
   }
 
-  public void enterValue(Integer value, String elementName) {
+  public void enterValueIfNotNull(Integer value, String elementName) {
     if (value == null) {
       return;
     }
     testWebDriver.sleep(1000);
-    WebElement element = elementsMap.get(elementName);
+    WebElement element = testWebDriver.getElementById(elementNameIdMap.get(elementName));
     testWebDriver.waitForElementToAppear(element);
     element.clear();
     element.sendKeys(value.toString());
@@ -404,7 +404,6 @@ public class InitiateRnRPage extends RequisitionPage {
     testWebDriver.waitForElementToAppear(configureTemplateErrorDiv);
     assertTrue("'Please contact admin to define R&R template for this program' div should show up", configureTemplateErrorDiv.isDisplayed());
     assertTrue("Please contact admin to define R&R template for this program should show up", configureTemplateErrorDiv.getText().equals("Please contact admin to define R&R template for this program"));
-
   }
 
   public void verifyQuantityReceivedForFirstProduct(Integer quantityReceivedValue) {
@@ -436,7 +435,6 @@ public class InitiateRnRPage extends RequisitionPage {
     lossesAndAdjustmentsDone.click();
   }
 
-
   public void calculateAndVerifyStockOnHand(Integer beginningBalance, Integer quantityReceived, Integer quantityDispensed, Integer lossesAndAdjustments) {
     Integer StockOnHand = beginningBalance + quantityReceived - quantityDispensed + lossesAndAdjustments;
     String stockOnHandActualValue = StockOnHand.toString();
@@ -446,9 +444,9 @@ public class InitiateRnRPage extends RequisitionPage {
 
   public String calculateStockOnHand(Integer beginningBalance, Integer quantityReceived,
                                      Integer quantityDispensed, Integer lossesAndAdjustment) {
-    enterValue(beginningBalance, "beginningBalanceFirstProduct");
-    enterValue(quantityReceived, "quantityReceivedFirstProduct");
-    enterValue(quantityDispensed, "quantityDispensedFirstProduct");
+    enterValueIfNotNull(beginningBalance, "beginningBalanceFirstProduct");
+    enterValueIfNotNull(quantityReceived, "quantityReceivedFirstProduct");
+    enterValueIfNotNull(quantityDispensed, "quantityDispensedFirstProduct");
     enterLossesAndAdjustments(lossesAndAdjustment.toString());
 
     testWebDriver.waitForElementToAppear(stockInHandFirstProduct);
@@ -530,14 +528,14 @@ public class InitiateRnRPage extends RequisitionPage {
   }
 
   public void calculateAndVerifyTotalCost() {
-    actualTotalCostFullSupply = calculateTotalCostForProduct("FirstProduct");
+    actualTotalCostFullSupply = calculateTotalCostForProduct(1);
     assertEquals(actualTotalCostFullSupply.toString() + "0", totalCost.getText().substring(1));
     testWebDriver.sleep(500);
   }
 
-  public float calculateTotalCostForProduct(String product) {
-    WebElement packsToShip = elementsMap.get("packsToShipFor" + product);
-    WebElement pricePerPack = elementsMap.get("pricePerPackFor" + product);
+  public float calculateTotalCostForProduct(int product) {
+    WebElement packsToShip = testWebDriver.getElementById("packsToShip_" + (product - 1));
+    WebElement pricePerPack = testWebDriver.getElementById("price_" + (product - 1));
 
     testWebDriver.waitForElementToAppear(packsToShip);
     String actualPacksToShip = testWebDriver.getText(packsToShip);
@@ -587,9 +585,9 @@ public class InitiateRnRPage extends RequisitionPage {
 
   private float getCostForAllItems(int numberOfProducts) {
     if (numberOfProducts == 1)
-      return calculateTotalCostForProduct("FirstProduct");
+      return calculateTotalCostForProduct(1);
     if (numberOfProducts == 2)
-      return calculateTotalCostForProduct("FirstProduct") + calculateTotalCostForProduct("SecondProduct");
+      return calculateTotalCostForProduct(1) + calculateTotalCostForProduct(2);
     return 0;
   }
 
@@ -611,8 +609,7 @@ public class InitiateRnRPage extends RequisitionPage {
   }
 
   public void addNonFullSupplyLineItems(String requestedQuantityValue, String requestedQuantityExplanationValue,
-                                        String productPrimaryName, String productCode, String category)
-    throws IOException, SQLException {
+                                        String productPrimaryName, String productCode, String category) throws IOException, SQLException {
     DBWrapper dbWrapper = new DBWrapper();
     String nonFullSupplyItems = dbWrapper.fetchNonFullSupplyData(productCode, "2", "1");
     clickNonFullSupplyTab();

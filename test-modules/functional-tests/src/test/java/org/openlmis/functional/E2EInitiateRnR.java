@@ -237,8 +237,8 @@ public class E2EInitiateRnR extends TestCaseHelper {
   @And("^I update & verify ordered quantities$")
   public void enterAndVerifyOrderedQuantities() throws Exception {
     InitiateRnRPage initiateRnRPage = PageFactory.getInstanceOfInitiateRnRPage(testWebDriver);
-    initiateRnRPage.enterValue(10, "newPatientFirstProduct");
-    initiateRnRPage.enterValue(10, "totalStockOutDaysFirstProduct");
+    initiateRnRPage.enterValueIfNotNull(10, "newPatientFirstProduct");
+    initiateRnRPage.enterValueIfNotNull(10, "totalStockOutDaysFirstProduct");
     int expectedCalculatedNC = calculatedExpectedNC(10, 10, 10);
     initiateRnRPage.verifyAmcAndCalculatedOrderQuantity(expectedCalculatedNC, 36, 3, 11);
     Integer packSize = parseInt(dbWrapper.getAttributeFromTable("products", "packSize", "code", "P10"));
@@ -248,8 +248,8 @@ public class E2EInitiateRnR extends TestCaseHelper {
   @And("^I update & verify quantities for emergency RnR$")
   public void enterAndVerifyOrderedQuantitiesForEmergencyRnR() throws Exception {
     InitiateRnRPage initiateRnRPage = PageFactory.getInstanceOfInitiateRnRPage(testWebDriver);
-    initiateRnRPage.enterValue(10, "newPatientFirstProduct");
-    initiateRnRPage.enterValue(10, "totalStockOutDaysFirstProduct");
+    initiateRnRPage.enterValueIfNotNull(10, "newPatientFirstProduct");
+    initiateRnRPage.enterValueIfNotNull(10, "totalStockOutDaysFirstProduct");
     int expectedCalculatedNC = calculatedExpectedNC(10, 10, 10);
     initiateRnRPage.verifyAmcAndCalculatedOrderQuantity(expectedCalculatedNC, round(((float) (expectedCalculatedNC + 36) / 2)), 3, 11);
     Integer packSize = Integer.parseInt(dbWrapper.getAttributeFromTable("products", "packSize", "code", "P10"));
@@ -259,7 +259,7 @@ public class E2EInitiateRnR extends TestCaseHelper {
   @And("^I update & verify requested quantities$")
   public void enterAndVerifyRequestedQuantities() throws Exception {
     InitiateRnRPage initiateRnRPage = PageFactory.getInstanceOfInitiateRnRPage(testWebDriver);
-    initiateRnRPage.enterValue(10, "requestedQuantityFirstProduct");
+    initiateRnRPage.enterValueIfNotNull(10, "requestedQuantityFirstProduct");
     initiateRnRPage.verifyRequestedQuantityExplanation();
     initiateRnRPage.enterExplanationReason();
     Integer packSize = Integer.parseInt(dbWrapper.getAttributeFromTable("products", "packSize", "code", "P10"));

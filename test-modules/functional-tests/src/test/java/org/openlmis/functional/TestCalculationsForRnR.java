@@ -751,22 +751,22 @@ public class TestCalculationsForRnR extends TestCaseHelper {
 
   public void enterDetailsForFirstProduct(Integer beginningBalance, Integer quantityReceived, Integer stockInHand,
                                           Integer quantityDispensed, Integer stockOutDays, Integer newPatientCount) throws IOException {
-    initiateRnRPage.enterValue(beginningBalance, "beginningBalanceFirstProduct");
-    initiateRnRPage.enterValue(quantityReceived, "quantityReceivedFirstProduct");
-    initiateRnRPage.enterValue(stockInHand, "stockInHandFirstProduct");
-    initiateRnRPage.enterValue(quantityDispensed, "quantityDispensedFirstProduct");
-    initiateRnRPage.enterValue(stockOutDays, "totalStockOutDaysFirstProduct");
-    initiateRnRPage.enterValue(newPatientCount, "newPatientFirstProduct");
+    initiateRnRPage.enterValueIfNotNull(beginningBalance, "beginningBalanceFirstProduct");
+    initiateRnRPage.enterValueIfNotNull(quantityReceived, "quantityReceivedFirstProduct");
+    initiateRnRPage.enterValueIfNotNull(stockInHand, "stockInHandFirstProduct");
+    initiateRnRPage.enterValueIfNotNull(quantityDispensed, "quantityDispensedFirstProduct");
+    initiateRnRPage.enterValueIfNotNull(stockOutDays, "totalStockOutDaysFirstProduct");
+    initiateRnRPage.enterValueIfNotNull(newPatientCount, "newPatientFirstProduct");
   }
 
   public void enterDetailsForSecondProduct(Integer beginningBalance, Integer quantityReceived, Integer stockInHand,
                                            Integer quantityDispensed, Integer stockOutDays, Integer newPatientCount) throws IOException {
-    initiateRnRPage.enterValue(beginningBalance, "beginningBalanceSecondProduct");
-    initiateRnRPage.enterValue(quantityReceived, "quantityReceivedSecondProduct");
-    initiateRnRPage.enterValue(stockInHand, "stockInHandSecondProduct");
-    initiateRnRPage.enterValue(quantityDispensed, "quantityDispensedSecondProduct");
-    initiateRnRPage.enterValue(stockOutDays, "totalStockOutDaysSecondProduct");
-    initiateRnRPage.enterValue(newPatientCount, "newPatientSecondProduct");
+    initiateRnRPage.enterValueIfNotNull(beginningBalance, "beginningBalanceSecondProduct");
+    initiateRnRPage.enterValueIfNotNull(quantityReceived, "quantityReceivedSecondProduct");
+    initiateRnRPage.enterValueIfNotNull(stockInHand, "stockInHandSecondProduct");
+    initiateRnRPage.enterValueIfNotNull(quantityDispensed, "quantityDispensedSecondProduct");
+    initiateRnRPage.enterValueIfNotNull(stockOutDays, "totalStockOutDaysSecondProduct");
+    initiateRnRPage.enterValueIfNotNull(newPatientCount, "newPatientSecondProduct");
   }
 
   public void submitAndAuthorizeRnR() throws IOException {

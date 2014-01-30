@@ -62,7 +62,7 @@ public class ManageBudget extends TestCaseHelper {
     initiateRnR.verifyBudgetAmountPresentOnFooter("$200.00");
     initiateRnR.checkWhetherBudgetExceedWarningPresent(true);
 
-    initiateRnRPage.enterValue(9, "requestedQuantityFirstProduct");
+    initiateRnRPage.enterValueIfNotNull(9, "requestedQuantityFirstProduct");
     initiateRnRPage.enterExplanationReason();
     initiateRnRPage.clickNonFullSupplyTab();
     initiateRnR.verifyBudgetAmountPresentOnFooter("$200.00");
@@ -137,7 +137,7 @@ public class ManageBudget extends TestCaseHelper {
     homePage.clickProceed();
 
     enterDetailsInRnRForFirstProduct(0, 100, 0);
-    initiateRnRPage.enterValue(90, "newPatientFirstProduct");
+    initiateRnRPage.enterValueIfNotNull(90, "newPatientFirstProduct");
 
     initiateRnR.verifyBudgetNotDisplayed();
     initiateRnR.checkWhetherBudgetExceedWarningPresent(false);
@@ -294,7 +294,7 @@ public class ManageBudget extends TestCaseHelper {
     homePage.clickProceed();
 
     enterDetailsInRnRForFirstProduct(100, 100, 10);
-    initiateRnRPage.enterValue(90, "newPatientFirstProduct");
+    initiateRnRPage.enterValueIfNotNull(90, "newPatientFirstProduct");
     initiateRnR.verifyBudgetAmountPresentOnFooter("$200.00");
     initiateRnR.checkWhetherBudgetExceedWarningPresent(true);
   }
@@ -385,7 +385,7 @@ public class ManageBudget extends TestCaseHelper {
     initiateRnR.verifyBudgetAmountPresentOnFooter("$200.00");
     initiateRnR.checkWhetherBudgetExceedWarningPresent(false);
     initiateRnRPage.clickNonFullSupplyTab();
-    initiateRnRPage.enterValue(200, "requestedQuantityFirstProduct");
+    initiateRnRPage.enterValueIfNotNull(200, "requestedQuantityFirstProduct");
     initiateRnR.verifyBudgetAmountPresentOnFooter("$200.00");
     initiateRnR.checkWhetherBudgetExceedWarningPresent(true);
 
@@ -423,9 +423,9 @@ public class ManageBudget extends TestCaseHelper {
   }
 
   public void enterDetailsInRnRForFirstProduct(int beginningBalance, int quantityReceived, int quantityDispensed) throws IOException {
-    initiateRnRPage.enterValue(beginningBalance, "beginningBalanceFirstProduct");
-    initiateRnRPage.enterValue(quantityReceived, "quantityReceivedFirstProduct");
-    initiateRnRPage.enterValue(quantityDispensed, "quantityDispensedFirstProduct");
+    initiateRnRPage.enterValueIfNotNull(beginningBalance, "beginningBalanceFirstProduct");
+    initiateRnRPage.enterValueIfNotNull(quantityReceived, "quantityReceivedFirstProduct");
+    initiateRnRPage.enterValueIfNotNull(quantityDispensed, "quantityDispensedFirstProduct");
   }
 
   public void viewRequisition() throws IOException {

@@ -44,9 +44,9 @@ public class ManageRights extends TestCaseHelper {
     homePage.clickProceed();
 
     InitiateRnRPage initiateRnRPage = PageFactory.getInstanceOfInitiateRnRPage(testWebDriver);
-    initiateRnRPage.enterValue(10, "beginningBalanceFirstProduct");
-    initiateRnRPage.enterValue(10, "quantityDispensedFirstProduct");
-    initiateRnRPage.enterValue(10, "quantityReceivedFirstProduct");
+    initiateRnRPage.enterValueIfNotNull(10, "beginningBalanceFirstProduct");
+    initiateRnRPage.enterValueIfNotNull(10, "quantityDispensedFirstProduct");
+    initiateRnRPage.enterValueIfNotNull(10, "quantityReceivedFirstProduct");
     initiateRnRPage.submitRnR();
     initiateRnRPage.verifyAuthorizeButtonNotPresent();
 

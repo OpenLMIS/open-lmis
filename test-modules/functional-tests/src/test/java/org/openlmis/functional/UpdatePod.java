@@ -50,6 +50,7 @@ public class UpdatePod extends TestCaseHelper {
     dbWrapper.deleteData();
     setUpData(updatePODData.get(PROGRAM), updatePODData.get(USER));
     updatePodPage = PageFactory.getInstanceOfUpdatePodPage(testWebDriver);
+    loginPage = PageFactory.getInstanceOfLoginPage(testWebDriver, baseUrlGlobal);
   }
 
   @Test(groups = {"requisition"})
