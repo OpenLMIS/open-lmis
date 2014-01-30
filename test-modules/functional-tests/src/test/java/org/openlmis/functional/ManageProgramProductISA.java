@@ -60,11 +60,18 @@ public class ManageProgramProductISA extends TestCaseHelper {
     programProductISAPage = navigateProgramProductISAPage(program);
   }
 
-  @When("^I type ratio \"([^\"]*)\" dosesPerYear \"([^\"]*)\" wastage \"([^\"]*)\" bufferPercentage \"([^\"]*)\" adjustmentValue \"([^\"]*)\" minimumValue \"([^\"]*)\" maximumValue \"([^\"]*)\"$")
-  public void fillProgramProductISA(String ratio, String dosesPerYear, String wastage, String bufferPercentage,
-                                    String adjustmentValue, String minimumValue, String maximumValue) throws IOException {
+  @When(
+    "^I type ratio \"([^\"]*)\" dosesPerYear \"([^\"]*)\" wastage \"([^\"]*)\" bufferPercentage \"([^\"]*)\" adjustmentValue \"([^\"]*)\" minimumValue \"([^\"]*)\" maximumValue \"([^\"]*)\"$")
+  public void fillProgramProductISA(String ratio,
+                                    String dosesPerYear,
+                                    String wastage,
+                                    String bufferPercentage,
+                                    String adjustmentValue,
+                                    String minimumValue,
+                                    String maximumValue) throws IOException {
     programProductISAPage = PageFactory.getInstanceOfProgramProductIsaPage(testWebDriver);
-    programProductISAPage.fillProgramProductISA(ratio, dosesPerYear, wastage, bufferPercentage, adjustmentValue, minimumValue, maximumValue);
+    programProductISAPage.fillProgramProductISA(ratio, dosesPerYear, wastage, bufferPercentage, adjustmentValue,
+      minimumValue, maximumValue);
   }
 
   @Then("^I verify calculated ISA value having population \"([^\"]*)\" as \"([^\"]*)\"$")
@@ -147,7 +154,10 @@ public class ManageProgramProductISA extends TestCaseHelper {
   }
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function-Verify-Push-Type-Program")
-  public void testPushTypeProgramsInDropDown(String userSIC, String password, String program1, String program2) throws Exception {
+  public void testPushTypeProgramsInDropDown(String userSIC,
+                                             String password,
+                                             String program1,
+                                             String program2) throws Exception {
     setUpTestDataForProgramProductISA();
     Login(userSIC, password);
     ProgramProductISAPage programProductISAPage = navigateConfigureProductISAPage();
@@ -169,8 +179,14 @@ public class ManageProgramProductISA extends TestCaseHelper {
   }
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function-Multiple-Programs")
-  public void testProgramProductsMappings(String userSIC, String password, String program1, String program2, String product1,
-                                          String product2, String product3, String product4) throws Exception {
+  public void testProgramProductsMappings(String userSIC,
+                                          String password,
+                                          String program1,
+                                          String program2,
+                                          String product1,
+                                          String product2,
+                                          String product3,
+                                          String product4) throws Exception {
     setUpTestDataForProgramProductISA();
     Login(userSIC, password);
     ProgramProductISAPage programProductISAPage = navigateConfigureProductISAPage();
@@ -202,7 +218,9 @@ public class ManageProgramProductISA extends TestCaseHelper {
   }
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function")
-  public void testVerifyMonthlyRestockAmountFieldAvailability(String userSIC, String password, String program) throws Exception {
+  public void testVerifyMonthlyRestockAmountFieldAvailability(String userSIC,
+                                                              String password,
+                                                              String program) throws Exception {
     setUpTestDataForProgramProductISA();
     Login(userSIC, password);
     ProgramProductISAPage programProductISAPage = navigateProgramProductISAPage(program);
@@ -213,6 +231,7 @@ public class ManageProgramProductISA extends TestCaseHelper {
   }
 
   private ProgramProductISAPage navigateProgramProductISAPage(String program) throws IOException {
+    homePage = PageFactory.getInstanceOfHomePage(testWebDriver);
     ProgramProductISAPage programProductISAPage = homePage.navigateProgramProductISA();
     programProductISAPage.selectProgram(program);
     programProductISAPage.editFormula();
@@ -246,8 +265,10 @@ public class ManageProgramProductISA extends TestCaseHelper {
   }
 
   public void verifyProgramNameIsDisplayedOnConfigureISAFormulaWindow(ProgramProductISAPage programProductISAPage) {
-    assertTrue(programProductISAPage.getProgramNameDisplayedOnModalHeaderOFConfigureISAFormulaWindow().contains("ISA formula for antibiotic1"));
-    assertTrue(programProductISAPage.getProgramNameDisplayedOnPopulationLabelOFConfigureISAFormulaWindow().contains("doses of antibiotic1 per month"));
+    assertTrue(programProductISAPage.getProgramNameDisplayedOnModalHeaderOFConfigureISAFormulaWindow().contains(
+      "ISA formula for antibiotic1"));
+    assertTrue(programProductISAPage.getProgramNameDisplayedOnPopulationLabelOFConfigureISAFormulaWindow().contains(
+      "doses of antibiotic1 per month"));
   }
 
   public void verifyISAFormula(ProgramProductISAPage programProductISAPage, String ISAFormula) {
@@ -290,29 +311,21 @@ public class ManageProgramProductISA extends TestCaseHelper {
 
   @DataProvider(name = "Data-Provider-Function")
   public Object[][] parameterIntTestProviderPositive() {
-    return new Object[][]{
-      {"Admin123", "Admin123", "VACCINES"}
-    };
+    return new Object[][]{{"Admin123", "Admin123", "VACCINES"}};
   }
 
   @DataProvider(name = "Data-Provider-Function-Search")
   public Object[][] parameterIntTestSearch() {
-    return new Object[][]{
-      {"Admin123", "Admin123", "VACCINES", "antibiotic1"}
-    };
+    return new Object[][]{{"Admin123", "Admin123", "VACCINES", "antibiotic1"}};
   }
 
   @DataProvider(name = "Data-Provider-Function-Verify-Push-Type-Program")
   public Object[][] parameterIntTestPushTypeProgram() {
-    return new Object[][]{
-      {"Admin123", "Admin123", "VACCINES", "TB"}
-    };
+    return new Object[][]{{"Admin123", "Admin123", "VACCINES", "TB"}};
   }
 
   @DataProvider(name = "Data-Provider-Function-Multiple-Programs")
   public Object[][] parameterIntTestMultipleProducts() {
-    return new Object[][]{
-      {"Admin123", "Admin123", "VACCINES", "TB", "antibiotic1", "antibiotic2", "antibiotic3", "antibiotic4"}
-    };
+    return new Object[][]{{"Admin123", "Admin123", "VACCINES", "TB", "antibiotic1", "antibiotic2", "antibiotic3", "antibiotic4"}};
   }
 }

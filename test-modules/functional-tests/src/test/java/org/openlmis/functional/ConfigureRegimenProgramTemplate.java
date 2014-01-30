@@ -93,7 +93,8 @@ public class ConfigureRegimenProgramTemplate extends TestCaseHelper {
     List<Map<String, String>> data = regimenTable.asMaps();
     regimenTemplateConfigPage = PageFactory.getInstanceOfRegimenTemplateConfigPage(testWebDriver);
     for (Map map : data)
-      regimenTemplateConfigPage.AddNewRegimen(map.get("Category").toString(), map.get("Code").toString(), map.get("Name").toString(), Boolean.parseBoolean(map.get("Active").toString()));
+      regimenTemplateConfigPage.AddNewRegimen(map.get("Category").toString(), map.get("Code").toString(),
+        map.get("Name").toString(), Boolean.parseBoolean(map.get("Active").toString()));
   }
 
   @And("^I save regimen$")
@@ -123,7 +124,8 @@ public class ConfigureRegimenProgramTemplate extends TestCaseHelper {
     List<Map<String, String>> data = regimenReportingTable.asMaps();
     regimenTemplateConfigPage = PageFactory.getInstanceOfRegimenTemplateConfigPage(testWebDriver);
     for (Map map : data) {
-      regimenTemplateConfigPage.NoOfPatientsOnTreatmentCheckBox(Boolean.parseBoolean(map.get("NoOfPatientsOnTreatment").toString()));
+      regimenTemplateConfigPage.NoOfPatientsOnTreatmentCheckBox(
+        Boolean.parseBoolean(map.get("NoOfPatientsOnTreatment").toString()));
       regimenTemplateConfigPage.setValueRemarksTextField(map.get("Remarks").toString());
     }
   }
@@ -163,7 +165,10 @@ public class ConfigureRegimenProgramTemplate extends TestCaseHelper {
   }
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function-Positive")
-  public void testVerifyAlteredRegimensColumnsOnRnRScreen(String program, String adminUser, String userSIC, String password) throws Exception {
+  public void testVerifyAlteredRegimensColumnsOnRnRScreen(String program,
+                                                          String adminUser,
+                                                          String userSIC,
+                                                          String password) throws Exception {
     String newRemarksHeading = "Testing column";
     dbWrapper.updateFieldValue("programs", "regimenTemplateConfigured", "false", null, null);
 
@@ -190,7 +195,8 @@ public class ConfigureRegimenProgramTemplate extends TestCaseHelper {
     initiateRnRPage.verifyColumnsHeadingPresent(tableXpathTillTr, "Code", columns);
     initiateRnRPage.verifyColumnsHeadingPresent(tableXpathTillTr, "Name", columns);
     initiateRnRPage.verifyColumnsHeadingPresent(tableXpathTillTr, "Number of patients on treatment", columns);
-    initiateRnRPage.verifyColumnsHeadingPresent(tableXpathTillTr, "Number of patients to be initiated treatment", columns);
+    initiateRnRPage.verifyColumnsHeadingPresent(tableXpathTillTr, "Number of patients to be initiated treatment",
+      columns);
     initiateRnRPage.verifyColumnsHeadingPresent(tableXpathTillTr, "Number of patients stopped treatment", columns);
     initiateRnRPage.verifyColumnsHeadingPresent(tableXpathTillTr, newRemarksHeading, columns);
   }
@@ -222,7 +228,8 @@ public class ConfigureRegimenProgramTemplate extends TestCaseHelper {
   }
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider")
-  public void testVerifyDuplicateCategoriesAdditionForSameCategory(String program, String[] credentials) throws Exception {
+  public void testVerifyDuplicateCategoriesAdditionForSameCategory(String program,
+                                                                   String[] credentials) throws Exception {
     dbWrapper.updateFieldValue("programs", "regimenTemplateConfigured", "false", null, null);
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
     RegimenTemplateConfigPage regimenTemplateConfigPage = homePage.navigateToRegimenConfigTemplate();
@@ -234,7 +241,9 @@ public class ConfigureRegimenProgramTemplate extends TestCaseHelper {
   }
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Multiple-Programs")
-  public void testVerifyDuplicateCategoriesInterPrograms(String program1, String program2, String[] credentials) throws Exception {
+  public void testVerifyDuplicateCategoriesInterPrograms(String program1,
+                                                         String program2,
+                                                         String[] credentials) throws Exception {
     dbWrapper.updateFieldValue("programs", "regimenTemplateConfigured", "false", null, null);
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
     RegimenTemplateConfigPage regimenTemplateConfigPage = homePage.navigateToRegimenConfigTemplate();
@@ -320,18 +329,25 @@ public class ConfigureRegimenProgramTemplate extends TestCaseHelper {
 
     regimenTemplateConfigPage.configureProgram(program);
     regimenTemplateConfigPage.CancelRegime(program);
-    assertTrue("Clicking Cancel button should be redirected to Regimen Template screen", testWebDriver.getElementById(program).isDisplayed());
+    assertTrue("Clicking Cancel button should be redirected to Regimen Template screen",
+      testWebDriver.getElementById(program).isDisplayed());
   }
 
   private void verifyDefaultRegimenReportingFieldsValues() {
-    assertTrue("noOfPatientsOnTreatmentCheckBox should be checked", regimenTemplateConfigPage.IsSelectedNoOfPatientsOnTreatmentCheckBox());
-    assertTrue("noOfPatientsToInitiateTreatmentCheckBox should be checked", regimenTemplateConfigPage.IsNoOfPatientsToInitiateTreatmentCheckBoxSelected());
-    assertTrue("noOfPatientsStoppedTreatmentCheckBox should be checked", regimenTemplateConfigPage.IsNoOfPatientsStoppedTreatmentCheckBoxSelected());
+    assertTrue("noOfPatientsOnTreatmentCheckBox should be checked",
+      regimenTemplateConfigPage.IsSelectedNoOfPatientsOnTreatmentCheckBox());
+    assertTrue("noOfPatientsToInitiateTreatmentCheckBox should be checked",
+      regimenTemplateConfigPage.IsNoOfPatientsToInitiateTreatmentCheckBoxSelected());
+    assertTrue("noOfPatientsStoppedTreatmentCheckBox should be checked",
+      regimenTemplateConfigPage.IsNoOfPatientsStoppedTreatmentCheckBoxSelected());
     assertTrue("remarksCheckBox should be checked", regimenTemplateConfigPage.IsRemarksCheckBoxSelected());
 
-    assertEquals("Number of patients on treatment", regimenTemplateConfigPage.getValueNoOfPatientsOnTreatmentTextField());
-    assertEquals("Number of patients to be initiated treatment", regimenTemplateConfigPage.getValueNoOfPatientsToInitiateTreatmentTextField());
-    assertEquals("Number of patients stopped treatment", regimenTemplateConfigPage.getValueNoOfPatientsStoppedTreatmentTextField());
+    assertEquals("Number of patients on treatment",
+      regimenTemplateConfigPage.getValueNoOfPatientsOnTreatmentTextField());
+    assertEquals("Number of patients to be initiated treatment",
+      regimenTemplateConfigPage.getValueNoOfPatientsToInitiateTreatmentTextField());
+    assertEquals("Number of patients stopped treatment",
+      regimenTemplateConfigPage.getValueNoOfPatientsStoppedTreatmentTextField());
     assertEquals("Remarks", regimenTemplateConfigPage.getValueRemarksTextField());
 
     assertEquals("Numeric", regimenTemplateConfigPage.getTextNoOfPatientsOnTreatmentDataType());
@@ -349,13 +365,19 @@ public class ConfigureRegimenProgramTemplate extends TestCaseHelper {
     assertTrue("Done regimen Error div should show up", regimenTemplateConfigPage.IsDisplayedDoneFailMessage());
   }
 
-  private void verifyNonEditableRegimenAdded(String code, String name, boolean activeCheckBoxSelected, int indexOfCodeAdded) {
+  private void verifyNonEditableRegimenAdded(String code,
+                                             String name,
+                                             boolean activeCheckBoxSelected,
+                                             int indexOfCodeAdded) {
     assertEquals(code, regimenTemplateConfigPage.getNonEditableAddedCode(indexOfCodeAdded));
     assertEquals(name, regimenTemplateConfigPage.getNonEditableAddedName(indexOfCodeAdded));
     assertEquals(activeCheckBoxSelected, regimenTemplateConfigPage.getNonEditableAddedActiveCheckBox(indexOfCodeAdded));
   }
 
-  private void verifyEditableRegimenAdded(String code, String name, boolean activeCheckBoxSelected, int indexOfCodeAdded) {
+  private void verifyEditableRegimenAdded(String code,
+                                          String name,
+                                          boolean activeCheckBoxSelected,
+                                          int indexOfCodeAdded) {
     assertEquals(code, regimenTemplateConfigPage.getEditableAddedCode(indexOfCodeAdded));
     assertEquals(name, regimenTemplateConfigPage.getEditableAddedName(indexOfCodeAdded));
     assertEquals(activeCheckBoxSelected, regimenTemplateConfigPage.getEditableAddedActiveCheckBox(indexOfCodeAdded));
@@ -363,14 +385,17 @@ public class ConfigureRegimenProgramTemplate extends TestCaseHelper {
 
   private void enterCategoriesValuesForEditing(String code, String name, int indexOfCodeAdded) {
     String baseRegimenDivXpath = "//div[@id='sortable']/div";
-    testWebDriver.waitForElementToAppear(testWebDriver.getElementByXpath(baseRegimenDivXpath + "[" + indexOfCodeAdded + "]/div[2]/input"));
+    testWebDriver.waitForElementToAppear(
+      testWebDriver.getElementByXpath(baseRegimenDivXpath + "[" + indexOfCodeAdded + "]/div[2]/input"));
     sendKeys(baseRegimenDivXpath + "[" + indexOfCodeAdded + "]/div[2]/input", code);
     sendKeys(baseRegimenDivXpath + "[" + indexOfCodeAdded + "]/div[3]/input", name);
   }
 
-  private void verifyProgramsListedOnManageRegimenTemplateScreen(List<String> actualProgramsString, String expectedProgramsString) {
+  private void verifyProgramsListedOnManageRegimenTemplateScreen(List<String> actualProgramsString,
+                                                                 String expectedProgramsString) {
     for (String program : actualProgramsString)
-      assertTrue("Program " + program + " not present in expected string : " + expectedProgramsString, expectedProgramsString.contains(program));
+      assertTrue("Program " + program + " not present in expected string : " + expectedProgramsString,
+        expectedProgramsString.contains(program));
   }
 
   private List<String> getProgramsListedOnRegimeScreen() {
@@ -378,21 +403,25 @@ public class ConfigureRegimenProgramTemplate extends TestCaseHelper {
     String regimenTableTillTR = "//table[@id='configureProgramRegimensTable']/tbody/tr";
     int size = testWebDriver.getElementsSizeByXpath(regimenTableTillTR);
     for (int counter = 1; counter < size + 1; counter++) {
-      testWebDriver.waitForElementToAppear(testWebDriver.getElementByXpath(regimenTableTillTR + "[" + counter + "]/td[1]"));
-      programsList.add(testWebDriver.getElementByXpath(regimenTableTillTR + "[" + counter + "]/td[1]").getText().trim());
+      testWebDriver.waitForElementToAppear(
+        testWebDriver.getElementByXpath(regimenTableTillTR + "[" + counter + "]/td[1]"));
+      programsList.add(
+        testWebDriver.getElementByXpath(regimenTableTillTR + "[" + counter + "]/td[1]").getText().trim());
     }
     return programsList;
   }
 
   private void verifySuccessMessage() {
-    assertTrue("saveSuccessMsgDiv should show up", regimenTemplateConfigPage.IsDisplayedSaveSuccessMsgDiv());
+    testWebDriver.waitForAjax();
+    assertTrue("saveSuccessMsgDiv should show up", regimenTemplateConfigPage.isDisplayedSaveSuccessMsgDiv());
     String saveSuccessfullyMessage = "Regimens saved successfully";
     assertEquals(saveSuccessfullyMessage, regimenTemplateConfigPage.getSaveSuccessMsgDiv());
   }
 
   private void verifyProgramConfigured(String program) {
     testWebDriver.waitForElementToAppear(testWebDriver.getElementById(program));
-    assertTrue("Program " + program + "should be configured", testWebDriver.getElementById(program).getText().trim().equals("Edit"));
+    assertTrue("Program " + program + "should be configured",
+      testWebDriver.getElementById(program).getText().trim().equals("Edit"));
   }
 
   private void verifyProgramDetailsSaved(String code, String name, String reportingField) {
@@ -430,23 +459,17 @@ public class ConfigureRegimenProgramTemplate extends TestCaseHelper {
 
   @DataProvider(name = "Data-Provider")
   public Object[][] parameterVerifyRnRScreen() {
-    return new Object[][]{
-      {"ESSENTIAL MEDICINES", new String[]{"Admin123", "Admin123"}}
-    };
+    return new Object[][]{{"ESSENTIAL MEDICINES", new String[]{"Admin123", "Admin123"}}};
   }
 
   @DataProvider(name = "Data-Provider-Multiple-Programs")
   public Object[][] parameterMultiplePrograms() {
-    return new Object[][]{
-      {"ESSENTIAL MEDICINES", "TB", new String[]{"Admin123", "Admin123"}}
-    };
+    return new Object[][]{{"ESSENTIAL MEDICINES", "TB", new String[]{"Admin123", "Admin123"}}};
   }
 
   @DataProvider(name = "Data-Provider-Function-Positive")
   public Object[][] parameterIntTestProviderPositive() {
-    return new Object[][]{
-      {"HIV", "Admin123", "storeInCharge", "Admin123"}
-    };
+    return new Object[][]{{"HIV", "Admin123", "storeInCharge", "Admin123"}};
   }
 }
 
