@@ -21,7 +21,6 @@
         <div class="form-field">
           <select id="newRegimenCategory" ng-model="newRegimen.category"
                   ng-options="regimenCategory as regimenCategory.name for regimenCategory in regimenCategories"
-                  ng-required="true"
                   ng-class="highlightRequired(newRegimen.category)">
             <option value="" openlmis-message="placeholder.select.category"></option>
           </select>
@@ -33,7 +32,7 @@
         </label>
 
         <div class="form-field">
-          <input type="text" id="newRegimenCode" name="newRegimenCode" ng-model="newRegimen.code" ng-required="true"
+          <input type="text" id="newRegimenCode" name="newRegimenCode" ng-model="newRegimen.code"
                  ng-class="highlightRequired(newRegimen.code)" maxlength="50" />
         </div>
       </div>
@@ -43,7 +42,7 @@
         </label>
 
         <div class="form-field">
-          <input type="text" id="newRegimenName" name="newRegimenName" ng-model="newRegimen.name" ng-required="true"
+          <input type="text" id="newRegimenName" name="newRegimenName" ng-model="newRegimen.name"
                  ng-class="highlightRequired(newRegimen.name)" maxlength="50" />
         </div>
       </div>
