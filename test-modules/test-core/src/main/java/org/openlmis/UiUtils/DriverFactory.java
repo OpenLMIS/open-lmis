@@ -10,7 +10,6 @@
 
 package org.openlmis.UiUtils;
 
-
 import com.gargoylesoftware.htmlunit.BrowserVersion;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -41,11 +40,10 @@ public class DriverFactory {
   Unzip unZip;
 
   public WebDriver loadDriver(String browser) throws InterruptedException, IOException {
-
     String Separator = getProperty("file.separator");
     File parentDir = new File(getProperty("user.dir"));
 
-    CHROME_FOLDER = parentDir.getParentFile().getParentFile().getPath() + Separator + "test-core" + Separator + "src" + Separator + "main" + Separator + "java" + Separator + "org" + Separator + "openlmis" + Separator + "UiUtils" + Separator;
+    CHROME_FOLDER = parentDir.getParentFile().getPath() + Separator + "test-core" + Separator + "src" + Separator + "main" + Separator + "java" + Separator + "org" + Separator + "openlmis" + Separator + "UiUtils" + Separator;
     OUTPUT_FOLDER = parentDir.getPath() + Separator + "test-modules" + Separator + "test-core" + Separator + "src" + Separator + "main" + Separator + "java" + Separator + "org" + Separator + "openlmis" + Separator + "UiUtils" + Separator;
     INPUT_ZIP_FILE_IE_DRIVER = OUTPUT_FOLDER + "IEDriverServer_Win32_2.39.0.zip";
     INPUT_ZIP_FILE_CHROME_DRIVER = OUTPUT_FOLDER + "chromedriver_win32.zip";
@@ -75,7 +73,6 @@ public class DriverFactory {
         Thread.sleep(1500);
         driverType = setProperty("webdriver.ie.driver", OUTPUT_FOLDER + "IEDriverServer.exe");
         driverType = getProperty("webdriver.ie.driver");
-
         return createInternetExplorerDriver();
 
       case "chrome":
@@ -88,9 +85,6 @@ public class DriverFactory {
 
       case "chromeM":
         //ToDO: To run offline test on Jenkins change CHROME_FOLDER to OUTPUT_FOLDER
-        //unZip = new Unzip();
-        //unZip.unZipIt(INPUT_ZIP_FILE_CHROME_DRIVER_MAC, CHROME_FOLDER);
-        //Thread.sleep(10000);
         driverType = setProperty("webdriver.chrome.driver", CHROME_FOLDER + "chromedriver");
         driverType = getProperty("webdriver.chrome.driver");
         return createChromeDriver();
@@ -115,16 +109,16 @@ public class DriverFactory {
     profile.setPreference("browser.download.folderList", 2);
     profile.setPreference("dom.storage.enabled", true);
     profile.setPreference("device.storage.enabled", true);
-    //profile.setPreference("network.manage-offline-status", true);
-    if ((getProperty("os.name").toLowerCase().indexOf("mac") >= 0) && headless) {
+
+    if ((getProperty("os.name").toLowerCase().contains("mac")) && headless) {
       String LOCAL_FIREFOX_X11_PATH = "/opt/local/bin/firefox-x11";
       File binaryFile = new File(LOCAL_FIREFOX_X11_PATH);
       FirefoxBinary binary = new FirefoxBinary(binaryFile);
       String LOCAL_X11_DISPLAY = ":5";
       binary.setEnvironmentProperty("DISPLAY", LOCAL_X11_DISPLAY);
       return new FirefoxDriver(binary, profile);
-    } else
-      return new FirefoxDriver(profile);
+    }
+    return new FirefoxDriver(profile);
   }
 
   private WebDriver createInternetExplorerDriver() throws IOException {
