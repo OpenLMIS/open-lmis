@@ -13,9 +13,12 @@ package org.openlmis.report.service;
 import lombok.NoArgsConstructor;
 import org.apache.commons.lang.StringUtils;
 import org.apache.ibatis.session.RowBounds;
+import org.openlmis.core.service.*;
 import org.openlmis.report.mapper.AverageConsumptionReportMapper;
+import org.openlmis.report.mapper.lookup.FacilityTypeReportMapper;
 import org.openlmis.report.model.ReportData;
 import org.openlmis.report.model.params.AverageConsumptionReportParam;
+import org.openlmis.report.service.lookup.ReportLookupService;
 import org.openlmis.report.util.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -30,8 +33,29 @@ public class AverageConsumptionReportDataProvider extends ReportDataProvider {
   @Autowired
   private AverageConsumptionReportMapper reportMapper;
 
-  @Autowired
   private AverageConsumptionReportParam averageConsumptionReportParam;
+
+  @Autowired
+  private ProductCategoryService productCategoryService;
+
+  @Autowired
+  private ReportLookupService reportLookupService;
+
+  @Autowired
+  private GeographicZoneService geographicZoneService;
+
+  @Autowired
+  private RequisitionGroupService requisitionGroupService;
+
+  @Autowired
+  private FacilityTypeReportMapper facilityTypeService;
+
+  @Autowired
+  private ProgramService programService;
+
+  @Autowired
+  private FacilityService facilityService;
+
 
   @Override
   protected List<? extends ReportData> getResultSetReportData(Map<String, String[]> filterCriteria) {
@@ -45,7 +69,8 @@ public class AverageConsumptionReportDataProvider extends ReportDataProvider {
   }
 
   public AverageConsumptionReportParam getReportFilterData(Map<String, String[]> filterCriteria) {
-    if (filterCriteria != null) {
+   averageConsumptionReportParam = new AverageConsumptionReportParam();
+   if (filterCriteria != null) {
 
       Date originalStart = new Date();
       Date originalEnd = new Date();
@@ -107,11 +132,24 @@ public class AverageConsumptionReportDataProvider extends ReportDataProvider {
 
     }
     return averageConsumptionReportParam;
+
   }
 
   @Override
   public String getFilterSummary(Map<String, String[]> params) {
-    return getReportFilterData(params).toString();
+    if(averageConsumptionReportParam != null){
+      averageConsumptionReportParam.setProgramService(programService);
+      averageConsumptionReportParam.setFacilityService(facilityService);
+      averageConsumptionReportParam.setFacilityTypeService(facilityTypeService);
+      averageConsumptionReportParam.setProductCategoryService(productCategoryService);
+      averageConsumptionReportParam.setReportLookupService(reportLookupService);
+      averageConsumptionReportParam.setGeographicZoneService(geographicZoneService);
+      averageConsumptionReportParam.setRequisitionGroupService(requisitionGroupService);
+      return averageConsumptionReportParam.toString();
+    }
+    // read the params and try again.
+    getReportFilterData(params);
+    return getFilterSummary(params);
   }
 
 }

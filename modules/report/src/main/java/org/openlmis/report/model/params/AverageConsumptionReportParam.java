@@ -12,7 +12,6 @@ package org.openlmis.report.model.params;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.service.*;
 import org.openlmis.report.mapper.lookup.FacilityTypeReportMapper;
@@ -22,7 +21,6 @@ import org.openlmis.report.service.lookup.ReportLookupService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.lang.String;
 import java.text.DateFormat;
 import java.util.Date;
 import java.util.List;
@@ -30,29 +28,21 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Component
-public class AverageConsumptionReportParam
-   implements ReportParameter {
+public class AverageConsumptionReportParam extends BaseParam
+  implements ReportParameter {
 
-  @Autowired
   private ProductCategoryService productCategoryService;
 
-  @Autowired
   private ReportLookupService reportLookupService;
 
-  @Autowired
   private GeographicZoneService geographicZoneService;
 
-  @Autowired
   private RequisitionGroupService requisitionGroupService;
 
-  @Autowired
   private FacilityTypeReportMapper facilityTypeService;
 
-  @Autowired
   private ProgramService programService;
 
-  @Autowired
   private FacilityService facilityService;
 
   // period selections
@@ -93,67 +83,70 @@ public class AverageConsumptionReportParam
   private Date endDate;
 
   @Override
-  public String toString(){
+  public String toString() {
+    try {
+      DateFormat dateFormatter = DateFormat.getDateInstance(DateFormat.DEFAULT);
 
-    DateFormat dateFormatter = DateFormat.getDateInstance(DateFormat.DEFAULT);
-
-    if(facilityTypeId == 0){
-      setFacilityType("All facility types");
-    }else{
-      //TODO: write the facility type service
-      //facilityTypeService.
-    }
-
-    if(programId != 0){
-      this.setProgram(programService.getById(programId).getName());
-    }
-
-    if(zoneId != 0){
-      setZone(geographicZoneService.getById( getZoneId()).getName() );
-    }  else{
-      setZone("All geographical zones");
-    }
-
-    if(rgroupId != 0 && rgroupId != null){
-      setRequisitionGroup(requisitionGroupService.getById(rgroupId).getName());
-    }else{
-      setRequisitionGroup("All requisition groups");
-    }
-
-    if(facilityId != null && facilityId != 0){
-      setFacility(facilityService.getById(getFacilityId()).getName());
-    }else{
-      setFacility("All facilities");
-    }
-
-    if(productCategoryId != 0){
-       setProductCategories(productCategoryService.getById(productCategoryId).getName());
-    } else{
-      setProductCategories("All Product Categories");
-    }
-
-    if(productId.equals("{}") ){
-       setProductNames("All products");
-    }else{
-      String productNames = "";
-      List<Product>  products = reportLookupService.getListOfProducts(productId);
-      for(Product p : products){
-        productNames = productNames + ((productNames.isEmpty()) ?"": ", ") + p.getName();
+      if (facilityTypeId == 0) {
+        setFacilityType("All facility types");
+      } else {
+        //TODO: write the facility type service
+        //facilityTypeService.
       }
-      setProductNames(productNames);
+
+      if (programId != 0) {
+        this.setProgram(programService.getById(programId).getName());
+      }
+
+      if (zoneId != 0) {
+        setZone(geographicZoneService.getById(getZoneId()).getName());
+      } else {
+        setZone("All geographical zones");
+      }
+
+      if (rgroupId != 0 && rgroupId != null) {
+        setRequisitionGroup(requisitionGroupService.getById(rgroupId).getName());
+      } else {
+        setRequisitionGroup("All requisition groups");
+      }
+
+      if (facilityId != null && facilityId != 0) {
+        setFacility(facilityService.getById(getFacilityId()).getName());
+      } else {
+        setFacility("All facilities");
+      }
+
+      if (productCategoryId != 0) {
+        setProductCategories(productCategoryService.getById(productCategoryId).getName());
+      } else {
+        setProductCategories("All Product Categories");
+      }
+
+      if (productId.equals("{}")) {
+        setProductNames("All products");
+      } else {
+        String productNames = "";
+        List<Product> products = reportLookupService.getListOfProducts(productId);
+        for (Product p : products) {
+          productNames = productNames + ((productNames.isEmpty()) ? "" : ", ") + p.getName();
+        }
+        setProductNames(productNames);
+      }
+
+      return "Program: " + this.getProgram() + "\n" +
+        "Period : " + dateFormatter.format(this.getStartDate()) + " - " + dateFormatter.format(this.getEndDate()) + " \n" +
+        "Geographic Zones: " + getZone() + "\n" +
+        "Requisition Group: " + getRequisitionGroup() + "\n" +
+        "Facility Types: " + this.getFacilityType() + "\n" +
+        "Facility: " + this.getFacility() + "\n" +
+        "Product Category: " + this.getProductCategories() + "\n" +
+        "Product: " + this.getProductNames();
+
+    } catch (Exception exp) {
+
     }
-
-    return "Program: " + this.getProgram() + "\n" +
-           "Period : "+  dateFormatter.format(this.getStartDate()) +" - "+ dateFormatter.format(this.getEndDate()) +" \n" +
-           "Geographic Zones: " + getZone() + "\n" +
-           "Requisition Group: " + getRequisitionGroup() + "\n" +
-           "Facility Types: "+ this.getFacilityType() +"\n" +
-           "Facility: " + this.getFacility()+ "\n" +
-           "Product Category: " + this.getProductCategories() + "\n" +
-           "Product: " + this.getProductNames();
-
-
-    }
+    return "";
+  }
 }
 
 
