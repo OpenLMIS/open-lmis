@@ -44,7 +44,7 @@ function ManagePODController($scope, OrdersForManagePOD, messageService, OrderPO
       $scope.$parent.pod = data.orderPOD;
       $scope.$parent.order = data.order;
       $scope.$parent.requisitionType = $scope.order.emergency ? "requisition.type.emergency" : "requisition.type.regular";
-      $location.url('/pod-orders/' + $scope.pod.id + '?page=1');
+      $location.url('/pods/' + $scope.pod.id + '?page=1');
     }, {});
   };
 
