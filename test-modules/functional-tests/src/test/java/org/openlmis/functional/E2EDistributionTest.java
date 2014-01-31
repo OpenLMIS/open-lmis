@@ -86,7 +86,7 @@ public class E2EDistributionTest extends TestCaseHelper {
 
     distributionPage.clickRecordData(1);
     FacilityListPage facilityListPage = PageFactory.getInstanceOfFacilityListPage(testWebDriver);
-    RefrigeratorPage refrigeratorPage = facilityListPage.selectFacility(facilityCodeFirst);
+    RefrigeratorPage refrigeratorPage = facilityListPage.selectFacility(facilityCodeFirst).navigateToRefrigerators();
     facilityListPage.verifyFacilityIndicatorColor("Overall", "AMBER");
 
     refrigeratorPage.onRefrigeratorScreen();
@@ -143,7 +143,7 @@ public class E2EDistributionTest extends TestCaseHelper {
     epiUsePage.verifyIndicator("GREEN");
 
     GeneralObservationPage generalObservationPage = epiUsePage.navigateToGeneralObservations();
-    generalObservationPage.enterData("some observations", "samuel", "Doe", "Verifier", "XYZ");
+    generalObservationPage.enterDataWhenFacilityVisited("some observations", "samuel", "Doe", "Verifier", "XYZ");
 
     ChildCoveragePage childCoveragePage = generalObservationPage.navigateToChildCoverage();
     SeleneseTestBase.assertEquals(childCoveragePage.getTextOfTargetGroupValue(9), "300");
@@ -257,8 +257,9 @@ public class E2EDistributionTest extends TestCaseHelper {
 
     distributionPage.clickRecordData(1);
     assertTrue(facilityListPage.getFacilitiesInDropDown().contains("F10"));
-    refrigeratorPage = facilityListPage.selectFacility(facilityCodeFirst);
+    generalObservationPage = facilityListPage.selectFacility(facilityCodeFirst);
     facilityListPage.verifyFacilityIndicatorColor("Overall", "RED");
+    generalObservationPage.navigateToRefrigerators();
 
     refrigeratorPage.verifyIndicator("RED");
 

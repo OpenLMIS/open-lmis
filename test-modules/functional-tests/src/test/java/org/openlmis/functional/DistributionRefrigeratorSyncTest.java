@@ -81,7 +81,9 @@ public class DistributionRefrigeratorSyncTest extends TestCaseHelper {
 
     HomePage homePage = loginPage.loginAs(refrigeratorTestData.get(USER), refrigeratorTestData.get(PASSWORD));
     initiateDistribution(refrigeratorTestData.get(FIRST_DELIVERY_ZONE_NAME), refrigeratorTestData.get(VACCINES_PROGRAM));
-    RefrigeratorPage refrigeratorPage = facilityListPage.selectFacility(refrigeratorTestData.get(FIRST_FACILITY_CODE));
+    GeneralObservationPage generalObservationPage = facilityListPage.selectFacility(refrigeratorTestData.get(FIRST_FACILITY_CODE));
+    generalObservationPage.enterDataWhenFacilityVisited("some observations", "samuel", "Doe", "Verifier", "XYZ");
+    RefrigeratorPage refrigeratorPage = generalObservationPage.navigateToRefrigerators();
 
     refrigeratorPage.clickShowForRefrigerator1();
     refrigeratorPage.verifyRefrigeratorColor("individual", "RED");
@@ -109,10 +111,7 @@ public class DistributionRefrigeratorSyncTest extends TestCaseHelper {
     EPIUsePage epiUsePage = refrigeratorPage.navigateToEpiUse();
     epiUsePage.enterData(10, 20, 30, 40, 50, "10/2011", 1);
 
-    GeneralObservationPage generalObservationPage = epiUsePage.navigateToGeneralObservations();
-    generalObservationPage.enterData("some observations", "samuel", "Doe", "Verifier", "XYZ");
-
-    FullCoveragePage fullCoveragePage = generalObservationPage.navigateToFullCoverage();
+    FullCoveragePage fullCoveragePage = epiUsePage.navigateToFullCoverage();
     fullCoveragePage.enterData(45, 67, 89, "90");
 
     fullCoveragePage.navigateToEpiInventory();
@@ -133,7 +132,10 @@ public class DistributionRefrigeratorSyncTest extends TestCaseHelper {
   public void testRefrigeratorSyncWhenRefrigeratorHasProblem() throws Exception {
     HomePage homePage = loginPage.loginAs(refrigeratorTestData.get(USER), refrigeratorTestData.get(PASSWORD));
     initiateDistribution(refrigeratorTestData.get(FIRST_DELIVERY_ZONE_NAME), refrigeratorTestData.get(VACCINES_PROGRAM));
-    RefrigeratorPage refrigeratorPage = facilityListPage.selectFacility(refrigeratorTestData.get(FIRST_FACILITY_CODE));
+    GeneralObservationPage generalObservationPage = facilityListPage.selectFacility(refrigeratorTestData.get(FIRST_FACILITY_CODE));
+    generalObservationPage.enterDataWhenFacilityVisited("some observations", "samuel", "Doe", "Verifier", "XYZ");
+
+    RefrigeratorPage refrigeratorPage = generalObservationPage.navigateToRefrigerators();
 
     refrigeratorPage.clickShowForRefrigerator1();
     refrigeratorPage.verifyRefrigeratorColor("individual", "RED");
@@ -154,10 +156,7 @@ public class DistributionRefrigeratorSyncTest extends TestCaseHelper {
     EPIUsePage epiUsePage = refrigeratorPage.navigateToEpiUse();
     epiUsePage.enterData(10, 20, 30, 40, 50, "10/2011", 1);
 
-    GeneralObservationPage generalObservationPage = epiUsePage.navigateToGeneralObservations();
-    generalObservationPage.enterData("some observations", "samuel", "Doe", "Verifier", "XYZ");
-
-    FullCoveragePage fullCoveragePage = generalObservationPage.navigateToFullCoverage();
+    FullCoveragePage fullCoveragePage = refrigeratorPage.navigateToFullCoverage();
     fullCoveragePage.enterData(67, 44, 22, "11");
 
     fullCoveragePage.navigateToEpiInventory();
@@ -176,7 +175,10 @@ public class DistributionRefrigeratorSyncTest extends TestCaseHelper {
   public void testRefrigeratorSyncWhenProblemIsSelectedAndAppliedNRBeforeSync() throws Exception {
     HomePage homePage = loginPage.loginAs(refrigeratorTestData.get(USER), refrigeratorTestData.get(PASSWORD));
     initiateDistribution(refrigeratorTestData.get(FIRST_DELIVERY_ZONE_NAME), refrigeratorTestData.get(VACCINES_PROGRAM));
-    RefrigeratorPage refrigeratorPage = facilityListPage.selectFacility(refrigeratorTestData.get(FIRST_FACILITY_CODE));
+    GeneralObservationPage generalObservationPage = facilityListPage.selectFacility(refrigeratorTestData.get(FIRST_FACILITY_CODE));
+    generalObservationPage.enterDataWhenFacilityVisited("some observations", "samuel", "Doe", "Verifier", "XYZ");
+
+    RefrigeratorPage refrigeratorPage = generalObservationPage.navigateToRefrigerators();
 
     refrigeratorPage.clickShowForRefrigerator1();
     refrigeratorPage.verifyRefrigeratorColor("individual", "RED");
@@ -200,10 +202,7 @@ public class DistributionRefrigeratorSyncTest extends TestCaseHelper {
     EPIUsePage epiUsePage = refrigeratorPage.navigateToEpiUse();
     epiUsePage.enterData(10, 20, 30, 40, 50, "10/2011", 1);
 
-    GeneralObservationPage generalObservationPage = epiUsePage.navigateToGeneralObservations();
-    generalObservationPage.enterData("some observations", "samuel", "Doe", "Verifier", "XYZ");
-
-    FullCoveragePage fullCoveragePage = generalObservationPage.navigateToFullCoverage();
+    FullCoveragePage fullCoveragePage = epiUsePage.navigateToFullCoverage();
     fullCoveragePage.enterData(77, 56, 78, "34");
 
     fullCoveragePage.navigateToEpiInventory();
@@ -222,7 +221,10 @@ public class DistributionRefrigeratorSyncTest extends TestCaseHelper {
   public void testRefrigeratorSyncWhenRefrigeratorIsDeletedBeforeSync() throws Exception {
     HomePage homePage = loginPage.loginAs(refrigeratorTestData.get(USER), refrigeratorTestData.get(PASSWORD));
     initiateDistribution(refrigeratorTestData.get(FIRST_DELIVERY_ZONE_NAME), refrigeratorTestData.get(VACCINES_PROGRAM));
-    RefrigeratorPage refrigeratorPage = facilityListPage.selectFacility(refrigeratorTestData.get(FIRST_FACILITY_CODE));
+    GeneralObservationPage generalObservationPage = facilityListPage.selectFacility(refrigeratorTestData.get(FIRST_FACILITY_CODE));
+    generalObservationPage.enterDataWhenFacilityVisited("some observations", "samuel", "Doe", "Verifier", "XYZ");
+
+    RefrigeratorPage refrigeratorPage = generalObservationPage.navigateToRefrigerators();
 
     refrigeratorPage.clickShowForRefrigerator1();
     refrigeratorPage.verifyRefrigeratorColor("individual", "RED");
@@ -240,10 +242,7 @@ public class DistributionRefrigeratorSyncTest extends TestCaseHelper {
     EPIUsePage epiUsePage = refrigeratorPage.navigateToEpiUse();
     epiUsePage.enterData(10, 20, 30, 40, 50, "10/2011", 1);
 
-    GeneralObservationPage generalObservationPage = epiUsePage.navigateToGeneralObservations();
-    generalObservationPage.enterData("some observations", "samuel", "Doe", "Verifier", "XYZ");
-
-    FullCoveragePage fullCoveragePage = generalObservationPage.navigateToFullCoverage();
+    FullCoveragePage fullCoveragePage = epiUsePage.navigateToFullCoverage();
     fullCoveragePage.enterData(78, 67, 34, "12");
 
     fullCoveragePage.navigateToEpiInventory();
@@ -281,7 +280,7 @@ public class DistributionRefrigeratorSyncTest extends TestCaseHelper {
     epiUsePage.enterData(10, 20, 30, 40, 50, "10/2011", 1);
 
     epiUsePage.navigateToGeneralObservations();
-    generalObservationPage.enterData("some observations", "samuel", "Doe", "Verifier", "XYZ");
+    generalObservationPage.enterDataWhenFacilityVisited("some observations", "samuel", "Doe", "Verifier", "XYZ");
 
     generalObservationPage.navigateToFullCoverage();
     fullCoveragePage.enterData(78, 67, 34, "12");
@@ -301,7 +300,7 @@ public class DistributionRefrigeratorSyncTest extends TestCaseHelper {
   public void testAddingDuplicateRefrigeratorForSameFacility() throws Exception {
     loginPage.loginAs(refrigeratorTestData.get(USER), refrigeratorTestData.get(PASSWORD));
     initiateDistribution(refrigeratorTestData.get(FIRST_DELIVERY_ZONE_NAME), refrigeratorTestData.get(VACCINES_PROGRAM));
-    RefrigeratorPage refrigeratorPage = facilityListPage.selectFacility(refrigeratorTestData.get(FIRST_FACILITY_CODE));
+    RefrigeratorPage refrigeratorPage = facilityListPage.selectFacility(refrigeratorTestData.get(FIRST_FACILITY_CODE)).navigateToRefrigerators();
 
     refrigeratorPage.clickAddNew();
     refrigeratorPage.addNewRefrigerator("LG", "800L1", "GNR7878");
@@ -312,7 +311,10 @@ public class DistributionRefrigeratorSyncTest extends TestCaseHelper {
   public void testAddingDuplicateRefrigeratorForDifferentFacility() throws Exception {
     HomePage homePage = loginPage.loginAs(refrigeratorTestData.get(USER), refrigeratorTestData.get(PASSWORD));
     initiateDistribution(refrigeratorTestData.get(FIRST_DELIVERY_ZONE_NAME), refrigeratorTestData.get(VACCINES_PROGRAM));
-    RefrigeratorPage refrigeratorPage = facilityListPage.selectFacility(refrigeratorTestData.get(SECOND_FACILITY_CODE));
+    GeneralObservationPage generalObservationPage = facilityListPage.selectFacility(refrigeratorTestData.get(SECOND_FACILITY_CODE));
+    generalObservationPage.enterDataWhenFacilityVisited("some observations", "samuel", "Doe", "Verifier", "XYZ");
+
+    RefrigeratorPage refrigeratorPage = generalObservationPage.navigateToRefrigerators();
 
     refrigeratorPage.clickAddNew();
     refrigeratorPage.addNewRefrigerator("LG22", "800L22", "GNR7878");
@@ -331,9 +333,6 @@ public class DistributionRefrigeratorSyncTest extends TestCaseHelper {
 
     FullCoveragePage fullCoveragePage = epiUsePage.navigateToFullCoverage();
     fullCoveragePage.enterData(12, 34, 45, "56");
-
-    GeneralObservationPage generalObservationPage = fullCoveragePage.navigateToGeneralObservations();
-    generalObservationPage.enterData("some observations", "samuel", "Doe", "Verifier", "XYZ");
 
     fullCoveragePage.navigateToEpiInventory();
     fillEpiInventoryWithOnlyDeliveredQuantity("2", "4", "6");
@@ -354,7 +353,10 @@ public class DistributionRefrigeratorSyncTest extends TestCaseHelper {
   public void testUpdatingRefrigeratorAndSync() throws Exception {
     HomePage homePage = loginPage.loginAs(refrigeratorTestData.get(USER), refrigeratorTestData.get(PASSWORD));
     initiateDistribution(refrigeratorTestData.get(FIRST_DELIVERY_ZONE_NAME), refrigeratorTestData.get(VACCINES_PROGRAM));
-    RefrigeratorPage refrigeratorPage = facilityListPage.selectFacility(refrigeratorTestData.get(FIRST_FACILITY_CODE));
+    GeneralObservationPage generalObservationPage = facilityListPage.selectFacility(refrigeratorTestData.get(FIRST_FACILITY_CODE));
+    generalObservationPage.enterDataWhenFacilityVisited("some observations", "samuel", "Doe", "Verifier", "XYZ");
+
+    RefrigeratorPage refrigeratorPage = generalObservationPage.navigateToRefrigerators();
 
     refrigeratorPage.clickDelete();
     refrigeratorPage.clickOKButton();
@@ -379,10 +381,7 @@ public class DistributionRefrigeratorSyncTest extends TestCaseHelper {
     EPIUsePage epiUse = refrigeratorPage.navigateToEpiUse();
     epiUse.enterData(10, 20, 30, 40, 50, "10/2011", 1);
 
-    GeneralObservationPage generalObservationPage = epiUse.navigateToGeneralObservations();
-    generalObservationPage.enterData("some observations", "samuel", "Doe", "Verifier", "XYZ");
-
-    FullCoveragePage fullCoveragePage = generalObservationPage.navigateToFullCoverage();
+    FullCoveragePage fullCoveragePage = epiUse.navigateToFullCoverage();
     fullCoveragePage.enterData(67, 8, 33, "54");
 
     fullCoveragePage.navigateToEpiInventory();

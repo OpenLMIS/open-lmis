@@ -78,21 +78,19 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
   public void testEpiUsePageSync() throws Exception {
     HomePage homePage = loginPage.loginAs(epiUseData.get(USER), epiUseData.get(PASSWORD));
     initiateDistribution(epiUseData.get(FIRST_DELIVERY_ZONE_NAME), epiUseData.get(VACCINES_PROGRAM));
-    RefrigeratorPage refrigeratorPage = facilityListPage.selectFacility(epiUseData.get(FIRST_FACILITY_CODE));
+    GeneralObservationPage generalObservationPage = facilityListPage.selectFacility(epiUseData.get(FIRST_FACILITY_CODE));
+    generalObservationPage.enterDataWhenFacilityVisited("some observations", "samuel", "Doe", "Verifier", "XYZ");
 
-    EPIUsePage epiUsePage = refrigeratorPage.navigateToEpiUse();
+    EPIUsePage epiUsePage = generalObservationPage.navigateToEpiUse();
     epiUsePage.verifyIndicator("RED");
     epiUsePage.verifyProductGroup("PG1-Name", 1);
     epiUsePage.enterData(10, 20, 30, 40, 50, "10/2011", 1);
     epiUsePage.verifyIndicator("GREEN");
 
-    GeneralObservationPage generalObservationPage = epiUsePage.navigateToGeneralObservations();
-    generalObservationPage.enterData("some observations", "samuel", "Doe", "Verifier", "XYZ");
-
-    FullCoveragePage fullCoveragePage = generalObservationPage.navigateToFullCoverage();
+    FullCoveragePage fullCoveragePage = epiUsePage.navigateToFullCoverage();
     fullCoveragePage.enterData(12, 34, 45, "56");
 
-    generalObservationPage.navigateToEpiInventory();
+    fullCoveragePage.navigateToEpiInventory();
     fillEpiInventoryWithOnlyDeliveredQuantity("2", "4", "6");
 
     DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
@@ -107,9 +105,10 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
   public void testEpiUseEditSync() throws Exception {
     HomePage homePage = loginPage.loginAs(epiUseData.get(USER), epiUseData.get(PASSWORD));
     initiateDistribution(epiUseData.get(FIRST_DELIVERY_ZONE_NAME), epiUseData.get(VACCINES_PROGRAM));
-    RefrigeratorPage refrigeratorPage = facilityListPage.selectFacility(epiUseData.get(FIRST_FACILITY_CODE));
+    GeneralObservationPage generalObservationPage = facilityListPage.selectFacility(epiUseData.get(FIRST_FACILITY_CODE));
+    generalObservationPage.enterDataWhenFacilityVisited("some observations", "samuel", "Doe", "Verifier", "XYZ");
 
-    EPIUsePage epiUsePage = refrigeratorPage.navigateToEpiUse();
+    EPIUsePage epiUsePage = generalObservationPage.navigateToEpiUse();
     epiUsePage.verifyProductGroup("PG1-Name", 1);
     epiUsePage.verifyIndicator("RED");
     epiUsePage.enterValueInLoss("0", 1);
@@ -117,7 +116,7 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
     epiUsePage.enterData(10, 20, 30, 40, 50, "10/2011", 1);
     epiUsePage.verifyIndicator("GREEN");
 
-    epiUsePage.navigateToRefrigerators();
+    RefrigeratorPage refrigeratorPage = epiUsePage.navigateToRefrigerators();
     refrigeratorPage.navigateToEpiUse();
 
     epiUsePage.verifyTotal("30", 1);
@@ -175,13 +174,10 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
     epiUsePage.verifyExpirationDateStatus(true, 1);
     epiUsePage.verifyIndicator("GREEN");
 
-    GeneralObservationPage generalObservationPage = epiUsePage.navigateToGeneralObservations();
-    generalObservationPage.enterData("some observations", "samuel", "Doe", "Verifier", "XYZ");
-
-    FullCoveragePage fullCoveragePage = generalObservationPage.navigateToFullCoverage();
+    FullCoveragePage fullCoveragePage = epiUsePage.navigateToFullCoverage();
     fullCoveragePage.enterData(12, 34, 45, "56");
 
-    generalObservationPage.navigateToEpiInventory();
+    fullCoveragePage.navigateToEpiInventory();
     fillEpiInventoryWithOnlyDeliveredQuantity("2", "4", "6");
 
     DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
@@ -196,21 +192,19 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
   public void testEpiUsePageSyncWhenSomeFieldsEmpty() throws Exception {
     loginPage.loginAs(epiUseData.get(USER), epiUseData.get(PASSWORD));
     initiateDistribution(epiUseData.get(FIRST_DELIVERY_ZONE_NAME), epiUseData.get(VACCINES_PROGRAM));
-    RefrigeratorPage refrigeratorPage = facilityListPage.selectFacility(epiUseData.get(FIRST_FACILITY_CODE));
+    GeneralObservationPage generalObservationPage = facilityListPage.selectFacility(epiUseData.get(FIRST_FACILITY_CODE));
+    generalObservationPage.enterDataWhenFacilityVisited("some observations", "samuel", "Doe", "Verifier", "XYZ");
 
-    EPIUsePage epiUsePage = refrigeratorPage.navigateToEpiUse();
+    EPIUsePage epiUsePage = generalObservationPage.navigateToEpiUse();
     epiUsePage.verifyProductGroup("PG1-Name", 1);
     epiUsePage.verifyIndicator("RED");
     epiUsePage.enterValueInStockAtFirstOfMonth("10", 1);
     epiUsePage.verifyIndicator("AMBER");
 
-    GeneralObservationPage generalObservationPage = epiUsePage.navigateToGeneralObservations();
-    generalObservationPage.enterData("some observations", "samuel", "Doe", "Verifier", "XYZ");
-
-    FullCoveragePage fullCoveragePage = generalObservationPage.navigateToFullCoverage();
+    FullCoveragePage fullCoveragePage = epiUsePage.navigateToFullCoverage();
     fullCoveragePage.enterData(12, 34, 45, "56");
 
-    generalObservationPage.navigateToEpiInventory();
+    fullCoveragePage.navigateToEpiInventory();
     fillEpiInventoryWithOnlyDeliveredQuantity("2", "4", "6");
 
     facilityListPage.selectFacility(epiUseData.get(FIRST_FACILITY_CODE));
@@ -223,9 +217,10 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
   public void testEpiUsePageSyncWhenNrAppliedToAllFields() throws Exception {
     HomePage homePage = loginPage.loginAs(epiUseData.get(USER), epiUseData.get(PASSWORD));
     initiateDistribution(epiUseData.get(FIRST_DELIVERY_ZONE_NAME), epiUseData.get(VACCINES_PROGRAM));
-    RefrigeratorPage refrigeratorPage = facilityListPage.selectFacility(epiUseData.get(FIRST_FACILITY_CODE));
+    GeneralObservationPage generalObservationPage = facilityListPage.selectFacility(epiUseData.get(FIRST_FACILITY_CODE));
+    generalObservationPage.enterDataWhenFacilityVisited("some observations", "samuel", "Doe", "Verifier", "XYZ");
 
-    EPIUsePage epiUsePage = refrigeratorPage.navigateToEpiUse();
+    EPIUsePage epiUsePage = generalObservationPage.navigateToEpiUse();
 
     epiUsePage.verifyProductGroup("PG1-Name", 1);
     epiUsePage.verifyIndicator("RED");
@@ -242,13 +237,10 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
     epiUsePage.verifyStockAtEndOfMonthStatus(false, 1);
     epiUsePage.verifyExpirationDateStatus(false, 1);
 
-    GeneralObservationPage generalObservationPage = epiUsePage.navigateToGeneralObservations();
-    generalObservationPage.enterData("some observations", "samuel", "Doe", "Verifier", "XYZ");
-
-    FullCoveragePage fullCoveragePage = generalObservationPage.navigateToFullCoverage();
+    FullCoveragePage fullCoveragePage = epiUsePage.navigateToFullCoverage();
     fullCoveragePage.enterData(12, 34, 45, "56");
 
-    generalObservationPage.navigateToEpiInventory();
+    fullCoveragePage.navigateToEpiInventory();
     fillEpiInventoryWithOnlyDeliveredQuantity("2", "4", "6");
 
     DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
@@ -271,9 +263,10 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
 
     HomePage homePage = loginPage.loginAs(epiUseData.get(USER), epiUseData.get(PASSWORD));
     initiateDistribution(epiUseData.get(FIRST_DELIVERY_ZONE_NAME), epiUseData.get(VACCINES_PROGRAM));
-    RefrigeratorPage refrigeratorPage = facilityListPage.selectFacility(epiUseData.get(FIRST_FACILITY_CODE));
+    GeneralObservationPage generalObservationPage = facilityListPage.selectFacility(epiUseData.get(FIRST_FACILITY_CODE));
+    generalObservationPage.enterDataWhenFacilityVisited("some observations", "samuel", "Doe", "Verifier", "XYZ");
 
-    EPIUsePage epiUsePage = refrigeratorPage.navigateToEpiUse();
+    EPIUsePage epiUsePage = generalObservationPage.navigateToEpiUse();
     epiUsePage.verifyIndicator("RED");
     epiUsePage.verifyProductGroup("PG1-Name", 1);
     epiUsePage.checkApplyNRToStockAtFirstOfMonth0();
@@ -286,13 +279,10 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
     epiUsePage.enterData(10, 20, 30, 40, 50, "10/2011", 2);
     epiUsePage.verifyIndicator("GREEN");
 
-    GeneralObservationPage generalObservationPage = epiUsePage.navigateToGeneralObservations();
-    generalObservationPage.enterData("some observations", "samuel", "Doe", "Verifier", "XYZ");
-
-    FullCoveragePage fullCoveragePage = generalObservationPage.navigateToFullCoverage();
+    FullCoveragePage fullCoveragePage = epiUsePage.navigateToFullCoverage();
     fullCoveragePage.enterData(12, 34, 45, "56");
 
-    EpiInventoryPage epiInventoryPage = generalObservationPage.navigateToEpiInventory();
+    EpiInventoryPage epiInventoryPage = fullCoveragePage.navigateToEpiInventory();
     fillEpiInventoryWithOnlyDeliveredQuantity("2", "4", "6");
     epiInventoryPage.fillDeliveredQuantity(4, "8");
 

@@ -221,9 +221,10 @@ public class DistributionEpiInventoryTest extends TestCaseHelper {
     initiateDistribution(epiInventoryData.get(FIRST_DELIVERY_ZONE_NAME), epiInventoryData.get(VACCINES_PROGRAM));
 
     FacilityListPage facilityListPage = PageFactory.getInstanceOfFacilityListPage(testWebDriver);
-    RefrigeratorPage refrigeratorPage = facilityListPage.selectFacility(epiInventoryData.get(FIRST_FACILITY_CODE));
+    GeneralObservationPage generalObservationPage = facilityListPage.selectFacility(epiInventoryData.get(FIRST_FACILITY_CODE));
+    generalObservationPage.enterDataWhenFacilityVisited("some observations", "samuel", "Doe", "Verifier", "XYZ");
 
-    EpiInventoryPage epiInventoryPage = refrigeratorPage.navigateToEpiInventory();
+    EpiInventoryPage epiInventoryPage = generalObservationPage.navigateToEpiInventory();
     epiInventoryPage.verifyIndicator("RED");
 
     epiInventoryPage.fillExistingQuantity(1, "1");
@@ -242,10 +243,7 @@ public class DistributionEpiInventoryTest extends TestCaseHelper {
 
     epiInventoryPage.verifyIndicator("GREEN");
 
-    GeneralObservationPage generalObservationPage = epiInventoryPage.navigateToGeneralObservations();
-    generalObservationPage.enterData("some observations", "samuel", "Doe", "Verifier", "XYZ");
-
-    FullCoveragePage fullCoveragePage = generalObservationPage.navigateToFullCoverage();
+    FullCoveragePage fullCoveragePage = epiInventoryPage.navigateToFullCoverage();
     fullCoveragePage.enterData(12, 34, 45, "56");
 
     EPIUsePage epiUsePage = fullCoveragePage.navigateToEpiUse();
@@ -271,9 +269,9 @@ public class DistributionEpiInventoryTest extends TestCaseHelper {
     dbWrapper.insertProgramProduct("Product8", "VACCINES", "10", "true");
 
     FacilityListPage facilityListPage = PageFactory.getInstanceOfFacilityListPage(testWebDriver);
-    RefrigeratorPage refrigeratorPage = facilityListPage.selectFacility(epiInventoryData.get(FIRST_FACILITY_CODE));
+    GeneralObservationPage generalObservationPage = facilityListPage.selectFacility(epiInventoryData.get(FIRST_FACILITY_CODE));
 
-    EpiInventoryPage epiInventoryPage = refrigeratorPage.navigateToEpiInventory();
+    EpiInventoryPage epiInventoryPage = generalObservationPage.navigateToEpiInventory();
     epiInventoryPage.applyNRToAll();
     epiInventoryPage.fillDeliveredQuantity(1, "10");
     epiInventoryPage.fillDeliveredQuantity(2, "20");
@@ -288,9 +286,10 @@ public class DistributionEpiInventoryTest extends TestCaseHelper {
     HomePage homePage = loginPage.loginAs(epiInventoryData.get(USER), epiInventoryData.get(PASSWORD));
     initiateDistribution(epiInventoryData.get(FIRST_DELIVERY_ZONE_NAME), epiInventoryData.get(VACCINES_PROGRAM));
     FacilityListPage facilityListPage = PageFactory.getInstanceOfFacilityListPage(testWebDriver);
-    RefrigeratorPage refrigeratorPage = facilityListPage.selectFacility(epiInventoryData.get(FIRST_FACILITY_CODE));
+    GeneralObservationPage generalObservationPage = facilityListPage.selectFacility(epiInventoryData.get(FIRST_FACILITY_CODE));
+    generalObservationPage.enterDataWhenFacilityVisited("some observations", "samuel", "Doe", "Verifier", "XYZ");
 
-    EpiInventoryPage epiInventoryPage = refrigeratorPage.navigateToEpiInventory();
+    EpiInventoryPage epiInventoryPage = generalObservationPage.navigateToEpiInventory();
     epiInventoryPage.verifyIndicator("RED");
 
     epiInventoryPage.applyNRToAll();
@@ -303,10 +302,7 @@ public class DistributionEpiInventoryTest extends TestCaseHelper {
 
     epiInventoryPage.verifyIndicator("GREEN");
 
-    GeneralObservationPage generalObservationPage = epiInventoryPage.navigateToGeneralObservations();
-    generalObservationPage.enterData("some observations", "samuel", "Doe", "Verifier", "XYZ");
-
-    FullCoveragePage fullCoveragePage = generalObservationPage.navigateToFullCoverage();
+    FullCoveragePage fullCoveragePage = epiInventoryPage.navigateToFullCoverage();
     fullCoveragePage.enterData(12, 34, 45, "56");
 
     EPIUsePage epiUsePage = fullCoveragePage.navigateToEpiUse();
@@ -327,9 +323,10 @@ public class DistributionEpiInventoryTest extends TestCaseHelper {
     HomePage homePage = loginPage.loginAs(epiInventoryData.get(USER), epiInventoryData.get(PASSWORD));
     initiateDistribution(epiInventoryData.get(FIRST_DELIVERY_ZONE_NAME), epiInventoryData.get(VACCINES_PROGRAM));
     FacilityListPage facilityListPage = PageFactory.getInstanceOfFacilityListPage(testWebDriver);
-    RefrigeratorPage refrigeratorPage = facilityListPage.selectFacility(epiInventoryData.get(FIRST_FACILITY_CODE));
+    GeneralObservationPage generalObservationPage = facilityListPage.selectFacility(epiInventoryData.get(FIRST_FACILITY_CODE));
+    generalObservationPage.enterDataWhenFacilityVisited("some observations", "samuel", "Doe", "Verifier", "XYZ");
 
-    EpiInventoryPage epiInventoryPage = refrigeratorPage.navigateToEpiInventory();
+    EpiInventoryPage epiInventoryPage = generalObservationPage.navigateToEpiInventory();
     epiInventoryPage.verifyIndicator("RED");
 
     epiInventoryPage.applyNRToAll();
@@ -345,10 +342,7 @@ public class DistributionEpiInventoryTest extends TestCaseHelper {
 
     epiInventoryPage.verifyIndicator("GREEN");
 
-    GeneralObservationPage generalObservationPage = epiInventoryPage.navigateToGeneralObservations();
-    generalObservationPage.enterData("some observations", "samuel", "Doe", "Verifier", "XYZ");
-
-    FullCoveragePage fullCoveragePage = generalObservationPage.navigateToFullCoverage();
+    FullCoveragePage fullCoveragePage = epiInventoryPage.navigateToFullCoverage();
     fullCoveragePage.enterData(12, 34, 45, "56");
 
     EPIUsePage epiUsePage = fullCoveragePage.navigateToEpiUse();

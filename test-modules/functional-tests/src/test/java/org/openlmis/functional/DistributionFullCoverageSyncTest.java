@@ -75,11 +75,12 @@ public class DistributionFullCoverageSyncTest extends TestCaseHelper {
     DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
     distributionPage.initiate(fullCoverageData.get(FIRST_DELIVERY_ZONE_NAME), fullCoverageData.get(VACCINES_PROGRAM));
     FacilityListPage facilityListPage = distributionPage.clickRecordData(1);
-    RefrigeratorPage refrigeratorPage = facilityListPage.selectFacility(fullCoverageData.get(FIRST_FACILITY_CODE));
+    GeneralObservationPage generalObservationPage = facilityListPage.selectFacility(fullCoverageData.get(FIRST_FACILITY_CODE));
+    generalObservationPage.enterDataWhenFacilityVisited("some observations", "samuel", "Doe", "Verifier", "XYZ");
 
     facilityListPage.verifyFacilityIndicatorColor("Overall", "AMBER");
 
-    FullCoveragePage fullCoveragePage = refrigeratorPage.navigateToFullCoverage();
+    FullCoveragePage fullCoveragePage = generalObservationPage.navigateToFullCoverage();
     fullCoveragePage.verifyIndicator("RED");
 
     assertEquals("Full Coverage", fullCoveragePage.getFullCoverageTabLabel());
@@ -101,10 +102,7 @@ public class DistributionFullCoverageSyncTest extends TestCaseHelper {
     EPIUsePage epiUsePage = fullCoveragePage.navigateToEpiUse();
     epiUsePage.enterData(10, 20, 30, 40, 50, "10/2011", 1);
 
-    GeneralObservationPage generalObservationPage = epiUsePage.navigateToGeneralObservations();
-    generalObservationPage.enterData("some observations", "samuel", "Doe", "Verifier", "XYZ");
-
-    refrigeratorPage.navigateToEpiInventory();
+    epiUsePage.navigateToEpiInventory();
     fillEpiInventoryWithOnlyDeliveredQuantity("2", "4", "6");
 
     facilityListPage.verifyFacilityIndicatorColor("Overall", "GREEN");
@@ -124,11 +122,12 @@ public class DistributionFullCoverageSyncTest extends TestCaseHelper {
     DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
     distributionPage.initiate(fullCoverageData.get(FIRST_DELIVERY_ZONE_NAME), fullCoverageData.get(VACCINES_PROGRAM));
     FacilityListPage facilityListPage = distributionPage.clickRecordData(1);
-    RefrigeratorPage refrigeratorPage = facilityListPage.selectFacility(fullCoverageData.get(FIRST_FACILITY_CODE));
+    GeneralObservationPage generalObservationPage = facilityListPage.selectFacility(fullCoverageData.get(FIRST_FACILITY_CODE));
 
     facilityListPage.verifyFacilityIndicatorColor("Overall", "RED");
+    generalObservationPage.enterDataWhenFacilityVisited("some observations", "samuel", "Doe", "Verifier", "XYZ");
 
-    FullCoveragePage fullCoveragePage = refrigeratorPage.navigateToFullCoverage();
+    FullCoveragePage fullCoveragePage = generalObservationPage.navigateToFullCoverage();
     fullCoveragePage.verifyIndicator("RED");
     fullCoveragePage.toggleApplyNRToFemaleMobileBrigade();
     fullCoveragePage.verifyIndicator("AMBER");
@@ -150,10 +149,7 @@ public class DistributionFullCoverageSyncTest extends TestCaseHelper {
     EPIUsePage epiUsePage = fullCoveragePage.navigateToEpiUse();
     epiUsePage.enterData(10, 20, 30, 40, 50, "10/2011", 1);
 
-    GeneralObservationPage generalObservationPage = epiUsePage.navigateToGeneralObservations();
-    generalObservationPage.enterData("some observations", "samuel", "Doe", "Verifier", "XYZ");
-
-    generalObservationPage.navigateToRefrigerators();
+    RefrigeratorPage refrigeratorPage = epiUsePage.navigateToRefrigerators();
     refrigeratorPage.clickDelete();
     refrigeratorPage.clickOKButton();
 
@@ -183,11 +179,12 @@ public class DistributionFullCoverageSyncTest extends TestCaseHelper {
     DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
     distributionPage.initiate(fullCoverageData.get(FIRST_DELIVERY_ZONE_NAME), fullCoverageData.get(VACCINES_PROGRAM));
     FacilityListPage facilityListPage = distributionPage.clickRecordData(1);
-    RefrigeratorPage refrigeratorPage = facilityListPage.selectFacility(fullCoverageData.get(FIRST_FACILITY_CODE));
+    GeneralObservationPage generalObservationPage = facilityListPage.selectFacility(fullCoverageData.get(FIRST_FACILITY_CODE));
 
     facilityListPage.verifyFacilityIndicatorColor("Overall", "AMBER");
+    generalObservationPage.enterDataWhenFacilityVisited("some observations", "samuel", "Doe", "Verifier", "XYZ");
 
-    FullCoveragePage fullCoveragePage = refrigeratorPage.navigateToFullCoverage();
+    FullCoveragePage fullCoveragePage = generalObservationPage.navigateToFullCoverage();
     fullCoveragePage.verifyIndicator("RED");
     fullCoveragePage.enterData(12, 34, 45, "56");
     fullCoveragePage.verifyIndicator("GREEN");
@@ -195,10 +192,7 @@ public class DistributionFullCoverageSyncTest extends TestCaseHelper {
     EPIUsePage epiUsePage = fullCoveragePage.navigateToEpiUse();
     epiUsePage.enterData(10, 20, 30, 40, 50, "10/2011", 1);
 
-    GeneralObservationPage generalObservationPage = epiUsePage.navigateToGeneralObservations();
-    generalObservationPage.enterData("some observations", "samuel", "Doe", "Verifier", "XYZ");
-
-    refrigeratorPage.navigateToEpiInventory();
+    epiUsePage.navigateToEpiInventory();
     fillEpiInventoryWithOnlyDeliveredQuantity("2", "4", "6");
 
     facilityListPage.verifyFacilityIndicatorColor("Overall", "GREEN");
@@ -216,11 +210,12 @@ public class DistributionFullCoverageSyncTest extends TestCaseHelper {
     DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
     distributionPage.initiate(fullCoverageData.get(FIRST_DELIVERY_ZONE_NAME), fullCoverageData.get(VACCINES_PROGRAM));
     FacilityListPage facilityListPage = distributionPage.clickRecordData(1);
-    RefrigeratorPage refrigeratorPage = facilityListPage.selectFacility(fullCoverageData.get(FIRST_FACILITY_CODE));
+    GeneralObservationPage generalObservationPage = facilityListPage.selectFacility(fullCoverageData.get(FIRST_FACILITY_CODE));
 
     facilityListPage.verifyFacilityIndicatorColor("Overall", "AMBER");
+    generalObservationPage.enterDataWhenFacilityVisited("some observations", "samuel", "Doe", "Verifier", "XYZ");
 
-    FullCoveragePage fullCoveragePage = refrigeratorPage.navigateToFullCoverage();
+    FullCoveragePage fullCoveragePage = generalObservationPage.navigateToFullCoverage();
     fullCoveragePage.verifyIndicator("RED");
     fullCoveragePage.enterMaleHealthCenter(33);
     fullCoveragePage.enterFemaleHealthCenter(67);
@@ -231,14 +226,11 @@ public class DistributionFullCoverageSyncTest extends TestCaseHelper {
     EPIUsePage epiUsePage = fullCoveragePage.navigateToEpiUse();
     epiUsePage.enterData(10, 20, 30, 40, 50, "10/2011", 1);
 
-    GeneralObservationPage generalObservationPage = epiUsePage.navigateToGeneralObservations();
-    generalObservationPage.enterData("some observations", "samuel", "Doe", "Verifier", "XYZ");
-
-    generalObservationPage.navigateToFullCoverage();
+    epiUsePage.navigateToFullCoverage();
     verifyDataOnFullCoveragePage("67", "", "33", "");
     verifyEnableStatusOfFields(true, true, true, false);
 
-    refrigeratorPage.navigateToEpiInventory();
+    epiUsePage.navigateToEpiInventory();
     fillEpiInventoryWithOnlyDeliveredQuantity("2", "4", "6");
 
     facilityListPage.verifyFacilityIndicatorColor("Overall", "AMBER");

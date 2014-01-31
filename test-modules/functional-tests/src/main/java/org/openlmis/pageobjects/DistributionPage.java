@@ -147,7 +147,7 @@ public class DistributionPage extends Page {
     return syncAlertMessage.getText();
   }
 
-  public FacilityListPage clickRecordData(int rowNumber) throws IOException {
+  public FacilityListPage clickRecordData(int rowNumber) {
     testWebDriver.sleep(1000);
     testWebDriver.waitForAjax();
     testWebDriver.waitForElementToAppear(testWebDriver.findElement(By.id("recordData" + (rowNumber - 1))));

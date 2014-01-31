@@ -94,17 +94,15 @@ public class DistributionSyncTest extends TestCaseHelper {
   public void testMultipleFacilitySync() throws Exception {
     HomePage homePage = loginPage.loginAs(distributionTestData.get(USER), distributionTestData.get(PASSWORD));
     initiateDistribution(distributionTestData.get(FIRST_DELIVERY_ZONE_NAME), distributionTestData.get(VACCINES_PROGRAM));
-    RefrigeratorPage refrigeratorPage = facilityListPage.selectFacility(distributionTestData.get(SECOND_FACILITY_CODE));
+    GeneralObservationPage generalObservationPage = facilityListPage.selectFacility(distributionTestData.get(SECOND_FACILITY_CODE));
 
     facilityListPage.verifyFacilityIndicatorColor("Overall", "AMBER");
+    generalObservationPage.enterDataWhenFacilityVisited("Some observations", "samuel D", "Doe Abc", "Verifier", "Verifier Title");
 
-    EPIUsePage epiUsePage = refrigeratorPage.navigateToEpiUse();
+    EPIUsePage epiUsePage = generalObservationPage.navigateToEpiUse();
     epiUsePage.enterData(70, 80, 90, 100, 9999999, "10/2011", 1);
 
-    GeneralObservationPage generalObservationPage = epiUsePage.navigateToGeneralObservations();
-    generalObservationPage.enterData("Some observations", "samuel D", "Doe Abc", "Verifier", "Verifier Title");
-
-    FullCoveragePage fullCoveragePage = generalObservationPage.navigateToFullCoverage();
+    FullCoveragePage fullCoveragePage = epiUsePage.navigateToFullCoverage();
     fullCoveragePage.clickApplyNRToAll();
 
     fullCoveragePage.navigateToEpiInventory();
@@ -158,7 +156,6 @@ public class DistributionSyncTest extends TestCaseHelper {
     facilityListPage.selectFacility("F11");
     facilityListPage.verifyFacilityIndicatorColor("Overall", "BLUE");
 
-    generalObservationPage = refrigeratorPage.navigateToGeneralObservations();
     generalObservationPage.verifyAllFieldsDisabled();
 
     epiUsePage = generalObservationPage.navigateToEpiUse();
@@ -183,9 +180,11 @@ public class DistributionSyncTest extends TestCaseHelper {
     dbWrapper.addRefrigeratorToFacility("LG", "800L", "GNR7878", "F11");
     HomePage homePage = loginPage.loginAs(distributionTestData.get(USER), distributionTestData.get(PASSWORD));
     initiateDistribution(distributionTestData.get(FIRST_DELIVERY_ZONE_NAME), distributionTestData.get(VACCINES_PROGRAM));
-    RefrigeratorPage refrigeratorPage = facilityListPage.selectFacility(distributionTestData.get(FIRST_FACILITY_CODE));
+    GeneralObservationPage generalObservationPage = facilityListPage.selectFacility(distributionTestData.get(FIRST_FACILITY_CODE));
 
     facilityListPage.verifyFacilityIndicatorColor("Overall", "RED");
+    generalObservationPage.enterDataWhenFacilityVisited("Some observations", "samuel D", "Doe Abc", "Verifier", "Verifier Title");
+    RefrigeratorPage refrigeratorPage = generalObservationPage.navigateToRefrigerators();
 
     refrigeratorPage.clickShowForRefrigerator1();
     refrigeratorPage.enterValueInRefrigeratorTemperature("3");
@@ -200,10 +199,7 @@ public class DistributionSyncTest extends TestCaseHelper {
     EPIUsePage epiUsePage = refrigeratorPage.navigateToEpiUse();
     epiUsePage.enterData(70, 80, 90, 100, 9999999, "10/2011", 1);
 
-    GeneralObservationPage generalObservationPage = epiUsePage.navigateToGeneralObservations();
-    generalObservationPage.enterData("Some observations", "samuel D", "Doe Abc", "Verifier", "Verifier Title");
-
-    FullCoveragePage fullCoveragePage = generalObservationPage.navigateToFullCoverage();
+    FullCoveragePage fullCoveragePage = epiUsePage.navigateToFullCoverage();
     fullCoveragePage.clickApplyNRToAll();
 
     fullCoveragePage.navigateToEpiInventory();
@@ -429,11 +425,11 @@ public class DistributionSyncTest extends TestCaseHelper {
 
     initiateNextDistributionForGivenPeriod(distributionTestData.get(FIRST_DELIVERY_ZONE_NAME), distributionTestData.get(VACCINES_PROGRAM), "Period13");
     assertTrue(facilityListPage.getFacilitiesInDropDown().contains(distributionTestData.get(FIRST_FACILITY_CODE)));
-    RefrigeratorPage refrigeratorPage = facilityListPage.selectFacility(distributionTestData.get(FIRST_FACILITY_CODE));
+    GeneralObservationPage generalObservationPage = facilityListPage.selectFacility(distributionTestData.get(FIRST_FACILITY_CODE));
     facilityListPage.verifyFacilityIndicatorColor("Overall", "AMBER");
     verifyProductsAreNotDisplayed();
 
-    refrigeratorPage.navigateToRefrigerators();
+    generalObservationPage.navigateToRefrigerators();
     String data = "SAM;800L;GNR7876";
     String[] refrigeratorDetails = data.split(";");
 
@@ -456,7 +452,10 @@ public class DistributionSyncTest extends TestCaseHelper {
 
     HomePage homePage = loginPage.loginAs(distributionTestData.get(USER), distributionTestData.get(PASSWORD));
     initiateDistribution(distributionTestData.get(FIRST_DELIVERY_ZONE_NAME), distributionTestData.get(VACCINES_PROGRAM));
-    RefrigeratorPage refrigeratorPage = facilityListPage.selectFacility(distributionTestData.get(FIRST_FACILITY_CODE));
+    GeneralObservationPage generalObservationPage = facilityListPage.selectFacility(distributionTestData.get(FIRST_FACILITY_CODE));
+    generalObservationPage.enterDataWhenFacilityVisited("Some observations", "samuel D", "Doe Abc", "Verifier", "Verifier Title");
+
+    RefrigeratorPage refrigeratorPage = generalObservationPage.navigateToRefrigerators();
 
     refrigeratorPage.clickShowForRefrigerator1();
     refrigeratorPage.enterValueInRefrigeratorTemperature("3");
@@ -468,10 +467,7 @@ public class DistributionSyncTest extends TestCaseHelper {
     refrigeratorPage.verifyRefrigeratorColor("individual", "GREEN");
     refrigeratorPage.clickDone();
 
-    GeneralObservationPage generalObservationPage = refrigeratorPage.navigateToGeneralObservations();
-    generalObservationPage.enterData("Some observations", "samuel D", "Doe Abc", "Verifier", "Verifier Title");
-
-    FullCoveragePage fullCoveragePage = generalObservationPage.navigateToFullCoverage();
+    FullCoveragePage fullCoveragePage = refrigeratorPage.navigateToFullCoverage();
     fullCoveragePage.clickApplyNRToAll();
 
     verifyProductsAreNotDisplayed();
@@ -507,7 +503,7 @@ public class DistributionSyncTest extends TestCaseHelper {
 
     initiateNextDistributionForSamePeriod(distributionTestData.get(FIRST_DELIVERY_ZONE_NAME), distributionTestData.get(VACCINES_PROGRAM));
     assertTrue(facilityListPage.getFacilitiesInDropDown().contains(distributionTestData.get(FIRST_FACILITY_CODE)));
-    RefrigeratorPage refrigeratorPage = facilityListPage.selectFacility(distributionTestData.get(FIRST_FACILITY_CODE));
+    GeneralObservationPage generalObservationPage = facilityListPage.selectFacility(distributionTestData.get(FIRST_FACILITY_CODE));
 
     facilityListPage.verifyFacilityIndicatorColor("Overall", "RED");
     verifyProductsAreDisplayed();
@@ -532,7 +528,7 @@ public class DistributionSyncTest extends TestCaseHelper {
     facilityListPage.selectFacility(distributionTestData.get(FIRST_FACILITY_CODE));
     facilityListPage.verifyFacilityIndicatorColor("Overall", "RED");
 
-    EPIUsePage epiUsePage = refrigeratorPage.navigateToEpiUse();
+    EPIUsePage epiUsePage = generalObservationPage.navigateToEpiUse();
     assertTrue(epiUsePage.getProductGroup(1).equals("PG1-Name"));
     assertTrue(epiUsePage.getProductGroup(2).equals("PG2-Name"));
     assertNull(epiUsePage.getNoProductsAddedMessage());
@@ -564,7 +560,7 @@ public class DistributionSyncTest extends TestCaseHelper {
 
     initiateNextDistributionForSamePeriod(distributionTestData.get(FIRST_DELIVERY_ZONE_NAME), distributionTestData.get(VACCINES_PROGRAM));
     assertTrue(facilityListPage.getFacilitiesInDropDown().contains(distributionTestData.get(FIRST_FACILITY_CODE)));
-    RefrigeratorPage refrigeratorPage = facilityListPage.selectFacility(distributionTestData.get(FIRST_FACILITY_CODE));
+    GeneralObservationPage generalObservationPage = facilityListPage.selectFacility(distributionTestData.get(FIRST_FACILITY_CODE));
 
     facilityListPage.verifyFacilityIndicatorColor("Overall", "RED");
     verifyProductsAreDisplayed();
@@ -589,7 +585,7 @@ public class DistributionSyncTest extends TestCaseHelper {
     facilityListPage.selectFacility(distributionTestData.get(FIRST_FACILITY_CODE));
     facilityListPage.verifyFacilityIndicatorColor("Overall", "RED");
 
-    EPIUsePage epiUsePage = refrigeratorPage.navigateToEpiUse();
+    EPIUsePage epiUsePage = generalObservationPage.navigateToEpiUse();
     assertTrue(epiUsePage.getProductGroup(1).equals("PG1-Name"));
     //assertNull(epiUsePage.getProductGroup(2));
     assertNull(epiUsePage.getNoProductsAddedMessage());
@@ -623,7 +619,10 @@ public class DistributionSyncTest extends TestCaseHelper {
   }
 
   private GeneralObservationPage fillFacilityData() {
-    RefrigeratorPage refrigeratorPage = PageFactory.getInstanceOfRefrigeratorPage(testWebDriver);
+    GeneralObservationPage generalObservationPage = PageFactory.getInstanceOfObservation(testWebDriver);
+    generalObservationPage.enterDataWhenFacilityVisited("Some observations", "samuel", "Doe", "Verifier", "XYZ");
+
+    RefrigeratorPage refrigeratorPage = generalObservationPage.navigateToRefrigerators();
     refrigeratorPage.navigateToRefrigerators();
     refrigeratorPage.clickDelete();
     refrigeratorPage.clickOKButton();
@@ -644,14 +643,13 @@ public class DistributionSyncTest extends TestCaseHelper {
     EPIUsePage epiUsePage = refrigeratorPage.navigateToEpiUse();
     epiUsePage.enterData(10, 20, 30, 40, 50, "10/2011", 1);
 
-    GeneralObservationPage generalObservationPage = epiUsePage.navigateToGeneralObservations();
-    generalObservationPage.enterData("Some observations", "samuel", "Doe", "Verifier", "XYZ");
-
-    EpiInventoryPage epiInventoryPage = generalObservationPage.navigateToEpiInventory();
+    EpiInventoryPage epiInventoryPage = epiUsePage.navigateToEpiInventory();
     fillEpiInventoryWithOnlyDeliveredQuantity("2", "4", "6");
 
     FullCoveragePage fullCoveragePage = epiInventoryPage.navigateToFullCoverage();
     fullCoveragePage.enterData(23, 66, 77, "45");
+
+    fullCoveragePage.navigateToGeneralObservations();
 
     return generalObservationPage;
   }
@@ -715,8 +713,8 @@ public class DistributionSyncTest extends TestCaseHelper {
   }
 
   private void verifyProductsAreDisplayed() {
-    RefrigeratorPage refrigeratorPage = PageFactory.getInstanceOfRefrigeratorPage(testWebDriver);
-    EPIUsePage epiUsePage = refrigeratorPage.navigateToEpiUse();
+    GeneralObservationPage generalObservationPage = PageFactory.getInstanceOfObservation(testWebDriver);
+    EPIUsePage epiUsePage = generalObservationPage.navigateToEpiUse();
     assertTrue(epiUsePage.getProductGroup(1).equals("PG1-Name"));
     //assertNull(epiUsePage.getProductGroup(2));
     assertNull(epiUsePage.getNoProductsAddedMessage());
@@ -729,8 +727,8 @@ public class DistributionSyncTest extends TestCaseHelper {
   }
 
   private void verifyProductsAreNotDisplayed() {
-    RefrigeratorPage refrigeratorPage = PageFactory.getInstanceOfRefrigeratorPage(testWebDriver);
-    EPIUsePage epiUsePage = refrigeratorPage.navigateToEpiUse();
+    GeneralObservationPage generalObservationPage = PageFactory.getInstanceOfObservation(testWebDriver);
+    EPIUsePage epiUsePage = generalObservationPage.navigateToEpiUse();
     //assertNull(epiUsePage.getProductGroup(1));
     //assertNull(epiUsePage.getProductGroup(2));
     assertTrue(epiUsePage.getNoProductsAddedMessage().contains("No products added"));
@@ -744,14 +742,14 @@ public class DistributionSyncTest extends TestCaseHelper {
   }
 
   private void verifyAllFieldsDisabled() {
-    RefrigeratorPage refrigeratorPage = PageFactory.getInstanceOfRefrigeratorPage(testWebDriver);
+    GeneralObservationPage generalObservationPage = PageFactory.getInstanceOfObservation(testWebDriver);
+    generalObservationPage.verifyAllFieldsDisabled();
+
+    RefrigeratorPage refrigeratorPage = generalObservationPage.navigateToRefrigerators();
     refrigeratorPage.clickShowForRefrigerator1();
     refrigeratorPage.verifyAllFieldsDisabled();
 
-    GeneralObservationPage generalObservationPage = refrigeratorPage.navigateToGeneralObservations();
-    generalObservationPage.verifyAllFieldsDisabled();
-
-    EPIUsePage epiUsePage = generalObservationPage.navigateToEpiUse();
+    EPIUsePage epiUsePage = refrigeratorPage.navigateToEpiUse();
     epiUsePage.verifyAllFieldsDisabled();
 
     FullCoveragePage fullCoveragePage = epiUsePage.navigateToFullCoverage();

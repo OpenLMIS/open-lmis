@@ -392,7 +392,7 @@ public class HomePage extends Page {
     return new ConvertOrderPage(testWebDriver);
   }
 
-  public DistributionPage navigateToDistributionWhenOnline() throws IOException {
+  public DistributionPage navigateToDistributionWhenOnline() {
     testWebDriver.waitForElementToAppear(distributionsMenuItem);
     testWebDriver.keyPress(distributionsMenuItem);
     testWebDriver.waitForElementToAppear(manageDistributionMenuItem);

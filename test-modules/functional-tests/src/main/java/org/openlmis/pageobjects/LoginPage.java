@@ -61,7 +61,7 @@ public class LoginPage extends Page {
   }
 
 
-  public HomePage loginAs(String username, String password) throws IOException {
+  public HomePage loginAs(String username, String password) {
     testWebDriver.waitForElementToAppear(userNameField);
     testWebDriver.waitForElementToAppear(passwordField);
     userNameField.clear();
