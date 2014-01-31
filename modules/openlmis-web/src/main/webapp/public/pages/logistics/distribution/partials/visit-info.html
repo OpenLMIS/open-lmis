@@ -91,9 +91,9 @@
           </h3>
 
           <div>
-            <input id="operatorError{{ $index }}" type="radio" ng-model="facilityData.facilityVisit.reasonForNoVisit"
+            <input id="badWeather{{ $index }}" type="radio" ng-model="facilityData.facilityVisit.reasonForNoVisit"
                    value="{{reasons.badWeather}}"/>
-            <label class="radio-label" for="operatorError{{ $index }}" openlmis-message="label.bad.weather"></label>
+            <label class="radio-label" for="badWeather{{ $index }}" openlmis-message="label.bad.weather"></label>
           </div>
           <div>
             <input id="noTransport{{ $index }}" type="radio" ng-model="facilityData.facilityVisit.reasonForNoVisit"
@@ -105,6 +105,18 @@
                    value="{{reasons.facilityClosed}}"/>
             <label class="radio-label" for="facilityClosed{{ $index }}"
                    openlmis-message="label.facility.closed"></label>
+          </div>
+          <div>
+            <input id="unavailableFunds{{ $index }}" type="radio" ng-model="facilityData.facilityVisit.reasonForNoVisit"
+                   value="{{reasons.unavailableFunds}}"/>
+            <label class="radio-label" for="unavailableFunds{{ $index }}"
+                   openlmis-message="label.unavailable.funds"></label>
+          </div>
+          <div>
+            <input id="notPartOfProgram{{ $index }}" type="radio" ng-model="facilityData.facilityVisit.reasonForNoVisit"
+                   value="{{reasons.notPartOfProgram}}"/>
+            <label class="radio-label" for="notPartOfProgram{{ $index }}"
+                   openlmis-message="label.not.part.of.program"></label>
           </div>
           <div>
             <input id="other{{ $index }}" type="radio"

@@ -16,6 +16,8 @@ function VisitInfoController($scope, distributionService, $routeParams) {
     badWeather: "BAD_WEATHER",
     noTransport: "NO_TRANSPORT",
     facilityClosed: "FACILITY_CLOSED",
+    unavailableFunds: "UNAVAILABLE_FUNDS",
+    notPartOfProgram: "NOT_PART_OF_PROGRAM",
     other: "OTHER"
   };
 }
