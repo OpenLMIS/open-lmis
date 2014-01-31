@@ -11,6 +11,8 @@
 package org.openlmis.functional;
 
 
+import cucumber.api.Scenario;
+import cucumber.api.java.After;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Then;
 import org.openlmis.UiUtils.CaptureScreenshotOnFailureListener;
@@ -304,6 +306,14 @@ public class ConvertToOrderPagination extends TestCaseHelper {
     return new Object[][]{
       {"HIV", "storeInCharge", "Admin123"}
     };
+  }
+
+  @After
+  public void embedScreenshot(Scenario scenario) {
+    if (scenario.isFailed()) {
+      byte[] screenshot = testWebDriver.getScreenshot();
+      scenario.embed(screenshot, "image/png");
+    }
   }
 }
 

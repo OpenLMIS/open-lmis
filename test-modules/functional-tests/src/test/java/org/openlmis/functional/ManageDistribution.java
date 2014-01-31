@@ -12,6 +12,7 @@ package org.openlmis.functional;
 
 
 import cucumber.api.DataTable;
+import cucumber.api.Scenario;
 import cucumber.api.java.After;
 import cucumber.api.java.Before;
 import cucumber.api.java.en.And;
@@ -848,6 +849,14 @@ public class ManageDistribution extends TestCaseHelper {
     dbWrapper.closeConnection();
 
     ((JavascriptExecutor) TestWebDriver.getDriver()).executeScript("indexedDB.deleteDatabase('open_lmis')");
+  }
+
+  @After
+  public void embedScreenshot(Scenario scenario) {
+    if (scenario.isFailed()) {
+      byte[] screenshot = testWebDriver.getScreenshot();
+      scenario.embed(screenshot, "image/png");
+    }
   }
 
   @DataProvider(name = "Data-Provider-Function")

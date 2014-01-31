@@ -12,6 +12,8 @@ package org.openlmis.functional;
 
 
 import cucumber.api.DataTable;
+import cucumber.api.Scenario;
+import cucumber.api.java.After;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
@@ -552,6 +554,14 @@ public class E2EInitiateRnR extends TestCaseHelper {
       ans = ((quantityDispensed * 30.0f / (dayDiff - stockOutDays))) + (numberOfNewPatients * (30 / 10));
     }
     return round(ans);
+  }
+
+  @After
+  public void embedScreenshot(Scenario scenario) {
+    if (scenario.isFailed()) {
+      byte[] screenshot = testWebDriver.getScreenshot();
+      scenario.embed(screenshot, "image/png");
+    }
   }
 }
 

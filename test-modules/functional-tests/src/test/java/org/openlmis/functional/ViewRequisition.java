@@ -11,6 +11,8 @@
 package org.openlmis.functional;
 
 
+import cucumber.api.Scenario;
+import cucumber.api.java.After;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import org.openlmis.UiUtils.CaptureScreenshotOnFailureListener;
@@ -349,6 +351,14 @@ public class ViewRequisition extends TestCaseHelper {
   @DataProvider(name = "Data-Provider-Function-Including-Regimen")
   public Object[][] parameterIntTest() {
     return new Object[][]{{"HIV", "storeInCharge", "ADULTS", "Admin123", "RegimenCode1", "RegimenName1", "RegimenCode2", "RegimenName2"}};
+  }
+
+  @After
+  public void embedScreenshot(Scenario scenario) {
+    if (scenario.isFailed()) {
+      byte[] screenshot = testWebDriver.getScreenshot();
+      scenario.embed(screenshot, "image/png");
+    }
   }
 }
 

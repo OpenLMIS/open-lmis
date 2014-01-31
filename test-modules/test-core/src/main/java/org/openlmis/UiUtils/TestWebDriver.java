@@ -10,10 +10,7 @@
 
 package org.openlmis.UiUtils;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.Keys;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedCondition;
@@ -22,6 +19,8 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+
+import static org.openqa.selenium.OutputType.BYTES;
 
 
 public class TestWebDriver {
@@ -256,6 +255,11 @@ public class TestWebDriver {
 
   public void moveToElement(WebElement element) {
     new Actions(driver).moveToElement(element).perform();
+  }
+
+  public byte[] getScreenshot() {
+    byte[] screenshotFile = ((TakesScreenshot) driver).getScreenshotAs(BYTES);
+    return screenshotFile;
   }
 
   public void scrollToElement(WebElement elementToClick) {

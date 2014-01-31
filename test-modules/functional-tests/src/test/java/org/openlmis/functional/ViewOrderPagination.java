@@ -11,13 +11,14 @@
 package org.openlmis.functional;
 
 
+import cucumber.api.Scenario;
+import cucumber.api.java.After;
 import org.openlmis.UiUtils.CaptureScreenshotOnFailureListener;
 import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.pageobjects.HomePage;
 import org.openlmis.pageobjects.LoginPage;
 import org.testng.annotations.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.Arrays.asList;
@@ -92,6 +93,14 @@ public class ViewOrderPagination extends TestCaseHelper {
     return new Object[][]{
       {"HIV", "storeInCharge", "Admin123"}
     };
+  }
+
+  @After
+  public void embedScreenshot(Scenario scenario) {
+    if (scenario.isFailed()) {
+      byte[] screenshot = testWebDriver.getScreenshot();
+      scenario.embed(screenshot, "image/png");
+    }
   }
 }
 

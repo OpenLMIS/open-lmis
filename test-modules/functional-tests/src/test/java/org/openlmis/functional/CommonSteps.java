@@ -11,6 +11,8 @@
 package org.openlmis.functional;
 
 import cucumber.api.DataTable;
+import cucumber.api.Scenario;
+import cucumber.api.java.After;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.When;
@@ -78,4 +80,13 @@ public class CommonSteps extends TestCaseHelper {
   public void insertApprovedQuantity(int approvedQuantity) throws IOException, SQLException {
     dbWrapper.updateFieldValue("requisition_line_items", "quantityApproved", approvedQuantity);
   }
+
+  @After
+  public void embedScreenshot(Scenario scenario) {
+    if (scenario.isFailed()) {
+      byte[] screenshot = testWebDriver.getScreenshot();
+      scenario.embed(screenshot, "image/png");
+    }
+  }
+
 }
