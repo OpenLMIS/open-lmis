@@ -11,8 +11,12 @@ package org.openlmis.pod.domain;
 
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
+import org.junit.runner.RunWith;
+import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.exception.DataException;
+import org.openlmis.db.categories.UnitTests;
 import org.openlmis.rnr.builder.RnrLineItemBuilder;
 import org.openlmis.rnr.domain.RnrLineItem;
 import org.openlmis.shipment.builder.ShipmentLineItemBuilder;
@@ -23,6 +27,8 @@ import static com.natpryce.makeiteasy.MakeItEasy.make;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
+@Category(UnitTests.class)
+@RunWith(MockitoJUnitRunner.class)
 public class OrderPODLineItemTest {
 
   @Rule
@@ -97,5 +103,21 @@ public class OrderPODLineItemTest {
     assertThat(orderPODLineItem.getFullSupply(), is(shipmentLineItem.getFullSupply()));
     assertThat(orderPODLineItem.getCreatedBy(), is(createdBy));
     assertThat(orderPODLineItem.getModifiedBy(), is(createdBy));
+  }
+
+  @Test
+  public void shouldCopySomeFieldsFromLineItemIntoAnother() {
+    Long modifiedBy = 1L;
+    String notes = "Notes";
+    OrderPODLineItem lineItem = new OrderPODLineItem(1L, "P1", null);
+    OrderPODLineItem otherLineItem = new OrderPODLineItem(1L, "P1", 30);
+    otherLineItem.setNotes(notes);
+    otherLineItem.setModifiedBy(modifiedBy);
+
+    lineItem.copy(otherLineItem);
+
+    assertThat(lineItem.getQuantityReceived(), is(30));
+    assertThat(lineItem.getNotes(), is(notes));
+    assertThat(lineItem.getModifiedBy(), is(modifiedBy));
   }
 }

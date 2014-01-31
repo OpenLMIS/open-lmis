@@ -17,6 +17,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.openlmis.authentication.web.UserAuthenticationSuccessHandler;
+import org.openlmis.core.exception.DataException;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.order.domain.Order;
 import org.openlmis.order.dto.OrderPODDTO;
@@ -33,12 +34,14 @@ import org.springframework.mock.web.MockHttpSession;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
 import static org.openlmis.web.controller.PODController.ORDER;
 import static org.openlmis.web.controller.PODController.ORDER_POD;
 import static org.powermock.api.mockito.PowerMockito.*;
+import static org.powermock.api.mockito.PowerMockito.when;
 
 @Category(UnitTests.class)
 @RunWith(PowerMockRunner.class)
@@ -134,5 +137,30 @@ public class PODControllerTest {
     assertThat((OrderPOD) response.getBody().getData().get(ORDER_POD), is(orderPOD));
     assertThat((OrderPODDTO) response.getBody().getData().get(ORDER), is(orderPODDTO));
     assertThat(response.getStatusCode(), is(HttpStatus.OK));
+  }
+
+  @Test
+  public void shouldSavePOD() throws Exception {
+    OrderPOD orderPOD = new OrderPOD();
+
+    when(service.save(orderPOD)).thenReturn(orderPOD);
+
+    ResponseEntity<OpenLmisResponse> response = controller.save(orderPOD, request);
+
+    assertThat((OrderPOD) response.getBody().getData().get(ORDER_POD), is(orderPOD));
+    assertThat(response.getBody().getSuccessMsg(), is("msg.pod.save.success"));
+    assertThat(orderPOD.getModifiedBy(), is(USER_ID));
+  }
+
+  @Test
+  public void shouldGiveErrorResponseIfSaveUnsuccessful() throws Exception {
+    OrderPOD orderPOD = new OrderPOD();
+
+    doThrow(new DataException("error")).when(service).save(orderPOD);
+
+    ResponseEntity<OpenLmisResponse> response = controller.save(orderPOD, request);
+
+    assertThat(response.getStatusCode(), is(HttpStatus.BAD_REQUEST));
+    assertThat(response.getBody().getErrorMsg(), is("error"));
   }
 }

@@ -15,7 +15,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.openlmis.db.categories.IntegrationTests;
+import org.openlmis.db.categories.UnitTests;
 import org.openlmis.pod.domain.OrderPOD;
 import org.openlmis.pod.domain.OrderPODLineItem;
 import org.openlmis.pod.repository.mapper.PODMapper;
@@ -26,37 +26,37 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-@Category(IntegrationTests.class)
+@Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
 public class PODRepositoryTest {
 
   @Mock
-  PODMapper podMapper;
+  PODMapper mapper;
 
   @InjectMocks
-  PODRepository podRepository;
+  PODRepository repository;
 
   @Test
   public void shouldInsertPODLineItem() {
     OrderPODLineItem orderPodLineItem = new OrderPODLineItem();
-    podRepository.insertPODLineItem(orderPodLineItem);
-    verify(podMapper).insertPODLineItem(orderPodLineItem);
+    repository.insertPODLineItem(orderPodLineItem);
+    verify(mapper).insertPODLineItem(orderPodLineItem);
   }
 
   @Test
   public void shouldInsertPOD() {
     OrderPOD orderPod = new OrderPOD();
-    podRepository.insertPOD(orderPod);
-    verify(podMapper).insertPOD(orderPod);
+    repository.insertPOD(orderPod);
+    verify(mapper).insertPOD(orderPod);
   }
 
   @Test
   public void shouldGetPODByOrderId() {
     Long orderId = 1l;
     OrderPOD expectedOrderPOD = new OrderPOD();
-    when(podMapper.getPODByOrderId(orderId)).thenReturn(expectedOrderPOD);
-    OrderPOD orderPod = podRepository.getPODByOrderId(orderId);
-    verify(podMapper).getPODByOrderId(orderId);
+    when(mapper.getPODByOrderId(orderId)).thenReturn(expectedOrderPOD);
+    OrderPOD orderPod = repository.getPODByOrderId(orderId);
+    verify(mapper).getPODByOrderId(orderId);
     assertThat(orderPod, is(expectedOrderPOD));
   }
 
@@ -68,12 +68,12 @@ public class PODRepositoryTest {
     OrderPODLineItem lineItem = new OrderPODLineItem();
     lineItem.setPodId(podId);
 
-    when(podMapper.getPODById(podId)).thenReturn(expectedOrderPOD);
+    when(mapper.getPODById(podId)).thenReturn(expectedOrderPOD);
     expectedOrderPOD.setPodLineItems(asList(lineItem));
 
-    OrderPOD orderPod = podRepository.getPODWithLineItemsById(podId);
+    OrderPOD orderPod = repository.getPOD(podId);
 
-    verify(podMapper).getPODById(podId);
+    verify(mapper).getPODById(podId);
     assertThat(orderPod, is(expectedOrderPOD));
   }
 
@@ -88,12 +88,27 @@ public class PODRepositoryTest {
     orderPOD.setPodLineItems(asList(lineItem, lineItem2));
     lineItem.setPodId(podId);
 
-    podRepository.insert(orderPOD);
+    repository.insert(orderPOD);
 
-    verify(podMapper).insertPOD(orderPOD);
-    verify(podMapper).insertPODLineItem(lineItem);
-    verify(podMapper).insertPODLineItem(lineItem2);
+    verify(mapper).insertPOD(orderPOD);
+    verify(mapper).insertPODLineItem(lineItem);
+    verify(mapper).insertPODLineItem(lineItem2);
     assertThat(lineItem.getPodId(), is(podId));
     assertThat(lineItem2.getPodId(), is(podId));
+  }
+
+  @Test
+  public void shouldUpdatePOD() {
+    OrderPOD orderPOD = new OrderPOD();
+    OrderPODLineItem lineItem1 = new OrderPODLineItem(1L, "P1", null);
+    OrderPODLineItem lineItem2 = new OrderPODLineItem(2L, "P2", 30);
+    orderPOD.setPodLineItems(asList(lineItem1, lineItem2));
+
+    OrderPOD updatedPOD = repository.update(orderPOD);
+
+    assertThat(updatedPOD, is(orderPOD));
+    verify(mapper).update(orderPOD);
+    verify(mapper).updateLineItem(lineItem1);
+    verify(mapper).updateLineItem(lineItem2);
   }
 }

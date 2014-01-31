@@ -10,6 +10,7 @@
 
 package org.openlmis.web.controller;
 
+import org.openlmis.core.exception.DataException;
 import org.openlmis.order.dto.OrderPODDTO;
 import org.openlmis.order.service.OrderService;
 import org.openlmis.pod.domain.OrderPOD;
@@ -27,9 +28,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import javax.servlet.http.HttpServletRequest;
 import java.text.ParseException;
 
-import static org.openlmis.web.response.OpenLmisResponse.response;
-import static org.springframework.web.bind.annotation.RequestMethod.GET;
-import static org.springframework.web.bind.annotation.RequestMethod.POST;
+import static org.openlmis.web.response.OpenLmisResponse.*;
+import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 @Controller
 public class PODController extends BaseController {
@@ -69,5 +69,19 @@ public class PODController extends BaseController {
     ResponseEntity<OpenLmisResponse> response = response(ORDER_POD, orderPOD);
     response.getBody().addData(ORDER, orderPODDTO);
     return response;
+  }
+
+  @RequestMapping(value = "/pods/{id}", method = PUT, headers = ACCEPT_JSON)
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'MANAGE_POD')")
+  public ResponseEntity<OpenLmisResponse> save(OrderPOD orderPOD, HttpServletRequest request) {
+    try {
+      orderPOD.setModifiedBy(loggedInUserId(request));
+      OrderPOD savedPod = service.save(orderPOD);
+      ResponseEntity<OpenLmisResponse> response = success("msg.pod.save.success");
+      response.getBody().addData(ORDER_POD, savedPod);
+      return response;
+    } catch (DataException e) {
+      return error(e, HttpStatus.BAD_REQUEST);
+    }
   }
 }

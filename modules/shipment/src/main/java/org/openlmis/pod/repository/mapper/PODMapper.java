@@ -42,8 +42,12 @@ public interface PODMapper {
     many = @Many(select = "org.openlmis.pod.repository.mapper.PODMapper.getPODLineItemsByPODId")),})
   OrderPOD getPODById(Long id);
 
-  @Select(
-    {"SELECT PLI.* FROM pod_line_items PLI INNER JOIN pod P ON PLI.podId = P.id " + "WHERE P.facilityId = #{requisition.facility.id} ", "AND P.programId = #{requisition.program.id} ", "AND P.createdDate >= #{startDate} ", "AND PLI.productCode = #{productCode}", "ORDER BY p.createdDate DESC LIMIT #{n}"})
+  @Select({"SELECT PLI.* FROM pod_line_items PLI INNER JOIN pod P ON PLI.podId = P.id ",
+    "WHERE P.facilityId = #{requisition.facility.id} ",
+    "AND P.programId = #{requisition.program.id} ",
+    "AND P.createdDate >= #{startDate} ",
+    "AND PLI.productCode = #{productCode}",
+    "ORDER BY p.createdDate DESC LIMIT #{n}"})
   List<OrderPODLineItem> getNPodLineItems(@Param("productCode") String productCode,
                                           @Param("requisition") Rnr requisition,
                                           @Param("n") Integer n,
@@ -54,4 +58,11 @@ public interface PODMapper {
     column = "id",
     many = @Many(select = "org.openlmis.pod.repository.mapper.PODMapper.getPODLineItemsByPODId")),})
   OrderPOD getPODByOrderId(Long orderId);
+
+  @Update({"UPDATE pod SET modifiedBy = #{modifiedBy} WHERE id = #{id}"})
+  void update(OrderPOD orderPOD);
+
+  @Update(
+    {"UPDATE pod_line_items SET quantityReceived = #{quantityReceived}, notes = #{notes}, modifiedBy = #{modifiedBy} WHERE id = #{id}"})
+  void updateLineItem(OrderPODLineItem lineItem);
 }

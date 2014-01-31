@@ -94,4 +94,10 @@ public class OrderPODLineItem extends BaseModel {
     this.setCreatedBy(createdBy);
     this.setModifiedBy(createdBy);
   }
+
+  public void copy(OrderPODLineItem lineItem) {
+    this.setQuantityReceived(lineItem.getQuantityReceived());
+    this.setNotes(lineItem.getNotes());
+    this.setModifiedBy(lineItem.getModifiedBy());
+  }
 }
