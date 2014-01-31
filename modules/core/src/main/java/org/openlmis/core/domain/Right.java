@@ -50,6 +50,7 @@ public enum Right {
   FACILITY_FILL_SHIPMENT("right.fulfillment.fill.shipment", FULFILLMENT, "Permission to fill shipment data for facility", 19),
   MANAGE_POD("right.fulfillment.manage.pod", FULFILLMENT, "Permission to manage proof of delivery", 20),
 
+  DELETE_REQUISITION("Delete Requisition", REQUISITION, "Permission to delete requisitions", 21),
   
   ACCESS_ILS_GATEWAY("Access ILS Gateway",ADMIN,"Permission to access the ILS Gateway",23),
   MANAGE_PRODUCT_ALLOWED_FOR_FACILITY("Admin - Manage Products Allowed for Facilities", ADMIN, "Permission to manage allowed products for facilities",24),
