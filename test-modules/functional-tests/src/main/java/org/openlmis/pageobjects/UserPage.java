@@ -22,8 +22,6 @@ import org.openqa.selenium.support.How;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 
-import java.io.IOException;
-import java.sql.SQLException;
 import java.util.List;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.assertFalse;
@@ -240,9 +238,8 @@ public class UserPage extends Page {
   }
 
   public void resetPassword(String newPassword, String confirmPassword) {
-    firstUserLink.sendKeys(Keys.TAB);
-    selectFirstEditUser.sendKeys(Keys.TAB);
     testWebDriver.moveToElement(firstUserLink);
+    testWebDriver.waitForElementToAppear(selectFirstResetPassword);
     selectFirstResetPassword.click();
     testWebDriver.waitForElementToAppear(newPasswordField);
     newPasswordField.sendKeys(newPassword);
@@ -253,8 +250,7 @@ public class UserPage extends Page {
     resetPasswordOkButton.click();
   }
 
-  public void enterUserDetails(String userName, String email, String firstName, String lastName)
-    throws IOException, SQLException {
+  public void enterUserDetails(String userName, String email, String firstName, String lastName) {
     testWebDriver.waitForElementToAppear(addNewButton);
     addNewButton.click();
     testWebDriver.waitForElementToAppear(userNameField);
@@ -276,8 +272,7 @@ public class UserPage extends Page {
     testWebDriver.waitForElementToAppear(viewHereLink);
   }
 
-  public void verifyUserCreated(String firstName, String lastName)
-    throws IOException, SQLException {
+  public void verifyUserCreated(String firstName, String lastName) {
     testWebDriver.waitForElementToAppear(successMessage);
 
     String expectedMessage = String.format("User \"%s %s\" has been successfully created," +
