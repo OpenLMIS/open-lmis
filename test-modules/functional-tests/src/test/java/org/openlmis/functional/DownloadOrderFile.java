@@ -32,9 +32,8 @@ import static java.util.Arrays.asList;
 public class DownloadOrderFile extends TestCaseHelper {
 
   public String program = "HIV";
-
   public String passwordUsers = "TQskzK3iiLfbRVHeM1muvBCiiKriibfl6lh8ipo91hb74G3OvsybvkzpPI4S3KIeWTXAiiwlUU0iiSxWii4wSuS8mokSAieie";
-  public String userSICUserName = "storeIncharge";
+  public String userSICUserName = "storeInCharge";
   public String[] csvRows = null;
 
   @BeforeMethod(groups = "requisition")
@@ -56,7 +55,7 @@ public class DownloadOrderFile extends TestCaseHelper {
 
   @And("^I configure non openlmis order file columns:$")
   public void setupOrderFileNonOpenLMISColumns(DataTable userTable) throws Exception {
-    dbWrapper.deleteOrderFileNonOpenLMISColumns();
+    dbWrapper.deleteRowFromTable("order_file_columns", "openLMISField", "false");
     List<Map<String, String>> data = userTable.asMaps();
     for (Map map : data)
       dbWrapper.setupOrderFileNonOpenLMISColumns(map.get("Data Field Label").toString(), map.get("Include In Order File").toString(), map.get("Column Label").toString(), Integer.parseInt(map.get("Position").toString()));
@@ -71,15 +70,14 @@ public class DownloadOrderFile extends TestCaseHelper {
 
   @And("^I download order file$")
   public void downloadOrderFile() throws Exception {
-    ViewOrdersPage viewOrderPage = new ViewOrdersPage(testWebDriver);
-    viewOrderPage.downloadCSV();
+    ViewOrdersPage viewOrdersPage = PageFactory.getInstanceOfViewOrdersPage(testWebDriver);
+    viewOrdersPage.downloadCSV();
     testWebDriver.sleep(5000);
   }
 
   @And("^I get order data in file prefix \"([^\"]*)\"$")
   public void getOrderDataFromDownloadedFile(String filePrefix) throws Exception {
     String orderId = String.valueOf(dbWrapper.getMaxRnrID());
-
     csvRows = readCSVFile(filePrefix + orderId + ".csv");
     testWebDriver.sleep(5000);
     deleteFile(filePrefix + orderId + ".csv");
@@ -106,14 +104,13 @@ public class DownloadOrderFile extends TestCaseHelper {
   @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function")
   public void testVerifyOrderFileForSpecificConfiguration(String password) throws Exception {
     dbWrapper.setupOrderFileConfiguration("Zero", "TRUE");
-
     dbWrapper.setupOrderFileOpenLMISColumns("create.facility.code", "TRUE", "Facility code", 5, "");
     dbWrapper.setupOrderFileOpenLMISColumns("header.order.number", "TRUE", "Order number", 7, "");
     dbWrapper.setupOrderFileOpenLMISColumns("header.quantity.approved", "TRUE", "Approved quantity", 2, "");
     dbWrapper.setupOrderFileOpenLMISColumns("header.product.code", "TRUE", "Product code", 3, "");
     dbWrapper.setupOrderFileOpenLMISColumns("header.order.date", "TRUE", "Order date", 4, "MM-dd-yyyy");
     dbWrapper.setupOrderFileOpenLMISColumns("label.period", "TRUE", "Period", 6, "yyyy-MM");
-    dbWrapper.deleteOrderFileNonOpenLMISColumns();
+    dbWrapper.deleteRowFromTable("order_file_columns", "openLMISField", "false");
     dbWrapper.setupOrderFileNonOpenLMISColumns("Not Applicable", "TRUE", "Extra 1", 1);
     dbWrapper.setupOrderFileNonOpenLMISColumns("Not Applicable", "TRUE", "", 8);
 
@@ -129,7 +126,6 @@ public class DownloadOrderFile extends TestCaseHelper {
   @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function")
   public void testVerifyOrderFileForDefaultConfiguration(String password) throws Exception {
     dbWrapper.setupOrderFileConfiguration("O", "TRUE");
-
     setupDownloadOrderFileSetup(password);
     getOrderDataFromDownloadedFile("O");
     checkOrderFileData(1, "Order number,Facility code,Product code,Approved quantity,Period,Order date");
@@ -141,7 +137,6 @@ public class DownloadOrderFile extends TestCaseHelper {
   @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function")
   public void testVerifyOrderFileForDefaultConfigurationWithNoHeaders(String password) throws Exception {
     dbWrapper.setupOrderFileConfiguration("O", "FALSE");
-
     setupDownloadOrderFileSetup(password);
     getOrderDataFromDownloadedFile("O");
     checkOrderFileData(1, ",F10,P10,10,01/12,");
@@ -158,7 +153,7 @@ public class DownloadOrderFile extends TestCaseHelper {
     dbWrapper.insertRoleAssignment("212", "lmu");
     dbWrapper.insertFulfilmentRoleAssignment("lmu", "lmu", "F10");
 
-    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+    LoginPage loginPage = PageFactory.getInstanceOfLoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(userSICUserName, password);
     homePage.navigateAndInitiateRnr(program);
     homePage.clickProceed();
@@ -174,7 +169,7 @@ public class DownloadOrderFile extends TestCaseHelper {
     loginPage.loginAs("lmu", password);
     homePage.navigateConvertToOrder();
 
-    ConvertOrderPage convertOrderPage = new ConvertOrderPage(testWebDriver);
+    ConvertOrderPage convertOrderPage = PageFactory.getInstanceOfConvertOrderPage(testWebDriver);
     convertOrderPage.clickConvertToOrderButton();
     convertOrderPage.clickCheckBoxConvertToOrder();
     convertOrderPage.clickConvertToOrderButton();
@@ -187,7 +182,7 @@ public class DownloadOrderFile extends TestCaseHelper {
   public void tearDown() throws Exception {
     testWebDriver.sleep(500);
     if (!testWebDriver.getElementById("username").isDisplayed()) {
-      HomePage homePage = new HomePage(testWebDriver);
+      HomePage homePage = PageFactory.getInstanceOfHomePage(testWebDriver);
       homePage.logout(baseUrlGlobal);
       dbWrapper.deleteData();
       dbWrapper.closeConnection();

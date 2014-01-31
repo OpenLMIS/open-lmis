@@ -10,10 +10,7 @@
 
 package org.openlmis.UiUtils;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.Keys;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedCondition;
@@ -22,6 +19,8 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+
+import static org.openqa.selenium.OutputType.BYTES;
 
 
 public class TestWebDriver {
@@ -220,6 +219,12 @@ public class TestWebDriver {
     action.click(element).perform();
   }
 
+  public void scrollAndClick(final WebElement element) {
+    //Due to chrome bug where clicking on element present in DOM but not on screen requires scrolling
+    scrollToElement(element);
+    click(element);
+  }
+
   public void clickForRadio(final WebElement element) {
     element.click();
     if (!element.isSelected()) {
@@ -249,7 +254,16 @@ public class TestWebDriver {
   }
 
   public void moveToElement(WebElement element) {
-    new Actions(this.driver).moveToElement(element).perform();
-    return;
+    new Actions(driver).moveToElement(element).perform();
+  }
+
+  public byte[] getScreenshot() {
+    byte[] screenshotFile = ((TakesScreenshot) driver).getScreenshotAs(BYTES);
+    return screenshotFile;
+  }
+
+  public void scrollToElement(WebElement elementToClick) {
+    // Scroll the browser to the element's Y position
+    ((org.openqa.selenium.JavascriptExecutor) driver).executeScript(String.format("window.scrollTo(0, %s);", elementToClick.getLocation().getY()));
   }
 }

@@ -10,9 +10,9 @@
 
 package org.openlmis.pageobjects;
 
-
 import com.thoughtworks.selenium.SeleneseTestNgHelper;
 import org.openlmis.UiUtils.TestWebDriver;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.How;
@@ -22,57 +22,58 @@ import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 import java.io.IOException;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
+import static org.openqa.selenium.support.How.ID;
 import static org.openqa.selenium.support.How.XPATH;
-
 
 public class ViewOrdersPage extends RequisitionPage {
 
   @FindBy(how = How.XPATH, using = "//div[@class='ngCellText ng-scope col0 colt0']/span")
-  private static WebElement orderNumberOnViewOrdersScreen=null;
+  private static WebElement orderNumberOnViewOrdersScreen = null;
 
   @FindBy(how = How.XPATH, using = "//div[@class='ngCellText ng-scope col2 colt2']/span")
-  private static WebElement programOnViewOrderScreen=null;
+  private static WebElement programOnViewOrderScreen = null;
 
   @FindBy(how = How.XPATH, using = "//div[@class='ng-scope ngRow even']/div[2]/div[2]/div/span")
-  private static WebElement facilityCodeNameOnOrderScreen=null;
+  private static WebElement facilityCodeNameOnOrderScreen = null;
 
   @FindBy(how = How.XPATH, using = "//div[@class='ng-scope ngRow even']/div[4]/div[2]/div/span")
-  private static WebElement periodDetailsOnViewOrderScreen=null;
+  private static WebElement periodDetailsOnViewOrderScreen = null;
 
   @FindBy(how = How.XPATH, using = "//div[@class='ng-scope ngRow even']/div[5]/div[2]/div/span")
-  private static WebElement supplyDepotOnViewOrderScreen=null;
+  private static WebElement supplyDepotOnViewOrderScreen = null;
 
   @FindBy(how = How.XPATH, using = "(//div[@id='orderStatus'])[1]")
-  private static WebElement orderStatusOnViewOrderScreen=null;
+  private static WebElement orderStatusOnViewOrderScreen = null;
 
   @FindBy(how = How.XPATH, using = "//a[contains(text(),'Download CSV')]")
-  private static WebElement downloadCSVLink=null;
+  private static WebElement downloadCSVLink = null;
 
   @FindBy(how = How.XPATH, using = "//span[contains(text(),'No products in this order')]")
-  private static WebElement noOrderMessage=null;
+  private static WebElement noOrderMessage = null;
 
   @FindBy(how = XPATH, using = "//i[@class='icon-ok']")
-  private static WebElement emergencyIcon=null;
+  private static WebElement emergencyIcon = null;
+
+  @FindBy(how = ID, using = "ordersGrid")
+  private static WebElement ordersGrid = null;
 
   @FindBy(how = XPATH, using = "//span[@openlmis-message='message.no.order']")
-  private static WebElement noRequisitionReleasedAsOrderYet=null;
+  private static WebElement noRequisitionReleasedAsOrderYet = null;
 
-  public ViewOrdersPage(TestWebDriver driver) throws IOException {
+  public ViewOrdersPage(TestWebDriver driver) {
     super(driver);
     PageFactory.initElements(new AjaxElementLocatorFactory(TestWebDriver.getDriver(), 10), this);
     testWebDriver.setImplicitWait(10);
   }
 
-  public void verifyNoRequisitionReleasedAsOrderMessage()
-  {
+  public void verifyNoRequisitionReleasedAsOrderMessage() {
     testWebDriver.waitForPageToLoad();
     noRequisitionReleasedAsOrderYet.isDisplayed();
   }
 
-  public void isFirstRowPresent()
-  {
+  public void isFirstRowPresent() {
     testWebDriver.waitForPageToLoad();
-    assertTrue("First row should show up",programOnViewOrderScreen.isDisplayed());
+    assertTrue("First row should show up", programOnViewOrderScreen.isDisplayed());
   }
 
   public void verifyOrderListElements(String program, long orderId, String facilityCodeName, String periodDetails, String supplyFacilityName, String orderStatus, boolean downloadLinkPresent) throws IOException {
@@ -101,7 +102,8 @@ public class ViewOrdersPage extends RequisitionPage {
   }
 
   public int getNumberOfLineItems() throws IOException {
-    return testWebDriver.getElementsSizeByXpath("html/body/div[1]/div/div/div/div[3]/div/div[2]/div/div");
+    testWebDriver.waitForElementToAppear(ordersGrid);
+    return ordersGrid.findElements(By.className("ngRow")).size();
   }
 
   public void verifyProgram(int row, String program) {
@@ -109,6 +111,4 @@ public class ViewOrdersPage extends RequisitionPage {
     String actualProgram = testWebDriver.getElementByXpath("(//div[@class='ngCellText ng-scope col2 colt2']/span)[" + row + "]").getText();
     SeleneseTestNgHelper.assertEquals(actualProgram, program);
   }
-
-
 }

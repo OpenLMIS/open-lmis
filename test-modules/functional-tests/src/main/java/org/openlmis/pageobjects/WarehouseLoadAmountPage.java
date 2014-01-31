@@ -18,8 +18,6 @@ import org.openqa.selenium.support.How;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 
-import java.io.IOException;
-
 
 public class WarehouseLoadAmountPage extends Page {
 
@@ -65,7 +63,7 @@ public class WarehouseLoadAmountPage extends Page {
   @FindBy(how = How.ID, using = "zoneTotalLabel")
   private WebElement zoneTotalLabel = null;
 
-  public WarehouseLoadAmountPage(TestWebDriver driver) throws IOException {
+  public WarehouseLoadAmountPage(TestWebDriver driver) {
     super(driver);
     PageFactory.initElements(new AjaxElementLocatorFactory(TestWebDriver.getDriver(), 10), this);
     testWebDriver.setImplicitWait(10);

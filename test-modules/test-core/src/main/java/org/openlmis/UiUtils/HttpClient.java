@@ -17,7 +17,6 @@ import org.apache.http.HttpResponse;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.AuthCache;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.CookieStore;
 import org.apache.http.client.methods.*;
 import org.apache.http.client.protocol.ClientContext;
@@ -36,7 +35,6 @@ import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 
 import static org.apache.http.client.protocol.ClientContext.AUTH_CACHE;
-import static org.apache.http.protocol.HTTP.UTF_8;
 
 public class HttpClient {
 
@@ -64,12 +62,9 @@ public class HttpClient {
 
     httpContext.setAttribute(AUTH_CACHE, authCache);
 
-
     try {
       return handleRequest(commMethod, json, url, true);
-    } catch (ClientProtocolException e) {
-      e.printStackTrace();
-    } catch (IOException e) {
+    } catch (Exception e) {
       e.printStackTrace();
     }
     return null;
@@ -89,9 +84,7 @@ public class HttpClient {
 
     try {
       return handleRequest(commMethod, json, url, false);
-    } catch (ClientProtocolException e) {
-      e.printStackTrace();
-    } catch (IOException e) {
+    } catch (Exception e) {
       e.printStackTrace();
     }
     return null;
@@ -123,7 +116,6 @@ public class HttpClient {
       sCompleteResponse = sCompleteResponse + (sCurrentLine);
     }
     responseEntity.setResponse(sCompleteResponse);
-
     EntityUtils.consume(entity);
 
     return responseEntity;
@@ -143,11 +135,10 @@ public class HttpClient {
 
   private void prepareRequestHeaderAndEntity(String commMethod, String json, HttpRequestBase httpRequest, boolean headerRequired)
     throws UnsupportedEncodingException {
-
     if (commMethod.equals(GET)) return;
 
     httpRequest.setHeader(new BasicHeader("Content-Type", "application/json;charset=UTF-8"));
-    ((HttpEntityEnclosingRequestBase) httpRequest).setEntity(new StringEntity(json, UTF_8));
+    ((HttpEntityEnclosingRequestBase) httpRequest).setEntity(new StringEntity(json));
 
     if (!headerRequired) {
       Header[] headers = httpRequest.getAllHeaders();
@@ -155,7 +146,6 @@ public class HttpClient {
         httpRequest.removeHeader(h);
       }
     }
-
   }
 
   public void createContext() {

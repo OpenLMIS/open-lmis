@@ -41,6 +41,27 @@
   margin-left: 270px;
   background: #fff;
   border-left: 1px solid #d2d2d2;
+
+  label {
+    margin-right: 15px;
+    font-size: 0.9em;
+  }
+
+  .radio-label {
+    font-weight: bold;
+    display: inline;
+  }
+
+  input[type="radio"] {
+    vertical-align: text-top;
+    margin-top: 1px;
+    margin-right: 2px;
+  }
+
+  #visitDateContainer, #vehicleIdContainer {
+    display: inline-block;
+    width: 297px;
+  }
 }
 
 .facility-container {
@@ -372,6 +393,12 @@
 .facility-visit-container {
   min-width: 600px;
   padding: 2px 20px 15px;
+  label {
+    font-weight: bold;
+  }
+  .form-row {
+    padding-left: 0;
+  }
   textarea {
     width: 550px;
     height: 150px;

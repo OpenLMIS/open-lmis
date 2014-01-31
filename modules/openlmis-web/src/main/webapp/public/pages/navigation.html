@@ -26,7 +26,7 @@
                openlmis-message="link.requisition.approve"></a>
           </li>
           <li ng-show="hasPermission('CONVERT_TO_ORDER')">
-            <a id="convertToOrderRnr" href="/public/pages/logistics/rnr/index.html#/requisitions-for-convert-to-order"
+            <a id="convertToOrderRnr" href="/public/pages/logistics/rnr/index.html#/requisitions-for-convert-to-order?page=1"
                openlmis-message="link.requisitions.convertToOrder"></a>
           </li>
           <li ng-show="hasPermission('VIEW_REQUISITION')">
@@ -45,11 +45,11 @@
       <div class="submenu">
         <ul>
           <li ng-show="hasPermission('VIEW_ORDER')">
-            <a href="/public/pages/logistics/order/index.html#/view-orders?page=1"
+            <a href="/public/pages/logistics/fulfillment/index.html#/view-orders?page=1"
                openlmis-message="link.orders.view"></a>
           </li>
           <li ng-show="hasPermission('MANAGE_POD')">
-            <a href="/public/pages/logistics/pod/index.html#/manage-pod-orders" openlmis-message="link.pod.manage"></a>
+            <a href="/public/pages/logistics/fulfillment/index.html#/manage-pod-orders" openlmis-message="link.pod.manage"></a>
           </li>
           <li class="beak"></li>
         </ul>

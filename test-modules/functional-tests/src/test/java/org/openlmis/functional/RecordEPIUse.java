@@ -66,7 +66,6 @@ public class RecordEPIUse extends TestCaseHelper {
     epiUsePage.navigateToRefrigerators();
     epiUsePage.navigateToEpiUse();
     List<Map<String, String>> epiData = tableData.asMaps();
-
     epiUsePage.verifyData(epiData);
   }
 
@@ -92,7 +91,7 @@ public class RecordEPIUse extends TestCaseHelper {
   public void tearDown() throws Exception {
     testWebDriver.sleep(250);
     if (!testWebDriver.getElementById("username").isDisplayed()) {
-      HomePage homePage = new HomePage(testWebDriver);
+      HomePage homePage = PageFactory.getInstanceOfHomePage(testWebDriver);
       homePage.logout(baseUrlGlobal);
       dbWrapper.deleteData();
       dbWrapper.closeConnection();
@@ -100,14 +99,12 @@ public class RecordEPIUse extends TestCaseHelper {
     ((JavascriptExecutor) TestWebDriver.getDriver()).executeScript("indexedDB.deleteDatabase('open_lmis');");
   }
 
-
   @DataProvider(name = "Data-Provider-Function")
   public Object[][] parameterIntTestProviderPositive() {
     return new Object[][]{
-      {"storeIncharge", "Admin123", "DZ1", "DZ2", "Delivery Zone First", "Delivery Zone Second",
+      {"storeInCharge", "Admin123", "DZ1", "DZ2", "Delivery Zone First", "Delivery Zone Second",
         "F10", "F11", "VACCINES", "TB", "M", "Period", 14}
     };
-
   }
 }
 

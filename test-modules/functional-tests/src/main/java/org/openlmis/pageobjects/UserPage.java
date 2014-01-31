@@ -22,8 +22,6 @@ import org.openqa.selenium.support.How;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 
-import java.io.IOException;
-import java.sql.SQLException;
 import java.util.List;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.assertFalse;
@@ -89,7 +87,7 @@ public class UserPage extends Page {
   @FindBy(how = How.ID, using = "searchFacility")
   private static WebElement searchFacility = null;
 
-  @FindBy(how = How.XPATH, using = "//a[@ng-click='setSelectedFacility(facility)']")
+  @FindBy(how = How.ID, using = "result0")
   private static WebElement selectFacility = null;
 
   @FindBy(how = How.XPATH, using = "//form[@id='create-user']/div/div[1]/div[7]/div/ng-switch/span")
@@ -201,11 +199,10 @@ public class UserPage extends Page {
   @FindBy(how = How.ID, using = "resetPasswordOk")
   private static WebElement resetPasswordOkButton = null;
 
-  public UserPage(TestWebDriver driver) throws IOException {
+  public UserPage(TestWebDriver driver) {
     super(driver);
     PageFactory.initElements(new AjaxElementLocatorFactory(TestWebDriver.getDriver(), 1), this);
     testWebDriver.setImplicitWait(1);
-
   }
 
   public void searchUser(String user) {
@@ -241,9 +238,8 @@ public class UserPage extends Page {
   }
 
   public void resetPassword(String newPassword, String confirmPassword) {
-    firstUserLink.sendKeys(Keys.TAB);
-    selectFirstEditUser.sendKeys(Keys.TAB);
-    testWebDriver.waitForElementToBeEnabled(selectFirstResetPassword);
+    testWebDriver.moveToElement(firstUserLink);
+    testWebDriver.waitForElementToAppear(selectFirstResetPassword);
     selectFirstResetPassword.click();
     testWebDriver.waitForElementToAppear(newPasswordField);
     newPasswordField.sendKeys(newPassword);
@@ -254,8 +250,7 @@ public class UserPage extends Page {
     resetPasswordOkButton.click();
   }
 
-  public void enterUserDetails(String userName, String email, String firstName, String lastName)
-    throws IOException, SQLException {
+  public void enterUserDetails(String userName, String email, String firstName, String lastName) {
     testWebDriver.waitForElementToAppear(addNewButton);
     addNewButton.click();
     testWebDriver.waitForElementToAppear(userNameField);
@@ -277,8 +272,7 @@ public class UserPage extends Page {
     testWebDriver.waitForElementToAppear(viewHereLink);
   }
 
-  public void verifyUserCreated(String firstName, String lastName)
-    throws IOException, SQLException {
+  public void verifyUserCreated(String firstName, String lastName) {
     testWebDriver.waitForElementToAppear(successMessage);
 
     String expectedMessage = String.format("User \"%s %s\" has been successfully created," +
@@ -336,20 +330,22 @@ public class UserPage extends Page {
     testWebDriver.waitForElementToAppear(searchFacility);
     if (!roleType.equals("ADMIN")) {
       enterUserHomeFacility(facilityCode);
+      testWebDriver.sleep(500);
       testWebDriver.waitForElementToAppear(selectFacility);
-      selectFacility.click();
+      testWebDriver.scrollAndClick(selectFacility);
       testWebDriver.waitForAjax();
-      homeFacilityRolesAccordion.click();
+      testWebDriver.scrollAndClick(homeFacilityRolesAccordion);
+      testWebDriver.scrollToElement(homeFacilityPrograms);
       testWebDriver.selectByVisibleText(homeFacilityPrograms, program1);
       testWebDriver.waitForElementToAppear(roleInputFieldHomeFacility);
-      roleInputFieldHomeFacility.click();
+      testWebDriver.scrollAndClick(roleInputFieldHomeFacility);
       roleInputFieldHomeFacility.clear();
       roleInputFieldHomeFacility.sendKeys(role);
       testWebDriver.waitForElementToAppear(rolesSelectFieldHomeFacility);
-      rolesSelectFieldHomeFacility.click();
-      addHomeFacilityRolesButton.click();
+      testWebDriver.scrollAndClick(rolesSelectFieldHomeFacility);
+      testWebDriver.scrollAndClick(addHomeFacilityRolesButton);
       testWebDriver.waitForElementToAppear(supervisoryRolesAccordion);
-      supervisoryRolesAccordion.click();
+      testWebDriver.scrollAndClick(supervisoryRolesAccordion);
       testWebDriver.waitForElementToAppear(programsToSupervise);
       testWebDriver.selectByVisibleText(programsToSupervise, program1);
       testWebDriver.waitForElementToAppear(supervisoryNodeToSupervise);
@@ -357,27 +353,27 @@ public class UserPage extends Page {
       testWebDriver.sleep(1000);
       testWebDriver.handleScroll();
       testWebDriver.waitForElementToAppear(rolesInputFieldSupervisoryRole);
-      rolesInputFieldSupervisoryRole.click();
+      testWebDriver.scrollAndClick(rolesInputFieldSupervisoryRole);
       rolesInputFieldSupervisoryRole.clear();
       rolesInputFieldSupervisoryRole.sendKeys(role);
       testWebDriver.waitForElementToAppear(rolesSelectFieldSupervisoryRole);
-      rolesSelectFieldSupervisoryRole.click();
+      testWebDriver.scrollAndClick(rolesSelectFieldSupervisoryRole);
 
       assertEquals(testWebDriver.getFirstSelectedOption(supervisoryNodeToSupervise).getText(), node);
       assertEquals(testWebDriver.getFirstSelectedOption(programsToSupervise).getText(), program1);
       testWebDriver.waitForElementToAppear(addSupervisoryRoleButton);
-      addSupervisoryRoleButton.click();
+      testWebDriver.scrollAndClick(addSupervisoryRoleButton);
 
     } else {
       testWebDriver.handleScroll();
       testWebDriver.waitForElementToAppear(adminAndGeneralOperationsRolesAccordion);
-      adminAndGeneralOperationsRolesAccordion.click();
+      testWebDriver.scrollAndClick(adminAndGeneralOperationsRolesAccordion);
       testWebDriver.waitForElementToAppear(adminRolesInputField);
-      adminRolesInputField.click();
+      testWebDriver.scrollAndClick(adminRolesInputField);
       adminRolesInputField.clear();
       adminRolesInputField.sendKeys(role);
       testWebDriver.waitForElementToAppear(rolesSelectFieldSupervisoryRole);
-      rolesSelectFieldSupervisoryRole.click();
+      testWebDriver.scrollAndClick(rolesSelectFieldSupervisoryRole);
     }
   }
 
@@ -442,7 +438,6 @@ public class UserPage extends Page {
     testWebDriver.waitForElementToAppear(addDeliveryZoneRoleButton);
     addDeliveryZoneRoleButton.click();
   }
-
 
   public void removeRole(int indexOfCancelIcon, boolean adminRole) {
     int counter = 1;
@@ -514,7 +509,6 @@ public class UserPage extends Page {
     testWebDriver.waitForElementToAppear(warehouseToSelect);
     return warehouseToSelect.getText();
   }
-
 
   public void clickViewHere() {
     testWebDriver.waitForElementToAppear(viewHereLink);

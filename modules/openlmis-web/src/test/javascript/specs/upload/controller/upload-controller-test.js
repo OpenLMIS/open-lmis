@@ -12,8 +12,7 @@ describe('Upload Controller Test', function () {
 
   var scope, ctrl, httpBackend, supportedUploads, http, controller, messageService;
   var loginConfig;
-  beforeEach(module('openlmis.services'));
-  beforeEach(module('openlmis.localStorage'));
+  beforeEach(module('openlmis'));
 
   beforeEach(inject(function ($httpBackend, $rootScope, $controller, $http, _messageService_) {
     scope = $rootScope.$new();

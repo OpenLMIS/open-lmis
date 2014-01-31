@@ -34,11 +34,14 @@ public class GeneralObservationPage extends DistributionTab {
   public static final String OBSERVATIONS = "observations";
   public static final String VALUE = "value";
 
-  @FindBy(how = How.XPATH, using = "//div[1]/div/div/ng-include/div/ul/li[7]/a")
-  private static WebElement generalObservationTab = null;
+  @FindBy(how = ID, using = "facilityVisitTab")
+  private static WebElement FacilityVisitTab = null;
 
-  @FindBy(how = XPATH, using = "//div[@class='left-navigation ng-scope']/ul/li[7]/a/span[1][@class='status-icon']")
-  public static WebElement generalObservationsIndicator = null;
+  @FindBy(how = ID, using = "facilityVisitTabIcon")
+  public static WebElement facilityVisitTabIcon = null;
+
+  @FindBy(how = ID, using = "facilityVisitTabLabel")
+  public static WebElement facilityVisitTabLabel = null;
 
   @FindBy(how = ID, using = OBSERVATIONS)
   public static WebElement observationsField = null;
@@ -55,6 +58,24 @@ public class GeneralObservationPage extends DistributionTab {
   @FindBy(how = ID, using = CONFIRMED_BY_TITLE)
   public static WebElement confirmedByTitleField = null;
 
+  @FindBy(how = ID, using = "wasFacilityVisited")
+  public static WebElement wasFacilityVisitedLabel = null;
+
+  @FindBy(how = ID, using = "facilityVisitedYes")
+  public static WebElement facilityVisitedYesRadioButton = null;
+
+  @FindBy(how = ID, using = "facilityVisitedNo")
+  public static WebElement facilityVisitedNoRadioButton = null;
+
+  @FindBy(how = ID, using = "visitDate")
+  public static WebElement visitDateField = null;
+
+  @FindBy(how = ID, using = "vehicleId")
+  public static WebElement vehicleIdField = null;
+
+  @FindBy(how = How.XPATH, using = "//a[@class='ui-state-default' and contains(text(),'1')]")
+  private static WebElement calender =null;
+
   public Map<String, WebElement> fieldMap = new HashMap<String, WebElement>() {{
     put(OBSERVATIONS, observationsField);
     put(CONFIRMED_BY_NAME, confirmedByNameField);
@@ -69,7 +90,7 @@ public class GeneralObservationPage extends DistributionTab {
 
   @Override
   public void verifyIndicator(String color) {
-    verifyOverallIndicator(generalObservationsIndicator, color);
+    verifyOverallIndicator(facilityVisitTabIcon, color);
   }
 
   @Override
@@ -98,6 +119,11 @@ public class GeneralObservationPage extends DistributionTab {
     }
   }
 
+  @Override
+  public void navigate() {
+    FacilityVisitTab.click();
+  }
+
   public void enterObservations(String observations) {
     testWebDriver.waitForElementToAppear(observationsField);
     sendKeys(observationsField, observations);
@@ -123,9 +149,36 @@ public class GeneralObservationPage extends DistributionTab {
     sendKeys(verifiedByTitleField, verifiedByTitle);
   }
 
-  @Override
-  public void navigate() {
-    generalObservationTab.click();
+  public void enterVisitDateAsFirstOfCurrentMonth() {
+    testWebDriver.waitForElementToAppear(visitDateField);
+    visitDateField.click();
+    testWebDriver.waitForElementToAppear(calender);
+    calender.click();
+  }
+
+  public void enterVehicleId(String vehicleId) {
+    testWebDriver.waitForElementToAppear(vehicleIdField);
+    sendKeys(vehicleIdField, vehicleId);
+  }
+
+  public String getFacilityVisitTabLabel() {
+    testWebDriver.waitForElementToAppear(facilityVisitTabLabel);
+    return facilityVisitTabLabel.getText();
+  }
+
+  public String getWasFacilityVisitedLabel() {
+    testWebDriver.waitForElementToAppear(wasFacilityVisitedLabel);
+    return wasFacilityVisitedLabel.getText();
+  }
+
+  public void selectFacilityVisitedYes() {
+    testWebDriver.waitForElementToAppear(facilityVisitedYesRadioButton);
+    facilityVisitedYesRadioButton.click();
+  }
+
+  public void selectFacilityVisitedNo() {
+    testWebDriver.waitForElementToAppear(facilityVisitedNoRadioButton);
+    facilityVisitedNoRadioButton.click();
   }
 
   public void verifyAllFieldsDisabled() {
@@ -134,10 +187,16 @@ public class GeneralObservationPage extends DistributionTab {
     assertFalse("ConfirmedBy title field enabled.", confirmedByTitleField.isEnabled());
     assertFalse("VerifiedBy name field enabled.", verifiedByNameField.isEnabled());
     assertFalse("VerifiedBy title Field field enabled.", verifiedByTitleField.isEnabled());
+    assertFalse("Yes radio button was enabled.", facilityVisitedYesRadioButton.isEnabled());
+    assertFalse("No radio button was enabled.", facilityVisitedNoRadioButton.isEnabled());
+    assertFalse("Visit date field was enabled.", visitDateField.isEnabled());
+    assertFalse("vehicle id field was enabled.", vehicleIdField.isEnabled());
   }
 
-  public void enterData(String observation, String confirmName, String confirmTitle, String verifierName,
-                        String verifierTitle) {
+  public void enterDataWhenFacilityVisited(String observation, String confirmName, String confirmTitle,
+                                           String verifierName, String verifierTitle) {
+    selectFacilityVisitedYes();
+    enterVisitDateAsFirstOfCurrentMonth();
     enterObservations(observation);
     enterConfirmedByName(confirmName);
     enterConfirmedByTitle(confirmTitle);

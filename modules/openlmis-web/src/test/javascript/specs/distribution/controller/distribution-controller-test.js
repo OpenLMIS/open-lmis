@@ -11,7 +11,7 @@
 describe('DistributionController', function () {
   var scope, controller, httpBackend, messageService, distributionService, rootScope;
 
-  beforeEach(module('openlmis.services'));
+  beforeEach(module('openlmis'));
   beforeEach(module('openlmis.localStorage'));
   beforeEach(module('distribution'));
   beforeEach(module(function ($provide) {

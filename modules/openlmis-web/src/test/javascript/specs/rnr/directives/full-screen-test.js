@@ -67,7 +67,9 @@ describe('Full screen', function () {
       var spySlideUP = spyOn(div, 'slideUp').andCallThrough();
       var spyAnimate = spyOn(printElement, 'animate').andCallThrough();
       var spyPrintShow = spyOn(printElement, 'show').andCallThrough();
-      $.browser = {msie: false};
+      spyOn(window, 'browserIE').andCallFake(function () {
+        return false;
+      });
 
       element.trigger('click');
 
@@ -85,7 +87,9 @@ describe('Full screen', function () {
       var spyHide = spyOn(div, 'hide').andCallThrough();
       var spyAnimate = spyOn(printElement, 'animate').andCallThrough();
       var spyPrintShow = spyOn(printElement, 'show').andCallThrough();
-      $.browser = {msie: true};
+      spyOn(window, 'browserIE').andCallFake(function () {
+        return true;
+      });
 
       element.trigger('click');
 
@@ -109,7 +113,9 @@ describe('Full screen', function () {
       var spyScroll = spyOn(element, 'scrollTop').andCallThrough();
       var spySlideDown = spyOn(div, 'slideDown').andCallThrough();
       var spyAnimate = spyOn(printElement, 'animate').andCallThrough();
-      $.browser = {msie: false};
+      spyOn(window, 'browserIE').andCallFake(function () {
+        return false;
+      });
 
       element.trigger('click');
 
@@ -131,7 +137,9 @@ describe('Full screen', function () {
       var spyScroll = spyOn(element, 'scrollTop').andCallThrough();
       var spyShow = spyOn(div, 'show').andCallThrough();
       var spyAnimate = spyOn(printElement, 'animate').andCallThrough();
-      $.browser = {msie: true};
+      spyOn(window, 'browserIE').andCallFake(function () {
+        return true;
+      });
 
       element.trigger('click');
 

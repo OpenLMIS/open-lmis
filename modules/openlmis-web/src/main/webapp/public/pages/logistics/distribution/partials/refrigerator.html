@@ -13,7 +13,7 @@
      ng-init="facilityData = distribution.facilityDistributions[selectedFacilityId]">
   <ng-include src="'/public/pages/logistics/distribution/partials/record-facility-menu.html'"></ng-include>
   <div class="facility-info">
-    <div class="refrigerator-container" disable-form="{{facilityData.isDisabled()}}">
+    <div class="refrigerator-container" disable-form="{{facilityData.isDisabled('refrigerators')}}">
       <h3>
         <span openlmis-message="label.refrigerators"></span>
         <input type="button" class="btn btn-primary pull-right" id="addNew" ng-click="showRefrigeratorModal()"
@@ -93,11 +93,6 @@
 
       </div>
     </div>
-  </div>
-
-  <div class="facility-info facility-toolbar">
-    <a href="" class="pull-left">&laquo; Previous</a>
-    <a href="" class="pull-right">Next &raquo;</a>
   </div>
 </div>
 

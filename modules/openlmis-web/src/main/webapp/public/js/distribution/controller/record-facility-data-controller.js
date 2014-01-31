@@ -33,6 +33,6 @@ function RecordFacilityDataController($scope, $location, $routeParams, distribut
 
   $scope.chooseFacility = function () {
     if ($routeParams.facility != $scope.facilitySelected.facilityId)
-      $location.path('record-facility-data/' + $routeParams.distribution + '/' + $scope.facilitySelected.facilityId + '/refrigerator-data');
+      $location.path('record-facility-data/' + $routeParams.distribution + '/' + $scope.facilitySelected.facilityId + '/visit-info');
   };
 }

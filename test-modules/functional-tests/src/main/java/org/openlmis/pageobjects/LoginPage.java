@@ -23,28 +23,28 @@ import java.io.IOException;
 
 public class LoginPage extends Page {
 
-  @FindBy(how= How.XPATH, using = "//div[@class='login-page']/ng-include/div/div[2]/h2")
-  private static WebElement pageIdentifierOnLoginPage=null;
+  @FindBy(how = How.XPATH, using = "//div[@class='login-page']/ng-include/div/div[2]/h2")
+  private static WebElement pageIdentifierOnLoginPage = null;
 
   @FindBy(how = How.ID, using = "username")
-  private static WebElement userNameField=null;
+  private static WebElement userNameField = null;
 
   @FindBy(how = How.ID, using = "password")
-  private static WebElement passwordField=null;
+  private static WebElement passwordField = null;
 
   @FindBy(how = How.XPATH, using = "//a[@openlmis-message='link.forgot.password']")
-  private static WebElement forgotPasswordLink=null;
+  private static WebElement forgotPasswordLink = null;
 
   @FindBy(how = How.ID, using = "locale_en")
-  private static WebElement langEnglish=null;
+  private static WebElement langEnglish = null;
 
-  @FindBy(how=How.ID, using = "locale_pt")
-  private static WebElement langPortugues=null;
+  @FindBy(how = How.ID, using = "locale_pt")
+  private static WebElement langPortuguese = null;
 
   @FindBy(how = How.XPATH, using = "//div[3][@class='alert alert-error ng-binding']")
-  private static WebElement loginErrorLabel=null;
+  private static WebElement loginErrorLabel = null;
 
-  public LoginPage(TestWebDriver driver, String baseUrl) throws IOException {
+  public LoginPage(TestWebDriver driver, String baseUrl) {
     super(driver);
 
     testWebDriver.setBaseURL(baseUrl);
@@ -61,7 +61,7 @@ public class LoginPage extends Page {
   }
 
 
-  public HomePage loginAs(String username, String password) throws IOException {
+  public HomePage loginAs(String username, String password) {
     testWebDriver.waitForElementToAppear(userNameField);
     testWebDriver.waitForElementToAppear(passwordField);
     userNameField.clear();
@@ -78,42 +78,38 @@ public class LoginPage extends Page {
     return new ForgotPasswordPage(testWebDriver);
   }
 
-    public String getEnglishColor()
-    {
-        testWebDriver.sleep(1500);
-        return langEnglish.getCssValue("color");
-    }
+  public String getEnglishColor() {
+    testWebDriver.sleep(1500);
+    return langEnglish.getCssValue("color");
+  }
 
-    public String getPortuguesColor()
+  public String getPortuguesColor()
 
-    {
-        testWebDriver.sleep(1500);
-        testWebDriver.waitForElementToAppear(langPortugues);
-        return langPortugues.getCssValue("color");
-    }
+  {
+    testWebDriver.sleep(1500);
+    testWebDriver.waitForElementToAppear(langPortuguese);
+    return langPortuguese.getCssValue("color");
+  }
 
-    public void setLangAsEnglish()
-    {
-        testWebDriver.sleep(1000);
-        testWebDriver.waitForElementToAppear(langEnglish);
-        langEnglish.click();
-    }
+  public void setLangAsEnglish() {
+    testWebDriver.sleep(1000);
+    testWebDriver.waitForElementToAppear(langEnglish);
+    langEnglish.click();
+  }
 
-    public void setLangAsPortugues()
-    {
-        testWebDriver.sleep(1000);
-        testWebDriver.waitForElementToAppear(langPortugues);
-        langPortugues.click();
-    }
+  public void setLangAsPortugues() {
+    testWebDriver.sleep(1000);
+    testWebDriver.waitForElementToAppear(langPortuguese);
+    langPortuguese.click();
+  }
 
-    public String getPageIdentifierOnLoginPageText()
-    {
-        testWebDriver.waitForElementToAppear(pageIdentifierOnLoginPage);
-        return pageIdentifierOnLoginPage.getText();
-    }
+  public String getPageIdentifierOnLoginPageText() {
+    testWebDriver.waitForElementToAppear(pageIdentifierOnLoginPage);
+    return pageIdentifierOnLoginPage.getText();
+  }
 
-    public String getLoginErrorMessage(){
-        return loginErrorLabel.getText();
-    }
+  public String getLoginErrorMessage() {
+    return loginErrorLabel.getText();
+  }
 
 }

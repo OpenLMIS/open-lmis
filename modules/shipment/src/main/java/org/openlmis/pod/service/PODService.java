@@ -38,13 +38,13 @@ import static org.openlmis.order.domain.OrderStatus.*;
 public class PODService {
 
   @Autowired
-  private PODRepository podRepository;
+  private PODRepository repository;
 
   @Autowired
   private OrderService orderService;
 
   @Autowired
-  RequisitionService requisitionService;
+  private RequisitionService requisitionService;
 
   @Autowired
   private FulfillmentPermissionService fulfillmentPermissionService;
@@ -64,7 +64,7 @@ public class PODService {
       orderPOD.fillPodLineItems(shipmentLineItems);
     }
 
-    return podRepository.insert(orderPOD);
+    return repository.insert(orderPOD);
   }
 
   public void updateOrderStatus(OrderPOD orderPod) {
@@ -78,29 +78,42 @@ public class PODService {
       orderPodLineItem.setPodId(orderPod.getId());
       orderPodLineItem.setCreatedBy(orderPod.getCreatedBy());
       orderPodLineItem.setModifiedBy(orderPod.getModifiedBy());
-      podRepository.insertPODLineItem(orderPodLineItem);
+      repository.insertPODLineItem(orderPodLineItem);
     }
   }
 
   public void checkPermissions(OrderPOD orderPod) {
-    if (!fulfillmentPermissionService.hasPermission(orderPod.getCreatedBy(), orderPod.getOrderId(), MANAGE_POD)) {
+    if (!fulfillmentPermissionService.hasPermission(orderPod.getModifiedBy(), orderPod.getOrderId(), MANAGE_POD)) {
       throw new DataException("error.permission.denied");
     }
   }
 
   public OrderPOD getPODByOrderId(Long orderId) {
-    return podRepository.getPODByOrderId(orderId);
+    return repository.getPODByOrderId(orderId);
   }
 
-  public List<OrderPODLineItem> getNPreviousOrderPodLineItems(String productCode, Rnr requisition, Integer n, Date startDate) {
-    return podRepository.getNPodLineItems(productCode, requisition, n, startDate);
+  public List<OrderPODLineItem> getNPreviousOrderPodLineItems(String productCode,
+                                                              Rnr requisition,
+                                                              Integer n,
+                                                              Date startDate) {
+    return repository.getNPodLineItems(productCode, requisition, n, startDate);
   }
 
   public void insertPOD(OrderPOD orderPod) {
-    podRepository.insertPOD(orderPod);
+    repository.insertPOD(orderPod);
   }
 
   public OrderPOD getPodById(Long podId) {
-    return podRepository.getPODWithLineItemsById(podId);
+    return repository.getPOD(podId);
   }
+
+  public OrderPOD save(OrderPOD orderPOD) {
+    OrderPOD existingPod = repository.getPOD(orderPOD.getId());
+    checkPermissions(existingPod);
+
+    existingPod.copy(orderPOD);
+
+    return repository.update(existingPod);
+  }
+
 }

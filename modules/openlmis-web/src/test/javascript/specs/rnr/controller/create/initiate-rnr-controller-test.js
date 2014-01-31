@@ -12,8 +12,7 @@ describe('InitiateRnrController', function () {
 
   var scope, ctrl, $httpBackend, location, facilities, programs, rootScope, messageService, navigateBackService;
 
-  beforeEach(module('openlmis.services'));
-  beforeEach(module('openlmis.localStorage'));
+  beforeEach(module('openlmis'));
   beforeEach(inject(function ($rootScope, _$httpBackend_, $controller,
                               $location, _messageService_,
                               _navigateBackService_) {

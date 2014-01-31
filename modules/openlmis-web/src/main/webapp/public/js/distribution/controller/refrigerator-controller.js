@@ -71,15 +71,11 @@ function RefrigeratorController($scope, $dialog, IndexedDB, $routeParams, distri
     OpenLmisDialog.newDialog(dialogOpts, callback(serialNumberToDelete), $dialog);
   };
 
-
-}
-
-function showProblemDivAnimation(idSent) {
-  $('body,html').animate({
-    scrollTop: utils.parseIntWithBaseTen($('#' + idSent).offset().top) + 'px'
-  }, 'fast');
-}
-
-function showProblemsDiv(idSent) {
-  setTimeout(showProblemDivAnimation(idSent), 100);
+  $scope.showProblemsDiv = function(idSent) {
+    setTimeout(function() {
+      $('body,html').animate({
+        scrollTop: utils.parseIntWithBaseTen($('#' + idSent).offset().top) + 'px'
+      }, 'fast');
+    }, 0);
+  };
 }

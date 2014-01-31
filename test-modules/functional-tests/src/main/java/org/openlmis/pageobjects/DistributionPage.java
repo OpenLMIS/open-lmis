@@ -83,8 +83,7 @@ public class DistributionPage extends Page {
   @FindBy(how = ID, using = "retryButton")
   private WebElement retryButton = null;
 
-
-  public DistributionPage(TestWebDriver driver) throws IOException {
+  public DistributionPage(TestWebDriver driver) {
     super(driver);
     PageFactory.initElements(new AjaxElementLocatorFactory(TestWebDriver.getDriver(), 1), this);
     testWebDriver.setImplicitWait(1);
@@ -148,7 +147,7 @@ public class DistributionPage extends Page {
     return syncAlertMessage.getText();
   }
 
-  public FacilityListPage clickRecordData(int rowNumber) throws IOException {
+  public FacilityListPage clickRecordData(int rowNumber) {
     testWebDriver.sleep(1000);
     testWebDriver.waitForAjax();
     testWebDriver.waitForElementToAppear(testWebDriver.findElement(By.id("recordData" + (rowNumber - 1))));

@@ -10,7 +10,6 @@
 
 package org.openlmis.UiUtils;
 
-
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.UnreachableBrowserException;
@@ -93,7 +92,7 @@ public class TestCaseHelper {
     testWebDriver = new TestWebDriver(driverFactory.loadDriver(browser));
   }
 
-  public void setupTestDataToInitiateRnR(boolean configureTemplate, String program, String user, String userId, List<String> rightsList) throws Exception {
+  public void setupTestDataToInitiateRnR(boolean configureTemplate, String program, String user, String userId, List<String> rightsList) throws IOException, SQLException {
     setupProductTestData("P10", "P11", program, "lvl3_hospital");
     dbWrapper.insertFacilities("F10", "F11");
     if (configureTemplate)
@@ -110,7 +109,7 @@ public class TestCaseHelper {
     dbWrapper.insertSupplyLines("N1", program, "F10", true);
   }
 
-  public void setupTestUserRoleRightsData(String userId, String userSIC, List<String> rightsList) throws IOException, SQLException {
+  public void setupTestUserRoleRightsData(String userId, String userSIC, List<String> rightsList) throws SQLException {
     dbWrapper.insertRole("store in-charge", "");
     dbWrapper.insertRole("district pharmacist", "");
     for (String rights : rightsList) {
@@ -131,7 +130,7 @@ public class TestCaseHelper {
   }
 
   public void setupRnRTestDataRnRForCommTrack(boolean configureGenericTemplate, String program, String user,
-                                              String userId, List<String> rightsList) throws Exception {
+                                              String userId, List<String> rightsList) throws SQLException, IOException {
     setupProductTestData("P10", "P11", program, "lvl3_hospital");
     dbWrapper.insertFacilities("F10", "F11");
 
@@ -163,40 +162,40 @@ public class TestCaseHelper {
     dbWrapper.insertRoleAssignmentForSupervisoryNodeForProgramId1(userId, "store in-charge", "N1");
   }
 
-  public void setupProductTestData(String product1, String product2, String program, String facilityTypeCode) throws Exception {
+  public void setupProductTestData(String product1, String product2, String program, String facilityTypeCode) throws SQLException {
     dbWrapper.insertProducts(product1, product2);
     dbWrapper.insertProgramProducts(product1, product2, program);
-    dbWrapper.deleteFacilityApprovedProducts();
+    dbWrapper.deleteTable("facility_approved_products");
     dbWrapper.insertFacilityApprovedProduct(product1, program, facilityTypeCode);
     dbWrapper.insertFacilityApprovedProduct(product2, program, facilityTypeCode);
   }
 
-  public void setupProgramProductTestDataWithCategories(String product, String productName, String category, String program) throws IOException, SQLException {
+  public void setupProgramProductTestDataWithCategories(String product, String productName, String category, String program) throws SQLException {
     dbWrapper.insertProductWithCategory(product, productName, category);
     dbWrapper.insertProgramProductsWithCategory(product, program);
   }
 
   public void setupProgramProductISA(String program, String product, String whoRatio, String dosesPerYear, String wastageFactor,
-                                     String bufferPercentage, String minimumValue, String maximumValue, String adjustmentValue) throws IOException, SQLException {
+                                     String bufferPercentage, String minimumValue, String maximumValue, String adjustmentValue) throws SQLException {
     dbWrapper.insertProgramProductISA(program, product, whoRatio, dosesPerYear, wastageFactor, bufferPercentage, minimumValue,
       maximumValue, adjustmentValue);
   }
 
   public void setupRequisitionGroupData(String RGCode1, String RGCode2, String SupervisoryNodeCode1, String SupervisoryNodeCode2,
-                                        String Facility1, String Facility2) throws IOException, SQLException {
+                                        String Facility1, String Facility2) throws SQLException {
     dbWrapper.insertRequisitionGroups(RGCode1, RGCode2, SupervisoryNodeCode1, SupervisoryNodeCode2);
     dbWrapper.insertRequisitionGroupMembers(Facility1, Facility2);
     dbWrapper.insertRequisitionGroupProgramSchedule();
   }
 
-  public void setupTestRoleRightsData(String roleName, String roleRight) throws IOException, SQLException {
+  public void setupTestRoleRightsData(String roleName, String roleRight) throws SQLException {
     dbWrapper.insertRole(roleName, "");
     for (String aRight : roleRight.split(",")) {
       dbWrapper.assignRight(roleName, aRight);
     }
   }
 
-  public void setupTestData(boolean isPreviousPeriodRnRRequired) throws Exception {
+  public void setupTestData(boolean isPreviousPeriodRnRRequired) throws IOException, SQLException {
     List<String> rightsList = asList("CREATE_REQUISITION", "VIEW_REQUISITION", "AUTHORIZE_REQUISITION");
     if (isPreviousPeriodRnRRequired)
       setupRnRTestDataRnRForCommTrack(false, "HIV", "commTrack", "700", rightsList);
@@ -252,7 +251,7 @@ public class TestCaseHelper {
     dbWrapper.insertSchedule("M", "Monthly", "Month");
     setupRequisitionGroupData("RG1", "RG2", "N1", "N2", facilityCode1, facilityCode2);
     dbWrapper.insertSupplyLines("N1", program, facilityCode1, true);
-    dbWrapper.updateActiveStatusOfProgram(programCode, true);
+    dbWrapper.updateFieldValue("programs", "active", "true", "code", programCode);
   }
 
   public void updateProductWithGroup(String product, String productGroup) throws IOException, SQLException {
@@ -272,11 +271,6 @@ public class TestCaseHelper {
     for (int i = 0; i < length; i++)
       locator.sendKeys("\u0008");
     locator.sendKeys(value);
-  }
-
-  public String getISAForProgramProduct(String program, String product, String population) throws IOException, SQLException {
-    String[] isaParams = dbWrapper.getProgramProductISA(program, product);
-    return String.valueOf(Math.round((float) calculateISA(isaParams[0], isaParams[1], isaParams[2], isaParams[3], isaParams[4], isaParams[5], isaParams[6], population) / 10));
   }
 
   public Integer calculateISA(String ratioValue, String dosesPerYearValue, String wastageValue, String bufferPercentageValue, String adjustmentValue,

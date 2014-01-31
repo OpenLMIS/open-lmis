@@ -19,7 +19,6 @@ import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 
 import java.io.FileNotFoundException;
-import java.io.IOException;
 
 import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertTrue;
 
@@ -28,34 +27,31 @@ public class UploadPage extends Page {
   String uploadFilePath = null;
 
   @FindBy(how = How.XPATH, using = "//input[@value='Upload']")
-  private static WebElement uploadButton=null;
+  private static WebElement uploadButton = null;
 
   @FindBy(how = How.XPATH, using = "//input[@value='Choose CSV File to upload']")
-  private static WebElement setCsvPath=null;
+  private static WebElement setCsvPath = null;
 
   @FindBy(how = How.XPATH, using = "//select[@id='model']")
-  private static WebElement uploadDropDown=null;
+  private static WebElement uploadDropDown = null;
 
   @FindBy(how = How.ID, using = "saveSuccessMsgDiv")
-  private static WebElement saveSuccessMsgDiv=null;
+  private static WebElement saveSuccessMsgDiv = null;
 
   @FindBy(how = How.ID, using = "saveErrorMsgDiv")
-  private static WebElement saveErrorMsgDiv=null;
-
+  private static WebElement saveErrorMsgDiv = null;
 
   private int implicitWait = 2000;
 
-  public UploadPage(TestWebDriver driver) throws IOException {
+  public UploadPage(TestWebDriver driver) {
     super(driver);
 
     PageFactory.initElements(new AjaxElementLocatorFactory(TestWebDriver.getDriver(), 10), this);
     testWebDriver.setImplicitWait(30);
-    testWebDriver.waitForElementToAppear(uploadButton);
-    verifyUploadPage();
   }
 
-
-  private void verifyUploadPage() {
+  public void verifyUploadPage() {
+    testWebDriver.waitForElementToAppear(uploadButton);
     assertTrue(uploadButton.isDisplayed());
     assertTrue(uploadDropDown.isDisplayed());
   }
@@ -65,14 +61,12 @@ public class UploadPage extends Page {
     testWebDriver.selectByVisibleText(uploadDropDown, uploadType);
   }
 
-
   public void uploadFile(String fileName) {
     uploadFilePath = this.getClass().getClassLoader().getResource(fileName).toExternalForm();//.getFile();
     setCsvPath.sendKeys(uploadFilePath);
     uploadButton.click();
     testWebDriver.sleep(500);
   }
-
 
   public void verifySuccessMessageOnUploadScreen() {
     testWebDriver.waitForElementsToAppear(saveSuccessMsgDiv, saveErrorMsgDiv);
@@ -282,6 +276,4 @@ public class UploadPage extends Page {
     uploadFile(uploadFileNameWithExtension);
     testWebDriver.sleep(250);
   }
-
-
 }

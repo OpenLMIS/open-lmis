@@ -8,6 +8,10 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
+function browserIE() {
+  return (navigator.appName.indexOf("Internet Explorer") != -1);
+}
+
 app.directive('fullScreen', function () {
   return {
     restrict: 'A',
@@ -31,7 +35,7 @@ app.directive('fullScreen', function () {
         fullScreen = !fullScreen;
         element.find('i').toggleClass('icon-resize-full icon-resize-small');
         angular.element(window).scrollTop(0);
-        if (!$.browser.msie) {
+        if (!browserIE()) {
           fullScreen ? angular.element('.toggleFullScreen').slideUp({duration: 'slow', progress: 'progressFunc', complete: 'completeFunc'}) :
             angular.element('.toggleFullScreen').slideDown({ duration: 'slow', progress: 'progressFunc', complete: 'completeFunc'});
         }

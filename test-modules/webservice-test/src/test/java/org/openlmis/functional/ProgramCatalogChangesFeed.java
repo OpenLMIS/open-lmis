@@ -29,14 +29,16 @@ public class ProgramCatalogChangesFeed extends JsonUtility {
 
   public static final String URL = "http://localhost:9091/feeds/program-catalog-changes/recent";
   public static final String GET = "GET";
+  LoginPage loginPage;
 
-  @BeforeMethod(groups = {"webservice","webserviceSmoke"})
+  @BeforeMethod(groups = {"webservice", "webserviceSmoke"})
   public void setUp() throws Exception {
     super.setup();
     super.setupTestData(true);
+    loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
   }
 
-  @AfterMethod(groups = {"webservice","webserviceSmoke"})
+  @AfterMethod(groups = {"webservice", "webserviceSmoke"})
   public void tearDown() throws Exception {
     HomePage homePage = new HomePage(testWebDriver);
     homePage.logout(baseUrlGlobal);
@@ -53,8 +55,6 @@ public class ProgramCatalogChangesFeed extends JsonUtility {
 
     HttpClient client = new HttpClient();
     client.createContext();
-
-    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
 
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
     UploadPage uploadPage = homePage.navigateUploads();
@@ -101,8 +101,6 @@ public class ProgramCatalogChangesFeed extends JsonUtility {
     HttpClient client = new HttpClient();
     client.createContext();
 
-    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
-
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
     UploadPage uploadPage = homePage.navigateUploads();
     uploadPage.uploadProductCategory("QA_Productcategoryupload_Webservice.csv");
@@ -147,8 +145,6 @@ public class ProgramCatalogChangesFeed extends JsonUtility {
 
     HttpClient client = new HttpClient();
     client.createContext();
-
-    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
 
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
     UploadPage uploadPage = homePage.navigateUploads();
@@ -195,8 +191,6 @@ public class ProgramCatalogChangesFeed extends JsonUtility {
     HttpClient client = new HttpClient();
     client.createContext();
 
-    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
-
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
     UploadPage uploadPage = homePage.navigateUploads();
     uploadPage.uploadProductCategory("QA_Productcategoryupload_Webservice.csv");
@@ -242,8 +236,6 @@ public class ProgramCatalogChangesFeed extends JsonUtility {
 
     HttpClient client = new HttpClient();
     client.createContext();
-
-    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
 
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
     UploadPage uploadPage = homePage.navigateUploads();

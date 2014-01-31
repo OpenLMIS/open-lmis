@@ -45,14 +45,17 @@ public class FacilityFeed extends JsonUtility {
   public static final String PUT = "PUT";
   public static final String FACILITY_FEED_URL = "http://localhost:9091/feeds/facilities/recent";
 
-  @BeforeMethod(groups = {"webservice","webserviceSmoke"})
+  LoginPage loginPage;
+
+  @BeforeMethod(groups = {"webservice", "webserviceSmoke"})
   public void setUp() throws Exception {
     super.setup();
     super.setupTestData(true);
     dbWrapper.updateRestrictLogin("commTrack", true);
+    loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
   }
 
-  @AfterMethod(groups = {"webservice","webserviceSmoke"})
+  @AfterMethod(groups = {"webservice", "webserviceSmoke"})
   public void tearDown() throws Exception {
     dbWrapper.deleteData();
     dbWrapper.closeConnection();
@@ -62,8 +65,6 @@ public class FacilityFeed extends JsonUtility {
   public void testFacilityFeedUsingUI(String user, String program, String[] credentials) throws Exception {
     HttpClient client = new HttpClient();
     client.createContext();
-
-    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
 
     dbWrapper.insertUser("200", user, "Ag/myf1Whs0fxr1FFfK8cs3q/VJ1qMs3yuMLDTeEcZEGzstj/waaUsQNQTIKk1U5JRzrDbPLCzCO1/vB5YGaEQ==", "F10", "Jane_Doe@openlmis.com");
 
@@ -159,8 +160,6 @@ public class FacilityFeed extends JsonUtility {
   public void shouldVerifyFacilityFeedForFacilityUpload(String[] credentials) throws Exception {
     HttpClient client = new HttpClient();
     client.createContext();
-
-    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
 
     String geoZone = "virtualgeozone";
     String facilityType = "Lvl3 Hospital";

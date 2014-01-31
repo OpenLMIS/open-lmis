@@ -12,7 +12,6 @@ package org.openlmis.functional;
 
 
 import cucumber.api.DataTable;
-import cucumber.api.java.Before;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
@@ -24,12 +23,11 @@ import org.openlmis.pageobjects.LoginPage;
 import org.openlmis.pageobjects.ManageFacilityPage;
 import org.testng.annotations.*;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
 import static java.lang.String.valueOf;
-import static org.openlmis.pageobjects.ManageFacilityPage.SaveButton;
+import static org.openlmis.pageobjects.ManageFacilityPage.saveButton;
 
 @Listeners(CaptureScreenshotOnFailureListener.class)
 
@@ -40,8 +38,8 @@ public class ManageISA extends TestCaseHelper {
   private static String operatedBy = "MoH";
   private static String facilityCodePrefix = "FCcode";
   private static String facilityNamePrefix = "FCname";
-  public String user, program, product, productName, category, whoRatio, dosesPerYear, wastageFactor,
-    bufferPercentage, minimumValue, maximumValue, adjustmentValue, date_time;
+  public String user, program, product, productName, category, whoRatio, dosesPerYear, wastageFactor, bufferPercentage, minimumValue,
+    maximumValue, adjustmentValue, date_time;
   static ManageFacilityPage manageFacilityPage;
 
   @BeforeMethod(groups = "admin")
@@ -95,7 +93,7 @@ public class ManageISA extends TestCaseHelper {
 
   @When("^I save facility$")
   public void clickSave() throws Exception {
-    SaveButton.click();
+    saveButton.click();
   }
 
   @Then("^I should see save successfully$")
@@ -105,9 +103,10 @@ public class ManageISA extends TestCaseHelper {
 
   @When("^I search facility$")
   public void searchFacility() throws Exception {
+    manageFacilityPage = ManageFacilityPage.getInstance(testWebDriver);
     manageFacilityPage = PageFactory.getInstanceOfManageFacilityPage(testWebDriver);
     manageFacilityPage.searchFacility(date_time);
-    ManageFacilityPage.getInstance(testWebDriver).clickFacilityList(date_time);
+    manageFacilityPage.clickFacilityList(date_time);
   }
 
   @Then("^I should see overridden ISA \"([^\"]*)\"$")
@@ -122,13 +121,13 @@ public class ManageISA extends TestCaseHelper {
     setupProgramProductISA(program, "P1", "1", "2", "3", "100", "100", "1000", "5");
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     loginPage.loginAs(userSIC, password);
-    HomePage homePage = new HomePage(testWebDriver);
+    HomePage homePage = PageFactory.getInstanceOfHomePage(testWebDriver);
     manageFacilityPage = homePage.navigateManageFacility();
     homePage.clickCreateFacilityButton();
 
-    String date_time = manageFacilityPage.enterValuesInFacility(facilityCodePrefix, facilityNamePrefix,
-      program, geoZone, facilityType, operatedBy, valueOf(333), true);
-    SaveButton.click();
+    String date_time = manageFacilityPage.enterValuesInFacility(facilityCodePrefix, facilityNamePrefix, program, geoZone,
+      facilityType, operatedBy, valueOf(333), true);
+    saveButton.click();
     manageFacilityPage.searchFacility(date_time);
     manageFacilityPage.clickFacilityList(date_time);
 
@@ -159,7 +158,7 @@ public class ManageISA extends TestCaseHelper {
 
     manageFacilityPage.overrideIsa("24", 1);
     manageFacilityPage.clickIsaDoneButton();
-    SaveButton.click();
+    saveButton.click();
     manageFacilityPage.verifySuccessMessage();
     manageFacilityPage.clickFacilityList(date_time);
     manageFacilityPage.verifyOverriddenIsa("24");
@@ -170,7 +169,7 @@ public class ManageISA extends TestCaseHelper {
   public void tearDown() throws Exception {
     testWebDriver.sleep(500);
     if (!testWebDriver.getElementById("username").isDisplayed()) {
-      HomePage homePage = new HomePage(testWebDriver);
+      HomePage homePage = PageFactory.getInstanceOfHomePage(testWebDriver);
       homePage.logout(baseUrlGlobal);
     }
     dbWrapper.deleteData();

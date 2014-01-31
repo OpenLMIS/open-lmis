@@ -11,8 +11,7 @@
 describe('ManagePODController', function () {
   var scope, controller, messageService, $httpBackend, location;
 
-  beforeEach(module('openlmis.services'));
-  beforeEach(module('openlmis.localStorage'));
+  beforeEach(module('openlmis'));
   beforeEach(inject(function ($rootScope, $controller, _messageService_, _$httpBackend_, $location) {
     scope = $rootScope.$new();
     location = $location;
@@ -50,7 +49,7 @@ describe('ManagePODController', function () {
       order: {emergency: true}
     };
 
-    $httpBackend.expectPOST('/pod-orders.json?orderId=1').respond(200, data);
+    $httpBackend.expectPOST('/pods.json?orderId=1').respond(200, data);
 
     scope.createPOD(orderId);
     $httpBackend.flush();
@@ -58,6 +57,6 @@ describe('ManagePODController', function () {
     expect(scope.$parent.pod).toEqual(data.orderPOD);
     expect(scope.$parent.order).toEqual(data.order);
     expect(scope.$parent.requisitionType).toEqual("requisition.type.emergency");
-    expect(location.url).toHaveBeenCalledWith('/pod-orders/' + orderId + '?page=1');
+    expect(location.url).toHaveBeenCalledWith('/pods/1?page=1');
   });
 });

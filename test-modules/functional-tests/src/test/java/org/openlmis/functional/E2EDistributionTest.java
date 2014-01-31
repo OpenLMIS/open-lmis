@@ -10,7 +10,6 @@
 
 package org.openlmis.functional;
 
-
 import com.thoughtworks.selenium.SeleneseTestBase;
 import org.openlmis.UiUtils.CaptureScreenshotOnFailureListener;
 import org.openlmis.UiUtils.TestCaseHelper;
@@ -21,19 +20,18 @@ import org.testng.annotations.*;
 
 import java.io.IOException;
 import java.sql.ResultSet;
-import java.util.ArrayList;
 import java.util.List;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.assertFalse;
 import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
 import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
+import static java.util.Arrays.asList;
 
 @Listeners(CaptureScreenshotOnFailureListener.class)
 
 public class E2EDistributionTest extends TestCaseHelper {
 
   public String userSIC, password;
-  private RefrigeratorPage refrigeratorPage;
   private String wifiInterface;
 
 
@@ -49,13 +47,11 @@ public class E2EDistributionTest extends TestCaseHelper {
                                         String facilityCodeFirst, String facilityCodeSecond,
                                         String programFirst, String programSecond, String schedule) throws Exception {
 
-    List<String> rightsList = new ArrayList<String>();
-    rightsList.add("MANAGE_DISTRIBUTION");
-    setupTestDataToInitiateRnRAndDistribution(facilityCodeFirst, facilityCodeSecond, true, programFirst, userSIC, "200", rightsList, programSecond, "District1", "Ngorongoro", "Ngorongoro");
-    setupDataForDeliveryZone(true, deliveryZoneCodeFirst, deliveryZoneCodeSecond,
-      deliveryZoneNameFirst, deliveryZoneNameSecond,
-      facilityCodeFirst, facilityCodeSecond,
-      programFirst, programSecond, schedule);
+    List<String> rightsList = asList("MANAGE_DISTRIBUTION");
+    setupTestDataToInitiateRnRAndDistribution(facilityCodeFirst, facilityCodeSecond, true, programFirst, userSIC, "200", rightsList,
+      programSecond, "District1", "Ngorongoro", "Ngorongoro");
+    setupDataForDeliveryZone(true, deliveryZoneCodeFirst, deliveryZoneCodeSecond, deliveryZoneNameFirst, deliveryZoneNameSecond,
+      facilityCodeFirst, facilityCodeSecond, programFirst, programSecond, schedule);
     dbWrapper.insertRoleAssignmentForDistribution(userSIC, "store in-charge", deliveryZoneCodeFirst);
     dbWrapper.insertRoleAssignmentForDistribution(userSIC, "store in-charge", deliveryZoneCodeSecond);
     dbWrapper.insertProductGroup("PG1");
@@ -68,7 +64,7 @@ public class E2EDistributionTest extends TestCaseHelper {
     dbWrapper.insertRegimenProductMapping();
     configureISA();
 
-    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+    LoginPage loginPage = PageFactory.getInstanceOfLoginPage(testWebDriver, baseUrlGlobal);
     testWebDriver.sleep(1000);
     HomePage homePage = loginPage.loginAs(userSIC, password);
     testWebDriver.sleep(1000);
@@ -88,10 +84,9 @@ public class E2EDistributionTest extends TestCaseHelper {
     assertFalse("Period selectBox displayed.", distributionPage.verifyPeriodSelectBoxNotPresent());
     assertFalse("Program selectBox displayed.", distributionPage.verifyProgramSelectBoxNotPresent());
 
-
     distributionPage.clickRecordData(1);
-    FacilityListPage facilityListPage = new FacilityListPage(testWebDriver);
-    RefrigeratorPage refrigeratorPage = facilityListPage.selectFacility(facilityCodeFirst);
+    FacilityListPage facilityListPage = PageFactory.getInstanceOfFacilityListPage(testWebDriver);
+    RefrigeratorPage refrigeratorPage = facilityListPage.selectFacility(facilityCodeFirst).navigateToRefrigerators();
     facilityListPage.verifyFacilityIndicatorColor("Overall", "AMBER");
 
     refrigeratorPage.onRefrigeratorScreen();
@@ -104,13 +99,13 @@ public class E2EDistributionTest extends TestCaseHelper {
     homePage.navigateHomePage();
     homePage.navigateOfflineDistribution();
 
-
     distributionPage.clickRecordData(1);
     facilityListPage.selectFacility(facilityCodeFirst);
 
     String[] refrigeratorDetails = "LG;800 LITRES;GR-J287PGHV".split(";");
     for (int i = 0; i < refrigeratorDetails.length; i++) {
-      assertEquals(testWebDriver.getElementByXpath("//div[@class='list-row ng-scope']/ng-include/form/div[1]/div[" + (i + 2) + "]").getText(), refrigeratorDetails[i]);
+      assertEquals(testWebDriver.getElementByXpath("//div[@class='list-row ng-scope']/ng-include/form/div[1]/div[" + (i + 2) + "]").getText(),
+        refrigeratorDetails[i]);
     }
 
     facilityListPage.verifyFacilityIndicatorColor("Overall", "RED");
@@ -148,7 +143,7 @@ public class E2EDistributionTest extends TestCaseHelper {
     epiUsePage.verifyIndicator("GREEN");
 
     GeneralObservationPage generalObservationPage = epiUsePage.navigateToGeneralObservations();
-    generalObservationPage.enterData("some observations", "samuel", "Doe", "Verifier", "XYZ");
+    generalObservationPage.enterDataWhenFacilityVisited("some observations", "samuel", "Doe", "Verifier", "XYZ");
 
     ChildCoveragePage childCoveragePage = generalObservationPage.navigateToChildCoverage();
     SeleneseTestBase.assertEquals(childCoveragePage.getTextOfTargetGroupValue(9), "300");
@@ -241,7 +236,6 @@ public class E2EDistributionTest extends TestCaseHelper {
     assertFalse(fullCoveragePage.getStatusForField("maleHealthCenter"));
     assertFalse(fullCoveragePage.getStatusForField("maleMobileBrigade"));
 
-    loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     testWebDriver.sleep(1000);
     homePage = loginPage.loginAs(userSIC, password);
     testWebDriver.sleep(1000);
@@ -263,8 +257,9 @@ public class E2EDistributionTest extends TestCaseHelper {
 
     distributionPage.clickRecordData(1);
     assertTrue(facilityListPage.getFacilitiesInDropDown().contains("F10"));
-    refrigeratorPage = facilityListPage.selectFacility(facilityCodeFirst);
+    generalObservationPage = facilityListPage.selectFacility(facilityCodeFirst);
     facilityListPage.verifyFacilityIndicatorColor("Overall", "RED");
+    generalObservationPage.navigateToRefrigerators();
 
     refrigeratorPage.verifyIndicator("RED");
 
@@ -275,8 +270,7 @@ public class E2EDistributionTest extends TestCaseHelper {
   }
 
   private void configureISA() throws IOException {
-
-    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+    LoginPage loginPage = PageFactory.getInstanceOfLoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs("Admin123", "Admin123");
 
     ProgramProductISAPage programProductISAPage = homePage.navigateProgramProductISA();
@@ -296,7 +290,7 @@ public class E2EDistributionTest extends TestCaseHelper {
   @DataProvider(name = "Data-Provider-Function")
   public Object[][] parameterIntTestProviderPositive() {
     return new Object[][]{
-      {"storeIncharge", "Admin123", "DZ1", "DZ2", "Delivery Zone First", "Delivery Zone Second",
+      {"storeInCharge", "Admin123", "DZ1", "DZ2", "Delivery Zone First", "Delivery Zone Second",
         "F10", "F11", "VACCINES", "TB", "M"}
     };
   }

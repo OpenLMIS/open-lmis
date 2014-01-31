@@ -24,35 +24,43 @@ import java.util.List;
 public class PODRepository {
 
   @Autowired
-  PODMapper podMapper;
+  PODMapper mapper;
 
   public void insertPODLineItem(OrderPODLineItem orderPodLineItem) {
-    podMapper.insertPODLineItem(orderPodLineItem);
+    mapper.insertPODLineItem(orderPodLineItem);
   }
 
   public void insertPOD(OrderPOD orderPod) {
-    podMapper.insertPOD(orderPod);
+    mapper.insertPOD(orderPod);
   }
 
   public OrderPOD getPODByOrderId(Long orderId) {
-    return podMapper.getPODByOrderId(orderId);
+    return mapper.getPODByOrderId(orderId);
   }
 
   public List<OrderPODLineItem> getNPodLineItems(String productCode, Rnr requisition, Integer n, Date startDate) {
-    return podMapper.getNPodLineItems(productCode, requisition, n, startDate);
+    return mapper.getNPodLineItems(productCode, requisition, n, startDate);
   }
 
-  public OrderPOD getPODWithLineItemsById(Long podId) {
-    return podMapper.getPODById(podId);
+  public OrderPOD getPOD(Long podId) {
+    return mapper.getPODById(podId);
   }
 
   public OrderPOD insert(OrderPOD orderPOD) {
-    podMapper.insertPOD(orderPOD);
+    mapper.insertPOD(orderPOD);
     for (OrderPODLineItem orderPodLineItem : orderPOD.getPodLineItems()) {
       orderPodLineItem.setPodId(orderPOD.getId());
-      podMapper.insertPODLineItem(orderPodLineItem);
+      mapper.insertPODLineItem(orderPodLineItem);
     }
 
+    return orderPOD;
+  }
+
+  public OrderPOD update(OrderPOD orderPOD) {
+    mapper.update(orderPOD);
+    for (OrderPODLineItem lineItem : orderPOD.getPodLineItems()) {
+      mapper.updateLineItem(lineItem);
+    }
     return orderPOD;
   }
 }

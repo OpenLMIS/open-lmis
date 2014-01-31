@@ -13,8 +13,7 @@ describe('ApproveRnrListController', function () {
   var scope, ctrl, httpBackend, controller, messageService;
   var requisitionList;
 
-  beforeEach(module('openlmis.services'));
-  beforeEach(module('openlmis.localStorage'));
+  beforeEach(module('openlmis'));
 
   beforeEach(inject(function ($httpBackend, $rootScope, $controller, _messageService_) {
     scope = $rootScope.$new();

@@ -11,6 +11,8 @@
 package org.openlmis.functional;
 
 
+import cucumber.api.Scenario;
+import cucumber.api.java.After;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Then;
 import org.openlmis.UiUtils.CaptureScreenshotOnFailureListener;
@@ -27,11 +29,11 @@ import org.testng.annotations.*;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
 import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
+import static java.util.Arrays.asList;
 
 @Listeners(CaptureScreenshotOnFailureListener.class)
 
@@ -44,7 +46,7 @@ public class ConvertToOrderPagination extends TestCaseHelper {
 
   @And("^I have \"([^\"]*)\" requisitions for convert to order$")
   public void haveRequisitionsToBeConvertedToOrder(String requisitions) throws Exception {
-    String userSIC = "storeIncharge";
+    String userSIC = "storeInCharge";
     setUpData("HIV", userSIC);
     dbWrapper.insertRequisitions(Integer.parseInt(requisitions), "MALARIA", true, "2012-12-01", "2015-12-01", "F10", false);
     dbWrapper.updateRequisitionStatus("SUBMITTED", userSIC, "MALARIA");
@@ -66,13 +68,13 @@ public class ConvertToOrderPagination extends TestCaseHelper {
 
   @And("^I access convert to order$")
   public void accessConvertToOrder() throws IOException, SQLException {
-    ConvertOrderPage convertOrderPage = new ConvertOrderPage(testWebDriver);
-    convertToOrder(convertOrderPage);
+    PageFactory.getInstanceOfConvertOrderPage(testWebDriver);
+    convertToOrder();
   }
 
   @Then("^\"([^\"]*)\" requisition converted to order$")
   public void requisitionConvertedToOrder(String requisitions) throws IOException, SQLException {
-    HomePage homePage = new HomePage(testWebDriver);
+    HomePage homePage = PageFactory.getInstanceOfHomePage(testWebDriver);
     ViewOrdersPage viewOrdersPage = homePage.navigateViewOrders();
     int numberOfLineItems = viewOrdersPage.getNumberOfLineItems();
     assertTrue("Number of line items on view order screen should be equal to " + Integer.parseInt(requisitions), numberOfLineItems == Integer.parseInt(requisitions));
@@ -89,14 +91,14 @@ public class ConvertToOrderPagination extends TestCaseHelper {
     dbWrapper.updateRequisitionStatus("APPROVED", userSIC, "TB");
     dbWrapper.updateFieldValue("requisition_line_items", "quantityApproved", 10);
     dbWrapper.updatePacksToShip("1");
-    dbWrapper.insertFulfilmentRoleAssignment("storeIncharge", "store in-charge", "F10");
-    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+    dbWrapper.insertFulfilmentRoleAssignment("storeInCharge", "store in-charge", "F10");
+
+    LoginPage loginPage = PageFactory.getInstanceOfLoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(userSIC, password);
     ConvertOrderPage convertOrderPage = homePage.navigateConvertToOrder();
     verifyNumberOfPageLinks(51, 50);
     verifyNextAndLastLinksEnabled();
     verifyPreviousAndFirstLinksDisabled();
-
 
     clickPageNumberLink(2);
     verifyPageLinksFromLastPage();
@@ -106,13 +108,12 @@ public class ConvertToOrderPagination extends TestCaseHelper {
     convertOrderPage.selectRequisitionToBeConvertedToOrder(1);
     clickPageNumberLink(1);
     convertOrderPage.selectRequisitionToBeConvertedToOrder(1);
-    convertToOrder(convertOrderPage);
-
+    convertToOrder();
     verifyNumberOfPageLinks(49, 50);
 
     ViewOrdersPage viewOrdersPage = homePage.navigateViewOrders();
     int numberOfLineItems = viewOrdersPage.getNumberOfLineItems();
-    assertTrue("Number of line items on view order screen should be equal to 1", numberOfLineItems == 1);
+    assertTrue("Number of line items on view order screen should be equal to 1, but found " + numberOfLineItems, numberOfLineItems == 1);
     viewOrdersPage.verifyProgram(1, "MALARIA");
   }
 
@@ -127,18 +128,19 @@ public class ConvertToOrderPagination extends TestCaseHelper {
     dbWrapper.insertRequisitions(49, "MALARIA", true, "2012-12-01", "2015-12-01", "F10", false);
     dbWrapper.updateRequisitionStatus("SUBMITTED", userSIC, "MALARIA");
     dbWrapper.updateRequisitionStatus("APPROVED", userSIC, "MALARIA");
-    dbWrapper.insertFulfilmentRoleAssignment("storeIncharge", "store in-charge", "F10");
-    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+    dbWrapper.insertFulfilmentRoleAssignment("storeInCharge", "store in-charge", "F10");
+
+    LoginPage loginPage = PageFactory.getInstanceOfLoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(userSIC, password);
     homePage.navigateConvertToOrder();
     verifyNumberOfPageLinks(49, 50);
+
     dbWrapper.insertRequisitions(2, "HIV", true, "2012-12-01", "2015-12-01", "F10", false);
     dbWrapper.updateRequisitionStatus("SUBMITTED", userSIC, "HIV");
     dbWrapper.updateRequisitionStatus("APPROVED", userSIC, "HIV");
     homePage.navigateHomePage();
     homePage.navigateConvertToOrder();
     verifyNumberOfPageLinks(51, 50);
-
   }
 
   @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-Positive")
@@ -147,19 +149,20 @@ public class ConvertToOrderPagination extends TestCaseHelper {
     dbWrapper.insertRequisitions(50, "MALARIA", true, "2012-12-01", "2015-12-01", "F10", false);
     dbWrapper.updateRequisitionStatus("SUBMITTED", userSIC, "MALARIA");
     dbWrapper.updateRequisitionStatus("APPROVED", userSIC, "MALARIA");
-    dbWrapper.insertFulfilmentRoleAssignment("storeIncharge", "store in-charge", "F10");
-    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+    dbWrapper.insertFulfilmentRoleAssignment("storeInCharge", "store in-charge", "F10");
+
+    LoginPage loginPage = PageFactory.getInstanceOfLoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(userSIC, password);
     homePage.navigateConvertToOrder();
     verifyNumberOfPageLinks(50, 50);
     verifyPageLinkNotPresent(2);
+
     dbWrapper.insertRequisitions(1, "HIV", true, "2012-12-01", "2015-12-01", "F10", false);
     dbWrapper.updateRequisitionStatus("SUBMITTED", userSIC, "HIV");
     dbWrapper.updateRequisitionStatus("APPROVED", userSIC, "HIV");
     homePage.navigateHomePage();
     homePage.navigateConvertToOrder();
     verifyNumberOfPageLinks(51, 50);
-
   }
 
   @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-Positive")
@@ -171,8 +174,9 @@ public class ConvertToOrderPagination extends TestCaseHelper {
     dbWrapper.updateRequisitionStatus("SUBMITTED", userSIC, "TB");
     dbWrapper.updateRequisitionStatus("APPROVED", userSIC, "MALARIA");
     dbWrapper.updateRequisitionStatus("APPROVED", userSIC, "TB");
-    dbWrapper.insertFulfilmentRoleAssignment("storeIncharge", "store in-charge", "F10");
-    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+    dbWrapper.insertFulfilmentRoleAssignment("storeInCharge", "store in-charge", "F10");
+
+    LoginPage loginPage = PageFactory.getInstanceOfLoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(userSIC, password);
     ConvertOrderPage convertOrderPage = homePage.navigateConvertToOrder();
     verifyNumberOfPageLinks(80, 50);
@@ -194,8 +198,9 @@ public class ConvertToOrderPagination extends TestCaseHelper {
     dbWrapper.updateRequisitionStatus("SUBMITTED", userSIC, "TB");
     dbWrapper.updateRequisitionStatus("APPROVED", userSIC, "MALARIA");
     dbWrapper.updateRequisitionStatus("APPROVED", userSIC, "TB");
-    dbWrapper.insertFulfilmentRoleAssignment("storeIncharge", "store in-charge", "F10");
-    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+    dbWrapper.insertFulfilmentRoleAssignment("storeInCharge", "store in-charge", "F10");
+
+    LoginPage loginPage = PageFactory.getInstanceOfLoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(userSIC, password);
     ConvertOrderPage convertOrderPage = homePage.navigateConvertToOrder();
     convertOrderPage.searchWithIndex(5, "Village Dispensary");
@@ -207,9 +212,7 @@ public class ConvertToOrderPagination extends TestCaseHelper {
     setupProductTestData("P10", "P11", program, "lvl3_hospital");
     dbWrapper.insertFacilities("F10", "F11");
     dbWrapper.configureTemplate(program);
-    List<String> rightsList = new ArrayList<>();
-    rightsList.add("CONVERT_TO_ORDER");
-    rightsList.add("VIEW_ORDER");
+    List<String> rightsList = asList("CONVERT_TO_ORDER", "VIEW_ORDER");
 
     setupTestUserRoleRightsData("200", userSIC, rightsList);
     dbWrapper.insertSupervisoryNode("F10", "N1", "Node 1", "null");
@@ -222,8 +225,8 @@ public class ConvertToOrderPagination extends TestCaseHelper {
     dbWrapper.insertSupplyLines("N1", program, "F10", true);
   }
 
-
-  private void convertToOrder(ConvertOrderPage convertOrderPage) {
+  private void convertToOrder() {
+    ConvertOrderPage convertOrderPage = PageFactory.getInstanceOfConvertOrderPage(testWebDriver);
     convertOrderPage.clickConvertToOrderButton();
     convertOrderPage.clickOk();
   }
@@ -279,9 +282,9 @@ public class ConvertToOrderPagination extends TestCaseHelper {
     dbWrapper.updateRequisitionStatus("SUBMITTED", userSIC, "TB");
     dbWrapper.updateRequisitionStatus("APPROVED", userSIC, "MALARIA");
     dbWrapper.updateRequisitionStatus("APPROVED", userSIC, "TB");
-    dbWrapper.insertFulfilmentRoleAssignment("storeIncharge", "store in-charge", "F10");
+    dbWrapper.insertFulfilmentRoleAssignment("storeInCharge", "store in-charge", "F10");
     dbWrapper.updateSupplyLines("F10", "F11");
-    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+    LoginPage loginPage = PageFactory.getInstanceOfLoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(userSIC, password);
     ConvertOrderPage convertOrderPage = homePage.navigateConvertToOrder();
     assertEquals("No requisitions to be converted to orders", convertOrderPage.getNoRequisitionPendingMessage());
@@ -291,21 +294,26 @@ public class ConvertToOrderPagination extends TestCaseHelper {
   public void tearDown() throws Exception {
     testWebDriver.sleep(500);
     if (!testWebDriver.getElementById("username").isDisplayed()) {
-      HomePage homePage = new HomePage(testWebDriver);
+      HomePage homePage = PageFactory.getInstanceOfHomePage(testWebDriver);
       homePage.logout(baseUrlGlobal);
       dbWrapper.deleteData();
       dbWrapper.closeConnection();
     }
-
   }
-
 
   @DataProvider(name = "Data-Provider-Function-Positive")
   public Object[][] parameterIntTestProviderPositive() {
     return new Object[][]{
-      {"HIV", "storeIncharge", "Admin123"}
+      {"HIV", "storeInCharge", "Admin123"}
     };
+  }
 
+  @After
+  public void embedScreenshot(Scenario scenario) {
+    if (scenario.isFailed()) {
+      byte[] screenshot = testWebDriver.getScreenshot();
+      scenario.embed(screenshot, "image/png");
+    }
   }
 }
 

@@ -27,14 +27,14 @@ public class FacilityAPI extends JsonUtility {
   public static final String commTrackUser = "commTrack";
   public static final String GET = "GET";
 
-  @BeforeMethod(groups = {"webservice","webserviceSmoke"})
+  @BeforeMethod(groups = {"webservice", "webserviceSmoke"})
   public void setUp() throws Exception {
     super.setup();
     super.setupTestData(true);
     dbWrapper.updateRestrictLogin("commTrack", true);
   }
 
-  @AfterMethod(groups = {"webservice","webserviceSmoke"})
+  @AfterMethod(groups = {"webservice", "webserviceSmoke"})
   public void tearDown() throws Exception {
     dbWrapper.deleteData();
     dbWrapper.closeConnection();
@@ -87,8 +87,7 @@ public class FacilityAPI extends JsonUtility {
     assertTrue("Response entity : " + response, response.contains("\"enabled\":true"));
 
     assertEquals(StringUtils.countMatches(response, ":"), 37);
-
-    dbWrapper.disableFacility("Village Dispensary");
+    dbWrapper.updateFieldValue("facilities", "enabled", "false", "name", "Village Dispensary");
     responseEntity = client.SendJSON("", format(URL, "F10"), GET, commTrackUser, "Admin123");
     response = responseEntity.getResponse();
     assertTrue("Response entity : " + response, response.contains("\"enabled\":false"));

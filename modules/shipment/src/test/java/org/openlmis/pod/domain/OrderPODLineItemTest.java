@@ -11,8 +11,12 @@ package org.openlmis.pod.domain;
 
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
+import org.junit.runner.RunWith;
+import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.exception.DataException;
+import org.openlmis.db.categories.UnitTests;
 import org.openlmis.rnr.builder.RnrLineItemBuilder;
 import org.openlmis.rnr.domain.RnrLineItem;
 import org.openlmis.shipment.builder.ShipmentLineItemBuilder;
@@ -23,6 +27,8 @@ import static com.natpryce.makeiteasy.MakeItEasy.make;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
+@Category(UnitTests.class)
+@RunWith(MockitoJUnitRunner.class)
 public class OrderPODLineItemTest {
 
   @Rule
@@ -61,26 +67,57 @@ public class OrderPODLineItemTest {
   @Test
   public void shouldCreateOrderPODLineItemFromRnrLineItem() throws Exception {
     RnrLineItem rnrLineItem = make(a(RnrLineItemBuilder.defaultRnrLineItem));
+    Long createdBy = 1L;
 
-    OrderPODLineItem orderPODLineItem = new OrderPODLineItem(rnrLineItem);
+    OrderPODLineItem orderPODLineItem = new OrderPODLineItem(rnrLineItem, createdBy);
 
     assertThat(orderPODLineItem.getProductCode(), is(rnrLineItem.getProductCode()));
+    assertThat(orderPODLineItem.getProductCategory(), is(rnrLineItem.getProductCategory()));
+    assertThat(orderPODLineItem.getProductCategoryDisplayOrder(), is(rnrLineItem.getProductCategoryDisplayOrder()));
+    assertThat(orderPODLineItem.getProductDisplayOrder(), is(rnrLineItem.getProductDisplayOrder()));
     assertThat(orderPODLineItem.getProductName(), is(rnrLineItem.getProduct()));
-    assertThat(orderPODLineItem.getPacksToShip(), is(rnrLineItem.getPacksToShip()));
     assertThat(orderPODLineItem.getDispensingUnit(), is(rnrLineItem.getDispensingUnit()));
+    assertThat(orderPODLineItem.getPacksToShip(), is(rnrLineItem.getPacksToShip()));
     assertThat(orderPODLineItem.getFullSupply(), is(rnrLineItem.getFullSupply()));
+    assertThat(orderPODLineItem.getCreatedBy(), is(createdBy));
+    assertThat(orderPODLineItem.getModifiedBy(), is(createdBy));
   }
 
   @Test
   public void shouldCreateOrderPODLineItemFromShipmentLineItem() throws Exception {
     ShipmentLineItem shipmentLineItem = make(a(ShipmentLineItemBuilder.defaultShipmentLineItem));
+    Long createdBy = 1L;
 
-    OrderPODLineItem orderPODLineItem = new OrderPODLineItem(shipmentLineItem);
+    OrderPODLineItem orderPODLineItem = new OrderPODLineItem(shipmentLineItem, createdBy);
 
     assertThat(orderPODLineItem.getProductCode(), is(shipmentLineItem.getProductCode()));
+    assertThat(orderPODLineItem.getProductCategory(), is(shipmentLineItem.getProductCategory()));
+    assertThat(orderPODLineItem.getProductCategoryDisplayOrder(),
+      is(shipmentLineItem.getProductCategoryDisplayOrder()));
+    assertThat(orderPODLineItem.getProductDisplayOrder(), is(shipmentLineItem.getProductDisplayOrder()));
     assertThat(orderPODLineItem.getProductName(), is(shipmentLineItem.getProductName()));
-    assertThat(orderPODLineItem.getPacksToShip(), is(shipmentLineItem.getPacksToShip()));
     assertThat(orderPODLineItem.getDispensingUnit(), is(shipmentLineItem.getDispensingUnit()));
-//    assertThat(orderPODLineItem.getFullSupply(), is(shipmentLineItem.getFullSupply()));
+    assertThat(orderPODLineItem.getPacksToShip(), is(shipmentLineItem.getPacksToShip()));
+    assertThat(orderPODLineItem.getFullSupply(), is(shipmentLineItem.getFullSupply()));
+    assertThat(orderPODLineItem.getQuantityShipped(), is(shipmentLineItem.getQuantityShipped()));
+    assertThat(orderPODLineItem.getFullSupply(), is(shipmentLineItem.getFullSupply()));
+    assertThat(orderPODLineItem.getCreatedBy(), is(createdBy));
+    assertThat(orderPODLineItem.getModifiedBy(), is(createdBy));
+  }
+
+  @Test
+  public void shouldCopySomeFieldsFromLineItemIntoAnother() {
+    Long modifiedBy = 1L;
+    String notes = "Notes";
+    OrderPODLineItem lineItem = new OrderPODLineItem(1L, "P1", null);
+    OrderPODLineItem otherLineItem = new OrderPODLineItem(1L, "P1", 30);
+    otherLineItem.setNotes(notes);
+    otherLineItem.setModifiedBy(modifiedBy);
+
+    lineItem.copy(otherLineItem);
+
+    assertThat(lineItem.getQuantityReceived(), is(30));
+    assertThat(lineItem.getNotes(), is(notes));
+    assertThat(lineItem.getModifiedBy(), is(modifiedBy));
   }
 }

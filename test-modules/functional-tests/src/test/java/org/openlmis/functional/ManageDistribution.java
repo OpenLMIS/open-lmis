@@ -11,8 +11,8 @@
 package org.openlmis.functional;
 
 
-import com.thoughtworks.selenium.SeleneseTestNgHelper;
 import cucumber.api.DataTable;
+import cucumber.api.Scenario;
 import cucumber.api.java.After;
 import cucumber.api.java.Before;
 import cucumber.api.java.en.And;
@@ -39,6 +39,7 @@ import java.util.Map;
 import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
 import static com.thoughtworks.selenium.SeleneseTestBase.fail;
 import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
+import static java.util.Arrays.asList;
 import static java.util.Collections.addAll;
 import static org.testng.AssertJUnit.assertFalse;
 
@@ -64,6 +65,7 @@ public class ManageDistribution extends TestCaseHelper {
   EPIUsePage epiUsePage;
   EpiInventoryPage epiInventoryPage;
   ChildCoveragePage childCoveragePage;
+  LoginPage loginPage;
   String productGroupCode = "PG1";
 
   @BeforeMethod(groups = "distribution")
@@ -73,10 +75,11 @@ public class ManageDistribution extends TestCaseHelper {
     dbWrapper.deleteData();
     epiUsePage = PageFactory.getInstanceOfEpiUsePage(testWebDriver);
     observation = PageFactory.getInstanceOfObservation(testWebDriver);
-    fullCoveragePage = PageFactory.getInstanceOfCoveragePage(testWebDriver);
+    fullCoveragePage = PageFactory.getInstanceOfFullCoveragePage(testWebDriver);
     epiInventoryPage = PageFactory.getInstanceOfEpiInventoryPage(testWebDriver);
     childCoveragePage = PageFactory.getInstanceOfChildCoveragePage(testWebDriver);
     refrigeratorPage = PageFactory.getInstanceOfRefrigeratorPage(testWebDriver);
+    loginPage = PageFactory.getInstanceOfLoginPage(testWebDriver, baseUrlGlobal);
 
     tabMap = new HashMap<String, DistributionTab>() {{
       put("epi use", epiUsePage);
@@ -159,12 +162,11 @@ public class ManageDistribution extends TestCaseHelper {
   @Then("^I verify fields$")
   public void verifyFieldsOnScreen() throws IOException, SQLException {
     distributionPage = PageFactory.getInstanceOfDistributionPage(testWebDriver);
-    verifyElementsPresent(distributionPage);
+    verifyElementsPresent();
   }
 
   @Then("^I should see period \"([^\"]*)\"$")
   public void verifyPeriod(String period) throws IOException, SQLException {
-    distributionPage = PageFactory.getInstanceOfDistributionPage(testWebDriver);
     distributionPage = PageFactory.getInstanceOfDistributionPage(testWebDriver);
     WebElement actualSelectFieldElement = distributionPage.getFirstSelectedOptionFromPeriod();
     testWebDriver.sleep(100);
@@ -180,13 +182,13 @@ public class ManageDistribution extends TestCaseHelper {
 
   @Given("^I login as user \"([^\"]*)\" having password \"([^\"]*)\"$")
   public void login(String user, String password) throws IOException, SQLException {
-    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+    LoginPage loginPage = PageFactory.getInstanceOfLoginPage(testWebDriver, baseUrlGlobal);
     loginPage.loginAs(user, password);
   }
 
   @And("^I access plan my distribution page$")
   public void accessDistributionPage() throws IOException, SQLException {
-    HomePage homePage = new HomePage(testWebDriver);
+    HomePage homePage = PageFactory.getInstanceOfHomePage(testWebDriver);
     homePage.navigateHomePage();
     homePage.navigateToDistributionWhenOnline();
   }
@@ -264,7 +266,7 @@ public class ManageDistribution extends TestCaseHelper {
 
   @Then("^I see full coverage fields disabled$")
   public void verifyFullCoverageFieldsDisabled() throws IOException {
-    fullCoveragePage = PageFactory.getInstanceOfCoveragePage(testWebDriver);
+    fullCoveragePage = PageFactory.getInstanceOfFullCoveragePage(testWebDriver);
     assertFalse(fullCoveragePage.getStatusForField("femaleHealthCenter"));
     assertFalse(fullCoveragePage.getStatusForField("femaleMobileBrigade"));
     assertFalse(fullCoveragePage.getStatusForField("maleHealthCenter"));
@@ -407,12 +409,13 @@ public class ManageDistribution extends TestCaseHelper {
   }
 
   @And("^I view epi inventory readings in DB for facility \"([^\"]*)\" for product \"([^\"]*)\":$")
-  public void verifyEpiInventoryDataInDB(String facilityCode,String productCode,DataTable tableData) throws SQLException {
+  public void verifyEpiInventoryDataInDB(String facilityCode, String productCode, DataTable tableData) throws SQLException {
     List<Map<String, String>> data = tableData.asMaps();
     for (Map map : data) {
-      verifyEpiInventoryDataInDatabase(map.get("existingQuantity").toString(),map.get("deliveredQuantity").toString(),map.get("spoiledQuantity").toString(),productCode,facilityCode);
+      verifyEpiInventoryDataInDatabase(map.get("existingQuantity").toString(), map.get("deliveredQuantity").toString(), map.get("spoiledQuantity").toString(), productCode, facilityCode);
     }
   }
+
   @Then("^I verify no record present in refrigerator problem table for refrigerator serial number \"([^\"]*)\" and facility \"([^\"]*)\"$")
   public void verifyNoRecordAddedToRefrigeratorProblemsTable(String refrigeratorSerialNumber, String facilityCode) throws SQLException {
     verifyRefrigeratorProblemDataNullInDatabase(refrigeratorSerialNumber, facilityCode);
@@ -486,7 +489,7 @@ public class ManageDistribution extends TestCaseHelper {
 
   @When("I enter coverage maleMobileBrigade as \"([^\"]*)\"$")
   public void enterCoverageMaleMobileBrigade(String maleMobileBrigade) throws IOException {
-    fullCoveragePage = PageFactory.getInstanceOfCoveragePage(testWebDriver);
+    fullCoveragePage = PageFactory.getInstanceOfFullCoveragePage(testWebDriver);
     fullCoveragePage.enterMaleMobileBrigade(maleMobileBrigade);
   }
 
@@ -519,46 +522,22 @@ public class ManageDistribution extends TestCaseHelper {
   }
 
   private void verifyElementsInTable(String deliveryZoneNameFirst, String programFirst, String periodDisplayedByDefault) {
-    SeleneseTestNgHelper.assertEquals(testWebDriver.getElementByXpath("//div[@id='cachedDistributions']/div[2]/" +
-      "div[1]/div[1]/div").getText(), deliveryZoneNameFirst);
-
-    SeleneseTestNgHelper.assertEquals(testWebDriver.getElementByXpath("//div[@id='cachedDistributions']/div[2]" +
-      "/div[1]/div[2]").getText(), programFirst);
-
-    SeleneseTestNgHelper.assertEquals(testWebDriver.getElementByXpath("//div[@id='cachedDistributions']/div[2]" +
-      "/div[1]/div[3]").getText(), periodDisplayedByDefault);
-
-    SeleneseTestNgHelper.assertEquals(testWebDriver.getElementByXpath("//div[@id='cachedDistributions']/div[2]" +
-      "/div[1]/div[4]").getText(), "INITIATED");
-
-    SeleneseTestNgHelper.assertEquals(testWebDriver.getElementByXpath("//div[@id='cachedDistributions']/div[2]" +
-      "/div[1]/div[5]/a").getText(), "Record Data");
-
-    SeleneseTestNgHelper.assertEquals(testWebDriver.getElementByXpath("//div[@id='cachedDistributions']/div[2]" +
-      "/div[1]/div[6]/a").getText(), "Sync");
+    assertEquals(testWebDriver.getElementByXpath("//div[@id='cachedDistributions']/div[2]/div[1]/div[1]/div").getText(), deliveryZoneNameFirst);
+    assertEquals(testWebDriver.getElementByXpath("//div[@id='cachedDistributions']/div[2]/div[1]/div[2]").getText(), programFirst);
+    assertEquals(testWebDriver.getElementByXpath("//div[@id='cachedDistributions']/div[2]/div[1]/div[3]").getText(), periodDisplayedByDefault);
+    assertEquals(testWebDriver.getElementByXpath("//div[@id='cachedDistributions']/div[2]/div[1]/div[4]").getText(), "INITIATED");
+    assertEquals(testWebDriver.getElementByXpath("//div[@id='cachedDistributions']/div[2]/div[1]/div[5]/a").getText(), "Record Data");
+    assertEquals(testWebDriver.getElementByXpath("//div[@id='cachedDistributions']/div[2]/div[1]/div[6]/a").getText(), "Sync");
   }
 
   @Test(groups = {"distribution"}, dataProvider = "Data-Provider-Function")
   public void testVerifyAlreadyCachedDistribution(String userSIC, String password, String deliveryZoneCodeFirst,
-                                                  String deliveryZoneCodeSecond,
-                                                  String deliveryZoneNameFirst, String deliveryZoneNameSecond,
-                                                  String facilityCodeFirst, String facilityCodeSecond,
-                                                  String programFirst, String programSecond, String schedule,
-                                                  String period, Integer totalNumberOfPeriods) throws Exception {
-    List<String> rightsList = new ArrayList<>();
-    rightsList.add("MANAGE_DISTRIBUTION");
-    setupTestDataToInitiateRnRAndDistribution("F10", "F11", true, programFirst, userSIC, "200", rightsList,
-      programSecond, "District1", "Ngorongoro", "Ngorongoro");
+                                                  String deliveryZoneCodeSecond, String deliveryZoneNameFirst,
+                                                  String deliveryZoneNameSecond, String facilityCodeFirst, String facilityCodeSecond,
+                                                  String programFirst, String programSecond, String schedule, String period,
+                                                  Integer totalNumberOfPeriods) throws Exception {
+    setupData(userSIC, deliveryZoneCodeFirst, deliveryZoneCodeSecond, deliveryZoneNameFirst, deliveryZoneNameSecond, facilityCodeFirst, facilityCodeSecond, programFirst, programSecond, schedule);
 
-    setupDataForDeliveryZone(true, deliveryZoneCodeFirst, deliveryZoneCodeSecond,
-      deliveryZoneNameFirst, deliveryZoneNameSecond,
-      facilityCodeFirst, facilityCodeSecond,
-      programFirst, programSecond, schedule);
-
-    dbWrapper.insertRoleAssignmentForDistribution(userSIC, "store in-charge", deliveryZoneCodeFirst);
-    dbWrapper.insertRoleAssignmentForDistribution(userSIC, "store in-charge", deliveryZoneCodeSecond);
-
-    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(userSIC, password);
     DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
     distributionPage.selectValueFromDeliveryZone(deliveryZoneNameFirst);
@@ -576,20 +555,16 @@ public class ManageDistribution extends TestCaseHelper {
                                      String programFirst, String programSecond, String schedule, String period,
                                      Integer totalNumberOfPeriods) throws Exception {
 
-    List<String> rightsList = new ArrayList<>();
-    rightsList.add("MANAGE_DISTRIBUTION");
+    List<String> rightsList = asList("MANAGE_DISTRIBUTION");
     setupTestDataToInitiateRnRAndDistribution("F10", "F11", true, programFirst, userSIC, "200",
       rightsList, programSecond, "District1", "Ngorongoro", "Ngorongoro");
 
-    setupDataForDeliveryZone(true, deliveryZoneCodeFirst, deliveryZoneCodeSecond,
-      deliveryZoneNameFirst, deliveryZoneNameSecond,
-      facilityCodeFirst, facilityCodeSecond,
-      programFirst, programSecond, schedule);
+    setupDataForDeliveryZone(true, deliveryZoneCodeFirst, deliveryZoneCodeSecond, deliveryZoneNameFirst, deliveryZoneNameSecond,
+      facilityCodeFirst, facilityCodeSecond, programFirst, programSecond, schedule);
 
-    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(userSIC, password);
     DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
-    verifyElementsPresent(distributionPage);
+    verifyElementsPresent();
 
     String defaultDistributionZoneValuesToBeVerified = NONE_ASSIGNED;
     WebElement actualSelectFieldElement = distributionPage.getFirstSelectedOptionFromDeliveryZone();
@@ -615,7 +590,6 @@ public class ManageDistribution extends TestCaseHelper {
     actualSelectFieldElement = distributionPage.getFirstSelectedOptionFromPeriod();
     verifySelectedOptionFromSelectField(defaultPeriodValuesToBeVerified, actualSelectFieldElement);
 
-
     distributionPage.selectValueFromDeliveryZone(deliveryZoneNameFirst);
     List<String> firstProgramValuesToBeVerified = new ArrayList<>();
     firstProgramValuesToBeVerified.add(programFirst);
@@ -625,7 +599,6 @@ public class ManageDistribution extends TestCaseHelper {
     actualSelectFieldElement = distributionPage.getFirstSelectedOptionFromPeriod();
     verifySelectedOptionFromSelectField(defaultPeriodValuesToBeVerified, actualSelectFieldElement);
 
-
     distributionPage.selectValueFromDeliveryZone(deliveryZoneNameSecond);
     List<String> secondProgramValuesToBeVerified = new ArrayList<>();
     secondProgramValuesToBeVerified.add(programSecond);
@@ -633,7 +606,6 @@ public class ManageDistribution extends TestCaseHelper {
     verifyAllSelectFieldValues(secondProgramValuesToBeVerified, valuesPresentInDropDown);
     actualSelectFieldElement = distributionPage.getFirstSelectedOptionFromPeriod();
     verifySelectedOptionFromSelectField(defaultPeriodValuesToBeVerified, actualSelectFieldElement);
-
 
     distributionPage.selectValueFromProgram(programSecond);
     List<String> periodValuesToBeVerified = new ArrayList<>();
@@ -665,31 +637,13 @@ public class ManageDistribution extends TestCaseHelper {
   }
 
   @Test(groups = {"distribution"}, dataProvider = "Data-Provider-Function")
-  public void testVerifyNoFacilityToBeShownIfNotMappedWithDeliveryZone(String userSIC, String password,
-                                                                       String deliveryZoneCodeFirst,
-                                                                       String deliveryZoneCodeSecond,
-                                                                       String deliveryZoneNameFirst,
-                                                                       String deliveryZoneNameSecond,
-                                                                       String facilityCodeFirst,
-                                                                       String facilityCodeSecond,
-                                                                       String programFirst, String programSecond,
-                                                                       String schedule, String period,
-                                                                       Integer totalNumberOfPeriods) throws Exception {
-
-    List<String> rightsList = new ArrayList<>();
-    rightsList.add("MANAGE_DISTRIBUTION");
-    setupTestDataToInitiateRnRAndDistribution("F10", "F11", true, programFirst, userSIC, "200", rightsList,
-      programSecond, "District1", "Ngorongoro", "Ngorongoro");
-
-    setupDataForDeliveryZone(true, deliveryZoneCodeFirst, deliveryZoneCodeSecond,
-      deliveryZoneNameFirst, deliveryZoneNameSecond,
-      facilityCodeFirst, facilityCodeSecond,
-      programFirst, programSecond, schedule);
-
-    dbWrapper.insertRoleAssignmentForDistribution(userSIC, "store in-charge", deliveryZoneCodeFirst);
-    dbWrapper.insertRoleAssignmentForDistribution(userSIC, "store in-charge", deliveryZoneCodeSecond);
+  public void testVerifyNoFacilityToBeShownIfNotMappedWithDeliveryZone(String userSIC, String password, String deliveryZoneCodeFirst,
+                                                                       String deliveryZoneCodeSecond, String deliveryZoneNameFirst,
+                                                                       String deliveryZoneNameSecond, String facilityCodeFirst,
+                                                                       String facilityCodeSecond, String programFirst, String programSecond,
+                                                                       String schedule, String period, Integer totalNumberOfPeriods) throws Exception {
+    setupData(userSIC, deliveryZoneCodeFirst, deliveryZoneCodeSecond, deliveryZoneNameFirst, deliveryZoneNameSecond, facilityCodeFirst, facilityCodeSecond, programFirst, programSecond, schedule);
     dbWrapper.deleteDeliveryZoneToFacilityMapping(deliveryZoneNameFirst);
-    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(userSIC, password);
     DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
     distributionPage.selectValueFromDeliveryZone(deliveryZoneNameFirst);
@@ -700,30 +654,13 @@ public class ManageDistribution extends TestCaseHelper {
   }
 
   @Test(groups = {"distribution"}, dataProvider = "Data-Provider-Function")
-  public void testVerifyNoFacilityToBeShownIfNotMappedWithPrograms(String userSIC, String password,
-                                                                   String deliveryZoneCodeFirst,
-                                                                   String deliveryZoneCodeSecond,
-                                                                   String deliveryZoneNameFirst,
-                                                                   String deliveryZoneNameSecond,
-                                                                   String facilityCodeFirst, String facilityCodeSecond,
-                                                                   String programFirst, String programSecond,
-                                                                   String schedule, String period,
-                                                                   Integer totalNumberOfPeriods) throws Exception {
-
-    List<String> rightsList = new ArrayList<>();
-    rightsList.add("MANAGE_DISTRIBUTION");
-    setupTestDataToInitiateRnRAndDistribution("F10", "F11", true, programFirst, userSIC, "200", rightsList,
-      programSecond, "District1", "Ngorongoro", "Ngorongoro");
-
-    setupDataForDeliveryZone(true, deliveryZoneCodeFirst, deliveryZoneCodeSecond,
-      deliveryZoneNameFirst, deliveryZoneNameSecond,
-      facilityCodeFirst, facilityCodeSecond,
-      programFirst, programSecond, schedule);
-
-    dbWrapper.insertRoleAssignmentForDistribution(userSIC, "store in-charge", deliveryZoneCodeFirst);
-    dbWrapper.insertRoleAssignmentForDistribution(userSIC, "store in-charge", deliveryZoneCodeSecond);
+  public void testVerifyNoFacilityToBeShownIfNotMappedWithPrograms(String userSIC, String password, String deliveryZoneCodeFirst,
+                                                                   String deliveryZoneCodeSecond, String deliveryZoneNameFirst,
+                                                                   String deliveryZoneNameSecond, String facilityCodeFirst,
+                                                                   String facilityCodeSecond, String programFirst, String programSecond,
+                                                                   String schedule, String period, Integer totalNumberOfPeriods) throws Exception {
+    setupData(userSIC, deliveryZoneCodeFirst, deliveryZoneCodeSecond, deliveryZoneNameFirst, deliveryZoneNameSecond, facilityCodeFirst, facilityCodeSecond, programFirst, programSecond, schedule);
     dbWrapper.deleteProgramToFacilityMapping(programFirst);
-    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(userSIC, password);
     DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
     distributionPage.selectValueFromDeliveryZone(deliveryZoneNameFirst);
@@ -735,26 +672,22 @@ public class ManageDistribution extends TestCaseHelper {
 
   @Test(groups = {"distribution"}, dataProvider = "Data-Provider-Function")
   public void testVerifyNoFacilityToBeShownIfInactive(String userSIC, String password, String deliveryZoneCodeFirst,
-                                                      String deliveryZoneCodeSecond,
-                                                      String deliveryZoneNameFirst, String deliveryZoneNameSecond,
-                                                      String facilityCodeFirst, String facilityCodeSecond,
-                                                      String programFirst, String programSecond, String schedule,
-                                                      String period, Integer totalNumberOfPeriods) throws Exception {
-
+                                                      String deliveryZoneCodeSecond, String deliveryZoneNameFirst,
+                                                      String deliveryZoneNameSecond, String facilityCodeFirst,
+                                                      String facilityCodeSecond, String programFirst, String programSecond,
+                                                      String schedule, String period, Integer totalNumberOfPeriods) throws Exception {
     List<String> rightsList = new ArrayList<>();
     rightsList.add("MANAGE_DISTRIBUTION");
     setupTestDataToInitiateRnRAndDistribution("F10", "F11", true, programFirst, userSIC, "200", rightsList,
       programSecond, "District1", "Ngorongoro", "Ngorongoro");
 
-    setupDataForDeliveryZone(true, deliveryZoneCodeFirst, deliveryZoneCodeSecond,
-      deliveryZoneNameFirst, deliveryZoneNameSecond,
-      facilityCodeFirst, facilityCodeSecond,
-      programFirst, programSecond, schedule);
+    setupDataForDeliveryZone(true, deliveryZoneCodeFirst, deliveryZoneCodeSecond, deliveryZoneNameFirst, deliveryZoneNameSecond,
+      facilityCodeFirst, facilityCodeSecond, programFirst, programSecond, schedule);
 
     dbWrapper.insertRoleAssignmentForDistribution(userSIC, "store in-charge", deliveryZoneCodeFirst);
     dbWrapper.insertRoleAssignmentForDistribution(userSIC, "store in-charge", deliveryZoneCodeSecond);
-    dbWrapper.updateActiveStatusOfFacility(facilityCodeFirst, "false");
-    dbWrapper.updateActiveStatusOfFacility(facilityCodeSecond, "false");
+    dbWrapper.updateFieldValue("facilities", "active", "false", "code", facilityCodeFirst);
+    dbWrapper.updateFieldValue("facilities", "active", "false", "code", facilityCodeSecond);
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(userSIC, password);
     DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
@@ -767,27 +700,21 @@ public class ManageDistribution extends TestCaseHelper {
 
   @Test(groups = {"distribution"}, dataProvider = "Data-Provider-Function")
   public void testVerifyGeoZonesOrderOnFacilityListPage(String userSIC, String password, String deliveryZoneCodeFirst,
-                                                        String deliveryZoneCodeSecond,
-                                                        String deliveryZoneNameFirst, String deliveryZoneNameSecond,
-                                                        String facilityCodeFirst, String facilityCodeSecond,
-                                                        String programFirst, String programSecond, String schedule,
-                                                        String period, Integer totalNumberOfPeriods) throws Exception {
-
+                                                        String deliveryZoneCodeSecond, String deliveryZoneNameFirst,
+                                                        String deliveryZoneNameSecond, String facilityCodeFirst,
+                                                        String facilityCodeSecond, String programFirst, String programSecond,
+                                                        String schedule, String period, Integer totalNumberOfPeriods) throws Exception {
     String geoZoneFirst = "District1";
     String geoZoneSecond = "Ngorongoro";
-    List<String> rightsList = new ArrayList<>();
-    rightsList.add("MANAGE_DISTRIBUTION");
+    List<String> rightsList = asList("MANAGE_DISTRIBUTION");
     setupTestDataToInitiateRnRAndDistribution("F10", "F11", true, programFirst, userSIC, "200", rightsList,
       programSecond, geoZoneFirst, geoZoneSecond, geoZoneSecond);
 
-    setupDataForDeliveryZone(true, deliveryZoneCodeFirst, deliveryZoneCodeSecond,
-      deliveryZoneNameFirst, deliveryZoneNameSecond,
-      facilityCodeFirst, facilityCodeSecond,
-      programFirst, programSecond, schedule);
+    setupDataForDeliveryZone(true, deliveryZoneCodeFirst, deliveryZoneCodeSecond, deliveryZoneNameFirst, deliveryZoneNameSecond,
+      facilityCodeFirst, facilityCodeSecond, programFirst, programSecond, schedule);
 
     dbWrapper.insertRoleAssignmentForDistribution(userSIC, "store in-charge", deliveryZoneCodeFirst);
     dbWrapper.insertRoleAssignmentForDistribution(userSIC, "store in-charge", deliveryZoneCodeSecond);
-    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(userSIC, password);
     DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
     distributionPage.selectValueFromDeliveryZone(deliveryZoneNameFirst);
@@ -803,14 +730,31 @@ public class ManageDistribution extends TestCaseHelper {
 
   @Test(groups = {"distribution"}, dataProvider = "Data-Provider-Function")
   public void testVerifyOnlyActiveProductsDisplayedOnViewLoadAmountScreenDistribution(String userSIC, String password, String deliveryZoneCodeFirst,
-                                                                                      String deliveryZoneCodeSecond,
-                                                                                      String deliveryZoneNameFirst, String deliveryZoneNameSecond,
-                                                                                      String facilityCodeFirst, String facilityCodeSecond,
-                                                                                      String programFirst, String programSecond, String schedule,
-                                                                                      String period, Integer totalNumberOfPeriods) throws Exception {
+                                                                                      String deliveryZoneCodeSecond, String deliveryZoneNameFirst,
+                                                                                      String deliveryZoneNameSecond, String facilityCodeFirst,
+                                                                                      String facilityCodeSecond, String programFirst, String programSecond,
+                                                                                      String schedule, String period, Integer totalNumberOfPeriods) throws Exception {
+    setupData(userSIC, deliveryZoneCodeFirst, deliveryZoneCodeSecond, deliveryZoneNameFirst, deliveryZoneNameSecond, facilityCodeFirst,
+      facilityCodeSecond, programFirst, programSecond, schedule);
+    dbWrapper.insertProductGroup(productGroupCode);
+    dbWrapper.insertProductWithGroup("Product5", "ProductName5", productGroupCode, true);
+    dbWrapper.insertProductWithGroup("Product6", "ProductName6", productGroupCode, true);
+    dbWrapper.insertProgramProduct("Product5", programFirst, "10", "false");
+    dbWrapper.insertProgramProduct("Product6", programFirst, "10", "true");
+    dbWrapper.updateFieldValue("products", "active", "false", "code", "Product6");
 
-    List<String> rightsList = new ArrayList<>();
-    rightsList.add("MANAGE_DISTRIBUTION");
+    HomePage homePage = loginPage.loginAs(userSIC, password);
+    DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
+    distributionPage.selectValueFromDeliveryZone(deliveryZoneNameFirst);
+    distributionPage.selectValueFromProgram(programFirst);
+    distributionPage.clickViewLoadAmount();
+
+    verifyInactiveProductsNotDisplayedOnViewLoadAmount();
+  }
+
+  private void setupData(String userSIC, String deliveryZoneCodeFirst, String deliveryZoneCodeSecond, String deliveryZoneNameFirst,
+                         String deliveryZoneNameSecond, String facilityCodeFirst, String facilityCodeSecond, String programFirst, String programSecond, String schedule) throws Exception {
+    List<String> rightsList = asList("MANAGE_DISTRIBUTION");
     setupTestDataToInitiateRnRAndDistribution("F10", "F11", true, programFirst, userSIC, "200", rightsList,
       programSecond, "District1", "Ngorongoro", "Ngorongoro");
 
@@ -821,26 +765,10 @@ public class ManageDistribution extends TestCaseHelper {
 
     dbWrapper.insertRoleAssignmentForDistribution(userSIC, "store in-charge", deliveryZoneCodeFirst);
     dbWrapper.insertRoleAssignmentForDistribution(userSIC, "store in-charge", deliveryZoneCodeSecond);
-    dbWrapper.insertProductGroup(productGroupCode);
-    dbWrapper.insertProductWithGroup("Product5", "ProductName5", productGroupCode, true);
-    dbWrapper.insertProductWithGroup("Product6", "ProductName6", productGroupCode, true);
-    dbWrapper.insertProgramProduct("Product5", programFirst, "10", "false");
-    dbWrapper.insertProgramProduct("Product6", programFirst, "10", "true");
-    dbWrapper.updateActiveStatusOfProduct("Product6", "false");
-
-    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
-    HomePage homePage = loginPage.loginAs(userSIC, password);
-    DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
-    distributionPage.selectValueFromDeliveryZone(deliveryZoneNameFirst);
-    distributionPage.selectValueFromProgram(programFirst);
-    distributionPage.clickViewLoadAmount();
-
-    verifyInactiveProductsNotDisplayedOnViewLoadAmount();
-
-
   }
 
-  private void verifyElementsPresent(DistributionPage distributionPage) {
+  private void verifyElementsPresent() {
+    distributionPage = PageFactory.getInstanceOfDistributionPage(testWebDriver);
     assertTrue("selectDeliveryZoneSelectBox should be present", distributionPage.IsDisplayedSelectDeliveryZoneSelectBox());
     assertTrue("selectProgramSelectBox should be present", distributionPage.IsDisplayedSelectProgramSelectBox());
     assertTrue("selectPeriodSelectBox should be present", distributionPage.IsDisplayedSelectPeriodSelectBox());
@@ -914,19 +842,27 @@ public class ManageDistribution extends TestCaseHelper {
   public void tearDown() throws Exception {
     testWebDriver.sleep(500);
     if (!testWebDriver.getElementById("username").isDisplayed()) {
-      HomePage homePage = new HomePage(testWebDriver);
+      HomePage homePage = PageFactory.getInstanceOfHomePage(testWebDriver);
       homePage.logout(baseUrlGlobal);
     }
-      dbWrapper.deleteData();
-      dbWrapper.closeConnection();
+    dbWrapper.deleteData();
+    dbWrapper.closeConnection();
 
     ((JavascriptExecutor) TestWebDriver.getDriver()).executeScript("indexedDB.deleteDatabase('open_lmis')");
+  }
+
+  @After
+  public void embedScreenshot(Scenario scenario) {
+    if (scenario.isFailed()) {
+      byte[] screenshot = testWebDriver.getScreenshot();
+      scenario.embed(screenshot, "image/png");
+    }
   }
 
   @DataProvider(name = "Data-Provider-Function")
   public Object[][] parameterIntTestProviderPositive() {
     return new Object[][]{
-      {"storeIncharge", "Admin123", "DZ1", "DZ2", "Delivery Zone First", "Delivery Zone Second",
+      {"storeInCharge", "Admin123", "DZ1", "DZ2", "Delivery Zone First", "Delivery Zone Second",
         "F10", "F11", "VACCINES", "TB", "M", "Period", 14}
     };
   }

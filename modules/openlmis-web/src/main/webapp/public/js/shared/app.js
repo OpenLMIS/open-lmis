@@ -9,7 +9,7 @@
  */
 
 /* App Module */
-var app = angular.module('openlmis', ['openlmis.services', 'openlmis.localStorage', 'ui.directives', 'ngCookies'],
+var app = angular.module('openlmis', ['openlmis.services', 'openlmis.localStorage', 'ui.directives', 'ngCookies', 'ngRoute'],
   function ($httpProvider) {
     var interceptor = ['$q', '$window', 'loginConfig', function ($q, $window, loginConfig) {
       var requestCount = 0;

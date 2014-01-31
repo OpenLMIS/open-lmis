@@ -11,8 +11,6 @@
 package org.openlmis.functional;
 
 
-import cucumber.api.java.After;
-import cucumber.api.java.Before;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
@@ -48,38 +46,38 @@ public class ConfigureBudgetTemplate extends TestCaseHelper {
 
   @And("^I access configure budget page$")
   public void accessOrderScreen() throws Exception {
-    HomePage homePage = new HomePage(testWebDriver);
+    HomePage homePage = PageFactory.getInstanceOfHomePage(testWebDriver);
     ConfigureEDIPage configureEDIPage = homePage.navigateEdiScreen();
     configureEDIPage.navigateConfigureBudgetPage();
   }
 
   @And("^I should see include column headers option unchecked$")
   public void verifyIncludeColumnHeader() throws Exception {
-    ConfigureBudgetPage configureBudgetPage = new ConfigureBudgetPage(testWebDriver);
+    ConfigureBudgetPage configureBudgetPage = PageFactory.getInstanceOfConfigureBudgetPage(testWebDriver);
     assertFalse(configureBudgetPage.isHeaderIncluded());
   }
 
   @And("^I verify default checkbox for all data fields$")
   public void verifyDefaultDataFieldsCheckBox() throws Exception {
-    ConfigureBudgetPage configureBudgetPage = new ConfigureBudgetPage(testWebDriver);
+    ConfigureBudgetPage configureBudgetPage = PageFactory.getInstanceOfConfigureBudgetPage(testWebDriver);
     configureBudgetPage.verifyDefaultIncludeCheckboxForAllDataFields();
   }
 
   @And("^I verify default value of positions$")
   public void verifyDefaultPositionValues() throws Exception {
-    ConfigureBudgetPage configureBudgetPage = new ConfigureBudgetPage(testWebDriver);
+    ConfigureBudgetPage configureBudgetPage = PageFactory.getInstanceOfConfigureBudgetPage(testWebDriver);
     configureBudgetPage.verifyDefaultPositionValues();
   }
 
   @When("^I save budget file format$")
   public void clickSave() throws Exception {
-    ConfigureBudgetPage configureBudgetPage = new ConfigureBudgetPage(testWebDriver);
+    ConfigureBudgetPage configureBudgetPage = PageFactory.getInstanceOfConfigureBudgetPage(testWebDriver);
     configureBudgetPage.clickSaveButton();
   }
 
   @Then("^I should see budget successful saved message as \"([^\"]*)\"$")
   public void verifySaveSuccessfullyMessage(String message) throws Exception {
-    ConfigureBudgetPage configureBudgetPage = new ConfigureBudgetPage(testWebDriver);
+    ConfigureBudgetPage configureBudgetPage = PageFactory.getInstanceOfConfigureBudgetPage(testWebDriver);
     configureBudgetPage.verifyMessage(message);
   }
 
@@ -111,56 +109,50 @@ public class ConfigureBudgetTemplate extends TestCaseHelper {
   @Test(groups = {"admin"})
   public void clickingCancelShouldTakeUserToConfigureEDIPage() throws Exception {
     ConfigureBudgetPage configureBudgetPage = gotToConfigureBudgetPage();
-
     configureBudgetPage.clickCancelButton();
-
     assertTrue("User should be redirected to EDI Config page", testWebDriver.getCurrentUrl().contains(CONFIGURE_EDI_INDEX_PAGE));
   }
 
   @Test(groups = {"admin"})
   public void testInputValidations() throws Exception {
-    ConfigureBudgetPage configureBudgetPage = gotToConfigureBudgetPage();
-
-    verifyDuplicatePositionError(configureBudgetPage);
-    verifyZeroPositionError(configureBudgetPage);
-    verifyBlankPositionError(configureBudgetPage);
-
-    verifyPositionMoreThan3Digits(configureBudgetPage);
+    gotToConfigureBudgetPage();
+    verifyDuplicatePositionError();
+    verifyZeroPositionError();
+    verifyBlankPositionError();
+    verifyPositionMoreThan3Digits();
   }
 
   private ConfigureBudgetPage gotToConfigureBudgetPage() throws IOException {
-    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+    LoginPage loginPage = PageFactory.getInstanceOfLoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(user, password);
     ConfigureEDIPage configureEDIPage = homePage.navigateEdiScreen();
     return configureEDIPage.navigateConfigureBudgetPage();
   }
 
-  private void verifyDuplicatePositionError(ConfigureBudgetPage configureBudgetPage) {
+  private void verifyDuplicatePositionError() {
+    ConfigureBudgetPage configureBudgetPage = PageFactory.getInstanceOfConfigureBudgetPage(testWebDriver);
     configureBudgetPage.setAllocatedBudgetPosition("101");
     configureBudgetPage.setFacilityCodePosition("101");
-
     configureBudgetPage.clickSaveButton();
-
     configureBudgetPage.verifyErrorMessage("Position numbers cannot have duplicate values");
   }
 
-  private void verifyZeroPositionError(ConfigureBudgetPage configureBudgetPage) {
+  private void verifyZeroPositionError() {
+    ConfigureBudgetPage configureBudgetPage = PageFactory.getInstanceOfConfigureBudgetPage(testWebDriver);
     configureBudgetPage.setAllocatedBudgetPosition("0");
-
     configureBudgetPage.clickSaveButton();
-
     configureBudgetPage.verifyErrorMessage("Position number cannot be blank or zero for an included field");
   }
 
-  private void verifyBlankPositionError(ConfigureBudgetPage configureBudgetPage) {
+  private void verifyBlankPositionError() {
+    ConfigureBudgetPage configureBudgetPage = PageFactory.getInstanceOfConfigureBudgetPage(testWebDriver);
     configureBudgetPage.setFacilityCodePosition("");
-
     configureBudgetPage.clickSaveButton();
-
     configureBudgetPage.verifyErrorMessage("Position number cannot be blank or zero for an included field");
   }
 
-  private void verifyPositionMoreThan3Digits(ConfigureBudgetPage configureBudgetPage) {
+  private void verifyPositionMoreThan3Digits() {
+    ConfigureBudgetPage configureBudgetPage = PageFactory.getInstanceOfConfigureBudgetPage(testWebDriver);
 
     configureBudgetPage.setFacilityCodePosition("12345");
     assertEquals(configureBudgetPage.getFacilityCodePosition(), "123");
@@ -178,7 +170,6 @@ public class ConfigureBudgetTemplate extends TestCaseHelper {
     assertEquals(configureBudgetPage.getPeriodStartDatePosition(), "523");
 
     configureBudgetPage.clickSaveButton();
-
     assertEquals(configureBudgetPage.getFacilityCodePosition(), "123");
     assertEquals(configureBudgetPage.getAllocatedBudgetPosition(), "223");
     assertEquals(configureBudgetPage.getNotesPosition(), "323");
@@ -190,7 +181,7 @@ public class ConfigureBudgetTemplate extends TestCaseHelper {
   public void tearDown() throws Exception {
     testWebDriver.sleep(500);
     if (!testWebDriver.getElementById("username").isDisplayed()) {
-      HomePage homePage = new HomePage(testWebDriver);
+      HomePage homePage = PageFactory.getInstanceOfHomePage(testWebDriver);
       homePage.logout(baseUrlGlobal);
       dbWrapper.deleteData();
       dbWrapper.closeConnection();

@@ -11,9 +11,7 @@
 describe("User Search Controller", function () {
 
   var scope, $httpBackend, ctrl, navigateBackService, location, messageService, userList;
-  beforeEach(module('openlmis.services'));
-  beforeEach(module('openlmis.localStorage'))
-  beforeEach(module('openlmis.localStorage'));
+  beforeEach(module('openlmis'));
   var searchTextId = 'searchTextId';
 
   beforeEach(inject(function ($rootScope, _$httpBackend_, $controller, _navigateBackService_, $location, _messageService_) {

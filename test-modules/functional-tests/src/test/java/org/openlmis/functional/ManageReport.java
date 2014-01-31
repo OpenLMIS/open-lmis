@@ -26,23 +26,21 @@ import java.util.Date;
 public class ManageReport extends TestCaseHelper {
 
   String reportName, fileName;
+  LoginPage loginPage;
 
   public ManageReport() {
     reportName = "Test-Report" + getCurrentDateAndTime();
     fileName = "activefacility.jrxml";
   }
 
-
   @BeforeMethod(groups = {"admin"})
   public void setUp() throws Exception {
     super.setup();
+    loginPage = PageFactory.getInstanceOfLoginPage(testWebDriver, baseUrlGlobal);
   }
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function-Positive")
   public void invalidScenariosReports(String[] credentials) throws Exception {
-
-    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
-
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
     ReportPage reportPage = homePage.navigateReportScreen();
 
@@ -67,8 +65,6 @@ public class ManageReport extends TestCaseHelper {
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function-Positive")
   public void uploadWrongReport(String[] credentials) throws Exception {
-    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
-
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
     ReportPage reportPage = homePage.navigateReportScreen();
     reportPage.clickAddNewButton();
@@ -85,9 +81,6 @@ public class ManageReport extends TestCaseHelper {
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function-Positive", dependsOnMethods = "invalidScenariosReports")
   public void uploadManageReport(String[] credentials) throws Exception {
-
-    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
-
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
     ReportPage reportPage = homePage.navigateReportScreen();
 
@@ -105,9 +98,6 @@ public class ManageReport extends TestCaseHelper {
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function-Positive", dependsOnMethods = "uploadManageReport")
   public void verifyDuplicateReport(String[] credentials) throws Exception {
-
-    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
-
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
     ReportPage reportPage = homePage.navigateReportScreen();
 
@@ -127,27 +117,21 @@ public class ManageReport extends TestCaseHelper {
 
     reportPage.clickCancelButton();
     reportPage.verifyReportNameInList(reportName, 8);
-
-
   }
 
-    @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function-Positive")
-    public void verifyDefaultReports(String[] credentials) throws Exception {
+  @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function-Positive")
+  public void verifyDefaultReports(String[] credentials) throws Exception {
+    HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
+    ReportPage reportPage = homePage.navigateReportScreen();
 
-        LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
-
-        HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
-        ReportPage reportPage = homePage.navigateReportScreen();
-
-        reportPage.verifyReportNameInList("Facilities Missing Supporting Requisition Group", 1);
-        reportPage.verifyReportNameInList("Facilities Missing Create Requisition Role", 2);
-        reportPage.verifyReportNameInList("Facilities Missing Authorize Requisition Role", 3);
-        reportPage.verifyReportNameInList("Supervisory Nodes Missing Approve Requisition Role", 4);
-        reportPage.verifyReportNameInList("Requisition Groups Missing Supply Line", 5);
-        reportPage.verifyReportNameInList("Order Routing Inconsistencies", 6);
-        reportPage.verifyReportNameInList("Delivery Zones Missing Manage Distribution Role", 7);
-
-    }
+    reportPage.verifyReportNameInList("Facilities Missing Supporting Requisition Group", 1);
+    reportPage.verifyReportNameInList("Facilities Missing Create Requisition Role", 2);
+    reportPage.verifyReportNameInList("Facilities Missing Authorize Requisition Role", 3);
+    reportPage.verifyReportNameInList("Supervisory Nodes Missing Approve Requisition Role", 4);
+    reportPage.verifyReportNameInList("Requisition Groups Missing Supply Line", 5);
+    reportPage.verifyReportNameInList("Order Routing Inconsistencies", 6);
+    reportPage.verifyReportNameInList("Delivery Zones Missing Manage Distribution Role", 7);
+  }
 
   private String getCurrentDateAndTime() {
     Date dObj = new Date();
@@ -156,13 +140,12 @@ public class ManageReport extends TestCaseHelper {
     return formatter_date_time.format(dObj);
   }
 
-
   @AfterMethod(groups = {"admin"})
   public void tearDown() throws Exception {
-    HomePage homePage = new HomePage(testWebDriver);
+    HomePage homePage = PageFactory.getInstanceOfHomePage(testWebDriver);
     homePage.logout(baseUrlGlobal);
     dbWrapper.deleteData();
-    dbWrapper.deleteReport(reportName);
+    dbWrapper.deleteRowFromTable("report_templates", "name", reportName);
     dbWrapper.closeConnection();
   }
 

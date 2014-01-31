@@ -22,12 +22,12 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
+import static java.util.Arrays.asList;
 
 public class DistributionEpiUseSyncTest extends TestCaseHelper {
 
@@ -44,6 +44,7 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
   public static final String SCHEDULE = "schedule";
   public static final String PRODUCT_GROUP_CODE = "productGroupName";
   LoginPage loginPage;
+  FacilityListPage facilityListPage;
 
   public Map<String, String> epiUseData = new HashMap<String, String>() {{
     put(USER, "fieldCoordinator");
@@ -63,10 +64,10 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
   @BeforeMethod(groups = {"distribution"})
   public void setUp() throws Exception {
     super.setup();
-    loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+    loginPage = PageFactory.getInstanceOfLoginPage(testWebDriver, baseUrlGlobal);
+    facilityListPage = PageFactory.getInstanceOfFacilityListPage(testWebDriver);
 
     Map<String, String> dataMap = epiUseData;
-
     setupDataForDistributionTest(dataMap.get(USER), dataMap.get(FIRST_DELIVERY_ZONE_CODE), dataMap.get(SECOND_DELIVERY_ZONE_CODE),
       dataMap.get(FIRST_DELIVERY_ZONE_NAME), dataMap.get(SECOND_DELIVERY_ZONE_NAME), dataMap.get(FIRST_FACILITY_CODE),
       dataMap.get(SECOND_FACILITY_CODE), dataMap.get(VACCINES_PROGRAM), dataMap.get(TB_PROGRAM), dataMap.get(SCHEDULE),
@@ -76,26 +77,21 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
   @Test(groups = {"distribution"})
   public void testEpiUsePageSync() throws Exception {
     HomePage homePage = loginPage.loginAs(epiUseData.get(USER), epiUseData.get(PASSWORD));
-
     initiateDistribution(epiUseData.get(FIRST_DELIVERY_ZONE_NAME), epiUseData.get(VACCINES_PROGRAM));
+    GeneralObservationPage generalObservationPage = facilityListPage.selectFacility(epiUseData.get(FIRST_FACILITY_CODE));
+    generalObservationPage.enterDataWhenFacilityVisited("some observations", "samuel", "Doe", "Verifier", "XYZ");
 
-    FacilityListPage facilityListPage = new FacilityListPage(testWebDriver);
-    RefrigeratorPage refrigeratorPage = facilityListPage.selectFacility(epiUseData.get(FIRST_FACILITY_CODE));
-
-    EPIUsePage epiUsePage = refrigeratorPage.navigateToEpiUse();
+    EPIUsePage epiUsePage = generalObservationPage.navigateToEpiUse();
     epiUsePage.verifyIndicator("RED");
     epiUsePage.verifyProductGroup("PG1-Name", 1);
     epiUsePage.enterData(10, 20, 30, 40, 50, "10/2011", 1);
     epiUsePage.verifyIndicator("GREEN");
 
-    GeneralObservationPage generalObservationPage = epiUsePage.navigateToGeneralObservations();
-    generalObservationPage.enterData("some observations", "samuel", "Doe", "Verifier", "XYZ");
-
-    FullCoveragePage fullCoveragePage = generalObservationPage.navigateToFullCoverage();
+    FullCoveragePage fullCoveragePage = epiUsePage.navigateToFullCoverage();
     fullCoveragePage.enterData(12, 34, 45, "56");
 
-    EpiInventoryPage epiInventoryPage = generalObservationPage.navigateToEpiInventory();
-    fillEpiInventoryWithOnlyDeliveredQuantity(epiInventoryPage, "2", "4", "6");
+    fullCoveragePage.navigateToEpiInventory();
+    fillEpiInventoryWithOnlyDeliveredQuantity("2", "4", "6");
 
     DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
     distributionPage.syncDistribution(1);
@@ -108,13 +104,11 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
   @Test(groups = {"distribution"})
   public void testEpiUseEditSync() throws Exception {
     HomePage homePage = loginPage.loginAs(epiUseData.get(USER), epiUseData.get(PASSWORD));
-
     initiateDistribution(epiUseData.get(FIRST_DELIVERY_ZONE_NAME), epiUseData.get(VACCINES_PROGRAM));
+    GeneralObservationPage generalObservationPage = facilityListPage.selectFacility(epiUseData.get(FIRST_FACILITY_CODE));
+    generalObservationPage.enterDataWhenFacilityVisited("some observations", "samuel", "Doe", "Verifier", "XYZ");
 
-    FacilityListPage facilityListPage = new FacilityListPage(testWebDriver);
-    RefrigeratorPage refrigeratorPage = facilityListPage.selectFacility(epiUseData.get(FIRST_FACILITY_CODE));
-
-    EPIUsePage epiUsePage = refrigeratorPage.navigateToEpiUse();
+    EPIUsePage epiUsePage = generalObservationPage.navigateToEpiUse();
     epiUsePage.verifyProductGroup("PG1-Name", 1);
     epiUsePage.verifyIndicator("RED");
     epiUsePage.enterValueInLoss("0", 1);
@@ -122,7 +116,7 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
     epiUsePage.enterData(10, 20, 30, 40, 50, "10/2011", 1);
     epiUsePage.verifyIndicator("GREEN");
 
-    epiUsePage.navigateToRefrigerators();
+    RefrigeratorPage refrigeratorPage = epiUsePage.navigateToRefrigerators();
     refrigeratorPage.navigateToEpiUse();
 
     epiUsePage.verifyTotal("30", 1);
@@ -180,14 +174,11 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
     epiUsePage.verifyExpirationDateStatus(true, 1);
     epiUsePage.verifyIndicator("GREEN");
 
-    GeneralObservationPage generalObservationPage = epiUsePage.navigateToGeneralObservations();
-    generalObservationPage.enterData("some observations", "samuel", "Doe", "Verifier", "XYZ");
-
-    FullCoveragePage fullCoveragePage = generalObservationPage.navigateToFullCoverage();
+    FullCoveragePage fullCoveragePage = epiUsePage.navigateToFullCoverage();
     fullCoveragePage.enterData(12, 34, 45, "56");
 
-    EpiInventoryPage epiInventoryPage = generalObservationPage.navigateToEpiInventory();
-    fillEpiInventoryWithOnlyDeliveredQuantity(epiInventoryPage, "2", "4", "6");
+    fullCoveragePage.navigateToEpiInventory();
+    fillEpiInventoryWithOnlyDeliveredQuantity("2", "4", "6");
 
     DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
     distributionPage.syncDistribution(1);
@@ -200,26 +191,21 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
   @Test(groups = {"distribution"})
   public void testEpiUsePageSyncWhenSomeFieldsEmpty() throws Exception {
     loginPage.loginAs(epiUseData.get(USER), epiUseData.get(PASSWORD));
-
     initiateDistribution(epiUseData.get(FIRST_DELIVERY_ZONE_NAME), epiUseData.get(VACCINES_PROGRAM));
+    GeneralObservationPage generalObservationPage = facilityListPage.selectFacility(epiUseData.get(FIRST_FACILITY_CODE));
+    generalObservationPage.enterDataWhenFacilityVisited("some observations", "samuel", "Doe", "Verifier", "XYZ");
 
-    FacilityListPage facilityListPage = new FacilityListPage(testWebDriver);
-    RefrigeratorPage refrigeratorPage = facilityListPage.selectFacility(epiUseData.get(FIRST_FACILITY_CODE));
-
-    EPIUsePage epiUsePage = refrigeratorPage.navigateToEpiUse();
+    EPIUsePage epiUsePage = generalObservationPage.navigateToEpiUse();
     epiUsePage.verifyProductGroup("PG1-Name", 1);
     epiUsePage.verifyIndicator("RED");
     epiUsePage.enterValueInStockAtFirstOfMonth("10", 1);
     epiUsePage.verifyIndicator("AMBER");
 
-    GeneralObservationPage generalObservationPage = epiUsePage.navigateToGeneralObservations();
-    generalObservationPage.enterData("some observations", "samuel", "Doe", "Verifier", "XYZ");
-
-    FullCoveragePage fullCoveragePage = generalObservationPage.navigateToFullCoverage();
+    FullCoveragePage fullCoveragePage = epiUsePage.navigateToFullCoverage();
     fullCoveragePage.enterData(12, 34, 45, "56");
 
-    EpiInventoryPage epiInventoryPage = generalObservationPage.navigateToEpiInventory();
-    fillEpiInventoryWithOnlyDeliveredQuantity(epiInventoryPage, "2", "4", "6");
+    fullCoveragePage.navigateToEpiInventory();
+    fillEpiInventoryWithOnlyDeliveredQuantity("2", "4", "6");
 
     facilityListPage.selectFacility(epiUseData.get(FIRST_FACILITY_CODE));
     facilityListPage.verifyFacilityIndicatorColor("Overall", "AMBER");
@@ -230,13 +216,11 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
   @Test(groups = {"distribution"})
   public void testEpiUsePageSyncWhenNrAppliedToAllFields() throws Exception {
     HomePage homePage = loginPage.loginAs(epiUseData.get(USER), epiUseData.get(PASSWORD));
-
     initiateDistribution(epiUseData.get(FIRST_DELIVERY_ZONE_NAME), epiUseData.get(VACCINES_PROGRAM));
+    GeneralObservationPage generalObservationPage = facilityListPage.selectFacility(epiUseData.get(FIRST_FACILITY_CODE));
+    generalObservationPage.enterDataWhenFacilityVisited("some observations", "samuel", "Doe", "Verifier", "XYZ");
 
-    FacilityListPage facilityListPage = new FacilityListPage(testWebDriver);
-    RefrigeratorPage refrigeratorPage = facilityListPage.selectFacility(epiUseData.get(FIRST_FACILITY_CODE));
-
-    EPIUsePage epiUsePage = refrigeratorPage.navigateToEpiUse();
+    EPIUsePage epiUsePage = generalObservationPage.navigateToEpiUse();
 
     epiUsePage.verifyProductGroup("PG1-Name", 1);
     epiUsePage.verifyIndicator("RED");
@@ -253,14 +237,11 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
     epiUsePage.verifyStockAtEndOfMonthStatus(false, 1);
     epiUsePage.verifyExpirationDateStatus(false, 1);
 
-    GeneralObservationPage generalObservationPage = epiUsePage.navigateToGeneralObservations();
-    generalObservationPage.enterData("some observations", "samuel", "Doe", "Verifier", "XYZ");
-
-    FullCoveragePage fullCoveragePage = generalObservationPage.navigateToFullCoverage();
+    FullCoveragePage fullCoveragePage = epiUsePage.navigateToFullCoverage();
     fullCoveragePage.enterData(12, 34, 45, "56");
 
-    EpiInventoryPage epiInventoryPage = generalObservationPage.navigateToEpiInventory();
-    fillEpiInventoryWithOnlyDeliveredQuantity(epiInventoryPage, "2", "4", "6");
+    fullCoveragePage.navigateToEpiInventory();
+    fillEpiInventoryWithOnlyDeliveredQuantity("2", "4", "6");
 
     DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
     distributionPage.syncDistribution(1);
@@ -281,13 +262,11 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
     dbWrapper.insertProgramProduct("Product7", epiUseData.get(VACCINES_PROGRAM), "10", "true");
 
     HomePage homePage = loginPage.loginAs(epiUseData.get(USER), epiUseData.get(PASSWORD));
-
     initiateDistribution(epiUseData.get(FIRST_DELIVERY_ZONE_NAME), epiUseData.get(VACCINES_PROGRAM));
+    GeneralObservationPage generalObservationPage = facilityListPage.selectFacility(epiUseData.get(FIRST_FACILITY_CODE));
+    generalObservationPage.enterDataWhenFacilityVisited("some observations", "samuel", "Doe", "Verifier", "XYZ");
 
-    FacilityListPage facilityListPage = new FacilityListPage(testWebDriver);
-    RefrigeratorPage refrigeratorPage = facilityListPage.selectFacility(epiUseData.get(FIRST_FACILITY_CODE));
-
-    EPIUsePage epiUsePage = refrigeratorPage.navigateToEpiUse();
+    EPIUsePage epiUsePage = generalObservationPage.navigateToEpiUse();
     epiUsePage.verifyIndicator("RED");
     epiUsePage.verifyProductGroup("PG1-Name", 1);
     epiUsePage.checkApplyNRToStockAtFirstOfMonth0();
@@ -300,14 +279,11 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
     epiUsePage.enterData(10, 20, 30, 40, 50, "10/2011", 2);
     epiUsePage.verifyIndicator("GREEN");
 
-    GeneralObservationPage generalObservationPage = epiUsePage.navigateToGeneralObservations();
-    generalObservationPage.enterData("some observations", "samuel", "Doe", "Verifier", "XYZ");
-
-    FullCoveragePage fullCoveragePage = generalObservationPage.navigateToFullCoverage();
+    FullCoveragePage fullCoveragePage = epiUsePage.navigateToFullCoverage();
     fullCoveragePage.enterData(12, 34, 45, "56");
 
-    EpiInventoryPage epiInventoryPage = generalObservationPage.navigateToEpiInventory();
-    fillEpiInventoryWithOnlyDeliveredQuantity(epiInventoryPage, "2", "4", "6");
+    EpiInventoryPage epiInventoryPage = fullCoveragePage.navigateToEpiInventory();
+    fillEpiInventoryWithOnlyDeliveredQuantity("2", "4", "6");
     epiInventoryPage.fillDeliveredQuantity(4, "8");
 
     DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
@@ -320,37 +296,32 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
   }
 
   @Test(groups = {"distribution"})
-  public void shouldDisplayNoProductsAddedMessageWhOnEpiUsePageWhenNoActiveProducts() throws Exception {
-    dbWrapper.updateActiveStatusOfProduct("P10", "false");
-    dbWrapper.updateActiveStatusOfProduct("P11", "false");
-    dbWrapper.updateActiveStatusOfProduct("Product6", "false");
+  public void shouldDisplayNoProductsAddedMessageOnEpiUsePageWhenNoActiveProducts() throws Exception {
+    dbWrapper.updateFieldValue("products", "active", "false", "code", "P10");
+    dbWrapper.updateFieldValue("products", "active", "false", "code", "P11");
+    dbWrapper.updateFieldValue("products", "active", "false", "code", "Product6");
 
-    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(epiUseData.get(USER), epiUseData.get(PASSWORD));
     DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
     distributionPage.initiate(epiUseData.get(FIRST_DELIVERY_ZONE_NAME), epiUseData.get(VACCINES_PROGRAM));
-
     FacilityListPage facilityListPage = distributionPage.clickRecordData(1);
     EPIUsePage epiUsePage = facilityListPage.selectFacility(epiUseData.get(FIRST_FACILITY_CODE)).navigateToEpiUse();
 
     assertTrue(epiUsePage.getNoProductsAddedMessage().contains("No products added"));
     epiUsePage.verifyIndicator("GREEN");
 
-    dbWrapper.updateActiveStatusOfProduct("P10", "true");
-    dbWrapper.updateActiveStatusOfProduct("P11", "true");
-    dbWrapper.updateActiveStatusOfProduct("Product6", "true");
-
+    dbWrapper.updateFieldValue("products", "active", "true", "code", "P10");
+    dbWrapper.updateFieldValue("products", "active", "true", "code", "P11");
+    dbWrapper.updateFieldValue("products", "active", "true", "code", "Product6");
   }
-
 
   public void setupDataForDistributionTest(String userSIC, String deliveryZoneCodeFirst, String deliveryZoneCodeSecond,
                                            String deliveryZoneNameFirst, String deliveryZoneNameSecond,
                                            String facilityCodeFirst, String facilityCodeSecond,
                                            String programFirst, String programSecond, String schedule, String productGroupCode) throws Exception {
-    List<String> rightsList = new ArrayList<>();
-    rightsList.add("MANAGE_DISTRIBUTION");
-    setupTestDataToInitiateRnRAndDistribution(facilityCodeFirst, facilityCodeSecond, true, programFirst, userSIC, "200", rightsList, programSecond,
-      "District1", "Ngorongoro", "Ngorongoro");
+    List<String> rightsList = asList("MANAGE_DISTRIBUTION");
+    setupTestDataToInitiateRnRAndDistribution(facilityCodeFirst, facilityCodeSecond, true, programFirst, userSIC, "200", rightsList,
+      programSecond, "District1", "Ngorongoro", "Ngorongoro");
     setupDataForDeliveryZone(true, deliveryZoneCodeFirst, deliveryZoneCodeSecond, deliveryZoneNameFirst, deliveryZoneNameSecond,
       facilityCodeFirst, facilityCodeSecond, programFirst, programSecond, schedule);
     dbWrapper.insertRoleAssignmentForDistribution(userSIC, "store in-charge", deliveryZoneCodeFirst);
@@ -363,8 +334,7 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
   }
 
   public void initiateDistribution(String deliveryZoneNameFirst, String programFirst) throws IOException {
-
-    HomePage homePage = new HomePage(testWebDriver);
+    HomePage homePage = PageFactory.getInstanceOfHomePage(testWebDriver);
     DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
     distributionPage.selectValueFromDeliveryZone(deliveryZoneNameFirst);
     distributionPage.selectValueFromProgram(programFirst);
@@ -372,7 +342,8 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
     distributionPage.clickRecordData(1);
   }
 
-  public void fillEpiInventoryWithOnlyDeliveredQuantity(EpiInventoryPage epiInventoryPage, String deliveredQuantity1, String deliveredQuantity2, String deliveredQuantity3) {
+  public void fillEpiInventoryWithOnlyDeliveredQuantity(String deliveredQuantity1, String deliveredQuantity2, String deliveredQuantity3) {
+    EpiInventoryPage epiInventoryPage = PageFactory.getInstanceOfEpiInventoryPage(testWebDriver);
     epiInventoryPage.applyNRToAll();
     epiInventoryPage.fillDeliveredQuantity(1, deliveredQuantity1);
     epiInventoryPage.fillDeliveredQuantity(2, deliveredQuantity2);
@@ -383,7 +354,7 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
   public void tearDown() throws Exception {
     testWebDriver.sleep(500);
     if (!testWebDriver.getElementById("username").isDisplayed()) {
-      HomePage homePage = new HomePage(testWebDriver);
+      HomePage homePage = PageFactory.getInstanceOfHomePage(testWebDriver);
       homePage.logout(baseUrlGlobal);
       dbWrapper.deleteData();
       dbWrapper.closeConnection();

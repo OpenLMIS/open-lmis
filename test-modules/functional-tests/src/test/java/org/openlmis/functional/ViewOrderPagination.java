@@ -11,25 +11,26 @@
 package org.openlmis.functional;
 
 
+import cucumber.api.Scenario;
+import cucumber.api.java.After;
 import org.openlmis.UiUtils.CaptureScreenshotOnFailureListener;
 import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.pageobjects.HomePage;
 import org.openlmis.pageobjects.LoginPage;
 import org.testng.annotations.*;
 
-import java.util.ArrayList;
 import java.util.List;
+
+import static java.util.Arrays.asList;
 
 @Listeners(CaptureScreenshotOnFailureListener.class)
 
 public class ViewOrderPagination extends TestCaseHelper {
 
-
   @BeforeMethod(groups = "requisition")
   public void setUp() throws Exception {
     super.setup();
   }
-
 
   @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-Positive")
   public void verifyPagination(String program, String userSIC, String password) throws Exception {
@@ -46,30 +47,24 @@ public class ViewOrderPagination extends TestCaseHelper {
     dbWrapper.insertOrders("RELEASED", userSIC, "MALARIA");
     dbWrapper.insertOrders("RELEASED", userSIC, "TB");
 
-
-    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+    LoginPage loginPage = PageFactory.getInstanceOfLoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(userSIC, password);
     homePage.navigateViewOrders();
     verifyNumberOfPageLinks(51, 50);
     verifyNextAndLastLinksEnabled();
     verifyPreviousAndFirstLinksDisabled();
 
-
     testWebDriver.getElementByXpath("//a[contains(text(), '2') and @class='ng-binding']").click();
     verifyPageLinksFromLastPage();
     verifyPreviousAndFirstLinksEnabled();
     verifyNextAndLastLinksDisabled();
-
   }
-
 
   private void setUpData(String program, String userSIC) throws Exception {
     setupProductTestData("P10", "P11", program, "lvl3_hospital");
     dbWrapper.insertFacilities("F10", "F11");
     dbWrapper.configureTemplate(program);
-    List<String> rightsList = new ArrayList<>();
-    rightsList.add("CONVERT_TO_ORDER");
-    rightsList.add("VIEW_ORDER");
+    List<String> rightsList = asList("CONVERT_TO_ORDER", "VIEW_ORDER");
 
     setupTestUserRoleRightsData("200", userSIC, rightsList);
     dbWrapper.insertSupervisoryNode("F10", "N1", "Node 1", "null");
@@ -86,21 +81,26 @@ public class ViewOrderPagination extends TestCaseHelper {
   public void tearDown() throws Exception {
     testWebDriver.sleep(500);
     if (!testWebDriver.getElementById("username").isDisplayed()) {
-      HomePage homePage = new HomePage(testWebDriver);
+      HomePage homePage = PageFactory.getInstanceOfHomePage(testWebDriver);
       homePage.logout(baseUrlGlobal);
       dbWrapper.deleteData();
       dbWrapper.closeConnection();
     }
-
   }
-
 
   @DataProvider(name = "Data-Provider-Function-Positive")
   public Object[][] parameterIntTestProviderPositive() {
     return new Object[][]{
-      {"HIV", "storeIncharge", "Admin123"}
+      {"HIV", "storeInCharge", "Admin123"}
     };
+  }
 
+  @After
+  public void embedScreenshot(Scenario scenario) {
+    if (scenario.isFailed()) {
+      byte[] screenshot = testWebDriver.getScreenshot();
+      scenario.embed(screenshot, "image/png");
+    }
   }
 }
 

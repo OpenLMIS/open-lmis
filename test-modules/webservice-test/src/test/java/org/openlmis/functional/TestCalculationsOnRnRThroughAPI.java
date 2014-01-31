@@ -39,7 +39,7 @@ public class TestCalculationsOnRnRThroughAPI extends JsonUtility {
     dbWrapper.insertProcessingPeriod("current", "current period", "2013-01-30", "2016-01-30", 1, "M");
     dbWrapper.insertRoleAssignmentForSupervisoryNodeForProgramId1("700", "store in-charge", "N1");
     dbWrapper.updateRestrictLogin("commTrack", true);
-    dbWrapper.updateProductFullSupplyFlag(true, "P11");
+    dbWrapper.updateFieldValue("products","fullSupply","true","code","P11");
   }
 
   @AfterMethod(groups = {"webservice","webserviceSmoke"})
@@ -388,7 +388,7 @@ public class TestCalculationsOnRnRThroughAPI extends JsonUtility {
     submitRnRThroughApi("V10", "HIV", "P10", null, 10, null, null, null, null);
     id = submitRnRThroughApi("V10", "HIV", "P10", null, 5, null, null, null, null);
     convertToOrderAndUpdatePOD("commTrack", "HIV", 5);
-    dbWrapper.updateCreatedDateInPODLineItems("2010-02-11", id);
+    dbWrapper.updateFieldValue("pod","createdDate","2010-02-11","orderId",id.toString());
     id = submitRnRThroughApi("V10", "HIV", "P10", null, 4, null, null, null, null);
     assertEquals("5", dbWrapper.getRequisitionLineItemFieldValue(id, "beginningBalance", "P10"));
     assertEquals("4", dbWrapper.getRequisitionLineItemFieldValue(id, "stockInHand", "P10"));
@@ -458,8 +458,8 @@ public class TestCalculationsOnRnRThroughAPI extends JsonUtility {
     dbWrapper.updateConfigureTemplate("HIV", "source", "C", "true", "quantityDispensed");
     dbWrapper.updateConfigureTemplate("HIV", "source", "U", "false", "beginningBalance");
     dbWrapper.deleteRnrData();
-    dbWrapper.deletePeriod("Period1");
-    dbWrapper.deletePeriod("Period2");
+    dbWrapper.deleteRowFromTable("processing_periods","name","Period1");
+    dbWrapper.deleteRowFromTable("processing_periods","name","Period2");
     dbWrapper.insertRequisitions(1, "HIV", false, "2013-01-16", "2013-01-29", "V10", false);
 
     Long id = submitRnRThroughApi("V10", "HIV", "P10", null, 4, null, 10, null, null);

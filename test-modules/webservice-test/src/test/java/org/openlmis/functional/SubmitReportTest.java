@@ -176,7 +176,7 @@ public class SubmitReportTest extends JsonUtility {
 
   @Test(groups = {"webservice"})
   public void testSubmitReportWhenVirtualFacilityInactive() throws Exception {
-    dbWrapper.updateActiveStatusOfFacility("V10", "false");
+    dbWrapper.updateFieldValue("facilities", "active", "false", "code", "V10");
     HttpClient client = new HttpClient();
     client.createContext();
     Report reportFromJson = JsonUtility.readObjectFromFile(FULL_JSON_TXT_FILE_NAME, Report.class);
@@ -195,7 +195,7 @@ public class SubmitReportTest extends JsonUtility {
 
   @Test(groups = {"webservice"})
   public void testSubmitReportWhenVirtualFacilityDisabled() throws Exception {
-    dbWrapper.updateFacilityFieldBYCode("enabled", "false", "V10");
+    dbWrapper.updateFieldValue("facilities", "enabled", "false", "code", "V10");
     HttpClient client = new HttpClient();
     client.createContext();
     Report reportFromJson = JsonUtility.readObjectFromFile(FULL_JSON_TXT_FILE_NAME, Report.class);
@@ -214,7 +214,7 @@ public class SubmitReportTest extends JsonUtility {
 
   @Test(groups = {"webservice"})
   public void testSubmitReportWhenParentFacilityInactive() throws Exception {
-    dbWrapper.updateActiveStatusOfFacility("V10", "false");
+    dbWrapper.updateFieldValue("facilities", "active", "false", "code", "V10");
     HttpClient client = new HttpClient();
     client.createContext();
     Report reportFromJson = JsonUtility.readObjectFromFile(FULL_JSON_TXT_FILE_NAME, Report.class);
@@ -233,7 +233,7 @@ public class SubmitReportTest extends JsonUtility {
 
   @Test(groups = {"webservice"})
   public void testSubmitReportWhenProgramGloballyInactive() throws Exception {
-    dbWrapper.updateActiveStatusOfProgram("HIV", false);
+    dbWrapper.updateFieldValue("programs", "active", "false", "code", "HIV");
     HttpClient client = new HttpClient();
     client.createContext();
     Report reportFromJson = JsonUtility.readObjectFromFile(FULL_JSON_TXT_FILE_NAME, Report.class);
@@ -248,7 +248,7 @@ public class SubmitReportTest extends JsonUtility {
 
     assertEquals(400, responseEntity.getStatus());
     assertEquals("{\"error\":\"User does not have permission\"}", responseEntity.getResponse());
-    dbWrapper.updateActiveStatusOfProgram("HIV", true);
+    dbWrapper.updateFieldValue("programs", "active", "true", "code", "HIV");
   }
 
   @Test(groups = {"webservice"})
@@ -272,7 +272,7 @@ public class SubmitReportTest extends JsonUtility {
 
   @Test(groups = {"webservice"})
   public void testSubmitReportWhenParentFacilityDisabled() throws Exception {
-    dbWrapper.updateFacilityFieldBYCode("enabled", "false", "F10");
+    dbWrapper.updateFieldValue("facilities", "enabled", "false", "code", "F10");
     HttpClient client = new HttpClient();
     client.createContext();
     Report reportFromJson = JsonUtility.readObjectFromFile(FULL_JSON_TXT_FILE_NAME, Report.class);
@@ -287,12 +287,12 @@ public class SubmitReportTest extends JsonUtility {
 
     assertEquals(400, responseEntity.getStatus());
     assertEquals("{\"error\":\"Facility is inoperative\"}", responseEntity.getResponse());
-    dbWrapper.updateFacilityFieldBYCode("enabled", "true", "F10");
+    dbWrapper.updateFieldValue("facilities", "enabled", "true", "code", "F10");
   }
 
   @Test(groups = {"webservice"})
   public void testSubmitReportWhenTemplateNotConfigured() throws Exception {
-    dbWrapper.deleteRnrTemplate();
+    dbWrapper.deleteTable("program_rnr_columns");
     HttpClient client = new HttpClient();
     client.createContext();
     Report reportFromJson = JsonUtility.readObjectFromFile(FULL_JSON_TXT_FILE_NAME, Report.class);
@@ -437,7 +437,7 @@ public class SubmitReportTest extends JsonUtility {
 
   @Test(groups = {"webservice"})
   public void testGloballyInactiveProductSubmitReport() throws Exception {
-    dbWrapper.updateActiveStatusOfProduct("P10", "False");
+    dbWrapper.updateFieldValue("products", "active", "false", "code", "P10");
     HttpClient client = new HttpClient();
     client.createContext();
 
@@ -455,7 +455,7 @@ public class SubmitReportTest extends JsonUtility {
 
     assertEquals(400, responseEntity.getStatus());
     assertEquals("{\"error\":\"Invalid product codes [P10]\"}", responseEntity.getResponse());
-    dbWrapper.updateActiveStatusOfProduct("P10", "True");
+    dbWrapper.updateFieldValue("products", "active", "true", "code", "P10");
   }
 
   @Test(groups = {"webservice"})
@@ -634,7 +634,7 @@ public class SubmitReportTest extends JsonUtility {
   public void testInvalidSubmitReportRnRWithoutFillingRegimen() throws Exception {
     dbWrapper.insertRegimenTemplateColumnsForProgram("HIV");
     dbWrapper.insertRegimenTemplateConfiguredForProgram("HIV", "ADULTS", "Regimen", "Regimen1", true);
-    dbWrapper.setRegimenTemplateConfiguredForAllPrograms(true);
+    dbWrapper.updateFieldValue("programs", "regimenTemplateConfigured", "true", null, null);
     HttpClient client = new HttpClient();
     client.createContext();
 
@@ -660,7 +660,7 @@ public class SubmitReportTest extends JsonUtility {
   public void testSubmitReportRnRWithoutFillingInactiveRegimen() throws Exception {
     dbWrapper.insertRegimenTemplateColumnsForProgram("HIV");
     dbWrapper.insertRegimenTemplateConfiguredForProgram("HIV", "ADULTS", "Regimen", "Regimen1", false);
-    dbWrapper.setRegimenTemplateConfiguredForAllPrograms(true);
+    dbWrapper.updateFieldValue("programs", "regimenTemplateConfigured", "true", null, null);
     HttpClient client = new HttpClient();
     client.createContext();
 
@@ -687,7 +687,7 @@ public class SubmitReportTest extends JsonUtility {
   public void testSubmitReportRnRWithRegimen() throws Exception {
     dbWrapper.insertRegimenTemplateColumnsForProgram("HIV");
     dbWrapper.insertRegimenTemplateConfiguredForProgram("HIV", "ADULTS", "Regimen", "Regimen1", true);
-    dbWrapper.setRegimenTemplateConfiguredForAllPrograms(true);
+    dbWrapper.updateFieldValue("programs", "regimenTemplateConfigured", "true", null, null);
     HttpClient client = new HttpClient();
     client.createContext();
 
@@ -724,7 +724,7 @@ public class SubmitReportTest extends JsonUtility {
   public void testSubmitReportRnRWithRegimenHavingExtraFields() throws Exception {
     dbWrapper.insertRegimenTemplateColumnsForProgram("HIV");
     dbWrapper.insertRegimenTemplateConfiguredForProgram("HIV", "ADULTS", "Regimen", "Regimen1", true);
-    dbWrapper.setRegimenTemplateConfiguredForAllPrograms(true);
+    dbWrapper.updateFieldValue("programs", "regimenTemplateConfigured", "true", null, null);
     HttpClient client = new HttpClient();
     client.createContext();
 
@@ -762,7 +762,7 @@ public class SubmitReportTest extends JsonUtility {
   public void testSubmitReportRnRWithRegimenMissingMandatoryFields() throws Exception {
     dbWrapper.insertRegimenTemplateColumnsForProgram("HIV");
     dbWrapper.insertRegimenTemplateConfiguredForProgram("HIV", "ADULTS", "Regimen", "Regimen1", true);
-    dbWrapper.setRegimenTemplateConfiguredForAllPrograms(true);
+    dbWrapper.updateFieldValue("programs", "regimenTemplateConfigured", "true", null, null);
     HttpClient client = new HttpClient();
     client.createContext();
 
@@ -798,7 +798,7 @@ public class SubmitReportTest extends JsonUtility {
   public void testInvalidSubmitReportRnRWithExtraRegimenLineItem() throws Exception {
     dbWrapper.insertRegimenTemplateColumnsForProgram("HIV");
     dbWrapper.insertRegimenTemplateConfiguredForProgram("HIV", "ADULTS", "Regimen", "Regimen1", true);
-    dbWrapper.setRegimenTemplateConfiguredForAllPrograms(true);
+    dbWrapper.updateFieldValue("programs", "regimenTemplateConfigured", "true", null, null);
     HttpClient client = new HttpClient();
     client.createContext();
 
@@ -847,7 +847,8 @@ public class SubmitReportTest extends JsonUtility {
     dbWrapper.insertRegimenTemplateColumnsForProgram("HIV");
     dbWrapper.insertRegimenTemplateConfiguredForProgram("HIV", "ADULTS", "Regimen", "Regimen1", true);
     dbWrapper.insertRegimenTemplateConfiguredForProgram("HIV", "ADULTS", "Regimen2", "Regimen12", true);
-    dbWrapper.setRegimenTemplateConfiguredForAllPrograms(true);
+    dbWrapper.updateFieldValue("programs", "regimenTemplateConfigured", "true", null, null);
+
     HttpClient client = new HttpClient();
     client.createContext();
 

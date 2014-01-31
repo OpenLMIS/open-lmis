@@ -3,6 +3,7 @@ package org.openlmis.pageobjects;
 
 import com.thoughtworks.selenium.SeleneseTestNgHelper;
 import org.openlmis.UiUtils.TestWebDriver;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
@@ -32,7 +33,7 @@ public class ManagePodPage extends Page {
   private static WebElement orderStatusDetailsOnManagePodScreen  = null;
 
   @FindBy(how = XPATH, using = "//div/a[contains(text(),'Update POD')]")
-  private static WebElement UpdatePodLinkOnManagePodScreen  = null;
+  private static WebElement updatePodLinkOnManagePodScreen = null;
 
   @FindBy(how = XPATH, using = "//div[@class='ngHeaderText ng-binding colt0']")
   private static WebElement headerOrderNoOnManagePodScreen  = null;
@@ -128,13 +129,21 @@ public class ManagePodPage extends Page {
   }
 
   public String getUpdatePodLink() {
-    return testWebDriver.getText(UpdatePodLinkOnManagePodScreen);
+    return testWebDriver.getText(updatePodLinkOnManagePodScreen);
   }
 
   public void verifyMessageOnManagePodScreen() {
     testWebDriver.sleep(500);
     testWebDriver.refresh();
     SeleneseTestNgHelper.assertTrue("Message not Displayed on Manage Pod Screen",noOrderPresentMessageOnPodScreen.isDisplayed());
+  }
+
+  public UpdatePodPage selectRequisitionToUpdatePod(int rowNumber) {
+    testWebDriver.waitForAjax();
+    WebElement uploadLink = testWebDriver.findElement(By.id("updatePod" + (rowNumber - 1)));
+    testWebDriver.waitForElementToAppear(uploadLink);
+    uploadLink.click();
+    return new UpdatePodPage(testWebDriver);
   }
 }
 

@@ -34,7 +34,8 @@ public class FacilityVisit extends BaseModel {
   private Facilitator confirmedBy;
   private Facilitator verifiedBy;
   private String observations;
-  private Boolean synced = Boolean.FALSE;
+
+  private Boolean synced = false;
 
   public FacilityVisit(Facility facility, Distribution distribution) {
     this.distributionId = distribution.getId();

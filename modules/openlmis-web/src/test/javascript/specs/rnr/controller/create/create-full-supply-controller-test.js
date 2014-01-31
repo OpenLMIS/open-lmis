@@ -11,8 +11,7 @@
 describe('CreateFullSupplyController', function () {
   var scope, ctrl, httpBackend, location, routeParams, controller, localStorageService;
 
-  beforeEach(module('openlmis.services'));
-  beforeEach(module('openlmis.localStorage'));
+  beforeEach(module('openlmis'));
   beforeEach(inject(function ($httpBackend, $rootScope, $location, $controller, $routeParams, _localStorageService_) {
     scope = $rootScope.$new();
     $rootScope.hasPermission = function () {

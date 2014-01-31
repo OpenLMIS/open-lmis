@@ -10,9 +10,7 @@
 
 describe("MessageService", function () {
 
-  beforeEach(module('openlmis.services'));
-
-  beforeEach(module('openlmis.localStorage'));
+  beforeEach(module('openlmis'));
 
   var httpBackend, messageService,localStorageService;
 

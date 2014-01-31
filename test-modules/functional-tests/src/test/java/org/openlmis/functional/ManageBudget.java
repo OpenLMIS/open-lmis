@@ -5,67 +5,64 @@ import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.pageobjects.*;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static java.util.Arrays.asList;
 
-public class ManageBudget extends TestCaseHelper{
+public class ManageBudget extends TestCaseHelper {
   public static final String APPROVE_REQUISITION = "APPROVE_REQUISITION";
   public static final String CREATE_REQUISITION = "CREATE_REQUISITION";
   public static final String AUTHORIZED = "AUTHORIZED";
   public static final String AUTHORIZE_REQUISITION = "AUTHORIZE_REQUISITION";
   public static final String VIEW_REQUISITION = "VIEW_REQUISITION";
   public static final String program = "HIV";
-  public static final String userSIC =  "storeIncharge";
+  public static final String userSIC = "storeInCharge";
   public static final String password = "Admin123";
 
   public LoginPage loginPage;
+  InitiateRnR initiateRnR;
+  InitiateRnRPage initiateRnRPage;
 
 
   @BeforeMethod(groups = "requisition")
-  //@cucumber.api.java.Before
   public void setUp() throws Exception {
     super.setup();
     dbWrapper.deleteData();
     setUpData(program, userSIC);
-    dbWrapper.deleteProcessingPeriods();
+    dbWrapper.deleteTable("processing_periods");
     dbWrapper.insertProcessingPeriod("current Period", "current Period", "2013-10-03", "2016-01-30", 1, "M");
-
+    loginPage = PageFactory.getInstanceOfLoginPage(testWebDriver, baseUrlGlobal);
+    initiateRnR = PageFactory.getInstanceOfInitiateRnR();
+    initiateRnRPage = PageFactory.getInstanceOfInitiateRnRPage(testWebDriver);
   }
 
   @Test(groups = {"requisition"})
   public void testVerifyBudgetWhenRegularRnRIsCreatedAndBudgetFlagIsTrueAndContainsBudgetInformation() throws Exception {
-    dbWrapper.updateBudgetFlag(program, true);
+    dbWrapper.updateFieldValue("programs", "budgetingApplies", "true", "name", program);
     dbWrapper.insertBudgetData();
 
-    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(userSIC, password);
 
     homePage.navigateHomePage();
     homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Regular");
     homePage.clickProceed();
 
-    InitiateRnRPage initiateRnRPage =new InitiateRnRPage(testWebDriver);
-    enterDetailsInRnRForFirstProduct(100,50,50);
+    enterDetailsInRnRForFirstProduct(100, 50, 50);
 
-    InitiateRnR initiateRnR = new InitiateRnR();
     initiateRnR.verifyBudgetAmountPresentOnFooter("$200.00");
     initiateRnR.checkWhetherBudgetExceedWarningPresent(false);
     initiateRnRPage.saveRnR();
 
-    enterDetailsInRnRForFirstProduct(100,100,200);
+    enterDetailsInRnRForFirstProduct(100, 100, 200);
     initiateRnRPage.clickSubmitButton();
     initiateRnRPage.clickOk();
     initiateRnR.verifyBudgetAmountPresentOnFooter("$200.00");
     initiateRnR.checkWhetherBudgetExceedWarningPresent(true);
 
-
-    initiateRnRPage.enterValue(9,"requestedQuantityFirstProduct");
+    initiateRnRPage.enterValueIfNotNull(9, "requestedQuantityFirstProduct");
     initiateRnRPage.enterExplanationReason();
     initiateRnRPage.clickNonFullSupplyTab();
     initiateRnR.verifyBudgetAmountPresentOnFooter("$200.00");
@@ -90,18 +87,15 @@ public class ManageBudget extends TestCaseHelper{
 
   @Test(groups = {"requisition"})
   public void testVerifyBudgetWhenRegularRnRIsCreatedAndBudgetFlagIsTrueAndDoNotContainsBudgetInformation() throws Exception {
-    dbWrapper.updateBudgetFlag(program, true);
+    dbWrapper.updateFieldValue("programs", "budgetingApplies", "true", "name", program);
 
-    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(userSIC, password);
     homePage.navigateHomePage();
     homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Regular");
     homePage.clickProceed();
 
-    InitiateRnRPage initiateRnRPage =new InitiateRnRPage(testWebDriver);
-    enterDetailsInRnRForFirstProduct(0,70,60);
+    enterDetailsInRnRForFirstProduct(0, 70, 60);
 
-    InitiateRnR initiateRnR = new InitiateRnR();
     initiateRnR.verifyBudgetAmountNotAllocated();
     initiateRnR.checkWhetherBudgetExceedWarningPresent(false);
 
@@ -118,7 +112,6 @@ public class ManageBudget extends TestCaseHelper{
     initiateRnRPage.authorizeRnR();
     initiateRnRPage.clickOk();
 
-
     ApprovePage approvePage = homePage.navigateToApprove();
     approvePage.clickRequisitionPresentForApproval();
     initiateRnR.verifyBudgetAmountNotAllocated();
@@ -134,21 +127,18 @@ public class ManageBudget extends TestCaseHelper{
 
   @Test(groups = {"requisition"})
   public void testVerifyBudgetWhenRegularRnRIsCreatedAndBudgetFlagIsFalseAndBudgetFilePresent() throws Exception {
-    dbWrapper.updateBudgetFlag(program, false);
+    dbWrapper.updateFieldValue("programs", "budgetingApplies", "false", "name", program);
     dbWrapper.insertBudgetData();
 
-    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(userSIC, password);
     homePage.navigateHomePage();
 
     homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Regular");
     homePage.clickProceed();
 
-    InitiateRnRPage initiateRnRPage =new InitiateRnRPage(testWebDriver);
-    enterDetailsInRnRForFirstProduct(0,100,0);
-    initiateRnRPage.enterValue(90,"newPatientFirstProduct");
+    enterDetailsInRnRForFirstProduct(0, 100, 0);
+    initiateRnRPage.enterValueIfNotNull(90, "newPatientFirstProduct");
 
-    InitiateRnR initiateRnR = new InitiateRnR();
     initiateRnR.verifyBudgetNotDisplayed();
     initiateRnR.checkWhetherBudgetExceedWarningPresent(false);
 
@@ -180,20 +170,17 @@ public class ManageBudget extends TestCaseHelper{
 
   @Test(groups = {"requisition"})
   public void testVerifyBudgetWhenEmergencyRnRIsCreatedWhenBudgetFlagIsTrueAndBudgetInformationPresent() throws Exception {
-    dbWrapper.updateBudgetFlag(program, true);
+    dbWrapper.updateFieldValue("programs", "budgetingApplies", "true", "name", program);
     dbWrapper.insertBudgetData();
 
-    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(userSIC, password);
     homePage.navigateHomePage();
 
     homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Emergency");
     homePage.clickProceed();
 
-    InitiateRnRPage initiateRnRPage =new InitiateRnRPage(testWebDriver);
     enterDetailsInRnRForFirstProduct(100, 100, 200);
 
-    InitiateRnR initiateRnR = new InitiateRnR();
     initiateRnR.verifyBudgetNotDisplayed();
     initiateRnR.checkWhetherBudgetExceedWarningPresent(false);
 
@@ -224,19 +211,15 @@ public class ManageBudget extends TestCaseHelper{
 
   @Test(groups = {"requisition"})
   public void testVerifyBudgetWhenEmergencyRnRIsCreatedWhenBudgetFlagIsFalseAndBudgetInformationNotPresent() throws Exception {
-    dbWrapper.updateBudgetFlag(program,false);
-
-    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+    dbWrapper.updateFieldValue("programs", "budgetingApplies", "false", "name", program);
     HomePage homePage = loginPage.loginAs(userSIC, password);
     homePage.navigateHomePage();
 
     homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Emergency");
     homePage.clickProceed();
 
-    InitiateRnRPage initiateRnRPage =new InitiateRnRPage(testWebDriver);
-    enterDetailsInRnRForFirstProduct(100,100,0);
+    enterDetailsInRnRForFirstProduct(100, 100, 0);
 
-    InitiateRnR initiateRnR = new InitiateRnR();
     initiateRnR.verifyBudgetNotDisplayed();
     initiateRnR.checkWhetherBudgetExceedWarningPresent(false);
 
@@ -267,21 +250,18 @@ public class ManageBudget extends TestCaseHelper{
 
   @Test(groups = {"requisition"})
   public void testVerifyBudgetWhenRegularRnRIsCreatedAndBudgetFlagIsTrueAndContainsBudgetInformationForDifferentPeriod() throws Exception {
-    dbWrapper.updateBudgetFlag(program, true);
+    dbWrapper.updateFieldValue("programs", "budgetingApplies", "true", "name", program);
     dbWrapper.insertBudgetData();
-    dbWrapper.insertProcessingPeriod("PastPeriod", "past period","2013-09-01","2013-10-02",1,"M" );
+    dbWrapper.insertProcessingPeriod("PastPeriod", "past period", "2013-09-01", "2013-10-02", 1, "M");
 
-    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(userSIC, password);
 
     homePage.navigateHomePage();
     homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Regular");
     homePage.clickProceed();
 
-    InitiateRnRPage initiateRnRPage =new InitiateRnRPage(testWebDriver);
-    enterDetailsInRnRForFirstProduct(100,100,100);
+    enterDetailsInRnRForFirstProduct(100, 100, 100);
 
-    InitiateRnR initiateRnR = new InitiateRnR();
     initiateRnR.verifyBudgetAmountNotAllocated();
     initiateRnR.checkWhetherBudgetExceedWarningPresent(false);
 
@@ -313,33 +293,29 @@ public class ManageBudget extends TestCaseHelper{
     homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Regular");
     homePage.clickProceed();
 
-    enterDetailsInRnRForFirstProduct(100,100,10);
-    initiateRnRPage.enterValue(90,"newPatientFirstProduct");
+    enterDetailsInRnRForFirstProduct(100, 100, 10);
+    initiateRnRPage.enterValueIfNotNull(90, "newPatientFirstProduct");
     initiateRnR.verifyBudgetAmountPresentOnFooter("$200.00");
     initiateRnR.checkWhetherBudgetExceedWarningPresent(true);
   }
 
   @Test(groups = {"requisition"})
   public void testVerifyBudgetWhenRegularRnRIsCreatedAndBudgetFlagIsTrueAndContainsBudgetInformationAndUpdated() throws Exception {
-    dbWrapper.updateBudgetFlag(program, true);
+    dbWrapper.updateFieldValue("programs", "budgetingApplies", "true", "name", program);
     dbWrapper.insertBudgetData();
 
-    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(userSIC, password);
 
     homePage.navigateHomePage();
     homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Regular");
     homePage.clickProceed();
 
-    InitiateRnRPage initiateRnRPage =new InitiateRnRPage(testWebDriver);
-    enterDetailsInRnRForFirstProduct(100,50,90);
+    enterDetailsInRnRForFirstProduct(100, 50, 90);
     initiateRnRPage.saveRnR();
 
-    InitiateRnR initiateRnR = new InitiateRnR();
     initiateRnR.verifyBudgetAmountPresentOnFooter("$200.00");
     initiateRnR.checkWhetherBudgetExceedWarningPresent(true);
-
-    dbWrapper.updateBudgetLineItemsByField("allocatedBudget","300");
+    dbWrapper.updateFieldValue("budget_line_items", "allocatedBudget", "300", null, null);
     testWebDriver.refresh();
 
     initiateRnR.verifyBudgetAmountPresentOnFooter("$200.00");
@@ -372,36 +348,33 @@ public class ManageBudget extends TestCaseHelper{
 
   @Test(groups = {"requisition"})
   public void testVerifyBudgetWhenNonFullSupplyProductAndRegimenPresentInRegularRnR() throws Exception {
-    dbWrapper.updateBudgetFlag(program, true);
+    dbWrapper.updateFieldValue("programs", "budgetingApplies", "true", "name", program);
     dbWrapper.insertBudgetData();
     dbWrapper.insertRegimenTemplateColumnsForProgram(program);
     dbWrapper.insertRegimenTemplateConfiguredForProgram(program, "ADULTS", "Regimen", "Regimen1", true);
-    dbWrapper.setRegimenTemplateConfiguredForAllPrograms(true);
+    dbWrapper.updateFieldValue("programs", "regimenTemplateConfigured", "true", null, null);
 
-    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(userSIC, password);
 
     homePage.navigateHomePage();
     homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Regular");
     homePage.clickProceed();
 
-    InitiateRnRPage initiateRnRPage =new InitiateRnRPage(testWebDriver);
-    enterDetailsInRnRForFirstProduct(100,50,50);
+    enterDetailsInRnRForFirstProduct(100, 50, 50);
 
-    InitiateRnR initiateRnR = new InitiateRnR();
     initiateRnR.verifyBudgetAmountPresentOnFooter("$200.00");
     initiateRnR.checkWhetherBudgetExceedWarningPresent(false);
 
     initiateRnRPage.clickNonFullSupplyTab();
-    initiateRnRPage.addNonFullSupplyLineItems("120","reason","antibiotic","P11","Antibiotics");
+    initiateRnRPage.addNonFullSupplyLineItems("120", "reason", "antibiotic", "P11", "Antibiotics");
     initiateRnR.verifyBudgetAmountPresentOnFooter("$200.00");
     initiateRnR.checkWhetherBudgetExceedWarningPresent(true);
 
     initiateRnRPage.clickRegimenTab();
-    initiateRnRPage.enterValuesOnRegimenScreen(3,2,"8");
-    initiateRnRPage.enterValuesOnRegimenScreen(4,2,"9");
-    initiateRnRPage.enterValuesOnRegimenScreen(5,2,"10");
-    initiateRnRPage.enterValuesOnRegimenScreen(6,2,"11");
+    initiateRnRPage.enterValuesOnRegimenScreen(3, 2, "8");
+    initiateRnRPage.enterValuesOnRegimenScreen(4, 2, "9");
+    initiateRnRPage.enterValuesOnRegimenScreen(5, 2, "10");
+    initiateRnRPage.enterValuesOnRegimenScreen(6, 2, "11");
     initiateRnR.verifyBudgetAmountPresentOnFooter("$200.00");
     initiateRnR.checkWhetherBudgetExceedWarningPresent(true);
 
@@ -412,7 +385,7 @@ public class ManageBudget extends TestCaseHelper{
     initiateRnR.verifyBudgetAmountPresentOnFooter("$200.00");
     initiateRnR.checkWhetherBudgetExceedWarningPresent(false);
     initiateRnRPage.clickNonFullSupplyTab();
-    initiateRnRPage.enterValue(200,"requestedQuantityFirstProduct");
+    initiateRnRPage.enterValueIfNotNull(200, "requestedQuantityFirstProduct");
     initiateRnR.verifyBudgetAmountPresentOnFooter("$200.00");
     initiateRnR.checkWhetherBudgetExceedWarningPresent(true);
 
@@ -437,11 +410,7 @@ public class ManageBudget extends TestCaseHelper{
     setupProductTestData("P10", "P11", program, "lvl3_hospital");
     dbWrapper.insertFacilities("F10", "F11");
     dbWrapper.configureTemplate(program);
-    List<String> rightsList = new ArrayList<>();
-    rightsList.add(CREATE_REQUISITION);
-    rightsList.add(VIEW_REQUISITION);
-    rightsList.add(AUTHORIZE_REQUISITION);
-    rightsList.add(APPROVE_REQUISITION);
+    List<String> rightsList = asList(CREATE_REQUISITION, VIEW_REQUISITION, AUTHORIZE_REQUISITION, APPROVE_REQUISITION);
     setupTestUserRoleRightsData("200", userSIC, rightsList);
     dbWrapper.insertSupervisoryNode("F10", "N1", "Node 1", "null");
     dbWrapper.insertRoleAssignment("200", "store in-charge");
@@ -453,29 +422,25 @@ public class ManageBudget extends TestCaseHelper{
     dbWrapper.insertSupplyLines("N1", program, "F10", true);
   }
 
-
-
   public void enterDetailsInRnRForFirstProduct(int beginningBalance, int quantityReceived, int quantityDispensed) throws IOException {
-    InitiateRnRPage initiateRnRPage =new InitiateRnRPage(testWebDriver);
-    initiateRnRPage.enterValue(beginningBalance, "beginningBalanceFirstProduct");
-    initiateRnRPage.enterValue(quantityReceived, "quantityReceivedFirstProduct");
-    initiateRnRPage.enterValue(quantityDispensed, "quantityDispensedFirstProduct");
+    initiateRnRPage.enterValueIfNotNull(beginningBalance, "beginningBalanceFirstProduct");
+    initiateRnRPage.enterValueIfNotNull(quantityReceived, "quantityReceivedFirstProduct");
+    initiateRnRPage.enterValueIfNotNull(quantityDispensed, "quantityDispensedFirstProduct");
   }
 
   public void viewRequisition() throws IOException {
-    HomePage homePage = new HomePage(testWebDriver);
-    ViewRequisitionPage viewRequisitionPage=homePage.navigateViewRequisition();
+    HomePage homePage = PageFactory.getInstanceOfHomePage(testWebDriver);
+    ViewRequisitionPage viewRequisitionPage = homePage.navigateViewRequisition();
     viewRequisitionPage.enterViewSearchCriteria();
     viewRequisitionPage.clickSearch();
     viewRequisitionPage.clickRnRList();
   }
 
   @AfterMethod(groups = "requisition")
-  //@cucumber.api.java.After
   public void tearDown() throws Exception {
     testWebDriver.sleep(500);
     if (!testWebDriver.getElementById("username").isDisplayed()) {
-      HomePage homePage = new HomePage(testWebDriver);
+      HomePage homePage = PageFactory.getInstanceOfHomePage(testWebDriver);
       homePage.logout(baseUrlGlobal);
       dbWrapper.deleteData();
       dbWrapper.closeConnection();

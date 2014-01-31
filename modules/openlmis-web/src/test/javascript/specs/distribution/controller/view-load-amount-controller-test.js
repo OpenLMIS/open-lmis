@@ -11,8 +11,7 @@
 describe('ViewLoadAmountController', function () {
   var scope, controller, httpBackend, program1, facilities;
 
-  beforeEach(module('openlmis.services'));
-  beforeEach(module('openlmis.localStorage'));
+  beforeEach(module('openlmis'));
   beforeEach(inject(function ($rootScope, $controller, $httpBackend) {
     scope = $rootScope.$new();
     controller = $controller;
@@ -143,7 +142,7 @@ describe('ViewLoadAmountController', function () {
 describe("View load amount resolve", function () {
   var $httpBackend, ctrl, $timeout, $route, $q;
   var deferredObject;
-  beforeEach(module('openlmis.services'));
+  beforeEach(module('openlmis'));
   beforeEach(inject(function (_$httpBackend_, $controller, _$timeout_, _$route_) {
     $httpBackend = _$httpBackend_;
     deferredObject = {promise: {id: 1}, resolve: function () {
@@ -159,8 +158,10 @@ describe("View load amount resolve", function () {
 
   it('should get all facilities with their Isa amount in delivery zone', function () {
     $route = {current: {params: {deliveryZoneId: 1, programId: 2}}};
-    $httpBackend.expect('GET', '/deliveryZones/1/programs/2/facilities.json').respond([]);
+    $httpBackend.expect('GET', '/deliveryZones/1/programs/2/facilities.json').respond(200);
+
     ctrl(ViewLoadAmountController.resolve.facilities, {$q: $q, $route: $route});
+
     $timeout.flush();
     $httpBackend.flush();
     expect(deferredObject.resolve).toHaveBeenCalled();
@@ -168,7 +169,7 @@ describe("View load amount resolve", function () {
 
   it('should get period reference data', function () {
     $route = {current: {params: {periodId: 2}}};
-    $httpBackend.expect('GET', '/periods/2.json').respond([]);
+    $httpBackend.expect('GET', '/periods/2.json').respond(200);
     ctrl(ViewLoadAmountController.resolve.period, {$q: $q, $route: $route});
     $timeout.flush();
     $httpBackend.flush();
@@ -177,7 +178,7 @@ describe("View load amount resolve", function () {
 
   it('should get period reference data', function () {
     $route = {current: {params: {deliveryZoneId: 2}}};
-    $httpBackend.expect('GET', '/deliveryZones/2.json').respond([]);
+    $httpBackend.expect('GET', '/deliveryZones/2.json').respond(200);
     ctrl(ViewLoadAmountController.resolve.deliveryZone, {$q: $q, $route: $route});
     $timeout.flush();
     $httpBackend.flush();

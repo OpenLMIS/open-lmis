@@ -11,8 +11,6 @@
 package org.openlmis.functional;
 
 
-import cucumber.api.java.After;
-import cucumber.api.java.Before;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
@@ -31,17 +29,19 @@ import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
 
 public class ConfigureOrderTemplate extends TestCaseHelper {
   ConfigureOrderPage configureOrderPage;
+  LoginPage loginPage;
 
   @BeforeMethod(groups = "admin")
   public void setUp() throws Exception {
     super.setup();
     dbWrapper.setupOrderFileConfiguration("O", "TRUE");
-    dbWrapper.deleteOrderFileNonOpenLMISColumns();
+    dbWrapper.deleteRowFromTable("order_file_columns", "openLMISField", "false");
+    loginPage = PageFactory.getInstanceOfLoginPage(testWebDriver, baseUrlGlobal);
   }
 
   @And("^I access configure order page$")
   public void accessOrderScreen() throws Exception {
-    HomePage homePage = new HomePage(testWebDriver);
+    HomePage homePage = PageFactory.getInstanceOfHomePage(testWebDriver);
     ConfigureEDIPage configureEDIPage = homePage.navigateEdiScreen();
     configureEDIPage.navigateConfigureOrderPage();
   }
@@ -84,7 +84,6 @@ public class ConfigureOrderTemplate extends TestCaseHelper {
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function")
   public void testEditPeriodAndOrderDateDropDown(String user, String password) throws Exception {
-    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(user, password);
     ConfigureEDIPage configureEDIPage = homePage.navigateEdiScreen();
     ConfigureOrderPage configureOrderPage = configureEDIPage.navigateConfigureOrderPage();
@@ -92,10 +91,8 @@ public class ConfigureOrderTemplate extends TestCaseHelper {
     configureOrderPage.selectValueFromOrderDateDropDown("yyyy-MM-dd");
     configureOrderPage.clickSaveButton();
     configureOrderPage.verifySuccessMessage("Order file configuration saved successfully!");
-    String period = configureOrderPage.getSelectedOptionOfPeriodDropDown();
-    assertEquals(period, "MM-dd-yyyy");
-    String orderDate = configureOrderPage.getSelectedOptionOfOrderDateDropDown();
-    assertEquals(orderDate, "yyyy-MM-dd");
+    assertEquals(configureOrderPage.getSelectedOptionOfPeriodDropDown(), "MM-dd-yyyy");
+    assertEquals(configureOrderPage.getSelectedOptionOfOrderDateDropDown(), "yyyy-MM-dd");
     configureOrderPage.selectValueFromPeriodDropDown("MM/yy");
     configureOrderPage.selectValueFromOrderDateDropDown("dd/MM/yy");
     configureOrderPage.clickSaveButton();
@@ -111,7 +108,6 @@ public class ConfigureOrderTemplate extends TestCaseHelper {
     String orderData = "OD";
     String orderPrefix = "OP";
 
-    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(user, password);
     ConfigureEDIPage configureEDIPage = homePage.navigateEdiScreen();
     ConfigureOrderPage configureOrderPage = configureEDIPage.navigateConfigureOrderPage();
@@ -145,7 +141,6 @@ public class ConfigureOrderTemplate extends TestCaseHelper {
     String orderData = "";
     String orderPrefix = "";
 
-    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(user, password);
     ConfigureEDIPage configureEDIPage = homePage.navigateEdiScreen();
     ConfigureOrderPage configureOrderPage = configureEDIPage.navigateConfigureOrderPage();
@@ -171,7 +166,6 @@ public class ConfigureOrderTemplate extends TestCaseHelper {
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function")
   public void testVerifyAllIncludeCheckBoxesUnchecked(String user, String password) throws Exception {
-    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(user, password);
     ConfigureEDIPage configureEDIPage = homePage.navigateEdiScreen();
     ConfigureOrderPage configureOrderPage = configureEDIPage.navigateConfigureOrderPage();
@@ -186,14 +180,11 @@ public class ConfigureOrderTemplate extends TestCaseHelper {
     configureOrderPage.verifySuccessMessage("Order file configuration saved successfully!");
     configureOrderPage.clickCancelButton();
     assertTrue("User should be redirected to home page", testWebDriver.getCurrentUrl().contains("public/pages/admin/edi/index.html#/configure-edi-file"));
-
   }
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function")
   public void testVerifyAddNewButtonFunctionality(String user, String password) throws Exception {
     String successMessage = "Order file configuration saved successfully!";
-
-    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(user, password);
     ConfigureEDIPage configureEDIPage = homePage.navigateEdiScreen();
     ConfigureOrderPage configureOrderPage = configureEDIPage.navigateConfigureOrderPage();
@@ -206,7 +197,6 @@ public class ConfigureOrderTemplate extends TestCaseHelper {
     configureOrderPage.verifySuccessMessage(successMessage);
   }
 
-
   @AfterMethod(groups = "admin")
   public void tearDown() throws Exception {
     testWebDriver.sleep(500);
@@ -216,17 +206,13 @@ public class ConfigureOrderTemplate extends TestCaseHelper {
       dbWrapper.deleteData();
       dbWrapper.closeConnection();
     }
-
   }
-
 
   @DataProvider(name = "Data-Provider-Function")
   public Object[][] parameterIntTestProviderPositive() {
     return new Object[][]{
       {"Admin123", "Admin123"}
     };
-
   }
-
 }
 

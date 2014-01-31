@@ -10,7 +10,6 @@
 
 package org.openlmis.functional;
 
-
 import org.openlmis.UiUtils.CaptureScreenshotOnFailureListener;
 import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.pageobjects.HomePage;
@@ -22,22 +21,20 @@ import java.util.ArrayList;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.*;
 
-
 @Listeners(CaptureScreenshotOnFailureListener.class)
 
 public class ManageFacility extends TestCaseHelper {
 
+  LoginPage loginPage;
 
   @BeforeMethod(groups = {"admin"})
   public void setUp() throws Exception {
     super.setup();
+    loginPage = PageFactory.getInstanceOfLoginPage(testWebDriver, baseUrlGlobal);
   }
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function-Positive")
   public void testE2EManageFacility(String user, String program, String[] credentials) throws Exception {
-
-    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
-
     dbWrapper.insertUser("200", user, "Ag/myf1Whs0fxr1FFfK8cs3q/VJ1qMs3yuMLDTeEcZEGzstj/waaUsQNQTIKk1U5JRzrDbPLCzCO1/vB5YGaEQ==", "F10", "Jane_Doe@openlmis.com");
 
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
@@ -84,12 +81,10 @@ public class ManageFacility extends TestCaseHelper {
     ManageFacilityPage manageFacilityPageEdit = homePageEdit.navigateSearchFacility();
     manageFacilityPageEdit.searchFacility(date_time);
     manageFacilityPageEdit.clickFacilityList(date_time);
-    ArrayList<String> programsSupported = new ArrayList<String>();
+    ArrayList<String> programsSupported = new ArrayList<>();
     programsSupported.add("HIV");
     programsSupported.add("ESSENTIAL MEDICINES");
-    manageFacilityPageEdit.verifyProgramSupported(programsSupported, date_time);
-
-
+    manageFacilityPageEdit.verifyProgramSupported(programsSupported);
   }
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function-Positive")
@@ -106,9 +101,8 @@ public class ManageFacility extends TestCaseHelper {
 
     dbWrapper.insertVirtualFacility("V10", "F10");
     dbWrapper.insertGeographicZone("District 1", "District 1", "Dodoma");
-    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
-    HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
 
+    HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
     ManageFacilityPage manageFacilityPage = homePage.navigateSearchFacility();
     manageFacilityPage.searchFacility("F10");
     manageFacilityPage.clickFacilityList("F10");
@@ -121,7 +115,6 @@ public class ManageFacility extends TestCaseHelper {
 
     assertEquals(facilityType, manageFacilityPage.getFacilityType());
     assertEquals(geoZone, manageFacilityPage.getGeographicZone());
-
   }
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function-Positive")
@@ -134,9 +127,8 @@ public class ManageFacility extends TestCaseHelper {
     setupRequisitionGroupData("RG1", "RG2", "N1", "N2", "F10", "F11");
     dbWrapper.insertVirtualFacility("V10", "F10");
     dbWrapper.insertGeographicZone("District 1", "District 1", "Dodoma");
-    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
-    HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
 
+    HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
     ManageFacilityPage manageFacilityPage = homePage.navigateSearchFacility();
     manageFacilityPage.searchFacility("F10");
     manageFacilityPage.clickFacilityList("F10");
@@ -191,12 +183,11 @@ public class ManageFacility extends TestCaseHelper {
     assertEquals("VACCINES", manageFacilityPage.getProgramSupported(2));
     assertFalse("Program supported flag incorrect", manageFacilityPage.getProgramSupportedActive(2));
     assertEquals(dbWrapper.getRequisitionGroupId("F10"), dbWrapper.getRequisitionGroupId("V10"));
-
   }
 
   @AfterMethod(groups = {"admin"})
   public void tearDown() throws Exception {
-    HomePage homePage = new HomePage(testWebDriver);
+    HomePage homePage = PageFactory.getInstanceOfHomePage(testWebDriver);
     homePage.logout(baseUrlGlobal);
     dbWrapper.deleteData();
     dbWrapper.closeConnection();

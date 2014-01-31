@@ -13,6 +13,7 @@ package org.openlmis.pod.domain;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.apache.commons.collections.Predicate;
 import org.openlmis.core.domain.BaseModel;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.rnr.domain.LineItem;
@@ -21,6 +22,8 @@ import org.openlmis.rnr.domain.RnrLineItem;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.apache.commons.collections.CollectionUtils.find;
 
 @Data
 @NoArgsConstructor
@@ -61,9 +64,8 @@ public class OrderPOD extends BaseModel {
   public void fillPodLineItems(List<? extends LineItem> lineItems) {
     this.podLineItems = new ArrayList<>();
     for (LineItem lineItem : lineItems) {
-      if (!validPacksToShip(lineItem))
-        continue;
-      this.podLineItems.add(new OrderPODLineItem(lineItem));
+      if (!validPacksToShip(lineItem)) continue;
+      this.podLineItems.add(new OrderPODLineItem(lineItem, this.createdBy));
     }
   }
 
@@ -75,4 +77,18 @@ public class OrderPOD extends BaseModel {
   private boolean validPacksToShip(LineItem lineItem) {
     return !lineItem.isRnrLineItem() || ((RnrLineItem) lineItem).getPacksToShip() > 0;
   }
+
+  public void copy(OrderPOD orderPOD) {
+    this.setModifiedBy(orderPOD.getModifiedBy());
+    for (final OrderPODLineItem newLineItem : orderPOD.podLineItems) {
+      OrderPODLineItem existingLineItem = (OrderPODLineItem) find(this.podLineItems, new Predicate() {
+        @Override
+        public boolean evaluate(Object o) {
+          return ((OrderPODLineItem) o).getId().equals(newLineItem.getId());
+        }
+      });
+      if (existingLineItem != null) existingLineItem.copy(newLineItem);
+    }
+  }
+
 }

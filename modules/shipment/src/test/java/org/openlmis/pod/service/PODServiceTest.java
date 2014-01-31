@@ -18,13 +18,11 @@ import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.openlmis.core.domain.Facility;
-import org.openlmis.core.domain.SupplyLine;
+import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.ProductService;
-import org.openlmis.db.categories.IntegrationTests;
+import org.openlmis.db.categories.UnitTests;
 import org.openlmis.fulfillment.shared.FulfillmentPermissionService;
-import org.openlmis.order.domain.Order;
 import org.openlmis.order.service.OrderService;
 import org.openlmis.pod.domain.OrderPOD;
 import org.openlmis.pod.repository.PODRepository;
@@ -33,8 +31,6 @@ import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.service.RequisitionService;
 import org.openlmis.shipment.domain.ShipmentLineItem;
 import org.openlmis.shipment.service.ShipmentService;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.util.List;
 
@@ -46,17 +42,13 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
 import static org.openlmis.core.domain.Right.MANAGE_POD;
 import static org.openlmis.order.domain.OrderStatus.*;
-import static org.powermock.api.mockito.PowerMockito.spy;
-import static org.powermock.api.mockito.PowerMockito.when;
 
-
-@Category(IntegrationTests.class)
-@RunWith(PowerMockRunner.class)
-@PrepareForTest(PODService.class)
+@Category(UnitTests.class)
+@RunWith(MockitoJUnitRunner.class)
 public class PODServiceTest {
 
   @Mock
-  private PODRepository podRepository;
+  private PODRepository repository;
 
   @Mock
   private OrderService orderService;
@@ -82,7 +74,6 @@ public class PODServiceTest {
   private Long podId;
   private Long orderId;
   private Long userId;
-  private Long facilityId;
   private OrderPOD orderPod;
 
   @Before
@@ -91,7 +82,6 @@ public class PODServiceTest {
     podId = 1L;
     orderId = 2L;
     userId = 3L;
-    facilityId = 4L;
     orderPod = new OrderPOD(podId);
     orderPod.setOrderId(orderId);
     orderPod.setCreatedBy(userId);
@@ -107,10 +97,11 @@ public class PODServiceTest {
     List<ShipmentLineItem> shipmentLineItems = asList(mock(ShipmentLineItem.class));
     when(shipmentService.getLineItems(orderId)).thenReturn(shipmentLineItems);
     doNothing().when(orderPOD).fillPodLineItems(shipmentLineItems);
-    when(podRepository.insert(orderPOD)).thenReturn(orderPOD);
+    when(repository.insert(orderPOD)).thenReturn(orderPOD);
 
     OrderPOD pod = podService.createPOD(orderPOD);
 
+    verify(podService).checkPermissions(orderPOD);
     verify(orderPOD).fillPodLineItems(shipmentLineItems);
     assertThat(pod, is(orderPOD));
   }
@@ -125,12 +116,13 @@ public class PODServiceTest {
     Rnr requisition = make(a(RequisitionBuilder.defaultRequisition));
     when(requisitionService.getFullRequisitionById(orderId)).thenReturn(requisition);
     doNothing().when(orderPOD).fillPODWithRequisition(requisition);
-    when(podRepository.insert(orderPOD)).thenReturn(orderPOD);
+    when(repository.insert(orderPOD)).thenReturn(orderPOD);
 
     OrderPOD pod = podService.createPOD(orderPOD);
 
     verify(orderPOD).fillPODWithRequisition(requisition);
-    verify(podRepository).insert(orderPOD);
+    verify(podService).checkPermissions(orderPOD);
+    verify(repository).insert(orderPOD);
     assertThat(pod, is(orderPOD));
   }
 
@@ -138,34 +130,65 @@ public class PODServiceTest {
   public void shouldGetPODByOrderId() {
     Long orderId = 2l;
     OrderPOD expectedOrderPOD = new OrderPOD();
-    when(podRepository.getPODByOrderId(orderId)).thenReturn(expectedOrderPOD);
+    when(repository.getPODByOrderId(orderId)).thenReturn(expectedOrderPOD);
 
     OrderPOD savedOrderPOD = podService.getPODByOrderId(orderId);
 
-    verify(podRepository).getPODByOrderId(orderId);
+    verify(repository).getPODByOrderId(orderId);
     assertThat(savedOrderPOD, is(expectedOrderPOD));
   }
 
   @Test
+  public void shouldGetPODWithLineItemsById() throws Exception {
+    podService.getPodById(podId);
+    verify(repository).getPOD(podId);
+  }
+
+  @Test
   public void shouldThrowErrorIfUserDoesNotHavePermissionOnGivenWareHouse() {
-    Order order = new Order(orderId);
-    SupplyLine supplyLine = new SupplyLine();
-    Facility supplyingFacility = new Facility(facilityId);
-    supplyLine.setSupplyingFacility(supplyingFacility);
-    order.setSupplyLine(supplyLine);
-    when(orderService.getOrder(orderId)).thenReturn(order);
-    when(fulfillmentPermissionService.hasPermission(userId, facilityId, MANAGE_POD)).thenReturn(false);
+    orderPod.setModifiedBy(7L);
+    when(fulfillmentPermissionService.hasPermission(7L, orderId, MANAGE_POD)).thenReturn(false);
 
     expectedException.expect(DataException.class);
     expectedException.expectMessage("error.permission.denied");
 
-    podService.createPOD(orderPod);
+    podService.checkPermissions(orderPod);
   }
 
+  @Test
+  public void shouldNotThrowErrorIfUserHasPermissionOnGivenWareHouse() {
+    orderPod.setModifiedBy(7L);
+    when(fulfillmentPermissionService.hasPermission(7L, orderId, MANAGE_POD)).thenReturn(true);
+
+    podService.checkPermissions(orderPod);
+  }
 
   @Test
-  public void shouldGetPODWithLineItemsById() throws Exception {
-    podService.getPodById(podId);
-    verify(podRepository).getPODWithLineItemsById(podId);
+  public void shouldSavePODWithModifiedLineItems() {
+    OrderPOD existingPOD = mock(OrderPOD.class);
+    when(repository.getPOD(podId)).thenReturn(existingPOD);
+    when(existingPOD.getModifiedBy()).thenReturn(userId);
+    when(existingPOD.getOrderId()).thenReturn(orderId);
+    doNothing().when(podService).checkPermissions(existingPOD);
+    when(repository.update(existingPOD)).thenReturn(existingPOD);
+
+    OrderPOD savedPod = podService.save(orderPod);
+
+    verify(repository).update(savedPod);
+    verify(existingPOD).copy(orderPod);
+  }
+
+  @Test
+  public void shouldNotSaveOrderPodIfUserDoesNotHavePermissions() {
+    OrderPOD existingPOD = mock(OrderPOD.class);
+    when(repository.getPOD(podId)).thenReturn(existingPOD);
+    when(existingPOD.getModifiedBy()).thenReturn(userId);
+    when(existingPOD.getOrderId()).thenReturn(orderId);
+    doThrow(new DataException("error.permission.denied")).when(podService).checkPermissions(existingPOD);
+
+    expectedException.expect(DataException.class);
+    expectedException.expectMessage("error.permission.denied");
+
+    podService.save(orderPod);
   }
 }

@@ -18,40 +18,38 @@ import org.openqa.selenium.support.How;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 
-import java.io.IOException;
-
 public class ForgotPasswordPage extends Page {
 
 
   @FindBy(how = How.ID, using = "email")
-  private static WebElement emailTextField=null;
+  private static WebElement emailTextField = null;
 
   @FindBy(how = How.ID, using = "username")
-  private static WebElement usernameTextField=null;
+  private static WebElement usernameTextField = null;
 
   @FindBy(how = How.XPATH, using = "//input[@value='Submit']")
-  private static WebElement submitButton=null;
+  private static WebElement submitButton = null;
 
   @FindBy(how = How.XPATH, using = "//input[@value='Cancel']")
-  private static WebElement cancelButton=null;
+  private static WebElement cancelButton = null;
 
   @FindBy(how = How.XPATH, using = "//h2[contains(text(),'Forgot Password')]")
-  private static WebElement forgotPasswordHeader=null;
+  private static WebElement forgotPasswordHeader = null;
 
   @FindBy(how = How.XPATH, using = "//a[contains(text(),'Forgot password?')]")
-  private static WebElement forgotPasswordLink=null;
+  private static WebElement forgotPasswordLink = null;
 
   @FindBy(how = How.ID, using = "saveFailMessage")
-  private static WebElement saveFailMessage=null;
+  private static WebElement saveFailMessage = null;
 
   @FindBy(how = How.XPATH, using = "//h2[contains(text(),'Email Sent!')]")
-  private static WebElement emailSendSuccessMessage=null;
+  private static WebElement emailSendSuccessMessage = null;
 
   @FindBy(how = How.XPATH, using = "//div[contains(text(),'Please check your email and click on reset password link.')]")
-  private static WebElement pleaseCheckMailDiv=null;
+  private static WebElement pleaseCheckMailDiv = null;
 
-  @FindBy(how= How.XPATH, using = "//body/div/div/div[2][@class='forgot-password-form']//input[1][@class='btn btn-primary']")
-  public static WebElement pageIdentifierOnForgotPasswordPage=null;
+  @FindBy(how = How.XPATH, using = "//body/div/div/div[2][@class='forgot-password-form']//input[1][@class='btn btn-primary']")
+  public static WebElement pageIdentifierOnForgotPasswordPage = null;
 
   public WebElement getEmailTextField() {
     return emailTextField;
@@ -77,7 +75,7 @@ public class ForgotPasswordPage extends Page {
     return forgotPasswordHeader;
   }
 
-  public ForgotPasswordPage(TestWebDriver driver) throws IOException {
+  public ForgotPasswordPage(TestWebDriver driver) {
     super(driver);
 
     PageFactory.initElements(new AjaxElementLocatorFactory(TestWebDriver.getDriver(), 1), this);
@@ -91,15 +89,15 @@ public class ForgotPasswordPage extends Page {
     emailTextField.sendKeys(email);
   }
 
-  public  WebElement getForgotPasswordLink() {
+  public WebElement getForgotPasswordLink() {
     return forgotPasswordLink;
   }
 
-  public  WebElement getEmailSendSuccessMessage() {
+  public WebElement getEmailSendSuccessMessage() {
     return emailSendSuccessMessage;
   }
 
-  public  WebElement getPleaseCheckMailDiv() {
+  public WebElement getPleaseCheckMailDiv() {
     return pleaseCheckMailDiv;
   }
 
@@ -122,10 +120,10 @@ public class ForgotPasswordPage extends Page {
 
   }
 
-   public String getPageIdentifierOnForgotPasswordPageAttribute() {
-     testWebDriver.sleep(1000);
-     testWebDriver.waitForElementToAppear(pageIdentifierOnForgotPasswordPage);
-     return testWebDriver.getAttribute(pageIdentifierOnForgotPasswordPage,"value");
-   }
+  public String getPageIdentifierOnForgotPasswordPageAttribute() {
+    testWebDriver.sleep(1000);
+    testWebDriver.waitForElementToAppear(pageIdentifierOnForgotPasswordPage);
+    return testWebDriver.getAttribute(pageIdentifierOnForgotPasswordPage, "value");
+  }
 
 }

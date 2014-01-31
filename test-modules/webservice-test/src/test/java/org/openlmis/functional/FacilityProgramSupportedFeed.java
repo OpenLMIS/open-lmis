@@ -33,14 +33,16 @@ import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertTrue;
 public class FacilityProgramSupportedFeed extends JsonUtility {
 
   public static final String PROGRAM_SUPPORTED_FEED_URL = "http://localhost:9091/feeds/programs-supported/recent";
+  LoginPage loginPage;
 
-  @BeforeMethod(groups = {"webservice","webserviceSmoke"})
+  @BeforeMethod(groups = {"webservice", "webserviceSmoke"})
   public void setUp() throws Exception {
     super.setup();
     super.setupTestData(true);
+    loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
   }
 
-  @AfterMethod(groups = {"webservice","webserviceSmoke"})
+  @AfterMethod(groups = {"webservice", "webserviceSmoke"})
   public void tearDown() throws Exception {
     HomePage homePage = new HomePage(testWebDriver);
     homePage.logout(baseUrlGlobal);
@@ -52,8 +54,6 @@ public class FacilityProgramSupportedFeed extends JsonUtility {
   public void testFacilityProgramSupportedFeed_Upload(String user, String program, String[] credentials) throws Exception {
     HttpClient client = new HttpClient();
     client.createContext();
-
-    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
 
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
     UploadPage uploadPage = homePage.navigateUploads();
@@ -79,8 +79,6 @@ public class FacilityProgramSupportedFeed extends JsonUtility {
   public void testFacilityProgramSupportedFeed(String user, String program, String[] credentials) throws Exception {
     HttpClient client = new HttpClient();
     client.createContext();
-
-    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
 
     dbWrapper.insertUser("200", user, "Ag/myf1Whs0fxr1FFfK8cs3q/VJ1qMs3yuMLDTeEcZEGzstj/waaUsQNQTIKk1U5JRzrDbPLCzCO1/vB5YGaEQ==", "F10", "Jane_Doe@openlmis.com");
 

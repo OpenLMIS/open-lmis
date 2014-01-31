@@ -41,6 +41,20 @@ public class ShipmentLineItemBuilder {
 
   public static Property<? super ShipmentLineItem, Integer> packsToShip = new Property<>();
 
+  public static Property<? super ShipmentLineItem, Integer> productCategoryDisplayOrder = new Property<>();
+
+  public static Property<? super ShipmentLineItem, Integer> productDisplayOrder = new Property<>();
+
+  public static Property<? super ShipmentLineItem, Boolean> fullSupply = new Property<>();
+
+  public static String defaultProductCategory = "Antibiotics";
+  public static String defaultProductName = "P123 Product 123";
+  public static String defaultProductDispensingUnit = "Tablet";
+  public static String defaultProductCode = "P123";
+  public static int defaultProductCategoryDisplayOrder = 1;
+  public static int defaultProductDisplayOrder = 1;
+  public static boolean defaultFullSupply = true;
+  public static int defaultPacksToShip = 100;
 
   public static final Instantiator<ShipmentLineItem> defaultShipmentLineItem = new Instantiator<ShipmentLineItem>() {
 
@@ -51,15 +65,19 @@ public class ShipmentLineItemBuilder {
       ShipmentLineItem lineItem = new ShipmentLineItem();
 
       lineItem.setOrderId(lookup.valueOf(orderId, 1L));
-      lineItem.setProductCode(lookup.valueOf(productCode, "P123"));
+      lineItem.setProductCode(lookup.valueOf(productCode, defaultProductCode));
       lineItem.setQuantityShipped(lookup.valueOf(quantityShipped, 0));
       lineItem.setCost(lookup.valueOf(cost, nullCost));
       lineItem.setShippedDate(lookup.valueOf(shippedDate, new Date()));
       lineItem.setPackedDate(lookup.valueOf(packedDate, new Date()));
-      lineItem.setProductName(lookup.valueOf(productName, "P123 Product 123"));
-      lineItem.setDispensingUnit(lookup.valueOf(dispensingUnit, "Tablet"));
-      lineItem.setProductCategory(lookup.valueOf(productCategory, "Antibiotics"));
-      lineItem.setPacksToShip(lookup.valueOf(packsToShip, 100));
+      lineItem.setProductName(lookup.valueOf(productName, defaultProductName));
+      lineItem.setDispensingUnit(lookup.valueOf(dispensingUnit, defaultProductDispensingUnit));
+      lineItem.setProductCategory(lookup.valueOf(productCategory, defaultProductCategory));
+      lineItem.setPacksToShip(lookup.valueOf(packsToShip, defaultPacksToShip));
+      lineItem.setProductCategoryDisplayOrder(
+        lookup.valueOf(productCategoryDisplayOrder, defaultProductCategoryDisplayOrder));
+      lineItem.setProductDisplayOrder(lookup.valueOf(productDisplayOrder, defaultProductDisplayOrder));
+      lineItem.setFullSupply(lookup.valueOf(fullSupply, defaultFullSupply));
       return lineItem;
     }
   };

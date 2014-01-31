@@ -79,7 +79,7 @@ describe("Message Directive", function () {
   describe("CommentBox", function () {
 
     var routeParams, httpBackend, scope;
-    beforeEach(module('openlmis.services'));
+    beforeEach(module('openlmis'));
 
     beforeEach(inject(function ($compile, $rootScope, $routeParams, $httpBackend) {
       scope = $rootScope.$new();

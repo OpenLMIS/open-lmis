@@ -28,7 +28,7 @@
       <ul id="not-sortable">
         <li id="{{rnrColumn.name}}" ng-repeat="rnrColumn in rnrNonSortableColumns">
           <span class="tpl-visible">
-            <input type="checkbox" ng-model="rnrColumn.visible" ng-click="setArithmeticValidationMessageShown()" ng-disabled="rnrColumn.mandatory"/>
+            <input type="checkbox" ng-model="rnrColumn.visible" ng-change="setArithmeticValidationMessageShown()" ng-disabled="rnrColumn.mandatory"/>
           </span>
           <span class="tpl-indicator">
             <div class="indicator" openlmis-message="rnrColumn.indicator"></div>
@@ -57,7 +57,7 @@
         <li id="{{rnrColumn.name}}" ng-repeat="rnrColumn in rnrSortableColumns">
           <div class="drag-handle"></div>
           <span class="tpl-visible">
-            <input type="checkbox" ng-model="rnrColumn.visible" ng-click="setArithmeticValidationMessageShown()" ng-disabled="rnrColumn.mandatory"/>
+            <input type="checkbox" ng-model="rnrColumn.visible" ng-change="setArithmeticValidationMessageShown()" ng-disabled="rnrColumn.mandatory"/>
           </span>
           <span class="tpl-indicator">
             <div class="indicator" openlmis-message="rnrColumn.indicator"></div>

@@ -29,6 +29,7 @@ import java.util.Map;
 import static com.thoughtworks.selenium.SeleneseTestBase.assertFalse;
 import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
 import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
+import static java.util.Arrays.asList;
 
 @Listeners(CaptureScreenshotOnFailureListener.class)
 
@@ -48,14 +49,23 @@ public class ManageRolesAndUsers extends TestCaseHelper {
   public static final String facilityNamePrefix = "FCname";
   public static final String warehouseRole = "SHIPMENT";
 
+  UserPage userPage;
+  LoginPage loginPage;
+  HomePage homePage;
+  RolesPage rolesPage;
+
   @BeforeMethod(groups = {"admin"})
   public void setUp() throws Exception {
     super.setup();
+    userPage = PageFactory.getInstanceOfUserPage(testWebDriver);
+    loginPage = PageFactory.getInstanceOfLoginPage(testWebDriver, baseUrlGlobal);
+    homePage = PageFactory.getInstanceOfHomePage(testWebDriver);
+    rolesPage = PageFactory.getInstanceOfRolesPage(testWebDriver);
   }
 
   @And("^I create a user:$")
   public void createUser(DataTable userTable) throws Exception {
-    HomePage homePage = new HomePage(testWebDriver);
+    HomePage homePage = PageFactory.getInstanceOfHomePage(testWebDriver);
     UserPage userPage = homePage.navigateToUser();
     List<Map<String, String>> data = userTable.asMaps();
     for (Map map : data)
@@ -66,29 +76,28 @@ public class ManageRolesAndUsers extends TestCaseHelper {
 
   @When("^I disable user \"([^\"]*)\"$")
   public void disableUser(String user) throws Exception {
-    HomePage homePage = new HomePage(testWebDriver);
+    HomePage homePage = PageFactory.getInstanceOfHomePage(testWebDriver);
     UserPage userPage = homePage.navigateToUser();
     userPage.searchUser(user);
     userPage.clickEditUserButton();
-    //userPage.clickUserList();
     userPage.clickDisableButton();
   }
 
   @Then("^I should see disable user \"([^\"]*)\" message$")
   public void verifyDisableUser(String user) throws Exception {
-    UserPage userPage = new UserPage(testWebDriver);
+    UserPage userPage = PageFactory.getInstanceOfUserPage(testWebDriver);
     userPage.verifyMessage("User \"" + user + "\" has been disabled");
   }
 
   @Then("^I should see user not verified$")
   public void notVerifiedUser() throws Exception {
-    UserPage userPage = new UserPage(testWebDriver);
+    UserPage userPage = PageFactory.getInstanceOfUserPage(testWebDriver);
     assertEquals("No", userPage.getVerifiedLabel());
   }
 
   @Then("^I should see user \"([^\"]*)\" verified$")
   public void VerifiedUser(String user) throws Exception {
-    HomePage homePage = new HomePage(testWebDriver);
+    HomePage homePage = PageFactory.getInstanceOfHomePage(testWebDriver);
     UserPage userPage = homePage.navigateToUser();
     userPage.searchUser(user);
     userPage.clickUserList();
@@ -97,7 +106,7 @@ public class ManageRolesAndUsers extends TestCaseHelper {
 
   @When("^I enable user \"([^\"]*)\"$")
   public void enableUser(String user) throws Exception {
-    HomePage homePage = new HomePage(testWebDriver);
+    HomePage homePage = PageFactory.getInstanceOfHomePage(testWebDriver);
     UserPage userPage = homePage.navigateToUser();
     userPage.searchUser(user);
     userPage.clickUserList();
@@ -106,7 +115,7 @@ public class ManageRolesAndUsers extends TestCaseHelper {
 
   @Then("^I should see enable user \"([^\"]*)\" message$")
   public void verifyEnabledUser(String user) throws Exception {
-    UserPage userPage = new UserPage(testWebDriver);
+    UserPage userPage = PageFactory.getInstanceOfUserPage(testWebDriver);
     userPage.verifyMessage("User \"" + user + "\" has been enabled");
   }
 
@@ -118,7 +127,6 @@ public class ManageRolesAndUsers extends TestCaseHelper {
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Role-Function")
   public void testVerifyRightsUponOK(String[] credentials) throws Exception {
     String UPLOADS = "Uploads";
-    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
     RolesPage rolesPage = homePage.navigateRoleAssignments();
     rolesPage.getCreateNewRoleButton().click();
@@ -142,7 +150,6 @@ public class ManageRolesAndUsers extends TestCaseHelper {
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Role-Function")
   public void testVerifyRightsUponCancel(String[] credentials) throws Exception {
     String UPLOADS = "Uploads";
-    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
     RolesPage rolesPage = homePage.navigateRoleAssignments();
     rolesPage.getCreateNewRoleButton().click();
@@ -158,7 +165,6 @@ public class ManageRolesAndUsers extends TestCaseHelper {
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Role-Function")
   public void testVerifyDuplicateRoleName(String[] credentials) throws Exception {
-    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
     RolesPage rolesPage = homePage.navigateRoleAssignments();
     List<String> userRoleList = new ArrayList<>();
@@ -169,7 +175,6 @@ public class ManageRolesAndUsers extends TestCaseHelper {
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Role-Function")
   public void testVerifyFacilityBasedRole(String[] credentials) throws Exception {
-    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
     RolesPage rolesPage = homePage.navigateRoleAssignments();
     rolesPage.createFacilityBasedRole("Facility Based Role Name", "Facility Based Role Description");
@@ -177,11 +182,10 @@ public class ManageRolesAndUsers extends TestCaseHelper {
   }
 
   public void testVerifyTabsForUserWithoutRights(String userName, String password) throws Exception {
-    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+    LoginPage loginPage = PageFactory.getInstanceOfLoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(userName, password);
     assertTrue(homePage.isHomeMenuTabDisplayed());
     assertFalse(homePage.isRequisitionsMenuTabDisplayed());
-
   }
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function-Positive")
@@ -189,8 +193,6 @@ public class ManageRolesAndUsers extends TestCaseHelper {
                                             String deliveryZoneNameFirst, String deliveryZoneNameSecond,
                                             String facilityCodeFirst, String facilityCodeSecond,
                                             String programFirst, String programSecond, String schedule, String roleName) throws Exception {
-    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
-
     dbWrapper.insertUser("200", user, "Ag/myf1Whs0fxr1FFfK8cs3q/VJ1qMs3yuMLDTeEcZEGzstj/waaUsQNQTIKk1U5JRzrDbPLCzCO1/vB5YGaEQ==", "F10", "Jane_Doe@openlmis.com");
 
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
@@ -202,12 +204,8 @@ public class ManageRolesAndUsers extends TestCaseHelper {
     String facility_name = facilityNamePrefix + date_time;
     manageFacilityPage.verifyMessageOnFacilityScreen(facility_name, "created");
 
-    List<String> userRoleList = new ArrayList<>();
-    userRoleList.add(CREATE_REQUISITION);
-    userRoleList.add(AUTHORIZE_REQUISITION);
-    userRoleList.add(APPROVE_REQUISITION);
-    createRoleAndAssignRights(homePage, userRoleList, LAB_IN_CHARGE, LAB_IN_CHARGE, "Requisition");
-
+    List<String> userRoleList = asList(CREATE_REQUISITION, AUTHORIZE_REQUISITION, APPROVE_REQUISITION);
+    createRoleAndAssignRights(userRoleList, LAB_IN_CHARGE, LAB_IN_CHARGE, "Requisition");
 
     RolesPage rolesPage = new RolesPage(testWebDriver);
     rolesPage.clickARole(LAB_IN_CHARGE);
@@ -218,10 +216,9 @@ public class ManageRolesAndUsers extends TestCaseHelper {
     dbWrapper.insertSupervisoryNode(facility_code, "N1", "Node 1", "null");
 
     String passwordUsers = "TQskzK3iiLfbRVHeM1muvBCiiKriibfl6lh8ipo91hb74G3OvsybvkzpPI4S3KIeWTXAiiwlUU0iiSxWii4wSuS8mokSAieie";
-    UserPage userPage = new UserPage(testWebDriver);
     setupWarehouseRolesAndRights(facilityCodeFirst, facilityCodeSecond, programFirst, schedule, "SHIPMENT");
     String warehouseName = dbWrapper.getAttributeFromTable("facilities", "name", "code", facilityCodeFirst);
-    createUserAndAssignRoles(homePage, passwordUsers, "Jasmine_Doe@openlmis.com", "Jasmine", "Doe", LAB_IN_CHARGE, facility_code, program, "Node 1", LAB_IN_CHARGE, "REQUISITION");
+    createUserAndAssignRoles(passwordUsers, "Jasmine_Doe@openlmis.com", "Jasmine", "Doe", LAB_IN_CHARGE, facility_code, program, "Node 1", LAB_IN_CHARGE, "REQUISITION");
     userPage.assignWarehouse(warehouseName, warehouseRole);
     userPage.clickSaveButton();
     userPage.verifyUserUpdated("Jasmine", "Doe");
@@ -261,7 +258,7 @@ public class ManageRolesAndUsers extends TestCaseHelper {
     testWebDriver.sleep(500);
     userPage.verifyRoleNotPresent(LAB_IN_CHARGE);
     userPage.verifyRemoveNotPresent();
-    verifyPUSHProgramNotAvailableForHomeFacilityRolesAndSupervisoryRoles(userPage);
+    verifyPushProgramNotAvailableForHomeFacilityRolesAndSupervisoryRoles();
     userPage.clickWarehouseRolesAccordion();
     testWebDriver.sleep(500);
     userPage.verifyRoleNotPresent(warehouseRole);
@@ -274,7 +271,6 @@ public class ManageRolesAndUsers extends TestCaseHelper {
     userPage.clickRemoveButtonWithOk(1);
     userPage.clickSaveButton();
     testVerifyTabsForUserWithoutRights(LAB_IN_CHARGE, "Admin123");
-
   }
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function-Positive")
@@ -283,8 +279,6 @@ public class ManageRolesAndUsers extends TestCaseHelper {
                                                                 String facilityCodeFirst, String facilityCodeSecond,
                                                                 String programFirst, String programSecond, String schedule, String roleName) throws Exception {
     setupDeliveryZoneRolesAndRights(deliveryZoneCodeFirst, deliveryZoneCodeSecond, deliveryZoneNameFirst, deliveryZoneNameSecond, facilityCodeFirst, facilityCodeSecond, programFirst, programSecond, schedule, roleName);
-
-    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
 
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
 
@@ -301,13 +295,11 @@ public class ManageRolesAndUsers extends TestCaseHelper {
 
     assertEquals(deliveryZoneNameFirst, dbWrapper.getDeliveryZoneNameAssignedToUser(LAB_IN_CHARGE));
     assertEquals(FIELD_COORDINATOR, dbWrapper.getRoleNameAssignedToUser(LAB_IN_CHARGE));
-
   }
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Role-Function")
   public void testRestrictLogin(String[] credentials) throws Exception {
     String passwordUsers = "TQskzK3iiLfbRVHeM1muvBCiiKriibfl6lh8ipo91hb74G3OvsybvkzpPI4S3KIeWTXAiiwlUU0iiSxWii4wSuS8mokSAieie";
-    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
 
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
     UserPage userPage = homePage.navigateToUser();
@@ -335,9 +327,6 @@ public class ManageRolesAndUsers extends TestCaseHelper {
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Role-Function")
   public void testCreateSearchResetPasswordUser(String[] credentials) throws Exception {
-
-    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
-
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
 
     String passwordUsers = "TQskzK3iiLfbRVHeM1muvBCiiKriibfl6lh8ipo91hb74G3OvsybvkzpPI4S3KIeWTXAiiwlUU0iiSxWii4wSuS8mokSAieie";
@@ -381,9 +370,8 @@ public class ManageRolesAndUsers extends TestCaseHelper {
     homePage.verifyLoggedInUser(LAB_IN_CHARGE);
   }
 
-  private void createUserAndAssignRoles(HomePage homePage, String passwordUsers, String userEmail,
-                                        String userFirstName, String userLastName, String userUserName,
-                                        String facility, String program, String supervisoryNode, String role,
+  private void createUserAndAssignRoles(String passwordUsers, String userEmail, String userFirstName, String userLastName,
+                                        String userUserName, String facility, String program, String supervisoryNode, String role,
                                         String roleType) throws IOException, SQLException {
     UserPage userPage = homePage.navigateToUser();
     userPage.enterUserDetails(userUserName, userEmail, userFirstName, userLastName);
@@ -400,46 +388,43 @@ public class ManageRolesAndUsers extends TestCaseHelper {
   }
 
 
-  private void createRoleAndAssignRights(HomePage homePage, List<String> userRoleList, String roleName, String roleDescription, String programDependent) throws IOException {
+  private void createRoleAndAssignRights(List<String> userRoleList, String roleName, String roleDescription, String programDependent) throws IOException {
     RolesPage rolesPage = homePage.navigateRoleAssignments();
     rolesPage.createRole(roleName, roleDescription, userRoleList, programDependent);
     rolesPage.verifyCreatedRoleMessage(roleName);
   }
 
-  private void verifyPUSHProgramNotAvailableForHomeFacilityRolesAndSupervisoryRoles(UserPage userPage) throws IOException, SQLException {
+  private void verifyPushProgramNotAvailableForHomeFacilityRolesAndSupervisoryRoles() throws IOException, SQLException {
     assertFalse(userPage.getAllProgramsHomeFacility().contains("VACCINES"));
+    userPage.clickSupervisoryRolesAccordion();
     assertFalse(userPage.getAllProgramsToSupervise().contains("VACCINES"));
   }
 
   private void verifyWarehouseAvailableForWarehouseRoles(String FacilityCode, String warehouseName) throws IOException, SQLException {
-    UserPage userPage = new UserPage(testWebDriver);
     assertTrue(userPage.getAllWarehouseToSelect().contains(warehouseName));
     assertFalse(userPage.getAllWarehouseToSelect().contains(facilityNamePrefix));
-    dbWrapper.disableFacility(warehouseName);
-
+    dbWrapper.updateFieldValue("facilities", "enabled", "false", "name", warehouseName);
     userPage.clickSaveButton();
     userPage.clickViewHere();
     userPage.clickWarehouseRolesAccordion();
     assertFalse(userPage.getAllWarehouseToSelect().contains(warehouseName));
-    dbWrapper.enableFacility(warehouseName);
-    dbWrapper.updateActiveStatusOfFacility(FacilityCode, "true");
+    dbWrapper.updateFieldValue("facilities", "enabled", "true", "name", warehouseName);
+    dbWrapper.updateFieldValue("facilities", "active", "true", "code", FacilityCode);
     userPage.clickSaveButton();
     userPage.clickViewHere();
     userPage.clickWarehouseRolesAccordion();
     assertTrue(userPage.getAllWarehouseToSelect().contains(warehouseName));
   }
-
 
   @AfterMethod(groups = "functional2")
   public void tearDown() throws Exception {
     testWebDriver.sleep(500);
     if (!testWebDriver.getElementById("username").isDisplayed()) {
-      HomePage homePage = new HomePage(testWebDriver);
+      HomePage homePage = PageFactory.getInstanceOfHomePage(testWebDriver);
       homePage.logout(baseUrlGlobal);
       dbWrapper.deleteData();
       dbWrapper.closeConnection();
     }
-
   }
 
   @DataProvider(name = "Data-Provider-Function")

@@ -8,15 +8,15 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 describe('Facility Distribution data', function () {
-  var facilityDistributions, epiUse, refrigerators, facilityVisit, epiInventory, coverage;
+  var facilityDistribution, epiUse, refrigerators, facilityVisit, epiInventory, coverage;
 
   beforeEach(function () {
-    facilityDistributions = new FacilityDistribution({facilityVisit: {id: 1}});
-    epiUse = facilityDistributions.epiUse;
-    refrigerators = facilityDistributions.refrigerators;
-    facilityVisit = facilityDistributions.facilityVisit;
-    epiInventory = facilityDistributions.epiInventory;
-    coverage = facilityDistributions.fullCoverage;
+    facilityDistribution = new FacilityDistribution({facilityVisit: {id: 1}});
+    epiUse = facilityDistribution.epiUse;
+    refrigerators = facilityDistribution.refrigerators;
+    facilityVisit = facilityDistribution.facilityVisit;
+    epiInventory = facilityDistribution.epiInventory;
+    coverage = facilityDistribution.fullCoverage;
   });
 
   it("should compute status as complete when all the forms for the facility are COMPLETE", function () {
@@ -26,7 +26,7 @@ describe('Facility Distribution data', function () {
     spyOn(epiInventory, "computeStatus").andReturn(DistributionStatus.COMPLETE);
     spyOn(coverage, "computeStatus").andReturn(DistributionStatus.COMPLETE);
 
-    expect(facilityDistributions.computeStatus()).toEqual(DistributionStatus.COMPLETE);
+    expect(facilityDistribution.computeStatus()).toEqual(DistributionStatus.COMPLETE);
   });
 
   it("should compute status as empty when all the forms for the facility are empty", function () {
@@ -35,7 +35,7 @@ describe('Facility Distribution data', function () {
     spyOn(facilityVisit, "computeStatus").andReturn(DistributionStatus.EMPTY);
     spyOn(epiInventory, "computeStatus").andReturn(DistributionStatus.EMPTY);
 
-    expect(facilityDistributions.computeStatus()).toEqual(DistributionStatus.EMPTY);
+    expect(facilityDistribution.computeStatus()).toEqual(DistributionStatus.EMPTY);
   });
 
   it("should compute status as incomplete when one of the forms for the facility is either empty or incomplete", function () {
@@ -43,7 +43,7 @@ describe('Facility Distribution data', function () {
     spyOn(refrigerators, "computeStatus").andReturn(DistributionStatus.COMPLETE);
     spyOn(facilityVisit, "computeStatus").andReturn(DistributionStatus.INCOMPLETE);
 
-    expect(facilityDistributions.computeStatus()).toEqual(DistributionStatus.INCOMPLETE);
+    expect(facilityDistribution.computeStatus()).toEqual(DistributionStatus.INCOMPLETE);
   });
 
   it("should compute status as incomplete when one of the forms for the facility is either empty or incomplete (another variant)", function () {
@@ -51,6 +51,47 @@ describe('Facility Distribution data', function () {
     spyOn(refrigerators, "computeStatus").andReturn(DistributionStatus.INCOMPLETE);
     spyOn(facilityVisit, "computeStatus").andReturn(DistributionStatus.INCOMPLETE);
 
-    expect(facilityDistributions.computeStatus()).toEqual(DistributionStatus.INCOMPLETE);
+    expect(facilityDistribution.computeStatus()).toEqual(DistributionStatus.INCOMPLETE);
   });
+
+  it("should disable all forms if already synced", function () {
+    facilityDistribution.status = DistributionStatus.SYNCED;
+    expect(facilityDistribution.isDisabled()).toEqual(true);
+  });
+
+  it("should disable all forms if already synced", function () {
+    facilityDistribution.status = DistributionStatus.DUPLICATE;
+    expect(facilityDistribution.isDisabled()).toEqual(true);
+  });
+
+  it("should disable refrigerator form if facility is not visited and tab is 'refrigerators'", function () {
+    facilityDistribution.facilityVisit.visited = false;
+    expect(facilityDistribution.isDisabled('refrigerators')).toEqual(true);
+  });
+
+  it("should disable epi-inventory form if facility is not visited and tab is 'epi-inventory'", function () {
+    facilityDistribution.facilityVisit.visited = false;
+    expect(facilityDistribution.isDisabled('epi-inventory')).toEqual(true);
+  });
+
+  it("should not disable refrigerator form if facility is visited and tab is 'refrigerators'", function () {
+    facilityDistribution.facilityVisit.visited = true;
+    expect(facilityDistribution.isDisabled('refrigerators')).toEqual(false);
+  });
+
+  it("should not disable epi-inventory form if facility is visited and tab is 'epi-inventory'", function () {
+    facilityDistribution.facilityVisit.visited = true;
+    expect(facilityDistribution.isDisabled('epi-inventory')).toEqual(false);
+  });
+
+  it("should not disable tabs other than refrigerator and epi-inventory if facility is not visited", function () {
+    facilityDistribution.facilityVisit.visited = false;
+    expect(facilityDistribution.isDisabled('epi-use')).toEqual(false);
+  });
+
+  it("should not disable tabs other than refrigerator and epi-inventory if facility is visited", function () {
+    facilityDistribution.facilityVisit.visited = true;
+    expect(facilityDistribution.isDisabled('epi-use')).toEqual(false);
+  });
+
 });

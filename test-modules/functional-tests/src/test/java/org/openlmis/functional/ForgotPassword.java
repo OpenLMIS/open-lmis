@@ -11,8 +11,6 @@
 package org.openlmis.functional;
 
 
-import cucumber.api.java.After;
-import cucumber.api.java.Before;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
@@ -31,125 +29,125 @@ import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
 public class ForgotPassword extends TestCaseHelper {
 
   ForgotPasswordPage forgotPasswordPage;
+  LoginPage loginPage;
 
   @BeforeMethod(groups = "admin")
   public void setUp() throws Exception {
     super.setup();
+    loginPage = PageFactory.getInstanceOfLoginPage(testWebDriver, baseUrlGlobal);
+    forgotPasswordPage = PageFactory.getInstanceOfForgotPasswordPage(testWebDriver);
   }
 
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function")
   public void testVerifyValidEmail(String userName, String email) throws Exception {
-    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     ForgotPasswordPage forgotPasswordPage = loginPage.clickForgotPasswordLink();
-    verifyElementsOnForgotPasswordScreen(forgotPasswordPage);
+    verifyElementsOnForgotPasswordScreen();
     forgotPasswordPage.enterEmail(email);
     forgotPasswordPage.clickSubmit();
-    verifyEmailSendSuccessfullyMessage(forgotPasswordPage);
+    verifyEmailSendSuccessfullyMessage();
 
   }
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function")
   public void testVerifyValidUsername(String userName, String email) throws Exception {
-    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     ForgotPasswordPage forgotPasswordPage = loginPage.clickForgotPasswordLink();
-    verifyElementsOnForgotPasswordScreen(forgotPasswordPage);
+    verifyElementsOnForgotPasswordScreen();
     forgotPasswordPage.enterUserName(userName);
     forgotPasswordPage.clickSubmit();
-    verifyEmailSendSuccessfullyMessage(forgotPasswordPage);
+    verifyEmailSendSuccessfullyMessage();
 
   }
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function")
   public void testVerifyValidEmailInvalidUsername(String userName, String email) throws Exception {
-    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     ForgotPasswordPage forgotPasswordPage = loginPage.clickForgotPasswordLink();
-    verifyElementsOnForgotPasswordScreen(forgotPasswordPage);
+    verifyElementsOnForgotPasswordScreen();
     forgotPasswordPage.enterEmail(email);
     forgotPasswordPage.enterUserName(userName + "vague");
     forgotPasswordPage.clickSubmit();
-    verifyEmailSendSuccessfullyMessage(forgotPasswordPage);
+    verifyEmailSendSuccessfullyMessage();
 
   }
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function")
   public void testVerifyValidUserNameInvalidEmail(String userName, String email) throws Exception {
-    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     ForgotPasswordPage forgotPasswordPage = loginPage.clickForgotPasswordLink();
-    verifyElementsOnForgotPasswordScreen(forgotPasswordPage);
+    verifyElementsOnForgotPasswordScreen();
     forgotPasswordPage.enterEmail(email + "vague");
     forgotPasswordPage.enterUserName(userName);
     forgotPasswordPage.clickSubmit();
-    verifyErrorMessage(forgotPasswordPage, "Please provide a valid email");
+    verifyErrorMessage("Please provide a valid email");
 
   }
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function")
   public void testVerifyBlankUserNameInvalidEmail(String userName, String email) throws Exception {
-    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     ForgotPasswordPage forgotPasswordPage = loginPage.clickForgotPasswordLink();
-    verifyElementsOnForgotPasswordScreen(forgotPasswordPage);
+    verifyElementsOnForgotPasswordScreen();
     forgotPasswordPage.enterEmail(email + "vague");
     forgotPasswordPage.enterUserName("");
     forgotPasswordPage.clickSubmit();
-    verifyErrorMessage(forgotPasswordPage, "Please provide a valid email");
+    verifyErrorMessage("Please provide a valid email");
 
   }
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function")
   public void testVerifyValidUserNameBlankEmail(String userName, String email) throws Exception {
-    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     ForgotPasswordPage forgotPasswordPage = loginPage.clickForgotPasswordLink();
-    verifyElementsOnForgotPasswordScreen(forgotPasswordPage);
+    verifyElementsOnForgotPasswordScreen();
     forgotPasswordPage.enterEmail("");
     forgotPasswordPage.enterUserName(userName + "vague");
     forgotPasswordPage.clickSubmit();
-    verifyErrorMessage(forgotPasswordPage, "Please provide a valid username");
+    verifyErrorMessage("Please provide a valid username");
 
   }
 
   @Given("^I am on forgot password screen$")
   public void onForgotPageAndVerifyElements() throws Exception {
-    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+    loginPage = PageFactory.getInstanceOfLoginPage(testWebDriver, baseUrlGlobal);
     forgotPasswordPage = loginPage.clickForgotPasswordLink();
-    verifyElementsOnForgotPasswordScreen(forgotPasswordPage);
+    verifyElementsOnForgotPasswordScreen();
   }
 
   @When("^I type email \"([^\"]*)\"$")
   public void enterEmail(String email) throws Exception {
+    forgotPasswordPage = PageFactory.getInstanceOfForgotPasswordPage(testWebDriver);
     forgotPasswordPage.enterEmail(email);
   }
 
   @When("^I type and username \"([^\"]*)\"$")
   public void enterPassword(String userName) throws Exception {
+    forgotPasswordPage = PageFactory.getInstanceOfForgotPasswordPage(testWebDriver);
     forgotPasswordPage.enterUserName(userName);
   }
 
   @When("^I click submit button$")
   public void clickSubmit() throws Exception {
+    forgotPasswordPage = PageFactory.getInstanceOfForgotPasswordPage(testWebDriver);
     forgotPasswordPage.clickSubmit();
   }
 
   @Then("^I should see email send successfully$")
   public void verifyEmailSendMessage() throws Exception {
-    verifyEmailSendSuccessfullyMessage(forgotPasswordPage);
+    forgotPasswordPage = PageFactory.getInstanceOfForgotPasswordPage(testWebDriver);
+    verifyEmailSendSuccessfullyMessage();
   }
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function")
   public void testVerifyBlankEmailAndUserName(String userName, String email) throws Exception {
-    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     ForgotPasswordPage forgotPasswordPage = loginPage.clickForgotPasswordLink();
-    verifyElementsOnForgotPasswordScreen(forgotPasswordPage);
+    verifyElementsOnForgotPasswordScreen();
     forgotPasswordPage.enterEmail("");
     forgotPasswordPage.enterUserName("");
     forgotPasswordPage.clickSubmit();
-    verifyErrorMessage(forgotPasswordPage, "Please enter either your Email or Username");
+    verifyErrorMessage("Please enter either your Email or Username");
     forgotPasswordPage.clickCancel();
     assertTrue("Forgot Password Link should show up", forgotPasswordPage.getForgotPasswordLink().isDisplayed());
 
   }
 
-  private void verifyElementsOnForgotPasswordScreen(ForgotPasswordPage forgotPasswordPage) {
+  private void verifyElementsOnForgotPasswordScreen() {
     testWebDriver.waitForElementToAppear(forgotPasswordPage.getForgotPasswordHeader());
     assertTrue("emailTextField should be displayed", forgotPasswordPage.getEmailTextField().isDisplayed());
     assertTrue("usernameTextField should be displayed", forgotPasswordPage.getUsernameTextField().isDisplayed());
@@ -158,13 +156,13 @@ public class ForgotPassword extends TestCaseHelper {
     assertTrue("forgotPasswordHeader should be displayed", forgotPasswordPage.getForgotPasswordHeader().isDisplayed());
   }
 
-  private void verifyEmailSendSuccessfullyMessage(ForgotPasswordPage forgotPasswordPage) {
+  private void verifyEmailSendSuccessfullyMessage() {
     testWebDriver.waitForElementToAppear(forgotPasswordPage.getEmailSendSuccessMessage());
     assertTrue("email send message should be displayed", forgotPasswordPage.getEmailSendSuccessMessage().isDisplayed());
     assertTrue("please check message div should be displayed", forgotPasswordPage.getPleaseCheckMailDiv().isDisplayed());
   }
 
-  private void verifyErrorMessage(ForgotPasswordPage forgotPasswordPage, String errorMessage) {
+  private void verifyErrorMessage(String errorMessage) {
     testWebDriver.waitForElementToAppear(forgotPasswordPage.getSaveFailedMessage());
     assertTrue("Error message " + errorMessage + " should show up", forgotPasswordPage.getSaveFailedMessage().getText().contains(errorMessage));
   }
@@ -172,24 +170,22 @@ public class ForgotPassword extends TestCaseHelper {
 
   @AfterMethod(groups = "admin")
   public void tearDown() throws Exception {
-    try{
-    if(!testWebDriver.getElementById("username").isDisplayed()) {
-      HomePage homePage = new HomePage(testWebDriver);
-      homePage.logout(baseUrlGlobal);
-      dbWrapper.deleteData();
-      dbWrapper.closeConnection();
+    try {
+      if (!testWebDriver.getElementById("username").isDisplayed()) {
+        HomePage homePage = PageFactory.getInstanceOfHomePage(testWebDriver);
+        homePage.logout(baseUrlGlobal);
+        dbWrapper.deleteData();
+        dbWrapper.closeConnection();
+      }
+    } catch (NoSuchElementException e) {
     }
-    }catch(NoSuchElementException e){}
-
   }
-
 
   @DataProvider(name = "Data-Provider-Function")
   public Object[][] parameterIntTestProviderPositive() {
     return new Object[][]{
       {"Admin123", "John_Doe@openlmis.com"}
     };
-
   }
 }
 

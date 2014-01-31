@@ -11,8 +11,7 @@
 describe("Order File Template Controller", function () {
   var scope, controller, httpBackend, messageService, orderFileTemplate, $q, timeout, deferredObject, dateFormats;
 
-  beforeEach(module('openlmis.services'));
-  beforeEach(module('openlmis.localStorage'));
+  beforeEach(module('openlmis'));
 
   beforeEach(inject(function ($rootScope, $controller, $httpBackend, _messageService_, _$timeout_) {
     messageService = _messageService_;

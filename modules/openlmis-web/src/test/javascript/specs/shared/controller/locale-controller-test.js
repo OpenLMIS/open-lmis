@@ -11,9 +11,7 @@
 describe("LocaleController", function () {
 
 
-  beforeEach(module('openlmis.services'));
-  beforeEach(module('openlmis.localStorage'));
-  beforeEach(module('ngCookies'));
+  beforeEach(module('openlmis'));
 
   var controller, scope, $httpBackend, $cookies;
 

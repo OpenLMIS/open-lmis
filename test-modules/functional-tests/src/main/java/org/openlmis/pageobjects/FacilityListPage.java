@@ -10,7 +10,6 @@
 
 package org.openlmis.pageobjects;
 
-
 import org.openlmis.UiUtils.TestWebDriver;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
@@ -18,14 +17,12 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 
-import java.io.IOException;
 import java.util.List;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
 import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
 import static org.openqa.selenium.support.How.ID;
 import static org.openqa.selenium.support.How.XPATH;
-
 
 public class FacilityListPage extends RequisitionPage {
 
@@ -59,13 +56,11 @@ public class FacilityListPage extends RequisitionPage {
   @FindBy(how = XPATH, using = "//div[@class='select2-result-label']/div/span[@class='status-icon']")
   private static WebElement firstFacilityIndicator = null;
 
-
   @FindBy(how = XPATH, using = "//div[@id='legend']/span[1]/span[2]")
   private static WebElement legendNotStartedText = null;
 
   @FindBy(how = XPATH, using = "//div[@id='legend']/span[1]/span[1]")
   private static WebElement legendNotStartedIcon = null;
-
 
   @FindBy(how = XPATH, using = "//div[@id='legend']/span[2]/span[2]")
   private static WebElement legendPartiallyCompletedText = null;
@@ -79,13 +74,11 @@ public class FacilityListPage extends RequisitionPage {
   @FindBy(how = XPATH, using = "//div[@id='legend']/span[3]/span[1]")
   private static WebElement legendCompletedIcon = null;
 
-
   @FindBy(how = XPATH, using = "//div[@id='legend']/span[4]/span[2]")
   private static WebElement legendSynchronizedText = null;
 
   @FindBy(how = XPATH, using = "//div[@id='legend']/span[4]/span[1]")
   private static WebElement legendSynchronizedIcon = null;
-
 
   @FindBy(how = XPATH, using = "//div[@id='legend']/span[5]/span[2]")
   private static WebElement legendCannotSynchronizedText = null;
@@ -93,13 +86,13 @@ public class FacilityListPage extends RequisitionPage {
   @FindBy(how = XPATH, using = "//div[@id='legend']/span[5]/span[1]")
   private static WebElement legendCannotSynchronizedIcon = null;
 
-  public FacilityListPage(TestWebDriver driver) throws IOException {
+  public FacilityListPage(TestWebDriver driver) {
     super(driver);
     PageFactory.initElements(new AjaxElementLocatorFactory(TestWebDriver.getDriver(), 10), this);
     testWebDriver.setImplicitWait(10);
   }
 
-  public String getFacilitiesInDropDown(){
+  public String getFacilitiesInDropDown() {
     testWebDriver.waitForElementToAppear(facilityListDropDown);
     return facilityListDropDown.getText();
   }
@@ -127,7 +120,7 @@ public class FacilityListPage extends RequisitionPage {
     assertEquals(geoZoneSecond, testWebDriver.getElementByXpath("//*[@id='select2-drop']/ul/li[2]/div").getText());
   }
 
-  public RefrigeratorPage selectFacility(String facilityCode) {
+  public GeneralObservationPage selectFacility(String facilityCode) {
     clickFacilityListDropDown();
     testWebDriver.waitForElementToAppear(facilityListTextField);
     facilityListTextField.clear();
@@ -136,7 +129,7 @@ public class FacilityListPage extends RequisitionPage {
     facilityListSelectField.click();
     testWebDriver.sleep(250);
 
-    return new RefrigeratorPage(testWebDriver);
+    return new GeneralObservationPage(testWebDriver);
   }
 
   public void clickFacilityListDropDown() {
@@ -145,7 +138,6 @@ public class FacilityListPage extends RequisitionPage {
     facilityListSelect.click();
     testWebDriver.sleep(2000);
   }
-
 
   public void verifyFacilityNameInHeader(String facilityName) {
     testWebDriver.sleep(500);
@@ -177,12 +169,8 @@ public class FacilityListPage extends RequisitionPage {
       testWebDriver.waitForElementToAppear(facilityListTextField);
       testWebDriver.getElementByXpath("//*[@id='select2-drop']/ul/li[1]/div").click();
       assertEquals(firstFacilityIndicator.getCssValue("background-color"), color);
-      escapeFacilitySearchInput();
+      inputFacilitySearch.sendKeys(Keys.ESCAPE);
     }
-  }
-
-  public void escapeFacilitySearchInput() {
-    inputFacilitySearch.sendKeys(Keys.ESCAPE);
   }
 
   public void verifyLegend() {

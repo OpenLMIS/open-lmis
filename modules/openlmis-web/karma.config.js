@@ -13,9 +13,10 @@ module.exports = function (config) {
     // list of files / patterns to load in the browser
     files: [
       //Library files in order
-      'lib/jquery/jquery-1.8.2.min.js',
+      'lib/jquery/jquery-2.0.0.min.js',
       'lib/jquery/jquery-ui-1.9.2.custom.min.js',
       'lib/angular/angular.min.js',
+      'lib/angular/angular-route.min.js',
       'lib/angular/angular-resource.min.js',
       'lib/angular/angular-cookies.min.js',
       'lib/angular-ui/ng-grid-1.6.3.js',

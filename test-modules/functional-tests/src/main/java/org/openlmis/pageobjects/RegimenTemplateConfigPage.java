@@ -24,79 +24,79 @@ import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 public class RegimenTemplateConfigPage extends Page {
 
   @FindBy(how = How.XPATH, using = "//input[@value='Save']")
-  private static WebElement SaveButton=null;
+  private static WebElement SaveButton = null;
 
   @FindBy(how = How.XPATH, using = "//a[contains(text(),'Cancel')]")
-  private static WebElement CancelButton=null;
+  private static WebElement CancelButton = null;
 
   @FindBy(how = How.ID, using = "saveSuccessMsgDiv")
-  private static WebElement saveSuccessMsgDiv=null;
+  private static WebElement saveSuccessMsgDiv = null;
 
   @FindBy(how = How.ID, using = "saveErrorMsgDiv")
-  private static WebElement saveErrorMsgDiv=null;
+  private static WebElement saveErrorMsgDiv = null;
 
   @FindBy(how = How.ID, using = "newRegimenCategory")
-  private static WebElement newRegimenCategoryDropDown=null;
+  private static WebElement newRegimenCategoryDropDown = null;
 
   @FindBy(how = How.ID, using = "newRegimenCode")
-  private static WebElement newRegimenCodeTextBox=null;
+  private static WebElement newRegimenCodeTextBox = null;
 
   @FindBy(how = How.ID, using = "newRegimenName")
-  private static WebElement newRegimenNameTextBox=null;
+  private static WebElement newRegimenNameTextBox = null;
 
   @FindBy(how = How.ID, using = "newRegimenActive")
-  private static WebElement newRegimenActiveCheckBox=null;
+  private static WebElement newRegimenActiveCheckBox = null;
 
   @FindBy(how = How.XPATH, using = "//input[@value='Add']")
-  private static WebElement addButton=null;
+  private static WebElement addButton = null;
 
   @FindBy(how = How.XPATH, using = "//input[@value='Edit']")
-  private static WebElement editButton=null;
+  private static WebElement editButton = null;
 
   @FindBy(how = How.XPATH, using = "//input[@value='Done']")
-  private static WebElement doneButton=null;
+  private static WebElement doneButton = null;
 
   @FindBy(how = How.ID, using = "doneFailMessage")
-  private static WebElement doneFailMessage=null;
+  private static WebElement doneFailMessage = null;
 
   @FindBy(how = How.XPATH, using = ".//*[@id='wrap']/div/div/div/div[2]/ul/li[1]/a")
-  private static WebElement reportingFieldsTab=null;
+  private static WebElement reportingFieldsTab = null;
 
   @FindBy(how = How.XPATH, using = ".//*[@id='reportingFields']/div[2]/div[1]/div/div[1]/span/input")
-  private static WebElement noOfPatientsOnTreatmentCheckBox=null;
+  private static WebElement noOfPatientsOnTreatmentCheckBox = null;
 
   @FindBy(how = How.XPATH, using = ".//*[@id='reportingFields']/div[2]/div[2]/div/div[1]/span/input")
-  private static WebElement noOfPatientsToInitiateTreatmentCheckBox=null;
+  private static WebElement noOfPatientsToInitiateTreatmentCheckBox = null;
 
   @FindBy(how = How.XPATH, using = ".//*[@id='reportingFields']/div[2]/div[3]/div/div[1]/span/input")
-  private static WebElement noOfPatientsStoppedTreatmentCheckBox=null;
+  private static WebElement noOfPatientsStoppedTreatmentCheckBox = null;
 
   @FindBy(how = How.XPATH, using = ".//*[@id='reportingFields']/div[2]/div[4]/div/div[1]/span/input")
-  private static WebElement remarksCheckBox=null;
+  private static WebElement remarksCheckBox = null;
 
   @FindBy(how = How.XPATH, using = ".//*[@id='reportingFields']/div[2]/div[1]/div/div[2]/input")
-  private static WebElement noOfPatientsOnTreatmentTextField=null;
+  private static WebElement noOfPatientsOnTreatmentTextField = null;
 
   @FindBy(how = How.XPATH, using = ".//*[@id='reportingFields']/div[2]/div[2]/div/div[2]/input")
-  private static WebElement noOfPatientsToInitiateTreatmentTextField=null;
+  private static WebElement noOfPatientsToInitiateTreatmentTextField = null;
 
   @FindBy(how = How.XPATH, using = ".//*[@id='reportingFields']/div[2]/div[3]/div/div[2]/input")
-  private static WebElement noOfPatientsStoppedTreatmentTextField=null;
+  private static WebElement noOfPatientsStoppedTreatmentTextField = null;
 
   @FindBy(how = How.XPATH, using = ".//*[@id='reportingFields']/div[2]/div[4]/div/div[2]/input")
-  private static WebElement remarksTextField=null;
+  private static WebElement remarksTextField = null;
 
   @FindBy(how = How.XPATH, using = ".//*[@id='reportingFields']/div[2]/div[1]/div/div[3]/span")
-  private static WebElement noOfPatientsOnTreatmentDataType=null;
+  private static WebElement noOfPatientsOnTreatmentDataType = null;
 
   @FindBy(how = How.XPATH, using = ".//*[@id='reportingFields']/div[2]/div[2]/div/div[3]/span")
-  private static WebElement noOfPatientsToInitiateTreatmentDataType=null;
+  private static WebElement noOfPatientsToInitiateTreatmentDataType = null;
 
   @FindBy(how = How.XPATH, using = ".//*[@id='reportingFields']/div[2]/div[3]/div/div[3]/span")
-  private static WebElement noOfPatientsStoppedTreatmentDataType=null;
+  private static WebElement noOfPatientsStoppedTreatmentDataType = null;
 
   @FindBy(how = How.XPATH, using = ".//*[@id='reportingFields']/div[2]/div[4]/div/div[3]/span")
-  private static WebElement remarksDataType=null;
+  private static WebElement remarksDataType = null;
 
   private static String baseRegimenDivXpath = "//div[@id='sortable']/div";
 
@@ -107,31 +107,23 @@ public class RegimenTemplateConfigPage extends Page {
   }
 
   public void NoOfPatientsOnTreatmentCheckBox(boolean select) {
-    if (select)
-      selectCheckBox(noOfPatientsOnTreatmentCheckBox);
-    else
-      unSelectCheckBox(noOfPatientsOnTreatmentCheckBox);
+    if (select) selectCheckBox(noOfPatientsOnTreatmentCheckBox);
+    else unSelectCheckBox(noOfPatientsOnTreatmentCheckBox);
   }
 
   public void NoOfPatientsToInitiateTreatmentCheckBox(boolean select) {
-    if (select)
-      selectCheckBox(noOfPatientsToInitiateTreatmentCheckBox);
-    else
-      unSelectCheckBox(noOfPatientsToInitiateTreatmentCheckBox);
+    if (select) selectCheckBox(noOfPatientsToInitiateTreatmentCheckBox);
+    else unSelectCheckBox(noOfPatientsToInitiateTreatmentCheckBox);
   }
 
   public void NoOfPatientsStoppedTreatmentCheckBox(boolean select) {
-    if (select)
-      selectCheckBox(noOfPatientsStoppedTreatmentCheckBox);
-    else
-      unSelectCheckBox(noOfPatientsStoppedTreatmentCheckBox);
+    if (select) selectCheckBox(noOfPatientsStoppedTreatmentCheckBox);
+    else unSelectCheckBox(noOfPatientsStoppedTreatmentCheckBox);
   }
 
   public void RemarksCheckBox(boolean select) {
-    if (select)
-      selectCheckBox(remarksCheckBox);
-    else
-      unSelectCheckBox(remarksCheckBox);
+    if (select) selectCheckBox(remarksCheckBox);
+    else unSelectCheckBox(remarksCheckBox);
   }
 
 
@@ -193,8 +185,7 @@ public class RegimenTemplateConfigPage extends Page {
     testWebDriver.selectByVisibleText(newRegimenCategoryDropDown, category);
     newRegimenCodeTextBox.sendKeys(code);
     newRegimenNameTextBox.sendKeys(name);
-    if (isActive)
-      newRegimenActiveCheckBox.click();
+    if (isActive) newRegimenActiveCheckBox.click();
     addButton.click();
 
   }
@@ -233,7 +224,7 @@ public class RegimenTemplateConfigPage extends Page {
     CancelButton.click();
   }
 
-  public boolean IsDisplayedSaveSuccessMsgDiv() {
+  public boolean isDisplayedSaveSuccessMsgDiv() {
     testWebDriver.waitForElementToAppear(saveSuccessMsgDiv);
     return saveSuccessMsgDiv.isDisplayed();
   }
@@ -254,33 +245,45 @@ public class RegimenTemplateConfigPage extends Page {
   }
 
   public String getNonEditableAddedCode(int indexOfCodeAdded) {
-    testWebDriver.waitForElementToAppear(testWebDriver.getElementByXpath(baseRegimenDivXpath + "[" + indexOfCodeAdded + "]/div[2]/div/span"));
-    return testWebDriver.getElementByXpath(baseRegimenDivXpath + "[" + indexOfCodeAdded + "]/div[2]/div/span").getText().trim();
+    testWebDriver.waitForElementToAppear(
+      testWebDriver.getElementByXpath(baseRegimenDivXpath + "[" + indexOfCodeAdded + "]/div[2]/div/span"));
+    return testWebDriver.getElementByXpath(
+      baseRegimenDivXpath + "[" + indexOfCodeAdded + "]/div[2]/div/span").getText().trim();
   }
 
   public String getNonEditableAddedName(int indexOfCodeAdded) {
-    testWebDriver.waitForElementToAppear(testWebDriver.getElementByXpath(baseRegimenDivXpath + "[" + indexOfCodeAdded + "]/div[2]/div/span"));
-    return testWebDriver.getElementByXpath(baseRegimenDivXpath + "[" + indexOfCodeAdded + "]/div[3]/div/span").getText().trim();
+    testWebDriver.waitForElementToAppear(
+      testWebDriver.getElementByXpath(baseRegimenDivXpath + "[" + indexOfCodeAdded + "]/div[2]/div/span"));
+    return testWebDriver.getElementByXpath(
+      baseRegimenDivXpath + "[" + indexOfCodeAdded + "]/div[3]/div/span").getText().trim();
   }
 
   public boolean getNonEditableAddedActiveCheckBox(int indexOfCodeAdded) {
-    testWebDriver.waitForElementToAppear(testWebDriver.getElementByXpath(baseRegimenDivXpath + "[" + indexOfCodeAdded + "]/div[2]/div/span"));
-    return testWebDriver.getElementByXpath(baseRegimenDivXpath + "[" + indexOfCodeAdded + "]/div[4]/input").isSelected();
+    testWebDriver.waitForElementToAppear(
+      testWebDriver.getElementByXpath(baseRegimenDivXpath + "[" + indexOfCodeAdded + "]/div[2]/div/span"));
+    return testWebDriver.getElementByXpath(
+      baseRegimenDivXpath + "[" + indexOfCodeAdded + "]/div[4]/input").isSelected();
   }
 
   public String getEditableAddedCode(int indexOfCodeAdded) {
-    testWebDriver.waitForElementToAppear(testWebDriver.getElementByXpath(baseRegimenDivXpath + "[" + indexOfCodeAdded + "]/div[2]/input"));
-    return testWebDriver.getAttribute(testWebDriver.getElementByXpath(baseRegimenDivXpath + "[" + indexOfCodeAdded + "]/div[2]/input"), "value").trim();
+    testWebDriver.waitForElementToAppear(
+      testWebDriver.getElementByXpath(baseRegimenDivXpath + "[" + indexOfCodeAdded + "]/div[2]/input"));
+    return testWebDriver.getAttribute(
+      testWebDriver.getElementByXpath(baseRegimenDivXpath + "[" + indexOfCodeAdded + "]/div[2]/input"), "value").trim();
   }
 
   public String getEditableAddedName(int indexOfCodeAdded) {
-    testWebDriver.waitForElementToAppear(testWebDriver.getElementByXpath(baseRegimenDivXpath + "[" + indexOfCodeAdded + "]/div[2]/input"));
-    return testWebDriver.getAttribute(testWebDriver.getElementByXpath(baseRegimenDivXpath + "[" + indexOfCodeAdded + "]/div[3]/input"), "value").trim();
+    testWebDriver.waitForElementToAppear(
+      testWebDriver.getElementByXpath(baseRegimenDivXpath + "[" + indexOfCodeAdded + "]/div[2]/input"));
+    return testWebDriver.getAttribute(
+      testWebDriver.getElementByXpath(baseRegimenDivXpath + "[" + indexOfCodeAdded + "]/div[3]/input"), "value").trim();
   }
 
   public boolean getEditableAddedActiveCheckBox(int indexOfCodeAdded) {
-    testWebDriver.waitForElementToAppear(testWebDriver.getElementByXpath(baseRegimenDivXpath + "[" + indexOfCodeAdded + "]/div[2]/input"));
-    return testWebDriver.getElementByXpath(baseRegimenDivXpath + "[" + indexOfCodeAdded + "]/div[4]/input").isSelected();
+    testWebDriver.waitForElementToAppear(
+      testWebDriver.getElementByXpath(baseRegimenDivXpath + "[" + indexOfCodeAdded + "]/div[2]/input"));
+    return testWebDriver.getElementByXpath(
+      baseRegimenDivXpath + "[" + indexOfCodeAdded + "]/div[4]/input").isSelected();
   }
 
   public void configureProgram(String program) throws InterruptedException {
@@ -328,10 +331,10 @@ public class RegimenTemplateConfigPage extends Page {
 
   public void sendKeys(WebElement locator, String value) {
     int length = testWebDriver.getAttribute(locator, "value").length();
-    for (int i = 0; i < length; i++){
+    for (int i = 0; i < length; i++) {
       locator.sendKeys(Keys.ARROW_RIGHT);
     }
-    for (int i = 0; i < length; i++){
+    for (int i = 0; i < length; i++) {
       locator.sendKeys("\u0008");
     }
     locator.sendKeys(value);

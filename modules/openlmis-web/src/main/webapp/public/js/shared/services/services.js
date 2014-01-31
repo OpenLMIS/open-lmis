@@ -18,7 +18,7 @@ services.factory('Programs', function ($resource) {
 });
 
 services.factory('RnRColumnList', function ($resource) {
-  return $resource('/program/:programId/rnr-template.json', {}, {post: {isArray: true, method: 'POST'}});
+  return $resource('/program/:programId/rnr-template.json', {}, {});
 });
 
 services.factory('ProgramRnRColumnList', function ($resource) {
@@ -192,7 +192,7 @@ services.factory('ProgramProducts', function ($resource) {
 });
 
 services.factory('FacilityProgramProducts', function ($resource) {
-  return $resource('/facility/:facilityId/program/:programId/isa.json', {}, {update: {method: 'PUT', isArray: true}});
+  return $resource('/facility/:facilityId/program/:programId/isa.json', {}, {update: {method: 'PUT'}});
 });
 
 services.factory('ProgramProductsISA', function ($resource) {
@@ -297,5 +297,5 @@ services.factory('EnabledWarehouse', function ($resource) {
 });
 
 services.factory('OrderPOD', function ($resource) {
-  return $resource('/pod-orders/:id.json', {id: '@id'}, update);
+  return $resource('/pods/:id.json', {id: '@id'}, update);
 });

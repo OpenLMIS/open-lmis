@@ -14,8 +14,7 @@ describe('Rnr Template controllers', function () {
 
     var scope, ctrl, $httpBackend, location, rnrColumnList, sources, rnrTemplateForm, program, routeParams, messageService;
 
-    beforeEach(module('openlmis.services'));
-    beforeEach(module('openlmis.localStorage'));
+    beforeEach(module('openlmis'));
 
     beforeEach(inject(function ($rootScope, _$httpBackend_, $controller, $location, $routeParams, _messageService_) {
       scope = $rootScope.$new();

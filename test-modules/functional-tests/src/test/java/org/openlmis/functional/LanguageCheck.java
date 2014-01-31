@@ -26,51 +26,49 @@ import static org.testng.Assert.assertTrue;
 
 public class LanguageCheck extends TestCaseHelper {
 
+  LoginPage loginPage;
+
   @BeforeMethod(groups = "admin")
   public void setUp() throws Exception {
     super.setup();
+    loginPage = PageFactory.getInstanceOfLoginPage(testWebDriver, baseUrlGlobal);
   }
 
   @Test(groups = {"admin"})
   public void changeLanguageAsEnglishOnLoginPage() throws Exception {
-    LoginPage loginpage = new LoginPage(testWebDriver, baseUrlGlobal);
-    loginpage.setLangAsEnglish();
-    verifyColorOfTextAsGray(loginpage.getEnglishColor());
+    loginPage.setLangAsEnglish();
+    verifyColorOfTextAsGray(loginPage.getEnglishColor());
     verifyPageIdentifierLabelOnLoginPage("Sign In");
   }
 
   @Test(groups = {"admin"})
   public void changeLanguageAsPortugueseOnLoginPage() throws Exception {
-    LoginPage loginpage = new LoginPage(testWebDriver, baseUrlGlobal);
-    loginpage.setLangAsPortugues();
-    verifyColorOfTextAsGray(loginpage.getPortuguesColor());
+    loginPage.setLangAsPortugues();
+    verifyColorOfTextAsGray(loginPage.getPortuguesColor());
     verifyPageIdentifierLabelOnLoginPage("Entrar");
   }
 
   @Test(groups = {"admin"})
   public void changeLanguageAsPortugueseBeforeForgotPasswordPage() throws Exception {
-    LoginPage loginpage = new LoginPage(testWebDriver, baseUrlGlobal);
-    loginpage.setLangAsPortugues();
-    loginpage.clickForgotPasswordLink();
-    verifyColorOfTextAsGray(loginpage.getPortuguesColor());
+    loginPage.setLangAsPortugues();
+    loginPage.clickForgotPasswordLink();
+    verifyColorOfTextAsGray(loginPage.getPortuguesColor());
     verifyPageIdentifierLabelOnForgotPasswordPage("Submeter");
   }
 
   @Test(groups = {"admin"})
   public void changeLanguageAsEnglishBeforeForgotPasswordPage() throws Exception {
-    LoginPage loginpage = new LoginPage(testWebDriver, baseUrlGlobal);
-    loginpage.setLangAsEnglish();
-    loginpage.clickForgotPasswordLink();
-    verifyColorOfTextAsGray(loginpage.getEnglishColor());
+    loginPage.setLangAsEnglish();
+    loginPage.clickForgotPasswordLink();
+    verifyColorOfTextAsGray(loginPage.getEnglishColor());
     verifyPageIdentifierLabelOnForgotPasswordPage("Submit");
   }
 
   @Test(groups = {"admin"})
   public void changeLanguageAsPortugueseOnForgotPasswordPage() throws Exception {
-    LoginPage loginpage = new LoginPage(testWebDriver, baseUrlGlobal);
-    loginpage.clickForgotPasswordLink();
-    loginpage.setLangAsPortugues();
-    verifyColorOfTextAsGray(loginpage.getPortuguesColor());
+    loginPage.clickForgotPasswordLink();
+    loginPage.setLangAsPortugues();
+    verifyColorOfTextAsGray(loginPage.getPortuguesColor());
     verifyPageIdentifierLabelOnForgotPasswordPage("Submeter");
   }
 
@@ -79,22 +77,20 @@ public class LanguageCheck extends TestCaseHelper {
   }
 
   private void verifyPageIdentifierLabelOnLoginPage(String expectedLabel) throws IOException {
-    LoginPage loginpage = new LoginPage(testWebDriver, baseUrlGlobal);
-    assertEquals(loginpage.getPageIdentifierOnLoginPageText(), expectedLabel);
+    assertEquals(loginPage.getPageIdentifierOnLoginPageText(), expectedLabel);
   }
 
   private void verifyPageIdentifierLabelOnForgotPasswordPage(String expectedLabel) throws IOException {
-    ForgotPasswordPage forgotPassword = new ForgotPasswordPage(testWebDriver);
-    assertEquals(forgotPassword.getPageIdentifierOnForgotPasswordPageAttribute(), expectedLabel);
+    ForgotPasswordPage forgotPasswordPage = PageFactory.getInstanceOfForgotPasswordPage(testWebDriver);
+    assertEquals(forgotPasswordPage.getPageIdentifierOnForgotPasswordPageAttribute(), expectedLabel);
   }
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function")
   public void signInAsAdmin123AndEnglish(String user) throws Exception {
-    LoginPage loginpage = new LoginPage(testWebDriver, baseUrlGlobal);
-    loginpage.setLangAsEnglish();
-    verifyColorOfTextAsGray(loginpage.getEnglishColor());
-    HomePage homePage = loginpage.loginAs(user, user);
-    verifyColorOfTextAsGray(loginpage.getEnglishColor());
+    loginPage.setLangAsEnglish();
+    verifyColorOfTextAsGray(loginPage.getEnglishColor());
+    HomePage homePage = loginPage.loginAs(user, user);
+    verifyColorOfTextAsGray(loginPage.getEnglishColor());
     assertTrue(homePage.getLogoutLink().isDisplayed());
   }
 
@@ -109,7 +105,7 @@ public class LanguageCheck extends TestCaseHelper {
   public void tearDown() throws Exception {
     testWebDriver.sleep(500);
     if (!testWebDriver.getElementById("username").isDisplayed()) {
-      HomePage homePage = new HomePage(testWebDriver);
+      HomePage homePage = PageFactory.getInstanceOfHomePage(testWebDriver);
       homePage.logout(baseUrlGlobal);
       dbWrapper.deleteData();
       dbWrapper.closeConnection();

@@ -16,8 +16,6 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 
-import java.io.IOException;
-
 import static com.thoughtworks.selenium.SeleneseTestBase.*;
 import static org.openqa.selenium.support.How.ID;
 import static org.openqa.selenium.support.How.XPATH;
@@ -102,13 +100,12 @@ public class ConfigureShipmentPage extends Page {
   private WebElement shippedDateSelectBoxDefaultSelected = null;
 
 
-  public ConfigureShipmentPage(TestWebDriver driver) throws IOException {
+  public ConfigureShipmentPage(TestWebDriver driver) {
     super(driver);
     initElements(new AjaxElementLocatorFactory(TestWebDriver.getDriver(), 10), this);
     testWebDriver.setImplicitWait(10);
     testWebDriver.waitForElementToAppear(includeHeaders);
   }
-
 
   public String getSelectedOptionOfPackedDateDropDown() {
     testWebDriver.waitForElementToAppear(packedDateSelectBoxDefaultSelected);
@@ -262,7 +259,6 @@ public class ConfigureShipmentPage extends Page {
     testWebDriver.sleep(2000);
   }
 
-
   public void verifyMessage(String message) {
     testWebDriver.waitForElementToAppear(successMessageDiv);
     assertEquals(message, successMessageDiv.getText());
@@ -287,7 +283,6 @@ public class ConfigureShipmentPage extends Page {
     assertTrue("costCheckBox should be enabled", costCheckBox.isEnabled());
     assertTrue("packedDateCheckBox should be enabled", packedDateCheckBox.isEnabled());
     assertTrue("shippedDateCheckBox should be enabled", shippedDateCheckBox.isEnabled());
-
   }
 
   public void verifyDefaultPositionValues() {

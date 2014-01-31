@@ -178,30 +178,30 @@ public class RequisitionStatusFeed extends JsonUtility {
   }
 
 
-  private void checkRequisitionStatusOnFeed(String requisitionStatus, String feedSting,
-                                            Long id) throws IOException, SAXException, ParserConfigurationException {
-    assertTrue("feed json list : " + feedSting, feedSting.contains("\"requisitionId\":" + id));
-    assertTrue("feed json list : " + feedSting,
-      feedSting.contains("\"requisitionStatus\":\"" + requisitionStatus + "\""));
-    assertTrue("Response entity : " + feedSting, feedSting.contains("\"emergency\":false"));
-    assertTrue("Response entity : " + feedSting, feedSting.contains("\"startDate\":1359484200000"));
-    assertTrue("Response entity : " + feedSting, feedSting.contains("\"endDate\":1454178599000"));
-    assertTrue("Response entity : " + feedSting, feedSting.contains("\"stringStartDate\":\"30-01-2013\""));
-    assertTrue("Response entity : " + feedSting, feedSting.contains("\"stringEndDate\":\"30-01-2016\""));
-    assertFalse("Response entity : " + feedSting, feedSting.contains("\"orderStatus\":"));
-    assertFalse("Response entity : " + feedSting, feedSting.contains("\"orderID\""));
+  private void checkRequisitionStatusOnFeed(String requisitionStatus, String feedString, Long id) throws IOException,
+    SAXException, ParserConfigurationException {
+    assertTrue("feed json list : " + feedString, feedString.contains("\"requisitionId\":" + id));
+    assertTrue("feed json list : " + feedString,
+      feedString.contains("\"requisitionStatus\":\"" + requisitionStatus + "\""));
+    assertTrue("Response entity : " + feedString, feedString.contains("\"emergency\":false"));
+    assertTrue("Response entity : " + feedString, feedString.contains("\"startDate\":1359484200000"));
+    assertTrue("Response entity : " + feedString, feedString.contains("\"endDate\":1454178599000"));
+    assertTrue("Response entity : " + feedString, feedString.contains("\"stringStartDate\":\"30-01-2013\""));
+    assertTrue("Response entity : " + feedString, feedString.contains("\"stringEndDate\":\"30-01-2016\""));
+    assertFalse("Response entity : " + feedString, feedString.contains("\"orderStatus\":"));
+    assertFalse("Response entity : " + feedString, feedString.contains("\"orderID\""));
   }
 
-  private void checkOrderStatusOnFeed(String orderStatus, String feedSting, Long id) {
-    assertTrue("feed json list : " + feedSting, feedSting.contains("\"requisitionId\":" + id));
-    assertTrue("feed json list : " + feedSting, feedSting.contains("\"requisitionStatus\":\"RELEASED\""));
-    assertTrue("Response entity : " + feedSting, feedSting.contains("\"emergency\":false"));
-    assertTrue("Response entity : " + feedSting, feedSting.contains("\"startDate\":1359484200000"));
-    assertTrue("Response entity : " + feedSting, feedSting.contains("\"endDate\":1454178599000"));
-    assertTrue("Response entity : " + feedSting, feedSting.contains("\"stringStartDate\":\"30-01-2013\""));
-    assertTrue("Response entity : " + feedSting, feedSting.contains("\"stringEndDate\":\"30-01-2016\""));
-    assertTrue("Response entity : " + feedSting, feedSting.contains("\"orderStatus\":\"" + orderStatus + "\""));
-    assertTrue("Response entity : " + feedSting, feedSting.contains("\"orderId\":" + id));
+  private void checkOrderStatusOnFeed(String orderStatus, String feedString, Long id) {
+    assertTrue("feed json list : " + feedString, feedString.contains("\"requisitionId\":" + id));
+    assertTrue("feed json list : " + feedString, feedString.contains("\"requisitionStatus\":\"RELEASED\""));
+    assertTrue("Response entity : " + feedString, feedString.contains("\"emergency\":false"));
+    assertTrue("Response entity : " + feedString, feedString.contains("\"startDate\":1359484200000"));
+    assertTrue("Response entity : " + feedString, feedString.contains("\"endDate\":1454178599000"));
+    assertTrue("Response entity : " + feedString, feedString.contains("\"stringStartDate\":\"30-01-2013\""));
+    assertTrue("Response entity : " + feedString, feedString.contains("\"stringEndDate\":\"30-01-2016\""));
+    assertTrue("Response entity : " + feedString, feedString.contains("\"orderStatus\":\"" + orderStatus + "\""));
+    assertTrue("Response entity : " + feedString, feedString.contains("\"orderId\":" + id));
   }
 
   private ResponseEntity waitForOrderStatusUpdatedOrTimeOut(int index) throws Exception {

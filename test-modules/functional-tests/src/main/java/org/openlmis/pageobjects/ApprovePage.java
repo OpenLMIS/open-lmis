@@ -32,43 +32,43 @@ import static org.openqa.selenium.support.How.XPATH;
 public class ApprovePage extends RequisitionPage {
 
   @FindBy(how = ID, using = "NoRequisitionsPendingMessage")
-  private static WebElement NoRequisitionsPendingMessage=null;
+  private static WebElement NoRequisitionsPendingMessage = null;
 
   @FindBy(how = XPATH, using = "//div[@class='form-group']/h3")
-  private static WebElement requisitionListHeader=null;
+  private static WebElement requisitionListHeader = null;
 
   @FindBy(how = XPATH, using = "//div[@class='ngCellText ng-scope col0 colt0']")
-  private static WebElement firstRow=null;
+  private static WebElement firstRow = null;
 
   @FindBy(how = XPATH, using = "//div[@class='ngCellText ng-scope col3 colt3']/span")
-  private static WebElement periodStartDate=null;
+  private static WebElement periodStartDate = null;
 
   @FindBy(how = XPATH, using = "//div[@class='ngCellText ng-scope col4 colt4']/span")
-  private static WebElement periodEndDate=null;
+  private static WebElement periodEndDate = null;
 
   @FindBy(how = XPATH, using = "//div[@id='requisition-header']/h2")
-  private static WebElement requisitionHeader=null;
+  private static WebElement requisitionHeader = null;
 
   @FindBy(how = XPATH, using = "//div[@id='requisition-head-block']/div[1]/span")
-  private static WebElement facilityLabel=null;
+  private static WebElement facilityLabel = null;
 
   @FindBy(how = ID, using = "calculatedOrderQuantity_0")
-  private static WebElement calculateOrderQuantity=null;
+  private static WebElement calculateOrderQuantity = null;
 
   @FindBy(how = ID, using = "quantityRequested_0")
-  private static WebElement requestedOrderQuantity=null;
+  private static WebElement requestedOrderQuantity = null;
 
   @FindBy(how = ID, using = "packsToShip_0")
-  private static WebElement packsToShip=null;
+  private static WebElement packsToShip = null;
 
   @FindBy(how = ID, using = "price_0")
-  private static WebElement pricePerPack=null;
+  private static WebElement pricePerPack = null;
 
   @FindBy(how = ID, using = "cost_0")
-  private static WebElement lineItemCost=null;
+  private static WebElement lineItemCost = null;
 
   @FindBy(how = ID, using = "totalCost")
-  private static WebElement totalRnrCost=null;
+  private static WebElement totalRnrCost = null;
 
   @FindBy(how = ID, using = "quantityApproved_0")
   private static WebElement quantityApproved1 = null;
@@ -77,50 +77,50 @@ public class ApprovePage extends RequisitionPage {
   private static WebElement quantityApproved2 = null;
 
   @FindBy(how = ID, using = "normalizedConsumption_0")
-  private static WebElement adjustedTotalConsumption=null;
+  private static WebElement adjustedTotalConsumption = null;
 
   @FindBy(how = ID, using = "amc_0")
-  private static WebElement amc=null;
+  private static WebElement amc = null;
 
   @FindBy(how = ID, using = "maxStockQuantity_0")
-  private static WebElement maxStockQuantity=null;
+  private static WebElement maxStockQuantity = null;
 
   @FindBy(how = ID, using = "calculatedOrderQuantity_0")
-  private static WebElement calculatedOrderQuantity=null;
+  private static WebElement calculatedOrderQuantity = null;
 
   @FindBy(how = ID, using = "nonFullSupplyTab")
-  private static WebElement nonFullSupplyTab=null;
+  private static WebElement nonFullSupplyTab = null;
 
   @FindBy(how = ID, using = "fullSupplyTab")
-  private static WebElement fullSupplyTab=null;
+  private static WebElement fullSupplyTab = null;
 
   @FindBy(how = ID, using = "remarks_0")
-  private static WebElement remarks=null;
+  private static WebElement remarks = null;
 
   @FindBy(how = XPATH, using = "//input[@value='Approve']")
-  private static WebElement approveButton=null;
+  private static WebElement approveButton = null;
 
   @FindBy(how = XPATH, using = "//input[@value='Save']")
-  private static WebElement saveButton=null;
+  private static WebElement saveButton = null;
 
   @FindBy(how = XPATH, using = "//div[@id='requisition-header']/div/div[2]/div[2]/div[3]/span")
-  private static WebElement reportingPeriodInitRnRScreen=null;
+  private static WebElement reportingPeriodInitRnRScreen = null;
 
   @FindBy(how = XPATH, using = "//span[@ng-bind='rnr.facility.geographicZone.name']")
-  private static WebElement geoZoneInitRnRScreen=null;
+  private static WebElement geoZoneInitRnRScreen = null;
 
   @FindBy(how = XPATH, using = "//span[@ng-bind='rnr.facility.geographicZone.parent.name']")
-  private static WebElement parentGeoZoneInitRnRScreen=null;
+  private static WebElement parentGeoZoneInitRnRScreen = null;
 
   @FindBy(how = XPATH, using = "//span[@ng-bind='rnr.facility.operatedBy.text']")
-  private static WebElement operatedByInitRnRScreen=null;
+  private static WebElement operatedByInitRnRScreen = null;
 
   @FindBy(how = XPATH, using = "//i[@class='icon-ok']")
-  private static WebElement emergencyIcon=null;
+  private static WebElement emergencyIcon = null;
 
   public float totalCostFullSupplyLineItem;
 
-  public ApprovePage(TestWebDriver driver) throws IOException {
+  public ApprovePage(TestWebDriver driver) {
     super(driver);
     PageFactory.initElements(new AjaxElementLocatorFactory(TestWebDriver.getDriver(), 10), this);
     testWebDriver.setImplicitWait(10);
@@ -139,9 +139,10 @@ public class ApprovePage extends RequisitionPage {
     firstRow.click();
     return period;
   }
-    public void verifyNoRequisitionMessage() {
-        assertTrue("No row of requisition is there for approval", firstRow.isDisplayed());
-    }
+
+  public void verifyNoRequisitionMessage() {
+    assertTrue("No row of requisition is there for approval", firstRow.isDisplayed());
+  }
 
   public void verifyRnRHeader(String FCode, String FName, String FCstring, String program, String periodDetails, String geoZone, String parentgeoZone, String operatedBy, String facilityType) {
 
@@ -173,7 +174,7 @@ public class ApprovePage extends RequisitionPage {
     assertEquals(actualApproveQuantity, actualCalculatedOrderQuantity);
   }
 
-  public void accessNonFullSupplyTab(){
+  public void accessNonFullSupplyTab() {
     nonFullSupplyTab.click();
   }
 
@@ -235,7 +236,7 @@ public class ApprovePage extends RequisitionPage {
     testWebDriver.waitForElementToAppear(quantityApproved1);
     int length = testWebDriver.getAttribute(quantityApproved1, "value").length();
     for (int i = 0; i < length; i++)
-        quantityApproved1.sendKeys("\u0008");
+      quantityApproved1.sendKeys("\u0008");
     quantityApproved1.sendKeys(approvedQuantity);
     remarks.click();
 
@@ -305,13 +306,13 @@ public class ApprovePage extends RequisitionPage {
     fullSupplyTab.click();
 
     testWebDriver.waitForElementToAppear(quantityApproved1);
-    if (row==1)
-      return(quantityApproved1.isEnabled());
+    if (row == 1)
+      return (quantityApproved1.isEnabled());
     else
       return (quantityApproved2.isEnabled());
   }
 
-  public String getPacksToShip(){
+  public String getPacksToShip() {
     return packsToShip.getText();
   }
 

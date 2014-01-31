@@ -20,7 +20,7 @@ import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.exception.DataException;
-import org.openlmis.db.categories.IntegrationTests;
+import org.openlmis.db.categories.UnitTests;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.domain.RnrLineItem;
 import org.openlmis.shipment.builder.ShipmentLineItemBuilder;
@@ -39,9 +39,10 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.openlmis.rnr.builder.RnrLineItemBuilder.defaultRnrLineItem;
 import static org.openlmis.rnr.builder.RnrLineItemBuilder.packsToShip;
+import static org.powermock.api.mockito.PowerMockito.spy;
 import static org.powermock.api.mockito.PowerMockito.whenNew;
 
-@Category(IntegrationTests.class)
+@Category(UnitTests.class)
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(OrderPOD.class)
 public class OrderPODTest {
@@ -114,11 +115,12 @@ public class OrderPODTest {
 
   @Test
   public void shouldFillPODLineItemsOnlyWithNonZeroPackToShip() throws Exception {
+    Long createdBy = 1L;
     RnrLineItem rnrLineItem1 = make(a(defaultRnrLineItem, with(packsToShip, 10)));
     RnrLineItem rnrLineItem2 = make(a(defaultRnrLineItem, with(packsToShip, 0)));
     List<RnrLineItem> rnrLineItems = asList(rnrLineItem1, rnrLineItem2);
 
-    whenNew(OrderPODLineItem.class).withArguments(rnrLineItem1).thenReturn(mock(OrderPODLineItem.class));
+    whenNew(OrderPODLineItem.class).withArguments(rnrLineItem1, createdBy).thenReturn(mock(OrderPODLineItem.class));
 
     OrderPOD orderPOD = new OrderPOD();
     orderPOD.fillPodLineItems(rnrLineItems);
@@ -128,14 +130,45 @@ public class OrderPODTest {
 
   @Test
   public void shouldCreatePODLineItemsWithShipmentLineItemEvenIfPackSize0() throws Exception {
+    Long createdBy = 1L;
     ShipmentLineItem shipmentLineItem = make(a(ShipmentLineItemBuilder.defaultShipmentLineItem));
     shipmentLineItem.setPacksToShip(0);
     List<ShipmentLineItem> shipmentLineItems = asList(shipmentLineItem);
     OrderPOD orderPOD = new OrderPOD();
     orderPOD.fillPodLineItems(shipmentLineItems);
 
-    whenNew(OrderPODLineItem.class).withArguments(shipmentLineItem).thenReturn(mock(OrderPODLineItem.class));
+    whenNew(OrderPODLineItem.class).withArguments(shipmentLineItem, createdBy).thenReturn(mock(OrderPODLineItem.class));
 
     assertThat(orderPOD.getPodLineItems().size(), is(1));
+  }
+
+  @Test
+  public void shouldCopyLineItemsFromPOD() throws Exception {
+    Long modifiedBy = 1L;
+    OrderPODLineItem P1LineItem = spy(new OrderPODLineItem());
+    P1LineItem.setId(1L);
+    OrderPODLineItem P2LineItem = spy(new OrderPODLineItem());
+    P2LineItem.setId(2L);
+
+    OrderPOD existingPOD = new OrderPOD();
+    existingPOD.setPodLineItems(asList(P1LineItem, P2LineItem));
+
+    OrderPODLineItem P3LineItem = new OrderPODLineItem();
+    P3LineItem.setId(3L);
+    OrderPODLineItem newP1LineItem = new OrderPODLineItem();
+    newP1LineItem.setId(1L);
+    OrderPODLineItem newP2LineItem = new OrderPODLineItem();
+    newP2LineItem.setId(2L);
+
+    OrderPOD newOrderPOD = new OrderPOD();
+    newOrderPOD.setModifiedBy(modifiedBy);
+    newOrderPOD.setPodLineItems(asList(newP1LineItem, newP2LineItem, P3LineItem));
+
+    existingPOD.copy(newOrderPOD);
+
+    verify(P1LineItem).copy(newP1LineItem);
+    verify(P2LineItem).copy(newP2LineItem);
+    assertThat(existingPOD.getPodLineItems().size(), is(2));
+    assertThat(existingPOD.getModifiedBy(), is(modifiedBy));
   }
 }

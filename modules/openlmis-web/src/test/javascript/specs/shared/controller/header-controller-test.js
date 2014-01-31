@@ -10,10 +10,7 @@
 
 describe("HeaderController", function () {
 
-  beforeEach(module('openlmis.services'));
   beforeEach(module('openlmis'));
-
-  beforeEach(module('openlmis.localStorage'));
   beforeEach(module('ui.directives'));
 
   var scope, loginConfig;

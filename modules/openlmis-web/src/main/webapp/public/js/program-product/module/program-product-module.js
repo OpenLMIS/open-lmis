@@ -8,14 +8,8 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-var programProductModule = angular.module('programProductModule', ['openlmis', 'ui.bootstrap.modal']).config(['$routeProvider', function ($routeProvider) {
-      $routeProvider.
-          when('/select-push-program', {
-            controller: ProgramProductController,
-            templateUrl: 'partials/list.html',
-            resolve: ProgramProductController.resolve }).
-
-          otherwise({redirectTo: '/select-push-program'});
-    }]);
-
-angular.bootstrap(document, ['programProductModule']);
+angular.module('programProductModule', ['openlmis', 'ui.bootstrap.modal']).config(['$routeProvider', function ($routeProvider) {
+  $routeProvider.
+    when('/select-push-program', {controller: ProgramProductController, templateUrl: 'partials/list.html', resolve: ProgramProductController.resolve }).
+    otherwise({redirectTo: '/select-push-program'});
+}]);

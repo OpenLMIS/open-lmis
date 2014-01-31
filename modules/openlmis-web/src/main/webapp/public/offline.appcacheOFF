@@ -3,8 +3,9 @@ CACHE MANIFEST
 
 CACHE:
 /favicon.ico
-/public/lib/jquery/jquery-1.8.2.min.js
+/public/lib/jquery/jquery-2.0.0.min.js
 /public/lib/angular/angular.min.js
+/public/lib/angular/angular-route.min.js
 /public/lib/angular/angular-resource.min.js
 /public/lib/bootstrap/js/bootstrap.min.js
 /public/lib/bootstrap/css/bootstrap.min.css
@@ -25,7 +26,6 @@ CACHE:
 /public/js/shared/directives/tab-scroll.js
 /public/js/shared/directives/modal-events.js
 /public/js/shared/directives/fade-out.js
-/public/js/shared/directives/auto-save.js
 
 /public/css/app.css
 /public/js/shared/services/services.js
@@ -48,10 +48,11 @@ CACHE:
 /public/pages/logistics/distribution/partials/epi-inventory.html
 /public/pages/logistics/distribution/partials/refrigerator-reading.html
 /public/pages/logistics/distribution/partials/refrigerator.html
-/public/pages/logistics/distribution/partials/facility-visit.html
+/public/pages/logistics/distribution/partials/visit-info.html
 /public/pages/logistics/distribution/partials/full-coverage.html
 /public/pages/logistics/distribution/partials/child-coverage.html
 
+/public/js/distribution/directives/auto-save.js
 /public/js/distribution/resolve/distribution-resolve.js
 /public/js/distribution/module/distribution-module.js
 /public/js/distribution/migrations.js
@@ -75,8 +76,8 @@ CACHE:
 /public/js/distribution/controller/refrigerator-controller.js
 /public/js/distribution/controller/epi-use-controller.js
 /public/js/distribution/controller/epi-inventory-controller.js
-/public/js/distribution/controller/facility-visit-controller.js
 /public/js/distribution/controller/coverage-controller.js
+/public/js/distribution/controller/visit-info-controller.js
 /public/js/distribution/controller/child-coverage-controller.js
 
 /public/js/shared/controller/locale-controller.js

@@ -43,7 +43,7 @@ abstract public class DistributionTab extends Page {
   @FindBy(how = ID, using = "epiUseTab")
   private static WebElement epiUseTab = null;
 
-  @FindBy(how = ID, using = "generalObservationTab")
+  @FindBy(how = ID, using = "facilityVisitTab")
   private static WebElement generalObservationTab = null;
 
   @FindBy(how = ID, using = "coverageTab")

@@ -42,12 +42,8 @@ public interface ShipmentMapper {
   @Select({"SELECT * FROM shipment_line_items WHERE orderId = #{orderId} AND productCode=#{productCode}"})
   ShipmentLineItem getShippedLineItem(ShipmentLineItem shipmentLineItem);
 
-  @Update({"UPDATE shipment_line_items ",
-    "SET orderId = #{orderId},",
-    "productCode= #{productCode},",
-    "quantityShipped= #{quantityShipped},",
-    "modifiedDate = DEFAULT",
-    "WHERE id= #{id}"})
+  @Update(
+    {"UPDATE shipment_line_items ", "SET orderId = #{orderId},", "productCode= #{productCode},", "quantityShipped= #{quantityShipped},", "modifiedDate = DEFAULT", "WHERE id= #{id}"})
   void updateShippedLineItem(ShipmentLineItem shipmentLineItem);
 
   @Select("SELECT modifiedDate FROM shipment_line_items WHERE orderId = #{orderId} LIMIT 1")

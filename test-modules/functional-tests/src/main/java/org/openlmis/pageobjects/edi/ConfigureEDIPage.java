@@ -25,15 +25,15 @@ import static org.openqa.selenium.support.How.ID;
 public class ConfigureEDIPage extends Page {
 
   @FindBy(how = ID, using = "configureOrder")
-  private static WebElement configureOrderButton=null;
+  private static WebElement configureOrderButton = null;
 
   @FindBy(how = ID, using = "configureShipment")
-  private static WebElement configureShipmentButton=null;
+  private static WebElement configureShipmentButton = null;
 
   @FindBy(how = ID, using = "configureBudget")
-  private static WebElement configureBudgetButton=null;
+  private static WebElement configureBudgetButton = null;
 
-  public ConfigureEDIPage(TestWebDriver driver) throws IOException {
+  public ConfigureEDIPage(TestWebDriver driver) {
     super(driver);
     PageFactory.initElements(new AjaxElementLocatorFactory(TestWebDriver.getDriver(), 10), this);
     testWebDriver.setImplicitWait(10);
@@ -43,21 +43,18 @@ public class ConfigureEDIPage extends Page {
   public ConfigureOrderPage navigateConfigureOrderPage() throws IOException {
     testWebDriver.waitForElementToAppear(configureOrderButton);
     configureOrderButton.click();
-
     return new ConfigureOrderPage(testWebDriver);
   }
 
   public ConfigureShipmentPage navigateConfigureShipmentPage() throws IOException {
     testWebDriver.waitForElementToAppear(configureShipmentButton);
-      configureShipmentButton.click();
-
+    configureShipmentButton.click();
     return new ConfigureShipmentPage(testWebDriver);
   }
 
   public ConfigureBudgetPage navigateConfigureBudgetPage() throws IOException {
-     testWebDriver.waitForElementToAppear(configureBudgetButton);
-     configureBudgetButton.click();
-
-     return new ConfigureBudgetPage(testWebDriver);
+    testWebDriver.waitForElementToAppear(configureBudgetButton);
+    configureBudgetButton.click();
+    return new ConfigureBudgetPage(testWebDriver);
   }
 }

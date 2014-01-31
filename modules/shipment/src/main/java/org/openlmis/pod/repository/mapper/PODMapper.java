@@ -22,44 +22,47 @@ import java.util.List;
 @Repository
 public interface PODMapper {
 
-  @Insert({"INSERT INTO pod_line_items " +
-    "(podId, productCode, quantityReceived, productName, dispensingUnit, packsToShip, fullSupply,",
-    "productCategory, productCategoryDisplayOrder, productDisplayOrder, createdBy, modifiedBy) VALUES " +
-      "(#{podId}, #{productCode}, #{quantityReceived}, #{productName}, #{dispensingUnit}, #{packsToShip}, #{fullSupply},",
-    "#{productCategory}, #{productCategoryDisplayOrder}, #{productDisplayOrder}, #{createdBy}, #{modifiedBy})"})
+  @Insert(
+    {"INSERT INTO pod_line_items ", "(podId, productCode, quantityReceived, quantityShipped, productName, dispensingUnit, packsToShip, fullSupply,", "productCategory, productCategoryDisplayOrder, productDisplayOrder, createdBy, modifiedBy, createdDate, modifiedDate) VALUES ", "(#{podId}, #{productCode}, #{quantityReceived}, #{quantityShipped}, #{productName}, #{dispensingUnit}, #{packsToShip}, #{fullSupply},", "#{productCategory}, #{productCategoryDisplayOrder}, #{productDisplayOrder}, #{createdBy}, #{modifiedBy}, DEFAULT, DEFAULT)"})
   @Options(useGeneratedKeys = true)
   void insertPODLineItem(OrderPODLineItem orderPodLineItem);
 
-  @Select("SELECT * FROM pod_line_items WHERE podId = #{podId} ORDER BY productCategoryDisplayOrder, LOWER(productCategory), productDisplayOrder NULLS LAST, LOWER(productCode)")
+  @Select(
+    "SELECT * FROM pod_line_items WHERE podId = #{podId} ORDER BY productCategoryDisplayOrder, LOWER(productCategory), productDisplayOrder NULLS LAST, LOWER(productCode)")
   List<OrderPODLineItem> getPODLineItemsByPODId(Long podId);
 
-  @Insert({"INSERT INTO pod (orderId, facilityId, programId, periodId, receivedDate, createdBy, modifiedBy) VALUES ",
-    "(#{orderId}, #{facilityId}, #{programId}, #{periodId}, DEFAULT, #{createdBy}, #{modifiedBy} )"})
+  @Insert(
+    {"INSERT INTO pod (orderId, facilityId, programId, periodId, receivedDate, createdBy, modifiedBy) VALUES ", "(#{orderId}, #{facilityId}, #{programId}, #{periodId}, DEFAULT, #{createdBy}, #{modifiedBy} )"})
   @Options(useGeneratedKeys = true)
   void insertPOD(OrderPOD orderPod);
 
   @Select({"SELECT * FROM pod WHERE id = #{id}"})
-  @Results(value = {
-    @Result(column = "id", property = "id"),
-    @Result(property = "podLineItems", javaType = List.class, column = "id",
-      many = @Many(select = "org.openlmis.pod.repository.mapper.PODMapper.getPODLineItemsByPODId")),
-  })
+  @Results(value = {@Result(column = "id", property = "id"), @Result(property = "podLineItems", javaType = List.class,
+    column = "id",
+    many = @Many(select = "org.openlmis.pod.repository.mapper.PODMapper.getPODLineItemsByPODId")),})
   OrderPOD getPODById(Long id);
 
-  @Select({"SELECT PLI.* FROM pod_line_items PLI INNER JOIN pod P ON PLI.podId = P.id " +
+  @Select({"SELECT PLI.* FROM pod_line_items PLI INNER JOIN pod P ON PLI.podId = P.id ",
     "WHERE P.facilityId = #{requisition.facility.id} ",
     "AND P.programId = #{requisition.program.id} ",
     "AND P.createdDate >= #{startDate} ",
     "AND PLI.productCode = #{productCode}",
     "ORDER BY p.createdDate DESC LIMIT #{n}"})
-  List<OrderPODLineItem> getNPodLineItems(@Param("productCode") String productCode, @Param("requisition") Rnr requisition,
-                                          @Param("n") Integer n, @Param("startDate") Date startDate);
+  List<OrderPODLineItem> getNPodLineItems(@Param("productCode") String productCode,
+                                          @Param("requisition") Rnr requisition,
+                                          @Param("n") Integer n,
+                                          @Param("startDate") Date startDate);
 
   @Select({"SELECT * FROM pod WHERE orderId = #{orderId}"})
-  @Results(value = {
-    @Result(column = "id", property = "id"),
-    @Result(property = "podLineItems", javaType = List.class, column = "id",
-      many = @Many(select = "org.openlmis.pod.repository.mapper.PODMapper.getPODLineItemsByPODId")),
-  })
+  @Results(value = {@Result(column = "id", property = "id"), @Result(property = "podLineItems", javaType = List.class,
+    column = "id",
+    many = @Many(select = "org.openlmis.pod.repository.mapper.PODMapper.getPODLineItemsByPODId")),})
   OrderPOD getPODByOrderId(Long orderId);
+
+  @Update({"UPDATE pod SET modifiedBy = #{modifiedBy} WHERE id = #{id}"})
+  void update(OrderPOD orderPOD);
+
+  @Update(
+    {"UPDATE pod_line_items SET quantityReceived = #{quantityReceived}, notes = #{notes}, modifiedBy = #{modifiedBy} WHERE id = #{id}"})
+  void updateLineItem(OrderPODLineItem lineItem);
 }

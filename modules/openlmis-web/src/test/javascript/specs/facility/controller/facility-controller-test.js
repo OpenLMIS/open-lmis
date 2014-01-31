@@ -9,9 +9,9 @@
  */
 
 describe("Facility Controller", function () {
-  beforeEach(module('openlmis.services'));
+
+  beforeEach(module('openlmis'));
   beforeEach(module('ui.bootstrap.dialog'));
-  beforeEach(module('openlmis.localStorage'));
 
   describe("Create Facility", function () {
     var scope, $httpBackend, ctrl, routeParams, facility, messageService;
@@ -165,7 +165,7 @@ describe("Facility Controller", function () {
   describe("Facility resolve", function () {
     var $httpBackend, ctrl, $timeout, $route, $q;
     var deferredObject;
-    beforeEach(module('openlmis.services'));
+    beforeEach(module('openlmis'));
 
     beforeEach(inject(function (_$httpBackend_, $controller, _$timeout_, _$route_) {
       $httpBackend = _$httpBackend_;

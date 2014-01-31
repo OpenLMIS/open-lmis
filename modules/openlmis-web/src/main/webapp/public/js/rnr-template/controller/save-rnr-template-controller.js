@@ -36,7 +36,7 @@ function SaveRnrTemplateController($scope, rnrTemplateForm, program, messageServ
     $scope.rnrColumns = _.union($scope.rnrNonSortableColumns, $scope.rnrSortableColumns);
     updatePosition();
     setRnRTemplateValidateFlag();
-    RnRColumnList.post({programId: $routeParams.programId}, $scope.rnrColumns, function () {
+    RnRColumnList.save({programId: $routeParams.programId}, $scope.rnrColumns, function () {
       $scope.$parent.message = messageService.get("template.save.success");
       $scope.error = "";
       $scope.errorMap = undefined;

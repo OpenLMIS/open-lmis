@@ -13,8 +13,7 @@ describe('ConvertToOrderListController', function () {
   var scope, httpBackend, controller, routeParams, location;
   var requisitions, $dialog, messageService;
 
-  beforeEach(module('openlmis.services'));
-  beforeEach(module('openlmis.localStorage'));
+  beforeEach(module('openlmis'));
   beforeEach(module('ui.bootstrap.dialog'));
 
   beforeEach(inject(function ($httpBackend, $rootScope, $controller, $routeParams, $location, _$dialog_,

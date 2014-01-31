@@ -10,26 +10,41 @@
 
 function FacilityVisit(facilityVisitJson) {
   $.extend(true, this, facilityVisitJson);
-  var mandatoryList = ['observations', 'verifiedBy', 'confirmedBy'];
+  var mandatoryList = ['observations', 'verifiedBy', 'confirmedBy', 'visitDate'];
 
   FacilityVisit.prototype.computeStatus = function () {
-    var _this = this;
+    if (isUndefined(this.visited)) {
+      return DistributionStatus.EMPTY;
+    }
+
+    if (this.visited) {
+      var visitedObservationStatus = computeStatusForObservation.call(this);
+      return visitedObservationStatus === DistributionStatus.EMPTY ? DistributionStatus.INCOMPLETE : visitedObservationStatus;
+    }
+
+    if (this.reasonForNoVisit === 'OTHER') {
+      return (isUndefined(this.otherReason) ? DistributionStatus.INCOMPLETE : DistributionStatus.COMPLETE);
+    }
+    return isUndefined(this.reasonForNoVisit) ? DistributionStatus.INCOMPLETE : DistributionStatus.COMPLETE;
+  };
+
+  function computeStatusForObservation() {
     var status;
+    var _this = this;
 
-    function isValid(fieldName) {
-      if(!_this[fieldName]) return false;
-
-      if (fieldName === 'observations') return !isUndefined(_this[fieldName]);
-
+    function validateFields(fieldName) {
+      if (['observations', 'visitDate'].indexOf(fieldName) != -1) return !isUndefined(_this[fieldName]);
       return !(isUndefined(_this[fieldName].name) || isUndefined(_this[fieldName].title));
     }
 
+    function isValid(fieldName) {
+      if (!_this[fieldName]) return false;
+      return validateFields(fieldName);
+    }
+
     function isEmpty(fieldName) {
-      if(!_this[fieldName]) return true;
-
-      if (fieldName === 'observations') return isUndefined(_this[fieldName]);
-
-      return isUndefined(_this[fieldName].name) && isUndefined(_this[fieldName].title);
+      if (!_this[fieldName]) return true;
+      return validateFields(fieldName);
     }
 
     $(mandatoryList).each(function (i, fieldName) {
@@ -44,8 +59,9 @@ function FacilityVisit(facilityVisitJson) {
       return true;
     });
 
-    _this.status = status;
+    this.status = status;
 
-    return status;
-  };
+    return this.status;
+  }
+
 }

@@ -11,8 +11,7 @@
 describe('ViewRnrListController', function () {
   var scope, httpBackend, controller, facilities, rnrList, location, messageService;
 
-  beforeEach(module('openlmis.services'));
-  beforeEach(module('openlmis.localStorage'));
+  beforeEach(module('openlmis'));
   beforeEach(inject(function ($httpBackend, $rootScope, $controller, $location, _messageService_) {
     location = $location;
     scope = $rootScope.$new();
