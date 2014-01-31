@@ -9,13 +9,13 @@
   -->
 
 <ng-include
-  src="'/public/pages/logistics/distribution/partials/record-facility-data.html'"></ng-include>
+    src="'/public/pages/logistics/distribution/partials/record-facility-data.html'"></ng-include>
 <div class="clearfix facility-container">
   <ng-include
-    src="'/public/pages/logistics/distribution/partials/record-facility-menu.html'"></ng-include>
+      src="'/public/pages/logistics/distribution/partials/record-facility-menu.html'"></ng-include>
 
   <div class="facility-info" ng-init="facilityData = distribution.facilityDistributions[selectedFacilityId]">
-    <div class="refrigerator-container" disable-form="{{facilityData.isDisabled()}}">
+    <div class="refrigerator-container" disable-form="{{facilityData.isDisabled('epi-inventory')}}">
       <h3>
         <span openlmis-message="label.epi.inventory.header"></span>
         <input id="applyNRAll" type="button" ng-click="applyNRAll()" class="pull-right btn"
@@ -111,12 +111,4 @@
       </div>
     </div>
   </div>
-
-  <div class="facility-info facility-toolbar">
-    <a href="" class="pull-left">&laquo; <span
-      openlmis-message="link.previous"></span></a>
-    <a href="" class="pull-right"><span
-      openlmis-message="link.next"></span> &raquo;</a>
-  </div>
-
 </div>

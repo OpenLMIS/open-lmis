@@ -63,4 +63,8 @@ describe("Refrigerators", function () {
     expect(refrigerators.computeStatus()).toEqual(DistributionStatus.COMPLETE);
   });
 
+  it('should set status indicator to complete if facility is not visited', function () {
+    expect(refrigerators.computeStatus(false)).toEqual(DistributionStatus.COMPLETE);
+  });
+
 });

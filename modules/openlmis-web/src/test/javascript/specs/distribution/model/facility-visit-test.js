@@ -18,7 +18,7 @@ describe('Facility Visit', function () {
   });
 
   it('should return incomplete if visit details not present', function () {
-    var facilityVisit = new FacilityVisit({verifiedBy: {name: 'something', title: 'title'}, confirmedBy: {name: 'something', title: 'title'}});
+    var facilityVisit = new FacilityVisit({visited: true, verifiedBy: {name: 'something', title: 'title'}, confirmedBy: {name: 'something', title: 'title'}});
 
     var status = facilityVisit.computeStatus();
 
@@ -26,7 +26,7 @@ describe('Facility Visit', function () {
   });
 
   it('should return incomplete if verified By Name not present', function () {
-    var facilityVisit = new FacilityVisit({observations: "blah blah blah", verifiedBy: {name: '', title: 'title'}, confirmedBy: {name: 'something', title: 'title'}});
+    var facilityVisit = new FacilityVisit({visited: true, observations: "blah blah blah", verifiedBy: {name: '', title: 'title'}, confirmedBy: {name: 'something', title: 'title'}});
 
     var status = facilityVisit.computeStatus();
 
@@ -42,7 +42,7 @@ describe('Facility Visit', function () {
   });
 
   it('should return complete if visit details valid', function () {
-    var facilityVisit = new FacilityVisit({observations: "blah blah blah", verifiedBy: {name: 'Pint', title: 'title'}, confirmedBy: {name: 'something', title: 'title'}});
+    var facilityVisit = new FacilityVisit({visited: true, visitDate: new Date(), observations: "blah blah blah", verifiedBy: {name: 'Pint', title: 'title'}, confirmedBy: {name: 'something', title: 'title'}});
 
     var status = facilityVisit.computeStatus();
 
@@ -50,7 +50,7 @@ describe('Facility Visit', function () {
   });
 
   it('should retain its status', function () {
-    var facilityVisit = new FacilityVisit({observations: "blah blah blah", verifiedBy: {name: 'Pint', title: 'title'}, confirmedBy: {name: 'something', title: 'title'}});
+    var facilityVisit = new FacilityVisit({visited: true, visitDate: new Date(), observations: "blah blah blah", verifiedBy: {name: 'Pint', title: 'title'}, confirmedBy: {name: 'something', title: 'title'}});
 
     facilityVisit.computeStatus();
 
@@ -60,24 +60,57 @@ describe('Facility Visit', function () {
   it('should return is-empty if facility visited not filled', function () {
     var facilityVisit = new FacilityVisit({});
 
-    expect(facilityVisit.computeStatus(true)).toEqual(DistributionStatus.EMPTY);
+    expect(facilityVisit.computeStatus()).toEqual(DistributionStatus.EMPTY);
   });
 
   it('should return is-incomplete if facility visited partially filled', function () {
     var facilityVisit = new FacilityVisit({visited: true});
 
-    expect(facilityVisit.computeStatus(true)).toEqual(DistributionStatus.INCOMPLETE);
+    expect(facilityVisit.computeStatus()).toEqual(DistributionStatus.INCOMPLETE);
   });
 
   it('should return is-complete if facility visited fully filled', function () {
     var facilityVisit = new FacilityVisit({visited: true, visitDate: new Date(), observations: "blah blah blah", verifiedBy: {name: 'Pint', title: 'title'}, confirmedBy: {name: 'something', title: 'title'}});
 
-    expect(facilityVisit.computeStatus(true)).toEqual(DistributionStatus.COMPLETE);
+    expect(facilityVisit.computeStatus()).toEqual(DistributionStatus.COMPLETE);
   });
 
   it('should return is-incomplete if visit info filled but observation data not filled', function () {
     var facilityVisit = new FacilityVisit({visited: true, visitDate: new Date()});
 
-    expect(facilityVisit.computeStatus(true)).toEqual(DistributionStatus.INCOMPLETE);
+    expect(facilityVisit.computeStatus()).toEqual(DistributionStatus.INCOMPLETE);
   });
+
+  it('should return incomplete if not visited but no reason provided fields filled', function () {
+    var facilityVisit = new FacilityVisit({visited: false});
+
+    var status = facilityVisit.computeStatus();
+
+    expect(status).toEqual(DistributionStatus.INCOMPLETE);
+  });
+
+  it('should return complete if not visited and a reason provided', function () {
+    var facilityVisit = new FacilityVisit({visited: false, reasonForNoVisit: "BAD WEATHER"});
+
+    var status = facilityVisit.computeStatus();
+
+    expect(status).toEqual(DistributionStatus.COMPLETE);
+  });
+
+  it('should return complete if not visited and a reason selected as other and described', function () {
+    var facilityVisit = new FacilityVisit({visited: false, reasonForNoVisit: "OTHER", otherReason: "I was ill"});
+
+    var status = facilityVisit.computeStatus();
+
+    expect(status).toEqual(DistributionStatus.COMPLETE);
+  });
+
+  it('should return incomplete if not visited and a reason selected as other but not described', function () {
+    var facilityVisit = new FacilityVisit({visited: false, reasonForNoVisit: "OTHER"});
+
+    var status = facilityVisit.computeStatus();
+
+    expect(status).toEqual(DistributionStatus.INCOMPLETE);
+  });
+
 });

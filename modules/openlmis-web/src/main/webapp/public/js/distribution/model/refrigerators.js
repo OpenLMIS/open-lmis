@@ -18,7 +18,10 @@ function Refrigerators(facilityVisitId, refrigerators) {
     _this.readings[i] = new RefrigeratorReading(facilityVisitId, value);
   });
 
-  Refrigerators.prototype.computeStatus = function () {
+  Refrigerators.prototype.computeStatus = function (visited) {
+    if (visited === false) {
+      return DistributionStatus.COMPLETE;
+    }
     if (_.findWhere(this.readings, {status: DistributionStatus.INCOMPLETE})) {
       return DistributionStatus.INCOMPLETE;
     }

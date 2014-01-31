@@ -10,15 +10,15 @@
 
 function EpiInventory(epiInventory) {
   $.extend(true, this, epiInventory);
-  $(this.lineItems).each(function(index, lineItem) {
+  $(this.lineItems).each(function (index, lineItem) {
     lineItem.existingQuantity = this.existingQuantity || {};
     lineItem.spoiledQuantity = this.spoiledQuantity || {};
   });
 
   var mandatoryFields = ['existingQuantity', 'deliveredQuantity', 'spoiledQuantity'];
 
-  EpiInventory.prototype.setNotRecorded = function() {
-    $(this.lineItems).each(function(index, lineItem) {
+  EpiInventory.prototype.setNotRecorded = function () {
+    $(this.lineItems).each(function (index, lineItem) {
       lineItem.existingQuantity.notRecorded = true;
       lineItem.spoiledQuantity.notRecorded = true;
     });
@@ -30,7 +30,10 @@ function EpiInventory(epiInventory) {
     return (!isUndefined(lineItem[field].value) || lineItem[field].notRecorded);
   }
 
-  EpiInventory.prototype.computeStatus = function () {
+  EpiInventory.prototype.computeStatus = function (visited) {
+    if (visited === false) {
+      return DistributionStatus.COMPLETE;
+    }
     var statusClass;
     $(this.lineItems).each(function (index, lineItem) {
       $(mandatoryFields).each(function (index, field) {

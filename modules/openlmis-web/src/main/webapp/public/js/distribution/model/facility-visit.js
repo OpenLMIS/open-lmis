@@ -10,39 +10,41 @@
 
 function FacilityVisit(facilityVisitJson) {
   $.extend(true, this, facilityVisitJson);
-  var mandatoryList = ['observations', 'verifiedBy', 'confirmedBy'];
+  var mandatoryList = ['observations', 'verifiedBy', 'confirmedBy', 'visitDate'];
 
-  FacilityVisit.prototype.computeStatus = function (useFacilityVisitedFlag) {
-    if (!useFacilityVisitedFlag)
-      return computeStatusForGeneralObservation.call(this);
-
-    if (this.visited === null || this.visited === undefined)
+  FacilityVisit.prototype.computeStatus = function () {
+    if (isUndefined(this.visited)) {
       return DistributionStatus.EMPTY;
+    }
 
-    if (!this.visitDate)
-      return DistributionStatus.INCOMPLETE;
+    if (this.visited) {
+      var visitedObservationStatus = computeStatusForObservation.call(this);
+      return visitedObservationStatus === DistributionStatus.EMPTY ? DistributionStatus.INCOMPLETE : visitedObservationStatus;
+    }
 
-    return computeStatusForGeneralObservation.call(this) === DistributionStatus.COMPLETE ? DistributionStatus.COMPLETE : DistributionStatus.INCOMPLETE;
+    if (this.reasonForNoVisit === 'OTHER') {
+      return (isUndefined(this.otherReason) ? DistributionStatus.INCOMPLETE : DistributionStatus.COMPLETE);
+    }
+    return isUndefined(this.reasonForNoVisit) ? DistributionStatus.INCOMPLETE : DistributionStatus.COMPLETE;
   };
 
-  function computeStatusForGeneralObservation() {
+  function computeStatusForObservation() {
     var status;
     var _this = this;
 
+    function validateFields(fieldName) {
+      if (['observations', 'visitDate'].indexOf(fieldName) != -1) return !isUndefined(_this[fieldName]);
+      return !(isUndefined(_this[fieldName].name) || isUndefined(_this[fieldName].title));
+    }
+
     function isValid(fieldName) {
       if (!_this[fieldName]) return false;
-
-      if (fieldName === 'observations') return !isUndefined(_this[fieldName]);
-
-      return !(isUndefined(_this[fieldName].name) || isUndefined(_this[fieldName].title));
+      return validateFields(fieldName);
     }
 
     function isEmpty(fieldName) {
       if (!_this[fieldName]) return true;
-
-      if (fieldName === 'observations') return isUndefined(_this[fieldName]);
-
-      return isUndefined(_this[fieldName].name) && isUndefined(_this[fieldName].title);
+      return validateFields(fieldName);
     }
 
     $(mandatoryList).each(function (i, fieldName) {

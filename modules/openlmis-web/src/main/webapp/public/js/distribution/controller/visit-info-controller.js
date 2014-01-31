@@ -11,4 +11,11 @@
 function VisitInfoController($scope, distributionService, $routeParams) {
   $scope.distribution = distributionService.distribution;
   $scope.selectedFacility = $routeParams.facility;
+
+  $scope.reasons = {
+    badWeather: "BAD_WEATHER",
+    noTransport: "NO_TRANSPORT",
+    facilityClosed: "FACILITY_CLOSED",
+    other: "OTHER"
+  };
 }

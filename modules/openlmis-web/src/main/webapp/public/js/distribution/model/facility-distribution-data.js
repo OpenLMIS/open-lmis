@@ -28,14 +28,15 @@ function FacilityDistribution(facilityDistribution) {
     if (this.status === DistributionStatus.SYNCED || this.status === DistributionStatus.DUPLICATE) {
       return this.status;
     }
+    var that = this;
     $.each(forms, function (index, form) {
-      var computedStatus = form.computeStatus();
+      var computedStatus = form.computeStatus(that.facilityVisit.visited);
       if (computedStatus === DistributionStatus.COMPLETE && (overallStatus === DistributionStatus.COMPLETE || !overallStatus)) {
         overallStatus = DistributionStatus.COMPLETE;
       } else if (computedStatus === DistributionStatus.EMPTY && (!overallStatus || overallStatus == DistributionStatus.EMPTY)) {
         overallStatus = DistributionStatus.EMPTY;
       } else if (computedStatus === DistributionStatus.INCOMPLETE || (computedStatus === DistributionStatus.EMPTY && overallStatus === DistributionStatus.COMPLETE) ||
-        (computedStatus === DistributionStatus.COMPLETE && overallStatus === DistributionStatus.EMPTY)) {
+          (computedStatus === DistributionStatus.COMPLETE && overallStatus === DistributionStatus.EMPTY)) {
         overallStatus = DistributionStatus.INCOMPLETE;
         return false;
       }
@@ -47,8 +48,11 @@ function FacilityDistribution(facilityDistribution) {
 
   };
 
-  FacilityDistribution.prototype.isDisabled = function () {
-    return [DistributionStatus.SYNCED, DistributionStatus.DUPLICATE].indexOf(this.status) != -1;
+  FacilityDistribution.prototype.isDisabled = function (tabName) {
+    if ([DistributionStatus.SYNCED, DistributionStatus.DUPLICATE].indexOf(this.status) != -1) {
+      return true;
+    }
+    return (this.facilityVisit.visited === false && ["refrigerators", "epi-inventory"].indexOf(tabName) != -1);
   };
 
 }

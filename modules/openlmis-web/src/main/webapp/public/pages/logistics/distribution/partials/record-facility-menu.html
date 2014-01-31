@@ -11,21 +11,21 @@
 <div class="left-navigation" ng-controller="RecordFacilityMenuController">
   <ul>
     <li id="facilityVisitStatus"
-        ng-class="[distributionData.facilityVisit.computeStatus(true), isSelected('visit-info')]">
-    <a id="facilityVisitTab" href="" ng-click="changeRoute('visit-info')">
+        ng-class="[distributionData.facilityVisit.computeStatus(), isSelected('visit-info')]">
+      <a id="facilityVisitTab" href="" ng-click="changeRoute('visit-info')">
         <span id="facilityVisitTabIcon" class="status-icon"></span>
         <span id="facilityVisitTabLabel" openlmis-message="label.visit.information"></span>
       </a>
     </li>
     <li id="refrigeratorStatus"
-        ng-class="[distributionData.refrigerators.computeStatus(), isSelected('refrigerator-data')]">
+        ng-class="[distributionData.refrigerators.computeStatus(distributionData.facilityVisit.visited), isSelected('refrigerator-data')]">
       <a id="refrigeratorTab" href="" ng-click="changeRoute('refrigerator-data')">
         <span id="refrigeratorTabIcon" class="status-icon"></span>
         <span id="refrigeratorTabLabel" openlmis-message="label.refrigerators"></span>
       </a>
     </li>
     <li id="epiInventoryStatus"
-        ng-class="[distributionData.epiInventory.computeStatus(), isSelected('epi-inventory')]">
+        ng-class="[distributionData.epiInventory.computeStatus(distributionData.facilityVisit.visited), isSelected('epi-inventory')]">
       <a id="epiInventoryTab" href="" ng-click="changeRoute('epi-inventory')">
         <span id="epiInventoryTabIcon" class="status-icon"></span>
         <span id="epiInventoryTabLabel" openlmis-message="label.epi.inventory"></span>
@@ -47,13 +47,6 @@
       <a id="childCoverageTab" href="" ng-click="changeRoute('child-coverage')">
         <span id="childCoverageTabIcon" class="status-icon"></span>
         <span id="childCoverageTabLabel" openlmis-message="label.coverage.children"></span>
-      </a>
-    </li>
-    <li id="generalObservationStatus"
-        ng-class="[distributionData.facilityVisit.computeStatus(), isSelected('facility-visit')]">
-      <a id="generalObservationTab" href="" ng-click="changeRoute('facility-visit')">
-        <span id="generalObservationTabIcon" class="status-icon"></span>
-        <span id="generalObservationTabLabel" openlmis-message="label.observations"></span>
       </a>
     </li>
   </ul>
