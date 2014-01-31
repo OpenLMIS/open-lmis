@@ -221,6 +221,7 @@ public class PODMapperIT extends ApplicationTestContext {
 
     OrderPODLineItem lineItem = mapper.getPODLineItemsByPODId(orderPod.getId()).get(0);
 
+    assertThat(lineItem.getModifiedBy(), is(orderPodLineItem.getModifiedBy()));
     assertThat(lineItem, is(orderPodLineItem));
   }
 }
