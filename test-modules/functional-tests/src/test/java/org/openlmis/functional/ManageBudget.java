@@ -32,7 +32,7 @@ public class ManageBudget extends TestCaseHelper {
     dbWrapper.deleteData();
     setUpData(program, userSIC);
     dbWrapper.deleteTable("processing_periods");
-    dbWrapper.insertProcessingPeriod("current Period", "current Period", "2013-10-03", "2016-01-30", 1, "M");
+    dbWrapper.insertCurrentPeriod("current Period", "current Period", 1, "M");
     loginPage = PageFactory.getInstanceOfLoginPage(testWebDriver, baseUrlGlobal);
     initiateRnR = PageFactory.getInstanceOfInitiateRnR();
     initiateRnRPage = PageFactory.getInstanceOfInitiateRnRPage(testWebDriver);

@@ -289,7 +289,7 @@ public class ViewRequisition extends TestCaseHelper {
     setupTestDataToInitiateRnR(true, program, userSIC, "200", rightsList);
     dbWrapper.deleteRowFromTable("processing_periods", "name", "Period1");
     dbWrapper.deleteRowFromTable("processing_periods", "name", "Period2");
-    dbWrapper.insertProcessingPeriod("current Period", "current Period", "2013-10-03", "2014-01-30", 1, "M");
+    dbWrapper.insertCurrentPeriod("current Period", "current Period", 1, "M");
     dbWrapper.updateFieldValue("products", "fullSupply", "true", "code", "P11");
 
     HomePage homePage = loginPage.loginAs(userSIC, password);

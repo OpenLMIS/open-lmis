@@ -437,7 +437,7 @@ public class InitiateRnR extends TestCaseHelper {
     setupTestDataToInitiateRnR(true, program, userSIC, "200", rightsList);
     dbWrapper.deleteRowFromTable("processing_periods", "name", "Period1");
     dbWrapper.deleteRowFromTable("processing_periods", "name", "Period2");
-    dbWrapper.insertProcessingPeriod("current Period", "current Period", "2013-10-03", "2014-01-30", 1, "M");
+    dbWrapper.insertCurrentPeriod("current Period", "current Period", 1, "M");
 
     homePage = loginPage.loginAs(userSIC, password);
     homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Regular");
@@ -469,7 +469,7 @@ public class InitiateRnR extends TestCaseHelper {
     createUserAndAssignRoleRights("201", "mo", "Maar_Doe@openlmis.com", "F10", "district pharmacist", rightsList1);
     dbWrapper.deleteRowFromTable("processing_periods", "name", "Period1");
     dbWrapper.deleteRowFromTable("processing_periods", "name", "Period2");
-    dbWrapper.insertProcessingPeriod("current Period", "current Period", "2013-10-03", "2014-01-30", 1, "M");
+    dbWrapper.insertCurrentPeriod("current Period", "current Period", 1, "M");
 
     homePage = loginPage.loginAs(userSIC, password);
     homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Emergency");
@@ -553,7 +553,7 @@ public class InitiateRnR extends TestCaseHelper {
     dbWrapper.deleteRowFromTable("processing_periods", "name", "Period1");
     dbWrapper.deleteRowFromTable("processing_periods", "name", "Period2");
     String periodStartDate = "2013-10-03";
-    String periodEndDate = "2014-01-30";
+    String periodEndDate = "2016-01-30";
     dbWrapper.insertProcessingPeriod("current Period", "current Period", periodStartDate, periodEndDate, 1, "M");
 
     homePage = loginPage.loginAs(userSIC, password);
@@ -622,7 +622,7 @@ public class InitiateRnR extends TestCaseHelper {
     dbWrapper.insertFulfilmentRoleAssignment(userName, roleName, "F10");
     homePage.navigateHomePage();
     homePage.navigateConvertToOrder();
-    convertOrderPage.verifyOrderListElements(program, "F10", "Village Dispensary", "03/10/2013", "30/01/2014", "Village Dispensary");
+    convertOrderPage.verifyOrderListElements(program, "F10", "Village Dispensary", "03/10/2013", "30/01/2016", "Village Dispensary");
     convertOrderPage.convertToOrder();
 
     homePage.navigateHomePage();
@@ -636,7 +636,7 @@ public class InitiateRnR extends TestCaseHelper {
     setupTestDataToInitiateRnR(true, program, userSIC, "200", rightsList);
     dbWrapper.deleteRowFromTable("processing_periods", "name", "Period1");
     dbWrapper.deleteRowFromTable("processing_periods", "name", "Period2");
-    dbWrapper.insertProcessingPeriod("current Period", "current Period", "2013-10-03", "2014-01-30", 1, "M");
+    dbWrapper.insertCurrentPeriod("current Period", "current Period", 1, "M");
 
     homePage = loginPage.loginAs(userSIC, password);
     homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Emergency");
@@ -654,7 +654,7 @@ public class InitiateRnR extends TestCaseHelper {
     setupTestDataToInitiateRnR(true, program, userSIC, "200", rightsList);
     dbWrapper.deleteRowFromTable("processing_periods", "name", "Period1");
     dbWrapper.deleteRowFromTable("processing_periods", "name", "Period2");
-    dbWrapper.insertProcessingPeriod("current Period", "current Period", "2013-10-03", "2014-01-30", 1, "M");
+    dbWrapper.insertCurrentPeriod("current Period", "current Period", 1, "M");
     dbWrapper.updateSourceOfAProgramTemplate("HIV", "Total Consumed Quantity", "C");
     dbWrapper.updateSourceOfAProgramTemplate("HIV", "Stock on Hand", "U");
 
@@ -675,7 +675,7 @@ public class InitiateRnR extends TestCaseHelper {
     setupTestDataToInitiateRnR(true, program, userSIC, "200", rightsList);
     dbWrapper.deleteRowFromTable("processing_periods", "name", "Period1");
     dbWrapper.deleteRowFromTable("processing_periods", "name", "Period2");
-    dbWrapper.insertProcessingPeriod("current Period", "current Period", "2013-10-03", "2014-01-30", 1, "M");
+    dbWrapper.insertCurrentPeriod("current Period", "current Period", 1, "M");
 
     homePage = loginPage.loginAs(userSIC, password);
     homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Emergency");
@@ -699,7 +699,7 @@ public class InitiateRnR extends TestCaseHelper {
       asList(AUTHORIZE_REQUISITION, VIEW_REQUISITION));
     dbWrapper.deleteRowFromTable("processing_periods", "name", "Period1");
     dbWrapper.deleteRowFromTable("processing_periods", "name", "Period2");
-    dbWrapper.insertProcessingPeriod("current Period", "current Period", "2013-10-03", "2014-01-30", 1, "M");
+    dbWrapper.insertCurrentPeriod("current Period", "current Period", 1, "M");
 
     homePage = loginPage.loginAs(userSIC, password);
     homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Regular");
@@ -799,7 +799,7 @@ public class InitiateRnR extends TestCaseHelper {
     setupTestDataToInitiateRnR(true, program, userSIC, "200", rightsList);
     dbWrapper.deleteRowFromTable("processing_periods", "name", "Period1");
     dbWrapper.deleteRowFromTable("processing_periods", "name", "Period2");
-    dbWrapper.insertProcessingPeriod("current Period", "current Period", "2013-10-03", "2014-01-30", 1, "M");
+    dbWrapper.insertProcessingPeriod("current Period", "current Period", "2013-10-03", "2016-01-30", 1, "M");
     dbWrapper.updateFieldValue("products", "fullSupply", "true", "code", "P11");
 
     homePage = loginPage.loginAs(userSIC, password);
@@ -849,7 +849,7 @@ public class InitiateRnR extends TestCaseHelper {
     setupTestDataToInitiateRnR(true, program, userSIC, "200", rightsList);
     dbWrapper.deleteRowFromTable("processing_periods", "name", "Period1");
     dbWrapper.deleteRowFromTable("processing_periods", "name", "Period2");
-    dbWrapper.insertProcessingPeriod("current Period", "current Period", "2013-10-03", "2014-01-30", 1, "M");
+    dbWrapper.insertProcessingPeriod("current Period", "current Period", "2013-10-03", "2016-01-30", 1, "M");
     dbWrapper.updateFieldValue("products", "fullSupply", "true", "code", "P11");
 
     homePage = new LoginPage(testWebDriver, baseUrlGlobal).loginAs(userSIC, password);
@@ -896,7 +896,7 @@ public class InitiateRnR extends TestCaseHelper {
     setupTestDataToInitiateRnR(true, program, userSIC, "200", rightsList);
     dbWrapper.deleteRowFromTable("processing_periods", "name", "Period1");
     dbWrapper.deleteRowFromTable("processing_periods", "name", "Period2");
-    dbWrapper.insertProcessingPeriod("current Period", "current Period", "2013-10-03", "2014-01-30", 1, "M");
+    dbWrapper.insertProcessingPeriod("current Period", "current Period", "2013-10-03", "2016-01-30", 1, "M");
     dbWrapper.updateFieldValue("products", "fullSupply", "true", "code", "P11");
 
     homePage = loginPage.loginAs(userSIC, password);
