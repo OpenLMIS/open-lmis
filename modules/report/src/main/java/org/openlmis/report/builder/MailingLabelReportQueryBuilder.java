@@ -19,10 +19,10 @@ import static org.apache.ibatis.jdbc.SqlBuilder.SQL;
 
 public class MailingLabelReportQueryBuilder {
 
-    public static String SelectFilteredSortedPagedMailingLabelsSql(Map params){
+    public static String getQuery(Map params){
 
         MailingLabelReportParam filter  =(MailingLabelReportParam)params.get("filterCriteria");
-        MailingLabelReportSorter sorter = (MailingLabelReportSorter)params.get("SortCriteria");
+
         BEGIN();
         SELECT("F.id, F.code, F.name, F.active as active, F.address1, F.address2 , FT.name as facilityType, GZ.name as region, FO.code as owner, F.latitude::text ||',' ||  F.longitude::text  ||', ' || F.altitude::text gpsCoordinates, CASE WHEN U.officePhone IS NULL THEN '' ELSE U.officePhone || ' ,' END || CASE WHEN U.cellPhone IS NULL THEN '' ELSE U.cellPhone || ' ,' END || F.mainPhone as phoneNumber, U.email email, F.fax as fax, U.firstName || ' ' || U.lastName || ', ' || jobtitle contact ");
         FROM("facilities F");

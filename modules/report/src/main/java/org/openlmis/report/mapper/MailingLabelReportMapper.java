@@ -24,7 +24,7 @@ import java.util.List;
 @Repository
 public interface MailingLabelReportMapper {
 
-  @SelectProvider(type = MailingLabelReportQueryBuilder.class, method = "SelectFilteredSortedPagedMailingLabelsSql")
+  @SelectProvider(type = MailingLabelReportQueryBuilder.class, method = "getQuery")
   @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize = 10, timeout = 0, useCache = true, flushCache = true)
 
   @Results(value = {
