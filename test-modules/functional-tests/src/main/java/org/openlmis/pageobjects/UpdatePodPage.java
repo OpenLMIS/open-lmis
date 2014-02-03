@@ -15,7 +15,7 @@ public class UpdatePodPage extends Page {
   @FindBy(how = ID, using = "podTable")
   private WebElement podTable = null;
 
-  @FindBy(how = ID, using = "PODPageTitle")
+  @FindBy(how = ID, using = "podPageTitle")
   private WebElement podPageTitle = null;
 
   @FindBy(how = ID, using = "noProductsLabel")
