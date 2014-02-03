@@ -145,10 +145,11 @@ public class PODControllerTest {
 
     when(service.save(orderPOD)).thenReturn(orderPOD);
 
-    ResponseEntity<OpenLmisResponse> response = controller.save(orderPOD, request);
+    ResponseEntity<OpenLmisResponse> response = controller.save(orderPOD, 4L, request);
 
     assertThat((OrderPOD) response.getBody().getData().get(ORDER_POD), is(orderPOD));
     assertThat(response.getBody().getSuccessMsg(), is("msg.pod.save.success"));
+    assertThat(orderPOD.getId(), is(4L));
     assertThat(orderPOD.getModifiedBy(), is(USER_ID));
   }
 
@@ -158,7 +159,7 @@ public class PODControllerTest {
 
     doThrow(new DataException("error")).when(service).save(orderPOD);
 
-    ResponseEntity<OpenLmisResponse> response = controller.save(orderPOD, request);
+    ResponseEntity<OpenLmisResponse> response = controller.save(orderPOD, 5L, request);
 
     assertThat(response.getStatusCode(), is(HttpStatus.BAD_REQUEST));
     assertThat(response.getBody().getErrorMsg(), is("error"));
