@@ -12,32 +12,83 @@ package org.openlmis.distribution.domain;
 
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
+import org.junit.runner.RunWith;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.db.categories.UnitTests;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
+import static org.powermock.api.mockito.PowerMockito.verifyNew;
 import static org.powermock.api.mockito.PowerMockito.whenNew;
 
+@RunWith(PowerMockRunner.class)
+@PrepareForTest(VaccinationChildCoverage.class)
 @Category(UnitTests.class)
 public class VaccinationChildCoverageTest {
 
   @Test
-  public void shouldCreateVaccinationChildCoverage() throws Exception {
+  public void shouldCreate12VaccinationChildCoverageLineItems() throws Exception {
     Facility facility = mock(Facility.class);
-    FacilityVisit facilityVisit = new FacilityVisit();
+    FacilityVisit facilityVisit = mock(FacilityVisit.class);
 
     VaccinationProduct vaccinationProduct = new VaccinationProduct();
+    vaccinationProduct.setVaccination("bcg");
     List<VaccinationProduct> vaccinationProducts = asList(vaccinationProduct);
     ChildCoverageLineItem lineItem = new ChildCoverageLineItem();
 
-    whenNew(ChildCoverageLineItem.class).withArguments(facilityVisit, facility, vaccinationProduct).thenReturn(lineItem);
+    whenNew(ChildCoverageLineItem.class).withArguments(facilityVisit, facility, vaccinationProduct, "BCG").thenReturn(lineItem);
     VaccinationChildCoverage vaccinationChildCoverage = new VaccinationChildCoverage(facilityVisit, facility, vaccinationProducts);
 
-    assertThat(vaccinationChildCoverage.getChildCoverageLineItems().size(), is(1));
+    assertThat(vaccinationChildCoverage.getChildCoverageLineItems().size(), is(12));
+  }
+
+  @Test
+  public void shouldCreate12ChildCoverageLineItemsWithVaccinationAsNullForInvalidVaccinationProduct() throws Exception {
+    Facility facility = mock(Facility.class);
+    FacilityVisit facilityVisit = mock(FacilityVisit.class);
+
+    VaccinationProduct invalidVaccination = new VaccinationProduct();
+    invalidVaccination.setVaccination("BCG1234");
+    List<VaccinationProduct> vaccinationProducts = asList(invalidVaccination);
+
+    ChildCoverageLineItem lineItem = new ChildCoverageLineItem();
+    lineItem.setVaccination("BCG");
+
+    whenNew(ChildCoverageLineItem.class).withArguments(facilityVisit, facility, null, "BCG").thenReturn(lineItem);
+
+    VaccinationChildCoverage vaccinationChildCoverage = new VaccinationChildCoverage(facilityVisit, facility, vaccinationProducts);
+
+    assertThat(vaccinationChildCoverage.getChildCoverageLineItems().size(), is(12));
+    assertTrue(vaccinationChildCoverage.getChildCoverageLineItems().get(0).getVaccination().equals("BCG"));
+    verifyNew(ChildCoverageLineItem.class).withArguments(facilityVisit, facility, null, "BCG");
+  }
+
+  @Test
+  public void shouldCreate12ChildCoverageLineItemsAlthoughMoreThan12VaccinationProductsExists() throws Exception {
+    Facility facility = mock(Facility.class);
+    FacilityVisit facilityVisit = mock(FacilityVisit.class);
+
+    List<VaccinationProduct> vaccinationProducts = new ArrayList<>();
+    VaccinationProduct invalidVaccination;
+    for (int i = 0; i < 13; i++) {
+      invalidVaccination = new VaccinationProduct();
+      invalidVaccination.setVaccination("invalid" + i);
+      vaccinationProducts.add(invalidVaccination);
+    }
+
+    ChildCoverageLineItem lineItem = new ChildCoverageLineItem();
+    whenNew(ChildCoverageLineItem.class).withAnyArguments().thenReturn(lineItem);
+
+    VaccinationChildCoverage vaccinationChildCoverage = new VaccinationChildCoverage(facilityVisit, facility, vaccinationProducts);
+
+    assertThat(vaccinationChildCoverage.getChildCoverageLineItems().size(), is(12));
   }
 }
