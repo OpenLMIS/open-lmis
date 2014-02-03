@@ -83,7 +83,6 @@ describe('PODController', function () {
       {productCode: 'P12', productCategory: 'anti-histamine'},
       {productCode: 'P13', productCategory: 'anti-septic'}
     ]);
-    expect(location.search).toHaveBeenCalledWith('page', 2);
   });
 
   it('should return false if category is same for the current and previous line item same', function () {
@@ -95,4 +94,80 @@ describe('PODController', function () {
     expect(scope.isCategorySameAsPreviousLineItem(1)).toBeTruthy();
   });
 
+});
+
+describe('Pod Save', function () {
+  var scope, controller, $httpBackend, routeParams, pod, location, podId;
+
+  beforeEach(module('openlmis'));
+  beforeEach(inject(function ($rootScope, $controller, _$httpBackend_, _$location_) {
+    podId = '1234';
+
+    scope = $rootScope.$new();
+    controller = $controller;
+    $httpBackend = _$httpBackend_;
+    location = _$location_;
+
+    routeParams = {id: podId};
+    pod = {
+      orderPOD: {
+        podLineItems: [
+          {productCode: 'P10', productCategory: 'antibiotics'},
+          {productCode: 'P11', productCategory: 'anti-fungal'},
+          {productCode: 'P12', productCategory: 'anti-histamine'},
+          {productCode: 'P13', productCategory: 'anti-septic'},
+          {productCode: 'P15', productCategory: 'pain-relief'}
+        ]
+      },
+      order: {facilityCode: 'F10', emergency: true}
+    };
+
+    controller(PODController, {$scope: scope, $routeParams: routeParams, $location: location, orderPOD: pod, pageSize: 2});
+  }));
+
+  it('should save pod if form dirty and set pristine on successful save', function () {
+    scope.pageLineItems = [
+      {id: 2},
+      {id: 4},
+      {id: 8}
+    ];
+    scope.podForm = jasmine.createSpyObj('podForm', ['$setPristine']);
+    scope.podForm.$dirty = true;
+    $httpBackend.expect('PUT', '/pods/' + podId + '.json', {podLineItems: scope.pageLineItems}).respond(200, {success: 'successful'});
+
+    scope.save();
+
+    $httpBackend.flush();
+    expect(scope.podForm.$setPristine).toHaveBeenCalled();
+    expect(scope.message).toEqual('successful')
+  });
+
+  it('should not save pod if form not dirty', function () {
+    scope.podForm = {$dirty: false};
+
+    scope.save();
+
+    scope.$apply();
+
+    $httpBackend.verifyNoOutstandingRequest();
+    $httpBackend.verifyNoOutstandingRequest();
+  });
+
+  it('should set error if save fails', function () {
+    scope.pageLineItems = [
+      {id: 2},
+      {id: 4},
+      {id: 8}
+    ];
+    scope.podForm = jasmine.createSpyObj('podForm', ['$setPristine']);
+    scope.podForm.$dirty = true;
+    $httpBackend.expect('PUT', '/pods/' + podId + '.json', {podLineItems: scope.pageLineItems}).respond(404, {error: 'error'});
+
+    scope.save();
+
+    $httpBackend.flush();
+
+    expect(scope.error).toEqual('error');
+    expect(scope.podForm.$setPristine).not.toHaveBeenCalled();
+  });
 });

@@ -143,11 +143,9 @@ public class PODControllerTest {
   public void shouldSavePOD() throws Exception {
     OrderPOD orderPOD = new OrderPOD();
 
-    when(service.save(orderPOD)).thenReturn(orderPOD);
-
     ResponseEntity<OpenLmisResponse> response = controller.save(orderPOD, 4L, request);
 
-    assertThat((OrderPOD) response.getBody().getData().get(ORDER_POD), is(orderPOD));
+    verify(service).save(orderPOD);
     assertThat(response.getBody().getSuccessMsg(), is("msg.pod.save.success"));
     assertThat(orderPOD.getId(), is(4L));
     assertThat(orderPOD.getModifiedBy(), is(USER_ID));

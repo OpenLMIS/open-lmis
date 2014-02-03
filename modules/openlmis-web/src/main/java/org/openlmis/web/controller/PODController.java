@@ -78,10 +78,8 @@ public class PODController extends BaseController {
     try {
       orderPOD.setModifiedBy(loggedInUserId(request));
       orderPOD.setId(id);
-      OrderPOD savedPod = service.save(orderPOD);
-      ResponseEntity<OpenLmisResponse> response = success("msg.pod.save.success");
-      response.getBody().addData(ORDER_POD, savedPod);
-      return response;
+      service.save(orderPOD);
+      return success("msg.pod.save.success");
     } catch (DataException e) {
       return error(e, HttpStatus.BAD_REQUEST);
     }

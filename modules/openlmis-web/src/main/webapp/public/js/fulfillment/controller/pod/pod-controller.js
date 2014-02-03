@@ -8,11 +8,13 @@
  *  You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
  */
 
-function PODController($scope, orderPOD, pageSize, $routeParams, $location) {
+function PODController($scope, orderPOD, OrderPOD, pageSize, $routeParams, $location) {
 
   $scope.pageSize = pageSize;
   $scope.pod = orderPOD.orderPOD;
   $scope.order = orderPOD.order;
+  $scope.numberOfPages = Math.ceil($scope.pod.podLineItems.length / $scope.pageSize) || 1;
+  $scope.requisitionType = $scope.order.emergency ? "requisition.type.emergency" : "requisition.type.regular";
 
   $scope.columns = [
     {label: "header.full.supply", name: "fullSupply"},
@@ -29,9 +31,6 @@ function PODController($scope, orderPOD, pageSize, $routeParams, $location) {
     $scope.currentPage = (utils.isValidPage($routeParams.page, $scope.numberOfPages)) ? parseInt($routeParams.page, 10) : 1;
     $scope.pageLineItems = $scope.pod.podLineItems.slice($scope.pageSize * ($scope.currentPage - 1), $scope.pageSize * $scope.currentPage);
   };
-
-  $scope.numberOfPages = Math.ceil($scope.pod.podLineItems.length / $scope.pageSize) || 1;
-  $scope.requisitionType = $scope.order.emergency ? "requisition.type.emergency" : "requisition.type.regular";
   refreshPageLineItems();
 
   $scope.$watch('currentPage', function () {
@@ -40,13 +39,22 @@ function PODController($scope, orderPOD, pageSize, $routeParams, $location) {
 
   $scope.$on('$routeUpdate', function () {
     refreshPageLineItems();
-    $location.search('page', $scope.currentPage);
   });
+
+  $scope.save = function () {
+    if (!$scope.podForm.$dirty)
+      return;
+    OrderPOD.update({id: $routeParams.id}, {podLineItems: $scope.pageLineItems}, function (data) {
+      $scope.message = data.success;
+      $scope.podForm.$setPristine();
+    }, function (response) {
+      $scope.error = response.data.error;
+    });
+  };
 
   $scope.isCategorySameAsPreviousLineItem = function (index) {
     return !((index > 0 ) && ($scope.pod.podLineItems[index].productCategory == $scope.pod.podLineItems[index - 1].productCategory));
   };
-
 }
 
 PODController.resolve = {
