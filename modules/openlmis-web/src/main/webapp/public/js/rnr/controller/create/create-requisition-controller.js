@@ -8,13 +8,42 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-function CreateRequisitionController($scope, requisition, pageSize, rnrColumns, lossesAndAdjustmentsTypes, facilityApprovedProducts, requisitionRights, regimenTemplate, $location, Requisitions, $routeParams, $dialog, requisitionService, $q) {
+function CreateRequisitionController($scope, requisition, pageSize, rnrColumns, lossesAndAdjustmentsTypes, facilityApprovedProducts, requisitionRights, regimenTemplate, $location, Requisitions, DeleteRequisition, $routeParams, $dialog, requisitionService, $q) {
 
   var NON_FULL_SUPPLY = 'nonFullSupply';
   var FULL_SUPPLY = 'fullSupply';
 
   $scope.pageSize = pageSize;
   $scope.rnr = new Rnr(requisition, rnrColumns);
+
+  $scope.deleteRnR = function( ){
+
+    var callBack = function (result) {
+      if (result) {
+        // delete the rnr here
+        DeleteRequisition.post({id: $scope.rnr.id}, function(data){
+          OpenLmisDialog.newDialog({
+                                      id: "confirmDialog",
+                                      header: "label.confirm.action",
+                                      body: data.delete
+                                    }, function(){
+            $location.url('/public/pages/logistics/rnr/index.html#/init-rnr');
+          }, $dialog);
+        });
+        // redirect to the main page
+
+      }
+    };
+
+    var options = {
+      id: "confirmDialog",
+      header: "label.confirm.action",
+      body: "Are you sure you would like to delete this R&R? You will not be able to undo this."
+    };
+
+    OpenLmisDialog.newDialog(options, callBack, $dialog);
+
+  };
 
   resetCostsIfNull();
 
