@@ -278,35 +278,38 @@
 					</reportElement>
 				</rectangle>
 				<staticText>
-					<reportElement x="4" y="100" width="214" height="20" uuid="797d322d-e41f-4cfa-88fc-4f0f76fee629">
+					<reportElement x="4" y="100" width="176" height="20" uuid="797d322d-e41f-4cfa-88fc-4f0f76fee629">
 						<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() != "XLS"]]></printWhenExpression>
 					</reportElement>
-					<textElement verticalAlignment="Bottom"/>
-					<text><![CDATA[Technical Officer signature and Name]]></text>
+					<textElement textAlignment="Right" verticalAlignment="Bottom"/>
+					<text><![CDATA[Order Reviewed and Printed By:]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="4" y="120" width="214" height="20" uuid="e01b8a4d-d017-4f7d-bc94-4b61a6ffce9b">
+					<reportElement x="4" y="120" width="176" height="20" uuid="e01b8a4d-d017-4f7d-bc94-4b61a6ffce9b">
 						<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() != "XLS"]]></printWhenExpression>
 					</reportElement>
-					<textElement verticalAlignment="Bottom"/>
-					<text><![CDATA[Authorized  signature and Name]]></text>
+					<textElement textAlignment="Right" verticalAlignment="Bottom"/>
+					<text><![CDATA[Order Received By:]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="415" y="100" width="205" height="20" uuid="7651950f-7427-469b-a85f-e50d03ef8065">
+					<reportElement x="550" y="100" width="70" height="20" uuid="7651950f-7427-469b-a85f-e50d03ef8065">
 						<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() != "XLS"]]></printWhenExpression>
 					</reportElement>
-					<textElement verticalAlignment="Bottom"/>
-					<text><![CDATA[Customer Driver Signature and Name]]></text>
+					<textElement textAlignment="Right" verticalAlignment="Bottom"/>
+					<text><![CDATA[Date]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="415" y="120" width="205" height="20" uuid="81938a4e-7b1e-49d6-9944-5484270f77a4">
+					<reportElement x="550" y="120" width="70" height="20" uuid="81938a4e-7b1e-49d6-9944-5484270f77a4">
 						<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() != "XLS"]]></printWhenExpression>
 					</reportElement>
-					<textElement verticalAlignment="Bottom"/>
-					<text><![CDATA[Customer Vehicle Number]]></text>
+					<textElement textAlignment="Right" verticalAlignment="Bottom"/>
+					<text><![CDATA[Date]]></text>
 				</staticText>
 				<line>
-					<reportElement x="218" y="119" width="102" height="1" uuid="969e35dc-8637-46c1-9aab-4545664ab3f4">
+					<reportElement x="190" y="119" width="170" height="1" uuid="969e35dc-8637-46c1-9aab-4545664ab3f4">
+						<property name="local_mesure_unitx" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="local_mesure_unitwidth" value="pixel"/>
 						<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() != "XLS"]]></printWhenExpression>
 					</reportElement>
 					<graphicElement>
@@ -314,7 +317,11 @@
 					</graphicElement>
 				</line>
 				<line>
-					<reportElement x="218" y="139" width="102" height="1" uuid="5be7998d-8dbc-4b01-bea8-12f575bac732">
+					<reportElement x="190" y="139" width="170" height="1" uuid="5be7998d-8dbc-4b01-bea8-12f575bac732">
+						<property name="local_mesure_unitx" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="local_mesure_unitwidth" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
 						<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() != "XLS"]]></printWhenExpression>
 					</reportElement>
 					<graphicElement>
@@ -322,14 +329,19 @@
 					</graphicElement>
 				</line>
 				<staticText>
-					<reportElement x="321" y="100" width="35" height="20" uuid="264d7f42-eace-4b78-af96-eb86a324d5c1">
+					<reportElement x="390" y="100" width="60" height="20" uuid="264d7f42-eace-4b78-af96-eb86a324d5c1">
 						<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() != "XLS"]]></printWhenExpression>
 					</reportElement>
 					<textElement textAlignment="Right" verticalAlignment="Bottom"/>
-					<text><![CDATA[Date]]></text>
+					<text><![CDATA[Signature]]></text>
 				</staticText>
 				<line>
-					<reportElement x="355" y="119" width="60" height="1" uuid="a2cc2512-cc11-494c-902f-c5d37fbcfaad">
+					<reportElement x="455" y="119" width="90" height="1" uuid="a2cc2512-cc11-494c-902f-c5d37fbcfaad">
+						<property name="local_mesure_unitx" value="pixel"/>
+						<property name="local_mesure_unitwidth" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						<property name="local_mesure_unity" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
 						<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() != "XLS"]]></printWhenExpression>
 					</reportElement>
 					<graphicElement>
@@ -337,29 +349,18 @@
 					</graphicElement>
 				</line>
 				<staticText>
-					<reportElement x="321" y="120" width="35" height="20" uuid="002617cc-f117-4c67-9224-2e778ef95209">
+					<reportElement x="390" y="120" width="60" height="20" uuid="002617cc-f117-4c67-9224-2e778ef95209">
 						<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() != "XLS"]]></printWhenExpression>
 					</reportElement>
 					<textElement textAlignment="Right" verticalAlignment="Bottom"/>
-					<text><![CDATA[Date]]></text>
+					<text><![CDATA[Signature]]></text>
 				</staticText>
 				<line>
-					<reportElement x="355" y="139" width="60" height="1" uuid="06a706ca-cfbd-49d8-9123-dd3b07e3be50">
-						<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() != "XLS"]]></printWhenExpression>
-					</reportElement>
-					<graphicElement>
-						<pen lineWidth="0.5"/>
-					</graphicElement>
-				</line>
-				<staticText>
-					<reportElement x="695" y="100" width="35" height="20" uuid="013227ab-7686-41d1-8c58-04fcfd0466fa">
-						<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() != "XLS"]]></printWhenExpression>
-					</reportElement>
-					<textElement textAlignment="Right" verticalAlignment="Bottom"/>
-					<text><![CDATA[Date]]></text>
-				</staticText>
-				<line>
-					<reportElement x="620" y="119" width="75" height="1" uuid="2690b11f-8a28-4c2d-9aa8-24ebe9a05a27">
+					<reportElement x="455" y="139" width="90" height="1" uuid="06a706ca-cfbd-49d8-9123-dd3b07e3be50">
+						<property name="local_mesure_unitwidth" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						<property name="local_mesure_unitx" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
 						<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() != "XLS"]]></printWhenExpression>
 					</reportElement>
 					<graphicElement>
@@ -367,7 +368,11 @@
 					</graphicElement>
 				</line>
 				<line>
-					<reportElement x="730" y="119" width="60" height="1" uuid="72972c4a-4778-474f-af8b-d472fa81c21e">
+					<reportElement x="625" y="119" width="90" height="1" uuid="2690b11f-8a28-4c2d-9aa8-24ebe9a05a27">
+						<property name="local_mesure_unitx" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="local_mesure_unitwidth" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
 						<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() != "XLS"]]></printWhenExpression>
 					</reportElement>
 					<graphicElement>
@@ -375,7 +380,11 @@
 					</graphicElement>
 				</line>
 				<line>
-					<reportElement x="620" y="139" width="75" height="1" uuid="29bc132b-a847-4c9a-9868-c7bc5710c3f7">
+					<reportElement x="625" y="139" width="90" height="1" uuid="29bc132b-a847-4c9a-9868-c7bc5710c3f7">
+						<property name="local_mesure_unitx" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="local_mesure_unitwidth" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
 						<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() != "XLS"]]></printWhenExpression>
 					</reportElement>
 					<graphicElement>
