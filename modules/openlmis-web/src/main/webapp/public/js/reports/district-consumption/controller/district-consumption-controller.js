@@ -8,7 +8,7 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-function DistrictConsumptionReportController($scope, $filter, ngTableParams, DistrictConsumptionReport, ReportProductsByProgram , ReportPrograms, ProductCategories, RequisitionGroups , ReportFacilityTypes, GeographicZones, OperationYears, Months, $http, $routeParams, $location) {
+function DistrictConsumptionReportController($scope, $filter, ngTableParams, DistrictConsumptionReport, ReportProductsByProgram, ReportPrograms, ProductCategoriesByProgram, RequisitionGroupsByProgram , ReportFacilityTypes, GeographicZones, OperationYears, Months, $http, $routeParams, $location) {
     // default to the monthly period type
     $scope.periodType = 'monthly';
 
@@ -66,11 +66,6 @@ function DistrictConsumptionReportController($scope, $filter, ngTableParams, Dis
     ];
 
     $scope.product;
-
-    RequisitionGroups.get(function(data){
-        $scope.requisitionGroups = data.requisitionGroupList;
-        $scope.requisitionGroups.unshift({'name':'All Requisition Groups'});
-    });
 
 
     // copy over the start month and end months
@@ -141,12 +136,6 @@ function DistrictConsumptionReportController($scope, $filter, ngTableParams, Dis
     });
 
 
-    ProductCategories.get(function(data){
-        $scope.productCategories = data.productCategoryList;
-        $scope.productCategories.unshift({'name': '-- All Product Categories --'});
-    });
-
-
     $scope.facilities         = [
         {'name':'One','value':'1'},
         {'name':'Two','value':'2'},
@@ -166,14 +155,6 @@ function DistrictConsumptionReportController($scope, $filter, ngTableParams, Dis
         $scope.products = [];
         $scope.products.push({name:'-- Select Product --'});
     });
-
-    $scope.ProgramChanged = function(){
-        ReportProductsByProgram.get({programId: $scope.program}, function(data){
-            $scope.products = data.productList;
-            $scope.products.unshift({id: '',name: '-- Select Product --'});
-        });
-    };
-
 
     $scope.$watch('zone.value', function(selection){
         if(selection !== undefined || selection === ""){
@@ -425,15 +406,45 @@ function DistrictConsumptionReportController($scope, $filter, ngTableParams, Dis
         $scope.filterGrid();
     });
 
-    $scope.$watch('program', function(selection){
-        if(selection !== undefined || selection === ""){
-            $scope.filterObject.programId =  selection;
-        }else{
-            $scope.filterObject.programId =  0;
+  $scope.$watch('program', function (selection) {
+    if (selection !== undefined || selection === "") {
+      $scope.filterObject.programId = selection;
+
+      if (selection === '') {
+        return;
+      }
+
+      // load the program-product categories
+      ProductCategoriesByProgram.get({programId: selection}, function (data) {
+        $scope.productCategories = data.productCategoryList;
+        $scope.productCategories.unshift({'name': '-- All Product Categories --'});
+      });
+
+      ReportProductsByProgram.get({programId: selection}, function (data) {
+        $scope.products = data.productList;
+        if ($scope.products.length == 0) {
+          $scope.products.push({'name': '-- All Products --'});
+        } else {
+          $scope.products.unshift({'name': '-- All Products --'});
+        }
+      });
+
+      RequisitionGroupsByProgram.get({program: selection }, function (data) {
+        $scope.requisitionGroups = data.requisitionGroupList;
+        if ($scope.requisitionGroups == undefined || $scope.requisitionGroups.length == 0) {
+          $scope.requisitionGroups = [];
+          $scope.requisitionGroups.push({'name': '-- All Requisition Groups --'});
+        } else {
+          $scope.requisitionGroups.unshift({'name': '-- All Requisition Groups --'});
         }
 
-        $scope.filterGrid();
-    });
+      });
+    } else {
+      //$scope.filterObject.programId =  0;
+      return;
+    }
+    $scope.filterGrid();
+  });
 
    $scope.exportReport   = function (type){
 
