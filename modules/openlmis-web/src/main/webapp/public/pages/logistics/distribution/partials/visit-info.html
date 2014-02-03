@@ -1,4 +1,4 @@
-<!--
+ <!--
   ~ This program is part of the OpenLMIS logistics management information system platform software.
   ~ Copyright © 2013 VillageReach
   ~
@@ -14,7 +14,7 @@
   <div class="facility-info" ng-init="facilityData = distribution.facilityDistributions[selectedFacility]">
     <div class="facility-visit-container">
       <h3>
-        <span openlmis-message="label.visit.information"></span>
+        <span id="visitInformationLabel" openlmis-message="label.visit.information"></span>
       </h3>
 
       <form auto-save="distribution" object-store="distributions" disable-form="{{facilityData.isDisabled()}}">

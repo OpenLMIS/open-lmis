@@ -477,6 +477,7 @@ Feature: Smoke Tests
     And I initiate distribution
     And I record data for distribution "1"
     And I choose facility "F10"
+    And I verify that I am on visit information page
     Then Verify "general observation" indicator should be "RED"
     When I select "yes" facility visited
     And I select visit date as current date
@@ -623,6 +624,7 @@ Feature: Smoke Tests
     And I choose facility "F10"
     Then I see "Overall" facility icon as "AMBER"
     And I see "Individual" facility icon as "AMBER"
+    And I navigate to "refrigerator" tab
     When I add new refrigerator
     When I enter Brand "LG"
     And I enter Modal "800 LITRES"
@@ -635,13 +637,17 @@ Feature: Smoke Tests
     When I record data for distribution "1"
 
     And I choose facility "F10"
+    And I navigate to "refrigerator" tab
     When I edit refrigerator
     And I enter refrigerator temperature "3"
     And I verify "Yes" it was working correctly when I left
     And I enter low alarm events "1"
     And I enter high alarm events "0"
     And I verify "No" that there is a problem with refrigerator since last visit
+
     And I navigate to "general observation" tab
+    When I select "yes" facility visited
+    And I select visit date as current date
     And I Enter "general observation" values:
       | observations     | confirmedByName | confirmedByTitle | verifiedByName | verifiedByTitle |
       | some observation | samuel          | fc               | Verifier       | XYZ             |
@@ -689,7 +695,6 @@ Feature: Smoke Tests
     When I record data for distribution "1"
     And I choose facility "F10"
     Then I see "Overall" facility icon as "BLUE"
-    When I navigate to "general observation" tab
     Then I see general observations fields disabled
     When I navigate to "epi use" tab
     Then I see EPI Use fields disabled
@@ -715,5 +720,6 @@ Feature: Smoke Tests
     When I record data for distribution "1"
     And I choose facility "F10"
     Then I see "Overall" facility icon as "RED"
+    And I navigate to "refrigerator" tab
     And I see "overall" refrigerator icon as "RED"
     And I verify the refrigerator "LG;800 LITRES;GR-J287PGHV" present

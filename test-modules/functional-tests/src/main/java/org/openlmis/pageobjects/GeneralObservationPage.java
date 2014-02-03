@@ -23,7 +23,6 @@ import java.util.Map;
 import static com.thoughtworks.selenium.SeleneseTestBase.assertFalse;
 import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
 import static org.openqa.selenium.support.How.ID;
-import static org.openqa.selenium.support.How.XPATH;
 
 public class GeneralObservationPage extends DistributionTab {
 
@@ -35,10 +34,13 @@ public class GeneralObservationPage extends DistributionTab {
   public static final String VALUE = "value";
 
   @FindBy(how = ID, using = "facilityVisitTab")
-  private static WebElement FacilityVisitTab = null;
+  private static WebElement facilityVisitTab = null;
 
   @FindBy(how = ID, using = "facilityVisitTabIcon")
   public static WebElement facilityVisitTabIcon = null;
+
+  @FindBy(how = ID, using = "visitInformationLabel")
+  private static WebElement visitInformationLabel = null;
 
   @FindBy(how = ID, using = "facilityVisitTabLabel")
   public static WebElement facilityVisitTabLabel = null;
@@ -121,8 +123,14 @@ public class GeneralObservationPage extends DistributionTab {
 
   @Override
   public void navigate() {
-    FacilityVisitTab.click();
+    facilityVisitTab.click();
   }
+
+  public String getVisitInformationPageLabel() {
+    testWebDriver.waitForElementToAppear(visitInformationLabel);
+    return visitInformationLabel.getText();
+  }
+
 
   public void enterObservations(String observations) {
     testWebDriver.waitForElementToAppear(observationsField);

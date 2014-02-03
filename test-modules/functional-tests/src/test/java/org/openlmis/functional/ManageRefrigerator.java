@@ -17,6 +17,7 @@ import cucumber.api.java.en.When;
 import org.openlmis.UiUtils.CaptureScreenshotOnFailureListener;
 import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.UiUtils.TestWebDriver;
+import org.openlmis.pageobjects.GeneralObservationPage;
 import org.openlmis.pageobjects.HomePage;
 import org.openlmis.pageobjects.RefrigeratorPage;
 import org.openqa.selenium.JavascriptExecutor;
@@ -187,12 +188,6 @@ public class ManageRefrigerator extends TestCaseHelper {
     else if (flag.equalsIgnoreCase("No")) refrigeratorPage.clickProblemSinceLastVisitNoRadio();
     else if (flag.equalsIgnoreCase("Dont know")) refrigeratorPage.clickProblemSinceLastVisitDontKnowRadio();
     else refrigeratorPage.clickProblemSinceLastVisitNR();
-  }
-
-  @Then("^I should see Refrigerators screen")
-  public void onRefrigeratorScreen() throws SQLException {
-    refrigeratorPage = PageFactory.getInstanceOfRefrigeratorPage(testWebDriver);
-    refrigeratorPage.onRefrigeratorScreen();
   }
 
   @Then(

@@ -26,6 +26,7 @@ import org.openlmis.pageobjects.*;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
+import org.testng.AssertJUnit;
 import org.testng.annotations.*;
 
 import java.sql.ResultSet;
@@ -113,6 +114,12 @@ public class ManageDistribution extends TestCaseHelper {
       programFirst, userSIC, "200", rightsList, programSecond, "District1", "Ngorongoro", "Ngorongoro");
   }
 
+  @Then("^I verify that I am on visit information page")
+  public void onVisitInformationPage() throws SQLException {
+    observation = PageFactory.getInstanceOfObservation(testWebDriver);
+    assertEquals("Visit Info / Observations", observation.getVisitInformationPageLabel());
+  }
+
   @And("^I update product \"([^\"]*)\" to have product group \"([^\"]*)\"$")
   public void setupProductAndProductGroup(String product, String productGroup) throws Exception {
     updateProductWithGroup(product, productGroup);
@@ -134,7 +141,7 @@ public class ManageDistribution extends TestCaseHelper {
   }
 
   @And("^I select visit date as current date$")
-  public void selectVisitedDateAsCurrentDate(){
+  public void selectVisitedDateAsCurrentDate() {
     GeneralObservationPage generalObservationPage = PageFactory.getInstanceOfObservation(testWebDriver);
     generalObservationPage.enterVisitDateAsFirstOfCurrentMonth();
   }
