@@ -70,12 +70,6 @@ function AdjustmentSummaryReportController($scope, $filter, ngTableParams, Adjus
 
   $scope.product;
 
-//  RequisitionGroups.get(function (data) {
-//    $scope.requisitionGroups = data.requisitionGroupList;
-//    $scope.requisitionGroups.unshift({'name': '-- All Requisition Groups --'});
-//  });
-
-
   // copy over the start month and end months
   // this is just for initial loading.
   $(function () {
@@ -141,16 +135,6 @@ function AdjustmentSummaryReportController($scope, $filter, ngTableParams, Adjus
     $scope.adjustmentTypes = data.adjustmentTypeList;
     $scope.adjustmentTypes.unshift({'description': '--All Adjustment Types --'});
   });
-//
-//  Products.get(function (data) {
-//    $scope.products = data.productList;
-//    $scope.products.unshift({'name': '-- All Products --'});
-//  });
-
-//  ProductCategories.get(function (data) {
-//    $scope.productCategories = data.productCategoryList;
-//    $scope.productCategories.unshift({'name': '-- All Categories --'});
-//  });
 
   GeographicZones.get(function (data) {
     $scope.zones = data.zones;
@@ -392,7 +376,7 @@ function AdjustmentSummaryReportController($scope, $filter, ngTableParams, Adjus
     if (selection !== undefined || selection === "") {
       $scope.filterObject.programId = selection;
 
-      if(selection === ''){
+      if (selection === '') {
         return;
       }
 
@@ -404,19 +388,19 @@ function AdjustmentSummaryReportController($scope, $filter, ngTableParams, Adjus
 
       ReportProductsByProgram.get({programId: selection}, function (data) {
         $scope.products = data.productList;
-        if($scope.products.length == 0){
+        if ($scope.products.length == 0) {
           $scope.products.push({'name': '-- All Products --'});
-        } else{
+        } else {
           $scope.products.unshift({'name': '-- All Products --'});
         }
       });
 
       RequisitionGroupsByProgram.get({program: selection }, function (data) {
         $scope.requisitionGroups = data.requisitionGroupList;
-        if($scope.requisitionGroups == undefined || $scope.requisitionGroups.length == 0){
+        if ($scope.requisitionGroups == undefined || $scope.requisitionGroups.length == 0) {
           $scope.requisitionGroups = [];
           $scope.requisitionGroups.push({'name': '-- All Requisition Groups --'});
-        } else{
+        } else {
           $scope.requisitionGroups.unshift({'name': '-- All Requisition Groups --'});
         }
 
