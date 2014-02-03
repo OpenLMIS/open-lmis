@@ -256,7 +256,7 @@ public class DistributionRefrigeratorSyncTest extends TestCaseHelper {
     distributionPage.clickRecordData(2);
     facilityListPage.selectFacility(refrigeratorTestData.get(FIRST_FACILITY_CODE));
     facilityListPage.verifyFacilityIndicatorColor("Overall", "RED");
-
+    refrigeratorPage.navigateToRefrigeratorTab();
     refrigeratorPage.verifyRefrigeratorColor("overall", "RED");
 
     refrigeratorPage.clickShowForRefrigerator1();
