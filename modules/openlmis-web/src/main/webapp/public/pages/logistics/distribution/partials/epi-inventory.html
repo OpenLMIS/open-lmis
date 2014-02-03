@@ -9,10 +9,10 @@
   -->
 
 <ng-include
-    src="'/public/pages/logistics/distribution/partials/record-facility-data.html'"></ng-include>
+  src="'/public/pages/logistics/distribution/partials/record-facility-data.html'"></ng-include>
 <div class="clearfix facility-container">
   <ng-include
-      src="'/public/pages/logistics/distribution/partials/record-facility-menu.html'"></ng-include>
+    src="'/public/pages/logistics/distribution/partials/record-facility-menu.html'"></ng-include>
 
   <div class="facility-info" ng-init="facilityData = distribution.facilityDistributions[selectedFacilityId]">
     <div class="refrigerator-container" disable-form="{{facilityData.isDisabled('epi-inventory')}}">
@@ -56,7 +56,7 @@
                 <div>
                   <span class="input-error-parent-cell">
                     <input id="existingQuantity{{ $index }}" type="text" ng-model="lineItem.existingQuantity.value"
-                           name="existingQuantityNR{{$index}}"
+                           name="existingQuantityNR{{$index}}" ng-trim=false
                            numeric-validator="positiveInteger" maxlength="7"
                            error-holder="existingQuantityError{{$index}}"/>
                     <span id="existingQuantityError{{$index}}"
@@ -75,7 +75,7 @@
                 <div>
                   <span class="input-error-parent-cell">
                     <input id="deliveredQuantity{{ $index }}" type="text" ng-model="lineItem.deliveredQuantity"
-                           name="deliveredQuantityNR{{ $index }}"
+                           name="deliveredQuantityNR{{ $index }}" ng-trim=false
                            numeric-validator="positiveInteger" maxlength="7"
                            error-holder="deliveredQuantityError{{$index}}"/>
                     <span id="deliveredQuantityError{{$index}}"
@@ -90,7 +90,7 @@
                   <span class="input-error-parent-cell">
                     <input id="spoiledQuantity{{ $index }}" type="text"
                            ng-model="lineItem.spoiledQuantity.value"
-                           name="spoiledQuantityNR{{ $index }}"
+                           name="spoiledQuantityNR{{ $index }}" ng-trim=false
                            numeric-validator="positiveInteger" maxlength="7"
                            error-holder="spoiledQuantityError{{$index}}"/>
                     <span id="spoiledQuantityError{{$index}}" class="rnr-form-error"

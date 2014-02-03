@@ -8,10 +8,10 @@
   ~  You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
   -->
 <ng-include
-  src="'/public/pages/logistics/distribution/partials/record-facility-data.html'"></ng-include>
+    src="'/public/pages/logistics/distribution/partials/record-facility-data.html'"></ng-include>
 <div class="clearfix facility-container">
   <ng-include
-    src="'/public/pages/logistics/distribution/partials/record-facility-menu.html'"></ng-include>
+      src="'/public/pages/logistics/distribution/partials/record-facility-menu.html'"></ng-include>
 
   <div class="facility-info" ng-init="facilityData = distribution.facilityDistributions[selectedFacilityId]">
     <div id="coverageContainer" class="refrigerator-container" disable-form="{{facilityData.isDisabled()}}">
@@ -74,7 +74,7 @@
                     <input id="healthCenterCategoryOne{{$index}}" type="text"
                            ng-model="lineItem.healthCenterCategoryOne.value"
                            name="healthCenterCategoryOne{{$index}}"
-                           numeric-validator="positiveInteger" maxlength="7"
+                           numeric-validator="positiveInteger" maxlength="7" ng-trim=false
                            error-holder="healthCenterCategoryOneError{{$index}}"/>
                     <span id="healthCenterCategoryOneError{{$index}}"
                           class="rnr-form-error"
@@ -94,7 +94,7 @@
                     <input id="outReachCategoryOne{{$index}}" type="text"
                            ng-model="lineItem.outReachCategoryOne.value"
                            name="outReachCategoryOne{{$index}}"
-                           numeric-validator="positiveInteger" maxlength="7"
+                           numeric-validator="positiveInteger" maxlength="7" ng-trim=false
                            error-holder="outReachCategoryOneError{{$index}}"/>
                     <span id="outReachCategoryOneError{{$index}}"
                           class="rnr-form-error"
@@ -117,7 +117,7 @@
                       <input id="healthCenterCategoryTwo{{$index}}" type="text"
                              ng-model="lineItem.healthCenterCategoryTwo.value"
                              name="healthCenterCategoryTwo{{$index}}"
-                             numeric-validator="positiveInteger" maxlength="7"
+                             numeric-validator="positiveInteger" maxlength="7" ng-trim=false
                              error-holder="healthCenterCategoryTwoError{{$index}}"/>
                       <span id="healthCenterCategoryTwoError{{$index}}"
                             class="rnr-form-error"
@@ -139,7 +139,7 @@
                       <input id="outReachCategoryTwo{{$index}}" type="text"
                              ng-model="lineItem.outReachCategoryTwo.value"
                              name="outReachCategoryTwo{{$index}}"
-                             numeric-validator="positiveInteger" maxlength="7"
+                             numeric-validator="positiveInteger" maxlength="7" ng-trim=false
                              error-holder="outReachCategoryTwoError{{$index}}"/>
                       <span id="outReachCategoryTwoError{{$index}}"
                             class="rnr-form-error"
@@ -163,7 +163,7 @@
                   <span class="input-error-parent-cell">
                     <input id="openedVials{{$index}}" type="text" ng-model="lineItem.openedVials.value"
                            name="openedVials{{$index}}"
-                           numeric-validator="positiveInteger" maxlength="7"
+                           numeric-validator="positiveInteger" maxlength="7" ng-trim=false
                            error-holder="{{product}}OpenedVialsError"/>
                     <span id="{{product}}OpenedVialsError"
                           class="rnr-form-error"

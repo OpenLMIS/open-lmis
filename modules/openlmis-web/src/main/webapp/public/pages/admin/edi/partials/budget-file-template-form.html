@@ -55,16 +55,16 @@
               </div>
               <div class="span2">
                 <div class="row-fluid" ng-show="budgetFileColumn.dataFieldLabel == 'header.period.start.date'">
-                  <select  class="span12" ui-select2 ng-model="budgetFileColumn.datePattern"
+                  <select class="span12" ui-select2 ng-model="budgetFileColumn.datePattern"
                           ng-options="dateFormat for dateFormat in dateFormats">
                   </select>
                 </div>
               </div>
               <div class="span1">
                 <input type="text" ng-model="budgetFileColumn.position" maxlength="3"
-                       numeric-validator="positiveInteger"
+                       numeric-validator="positiveInteger" ng-trim=false
                        class="right-justified"
-                       id="{{budgetFileColumn.name}}Position" />
+                       id="{{budgetFileColumn.name}}Position"/>
               </div>
             </div>
           </div>

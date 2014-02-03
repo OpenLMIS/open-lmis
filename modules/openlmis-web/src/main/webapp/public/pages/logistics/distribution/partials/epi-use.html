@@ -9,10 +9,10 @@
  -->
 
 <ng-include
-    src="'/public/pages/logistics/distribution/partials/record-facility-data.html'"></ng-include>
+  src="'/public/pages/logistics/distribution/partials/record-facility-data.html'"></ng-include>
 <div class="clearfix facility-container">
   <ng-include
-      src="'/public/pages/logistics/distribution/partials/record-facility-menu.html'"></ng-include>
+    src="'/public/pages/logistics/distribution/partials/record-facility-menu.html'"></ng-include>
 
   <div class="facility-info" ng-init="facilityData = distribution.facilityDistributions[selectedFacilityId]">
     <div class="refrigerator-container" disable-form="{{facilityData.isDisabled()}}">
@@ -64,7 +64,7 @@
                   <span class="input-error-parent-cell">
                     <input type="text"
                            ng-model="lineItem.stockAtFirstOfMonth.value"
-                           name="stockAtFirstOfMonth{{$index}}"
+                           name="stockAtFirstOfMonth{{$index}}" ng-trim=false
                            numeric-validator="positiveInteger" maxlength="7"
                            error-holder="stockAtFirstOfMonthError{{$index}}"/>
                     <span id="stockAtFirstOfMonthError{{$index}}"
@@ -85,7 +85,7 @@
                   <span class="input-error-parent-cell">
                     <input type="text"
                            ng-model="lineItem.received.value"
-                           name="received{{$index}}"
+                           name="received{{$index}}" ng-trim=false
                            numeric-validator="positiveInteger" maxlength="7"
                            error-holder="receivedError{{$index}}"/>
                     <span id="receivedError{{$index}}"
@@ -108,7 +108,7 @@
                   <span class="input-error-parent-cell">
                     <input type="text"
                            ng-model="lineItem.distributed.value"
-                           name="distributed{{$index}}"
+                           name="distributed{{$index}}" ng-trim=false
                            numeric-validator="positiveInteger" maxlength="7"
                            error-holder="distributedError{{$index}}"/>
                     <span id="distributedError{{$index}}"
@@ -127,7 +127,7 @@
                 <div>
                   <span class="input-error-parent-cell">
                     <input type="text"
-                           ng-model="lineItem.loss.value"
+                           ng-model="lineItem.loss.value" ng-trim=false
                            name="loss{{$index}}" maxlength="7"
                            numeric-validator="positiveInteger"
                            error-holder="lossError{{$index}}"/>
@@ -147,7 +147,7 @@
                   <span class="input-error-parent-cell">
                     <input type="text"
                            ng-model="lineItem.stockAtEndOfMonth.value"
-                           name="stockAtEndOfMonth{{$index}}"
+                           name="stockAtEndOfMonth{{$index}}" ng-trim=false
                            numeric-validator="positiveInteger" maxlength="7"
                            error-holder="stockAtEndOfMonthError{{$index}}"/>
                     <span id="stockAtEndOfMonthError{{$index}}"

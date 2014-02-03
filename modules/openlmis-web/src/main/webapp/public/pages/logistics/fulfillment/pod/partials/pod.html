@@ -12,7 +12,8 @@
 
   <h2 id="PODPageTitle" openlmis-message="header.proof.of.delivery"></h2>
   <ng-include src="'/public/pages/logistics/fulfillment/pod/partials/header.html'"></ng-include>
-  <div ng-hide="pageLineItems.length" class="alert alert-info" id="noProductsLabel" openlmis-message="label.no.products"></div>
+  <div ng-hide="pageLineItems.length" class="alert alert-info" id="noProductsLabel"
+       openlmis-message="label.no.products"></div>
   <div id="pod" ng-show="pageLineItems.length" class="rnr-table">
     <table id="podTable" class="table table-bordered" fixed-table-header>
       <thead>
@@ -53,7 +54,7 @@
         </td>
         <td class="cell-input col-quantityReceived">
           <input id="quantityReceived{{$index}}" type="text"
-                 ng-model="podLineItem.quantityReceived"
+                 ng-model="podLineItem.quantityReceived" ng-trim=false
                  numeric-validator="positiveInteger" maxlength="8"
                  error-holder="receivedQuantityError{{$index}}"/>
 
