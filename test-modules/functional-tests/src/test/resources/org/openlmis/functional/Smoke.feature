@@ -426,9 +426,9 @@ Feature: Smoke Tests
     And I select period "Period14"
     And I initiate distribution
     And I record data for distribution "1"
-    When I choose facility "F10"
-    Then I should see Refrigerators screen
-    When I add new refrigerator
+    And I choose facility "F10"
+    And I navigate to "refrigerator" tab
+    And I add new refrigerator
     Then I should see New Refrigerator screen
     When I enter Brand "LG"
     And I enter Modal "800 LITRES"
@@ -477,9 +477,10 @@ Feature: Smoke Tests
     And I initiate distribution
     And I record data for distribution "1"
     And I choose facility "F10"
-    And I navigate to "general observation" tab
     Then Verify "general observation" indicator should be "RED"
-    When I Enter "general observation" values:
+    When I select "yes" facility visited
+    And I select visit date as current date
+    And I Enter "general observation" values:
       | observations     | confirmedByName | confirmedByTitle | verifiedByName | verifiedByTitle |
       | some observation | samuel          | fc               |                |                 |
     Then Verify "general observation" indicator should be "AMBER"
