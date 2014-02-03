@@ -20,7 +20,6 @@ import org.openlmis.pageobjects.UploadPage;
 import org.testng.annotations.*;
 
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.sql.SQLException;
 import java.util.HashSet;
 import java.util.List;
@@ -333,7 +332,7 @@ public class E2EUpload extends TestCaseHelper {
     uploadPage.validateErrorMessageOnUploadScreen("Invalid program code ");
   }
 
-  private void verifyValidFacilityTypeToProductMappingUpload() throws IOException, SQLException {
+  private void verifyValidFacilityTypeToProductMappingUpload() throws SQLException, FileNotFoundException {
     uploadPage.uploadFacilityTypeToProductMapping("QA_Facility_Type_To_Product_Mapping.csv");
     uploadPage.verifySuccessMessageOnUploadScreen();
     uploadPage.uploadFacilityTypeToProductMapping("QA_Facility_Type_To_Product_Mapping_Subsequent.csv");
@@ -460,7 +459,7 @@ public class E2EUpload extends TestCaseHelper {
     uploadPage.validateErrorMessageOnUploadScreen("Invalid program code");
   }
 
-  private void verifyValidUserUpload() throws IOException, SQLException {
+  private void verifyValidUserUpload() throws SQLException, FileNotFoundException {
     String tableName = "users";
     uploadPage.uploadUsers("QA_Users.csv");
     uploadPage.verifySuccessMessageOnUploadScreen();
@@ -474,7 +473,7 @@ public class E2EUpload extends TestCaseHelper {
     assertEquals(dbWrapper.getAttributeFromTable("users", "restrictLogin", "userName", "User1236"), "f");
   }
 
-  private void verifyInValidUserUpload() throws IOException, SQLException {
+  private void verifyInValidUserUpload() throws SQLException, FileNotFoundException {
     String tableName = "users";
     uploadPage.uploadInvalidUserScenarios("QA_Users_Duplicate_Email.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
@@ -507,7 +506,7 @@ public class E2EUpload extends TestCaseHelper {
     assertEquals(dbWrapper.getRowsCountFromDB(tableName), "5");
   }
 
-  private void verifyValidProductCategoryUpload() throws IOException, SQLException {
+  private void verifyValidProductCategoryUpload() throws SQLException, FileNotFoundException {
     String tableName = "product_categories";
     uploadPage.uploadProductCategory("QA_Productcategoryupload.csv");
     uploadPage.verifySuccessMessageOnUploadScreen();
@@ -518,7 +517,7 @@ public class E2EUpload extends TestCaseHelper {
     assertEquals(dbWrapper.getRowsCountFromDB(tableName), "20");
   }
 
-  private void verifyInvalidProductCategoryUpload() throws IOException, SQLException {
+  private void verifyInvalidProductCategoryUpload() throws SQLException, FileNotFoundException {
     String tableName = "product_categories";
     uploadPage.uploadProductCategory("QA_ProductCategoryUpload_DuplicateCategoryCode.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
@@ -531,7 +530,7 @@ public class E2EUpload extends TestCaseHelper {
     assertEquals(dbWrapper.getRowsCountFromDB(tableName), "20");
   }
 
-  private void verifyInValidProductUpload() throws IOException, SQLException {
+  private void verifyInValidProductUpload() throws SQLException, FileNotFoundException {
     String tableName = "products";
     uploadPage.uploadProductsInvalidScenarios("QA_products_Duplicate_Code.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
@@ -555,7 +554,7 @@ public class E2EUpload extends TestCaseHelper {
 
   }
 
-  private void verifyValidProductUpload() throws IOException, SQLException {
+  private void verifyValidProductUpload() throws SQLException, FileNotFoundException {
     String tableName = "products";
     uploadPage.uploadProducts("QA_products.csv");
     uploadPage.verifySuccessMessageOnUploadScreen();
@@ -566,20 +565,20 @@ public class E2EUpload extends TestCaseHelper {
     assertEquals(dbWrapper.getRowsCountFromDB(tableName), "2");
   }
 
-  private void verifyInValidProductGroupUpload() throws IOException, SQLException {
+  private void verifyInValidProductGroupUpload() throws SQLException, FileNotFoundException {
     uploadPage.uploadProductGroupsScenarios("QA_Product_Group_Duplicate.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
     uploadPage.validateErrorMessageOnUploadScreen("Duplicate Product Group Code in Record No");
   }
 
-  private void verifyValidProductGroupUpload() throws IOException, SQLException {
+  private void verifyValidProductGroupUpload() throws SQLException, FileNotFoundException {
     uploadPage.uploadProductGroupsScenarios("QA_product_group.csv");
     uploadPage.verifySuccessMessageOnUploadScreen();
     uploadPage.uploadProductGroupsScenarios("QA_Product_Group_Subsequent.csv");
     uploadPage.verifySuccessMessageOnUploadScreen();
   }
 
-  private void verifyInValidDeliveryZonesUpload() throws IOException, SQLException {
+  private void verifyInValidDeliveryZonesUpload() throws SQLException, FileNotFoundException {
     uploadPage.uploadDeliveryZonesInvalidScenarios("QA_Delivery_Zones_Duplicate.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
     uploadPage.validateErrorMessageOnUploadScreen("Duplicate delivery zone Code found");
@@ -590,14 +589,14 @@ public class E2EUpload extends TestCaseHelper {
 
   }
 
-  private void verifyValidDeliveryZonesUpload() throws IOException, SQLException {
+  private void verifyValidDeliveryZonesUpload() throws SQLException, FileNotFoundException {
     uploadPage.uploadDeliveryZones("QA_Delivery_Zones.csv");
     uploadPage.verifySuccessMessageOnUploadScreen();
     uploadPage.uploadDeliveryZones("QA_Delivery_Zones_Subsequent.csv");
     uploadPage.verifySuccessMessageOnUploadScreen();
   }
 
-  private void verifyInValidDeliveryZonesProgramScheduleUpload() throws IOException, SQLException {
+  private void verifyInValidDeliveryZonesProgramScheduleUpload() throws SQLException, FileNotFoundException {
     uploadPage.uploadDeliveryZoneProgramSchedule("QA_Delivery_Zone_Program_Schedule_Duplicate.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
     uploadPage.validateErrorMessageOnUploadScreen("Duplicate Delivery zone code and Program code combination found in Record No");
@@ -615,7 +614,7 @@ public class E2EUpload extends TestCaseHelper {
     uploadPage.validateErrorMessageOnUploadScreen("Invalid schedule code");
   }
 
-  private void verifyValidDeliveryZonesProgramScheduleUpload() throws IOException, SQLException {
+  private void verifyValidDeliveryZonesProgramScheduleUpload() throws SQLException, FileNotFoundException {
     uploadPage.uploadDeliveryZoneProgramScheduleValidScenarios("QA_Delivery_Zone_Program_Schedule.csv");
     uploadPage.verifySuccessMessageOnUploadScreen();
 
@@ -623,7 +622,7 @@ public class E2EUpload extends TestCaseHelper {
     uploadPage.verifySuccessMessageOnUploadScreen();
   }
 
-  private void verifyInValidDeliveryZonesMembersUpload() throws IOException, SQLException {
+  private void verifyInValidDeliveryZonesMembersUpload() throws SQLException, FileNotFoundException {
     uploadPage.uploadDeliveryZoneMembers("QA_Delivery_Zone_Members_Duplicate.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
     uploadPage.validateErrorMessageOnUploadScreen("Duplicate Delivery Zone code and Member code combination found");
@@ -641,7 +640,7 @@ public class E2EUpload extends TestCaseHelper {
     uploadPage.validateErrorMessageOnUploadScreen("No Program(s) mapped for Delivery Zones");
   }
 
-  private void verifyValidDeliveryZonesMembersUpload() throws IOException, SQLException {
+  private void verifyValidDeliveryZonesMembersUpload() throws SQLException, FileNotFoundException {
     uploadPage.uploadDeliveryZoneMembersValidScenarios("QA_Delivery_Zone_Members.csv");
     uploadPage.verifySuccessMessageOnUploadScreen();
 
@@ -649,7 +648,7 @@ public class E2EUpload extends TestCaseHelper {
     uploadPage.verifySuccessMessageOnUploadScreen();
   }
 
-  private void verifyInValidDeliveryZonesWarehousesUpload() throws IOException, SQLException {
+  private void verifyInValidDeliveryZonesWarehousesUpload() throws SQLException, FileNotFoundException {
     uploadPage.uploadDeliveryZoneWarehouses("QA_Delivery_Zone_Warehouses_Invalid_Delivery_Zone.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
     uploadPage.validateErrorMessageOnUploadScreen("Invalid Delivery zone code");
@@ -659,7 +658,7 @@ public class E2EUpload extends TestCaseHelper {
     uploadPage.validateErrorMessageOnUploadScreen("Invalid Warehouse code");
   }
 
-  private void verifyValidDeliveryZonesWarehousesUpload() throws IOException, SQLException {
+  private void verifyValidDeliveryZonesWarehousesUpload() throws SQLException, FileNotFoundException {
     uploadPage.uploadDeliveryZoneWarehousesValidScenarios("QA_Delivery_zone_warehouses.csv");
     uploadPage.verifySuccessMessageOnUploadScreen();
 
@@ -667,7 +666,7 @@ public class E2EUpload extends TestCaseHelper {
     uploadPage.verifySuccessMessageOnUploadScreen();
   }
 
-  private void verifyInValidFacilityFTPDetailsUpload() throws IOException, SQLException {
+  private void verifyInValidFacilityFTPDetailsUpload() throws SQLException, FileNotFoundException {
     uploadPage.uploadFacilityFTPDetails("QA_Blank.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
     uploadPage.validateErrorMessageOnUploadScreen("File is empty");
@@ -718,7 +717,7 @@ public class E2EUpload extends TestCaseHelper {
 
   }
 
-  private void verifyValidFacilityFTPDetailsUpload() throws IOException, SQLException {
+  private void verifyValidFacilityFTPDetailsUpload() throws SQLException, FileNotFoundException {
     uploadPage.uploadFacilityFTPDetails("QA_Facility_FTP_Details.csv");
     uploadPage.verifySuccessMessageOnUploadScreen();
 
@@ -727,7 +726,7 @@ public class E2EUpload extends TestCaseHelper {
     uploadPage.validateSuccessMessageOnUploadScreen("File uploaded successfully. \"Number of records processed: 1\".");
   }
 
-  private void verifyValidVirtualFacilityUpload() throws IOException, SQLException {
+  private void verifyValidVirtualFacilityUpload() throws SQLException, FileNotFoundException {
     uploadPage.uploadFacilityFTPDetails("QA_Facility_FTP_Details.csv");
     uploadPage.verifySuccessMessageOnUploadScreen();
 
@@ -736,7 +735,7 @@ public class E2EUpload extends TestCaseHelper {
     uploadPage.validateSuccessMessageOnUploadScreen("File uploaded successfully. \"Number of records processed: 1\".");
   }
 
-  public void verifyGeographicZoneAndFacilityTypeForVirtualFacility(String virtualFacilityCode, String parentFacilityCode) throws IOException, SQLException {
+  public void verifyGeographicZoneAndFacilityTypeForVirtualFacility(String virtualFacilityCode, String parentFacilityCode) throws SQLException {
     assertEquals(dbWrapper.getAttributeFromTable("facilities", "geographicZoneId", "code", virtualFacilityCode), dbWrapper.getAttributeFromTable("facilities", "geographicZoneId", "code", parentFacilityCode));
     assertEquals(dbWrapper.getAttributeFromTable("facilities", "typeId", "code", virtualFacilityCode), dbWrapper.getAttributeFromTable("facilities", "typeId", "code", parentFacilityCode));
   }

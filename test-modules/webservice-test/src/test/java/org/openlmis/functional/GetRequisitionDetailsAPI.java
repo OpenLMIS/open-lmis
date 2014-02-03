@@ -18,7 +18,6 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import java.io.IOException;
 import java.sql.SQLException;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.*;
@@ -41,7 +40,7 @@ public class GetRequisitionDetailsAPI extends JsonUtility {
   }
 
   @AfterMethod(groups = {"webservice", "webserviceSmoke"})
-  public void tearDown() throws IOException, SQLException {
+  public void tearDown() throws SQLException {
     dbWrapper.deleteData();
     dbWrapper.closeConnection();
   }

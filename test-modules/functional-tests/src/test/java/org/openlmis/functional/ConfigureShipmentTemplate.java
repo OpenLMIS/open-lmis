@@ -26,8 +26,6 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 
-import java.io.IOException;
-
 import static com.thoughtworks.selenium.SeleneseTestBase.assertFalse;
 import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
 import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
@@ -186,7 +184,7 @@ public class ConfigureShipmentTemplate extends TestCaseHelper {
     configureShipmentPage.verifyErrorMessage("Position number cannot be blank or zero for an included field");
   }
 
-  private void setDefaultPositionValues() throws IOException {
+  private void setDefaultPositionValues() {
     ConfigureShipmentPage configureShipmentPage = PageFactory.getInstanceOfConfigureShipmentPage(testWebDriver);
     configureShipmentPage.unCheckIncludeHeader();
     configureShipmentPage.unCheckCostCheckBox();

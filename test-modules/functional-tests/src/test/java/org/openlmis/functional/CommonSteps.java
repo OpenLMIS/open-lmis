@@ -20,7 +20,6 @@ import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.pageobjects.HomePage;
 import org.openlmis.pageobjects.LoginPage;
 
-import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -31,19 +30,19 @@ import java.util.Map;
 public class CommonSteps extends TestCaseHelper {
 
   @And("^I logout$")
-  public void logout() throws IOException {
+  public void logout() {
     HomePage homePage = PageFactory.getInstanceOfHomePage(testWebDriver);
     homePage.logout(baseUrlGlobal);
   }
 
   @And("^I am logged in as \"([^\"]*)\"$")
-  public void login(String username) throws IOException {
+  public void login(String username) {
     LoginPage loginPage = PageFactory.getInstanceOfLoginPage(testWebDriver, baseUrlGlobal);
     loginPage.loginAs(username, "Admin123");
   }
 
   @Given("^I am logged in as Admin$")
-  public void adminLogin() throws IOException {
+  public void adminLogin() {
     LoginPage loginPage = PageFactory.getInstanceOfLoginPage(testWebDriver, baseUrlGlobal);
     loginPage.loginAs("Admin123", "Admin123");
   }
@@ -77,7 +76,7 @@ public class CommonSteps extends TestCaseHelper {
   }
 
   @And("^I have approved quantity \"([^\"]*)\"$")
-  public void insertApprovedQuantity(int approvedQuantity) throws IOException, SQLException {
+  public void insertApprovedQuantity(int approvedQuantity) throws SQLException {
     dbWrapper.updateFieldValue("requisition_line_items", "quantityApproved", approvedQuantity);
   }
 

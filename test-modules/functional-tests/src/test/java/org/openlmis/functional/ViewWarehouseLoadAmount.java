@@ -27,7 +27,6 @@ import org.openlmis.pageobjects.WarehouseLoadAmountPage;
 import org.openqa.selenium.JavascriptExecutor;
 import org.testng.annotations.*;
 
-import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -95,7 +94,7 @@ public class ViewWarehouseLoadAmount extends TestCaseHelper {
   }
 
   @And("^I update population of facility \"([^\"]*)\" as \"([^\"]*)\"$")
-  public void updatePopulationOfFacility(String facilityCode, String population) throws IOException, SQLException {
+  public void updatePopulationOfFacility(String facilityCode, String population) throws SQLException {
     dbWrapper.updatePopulationOfFacility(facilityCode, population);
   }
 
@@ -158,7 +157,7 @@ public class ViewWarehouseLoadAmount extends TestCaseHelper {
   }
 
   @And("^I verify ISA values for Product1 as:$")
-  public void verifyISAForProduct1(DataTable dataTable) throws IOException {
+  public void verifyISAForProduct1(DataTable dataTable) {
     warehouseLoadAmountPage = PageFactory.getInstanceOfWarehouseLoadAmountPage(testWebDriver);
     List<Map<String, String>> facilityProductISAMaps = dataTable.asMaps();
     for (Map<String, String> facilityProductISAMap : facilityProductISAMaps) {
@@ -168,7 +167,7 @@ public class ViewWarehouseLoadAmount extends TestCaseHelper {
   }
 
   @And("^I verify ISA values for Product2 as:$")
-  public void verifyISAForProduct2(DataTable dataTable) throws IOException {
+  public void verifyISAForProduct2(DataTable dataTable) {
     warehouseLoadAmountPage = PageFactory.getInstanceOfWarehouseLoadAmountPage(testWebDriver);
     List<Map<String, String>> facilityProductISAMaps = dataTable.asMaps();
     for (Map<String, String> facilityProductISAMap : facilityProductISAMaps) {
@@ -178,7 +177,7 @@ public class ViewWarehouseLoadAmount extends TestCaseHelper {
   }
 
   @And("^I should not see inactive products on view load amount$")
-  public void verifyInactiveProductsNotDisplayedOnViewLoadAmount() throws IOException {
+  public void verifyInactiveProductsNotDisplayedOnViewLoadAmount() {
     warehouseLoadAmountPage = PageFactory.getInstanceOfWarehouseLoadAmountPage(testWebDriver);
     assertFalse(warehouseLoadAmountPage.getAggregateTableData().contains("ProductName6"));
     assertFalse(warehouseLoadAmountPage.getTable1Data().contains("ProductName6"));

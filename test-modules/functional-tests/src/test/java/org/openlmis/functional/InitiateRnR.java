@@ -25,7 +25,6 @@ import org.openlmis.pageobjects.edi.ConvertOrderPage;
 import org.openqa.selenium.By;
 import org.testng.annotations.*;
 
-import java.io.IOException;
 import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -114,13 +113,13 @@ public class InitiateRnR extends TestCaseHelper {
   }
 
   @Given("I have \"([^\"]*)\" user with \"([^\"]*)\" rights and data to initiate requisition$")
-  public void setupUserWithRightsAndInitiateRequisitionData(String user, String rights) throws IOException, SQLException {
+  public void setupUserWithRightsAndInitiateRequisitionData(String user, String rights) throws SQLException {
     String[] rightList = rights.split(",");
     setupTestDataToInitiateRnR(true, program, user, "200", asList(rightList));
   }
 
   @When("^I click proceed$")
-  public void clickOnProceed() throws IOException {
+  public void clickOnProceed() {
     homePage = PageFactory.getInstanceOfHomePage(testWebDriver);
     homePage.navigateAndInitiateRnr(program);
     initiateRnRPage = homePage.clickProceed();
@@ -128,48 +127,48 @@ public class InitiateRnR extends TestCaseHelper {
   }
 
   @When("^I populate RnR data$")
-  public void enterValuesFromDB() throws IOException, SQLException {
+  public void enterValuesFromDB() throws SQLException {
     dbWrapper.insertValuesInRequisition(false);
   }
 
   @When("^I access regimen tab$")
-  public void clickRegimenTab() throws IOException, SQLException {
+  public void clickRegimenTab() throws SQLException {
     initiateRnRPage = PageFactory.getInstanceOfInitiateRnRPage(testWebDriver);
     initiateRnRPage.clickRegimenTab();
   }
 
   @When("^I enter beginning balance \"([^\"]*)\"$")
-  public void enterBeginningBalance(String beginningBalance) throws IOException, SQLException {
+  public void enterBeginningBalance(String beginningBalance) throws SQLException {
     initiateRnRPage = PageFactory.getInstanceOfInitiateRnRPage(testWebDriver);
     initiateRnRPage.enterValueIfNotNull(valueOf(beginningBalance), "beginningBalanceFirstProduct");
   }
 
   @When("^I enter quantity received \"([^\"]*)\"$")
-  public void enterQuantityReceived(String quantityReceived) throws IOException, SQLException {
+  public void enterQuantityReceived(String quantityReceived) throws SQLException {
     initiateRnRPage = PageFactory.getInstanceOfInitiateRnRPage(testWebDriver);
     initiateRnRPage.enterValueIfNotNull(valueOf(quantityReceived), "quantityReceivedFirstProduct");
   }
 
   @When("^I enter quantity dispensed \"([^\"]*)\"$")
-  public void enterQuantityDispensed(String quantityDispensed) throws IOException, SQLException {
+  public void enterQuantityDispensed(String quantityDispensed) throws SQLException {
     initiateRnRPage = PageFactory.getInstanceOfInitiateRnRPage(testWebDriver);
     initiateRnRPage.enterValueIfNotNull(valueOf(quantityDispensed), "quantityDispensedFirstProduct");
   }
 
   @Then("^I validate beginning balance \"([^\"]*)\"$")
-  public void validateBeginningBalance(String beginningBalance) throws IOException, SQLException {
+  public void validateBeginningBalance(String beginningBalance) throws SQLException {
     initiateRnRPage = PageFactory.getInstanceOfInitiateRnRPage(testWebDriver);
     initiateRnRPage.verifyBeginningBalanceForFirstProduct(parseInt(beginningBalance));
   }
 
   @Then("^I validate quantity received \"([^\"]*)\"$")
-  public void validateQuantityReceived(String quantityReceived) throws IOException, SQLException {
+  public void validateQuantityReceived(String quantityReceived) throws SQLException {
     initiateRnRPage = PageFactory.getInstanceOfInitiateRnRPage(testWebDriver);
     initiateRnRPage.verifyQuantityReceivedForFirstProduct(parseInt(quantityReceived));
   }
 
   @Then("^I validate quantity dispensed \"([^\"]*)\"$")
-  public void validateQuantityDispensed(String quantityDispensed) throws IOException, SQLException {
+  public void validateQuantityDispensed(String quantityDispensed) throws SQLException {
     initiateRnRPage = PageFactory.getInstanceOfInitiateRnRPage(testWebDriver);
     initiateRnRPage.verifyQuantityDispensedForFirstProduct(parseInt(quantityDispensed));
   }
@@ -237,7 +236,7 @@ public class InitiateRnR extends TestCaseHelper {
   }
 
   @Then("^I got error message \"([^\"]*)\"$")
-  public void shouldSeeSubmitSuccessfully(String errorMsg) throws IOException {
+  public void shouldSeeSubmitSuccessfully(String errorMsg) {
     homePage = PageFactory.getInstanceOfHomePage(testWebDriver);
     assertEquals(homePage.getErrorMessage(), errorMsg);
   }
@@ -1037,7 +1036,7 @@ public class InitiateRnR extends TestCaseHelper {
     assertFalse(initiateRnRPage.isBudgetNotAllocatedDisplayed());
   }
 
-  public void checkWhetherBudgetExceedWarningPresent(boolean isWarningPresentFlag) throws IOException {
+  public void checkWhetherBudgetExceedWarningPresent(boolean isWarningPresentFlag) {
     boolean flag = false;
     if (isWarningPresentFlag) {
       assertEquals("The total cost exceeds the allocated budget", initiateRnRPage.getBudgetWarningMessage());

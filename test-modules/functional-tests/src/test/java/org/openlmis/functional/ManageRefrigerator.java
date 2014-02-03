@@ -27,7 +27,6 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Listeners;
 
-import java.io.IOException;
 import java.sql.SQLException;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.assertFalse;
@@ -50,70 +49,70 @@ public class ManageRefrigerator extends TestCaseHelper {
   }
 
   @When("^I add new refrigerator$")
-  public void clickAddNewButton() throws IOException, SQLException {
+  public void clickAddNewButton() throws SQLException {
     refrigeratorPage = PageFactory.getInstanceOfRefrigeratorPage(testWebDriver);
     refrigeratorPage.clickAddNew();
   }
 
   @Then("^I should see New Refrigerator screen$")
-  public void shouldSeeNewRefrigeratorModalWindow() throws IOException, SQLException {
+  public void shouldSeeNewRefrigeratorModalWindow() throws SQLException {
     verifyNewRefrigeratorModalWindowExist();
   }
 
   @When("^I enter Brand \"([^\"]*)\"$")
-  public void enterBrand(String brand) throws IOException, SQLException {
+  public void enterBrand(String brand) throws SQLException {
     refrigeratorPage = PageFactory.getInstanceOfRefrigeratorPage(testWebDriver);
     refrigeratorPage.enterValueInBrandModal(brand);
   }
 
   @And("^I enter Modal \"([^\"]*)\"$")
-  public void enterModal(String modal) throws IOException, SQLException {
+  public void enterModal(String modal) throws SQLException {
     refrigeratorPage = PageFactory.getInstanceOfRefrigeratorPage(testWebDriver);
     refrigeratorPage.enterValueInModelModal(modal);
   }
 
   @And("^I enter Serial Number \"([^\"]*)\"$")
-  public void enterSerialNumber(String serial) throws IOException, SQLException {
+  public void enterSerialNumber(String serial) throws SQLException {
     refrigeratorPage = PageFactory.getInstanceOfRefrigeratorPage(testWebDriver);
     refrigeratorPage.enterValueInManufacturingSerialNumberModal(serial);
   }
 
   @And("^I access done$")
-  public void clickDoneOnModal() throws IOException, SQLException {
+  public void clickDoneOnModal() throws SQLException {
     refrigeratorPage = PageFactory.getInstanceOfRefrigeratorPage(testWebDriver);
     refrigeratorPage.clickDoneOnModal();
   }
 
   @And("^I should see refrigerator \"([^\"]*)\" added successfully")
-  public void refrigeratorShouldBeAddedSuccessfully(String refrigeratorDetails) throws IOException, SQLException {
+  public void refrigeratorShouldBeAddedSuccessfully(String refrigeratorDetails) throws SQLException {
     verifyRefrigeratorAdded(refrigeratorDetails);
   }
 
   @And("^I verify Refrigerator data is not synchronised")
-  public void verifyRefrigeratorsInDB() throws IOException, SQLException {
+  public void verifyRefrigeratorsInDB() throws SQLException {
     assertEquals(dbWrapper.getRowsCountFromDB("Refrigerators"), 0);
   }
 
   @And("^I delete refrigerator")
-  public void clickDelete() throws IOException, SQLException {
+  public void clickDelete() throws SQLException {
     refrigeratorPage = PageFactory.getInstanceOfRefrigeratorPage(testWebDriver);
     refrigeratorPage.clickDelete();
   }
 
   @And("^I edit refrigerator")
-  public void clickEdit() throws IOException, SQLException {
+  public void clickEdit() throws SQLException {
     refrigeratorPage = PageFactory.getInstanceOfRefrigeratorPage(testWebDriver);
     refrigeratorPage.clickShowForRefrigerator1();
   }
 
   @When("^I confirm delete$")
-  public void clickOK() throws IOException, SQLException {
+  public void clickOK() throws SQLException {
     refrigeratorPage = PageFactory.getInstanceOfRefrigeratorPage(testWebDriver);
     refrigeratorPage.clickOKButton();
   }
 
   @Then("^I should see refrigerator \"([^\"]*)\" deleted successfully$")
-  public void shouldSeeRefrigeratorDeleted(String refrigeratorData) throws IOException, SQLException {
+  public void shouldSeeRefrigeratorDeleted(String refrigeratorData) throws SQLException {
     String[] data = refrigeratorData.split(";");
     for (String aData : data)
       assertFalse("Refrigerator with data :" + aData + " should not exist",
@@ -121,53 +120,53 @@ public class ManageRefrigerator extends TestCaseHelper {
   }
 
   @Then("^I should see confirmation for delete$")
-  public void shouldSeeConfirmationOfDelete() throws IOException, SQLException {
+  public void shouldSeeConfirmationOfDelete() throws SQLException {
     verifyConfirmationPopUp();
   }
 
   @And("^I enter refrigerator temperature \"([^\"]*)\"$")
-  public void enterRefrigeratorTemperature(String temperature) throws IOException, SQLException {
+  public void enterRefrigeratorTemperature(String temperature) throws SQLException {
     refrigeratorPage = PageFactory.getInstanceOfRefrigeratorPage(testWebDriver);
     refrigeratorPage.enterValueInRefrigeratorTemperature(temperature);
   }
 
   @And("^I enter low alarm events \"([^\"]*)\"$")
-  public void enterLowEvents(String event) throws IOException, SQLException {
+  public void enterLowEvents(String event) throws SQLException {
     refrigeratorPage = PageFactory.getInstanceOfRefrigeratorPage(testWebDriver);
     refrigeratorPage.enterValueInLowAlarmEvents(event);
   }
 
   @And("^I enter high alarm events \"([^\"]*)\"$")
-  public void enterHighEvents(String event) throws IOException, SQLException {
+  public void enterHighEvents(String event) throws SQLException {
     refrigeratorPage = PageFactory.getInstanceOfRefrigeratorPage(testWebDriver);
     refrigeratorPage.enterValueInHighAlarmEvents(event);
   }
 
   @And("^I enter Notes \"([^\"]*)\"$")
-  public void enterNotes(String notes) throws IOException, SQLException {
+  public void enterNotes(String notes) throws SQLException {
     refrigeratorPage = PageFactory.getInstanceOfRefrigeratorPage(testWebDriver);
     refrigeratorPage.enterValueInNotesTextArea(notes);
   }
 
   @And("^I add refrigerator$")
-  public void clickDone() throws IOException, SQLException {
+  public void clickDone() throws SQLException {
     refrigeratorPage = PageFactory.getInstanceOfRefrigeratorPage(testWebDriver);
     refrigeratorPage.clickDone();
   }
 
   @Then("^I see \"([^\"]*)\" refrigerator icon as \"([^\"]*)\"$")
-  public void verifyIndividualRefrigeratorColor(String whichIcon, String color) throws IOException, SQLException {
+  public void verifyIndividualRefrigeratorColor(String whichIcon, String color) throws SQLException {
     refrigeratorPage = PageFactory.getInstanceOfRefrigeratorPage(testWebDriver);
     refrigeratorPage.verifyRefrigeratorColor(whichIcon, color);
   }
 
   @Then("^I should not see Refrigerator details section$")
-  public void shouldNotSeeRefrigeratorSection() throws IOException, SQLException {
+  public void shouldNotSeeRefrigeratorSection() throws SQLException {
     verifyShouldNotSeeRefrigeratorSection();
   }
 
   @And("^I should see Edit button$")
-  public void shouldSeeEditButton() throws IOException, SQLException {
+  public void shouldSeeEditButton() throws SQLException {
     assertTrue("Edit button should show up", RefrigeratorPage.showButtonForRefrigerator1.isDisplayed());
   }
 
@@ -182,7 +181,7 @@ public class ManageRefrigerator extends TestCaseHelper {
   }
 
   @And("^I verify \"([^\"]*)\" that there is a problem with refrigerator since last visit$")
-  public void clickProblemSinceLastVisit(String flag) throws IOException, SQLException {
+  public void clickProblemSinceLastVisit(String flag) throws SQLException {
     refrigeratorPage = PageFactory.getInstanceOfRefrigeratorPage(testWebDriver);
     if (flag.equalsIgnoreCase("Yes")) refrigeratorPage.clickProblemSinceLastVisitYesRadio();
     else if (flag.equalsIgnoreCase("No")) refrigeratorPage.clickProblemSinceLastVisitNoRadio();
@@ -191,7 +190,7 @@ public class ManageRefrigerator extends TestCaseHelper {
   }
 
   @Then("^I should see Refrigerators screen")
-  public void onRefrigeratorScreen() throws IOException, SQLException {
+  public void onRefrigeratorScreen() throws SQLException {
     refrigeratorPage = PageFactory.getInstanceOfRefrigeratorPage(testWebDriver);
     refrigeratorPage.onRefrigeratorScreen();
   }
@@ -201,7 +200,7 @@ public class ManageRefrigerator extends TestCaseHelper {
   public void verifyRefrigeratorDetails(String temperature,
                                         String low,
                                         String high,
-                                        String notes) throws IOException, SQLException {
+                                        String notes) throws SQLException {
     refrigeratorPage = PageFactory.getInstanceOfRefrigeratorPage(testWebDriver);
     assertEquals(refrigeratorPage.getRefrigeratorTemperateTextFieldValue(), temperature);
     assertEquals(refrigeratorPage.getNotesTextAreaValue(), notes);

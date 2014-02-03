@@ -19,7 +19,6 @@ import org.openlmis.pageobjects.LoginPage;
 import org.openlmis.pageobjects.ViewRequisitionPage;
 import org.testng.annotations.*;
 
-import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -105,7 +104,7 @@ public class RnRPagination extends TestCaseHelper {
     verifyPageLinksFromLastPage();
   }
 
-  private void setupData(String program, String userSIC) throws IOException, SQLException {
+  private void setupData(String program, String userSIC) throws SQLException {
     dbWrapper.insertFacilities("F10", "F11");
     dbWrapper.configureTemplate(program);
     List<String> rightsList = asList("CREATE_REQUISITION", "VIEW_REQUISITION");

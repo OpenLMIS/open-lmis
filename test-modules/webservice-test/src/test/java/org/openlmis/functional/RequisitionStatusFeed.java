@@ -19,10 +19,7 @@ import org.openlmis.pod.domain.OrderPOD;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-import org.xml.sax.SAXException;
 
-import javax.xml.parsers.ParserConfigurationException;
-import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -47,7 +44,7 @@ public class RequisitionStatusFeed extends JsonUtility {
   }
 
   @AfterMethod(groups = {"webservice", "webserviceSmoke"})
-  public void tearDown() throws IOException, SQLException {
+  public void tearDown() throws SQLException {
     dbWrapper.deleteData();
     dbWrapper.closeConnection();
   }
@@ -178,8 +175,7 @@ public class RequisitionStatusFeed extends JsonUtility {
   }
 
 
-  private void checkRequisitionStatusOnFeed(String requisitionStatus, String feedString, Long id) throws IOException,
-    SAXException, ParserConfigurationException {
+  private void checkRequisitionStatusOnFeed(String requisitionStatus, String feedString, Long id) {
     assertTrue("feed json list : " + feedString, feedString.contains("\"requisitionId\":" + id));
     assertTrue("feed json list : " + feedString,
       feedString.contains("\"requisitionStatus\":\"" + requisitionStatus + "\""));

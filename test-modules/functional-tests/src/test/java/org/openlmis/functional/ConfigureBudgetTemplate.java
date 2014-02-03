@@ -25,8 +25,6 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 
-import java.io.IOException;
-
 import static com.thoughtworks.selenium.SeleneseTestBase.assertFalse;
 import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
 import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
@@ -122,7 +120,7 @@ public class ConfigureBudgetTemplate extends TestCaseHelper {
     verifyPositionMoreThan3Digits();
   }
 
-  private ConfigureBudgetPage gotToConfigureBudgetPage() throws IOException {
+  private ConfigureBudgetPage gotToConfigureBudgetPage() {
     LoginPage loginPage = PageFactory.getInstanceOfLoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(user, password);
     ConfigureEDIPage configureEDIPage = homePage.navigateEdiScreen();

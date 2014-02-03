@@ -20,7 +20,6 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -497,7 +496,7 @@ public class InitiateRnRPage extends RequisitionPage {
     verifyFieldValue(String.valueOf(expectedMaxStockQuantity - stockOnHand), actualCalculatedOrderQuantity.trim());
   }
 
-  public void verifyPacksToShip(Integer packSize) throws IOException, SQLException {
+  public void verifyPacksToShip(Integer packSize) throws SQLException {
     testWebDriver.waitForElementToAppear(packsToShipForFirstProduct);
     String actualPacksToShip = testWebDriver.getText(packsToShipForFirstProduct);
     int expectedPacksToShip;
@@ -609,7 +608,7 @@ public class InitiateRnRPage extends RequisitionPage {
   }
 
   public void addNonFullSupplyLineItems(String requestedQuantityValue, String requestedQuantityExplanationValue,
-                                        String productPrimaryName, String productCode, String category) throws IOException, SQLException {
+                                        String productPrimaryName, String productCode, String category) throws SQLException {
     DBWrapper dbWrapper = new DBWrapper();
     String nonFullSupplyItems = dbWrapper.fetchNonFullSupplyData(productCode, "2", "1");
     clickNonFullSupplyTab();
@@ -720,7 +719,7 @@ public class InitiateRnRPage extends RequisitionPage {
     return flag;
   }
 
-  public void addMultipleNonFullSupplyLineItems(int numberOfLineItems, boolean isMultipleCategories) throws IOException, SQLException {
+  public void addMultipleNonFullSupplyLineItems(int numberOfLineItems, boolean isMultipleCategories) throws SQLException {
     clickNonFullSupplyTab();
     testWebDriver.sleep(1000);
     addButtonOnNonFullSupplyTab.click();

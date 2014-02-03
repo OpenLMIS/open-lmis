@@ -18,8 +18,6 @@ import org.openqa.selenium.support.How;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 
-import java.io.IOException;
-
 
 public class LoginPage extends Page {
 
@@ -72,7 +70,7 @@ public class LoginPage extends Page {
     return new HomePage(testWebDriver);
   }
 
-  public ForgotPasswordPage clickForgotPasswordLink() throws IOException {
+  public ForgotPasswordPage clickForgotPasswordLink() {
     testWebDriver.waitForElementToAppear(forgotPasswordLink);
     forgotPasswordLink.click();
     return new ForgotPasswordPage(testWebDriver);

@@ -19,8 +19,6 @@ import org.openqa.selenium.support.How;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 
-import java.io.IOException;
-
 import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
 import static org.openqa.selenium.support.How.ID;
 import static org.openqa.selenium.support.How.XPATH;
@@ -76,7 +74,7 @@ public class ViewOrdersPage extends RequisitionPage {
     assertTrue("First row should show up", programOnViewOrderScreen.isDisplayed());
   }
 
-  public void verifyOrderListElements(String program, long orderId, String facilityCodeName, String periodDetails, String supplyFacilityName, String orderStatus, boolean downloadLinkPresent) throws IOException {
+  public void verifyOrderListElements(String program, long orderId, String facilityCodeName, String periodDetails, String supplyFacilityName, String orderStatus, boolean downloadLinkPresent) {
     testWebDriver.refresh();
     testWebDriver.waitForElementToAppear(programOnViewOrderScreen);
     SeleneseTestNgHelper.assertEquals(programOnViewOrderScreen.getText().trim(), program);
@@ -91,17 +89,17 @@ public class ViewOrdersPage extends RequisitionPage {
       SeleneseTestNgHelper.assertTrue("'No products in this order' message should show up", noOrderMessage.isDisplayed());
   }
 
-  public void downloadCSV() throws IOException, InterruptedException {
+  public void downloadCSV() throws InterruptedException {
     testWebDriver.waitForElementToAppear(programOnViewOrderScreen);
     downloadFileWhileSaveDialogOPen(downloadCSVLink);
   }
 
-  public void verifyEmergencyStatus() throws IOException {
+  public void verifyEmergencyStatus() {
     testWebDriver.waitForElementToAppear(emergencyIcon);
     assertTrue("Emergency icon should show up", emergencyIcon.isDisplayed());
   }
 
-  public int getNumberOfLineItems() throws IOException {
+  public int getNumberOfLineItems() {
     testWebDriver.waitForElementToAppear(ordersGrid);
     return ordersGrid.findElements(By.className("ngRow")).size();
   }

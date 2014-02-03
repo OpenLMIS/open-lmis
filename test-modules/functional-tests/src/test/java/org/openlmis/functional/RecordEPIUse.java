@@ -26,7 +26,6 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Listeners;
 
-import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
@@ -76,7 +75,7 @@ public class RecordEPIUse extends TestCaseHelper {
   }
 
   @Then("^Verify indicator should be \"([^\"]*)\"$")
-  public void shouldVerifyIndicatorColor(String color) throws IOException, SQLException {
+  public void shouldVerifyIndicatorColor(String color) throws SQLException {
     epiUsePage = PageFactory.getInstanceOfEpiUsePage(testWebDriver);
     epiUsePage.verifyIndicator(color);
   }

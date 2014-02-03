@@ -25,7 +25,6 @@ import org.openqa.selenium.By;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Listeners;
 
-import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -90,7 +89,7 @@ public class E2EInitiateRnR extends TestCaseHelper {
   }
 
   @When("^I create \"([^\"]*)\" role having \"([^\"]*)\" based \"([^\"]*)\" rights$")
-  public void createRoleWithRights(String roleName, String roleType, String rightsList) throws IOException {
+  public void createRoleWithRights(String roleName, String roleType, String rightsList) {
     String[] roleRights = rightsList.split(",");
     List<String> userRoleListStoreInCharge = new ArrayList<>();
     Collections.addAll(userRoleListStoreInCharge, roleRights);
@@ -507,7 +506,7 @@ public class E2EInitiateRnR extends TestCaseHelper {
 
   private void createUserAndAssignRoles(String passwordUsers, String userEmail, String userFirstName, String userLastName,
                                         String userUserName, String facility, String program, String supervisoryNode, String role,
-                                        String roleType, String warehouse, String warehouseRole) throws IOException, SQLException {
+                                        String roleType, String warehouse, String warehouseRole) throws SQLException {
     HomePage homePage = PageFactory.getInstanceOfHomePage(testWebDriver);
     UserPage userPage = homePage.navigateToUser();
     userPage.enterUserDetails(userUserName, userEmail, userFirstName, userLastName);
@@ -528,7 +527,7 @@ public class E2EInitiateRnR extends TestCaseHelper {
     convertOrderPageOrdersPending.clickOk();
   }
 
-  private void createRoleAndAssignRights(List<String> userRoleList, String roleName, String roleDescription, String roleType) throws IOException {
+  private void createRoleAndAssignRights(List<String> userRoleList, String roleName, String roleDescription, String roleType) {
     HomePage homePage = PageFactory.getInstanceOfHomePage(testWebDriver);
     RolesPage rolesPage = homePage.navigateRoleAssignments();
     rolesPage.createRole(roleName, roleDescription, userRoleList, roleType);
@@ -542,7 +541,7 @@ public class E2EInitiateRnR extends TestCaseHelper {
     viewOrdersPage.verifyOrderListElements(program, dbWrapper.getMaxRnrID(), facility_code + " - " + facility_name, "Period1" + " (" + periods[0].trim() + " - " + periods[1].trim() + ")", supplyFacilityName, "Transfer failed", downloadFlag);
   }
 
-  public int calculatedExpectedNC(Integer numberOfNewPatients, Integer stockOutDays, Integer quantityDispensed) throws IOException, SQLException {
+  public int calculatedExpectedNC(Integer numberOfNewPatients, Integer stockOutDays, Integer quantityDispensed) throws SQLException {
     int id = dbWrapper.getMaxRnrID();
 
     Integer dayDiff = parseInt(dbWrapper.getRequisitionLineItemFieldValue((long) id, "reportingDays", "P10"));

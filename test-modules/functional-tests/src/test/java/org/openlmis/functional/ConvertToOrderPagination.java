@@ -27,7 +27,6 @@ import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.NoSuchElementException;
 import org.testng.annotations.*;
 
-import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -57,7 +56,7 @@ public class ConvertToOrderPagination extends TestCaseHelper {
   }
 
   @And("^I select \"([^\"]*)\" requisition on page \"([^\"]*)\"$")
-  public void selectRequisition(String numberOfRequisitions, String page) throws IOException, SQLException {
+  public void selectRequisition(String numberOfRequisitions, String page) throws SQLException {
     testWebDriver.sleep(5000);
     testWebDriver.handleScrollByPixels(0, 1000);
     String url = ((JavascriptExecutor) TestWebDriver.getDriver()).executeScript("return window.location.href").toString();
@@ -67,13 +66,13 @@ public class ConvertToOrderPagination extends TestCaseHelper {
   }
 
   @And("^I access convert to order$")
-  public void accessConvertToOrder() throws IOException, SQLException {
+  public void accessConvertToOrder() throws SQLException {
     PageFactory.getInstanceOfConvertOrderPage(testWebDriver);
     convertToOrder();
   }
 
   @Then("^\"([^\"]*)\" requisition converted to order$")
-  public void requisitionConvertedToOrder(String requisitions) throws IOException, SQLException {
+  public void requisitionConvertedToOrder(String requisitions) throws SQLException {
     HomePage homePage = PageFactory.getInstanceOfHomePage(testWebDriver);
     ViewOrdersPage viewOrdersPage = homePage.navigateViewOrders();
     int numberOfLineItems = viewOrdersPage.getNumberOfLineItems();

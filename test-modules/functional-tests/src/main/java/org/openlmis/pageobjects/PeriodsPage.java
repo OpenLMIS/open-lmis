@@ -18,7 +18,6 @@ import org.openqa.selenium.support.How;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -29,60 +28,59 @@ import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
 public class PeriodsPage extends Page {
 
   @FindBy(how = How.ID, using = "name")
-  private static WebElement namePeriod=null;
+  private static WebElement namePeriod = null;
 
   @FindBy(how = How.ID, using = "description")
-  private static WebElement descriptionPeriod=null;
+  private static WebElement descriptionPeriod = null;
 
   @FindBy(how = How.ID, using = "startDate")
-  private static WebElement startDatePeriod=null;
+  private static WebElement startDatePeriod = null;
 
   @FindBy(how = How.ID, using = "endDate")
-  private static WebElement endDatePeriod=null;
+  private static WebElement endDatePeriod = null;
 
   @FindBy(how = How.XPATH, using = "//span[contains(text(),'Prev')]")
-  private static WebElement prevCalender=null;
+  private static WebElement prevCalender = null;
 
   @FindBy(how = How.XPATH, using = "//span[contains(text(),'Next')]")
-  private static WebElement nextCalender=null;
+  private static WebElement nextCalender = null;
 
   @FindBy(how = How.XPATH, using = "//a[@class='ui-state-default' and contains(text(),'1')]")
-  private static WebElement startDateCalender=null;
+  private static WebElement startDateCalender = null;
 
   @FindBy(how = How.XPATH, using = "//a[@class='ui-state-default' and contains(text(),'2')]")
-  private static WebElement endDateCalender=null;
+  private static WebElement endDateCalender = null;
 
   @FindBy(how = How.XPATH, using = "//a[@class='ui-state-default' and contains(text(),'26')]")
-  private static WebElement endDateSecondCalender=null;
+  private static WebElement endDateSecondCalender = null;
 
   @FindBy(how = How.XPATH, using = "//a[contains(text(),'28')]")
-  private static WebElement endDateThirdCalender=null;
+  private static WebElement endDateThirdCalender = null;
 
   @FindBy(how = How.XPATH, using = "//span[@id='numberOfMonths']")
-  private static WebElement numberOfMonthsPeriods=null;
+  private static WebElement numberOfMonthsPeriods = null;
 
   @FindBy(how = How.XPATH, using = "//input[@value='Add']")
-  private static WebElement addButton=null;
+  private static WebElement addButton = null;
 
   @FindBy(how = How.XPATH, using = "//input[@value='Delete']")
-  private static WebElement deleteButton=null;
+  private static WebElement deleteButton = null;
 
   @FindBy(how = How.XPATH, using = ".//table[@id='periodTable']/tbody/tr/td[3]")
-  private static WebElement startDateList=null;
+  private static WebElement startDateList = null;
 
   @FindBy(how = How.XPATH, using = ".//table[@id='periodTable']/tbody/tr/td[4]")
-  private static WebElement endDateList=null;
+  private static WebElement endDateList = null;
 
 
-  public PeriodsPage(TestWebDriver driver) throws IOException {
+  public PeriodsPage(TestWebDriver driver) {
     super(driver);
     PageFactory.initElements(new AjaxElementLocatorFactory(TestWebDriver.getDriver(), 10), this);
     testWebDriver.setImplicitWait(10);
-
   }
 
 
-  public void createAndVerifyPeriods() throws IOException {
+  public void createAndVerifyPeriods() {
     testWebDriver.waitForElementToAppear(namePeriod);
     testWebDriver.sleep(1000);
     enterAndVerifyPeriodDetails("Period1", "first period", "2", 1);
@@ -92,7 +90,7 @@ public class PeriodsPage extends Page {
     enterAndVerifyPeriodDetails("Period3", "third period", "1", 3);
   }
 
-  public void deleteAndVerifyPeriods() throws IOException {
+  public void deleteAndVerifyPeriods() {
     testWebDriver.waitForElementToAppear(startDateList);
     String actualStartDateListValue = startDateList.getText().trim();
 
@@ -109,7 +107,6 @@ public class PeriodsPage extends Page {
     String actualStartDateCalender = testWebDriver.getAttribute(startDatePeriod, "value");
     int diffInDays = compareTwoDates(actualStartDateCalender, actualEndDateList);
     assertEquals(String.valueOf(diffInDays), "1");
-
   }
 
 
@@ -179,7 +176,7 @@ public class PeriodsPage extends Page {
     } catch (java.text.ParseException e) {
       e.printStackTrace();
     }
-      return diffInDays;
+    return diffInDays;
   }
 
   public int compareDateWithToday(String dateToCompare) {
@@ -203,12 +200,12 @@ public class PeriodsPage extends Page {
         flag = 2;
 
       } else if (datePeriods.compareTo(todayDate) == 0) {
-          flag = 3;
+        flag = 3;
       }
 
     } catch (Exception ex) {
       ex.printStackTrace();
     }
-      return flag;
+    return flag;
   }
 }

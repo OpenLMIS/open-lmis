@@ -9,7 +9,6 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import java.io.IOException;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -113,7 +112,7 @@ public class UpdatePod extends TestCaseHelper {
     verifyRequisitionTypeAndColor("regular");
   }
 
-  private void initiateRnrAndConvertToOrder(boolean isEmergencyRegular, int packsToShip) throws IOException, SQLException {
+  private void initiateRnrAndConvertToOrder(boolean isEmergencyRegular, int packsToShip) throws SQLException {
     dbWrapper.insertRequisitions(1, "MALARIA", true, "2012-12-01", "2015-12-01", "F10", isEmergencyRegular);
     dbWrapper.updateRequisitionStatus("APPROVED", updatePODData.get(USER), "MALARIA");
     dbWrapper.updateFieldValue("requisition_line_items", "packsToShip", packsToShip);
@@ -140,7 +139,7 @@ public class UpdatePod extends TestCaseHelper {
     assertEquals("Notes", testWebDriver.getElementByXpath("//table[@id='podTable']/thead/tr/th[8]/span").getText());
   }
 
-  private void verifyHeadersWithValuesOnUpdatePODScreen() throws IOException, SQLException {
+  private void verifyHeadersWithValuesOnUpdatePODScreen() throws SQLException {
     Integer id = dbWrapper.getMaxRnrID();
     assertEquals("Order No.: " + id, updatePodPage.getOrderNumberLabel() + ": " + updatePodPage.getOrderId());
     assertEquals("Facility: F10 - Village Dispensary", updatePodPage.getFacilityLabel() + ": " + updatePodPage.getFacilityCode());

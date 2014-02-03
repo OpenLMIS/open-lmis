@@ -21,7 +21,6 @@ import org.openlmis.pageobjects.*;
 import org.openlmis.pageobjects.edi.ConvertOrderPage;
 import org.testng.annotations.*;
 
-import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -64,77 +63,77 @@ public class ViewRequisition extends TestCaseHelper {
   public void enterValuesFromDB(String patientsOnTreatment,
                                 String patientsToInitiateTreatment,
                                 String patientsStoppedTreatment,
-                                String remarks) throws IOException, SQLException {
+                                String remarks) throws SQLException {
     dbWrapper.insertValuesInRegimenLineItems(patientsOnTreatment, patientsToInitiateTreatment, patientsStoppedTreatment,
       remarks);
   }
 
   @When("^I access home page")
-  public void accessHomePage() throws IOException, SQLException {
+  public void accessHomePage() throws SQLException {
     InitiateRnRPage initiateRnRPage = PageFactory.getInstanceOfInitiateRnRPage(testWebDriver);
     initiateRnRPage.clickHome();
   }
 
   @When("^I access view RnR screen$")
-  public void accessViewRnRScreen() throws IOException {
+  public void accessViewRnRScreen() {
     HomePage homePage = PageFactory.getInstanceOfHomePage(testWebDriver);
     homePage.navigateViewRequisition();
   }
 
   @Then("^I should see elements on view requisition page$")
-  public void shouldSeeElementsOnViewRequisitionPage() throws IOException {
+  public void shouldSeeElementsOnViewRequisitionPage() {
     ViewRequisitionPage viewRequisitionPage = PageFactory.getInstanceOfViewRequisitionPage(testWebDriver);
     viewRequisitionPage.verifyElementsOnViewRequisitionScreen();
   }
 
   @When("^I update requisition status to \"([^\"]*)\"$")
-  public void updateRequisitionStatus(String status) throws IOException, SQLException {
+  public void updateRequisitionStatus(String status) throws SQLException {
     dbWrapper.updateRequisitionStatus(status, "storeInCharge", "HIV");
   }
 
   @When("^I type view search criteria$")
-  public void typeViewResultCriteria() throws IOException, SQLException {
+  public void typeViewResultCriteria() throws SQLException {
     ViewRequisitionPage viewRequisitionPage = PageFactory.getInstanceOfViewRequisitionPage(testWebDriver);
     viewRequisitionPage.enterViewSearchCriteria();
   }
 
   @When("^I click search$")
-  public void clickSearch() throws IOException, SQLException {
+  public void clickSearch() throws SQLException {
     ViewRequisitionPage viewRequisitionPage = PageFactory.getInstanceOfViewRequisitionPage(testWebDriver);
     viewRequisitionPage.clickSearch();
   }
 
   @When("^I access regimen tab for view requisition$")
-  public void clickRegimenTab() throws IOException, SQLException {
+  public void clickRegimenTab() throws SQLException {
     ViewRequisitionPage viewRequisitionPage = PageFactory.getInstanceOfViewRequisitionPage(testWebDriver);
     viewRequisitionPage.clickRegimenTab();
   }
 
   @Then("^I should see no requisition found message$")
-  public void shouldSeeNoRequisitionMessage() throws IOException, SQLException {
+  public void shouldSeeNoRequisitionMessage() throws SQLException {
     ViewRequisitionPage viewRequisitionPage = PageFactory.getInstanceOfViewRequisitionPage(testWebDriver);
     viewRequisitionPage.verifyNoRequisitionFound();
   }
 
   @When("^I update approved quantity \"([^\"]*)\"$")
-  public void updateApprovedQuantity(String quantity) throws IOException, SQLException {
+  public void updateApprovedQuantity(String quantity) throws SQLException {
     dbWrapper.updateFieldValue("requisition_line_items", "quantityApproved", Integer.parseInt(quantity));
   }
 
   @Then("^I should see requisition status as \"([^\"]*)\"$")
-  public void verifyRequisitionStatus(String status) throws IOException, SQLException {
+  public void verifyRequisitionStatus(String status) throws SQLException {
     ViewRequisitionPage viewRequisitionPage = PageFactory.getInstanceOfViewRequisitionPage(testWebDriver);
     viewRequisitionPage.verifyStatus(status);
   }
 
   @When("^I click RnR List$")
-  public void clickRnRList() throws IOException, SQLException {
+  public void clickRnRList() throws SQLException {
     ViewRequisitionPage viewRequisitionPage = PageFactory.getInstanceOfViewRequisitionPage(testWebDriver);
     viewRequisitionPage.clickRnRList();
   }
 
   @Then("^I verify total field$")
-  public void verifyTotalField() throws IOException, SQLException {
+  public void verifyTotalField() throws SQLException {
     ViewRequisitionPage viewRequisitionPage = PageFactory.getInstanceOfViewRequisitionPage(testWebDriver);
     viewRequisitionPage.verifyTotalFieldPostAuthorize();
   }
@@ -144,7 +143,7 @@ public class ViewRequisition extends TestCaseHelper {
   public void verifyValuesONRegimenPage(String patientsOnTreatment,
                                         String patientsToInitiateTreatment,
                                         String patientsStoppedTreatment,
-                                        String remarks) throws IOException {
+                                        String remarks) {
     verifyValuesOnRegimenScreen(patientsOnTreatment, patientsToInitiateTreatment, patientsStoppedTreatment, remarks);
   }
 

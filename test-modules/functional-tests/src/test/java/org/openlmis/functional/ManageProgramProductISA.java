@@ -21,7 +21,6 @@ import org.openlmis.pageobjects.ProgramProductISAPage;
 import org.openqa.selenium.WebElement;
 import org.testng.annotations.*;
 
-import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -46,7 +45,7 @@ public class ManageProgramProductISA extends TestCaseHelper {
   }
 
   @When("^I have data available for program product ISA$")
-  public void setUpTestDataForProgramProductISA() throws IOException, SQLException {
+  public void setUpTestDataForProgramProductISA() throws SQLException {
     setupProgramProductTestDataWithCategories("P1", "antibiotic1", "C1", "VACCINES");
     setupProgramProductTestDataWithCategories("P2", "antibiotic2", "C2", "VACCINES");
     setupProgramProductTestDataWithCategories("P3", "antibiotic3", "C3", "TB");
@@ -55,7 +54,7 @@ public class ManageProgramProductISA extends TestCaseHelper {
   }
 
   @Given("^I access program product ISA page for \"([^\"]*)\"$")
-  public void accessProgramProductISAPage(String program) throws IOException {
+  public void accessProgramProductISAPage(String program) {
     programProductISAPage = PageFactory.getInstanceOfProgramProductIsaPage(testWebDriver);
     programProductISAPage = navigateProgramProductISAPage(program);
   }
@@ -68,21 +67,21 @@ public class ManageProgramProductISA extends TestCaseHelper {
                                     String bufferPercentage,
                                     String adjustmentValue,
                                     String minimumValue,
-                                    String maximumValue) throws IOException {
+                                    String maximumValue) {
     programProductISAPage = PageFactory.getInstanceOfProgramProductIsaPage(testWebDriver);
     programProductISAPage.fillProgramProductISA(ratio, dosesPerYear, wastage, bufferPercentage, adjustmentValue,
       minimumValue, maximumValue);
   }
 
   @Then("^I verify calculated ISA value having population \"([^\"]*)\" as \"([^\"]*)\"$")
-  public void verifyTestCalculatedISA(String population, String expectedISA) throws IOException, SQLException {
+  public void verifyTestCalculatedISA(String population, String expectedISA) throws SQLException {
     programProductISAPage = PageFactory.getInstanceOfProgramProductIsaPage(testWebDriver);
     String actualISA = programProductISAPage.calculateISA(population);
     assertEquals(expectedISA, actualISA);
   }
 
   @Then("^I click cancel$")
-  public void clickCancel() throws IOException {
+  public void clickCancel() {
     programProductISAPage = PageFactory.getInstanceOfProgramProductIsaPage(testWebDriver);
     programProductISAPage.cancelISA();
   }
@@ -230,7 +229,7 @@ public class ManageProgramProductISA extends TestCaseHelper {
     homePage.navigateHomePage();
   }
 
-  private ProgramProductISAPage navigateProgramProductISAPage(String program) throws IOException {
+  private ProgramProductISAPage navigateProgramProductISAPage(String program) {
     homePage = PageFactory.getInstanceOfHomePage(testWebDriver);
     ProgramProductISAPage programProductISAPage = homePage.navigateProgramProductISA();
     programProductISAPage.selectProgram(program);
@@ -238,12 +237,12 @@ public class ManageProgramProductISA extends TestCaseHelper {
     return programProductISAPage;
   }
 
-  private ProgramProductISAPage navigateConfigureProductISAPage() throws IOException {
+  private ProgramProductISAPage navigateConfigureProductISAPage() {
     programProductISAPage = homePage.navigateProgramProductISA();
     return programProductISAPage;
   }
 
-  private HomePage Login(String userSIC, String password) throws IOException {
+  private HomePage Login(String userSIC, String password) {
     return loginPage.loginAs(userSIC, password);
   }
 

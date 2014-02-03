@@ -20,7 +20,6 @@ import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.pageobjects.*;
 import org.testng.annotations.*;
 
-import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -372,7 +371,7 @@ public class ManageRolesAndUsers extends TestCaseHelper {
 
   private void createUserAndAssignRoles(String passwordUsers, String userEmail, String userFirstName, String userLastName,
                                         String userUserName, String facility, String program, String supervisoryNode, String role,
-                                        String roleType) throws IOException, SQLException {
+                                        String roleType) throws SQLException {
     UserPage userPage = homePage.navigateToUser();
     userPage.enterUserDetails(userUserName, userEmail, userFirstName, userLastName);
     userPage.verifyUserCreated(userFirstName, userLastName);
@@ -388,19 +387,19 @@ public class ManageRolesAndUsers extends TestCaseHelper {
   }
 
 
-  private void createRoleAndAssignRights(List<String> userRoleList, String roleName, String roleDescription, String programDependent) throws IOException {
+  private void createRoleAndAssignRights(List<String> userRoleList, String roleName, String roleDescription, String programDependent) {
     RolesPage rolesPage = homePage.navigateRoleAssignments();
     rolesPage.createRole(roleName, roleDescription, userRoleList, programDependent);
     rolesPage.verifyCreatedRoleMessage(roleName);
   }
 
-  private void verifyPushProgramNotAvailableForHomeFacilityRolesAndSupervisoryRoles() throws IOException, SQLException {
+  private void verifyPushProgramNotAvailableForHomeFacilityRolesAndSupervisoryRoles() throws SQLException {
     assertFalse(userPage.getAllProgramsHomeFacility().contains("VACCINES"));
     userPage.clickSupervisoryRolesAccordion();
     assertFalse(userPage.getAllProgramsToSupervise().contains("VACCINES"));
   }
 
-  private void verifyWarehouseAvailableForWarehouseRoles(String FacilityCode, String warehouseName) throws IOException, SQLException {
+  private void verifyWarehouseAvailableForWarehouseRoles(String FacilityCode, String warehouseName) throws SQLException {
     assertTrue(userPage.getAllWarehouseToSelect().contains(warehouseName));
     assertFalse(userPage.getAllWarehouseToSelect().contains(facilityNamePrefix));
     dbWrapper.updateFieldValue("facilities", "enabled", "false", "name", warehouseName);
