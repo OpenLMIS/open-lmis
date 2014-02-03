@@ -13,7 +13,6 @@ package org.openlmis.functional;
 
 import cucumber.api.DataTable;
 import cucumber.api.Scenario;
-import cucumber.api.java.After;
 import cucumber.api.java.Before;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
@@ -26,7 +25,6 @@ import org.openlmis.pageobjects.*;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
-import org.testng.AssertJUnit;
 import org.testng.annotations.*;
 
 import java.sql.ResultSet;
@@ -860,8 +858,7 @@ public class ManageDistribution extends TestCaseHelper {
   }
 
   @AfterMethod(groups = "distribution")
-  @After
-  public void tearDown() throws Exception {
+  public void tearDownForSmoke(Scenario scenario) throws Exception {
     testWebDriver.sleep(500);
     if (!testWebDriver.getElementById("username").isDisplayed()) {
       HomePage homePage = PageFactory.getInstanceOfHomePage(testWebDriver);
@@ -871,14 +868,6 @@ public class ManageDistribution extends TestCaseHelper {
     dbWrapper.closeConnection();
 
     ((JavascriptExecutor) TestWebDriver.getDriver()).executeScript("indexedDB.deleteDatabase('open_lmis')");
-  }
-
-  @After
-  public void embedScreenshot(Scenario scenario) {
-    if (scenario.isFailed()) {
-      byte[] screenshot = testWebDriver.getScreenshot();
-      scenario.embed(screenshot, "image/png");
-    }
   }
 
   @DataProvider(name = "Data-Provider-Function")

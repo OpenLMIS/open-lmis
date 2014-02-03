@@ -12,8 +12,6 @@ package org.openlmis.functional;
 
 
 import cucumber.api.DataTable;
-import cucumber.api.Scenario;
-import cucumber.api.java.After;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
@@ -414,14 +412,6 @@ public class ViewWarehouseLoadAmount extends TestCaseHelper {
       {"fieldCoordinator", "Admin123", "DZ1", "DZ2", "Delivery Zone First", "Delivery Zone Second",
         "F10", "F11", "VACCINES", "TB", "M", "P10", "P11"}
     };
-  }
-
-  @After
-  public void embedScreenshot(Scenario scenario) {
-    if (scenario.isFailed()) {
-      byte[] screenshot = testWebDriver.getScreenshot();
-      scenario.embed(screenshot, "image/png");
-    }
   }
 }
 

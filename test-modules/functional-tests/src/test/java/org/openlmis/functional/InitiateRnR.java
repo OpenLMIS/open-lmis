@@ -13,8 +13,6 @@ package org.openlmis.functional;
 
 import com.thoughtworks.selenium.SeleneseTestBase;
 import cucumber.api.DataTable;
-import cucumber.api.Scenario;
-import cucumber.api.java.After;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
@@ -1057,14 +1055,6 @@ public class InitiateRnR extends TestCaseHelper {
       homePage.logout(baseUrlGlobal);
       dbWrapper.deleteData();
       dbWrapper.closeConnection();
-    }
-  }
-
-  @After
-  public void embedScreenshot(Scenario scenario) {
-    if (scenario.isFailed()) {
-      byte[] screenshot = testWebDriver.getScreenshot();
-      scenario.embed(screenshot, "image/png");
     }
   }
 

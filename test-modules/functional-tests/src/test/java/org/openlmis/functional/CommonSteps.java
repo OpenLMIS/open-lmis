@@ -17,8 +17,10 @@ import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.When;
 import org.openlmis.UiUtils.TestCaseHelper;
+import org.openlmis.UiUtils.TestWebDriver;
 import org.openlmis.pageobjects.HomePage;
 import org.openlmis.pageobjects.LoginPage;
+import org.openqa.selenium.JavascriptExecutor;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -81,11 +83,19 @@ public class CommonSteps extends TestCaseHelper {
   }
 
   @After
-  public void embedScreenshot(Scenario scenario) {
+  public void tearDownForSmoke(Scenario scenario) throws Exception {
     if (scenario.isFailed()) {
-      byte[] screenshot = testWebDriver.getScreenshot();
-      scenario.embed(screenshot, "image/png");
+      byte[] screenShot = testWebDriver.getScreenshot();
+      scenario.embed(screenShot, "image/png");
     }
-  }
+    testWebDriver.sleep(500);
+    if (!testWebDriver.getElementById("username").isDisplayed()) {
+      HomePage homePage = PageFactory.getInstanceOfHomePage(testWebDriver);
+      homePage.logout(baseUrlGlobal);
+    }
+    dbWrapper.deleteData();
+    dbWrapper.closeConnection();
 
+    ((JavascriptExecutor) TestWebDriver.getDriver()).executeScript("indexedDB.deleteDatabase('open_lmis')");
+  }
 }
