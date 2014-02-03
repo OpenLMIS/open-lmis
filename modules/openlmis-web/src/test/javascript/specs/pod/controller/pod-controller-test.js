@@ -74,6 +74,7 @@ describe('PODController', function () {
 
   it('should update line items in page when page in url is updated', function () {
     routeParams.page = 2;
+    scope.podForm = {$dirty: true};
     spyOn(location, 'search');
 
     scope.$broadcast('$routeUpdate');
@@ -170,4 +171,13 @@ describe('Pod Save', function () {
     expect(scope.error).toEqual('error');
     expect(scope.podForm.$setPristine).not.toHaveBeenCalled();
   });
+
+  it('should auto save on page change', function () {
+    spyOn(scope, 'save');
+    scope.podForm = {$dirty: false};
+
+    scope.$broadcast('$routeUpdate');
+
+    expect(scope.save).toHaveBeenCalled();
+  })
 });

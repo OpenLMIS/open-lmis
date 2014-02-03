@@ -38,6 +38,7 @@ function PODController($scope, orderPOD, OrderPOD, pageSize, $routeParams, $loca
   });
 
   $scope.$on('$routeUpdate', function () {
+    $scope.save();
     refreshPageLineItems();
   });
 
