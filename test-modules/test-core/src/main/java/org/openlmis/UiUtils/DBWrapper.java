@@ -603,6 +603,12 @@ public class DBWrapper {
       "('" + periodName + "', '" + periodDesc + "', '" + periodStartDate + " 00:00:00', '" + periodEndDate + " 23:59:59', " + numberOfMonths + ", (SELECT id FROM processing_schedules WHERE code = '" + scheduleCode + "'), (SELECT id FROM users LIMIT 1));");
   }
 
+  public void insertCurrentPeriod(String periodName, String periodDesc, Integer numberOfMonths, String scheduleCode) throws SQLException {
+    update("INSERT INTO processing_periods\n" +
+      "(name, description, startDate, endDate, numberOfMonths, scheduleId, modifiedBy) VALUES\n" +
+      "('" + periodName + "', '" + periodDesc + "', NOW() - interval '5' day, NOW() + interval '5' day, " + numberOfMonths + ", (SELECT id FROM processing_schedules WHERE code = '" + scheduleCode + "'), (SELECT id FROM users LIMIT 1));");
+  }
+
   public void configureTemplate(String program) throws SQLException {
     update("INSERT INTO program_rnr_columns\n" +
       "(masterColumnId, programId, visible, source, formulaValidationRequired, position, label) VALUES\n" +
