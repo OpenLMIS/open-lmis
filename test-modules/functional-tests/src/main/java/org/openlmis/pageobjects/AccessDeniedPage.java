@@ -17,15 +17,13 @@ import org.openqa.selenium.support.How;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 
-import java.io.IOException;
-
 
 public class AccessDeniedPage extends Page {
 
   @FindBy(how = How.XPATH, using = "//h3[@class='access-denied']")
   private static WebElement accessDeniedHeader = null;
 
-  public AccessDeniedPage(TestWebDriver driver) throws IOException {
+  public AccessDeniedPage(TestWebDriver driver) {
     super(driver);
     PageFactory.initElements(new AjaxElementLocatorFactory(TestWebDriver.getDriver(), 10), this);
     testWebDriver.setImplicitWait(10);

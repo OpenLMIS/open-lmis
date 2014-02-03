@@ -21,7 +21,6 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 
-import java.io.IOException;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
@@ -677,7 +676,7 @@ public class DistributionSyncTest extends TestCaseHelper {
     epiInventoryPage.fillDeliveredQuantity(3, deliveredQuantity3);
   }
 
-  public void initiateDistribution(String deliveryZoneNameFirst, String programFirst) throws IOException {
+  public void initiateDistribution(String deliveryZoneNameFirst, String programFirst) {
 
     HomePage homePage = PageFactory.getInstanceOfHomePage(testWebDriver);
     DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
@@ -687,7 +686,7 @@ public class DistributionSyncTest extends TestCaseHelper {
     distributionPage.clickRecordData(1);
   }
 
-  public void initiateNextDistributionForGivenPeriod(String deliveryZoneNameFirst, String programFirst, String period) throws IOException {
+  public void initiateNextDistributionForGivenPeriod(String deliveryZoneNameFirst, String programFirst, String period) {
     DistributionPage distributionPage = PageFactory.getInstanceOfDistributionPage(testWebDriver);
     distributionPage.selectValueFromDeliveryZone(deliveryZoneNameFirst);
     distributionPage.selectValueFromProgram(programFirst);
@@ -696,7 +695,7 @@ public class DistributionSyncTest extends TestCaseHelper {
     distributionPage.clickRecordData(1);
   }
 
-  private void initiateNextDistributionForSamePeriod(String deliveryZoneNameFirst, String programFirst) throws IOException {
+  private void initiateNextDistributionForSamePeriod(String deliveryZoneNameFirst, String programFirst) {
     DistributionPage distributionPage = PageFactory.getInstanceOfDistributionPage(testWebDriver);
     distributionPage.selectValueFromDeliveryZone(deliveryZoneNameFirst);
     distributionPage.selectValueFromProgram(programFirst);
@@ -705,7 +704,7 @@ public class DistributionSyncTest extends TestCaseHelper {
     distributionPage.clickRecordData(1);
   }
 
-  private void deleteDistribution() throws IOException {
+  private void deleteDistribution() {
     HomePage homePage = PageFactory.getInstanceOfHomePage(testWebDriver);
     DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
     distributionPage.deleteDistribution();

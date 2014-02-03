@@ -21,7 +21,6 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -397,7 +396,7 @@ public class DistributionRefrigeratorSyncTest extends TestCaseHelper {
     verifyRefrigeratorsDataInDatabase("F10", "GNR7878", "LG", "800L1", "t");
   }
 
-  private void initiateDistributionForPeriod(String periodName) throws IOException {
+  private void initiateDistributionForPeriod(String periodName) {
     DistributionPage distributionPage = PageFactory.getInstanceOfDistributionPage(testWebDriver);
     distributionPage.selectValueFromDeliveryZone(refrigeratorTestData.get(FIRST_DELIVERY_ZONE_NAME));
     distributionPage.selectValueFromProgram(refrigeratorTestData.get(VACCINES_PROGRAM));
@@ -424,7 +423,7 @@ public class DistributionRefrigeratorSyncTest extends TestCaseHelper {
     dbWrapper.addRefrigeratorToFacility("LG", "800L", "GNR7878", "F10");
   }
 
-  public void initiateDistribution(String deliveryZoneNameFirst, String programFirst) throws IOException {
+  public void initiateDistribution(String deliveryZoneNameFirst, String programFirst) {
     HomePage homePage = PageFactory.getInstanceOfHomePage(testWebDriver);
     DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
     distributionPage.selectValueFromDeliveryZone(deliveryZoneNameFirst);

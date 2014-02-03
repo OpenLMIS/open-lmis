@@ -7,7 +7,6 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import java.io.IOException;
 import java.util.List;
 
 import static java.util.Arrays.asList;
@@ -422,13 +421,13 @@ public class ManageBudget extends TestCaseHelper {
     dbWrapper.insertSupplyLines("N1", program, "F10", true);
   }
 
-  public void enterDetailsInRnRForFirstProduct(int beginningBalance, int quantityReceived, int quantityDispensed) throws IOException {
+  public void enterDetailsInRnRForFirstProduct(int beginningBalance, int quantityReceived, int quantityDispensed) {
     initiateRnRPage.enterValueIfNotNull(beginningBalance, "beginningBalanceFirstProduct");
     initiateRnRPage.enterValueIfNotNull(quantityReceived, "quantityReceivedFirstProduct");
     initiateRnRPage.enterValueIfNotNull(quantityDispensed, "quantityDispensedFirstProduct");
   }
 
-  public void viewRequisition() throws IOException {
+  public void viewRequisition() {
     HomePage homePage = PageFactory.getInstanceOfHomePage(testWebDriver);
     ViewRequisitionPage viewRequisitionPage = homePage.navigateViewRequisition();
     viewRequisitionPage.enterViewSearchCriteria();

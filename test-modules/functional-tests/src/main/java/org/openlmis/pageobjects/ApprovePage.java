@@ -17,7 +17,6 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 
-import java.io.IOException;
 import java.math.BigDecimal;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.assertEquals;
@@ -158,7 +157,7 @@ public class ApprovePage extends RequisitionPage {
     assertEquals(operatedBy, operatedByInitRnRScreen.getText().trim());
   }
 
-  public void verifyEmergencyStatus() throws IOException {
+  public void verifyEmergencyStatus() {
     testWebDriver.sleep(2000);
     testWebDriver.waitForElementToAppear(emergencyIcon);
     assertTrue("Emergency icon should show up", emergencyIcon.isDisplayed());

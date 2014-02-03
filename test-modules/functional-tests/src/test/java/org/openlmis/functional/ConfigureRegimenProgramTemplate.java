@@ -24,7 +24,6 @@ import org.openlmis.pageobjects.LoginPage;
 import org.openlmis.pageobjects.RegimenTemplateConfigPage;
 import org.testng.annotations.*;
 
-import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -430,7 +429,7 @@ public class ConfigureRegimenProgramTemplate extends TestCaseHelper {
     assertEquals(reportingField, regimenTemplateConfigPage.getValueRemarksTextField());
   }
 
-  private void setUpDataForInitiateRnR(String program, String userSIC) throws SQLException, IOException {
+  private void setUpDataForInitiateRnR(String program, String userSIC) throws SQLException {
     dbWrapper.setupMultipleProducts(program, "Lvl3 Hospital", 2, false);
     dbWrapper.insertFacilities("F10", "F11");
     dbWrapper.configureTemplate(program);

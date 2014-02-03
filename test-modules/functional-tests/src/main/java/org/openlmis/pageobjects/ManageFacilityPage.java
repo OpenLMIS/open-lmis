@@ -21,7 +21,6 @@ import org.openqa.selenium.support.How;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -469,7 +468,7 @@ public class ManageFacilityPage extends Page {
     verifyEditFacilityHeader("Edit facility");
   }
 
-  public HomePage enableFacility() throws IOException {
+  public HomePage enableFacility() {
     testWebDriver.waitForElementToAppear(enableButton);
     testWebDriver.sleep(1000);
     enableButton.click();
@@ -484,7 +483,7 @@ public class ManageFacilityPage extends Page {
 
   public HomePage editFacility(String program, String catchmentPopulationValue,
                                String latitudeValue,
-                               String longitudeValue, String altitudeValue) throws IOException {
+                               String longitudeValue, String altitudeValue) {
     testWebDriver.waitForElementToAppear(disableButton);
     testWebDriver.sleep(1500);
     testWebDriver.waitForElementToAppear(facilityCode);
@@ -520,7 +519,7 @@ public class ManageFacilityPage extends Page {
     assertTrue(removeSupportedProgram.isDisplayed());
   }
 
-  public HomePage verifyProgramSupported(List<String> programsSupported) throws IOException {
+  public HomePage verifyProgramSupported(List<String> programsSupported) {
     verifyEditFacilityHeader("Edit facility");
     testWebDriver.waitForElementToAppear(disableButton);
     testWebDriver.sleep(1500);

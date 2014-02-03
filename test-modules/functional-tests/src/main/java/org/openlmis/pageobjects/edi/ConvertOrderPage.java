@@ -19,7 +19,6 @@ import org.openqa.selenium.support.How;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 
-import java.io.IOException;
 import java.util.List;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
@@ -76,7 +75,7 @@ public class ConvertOrderPage extends RequisitionPage {
     testWebDriver.setImplicitWait(2);
   }
 
-  public void verifyOrderListElements(String program, String facilityCode, String facilityName, String periodStartDate, String periodEndDate, String supplyFacilityName) throws IOException {
+  public void verifyOrderListElements(String program, String facilityCode, String facilityName, String periodStartDate, String periodEndDate, String supplyFacilityName) {
     testWebDriver.waitForElementToAppear(programOnOrderScreen);
     assertEquals(programOnOrderScreen.getText().trim(), program);
     assertEquals(facilityCodeOnOrderScreen.getText().trim(), facilityCode);
@@ -106,18 +105,18 @@ public class ConvertOrderPage extends RequisitionPage {
     SeleneseTestNgHelper.assertTrue(message, noRequisitionSelectedDiv.isDisplayed());
   }
 
-  public void convertToOrder() throws IOException {
+  public void convertToOrder() {
     clickCheckBoxConvertToOrder();
     clickConvertToOrderButton();
     clickOk();
   }
 
-  public void verifyNoRequisitionSelectedMessage() throws IOException {
+  public void verifyNoRequisitionSelectedMessage() {
     clickConvertToOrderButton();
     verifyMessageOnOrderScreen("Message 'Please select at least one Requisition for Converting to Order.' is not displayed");
   }
 
-  public void verifyEmergencyStatus() throws IOException {
+  public void verifyEmergencyStatus() {
     testWebDriver.waitForElementToAppear(emergencyIcon);
     assertTrue("Emergency icon should show up", emergencyIcon.isDisplayed());
   }

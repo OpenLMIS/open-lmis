@@ -19,8 +19,6 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-import java.io.IOException;
-
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 
@@ -76,11 +74,11 @@ public class LanguageCheck extends TestCaseHelper {
     assertEquals(color, "rgba(136, 135, 135, 1)");
   }
 
-  private void verifyPageIdentifierLabelOnLoginPage(String expectedLabel) throws IOException {
+  private void verifyPageIdentifierLabelOnLoginPage(String expectedLabel) {
     assertEquals(loginPage.getPageIdentifierOnLoginPageText(), expectedLabel);
   }
 
-  private void verifyPageIdentifierLabelOnForgotPasswordPage(String expectedLabel) throws IOException {
+  private void verifyPageIdentifierLabelOnForgotPasswordPage(String expectedLabel) {
     ForgotPasswordPage forgotPasswordPage = PageFactory.getInstanceOfForgotPasswordPage(testWebDriver);
     assertEquals(forgotPasswordPage.getPageIdentifierOnForgotPasswordPageAttribute(), expectedLabel);
   }

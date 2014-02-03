@@ -20,8 +20,6 @@ import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 import org.openqa.selenium.support.ui.Select;
 
-import java.io.IOException;
-
 import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
 import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
 
@@ -296,7 +294,7 @@ public class TemplateConfigPage extends Page {
     testWebDriver.sleep(100);
   }
 
-  public HomePage clickSaveButton() throws IOException{
+  public HomePage clickSaveButton() {
     testWebDriver.waitForElementToAppear(SaveButton);
     SaveButton.click();
     testWebDriver.sleep(100);
@@ -367,7 +365,7 @@ public class TemplateConfigPage extends Page {
     assertTrue("Success message should display", saveSuccessMsg.isDisplayed());
   }
 
-  private void verifyCAndEUserInputsAndShouldBeDisplayed() throws IOException {
+  private void verifyCAndEUserInputsAndShouldBeDisplayed() {
     testWebDriver.waitForElementToAppear(SaveButton);
     unClickTotalConsumedQuantity();
     unClickStockOnHand();
@@ -397,7 +395,7 @@ public class TemplateConfigPage extends Page {
 
   }
 
-  private void verifyCDerivedEMustViceVersa(String program) throws IOException {
+  private void verifyCDerivedEMustViceVersa(String program) {
     selectFromTotalConsumedQuantityDropDown(CALCULATED);
     selectFromStockOnHandDropDown(USER_INPUT);
     unClickStockOnHand();
@@ -420,14 +418,14 @@ public class TemplateConfigPage extends Page {
     verifyErrorMessageDivTotalConsumedQuantity("If 'Total Consumed Quantity' is user input then it should be visible");
   }
 
-  public void verifyArithmeticValidations(String program) throws IOException {
+  public void verifyArithmeticValidations(String program) {
     verifyCAndEUserInputsAndShouldBeDisplayed();
     verifyArithmeticValidationOnOff();
     verifyCDerivedEMustViceVersa(program);
 
   }
 
-  private void prepareDataForBusinessRuleCE()throws IOException {
+  private void prepareDataForBusinessRuleCE() {
     clickTotalConsumedQuantity();
     clickStockOnHand();
     selectFromTotalConsumedQuantityDropDown(CALCULATED);
@@ -443,13 +441,13 @@ public class TemplateConfigPage extends Page {
     verifyErrorMessageDivFooter();
   }
 
-  private void prepareDataForBusinessRuleWJ() throws IOException{
+  private void prepareDataForBusinessRuleWJ() {
     clickRequestedQuantity();
     unClickRequestedQuantityExplanation();
     clickSaveButton();
   }
 
-  private void prepareDataForBusinessRuleJW() throws IOException {
+  private void prepareDataForBusinessRuleJW() {
     unClickRequestedQuantity();
     clickRequestedQuantityExplanation();
     clickSaveButton();
@@ -466,7 +464,7 @@ public class TemplateConfigPage extends Page {
   }
 
 
-  public void verifyBusinessRules() throws IOException {
+  public void verifyBusinessRules() {
     prepareDataForBusinessRuleCE();
     verifyBusinessRuleCE();
     prepareDataForBusinessRuleWJ();
@@ -550,7 +548,7 @@ public class TemplateConfigPage extends Page {
     verifySuccessDiv();
   }
 
-  public void alterBeginningBalanceLabel(String columnHeadingToBeAltered) throws IOException {
+  public void alterBeginningBalanceLabel(String columnHeadingToBeAltered) {
     testWebDriver.waitForElementToAppear(SaveButton);
     beginningBalance.clear();
     beginningBalance.sendKeys(columnHeadingToBeAltered);

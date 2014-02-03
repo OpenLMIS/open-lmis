@@ -18,7 +18,6 @@ import org.openlmis.pageobjects.*;
 import org.openqa.selenium.JavascriptExecutor;
 import org.testng.annotations.*;
 
-import java.io.IOException;
 import java.sql.ResultSet;
 import java.util.List;
 
@@ -269,7 +268,7 @@ public class E2EDistributionTest extends TestCaseHelper {
       assertEquals(testWebDriver.getElementByXpath("//div[@class='list-row ng-scope']/ng-include/form/div[1]/div[" + (i + 2) + "]").getText(), refrigeratorDetailsOnUI[i]);
   }
 
-  private void configureISA() throws IOException {
+  private void configureISA() {
     LoginPage loginPage = PageFactory.getInstanceOfLoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs("Admin123", "Admin123");
 
