@@ -8,7 +8,7 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-function ShipmentFileTemplateController($scope, shipmentFileTemplate, ShipmentFileTemplate, dateFormats) {
+function ShipmentFileTemplateController($scope, shipmentFileTemplate, ShipmentFileTemplate, dateFormats, $location, messageService) {
 
   $scope.shipmentFileTemplate = shipmentFileTemplate;
   $scope.dateFormats = _.pluck(_.where(dateFormats, {"orderDate": true}), "format");
@@ -47,14 +47,8 @@ function ShipmentFileTemplateController($scope, shipmentFileTemplate, ShipmentFi
 
     ShipmentFileTemplate.save({}, $scope.shipmentFileTemplate, function (data) {
       $scope.error = "";
-      $scope.message = data.success;
-      setTimeout(function () {
-        $scope.$apply(function () {
-          angular.element("#saveSuccessMsgDiv").fadeOut('slow', function () {
-            $scope.message = '';
-          });
-        });
-      }, 3000);
+      $scope.$parent.message = messageService.get(data.success);
+      $location.path('configure-edi-file');
     });
   };
 
