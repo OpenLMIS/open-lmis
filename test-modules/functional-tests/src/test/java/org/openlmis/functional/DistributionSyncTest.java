@@ -619,6 +619,7 @@ public class DistributionSyncTest extends TestCaseHelper {
 
   private GeneralObservationPage fillFacilityData() {
     GeneralObservationPage generalObservationPage = PageFactory.getInstanceOfObservation(testWebDriver);
+    generalObservationPage.navigateToGeneralObservations();
     generalObservationPage.enterDataWhenFacilityVisited("Some observations", "samuel", "Doe", "Verifier", "XYZ");
 
     RefrigeratorPage refrigeratorPage = generalObservationPage.navigateToRefrigerators();
