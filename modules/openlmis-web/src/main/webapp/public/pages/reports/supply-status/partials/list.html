@@ -1,130 +1,159 @@
-    <!--
-  ~ This program was produced for the U.S. Agency for International Development. It was prepared by the USAID | DELIVER PROJECT, Task Order 4. It is part of a project which utilizes code originally licensed under the terms of the Mozilla Public License (MPL) v2 and therefore is licensed under MPL v2 or later.
-  ~
-  ~ This program is free software: you can redistribute it and/or modify it under the terms of the Mozilla Public License as published by the Mozilla Foundation, either version 2 of the License, or (at your option) any later version.
-  ~
-  ~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the Mozilla Public License for more details.
-  ~
-  ~ You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
-  -->
+<!--
+~ This program was produced for the U.S. Agency for International Development. It was prepared by the USAID | DELIVER PROJECT, Task Order 4. It is part of a project which utilizes code originally licensed under the terms of the Mozilla Public License (MPL) v2 and therefore is licensed under MPL v2 or later.
+~
+~ This program is free software: you can redistribute it and/or modify it under the terms of the Mozilla Public License as published by the Mozilla Foundation, either version 2 of the License, or (at your option) any later version.
+~
+~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the Mozilla Public License for more details.
+~
+~ You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
+-->
 
 <div class="row-fluid sortable ui-sortable">
-            <div class="box span12">
-                    <div class="box-header">
-                        <h2><i class="icon-edit"></i><span class="break"></span>Supply Status by Facility</h2>
-                        <div class="box-icon">
-                            <span id="pdf-button" ng-show="!filterForm.$valid" href="#" ng-click="" class='btn-small btn-disabled'>PDF</span>
-                            <span id="xls-button" ng-show="!filterForm.$valid" href="#" ng-click="" class='btn-small btn-disabled'>Excel</span>
+  <div class="box span12">
+    <div class="box-header">
+      <h2><i class="icon-edit"></i><span class="break"></span>Supply Status by Facility</h2>
 
-                            <a id="pdf-button" ng-show="filterForm.$valid" href="#list" ng-click="exportReport('PDF');" class='btn-small btn-info'>PDF</a>
-                            <a id="xls-button" ng-show="filterForm.$valid" href="#list" ng-click="exportReport('xls')" class='btn-small btn-info'>Excel</a>
-                        </div>
-                    </div>
+      <div class="box-icon">
+        <a id="pdf-button" ng-show="filterForm.$valid" href="#list" ng-click="exportReport('PDF');"
+           class='btn-small btn-info'>PDF</a>
+        <a id="xls-button" ng-show="filterForm.$valid" href="#list" ng-click="exportReport('xls')"
+           class='btn-small btn-info'>Excel</a>
+      </div>
+    </div>
 
-            <div >
-                <div class="app-form" style="padding: 5px;">
-                        <form ng-submit="filterGrid()" name="filterForm" >
-                            <div class="clearfix ">
+    <div>
+      <div class="app-form" style="padding: 5px;">
+        <form ng-submit="filterGrid()" name="filterForm">
+          <div class="clearfix ">
 
-                                <div class="form-cell horizontalFilters" >
-                                    <label class="labels">Program<span class="label-required"> *</span></label>
+            <div class="form-cell horizontalFilters">
+              <label class="labels">Program<span class="label-required"> *</span></label>
 
-                                    <div class="form-fields">
-                                        <select ui-select2 style="width:200px;" class="large-input" name="program"  ng-model=" filterObject.program" ng-change="ProgramChanged()"  required="true">
-                                            <option  ng-repeat="option in programs" value="{{ option.id }}">{{ option.name }}</option>
-                                        </select>
-                                    </div>
-                                </div>
-
-                                <div class="form-cell horizontalFilters" >
-                                    <label class="labels">Schedule<span class="label-required"> *</span></label>
-
-                                    <div class="form-fields">
-                                        <select ui-select2 style="width:200px;" class="large-input" name="schedule" ng-change="ChangeSchedule()" ng-model="filterObject.schedule" required="true">
-                                            <option  ng-repeat="option in schedules" value="{{ option.id }}">{{ option.name }}</option>
-                                        </select>
-                                    </div>
-                                </div>
-
-                                <div class="form-cell horizontalFilters">
-                                    <label class="labels">Period<span class="label-required"> *</span></label>
-
-                                    <div class="form-field">
-                                        <select ui-select2 style="width:200px;" class="input-large" ng-required="true"  ng-change="filterGrid();" name="period" ng-model="filterObject.period" required="true">
-
-                                            <option  ng-repeat="option in periods" value="{{ option.id }}">{{ option.name }}</option>
-                                        </select>
-                                    </div>
-                                </div>
-
-
-                                <div class="form-cell horizontalFilters" >
-                                    <label class="labels">Facility Type</label>
-
-                                    <div class="form-field">
-                                        <select ui-select2 style="width:200px;" id="facility-type"  name="facilityType" ng-change="loadFacilities();filterGrid();" ng-model="filterObject.facilityType" >
-
-                                            <option  ng-repeat="option in facilityTypes" value="{{ option.id }}">{{ option.name }}</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="form-cell horizontalFilters">
-                                    <label class="labels">Facility Name<span class="label-required"> *</span></label>
-                                    <div class="form-field">
-                                        <select ui-select2 style="width:200px;" id="facility-name"  name="facility" ng-model="filterObject.facility" ng-change="filterGrid();" required="true">
-                                            <option  ng-repeat="option in allFacilities" value="{{ option.id }}">{{ option.code }} - {{ option.name }}</option>
-                                        </select>
-                                    </div>
-
-                                </div>
-
-                                <div class="form-cell horizontalFilters" >
-                                    <label class="labels">Product</label>
-                                    <div class="form-field">
-                                        <select ui-select2 style="width:200px;" name="product" ng-change="filterGrid();"  ng-model="filterObject.product" >
-                                            <option  ng-repeat="option in products" value="{{ option.id }}">{{ option.name }}</option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                         </form>
-
-                    <span class="label-required">*</span> <span id="requiredMsgDiv" ng-bind="message" ng-show="showMessage"/>
-                </div>
+              <div class="form-fields">
+                <select ui-select2 style="width:200px;" class="large-input" name="program"
+                        ng-model=" filterObject.program" ng-change="ProgramChanged()" required="true">
+                  <option ng-repeat="option in programs" value="{{ option.id }}">{{ option.name }}</option>
+                </select>
+              </div>
             </div>
 
-                <table class="table table-bordered" ng-show="data == undefined || data.length == 0">
-                    <tr>
-                        <td>No data to show under selected filters</td>
-                    </tr>
-                </table>
+            <div class="form-cell horizontalFilters">
+              <label class="labels">Schedule<span class="label-required"> *</span></label>
 
-                <div ng-show="datarows.length > 0">
-                    <div class="pull-right legend" >Page: {{tableParams.page}}, Showing records {{ ((tableParams.page - 1) * tableParams.count) + 1 }} to {{ (tableParams.page ) * tableParams.count }} of {{tableParams.total}} </div>
-                    <div class="report-container pull-right">
-                        <div class="clearfix">
-                        <table ng-show="datarows.length > 0" class="table-bordered table table-striped" ng-table="tableParams">
-                            <tbody>
-                            <tr ng-repeat="row in datarows">
-                                <td data-title="'#'" class="number" style="width:20px" >{{ row.no }}</td>
-                                <td data-title="'Category'" style="width:150px" sortable="category" >{{ row.category }}</td>
-                                <td data-title="'Product Code'" style="width:80px" sortable="code" >{{ row.code }}</td>
-                                <td data-title="'Product'" style="width:30%" sortable="product"  >{{ row.product }}</td>
-                                <td data-title="'B. Balance'" class="number" style="width:80px" sortable="openingBalance"  >{{ row.openingBalance | number }}</td>
-                                <td data-title="'Reciepts'" class="number" style="width:80px" sortable="recipts"  >{{ row.receipts | number }}</td>
-                                <td data-title="'Issues'" class="number" style="width:80px" sortable="issues"  >{{ row.issues | number }}</td>
-                                <td data-title="'Adjustments'" class="number" style="width:80px" sortable="adjustment"  >{{ row.adjustments | number }}</td>
-                                <td data-title="'C. Balance'" class="number" style="width:80px" sortable="closingBalance"  >{{ row.closingBalance | number }}</td>
-                                <td data-title="'MOS'" class="number" style="width:80px" sortable="monthsOfStock"  >{{ row.monthsOfStock | number }}</td>
-                                <td data-title="'AMC'" class="number" style="width:80px" sortable="averageMonthlyConsumption"  >{{ row.averageMonthlyConsumption | number }}</td>
-                                <td data-title="'Max Stock'" class="number" style="width:80px" sortable="maximumStock"  >{{ row.maximumStock | number }}</td>
-                                <td data-title="'Order Amount'" class="number" style="width:80px" sortable="reorderAmount"  >{{ row.reorderAmount | number }}</td>
-                            </tr>
-                            </tbody>
-                        </table>
-                        </div>
-                    </div>
-                    </div>
-                </div>
+              <div class="form-fields">
+                <select ui-select2 style="width:200px;" class="large-input" name="schedule" ng-change="ChangeSchedule()"
+                        ng-model="filterObject.schedule" required="true">
+                  <option ng-repeat="option in schedules" value="{{ option.id }}">{{ option.name }}</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-cell horizontalFilters">
+              <label class="labels">Period<span class="label-required"> *</span></label>
+
+              <div class="form-field">
+                <select ui-select2 style="width:200px;" class="input-large" ng-required="true" ng-change="filterGrid();"
+                        name="period" ng-model="filterObject.period" required="true">
+
+                  <option ng-repeat="option in periods" value="{{ option.id }}">{{ option.name }}</option>
+                </select>
+              </div>
+            </div>
+
+
+            <div class="form-cell horizontalFilters">
+              <label class="labels">Facility Type</label>
+
+              <div class="form-field">
+                <select ui-select2 style="width:200px;" id="facility-type" name="facilityType"
+                        ng-change="loadFacilities();filterGrid();" ng-model="filterObject.facilityType">
+
+                  <option ng-repeat="option in facilityTypes" value="{{ option.id }}">{{ option.name }}</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-cell horizontalFilters">
+              <label class="labels">Facility Name<span class="label-required"> *</span></label>
+
+              <div class="form-field">
+                <select ui-select2 style="width:200px;" id="facility-name" name="facility"
+                        ng-model="filterObject.facility" ng-change="filterGrid();" required="true">
+                  <option ng-repeat="option in allFacilities" value="{{ option.id }}">{{ option.code }} - {{ option.name
+                    }}
+                  </option>
+                </select>
+              </div>
+
+            </div>
+
+            <div class="form-cell horizontalFilters">
+              <label class="labels">Product</label>
+
+              <div class="form-field">
+                <select ui-select2 style="width:200px;" name="product" ng-change="filterGrid();"
+                        ng-model="filterObject.product">
+                  <option ng-repeat="option in products" value="{{ option.id }}">{{ option.name }}</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </form>
+
+        <span class="label-required">*</span> <span id="requiredMsgDiv" ng-bind="message" ng-show="showMessage"/>
+      </div>
+    </div>
+
+    <table class="table table-bordered" ng-show="data == undefined || data.length == 0">
+      <tr>
+        <td>No data to show under selected filters</td>
+      </tr>
+    </table>
+
+    <div ng-show="datarows.length > 0">
+      <div class="pull-right legend">Page: {{tableParams.page}}, Showing records {{ ((tableParams.page - 1) *
+        tableParams.count) + 1 }} to {{ (tableParams.page ) * tableParams.count }} of {{tableParams.total}}
+      </div>
+      <div class="report-container pull-right">
+        <div class="clearfix">
+          <table ng-show="datarows.length > 0" class="table-bordered table table-striped" ng-table="tableParams">
+            <tbody>
+            <tr ng-repeat="row in datarows">
+              <td data-title="'#'" class="number" style="width:20px">{{ row.no }}</td>
+              <td data-title="'Category'" style="width:150px" sortable="category">{{ row.category }}</td>
+              <td data-title="'Product Code'" style="width:80px" sortable="code">{{ row.code }}</td>
+              <td data-title="'Product'" style="width:30%" sortable="product">{{ row.product }}</td>
+              <td data-title="'B. Balance'" class="number" style="width:80px" sortable="openingBalance">{{
+                row.openingBalance | number }}
+              </td>
+              <td data-title="'Reciepts'" class="number" style="width:80px" sortable="recipts">{{ row.receipts | number
+                }}
+              </td>
+              <td data-title="'Issues'" class="number" style="width:80px" sortable="issues">{{ row.issues | number }}
+              </td>
+              <td data-title="'Adjustments'" class="number" style="width:80px" sortable="adjustment">{{ row.adjustments
+                | number }}
+              </td>
+              <td data-title="'C. Balance'" class="number" style="width:80px" sortable="closingBalance">{{
+                row.closingBalance | number }}
+              </td>
+              <td data-title="'MOS'" class="number" style="width:80px" sortable="monthsOfStock">{{ row.monthsOfStock |
+                number }}
+              </td>
+              <td data-title="'AMC'" class="number" style="width:80px" sortable="averageMonthlyConsumption">{{
+                row.averageMonthlyConsumption | number }}
+              </td>
+              <td data-title="'Max Stock'" class="number" style="width:80px" sortable="maximumStock">{{ row.maximumStock
+                | number }}
+              </td>
+              <td data-title="'Order Amount'" class="number" style="width:80px" sortable="reorderAmount">{{
+                row.reorderAmount | number }}
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
   </div>
+</div>
 

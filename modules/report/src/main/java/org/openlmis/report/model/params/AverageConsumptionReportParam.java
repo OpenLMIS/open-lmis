@@ -12,6 +12,7 @@ package org.openlmis.report.model.params;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.service.*;
 import org.openlmis.report.mapper.lookup.FacilityTypeReportMapper;
@@ -27,6 +28,7 @@ import java.util.List;
 
 @Data
 @NoArgsConstructor
+@EqualsAndHashCode(callSuper=false)
 @AllArgsConstructor
 public class AverageConsumptionReportParam extends BaseParam
   implements ReportParameter {
