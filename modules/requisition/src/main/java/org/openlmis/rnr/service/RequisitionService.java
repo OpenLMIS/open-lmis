@@ -496,5 +496,9 @@ public class RequisitionService {
   public RnrLineItem getLineItem(Long rnrId, String productCode) {
     return requisitionRepository.getLineItem(rnrId, productCode);
   }
+
+  public String deleteRnR(Long rnrId) {
+    return requisitionRepository.deleteRnR(rnrId);
+  }
 }
 

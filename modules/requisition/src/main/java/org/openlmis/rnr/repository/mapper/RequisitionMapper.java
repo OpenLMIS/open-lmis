@@ -176,6 +176,10 @@ public interface RequisitionMapper {
   })
   Rnr getLastRegularRequisition(@Param("facility") Facility facility, @Param("program") Program program);
 
+
+  @Select("select * from fn_delete_rnr( #{rnrId} )")
+  String deleteRnR(@Param("rnrId")Integer rnrId);
+
   public class ApprovedRequisitionSearch {
 
     @SuppressWarnings("UnusedDeclaration")

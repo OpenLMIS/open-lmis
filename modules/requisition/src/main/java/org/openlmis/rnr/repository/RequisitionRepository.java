@@ -219,5 +219,9 @@ public class RequisitionRepository {
   public RnrLineItem getLineItem(Long rnrId, String productCode) {
     return rnrLineItemMapper.getLineItem(rnrId, productCode);
   }
+
+  public String deleteRnR(Long rnrId) {
+    return requisitionMapper.deleteRnR(rnrId.intValue());
+  }
 }
 

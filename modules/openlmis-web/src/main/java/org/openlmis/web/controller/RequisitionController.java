@@ -261,4 +261,13 @@ public class RequisitionController extends BaseController {
   public ResponseEntity<OpenLmisResponse> getCommentsForARnr(@PathVariable Long id) {
     return response(COMMENTS, requisitionService.getCommentsByRnrId(id));
   }
+
+  @RequestMapping(value = "/requisitions/delete/{id}", method = POST, headers = ACCEPT_JSON)
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'DELETE_REQUISITION')")
+  public ResponseEntity<OpenLmisResponse> deleteRnR(@PathVariable("id") Long rnrId,
+                                                        HttpServletRequest request) {
+    String result = requisitionService.deleteRnR(rnrId);
+    return OpenLmisResponse.response("delete", result);
+  }
+
 }

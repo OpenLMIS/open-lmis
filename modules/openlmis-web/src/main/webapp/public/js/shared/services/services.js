@@ -113,6 +113,10 @@ services.factory('LossesAndAdjustmentsReferenceData', function ($resource) {
   return $resource('/requisitions/lossAndAdjustments/reference-data.json', {}, {});
 });
 
+services.factory('DeleteRequisition', function ($resource) {
+  return $resource('/requisitions/delete/:id.json', {id: '@id'}, {post: {method: 'POST', isArray: false}});
+});
+
 services.factory('Schedule', function ($resource) {
   return $resource('/schedules/:id.json', {id: '@id'}, update);
 });
