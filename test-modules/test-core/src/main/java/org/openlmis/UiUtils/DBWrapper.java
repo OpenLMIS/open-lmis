@@ -1373,11 +1373,13 @@ public class DBWrapper {
   }
 
   public void insertShipmentData(int orderID, String productCode, Integer quantityShipped) throws SQLException {
-    update("INSERT INTO shipment_file_info(id,filename,processingError) VALUES (%d, '%s','%s')", orderID,
-      "abc", "false");
-
     update("INSERT INTO shipment_line_items(orderId,productCode,quantityShipped,productName,dispensingUnit,productCategory) VALUES (%d, '%s', %d, %s, %s, %s)", orderID,
-      productCode, quantityShipped, "'antibiotic Capsule'", "'Strip'", "'Antibiotic'");
+      productCode, quantityShipped, "'antibiotic Capsule 300/200/600 mg'", "'Strip'", "'Antibiotic'");
   }
 
+  public Integer getProductId(String productCode) throws SQLException {
+    ResultSet rs = query("select id from products where code = '" + productCode + "';");
+    rs.next();
+    return rs.getInt("id");
+  }
 }
