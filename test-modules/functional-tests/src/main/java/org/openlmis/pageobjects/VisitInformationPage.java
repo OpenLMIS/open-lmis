@@ -79,6 +79,27 @@ public class VisitInformationPage extends DistributionTab {
   @FindBy(how = How.XPATH, using = "//a[@class='ui-state-default' and contains(text(),'1')]")
   private static WebElement calender = null;
 
+  @FindBy(how = ID, using = "badWeather")
+  public static WebElement badWeather = null;
+
+  @FindBy(how = ID, using = "noTransport")
+  public static WebElement noTransport = null;
+
+  @FindBy(how = ID, using = "facilityClosed")
+  public static WebElement facilityClosed = null;
+
+  @FindBy(how = ID, using = "unavailableFunds")
+  public static WebElement unavailableFunds = null;
+
+  @FindBy(how = ID, using = "notPartOfProgram")
+  public static WebElement notPartOfProgram = null;
+
+  @FindBy(how = ID, using = "other")
+  public static WebElement other = null;
+
+  @FindBy(how = ID, using = "otherTextBox")
+  public static WebElement otherTextBox = null;
+
   public Map<String, WebElement> fieldMap = new HashMap<String, WebElement>() {{
     put(VEHICLE_ID, vehicleIdField);
     put(OBSERVATIONS, observationsField);
@@ -193,11 +214,13 @@ public class VisitInformationPage extends DistributionTab {
   public void selectFacilityVisitedYes() {
     testWebDriver.waitForElementToAppear(facilityVisitedYesRadioButton);
     facilityVisitedYesRadioButton.click();
+    removeFocusFromElement();
   }
 
   public void selectFacilityVisitedNo() {
     testWebDriver.waitForElementToAppear(facilityVisitedNoRadioButton);
     facilityVisitedNoRadioButton.click();
+    removeFocusFromElement();
   }
 
   public boolean isYesRadioButtonSelected() {
@@ -215,20 +238,72 @@ public class VisitInformationPage extends DistributionTab {
     return visitDateField.getAttribute("value");
   }
 
-  public void verifyAllFieldsDisabled() {
-    assertFalse("Observation field enabled.", observationsField.isEnabled());
-    assertFalse("ConfirmedBy name field enabled.", confirmedByNameField.isEnabled());
-    assertFalse("ConfirmedBy title field enabled.", confirmedByTitleField.isEnabled());
-    assertFalse("VerifiedBy name field enabled.", verifiedByNameField.isEnabled());
-    assertFalse("VerifiedBy title Field field enabled.", verifiedByTitleField.isEnabled());
-    assertFalse("Yes radio button was enabled.", facilityVisitedYesRadioButton.isEnabled());
-    assertFalse("No radio button was enabled.", facilityVisitedNoRadioButton.isEnabled());
-    assertFalse("Visit date field was enabled.", visitDateField.isEnabled());
-    assertFalse("vehicle id field was enabled.", vehicleIdField.isEnabled());
+  public void selectReasonBadWeather() {
+    testWebDriver.waitForElementToAppear(badWeather);
+    badWeather.click();
+    removeFocusFromElement();
   }
 
-  public void enterDataWhenFacilityVisited(String observation, String confirmName, String confirmTitle,
-                                           String verifierName, String verifierTitle) {
+  public void selectReasonNoTransport() {
+    testWebDriver.waitForElementToAppear(noTransport);
+    noTransport.click();
+    removeFocusFromElement();
+  }
+
+  public void selectReasonFacilityClosed() {
+    testWebDriver.waitForElementToAppear(facilityClosed);
+    facilityClosed.click();
+    removeFocusFromElement();
+  }
+
+  public void selectReasonUnavailableFunds() {
+    testWebDriver.waitForElementToAppear(unavailableFunds);
+    facilityVisitedNoRadioButton.click();
+    removeFocusFromElement();
+  }
+
+  public void selectReasonNotPartOfProgram() {
+    testWebDriver.waitForElementToAppear(notPartOfProgram);
+    notPartOfProgram.click();
+    removeFocusFromElement();
+  }
+
+  public void selectReasonOther() {
+    testWebDriver.waitForElementToAppear(other);
+    other.click();
+    removeFocusFromElement();
+  }
+
+  public void enterOtherReasonInTextBox(String reason) {
+    testWebDriver.waitForElementToAppear(otherTextBox);
+    sendKeys(otherTextBox, reason);
+    otherTextBox.sendKeys(Keys.TAB);
+  }
+
+  public void verifyAllFieldsDisabled() {
+    assertFalse("Yes radio button was enabled.", facilityVisitedYesRadioButton.isEnabled());
+    assertFalse("No radio button was enabled.", facilityVisitedNoRadioButton.isEnabled());
+    if (isYesRadioButtonSelected()) {
+      assertFalse("Observation field enabled.", observationsField.isEnabled());
+      assertFalse("ConfirmedBy name field enabled.", confirmedByNameField.isEnabled());
+      assertFalse("ConfirmedBy title field enabled.", confirmedByTitleField.isEnabled());
+      assertFalse("VerifiedBy name field enabled.", verifiedByNameField.isEnabled());
+      assertFalse("VerifiedBy title Field field enabled.", verifiedByTitleField.isEnabled());
+      assertFalse("Visit date field was enabled.", visitDateField.isEnabled());
+      assertFalse("vehicle id field was enabled.", vehicleIdField.isEnabled());
+    } else if (isNoRadioButtonSelected()) {
+      assertFalse("Bad Weather reason radio button enabled.", badWeather.isEnabled());
+      assertFalse("No Transport reason radio button enabled.", noTransport.isEnabled());
+      assertFalse("Facility Closed radio button enabled.", facilityClosed.isEnabled());
+      assertFalse("Unavailable Funds radio button enabled.", unavailableFunds.isEnabled());
+      assertFalse("Not Part Of Program radio button enabled.", notPartOfProgram.isEnabled());
+      assertFalse("Other radio button enabled.", other.isEnabled());
+      assertFalse("Other reason text field was enabled.", otherTextBox.isEnabled());
+    }
+  }
+
+  public void enterDataWhenFacilityVisited(String observation, String confirmName, String confirmTitle, String verifierName,
+                                           String verifierTitle) {
     selectFacilityVisitedYes();
     enterVisitDateAsFirstOfCurrentMonth();
     enterObservations(observation);
@@ -236,5 +311,9 @@ public class VisitInformationPage extends DistributionTab {
     enterConfirmedByTitle(confirmTitle);
     enterVerifiedByName(verifierName);
     enterVerifiedByTitle(verifierTitle);
+  }
+
+  public void removeFocusFromElement() {
+    testWebDriver.moveToElement(visitInformationLabel);
   }
 }
