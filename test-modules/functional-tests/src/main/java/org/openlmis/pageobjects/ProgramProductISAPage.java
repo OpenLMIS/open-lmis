@@ -213,6 +213,7 @@ public class ProgramProductISAPage extends Page {
   }
 
   public void editFormula() {
+    testWebDriver.waitForElementToAppear(editFormulaButton);
     editFormulaButton.click();
   }
 
@@ -222,6 +223,7 @@ public class ProgramProductISAPage extends Page {
   }
 
   public void saveISA() {
+    testWebDriver.waitForElementToAppear(programProductISASaveButton);
     programProductISASaveButton.click();
   }
 

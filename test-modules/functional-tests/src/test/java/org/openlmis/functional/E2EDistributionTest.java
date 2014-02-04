@@ -84,7 +84,8 @@ public class E2EDistributionTest extends TestCaseHelper {
 
     distributionPage.clickRecordData(1);
     FacilityListPage facilityListPage = PageFactory.getInstanceOfFacilityListPage(testWebDriver);
-    RefrigeratorPage refrigeratorPage = facilityListPage.selectFacility(facilityCodeFirst).navigateToRefrigerators();
+    VisitInformationPage visitInformationPage = facilityListPage.selectFacility(facilityCodeFirst);
+    RefrigeratorPage refrigeratorPage = visitInformationPage.navigateToRefrigerators();
     facilityListPage.verifyFacilityIndicatorColor("Overall", "AMBER");
 
     refrigeratorPage.onRefrigeratorScreen();
@@ -99,6 +100,7 @@ public class E2EDistributionTest extends TestCaseHelper {
 
     distributionPage.clickRecordData(1);
     facilityListPage.selectFacility(facilityCodeFirst);
+    visitInformationPage.navigateToRefrigerators();
 
     String[] refrigeratorDetails = "LG;800 LITRES;GR-J287PGHV".split(";");
     for (int i = 0; i < refrigeratorDetails.length; i++) {
@@ -140,8 +142,11 @@ public class E2EDistributionTest extends TestCaseHelper {
     epiUsePage.enterValueInExpirationDate("10/2011", 1);
     epiUsePage.verifyIndicator("GREEN");
 
-    VisitInformationPage visitInformationPage = epiUsePage.navigateToVisitInformation();
+    visitInformationPage = epiUsePage.navigateToVisitInformation();
+    visitInformationPage.verifyIndicator("RED");
     visitInformationPage.enterDataWhenFacilityVisited("some observations", "samuel", "Doe", "Verifier", "XYZ");
+    visitInformationPage.verifyIndicator("GREEN");
+    visitInformationPage.enterVehicleId("90U-L!K3");
 
     ChildCoveragePage childCoveragePage = visitInformationPage.navigateToChildCoverage();
     assertEquals(childCoveragePage.getTextOfTargetGroupValue(9), "300");
@@ -154,6 +159,7 @@ public class E2EDistributionTest extends TestCaseHelper {
     homePage.navigateOfflineDistribution();
     distributionPage.clickRecordData(1);
     facilityListPage.selectFacility(facilityCodeFirst);
+    visitInformationPage.navigateToRefrigerators();
 
     refrigeratorPage.clickShowForRefrigerator1();
     assertEquals(refrigeratorPage.getRefrigeratorTemperateTextFieldValue(), "3");
@@ -184,6 +190,7 @@ public class E2EDistributionTest extends TestCaseHelper {
     epiInventoryPage.verifyIndicator("GREEN");
 
     FullCoveragePage fullCoveragePage = epiInventoryPage.navigateToFullCoverage();
+    fullCoveragePage.verifyIndicator("RED");
     fullCoveragePage.enterData(5, 7, 0, "9999999");
     fullCoveragePage.verifyIndicator("GREEN");
 
@@ -218,7 +225,6 @@ public class E2EDistributionTest extends TestCaseHelper {
     ResultSet childCoverageDetails = dbWrapper.getChildCoverageDetails("PCV10 1st dose", "F10");
     assertEquals("300", childCoverageDetails.getInt("targetGroup"));
 
-    refrigeratorPage.navigateToVisitInformation();
     visitInformationPage.verifyAllFieldsDisabled();
 
     visitInformationPage.navigateToEpiUse();
@@ -229,11 +235,9 @@ public class E2EDistributionTest extends TestCaseHelper {
     refrigeratorPage.verifyAllFieldsDisabled();
 
     refrigeratorPage.navigateToFullCoverage();
-    assertFalse(fullCoveragePage.getStatusForField("femaleHealthCenter"));
-    assertFalse(fullCoveragePage.getStatusForField("femaleMobileBrigade"));
-    assertFalse(fullCoveragePage.getStatusForField("maleHealthCenter"));
-    assertFalse(fullCoveragePage.getStatusForField("maleMobileBrigade"));
+    fullCoveragePage.verifyAllFieldsDisabled();
 
+    loginPage = PageFactory.getInstanceOfLoginPage(testWebDriver, baseUrlGlobal);
     testWebDriver.sleep(1000);
     homePage = loginPage.loginAs(userSIC, password);
     testWebDriver.sleep(1000);
