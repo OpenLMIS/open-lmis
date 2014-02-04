@@ -60,7 +60,7 @@ public class UserPage extends Page {
   @FindBy(how = How.ID, using = "searchUser")
   private static WebElement searchUserTextField = null;
 
-  @FindBy(how = How.XPATH, using = "//ul[@id='userList']/li/div[@class='user-actions']/a[2]")
+  @FindBy(how = How.ID, using = "resetPassword0")
   private static WebElement selectFirstResetPassword = null;
 
   @FindBy(how = How.ID, using = "password1")
@@ -240,6 +240,7 @@ public class UserPage extends Page {
   public void resetPassword(String newPassword, String confirmPassword) {
     testWebDriver.moveToElement(firstUserLink);
     testWebDriver.waitForElementToAppear(selectFirstResetPassword);
+    testWebDriver.sleep(300);
     selectFirstResetPassword.click();
     testWebDriver.waitForElementToAppear(newPasswordField);
     newPasswordField.sendKeys(newPassword);
