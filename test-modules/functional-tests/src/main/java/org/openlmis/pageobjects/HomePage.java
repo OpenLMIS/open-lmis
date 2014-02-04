@@ -459,6 +459,7 @@ public class HomePage extends Page {
   }
 
   public void navigateRnr() {
+    testWebDriver.sleep(1000);
     testWebDriver.waitForElementToBeEnabled(requisitionsLink);
     testWebDriver.keyPress(requisitionsLink);
     testWebDriver.waitForElementToBeEnabled(createLink);
