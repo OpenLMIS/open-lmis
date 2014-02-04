@@ -31,7 +31,8 @@ public class EpiInventory extends BaseModel {
 
   public EpiInventory(FacilityVisit facilityVisit, Facility facility, Distribution distribution) {
 
-    for (FacilityProgramProduct facilityProgramProduct : facility.getSupportedPrograms().get(0).getProgramProducts()) {
+    List<FacilityProgramProduct> programProducts = FacilityProgramProduct.filterActiveProducts(facility.getSupportedPrograms().get(0).getProgramProducts());
+    for (FacilityProgramProduct facilityProgramProduct : programProducts) {
       EpiInventoryLineItem lineItem = new EpiInventoryLineItem(facilityVisit.getId(), facilityProgramProduct, facility.getCatchmentPopulation(), distribution.getPeriod().getNumberOfMonths());
       lineItem.setCreatedBy(facilityVisit.getCreatedBy());
       lineItems.add(lineItem);

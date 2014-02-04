@@ -14,9 +14,13 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.Predicate;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
+
+import java.util.List;
 
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 
@@ -66,5 +70,16 @@ public class FacilityProgramProduct extends ProgramProduct {
       return programProductIsa.getWhoRatio();
     }
     return null;
+  }
+
+  public static List<FacilityProgramProduct> filterActiveProducts(List<FacilityProgramProduct> programProducts) {
+    List<FacilityProgramProduct> activeProgramProducts = (List<FacilityProgramProduct>) CollectionUtils.select(programProducts, new Predicate() {
+      @Override
+      public boolean evaluate(Object o) {
+        FacilityProgramProduct programProduct = (FacilityProgramProduct) o;
+        return programProduct.isActive() && programProduct.getProduct().getActive();
+      }
+    });
+    return activeProgramProducts;
   }
 }

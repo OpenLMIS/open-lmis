@@ -204,4 +204,13 @@ public class Facility extends BaseModel implements Importable {
   public Double getWhoRatioFor(String productCode) {
     return this.getSupportedPrograms().get(0).getWhoRatioFor(productCode);
   }
+
+  public static List<Facility> filterForActiveProducts(List<Facility> facilities) {
+    for (Facility facility : facilities) {
+      for (ProgramSupported programSupported : facility.getSupportedPrograms()) {
+        programSupported.setProgramProducts(FacilityProgramProduct.filterActiveProducts(programSupported.getProgramProducts()));
+      }
+    }
+    return facilities;
+  }
 }

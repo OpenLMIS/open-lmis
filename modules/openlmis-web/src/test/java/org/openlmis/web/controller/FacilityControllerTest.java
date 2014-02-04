@@ -249,8 +249,10 @@ public class FacilityControllerTest {
 
   @Test
   public void shouldGetFacilitiesForDeliveryZoneAndProgram() throws Exception {
+    mockStatic(Facility.class);
     List<Facility> facilities = new ArrayList<>();
     Mockito.when(facilityService.getAllForDeliveryZoneAndProgram(1l, 1l)).thenReturn(facilities);
+    when(Facility.filterForActiveProducts(facilities)).thenReturn(facilities);
 
     ResponseEntity<OpenLmisResponse> responseEntity = facilityController.getFacilitiesForDeliveryZoneAndProgram(1l, 1l);
 
