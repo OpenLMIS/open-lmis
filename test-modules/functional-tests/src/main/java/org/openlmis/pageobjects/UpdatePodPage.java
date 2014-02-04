@@ -76,29 +76,29 @@ public class UpdatePodPage extends Page {
   }
 
   public String getProductCode(int rowNumber) {
-    WebElement productCode = testWebDriver.findElement(By.id("productCode_" + (rowNumber - 1)));
+    WebElement productCode = testWebDriver.findElement(By.id("productCode" + (rowNumber - 1)));
     testWebDriver.waitForElementToAppear(productCode);
     return productCode.getText();
   }
 
   public String getProductName(int rowNumber) {
-    return testWebDriver.findElement(By.id("productName_" + (rowNumber - 1))).getText();
+    return testWebDriver.findElement(By.id("productName" + (rowNumber - 1))).getText();
   }
 
   public String getCategoryName(int rowNumber) {
-    return testWebDriver.findElement(By.id("category_" + (rowNumber - 1))).getText();
+    return testWebDriver.findElement(By.id("category" + (rowNumber - 1))).getText();
   }
 
   public String getUnitOfIssue(int rowNumber) {
-    return testWebDriver.findElement(By.id("dispensingUnit_" + (rowNumber - 1))).getText();
+    return testWebDriver.findElement(By.id("dispensingUnit" + (rowNumber - 1))).getText();
   }
 
   public String getPacksToShip(int rowNumber) {
-    return testWebDriver.findElement(By.id("packsToShip_" + (rowNumber - 1))).getText();
+    return testWebDriver.findElement(By.id("packsToShip" + (rowNumber - 1))).getText();
   }
 
   public String getQuantityShipped(int rowNumber) {
-    return testWebDriver.findElement(By.id("quantityShipped_" + (rowNumber - 1))).getText();
+    return testWebDriver.findElement(By.id("quantityShipped" + (rowNumber - 1))).getText();
   }
 
   public String getQuantityReceived(int rowNumber) {
@@ -106,7 +106,7 @@ public class UpdatePodPage extends Page {
   }
 
   public String getNotes(int rowNumber) {
-    return testWebDriver.findElement(By.id("notes_" + (rowNumber - 1))).getText();
+    return testWebDriver.findElement(By.id("notes" + (rowNumber - 1))).getText();
   }
 
   public void setQuantityReceived(int rowNumber, String quantityReceived) {
@@ -114,7 +114,7 @@ public class UpdatePodPage extends Page {
   }
 
   public void setNotes(int rowNumber, String notes) {
-    testWebDriver.findElement(By.id("notes_" + (rowNumber - 1))).sendKeys(notes);
+    testWebDriver.findElement(By.id("notes" + (rowNumber - 1))).sendKeys(notes);
   }
 
   public String getTitle() {
@@ -134,47 +134,47 @@ public class UpdatePodPage extends Page {
 
   public Boolean isFullSupplyTickIconDisplayed(int rowNumber) {
     testWebDriver.waitForAjax();
-    WebElement tickIcon = testWebDriver.getElementById("tickIcon"+(rowNumber-1));
+    WebElement tickIcon = testWebDriver.getElementById("tickIcon" + (rowNumber - 1));
     testWebDriver.waitForElementToAppear(tickIcon);
     return tickIcon.isDisplayed();
   }
 
-  public boolean isFirstPageLinkEnabled(){
+  public boolean isFirstPageLinkEnabled() {
     testWebDriver.waitForElementToAppear(firstPageLink);
-    return firstPageLink.getCssValue("color").contains( "rgba(119, 119, 119, 1)");
+    return firstPageLink.getCssValue("color").contains("rgba(119, 119, 119, 1)");
   }
 
-  public boolean isFirstPageLinkDisplayed(){
+  public boolean isFirstPageLinkDisplayed() {
     testWebDriver.waitForElementToAppear(firstPageLink);
     return firstPageLink.isDisplayed();
   }
 
-  public boolean isPreviousPageLinkEnabled(){
+  public boolean isPreviousPageLinkEnabled() {
     testWebDriver.waitForElementToAppear(previousPageLink);
     return previousPageLink.getCssValue("color").contains("rgba(119, 119, 119, 1)");
   }
 
-  public boolean isPreviousPageLinkDisplayed(){
+  public boolean isPreviousPageLinkDisplayed() {
     testWebDriver.waitForElementToAppear(previousPageLink);
     return previousPageLink.isDisplayed();
   }
 
-  public boolean isNextPageLinkEnabled(){
+  public boolean isNextPageLinkEnabled() {
     testWebDriver.waitForElementToAppear(nextPageLink);
     return nextPageLink.getCssValue("color").contains("rgba(119, 119, 119, 1)");
   }
 
-  public boolean isNextPageLinkDisplayed(){
+  public boolean isNextPageLinkDisplayed() {
     testWebDriver.waitForElementToAppear(nextPageLink);
     return nextPageLink.isDisplayed();
   }
 
-  public boolean isLastPageLinkEnabled(){
+  public boolean isLastPageLinkEnabled() {
     testWebDriver.waitForElementToAppear(lastPageLink);
     return lastPageLink.getCssValue("color").contains("rgba(119, 119, 119, 1)");
   }
 
-  public boolean isLastPageLinkDisplayed(){
+  public boolean isLastPageLinkDisplayed() {
     testWebDriver.waitForElementToAppear(lastPageLink);
     return lastPageLink.isDisplayed();
   }
@@ -199,62 +199,62 @@ public class UpdatePodPage extends Page {
     previousPageLink.click();
   }
 
-  public String getRequisitionTypeColor(){
+  public String getRequisitionTypeColor() {
     testWebDriver.waitForElementToAppear(requisitionTypeClass);
     return requisitionTypeClass.getCssValue("background-color");
   }
 
-  public String getRequisitionType(){
+  public String getRequisitionType() {
     testWebDriver.waitForElementToAppear(requisitionType);
     return requisitionType.getText();
   }
 
-  public String getOrderNumberLabel(){
+  public String getOrderNumberLabel() {
     testWebDriver.waitForElementToAppear(orderNumberLabel);
     return orderNumberLabel.getText();
   }
 
-  public String getOrderId(){
+  public String getOrderId() {
     testWebDriver.waitForElementToAppear(orderId);
     return orderId.getText();
   }
 
-  public String getOrderDateTimeLabel(){
+  public String getOrderDateTimeLabel() {
     testWebDriver.waitForElementToAppear(orderDateTimeLabel);
     return orderDateTimeLabel.getText();
   }
 
-  public String getOrderCreatedDate(){
+  public String getOrderCreatedDate() {
     testWebDriver.waitForElementToAppear(orderCreatedDate);
     return orderCreatedDate.getText();
   }
 
-  public String getSupplyingDepotLabel(){
+  public String getSupplyingDepotLabel() {
     testWebDriver.waitForElementToAppear(supplyingDepotLabel);
     return supplyingDepotLabel.getText();
   }
 
-  public String getSupplyingDepot(){
+  public String getSupplyingDepot() {
     testWebDriver.waitForElementToAppear(supplyingDepot);
     return supplyingDepot.getText();
   }
 
-  public String getFacilityLabel(){
+  public String getFacilityLabel() {
     testWebDriver.waitForElementToAppear(facilityLabel);
     return facilityLabel.getText();
   }
 
-  public String getFacilityCode(){
+  public String getFacilityCode() {
     testWebDriver.waitForElementToAppear(facilityCode);
     return facilityCode.getText();
   }
 
-  public String getReportingPeriodLabel(){
+  public String getReportingPeriodLabel() {
     testWebDriver.waitForElementToAppear(reportingPeriodLabel);
     return reportingPeriodLabel.getText();
   }
 
-  public String getPeriodStartDate(){
+  public String getPeriodStartDate() {
     testWebDriver.waitForElementToAppear(periodStartDate);
     return periodStartDate.getText();
   }
