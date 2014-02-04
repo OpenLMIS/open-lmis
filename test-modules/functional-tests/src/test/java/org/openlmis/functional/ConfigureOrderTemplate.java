@@ -91,8 +91,10 @@ public class ConfigureOrderTemplate extends TestCaseHelper {
     configureOrderPage.selectValueFromOrderDateDropDown("yyyy-MM-dd");
     configureOrderPage.clickSaveButton();
     configureOrderPage.verifySuccessMessage("Order file configuration saved successfully!");
+
     testWebDriver.refresh();
     configureOrderPage = configureEDIPage.navigateConfigureOrderPage();
+
     assertEquals(configureOrderPage.getSelectedOptionOfPeriodDropDown(), "MM-dd-yyyy");
     assertEquals(configureOrderPage.getSelectedOptionOfOrderDateDropDown(), "yyyy-MM-dd");
     configureOrderPage.selectValueFromPeriodDropDown("MM/yy");

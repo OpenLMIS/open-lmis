@@ -92,8 +92,12 @@ public class ConfigureBudgetTemplate extends TestCaseHelper {
     configureBudgetPage.setPeriodStartDatePosition("105");
 
     configureBudgetPage.clickSaveButton();
-
     configureBudgetPage.verifyMessage("Budget file configuration saved successfully!");
+
+    testWebDriver.refresh();
+    ConfigureEDIPage configureEDIPage = PageFactory.getInstanceOfConfigureEdiPage(testWebDriver);
+    configureEDIPage.navigateConfigureBudgetPage();
+
     assertTrue(configureBudgetPage.isHeaderIncluded());
     assertEquals(configureBudgetPage.getAllocatedBudgetPosition(), "101");
     assertEquals(configureBudgetPage.getFacilityCodePosition(), "102");
@@ -168,6 +172,8 @@ public class ConfigureBudgetTemplate extends TestCaseHelper {
     assertEquals(configureBudgetPage.getPeriodStartDatePosition(), "523");
 
     configureBudgetPage.clickSaveButton();
+    ConfigureEDIPage configureEDIPage = PageFactory.getInstanceOfConfigureEdiPage(testWebDriver);
+    configureEDIPage.navigateConfigureBudgetPage();
     assertEquals(configureBudgetPage.getFacilityCodePosition(), "123");
     assertEquals(configureBudgetPage.getAllocatedBudgetPosition(), "223");
     assertEquals(configureBudgetPage.getNotesPosition(), "323");

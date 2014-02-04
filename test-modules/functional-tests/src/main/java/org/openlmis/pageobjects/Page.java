@@ -32,7 +32,7 @@ public abstract class Page {
   }
 
   public LoginPage logout() {
-    testWebDriver.sleep(500);
+    testWebDriver.waitForElementToBeEnabled(logoutLink);
     logoutLink.click();
     testWebDriver.sleep(500);
     return new LoginPage(testWebDriver);

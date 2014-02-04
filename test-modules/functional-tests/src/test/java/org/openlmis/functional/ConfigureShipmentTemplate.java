@@ -96,6 +96,8 @@ public class ConfigureShipmentTemplate extends TestCaseHelper {
     configureShipmentPage.selectValueFromShippedDateDropDown("yyyy-MM-dd");
     configureShipmentPage.clickSaveButton();
     configureShipmentPage.verifyMessage("Shipment file configuration saved successfully!");
+    testWebDriver.refresh();
+    configureEDIPage.navigateConfigureShipmentPage();
     assertEquals(configureShipmentPage.getSelectedOptionOfPackedDateDropDown(), "MM-dd-yyyy");
     assertEquals(configureShipmentPage.getSelectedOptionOfShippedDateDropDown(), "yyyy-MM-dd");
 
@@ -103,6 +105,8 @@ public class ConfigureShipmentTemplate extends TestCaseHelper {
     configureShipmentPage.selectValueFromShippedDateDropDown("ddMMyy");
     configureShipmentPage.clickSaveButton();
     configureShipmentPage.verifyMessage("Shipment file configuration saved successfully!");
+    testWebDriver.refresh();
+    configureEDIPage.navigateConfigureShipmentPage();
     assertEquals(configureShipmentPage.getSelectedOptionOfPackedDateDropDown(), "yyyy/MM/dd");
     assertEquals(configureShipmentPage.getSelectedOptionOfShippedDateDropDown(), "ddMMyy");
   }
@@ -124,6 +128,9 @@ public class ConfigureShipmentTemplate extends TestCaseHelper {
     configureShipmentPage.setShippedDate("106");
     configureShipmentPage.clickSaveButton();
     configureShipmentPage.verifyMessage("Shipment file configuration saved successfully!");
+
+    testWebDriver.refresh();
+    configureEDIPage.navigateConfigureShipmentPage();
 
     assertTrue(configureShipmentPage.getIncludeHeader());
     assertEquals("101", configureShipmentPage.getQuantityShipped());
@@ -150,6 +157,8 @@ public class ConfigureShipmentTemplate extends TestCaseHelper {
     configureShipmentPage.unCheckShippedDateCheckBox();
     configureShipmentPage.clickSaveButton();
     configureShipmentPage.verifyMessage("Shipment file configuration saved successfully!");
+    testWebDriver.refresh();
+    configureEDIPage.navigateConfigureShipmentPage();
 
     assertFalse(configureShipmentPage.getIncludeHeader());
     assertEquals("101", configureShipmentPage.getQuantityShipped());
@@ -159,6 +168,7 @@ public class ConfigureShipmentTemplate extends TestCaseHelper {
     assertEquals("5", configureShipmentPage.getPackedDate());
     assertEquals("6", configureShipmentPage.getShippedDate());
     setDefaultPositionValues();
+    configureEDIPage.navigateConfigureShipmentPage();
     configureShipmentPage.clickCancelButton();
     assertTrue("User should be redirected to home page", testWebDriver.getCurrentUrl().contains("public/pages/admin/edi/index.html#/configure-edi-file"));
   }
