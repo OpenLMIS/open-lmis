@@ -297,5 +297,5 @@ services.factory('EnabledWarehouse', function ($resource) {
 });
 
 services.factory('OrderPOD', function ($resource) {
-  return $resource('/pods/:id.json', {id: '@id'}, update);
+  return $resource('/pods/:action/:id.json', {id: '@id', action: '@action'}, update);
 });

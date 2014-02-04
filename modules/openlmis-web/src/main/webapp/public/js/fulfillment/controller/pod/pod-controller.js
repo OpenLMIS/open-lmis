@@ -8,10 +8,10 @@
  *  You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
  */
 
-function PODController($scope, orderPOD, OrderPOD, pageSize, $routeParams, $location) {
+function PODController($scope, orderPOD, OrderPOD, pageSize, $routeParams, $location, $dialog, $q) {
 
   $scope.pageSize = pageSize;
-  $scope.pod = orderPOD.orderPOD;
+  $scope.pod = new ProofOfDelivery(orderPOD.orderPOD);
   $scope.order = orderPOD.order;
   $scope.numberOfPages = Math.ceil($scope.pod.podLineItems.length / $scope.pageSize) || 1;
   $scope.requisitionType = $scope.order.emergency ? "requisition.type.emergency" : "requisition.type.regular";
@@ -50,6 +50,34 @@ function PODController($scope, orderPOD, OrderPOD, pageSize, $routeParams, $loca
       $scope.podForm.$setPristine();
     }, function (response) {
       $scope.error = response.data.error;
+    });
+  };
+
+  function confirm() {
+    var deferred = $q.defer();
+    var options = {
+      id: "confirmDialog",
+      header: "label.confirm.action",
+      body: "msg.question.confirmation"
+    };
+
+    OpenLmisDialog.newDialog(options, function (result) {
+      result ? deferred.resolve() : deferred.reject();
+    }, $dialog);
+
+    return deferred.promise;
+  }
+
+  $scope.submit = function () {
+    if (($scope.errorPages = $scope.pod.error(pageSize).errorPages))
+      return;
+
+    confirm().then(function () {
+      OrderPOD.update({id: $routeParams.id, action: 'submit'}, function (data) {
+        $scope.message = data.success;
+      }, function (response) {
+        $scope.error = response.data.error;
+      });
     });
   };
 

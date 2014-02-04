@@ -8,10 +8,16 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-angular.module('fulfillment', ['openlmis', 'ngGrid', 'ui.bootstrap.dialog']).config(['$routeProvider', function ($routeProvider) {
-  $routeProvider.
-    when('/view-orders', {controller: ViewOrderListController, templateUrl: 'order/partials/view-order.html', reloadOnSearch: false}).
-    when('/manage-pod-orders', {controller: ManagePODController, templateUrl: 'pod/partials/manage-pod.html'}).
-    when('/pods/:id', {controller: PODController, templateUrl: 'pod/partials/pod.html', resolve: PODController.resolve, reloadOnSearch: false}).
-    otherwise({redirectTo: '/view-orders'});
-}]);
+function ProofOfDelivery(proofOfDeliveryJson) {
+  $.extend(true, this, proofOfDeliveryJson);
+}
+
+ProofOfDelivery.prototype.error = function (pageSize) {
+  var errorPages = [];
+  this.podLineItems.forEach(function (lineItem, i) {
+    if (lineItem.quantityReceived === undefined || lineItem.quantityReceived === null) {
+      errorPages.push(i / pageSize + 1);
+    }
+  });
+  return !errorPages.length ? {errorPages: null} : {errorPages: errorPages};
+};
