@@ -528,7 +528,7 @@ public class InitiateRnRPage extends RequisitionPage {
 
   public void calculateAndVerifyTotalCost() {
     actualTotalCostFullSupply = calculateTotalCostForProduct(1);
-    assertEquals(actualTotalCostFullSupply.toString() + "0", totalCost.getText().substring(1));
+    assertEquals(actualTotalCostFullSupply.toString() + "0", totalCost.getText().substring(1).replace(",", ""));
     testWebDriver.sleep(500);
   }
 
