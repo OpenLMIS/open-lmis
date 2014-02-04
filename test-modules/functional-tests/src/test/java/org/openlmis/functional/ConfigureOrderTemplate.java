@@ -91,6 +91,8 @@ public class ConfigureOrderTemplate extends TestCaseHelper {
     configureOrderPage.selectValueFromOrderDateDropDown("yyyy-MM-dd");
     configureOrderPage.clickSaveButton();
     configureOrderPage.verifySuccessMessage("Order file configuration saved successfully!");
+    testWebDriver.refresh();
+    configureOrderPage = configureEDIPage.navigateConfigureOrderPage();
     assertEquals(configureOrderPage.getSelectedOptionOfPeriodDropDown(), "MM-dd-yyyy");
     assertEquals(configureOrderPage.getSelectedOptionOfOrderDateDropDown(), "yyyy-MM-dd");
     configureOrderPage.selectValueFromPeriodDropDown("MM/yy");
@@ -122,6 +124,9 @@ public class ConfigureOrderTemplate extends TestCaseHelper {
     configureOrderPage.setOrderDate(orderData);
     configureOrderPage.clickSaveButton();
     configureOrderPage.verifySuccessMessage("Order file configuration saved successfully!");
+
+    testWebDriver.refresh();
+    configureOrderPage = configureEDIPage.navigateConfigureOrderPage();
 
     assertEquals(facilityCode, configureOrderPage.getFacilityCode());
     assertEquals(orderNumber, configureOrderPage.getOrderNumber());
@@ -156,6 +161,9 @@ public class ConfigureOrderTemplate extends TestCaseHelper {
     configureOrderPage.clickSaveButton();
     configureOrderPage.verifySuccessMessage("Order file configuration saved successfully!");
 
+    testWebDriver.refresh();
+    configureOrderPage = configureEDIPage.navigateConfigureOrderPage();
+
     assertEquals(facilityCode, configureOrderPage.getFacilityCode());
     assertEquals(orderNumber, configureOrderPage.getOrderNumber());
     assertEquals(approvedQuantity, configureOrderPage.getApprovedQuantity());
@@ -178,6 +186,10 @@ public class ConfigureOrderTemplate extends TestCaseHelper {
     configureOrderPage.unCheckProductCodeCheckBox();
     configureOrderPage.clickSaveButton();
     configureOrderPage.verifySuccessMessage("Order file configuration saved successfully!");
+
+    testWebDriver.refresh();
+    configureOrderPage = configureEDIPage.navigateConfigureOrderPage();
+
     configureOrderPage.clickCancelButton();
     assertTrue("User should be redirected to home page", testWebDriver.getCurrentUrl().contains("public/pages/admin/edi/index.html#/configure-edi-file"));
   }
@@ -192,6 +204,10 @@ public class ConfigureOrderTemplate extends TestCaseHelper {
     configureOrderPage.verifyElementsOnAddNewButtonClick(6, "true", "Not applicable", "");
     configureOrderPage.clickSaveButton();
     configureOrderPage.verifySuccessMessage(successMessage);
+
+    testWebDriver.refresh();
+    configureOrderPage = configureEDIPage.navigateConfigureOrderPage();
+
     configureOrderPage.clickRemoveIcon(6);
     configureOrderPage.clickSaveButton();
     configureOrderPage.verifySuccessMessage(successMessage);
