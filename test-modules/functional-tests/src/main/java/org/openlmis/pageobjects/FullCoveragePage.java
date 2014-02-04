@@ -12,6 +12,7 @@
 package org.openlmis.pageobjects;
 
 import org.openlmis.UiUtils.TestWebDriver;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
@@ -134,21 +135,25 @@ public class FullCoveragePage extends DistributionTab {
   public void enterFemaleHealthCenter(Integer femaleHealthCenter) {
     testWebDriver.waitForElementToAppear(femaleHealthCenterField);
     sendKeys(femaleHealthCenterField, femaleHealthCenter.toString());
+    femaleHealthCenterField.sendKeys(Keys.TAB);
   }
 
   public void enterFemaleMobileBrigade(Integer femaleMobileBrigade) {
     testWebDriver.waitForElementToAppear(femaleMobileBrigadeField);
     sendKeys(femaleMobileBrigadeField, femaleMobileBrigade.toString());
+    femaleMobileBrigadeField.sendKeys(Keys.TAB);
   }
 
   public void enterMaleHealthCenter(Integer maleHealthCenter) {
     testWebDriver.waitForElementToAppear(maleHealthCenterField);
     sendKeys(maleHealthCenterField, maleHealthCenter.toString());
+    maleHealthCenterField.sendKeys(Keys.TAB);
   }
 
   public void enterMaleMobileBrigade(String maleMobileBrigade) {
     testWebDriver.waitForElementToAppear(maleMobileBrigadeField);
     sendKeys(maleMobileBrigadeField, maleMobileBrigade);
+    maleMobileBrigadeField.sendKeys(Keys.TAB);
   }
 
   public void enterData(Integer femaleHealthCenter, Integer femaleMobileBrigade, Integer maleHealthCenter, String maleMobileBrigade) {

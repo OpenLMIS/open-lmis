@@ -145,6 +145,7 @@ public class VisitInformationPage extends DistributionTab {
   public void enterConfirmedByName(String confirmedByName) {
     testWebDriver.waitForElementToAppear(confirmedByNameField);
     sendKeys(confirmedByNameField, confirmedByName);
+    confirmedByNameField.sendKeys(Keys.TAB);
   }
 
   public void enterConfirmedByTitle(String confirmedByTitle) {
@@ -162,6 +163,7 @@ public class VisitInformationPage extends DistributionTab {
   public void enterVerifiedByTitle(String verifiedByTitle) {
     testWebDriver.waitForElementToAppear(verifiedByTitleField);
     sendKeys(verifiedByTitleField, verifiedByTitle);
+    verifiedByTitleField.sendKeys(Keys.TAB);
   }
 
   public void enterVisitDateAsFirstOfCurrentMonth() {

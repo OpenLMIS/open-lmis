@@ -48,6 +48,7 @@ public class EpiInventoryPage extends DistributionTab {
       fillDeliveredQuantity(i + 1, epiInventoryData.get("deliveredQuantity"));
       fillExistingQuantity(i + 1, epiInventoryData.get("existingQuantity"));
       fillSpoiledQuantity(i + 1, epiInventoryData.get("spoiledQuantity"));
+
     }
   }
 
@@ -58,6 +59,7 @@ public class EpiInventoryPage extends DistributionTab {
       assertEquals(getDeliveredQuantity(i + 1), epiInventoryData.get("deliveredQuantity"));
       assertEquals(getExistingQuantity(i + 1), epiInventoryData.get("existingQuantity"));
       assertEquals(getSpoiledQuantity(i + 1), epiInventoryData.get("spoiledQuantity"));
+      testWebDriver.findElement(By.id("productName0")).click();
     }
   }
 
@@ -172,5 +174,4 @@ public class EpiInventoryPage extends DistributionTab {
   public String getExistingQuantity(int rowNumber) {
     return testWebDriver.findElement(By.id("existingQuantity" + (rowNumber - 1))).getAttribute("value");
   }
-
 }

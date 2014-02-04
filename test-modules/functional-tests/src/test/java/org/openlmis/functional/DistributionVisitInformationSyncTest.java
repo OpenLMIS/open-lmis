@@ -102,6 +102,7 @@ public class DistributionVisitInformationSyncTest extends TestCaseHelper {
   private void verifyLabels() {
     VisitInformationPage visitInformationPage = PageFactory.getInstanceOfVisitInformation(testWebDriver);
     assertEquals("Visit Info / Observations", visitInformationPage.getFacilityVisitTabLabel());
+    assertEquals("Visit Info / Observations", visitInformationPage.getVisitInformationPageLabel());
   }
 
   public void setupDataForDistributionTest(String userSIC, String deliveryZoneCodeFirst, String deliveryZoneCodeSecond,

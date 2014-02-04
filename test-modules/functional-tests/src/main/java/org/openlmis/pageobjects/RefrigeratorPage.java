@@ -184,7 +184,7 @@ public class RefrigeratorPage extends DistributionTab {
 
   @Override
   public void verifyIndicator(String color) {
-    //To change body of implemented methods use File | Settings | File Templates.
+    verifyRefrigeratorColor("Overall", color);
   }
 
   @Override
@@ -309,16 +309,19 @@ public class RefrigeratorPage extends DistributionTab {
   public void enterValueInBrandModal(String value) {
     testWebDriver.waitForElementToAppear(brandTextField);
     sendKeys(brandTextField, value);
+    brandTextField.sendKeys(Keys.TAB);
   }
 
   public void enterValueInModelModal(String value) {
     testWebDriver.waitForElementToAppear(modelTextField);
     sendKeys(modelTextField, value);
+    modelTextField.sendKeys(Keys.TAB);
   }
 
   public void enterValueInManufacturingSerialNumberModal(String value) {
     testWebDriver.waitForElementToAppear(manufacturerSerialNumberTextField);
     sendKeys(manufacturerSerialNumberTextField, value);
+    manufacturerSerialNumberTextField.sendKeys(Keys.TAB);
   }
 
   public void enterValueInHighAlarmEvents(String value) {
@@ -336,6 +339,7 @@ public class RefrigeratorPage extends DistributionTab {
   public void enterValueInNotesTextArea(String value) {
     testWebDriver.waitForElementToAppear(notesTextArea);
     sendKeys(notesTextArea, value);
+    notesTextArea.sendKeys(Keys.TAB);
   }
 
   public void clickDoneOnModal() {
