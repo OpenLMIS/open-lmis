@@ -328,9 +328,10 @@ public class DBWrapper {
     update("delete from program_product_price_history");
     update("delete from pod_line_items");
     update("delete from pod");
+    update("delete from shipment_file_info");
+    update("delete from shipment_line_items");
     update("delete from orders");
     update("delete from requisition_status_changes");
-
     update("delete from user_password_reset_tokens");
     update("delete from comments");
     update("delete from epi_use_line_items");
@@ -1370,4 +1371,13 @@ public class DBWrapper {
   public void updatePopulationOfFacility(String facility, String population) throws SQLException {
     update("update facilities set catchmentPopulation=" + population + " where code='" + facility + "';");
   }
+
+  public void insertShipmentData(int orderID, String productCode, Integer quantityShipped) throws SQLException {
+    update("INSERT INTO shipment_file_info(id,filename,processingError) VALUES (%d, '%s','%s')", orderID,
+      "abc", "false");
+
+    update("INSERT INTO shipment_line_items(orderId,productCode,quantityShipped,productName,dispensingUnit,productCategory) VALUES (%d, '%s', %d, %s, %s, %s)", orderID,
+      productCode, quantityShipped, "'antibiotic Capsule'", "'Strip'", "'Antibiotic'");
+  }
+
 }

@@ -112,6 +112,24 @@ public class UpdatePod extends TestCaseHelper {
     verifyRequisitionTypeAndColor("regular");
   }
 
+  @Test(groups = {"requisition"})
+  public void testVerifyUpdatePODForPackedOrdersValidFlowForRegularRnR() throws Exception {
+    initiateRnrAndConvertToOrder(false, 1111);
+    testDataForShipment();
+
+    HomePage homePage = loginPage.loginAs(updatePODData.get(USER), updatePODData.get(PASSWORD));
+    ManagePodPage managePodPage = homePage.navigateManagePOD();
+    UpdatePodPage updatePodPage = managePodPage.selectRequisitionToUpdatePod(1);
+
+    assertEquals("Proof of Delivery", updatePodPage.getTitle());
+    verifyHeadersWithValuesOnUpdatePODScreen();
+    verifyHeadersOfPodTableOnUpdatePODScreen();
+    verifyValuesOfPodTableOnUpdatePODScreen(1, "P10", "antibiotic Capsule", "111", "Strip", "99898998");
+    assertEquals("", updatePodPage.getQuantityReceived(1));
+    assertEquals("", updatePodPage.getNotes(1));
+    verifyRequisitionTypeAndColor("regular");
+  }
+
   private void initiateRnrAndConvertToOrder(boolean isEmergencyRegular, int packsToShip) throws SQLException {
     dbWrapper.insertRequisitions(1, "MALARIA", true, "2012-12-01", "2015-12-01", "F10", isEmergencyRegular);
     dbWrapper.updateRequisitionStatus("APPROVED", updatePODData.get(USER), "MALARIA");
@@ -173,6 +191,14 @@ public class UpdatePod extends TestCaseHelper {
     setupRequisitionGroupData("RG1", "RG2", "N1", "N2", "F10", "F11");
     dbWrapper.insertSupplyLines("N1", program, "F10", true);
     dbWrapper.insertFulfilmentRoleAssignment("storeInCharge", "store in-charge", "F10");
+  }
+
+  private void testDataForShipment() throws SQLException {
+    dbWrapper.updateFieldValue("orders", "status", "RELEASED", null, null);
+    int id = dbWrapper.getMaxRnrID();
+    dbWrapper.insertShipmentData(id, "P10", 99898998);
+    dbWrapper.updateFieldValue("shipment_line_items", "packstoship", 111);
+    dbWrapper.updateFieldValue("orders", "status", "PACKED", null, null);
   }
 
   @AfterMethod(groups = "requisition")
