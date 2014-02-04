@@ -246,6 +246,7 @@ public class RefrigeratorPage extends DistributionTab {
     refrigeratorTab.click();
   }
 
+  @Override
   public void verifyAllFieldsDisabled() {
     assertFalse("refrigeratorTemperatureTextField enabled.", refrigeratorTemperatureTextField.isEnabled());
     assertFalse("refrigeratorTemperatureNR enabled.", refrigeratorTemperatureNR.isEnabled());

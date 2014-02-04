@@ -24,7 +24,7 @@ import static com.thoughtworks.selenium.SeleneseTestBase.assertFalse;
 import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
 import static org.openqa.selenium.support.How.ID;
 
-public class GeneralObservationPage extends DistributionTab {
+public class VisitInformationPage extends DistributionTab {
 
   public static final String VERIFIED_BY_NAME = "verifiedByName";
   public static final String VERIFIED_BY_TITLE = "verifiedByTitle";
@@ -88,7 +88,7 @@ public class GeneralObservationPage extends DistributionTab {
     put(VERIFIED_BY_NAME, verifiedByNameField);
   }};
 
-  public GeneralObservationPage(TestWebDriver driver) {
+  public VisitInformationPage(TestWebDriver driver) {
     super(driver);
   }
 
@@ -115,13 +115,13 @@ public class GeneralObservationPage extends DistributionTab {
 
   @Override
   public void verifyData(List<Map<String, String>> data) {
-    for (Map<String, String> generalObservationData : data) {
-      assertEquals(fieldMap.get(VEHICLE_ID).getAttribute(VALUE), generalObservationData.get(VEHICLE_ID));
-      assertEquals(fieldMap.get(OBSERVATIONS).getAttribute(VALUE), generalObservationData.get(OBSERVATIONS));
-      assertEquals(fieldMap.get(VERIFIED_BY_NAME).getAttribute(VALUE), generalObservationData.get(VERIFIED_BY_NAME));
-      assertEquals(fieldMap.get(VERIFIED_BY_TITLE).getAttribute(VALUE), generalObservationData.get(VERIFIED_BY_TITLE));
-      assertEquals(fieldMap.get(CONFIRMED_BY_NAME).getAttribute(VALUE), generalObservationData.get(CONFIRMED_BY_NAME));
-      assertEquals(fieldMap.get(CONFIRMED_BY_TITLE).getAttribute(VALUE), generalObservationData.get(CONFIRMED_BY_TITLE));
+    for (Map<String, String> visitInformationData : data) {
+      assertEquals(fieldMap.get(VEHICLE_ID).getAttribute(VALUE), visitInformationData.get(VEHICLE_ID));
+      assertEquals(fieldMap.get(OBSERVATIONS).getAttribute(VALUE), visitInformationData.get(OBSERVATIONS));
+      assertEquals(fieldMap.get(VERIFIED_BY_NAME).getAttribute(VALUE), visitInformationData.get(VERIFIED_BY_NAME));
+      assertEquals(fieldMap.get(VERIFIED_BY_TITLE).getAttribute(VALUE), visitInformationData.get(VERIFIED_BY_TITLE));
+      assertEquals(fieldMap.get(CONFIRMED_BY_NAME).getAttribute(VALUE), visitInformationData.get(CONFIRMED_BY_NAME));
+      assertEquals(fieldMap.get(CONFIRMED_BY_TITLE).getAttribute(VALUE), visitInformationData.get(CONFIRMED_BY_TITLE));
     }
   }
 

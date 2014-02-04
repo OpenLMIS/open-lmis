@@ -136,6 +136,11 @@ public class ChildCoveragePage extends DistributionTab {
     //To change body of implemented methods use File | Settings | File Templates.
   }
 
+  @Override
+  public void verifyAllFieldsDisabled() {
+    //To change body of implemented methods use File | Settings | File Templates.
+  }
+
   public String getTextOfRegimenBCG() {
     testWebDriver.waitForElementToAppear(regimenBCG);
     return regimenBCG.getText();
@@ -302,8 +307,8 @@ public class ChildCoveragePage extends DistributionTab {
   }
 
   public String getTextOfTargetGroupValue(int rowNumber) {
-    testWebDriver.waitForElementToAppear(testWebDriver.findElement(By.id("target"+ (rowNumber-1))));
-    return testWebDriver.findElement(By.id("target"+ (rowNumber-1))).getText() ;
+    testWebDriver.waitForElementToAppear(testWebDriver.findElement(By.id("target" + (rowNumber - 1))));
+    return testWebDriver.findElement(By.id("target" + (rowNumber - 1))).getText();
   }
 
 }

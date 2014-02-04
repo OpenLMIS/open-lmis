@@ -10,7 +10,6 @@
 
 package org.openlmis.functional;
 
-import com.thoughtworks.selenium.SeleneseTestBase;
 import org.openlmis.UiUtils.CaptureScreenshotOnFailureListener;
 import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.UiUtils.TestWebDriver;
@@ -141,15 +140,15 @@ public class E2EDistributionTest extends TestCaseHelper {
     epiUsePage.enterValueInExpirationDate("10/2011", 1);
     epiUsePage.verifyIndicator("GREEN");
 
-    GeneralObservationPage generalObservationPage = epiUsePage.navigateToGeneralObservations();
-    generalObservationPage.enterDataWhenFacilityVisited("some observations", "samuel", "Doe", "Verifier", "XYZ");
+    VisitInformationPage visitInformationPage = epiUsePage.navigateToVisitInformation();
+    visitInformationPage.enterDataWhenFacilityVisited("some observations", "samuel", "Doe", "Verifier", "XYZ");
 
-    ChildCoveragePage childCoveragePage = generalObservationPage.navigateToChildCoverage();
-    SeleneseTestBase.assertEquals(childCoveragePage.getTextOfTargetGroupValue(9), "300");
-    SeleneseTestBase.assertEquals(childCoveragePage.getTextOfTargetGroupValue(10), "300");
-    SeleneseTestBase.assertEquals(childCoveragePage.getTextOfTargetGroupValue(11), "300");
-    SeleneseTestBase.assertEquals(childCoveragePage.getTextOfTargetGroupValue(1), "");
-    SeleneseTestBase.assertEquals(childCoveragePage.getTextOfTargetGroupValue(12), "");
+    ChildCoveragePage childCoveragePage = visitInformationPage.navigateToChildCoverage();
+    assertEquals(childCoveragePage.getTextOfTargetGroupValue(9), "300");
+    assertEquals(childCoveragePage.getTextOfTargetGroupValue(10), "300");
+    assertEquals(childCoveragePage.getTextOfTargetGroupValue(11), "300");
+    assertEquals(childCoveragePage.getTextOfTargetGroupValue(1), "");
+    assertEquals(childCoveragePage.getTextOfTargetGroupValue(12), "");
 
     homePage.navigateHomePage();
     homePage.navigateOfflineDistribution();
@@ -210,19 +209,19 @@ public class E2EDistributionTest extends TestCaseHelper {
     verifyEpiUseDataInDatabase(10, 20, 30, null, 50, "10/2011", "PG1", facilityCodeFirst);
     verifyRefrigeratorReadingDataInDatabase(facilityCodeFirst, "GR-J287PGHV", 3F, "Y", 1, 0, "D", "miscellaneous");
     verifyRefrigeratorProblemDataNullInDatabase("GR-J287PGHV", facilityCodeFirst);
-    verifyGeneralObservationsDataInDatabase(facilityCodeFirst, "some observations", "samuel", "Doe", "Verifier", "XYZ");
+    verifyVisitInformationDataInDatabase(facilityCodeFirst, "some observations", "samuel", "Doe", "Verifier", "XYZ");
     verifyFullCoveragesDataInDatabase(5, 7, 0, 9999999, facilityCodeFirst);
     verifyEpiInventoryDataInDatabase(null, "10", null, "P10", facilityCodeFirst);
     verifyEpiInventoryDataInDatabase(null, "20", null, "Product6", facilityCodeFirst);
     verifyEpiInventoryDataInDatabase(null, "30", null, "P11", facilityCodeFirst);
 
     ResultSet childCoverageDetails = dbWrapper.getChildCoverageDetails("PCV10 1st dose", "F10");
-    SeleneseTestBase.assertEquals("300", childCoverageDetails.getInt("targetGroup"));
+    assertEquals("300", childCoverageDetails.getInt("targetGroup"));
 
-    refrigeratorPage.navigateToGeneralObservations();
-    generalObservationPage.verifyAllFieldsDisabled();
+    refrigeratorPage.navigateToVisitInformation();
+    visitInformationPage.verifyAllFieldsDisabled();
 
-    generalObservationPage.navigateToEpiUse();
+    visitInformationPage.navigateToEpiUse();
     epiUsePage.verifyAllFieldsDisabled();
 
     epiUsePage.navigateToRefrigerators();
@@ -256,9 +255,9 @@ public class E2EDistributionTest extends TestCaseHelper {
 
     distributionPage.clickRecordData(1);
     assertTrue(facilityListPage.getFacilitiesInDropDown().contains("F10"));
-    generalObservationPage = facilityListPage.selectFacility(facilityCodeFirst);
+    visitInformationPage = facilityListPage.selectFacility(facilityCodeFirst);
     facilityListPage.verifyFacilityIndicatorColor("Overall", "RED");
-    generalObservationPage.navigateToRefrigerators();
+    visitInformationPage.navigateToRefrigerators();
 
     refrigeratorPage.verifyIndicator("RED");
 

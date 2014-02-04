@@ -57,7 +57,7 @@ public class ManageDistribution extends TestCaseHelper {
   DistributionPage distributionPage;
   FacilityListPage facilityListPage;
   RefrigeratorPage refrigeratorPage;
-  GeneralObservationPage observation;
+  VisitInformationPage visitInformationPage;
   FullCoveragePage fullCoveragePage;
   EPIUsePage epiUsePage;
   EpiInventoryPage epiInventoryPage;
@@ -71,7 +71,7 @@ public class ManageDistribution extends TestCaseHelper {
     super.setup();
     dbWrapper.deleteData();
     epiUsePage = PageFactory.getInstanceOfEpiUsePage(testWebDriver);
-    observation = PageFactory.getInstanceOfObservation(testWebDriver);
+    visitInformationPage = PageFactory.getInstanceOfVisitInformation(testWebDriver);
     fullCoveragePage = PageFactory.getInstanceOfFullCoveragePage(testWebDriver);
     epiInventoryPage = PageFactory.getInstanceOfEpiInventoryPage(testWebDriver);
     childCoveragePage = PageFactory.getInstanceOfChildCoveragePage(testWebDriver);
@@ -80,7 +80,7 @@ public class ManageDistribution extends TestCaseHelper {
 
     tabMap = new HashMap<String, DistributionTab>() {{
       put("epi use", epiUsePage);
-      put("general observation", observation);
+      put("visit information", visitInformationPage);
       put("full coverage", fullCoveragePage);
       put("epi inventory", epiInventoryPage);
       put("refrigerator", refrigeratorPage);
@@ -113,8 +113,8 @@ public class ManageDistribution extends TestCaseHelper {
 
   @Then("^I verify that I am on visit information page")
   public void onVisitInformationPage() throws SQLException {
-    observation = PageFactory.getInstanceOfObservation(testWebDriver);
-    assertEquals("Visit Info / Observations", observation.getVisitInformationPageLabel());
+    visitInformationPage = PageFactory.getInstanceOfVisitInformation(testWebDriver);
+    assertEquals("Visit Info / Observations", visitInformationPage.getVisitInformationPageLabel());
   }
 
   @And("^I update product \"([^\"]*)\" to have product group \"([^\"]*)\"$")
@@ -254,31 +254,11 @@ public class ManageDistribution extends TestCaseHelper {
     refrigeratorPage.clickShowForRefrigerator1();
   }
 
-  @Then("^I see general observations fields disabled$")
-  public void verifyObservationFieldsDisabled() {
-    observation = PageFactory.getInstanceOfObservation(testWebDriver);
-    observation.verifyAllFieldsDisabled();
-  }
-
-  @Then("^I see refrigerator fields disabled$")
-  public void verifyRefrigeratorFieldsDisabled() {
-    refrigeratorPage = PageFactory.getInstanceOfRefrigeratorPage(testWebDriver);
-    refrigeratorPage.verifyAllFieldsDisabled();
-  }
-
-  @Then("^I see full coverage fields disabled$")
-  public void verifyFullCoverageFieldsDisabled() {
-    fullCoveragePage = PageFactory.getInstanceOfFullCoveragePage(testWebDriver);
-    assertFalse(fullCoveragePage.getStatusForField("femaleHealthCenter"));
-    assertFalse(fullCoveragePage.getStatusForField("femaleMobileBrigade"));
-    assertFalse(fullCoveragePage.getStatusForField("maleHealthCenter"));
-    assertFalse(fullCoveragePage.getStatusForField("maleMobileBrigade"));
-  }
-
-  @Then("^I see EPI Use fields disabled$")
-  public void verifyEpiFieldsDisabled() {
-    epiUsePage = PageFactory.getInstanceOfEpiUsePage(testWebDriver);
-    epiUsePage.verifyAllFieldsDisabled();
+  @Then("^I see \"([^\"]*)\" fields disabled$")
+  public void verifyVisitInformationFieldsDisabled(String tabName) {
+    testWebDriver.sleep(1000);
+    DistributionTab tab = tabMap.get(tabName);
+    tab.verifyAllFieldsDisabled();
   }
 
   @Then("^Verify \"([^\"]*)\" indicator should be \"([^\"]*)\"$")
@@ -353,8 +333,8 @@ public class ManageDistribution extends TestCaseHelper {
     testWebDriver.sleep(2000);
   }
 
-  @Then("^I view observations data in DB for facility \"([^\"]*)\":$")
-  public void verifyObservationsDataInDB(String facility, DataTable tableData) throws SQLException {
+  @Then("^I view visit information in DB for facility \"([^\"]*)\":$")
+  public void verifyVisitInformationDataInDB(String facility, DataTable tableData) throws SQLException {
     List<Map<String, String>> data = tableData.asMaps();
     for (Map map : data) {
       Map<String, String> facilityVisitDetails = dbWrapper.getFacilityVisitDetails(facility);

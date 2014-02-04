@@ -19,6 +19,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.thoughtworks.selenium.SeleneseTestBase.assertFalse;
 import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
 import static org.openqa.selenium.support.How.ID;
 
@@ -116,6 +117,14 @@ public class FullCoveragePage extends DistributionTab {
   @Override
   public void navigate() {
     fullCoverageTabLabel.click();
+  }
+
+  @Override
+  public void verifyAllFieldsDisabled() {
+    assertFalse(getStatusForField("femaleHealthCenter"));
+    assertFalse(getStatusForField("femaleMobileBrigade"));
+    assertFalse(getStatusForField("maleHealthCenter"));
+    assertFalse(getStatusForField("maleMobileBrigade"));
   }
 
   public String getFullCoverageTabLabel() {

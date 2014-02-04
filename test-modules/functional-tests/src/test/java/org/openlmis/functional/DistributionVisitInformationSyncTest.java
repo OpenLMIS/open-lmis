@@ -76,32 +76,32 @@ public class DistributionVisitInformationSyncTest extends TestCaseHelper {
   public void testVisitInformationPage() throws SQLException {
     loginPage.loginAs(visitInformationData.get(USER), visitInformationData.get(PASSWORD));
     initiateDistribution(visitInformationData.get(FIRST_DELIVERY_ZONE_NAME), visitInformationData.get(VACCINES_PROGRAM));
-    GeneralObservationPage generalObservationPage = facilityListPage.selectFacility(visitInformationData.get(FIRST_FACILITY_CODE));
+    VisitInformationPage visitInformationPage = facilityListPage.selectFacility(visitInformationData.get(FIRST_FACILITY_CODE));
     verifyLabels();
     assertEquals("Was " + dbWrapper.getAttributeFromTable("facilities", "name", "code", visitInformationData.get(FIRST_FACILITY_CODE)) +
-      " visited in " + "Period14" + "?", generalObservationPage.getWasFacilityVisitedLabel());
-    generalObservationPage.verifyIndicator("RED");
-    generalObservationPage.selectFacilityVisitedYes();
-    generalObservationPage.verifyIndicator("AMBER");
-    generalObservationPage.enterVisitDateAsFirstOfCurrentMonth();
-    generalObservationPage.verifyIndicator("AMBER");
-    generalObservationPage.enterObservations("Some Observations");
-    generalObservationPage.verifyIndicator("AMBER");
-    generalObservationPage.enterConfirmedByName("ConfirmName");
-    generalObservationPage.verifyIndicator("AMBER");
-    generalObservationPage.enterConfirmedByTitle("ConfirmTitle");
-    generalObservationPage.verifyIndicator("AMBER");
-    generalObservationPage.enterVerifiedByName("VerifyName");
-    generalObservationPage.verifyIndicator("AMBER");
-    generalObservationPage.enterVerifiedByTitle("VerifyTitle");
-    generalObservationPage.verifyIndicator("GREEN");
-    generalObservationPage.enterVehicleId("12U3-93");
-    generalObservationPage.verifyIndicator("GREEN");
+      " visited in " + "Period14" + "?", visitInformationPage.getWasFacilityVisitedLabel());
+    visitInformationPage.verifyIndicator("RED");
+    visitInformationPage.selectFacilityVisitedYes();
+    visitInformationPage.verifyIndicator("AMBER");
+    visitInformationPage.enterVisitDateAsFirstOfCurrentMonth();
+    visitInformationPage.verifyIndicator("AMBER");
+    visitInformationPage.enterObservations("Some Observations");
+    visitInformationPage.verifyIndicator("AMBER");
+    visitInformationPage.enterConfirmedByName("ConfirmName");
+    visitInformationPage.verifyIndicator("AMBER");
+    visitInformationPage.enterConfirmedByTitle("ConfirmTitle");
+    visitInformationPage.verifyIndicator("AMBER");
+    visitInformationPage.enterVerifiedByName("VerifyName");
+    visitInformationPage.verifyIndicator("AMBER");
+    visitInformationPage.enterVerifiedByTitle("VerifyTitle");
+    visitInformationPage.verifyIndicator("GREEN");
+    visitInformationPage.enterVehicleId("12U3-93");
+    visitInformationPage.verifyIndicator("GREEN");
   }
 
   private void verifyLabels() {
-    GeneralObservationPage generalObservationPage = PageFactory.getInstanceOfObservation(testWebDriver);
-    assertEquals("Visit Info / Observations", generalObservationPage.getFacilityVisitTabLabel());
+    VisitInformationPage visitInformationPage = PageFactory.getInstanceOfVisitInformation(testWebDriver);
+    assertEquals("Visit Info / Observations", visitInformationPage.getFacilityVisitTabLabel());
   }
 
   public void setupDataForDistributionTest(String userSIC, String deliveryZoneCodeFirst, String deliveryZoneCodeSecond,
@@ -133,44 +133,44 @@ public class DistributionVisitInformationSyncTest extends TestCaseHelper {
 
   @When("^I verify radio button \"([^\"]*)\" is selected$")
   public void verifyRadioButtonSelected(String radioButtonSelected) {
-    GeneralObservationPage generalObservationPage = PageFactory.getInstanceOfObservation(testWebDriver);
+    VisitInformationPage visitInformationPage = PageFactory.getInstanceOfVisitInformation(testWebDriver);
     if (radioButtonSelected.toLowerCase().equals("yes")) {
-      assertTrue(generalObservationPage.isYesRadioButtonSelected());
-      assertFalse(generalObservationPage.isNoRadioButtonSelected());
+      assertTrue(visitInformationPage.isYesRadioButtonSelected());
+      assertFalse(visitInformationPage.isNoRadioButtonSelected());
     } else if (radioButtonSelected.toLowerCase().equals("no")) {
-      assertTrue(generalObservationPage.isNoRadioButtonSelected());
-      assertFalse(generalObservationPage.isYesRadioButtonSelected());
+      assertTrue(visitInformationPage.isNoRadioButtonSelected());
+      assertFalse(visitInformationPage.isYesRadioButtonSelected());
     }
   }
 
   @And("^I verify visit date")
   public void verifyVisitDate() {
-    GeneralObservationPage generalObservationPage = PageFactory.getInstanceOfObservation(testWebDriver);
-    String actualDate = generalObservationPage.getVisitDate();
+    VisitInformationPage visitInformationPage = PageFactory.getInstanceOfVisitInformation(testWebDriver);
+    String actualDate = visitInformationPage.getVisitDate();
     String expectedDate = "01/" + new SimpleDateFormat("MM/yyyy").format(new Date());
     assertEquals(expectedDate, actualDate);
   }
 
   @And("^I select visit date as current date$")
   public void enterVisitDateAsFirstOfCurrentMonth() {
-    GeneralObservationPage generalObservationPage = PageFactory.getInstanceOfObservation(testWebDriver);
-    generalObservationPage.enterVisitDateAsFirstOfCurrentMonth();
+    VisitInformationPage visitInformationPage = PageFactory.getInstanceOfVisitInformation(testWebDriver);
+    visitInformationPage.enterVisitDateAsFirstOfCurrentMonth();
   }
 
   @Then("^I enter vehicle id as \"([^\"]*)\"$")
   public void enterVehicleId(String vehicleId) {
-    GeneralObservationPage generalObservationPage = PageFactory.getInstanceOfObservation(testWebDriver);
-    generalObservationPage.enterVehicleId(vehicleId);
+    VisitInformationPage visitInformationPage = PageFactory.getInstanceOfVisitInformation(testWebDriver);
+    visitInformationPage.enterVehicleId(vehicleId);
 
   }
 
   @When("^I select \"([^\"]*)\" facility visited$")
   public void selectFacilityVisitedOption(String option) {
-    GeneralObservationPage generalObservationPage = PageFactory.getInstanceOfObservation(testWebDriver);
+    VisitInformationPage visitInformationPage = PageFactory.getInstanceOfVisitInformation(testWebDriver);
     if (option.toLowerCase().equals("yes")) {
-      generalObservationPage.selectFacilityVisitedYes();
+      visitInformationPage.selectFacilityVisitedYes();
     } else if (option.toLowerCase().equals("no")) {
-      generalObservationPage.selectFacilityVisitedNo();
+      visitInformationPage.selectFacilityVisitedNo();
     }
   }
 }

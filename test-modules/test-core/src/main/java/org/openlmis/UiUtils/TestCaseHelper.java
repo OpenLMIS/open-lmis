@@ -501,14 +501,14 @@ public class TestCaseHelper {
     assertEquals(testWebDriver.getElementById("previousPageLink").getCssValue("color"), "rgba(204, 204, 204, 1)");
   }
 
-  public void verifyGeneralObservationsDataInDatabase(String facilityCode, String observation, String confirmedByName,
-                                                      String confirmedByTitle, String verifiedByName, String verifiedByTitle) throws SQLException {
-    Map<String, String> generalObservations = dbWrapper.getFacilityVisitDetails(facilityCode);
-    assertEquals(observation, generalObservations.get("observations"));
-    assertEquals(confirmedByName, generalObservations.get("confirmedByName"));
-    assertEquals(confirmedByTitle, generalObservations.get("confirmedByTitle"));
-    assertEquals(verifiedByName, generalObservations.get("verifiedByName"));
-    assertEquals(verifiedByTitle, generalObservations.get("verifiedByTitle"));
+  public void verifyVisitInformationDataInDatabase(String facilityCode, String observation, String confirmedByName,
+                                                   String confirmedByTitle, String verifiedByName, String verifiedByTitle) throws SQLException {
+    Map<String, String> visitInformation = dbWrapper.getFacilityVisitDetails(facilityCode);
+    assertEquals(observation, visitInformation.get("observations"));
+    assertEquals(confirmedByName, visitInformation.get("confirmedByName"));
+    assertEquals(confirmedByTitle, visitInformation.get("confirmedByTitle"));
+    assertEquals(verifiedByName, visitInformation.get("verifiedByName"));
+    assertEquals(verifiedByTitle, visitInformation.get("verifiedByTitle"));
   }
 
   public void verifyEpiUseDataInDatabase(Integer stockAtFirstOfMonth, Integer receivedValue, Integer distributedValue, Integer loss,

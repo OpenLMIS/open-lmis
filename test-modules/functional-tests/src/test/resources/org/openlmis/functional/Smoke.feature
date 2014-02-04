@@ -463,7 +463,7 @@ Feature: Smoke Tests
     Then I should see refrigerator "LG;800 LITRES;GR-J287PGHV" deleted successfully
 
   @smokeDistribution
-  Scenario: User should fill visit information when facility was visited
+  Scenario: User should fill Visit Information when facility was visited
     Given I have the following data for distribution:
       | userSIC       | deliveryZoneCodeFirst | deliveryZoneCodeSecond | deliveryZoneNameFirst | deliveryZoneNameSecond | facilityCodeFirst | facilityCodeSecond | programFirst | programSecond | schedule |
       | storeInCharge | DZ1                   | DZ2                    | Delivery Zone First   | Delivery Zone Second   | F10               | F11                | VACCINES     | TB            | M        |
@@ -478,22 +478,22 @@ Feature: Smoke Tests
     And I record data for distribution "1"
     And I choose facility "F10"
     And I verify that I am on visit information page
-    Then Verify "general observation" indicator should be "RED"
+    Then Verify "visit information" indicator should be "RED"
     When I select "yes" facility visited
     And I select visit date as current date
-    And I Enter "general observation" values:
+    And I Enter "visit information" values:
       | observations     | confirmedByName | confirmedByTitle | verifiedByName | verifiedByTitle |
       | some observation | samuel          | fc               |                |                 |
-    Then Verify "general observation" indicator should be "AMBER"
-    When I Enter "general observation" values:
+    Then Verify "visit information" indicator should be "AMBER"
+    When I Enter "visit information" values:
       | vehicleId | observations     | confirmedByName | confirmedByTitle | verifiedByName | verifiedByTitle |
       |           | some observation | samuel          | fc               | Verifier       | X YZ            |
-    Then Verify "general observation" indicator should be "GREEN"
+    Then Verify "visit information" indicator should be "GREEN"
     And I enter vehicle id as "023!YU-09"
     And I reload the page
     Then I verify radio button "yes" is selected
     And I verify visit date
-    And I verify saved "general observation" values:
+    And I verify saved "visit information" values:
       | vehicleId | observations     | confirmedByName | confirmedByTitle | verifiedByName | verifiedByTitle |
       | 023!YU-09 | some observation | samuel          | fc               | Verifier       | X YZ            |
 
@@ -610,7 +610,7 @@ Feature: Smoke Tests
     Then Verify "child coverage" indicator should be "RED"
 
   @smokeDistribution
-  Scenario: User should verify facility and sync status
+  Scenario: User should verify facility and sync status when facility was visited
     Given I have the following data for distribution:
       | userSIC       | deliveryZoneCodeFirst | deliveryZoneCodeSecond | deliveryZoneNameFirst | deliveryZoneNameSecond | facilityCodeFirst | facilityCodeSecond | programFirst | programSecond | schedule |
       | storeInCharge | DZ1                   | DZ2                    | Delivery Zone First   | Delivery Zone Second   | F10               | F11                | VACCINES     | TB            | M        |
@@ -649,10 +649,10 @@ Feature: Smoke Tests
     And I enter high alarm events "0"
     And I verify "No" that there is a problem with refrigerator since last visit
 
-    And I navigate to "general observation" tab
+    And I navigate to "visit information" tab
     When I select "yes" facility visited
     And I select visit date as current date
-    And I Enter "general observation" values:
+    And I Enter "visit information" values:
       | observations     | confirmedByName | confirmedByTitle | verifiedByName | verifiedByTitle |
       | some observation | samuel          | fc               | Verifier       | XYZ             |
 
@@ -677,7 +677,7 @@ Feature: Smoke Tests
     When I sync recorded data
     Then I check confirm sync message as "F10-Village Dispensary"
     When I done sync message
-    And I view observations data in DB for facility "F10":
+    And I view visit information in DB for facility "F10":
       | observations     | confirmedByName | confirmedByTitle | verifiedByName | verifiedByTitle |
       | some observation | samuel          | fc               | Verifier       | XYZ             |
     And I view epi use data in DB for facility "F10" and product group "penta":
@@ -699,14 +699,14 @@ Feature: Smoke Tests
     When I record data for distribution "1"
     And I choose facility "F10"
     Then I see "Overall" facility icon as "BLUE"
-    Then I see general observations fields disabled
+    Then I see "visit information" fields disabled
     When I navigate to "epi use" tab
-    Then I see EPI Use fields disabled
+    Then I see "epi use" fields disabled
     When I navigate to "full coverage" tab
-    Then I see full coverage fields disabled
+    Then I see "full coverage" fields disabled
     When I navigate to "refrigerator" tab
     And I access show
-    Then I see refrigerator fields disabled
+    Then I see "refrigerator" fields disabled
 
     And I access plan my distribution page
     And I delete already cached data for distribution

@@ -207,7 +207,7 @@ public class DistributionEpiInventoryTest extends TestCaseHelper {
 
     epiInventoryPage.fillSpoiledQuantity(2, "4");
 
-    epiInventoryPage = epiInventoryPage.navigateToGeneralObservations().navigateToEpiInventory();
+    epiInventoryPage = epiInventoryPage.navigateToVisitInformation().navigateToEpiInventory();
 
     assertEquals(epiInventoryPage.getDeliveredQuantity(1), "1");
 
@@ -220,10 +220,10 @@ public class DistributionEpiInventoryTest extends TestCaseHelper {
     initiateDistribution(epiInventoryData.get(FIRST_DELIVERY_ZONE_NAME), epiInventoryData.get(VACCINES_PROGRAM));
 
     FacilityListPage facilityListPage = PageFactory.getInstanceOfFacilityListPage(testWebDriver);
-    GeneralObservationPage generalObservationPage = facilityListPage.selectFacility(epiInventoryData.get(FIRST_FACILITY_CODE));
-    generalObservationPage.enterDataWhenFacilityVisited("some observations", "samuel", "Doe", "Verifier", "XYZ");
+    VisitInformationPage visitInformationPage = facilityListPage.selectFacility(epiInventoryData.get(FIRST_FACILITY_CODE));
+    visitInformationPage.enterDataWhenFacilityVisited("some observations", "samuel", "Doe", "Verifier", "XYZ");
 
-    EpiInventoryPage epiInventoryPage = generalObservationPage.navigateToEpiInventory();
+    EpiInventoryPage epiInventoryPage = visitInformationPage.navigateToEpiInventory();
     epiInventoryPage.verifyIndicator("RED");
 
     epiInventoryPage.fillExistingQuantity(1, "1");
@@ -268,9 +268,9 @@ public class DistributionEpiInventoryTest extends TestCaseHelper {
     dbWrapper.insertProgramProduct("Product8", "VACCINES", "10", "true");
 
     FacilityListPage facilityListPage = PageFactory.getInstanceOfFacilityListPage(testWebDriver);
-    GeneralObservationPage generalObservationPage = facilityListPage.selectFacility(epiInventoryData.get(FIRST_FACILITY_CODE));
+    VisitInformationPage visitInformationPage = facilityListPage.selectFacility(epiInventoryData.get(FIRST_FACILITY_CODE));
 
-    EpiInventoryPage epiInventoryPage = generalObservationPage.navigateToEpiInventory();
+    EpiInventoryPage epiInventoryPage = visitInformationPage.navigateToEpiInventory();
     epiInventoryPage.applyNRToAll();
     epiInventoryPage.fillDeliveredQuantity(1, "10");
     epiInventoryPage.fillDeliveredQuantity(2, "20");
@@ -279,16 +279,15 @@ public class DistributionEpiInventoryTest extends TestCaseHelper {
     assertFalse(epiInventoryPage.getDataEpiInventory().contains("ProductName7"));
   }
 
-
   @Test(groups = {"distribution"})
   public void testEpiInventoryPageSyncWhenApplyNRAll() throws Exception {
     HomePage homePage = loginPage.loginAs(epiInventoryData.get(USER), epiInventoryData.get(PASSWORD));
     initiateDistribution(epiInventoryData.get(FIRST_DELIVERY_ZONE_NAME), epiInventoryData.get(VACCINES_PROGRAM));
     FacilityListPage facilityListPage = PageFactory.getInstanceOfFacilityListPage(testWebDriver);
-    GeneralObservationPage generalObservationPage = facilityListPage.selectFacility(epiInventoryData.get(FIRST_FACILITY_CODE));
-    generalObservationPage.enterDataWhenFacilityVisited("some observations", "samuel", "Doe", "Verifier", "XYZ");
+    VisitInformationPage visitInformationPage = facilityListPage.selectFacility(epiInventoryData.get(FIRST_FACILITY_CODE));
+    visitInformationPage.enterDataWhenFacilityVisited("some observations", "samuel", "Doe", "Verifier", "XYZ");
 
-    EpiInventoryPage epiInventoryPage = generalObservationPage.navigateToEpiInventory();
+    EpiInventoryPage epiInventoryPage = visitInformationPage.navigateToEpiInventory();
     epiInventoryPage.verifyIndicator("RED");
 
     epiInventoryPage.applyNRToAll();
@@ -322,10 +321,10 @@ public class DistributionEpiInventoryTest extends TestCaseHelper {
     HomePage homePage = loginPage.loginAs(epiInventoryData.get(USER), epiInventoryData.get(PASSWORD));
     initiateDistribution(epiInventoryData.get(FIRST_DELIVERY_ZONE_NAME), epiInventoryData.get(VACCINES_PROGRAM));
     FacilityListPage facilityListPage = PageFactory.getInstanceOfFacilityListPage(testWebDriver);
-    GeneralObservationPage generalObservationPage = facilityListPage.selectFacility(epiInventoryData.get(FIRST_FACILITY_CODE));
-    generalObservationPage.enterDataWhenFacilityVisited("some observations", "samuel", "Doe", "Verifier", "XYZ");
+    VisitInformationPage visitInformationPage = facilityListPage.selectFacility(epiInventoryData.get(FIRST_FACILITY_CODE));
+    visitInformationPage.enterDataWhenFacilityVisited("some observations", "samuel", "Doe", "Verifier", "XYZ");
 
-    EpiInventoryPage epiInventoryPage = generalObservationPage.navigateToEpiInventory();
+    EpiInventoryPage epiInventoryPage = visitInformationPage.navigateToEpiInventory();
     epiInventoryPage.verifyIndicator("RED");
 
     epiInventoryPage.applyNRToAll();

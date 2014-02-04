@@ -17,7 +17,6 @@ import cucumber.api.java.en.When;
 import org.openlmis.UiUtils.CaptureScreenshotOnFailureListener;
 import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.UiUtils.TestWebDriver;
-import org.openlmis.pageobjects.GeneralObservationPage;
 import org.openlmis.pageobjects.HomePage;
 import org.openlmis.pageobjects.RefrigeratorPage;
 import org.openqa.selenium.JavascriptExecutor;

@@ -115,6 +115,7 @@ public class EPIUsePage extends DistributionTab {
     enterValueInExpirationDate(expirationDate, rowNumber);
   }
 
+  @Override
   public void verifyAllFieldsDisabled() {
     assertFalse("stockAtFirstOfMonth field enabled.", textBoxStockAtFirstOfMonth0.isEnabled());
     assertFalse("received field enabled.", textBoxReceived0.isEnabled());

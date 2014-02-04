@@ -11,6 +11,7 @@ import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 import java.util.List;
 import java.util.Map;
 
+import static com.thoughtworks.selenium.SeleneseTestBase.assertFalse;
 import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
 import static org.openqa.selenium.support.How.ID;
 
@@ -63,6 +64,21 @@ public class EpiInventoryPage extends DistributionTab {
   public void navigate() {
     testWebDriver.waitForElementToAppear(epiInventoryStatusIcon);
     epiInventoryStatusIcon.click();
+  }
+
+  @Override
+  public void verifyAllFieldsDisabled() {
+    assertFalse(getExistingQuantityStatus(1));
+    assertFalse(getExistingQuantityStatus(2));
+    assertFalse(getExistingQuantityStatus(3));
+
+    assertFalse(getDeliveredQuantityStatus(1));
+    assertFalse(getDeliveredQuantityStatus(2));
+    assertFalse(getDeliveredQuantityStatus(3));
+
+    assertFalse(getSpoiledQuantityStatus(1));
+    assertFalse(getSpoiledQuantityStatus(2));
+    assertFalse(getSpoiledQuantityStatus(3));
   }
 
   public void fillDeliveredQuantity(int rowNumber, String deliveredQuantity) {

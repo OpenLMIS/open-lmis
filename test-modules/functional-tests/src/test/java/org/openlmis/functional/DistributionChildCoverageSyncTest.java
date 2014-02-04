@@ -66,11 +66,11 @@ public class DistributionChildCoverageSyncTest extends TestCaseHelper {
     DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
     distributionPage.initiate(childCoverageData.get(FIRST_DELIVERY_ZONE_NAME), childCoverageData.get(VACCINES_PROGRAM));
     FacilityListPage facilityListPage = distributionPage.clickRecordData(1);
-    GeneralObservationPage generalObservationPage = facilityListPage.selectFacility(childCoverageData.get(FIRST_FACILITY_CODE));
+    VisitInformationPage visitInformationPage = facilityListPage.selectFacility(childCoverageData.get(FIRST_FACILITY_CODE));
 
     facilityListPage.verifyFacilityIndicatorColor("Overall", "AMBER");
 
-    ChildCoveragePage childCoveragePage = generalObservationPage.navigateToChildCoverage();
+    ChildCoveragePage childCoveragePage = visitInformationPage.navigateToChildCoverage();
     childCoveragePage.verifyIndicator("RED");
 
     verifyRegimentsPresent();
@@ -89,9 +89,9 @@ public class DistributionChildCoverageSyncTest extends TestCaseHelper {
     DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
     distributionPage.initiate(childCoverageData.get(FIRST_DELIVERY_ZONE_NAME), childCoverageData.get(VACCINES_PROGRAM));
     FacilityListPage facilityListPage = distributionPage.clickRecordData(1);
-    GeneralObservationPage generalObservationPage = facilityListPage.selectFacility(childCoverageData.get(FIRST_FACILITY_CODE));
+    VisitInformationPage visitInformationPage = facilityListPage.selectFacility(childCoverageData.get(FIRST_FACILITY_CODE));
 
-    ChildCoveragePage childCoveragePage = generalObservationPage.navigateToChildCoverage();
+    ChildCoveragePage childCoveragePage = visitInformationPage.navigateToChildCoverage();
     assertEquals(childCoveragePage.getTextOfTargetGroupValue(9), "300");
     assertEquals(childCoveragePage.getTextOfTargetGroupValue(10), "300");
     assertEquals(childCoveragePage.getTextOfTargetGroupValue(11), "300");
@@ -108,9 +108,9 @@ public class DistributionChildCoverageSyncTest extends TestCaseHelper {
     DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
     distributionPage.initiate(childCoverageData.get(FIRST_DELIVERY_ZONE_NAME), childCoverageData.get(VACCINES_PROGRAM));
     FacilityListPage facilityListPage = distributionPage.clickRecordData(1);
-    GeneralObservationPage generalObservationPage = facilityListPage.selectFacility(childCoverageData.get(FIRST_FACILITY_CODE));
+    VisitInformationPage visitInformationPage = facilityListPage.selectFacility(childCoverageData.get(FIRST_FACILITY_CODE));
 
-    ChildCoveragePage childCoveragePage = generalObservationPage.navigateToChildCoverage();
+    ChildCoveragePage childCoveragePage = visitInformationPage.navigateToChildCoverage();
     assertEquals(childCoveragePage.getTextOfTargetGroupValue(9), "");
     assertEquals(childCoveragePage.getTextOfTargetGroupValue(10), "");
     assertEquals(childCoveragePage.getTextOfTargetGroupValue(11), "");
@@ -137,9 +137,9 @@ public class DistributionChildCoverageSyncTest extends TestCaseHelper {
     DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
     distributionPage.initiate(childCoverageData.get(FIRST_DELIVERY_ZONE_NAME), childCoverageData.get(VACCINES_PROGRAM));
     FacilityListPage facilityListPage = distributionPage.clickRecordData(1);
-    GeneralObservationPage generalObservationPage = facilityListPage.selectFacility(childCoverageData.get(FIRST_FACILITY_CODE));
+    VisitInformationPage visitInformationPage = facilityListPage.selectFacility(childCoverageData.get(FIRST_FACILITY_CODE));
 
-    ChildCoveragePage childCoveragePage = generalObservationPage.navigateToChildCoverage();
+    ChildCoveragePage childCoveragePage = visitInformationPage.navigateToChildCoverage();
     assertEquals(childCoveragePage.getTextOfTargetGroupValue(9), "");
     assertEquals(childCoveragePage.getTextOfTargetGroupValue(10), "");
     assertEquals(childCoveragePage.getTextOfTargetGroupValue(11), "");

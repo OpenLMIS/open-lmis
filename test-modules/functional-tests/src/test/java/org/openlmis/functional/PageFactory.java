@@ -23,7 +23,7 @@ public class PageFactory {
   private static DistributionPage instanceOfDistributionPage;
   private static FacilityListPage instanceOfFacilityListPage;
   private static RefrigeratorPage instanceOfRefrigeratorPage;
-  private static GeneralObservationPage instanceOfObservation;
+  private static VisitInformationPage instanceOfVisitInformationPage;
   private static FullCoveragePage instanceOfFullCoveragePage;
   private static EPIUsePage instanceOfEpiUsePage;
   private static ChildCoveragePage instanceOfChildCoveragePage;
@@ -76,11 +76,11 @@ public class PageFactory {
     return instanceOfRefrigeratorPage;
   }
 
-  public static GeneralObservationPage getInstanceOfObservation(TestWebDriver testWebDriver) {
-    if (instanceOfObservation == null) {
-      instanceOfObservation = new GeneralObservationPage(testWebDriver);
+  public static VisitInformationPage getInstanceOfVisitInformation(TestWebDriver testWebDriver) {
+    if (instanceOfVisitInformationPage == null) {
+      instanceOfVisitInformationPage = new VisitInformationPage(testWebDriver);
     }
-    return instanceOfObservation;
+    return instanceOfVisitInformationPage;
   }
 
   public static FullCoveragePage getInstanceOfFullCoveragePage(TestWebDriver testWebDriver) {
