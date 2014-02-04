@@ -127,22 +127,6 @@ public class ManageDistribution extends TestCaseHelper {
     dbWrapper.deleteDeliveryZoneMembers(facility);
   }
 
-  @When("^I select \"([^\"]*)\" facility visited$")
-  public void selectFacilityVisitedOption(String option) {
-    GeneralObservationPage generalObservationPage = PageFactory.getInstanceOfObservation(testWebDriver);
-    if (option.toLowerCase().equals("yes")) {
-      generalObservationPage.selectFacilityVisitedYes();
-    } else if (option.toLowerCase().equals("no")) {
-      generalObservationPage.selectFacilityVisitedNo();
-    }
-  }
-
-  @And("^I select visit date as current date$")
-  public void selectVisitedDateAsCurrentDate() {
-    GeneralObservationPage generalObservationPage = PageFactory.getInstanceOfObservation(testWebDriver);
-    generalObservationPage.enterVisitDateAsFirstOfCurrentMonth();
-  }
-
   @When("^I Enter \"([^\"]*)\" values:$")
   public void enterValuesInForm(String tabName, DataTable tableData) {
     List<Map<String, String>> data = tableData.asMaps();
@@ -158,7 +142,6 @@ public class ManageDistribution extends TestCaseHelper {
     tab.navigate();
     List<Map<String, String>> data = tableData.asMaps();
     tab.verifyData(data);
-
   }
 
   @And("^I navigate to \"([^\"]*)\" tab$")

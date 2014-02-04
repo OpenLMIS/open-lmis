@@ -82,6 +82,11 @@ public class CommonSteps extends TestCaseHelper {
     dbWrapper.updateFieldValue("requisition_line_items", "quantityApproved", approvedQuantity);
   }
 
+  @And("^I reload the page")
+  public void reloadPage() {
+    testWebDriver.refresh();
+  }
+
   @After
   public void tearDownForSmoke(Scenario scenario) throws Exception {
     if (scenario.isFailed()) {

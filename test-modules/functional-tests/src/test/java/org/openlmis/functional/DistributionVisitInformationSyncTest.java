@@ -10,17 +10,22 @@
 
 package org.openlmis.functional;
 
+import cucumber.api.java.en.And;
+import cucumber.api.java.en.Then;
+import cucumber.api.java.en.When;
 import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.pageobjects.*;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.thoughtworks.selenium.SeleneseTestBase.assertEquals;
+import static com.thoughtworks.selenium.SeleneseTestBase.*;
 import static java.util.Arrays.asList;
 
 public class DistributionVisitInformationSyncTest extends TestCaseHelper {
@@ -124,5 +129,48 @@ public class DistributionVisitInformationSyncTest extends TestCaseHelper {
     distributionPage.selectValueFromProgram(programFirst);
     distributionPage.clickInitiateDistribution();
     distributionPage.clickRecordData(1);
+  }
+
+  @When("^I verify radio button \"([^\"]*)\" is selected$")
+  public void verifyRadioButtonSelected(String radioButtonSelected) {
+    GeneralObservationPage generalObservationPage = PageFactory.getInstanceOfObservation(testWebDriver);
+    if (radioButtonSelected.toLowerCase().equals("yes")) {
+      assertTrue(generalObservationPage.isYesRadioButtonSelected());
+      assertFalse(generalObservationPage.isNoRadioButtonSelected());
+    } else if (radioButtonSelected.toLowerCase().equals("no")) {
+      assertTrue(generalObservationPage.isNoRadioButtonSelected());
+      assertFalse(generalObservationPage.isYesRadioButtonSelected());
+    }
+  }
+
+  @And("^I verify visit date")
+  public void verifyVisitDate() {
+    GeneralObservationPage generalObservationPage = PageFactory.getInstanceOfObservation(testWebDriver);
+    String actualDate = generalObservationPage.getVisitDate();
+    String expectedDate = "01/" + new SimpleDateFormat("MM/yyyy").format(new Date());
+    assertEquals(expectedDate, actualDate);
+  }
+
+  @And("^I select visit date as current date$")
+  public void enterVisitDateAsFirstOfCurrentMonth() {
+    GeneralObservationPage generalObservationPage = PageFactory.getInstanceOfObservation(testWebDriver);
+    generalObservationPage.enterVisitDateAsFirstOfCurrentMonth();
+  }
+
+  @Then("^I enter vehicle id as \"([^\"]*)\"$")
+  public void enterVehicleId(String vehicleId) {
+    GeneralObservationPage generalObservationPage = PageFactory.getInstanceOfObservation(testWebDriver);
+    generalObservationPage.enterVehicleId(vehicleId);
+
+  }
+
+  @When("^I select \"([^\"]*)\" facility visited$")
+  public void selectFacilityVisitedOption(String option) {
+    GeneralObservationPage generalObservationPage = PageFactory.getInstanceOfObservation(testWebDriver);
+    if (option.toLowerCase().equals("yes")) {
+      generalObservationPage.selectFacilityVisitedYes();
+    } else if (option.toLowerCase().equals("no")) {
+      generalObservationPage.selectFacilityVisitedNo();
+    }
   }
 }

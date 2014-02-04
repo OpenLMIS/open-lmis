@@ -32,6 +32,7 @@ public class GeneralObservationPage extends DistributionTab {
   public static final String CONFIRMED_BY_TITLE = "confirmedByTitle";
   public static final String OBSERVATIONS = "observations";
   public static final String VALUE = "value";
+  public static final String VEHICLE_ID = "vehicleId";
 
   @FindBy(how = ID, using = "facilityVisitTab")
   private static WebElement facilityVisitTab = null;
@@ -79,6 +80,7 @@ public class GeneralObservationPage extends DistributionTab {
   private static WebElement calender = null;
 
   public Map<String, WebElement> fieldMap = new HashMap<String, WebElement>() {{
+    put(VEHICLE_ID, vehicleIdField);
     put(OBSERVATIONS, observationsField);
     put(CONFIRMED_BY_NAME, confirmedByNameField);
     put(CONFIRMED_BY_TITLE, confirmedByTitleField);
@@ -114,6 +116,7 @@ public class GeneralObservationPage extends DistributionTab {
   @Override
   public void verifyData(List<Map<String, String>> data) {
     for (Map<String, String> generalObservationData : data) {
+      assertEquals(fieldMap.get(VEHICLE_ID).getAttribute(VALUE), generalObservationData.get(VEHICLE_ID));
       assertEquals(fieldMap.get(OBSERVATIONS).getAttribute(VALUE), generalObservationData.get(OBSERVATIONS));
       assertEquals(fieldMap.get(VERIFIED_BY_NAME).getAttribute(VALUE), generalObservationData.get(VERIFIED_BY_NAME));
       assertEquals(fieldMap.get(VERIFIED_BY_TITLE).getAttribute(VALUE), generalObservationData.get(VERIFIED_BY_TITLE));
@@ -136,6 +139,7 @@ public class GeneralObservationPage extends DistributionTab {
   public void enterObservations(String observations) {
     testWebDriver.waitForElementToAppear(observationsField);
     sendKeys(observationsField, observations);
+    observationsField.sendKeys(Keys.TAB);
   }
 
   public void enterConfirmedByName(String confirmedByName) {
@@ -146,11 +150,13 @@ public class GeneralObservationPage extends DistributionTab {
   public void enterConfirmedByTitle(String confirmedByTitle) {
     testWebDriver.waitForElementToAppear(confirmedByTitleField);
     sendKeys(confirmedByTitleField, confirmedByTitle);
+    confirmedByTitleField.sendKeys(Keys.TAB);
   }
 
   public void enterVerifiedByName(String verifiedByName) {
     testWebDriver.waitForElementToAppear(verifiedByNameField);
     sendKeys(verifiedByNameField, verifiedByName);
+    verifiedByNameField.sendKeys(Keys.TAB);
   }
 
   public void enterVerifiedByTitle(String verifiedByTitle) {
@@ -163,11 +169,13 @@ public class GeneralObservationPage extends DistributionTab {
     visitDateField.click();
     testWebDriver.waitForElementToAppear(calender);
     calender.click();
+    calender.sendKeys(Keys.TAB);
   }
 
   public void enterVehicleId(String vehicleId) {
     testWebDriver.waitForElementToAppear(vehicleIdField);
     sendKeys(vehicleIdField, vehicleId);
+    vehicleIdField.sendKeys(Keys.TAB);
   }
 
   public String getFacilityVisitTabLabel() {
@@ -188,6 +196,21 @@ public class GeneralObservationPage extends DistributionTab {
   public void selectFacilityVisitedNo() {
     testWebDriver.waitForElementToAppear(facilityVisitedNoRadioButton);
     facilityVisitedNoRadioButton.click();
+  }
+
+  public boolean isYesRadioButtonSelected() {
+    testWebDriver.waitForElementToAppear(facilityVisitedYesRadioButton);
+    return facilityVisitedYesRadioButton.isSelected();
+  }
+
+  public boolean isNoRadioButtonSelected() {
+    testWebDriver.waitForElementToAppear(facilityVisitedNoRadioButton);
+    return facilityVisitedNoRadioButton.isSelected();
+  }
+
+  public String getVisitDate() {
+    testWebDriver.waitForElementToAppear(visitDateField);
+    return visitDateField.getAttribute("value");
   }
 
   public void verifyAllFieldsDisabled() {

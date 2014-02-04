@@ -463,7 +463,7 @@ Feature: Smoke Tests
     Then I should see refrigerator "LG;800 LITRES;GR-J287PGHV" deleted successfully
 
   @smokeDistribution
-  Scenario: User should fill general observation data
+  Scenario: User should fill visit information when facility was visited
     Given I have the following data for distribution:
       | userSIC       | deliveryZoneCodeFirst | deliveryZoneCodeSecond | deliveryZoneNameFirst | deliveryZoneNameSecond | facilityCodeFirst | facilityCodeSecond | programFirst | programSecond | schedule |
       | storeInCharge | DZ1                   | DZ2                    | Delivery Zone First   | Delivery Zone Second   | F10               | F11                | VACCINES     | TB            | M        |
@@ -486,12 +486,16 @@ Feature: Smoke Tests
       | some observation | samuel          | fc               |                |                 |
     Then Verify "general observation" indicator should be "AMBER"
     When I Enter "general observation" values:
-      | observations     | confirmedByName | confirmedByTitle | verifiedByName | verifiedByTitle |
-      | some observation | samuel          | fc               | Verifier       | X YZ            |
+      | vehicleId | observations     | confirmedByName | confirmedByTitle | verifiedByName | verifiedByTitle |
+      |           | some observation | samuel          | fc               | Verifier       | X YZ            |
     Then Verify "general observation" indicator should be "GREEN"
+    And I enter vehicle id as "023!YU-09"
+    And I reload the page
+    Then I verify radio button "yes" is selected
+    And I verify visit date
     And I verify saved "general observation" values:
-      | observations     | confirmedByName | confirmedByTitle | verifiedByName | verifiedByTitle |
-      | some observation | samuel          | fc               | Verifier       | X YZ            |
+      | vehicleId | observations     | confirmedByName | confirmedByTitle | verifiedByName | verifiedByTitle |
+      | 023!YU-09 | some observation | samuel          | fc               | Verifier       | X YZ            |
 
 
   @smokeDistribution
