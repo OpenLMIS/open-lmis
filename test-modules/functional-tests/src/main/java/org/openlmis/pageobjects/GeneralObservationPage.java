@@ -76,7 +76,7 @@ public class GeneralObservationPage extends DistributionTab {
   public static WebElement vehicleIdField = null;
 
   @FindBy(how = How.XPATH, using = "//a[@class='ui-state-default' and contains(text(),'1')]")
-  private static WebElement calender =null;
+  private static WebElement calender = null;
 
   public Map<String, WebElement> fieldMap = new HashMap<String, WebElement>() {{
     put(OBSERVATIONS, observationsField);
@@ -92,6 +92,7 @@ public class GeneralObservationPage extends DistributionTab {
 
   @Override
   public void verifyIndicator(String color) {
+    visitInformationLabel.click();
     verifyOverallIndicator(facilityVisitTabIcon, color);
   }
 
