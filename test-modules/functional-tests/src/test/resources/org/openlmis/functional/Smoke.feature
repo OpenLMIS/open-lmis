@@ -264,6 +264,19 @@ Feature: Smoke Tests
     When I click on update Pod link for Row "1"
     Then I should see all products to update pod
 
+  @smokeRequisition
+  Scenario: User should able to see list of orders to update POD for packed orders
+    Given I have "storeInCharge" user with "MANAGE_POD" rights
+    And I have "5" requisitions for convert to order
+    And I am logged in as "storeInCharge"
+    And I access convert to order page
+    And I select "5" requisition on page "1"
+    And I access convert to order
+    And I access Manage POD page
+    When I receive shipment for the order
+    And I click on update Pod link for Row "1"
+    Then I should see all products listed in shipment file to update pod
+
 # DISTRIBUTION SMOKE TESTS
 
   @smokeDistribution

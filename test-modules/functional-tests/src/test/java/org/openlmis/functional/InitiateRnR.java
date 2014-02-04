@@ -21,6 +21,7 @@ import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.pageobjects.*;
 import org.openlmis.pageobjects.edi.ConvertOrderPage;
 import org.openqa.selenium.By;
+import org.testng.AssertJUnit;
 import org.testng.annotations.*;
 
 import java.sql.SQLException;
@@ -237,6 +238,26 @@ public class InitiateRnR extends TestCaseHelper {
   public void shouldSeeSubmitSuccessfully(String errorMsg) {
     homePage = PageFactory.getInstanceOfHomePage(testWebDriver);
     assertEquals(homePage.getErrorMessage(), errorMsg);
+  }
+
+  @When("^I receive shipment for the order$")
+  public void insertShipmentData() throws SQLException {
+    dbWrapper.updateFieldValue("orders", "status", "RELEASED", null, null);
+    int id = dbWrapper.getMaxRnrID();
+    dbWrapper.insertShipmentData(id, "P10", 1111);
+    dbWrapper.updateFieldValue("shipment_line_items", "packsToShip", 100);
+    dbWrapper.updateFieldValue("shipment_line_items", "fullSupply", true);
+    dbWrapper.updateFieldValue("orders", "status", "PACKED", null, null);
+  }
+
+  @Then("^I should see all products listed in shipment file to update pod$")
+  public void verifyDataForPodForPackedOrders() throws SQLException {
+    UpdatePodPage updatePodPage = new UpdatePodPage(testWebDriver);
+    assertEquals("P10", updatePodPage.getProductCode(1));
+    assertEquals("antibiotic Capsule 300/200/600 mg", updatePodPage.getProductName(1));
+    assertEquals(100, updatePodPage.getPacksToShip(1));
+    assertEquals("Strip", updatePodPage.getUnitOfIssue(1));
+    assertEquals(1111, updatePodPage.getQuantityShipped(1));
   }
 
   @Then("^I should see list of orders to manage POD for Rnr$")

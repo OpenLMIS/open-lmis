@@ -179,22 +179,17 @@ public class UpdatePod extends TestCaseHelper {
     verifyValuesOfPodTableOnUpdatePODScreen(2, "P11", "antibiotic Capsule 300/200/600 mg", "", "Strip", "0");
   }
 
-  //@Test(groups = {"requisition"}) Needs discussion
-  public void testVerifyUpdatePODForPackedOrdersWhenPacksToShipIsZero() throws Exception {
+  @Test(groups = {"requisition"})
+  public void testVerifyUpdatePODForPackedOrdersWhenPacksToShipAndQuantityShippedIsZero() throws Exception {
     initiateRnrAndConvertToOrder(false, 0);
-    testDataForShipment(0, true, "P10", 99898998);
+    testDataForShipment(0, true, "P10",0);
     dbWrapper.updateFieldValue("orders", "status", "PACKED", null, null);
 
     HomePage homePage = loginPage.loginAs(updatePODData.get(USER), updatePODData.get(PASSWORD));
     ManagePodPage managePodPage = homePage.navigateManagePOD();
-    UpdatePodPage updatePodPage = managePodPage.selectRequisitionToUpdatePod(1);
+    managePodPage.selectRequisitionToUpdatePod(1);
 
-    assertEquals("No products.", updatePodPage.getNoProductsMessage());
-    assertFalse(updatePodPage.getPodTableData().contains("P10"));
-    assertFalse(updatePodPage.getPodTableData().contains("antibiotic Capsule 300/200/600 mg"));
-    assertFalse(updatePodPage.getPodTableData().contains("100"));
-    assertFalse(updatePodPage.getPodTableData().contains("Strip"));
-    verifyRequisitionTypeAndColor("regular");
+    verifyValuesOfPodTableOnUpdatePODScreen(1, "P10", "antibiotic Capsule 300/200/600 mg", "0", "Strip", "0");
   }
 
   private void initiateRnrAndConvertToOrder(boolean isEmergencyRegular, int packsToShip) throws SQLException {
