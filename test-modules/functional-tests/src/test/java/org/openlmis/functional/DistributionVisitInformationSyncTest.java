@@ -21,7 +21,6 @@ import java.util.List;
 import java.util.Map;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.assertEquals;
-import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
 import static java.util.Arrays.asList;
 
 public class DistributionVisitInformationSyncTest extends TestCaseHelper {
@@ -69,7 +68,7 @@ public class DistributionVisitInformationSyncTest extends TestCaseHelper {
   }
 
   @Test(groups = {"distribution"})
-  public void testVisitInfoPage() throws SQLException {
+  public void testVisitInformationPage() throws SQLException {
     loginPage.loginAs(visitInformationData.get(USER), visitInformationData.get(PASSWORD));
     initiateDistribution(visitInformationData.get(FIRST_DELIVERY_ZONE_NAME), visitInformationData.get(VACCINES_PROGRAM));
     GeneralObservationPage generalObservationPage = facilityListPage.selectFacility(visitInformationData.get(FIRST_FACILITY_CODE));
@@ -80,45 +79,24 @@ public class DistributionVisitInformationSyncTest extends TestCaseHelper {
     generalObservationPage.selectFacilityVisitedYes();
     generalObservationPage.verifyIndicator("AMBER");
     generalObservationPage.enterVisitDateAsFirstOfCurrentMonth();
+    generalObservationPage.verifyIndicator("AMBER");
     generalObservationPage.enterObservations("Some Observations");
+    generalObservationPage.verifyIndicator("AMBER");
     generalObservationPage.enterConfirmedByName("ConfirmName");
+    generalObservationPage.verifyIndicator("AMBER");
     generalObservationPage.enterConfirmedByTitle("ConfirmTitle");
+    generalObservationPage.verifyIndicator("AMBER");
     generalObservationPage.enterVerifiedByName("VerifyName");
+    generalObservationPage.verifyIndicator("AMBER");
     generalObservationPage.enterVerifiedByTitle("VerifyTitle");
+    generalObservationPage.verifyIndicator("GREEN");
+    generalObservationPage.enterVehicleId("12U3-93");
     generalObservationPage.verifyIndicator("GREEN");
   }
 
   private void verifyLabels() {
     GeneralObservationPage generalObservationPage = PageFactory.getInstanceOfObservation(testWebDriver);
     assertEquals("Visit Info / Observations", generalObservationPage.getFacilityVisitTabLabel());
-    //TODO
-  }
-
-  @Test(groups = {"distribution"})
-  public void testEpiUsePageSync() throws Exception {
-    HomePage homePage = loginPage.loginAs(visitInformationData.get(USER), visitInformationData.get(PASSWORD));
-    initiateDistribution(visitInformationData.get(FIRST_DELIVERY_ZONE_NAME), visitInformationData.get(VACCINES_PROGRAM));
-    GeneralObservationPage generalObservationPage = facilityListPage.selectFacility(visitInformationData.get(FIRST_FACILITY_CODE));
-    generalObservationPage.enterDataWhenFacilityVisited("some observations", "samuel", "Doe", "Verifier", "XYZ");
-
-    EPIUsePage epiUsePage = generalObservationPage.navigateToEpiUse();
-    epiUsePage.verifyIndicator("RED");
-    epiUsePage.verifyProductGroup("PG1-Name", 1);
-    epiUsePage.enterData(10, 20, 30, 40, 50, "10/2011", 1);
-    epiUsePage.verifyIndicator("GREEN");
-
-    FullCoveragePage fullCoveragePage = epiUsePage.navigateToFullCoverage();
-    fullCoveragePage.enterData(12, 34, 45, "56");
-
-    generalObservationPage.navigateToEpiInventory();
-    fillEpiInventoryWithOnlyDeliveredQuantity("2", "4", "6");
-
-    DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
-    distributionPage.syncDistribution(1);
-    assertTrue(distributionPage.getSyncMessage().contains("F10-Village Dispensary"));
-    distributionPage.syncDistributionMessageDone();
-
-    verifyEpiUseDataInDatabase(10, 20, 30, 40, 50, "10/2011", visitInformationData.get(PRODUCT_GROUP_CODE), visitInformationData.get(FIRST_FACILITY_CODE));
   }
 
   public void setupDataForDistributionTest(String userSIC, String deliveryZoneCodeFirst, String deliveryZoneCodeSecond,
@@ -146,13 +124,5 @@ public class DistributionVisitInformationSyncTest extends TestCaseHelper {
     distributionPage.selectValueFromProgram(programFirst);
     distributionPage.clickInitiateDistribution();
     distributionPage.clickRecordData(1);
-  }
-
-  public void fillEpiInventoryWithOnlyDeliveredQuantity(String deliveredQuantity1, String deliveredQuantity2, String deliveredQuantity3) {
-    EpiInventoryPage epiInventoryPage = PageFactory.getInstanceOfEpiInventoryPage(testWebDriver);
-    epiInventoryPage.applyNRToAll();
-    epiInventoryPage.fillDeliveredQuantity(1, deliveredQuantity1);
-    epiInventoryPage.fillDeliveredQuantity(2, deliveredQuantity2);
-    epiInventoryPage.fillDeliveredQuantity(3, deliveredQuantity3);
   }
 }
