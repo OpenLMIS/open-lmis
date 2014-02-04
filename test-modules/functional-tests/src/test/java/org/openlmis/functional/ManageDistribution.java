@@ -12,7 +12,6 @@ package org.openlmis.functional;
 
 
 import cucumber.api.DataTable;
-import cucumber.api.Scenario;
 import cucumber.api.java.Before;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
@@ -858,7 +857,7 @@ public class ManageDistribution extends TestCaseHelper {
   }
 
   @AfterMethod(groups = "distribution")
-  public void tearDownForSmoke(Scenario scenario) throws Exception {
+  public void tearDownForSmoke() throws Exception {
     testWebDriver.sleep(500);
     if (!testWebDriver.getElementById("username").isDisplayed()) {
       HomePage homePage = PageFactory.getInstanceOfHomePage(testWebDriver);
