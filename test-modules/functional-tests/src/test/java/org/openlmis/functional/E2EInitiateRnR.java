@@ -479,7 +479,7 @@ public class E2EInitiateRnR extends TestCaseHelper {
     assertEquals("Central Hospital", testWebDriver.findElement(By.xpath("//div/span[contains(text(),'Central Hospital')]")).getText());
     assertEquals("HIV", testWebDriver.findElement(By.xpath("//div/span[contains(text(),'HIV')]")).getText());
     assertEquals("Transfer failed", testWebDriver.findElement(By.xpath("//div/span[contains(text(),'Transfer failed')]")).getText());
-    assertEquals("Period1 (01/12/2013 - 02/02/2014)", testWebDriver.findElement(By.xpath("//div/span[contains(text(),'Period1 (01/12/2013 - 02/02/2014)')]")).getText());
+    assertTrue(testWebDriver.findElement(By.xpath("//div/span[contains(text(),'Period1')]")).getText().contains("Period1"));
     assertEquals("Update POD", testWebDriver.findElement(By.xpath("//div/a[contains(text(),'Update POD')]")).getText());
     //TODO find proper xpath or give id for facility_code
     if (rnrType.equals("Emergency")) {
