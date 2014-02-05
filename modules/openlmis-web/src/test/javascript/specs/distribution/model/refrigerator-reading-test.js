@@ -64,10 +64,19 @@ describe('RefrigeratorReading', function () {
     expect(status).toEqual(DistributionStatus.COMPLETE);
   });
 
-  it('should return green status class if internal refrigerator form fields are completely filled or NR flag set',
+  it('should return green status class if internal refrigerator form fields are completely filled', function () {
+    refrigeratorReading = new RefrigeratorReading(facilityVisitId, {temperature: {value: 7}, functioningCorrectly: {value: 'Y'},
+      lowAlarmEvents: {value: 3}, highAlarmEvents: {value: 6}, problemSinceLastTime: {notRecorded: true}});
+
+    var status = refrigeratorReading.computeStatus();
+
+    expect(status).toEqual(DistributionStatus.COMPLETE);
+  });
+
+  it('should return green status class if internal refrigerator form fields are completely filled, including notes, or NR flag set',
     function () {
       refrigeratorReading = new RefrigeratorReading(facilityVisitId, {temperature: {notRecorded: true}, functioningCorrectly: {value: 'Y'},
-        lowAlarmEvents: {value: 3}, highAlarmEvents: {value: 6, notRecorded: true}, problemSinceLastTime: {value: undefined, notRecorded: true}});
+        lowAlarmEvents: {value: 3}, highAlarmEvents: {value: 6, notRecorded: true}, problemSinceLastTime: {value: 'Y'}, problems: {other: true, otherProblemExplanation: 'eer'}});
 
       var status = refrigeratorReading.computeStatus();
 
