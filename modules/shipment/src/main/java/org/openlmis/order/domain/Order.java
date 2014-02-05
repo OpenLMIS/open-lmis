@@ -48,6 +48,11 @@ public class Order extends BaseModel implements Comparable {
     return supplyLine == null ? null : supplyLine.getSupplyingFacility();
   }
 
+  public Order(Long id, OrderStatus status) {
+    this.id = id;
+    this.status = status;
+  }
+
   @Override
   public int compareTo(Object o) {
     Order order2 = (Order) o;

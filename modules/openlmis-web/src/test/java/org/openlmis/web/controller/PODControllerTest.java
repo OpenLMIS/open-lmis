@@ -41,6 +41,7 @@ import static org.mockito.MockitoAnnotations.initMocks;
 import static org.openlmis.web.controller.PODController.ORDER;
 import static org.openlmis.web.controller.PODController.ORDER_POD;
 import static org.powermock.api.mockito.PowerMockito.*;
+import static org.powermock.api.mockito.PowerMockito.doNothing;
 import static org.powermock.api.mockito.PowerMockito.when;
 
 @Category(UnitTests.class)
@@ -161,5 +162,26 @@ public class PODControllerTest {
 
     assertThat(response.getStatusCode(), is(HttpStatus.BAD_REQUEST));
     assertThat(response.getBody().getErrorMsg(), is("error"));
+  }
+
+  @Test
+  public void shouldSubmitPOD() throws Exception {
+    Long podId = 4L;
+    doNothing().when(service).submit(podId, USER_ID);
+    ResponseEntity<OpenLmisResponse> response = controller.submit(podId, request);
+
+    verify(service).submit(podId, USER_ID);
+    assertThat(response.getBody().getSuccessMsg(), is("msg.pod.submit.success"));
+  }
+
+  @Test
+  public void shouldReturnErrorIfCouldNotSubmitPOD() throws Exception {
+    Long podId = 1234L;
+    doThrow(new DataException("msg.pod.submit.failure")).when(service).submit(podId, USER_ID);
+
+    ResponseEntity<OpenLmisResponse> response = controller.submit(podId, request);
+
+    assertThat(response.getBody().getErrorMsg(), is("msg.pod.submit.failure"));
+    assertThat(response.getStatusCode(), is(HttpStatus.BAD_REQUEST));
   }
 }

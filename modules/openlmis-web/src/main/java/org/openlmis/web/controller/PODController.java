@@ -84,4 +84,15 @@ public class PODController extends BaseController {
       return error(e, HttpStatus.BAD_REQUEST);
     }
   }
+
+  @RequestMapping(value = "/pods/submit/{id}", method = PUT, headers = ACCEPT_JSON)
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'MANAGE_POD')")
+  public ResponseEntity<OpenLmisResponse> submit(@PathVariable Long id, HttpServletRequest request) {
+    try {
+      service.submit(id, loggedInUserId(request));
+      return success("msg.pod.submit.success");
+    } catch (DataException exception) {
+      return error(exception, HttpStatus.BAD_REQUEST);
+    }
+  }
 }
