@@ -408,6 +408,12 @@ public class DistributionVisitInformationSyncTest extends TestCaseHelper {
     }
   }
 
+  @And("^I select No Transport reason$")
+  public void selectNoTransportReason() {
+    VisitInformationPage visitInformationPage = PageFactory.getInstanceOfVisitInformation(testWebDriver);
+    visitInformationPage.selectReasonNoTransport();
+  }
+
   @AfterMethod(groups = "distribution")
   public void tearDown() throws SQLException {
     testWebDriver.sleep(500);

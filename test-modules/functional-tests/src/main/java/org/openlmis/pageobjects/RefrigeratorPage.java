@@ -356,7 +356,7 @@ public class RefrigeratorPage extends DistributionTab {
   public void clickDoneOnModal() {
     testWebDriver.waitForElementToAppear(doneButtonOnModal);
     doneButtonOnModal.click();
-    //testWebDriver.waitForElementToAppear(testWebDriver.getElementByXpath("(//a[contains(text(),'Show')])[1]"));
+    removeFocusFromElement();
   }
 
   public void clickFunctioningCorrectlyYesRadio() {
@@ -527,6 +527,7 @@ public class RefrigeratorPage extends DistributionTab {
   }
 
   public void removeFocusFromElement() {
+    testWebDriver.waitForElementToAppear(refrigeratorsPageLabel);
     testWebDriver.moveToElement(refrigeratorsPageLabel);
   }
 }

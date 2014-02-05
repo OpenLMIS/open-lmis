@@ -315,6 +315,7 @@ public class VisitInformationPage extends DistributionTab {
   }
 
   public void removeFocusFromElement() {
+    testWebDriver.waitForElementToAppear(visitInformationLabel);
     testWebDriver.moveToElement(visitInformationLabel);
   }
 }

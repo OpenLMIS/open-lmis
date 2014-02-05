@@ -315,6 +315,7 @@ public class ChildCoveragePage extends DistributionTab {
   }
 
   public void removeFocusFromElement() {
+    testWebDriver.waitForElementToAppear(childCoverageHeader);
     testWebDriver.moveToElement(childCoverageHeader);
   }
 }

@@ -74,17 +74,12 @@ public class EpiInventoryPage extends DistributionTab {
 
   @Override
   public void verifyAllFieldsDisabled() {
-    assertFalse(getExistingQuantityStatus(1));
-    assertFalse(getExistingQuantityStatus(2));
-    assertFalse(getExistingQuantityStatus(3));
-
-    assertFalse(getDeliveredQuantityStatus(1));
-    assertFalse(getDeliveredQuantityStatus(2));
-    assertFalse(getDeliveredQuantityStatus(3));
-
-    assertFalse(getSpoiledQuantityStatus(1));
-    assertFalse(getSpoiledQuantityStatus(2));
-    assertFalse(getSpoiledQuantityStatus(3));
+    int numberOfProducts = testWebDriver.getElementsSizeByXpath("//table[@id='epiInventoryTable']/tbody");
+    for (int rowNumber = 1; rowNumber < numberOfProducts; rowNumber++) {
+      assertFalse(getExistingQuantityStatus(rowNumber));
+      assertFalse(getDeliveredQuantityStatus(rowNumber));
+      assertFalse(getSpoiledQuantityStatus(rowNumber));
+    }
   }
 
   public void fillDeliveredQuantity(int rowNumber, String deliveredQuantity) {
@@ -93,6 +88,10 @@ public class EpiInventoryPage extends DistributionTab {
 
   public String getProductName(int rowNumber) {
     return testWebDriver.findElement(By.id("productName" + (rowNumber - 1))).getText();
+  }
+
+  public Boolean isProductNameDisplayed(int rowNumber) {
+    return testWebDriver.findElement(By.id("productName" + (rowNumber - 1))).isDisplayed();
   }
 
   public String getIsaValue(int rowNumber) {
@@ -163,7 +162,7 @@ public class EpiInventoryPage extends DistributionTab {
   }
 
   public String getDataEpiInventory() {
-    return testWebDriver.findElement(By.id("epiInventoryTable")).getText();
+    return testWebDriver.findElement(By.id("epiInventoryContainer")).getText();
   }
 
   public boolean getDeliveredQuantityStatus(int rowNumber) {
@@ -187,6 +186,7 @@ public class EpiInventoryPage extends DistributionTab {
   }
 
   public void removeFocusFromElement() {
+    testWebDriver.waitForElementToAppear(epiInventoryPageLabel);
     testWebDriver.moveToElement(epiInventoryPageLabel);
   }
 }
