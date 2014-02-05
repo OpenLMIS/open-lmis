@@ -146,10 +146,12 @@ public class DistributionRefrigeratorSyncTest extends TestCaseHelper {
     refrigeratorPage.clickProblemSinceLastVisitYesRadio();
     refrigeratorPage.verifyRefrigeratorColor("overall", "AMBER");
     refrigeratorPage.selectOtherProblem();
-    refrigeratorPage.verifyRefrigeratorColor("overall", "GREEN");
-    refrigeratorPage.verifyRefrigeratorColor("individual", "GREEN");
+    refrigeratorPage.verifyRefrigeratorColor("overall", "AMBER");
+    refrigeratorPage.verifyRefrigeratorColor("individual", "AMBER");
     refrigeratorPage.enterTextInOtherProblemTextBox("others");
     refrigeratorPage.selectGasLeakProblem();
+    refrigeratorPage.verifyRefrigeratorColor("overall", "GREEN");
+    refrigeratorPage.verifyRefrigeratorColor("individual", "GREEN");
     refrigeratorPage.clickDone();
 
     EPIUsePage epiUsePage = refrigeratorPage.navigateToEpiUse();
