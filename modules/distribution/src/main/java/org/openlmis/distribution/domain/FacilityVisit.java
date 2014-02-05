@@ -37,7 +37,7 @@ public class FacilityVisit extends BaseModel {
   private Facilitator verifiedBy;
   private String observations;
   private Date visitDate;
-  private Boolean visited = false;
+  private Boolean visited;
   private String vehicleId;
 
   private Boolean synced = false;
