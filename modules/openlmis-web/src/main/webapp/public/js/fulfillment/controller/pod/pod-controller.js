@@ -79,8 +79,11 @@ function PODController($scope, orderPOD, OrderPOD, pageSize, $routeParams, $loca
 
     function confirmAndSubmit() {
       $scope.showSubmitErrors = true;
-      if (($scope.errorPages = $scope.pod.error(pageSize).errorPages))
+      if (($scope.errorPages = $scope.pod.error(pageSize).errorPages)) {
+        $scope.message = undefined;
+        $scope.error = 'error.quantity.received.invalid';
         return;
+      }
 
       confirm().then(function () {
         OrderPOD.update({id: $routeParams.id, action: 'submit'}, function (data) {

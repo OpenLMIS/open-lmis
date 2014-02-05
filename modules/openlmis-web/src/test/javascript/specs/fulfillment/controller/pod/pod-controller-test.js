@@ -247,6 +247,8 @@ describe('PODController', function () {
 
       expect(ProofOfDelivery.prototype.error).toHaveBeenCalled();
       expect(OpenLmisDialog.newDialog).not.toHaveBeenCalled();
+      expect(scope.error).toEqual('error.quantity.received.invalid');
+      expect(scope.message).toBeUndefined();
     });
 
     it('should show error if submit fails', function () {

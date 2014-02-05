@@ -41,7 +41,6 @@ import static org.mockito.MockitoAnnotations.initMocks;
 import static org.openlmis.web.controller.PODController.ORDER;
 import static org.openlmis.web.controller.PODController.ORDER_POD;
 import static org.powermock.api.mockito.PowerMockito.*;
-import static org.powermock.api.mockito.PowerMockito.doNothing;
 import static org.powermock.api.mockito.PowerMockito.when;
 
 @Category(UnitTests.class)
@@ -167,7 +166,9 @@ public class PODControllerTest {
   @Test
   public void shouldSubmitPOD() throws Exception {
     Long podId = 4L;
-    doNothing().when(service).submit(podId, USER_ID);
+    OrderPOD orderPOD = new OrderPOD();
+    orderPOD.setId(podId);
+    when(service.submit(podId, USER_ID)).thenReturn(orderPOD);
     ResponseEntity<OpenLmisResponse> response = controller.submit(podId, request);
 
     verify(service).submit(podId, USER_ID);
