@@ -51,8 +51,9 @@
     </div>
     <div class="info-box">
         <div class="row-fluid">
-            <select ui-select2="{formatResult: format}" openlmis-message="label" id="selectFacility" class="span3"
-                    ng-model="facilitySelected.facilityId"
+          <select ui-select2="{formatResult: format}" openlmis-message="label" id="selectFacility"
+                  style="position: fixed;" class="span3"
+                  ng-model="facilitySelected.facilityId"
                     ng-change="chooseFacility()">
                 <option value=""></option>
                 <optgroup ng-repeat="zone in geographicZones" label="{{ zone }}">
