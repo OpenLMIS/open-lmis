@@ -22,6 +22,7 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import java.io.IOException;
 import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -43,7 +44,7 @@ public class TestCalculationsForRnR extends TestCaseHelper {
   InitiateRnRPage initiateRnRPage;
 
   @BeforeMethod(groups = "requisition")
-  public void setUp() throws Exception {
+  public void setUp() throws InterruptedException, SQLException, IOException {
     super.setup();
     List<String> rightsList = asList("CREATE_REQUISITION", "VIEW_REQUISITION", "AUTHORIZE_REQUISITION", "APPROVE_REQUISITION");
     setupTestDataToInitiateRnR(true, program, userSIC, "200", rightsList);
@@ -286,7 +287,7 @@ public class TestCalculationsForRnR extends TestCaseHelper {
   }
 
   @Test(groups = "requisition")
-  public void testCalculationWhenFieldsNotVisibleAndSameProductInDifferentPrograms() throws Exception {
+  public void testCalculationWhenFieldsNotVisibleAndSameProductInDifferentPrograms() throws SQLException {
     dbWrapper.updateConfigureTemplate("HIV", "source", "C", "false", "quantityDispensed");
     dbWrapper.updateConfigureTemplate("HIV", "source", "U", "true", "stockInHand");
     dbWrapper.updateConfigureTemplate("HIV", "source", "C", "false", "normalizedConsumption");
@@ -918,7 +919,7 @@ public class TestCalculationsForRnR extends TestCaseHelper {
   }
 
   @AfterMethod(groups = "requisition")
-  public void tearDown() throws Exception {
+  public void tearDown() throws SQLException {
     testWebDriver.sleep(500);
     if (!testWebDriver.getElementById("username").isDisplayed()) {
       HomePage homePage = PageFactory.getInstanceOfHomePage(testWebDriver);

@@ -21,6 +21,8 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -62,7 +64,7 @@ public class DistributionRefrigeratorSyncTest extends TestCaseHelper {
   }};
 
   @BeforeMethod(groups = {"distribution"})
-  public void setUp() throws Exception {
+  public void setUp() throws InterruptedException, SQLException, IOException {
     super.setup();
     loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     facilityListPage = new FacilityListPage(testWebDriver);
@@ -75,7 +77,7 @@ public class DistributionRefrigeratorSyncTest extends TestCaseHelper {
   }
 
   @Test(groups = {"distribution"})
-  public void testRefrigeratorPageSyncWith2Refrigerators() throws Exception {
+  public void testRefrigeratorPageSyncWith2Refrigerators() throws SQLException {
     dbWrapper.addRefrigeratorToFacility("LG", "800L1", "TGNR7878", "F10");
 
     HomePage homePage = loginPage.loginAs(refrigeratorTestData.get(USER), refrigeratorTestData.get(PASSWORD));
@@ -128,7 +130,7 @@ public class DistributionRefrigeratorSyncTest extends TestCaseHelper {
   }
 
   @Test(groups = {"distribution"})
-  public void testRefrigeratorSyncWhenRefrigeratorHasProblem() throws Exception {
+  public void testRefrigeratorSyncWhenRefrigeratorHasProblem() throws SQLException {
     HomePage homePage = loginPage.loginAs(refrigeratorTestData.get(USER), refrigeratorTestData.get(PASSWORD));
     initiateDistribution(refrigeratorTestData.get(FIRST_DELIVERY_ZONE_NAME), refrigeratorTestData.get(VACCINES_PROGRAM));
     VisitInformationPage visitInformationPage = facilityListPage.selectFacility(refrigeratorTestData.get(FIRST_FACILITY_CODE));
@@ -173,7 +175,7 @@ public class DistributionRefrigeratorSyncTest extends TestCaseHelper {
   }
 
   @Test(groups = {"distribution"})
-  public void testRefrigeratorSyncWhenProblemIsSelectedAndAppliedNRBeforeSync() throws Exception {
+  public void testRefrigeratorSyncWhenProblemIsSelectedAndAppliedNRBeforeSync() throws SQLException {
     HomePage homePage = loginPage.loginAs(refrigeratorTestData.get(USER), refrigeratorTestData.get(PASSWORD));
     initiateDistribution(refrigeratorTestData.get(FIRST_DELIVERY_ZONE_NAME), refrigeratorTestData.get(VACCINES_PROGRAM));
     VisitInformationPage visitInformationPage = facilityListPage.selectFacility(refrigeratorTestData.get(FIRST_FACILITY_CODE));
@@ -219,7 +221,7 @@ public class DistributionRefrigeratorSyncTest extends TestCaseHelper {
   }
 
   @Test(groups = {"distribution"})
-  public void testRefrigeratorSyncWhenRefrigeratorIsDeletedBeforeSync() throws Exception {
+  public void testRefrigeratorSyncWhenRefrigeratorIsDeletedBeforeSync() throws SQLException {
     HomePage homePage = loginPage.loginAs(refrigeratorTestData.get(USER), refrigeratorTestData.get(PASSWORD));
     initiateDistribution(refrigeratorTestData.get(FIRST_DELIVERY_ZONE_NAME), refrigeratorTestData.get(VACCINES_PROGRAM));
     VisitInformationPage visitInformationPage = facilityListPage.selectFacility(refrigeratorTestData.get(FIRST_FACILITY_CODE));
@@ -298,7 +300,7 @@ public class DistributionRefrigeratorSyncTest extends TestCaseHelper {
   }
 
   @Test(groups = {"distribution"})
-  public void testAddingDuplicateRefrigeratorForSameFacility() throws Exception {
+  public void testAddingDuplicateRefrigeratorForSameFacility() {
     loginPage.loginAs(refrigeratorTestData.get(USER), refrigeratorTestData.get(PASSWORD));
     initiateDistribution(refrigeratorTestData.get(FIRST_DELIVERY_ZONE_NAME), refrigeratorTestData.get(VACCINES_PROGRAM));
     RefrigeratorPage refrigeratorPage = facilityListPage.selectFacility(refrigeratorTestData.get(FIRST_FACILITY_CODE)).navigateToRefrigerators();
@@ -309,7 +311,7 @@ public class DistributionRefrigeratorSyncTest extends TestCaseHelper {
   }
 
   @Test(groups = {"distribution"})
-  public void testAddingDuplicateRefrigeratorForDifferentFacility() throws Exception {
+  public void testAddingDuplicateRefrigeratorForDifferentFacility() throws SQLException {
     HomePage homePage = loginPage.loginAs(refrigeratorTestData.get(USER), refrigeratorTestData.get(PASSWORD));
     initiateDistribution(refrigeratorTestData.get(FIRST_DELIVERY_ZONE_NAME), refrigeratorTestData.get(VACCINES_PROGRAM));
     VisitInformationPage visitInformationPage = facilityListPage.selectFacility(refrigeratorTestData.get(SECOND_FACILITY_CODE));
@@ -351,7 +353,7 @@ public class DistributionRefrigeratorSyncTest extends TestCaseHelper {
   }
 
   @Test(groups = {"distribution"})
-  public void testUpdatingRefrigeratorAndSync() throws Exception {
+  public void testUpdatingRefrigeratorAndSync() throws SQLException {
     HomePage homePage = loginPage.loginAs(refrigeratorTestData.get(USER), refrigeratorTestData.get(PASSWORD));
     initiateDistribution(refrigeratorTestData.get(FIRST_DELIVERY_ZONE_NAME), refrigeratorTestData.get(VACCINES_PROGRAM));
     VisitInformationPage visitInformationPage = facilityListPage.selectFacility(refrigeratorTestData.get(FIRST_FACILITY_CODE));
@@ -409,7 +411,7 @@ public class DistributionRefrigeratorSyncTest extends TestCaseHelper {
   public void setupDataForDistributionTest(String userSIC, String deliveryZoneCodeFirst, String deliveryZoneCodeSecond,
                                            String deliveryZoneNameFirst, String deliveryZoneNameSecond, String facilityCodeFirst,
                                            String facilityCodeSecond, String programFirst, String programSecond, String schedule,
-                                           String productGroupCode) throws Exception {
+                                           String productGroupCode) throws SQLException {
     List<String> rightsList = asList("MANAGE_DISTRIBUTION");
     setupTestDataToInitiateRnRAndDistribution(facilityCodeFirst, facilityCodeSecond, true, programFirst, userSIC, "200", rightsList,
       programSecond, "District1", "Ngorongoro", "Ngorongoro");
@@ -443,7 +445,7 @@ public class DistributionRefrigeratorSyncTest extends TestCaseHelper {
   }
 
   @AfterMethod(groups = "distribution")
-  public void tearDown() throws Exception {
+  public void tearDown() throws SQLException {
     testWebDriver.sleep(500);
     if (!testWebDriver.getElementById("username").isDisplayed()) {
       HomePage homePage = PageFactory.getInstanceOfHomePage(testWebDriver);

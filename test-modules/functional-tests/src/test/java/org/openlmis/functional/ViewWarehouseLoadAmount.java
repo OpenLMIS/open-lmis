@@ -25,6 +25,7 @@ import org.openlmis.pageobjects.WarehouseLoadAmountPage;
 import org.openqa.selenium.JavascriptExecutor;
 import org.testng.annotations.*;
 
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -58,13 +59,13 @@ public class ViewWarehouseLoadAmount extends TestCaseHelper {
   LoginPage loginPage;
 
   @BeforeMethod(groups = "distribution")
-  public void setUp() throws Exception {
+  public void setUp() throws InterruptedException, SQLException, IOException {
     super.setup();
     loginPage = PageFactory.getInstanceOfLoginPage(testWebDriver, baseUrlGlobal);
   }
 
   @Given("^I have data available for distribution load amount$")
-  public void setupDataForDistributionLoadAmount() throws Exception {
+  public void setupDataForDistributionLoadAmount() throws SQLException {
     String productGroupCode = "PG1";
     List<String> rightsList = new ArrayList<>();
     rightsList.add("MANAGE_DISTRIBUTION");
@@ -81,7 +82,7 @@ public class ViewWarehouseLoadAmount extends TestCaseHelper {
   }
 
   @And("^I have data available for \"([^\"]*)\" (facility|facilities) attached to delivery zones$")
-  public void setupDataForMultipleDeliveryZones(String facilityInstances, String facility) throws Exception {
+  public void setupDataForMultipleDeliveryZones(String facilityInstances, String facility) throws SQLException {
     if (facilityInstances.equalsIgnoreCase("Multiple")) {
       setupDataForDeliveryZone(true, deliveryZoneCodeFirst, deliveryZoneCodeSecond, deliveryZoneNameFirst, deliveryZoneNameSecond,
         facilityCodeFirst, facilityCodeSecond, programFirst, programSecond, schedule);
@@ -97,18 +98,18 @@ public class ViewWarehouseLoadAmount extends TestCaseHelper {
   }
 
   @And("^I have role assigned to delivery zones$")
-  public void setupRoleAssignmentForMultipleDeliveryZones() throws Exception {
+  public void setupRoleAssignmentForMultipleDeliveryZones() throws SQLException {
     dbWrapper.insertRoleAssignmentForDistribution(userSIC, "store in-charge", deliveryZoneCodeFirst);
     dbWrapper.insertRoleAssignmentForDistribution(userSIC, "store in-charge", deliveryZoneCodeSecond);
   }
 
   @And("^I have role assigned to delivery zone first$")
-  public void setupRoleAssignmentForDeliveryZoneFirst() throws Exception {
+  public void setupRoleAssignmentForDeliveryZoneFirst() throws SQLException {
     dbWrapper.insertRoleAssignmentForDistribution(userSIC, "store in-charge", deliveryZoneCodeFirst);
   }
 
   @And("^I have following ISA values:$")
-  public void setProgramProductISA(DataTable tableData) throws Exception {
+  public void setProgramProductISA(DataTable tableData) throws SQLException {
     for (Map<String, String> map : tableData.asMaps()) {
       dbWrapper.insertProgramProductISA(map.get("Program"), map.get("Product"), map.get("whoRatio"),
         map.get("dosesPerYear"), map.get("wastageFactor"), map.get("bufferPercentage"), map.get("minimumValue"),
@@ -117,7 +118,7 @@ public class ViewWarehouseLoadAmount extends TestCaseHelper {
   }
 
   @And("^I have following override ISA values:$")
-  public void setOverrideISA(DataTable tableData) throws Exception {
+  public void setOverrideISA(DataTable tableData) throws SQLException {
     for (Map<String, String> map : tableData.asMaps()) {
       dbWrapper.InsertOverriddenIsa(map.get("Facility Code"), map.get("Program"),
         map.get("Product"), Integer.parseInt(map.get("ISA")));
@@ -125,7 +126,7 @@ public class ViewWarehouseLoadAmount extends TestCaseHelper {
   }
 
   @Then("^I should see aggregate ISA values as per multiple facilities in one delivery zone$")
-  public void verifyISAAndOverrideISAValuesAggregatedForMultipleFacilities() throws Exception {
+  public void verifyISAAndOverrideISAValuesAggregatedForMultipleFacilities() {
     warehouseLoadAmountPage = PageFactory.getInstanceOfWarehouseLoadAmountPage(testWebDriver);
     assertEquals(String.valueOf(Integer.parseInt(warehouseLoadAmountPage.getFacilityPopulation(1, 1)) +
       Integer.parseInt(warehouseLoadAmountPage.getFacilityPopulation(1, 2))), warehouseLoadAmountPage.getTotalPopulation(1));
@@ -144,7 +145,7 @@ public class ViewWarehouseLoadAmount extends TestCaseHelper {
   }
 
   @Then("^I should see ISA values as per delivery zone facilities$")
-  public void verifyISAAndOverrideISA() throws Exception {
+  public void verifyISAAndOverrideISA() {
     warehouseLoadAmountPage = PageFactory.getInstanceOfWarehouseLoadAmountPage(testWebDriver);
     assertEquals(facilityCodeSecond, warehouseLoadAmountPage.getFacilityCode(1, 1));
     assertEquals("Central Hospital", warehouseLoadAmountPage.getFacilityName(1, 1));
@@ -188,7 +189,7 @@ public class ViewWarehouseLoadAmount extends TestCaseHelper {
   }
 
   @Then("^I should see message \"([^\"]*)\"$")
-  public void verifyNoRecordFoundMessage(String message) throws Exception {
+  public void verifyNoRecordFoundMessage(String message) {
     warehouseLoadAmountPage = PageFactory.getInstanceOfWarehouseLoadAmountPage(testWebDriver);
     assertEquals(message, warehouseLoadAmountPage.getNoRecordFoundMessage());
   }
@@ -199,7 +200,7 @@ public class ViewWarehouseLoadAmount extends TestCaseHelper {
                                                                   String deliveryZoneNameSecond, String facilityCodeFirst,
                                                                   String facilityCodeSecond, String facilityCodeThird,
                                                                   String facilityCodeFourth, String programFirst, String programSecond,
-                                                                  String schedule, String product1, String product2) throws Exception {
+                                                                  String schedule, String product1, String product2) throws SQLException {
     List<String> rightsList = asList("MANAGE_DISTRIBUTION");
     setupTestDataToInitiateRnRAndDistribution(facilityCodeFirst, facilityCodeSecond, true, programFirst, userSIC, "200",
       rightsList, programSecond, district1, district1, parentGeoZone1);
@@ -294,7 +295,7 @@ public class ViewWarehouseLoadAmount extends TestCaseHelper {
   public void testShouldVerifyISAForGeographicZones(String userSIC, String password, String deliveryZoneCodeFirst, String deliveryZoneCodeSecond,
                                                     String deliveryZoneNameFirst, String deliveryZoneNameSecond, String facilityCodeFirst,
                                                     String facilityCodeSecond, String programFirst, String programSecond, String schedule,
-                                                    String product, String product2) throws Exception {
+                                                    String product, String product2) throws SQLException {
     List<String> rightsList = asList("MANAGE_DISTRIBUTION");
     setupTestDataToInitiateRnRAndDistribution(facilityCodeFirst, facilityCodeSecond, true, programFirst, userSIC, "200",
       rightsList, programSecond, district1, parentGeoZone, parentGeoZone);
@@ -387,7 +388,7 @@ public class ViewWarehouseLoadAmount extends TestCaseHelper {
   }
 
   @AfterMethod(groups = "distribution")
-  public void tearDown() throws Exception {
+  public void tearDown() throws SQLException {
     testWebDriver.sleep(500);
     if (!testWebDriver.getElementById("username").isDisplayed()) {
       HomePage homePage = PageFactory.getInstanceOfHomePage(testWebDriver);

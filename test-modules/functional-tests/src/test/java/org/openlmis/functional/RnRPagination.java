@@ -19,6 +19,7 @@ import org.openlmis.pageobjects.LoginPage;
 import org.openlmis.pageobjects.ViewRequisitionPage;
 import org.testng.annotations.*;
 
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -36,14 +37,14 @@ public class RnRPagination extends TestCaseHelper {
   LoginPage loginPage;
 
   @BeforeMethod(groups = {"requisition"})
-  public void setUp() throws Exception {
+  public void setUp() throws InterruptedException, SQLException, IOException {
     super.setup();
     initiateRnRPage = PageFactory.getInstanceOfInitiateRnRPage(testWebDriver);
     loginPage = PageFactory.getInstanceOfLoginPage(testWebDriver, baseUrlGlobal);
   }
 
   @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-Positive", enabled = false)
-  public void testRnRPaginationAndSpecificDisplayOrder(String program, String userSIC, String password) throws Exception {
+  public void testRnRPaginationAndSpecificDisplayOrder(String program, String userSIC, String password) throws SQLException {
     dbWrapper.setupMultipleProducts(program, "Lvl3 Hospital", 11, false);
     setupData(program, userSIC);
 
@@ -120,7 +121,7 @@ public class RnRPagination extends TestCaseHelper {
   }
 
   @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-Positive")
-  public void testProductDefaultDisplayOrder(String program, String userSIC, String password) throws Exception {
+  public void testProductDefaultDisplayOrder(String program, String userSIC, String password) throws SQLException {
     dbWrapper.setupMultipleProducts(program, "Lvl3 Hospital", 11, true);
     setupData(program, userSIC);
 
@@ -135,7 +136,7 @@ public class RnRPagination extends TestCaseHelper {
   }
 
   @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-Positive")
-  public void testCategoryDisplayOrder(String program, String userSIC, String password) throws Exception {
+  public void testCategoryDisplayOrder(String program, String userSIC, String password) throws SQLException {
     dbWrapper.setupMultipleCategoryProducts(program, "Lvl3 Hospital", 11, false);
     setupData(program, userSIC);
 
@@ -150,7 +151,7 @@ public class RnRPagination extends TestCaseHelper {
   }
 
   @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-Positive")
-  public void testCategoryDefaultDisplayOrder(String program, String userSIC, String password) throws Exception {
+  public void testCategoryDefaultDisplayOrder(String program, String userSIC, String password) throws SQLException {
     dbWrapper.setupMultipleCategoryProducts(program, "Lvl3 Hospital", 11, true);
     setupData(program, userSIC);
 
@@ -164,63 +165,63 @@ public class RnRPagination extends TestCaseHelper {
     verifyCategoryDefaultDisplayOrderNonFullSupply();
   }
 
-  public void verifyDisplayOrderFullSupply(int numberOfLineItemsPerPage) throws Exception {
+  public void verifyDisplayOrderFullSupply(int numberOfLineItemsPerPage) {
     for (int i = 0; i < numberOfLineItemsPerPage; i++) {
       testWebDriver.waitForElementToAppear(testWebDriver.getElementByXpath(FULL_SUPPLY_BASE_LOCATOR + "/tbody[" + (i + 1) + "]/tr[2]/td[1]/ng-switch/span/ng-switch/span"));
       assertEquals(testWebDriver.getElementByXpath(FULL_SUPPLY_BASE_LOCATOR + "/tbody[" + (i + 1) + "]/tr[2]/td[1]/ng-switch/span/ng-switch/span").getText(), "F" + i);
     }
   }
 
-  public void verifyDisplayOrderFullSupplyOnViewRequisition(int numberOfLineItemsPerPage) throws Exception {
+  public void verifyDisplayOrderFullSupplyOnViewRequisition(int numberOfLineItemsPerPage) {
     for (int i = 0; i < numberOfLineItemsPerPage; i++) {
       testWebDriver.waitForElementToAppear(testWebDriver.getElementByXpath("//span[@id='productCode_" + i + "']"));
       assertEquals(testWebDriver.getElementByXpath("//span[@id='productCode_" + i + "']").getText(), "F" + i);
     }
   }
 
-  public void verifyDisplayOrderNonFullSupply(int numberOfLineItemsPerPage) throws Exception {
+  public void verifyDisplayOrderNonFullSupply(int numberOfLineItemsPerPage) {
     for (int i = 0; i < numberOfLineItemsPerPage; i++) {
       testWebDriver.waitForElementToAppear(testWebDriver.getElementByXpath(NON_FULL_SUPPLY_BASE_LOCATOR + "/tbody[" + (i + 1) + "]/tr[2]/td[1]/ng-switch/span"));
       assertEquals(testWebDriver.getElementByXpath(NON_FULL_SUPPLY_BASE_LOCATOR + "/tbody[" + (i + 1) + "]/tr[2]/td[1]/ng-switch/span").getText(), "NF" + i);
     }
   }
 
-  public void verifyDisplayOrderNonFullSupplyOnViewRequisition(int numberOfLineItemsPerPage) throws Exception {
+  public void verifyDisplayOrderNonFullSupplyOnViewRequisition(int numberOfLineItemsPerPage) {
     for (int i = 0; i < numberOfLineItemsPerPage; i++) {
       testWebDriver.waitForElementToAppear(testWebDriver.getElementByXpath("//span[@id='productCode_" + i + "']"));
       assertEquals(testWebDriver.getElementByXpath("//span[@id='productCode_" + i + "']").getText(), "NF" + i);
     }
   }
 
-  public void verifyDefaultDisplayOrderFullSupply() throws Exception {
+  public void verifyDefaultDisplayOrderFullSupply() {
     testWebDriver.waitForElementToAppear(testWebDriver.getElementById("productCode_0"));
     assertEquals(initiateRnRPage.getProductCode(0), "F0");
     assertEquals(initiateRnRPage.getProductCode(1), "F1");
     assertEquals(initiateRnRPage.getProductCode(2), "F10");
   }
 
-  public void verifyDefaultDisplayOrderNonFullSupply() throws Exception {
+  public void verifyDefaultDisplayOrderNonFullSupply() {
     testWebDriver.waitForElementToAppear(testWebDriver.getElementById("productCode_0"));
     assertEquals(initiateRnRPage.getProductCode(0), "NF0");
     assertEquals(initiateRnRPage.getProductCode(1), "NF1");
     assertEquals(initiateRnRPage.getProductCode(2), "NF10");
   }
 
-  public void verifyCategoryDisplayOrder(int numberOfLineItems) throws Exception {
+  public void verifyCategoryDisplayOrder(int numberOfLineItems) {
     testWebDriver.waitForElementToAppear(testWebDriver.getElementById("category_0"));
     for (int i = 0; i < numberOfLineItems; i++) {
       assertEquals(initiateRnRPage.getCategoryText(i), "Antibiotics" + i);
     }
   }
 
-  public void verifyCategoryDefaultDisplayOrderFullSupply() throws Exception {
+  public void verifyCategoryDefaultDisplayOrderFullSupply() {
     testWebDriver.waitForElementToAppear(testWebDriver.getElementById("category_0"));
     assertEquals(initiateRnRPage.getCategoryText(0), "Antibiotics0");
     assertEquals(initiateRnRPage.getCategoryText(1), "Antibiotics1");
     assertEquals(initiateRnRPage.getCategoryText(2), "Antibiotics10");
   }
 
-  public void verifyCategoryDefaultDisplayOrderNonFullSupply() throws Exception {
+  public void verifyCategoryDefaultDisplayOrderNonFullSupply() {
     assertEquals(initiateRnRPage.getCategoryText(0), "Antibiotics0");
     assertEquals(initiateRnRPage.getCategoryText(1), "Antibiotics1");
     assertEquals(initiateRnRPage.getCategoryText(2), "Antibiotics10");
@@ -228,7 +229,7 @@ public class RnRPagination extends TestCaseHelper {
   }
 
   @AfterMethod(groups = {"requisition"})
-  public void tearDown() throws Exception {
+  public void tearDown() throws SQLException {
     HomePage homePage = PageFactory.getInstanceOfHomePage(testWebDriver);
     homePage.logout(baseUrlGlobal);
     dbWrapper.deleteData();

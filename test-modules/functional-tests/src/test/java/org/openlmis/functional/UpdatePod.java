@@ -1,17 +1,15 @@
 package org.openlmis.functional;
 
-import com.thoughtworks.selenium.SeleneseTestBase;
-import com.thoughtworks.selenium.SeleneseTestNgHelper;
 import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.pageobjects.HomePage;
 import org.openlmis.pageobjects.LoginPage;
 import org.openlmis.pageobjects.ManagePodPage;
 import org.openlmis.pageobjects.UpdatePodPage;
-import org.testng.AssertJUnit;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
@@ -49,7 +47,7 @@ public class UpdatePod extends TestCaseHelper {
   }};
 
   @BeforeMethod(groups = "requisition")
-  public void setUp() throws Exception {
+  public void setUp() throws InterruptedException, SQLException, IOException {
     super.setup();
     dbWrapper.deleteData();
     setUpData(updatePODData.get(PROGRAM), updatePODData.get(USER));
@@ -58,7 +56,7 @@ public class UpdatePod extends TestCaseHelper {
   }
 
   @Test(groups = {"requisition"})
-  public void testVerifyManagePODValidFlowForRegularRnR() throws Exception {
+  public void testVerifyManagePODValidFlowForRegularRnR() throws SQLException {
     initiateRnrAndConvertToOrder(false, 100);
 
     HomePage homePage = loginPage.loginAs(updatePODData.get(USER), updatePODData.get(PASSWORD));
@@ -105,7 +103,7 @@ public class UpdatePod extends TestCaseHelper {
   }
 
   @Test(groups = {"requisition"})
-  public void testVerifyManagePODValidFlowForEmergencyRnR() throws Exception {
+  public void testVerifyManagePODValidFlowForEmergencyRnR() throws SQLException {
     initiateRnrAndConvertToOrder(true, 100);
 
     HomePage homePage = loginPage.loginAs(updatePODData.get(USER), updatePODData.get(PASSWORD));
@@ -116,7 +114,7 @@ public class UpdatePod extends TestCaseHelper {
   }
 
   @Test(groups = {"requisition"})
-  public void testVerifyManagePODWhenPacksToShipIsZero() throws Exception {
+  public void testVerifyManagePODWhenPacksToShipIsZero() throws SQLException {
     initiateRnrAndConvertToOrder(false, 0);
 
     HomePage homePage = loginPage.loginAs(updatePODData.get(USER), updatePODData.get(PASSWORD));
@@ -132,7 +130,7 @@ public class UpdatePod extends TestCaseHelper {
   }
 
   @Test(groups = {"requisition"})
-  public void testVerifyManagePODWhenMultipleProducts() throws Exception {
+  public void testVerifyManagePODWhenMultipleProducts() throws SQLException {
     dbWrapper.setupMultipleProducts(updatePODData.get(PROGRAM), "Lvl3 Hospital", 1, true);
     dbWrapper.insertRequisitionWithMultipleLineItems(1, updatePODData.get(PROGRAM), true, "F10", false);
     dbWrapper.convertRequisitionToOrder(dbWrapper.getMaxRnrID(), "READY_TO_PACK", updatePODData.get(USER));
@@ -147,7 +145,7 @@ public class UpdatePod extends TestCaseHelper {
   }
 
   @Test(groups = {"requisition"})
-  public void testVerifyUpdatePODForPackedOrdersWhenMultipleProducts() throws Exception {
+  public void testVerifyUpdatePODForPackedOrdersWhenMultipleProducts() throws SQLException {
     dbWrapper.setupMultipleProducts(updatePODData.get(PROGRAM), "Lvl3 Hospital", 1, true);
     dbWrapper.insertRequisitionWithMultipleLineItems(1, updatePODData.get(PROGRAM), true, "F10", true);
     dbWrapper.convertRequisitionToOrder(dbWrapper.getMaxRnrID(), "READY_TO_PACK", updatePODData.get(USER));
@@ -166,7 +164,7 @@ public class UpdatePod extends TestCaseHelper {
   }
 
   @Test(groups = {"requisition"})
-  public void testVerifyUpdatePODForPackedOrdersValidFlowForRegularRnR() throws Exception {
+  public void testVerifyUpdatePODForPackedOrdersValidFlowForRegularRnR() throws SQLException {
     initiateRnrAndConvertToOrder(false, 1111);
     testDataForShipment(999, true, "P10", 99898998);
     dbWrapper.updateFieldValue("orders", "status", "PACKED", null, null);
@@ -187,7 +185,7 @@ public class UpdatePod extends TestCaseHelper {
   }
 
   @Test(groups = {"requisition"})
-  public void testVerifyUpdatePODForPackedOrdersAdditionalProduct() throws Exception {
+  public void testVerifyUpdatePODForPackedOrdersAdditionalProduct() throws SQLException {
     Integer id = dbWrapper.getProductId("P11");
     dbWrapper.updateFieldValue("program_products", "programid", "4", "id", id.toString());
     initiateRnrAndConvertToOrder(false, 1111);
@@ -212,7 +210,7 @@ public class UpdatePod extends TestCaseHelper {
   }
 
   @Test(groups = {"requisition"})
-  public void testVerifyUpdatePODForPackedOrdersWhenPacksToShipAndQuantityShippedIsZero() throws Exception {
+  public void testVerifyUpdatePODForPackedOrdersWhenPacksToShipAndQuantityShippedIsZero() throws SQLException {
     initiateRnrAndConvertToOrder(false, 0);
     testDataForShipment(0, true, "P10", 0);
     dbWrapper.updateFieldValue("orders", "status", "PACKED", null, null);
@@ -271,7 +269,7 @@ public class UpdatePod extends TestCaseHelper {
     }
   }
 
-  private void setUpData(String program, String userSIC) throws Exception {
+  private void setUpData(String program, String userSIC) throws SQLException {
     setupProductTestData("P10", "P11", program, "lvl3_hospital");
     dbWrapper.insertFacilities("F10", "F11");
     dbWrapper.configureTemplate(program);
@@ -297,7 +295,7 @@ public class UpdatePod extends TestCaseHelper {
   }
 
   @AfterMethod(groups = "requisition")
-  public void tearDown() throws Exception {
+  public void tearDown() throws SQLException {
     testWebDriver.sleep(500);
     if (!testWebDriver.getElementById("username").isDisplayed()) {
       HomePage homePage = PageFactory.getInstanceOfHomePage(testWebDriver);

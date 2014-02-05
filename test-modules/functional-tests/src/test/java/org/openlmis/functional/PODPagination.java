@@ -20,13 +20,15 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.thoughtworks.selenium.SeleneseTestBase.*;
+import static com.thoughtworks.selenium.SeleneseTestBase.assertFalse;
+import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
 import static java.util.Arrays.asList;
 import static org.testng.AssertJUnit.assertEquals;
 
@@ -45,7 +47,7 @@ public class PODPagination extends TestCaseHelper {
   UpdatePodPage updatePodPage;
 
   @BeforeMethod(groups = {"requisition"})
-  public void setUp() throws Exception {
+  public void setUp() throws SQLException, IOException, InterruptedException {
     super.setup();
     updatePodPage = PageFactory.getInstanceOfUpdatePodPage(testWebDriver);
 
@@ -66,7 +68,7 @@ public class PODPagination extends TestCaseHelper {
   }
 
   @Test(groups = {"requisition"})
-  public void testRnRPaginationAndDefaultDisplayOrder() throws Exception {
+  public void testRnRPaginationAndDefaultDisplayOrder() throws SQLException {
     dbWrapper.setupMultipleProducts(podPaginationData.get(PROGRAM), "Lvl3 Hospital", 11, true);
     dbWrapper.insertRequisitionWithMultipleLineItems(11, podPaginationData.get(PROGRAM), true, "F10", false);
     dbWrapper.convertRequisitionToOrder(dbWrapper.getMaxRnrID(), "READY_TO_PACK", podPaginationData.get(USER));
@@ -120,7 +122,7 @@ public class PODPagination extends TestCaseHelper {
   }
 
   @Test(groups = {"requisition"})
-  public void testRnRPaginationAndSpecificDisplayOrder() throws Exception {
+  public void testRnRPaginationAndSpecificDisplayOrder() throws SQLException {
     dbWrapper.setupMultipleProducts(podPaginationData.get(PROGRAM), "Lvl3 Hospital", 11, false);
     dbWrapper.insertRequisitionWithMultipleLineItems(11, podPaginationData.get(PROGRAM), true, "F10", false);
     dbWrapper.convertRequisitionToOrder(dbWrapper.getMaxRnrID(), "READY_TO_PACK", podPaginationData.get(USER));
@@ -144,7 +146,7 @@ public class PODPagination extends TestCaseHelper {
   }
 
   @Test(groups = {"requisition"})
-  public void testCategoryDefaultDisplayOrder() throws Exception {
+  public void testCategoryDefaultDisplayOrder() throws SQLException {
     dbWrapper.setupMultipleCategoryProducts(podPaginationData.get(PROGRAM), "Lvl3 Hospital", 11, true);
     dbWrapper.insertRequisitionWithMultipleLineItems(11, podPaginationData.get(PROGRAM), true, "F10", false);
     dbWrapper.convertRequisitionToOrder(dbWrapper.getMaxRnrID(), "READY_TO_PACK", podPaginationData.get(USER));
@@ -168,7 +170,7 @@ public class PODPagination extends TestCaseHelper {
   }
 
   @Test(groups = {"requisition"})
-  public void testCategorySpecificDisplayOrder() throws Exception {
+  public void testCategorySpecificDisplayOrder() throws SQLException {
     dbWrapper.setupMultipleCategoryProducts(podPaginationData.get(PROGRAM), "Lvl3 Hospital", 11, false);
     dbWrapper.insertRequisitionWithMultipleLineItems(11, podPaginationData.get(PROGRAM), true, "F10", false);
     dbWrapper.convertRequisitionToOrder(dbWrapper.getMaxRnrID(), "READY_TO_PACK", podPaginationData.get(USER));
@@ -192,7 +194,7 @@ public class PODPagination extends TestCaseHelper {
   }
 
   @Test(groups = {"requisition"})
-  public void testRnRPaginationAndDefaultDisplayOrderForPackedOrders() throws Exception {
+  public void testRnRPaginationAndDefaultDisplayOrderForPackedOrders() throws SQLException {
     dbWrapper.setupMultipleProducts(podPaginationData.get(PROGRAM), "Lvl3 Hospital", 11, true);
     dbWrapper.insertRequisitionWithMultipleLineItems(11, podPaginationData.get(PROGRAM), true, "F10", false);
     dbWrapper.convertRequisitionToOrder(dbWrapper.getMaxRnrID(), "READY_TO_PACK", podPaginationData.get(USER));
@@ -350,7 +352,7 @@ public class PODPagination extends TestCaseHelper {
   }
 
   @AfterMethod(groups = {"requisition"})
-  public void tearDown() throws Exception {
+  public void tearDown() throws SQLException {
     HomePage homePage = PageFactory.getInstanceOfHomePage(testWebDriver);
     homePage.logout(baseUrlGlobal);
     dbWrapper.deleteData();

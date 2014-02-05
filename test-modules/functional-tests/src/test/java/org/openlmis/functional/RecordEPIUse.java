@@ -26,6 +26,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Listeners;
 
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
@@ -38,7 +39,7 @@ public class RecordEPIUse extends TestCaseHelper {
   EPIUsePage epiUsePage;
 
   @BeforeMethod(groups = {"distribution"})
-  public void setUp() throws Exception {
+  public void setUp() throws InterruptedException, SQLException, IOException {
     super.setup();
   }
 
@@ -87,7 +88,7 @@ public class RecordEPIUse extends TestCaseHelper {
   }
 
   @AfterMethod(groups = {"distribution"})
-  public void tearDown() throws Exception {
+  public void tearDown() throws SQLException {
     testWebDriver.sleep(250);
     if (!testWebDriver.getElementById("username").isDisplayed()) {
       HomePage homePage = PageFactory.getInstanceOfHomePage(testWebDriver);

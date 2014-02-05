@@ -11,6 +11,8 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.List;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.*;
@@ -27,14 +29,14 @@ public class ManagePod extends TestCaseHelper {
   public LoginPage loginPage;
 
   @BeforeMethod(groups = "requisition")
-  public void setUp() throws Exception {
+  public void setUp() throws InterruptedException, SQLException, IOException {
     super.setup();
     dbWrapper.deleteData();
     loginPage = PageFactory.getInstanceOfLoginPage(testWebDriver, baseUrlGlobal);
   }
 
   @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-RnR")
-  public void testVerifyManagePODValidFlowForRegularRnR(String program, String userSIC, String password) throws Exception {
+  public void testVerifyManagePODValidFlowForRegularRnR(String program, String userSIC, String password) throws SQLException {
     setUpData(program, userSIC);
 
     HomePage homePage = loginPage.loginAs(userSIC, password);
@@ -48,7 +50,7 @@ public class ManagePod extends TestCaseHelper {
   }
 
   @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-RnR")
-  public void testVerifyManagePODWhenSupplyLineMissing(String program, String userSIC, String password) throws Exception {
+  public void testVerifyManagePODWhenSupplyLineMissing(String program, String userSIC, String password) throws SQLException {
     setUpData(program, userSIC);
     dbWrapper.deleteSupplyLine();
 
@@ -65,7 +67,7 @@ public class ManagePod extends TestCaseHelper {
   }
 
   @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-RnR")
-  public void testVerifyManagePODValidFlowForEmergencyRnR(String program, String userSIC, String password) throws Exception {
+  public void testVerifyManagePODValidFlowForEmergencyRnR(String program, String userSIC, String password) throws SQLException {
     setUpData(program, userSIC);
     dbWrapper.updateFieldValue("requisitions", "Emergency", true);
 
@@ -81,7 +83,7 @@ public class ManagePod extends TestCaseHelper {
   }
 
   @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-RnR")
-  public void testManagePODWhenRequisitionNotConvertedToOrder(String program, String userSIC, String password) throws Exception {
+  public void testManagePODWhenRequisitionNotConvertedToOrder(String program, String userSIC, String password) throws SQLException {
     setUpData(program, userSIC);
 
     HomePage homePage = loginPage.loginAs(userSIC, password);
@@ -90,7 +92,7 @@ public class ManagePod extends TestCaseHelper {
   }
 
   @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-RnR")
-  public void testManagePODWhenPodAlreadySubmitted(String program, String userSIC, String password) throws Exception {
+  public void testManagePODWhenPodAlreadySubmitted(String program, String userSIC, String password) throws SQLException {
     setUpData(program, userSIC);
 
     HomePage homePage = loginPage.loginAs(userSIC, password);
@@ -103,7 +105,7 @@ public class ManagePod extends TestCaseHelper {
   }
 
   @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-RnR")
-  public void testManagePODWhenManagePodRightsNotAssigned(String program, String userSIC, String password) throws Exception {
+  public void testManagePODWhenManagePodRightsNotAssigned(String program, String userSIC, String password) throws SQLException {
     setupProductTestData("P10", "P11", program, "lvl3_hospital");
     dbWrapper.insertFacilities("F10", "F11");
     dbWrapper.configureTemplate(program);
@@ -147,7 +149,7 @@ public class ManagePod extends TestCaseHelper {
     assertEquals("Emergency", managePodPage.getHeaderEmergency());
   }
 
-  private void setUpData(String program, String userSIC) throws Exception {
+  private void setUpData(String program, String userSIC) throws SQLException {
     setupProductTestData("P10", "P11", program, "lvl3_hospital");
     dbWrapper.insertFacilities("F10", "F11");
     dbWrapper.configureTemplate(program);
@@ -169,7 +171,7 @@ public class ManagePod extends TestCaseHelper {
   }
 
   @AfterMethod(groups = "requisition")
-  public void tearDown() throws Exception {
+  public void tearDown() throws SQLException {
     testWebDriver.sleep(500);
     if (!testWebDriver.getElementById("username").isDisplayed()) {
       HomePage homePage = PageFactory.getInstanceOfHomePage(testWebDriver);

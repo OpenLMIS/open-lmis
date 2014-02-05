@@ -20,6 +20,7 @@ import org.openlmis.pageobjects.UploadPage;
 import org.testng.annotations.*;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.HashSet;
 import java.util.List;
@@ -39,7 +40,7 @@ public class E2EUpload extends TestCaseHelper {
   RolesPage rolesPage;
 
   @BeforeMethod(groups = {"admin"})
-  public void setUp() throws Exception {
+  public void setUp() throws InterruptedException, SQLException, IOException {
     super.setup();
     loginPage = PageFactory.getInstanceOfLoginPage(testWebDriver, baseUrlGlobal);
     uploadPage = PageFactory.getInstanceOfUploadPage(testWebDriver);
@@ -47,7 +48,7 @@ public class E2EUpload extends TestCaseHelper {
   }
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function-Positive")
-  public void uploadCSVFiles(String[] credentials) throws Exception {
+  public void uploadCSVFiles(String[] credentials) throws FileNotFoundException, SQLException {
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
     RolesPage rolesPage = homePage.navigateRoleAssignments();
     assertTrue(rolesPage.isCreateNewRoleButtonDisplayed());
@@ -741,7 +742,7 @@ public class E2EUpload extends TestCaseHelper {
   }
 
   @AfterMethod(groups = {"admin"})
-  public void tearDown() throws Exception {
+  public void tearDown() throws SQLException {
     HomePage homePage = PageFactory.getInstanceOfHomePage(testWebDriver);
     homePage.logout(baseUrlGlobal);
     dbWrapper.deleteData();

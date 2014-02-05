@@ -26,6 +26,9 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 
+import java.io.IOException;
+import java.sql.SQLException;
+
 import static com.thoughtworks.selenium.SeleneseTestBase.assertFalse;
 import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
 import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
@@ -35,12 +38,12 @@ public class ConfigureShipmentTemplate extends TestCaseHelper {
 
 
   @Given("^I have shipment file with Header In File as \"([^\"]*)\"$")
-  public void setupShipmentFileConfiguration(String status) throws Exception {
+  public void setupShipmentFileConfiguration(String status) throws SQLException {
     dbWrapper.setupShipmentFileConfiguration(status);
   }
 
   @And("^I access configure shipment page$")
-  public void accessOrderScreen() throws Exception {
+  public void accessOrderScreen() {
     HomePage homePage = PageFactory.getInstanceOfHomePage(testWebDriver);
     ConfigureEDIPage configureEDIPage = homePage.navigateEdiScreen();
     configureEDIPage.navigateConfigureShipmentPage();
@@ -53,25 +56,25 @@ public class ConfigureShipmentTemplate extends TestCaseHelper {
   }
 
   @And("^I should see include checkbox for all data fields$")
-  public void verifyDefaultDataFieldsCheckBox() throws Exception {
+  public void verifyDefaultDataFieldsCheckBox() {
     ConfigureShipmentPage configureShipmentPage = PageFactory.getInstanceOfConfigureShipmentPage(testWebDriver);
     configureShipmentPage.verifyDefaultIncludeCheckboxForAllDataFields();
   }
 
   @And("^I should see default value of positions$")
-  public void verifyDefaultPositionValues() throws Exception {
+  public void verifyDefaultPositionValues() {
     ConfigureShipmentPage configureShipmentPage = PageFactory.getInstanceOfConfigureShipmentPage(testWebDriver);
     configureShipmentPage.verifyDefaultPositionValues();
   }
 
   @When("^I save shipment file format$")
-  public void clickSave() throws Exception {
+  public void clickSave() {
     ConfigureShipmentPage configureShipmentPage = PageFactory.getInstanceOfConfigureShipmentPage(testWebDriver);
     configureShipmentPage.clickSaveButton();
   }
 
   @Then("^I should see successful message \"([^\"]*)\"$")
-  public void verifySaveSuccessfullyMessage(String message) throws Exception {
+  public void verifySaveSuccessfullyMessage(String message) {
     ConfigureShipmentPage configureShipmentPage = PageFactory.getInstanceOfConfigureShipmentPage(testWebDriver);
     configureShipmentPage.verifyMessage(message);
   }
@@ -81,14 +84,14 @@ public class ConfigureShipmentTemplate extends TestCaseHelper {
   LoginPage loginPage;
 
   @BeforeMethod(groups = "admin")
-  public void setUp() throws Exception {
+  public void setUp() throws InterruptedException, SQLException, IOException {
     super.setup();
     dbWrapper.setupShipmentFileConfiguration("false");
     loginPage = PageFactory.getInstanceOfLoginPage(testWebDriver, baseUrlGlobal);
   }
 
   @Test(groups = {"admin"})
-  public void testEditPackedAndShippedDateDropDown() throws Exception {
+  public void testEditPackedAndShippedDateDropDown() {
     HomePage homePage = loginPage.loginAs(user, password);
     ConfigureEDIPage configureEDIPage = homePage.navigateEdiScreen();
     ConfigureShipmentPage configureShipmentPage = configureEDIPage.navigateConfigureShipmentPage();
@@ -112,7 +115,7 @@ public class ConfigureShipmentTemplate extends TestCaseHelper {
   }
 
   @Test(groups = {"admin"})
-  public void testVerifyIncludeColumnHeaderONWithAllPositionsAltered() throws Exception {
+  public void testVerifyIncludeColumnHeaderONWithAllPositionsAltered() {
     HomePage homePage = loginPage.loginAs(user, password);
     ConfigureEDIPage configureEDIPage = homePage.navigateEdiScreen();
     ConfigureShipmentPage configureShipmentPage = configureEDIPage.navigateConfigureShipmentPage();
@@ -144,7 +147,7 @@ public class ConfigureShipmentTemplate extends TestCaseHelper {
   }
 
   @Test(groups = {"admin"})
-  public void testVerifyIncludeColumnHeaderOFFWithMandatoryPositionsAltered() throws Exception {
+  public void testVerifyIncludeColumnHeaderOFFWithMandatoryPositionsAltered() {
     HomePage homePage = loginPage.loginAs(user, password);
     ConfigureEDIPage configureEDIPage = homePage.navigateEdiScreen();
     ConfigureShipmentPage configureShipmentPage = configureEDIPage.navigateConfigureShipmentPage();
@@ -174,7 +177,7 @@ public class ConfigureShipmentTemplate extends TestCaseHelper {
   }
 
   @Test(groups = {"admin"})
-  public void testVerifyInvalidPosition() throws Exception {
+  public void testVerifyInvalidPosition() {
     HomePage homePage = loginPage.loginAs(user, password);
     ConfigureEDIPage configureEDIPage = homePage.navigateEdiScreen();
     ConfigureShipmentPage configureShipmentPage = configureEDIPage.navigateConfigureShipmentPage();
@@ -213,7 +216,7 @@ public class ConfigureShipmentTemplate extends TestCaseHelper {
   }
 
   @AfterMethod(groups = "admin")
-  public void tearDown() throws Exception {
+  public void tearDown() throws SQLException {
     if (!testWebDriver.getElementById("username").isDisplayed()) {
       HomePage homePage = PageFactory.getInstanceOfHomePage(testWebDriver);
       homePage.logout(baseUrlGlobal);

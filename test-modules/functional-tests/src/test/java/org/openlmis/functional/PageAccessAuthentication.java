@@ -26,21 +26,21 @@ import static com.thoughtworks.selenium.SeleneseTestBase.assertEquals;
 public class PageAccessAuthentication extends TestCaseHelper {
 
   @When("^I access initiate requisition page through URL$")
-  public void accessInitiateRequisitionPageThroughURL() throws Exception {
+  public void accessInitiateRequisitionPageThroughURL() {
     testWebDriver.waitForElementToAppear(new HomePage(testWebDriver).getLogoutLink());
     testWebDriver.getUrl(baseUrlGlobal + "public/pages/logistics/rnr/index.html#/init-rnr");
     testWebDriver.sleep(2000);
   }
 
   @When("^I access create facility page through URL$")
-  public void accessCreateFacilityPageThroughURL() throws Exception {
+  public void accessCreateFacilityPageThroughURL() {
     testWebDriver.waitForElementToAppear(new HomePage(testWebDriver).getLogoutLink());
     testWebDriver.getUrl(baseUrlGlobal + "public/pages/admin/facility/index.html#/create-facility");
     testWebDriver.sleep(2000);
   }
 
   @Then("^I should see unauthorized access message$")
-  public void verifyUnauthorizedAccessPage() throws Exception {
+  public void verifyUnauthorizedAccessPage() {
     assertEquals("You are not authorized to view the requested page.", new AccessDeniedPage(testWebDriver).getAccessDeniedText());
   }
 }

@@ -19,6 +19,7 @@ import org.openlmis.pageobjects.*;
 import org.openlmis.pageobjects.edi.ConvertOrderPage;
 import org.testng.annotations.*;
 
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -50,7 +51,7 @@ public class ViewRequisition extends TestCaseHelper {
   InitiateRnRPage initiateRnRPage;
 
   @BeforeMethod(groups = "requisition")
-  public void setUp() throws Exception {
+  public void setUp() throws InterruptedException, SQLException, IOException {
     super.setup();
     loginPage = PageFactory.getInstanceOfLoginPage(testWebDriver, baseUrlGlobal);
     initiateRnRPage = PageFactory.getInstanceOfInitiateRnRPage(testWebDriver);
@@ -153,7 +154,7 @@ public class ViewRequisition extends TestCaseHelper {
                                                            String regimenCode,
                                                            String regimenName,
                                                            String regimenCode2,
-                                                           String regimenName2) throws Exception {
+                                                           String regimenName2) throws SQLException {
     List<String> rightsList = asList("CREATE_REQUISITION", "VIEW_REQUISITION");
 
     setupTestDataToInitiateRnR(true, program, userSIC, "200", rightsList);
@@ -264,7 +265,7 @@ public class ViewRequisition extends TestCaseHelper {
   @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-RnR")
   public void testViewVirtualFacilityFromRnRViewScreen(String program,
                                                        String userSIC,
-                                                       String password) throws Exception {
+                                                       String password) throws SQLException {
     List<String> rightsList = new ArrayList<>();
     rightsList.add("CREATE_REQUISITION");
     rightsList.add("VIEW_REQUISITION");
@@ -280,7 +281,7 @@ public class ViewRequisition extends TestCaseHelper {
   }
 
   @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-RnR")
-  public void testViewRnRSkipProductField(String program, String userSIC, String password) throws Exception {
+  public void testViewRnRSkipProductField(String program, String userSIC, String password) throws SQLException {
     List<String> rightsList = new ArrayList<>();
     rightsList.add("CREATE_REQUISITION");
     rightsList.add("AUTHORIZE_REQUISITION");
@@ -330,7 +331,7 @@ public class ViewRequisition extends TestCaseHelper {
   }
 
   @AfterMethod(groups = "requisition")
-  public void tearDown() throws Exception {
+  public void tearDown() throws SQLException {
     testWebDriver.sleep(500);
     if (!testWebDriver.getElementById("username").isDisplayed()) {
       HomePage homePage = PageFactory.getInstanceOfHomePage(testWebDriver);

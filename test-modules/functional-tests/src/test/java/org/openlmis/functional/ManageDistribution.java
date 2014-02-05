@@ -26,6 +26,7 @@ import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
 import org.testng.annotations.*;
 
+import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -67,7 +68,7 @@ public class ManageDistribution extends TestCaseHelper {
 
   @BeforeMethod(groups = "distribution")
   @Before
-  public void setUp() throws Exception {
+  public void setUp() throws InterruptedException, SQLException, IOException {
     super.setup();
     dbWrapper.deleteData();
     epiUsePage = PageFactory.getInstanceOfEpiUsePage(testWebDriver);
@@ -90,7 +91,7 @@ public class ManageDistribution extends TestCaseHelper {
   }
 
   @Given("^I have the following data for distribution:$")
-  public void theFollowingDataExist(DataTable tableData) throws Exception {
+  public void theFollowingDataExist(DataTable tableData) throws SQLException {
     List<Map<String, String>> data = tableData.asMaps();
     for (Map map : data) {
       userSIC = map.get("userSIC").toString();
@@ -118,12 +119,12 @@ public class ManageDistribution extends TestCaseHelper {
   }
 
   @And("^I update product \"([^\"]*)\" to have product group \"([^\"]*)\"$")
-  public void setupProductAndProductGroup(String product, String productGroup) throws Exception {
+  public void setupProductAndProductGroup(String product, String productGroup) throws SQLException {
     updateProductWithGroup(product, productGroup);
   }
 
   @And("^I disassociate \"([^\"]*)\" from delivery zone$")
-  public void disassociateFacility(String facility) throws Exception {
+  public void disassociateFacility(String facility) throws SQLException {
     dbWrapper.deleteDeliveryZoneMembers(facility);
   }
 
@@ -517,7 +518,7 @@ public class ManageDistribution extends TestCaseHelper {
                                                   String deliveryZoneCodeSecond, String deliveryZoneNameFirst,
                                                   String deliveryZoneNameSecond, String facilityCodeFirst, String facilityCodeSecond,
                                                   String programFirst, String programSecond, String schedule, String period,
-                                                  Integer totalNumberOfPeriods) throws Exception {
+                                                  Integer totalNumberOfPeriods) throws SQLException {
     setupData(userSIC, deliveryZoneCodeFirst, deliveryZoneCodeSecond, deliveryZoneNameFirst, deliveryZoneNameSecond, facilityCodeFirst, facilityCodeSecond, programFirst, programSecond, schedule);
 
     HomePage homePage = loginPage.loginAs(userSIC, password);
@@ -535,7 +536,7 @@ public class ManageDistribution extends TestCaseHelper {
                                      String deliveryZoneNameFirst, String deliveryZoneNameSecond,
                                      String facilityCodeFirst, String facilityCodeSecond,
                                      String programFirst, String programSecond, String schedule, String period,
-                                     Integer totalNumberOfPeriods) throws Exception {
+                                     Integer totalNumberOfPeriods) throws SQLException {
 
     List<String> rightsList = asList("MANAGE_DISTRIBUTION");
     setupTestDataToInitiateRnRAndDistribution("F10", "F11", true, programFirst, userSIC, "200",
@@ -623,7 +624,7 @@ public class ManageDistribution extends TestCaseHelper {
                                                                        String deliveryZoneCodeSecond, String deliveryZoneNameFirst,
                                                                        String deliveryZoneNameSecond, String facilityCodeFirst,
                                                                        String facilityCodeSecond, String programFirst, String programSecond,
-                                                                       String schedule, String period, Integer totalNumberOfPeriods) throws Exception {
+                                                                       String schedule, String period, Integer totalNumberOfPeriods) throws SQLException {
     setupData(userSIC, deliveryZoneCodeFirst, deliveryZoneCodeSecond, deliveryZoneNameFirst, deliveryZoneNameSecond, facilityCodeFirst, facilityCodeSecond, programFirst, programSecond, schedule);
     dbWrapper.deleteDeliveryZoneToFacilityMapping(deliveryZoneNameFirst);
     HomePage homePage = loginPage.loginAs(userSIC, password);
@@ -640,7 +641,7 @@ public class ManageDistribution extends TestCaseHelper {
                                                                    String deliveryZoneCodeSecond, String deliveryZoneNameFirst,
                                                                    String deliveryZoneNameSecond, String facilityCodeFirst,
                                                                    String facilityCodeSecond, String programFirst, String programSecond,
-                                                                   String schedule, String period, Integer totalNumberOfPeriods) throws Exception {
+                                                                   String schedule, String period, Integer totalNumberOfPeriods) throws SQLException {
     setupData(userSIC, deliveryZoneCodeFirst, deliveryZoneCodeSecond, deliveryZoneNameFirst, deliveryZoneNameSecond, facilityCodeFirst, facilityCodeSecond, programFirst, programSecond, schedule);
     dbWrapper.deleteProgramToFacilityMapping(programFirst);
     HomePage homePage = loginPage.loginAs(userSIC, password);
@@ -657,7 +658,7 @@ public class ManageDistribution extends TestCaseHelper {
                                                       String deliveryZoneCodeSecond, String deliveryZoneNameFirst,
                                                       String deliveryZoneNameSecond, String facilityCodeFirst,
                                                       String facilityCodeSecond, String programFirst, String programSecond,
-                                                      String schedule, String period, Integer totalNumberOfPeriods) throws Exception {
+                                                      String schedule, String period, Integer totalNumberOfPeriods) throws SQLException {
     List<String> rightsList = new ArrayList<>();
     rightsList.add("MANAGE_DISTRIBUTION");
     setupTestDataToInitiateRnRAndDistribution("F10", "F11", true, programFirst, userSIC, "200", rightsList,
@@ -685,7 +686,7 @@ public class ManageDistribution extends TestCaseHelper {
                                                         String deliveryZoneCodeSecond, String deliveryZoneNameFirst,
                                                         String deliveryZoneNameSecond, String facilityCodeFirst,
                                                         String facilityCodeSecond, String programFirst, String programSecond,
-                                                        String schedule, String period, Integer totalNumberOfPeriods) throws Exception {
+                                                        String schedule, String period, Integer totalNumberOfPeriods) throws SQLException {
     String geoZoneFirst = "District1";
     String geoZoneSecond = "Ngorongoro";
     List<String> rightsList = asList("MANAGE_DISTRIBUTION");
@@ -715,7 +716,7 @@ public class ManageDistribution extends TestCaseHelper {
                                                                                       String deliveryZoneCodeSecond, String deliveryZoneNameFirst,
                                                                                       String deliveryZoneNameSecond, String facilityCodeFirst,
                                                                                       String facilityCodeSecond, String programFirst, String programSecond,
-                                                                                      String schedule, String period, Integer totalNumberOfPeriods) throws Exception {
+                                                                                      String schedule, String period, Integer totalNumberOfPeriods) throws SQLException {
     setupData(userSIC, deliveryZoneCodeFirst, deliveryZoneCodeSecond, deliveryZoneNameFirst, deliveryZoneNameSecond, facilityCodeFirst,
       facilityCodeSecond, programFirst, programSecond, schedule);
     dbWrapper.insertProductGroup(productGroupCode);
@@ -735,7 +736,7 @@ public class ManageDistribution extends TestCaseHelper {
   }
 
   private void setupData(String userSIC, String deliveryZoneCodeFirst, String deliveryZoneCodeSecond, String deliveryZoneNameFirst,
-                         String deliveryZoneNameSecond, String facilityCodeFirst, String facilityCodeSecond, String programFirst, String programSecond, String schedule) throws Exception {
+                         String deliveryZoneNameSecond, String facilityCodeFirst, String facilityCodeSecond, String programFirst, String programSecond, String schedule) throws SQLException {
     List<String> rightsList = asList("MANAGE_DISTRIBUTION");
     setupTestDataToInitiateRnRAndDistribution("F10", "F11", true, programFirst, userSIC, "200", rightsList,
       programSecond, "District1", "Ngorongoro", "Ngorongoro");
@@ -820,7 +821,7 @@ public class ManageDistribution extends TestCaseHelper {
   }
 
   @AfterMethod(groups = "distribution")
-  public void tearDown() throws Exception {
+  public void tearDown() throws SQLException {
     testWebDriver.sleep(500);
     if (!testWebDriver.getElementById("username").isDisplayed()) {
       HomePage homePage = PageFactory.getInstanceOfHomePage(testWebDriver);

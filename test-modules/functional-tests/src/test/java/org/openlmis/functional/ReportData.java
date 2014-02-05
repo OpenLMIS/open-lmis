@@ -19,6 +19,8 @@ import org.openqa.selenium.WebElement;
 import org.testng.annotations.*;
 
 import java.io.File;
+import java.io.IOException;
+import java.sql.SQLException;
 
 @Listeners(CaptureScreenshotOnFailureListener.class)
 
@@ -29,12 +31,12 @@ public class ReportData extends TestCaseHelper {
   private static String downloadedFilePath = new File(System.getProperty("user.dir")).getParent() + separator + "csv";
 
   @BeforeMethod(groups = {"distribution"})
-  public void setUp() throws Exception {
+  public void setUp() throws InterruptedException, SQLException, IOException {
     super.setup();
   }
 
   @Test(dataProvider = "Data-Provider-Function-Positive")
-  public void testVerifyReport(String[] credentials) throws Exception {
+  public void testVerifyReport(String[] credentials) throws InterruptedException, IOException, SQLException {
     LoginPage loginPage = PageFactory.getInstanceOfLoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
     homePage.navigateReportScreen();
@@ -42,7 +44,7 @@ public class ReportData extends TestCaseHelper {
     deleteFile(downloadedFilePath);
   }
 
-  public String[] getReportData(int reportNumber) throws Exception {
+  public String[] getReportData(int reportNumber) throws InterruptedException, IOException, SQLException {
     WebElement reportLink = testWebDriver.getElementByXpath("//table[@class='table table-striped table-bordered']/tbody/tr[" + reportNumber + "]/td[2]/div/a[3]");
     reportLink.click();
     Thread.sleep(2500);
@@ -50,7 +52,7 @@ public class ReportData extends TestCaseHelper {
   }
 
   @AfterMethod(groups = {"distribution"})
-  public void tearDown() throws Exception {
+  public void tearDown() throws SQLException {
     HomePage homePage = PageFactory.getInstanceOfHomePage(testWebDriver);
     homePage.logout(baseUrlGlobal);
     dbWrapper.closeConnection();

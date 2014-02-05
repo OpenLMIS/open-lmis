@@ -21,6 +21,7 @@ import org.openlmis.pageobjects.ProgramProductISAPage;
 import org.openqa.selenium.WebElement;
 import org.testng.annotations.*;
 
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +39,7 @@ public class ManageProgramProductISA extends TestCaseHelper {
   LoginPage loginPage;
 
   @BeforeMethod(groups = "admin")
-  public void setUp() throws Exception {
+  public void setUp() throws InterruptedException, SQLException, IOException {
     super.setup();
     homePage = PageFactory.getInstanceOfHomePage(testWebDriver);
     loginPage = PageFactory.getInstanceOfLoginPage(testWebDriver, baseUrlGlobal);
@@ -87,7 +88,7 @@ public class ManageProgramProductISA extends TestCaseHelper {
   }
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function")
-  public void testMinimumProgramProductISA(String userSIC, String password, String program) throws Exception {
+  public void testMinimumProgramProductISA(String userSIC, String password, String program) throws SQLException {
     setUpTestDataForProgramProductISA();
     Login(userSIC, password);
     ProgramProductISAPage programProductISAPage = navigateProgramProductISAPage(program);
@@ -100,7 +101,7 @@ public class ManageProgramProductISA extends TestCaseHelper {
   }
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function")
-  public void testMaximumProgramProductISA(String userSIC, String password, String program) throws Exception {
+  public void testMaximumProgramProductISA(String userSIC, String password, String program) throws SQLException {
     setUpTestDataForProgramProductISA();
     Login(userSIC, password);
     ProgramProductISAPage programProductISAPage = navigateProgramProductISAPage(program);
@@ -113,7 +114,7 @@ public class ManageProgramProductISA extends TestCaseHelper {
   }
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function")
-  public void testProgramProductISA(String userSIC, String password, String program) throws Exception {
+  public void testProgramProductISA(String userSIC, String password, String program) throws SQLException {
     setUpTestDataForProgramProductISA();
     Login(userSIC, password);
     ProgramProductISAPage programProductISAPage = navigateProgramProductISAPage(program);
@@ -126,7 +127,7 @@ public class ManageProgramProductISA extends TestCaseHelper {
   }
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function")
-  public void testISAFormula(String userSIC, String password, String program) throws Exception {
+  public void testISAFormula(String userSIC, String password, String program) throws SQLException {
     setUpTestDataForProgramProductISA();
     Login(userSIC, password);
     ProgramProductISAPage programProductISAPage = navigateProgramProductISAPage(program);
@@ -142,7 +143,7 @@ public class ManageProgramProductISA extends TestCaseHelper {
   }
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function-Search")
-  public void testSearchBox(String userSIC, String password, String program, String productName) throws Exception {
+  public void testSearchBox(String userSIC, String password, String program, String productName) throws SQLException {
     setUpTestDataForProgramProductISA();
     Login(userSIC, password);
     ProgramProductISAPage programProductISAPage = navigateConfigureProductISAPage();
@@ -156,7 +157,7 @@ public class ManageProgramProductISA extends TestCaseHelper {
   public void testPushTypeProgramsInDropDown(String userSIC,
                                              String password,
                                              String program1,
-                                             String program2) throws Exception {
+                                             String program2) throws SQLException {
     setUpTestDataForProgramProductISA();
     Login(userSIC, password);
     ProgramProductISAPage programProductISAPage = navigateConfigureProductISAPage();
@@ -185,7 +186,7 @@ public class ManageProgramProductISA extends TestCaseHelper {
                                           String product1,
                                           String product2,
                                           String product3,
-                                          String product4) throws Exception {
+                                          String product4) throws SQLException {
     setUpTestDataForProgramProductISA();
     Login(userSIC, password);
     ProgramProductISAPage programProductISAPage = navigateConfigureProductISAPage();
@@ -206,7 +207,7 @@ public class ManageProgramProductISA extends TestCaseHelper {
   }
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function")
-  public void testVerifyMandatoryFields(String userSIC, String password, String program) throws Exception {
+  public void testVerifyMandatoryFields(String userSIC, String password, String program) throws SQLException {
     setUpTestDataForProgramProductISA();
     Login(userSIC, password);
     ProgramProductISAPage programProductISAPage = navigateProgramProductISAPage(program);
@@ -217,9 +218,7 @@ public class ManageProgramProductISA extends TestCaseHelper {
   }
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function")
-  public void testVerifyMonthlyRestockAmountFieldAvailability(String userSIC,
-                                                              String password,
-                                                              String program) throws Exception {
+  public void testVerifyMonthlyRestockAmountFieldAvailability(String userSIC, String password, String program) throws SQLException {
     setUpTestDataForProgramProductISA();
     Login(userSIC, password);
     ProgramProductISAPage programProductISAPage = navigateProgramProductISAPage(program);
@@ -298,7 +297,7 @@ public class ManageProgramProductISA extends TestCaseHelper {
   }
 
   @AfterMethod(groups = "admin")
-  public void tearDown() throws Exception {
+  public void tearDown() throws SQLException {
     testWebDriver.sleep(500);
     if (!testWebDriver.getElementById("username").isDisplayed()) {
       HomePage homePage = PageFactory.getInstanceOfHomePage(testWebDriver);

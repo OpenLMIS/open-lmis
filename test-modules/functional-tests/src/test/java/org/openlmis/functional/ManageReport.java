@@ -18,6 +18,8 @@ import org.openlmis.pageobjects.LoginPage;
 import org.openlmis.pageobjects.ReportPage;
 import org.testng.annotations.*;
 
+import java.io.IOException;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -34,13 +36,13 @@ public class ManageReport extends TestCaseHelper {
   }
 
   @BeforeMethod(groups = {"admin"})
-  public void setUp() throws Exception {
+  public void setUp() throws InterruptedException, SQLException, IOException {
     super.setup();
     loginPage = PageFactory.getInstanceOfLoginPage(testWebDriver, baseUrlGlobal);
   }
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function-Positive")
-  public void invalidScenariosReports(String[] credentials) throws Exception {
+  public void invalidScenariosReports(String[] credentials) {
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
     ReportPage reportPage = homePage.navigateReportScreen();
 
@@ -64,7 +66,7 @@ public class ManageReport extends TestCaseHelper {
   }
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function-Positive")
-  public void uploadWrongReport(String[] credentials) throws Exception {
+  public void uploadWrongReport(String[] credentials) {
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
     ReportPage reportPage = homePage.navigateReportScreen();
     reportPage.clickAddNewButton();
@@ -80,7 +82,7 @@ public class ManageReport extends TestCaseHelper {
   }
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function-Positive", dependsOnMethods = "invalidScenariosReports")
-  public void uploadManageReport(String[] credentials) throws Exception {
+  public void uploadManageReport(String[] credentials) {
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
     ReportPage reportPage = homePage.navigateReportScreen();
 
@@ -97,7 +99,7 @@ public class ManageReport extends TestCaseHelper {
   }
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function-Positive", dependsOnMethods = "uploadManageReport")
-  public void verifyDuplicateReport(String[] credentials) throws Exception {
+  public void verifyDuplicateReport(String[] credentials) {
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
     ReportPage reportPage = homePage.navigateReportScreen();
 
@@ -120,7 +122,7 @@ public class ManageReport extends TestCaseHelper {
   }
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function-Positive")
-  public void verifyDefaultReports(String[] credentials) throws Exception {
+  public void verifyDefaultReports(String[] credentials) {
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
     ReportPage reportPage = homePage.navigateReportScreen();
 
@@ -141,7 +143,7 @@ public class ManageReport extends TestCaseHelper {
   }
 
   @AfterMethod(groups = {"admin"})
-  public void tearDown() throws Exception {
+  public void tearDown() throws SQLException {
     HomePage homePage = PageFactory.getInstanceOfHomePage(testWebDriver);
     homePage.logout(baseUrlGlobal);
     dbWrapper.deleteData();

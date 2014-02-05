@@ -21,6 +21,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
@@ -68,7 +69,7 @@ public class DistributionSyncTest extends TestCaseHelper {
   }};
 
   @BeforeMethod(groups = {"distribution"})
-  public void setUp() throws Exception {
+  public void setUp() throws InterruptedException, SQLException, IOException {
     super.setup();
     loginPage = PageFactory.getInstanceOfLoginPage(testWebDriver, baseUrlGlobal);
     facilityListPage = PageFactory.getInstanceOfFacilityListPage(testWebDriver);
@@ -90,7 +91,7 @@ public class DistributionSyncTest extends TestCaseHelper {
   }
 
   @Test(groups = {"distribution"})
-  public void testMultipleFacilitySync() throws Exception {
+  public void testMultipleFacilitySync() throws SQLException {
     HomePage homePage = loginPage.loginAs(distributionTestData.get(USER), distributionTestData.get(PASSWORD));
     initiateDistribution(distributionTestData.get(FIRST_DELIVERY_ZONE_NAME), distributionTestData.get(VACCINES_PROGRAM));
     VisitInformationPage visitInformationPage = facilityListPage.selectFacility(distributionTestData.get(SECOND_FACILITY_CODE));
@@ -181,7 +182,7 @@ public class DistributionSyncTest extends TestCaseHelper {
   }
 
   @Test(groups = {"distribution"})
-  public void shouldCheckAlreadySyncedFacilities() throws Exception {
+  public void shouldCheckAlreadySyncedFacilities() throws SQLException {
     dbWrapper.addRefrigeratorToFacility("LG", "800L", "GNR7878", "F11");
     HomePage homePage = loginPage.loginAs(distributionTestData.get(USER), distributionTestData.get(PASSWORD));
     initiateDistribution(distributionTestData.get(FIRST_DELIVERY_ZONE_NAME), distributionTestData.get(VACCINES_PROGRAM));
@@ -261,7 +262,7 @@ public class DistributionSyncTest extends TestCaseHelper {
   }
 
   @Test(groups = {"distribution"})
-  public void testSyncWhenFacilityInactiveAfterCaching() throws Exception {
+  public void testSyncWhenFacilityInactiveAfterCaching() throws SQLException {
     HomePage homePage = loginPage.loginAs(distributionTestData.get(USER), distributionTestData.get(PASSWORD));
 
     initiateDistribution(distributionTestData.get(FIRST_DELIVERY_ZONE_NAME), distributionTestData.get(VACCINES_PROGRAM));
@@ -299,7 +300,7 @@ public class DistributionSyncTest extends TestCaseHelper {
   }
 
   @Test(groups = {"distribution"})
-  public void testSyncWhenFacilityDisabledAfterCaching() throws Exception {
+  public void testSyncWhenFacilityDisabledAfterCaching() throws SQLException {
     HomePage homePage = loginPage.loginAs(distributionTestData.get(USER), distributionTestData.get(PASSWORD));
 
     initiateDistribution(distributionTestData.get(FIRST_DELIVERY_ZONE_NAME), distributionTestData.get(VACCINES_PROGRAM));
@@ -339,7 +340,7 @@ public class DistributionSyncTest extends TestCaseHelper {
   }
 
   @Test(groups = {"distribution"})
-  public void testSyncWhenAllProgramInactiveAfterCaching() throws Exception {
+  public void testSyncWhenAllProgramInactiveAfterCaching() throws SQLException {
     HomePage homePage = loginPage.loginAs(distributionTestData.get(USER), distributionTestData.get(PASSWORD));
 
     initiateDistribution(distributionTestData.get(FIRST_DELIVERY_ZONE_NAME), distributionTestData.get(VACCINES_PROGRAM));
@@ -370,7 +371,7 @@ public class DistributionSyncTest extends TestCaseHelper {
   }
 
   @Test(groups = {"distribution"})
-  public void testSyncWhenProgramDeletedAfterCaching() throws Exception {
+  public void testSyncWhenProgramDeletedAfterCaching() throws SQLException {
     HomePage homePage = loginPage.loginAs(distributionTestData.get(USER), distributionTestData.get(PASSWORD));
 
     initiateDistribution(distributionTestData.get(FIRST_DELIVERY_ZONE_NAME), distributionTestData.get(VACCINES_PROGRAM));
@@ -398,7 +399,7 @@ public class DistributionSyncTest extends TestCaseHelper {
   }
 
   @Test(groups = {"distribution"})
-  public void testSyncWhenAllProductsInactiveAfterCaching() throws Exception {
+  public void testSyncWhenAllProductsInactiveAfterCaching() throws SQLException {
     HomePage homePage = loginPage.loginAs(distributionTestData.get(USER), distributionTestData.get(PASSWORD));
 
     initiateDistribution(distributionTestData.get(FIRST_DELIVERY_ZONE_NAME), distributionTestData.get(VACCINES_PROGRAM));
@@ -457,7 +458,7 @@ public class DistributionSyncTest extends TestCaseHelper {
   }
 
   @Test(groups = {"distribution"})
-  public void testSyncWhenAllProductsAreInactive() throws Exception {
+  public void testSyncWhenAllProductsAreInactive() throws SQLException {
     dbWrapper.updateFieldValue("products", "active", "false", "code", "P10");
     dbWrapper.updateFieldValue("products", "active", "false", "code", "P11");
     dbWrapper.updateFieldValue("products", "active", "false", "code", "Product6");
@@ -503,7 +504,7 @@ public class DistributionSyncTest extends TestCaseHelper {
   }
 
   @Test(groups = {"distribution"})
-  public void testSyncWhenProductGroupAddedAfterCaching() throws Exception {
+  public void testSyncWhenProductGroupAddedAfterCaching() throws SQLException {
     HomePage homePage = loginPage.loginAs(distributionTestData.get(USER), distributionTestData.get(PASSWORD));
 
     initiateDistribution(distributionTestData.get(FIRST_DELIVERY_ZONE_NAME), distributionTestData.get(VACCINES_PROGRAM));
@@ -559,7 +560,7 @@ public class DistributionSyncTest extends TestCaseHelper {
   }
 
   @Test(groups = {"distribution"})
-  public void testSyncWhenProductWithNoProductGroupAddedAfterCaching() throws Exception {
+  public void testSyncWhenProductWithNoProductGroupAddedAfterCaching() throws SQLException {
     HomePage homePage = loginPage.loginAs(distributionTestData.get(USER), distributionTestData.get(PASSWORD));
 
     initiateDistribution(distributionTestData.get(FIRST_DELIVERY_ZONE_NAME), distributionTestData.get(VACCINES_PROGRAM));
@@ -616,7 +617,7 @@ public class DistributionSyncTest extends TestCaseHelper {
   public void setupDataForDistributionTest(String userSIC, String deliveryZoneCodeFirst, String deliveryZoneCodeSecond,
                                            String deliveryZoneNameFirst, String deliveryZoneNameSecond,
                                            String facilityCodeFirst, String facilityCodeSecond,
-                                           String programFirst, String programSecond, String schedule, String productGroupCode) throws Exception {
+                                           String programFirst, String programSecond, String schedule, String productGroupCode) throws SQLException {
     List<String> rightsList = asList("MANAGE_DISTRIBUTION");
     setupTestDataToInitiateRnRAndDistribution(facilityCodeFirst, facilityCodeSecond, true, programFirst, userSIC, "200", rightsList,
       programSecond, "District1", "Ngorongoro", "Ngorongoro");
@@ -774,7 +775,7 @@ public class DistributionSyncTest extends TestCaseHelper {
   }
 
   @AfterMethod(groups = "distribution")
-  public void tearDown() throws Exception {
+  public void tearDown() throws SQLException {
     testWebDriver.sleep(500);
     if (!testWebDriver.getElementById("username").isDisplayed()) {
       HomePage homePage = PageFactory.getInstanceOfHomePage(testWebDriver);
