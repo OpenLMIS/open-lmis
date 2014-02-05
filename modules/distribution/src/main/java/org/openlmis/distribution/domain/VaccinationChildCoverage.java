@@ -27,13 +27,47 @@ import static java.util.Arrays.asList;
 public class VaccinationChildCoverage {
 
   private List<ChildCoverageLineItem> childCoverageLineItems = new ArrayList<>();
+  private List<OpenedVialLineItem> openedVialLineItems = new ArrayList<>();
 
-  public VaccinationChildCoverage(FacilityVisit facilityVisit, Facility facility, List<VaccinationProduct> vaccinationProducts) {
+  public VaccinationChildCoverage(FacilityVisit facilityVisit, Facility facility,
+                                  List<VaccinationProduct> vaccinationProducts, List<ProductVial> productVials) {
+
+    List<String> validVaccinations = Collections.unmodifiableList(
+      asList("BCG", "Polio (Newborn)", "Polio 1st dose", "Polio 2nd dose",
+        "Polio 3rd dose", "Penta 1st dose", "Penta 2nd dose", "Penta 3rd dose",
+        "PCV10 1st dose", "PCV10 2nd dose", "PCV10 3rd dose", "Measles"));
+
+    List<String> validProductVials = Collections.unmodifiableList(asList(
+      "BCG", "Polio10", "Polio20",
+      "Penta1", "Penta10", "PCV", "Measles"));
+
+    createChildCoverageLineItems(facilityVisit, facility, vaccinationProducts, validVaccinations);
+
+    createOpenedVialLineItems(facilityVisit, facility, productVials, validProductVials);
+  }
+
+  private void createOpenedVialLineItems(FacilityVisit facilityVisit,
+                                         Facility facility, List<ProductVial> productVials,
+                                         List<String> validProductVials) {
+
+    ProductVial productVial;
+
+    for (final String productVialName : validProductVials) {
+      productVial = (ProductVial) CollectionUtils.find(productVials, new Predicate() {
+        @Override
+        public boolean evaluate(Object o) {
+          return ((ProductVial) o).getVial().equalsIgnoreCase(productVialName);
+        }
+      });
+      this.openedVialLineItems.add(new OpenedVialLineItem(facilityVisit, facility, productVial, productVialName));
+    }
+  }
+
+  private void createChildCoverageLineItems(FacilityVisit facilityVisit,
+                                            Facility facility,
+                                            List<VaccinationProduct> vaccinationProducts,
+                                            List<String> validVaccinations) {
     VaccinationProduct vaccinationProduct;
-
-    List<String> validVaccinations = Collections.unmodifiableList(asList("BCG", "Polio (Newborn)", "Polio 1st dose", "Polio 2nd dose",
-      "Polio 3rd dose", "Penta 1st dose", "Penta 2nd dose", "Penta 3rd dose",
-      "PCV10 1st dose", "PCV10 2nd dose", "PCV10 3rd dose", "Measles"));
 
     for (final String vaccination : validVaccinations) {
       vaccinationProduct = (VaccinationProduct) CollectionUtils.find(vaccinationProducts, new Predicate() {

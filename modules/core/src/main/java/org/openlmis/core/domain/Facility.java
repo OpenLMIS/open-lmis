@@ -213,4 +213,9 @@ public class Facility extends BaseModel implements Importable {
     }
     return facilities;
   }
+
+  @JsonIgnore
+  public Integer getPackSizeFor(String productCode) {
+    return this.getSupportedPrograms().get(0).getPackSizeFor(productCode);
+  }
 }

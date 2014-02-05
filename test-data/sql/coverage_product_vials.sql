@@ -8,16 +8,10 @@
 -- You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
 --
 
-\i ../../test-data/sql/products.sql
-\i ../../test-data/sql/facilities.sql
-\i ../../test-data/sql/rnr_template.sql
-\i ../../test-data/sql/users.sql
-\i ../../test-data/sql/processing_schedules.sql
-\i ../../test-data/sql/requisition_groups.sql
-\i ../../test-data/sql/regimens.sql
-
-\i ../../test-data/sql/delivery_zones.sql
-\i ../../test-data/sql/allocation_users.sql
-\i ../../test-data/sql/budget.sql
-\i ../../test-data/sql/coverage_vaccination_products.sql
-\i ../../test-data/sql/coverage_product_vials.sql
+INSERT INTO coverage_product_vials (vial, productCode) VALUES ('BCG', 'BCG');
+INSERT INTO coverage_product_vials (vial, productCode) VALUES ('Polio10', 'polio10dose');
+INSERT INTO coverage_product_vials (vial, productCode) VALUES ('Polio20', 'polio20dose');
+INSERT INTO coverage_product_vials (vial, productCode) VALUES ('Penta1', 'penta1');
+INSERT INTO coverage_product_vials (vial, productCode) VALUES ('Penta10', 'penta10');
+INSERT INTO coverage_product_vials (vial, productCode) VALUES ('PCV', 'P10');
+INSERT INTO coverage_product_vials (vial, productCode) VALUES ('Measles', 'Measles');

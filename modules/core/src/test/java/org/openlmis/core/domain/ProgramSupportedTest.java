@@ -23,7 +23,7 @@ public class ProgramSupportedTest {
   public ExpectedException expectedException = ExpectedException.none();
 
   @Test
-  public void shouldReturnWhoRatio() throws Exception {
+  public void shouldReturnWhoRatio() {
     Double whoRatio = 127D;
     String productCode = "BCG";
     ProgramSupported programSupported = new ProgramSupported();
@@ -41,7 +41,7 @@ public class ProgramSupportedTest {
   }
 
   @Test
-  public void shouldReturnNullIfNoProgramProducts() throws Exception {
+  public void shouldReturnNullIfNoProgramProducts() {
     String productCode = "BCG";
     ProgramSupported programSupported = new ProgramSupported();
     programSupported.setProgramProducts(Collections.<FacilityProgramProduct>emptyList());
@@ -50,7 +50,7 @@ public class ProgramSupportedTest {
   }
 
   @Test
-  public void shouldReturnNullIfInvalidProductCode() throws Exception {
+  public void shouldReturnNullIfInvalidProductCode() {
     Double whoRatio = 127D;
     String productCode = "BCG";
     ProgramSupported programSupported = new ProgramSupported();
@@ -73,4 +73,32 @@ public class ProgramSupportedTest {
 
     programSupported.isValid();
   }
+
+  @Test
+  public void shouldReturnPackSizeForProductIfItExistsInFPPs() {
+    Integer packSize = 1000;
+    String productCode = "BCG";
+    ProgramSupported programSupported = new ProgramSupported();
+
+    FacilityProgramProduct facilityProgramProduct = mock(FacilityProgramProduct.class);
+    Product product = mock(Product.class);
+
+    when(facilityProgramProduct.getProduct()).thenReturn(product);
+    when(product.getCode()).thenReturn(productCode);
+    when(product.getPackSize()).thenReturn(packSize);
+
+    programSupported.setProgramProducts(asList(facilityProgramProduct));
+
+    assertThat(programSupported.getPackSizeFor(productCode), is(packSize));
+  }
+
+  @Test
+  public void shouldReturnPackSizeNullIfNoProductExistsWithProductCode() {
+    String productCode = "BCG";
+    ProgramSupported programSupported = new ProgramSupported();
+    programSupported.setProgramProducts(Collections.<FacilityProgramProduct>emptyList());
+
+    assertThat(programSupported.getPackSizeFor(productCode), is(nullValue()));
+  }
+
 }

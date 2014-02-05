@@ -82,4 +82,15 @@ public class ProgramSupported extends BaseModel implements Importable {
     });
     return (facilityProgramProduct == null) ? null : facilityProgramProduct.getWhoRatio(productCode);
   }
+
+  @JsonIgnore
+  public Integer getPackSizeFor(final String productCode) {
+    FacilityProgramProduct facilityProgramProduct = (FacilityProgramProduct) CollectionUtils.find(this.getProgramProducts(), new Predicate() {
+      @Override
+      public boolean evaluate(Object o) {
+        return ((FacilityProgramProduct) o).getProduct().getCode().equals(productCode);
+      }
+    });
+    return (facilityProgramProduct == null) ? null : facilityProgramProduct.getProduct().getPackSize();
+  }
 }

@@ -10,10 +10,7 @@
 
 package org.openlmis.distribution.repository;
 
-import org.openlmis.distribution.domain.ChildCoverageLineItem;
-import org.openlmis.distribution.domain.VaccinationChildCoverage;
-import org.openlmis.distribution.domain.VaccinationFullCoverage;
-import org.openlmis.distribution.domain.VaccinationProduct;
+import org.openlmis.distribution.domain.*;
 import org.openlmis.distribution.repository.mapper.VaccinationCoverageMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -42,9 +39,17 @@ public class VaccinationCoverageRepository {
     for (ChildCoverageLineItem childCoverageLineItem : childCoverage.getChildCoverageLineItems()) {
       mapper.insertChildVaccinationCoverageLineItem(childCoverageLineItem);
     }
+
+    for (OpenedVialLineItem openedVialLineItem : childCoverage.getOpenedVialLineItems()) {
+      mapper.insertOpenedVialLineItem(openedVialLineItem);
+    }
   }
 
   public VaccinationChildCoverage getChildCoverageBy(Long facilityVisitId) {
     return new VaccinationChildCoverage(mapper.getChildCoverageLineItemsBy(facilityVisitId));
+  }
+
+  public List<ProductVial> getProductVials() {
+    return mapper.getProductVials();
   }
 }

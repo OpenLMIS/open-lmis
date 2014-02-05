@@ -181,7 +181,8 @@ public class FacilityTest {
 
     List<Facility> facilitiesWithActiveProducts = Facility.filterForActiveProducts(facilities);
 
-    assertThat(facilitiesWithActiveProducts.get(0).getSupportedPrograms().get(0).getProgramProducts(), is(programProducts));
+    assertThat(facilitiesWithActiveProducts.get(0).getSupportedPrograms().get(0).getProgramProducts(),
+      is(programProducts));
   }
 
   @Test
@@ -192,5 +193,15 @@ public class FacilityTest {
     Facility facility = make(a(defaultFacility, with(programSupportedList, asList(programSupported))));
 
     assertThat(facility.getWhoRatioFor("BCG"), is(whoRatio));
+  }
+
+  @Test
+  public void shouldReturnPackSizeForFirstAndOnlySupportedProgram() throws Exception {
+    ProgramSupported programSupported = mock(ProgramSupported.class);
+    Integer packSize = 10;
+    when(programSupported.getPackSizeFor("BCG")).thenReturn(packSize);
+    Facility facility = make(a(defaultFacility, with(programSupportedList, asList(programSupported))));
+
+    assertThat(facility.getPackSizeFor("BCG"), is(packSize));
   }
 }
