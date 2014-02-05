@@ -108,7 +108,9 @@
                 <label class="checkbox-label" for="outReachCategoryOneNR{{$index}}"
                        openlmis-message="label.not.recorded"></label>
               </td>
-              <td class="col-complete-vaccinated col-total"><span></span></td>
+              <td class="col-complete-vaccinated col-total">
+                <span ng-bind="getTotal(lineItem.healthCenterCategoryOne.value, lineItem.outReachCategoryOne.value)"></span>
+              </td>
               <td class="col-complete-vaccinated col-coverage-rate"><span></span></td>
               <td class="col-complete-vaccinated">
                 <span ng-hide="lineItem.vaccination == 'Polio (Newborn)'">
@@ -154,8 +156,13 @@
                          openlmis-message="label.not.recorded"></label>
                 </span>
               </td>
-              <td class="col-complete-vaccinated col-total"><span></span></td>
-              <td class="col-complete-vaccinated col-total"><span></span></td>
+              <td class="col-complete-vaccinated col-total">
+                <span ng-bind="getTotal(lineItem.healthCenterCategoryTwo.value, lineItem.outReachCategoryTwo.value)"></span>
+              </td>
+              <td class="col-complete-vaccinated col-total">
+                <span ng-bind="getTotal(getTotal(lineItem.healthCenterCategoryOne.value, lineItem.outReachCategoryOne.value),
+                getTotal(lineItem.healthCenterCategoryTwo.value, lineItem.outReachCategoryTwo.value))"></span>
+              </td>
               <td class="col-complete-vaccinated opened-vials" ng-hide="hideCell('{{lineItem.vaccination}}')"
                   rowspan="{{productsMap[lineItem.vaccination].rowSpan}}">
                 <div id="{{product}}Container" ng-repeat="product in productsMap[lineItem.vaccination].products">

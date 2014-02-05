@@ -13,20 +13,27 @@ package org.openlmis.distribution.domain;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.openlmis.core.domain.BaseModel;
 import org.openlmis.core.domain.Facility;
+
+import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class OpenedVialLineItem extends BaseModel{
+@JsonSerialize(include = NON_EMPTY)
+public class OpenedVialLineItem extends BaseModel {
 
   private Long facilityVisitId;
   private String productVialName;
   private Integer openedVials;
   private Integer packSize;
 
-  public OpenedVialLineItem(FacilityVisit facilityVisit, Facility facility, ProductVial productVial, String productVialName) {
+  public OpenedVialLineItem(FacilityVisit facilityVisit,
+                            Facility facility,
+                            ProductVial productVial,
+                            String productVialName) {
     this.facilityVisitId = facilityVisit.getId();
     this.productVialName = productVialName;
     this.packSize = productVial != null ? facility.getPackSizeFor(productVial.getProductCode()) : null;
