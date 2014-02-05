@@ -19,7 +19,12 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
+import org.xml.sax.SAXException;
 
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.List;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.*;
@@ -32,14 +37,14 @@ public class ProgramCatalogChangesFeed extends JsonUtility {
   LoginPage loginPage;
 
   @BeforeMethod(groups = {"webservice", "webserviceSmoke"})
-  public void setUp() throws Exception {
+  public void setUp() throws InterruptedException, SQLException, IOException {
     super.setup();
     super.setupTestData(true);
     loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
   }
 
   @AfterMethod(groups = {"webservice", "webserviceSmoke"})
-  public void tearDown() throws Exception {
+  public void tearDown() throws SQLException {
     HomePage homePage = new HomePage(testWebDriver);
     homePage.logout(baseUrlGlobal);
     dbWrapper.deleteData();
@@ -48,7 +53,7 @@ public class ProgramCatalogChangesFeed extends JsonUtility {
 
 
   @Test(groups = {"webservice"}, dataProvider = "Data-Provider-Function-Positive")
-  public void shouldVerifyProgramFeedWhenProductIsActiveOrInActive(String[] credentials) throws Exception {
+  public void shouldVerifyProgramFeedWhenProductIsActiveOrInActive(String[] credentials) throws FileNotFoundException, ParserConfigurationException, SAXException {
     String Program = "HIV";
     String ProgramSecond = "MALARIA";
     String ProgramThird = "TB";
@@ -93,7 +98,7 @@ public class ProgramCatalogChangesFeed extends JsonUtility {
   }
 
   @Test(groups = {"webserviceSmoke"}, dataProvider = "Data-Provider-Function-Positive")
-  public void shouldVerifyProgramFeedWhenProductIsActiveOrInActiveUsingCommTrackVendor(String[] credentials) throws Exception {
+  public void shouldVerifyProgramFeedWhenProductIsActiveOrInActiveUsingCommTrackVendor(String[] credentials) throws FileNotFoundException, ParserConfigurationException, SAXException {
     String Program = "HIV";
     String ProgramSecond = "MALARIA";
     String ProgramThird = "TB";
@@ -138,7 +143,7 @@ public class ProgramCatalogChangesFeed extends JsonUtility {
   }
 
   @Test(groups = {"webservice"}, dataProvider = "Data-Provider-Function-Positive")
-  public void shouldVerifyProgramFeedWhenProductIsActiveOrInActiveUsingInvalidVendor(String[] credentials) throws Exception {
+  public void shouldVerifyProgramFeedWhenProductIsActiveOrInActiveUsingInvalidVendor(String[] credentials) throws FileNotFoundException, ParserConfigurationException, SAXException {
     String Program = "HIV";
     String ProgramSecond = "MALARIA";
     String ProgramThird = "TB";
@@ -183,7 +188,7 @@ public class ProgramCatalogChangesFeed extends JsonUtility {
   }
 
   @Test(groups = {"webservice"}, dataProvider = "Data-Provider-Function-Positive")
-  public void shouldVerifyProgramFeedWhenProductIsActiveOrInActiveUsingOpenLmisVendor(String[] credentials) throws Exception {
+  public void shouldVerifyProgramFeedWhenProductIsActiveOrInActiveUsingOpenLmisVendor(String[] credentials) throws FileNotFoundException, ParserConfigurationException, SAXException {
     String Program = "HIV";
     String ProgramSecond = "MALARIA";
     String ProgramThird = "TB";
@@ -229,7 +234,7 @@ public class ProgramCatalogChangesFeed extends JsonUtility {
   }
 
   @Test(groups = {"webservice"}, dataProvider = "Data-Provider-Function-Positive")
-  public void shouldVerifyProgramFeedUsingAndConditions(String[] credentials) throws Exception {
+  public void shouldVerifyProgramFeedUsingAndConditions(String[] credentials) throws FileNotFoundException, SQLException, ParserConfigurationException, SAXException {
     String Program = "HIV";
     String ProgramSecond = "MALARIA";
     String ProgramThird = "TB";

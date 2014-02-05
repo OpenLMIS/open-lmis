@@ -20,6 +20,8 @@ import org.openlmis.pageobjects.LoginPage;
 import org.openlmis.pageobjects.edi.ConvertOrderPage;
 import org.testng.annotations.*;
 
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.List;
 
 import static java.util.Arrays.asList;
@@ -43,12 +45,13 @@ public class CreateTestRequisition extends TestCaseHelper {
 
 
   @BeforeMethod(groups = "createTestRequisition")
-  public void setUp() throws Exception {
+  public void setUp() throws InterruptedException, SQLException, IOException {
     super.setup();
   }
 
   @Test(groups = {"createTestRequisition"}, dataProvider = "Data-Provider-Function-Including-Regimen")
-  public void testCreateRequisitionWithEmergencyStatus(String program, String userSIC, String categoryCode, String password, String regimenCode, String regimenName, String regimenCode2, String regimenName2) throws Exception {
+  public void testCreateRequisitionWithEmergencyStatus(String program, String userSIC, String categoryCode, String password,
+                                                       String regimenCode, String regimenName, String regimenCode2, String regimenName2) throws SQLException {
     List<String> rightsList = asList("CREATE_REQUISITION", "VIEW_REQUISITION");
     setupTestDataToInitiateRnR(true, program, userSIC, "200", rightsList);
     dbWrapper.insertRegimenTemplateConfiguredForProgram(program, categoryCode, regimenCode, regimenName, true);
@@ -116,7 +119,7 @@ public class CreateTestRequisition extends TestCaseHelper {
   }
 
   @AfterMethod(groups = "createTestRequisition")
-  public void tearDown() throws Exception {
+  public void tearDown() throws SQLException {
     testWebDriver.sleep(500);
     if (!testWebDriver.getElementById("username").isDisplayed()) {
       HomePage homePage = PageFactory.getInstanceOfHomePage(testWebDriver);

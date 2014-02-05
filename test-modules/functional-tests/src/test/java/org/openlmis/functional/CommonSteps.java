@@ -88,7 +88,7 @@ public class CommonSteps extends TestCaseHelper {
   }
 
   @After
-  public void tearDownForSmoke(Scenario scenario) throws Exception {
+  public void tearDownForSmoke(Scenario scenario) throws SQLException {
     if (scenario.isFailed()) {
       byte[] screenShot = testWebDriver.getScreenshot();
       scenario.embed(screenShot, "image/png");

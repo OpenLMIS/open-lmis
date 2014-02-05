@@ -19,6 +19,9 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -49,7 +52,7 @@ public class CreateUpdateCHW extends JsonUtility {
   LoginPage loginPage;
 
   @BeforeMethod(groups = {"webservice", "webserviceSmoke"})
-  public void setUp() throws Exception {
+  public void setUp() throws InterruptedException, SQLException, IOException {
     super.setup();
     super.setupTestData(true);
     dbWrapper.updateRestrictLogin("commTrack", true);
@@ -57,14 +60,14 @@ public class CreateUpdateCHW extends JsonUtility {
   }
 
   @AfterMethod(groups = {"webservice", "webserviceSmoke"})
-  public void tearDown() throws Exception {
+  public void tearDown() throws SQLException {
     dbWrapper.deleteData();
     dbWrapper.closeConnection();
 
   }
 
   @Test(groups = {"webservice"}, dataProvider = "Data-Provider-Function-Positive")
-  public void shouldNotShowVirtualFacilityOnManageUserScreen(String[] credentials) throws Exception {
+  public void shouldNotShowVirtualFacilityOnManageUserScreen(String[] credentials) throws SQLException {
     dbWrapper.updateFieldValue("facilities", "virtualFacility", ACTIVE_STATUS, "code", DEFAULT_PARENT_FACILITY_CODE);
 
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
@@ -77,7 +80,7 @@ public class CreateUpdateCHW extends JsonUtility {
   }
 
   @Test(groups = {"webservice"}, dataProvider = "Data-Provider-Function-Positive")
-  public void shouldVerifyFacilityUpload(String[] credentials) throws Exception {
+  public void shouldVerifyFacilityUpload(String[] credentials) throws FileNotFoundException, SQLException {
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
     UploadPage uploadPage = homePage.navigateUploads();
     uploadPage.uploadAndVerifyGeographicZone("QA_Geographic_Data_WebService.csv");
@@ -89,7 +92,7 @@ public class CreateUpdateCHW extends JsonUtility {
   }
 
   @Test(groups = {"webservice"}, dataProvider = "Data-Provider-Function-Positive")
-  public void shouldManageFacility(String[] credentials) throws Exception {
+  public void shouldManageFacility(String[] credentials) throws IOException, SQLException {
     HttpClient client = new HttpClient();
     client.createContext();
     Agent agentJson = readObjectFromFile(FULL_JSON_TXT_FILE_NAME, Agent.class);
@@ -548,7 +551,7 @@ public class CreateUpdateCHW extends JsonUtility {
 
 
   @Test(groups = {"webservice"})
-  public void testBlankJson() throws Exception {
+  public void testBlankJson() {
     HttpClient client = new HttpClient();
     client.createContext();
     ResponseEntity responseEntity = client.SendJSON("{}", CREATE_URL, POST, commTrackUser, "Admin123");
@@ -851,7 +854,7 @@ public class CreateUpdateCHW extends JsonUtility {
   }
 
   @Test(groups = {"webservice"})
-  public void testCaseSensitiveCheckForCreateCHW() throws Exception {
+  public void testCaseSensitiveCheckForCreateCHW() throws IOException {
     HttpClient client = new HttpClient();
     client.createContext();
     Agent agentJson = readObjectFromFile(FULL_JSON_TXT_FILE_NAME, Agent.class);
@@ -877,7 +880,7 @@ public class CreateUpdateCHW extends JsonUtility {
   }
 
   @Test(groups = {"webservice"})
-  public void testCaseSensitiveCheckForUpdateCHW() throws Exception {
+  public void testCaseSensitiveCheckForUpdateCHW() throws IOException {
     HttpClient client = new HttpClient();
     client.createContext();
     Agent agentJson = readObjectFromFile(FULL_JSON_TXT_FILE_NAME, Agent.class);

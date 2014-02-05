@@ -41,7 +41,7 @@ public class TestCaseHelper {
   protected static boolean isSeleniumStarted = false;
   protected static DriverFactory driverFactory = new DriverFactory();
 
-  public void setup() throws Exception {
+  public void setup() throws SQLException, IOException, InterruptedException {
     String browser = getProperty("browser", DEFAULT_BROWSER);
     baseUrlGlobal = getProperty("baseurl", DEFAULT_BASE_URL);
 
@@ -87,8 +87,7 @@ public class TestCaseHelper {
     });
   }
 
-  protected void loadDriver(String browser) throws InterruptedException, IOException {
-
+  protected void loadDriver(String browser) throws IOException, InterruptedException {
     testWebDriver = new TestWebDriver(driverFactory.loadDriver(browser));
   }
 
@@ -237,7 +236,7 @@ public class TestCaseHelper {
 
   public void setupTestDataToInitiateRnRAndDistribution(String facilityCode1, String facilityCode2, boolean configureTemplate, String program, String user, String userId,
                                                         List<String> rightsList, String programCode, String geoLevel1, String geoLevel2,
-                                                        String parentGeoLevel) throws Exception {
+                                                        String parentGeoLevel) throws SQLException {
     setupProductTestData("P10", "P11", program, "lvl3_hospital");
     dbWrapper.insertGeographicZone(geoLevel1, geoLevel1, parentGeoLevel);
     dbWrapper.insertFacilitiesWithDifferentGeoZones(facilityCode1, facilityCode2, geoLevel2, geoLevel1);
@@ -274,7 +273,7 @@ public class TestCaseHelper {
   }
 
   public Integer calculateISA(String ratioValue, String dosesPerYearValue, String wastageValue, String bufferPercentageValue, String adjustmentValue,
-                              String minimumValue, String maximumValue, String populationValue) throws SQLException {
+                              String minimumValue, String maximumValue, String populationValue) {
     Float calculatedISA;
     Float minimum = 0.0F;
     Float maximum = 0.0F;
@@ -438,7 +437,7 @@ public class TestCaseHelper {
     }
   }
 
-  public void verifyPageLinksFromLastPage() throws Exception {
+  public void verifyPageLinksFromLastPage() {
     verifyNextAndLastLinksDisabled();
     verifyPreviousAndFirstLinksEnabled();
 
@@ -459,7 +458,7 @@ public class TestCaseHelper {
     verifyPreviousAndFirstLinksEnabled();
   }
 
-  public void verifyNumberOfPageLinks(int numberOfProducts, int numberOfLineItemsPerPage) throws Exception {
+  public void verifyNumberOfPageLinks(int numberOfProducts, int numberOfLineItemsPerPage) {
     testWebDriver.waitForAjax();
     int numberOfPages = numberOfProducts / numberOfLineItemsPerPage;
     if (numberOfProducts % numberOfLineItemsPerPage != 0) {
@@ -471,7 +470,7 @@ public class TestCaseHelper {
     }
   }
 
-  public void verifyNextAndLastLinksEnabled() throws Exception {
+  public void verifyNextAndLastLinksEnabled() {
     testWebDriver.waitForAjax();
     WebElement nextPageLink = testWebDriver.getElementById("nextPageLink");
 
@@ -479,21 +478,21 @@ public class TestCaseHelper {
     assertEquals(testWebDriver.getElementById("lastPageLink").getCssValue("color"), "rgba(119, 119, 119, 1)");
   }
 
-  public void verifyPreviousAndFirstLinksEnabled() throws Exception {
+  public void verifyPreviousAndFirstLinksEnabled() {
     testWebDriver.waitForPageToLoad();
     testWebDriver.waitForElementToAppear(testWebDriver.getElementById("previousPageLink"));
     assertEquals(testWebDriver.getElementById("previousPageLink").getCssValue("color"), "rgba(119, 119, 119, 1)");
     assertEquals(testWebDriver.getElementById("firstPageLink").getCssValue("color"), "rgba(119, 119, 119, 1)");
   }
 
-  public void verifyNextAndLastLinksDisabled() throws Exception {
+  public void verifyNextAndLastLinksDisabled() {
     testWebDriver.waitForPageToLoad();
     testWebDriver.waitForElementToAppear(testWebDriver.getElementById("nextPageLink"));
     assertEquals(testWebDriver.getElementById("nextPageLink").getCssValue("color"), "rgba(204, 204, 204, 1)");
     assertEquals(testWebDriver.getElementById("lastPageLink").getCssValue("color"), "rgba(204, 204, 204, 1)");
   }
 
-  public void verifyPreviousAndFirstLinksDisabled() throws Exception {
+  public void verifyPreviousAndFirstLinksDisabled() {
     testWebDriver.waitForAjax();
     WebElement firstPageLink = testWebDriver.getElementById("firstPageLink");
 

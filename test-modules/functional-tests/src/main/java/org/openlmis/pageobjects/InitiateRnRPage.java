@@ -719,7 +719,7 @@ public class InitiateRnRPage extends RequisitionPage {
     return flag;
   }
 
-  public void addMultipleNonFullSupplyLineItems(int numberOfLineItems, boolean isMultipleCategories) throws SQLException {
+  public void addMultipleNonFullSupplyLineItems(int numberOfLineItems, boolean isMultipleCategories) {
     clickNonFullSupplyTab();
     testWebDriver.sleep(1000);
     addButtonOnNonFullSupplyTab.click();

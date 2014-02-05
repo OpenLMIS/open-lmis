@@ -21,7 +21,12 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
+import org.xml.sax.SAXException;
 
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.IOException;
+import java.sql.SQLException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
@@ -36,14 +41,14 @@ public class FacilityProgramSupportedFeed extends JsonUtility {
   LoginPage loginPage;
 
   @BeforeMethod(groups = {"webservice", "webserviceSmoke"})
-  public void setUp() throws Exception {
+  public void setUp() throws InterruptedException, SQLException, IOException {
     super.setup();
     super.setupTestData(true);
     loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
   }
 
   @AfterMethod(groups = {"webservice", "webserviceSmoke"})
-  public void tearDown() throws Exception {
+  public void tearDown() throws SQLException {
     HomePage homePage = new HomePage(testWebDriver);
     homePage.logout(baseUrlGlobal);
     dbWrapper.deleteData();
@@ -76,7 +81,7 @@ public class FacilityProgramSupportedFeed extends JsonUtility {
   }
 
   @Test(groups = {"webservice"}, dataProvider = "Data-Provider-Function-Positive")
-  public void testFacilityProgramSupportedFeed(String user, String program, String[] credentials) throws Exception {
+  public void testFacilityProgramSupportedFeed(String user, String program, String[] credentials) throws SQLException, ParseException, InterruptedException, ParserConfigurationException, SAXException {
     HttpClient client = new HttpClient();
     client.createContext();
 

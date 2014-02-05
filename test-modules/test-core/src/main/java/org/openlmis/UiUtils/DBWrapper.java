@@ -1038,7 +1038,7 @@ public class DBWrapper {
     }
   }
 
-  public int getPODLineItemQuantityReceived(long orderId, String productCode) throws Exception {
+  public int getPODLineItemQuantityReceived(long orderId, String productCode) throws SQLException {
     try (ResultSet rs1 = query("SELECT id FROM pod WHERE OrderId = %d", orderId)) {
       if (rs1.next()) {
         int podId = rs1.getInt("id");

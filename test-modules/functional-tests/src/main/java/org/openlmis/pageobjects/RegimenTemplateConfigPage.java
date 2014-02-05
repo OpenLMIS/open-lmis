@@ -289,7 +289,7 @@ public class RegimenTemplateConfigPage extends Page {
       baseRegimenDivXpath + "[" + indexOfCodeAdded + "]/div[4]/input").isSelected();
   }
 
-  public void configureProgram(String program) throws InterruptedException {
+  public void configureProgram(String program) {
     WebElement configureProgram = testWebDriver.getElementById(program);
     testWebDriver.waitForElementToAppear(configureProgram);
     configureProgram.click();

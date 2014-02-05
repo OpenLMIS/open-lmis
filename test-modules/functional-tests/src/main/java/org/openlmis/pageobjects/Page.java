@@ -45,7 +45,7 @@ public abstract class Page {
     locator.sendKeys(value);
   }
 
-  public void downloadFileWhileSaveDialogOPen(WebElement element) throws NullPointerException, InterruptedException {
+  public void downloadFileWhileSaveDialogOPen(WebElement element) throws InterruptedException {
     try {
       Robot robot = new Robot();
       //get the focus on the element..don't use click since it stalls the driver

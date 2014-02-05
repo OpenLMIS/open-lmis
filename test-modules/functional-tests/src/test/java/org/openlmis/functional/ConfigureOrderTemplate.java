@@ -22,6 +22,9 @@ import org.openlmis.pageobjects.edi.ConfigureEDIPage;
 import org.openlmis.pageobjects.edi.ConfigureOrderPage;
 import org.testng.annotations.*;
 
+import java.io.IOException;
+import java.sql.SQLException;
+
 import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
 import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
 
@@ -32,7 +35,7 @@ public class ConfigureOrderTemplate extends TestCaseHelper {
   LoginPage loginPage;
 
   @BeforeMethod(groups = "admin")
-  public void setUp() throws Exception {
+  public void setUp() throws InterruptedException, SQLException, IOException {
     super.setup();
     dbWrapper.setupOrderFileConfiguration("O", "TRUE");
     dbWrapper.deleteRowFromTable("order_file_columns", "openLMISField", "false");
@@ -40,50 +43,50 @@ public class ConfigureOrderTemplate extends TestCaseHelper {
   }
 
   @And("^I access configure order page$")
-  public void accessOrderScreen() throws Exception {
+  public void accessOrderScreen() {
     HomePage homePage = PageFactory.getInstanceOfHomePage(testWebDriver);
     ConfigureEDIPage configureEDIPage = homePage.navigateEdiScreen();
     configureEDIPage.navigateConfigureOrderPage();
   }
 
   @Then("^I should see order file prefix \"([^\"]*)\"$")
-  public void verifyOrderPrefix(String prefix) throws Exception {
+  public void verifyOrderPrefix(String prefix) {
     configureOrderPage = PageFactory.getInstanceOfConfigureOrderPage(testWebDriver);
     assertEquals(configureOrderPage.getOrderPrefix(), prefix);
   }
 
   @And("^I should see include column header as \"([^\"]*)\"$")
-  public void verifyIncludeColumnHeader(String indicator) throws Exception {
+  public void verifyIncludeColumnHeader(String indicator) {
     configureOrderPage = PageFactory.getInstanceOfConfigureOrderPage(testWebDriver);
     assertEquals(String.valueOf(configureOrderPage.getIncludeOrderHeader()), indicator);
   }
 
   @And("^I should see all column headers disabled$")
-  public void verifyAllColumnsDisabled() throws Exception {
+  public void verifyAllColumnsDisabled() {
     configureOrderPage = PageFactory.getInstanceOfConfigureOrderPage(testWebDriver);
     configureOrderPage.verifyColumnHeadersDisabled();
   }
 
   @And("^I should see include checkbox \"([^\"]*)\" for all column headers$")
-  public void verifyAllColumnsDisabled(String flag) throws Exception {
+  public void verifyAllColumnsDisabled(String flag) {
     configureOrderPage = PageFactory.getInstanceOfConfigureOrderPage(testWebDriver);
     configureOrderPage.verifyIncludeCheckboxForAllColumnHeaders(flag);
   }
 
   @When("^I save order file format$")
-  public void clickSave() throws Exception {
+  public void clickSave() {
     configureOrderPage = PageFactory.getInstanceOfConfigureOrderPage(testWebDriver);
     configureOrderPage.clickSaveButton();
   }
 
   @Then("^I should see \"([^\"]*)\"$")
-  public void verifySaveSuccessfullyMessage(String message) throws Exception {
+  public void verifySaveSuccessfullyMessage(String message) {
     configureOrderPage = PageFactory.getInstanceOfConfigureOrderPage(testWebDriver);
     configureOrderPage.verifySuccessMessage(message);
   }
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function")
-  public void testEditPeriodAndOrderDateDropDown(String user, String password) throws Exception {
+  public void testEditPeriodAndOrderDateDropDown(String user, String password) {
     HomePage homePage = loginPage.loginAs(user, password);
     ConfigureEDIPage configureEDIPage = homePage.navigateEdiScreen();
     ConfigureOrderPage configureOrderPage = configureEDIPage.navigateConfigureOrderPage();
@@ -103,7 +106,7 @@ public class ConfigureOrderTemplate extends TestCaseHelper {
   }
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function")
-  public void testVerifyIncludeColumnHeaderONWithHeadersAltered(String user, String password) throws Exception {
+  public void testVerifyIncludeColumnHeaderONWithHeadersAltered(String user, String password) {
     String facilityCode = "FC";
     String orderNumber = "ON";
     String approvedQuantity = "Approved quantityApproved quantityApproved quantit";
@@ -139,7 +142,7 @@ public class ConfigureOrderTemplate extends TestCaseHelper {
   }
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function")
-  public void testVerifyIncludeColumnHeaderONWithHeadersBlank(String user, String password) throws Exception {
+  public void testVerifyIncludeColumnHeaderONWithHeadersBlank(String user, String password) {
     String facilityCode = "";
     String orderNumber = "";
     String approvedQuantity = "";
@@ -175,7 +178,7 @@ public class ConfigureOrderTemplate extends TestCaseHelper {
   }
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function")
-  public void testVerifyAllIncludeCheckBoxesUnchecked(String user, String password) throws Exception {
+  public void testVerifyAllIncludeCheckBoxesUnchecked(String user, String password) {
     HomePage homePage = loginPage.loginAs(user, password);
     ConfigureEDIPage configureEDIPage = homePage.navigateEdiScreen();
     ConfigureOrderPage configureOrderPage = configureEDIPage.navigateConfigureOrderPage();
@@ -197,7 +200,7 @@ public class ConfigureOrderTemplate extends TestCaseHelper {
   }
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function")
-  public void testVerifyAddNewButtonFunctionality(String user, String password) throws Exception {
+  public void testVerifyAddNewButtonFunctionality(String user, String password) {
     String successMessage = "Order file configuration saved successfully!";
     HomePage homePage = loginPage.loginAs(user, password);
     ConfigureEDIPage configureEDIPage = homePage.navigateEdiScreen();
@@ -216,7 +219,7 @@ public class ConfigureOrderTemplate extends TestCaseHelper {
   }
 
   @AfterMethod(groups = "admin")
-  public void tearDown() throws Exception {
+  public void tearDown() throws SQLException {
     testWebDriver.sleep(500);
     if (!testWebDriver.getElementById("username").isDisplayed()) {
       HomePage homePage = new HomePage(testWebDriver);

@@ -17,7 +17,9 @@ import org.openlmis.pageobjects.*;
 import org.openqa.selenium.JavascriptExecutor;
 import org.testng.annotations.*;
 
+import java.io.IOException;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.List;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.assertFalse;
@@ -34,7 +36,7 @@ public class E2EDistributionTest extends TestCaseHelper {
 
 
   @BeforeMethod(groups = {"offline"})
-  public void setUp() throws Exception {
+  public void setUp() throws InterruptedException, SQLException, IOException {
     super.setup();
     wifiInterface = getWiFiInterface();
   }
@@ -43,8 +45,7 @@ public class E2EDistributionTest extends TestCaseHelper {
   public void testE2EManageDistribution(String userSIC, String password, String deliveryZoneCodeFirst, String deliveryZoneCodeSecond,
                                         String deliveryZoneNameFirst, String deliveryZoneNameSecond,
                                         String facilityCodeFirst, String facilityCodeSecond,
-                                        String programFirst, String programSecond, String schedule) throws Exception {
-
+                                        String programFirst, String programSecond, String schedule) throws SQLException, IOException {
     List<String> rightsList = asList("MANAGE_DISTRIBUTION");
     setupTestDataToInitiateRnRAndDistribution(facilityCodeFirst, facilityCodeSecond, true, programFirst, userSIC, "200", rightsList,
       programSecond, "District1", "Ngorongoro", "Ngorongoro");
@@ -281,7 +282,7 @@ public class E2EDistributionTest extends TestCaseHelper {
   }
 
   @AfterMethod(groups = {"offline"})
-  public void tearDownNew() throws Exception {
+  public void tearDownNew() throws IOException, SQLException {
     switchOnNetworkInterface(wifiInterface);
     testWebDriver.sleep(5000);
     dbWrapper.deleteData();
