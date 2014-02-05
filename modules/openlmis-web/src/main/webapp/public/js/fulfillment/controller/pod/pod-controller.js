@@ -43,14 +43,20 @@ function PODController($scope, orderPOD, OrderPOD, pageSize, $routeParams, $loca
   });
 
   $scope.save = function () {
-    if (!$scope.podForm.$dirty)
-      return;
+    var saveDefer = $q.defer();
+    if (!$scope.podForm.$dirty) {
+      saveDefer.resolve();
+      return saveDefer.promise;
+    }
     OrderPOD.update({id: $routeParams.id}, {podLineItems: $scope.pageLineItems}, function (data) {
       $scope.message = data.success;
       $scope.podForm.$setPristine();
+      saveDefer.resolve();
     }, function (response) {
       $scope.error = response.data.error;
+      saveDefer.reject();
     });
+    return saveDefer.promise;
   };
 
   function confirm() {
@@ -69,17 +75,21 @@ function PODController($scope, orderPOD, OrderPOD, pageSize, $routeParams, $loca
   }
 
   $scope.submit = function () {
-    $scope.showSubmitErrors = true;
-    if (($scope.errorPages = $scope.pod.error(pageSize).errorPages))
-      return;
+    $scope.save().then(confirmAndSubmit);
 
-    confirm().then(function () {
-      OrderPOD.update({id: $routeParams.id, action: 'submit'}, function (data) {
-        $scope.message = data.success;
-      }, function (response) {
-        $scope.error = response.data.error;
+    function confirmAndSubmit() {
+      $scope.showSubmitErrors = true;
+      if (($scope.errorPages = $scope.pod.error(pageSize).errorPages))
+        return;
+
+      confirm().then(function () {
+        OrderPOD.update({id: $routeParams.id, action: 'submit'}, function (data) {
+          $scope.message = data.success;
+        }, function (response) {
+          $scope.error = response.data.error;
+        });
       });
-    });
+    }
   };
 
   $scope.isCategorySameAsPreviousLineItem = function (index) {

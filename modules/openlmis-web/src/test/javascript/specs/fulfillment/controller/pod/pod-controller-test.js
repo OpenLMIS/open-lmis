@@ -96,18 +96,18 @@ describe('PODController', function () {
       expect(scope.isCategorySameAsPreviousLineItem(1)).toBeTruthy();
     });
 
-    it('should return error class if quantity received is undefined or null and errors shown', function(){
+    it('should return error class if quantity received is undefined or null and errors shown', function () {
       scope.showSubmitErrors = true;
       expect(scope.cssClassForQuantityReceived(undefined)).toEqual('required-error');
       expect(scope.cssClassForQuantityReceived(null)).toEqual('required-error');
     });
 
-    it('should not return error class if quantity received is valid', function(){
+    it('should not return error class if quantity received is valid', function () {
       scope.showSubmitErrors = true;
       expect(scope.cssClassForQuantityReceived(67)).toEqual('');
     });
 
-    it('should not return error class if errors not shown', function(){
+    it('should not return error class if errors not shown', function () {
       scope.showSubmitErrors = false;
       expect(scope.cssClassForQuantityReceived(undefined)).toEqual('');
       expect(scope.cssClassForQuantityReceived(null)).toEqual('');
@@ -173,9 +173,23 @@ describe('PODController', function () {
   });
 
   describe('POD submit', function () {
-    it('should set submit flag if user is submitting the form', function(){
+    beforeEach(inject(function ($q) {
+      var defer = $q.defer();
+      defer.resolve();
+      spyOn(scope, 'save').andReturn(defer.promise);
+    }));
+
+    it('should set submit flag if user is submitting the form', function () {
       scope.submit();
+      scope.$apply();
+
       expect(scope.showSubmitErrors).toBeTruthy();
+    });
+
+    it('should save pod before submission', function () {
+      scope.submit();
+
+      expect(scope.save).toHaveBeenCalled();
     });
 
     it('should confirm before submission', inject(function (_$dialog_) {
@@ -185,6 +199,7 @@ describe('PODController', function () {
       });
 
       scope.submit();
+      scope.$apply();
 
       expect(OpenLmisDialog.newDialog).toHaveBeenCalled();
       expect(OpenLmisDialog.newDialog.calls[0].args[0]).toEqual({id: 'confirmDialog', header: 'label.confirm.action', body: 'msg.question.confirmation'});
@@ -199,6 +214,7 @@ describe('PODController', function () {
       $httpBackend.expect('PUT', '/pods/submit/' + podId + '.json').respond(200, {success: 'successful'});
 
       scope.submit();
+      scope.$apply();
       OpenLmisDialog.newDialog.calls[0].args[1](true);
       $httpBackend.flush();
 
@@ -212,6 +228,7 @@ describe('PODController', function () {
       });
 
       scope.submit();
+      scope.$apply();
       OpenLmisDialog.newDialog.calls[0].args[1](false);
       scope.$apply();
 
@@ -226,6 +243,7 @@ describe('PODController', function () {
       });
 
       scope.submit();
+      scope.$apply();
 
       expect(ProofOfDelivery.prototype.error).toHaveBeenCalled();
       expect(OpenLmisDialog.newDialog).not.toHaveBeenCalled();
@@ -239,6 +257,8 @@ describe('PODController', function () {
       $httpBackend.expect('PUT', '/pods/submit/' + podId + '.json').respond(404, {error: 'error'});
 
       scope.submit();
+      scope.$apply();
+
       OpenLmisDialog.newDialog.calls[0].args[1](true);
       $httpBackend.flush();
 
