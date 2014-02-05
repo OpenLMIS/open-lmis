@@ -95,12 +95,6 @@ public class FacilityVisitMapperIT {
   @Test
   public void shouldInsertFacilityVisit() {
     FacilityVisit facilityVisit = new FacilityVisit(facility, distribution);
-    Facilitator confirmedBy = new Facilitator("Barack", "President");
-    Facilitator verifiedBy = new Facilitator("ManMohan", "Spectator");
-    facilityVisit.setConfirmedBy(confirmedBy);
-    facilityVisit.setVerifiedBy(verifiedBy);
-    facilityVisit.setObservations("I observed something");
-
     mapper.insert(facilityVisit);
 
     FacilityVisit actualFacilityVisit = mapper.getBy(facilityVisit.getFacilityId(), facilityVisit.getDistributionId());

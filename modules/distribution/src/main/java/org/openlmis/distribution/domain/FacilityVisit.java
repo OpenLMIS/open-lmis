@@ -20,6 +20,8 @@ import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.openlmis.core.domain.BaseModel;
 import org.openlmis.core.domain.Facility;
 
+import java.util.Date;
+
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 
 @Data
@@ -34,6 +36,9 @@ public class FacilityVisit extends BaseModel {
   private Facilitator confirmedBy;
   private Facilitator verifiedBy;
   private String observations;
+  private Date visitDate;
+  private Boolean visited = false;
+  private String vehicleId;
 
   private Boolean synced = false;
 
