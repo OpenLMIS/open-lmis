@@ -96,6 +96,23 @@ describe('PODController', function () {
       expect(scope.isCategorySameAsPreviousLineItem(1)).toBeTruthy();
     });
 
+    it('should return error class if quantity received is undefined or null and errors shown', function(){
+      scope.showSubmitErrors = true;
+      expect(scope.cssClassForQuantityReceived(undefined)).toEqual('required-error');
+      expect(scope.cssClassForQuantityReceived(null)).toEqual('required-error');
+    });
+
+    it('should not return error class if quantity received is valid', function(){
+      scope.showSubmitErrors = true;
+      expect(scope.cssClassForQuantityReceived(67)).toEqual('');
+    });
+
+    it('should not return error class if errors not shown', function(){
+      scope.showSubmitErrors = false;
+      expect(scope.cssClassForQuantityReceived(undefined)).toEqual('');
+      expect(scope.cssClassForQuantityReceived(null)).toEqual('');
+      expect(scope.cssClassForQuantityReceived(65)).toEqual('');
+    });
   });
 
   describe('Pod Save', function () {
@@ -156,6 +173,11 @@ describe('PODController', function () {
   });
 
   describe('POD submit', function () {
+    it('should set submit flag if user is submitting the form', function(){
+      scope.submit();
+      expect(scope.showSubmitErrors).toBeTruthy();
+    });
+
     it('should confirm before submission', inject(function (_$dialog_) {
       spyOn(OpenLmisDialog, 'newDialog');
       spyOn(ProofOfDelivery.prototype, 'error').andCallFake(function () {

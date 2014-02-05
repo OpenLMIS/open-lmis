@@ -12,6 +12,20 @@
 
   <h2 id="podPageTitle" openlmis-message="header.proof.of.delivery"></h2>
   <ng-include src="'/public/pages/logistics/fulfillment/pod/partials/header.html'"></ng-include>
+
+  <div id="pageErrors" class="page-errors" ng-show="errorPages">
+    <div ng-switch on="errorPages.length" class="dropdown">
+      <a href="" ng-switch-when="1" class="dropdown-toggle" openlmis-message="error.one.page"></a>
+      <a href="" ng-switch-default class="dropdown-toggle"
+         openlmis-message="error.multiple.pages|errorPages.length"></a>
+      <ul class="dropdown-menu">
+        <li ng-repeat="page in errorPages">
+          <a href="#/pods/{{pod.id}}?page={{page}}" ng-bind="page"></a>
+        </li>
+      </ul>
+    </div>
+
+  </div>
   <form id="podForm" name="podForm">
     <div ng-hide="pageLineItems.length" class="alert alert-info" id="noProductsLabel"
          openlmis-message="label.no.products"></div>
@@ -55,6 +69,7 @@
           </td>
           <td class="cell-input col-quantityReceived">
             <input id="quantityReceived{{$index}}" type="text"
+                   ng-class="cssClassForQuantityReceived(podLineItem.quantityReceived)"
                    ng-model="podLineItem.quantityReceived" ng-trim=false
                    numeric-validator="positiveInteger" maxlength="8"
                    error-holder="receivedQuantityError{{$index}}"/>
@@ -75,11 +90,12 @@
       </table>
     </div>
     <div>
-      <openlmis-pagination num-pages="numberOfPages" current-page="currentPage" max-size="10"></openlmis-pagination>
+      <openlmis-pagination num-pages="numberOfPages" current-page="currentPage" max-size="10" error-pages="errorPages"></openlmis-pagination>
     </div>
     <div form-toolbar id="action_buttons" class="action-buttons">
       <div class="form-cell button-row">
         <input type="button" class="btn btn-primary save-button" ng-click="save()" openlmis-message="button.save"/>
+        <input type="button" class="btn btn-primary submit-button" ng-click="submit()" openlmis-message="button.submit"/>
       </div>
       <div class="toolbar-error" id="saveFailMessage" openlmis-message="error" ng-show="error"></div>
       <div class="toolbar-success" id="saveSuccessMsgDiv" fade-out="3000" openlmis-message="message"

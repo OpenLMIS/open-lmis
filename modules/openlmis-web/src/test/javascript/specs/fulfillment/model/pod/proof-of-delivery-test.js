@@ -21,9 +21,10 @@ describe('Proof of delivery', function () {
   it('should return page numbers as array if it contains line items with undefined or null quantity received', function () {
     var error = new ProofOfDelivery({podLineItems: [
       {id: 1, quantityReceived: null},
-      {id: 3, quantityReceived: 12},
-      {id: 2, quantityReceived: undefined}
-    ]}).error(2);
+      {id: 2, quantityReceived: 12},
+      {id: 3, quantityReceived: undefined},
+      {id: 4, quantityReceived: undefined}
+    ]}).error(3);
 
     expect(error).toEqual({errorPages: [1, 2]});
   });

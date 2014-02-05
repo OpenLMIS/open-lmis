@@ -69,6 +69,7 @@ function PODController($scope, orderPOD, OrderPOD, pageSize, $routeParams, $loca
   }
 
   $scope.submit = function () {
+    $scope.showSubmitErrors = true;
     if (($scope.errorPages = $scope.pod.error(pageSize).errorPages))
       return;
 
@@ -83,6 +84,12 @@ function PODController($scope, orderPOD, OrderPOD, pageSize, $routeParams, $loca
 
   $scope.isCategorySameAsPreviousLineItem = function (index) {
     return !((index > 0 ) && ($scope.pod.podLineItems[index].productCategory == $scope.pod.podLineItems[index - 1].productCategory));
+  };
+
+  $scope.cssClassForQuantityReceived = function (quantityReceived) {
+    if (!$scope.showSubmitErrors)
+      return '';
+    return (quantityReceived === null || quantityReceived === undefined) ? 'required-error' : '';
   };
 }
 

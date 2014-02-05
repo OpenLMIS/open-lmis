@@ -13,11 +13,15 @@ function ProofOfDelivery(proofOfDeliveryJson) {
 }
 
 ProofOfDelivery.prototype.error = function (pageSize) {
-  var errorPages = [];
-  this.podLineItems.forEach(function (lineItem, i) {
+  var errorPages = [], i = 0;
+  while (i < this.podLineItems.length) {
+    var lineItem = this.podLineItems[i];
     if (lineItem.quantityReceived === undefined || lineItem.quantityReceived === null) {
-      errorPages.push(i / pageSize + 1);
+      errorPages.push(utils.parseIntWithBaseTen(i / pageSize + 1));
+      i += (pageSize - (i % pageSize));
+      continue;
     }
-  });
+    i++;
+  }
   return !errorPages.length ? {errorPages: null} : {errorPages: errorPages};
 };
