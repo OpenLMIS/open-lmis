@@ -132,7 +132,7 @@ public class UserPage extends Page {
   @FindBy(how = How.XPATH, using = "//input[@ng-click='addSupervisoryRole()']")
   private static WebElement addSupervisoryRoleButton = null;
 
-  @FindBy(how = How.XPATH, using = "//a[contains(text(),'Warehouse Roles')]")
+  @FindBy(how = How.XPATH, using = "//a[contains(text(),'Order Fulfillment Roles')]")
   private static WebElement warehouseRolesAccordion = null;
 
   @FindBy(how = How.XPATH, using = "(//input[@type='text'])[16]")
