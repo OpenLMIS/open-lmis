@@ -11,6 +11,7 @@
 package org.openlmis.report.mapper.lookup;
 
 import org.apache.ibatis.annotations.Select;
+import org.openlmis.report.model.dto.FlatGeographicZone;
 import org.openlmis.report.model.dto.GeographicZone;
 import org.springframework.stereotype.Repository;
 
@@ -19,13 +20,20 @@ import java.util.List;
 @Repository
 public interface GeographicZoneReportMapper {
 
-    @Select("SELECT g.id, g.code , g.name, p.name as parent" +
-            "   FROM " +
-            "       geographic_zones g left join geographic_zones p on g.parentid = p.id order by p.name, g.name")
-    List<GeographicZone> getAll();
+  @Select("SELECT g.id, g.code , g.name, p.name as parent" +
+    "   FROM " +
+    "       geographic_zones g left join geographic_zones p on g.parentid = p.id order by p.name, g.name")
+  List<GeographicZone> getAll();
 
-    @Select("SELECT * FROM geographic_zones gz INNER JOIN geographic_levels gl ON gz.levelid = gl.id\n" +
-            "  where levelid = #{geographicLevelId} ORDER BY gz.id,gl.id")
-    List<GeographicZone>getGeographicZoneByLevel(Long id);
+  @Select("SELECT * FROM geographic_zones gz INNER JOIN geographic_levels gl ON gz.levelid = gl.id\n" +
+    "  where levelid = #{geographicLevelId} ORDER BY gz.id,gl.id")
+  List<GeographicZone> getGeographicZoneByLevel(Long id);
+
+  @Select("select gz2.name ADM1,gz1.name ADM2, gz.name ADM3, gz.* from geographic_zones gz " +
+        "left join geographic_zones gz1  " +
+        "   on gz.parentid = gz1.id " +
+        " left join geographic_zones gz2 " +
+        "   on gz1.parentid = gz2.id")
+  List<FlatGeographicZone> getFlatGeographicZoneList();
 
 }

@@ -108,6 +108,13 @@ public class ReportLookupController extends BaseController {
       return OpenLmisResponse.response("zones", geographicZoneList);
   }
 
+  @RequestMapping(value = "/geographic-zones/flat", method = GET, headers = ACCEPT_JSON)
+  public ResponseEntity<OpenLmisResponse> getFlatGeographicZones() {
+    List<FlatGeographicZone> geographicZoneList =  reportLookupService.getFlatGeographicZoneList();
+
+    return OpenLmisResponse.response("zones", geographicZoneList);
+  }
+
   @RequestMapping(value="/program-products/{programId}.json", method = GET, headers = BaseController.ACCEPT_JSON)
   public List<Product> getProgramProducts( @PathVariable("programId") Long programId){
     return this.reportLookupService.getProductsActiveUnderProgram(programId);

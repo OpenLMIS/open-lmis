@@ -111,6 +111,10 @@ services.factory('ReportRegimensByCategory',function ($resource){
 services.factory('ReportGeographicZonesByLevel',function ($resource){
     return $resource('/reports/geographicLevels/:geographicLevelId/zones.json', {}, {});
 });
+services.factory('FlatGeographicZoneList',function ($resource){
+  return $resource('/reports//geographic-zones/flat.json', {}, {});
+});
+
 services.factory('ReportRegimens',function ($resource){
     return $resource('/reports/regiments.json', {}, {}) ;
 });

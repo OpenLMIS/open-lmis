@@ -108,6 +108,10 @@ public class ReportLookupService {
     return geographicZoneMapper.getGeographicZoneByLevel(geographicLevelId);
   }
 
+  public List<FlatGeographicZone> getFlatGeographicZoneList() {
+    return geographicZoneMapper.getFlatGeographicZoneList();
+  }
+
   public List<Regimen> getRegimenByCategory(Long regimenCategoryId) {
     return regimenReportMapper.getRegimenByCategory(regimenCategoryId);
   }
