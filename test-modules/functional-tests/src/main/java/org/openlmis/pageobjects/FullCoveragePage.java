@@ -118,6 +118,7 @@ public class FullCoveragePage extends DistributionTab {
   @Override
   public void navigate() {
     fullCoverageTabLabel.click();
+    removeFocusFromElement();
   }
 
   @Override
@@ -172,21 +173,25 @@ public class FullCoveragePage extends DistributionTab {
   public void toggleApplyNRToFemaleHealthCenter() {
     testWebDriver.waitForElementToAppear(femaleHealthCenterNR);
     femaleHealthCenterNR.click();
+    removeFocusFromElement();
   }
 
   public void toggleApplyNRToMaleHealthCenter() {
     testWebDriver.waitForElementToAppear(maleHealthCenterNR);
     maleHealthCenterNR.click();
+    removeFocusFromElement();
   }
 
   public void toggleApplyNRToFemaleMobileBrigade() {
     testWebDriver.waitForElementToAppear(femaleMobileBrigadeNR);
     femaleMobileBrigadeNR.click();
+    removeFocusFromElement();
   }
 
   public void toggleApplyNRToMaleMobileBrigade() {
     testWebDriver.waitForElementToAppear(maleMobileBrigadeNR);
     maleMobileBrigadeNR.click();
+    removeFocusFromElement();
   }
 
   public String getTextOfFullCoverageHeader() {
@@ -234,5 +239,9 @@ public class FullCoveragePage extends DistributionTab {
   private void clickOkButton() {
     testWebDriver.waitForElementToAppear(okButton);
     okButton.click();
+  }
+
+  public void removeFocusFromElement() {
+    testWebDriver.moveToElement(fullCoverageHeader);
   }
 }

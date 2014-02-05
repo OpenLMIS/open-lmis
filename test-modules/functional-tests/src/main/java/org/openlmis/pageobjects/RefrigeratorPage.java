@@ -204,6 +204,7 @@ public class RefrigeratorPage extends DistributionTab {
   public void navigate() {
     testWebDriver.waitForElementToAppear(refrigeratorTab);
     refrigeratorTab.click();
+    removeFocusFromElement();
   }
 
   public void enterValueInRefrigeratorTemperature(String value) {
@@ -250,6 +251,7 @@ public class RefrigeratorPage extends DistributionTab {
   public void navigateToRefrigeratorTab() {
     testWebDriver.waitForElementToAppear(refrigeratorTab);
     refrigeratorTab.click();
+    removeFocusFromElement();
   }
 
   @Override
@@ -461,8 +463,6 @@ public class RefrigeratorPage extends DistributionTab {
     testWebDriver.waitForElementToAppear(doneButton);
     doneButton.click();
     testWebDriver.sleep(500);
-    removeFocusFromElement();
-
   }
 
   public void addNewRefrigerator(String brand, String model, String manufacturerSerialNumber) {
@@ -471,7 +471,6 @@ public class RefrigeratorPage extends DistributionTab {
     enterValueInManufacturingSerialNumberModal(manufacturerSerialNumber);
     clickDoneOnModal();
   }
-
 
   public void verifyDuplicateErrorMessage(String message) {
     testWebDriver.waitForElementToAppear(duplicateRefrigeratorMessage);

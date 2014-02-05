@@ -25,6 +25,9 @@ import static org.openqa.selenium.support.How.*;
 
 public class EPIUsePage extends DistributionTab {
 
+  @FindBy(how = ID, using = "epiUsePageHeader")
+  private static WebElement epiUsePageHeader = null;
+
   @FindBy(how = XPATH, using = "//div[1]/div/div/ng-include/div/ul/li[4]/a/span[2]")
   private static WebElement epiUseTab = null;
 
@@ -103,6 +106,7 @@ public class EPIUsePage extends DistributionTab {
   public void navigate() {
     testWebDriver.waitForElementToAppear(epiUseTab);
     epiUseTab.click();
+    removeFocusFromElement();
   }
 
   public void enterData(Integer stockAtFirstOfMonth, Integer receivedValue, Integer distributedValue,
@@ -180,24 +184,28 @@ public class EPIUsePage extends DistributionTab {
     rowNumber = rowNumber - 1;
     WebElement stockAtFirstOfMonthNotRecordedCheckBox = testWebDriver.getElementById("stockAtFirstOfMonth" + rowNumber);
     stockAtFirstOfMonthNotRecordedCheckBox.click();
+    removeFocusFromElement();
   }
 
   public void checkUncheckReceivedNotRecorded(int rowNumber) {
     rowNumber = rowNumber - 1;
     WebElement receivedNotRecordedCheckBox = testWebDriver.getElementById("received" + rowNumber);
     receivedNotRecordedCheckBox.click();
+    removeFocusFromElement();
   }
 
   public void checkUncheckDistributedNotRecorded(int rowNumber) {
     rowNumber = rowNumber - 1;
     WebElement distributedNotRecordedCheckBox = testWebDriver.getElementById("distributed" + rowNumber);
     distributedNotRecordedCheckBox.click();
+    removeFocusFromElement();
   }
 
   public void checkUncheckLossNotRecorded(int rowNumber) {
     rowNumber = rowNumber - 1;
     WebElement lossNotRecordedCheckBox = testWebDriver.getElementById("loss" + rowNumber);
     lossNotRecordedCheckBox.click();
+    removeFocusFromElement();
   }
 
   public void checkApplyNRToAllFields(boolean confirm) {
@@ -210,30 +218,36 @@ public class EPIUsePage extends DistributionTab {
 
   public void checkApplyNRToStockAtFirstOfMonth0() {
     NRForStockFirstOfMonth0.click();
+    removeFocusFromElement();
   }
 
   public void checkApplyNRToDistributed0() {
     NRForDistributed0.click();
+    removeFocusFromElement();
   }
 
   public void checkApplyNRToLoss0() {
     NRForLoss0.click();
+    removeFocusFromElement();
   }
 
   public void checkApplyNRToReceived0() {
     NRForReceived0.click();
+    removeFocusFromElement();
   }
 
   public void checkUncheckStockAtEndOfMonthNotRecorded(int rowNumber) {
     rowNumber = rowNumber - 1;
     WebElement stockAtEndOfMonthNotRecordedCheckBox = testWebDriver.getElementById("stockAtEndOfMonth" + rowNumber);
     stockAtEndOfMonthNotRecordedCheckBox.click();
+    removeFocusFromElement();
   }
 
   public void checkUncheckExpirationDateNotRecorded(int rowNumber) {
     rowNumber = rowNumber - 1;
     WebElement expirationDateNotRecordedCheckBox = testWebDriver.getElementById("expirationDate" + rowNumber);
     expirationDateNotRecordedCheckBox.click();
+    removeFocusFromElement();
   }
 
   public void verifyProductGroup(String productGroup, int rowNumber) {
@@ -361,5 +375,9 @@ public class EPIUsePage extends DistributionTab {
       verifyStockAtFirstOfMonth(epiData.get("firstOfMonth"), 1);
       verifyTotal(epiData.get("total"), 1);
     }
+  }
+
+  public void removeFocusFromElement() {
+    testWebDriver.moveToElement(epiUsePageHeader);
   }
 }

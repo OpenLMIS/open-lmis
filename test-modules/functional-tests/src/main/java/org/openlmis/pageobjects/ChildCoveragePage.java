@@ -13,6 +13,9 @@ import static org.openqa.selenium.support.How.ID;
 
 public class ChildCoveragePage extends DistributionTab {
 
+  @FindBy(how = ID, using = "coverageHeader")
+  private static WebElement childCoverageHeader = null;
+
   @FindBy(how = ID, using = "colBCG")
   private static WebElement regimenBCG = null;
 
@@ -311,4 +314,7 @@ public class ChildCoveragePage extends DistributionTab {
     return testWebDriver.findElement(By.id("target" + (rowNumber - 1))).getText();
   }
 
+  public void removeFocusFromElement() {
+    testWebDriver.moveToElement(childCoverageHeader);
+  }
 }

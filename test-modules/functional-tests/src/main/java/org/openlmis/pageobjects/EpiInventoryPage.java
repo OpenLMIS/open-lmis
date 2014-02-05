@@ -3,6 +3,7 @@ package org.openlmis.pageobjects;
 
 import org.openlmis.UiUtils.TestWebDriver;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
@@ -30,6 +31,9 @@ public class EpiInventoryPage extends DistributionTab {
   @FindBy(how = ID, using = "epiInventoryTabIcon")
   private static WebElement epiInventoryStatusIcon = null;
 
+  @FindBy(how = ID, using = "epiInventoryPageLabel")
+  private static WebElement epiInventoryPageLabel = null;
+
   public EpiInventoryPage(TestWebDriver driver) {
     super(driver);
     PageFactory.initElements(new AjaxElementLocatorFactory(TestWebDriver.getDriver(), 10), this);
@@ -48,7 +52,6 @@ public class EpiInventoryPage extends DistributionTab {
       fillDeliveredQuantity(i + 1, epiInventoryData.get("deliveredQuantity"));
       fillExistingQuantity(i + 1, epiInventoryData.get("existingQuantity"));
       fillSpoiledQuantity(i + 1, epiInventoryData.get("spoiledQuantity"));
-
     }
   }
 
@@ -66,6 +69,7 @@ public class EpiInventoryPage extends DistributionTab {
   public void navigate() {
     testWebDriver.waitForElementToAppear(epiInventoryStatusIcon);
     epiInventoryStatusIcon.click();
+    removeFocusFromElement();
   }
 
   @Override
@@ -105,22 +109,29 @@ public class EpiInventoryPage extends DistributionTab {
   public void applyNRToAll() {
     applyNRToAllButton.click();
     okButton.click();
+    removeFocusFromElement();
   }
 
   public void toggleExistingQuantityNR(int rowNumber) {
     testWebDriver.findElement(By.id("existingQuantityNR" + (rowNumber - 1))).click();
+    removeFocusFromElement();
   }
 
   public void fillExistingQuantity(int rowNumber, String existingQuantity) {
-    testWebDriver.findElement(By.id("existingQuantity" + (rowNumber - 1))).sendKeys(existingQuantity);
+    WebElement existingQuantityField = testWebDriver.findElement(By.id("existingQuantity" + (rowNumber - 1)));
+    testWebDriver.waitForElementToAppear(existingQuantityField);
+    existingQuantityField.sendKeys(existingQuantity);
+    existingQuantityField.sendKeys(Keys.TAB);
   }
 
   public void toggleSpoiledQuantityNR(int rowNumber) {
     testWebDriver.findElement(By.id("spoiledQuantityNR" + (rowNumber - 1))).click();
+    removeFocusFromElement();
   }
 
   public void fillSpoiledQuantity(int rowNumber, String spoiledQuantity) {
     testWebDriver.findElement(By.id("spoiledQuantity" + (rowNumber - 1))).sendKeys(spoiledQuantity);
+    removeFocusFromElement();
   }
 
   public boolean errorMessageDisplayed(int rowNumber) {
@@ -173,5 +184,9 @@ public class EpiInventoryPage extends DistributionTab {
 
   public String getExistingQuantity(int rowNumber) {
     return testWebDriver.findElement(By.id("existingQuantity" + (rowNumber - 1))).getAttribute("value");
+  }
+
+  public void removeFocusFromElement() {
+    testWebDriver.moveToElement(epiInventoryPageLabel);
   }
 }

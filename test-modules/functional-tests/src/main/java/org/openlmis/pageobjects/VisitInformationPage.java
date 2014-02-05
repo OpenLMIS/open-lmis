@@ -115,7 +115,7 @@ public class VisitInformationPage extends DistributionTab {
 
   @Override
   public void verifyIndicator(String color) {
-    visitInformationLabel.click();
+    removeFocusFromElement();
     verifyOverallIndicator(facilityVisitTabIcon, color);
   }
 
@@ -150,13 +150,13 @@ public class VisitInformationPage extends DistributionTab {
   public void navigate() {
     testWebDriver.sleep(1000);
     facilityVisitTab.click();
+    removeFocusFromElement();
   }
 
   public String getVisitInformationPageLabel() {
     testWebDriver.waitForElementToAppear(visitInformationLabel);
     return visitInformationLabel.getText();
   }
-
 
   public void enterObservations(String observations) {
     testWebDriver.waitForElementToAppear(observationsField);
