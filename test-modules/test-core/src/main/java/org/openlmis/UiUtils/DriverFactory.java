@@ -109,6 +109,7 @@ public class DriverFactory {
     profile.setPreference("browser.download.folderList", 2);
     profile.setPreference("dom.storage.enabled", true);
     profile.setPreference("device.storage.enabled", true);
+    profile.setEnableNativeEvents(true);
 
     if ((getProperty("os.name").toLowerCase().contains("mac")) && headless) {
       String LOCAL_FIREFOX_X11_PATH = "/opt/local/bin/firefox-x11";
