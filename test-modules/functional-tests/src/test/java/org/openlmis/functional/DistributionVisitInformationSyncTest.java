@@ -14,7 +14,10 @@ import cucumber.api.java.en.And;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import org.openlmis.UiUtils.TestCaseHelper;
+import org.openlmis.UiUtils.TestWebDriver;
 import org.openlmis.pageobjects.*;
+import org.openqa.selenium.JavascriptExecutor;
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -203,10 +206,6 @@ public class DistributionVisitInformationSyncTest extends TestCaseHelper {
     visitInformationPage.verifyIndicator("AMBER");
     visitInformationPage.selectReasonBadWeather();
     visitInformationPage.verifyIndicator("GREEN");
-    visitInformationPage.selectReasonOther();
-    visitInformationPage.verifyIndicator("AMBER");
-    visitInformationPage.enterOtherReasonInTextBox("Reason for not visiting the facility");
-    visitInformationPage.verifyIndicator("GREEN");
     visitInformationPage.navigateToRefrigerators();
 
     refrigeratorPage.verifyIndicator("GREEN");
@@ -255,9 +254,7 @@ public class DistributionVisitInformationSyncTest extends TestCaseHelper {
     visitInformationPage.verifyIndicator("AMBER");
     visitInformationPage.selectReasonBadWeather();
     visitInformationPage.verifyIndicator("GREEN");
-    visitInformationPage.selectReasonOther();
-    visitInformationPage.verifyIndicator("AMBER");
-    visitInformationPage.enterOtherReasonInTextBox("Reason for not visiting the facility");
+    visitInformationPage.selectReasonFacilityClosed();
     visitInformationPage.verifyIndicator("GREEN");
     visitInformationPage.navigateToRefrigerators();
 
@@ -409,5 +406,17 @@ public class DistributionVisitInformationSyncTest extends TestCaseHelper {
     } else if (option.toLowerCase().equals("no")) {
       visitInformationPage.selectFacilityVisitedNo();
     }
+  }
+
+  @AfterMethod(groups = "distribution")
+  public void tearDown() throws SQLException {
+    testWebDriver.sleep(500);
+    if (!testWebDriver.getElementById("username").isDisplayed()) {
+      HomePage homePage = PageFactory.getInstanceOfHomePage(testWebDriver);
+      homePage.logout(baseUrlGlobal);
+      dbWrapper.deleteData();
+      dbWrapper.closeConnection();
+    }
+    ((JavascriptExecutor) TestWebDriver.getDriver()).executeScript("indexedDB.deleteDatabase('open_lmis');");
   }
 }
