@@ -53,20 +53,6 @@ public interface ProgramProductMapper {
   })
   List<ProgramProduct> getByProgram(Program program);
 
-  @Select({"SELECT PP.*, PD.* FROM program_products PP INNER JOIN products PD ON PP.productId = PD.id",
-    "WHERE PP.programId = #{id} AND PP.active = TRUE AND PD.active = TRUE",
-    "ORDER BY PD.displayOrder NULLS LAST, LOWER(PD.code)"})
-  @Results(value = {
-    @Result(property = "id", column = "id"),
-    @Result(property = "program", column = "programId", javaType = Program.class,
-      one = @One(select = "org.openlmis.core.repository.mapper.ProgramMapper.getById")),
-    @Result(property = "product", column = "productId", javaType = Product.class,
-      one = @One(select = "org.openlmis.core.repository.mapper.ProductMapper.getById")),
-    @Result(property = "programProductIsa", column = "id", javaType = ProgramProductISA.class,
-      one = @One(select = "org.openlmis.core.repository.mapper.ProgramProductIsaMapper.getIsaByProgramProductId"))
-  })
-  List<ProgramProduct> getActiveByProgram(Long programId);
-
   @Select("SELECT * FROM program_products WHERE id = #{id}")
   @Results(value = {
     @Result(property = "product", column = "productId", javaType = Product.class,
@@ -83,25 +69,22 @@ public interface ProgramProductMapper {
   })
   List<ProgramProduct> getByProductCode(String code);
 
-
-  @Select("SELECT DISTINCT pp.active, pr.code AS programCode, pr.name AS programName, p.code AS productCode, " +
-    "       p.primaryName AS productName, p.description, p.dosesPerDispensingUnit AS unit, pc.name AS category " +
-    "FROM program_products pp " +
-    "INNER JOIN products p  ON pp.productid=p.id " +
-    "INNER JOIN programs pr ON pr.id=pp.programid " +
-    "LEFT OUTER JOIN product_categories pc ON pc.id = p.categoryId  " +
-    "LEFT OUTER JOIN facility_approved_products fap ON fap.programproductid=pp.id " +
-    "LEFT OUTER JOIN facility_types ft  ON ft.id=fap.facilitytypeid " +
-    "WHERE " +
-    " CASE " +
-    "   WHEN COALESCE(#{facilityTypeCode}) IS NULL " +
-    " THEN " +
-    "   TRUE " +
-    " ELSE LOWER(ft.code)=LOWER(#{facilityTypeCode}) " +
-    " END " +
-    "AND pr.id=#{programId} " +
-    "AND p.active = TRUE " +
-    "AND pp.active = TRUE ")
+  @Select({"SELECT DISTINCT pp.active, pr.code AS programCode, pr.name AS programName, p.code AS productCode,",
+    "p.primaryName AS productName, p.description, p.dosesPerDispensingUnit AS unit, pc.name AS category",
+    "FROM program_products pp",
+    "INNER JOIN products p  ON pp.productId=p.id",
+    "INNER JOIN programs pr ON pr.id=pp.programId",
+    "LEFT OUTER JOIN product_categories pc ON pc.id = p.categoryId",
+    "LEFT OUTER JOIN facility_approved_products fap ON fap.programProductId=pp.id",
+    "LEFT OUTER JOIN facility_types ft  ON ft.id=fap.facilityTypeId",
+    "WHERE ",
+    " CASE ",
+    "   WHEN COALESCE(#{facilityTypeCode}) IS NULL ",
+    " THEN ",
+    "   TRUE ",
+    " ELSE LOWER(ft.code)=LOWER(#{facilityTypeCode}) ",
+    " END ",
+    "AND pr.id=#{programId} AND p.active = TRUE AND pp.active = TRUE "})
   @Results(value = {
     @Result(property = "id", column = "id"),
     @Result(property = "program", column = "programCode", javaType = Program.class,
@@ -109,7 +92,7 @@ public interface ProgramProductMapper {
     @Result(property = "product", column = "productCode", javaType = Product.class,
       one = @One(select = "org.openlmis.core.repository.mapper.ProductMapper.getByCode"))
   })
-  List<ProgramProduct> getByProgramIdAndFacilityCode(@Param("programId") Long programId, @Param("facilityTypeCode") String facilityTypeCode);
+  List<ProgramProduct> getByProgramIdAndFacilityTypeCode(@Param("programId") Long programId, @Param("facilityTypeCode") String facilityTypeCode);
 
   @Select({"SELECT * FROM program_products pp INNER JOIN products p ON pp.productId = p.id WHERE programId = #{id} AND p.fullsupply = FALSE"})
   @Results(value = {

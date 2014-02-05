@@ -31,18 +31,13 @@ public class ProgramProductController {
 
   @Autowired
   ProgramProductService service;
+
   private static final String PROGRAM_PRODUCT_LIST = "programProductList";
 
   @RequestMapping(value = "/programProducts/programId/{programId}", method = GET, headers = BaseController.ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_PROGRAM_PRODUCT')")
   public ResponseEntity<OpenLmisResponse> getProgramProductsByProgram(@PathVariable Long programId) {
     List<ProgramProduct> programProductsByProgram = service.getByProgram(new Program(programId));
-    return response(PROGRAM_PRODUCT_LIST, programProductsByProgram);
-  }
-
-  @RequestMapping(value = "/program/{programId}/active-products", method = GET, headers = BaseController.ACCEPT_JSON)
-  public ResponseEntity<OpenLmisResponse> getActiveProgramProductsByProgram(@PathVariable Long programId) {
-    List<ProgramProduct> programProductsByProgram = service.getActiveByProgram(programId);
     return response(PROGRAM_PRODUCT_LIST, programProductsByProgram);
   }
 

@@ -16,6 +16,7 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.openlmis.core.builder.ProgramProductBuilder;
 import org.openlmis.core.domain.Product;
@@ -35,7 +36,6 @@ import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.a;
 import static com.natpryce.makeiteasy.MakeItEasy.make;
-import static java.util.Collections.EMPTY_LIST;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.anyLong;
@@ -50,19 +50,25 @@ import static org.powermock.api.mockito.PowerMockito.when;
 @Category(UnitTests.class)
 @RunWith(org.mockito.runners.MockitoJUnitRunner.class)
 public class ProgramProductRepositoryTest {
+
   @Rule
   public ExpectedException expectedEx = ExpectedException.none();
 
+  @InjectMocks
   private ProgramProductRepository programProductRepository;
 
   @Mock
   private ProgramProductMapper programProductMapper;
+
   @Mock
   private ProgramRepository programRepository;
+
   @Mock
   private ProductMapper productMapper;
+
   @Mock
   private ProductRepository productRepository;
+
   @Mock
   private ProgramProductPriceMapper programProductPriceMapper;
 
@@ -70,7 +76,6 @@ public class ProgramProductRepositoryTest {
 
   @Before
   public void setUp() throws Exception {
-    programProductRepository = new ProgramProductRepository(programRepository, programProductMapper, productRepository, programProductPriceMapper);
     programProduct = make(a(ProgramProductBuilder.defaultProgramProduct));
     programProduct.setModifiedDate(new Date());
 
@@ -133,7 +138,6 @@ public class ProgramProductRepositoryTest {
     programProductRepository.getIdByProgramIdAndProductId(1L, 2L);
   }
 
-
   @Test
   public void shouldGetProgramProductByProgramAndProductCodes() throws Exception {
     ProgramProduct programProduct = make(a(ProgramProductBuilder.defaultProgramProduct));
@@ -169,7 +173,6 @@ public class ProgramProductRepositoryTest {
     verify(programProductPriceMapper).closeLastActivePrice(programProductPrice);
     verify(programProductPriceMapper).insertNewCurrentPrice(programProductPrice);
   }
-
 
   @Test
   public void shouldUpdateProgramProductIfExist() throws Exception {
@@ -231,22 +234,11 @@ public class ProgramProductRepositoryTest {
   @Test
   public void shouldGetProgramProductByProgramIdAndFacilityTypeCode() {
     List<ProgramProduct> expectedProgramProducts = new ArrayList<>();
-    when(programProductMapper.getByProgramIdAndFacilityCode(10L, "warehouse")).thenReturn(expectedProgramProducts);
+    when(programProductMapper.getByProgramIdAndFacilityTypeCode(10L, "warehouse")).thenReturn(expectedProgramProducts);
 
     List<ProgramProduct> programProducts = programProductRepository.getProgramProductsBy(10L, "warehouse");
 
-    verify(programProductMapper).getByProgramIdAndFacilityCode(10L, "warehouse");
-    assertThat(programProducts, is(expectedProgramProducts));
-  }
-
-  @Test
-  public void shouldGetActiveProgramProductsForAProgram() throws Exception {
-    List<ProgramProduct> expectedProgramProducts = EMPTY_LIST;
-    when(programProductMapper.getActiveByProgram(5L)).thenReturn(expectedProgramProducts);
-
-    List<ProgramProduct> programProducts = programProductRepository.getActiveByProgram(5L);
-
-    verify(programProductMapper).getActiveByProgram(5L);
+    verify(programProductMapper).getByProgramIdAndFacilityTypeCode(10L, "warehouse");
     assertThat(programProducts, is(expectedProgramProducts));
   }
 }
