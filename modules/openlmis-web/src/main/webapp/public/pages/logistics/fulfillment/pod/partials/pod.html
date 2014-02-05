@@ -94,8 +94,8 @@
     </div>
     <div form-toolbar id="action_buttons" class="action-buttons">
       <div class="form-cell button-row">
-        <input type="button" class="btn btn-primary save-button" ng-click="save()" openlmis-message="button.save"/>
-        <input type="button" class="btn btn-primary submit-button" ng-click="submit()" openlmis-message="button.submit"/>
+        <input id=saveButton type="button" class="btn btn-primary save-button" ng-click="save()" openlmis-message="button.save"/>
+        <input id=submitButton type="button" class="btn btn-primary submit-button" ng-click="submit()" openlmis-message="button.submit"/>
       </div>
       <div class="toolbar-error" id="saveFailMessage" openlmis-message="error" ng-show="error"></div>
       <div class="toolbar-success" id="saveSuccessMsgDiv" fade-out="3000" openlmis-message="message"
