@@ -47,11 +47,11 @@
         <span class="status-icon"></span>
         <span openlmis-message="label.distribution.legend.cannot.synchronize"></span>
       </span>
+      </div>
     </div>
-  </div>
   <div class="info-box">
     <div class="row-fluid">
-      <div class="span3">
+      <div class="span3 facility-change-dropdown">
         <select ui-select2="{formatResult: format}" openlmis-message="label" id="selectFacility"
                 ng-model="facilitySelected.facilityId"
                 ng-change="chooseFacility()">
@@ -71,12 +71,10 @@
         ng-bind="distribution.deliveryZone.name"></span>
       </div>
       <div class="span3 info-box-labels">
-        <strong openlmis-message="label.program"></strong> :&nbsp;<span
-        ng-bind="distribution.program.name"></span>
+        <strong openlmis-message="label.program"></strong> :&nbsp;<span ng-bind="distribution.program.name"></span>
       </div>
       <div class="span2 info-box-labels">
-        <strong openlmis-message="label.period"> </strong> :&nbsp;<span
-        ng-bind="distribution.period.name"></span>
+        <strong openlmis-message="label.period"> </strong> :&nbsp;<span ng-bind="distribution.period.name"></span>
       </div>
     </div>
   </div>
