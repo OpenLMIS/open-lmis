@@ -512,6 +512,45 @@ Feature: Smoke Tests
 
 
   @smokeDistribution
+  Scenario: User should fill Visit Information when facility was not visited
+    Given I have the following data for distribution:
+      | userSIC       | deliveryZoneCodeFirst | deliveryZoneCodeSecond | deliveryZoneNameFirst | deliveryZoneNameSecond | facilityCodeFirst | facilityCodeSecond | programFirst | programSecond | schedule |
+      | storeInCharge | DZ1                   | DZ2                    | Delivery Zone First   | Delivery Zone Second   | F10               | F11                | VACCINES     | TB            | M        |
+    And I have data available for "Multiple" facilities attached to delivery zones
+    And I assign delivery zone "DZ1" to user "storeInCharge" having role "store in-charge"
+    When I am logged in as "storeInCharge"
+    And I access plan my distribution page
+    And I select delivery zone "Delivery Zone First"
+    And I select program "VACCINES"
+    And I select period "Period14"
+    And I initiate distribution
+    And I record data for distribution "1"
+    And I choose facility "F10"
+    And I verify that I am on visit information page
+    Then I see "Overall" facility icon as "AMBER"
+    And I see "Individual" facility icon as "AMBER"
+    And I navigate to "refrigerator" tab
+    When I add new refrigerator
+    When I enter Brand "LG"
+    And I enter Modal "800 LITRES"
+    And I enter Serial Number "GR-J287PGHV"
+    And I access done
+    And I navigate to "visit information" tab
+    Then Verify "visit information" indicator should be "RED"
+    When I select "no" facility visited
+    And I select No Transport reason
+    Then Verify "visit information" indicator should be "GREEN"
+    Then I see "Overall" facility icon as "AMBER"
+    And Verify "refrigerator" indicator should be "GREEN"
+    Then Verify "epi inventory" indicator should be "GREEN"
+    When I navigate to "epi inventory" tab
+    Then I see "epi inventory" fields disabled
+    When I navigate to "refrigerator" tab
+    And I access show
+    Then I see "refrigerator" fields disabled
+
+
+  @smokeDistribution
   Scenario: User should fill EPI use data
     Given I have the following data for distribution:
       | userSIC       | deliveryZoneCodeFirst | deliveryZoneCodeSecond | deliveryZoneNameFirst | deliveryZoneNameSecond | facilityCodeFirst | facilityCodeSecond | programFirst | programSecond | schedule |
