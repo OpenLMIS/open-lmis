@@ -69,6 +69,15 @@ public class UpdatePodPage extends Page {
   @FindBy(how = ID, using = "periodStartDate")
   private WebElement periodStartDate = null;
 
+  @FindBy(how = ID, using = "saveButton")
+  private WebElement saveButton = null;
+
+  @FindBy(how = ID, using = "submitButton")
+  private WebElement submitButton = null;
+
+  @FindBy(how = ID, using = "saveSuccessMsgDiv")
+  private WebElement PodSaveSuccessMsg = null;
+
   public UpdatePodPage(TestWebDriver testWebDriver) {
     super(testWebDriver);
     PageFactory.initElements(new AjaxElementLocatorFactory(TestWebDriver.getDriver(), 10), this);
@@ -102,19 +111,24 @@ public class UpdatePodPage extends Page {
   }
 
   public String getQuantityReceived(int rowNumber) {
-    return testWebDriver.findElement(By.id("quantityReceived" + (rowNumber - 1))).getText();
+    testWebDriver.scrollToElement(testWebDriver.findElement(By.id("quantityReceived" + (rowNumber - 1))));
+    return testWebDriver.findElement(By.id("quantityReceived" + (rowNumber - 1))).getAttribute("value");
   }
 
   public String getNotes(int rowNumber) {
-    return testWebDriver.findElement(By.id("notes" + (rowNumber - 1))).getText();
+    return testWebDriver.findElement(By.id("notes" + (rowNumber - 1))).getAttribute("value");
   }
 
   public void setQuantityReceived(int rowNumber, String quantityReceived) {
-    testWebDriver.findElement(By.id("quantityReceived_" + (rowNumber - 1))).sendKeys(quantityReceived);
+    WebElement elementQuantityReceived = testWebDriver.findElement(By.id("quantityReceived" + (rowNumber - 1)));
+    elementQuantityReceived.clear();
+    elementQuantityReceived.sendKeys(quantityReceived);
   }
 
   public void setNotes(int rowNumber, String notes) {
-    testWebDriver.findElement(By.id("notes" + (rowNumber - 1))).sendKeys(notes);
+    WebElement elementNotes = testWebDriver.findElement(By.id("notes" + (rowNumber - 1)));
+    elementNotes.clear();
+    elementNotes.sendKeys(notes);
   }
 
   public String getTitle() {
@@ -257,5 +271,16 @@ public class UpdatePodPage extends Page {
   public String getPeriodStartDate() {
     testWebDriver.waitForElementToAppear(periodStartDate);
     return periodStartDate.getText();
+  }
+
+  public void clickSave() {
+    testWebDriver.waitForElementToAppear(saveButton);
+    saveButton.click();
+  }
+
+  public Boolean isPodSaveSuccessMessageDisplayed() {
+    testWebDriver.waitForAjax();
+    testWebDriver.waitForElementToAppear(PodSaveSuccessMsg);
+    return PodSaveSuccessMsg.isDisplayed();
   }
 }

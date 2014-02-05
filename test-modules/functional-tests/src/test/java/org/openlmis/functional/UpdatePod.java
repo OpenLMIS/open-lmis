@@ -1,15 +1,18 @@
 package org.openlmis.functional;
 
 import com.thoughtworks.selenium.SeleneseTestBase;
+import com.thoughtworks.selenium.SeleneseTestNgHelper;
 import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.pageobjects.HomePage;
 import org.openlmis.pageobjects.LoginPage;
 import org.openlmis.pageobjects.ManagePodPage;
 import org.openlmis.pageobjects.UpdatePodPage;
+import org.testng.AssertJUnit;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -68,8 +71,37 @@ public class UpdatePod extends TestCaseHelper {
     verifyValuesOfPodTableOnUpdatePODScreen(1, "P10", "antibiotic Capsule 300/200/600 mg", "100", "Strip", "");
     assertEquals("", updatePodPage.getQuantityReceived(1));
     assertEquals("", updatePodPage.getNotes(1));
+    verifyPodDataInDatabase(null, null, "P10");
     assertTrue(updatePodPage.isFullSupplyTickIconDisplayed(1));
     verifyRequisitionTypeAndColor("regular");
+
+    enterPodData(updatePodPage, "200", "openlmis open source logistic management system", 1);
+    verifyQuantityReceivedAndNotes(updatePodPage, "200", "openlmis open source logistic management system");
+    verifyPodDataInDatabase("200", "openlmis open source logistic management system", "P10");
+
+    enterPodData(updatePodPage, "990", "openlmis project", 1);
+    verifyQuantityReceivedAndNotes(updatePodPage, "990", "openlmis project");
+    verifyPodDataInDatabase("990", "openlmis project", "P10");
+  }
+
+  private void enterPodData(UpdatePodPage updatePodPage, String quantityReceived, String notes, int rowNumber) {
+    updatePodPage.setQuantityReceived(rowNumber, quantityReceived);
+    updatePodPage.setNotes(rowNumber, notes);
+    updatePodPage.clickSave();
+    assertTrue(updatePodPage.isPodSaveSuccessMessageDisplayed());
+    testWebDriver.refresh();
+  }
+
+  private void verifyQuantityReceivedAndNotes(UpdatePodPage updatePodPage, String quantityReceived, String notes) {
+    assertEquals(quantityReceived, updatePodPage.getQuantityReceived(1));
+    assertEquals(notes, updatePodPage.getNotes(1));
+  }
+
+  private void verifyPodDataInDatabase(String quantityReceived, String notes, String productCode) throws SQLException {
+    Integer id = dbWrapper.getMaxRnrID();
+    ResultSet podLineItemsDetails = dbWrapper.getPodLineItemsDetails(id, productCode);
+    assertEquals(quantityReceived, podLineItemsDetails.getString("quantityReceived"));
+    assertEquals(notes, podLineItemsDetails.getString("notes"));
   }
 
   @Test(groups = {"requisition"})
@@ -182,7 +214,7 @@ public class UpdatePod extends TestCaseHelper {
   @Test(groups = {"requisition"})
   public void testVerifyUpdatePODForPackedOrdersWhenPacksToShipAndQuantityShippedIsZero() throws Exception {
     initiateRnrAndConvertToOrder(false, 0);
-    testDataForShipment(0, true, "P10",0);
+    testDataForShipment(0, true, "P10", 0);
     dbWrapper.updateFieldValue("orders", "status", "PACKED", null, null);
 
     HomePage homePage = loginPage.loginAs(updatePODData.get(USER), updatePODData.get(PASSWORD));
@@ -191,6 +223,7 @@ public class UpdatePod extends TestCaseHelper {
 
     verifyValuesOfPodTableOnUpdatePODScreen(1, "P10", "antibiotic Capsule 300/200/600 mg", "0", "Strip", "0");
   }
+
 
   private void initiateRnrAndConvertToOrder(boolean isEmergencyRegular, int packsToShip) throws SQLException {
     dbWrapper.insertRequisitions(1, "HIV", true, "2012-12-01", "2015-12-01", "F10", isEmergencyRegular);
