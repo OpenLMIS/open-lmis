@@ -59,6 +59,9 @@ public interface UserMapper {
     "LOWER(#{userSearchParam}) ||'%' OR LOWER(email) LIKE '%'|| LOWER(#{userSearchParam}) ||'%' OR LOWER(username) LIKE '%'|| LOWER(#{userSearchParam}) ||'%'")
   List<User> getUserWithSearchedName(String userSearchParam);
 
+  @Select(value = "SELECT id, firstName, lastName, email, username, active FROM users")
+  List<User> getAllUsers();
+
   @Update("UPDATE users SET userName = #{userName}, firstName = #{firstName}, lastName = #{lastName}, " +
     "employeeId = #{employeeId},restrictLogin = #{restrictLogin}, facilityId=#{facilityId}, jobTitle = #{jobTitle}, " +
     "primaryNotificationMethod = #{primaryNotificationMethod}, officePhone = #{officePhone}, cellPhone = #{cellPhone}, " +

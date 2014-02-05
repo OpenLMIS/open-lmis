@@ -21,10 +21,10 @@
   <input id="searchUser" class="search-query input-xxlarge" type="text" ng-model="query"
          on-keyup="showUserSearchResults()" openlmis-message="placeholder.user.search"/>
 
-  <div class="form-tip" openlmis-message="search.threeCharacters"></div>
-  <div class="facility-list" ng-show="query.length > 2">
+  <!--<div class="form-tip" openlmis-message="search.threeCharacters"></div>-->
+  <div class="facility-list">
     <div ng-switch on="resultCount">
-      <h3 ng-switch-when="0" openlmis-message="msg.no.matches|query"></h3>
+        <h3 ng-switch-when="0" openlmis-message="msg.no.matches|query"></h3>
 
       <h3 ng-switch-when="1" openlmis-message="msg.one.match|query"></h3>
 
