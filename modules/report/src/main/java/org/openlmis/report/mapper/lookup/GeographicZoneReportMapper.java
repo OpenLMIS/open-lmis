@@ -33,7 +33,8 @@ public interface GeographicZoneReportMapper {
         "left join geographic_zones gz1  " +
         "   on gz.parentid = gz1.id " +
         " left join geographic_zones gz2 " +
-        "   on gz1.parentid = gz2.id")
+        "   on gz1.parentid = gz2.id" +
+    " order by ADM1, ADM2, ADM3")
   List<FlatGeographicZone> getFlatGeographicZoneList();
 
 }

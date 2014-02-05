@@ -8,10 +8,11 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-angular.module('geographic-zones', ['openlmis', 'ngGrid', 'ui.bootstrap.modal', 'ui.bootstrap.dialog']).
+angular.module('geographic-zones', ['openlmis', 'ngGrid', 'ui.bootstrap.modal', 'ui.bootstrap.dialog','leaflet-directive','ngDragDrop']).
     config(['$routeProvider', function ($routeProvider) {
       $routeProvider.
         when('/search', {controller: GeographicZonesSearchController, templateUrl: 'partials/search.html'}).
+        when('/json', {controller: GeographicZonesJsonController, templateUrl: 'partials/json.html'}).
         when('/create-geographic-zone', {controller: GeographicZonesController, templateUrl: 'partials/create.html'}).
         when('/edit/:geographicZoneId', {controller: GeographicZonesController, templateUrl: 'partials/create.html'}).
         otherwise({redirectTo: '/search'});

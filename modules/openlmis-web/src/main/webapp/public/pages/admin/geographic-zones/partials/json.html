@@ -1,0 +1,78 @@
+<!--
+  ~ This program was produced for the U.S. Agency for International Development. It was prepared by the USAID | DELIVER PROJECT, Task Order 4. It is part of a project which utilizes code originally licensed under the terms of the Mozilla Public License (MPL) v2 and therefore is licensed under MPL v2 or later.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify it under the terms of the Mozilla Public License as published by the Mozilla Foundation, either version 2 of the License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the Mozilla Public License for more details.
+  ~
+  ~ You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
+  -->
+
+<div xmlns="http://www.w3.org/1999/html">
+  <h2>
+    <span>Geographic Zones List</span>
+    <a ng-click="upload_file = true" ng-show="upload_file != true" class="btn btn-primary pull-right">Import new
+      JSON</a>
+  </h2>
+
+  <div>
+    <leaflet center="center" width="640px" height="400px" geojson="geojson"></leaflet>
+  </div>
+  <div ng-show="upload_file">
+    <h3>Upload Json File</h3>
+    <table>
+      <tr>
+        <td>Level</td>
+        <td><select ng-model="level" ng-change="filterByLevel()">
+          <option ng-repeat="lv in geographicLevels" value="{{ lv.id }}">{{ lv.name }}</option>
+        </select></td>
+      </tr>
+      <tr>
+        <td></td>
+        <td><input ng-change="importFile(this);" ng-model="filename" type="file" name="jsonfile" id="jsonfile"></td>
+      </tr>
+    </table>
+
+  </div>
+  <div>
+    <span class="pull-right">Count = {{ features.length }}</span>
+  </div>
+  <div class="row">
+    <div class="span5">
+      <input type="text" ng-model="search_geo" >
+      <table class="table">
+        <tr ng-class="feature.properties.mapped == true? 'message alert alert-success':''" ui-draggable="true"
+            drag="feature" on-drop-success="dropSuccessHandler($event,feature)" ng-repeat="feature in features">
+          <td>{{ feature.properties.ADM1 }}</td>
+          <td>{{ feature.properties.ADM2 }}</td>
+          <td>{{ feature.properties.ADM3 }}</td>
+          <td>{{ feature.properties.ADM4 }}</td>
+          <td>{{ feature.properties.ID }}</td>
+          <td>{{ feature.properties.mapped == true? 'Yes' : 'No' }}</td>
+        </tr>
+      </table>
+    </div>
+    <div class="span2">
+      &nbsp;
+    </div>
+    <div class="span5">
+      <input type="text" ng-model="search_zone" >
+      <table class="table" ng-show="level != undefined">
+        <tr ng-class="zone.mapped == true? 'message alert alert-success':''" ng-repeat="zone in geographicZones"
+            ui-on-Drop="onDrop($event,$data, zone)">
+          <!--<td>{{ zone.adm1 }}</td>-->
+          <td>{{ zone.adm2 }}</td>
+          <td>{{ zone.adm3 }}</td>
+          <td>{{ zone.newId }}</td>
+          <td>{{ zone.mapped == true? 'Yes': 'No' }}</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+  <div class="clear-both"></div>
+  <div>
+    <a class="btn btn-primary">Guess the match!</a>
+    <a class="btn btn-primary">Save</a>
+  </div>
+
+</div>
