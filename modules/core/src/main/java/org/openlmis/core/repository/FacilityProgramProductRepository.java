@@ -49,7 +49,4 @@ public class FacilityProgramProductRepository {
     mapper.insert(product);
   }
 
-  public List<FacilityProgramProduct> getByFacilityAndProgram(Long facilityId, Long programId) {
-    return mapper.getByFacilityAndProgram(facilityId, programId);
-  }
 }

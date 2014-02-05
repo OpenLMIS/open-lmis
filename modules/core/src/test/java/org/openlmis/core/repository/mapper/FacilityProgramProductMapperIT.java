@@ -93,21 +93,4 @@ public class FacilityProgramProductMapperIT {
     assertThat(mapper.getOverriddenIsa(programProduct.getId(), facility.getId()), is(nullValue()));
   }
 
-  @Test
-  public void shouldGetProgramProductForFacilityAndProgram() throws Exception {
-    FacilityProgramProduct facilityProgramProduct1 = new FacilityProgramProduct(programProduct, facility.getId(), 34);
-    Product product2 = make(a(ProductBuilder.defaultProduct,with(ProductBuilder.code, "P1000"), with(displayOrder, 1)));
-    productMapper.insert(product2);
-    ProgramProduct programProduct2 = new ProgramProduct(program, product2, 10, true);
-    programProductMapper.insert(programProduct2);
-    FacilityProgramProduct facilityProgramProduct2 = new FacilityProgramProduct(programProduct2, facility.getId(), 34);
-    mapper.insert(facilityProgramProduct1);
-    mapper.insert(facilityProgramProduct2);
-
-    List<FacilityProgramProduct> facilityProgramProducts = mapper.getByFacilityAndProgram(facility.getId(), program.getId());
-
-    assertThat(facilityProgramProducts.size(),is(2));
-    assertThat(facilityProgramProducts.get(0).getProduct().getCode(),is("P1000"));
-    assertThat(facilityProgramProducts.get(1).getProduct().getCode(),is("P999"));
-  }
 }

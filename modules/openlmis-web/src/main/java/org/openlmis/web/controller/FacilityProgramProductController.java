@@ -39,7 +39,7 @@ public class FacilityProgramProductController extends BaseController {
   @RequestMapping(value = "/facility/{facilityId}/program/{programId}/isa", method = GET, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_PROGRAM_PRODUCT')")
   public ResponseEntity<OpenLmisResponse> getProgramProductsByProgramAndFacility(@PathVariable Long programId, @PathVariable Long facilityId) {
-    List<FacilityProgramProduct> programProductsByProgram = service.getForProgramAndFacility(programId, facilityId);
+    List<FacilityProgramProduct> programProductsByProgram = service.getActiveProductsForProgramAndFacility(programId, facilityId);
     return OpenLmisResponse.response(PROGRAM_PRODUCT_LIST, programProductsByProgram);
   }
 
