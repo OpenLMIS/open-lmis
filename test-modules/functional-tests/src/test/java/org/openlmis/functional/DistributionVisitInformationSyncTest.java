@@ -74,7 +74,7 @@ public class DistributionVisitInformationSyncTest extends TestCaseHelper {
   }
 
   @Test(groups = {"distribution"})
-  public void testVisitInformationPage() throws SQLException {
+  public void testVisitInformationPageWhenFacilityVisited() throws SQLException {
     loginPage.loginAs(visitInformationData.get(USER), visitInformationData.get(PASSWORD));
     initiateDistribution(visitInformationData.get(FIRST_DELIVERY_ZONE_NAME), visitInformationData.get(VACCINES_PROGRAM));
     VisitInformationPage visitInformationPage = facilityListPage.selectFacility(visitInformationData.get(FIRST_FACILITY_CODE));
@@ -98,6 +98,201 @@ public class DistributionVisitInformationSyncTest extends TestCaseHelper {
     visitInformationPage.verifyIndicator("GREEN");
     visitInformationPage.enterVehicleId("12U3-93");
     visitInformationPage.verifyIndicator("GREEN");
+  }
+
+  @Test(groups = {"distribution"})
+  public void testVisitInformationPageAndFacilityIndicatorWhenFacilityVisited() throws SQLException {
+    dbWrapper.addRefrigeratorToFacility("LG", "yu", "Hry3", visitInformationData.get(FIRST_FACILITY_CODE));
+    loginPage.loginAs(visitInformationData.get(USER), visitInformationData.get(PASSWORD));
+    initiateDistribution(visitInformationData.get(FIRST_DELIVERY_ZONE_NAME), visitInformationData.get(VACCINES_PROGRAM));
+    VisitInformationPage visitInformationPage = facilityListPage.selectFacility(visitInformationData.get(FIRST_FACILITY_CODE));
+    facilityListPage.verifyFacilityIndicatorColor("Overall", "RED");
+    assertEquals("Was " + dbWrapper.getAttributeFromTable("facilities", "name", "code", visitInformationData.get(FIRST_FACILITY_CODE)) +
+      " visited in " + "Period14" + "?", visitInformationPage.getWasFacilityVisitedLabel());
+    visitInformationPage.verifyIndicator("RED");
+    visitInformationPage.selectFacilityVisitedYes();
+    visitInformationPage.verifyIndicator("AMBER");
+    facilityListPage.verifyFacilityIndicatorColor("Overall", "AMBER");
+    visitInformationPage.enterVisitDateAsFirstOfCurrentMonth();
+    visitInformationPage.verifyIndicator("AMBER");
+    visitInformationPage.enterObservations("Some Observations");
+    visitInformationPage.verifyIndicator("AMBER");
+    visitInformationPage.enterConfirmedByName("ConfirmName");
+    visitInformationPage.verifyIndicator("AMBER");
+    visitInformationPage.enterConfirmedByTitle("ConfirmTitle");
+    visitInformationPage.verifyIndicator("AMBER");
+    visitInformationPage.enterVerifiedByName("VerifyName");
+    visitInformationPage.verifyIndicator("AMBER");
+
+    fillFacilityData(true);
+    facilityListPage.verifyFacilityIndicatorColor("Overall", "AMBER");
+    visitInformationPage.enterVerifiedByTitle("VerifyTitle");
+    visitInformationPage.verifyIndicator("GREEN");
+    facilityListPage.verifyFacilityIndicatorColor("Overall", "GREEN");
+    visitInformationPage.enterVehicleId("12U3-93");
+    visitInformationPage.verifyIndicator("GREEN");
+    facilityListPage.verifyFacilityIndicatorColor("Overall", "GREEN");
+  }
+
+  @Test(groups = {"distribution"})
+  public void testVisitInformationPageWhenFacilityNotVisitedAndNoRefrigeratorPresent() throws SQLException {
+    loginPage.loginAs(visitInformationData.get(USER), visitInformationData.get(PASSWORD));
+    initiateDistribution(visitInformationData.get(FIRST_DELIVERY_ZONE_NAME), visitInformationData.get(VACCINES_PROGRAM));
+    VisitInformationPage visitInformationPage = facilityListPage.selectFacility(visitInformationData.get(FIRST_FACILITY_CODE));
+    assertEquals("Was " + dbWrapper.getAttributeFromTable("facilities", "name", "code", visitInformationData.get(FIRST_FACILITY_CODE)) +
+      " visited in " + "Period14" + "?", visitInformationPage.getWasFacilityVisitedLabel());
+    visitInformationPage.verifyIndicator("RED");
+    visitInformationPage.selectFacilityVisitedNo();
+    visitInformationPage.verifyIndicator("AMBER");
+    visitInformationPage.selectReasonBadWeather();
+    visitInformationPage.verifyIndicator("GREEN");
+    visitInformationPage.selectReasonOther();
+    visitInformationPage.verifyIndicator("AMBER");
+    visitInformationPage.enterOtherReasonInTextBox("Reason for not visiting the facility");
+    visitInformationPage.verifyIndicator("GREEN");
+    RefrigeratorPage refrigeratorPage = visitInformationPage.navigateToRefrigerators();
+    refrigeratorPage.verifyIndicator("GREEN");
+    assertFalse(refrigeratorPage.isAddNewButtonEnabled());
+    EpiInventoryPage epiInventoryPage = refrigeratorPage.navigateToEpiInventory();
+    epiInventoryPage.verifyIndicator("GREEN");
+    epiInventoryPage.verifyAllFieldsDisabled();
+  }
+
+  @Test(groups = {"distribution"})
+  public void testVisitInformationPageWhenFacilityNotVisitedAndAllFormsFilled() throws SQLException {
+    dbWrapper.addRefrigeratorToFacility("LG", "GR890", "GNRE0989", visitInformationData.get(FIRST_FACILITY_CODE));
+    loginPage.loginAs(visitInformationData.get(USER), visitInformationData.get(PASSWORD));
+    initiateDistribution(visitInformationData.get(FIRST_DELIVERY_ZONE_NAME), visitInformationData.get(VACCINES_PROGRAM));
+    VisitInformationPage visitInformationPage = facilityListPage.selectFacility(visitInformationData.get(FIRST_FACILITY_CODE));
+    assertEquals("Was " + dbWrapper.getAttributeFromTable("facilities", "name", "code", visitInformationData.get(FIRST_FACILITY_CODE)) +
+      " visited in " + "Period14" + "?", visitInformationPage.getWasFacilityVisitedLabel());
+    RefrigeratorPage refrigeratorPage = visitInformationPage.navigateToRefrigerators();
+    refrigeratorPage.clickDelete();
+    refrigeratorPage.clickOKButton();
+
+    refrigeratorPage.clickAddNew();
+    refrigeratorPage.addNewRefrigerator("SAM", "800L", "GNR7876");
+
+    refrigeratorPage.clickShowForRefrigerator1();
+    refrigeratorPage.enterValueInRefrigeratorTemperature("3");
+    refrigeratorPage.clickFunctioningCorrectlyYesRadio();
+    refrigeratorPage.enterValueInLowAlarmEvents("2");
+    refrigeratorPage.enterValueInHighAlarmEvents("5");
+    refrigeratorPage.clickProblemSinceLastVisitNR();
+    refrigeratorPage.clickDone();
+    refrigeratorPage.verifyRefrigeratorColor("overall", "GREEN");
+    refrigeratorPage.verifyRefrigeratorColor("individual", "GREEN");
+
+    EPIUsePage epiUsePage = refrigeratorPage.navigateToEpiUse();
+    epiUsePage.enterData(10, 20, 30, 40, 50, "10/2011", 1);
+
+    EpiInventoryPage epiInventoryPage = epiUsePage.navigateToEpiInventory();
+    epiInventoryPage.applyNRToAll();
+    epiInventoryPage.fillDeliveredQuantity(1, "2");
+    epiInventoryPage.fillDeliveredQuantity(2, "4");
+    epiInventoryPage.fillDeliveredQuantity(3, "6");
+    epiInventoryPage.verifyIndicator("GREEN");
+
+    FullCoveragePage fullCoveragePage = epiInventoryPage.navigateToFullCoverage();
+    fullCoveragePage.enterData(23, 66, 77, "45");
+
+    fullCoveragePage.navigateToVisitInformation();
+
+    visitInformationPage.verifyIndicator("RED");
+    visitInformationPage.selectFacilityVisitedNo();
+    visitInformationPage.verifyIndicator("AMBER");
+    visitInformationPage.selectReasonBadWeather();
+    visitInformationPage.verifyIndicator("GREEN");
+    visitInformationPage.selectReasonOther();
+    visitInformationPage.verifyIndicator("AMBER");
+    visitInformationPage.enterOtherReasonInTextBox("Reason for not visiting the facility");
+    visitInformationPage.verifyIndicator("GREEN");
+    visitInformationPage.navigateToRefrigerators();
+
+    refrigeratorPage.verifyIndicator("GREEN");
+    assertFalse(refrigeratorPage.isAddNewButtonEnabled());
+    refrigeratorPage.clickShowForRefrigerator1();
+    refrigeratorPage.verifyAllFieldsDisabled();
+    refrigeratorPage.navigateToEpiInventory();
+
+    epiInventoryPage.verifyIndicator("GREEN");
+    epiInventoryPage.verifyAllFieldsDisabled();
+  }
+
+  @Test(groups = {"distribution"})
+  public void testVisitInformationPageWhenFacilityNotVisitedAndFormsPartiallyFilled() throws SQLException {
+    dbWrapper.addRefrigeratorToFacility("LG", "GR890", "GNRE0989", visitInformationData.get(FIRST_FACILITY_CODE));
+    loginPage.loginAs(visitInformationData.get(USER), visitInformationData.get(PASSWORD));
+    initiateDistribution(visitInformationData.get(FIRST_DELIVERY_ZONE_NAME), visitInformationData.get(VACCINES_PROGRAM));
+    VisitInformationPage visitInformationPage = facilityListPage.selectFacility(visitInformationData.get(FIRST_FACILITY_CODE));
+    assertEquals("Was " + dbWrapper.getAttributeFromTable("facilities", "name", "code", visitInformationData.get(FIRST_FACILITY_CODE)) +
+      " visited in " + "Period14" + "?", visitInformationPage.getWasFacilityVisitedLabel());
+    RefrigeratorPage refrigeratorPage = visitInformationPage.navigateToRefrigerators();
+    refrigeratorPage.clickDelete();
+    refrigeratorPage.clickOKButton();
+
+    refrigeratorPage.clickAddNew();
+    refrigeratorPage.addNewRefrigerator("SAM", "800L", "GNR7876");
+
+    refrigeratorPage.clickShowForRefrigerator1();
+    refrigeratorPage.enterValueInRefrigeratorTemperature("3");
+    refrigeratorPage.clickFunctioningCorrectlyYesRadio();
+    refrigeratorPage.enterValueInLowAlarmEvents("2");
+    refrigeratorPage.enterValueInHighAlarmEvents("5");
+    refrigeratorPage.clickDone();
+    refrigeratorPage.verifyRefrigeratorColor("overall", "AMBER");
+    refrigeratorPage.verifyRefrigeratorColor("individual", "AMBER");
+
+    EpiInventoryPage epiInventoryPage = refrigeratorPage.navigateToEpiInventory();
+    epiInventoryPage.fillDeliveredQuantity(1, "2");
+    epiInventoryPage.fillDeliveredQuantity(2, "4");
+    epiInventoryPage.verifyIndicator("AMBER");
+
+    epiInventoryPage.navigateToVisitInformation();
+
+    visitInformationPage.verifyIndicator("RED");
+    visitInformationPage.selectFacilityVisitedNo();
+    visitInformationPage.verifyIndicator("AMBER");
+    visitInformationPage.selectReasonBadWeather();
+    visitInformationPage.verifyIndicator("GREEN");
+    visitInformationPage.selectReasonOther();
+    visitInformationPage.verifyIndicator("AMBER");
+    visitInformationPage.enterOtherReasonInTextBox("Reason for not visiting the facility");
+    visitInformationPage.verifyIndicator("GREEN");
+    visitInformationPage.navigateToRefrigerators();
+
+    refrigeratorPage.verifyIndicator("GREEN");
+    assertFalse(refrigeratorPage.isAddNewButtonEnabled());
+    refrigeratorPage.clickShowForRefrigerator1();
+    refrigeratorPage.verifyAllFieldsDisabled();
+    refrigeratorPage.navigateToEpiInventory();
+
+    epiInventoryPage.verifyIndicator("GREEN");
+    epiInventoryPage.verifyAllFieldsDisabled();
+  }
+
+  @Test(groups = {"distribution"})
+  public void testVisitInformationPageAndFacilityIndicatorWhenFacilityNotVisited() throws SQLException {
+    dbWrapper.addRefrigeratorToFacility("LG", "yu", "Hry3", visitInformationData.get(FIRST_FACILITY_CODE));
+    loginPage.loginAs(visitInformationData.get(USER), visitInformationData.get(PASSWORD));
+    initiateDistribution(visitInformationData.get(FIRST_DELIVERY_ZONE_NAME), visitInformationData.get(VACCINES_PROGRAM));
+    VisitInformationPage visitInformationPage = facilityListPage.selectFacility(visitInformationData.get(FIRST_FACILITY_CODE));
+    facilityListPage.verifyFacilityIndicatorColor("Overall", "RED");
+    assertEquals("Was " + dbWrapper.getAttributeFromTable("facilities", "name", "code", visitInformationData.get(FIRST_FACILITY_CODE)) +
+      " visited in " + "Period14" + "?", visitInformationPage.getWasFacilityVisitedLabel());
+    visitInformationPage.verifyIndicator("RED");
+    visitInformationPage.selectFacilityVisitedNo();
+    visitInformationPage.verifyIndicator("AMBER");
+    visitInformationPage.selectReasonBadWeather();
+    visitInformationPage.verifyIndicator("GREEN");
+    visitInformationPage.selectReasonOther();
+    visitInformationPage.verifyIndicator("AMBER");
+
+    fillFacilityData(false);
+    facilityListPage.verifyFacilityIndicatorColor("Overall", "AMBER");
+    visitInformationPage.enterOtherReasonInTextBox("Reason for not visiting the facility");
+    visitInformationPage.verifyIndicator("GREEN");
+    facilityListPage.verifyFacilityIndicatorColor("Overall", "GREEN");
   }
 
   private void verifyLabels() {
@@ -131,6 +326,46 @@ public class DistributionVisitInformationSyncTest extends TestCaseHelper {
     distributionPage.selectValueFromProgram(programFirst);
     distributionPage.clickInitiateDistribution();
     distributionPage.clickRecordData(1);
+  }
+
+  private VisitInformationPage fillFacilityData(Boolean wasFacilityVisity) {
+    VisitInformationPage visitInformationPage = PageFactory.getInstanceOfVisitInformation(testWebDriver);
+
+    if (wasFacilityVisity) {
+      RefrigeratorPage refrigeratorPage = visitInformationPage.navigateToRefrigerators();
+      refrigeratorPage.navigateToRefrigerators();
+      refrigeratorPage.clickDelete();
+      refrigeratorPage.clickOKButton();
+
+      refrigeratorPage.clickAddNew();
+      refrigeratorPage.addNewRefrigerator("SAM", "800L", "GNR7876");
+
+      refrigeratorPage.clickShowForRefrigerator1();
+      refrigeratorPage.enterValueInRefrigeratorTemperature("3");
+      refrigeratorPage.clickFunctioningCorrectlyYesRadio();
+      refrigeratorPage.enterValueInLowAlarmEvents("2");
+      refrigeratorPage.enterValueInHighAlarmEvents("5");
+      refrigeratorPage.clickProblemSinceLastVisitNR();
+      refrigeratorPage.clickDone();
+      refrigeratorPage.verifyRefrigeratorColor("overall", "GREEN");
+      refrigeratorPage.verifyRefrigeratorColor("individual", "GREEN");
+
+      EpiInventoryPage epiInventoryPage = refrigeratorPage.navigateToEpiInventory();
+      epiInventoryPage.applyNRToAll();
+      epiInventoryPage.fillDeliveredQuantity(1, "2");
+      epiInventoryPage.fillDeliveredQuantity(2, "4");
+      epiInventoryPage.fillDeliveredQuantity(3, "6");
+    }
+
+    EPIUsePage epiUsePage = visitInformationPage.navigateToEpiUse();
+    epiUsePage.enterData(10, 20, 30, 40, 50, "10/2011", 1);
+
+    FullCoveragePage fullCoveragePage = epiUsePage.navigateToFullCoverage();
+    fullCoveragePage.enterData(23, 66, 77, "45");
+
+    fullCoveragePage.navigateToVisitInformation();
+
+    return visitInformationPage;
   }
 
   @When("^I verify radio button \"([^\"]*)\" is selected$")

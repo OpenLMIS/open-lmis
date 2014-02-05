@@ -148,6 +148,7 @@ public class VisitInformationPage extends DistributionTab {
 
   @Override
   public void navigate() {
+    testWebDriver.sleep(1000);
     facilityVisitTab.click();
   }
 
