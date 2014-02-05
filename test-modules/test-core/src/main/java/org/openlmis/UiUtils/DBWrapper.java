@@ -341,6 +341,7 @@ public class DBWrapper {
     update("delete from full_coverages");
     update("delete from vaccination_child_coverage_line_items;");
     update("delete from coverage_vaccination_products;");
+    update("delete from opened_vial_line_items;");
     update("delete from facility_visits");
     update("delete from distributions");
     update("delete from refrigerators");
