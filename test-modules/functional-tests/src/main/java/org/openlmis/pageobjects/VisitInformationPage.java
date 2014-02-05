@@ -192,7 +192,7 @@ public class VisitInformationPage extends DistributionTab {
     visitDateField.click();
     testWebDriver.waitForElementToAppear(calender);
     calender.click();
-    calender.sendKeys(Keys.TAB);
+    removeFocusFromElement();
   }
 
   public void enterVehicleId(String vehicleId) {
