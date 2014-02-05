@@ -56,7 +56,7 @@ public class JsonUtility extends TestCaseHelper {
     dbWrapper.updateRequisitionStatus("SUBMITTED", userName, program);
   }
 
-  public static void createOrder(String userName, String status, String program) throws Exception {
+  public static void createOrder(String userName, String status, String program) throws SQLException {
     dbWrapper.insertRequisitions(1, program, true, "2012-12-01", "2015-12-01", "F10", false);
     dbWrapper.updateRequisitionStatus("SUBMITTED", userName, program);
     dbWrapper.updateRequisitionStatus("APPROVED", userName, program);
@@ -139,7 +139,7 @@ public class JsonUtility extends TestCaseHelper {
       responseEntity.getResponse().contains("{\"success\":\"CHW created successfully\"}"));
   }
 
-  public void convertToOrderAndUpdatePOD(String userName, String program, Integer quantityReceived) throws Exception {
+  public void convertToOrderAndUpdatePOD(String userName, String program, Integer quantityReceived) throws SQLException, IOException {
     HttpClient client = new HttpClient();
     client.createContext();
     dbWrapper.assignRight("store in-charge", "MANAGE_POD");

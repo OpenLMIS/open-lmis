@@ -24,6 +24,7 @@ import org.testng.annotations.Test;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.text.ParseException;
@@ -56,7 +57,7 @@ public class FacilityProgramSupportedFeed extends JsonUtility {
   }
 
   @Test(groups = {"webserviceSmoke"}, dataProvider = "Data-Provider-Function-Positive")
-  public void testFacilityProgramSupportedFeed_Upload(String user, String program, String[] credentials) throws Exception {
+  public void testFacilityProgramSupportedFeed_Upload(String user, String program, String[] credentials) throws FileNotFoundException, InterruptedException, ParserConfigurationException, SAXException {
     HttpClient client = new HttpClient();
     client.createContext();
 

@@ -18,6 +18,9 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
+import java.io.IOException;
+import java.sql.SQLException;
+
 import static com.thoughtworks.selenium.SeleneseTestBase.*;
 import static java.lang.String.format;
 
@@ -28,20 +31,20 @@ public class FacilityAPI extends JsonUtility {
   public static final String GET = "GET";
 
   @BeforeMethod(groups = {"webservice", "webserviceSmoke"})
-  public void setUp() throws Exception {
+  public void setUp() throws InterruptedException, SQLException, IOException {
     super.setup();
     super.setupTestData(true);
     dbWrapper.updateRestrictLogin("commTrack", true);
   }
 
   @AfterMethod(groups = {"webservice", "webserviceSmoke"})
-  public void tearDown() throws Exception {
+  public void tearDown() throws SQLException {
     dbWrapper.deleteData();
     dbWrapper.closeConnection();
   }
 
   @Test(groups = {"webserviceSmoke"})
-  public void testFacilityAPI() throws Exception {
+  public void testFacilityAPI() throws SQLException {
     HttpClient client = new HttpClient();
     client.createContext();
 //TODO set parent facility, facility type
@@ -107,46 +110,42 @@ public class FacilityAPI extends JsonUtility {
   }
 
   @Test(groups = {"webservice"})
-  public void testInvalidFacilityCode() throws Exception {
+  public void testInvalidFacilityCode() {
     HttpClient client = new HttpClient();
     client.createContext();
 
     ResponseEntity responseEntity = client.SendJSON("", format(URL, "F100"), GET, commTrackUser, "Admin123");
     assertEquals(responseEntity.getResponse(), "{\"error\":\"Invalid Facility code\"}");
     assertEquals(responseEntity.getStatus(), 400);
-
   }
 
   @Test(groups = {"webservice"})
-  public void testBlankFacilityCode() throws Exception {
+  public void testBlankFacilityCode() {
     HttpClient client = new HttpClient();
     client.createContext();
 
     ResponseEntity responseEntity = client.SendJSON("", format(URL, ""), GET, commTrackUser, "Admin123");
     assertEquals(responseEntity.getStatus(), 404);
-
   }
 
   @Test(groups = {"webservice"})
-  public void testInvalidUser() throws Exception {
+  public void testInvalidUser() {
     HttpClient client = new HttpClient();
     client.createContext();
 
     ResponseEntity responseEntity = client.SendJSON("", format(URL, "F100"), GET, "ABCD", "Admin123");
     assertTrue("Response:" + responseEntity.getResponse(), responseEntity.getResponse().contains("Error 401 Authentication Failed"));
     assertEquals(responseEntity.getStatus(), 401);
-
   }
 
   @Test(groups = {"webservice"})
-  public void testInvalidPassword() throws Exception {
+  public void testInvalidPassword() {
     HttpClient client = new HttpClient();
     client.createContext();
 
     ResponseEntity responseEntity = client.SendJSON("", format(URL, "F100"), GET, commTrackUser, "ABCD");
     assertTrue("Response:" + responseEntity.getResponse(), responseEntity.getResponse().contains("Error 401 Authentication Failed"));
     assertEquals(responseEntity.getStatus(), 401);
-
   }
 
 

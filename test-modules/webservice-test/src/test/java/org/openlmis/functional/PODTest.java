@@ -18,6 +18,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
+import java.io.IOException;
 import java.sql.SQLException;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.assertEquals;
@@ -32,7 +33,7 @@ public class PODTest extends JsonUtility {
   public static final String POD_URL = "http://localhost:9091/rest-api/orders/%s/pod.json";
 
   @BeforeMethod(groups = {"webservice", "webserviceSmoke"})
-  public void setUp() throws Exception {
+  public void setUp() throws InterruptedException, SQLException, IOException {
     super.setup();
     super.setupTestData(false);
     super.setupDataRequisitionApprove();
@@ -46,7 +47,7 @@ public class PODTest extends JsonUtility {
   }
 
   @Test(groups = {"webserviceSmoke"}, dataProvider = "Data-Provider")
-  public void testValidAndDuplicatePOD(String userName, String program) throws Exception {
+  public void testValidAndDuplicatePOD(String userName, String program) throws SQLException, IOException {
     dbWrapper.assignRight("store in-charge", "MANAGE_POD");
     dbWrapper.setupUserForFulfillmentRole("commTrack", STORE_IN_CHARGE, "F10");
 
@@ -89,7 +90,7 @@ public class PODTest extends JsonUtility {
   }
 
   @Test(groups = {"webservice"}, dataProvider = "Data-Provider")
-  public void verifyPODHavingProductNotAvailableInRnR(String userName, String program) throws Exception {
+  public void verifyPODHavingProductNotAvailableInRnR(String userName, String program) throws SQLException, IOException {
     dbWrapper.assignRight("store in-charge", "MANAGE_POD");
     dbWrapper.setupUserForFulfillmentRole("commTrack", "store in-charge", "F10");
     HttpClient client = new HttpClient();
@@ -120,7 +121,7 @@ public class PODTest extends JsonUtility {
   }
 
   @Test(groups = {"webservice"}, dataProvider = "Data-Provider")
-  public void verifyUserPermissionOnWarehouse(String userName, String program) throws Exception {
+  public void verifyUserPermissionOnWarehouse(String userName, String program) throws SQLException, IOException {
     dbWrapper.assignRight("store in-charge", "MANAGE_POD");
     HttpClient client = new HttpClient();
 
@@ -148,7 +149,7 @@ public class PODTest extends JsonUtility {
   }
 
   @Test(groups = {"webservice"}, dataProvider = "Data-Provider")
-  public void verifyRoleManagePOD(String userName, String program) throws Exception {
+  public void verifyRoleManagePOD(String userName, String program) throws SQLException, IOException {
     dbWrapper.setupUserForFulfillmentRole("commTrack", "store in-charge", "F10");
     HttpClient client = new HttpClient();
 
@@ -175,7 +176,7 @@ public class PODTest extends JsonUtility {
   }
 
   @Test(groups = {"webservice"})
-  public void verifyInvalidOrderId() throws Exception {
+  public void verifyInvalidOrderId() throws IOException {
     HttpClient client = new HttpClient();
 
     client.createContext();
@@ -198,7 +199,7 @@ public class PODTest extends JsonUtility {
   }
 
   @Test(groups = {"webservice"}, dataProvider = "Data-Provider")
-  public void verifyInvalidProductCode(String userName, String program) throws Exception {
+  public void verifyInvalidProductCode(String userName, String program) throws SQLException, IOException {
     dbWrapper.assignRight("store in-charge", "MANAGE_POD");
     dbWrapper.setupUserForFulfillmentRole("commTrack", "store in-charge", "F10");
     HttpClient client = new HttpClient();
@@ -227,7 +228,7 @@ public class PODTest extends JsonUtility {
   }
 
   @Test(groups = {"webservice"}, dataProvider = "Data-Provider")
-  public void verifyAuthentication(String userName, String program) throws Exception {
+  public void verifyAuthentication(String userName, String program) throws SQLException, IOException {
     dbWrapper.assignRight("store in-charge", "MANAGE_POD");
     dbWrapper.setupUserForFulfillmentRole("commTrack", "store in-charge", "F10");
     HttpClient client = new HttpClient();
@@ -256,7 +257,7 @@ public class PODTest extends JsonUtility {
   }
 
   @Test(groups = {"webservice"}, dataProvider = "Data-Provider")
-  public void verifyInvalidQuantity(String userName, String program) throws Exception {
+  public void verifyInvalidQuantity(String userName, String program) throws SQLException, IOException {
     dbWrapper.assignRight("store in-charge", "MANAGE_POD");
     dbWrapper.setupUserForFulfillmentRole("commTrack", "store in-charge", "F10");
     HttpClient client = new HttpClient();
@@ -285,7 +286,7 @@ public class PODTest extends JsonUtility {
   }
 
   @Test(groups = {"webservice"}, dataProvider = "Data-Provider")
-  public void testShowErrorMessageForUnrecognizedFieldInAPI(String userName, String program) throws Exception {
+  public void testShowErrorMessageForUnrecognizedFieldInAPI(String userName, String program) throws SQLException {
     dbWrapper.assignRight("store in-charge", "MANAGE_POD");
     dbWrapper.setupUserForFulfillmentRole("commTrack", STORE_IN_CHARGE, "F10");
 

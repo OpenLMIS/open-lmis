@@ -22,7 +22,12 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
+import org.xml.sax.SAXException;
 
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -48,7 +53,7 @@ public class FacilityFeed extends JsonUtility {
   LoginPage loginPage;
 
   @BeforeMethod(groups = {"webservice", "webserviceSmoke"})
-  public void setUp() throws Exception {
+  public void setUp() throws InterruptedException, SQLException, IOException {
     super.setup();
     super.setupTestData(true);
     dbWrapper.updateRestrictLogin("commTrack", true);
@@ -56,13 +61,13 @@ public class FacilityFeed extends JsonUtility {
   }
 
   @AfterMethod(groups = {"webservice", "webserviceSmoke"})
-  public void tearDown() throws Exception {
+  public void tearDown() throws SQLException {
     dbWrapper.deleteData();
     dbWrapper.closeConnection();
   }
 
   @Test(groups = {"webservice"}, dataProvider = "Data-Provider-Function-Positive")
-  public void testFacilityFeedUsingUI(String user, String program, String[] credentials) throws Exception {
+  public void testFacilityFeedUsingUI(String user, String program, String[] credentials) throws SQLException, ParserConfigurationException, SAXException, InterruptedException {
     HttpClient client = new HttpClient();
     client.createContext();
 
@@ -157,7 +162,7 @@ public class FacilityFeed extends JsonUtility {
   }
 
   @Test(groups = {"webservice"}, dataProvider = "Data-Provider-Function-Credentials")
-  public void shouldVerifyFacilityFeedForFacilityUpload(String[] credentials) throws Exception {
+  public void shouldVerifyFacilityFeedForFacilityUpload(String[] credentials) throws FileNotFoundException, ParserConfigurationException, SAXException {
     HttpClient client = new HttpClient();
     client.createContext();
 
@@ -228,7 +233,7 @@ public class FacilityFeed extends JsonUtility {
   }
 
   @Test(groups = {"webserviceSmoke"})
-  public void testFacilityFeedUsingCommTrack() throws Exception {
+  public void testFacilityFeedUsingCommTrack() throws IOException, ParserConfigurationException, SAXException {
 
     HttpClient client = new HttpClient();
     client.createContext();
@@ -290,7 +295,7 @@ public class FacilityFeed extends JsonUtility {
   }
 
   @Test(groups = {"webservice"})
-  public void testFacilityFeedUsingCommTrackWithoutHeaders() throws Exception {
+  public void testFacilityFeedUsingCommTrackWithoutHeaders() throws IOException {
 
     HttpClient client = new HttpClient();
     client.createContext();
@@ -308,11 +313,10 @@ public class FacilityFeed extends JsonUtility {
       "");
 
     assertTrue("Showing response as : " + responseEntity.getStatus(), responseEntity.getStatus() == 401);
-
   }
 
   @Test(groups = {"webserviceSmoke"})
-  public void testFacilityFeedUsingCommTrackUsingOpenLmisVendor() throws Exception {
+  public void testFacilityFeedUsingCommTrackUsingOpenLmisVendor() throws IOException, ParserConfigurationException, SAXException {
 
     HttpClient client = new HttpClient();
     client.createContext();
@@ -360,7 +364,7 @@ public class FacilityFeed extends JsonUtility {
   }
 
   @Test(groups = {"webservice"})
-  public void testFacilityFeedUsingCommTrackUsingInvalidVendor() throws Exception {
+  public void testFacilityFeedUsingCommTrackUsingInvalidVendor() throws IOException, ParserConfigurationException, SAXException {
 
     HttpClient client = new HttpClient();
     client.createContext();
@@ -408,7 +412,7 @@ public class FacilityFeed extends JsonUtility {
   }
 
   @Test(groups = {"webservice"})
-  public void testFacilityFeedForCommTrackVendorSpecificInfo() throws Exception {
+  public void testFacilityFeedForCommTrackVendorSpecificInfo() throws IOException, ParserConfigurationException, SAXException {
 
     HttpClient client = new HttpClient();
     client.createContext();

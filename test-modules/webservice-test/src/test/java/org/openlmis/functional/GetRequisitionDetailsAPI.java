@@ -18,6 +18,7 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import java.io.IOException;
 import java.sql.SQLException;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.*;
@@ -29,7 +30,7 @@ public class GetRequisitionDetailsAPI extends JsonUtility {
   public static final String URL = "http://localhost:9091/rest-api/requisitions/";
 
   @BeforeMethod(groups = {"webservice", "webserviceSmoke"})
-  public void setUp() throws Exception {
+  public void setUp() throws InterruptedException, SQLException, IOException {
     super.setup();
     super.setupTestData(false);
     super.setupDataRequisitionApprove();
@@ -46,7 +47,7 @@ public class GetRequisitionDetailsAPI extends JsonUtility {
   }
 
   @Test(groups = {"webserviceSmoke"})
-  public void testGetRequisitionDetails() throws Exception {
+  public void testGetRequisitionDetails() throws SQLException {
     HttpClient client = new HttpClient();
     client.createContext();
     submitRequisition("commTrack1", "HIV");
@@ -59,7 +60,7 @@ public class GetRequisitionDetailsAPI extends JsonUtility {
   }
 
   @Test(groups = {"webserviceSmoke"})
-  public void testGetRequisitionDetailsWithMultipleProducts() throws Exception {
+  public void testGetRequisitionDetailsWithMultipleProducts() throws SQLException, IOException {
     dbWrapper.updateFieldValue("products", "fullSupply", "true", "code", "P11");
 
     long id = submitRnRThroughApi("V10", "HIV", "P10", 1, 10, 1, 0, 0, 2);
@@ -73,7 +74,7 @@ public class GetRequisitionDetailsAPI extends JsonUtility {
   }
 
   @Test(groups = {"webservice"})
-  public void testGetRequisitionDetailsWithInvalidRequisitionID() throws Exception {
+  public void testGetRequisitionDetailsWithInvalidRequisitionID() {
     HttpClient client = new HttpClient();
     client.createContext();
 
@@ -91,7 +92,7 @@ public class GetRequisitionDetailsAPI extends JsonUtility {
   }
 
   @Test(groups = {"webservice"})
-  public void testGetRequisitionDetailsWithInvalidPassword() throws Exception {
+  public void testGetRequisitionDetailsWithInvalidPassword() throws SQLException {
     HttpClient client = new HttpClient();
     client.createContext();
     submitRequisition("commTrack1", "HIV");
@@ -105,7 +106,7 @@ public class GetRequisitionDetailsAPI extends JsonUtility {
   }
 
   @Test(groups = {"webservice"})
-  public void testGetRequisitionDetailsWithInvalidUser() throws Exception {
+  public void testGetRequisitionDetailsWithInvalidUser() throws SQLException {
     HttpClient client = new HttpClient();
     client.createContext();
     submitRequisition("commTrack1", "HIV");
@@ -119,7 +120,7 @@ public class GetRequisitionDetailsAPI extends JsonUtility {
   }
 
   @Test(groups = {"webservice"})
-  public void testGetRequisitionDetailsWithBlankRequisitionID() throws Exception {
+  public void testGetRequisitionDetailsWithBlankRequisitionID() {
     HttpClient client = new HttpClient();
     client.createContext();
 
@@ -131,7 +132,7 @@ public class GetRequisitionDetailsAPI extends JsonUtility {
   }
 
   @Test(groups = {"webservice"})
-  public void testGetRequisitionDetailsWithMalformedRequest() throws Exception {
+  public void testGetRequisitionDetailsWithMalformedRequest() throws SQLException {
     HttpClient client = new HttpClient();
     client.createContext();
     submitRequisition("commTrack1", "HIV");
@@ -145,7 +146,7 @@ public class GetRequisitionDetailsAPI extends JsonUtility {
   }
 
   @Test(groups = {"webservice"})
-  public void testGetRequisitionDetailsWithUnrecognizedField() throws Exception {
+  public void testGetRequisitionDetailsWithUnrecognizedField() throws SQLException {
     HttpClient client = new HttpClient();
     client.createContext();
     submitRequisition("commTrack1", "HIV");
@@ -159,7 +160,7 @@ public class GetRequisitionDetailsAPI extends JsonUtility {
   }
 
   @Test(groups = {"webservice"})
-  public void testGetRequisitionDetailsWithSpaceBeforeRequisitionID() throws Exception {
+  public void testGetRequisitionDetailsWithSpaceBeforeRequisitionID() throws SQLException {
     HttpClient client = new HttpClient();
     client.createContext();
     submitRequisition("commTrack1", "HIV");
@@ -171,7 +172,7 @@ public class GetRequisitionDetailsAPI extends JsonUtility {
   }
 
   @Test(groups = {"webservice"})
-  public void testGetRequisitionDetailsWithNullRemarks() throws Exception {
+  public void testGetRequisitionDetailsWithNullRemarks() throws SQLException {
     HttpClient client = new HttpClient();
     client.createContext();
     submitRequisition("commTrack1", "HIV");
@@ -188,7 +189,7 @@ public class GetRequisitionDetailsAPI extends JsonUtility {
 
 
   @Test(groups = {"webservice"})
-  public void testRequisitionDetailsAfterApprovalForExportOrdersFlagSetFalse() throws Exception {
+  public void testRequisitionDetailsAfterApprovalForExportOrdersFlagSetFalse() throws SQLException, IOException {
     HttpClient client = new HttpClient();
     client.createContext();
     submitRequisition("commTrack1", "HIV");
@@ -208,11 +209,10 @@ public class GetRequisitionDetailsAPI extends JsonUtility {
     responseEntity = client.SendJSON("", URL + id, "GET", "commTrack", "Admin123");
     checkRequisitionStatus("RELEASED", responseEntity);
     checkOrderStatus(65, "READY_TO_PACK", responseEntity);
-
   }
 
   @Test(groups = {"webservice"})
-  public void testRequisitionDetailsAfterApprovalForExportOrdersFlagSetTrue() throws Exception {
+  public void testRequisitionDetailsAfterApprovalForExportOrdersFlagSetTrue() throws SQLException, IOException, InterruptedException {
     HttpClient client = new HttpClient();
     client.createContext();
     submitRequisition("commTrack1", "HIV");
@@ -235,7 +235,7 @@ public class GetRequisitionDetailsAPI extends JsonUtility {
   }
 
   @Test(groups = {"webservice"})
-  public void testRequisitionDetailsAfterApprovalForExportOrdersFlagSetTrueAndFtpDetailsValid() throws Exception {
+  public void testRequisitionDetailsAfterApprovalForExportOrdersFlagSetTrueAndFtpDetailsValid() throws SQLException, IOException, InterruptedException {
     HttpClient client = new HttpClient();
     client.createContext();
     submitRequisition("commTrack1", "HIV");
@@ -262,7 +262,7 @@ public class GetRequisitionDetailsAPI extends JsonUtility {
   }
 
   @Test(groups = {"webservice"})
-  public void testRequisitionDetailsAfterPOD() throws Exception {
+  public void testRequisitionDetailsAfterPOD() throws SQLException, IOException {
 
     HttpClient client = new HttpClient();
     client.createContext();
@@ -341,13 +341,13 @@ public class GetRequisitionDetailsAPI extends JsonUtility {
 
   }
 
-  private void checkOrderStatus(int quantityApproved, String orderStatus, ResponseEntity responseEntity) throws Exception {
+  private void checkOrderStatus(int quantityApproved, String orderStatus, ResponseEntity responseEntity) {
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"quantityApproved\":" + quantityApproved));
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"supplyingFacilityCode\":\"F10\""));
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"orderStatus\":\"" + orderStatus + "\""));
   }
 
-  private ResponseEntity waitUntilOrderStatusUpdatedOrTimeOut(long id, String expected) throws Exception {
+  private ResponseEntity waitUntilOrderStatusUpdatedOrTimeOut(long id, String expected) throws InterruptedException {
     HttpClient client = new HttpClient();
     client.createContext();
     ResponseEntity responseEntity;
