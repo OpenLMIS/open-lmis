@@ -90,10 +90,6 @@ public class EpiInventoryPage extends DistributionTab {
     return testWebDriver.findElement(By.id("productName" + (rowNumber - 1))).getText();
   }
 
-  public Boolean isProductNameDisplayed(int rowNumber) {
-    return testWebDriver.findElement(By.id("productName" + (rowNumber - 1))).isDisplayed();
-  }
-
   public String getIsaValue(int rowNumber) {
     return testWebDriver.findElement(By.id("idealQuantity" + (rowNumber - 1))).getText();
   }

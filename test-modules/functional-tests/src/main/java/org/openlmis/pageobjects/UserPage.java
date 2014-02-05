@@ -171,7 +171,6 @@ public class UserPage extends Page {
   @FindBy(how = How.XPATH, using = "(//input[@type='text'])[17]")
   private static WebElement adminRolesInputField = null;
 
-
   @FindBy(how = How.LINK_TEXT, using = "View Here")
   private static WebElement viewHereLink = null;
 

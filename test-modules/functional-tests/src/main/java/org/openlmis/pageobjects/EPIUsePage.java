@@ -180,28 +180,28 @@ public class EPIUsePage extends DistributionTab {
     expirationDate.sendKeys(Keys.TAB);
   }
 
-  public void checkUncheckStockAtFirstOfMonthNotRecorded(int rowNumber) {
+  public void checkUnCheckStockAtFirstOfMonthNotRecorded(int rowNumber) {
     rowNumber = rowNumber - 1;
     WebElement stockAtFirstOfMonthNotRecordedCheckBox = testWebDriver.getElementById("stockAtFirstOfMonth" + rowNumber);
     stockAtFirstOfMonthNotRecordedCheckBox.click();
     removeFocusFromElement();
   }
 
-  public void checkUncheckReceivedNotRecorded(int rowNumber) {
+  public void checkUnCheckReceivedNotRecorded(int rowNumber) {
     rowNumber = rowNumber - 1;
     WebElement receivedNotRecordedCheckBox = testWebDriver.getElementById("received" + rowNumber);
     receivedNotRecordedCheckBox.click();
     removeFocusFromElement();
   }
 
-  public void checkUncheckDistributedNotRecorded(int rowNumber) {
+  public void checkUnCheckDistributedNotRecorded(int rowNumber) {
     rowNumber = rowNumber - 1;
     WebElement distributedNotRecordedCheckBox = testWebDriver.getElementById("distributed" + rowNumber);
     distributedNotRecordedCheckBox.click();
     removeFocusFromElement();
   }
 
-  public void checkUncheckLossNotRecorded(int rowNumber) {
+  public void checkUnCheckLossNotRecorded(int rowNumber) {
     rowNumber = rowNumber - 1;
     WebElement lossNotRecordedCheckBox = testWebDriver.getElementById("loss" + rowNumber);
     lossNotRecordedCheckBox.click();
@@ -236,14 +236,14 @@ public class EPIUsePage extends DistributionTab {
     removeFocusFromElement();
   }
 
-  public void checkUncheckStockAtEndOfMonthNotRecorded(int rowNumber) {
+  public void checkUnCheckStockAtEndOfMonthNotRecorded(int rowNumber) {
     rowNumber = rowNumber - 1;
     WebElement stockAtEndOfMonthNotRecordedCheckBox = testWebDriver.getElementById("stockAtEndOfMonth" + rowNumber);
     stockAtEndOfMonthNotRecordedCheckBox.click();
     removeFocusFromElement();
   }
 
-  public void checkUncheckExpirationDateNotRecorded(int rowNumber) {
+  public void checkUnCheckExpirationDateNotRecorded(int rowNumber) {
     rowNumber = rowNumber - 1;
     WebElement expirationDateNotRecordedCheckBox = testWebDriver.getElementById("expirationDate" + rowNumber);
     expirationDateNotRecordedCheckBox.click();

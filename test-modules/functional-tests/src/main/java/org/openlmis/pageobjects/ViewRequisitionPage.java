@@ -11,7 +11,6 @@
 package org.openlmis.pageobjects;
 
 
-import com.thoughtworks.selenium.SeleneseTestNgHelper;
 import org.openlmis.UiUtils.TestWebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -82,15 +81,14 @@ public class ViewRequisitionPage extends RequisitionPage {
     super(driver);
     PageFactory.initElements(new AjaxElementLocatorFactory(TestWebDriver.getDriver(), 1), this);
     testWebDriver.setImplicitWait(1);
-
   }
 
   public void verifyElementsOnViewRequisitionScreen() {
-    SeleneseTestNgHelper.assertTrue("Facility name drop down is not displayed", selectFacilityDropDown.isDisplayed());
-    SeleneseTestNgHelper.assertTrue("Program name drop down is not displayed", selectProgramDropDown.isDisplayed());
-    SeleneseTestNgHelper.assertTrue("Start date is not displayed", startDate.isDisplayed());
-    SeleneseTestNgHelper.assertTrue("End date is not displayed", endDate.isDisplayed());
-    SeleneseTestNgHelper.assertTrue("Search button is not displayed", searchButton.isDisplayed());
+    assertTrue("Facility name drop down is not displayed", selectFacilityDropDown.isDisplayed());
+    assertTrue("Program name drop down is not displayed", selectProgramDropDown.isDisplayed());
+    assertTrue("Start date is not displayed", startDate.isDisplayed());
+    assertTrue("End date is not displayed", endDate.isDisplayed());
+    assertTrue("Search button is not displayed", searchButton.isDisplayed());
   }
 
   public void enterViewSearchCriteria() {
@@ -117,9 +115,7 @@ public class ViewRequisitionPage extends RequisitionPage {
   }
 
   public void verifyNoRequisitionFound() {
-
-    SeleneseTestNgHelper.assertTrue("noRequisitionFoundDiv is not showing up", noRequisitionFoundDiv.isDisplayed());
-
+    assertTrue("noRequisitionFoundDiv is not showing up", noRequisitionFoundDiv.isDisplayed());
   }
 
   public void verifyStatus(String statusToBeVerified) {
@@ -143,7 +139,6 @@ public class ViewRequisitionPage extends RequisitionPage {
     emergencyIcon.click();
   }
 
-
   public void clickFullSupplyTab() {
     testWebDriver.waitForElementToAppear(fullSupplyTab);
     fullSupplyTab.click();
@@ -156,25 +151,20 @@ public class ViewRequisitionPage extends RequisitionPage {
 
   public void verifyApprovedQuantityFieldPresent() {
     testWebDriver.waitForElementToAppear(approveQuantity);
-    SeleneseTestNgHelper.assertTrue("Quantity Approved field should be displayed", approveQuantity.isDisplayed());
+    assertTrue("Quantity Approved field should be displayed", approveQuantity.isDisplayed());
   }
 
   public HomePage verifyFieldsPreApproval(String cost, String newPatientValue) {
     testWebDriver.waitForElementToAppear(totalCostPreApproval);
     assertEquals(totalCostPreApproval.getText().substring(1), cost);
     assertEquals(newPatient.getText().trim(), newPatientValue);
-
     return new HomePage(testWebDriver);
   }
-
 
   public HomePage verifyFieldsPostApproval(String cost, String newPatientValue) {
     testWebDriver.waitForElementToAppear(totalCostPostApproval);
     assertEquals(totalCostPostApproval.getText().substring(1), cost);
     assertEquals(newPatient.getText().trim(), newPatientValue);
-
     return new HomePage(testWebDriver);
   }
-
-
 }

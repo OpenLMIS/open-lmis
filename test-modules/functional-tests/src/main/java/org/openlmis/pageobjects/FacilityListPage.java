@@ -128,7 +128,6 @@ public class FacilityListPage extends RequisitionPage {
     testWebDriver.waitForElementToAppear(facilityListSelectField);
     facilityListSelectField.click();
     testWebDriver.sleep(250);
-
     return new VisitInformationPage(testWebDriver);
   }
 

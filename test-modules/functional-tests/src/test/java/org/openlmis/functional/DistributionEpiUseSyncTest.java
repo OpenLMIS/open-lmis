@@ -128,12 +128,12 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
     epiUsePage.verifyStockAtEndOfMonth("50", 1);
     epiUsePage.verifyExpirationDate("10/2011", 1);
 
-    epiUsePage.checkUncheckStockAtFirstOfMonthNotRecorded(1);
-    epiUsePage.checkUncheckReceivedNotRecorded(1);
-    epiUsePage.checkUncheckDistributedNotRecorded(1);
-    epiUsePage.checkUncheckLossNotRecorded(1);
-    epiUsePage.checkUncheckStockAtEndOfMonthNotRecorded(1);
-    epiUsePage.checkUncheckExpirationDateNotRecorded(1);
+    epiUsePage.checkUnCheckStockAtFirstOfMonthNotRecorded(1);
+    epiUsePage.checkUnCheckReceivedNotRecorded(1);
+    epiUsePage.checkUnCheckDistributedNotRecorded(1);
+    epiUsePage.checkUnCheckLossNotRecorded(1);
+    epiUsePage.checkUnCheckStockAtEndOfMonthNotRecorded(1);
+    epiUsePage.checkUnCheckExpirationDateNotRecorded(1);
 
     epiUsePage.navigateToRefrigerators();
     refrigeratorPage.navigateToEpiUse();
@@ -145,12 +145,12 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
     epiUsePage.verifyStockAtEndOfMonthStatus(false, 1);
     epiUsePage.verifyExpirationDateStatus(false, 1);
 
-    epiUsePage.checkUncheckStockAtFirstOfMonthNotRecorded(1);
-    epiUsePage.checkUncheckReceivedNotRecorded(1);
-    epiUsePage.checkUncheckDistributedNotRecorded(1);
-    epiUsePage.checkUncheckLossNotRecorded(1);
-    epiUsePage.checkUncheckStockAtEndOfMonthNotRecorded(1);
-    epiUsePage.checkUncheckExpirationDateNotRecorded(1);
+    epiUsePage.checkUnCheckStockAtFirstOfMonthNotRecorded(1);
+    epiUsePage.checkUnCheckReceivedNotRecorded(1);
+    epiUsePage.checkUnCheckDistributedNotRecorded(1);
+    epiUsePage.checkUnCheckLossNotRecorded(1);
+    epiUsePage.checkUnCheckStockAtEndOfMonthNotRecorded(1);
+    epiUsePage.checkUnCheckExpirationDateNotRecorded(1);
 
     epiUsePage.enterData(20, 30, 40, 50, 60, "11/2012", 1);
     epiUsePage.verifyIndicator("GREEN");

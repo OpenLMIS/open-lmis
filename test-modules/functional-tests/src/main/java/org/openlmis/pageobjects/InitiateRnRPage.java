@@ -60,32 +60,17 @@ public class InitiateRnRPage extends RequisitionPage {
   @FindBy(how = ID, using = "beginningBalance_0")
   private static WebElement beginningBalanceFirstProduct = null;
 
-  @FindBy(how = ID, using = "beginningBalance_1")
-  private static WebElement beginningBalanceSecondProduct = null;
-
   @FindBy(how = ID, using = "quantityReceived_0")
   private static WebElement quantityReceivedFirstProduct = null;
-
-  @FindBy(how = ID, using = "quantityReceived_1")
-  private static WebElement quantityReceivedSecondProduct = null;
 
   @FindBy(how = ID, using = "quantityDispensed_0")
   private static WebElement quantityDispensedFirstProduct = null;
 
-  @FindBy(how = ID, using = "quantityDispensed_1")
-  private static WebElement quantityDispensedSecondProduct = null;
-
   @FindBy(how = ID, using = "stockInHand_0")
   private static WebElement stockInHandFirstProduct = null;
 
-  @FindBy(how = ID, using = "stockInHand_1")
-  private static WebElement stockInHandSecondProduct = null;
-
   @FindBy(how = ID, using = "newPatientCount_0")
   private static WebElement newPatientFirstProduct = null;
-
-  @FindBy(how = ID, using = "newPatientCount_1")
-  private static WebElement newPatientSecondProduct = null;
 
   @FindBy(how = ID, using = "maxStockQuantity_0")
   private static WebElement maximumStockQuantity = null;
@@ -95,9 +80,6 @@ public class InitiateRnRPage extends RequisitionPage {
 
   @FindBy(how = ID, using = "quantityRequested_0")
   private static WebElement requestedQuantityFirstProduct = null;
-
-  @FindBy(how = ID, using = "quantityRequested_1")
-  private static WebElement requestedQuantitySecondProduct = null;
 
   @FindBy(how = ID, using = "normalizedConsumption_0")
   private static WebElement adjustedTotalConsumptionFirstProduct = null;
@@ -117,14 +99,8 @@ public class InitiateRnRPage extends RequisitionPage {
   @FindBy(how = ID, using = "price_0")
   private static WebElement pricePerPackForFirstProduct = null;
 
-  @FindBy(how = ID, using = "price_1")
-  private static WebElement pricePerPackForSecondProduct = null;
-
   @FindBy(how = ID, using = "packsToShip_0")
   private static WebElement packsToShipForFirstProduct = null;
-
-  @FindBy(how = ID, using = "packsToShip_1")
-  private static WebElement packsToShipForSecondProduct = null;
 
   @FindBy(how = ID, using = "price_0")
   private static WebElement pricePerPackNonFullSupply = null;
@@ -149,9 +125,6 @@ public class InitiateRnRPage extends RequisitionPage {
 
   @FindBy(how = ID, using = "stockOutDays_0")
   private static WebElement totalStockOutDaysFirstProduct = null;
-
-  @FindBy(how = ID, using = "stockOutDays_1")
-  private static WebElement totalStockOutDaysSecondProduct = null;
 
   @FindBy(how = ID, using = "dividedCost")
   private static WebElement showRnrCostDetailsIcon = null;
@@ -430,7 +403,6 @@ public class InitiateRnRPage extends RequisitionPage {
     String labelAdj = testWebDriver.getText(adjList);
 
     assertEquals("Transfer In", labelAdj.trim());
-
     lossesAndAdjustmentsDone.click();
   }
 
@@ -540,7 +512,6 @@ public class InitiateRnRPage extends RequisitionPage {
     String actualPacksToShip = testWebDriver.getText(packsToShip);
     testWebDriver.waitForElementToAppear(pricePerPack);
     String actualPricePerPack = pricePerPack.getText().substring(1);
-
     return calculateTotalCost(actualPacksToShip, actualPricePerPack);
   }
 
@@ -774,7 +745,6 @@ public class InitiateRnRPage extends RequisitionPage {
   }
 
   public void verifyAllFieldsDisabled() {
-
     assertFalse("beginningBalanceFirstProduct should be disabled", beginningBalanceFirstProduct.isEnabled());
     assertFalse("quantityReceivedFirstProduct should be disabled", quantityReceivedFirstProduct.isEnabled());
     assertFalse("quantityDispensedFirstProduct should be disabled", quantityDispensedFirstProduct.isEnabled());

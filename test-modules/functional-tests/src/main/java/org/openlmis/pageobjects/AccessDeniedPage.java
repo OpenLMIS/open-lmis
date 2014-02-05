@@ -32,5 +32,4 @@ public class AccessDeniedPage extends Page {
   public String getAccessDeniedText() {
     return accessDeniedHeader.getText();
   }
-
 }

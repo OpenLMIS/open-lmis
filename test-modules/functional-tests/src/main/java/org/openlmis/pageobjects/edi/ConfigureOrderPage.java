@@ -85,7 +85,7 @@ public class ConfigureOrderPage extends Page {
   private static WebElement addNewButton = null;
 
   @FindBy(how = XPATH, using = "//div[@id='s2id_autogen19']/a/div/b")
-  private static WebElement periodSelectBoxClickableLink = null;
+  private static WebElement periodSelectBoxClickAbleLink = null;
 
   @FindBy(how = XPATH, using = "//div[@id='select2-drop']/div/input")
   private static WebElement periodSelectBoxTextField = null;
@@ -94,7 +94,7 @@ public class ConfigureOrderPage extends Page {
   private static WebElement periodSelectBoxSelectableElement = null;
 
   @FindBy(how = XPATH, using = "//div[@id='s2id_autogen21']/a/div/b")
-  private static WebElement orderDateSelectBoxClickableLink = null;
+  private static WebElement orderDateSelectBoxClickAbleLink = null;
 
   @FindBy(how = XPATH, using = "//div[@id='select2-drop']/div/input")
   private static WebElement orderDateSelectBoxTextField = null;
@@ -137,8 +137,8 @@ public class ConfigureOrderPage extends Page {
   }
 
   public void selectValueFromPeriodDropDown(String value) {
-    testWebDriver.waitForElementToAppear(periodSelectBoxClickableLink);
-    periodSelectBoxClickableLink.click();
+    testWebDriver.waitForElementToAppear(periodSelectBoxClickAbleLink);
+    periodSelectBoxClickAbleLink.click();
     testWebDriver.waitForElementToAppear(periodSelectBoxTextField);
     sendKeys(periodSelectBoxTextField, value);
     testWebDriver.waitForElementToAppear(periodSelectBoxSelectableElement);
@@ -146,8 +146,8 @@ public class ConfigureOrderPage extends Page {
   }
 
   public void selectValueFromOrderDateDropDown(String value) {
-    testWebDriver.waitForElementToAppear(orderDateSelectBoxClickableLink);
-    orderDateSelectBoxClickableLink.click();
+    testWebDriver.waitForElementToAppear(orderDateSelectBoxClickAbleLink);
+    orderDateSelectBoxClickAbleLink.click();
     testWebDriver.waitForElementToAppear(orderDateSelectBoxTextField);
     sendKeys(orderDateSelectBoxTextField, value);
     testWebDriver.waitForElementToAppear(orderDateSelectBoxSelectableElement);

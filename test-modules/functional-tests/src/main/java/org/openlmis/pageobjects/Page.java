@@ -61,7 +61,6 @@ public abstract class Page {
       Thread.sleep(3000);
 
     } catch (AWTException e) {
-
       e.printStackTrace();
     }
   }

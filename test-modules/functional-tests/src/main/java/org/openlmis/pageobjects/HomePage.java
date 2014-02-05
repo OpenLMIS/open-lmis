@@ -216,7 +216,6 @@ public class HomePage extends Page {
     assertEquals(facilityHeader.getText().trim(), headingToVerify);
   }
 
-
   public void verifyAdminTabs() {
     testWebDriver.waitForElementToAppear(facilitiesTab);
     assertTrue(facilitiesTab.isDisplayed());
@@ -224,7 +223,6 @@ public class HomePage extends Page {
     assertTrue(schedulesTab.isDisplayed());
     assertTrue(usersTab.isDisplayed());
   }
-
 
   public TemplateConfigPage selectProgramToConfigTemplate(String programme) {
     testWebDriver.waitForElementToAppear(AdministrationMenuItem);
@@ -235,7 +233,6 @@ public class HomePage extends Page {
     testWebDriver.keyPress(RnRTemplateConfigTab);
     testWebDriver.waitForElementToAppear(testWebDriver.getElementById(programme));
     testWebDriver.getElementById(programme).click();
-
     return new TemplateConfigPage(testWebDriver);
   }
 
@@ -246,7 +243,6 @@ public class HomePage extends Page {
     testWebDriver.keyPress(TemplateConfigTab);
     testWebDriver.waitForElementToAppear(ediFileTab);
     testWebDriver.keyPress(ediFileTab);
-
     return new ConfigureEDIPage(testWebDriver);
   }
 
@@ -258,7 +254,6 @@ public class HomePage extends Page {
     testWebDriver.waitForElementToAppear(RegimenTemplateConfigTab);
     testWebDriver.keyPress(RegimenTemplateConfigTab);
     testWebDriver.waitForElementToAppear(RegimenTemplateHeader);
-
     return new RegimenTemplateConfigPage(testWebDriver);
   }
 
@@ -300,7 +295,6 @@ public class HomePage extends Page {
     return new InitiateRnRPage(testWebDriver);
   }
 
-
   public ViewRequisitionPage navigateViewRequisition() {
     testWebDriver.sleep(1000);
     testWebDriver.waitForElementToAppear(requisitionMenuItem);
@@ -328,7 +322,6 @@ public class HomePage extends Page {
     return ManageFacilityPage.getInstance(testWebDriver);
   }
 
-
   public RolesPage navigateRoleAssignments() {
     testWebDriver.waitForElementToAppear(AdministrationMenuItem);
     testWebDriver.keyPress(AdministrationMenuItem);
@@ -355,7 +348,6 @@ public class HomePage extends Page {
     testWebDriver.waitForElementToAppear(schedulesTab);
     schedulesTab.click();
     return new ManageSchedulePage(testWebDriver);
-
   }
 
   public UserPage navigateToUser() {
@@ -366,7 +358,6 @@ public class HomePage extends Page {
     testWebDriver.waitForElementToAppear(usersTab);
     usersTab.click();
     return new UserPage(testWebDriver);
-
   }
 
   public ApprovePage navigateToApprove() {
@@ -376,7 +367,6 @@ public class HomePage extends Page {
     testWebDriver.waitForElementToAppear(approveLink);
     testWebDriver.keyPress(approveLink);
     return new ApprovePage(testWebDriver);
-
   }
 
   public ConvertOrderPage navigateConvertToOrder() {

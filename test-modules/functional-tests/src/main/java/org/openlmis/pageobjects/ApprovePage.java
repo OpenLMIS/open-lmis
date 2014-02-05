@@ -123,14 +123,12 @@ public class ApprovePage extends RequisitionPage {
     super(driver);
     PageFactory.initElements(new AjaxElementLocatorFactory(TestWebDriver.getDriver(), 10), this);
     testWebDriver.setImplicitWait(10);
-
   }
 
   public void verifyNoRequisitionPendingMessage() {
     testWebDriver.waitForElementToAppear(requisitionListHeader);
     assertTrue("NoRequisitionsPendingMessage is not displayed", NoRequisitionsPendingMessage.isDisplayed());
   }
-
 
   public String clickRequisitionPresentForApproval() {
     testWebDriver.waitForElementToAppear(requisitionListHeader);
@@ -143,17 +141,17 @@ public class ApprovePage extends RequisitionPage {
     assertTrue("No row of requisition is there for approval", firstRow.isDisplayed());
   }
 
-  public void verifyRnRHeader(String FCode, String FName, String FCstring, String program, String periodDetails, String geoZone, String parentgeoZone, String operatedBy, String facilityType) {
-
+  public void verifyRnRHeader(String FCode, String FName, String FCString, String program, String periodDetails, String geoZone,
+                              String parentGeoZone, String operatedBy, String facilityType) {
     testWebDriver.waitForElementToAppear(requisitionHeader);
     String headerText = testWebDriver.getText(requisitionHeader);
     assertTrue(headerText.contains("Report and Requisition for " + program + " (" + facilityType + ")"));
     String facilityText = testWebDriver.getText(facilityLabel);
-    assertTrue(facilityText.contains(FCode + FCstring + " - " + FName + FCstring));
+    assertTrue(facilityText.contains(FCode + FCString + " - " + FName + FCString));
 
     assertEquals(periodDetails.trim(), reportingPeriodInitRnRScreen.getText().trim());
     assertEquals(geoZone, geoZoneInitRnRScreen.getText().trim());
-    assertEquals(parentgeoZone, parentGeoZoneInitRnRScreen.getText().trim());
+    assertEquals(parentGeoZone, parentGeoZoneInitRnRScreen.getText().trim());
     assertEquals(operatedBy, operatedByInitRnRScreen.getText().trim());
   }
 
@@ -182,7 +180,6 @@ public class ApprovePage extends RequisitionPage {
     String actualRequestedOrderQuantity = requestedOrderQuantity.getText();
     String actualApproveQuantityNonFullSupply = testWebDriver.getAttribute(quantityApproved1, "value");
     assertEquals(actualApproveQuantityNonFullSupply, actualRequestedOrderQuantity);
-
   }
 
   public void verifyApprovedQuantityApprovedFromLowerHierarchy(String approvedQuantity) {
@@ -225,7 +222,6 @@ public class ApprovePage extends RequisitionPage {
       quantityApproved1.sendKeys("\u0008");
     quantityApproved1.sendKeys(approvedQuantity);
     remarks.click();
-
   }
 
   public void editNonFullSupplyApproveQuantity(String approvedQuantity) {
@@ -238,7 +234,6 @@ public class ApprovePage extends RequisitionPage {
       quantityApproved1.sendKeys("\u0008");
     quantityApproved1.sendKeys(approvedQuantity);
     remarks.click();
-
   }
 
   public String getApprovedQuantity() {
@@ -296,8 +291,6 @@ public class ApprovePage extends RequisitionPage {
 
     testWebDriver.waitForElementToAppear(totalRnrCost);
     assertEquals(String.valueOf(totalOverAllCost), totalRnrCost.getText().substring(1).trim());
-
-
   }
 
   public boolean approveQuantityVisible(int row) {
@@ -314,6 +307,4 @@ public class ApprovePage extends RequisitionPage {
   public String getPacksToShip() {
     return packsToShip.getText();
   }
-
-
 }

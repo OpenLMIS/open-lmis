@@ -20,6 +20,7 @@ import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
+import static com.thoughtworks.selenium.SeleneseTestCase.assertEquals;
 import static org.openqa.selenium.support.How.ID;
 import static org.openqa.selenium.support.How.XPATH;
 
@@ -77,16 +78,16 @@ public class ViewOrdersPage extends RequisitionPage {
   public void verifyOrderListElements(String program, long orderId, String facilityCodeName, String periodDetails, String supplyFacilityName, String orderStatus, boolean downloadLinkPresent) {
     testWebDriver.refresh();
     testWebDriver.waitForElementToAppear(programOnViewOrderScreen);
-    SeleneseTestNgHelper.assertEquals(programOnViewOrderScreen.getText().trim(), program);
-    SeleneseTestNgHelper.assertEquals(orderNumberOnViewOrdersScreen.getText().trim(), orderId);
-    SeleneseTestNgHelper.assertEquals(facilityCodeNameOnOrderScreen.getText().trim(), facilityCodeName);
-    SeleneseTestNgHelper.assertEquals(periodDetailsOnViewOrderScreen.getText().trim(), periodDetails);
-    SeleneseTestNgHelper.assertEquals(supplyDepotOnViewOrderScreen.getText().trim(), supplyFacilityName);
+    assertEquals(programOnViewOrderScreen.getText().trim(), program);
+    assertEquals(orderNumberOnViewOrdersScreen.getText().trim(), String.valueOf(orderId));
+    assertEquals(facilityCodeNameOnOrderScreen.getText().trim(), facilityCodeName);
+    assertEquals(periodDetailsOnViewOrderScreen.getText().trim(), periodDetails);
+    assertEquals(supplyDepotOnViewOrderScreen.getText().trim(), supplyFacilityName);
     SeleneseTestNgHelper.assertEquals(orderStatusOnViewOrderScreen.getText().trim(), orderStatus);
     if (downloadLinkPresent)
-      SeleneseTestNgHelper.assertTrue("'Download CSV' link should show up", downloadCSVLink.isDisplayed());
+      assertTrue("'Download CSV' link should show up", downloadCSVLink.isDisplayed());
     else
-      SeleneseTestNgHelper.assertTrue("'No products in this order' message should show up", noOrderMessage.isDisplayed());
+      assertTrue("'No products in this order' message should show up", noOrderMessage.isDisplayed());
   }
 
   public void downloadCSV() throws InterruptedException {

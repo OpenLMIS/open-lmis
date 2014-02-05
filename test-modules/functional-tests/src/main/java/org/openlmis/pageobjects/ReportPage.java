@@ -71,7 +71,6 @@ public class ReportPage extends RequisitionPage {
     super(driver);
     PageFactory.initElements(new AjaxElementLocatorFactory(TestWebDriver.getDriver(), 10), this);
     testWebDriver.setImplicitWait(10);
-
   }
 
   public void clickAddNewButton() {
@@ -105,7 +104,6 @@ public class ReportPage extends RequisitionPage {
     String uploadFilePath;
     uploadFilePath = this.getClass().getClassLoader().getResource(fileName).getFile();
     uploadField.sendKeys(uploadFilePath);
-
   }
 
   public void clickSaveButton() {
@@ -143,6 +141,4 @@ public class ReportPage extends RequisitionPage {
     testWebDriver.waitForElementToAppear(element);
     assertTrue("Report Name '" + reportName + "' should display in list", element.getText().trim().equalsIgnoreCase(reportName));
   }
-
-
 }

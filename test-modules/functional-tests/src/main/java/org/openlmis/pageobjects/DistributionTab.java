@@ -66,6 +66,8 @@ abstract public class DistributionTab extends Page {
 
   abstract public void navigate();
 
+  abstract public void verifyAllFieldsDisabled();
+
   public void verifyOverallIndicator(WebElement element, String color) {
     testWebDriver.sleep(500);
     assertEquals(colorMap.get(color.toLowerCase()), element.getCssValue("background-color"));
@@ -100,6 +102,4 @@ abstract public class DistributionTab extends Page {
     childCoverageTab.click();
     return new ChildCoveragePage(testWebDriver);
   }
-
-  public abstract void verifyAllFieldsDisabled();
 }

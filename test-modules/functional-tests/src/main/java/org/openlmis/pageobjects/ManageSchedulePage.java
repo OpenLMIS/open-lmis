@@ -71,9 +71,7 @@ public class ManageSchedulePage extends Page {
     super(driver);
     PageFactory.initElements(new AjaxElementLocatorFactory(TestWebDriver.getDriver(), 10), this);
     testWebDriver.setImplicitWait(10);
-
   }
-
 
   public void createSchedule(String periodCode1, String periodCode2) {
     testWebDriver.waitForElementToAppear(addScheduleButton);
@@ -130,5 +128,4 @@ public class ManageSchedulePage extends Page {
     saveButton.click();
 
   }
-
 }

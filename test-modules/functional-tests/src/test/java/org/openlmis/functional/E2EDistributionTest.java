@@ -122,7 +122,7 @@ public class E2EDistributionTest extends TestCaseHelper {
     refrigeratorPage.clickFunctioningCorrectlyYesRadio();
     refrigeratorPage.enterValueInLowAlarmEvents("1");
     refrigeratorPage.enterValueInHighAlarmEvents("0");
-    refrigeratorPage.clickProblemSinceLastVisitDontKnowRadio();
+    refrigeratorPage.clickProblemSinceLastVisitDoNotKnowRadio();
 
     refrigeratorPage.verifyRefrigeratorColor("overall", "GREEN");
     refrigeratorPage.verifyRefrigeratorColor("individual", "GREEN");

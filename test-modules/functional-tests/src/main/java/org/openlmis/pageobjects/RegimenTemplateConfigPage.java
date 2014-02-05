@@ -129,7 +129,6 @@ public class RegimenTemplateConfigPage extends Page {
     else unSelectCheckBox(remarksCheckBox);
   }
 
-
   public boolean IsSelectedNoOfPatientsOnTreatmentCheckBox() {
     return noOfPatientsOnTreatmentCheckBox.isSelected();
   }
@@ -182,7 +181,6 @@ public class RegimenTemplateConfigPage extends Page {
     return remarksDataType.getText().trim();
   }
 
-
   public void AddNewRegimen(String category, String code, String name, Boolean isActive) {
     testWebDriver.waitForElementsToAppear(newRegimenCategoryDropDown, newRegimenCodeTextBox);
     testWebDriver.selectByVisibleText(newRegimenCategoryDropDown, category);
@@ -190,7 +188,6 @@ public class RegimenTemplateConfigPage extends Page {
     newRegimenNameTextBox.sendKeys(name);
     if (isActive) newRegimenActiveCheckBox.click();
     addButton.click();
-
   }
 
   public void clickReportingFieldTab() {
@@ -198,7 +195,6 @@ public class RegimenTemplateConfigPage extends Page {
     reportingFieldsTab.click();
     testWebDriver.waitForElementToAppear(noOfPatientsOnTreatmentCheckBox);
   }
-
 
   public void selectCheckBox(WebElement locator) {
     if (!locator.isSelected()) {

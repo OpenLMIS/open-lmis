@@ -205,7 +205,7 @@ public class ManageFacilityPage extends Page {
   private static WebElement calculatedIsaTextField = null;
 
   @FindBy(how = ID, using = "use-calculated-button0")
-  private static WebElement useCalculatedIsabutton = null;
+  private static WebElement useCalculatedIsaButton = null;
 
   @FindBy(how = XPATH, using = "//input[@value='Done']")
   private static WebElement doneIsaButton = null;
@@ -242,9 +242,10 @@ public class ManageFacilityPage extends Page {
   }
 
   public String enterValuesInFacilityAndClickSave(String facilityCodePrefix, String facilityNamePrefix,
-                                                  String program, String geoZone, String facilityTypeValue, String operatedByValue, String population) {
-
-    String date_time = enterValuesInFacility(facilityCodePrefix, facilityNamePrefix, program, geoZone, facilityTypeValue, operatedByValue, population, false);
+                                                  String program, String geoZone, String facilityTypeValue, String operatedByValue,
+                                                  String population) {
+    String date_time = enterValuesInFacility(facilityCodePrefix, facilityNamePrefix, program, geoZone, facilityTypeValue,
+      operatedByValue, population, false);
     saveButton.click();
     return date_time;
   }
@@ -387,8 +388,8 @@ public class ManageFacilityPage extends Page {
   }
 
   public void clickUseCalculatedIsaButton() {
-    testWebDriver.waitForElementToAppear(useCalculatedIsabutton);
-    useCalculatedIsabutton.click();
+    testWebDriver.waitForElementToAppear(useCalculatedIsaButton);
+    useCalculatedIsaButton.click();
   }
 
   public void verifyOverriddenIsa(String expectedIsa) {
@@ -515,7 +516,6 @@ public class ManageFacilityPage extends Page {
     assertEquals(testWebDriver.getAttribute(latitude, "value"), latitudeValue);
     assertEquals(testWebDriver.getAttribute(longitude, "value"), longitudeValue);
     assertEquals(testWebDriver.getAttribute(altitude, "value"), altitudeValue);
-
     assertTrue(removeSupportedProgram.isDisplayed());
   }
 

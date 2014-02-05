@@ -44,7 +44,6 @@ public class LoginPage extends Page {
 
   public LoginPage(TestWebDriver driver, String baseUrl) {
     super(driver);
-
     testWebDriver.setBaseURL(baseUrl);
     PageFactory.initElements(new AjaxElementLocatorFactory(TestWebDriver.getDriver(), 10), this);
     testWebDriver.setImplicitWait(10);
@@ -57,7 +56,6 @@ public class LoginPage extends Page {
     testWebDriver.setImplicitWait(10);
     testWebDriver.waitForElementToAppear(userNameField);
   }
-
 
   public HomePage loginAs(String username, String password) {
     testWebDriver.waitForElementToAppear(userNameField);
@@ -81,9 +79,7 @@ public class LoginPage extends Page {
     return langEnglish.getCssValue("color");
   }
 
-  public String getPortuguesColor()
-
-  {
+  public String getPortugueseColor() {
     testWebDriver.sleep(1500);
     testWebDriver.waitForElementToAppear(langPortuguese);
     return langPortuguese.getCssValue("color");
@@ -95,7 +91,7 @@ public class LoginPage extends Page {
     langEnglish.click();
   }
 
-  public void setLangAsPortugues() {
+  public void setLangAsPortuguese() {
     testWebDriver.sleep(1000);
     testWebDriver.waitForElementToAppear(langPortuguese);
     langPortuguese.click();
@@ -109,5 +105,4 @@ public class LoginPage extends Page {
   public String getLoginErrorMessage() {
     return loginErrorLabel.getText();
   }
-
 }

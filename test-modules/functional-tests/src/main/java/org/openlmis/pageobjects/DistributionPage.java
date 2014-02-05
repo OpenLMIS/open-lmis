@@ -107,7 +107,6 @@ public class DistributionPage extends Page {
     testWebDriver.waitForElementToAppear(viewLoadAmountButton);
     viewLoadAmountButton.click();
     testWebDriver.sleep(1000);
-
   }
 
   public void verifyDataAlreadyCachedMessage(String deliveryZone, String program, String period) {
@@ -173,7 +172,6 @@ public class DistributionPage extends Page {
     testWebDriver.waitForElementToAppear(saveSuccessMessageDiv);
     String message = String.format("Program \"%s\" is not supported by any facility in delivery zone \"%s\"",
       programFirst, deliveryZoneNameFirst);
-
     assertEquals(message, saveSuccessMessageDiv.getText());
   }
 
@@ -260,7 +258,6 @@ public class DistributionPage extends Page {
   public void verifyDeleteConfirmMessageAndHeader() {
     assertEquals("Are you sure you want to delete this distribution? " +
       "Any data that has not been synced with the server will be lost.", deleteConfirmDialogMessage.getText());
-
     assertEquals("Delete distribution", deleteConfirmDialogHeader.getText());
   }
 

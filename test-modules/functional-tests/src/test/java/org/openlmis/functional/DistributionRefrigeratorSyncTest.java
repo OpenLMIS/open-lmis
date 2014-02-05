@@ -94,7 +94,7 @@ public class DistributionRefrigeratorSyncTest extends TestCaseHelper {
     refrigeratorPage.clickFunctioningCorrectlyYesRadio();
     refrigeratorPage.enterValueInLowAlarmEvents("1");
     refrigeratorPage.enterValueInHighAlarmEvents("0");
-    refrigeratorPage.clickProblemSinceLastVisitDontKnowRadio();
+    refrigeratorPage.clickProblemSinceLastVisitDoNotKnowRadio();
     refrigeratorPage.enterValueInNotesTextArea("miscellaneous");
     refrigeratorPage.clickDone();
     refrigeratorPage.verifyRefrigeratorColor("individual", "GREEN");

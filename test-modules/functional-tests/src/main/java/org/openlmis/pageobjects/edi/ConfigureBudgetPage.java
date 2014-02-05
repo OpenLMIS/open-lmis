@@ -25,7 +25,6 @@ import static org.openqa.selenium.support.How.XPATH;
 
 public class ConfigureBudgetPage extends Page {
 
-
   @FindBy(how = ID, using = "includeHeadersCheckbox")
   private static WebElement includeHeaders = null;
 
@@ -78,7 +77,7 @@ public class ConfigureBudgetPage extends Page {
   private static WebElement periodStartDateSelectBoxSelectableElement = null;
 
   @FindBy(how = XPATH, using = "//div[@id='s2id_autogen5']/a/div/b")
-  private static WebElement periodStartDateSelectBoxClickableLink = null;
+  private static WebElement periodStartDateSelectBoxClickAbleLink = null;
 
   @FindBy(how = XPATH, using = "//div[@id='s2id_autogen5']/a/span")
   private static WebElement periodStartDateSelectBoxDefaultSelected = null;
@@ -97,8 +96,8 @@ public class ConfigureBudgetPage extends Page {
   }
 
   public void selectValueFromPeriodStartDateDropDown(String value) {
-    testWebDriver.waitForElementToAppear(periodStartDateSelectBoxClickableLink);
-    periodStartDateSelectBoxClickableLink.click();
+    testWebDriver.waitForElementToAppear(periodStartDateSelectBoxClickAbleLink);
+    periodStartDateSelectBoxClickAbleLink.click();
     testWebDriver.waitForElementToAppear(periodStartDateSelectBoxTextField);
     sendKeys(periodStartDateSelectBoxTextField, value);
     testWebDriver.waitForElementToAppear(periodStartDateSelectBoxSelectableElement);

@@ -66,7 +66,7 @@ public class RefrigeratorPage extends DistributionTab {
   private static WebElement functioningCorrectlyNoRadio = null;
 
   @FindBy(how = ID, using = "functioningCorrectlyDontKnow0")
-  private static WebElement functioningCorrectlyDontKnowRadio = null;
+  private static WebElement functioningCorrectlyDoNotKnowRadio = null;
 
   @FindBy(how = ID, using = "functioningCorrectly0")
   private static WebElement functioningCorrectlyNR = null;
@@ -84,7 +84,7 @@ public class RefrigeratorPage extends DistributionTab {
   private static WebElement problemSinceLastVisitNoRadio = null;
 
   @FindBy(how = ID, using = "problemSinceLastVisitDontKnow0")
-  private static WebElement problemSinceLastVisitDontKnowRadio = null;
+  private static WebElement problemSinceLastVisitDoNotKnowRadio = null;
 
   @FindBy(how = ID, using = "problemSinceLastVisit0")
   private static WebElement problemSinceLastVisitNR = null;
@@ -108,7 +108,7 @@ public class RefrigeratorPage extends DistributionTab {
   private static WebElement functioningCorrectlyNoRadioForSecondRefrigerator = null;
 
   @FindBy(how = ID, using = "functioningCorrectlyDontKnow1")
-  private static WebElement functioningCorrectlyDontKnowRadioForSecondRefrigerator = null;
+  private static WebElement functioningCorrectlyDoNotKnowRadioForSecondRefrigerator = null;
 
   @FindBy(how = ID, using = "functioningCorrectly1")
   private static WebElement functioningCorrectlyNRForSecondRefrigerator = null;
@@ -126,7 +126,7 @@ public class RefrigeratorPage extends DistributionTab {
   private static WebElement problemSinceLastVisitNoRadioForSecondRefrigerator = null;
 
   @FindBy(how = ID, using = "problemSinceLastVisitDontKnow1")
-  private static WebElement problemSinceLastVisitDontKnowRadioForSecondRefrigerator = null;
+  private static WebElement problemSinceLastVisitDoNotKnowRadioForSecondRefrigerator = null;
 
   @FindBy(how = ID, using = "problemSinceLastVisit1")
   private static WebElement problemSinceLastVisitNRForSecondRefrigerator = null;
@@ -259,7 +259,7 @@ public class RefrigeratorPage extends DistributionTab {
     assertFalse("refrigeratorTemperatureTextField enabled.", refrigeratorTemperatureTextField.isEnabled());
     assertFalse("refrigeratorTemperatureNR enabled.", refrigeratorTemperatureNR.isEnabled());
 
-    assertFalse("functioningCorrectlyDontKnowRadio enabled.", functioningCorrectlyDontKnowRadio.isEnabled());
+    assertFalse("functioningCorrectlyDoNotKnowRadio enabled.", functioningCorrectlyDoNotKnowRadio.isEnabled());
     assertFalse("functioningCorrectlyNoRadio enabled.", functioningCorrectlyNoRadio.isEnabled());
     assertFalse("functioningCorrectlyNR enabled.", functioningCorrectlyNR.isEnabled());
     assertFalse("functioningCorrectlyYesRadio enabled.", functioningCorrectlyYesRadio.isEnabled());
@@ -270,7 +270,7 @@ public class RefrigeratorPage extends DistributionTab {
     assertFalse("highAlarmEventsTextField enabled.", highAlarmEventsTextField.isEnabled());
     assertFalse("highAlarmEventNR enabled.", highAlarmEventNR.isEnabled());
 
-    assertFalse("problemSinceLastVisitDontKnowRadio enabled.", problemSinceLastVisitDontKnowRadio.isEnabled());
+    assertFalse("problemSinceLastVisitDoNotKnowRadio enabled.", problemSinceLastVisitDoNotKnowRadio.isEnabled());
     assertFalse("problemSinceLastVisitNoRadio enabled.", problemSinceLastVisitNoRadio.isEnabled());
     assertFalse("problemSinceLastVisitNR enabled.", problemSinceLastVisitNR.isEnabled());
     assertFalse("problemSinceLastVisitYesRadio enabled.", problemSinceLastVisitYesRadio.isEnabled());
@@ -293,9 +293,9 @@ public class RefrigeratorPage extends DistributionTab {
     removeFocusFromElement();
   }
 
-  public void clickProblemSinceLastVisitDontKnowRadio() {
-    testWebDriver.waitForElementToAppear(problemSinceLastVisitDontKnowRadio);
-    problemSinceLastVisitDontKnowRadio.click();
+  public void clickProblemSinceLastVisitDoNotKnowRadio() {
+    testWebDriver.waitForElementToAppear(problemSinceLastVisitDoNotKnowRadio);
+    problemSinceLastVisitDoNotKnowRadio.click();
     removeFocusFromElement();
   }
 
@@ -377,9 +377,9 @@ public class RefrigeratorPage extends DistributionTab {
     removeFocusFromElement();
   }
 
-  public void clickFunctioningCorrectlyDontKnowRadio() {
-    testWebDriver.waitForElementToAppear(functioningCorrectlyDontKnowRadio);
-    functioningCorrectlyDontKnowRadio.click();
+  public void clickFunctioningCorrectlyDoNotKnowRadio() {
+    testWebDriver.waitForElementToAppear(functioningCorrectlyDoNotKnowRadio);
+    functioningCorrectlyDoNotKnowRadio.click();
     removeFocusFromElement();
   }
 
@@ -499,7 +499,7 @@ public class RefrigeratorPage extends DistributionTab {
     assertFalse("refrigeratorTemperatureTextField enabled.", refrigeratorTemperatureTextField.isEnabled());
     assertTrue("refrigeratorTemperatureNR enabled.", refrigeratorTemperatureNR.isEnabled());
 
-    assertFalse("functioningCorrectlyDontKnowRadio enabled.", functioningCorrectlyDontKnowRadio.isEnabled());
+    assertFalse("functioningCorrectlyDoNotKnowRadio enabled.", functioningCorrectlyDoNotKnowRadio.isEnabled());
     assertFalse("functioningCorrectlyNoRadio enabled.", functioningCorrectlyNoRadio.isEnabled());
     assertTrue("functioningCorrectlyNR enabled.", functioningCorrectlyNR.isEnabled());
     assertFalse("functioningCorrectlyYesRadio enabled.", functioningCorrectlyYesRadio.isEnabled());
@@ -510,7 +510,7 @@ public class RefrigeratorPage extends DistributionTab {
     assertFalse("highAlarmEventsTextField enabled.", highAlarmEventsTextField.isEnabled());
     assertTrue("highAlarmEventNR enabled.", highAlarmEventNR.isEnabled());
 
-    assertFalse("problemSinceLastVisitDontKnowRadio enabled.", problemSinceLastVisitDontKnowRadio.isEnabled());
+    assertFalse("problemSinceLastVisitDoNotKnowRadio enabled.", problemSinceLastVisitDoNotKnowRadio.isEnabled());
     assertFalse("problemSinceLastVisitNoRadio enabled.", problemSinceLastVisitNoRadio.isEnabled());
     assertTrue("problemSinceLastVisitNR enabled.", problemSinceLastVisitNR.isEnabled());
     assertFalse("problemSinceLastVisitYesRadio enabled.", problemSinceLastVisitYesRadio.isEnabled());

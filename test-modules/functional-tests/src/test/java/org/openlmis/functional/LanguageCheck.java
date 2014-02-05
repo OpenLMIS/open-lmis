@@ -44,16 +44,16 @@ public class LanguageCheck extends TestCaseHelper {
 
   @Test(groups = {"admin"})
   public void changeLanguageAsPortugueseOnLoginPage() {
-    loginPage.setLangAsPortugues();
-    verifyColorOfTextAsGray(loginPage.getPortuguesColor());
+    loginPage.setLangAsPortuguese();
+    verifyColorOfTextAsGray(loginPage.getPortugueseColor());
     verifyPageIdentifierLabelOnLoginPage("Entrar");
   }
 
   @Test(groups = {"admin"})
   public void changeLanguageAsPortugueseBeforeForgotPasswordPage() {
-    loginPage.setLangAsPortugues();
+    loginPage.setLangAsPortuguese();
     loginPage.clickForgotPasswordLink();
-    verifyColorOfTextAsGray(loginPage.getPortuguesColor());
+    verifyColorOfTextAsGray(loginPage.getPortugueseColor());
     verifyPageIdentifierLabelOnForgotPasswordPage("Submeter");
   }
 
@@ -68,8 +68,8 @@ public class LanguageCheck extends TestCaseHelper {
   @Test(groups = {"admin"})
   public void changeLanguageAsPortugueseOnForgotPasswordPage() {
     loginPage.clickForgotPasswordLink();
-    loginPage.setLangAsPortugues();
-    verifyColorOfTextAsGray(loginPage.getPortuguesColor());
+    loginPage.setLangAsPortuguese();
+    verifyColorOfTextAsGray(loginPage.getPortugueseColor());
     verifyPageIdentifierLabelOnForgotPasswordPage("Submeter");
   }
 

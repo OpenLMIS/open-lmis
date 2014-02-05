@@ -88,10 +88,10 @@ public class ConfigureShipmentPage extends Page {
   private WebElement shippedDateSelectBoxSelectableElement = null;
 
   @FindBy(how = XPATH, using = "//div[@id='s2id_autogen17']/a/div/b")
-  private WebElement packedDateSelectBoxClickableLink = null;
+  private WebElement packedDateSelectBoxClickAbleLink = null;
 
   @FindBy(how = XPATH, using = "//div[@id='s2id_autogen23']/a/div/b")
-  private WebElement shippedDateSelectBoxClickableLink = null;
+  private WebElement shippedDateSelectBoxClickAbleLink = null;
 
   @FindBy(how = XPATH, using = "//div[@id='s2id_autogen17']/a/span")
   private WebElement packedDateSelectBoxDefaultSelected = null;
@@ -118,8 +118,8 @@ public class ConfigureShipmentPage extends Page {
   }
 
   public void selectValueFromPackedDateDropDown(String value) {
-    testWebDriver.waitForElementToAppear(packedDateSelectBoxClickableLink);
-    packedDateSelectBoxClickableLink.click();
+    testWebDriver.waitForElementToAppear(packedDateSelectBoxClickAbleLink);
+    packedDateSelectBoxClickAbleLink.click();
     testWebDriver.waitForElementToAppear(packedDateSelectBoxTextField);
     sendKeys(packedDateSelectBoxTextField, value);
     testWebDriver.waitForElementToAppear(packedDateSelectBoxSelectableElement);
@@ -127,8 +127,8 @@ public class ConfigureShipmentPage extends Page {
   }
 
   public void selectValueFromShippedDateDropDown(String value) {
-    testWebDriver.waitForElementToAppear(shippedDateSelectBoxClickableLink);
-    shippedDateSelectBoxClickableLink.click();
+    testWebDriver.waitForElementToAppear(shippedDateSelectBoxClickAbleLink);
+    shippedDateSelectBoxClickAbleLink.click();
     testWebDriver.waitForElementToAppear(shippedDateSelectBoxTextField);
     sendKeys(shippedDateSelectBoxTextField, value);
     testWebDriver.waitForElementToAppear(shippedDateSelectBoxSelectableElement);

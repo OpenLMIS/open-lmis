@@ -100,12 +100,10 @@ public class ProgramProductISAPage extends Page {
   @FindBy(how = XPATH, using = "//div[@id='ISA-population']")
   private static WebElement programNameOnPopulationLabelOFConfigureISAFormulaWindow = null;
 
-
   public ProgramProductISAPage(TestWebDriver driver) {
     super(driver);
     PageFactory.initElements(new AjaxElementLocatorFactory(TestWebDriver.getDriver(), 10), this);
     testWebDriver.setImplicitWait(10);
-
   }
 
   public void fillProgramProductISA(String ratio, String dosesPerYear, String wastage, String bufferPercentage,
@@ -189,7 +187,6 @@ public class ProgramProductISAPage extends Page {
     testWebDriver.waitForElementToAppear(selectProgramSelectBox);
     testWebDriver.selectByVisibleText(selectProgramSelectBox, valueToBeSelected);
   }
-
 
   public String getProductsDisplayingOnConfigureProgramISAPage() {
     String productsLocator = "//div[@id='productPrimaryName']";
@@ -289,6 +286,4 @@ public class ProgramProductISAPage extends Page {
   public boolean verifyProgramProductISACancelButtonFieldOnISAModalWindowIsDisplayed() {
     return programProductISACancelButton.isDisplayed();
   }
-
-
 }

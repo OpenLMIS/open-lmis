@@ -79,7 +79,6 @@ public class PeriodsPage extends Page {
     testWebDriver.setImplicitWait(10);
   }
 
-
   public void createAndVerifyPeriods() {
     testWebDriver.waitForElementToAppear(namePeriod);
     testWebDriver.sleep(1000);
@@ -108,7 +107,6 @@ public class PeriodsPage extends Page {
     int diffInDays = compareTwoDates(actualStartDateCalender, actualEndDateList);
     assertEquals(String.valueOf(diffInDays), "1");
   }
-
 
   public void enterAndVerifyPeriodDetails(String name, String desc, String totalMonths, int indicator) {
     namePeriod.clear();
@@ -144,7 +142,6 @@ public class PeriodsPage extends Page {
       endDateThirdCalender.click();
       testWebDriver.sleep(100);
     }
-
 
     String actualNumberOfMonthsPeriods = numberOfMonthsPeriods.getText().trim();
     assertEquals(actualNumberOfMonthsPeriods, totalMonths);

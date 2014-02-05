@@ -177,7 +177,7 @@ public class ManageRefrigerator extends TestCaseHelper {
     Thread.sleep(1000);
     if (flag.equalsIgnoreCase("Yes")) refrigeratorPage.clickFunctioningCorrectlyYesRadio();
     else if (flag.equalsIgnoreCase("No")) refrigeratorPage.clickFunctioningCorrectlyNoRadio();
-    else if (flag.equalsIgnoreCase("Dont know")) refrigeratorPage.clickFunctioningCorrectlyDontKnowRadio();
+    else if (flag.equalsIgnoreCase("Dont know")) refrigeratorPage.clickFunctioningCorrectlyDoNotKnowRadio();
     else refrigeratorPage.clickFunctioningCorrectlyNR();
   }
 
@@ -186,7 +186,7 @@ public class ManageRefrigerator extends TestCaseHelper {
     refrigeratorPage = PageFactory.getInstanceOfRefrigeratorPage(testWebDriver);
     if (flag.equalsIgnoreCase("Yes")) refrigeratorPage.clickProblemSinceLastVisitYesRadio();
     else if (flag.equalsIgnoreCase("No")) refrigeratorPage.clickProblemSinceLastVisitNoRadio();
-    else if (flag.equalsIgnoreCase("Dont know")) refrigeratorPage.clickProblemSinceLastVisitDontKnowRadio();
+    else if (flag.equalsIgnoreCase("Dont know")) refrigeratorPage.clickProblemSinceLastVisitDoNotKnowRadio();
     else refrigeratorPage.clickProblemSinceLastVisitNR();
   }
 
