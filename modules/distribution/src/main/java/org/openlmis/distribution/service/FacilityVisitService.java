@@ -37,4 +37,8 @@ public class FacilityVisitService {
   public List<FacilityVisit> getUnSyncedFacilities(Long distributionId) {
     return repository.getUnSyncedFacilities(distributionId);
   }
+
+  public Integer getUnsyncedFacilityCountForDistribution(Long distributionId) {
+    return repository.getUnsyncedFacilityCountForDistribution(distributionId);
+  }
 }

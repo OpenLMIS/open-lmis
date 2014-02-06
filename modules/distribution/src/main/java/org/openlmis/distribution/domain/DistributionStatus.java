@@ -13,6 +13,7 @@ package org.openlmis.distribution.domain;
 public enum DistributionStatus {
 
   INITIATED,
-  COMPLETED
+  COMPLETED,
+  SYNCED
 
 }

@@ -20,6 +20,7 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.distribution.domain.Distribution;
+import org.openlmis.distribution.domain.DistributionStatus;
 import org.openlmis.distribution.domain.FacilityDistribution;
 import org.openlmis.distribution.domain.FacilityVisit;
 import org.openlmis.distribution.repository.DistributionRepository;
@@ -31,6 +32,8 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
+import static org.openlmis.distribution.domain.DistributionStatus.INITIATED;
+import static org.openlmis.distribution.domain.DistributionStatus.SYNCED;
 
 @Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
@@ -44,6 +47,9 @@ public class DistributionServiceTest {
 
   @Mock
   DistributionRepository repository;
+
+  @Mock
+  private FacilityVisitService facilityVisitService;
 
   @Test
   public void shouldCreateDistribution() throws Exception {
@@ -80,5 +86,27 @@ public class DistributionServiceTest {
     service.get(distribution);
 
     verify(repository).get(distribution);
+  }
+
+  @Test
+  public void shouldUpdateAndReturnDistributionStatusIfAllFacilitiesAreSynced() {
+    Long distributionId = 1L;
+    when(facilityVisitService.getUnsyncedFacilityCountForDistribution(distributionId)).thenReturn(0);
+
+    DistributionStatus distributionStatus = service.updateDistributionStatus(distributionId);
+
+    verify(repository).updateDistributionStatus(distributionId, SYNCED);
+    assertThat(distributionStatus, is(SYNCED));
+  }
+
+  @Test
+  public void shouldNotUpdateDistributionIfAllFacilitiesAreNotSynced() {
+    Long distributionId = 1L;
+    when(facilityVisitService.getUnsyncedFacilityCountForDistribution(distributionId)).thenReturn(1);
+
+    DistributionStatus distributionStatus = service.updateDistributionStatus(distributionId);
+
+    verify(repository, never()).updateDistributionStatus(distributionId, SYNCED);
+    assertThat(distributionStatus, is(INITIATED));
   }
 }

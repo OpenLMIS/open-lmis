@@ -48,4 +48,7 @@ public interface FacilityVisitMapper {
 
   @Select({"SELECT * FROM facility_visits WHERE distributionId = #{distributionId} AND synced = false"})
   List<FacilityVisit> getUnSyncedFacilities(Long distributionId);
+
+  @Select({"SELECT count(*) FROM facility_visits WHERE distributionId = #{distributionId} AND synced = false"})
+  Integer getUnsyncedFacilityCountForDistribution(Long distributionId);
 }

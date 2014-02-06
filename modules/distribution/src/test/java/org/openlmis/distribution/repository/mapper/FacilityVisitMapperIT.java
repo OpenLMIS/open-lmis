@@ -148,4 +148,21 @@ public class FacilityVisitMapperIT {
 
     assertThat(unSyncedFacilities, is(asList(facilityVisit2)));
   }
+
+  @Test
+  public void shouldGetCountOfUnsyncedFacilities() {
+    FacilityVisit facilityVisit1 = new FacilityVisit(facility, distribution);
+    facilityVisit1.setSynced(true);
+    mapper.insert(facilityVisit1);
+
+    Facility facility1 = make(a(defaultFacility, with(code, "F999")));
+    facilityMapper.insert(facility1);
+    FacilityVisit facilityVisit2 = new FacilityVisit(facility1, distribution);
+    facilityVisit2.setSynced(false);
+    mapper.insert(facilityVisit2);
+
+    Integer unsyncedFacilityCountForDistribution = mapper.getUnsyncedFacilityCountForDistribution(distribution.getId());
+
+    assertThat(unsyncedFacilityCountForDistribution, is(1));
+  }
 }
