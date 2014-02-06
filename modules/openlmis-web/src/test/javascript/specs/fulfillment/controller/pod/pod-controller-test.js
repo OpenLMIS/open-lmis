@@ -131,6 +131,7 @@ describe('PODController', function () {
       $httpBackend.flush();
       expect(scope.podForm.$setPristine).toHaveBeenCalled();
       expect(scope.message).toEqual('successful')
+      expect(scope.error).toBeUndefined()
     });
 
     it('should not save pod if form not dirty', function () {
@@ -159,6 +160,7 @@ describe('PODController', function () {
       $httpBackend.flush();
 
       expect(scope.error).toEqual('error');
+      expect(scope.message).toBeUndefined()
       expect(scope.podForm.$setPristine).not.toHaveBeenCalled();
     });
 
@@ -219,6 +221,7 @@ describe('PODController', function () {
       $httpBackend.flush();
 
       expect(scope.message).toEqual('successful');
+      expect(scope.order.alreadyConfirmed).toBeTruthy();
     });
 
     it('should not submit pod if not confirmed', function () {
@@ -234,6 +237,7 @@ describe('PODController', function () {
 
       $httpBackend.verifyNoOutstandingExpectation();
       $httpBackend.verifyNoOutstandingRequest();
+      expect(scope.order.alreadyConfirmed).toBeFalsy();
     });
 
     it('should validate pod before submitting and not proceed if invalid', function () {
@@ -265,6 +269,7 @@ describe('PODController', function () {
       $httpBackend.flush();
 
       expect(scope.error).toEqual('error');
+      expect(scope.message).toBeUndefined();
     });
 
   })

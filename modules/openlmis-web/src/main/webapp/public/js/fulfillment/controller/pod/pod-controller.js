@@ -50,6 +50,7 @@ function PODController($scope, orderPOD, OrderPOD, pageSize, $routeParams, $loca
     }
     OrderPOD.update({id: $routeParams.id}, {podLineItems: $scope.pageLineItems}, function (data) {
       $scope.message = data.success;
+      $scope.error = undefined;
       $scope.podForm.$setPristine();
       saveDefer.resolve();
     }, function (response) {
@@ -88,6 +89,8 @@ function PODController($scope, orderPOD, OrderPOD, pageSize, $routeParams, $loca
       confirm().then(function () {
         OrderPOD.update({id: $routeParams.id, action: 'submit'}, function (data) {
           $scope.message = data.success;
+          $scope.order.alreadyConfirmed = true;
+          $scope.error = undefined;
         }, function (response) {
           $scope.error = response.data.error;
         });
