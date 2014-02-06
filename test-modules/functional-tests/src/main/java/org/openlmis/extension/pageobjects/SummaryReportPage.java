@@ -82,7 +82,7 @@ public class SummaryReportPage extends Page {
     @FindBy(how = ID, using = "xls-button")
     private static WebElement XLSButton;
 
-    public SummaryReportPage(TestWebDriver driver) throws IOException {
+    public SummaryReportPage(TestWebDriver driver) {
         super(driver);
         PageFactory.initElements(new AjaxElementLocatorFactory(testWebDriver.getDriver(), 10), this);
         testWebDriver.setImplicitWait(10);

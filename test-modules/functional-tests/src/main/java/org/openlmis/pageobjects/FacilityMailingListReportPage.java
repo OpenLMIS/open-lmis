@@ -63,7 +63,7 @@ public class FacilityMailingListReportPage extends Page {
     private String facilityCodeFilter;
     private String facilityTypeFilter;
 
-    public FacilityMailingListReportPage(TestWebDriver driver) throws IOException {
+    public FacilityMailingListReportPage(TestWebDriver driver)  {
         super(driver);
         PageFactory.initElements(new AjaxElementLocatorFactory(testWebDriver.getDriver(), 10), this);
         testWebDriver.setImplicitWait(10);

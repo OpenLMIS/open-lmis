@@ -76,7 +76,7 @@ public class OrderReportPage extends Page {
     @FindBy(how = XPATH, using = "//a[contains(text(),'Emergency')]")
     private static WebElement emergency;
 
-    public OrderReportPage(TestWebDriver driver) throws IOException {
+    public OrderReportPage(TestWebDriver driver)   {
         super(driver);
         PageFactory.initElements(new AjaxElementLocatorFactory(testWebDriver.getDriver(), 10), this);
         testWebDriver.setImplicitWait(10);

@@ -25,10 +25,6 @@ import java.io.IOException;
 @Listeners
 public class E2EManageSupervisoryNodes extends TestCaseHelper {
 
-    @BeforeMethod(groups = {"functional2"})
-    public void setup() throws Exception {
-        super.setup();
-    }
 
     @Test(enabled=true, groups = {"functional2"},dataProvider = "Data-Provider-Function-Positive")
     public void testE2EManageSupervisoryNodesAddNewSupGroup (String [] credentials ) throws IOException{

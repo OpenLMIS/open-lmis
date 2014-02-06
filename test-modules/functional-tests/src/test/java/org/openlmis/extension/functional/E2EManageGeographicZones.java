@@ -25,11 +25,6 @@ import java.io.*;
 @Listeners
 public class E2EManageGeographicZones extends TestCaseHelper {
 
-    @BeforeMethod(groups = {"functional2"})
-    public void setup() throws Exception {
-        super.setup();
-    }
-
     @Test(groups = {"functional2"},dataProvider = "Data-Provider-Function-Positive")
     public void testE2EManageGeographicZonesAddFunctionality (String [] credentials ) throws IOException{
         LoginPage loginPage = new LoginPage(testWebDriver,baseUrlGlobal);

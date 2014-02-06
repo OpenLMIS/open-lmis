@@ -48,7 +48,7 @@ public class FacilityListingReportPage extends Page {
   private String facilityTypeFilter;
   private String statusFilter;
 
-  public FacilityListingReportPage(TestWebDriver driver) throws IOException {
+  public FacilityListingReportPage(TestWebDriver driver) {
     super(driver);
     PageFactory.initElements(new AjaxElementLocatorFactory(testWebDriver.getDriver(), 10), this);
     testWebDriver.setImplicitWait(10);

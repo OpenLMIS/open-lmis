@@ -747,18 +747,18 @@ public class DBWrapper {
     update("update requisitions set createdBy= (select id from users where username = '" + username + "') , modifiedBy= (select id from users where username = '" + username + "');");
   }
 
-  public void updateRequisitionStatus(String status) throws IOException, SQLException {
+  public void updateRequisitionStatus(String status) throws SQLException {
     update("update requisitions set status='" + status + "';");
     ResultSet rs = query("select id from requisitions ;");
     while (rs.next()) {
       update("insert into requisition_status_changes(rnrId, status, createdBy, modifiedBy) values(" + rs.getString("id") + ", '" + status + "', " +
-          "(select id from users where username = 'Admin123'), (select id from users where username = 'Admin123'));");
+        "(select id from users where username = 'Admin123'), (select id from users where username = 'Admin123'));");
     }
     update("update requisitions set supervisorynodeid=(select id from supervisory_nodes where code='N1');");
     update("update requisitions set createdBy= (select id from users where username = 'Admin123') , modifiedBy= (select id from users where username = 'Admin123');");
   }
 
-  public String getSupplyFacilityName(String supervisoryNode, String programCode) throws IOException, SQLException {
+
   public String getSupplyFacilityName(String supervisoryNode, String programCode) throws SQLException {
     String facilityName = null;
     ResultSet rs = query("select name from facilities where id=" +

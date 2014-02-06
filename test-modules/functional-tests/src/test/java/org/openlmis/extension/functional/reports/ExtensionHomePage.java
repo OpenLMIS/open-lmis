@@ -12,6 +12,7 @@ import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 
 import java.io.IOException;
+import java.sql.SQLException;
 
 public class ExtensionHomePage extends HomePage{
 
@@ -58,7 +59,7 @@ public class ExtensionHomePage extends HomePage{
   private static WebElement facilityListingReportPageHeader;
 
 
-  public ExtensionHomePage(TestWebDriver driver) throws IOException {
+  public ExtensionHomePage(TestWebDriver driver)  {
     super(driver);
     PageFactory.initElements(new AjaxElementLocatorFactory(TestWebDriver.getDriver(), 10), this);
     testWebDriver.setImplicitWait(10);
@@ -66,7 +67,7 @@ public class ExtensionHomePage extends HomePage{
 
 
 
-  public FacilityMailingListReportPage navigateViewFacilityMailingListReport() throws IOException {
+  public FacilityMailingListReportPage navigateViewFacilityMailingListReport() {
     SeleneseTestNgHelper.assertTrue(ReportsMenuItem.isDisplayed());
     testWebDriver.waitForElementToAppear(ReportsMenuItem);
     testWebDriver.keyPress(ReportsMenuItem);
@@ -78,7 +79,7 @@ public class ExtensionHomePage extends HomePage{
     return new FacilityMailingListReportPage(testWebDriver);
   }
 
-  public FacilityListingReportPage navigateViewFacilityListingReport() throws IOException {
+  public FacilityListingReportPage navigateViewFacilityListingReport() {
     SeleneseTestNgHelper.assertTrue(ReportsMenuItem.isDisplayed());
     testWebDriver.waitForElementToAppear(ReportsMenuItem);
     testWebDriver.keyPress(ReportsMenuItem);
@@ -87,7 +88,7 @@ public class ExtensionHomePage extends HomePage{
     return new FacilityListingReportPage(testWebDriver);
   }
 
-  public SummaryReportPage navigateViewSummaryReport() throws IOException{
+  public SummaryReportPage navigateViewSummaryReport() {
     SeleneseTestNgHelper.assertTrue(ReportsMenuItem.isDisplayed());
     testWebDriver.waitForElementToAppear(ReportsMenuItem);
     testWebDriver.keyPress(ReportsMenuItem);
@@ -98,7 +99,7 @@ public class ExtensionHomePage extends HomePage{
     return new SummaryReportPage(testWebDriver);
   }
 
-  public NonReportingFacilityReportPage navigateViewNonReportingFacilityReport() throws IOException{
+  public NonReportingFacilityReportPage navigateViewNonReportingFacilityReport(){
     SeleneseTestNgHelper.assertTrue(ReportsMenuItem.isDisplayed());
     testWebDriver.waitForElementToAppear(ReportsMenuItem);
     testWebDriver.keyPress(ReportsMenuItem);
@@ -109,7 +110,7 @@ public class ExtensionHomePage extends HomePage{
     return new NonReportingFacilityReportPage(testWebDriver);
   }
 
-  public AverageConsumptionReportPage navigateViewAverageConsumptionReport() throws IOException{
+  public AverageConsumptionReportPage navigateViewAverageConsumptionReport() {
 
     SeleneseTestNgHelper.assertTrue(ReportsMenuItem.isDisplayed());
     testWebDriver.waitForElementToAppear(ReportsMenuItem);
@@ -121,7 +122,7 @@ public class ExtensionHomePage extends HomePage{
     return new AverageConsumptionReportPage(testWebDriver);
   }
 
-  public AdjustmentSummaryReportPage navigateViewAdjustmentSummaryReport() throws IOException{
+  public AdjustmentSummaryReportPage navigateViewAdjustmentSummaryReport(){
 
     SeleneseTestNgHelper.assertTrue(ReportsMenuItem.isDisplayed());
     testWebDriver.waitForElementToAppear(ReportsMenuItem);
@@ -133,7 +134,7 @@ public class ExtensionHomePage extends HomePage{
     return new AdjustmentSummaryReportPage(testWebDriver);
   }
 
-  public StockedOutReportPage navigateViewStockedOutReport() throws IOException{
+  public StockedOutReportPage navigateViewStockedOutReport() {
 
     SeleneseTestNgHelper.assertTrue(ReportsMenuItem.isDisplayed());
     testWebDriver.waitForElementToAppear(ReportsMenuItem);
@@ -145,7 +146,7 @@ public class ExtensionHomePage extends HomePage{
     return new StockedOutReportPage(testWebDriver);
   }
 
-  public OrderReportPage navigateViewOrderReport() throws IOException{
+  public OrderReportPage navigateViewOrderReport() {
 
     SeleneseTestNgHelper.assertTrue(ReportsMenuItem.isDisplayed());
     testWebDriver.waitForElementToAppear(ReportsMenuItem);
@@ -158,7 +159,7 @@ public class ExtensionHomePage extends HomePage{
   }
 
 
-  public SupplyStatusByFacilityPage navigateViewSupplyStatusByFacilityPage() throws IOException{
+  public SupplyStatusByFacilityPage navigateViewSupplyStatusByFacilityPage(){
 
     SeleneseTestNgHelper.assertTrue(ReportsMenuItem.isDisplayed());
     testWebDriver.waitForElementToAppear(ReportsMenuItem);
@@ -174,7 +175,7 @@ public class ExtensionHomePage extends HomePage{
 
 
 
-  public StockImbalanceByFacilityPage navigateViewStockImbalanceByFacilityPage() throws IOException{
+  public StockImbalanceByFacilityPage navigateViewStockImbalanceByFacilityPage() {
 
     SeleneseTestNgHelper.assertTrue(ReportsMenuItem.isDisplayed());
     testWebDriver.waitForElementToAppear(ReportsMenuItem);

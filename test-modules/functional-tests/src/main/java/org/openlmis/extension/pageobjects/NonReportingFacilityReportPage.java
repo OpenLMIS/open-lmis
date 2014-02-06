@@ -68,7 +68,7 @@ public class NonReportingFacilityReportPage extends Page {
   @FindBy(how = ID, using = "xls-button")
   private static WebElement XLSButton;
 
-  public NonReportingFacilityReportPage(TestWebDriver driver) throws IOException {
+  public NonReportingFacilityReportPage(TestWebDriver driver)  {
     super(driver);
     PageFactory.initElements(new AjaxElementLocatorFactory(testWebDriver.getDriver(), 10), this);
     testWebDriver.setImplicitWait(10);

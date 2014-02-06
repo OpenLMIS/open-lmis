@@ -32,7 +32,7 @@ public class ReportLoginPage extends LoginPage {
     super(driver, baseUrl);
   }
 
-  public ExtensionHomePage loginAs(String username, String password) throws IOException {
+  public ExtensionHomePage loginAs(String username, String password){
     testWebDriver.waitForElementToAppear(userNameField);
     testWebDriver.waitForElementToAppear(passwordField);
     userNameField.sendKeys(username);

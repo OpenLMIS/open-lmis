@@ -68,7 +68,7 @@ public class SupplyStatusByFacilityPage extends Page {
     private String facilityCodeFilter;
     private String facilityTypeFilter;
 
-    public SupplyStatusByFacilityPage(TestWebDriver driver) throws IOException {
+    public SupplyStatusByFacilityPage(TestWebDriver driver)  {
         super(driver);
         PageFactory.initElements(new AjaxElementLocatorFactory(testWebDriver.getDriver(), 10), this);
         testWebDriver.setImplicitWait(10);
