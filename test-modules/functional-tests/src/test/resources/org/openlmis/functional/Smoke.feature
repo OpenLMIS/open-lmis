@@ -730,8 +730,8 @@ Feature: Smoke Tests
     Then I check confirm sync message as "F10-Village Dispensary"
     When I done sync message
     And I view visit information in DB for facility "F10":
-      | observations     | confirmedByName | confirmedByTitle | verifiedByName | verifiedByTitle |
-      | some observation | samuel          | fc               | Verifier       | XYZ             |
+      | observations     | confirmedByName | confirmedByTitle | verifiedByName | verifiedByTitle | vehicleId |
+      | some observation | samuel          | fc               | Verifier       | XYZ             | null      |
     And I view epi use data in DB for facility "F10" and product group "penta":
       | distributed | expirationDate | loss | received | firstOfMonth | endOfMonth |
       | 16          | 11/2012        | 1    | 10       | 12           | 5          |

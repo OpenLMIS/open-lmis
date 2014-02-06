@@ -29,10 +29,8 @@ import org.testng.annotations.*;
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
 import static com.thoughtworks.selenium.SeleneseTestBase.fail;
@@ -344,6 +342,10 @@ public class ManageDistribution extends TestCaseHelper {
       assertEquals(facilityVisitDetails.get("confirmedByTitle"), map.get("confirmedByTitle"));
       assertEquals(facilityVisitDetails.get("verifiedByName"), map.get("verifiedByName"));
       assertEquals(facilityVisitDetails.get("verifiedByTitle"), map.get("verifiedByTitle"));
+      assertEquals(facilityVisitDetails.get("visited"), "t");
+      assertEquals(facilityVisitDetails.get("visitDate"), new SimpleDateFormat("yyyy-MM").format(new Date()) + "-01 00:00:00");
+      if (!map.get("vehicleId").equals("null"))
+        assertEquals(facilityVisitDetails.get("vehicleId"), map.get("vehicleId"));
     }
   }
 
