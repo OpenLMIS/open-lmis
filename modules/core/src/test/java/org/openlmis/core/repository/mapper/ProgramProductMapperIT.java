@@ -149,23 +149,6 @@ public class ProgramProductMapperIT {
   }
 
   @Test
-  public void shouldGetActiveProgramProductsByProgram() {
-    ProgramProduct programProduct = new ProgramProduct(program, product, 10, false);
-    programProductMapper.insert(programProduct);
-
-    Product activeProduct = make(a(ProductBuilder.defaultProduct, with(code, "P5000") ,with(displayOrder, 1)));
-    activeProduct.setCategory(productCategory);
-    productMapper.insert(activeProduct);
-    ProgramProduct activeProgramProduct = new ProgramProduct(program, activeProduct, 10, true);
-    programProductMapper.insert(activeProgramProduct);
-
-    List<ProgramProduct> programProducts = programProductMapper.getActiveByProgram(program.getId());
-
-    assertThat(programProducts.size(), is(1));
-    assertThat(programProducts.get(0).getId(), is(activeProgramProduct.getId()));
-  }
-
-  @Test
   public void shouldGetNonFullSuppProgramProductsByProgram() {
     Product product1 = make(a(ProductBuilder.defaultProduct, with(ProductBuilder.code, "P2"), with(fullSupply, false)));
     productMapper.insert(product1);
@@ -228,7 +211,7 @@ public class ProgramProductMapperIT {
 
     facilityApprovedProductMapper.insert(facilityTypeApprovedProduct);
 
-    List<ProgramProduct> returnedProducts = programProductMapper.getByProgramIdAndFacilityCode(program.getId(), facilityTypeCode);
+    List<ProgramProduct> returnedProducts = programProductMapper.getByProgramIdAndFacilityTypeCode(program.getId(), facilityTypeCode);
 
     assertThat(returnedProducts.size(), is(1));
     assertContainsProgramProduct(returnedProducts, programProduct);
@@ -248,7 +231,7 @@ public class ProgramProductMapperIT {
     programProductMapper.insert(programProduct);
     programProductMapper.insert(programProduct2);
 
-    List<ProgramProduct> returnedProducts = programProductMapper.getByProgramIdAndFacilityCode(program.getId(), null);
+    List<ProgramProduct> returnedProducts = programProductMapper.getByProgramIdAndFacilityTypeCode(program.getId(), null);
 
     assertThat(returnedProducts.size(), is(2));
     assertContainsProgramProduct(returnedProducts, programProduct);

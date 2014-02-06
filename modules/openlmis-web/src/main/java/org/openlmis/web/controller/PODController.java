@@ -22,6 +22,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -73,15 +74,25 @@ public class PODController extends BaseController {
 
   @RequestMapping(value = "/pods/{id}", method = PUT, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'MANAGE_POD')")
-  public ResponseEntity<OpenLmisResponse> save(OrderPOD orderPOD, HttpServletRequest request) {
+  public ResponseEntity<OpenLmisResponse> save(@RequestBody OrderPOD orderPOD, @PathVariable Long id, HttpServletRequest request) {
     try {
       orderPOD.setModifiedBy(loggedInUserId(request));
-      OrderPOD savedPod = service.save(orderPOD);
-      ResponseEntity<OpenLmisResponse> response = success("msg.pod.save.success");
-      response.getBody().addData(ORDER_POD, savedPod);
-      return response;
+      orderPOD.setId(id);
+      service.save(orderPOD);
+      return success("msg.pod.save.success");
     } catch (DataException e) {
       return error(e, HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  @RequestMapping(value = "/pods/submit/{id}", method = PUT, headers = ACCEPT_JSON)
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'MANAGE_POD')")
+  public ResponseEntity<OpenLmisResponse> submit(@PathVariable Long id, HttpServletRequest request) {
+    try {
+      service.submit(id, loggedInUserId(request));
+      return success("msg.pod.submit.success");
+    } catch (DataException exception) {
+      return error(exception, HttpStatus.BAD_REQUEST);
     }
   }
 }

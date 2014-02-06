@@ -10,7 +10,7 @@
 
 function DistributionListController($scope, SharedDistributions, SyncFacilityDistributionData, $q, distributionService, $dialog) {
   angular.extend($scope, DistributionStatus);
-  var SYNC_COMPLETE = 'label.distribution.synchronization.complete';
+  var SYNC_STATUS = 'label.distribution.synchronization.status';
   var SYNC_IN_PROGRESS = 'label.distribution.synchronization.progress';
   var totalFacilityCount;
 
@@ -47,6 +47,7 @@ function DistributionListController($scope, SharedDistributions, SyncFacilityDis
             } else {
               facilityDistribution.status = $scope.DUPLICATE;
             }
+            $scope.distributionData.status = data.distributionStatus;
             defer.resolve(facilityDistribution);
             updateProgressBar();
           }, function () {
@@ -62,7 +63,7 @@ function DistributionListController($scope, SharedDistributions, SyncFacilityDis
 
       $q.all(promises).then(function (resolves) {
         $scope.requestInProgress = false;
-        $scope.syncProgressHeader = SYNC_COMPLETE;
+        $scope.syncProgressHeader = SYNC_STATUS;
         distributionService.save($scope.distributionData);
 
         $scope.syncResult = _.groupBy(resolves, function (resolve) {

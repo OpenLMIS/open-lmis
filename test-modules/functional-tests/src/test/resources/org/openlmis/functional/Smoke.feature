@@ -264,6 +264,19 @@ Feature: Smoke Tests
     When I click on update Pod link for Row "1"
     Then I should see all products to update pod
 
+  @smokeRequisition
+  Scenario: User should able to see list of orders to update POD for packed orders
+    Given I have "storeInCharge" user with "MANAGE_POD" rights
+    And I have "5" requisitions for convert to order
+    And I am logged in as "storeInCharge"
+    And I access convert to order page
+    And I select "5" requisition on page "1"
+    And I access convert to order
+    And I access Manage POD page
+    When I receive shipment for the order
+    And I click on update Pod link for Row "1"
+    Then I should see all products listed in shipment file to update pod
+
 # DISTRIBUTION SMOKE TESTS
 
   @smokeDistribution
@@ -426,9 +439,9 @@ Feature: Smoke Tests
     And I select period "Period14"
     And I initiate distribution
     And I record data for distribution "1"
-    When I choose facility "F10"
-    Then I should see Refrigerators screen
-    When I add new refrigerator
+    And I choose facility "F10"
+    And I navigate to "refrigerator" tab
+    And I add new refrigerator
     Then I should see New Refrigerator screen
     When I enter Brand "LG"
     And I enter Modal "800 LITRES"
@@ -463,7 +476,7 @@ Feature: Smoke Tests
     Then I should see refrigerator "LG;800 LITRES;GR-J287PGHV" deleted successfully
 
   @smokeDistribution
-  Scenario: User should fill general observation data
+  Scenario: User should fill Visit Information when facility was visited
     Given I have the following data for distribution:
       | userSIC       | deliveryZoneCodeFirst | deliveryZoneCodeSecond | deliveryZoneNameFirst | deliveryZoneNameSecond | facilityCodeFirst | facilityCodeSecond | programFirst | programSecond | schedule |
       | storeInCharge | DZ1                   | DZ2                    | Delivery Zone First   | Delivery Zone Second   | F10               | F11                | VACCINES     | TB            | M        |
@@ -477,19 +490,64 @@ Feature: Smoke Tests
     And I initiate distribution
     And I record data for distribution "1"
     And I choose facility "F10"
-    And I navigate to "general observation" tab
-    Then Verify "general observation" indicator should be "RED"
-    When I Enter "general observation" values:
+    And I verify that I am on visit information page
+    Then Verify "visit information" indicator should be "RED"
+    When I select "yes" facility visited
+    And I select visit date as current date
+    And I Enter "visit information" values:
       | observations     | confirmedByName | confirmedByTitle | verifiedByName | verifiedByTitle |
       | some observation | samuel          | fc               |                |                 |
-    Then Verify "general observation" indicator should be "AMBER"
-    When I Enter "general observation" values:
-      | observations     | confirmedByName | confirmedByTitle | verifiedByName | verifiedByTitle |
-      | some observation | samuel          | fc               | Verifier       | X YZ            |
-    Then Verify "general observation" indicator should be "GREEN"
-    And I verify saved "general observation" values:
-      | observations     | confirmedByName | confirmedByTitle | verifiedByName | verifiedByTitle |
-      | some observation | samuel          | fc               | Verifier       | X YZ            |
+    Then Verify "visit information" indicator should be "AMBER"
+    When I Enter "visit information" values:
+      | vehicleId | observations     | confirmedByName | confirmedByTitle | verifiedByName | verifiedByTitle |
+      |           | some observation | samuel          | fc               | Verifier       | X YZ            |
+    Then Verify "visit information" indicator should be "GREEN"
+    And I enter vehicle id as "023!YU-09"
+    And I reload the page
+    Then I verify radio button "yes" is selected
+    And I verify visit date
+    And I verify saved "visit information" values:
+      | vehicleId | observations     | confirmedByName | confirmedByTitle | verifiedByName | verifiedByTitle |
+      | 023!YU-09 | some observation | samuel          | fc               | Verifier       | X YZ            |
+
+
+  @smokeDistribution
+  Scenario: User should fill Visit Information when facility was not visited
+    Given I have the following data for distribution:
+      | userSIC       | deliveryZoneCodeFirst | deliveryZoneCodeSecond | deliveryZoneNameFirst | deliveryZoneNameSecond | facilityCodeFirst | facilityCodeSecond | programFirst | programSecond | schedule |
+      | storeInCharge | DZ1                   | DZ2                    | Delivery Zone First   | Delivery Zone Second   | F10               | F11                | VACCINES     | TB            | M        |
+    And I have data available for "Multiple" facilities attached to delivery zones
+    And I assign delivery zone "DZ1" to user "storeInCharge" having role "store in-charge"
+    When I am logged in as "storeInCharge"
+    And I access plan my distribution page
+    And I select delivery zone "Delivery Zone First"
+    And I select program "VACCINES"
+    And I select period "Period14"
+    And I initiate distribution
+    And I record data for distribution "1"
+    And I choose facility "F10"
+    And I verify that I am on visit information page
+    Then I see "Overall" facility icon as "AMBER"
+    And I see "Individual" facility icon as "AMBER"
+    And I navigate to "refrigerator" tab
+    When I add new refrigerator
+    When I enter Brand "LG"
+    And I enter Modal "800 LITRES"
+    And I enter Serial Number "GR-J287PGHV"
+    And I access done
+    And I navigate to "visit information" tab
+    Then Verify "visit information" indicator should be "RED"
+    When I select "no" facility visited
+    And I select No Transport reason
+    Then Verify "visit information" indicator should be "GREEN"
+    Then I see "Overall" facility icon as "AMBER"
+    And Verify "refrigerator" indicator should be "GREEN"
+    Then Verify "epi inventory" indicator should be "GREEN"
+    When I navigate to "epi inventory" tab
+    Then I see "epi inventory" fields disabled
+    When I navigate to "refrigerator" tab
+    And I access show
+    Then I see "refrigerator" fields disabled
 
 
   @smokeDistribution
@@ -604,7 +662,7 @@ Feature: Smoke Tests
     Then Verify "child coverage" indicator should be "RED"
 
   @smokeDistribution
-  Scenario: User should verify facility and sync status
+  Scenario: User should verify facility and sync status when facility was visited
     Given I have the following data for distribution:
       | userSIC       | deliveryZoneCodeFirst | deliveryZoneCodeSecond | deliveryZoneNameFirst | deliveryZoneNameSecond | facilityCodeFirst | facilityCodeSecond | programFirst | programSecond | schedule |
       | storeInCharge | DZ1                   | DZ2                    | Delivery Zone First   | Delivery Zone Second   | F10               | F11                | VACCINES     | TB            | M        |
@@ -622,6 +680,7 @@ Feature: Smoke Tests
     And I choose facility "F10"
     Then I see "Overall" facility icon as "AMBER"
     And I see "Individual" facility icon as "AMBER"
+    And I navigate to "refrigerator" tab
     When I add new refrigerator
     When I enter Brand "LG"
     And I enter Modal "800 LITRES"
@@ -634,14 +693,18 @@ Feature: Smoke Tests
     When I record data for distribution "1"
 
     And I choose facility "F10"
+    And I navigate to "refrigerator" tab
     When I edit refrigerator
     And I enter refrigerator temperature "3"
     And I verify "Yes" it was working correctly when I left
     And I enter low alarm events "1"
     And I enter high alarm events "0"
     And I verify "No" that there is a problem with refrigerator since last visit
-    And I navigate to "general observation" tab
-    And I Enter "general observation" values:
+
+    And I navigate to "visit information" tab
+    When I select "yes" facility visited
+    And I select visit date as current date
+    And I Enter "visit information" values:
       | observations     | confirmedByName | confirmedByTitle | verifiedByName | verifiedByTitle |
       | some observation | samuel          | fc               | Verifier       | XYZ             |
 
@@ -666,9 +729,9 @@ Feature: Smoke Tests
     When I sync recorded data
     Then I check confirm sync message as "F10-Village Dispensary"
     When I done sync message
-    And I view observations data in DB for facility "F10":
-      | observations     | confirmedByName | confirmedByTitle | verifiedByName | verifiedByTitle |
-      | some observation | samuel          | fc               | Verifier       | XYZ             |
+    And I view visit information in DB for facility "F10":
+      | observations     | confirmedByName | confirmedByTitle | verifiedByName | verifiedByTitle | vehicleId |
+      | some observation | samuel          | fc               | Verifier       | XYZ             | null      |
     And I view epi use data in DB for facility "F10" and product group "penta":
       | distributed | expirationDate | loss | received | firstOfMonth | endOfMonth |
       | 16          | 11/2012        | 1    | 10       | 12           | 5          |
@@ -688,15 +751,14 @@ Feature: Smoke Tests
     When I record data for distribution "1"
     And I choose facility "F10"
     Then I see "Overall" facility icon as "BLUE"
-    When I navigate to "general observation" tab
-    Then I see general observations fields disabled
+    Then I see "visit information" fields disabled
     When I navigate to "epi use" tab
-    Then I see EPI Use fields disabled
+    Then I see "epi use" fields disabled
     When I navigate to "full coverage" tab
-    Then I see full coverage fields disabled
+    Then I see "full coverage" fields disabled
     When I navigate to "refrigerator" tab
     And I access show
-    Then I see refrigerator fields disabled
+    Then I see "refrigerator" fields disabled
 
     And I access plan my distribution page
     And I delete already cached data for distribution
@@ -714,5 +776,6 @@ Feature: Smoke Tests
     When I record data for distribution "1"
     And I choose facility "F10"
     Then I see "Overall" facility icon as "RED"
+    And I navigate to "refrigerator" tab
     And I see "overall" refrigerator icon as "RED"
     And I verify the refrigerator "LG;800 LITRES;GR-J287PGHV" present

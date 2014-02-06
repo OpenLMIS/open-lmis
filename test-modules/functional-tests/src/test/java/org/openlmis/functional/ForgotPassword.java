@@ -22,6 +22,8 @@ import org.openlmis.pageobjects.LoginPage;
 import org.openqa.selenium.NoSuchElementException;
 import org.testng.annotations.*;
 
+import java.sql.SQLException;
+
 import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
 
 @Listeners(CaptureScreenshotOnFailureListener.class)
@@ -50,7 +52,7 @@ public class ForgotPassword extends TestCaseHelper {
   }
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function")
-  public void testVerifyValidUsername(String userName, String email) throws Exception {
+  public void testVerifyValidUsername(String userName, String email) {
     ForgotPasswordPage forgotPasswordPage = loginPage.clickForgotPasswordLink();
     verifyElementsOnForgotPasswordScreen();
     forgotPasswordPage.enterUserName(userName);
@@ -93,7 +95,7 @@ public class ForgotPassword extends TestCaseHelper {
   }
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function")
-  public void testVerifyValidUserNameBlankEmail(String userName, String email) throws Exception {
+  public void testVerifyValidUserNameBlankEmail(String userName, String email) {
     ForgotPasswordPage forgotPasswordPage = loginPage.clickForgotPasswordLink();
     verifyElementsOnForgotPasswordScreen();
     forgotPasswordPage.enterEmail("");
@@ -104,38 +106,38 @@ public class ForgotPassword extends TestCaseHelper {
   }
 
   @Given("^I am on forgot password screen$")
-  public void onForgotPageAndVerifyElements() throws Exception {
+  public void onForgotPageAndVerifyElements() {
     loginPage = PageFactory.getInstanceOfLoginPage(testWebDriver, baseUrlGlobal);
     forgotPasswordPage = loginPage.clickForgotPasswordLink();
     verifyElementsOnForgotPasswordScreen();
   }
 
   @When("^I type email \"([^\"]*)\"$")
-  public void enterEmail(String email) throws Exception {
+  public void enterEmail(String email) {
     forgotPasswordPage = PageFactory.getInstanceOfForgotPasswordPage(testWebDriver);
     forgotPasswordPage.enterEmail(email);
   }
 
   @When("^I type and username \"([^\"]*)\"$")
-  public void enterPassword(String userName) throws Exception {
+  public void enterPassword(String userName) {
     forgotPasswordPage = PageFactory.getInstanceOfForgotPasswordPage(testWebDriver);
     forgotPasswordPage.enterUserName(userName);
   }
 
   @When("^I click submit button$")
-  public void clickSubmit() throws Exception {
+  public void clickSubmit() {
     forgotPasswordPage = PageFactory.getInstanceOfForgotPasswordPage(testWebDriver);
     forgotPasswordPage.clickSubmit();
   }
 
   @Then("^I should see email send successfully$")
-  public void verifyEmailSendMessage() throws Exception {
+  public void verifyEmailSendMessage() {
     forgotPasswordPage = PageFactory.getInstanceOfForgotPasswordPage(testWebDriver);
     verifyEmailSendSuccessfullyMessage();
   }
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function")
-  public void testVerifyBlankEmailAndUserName(String userName, String email) throws Exception {
+  public void testVerifyBlankEmailAndUserName(String userName, String email) {
     ForgotPasswordPage forgotPasswordPage = loginPage.clickForgotPasswordLink();
     verifyElementsOnForgotPasswordScreen();
     forgotPasswordPage.enterEmail("");
@@ -169,7 +171,7 @@ public class ForgotPassword extends TestCaseHelper {
 
 
   @AfterMethod(groups = "admin")
-  public void tearDown() throws Exception {
+  public void tearDown() throws SQLException {
     try {
       if (!testWebDriver.getElementById("username").isDisplayed()) {
         HomePage homePage = PageFactory.getInstanceOfHomePage(testWebDriver);

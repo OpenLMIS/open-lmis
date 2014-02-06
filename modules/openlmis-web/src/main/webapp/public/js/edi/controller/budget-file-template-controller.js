@@ -8,7 +8,7 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-function BudgetFileTemplateController($scope, budgetFileTemplate, BudgetFileTemplate, dateFormats) {
+function BudgetFileTemplateController($scope, budgetFileTemplate, BudgetFileTemplate, dateFormats, $location, messageService) {
 
   $scope.budgetFileTemplate = budgetFileTemplate;
   $scope.dateFormats = _.pluck(_.where(dateFormats, {"orderDate": true}), "format");
@@ -40,6 +40,11 @@ function BudgetFileTemplateController($scope, budgetFileTemplate, BudgetFileTemp
     return emptyPosition;
   }
 
+  $scope.cancelEdiSave = function () {
+    $scope.$parent.message = "";
+    $location.path('configure-edi-file');
+  };
+
   $scope.saveBudgetFileTemplate = function () {
     if (isInvalidPosition() || isDuplicatePosition()) {
       return;
@@ -47,14 +52,8 @@ function BudgetFileTemplateController($scope, budgetFileTemplate, BudgetFileTemp
 
     BudgetFileTemplate.save({}, $scope.budgetFileTemplate, function (data) {
       $scope.error = "";
-      $scope.message = data.success;
-      setTimeout(function () {
-        $scope.$apply(function () {
-          angular.element("#saveSuccessMsgDiv").fadeOut('slow', function () {
-            $scope.message = '';
-          });
-        });
-      }, 3000);
+      $scope.$parent.message = messageService.get(data.success);
+      $location.path('configure-edi-file');
     });
   };
 

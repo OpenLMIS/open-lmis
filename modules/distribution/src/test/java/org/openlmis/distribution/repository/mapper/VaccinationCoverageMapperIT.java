@@ -27,11 +27,13 @@ import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static junit.framework.Assert.assertTrue;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 import static org.openlmis.core.builder.DeliveryZoneBuilder.defaultDeliveryZone;
 import static org.openlmis.core.builder.FacilityBuilder.defaultFacility;
@@ -197,5 +199,39 @@ public class VaccinationCoverageMapperIT {
 
     assertThat(fetchedChildCoverageLineItems.size(), is(1));
     assertThat(fetchedChildCoverageLineItems.get(0).getFacilityVisitId(), is(facilityVisit.getId()));
+  }
+  
+  @Test
+  public void shouldReturnProductVialsMapping() throws SQLException {
+    Product product = make(a(ProductBuilder.defaultProduct));
+
+    productMapper.insert(product);
+    ProductVial productVial = new ProductVial("BCGVial", product.getCode());
+
+    queryExecutor.executeUpdate("INSERT INTO coverage_product_vials (vial, productCode) VALUES (?, ?)",
+      productVial.getVial(), productVial.getProductCode());
+
+    List<ProductVial> productVials = mapper.getProductVials();
+
+    assertThat(productVials.size(), is(1));
+    assertThat(productVials.get(0).getVial(), is("BCGVial"));
+    assertThat(productVials.get(0).getProductCode(), is(product.getCode()));
+  }
+
+  @Test
+  public void shouldInsertOpenedVialLineItem() throws SQLException {
+    String productVialName = "BCG";
+    OpenedVialLineItem lineItem = new OpenedVialLineItem(facilityVisit.getId(), productVialName, null, 10);
+
+    mapper.insertOpenedVialLineItem(lineItem);
+
+    ResultSet resultSet = queryExecutor.execute(
+      "SELECT * FROM opened_vial_line_items WHERE facilityVisitId = " + facilityVisit.getId());
+    resultSet.next();
+
+    assertThat(resultSet.getInt("packSize"), is(10));
+    assertThat(resultSet.getString("productVialName"), is(productVialName));
+    assertThat(resultSet.getLong("facilityVisitId"), is(facilityVisit.getId()));
+    assertThat(resultSet.getLong("id"), is(notNullValue()));
   }
 }

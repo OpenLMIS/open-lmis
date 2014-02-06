@@ -416,9 +416,9 @@ public class RequisitionRepositoryTest {
   @Test
   public void shouldGetLineItemUsingRnrIdAndProductCode() throws Exception {
     RnrLineItem expectedLineItem = new RnrLineItem();
-    when(rnrLineItemMapper.getLineItem(5L, "P500")).thenReturn(expectedLineItem);
+    when(rnrLineItemMapper.getNonSkippedLineItem(5L, "P500")).thenReturn(expectedLineItem);
 
-    RnrLineItem lineItem = requisitionRepository.getLineItem(5L, "P500");
+    RnrLineItem lineItem = requisitionRepository.getNonSkippedLineItem(5L, "P500");
 
     assertThat(lineItem, is(expectedLineItem));
   }

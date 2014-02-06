@@ -78,7 +78,7 @@
             <div class="form-cell">
               <label openlmis-message="label.number.low.alarms"></label>
               <input type="text" name="lowAlarmEvent{{$index}}" ng-model="refrigeratorReading.lowAlarmEvents.value"
-                     numeric-validator="positiveInteger"
+                     numeric-validator="positiveInteger" ng-trim=false
                      maxlength="3"
                      error-holder="lowAlarmError{{$index}}"
                      class="right-justified"/>

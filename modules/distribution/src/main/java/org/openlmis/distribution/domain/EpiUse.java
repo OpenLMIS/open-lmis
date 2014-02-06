@@ -38,7 +38,7 @@ public class EpiUse extends BaseModel {
   public EpiUse(Facility facility, FacilityVisit facilityVisit) {
 
     if (facility.getSupportedPrograms().size() != 0) {
-      List<FacilityProgramProduct> programProducts = facility.getSupportedPrograms().get(0).getProgramProducts();
+      List<FacilityProgramProduct> programProducts = FacilityProgramProduct.filterActiveProducts(facility.getSupportedPrograms().get(0).getProgramProducts());
       this.populateEpiUseLineItems(programProducts, facilityVisit.getCreatedBy(), facilityVisit.getId());
     }
 

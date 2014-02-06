@@ -8,7 +8,7 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-function OrderFileTemplateController($scope, orderFileTemplate, OrderFileTemplate, dateFormats) {
+function OrderFileTemplateController($scope, orderFileTemplate, OrderFileTemplate, dateFormats, $location, messageService) {
 
   $scope.orderFileTemplate = orderFileTemplate;
   $scope.orderDateFormats = _.pluck(_.where(dateFormats, {"orderDate": true}), "format");
@@ -19,15 +19,14 @@ function OrderFileTemplateController($scope, orderFileTemplate, OrderFileTemplat
   $scope.saveOrderFileTemplate = function () {
     updatePosition();
     OrderFileTemplate.save({}, $scope.orderFileTemplate, function (data) {
-      $scope.message = data.success;
-      setTimeout(function () {
-        $scope.$apply(function () {
-          angular.element("#saveSuccessMsgDiv").fadeOut('slow', function () {
-            $scope.message = '';
-          });
-        });
-      }, 3000);
+      $scope.$parent.message = messageService.get(data.success);
+      $location.path('configure-edi-file');
     });
+  };
+
+  $scope.cancelEdiSave = function () {
+    $scope.$parent.message = "";
+    $location.path('configure-edi-file');
   };
 
   $scope.addNewOrderFileColumn = function () {

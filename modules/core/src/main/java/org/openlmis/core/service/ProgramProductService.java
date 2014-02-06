@@ -143,7 +143,4 @@ public class ProgramProductService {
     return programProductRepository.getNonFullSupplyProductsForProgram(program);
   }
 
-  public List<ProgramProduct> getActiveByProgram(Long programId) {
-    return programProductRepository.getActiveByProgram(programId);
-  }
 }

@@ -20,10 +20,10 @@
   <div class="rnr-tabs clearfix">
     <ul>
       <li class="selected" ng-class="{'selected' : showReportingFields}">
-        <a openlmis-message="label.reporting.fields" href="" ng-click="showReportingFields=true;"></a>
+        <a id="reportingFieldsTab" openlmis-message="label.reporting.fields" href="" ng-click="showReportingFields=true;"></a>
       </li>
       <li ng-class="{'selected' : !showReportingFields}">
-        <a openlmis-message="label.regimens" href="" ng-click="showReportingFields=false;"></a>
+        <a id="regimensTab" openlmis-message="label.regimens" href="" ng-click="showReportingFields=false;"></a>
       </li>
     </ul>
   </div>

@@ -21,6 +21,8 @@ import org.openlmis.pageobjects.ViewOrdersPage;
 import org.openlmis.pageobjects.edi.ConvertOrderPage;
 import org.testng.annotations.*;
 
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
@@ -37,7 +39,7 @@ public class DownloadOrderFile extends TestCaseHelper {
   public String[] csvRows = null;
 
   @BeforeMethod(groups = "requisition")
-  public void setUp() throws Exception {
+  public void setUp() throws InterruptedException, SQLException, IOException {
     super.setup();
   }
 
@@ -47,14 +49,14 @@ public class DownloadOrderFile extends TestCaseHelper {
   }
 
   @And("^I configure order file:$")
-  public void setupOrderFileConfiguration(DataTable userTable) throws Exception {
+  public void setupOrderFileConfiguration(DataTable userTable) throws SQLException {
     List<Map<String, String>> data = userTable.asMaps();
     for (Map map : data)
       dbWrapper.setupOrderFileConfiguration(map.get("File Prefix").toString(), map.get("Header In File").toString());
   }
 
   @And("^I configure non openlmis order file columns:$")
-  public void setupOrderFileNonOpenLMISColumns(DataTable userTable) throws Exception {
+  public void setupOrderFileNonOpenLMISColumns(DataTable userTable) throws SQLException {
     dbWrapper.deleteRowFromTable("order_file_columns", "openLMISField", "false");
     List<Map<String, String>> data = userTable.asMaps();
     for (Map map : data)
@@ -62,21 +64,21 @@ public class DownloadOrderFile extends TestCaseHelper {
   }
 
   @And("^I configure openlmis order file columns:$")
-  public void setupOrderFileOpenLMISColumns(DataTable userTable) throws Exception {
+  public void setupOrderFileOpenLMISColumns(DataTable userTable) throws SQLException {
     List<Map<String, String>> data = userTable.asMaps();
     for (Map map : data)
       dbWrapper.setupOrderFileOpenLMISColumns(map.get("Data Field Label").toString(), map.get("Include In Order File").toString(), map.get("Column Label").toString(), Integer.parseInt(map.get("Position").toString()), map.get("Format").toString());
   }
 
   @And("^I download order file$")
-  public void downloadOrderFile() throws Exception {
+  public void downloadOrderFile() throws InterruptedException {
     ViewOrdersPage viewOrdersPage = PageFactory.getInstanceOfViewOrdersPage(testWebDriver);
     viewOrdersPage.downloadCSV();
     testWebDriver.sleep(5000);
   }
 
   @And("^I get order data in file prefix \"([^\"]*)\"$")
-  public void getOrderDataFromDownloadedFile(String filePrefix) throws Exception {
+  public void getOrderDataFromDownloadedFile(String filePrefix) throws InterruptedException, SQLException, IOException {
     String orderId = String.valueOf(dbWrapper.getMaxRnrID());
     csvRows = readCSVFile(filePrefix + orderId + ".csv");
     testWebDriver.sleep(5000);
@@ -84,25 +86,25 @@ public class DownloadOrderFile extends TestCaseHelper {
   }
 
   @And("^I verify order file line \"([^\"]*)\" having \"([^\"]*)\"$")
-  public void checkOrderFileData(int lineNumber, String data) throws Exception {
+  public void checkOrderFileData(int lineNumber, String data) {
     testWebDriver.sleep(1000);
     assertTrue("Order data incorrect in line number " + lineNumber, csvRows[lineNumber - 1].contains(data));
   }
 
   @And("^I verify order date format \"([^\"]*)\" in line \"([^\"]*)\"$")
-  public void checkOrderFileOrderDate(String dateFormat, int lineNumber) throws Exception {
+  public void checkOrderFileOrderDate(String dateFormat, int lineNumber) throws SQLException {
     String createdDate = dbWrapper.getCreatedDate("orders", dateFormat);
     assertTrue("Order date incorrect.", csvRows[lineNumber - 1].contains(createdDate));
   }
 
   @And("^I verify order id in line \"([^\"]*)\"$")
-  public void checkOrderFileOrderId(int lineNumber) throws Exception {
+  public void checkOrderFileOrderId(int lineNumber) throws SQLException {
     String orderId = String.valueOf(dbWrapper.getMaxRnrID());
     assertTrue("Order date incorrect.", csvRows[lineNumber - 1].contains(orderId));
   }
 
   @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function")
-  public void testVerifyOrderFileForSpecificConfiguration(String password) throws Exception {
+  public void testVerifyOrderFileForSpecificConfiguration(String password) throws SQLException, IOException, InterruptedException {
     dbWrapper.setupOrderFileConfiguration("Zero", "TRUE");
     dbWrapper.setupOrderFileOpenLMISColumns("create.facility.code", "TRUE", "Facility code", 5, "");
     dbWrapper.setupOrderFileOpenLMISColumns("header.order.number", "TRUE", "Order number", 7, "");
@@ -124,7 +126,7 @@ public class DownloadOrderFile extends TestCaseHelper {
   }
 
   @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function")
-  public void testVerifyOrderFileForDefaultConfiguration(String password) throws Exception {
+  public void testVerifyOrderFileForDefaultConfiguration(String password) throws InterruptedException, SQLException, IOException {
     dbWrapper.setupOrderFileConfiguration("O", "TRUE");
     setupDownloadOrderFileSetup(password);
     getOrderDataFromDownloadedFile("O");
@@ -135,7 +137,7 @@ public class DownloadOrderFile extends TestCaseHelper {
   }
 
   @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function")
-  public void testVerifyOrderFileForDefaultConfigurationWithNoHeaders(String password) throws Exception {
+  public void testVerifyOrderFileForDefaultConfigurationWithNoHeaders(String password) throws InterruptedException, SQLException, IOException {
     dbWrapper.setupOrderFileConfiguration("O", "FALSE");
     setupDownloadOrderFileSetup(password);
     getOrderDataFromDownloadedFile("O");
@@ -144,7 +146,7 @@ public class DownloadOrderFile extends TestCaseHelper {
     checkOrderFileOrderId(1);
   }
 
-  public void setupDownloadOrderFileSetup(String password) throws Exception {
+  public void setupDownloadOrderFileSetup(String password) throws SQLException, InterruptedException {
     List<String> rightsList = asList("CREATE_REQUISITION", "VIEW_REQUISITION", "APPROVE_REQUISITION");
     setupTestDataToInitiateRnR(true, program, userSICUserName, "200", rightsList);
 
@@ -179,7 +181,7 @@ public class DownloadOrderFile extends TestCaseHelper {
   }
 
   @AfterMethod(groups = "requisition")
-  public void tearDown() throws Exception {
+  public void tearDown() throws SQLException {
     testWebDriver.sleep(500);
     if (!testWebDriver.getElementById("username").isDisplayed()) {
       HomePage homePage = PageFactory.getInstanceOfHomePage(testWebDriver);

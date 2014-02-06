@@ -8,11 +8,14 @@
  *  You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
  */
 
-function PODController($scope, orderPOD, pageSize, $routeParams, $location) {
+function PODController($scope, orderPOD, OrderPOD, pageSize, $routeParams, $location, $dialog, $q) {
 
   $scope.pageSize = pageSize;
-  $scope.pod = orderPOD.orderPOD;
+  $scope.pod = new ProofOfDelivery(orderPOD.orderPOD);
   $scope.order = orderPOD.order;
+  $scope.podAlreadySubmitted = orderPOD.order.alreadyReceived;
+  $scope.numberOfPages = Math.ceil($scope.pod.podLineItems.length / $scope.pageSize) || 1;
+  $scope.requisitionType = $scope.order.emergency ? "requisition.type.emergency" : "requisition.type.regular";
 
   $scope.columns = [
     {label: "header.full.supply", name: "fullSupply"},
@@ -29,9 +32,6 @@ function PODController($scope, orderPOD, pageSize, $routeParams, $location) {
     $scope.currentPage = (utils.isValidPage($routeParams.page, $scope.numberOfPages)) ? parseInt($routeParams.page, 10) : 1;
     $scope.pageLineItems = $scope.pod.podLineItems.slice($scope.pageSize * ($scope.currentPage - 1), $scope.pageSize * $scope.currentPage);
   };
-
-  $scope.numberOfPages = Math.ceil($scope.pod.podLineItems.length / $scope.pageSize) || 1;
-  $scope.requisitionType = $scope.order.emergency ? "requisition.type.emergency" : "requisition.type.regular";
   refreshPageLineItems();
 
   $scope.$watch('currentPage', function () {
@@ -39,14 +39,75 @@ function PODController($scope, orderPOD, pageSize, $routeParams, $location) {
   });
 
   $scope.$on('$routeUpdate', function () {
+    $scope.save();
     refreshPageLineItems();
-    $location.search('page', $scope.currentPage);
   });
+
+  $scope.save = function () {
+    var saveDefer = $q.defer();
+    if (!$scope.podForm.$dirty) {
+      saveDefer.resolve();
+      return saveDefer.promise;
+    }
+    OrderPOD.update({id: $routeParams.id}, {podLineItems: $scope.pageLineItems}, function (data) {
+      $scope.message = data.success;
+      $scope.error = undefined;
+      $scope.podForm.$setPristine();
+      saveDefer.resolve();
+    }, function (response) {
+      $scope.error = response.data.error;
+      saveDefer.reject();
+    });
+    return saveDefer.promise;
+  };
+
+  function confirm() {
+    var deferred = $q.defer();
+    var options = {
+      id: "confirmDialog",
+      header: "label.confirm.action",
+      body: "msg.question.confirmation"
+    };
+
+    OpenLmisDialog.newDialog(options, function (result) {
+      result ? deferred.resolve() : deferred.reject();
+    }, $dialog);
+
+    return deferred.promise;
+  }
+
+  $scope.submit = function () {
+    $scope.save().then(confirmAndSubmit);
+
+    function confirmAndSubmit() {
+      $scope.showSubmitErrors = true;
+      if (($scope.errorPages = $scope.pod.error(pageSize).errorPages)) {
+        $scope.message = undefined;
+        $scope.error = 'error.quantity.received.invalid';
+        return;
+      }
+
+      confirm().then(function () {
+        OrderPOD.update({id: $routeParams.id, action: 'submit'}, function (data) {
+          $scope.message = data.success;
+          $scope.podAlreadySubmitted = true;
+          $scope.error = undefined;
+        }, function (response) {
+          $scope.error = response.data.error;
+        });
+      });
+    }
+  };
 
   $scope.isCategorySameAsPreviousLineItem = function (index) {
     return !((index > 0 ) && ($scope.pod.podLineItems[index].productCategory == $scope.pod.podLineItems[index - 1].productCategory));
   };
 
+  $scope.cssClassForQuantityReceived = function (quantityReceived) {
+    if (!$scope.showSubmitErrors)
+      return '';
+    return (quantityReceived === null || quantityReceived === undefined) ? 'required-error' : '';
+  };
 }
 
 PODController.resolve = {

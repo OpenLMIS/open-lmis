@@ -20,7 +20,6 @@ import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 
 public class ForgotPasswordPage extends Page {
 
-
   @FindBy(how = How.ID, using = "email")
   private static WebElement emailTextField = null;
 
@@ -82,7 +81,6 @@ public class ForgotPasswordPage extends Page {
     testWebDriver.setImplicitWait(1);
   }
 
-
   public void enterEmail(String email) {
     testWebDriver.waitForElementToAppear(emailTextField);
     emailTextField.clear();
@@ -102,7 +100,6 @@ public class ForgotPasswordPage extends Page {
   }
 
   public void enterUserName(String userName) {
-
     testWebDriver.waitForElementToAppear(usernameTextField);
     usernameTextField.clear();
     usernameTextField.sendKeys(userName);
@@ -111,13 +108,11 @@ public class ForgotPasswordPage extends Page {
   public void clickSubmit() {
     testWebDriver.waitForElementToAppear(submitButton);
     submitButton.click();
-
   }
 
   public void clickCancel() {
     testWebDriver.waitForElementToAppear(cancelButton);
     cancelButton.click();
-
   }
 
   public String getPageIdentifierOnForgotPasswordPageAttribute() {
@@ -125,5 +120,4 @@ public class ForgotPasswordPage extends Page {
     testWebDriver.waitForElementToAppear(pageIdentifierOnForgotPasswordPage);
     return testWebDriver.getAttribute(pageIdentifierOnForgotPasswordPage, "value");
   }
-
 }

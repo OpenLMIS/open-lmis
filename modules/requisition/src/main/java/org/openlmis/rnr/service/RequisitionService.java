@@ -493,8 +493,8 @@ public class RequisitionService {
     }
   }
 
-  public RnrLineItem getLineItem(Long rnrId, String productCode) {
-    return requisitionRepository.getLineItem(rnrId, productCode);
+  public RnrLineItem getNonSkippedLineItem(Long rnrId, String productCode) {
+    return requisitionRepository.getNonSkippedLineItem(rnrId, productCode);
   }
 
   public String deleteRnR(Long rnrId) {

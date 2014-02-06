@@ -9,15 +9,16 @@
  */
 
 describe("Shipment File Template Controller", function () {
-  var scope, controller, httpBackend, messageService, shipmentFileTemplate, $q, timeout, deferredObject, dateFormats;
+  var scope, controller, httpBackend, messageService, shipmentFileTemplate, $q, timeout, deferredObject, dateFormats, location;
 
   beforeEach(module('openlmis'));
 
-  beforeEach(inject(function ($rootScope, $controller, $httpBackend, _messageService_) {
+  beforeEach(inject(function ($rootScope, $controller, $httpBackend, _messageService_, $location) {
     messageService = _messageService_;
     scope = $rootScope.$new();
     controller = $controller;
     httpBackend = $httpBackend;
+    location = $location;
 
     shipmentFileTemplate = {
       "configuration": {
@@ -107,10 +108,13 @@ describe("Shipment File Template Controller", function () {
 
   it('should save shipment file template', function () {
     httpBackend.expect('POST', '/shipment-file-template.json').respond(200, {"success": "saved successfully"});
+    spyOn(location, 'path');
+    spyOn(messageService, 'get').andReturn("saved successfully");
     scope.saveShipmentFileTemplate();
     httpBackend.flush();
     expect(scope.message).toEqual("saved successfully");
     expect(scope.error).toEqual("");
+    expect(location.path).toHaveBeenCalledWith("configure-edi-file");
   });
 
   it('should not save shipment file template if position is invalid', function () {

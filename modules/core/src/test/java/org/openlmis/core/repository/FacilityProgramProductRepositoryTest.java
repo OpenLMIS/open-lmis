@@ -95,18 +95,4 @@ public class FacilityProgramProductRepositoryTest {
     verify(mapper).insert(product);
   }
 
-  @Test
-  public void shouldGetFacilityProgramProductsForFacilityAndProgram() throws Exception {
-
-    List<FacilityProgramProduct> facilityProgramProducts = new ArrayList<>();
-    Long facilityId = 1l;
-    Long programId = 1l;
-    when(mapper.getByFacilityAndProgram(facilityId, programId)).thenReturn(facilityProgramProducts);
-
-    List<FacilityProgramProduct> returnedFacilityProgramProducts = repository.getByFacilityAndProgram(facilityId, programId);
-
-    assertThat(returnedFacilityProgramProducts, is(facilityProgramProducts));
-    verify(mapper).getByFacilityAndProgram(facilityId, programId);
-
-  }
 }

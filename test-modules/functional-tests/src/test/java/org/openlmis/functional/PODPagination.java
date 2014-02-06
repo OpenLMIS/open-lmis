@@ -10,8 +10,6 @@
 
 package org.openlmis.functional;
 
-import cucumber.api.Scenario;
-import cucumber.api.java.After;
 import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.pageobjects.HomePage;
 import org.openlmis.pageobjects.LoginPage;
@@ -22,12 +20,16 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.thoughtworks.selenium.SeleneseTestBase.*;
+import static com.thoughtworks.selenium.SeleneseTestBase.assertFalse;
+import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
 import static java.util.Arrays.asList;
+import static org.testng.AssertJUnit.assertEquals;
 
 public class PODPagination extends TestCaseHelper {
 
@@ -44,7 +46,7 @@ public class PODPagination extends TestCaseHelper {
   UpdatePodPage updatePodPage;
 
   @BeforeMethod(groups = {"requisition"})
-  public void setUp() throws Exception {
+  public void setUp() throws SQLException, IOException, InterruptedException {
     super.setup();
     updatePodPage = PageFactory.getInstanceOfUpdatePodPage(testWebDriver);
 
@@ -65,7 +67,7 @@ public class PODPagination extends TestCaseHelper {
   }
 
   @Test(groups = {"requisition"})
-  public void testRnRPaginationAndDefaultDisplayOrder() throws Exception {
+  public void testRnRPaginationAndDefaultDisplayOrder() throws SQLException {
     dbWrapper.setupMultipleProducts(podPaginationData.get(PROGRAM), "Lvl3 Hospital", 11, true);
     dbWrapper.insertRequisitionWithMultipleLineItems(11, podPaginationData.get(PROGRAM), true, "F10", false);
     dbWrapper.convertRequisitionToOrder(dbWrapper.getMaxRnrID(), "READY_TO_PACK", podPaginationData.get(USER));
@@ -190,6 +192,68 @@ public class PODPagination extends TestCaseHelper {
     verifyCategoryDisplayOrderOnPage(new String[]{"C10", ""});
   }
 
+  @Test(groups = {"requisition"})
+  public void testRnRPaginationAndDefaultDisplayOrderForPackedOrders() throws SQLException {
+    dbWrapper.setupMultipleProducts(podPaginationData.get(PROGRAM), "Lvl3 Hospital", 11, true);
+    dbWrapper.insertRequisitionWithMultipleLineItems(11, podPaginationData.get(PROGRAM), true, "F10", false);
+    dbWrapper.convertRequisitionToOrder(dbWrapper.getMaxRnrID(), "READY_TO_PACK", podPaginationData.get(USER));
+
+    enterTestDataForShipment();
+
+    LoginPage loginPage = PageFactory.getInstanceOfLoginPage(testWebDriver, baseUrlGlobal);
+    HomePage homePage = loginPage.loginAs(podPaginationData.get(USER), podPaginationData.get(PASSWORD));
+    ManagePodPage managePodPage = homePage.navigateManagePOD();
+    managePodPage.selectRequisitionToUpdatePod(1);
+    verifyNumberOFPageLinksDisplayed(20, 10);
+    verifyPageNumberLinksDisplayed();
+    verifyPageNumberSelected(1);
+    verifyNextAndLastPageLinksEnabled();
+    verifyFirstAndPreviousPageLinksDisabled();
+    verifyNumberOfProductsVisibleOnPage(10);
+    verifyProductDisplayOrderOnPage(new String[]{"F0", "F1", "F2", "F3", "F4", "F5", "F6", "F7", "F8", "F9"});
+    verifyCategoryDisplayOrderOnPage(new String[]{"Antibiotic", "", "", "", "", "", "", "", "", ""});
+    updatePodPage.enterPodData("110", "openlmis openlmis", 1);
+    updatePodPage.enterPodData("200", "openlmis openlmis", 5);
+
+    navigateToPage(2);
+    verifyPageNumberSelected(2);
+    verifyFirstAndPreviousPageLinksEnabled();
+    verifyNumberOfProductsVisibleOnPage(10);
+    verifyProductDisplayOrderOnPage(new String[]{"NF0", "NF1", "NF2", "NF3", "NF4", "NF5", "NF6", "NF7", "NF8", "NF9"});
+    verifyCategoryDisplayOrderOnPage(new String[]{"Antibiotic", "", "", "", "", "", "", "", "", ""});
+    updatePodPage.enterPodData("10", "openlmis", 1);
+    updatePodPage.enterPodData("11", "openlmis openlmis project", 10);
+
+
+    updatePodPage.navigateToFirstPage();
+    updatePodPage.verifyQuantityReceivedAndNotes("110", "openlmis openlmis", 1);
+    verifyPodDataInDatabase("110", "openlmis openlmis", "F0");
+    updatePodPage.verifyQuantityReceivedAndNotes("200", "openlmis openlmis", 5);
+    verifyPodDataInDatabase("200", "openlmis openlmis", "F4");
+
+    verifyPageNumberSelected(1);
+    verifyNextAndLastPageLinksEnabled();
+    verifyFirstAndPreviousPageLinksDisabled();
+    verifyNumberOfProductsVisibleOnPage(10);
+
+    homePage.navigateHomePage();
+    homePage.navigateManagePOD();
+    managePodPage.selectRequisitionToUpdatePod(1);
+    navigateToPage(2);
+    updatePodPage.verifyQuantityReceivedAndNotes("10", "openlmis", 1);
+    verifyPodDataInDatabase("10", "openlmis", "NF0");
+    updatePodPage.verifyQuantityReceivedAndNotes("11", "openlmis openlmis project", 10);
+    verifyPodDataInDatabase("11", "openlmis openlmis project", "NF9");
+  }
+
+  private void enterTestDataForShipment() throws SQLException {
+    for (Integer i = 0; i < 10; i++)
+      testDataForShipment(0, true, "F" + i, i);
+    for (Integer i = 0; i < 10; i++)
+      testDataForShipment(0, true, "NF" + i, i);
+    dbWrapper.updateFieldValue("orders", "status", "PACKED", null, null);
+  }
+
   private void verifyNextAndLastPageLinksDisabled() {
     assertFalse(updatePodPage.isNextPageLinkEnabled());
     assertFalse(updatePodPage.isLastPageLinkEnabled());
@@ -259,18 +323,10 @@ public class PODPagination extends TestCaseHelper {
   }
 
   @AfterMethod(groups = {"requisition"})
-  public void tearDown() throws Exception {
+  public void tearDown() throws SQLException {
     HomePage homePage = PageFactory.getInstanceOfHomePage(testWebDriver);
     homePage.logout(baseUrlGlobal);
     dbWrapper.deleteData();
     dbWrapper.closeConnection();
-  }
-
-  @After
-  public void embedScreenshot(Scenario scenario) {
-    if (scenario.isFailed()) {
-      byte[] screenshot = testWebDriver.getScreenshot();
-      scenario.embed(screenshot, "image/png");
-    }
   }
 }

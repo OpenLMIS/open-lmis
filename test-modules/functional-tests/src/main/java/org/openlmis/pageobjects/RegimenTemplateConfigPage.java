@@ -47,7 +47,7 @@ public class RegimenTemplateConfigPage extends Page {
   @FindBy(how = How.ID, using = "newRegimenActive")
   private static WebElement newRegimenActiveCheckBox = null;
 
-  @FindBy(how = How.XPATH, using = "//input[@value='Add']")
+  @FindBy(how = How.ID, using = "addNewRegimen")
   private static WebElement addButton = null;
 
   @FindBy(how = How.XPATH, using = "//input[@value='Edit']")
@@ -98,6 +98,9 @@ public class RegimenTemplateConfigPage extends Page {
   @FindBy(how = How.XPATH, using = ".//*[@id='reportingFields']/div[2]/div[4]/div/div[3]/span")
   private static WebElement remarksDataType = null;
 
+  @FindBy(how = How.ID, using = "regimensTab")
+  private static WebElement regimensTab = null;
+
   private static String baseRegimenDivXpath = "//div[@id='sortable']/div";
 
   public RegimenTemplateConfigPage(TestWebDriver driver) {
@@ -125,7 +128,6 @@ public class RegimenTemplateConfigPage extends Page {
     if (select) selectCheckBox(remarksCheckBox);
     else unSelectCheckBox(remarksCheckBox);
   }
-
 
   public boolean IsSelectedNoOfPatientsOnTreatmentCheckBox() {
     return noOfPatientsOnTreatmentCheckBox.isSelected();
@@ -179,7 +181,6 @@ public class RegimenTemplateConfigPage extends Page {
     return remarksDataType.getText().trim();
   }
 
-
   public void AddNewRegimen(String category, String code, String name, Boolean isActive) {
     testWebDriver.waitForElementsToAppear(newRegimenCategoryDropDown, newRegimenCodeTextBox);
     testWebDriver.selectByVisibleText(newRegimenCategoryDropDown, category);
@@ -187,7 +188,6 @@ public class RegimenTemplateConfigPage extends Page {
     newRegimenNameTextBox.sendKeys(name);
     if (isActive) newRegimenActiveCheckBox.click();
     addButton.click();
-
   }
 
   public void clickReportingFieldTab() {
@@ -195,7 +195,6 @@ public class RegimenTemplateConfigPage extends Page {
     reportingFieldsTab.click();
     testWebDriver.waitForElementToAppear(noOfPatientsOnTreatmentCheckBox);
   }
-
 
   public void selectCheckBox(WebElement locator) {
     if (!locator.isSelected()) {
@@ -286,11 +285,12 @@ public class RegimenTemplateConfigPage extends Page {
       baseRegimenDivXpath + "[" + indexOfCodeAdded + "]/div[4]/input").isSelected();
   }
 
-  public void configureProgram(String program) throws InterruptedException {
-    testWebDriver.waitForElementToAppear(testWebDriver.getElementByXpath("//a[@id='" + program + "']/span"));
-    testWebDriver.getElementByXpath("//a[@id='" + program + "']/span").click();
-    Thread.sleep(100);
-    testWebDriver.getElementByXpath(".//*[@id='wrap']/div/div/div/div[2]/ul/li[2]/a").click();
+  public void configureProgram(String program) {
+    WebElement configureProgram = testWebDriver.getElementById(program);
+    testWebDriver.waitForElementToAppear(configureProgram);
+    configureProgram.click();
+    testWebDriver.waitForElementToAppear(regimensTab);
+    regimensTab.click();
     testWebDriver.waitForElementToAppear(addButton);
   }
 

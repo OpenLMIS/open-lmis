@@ -21,8 +21,8 @@ import java.util.List;
 @Repository
 public interface FacilityVisitMapper {
 
-  @Insert({"INSERT INTO facility_visits (distributionId, facilityId, confirmedByName, confirmedByTitle, verifiedByName, verifiedByTitle, observations, synced, createdBy, modifiedBy)",
-    "VALUES (#{distributionId}, #{facilityId}, #{confirmedBy.name}, #{confirmedBy.title}, #{verifiedBy.name}, #{verifiedBy.title}, #{observations}, #{synced}, #{createdBy}, #{modifiedBy})"})
+  @Insert({"INSERT INTO facility_visits (distributionId, facilityId, synced, createdBy, modifiedBy)",
+    "VALUES (#{distributionId}, #{facilityId}, #{synced}, #{createdBy}, #{modifiedBy})"})
   @Options(useGeneratedKeys = true)
   public void insert(FacilityVisit facilityVisit);
 
@@ -35,9 +35,10 @@ public interface FacilityVisitMapper {
   })
   public FacilityVisit getBy(@Param(value = "facilityId") Long facilityId, @Param(value = "distributionId") Long distributionId);
 
-  @Update({"UPDATE facility_visits SET confirmedByName = #{confirmedBy.name}, confirmedByTitle = #{confirmedBy.title}, ",
-    "verifiedByName = #{verifiedBy.name}, verifiedByTitle = #{verifiedBy.title}, " +
-      "observations = #{observations}, synced = #{synced}, modifiedBy = #{modifiedBy}, modifiedDate = DEFAULT WHERE id = #{id}"})
+  @Update({"UPDATE facility_visits SET visited = #{visited}, visitDate = #{visitDate}, vehicleId = #{vehicleId}, ",
+    "confirmedByName = #{confirmedBy.name}, confirmedByTitle = #{confirmedBy.title}, ",
+    "verifiedByName = #{verifiedBy.name}, verifiedByTitle = #{verifiedBy.title}, ",
+    "observations = #{observations}, synced = #{synced}, modifiedBy = #{modifiedBy}, modifiedDate = DEFAULT WHERE id = #{id}"})
   public void update(FacilityVisit facilityVisit);
 
 
@@ -47,4 +48,7 @@ public interface FacilityVisitMapper {
 
   @Select({"SELECT * FROM facility_visits WHERE distributionId = #{distributionId} AND synced = false"})
   List<FacilityVisit> getUnSyncedFacilities(Long distributionId);
+
+  @Select({"SELECT count(*) FROM facility_visits WHERE distributionId = #{distributionId} AND synced = false"})
+  Integer getUnsyncedFacilityCountForDistribution(Long distributionId);
 }

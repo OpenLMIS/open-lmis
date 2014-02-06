@@ -49,6 +49,7 @@ import static org.openlmis.core.builder.ProcessingScheduleBuilder.defaultProcess
 import static org.openlmis.core.builder.ProgramBuilder.defaultProgram;
 import static org.openlmis.distribution.builder.DistributionBuilder.*;
 import static org.openlmis.distribution.domain.DistributionStatus.INITIATED;
+import static org.openlmis.distribution.domain.DistributionStatus.SYNCED;
 
 
 @Category(IntegrationTests.class)
@@ -157,5 +158,20 @@ public class DistributionMapperIT {
     assertThat(distributionFromDatabase.getProgram().getId(), is(distribution.getProgram().getId()));
     assertThat(distributionFromDatabase.getPeriod().getId(), is(distribution.getPeriod().getId()));
     assertThat(distributionFromDatabase.getDeliveryZone().getId(), is(distribution.getDeliveryZone().getId()));
+  }
+
+  @Test
+  public void shouldUpdateDistributionStatus() {
+    Distribution distribution = make(a(defaultDistribution,
+      with(deliveryZone, zone),
+      with(period, processingPeriod),
+      with(program, program1)));
+
+    mapper.insert(distribution);
+    mapper.updateDistributionStatus(distribution.getId(), SYNCED);
+
+    Distribution distributionFromDatabase = mapper.get(distribution);
+
+    assertThat(distributionFromDatabase.getStatus(), is(SYNCED));
   }
 }

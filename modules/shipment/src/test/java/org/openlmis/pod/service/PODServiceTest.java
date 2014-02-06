@@ -23,6 +23,8 @@ import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.ProductService;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.fulfillment.shared.FulfillmentPermissionService;
+import org.openlmis.order.domain.Order;
+import org.openlmis.order.domain.OrderStatus;
 import org.openlmis.order.service.OrderService;
 import org.openlmis.pod.domain.OrderPOD;
 import org.openlmis.pod.repository.PODRepository;
@@ -190,5 +192,88 @@ public class PODServiceTest {
     expectedException.expectMessage("error.permission.denied");
 
     podService.save(orderPod);
+  }
+
+  @Test
+  public void shouldNotSubmitPODIfUserDoesNotHaveTheRight() throws Exception {
+    OrderPOD orderPOD = new OrderPOD();
+    orderPOD.setId(1234L);
+    when(repository.getPOD(1234L)).thenReturn(orderPOD);
+    doThrow(new DataException("error.permission.denied")).when(podService).checkPermissions(orderPOD);
+
+    expectedException.expect(DataException.class);
+    expectedException.expectMessage("error.permission.denied");
+
+    podService.submit(1234L, userId);
+
+    verify(podService).checkPermissions(orderPOD);
+  }
+
+  @Test
+  public void shouldValidatePODLienItems() throws Exception {
+    long podId = 1234L;
+    OrderPOD orderPOD = mock(OrderPOD.class);
+    long orderId = 2345L;
+    when(orderPOD.getOrderId()).thenReturn(orderId);
+    when(orderService.hasStatus(orderId, OrderStatus.RECEIVED)).thenReturn(false);
+    when(repository.getPOD(podId)).thenReturn(orderPOD);
+    doNothing().when(podService).checkPermissions(orderPOD);
+    doThrow(new DataException("error.invalid.received.quantity")).when(orderPOD).validate();
+
+    expectedException.expect(DataException.class);
+    expectedException.expectMessage("error.invalid.received.quantity");
+
+    podService.submit(podId, userId);
+  }
+
+  @Test
+  public void shouldChangeOrderStatusWhenPODIsSubmittedSuccessfully() throws Exception {
+    long podId = 1234L;
+    OrderPOD orderPOD = mock(OrderPOD.class);
+    long orderId = 2345L;
+    when(orderPOD.getOrderId()).thenReturn(orderId);
+    when(orderService.hasStatus(orderId, OrderStatus.RECEIVED)).thenReturn(false);
+    when(repository.getPOD(podId)).thenReturn(orderPOD);
+    doNothing().when(podService).checkPermissions(orderPOD);
+    doNothing().when(orderPOD).validate();
+
+    podService.submit(podId, userId);
+
+    verify(orderService).updateOrderStatus(new Order(3L, RECEIVED));
+  }
+
+  @Test
+  public void shouldReturnSubmittedPOD() throws Exception {
+    long podId = 1234L;
+    long orderId = 2345L;
+
+    OrderPOD orderPOD = mock(OrderPOD.class);
+    when(orderPOD.getOrderId()).thenReturn(orderId);
+    when(orderService.hasStatus(orderId, OrderStatus.RECEIVED)).thenReturn(false);
+
+    when(repository.getPOD(podId)).thenReturn(orderPOD);
+    doNothing().when(podService).checkPermissions(orderPOD);
+    doNothing().when(orderPOD).validate();
+    when(repository.update(orderPOD)).thenReturn(orderPOD);
+
+    OrderPOD submittedPOD = podService.submit(podId, userId);
+
+    assertThat(submittedPOD, is(orderPOD));
+  }
+
+  @Test
+  public void shouldNotSubmitAlreadySubmittedPOD() throws Exception {
+    long podId = 1234L;
+    long orderId = 2345L;
+    OrderPOD orderPOD = new OrderPOD();
+    orderPOD.setOrderId(orderId);
+    when(repository.getPOD(podId)).thenReturn(orderPOD);
+    doNothing().when(podService).checkPermissions(orderPOD);
+    when(orderService.hasStatus(orderId, OrderStatus.RECEIVED)).thenReturn(true);
+
+    expectedException.expect(DataException.class);
+    expectedException.expectMessage("error.pod.already.submitted");
+
+    podService.submit(podId, 5432L);
   }
 }

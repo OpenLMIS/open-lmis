@@ -51,7 +51,7 @@ public class DistributionChildCoverageSyncTest extends TestCaseHelper {
   }};
 
   @BeforeMethod(groups = {"distribution"})
-  public void setUp() throws Exception {
+  public void setUp() throws InterruptedException, SQLException, IOException {
     super.setup();
     Map<String, String> dataMap = childCoverageData;
     setupDataForDistributionTest(dataMap.get(USER), dataMap.get(FIRST_DELIVERY_ZONE_CODE), dataMap.get(SECOND_DELIVERY_ZONE_CODE),
@@ -62,16 +62,16 @@ public class DistributionChildCoverageSyncTest extends TestCaseHelper {
   }
 
   @Test(groups = {"distribution"})
-  public void testShouldVerifyAllLabels() throws IOException, SQLException {
+  public void testShouldVerifyAllLabels() {
     HomePage homePage = loginPage.loginAs(childCoverageData.get(USER), childCoverageData.get(PASSWORD));
     DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
     distributionPage.initiate(childCoverageData.get(FIRST_DELIVERY_ZONE_NAME), childCoverageData.get(VACCINES_PROGRAM));
     FacilityListPage facilityListPage = distributionPage.clickRecordData(1);
-    GeneralObservationPage generalObservationPage = facilityListPage.selectFacility(childCoverageData.get(FIRST_FACILITY_CODE));
+    VisitInformationPage visitInformationPage = facilityListPage.selectFacility(childCoverageData.get(FIRST_FACILITY_CODE));
 
     facilityListPage.verifyFacilityIndicatorColor("Overall", "AMBER");
 
-    ChildCoveragePage childCoveragePage = generalObservationPage.navigateToChildCoverage();
+    ChildCoveragePage childCoveragePage = visitInformationPage.navigateToChildCoverage();
     childCoveragePage.verifyIndicator("RED");
 
     verifyRegimentsPresent();
@@ -80,7 +80,7 @@ public class DistributionChildCoverageSyncTest extends TestCaseHelper {
   }
 
   @Test(groups = {"distribution"})
-  public void testShouldVerifyTargetGroupIfCatchmentPopulationAndWhoRatioPresent() throws IOException, SQLException {
+  public void testShouldVerifyTargetGroupIfCatchmentPopulationAndWhoRatioPresent() throws SQLException {
     HomePage homePage = loginPage.loginAs("Admin123", "Admin123");
     ProgramProductISAPage programProductISAPage = homePage.navigateProgramProductISA();
     programProductISAPage.fillProgramProductISA(childCoverageData.get(VACCINES_PROGRAM), "90", "1", "50", "30", "0", "100", "2000", "333");
@@ -90,9 +90,9 @@ public class DistributionChildCoverageSyncTest extends TestCaseHelper {
     DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
     distributionPage.initiate(childCoverageData.get(FIRST_DELIVERY_ZONE_NAME), childCoverageData.get(VACCINES_PROGRAM));
     FacilityListPage facilityListPage = distributionPage.clickRecordData(1);
-    GeneralObservationPage generalObservationPage = facilityListPage.selectFacility(childCoverageData.get(FIRST_FACILITY_CODE));
+    VisitInformationPage visitInformationPage = facilityListPage.selectFacility(childCoverageData.get(FIRST_FACILITY_CODE));
 
-    ChildCoveragePage childCoveragePage = generalObservationPage.navigateToChildCoverage();
+    ChildCoveragePage childCoveragePage = visitInformationPage.navigateToChildCoverage();
     assertEquals(childCoveragePage.getTextOfTargetGroupValue(9), "300");
     assertEquals(childCoveragePage.getTextOfTargetGroupValue(10), "300");
     assertEquals(childCoveragePage.getTextOfTargetGroupValue(11), "300");
@@ -104,14 +104,14 @@ public class DistributionChildCoverageSyncTest extends TestCaseHelper {
   }
 
   @Test(groups = {"distribution"})
-  public void testShouldVerifyTargetGroupIfOnlyCatchmentPopulationPresent() throws IOException, SQLException {
+  public void testShouldVerifyTargetGroupIfOnlyCatchmentPopulationPresent() {
     HomePage homePage = loginPage.loginAs(childCoverageData.get(USER), childCoverageData.get(PASSWORD));
     DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
     distributionPage.initiate(childCoverageData.get(FIRST_DELIVERY_ZONE_NAME), childCoverageData.get(VACCINES_PROGRAM));
     FacilityListPage facilityListPage = distributionPage.clickRecordData(1);
-    GeneralObservationPage generalObservationPage = facilityListPage.selectFacility(childCoverageData.get(FIRST_FACILITY_CODE));
+    VisitInformationPage visitInformationPage = facilityListPage.selectFacility(childCoverageData.get(FIRST_FACILITY_CODE));
 
-    ChildCoveragePage childCoveragePage = generalObservationPage.navigateToChildCoverage();
+    ChildCoveragePage childCoveragePage = visitInformationPage.navigateToChildCoverage();
     assertEquals(childCoveragePage.getTextOfTargetGroupValue(9), "");
     assertEquals(childCoveragePage.getTextOfTargetGroupValue(10), "");
     assertEquals(childCoveragePage.getTextOfTargetGroupValue(11), "");
@@ -120,7 +120,7 @@ public class DistributionChildCoverageSyncTest extends TestCaseHelper {
   }
 
   @Test(groups = {"distribution"})
-  public void testShouldVerifyTargetGroupIfOnlyWhoRatioPresent() throws IOException, SQLException {
+  public void testShouldVerifyTargetGroupIfOnlyWhoRatioPresent() {
     HomePage homePage = loginPage.loginAs("Admin123", "Admin123");
     ProgramProductISAPage programProductISAPage = homePage.navigateProgramProductISA();
     programProductISAPage.fillProgramProductISA(childCoverageData.get(VACCINES_PROGRAM), "90", "1", "50", "30", "0", "100", "2000", "333");
@@ -138,9 +138,9 @@ public class DistributionChildCoverageSyncTest extends TestCaseHelper {
     DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
     distributionPage.initiate(childCoverageData.get(FIRST_DELIVERY_ZONE_NAME), childCoverageData.get(VACCINES_PROGRAM));
     FacilityListPage facilityListPage = distributionPage.clickRecordData(1);
-    GeneralObservationPage generalObservationPage = facilityListPage.selectFacility(childCoverageData.get(FIRST_FACILITY_CODE));
+    VisitInformationPage visitInformationPage = facilityListPage.selectFacility(childCoverageData.get(FIRST_FACILITY_CODE));
 
-    ChildCoveragePage childCoveragePage = generalObservationPage.navigateToChildCoverage();
+    ChildCoveragePage childCoveragePage = visitInformationPage.navigateToChildCoverage();
     assertEquals(childCoveragePage.getTextOfTargetGroupValue(9), "");
     assertEquals(childCoveragePage.getTextOfTargetGroupValue(10), "");
     assertEquals(childCoveragePage.getTextOfTargetGroupValue(11), "");
@@ -196,7 +196,7 @@ public class DistributionChildCoverageSyncTest extends TestCaseHelper {
   public void setupDataForDistributionTest(String userSIC, String deliveryZoneCodeFirst, String deliveryZoneCodeSecond,
                                            String deliveryZoneNameFirst, String deliveryZoneNameSecond,
                                            String facilityCodeFirst, String facilityCodeSecond,
-                                           String programFirst, String programSecond, String schedule, String productGroupCode) throws Exception {
+                                           String programFirst, String programSecond, String schedule, String productGroupCode) throws SQLException {
     List<String> rightsList = asList("MANAGE_DISTRIBUTION");
     setupTestDataToInitiateRnRAndDistribution(facilityCodeFirst, facilityCodeSecond, true, programFirst, userSIC, "200", rightsList,
       programSecond, "District1", "Ngorongoro", "Ngorongoro");
@@ -214,7 +214,7 @@ public class DistributionChildCoverageSyncTest extends TestCaseHelper {
   }
 
   @AfterMethod(groups = "distribution")
-  public void tearDown() throws Exception {
+  public void tearDown() throws SQLException {
     testWebDriver.sleep(500);
     if (!testWebDriver.getElementById("username").isDisplayed()) {
       HomePage homePage = PageFactory.getInstanceOfHomePage(testWebDriver);

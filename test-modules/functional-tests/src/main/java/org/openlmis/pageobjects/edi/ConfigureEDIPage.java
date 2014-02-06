@@ -17,8 +17,6 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 
-import java.io.IOException;
-
 import static org.openqa.selenium.support.How.ID;
 
 
@@ -40,19 +38,19 @@ public class ConfigureEDIPage extends Page {
     testWebDriver.waitForElementToAppear(configureOrderButton);
   }
 
-  public ConfigureOrderPage navigateConfigureOrderPage() throws IOException {
+  public ConfigureOrderPage navigateConfigureOrderPage() {
     testWebDriver.waitForElementToAppear(configureOrderButton);
     configureOrderButton.click();
     return new ConfigureOrderPage(testWebDriver);
   }
 
-  public ConfigureShipmentPage navigateConfigureShipmentPage() throws IOException {
+  public ConfigureShipmentPage navigateConfigureShipmentPage() {
     testWebDriver.waitForElementToAppear(configureShipmentButton);
     configureShipmentButton.click();
     return new ConfigureShipmentPage(testWebDriver);
   }
 
-  public ConfigureBudgetPage navigateConfigureBudgetPage() throws IOException {
+  public ConfigureBudgetPage navigateConfigureBudgetPage() {
     testWebDriver.waitForElementToAppear(configureBudgetButton);
     configureBudgetButton.click();
     return new ConfigureBudgetPage(testWebDriver);

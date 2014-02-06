@@ -17,8 +17,6 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 
-import java.io.IOException;
-
 import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
 import static org.openqa.selenium.support.How.ID;
 import static org.openqa.selenium.support.How.XPATH;
@@ -27,53 +25,52 @@ import static org.openqa.selenium.support.How.XPATH;
 public class ReportPage extends RequisitionPage {
 
   @FindBy(how = ID, using = "addNew")
-  private static WebElement addNewButton=null;
+  private static WebElement addNewButton = null;
 
   @FindBy(how = ID, using = "addNewHeader")
-  private static WebElement addNewReportTitle=null;
+  private static WebElement addNewReportTitle = null;
 
   @FindBy(how = ID, using = "name")
-  private static WebElement reportNameTextField=null;
+  private static WebElement reportNameTextField = null;
 
   @FindBy(how = ID, using = "file")
-  private static WebElement uploadField=null;
+  private static WebElement uploadField = null;
 
   @FindBy(how = ID, using = "saveReport")
-  private static WebElement saveButton=null;
+  private static WebElement saveButton = null;
 
   @FindBy(how = ID, using = "cancelButton")
-  private static WebElement cancelButton=null;
+  private static WebElement cancelButton = null;
 
   @FindBy(how = ID, using = "saveSuccessMsgDiv")
-  private static WebElement saveSuccessMessage=null;
+  private static WebElement saveSuccessMessage = null;
 
   @FindBy(how = ID, using = "error")
-  private static WebElement saveErrorMessage=null;
+  private static WebElement saveErrorMessage = null;
 
   @FindBy(how = XPATH, using = "//a[contains(text(),'PDF')]")
-  private static WebElement PDF=null;
+  private static WebElement PDF = null;
 
   @FindBy(how = XPATH, using = "//a[contains(text(),'XLS')]")
-  private static WebElement XLS=null;
+  private static WebElement XLS = null;
 
   @FindBy(how = XPATH, using = "//a[contains(text(),'CSV')]")
-  private static WebElement CSV=null;
+  private static WebElement CSV = null;
 
   @FindBy(how = XPATH, using = "//a[contains(text(),'HTML')]")
-  private static WebElement HTML=null;
+  private static WebElement HTML = null;
 
   @FindBy(how = XPATH, using = "(//span[contains(text(),'Please fill this value')])[1]")
-  private static WebElement errorReportName=null;
+  private static WebElement errorReportName = null;
 
   @FindBy(how = XPATH, using = "(//span[contains(text(),'Please fill this value')])[2]")
-  private static WebElement errorFile=null;
+  private static WebElement errorFile = null;
 
 
-  public ReportPage(TestWebDriver driver) throws IOException {
+  public ReportPage(TestWebDriver driver) {
     super(driver);
     PageFactory.initElements(new AjaxElementLocatorFactory(TestWebDriver.getDriver(), 10), this);
     testWebDriver.setImplicitWait(10);
-
   }
 
   public void clickAddNewButton() {
@@ -107,7 +104,6 @@ public class ReportPage extends RequisitionPage {
     String uploadFilePath;
     uploadFilePath = this.getClass().getClassLoader().getResource(fileName).getFile();
     uploadField.sendKeys(uploadFilePath);
-
   }
 
   public void clickSaveButton() {
@@ -145,6 +141,4 @@ public class ReportPage extends RequisitionPage {
     testWebDriver.waitForElementToAppear(element);
     assertTrue("Report Name '" + reportName + "' should display in list", element.getText().trim().equalsIgnoreCase(reportName));
   }
-
-
 }

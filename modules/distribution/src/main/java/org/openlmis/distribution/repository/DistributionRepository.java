@@ -32,4 +32,8 @@ public class DistributionRepository {
   public Distribution get(Distribution distribution) {
     return mapper.get(distribution);
   }
+
+  public void updateDistributionStatus(Long distributionId, DistributionStatus status) {
+    mapper.updateDistributionStatus(distributionId, status);
+  }
 }

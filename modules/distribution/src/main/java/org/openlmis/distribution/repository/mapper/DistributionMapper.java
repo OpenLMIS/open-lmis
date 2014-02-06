@@ -13,6 +13,7 @@ package org.openlmis.distribution.repository.mapper;
 
 import org.apache.ibatis.annotations.*;
 import org.openlmis.distribution.domain.Distribution;
+import org.openlmis.distribution.domain.DistributionStatus;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -34,4 +35,7 @@ public interface DistributionMapper {
     @Result(property = "deliveryZone.id", column = "deliveryZoneId")
   })
   Distribution get(Distribution distribution);
+
+  @Update({"UPDATE distributions SET status =  #{status} WHERE id = #{id}"})
+  void updateDistributionStatus(@Param("id") Long id, @Param("status") DistributionStatus status);
 }

@@ -22,6 +22,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -62,7 +63,7 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
   }};
 
   @BeforeMethod(groups = {"distribution"})
-  public void setUp() throws Exception {
+  public void setUp() throws InterruptedException, SQLException, IOException {
     super.setup();
     loginPage = PageFactory.getInstanceOfLoginPage(testWebDriver, baseUrlGlobal);
     facilityListPage = PageFactory.getInstanceOfFacilityListPage(testWebDriver);
@@ -75,13 +76,13 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
   }
 
   @Test(groups = {"distribution"})
-  public void testEpiUsePageSync() throws Exception {
+  public void testEpiUsePageSync() throws SQLException {
     HomePage homePage = loginPage.loginAs(epiUseData.get(USER), epiUseData.get(PASSWORD));
     initiateDistribution(epiUseData.get(FIRST_DELIVERY_ZONE_NAME), epiUseData.get(VACCINES_PROGRAM));
-    GeneralObservationPage generalObservationPage = facilityListPage.selectFacility(epiUseData.get(FIRST_FACILITY_CODE));
-    generalObservationPage.enterDataWhenFacilityVisited("some observations", "samuel", "Doe", "Verifier", "XYZ");
+    VisitInformationPage visitInformationPage = facilityListPage.selectFacility(epiUseData.get(FIRST_FACILITY_CODE));
+    visitInformationPage.enterDataWhenFacilityVisited("some observations", "samuel", "Doe", "Verifier", "XYZ");
 
-    EPIUsePage epiUsePage = generalObservationPage.navigateToEpiUse();
+    EPIUsePage epiUsePage = visitInformationPage.navigateToEpiUse();
     epiUsePage.verifyIndicator("RED");
     epiUsePage.verifyProductGroup("PG1-Name", 1);
     epiUsePage.enterData(10, 20, 30, 40, 50, "10/2011", 1);
@@ -102,13 +103,13 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
   }
 
   @Test(groups = {"distribution"})
-  public void testEpiUseEditSync() throws Exception {
+  public void testEpiUseEditSync() throws SQLException {
     HomePage homePage = loginPage.loginAs(epiUseData.get(USER), epiUseData.get(PASSWORD));
     initiateDistribution(epiUseData.get(FIRST_DELIVERY_ZONE_NAME), epiUseData.get(VACCINES_PROGRAM));
-    GeneralObservationPage generalObservationPage = facilityListPage.selectFacility(epiUseData.get(FIRST_FACILITY_CODE));
-    generalObservationPage.enterDataWhenFacilityVisited("some observations", "samuel", "Doe", "Verifier", "XYZ");
+    VisitInformationPage visitInformationPage = facilityListPage.selectFacility(epiUseData.get(FIRST_FACILITY_CODE));
+    visitInformationPage.enterDataWhenFacilityVisited("some observations", "samuel", "Doe", "Verifier", "XYZ");
 
-    EPIUsePage epiUsePage = generalObservationPage.navigateToEpiUse();
+    EPIUsePage epiUsePage = visitInformationPage.navigateToEpiUse();
     epiUsePage.verifyProductGroup("PG1-Name", 1);
     epiUsePage.verifyIndicator("RED");
     epiUsePage.enterValueInLoss("0", 1);
@@ -127,12 +128,12 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
     epiUsePage.verifyStockAtEndOfMonth("50", 1);
     epiUsePage.verifyExpirationDate("10/2011", 1);
 
-    epiUsePage.checkUncheckStockAtFirstOfMonthNotRecorded(1);
-    epiUsePage.checkUncheckReceivedNotRecorded(1);
-    epiUsePage.checkUncheckDistributedNotRecorded(1);
-    epiUsePage.checkUncheckLossNotRecorded(1);
-    epiUsePage.checkUncheckStockAtEndOfMonthNotRecorded(1);
-    epiUsePage.checkUncheckExpirationDateNotRecorded(1);
+    epiUsePage.checkUnCheckStockAtFirstOfMonthNotRecorded(1);
+    epiUsePage.checkUnCheckReceivedNotRecorded(1);
+    epiUsePage.checkUnCheckDistributedNotRecorded(1);
+    epiUsePage.checkUnCheckLossNotRecorded(1);
+    epiUsePage.checkUnCheckStockAtEndOfMonthNotRecorded(1);
+    epiUsePage.checkUnCheckExpirationDateNotRecorded(1);
 
     epiUsePage.navigateToRefrigerators();
     refrigeratorPage.navigateToEpiUse();
@@ -144,12 +145,12 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
     epiUsePage.verifyStockAtEndOfMonthStatus(false, 1);
     epiUsePage.verifyExpirationDateStatus(false, 1);
 
-    epiUsePage.checkUncheckStockAtFirstOfMonthNotRecorded(1);
-    epiUsePage.checkUncheckReceivedNotRecorded(1);
-    epiUsePage.checkUncheckDistributedNotRecorded(1);
-    epiUsePage.checkUncheckLossNotRecorded(1);
-    epiUsePage.checkUncheckStockAtEndOfMonthNotRecorded(1);
-    epiUsePage.checkUncheckExpirationDateNotRecorded(1);
+    epiUsePage.checkUnCheckStockAtFirstOfMonthNotRecorded(1);
+    epiUsePage.checkUnCheckReceivedNotRecorded(1);
+    epiUsePage.checkUnCheckDistributedNotRecorded(1);
+    epiUsePage.checkUnCheckLossNotRecorded(1);
+    epiUsePage.checkUnCheckStockAtEndOfMonthNotRecorded(1);
+    epiUsePage.checkUnCheckExpirationDateNotRecorded(1);
 
     epiUsePage.enterData(20, 30, 40, 50, 60, "11/2012", 1);
     epiUsePage.verifyIndicator("GREEN");
@@ -189,13 +190,13 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
   }
 
   @Test(groups = {"distribution"})
-  public void testEpiUsePageSyncWhenSomeFieldsEmpty() throws Exception {
+  public void testEpiUsePageSyncWhenSomeFieldsEmpty() throws SQLException {
     loginPage.loginAs(epiUseData.get(USER), epiUseData.get(PASSWORD));
     initiateDistribution(epiUseData.get(FIRST_DELIVERY_ZONE_NAME), epiUseData.get(VACCINES_PROGRAM));
-    GeneralObservationPage generalObservationPage = facilityListPage.selectFacility(epiUseData.get(FIRST_FACILITY_CODE));
-    generalObservationPage.enterDataWhenFacilityVisited("some observations", "samuel", "Doe", "Verifier", "XYZ");
+    VisitInformationPage visitInformationPage = facilityListPage.selectFacility(epiUseData.get(FIRST_FACILITY_CODE));
+    visitInformationPage.enterDataWhenFacilityVisited("some observations", "samuel", "Doe", "Verifier", "XYZ");
 
-    EPIUsePage epiUsePage = generalObservationPage.navigateToEpiUse();
+    EPIUsePage epiUsePage = visitInformationPage.navigateToEpiUse();
     epiUsePage.verifyProductGroup("PG1-Name", 1);
     epiUsePage.verifyIndicator("RED");
     epiUsePage.enterValueInStockAtFirstOfMonth("10", 1);
@@ -214,13 +215,13 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
   }
 
   @Test(groups = {"distribution"})
-  public void testEpiUsePageSyncWhenNrAppliedToAllFields() throws Exception {
+  public void testEpiUsePageSyncWhenNrAppliedToAllFields() throws SQLException {
     HomePage homePage = loginPage.loginAs(epiUseData.get(USER), epiUseData.get(PASSWORD));
     initiateDistribution(epiUseData.get(FIRST_DELIVERY_ZONE_NAME), epiUseData.get(VACCINES_PROGRAM));
-    GeneralObservationPage generalObservationPage = facilityListPage.selectFacility(epiUseData.get(FIRST_FACILITY_CODE));
-    generalObservationPage.enterDataWhenFacilityVisited("some observations", "samuel", "Doe", "Verifier", "XYZ");
+    VisitInformationPage visitInformationPage = facilityListPage.selectFacility(epiUseData.get(FIRST_FACILITY_CODE));
+    visitInformationPage.enterDataWhenFacilityVisited("some observations", "samuel", "Doe", "Verifier", "XYZ");
 
-    EPIUsePage epiUsePage = generalObservationPage.navigateToEpiUse();
+    EPIUsePage epiUsePage = visitInformationPage.navigateToEpiUse();
 
     epiUsePage.verifyProductGroup("PG1-Name", 1);
     epiUsePage.verifyIndicator("RED");
@@ -256,17 +257,17 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
   }
 
   @Test(groups = {"distribution"})
-  public void testEpiUsePageSyncWhenNRAppliedToFewFields() throws Exception {
+  public void testEpiUsePageSyncWhenNRAppliedToFewFields() throws SQLException {
     dbWrapper.insertProductGroup("PG2");
     dbWrapper.insertProductWithGroup("Product7", "ProductName7", "PG2", true);
     dbWrapper.insertProgramProduct("Product7", epiUseData.get(VACCINES_PROGRAM), "10", "true");
 
     HomePage homePage = loginPage.loginAs(epiUseData.get(USER), epiUseData.get(PASSWORD));
     initiateDistribution(epiUseData.get(FIRST_DELIVERY_ZONE_NAME), epiUseData.get(VACCINES_PROGRAM));
-    GeneralObservationPage generalObservationPage = facilityListPage.selectFacility(epiUseData.get(FIRST_FACILITY_CODE));
-    generalObservationPage.enterDataWhenFacilityVisited("some observations", "samuel", "Doe", "Verifier", "XYZ");
+    VisitInformationPage visitInformationPage = facilityListPage.selectFacility(epiUseData.get(FIRST_FACILITY_CODE));
+    visitInformationPage.enterDataWhenFacilityVisited("some observations", "samuel", "Doe", "Verifier", "XYZ");
 
-    EPIUsePage epiUsePage = generalObservationPage.navigateToEpiUse();
+    EPIUsePage epiUsePage = visitInformationPage.navigateToEpiUse();
     epiUsePage.verifyIndicator("RED");
     epiUsePage.verifyProductGroup("PG1-Name", 1);
     epiUsePage.checkApplyNRToStockAtFirstOfMonth0();
@@ -296,7 +297,7 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
   }
 
   @Test(groups = {"distribution"})
-  public void shouldDisplayNoProductsAddedMessageOnEpiUsePageWhenNoActiveProducts() throws Exception {
+  public void shouldDisplayNoProductsAddedMessageOnEpiUsePageWhenNoActiveProducts() throws SQLException {
     dbWrapper.updateFieldValue("products", "active", "false", "code", "P10");
     dbWrapper.updateFieldValue("products", "active", "false", "code", "P11");
     dbWrapper.updateFieldValue("products", "active", "false", "code", "Product6");
@@ -318,7 +319,7 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
   public void setupDataForDistributionTest(String userSIC, String deliveryZoneCodeFirst, String deliveryZoneCodeSecond,
                                            String deliveryZoneNameFirst, String deliveryZoneNameSecond,
                                            String facilityCodeFirst, String facilityCodeSecond,
-                                           String programFirst, String programSecond, String schedule, String productGroupCode) throws Exception {
+                                           String programFirst, String programSecond, String schedule, String productGroupCode) throws SQLException {
     List<String> rightsList = asList("MANAGE_DISTRIBUTION");
     setupTestDataToInitiateRnRAndDistribution(facilityCodeFirst, facilityCodeSecond, true, programFirst, userSIC, "200", rightsList,
       programSecond, "District1", "Ngorongoro", "Ngorongoro");
@@ -333,7 +334,7 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
     dbWrapper.insertProgramProduct("Product6", programFirst, "10", "true");
   }
 
-  public void initiateDistribution(String deliveryZoneNameFirst, String programFirst) throws IOException {
+  public void initiateDistribution(String deliveryZoneNameFirst, String programFirst) {
     HomePage homePage = PageFactory.getInstanceOfHomePage(testWebDriver);
     DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
     distributionPage.selectValueFromDeliveryZone(deliveryZoneNameFirst);
@@ -351,7 +352,7 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
   }
 
   @AfterMethod(groups = "distribution")
-  public void tearDown() throws Exception {
+  public void tearDown() throws SQLException {
     testWebDriver.sleep(500);
     if (!testWebDriver.getElementById("username").isDisplayed()) {
       HomePage homePage = PageFactory.getInstanceOfHomePage(testWebDriver);

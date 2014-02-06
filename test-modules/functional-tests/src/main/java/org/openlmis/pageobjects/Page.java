@@ -17,7 +17,6 @@ import org.openqa.selenium.support.FindBy;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
-import java.io.IOException;
 
 import static org.openqa.selenium.support.How.LINK_TEXT;
 
@@ -32,8 +31,8 @@ public abstract class Page {
     this.testWebDriver = driver;
   }
 
-  public LoginPage logout() throws IOException {
-    testWebDriver.sleep(500);
+  public LoginPage logout() {
+    testWebDriver.waitForElementToBeEnabled(logoutLink);
     logoutLink.click();
     testWebDriver.sleep(500);
     return new LoginPage(testWebDriver);
@@ -46,7 +45,7 @@ public abstract class Page {
     locator.sendKeys(value);
   }
 
-  public void downloadFileWhileSaveDialogOPen(WebElement element) throws IOException, NullPointerException, InterruptedException {
+  public void downloadFileWhileSaveDialogOPen(WebElement element) throws InterruptedException {
     try {
       Robot robot = new Robot();
       //get the focus on the element..don't use click since it stalls the driver
@@ -62,7 +61,6 @@ public abstract class Page {
       Thread.sleep(3000);
 
     } catch (AWTException e) {
-
       e.printStackTrace();
     }
   }

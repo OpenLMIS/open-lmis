@@ -28,21 +28,17 @@ import java.util.List;
 @NoArgsConstructor
 public class ProgramProductRepository {
 
+  @Autowired
   private ProgramProductMapper mapper;
-  private ProgramRepository programRepository;
-  private ProductRepository productRepository;
-  private ProgramProductPriceMapper programProductPriceMapper;
-
 
   @Autowired
-  public ProgramProductRepository(ProgramRepository programRepository, ProgramProductMapper programProductMapper,
-                                  ProductRepository productRepository, ProgramProductPriceMapper programProductPriceMapper) {
-    this.mapper = programProductMapper;
-    this.programRepository = programRepository;
-    this.productRepository = productRepository;
-    this.programProductPriceMapper = programProductPriceMapper;
-  }
+  private ProgramRepository programRepository;
 
+  @Autowired
+  private ProductRepository productRepository;
+
+  @Autowired
+  private ProgramProductPriceMapper programProductPriceMapper;
 
   public void save(ProgramProduct programProduct) {
     Long programId = programRepository.getIdByCode(programProduct.getProgram().getCode());
@@ -113,7 +109,6 @@ public class ProgramProductRepository {
     return mapper.getOptionsByProduct(product);
   }
 
-
   public ProgramProduct getById(Long id) {
     return mapper.getById(id);
   }
@@ -123,14 +118,10 @@ public class ProgramProductRepository {
   }
 
   public List<ProgramProduct> getProgramProductsBy(Long programId, String facilityTypeCode) {
-    return mapper.getByProgramIdAndFacilityCode(programId, facilityTypeCode);
+    return mapper.getByProgramIdAndFacilityTypeCode(programId, facilityTypeCode);
   }
 
   public List<ProgramProduct> getNonFullSupplyProductsForProgram(Program program) {
     return mapper.getNonFullSupplyProductsForProgram(program);
-  }
-
-  public List<ProgramProduct> getActiveByProgram(Long programId) {
-    return mapper.getActiveByProgram(programId);
   }
 }

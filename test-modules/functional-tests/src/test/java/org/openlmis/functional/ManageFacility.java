@@ -17,6 +17,8 @@ import org.openlmis.pageobjects.LoginPage;
 import org.openlmis.pageobjects.ManageFacilityPage;
 import org.testng.annotations.*;
 
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.*;
@@ -28,13 +30,13 @@ public class ManageFacility extends TestCaseHelper {
   LoginPage loginPage;
 
   @BeforeMethod(groups = {"admin"})
-  public void setUp() throws Exception {
+  public void setUp() throws InterruptedException, SQLException, IOException {
     super.setup();
     loginPage = PageFactory.getInstanceOfLoginPage(testWebDriver, baseUrlGlobal);
   }
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function-Positive")
-  public void testE2EManageFacility(String user, String program, String[] credentials) throws Exception {
+  public void testE2EManageFacility(String user, String program, String[] credentials) throws SQLException {
     dbWrapper.insertUser("200", user, "Ag/myf1Whs0fxr1FFfK8cs3q/VJ1qMs3yuMLDTeEcZEGzstj/waaUsQNQTIKk1U5JRzrDbPLCzCO1/vB5YGaEQ==", "F10", "Jane_Doe@openlmis.com");
 
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
@@ -88,7 +90,7 @@ public class ManageFacility extends TestCaseHelper {
   }
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function-Positive")
-  public void testFacilityTypeAndGeoZonePropagationFromParentFacility(String user, String program, String[] credentials) throws Exception {
+  public void testFacilityTypeAndGeoZonePropagationFromParentFacility(String user, String program, String[] credentials) throws SQLException {
     String geoZone = "District 1";
     String facilityType = "Lvl2 Hospital";
 
@@ -118,7 +120,7 @@ public class ManageFacility extends TestCaseHelper {
   }
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function-Positive")
-  public void testProgramSupportedPropagationFromParentFacility(String user, String program, String[] credentials) throws Exception {
+  public void testProgramSupportedPropagationFromParentFacility(String user, String program, String[] credentials) throws SQLException {
     setupProductTestData("P10", "P11", program, "lvl3_hospital");
     dbWrapper.insertFacilities("F10", "F11");
     dbWrapper.insertSupervisoryNode("F10", "N1", "Node 1", "null");
@@ -186,7 +188,7 @@ public class ManageFacility extends TestCaseHelper {
   }
 
   @AfterMethod(groups = {"admin"})
-  public void tearDown() throws Exception {
+  public void tearDown() throws SQLException {
     HomePage homePage = PageFactory.getInstanceOfHomePage(testWebDriver);
     homePage.logout(baseUrlGlobal);
     dbWrapper.deleteData();

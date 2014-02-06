@@ -16,6 +16,8 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.List;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.assertFalse;
@@ -28,21 +30,21 @@ public class ProgramProductAPI extends JsonUtility {
   public static final String commTrackUser = "commTrack";
   public static final String GET = "GET";
 
-  @BeforeMethod(groups = {"webservice","webserviceSmoke"})
-  public void setUp() throws Exception {
+  @BeforeMethod(groups = {"webservice", "webserviceSmoke"})
+  public void setUp() throws InterruptedException, SQLException, IOException {
     super.setup();
     super.setupTestData(true);
-    dbWrapper.updateRestrictLogin("commTrack",true);
+    dbWrapper.updateRestrictLogin("commTrack", true);
   }
 
-  @AfterMethod(groups = {"webservice","webserviceSmoke"})
-  public void tearDown() throws Exception {
+  @AfterMethod(groups = {"webservice", "webserviceSmoke"})
+  public void tearDown() throws SQLException {
     dbWrapper.deleteData();
     dbWrapper.closeConnection();
   }
 
   @Test(groups = {"webserviceSmoke"})
-  public void shouldVerifyProgramProductWithValidProgramCodeAndValidFacilityType() throws Exception {
+  public void shouldVerifyProgramProductWithValidProgramCodeAndValidFacilityType() {
     HttpClient client = new HttpClient();
     client.createContext();
     String programCode = "HIV";
@@ -62,7 +64,7 @@ public class ProgramProductAPI extends JsonUtility {
   }
 
   @Test(groups = {"webservice"})
-  public void shouldVerifyProgramProductWithValidProgramCodeAndValidFacilityTypeAndLowerCase() throws Exception {
+  public void shouldVerifyProgramProductWithValidProgramCodeAndValidFacilityTypeAndLowerCase() {
     HttpClient client = new HttpClient();
     client.createContext();
     String programCode = "hiv";
@@ -80,7 +82,7 @@ public class ProgramProductAPI extends JsonUtility {
   }
 
   @Test(groups = {"webservice"})
-  public void shouldVerifyProgramProductWithValidProgramCodeAndInvalidFacilityType() throws Exception {
+  public void shouldVerifyProgramProductWithValidProgramCodeAndInvalidFacilityType() throws SQLException {
     HttpClient client = new HttpClient();
     client.createContext();
     String programCode = "HIV";
@@ -96,7 +98,7 @@ public class ProgramProductAPI extends JsonUtility {
   }
 
   @Test(groups = {"webservice"})
-  public void shouldVerifyProgramProductWithValidProgramCode() throws Exception {
+  public void shouldVerifyProgramProductWithValidProgramCode() {
     HttpClient client = new HttpClient();
     client.createContext();
     String programCode = "HIV";
@@ -112,7 +114,7 @@ public class ProgramProductAPI extends JsonUtility {
   }
 
   @Test(groups = {"webservice"})
-  public void shouldVerifyProgramProductWithoutCategory() throws Exception {
+  public void shouldVerifyProgramProductWithoutCategory() throws SQLException {
     HttpClient client = new HttpClient();
     client.createContext();
     String programCode = "HIV";
@@ -130,7 +132,7 @@ public class ProgramProductAPI extends JsonUtility {
   }
 
   @Test(groups = {"webservice"})
-  public void shouldVerifyProgramProductWithoutDescription() throws Exception {
+  public void shouldVerifyProgramProductWithoutDescription() throws SQLException {
     HttpClient client = new HttpClient();
     client.createContext();
     String programCode = "HIV";
@@ -149,7 +151,7 @@ public class ProgramProductAPI extends JsonUtility {
   }
 
   @Test(groups = {"webservice"})
-  public void shouldVerifyProgramProductWithInvalidProgramCode() throws Exception {
+  public void shouldVerifyProgramProductWithInvalidProgramCode() throws SQLException {
     HttpClient client = new HttpClient();
     client.createContext();
     String programCode = "testing123";
@@ -161,13 +163,13 @@ public class ProgramProductAPI extends JsonUtility {
   }
 
   @Test(groups = {"webservice"})
-  public void shouldVerifyProgramProductWhenProductIsInactiveGlobally() throws Exception {
+  public void shouldVerifyProgramProductWhenProductIsInactiveGlobally() throws SQLException {
     HttpClient client = new HttpClient();
     client.createContext();
     String programCode = "HIV";
     String productCode = "P10";
 
-    dbWrapper.updateFieldValue("products","active","false","code",productCode);
+    dbWrapper.updateFieldValue("products", "active", "false", "code", productCode);
 
     ResponseEntity responseEntity = client.SendJSON("", URL + "?programCode=" + programCode, GET, commTrackUser, "Admin123");
 
@@ -175,7 +177,7 @@ public class ProgramProductAPI extends JsonUtility {
   }
 
   @Test(groups = {"webservice"})
-  public void shouldVerifyProgramProductWhenProgramProductIsInactive() throws Exception {
+  public void shouldVerifyProgramProductWhenProgramProductIsInactive() throws SQLException {
     HttpClient client = new HttpClient();
     client.createContext();
     String programCode = "HIV";
@@ -189,7 +191,7 @@ public class ProgramProductAPI extends JsonUtility {
   }
 
   @Test(groups = {"webservice"})
-  public void shouldVerifyProgramProductWithProgramCodeNotAllowableLength() throws Exception {
+  public void shouldVerifyProgramProductWithProgramCodeNotAllowableLength() {
     HttpClient client = new HttpClient();
     client.createContext();
     String programCode = "HIVtestingtestingtestingHIVtestingtestingtestingHIVtestingtestingtestingHIVtestingtestingtesting";
@@ -200,7 +202,7 @@ public class ProgramProductAPI extends JsonUtility {
   }
 
   @Test(groups = {"webservice"})
-  public void shouldVerifyProgramProductWithBlankProgramCodeValue() throws Exception {
+  public void shouldVerifyProgramProductWithBlankProgramCodeValue() {
     HttpClient client = new HttpClient();
     client.createContext();
 
@@ -210,7 +212,7 @@ public class ProgramProductAPI extends JsonUtility {
   }
 
   @Test(groups = {"webservice"})
-  public void shouldVerifyProgramProductWithProgramCodeAttributeNotPresent() throws Exception {
+  public void shouldVerifyProgramProductWithProgramCodeAttributeNotPresent() {
     HttpClient client = new HttpClient();
     client.createContext();
 
@@ -221,7 +223,7 @@ public class ProgramProductAPI extends JsonUtility {
 
 
   @Test(groups = {"webservice"})
-  public void shouldVerifyProgramProductWitInvalidAuthToken() throws Exception {
+  public void shouldVerifyProgramProductWitInvalidAuthToken() {
     HttpClient client = new HttpClient();
     client.createContext();
     String programCode = "HIV";
@@ -232,7 +234,7 @@ public class ProgramProductAPI extends JsonUtility {
   }
 
   @Test(groups = {"webservice"})
-  public void shouldVerifyProgramProductWithNoHeaders() throws Exception {
+  public void shouldVerifyProgramProductWithNoHeaders() {
     HttpClient client = new HttpClient();
     client.createContext();
     String programCode = "HIV";
@@ -243,7 +245,7 @@ public class ProgramProductAPI extends JsonUtility {
   }
 
   @Test(groups = {"webservice"})
-  public void shouldVerifyProgramProductWitInvalidUser() throws Exception {
+  public void shouldVerifyProgramProductWitInvalidUser() {
     HttpClient client = new HttpClient();
     client.createContext();
     String programCode = "HIV";

@@ -98,7 +98,7 @@
           <div class="span4">
             <input id="doses-per-year" name="dosesPerYear" type="text" ng-required="true"
                    ng-model="currentProgramProduct.programProductIsa.dosesPerYear"
-                   numeric-validator="positiveInteger"
+                   numeric-validator="positiveInteger" ng-trim=false
                    maxlength="3"
                    ng-change="error=''"
                    ng-class="highlightRequired(currentProgramProduct.programProductIsa.dosesPerYear)"/>
@@ -168,7 +168,7 @@
             <input id="minimum-value" name="minimumValue" type="text"
                    ng-model="currentProgramProduct.programProductIsa.minimumValue"
                    ng-change="error=''"
-                   numeric-validator="positiveInteger"
+                   numeric-validator="positiveInteger" ng-trim=false
                    maxlength="6"/>
 
             <div id="minimumValue" class="form-error" openlmis-message="error.enter.number.only"></div>
@@ -183,7 +183,7 @@
             <input id="maximum-value" name="maximumValue" type="text"
                    ng-change="error=''"
                    ng-model="currentProgramProduct.programProductIsa.maximumValue"
-                   numeric-validator="positiveInteger"
+                   numeric-validator="positiveInteger" ng-trim=false
                    maxlength="6"/>
 
             <div id="maximumValue" class="form-error" openlmis-message="error.enter.number.only"></div>
@@ -208,7 +208,7 @@
       <div id="ISA-population" class="calculatedAmount">
         <span openlmis-message="label.isa.population.of"></span>
         <input type="text" id="catchmentPopulation" ng-model="population" name="population"
-               numeric-validator="positiveInteger"
+               numeric-validator="positiveInteger" ng-trim=false
                maxlength="10"/>
         <span openlmis-message="label.isa.will.need"></span>
         <span class="label" ng-bind="isaValue"></span>

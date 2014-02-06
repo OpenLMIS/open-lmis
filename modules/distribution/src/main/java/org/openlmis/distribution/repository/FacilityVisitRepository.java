@@ -48,4 +48,8 @@ public class FacilityVisitRepository {
   public List<FacilityVisit> getUnSyncedFacilities(Long distributionId) {
     return mapper.getUnSyncedFacilities(distributionId);
   }
+
+  public Integer getUnsyncedFacilityCountForDistribution(Long distributionId) {
+    return mapper.getUnsyncedFacilityCountForDistribution(distributionId);
+  }
 }

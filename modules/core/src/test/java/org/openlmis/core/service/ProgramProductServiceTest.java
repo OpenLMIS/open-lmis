@@ -30,7 +30,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
-import static java.util.Collections.EMPTY_LIST;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
@@ -297,14 +296,4 @@ public class ProgramProductServiceTest {
     verify(programProductRepository).getProgramProductsBy(10L, null);
   }
 
-  @Test
-  public void shouldGetActiveProgramProductsForAProgram() throws Exception {
-    List<ProgramProduct> expectedProgramProducts = EMPTY_LIST;
-    when(programProductRepository.getActiveByProgram(2L)).thenReturn(expectedProgramProducts);
-
-    List<ProgramProduct> programProducts = programProductService.getActiveByProgram(2L);
-
-    verify(programProductRepository).getActiveByProgram(2L);
-    assertThat(programProducts, is(expectedProgramProducts));
-  }
 }

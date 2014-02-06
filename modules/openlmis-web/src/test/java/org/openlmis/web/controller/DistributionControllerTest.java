@@ -23,10 +23,7 @@ import org.openlmis.core.domain.User;
 import org.openlmis.core.service.MessageService;
 import org.openlmis.core.service.UserService;
 import org.openlmis.db.categories.UnitTests;
-import org.openlmis.distribution.domain.Distribution;
-import org.openlmis.distribution.domain.DistributionRefrigerators;
-import org.openlmis.distribution.domain.FacilityDistribution;
-import org.openlmis.distribution.domain.FacilityVisit;
+import org.openlmis.distribution.domain.*;
 import org.openlmis.distribution.dto.FacilityDistributionDTO;
 import org.openlmis.distribution.service.DistributionService;
 import org.openlmis.distribution.service.FacilityDistributionService;
@@ -48,6 +45,7 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
 import static org.openlmis.core.builder.UserBuilder.defaultUser;
 import static org.openlmis.distribution.builder.DistributionBuilder.*;
+import static org.openlmis.distribution.domain.DistributionStatus.SYNCED;
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
 
@@ -146,6 +144,7 @@ public class DistributionControllerTest {
     FacilityDistribution facilityDistributionData = new FacilityDistribution(null, null, new DistributionRefrigerators(EMPTY_LIST), null, null, null);
 
     when(service.sync(facilityDistributionData)).thenReturn(true);
+    when(service.updateDistributionStatus(distribution.getId())).thenReturn(SYNCED);
     doReturn(facilityDistributionData).when(facilityDistributionDTO).transform();
     doNothing().when(facilityDistributionDTO).setModifiedBy(USER_ID);
     doNothing().when(facilityDistributionDTO).setDistributionId(distribution.getId());
@@ -154,7 +153,9 @@ public class DistributionControllerTest {
 
     assertThat(response.getStatusCode(), is(HttpStatus.OK));
     assertTrue((boolean) response.getBody().getData().get("syncStatus"));
+    assertThat((DistributionStatus) response.getBody().getData().get("distributionStatus"), is(SYNCED));
     verify(service).sync(facilityDistributionData);
+    verify(service).updateDistributionStatus(distribution.getId());
     verify(facilityDistributionDTO).setModifiedBy(USER_ID);
     verify(facilityDistributionDTO).setDistributionId(distribution.getId());
   }

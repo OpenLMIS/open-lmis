@@ -20,8 +20,6 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 
-import java.io.IOException;
-
 import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
 import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
 import static org.openqa.selenium.support.How.*;
@@ -192,7 +190,7 @@ public class HomePage extends Page {
     return logoutLink;
   }
 
-  public LoginPage logout(String baseUrl) throws IOException {
+  public LoginPage logout(String baseUrl) {
     testWebDriver.waitForElementToAppear(logoutLink);
     logoutLink.click();
     return new LoginPage(testWebDriver, baseUrl);
@@ -218,7 +216,6 @@ public class HomePage extends Page {
     assertEquals(facilityHeader.getText().trim(), headingToVerify);
   }
 
-
   public void verifyAdminTabs() {
     testWebDriver.waitForElementToAppear(facilitiesTab);
     assertTrue(facilitiesTab.isDisplayed());
@@ -226,7 +223,6 @@ public class HomePage extends Page {
     assertTrue(schedulesTab.isDisplayed());
     assertTrue(usersTab.isDisplayed());
   }
-
 
   public TemplateConfigPage selectProgramToConfigTemplate(String programme) {
     testWebDriver.waitForElementToAppear(AdministrationMenuItem);
@@ -237,18 +233,16 @@ public class HomePage extends Page {
     testWebDriver.keyPress(RnRTemplateConfigTab);
     testWebDriver.waitForElementToAppear(testWebDriver.getElementById(programme));
     testWebDriver.getElementById(programme).click();
-
     return new TemplateConfigPage(testWebDriver);
   }
 
-  public ConfigureEDIPage navigateEdiScreen() throws IOException {
+  public ConfigureEDIPage navigateEdiScreen() {
     testWebDriver.waitForElementToAppear(AdministrationMenuItem);
     testWebDriver.keyPress(AdministrationMenuItem);
     testWebDriver.waitForElementToAppear(TemplateConfigTab);
     testWebDriver.keyPress(TemplateConfigTab);
     testWebDriver.waitForElementToAppear(ediFileTab);
     testWebDriver.keyPress(ediFileTab);
-
     return new ConfigureEDIPage(testWebDriver);
   }
 
@@ -260,7 +254,6 @@ public class HomePage extends Page {
     testWebDriver.waitForElementToAppear(RegimenTemplateConfigTab);
     testWebDriver.keyPress(RegimenTemplateConfigTab);
     testWebDriver.waitForElementToAppear(RegimenTemplateHeader);
-
     return new RegimenTemplateConfigPage(testWebDriver);
   }
 
@@ -274,7 +267,7 @@ public class HomePage extends Page {
     return (startDate.getText().trim() + " - " + endDate.getText().trim());
   }
 
-  public void navigateInitiateRnRScreenAndSelectingRequiredFields(String program, String type) throws IOException {
+  public void navigateInitiateRnRScreenAndSelectingRequiredFields(String program, String type) {
     navigateRnr();
     myFacilityRadioButton.click();
     testWebDriver.sleep(500);
@@ -284,17 +277,17 @@ public class HomePage extends Page {
     testWebDriver.sleep(1000);
   }
 
-  public void clickRequisitionSubMenuItem() throws IOException {
+  public void clickRequisitionSubMenuItem() {
     testWebDriver.waitForElementToAppear(requisitionsLink);
     testWebDriver.keyPress(requisitionsLink);
   }
 
-  public void verifySubMenuItems(String[] expectedSubMenuItem) throws IOException {
+  public void verifySubMenuItems(String[] expectedSubMenuItem) {
     String[] subMenuItem = SubMenuItem.getText().split("\n");
     assertEquals(subMenuItem, expectedSubMenuItem);
   }
 
-  public InitiateRnRPage clickProceed() throws IOException {
+  public InitiateRnRPage clickProceed() {
     testWebDriver.setImplicitWait(100);
     testWebDriver.waitForElementToAppear(proceedButton);
     proceedButton.click();
@@ -302,8 +295,7 @@ public class HomePage extends Page {
     return new InitiateRnRPage(testWebDriver);
   }
 
-
-  public ViewRequisitionPage navigateViewRequisition() throws IOException {
+  public ViewRequisitionPage navigateViewRequisition() {
     testWebDriver.sleep(1000);
     testWebDriver.waitForElementToAppear(requisitionMenuItem);
     testWebDriver.keyPress(requisitionMenuItem);
@@ -313,14 +305,14 @@ public class HomePage extends Page {
     return new ViewRequisitionPage(testWebDriver);
   }
 
-  public ReportPage navigateReportScreen() throws IOException {
+  public ReportPage navigateReportScreen() {
     testWebDriver.waitForElementToAppear(reportMenuItem);
     testWebDriver.keyPress(reportMenuItem);
     testWebDriver.waitForElementToAppear(reportsTitle);
     return new ReportPage(testWebDriver);
   }
 
-  public ManageFacilityPage navigateSearchFacility() throws IOException {
+  public ManageFacilityPage navigateSearchFacility() {
     testWebDriver.waitForElementToAppear(AdministrationMenuItem);
     testWebDriver.keyPress(AdministrationMenuItem);
     testWebDriver.waitForElementToAppear(manageLink);
@@ -329,7 +321,6 @@ public class HomePage extends Page {
     facilitiesTab.click();
     return ManageFacilityPage.getInstance(testWebDriver);
   }
-
 
   public RolesPage navigateRoleAssignments() {
     testWebDriver.waitForElementToAppear(AdministrationMenuItem);
@@ -341,7 +332,7 @@ public class HomePage extends Page {
     return new RolesPage(testWebDriver);
   }
 
-  public UploadPage navigateUploads() throws IOException {
+  public UploadPage navigateUploads() {
     testWebDriver.waitForElementToAppear(AdministrationMenuItem);
     testWebDriver.keyPress(AdministrationMenuItem);
     testWebDriver.waitForElementToAppear(uploadLink);
@@ -349,7 +340,7 @@ public class HomePage extends Page {
     return new UploadPage(testWebDriver);
   }
 
-  public ManageSchedulePage navigateToSchedule() throws IOException {
+  public ManageSchedulePage navigateToSchedule() {
     testWebDriver.waitForElementToAppear(AdministrationMenuItem);
     testWebDriver.keyPress(AdministrationMenuItem);
     testWebDriver.waitForElementToAppear(manageLink);
@@ -357,10 +348,9 @@ public class HomePage extends Page {
     testWebDriver.waitForElementToAppear(schedulesTab);
     schedulesTab.click();
     return new ManageSchedulePage(testWebDriver);
-
   }
 
-  public UserPage navigateToUser() throws IOException {
+  public UserPage navigateToUser() {
     testWebDriver.waitForElementToAppear(AdministrationMenuItem);
     testWebDriver.keyPress(AdministrationMenuItem);
     testWebDriver.waitForElementToAppear(manageLink);
@@ -368,20 +358,18 @@ public class HomePage extends Page {
     testWebDriver.waitForElementToAppear(usersTab);
     usersTab.click();
     return new UserPage(testWebDriver);
-
   }
 
-  public ApprovePage navigateToApprove() throws IOException {
+  public ApprovePage navigateToApprove() {
     testWebDriver.sleep(1000);
     testWebDriver.waitForElementToAppear(requisitionMenuItem);
     testWebDriver.keyPress(requisitionMenuItem);
     testWebDriver.waitForElementToAppear(approveLink);
     testWebDriver.keyPress(approveLink);
     return new ApprovePage(testWebDriver);
-
   }
 
-  public ConvertOrderPage navigateConvertToOrder() throws IOException {
+  public ConvertOrderPage navigateConvertToOrder() {
     testWebDriver.sleep(1000);
     testWebDriver.waitForElementToAppear(requisitionMenuItem);
     testWebDriver.keyPress(requisitionMenuItem);
@@ -401,7 +389,7 @@ public class HomePage extends Page {
     return new DistributionPage(testWebDriver);
   }
 
-  public DistributionPage navigateOfflineDistribution() throws IOException {
+  public DistributionPage navigateOfflineDistribution() {
     testWebDriver.waitForElementToAppear(offlineDistributions);
     testWebDriver.keyPress(offlineDistributions);
     testWebDriver.waitForElementToAppear(manageDistributionMenuItem);
@@ -409,7 +397,7 @@ public class HomePage extends Page {
     return new DistributionPage(testWebDriver);
   }
 
-  public ProgramProductISAPage navigateProgramProductISA() throws IOException {
+  public ProgramProductISAPage navigateProgramProductISA() {
     testWebDriver.waitForElementToAppear(AdministrationMenuItem);
     testWebDriver.keyPress(AdministrationMenuItem);
     testWebDriver.waitForElementToAppear(TemplateConfigTab);
@@ -420,14 +408,14 @@ public class HomePage extends Page {
     return new ProgramProductISAPage(testWebDriver);
   }
 
-  public HomePage navigateHomePage() throws IOException {
+  public HomePage navigateHomePage() {
     testWebDriver.waitForElementToAppear(homeMenuItem);
     testWebDriver.keyPress(homeMenuItem);
     testWebDriver.sleep(500);
     return new HomePage(testWebDriver);
   }
 
-  public ViewOrdersPage navigateViewOrders() throws IOException {
+  public ViewOrdersPage navigateViewOrders() {
     testWebDriver.sleep(1000);
     testWebDriver.waitForElementToAppear(ordersMenuItem);
     testWebDriver.keyPress(ordersMenuItem);
@@ -461,6 +449,7 @@ public class HomePage extends Page {
   }
 
   public void navigateRnr() {
+    testWebDriver.sleep(1000);
     testWebDriver.waitForElementToBeEnabled(requisitionsLink);
     testWebDriver.keyPress(requisitionsLink);
     testWebDriver.waitForElementToBeEnabled(createLink);
@@ -478,7 +467,7 @@ public class HomePage extends Page {
     return requisitionMenuItem.isDisplayed();
   }
 
-  public void navigateAndInitiateRnrForSupervisedFacility(String program) throws IOException {
+  public void navigateAndInitiateRnrForSupervisedFacility(String program) {
     navigateRnr();
     supervisedFacilityRadioButton.click();
     testWebDriver.sleep(1000);
@@ -501,7 +490,7 @@ public class HomePage extends Page {
     return testWebDriver.findElement(By.name("selectFacility")).getText();
   }
 
-  public ManagePodPage navigateManagePOD() throws IOException {
+  public ManagePodPage navigateManagePOD() {
     testWebDriver.sleep(1000);
     testWebDriver.waitForElementToAppear(ordersMenuItem);
     testWebDriver.keyPress(ordersMenuItem);

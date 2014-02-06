@@ -39,7 +39,7 @@ public class RecordEPIUse extends TestCaseHelper {
   EPIUsePage epiUsePage;
 
   @BeforeMethod(groups = {"distribution"})
-  public void setUp() throws Exception {
+  public void setUp() throws InterruptedException, SQLException, IOException {
     super.setup();
   }
 
@@ -76,7 +76,7 @@ public class RecordEPIUse extends TestCaseHelper {
   }
 
   @Then("^Verify indicator should be \"([^\"]*)\"$")
-  public void shouldVerifyIndicatorColor(String color) throws IOException, SQLException {
+  public void shouldVerifyIndicatorColor(String color) throws SQLException {
     epiUsePage = PageFactory.getInstanceOfEpiUsePage(testWebDriver);
     epiUsePage.verifyIndicator(color);
   }
@@ -88,7 +88,7 @@ public class RecordEPIUse extends TestCaseHelper {
   }
 
   @AfterMethod(groups = {"distribution"})
-  public void tearDown() throws Exception {
+  public void tearDown() throws SQLException {
     testWebDriver.sleep(250);
     if (!testWebDriver.getElementById("username").isDisplayed()) {
       HomePage homePage = PageFactory.getInstanceOfHomePage(testWebDriver);

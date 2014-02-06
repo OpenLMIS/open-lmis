@@ -16,7 +16,7 @@
     <div class="app-form" tab-scroll>
       <div class="clearfix form-inline row-fluid">
         <div class="span4 include-header-form">
-          <input type="checkbox" id="includeHeadersCheckbox" name = "includeHeadersCheckbox"
+          <input type="checkbox" id="includeHeadersCheckbox" name="includeHeadersCheckbox"
                  ng-model="shipmentFileTemplate.configuration.headerInFile"/>
           <label for="includeHeadersCheckbox" openlmis-message="label.column.include.headers"></label>
         </div>
@@ -68,8 +68,9 @@
                 </div>
               </div>
               <div class="span1">
-                <input type="text" id="{{shipmentFileColumn.name}}Position"  ng-model="shipmentFileColumn.position" maxlength="3"
-                       numeric-validator="positiveInteger" class="right-justified"/>
+                <input type="text" id="{{shipmentFileColumn.name}}Position" ng-model="shipmentFileColumn.position"
+                       maxlength="3"
+                       ng-trim=false numeric-validator="positiveInteger" class="right-justified"/>
               </div>
             </div>
           </div>
@@ -80,9 +81,8 @@
     <div form-toolbar id="action_buttons" class="action-buttons">
       <div class="form-cell button-row">
         <input type="submit" class="btn btn-primary save-button" openlmis-message="button.save"/>
-        <a href="#/configure-edi-file" class="btn btn-cancel cancel-button" openlmis-message="button.cancel"></a>
+        <a ng-click="cancelEdiSave()" class="btn btn-cancel cancel-button" openlmis-message="button.cancel"></a>
       </div>
-      <div class="toolbar-success" id="saveSuccessMsgDiv" openlmis-message="message" ng-show="message"></div>
       <div class="toolbar-error" id="saveErrorMsgDiv" openlmis-message="error" ng-show="error"></div>
 
     </div>

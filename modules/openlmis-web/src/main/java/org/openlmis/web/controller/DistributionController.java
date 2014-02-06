@@ -14,6 +14,7 @@ import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.User;
 import org.openlmis.core.service.UserService;
 import org.openlmis.distribution.domain.Distribution;
+import org.openlmis.distribution.domain.DistributionStatus;
 import org.openlmis.distribution.domain.FacilityDistribution;
 import org.openlmis.distribution.dto.FacilityDistributionDTO;
 import org.openlmis.distribution.service.DistributionService;
@@ -76,7 +77,11 @@ public class DistributionController extends BaseController {
     facilityDistributionDTO.getFacilityVisit().setFacilityId(facilityId);
     facilityDistributionDTO.setDistributionId(id);
     facilityDistributionDTO.setModifiedBy(loggedInUserId(httpServletRequest));
-    return OpenLmisResponse.response("syncStatus", distributionService.sync(facilityDistributionDTO.transform()));
+    boolean syncStatus = distributionService.sync(facilityDistributionDTO.transform());
+    DistributionStatus distributionStatus = distributionService.updateDistributionStatus(id);
+    ResponseEntity<OpenLmisResponse> response = OpenLmisResponse.response("syncStatus", syncStatus);
+    response.getBody().addData("distributionStatus", distributionStatus);
+    return response;
   }
 
   private ResponseEntity<OpenLmisResponse> returnInitiatedDistribution(Distribution distribution, Distribution existingDistribution) {

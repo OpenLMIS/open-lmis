@@ -29,7 +29,7 @@ public class ApproveRequisitionTest extends JsonUtility {
   public static final String FULL_JSON_MULTIPLE_PRODUCTS_APPROVE_TXT_FILE_NAME = "ReportJsonMultipleProductsApprove.txt";
 
   @BeforeMethod(groups = {"webservice", "webserviceSmoke"})
-  public void setUp() throws Exception {
+  public void setUp() throws InterruptedException, SQLException, IOException {
     super.setup();
     super.setupTestData(false);
     super.setupDataRequisitionApprove();
@@ -37,13 +37,13 @@ public class ApproveRequisitionTest extends JsonUtility {
   }
 
   @AfterMethod(groups = {"webservice", "webserviceSmoke"})
-  public void tearDown() throws IOException, SQLException {
+  public void tearDown() throws SQLException {
     dbWrapper.deleteData();
     dbWrapper.closeConnection();
   }
 
   @Test(groups = {"webserviceSmoke"})
-  public void testApproveRequisitionValidRnR() throws Exception {
+  public void testApproveRequisitionValidRnR() throws SQLException, IOException {
     HttpClient client = new HttpClient();
     dbWrapper.updateFieldValue("facilities", "virtualFacility", "true", "code", "F10");
     client.createContext();
@@ -78,7 +78,7 @@ public class ApproveRequisitionTest extends JsonUtility {
 
 
   @Test(groups = {"webservice"})
-  public void testApproveRequisitionUnauthorizedAccess() throws Exception {
+  public void testApproveRequisitionUnauthorizedAccess() throws SQLException, IOException {
     HttpClient client = new HttpClient();
     client.createContext();
     dbWrapper.updateFieldValue("facilities", "virtualFacility", "true", "code", "F10");
@@ -102,7 +102,7 @@ public class ApproveRequisitionTest extends JsonUtility {
   }
 
   @Test(groups = {"webservice"})
-  public void testApproveRequisitionProductNotAvailableInSystem() throws Exception {
+  public void testApproveRequisitionProductNotAvailableInSystem() throws SQLException, IOException {
     HttpClient client = new HttpClient();
     client.createContext();
     dbWrapper.updateFieldValue("facilities", "virtualFacility", "true", "code", "F10");
@@ -130,7 +130,7 @@ public class ApproveRequisitionTest extends JsonUtility {
   }
 
   @Test(groups = {"webservice"})
-  public void testApproveRequisitionProductNotAvailableInRnR() throws Exception {
+  public void testApproveRequisitionProductNotAvailableInRnR() throws SQLException, IOException {
     HttpClient client = new HttpClient();
     client.createContext();
     dbWrapper.updateFieldValue("facilities", "virtualFacility", "true", "code", "F10");
@@ -158,7 +158,7 @@ public class ApproveRequisitionTest extends JsonUtility {
   }
 
   @Test(groups = {"webservice"})
-  public void testApproveRequisitionProgramProductsInactive() throws Exception {
+  public void testApproveRequisitionProgramProductsInactive() throws SQLException, IOException {
     HttpClient client = new HttpClient();
     client.createContext();
     dbWrapper.updateFieldValue("facilities", "virtualFacility", "true", "code", "F10");
@@ -188,7 +188,7 @@ public class ApproveRequisitionTest extends JsonUtility {
   }
 
   @Test(groups = {"webservice"})
-  public void testApproveRequisitionProgramInactive() throws Exception {
+  public void testApproveRequisitionProgramInactive() throws SQLException, IOException {
     HttpClient client = new HttpClient();
     client.createContext();
     dbWrapper.updateFieldValue("facilities", "virtualFacility", "true", "code", "F10");
@@ -219,7 +219,7 @@ public class ApproveRequisitionTest extends JsonUtility {
   }
 
   @Test(groups = {"webservice"})
-  public void testApproveRequisitionProductInactive() throws Exception {
+  public void testApproveRequisitionProductInactive() throws SQLException, IOException {
     HttpClient client = new HttpClient();
     client.createContext();
     dbWrapper.updateFieldValue("facilities", "virtualFacility", "true", "code", "F10");
@@ -249,7 +249,7 @@ public class ApproveRequisitionTest extends JsonUtility {
   }
 
   @Test(groups = {"webservice"})
-  public void testApproveRequisitionNotVirtualFacility() throws Exception {
+  public void testApproveRequisitionNotVirtualFacility() throws SQLException, IOException {
     HttpClient client = new HttpClient();
     client.createContext();
 
@@ -274,7 +274,7 @@ public class ApproveRequisitionTest extends JsonUtility {
   }
 
   @Test(groups = {"webservice"})
-  public void testApproveRequisitionInvalidRequisitionId() throws Exception {
+  public void testApproveRequisitionInvalidRequisitionId() throws SQLException, IOException {
     HttpClient client = new HttpClient();
     client.createContext();
     dbWrapper.updateFieldValue("facilities", "virtualFacility", "true", "code", "F10");
@@ -298,7 +298,7 @@ public class ApproveRequisitionTest extends JsonUtility {
   }
 
   @Test(groups = {"webservice"})
-  public void testApproveRequisitionBlankQuantityApproved() throws Exception {
+  public void testApproveRequisitionBlankQuantityApproved() throws SQLException, IOException {
     HttpClient client = new HttpClient();
     client.createContext();
     dbWrapper.updateFieldValue("facilities", "virtualFacility", "true", "code", "F10");
@@ -327,7 +327,7 @@ public class ApproveRequisitionTest extends JsonUtility {
   }
 
   @Test(groups = {"webservice"})
-  public void testApproveRequisitionBlankQuantityApproverName() throws Exception {
+  public void testApproveRequisitionBlankQuantityApproverName() throws SQLException, IOException {
     HttpClient client = new HttpClient();
     client.createContext();
     dbWrapper.updateFieldValue("facilities", "virtualFacility", "true", "code", "F10");
@@ -355,7 +355,7 @@ public class ApproveRequisitionTest extends JsonUtility {
   }
 
   @Test(groups = {"webservice"})
-  public void testApproveRequisitionOnIncorrectRequisitionStatus() throws Exception {
+  public void testApproveRequisitionOnIncorrectRequisitionStatus() throws SQLException, IOException {
     HttpClient client = new HttpClient();
     dbWrapper.updateFieldValue("facilities", "virtualFacility", "true", "code", "F10");
     client.createContext();
@@ -383,7 +383,7 @@ public class ApproveRequisitionTest extends JsonUtility {
   }
 
   @Test(groups = {"webservice"})
-  public void testApproveRequisitionProductCountMismatch() throws Exception {
+  public void testApproveRequisitionProductCountMismatch() throws SQLException, IOException {
     HttpClient client = new HttpClient();
     dbWrapper.updateFieldValue("facilities", "virtualFacility", "true", "code", "F10");
     client.createContext();
@@ -415,7 +415,7 @@ public class ApproveRequisitionTest extends JsonUtility {
   }
 
   @Test(groups = {"webservice"})
-  public void testApproveRequisitionValidRnRWithRemarksAndRnaSubmissionThroughAPI() throws Exception {
+  public void testApproveRequisitionValidRnRWithRemarksAndRnaSubmissionThroughAPI() throws IOException, SQLException {
     HttpClient client = new HttpClient();
     client.createContext();
     createVirtualFacilityThroughApi("V100", "F10");
@@ -446,7 +446,7 @@ public class ApproveRequisitionTest extends JsonUtility {
   }
 
   @Test(groups = {"webservice"})
-  public void testShowErrorMessageForUnrecognizedFieldInAPI() throws Exception {
+  public void testShowErrorMessageForUnrecognizedFieldInAPI() throws SQLException {
     HttpClient client = new HttpClient();
     client.createContext();
     dbWrapper.updateFieldValue("facilities", "virtualFacility", "true", "code", "F10");

@@ -142,12 +142,12 @@ public interface RnrLineItemMapper {
                                                            @Param("rnr") Rnr rnr, @Param("count") Integer count,
                                                            @Param("startDate") Date startDate);
 
-  @Select("SELECT * FROM requisition_line_items WHERE rnrId = #{rnrId} AND productCode = #{productCode}")
+  @Select("SELECT * FROM requisition_line_items WHERE rnrId = #{rnrId} AND productCode = #{productCode} AND skipped = FALSE")
   @Results(value = {
     @Result(property = "id", column = "id"),
     @Result(property = "previousNormalizedConsumptions", column = "previousNormalizedConsumptions", typeHandler = StringToList.class),
     @Result(property = "lossesAndAdjustments", javaType = List.class, column = "id",
       many = @Many(select = "org.openlmis.rnr.repository.mapper.LossesAndAdjustmentsMapper.getByRnrLineItem"))
   })
-  RnrLineItem getLineItem(@Param("rnrId") Long rnrId, @Param("productCode") String productCode);
+  RnrLineItem getNonSkippedLineItem(@Param("rnrId") Long rnrId, @Param("productCode") String productCode);
 }

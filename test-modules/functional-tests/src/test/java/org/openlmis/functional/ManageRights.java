@@ -17,6 +17,8 @@ import org.openlmis.pageobjects.HomePage;
 import org.openlmis.pageobjects.InitiateRnRPage;
 import org.testng.annotations.*;
 
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.List;
 
 import static java.util.Arrays.asList;
@@ -26,12 +28,12 @@ import static java.util.Arrays.asList;
 public class ManageRights extends TestCaseHelper {
 
   @BeforeMethod(groups = {"admin"})
-  public void setUp() throws Exception {
+  public void setUp() throws InterruptedException, SQLException, IOException {
     super.setup();
   }
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function-Positive")
-  public void testOnlyCreateRight(String program, String userSIC, String password) throws Exception {
+  public void testOnlyCreateRight(String program, String userSIC, String password) throws SQLException {
     List<String> rightsList = asList("CREATE_REQUISITION", "VIEW_REQUISITION");
     setupTestDataToInitiateRnR(true, program, userSIC, "200", rightsList);
 
@@ -56,7 +58,7 @@ public class ManageRights extends TestCaseHelper {
   }
 
   @AfterMethod(groups = {"admin"})
-  public void tearDown() throws Exception {
+  public void tearDown() throws SQLException {
     HomePage homePage = PageFactory.getInstanceOfHomePage(testWebDriver);
     homePage.logout(baseUrlGlobal);
     dbWrapper.deleteData();

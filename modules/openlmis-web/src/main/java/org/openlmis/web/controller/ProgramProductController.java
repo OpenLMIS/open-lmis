@@ -29,14 +29,14 @@ import static org.openlmis.web.response.OpenLmisResponse.response;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
 @Controller
-public class ProgramProductController  extends BaseController  {
+public class ProgramProductController {
 
   @Autowired
+  ProgramProductService service;
+  
+  
   private ProgramProductPriceListDataProvider programPriceService;
 
-
-  @Autowired
-  private ProgramProductService service;
   private static final String PROGRAM_PRODUCT_LIST = "programProductList";
   private static final String PROGRAM_PRODUCT_PRICE_LIST = "programProductPriceList";
 
