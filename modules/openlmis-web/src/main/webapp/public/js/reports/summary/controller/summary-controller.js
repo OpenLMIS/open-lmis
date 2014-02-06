@@ -134,7 +134,7 @@ function SummaryReportController($scope, $filter, ngTableParams, SummaryReport, 
 
       ReportProductsByProgram.get({programId: selection}, function (data) {
         $scope.products = data.productList;
-        if ($scope.products.length == 0) {
+        if ($scope.products.length === 0) {
           $scope.products.push({'name': '-- All Products --'});
         } else {
           $scope.products.unshift({'name': '-- All Products --'});
@@ -143,7 +143,7 @@ function SummaryReportController($scope, $filter, ngTableParams, SummaryReport, 
 
       RequisitionGroupsByProgram.get({program: selection }, function (data) {
         $scope.requisitionGroups = data.requisitionGroupList;
-        if ($scope.requisitionGroups == undefined || $scope.requisitionGroups.length == 0) {
+        if ($scope.requisitionGroups === undefined || $scope.requisitionGroups.length === 0) {
           $scope.requisitionGroups = [];
           $scope.requisitionGroups.push({'name': '-- All Requisition Groups --'});
         } else {

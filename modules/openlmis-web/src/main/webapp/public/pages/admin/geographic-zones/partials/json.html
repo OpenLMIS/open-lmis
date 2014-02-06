@@ -35,13 +35,16 @@
 
   </div>
   <div>
+    <div>
+      <input type="checkbox" ng-model="hide_mapped" > Hide Mapped Variables
+    </div>
     <span class="pull-right">Count = {{ features.length }}</span>
   </div>
   <div class="row">
     <div class="span5">
       <input type="text" ng-model="search_geo" >
       <table class="table">
-        <tr ng-class="feature.properties.mapped == true? 'message alert alert-success':''" ui-draggable="true"
+        <tr ng-hide="hide_mapped && feature.properties.mapped" ng-class="feature.properties.mapped == true? 'message alert alert-success':''" ui-draggable="true"
             drag="feature" on-drop-success="dropSuccessHandler($event,feature)" ng-repeat="feature in features">
           <td>{{ feature.properties.ADM1 }}</td>
           <td>{{ feature.properties.ADM2 }}</td>
@@ -58,7 +61,7 @@
     <div class="span5">
       <input type="text" ng-model="search_zone" >
       <table class="table" ng-show="level != undefined">
-        <tr ng-class="zone.mapped == true? 'message alert alert-success':''" ng-repeat="zone in geographicZones"
+        <tr ng-hide="hide_mapped && zone.mapped" ng-class="zone.mapped == true? 'message alert alert-success':''" ng-repeat="zone in geographicZones"
             ui-on-Drop="onDrop($event,$data, zone)">
           <!--<td>{{ zone.adm1 }}</td>-->
           <td>{{ zone.adm2 }}</td>

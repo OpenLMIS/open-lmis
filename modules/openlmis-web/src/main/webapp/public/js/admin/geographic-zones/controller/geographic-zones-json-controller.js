@@ -69,7 +69,7 @@ function GeographicZonesJsonController($scope, leafletData, FlatGeographicZoneLi
   });
 
   $scope.filterByLevel = function () {
-    if ($scope.level == undefined) {
+    if ($scope.level === undefined) {
       $scope.geographicZones = $scope.origionalGeographicZones;
     } else {
       $scope.geographicZones = [];
@@ -101,7 +101,8 @@ function GeographicZonesJsonController($scope, leafletData, FlatGeographicZoneLi
     zone.mapped = true;
     $data.properties.mapped = true;
     zone.newId = $data.properties.ID;
-  }
+    zone.geometry = $data.geometry;
+  };
 
 }
 
