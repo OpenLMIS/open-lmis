@@ -48,14 +48,14 @@ public class ProgramProductController {
   }
 
   // All product cost
-  @RequestMapping(value = "/allproductcost", method = RequestMethod.GET, headers = ACCEPT_JSON)
+  @RequestMapping(value = "/allproductcost", method = RequestMethod.GET, headers = BaseController.ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_PRODUCT')")
   public ResponseEntity<OpenLmisResponse> getAllPrices(Long id) {
     return OpenLmisResponse.response("AllProgramCosts", programPriceService.getAllPrices());
   }
 
   // product cost history for this product
-  @RequestMapping(value = "/priceHistory/{productId}", method = RequestMethod.GET, headers = ACCEPT_JSON)
+  @RequestMapping(value = "/priceHistory/{productId}", method = RequestMethod.GET, headers = BaseController.ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_PRODUCT')")
   public ResponseEntity<OpenLmisResponse> getProductPriceHistory(@PathVariable("productId") Long productId) {
     return OpenLmisResponse.response("priceHistory", programPriceService.getByProductId( productId ) );

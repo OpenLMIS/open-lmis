@@ -68,6 +68,20 @@ public interface ProgramProductMapper {
   List<ProgramProduct> getOptionsByProduct(Product product);
 
 
+  @Select({"SELECT PP.*, PD.* FROM program_products PP INNER JOIN products PD ON PP.productId = PD.id",
+    "WHERE PP.programId = #{id} AND PP.active = TRUE AND PD.active = TRUE",
+    "ORDER BY PD.displayOrder NULLS LAST, LOWER(PD.code)"})
+  @Results(value = {
+    @Result(property = "id", column = "id"),
+    @Result(property = "program", column = "programId", javaType = Program.class,
+      one = @One(select = "org.openlmis.core.repository.mapper.ProgramMapper.getById")),
+    @Result(property = "product", column = "productId", javaType = Product.class,
+      one = @One(select = "org.openlmis.core.repository.mapper.ProductMapper.getById")),
+    @Result(property = "programProductIsa", column = "id", javaType = ProgramProductISA.class,
+      one = @One(select = "org.openlmis.core.repository.mapper.ProgramProductIsaMapper.getIsaByProgramProductId"))
+  })
+  List<ProgramProduct> getActiveByProgram(Long programId);
+
   @Select("SELECT * FROM program_products WHERE id = #{id}")
   @Results(value = {
     @Result(property = "product", column = "productId", javaType = Product.class,

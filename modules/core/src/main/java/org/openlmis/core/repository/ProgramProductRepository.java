@@ -124,4 +124,8 @@ public class ProgramProductRepository {
   public List<ProgramProduct> getNonFullSupplyProductsForProgram(Program program) {
     return mapper.getNonFullSupplyProductsForProgram(program);
   }
+
+  public List<ProgramProduct> getActiveByProgram(Long programId) {
+    return mapper.getActiveByProgram(programId);
+  }
 }
