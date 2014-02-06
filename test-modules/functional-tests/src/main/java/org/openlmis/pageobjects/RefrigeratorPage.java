@@ -530,4 +530,9 @@ public class RefrigeratorPage extends DistributionTab {
     testWebDriver.waitForElementToAppear(refrigeratorsPageLabel);
     testWebDriver.moveToElement(refrigeratorsPageLabel);
   }
+
+  public boolean isFunctioningCorrectlyNRSelected() {
+    testWebDriver.waitForElementToAppear(functioningCorrectlyNR);
+    return functioningCorrectlyNR.isSelected();
+  }
 }

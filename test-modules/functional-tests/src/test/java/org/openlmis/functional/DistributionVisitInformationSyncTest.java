@@ -87,6 +87,8 @@ public class DistributionVisitInformationSyncTest extends TestCaseHelper {
     visitInformationPage.verifyIndicator("RED");
     visitInformationPage.selectFacilityVisitedYes();
     visitInformationPage.verifyIndicator("AMBER");
+    testWebDriver.refresh();
+    assertTrue(visitInformationPage.isYesRadioButtonSelected());
     visitInformationPage.enterVisitDateAsFirstOfCurrentMonth();
     visitInformationPage.verifyIndicator("AMBER");
     visitInformationPage.enterObservations("Some Observations");
@@ -147,16 +149,21 @@ public class DistributionVisitInformationSyncTest extends TestCaseHelper {
     visitInformationPage.verifyIndicator("RED");
     visitInformationPage.selectFacilityVisitedNo();
     visitInformationPage.verifyIndicator("AMBER");
+    EpiInventoryPage epiInventoryPage = visitInformationPage.navigateToEpiInventory();
+    epiInventoryPage.navigateToVisitInformation();
+    assertTrue(visitInformationPage.isNoRadioButtonSelected());
     visitInformationPage.selectReasonBadWeather();
     visitInformationPage.verifyIndicator("GREEN");
     visitInformationPage.selectReasonOther();
     visitInformationPage.verifyIndicator("AMBER");
+    testWebDriver.refresh();
+    assertTrue(visitInformationPage.isOtherReasonSelected());
     visitInformationPage.enterOtherReasonInTextBox("Reason for not visiting the facility");
     visitInformationPage.verifyIndicator("GREEN");
     RefrigeratorPage refrigeratorPage = visitInformationPage.navigateToRefrigerators();
     refrigeratorPage.verifyIndicator("GREEN");
     assertFalse(refrigeratorPage.isAddNewButtonEnabled());
-    EpiInventoryPage epiInventoryPage = refrigeratorPage.navigateToEpiInventory();
+    epiInventoryPage = refrigeratorPage.navigateToEpiInventory();
     epiInventoryPage.verifyIndicator("GREEN");
     epiInventoryPage.verifyAllFieldsDisabled();
   }
@@ -325,10 +332,10 @@ public class DistributionVisitInformationSyncTest extends TestCaseHelper {
     distributionPage.clickRecordData(1);
   }
 
-  private VisitInformationPage fillFacilityData(Boolean wasFacilityVisity) {
+  private VisitInformationPage fillFacilityData(Boolean wasFacilityVisited) {
     VisitInformationPage visitInformationPage = PageFactory.getInstanceOfVisitInformation(testWebDriver);
 
-    if (wasFacilityVisity) {
+    if (wasFacilityVisited) {
       RefrigeratorPage refrigeratorPage = visitInformationPage.navigateToRefrigerators();
       refrigeratorPage.navigateToRefrigerators();
       refrigeratorPage.clickDelete();
@@ -339,7 +346,11 @@ public class DistributionVisitInformationSyncTest extends TestCaseHelper {
 
       refrigeratorPage.clickShowForRefrigerator1();
       refrigeratorPage.enterValueInRefrigeratorTemperature("3");
-      refrigeratorPage.clickFunctioningCorrectlyYesRadio();
+      refrigeratorPage.clickFunctioningCorrectlyNR();
+      EpiInventoryPage epiInventoryPage = refrigeratorPage.navigateToEpiInventory();
+      epiInventoryPage.navigateToRefrigerators();
+      refrigeratorPage.clickShowForRefrigerator1();
+      assertTrue(refrigeratorPage.isFunctioningCorrectlyNRSelected());
       refrigeratorPage.enterValueInLowAlarmEvents("2");
       refrigeratorPage.enterValueInHighAlarmEvents("5");
       refrigeratorPage.clickProblemSinceLastVisitNR();
@@ -347,7 +358,7 @@ public class DistributionVisitInformationSyncTest extends TestCaseHelper {
       refrigeratorPage.verifyRefrigeratorColor("overall", "GREEN");
       refrigeratorPage.verifyRefrigeratorColor("individual", "GREEN");
 
-      EpiInventoryPage epiInventoryPage = refrigeratorPage.navigateToEpiInventory();
+      epiInventoryPage = refrigeratorPage.navigateToEpiInventory();
       epiInventoryPage.applyNRToAll();
       epiInventoryPage.fillDeliveredQuantity(1, "2");
       epiInventoryPage.fillDeliveredQuantity(2, "4");

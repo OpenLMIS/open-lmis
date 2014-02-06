@@ -318,4 +318,9 @@ public class VisitInformationPage extends DistributionTab {
     testWebDriver.waitForElementToAppear(visitInformationLabel);
     testWebDriver.moveToElement(visitInformationLabel);
   }
+
+  public boolean isOtherReasonSelected() {
+    testWebDriver.waitForElementToAppear(other);
+    return other.isSelected();
+  }
 }
