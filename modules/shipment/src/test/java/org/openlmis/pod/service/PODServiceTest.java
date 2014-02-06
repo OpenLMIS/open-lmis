@@ -24,6 +24,7 @@ import org.openlmis.core.service.ProductService;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.fulfillment.shared.FulfillmentPermissionService;
 import org.openlmis.order.domain.Order;
+import org.openlmis.order.domain.OrderStatus;
 import org.openlmis.order.service.OrderService;
 import org.openlmis.pod.domain.OrderPOD;
 import org.openlmis.pod.repository.PODRepository;
@@ -212,6 +213,9 @@ public class PODServiceTest {
   public void shouldValidatePODLienItems() throws Exception {
     long podId = 1234L;
     OrderPOD orderPOD = mock(OrderPOD.class);
+    long orderId = 2345L;
+    when(orderPOD.getOrderId()).thenReturn(orderId);
+    when(orderService.hasStatus(orderId, OrderStatus.RECEIVED)).thenReturn(false);
     when(repository.getPOD(podId)).thenReturn(orderPOD);
     doNothing().when(podService).checkPermissions(orderPOD);
     doThrow(new DataException("error.invalid.received.quantity")).when(orderPOD).validate();
@@ -226,6 +230,9 @@ public class PODServiceTest {
   public void shouldChangeOrderStatusWhenPODIsSubmittedSuccessfully() throws Exception {
     long podId = 1234L;
     OrderPOD orderPOD = mock(OrderPOD.class);
+    long orderId = 2345L;
+    when(orderPOD.getOrderId()).thenReturn(orderId);
+    when(orderService.hasStatus(orderId, OrderStatus.RECEIVED)).thenReturn(false);
     when(repository.getPOD(podId)).thenReturn(orderPOD);
     doNothing().when(podService).checkPermissions(orderPOD);
     doNothing().when(orderPOD).validate();
@@ -238,7 +245,12 @@ public class PODServiceTest {
   @Test
   public void shouldReturnSubmittedPOD() throws Exception {
     long podId = 1234L;
+    long orderId = 2345L;
+
     OrderPOD orderPOD = mock(OrderPOD.class);
+    when(orderPOD.getOrderId()).thenReturn(orderId);
+    when(orderService.hasStatus(orderId, OrderStatus.RECEIVED)).thenReturn(false);
+
     when(repository.getPOD(podId)).thenReturn(orderPOD);
     doNothing().when(podService).checkPermissions(orderPOD);
     doNothing().when(orderPOD).validate();
@@ -247,5 +259,21 @@ public class PODServiceTest {
     OrderPOD submittedPOD = podService.submit(podId, userId);
 
     assertThat(submittedPOD, is(orderPOD));
+  }
+
+  @Test
+  public void shouldNotSubmitAlreadySubmittedPOD() throws Exception {
+    long podId = 1234L;
+    long orderId = 2345L;
+    OrderPOD orderPOD = new OrderPOD();
+    orderPOD.setOrderId(orderId);
+    when(repository.getPOD(podId)).thenReturn(orderPOD);
+    doNothing().when(podService).checkPermissions(orderPOD);
+    when(orderService.hasStatus(orderId, OrderStatus.RECEIVED)).thenReturn(true);
+
+    expectedException.expect(DataException.class);
+    expectedException.expectMessage("error.pod.already.submitted");
+
+    podService.submit(podId, 5432L);
   }
 }

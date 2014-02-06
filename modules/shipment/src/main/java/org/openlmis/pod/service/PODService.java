@@ -122,6 +122,9 @@ public class PODService {
     OrderPOD orderPOD = repository.getPOD(podId);
     orderPOD.setModifiedBy(userId);
 
+    if (orderService.hasStatus(orderPOD.getOrderId(), OrderStatus.RECEIVED)) {
+      throw new DataException("error.pod.already.submitted");
+    }
     checkPermissions(orderPOD);
     orderPOD.validate();
 
