@@ -14,8 +14,11 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
+import org.junit.runner.RunWith;
 import org.openlmis.core.builder.FacilityBuilder;
 import org.openlmis.db.categories.UnitTests;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -32,8 +35,11 @@ import static org.mockito.Mockito.when;
 import static org.openlmis.core.builder.FacilityBuilder.*;
 import static org.openlmis.core.builder.ProgramSupportedBuilder.defaultProgramSupported;
 import static org.openlmis.core.builder.ProgramSupportedBuilder.supportedProgram;
+import static org.powermock.api.mockito.PowerMockito.mockStatic;
 
 @Category(UnitTests.class)
+@RunWith(PowerMockRunner.class)
+@PrepareForTest(FacilityProgramProduct.class)
 public class FacilityTest {
 
   @Rule
@@ -161,6 +167,24 @@ public class FacilityTest {
     assertFalse(facility.isValid(null));
   }
 
+
+  @Test
+  public void shouldReturnFacilityListWithActiveProgramProducts() {
+    Facility facility = new Facility();
+    ProgramSupported programSupported = new ProgramSupported();
+    List<FacilityProgramProduct> programProducts = new ArrayList<>();
+    programSupported.setProgramProducts(programProducts);
+    facility.setSupportedPrograms(asList(programSupported));
+    List<Facility> facilities = new ArrayList<>(asList(facility));
+    mockStatic(FacilityProgramProduct.class);
+    when(FacilityProgramProduct.filterActiveProducts(programProducts)).thenReturn(programProducts);
+
+    List<Facility> facilitiesWithActiveProducts = Facility.filterForActiveProducts(facilities);
+
+    assertThat(facilitiesWithActiveProducts.get(0).getSupportedPrograms().get(0).getProgramProducts(),
+      is(programProducts));
+  }
+
   @Test
   public void shouldReturnWhoRatioForFirstAndOnlySupportedProgram() throws Exception {
     ProgramSupported programSupported = mock(ProgramSupported.class);
@@ -169,5 +193,15 @@ public class FacilityTest {
     Facility facility = make(a(defaultFacility, with(programSupportedList, asList(programSupported))));
 
     assertThat(facility.getWhoRatioFor("BCG"), is(whoRatio));
+  }
+
+  @Test
+  public void shouldReturnPackSizeForFirstAndOnlySupportedProgram() throws Exception {
+    ProgramSupported programSupported = mock(ProgramSupported.class);
+    Integer packSize = 10;
+    when(programSupported.getPackSizeFor("BCG")).thenReturn(packSize);
+    Facility facility = make(a(defaultFacility, with(programSupportedList, asList(programSupported))));
+
+    assertThat(facility.getPackSizeFor("BCG"), is(packSize));
   }
 }

@@ -21,7 +21,6 @@ import org.openqa.selenium.support.How;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -206,7 +205,7 @@ public class ManageFacilityPage extends Page {
   private static WebElement calculatedIsaTextField = null;
 
   @FindBy(how = ID, using = "use-calculated-button0")
-  private static WebElement useCalculatedIsabutton = null;
+  private static WebElement useCalculatedIsaButton = null;
 
   @FindBy(how = XPATH, using = "//input[@value='Done']")
   private static WebElement doneIsaButton = null;
@@ -243,9 +242,10 @@ public class ManageFacilityPage extends Page {
   }
 
   public String enterValuesInFacilityAndClickSave(String facilityCodePrefix, String facilityNamePrefix,
-                                                  String program, String geoZone, String facilityTypeValue, String operatedByValue, String population) {
-
-    String date_time = enterValuesInFacility(facilityCodePrefix, facilityNamePrefix, program, geoZone, facilityTypeValue, operatedByValue, population, false);
+                                                  String program, String geoZone, String facilityTypeValue, String operatedByValue,
+                                                  String population) {
+    String date_time = enterValuesInFacility(facilityCodePrefix, facilityNamePrefix, program, geoZone, facilityTypeValue,
+      operatedByValue, population, false);
     saveButton.click();
     return date_time;
   }
@@ -388,8 +388,8 @@ public class ManageFacilityPage extends Page {
   }
 
   public void clickUseCalculatedIsaButton() {
-    testWebDriver.waitForElementToAppear(useCalculatedIsabutton);
-    useCalculatedIsabutton.click();
+    testWebDriver.waitForElementToAppear(useCalculatedIsaButton);
+    useCalculatedIsaButton.click();
   }
 
   public void verifyOverriddenIsa(String expectedIsa) {
@@ -469,7 +469,7 @@ public class ManageFacilityPage extends Page {
     verifyEditFacilityHeader("Edit facility");
   }
 
-  public HomePage enableFacility() throws IOException {
+  public HomePage enableFacility() {
     testWebDriver.waitForElementToAppear(enableButton);
     testWebDriver.sleep(1000);
     enableButton.click();
@@ -484,7 +484,7 @@ public class ManageFacilityPage extends Page {
 
   public HomePage editFacility(String program, String catchmentPopulationValue,
                                String latitudeValue,
-                               String longitudeValue, String altitudeValue) throws IOException {
+                               String longitudeValue, String altitudeValue) {
     testWebDriver.waitForElementToAppear(disableButton);
     testWebDriver.sleep(1500);
     testWebDriver.waitForElementToAppear(facilityCode);
@@ -516,11 +516,10 @@ public class ManageFacilityPage extends Page {
     assertEquals(testWebDriver.getAttribute(latitude, "value"), latitudeValue);
     assertEquals(testWebDriver.getAttribute(longitude, "value"), longitudeValue);
     assertEquals(testWebDriver.getAttribute(altitude, "value"), altitudeValue);
-
     assertTrue(removeSupportedProgram.isDisplayed());
   }
 
-  public HomePage verifyProgramSupported(List<String> programsSupported) throws IOException {
+  public HomePage verifyProgramSupported(List<String> programsSupported) {
     verifyEditFacilityHeader("Edit facility");
     testWebDriver.waitForElementToAppear(disableButton);
     testWebDriver.sleep(1500);

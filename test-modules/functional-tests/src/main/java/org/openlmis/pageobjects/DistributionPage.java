@@ -19,7 +19,6 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 
-import java.io.IOException;
 import java.util.List;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.assertEquals;
@@ -83,6 +82,10 @@ public class DistributionPage extends Page {
   @FindBy(how = ID, using = "retryButton")
   private WebElement retryButton = null;
 
+  @FindBy(how = XPATH, using = "//span[@openlmis-message='syncProgressHeader']")
+  private WebElement syncStatusMessage = null;
+
+
   public DistributionPage(TestWebDriver driver) {
     super(driver);
     PageFactory.initElements(new AjaxElementLocatorFactory(TestWebDriver.getDriver(), 1), this);
@@ -108,7 +111,6 @@ public class DistributionPage extends Page {
     testWebDriver.waitForElementToAppear(viewLoadAmountButton);
     viewLoadAmountButton.click();
     testWebDriver.sleep(1000);
-
   }
 
   public void verifyDataAlreadyCachedMessage(String deliveryZone, String program, String period) {
@@ -174,7 +176,6 @@ public class DistributionPage extends Page {
     testWebDriver.waitForElementToAppear(saveSuccessMessageDiv);
     String message = String.format("Program \"%s\" is not supported by any facility in delivery zone \"%s\"",
       programFirst, deliveryZoneNameFirst);
-
     assertEquals(message, saveSuccessMessageDiv.getText());
   }
 
@@ -261,7 +262,6 @@ public class DistributionPage extends Page {
   public void verifyDeleteConfirmMessageAndHeader() {
     assertEquals("Are you sure you want to delete this distribution? " +
       "Any data that has not been synced with the server will be lost.", deleteConfirmDialogMessage.getText());
-
     assertEquals("Delete distribution", deleteConfirmDialogHeader.getText());
   }
 
@@ -294,5 +294,10 @@ public class DistributionPage extends Page {
   public void clickRetryButton() {
     testWebDriver.waitForElementToAppear(retryButton);
     retryButton.click();
+  }
+
+  public String getSyncStatusMessage() {
+    testWebDriver.waitForElementToAppear(syncStatusMessage);
+    return syncStatusMessage.getText();
   }
 }

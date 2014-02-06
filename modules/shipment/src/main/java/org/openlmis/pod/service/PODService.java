@@ -107,6 +107,7 @@ public class PODService {
     return repository.getPOD(podId);
   }
 
+  @Transactional
   public OrderPOD save(OrderPOD orderPOD) {
     OrderPOD existingPod = repository.getPOD(orderPOD.getId());
     checkPermissions(existingPod);
@@ -116,4 +117,19 @@ public class PODService {
     return repository.update(existingPod);
   }
 
+  @Transactional
+  public OrderPOD submit(Long podId, Long userId) {
+    OrderPOD orderPOD = repository.getPOD(podId);
+    orderPOD.setModifiedBy(userId);
+
+    if (orderService.hasStatus(orderPOD.getOrderId(), OrderStatus.RECEIVED)) {
+      throw new DataException("error.pod.already.submitted");
+    }
+    checkPermissions(orderPOD);
+    orderPOD.validate();
+
+    orderService.updateOrderStatus(new Order(orderPOD.getOrderId(), RECEIVED));
+
+    return repository.update(orderPOD);
+  }
 }

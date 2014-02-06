@@ -61,21 +61,26 @@ public class FacilityDistributionService {
 
     List<Facility> facilities = facilityService.getAllForDeliveryZoneAndProgram(deliveryZoneId, programId);
     List<Refrigerator> distributionRefrigerators = refrigeratorService.getRefrigeratorsForADeliveryZoneAndProgram(deliveryZoneId, programId);
-    List<VaccinationProduct> vaccinationProducts = vaccinationCoverageService.getReferenceData(true);
+    List<VaccinationProduct> vaccinationProducts = vaccinationCoverageService.getVaccinationProducts(true);
+    List<ProductVial> productVials = vaccinationCoverageService.getProductVials();
 
     for (Facility facility : facilities) {
-      facilityDistributions.put(facility.getId(), createDistributionData(facility, distribution, distributionRefrigerators, vaccinationProducts));
+      facilityDistributions.put(facility.getId(), createDistributionData(facility, distribution, distributionRefrigerators, vaccinationProducts, productVials));
     }
 
     return facilityDistributions;
   }
 
-  FacilityDistribution createDistributionData(final Facility facility, Distribution distribution, List<Refrigerator> refrigerators, List<VaccinationProduct> vaccinationProducts) {
+  FacilityDistribution createDistributionData(final Facility facility,
+                                              Distribution distribution,
+                                              List<Refrigerator> refrigerators,
+                                              List<VaccinationProduct> vaccinationProducts,
+                                              List<ProductVial> productVials) {
     List<RefrigeratorReading> refrigeratorReadings = getRefrigeratorReadings(facility.getId(), refrigerators);
 
     FacilityVisit facilityVisit = new FacilityVisit(facility, distribution);
     facilityVisitService.save(facilityVisit);
-    FacilityDistribution facilityDistribution = new FacilityDistribution(facilityVisit, facility, distribution, refrigeratorReadings, vaccinationProducts);
+    FacilityDistribution facilityDistribution = new FacilityDistribution(facilityVisit, facility, distribution, refrigeratorReadings, vaccinationProducts, productVials);
     epiUseService.save(facilityDistribution.getEpiUse());
     epiInventoryService.save(facilityDistribution.getEpiInventory());
     vaccinationCoverageService.saveChildCoverage(facilityDistribution.getChildCoverage());
@@ -95,7 +100,6 @@ public class FacilityDistributionService {
       }
     });
   }
-
 
   public boolean save(FacilityDistribution facilityDistribution) {
     boolean canSync = facilityVisitService.save(facilityDistribution.getFacilityVisit());
@@ -134,4 +138,5 @@ public class FacilityDistributionService {
     facilityDistribution.setFacility(facility);
     return facilityDistribution;
   }
+
 }

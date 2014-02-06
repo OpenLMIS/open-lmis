@@ -30,10 +30,13 @@ public class ProgramProduct extends BaseModel implements Importable {
 
   @ImportField(name = "Program Code", type = "String", nested = "code", mandatory = true)
   private Program program;
+
   @ImportField(name = "Product Code", type = "String", nested = "code", mandatory = true)
   private Product product;
+
   @ImportField(name = "Doses Per Month", type = "int", mandatory = true)
   private Integer dosesPerMonth;
+
   @ImportField(name = "Is Active", type = "boolean", mandatory = true)
   private boolean active;
 

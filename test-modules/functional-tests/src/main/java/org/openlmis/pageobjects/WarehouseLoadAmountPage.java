@@ -67,7 +67,6 @@ public class WarehouseLoadAmountPage extends Page {
     super(driver);
     PageFactory.initElements(new AjaxElementLocatorFactory(TestWebDriver.getDriver(), 10), this);
     testWebDriver.setImplicitWait(10);
-
   }
 
   public String getPageHeader() {
@@ -173,7 +172,6 @@ public class WarehouseLoadAmountPage extends Page {
     return totalProductIsa.getText();
   }
 
-
   public String getGeoZoneTitleForTable(int tableNumber) {
     WebElement geoZoneTitle = testWebDriver.getElementById("geoZoneTitle" + (tableNumber - 1));
     testWebDriver.waitForElementToAppear(geoZoneTitle);
@@ -261,5 +259,4 @@ public class WarehouseLoadAmountPage extends Page {
   public String getTable1Data() {
     return Table1.getText();
   }
-
 }

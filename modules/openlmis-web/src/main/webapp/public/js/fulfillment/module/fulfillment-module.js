@@ -8,7 +8,7 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-angular.module('fulfillment', ['openlmis', 'ngGrid', 'ui.bootstrap']).config(['$routeProvider', function ($routeProvider) {
+angular.module('fulfillment', ['openlmis', 'ngGrid', 'ui.bootstrap.dialog', 'ui.bootstrap.dropdownToggle']).config(['$routeProvider', function ($routeProvider) {
   $routeProvider.
     when('/view-orders', {controller: ViewOrderListController, templateUrl: 'order/partials/view-order.html', reloadOnSearch: false}).
     when('/manage-pod-orders', {controller: ManagePODController, templateUrl: 'pod/partials/manage-pod.html'}).

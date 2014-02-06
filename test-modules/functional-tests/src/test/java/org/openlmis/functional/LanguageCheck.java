@@ -20,6 +20,7 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import java.io.IOException;
+import java.sql.SQLException;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
@@ -29,35 +30,35 @@ public class LanguageCheck extends TestCaseHelper {
   LoginPage loginPage;
 
   @BeforeMethod(groups = "admin")
-  public void setUp() throws Exception {
+  public void setUp() throws InterruptedException, SQLException, IOException {
     super.setup();
     loginPage = PageFactory.getInstanceOfLoginPage(testWebDriver, baseUrlGlobal);
   }
 
   @Test(groups = {"admin"})
-  public void changeLanguageAsEnglishOnLoginPage() throws Exception {
+  public void changeLanguageAsEnglishOnLoginPage() {
     loginPage.setLangAsEnglish();
     verifyColorOfTextAsGray(loginPage.getEnglishColor());
     verifyPageIdentifierLabelOnLoginPage("Sign In");
   }
 
   @Test(groups = {"admin"})
-  public void changeLanguageAsPortugueseOnLoginPage() throws Exception {
-    loginPage.setLangAsPortugues();
-    verifyColorOfTextAsGray(loginPage.getPortuguesColor());
+  public void changeLanguageAsPortugueseOnLoginPage() {
+    loginPage.setLangAsPortuguese();
+    verifyColorOfTextAsGray(loginPage.getPortugueseColor());
     verifyPageIdentifierLabelOnLoginPage("Entrar");
   }
 
   @Test(groups = {"admin"})
-  public void changeLanguageAsPortugueseBeforeForgotPasswordPage() throws Exception {
-    loginPage.setLangAsPortugues();
+  public void changeLanguageAsPortugueseBeforeForgotPasswordPage() {
+    loginPage.setLangAsPortuguese();
     loginPage.clickForgotPasswordLink();
-    verifyColorOfTextAsGray(loginPage.getPortuguesColor());
+    verifyColorOfTextAsGray(loginPage.getPortugueseColor());
     verifyPageIdentifierLabelOnForgotPasswordPage("Submeter");
   }
 
   @Test(groups = {"admin"})
-  public void changeLanguageAsEnglishBeforeForgotPasswordPage() throws Exception {
+  public void changeLanguageAsEnglishBeforeForgotPasswordPage() {
     loginPage.setLangAsEnglish();
     loginPage.clickForgotPasswordLink();
     verifyColorOfTextAsGray(loginPage.getEnglishColor());
@@ -65,10 +66,10 @@ public class LanguageCheck extends TestCaseHelper {
   }
 
   @Test(groups = {"admin"})
-  public void changeLanguageAsPortugueseOnForgotPasswordPage() throws Exception {
+  public void changeLanguageAsPortugueseOnForgotPasswordPage() {
     loginPage.clickForgotPasswordLink();
-    loginPage.setLangAsPortugues();
-    verifyColorOfTextAsGray(loginPage.getPortuguesColor());
+    loginPage.setLangAsPortuguese();
+    verifyColorOfTextAsGray(loginPage.getPortugueseColor());
     verifyPageIdentifierLabelOnForgotPasswordPage("Submeter");
   }
 
@@ -76,17 +77,17 @@ public class LanguageCheck extends TestCaseHelper {
     assertEquals(color, "rgba(136, 135, 135, 1)");
   }
 
-  private void verifyPageIdentifierLabelOnLoginPage(String expectedLabel) throws IOException {
+  private void verifyPageIdentifierLabelOnLoginPage(String expectedLabel) {
     assertEquals(loginPage.getPageIdentifierOnLoginPageText(), expectedLabel);
   }
 
-  private void verifyPageIdentifierLabelOnForgotPasswordPage(String expectedLabel) throws IOException {
+  private void verifyPageIdentifierLabelOnForgotPasswordPage(String expectedLabel) {
     ForgotPasswordPage forgotPasswordPage = PageFactory.getInstanceOfForgotPasswordPage(testWebDriver);
     assertEquals(forgotPasswordPage.getPageIdentifierOnForgotPasswordPageAttribute(), expectedLabel);
   }
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function")
-  public void signInAsAdmin123AndEnglish(String user) throws Exception {
+  public void signInAsAdmin123AndEnglish(String user) {
     loginPage.setLangAsEnglish();
     verifyColorOfTextAsGray(loginPage.getEnglishColor());
     HomePage homePage = loginPage.loginAs(user, user);
@@ -102,7 +103,7 @@ public class LanguageCheck extends TestCaseHelper {
   }
 
   @AfterMethod(groups = "admin")
-  public void tearDown() throws Exception {
+  public void tearDown() throws SQLException {
     testWebDriver.sleep(500);
     if (!testWebDriver.getElementById("username").isDisplayed()) {
       HomePage homePage = PageFactory.getInstanceOfHomePage(testWebDriver);

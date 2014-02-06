@@ -14,6 +14,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.openlmis.order.domain.Order;
+import org.openlmis.order.domain.OrderStatus;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -31,6 +32,7 @@ public class OrderPODDTO {
   private String periodStartDate;
   private String periodEndDate;
   private Boolean emergency;
+  private Boolean alreadyReceived;
 
   public static OrderPODDTO getOrderDetailsForPOD(Order order) throws ParseException {
     OrderPODDTO orderPODDTO = new OrderPODDTO();
@@ -46,6 +48,7 @@ public class OrderPODDTO {
     orderPODDTO.setPeriodStartDate(order.getRnr().getPeriod().getStringStartDate());
     orderPODDTO.setPeriodEndDate(order.getRnr().getPeriod().getStringEndDate());
     orderPODDTO.setEmergency(order.getRnr().isEmergency());
+    orderPODDTO.setAlreadyReceived(order.getStatus() == OrderStatus.RECEIVED);
     return orderPODDTO;
   }
 }

@@ -23,6 +23,8 @@ import org.openlmis.pageobjects.LoginPage;
 import org.openlmis.pageobjects.ManageFacilityPage;
 import org.testng.annotations.*;
 
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
@@ -43,12 +45,12 @@ public class ManageISA extends TestCaseHelper {
   static ManageFacilityPage manageFacilityPage;
 
   @BeforeMethod(groups = "admin")
-  public void setUp() throws Exception {
+  public void setUp() throws InterruptedException, SQLException, IOException {
     super.setup();
   }
 
   @Given("^I have the following data for override ISA:$")
-  public void theFollowingDataExist(DataTable tableData) throws Exception {
+  public void theFollowingDataExist(DataTable tableData) throws SQLException {
     List<Map<String, String>> data = tableData.asMaps();
     for (Map map : data) {
       user = map.get("user").toString();
@@ -70,39 +72,39 @@ public class ManageISA extends TestCaseHelper {
   }
 
   @When("^I create facility$")
-  public void createFacility() throws Exception {
+  public void createFacility() {
     manageFacilityPage = PageFactory.getInstanceOfManageFacilityPage(testWebDriver);
     date_time = ManageFacilityPage.getInstance(testWebDriver).enterValuesInFacility(facilityCodePrefix, facilityNamePrefix,
       program, geoZone, facilityType, operatedBy, valueOf(333), true);
   }
 
   @And("^I override ISA \"([^\"]*)\"$")
-  public void overrideISA(String isaValue) throws Exception {
+  public void overrideISA(String isaValue) {
     PageFactory.getInstanceOfManageFacilityPage(testWebDriver).overrideIsa(isaValue, 1);
   }
 
   @Then("^I should see calculated ISA \"([^\"]*)\"$")
-  public void verifyCalculatedISA(String isaValue) throws Exception {
+  public void verifyCalculatedISA(String isaValue) {
     PageFactory.getInstanceOfManageFacilityPage(testWebDriver).verifyCalculatedIsa(Integer.parseInt(isaValue));
   }
 
   @When("^I click ISA done$")
-  public void clickISADone() throws Exception {
+  public void clickISADone() {
     PageFactory.getInstanceOfManageFacilityPage(testWebDriver).clickIsaDoneButton();
   }
 
   @When("^I save facility$")
-  public void clickSave() throws Exception {
+  public void clickSave() {
     saveButton.click();
   }
 
   @Then("^I should see save successfully$")
-  public void verifySaveSuccessfully() throws Exception {
+  public void verifySaveSuccessfully() {
     ManageFacilityPage.getInstance(testWebDriver).verifySuccessMessage();
   }
 
   @When("^I search facility$")
-  public void searchFacility() throws Exception {
+  public void searchFacility() {
     manageFacilityPage = ManageFacilityPage.getInstance(testWebDriver);
     manageFacilityPage = PageFactory.getInstanceOfManageFacilityPage(testWebDriver);
     manageFacilityPage.searchFacility(date_time);
@@ -110,13 +112,13 @@ public class ManageISA extends TestCaseHelper {
   }
 
   @Then("^I should see overridden ISA \"([^\"]*)\"$")
-  public void verifyOverriddenISA(String isa) throws Exception {
+  public void verifyOverriddenISA(String isa) {
     manageFacilityPage = PageFactory.getInstanceOfManageFacilityPage(testWebDriver);
     manageFacilityPage.verifyOverriddenIsa(isa);
   }
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function")
-  public void shouldOverrideIsaExistingFacility(String userSIC, String password, String program) throws Exception {
+  public void shouldOverrideIsaExistingFacility(String userSIC, String password, String program) throws SQLException {
     setupProgramProductTestDataWithCategories("P1", "antibiotic1", "C1", "VACCINES");
     setupProgramProductISA(program, "P1", "1", "2", "3", "100", "100", "1000", "5");
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
@@ -166,7 +168,7 @@ public class ManageISA extends TestCaseHelper {
 
 
   @AfterMethod(groups = "admin")
-  public void tearDown() throws Exception {
+  public void tearDown() throws SQLException {
     testWebDriver.sleep(500);
     if (!testWebDriver.getElementById("username").isDisplayed()) {
       HomePage homePage = PageFactory.getInstanceOfHomePage(testWebDriver);

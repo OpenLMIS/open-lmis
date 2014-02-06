@@ -9,17 +9,17 @@
  */
 
 describe("Order File Template Controller", function () {
-  var scope, controller, httpBackend, messageService, orderFileTemplate, $q, timeout, deferredObject, dateFormats;
+  var scope, controller, httpBackend, messageService, orderFileTemplate, $q, timeout, deferredObject, dateFormats, location;
 
   beforeEach(module('openlmis'));
 
-  beforeEach(inject(function ($rootScope, $controller, $httpBackend, _messageService_, _$timeout_) {
+  beforeEach(inject(function ($rootScope, $controller, $httpBackend, _messageService_, _$timeout_, $location) {
     messageService = _messageService_;
     scope = $rootScope.$new();
     controller = $controller;
     httpBackend = $httpBackend;
     timeout = _$timeout_;
-
+    location = $location;
     orderFileTemplate = {"configuration": {"id": null, "orderFilePrefix": "O", "orderDatePattern": "dd/MM/yy", "periodDatePattern": "MM/yy", "headerInOrderFile": false},
       "orderFileColumns": [
         {"id": null, "dataFieldLabel": "header.order.number", "openLmisField": true, "position": 1, "columnLabel": "Order number", "includeInOrderFile": true},
@@ -84,9 +84,12 @@ describe("Order File Template Controller", function () {
 
   it('should save order file template', function () {
     httpBackend.expect('POST', "/order-file-template.json").respond({success: "Saved successfully"}, 200);
+    spyOn(location, 'path');
+    spyOn(messageService, 'get').andReturn("Saved successfully");
     scope.saveOrderFileTemplate();
     httpBackend.flush();
     expect(scope.message).toEqual("Saved successfully");
+    expect(location.path).toHaveBeenCalledWith("configure-edi-file");
   });
 
   it('should add new Order file column', function () {

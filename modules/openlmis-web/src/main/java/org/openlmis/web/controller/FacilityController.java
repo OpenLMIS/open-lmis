@@ -176,8 +176,7 @@ public class FacilityController extends BaseController {
   public ResponseEntity<OpenLmisResponse> getFacilitiesForDeliveryZoneAndProgram(@PathVariable("deliveryZoneId") Long deliveryZoneId,
                                                                                  @PathVariable("programId") Long programId) {
     List<Facility> facilities = facilityService.getAllForDeliveryZoneAndProgram(deliveryZoneId, programId);
-
-    return response("facilities", facilities);
+    return response("facilities", Facility.filterForActiveProducts(facilities));
   }
 
   @RequestMapping(value = "/enabledWarehouses", method = GET, headers = ACCEPT_JSON)

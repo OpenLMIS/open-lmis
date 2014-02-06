@@ -31,7 +31,7 @@ public class SubmitReportTest extends JsonUtility {
   public static final String PRODUCT_JSON_TXT_FILE_NAME = "ReportWithProductJson.txt";
 
   @BeforeMethod(groups = {"webservice", "webserviceSmoke"})
-  public void setUp() throws Exception {
+  public void setUp() throws InterruptedException, SQLException, IOException {
     super.setup();
     super.setupTestData(false);
     createVirtualFacilityThroughApi("V10", "F10");
@@ -41,19 +41,19 @@ public class SubmitReportTest extends JsonUtility {
   }
 
   @AfterMethod(groups = {"webservice", "webserviceSmoke"})
-  public void tearDown() throws IOException, SQLException {
+  public void tearDown() throws SQLException {
     dbWrapper.deleteData();
     dbWrapper.closeConnection();
   }
 
   @Test(groups = {"webserviceSmoke"})
-  public void testInitiateRnr() throws Exception {
+  public void testInitiateRnr() throws IOException, SQLException {
     long id = submitRnRThroughApi("V10", "HIV", "P10", 1, 10, 1, 0, 0, 2);
     assertEquals("AUTHORIZED", dbWrapper.getAttributeFromTable("requisitions", "status", "id", String.valueOf(id)));
   }
 
   @Test(groups = {"webserviceSmoke"})
-  public void shouldReturn401StatusWhenSubmittingReportWithInvalidAPIUser() throws Exception {
+  public void shouldReturn401StatusWhenSubmittingReportWithInvalidAPIUser() throws IOException {
     HttpClient client = new HttpClient();
     client.createContext();
 
@@ -73,7 +73,7 @@ public class SubmitReportTest extends JsonUtility {
   }
 
   @Test(groups = {"webservice"})
-  public void testSubmitReportWhenUserWithoutRights() throws Exception {
+  public void testSubmitReportWhenUserWithoutRights() throws IOException, SQLException {
     dbWrapper.deleteSupervisoryRoleFromRoleAssignment();
     HttpClient client = new HttpClient();
     client.createContext();
@@ -93,7 +93,7 @@ public class SubmitReportTest extends JsonUtility {
   }
 
   @Test(groups = {"webservice"})
-  public void testSubmitReportInvalidFacility() throws Exception {
+  public void testSubmitReportInvalidFacility() throws IOException {
     HttpClient client = new HttpClient();
     client.createContext();
 
@@ -112,7 +112,7 @@ public class SubmitReportTest extends JsonUtility {
   }
 
   @Test(groups = {"webservice"})
-  public void testSubmitReportWithoutHeaders() throws Exception {
+  public void testSubmitReportWithoutHeaders() throws IOException {
     HttpClient client = new HttpClient();
     client.createContext();
     Report reportFromJson = readObjectFromFile(FULL_JSON_TXT_FILE_NAME, Report.class);
@@ -128,7 +128,7 @@ public class SubmitReportTest extends JsonUtility {
   }
 
   @Test(groups = {"webservice"})
-  public void testSubmitReportInvalidProgram() throws Exception {
+  public void testSubmitReportInvalidProgram() throws IOException {
     HttpClient client = new HttpClient();
     client.createContext();
     Report reportFromJson = JsonUtility.readObjectFromFile(FULL_JSON_TXT_FILE_NAME, Report.class);
@@ -146,7 +146,7 @@ public class SubmitReportTest extends JsonUtility {
   }
 
   @Test(groups = {"webservice"})
-  public void testSubmitReportMandatoryFieldsMissing() throws Exception {
+  public void testSubmitReportMandatoryFieldsMissing() throws IOException {
     HttpClient client = new HttpClient();
     client.createContext();
     Report reportFromJson = JsonUtility.readObjectFromFile(FULL_JSON_TXT_FILE_NAME, Report.class);
@@ -175,7 +175,7 @@ public class SubmitReportTest extends JsonUtility {
   }
 
   @Test(groups = {"webservice"})
-  public void testSubmitReportWhenVirtualFacilityInactive() throws Exception {
+  public void testSubmitReportWhenVirtualFacilityInactive() throws SQLException, IOException {
     dbWrapper.updateFieldValue("facilities", "active", "false", "code", "V10");
     HttpClient client = new HttpClient();
     client.createContext();
@@ -194,7 +194,7 @@ public class SubmitReportTest extends JsonUtility {
   }
 
   @Test(groups = {"webservice"})
-  public void testSubmitReportWhenVirtualFacilityDisabled() throws Exception {
+  public void testSubmitReportWhenVirtualFacilityDisabled() throws SQLException, IOException {
     dbWrapper.updateFieldValue("facilities", "enabled", "false", "code", "V10");
     HttpClient client = new HttpClient();
     client.createContext();
@@ -213,7 +213,7 @@ public class SubmitReportTest extends JsonUtility {
   }
 
   @Test(groups = {"webservice"})
-  public void testSubmitReportWhenParentFacilityInactive() throws Exception {
+  public void testSubmitReportWhenParentFacilityInactive() throws SQLException, IOException {
     dbWrapper.updateFieldValue("facilities", "active", "false", "code", "V10");
     HttpClient client = new HttpClient();
     client.createContext();
@@ -232,7 +232,7 @@ public class SubmitReportTest extends JsonUtility {
   }
 
   @Test(groups = {"webservice"})
-  public void testSubmitReportWhenProgramGloballyInactive() throws Exception {
+  public void testSubmitReportWhenProgramGloballyInactive() throws SQLException, IOException {
     dbWrapper.updateFieldValue("programs", "active", "false", "code", "HIV");
     HttpClient client = new HttpClient();
     client.createContext();
@@ -252,7 +252,7 @@ public class SubmitReportTest extends JsonUtility {
   }
 
   @Test(groups = {"webservice"})
-  public void testSubmitReportWhenProgramInactiveAtVirtualFacility() throws Exception {
+  public void testSubmitReportWhenProgramInactiveAtVirtualFacility() throws SQLException, IOException {
     dbWrapper.updateProgramsSupportedByField("active", "false", "V10");
     HttpClient client = new HttpClient();
     client.createContext();
@@ -271,7 +271,7 @@ public class SubmitReportTest extends JsonUtility {
   }
 
   @Test(groups = {"webservice"})
-  public void testSubmitReportWhenParentFacilityDisabled() throws Exception {
+  public void testSubmitReportWhenParentFacilityDisabled() throws SQLException, IOException {
     dbWrapper.updateFieldValue("facilities", "enabled", "false", "code", "F10");
     HttpClient client = new HttpClient();
     client.createContext();
@@ -291,7 +291,7 @@ public class SubmitReportTest extends JsonUtility {
   }
 
   @Test(groups = {"webservice"})
-  public void testSubmitReportWhenTemplateNotConfigured() throws Exception {
+  public void testSubmitReportWhenTemplateNotConfigured() throws SQLException, IOException {
     dbWrapper.deleteTable("program_rnr_columns");
     HttpClient client = new HttpClient();
     client.createContext();
@@ -311,7 +311,7 @@ public class SubmitReportTest extends JsonUtility {
   }
 
   @Test(groups = {"webservice"})
-  public void shouldSubmitDuplicateReport() throws Exception {
+  public void shouldSubmitDuplicateReport() throws IOException {
     HttpClient client = new HttpClient();
     client.createContext();
 
@@ -339,7 +339,7 @@ public class SubmitReportTest extends JsonUtility {
 
 
   @Test(groups = {"webservice"})
-  public void testBlankProductSubmitReport() throws Exception {
+  public void testBlankProductSubmitReport() throws IOException {
     HttpClient client = new HttpClient();
     client.createContext();
     Report reportFromJson = JsonUtility.readObjectFromFile(PRODUCT_JSON_TXT_FILE_NAME, Report.class);
@@ -356,7 +356,7 @@ public class SubmitReportTest extends JsonUtility {
   }
 
   @Test(groups = {"webservice"})
-  public void testInitiateRnrWhenCurrentPeriodNotDefined() throws Exception {
+  public void testInitiateRnrWhenCurrentPeriodNotDefined() throws IOException, SQLException {
     dbWrapper.deleteCurrentPeriod();
     HttpClient client = new HttpClient();
     client.createContext();
@@ -374,7 +374,7 @@ public class SubmitReportTest extends JsonUtility {
   }
 
   @Test(groups = {"webservice"})
-  public void testInitiateRnrWhenProgramStartDateIsAfterCurrentDateAndInCurrentPeriod() throws Exception {
+  public void testInitiateRnrWhenProgramStartDateIsAfterCurrentDateAndInCurrentPeriod() throws SQLException, IOException {
     dbWrapper.updateProgramsSupportedByField("startDate", "2015-01-01", "V10");
     HttpClient client = new HttpClient();
     client.createContext();
@@ -396,7 +396,7 @@ public class SubmitReportTest extends JsonUtility {
   }
 
   @Test(groups = {"webservice"})
-  public void testInitiateRnrWhenProgramStartDateIsAfterCurrentDateAndCurrentPeriodEndDate() throws Exception {
+  public void testInitiateRnrWhenProgramStartDateIsAfterCurrentDateAndCurrentPeriodEndDate() throws SQLException, IOException {
     dbWrapper.insertProcessingPeriod("future", "future period", "2016-01-30", "2017-01-30", 1, "M");
     dbWrapper.updateProgramsSupportedByField("startDate", "2017-01-01", "V10");
     HttpClient client = new HttpClient();
@@ -415,7 +415,7 @@ public class SubmitReportTest extends JsonUtility {
   }
 
   @Test(groups = {"webservice"})
-  public void testInvalidProductSubmitReport() throws Exception {
+  public void testInvalidProductSubmitReport() throws IOException {
     HttpClient client = new HttpClient();
     client.createContext();
 
@@ -436,7 +436,7 @@ public class SubmitReportTest extends JsonUtility {
   }
 
   @Test(groups = {"webservice"})
-  public void testGloballyInactiveProductSubmitReport() throws Exception {
+  public void testGloballyInactiveProductSubmitReport() throws SQLException, IOException {
     dbWrapper.updateFieldValue("products", "active", "false", "code", "P10");
     HttpClient client = new HttpClient();
     client.createContext();
@@ -459,7 +459,7 @@ public class SubmitReportTest extends JsonUtility {
   }
 
   @Test(groups = {"webservice"})
-  public void testProductNotActiveAtProgramSubmitReport() throws Exception {
+  public void testProductNotActiveAtProgramSubmitReport() throws SQLException, IOException {
     dbWrapper.updateActiveStatusOfProgramProduct("P10", "HIV", "false");
     HttpClient client = new HttpClient();
     client.createContext();
@@ -482,7 +482,7 @@ public class SubmitReportTest extends JsonUtility {
   }
 
   @Test(groups = {"webservice"})
-  public void testProductNotAvailableAtFacilitySubmitReport() throws Exception {
+  public void testProductNotAvailableAtFacilitySubmitReport() throws SQLException, IOException {
     dbWrapper.deleteProductAvailableAtFacility("P10", "HIV", "V10");
     HttpClient client = new HttpClient();
     client.createContext();
@@ -504,7 +504,7 @@ public class SubmitReportTest extends JsonUtility {
   }
 
   @Test(groups = {"webservice"})
-  public void testSubmitReportWithUnrecognizedField() throws Exception {
+  public void testSubmitReportWithUnrecognizedField() {
     HttpClient client = new HttpClient();
     client.createContext();
 
@@ -529,7 +529,7 @@ public class SubmitReportTest extends JsonUtility {
   }
 
   @Test(groups = {"webservice"})
-  public void testPreviousPeriodSubmitReportForParentFacility() throws Exception {
+  public void testPreviousPeriodSubmitReportForParentFacility() throws IOException {
     HttpClient client = new HttpClient();
     client.createContext();
 
@@ -550,7 +550,7 @@ public class SubmitReportTest extends JsonUtility {
   }
 
   @Test(groups = {"webservice"})
-  public void testCurrentPeriodSubmitReportForParentFacility() throws Exception {
+  public void testCurrentPeriodSubmitReportForParentFacility() throws SQLException, IOException {
     dbWrapper.updateProgramsSupportedByField("startDate", "NOW()", "F10");
     HttpClient client = new HttpClient();
     client.createContext();
@@ -572,7 +572,7 @@ public class SubmitReportTest extends JsonUtility {
   }
 
   @Test(groups = {"webservice"})
-  public void testMultipleSubmitReportForParentFacility() throws Exception {
+  public void testMultipleSubmitReportForParentFacility() throws SQLException, IOException {
     dbWrapper.updateProgramsSupportedByField("startDate", "NOW()", "F10");
     HttpClient client = new HttpClient();
     client.createContext();
@@ -604,7 +604,7 @@ public class SubmitReportTest extends JsonUtility {
   }
 
   @Test(groups = {"webservice"})
-  public void testCommTrackSubmitReportValidRnR() throws Exception {
+  public void testCommTrackSubmitReportValidRnR() throws SQLException, IOException {
     dbWrapper.deleteConfigureTemplate("HIV");
     dbWrapper.configureTemplateForCommTrack("HIV");
     dbWrapper.insertPastPeriodRequisitionAndLineItems("F10", "HIV", "Period1", "P10");
@@ -631,7 +631,7 @@ public class SubmitReportTest extends JsonUtility {
   }
 
   @Test(groups = {"webservice"})
-  public void testInvalidSubmitReportRnRWithoutFillingRegimen() throws Exception {
+  public void testInvalidSubmitReportRnRWithoutFillingRegimen() throws SQLException, IOException {
     dbWrapper.insertRegimenTemplateColumnsForProgram("HIV");
     dbWrapper.insertRegimenTemplateConfiguredForProgram("HIV", "ADULTS", "Regimen", "Regimen1", true);
     dbWrapper.updateFieldValue("programs", "regimenTemplateConfigured", "true", null, null);
@@ -657,7 +657,7 @@ public class SubmitReportTest extends JsonUtility {
   }
 
   @Test(groups = {"webservice"})
-  public void testSubmitReportRnRWithoutFillingInactiveRegimen() throws Exception {
+  public void testSubmitReportRnRWithoutFillingInactiveRegimen() throws SQLException, IOException {
     dbWrapper.insertRegimenTemplateColumnsForProgram("HIV");
     dbWrapper.insertRegimenTemplateConfiguredForProgram("HIV", "ADULTS", "Regimen", "Regimen1", false);
     dbWrapper.updateFieldValue("programs", "regimenTemplateConfigured", "true", null, null);
@@ -684,7 +684,7 @@ public class SubmitReportTest extends JsonUtility {
   }
 
   @Test(groups = {"webservice"})
-  public void testSubmitReportRnRWithRegimen() throws Exception {
+  public void testSubmitReportRnRWithRegimen() throws SQLException {
     dbWrapper.insertRegimenTemplateColumnsForProgram("HIV");
     dbWrapper.insertRegimenTemplateConfiguredForProgram("HIV", "ADULTS", "Regimen", "Regimen1", true);
     dbWrapper.updateFieldValue("programs", "regimenTemplateConfigured", "true", null, null);
@@ -721,7 +721,7 @@ public class SubmitReportTest extends JsonUtility {
   }
 
   @Test(groups = {"webservice"})
-  public void testSubmitReportRnRWithRegimenHavingExtraFields() throws Exception {
+  public void testSubmitReportRnRWithRegimenHavingExtraFields() throws SQLException {
     dbWrapper.insertRegimenTemplateColumnsForProgram("HIV");
     dbWrapper.insertRegimenTemplateConfiguredForProgram("HIV", "ADULTS", "Regimen", "Regimen1", true);
     dbWrapper.updateFieldValue("programs", "regimenTemplateConfigured", "true", null, null);
@@ -759,7 +759,7 @@ public class SubmitReportTest extends JsonUtility {
   }
 
   @Test(groups = {"webservice"})
-  public void testSubmitReportRnRWithRegimenMissingMandatoryFields() throws Exception {
+  public void testSubmitReportRnRWithRegimenMissingMandatoryFields() throws SQLException {
     dbWrapper.insertRegimenTemplateColumnsForProgram("HIV");
     dbWrapper.insertRegimenTemplateConfiguredForProgram("HIV", "ADULTS", "Regimen", "Regimen1", true);
     dbWrapper.updateFieldValue("programs", "regimenTemplateConfigured", "true", null, null);
@@ -795,7 +795,7 @@ public class SubmitReportTest extends JsonUtility {
   }
 
   @Test(groups = {"webservice"})
-  public void testInvalidSubmitReportRnRWithExtraRegimenLineItem() throws Exception {
+  public void testInvalidSubmitReportRnRWithExtraRegimenLineItem() throws SQLException {
     dbWrapper.insertRegimenTemplateColumnsForProgram("HIV");
     dbWrapper.insertRegimenTemplateConfiguredForProgram("HIV", "ADULTS", "Regimen", "Regimen1", true);
     dbWrapper.updateFieldValue("programs", "regimenTemplateConfigured", "true", null, null);
@@ -843,7 +843,7 @@ public class SubmitReportTest extends JsonUtility {
   }
 
   @Test(groups = {"webservice"})
-  public void testInvalidSubmitReportRnRWithLessRegimenLineItems() throws Exception {
+  public void testInvalidSubmitReportRnRWithLessRegimenLineItems() throws SQLException {
     dbWrapper.insertRegimenTemplateColumnsForProgram("HIV");
     dbWrapper.insertRegimenTemplateConfiguredForProgram("HIV", "ADULTS", "Regimen", "Regimen1", true);
     dbWrapper.insertRegimenTemplateConfiguredForProgram("HIV", "ADULTS", "Regimen2", "Regimen12", true);
@@ -883,7 +883,7 @@ public class SubmitReportTest extends JsonUtility {
   }
 
   @Test(groups = {"webservice"})
-  public void testMasterTemplateValidationMissingBothMandatoryUserInputFields() throws Exception {
+  public void testMasterTemplateValidationMissingBothMandatoryUserInputFields() throws SQLException, IOException {
     HttpClient client = new HttpClient();
     client.createContext();
     dbWrapper.updateConfigureTemplate("HIV", "source", "U", "true", "stockInHand");
@@ -908,7 +908,7 @@ public class SubmitReportTest extends JsonUtility {
   }
 
   @Test(groups = {"webservice"})
-  public void testMasterTemplateValidationMissingOneMandatoryUserInputFields() throws Exception {
+  public void testMasterTemplateValidationMissingOneMandatoryUserInputFields() throws SQLException, IOException {
     HttpClient client = new HttpClient();
     client.createContext();
     dbWrapper.updateConfigureTemplate("HIV", "source", "U", "true", "stockInHand");
@@ -934,7 +934,7 @@ public class SubmitReportTest extends JsonUtility {
   }
 
   @Test(groups = {"webservice"})
-  public void testMasterTemplateValidationViolateArithmeticValidation() throws Exception {
+  public void testMasterTemplateValidationViolateArithmeticValidation() throws SQLException, IOException {
     HttpClient client = new HttpClient();
     client.createContext();
     dbWrapper.updateConfigureTemplate("HIV", "source", "U", "true", "stockInHand");
@@ -961,14 +961,14 @@ public class SubmitReportTest extends JsonUtility {
 
 
   @Test(groups = {"webservice"})
-  public void testMasterTemplateValidationOverrideWithCalculatedValue() throws Exception {
+  public void testMasterTemplateValidationOverrideWithCalculatedValue() throws SQLException, IOException {
     long id = submitRnRThroughApi("V10", "HIV", "P10", 1, 10, 1, 4, 0, 2);
     assertEquals("4", dbWrapper.getRequisitionLineItemFieldValue(id, "stockInHand", "P10"));
   }
 
 
   @Test(groups = {"webservice"})
-  public void testMasterTemplateValidationIgnoreReportedValueWhenFieldNotVisible() throws Exception {
+  public void testMasterTemplateValidationIgnoreReportedValueWhenFieldNotVisible() throws SQLException, IOException {
     dbWrapper.updateConfigureTemplate("HIV", "source", "C", "false", "stockInHand");
     dbWrapper.updateConfigureTemplate("HIV", "source", "C", "false", "beginningBalance");
     Long id = submitRnRThroughApi("V10", "HIV", "P10", 1, 10, 1, 4, 0, 2);
@@ -977,7 +977,7 @@ public class SubmitReportTest extends JsonUtility {
 
 
   @Test(groups = {"webservice"})
-  public void testShowErrorMessageForUnrecognizedFieldInAPI() throws Exception {
+  public void testShowErrorMessageForUnrecognizedFieldInAPI() {
     HttpClient client = new HttpClient();
     client.createContext();
 
@@ -1004,7 +1004,7 @@ public class SubmitReportTest extends JsonUtility {
   }
 
   @Test(groups = {"webservice"})
-  public void testSubmitRnrWithReferenceData() throws Exception {
+  public void testSubmitRnrWithReferenceData() {
     HttpClient client = new HttpClient();
     client.createContext();
 

@@ -34,7 +34,7 @@ public class FacilityProgramProductService {
   ProgramProductService programProductService;
 
   public List<FacilityProgramProduct> getForProgramAndFacility(Long programId, final Long facilityId) {
-    List<ProgramProduct> programProducts = programProductService.getActiveByProgram(programId);
+    List<ProgramProduct> programProducts = programProductService.getByProgram(new Program(programId));
     final List<FacilityProgramProduct> facilityProgramProducts = new ArrayList<>();
     forAllDo(programProducts, new Closure() {
       @Override
@@ -53,7 +53,6 @@ public class FacilityProgramProductService {
     repository.insertISA(isa);
   }
 
-
   public void updateISA(ProgramProductISA isa) {
     repository.updateISA(isa);
   }
@@ -69,7 +68,7 @@ public class FacilityProgramProductService {
     });
   }
 
-  public List<FacilityProgramProduct> getByFacilityAndProgram(Long facilityId, Long programId) {
-    return repository.getByFacilityAndProgram(facilityId, programId);
+  public List<FacilityProgramProduct> getActiveProductsForProgramAndFacility(Long programId, Long facilityId) {
+    return FacilityProgramProduct.filterActiveProducts(getForProgramAndFacility(programId, facilityId));
   }
 }

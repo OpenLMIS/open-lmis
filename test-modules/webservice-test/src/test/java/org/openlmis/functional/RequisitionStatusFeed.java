@@ -35,7 +35,7 @@ public class RequisitionStatusFeed extends JsonUtility {
   public static final String URL = "http://localhost:9091/feeds/requisition-status/";
 
   @BeforeMethod(groups = {"webservice", "webserviceSmoke"})
-  public void setUp() throws Exception {
+  public void setUp() throws InterruptedException, SQLException, IOException {
     super.setup();
     super.setupTestData(false);
     super.setupDataRequisitionApprove();
@@ -47,13 +47,13 @@ public class RequisitionStatusFeed extends JsonUtility {
   }
 
   @AfterMethod(groups = {"webservice", "webserviceSmoke"})
-  public void tearDown() throws IOException, SQLException {
+  public void tearDown() throws SQLException {
     dbWrapper.deleteData();
     dbWrapper.closeConnection();
   }
 
   @Test(groups = {"webserviceSmoke"})
-  public void testRequisitionStatusUsingCommTrackUserForExportOrderFlagFalse() throws Exception {
+  public void testRequisitionStatusUsingCommTrackUserForExportOrderFlagFalse() throws IOException, SQLException, ParserConfigurationException, SAXException {
     HttpClient client = new HttpClient();
     client.createContext();
     submitRnRThroughApi("V10", "HIV", "P10", 1, 10, 1, 0, 0, 2);
@@ -104,7 +104,7 @@ public class RequisitionStatusFeed extends JsonUtility {
   }
 
   @Test(groups = {"webservice"})
-  public void testRequisitionStatusUsingCommTrackUserForExportOrderFlagTrue() throws Exception {
+  public void testRequisitionStatusUsingCommTrackUserForExportOrderFlagTrue() throws IOException, SQLException, ParserConfigurationException, SAXException, InterruptedException {
     HttpClient client = new HttpClient();
     client.createContext();
 
@@ -141,7 +141,7 @@ public class RequisitionStatusFeed extends JsonUtility {
   }
 
   @Test(groups = {"webservice"})
-  public void testRequisitionStatusUsingCommTrackUserForExportOrderFlagTrueAndFtpDetailsValid() throws Exception {
+  public void testRequisitionStatusUsingCommTrackUserForExportOrderFlagTrueAndFtpDetailsValid() throws IOException, SQLException, ParserConfigurationException, SAXException, InterruptedException {
     HttpClient client = new HttpClient();
     client.createContext();
 
@@ -178,8 +178,7 @@ public class RequisitionStatusFeed extends JsonUtility {
   }
 
 
-  private void checkRequisitionStatusOnFeed(String requisitionStatus, String feedString, Long id) throws IOException,
-    SAXException, ParserConfigurationException {
+  private void checkRequisitionStatusOnFeed(String requisitionStatus, String feedString, Long id) {
     assertTrue("feed json list : " + feedString, feedString.contains("\"requisitionId\":" + id));
     assertTrue("feed json list : " + feedString,
       feedString.contains("\"requisitionStatus\":\"" + requisitionStatus + "\""));
@@ -204,7 +203,7 @@ public class RequisitionStatusFeed extends JsonUtility {
     assertTrue("Response entity : " + feedString, feedString.contains("\"orderId\":" + id));
   }
 
-  private ResponseEntity waitForOrderStatusUpdatedOrTimeOut(int index) throws Exception {
+  private ResponseEntity waitForOrderStatusUpdatedOrTimeOut(int index) throws ParserConfigurationException, SAXException, InterruptedException {
     HttpClient client = new HttpClient();
     client.createContext();
     ResponseEntity responseEntity;

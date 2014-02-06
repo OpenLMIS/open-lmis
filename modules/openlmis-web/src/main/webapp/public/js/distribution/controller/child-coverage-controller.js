@@ -54,6 +54,13 @@ function ChildCoverageController($scope, $routeParams, distributionService) {
     }
   };
 
+  $scope.getTotal = function (value1, value2) {
+    return getValue(value1) + getValue(value2);
+  };
+
+  var getValue = function (value) {
+    return (!isUndefined(value)) ? parseInt(value, 10) : 0;
+  };
 
   $scope.hideCell = function (vaccination) {
     return Object.keys($scope.productsMap).indexOf(vaccination) === -1;

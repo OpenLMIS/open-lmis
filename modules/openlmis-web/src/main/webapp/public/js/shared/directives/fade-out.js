@@ -17,7 +17,6 @@ app.directive('fadeOut', function ($timeout) {
       var message = attrs.openlmisMessage || 'message';
 
       function fadeMessage() {
-        element.fadeOut();
         scope[message] = undefined;
       }
 

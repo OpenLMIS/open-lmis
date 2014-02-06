@@ -44,7 +44,7 @@ public class TestCalculationsForRnR extends TestCaseHelper {
   InitiateRnRPage initiateRnRPage;
 
   @BeforeMethod(groups = "requisition")
-  public void setUp() throws Exception {
+  public void setUp() throws InterruptedException, SQLException, IOException {
     super.setup();
     List<String> rightsList = asList("CREATE_REQUISITION", "VIEW_REQUISITION", "AUTHORIZE_REQUISITION", "APPROVE_REQUISITION");
     setupTestDataToInitiateRnR(true, program, userSIC, "200", rightsList);
@@ -55,7 +55,7 @@ public class TestCalculationsForRnR extends TestCaseHelper {
   }
 
   @Test(groups = "requisition")
-  public void testEffectOfChangingPackSize() throws IOException, SQLException {
+  public void testEffectOfChangingPackSize() throws SQLException {
     dbWrapper.updateFieldValue("products", "fullSupply", "false", "code", "P11");
     dbWrapper.updateFieldValue("products", "packSize", "5", "code", "P10");
     dbWrapper.updateFieldValue("products", "packSize", "15", "code", "P11");
@@ -95,7 +95,7 @@ public class TestCalculationsForRnR extends TestCaseHelper {
   }
 
   @Test(groups = "requisition")
-  public void testEffectOfChangingDosesPerDispensingUnit() throws IOException, SQLException {
+  public void testEffectOfChangingDosesPerDispensingUnit() throws SQLException {
     dbWrapper.updateFieldValue("products", "fullSupply", "false", "code", "P11");
     dbWrapper.updateFieldValue("products", "dosesPerDispensingUnit", "5", "code", "P10");
 
@@ -125,7 +125,7 @@ public class TestCalculationsForRnR extends TestCaseHelper {
   }
 
   @Test(groups = "requisition")
-  public void testEffectOfChangingRoundToZeroFlagWhenTrueInitially() throws IOException, SQLException {
+  public void testEffectOfChangingRoundToZeroFlagWhenTrueInitially() throws SQLException {
     dbWrapper.updateFieldValue("products", "fullSupply", "false", "code", "P11");
     dbWrapper.updateFieldValue("products", "roundToZero", "true", "code", "P10");
     dbWrapper.updateFieldValue("products", "roundToZero", "true", "code", "P11");
@@ -165,7 +165,7 @@ public class TestCalculationsForRnR extends TestCaseHelper {
   }
 
   @Test(groups = "requisition")
-  public void testEffectOfChangingRoundToZeroFlagWhenFalseInitially() throws IOException, SQLException {
+  public void testEffectOfChangingRoundToZeroFlagWhenFalseInitially() throws SQLException {
     dbWrapper.updateFieldValue("products", "fullSupply", "false", "code", "P11");
     dbWrapper.updateFieldValue("products", "roundToZero", "false", "code", "P10");
     dbWrapper.updateFieldValue("products", "roundToZero", "false", "code", "P11");
@@ -205,7 +205,7 @@ public class TestCalculationsForRnR extends TestCaseHelper {
   }
 
   @Test(groups = "requisition")
-  public void testEffectOfChangingPackRoundingThreshold() throws IOException, SQLException {
+  public void testEffectOfChangingPackRoundingThreshold() throws SQLException {
     dbWrapper.updateFieldValue("products", "fullSupply", "false", "code", "P11");
     dbWrapper.updateFieldValue("products", "packRoundingThreshold", "5", "code", "P10");
     dbWrapper.updateFieldValue("products", "packRoundingThreshold", "7", "code", "P11");
@@ -245,7 +245,7 @@ public class TestCalculationsForRnR extends TestCaseHelper {
   }
 
   @Test(groups = "requisition")
-  public void testCalculationWhenMIs1WithStockOnHandCalculatedAndGZero() throws IOException, SQLException {
+  public void testCalculationWhenMIs1WithStockOnHandCalculatedAndGZero() throws SQLException {
     dbWrapper.updateConfigureTemplate("HIV", "source", "U", "true", "quantityDispensed");
     dbWrapper.updateConfigureTemplate("HIV", "source", "C", "true", "stockInHand");
     dbWrapper.updateFieldValue("products", "dosesPerDispensingUnit", "0", "code", "P10");
@@ -266,7 +266,7 @@ public class TestCalculationsForRnR extends TestCaseHelper {
   }
 
   @Test(groups = "requisition")
-  public void testCalculationWhenNoPreviousPeriod() throws IOException, SQLException {
+  public void testCalculationWhenNoPreviousPeriod() throws SQLException {
     dbWrapper.updateConfigureTemplate("HIV", "source", "U", "true", "quantityDispensed");
     dbWrapper.updateConfigureTemplate("HIV", "source", "C", "true", "stockInHand");
     dbWrapper.deleteRowFromTable("processing_periods", "name", "Period2");
@@ -287,7 +287,7 @@ public class TestCalculationsForRnR extends TestCaseHelper {
   }
 
   @Test(groups = "requisition")
-  public void testCalculationWhenFieldsNotVisibleAndSameProductInDifferentPrograms() throws Exception {
+  public void testCalculationWhenFieldsNotVisibleAndSameProductInDifferentPrograms() throws SQLException {
     dbWrapper.updateConfigureTemplate("HIV", "source", "C", "false", "quantityDispensed");
     dbWrapper.updateConfigureTemplate("HIV", "source", "U", "true", "stockInHand");
     dbWrapper.updateConfigureTemplate("HIV", "source", "C", "false", "normalizedConsumption");
@@ -322,7 +322,7 @@ public class TestCalculationsForRnR extends TestCaseHelper {
   }
 
   @Test(groups = "requisition")
-  public void testCalculationWhenMIs1WithStockOnHandAndQuantityConsumedUserInputAndMultipleProductsAndXLargerThan30M() throws IOException, SQLException {
+  public void testCalculationWhenMIs1WithStockOnHandAndQuantityConsumedUserInputAndMultipleProductsAndXLargerThan30M() throws SQLException {
     dbWrapper.updateConfigureTemplate("HIV", "source", "U", "true", "quantityDispensed");
     dbWrapper.updateConfigureTemplate("HIV", "source", "U", "true", "stockInHand");
     dbWrapper.updateConfigureTemplateValidationFlag("HIV", "true");
@@ -358,7 +358,7 @@ public class TestCalculationsForRnR extends TestCaseHelper {
   }
 
   @Test(groups = "requisition")
-  public void testCalculationWhenMIs1WithStockOnHandAndQuantityConsumedUserInputAndRnRExistsForDifferentFacility() throws IOException, SQLException {
+  public void testCalculationWhenMIs1WithStockOnHandAndQuantityConsumedUserInputAndRnRExistsForDifferentFacility() throws SQLException {
     dbWrapper.updateConfigureTemplate("HIV", "source", "U", "true", "quantityDispensed");
     dbWrapper.updateConfigureTemplate("HIV", "source", "U", "true", "stockInHand");
     dbWrapper.updateConfigureTemplateValidationFlag("HIV", "false");
@@ -392,7 +392,7 @@ public class TestCalculationsForRnR extends TestCaseHelper {
   }
 
   @Test(groups = "requisition")
-  public void testCalculationOfAmcTrackingWhenMIs1() throws IOException, SQLException {
+  public void testCalculationOfAmcTrackingWhenMIs1() throws SQLException {
     dbWrapper.updateFieldValue("products", "fullSupply", "false", "code", "P11");
     dbWrapper.insertProcessingPeriod("feb13", "feb13", "2013-01-31", "2013-02-28", 1, "M");
     dbWrapper.insertProcessingPeriod("mar13", "mar13", "2013-03-01", "2013-03-31", 1, "M");
@@ -450,7 +450,7 @@ public class TestCalculationsForRnR extends TestCaseHelper {
   }
 
   @Test(groups = "requisition")
-  public void testCalculationTrackingOfAmcWhenMIs2() throws IOException, SQLException {
+  public void testCalculationTrackingOfAmcWhenMIs2() throws SQLException {
     dbWrapper.updateFieldValue("products", "fullSupply", "false", "code", "P11");
     dbWrapper.deleteRowFromTable("processing_periods", "name", "Period2");
     dbWrapper.insertProcessingPeriod("feb13", "feb13", "2013-01-31", "2013-02-28", 2, "M");
@@ -495,7 +495,7 @@ public class TestCalculationsForRnR extends TestCaseHelper {
   }
 
   @Test(groups = "requisition")
-  public void testCalculationTrackingOfAmcWhenMIs3() throws IOException, SQLException {
+  public void testCalculationTrackingOfAmcWhenMIs3() throws SQLException {
     dbWrapper.updateFieldValue("products", "fullSupply", "false", "code", "P11");
     dbWrapper.deleteRowFromTable("processing_periods", "name", "Period2");
     dbWrapper.insertProcessingPeriod("feb13", "feb13", "2013-01-31", "2013-02-28", 3, "M");
@@ -527,7 +527,7 @@ public class TestCalculationsForRnR extends TestCaseHelper {
   }
 
   @Test(groups = "requisition")
-  public void testCalculationTrackingOfAmcWhenMIs5() throws IOException, SQLException {
+  public void testCalculationTrackingOfAmcWhenMIs5() throws SQLException {
     dbWrapper.updateFieldValue("products", "fullSupply", "false", "code", "P11");
     dbWrapper.deleteRowFromTable("processing_periods", "name", "Period2");
     dbWrapper.insertProcessingPeriod("feb13", "feb13", "2013-01-31", "2013-02-28", 5, "M");
@@ -559,7 +559,7 @@ public class TestCalculationsForRnR extends TestCaseHelper {
   }
 
   @Test(groups = "requisition")
-  public void testCalculationOfAmcNoTrackingForMoreThan5PeriodsWhenMIs1() throws IOException, SQLException {
+  public void testCalculationOfAmcNoTrackingForMoreThan5PeriodsWhenMIs1() throws SQLException {
     dbWrapper.updateFieldValue("products", "fullSupply", "false", "code", "P11");
     dbWrapper.insertProcessingPeriod("feb13", "feb13", "2013-01-31", "2013-02-28", 1, "M");
     dbWrapper.insertProcessingPeriod("mar13", "mar13", "2013-03-01", "2013-03-31", 1, "M");
@@ -607,7 +607,7 @@ public class TestCalculationsForRnR extends TestCaseHelper {
     verifyNormalizedConsumptionAndAmcInDatabase(0, 0, "P10");
   }
 
-  private void skipAllProductsAndAuthorizeRnr() throws IOException {
+  private void skipAllProductsAndAuthorizeRnr() {
     homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Regular");
     InitiateRnRPage initiateRnRPage = homePage.clickProceed();
 
@@ -616,7 +616,7 @@ public class TestCalculationsForRnR extends TestCaseHelper {
   }
 
   @Test(groups = "requisition")
-  public void testCalculationAmcNoTrackingForMoreThan2MWhenMIs2() throws IOException, SQLException {
+  public void testCalculationAmcNoTrackingForMoreThan2MWhenMIs2() throws SQLException {
     dbWrapper.updateFieldValue("products", "fullSupply", "false", "code", "P11");
     dbWrapper.deleteRowFromTable("processing_periods", "name", "Period2");
     dbWrapper.insertProcessingPeriod("feb13", "feb13", "2013-01-31", "2013-02-28", 2, "M");
@@ -655,7 +655,7 @@ public class TestCalculationsForRnR extends TestCaseHelper {
   }
 
   @Test(groups = "requisition")
-  public void testCalculationWhenProductSkipped() throws IOException, SQLException {
+  public void testCalculationWhenProductSkipped() throws SQLException {
     dbWrapper.updateConfigureTemplate("HIV", "source", "U", "true", "quantityDispensed");
     dbWrapper.updateConfigureTemplate("HIV", "source", "U", "true", "stockInHand");
     dbWrapper.updateConfigureTemplateValidationFlag("HIV", "false");
@@ -686,7 +686,7 @@ public class TestCalculationsForRnR extends TestCaseHelper {
   }
 
   @Test(groups = "requisition")
-  public void testCalculationTrackingWhenRequisitionConvertedToOrder() throws IOException, SQLException {
+  public void testCalculationTrackingWhenRequisitionConvertedToOrder() throws SQLException {
     dbWrapper.updateConfigureTemplate("HIV", "source", "U", "true", "quantityDispensed");
     dbWrapper.updateConfigureTemplate("HIV", "source", "U", "true", "stockInHand");
     dbWrapper.updateConfigureTemplateValidationFlag("HIV", "false");
@@ -729,14 +729,14 @@ public class TestCalculationsForRnR extends TestCaseHelper {
     verifyNormalizedConsumptionAndAmcInDatabase(13, 34, "P10");
   }
 
-  public void verifyNormalizedConsumptionAndAmcInDatabase(Integer normalizedConsumption, Integer amc, String productCode) throws IOException, SQLException {
+  public void verifyNormalizedConsumptionAndAmcInDatabase(Integer normalizedConsumption, Integer amc, String productCode) throws SQLException {
     Long rnrId = (long) dbWrapper.getMaxRnrID();
     assertEquals(normalizedConsumption.toString(), dbWrapper.getRequisitionLineItemFieldValue(rnrId, "normalizedConsumption", productCode));
     assertEquals(amc.toString(), dbWrapper.getRequisitionLineItemFieldValue(rnrId, "amc", productCode));
   }
 
   public void enterDetailsForFirstProduct(Integer beginningBalance, Integer quantityReceived, Integer stockInHand,
-                                          Integer quantityDispensed, Integer stockOutDays, Integer newPatientCount) throws IOException {
+                                          Integer quantityDispensed, Integer stockOutDays, Integer newPatientCount) {
     initiateRnRPage.enterValueIfNotNull(beginningBalance, "beginningBalanceFirstProduct");
     initiateRnRPage.enterValueIfNotNull(quantityReceived, "quantityReceivedFirstProduct");
     initiateRnRPage.enterValueIfNotNull(stockInHand, "stockInHandFirstProduct");
@@ -746,7 +746,7 @@ public class TestCalculationsForRnR extends TestCaseHelper {
   }
 
   public void enterDetailsForSecondProduct(Integer beginningBalance, Integer quantityReceived, Integer stockInHand,
-                                           Integer quantityDispensed, Integer stockOutDays, Integer newPatientCount) throws IOException {
+                                           Integer quantityDispensed, Integer stockOutDays, Integer newPatientCount) {
     initiateRnRPage.enterValueIfNotNull(beginningBalance, "beginningBalanceSecondProduct");
     initiateRnRPage.enterValueIfNotNull(quantityReceived, "quantityReceivedSecondProduct");
     initiateRnRPage.enterValueIfNotNull(stockInHand, "stockInHandSecondProduct");
@@ -755,7 +755,7 @@ public class TestCalculationsForRnR extends TestCaseHelper {
     initiateRnRPage.enterValueIfNotNull(newPatientCount, "newPatientSecondProduct");
   }
 
-  public void submitAndAuthorizeRnR() throws IOException {
+  public void submitAndAuthorizeRnR() {
     initiateRnRPage.submitRnR();
     initiateRnRPage.clickOk();
 
@@ -764,7 +764,7 @@ public class TestCalculationsForRnR extends TestCaseHelper {
   }
 
   @Test(groups = "requisition")
-  public void testCalculationForEmergencyRnRWhenNumberOfMonthsIs1AndVerifyDefaultApprovedQuantityAndOtherFields() throws IOException, SQLException, ParseException {
+  public void testCalculationForEmergencyRnRWhenNumberOfMonthsIs1AndVerifyDefaultApprovedQuantityAndOtherFields() throws SQLException, ParseException {
     String periodStartDate = "2013-10-01";
     dbWrapper.deleteCurrentPeriod();
     dbWrapper.updateConfigureTemplate("HIV", "source", "C", "false", "maxStockQuantity");
@@ -791,7 +791,7 @@ public class TestCalculationsForRnR extends TestCaseHelper {
   }
 
   @Test(groups = "requisition")
-  public void testCalculationForEmergencyRnRWhenNumberOfMonthsIs1AndDosesPerDispensingUnitIsZero() throws IOException, SQLException, ParseException {
+  public void testCalculationForEmergencyRnRWhenNumberOfMonthsIs1AndDosesPerDispensingUnitIsZero() throws SQLException, ParseException {
     dbWrapper.deleteCurrentPeriod();
     String periodStartDate = "2013-10-01";
     dbWrapper.insertProcessingPeriod("current", "current period", periodStartDate, "2016-01-30", 1, "M");
@@ -821,7 +821,7 @@ public class TestCalculationsForRnR extends TestCaseHelper {
   }
 
   @Test(groups = "requisition")
-  public void testCalculationForEmergencyRnRWhenNumberOfMonthsIs1ForMultipleProducts() throws IOException, SQLException, ParseException {
+  public void testCalculationForEmergencyRnRWhenNumberOfMonthsIs1ForMultipleProducts() throws SQLException, ParseException {
     String periodStartDate = "2013-10-01";
     dbWrapper.deleteCurrentPeriod();
     dbWrapper.insertProcessingPeriod("current", "current period", periodStartDate, "2016-01-30", 1, "M");
@@ -853,7 +853,7 @@ public class TestCalculationsForRnR extends TestCaseHelper {
   }
 
   @Test(groups = "requisition")
-  public void testCalculationForEmergencyRnRWhenNumberOfMonthsIs1AndDayDifferenceIsGreaterThanStockOutDays() throws IOException, SQLException, ParseException {
+  public void testCalculationForEmergencyRnRWhenNumberOfMonthsIs1AndDayDifferenceIsGreaterThanStockOutDays() throws SQLException, ParseException {
     dbWrapper.deleteCurrentPeriod();
     dbWrapper.insertProcessingPeriod("current", "current period", "2013-10-01", "2016-01-30", 1, "M");
 
@@ -879,7 +879,7 @@ public class TestCalculationsForRnR extends TestCaseHelper {
   }
 
   @Test(groups = "requisition")
-  public void testCalculationForEmergencyRnRWhenNumberOfMonthsIs1AndDayDifferenceIsEqualToStockOutDays() throws IOException, SQLException, ParseException {
+  public void testCalculationForEmergencyRnRWhenNumberOfMonthsIs1AndDayDifferenceIsEqualToStockOutDays() throws SQLException, ParseException {
     dbWrapper.deleteCurrentPeriod();
     dbWrapper.insertProcessingPeriod("current", "current period", "2013-10-01", "2016-01-30", 1, "M");
 
@@ -904,22 +904,22 @@ public class TestCalculationsForRnR extends TestCaseHelper {
   }
 
   @Test(groups = "requisition")
-  public void testCalculationForEmergencyRnRWhenNumberOfMonthsIs1() throws IOException, SQLException, ParseException {
+  public void testCalculationForEmergencyRnRWhenNumberOfMonthsIs1() throws SQLException, ParseException {
     verifyCalculationForEmergencyForGivenNumberOfMonths(1);
   }
 
   @Test(groups = "requisition")
-  public void testCalculationForEmergencyRnRWhenNumberOfMonthsIs2() throws IOException, SQLException, ParseException {
+  public void testCalculationForEmergencyRnRWhenNumberOfMonthsIs2() throws SQLException, ParseException {
     verifyCalculationForEmergencyForGivenNumberOfMonths(2);
   }
 
   @Test(groups = "requisition")
-  public void testCalculationForEmergencyRnRWhenNumberOfMonthsIs3() throws IOException, SQLException, ParseException {
+  public void testCalculationForEmergencyRnRWhenNumberOfMonthsIs3() throws SQLException, ParseException {
     verifyCalculationForEmergencyForGivenNumberOfMonths(3);
   }
 
   @AfterMethod(groups = "requisition")
-  public void tearDown() throws Exception {
+  public void tearDown() throws SQLException {
     testWebDriver.sleep(500);
     if (!testWebDriver.getElementById("username").isDisplayed()) {
       HomePage homePage = PageFactory.getInstanceOfHomePage(testWebDriver);
@@ -929,7 +929,7 @@ public class TestCalculationsForRnR extends TestCaseHelper {
     }
   }
 
-  private void verifyCalculationForEmergencyForGivenNumberOfMonths(int numberOfMonths) throws SQLException, IOException, ParseException {
+  private void verifyCalculationForEmergencyForGivenNumberOfMonths(int numberOfMonths) throws SQLException, ParseException {
     dbWrapper.deleteCurrentPeriod();
     dbWrapper.deleteRowFromTable("processing_periods", "name", "Period2");
     dbWrapper.insertProcessingPeriod("current", "current period", "2013-10-01", "2016-01-30", numberOfMonths, "M");

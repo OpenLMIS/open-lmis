@@ -44,7 +44,7 @@ abstract public class DistributionTab extends Page {
   private static WebElement epiUseTab = null;
 
   @FindBy(how = ID, using = "facilityVisitTab")
-  private static WebElement generalObservationTab = null;
+  private static WebElement visitInformationTab = null;
 
   @FindBy(how = ID, using = "coverageTab")
   private static WebElement coverageTab = null;
@@ -65,6 +65,8 @@ abstract public class DistributionTab extends Page {
   abstract public void verifyData(List<Map<String, String>> map);
 
   abstract public void navigate();
+
+  abstract public void verifyAllFieldsDisabled();
 
   public void verifyOverallIndicator(WebElement element, String color) {
     testWebDriver.sleep(500);
@@ -91,9 +93,9 @@ abstract public class DistributionTab extends Page {
     return new FullCoveragePage(testWebDriver);
   }
 
-  public GeneralObservationPage navigateToGeneralObservations() {
-    generalObservationTab.click();
-    return new GeneralObservationPage(testWebDriver);
+  public VisitInformationPage navigateToVisitInformation() {
+    visitInformationTab.click();
+    return new VisitInformationPage(testWebDriver);
   }
 
   public ChildCoveragePage navigateToChildCoverage() {

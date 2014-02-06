@@ -51,12 +51,12 @@ public class JsonUtility extends TestCaseHelper {
     return writer.toString();
   }
 
-  public static void submitRequisition(String userName, String program) throws Exception {
+  public static void submitRequisition(String userName, String program) throws SQLException {
     dbWrapper.insertRequisitions(1, program, true, "2012-12-01", "2015-12-01", "F10", false);
     dbWrapper.updateRequisitionStatus("SUBMITTED", userName, program);
   }
 
-  public static void createOrder(String userName, String status, String program) throws Exception {
+  public static void createOrder(String userName, String status, String program) throws SQLException {
     dbWrapper.insertRequisitions(1, program, true, "2012-12-01", "2015-12-01", "F10", false);
     dbWrapper.updateRequisitionStatus("SUBMITTED", userName, program);
     dbWrapper.updateRequisitionStatus("APPROVED", userName, program);
@@ -66,7 +66,7 @@ public class JsonUtility extends TestCaseHelper {
     dbWrapper.updatePacksToShip("1");
   }
 
-  public static void approveRequisition(Long id, int quantityApproved) throws Exception {
+  public static void approveRequisition(Long id, int quantityApproved) throws IOException {
     HttpClient client = new HttpClient();
     client.createContext();
 
@@ -83,7 +83,7 @@ public class JsonUtility extends TestCaseHelper {
       "Admin123");
   }
 
-  public static void convertToOrder(String userName, String password) throws Exception {
+  public static void convertToOrder(String userName, String password) {
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(userName, password);
     ConvertOrderPage convertOrderPage = homePage.navigateConvertToOrder();
@@ -139,7 +139,7 @@ public class JsonUtility extends TestCaseHelper {
       responseEntity.getResponse().contains("{\"success\":\"CHW created successfully\"}"));
   }
 
-  public void convertToOrderAndUpdatePOD(String userName, String program, Integer quantityReceived) throws Exception {
+  public void convertToOrderAndUpdatePOD(String userName, String program, Integer quantityReceived) throws SQLException, IOException {
     HttpClient client = new HttpClient();
     client.createContext();
     dbWrapper.assignRight("store in-charge", "MANAGE_POD");

@@ -24,7 +24,7 @@ distributionModule.service('distributionService', function ($dialog, SharedDistr
         if (!result) return;
 
         applyFunc(_this.distribution);
-        $($('input[not-recorded]').last()).trigger("blur"); //for auto save
+        $($('input[not-recorded]').last()).trigger("click"); //for auto save
       };
     };
 

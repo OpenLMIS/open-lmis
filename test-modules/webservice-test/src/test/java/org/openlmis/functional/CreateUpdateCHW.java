@@ -19,6 +19,9 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -49,7 +52,7 @@ public class CreateUpdateCHW extends JsonUtility {
   LoginPage loginPage;
 
   @BeforeMethod(groups = {"webservice", "webserviceSmoke"})
-  public void setUp() throws Exception {
+  public void setUp() throws InterruptedException, SQLException, IOException {
     super.setup();
     super.setupTestData(true);
     dbWrapper.updateRestrictLogin("commTrack", true);
@@ -57,14 +60,14 @@ public class CreateUpdateCHW extends JsonUtility {
   }
 
   @AfterMethod(groups = {"webservice", "webserviceSmoke"})
-  public void tearDown() throws Exception {
+  public void tearDown() throws SQLException {
     dbWrapper.deleteData();
     dbWrapper.closeConnection();
 
   }
 
   @Test(groups = {"webservice"}, dataProvider = "Data-Provider-Function-Positive")
-  public void shouldNotShowVirtualFacilityOnManageUserScreen(String[] credentials) throws Exception {
+  public void shouldNotShowVirtualFacilityOnManageUserScreen(String[] credentials) throws SQLException {
     dbWrapper.updateFieldValue("facilities", "virtualFacility", ACTIVE_STATUS, "code", DEFAULT_PARENT_FACILITY_CODE);
 
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
@@ -77,7 +80,7 @@ public class CreateUpdateCHW extends JsonUtility {
   }
 
   @Test(groups = {"webservice"}, dataProvider = "Data-Provider-Function-Positive")
-  public void shouldVerifyFacilityUpload(String[] credentials) throws Exception {
+  public void shouldVerifyFacilityUpload(String[] credentials) throws FileNotFoundException, SQLException {
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
     UploadPage uploadPage = homePage.navigateUploads();
     uploadPage.uploadAndVerifyGeographicZone("QA_Geographic_Data_WebService.csv");
@@ -89,7 +92,7 @@ public class CreateUpdateCHW extends JsonUtility {
   }
 
   @Test(groups = {"webservice"}, dataProvider = "Data-Provider-Function-Positive")
-  public void shouldManageFacility(String[] credentials) throws Exception {
+  public void shouldManageFacility(String[] credentials) throws IOException, SQLException {
     HttpClient client = new HttpClient();
     client.createContext();
     Agent agentJson = readObjectFromFile(FULL_JSON_TXT_FILE_NAME, Agent.class);
@@ -122,7 +125,7 @@ public class CreateUpdateCHW extends JsonUtility {
 
 
   @Test(groups = {"webserviceSmoke"})
-  public void testChwFeedWithValidParentFacilityCode() throws Exception {
+  public void testChwFeedWithValidParentFacilityCode() throws IOException, SQLException {
     HttpClient client = new HttpClient();
     client.createContext();
     Agent agentJson = readObjectFromFile(FULL_JSON_TXT_FILE_NAME, Agent.class);
@@ -158,7 +161,7 @@ public class CreateUpdateCHW extends JsonUtility {
   }
 
   @Test(groups = {"webservice"})
-  public void testUpdateChwFeedForEnableScenarios() throws Exception {
+  public void testUpdateChwFeedForEnableScenarios() throws IOException, SQLException {
     HttpClient client = new HttpClient();
     client.createContext();
     Agent agentJson = readObjectFromFile(FULL_JSON_TXT_FILE_NAME, Agent.class);
@@ -192,7 +195,7 @@ public class CreateUpdateCHW extends JsonUtility {
   }
 
   @Test(groups = {"webservice"})
-  public void testChwFeedCreateWithInvalidDataLength() throws Exception {
+  public void testChwFeedCreateWithInvalidDataLength() throws IOException {
     HttpClient client = new HttpClient();
     client.createContext();
     Agent agentJson = readObjectFromFile(FULL_JSON_TXT_FILE_NAME, Agent.class);
@@ -209,7 +212,7 @@ public class CreateUpdateCHW extends JsonUtility {
   }
 
   @Test(groups = {"webservice"})
-  public void testChwFeedUpdateWithInvalidDataLength() throws Exception {
+  public void testChwFeedUpdateWithInvalidDataLength() throws IOException {
     HttpClient client = new HttpClient();
     client.createContext();
     Agent agentJson = readObjectFromFile(FULL_JSON_TXT_FILE_NAME, Agent.class);
@@ -232,7 +235,7 @@ public class CreateUpdateCHW extends JsonUtility {
   }
 
   @Test(groups = {"webservice"})
-  public void testUpdateStatusOfAgentCode() throws Exception {
+  public void testUpdateStatusOfAgentCode() throws IOException, SQLException {
     String AGENT_CODE = "ABCD";
     HttpClient client = new HttpClient();
     client.createContext();
@@ -259,7 +262,7 @@ public class CreateUpdateCHW extends JsonUtility {
   }
 
   @Test(groups = {"webservice"})
-  public void testVerifyFieldsAfterChangeInParentFacilityCode() throws Exception {
+  public void testVerifyFieldsAfterChangeInParentFacilityCode() throws IOException, SQLException {
     String typeId = "typeId";
     String geographicZoneId = "geographicZoneId";
     String parentFacilityId = "parentFacilityId";
@@ -337,7 +340,7 @@ public class CreateUpdateCHW extends JsonUtility {
   }
 
   @Test(groups = {"webservice"})
-  public void testVerifyFieldsAfterCHWCreation() throws Exception {
+  public void testVerifyFieldsAfterCHWCreation() throws IOException, SQLException {
     String typeId = "typeId";
     String geographicZoneId = "geographicZoneId";
     String parentFacilityId = "parentFacilityId";
@@ -412,7 +415,7 @@ public class CreateUpdateCHW extends JsonUtility {
   }
 
   @Test(groups = {"webservice"})
-  public void testCreateChwFeedWithParentFacilityCodeAsVirtualFacility() throws Exception {
+  public void testCreateChwFeedWithParentFacilityCodeAsVirtualFacility() throws SQLException, IOException {
     dbWrapper.updateFieldValue("facilities", "virtualFacility", ACTIVE_STATUS, "code", DEFAULT_PARENT_FACILITY_CODE);
     HttpClient client = new HttpClient();
     client.createContext();
@@ -430,7 +433,7 @@ public class CreateUpdateCHW extends JsonUtility {
   }
 
   @Test(groups = {"webservice"})
-  public void testUpdateChwFeedWithParentFacilityCodeAsVirtualFacility() throws Exception {
+  public void testUpdateChwFeedWithParentFacilityCodeAsVirtualFacility() throws IOException, SQLException {
     String facilityCode = DEFAULT_PARENT_FACILITY_CODE;
 
     HttpClient client = new HttpClient();
@@ -454,7 +457,7 @@ public class CreateUpdateCHW extends JsonUtility {
 
 
   @Test(groups = {"webservice"})
-  public void testChwFeedWithAgentCodeAlreadyRegistered() throws Exception {
+  public void testChwFeedWithAgentCodeAlreadyRegistered() throws IOException {
     HttpClient client = new HttpClient();
     client.createContext();
     Agent agentJson = readObjectFromFile(FULL_JSON_TXT_FILE_NAME, Agent.class);
@@ -474,7 +477,7 @@ public class CreateUpdateCHW extends JsonUtility {
 
 
   @Test(groups = {"webservice"})
-  public void testUpdateShouldVerifyAgentIsNotAVirtualFacility() throws Exception {
+  public void testUpdateShouldVerifyAgentIsNotAVirtualFacility() throws IOException {
     String Agent_code = "F11";
     HttpClient client = new HttpClient();
     client.createContext();
@@ -491,7 +494,7 @@ public class CreateUpdateCHW extends JsonUtility {
   }
 
   @Test(groups = {"webservice"})
-  public void testCreateChwFeedWithInvalidParentFacilityCode() throws Exception {
+  public void testCreateChwFeedWithInvalidParentFacilityCode() throws IOException {
     HttpClient client = new HttpClient();
     client.createContext();
     Agent agentJson = readObjectFromFile(FULL_JSON_TXT_FILE_NAME, Agent.class);
@@ -508,7 +511,7 @@ public class CreateUpdateCHW extends JsonUtility {
   }
 
   @Test(groups = {"webservice"})
-  public void testUpdateChwFeedWithInvalidParentFacilityCode() throws Exception {
+  public void testUpdateChwFeedWithInvalidParentFacilityCode() throws IOException {
     HttpClient client = new HttpClient();
     client.createContext();
     Agent agentJson = readObjectFromFile(FULL_JSON_TXT_FILE_NAME, Agent.class);
@@ -528,7 +531,7 @@ public class CreateUpdateCHW extends JsonUtility {
   }
 
   @Test(groups = {"webservice"})
-  public void testMalformedJson() throws Exception {
+  public void testMalformedJson() throws IOException {
     HttpClient client = new HttpClient();
     client.createContext();
     Agent agentJson = readObjectFromFile(FULL_JSON_TXT_FILE_NAME, Agent.class);
@@ -548,7 +551,7 @@ public class CreateUpdateCHW extends JsonUtility {
 
 
   @Test(groups = {"webservice"})
-  public void testBlankJson() throws Exception {
+  public void testBlankJson() {
     HttpClient client = new HttpClient();
     client.createContext();
     ResponseEntity responseEntity = client.SendJSON("{}", CREATE_URL, POST, commTrackUser, "Admin123");
@@ -558,7 +561,7 @@ public class CreateUpdateCHW extends JsonUtility {
   }
 
   @Test(groups = {"webservice"})
-  public void testCreateMissingMandatoryFieldsWhenFieldIsNotPresent() throws Exception {
+  public void testCreateMissingMandatoryFieldsWhenFieldIsNotPresent() throws IOException {
     HttpClient client = new HttpClient();
     client.createContext();
     Agent agentJson = readObjectFromFile(FULL_JSON_TXT_FILE_NAME, Agent.class);
@@ -577,7 +580,7 @@ public class CreateUpdateCHW extends JsonUtility {
   }
 
   @Test(groups = {"webservice"})
-  public void testUpdateMissingMandatoryFieldsWhenFieldIsNotPresent() throws Exception {
+  public void testUpdateMissingMandatoryFieldsWhenFieldIsNotPresent() throws IOException {
     HttpClient client = new HttpClient();
     client.createContext();
     Agent agentJson = readObjectFromFile(FULL_JSON_TXT_FILE_NAME, Agent.class);
@@ -599,7 +602,7 @@ public class CreateUpdateCHW extends JsonUtility {
   }
 
   @Test(groups = {"webservice"})
-  public void testCreateMissingMandatoryFieldValueWhenFieldIsNotPresent() throws Exception {
+  public void testCreateMissingMandatoryFieldValueWhenFieldIsNotPresent() throws IOException {
     HttpClient client = new HttpClient();
     client.createContext();
     Agent agentJson = readObjectFromFile(FULL_JSON_TXT_FILE_NAME, Agent.class);
@@ -618,7 +621,7 @@ public class CreateUpdateCHW extends JsonUtility {
   }
 
   @Test(groups = {"webservice"})
-  public void testUpdateMissingMandatoryFieldValueWhenFieldIsNotPresent() throws Exception {
+  public void testUpdateMissingMandatoryFieldValueWhenFieldIsNotPresent() throws IOException {
     HttpClient client = new HttpClient();
     client.createContext();
     Agent agentJson = readObjectFromFile(FULL_JSON_TXT_FILE_NAME, Agent.class);
@@ -643,7 +646,7 @@ public class CreateUpdateCHW extends JsonUtility {
   }
 
   @Test(groups = {"webservice"})
-  public void testCreateMissingMandatoryFieldsWhenActiveFieldIsNotPresent() throws Exception {
+  public void testCreateMissingMandatoryFieldsWhenActiveFieldIsNotPresent() throws IOException {
     HttpClient client = new HttpClient();
     client.createContext();
     Agent agentJson = readObjectFromFile(FULL_JSON_TXT_FILE_NAME, Agent.class);
@@ -662,7 +665,7 @@ public class CreateUpdateCHW extends JsonUtility {
   }
 
   @Test(groups = {"webservice"})
-  public void testUpdateAgentCodeNotPresent() throws Exception {
+  public void testUpdateAgentCodeNotPresent() throws IOException {
     HttpClient client = new HttpClient();
     client.createContext();
     Agent agentJson = readObjectFromFile(FULL_JSON_TXT_FILE_NAME, Agent.class);
@@ -680,7 +683,7 @@ public class CreateUpdateCHW extends JsonUtility {
   }
 
   @Test(groups = {"webservice"})
-  public void testUpdateMissingMandatoryFieldsWhenActiveFieldIsNotPresent() throws Exception {
+  public void testUpdateMissingMandatoryFieldsWhenActiveFieldIsNotPresent() throws IOException {
     HttpClient client = new HttpClient();
     client.createContext();
     Agent agentJson = readObjectFromFile(FULL_JSON_TXT_FILE_NAME, Agent.class);
@@ -704,7 +707,7 @@ public class CreateUpdateCHW extends JsonUtility {
   }
 
   @Test(groups = {"webservice"})
-  public void testCreateMissingMandatoryFieldsWhenFieldValueIsNotPresent() throws Exception {
+  public void testCreateMissingMandatoryFieldsWhenFieldValueIsNotPresent() throws IOException {
     HttpClient client = new HttpClient();
     client.createContext();
     Agent agentJson = readObjectFromFile(FULL_JSON_TXT_FILE_NAME, Agent.class);
@@ -723,7 +726,7 @@ public class CreateUpdateCHW extends JsonUtility {
   }
 
   @Test(groups = {"webservice"})
-  public void testUpdateMissingMandatoryFieldsWhenFieldValueIsNotPresent() throws Exception {
+  public void testUpdateMissingMandatoryFieldsWhenFieldValueIsNotPresent() throws IOException {
     HttpClient client = new HttpClient();
     client.createContext();
     Agent agentJson = readObjectFromFile(FULL_JSON_TXT_FILE_NAME, Agent.class);
@@ -746,7 +749,7 @@ public class CreateUpdateCHW extends JsonUtility {
   }
 
   @Test(groups = {"webservice"})
-  public void testCreateMissingMandatoryFieldsWhenActiveFieldValueIsNotPresent() throws Exception {
+  public void testCreateMissingMandatoryFieldsWhenActiveFieldValueIsNotPresent() throws IOException {
     HttpClient client = new HttpClient();
     client.createContext();
     Agent agentJson = readObjectFromFile(FULL_JSON_TXT_FILE_NAME, Agent.class);
@@ -765,7 +768,7 @@ public class CreateUpdateCHW extends JsonUtility {
   }
 
   @Test(groups = {"webservice"})
-  public void testUpdateMissingMandatoryFieldsWhenActiveFieldValueIsNotPresent() throws Exception {
+  public void testUpdateMissingMandatoryFieldsWhenActiveFieldValueIsNotPresent() throws IOException {
     HttpClient client = new HttpClient();
     client.createContext();
     Agent agentJson = readObjectFromFile(FULL_JSON_TXT_FILE_NAME, Agent.class);
@@ -789,7 +792,7 @@ public class CreateUpdateCHW extends JsonUtility {
   }
 
   @Test(groups = {"webservice"})
-  public void testUpdateMissingMandatoryFieldsWhenActiveFieldValueIsNotCorrect() throws Exception {
+  public void testUpdateMissingMandatoryFieldsWhenActiveFieldValueIsNotCorrect() throws IOException {
     HttpClient client = new HttpClient();
     client.createContext();
     Agent agentJson = readObjectFromFile(FULL_JSON_TXT_FILE_NAME, Agent.class);
@@ -813,7 +816,7 @@ public class CreateUpdateCHW extends JsonUtility {
   }
 
   @Test(groups = {"webservice"})
-  public void testUpdatedSuccessfully() throws Exception {
+  public void testUpdatedSuccessfully() throws IOException {
     HttpClient client = new HttpClient();
     client.createContext();
     Agent agentJson = readObjectFromFile(FULL_JSON_TXT_FILE_NAME, Agent.class);
@@ -833,7 +836,7 @@ public class CreateUpdateCHW extends JsonUtility {
   }
 
   @Test(groups = {"webservice"})
-  public void testUnrecognizedField() throws Exception {
+  public void testUnrecognizedField() throws IOException {
     HttpClient client = new HttpClient();
     client.createContext();
     Agent agentJson = readObjectFromFile(FULL_JSON_TXT_FILE_NAME, Agent.class);
@@ -851,7 +854,7 @@ public class CreateUpdateCHW extends JsonUtility {
   }
 
   @Test(groups = {"webservice"})
-  public void testCaseSensitiveCheckForCreateCHW() throws Exception {
+  public void testCaseSensitiveCheckForCreateCHW() throws IOException {
     HttpClient client = new HttpClient();
     client.createContext();
     Agent agentJson = readObjectFromFile(FULL_JSON_TXT_FILE_NAME, Agent.class);
@@ -877,7 +880,7 @@ public class CreateUpdateCHW extends JsonUtility {
   }
 
   @Test(groups = {"webservice"})
-  public void testCaseSensitiveCheckForUpdateCHW() throws Exception {
+  public void testCaseSensitiveCheckForUpdateCHW() throws IOException {
     HttpClient client = new HttpClient();
     client.createContext();
     Agent agentJson = readObjectFromFile(FULL_JSON_TXT_FILE_NAME, Agent.class);
@@ -906,7 +909,7 @@ public class CreateUpdateCHW extends JsonUtility {
   }
 
   @Test(groups = {"webservice"})
-  public void testInvalidActiveFieldOption() throws Exception {
+  public void testInvalidActiveFieldOption() throws IOException {
     HttpClient client = new HttpClient();
     client.createContext();
     Agent agentJson = readObjectFromFile(FULL_JSON_TXT_FILE_NAME, Agent.class);
@@ -924,7 +927,7 @@ public class CreateUpdateCHW extends JsonUtility {
   }
 
   @Test(groups = {"webservice"})
-  public void testCreateInvalidAuthenticationToken() throws Exception {
+  public void testCreateInvalidAuthenticationToken() throws IOException {
     HttpClient client = new HttpClient();
     client.createContext();
     Agent agentJson = readObjectFromFile(FULL_JSON_TXT_FILE_NAME, Agent.class);
@@ -943,7 +946,7 @@ public class CreateUpdateCHW extends JsonUtility {
   }
 
   @Test(groups = {"webservice"})
-  public void testUpdateInvalidAuthenticationToken() throws Exception {
+  public void testUpdateInvalidAuthenticationToken() throws IOException {
     HttpClient client = new HttpClient();
     client.createContext();
     Agent agentJson = readObjectFromFile(FULL_JSON_TXT_FILE_NAME, Agent.class);
@@ -958,7 +961,7 @@ public class CreateUpdateCHW extends JsonUtility {
   }
 
   @Test(groups = {"webservice"})
-  public void testCreateInvalidUserName() throws Exception {
+  public void testCreateInvalidUserName() throws IOException {
     HttpClient client = new HttpClient();
     client.createContext();
     Agent agentJson = readObjectFromFile(FULL_JSON_TXT_FILE_NAME, Agent.class);
@@ -976,7 +979,7 @@ public class CreateUpdateCHW extends JsonUtility {
   }
 
   @Test(groups = {"webservice"})
-  public void testUpdateInvalidUserName() throws Exception {
+  public void testUpdateInvalidUserName() throws IOException {
     HttpClient client = new HttpClient();
     client.createContext();
     Agent agentJson = readObjectFromFile(FULL_JSON_TXT_FILE_NAME, Agent.class);

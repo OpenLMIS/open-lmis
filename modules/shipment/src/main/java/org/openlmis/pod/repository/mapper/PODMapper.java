@@ -37,9 +37,10 @@ public interface PODMapper {
   void insertPOD(OrderPOD orderPod);
 
   @Select({"SELECT * FROM pod WHERE id = #{id}"})
-  @Results(value = {@Result(column = "id", property = "id"), @Result(property = "podLineItems", javaType = List.class,
-    column = "id",
-    many = @Many(select = "org.openlmis.pod.repository.mapper.PODMapper.getPODLineItemsByPODId")),})
+  @Results({
+    @Result(column = "id", property = "id"),
+    @Result(property = "podLineItems", javaType = List.class, column = "id", many = @Many(select = "org.openlmis.pod.repository.mapper.PODMapper.getPODLineItemsByPODId"))
+  })
   OrderPOD getPODById(Long id);
 
   @Select({"SELECT PLI.* FROM pod_line_items PLI INNER JOIN pod P ON PLI.podId = P.id ",

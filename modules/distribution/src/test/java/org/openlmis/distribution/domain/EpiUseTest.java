@@ -3,12 +3,13 @@ package org.openlmis.distribution.domain;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
-import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.FacilityProgramProduct;
 import org.openlmis.core.domain.ProductGroup;
 import org.openlmis.core.domain.ProgramSupported;
 import org.openlmis.db.categories.UnitTests;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.util.Date;
 import java.util.List;
@@ -16,11 +17,11 @@ import java.util.List;
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
-import static org.powermock.api.mockito.PowerMockito.mock;
-import static org.powermock.api.mockito.PowerMockito.when;
+import static org.powermock.api.mockito.PowerMockito.*;
 
 @Category(UnitTests.class)
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(PowerMockRunner.class)
+@PrepareForTest(FacilityProgramProduct.class)
 public class EpiUseTest {
 
   @Test
@@ -34,9 +35,12 @@ public class EpiUseTest {
     when(facilityProgramProduct1.getActiveProductGroup()).thenReturn(new ProductGroup("PG1", "PG1"));
     when(facilityProgramProduct2.getActiveProductGroup()).thenReturn(null);
 
-    programSupported.setProgramProducts(asList(facilityProgramProduct1, facilityProgramProduct2));
+    List<FacilityProgramProduct> programProducts = asList(facilityProgramProduct1, facilityProgramProduct2);
+    programSupported.setProgramProducts(programProducts);
     facility.setSupportedPrograms(asList(programSupported));
 
+    mockStatic(FacilityProgramProduct.class);
+    when(FacilityProgramProduct.filterActiveProducts(programProducts)).thenReturn(programProducts);
     FacilityVisit facilityVisit = new FacilityVisit();
 
     EpiUse epiUse = new EpiUse(facility, facilityVisit);

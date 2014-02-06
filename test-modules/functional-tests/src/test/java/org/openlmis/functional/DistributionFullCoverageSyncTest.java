@@ -59,7 +59,7 @@ public class DistributionFullCoverageSyncTest extends TestCaseHelper {
   }};
 
   @BeforeMethod(groups = {"distribution"})
-  public void setUp() throws Exception {
+  public void setUp() throws InterruptedException, SQLException, IOException {
     super.setup();
     Map<String, String> dataMap = fullCoverageData;
     setupDataForDistributionTest(dataMap.get(USER), dataMap.get(FIRST_DELIVERY_ZONE_CODE), dataMap.get(SECOND_DELIVERY_ZONE_CODE),
@@ -70,17 +70,17 @@ public class DistributionFullCoverageSyncTest extends TestCaseHelper {
   }
 
   @Test(groups = {"distribution"})
-  public void shouldVerifyLabelsAndTestApplyNRToAllAndSync() throws IOException, SQLException {
+  public void shouldVerifyLabelsAndTestApplyNRToAllAndSync() throws SQLException {
     HomePage homePage = loginPage.loginAs(fullCoverageData.get(USER), fullCoverageData.get(PASSWORD));
     DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
     distributionPage.initiate(fullCoverageData.get(FIRST_DELIVERY_ZONE_NAME), fullCoverageData.get(VACCINES_PROGRAM));
     FacilityListPage facilityListPage = distributionPage.clickRecordData(1);
-    GeneralObservationPage generalObservationPage = facilityListPage.selectFacility(fullCoverageData.get(FIRST_FACILITY_CODE));
-    generalObservationPage.enterDataWhenFacilityVisited("some observations", "samuel", "Doe", "Verifier", "XYZ");
+    VisitInformationPage visitInformationPage = facilityListPage.selectFacility(fullCoverageData.get(FIRST_FACILITY_CODE));
+    visitInformationPage.enterDataWhenFacilityVisited("some observations", "samuel", "Doe", "Verifier", "XYZ");
 
     facilityListPage.verifyFacilityIndicatorColor("Overall", "AMBER");
 
-    FullCoveragePage fullCoveragePage = generalObservationPage.navigateToFullCoverage();
+    FullCoveragePage fullCoveragePage = visitInformationPage.navigateToFullCoverage();
     fullCoveragePage.verifyIndicator("RED");
 
     assertEquals("Full Coverage", fullCoveragePage.getFullCoverageTabLabel());
@@ -115,19 +115,19 @@ public class DistributionFullCoverageSyncTest extends TestCaseHelper {
   }
 
   @Test(groups = {"distribution"})
-  public void shouldTestFullCoverageAndFacilityIconStatusAndSync() throws IOException, SQLException {
+  public void shouldTestFullCoverageAndFacilityIconStatusAndSync() throws SQLException {
     dbWrapper.addRefrigeratorToFacility("brand", "model", "serial", "F10");
 
     HomePage homePage = loginPage.loginAs(fullCoverageData.get(USER), fullCoverageData.get(PASSWORD));
     DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
     distributionPage.initiate(fullCoverageData.get(FIRST_DELIVERY_ZONE_NAME), fullCoverageData.get(VACCINES_PROGRAM));
     FacilityListPage facilityListPage = distributionPage.clickRecordData(1);
-    GeneralObservationPage generalObservationPage = facilityListPage.selectFacility(fullCoverageData.get(FIRST_FACILITY_CODE));
+    VisitInformationPage visitInformationPage = facilityListPage.selectFacility(fullCoverageData.get(FIRST_FACILITY_CODE));
 
     facilityListPage.verifyFacilityIndicatorColor("Overall", "RED");
-    generalObservationPage.enterDataWhenFacilityVisited("some observations", "samuel", "Doe", "Verifier", "XYZ");
+    visitInformationPage.enterDataWhenFacilityVisited("some observations", "samuel", "Doe", "Verifier", "XYZ");
 
-    FullCoveragePage fullCoveragePage = generalObservationPage.navigateToFullCoverage();
+    FullCoveragePage fullCoveragePage = visitInformationPage.navigateToFullCoverage();
     fullCoveragePage.verifyIndicator("RED");
     fullCoveragePage.toggleApplyNRToFemaleMobileBrigade();
     fullCoveragePage.verifyIndicator("AMBER");
@@ -174,17 +174,17 @@ public class DistributionFullCoverageSyncTest extends TestCaseHelper {
   }
 
   @Test(groups = {"distribution"})
-  public void shouldTestFillFullCoverageFormAndSync() throws IOException, SQLException {
+  public void shouldTestFillFullCoverageFormAndSync() throws SQLException {
     HomePage homePage = loginPage.loginAs(fullCoverageData.get(USER), fullCoverageData.get(PASSWORD));
     DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
     distributionPage.initiate(fullCoverageData.get(FIRST_DELIVERY_ZONE_NAME), fullCoverageData.get(VACCINES_PROGRAM));
     FacilityListPage facilityListPage = distributionPage.clickRecordData(1);
-    GeneralObservationPage generalObservationPage = facilityListPage.selectFacility(fullCoverageData.get(FIRST_FACILITY_CODE));
+    VisitInformationPage visitInformationPage = facilityListPage.selectFacility(fullCoverageData.get(FIRST_FACILITY_CODE));
 
     facilityListPage.verifyFacilityIndicatorColor("Overall", "AMBER");
-    generalObservationPage.enterDataWhenFacilityVisited("some observations", "samuel", "Doe", "Verifier", "XYZ");
+    visitInformationPage.enterDataWhenFacilityVisited("some observations", "samuel", "Doe", "Verifier", "XYZ");
 
-    FullCoveragePage fullCoveragePage = generalObservationPage.navigateToFullCoverage();
+    FullCoveragePage fullCoveragePage = visitInformationPage.navigateToFullCoverage();
     fullCoveragePage.verifyIndicator("RED");
     fullCoveragePage.enterData(12, 34, 45, "56");
     fullCoveragePage.verifyIndicator("GREEN");
@@ -205,17 +205,17 @@ public class DistributionFullCoverageSyncTest extends TestCaseHelper {
   }
 
   @Test(groups = {"distribution"})
-  public void shouldTestSyncIncompleteFullCoverageFormUnsuccessful() throws IOException, SQLException {
+  public void shouldTestSyncIncompleteFullCoverageFormUnsuccessful() {
     HomePage homePage = loginPage.loginAs(fullCoverageData.get(USER), fullCoverageData.get(PASSWORD));
     DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
     distributionPage.initiate(fullCoverageData.get(FIRST_DELIVERY_ZONE_NAME), fullCoverageData.get(VACCINES_PROGRAM));
     FacilityListPage facilityListPage = distributionPage.clickRecordData(1);
-    GeneralObservationPage generalObservationPage = facilityListPage.selectFacility(fullCoverageData.get(FIRST_FACILITY_CODE));
+    VisitInformationPage visitInformationPage = facilityListPage.selectFacility(fullCoverageData.get(FIRST_FACILITY_CODE));
 
     facilityListPage.verifyFacilityIndicatorColor("Overall", "AMBER");
-    generalObservationPage.enterDataWhenFacilityVisited("some observations", "samuel", "Doe", "Verifier", "XYZ");
+    visitInformationPage.enterDataWhenFacilityVisited("some observations", "samuel", "Doe", "Verifier", "XYZ");
 
-    FullCoveragePage fullCoveragePage = generalObservationPage.navigateToFullCoverage();
+    FullCoveragePage fullCoveragePage = visitInformationPage.navigateToFullCoverage();
     fullCoveragePage.verifyIndicator("RED");
     fullCoveragePage.enterMaleHealthCenter(33);
     fullCoveragePage.enterFemaleHealthCenter(67);
@@ -243,7 +243,7 @@ public class DistributionFullCoverageSyncTest extends TestCaseHelper {
   public void setupDataForDistributionTest(String userSIC, String deliveryZoneCodeFirst, String deliveryZoneCodeSecond,
                                            String deliveryZoneNameFirst, String deliveryZoneNameSecond,
                                            String facilityCodeFirst, String facilityCodeSecond,
-                                           String programFirst, String programSecond, String schedule, String productGroupCode) throws Exception {
+                                           String programFirst, String programSecond, String schedule, String productGroupCode) throws SQLException {
     List<String> rightsList = asList("MANAGE_DISTRIBUTION");
     setupTestDataToInitiateRnRAndDistribution(facilityCodeFirst, facilityCodeSecond, true, programFirst, userSIC, "200", rightsList,
       programSecond, "District1", "Ngorongoro", "Ngorongoro");
@@ -289,7 +289,7 @@ public class DistributionFullCoverageSyncTest extends TestCaseHelper {
   }
 
   @AfterMethod(groups = "distribution")
-  public void tearDown() throws Exception {
+  public void tearDown() throws SQLException {
     testWebDriver.sleep(500);
     if (!testWebDriver.getElementById("username").isDisplayed()) {
       HomePage homePage = PageFactory.getInstanceOfHomePage(testWebDriver);

@@ -130,7 +130,7 @@ public class RequisitionPage extends Page {
 
     commentsButton.click();
     WebElement comment = testWebDriver.getElementByXpath("//ul[@id='comments-list']/li[" + commentNumber + "]/span");
-    assertEquals(comment.getText(),comments);
+    assertEquals(comment.getText(), comments);
 
     WebElement commentAddedBy = testWebDriver.getElementByXpath("//ul[@id='comments-list']/li[" + commentNumber + "]/div");
 
@@ -187,12 +187,9 @@ public class RequisitionPage extends Page {
 
   public void clickOk() {
     testWebDriver.waitForElementToAppear(okButton);
-
     okButton.click();
-
     testWebDriver.sleep(500);
   }
-
 
   public void verifyTotalField() {
     testWebDriver.waitForElementToAppear(total);
@@ -200,7 +197,7 @@ public class RequisitionPage extends Page {
     String beginningBalanceValue = testWebDriver.getAttribute(beginningBalance, "value");
     String quantityReceivedValue = testWebDriver.getAttribute(quantityReceived, "value");
     assertEquals(totalValue,
-            String.valueOf(Integer.parseInt(beginningBalanceValue) + Integer.parseInt(quantityReceivedValue)));
+      String.valueOf(Integer.parseInt(beginningBalanceValue) + Integer.parseInt(quantityReceivedValue)));
   }
 
   public void verifyTotalFieldPostAuthorize() {
@@ -209,7 +206,7 @@ public class RequisitionPage extends Page {
     String beginningBalanceValue = beginningBalance.getText();
     String quantityReceivedValue = quantityReceived.getText();
     assertEquals(totalValue,
-            String.valueOf(Integer.parseInt(beginningBalanceValue) + Integer.parseInt(quantityReceivedValue)));
+      String.valueOf(Integer.parseInt(beginningBalanceValue) + Integer.parseInt(quantityReceivedValue)));
   }
 
   public void clickFullSupplyTab() {
@@ -336,13 +333,12 @@ public class RequisitionPage extends Page {
     return tr_collection.size();
   }
 
-    public void verifySkippedProductsOnRnRScreen(int rowNumber)
-    {
-        WebElement skipCheckBox = testWebDriver.getElementById("skip_" + (rowNumber - 1));
-        testWebDriver.waitForElementToAppear(skipCheckBox);
-        assertTrue(skipCheckBox.isSelected());
-        skipCheckBox=null;
-        skipCheckBox = testWebDriver.getElementById("skip_" + (rowNumber));
-        assertFalse(skipCheckBox.isSelected());
-    }
+  public void verifySkippedProductsOnRnRScreen(int rowNumber) {
+    WebElement skipCheckBox = testWebDriver.getElementById("skip_" + (rowNumber - 1));
+    testWebDriver.waitForElementToAppear(skipCheckBox);
+    assertTrue(skipCheckBox.isSelected());
+    skipCheckBox = null;
+    skipCheckBox = testWebDriver.getElementById("skip_" + (rowNumber));
+    assertFalse(skipCheckBox.isSelected());
+  }
 }

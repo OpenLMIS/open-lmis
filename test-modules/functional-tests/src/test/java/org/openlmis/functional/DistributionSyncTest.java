@@ -16,6 +16,7 @@ import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.UiUtils.TestWebDriver;
 import org.openlmis.pageobjects.*;
 import org.openqa.selenium.JavascriptExecutor;
+import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Listeners;
@@ -69,7 +70,7 @@ public class DistributionSyncTest extends TestCaseHelper {
   }};
 
   @BeforeMethod(groups = {"distribution"})
-  public void setUp() throws Exception {
+  public void setUp() throws InterruptedException, SQLException, IOException {
     super.setup();
     loginPage = PageFactory.getInstanceOfLoginPage(testWebDriver, baseUrlGlobal);
     facilityListPage = PageFactory.getInstanceOfFacilityListPage(testWebDriver);
@@ -91,15 +92,17 @@ public class DistributionSyncTest extends TestCaseHelper {
   }
 
   @Test(groups = {"distribution"})
-  public void testMultipleFacilitySync() throws Exception {
+  public void testMultipleFacilitySync() throws SQLException {
     HomePage homePage = loginPage.loginAs(distributionTestData.get(USER), distributionTestData.get(PASSWORD));
     initiateDistribution(distributionTestData.get(FIRST_DELIVERY_ZONE_NAME), distributionTestData.get(VACCINES_PROGRAM));
-    GeneralObservationPage generalObservationPage = facilityListPage.selectFacility(distributionTestData.get(SECOND_FACILITY_CODE));
+    VisitInformationPage visitInformationPage = facilityListPage.selectFacility(distributionTestData.get(SECOND_FACILITY_CODE));
 
     facilityListPage.verifyFacilityIndicatorColor("Overall", "AMBER");
-    generalObservationPage.enterDataWhenFacilityVisited("Some observations", "samuel D", "Doe Abc", "Verifier", "Verifier Title");
+    assertEquals("Was " + dbWrapper.getAttributeFromTable("facilities", "name", "code", distributionTestData.get(SECOND_FACILITY_CODE)) +
+      " visited in " + "Period14" + "?", visitInformationPage.getWasFacilityVisitedLabel());
+    visitInformationPage.enterDataWhenFacilityVisited("Some observations", "samuel D", "Doe Abc", "Verifier", "Verifier Title");
 
-    EPIUsePage epiUsePage = generalObservationPage.navigateToEpiUse();
+    EPIUsePage epiUsePage = visitInformationPage.navigateToEpiUse();
     epiUsePage.enterData(70, 80, 90, 100, 9999999, "10/2011", 1);
 
     FullCoveragePage fullCoveragePage = epiUsePage.navigateToFullCoverage();
@@ -116,6 +119,8 @@ public class DistributionSyncTest extends TestCaseHelper {
     facilityListPage.selectFacility(distributionTestData.get(FIRST_FACILITY_CODE));
 
     facilityListPage.verifyFacilityIndicatorColor("Overall", "RED");
+    assertEquals("Was " + dbWrapper.getAttributeFromTable("facilities", "name", "code", distributionTestData.get(FIRST_FACILITY_CODE)) +
+      " visited in " + "Period14" + "?", visitInformationPage.getWasFacilityVisitedLabel());
 
     fillFacilityData();
     facilityListPage.verifyFacilityIndicatorColor("Overall", "GREEN");
@@ -155,10 +160,12 @@ public class DistributionSyncTest extends TestCaseHelper {
     distributionPage.clickRecordData(1);
     facilityListPage.selectFacility("F11");
     facilityListPage.verifyFacilityIndicatorColor("Overall", "BLUE");
+    assertEquals("Was " + dbWrapper.getAttributeFromTable("facilities", "name", "code", distributionTestData.get(SECOND_FACILITY_CODE)) +
+      " visited in " + "Period14" + "?", visitInformationPage.getWasFacilityVisitedLabel());
 
-    generalObservationPage.verifyAllFieldsDisabled();
+    visitInformationPage.verifyAllFieldsDisabled();
 
-    epiUsePage = generalObservationPage.navigateToEpiUse();
+    epiUsePage = visitInformationPage.navigateToEpiUse();
     epiUsePage.verifyAllFieldsDisabled();
 
     homePage.navigateToDistributionWhenOnline();
@@ -166,7 +173,7 @@ public class DistributionSyncTest extends TestCaseHelper {
     distributionPage.clickOk();
 
     verifyEpiUseDataInDatabase(70, 80, 90, 100, 9999999, "10/2011", "PG1", distributionTestData.get(SECOND_FACILITY_CODE));
-    verifyGeneralObservationsDataInDatabase(distributionTestData.get(SECOND_FACILITY_CODE), "Some observations", "samuel D", "Doe Abc", "Verifier", "Verifier Title");
+    verifyVisitInformationDataWhenFacilityWasVisitedInDatabase(distributionTestData.get(SECOND_FACILITY_CODE), "Some observations", "samuel D", "Doe Abc", "Verifier", "Verifier Title", null);
     verifyFullCoveragesDataInDatabase(null, null, null, null, distributionTestData.get(SECOND_FACILITY_CODE));
     verifyEpiInventoryDataInDatabase(null, "2", null, "P10", distributionTestData.get(SECOND_FACILITY_CODE));
     verifyEpiInventoryDataInDatabase(null, "4", null, "Product6", distributionTestData.get(SECOND_FACILITY_CODE));
@@ -176,15 +183,17 @@ public class DistributionSyncTest extends TestCaseHelper {
   }
 
   @Test(groups = {"distribution"})
-  public void shouldCheckAlreadySyncedFacilities() throws Exception {
+  public void shouldCheckAlreadySyncedFacilities() throws SQLException {
     dbWrapper.addRefrigeratorToFacility("LG", "800L", "GNR7878", "F11");
     HomePage homePage = loginPage.loginAs(distributionTestData.get(USER), distributionTestData.get(PASSWORD));
     initiateDistribution(distributionTestData.get(FIRST_DELIVERY_ZONE_NAME), distributionTestData.get(VACCINES_PROGRAM));
-    GeneralObservationPage generalObservationPage = facilityListPage.selectFacility(distributionTestData.get(FIRST_FACILITY_CODE));
+    VisitInformationPage visitInformationPage = facilityListPage.selectFacility(distributionTestData.get(FIRST_FACILITY_CODE));
 
     facilityListPage.verifyFacilityIndicatorColor("Overall", "RED");
-    generalObservationPage.enterDataWhenFacilityVisited("Some observations", "samuel D", "Doe Abc", "Verifier", "Verifier Title");
-    RefrigeratorPage refrigeratorPage = generalObservationPage.navigateToRefrigerators();
+    assertEquals("Was " + dbWrapper.getAttributeFromTable("facilities", "name", "code", distributionTestData.get(FIRST_FACILITY_CODE)) +
+      " visited in " + "Period14" + "?", visitInformationPage.getWasFacilityVisitedLabel());
+    visitInformationPage.enterDataWhenFacilityVisited("Some observations", "samuel D", "Doe Abc", "Verifier", "Verifier Title");
+    RefrigeratorPage refrigeratorPage = visitInformationPage.navigateToRefrigerators();
 
     refrigeratorPage.clickShowForRefrigerator1();
     refrigeratorPage.enterValueInRefrigeratorTemperature("3");
@@ -212,7 +221,7 @@ public class DistributionSyncTest extends TestCaseHelper {
     distributionPage.syncDistributionMessageDone();
 
     verifyEpiUseDataInDatabase(70, 80, 90, 100, 9999999, "10/2011", "PG1", distributionTestData.get(FIRST_FACILITY_CODE));
-    verifyGeneralObservationsDataInDatabase(distributionTestData.get(FIRST_FACILITY_CODE), "Some observations", "samuel D", "Doe Abc", "Verifier", "Verifier Title");
+    verifyVisitInformationDataWhenFacilityWasVisitedInDatabase(distributionTestData.get(FIRST_FACILITY_CODE), "Some observations", "samuel D", "Doe Abc", "Verifier", "Verifier Title", null);
     verifyRefrigeratorProblemDataNullInDatabase("GNR7878", distributionTestData.get(FIRST_FACILITY_CODE));
     verifyRefrigeratorReadingDataInDatabase(distributionTestData.get(FIRST_FACILITY_CODE), "GNR7878", 3.0F, "Y", 2, 5, null, null);
     verifyFullCoveragesDataInDatabase(null, null, null, null, distributionTestData.get(FIRST_FACILITY_CODE));
@@ -232,6 +241,8 @@ public class DistributionSyncTest extends TestCaseHelper {
     assertFalse(facilityListPage.getFacilitiesInDropDown().contains(distributionTestData.get(FIRST_FACILITY_CODE)));
 
     facilityListPage.selectFacility(distributionTestData.get(SECOND_FACILITY_CODE));
+    assertEquals("Was " + dbWrapper.getAttributeFromTable("facilities", "name", "code", distributionTestData.get(SECOND_FACILITY_CODE)) +
+      " visited in " + "Period14" + "?", visitInformationPage.getWasFacilityVisitedLabel());
 
     fillFacilityData();
 
@@ -244,7 +255,7 @@ public class DistributionSyncTest extends TestCaseHelper {
     distributionPage.syncDistributionMessageDone();
 
     verifyEpiUseDataInDatabase(70, 80, 90, 100, 9999999, "10/2011", "PG1", distributionTestData.get(FIRST_FACILITY_CODE));
-    verifyGeneralObservationsDataInDatabase(distributionTestData.get(FIRST_FACILITY_CODE), "Some observations", "samuel D", "Doe Abc", "Verifier", "Verifier Title");
+    verifyVisitInformationDataWhenFacilityWasVisitedInDatabase(distributionTestData.get(FIRST_FACILITY_CODE), "Some observations", "samuel D", "Doe Abc", "Verifier", "Verifier Title", null);
     verifyRefrigeratorProblemDataNullInDatabase("GNR7878", distributionTestData.get(FIRST_FACILITY_CODE));
     verifyRefrigeratorReadingDataInDatabase(distributionTestData.get(FIRST_FACILITY_CODE), "GNR7878", 3.0F, "Y", 2, 5, null, null);
 
@@ -252,7 +263,7 @@ public class DistributionSyncTest extends TestCaseHelper {
   }
 
   @Test(groups = {"distribution"})
-  public void testSyncWhenFacilityInactiveAfterCaching() throws Exception {
+  public void testSyncWhenFacilityInactiveAfterCaching() throws SQLException {
     HomePage homePage = loginPage.loginAs(distributionTestData.get(USER), distributionTestData.get(PASSWORD));
 
     initiateDistribution(distributionTestData.get(FIRST_DELIVERY_ZONE_NAME), distributionTestData.get(VACCINES_PROGRAM));
@@ -273,6 +284,7 @@ public class DistributionSyncTest extends TestCaseHelper {
     DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
     distributionPage.syncDistribution(1);
     assertTrue(distributionPage.getSyncMessage().contains("F10-Village Dispensary"));
+    assertEquals(distributionPage.getSyncStatusMessage(), "Sync Status");
     distributionPage.syncDistributionMessageDone();
 
     verifySyncedDataInDatabase(distributionTestData.get(FIRST_FACILITY_CODE));
@@ -290,7 +302,7 @@ public class DistributionSyncTest extends TestCaseHelper {
   }
 
   @Test(groups = {"distribution"})
-  public void testSyncWhenFacilityDisabledAfterCaching() throws Exception {
+  public void testSyncWhenFacilityDisabledAfterCaching() throws SQLException {
     HomePage homePage = loginPage.loginAs(distributionTestData.get(USER), distributionTestData.get(PASSWORD));
 
     initiateDistribution(distributionTestData.get(FIRST_DELIVERY_ZONE_NAME), distributionTestData.get(VACCINES_PROGRAM));
@@ -330,7 +342,7 @@ public class DistributionSyncTest extends TestCaseHelper {
   }
 
   @Test(groups = {"distribution"})
-  public void testSyncWhenAllProgramInactiveAfterCaching() throws Exception {
+  public void testSyncWhenAllProgramInactiveAfterCaching() throws SQLException {
     HomePage homePage = loginPage.loginAs(distributionTestData.get(USER), distributionTestData.get(PASSWORD));
 
     initiateDistribution(distributionTestData.get(FIRST_DELIVERY_ZONE_NAME), distributionTestData.get(VACCINES_PROGRAM));
@@ -361,7 +373,7 @@ public class DistributionSyncTest extends TestCaseHelper {
   }
 
   @Test(groups = {"distribution"})
-  public void testSyncWhenProgramDeletedAfterCaching() throws Exception {
+  public void testSyncWhenProgramDeletedAfterCaching() throws SQLException {
     HomePage homePage = loginPage.loginAs(distributionTestData.get(USER), distributionTestData.get(PASSWORD));
 
     initiateDistribution(distributionTestData.get(FIRST_DELIVERY_ZONE_NAME), distributionTestData.get(VACCINES_PROGRAM));
@@ -389,7 +401,7 @@ public class DistributionSyncTest extends TestCaseHelper {
   }
 
   @Test(groups = {"distribution"})
-  public void testSyncWhenAllProductsInactiveAfterCaching() throws Exception {
+  public void testSyncWhenAllProductsInactiveAfterCaching() throws SQLException {
     HomePage homePage = loginPage.loginAs(distributionTestData.get(USER), distributionTestData.get(PASSWORD));
 
     initiateDistribution(distributionTestData.get(FIRST_DELIVERY_ZONE_NAME), distributionTestData.get(VACCINES_PROGRAM));
@@ -403,7 +415,9 @@ public class DistributionSyncTest extends TestCaseHelper {
 
     initiateNextDistributionForSamePeriod(distributionTestData.get(FIRST_DELIVERY_ZONE_NAME), distributionTestData.get(VACCINES_PROGRAM));
     assertTrue(facilityListPage.getFacilitiesInDropDown().contains(distributionTestData.get(FIRST_FACILITY_CODE)));
-    facilityListPage.selectFacility(distributionTestData.get(FIRST_FACILITY_CODE));
+    VisitInformationPage visitInformationPage = facilityListPage.selectFacility(distributionTestData.get(FIRST_FACILITY_CODE));
+    assertEquals("Was " + dbWrapper.getAttributeFromTable("facilities", "name", "code", distributionTestData.get(FIRST_FACILITY_CODE)) +
+      " visited in " + "Period14" + "?", visitInformationPage.getWasFacilityVisitedLabel());
 
     facilityListPage.verifyFacilityIndicatorColor("Overall", "RED");
     verifyProductsAreDisplayed();
@@ -425,11 +439,13 @@ public class DistributionSyncTest extends TestCaseHelper {
 
     initiateNextDistributionForGivenPeriod(distributionTestData.get(FIRST_DELIVERY_ZONE_NAME), distributionTestData.get(VACCINES_PROGRAM), "Period13");
     assertTrue(facilityListPage.getFacilitiesInDropDown().contains(distributionTestData.get(FIRST_FACILITY_CODE)));
-    GeneralObservationPage generalObservationPage = facilityListPage.selectFacility(distributionTestData.get(FIRST_FACILITY_CODE));
+    facilityListPage.selectFacility(distributionTestData.get(FIRST_FACILITY_CODE));
     facilityListPage.verifyFacilityIndicatorColor("Overall", "AMBER");
+    assertEquals("Was " + dbWrapper.getAttributeFromTable("facilities", "name", "code", distributionTestData.get(FIRST_FACILITY_CODE)) +
+      " visited in " + "Period13" + "?", visitInformationPage.getWasFacilityVisitedLabel());
     verifyProductsAreNotDisplayed();
 
-    generalObservationPage.navigateToRefrigerators();
+    visitInformationPage.navigateToRefrigerators();
     String data = "SAM;800L;GNR7876";
     String[] refrigeratorDetails = data.split(";");
 
@@ -444,7 +460,7 @@ public class DistributionSyncTest extends TestCaseHelper {
   }
 
   @Test(groups = {"distribution"})
-  public void testSyncWhenAllProductsAreInactive() throws Exception {
+  public void testSyncWhenAllProductsAreInactive() throws SQLException {
     dbWrapper.updateFieldValue("products", "active", "false", "code", "P10");
     dbWrapper.updateFieldValue("products", "active", "false", "code", "P11");
     dbWrapper.updateFieldValue("products", "active", "false", "code", "Product6");
@@ -452,10 +468,10 @@ public class DistributionSyncTest extends TestCaseHelper {
 
     HomePage homePage = loginPage.loginAs(distributionTestData.get(USER), distributionTestData.get(PASSWORD));
     initiateDistribution(distributionTestData.get(FIRST_DELIVERY_ZONE_NAME), distributionTestData.get(VACCINES_PROGRAM));
-    GeneralObservationPage generalObservationPage = facilityListPage.selectFacility(distributionTestData.get(FIRST_FACILITY_CODE));
-    generalObservationPage.enterDataWhenFacilityVisited("Some observations", "samuel D", "Doe Abc", "Verifier", "Verifier Title");
+    VisitInformationPage visitInformationPage = facilityListPage.selectFacility(distributionTestData.get(FIRST_FACILITY_CODE));
+    visitInformationPage.enterDataWhenFacilityVisited("Some observations", "samuel D", "Doe Abc", "Verifier", "Verifier Title");
 
-    RefrigeratorPage refrigeratorPage = generalObservationPage.navigateToRefrigerators();
+    RefrigeratorPage refrigeratorPage = visitInformationPage.navigateToRefrigerators();
 
     refrigeratorPage.clickShowForRefrigerator1();
     refrigeratorPage.enterValueInRefrigeratorTemperature("3");
@@ -478,7 +494,7 @@ public class DistributionSyncTest extends TestCaseHelper {
     distributionPage.syncDistribution(1);
     distributionPage.syncDistributionMessageDone();
 
-    verifyGeneralObservationsDataInDatabase(distributionTestData.get(FIRST_FACILITY_CODE), "Some observations", "samuel D", "Doe Abc", "Verifier", "Verifier Title");
+    verifyVisitInformationDataWhenFacilityWasVisitedInDatabase(distributionTestData.get(FIRST_FACILITY_CODE), "Some observations", "samuel D", "Doe Abc", "Verifier", "Verifier Title", null);
     verifyRefrigeratorProblemDataNullInDatabase("GNR7878", distributionTestData.get(FIRST_FACILITY_CODE));
     verifyRefrigeratorReadingDataInDatabase(distributionTestData.get(FIRST_FACILITY_CODE), "GNR7878", 3.0F, "Y", 2, 5, null, null);
     verifyFullCoveragesDataInDatabase(null, null, null, null, distributionTestData.get(FIRST_FACILITY_CODE));
@@ -490,7 +506,7 @@ public class DistributionSyncTest extends TestCaseHelper {
   }
 
   @Test(groups = {"distribution"})
-  public void testSyncWhenProductGroupAddedAfterCaching() throws Exception {
+  public void testSyncWhenProductGroupAddedAfterCaching() throws SQLException {
     HomePage homePage = loginPage.loginAs(distributionTestData.get(USER), distributionTestData.get(PASSWORD));
 
     initiateDistribution(distributionTestData.get(FIRST_DELIVERY_ZONE_NAME), distributionTestData.get(VACCINES_PROGRAM));
@@ -503,7 +519,7 @@ public class DistributionSyncTest extends TestCaseHelper {
 
     initiateNextDistributionForSamePeriod(distributionTestData.get(FIRST_DELIVERY_ZONE_NAME), distributionTestData.get(VACCINES_PROGRAM));
     assertTrue(facilityListPage.getFacilitiesInDropDown().contains(distributionTestData.get(FIRST_FACILITY_CODE)));
-    GeneralObservationPage generalObservationPage = facilityListPage.selectFacility(distributionTestData.get(FIRST_FACILITY_CODE));
+    VisitInformationPage visitInformationPage = facilityListPage.selectFacility(distributionTestData.get(FIRST_FACILITY_CODE));
 
     facilityListPage.verifyFacilityIndicatorColor("Overall", "RED");
     verifyProductsAreDisplayed();
@@ -528,7 +544,7 @@ public class DistributionSyncTest extends TestCaseHelper {
     facilityListPage.selectFacility(distributionTestData.get(FIRST_FACILITY_CODE));
     facilityListPage.verifyFacilityIndicatorColor("Overall", "RED");
 
-    EPIUsePage epiUsePage = generalObservationPage.navigateToEpiUse();
+    EPIUsePage epiUsePage = visitInformationPage.navigateToEpiUse();
     assertTrue(epiUsePage.getProductGroup(1).equals("PG1-Name"));
     assertTrue(epiUsePage.getProductGroup(2).equals("PG2-Name"));
     assertNull(epiUsePage.getNoProductsAddedMessage());
@@ -546,7 +562,7 @@ public class DistributionSyncTest extends TestCaseHelper {
   }
 
   @Test(groups = {"distribution"})
-  public void testSyncWhenProductWithNoProductGroupAddedAfterCaching() throws Exception {
+  public void testSyncWhenProductWithNoProductGroupAddedAfterCaching() throws SQLException {
     HomePage homePage = loginPage.loginAs(distributionTestData.get(USER), distributionTestData.get(PASSWORD));
 
     initiateDistribution(distributionTestData.get(FIRST_DELIVERY_ZONE_NAME), distributionTestData.get(VACCINES_PROGRAM));
@@ -560,7 +576,7 @@ public class DistributionSyncTest extends TestCaseHelper {
 
     initiateNextDistributionForSamePeriod(distributionTestData.get(FIRST_DELIVERY_ZONE_NAME), distributionTestData.get(VACCINES_PROGRAM));
     assertTrue(facilityListPage.getFacilitiesInDropDown().contains(distributionTestData.get(FIRST_FACILITY_CODE)));
-    GeneralObservationPage generalObservationPage = facilityListPage.selectFacility(distributionTestData.get(FIRST_FACILITY_CODE));
+    VisitInformationPage visitInformationPage = facilityListPage.selectFacility(distributionTestData.get(FIRST_FACILITY_CODE));
 
     facilityListPage.verifyFacilityIndicatorColor("Overall", "RED");
     verifyProductsAreDisplayed();
@@ -585,7 +601,7 @@ public class DistributionSyncTest extends TestCaseHelper {
     facilityListPage.selectFacility(distributionTestData.get(FIRST_FACILITY_CODE));
     facilityListPage.verifyFacilityIndicatorColor("Overall", "RED");
 
-    EPIUsePage epiUsePage = generalObservationPage.navigateToEpiUse();
+    EPIUsePage epiUsePage = visitInformationPage.navigateToEpiUse();
     assertTrue(epiUsePage.getProductGroup(1).equals("PG1-Name"));
     //assertNull(epiUsePage.getProductGroup(2));
     assertNull(epiUsePage.getNoProductsAddedMessage());
@@ -603,7 +619,7 @@ public class DistributionSyncTest extends TestCaseHelper {
   public void setupDataForDistributionTest(String userSIC, String deliveryZoneCodeFirst, String deliveryZoneCodeSecond,
                                            String deliveryZoneNameFirst, String deliveryZoneNameSecond,
                                            String facilityCodeFirst, String facilityCodeSecond,
-                                           String programFirst, String programSecond, String schedule, String productGroupCode) throws Exception {
+                                           String programFirst, String programSecond, String schedule, String productGroupCode) throws SQLException {
     List<String> rightsList = asList("MANAGE_DISTRIBUTION");
     setupTestDataToInitiateRnRAndDistribution(facilityCodeFirst, facilityCodeSecond, true, programFirst, userSIC, "200", rightsList,
       programSecond, "District1", "Ngorongoro", "Ngorongoro");
@@ -618,11 +634,12 @@ public class DistributionSyncTest extends TestCaseHelper {
     dbWrapper.insertProgramProduct("Product6", programFirst, "10", "true");
   }
 
-  private GeneralObservationPage fillFacilityData() {
-    GeneralObservationPage generalObservationPage = PageFactory.getInstanceOfObservation(testWebDriver);
-    generalObservationPage.enterDataWhenFacilityVisited("Some observations", "samuel", "Doe", "Verifier", "XYZ");
+  private VisitInformationPage fillFacilityData() {
+    VisitInformationPage visitInformationPage = PageFactory.getInstanceOfVisitInformation(testWebDriver);
+    visitInformationPage.navigateToVisitInformation();
+    visitInformationPage.enterDataWhenFacilityVisited("Some observations", "samuel", "Doe", "Verifier", "XYZ");
 
-    RefrigeratorPage refrigeratorPage = generalObservationPage.navigateToRefrigerators();
+    RefrigeratorPage refrigeratorPage = visitInformationPage.navigateToRefrigerators();
     refrigeratorPage.navigateToRefrigerators();
     refrigeratorPage.clickDelete();
     refrigeratorPage.clickOKButton();
@@ -649,9 +666,9 @@ public class DistributionSyncTest extends TestCaseHelper {
     FullCoveragePage fullCoveragePage = epiInventoryPage.navigateToFullCoverage();
     fullCoveragePage.enterData(23, 66, 77, "45");
 
-    fullCoveragePage.navigateToGeneralObservations();
+    fullCoveragePage.navigateToVisitInformation();
 
-    return generalObservationPage;
+    return visitInformationPage;
   }
 
   private void verifySyncedDataInDatabase(String facilityCode) throws SQLException {
@@ -660,7 +677,7 @@ public class DistributionSyncTest extends TestCaseHelper {
 
     verifyEpiUseDataInDatabase(10, 20, 30, 40, 50, "10/2011", "PG1", facilityCode);
 
-    verifyGeneralObservationsDataInDatabase(facilityCode, "Some observations", "samuel", "Doe", "Verifier", "XYZ");
+    verifyVisitInformationDataWhenFacilityWasVisitedInDatabase(facilityCode, "Some observations", "samuel", "Doe", "Verifier", "XYZ", null);
 
     verifyFullCoveragesDataInDatabase(23, 66, 77, 45, facilityCode);
 
@@ -677,7 +694,7 @@ public class DistributionSyncTest extends TestCaseHelper {
     epiInventoryPage.fillDeliveredQuantity(3, deliveredQuantity3);
   }
 
-  public void initiateDistribution(String deliveryZoneNameFirst, String programFirst) throws IOException {
+  public void initiateDistribution(String deliveryZoneNameFirst, String programFirst) {
 
     HomePage homePage = PageFactory.getInstanceOfHomePage(testWebDriver);
     DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
@@ -687,7 +704,7 @@ public class DistributionSyncTest extends TestCaseHelper {
     distributionPage.clickRecordData(1);
   }
 
-  public void initiateNextDistributionForGivenPeriod(String deliveryZoneNameFirst, String programFirst, String period) throws IOException {
+  public void initiateNextDistributionForGivenPeriod(String deliveryZoneNameFirst, String programFirst, String period) {
     DistributionPage distributionPage = PageFactory.getInstanceOfDistributionPage(testWebDriver);
     distributionPage.selectValueFromDeliveryZone(deliveryZoneNameFirst);
     distributionPage.selectValueFromProgram(programFirst);
@@ -696,7 +713,7 @@ public class DistributionSyncTest extends TestCaseHelper {
     distributionPage.clickRecordData(1);
   }
 
-  private void initiateNextDistributionForSamePeriod(String deliveryZoneNameFirst, String programFirst) throws IOException {
+  private void initiateNextDistributionForSamePeriod(String deliveryZoneNameFirst, String programFirst) {
     DistributionPage distributionPage = PageFactory.getInstanceOfDistributionPage(testWebDriver);
     distributionPage.selectValueFromDeliveryZone(deliveryZoneNameFirst);
     distributionPage.selectValueFromProgram(programFirst);
@@ -705,7 +722,7 @@ public class DistributionSyncTest extends TestCaseHelper {
     distributionPage.clickRecordData(1);
   }
 
-  private void deleteDistribution() throws IOException {
+  private void deleteDistribution() {
     HomePage homePage = PageFactory.getInstanceOfHomePage(testWebDriver);
     DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
     distributionPage.deleteDistribution();
@@ -713,8 +730,8 @@ public class DistributionSyncTest extends TestCaseHelper {
   }
 
   private void verifyProductsAreDisplayed() {
-    GeneralObservationPage generalObservationPage = PageFactory.getInstanceOfObservation(testWebDriver);
-    EPIUsePage epiUsePage = generalObservationPage.navigateToEpiUse();
+    VisitInformationPage visitInformationPage = PageFactory.getInstanceOfVisitInformation(testWebDriver);
+    EPIUsePage epiUsePage = visitInformationPage.navigateToEpiUse();
     assertTrue(epiUsePage.getProductGroup(1).equals("PG1-Name"));
     //assertNull(epiUsePage.getProductGroup(2));
     assertNull(epiUsePage.getNoProductsAddedMessage());
@@ -727,8 +744,8 @@ public class DistributionSyncTest extends TestCaseHelper {
   }
 
   private void verifyProductsAreNotDisplayed() {
-    GeneralObservationPage generalObservationPage = PageFactory.getInstanceOfObservation(testWebDriver);
-    EPIUsePage epiUsePage = generalObservationPage.navigateToEpiUse();
+    VisitInformationPage visitInformationPage = PageFactory.getInstanceOfVisitInformation(testWebDriver);
+    EPIUsePage epiUsePage = visitInformationPage.navigateToEpiUse();
     //assertNull(epiUsePage.getProductGroup(1));
     //assertNull(epiUsePage.getProductGroup(2));
     assertTrue(epiUsePage.getNoProductsAddedMessage().contains("No products added"));
@@ -742,10 +759,10 @@ public class DistributionSyncTest extends TestCaseHelper {
   }
 
   private void verifyAllFieldsDisabled() {
-    GeneralObservationPage generalObservationPage = PageFactory.getInstanceOfObservation(testWebDriver);
-    generalObservationPage.verifyAllFieldsDisabled();
+    VisitInformationPage visitInformationPage = PageFactory.getInstanceOfVisitInformation(testWebDriver);
+    visitInformationPage.verifyAllFieldsDisabled();
 
-    RefrigeratorPage refrigeratorPage = generalObservationPage.navigateToRefrigerators();
+    RefrigeratorPage refrigeratorPage = visitInformationPage.navigateToRefrigerators();
     refrigeratorPage.clickShowForRefrigerator1();
     refrigeratorPage.verifyAllFieldsDisabled();
 
@@ -753,27 +770,14 @@ public class DistributionSyncTest extends TestCaseHelper {
     epiUsePage.verifyAllFieldsDisabled();
 
     FullCoveragePage fullCoveragePage = epiUsePage.navigateToFullCoverage();
-    assertFalse(fullCoveragePage.getStatusForField("femaleHealthCenter"));
-    assertFalse(fullCoveragePage.getStatusForField("femaleMobileBrigade"));
-    assertFalse(fullCoveragePage.getStatusForField("maleHealthCenter"));
-    assertFalse(fullCoveragePage.getStatusForField("maleMobileBrigade"));
+    fullCoveragePage.verifyAllFieldsDisabled();
 
     EpiInventoryPage epiInventoryPage = fullCoveragePage.navigateToEpiInventory();
-    assertFalse(epiInventoryPage.getExistingQuantityStatus(1));
-    assertFalse(epiInventoryPage.getExistingQuantityStatus(2));
-    assertFalse(epiInventoryPage.getExistingQuantityStatus(3));
-
-    assertFalse(epiInventoryPage.getDeliveredQuantityStatus(1));
-    assertFalse(epiInventoryPage.getDeliveredQuantityStatus(2));
-    assertFalse(epiInventoryPage.getDeliveredQuantityStatus(3));
-
-    assertFalse(epiInventoryPage.getSpoiledQuantityStatus(1));
-    assertFalse(epiInventoryPage.getSpoiledQuantityStatus(2));
-    assertFalse(epiInventoryPage.getSpoiledQuantityStatus(3));
+    epiInventoryPage.verifyAllFieldsDisabled();
   }
 
   @AfterMethod(groups = "distribution")
-  public void tearDown() throws Exception {
+  public void tearDown() throws SQLException {
     testWebDriver.sleep(500);
     if (!testWebDriver.getElementById("username").isDisplayed()) {
       HomePage homePage = PageFactory.getInstanceOfHomePage(testWebDriver);

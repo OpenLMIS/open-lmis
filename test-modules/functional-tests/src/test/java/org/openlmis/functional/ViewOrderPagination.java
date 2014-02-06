@@ -11,14 +11,14 @@
 package org.openlmis.functional;
 
 
-import cucumber.api.Scenario;
-import cucumber.api.java.After;
 import org.openlmis.UiUtils.CaptureScreenshotOnFailureListener;
 import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.pageobjects.HomePage;
 import org.openlmis.pageobjects.LoginPage;
 import org.testng.annotations.*;
 
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.List;
 
 import static java.util.Arrays.asList;
@@ -28,12 +28,12 @@ import static java.util.Arrays.asList;
 public class ViewOrderPagination extends TestCaseHelper {
 
   @BeforeMethod(groups = "requisition")
-  public void setUp() throws Exception {
+  public void setUp() throws InterruptedException, SQLException, IOException {
     super.setup();
   }
 
   @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-Positive")
-  public void verifyPagination(String program, String userSIC, String password) throws Exception {
+  public void verifyPagination(String program, String userSIC, String password) throws SQLException {
     setUpData(program, userSIC);
     dbWrapper.insertRequisitions(50, "MALARIA", true, "2012-12-01", "2015-12-01", "F10", false);
     dbWrapper.insertRequisitions(1, "TB", true, "2012-12-01", "2015-12-01", "F10", false);
@@ -60,7 +60,7 @@ public class ViewOrderPagination extends TestCaseHelper {
     verifyNextAndLastLinksDisabled();
   }
 
-  private void setUpData(String program, String userSIC) throws Exception {
+  private void setUpData(String program, String userSIC) throws SQLException {
     setupProductTestData("P10", "P11", program, "lvl3_hospital");
     dbWrapper.insertFacilities("F10", "F11");
     dbWrapper.configureTemplate(program);
@@ -78,7 +78,7 @@ public class ViewOrderPagination extends TestCaseHelper {
   }
 
   @AfterMethod(groups = "requisition")
-  public void tearDown() throws Exception {
+  public void tearDown() throws SQLException {
     testWebDriver.sleep(500);
     if (!testWebDriver.getElementById("username").isDisplayed()) {
       HomePage homePage = PageFactory.getInstanceOfHomePage(testWebDriver);
@@ -93,14 +93,6 @@ public class ViewOrderPagination extends TestCaseHelper {
     return new Object[][]{
       {"HIV", "storeInCharge", "Admin123"}
     };
-  }
-
-  @After
-  public void embedScreenshot(Scenario scenario) {
-    if (scenario.isFailed()) {
-      byte[] screenshot = testWebDriver.getScreenshot();
-      scenario.embed(screenshot, "image/png");
-    }
   }
 }
 

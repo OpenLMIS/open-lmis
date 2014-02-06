@@ -10,134 +10,135 @@
 
 <div ng-controller="DistributionListController">
 
-    <h2 openlmis-message="label.initiated.distributions"></h2>
+  <h2 openlmis-message="label.initiated.distributions"></h2>
 
-    <div class="alert alert-info" id="noDistributionInitiated"
-         ng-hide="sharedDistributions.distributionList.length > 0">
-        <span openlmis-message="message.no.distribution.initiated"></span>
+  <div class="alert alert-info" id="noDistributionInitiated"
+       ng-hide="sharedDistributions.distributionList.length > 0">
+    <span openlmis-message="message.no.distribution.initiated"></span>
+  </div>
+
+  <div class="alert alert-info" ng-show="syncMessage"><span openlmis-message="syncMessage"></span></div>
+
+  <div ng-show="sharedDistributions.distributionList.length">
+    <div id="cachedDistributions" class="distribution-grid">
+      <div class="list-header-container">
+        <div class="row-fluid list-header">
+          <div class="span2">
+            <div class="delivery-zone" openlmis-message="label.delivery.zone"></div>
+          </div>
+          <div class="span2" openlmis-message="label.program"></div>
+          <div class="span2" openlmis-message="label.period"></div>
+          <div class="span2" openlmis-message="label.status"></div>
+          <div class="span2"></div>
+          <div class="span1"></div>
+          <div class="span1"></div>
+        </div>
+      </div>
+
+      <div id="distributionList" class="list-container">
+        <div class="row-fluid list-row" ng-repeat="distribution in sharedDistributions.distributionList">
+
+          <div class="span2">
+            <div class="delivery-zone" ng-bind="distribution.deliveryZone.name"></div>
+          </div>
+          <div class="span2" ng-bind="distribution.program.name"></div>
+          <div class="span2" ng-bind="distribution.period.name"></div>
+          <div class="span2" ng-bind="distribution.status"></div>
+          <div class="span2"><a id="recordData{{$index}}" href="javascript:void(0)"
+                                openlmis-message="label.record.data"
+                                ng-href="#/record-facility-data/{{distribution.id}}"></a></div>
+          <div class="span1"><a id="sync{{$index}}" href="javascript:void(0)" openlmis-message="label.sync"
+                                ng-show="distribution.status != 'SYNCED'"
+                                ng-click="showConfirmDistributionSync(distribution.id)"></a></div>
+          <div class="span1">
+            <i id="deleteDistribution{{$index}}" class="icon-remove-sign"
+               ng-click="deleteDistribution(distribution.id)"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!--modal-->
+
+  <div id="synchronizationModal" show="requestInProgress" modal="synchronizationModal"
+       options="{'backdrop':'static', 'escape':false}">
+    <div class="modal-header">
+      <h3>
+        <span openlmis-message="syncProgressHeader"></span>
+      </h3>
     </div>
 
-    <div class="alert alert-info" ng-show="syncMessage"><span openlmis-message="syncMessage"></span></div>
-
-    <div ng-show="sharedDistributions.distributionList.length">
-        <div id="cachedDistributions" class="distribution-grid">
-            <div class="list-header-container">
-                <div class="row-fluid list-header">
-                    <div class="span2">
-                        <div class="delivery-zone" openlmis-message="label.delivery.zone"></div>
-                    </div>
-                    <div class="span2" openlmis-message="label.program"></div>
-                    <div class="span2" openlmis-message="label.period"></div>
-                    <div class="span2" openlmis-message="label.status"></div>
-                    <div class="span2"></div>
-                    <div class="span1"></div>
-                    <div class="span1"></div>
-                </div>
-            </div>
-
-            <div id="distributionList" class="list-container">
-                <div class="row-fluid list-row" ng-repeat="distribution in sharedDistributions.distributionList">
-
-                    <div class="span2">
-                        <div class="delivery-zone" ng-bind="distribution.deliveryZone.name"></div>
-                    </div>
-                    <div class="span2" ng-bind="distribution.program.name"></div>
-                    <div class="span2" ng-bind="distribution.period.name"></div>
-                    <div class="span2" ng-bind="distribution.status"></div>
-                    <div class="span2"><a id="recordData{{$index}}" href="javascript:void(0)"
-                                          openlmis-message="label.record.data"
-                                          ng-href="#/record-facility-data/{{distribution.id}}"></a></div>
-                    <div class="span1"><a id="sync{{$index}}" href="javascript:void(0)" openlmis-message="label.sync"
-                                          ng-click="showConfirmDistributionSync(distribution.id)"></a></div>
-                    <div class="span1">
-                        <i id="deleteDistribution{{$index}}" class="icon-remove-sign"
-                           ng-click="deleteDistribution(distribution.id)"></i>
-                    </div>
-                </div>
-            </div>
+    <div class="modal-body">
+      <div class="row-fluid info-box">
+        <div class="span4 info-box-labels">
+          <strong openlmis-message="label.delivery.zone"> </strong> :&nbsp;<span
+            ng-bind="distributionData.deliveryZone.name"></span>
         </div>
-    </div>
+        <div class="span4 info-box-labels">
+          <strong openlmis-message="label.program"></strong> :&nbsp;<span
+            ng-bind="distributionData.program.name"></span>
+        </div>
+        <div class="span4 info-box-labels">
+          <strong openlmis-message="label.period"> </strong> :&nbsp;<span
+            ng-bind="distributionData.period.name"></span>
+        </div>
+      </div>
+      <div ng-show="requestInProgress" class="row-fluid">
+        <progress id="progressbar" max="100" value="{{ progressValue }}"></progress>
+      </div>
+      <div class="sync-failure-message" ng-show="syncResult[COMPLETE].length">
+        <i class="icon icon-exclamation-sign"></i>
+        <span openlmis-message="message.sync.failure.retry"></span>
+      </div>
+      <div class="row-fluid" ng-hide="requestInProgress">
+        <div id="syncedFacilities" class="span4" ng-show="syncResult[SYNCED].length">
+          <strong id="syncedFacilityHeader" openlmis-message="label.facilities.synced"> </strong> <span>:&nbsp;</span>
 
-
-    <!--modal-->
-
-    <div id="synchronizationModal" show="requestInProgress" modal="synchronizationModal"
-         options="{'backdrop':'static', 'escape':false}">
-        <div class="modal-header">
-            <h3>
-                <span openlmis-message="syncProgressHeader"></span>
-            </h3>
+          <div ng-repeat="result in syncResult[SYNCED]">
+            <span class="is-synced">
+              <span class="status-icon"></span>
+              <span ng-bind="result.facilityCode"></span>-<span class="facility-name"
+                                                                ng-bind="result.facilityName"></span>
+            </span>
+          </div>
         </div>
 
-        <div class="modal-body">
-            <div class="row-fluid info-box">
-                <div class="span4 info-box-labels">
-                    <strong openlmis-message="label.delivery.zone"> </strong> :&nbsp;<span
-                        ng-bind="distributionData.deliveryZone.name"></span>
-                </div>
-                <div class="span4 info-box-labels">
-                    <strong openlmis-message="label.program"></strong> :&nbsp;<span
-                        ng-bind="distributionData.program.name"></span>
-                </div>
-                <div class="span4 info-box-labels">
-                    <strong openlmis-message="label.period"> </strong> :&nbsp;<span
-                        ng-bind="distributionData.period.name"></span>
-                </div>
-            </div>
-            <div ng-show="requestInProgress" class="row-fluid">
-                <progress id="progressbar" max="100" value="{{ progressValue }}"></progress>
-            </div>
-            <div class="sync-failure-message" ng-show="syncResult[COMPLETE].length">
-                <i class="icon icon-exclamation-sign"></i>
-                <span openlmis-message="message.sync.failure.retry"></span>
-            </div>
-            <div class="row-fluid" ng-hide="requestInProgress">
-                <div id="syncedFacilities" class="span4" ng-show="syncResult[SYNCED].length">
-                    <strong id="syncedFacilityHeader" openlmis-message="label.facilities.synced"> </strong> <span>:&nbsp;</span>
+        <div id="duplicateFacilities" class="span4" ng-show="syncResult[DUPLICATE].length">
+          <strong id="duplicateFacilityHeader" openlmis-message="label.facilities.already.synced"> </strong>
+          <span>:&nbsp;</span>
 
-                    <div ng-repeat="result in syncResult[SYNCED]">
-          <span class="is-synced">
-            <span class="status-icon"></span>
+          <div ng-repeat="result in syncResult[DUPLICATE]">
+            <span class="is-duplicate">
+              <span class="status-icon"></span>
+              <span ng-bind="result.facilityCode"></span>-<span class="facility-name"
+                                                                ng-bind="result.facilityName"></span>
+            </span>
+          </div>
+        </div>
+
+        <div id="failedFacilities" class="span4" ng-show="syncResult[COMPLETE].length">
+          <strong id="failedFacilityHeader"
+                  openlmis-message="label.facilities.synchronization.failed"> </strong> <span>:&nbsp;</span>
+
+          <div ng-repeat="result in syncResult[COMPLETE]">
+            <i class="icon icon-exclamation-sign"></i>
             <span ng-bind="result.facilityCode"></span>-<span class="facility-name"
                                                               ng-bind="result.facilityName"></span>
-          </span>
-                    </div>
-                </div>
-
-                <div id="duplicateFacilities" class="span4" ng-show="syncResult[DUPLICATE].length">
-                    <strong id="duplicateFacilityHeader" openlmis-message="label.facilities.already.synced"> </strong>
-                    <span>:&nbsp;</span>
-
-                    <div ng-repeat="result in syncResult[DUPLICATE]">
-          <span class="is-duplicate">
-            <span class="status-icon"></span>
-            <span ng-bind="result.facilityCode"></span>-<span class="facility-name"
-                                                              ng-bind="result.facilityName"></span>
-          </span>
-                    </div>
-                </div>
-
-                <div id="failedFacilities" class="span4" ng-show="syncResult[COMPLETE].length">
-                    <strong id="failedFacilityHeader"
-                            openlmis-message="label.facilities.synchronization.failed"> </strong> <span>:&nbsp;</span>
-
-                    <div ng-repeat="result in syncResult[COMPLETE]">
-                        <i class="icon icon-exclamation-sign"></i>
-                        <span ng-bind="result.facilityCode"></span>-<span class="facility-name"
-                                                                          ng-bind="result.facilityName"></span>
-                    </div>
-                </div>
-            </div>
+          </div>
         </div>
-
-        <div class="modal-footer" ng-hide="requestInProgress">
-            <input type="button" class="btn btn-primary" openlmis-message="button.done"
-                   ng-click="synchronizationModal = false" ng-hide="syncResult[COMPLETE].length"/>
-            <input id="retryButton" type="button" class="btn btn-primary" openlmis-message="button.retry"
-                   ng-show="syncResult[COMPLETE].length"
-                   ng-click="syncDistribution(distributionData.id)"/>
-            <input type="button" class="btn btn-cancel" openlmis-message="button.cancel"
-                   ng-click="synchronizationModal = false" ng-show="syncResult[COMPLETE].length"/>
-        </div>
+      </div>
     </div>
+
+    <div class="modal-footer" ng-hide="requestInProgress">
+      <input type="button" class="btn btn-primary" openlmis-message="button.done"
+             ng-click="synchronizationModal = false" ng-hide="syncResult[COMPLETE].length"/>
+      <input id="retryButton" type="button" class="btn btn-primary" openlmis-message="button.retry"
+             ng-show="syncResult[COMPLETE].length"
+             ng-click="syncDistribution(distributionData.id)"/>
+      <input type="button" class="btn btn-cancel" openlmis-message="button.cancel"
+             ng-click="synchronizationModal = false" ng-show="syncResult[COMPLETE].length"/>
+    </div>
+  </div>
 </div>

@@ -67,7 +67,7 @@ public class ShipmentServiceTest {
       with(orderId, 1L),
       with(quantityShipped, 500)));
 
-    when(requisitionService.getLineItem(1L, "P10")).thenReturn(new RnrLineItem());
+    when(requisitionService.getNonSkippedLineItem(1L, "P10")).thenReturn(new RnrLineItem());
     shipmentService.save(shipmentLineItem);
 
     verify(shipmentRepository).save(shipmentLineItem);
@@ -110,7 +110,7 @@ public class ShipmentServiceTest {
       with(quantityShipped, 20))));
 
     RnrLineItem lineItem = make(a(defaultRnrLineItem));
-    when(requisitionService.getLineItem(shipmentLineItem.getOrderId(), "P10")).thenReturn(lineItem);
+    when(requisitionService.getNonSkippedLineItem(shipmentLineItem.getOrderId(), "P10")).thenReturn(lineItem);
 
     shipmentService.save(shipmentLineItem);
 
@@ -122,7 +122,7 @@ public class ShipmentServiceTest {
     ShipmentLineItem shipmentLineItem = spy(make(a(defaultShipmentLineItem, with(productCode, "P10"), with(orderId, 1L),
       with(quantityShipped, 20))));
 
-    when(requisitionService.getLineItem(shipmentLineItem.getOrderId(), "P10")).thenReturn(null);
+    when(requisitionService.getNonSkippedLineItem(shipmentLineItem.getOrderId(), "P10")).thenReturn(null);
     Product product = make(a(defaultProduct));
     when(productService.getByCode("P10")).thenReturn(product);
 
@@ -136,7 +136,7 @@ public class ShipmentServiceTest {
     ShipmentLineItem shipmentLineItem = spy(make(a(defaultShipmentLineItem, with(productCode, "P10"), with(orderId, 1L),
       with(quantityShipped, 20))));
 
-    when(requisitionService.getLineItem(shipmentLineItem.getOrderId(), "P10")).thenReturn(null);
+    when(requisitionService.getNonSkippedLineItem(shipmentLineItem.getOrderId(), "P10")).thenReturn(null);
     when(productService.getByCode("P10")).thenReturn(null);
 
     exException.expect(DataException.class);

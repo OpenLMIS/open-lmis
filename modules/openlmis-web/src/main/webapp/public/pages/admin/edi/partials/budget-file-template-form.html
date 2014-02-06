@@ -55,16 +55,16 @@
               </div>
               <div class="span2">
                 <div class="row-fluid" ng-show="budgetFileColumn.dataFieldLabel == 'header.period.start.date'">
-                  <select  class="span12" ui-select2 ng-model="budgetFileColumn.datePattern"
+                  <select class="span12" ui-select2 ng-model="budgetFileColumn.datePattern"
                           ng-options="dateFormat for dateFormat in dateFormats">
                   </select>
                 </div>
               </div>
               <div class="span1">
                 <input type="text" ng-model="budgetFileColumn.position" maxlength="3"
-                       numeric-validator="positiveInteger"
+                       numeric-validator="positiveInteger" ng-trim=false
                        class="right-justified"
-                       id="{{budgetFileColumn.name}}Position" />
+                       id="{{budgetFileColumn.name}}Position"/>
               </div>
             </div>
           </div>
@@ -75,9 +75,8 @@
     <div form-toolbar id="action_buttons" class="action-buttons">
       <div class="form-cell button-row">
         <input type="submit" class="btn btn-primary save-button" openlmis-message="button.save"/>
-        <a href="#/configure-edi-file" class="btn btn-cancel cancel-button" openlmis-message="button.cancel"></a>
+        <a ng-click="cancelEdiSave()" class="btn btn-cancel cancel-button" openlmis-message="button.cancel"></a>
       </div>
-      <div class="toolbar-success" id="saveSuccessMsgDiv" openlmis-message="message" ng-show="message"></div>
       <div class="toolbar-error" id="saveErrorMsgDiv" openlmis-message="error" ng-show="error"></div>
 
     </div>

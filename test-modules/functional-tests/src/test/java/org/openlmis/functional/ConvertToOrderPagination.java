@@ -11,8 +11,6 @@
 package org.openlmis.functional;
 
 
-import cucumber.api.Scenario;
-import cucumber.api.java.After;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Then;
 import org.openlmis.UiUtils.CaptureScreenshotOnFailureListener;
@@ -40,12 +38,12 @@ import static java.util.Arrays.asList;
 public class ConvertToOrderPagination extends TestCaseHelper {
 
   @BeforeMethod(groups = "requisition")
-  public void setUp() throws Exception {
+  public void setUp() throws InterruptedException, SQLException, IOException {
     super.setup();
   }
 
   @And("^I have \"([^\"]*)\" requisitions for convert to order$")
-  public void haveRequisitionsToBeConvertedToOrder(String requisitions) throws Exception {
+  public void haveRequisitionsToBeConvertedToOrder(String requisitions) throws SQLException {
     String userSIC = "storeInCharge";
     setUpData("HIV", userSIC);
     dbWrapper.insertRequisitions(Integer.parseInt(requisitions), "MALARIA", true, "2012-12-01", "2015-12-01", "F10", false);
@@ -57,7 +55,7 @@ public class ConvertToOrderPagination extends TestCaseHelper {
   }
 
   @And("^I select \"([^\"]*)\" requisition on page \"([^\"]*)\"$")
-  public void selectRequisition(String numberOfRequisitions, String page) throws IOException, SQLException {
+  public void selectRequisition(String numberOfRequisitions, String page) {
     testWebDriver.sleep(5000);
     testWebDriver.handleScrollByPixels(0, 1000);
     String url = ((JavascriptExecutor) TestWebDriver.getDriver()).executeScript("return window.location.href").toString();
@@ -67,13 +65,13 @@ public class ConvertToOrderPagination extends TestCaseHelper {
   }
 
   @And("^I access convert to order$")
-  public void accessConvertToOrder() throws IOException, SQLException {
+  public void accessConvertToOrder() {
     PageFactory.getInstanceOfConvertOrderPage(testWebDriver);
     convertToOrder();
   }
 
   @Then("^\"([^\"]*)\" requisition converted to order$")
-  public void requisitionConvertedToOrder(String requisitions) throws IOException, SQLException {
+  public void requisitionConvertedToOrder(String requisitions) {
     HomePage homePage = PageFactory.getInstanceOfHomePage(testWebDriver);
     ViewOrdersPage viewOrdersPage = homePage.navigateViewOrders();
     int numberOfLineItems = viewOrdersPage.getNumberOfLineItems();
@@ -81,7 +79,7 @@ public class ConvertToOrderPagination extends TestCaseHelper {
   }
 
   @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-Positive")
-  public void shouldConvertOnlyCurrentPageRequisitions(String program, String userSIC, String password) throws Exception {
+  public void shouldConvertOnlyCurrentPageRequisitions(String program, String userSIC, String password) throws SQLException {
     setUpData(program, userSIC);
     dbWrapper.insertRequisitions(50, "MALARIA", true, "2012-12-01", "2015-12-01", "F10", false);
     dbWrapper.insertRequisitions(1, "TB", true, "2012-12-01", "2015-12-01", "F10", false);
@@ -123,7 +121,7 @@ public class ConvertToOrderPagination extends TestCaseHelper {
   }
 
   @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-Positive")
-  public void shouldVerifyIntroductionOfPagination(String program, String userSIC, String password) throws Exception {
+  public void shouldVerifyIntroductionOfPagination(String program, String userSIC, String password) throws SQLException {
     setUpData(program, userSIC);
     dbWrapper.insertRequisitions(49, "MALARIA", true, "2012-12-01", "2015-12-01", "F10", false);
     dbWrapper.updateRequisitionStatus("SUBMITTED", userSIC, "MALARIA");
@@ -144,7 +142,7 @@ public class ConvertToOrderPagination extends TestCaseHelper {
   }
 
   @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-Positive")
-  public void shouldVerifyIntroductionOfPaginationForBoundaryValue(String program, String userSIC, String password) throws Exception {
+  public void shouldVerifyIntroductionOfPaginationForBoundaryValue(String program, String userSIC, String password) throws SQLException {
     setUpData(program, userSIC);
     dbWrapper.insertRequisitions(50, "MALARIA", true, "2012-12-01", "2015-12-01", "F10", false);
     dbWrapper.updateRequisitionStatus("SUBMITTED", userSIC, "MALARIA");
@@ -166,7 +164,7 @@ public class ConvertToOrderPagination extends TestCaseHelper {
   }
 
   @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-Positive")
-  public void shouldVerifySearch(String program, String userSIC, String password) throws Exception {
+  public void shouldVerifySearch(String program, String userSIC, String password) throws SQLException {
     setUpData(program, userSIC);
     dbWrapper.insertRequisitions(55, "MALARIA", true, "2012-12-01", "2015-12-01", "F10", false);
     dbWrapper.insertRequisitions(40, "TB", true, "2012-12-01", "2015-12-01", "F10", false);
@@ -190,7 +188,7 @@ public class ConvertToOrderPagination extends TestCaseHelper {
   }
 
   @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-Positive")
-  public void shouldVerifySearchWithDifferentOptions(String program, String userSIC, String password) throws Exception {
+  public void shouldVerifySearchWithDifferentOptions(String program, String userSIC, String password) throws SQLException {
     setUpData(program, userSIC);
     dbWrapper.insertRequisitions(55, "MALARIA", true, "2012-12-01", "2015-12-01", "F10", false);
     dbWrapper.insertRequisitions(40, "TB", false, "2012-12-01", "2015-12-01", "F10", false);
@@ -208,7 +206,7 @@ public class ConvertToOrderPagination extends TestCaseHelper {
     verifySupplyingDepotInGrid(55, 50, "Village Dispensary");
   }
 
-  private void setUpData(String program, String userSIC) throws Exception {
+  private void setUpData(String program, String userSIC) throws SQLException {
     setupProductTestData("P10", "P11", program, "lvl3_hospital");
     dbWrapper.insertFacilities("F10", "F11");
     dbWrapper.configureTemplate(program);
@@ -231,7 +229,7 @@ public class ConvertToOrderPagination extends TestCaseHelper {
     convertOrderPage.clickOk();
   }
 
-  public void verifyProgramInGrid(int numberOfProducts, int numberOfLineItemsPerPage, String program) throws Exception {
+  public void verifyProgramInGrid(int numberOfProducts, int numberOfLineItemsPerPage, String program) {
     int numberOfPages = numberOfProducts / numberOfLineItemsPerPage;
     if (numberOfProducts % numberOfLineItemsPerPage != 0) {
       numberOfPages = numberOfPages + 1;
@@ -246,7 +244,7 @@ public class ConvertToOrderPagination extends TestCaseHelper {
     }
   }
 
-  public void verifySupplyingDepotInGrid(int numberOfProducts, int numberOfLineItemsPerPage, String supplyingDepot) throws Exception {
+  public void verifySupplyingDepotInGrid(int numberOfProducts, int numberOfLineItemsPerPage, String supplyingDepot) {
     int numberOfPages = numberOfProducts / numberOfLineItemsPerPage;
     if (numberOfProducts % numberOfLineItemsPerPage != 0) {
       numberOfPages = numberOfPages + 1;
@@ -261,7 +259,7 @@ public class ConvertToOrderPagination extends TestCaseHelper {
     }
   }
 
-  public void verifyPageLinkNotPresent(int i) throws Exception {
+  public void verifyPageLinkNotPresent(int i) {
     boolean flag = false;
     try {
       testWebDriver.getElementByXpath("//a[contains(text(), '" + i + "') and @class='ng-binding']").click();
@@ -274,7 +272,7 @@ public class ConvertToOrderPagination extends TestCaseHelper {
   }
 
   @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-Positive")
-  public void VerifyConvertToOrderAccessOnRequisition(String program, String userSIC, String password) throws Exception {
+  public void VerifyConvertToOrderAccessOnRequisition(String program, String userSIC, String password) throws SQLException {
     setUpData(program, userSIC);
     dbWrapper.insertRequisitions(50, "MALARIA", true, "2012-12-01", "2015-12-01", "F10", false);
     dbWrapper.insertRequisitions(1, "TB", true, "2012-12-01", "2015-12-01", "F10", false);
@@ -291,7 +289,7 @@ public class ConvertToOrderPagination extends TestCaseHelper {
   }
 
   @AfterMethod(groups = "requisition")
-  public void tearDown() throws Exception {
+  public void tearDown() throws SQLException {
     testWebDriver.sleep(500);
     if (!testWebDriver.getElementById("username").isDisplayed()) {
       HomePage homePage = PageFactory.getInstanceOfHomePage(testWebDriver);
@@ -306,14 +304,6 @@ public class ConvertToOrderPagination extends TestCaseHelper {
     return new Object[][]{
       {"HIV", "storeInCharge", "Admin123"}
     };
-  }
-
-  @After
-  public void embedScreenshot(Scenario scenario) {
-    if (scenario.isFailed()) {
-      byte[] screenshot = testWebDriver.getScreenshot();
-      scenario.embed(screenshot, "image/png");
-    }
   }
 }
 

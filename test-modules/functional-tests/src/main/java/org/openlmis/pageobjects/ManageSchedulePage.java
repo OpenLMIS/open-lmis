@@ -18,8 +18,6 @@ import org.openqa.selenium.support.How;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 
-import java.io.IOException;
-
 import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
 import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
 
@@ -27,57 +25,55 @@ import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
 public class ManageSchedulePage extends Page {
 
   @FindBy(how = How.ID, using = "schedule-add-new")
-  private static WebElement addScheduleButton=null;
+  private static WebElement addScheduleButton = null;
 
   @FindBy(how = How.ID, using = "code")
-  private static WebElement codeTextField=null;
+  private static WebElement codeTextField = null;
 
   @FindBy(how = How.ID, using = "code_0")
-  private static WebElement codeEditTextField=null;
+  private static WebElement codeEditTextField = null;
 
   @FindBy(how = How.ID, using = "name")
-  private static WebElement nameTextField=null;
+  private static WebElement nameTextField = null;
 
   @FindBy(how = How.ID, using = "name_0")
-  private static WebElement nameEditTextField=null;
+  private static WebElement nameEditTextField = null;
 
   @FindBy(how = How.ID, using = "desc_0")
-  private static WebElement descriptionEditTextField=null;
+  private static WebElement descriptionEditTextField = null;
 
   @FindBy(how = How.ID, using = "description")
-  private static WebElement descriptionTextField=null;
+  private static WebElement descriptionTextField = null;
 
   @FindBy(how = How.XPATH, using = "//input[@value='Create']")
-  private static WebElement createButton=null;
+  private static WebElement createButton = null;
 
   @FindBy(how = How.ID, using = "saveSuccessMsgDiv")
-  private static WebElement saveSuccessMsgDiv=null;
+  private static WebElement saveSuccessMsgDiv = null;
 
   @FindBy(how = How.XPATH, using = "//input[@value='Edit']")
-  private static WebElement editFirstButton=null;
+  private static WebElement editFirstButton = null;
 
   @FindBy(how = How.XPATH, using = "(//input[@value='Edit'])[2]")
-  private static WebElement editSecondButton=null;
+  private static WebElement editSecondButton = null;
 
   @FindBy(how = How.XPATH, using = " //input[@type='submit' and @value='Save']")
-  private static WebElement saveButton=null;
+  private static WebElement saveButton = null;
 
   @FindBy(how = How.XPATH, using = "//input[@value='Add Period']")
-  private static WebElement addPeriodButton=null;
+  private static WebElement addPeriodButton = null;
 
   @FindBy(how = How.ID, using = "name")
-  private static WebElement namePeriod=null;
+  private static WebElement namePeriod = null;
 
 
-  public ManageSchedulePage(TestWebDriver driver) throws IOException {
+  public ManageSchedulePage(TestWebDriver driver) {
     super(driver);
     PageFactory.initElements(new AjaxElementLocatorFactory(TestWebDriver.getDriver(), 10), this);
     testWebDriver.setImplicitWait(10);
-
   }
 
-
-  public void createSchedule(String periodCode1,String periodCode2) {
+  public void createSchedule(String periodCode1, String periodCode2) {
     testWebDriver.waitForElementToAppear(addScheduleButton);
     enterCreateScheduleDetails(periodCode1, "QuarterMonthly", "QuarterMonth");
     enterCreateScheduleDetails(periodCode2, "Monthly", "Month");
@@ -96,23 +92,23 @@ public class ManageSchedulePage extends Page {
     testWebDriver.waitForElementToAppear(saveSuccessMsgDiv);
   }
 
-  public void editSchedule(String periodCode1,String periodCode2) {
+  public void editSchedule(String periodCode1, String periodCode2) {
     testWebDriver.waitForElementToAppear(editFirstButton);
     enterEditScheduleDetails(periodCode1, "Monthly1", "Month");
     testWebDriver.sleep(500);
     enterEditScheduleDetails(periodCode2, "Monthly", "Month");
   }
 
-  public void verifyScheduleCode(String periodCode1,String periodCode2) {
+  public void verifyScheduleCode(String periodCode1, String periodCode2) {
     testWebDriver.sleep(500);
     assertEquals(testWebDriver.getElementByXpath(
-            "//form[@id='editScheduleForm_0']/div/div[1]/div[2]/span[1]").getText().trim(), periodCode2);
+      "//form[@id='editScheduleForm_0']/div/div[1]/div[2]/span[1]").getText().trim(), periodCode2);
     assertEquals(testWebDriver.getElementByXpath("//form[@id='editScheduleForm_1']/div/div[1]/div[2]/span[1]").getText().trim(), periodCode1);
     assertTrue("First edit button is not showing up", editFirstButton.isDisplayed());
     assertTrue("Second edit button is not showing up", editSecondButton.isDisplayed());
   }
 
-  public PeriodsPage navigatePeriods() throws IOException {
+  public PeriodsPage navigatePeriods() {
     testWebDriver.waitForElementToBeEnabled(addPeriodButton);
     addPeriodButton.click();
     testWebDriver.sleep(1500);
@@ -132,5 +128,4 @@ public class ManageSchedulePage extends Page {
     saveButton.click();
 
   }
-
 }

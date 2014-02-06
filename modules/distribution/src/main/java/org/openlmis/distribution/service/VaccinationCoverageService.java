@@ -10,6 +10,7 @@
 
 package org.openlmis.distribution.service;
 
+import org.openlmis.distribution.domain.ProductVial;
 import org.openlmis.distribution.domain.VaccinationChildCoverage;
 import org.openlmis.distribution.domain.VaccinationFullCoverage;
 import org.openlmis.distribution.domain.VaccinationProduct;
@@ -33,7 +34,7 @@ public class VaccinationCoverageService {
     return repository.getFullCoverageBy(facilityVisitId);
   }
 
-  public List<VaccinationProduct> getReferenceData(Boolean isChildCoverage) {
+  public List<VaccinationProduct> getVaccinationProducts(Boolean isChildCoverage) {
     return repository.getVaccinationProducts(isChildCoverage);
   }
 
@@ -43,5 +44,9 @@ public class VaccinationCoverageService {
 
   public VaccinationChildCoverage getChildCoverageBy(Long facilityVisitId) {
     return repository.getChildCoverageBy(facilityVisitId);
+  }
+
+  public List<ProductVial> getProductVials() {
+    return repository.getProductVials();
   }
 }

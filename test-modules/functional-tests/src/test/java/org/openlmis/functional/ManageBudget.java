@@ -8,6 +8,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.List;
 
 import static java.util.Arrays.asList;
@@ -28,19 +29,19 @@ public class ManageBudget extends TestCaseHelper {
 
 
   @BeforeMethod(groups = "requisition")
-  public void setUp() throws Exception {
+  public void setUp() throws SQLException, IOException, InterruptedException {
     super.setup();
     dbWrapper.deleteData();
     setUpData(program, userSIC);
     dbWrapper.deleteTable("processing_periods");
-    dbWrapper.insertProcessingPeriod("current Period", "current Period", "2013-10-03", "2016-01-30", 1, "M");
+    dbWrapper.insertCurrentPeriod("current Period", "current Period", 1, "M");
     loginPage = PageFactory.getInstanceOfLoginPage(testWebDriver, baseUrlGlobal);
     initiateRnR = PageFactory.getInstanceOfInitiateRnR();
     initiateRnRPage = PageFactory.getInstanceOfInitiateRnRPage(testWebDriver);
   }
 
   @Test(groups = {"requisition"})
-  public void testVerifyBudgetWhenRegularRnRIsCreatedAndBudgetFlagIsTrueAndContainsBudgetInformation() throws Exception {
+  public void testVerifyBudgetWhenRegularRnRIsCreatedAndBudgetFlagIsTrueAndContainsBudgetInformation() throws SQLException {
     dbWrapper.updateFieldValue("programs", "budgetingApplies", "true", "name", program);
     dbWrapper.insertBudgetData();
 
@@ -86,7 +87,7 @@ public class ManageBudget extends TestCaseHelper {
   }
 
   @Test(groups = {"requisition"})
-  public void testVerifyBudgetWhenRegularRnRIsCreatedAndBudgetFlagIsTrueAndDoNotContainsBudgetInformation() throws Exception {
+  public void testVerifyBudgetWhenRegularRnRIsCreatedAndBudgetFlagIsTrueAndDoNotContainsBudgetInformation() throws SQLException {
     dbWrapper.updateFieldValue("programs", "budgetingApplies", "true", "name", program);
 
     HomePage homePage = loginPage.loginAs(userSIC, password);
@@ -126,7 +127,7 @@ public class ManageBudget extends TestCaseHelper {
   }
 
   @Test(groups = {"requisition"})
-  public void testVerifyBudgetWhenRegularRnRIsCreatedAndBudgetFlagIsFalseAndBudgetFilePresent() throws Exception {
+  public void testVerifyBudgetWhenRegularRnRIsCreatedAndBudgetFlagIsFalseAndBudgetFilePresent() throws SQLException {
     dbWrapper.updateFieldValue("programs", "budgetingApplies", "false", "name", program);
     dbWrapper.insertBudgetData();
 
@@ -169,7 +170,7 @@ public class ManageBudget extends TestCaseHelper {
 
 
   @Test(groups = {"requisition"})
-  public void testVerifyBudgetWhenEmergencyRnRIsCreatedWhenBudgetFlagIsTrueAndBudgetInformationPresent() throws Exception {
+  public void testVerifyBudgetWhenEmergencyRnRIsCreatedWhenBudgetFlagIsTrueAndBudgetInformationPresent() throws SQLException {
     dbWrapper.updateFieldValue("programs", "budgetingApplies", "true", "name", program);
     dbWrapper.insertBudgetData();
 
@@ -210,7 +211,7 @@ public class ManageBudget extends TestCaseHelper {
   }
 
   @Test(groups = {"requisition"})
-  public void testVerifyBudgetWhenEmergencyRnRIsCreatedWhenBudgetFlagIsFalseAndBudgetInformationNotPresent() throws Exception {
+  public void testVerifyBudgetWhenEmergencyRnRIsCreatedWhenBudgetFlagIsFalseAndBudgetInformationNotPresent() throws SQLException {
     dbWrapper.updateFieldValue("programs", "budgetingApplies", "false", "name", program);
     HomePage homePage = loginPage.loginAs(userSIC, password);
     homePage.navigateHomePage();
@@ -249,7 +250,7 @@ public class ManageBudget extends TestCaseHelper {
   }
 
   @Test(groups = {"requisition"})
-  public void testVerifyBudgetWhenRegularRnRIsCreatedAndBudgetFlagIsTrueAndContainsBudgetInformationForDifferentPeriod() throws Exception {
+  public void testVerifyBudgetWhenRegularRnRIsCreatedAndBudgetFlagIsTrueAndContainsBudgetInformationForDifferentPeriod() throws SQLException {
     dbWrapper.updateFieldValue("programs", "budgetingApplies", "true", "name", program);
     dbWrapper.insertBudgetData();
     dbWrapper.insertProcessingPeriod("PastPeriod", "past period", "2013-09-01", "2013-10-02", 1, "M");
@@ -300,7 +301,7 @@ public class ManageBudget extends TestCaseHelper {
   }
 
   @Test(groups = {"requisition"})
-  public void testVerifyBudgetWhenRegularRnRIsCreatedAndBudgetFlagIsTrueAndContainsBudgetInformationAndUpdated() throws Exception {
+  public void testVerifyBudgetWhenRegularRnRIsCreatedAndBudgetFlagIsTrueAndContainsBudgetInformationAndUpdated() throws SQLException {
     dbWrapper.updateFieldValue("programs", "budgetingApplies", "true", "name", program);
     dbWrapper.insertBudgetData();
 
@@ -347,7 +348,7 @@ public class ManageBudget extends TestCaseHelper {
   }
 
   @Test(groups = {"requisition"})
-  public void testVerifyBudgetWhenNonFullSupplyProductAndRegimenPresentInRegularRnR() throws Exception {
+  public void testVerifyBudgetWhenNonFullSupplyProductAndRegimenPresentInRegularRnR() throws SQLException {
     dbWrapper.updateFieldValue("programs", "budgetingApplies", "true", "name", program);
     dbWrapper.insertBudgetData();
     dbWrapper.insertRegimenTemplateColumnsForProgram(program);
@@ -406,7 +407,7 @@ public class ManageBudget extends TestCaseHelper {
     initiateRnR.checkWhetherBudgetExceedWarningPresent(false);
   }
 
-  private void setUpData(String program, String userSIC) throws Exception {
+  private void setUpData(String program, String userSIC) throws SQLException {
     setupProductTestData("P10", "P11", program, "lvl3_hospital");
     dbWrapper.insertFacilities("F10", "F11");
     dbWrapper.configureTemplate(program);
@@ -422,13 +423,13 @@ public class ManageBudget extends TestCaseHelper {
     dbWrapper.insertSupplyLines("N1", program, "F10", true);
   }
 
-  public void enterDetailsInRnRForFirstProduct(int beginningBalance, int quantityReceived, int quantityDispensed) throws IOException {
+  public void enterDetailsInRnRForFirstProduct(int beginningBalance, int quantityReceived, int quantityDispensed) {
     initiateRnRPage.enterValueIfNotNull(beginningBalance, "beginningBalanceFirstProduct");
     initiateRnRPage.enterValueIfNotNull(quantityReceived, "quantityReceivedFirstProduct");
     initiateRnRPage.enterValueIfNotNull(quantityDispensed, "quantityDispensedFirstProduct");
   }
 
-  public void viewRequisition() throws IOException {
+  public void viewRequisition() {
     HomePage homePage = PageFactory.getInstanceOfHomePage(testWebDriver);
     ViewRequisitionPage viewRequisitionPage = homePage.navigateViewRequisition();
     viewRequisitionPage.enterViewSearchCriteria();
@@ -437,7 +438,7 @@ public class ManageBudget extends TestCaseHelper {
   }
 
   @AfterMethod(groups = "requisition")
-  public void tearDown() throws Exception {
+  public void tearDown() throws SQLException {
     testWebDriver.sleep(500);
     if (!testWebDriver.getElementById("username").isDisplayed()) {
       HomePage homePage = PageFactory.getInstanceOfHomePage(testWebDriver);

@@ -13,6 +13,7 @@
 package org.openlmis.distribution.service;
 
 import org.openlmis.distribution.domain.Distribution;
+import org.openlmis.distribution.domain.DistributionStatus;
 import org.openlmis.distribution.domain.FacilityDistribution;
 import org.openlmis.distribution.repository.DistributionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,11 +22,17 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Map;
 
+import static org.openlmis.distribution.domain.DistributionStatus.INITIATED;
+import static org.openlmis.distribution.domain.DistributionStatus.SYNCED;
+
 @Service
 public class DistributionService {
 
   @Autowired
   FacilityDistributionService facilityDistributionService;
+
+  @Autowired
+  FacilityVisitService facilityVisitService;
 
   @Autowired
   DistributionRepository repository;
@@ -45,5 +52,14 @@ public class DistributionService {
 
   public Distribution get(Distribution distribution) {
     return repository.get(distribution);
+  }
+
+  public DistributionStatus updateDistributionStatus(Long distributionId) {
+    if (facilityVisitService.getUnsyncedFacilityCountForDistribution(distributionId) > 0) {
+      return INITIATED;
+    } else {
+      repository.updateDistributionStatus(distributionId, DistributionStatus.SYNCED);
+      return SYNCED;
+    }
   }
 }

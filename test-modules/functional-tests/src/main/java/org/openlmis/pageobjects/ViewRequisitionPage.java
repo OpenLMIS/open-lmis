@@ -11,14 +11,11 @@
 package org.openlmis.pageobjects;
 
 
-import com.thoughtworks.selenium.SeleneseTestNgHelper;
 import org.openlmis.UiUtils.TestWebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
-
-import java.io.IOException;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
 import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
@@ -84,18 +81,17 @@ public class ViewRequisitionPage extends RequisitionPage {
     super(driver);
     PageFactory.initElements(new AjaxElementLocatorFactory(TestWebDriver.getDriver(), 1), this);
     testWebDriver.setImplicitWait(1);
-
   }
 
-  public void verifyElementsOnViewRequisitionScreen() throws IOException {
-    SeleneseTestNgHelper.assertTrue("Facility name drop down is not displayed", selectFacilityDropDown.isDisplayed());
-    SeleneseTestNgHelper.assertTrue("Program name drop down is not displayed", selectProgramDropDown.isDisplayed());
-    SeleneseTestNgHelper.assertTrue("Start date is not displayed", startDate.isDisplayed());
-    SeleneseTestNgHelper.assertTrue("End date is not displayed", endDate.isDisplayed());
-    SeleneseTestNgHelper.assertTrue("Search button is not displayed", searchButton.isDisplayed());
+  public void verifyElementsOnViewRequisitionScreen() {
+    assertTrue("Facility name drop down is not displayed", selectFacilityDropDown.isDisplayed());
+    assertTrue("Program name drop down is not displayed", selectProgramDropDown.isDisplayed());
+    assertTrue("Start date is not displayed", startDate.isDisplayed());
+    assertTrue("End date is not displayed", endDate.isDisplayed());
+    assertTrue("Search button is not displayed", searchButton.isDisplayed());
   }
 
-  public void enterViewSearchCriteria() throws IOException {
+  public void enterViewSearchCriteria() {
     testWebDriver.waitForElementToAppear(selectFacilityDropDown);
     testWebDriver.selectByIndex(selectFacilityDropDown, 1);
     testWebDriver.sleep(250);
@@ -118,18 +114,16 @@ public class ViewRequisitionPage extends RequisitionPage {
     endDateCalender.click();
   }
 
-  public void verifyNoRequisitionFound() throws IOException {
-
-    SeleneseTestNgHelper.assertTrue("noRequisitionFoundDiv is not showing up", noRequisitionFoundDiv.isDisplayed());
-
+  public void verifyNoRequisitionFound() {
+    assertTrue("noRequisitionFoundDiv is not showing up", noRequisitionFoundDiv.isDisplayed());
   }
 
-  public void verifyStatus(String statusToBeVerified) throws IOException {
+  public void verifyStatus(String statusToBeVerified) {
     testWebDriver.waitForElementToAppear(status);
     assertEquals(status.getText().trim(), statusToBeVerified.trim());
   }
 
-  public void verifyEmergencyStatus() throws IOException {
+  public void verifyEmergencyStatus() {
     testWebDriver.waitForElementToAppear(emergencyIcon);
     assertTrue("Emergency icon should show up", emergencyIcon.isDisplayed());
   }
@@ -145,7 +139,6 @@ public class ViewRequisitionPage extends RequisitionPage {
     emergencyIcon.click();
   }
 
-
   public void clickFullSupplyTab() {
     testWebDriver.waitForElementToAppear(fullSupplyTab);
     fullSupplyTab.click();
@@ -158,25 +151,20 @@ public class ViewRequisitionPage extends RequisitionPage {
 
   public void verifyApprovedQuantityFieldPresent() {
     testWebDriver.waitForElementToAppear(approveQuantity);
-    SeleneseTestNgHelper.assertTrue("Quantity Approved field should be displayed", approveQuantity.isDisplayed());
+    assertTrue("Quantity Approved field should be displayed", approveQuantity.isDisplayed());
   }
 
-  public HomePage verifyFieldsPreApproval(String cost, String newPatientValue) throws IOException {
+  public HomePage verifyFieldsPreApproval(String cost, String newPatientValue) {
     testWebDriver.waitForElementToAppear(totalCostPreApproval);
     assertEquals(totalCostPreApproval.getText().substring(1), cost);
     assertEquals(newPatient.getText().trim(), newPatientValue);
-
     return new HomePage(testWebDriver);
   }
 
-
-  public HomePage verifyFieldsPostApproval(String cost, String newPatientValue) throws IOException {
+  public HomePage verifyFieldsPostApproval(String cost, String newPatientValue) {
     testWebDriver.waitForElementToAppear(totalCostPostApproval);
     assertEquals(totalCostPostApproval.getText().substring(1), cost);
     assertEquals(newPatient.getText().trim(), newPatientValue);
-
     return new HomePage(testWebDriver);
   }
-
-
 }

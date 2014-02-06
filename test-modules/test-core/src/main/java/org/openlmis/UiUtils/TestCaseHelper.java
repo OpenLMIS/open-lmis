@@ -20,7 +20,9 @@ import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -41,7 +43,7 @@ public class TestCaseHelper {
   protected static boolean isSeleniumStarted = false;
   protected static DriverFactory driverFactory = new DriverFactory();
 
-  public void setup() throws Exception {
+  public void setup() throws SQLException, IOException, InterruptedException {
     String browser = getProperty("browser", DEFAULT_BROWSER);
     baseUrlGlobal = getProperty("baseurl", DEFAULT_BASE_URL);
 
@@ -87,12 +89,11 @@ public class TestCaseHelper {
     });
   }
 
-  protected void loadDriver(String browser) throws InterruptedException, IOException {
-
+  protected void loadDriver(String browser) throws IOException, InterruptedException {
     testWebDriver = new TestWebDriver(driverFactory.loadDriver(browser));
   }
 
-  public void setupTestDataToInitiateRnR(boolean configureTemplate, String program, String user, String userId, List<String> rightsList) throws IOException, SQLException {
+  public void setupTestDataToInitiateRnR(boolean configureTemplate, String program, String user, String userId, List<String> rightsList) throws SQLException {
     setupProductTestData("P10", "P11", program, "lvl3_hospital");
     dbWrapper.insertFacilities("F10", "F11");
     if (configureTemplate)
@@ -119,7 +120,7 @@ public class TestCaseHelper {
     dbWrapper.insertUser(userId, userSIC, passwordUsers, "F10", "Fatima_Doe@openlmis.com");
   }
 
-  protected void createUserAndAssignRoleRights(String userId, String user, String email, String homeFacility, String role, List<String> rightsList) throws IOException, SQLException {
+  protected void createUserAndAssignRoleRights(String userId, String user, String email, String homeFacility, String role, List<String> rightsList) throws SQLException {
     dbWrapper.insertRole(role, "");
     for (String rights : rightsList) {
       dbWrapper.assignRight(role, rights);
@@ -130,7 +131,7 @@ public class TestCaseHelper {
   }
 
   public void setupRnRTestDataRnRForCommTrack(boolean configureGenericTemplate, String program, String user,
-                                              String userId, List<String> rightsList) throws SQLException, IOException {
+                                              String userId, List<String> rightsList) throws SQLException {
     setupProductTestData("P10", "P11", program, "lvl3_hospital");
     dbWrapper.insertFacilities("F10", "F11");
 
@@ -153,7 +154,7 @@ public class TestCaseHelper {
     }
   }
 
-  public void setupTestDataToApproveRnR(String user, String userId, List<String> rightsList) throws IOException, SQLException {
+  public void setupTestDataToApproveRnR(String user, String userId, List<String> rightsList) throws SQLException {
     for (String rights : rightsList)
       dbWrapper.assignRight("store in-charge", rights);
     String passwordUsers = "TQskzK3iiLfbRVHeM1muvBCiiKriibfl6lh8ipo91hb74G3OvsybvkzpPI4S3KIeWTXAiiwlUU0iiSxWii4wSuS8mokSAieie";
@@ -195,7 +196,7 @@ public class TestCaseHelper {
     }
   }
 
-  public void setupTestData(boolean isPreviousPeriodRnRRequired) throws IOException, SQLException {
+  public void setupTestData(boolean isPreviousPeriodRnRRequired) throws SQLException {
     List<String> rightsList = asList("CREATE_REQUISITION", "VIEW_REQUISITION", "AUTHORIZE_REQUISITION");
     if (isPreviousPeriodRnRRequired)
       setupRnRTestDataRnRForCommTrack(false, "HIV", "commTrack", "700", rightsList);
@@ -203,7 +204,7 @@ public class TestCaseHelper {
       setupRnRTestDataRnRForCommTrack(true, "HIV", "commTrack", "700", rightsList);
   }
 
-  public void setupDataRequisitionApprove() throws IOException, SQLException {
+  public void setupDataRequisitionApprove() throws SQLException {
     List<String> rightsList = asList("APPROVE_REQUISITION", "CONVERT_TO_ORDER");
     setupTestDataToApproveRnR("commTrack1", "701", rightsList);
   }
@@ -211,7 +212,7 @@ public class TestCaseHelper {
   public void setupDataForDeliveryZone(boolean multipleFacilityInstances, String deliveryZoneCodeFirst, String deliveryZoneCodeSecond,
                                        String deliveryZoneNameFirst, String deliveryZoneNameSecond,
                                        String facilityCodeFirst, String facilityCodeSecond,
-                                       String programFirst, String programSecond, String schedule) throws IOException, SQLException {
+                                       String programFirst, String programSecond, String schedule) throws SQLException {
     dbWrapper.insertDeliveryZone(deliveryZoneCodeFirst, deliveryZoneNameFirst);
     if (multipleFacilityInstances)
       dbWrapper.insertDeliveryZone(deliveryZoneCodeSecond, deliveryZoneNameSecond);
@@ -228,7 +229,7 @@ public class TestCaseHelper {
 
   public void addOnDataSetupForDeliveryZoneForMultipleFacilitiesAttachedWithSingleDeliveryZone(String deliveryZoneCodeFirst,
                                                                                                String facilityCodeThird, String facilityCodeFourth, String geoZone1, String geoZone2,
-                                                                                               String parentGeoZone) throws IOException, SQLException {
+                                                                                               String parentGeoZone) throws SQLException {
     dbWrapper.insertGeographicZone(geoZone1, geoZone2, parentGeoZone);
     dbWrapper.insertFacilitiesWithDifferentGeoZones(facilityCodeThird, facilityCodeFourth, geoZone1, geoZone2);
     dbWrapper.insertDeliveryZoneMembers(deliveryZoneCodeFirst, facilityCodeThird);
@@ -237,7 +238,7 @@ public class TestCaseHelper {
 
   public void setupTestDataToInitiateRnRAndDistribution(String facilityCode1, String facilityCode2, boolean configureTemplate, String program, String user, String userId,
                                                         List<String> rightsList, String programCode, String geoLevel1, String geoLevel2,
-                                                        String parentGeoLevel) throws Exception {
+                                                        String parentGeoLevel) throws SQLException {
     setupProductTestData("P10", "P11", program, "lvl3_hospital");
     dbWrapper.insertGeographicZone(geoLevel1, geoLevel1, parentGeoLevel);
     dbWrapper.insertFacilitiesWithDifferentGeoZones(facilityCode1, facilityCode2, geoLevel2, geoLevel1);
@@ -254,7 +255,7 @@ public class TestCaseHelper {
     dbWrapper.updateFieldValue("programs", "active", "true", "code", programCode);
   }
 
-  public void updateProductWithGroup(String product, String productGroup) throws IOException, SQLException {
+  public void updateProductWithGroup(String product, String productGroup) throws SQLException {
     dbWrapper.insertProductGroup(productGroup);
     dbWrapper.updateProductToHaveGroup(product, productGroup);
   }
@@ -274,7 +275,7 @@ public class TestCaseHelper {
   }
 
   public Integer calculateISA(String ratioValue, String dosesPerYearValue, String wastageValue, String bufferPercentageValue, String adjustmentValue,
-                              String minimumValue, String maximumValue, String populationValue) throws SQLException {
+                              String minimumValue, String maximumValue, String populationValue) {
     Float calculatedISA;
     Float minimum = 0.0F;
     Float maximum = 0.0F;
@@ -305,7 +306,7 @@ public class TestCaseHelper {
 
   public void setupDeliveryZoneRolesAndRights(String deliveryZoneCodeFirst, String deliveryZoneCodeSecond, String deliveryZoneNameFirst,
                                               String deliveryZoneNameSecond, String facilityCodeFirst, String facilityCodeSecond,
-                                              String programFirst, String programSecond, String schedule, String roleName) throws IOException, SQLException {
+                                              String programFirst, String programSecond, String schedule, String roleName) throws SQLException {
     dbWrapper.insertFacilities(facilityCodeFirst, facilityCodeSecond);
     dbWrapper.insertSchedule(schedule, "Monthly", "Month");
     setupTestRoleRightsData(roleName, "MANAGE_DISTRIBUTION");
@@ -316,21 +317,21 @@ public class TestCaseHelper {
   public void setupDeliveryZoneRolesAndRightsAfterWarehouse(String deliveryZoneCodeFirst, String deliveryZoneCodeSecond,
                                                             String deliveryZoneNameFirst, String deliveryZoneNameSecond,
                                                             String facilityCodeFirst, String facilityCodeSecond, String programFirst,
-                                                            String programSecond, String schedule, String roleName) throws IOException, SQLException {
+                                                            String programSecond, String schedule, String roleName) throws SQLException {
     setupTestRoleRightsData(roleName, "MANAGE_DISTRIBUTION");
     setupDataForDeliveryZone(true, deliveryZoneCodeFirst, deliveryZoneCodeSecond, deliveryZoneNameFirst,
       deliveryZoneNameSecond, facilityCodeFirst, facilityCodeSecond, programFirst, programSecond, schedule);
   }
 
   public void setupWarehouseRolesAndRights(String facilityCodeFirst, String facilityCodeSecond, String programName, String schedule,
-                                           String roleName) throws IOException, SQLException {
+                                           String roleName) throws SQLException {
     dbWrapper.insertFacilities(facilityCodeFirst, facilityCodeSecond);
     dbWrapper.insertSchedule(schedule, "Monthly", "Month");
     setupTestRoleRightsData(roleName, "FACILITY_FILL_SHIPMENT");
     setupDataForWarehouse(facilityCodeFirst, programName);
   }
 
-  private void setupDataForWarehouse(String facilityCode, String programName) throws IOException, SQLException {
+  private void setupDataForWarehouse(String facilityCode, String programName) throws SQLException {
     dbWrapper.insertWarehouseIntoSupplyLinesTable(facilityCode, programName, "N1", false);
   }
 
@@ -438,7 +439,7 @@ public class TestCaseHelper {
     }
   }
 
-  public void verifyPageLinksFromLastPage() throws Exception {
+  public void verifyPageLinksFromLastPage() {
     verifyNextAndLastLinksDisabled();
     verifyPreviousAndFirstLinksEnabled();
 
@@ -459,7 +460,7 @@ public class TestCaseHelper {
     verifyPreviousAndFirstLinksEnabled();
   }
 
-  public void verifyNumberOfPageLinks(int numberOfProducts, int numberOfLineItemsPerPage) throws Exception {
+  public void verifyNumberOfPageLinks(int numberOfProducts, int numberOfLineItemsPerPage) {
     testWebDriver.waitForAjax();
     int numberOfPages = numberOfProducts / numberOfLineItemsPerPage;
     if (numberOfProducts % numberOfLineItemsPerPage != 0) {
@@ -471,7 +472,7 @@ public class TestCaseHelper {
     }
   }
 
-  public void verifyNextAndLastLinksEnabled() throws Exception {
+  public void verifyNextAndLastLinksEnabled() {
     testWebDriver.waitForAjax();
     WebElement nextPageLink = testWebDriver.getElementById("nextPageLink");
 
@@ -479,21 +480,21 @@ public class TestCaseHelper {
     assertEquals(testWebDriver.getElementById("lastPageLink").getCssValue("color"), "rgba(119, 119, 119, 1)");
   }
 
-  public void verifyPreviousAndFirstLinksEnabled() throws Exception {
+  public void verifyPreviousAndFirstLinksEnabled() {
     testWebDriver.waitForPageToLoad();
     testWebDriver.waitForElementToAppear(testWebDriver.getElementById("previousPageLink"));
     assertEquals(testWebDriver.getElementById("previousPageLink").getCssValue("color"), "rgba(119, 119, 119, 1)");
     assertEquals(testWebDriver.getElementById("firstPageLink").getCssValue("color"), "rgba(119, 119, 119, 1)");
   }
 
-  public void verifyNextAndLastLinksDisabled() throws Exception {
+  public void verifyNextAndLastLinksDisabled() {
     testWebDriver.waitForPageToLoad();
     testWebDriver.waitForElementToAppear(testWebDriver.getElementById("nextPageLink"));
     assertEquals(testWebDriver.getElementById("nextPageLink").getCssValue("color"), "rgba(204, 204, 204, 1)");
     assertEquals(testWebDriver.getElementById("lastPageLink").getCssValue("color"), "rgba(204, 204, 204, 1)");
   }
 
-  public void verifyPreviousAndFirstLinksDisabled() throws Exception {
+  public void verifyPreviousAndFirstLinksDisabled() {
     testWebDriver.waitForAjax();
     WebElement firstPageLink = testWebDriver.getElementById("firstPageLink");
 
@@ -501,14 +502,18 @@ public class TestCaseHelper {
     assertEquals(testWebDriver.getElementById("previousPageLink").getCssValue("color"), "rgba(204, 204, 204, 1)");
   }
 
-  public void verifyGeneralObservationsDataInDatabase(String facilityCode, String observation, String confirmedByName,
-                                                      String confirmedByTitle, String verifiedByName, String verifiedByTitle) throws SQLException {
-    Map<String, String> generalObservations = dbWrapper.getFacilityVisitDetails(facilityCode);
-    assertEquals(observation, generalObservations.get("observations"));
-    assertEquals(confirmedByName, generalObservations.get("confirmedByName"));
-    assertEquals(confirmedByTitle, generalObservations.get("confirmedByTitle"));
-    assertEquals(verifiedByName, generalObservations.get("verifiedByName"));
-    assertEquals(verifiedByTitle, generalObservations.get("verifiedByTitle"));
+  public void verifyVisitInformationDataWhenFacilityWasVisitedInDatabase(String facilityCode, String observation, String confirmedByName,
+                                                                         String confirmedByTitle, String verifiedByName,
+                                                                         String verifiedByTitle, String vehicleId) throws SQLException {
+    Map<String, String> visitInformation = dbWrapper.getFacilityVisitDetails(facilityCode);
+    assertEquals(observation, visitInformation.get("observations"));
+    assertEquals(confirmedByName, visitInformation.get("confirmedByName"));
+    assertEquals(confirmedByTitle, visitInformation.get("confirmedByTitle"));
+    assertEquals(verifiedByName, visitInformation.get("verifiedByName"));
+    assertEquals(verifiedByTitle, visitInformation.get("verifiedByTitle"));
+    assertEquals(new SimpleDateFormat("yyyy-MM").format(new Date()) + "-01 00:00:00", visitInformation.get("visitDate"));
+    assertEquals(vehicleId, visitInformation.get("vehicleId"));
+    assertEquals("t", visitInformation.get("visited"));
   }
 
   public void verifyEpiUseDataInDatabase(Integer stockAtFirstOfMonth, Integer receivedValue, Integer distributedValue, Integer loss,
@@ -585,6 +590,13 @@ public class TestCaseHelper {
     assertEquals(maleMobileBrigadeReading, fullCoveragesDetails.get("maleoutreach"));
   }
 
+  public void verifyPodDataInDatabase(String quantityReceived, String notes, String productCode) throws SQLException {
+    Integer id = dbWrapper.getMaxRnrID();
+    Map<String, String> podLineItemFor = dbWrapper.getPodLineItemFor(id, productCode);
+    assertEquals(quantityReceived, podLineItemFor.get("quantityreceived"));
+    assertEquals(notes, podLineItemFor.get("notes"));
+  }
+
   public static Boolean parsePostgresBoolean(String value) {
     value = value.toLowerCase();
     if (!(value.equals("t") || value.equals("f") || value.equals("true") || value.equals("false"))) {
@@ -593,6 +605,13 @@ public class TestCaseHelper {
     return (value.equals("t") || value.equals("true")) ? Boolean.TRUE : Boolean.FALSE;
   }
 
+  protected void testDataForShipment(Integer packsToShip, Boolean fullSupplyFlag, String productCode, int quantityShipped) throws SQLException {
+    dbWrapper.updateFieldValue("orders", "status", "RELEASED", null, null);
+    int id = dbWrapper.getMaxRnrID();
+    dbWrapper.insertShipmentData(id, productCode, quantityShipped);
+    dbWrapper.updateFieldValue("shipment_line_items", "packsToShip", packsToShip);
+    dbWrapper.updateFieldValue("shipment_line_items", "fullSupply", fullSupplyFlag);
+  }
 }
 
 

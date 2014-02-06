@@ -14,6 +14,9 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.openlmis.db.categories.UnitTests;
 
+import java.util.List;
+
+import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertNull;
@@ -172,5 +175,21 @@ public class FacilityProgramProductTest {
     facilityProgramProduct.setProgramProductIsa(programProductISA);
 
     assertThat(facilityProgramProduct.getWhoRatio("invalidProductCode"), is(nullValue()));
+  }
+
+
+  @Test
+  public void shouldReturnActiveProductsOnly() {
+    Long facilityId = 1L;
+    Product product = new Product();
+    product.setActive(true);
+    FacilityProgramProduct programProductActive = new FacilityProgramProduct(new ProgramProduct(new Program(), product, 10, true),
+      facilityId, 100);
+    FacilityProgramProduct programProductInactive = new FacilityProgramProduct(new ProgramProduct(new Program(), product, 10, false)
+      , facilityId, 100);
+
+    List<FacilityProgramProduct> activeFacilityProgramProducts = FacilityProgramProduct.filterActiveProducts(asList(programProductActive, programProductInactive));
+
+    assertThat(activeFacilityProgramProducts.size(), is(1));
   }
 }

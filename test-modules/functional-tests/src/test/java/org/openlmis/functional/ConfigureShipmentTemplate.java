@@ -27,6 +27,7 @@ import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 
 import java.io.IOException;
+import java.sql.SQLException;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.assertFalse;
 import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
@@ -37,12 +38,12 @@ public class ConfigureShipmentTemplate extends TestCaseHelper {
 
 
   @Given("^I have shipment file with Header In File as \"([^\"]*)\"$")
-  public void setupShipmentFileConfiguration(String status) throws Exception {
+  public void setupShipmentFileConfiguration(String status) throws SQLException {
     dbWrapper.setupShipmentFileConfiguration(status);
   }
 
   @And("^I access configure shipment page$")
-  public void accessOrderScreen() throws Exception {
+  public void accessOrderScreen() {
     HomePage homePage = PageFactory.getInstanceOfHomePage(testWebDriver);
     ConfigureEDIPage configureEDIPage = homePage.navigateEdiScreen();
     configureEDIPage.navigateConfigureShipmentPage();
@@ -55,25 +56,25 @@ public class ConfigureShipmentTemplate extends TestCaseHelper {
   }
 
   @And("^I should see include checkbox for all data fields$")
-  public void verifyDefaultDataFieldsCheckBox() throws Exception {
+  public void verifyDefaultDataFieldsCheckBox() {
     ConfigureShipmentPage configureShipmentPage = PageFactory.getInstanceOfConfigureShipmentPage(testWebDriver);
     configureShipmentPage.verifyDefaultIncludeCheckboxForAllDataFields();
   }
 
   @And("^I should see default value of positions$")
-  public void verifyDefaultPositionValues() throws Exception {
+  public void verifyDefaultPositionValues() {
     ConfigureShipmentPage configureShipmentPage = PageFactory.getInstanceOfConfigureShipmentPage(testWebDriver);
     configureShipmentPage.verifyDefaultPositionValues();
   }
 
   @When("^I save shipment file format$")
-  public void clickSave() throws Exception {
+  public void clickSave() {
     ConfigureShipmentPage configureShipmentPage = PageFactory.getInstanceOfConfigureShipmentPage(testWebDriver);
     configureShipmentPage.clickSaveButton();
   }
 
   @Then("^I should see successful message \"([^\"]*)\"$")
-  public void verifySaveSuccessfullyMessage(String message) throws Exception {
+  public void verifySaveSuccessfullyMessage(String message) {
     ConfigureShipmentPage configureShipmentPage = PageFactory.getInstanceOfConfigureShipmentPage(testWebDriver);
     configureShipmentPage.verifyMessage(message);
   }
@@ -83,14 +84,14 @@ public class ConfigureShipmentTemplate extends TestCaseHelper {
   LoginPage loginPage;
 
   @BeforeMethod(groups = "admin")
-  public void setUp() throws Exception {
+  public void setUp() throws InterruptedException, SQLException, IOException {
     super.setup();
     dbWrapper.setupShipmentFileConfiguration("false");
     loginPage = PageFactory.getInstanceOfLoginPage(testWebDriver, baseUrlGlobal);
   }
 
   @Test(groups = {"admin"})
-  public void testEditPackedAndShippedDateDropDown() throws Exception {
+  public void testEditPackedAndShippedDateDropDown() {
     HomePage homePage = loginPage.loginAs(user, password);
     ConfigureEDIPage configureEDIPage = homePage.navigateEdiScreen();
     ConfigureShipmentPage configureShipmentPage = configureEDIPage.navigateConfigureShipmentPage();
@@ -98,6 +99,8 @@ public class ConfigureShipmentTemplate extends TestCaseHelper {
     configureShipmentPage.selectValueFromShippedDateDropDown("yyyy-MM-dd");
     configureShipmentPage.clickSaveButton();
     configureShipmentPage.verifyMessage("Shipment file configuration saved successfully!");
+    testWebDriver.refresh();
+    configureEDIPage.navigateConfigureShipmentPage();
     assertEquals(configureShipmentPage.getSelectedOptionOfPackedDateDropDown(), "MM-dd-yyyy");
     assertEquals(configureShipmentPage.getSelectedOptionOfShippedDateDropDown(), "yyyy-MM-dd");
 
@@ -105,12 +108,14 @@ public class ConfigureShipmentTemplate extends TestCaseHelper {
     configureShipmentPage.selectValueFromShippedDateDropDown("ddMMyy");
     configureShipmentPage.clickSaveButton();
     configureShipmentPage.verifyMessage("Shipment file configuration saved successfully!");
+    testWebDriver.refresh();
+    configureEDIPage.navigateConfigureShipmentPage();
     assertEquals(configureShipmentPage.getSelectedOptionOfPackedDateDropDown(), "yyyy/MM/dd");
     assertEquals(configureShipmentPage.getSelectedOptionOfShippedDateDropDown(), "ddMMyy");
   }
 
   @Test(groups = {"admin"})
-  public void testVerifyIncludeColumnHeaderONWithAllPositionsAltered() throws Exception {
+  public void testVerifyIncludeColumnHeaderONWithAllPositionsAltered() {
     HomePage homePage = loginPage.loginAs(user, password);
     ConfigureEDIPage configureEDIPage = homePage.navigateEdiScreen();
     ConfigureShipmentPage configureShipmentPage = configureEDIPage.navigateConfigureShipmentPage();
@@ -127,6 +132,9 @@ public class ConfigureShipmentTemplate extends TestCaseHelper {
     configureShipmentPage.clickSaveButton();
     configureShipmentPage.verifyMessage("Shipment file configuration saved successfully!");
 
+    testWebDriver.refresh();
+    configureEDIPage.navigateConfigureShipmentPage();
+
     assertTrue(configureShipmentPage.getIncludeHeader());
     assertEquals("101", configureShipmentPage.getQuantityShipped());
     assertEquals("102", configureShipmentPage.getOrderNumber());
@@ -139,7 +147,7 @@ public class ConfigureShipmentTemplate extends TestCaseHelper {
   }
 
   @Test(groups = {"admin"})
-  public void testVerifyIncludeColumnHeaderOFFWithMandatoryPositionsAltered() throws Exception {
+  public void testVerifyIncludeColumnHeaderOFFWithMandatoryPositionsAltered() {
     HomePage homePage = loginPage.loginAs(user, password);
     ConfigureEDIPage configureEDIPage = homePage.navigateEdiScreen();
     ConfigureShipmentPage configureShipmentPage = configureEDIPage.navigateConfigureShipmentPage();
@@ -152,6 +160,8 @@ public class ConfigureShipmentTemplate extends TestCaseHelper {
     configureShipmentPage.unCheckShippedDateCheckBox();
     configureShipmentPage.clickSaveButton();
     configureShipmentPage.verifyMessage("Shipment file configuration saved successfully!");
+    testWebDriver.refresh();
+    configureEDIPage.navigateConfigureShipmentPage();
 
     assertFalse(configureShipmentPage.getIncludeHeader());
     assertEquals("101", configureShipmentPage.getQuantityShipped());
@@ -161,12 +171,13 @@ public class ConfigureShipmentTemplate extends TestCaseHelper {
     assertEquals("5", configureShipmentPage.getPackedDate());
     assertEquals("6", configureShipmentPage.getShippedDate());
     setDefaultPositionValues();
+    configureEDIPage.navigateConfigureShipmentPage();
     configureShipmentPage.clickCancelButton();
     assertTrue("User should be redirected to home page", testWebDriver.getCurrentUrl().contains("public/pages/admin/edi/index.html#/configure-edi-file"));
   }
 
   @Test(groups = {"admin"})
-  public void testVerifyInvalidPosition() throws Exception {
+  public void testVerifyInvalidPosition() {
     HomePage homePage = loginPage.loginAs(user, password);
     ConfigureEDIPage configureEDIPage = homePage.navigateEdiScreen();
     ConfigureShipmentPage configureShipmentPage = configureEDIPage.navigateConfigureShipmentPage();
@@ -186,7 +197,7 @@ public class ConfigureShipmentTemplate extends TestCaseHelper {
     configureShipmentPage.verifyErrorMessage("Position number cannot be blank or zero for an included field");
   }
 
-  private void setDefaultPositionValues() throws IOException {
+  private void setDefaultPositionValues() {
     ConfigureShipmentPage configureShipmentPage = PageFactory.getInstanceOfConfigureShipmentPage(testWebDriver);
     configureShipmentPage.unCheckIncludeHeader();
     configureShipmentPage.unCheckCostCheckBox();
@@ -205,7 +216,7 @@ public class ConfigureShipmentTemplate extends TestCaseHelper {
   }
 
   @AfterMethod(groups = "admin")
-  public void tearDown() throws Exception {
+  public void tearDown() throws SQLException {
     if (!testWebDriver.getElementById("username").isDisplayed()) {
       HomePage homePage = PageFactory.getInstanceOfHomePage(testWebDriver);
       homePage.logout(baseUrlGlobal);

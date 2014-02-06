@@ -151,7 +151,6 @@ public class RolesPage extends Page {
     return allocationRoleType;
   }
 
-
   public void createRole(String roleName, String roleDesc, List<String> rights, String roleType) {
     testWebDriver.waitForElementToAppear(createNewRoleButton);
     createNewRoleButton.click();
@@ -193,17 +192,13 @@ public class RolesPage extends Page {
   public void createFacilityBasedRole(String roleName, String roleDesc) {
     testWebDriver.waitForElementToAppear(createNewRoleButton);
     createNewRoleButton.click();
-
     facilityBasedRoleType.click();
     clickContinueButton();
-
     testWebDriver.sleep(1000);
-
     roleNameField.sendKeys(roleName);
     roleDescription.sendKeys(roleDesc);
     rightFillShipment.click();
     saveButton.click();
-
     testWebDriver.waitForElementToAppear(saveSuccessMsgDiv);
   }
 

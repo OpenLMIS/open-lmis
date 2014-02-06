@@ -26,6 +26,9 @@ import static org.openqa.selenium.support.How.*;
 
 public class RefrigeratorPage extends DistributionTab {
 
+  @FindBy(how = ID, using = "refrigeratorsLabel")
+  private static WebElement refrigeratorsPageLabel = null;
+
   @FindBy(how = ID, using = "addNew")
   private static WebElement addNewButton = null;
 
@@ -63,7 +66,7 @@ public class RefrigeratorPage extends DistributionTab {
   private static WebElement functioningCorrectlyNoRadio = null;
 
   @FindBy(how = ID, using = "functioningCorrectlyDontKnow0")
-  private static WebElement functioningCorrectlyDontKnowRadio = null;
+  private static WebElement functioningCorrectlyDoNotKnowRadio = null;
 
   @FindBy(how = ID, using = "functioningCorrectly0")
   private static WebElement functioningCorrectlyNR = null;
@@ -81,7 +84,7 @@ public class RefrigeratorPage extends DistributionTab {
   private static WebElement problemSinceLastVisitNoRadio = null;
 
   @FindBy(how = ID, using = "problemSinceLastVisitDontKnow0")
-  private static WebElement problemSinceLastVisitDontKnowRadio = null;
+  private static WebElement problemSinceLastVisitDoNotKnowRadio = null;
 
   @FindBy(how = ID, using = "problemSinceLastVisit0")
   private static WebElement problemSinceLastVisitNR = null;
@@ -105,7 +108,7 @@ public class RefrigeratorPage extends DistributionTab {
   private static WebElement functioningCorrectlyNoRadioForSecondRefrigerator = null;
 
   @FindBy(how = ID, using = "functioningCorrectlyDontKnow1")
-  private static WebElement functioningCorrectlyDontKnowRadioForSecondRefrigerator = null;
+  private static WebElement functioningCorrectlyDoNotKnowRadioForSecondRefrigerator = null;
 
   @FindBy(how = ID, using = "functioningCorrectly1")
   private static WebElement functioningCorrectlyNRForSecondRefrigerator = null;
@@ -123,7 +126,7 @@ public class RefrigeratorPage extends DistributionTab {
   private static WebElement problemSinceLastVisitNoRadioForSecondRefrigerator = null;
 
   @FindBy(how = ID, using = "problemSinceLastVisitDontKnow1")
-  private static WebElement problemSinceLastVisitDontKnowRadioForSecondRefrigerator = null;
+  private static WebElement problemSinceLastVisitDoNotKnowRadioForSecondRefrigerator = null;
 
   @FindBy(how = ID, using = "problemSinceLastVisit1")
   private static WebElement problemSinceLastVisitNRForSecondRefrigerator = null;
@@ -184,7 +187,7 @@ public class RefrigeratorPage extends DistributionTab {
 
   @Override
   public void verifyIndicator(String color) {
-    //To change body of implemented methods use File | Settings | File Templates.
+    verifyRefrigeratorColor("Overall", color);
   }
 
   @Override
@@ -201,6 +204,7 @@ public class RefrigeratorPage extends DistributionTab {
   public void navigate() {
     testWebDriver.waitForElementToAppear(refrigeratorTab);
     refrigeratorTab.click();
+    removeFocusFromElement();
   }
 
   public void enterValueInRefrigeratorTemperature(String value) {
@@ -218,11 +222,13 @@ public class RefrigeratorPage extends DistributionTab {
   public void clickProblemSinceLastVisitYesRadio() {
     testWebDriver.waitForElementToAppear(problemSinceLastVisitYesRadio);
     problemSinceLastVisitYesRadio.click();
+    removeFocusFromElement();
   }
 
   public void selectOtherProblem() {
     testWebDriver.waitForElementToAppear(problemOther);
     problemOther.click();
+    removeFocusFromElement();
   }
 
   public void enterTextInOtherProblemTextBox(String value) {
@@ -234,6 +240,7 @@ public class RefrigeratorPage extends DistributionTab {
   public void selectGasLeakProblem() {
     testWebDriver.waitForElementToAppear(problemGasLeak);
     problemGasLeak.click();
+    removeFocusFromElement();
   }
 
   public void clickOKButton() {
@@ -244,13 +251,15 @@ public class RefrigeratorPage extends DistributionTab {
   public void navigateToRefrigeratorTab() {
     testWebDriver.waitForElementToAppear(refrigeratorTab);
     refrigeratorTab.click();
+    removeFocusFromElement();
   }
 
+  @Override
   public void verifyAllFieldsDisabled() {
     assertFalse("refrigeratorTemperatureTextField enabled.", refrigeratorTemperatureTextField.isEnabled());
     assertFalse("refrigeratorTemperatureNR enabled.", refrigeratorTemperatureNR.isEnabled());
 
-    assertFalse("functioningCorrectlyDontKnowRadio enabled.", functioningCorrectlyDontKnowRadio.isEnabled());
+    assertFalse("functioningCorrectlyDoNotKnowRadio enabled.", functioningCorrectlyDoNotKnowRadio.isEnabled());
     assertFalse("functioningCorrectlyNoRadio enabled.", functioningCorrectlyNoRadio.isEnabled());
     assertFalse("functioningCorrectlyNR enabled.", functioningCorrectlyNR.isEnabled());
     assertFalse("functioningCorrectlyYesRadio enabled.", functioningCorrectlyYesRadio.isEnabled());
@@ -261,7 +270,7 @@ public class RefrigeratorPage extends DistributionTab {
     assertFalse("highAlarmEventsTextField enabled.", highAlarmEventsTextField.isEnabled());
     assertFalse("highAlarmEventNR enabled.", highAlarmEventNR.isEnabled());
 
-    assertFalse("problemSinceLastVisitDontKnowRadio enabled.", problemSinceLastVisitDontKnowRadio.isEnabled());
+    assertFalse("problemSinceLastVisitDoNotKnowRadio enabled.", problemSinceLastVisitDoNotKnowRadio.isEnabled());
     assertFalse("problemSinceLastVisitNoRadio enabled.", problemSinceLastVisitNoRadio.isEnabled());
     assertFalse("problemSinceLastVisitNR enabled.", problemSinceLastVisitNR.isEnabled());
     assertFalse("problemSinceLastVisitYesRadio enabled.", problemSinceLastVisitYesRadio.isEnabled());
@@ -275,22 +284,25 @@ public class RefrigeratorPage extends DistributionTab {
   public void clickProblemSinceLastVisitNoRadio() {
     testWebDriver.waitForElementToAppear(problemSinceLastVisitNoRadio);
     problemSinceLastVisitNoRadio.click();
+    removeFocusFromElement();
   }
 
   public void clickProblemSinceLastVisitNoRadioForSecondRefrigerator() {
     testWebDriver.waitForElementToAppear(problemSinceLastVisitNoRadioForSecondRefrigerator);
     problemSinceLastVisitNoRadioForSecondRefrigerator.click();
+    removeFocusFromElement();
   }
 
-  public void clickProblemSinceLastVisitDontKnowRadio() {
-    testWebDriver.waitForElementToAppear(problemSinceLastVisitDontKnowRadio);
-    problemSinceLastVisitDontKnowRadio.click();
+  public void clickProblemSinceLastVisitDoNotKnowRadio() {
+    testWebDriver.waitForElementToAppear(problemSinceLastVisitDoNotKnowRadio);
+    problemSinceLastVisitDoNotKnowRadio.click();
+    removeFocusFromElement();
   }
 
   public void clickProblemSinceLastVisitNR() {
     testWebDriver.waitForElementToAppear(problemSinceLastVisitNR);
     problemSinceLastVisitNR.click();
-    problemSinceLastVisitNR.sendKeys(Keys.TAB);
+    removeFocusFromElement();
   }
 
   public void enterValueInLowAlarmEvents(String value) {
@@ -308,16 +320,19 @@ public class RefrigeratorPage extends DistributionTab {
   public void enterValueInBrandModal(String value) {
     testWebDriver.waitForElementToAppear(brandTextField);
     sendKeys(brandTextField, value);
+    brandTextField.sendKeys(Keys.TAB);
   }
 
   public void enterValueInModelModal(String value) {
     testWebDriver.waitForElementToAppear(modelTextField);
     sendKeys(modelTextField, value);
+    modelTextField.sendKeys(Keys.TAB);
   }
 
   public void enterValueInManufacturingSerialNumberModal(String value) {
     testWebDriver.waitForElementToAppear(manufacturerSerialNumberTextField);
     sendKeys(manufacturerSerialNumberTextField, value);
+    manufacturerSerialNumberTextField.sendKeys(Keys.TAB);
   }
 
   public void enterValueInHighAlarmEvents(String value) {
@@ -335,55 +350,63 @@ public class RefrigeratorPage extends DistributionTab {
   public void enterValueInNotesTextArea(String value) {
     testWebDriver.waitForElementToAppear(notesTextArea);
     sendKeys(notesTextArea, value);
+    notesTextArea.sendKeys(Keys.TAB);
   }
 
   public void clickDoneOnModal() {
     testWebDriver.waitForElementToAppear(doneButtonOnModal);
     doneButtonOnModal.click();
-    //testWebDriver.waitForElementToAppear(testWebDriver.getElementByXpath("(//a[contains(text(),'Show')])[1]"));
+    removeFocusFromElement();
   }
 
   public void clickFunctioningCorrectlyYesRadio() {
     testWebDriver.waitForElementToAppear(functioningCorrectlyYesRadio);
     functioningCorrectlyYesRadio.click();
-    functioningCorrectlyYesRadio.sendKeys(Keys.TAB);
+    removeFocusFromElement();
   }
 
   public void clickFunctioningCorrectlyNoRadio() {
     testWebDriver.waitForElementToAppear(functioningCorrectlyNoRadio);
     functioningCorrectlyNoRadio.click();
+    removeFocusFromElement();
   }
 
   public void clickFunctioningCorrectlyNoRadioForSecondRefrigerator() {
     testWebDriver.waitForElementToAppear(functioningCorrectlyNoRadioForSecondRefrigerator);
     functioningCorrectlyNoRadioForSecondRefrigerator.click();
+    removeFocusFromElement();
   }
 
-  public void clickFunctioningCorrectlyDontKnowRadio() {
-    testWebDriver.waitForElementToAppear(functioningCorrectlyDontKnowRadio);
-    functioningCorrectlyDontKnowRadio.click();
+  public void clickFunctioningCorrectlyDoNotKnowRadio() {
+    testWebDriver.waitForElementToAppear(functioningCorrectlyDoNotKnowRadio);
+    functioningCorrectlyDoNotKnowRadio.click();
+    removeFocusFromElement();
   }
 
   public void clickFunctioningCorrectlyNR() {
     testWebDriver.waitForElementToAppear(functioningCorrectlyNR);
     functioningCorrectlyNR.click();
+    removeFocusFromElement();
   }
 
   public void clickAddNew() {
     testWebDriver.waitForElementToAppear(addNewButton);
     addNewButton.click();
+    removeFocusFromElement();
     testWebDriver.waitForElementToAppear(newRefrigeratorHeaderOnModal);
   }
 
   public void clickShowForRefrigerator1() {
     testWebDriver.waitForElementToAppear(showButtonForRefrigerator1);
     showButtonForRefrigerator1.click();
+    removeFocusFromElement();
     testWebDriver.waitForElementToAppear(refrigeratorTemperatureNR);
   }
 
   public void clickShowForRefrigerator2() {
     testWebDriver.waitForElementToAppear(showButtonForRefrigerator2);
     showButtonForRefrigerator2.click();
+    removeFocusFromElement();
     testWebDriver.waitForElementToAppear(refrigeratorTemperatureNRForSecondRefrigerator);
   }
 
@@ -414,7 +437,6 @@ public class RefrigeratorPage extends DistributionTab {
   }
 
   public void verifyRefrigeratorColor(String whichIcon, String color) {
-    testWebDriver.waitForElementToAppear(individualRefrigeratorIcon);
     if (color.toLowerCase().equals("RED".toLowerCase()))
       color = "rgba(203, 64, 64, 1)";
     else if (color.toLowerCase().equals("GREEN".toLowerCase()))
@@ -422,10 +444,12 @@ public class RefrigeratorPage extends DistributionTab {
     else if (color.toLowerCase().equals("AMBER".toLowerCase()))
       color = "rgba(240, 165, 19, 1)";
 
-    if (whichIcon.toLowerCase().equals("Overall".toLowerCase()))
+    if (whichIcon.toLowerCase().equals("Overall".toLowerCase())) {
       assertEquals(color, overallRefrigeratorIcon.getCssValue("background-color"));
-    else if (whichIcon.toLowerCase().equals("Individual".toLowerCase()))
+    } else if (whichIcon.toLowerCase().equals("Individual".toLowerCase())) {
+      testWebDriver.waitForElementToAppear(individualRefrigeratorIcon);
       assertEquals(color, individualRefrigeratorIcon.getCssValue("background-color"));
+    }
   }
 
   public void onRefrigeratorScreen() {
@@ -439,7 +463,6 @@ public class RefrigeratorPage extends DistributionTab {
     testWebDriver.waitForElementToAppear(doneButton);
     doneButton.click();
     testWebDriver.sleep(500);
-
   }
 
   public void addNewRefrigerator(String brand, String model, String manufacturerSerialNumber) {
@@ -449,7 +472,6 @@ public class RefrigeratorPage extends DistributionTab {
     clickDoneOnModal();
   }
 
-
   public void verifyDuplicateErrorMessage(String message) {
     testWebDriver.waitForElementToAppear(duplicateRefrigeratorMessage);
     assertEquals(duplicateRefrigeratorMessage.getText(), message);
@@ -458,23 +480,26 @@ public class RefrigeratorPage extends DistributionTab {
   public void applyNRToRefrigeratorTemperature() {
     testWebDriver.waitForElementToAppear(refrigeratorTemperatureNR);
     refrigeratorTemperatureNR.click();
+    removeFocusFromElement();
   }
 
   public void applyNRToLowAlarmEvent() {
     testWebDriver.waitForElementToAppear(lowAlarmEventNR);
     lowAlarmEventNR.click();
+    removeFocusFromElement();
   }
 
   public void applyNRToHighAlarmEvent() {
     testWebDriver.waitForElementToAppear(highAlarmEventNR);
     highAlarmEventNR.click();
+    removeFocusFromElement();
   }
 
   public void verifyFieldsDisabledWhenAllNRSelected() {
     assertFalse("refrigeratorTemperatureTextField enabled.", refrigeratorTemperatureTextField.isEnabled());
     assertTrue("refrigeratorTemperatureNR enabled.", refrigeratorTemperatureNR.isEnabled());
 
-    assertFalse("functioningCorrectlyDontKnowRadio enabled.", functioningCorrectlyDontKnowRadio.isEnabled());
+    assertFalse("functioningCorrectlyDoNotKnowRadio enabled.", functioningCorrectlyDoNotKnowRadio.isEnabled());
     assertFalse("functioningCorrectlyNoRadio enabled.", functioningCorrectlyNoRadio.isEnabled());
     assertTrue("functioningCorrectlyNR enabled.", functioningCorrectlyNR.isEnabled());
     assertFalse("functioningCorrectlyYesRadio enabled.", functioningCorrectlyYesRadio.isEnabled());
@@ -485,17 +510,29 @@ public class RefrigeratorPage extends DistributionTab {
     assertFalse("highAlarmEventsTextField enabled.", highAlarmEventsTextField.isEnabled());
     assertTrue("highAlarmEventNR enabled.", highAlarmEventNR.isEnabled());
 
-    assertFalse("problemSinceLastVisitDontKnowRadio enabled.", problemSinceLastVisitDontKnowRadio.isEnabled());
+    assertFalse("problemSinceLastVisitDoNotKnowRadio enabled.", problemSinceLastVisitDoNotKnowRadio.isEnabled());
     assertFalse("problemSinceLastVisitNoRadio enabled.", problemSinceLastVisitNoRadio.isEnabled());
     assertTrue("problemSinceLastVisitNR enabled.", problemSinceLastVisitNR.isEnabled());
     assertFalse("problemSinceLastVisitYesRadio enabled.", problemSinceLastVisitYesRadio.isEnabled());
 
     assertTrue("notesTextArea enabled.", notesTextArea.isEnabled());
-
   }
 
   public Boolean isNoRefrigeratorAddedMessagePresent() {
     return noRefrigeratorAddedMessage.isDisplayed();
   }
 
+  public boolean isAddNewButtonEnabled() {
+    return addNewButton.isEnabled();
+  }
+
+  public void removeFocusFromElement() {
+    testWebDriver.waitForElementToAppear(refrigeratorsPageLabel);
+    testWebDriver.moveToElement(refrigeratorsPageLabel);
+  }
+
+  public boolean isFunctioningCorrectlyNRSelected() {
+    testWebDriver.waitForElementToAppear(functioningCorrectlyNR);
+    return functioningCorrectlyNR.isSelected();
+  }
 }

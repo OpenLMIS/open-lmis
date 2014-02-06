@@ -26,6 +26,7 @@ import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 
 import java.io.IOException;
+import java.sql.SQLException;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.assertFalse;
 import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
@@ -40,49 +41,49 @@ public class ConfigureBudgetTemplate extends TestCaseHelper {
   public static final String CONFIGURE_EDI_INDEX_PAGE = "public/pages/admin/edi/index.html#/configure-edi-file";
 
   @BeforeMethod(groups = "admin")
-  public void setUp() throws Exception {
+  public void setUp() throws InterruptedException, SQLException, IOException {
     super.setup();
   }
 
   @And("^I access configure budget page$")
-  public void accessOrderScreen() throws Exception {
+  public void accessOrderScreen() {
     HomePage homePage = PageFactory.getInstanceOfHomePage(testWebDriver);
     ConfigureEDIPage configureEDIPage = homePage.navigateEdiScreen();
     configureEDIPage.navigateConfigureBudgetPage();
   }
 
   @And("^I should see include column headers option unchecked$")
-  public void verifyIncludeColumnHeader() throws Exception {
+  public void verifyIncludeColumnHeader() {
     ConfigureBudgetPage configureBudgetPage = PageFactory.getInstanceOfConfigureBudgetPage(testWebDriver);
     assertFalse(configureBudgetPage.isHeaderIncluded());
   }
 
   @And("^I verify default checkbox for all data fields$")
-  public void verifyDefaultDataFieldsCheckBox() throws Exception {
+  public void verifyDefaultDataFieldsCheckBox() {
     ConfigureBudgetPage configureBudgetPage = PageFactory.getInstanceOfConfigureBudgetPage(testWebDriver);
     configureBudgetPage.verifyDefaultIncludeCheckboxForAllDataFields();
   }
 
   @And("^I verify default value of positions$")
-  public void verifyDefaultPositionValues() throws Exception {
+  public void verifyDefaultPositionValues() {
     ConfigureBudgetPage configureBudgetPage = PageFactory.getInstanceOfConfigureBudgetPage(testWebDriver);
     configureBudgetPage.verifyDefaultPositionValues();
   }
 
   @When("^I save budget file format$")
-  public void clickSave() throws Exception {
+  public void clickSave() {
     ConfigureBudgetPage configureBudgetPage = PageFactory.getInstanceOfConfigureBudgetPage(testWebDriver);
     configureBudgetPage.clickSaveButton();
   }
 
   @Then("^I should see budget successful saved message as \"([^\"]*)\"$")
-  public void verifySaveSuccessfullyMessage(String message) throws Exception {
+  public void verifySaveSuccessfullyMessage(String message) {
     ConfigureBudgetPage configureBudgetPage = PageFactory.getInstanceOfConfigureBudgetPage(testWebDriver);
     configureBudgetPage.verifyMessage(message);
   }
 
   @Test(groups = {"admin"})
-  public void testVerifyIncludeColumnHeaderONWithAllPositionsAltered() throws Exception {
+  public void testVerifyIncludeColumnHeaderONWithAllPositionsAltered() {
     ConfigureBudgetPage configureBudgetPage = gotToConfigureBudgetPage();
     configureBudgetPage.checkIncludeHeader();
     configureBudgetPage.selectValueFromPeriodStartDateDropDown("MM-dd-yyyy");
@@ -94,8 +95,12 @@ public class ConfigureBudgetTemplate extends TestCaseHelper {
     configureBudgetPage.setPeriodStartDatePosition("105");
 
     configureBudgetPage.clickSaveButton();
-
     configureBudgetPage.verifyMessage("Budget file configuration saved successfully!");
+
+    testWebDriver.refresh();
+    ConfigureEDIPage configureEDIPage = PageFactory.getInstanceOfConfigureEdiPage(testWebDriver);
+    configureEDIPage.navigateConfigureBudgetPage();
+
     assertTrue(configureBudgetPage.isHeaderIncluded());
     assertEquals(configureBudgetPage.getAllocatedBudgetPosition(), "101");
     assertEquals(configureBudgetPage.getFacilityCodePosition(), "102");
@@ -107,14 +112,14 @@ public class ConfigureBudgetTemplate extends TestCaseHelper {
   }
 
   @Test(groups = {"admin"})
-  public void clickingCancelShouldTakeUserToConfigureEDIPage() throws Exception {
+  public void clickingCancelShouldTakeUserToConfigureEDIPage() {
     ConfigureBudgetPage configureBudgetPage = gotToConfigureBudgetPage();
     configureBudgetPage.clickCancelButton();
     assertTrue("User should be redirected to EDI Config page", testWebDriver.getCurrentUrl().contains(CONFIGURE_EDI_INDEX_PAGE));
   }
 
   @Test(groups = {"admin"})
-  public void testInputValidations() throws Exception {
+  public void testInputValidations() {
     gotToConfigureBudgetPage();
     verifyDuplicatePositionError();
     verifyZeroPositionError();
@@ -122,7 +127,7 @@ public class ConfigureBudgetTemplate extends TestCaseHelper {
     verifyPositionMoreThan3Digits();
   }
 
-  private ConfigureBudgetPage gotToConfigureBudgetPage() throws IOException {
+  private ConfigureBudgetPage gotToConfigureBudgetPage() {
     LoginPage loginPage = PageFactory.getInstanceOfLoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(user, password);
     ConfigureEDIPage configureEDIPage = homePage.navigateEdiScreen();
@@ -170,6 +175,8 @@ public class ConfigureBudgetTemplate extends TestCaseHelper {
     assertEquals(configureBudgetPage.getPeriodStartDatePosition(), "523");
 
     configureBudgetPage.clickSaveButton();
+    ConfigureEDIPage configureEDIPage = PageFactory.getInstanceOfConfigureEdiPage(testWebDriver);
+    configureEDIPage.navigateConfigureBudgetPage();
     assertEquals(configureBudgetPage.getFacilityCodePosition(), "123");
     assertEquals(configureBudgetPage.getAllocatedBudgetPosition(), "223");
     assertEquals(configureBudgetPage.getNotesPosition(), "323");
@@ -178,7 +185,7 @@ public class ConfigureBudgetTemplate extends TestCaseHelper {
   }
 
   @AfterMethod(groups = "admin")
-  public void tearDown() throws Exception {
+  public void tearDown() throws SQLException {
     testWebDriver.sleep(500);
     if (!testWebDriver.getElementById("username").isDisplayed()) {
       HomePage homePage = PageFactory.getInstanceOfHomePage(testWebDriver);

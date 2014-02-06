@@ -143,12 +143,11 @@ public class PODControllerTest {
   public void shouldSavePOD() throws Exception {
     OrderPOD orderPOD = new OrderPOD();
 
-    when(service.save(orderPOD)).thenReturn(orderPOD);
+    ResponseEntity<OpenLmisResponse> response = controller.save(orderPOD, 4L, request);
 
-    ResponseEntity<OpenLmisResponse> response = controller.save(orderPOD, request);
-
-    assertThat((OrderPOD) response.getBody().getData().get(ORDER_POD), is(orderPOD));
+    verify(service).save(orderPOD);
     assertThat(response.getBody().getSuccessMsg(), is("msg.pod.save.success"));
+    assertThat(orderPOD.getId(), is(4L));
     assertThat(orderPOD.getModifiedBy(), is(USER_ID));
   }
 
@@ -158,9 +157,32 @@ public class PODControllerTest {
 
     doThrow(new DataException("error")).when(service).save(orderPOD);
 
-    ResponseEntity<OpenLmisResponse> response = controller.save(orderPOD, request);
+    ResponseEntity<OpenLmisResponse> response = controller.save(orderPOD, 5L, request);
 
     assertThat(response.getStatusCode(), is(HttpStatus.BAD_REQUEST));
     assertThat(response.getBody().getErrorMsg(), is("error"));
+  }
+
+  @Test
+  public void shouldSubmitPOD() throws Exception {
+    Long podId = 4L;
+    OrderPOD orderPOD = new OrderPOD();
+    orderPOD.setId(podId);
+    when(service.submit(podId, USER_ID)).thenReturn(orderPOD);
+    ResponseEntity<OpenLmisResponse> response = controller.submit(podId, request);
+
+    verify(service).submit(podId, USER_ID);
+    assertThat(response.getBody().getSuccessMsg(), is("msg.pod.submit.success"));
+  }
+
+  @Test
+  public void shouldReturnErrorIfCouldNotSubmitPOD() throws Exception {
+    Long podId = 1234L;
+    doThrow(new DataException("msg.pod.submit.failure")).when(service).submit(podId, USER_ID);
+
+    ResponseEntity<OpenLmisResponse> response = controller.submit(podId, request);
+
+    assertThat(response.getBody().getErrorMsg(), is("msg.pod.submit.failure"));
+    assertThat(response.getStatusCode(), is(HttpStatus.BAD_REQUEST));
   }
 }

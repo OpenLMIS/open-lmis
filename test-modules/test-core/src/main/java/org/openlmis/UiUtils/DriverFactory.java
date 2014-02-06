@@ -39,11 +39,11 @@ public class DriverFactory {
 
   Unzip unZip;
 
-  public WebDriver loadDriver(String browser) throws InterruptedException, IOException {
+  public WebDriver loadDriver(String browser) throws IOException, InterruptedException {
     String Separator = getProperty("file.separator");
     File parentDir = new File(getProperty("user.dir"));
 
-    CHROME_FOLDER = parentDir.getParentFile().getPath() + Separator + "test-core" + Separator + "src" + Separator + "main" + Separator + "java" + Separator + "org" + Separator + "openlmis" + Separator + "UiUtils" + Separator;
+    CHROME_FOLDER = parentDir.getPath() + Separator + "test-modules" + Separator + "test-core" + Separator + "src" + Separator + "main" + Separator + "java" + Separator + "org" + Separator + "openlmis" + Separator + "UiUtils" + Separator;
     OUTPUT_FOLDER = parentDir.getPath() + Separator + "test-modules" + Separator + "test-core" + Separator + "src" + Separator + "main" + Separator + "java" + Separator + "org" + Separator + "openlmis" + Separator + "UiUtils" + Separator;
     INPUT_ZIP_FILE_IE_DRIVER = OUTPUT_FOLDER + "IEDriverServer_Win32_2.39.0.zip";
     INPUT_ZIP_FILE_CHROME_DRIVER = OUTPUT_FOLDER + "chromedriver_win32.zip";
@@ -51,11 +51,11 @@ public class DriverFactory {
     return loadDriver(true, browser);
   }
 
-  public String driverType() throws InterruptedException {
+  public String driverType() {
     return driverType.trim();
   }
 
-  public void deleteExe() throws InterruptedException, IOException {
+  public void deleteExe() {
     unZip = new Unzip();
     unZip.deleteFile(OUTPUT_FOLDER + "IEDriverServer.exe");
     unZip.deleteFile(OUTPUT_FOLDER + "chromedriver.exe");

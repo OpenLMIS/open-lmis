@@ -18,46 +18,46 @@ public class ManagePodPage extends Page {
   private static WebElement facilityCodeNameOnManagePodScreen = null;
 
   @FindBy(how = XPATH, using = "//div/span[contains(text(),'Village Dispensary')]")
-  private static WebElement supplyingDepotNameOnManagePodScreen  = null;
+  private static WebElement supplyingDepotNameOnManagePodScreen = null;
 
   @FindBy(how = XPATH, using = "//div/span[contains(text(),'MALARIA')]")
-  private static WebElement programCodeNameOnManagePodScreen  = null;
+  private static WebElement programCodeNameOnManagePodScreen = null;
 
   @FindBy(how = XPATH, using = "//div/span[contains(text(),'PeriodName1 (01/12/2012 - 01/12/2015)')]")
-  private static WebElement periodDetailsOnManagePodScreen  = null;
+  private static WebElement periodDetailsOnManagePodScreen = null;
 
   @FindBy(how = XPATH, using = "//div/span/[contains(text(),'16/12/2013 03:06:04')]")
-  private static WebElement orderDateTimeDetailsOnManagePodScreen  = null;
+  private static WebElement orderDateTimeDetailsOnManagePodScreen = null;
 
   @FindBy(how = XPATH, using = "//div/span[contains(text(),'Transfer failed')]")
-  private static WebElement orderStatusDetailsOnManagePodScreen  = null;
+  private static WebElement orderStatusDetailsOnManagePodScreen = null;
 
   @FindBy(how = XPATH, using = "//div/a[contains(text(),'Update POD')]")
   private static WebElement updatePodLinkOnManagePodScreen = null;
 
   @FindBy(how = XPATH, using = "//div[@class='ngHeaderText ng-binding colt0']")
-  private static WebElement headerOrderNoOnManagePodScreen  = null;
+  private static WebElement headerOrderNoOnManagePodScreen = null;
 
   @FindBy(how = XPATH, using = "//div[@class='ngHeaderText ng-binding colt1']")
-  private static WebElement headerSupplyingDepotOnManagePodScreen  = null;
+  private static WebElement headerSupplyingDepotOnManagePodScreen = null;
 
   @FindBy(how = XPATH, using = "//div[@class='ngHeaderText ng-binding colt2']")
-  private static WebElement headerFacilityCodeNameOnManagePodScreen  = null;
+  private static WebElement headerFacilityCodeNameOnManagePodScreen = null;
 
   @FindBy(how = XPATH, using = "//div[@class='ngHeaderText ng-binding colt3']")
-  private static WebElement headerProgramOnManagePodScreen  = null;
+  private static WebElement headerProgramOnManagePodScreen = null;
 
   @FindBy(how = XPATH, using = "//div[@class='ngHeaderText ng-binding colt4']")
-  private static WebElement headerPeriodDetailsOnManagePodScreen  = null;
+  private static WebElement headerPeriodDetailsOnManagePodScreen = null;
 
   @FindBy(how = XPATH, using = "//div[@class='ngHeaderText ng-binding colt5']")
-  private static WebElement headerOrderDateTimeDetailsOnManagePodScreen  = null;
+  private static WebElement headerOrderDateTimeDetailsOnManagePodScreen = null;
 
   @FindBy(how = XPATH, using = "//div[@class='ngHeaderText ng-binding colt6']")
-  private static WebElement headerOrderStatusOnManagePodScreen  = null;
+  private static WebElement headerOrderStatusOnManagePodScreen = null;
 
   @FindBy(how = XPATH, using = "//div[@class='ngHeaderText ng-binding colt7']")
-  private static WebElement headerEmergencyOnManagePodScreen  = null;
+  private static WebElement headerEmergencyOnManagePodScreen = null;
 
   @FindBy(how = ID, using = "noOrdersPresent")
   private static WebElement noOrderPresentMessageOnPodScreen = null;
@@ -105,7 +105,7 @@ public class ManagePodPage extends Page {
   }
 
   public String getFacilityCodeName() {
-   return testWebDriver.getText(facilityCodeNameOnManagePodScreen);
+    return testWebDriver.getText(facilityCodeNameOnManagePodScreen);
   }
 
   public String getSupplyingDepotName() {
@@ -135,7 +135,7 @@ public class ManagePodPage extends Page {
   public void verifyMessageOnManagePodScreen() {
     testWebDriver.sleep(500);
     testWebDriver.refresh();
-    SeleneseTestNgHelper.assertTrue("Message not Displayed on Manage Pod Screen",noOrderPresentMessageOnPodScreen.isDisplayed());
+    SeleneseTestNgHelper.assertTrue("Message not Displayed on Manage Pod Screen", noOrderPresentMessageOnPodScreen.isDisplayed());
   }
 
   public UpdatePodPage selectRequisitionToUpdatePod(int rowNumber) {

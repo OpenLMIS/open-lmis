@@ -22,3 +22,4 @@
 \i ../../test-data/sql/allocation_users.sql
 \i ../../test-data/sql/budget.sql
 \i ../../test-data/sql/coverage_vaccination_products.sql
+\i ../../test-data/sql/coverage_product_vials.sql

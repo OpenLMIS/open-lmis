@@ -17,6 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.thoughtworks.selenium.SeleneseTestBase.assertNotEquals;
 import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
 import static java.util.Arrays.asList;
 import static org.testng.AssertJUnit.assertEquals;
@@ -45,7 +46,7 @@ public class UpdatePod extends TestCaseHelper {
   }};
 
   @BeforeMethod(groups = "requisition")
-  public void setUp() throws Exception {
+  public void setUp() throws InterruptedException, SQLException, IOException {
     super.setup();
     dbWrapper.deleteData();
     setUpData(updatePODData.get(PROGRAM), updatePODData.get(USER));
@@ -54,7 +55,7 @@ public class UpdatePod extends TestCaseHelper {
   }
 
   @Test(groups = {"requisition"})
-  public void testVerifyManagePODValidFlowForRegularRnR() throws Exception {
+  public void testVerifyUpdatePODForReleasedOrdersValidFlowForRegularRnR() throws Exception {
     initiateRnrAndConvertToOrder(false, 100);
 
     HomePage homePage = loginPage.loginAs(updatePODData.get(USER), updatePODData.get(PASSWORD));
@@ -67,12 +68,21 @@ public class UpdatePod extends TestCaseHelper {
     verifyValuesOfPodTableOnUpdatePODScreen(1, "P10", "antibiotic Capsule 300/200/600 mg", "100", "Strip", "");
     assertEquals("", updatePodPage.getQuantityReceived(1));
     assertEquals("", updatePodPage.getNotes(1));
+    verifyPodDataInDatabase(null, null, "P10");
     assertTrue(updatePodPage.isFullSupplyTickIconDisplayed(1));
     verifyRequisitionTypeAndColor("regular");
+
+    updatePodPage.enterPodData("200", "openlmis open source logistic management system", 1);
+    updatePodPage.verifyQuantityReceivedAndNotes("200", "openlmis open source logistic management system", 1);
+    verifyPodDataInDatabase("200", "openlmis open source logistic management system", "P10");
+
+    updatePodPage.enterPodData("990", "openlmis project", 1);
+    updatePodPage.verifyQuantityReceivedAndNotes("990", "openlmis project", 1);
+    verifyPodDataInDatabase("990", "openlmis project", "P10");
   }
 
   @Test(groups = {"requisition"})
-  public void testVerifyManagePODValidFlowForEmergencyRnR() throws Exception {
+  public void testVerifyUpdatePODForReleasedOrdersValidFlowForEmergencyRnR() throws Exception {
     initiateRnrAndConvertToOrder(true, 100);
 
     HomePage homePage = loginPage.loginAs(updatePODData.get(USER), updatePODData.get(PASSWORD));
@@ -83,7 +93,7 @@ public class UpdatePod extends TestCaseHelper {
   }
 
   @Test(groups = {"requisition"})
-  public void testVerifyManagePODWhenPacksToShipIsZero() throws Exception {
+  public void testVerifyUpdatePODForReleasedOrdersWhenPacksToShipIsZero() throws Exception {
     initiateRnrAndConvertToOrder(false, 0);
 
     HomePage homePage = loginPage.loginAs(updatePODData.get(USER), updatePODData.get(PASSWORD));
@@ -99,7 +109,7 @@ public class UpdatePod extends TestCaseHelper {
   }
 
   @Test(groups = {"requisition"})
-  public void testVerifyManagePODWhenMultipleProducts() throws Exception {
+  public void testVerifyUpdatePODForReleasedOrdersWhenMultipleProducts() throws Exception {
     dbWrapper.setupMultipleProducts(updatePODData.get(PROGRAM), "Lvl3 Hospital", 1, true);
     dbWrapper.insertRequisitionWithMultipleLineItems(1, updatePODData.get(PROGRAM), true, "F10", false);
     dbWrapper.convertRequisitionToOrder(dbWrapper.getMaxRnrID(), "READY_TO_PACK", updatePODData.get(USER));
@@ -113,9 +123,86 @@ public class UpdatePod extends TestCaseHelper {
     verifyRequisitionTypeAndColor("regular");
   }
 
-  private void initiateRnrAndConvertToOrder(boolean isEmergencyRegular, int packsToShip) throws IOException, SQLException {
-    dbWrapper.insertRequisitions(1, "MALARIA", true, "2012-12-01", "2015-12-01", "F10", isEmergencyRegular);
-    dbWrapper.updateRequisitionStatus("APPROVED", updatePODData.get(USER), "MALARIA");
+  @Test(groups = {"requisition"})
+  public void testVerifyUpdatePODForPackedOrdersWhenMultipleProducts() throws SQLException {
+    dbWrapper.setupMultipleProducts(updatePODData.get(PROGRAM), "Lvl3 Hospital", 1, true);
+    dbWrapper.insertRequisitionWithMultipleLineItems(1, updatePODData.get(PROGRAM), true, "F10", true);
+    dbWrapper.convertRequisitionToOrder(dbWrapper.getMaxRnrID(), "READY_TO_PACK", updatePODData.get(USER));
+    testDataForShipment(50, false, "NF0", 999);
+    dbWrapper.updateFieldValue("orders", "status", "PACKED", null, null);
+
+    HomePage homePage = loginPage.loginAs(updatePODData.get(USER), updatePODData.get(PASSWORD));
+    ManagePodPage managePodPage = homePage.navigateManagePOD();
+    managePodPage.selectRequisitionToUpdatePod(1);
+
+    verifyValuesOfPodTableOnUpdatePODScreen(1, "NF0", "antibiotic Capsule 300/200/600 mg", "50", "Strip", "999");
+    verifyRequisitionTypeAndColor("emergency");
+    updatePodPage.getPodTableData();
+    assertNotEquals(updatePodPage.getPodTableData(), "F0");
+  }
+
+  @Test(groups = {"requisition"})
+  public void testVerifyUpdatePODForPackedOrdersValidFlowForRegularRnR() throws SQLException {
+    initiateRnrAndConvertToOrder(false, 1111);
+    testDataForShipment(999, true, "P10", 99898998);
+    dbWrapper.updateFieldValue("orders", "status", "PACKED", null, null);
+
+    HomePage homePage = loginPage.loginAs(updatePODData.get(USER), updatePODData.get(PASSWORD));
+    ManagePodPage managePodPage = homePage.navigateManagePOD();
+    UpdatePodPage updatePodPage = managePodPage.selectRequisitionToUpdatePod(1);
+
+    assertEquals("Proof of Delivery", updatePodPage.getTitle());
+    verifyHeadersWithValuesOnUpdatePODScreen();
+    verifyHeadersOfPodTableOnUpdatePODScreen();
+    verifyValuesOfPodTableOnUpdatePODScreen(1, "P10", "antibiotic Capsule 300/200/600 mg", "999", "Strip", "99898998");
+    assertEquals("", updatePodPage.getQuantityReceived(1));
+    assertEquals("", updatePodPage.getNotes(1));
+    assertTrue(updatePodPage.isFullSupplyTickIconDisplayed(1));
+    verifyRequisitionTypeAndColor("regular");
+  }
+
+  @Test(groups = {"requisition"})
+  public void testVerifyUpdatePODForPackedOrdersAdditionalProduct() throws SQLException {
+    Integer id = dbWrapper.getProductId("P11");
+    dbWrapper.updateFieldValue("program_products", "programid", "4", "id", id.toString());
+    initiateRnrAndConvertToOrder(false, 1111);
+    testDataForShipment(999, true, "P10", 99898998);
+    dbWrapper.insertShipmentData(dbWrapper.getMaxRnrID(), "P11", 0);
+    dbWrapper.updateFieldValue("orders", "status", "PACKED", null, null);
+
+
+    HomePage homePage = loginPage.loginAs(updatePODData.get(USER), updatePODData.get(PASSWORD));
+    ManagePodPage managePodPage = homePage.navigateManagePOD();
+    UpdatePodPage updatePodPage = managePodPage.selectRequisitionToUpdatePod(1);
+
+    assertEquals("Proof of Delivery", updatePodPage.getTitle());
+    verifyHeadersWithValuesOnUpdatePODScreen();
+    verifyHeadersOfPodTableOnUpdatePODScreen();
+    verifyValuesOfPodTableOnUpdatePODScreen(1, "P10", "antibiotic Capsule 300/200/600 mg", "999", "Strip", "99898998");
+    assertEquals("", updatePodPage.getQuantityReceived(1));
+    assertEquals("", updatePodPage.getNotes(1));
+    assertTrue(updatePodPage.isFullSupplyTickIconDisplayed(1));
+    verifyRequisitionTypeAndColor("regular");
+    verifyValuesOfPodTableOnUpdatePODScreen(2, "P11", "antibiotic Capsule 300/200/600 mg", "", "Strip", "0");
+  }
+
+  @Test(groups = {"requisition"})
+  public void testVerifyUpdatePODForPackedOrdersWhenPacksToShipAndQuantityShippedIsZero() throws SQLException {
+    initiateRnrAndConvertToOrder(false, 0);
+    super.testDataForShipment(0, true, "P10", 0);
+    dbWrapper.updateFieldValue("orders", "status", "PACKED", null, null);
+
+    HomePage homePage = loginPage.loginAs(updatePODData.get(USER), updatePODData.get(PASSWORD));
+    ManagePodPage managePodPage = homePage.navigateManagePOD();
+    managePodPage.selectRequisitionToUpdatePod(1);
+
+    verifyValuesOfPodTableOnUpdatePODScreen(1, "P10", "antibiotic Capsule 300/200/600 mg", "0", "Strip", "0");
+  }
+
+
+  private void initiateRnrAndConvertToOrder(boolean isEmergencyRegular, int packsToShip) throws SQLException {
+    dbWrapper.insertRequisitions(1, "HIV", true, "2012-12-01", "2015-12-01", "F10", isEmergencyRegular);
+    dbWrapper.updateRequisitionStatus("APPROVED", updatePODData.get(USER), "HIV");
     dbWrapper.updateFieldValue("requisition_line_items", "packsToShip", packsToShip);
     dbWrapper.convertRequisitionToOrder(dbWrapper.getMaxRnrID(), "READY_TO_PACK", updatePODData.get(USER));
   }
@@ -140,7 +227,7 @@ public class UpdatePod extends TestCaseHelper {
     assertEquals("Notes", testWebDriver.getElementByXpath("//table[@id='podTable']/thead/tr/th[8]/span").getText());
   }
 
-  private void verifyHeadersWithValuesOnUpdatePODScreen() throws IOException, SQLException {
+  private void verifyHeadersWithValuesOnUpdatePODScreen() throws SQLException {
     Integer id = dbWrapper.getMaxRnrID();
     assertEquals("Order No.: " + id, updatePodPage.getOrderNumberLabel() + ": " + updatePodPage.getOrderId());
     assertEquals("Facility: F10 - Village Dispensary", updatePodPage.getFacilityLabel() + ": " + updatePodPage.getFacilityCode());
@@ -159,7 +246,7 @@ public class UpdatePod extends TestCaseHelper {
     }
   }
 
-  private void setUpData(String program, String userSIC) throws Exception {
+  private void setUpData(String program, String userSIC) throws SQLException {
     setupProductTestData("P10", "P11", program, "lvl3_hospital");
     dbWrapper.insertFacilities("F10", "F11");
     dbWrapper.configureTemplate(program);
@@ -177,7 +264,7 @@ public class UpdatePod extends TestCaseHelper {
   }
 
   @AfterMethod(groups = "requisition")
-  public void tearDown() throws Exception {
+  public void tearDown() throws SQLException {
     testWebDriver.sleep(500);
     if (!testWebDriver.getElementById("username").isDisplayed()) {
       HomePage homePage = PageFactory.getInstanceOfHomePage(testWebDriver);

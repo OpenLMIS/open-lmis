@@ -95,12 +95,6 @@ public class FacilityVisitMapperIT {
   @Test
   public void shouldInsertFacilityVisit() {
     FacilityVisit facilityVisit = new FacilityVisit(facility, distribution);
-    Facilitator confirmedBy = new Facilitator("Barack", "President");
-    Facilitator verifiedBy = new Facilitator("ManMohan", "Spectator");
-    facilityVisit.setConfirmedBy(confirmedBy);
-    facilityVisit.setVerifiedBy(verifiedBy);
-    facilityVisit.setObservations("I observed something");
-
     mapper.insert(facilityVisit);
 
     FacilityVisit actualFacilityVisit = mapper.getBy(facilityVisit.getFacilityId(), facilityVisit.getDistributionId());
@@ -153,5 +147,22 @@ public class FacilityVisitMapperIT {
     List<FacilityVisit> unSyncedFacilities = mapper.getUnSyncedFacilities(distribution.getId());
 
     assertThat(unSyncedFacilities, is(asList(facilityVisit2)));
+  }
+
+  @Test
+  public void shouldGetCountOfUnsyncedFacilities() {
+    FacilityVisit facilityVisit1 = new FacilityVisit(facility, distribution);
+    facilityVisit1.setSynced(true);
+    mapper.insert(facilityVisit1);
+
+    Facility facility1 = make(a(defaultFacility, with(code, "F999")));
+    facilityMapper.insert(facility1);
+    FacilityVisit facilityVisit2 = new FacilityVisit(facility1, distribution);
+    facilityVisit2.setSynced(false);
+    mapper.insert(facilityVisit2);
+
+    Integer unsyncedFacilityCountForDistribution = mapper.getUnsyncedFacilityCountForDistribution(distribution.getId());
+
+    assertThat(unsyncedFacilityCountForDistribution, is(1));
   }
 }

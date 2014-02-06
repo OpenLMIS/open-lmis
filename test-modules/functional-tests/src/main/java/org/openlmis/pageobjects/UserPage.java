@@ -60,7 +60,7 @@ public class UserPage extends Page {
   @FindBy(how = How.ID, using = "searchUser")
   private static WebElement searchUserTextField = null;
 
-  @FindBy(how = How.XPATH, using = "//ul[@id='userList']/li/div[@class='user-actions']/a[2]")
+  @FindBy(how = How.ID, using = "resetPassword0")
   private static WebElement selectFirstResetPassword = null;
 
   @FindBy(how = How.ID, using = "password1")
@@ -132,7 +132,7 @@ public class UserPage extends Page {
   @FindBy(how = How.XPATH, using = "//input[@ng-click='addSupervisoryRole()']")
   private static WebElement addSupervisoryRoleButton = null;
 
-  @FindBy(how = How.XPATH, using = "//a[contains(text(),'Warehouse Roles')]")
+  @FindBy(how = How.XPATH, using = "//a[contains(text(),'Order Fulfillment Roles')]")
   private static WebElement warehouseRolesAccordion = null;
 
   @FindBy(how = How.XPATH, using = "(//input[@type='text'])[16]")
@@ -170,7 +170,6 @@ public class UserPage extends Page {
 
   @FindBy(how = How.XPATH, using = "(//input[@type='text'])[17]")
   private static WebElement adminRolesInputField = null;
-
 
   @FindBy(how = How.LINK_TEXT, using = "View Here")
   private static WebElement viewHereLink = null;
@@ -238,12 +237,16 @@ public class UserPage extends Page {
   }
 
   public void resetPassword(String newPassword, String confirmPassword) {
-    testWebDriver.moveToElement(firstUserLink);
     testWebDriver.waitForElementToAppear(selectFirstResetPassword);
+    testWebDriver.sleep(300);
     selectFirstResetPassword.click();
+
     testWebDriver.waitForElementToAppear(newPasswordField);
     newPasswordField.sendKeys(newPassword);
+
+    testWebDriver.waitForElementToAppear(confirmPasswordField);
     confirmPasswordField.sendKeys(confirmPassword);
+
     testWebDriver.waitForElementToBeEnabled(resetPasswordDone);
     resetPasswordDone.click();
     testWebDriver.waitForElementToBeEnabled(resetPasswordOkButton);

@@ -40,9 +40,10 @@
         </a>
 
         <div class="user-actions">
-          <a href="" class="btn btn-primary btn-small" openlmis-message="button.edit"
+          <a id="editUser{{$index}}" href="" class="btn btn-primary btn-small" openlmis-message="button.edit"
              ng-click="editUser(user.id)"></a>
-          <a href="" class="btn btn-primary btn-small" ng-class="{'disabled': !user.active}" openlmis-message="button.reset.password"
+          <a id="resetPassword{{$index}}" href="" class="btn btn-primary btn-small"
+             ng-class="{'disabled': !user.active}" openlmis-message="button.reset.password"
              ng-click="user.active? changePassword(user): ''"></a>
         </div>
       </li>

@@ -12,10 +12,7 @@ package org.openlmis.functional;
 
 import org.openlmis.UiUtils.TestWebDriver;
 import org.openlmis.pageobjects.*;
-import org.openlmis.pageobjects.edi.ConfigureBudgetPage;
-import org.openlmis.pageobjects.edi.ConfigureOrderPage;
-import org.openlmis.pageobjects.edi.ConfigureShipmentPage;
-import org.openlmis.pageobjects.edi.ConvertOrderPage;
+import org.openlmis.pageobjects.edi.*;
 
 public class PageFactory {
 
@@ -23,7 +20,7 @@ public class PageFactory {
   private static DistributionPage instanceOfDistributionPage;
   private static FacilityListPage instanceOfFacilityListPage;
   private static RefrigeratorPage instanceOfRefrigeratorPage;
-  private static GeneralObservationPage instanceOfObservation;
+  private static VisitInformationPage instanceOfVisitInformationPage;
   private static FullCoveragePage instanceOfFullCoveragePage;
   private static EPIUsePage instanceOfEpiUsePage;
   private static ChildCoveragePage instanceOfChildCoveragePage;
@@ -47,6 +44,7 @@ public class PageFactory {
   private static ViewOrdersPage instanceOfViewOrdersPage;
   private static ConfigureShipmentPage instanceOfConfigureShipmentPage;
   private static ConfigureBudgetPage instanceOfConfigureBudgetPage;
+  private static ConfigureEDIPage instanceOfConfigureEdiPage;
 
   public static ManageFacilityPage getInstanceOfManageFacilityPage(TestWebDriver testWebDriver) {
     if (instanceOfManageFacilityPage == null) {
@@ -76,11 +74,11 @@ public class PageFactory {
     return instanceOfRefrigeratorPage;
   }
 
-  public static GeneralObservationPage getInstanceOfObservation(TestWebDriver testWebDriver) {
-    if (instanceOfObservation == null) {
-      instanceOfObservation = new GeneralObservationPage(testWebDriver);
+  public static VisitInformationPage getInstanceOfVisitInformation(TestWebDriver testWebDriver) {
+    if (instanceOfVisitInformationPage == null) {
+      instanceOfVisitInformationPage = new VisitInformationPage(testWebDriver);
     }
-    return instanceOfObservation;
+    return instanceOfVisitInformationPage;
   }
 
   public static FullCoveragePage getInstanceOfFullCoveragePage(TestWebDriver testWebDriver) {
@@ -244,5 +242,12 @@ public class PageFactory {
       instanceOfConfigureBudgetPage = new ConfigureBudgetPage(testWebDriver);
     }
     return instanceOfConfigureBudgetPage;
+  }
+
+  public static ConfigureEDIPage getInstanceOfConfigureEdiPage(TestWebDriver testWebDriver) {
+    if (instanceOfConfigureEdiPage == null) {
+      instanceOfConfigureEdiPage = new ConfigureEDIPage(testWebDriver);
+    }
+    return instanceOfConfigureEdiPage;
   }
 }

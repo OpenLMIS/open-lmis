@@ -12,6 +12,7 @@
 package org.openlmis.pageobjects;
 
 import org.openlmis.UiUtils.TestWebDriver;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
@@ -19,6 +20,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.thoughtworks.selenium.SeleneseTestBase.assertFalse;
 import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
 import static org.openqa.selenium.support.How.ID;
 
@@ -116,6 +118,15 @@ public class FullCoveragePage extends DistributionTab {
   @Override
   public void navigate() {
     fullCoverageTabLabel.click();
+    removeFocusFromElement();
+  }
+
+  @Override
+  public void verifyAllFieldsDisabled() {
+    assertFalse(getStatusForField("femaleHealthCenter"));
+    assertFalse(getStatusForField("femaleMobileBrigade"));
+    assertFalse(getStatusForField("maleHealthCenter"));
+    assertFalse(getStatusForField("maleMobileBrigade"));
   }
 
   public String getFullCoverageTabLabel() {
@@ -125,21 +136,25 @@ public class FullCoveragePage extends DistributionTab {
   public void enterFemaleHealthCenter(Integer femaleHealthCenter) {
     testWebDriver.waitForElementToAppear(femaleHealthCenterField);
     sendKeys(femaleHealthCenterField, femaleHealthCenter.toString());
+    femaleHealthCenterField.sendKeys(Keys.TAB);
   }
 
   public void enterFemaleMobileBrigade(Integer femaleMobileBrigade) {
     testWebDriver.waitForElementToAppear(femaleMobileBrigadeField);
     sendKeys(femaleMobileBrigadeField, femaleMobileBrigade.toString());
+    femaleMobileBrigadeField.sendKeys(Keys.TAB);
   }
 
   public void enterMaleHealthCenter(Integer maleHealthCenter) {
     testWebDriver.waitForElementToAppear(maleHealthCenterField);
     sendKeys(maleHealthCenterField, maleHealthCenter.toString());
+    maleHealthCenterField.sendKeys(Keys.TAB);
   }
 
   public void enterMaleMobileBrigade(String maleMobileBrigade) {
     testWebDriver.waitForElementToAppear(maleMobileBrigadeField);
     sendKeys(maleMobileBrigadeField, maleMobileBrigade);
+    maleMobileBrigadeField.sendKeys(Keys.TAB);
   }
 
   public void enterData(Integer femaleHealthCenter, Integer femaleMobileBrigade, Integer maleHealthCenter, String maleMobileBrigade) {
@@ -158,21 +173,25 @@ public class FullCoveragePage extends DistributionTab {
   public void toggleApplyNRToFemaleHealthCenter() {
     testWebDriver.waitForElementToAppear(femaleHealthCenterNR);
     femaleHealthCenterNR.click();
+    removeFocusFromElement();
   }
 
   public void toggleApplyNRToMaleHealthCenter() {
     testWebDriver.waitForElementToAppear(maleHealthCenterNR);
     maleHealthCenterNR.click();
+    removeFocusFromElement();
   }
 
   public void toggleApplyNRToFemaleMobileBrigade() {
     testWebDriver.waitForElementToAppear(femaleMobileBrigadeNR);
     femaleMobileBrigadeNR.click();
+    removeFocusFromElement();
   }
 
   public void toggleApplyNRToMaleMobileBrigade() {
     testWebDriver.waitForElementToAppear(maleMobileBrigadeNR);
     maleMobileBrigadeNR.click();
+    removeFocusFromElement();
   }
 
   public String getTextOfFullCoverageHeader() {
@@ -220,5 +239,10 @@ public class FullCoveragePage extends DistributionTab {
   private void clickOkButton() {
     testWebDriver.waitForElementToAppear(okButton);
     okButton.click();
+  }
+
+  public void removeFocusFromElement() {
+    testWebDriver.waitForElementToAppear(fullCoverageHeader);
+    testWebDriver.moveToElement(fullCoverageHeader);
   }
 }

@@ -587,6 +587,30 @@ INSERT INTO fulfillment_role_assignments
                                                              FROM
                                                                facilities
                                                              WHERE
+                                                               code = 'F10')),
+((SELECT
+    ID
+  FROM USERS
+  WHERE username = 'superuser'), (SELECT
+                                    id
+                                  FROM roles
+                                  WHERE name = 'LMU In-Charge'), (SELECT
+                                                                    id
+                                                                  FROM
+                                                                    facilities
+                                                                  WHERE
+                                                                    code = 'F11')),
+((SELECT
+    ID
+  FROM USERS
+  WHERE username = 'superuser'), (SELECT
+                                    id
+                                  FROM roles
+                                  WHERE name = 'Shipment'), (SELECT
+                                                               id
+                                                             FROM
+                                                               facilities
+                                                             WHERE
                                                                code = 'F11')),
 ((SELECT
     ID

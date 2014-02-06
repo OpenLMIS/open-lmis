@@ -13,9 +13,7 @@ package org.openlmis.distribution.repository.mapper;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Select;
-import org.openlmis.distribution.domain.ChildCoverageLineItem;
-import org.openlmis.distribution.domain.VaccinationFullCoverage;
-import org.openlmis.distribution.domain.VaccinationProduct;
+import org.openlmis.distribution.domain.*;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -43,4 +41,12 @@ public interface VaccinationCoverageMapper {
 
   @Select({"SELECT * FROM vaccination_child_coverage_line_items WHERE facilityVisitId = #{facilityVisitId}"})
   List<ChildCoverageLineItem> getChildCoverageLineItemsBy(Long facilityVisitId);
+
+  @Select({"SELECT * FROM coverage_product_vials"})
+  List<ProductVial> getProductVials();
+
+  @Insert({"INSERT INTO opened_vial_line_items (facilityVisitId, productVialName, packSize) ",
+    "VALUES (#{facilityVisitId}, #{productVialName}, #{packSize})"})
+    @Options(useGeneratedKeys = true)
+  void insertOpenedVialLineItem(OpenedVialLineItem openedVialLineItem);
 }
