@@ -19,11 +19,11 @@ public class AdjustmentSummaryQueryBuilderTest {
 
   @Test
   public void shouldNotThrowErrorWhenEmptyFilterIsPassed() {
-    String query = AdjustmentSummaryQueryBuilder.getData(null);
+//    String query = AdjustmentSummaryQueryBuilder.getData(null);
   }
 
   @Test
   public void shouldNotThrowErrorWhenEmptyMapIsPassed() {
-    String query = AdjustmentSummaryQueryBuilder.getData(null);
+//    String query = AdjustmentSummaryQueryBuilder.getData(null);
   }
 }
