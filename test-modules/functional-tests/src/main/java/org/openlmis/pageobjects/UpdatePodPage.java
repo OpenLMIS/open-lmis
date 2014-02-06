@@ -294,8 +294,8 @@ public class UpdatePodPage extends Page {
     testWebDriver.refresh();
   }
 
-  public void verifyQuantityReceivedAndNotes(String quantityReceived, String notes) {
-    assertEquals(quantityReceived,getQuantityReceived(1));
-    assertEquals(notes,getNotes(1));
+  public void verifyQuantityReceivedAndNotes(String quantityReceived, String notes, Integer rowNumber) {
+    assertEquals(quantityReceived, getQuantityReceived(rowNumber));
+    assertEquals(notes, getNotes(rowNumber));
   }
 }

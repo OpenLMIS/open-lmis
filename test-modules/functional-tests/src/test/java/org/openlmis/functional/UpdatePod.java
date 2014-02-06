@@ -73,11 +73,11 @@ public class UpdatePod extends TestCaseHelper {
     verifyRequisitionTypeAndColor("regular");
 
     updatePodPage.enterPodData("200", "openlmis open source logistic management system", 1);
-    updatePodPage.verifyQuantityReceivedAndNotes("200", "openlmis open source logistic management system");
+    updatePodPage.verifyQuantityReceivedAndNotes("200", "openlmis open source logistic management system", 1);
     verifyPodDataInDatabase("200", "openlmis open source logistic management system", "P10");
 
     updatePodPage.enterPodData("990", "openlmis project", 1);
-    updatePodPage.verifyQuantityReceivedAndNotes("990", "openlmis project");
+    updatePodPage.verifyQuantityReceivedAndNotes("990", "openlmis project", 1);
     verifyPodDataInDatabase("990", "openlmis project", "P10");
   }
 

@@ -226,9 +226,9 @@ public class PODPagination extends TestCaseHelper {
 
 
     updatePodPage.navigateToFirstPage();
-    verifyQuantityReceivedAndNotes(updatePodPage, "110", "openlmis openlmis", 1);
+    updatePodPage.verifyQuantityReceivedAndNotes("110", "openlmis openlmis", 1);
     verifyPodDataInDatabase("110", "openlmis openlmis", "F0");
-    verifyQuantityReceivedAndNotes(updatePodPage, "200", "openlmis openlmis", 5);
+    updatePodPage.verifyQuantityReceivedAndNotes("200", "openlmis openlmis", 5);
     verifyPodDataInDatabase("200", "openlmis openlmis", "F4");
 
     verifyPageNumberSelected(1);
@@ -240,9 +240,9 @@ public class PODPagination extends TestCaseHelper {
     homePage.navigateManagePOD();
     managePodPage.selectRequisitionToUpdatePod(1);
     navigateToPage(2);
-    verifyQuantityReceivedAndNotes(updatePodPage, "10", "openlmis", 1);
+    updatePodPage.verifyQuantityReceivedAndNotes("10", "openlmis", 1);
     verifyPodDataInDatabase("10", "openlmis", "NF0");
-    verifyQuantityReceivedAndNotes(updatePodPage, "11", "openlmis openlmis project", 10);
+    updatePodPage.verifyQuantityReceivedAndNotes("11", "openlmis openlmis project", 10);
     verifyPodDataInDatabase("11", "openlmis openlmis project", "NF9");
   }
 
@@ -320,11 +320,6 @@ public class PODPagination extends TestCaseHelper {
     for (int i = 1; i < categoryCodes.length; i++) {
       assertEquals(categoryCodes[i - 1], updatePodPage.getCategoryName(i));
     }
-  }
-
-  public void verifyQuantityReceivedAndNotes(UpdatePodPage updatePodPage, String quantityReceived, String notes, Integer rowNumber) {
-    assertEquals(quantityReceived, updatePodPage.getQuantityReceived(rowNumber));
-    assertEquals(notes, updatePodPage.getNotes(rowNumber));
   }
 
   @AfterMethod(groups = {"requisition"})
