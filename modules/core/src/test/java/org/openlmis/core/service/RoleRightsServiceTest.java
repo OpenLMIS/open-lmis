@@ -82,6 +82,7 @@ public class RoleRightsServiceTest {
             CONFIGURE_EDI,
             FACILITY_FILL_SHIPMENT,
             MANAGE_POD,
+            DELETE_REQUISITION,
             ACCESS_ILS_GATEWAY,
             MANAGE_PRODUCT_ALLOWED_FOR_FACILITY,
             MANAGE_SETTING,
