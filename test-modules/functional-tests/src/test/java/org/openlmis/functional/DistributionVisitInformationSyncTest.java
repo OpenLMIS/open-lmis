@@ -106,9 +106,9 @@ public class DistributionVisitInformationSyncTest extends TestCaseHelper {
   }
 
   @Test(groups = {"distribution"})
-  public void testVisitInformationPageAndFacilityIndicatorWhenFacilityVisited() throws SQLException {
+  public void testVisitInformationPageAndFacilityIndicatorWhenFacilityVisitedAndSync() throws SQLException {
     dbWrapper.addRefrigeratorToFacility("LG", "yu", "Hry3", visitInformationData.get(FIRST_FACILITY_CODE));
-    loginPage.loginAs(visitInformationData.get(USER), visitInformationData.get(PASSWORD));
+    HomePage homePage = loginPage.loginAs(visitInformationData.get(USER), visitInformationData.get(PASSWORD));
     initiateDistribution(visitInformationData.get(FIRST_DELIVERY_ZONE_NAME), visitInformationData.get(VACCINES_PROGRAM));
     VisitInformationPage visitInformationPage = facilityListPage.selectFacility(visitInformationData.get(FIRST_FACILITY_CODE));
     facilityListPage.verifyFacilityIndicatorColor("Overall", "RED");
@@ -130,13 +130,41 @@ public class DistributionVisitInformationSyncTest extends TestCaseHelper {
     visitInformationPage.verifyIndicator("AMBER");
 
     fillFacilityData(true);
+
+    DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
+    distributionPage.clickSyncDistribution(1);
+    assertEquals("No facility for the chosen zone, program and period is ready to be sync", distributionPage.getSyncAlertMessage());
+    distributionPage.clickRecordData(1);
+    facilityListPage.selectFacility(visitInformationData.get(FIRST_FACILITY_CODE));
+
     facilityListPage.verifyFacilityIndicatorColor("Overall", "AMBER");
     visitInformationPage.enterVerifiedByTitle("VerifyTitle");
     visitInformationPage.verifyIndicator("GREEN");
     facilityListPage.verifyFacilityIndicatorColor("Overall", "GREEN");
     visitInformationPage.enterVehicleId("12U3-93");
     visitInformationPage.verifyIndicator("GREEN");
+    visitInformationPage.enterVehicleId("012U3-93");
     facilityListPage.verifyFacilityIndicatorColor("Overall", "GREEN");
+
+    distributionPage = homePage.navigateToDistributionWhenOnline();
+    distributionPage.syncDistribution(1);
+    assertTrue(distributionPage.getSyncMessage().contains(visitInformationData.get(FIRST_FACILITY_CODE) + "-Village Dispensary"));
+    distributionPage.syncDistributionMessageDone();
+
+    verifyVisitInformationDataWhenFacilityWasVisitedInDatabase(visitInformationData.get(FIRST_FACILITY_CODE), "Some Observations",
+      "ConfirmName", "ConfirmTitle", "VerifyName", "VerifyTitle", "012U3-93");
+    homePage.navigateToDistributionWhenOnline();
+    distributionPage.clickRecordData(1);
+    facilityListPage.selectFacility(visitInformationData.get(FIRST_FACILITY_CODE));
+    visitInformationPage.verifyAllFieldsDisabled();
+    assertTrue(visitInformationPage.isYesRadioButtonSelected());
+    assertEquals("Some Observations", visitInformationPage.getObservations());
+    assertEquals("ConfirmName", visitInformationPage.getConfirmedByName());
+    assertEquals("ConfirmTitle", visitInformationPage.getConfirmedByTitle());
+    assertEquals("VerifyName", visitInformationPage.getVerifiedByName());
+    assertEquals("VerifyTitle", visitInformationPage.getVerifiedByTitle());
+    assertEquals("012U3-93", visitInformationPage.getVehicleId());
+    assertEquals("01/" + new SimpleDateFormat("MM/yyyy").format(new Date()), visitInformationPage.getVisitDate());
   }
 
   @Test(groups = {"distribution"})

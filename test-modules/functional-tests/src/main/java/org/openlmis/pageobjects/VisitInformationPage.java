@@ -323,4 +323,39 @@ public class VisitInformationPage extends DistributionTab {
     testWebDriver.waitForElementToAppear(other);
     return other.isSelected();
   }
+
+  public String getObservations() {
+    testWebDriver.waitForElementToAppear(observationsField);
+    return observationsField.getAttribute("value");
+  }
+
+  public String getConfirmedByName() {
+    testWebDriver.waitForElementToAppear(confirmedByNameField);
+    return confirmedByNameField.getAttribute("value");
+  }
+
+  public String getConfirmedByTitle() {
+    testWebDriver.waitForElementToAppear(confirmedByTitleField);
+    return confirmedByTitleField.getAttribute("value");
+  }
+
+  public String getVerifiedByName() {
+    testWebDriver.waitForElementToAppear(verifiedByNameField);
+    return verifiedByNameField.getAttribute("value");
+  }
+
+  public String getVerifiedByTitle() {
+    testWebDriver.waitForElementToAppear(verifiedByTitleField);
+    return verifiedByTitleField.getAttribute("value");
+  }
+
+  public String getVisitDateAsFirstOfCurrentMonth() {
+    testWebDriver.waitForElementToAppear(visitDateField);
+    return visitDateField.getAttribute("value");
+  }
+
+  public String getVehicleId() {
+    testWebDriver.waitForElementToAppear(vehicleIdField);
+    return vehicleIdField.getAttribute("value");
+  }
 }
