@@ -42,7 +42,7 @@
         <tbody ng-repeat="podLineItem in pageLineItems">
         <tr>
           <td class="productCategory" id="category{{$index}}" colspan="{{columns.length}}"
-              ng-show="isCategorySameAsPreviousLineItem($index)"
+              ng-show="isCategoryDifferentFromPreviousLineItem($index)"
               ng-bind="podLineItem.productCategory">
           </td>
         </tr>

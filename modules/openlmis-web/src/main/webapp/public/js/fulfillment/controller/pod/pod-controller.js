@@ -99,8 +99,8 @@ function PODController($scope, orderPOD, OrderPOD, pageSize, $routeParams, $loca
     }
   };
 
-  $scope.isCategorySameAsPreviousLineItem = function (index) {
-    return !((index > 0 ) && ($scope.pod.podLineItems[index].productCategory == $scope.pod.podLineItems[index - 1].productCategory));
+  $scope.isCategoryDifferentFromPreviousLineItem = function (index) {
+    return !((index > 0 ) && ($scope.pageLineItems[index].productCategory == $scope.pageLineItems[index - 1].productCategory));
   };
 
   $scope.cssClassForQuantityReceived = function (quantityReceived) {
