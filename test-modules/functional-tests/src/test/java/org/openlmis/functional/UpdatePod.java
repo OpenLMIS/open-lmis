@@ -72,12 +72,12 @@ public class UpdatePod extends TestCaseHelper {
     assertTrue(updatePodPage.isFullSupplyTickIconDisplayed(1));
     verifyRequisitionTypeAndColor("regular");
 
-    enterPodData(updatePodPage, "200", "openlmis open source logistic management system", 1);
-    verifyQuantityReceivedAndNotes(updatePodPage, "200", "openlmis open source logistic management system");
+    updatePodPage.enterPodData("200", "openlmis open source logistic management system", 1);
+    updatePodPage.verifyQuantityReceivedAndNotes("200", "openlmis open source logistic management system");
     verifyPodDataInDatabase("200", "openlmis open source logistic management system", "P10");
 
-    enterPodData(updatePodPage, "990", "openlmis project", 1);
-    verifyQuantityReceivedAndNotes(updatePodPage, "990", "openlmis project");
+    updatePodPage.enterPodData("990", "openlmis project", 1);
+    updatePodPage.verifyQuantityReceivedAndNotes("990", "openlmis project");
     verifyPodDataInDatabase("990", "openlmis project", "P10");
   }
 
@@ -147,7 +147,6 @@ public class UpdatePod extends TestCaseHelper {
     testDataForShipment(999, true, "P10", 99898998);
     dbWrapper.updateFieldValue("orders", "status", "PACKED", null, null);
 
-
     HomePage homePage = loginPage.loginAs(updatePODData.get(USER), updatePODData.get(PASSWORD));
     ManagePodPage managePodPage = homePage.navigateManagePOD();
     UpdatePodPage updatePodPage = managePodPage.selectRequisitionToUpdatePod(1);
@@ -190,7 +189,7 @@ public class UpdatePod extends TestCaseHelper {
   @Test(groups = {"requisition"})
   public void testVerifyUpdatePODForPackedOrdersWhenPacksToShipAndQuantityShippedIsZero() throws SQLException {
     initiateRnrAndConvertToOrder(false, 0);
-    testDataForShipment(0, true, "P10", 0);
+    super.testDataForShipment(0, true, "P10", 0);
     dbWrapper.updateFieldValue("orders", "status", "PACKED", null, null);
 
     HomePage homePage = loginPage.loginAs(updatePODData.get(USER), updatePODData.get(PASSWORD));
@@ -262,27 +261,6 @@ public class UpdatePod extends TestCaseHelper {
     setupRequisitionGroupData("RG1", "RG2", "N1", "N2", "F10", "F11");
     dbWrapper.insertSupplyLines("N1", program, "F10", true);
     dbWrapper.insertFulfilmentRoleAssignment("storeInCharge", "store in-charge", "F10");
-  }
-
-  private void testDataForShipment(Integer packsToShip, Boolean fullSupplyFlag, String productCode, int quantityShipped) throws SQLException {
-    dbWrapper.updateFieldValue("orders", "status", "RELEASED", null, null);
-    int id = dbWrapper.getMaxRnrID();
-    dbWrapper.insertShipmentData(id, productCode, quantityShipped);
-    dbWrapper.updateFieldValue("shipment_line_items", "packsToShip", packsToShip);
-    dbWrapper.updateFieldValue("shipment_line_items", "fullSupply", fullSupplyFlag);
-  }
-
-  private void enterPodData(UpdatePodPage updatePodPage, String quantityReceived, String notes, int rowNumber) {
-    updatePodPage.setQuantityReceived(rowNumber, quantityReceived);
-    updatePodPage.setNotes(rowNumber, notes);
-    updatePodPage.clickSave();
-    assertTrue(updatePodPage.isPodSaveSuccessMessageDisplayed());
-    testWebDriver.refresh();
-  }
-
-  private void verifyQuantityReceivedAndNotes(UpdatePodPage updatePodPage, String quantityReceived, String notes) {
-    assertEquals(quantityReceived, updatePodPage.getQuantityReceived(1));
-    assertEquals(notes, updatePodPage.getNotes(1));
   }
 
   @AfterMethod(groups = "requisition")

@@ -605,6 +605,13 @@ public class TestCaseHelper {
     return (value.equals("t") || value.equals("true")) ? Boolean.TRUE : Boolean.FALSE;
   }
 
+  protected void testDataForShipment(Integer packsToShip, Boolean fullSupplyFlag, String productCode, int quantityShipped) throws SQLException {
+    dbWrapper.updateFieldValue("orders", "status", "RELEASED", null, null);
+    int id = dbWrapper.getMaxRnrID();
+    dbWrapper.insertShipmentData(id, productCode, quantityShipped);
+    dbWrapper.updateFieldValue("shipment_line_items", "packsToShip", packsToShip);
+    dbWrapper.updateFieldValue("shipment_line_items", "fullSupply", fullSupplyFlag);
+  }
 }
 
 

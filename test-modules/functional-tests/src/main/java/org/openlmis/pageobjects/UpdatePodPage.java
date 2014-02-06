@@ -8,6 +8,8 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 
+import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
+import static com.thoughtworks.selenium.SeleneseTestCase.assertEquals;
 import static org.openqa.selenium.support.How.ID;
 
 public class UpdatePodPage extends Page {
@@ -282,5 +284,18 @@ public class UpdatePodPage extends Page {
     testWebDriver.waitForAjax();
     testWebDriver.waitForElementToAppear(PodSaveSuccessMsg);
     return PodSaveSuccessMsg.isDisplayed();
+  }
+
+  public void enterPodData(String quantityReceived, String notes, int rowNumber) {
+    setQuantityReceived(rowNumber, quantityReceived);
+    setNotes(rowNumber, notes);
+    clickSave();
+    assertTrue(isPodSaveSuccessMessageDisplayed());
+    testWebDriver.refresh();
+  }
+
+  public void verifyQuantityReceivedAndNotes(String quantityReceived, String notes) {
+    assertEquals(quantityReceived,getQuantityReceived(1));
+    assertEquals(notes,getNotes(1));
   }
 }

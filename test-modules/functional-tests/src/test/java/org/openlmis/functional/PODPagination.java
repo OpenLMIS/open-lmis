@@ -212,8 +212,8 @@ public class PODPagination extends TestCaseHelper {
     verifyNumberOfProductsVisibleOnPage(10);
     verifyProductDisplayOrderOnPage(new String[]{"F0", "F1", "F2", "F3", "F4", "F5", "F6", "F7", "F8", "F9"});
     verifyCategoryDisplayOrderOnPage(new String[]{"Antibiotic", "", "", "", "", "", "", "", "", ""});
-    enterPodData(updatePodPage, "110", "openlmis openlmis", 1);
-    enterPodData(updatePodPage, "200", "openlmis openlmis", 5);
+    updatePodPage.enterPodData("110", "openlmis openlmis", 1);
+    updatePodPage.enterPodData("200", "openlmis openlmis", 5);
 
     navigateToPage(2);
     verifyPageNumberSelected(2);
@@ -221,8 +221,8 @@ public class PODPagination extends TestCaseHelper {
     verifyNumberOfProductsVisibleOnPage(10);
     verifyProductDisplayOrderOnPage(new String[]{"NF0", "NF1", "NF2", "NF3", "NF4", "NF5", "NF6", "NF7", "NF8", "NF9"});
     verifyCategoryDisplayOrderOnPage(new String[]{"Antibiotic", "", "", "", "", "", "", "", "", ""});
-    enterPodData(updatePodPage, "10", "openlmis", 1);
-    enterPodData(updatePodPage, "11", "openlmis openlmis project", 10);
+    updatePodPage.enterPodData("10", "openlmis", 1);
+    updatePodPage.enterPodData("11", "openlmis openlmis project", 10);
 
 
     updatePodPage.navigateToFirstPage();
@@ -322,23 +322,7 @@ public class PODPagination extends TestCaseHelper {
     }
   }
 
-  private void testDataForShipment(Integer packsToShip, Boolean fullSupplyFlag, String productCode, int quantityShipped) throws SQLException {
-    dbWrapper.updateFieldValue("orders", "status", "RELEASED", null, null);
-    int id = dbWrapper.getMaxRnrID();
-    dbWrapper.insertShipmentData(id, productCode, quantityShipped);
-    dbWrapper.updateFieldValue("shipment_line_items", "packsToShip", packsToShip);
-    dbWrapper.updateFieldValue("shipment_line_items", "fullSupply", fullSupplyFlag);
-  }
-
-  private void enterPodData(UpdatePodPage updatePodPage, String quantityReceived, String notes, int rowNumber) {
-    updatePodPage.setQuantityReceived(rowNumber, quantityReceived);
-    updatePodPage.setNotes(rowNumber, notes);
-    updatePodPage.clickSave();
-    assertTrue(updatePodPage.isPodSaveSuccessMessageDisplayed());
-    testWebDriver.refresh();
-  }
-
-  private void verifyQuantityReceivedAndNotes(UpdatePodPage updatePodPage, String quantityReceived, String notes, Integer rowNumber) {
+  public void verifyQuantityReceivedAndNotes(UpdatePodPage updatePodPage, String quantityReceived, String notes, Integer rowNumber) {
     assertEquals(quantityReceived, updatePodPage.getQuantityReceived(rowNumber));
     assertEquals(notes, updatePodPage.getNotes(rowNumber));
   }

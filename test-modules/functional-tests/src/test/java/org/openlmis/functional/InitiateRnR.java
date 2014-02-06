@@ -242,11 +242,7 @@ public class InitiateRnR extends TestCaseHelper {
 
   @When("^I receive shipment for the order$")
   public void insertShipmentData() throws SQLException {
-    dbWrapper.updateFieldValue("orders", "status", "RELEASED", null, null);
-    int id = dbWrapper.getMaxRnrID();
-    dbWrapper.insertShipmentData(id, "P10", 1111);
-    dbWrapper.updateFieldValue("shipment_line_items", "packsToShip", 100);
-    dbWrapper.updateFieldValue("shipment_line_items", "fullSupply", true);
+    testDataForShipment(100, true, "P10", 1111);
     dbWrapper.updateFieldValue("orders", "status", "PACKED", null, null);
   }
 
