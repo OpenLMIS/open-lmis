@@ -82,31 +82,31 @@ public class ShipmentMapperIT {
   @Autowired
   SupplyLineMapper supplyLineMapper;
 
-
-  @Test
-  public void shouldInsertShippedLineItems() throws Exception {
-
-    ShipmentLineItem shipmentLineItem = createShippedLineItem();
-    mapper.insertShippedLineItem(shipmentLineItem);
-
-    assertThat(shipmentLineItem.getId(), is(notNullValue()));
-
-    String fetchShipmentFileInfoQuery = "Select * from shipment_line_items where id = ?";
-    ResultSet shipmentFileInfoResultSet = queryExecutor.execute(fetchShipmentFileInfoQuery, shipmentLineItem.getId());
-    shipmentFileInfoResultSet.next();
-    assertThat(shipmentFileInfoResultSet.getLong("orderId"), is(shipmentLineItem.getOrderId()));
-    assertThat(shipmentFileInfoResultSet.getString("productCode"), is(shipmentLineItem.getProductCode()));
-    assertThat(shipmentFileInfoResultSet.getInt("quantityShipped"), is(shipmentLineItem.getQuantityShipped()));
-
-    assertThat(shipmentFileInfoResultSet.getString("productName"), is(shipmentLineItem.getProductName()));
-    assertThat(shipmentFileInfoResultSet.getString("dispensingUnit"), is(shipmentLineItem.getDispensingUnit()));
-    assertThat(shipmentFileInfoResultSet.getString("productCategory"), is(shipmentLineItem.getProductCategory()));
-    assertThat(shipmentFileInfoResultSet.getInt("packsToShip"), is(shipmentLineItem.getPacksToShip()));
-    assertThat(shipmentFileInfoResultSet.getInt("productCategoryDisplayOrder"),
-      is(shipmentLineItem.getProductCategoryDisplayOrder()));
-    assertThat(shipmentFileInfoResultSet.getInt("productDisplayOrder"), is(shipmentLineItem.getProductDisplayOrder()));
-    assertThat(shipmentFileInfoResultSet.getBoolean("fullSupply"), is(shipmentLineItem.getFullSupply()));
-  }
+//
+//  @Test
+//  public void shouldInsertShippedLineItems() throws Exception {
+//
+//    ShipmentLineItem shipmentLineItem = createShippedLineItem();
+//    mapper.insertShippedLineItem(shipmentLineItem);
+//
+//    assertThat(shipmentLineItem.getId(), is(notNullValue()));
+//
+//    String fetchShipmentFileInfoQuery = "Select * from shipment_line_items where id = ?";
+//    ResultSet shipmentFileInfoResultSet = queryExecutor.execute(fetchShipmentFileInfoQuery, shipmentLineItem.getId());
+//    shipmentFileInfoResultSet.next();
+//    assertThat(shipmentFileInfoResultSet.getLong("orderId"), is(shipmentLineItem.getOrderId()));
+//    assertThat(shipmentFileInfoResultSet.getString("productCode"), is(shipmentLineItem.getProductCode()));
+//    assertThat(shipmentFileInfoResultSet.getInt("quantityShipped"), is(shipmentLineItem.getQuantityShipped()));
+//
+//    assertThat(shipmentFileInfoResultSet.getString("productName"), is(shipmentLineItem.getProductName()));
+//    assertThat(shipmentFileInfoResultSet.getString("dispensingUnit"), is(shipmentLineItem.getDispensingUnit()));
+//    assertThat(shipmentFileInfoResultSet.getString("productCategory"), is(shipmentLineItem.getProductCategory()));
+//    assertThat(shipmentFileInfoResultSet.getInt("packsToShip"), is(shipmentLineItem.getPacksToShip()));
+//    assertThat(shipmentFileInfoResultSet.getInt("productCategoryDisplayOrder"),
+//      is(shipmentLineItem.getProductCategoryDisplayOrder()));
+//    assertThat(shipmentFileInfoResultSet.getInt("productDisplayOrder"), is(shipmentLineItem.getProductDisplayOrder()));
+//    assertThat(shipmentFileInfoResultSet.getBoolean("fullSupply"), is(shipmentLineItem.getFullSupply()));
+//  }
 
   private ShipmentLineItem createShippedLineItem() {
     Product product = make(a(defaultProduct));
@@ -175,16 +175,16 @@ public class ShipmentMapperIT {
     assertThat(result.getId(), is(shipmentFileInfo.getId()));
   }
 
-  @Test
-  public void shouldSelectShippedLineItem() throws Exception {
-    ShipmentLineItem shipmentLineItem = createShippedLineItem();
-
-    mapper.insertShippedLineItem(shipmentLineItem);
-
-    ShipmentLineItem returnedShipmentLineItem = mapper.getShippedLineItem(shipmentLineItem);
-
-    assertThat(returnedShipmentLineItem, is(shipmentLineItem));
-  }
+//  @Test
+//  public void shouldSelectShippedLineItem() throws Exception {
+//    ShipmentLineItem shipmentLineItem = createShippedLineItem();
+//
+//    mapper.insertShippedLineItem(shipmentLineItem);
+//
+//    ShipmentLineItem returnedShipmentLineItem = mapper.getShippedLineItem(shipmentLineItem);
+//
+//    assertThat(returnedShipmentLineItem, is(shipmentLineItem));
+//  }
 
   @Test
   public void shouldUpdateShippedLineItem() throws Exception {
@@ -200,29 +200,29 @@ public class ShipmentMapperIT {
     assertThat(shipmentLineItemFromDB.getQuantityShipped(), is(10));
   }
 
-  @Test
-  public void shouldNotUpdateProductRelatedFieldsShippedLineItemFields() throws Exception {
-    ShipmentLineItem shipmentLineItem = createShippedLineItem();
-
-    mapper.insertShippedLineItem(shipmentLineItem);
-
-    shipmentLineItem.setQuantityShipped(10);
-    shipmentLineItem.setProductCategoryDisplayOrder(100);
-    shipmentLineItem.setProductDisplayOrder(200);
-    shipmentLineItem.setFullSupply(false);
-    shipmentLineItem.setProductCategory("New Category");
-
-    mapper.updateShippedLineItem(shipmentLineItem);
-
-    ShipmentLineItem shipmentLineItemFromDB = mapper.getShippedLineItem(shipmentLineItem);
-
-    assertThat(shipmentLineItemFromDB.getQuantityShipped(), is(10));
-    assertThat(shipmentLineItemFromDB.getProductCategoryDisplayOrder(),
-      is(ShipmentLineItemBuilder.defaultProductCategoryDisplayOrder));
-    assertThat(shipmentLineItemFromDB.getProductDisplayOrder(), is(ShipmentLineItemBuilder.defaultProductDisplayOrder));
-    assertThat(shipmentLineItemFromDB.getFullSupply(), is(ShipmentLineItemBuilder.defaultFullSupply));
-    assertThat(shipmentLineItemFromDB.getProductCategory(), is(ShipmentLineItemBuilder.defaultProductCategory));
-  }
+//  @Test
+//  public void shouldNotUpdateProductRelatedFieldsShippedLineItemFields() throws Exception {
+//    ShipmentLineItem shipmentLineItem = createShippedLineItem();
+//
+//    mapper.insertShippedLineItem(shipmentLineItem);
+//
+//    shipmentLineItem.setQuantityShipped(10);
+//    shipmentLineItem.setProductCategoryDisplayOrder(100);
+//    shipmentLineItem.setProductDisplayOrder(200);
+//    shipmentLineItem.setFullSupply(false);
+//    shipmentLineItem.setProductCategory("New Category");
+//
+//    mapper.updateShippedLineItem(shipmentLineItem);
+//
+//    ShipmentLineItem shipmentLineItemFromDB = mapper.getShippedLineItem(shipmentLineItem);
+//
+//    assertThat(shipmentLineItemFromDB.getQuantityShipped(), is(10));
+//    assertThat(shipmentLineItemFromDB.getProductCategoryDisplayOrder(),
+//      is(ShipmentLineItemBuilder.defaultProductCategoryDisplayOrder));
+//    assertThat(shipmentLineItemFromDB.getProductDisplayOrder(), is(ShipmentLineItemBuilder.defaultProductDisplayOrder));
+//    assertThat(shipmentLineItemFromDB.getFullSupply(), is(ShipmentLineItemBuilder.defaultFullSupply));
+//    assertThat(shipmentLineItemFromDB.getProductCategory(), is(ShipmentLineItemBuilder.defaultProductCategory));
+//  }
 
   @Test
   public void shouldGetProcessedTimestampForShippedLineItem() throws Exception {
@@ -236,14 +236,14 @@ public class ShipmentMapperIT {
     assertThat(date, is(shipmentLineItemFromDB.getModifiedDate()));
   }
 
-  @Test
-  public void shouldReturnLineItemsForAnOrder() throws Exception {
-    ShipmentLineItem shipmentLineItem = createShippedLineItem();
-    mapper.insertShippedLineItem(shipmentLineItem);
-
-    Long orderId = shipmentLineItem.getOrderId();
-    List<ShipmentLineItem> lineItems = mapper.getLineItems(orderId);
-
-    assertThat(lineItems, hasItem(shipmentLineItem));
-  }
+//  @Test
+//  public void shouldReturnLineItemsForAnOrder() throws Exception {
+//    ShipmentLineItem shipmentLineItem = createShippedLineItem();
+//    mapper.insertShippedLineItem(shipmentLineItem);
+//
+//    Long orderId = shipmentLineItem.getOrderId();
+//    List<ShipmentLineItem> lineItems = mapper.getLineItems(orderId);
+//
+//    assertThat(lineItems, hasItem(shipmentLineItem));
+//  }
 }
