@@ -221,7 +221,7 @@ describe('PODController', function () {
       $httpBackend.flush();
 
       expect(scope.message).toEqual('successful');
-      expect(scope.order.alreadyConfirmed).toBeTruthy();
+      expect(scope.podAlreadySubmitted).toBeTruthy();
     });
 
     it('should not submit pod if not confirmed', function () {

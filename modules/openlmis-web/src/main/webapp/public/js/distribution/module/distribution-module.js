@@ -100,3 +100,16 @@ distributionModule.directive('notRecorded', function ($timeout) {
     }
   };
 });
+
+distributionModule.directive('disableForm', function ($timeout) {
+  return {
+    require: '?ngModel',
+    link: function (scope, element) {
+      $timeout(function () {
+        if (element.attr('disable-form') === "true") {
+          element.find('input, textarea').attr('disabled', 'disabled');
+        }
+      });
+    }
+  };
+});

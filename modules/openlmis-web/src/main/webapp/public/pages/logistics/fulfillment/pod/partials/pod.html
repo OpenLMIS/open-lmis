@@ -26,7 +26,7 @@
     </div>
 
   </div>
-  <form id="podForm" name="podForm" disable-form="{{order.alreadyReceived}}">
+  <form id="podForm" name="podForm">
     <div ng-hide="pageLineItems.length" class="alert alert-info" id="noProductsLabel"
          openlmis-message="label.no.products"></div>
     <div id="pod" ng-show="pageLineItems.length" class="rnr-table">
@@ -72,7 +72,8 @@
                    ng-class="cssClassForQuantityReceived(podLineItem.quantityReceived)"
                    ng-model="podLineItem.quantityReceived" ng-trim=false
                    numeric-validator="positiveInteger" maxlength="8"
-                   error-holder="receivedQuantityError{{$index}}"/>
+                   error-holder="receivedQuantityError{{$index}}"
+                   ng-disabled="podAlreadySubmitted"/>
 
             <div class="input-error-parent-cell">
             <span id="receivedQuantityError{{$index}}"
@@ -83,7 +84,7 @@
           </td>
           <td class="cell-input">
             <input class="col-remarks" type="text" maxlength="250" ng-model="podLineItem.notes"
-                   id="notes{{$index}}"></span>
+                   id="notes{{$index}}" ng-disabled="podAlreadySubmitted"></span>
           </td>
         </tr>
         </tbody>
@@ -96,9 +97,9 @@
     <div form-toolbar id="action_buttons" class="action-buttons">
       <div class="form-cell button-row">
         <input id=saveButton type="button" class="btn btn-primary save-button" ng-click="save()"
-               openlmis-message="button.save"/>
+               openlmis-message="button.save" ng-disabled="podAlreadySubmitted"/>
         <input id=submitButton type="button" class="btn btn-primary submit-button" ng-click="submit()"
-               openlmis-message="button.submit"/>
+               openlmis-message="button.submit" ng-disabled="podAlreadySubmitted"/>
       </div>
       <div class="toolbar-error" id="saveFailMessage" fade-out="3000" openlmis-message="error" ng-show="error"></div>
       <div class="toolbar-success" id="saveSuccessMsgDiv" fade-out="3000" openlmis-message="message"

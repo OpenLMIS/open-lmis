@@ -193,19 +193,6 @@ app.positiveInteger = function (value, errorHolder) {
   return valid;
 };
 
-app.directive('disableForm', function ($timeout) {
-  return {
-    require: '?ngModel',
-    link: function (scope, element) {
-      $timeout(function () {
-        if (element.attr('disable-form') === "true") {
-          element.find('input, textarea').attr('disabled', 'disabled');
-        }
-      });
-    }
-  };
-});
-
 app.run(function ($rootScope) {
   $rootScope.$on('$routeChangeStart', function () {
     angular.element('#ui-datepicker-div').hide();

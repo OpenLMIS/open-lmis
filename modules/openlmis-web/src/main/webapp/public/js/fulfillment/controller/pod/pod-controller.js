@@ -13,6 +13,7 @@ function PODController($scope, orderPOD, OrderPOD, pageSize, $routeParams, $loca
   $scope.pageSize = pageSize;
   $scope.pod = new ProofOfDelivery(orderPOD.orderPOD);
   $scope.order = orderPOD.order;
+  $scope.podAlreadySubmitted = orderPOD.order.alreadyReceived;
   $scope.numberOfPages = Math.ceil($scope.pod.podLineItems.length / $scope.pageSize) || 1;
   $scope.requisitionType = $scope.order.emergency ? "requisition.type.emergency" : "requisition.type.regular";
 
@@ -89,7 +90,7 @@ function PODController($scope, orderPOD, OrderPOD, pageSize, $routeParams, $loca
       confirm().then(function () {
         OrderPOD.update({id: $routeParams.id, action: 'submit'}, function (data) {
           $scope.message = data.success;
-          $scope.order.alreadyConfirmed = true;
+          $scope.podAlreadySubmitted = true;
           $scope.error = undefined;
         }, function (response) {
           $scope.error = response.data.error;
