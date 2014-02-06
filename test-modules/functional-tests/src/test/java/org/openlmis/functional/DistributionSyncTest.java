@@ -16,6 +16,7 @@ import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.UiUtils.TestWebDriver;
 import org.openlmis.pageobjects.*;
 import org.openqa.selenium.JavascriptExecutor;
+import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Listeners;
@@ -283,6 +284,7 @@ public class DistributionSyncTest extends TestCaseHelper {
     DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
     distributionPage.syncDistribution(1);
     assertTrue(distributionPage.getSyncMessage().contains("F10-Village Dispensary"));
+    assertEquals(distributionPage.getSyncStatusMessage(), "Sync Status");
     distributionPage.syncDistributionMessageDone();
 
     verifySyncedDataInDatabase(distributionTestData.get(FIRST_FACILITY_CODE));

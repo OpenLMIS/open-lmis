@@ -82,6 +82,10 @@ public class DistributionPage extends Page {
   @FindBy(how = ID, using = "retryButton")
   private WebElement retryButton = null;
 
+  @FindBy(how = XPATH, using = "//span[@openlmis-message='syncProgressHeader']")
+  private WebElement syncStatusMessage = null;
+
+
   public DistributionPage(TestWebDriver driver) {
     super(driver);
     PageFactory.initElements(new AjaxElementLocatorFactory(TestWebDriver.getDriver(), 1), this);
@@ -290,5 +294,10 @@ public class DistributionPage extends Page {
   public void clickRetryButton() {
     testWebDriver.waitForElementToAppear(retryButton);
     retryButton.click();
+  }
+
+  public String getSyncStatusMessage() {
+    testWebDriver.waitForElementToAppear(syncStatusMessage);
+    return syncStatusMessage.getText();
   }
 }

@@ -207,6 +207,7 @@ public class E2EDistributionTest extends TestCaseHelper {
     testWebDriver.sleep(7000);
 
     distributionPage.clickRetryButton();
+    assertEquals(distributionPage.getSyncStatusMessage(), "Sync Status");
     assertTrue("Incorrect Sync Facility", distributionPage.getSyncMessage().contains("F10-Village Dispensary"));
 
     distributionPage.syncDistributionMessageDone();
