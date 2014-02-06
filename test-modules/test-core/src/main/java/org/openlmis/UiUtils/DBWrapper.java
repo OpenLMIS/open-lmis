@@ -353,6 +353,7 @@ public class DBWrapper {
     update("delete from facility_program_products");
     update("delete from program_products");
     update("delete from coverage_vaccination_products");
+    update("delete from coverage_product_vials");
     update("delete from products");
     update("delete from product_categories");
     update("delete from product_groups");
@@ -1384,9 +1385,8 @@ public class DBWrapper {
     return rs.getInt("id");
   }
 
-  public ResultSet getPodLineItemsDetails(Integer id, String productCode) throws SQLException {
-    ResultSet resultSet = query("select * from pod_line_items where productCode = '%s' AND podid = %d", productCode, id);
-    resultSet.next();
-    return resultSet;
+  public Map<String, String> getPodLineItemFor(Integer orderId, String productCode) throws SQLException {
+
+    return select("select * from pod_line_items where productCode = '%s' AND podid =(Select id from pod where orderId= %d )", productCode, orderId).get(0);
   }
 }

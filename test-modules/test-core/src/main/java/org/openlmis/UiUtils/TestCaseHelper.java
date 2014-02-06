@@ -13,6 +13,7 @@ package org.openlmis.UiUtils;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.UnreachableBrowserException;
+import org.testng.AssertJUnit;
 
 import java.io.*;
 import java.math.BigDecimal;
@@ -582,6 +583,13 @@ public class TestCaseHelper {
     assertEquals(femaleMobileBrigadeReading, fullCoveragesDetails.get("femaleoutreach"));
     assertEquals(maleHealthCenterReading, fullCoveragesDetails.get("malehealthcenter"));
     assertEquals(maleMobileBrigadeReading, fullCoveragesDetails.get("maleoutreach"));
+  }
+
+  public void verifyPodDataInDatabase(String quantityReceived, String notes, String productCode) throws SQLException {
+    Integer id = dbWrapper.getMaxRnrID();
+    Map<String, String> podLineItemFor = dbWrapper.getPodLineItemFor(id, productCode);
+    assertEquals(quantityReceived, podLineItemFor.get("quantityreceived"));
+    assertEquals(notes, podLineItemFor.get("notes"));
   }
 
   public static Boolean parsePostgresBoolean(String value) {

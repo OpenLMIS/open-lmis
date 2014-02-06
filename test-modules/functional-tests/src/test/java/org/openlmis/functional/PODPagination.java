@@ -21,7 +21,6 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.io.IOException;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
@@ -122,7 +121,7 @@ public class PODPagination extends TestCaseHelper {
   }
 
   @Test(groups = {"requisition"})
-  public void testRnRPaginationAndSpecificDisplayOrder() throws SQLException {
+  public void testRnRPaginationAndSpecificDisplayOrder() throws Exception {
     dbWrapper.setupMultipleProducts(podPaginationData.get(PROGRAM), "Lvl3 Hospital", 11, false);
     dbWrapper.insertRequisitionWithMultipleLineItems(11, podPaginationData.get(PROGRAM), true, "F10", false);
     dbWrapper.convertRequisitionToOrder(dbWrapper.getMaxRnrID(), "READY_TO_PACK", podPaginationData.get(USER));
@@ -146,7 +145,7 @@ public class PODPagination extends TestCaseHelper {
   }
 
   @Test(groups = {"requisition"})
-  public void testCategoryDefaultDisplayOrder() throws SQLException {
+  public void testCategoryDefaultDisplayOrder() throws Exception {
     dbWrapper.setupMultipleCategoryProducts(podPaginationData.get(PROGRAM), "Lvl3 Hospital", 11, true);
     dbWrapper.insertRequisitionWithMultipleLineItems(11, podPaginationData.get(PROGRAM), true, "F10", false);
     dbWrapper.convertRequisitionToOrder(dbWrapper.getMaxRnrID(), "READY_TO_PACK", podPaginationData.get(USER));
@@ -170,7 +169,7 @@ public class PODPagination extends TestCaseHelper {
   }
 
   @Test(groups = {"requisition"})
-  public void testCategorySpecificDisplayOrder() throws SQLException {
+  public void testCategorySpecificDisplayOrder() throws Exception {
     dbWrapper.setupMultipleCategoryProducts(podPaginationData.get(PROGRAM), "Lvl3 Hospital", 11, false);
     dbWrapper.insertRequisitionWithMultipleLineItems(11, podPaginationData.get(PROGRAM), true, "F10", false);
     dbWrapper.convertRequisitionToOrder(dbWrapper.getMaxRnrID(), "READY_TO_PACK", podPaginationData.get(USER));
@@ -342,13 +341,6 @@ public class PODPagination extends TestCaseHelper {
   private void verifyQuantityReceivedAndNotes(UpdatePodPage updatePodPage, String quantityReceived, String notes, Integer rowNumber) {
     assertEquals(quantityReceived, updatePodPage.getQuantityReceived(rowNumber));
     assertEquals(notes, updatePodPage.getNotes(rowNumber));
-  }
-
-  private void verifyPodDataInDatabase(String quantityReceived, String notes, String productCode) throws SQLException {
-    Integer id = dbWrapper.getMaxRnrID();
-    ResultSet podLineItemsDetails = dbWrapper.getPodLineItemsDetails(id, productCode);
-    assertEquals(quantityReceived, podLineItemsDetails.getString("quantityReceived"));
-    assertEquals(notes, podLineItemsDetails.getString("notes"));
   }
 
   @AfterMethod(groups = {"requisition"})

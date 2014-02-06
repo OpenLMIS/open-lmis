@@ -10,7 +10,6 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.io.IOException;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -56,7 +55,7 @@ public class UpdatePod extends TestCaseHelper {
   }
 
   @Test(groups = {"requisition"})
-  public void testVerifyManagePODValidFlowForRegularRnR() throws SQLException {
+  public void testVerifyUpdatePODForReleasedOrdersValidFlowForRegularRnR() throws Exception {
     initiateRnrAndConvertToOrder(false, 100);
 
     HomePage homePage = loginPage.loginAs(updatePODData.get(USER), updatePODData.get(PASSWORD));
@@ -82,28 +81,8 @@ public class UpdatePod extends TestCaseHelper {
     verifyPodDataInDatabase("990", "openlmis project", "P10");
   }
 
-  private void enterPodData(UpdatePodPage updatePodPage, String quantityReceived, String notes, int rowNumber) {
-    updatePodPage.setQuantityReceived(rowNumber, quantityReceived);
-    updatePodPage.setNotes(rowNumber, notes);
-    updatePodPage.clickSave();
-    assertTrue(updatePodPage.isPodSaveSuccessMessageDisplayed());
-    testWebDriver.refresh();
-  }
-
-  private void verifyQuantityReceivedAndNotes(UpdatePodPage updatePodPage, String quantityReceived, String notes) {
-    assertEquals(quantityReceived, updatePodPage.getQuantityReceived(1));
-    assertEquals(notes, updatePodPage.getNotes(1));
-  }
-
-  private void verifyPodDataInDatabase(String quantityReceived, String notes, String productCode) throws SQLException {
-    Integer id = dbWrapper.getMaxRnrID();
-    ResultSet podLineItemsDetails = dbWrapper.getPodLineItemsDetails(id, productCode);
-    assertEquals(quantityReceived, podLineItemsDetails.getString("quantityReceived"));
-    assertEquals(notes, podLineItemsDetails.getString("notes"));
-  }
-
   @Test(groups = {"requisition"})
-  public void testVerifyManagePODValidFlowForEmergencyRnR() throws SQLException {
+  public void testVerifyUpdatePODForReleasedOrdersValidFlowForEmergencyRnR() throws Exception {
     initiateRnrAndConvertToOrder(true, 100);
 
     HomePage homePage = loginPage.loginAs(updatePODData.get(USER), updatePODData.get(PASSWORD));
@@ -114,7 +93,7 @@ public class UpdatePod extends TestCaseHelper {
   }
 
   @Test(groups = {"requisition"})
-  public void testVerifyManagePODWhenPacksToShipIsZero() throws SQLException {
+  public void testVerifyUpdatePODForReleasedOrdersWhenPacksToShipIsZero() throws Exception {
     initiateRnrAndConvertToOrder(false, 0);
 
     HomePage homePage = loginPage.loginAs(updatePODData.get(USER), updatePODData.get(PASSWORD));
@@ -130,7 +109,7 @@ public class UpdatePod extends TestCaseHelper {
   }
 
   @Test(groups = {"requisition"})
-  public void testVerifyManagePODWhenMultipleProducts() throws SQLException {
+  public void testVerifyUpdatePODForReleasedOrdersWhenMultipleProducts() throws Exception {
     dbWrapper.setupMultipleProducts(updatePODData.get(PROGRAM), "Lvl3 Hospital", 1, true);
     dbWrapper.insertRequisitionWithMultipleLineItems(1, updatePODData.get(PROGRAM), true, "F10", false);
     dbWrapper.convertRequisitionToOrder(dbWrapper.getMaxRnrID(), "READY_TO_PACK", updatePODData.get(USER));
@@ -160,7 +139,6 @@ public class UpdatePod extends TestCaseHelper {
     verifyRequisitionTypeAndColor("emergency");
     updatePodPage.getPodTableData();
     assertNotEquals(updatePodPage.getPodTableData(), "F0");
-
   }
 
   @Test(groups = {"requisition"})
@@ -292,6 +270,19 @@ public class UpdatePod extends TestCaseHelper {
     dbWrapper.insertShipmentData(id, productCode, quantityShipped);
     dbWrapper.updateFieldValue("shipment_line_items", "packsToShip", packsToShip);
     dbWrapper.updateFieldValue("shipment_line_items", "fullSupply", fullSupplyFlag);
+  }
+
+  private void enterPodData(UpdatePodPage updatePodPage, String quantityReceived, String notes, int rowNumber) {
+    updatePodPage.setQuantityReceived(rowNumber, quantityReceived);
+    updatePodPage.setNotes(rowNumber, notes);
+    updatePodPage.clickSave();
+    assertTrue(updatePodPage.isPodSaveSuccessMessageDisplayed());
+    testWebDriver.refresh();
+  }
+
+  private void verifyQuantityReceivedAndNotes(UpdatePodPage updatePodPage, String quantityReceived, String notes) {
+    assertEquals(quantityReceived, updatePodPage.getQuantityReceived(1));
+    assertEquals(notes, updatePodPage.getNotes(1));
   }
 
   @AfterMethod(groups = "requisition")
