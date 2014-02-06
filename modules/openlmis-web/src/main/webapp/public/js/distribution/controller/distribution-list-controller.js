@@ -47,6 +47,7 @@ function DistributionListController($scope, SharedDistributions, SyncFacilityDis
             } else {
               facilityDistribution.status = $scope.DUPLICATE;
             }
+            $scope.distributionData.status = data.distributionStatus;
             defer.resolve(facilityDistribution);
             updateProgressBar();
           }, function () {
