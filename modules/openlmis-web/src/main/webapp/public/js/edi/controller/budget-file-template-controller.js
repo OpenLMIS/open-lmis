@@ -40,6 +40,11 @@ function BudgetFileTemplateController($scope, budgetFileTemplate, BudgetFileTemp
     return emptyPosition;
   }
 
+  $scope.cancelEdiSave = function () {
+    $scope.$parent.message = "";
+    $location.path('configure-edi-file');
+  };
+
   $scope.saveBudgetFileTemplate = function () {
     if (isInvalidPosition() || isDuplicatePosition()) {
       return;

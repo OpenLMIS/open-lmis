@@ -24,6 +24,11 @@ function OrderFileTemplateController($scope, orderFileTemplate, OrderFileTemplat
     });
   };
 
+  $scope.cancelEdiSave = function () {
+    $scope.$parent.message = "";
+    $location.path('configure-edi-file');
+  };
+
   $scope.addNewOrderFileColumn = function () {
     $scope.newOrderFileColumn.openLmisField = false;
     $scope.newOrderFileColumn.position = $scope.orderFileColumns.length + 1;

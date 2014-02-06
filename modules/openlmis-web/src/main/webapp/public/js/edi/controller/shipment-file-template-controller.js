@@ -40,6 +40,11 @@ function ShipmentFileTemplateController($scope, shipmentFileTemplate, ShipmentFi
     return emptyPosition;
   }
 
+  $scope.cancelEdiSave = function () {
+    $scope.$parent.message = "";
+    $location.path('configure-edi-file');
+  };
+
   $scope.saveShipmentFileTemplate = function () {
     if (isInvalidPosition() || isDuplicatePosition()) {
       return;
