@@ -42,7 +42,7 @@ public class ShipmentService {
       throw new DataException("error.negative.shipped.quantity");
     }
     RnrLineItem lineItem;
-    if ((lineItem = requisitionService.getLineItem(shipmentLineItem.getOrderId(), shipmentLineItem.getProductCode())) != null) {
+    if ((lineItem = requisitionService.getNonSkippedLineItem(shipmentLineItem.getOrderId(), shipmentLineItem.getProductCode())) != null) {
       shipmentLineItem.fillReferenceFields(lineItem);
     } else {
       Product product = productService.getByCode(shipmentLineItem.getProductCode());

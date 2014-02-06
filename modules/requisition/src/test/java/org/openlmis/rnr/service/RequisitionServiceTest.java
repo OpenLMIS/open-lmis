@@ -1402,9 +1402,9 @@ public class RequisitionServiceTest {
   @Test
   public void shouldGetLineItemWithRnrIdAndProductCode() throws Exception {
     RnrLineItem expectedLineItem = new RnrLineItem();
-    when(requisitionRepository.getLineItem(3L, "P100")).thenReturn(expectedLineItem);
+    when(requisitionRepository.getNonSkippedLineItem(3L, "P100")).thenReturn(expectedLineItem);
 
-    RnrLineItem lineItem = requisitionService.getLineItem(3L, "P100");
+    RnrLineItem lineItem = requisitionService.getNonSkippedLineItem(3L, "P100");
 
     assertThat(lineItem, is(expectedLineItem));
   }

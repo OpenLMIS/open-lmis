@@ -38,6 +38,7 @@ import java.util.List;
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.*;
 import static org.openlmis.core.builder.FacilityApprovedProductBuilder.defaultFacilityApprovedProduct;
 import static org.openlmis.core.builder.FacilityBuilder.defaultFacility;
@@ -554,9 +555,26 @@ public class RnrLineItemMapperIT {
     lineItem.setReportingDays(10);
     rnrLineItemMapper.insert(lineItem, lineItem.getPreviousNormalizedConsumptions().toString());
 
-    RnrLineItem actualLineItem = rnrLineItemMapper.getLineItem(rnr.getId(), facilityTypeApprovedProduct.getProgramProduct().getProduct().getCode());
+    RnrLineItem actualLineItem = rnrLineItemMapper.getNonSkippedLineItem(rnr.getId(), facilityTypeApprovedProduct.getProgramProduct().getProduct().getCode());
 
     assertThat(actualLineItem, is(lineItem));
+  }
+
+  @Test
+  public void shouldNotGetSkippedLineItemsWithRnrIdAndProductCode() throws Exception {
+    requisitionMapper.insert(rnr);
+    RnrLineItem lineItem = new RnrLineItem(rnr.getId(), facilityTypeApprovedProduct, MODIFIED_BY, 1L);
+    lineItem.setPacksToShip(20);
+    lineItem.setBeginningBalance(5);
+    lineItem.setFullSupply(true);
+    lineItem.setReportingDays(10);
+    rnrLineItemMapper.insert(lineItem, lineItem.getPreviousNormalizedConsumptions().toString());
+    lineItem.setSkipped(true);
+    rnrLineItemMapper.update(lineItem);
+
+    RnrLineItem actualLineItem = rnrLineItemMapper.getNonSkippedLineItem(rnr.getId(), facilityTypeApprovedProduct.getProgramProduct().getProduct().getCode());
+
+    assertThat(actualLineItem, is(nullValue()));
   }
 
   @Test
