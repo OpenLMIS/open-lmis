@@ -13,7 +13,6 @@ package org.openlmis.UiUtils;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.UnreachableBrowserException;
-import org.testng.AssertJUnit;
 
 import java.io.*;
 import java.math.BigDecimal;
@@ -21,7 +20,9 @@ import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -501,14 +502,18 @@ public class TestCaseHelper {
     assertEquals(testWebDriver.getElementById("previousPageLink").getCssValue("color"), "rgba(204, 204, 204, 1)");
   }
 
-  public void verifyVisitInformationDataInDatabase(String facilityCode, String observation, String confirmedByName,
-                                                   String confirmedByTitle, String verifiedByName, String verifiedByTitle) throws SQLException {
+  public void verifyVisitInformationDataWhenFacilityWasVisitedInDatabase(String facilityCode, String observation, String confirmedByName,
+                                                                         String confirmedByTitle, String verifiedByName,
+                                                                         String verifiedByTitle, String vehicleId) throws SQLException {
     Map<String, String> visitInformation = dbWrapper.getFacilityVisitDetails(facilityCode);
     assertEquals(observation, visitInformation.get("observations"));
     assertEquals(confirmedByName, visitInformation.get("confirmedByName"));
     assertEquals(confirmedByTitle, visitInformation.get("confirmedByTitle"));
     assertEquals(verifiedByName, visitInformation.get("verifiedByName"));
     assertEquals(verifiedByTitle, visitInformation.get("verifiedByTitle"));
+    assertEquals(new SimpleDateFormat("yyyy-MM").format(new Date()) + "-01 00:00:00", visitInformation.get("visitDate"));
+    assertEquals(vehicleId, visitInformation.get("vehicleId"));
+    assertEquals("t", visitInformation.get("visited"));
   }
 
   public void verifyEpiUseDataInDatabase(Integer stockAtFirstOfMonth, Integer receivedValue, Integer distributedValue, Integer loss,
