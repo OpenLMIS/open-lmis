@@ -35,24 +35,24 @@ var Charts = function () {
          
                 return data;
             }
-            
-                     
-            var options = {
-                    series:{
-                        bars:{show: true}
-                    },
-                    bars:{
-						  align:"center",
-                          barWidth:0.5
-                    },
-                    xaxis:{
-						axisLabel: "Sample tabs",
-						 axisLabelUseCanvas: true,
-						 axisLabelFontSizePixels: 12,
-						 axisLabelFontFamily: 'Verdana, Arial',
-						axisLabelPadding: 10,
-						ticks:ticks
-					},
+
+
+          var options = {
+            series: {
+              bars: {show: true}
+            },
+            bars: {
+              align: "center",
+              barWidth: 0.5
+            },
+            xaxis: {
+              axisLabel: "Sample tabs",
+              axisLabelUseCanvas: true,
+              axisLabelFontSizePixels: 12,
+              axisLabelFontFamily: 'Verdana, Arial',
+              axisLabelPadding: 10,
+              ticks: ticks
+            },
 					yaxis: {
 						axisLabel: "Data Size",
 						axisLabelUseCanvas: true,
@@ -95,7 +95,7 @@ var Charts = function () {
                     label: labels[i],
                     data: Math.floor(Math.random() * 100) + 1,
                     color: colors[i]
-                }
+                };
             }
             
             $.plot($("#pie_chart_1"), data, {
