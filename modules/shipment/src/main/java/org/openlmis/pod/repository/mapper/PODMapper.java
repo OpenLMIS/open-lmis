@@ -60,10 +60,10 @@ public interface PODMapper {
     many = @Many(select = "org.openlmis.pod.repository.mapper.PODMapper.getPODLineItemsByPODId")),})
   OrderPOD getPODByOrderId(Long orderId);
 
-  @Update({"UPDATE pod SET modifiedBy = #{modifiedBy} WHERE id = #{id}"})
+  @Update({"UPDATE pod SET modifiedBy = #{modifiedBy}, modifiedDate = DEFAULT WHERE id = #{id}"})
   void update(OrderPOD orderPOD);
 
   @Update(
-    {"UPDATE pod_line_items SET quantityReceived = #{quantityReceived}, notes = #{notes}, modifiedBy = #{modifiedBy} WHERE id = #{id}"})
+    {"UPDATE pod_line_items SET quantityReceived = #{quantityReceived}, notes = #{notes}, modifiedBy = #{modifiedBy}, modifiedDate = DEFAULT WHERE id = #{id}"})
   void updateLineItem(OrderPODLineItem lineItem);
 }
