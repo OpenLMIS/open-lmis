@@ -19,6 +19,7 @@ import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -63,7 +64,7 @@ public class PODController extends BaseController {
   }
 
   @RequestMapping(value = "/pods/{id}", method = GET, headers = ACCEPT_JSON)
-  @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'MANAGE_POD')")
+  @PostAuthorize("@fulfillmentPermissionService.hasPermission(principal, returnObject.body.data.get(\"order\").getId(), 'MANAGE_POD')")
   public ResponseEntity<OpenLmisResponse> getPOD(@PathVariable("id") Long podId) throws ParseException {
     OrderPOD orderPOD = service.getPodById(podId);
     OrderPODDTO orderPODDTO = OrderPODDTO.getOrderDetailsForPOD(orderService.getOrder(orderPOD.getOrderId()));
