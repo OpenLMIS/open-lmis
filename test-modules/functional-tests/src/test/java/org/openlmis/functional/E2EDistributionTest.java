@@ -60,7 +60,7 @@ public class E2EDistributionTest extends TestCaseHelper {
     dbWrapper.insertProgramProduct("Product6", programFirst, "10", "true");
     dbWrapper.deleteDeliveryZoneMembers(facilityCodeSecond);
     dbWrapper.setUpDataForChildCoverage();
-    dbWrapper.insertRegimenProductMapping();
+    insertRegimenProductMapping();
     configureISA();
 
     LoginPage loginPage = PageFactory.getInstanceOfLoginPage(testWebDriver, baseUrlGlobal);
@@ -292,7 +292,7 @@ public class E2EDistributionTest extends TestCaseHelper {
     dbWrapper.insertProgramProduct("Product6", programFirst, "10", "true");
     dbWrapper.deleteDeliveryZoneMembers(facilityCodeSecond);
     dbWrapper.setUpDataForChildCoverage();
-    dbWrapper.insertRegimenProductMapping();
+    insertRegimenProductMapping();
     configureISA();
 
     LoginPage loginPage = PageFactory.getInstanceOfLoginPage(testWebDriver, baseUrlGlobal);
@@ -413,6 +413,21 @@ public class E2EDistributionTest extends TestCaseHelper {
     ProgramProductISAPage programProductISAPage = homePage.navigateProgramProductISA();
     programProductISAPage.fillProgramProductISA("VACCINES", "90", "1", "50", "30", "0", "100", "2000", "333");
     homePage.logout();
+  }
+
+  private void insertRegimenProductMapping() throws SQLException {
+    dbWrapper.insertRegimensProductsInMappingTable("BCG", "BCG");
+    dbWrapper.insertRegimensProductsInMappingTable("Polio (Newborn)", "polio10dose");
+    dbWrapper.insertRegimensProductsInMappingTable("Polio 1st dose", "polio20dose");
+    dbWrapper.insertRegimensProductsInMappingTable("Polio 2nd dose", "polio10dose");
+    dbWrapper.insertRegimensProductsInMappingTable("Polio 3rd dose", "polio20dose");
+    dbWrapper.insertRegimensProductsInMappingTable("Penta 1st dose", "penta1");
+    dbWrapper.insertRegimensProductsInMappingTable("Penta 2nd dose", "penta10");
+    dbWrapper.insertRegimensProductsInMappingTable("Penta 3rd dose", "penta1");
+    dbWrapper.insertRegimensProductsInMappingTable("PCV10 1st dose", "P10");
+    dbWrapper.insertRegimensProductsInMappingTable("PCV10 2nd dose", "P10");
+    dbWrapper.insertRegimensProductsInMappingTable("PCV10 3rd dose", "P10");
+    dbWrapper.insertRegimensProductsInMappingTable("Measles", "Measles");
   }
 
   @AfterMethod(groups = {"offline"})

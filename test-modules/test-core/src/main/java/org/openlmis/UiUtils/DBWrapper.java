@@ -1291,24 +1291,6 @@ public class DBWrapper {
 
   }
 
-
-  public void insertRegimenProductMapping() throws SQLException {
-    update("INSERT INTO coverage_vaccination_products\n" +
-      "(vaccination, productCode, childCoverage) values\n" +
-      "('BCG', 'BCG', TRUE),\n" +
-      "('Polio (Newborn)', 'polio10dose',TRUE),\n" +
-      "('Polio 1st dose', 'polio20dose' ,TRUE),\n" +
-      "('Polio 2nd dose', 'polio10dose' ,TRUE),\n" +
-      "('Polio 3rd dose', 'polio20dose' ,TRUE),\n" +
-      "('Penta 1st dose', 'penta1',TRUE),\n" +
-      "('Penta 2nd dose', 'penta10',TRUE),\n" +
-      "('Penta 3rd dose', 'penta1',TRUE),\n" +
-      "('PCV10 1st dose', 'P10',TRUE),\n" +
-      "('PCV10 2nd dose', 'P10', TRUE),\n" +
-      "('PCV10 3rd dose', 'P10', TRUE),\n" +
-      "('Measles', 'Measles',TRUE);\n");
-  }
-
   public ResultSet getChildCoverageDetails(String vaccination, String facilityCode) throws SQLException {
     ResultSet resultSet = query("SELECT * FROM vaccination_child_coverage_line_items WHERE vaccination = '%s'" +
       "AND facilityVisitId=(Select id from facility_visits where facilityId=" +
@@ -1391,5 +1373,9 @@ public class DBWrapper {
   public Map<String, String> getPodLineItemFor(Integer orderId, String productCode) throws SQLException {
 
     return select("select * from pod_line_items where productCode = '%s' AND podid =(Select id from pod where orderId= %d )", productCode, orderId).get(0);
+  }
+
+  public void insertRegimensProductsInMappingTable(String vaccination, String productCode) throws SQLException {
+    update("INSERT INTO coverage_vaccination_products (vaccination, productCode, childCoverage) values ('%s' ,'%s' , TRUE)", vaccination, productCode);
   }
 }

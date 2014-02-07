@@ -115,6 +115,9 @@ public class ChildCoveragePage extends DistributionTab {
   @FindBy(how = ID, using = "MeaslesContainer")
   private static WebElement OpenedVialsMeasles = null;
 
+  @FindBy(how = ID, using = "childCoverageTable")
+  private static WebElement childCoverageTable = null;
+
   public ChildCoveragePage(TestWebDriver driver) {
     super(driver);
   }
@@ -317,5 +320,10 @@ public class ChildCoveragePage extends DistributionTab {
   public void removeFocusFromElement() {
     testWebDriver.waitForElementToAppear(childCoverageHeader);
     testWebDriver.moveToElement(childCoverageHeader);
+  }
+
+  public String getTextOfChildCoverageTable() {
+    testWebDriver.waitForElementToAppear(childCoverageTable);
+    return childCoverageTable.getText();
   }
 }
