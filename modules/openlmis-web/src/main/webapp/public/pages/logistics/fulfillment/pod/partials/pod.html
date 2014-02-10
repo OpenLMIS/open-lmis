@@ -20,7 +20,7 @@
          openlmis-message="error.multiple.pages|errorPages.length"></a>
       <ul class="dropdown-menu">
         <li ng-repeat="page in errorPages">
-          <a href="#/pods/{{pod.id}}?page={{page}}" ng-bind="page"></a>
+          <a href="#/pods/{{pod.id}}?page={{page}}" id="errorPageLink{{page}}" ng-bind="page"></a>
         </li>
       </ul>
     </div>

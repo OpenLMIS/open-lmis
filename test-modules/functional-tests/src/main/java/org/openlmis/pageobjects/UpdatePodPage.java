@@ -8,7 +8,6 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 
-import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
 import static com.thoughtworks.selenium.SeleneseTestCase.assertEquals;
 import static org.openqa.selenium.support.How.ID;
 
@@ -78,7 +77,19 @@ public class UpdatePodPage extends Page {
   private WebElement submitButton = null;
 
   @FindBy(how = ID, using = "saveSuccessMsgDiv")
-  private WebElement PodSaveSuccessMsg = null;
+  private WebElement podSuccessMsg = null;
+
+  @FindBy(how = ID, using = "saveFailMessage")
+  private WebElement podFailMsg = null;
+
+  @FindBy(how = ID, using = "pageErrors")
+  private WebElement pageErrors = null;
+
+  @FindBy(how = ID, using = "button_OK")
+  private WebElement okButton = null;
+
+  @FindBy(how = ID, using = "button_Cancel")
+  private WebElement cancelButton = null;
 
   public UpdatePodPage(TestWebDriver testWebDriver) {
     super(testWebDriver);
@@ -113,8 +124,8 @@ public class UpdatePodPage extends Page {
   }
 
   public String getQuantityReceived(int rowNumber) {
-    testWebDriver.scrollToElement(testWebDriver.findElement(By.id("quantityReceived" + (rowNumber - 1))));
-    return testWebDriver.findElement(By.id("quantityReceived" + (rowNumber - 1))).getAttribute("value");
+    testWebDriver.scrollToElement(testWebDriver.getElementById("quantityReceived" + (rowNumber - 1)));
+    return testWebDriver.getElementById("quantityReceived" + (rowNumber - 1)).getAttribute("value");
   }
 
   public String getNotes(int rowNumber) {
@@ -280,10 +291,10 @@ public class UpdatePodPage extends Page {
     saveButton.click();
   }
 
-  public Boolean isPodSaveSuccessMessageDisplayed() {
+  public Boolean isPodSuccessMessageDisplayed() {
     testWebDriver.waitForAjax();
-    testWebDriver.waitForElementToAppear(PodSaveSuccessMsg);
-    return PodSaveSuccessMsg.isDisplayed();
+    testWebDriver.waitForElementToAppear(podSuccessMsg);
+    return podSuccessMsg.isDisplayed();
   }
 
   public void enterPodData(String quantityReceived, String notes, int rowNumber) {
@@ -294,5 +305,65 @@ public class UpdatePodPage extends Page {
   public void verifyQuantityReceivedAndNotes(String quantityReceived, String notes, Integer rowNumber) {
     assertEquals(quantityReceived, getQuantityReceived(rowNumber));
     assertEquals(notes, getNotes(rowNumber));
+  }
+
+  public void clickSubmitButton() {
+    testWebDriver.waitForElementToAppear(submitButton);
+    submitButton.click();
+  }
+
+  public Boolean isPodFailMessageDisplayed() {
+    testWebDriver.waitForAjax();
+    testWebDriver.waitForElementToAppear(podFailMsg);
+    return podFailMsg.isDisplayed();
+  }
+
+  public String getPodFailMessage() {
+    testWebDriver.waitForElementToAppear(podFailMsg);
+    return podFailMsg.getText();
+  }
+
+  public String getPodSuccessMessage() {
+    testWebDriver.waitForElementToAppear(podSuccessMsg);
+    return podSuccessMsg.getText();
+  }
+
+  public String getPageErrorsMessage() {
+    testWebDriver.waitForElementToAppear(pageErrors);
+    return pageErrors.getText();
+  }
+
+  public void clickPageErrorsMessage() {
+    WebElement pageErrorClick = testWebDriver.getElementByXpath("//div[@id='pageErrors']/div/a");
+    testWebDriver.waitForElementToAppear(pageErrorClick);
+    pageErrorClick.click();
+  }
+
+  public void clickErrorPage(int pageNumber) {
+    WebElement errorPage = testWebDriver.getElementById("errorPageLink" + pageNumber);
+    testWebDriver.waitForElementToAppear(errorPage);
+    errorPage.click();
+  }
+
+  public void clickOkButton() {
+    testWebDriver.waitForElementToAppear(okButton);
+    okButton.click();
+  }
+
+  public void clickCancelButton() {
+    testWebDriver.waitForElementToAppear(cancelButton);
+    cancelButton.click();
+  }
+
+  public boolean isQuantityReceivedEnabled(int rowNumber) {
+    WebElement quantityReceived = testWebDriver.getElementById("quantityReceived" + (rowNumber - 1));
+    testWebDriver.scrollToElement(quantityReceived);
+    return quantityReceived.isEnabled();
+  }
+
+  public boolean isNotesEnabled(int rowNumber) {
+    WebElement notes = testWebDriver.getElementById("notes" + (rowNumber - 1));
+    testWebDriver.scrollToElement(notes);
+    return notes.isEnabled();
   }
 }

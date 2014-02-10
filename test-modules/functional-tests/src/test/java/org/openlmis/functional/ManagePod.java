@@ -60,7 +60,7 @@ public class ManagePod extends TestCaseHelper {
     convertOrderPage.clickConvertToOrderButton();
     convertOrderPage.clickOk();
     ManagePodPage managePodPage = homePage.navigateManagePOD();
-    managePodPage.verifyMessageOnManagePodScreen();
+    managePodPage.verifyNoProductMessage();
     String id = String.valueOf(dbWrapper.getMaxRnrID());
     assertEquals("TRANSFER_FAILED", dbWrapper.getAttributeFromTable("orders", "status", "id", id));
     assertTrue(dbWrapper.getAttributeFromTable("orders", "ftpComment", "id", id).contains("supplyline.missing"));
@@ -88,7 +88,7 @@ public class ManagePod extends TestCaseHelper {
 
     HomePage homePage = loginPage.loginAs(userSIC, password);
     ManagePodPage managePodPage = homePage.navigateManagePOD();
-    managePodPage.verifyMessageOnManagePodScreen();
+    managePodPage.verifyNoProductMessage();
   }
 
   @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-RnR")
@@ -101,7 +101,7 @@ public class ManagePod extends TestCaseHelper {
     dbWrapper.updateFieldValue("orders", "status", "RECEIVED", null, null);
     homePage.navigateHomePage();
     homePage.navigateManagePOD();
-    managePodPage.verifyMessageOnManagePodScreen();
+    managePodPage.verifyNoProductMessage();
   }
 
   @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-RnR")
