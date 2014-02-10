@@ -51,7 +51,7 @@ describe('DistributionListController', function () {
         }};
 
         var facilityDistribution1 = new FacilityDistribution(
-          {facilityId: 44,'epiUse': {'productGroups': [
+          {facilityId: 44, 'epiUse': {'productGroups': [
             {'id': 3, 'code': 'penta', 'name': 'penta', 'reading': {'stockAtFirstOfMonth': {'notRecorded': true}, 'received': {'notRecorded': true}, 'distributed': {'notRecorded': false},
               'loss': {'notRecorded': true}, 'stockAtEndOfMonth': {'notRecorded': true}, 'expirationDate': {'notRecorded': true}}, '$$hashKey': '02A'}
           ], 'status': 'is-complete'}, 'refrigerators': {'refrigeratorReadings': []},
@@ -129,6 +129,25 @@ describe('DistributionListController', function () {
     $httpBackend.flush();
 
     expect(scope.progressValue).toEqual(100);
+  });
+
+  it('should update all facilities if distribution is completely synced', function () {
+
+    var distribution = {facilityDistributions: {44: {status: DistributionStatus.COMPLETE}, 46: {status: DistributionStatus.COMPLETE}, 45: {status: DistributionStatus.INCOMPLETE}}}
+
+    $httpBackend.when('PUT', '/distributions/1/facilities/44.json', distribution.facilityDistributions[44]).respond(200, {syncStatus: false, distributionStatus: 'INITIATED'});
+    $httpBackend.when('PUT', '/distributions/1/facilities/46.json', distribution.facilityDistributions[46]).respond(200, {syncStatus: true, distributionStatus: 'SYNCED'});
+
+    scope.distributionData = distribution;
+
+    var syncFacilitiesFunction = getSyncFacilitiesFunction();
+
+    $httpBackend.flush();
+
+    scope.$apply();
+
+    expect(scope.syncResult[DistributionStatus.SYNCED].length).toEqual(1);
+    expect(scope.syncResult[DistributionStatus.DUPLICATE].length).toEqual(2);
   });
 
   it('should save synced status for facility data on success', function () {
