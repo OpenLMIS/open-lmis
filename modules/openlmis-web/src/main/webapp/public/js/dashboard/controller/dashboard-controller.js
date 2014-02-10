@@ -9,18 +9,119 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-function AdminDashboardController($scope, $routeParams, $location, $dialog, messageService) {
+function AdminDashboardController($scope) {
+    /* Bar Chart */
+    var barChartTicks = [[1, "Tab1"], [2, "Tab2"], [3, "Tab3"]];
 
-    $scope.setHeight = function(){
+    function GenerateSeries(added){
+        var data = [];
+        var start = 0 + added;
+        var end = 100 + added;
 
-    } ;
+        for(i=1;i<=3;i++){
+            var d = Math.floor(Math.random() * (end - start + 1) + start);
+            data.push([i, d]);
+            start++;
+            end++;
+        }
 
-    $scope.getHeight = function(contentId){
-        var content = document.getElementById(contentId).contentWindow;
-        if(content !== null){
-            var height = content.document.height;
-            return "height :" + height;
+        return data;
+    }
+
+    $scope.barChartData =  [{ label: "Random Tabs Data Size", data:  GenerateSeries(0), color: "#5482FF" }];
+
+    $scope.barChartOption = {
+        series: {
+            bars: {show: true}
+        },
+        bars: {
+            align: "center",
+            barWidth: 0.5
+        },
+        xaxis: {
+            axisLabel: "Sample tabs",
+            axisLabelUseCanvas: true,
+            axisLabelFontSizePixels: 12,
+            axisLabelFontFamily: 'Verdana, Arial',
+            axisLabelPadding: 10,
+            ticks: barChartTicks
+        },
+        yaxis: {
+            axisLabel: "Data Size",
+            axisLabelUseCanvas: true,
+            axisLabelFontSizePixels: 12,
+            axisLabelFontFamily: 'Verdana, Arial',
+            axisLabelPadding: 3,
+            tickFormatter: function (v, axis) {
+                return v + "kb";
+            }
+        },
+        legend: {
+            noColumns: 0,
+            labelBoxBorderColor: "#000000",
+            position: "nw"
+        },
+        grid:{
+            clickable:true,
+            hoverable: true,
+            borderWidth: 2,
+            backgroundColor: { colors: ["#ffffff", "#EDF5FF"] }
         }
     };
+
+
+    $("#afloat1").bind("plotclick", function (event, pos, item) {
+
+        var showTab = 2- item.dataIndex;
+        $('#dashboard-tabs li:eq('+showTab+') a').tab('show');
+    });
+
+    /* End Bar Chart */
+
+    /* Pie Chart */
+
+    var pieChartSeries = 3;
+    var pieChartColors = ["#05BC57","#CC0505", "#FFFF05"];
+    var pieChartLabels = ["Reported on time","Did not report","Reported late"];
+
+    $scope.pieChartData = [];
+    var series = 3;
+    var colors = ["#05BC57","#CC0505", "#FFFF05"];
+    var labels = ["Reported on time","Did not report","Reported late"];
+
+    for (var i = 0; i < series; i++) {
+        $scope.pieChartData[i] = {
+            label: labels[i],
+            data: Math.floor(Math.random() * 100) + 1,
+            color: colors[i]
+        };
+    }
+    $scope.pieChartOption = {
+        series: {
+            pie: {
+                show: true,
+                radius: 1,
+
+                label: {
+                    show: true,
+                    radius: 2 / 3,
+                    formatter: function (label, series) {
+                        return '<div style="font-size:8pt;text-align:center;padding:2px;color:black;">' + Math.round(series.percent) + '%</div>';
+                    },
+                    threshold: 0.1
+                }
+            }
+        },
+        legend: {
+            show: true
+        }
+    };
+
+
+
+
+    /* End Pie Chart */
+
+
 
 }

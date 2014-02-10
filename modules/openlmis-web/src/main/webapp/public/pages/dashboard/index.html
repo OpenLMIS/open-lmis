@@ -6,114 +6,87 @@
   -->
 <html lang="en" ng-app="dashboard">
 <head>
-  <meta charset="utf-8">
-  <title></title>
-  <!-- Icons -->
-  <link rel="icon" href="/favicon.ico" type="image/x-icon"/>
+    <meta charset="utf-8">
+    <title openlmis-message="app.title"></title>        <!-- Icons -->
+    <link rel="icon" href="/favicon.ico" type="image/x-icon"/>
 
-  <!-- library files-->
-   <script src="/public/lib/jquery/jquery-2.0.0.min.js"></script>
-  <script src="/public/lib/jquery/jquery-ui-1.9.2.custom.min.js"></script>
+    <!-- library files-->
+    <title openlmis-message="app.title"></title>
+    <script src="/public/lib/jquery/jquery-2.0.0.min.js"></script>
+    <script src="/public/lib/jquery/jquery-ui-1.9.2.custom.min.js"></script>
+    <script src="/public/lib/angular/angular.min.js"></script>
+    <script src="/public/lib/angular/angular-route.min.js"></script>
+    <script src="/public/lib/angular/angular-cookies.js"></script>
+    <script src="/public/lib/angular/angular-resource.min.js"></script>
+    <script src="/public/lib/bootstrap/js/bootstrap.min.js"></script>
+    <script src="/public/lib/angular-ui/angular-ui.min.js"></script>
+    <script src="/public/lib/angular-ui/bootstrap/ui-bootstrap-0.1.0.min.js"></script>
+    <script src="/public/lib/select2/select2.js"></script>
 
-  <script src="/public/lib/angular/angular.min.js"></script>
-  <script src="/public/lib/angular/angular-route.min.js"></script>
-  <script src="/public/lib/angular/angular-cookies.js"></script>
-  <script src="/public/lib/angular/angular-resource.min.js"></script>
-  <script src="/public/lib/bootstrap/js/bootstrap.min.js"></script>
-  <script src="/public/lib/angular-ui/angular-ui.min.js"></script>
-  <script src="/public/lib/angular-ui/bootstrap/ui-bootstrap-0.1.0.min.js"></script>
-  <script src="/public/lib/jquery/jquery.form.js"></script>
-  <script src="/public/lib/angular-ui/ng-grid/ng-grid-2.0.5.min.js"></script>
-  <script src="/public/lib/angular-ui/ng-grid-flexible-height.js"></script>
-  <script src="/public/lib/select2/select2.js"></script>
+    <!-- Style sheet files-->
+    <link rel="stylesheet" href="/public/lib/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/public/lib/angular-ui/angular-ui.min.css">
+    <link rel="stylesheet" href="/public/lib/select2/select2.css">
+    <link rel="stylesheet" href="/public/lib/fullcalendar/fullcalendar.css">
 
-  <!-- Style sheet files-->
-  <link rel="stylesheet" href="/public/lib/bootstrap/css/bootstrap.min.css">
-  <link rel="stylesheet" href="/public/lib/angular-ui/angular-ui.min.css">
-  <link rel="stylesheet" href="/public/lib/select2/select2.css">
-  <link href="/public/lib/uniform/css/uniform.default.css" rel="stylesheet" type="text/css"/>
-  <link rel="stylesheet" href="/public/lib/data-tables/DT_bootstrap.css"/>
-  <link href="/public/css/style-metronic.css" rel="stylesheet" type="text/css"/>
-  <link href="/public/css/style-metronic-bootstrap.css" rel="stylesheet" type="text/css"/>
+    <!-- Services -->
+    <script src="/public/js/shared/services/services.js"></script>
+    <script src="/public/js/shared/services/extension-services.js"></script>
+    <script type="text/javascript" src="/public/js/shared/services/message-service.js"></script>
+    <script type="text/javascript" src="/public/js/shared/services/authorization-service.js"></script>
+    <script src="/public/js/shared/services/navigate-back-service.js"></script>
 
-  <!-- Services -->
-  <script src="/public/js/shared/services/services.js"></script>
-  <script src="/public/js/shared/services/extension-services.js"></script>
-  <script type="text/javascript" src="/public/js/shared/services/message-service.js"></script>
-  <script type="text/javascript" src="/public/js/shared/services/authorization-service.js"></script>
-  <script src="/public/js/shared/services/navigate-back-service.js"></script>
+    <script src="/public/js/shared/app.js"></script>
 
-  <script src="/public/js/shared/app.js"></script>
-
-  <!-- App directives and shared utilites -->
-  <script src="/public/js/shared/directives/form-toolbar.js"></script>
-  <script src="/public/js/shared/directives/openlmis-message.js"></script>
-  <script src="/public/js/shared/directives/openlmis-pagination.js"></script>
-  <script src="/public/js/shared/directives/placeholder.js"></script>
-  <script src="/public/js/shared/directives/ui-nav.js"></script>
-  <script src="/public/lib/localstorage/localStorage.js"></script>
-  <script src="/public/js/shared/util.js"></script>
-  <script src="/public/js/shared/open-lmis-dialog.js"></script>
-  <script src="/public/js/shared/localStorageKeys.js"></script>
+    <!-- App directives and shared utilites -->
+    <script src="/public/js/shared/directives/form-toolbar.js"></script>
+    <script src="/public/js/shared/directives/openlmis-message.js"></script>
+    <script src="/public/js/shared/directives/openlmis-pagination.js"></script>
+    <script src="/public/js/shared/directives/placeholder.js"></script>
+    <script src="/public/js/shared/directives/ui-nav.js"></script>
+    <script src="/public/lib/localstorage/localStorage.js"></script>
+    <script src="/public/js/shared/util.js"></script>
+    <script src="/public/js/shared/open-lmis-dialog.js"></script>
+    <script src="/public/js/shared/localStorageKeys.js"></script>
+    <script src="/public/js/shared/directives/angular-flot.js"></script>
 
 
-  <link rel="stylesheet" href="/public/css/app.css">
-  <link rel="stylesheet" href="/public/css/ng-grid.css">
-  <link rel="stylesheet" href="/public/css/report.css">
+    <link rel="stylesheet" href="/public/css/app.css">
+    <link rel="stylesheet" href="/public/css/ng-grid.css">
+    <link rel="stylesheet" href="/public/css/report.css">
+    <link rel="stylesheet" href="/public/css/style-metronic-bootstrap.css">
+    <link rel="stylesheet" href="/public/css/style-metronic.css">
 
-  <!-- Shared controller files -->
-  <script src="/public/js/shared/controller/login-controller.js"></script>
-  <script src="/public/js/shared/controller/locale-controller.js"></script>
-  <script src="/public/js/shared/controller/header-controller.js"></script>
-  <script src="/public/js/shared/controller/navigation-controller.js"></script>
+    <!-- Shared controller files -->
+    <script src="/public/js/shared/controller/login-controller.js"></script>
+    <script src="/public/js/shared/controller/locale-controller.js"></script>
+    <script src="/public/js/shared/controller/header-controller.js"></script>
+    <script src="/public/js/shared/controller/navigation-controller.js"></script>
 
-  <!-- Page specific files -->
-
-<script src="/public/lib/jquery/jquery-migrate-1.2.1.min.js" type="text/javascript"></script>
-<script src="/public/lib/jquery/jquery.cokie.min.js" type="text/javascript"></script>
-<script src="/public/lib/uniform/jquery.uniform.min.js" type="text/javascript"></script>
-
-<script src="/public/lib/flot/jquery.flot.js"></script>
-<script src="/public/lib/flot/jquery.flot.symbol.js"></script>
-<script src="/public/lib/flot/jquery.flot.pie.js"></script>
-<script src="/public/lib/flot/jquery.flot.stack.js"></script>
-<script src="/public/lib/flot/jquery.flot.crosshair.js"></script>
-<script src="/public/lib/flot/jquery.flot.axislabels.js"></script>
-<script src="/public/js/dashboard/app.js" type="text/javascript"></script>
-<script src="/public/js/dashboard/charts.js" type="text/javascript"></script>
-<script src="/public/js/dashboard/table-advanced.js"></script>
-<script type="text/javascript" src="/public/lib/data-tables/jquery.dataTables.min.js"></script>
-<script type="text/javascript" src="/public/lib/data-tables/DT_bootstrap.js"></script>
-
+    <!-- Page specific files -->
     <script src="/public/js/dashboard/module/dashboard-module.js"></script>
     <script src="/public/js/dashboard/controller/dashboard-controller.js"></script>
+    <!-- charts tool (Bar, pie) -->
+    <script src="/public/lib/flot/jquery.flot.min.js"></script>
+    <script src="/public/lib/flot/jquery.flot.pie.min.js"></script>
+    <script src="/public/lib/flot/jquery.flot.axislabels.js"></script>
+    <!-- Calendar tool-->
+   <!-- <script src="/public/lib/fullcalendar/fullcalendar.min.js" ></script>-->
 
-  <link type="text/css" rel="stylesheet" charset="UTF-8" href="/public/css/app.css">
-  [if IE 9]>
-  <link rel="stylesheet" href="/public/css/ie9.css"/>
-  <![endif]
+
+    <link type="text/css" rel="stylesheet" charset="UTF-8" href="/public/css/app.css">
+    <!--[if IE 9]>
+    <link rel="stylesheet" href="/public/css/ie9.css"/>
+    <![endif]-->
 
 </head>
 <body onunload="">
 <div id="wrap">
-  <ng-include src="'/public/pages/header.html'"></ng-include>
-  <ng-include src="'/public/pages/navigation.html'"></ng-include>
-  <div class="content">
-    <div ng-view></div>
-  </div>
+    <ng-include src="'/public/pages/header.html'"></ng-include>
+    <ng-include src="'/public/pages/navigation.html'"></ng-include>
+    <div class="content">
+        <div ng-view></div>
+    </div>
 </div>
-
-<script>
-    jQuery(document).ready(function() {
-        App.init(); // initlayout and core plugins
-
-        Charts.init();
-        Charts.initBarCharts();
-        Charts.initPieCharts();
-        TableAdvanced.init();
-
-    });
-</script>
-<!-- END JAVASCRIPTS -->
 </body>
 </html>
