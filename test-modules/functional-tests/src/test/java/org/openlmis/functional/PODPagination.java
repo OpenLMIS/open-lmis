@@ -10,11 +10,9 @@
 
 package org.openlmis.functional;
 
-import com.thoughtworks.selenium.SeleneseTestBase;
 import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.pageobjects.*;
 import org.openqa.selenium.WebElement;
-import org.testng.AssertJUnit;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -282,7 +280,6 @@ public class PODPagination extends TestCaseHelper {
 
     updatePodPage.clickSubmitButton();
     updatePodPage.clickCancelButton();
-    //TODO verify in DB
 
     ViewOrdersPage viewOrdersPage = homePage.navigateViewOrders();
     assertEquals("Ready to pack", viewOrdersPage.getOrderStatus());
@@ -362,8 +359,6 @@ public class PODPagination extends TestCaseHelper {
     updatePodPage.clickSubmitButton();
     updatePodPage.clickOkButton();
     assertTrue(updatePodPage.isPodSuccessMessageDisplayed());
-
-    //TODO verify in DB
 
     assertFalse(updatePodPage.isQuantityReceivedEnabled(1));
     assertFalse(updatePodPage.isNotesEnabled(1));

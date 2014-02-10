@@ -204,6 +204,10 @@ public class UpdatePod extends TestCaseHelper {
     managePodPage.selectRequisitionToUpdatePod(1);
 
     verifyValuesOfPodTableOnUpdatePODScreen(1, "P10", "antibiotic Capsule 300/200/600 mg", "0", "Strip", "0");
+    updatePodPage.enterPodData("45", "Some notes", 1);
+    updatePodPage.clickSubmitButton();
+    updatePodPage.clickOkButton();
+    verifyPodDataInDatabase("45", "Some notes", "P10");
   }
 
 
