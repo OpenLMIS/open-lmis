@@ -765,9 +765,7 @@ Feature: Smoke Tests
     And I access plan my distribution page
     And I select delivery zone "Delivery Zone First"
     And I select program "VACCINES"
-    And I select period "Period14"
-    And I initiate distribution
-    Then I verify distribution not initiated
+    Then I verify period "Period14" not present
 
     And I select delivery zone "Delivery Zone First"
     And I select program "VACCINES"

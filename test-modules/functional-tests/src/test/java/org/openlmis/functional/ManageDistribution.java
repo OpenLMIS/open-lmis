@@ -32,8 +32,7 @@ import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
-import static com.thoughtworks.selenium.SeleneseTestBase.fail;
+import static com.thoughtworks.selenium.SeleneseTestBase.*;
 import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
 import static java.util.Arrays.asList;
 import static java.util.Collections.addAll;
@@ -215,6 +214,13 @@ public class ManageDistribution extends TestCaseHelper {
   public void selectPeriod(String period) {
     distributionPage = PageFactory.getInstanceOfDistributionPage(testWebDriver);
     distributionPage.selectValueFromPeriod(period);
+  }
+
+  @Then("^I verify period \"([^\"]*)\" not present$")
+  public void verifyPeriodNotPresent(String period) {
+    distributionPage = PageFactory.getInstanceOfDistributionPage(testWebDriver);
+    assertFalse(distributionPage.getAllSelectOptionsFromPeriod().contains(period));
+    assertNotEquals(period, distributionPage.getFirstSelectedOptionFromPeriod().getText());
   }
 
   @And("^I verify Distributions data is not synchronised$")
