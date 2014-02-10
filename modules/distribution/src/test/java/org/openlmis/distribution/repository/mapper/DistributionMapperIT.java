@@ -27,7 +27,9 @@ import org.openlmis.core.repository.mapper.ProcessingPeriodMapper;
 import org.openlmis.core.repository.mapper.ProcessingScheduleMapper;
 import org.openlmis.core.repository.mapper.ProgramMapper;
 import org.openlmis.db.categories.IntegrationTests;
+import org.openlmis.distribution.builder.DistributionBuilder;
 import org.openlmis.distribution.domain.Distribution;
+import org.openlmis.distribution.domain.DistributionStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.test.context.ContextConfiguration;
@@ -36,15 +38,14 @@ import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.ResultSet;
+import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.*;
 import static org.openlmis.core.builder.DeliveryZoneBuilder.defaultDeliveryZone;
-import static org.openlmis.core.builder.ProcessingPeriodBuilder.defaultProcessingPeriod;
-import static org.openlmis.core.builder.ProcessingPeriodBuilder.scheduleId;
+import static org.openlmis.core.builder.ProcessingPeriodBuilder.*;
 import static org.openlmis.core.builder.ProcessingScheduleBuilder.defaultProcessingSchedule;
 import static org.openlmis.core.builder.ProgramBuilder.defaultProgram;
 import static org.openlmis.distribution.builder.DistributionBuilder.*;
@@ -78,8 +79,9 @@ public class DistributionMapperIT {
   private QueryExecutor queryExecutor;
 
   DeliveryZone zone;
-  Program program1;
+  Program program;
   ProcessingPeriod processingPeriod;
+  ProcessingSchedule schedule;
 
   @Rule
   public ExpectedException expectedException = ExpectedException.none();
@@ -88,15 +90,15 @@ public class DistributionMapperIT {
   @Before
   public void setUp() throws Exception {
     zone = make(a(defaultDeliveryZone));
-    program1 = make(a(defaultProgram));
+    program = make(a(defaultProgram));
 
-    ProcessingSchedule schedule = make(a(defaultProcessingSchedule));
+    schedule = make(a(defaultProcessingSchedule));
     scheduleMapper.insert(schedule);
 
     processingPeriod = make(a(defaultProcessingPeriod, with(scheduleId, schedule.getId())));
 
     deliveryZoneMapper.insert(zone);
-    programMapper.insert(program1);
+    programMapper.insert(program);
     periodMapper.insert(processingPeriod);
   }
 
@@ -105,7 +107,7 @@ public class DistributionMapperIT {
     Distribution distribution = make(a(initiatedDistribution,
       with(deliveryZone, zone),
       with(period, processingPeriod),
-      with(program, program1)));
+      with(DistributionBuilder.program, program)));
 
     mapper.insert(distribution);
 
@@ -115,7 +117,7 @@ public class DistributionMapperIT {
 
     assertNotNull(distribution.getId());
     assertThat(resultSet.getLong("deliveryZoneId"), is(zone.getId()));
-    assertThat(resultSet.getLong("programId"), is(program1.getId()));
+    assertThat(resultSet.getLong("programId"), is(program.getId()));
     assertThat(resultSet.getLong("periodId"), is(processingPeriod.getId()));
     assertThat(resultSet.getString("status"), is(INITIATED.toString()));
     assertThat(resultSet.getLong("createdBy"), is(distribution.getCreatedBy()));
@@ -129,14 +131,14 @@ public class DistributionMapperIT {
     Distribution distribution = make(a(defaultDistribution,
       with(deliveryZone, zone),
       with(period, processingPeriod),
-      with(program, program1)));
+      with(DistributionBuilder.program, program)));
 
     mapper.insert(distribution);
 
     Distribution duplicateDistribution = make(a(defaultDistribution,
       with(deliveryZone, zone),
       with(period, processingPeriod),
-      with(program, program1)));
+      with(DistributionBuilder.program, program)));
 
     expectedException.expect(DuplicateKeyException.class);
     expectedException.expectMessage("duplicate key value violates unique constraint");
@@ -149,7 +151,7 @@ public class DistributionMapperIT {
     Distribution distribution = make(a(defaultDistribution,
       with(deliveryZone, zone),
       with(period, processingPeriod),
-      with(program, program1)));
+      with(DistributionBuilder.program, program)));
 
     mapper.insert(distribution);
 
@@ -161,11 +163,44 @@ public class DistributionMapperIT {
   }
 
   @Test
+  public void shouldGetAllPeriodsForAZoneAndProgramForWhichDistributionIsSynced() {
+    Distribution synedDistribution1 = make(a(defaultDistribution,
+      with(deliveryZone, zone),
+      with(period, processingPeriod),
+      with(DistributionBuilder.program, program),
+      with(status, DistributionStatus.SYNCED)));
+    mapper.insert(synedDistribution1);
+
+    ProcessingPeriod processingPeriod2 = make(a(defaultProcessingPeriod, with(scheduleId, schedule.getId()), with(name, "Month2")));
+    periodMapper.insert(processingPeriod2);
+    Distribution synedDistribution2 = make(a(defaultDistribution,
+      with(deliveryZone, zone),
+      with(period, processingPeriod2),
+      with(DistributionBuilder.program, program),
+      with(status, DistributionStatus.SYNCED)));
+    mapper.insert(synedDistribution2);
+
+    ProcessingPeriod processingPeriod3 = make(a(defaultProcessingPeriod, with(scheduleId, schedule.getId()), with(name, "Month3")));
+    periodMapper.insert(processingPeriod3);
+    Distribution unsynedDistribution = make(a(defaultDistribution,
+      with(deliveryZone, zone),
+      with(period, processingPeriod3),
+      with(DistributionBuilder.program, program)));
+    mapper.insert(unsynedDistribution);
+
+    List<Long> syncedPeriodsForDeliveryZoneAndProgram = mapper.getSyncedPeriodsForDeliveryZoneAndProgram(zone.getId(), program.getId());
+
+    assertThat(syncedPeriodsForDeliveryZoneAndProgram.size(), is(2));
+    assertTrue(syncedPeriodsForDeliveryZoneAndProgram.contains(processingPeriod.getId()));
+    assertTrue(syncedPeriodsForDeliveryZoneAndProgram.contains(processingPeriod2.getId()));
+  }
+
+  @Test
   public void shouldUpdateDistributionStatus() {
     Distribution distribution = make(a(defaultDistribution,
       with(deliveryZone, zone),
       with(period, processingPeriod),
-      with(program, program1)));
+      with(DistributionBuilder.program, program)));
 
     mapper.insert(distribution);
     mapper.updateDistributionStatus(distribution.getId(), SYNCED);

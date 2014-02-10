@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Map;
 
 import static org.openlmis.distribution.domain.DistributionStatus.INITIATED;
@@ -61,5 +62,9 @@ public class DistributionService {
       repository.updateDistributionStatus(distributionId, DistributionStatus.SYNCED);
       return SYNCED;
     }
+  }
+
+  public List<Long> getSyncedPeriodsForDeliveryZoneAndProgram(Long zoneId, Long programId) {
+    return repository.getSyncedPeriodsForDeliveryZoneAndProgram(zoneId, programId);
   }
 }

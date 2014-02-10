@@ -16,6 +16,8 @@ import org.openlmis.distribution.repository.mapper.DistributionMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public class DistributionRepository {
 
@@ -35,5 +37,10 @@ public class DistributionRepository {
 
   public void updateDistributionStatus(Long distributionId, DistributionStatus status) {
     mapper.updateDistributionStatus(distributionId, status);
+  }
+
+
+  public List<Long> getSyncedPeriodsForDeliveryZoneAndProgram(Long zoneId, Long programId) {
+    return mapper.getSyncedPeriodsForDeliveryZoneAndProgram(zoneId, programId);
   }
 }

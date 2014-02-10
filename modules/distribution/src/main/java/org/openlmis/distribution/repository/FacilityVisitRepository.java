@@ -52,4 +52,5 @@ public class FacilityVisitRepository {
   public Integer getUnsyncedFacilityCountForDistribution(Long distributionId) {
     return mapper.getUnsyncedFacilityCountForDistribution(distributionId);
   }
+
 }
