@@ -17,6 +17,7 @@ import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.distribution.serializer.DistributionReadingDeSerializer;
 
+import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 
 @Data
@@ -27,6 +28,11 @@ public class Reading {
 
   private String value;
   private Boolean notRecorded;
+
+  public Reading(String value, Boolean notRecorded) {
+    this.value = value;
+    this.notRecorded = ((isBlank(value)) && (!notRecorded)) ? true : notRecorded;
+  }
 
   public String getEffectiveValue() {
     return (notRecorded == null || !notRecorded) ? value : null;
@@ -43,14 +49,6 @@ public class Reading {
       throw new DataException("error.epi.use.line.item.invalid");
     }
     return intValue;
-  }
-
-  public Reading(String value, Boolean notRecorded) {
-    if ((value == null || value.equals("")) && (!notRecorded)) {
-      throw new DataException("error.invalid.reading.value");
-    }
-    this.value = value;
-    this.notRecorded = notRecorded;
   }
 
   public Integer parseInt() {
