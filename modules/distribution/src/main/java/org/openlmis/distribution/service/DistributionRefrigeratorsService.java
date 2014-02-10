@@ -29,18 +29,15 @@ public class DistributionRefrigeratorsService {
   private DistributionRefrigeratorsRepository repository;
 
   @Autowired
-  private FacilityVisitService facilityVisitService;
-
-  @Autowired
   private RefrigeratorService refrigeratorService;
 
   public void save(Long facilityId, DistributionRefrigerators distributionRefrigerators) {
     List<RefrigeratorReading> readings = distributionRefrigerators.getReadings();
+    refrigeratorService.disableAllFor(facilityId);
+
     if (readings.size() == 0) {
-      refrigeratorService.disableAllFor(facilityId);
       return;
     }
-    refrigeratorService.disableAllFor(facilityId);
 
     List<Refrigerator> refrigeratorsForFacility = refrigeratorService.getAllBy(facilityId);
 
