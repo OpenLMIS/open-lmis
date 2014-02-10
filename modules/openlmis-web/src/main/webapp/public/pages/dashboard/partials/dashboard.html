@@ -9,51 +9,69 @@
         width: 400px;
         height:300px;
     }
+
 </style>
 
 <!-- BEGIN CONTAINER -->
 <div class="page-container">
 <!-- BEGIN CONTENT -->
-<div class="page-content-wrapper">
-<div class="page-content">
-<!-- BEGIN TAB PORTLET-->
-<div class="portlet box blue tabbable">
-<div class="portlet-title">
-    <div class="caption">
-        <i class="fa fa-reorder"></i>Sample Tabs
+    <div class="page-content-wrapper">
+        <div class="page-content">
+            <!-- BEGIN TAB PORTLET-->
+            <div class="portlet box blue tabbable">
+                <div class="portlet-title">
+                        <div class="caption">
+                                    <i class="fa fa-reorder"></i>Sample Tabs
+                        </div>
+                </div>
+                <div class="portlet-body">
+                    <div id="dashboard-tabs" class=" portlet-tabs">
+                        <ul class="nav nav-tabs">
+                            <li><a href="#portlet_tab2_4" data-toggle="tab">Tab 4</a></li>
+                            <li><a href="#portlet_tab2_3" data-toggle="tab">Tab 3</a></li>
+                            <li><a href="#portlet_tab2_2" data-toggle="tab">Tab 2</a></li>
+                            <li class="active"><a href="#portlet_tab2_1" data-toggle="tab">Tab 1</a></li>
+                        </ul>
+                        <div class="tab-content">
+                            <div class="tab-pane active" id="portlet_tab2_1">
+                                <a-float id="afloat1" af-option="barChartOption" af-data="barChartData"  class="chart"></a-float>
+                            </div>
+                            <div class="tab-pane" id="portlet_tab2_2">
+                                <h2>District Reporting Performance</h2>
+                                <a-float id="afloat2" af-option="pieChartOption" af-data="pieChartData" class="chart"></a-float>
+                            </div>
+                            <div class="tab-pane" id="portlet_tab2_3">
+                                <div   ng-model="eventSources" calendar="myCalendar"  ui-calendar="uiConfig.calendar"></div>
+                            </div>
+                            <div class="tab-pane" id="portlet_tab2_4">
+
+                                <div >
+		                            <span class="easychart" easypiechart percent="percent1">
+			                            <span class="easychart-percent" ng-bind="percent1"></span>
+                                    </span>
+                                    <span class="easychart" easypiechart   options="option2" percent="percent2">
+			                            <span class="easychart-percent" ng-bind="percent2"></span>
+                                    </span>
+                                    <span class="easychart" easypiechart  options="option3" percent="percent3">
+			                            <span class="easychart-percent" ng-bind="percent3"></span>
+                                    </span>
+                                    <span class="easychart" easypiechart   options="option4" percent="percent4">
+			                            <span class="easychart-percent" ng-bind="percent4"></span>
+                                    </span>
+                                    <input type="range" min="-100" max="100" step="1" ng-model="percent4" />
+                                    <!--span class="easychart" easypiechart percent="anotherPercent" options="anotherOptions">
+                                        <span class="easychart-percent" ng-bind="anotherPercent"></span>
+                                    </span>-->
+
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- END TAB PORTLET-->
+        </div>
     </div>
-</div>
-<div class="portlet-body">
-<div id="dashboard-tabs" class=" portlet-tabs">
-<ul class="nav nav-tabs">
-    <li>
-        <a href="#portlet_tab2_3" data-toggle="tab">Tab 3</a>
-    </li>
-    <li>
-        <a href="#portlet_tab2_2" data-toggle="tab">Tab 2</a>
-    </li>
-    <li class="active">
-        <a href="#portlet_tab2_1" data-toggle="tab">Tab 1</a>
-    </li>
-</ul>
-<div class="tab-content">
-<div class="tab-pane active" id="portlet_tab2_1">
-    <a-float id="afloat1" af-option="barChartOption" af-data="barChartData"  class="chart"></a-float>
-</div>
-<div class="tab-pane" id="portlet_tab2_2">
-    <h2>District Reporting Performance</h2>
-     <a-float id="afloat2" af-option="pieChartOption" af-data="pieChartData" class="chart"></a-float>
-</div>
-<div class="tab-pane" id="portlet_tab2_3">
-
-</div>
-</div>
-</div>
-</div>
-</div>
-<!-- END TAB PORTLET-->
-</div>
-</div>
-
 </div>
 

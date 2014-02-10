@@ -117,10 +117,67 @@ function AdminDashboardController($scope) {
         }
     };
 
-
-
-
     /* End Pie Chart */
+
+    /* Calendar */
+        var date = new Date();
+        var d = date.getDate();
+        var m = date.getMonth();
+        var y = date.getFullYear();
+
+    $scope.events = [
+        {title: 'All Day Event',start: new Date(y, m, 1)},
+        {title: 'Long Event',start: new Date(y, m, d - 5),end: new Date(y, m, d - 2)},
+        {id: 999,title: 'Repeating Event',start: new Date(y, m, d - 3, 16, 0),allDay: false},
+        {id: 999,title: 'Repeating Event',start: new Date(y, m, d + 4, 16, 0),allDay: false},
+        {title: 'Birthday Party',start: new Date(y, m, d + 1, 19, 0),end: new Date(y, m, d + 1, 22, 30),allDay: false},
+        {title: 'Click for Google',start: new Date(y, m, 28),end: new Date(y, m, 29),url: 'http://google.com/'}
+    ];
+
+    /* event sources array*/
+    $scope.eventSources = [$scope.events];
+        /* config object */
+        $scope.uiConfig = {
+            calendar:{
+                height: 450,
+                editable: true,
+                header: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'month,basicWeek,basicDay'
+                },
+                eventClick: $scope.alertOnEventClick,
+                eventDrop: $scope.alertOnDrop,
+                eventResize: $scope.alertOnResize
+            }
+        };
+    /* End of Calendar */
+
+
+    /* Easy pie chart */
+    $scope.option1  = { animate:false, barColor:'#FEBA50', scaleColor:false, lineWidth:5, lineCap:'butt' };
+    $scope.percent1 = 55;
+    $scope.option2  = { animate:false, barColor:'#E23E3E', scaleColor:false, lineWidth:5 };
+    $scope.percent2 = -46;
+    $scope.option3  = { animate:false, barColor:'#38AB49', scaleColor:false, lineWidth:5};
+    $scope.percent3 = 85;
+    $scope.option4  = { animate:false, barColor:'#FFB848', scaleColor:false, lineWidth:5, lineCap:'butt' };
+    $scope.percent4 = 55;
+
+    $scope.anotherPercent = -45;
+    $scope.anotherOptions = {
+        animate:{
+            duration:0,
+            enabled:false
+        },
+        barColor:'#2C3E50',
+        scaleColor:false,
+        lineWidth:5,
+       lineCap:'butt'
+    };
+
+
+    /* End of Easy pie chart */
 
 
 

@@ -8,7 +8,7 @@
  *
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
-angular.module('dashboard', ['openlmis', 'ui.bootstrap.modal']).config(['$routeProvider', function ($routeProvider) {
+angular.module('dashboard',['openlmis', 'ui.calendar', 'ui.bootstrap','easypiechart']).config(['$routeProvider', function ($routeProvider) {
     $routeProvider.
         when('/dashboard', {controller: AdminDashboardController, templateUrl: 'partials/dashboard.html'}).
         otherwise({redirectTo: '/dashboard'});
