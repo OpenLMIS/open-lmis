@@ -289,9 +289,6 @@ public class UpdatePodPage extends Page {
   public void enterPodData(String quantityReceived, String notes, int rowNumber) {
     setQuantityReceived(rowNumber, quantityReceived);
     setNotes(rowNumber, notes);
-    clickSave();
-    assertTrue(isPodSaveSuccessMessageDisplayed());
-    testWebDriver.refresh();
   }
 
   public void verifyQuantityReceivedAndNotes(String quantityReceived, String notes, Integer rowNumber) {

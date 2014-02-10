@@ -328,7 +328,6 @@ public class DBWrapper {
     update("delete from program_product_price_history");
     update("delete from pod_line_items");
     update("delete from pod");
-    update("delete from shipment_file_info");
     update("delete from shipment_line_items");
     update("delete from orders");
     update("delete from requisition_status_changes");

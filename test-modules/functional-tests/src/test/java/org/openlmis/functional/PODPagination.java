@@ -213,7 +213,13 @@ public class PODPagination extends TestCaseHelper {
     verifyProductDisplayOrderOnPage(new String[]{"F0", "F1", "F2", "F3", "F4", "F5", "F6", "F7", "F8", "F9"});
     verifyCategoryDisplayOrderOnPage(new String[]{"Antibiotic", "", "", "", "", "", "", "", "", ""});
     updatePodPage.enterPodData("110", "openlmis openlmis", 1);
+    updatePodPage.clickSave();
+    assertTrue(updatePodPage.isPodSaveSuccessMessageDisplayed());
+    testWebDriver.refresh();
     updatePodPage.enterPodData("200", "openlmis openlmis", 5);
+    updatePodPage.clickSave();
+    assertTrue(updatePodPage.isPodSaveSuccessMessageDisplayed());
+    testWebDriver.refresh();
 
     navigateToPage(2);
     verifyPageNumberSelected(2);
@@ -222,8 +228,13 @@ public class PODPagination extends TestCaseHelper {
     verifyProductDisplayOrderOnPage(new String[]{"NF0", "NF1", "NF2", "NF3", "NF4", "NF5", "NF6", "NF7", "NF8", "NF9"});
     verifyCategoryDisplayOrderOnPage(new String[]{"Antibiotic", "", "", "", "", "", "", "", "", ""});
     updatePodPage.enterPodData("10", "openlmis", 1);
+    updatePodPage.clickSave();
+    assertTrue(updatePodPage.isPodSaveSuccessMessageDisplayed());
+    testWebDriver.refresh();
     updatePodPage.enterPodData("11", "openlmis openlmis project", 10);
-
+    updatePodPage.clickSave();
+    assertTrue(updatePodPage.isPodSaveSuccessMessageDisplayed());
+    testWebDriver.refresh();
 
     updatePodPage.navigateToFirstPage();
     updatePodPage.verifyQuantityReceivedAndNotes("110", "openlmis openlmis", 1);
