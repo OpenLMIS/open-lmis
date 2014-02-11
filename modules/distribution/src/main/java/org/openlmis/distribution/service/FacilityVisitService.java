@@ -1,5 +1,6 @@
 package org.openlmis.distribution.service;
 
+import org.openlmis.core.exception.DataException;
 import org.openlmis.distribution.domain.FacilityVisit;
 import org.openlmis.distribution.repository.FacilityVisitRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,16 +15,18 @@ public class FacilityVisitService {
   @Autowired
   FacilityVisitRepository repository;
 
-  public boolean save(FacilityVisit facilityVisit) {
-    FacilityVisit savedVisit = repository.get(facilityVisit);
-    if (savedVisit == null) {
-      repository.insert(facilityVisit);
-    } else if (!savedVisit.getSynced()) {
-      facilityVisit.setSynced(true);
-      repository.update(facilityVisit);
-      return true;
+  public FacilityVisit save(FacilityVisit facilityVisit) {
+    return repository.save(facilityVisit);
+  }
+
+  public FacilityVisit setSynced(FacilityVisit facilityVisit) {
+    FacilityVisit existingVisit = repository.getById(facilityVisit.getId());
+    if (existingVisit.getSynced()) {
+      throw new DataException("error.facility.already.synced");
     }
-    return false;
+    facilityVisit.setSynced(true);
+    repository.update(facilityVisit);
+    return facilityVisit;
   }
 
   public FacilityVisit getById(Long facilityVisitId) {

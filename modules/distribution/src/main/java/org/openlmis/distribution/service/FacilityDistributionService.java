@@ -87,6 +87,20 @@ public class FacilityDistributionService {
     return facilityDistribution;
   }
 
+  public FacilityDistribution save(FacilityDistribution facilityDistribution) {
+    facilityVisitService.save(facilityDistribution.getFacilityVisit());
+    epiUseService.save(facilityDistribution.getEpiUse());
+    distributionRefrigeratorsService.save(facilityDistribution.getFacilityVisit().getFacilityId(), facilityDistribution.getRefrigerators());
+    vaccinationCoverageService.saveFullCoverage(facilityDistribution.getFullCoverage());
+    epiInventoryService.save(facilityDistribution.getEpiInventory());
+    return facilityDistribution;
+  }
+
+  public FacilityDistribution setSynced(FacilityDistribution facilityDistribution) {
+    facilityVisitService.setSynced(facilityDistribution.getFacilityVisit());
+    return facilityDistribution;
+  }
+
   private List<RefrigeratorReading> getRefrigeratorReadings(final Long facilityId, List<Refrigerator> refrigerators) {
     return (List<RefrigeratorReading>) collect(select(refrigerators, new Predicate() {
       @Override
@@ -99,17 +113,6 @@ public class FacilityDistributionService {
         return new RefrigeratorReading((Refrigerator) o);
       }
     });
-  }
-
-  public boolean save(FacilityDistribution facilityDistribution) {
-    boolean canSync = facilityVisitService.save(facilityDistribution.getFacilityVisit());
-    if (canSync) {
-      epiUseService.save(facilityDistribution.getEpiUse());
-      distributionRefrigeratorsService.save(facilityDistribution.getFacilityVisit().getFacilityId(), facilityDistribution.getRefrigerators());
-      vaccinationCoverageService.saveFullCoverage(facilityDistribution.getFullCoverage());
-      epiInventoryService.save(facilityDistribution.getEpiInventory());
-    }
-    return canSync;
   }
 
   public Map<Long, FacilityDistribution> get(Distribution distribution) {
@@ -138,5 +141,4 @@ public class FacilityDistributionService {
     facilityDistribution.setFacility(facility);
     return facilityDistribution;
   }
-
 }

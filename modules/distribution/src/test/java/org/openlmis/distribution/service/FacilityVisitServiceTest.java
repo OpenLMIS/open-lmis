@@ -8,13 +8,14 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.openlmis.core.exception.DataException;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.distribution.domain.FacilityVisit;
 import org.openlmis.distribution.repository.FacilityVisitRepository;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.*;
-import static org.junit.rules.ExpectedException.none;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -29,39 +30,49 @@ public class FacilityVisitServiceTest {
   FacilityVisitService facilityVisitService;
 
   @Rule
-  public ExpectedException expectedException = none();
+  public ExpectedException expectedEx = ExpectedException.none();
 
   @Test
-  public void shouldInsertFacilityVisitIfDoesNotExistAlready() {
+  public void shouldSaveFacilityVisit() {
     FacilityVisit facilityVisit = new FacilityVisit();
-    when(facilityVisitRepository.get(facilityVisit)).thenReturn(null);
+    when(facilityVisitRepository.save(facilityVisit)).thenReturn(facilityVisit);
 
-    boolean syncStatus = facilityVisitService.save(facilityVisit);
+    FacilityVisit savedVisit = facilityVisitService.save(facilityVisit);
 
-    verify(facilityVisitRepository).insert(facilityVisit);
-    assertFalse(syncStatus);
+    assertThat(savedVisit, is(facilityVisit));
+    verify(facilityVisitRepository).save(facilityVisit);
   }
 
   @Test
-  public void shouldReturnAlreadySyncedStatusIfFacilityVisitAlreadySynced() {
+  public void shouldSyncFacilityVisitIfNotAlreadySynced() throws Exception {
     FacilityVisit facilityVisit = new FacilityVisit();
-    facilityVisit.setSynced(true);
-    when(facilityVisitRepository.get(facilityVisit)).thenReturn(facilityVisit);
+    facilityVisit.setId(4L);
+    FacilityVisit existingFacilityVisit = new FacilityVisit();
+    existingFacilityVisit.setSynced(false);
 
-    boolean syncStatus = facilityVisitService.save(facilityVisit);
+    when(facilityVisitRepository.getById(4L)).thenReturn(existingFacilityVisit);
 
-    assertFalse(syncStatus);
-  }
+    FacilityVisit syncedVisit = facilityVisitService.setSynced(facilityVisit);
 
-  @Test
-  public void shouldReturnTrueStatusIfFacilityVisitIsToBeSynced() throws Exception {
-    FacilityVisit facilityVisit = new FacilityVisit();
-    when(facilityVisitRepository.get(facilityVisit)).thenReturn(facilityVisit);
-
-    boolean syncStatus = facilityVisitService.save(facilityVisit);
-
-    assertThat(facilityVisit.getSynced(), is(true));
     verify(facilityVisitRepository).update(facilityVisit);
-    assertTrue(syncStatus);
+    assertTrue(syncedVisit.getSynced());
+    assertTrue(facilityVisit.getSynced());
+  }
+
+  @Test
+  public void shouldGiveErrorIfFacilityAlreadySynced() throws Exception {
+    FacilityVisit alreadySyncedVisit = new FacilityVisit();
+    alreadySyncedVisit.setId(6L);
+    alreadySyncedVisit.setSynced(true);
+
+    FacilityVisit facilityVisit = new FacilityVisit();
+    facilityVisit.setId(6L);
+
+    when(facilityVisitRepository.getById(6L)).thenReturn(alreadySyncedVisit);
+
+    expectedEx.expect(DataException.class);
+    expectedEx.expectMessage("error.facility.already.synced");
+
+    facilityVisitService.setSynced(facilityVisit);
   }
 }

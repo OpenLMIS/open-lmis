@@ -47,8 +47,9 @@ public class DistributionService {
   }
 
   @Transactional
-  public boolean sync(FacilityDistribution facilityDistribution) {
-    return facilityDistributionService.save(facilityDistribution);
+  public FacilityDistribution sync(FacilityDistribution facilityDistribution) {
+    facilityDistributionService.save(facilityDistribution);
+    return facilityDistributionService.setSynced(facilityDistribution);
   }
 
   public Distribution get(Distribution distribution) {

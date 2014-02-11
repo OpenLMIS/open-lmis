@@ -30,7 +30,6 @@ import java.util.Map;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
 import static org.openlmis.distribution.domain.DistributionStatus.INITIATED;
 import static org.openlmis.distribution.domain.DistributionStatus.SYNCED;
@@ -72,11 +71,19 @@ public class DistributionServiceTest {
 
     FacilityDistribution facilityDistribution = mock(FacilityDistribution.class);
     when(facilityDistribution.getFacilityVisit()).thenReturn(facilityVisit);
-    when(facilityDistributionService.save(facilityDistribution)).thenReturn(true);
-    boolean syncStatus = service.sync(facilityDistribution);
+
+    FacilityDistribution syncedFacilityDistribution = new FacilityDistribution();
+    FacilityVisit syncedVisit = new FacilityVisit();
+    syncedVisit.setSynced(true);
+    syncedFacilityDistribution.setFacilityVisit(syncedVisit);
+    when(facilityDistributionService.setSynced(facilityDistribution)).thenReturn(syncedFacilityDistribution);
+
+    FacilityDistribution returnedFacilityDistribution = service.sync(facilityDistribution);
 
     verify(facilityDistributionService).save(facilityDistribution);
-    assertTrue(syncStatus);
+    verify(facilityDistributionService).setSynced(facilityDistribution);
+
+    assertThat(returnedFacilityDistribution, is(syncedFacilityDistribution));
   }
 
   @Test

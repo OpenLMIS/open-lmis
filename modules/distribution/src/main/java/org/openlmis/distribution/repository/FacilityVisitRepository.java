@@ -53,4 +53,12 @@ public class FacilityVisitRepository {
     return mapper.getUnsyncedFacilityCountForDistribution(distributionId);
   }
 
+  public FacilityVisit save(FacilityVisit facilityVisit) {
+    if (facilityVisit.getId() == null) {
+      mapper.insert(facilityVisit);
+    } else {
+      mapper.update(facilityVisit);
+    }
+    return facilityVisit;
+  }
 }

@@ -33,7 +33,6 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.powermock.api.mockito.PowerMockito.*;
@@ -193,7 +192,7 @@ public class FacilityDistributionServiceTest {
   }
 
   @Test
-  public void shouldSaveFacilityVisitAndEpiUse() throws Exception {
+  public void shouldSaveFacilityDistributionForms() throws Exception {
     EpiUse epiUse = new EpiUse();
     FacilityVisit facilityVisit = new FacilityVisit();
     DistributionRefrigerators distributionRefrigerators = new DistributionRefrigerators();
@@ -201,14 +200,23 @@ public class FacilityDistributionServiceTest {
     VaccinationFullCoverage vaccinationFullCoverage = new VaccinationFullCoverage();
     FacilityDistribution facilityDistribution = new FacilityDistribution(facilityVisit, epiUse, distributionRefrigerators, epiInventory, vaccinationFullCoverage, null);
 
-    when(facilityVisitService.save(facilityVisit)).thenReturn(true);
-    boolean saveStatus = facilityDistributionService.save(facilityDistribution);
+    facilityDistributionService.save(facilityDistribution);
 
     verify(facilityVisitService).save(facilityVisit);
     verify(epiUseService).save(epiUse);
     verify(vaccinationCoverageService).saveFullCoverage(vaccinationFullCoverage);
     verify(epiInventoryService).save(epiInventory);
-    assertTrue(saveStatus);
+  }
+
+  @Test
+  public void shouldSyncFacilityVisit() throws Exception {
+    FacilityDistribution facilityDistribution = new FacilityDistribution();
+    FacilityVisit facilityVisit = new FacilityVisit();
+    facilityDistribution.setFacilityVisit(facilityVisit);
+
+    facilityDistributionService.setSynced(facilityDistribution);
+
+    verify(facilityVisitService).setSynced(facilityVisit);
   }
 
   @Test
