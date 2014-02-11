@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.assertFalse;
 import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
@@ -203,6 +204,7 @@ public class E2EDistributionTest extends TestCaseHelper {
     distributionPage.syncDistribution(1);
     assertTrue(distributionPage.isFacilitySyncFailed());
 
+
     switchOnNetworkInterface(wifiInterface);
     testWebDriver.sleep(7000);
 
@@ -211,6 +213,12 @@ public class E2EDistributionTest extends TestCaseHelper {
     assertTrue("Incorrect Sync Facility", distributionPage.getSyncMessage().contains("F10-Village Dispensary"));
 
     distributionPage.syncDistributionMessageDone();
+    assertEquals(distributionPage.getDistributionStatus(),"SYNCED");
+    assertFalse(distributionPage.getTextDistributionList().contains("sync"));
+
+    Map<String,String> distributionDetails=dbWrapper.getDistributionDetails(deliveryZoneNameFirst,programFirst,"Period14");
+    assertEquals(distributionDetails.get("status"),"SYNCED");
+
     distributionPage.clickRecordData(1);
     facilityListPage.selectFacility(facilityCodeFirst);
     facilityListPage.verifyFacilityIndicatorColor("Overall", "BLUE");
@@ -251,6 +259,9 @@ public class E2EDistributionTest extends TestCaseHelper {
 
     distributionPage.selectValueFromDeliveryZone(deliveryZoneNameFirst);
     distributionPage.selectValueFromProgram(programFirst);
+    String str = distributionPage.getPeriodDropDownList();
+    assertFalse(str.contains("Period14"));
+
     distributionPage.clickInitiateDistribution();
 
     testWebDriver.sleep(1000);
