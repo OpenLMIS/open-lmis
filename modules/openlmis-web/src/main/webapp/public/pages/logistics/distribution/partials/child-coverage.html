@@ -71,66 +71,69 @@
               <td class="col-complete-vaccinated">
                 <div>
                   <span class="input-error-parent-cell">
-                    <input id="healthCenterCategoryOne{{$index}}" type="text"
-                           ng-model="lineItem.healthCenterCategoryOne.value"
-                           name="healthCenterCategoryOne{{$index}}"
+                    <input id="healthCenter11Months{{$index}}" type="text"
+                           ng-model="lineItem.healthCenter11Months.value"
+                           name="coverageHealthCenter11Months{{$index}}"
                            numeric-validator="positiveInteger" maxlength="7" ng-trim=false
-                           error-holder="healthCenterCategoryOneError{{$index}}"/>
-                    <span id="healthCenterCategoryOneError{{$index}}"
+                           error-holder="healthCenter11MonthsError{{$index}}"/>
+                    <span id="healthCenter11MonthsError{{$index}}"
                           class="rnr-form-error"
                           openlmis-message="error.number.only"
                           style="display: none"></span>
                   </span>
                 </div>
-                <input id="healthCenterCategoryOneNR{{$index}}" type="checkbox"
-                       ng-model="lineItem.healthCenterCategoryOne.notRecorded"
+                <input id="coverageHealthCenter11Months{{$index}}" type="checkbox"
+                       ng-model="lineItem.healthCenter11Months.notRecorded"
                        not-recorded/>
-                <label class="checkbox-label" for="healthCenterCategoryOneNR{{$index}}"
+                <label class="checkbox-label" for="coverageHealthCenter11Months{{$index}}"
                        openlmis-message="label.not.recorded"></label>
               </td>
               <td class="col-complete-vaccinated">
                 <div>
                   <span class="input-error-parent-cell">
-                    <input id="outReachCategoryOne{{$index}}" type="text"
-                           ng-model="lineItem.outReachCategoryOne.value"
-                           name="outReachCategoryOne{{$index}}"
+                    <input id="outReach11Months{{$index}}" type="text"
+                           ng-model="lineItem.outReach11Months.value"
+                           name="coverageOutReach11Months{{$index}}"
                            numeric-validator="positiveInteger" maxlength="7" ng-trim=false
-                           error-holder="outReachCategoryOneError{{$index}}"/>
-                    <span id="outReachCategoryOneError{{$index}}"
+                           error-holder="outReach11MonthsError{{$index}}"/>
+                    <span id="outReach11MonthsError{{$index}}"
                           class="rnr-form-error"
                           openlmis-message="error.number.only"
                           style="display: none"></span>
                   </span>
                 </div>
-                <input id="outReachCategoryOneNR{{$index}}" type="checkbox"
-                       ng-model="lineItem.outReachCategoryOne.notRecorded"
+                <input id="coverageOutReach11Months{{$index}}" type="checkbox"
+                       ng-model="lineItem.outReach11Months.notRecorded"
                        not-recorded/>
-                <label class="checkbox-label" for="outReachCategoryOneNR{{$index}}"
+                <label class="checkbox-label" for="coverageOutReach11Months{{$index}}"
                        openlmis-message="label.not.recorded"></label>
               </td>
               <td class="col-complete-vaccinated col-total">
-                <span ng-bind="getTotal(lineItem.healthCenterCategoryOne.value, lineItem.outReachCategoryOne.value)"></span>
+                <span ng-bind="getTotal(lineItem.healthCenter11Months, lineItem.outReach11Months)"></span>
               </td>
-              <td class="col-complete-vaccinated col-coverage-rate"><span></span></td>
+              <td class="col-complete-vaccinated col-coverage-rate">
+                <span
+                    ng-bind="calculateCoverageRate(getTotal(lineItem.healthCenter11Months, lineItem.outReach11Months), lineItem.targetGroup)"></span>
+              </td>
               <td class="col-complete-vaccinated">
                 <span ng-hide="lineItem.vaccination == 'Polio (Newborn)'">
                   <div>
                     <span class="input-error-parent-cell">
-                      <input id="healthCenterCategoryTwo{{$index}}" type="text"
-                             ng-model="lineItem.healthCenterCategoryTwo.value"
-                             name="healthCenterCategoryTwo{{$index}}"
+                      <input id="healthCenter23Months{{$index}}" type="text"
+                             ng-model="lineItem.healthCenter23Months.value"
+                             name="coverageHealthCenter23Months{{$index}}"
                              numeric-validator="positiveInteger" maxlength="7" ng-trim=false
-                             error-holder="healthCenterCategoryTwoError{{$index}}"/>
-                      <span id="healthCenterCategoryTwoError{{$index}}"
+                             error-holder="healthCenter23MonthsError{{$index}}"/>
+                      <span id="healthCenter23MonthsError{{$index}}"
                             class="rnr-form-error"
                             openlmis-message="error.number.only"
                             style="display: none"></span>
                     </span>
                   </div>
-                  <input id="healthCenterCategoryTwoNR{{$index}}" type="checkbox"
-                         ng-model="lineItem.healthCenterCategoryTwo.notRecorded"
+                  <input id="coverageHealthCenter23Months{{$index}}" type="checkbox"
+                         ng-model="lineItem.healthCenter23Months.notRecorded"
                          not-recorded/>
-                  <label class="checkbox-label" for="healthCenterCategoryTwoNR{{$index}}"
+                  <label class="checkbox-label" for="coverageHealthCenter23Months{{$index}}"
                          openlmis-message="label.not.recorded"></label>
                 </span>
               </td>
@@ -138,55 +141,58 @@
                 <span ng-hide="lineItem.vaccination == 'Polio (Newborn)'">
                   <div>
                     <span class="input-error-parent-cell">
-                      <input id="outReachCategoryTwo{{$index}}" type="text"
-                             ng-model="lineItem.outReachCategoryTwo.value"
-                             name="outReachCategoryTwo{{$index}}"
+                      <input id="outReach23Months{{$index}}" type="text"
+                             ng-model="lineItem.outReach23Months.value"
+                             name="coverageOutReach23Months{{$index}}"
                              numeric-validator="positiveInteger" maxlength="7" ng-trim=false
-                             error-holder="outReachCategoryTwoError{{$index}}"/>
-                      <span id="outReachCategoryTwoError{{$index}}"
+                             error-holder="outReach23MonthsError{{$index}}"/>
+                      <span id="outReach23MonthsError{{$index}}"
                             class="rnr-form-error"
                             openlmis-message="error.number.only"
                             style="display: none"></span>
                     </span>
                   </div>
-                  <input id="outReachCategoryTwoNR{{$index}}" type="checkbox"
-                         ng-model="lineItem.outReachCategoryTwo.notRecorded"
+                  <input id="coverageOutReach23Months{{$index}}" type="checkbox"
+                         ng-model="lineItem.outReach23Months.notRecorded"
                          not-recorded/>
-                  <label class="checkbox-label" for="outReachCategoryTwoNR{{$index}}"
+
+                  <label class="checkbox-label" for="coverageOutReach23Months{{$index}}"
                          openlmis-message="label.not.recorded"></label>
                 </span>
               </td>
               <td class="col-complete-vaccinated col-total">
-                <span ng-bind="getTotal(lineItem.healthCenterCategoryTwo.value, lineItem.outReachCategoryTwo.value)"></span>
+                <span ng-bind="getTotal(lineItem.healthCenter23Months, lineItem.outReach23Months)"></span>
               </td>
               <td class="col-complete-vaccinated col-total">
-                <span ng-bind="getTotal(getTotal(lineItem.healthCenterCategoryOne.value, lineItem.outReachCategoryOne.value),
-                getTotal(lineItem.healthCenterCategoryTwo.value, lineItem.outReachCategoryTwo.value))"></span>
+                <span ng-bind="getTotalVaccinations(lineItem)"></span>
               </td>
               <td class="col-complete-vaccinated opened-vials" ng-hide="hideCell('{{lineItem.vaccination}}')"
                   rowspan="{{productsMap[lineItem.vaccination].rowSpan}}">
                 <div id="{{product}}Container" ng-repeat="product in productsMap[lineItem.vaccination].products">
                   <span ng-bind="product"></span>
                   <span class="input-error-parent-cell">
-                    <input id="openedVials{{$index}}" type="text" ng-model="lineItem.openedVials.value"
-                           name="openedVials{{$index}}"
+                    <input id="openedVial{{$parent.$index}}{{$index}}" type="text"
+                           ng-model="openedVialMap[product].openedVial.value"
+                           name="coverageOpenedVial{{$parent.$index}}{{$index}}"
                            numeric-validator="positiveInteger" maxlength="7" ng-trim=false
-                           error-holder="{{product}}OpenedVialsError"/>
-                    <span id="{{product}}OpenedVialsError"
+                           error-holder="{{product}}OpenedVialError"/>
+                    <span id="{{product}}OpenedVialError"
                           class="rnr-form-error"
                           openlmis-message="error.number.only"
                           style="display: none"></span>
                   </span>
+                  <input id="coverageOpenedVial{{$parent.$index}}{{$index}}" type="checkbox"
+                         ng-hide="(product == 'Polio10' || product == 'Penta1')"
+                         ng-model="openedVialMap[product].openedVial.notRecorded"
+                         not-recorded/>
+                  <label class="checkbox-label" for="coverageOpenedVial{{$parent.$index}}{{$index}}"
+                         ng-hide="(product == 'Polio10' || product == 'Penta1')"
+                         openlmis-message="label.not.recorded"></label>
                 </div>
-                <input id="openedVialsNR{{$index}}" type="checkbox"
-                       ng-model="lineItem.openedVials.notRecorded"
-                       not-recorded/>
-                <label class="checkbox-label" for="openedVialsNR{{$index}}"
-                       openlmis-message="label.not.recorded"></label>
               </td>
               <td class="col-complete-vaccinated col-opened-vial" ng-hide="hideCell('{{lineItem.vaccination}}')"
                   rowspan="{{productsMap[lineItem.vaccination].rowSpan}}">
-                <span></span>
+                <span ng-bind="calculateWastageRate(productsMap[lineItem.vaccination])"></span>
               </td>
             </tr>
             </tbody>
