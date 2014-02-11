@@ -1382,4 +1382,8 @@ public class DBWrapper {
   public Map<String, String> getDistributionDetails(String deliveryZoneName, String programName, String periodName) throws SQLException {
     return select("select * from distributions where deliveryZoneId =(Select id from delivery_zones where name= '%s')AND programid = (Select id from programs where name = '%s') AND periodid=(Select id from processing_periods where name= '%s' )", deliveryZoneName, programName, periodName).get(0);
   }
+
+  public void updateOrderStatus(String orderStatus) throws SQLException {
+    update("UPDATE orders set status = '" + orderStatus + "' WHERE id = " + getMaxRnrID());
+  }
 }

@@ -438,15 +438,20 @@ public class E2EInitiateRnR extends TestCaseHelper {
     homePage.navigateViewOrders();
   }
 
-  @And("^I verify order status as \"([^\"]*)\"$")
-  public void verifyOrderStatus(String orderStatus) {
+  @And("^I verify order status as \"([^\"]*)\" in row \"([^\"]*)\"$")
+  public void verifyOrderStatus(String orderStatus, String rowNumber) {
     ViewOrdersPage viewOrdersPage = PageFactory.getInstanceOfViewOrdersPage(testWebDriver);
-    assertEquals(orderStatus, viewOrdersPage.getOrderStatus());
+    assertEquals(orderStatus, viewOrdersPage.getOrderStatus(Integer.parseInt(rowNumber)));
   }
 
   @Then("^I should see ordered list with download link$")
   public void verifyOrderListWithDownloadLink() throws SQLException {
     verifyOrderedList(true);
+  }
+
+  @And("^I change order status to \"([^\"]*)\"$")
+  public void updateOrderStatus(String orderStatus) throws SQLException {
+    dbWrapper.updateOrderStatus(orderStatus);
   }
 
   @When("^I do not have anything to pack to ship$")

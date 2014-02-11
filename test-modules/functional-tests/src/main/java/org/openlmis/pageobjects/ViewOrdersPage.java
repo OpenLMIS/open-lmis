@@ -111,8 +111,9 @@ public class ViewOrdersPage extends RequisitionPage {
     SeleneseTestNgHelper.assertEquals(actualProgram, program);
   }
 
-  public String getOrderStatus() {
-    testWebDriver.waitForElementToAppear(orderStatusOnViewOrderScreen);
-    return orderStatusOnViewOrderScreen.getText();
+  public String getOrderStatus(int rowNumber) {
+    WebElement orderStatus = testWebDriver.getElementByXpath("(//div[@id='orderStatus'])[" + rowNumber + "]");
+    testWebDriver.waitForElementToAppear(orderStatus);
+    return orderStatus.getText();
   }
 }

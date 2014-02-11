@@ -282,7 +282,7 @@ public class PODPagination extends TestCaseHelper {
     updatePodPage.clickCancelButton();
 
     ViewOrdersPage viewOrdersPage = homePage.navigateViewOrders();
-    assertEquals("Ready to pack", viewOrdersPage.getOrderStatus());
+    assertEquals("Ready to pack", viewOrdersPage.getOrderStatus(1));
 
     homePage.navigateManagePOD();
     managePodPage.selectRequisitionToUpdatePod(1);
@@ -309,7 +309,7 @@ public class PODPagination extends TestCaseHelper {
     assertFalse(updatePodPage.isNotesEnabled(2));
 
     homePage.navigateViewOrders();
-    assertEquals("Received", viewOrdersPage.getOrderStatus());
+    assertEquals("Received", viewOrdersPage.getOrderStatus(1));
 
     homePage.navigateManagePOD();
     managePodPage.verifyNoOrderMessage();
@@ -338,7 +338,7 @@ public class PODPagination extends TestCaseHelper {
     assertTrue(updatePodPage.isNotesEnabled(1));
 
     ViewOrdersPage viewOrdersPage = homePage.navigateViewOrders();
-    assertEquals("Ready to pack", viewOrdersPage.getOrderStatus());
+    assertEquals("Ready to pack", viewOrdersPage.getOrderStatus(1));
 
     homePage.navigateManagePOD();
     managePodPage.selectRequisitionToUpdatePod(1);
@@ -364,7 +364,7 @@ public class PODPagination extends TestCaseHelper {
     assertFalse(updatePodPage.isNotesEnabled(1));
 
     homePage.navigateViewOrders();
-    assertEquals("Received", viewOrdersPage.getOrderStatus());
+    assertEquals("Received", viewOrdersPage.getOrderStatus(1));
 
     homePage.navigateManagePOD();
     managePodPage.verifyNoOrderMessage();

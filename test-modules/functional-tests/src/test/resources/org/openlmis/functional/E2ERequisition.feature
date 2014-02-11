@@ -70,10 +70,14 @@ Feature: End to end requisition flow
     Then I should see ordered list with download link
     When I access Manage POD page
     Then I should see list of orders to manage POD for "Regular" Rnr
+    When I access Manage POD page
+    When I click on update Pod link for Row "1"
+    Then I should see all products to update pod
     When I do not have anything to pack to ship
     And I access view orders page
     Then I should see ordered list without download link
     When I logout
+
     And I am logged in as "storeInCharge"
     And I initiate and submit emergency requisition
     And I update & verify quantities for emergency RnR
@@ -101,11 +105,18 @@ Feature: End to end requisition flow
     Then I should see pending order list
     When I convert to order
     And I access view orders page
+    And I verify order status as "Transfer failed" in row "1"
+    And I verify order status as "Transfer failed" in row "2"
     Then I should see ordered list with download link
+    And I change order status to "RELEASED"
     When I access Manage POD page
     Then I should see list of orders to manage POD for "Emergency" Rnr
     When I click on update Pod link for Row "2"
     Then I should see all products to update pod
-    When I do not have anything to pack to ship
-    And I access view orders page
-    Then I should see ordered list without download link
+    And I enter "23" as quantity received and "Notes" as notes in row "1"
+    And I enter "35" as quantity received and "Other" as notes in row "2"
+    Then I submit POD
+    And I verify quantity received and notes disabled
+    Then I access view orders page
+    And I verify order status as "Received" in row "1"
+    Then I logout

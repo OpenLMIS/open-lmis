@@ -213,10 +213,10 @@ public class UpdatePod extends TestCaseHelper {
     verifyPodDataInDatabase("45", "Some notes", "P10");
   }
 
-  @And("^I enter \"([^\"]*)\" as quantity received and \"([^\"]*)\" as notes$")
-  public void enterPodDetails(String quantityReceived, String notes) {
+  @And("^I enter \"([^\"]*)\" as quantity received and \"([^\"]*)\" as notes in row \"([^\"]*)\"$")
+  public void enterPodDetails(String quantityReceived, String notes, String rowNumber) {
     UpdatePodPage updatePodPage = PageFactory.getInstanceOfUpdatePodPage(testWebDriver);
-    updatePodPage.enterPodData(quantityReceived, notes, 1);
+    updatePodPage.enterPodData(quantityReceived, notes, Integer.parseInt(rowNumber));
   }
 
   @And("^I submit POD$")
