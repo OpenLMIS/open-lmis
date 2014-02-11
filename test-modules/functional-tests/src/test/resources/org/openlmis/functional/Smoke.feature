@@ -747,8 +747,8 @@ Feature: Smoke Tests
     Then I check confirm sync message as "F10-Village Dispensary"
     When I done sync message
     And I view visit information in DB for facility "F10":
-      | observations     | confirmedByName | confirmedByTitle | verifiedByName | verifiedByTitle | vehicleId |
-      | some observation | samuel          | fc               | Verifier       | XYZ             | null      |
+      | observations     | confirmedByName | confirmedByTitle | verifiedByName | verifiedByTitle | vehicleId | synced |
+      | some observation | samuel          | fc               | Verifier       | XYZ             | null      |    t   |
     And I view epi use data in DB for facility "F10" and product group "penta":
       | distributed | expirationDate | loss | received | firstOfMonth | endOfMonth |
       | 16          | 11/2012        | 1    | 10       | 12           | 5          |
@@ -765,6 +765,7 @@ Feature: Smoke Tests
       | existingQuantity | deliveredQuantity | spoiledQuantity |
       | 10               | 50                | 3               |
     And I verify no record present in refrigerator problem table for refrigerator serial number "GR-J287PGHV" and facility "F10"
+    And I see distribution status as synced
     When I record data for distribution "1"
     And I choose facility "F10"
     Then I see "Overall" facility icon as "BLUE"

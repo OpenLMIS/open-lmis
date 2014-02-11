@@ -351,6 +351,7 @@ public class ManageDistribution extends TestCaseHelper {
       assertEquals(facilityVisitDetails.get("verifiedByName"), map.get("verifiedByName"));
       assertEquals(facilityVisitDetails.get("verifiedByTitle"), map.get("verifiedByTitle"));
       assertEquals(facilityVisitDetails.get("visited"), "t");
+      assertEquals(facilityVisitDetails.get("synced"), "t");
       assertEquals(facilityVisitDetails.get("visitDate"), new SimpleDateFormat("yyyy-MM").format(new Date()) + "-01 00:00:00");
       if (!map.get("vehicleId").equals("null"))
         assertEquals(facilityVisitDetails.get("vehicleId"), map.get("vehicleId"));
@@ -512,6 +513,15 @@ public class ManageDistribution extends TestCaseHelper {
     distributionPage = PageFactory.getInstanceOfDistributionPage(testWebDriver);
     distributionPage.verifyFacilityNotSupportedMessage("VACCINES", "Delivery Zone First");
     distributionPage.verifyNoDistributionCachedMessage();
+  }
+
+  @And("^I see distribution status as synced$")
+  public void verifyDistributionStatus() throws SQLException {
+    distributionPage = PageFactory.getInstanceOfDistributionPage(testWebDriver);
+    Map<String, String> distributionDetails = dbWrapper.getDistributionDetails("Delivery Zone First", "VACCINES", "Period14");
+    assertEquals(distributionDetails.get("status"), "SYNCED");
+    assertEquals(distributionPage.getDistributionStatus(), "SYNCED");
+    assertFalse(distributionPage.getTextDistributionList().contains("sync"));
   }
 
   private void verifyElementsInTable(String deliveryZoneNameFirst, String programFirst, String periodDisplayedByDefault) {
