@@ -219,7 +219,9 @@ public class ManageDistribution extends TestCaseHelper {
   @Then("^I verify period \"([^\"]*)\" not present$")
   public void verifyPeriodNotPresent(String period) {
     distributionPage = PageFactory.getInstanceOfDistributionPage(testWebDriver);
-    assertFalse(distributionPage.getAllSelectOptionsFromPeriod().contains(period));
+    for (WebElement webElement : distributionPage.getAllSelectOptionsFromPeriod()) {
+      assertFalse(webElement.getText().contains(period));
+    }
     assertNotEquals(period, distributionPage.getFirstSelectedOptionFromPeriod().getText());
   }
 
@@ -760,10 +762,10 @@ public class ManageDistribution extends TestCaseHelper {
 
   private void verifyElementsPresent() {
     distributionPage = PageFactory.getInstanceOfDistributionPage(testWebDriver);
-    assertTrue("selectDeliveryZoneSelectBox should be present", distributionPage.IsDisplayedSelectDeliveryZoneSelectBox());
-    assertTrue("selectProgramSelectBox should be present", distributionPage.IsDisplayedSelectProgramSelectBox());
-    assertTrue("selectPeriodSelectBox should be present", distributionPage.IsDisplayedSelectPeriodSelectBox());
-    assertTrue("proceedButton should be present", distributionPage.IsDisplayedViewLoadAmountButton());
+    assertTrue("selectDeliveryZoneSelectBox should be present", distributionPage.isDisplayedSelectDeliveryZoneSelectBox());
+    assertTrue("selectProgramSelectBox should be present", distributionPage.isDisplayedSelectProgramSelectBox());
+    assertTrue("selectPeriodSelectBox should be present", distributionPage.isDisplayedSelectPeriodSelectBox());
+    assertTrue("proceedButton should be present", distributionPage.isDisplayedViewLoadAmountButton());
   }
 
   private void verifyAllSelectFieldValues(List<String> valuesToBeVerified, List<WebElement> valuesPresentInDropDown) {

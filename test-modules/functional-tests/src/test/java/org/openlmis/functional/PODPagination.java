@@ -265,12 +265,12 @@ public class PODPagination extends TestCaseHelper {
     ManagePodPage managePodPage = homePage.navigateManagePOD();
     managePodPage.selectRequisitionToUpdatePod(1);
 
-    for(int i=1; i<=10; i++) {
+    for (int i = 1; i <= 10; i++) {
       updatePodPage.enterPodData("1" + i, "notes", i);
     }
 
     navigateToPage(2);
-    for(int i=1; i<=10; i++) {
+    for (int i = 1; i <= 10; i++) {
       updatePodPage.enterPodData("2" + i, "notes", i);
     }
 
@@ -312,7 +312,7 @@ public class PODPagination extends TestCaseHelper {
     assertEquals("Received", viewOrdersPage.getOrderStatus());
 
     homePage.navigateManagePOD();
-    managePodPage.verifyNoProductMessage();
+    managePodPage.verifyNoOrderMessage();
   }
 
   @Test(groups = {"requisition"})
@@ -326,7 +326,7 @@ public class PODPagination extends TestCaseHelper {
     ManagePodPage managePodPage = homePage.navigateManagePOD();
     managePodPage.selectRequisitionToUpdatePod(1);
 
-    for(int i=1; i<=10; i++) {
+    for (int i = 1; i <= 10; i++) {
       updatePodPage.enterPodData("1" + i, "notes", i);
     }
 
@@ -347,7 +347,7 @@ public class PODPagination extends TestCaseHelper {
     updatePodPage.clickErrorPage(2);
 
     verifyProductDisplayOrderOnPage(new String[]{"F5", "NF5", "F6", "NF6", "F7", "NF7", "F8", "NF8", "F9", "NF9"});
-    for(int i=1; i<=10; i++) {
+    for (int i = 1; i <= 10; i++) {
       updatePodPage.enterPodData("2" + i, "notes", i);
     }
 
@@ -367,7 +367,7 @@ public class PODPagination extends TestCaseHelper {
     assertEquals("Received", viewOrdersPage.getOrderStatus());
 
     homePage.navigateManagePOD();
-    managePodPage.verifyNoProductMessage();
+    managePodPage.verifyNoOrderMessage();
   }
 
   private void enterTestDataForShipment() throws SQLException {

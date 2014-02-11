@@ -214,19 +214,19 @@ public class DistributionPage extends Page {
     return testWebDriver.getFirstSelectedOption(selectPeriodSelectBox);
   }
 
-  public boolean IsDisplayedSelectDeliveryZoneSelectBox() {
+  public boolean isDisplayedSelectDeliveryZoneSelectBox() {
     return selectDeliveryZoneSelectBox.isDisplayed();
   }
 
-  public boolean IsDisplayedSelectProgramSelectBox() {
+  public boolean isDisplayedSelectProgramSelectBox() {
     return selectProgramSelectBox.isDisplayed();
   }
 
-  public boolean IsDisplayedSelectPeriodSelectBox() {
+  public boolean isDisplayedSelectPeriodSelectBox() {
     return selectPeriodSelectBox.isDisplayed();
   }
 
-  public boolean IsDisplayedViewLoadAmountButton() {
+  public boolean isDisplayedViewLoadAmountButton() {
     return viewLoadAmountButton.isDisplayed();
   }
 

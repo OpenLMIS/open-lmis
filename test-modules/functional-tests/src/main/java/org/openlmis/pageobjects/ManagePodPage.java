@@ -1,7 +1,6 @@
 package org.openlmis.pageobjects;
 
 
-import com.thoughtworks.selenium.SeleneseTestNgHelper;
 import org.openlmis.UiUtils.TestWebDriver;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -133,7 +132,7 @@ public class ManagePodPage extends Page {
     return testWebDriver.getText(updatePodLinkOnManagePodScreen);
   }
 
-  public void verifyNoProductMessage() {
+  public void verifyNoOrderMessage() {
     testWebDriver.sleep(500);
     testWebDriver.refresh();
     assertTrue("Message not Displayed on Manage Pod Screen", noOrderPresentMessageOnPodScreen.isDisplayed());

@@ -248,7 +248,7 @@ Feature: Smoke Tests
     When I access convert to order page
     And I select "1" requisition on page "1"
     And I select "1" requisition on page "2"
-    And I access convert to order
+    And I convert selected requisitions to order
     Then "1" requisition converted to order
 
   @smokeRequisition
@@ -258,7 +258,7 @@ Feature: Smoke Tests
     And I am logged in as "storeInCharge"
     And I access convert to order page
     And I select "1" requisition on page "1"
-    And I access convert to order
+    And I convert selected requisitions to order
     When I access Manage POD page
     Then I should see list of orders to manage POD for Rnr
     When I click on update Pod link for Row "1"
@@ -271,11 +271,28 @@ Feature: Smoke Tests
     And I am logged in as "storeInCharge"
     And I access convert to order page
     And I select "5" requisition on page "1"
-    And I access convert to order
+    And I convert selected requisitions to order
     And I access Manage POD page
     When I receive shipment for the order
     And I click on update Pod link for Row "1"
     Then I should see all products listed in shipment file to update pod
+
+  @smokeRequisition
+  Scenario: User should able to submit POD for emergency RnR
+    Given I have "storeInCharge" user with "MANAGE_POD" rights
+    And I have a/an "Emergency" order in "RELEASED" status
+    And I am logged in as "storeInCharge"
+    And I receive shipment for the order
+    And I access Manage POD page
+    And I click on update Pod link for Row "1"
+    And I enter "10" as quantity received and "notes" as notes
+    And I submit POD
+    Then I verify quantity received and notes disabled
+    And I verify in database quantity received as "10" and notes as "notes"
+    Then I access view orders page
+    And I verify order status as "Received"
+    Then I access Manage POD page
+    And I verify order not present on manage pod page
 
 # DISTRIBUTION SMOKE TESTS
 
