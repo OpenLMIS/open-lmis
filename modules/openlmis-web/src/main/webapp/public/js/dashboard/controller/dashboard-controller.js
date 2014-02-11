@@ -213,8 +213,97 @@ function AdminDashboardController($scope) {
        lineCap:'butt'
     };
 
-
     /* End of Easy pie chart */
+
+    /* Custom Bar Chart */
+    var d1_1 = [[0, 95],[1, 70],[2, 94]];
+
+    var d1_2 = [[0, 80],[1, 60],[2, 30]];
+
+    var d1_3 = [[0, 65],[1, 40],[2, 45]];
+
+    var multiBarsTicks = [[0, "District A"], [1, "District B"], [2, "District C"]];
+
+    $scope.multipleBarsOption = {
+        series: {
+            shadowSize: 1
+        },
+        bars: {
+            show: true,
+            barWidth: 0.2
+        },
+        xaxis: {
+            tickLength: 0, // hide gridlines
+            axisLabel: 'District',
+            axisLabelUseCanvas: true,
+            axisLabelFontSizePixels: 12,
+            ticks: multiBarsTicks
+
+        } ,
+        yaxis: {
+            min:0,
+            max:100,
+            axisLabel: 'Value',
+            axisLabelUseCanvas: true,
+            axisLabelFontSizePixels: 12 ,
+            axisLabelPadding: 3
+        },
+        grid: {
+            hoverable: true,
+            clickable: false,
+            borderWidth: 1
+        },
+        legend: {
+            labelBoxBorderColor: "none"
+        },
+        tooltip: true,
+        tooltipOpts: {
+            content: getTooltip,//"<h4>%s</h4><ul><li>X is %x</li><li>Y is %y</li></ul>",
+            shifts: {
+                x: 10,
+                y: 20
+            },
+            defaultTheme: false
+        }
+    };
+    $scope.multiBarsData = [
+        {
+            label: "Reported on time",
+            data: d1_1,
+            bars: {
+                order: 1,
+                fillColor:  "#05BC57"
+            },
+            color: "#05BC57"
+        },
+        {
+            label: "Report late",
+            data: d1_2,
+            bars: {
+
+                order: 2,
+                fillColor:  "#FFFF05"
+            },
+            color: "#FFFF05"
+        },
+        {
+            label: "Did not report",
+            data: d1_3,
+            bars: {
+
+                order: 3,
+                fillColor:  "#CC0505"
+            },
+            color: "#CC0505"
+        }
+    ];
+     function getTooltip(label, xval, yval, flotItem){
+
+         return label+' '+xval+' '+yval;
+     }
+
+
+    /* End Custom Bar Chart */
 
 
 

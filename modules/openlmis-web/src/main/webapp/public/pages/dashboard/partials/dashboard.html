@@ -6,8 +6,22 @@
     }
     .chart {
 
-        width: 400px;
+        width: 500px;
         height:300px;
+    }
+
+    #flotTip {white-space: nowrap; border: 1px solid #111; padding: 3px 8px; background:#fff; font-size:12px;}
+    .legend table, .legend > div {
+        height: 82px !important;
+        opacity: 1 !important;
+        right: -55px;
+        top: 10px;
+        width: 116px !important;
+    }
+
+    .legend table {
+        border: 1px solid #555;
+        padding: 5px;
     }
 </style>
 
@@ -41,7 +55,7 @@
                             </div>
                             <div class="tab-pane" id="portlet_tab2_3">
                                <!-- <div   ng-model="eventSources" calendar="myCalendar"  ui-calendar="uiConfig.calendar"></div>-->
-
+                                <a-float id="multipleBars" af-option="multipleBarsOption" af-data="multiBarsData" class="chart"> </a-float>
                             </div>
                             <div class="tab-pane" id="portlet_tab2_4">
 
