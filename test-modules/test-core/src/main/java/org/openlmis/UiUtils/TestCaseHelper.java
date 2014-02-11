@@ -214,18 +214,21 @@ public class TestCaseHelper {
                                        String facilityCodeFirst, String facilityCodeSecond,
                                        String programFirst, String programSecond, String schedule) throws SQLException {
     dbWrapper.insertDeliveryZone(deliveryZoneCodeFirst, deliveryZoneNameFirst);
-    if (multipleFacilityInstances)
+    if (multipleFacilityInstances) {
       dbWrapper.insertDeliveryZone(deliveryZoneCodeSecond, deliveryZoneNameSecond);
+    }
     dbWrapper.insertDeliveryZoneMembers(deliveryZoneCodeFirst, facilityCodeFirst);
     dbWrapper.insertDeliveryZoneMembers(deliveryZoneCodeFirst, facilityCodeSecond);
-    if (multipleFacilityInstances)
+    if (multipleFacilityInstances) {
       dbWrapper.insertDeliveryZoneMembers(deliveryZoneCodeSecond, facilityCodeSecond);
+    }
     dbWrapper.insertProcessingPeriodForDistribution(14, schedule);
     dbWrapper.insertDeliveryZoneProgramSchedule(deliveryZoneCodeFirst, programFirst, schedule);
     dbWrapper.insertDeliveryZoneProgramSchedule(deliveryZoneCodeFirst, programSecond, schedule);
-    if (multipleFacilityInstances)
+    if (multipleFacilityInstances) {
       dbWrapper.insertDeliveryZoneProgramSchedule(deliveryZoneCodeSecond, programSecond, schedule);
-    dbWrapper.insertDeliveryZoneProgramSchedule(deliveryZoneCodeSecond, programFirst, schedule);
+      dbWrapper.insertDeliveryZoneProgramSchedule(deliveryZoneCodeSecond, programFirst, schedule);
+    }
   }
 
   public void addOnDataSetupForDeliveryZoneForMultipleFacilitiesAttachedWithSingleDeliveryZone(String deliveryZoneCodeFirst,
