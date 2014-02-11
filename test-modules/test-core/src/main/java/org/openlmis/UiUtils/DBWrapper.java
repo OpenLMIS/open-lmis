@@ -1026,7 +1026,7 @@ public class DBWrapper {
 
   public Map<String, String> getFacilityVisitDetails(String facilityCode) throws SQLException {
     Map<String, String> facilityVisitsDetails = new HashMap<>();
-    try (ResultSet rs = query("SELECT observations,confirmedByName,confirmedByTitle,verifiedByName,verifiedByTitle, visited, " +
+    try (ResultSet rs = query("SELECT observations,confirmedByName,confirmedByTitle,verifiedByName,verifiedByTitle, visited, synced, " +
       "visitDate, vehicleId from facility_visits WHERE facilityId = (SELECT id FROM facilities WHERE code = '" + facilityCode + "');")) {
       while (rs.next()) {
         facilityVisitsDetails.put("observations", rs.getString("observations"));
@@ -1037,6 +1037,7 @@ public class DBWrapper {
         facilityVisitsDetails.put("visited", rs.getString("visited"));
         facilityVisitsDetails.put("visitDate", rs.getString("visitDate"));
         facilityVisitsDetails.put("vehicleId", rs.getString("vehicleId"));
+        facilityVisitsDetails.put("synced", rs.getString("synced"));
       }
       return facilityVisitsDetails;
     }
@@ -1376,5 +1377,9 @@ public class DBWrapper {
 
   public void insertRegimensProductsInMappingTable(String vaccination, String productCode) throws SQLException {
     update("INSERT INTO coverage_vaccination_products (vaccination, productCode, childCoverage) values ('%s' ,'%s' , TRUE)", vaccination, productCode);
+  }
+
+  public Map<String, String> getDistributionDetails(String deliveryZoneName, String programName, String periodName) throws SQLException {
+    return select("select * from distributions where deliveryZoneId =(Select id from delivery_zones where name= '%s')AND programid = (Select id from programs where name = '%s') AND periodid=(Select id from processing_periods where name= '%s' )", deliveryZoneName, programName, periodName).get(0);
   }
 }

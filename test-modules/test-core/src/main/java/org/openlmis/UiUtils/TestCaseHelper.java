@@ -225,6 +225,7 @@ public class TestCaseHelper {
     dbWrapper.insertDeliveryZoneProgramSchedule(deliveryZoneCodeFirst, programSecond, schedule);
     if (multipleFacilityInstances)
       dbWrapper.insertDeliveryZoneProgramSchedule(deliveryZoneCodeSecond, programSecond, schedule);
+    dbWrapper.insertDeliveryZoneProgramSchedule(deliveryZoneCodeSecond, programFirst, schedule);
   }
 
   public void addOnDataSetupForDeliveryZoneForMultipleFacilitiesAttachedWithSingleDeliveryZone(String deliveryZoneCodeFirst,

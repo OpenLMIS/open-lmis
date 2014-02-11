@@ -49,7 +49,7 @@ public class UpdatePod extends TestCaseHelper {
   }};
 
   @BeforeMethod(groups = "requisition")
-  public void setUp() throws InterruptedException, SQLException, IOException {
+  public void setUp() throws Exception {
     super.setup();
     dbWrapper.deleteData();
     setUpData(updatePODData.get(PROGRAM), updatePODData.get(USER));
@@ -58,7 +58,7 @@ public class UpdatePod extends TestCaseHelper {
   }
 
   @Test(groups = {"requisition"})
-  public void testVerifyUpdatePODForReleasedOrdersValidFlowForRegularRnR() throws Exception {
+  public void testVerifyUpdatePODForReleasedOrdersValidFlowForRegularRnR() throws SQLException {
     initiateRnrAndConvertToOrder(false, 100);
 
     HomePage homePage = loginPage.loginAs(updatePODData.get(USER), updatePODData.get(PASSWORD));
@@ -92,7 +92,7 @@ public class UpdatePod extends TestCaseHelper {
   }
 
   @Test(groups = {"requisition"})
-  public void testVerifyUpdatePODForReleasedOrdersValidFlowForEmergencyRnR() throws Exception {
+  public void testVerifyUpdatePODForReleasedOrdersValidFlowForEmergencyRnR() throws SQLException {
     initiateRnrAndConvertToOrder(true, 100);
 
     HomePage homePage = loginPage.loginAs(updatePODData.get(USER), updatePODData.get(PASSWORD));
@@ -103,7 +103,7 @@ public class UpdatePod extends TestCaseHelper {
   }
 
   @Test(groups = {"requisition"})
-  public void testVerifyUpdatePODForReleasedOrdersWhenPacksToShipIsZero() throws Exception {
+  public void testVerifyUpdatePODForReleasedOrdersWhenPacksToShipIsZero() throws SQLException {
     initiateRnrAndConvertToOrder(false, 0);
 
     HomePage homePage = loginPage.loginAs(updatePODData.get(USER), updatePODData.get(PASSWORD));
@@ -119,7 +119,7 @@ public class UpdatePod extends TestCaseHelper {
   }
 
   @Test(groups = {"requisition"})
-  public void testVerifyUpdatePODForReleasedOrdersWhenMultipleProducts() throws Exception {
+  public void testVerifyUpdatePODForReleasedOrdersWhenMultipleProducts() throws SQLException {
     dbWrapper.setupMultipleProducts(updatePODData.get(PROGRAM), "Lvl3 Hospital", 1, true);
     dbWrapper.insertRequisitionWithMultipleLineItems(1, updatePODData.get(PROGRAM), true, "F10", false);
     dbWrapper.convertRequisitionToOrder(dbWrapper.getMaxRnrID(), "READY_TO_PACK", updatePODData.get(USER));

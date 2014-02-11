@@ -15,6 +15,7 @@ import org.openlmis.UiUtils.CaptureScreenshotOnFailureListener;
 import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.UiUtils.TestWebDriver;
 import org.openlmis.pageobjects.*;
+import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
@@ -92,10 +93,11 @@ public class DistributionSyncTest extends TestCaseHelper {
   }
 
   @Test(groups = {"distribution"})
-  public void testMultipleFacilitySync() throws SQLException {
+  public void testMultipleFacilityFinalSyncAndRestrictAlreadySyncedPeriod() throws SQLException {
     HomePage homePage = loginPage.loginAs(distributionTestData.get(USER), distributionTestData.get(PASSWORD));
     initiateDistribution(distributionTestData.get(FIRST_DELIVERY_ZONE_NAME), distributionTestData.get(VACCINES_PROGRAM));
     VisitInformationPage visitInformationPage = facilityListPage.selectFacility(distributionTestData.get(SECOND_FACILITY_CODE));
+
 
     facilityListPage.verifyFacilityIndicatorColor("Overall", "AMBER");
     assertEquals("Was " + dbWrapper.getAttributeFromTable("facilities", "name", "code", distributionTestData.get(SECOND_FACILITY_CODE)) +
@@ -134,6 +136,11 @@ public class DistributionSyncTest extends TestCaseHelper {
     assertTrue(distributionPage.getSyncMessage().contains("F11-Central Hospital"));
 
     distributionPage.syncDistributionMessageDone();
+    assertEquals(distributionPage.getDistributionStatus(),"SYNCED");
+    assertFalse(distributionPage.getTextDistributionList().contains("sync"));
+
+    Map <String,String> distributionDetails=dbWrapper.getDistributionDetails(distributionTestData.get(FIRST_DELIVERY_ZONE_NAME),distributionTestData.get(VACCINES_PROGRAM),"Period14");
+    assertEquals(distributionDetails.get("status"),"SYNCED");
 
     Map<String, String> facilityVisitF10 = dbWrapper.getFacilityVisitDetails("F10");
     assertEquals(facilityVisitF10.get("observations"), "Some observations");
@@ -141,6 +148,7 @@ public class DistributionSyncTest extends TestCaseHelper {
     assertEquals(facilityVisitF10.get("confirmedByTitle"), "Doe");
     assertEquals(facilityVisitF10.get("verifiedByName"), "Verifier");
     assertEquals(facilityVisitF10.get("verifiedByTitle"), "XYZ");
+    assertEquals(facilityVisitF10.get("synced"), "t");
 
     Map<String, String> facilityVisitF11 = dbWrapper.getFacilityVisitDetails("F11");
     assertEquals(facilityVisitF11.get("observations"), "Some observations");
@@ -148,6 +156,7 @@ public class DistributionSyncTest extends TestCaseHelper {
     assertEquals(facilityVisitF11.get("confirmedByTitle"), "Doe Abc");
     assertEquals(facilityVisitF11.get("verifiedByName"), "Verifier");
     assertEquals(facilityVisitF11.get("verifiedByTitle"), "Verifier Title");
+    assertEquals(facilityVisitF11.get("synced"), "t");
 
     distributionPage.clickRecordData(1);
     facilityListPage.selectFacility("F10");
@@ -168,6 +177,13 @@ public class DistributionSyncTest extends TestCaseHelper {
     epiUsePage = visitInformationPage.navigateToEpiUse();
     epiUsePage.verifyAllFieldsDisabled();
 
+    homePage.navigateHomePage();
+    homePage.navigateToDistributionWhenOnline();
+    distributionPage.selectValueFromDeliveryZone(distributionTestData.get(FIRST_DELIVERY_ZONE_NAME));
+    distributionPage.selectValueFromProgram(distributionTestData.get(VACCINES_PROGRAM));
+    String str = distributionPage.getPeriodDropDownList();
+    assertFalse(str.contains("Period14"));
+
     homePage.navigateToDistributionWhenOnline();
     distributionPage.deleteDistribution();
     distributionPage.clickOk();
@@ -180,6 +196,27 @@ public class DistributionSyncTest extends TestCaseHelper {
     verifyEpiInventoryDataInDatabase(null, "6", null, "P11", distributionTestData.get(SECOND_FACILITY_CODE));
 
     verifySyncedDataInDatabase(distributionTestData.get(FIRST_FACILITY_CODE));
+
+    homePage.navigateHomePage();
+    homePage.navigateToDistributionWhenOnline();
+    distributionPage.selectValueFromDeliveryZone(distributionTestData.get(FIRST_DELIVERY_ZONE_NAME));
+    distributionPage.selectValueFromProgram(distributionTestData.get(VACCINES_PROGRAM));
+    str = distributionPage.getPeriodDropDownList();
+    assertFalse(str.contains("Period14"));
+
+    homePage.navigateHomePage();
+    homePage.navigateToDistributionWhenOnline();
+    distributionPage.selectValueFromDeliveryZone(distributionTestData.get(FIRST_DELIVERY_ZONE_NAME));
+    distributionPage.selectValueFromProgram(distributionTestData.get(TB_PROGRAM));
+    str = distributionPage.getPeriodDropDownList();
+    assertTrue(str.contains("Period14"));
+
+    homePage.navigateHomePage();
+    homePage.navigateToDistributionWhenOnline();
+    distributionPage.selectValueFromDeliveryZone(distributionTestData.get(SECOND_DELIVERY_ZONE_NAME));
+    distributionPage.selectValueFromProgram(distributionTestData.get(VACCINES_PROGRAM));
+    str = distributionPage.getPeriodDropDownList();
+    assertTrue(str.contains("Period14"));
   }
 
   @Test(groups = {"distribution"})

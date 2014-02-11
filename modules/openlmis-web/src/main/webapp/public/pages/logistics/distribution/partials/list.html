@@ -43,7 +43,7 @@
           </div>
           <div class="span2" ng-bind="distribution.program.name"></div>
           <div class="span2" ng-bind="distribution.period.name"></div>
-          <div class="span2" ng-bind="distribution.status"></div>
+          <div id=distributionStatus class="span2" ng-bind="distribution.status"></div>
           <div class="span2"><a id="recordData{{$index}}" href="javascript:void(0)"
                                 openlmis-message="label.record.data"
                                 ng-href="#/record-facility-data/{{distribution.id}}"></a></div>

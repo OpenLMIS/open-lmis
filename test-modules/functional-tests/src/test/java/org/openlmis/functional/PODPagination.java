@@ -43,7 +43,7 @@ public class PODPagination extends TestCaseHelper {
   UpdatePodPage updatePodPage;
 
   @BeforeMethod(groups = {"requisition"})
-  public void setUp() throws SQLException, IOException, InterruptedException {
+  public void setUp() throws Exception {
     super.setup();
     updatePodPage = PageFactory.getInstanceOfUpdatePodPage(testWebDriver);
 
@@ -118,7 +118,7 @@ public class PODPagination extends TestCaseHelper {
   }
 
   @Test(groups = {"requisition"})
-  public void testRnRPaginationAndSpecificDisplayOrder() throws Exception {
+  public void testRnRPaginationAndSpecificDisplayOrder() throws SQLException {
     dbWrapper.setupMultipleProducts(podPaginationData.get(PROGRAM), "Lvl3 Hospital", 11, false);
     dbWrapper.insertRequisitionWithMultipleLineItems(11, podPaginationData.get(PROGRAM), true, "F10", false);
     dbWrapper.convertRequisitionToOrder(dbWrapper.getMaxRnrID(), "READY_TO_PACK", podPaginationData.get(USER));
@@ -166,7 +166,7 @@ public class PODPagination extends TestCaseHelper {
   }
 
   @Test(groups = {"requisition"})
-  public void testCategorySpecificDisplayOrder() throws Exception {
+  public void testCategorySpecificDisplayOrder() throws SQLException {
     dbWrapper.setupMultipleCategoryProducts(podPaginationData.get(PROGRAM), "Lvl3 Hospital", 11, false);
     dbWrapper.insertRequisitionWithMultipleLineItems(11, podPaginationData.get(PROGRAM), true, "F10", false);
     dbWrapper.convertRequisitionToOrder(dbWrapper.getMaxRnrID(), "READY_TO_PACK", podPaginationData.get(USER));
