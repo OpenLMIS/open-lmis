@@ -604,6 +604,7 @@ public class ManageDistribution extends TestCaseHelper {
 
     distributionPage.selectValueFromDeliveryZone(deliveryZoneNameSecond);
     List<String> secondProgramValuesToBeVerified = new ArrayList<>();
+    secondProgramValuesToBeVerified.add(programFirst);
     secondProgramValuesToBeVerified.add(programSecond);
     valuesPresentInDropDown = distributionPage.getAllSelectOptionsFromProgram();
     verifyAllSelectFieldValues(secondProgramValuesToBeVerified, valuesPresentInDropDown);
