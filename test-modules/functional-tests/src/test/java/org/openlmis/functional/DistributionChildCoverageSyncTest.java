@@ -243,6 +243,24 @@ public class DistributionChildCoverageSyncTest extends TestCaseHelper {
   }
 
   @Test(groups = {"distribution"})
+  public void testShouldVerifyAllRegimensWhenInsertedInDifferentOrderInMappingTableAndMappedToPullTypePrograms() throws SQLException {
+    dbWrapper.deleteRowFromTable("coverage_vaccination_products", "vaccination", "BCG");
+    dbWrapper.deleteRowFromTable("coverage_vaccination_products", "vaccination", "Measles");
+    dbWrapper.insertRegimensProductsInMappingTable("Measles", "P10");
+    dbWrapper.insertRegimensProductsInMappingTable("BCG", "P10");
+
+    HomePage homePage = loginPage.loginAs(childCoverageData.get(USER), childCoverageData.get(PASSWORD));
+    DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
+    distributionPage.initiate(childCoverageData.get(FIRST_DELIVERY_ZONE_NAME), childCoverageData.get(VACCINES_PROGRAM));
+    FacilityListPage facilityListPage = distributionPage.clickRecordData(1);
+    VisitInformationPage visitInformationPage = facilityListPage.selectFacility(childCoverageData.get(FIRST_FACILITY_CODE));
+    visitInformationPage.navigateToChildCoverage();
+
+    verifyRegimentsPresent();
+    verifyOpenVialsPresent();
+  }
+
+  @Test(groups = {"distribution"})
   public void testShouldVerifyAllRegimensWhenRegimenMappedToProductInactiveAtGlobalLevelAfterCaching() throws SQLException {
     HomePage homePage = loginPage.loginAs("Admin123", "Admin123");
     ProgramProductISAPage programProductISAPage = homePage.navigateProgramProductISA();
