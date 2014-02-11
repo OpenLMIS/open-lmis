@@ -66,7 +66,7 @@ public class DistributionServiceTest {
   }
 
   @Test
-  public void shouldSyncFacilityDistributionDataAndReturnSyncStatus() {
+  public void shouldSyncFacilityDistributionData() {
     FacilityVisit facilityVisit = new FacilityVisit();
 
     FacilityDistribution facilityDistribution = mock(FacilityDistribution.class);

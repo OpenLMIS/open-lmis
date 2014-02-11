@@ -12,9 +12,9 @@ package org.openlmis.web.controller;
 
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.User;
+import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.UserService;
 import org.openlmis.distribution.domain.Distribution;
-import org.openlmis.distribution.domain.DistributionStatus;
 import org.openlmis.distribution.domain.FacilityDistribution;
 import org.openlmis.distribution.dto.FacilityDistributionDTO;
 import org.openlmis.distribution.service.DistributionService;
@@ -32,6 +32,7 @@ import java.text.SimpleDateFormat;
 import java.util.Map;
 
 import static org.openlmis.web.response.OpenLmisResponse.SUCCESS;
+import static org.openlmis.web.response.OpenLmisResponse.response;
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
@@ -74,13 +75,17 @@ public class DistributionController extends BaseController {
   @RequestMapping(value = "/distributions/{id}/facilities/{facilityId}", method = PUT, headers = ACCEPT_JSON)
   public ResponseEntity<OpenLmisResponse> sync(@RequestBody FacilityDistributionDTO facilityDistributionDTO, @PathVariable Long id,
                                                @PathVariable Long facilityId, HttpServletRequest httpServletRequest) {
-    facilityDistributionDTO.getFacilityVisit().setFacilityId(facilityId);
-    facilityDistributionDTO.setDistributionId(id);
-    facilityDistributionDTO.setModifiedBy(loggedInUserId(httpServletRequest));
-    boolean syncStatus = distributionService.sync(facilityDistributionDTO.transform());
-    DistributionStatus distributionStatus = distributionService.updateDistributionStatus(id);
-    ResponseEntity<OpenLmisResponse> response = OpenLmisResponse.response("syncStatus", syncStatus);
-    response.getBody().addData("distributionStatus", distributionStatus);
+    ResponseEntity<OpenLmisResponse> response;
+    try {
+      facilityDistributionDTO.getFacilityVisit().setFacilityId(facilityId);
+      facilityDistributionDTO.setDistributionId(id);
+      facilityDistributionDTO.setModifiedBy(loggedInUserId(httpServletRequest));
+      distributionService.sync(facilityDistributionDTO.transform());
+      response = response("syncStatus", true);
+    } catch (DataException e) {
+      response = response("syncStatus", false);
+    }
+    response.getBody().addData("distributionStatus", distributionService.updateDistributionStatus(id));
     return response;
   }
 
