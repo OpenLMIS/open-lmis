@@ -6,10 +6,23 @@
     }
     .chart {
 
-        width: 400px;
+        width: 500px;
         height:300px;
     }
 
+    #flotTip {white-space: nowrap; border: 1px solid #111; padding: 3px 8px; background:#fff; font-size:12px;}
+    .legend table, .legend > div {
+        height: 82px !important;
+        opacity: 1 !important;
+        right: -55px;
+        top: 10px;
+        width: 116px !important;
+    }
+
+    .legend table {
+        border: 1px solid #555;
+        padding: 5px;
+    }
 </style>
 
 <!-- BEGIN CONTAINER -->
@@ -41,12 +54,13 @@
                                 <a-float id="afloat2" af-option="pieChartOption" af-data="pieChartData" class="chart"></a-float>
                             </div>
                             <div class="tab-pane" id="portlet_tab2_3">
-                                <div   ng-model="eventSources" calendar="myCalendar"  ui-calendar="uiConfig.calendar"></div>
+                               <!-- <div   ng-model="eventSources" calendar="myCalendar"  ui-calendar="uiConfig.calendar"></div>-->
+                                <a-float id="multipleBars" af-option="multipleBarsOption" af-data="multiBarsData" class="chart"> </a-float>
                             </div>
                             <div class="tab-pane" id="portlet_tab2_4">
 
                                 <div >
-		                            <span class="easychart" easypiechart percent="percent1">
+		                            <span class="easychart" easypiechart options="option1" percent="percent1">
 			                            <span class="easychart-percent" ng-bind="percent1"></span>
                                     </span>
                                     <span class="easychart" easypiechart   options="option2" percent="percent2">
@@ -71,7 +85,43 @@
                 </div>
             </div>
             <!-- END TAB PORTLET-->
+            <div class="well">
+                <div class="row-fluid">
+                    <div class="span4">
+                        <div class="center-justified"><h2>Events</h2></div>
+                        <div style="margin-bottom: 3px;">
+                            <button type="button" class="btn btn-primary" ng-click="addEvent()">
+                                Add Event
+                            </button>
+                        </div>
+                        <div>
+                            <ul class="unstyled">
+                                <li ng-repeat="e in events">
+                                    <div class="row-fluid" style="margin-bottom: 3px;">
+                                        <div class="span7"><div><input ng-model="e.title"/></div></div>
+                                        <div class="span3"><div>{{e.start | date:"MMM dd"}} - {{e.end | date:"MMM dd"}}</div></div>
+                                        <div class="span2"><div><button class="btn btn-primary" ng-click="remove($index)">Remove</button></div></div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="span8">
+                        <div class="center-justified"><h2>Calendar Events View</h2></div>
+                        <div class="btn-toolbar pull-right">
+                            <div class="btn-group">
+                                <button class="btn" ng-click="changeView('agendaDay', myCalendar)">AgendaDay</button>
+                                <button class="btn" ng-click="changeView('agendaWeek', myCalendar)">AgendaWeek</button>
+                                <button class="btn" ng-click="changeView('month', myCalendar)">Month</button>
+                            </div>
+                        </div>
+                        <div class="calendar" ng-model="eventSources" calendar="myCalendar" config="uiConfig.calendar" ui-calendar="uiConfig.calendar"></div>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
 </div>
+
 

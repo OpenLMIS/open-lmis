@@ -119,12 +119,14 @@ function AdminDashboardController($scope) {
 
     /* End Pie Chart */
 
-    /* Calendar */
-        var date = new Date();
-        var d = date.getDate();
-        var m = date.getMonth();
-        var y = date.getFullYear();
+   /* Calendar  */
 
+    var date = new Date();
+    var d = date.getDate();
+    var m = date.getMonth();
+    var y = date.getFullYear();
+
+    /* event source that contains custom events on the scope */
     $scope.events = [
         {title: 'All Day Event',start: new Date(y, m, 1)},
         {title: 'Long Event',start: new Date(y, m, d - 5),end: new Date(y, m, d - 2)},
@@ -134,24 +136,59 @@ function AdminDashboardController($scope) {
         {title: 'Click for Google',start: new Date(y, m, 28),end: new Date(y, m, 29),url: 'http://google.com/'}
     ];
 
+    /* alert on eventClick */
+    $scope.alertOnEventClick = function( event, allDay, jsEvent, view ){
+        alert(event.title + 'was clicked');
+
+    };
+    /* alert on Drop */
+    $scope.alertOnDrop = function(event, dayDelta, minuteDelta, allDay, revertFunc, jsEvent, ui, view){
+        alert('Event Droped to make dayDelta ' + dayDelta);
+
+    };
+    /* alert on Resize */
+    $scope.alertOnResize = function(event, dayDelta, minuteDelta, revertFunc, jsEvent, ui, view ){
+        alert('Event Resized to make dayDelta ' + minuteDelta);
+    };
+
+    /* add custom event*/
+    $scope.addEvent = function() {
+        $scope.events.push({
+            title: 'eLMIS V2 kickoff meeting',
+            start: new Date(y, m, 28),
+            end: new Date(y, m, 29)
+        });
+    };
+    /* remove event */
+    $scope.remove = function(index) {
+        $scope.events.splice(index,1);
+    };
+    /* Change View */
+    $scope.changeView = function(view,calendar) {
+        calendar.fullCalendar('changeView',view);
+    };
+
+    /* config object */
+    $scope.uiConfig = {
+        calendar:{
+            height: 450,
+            editable: true,
+            header:{
+                left: 'title',
+                center: '',
+                right: 'today prev,next'
+            },
+            eventClick: $scope.alertOnEventClick,
+            eventDrop: $scope.alertOnDrop,
+            eventResize: $scope.alertOnResize
+        }
+    };
+
+
     /* event sources array*/
     $scope.eventSources = [$scope.events];
-        /* config object */
-        $scope.uiConfig = {
-            calendar:{
-                height: 450,
-                editable: true,
-                header: {
-                    left: 'prev,next today',
-                    center: 'title',
-                    right: 'month,basicWeek,basicDay'
-                },
-                eventClick: $scope.alertOnEventClick,
-                eventDrop: $scope.alertOnDrop,
-                eventResize: $scope.alertOnResize
-            }
-        };
-    /* End of Calendar */
+
+    /* End Calendar  */
 
 
     /* Easy pie chart */
@@ -159,7 +196,7 @@ function AdminDashboardController($scope) {
     $scope.percent1 = 55;
     $scope.option2  = { animate:false, barColor:'#E23E3E', scaleColor:false, lineWidth:5 };
     $scope.percent2 = -46;
-    $scope.option3  = { animate:false, barColor:'#38AB49', scaleColor:false, lineWidth:5};
+    $scope.option3  = { animate:false, barColor:'#38AB49', scaleColor:false, lineWidth:5, lineCap:'butt' };
     $scope.percent3 = 85;
     $scope.option4  = { animate:false, barColor:'#FFB848', scaleColor:false, lineWidth:5, lineCap:'butt' };
     $scope.percent4 = 55;
@@ -176,8 +213,97 @@ function AdminDashboardController($scope) {
        lineCap:'butt'
     };
 
-
     /* End of Easy pie chart */
+
+    /* Custom Bar Chart */
+    var d1_1 = [[0, 95],[1, 70],[2, 94]];
+
+    var d1_2 = [[0, 80],[1, 60],[2, 30]];
+
+    var d1_3 = [[0, 65],[1, 40],[2, 45]];
+
+    var multiBarsTicks = [[0, "District A"], [1, "District B"], [2, "District C"]];
+
+    $scope.multipleBarsOption = {
+        series: {
+            shadowSize: 1
+        },
+        bars: {
+            show: true,
+            barWidth: 0.2
+        },
+        xaxis: {
+            tickLength: 0, // hide gridlines
+            axisLabel: 'District',
+            axisLabelUseCanvas: true,
+            axisLabelFontSizePixels: 12,
+            ticks: multiBarsTicks
+
+        } ,
+        yaxis: {
+            min:0,
+            max:100,
+            axisLabel: 'Value',
+            axisLabelUseCanvas: true,
+            axisLabelFontSizePixels: 12 ,
+            axisLabelPadding: 3
+        },
+        grid: {
+            hoverable: true,
+            clickable: false,
+            borderWidth: 1
+        },
+        legend: {
+            labelBoxBorderColor: "none"
+        },
+        tooltip: true,
+        tooltipOpts: {
+            content: getTooltip,//"<h4>%s</h4><ul><li>X is %x</li><li>Y is %y</li></ul>",
+            shifts: {
+                x: 10,
+                y: 20
+            },
+            defaultTheme: false
+        }
+    };
+    $scope.multiBarsData = [
+        {
+            label: "Reported on time",
+            data: d1_1,
+            bars: {
+                order: 1,
+                fillColor:  "#05BC57"
+            },
+            color: "#05BC57"
+        },
+        {
+            label: "Report late",
+            data: d1_2,
+            bars: {
+
+                order: 2,
+                fillColor:  "#FFFF05"
+            },
+            color: "#FFFF05"
+        },
+        {
+            label: "Did not report",
+            data: d1_3,
+            bars: {
+
+                order: 3,
+                fillColor:  "#CC0505"
+            },
+            color: "#CC0505"
+        }
+    ];
+     function getTooltip(label, xval, yval, flotItem){
+
+         return label+' '+xval+' '+yval;
+     }
+
+
+    /* End Custom Bar Chart */
 
 
 
