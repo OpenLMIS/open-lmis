@@ -39,6 +39,8 @@ public class FacilityVisit extends BaseModel {
   private Date visitDate;
   private Boolean visited;
   private String vehicleId;
+  private ReasonForNotVisiting reasonForNotVisiting;
+  private String otherReasonDescription;
 
   private Boolean synced = false;
 
@@ -46,5 +48,19 @@ public class FacilityVisit extends BaseModel {
     this.distributionId = distribution.getId();
     this.facilityId = facility.getId();
     this.createdBy = distribution.getCreatedBy();
+  }
+
+  public void setApplicableVisitInfo() {
+    if (this.visited) {
+      this.reasonForNotVisiting = null;
+      this.otherReasonDescription = null;
+      return;
+    }
+    this.observations = null;
+    this.visited = null;
+    this.confirmedBy = null;
+    this.verifiedBy = null;
+    this.vehicleId = null;
+    this.visitDate = null;
   }
 }

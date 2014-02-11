@@ -16,8 +16,7 @@ import org.openlmis.distribution.repository.FacilityVisitRepository;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
@@ -33,14 +32,17 @@ public class FacilityVisitServiceTest {
   public ExpectedException expectedEx = ExpectedException.none();
 
   @Test
-  public void shouldSaveFacilityVisit() {
-    FacilityVisit facilityVisit = new FacilityVisit();
+  public void shouldSaveFacilityVisitWithVisitDetails() {
+    FacilityVisit facilityVisit = spy(new FacilityVisit());
+
+    doNothing().when(facilityVisit).setApplicableVisitInfo();
     when(facilityVisitRepository.save(facilityVisit)).thenReturn(facilityVisit);
 
     FacilityVisit savedVisit = facilityVisitService.save(facilityVisit);
 
     assertThat(savedVisit, is(facilityVisit));
     verify(facilityVisitRepository).save(facilityVisit);
+    verify(facilityVisit).setApplicableVisitInfo();
   }
 
   @Test

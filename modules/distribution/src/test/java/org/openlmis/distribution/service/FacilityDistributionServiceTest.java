@@ -33,8 +33,8 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 import static org.powermock.api.mockito.PowerMockito.*;
 
 @Category(UnitTests.class)
@@ -192,9 +192,11 @@ public class FacilityDistributionServiceTest {
   }
 
   @Test
-  public void shouldSaveFacilityDistributionForms() throws Exception {
+  public void shouldSaveFacilityDistributionFormsIfFacilityVisited() throws Exception {
     EpiUse epiUse = new EpiUse();
     FacilityVisit facilityVisit = new FacilityVisit();
+    facilityVisit.setFacilityId(1234L);
+    facilityVisit.setVisited(true);
     DistributionRefrigerators distributionRefrigerators = new DistributionRefrigerators();
     EpiInventory epiInventory = new EpiInventory();
     VaccinationFullCoverage vaccinationFullCoverage = new VaccinationFullCoverage();
@@ -206,6 +208,28 @@ public class FacilityDistributionServiceTest {
     verify(epiUseService).save(epiUse);
     verify(vaccinationCoverageService).saveFullCoverage(vaccinationFullCoverage);
     verify(epiInventoryService).save(epiInventory);
+    verify(distributionRefrigeratorsService).save(1234L, distributionRefrigerators);
+  }
+
+  @Test
+  public void shouldSaveOnlyFacilityVisitCoverageAndEpiUseDataIfFacilityNotVisited() throws Exception {
+    EpiUse epiUse = new EpiUse();
+    FacilityVisit facilityVisit = new FacilityVisit();
+    facilityVisit.setFacilityId(1234L);
+    facilityVisit.setVisited(false);
+    DistributionRefrigerators distributionRefrigerators = new DistributionRefrigerators();
+    EpiInventory epiInventory = new EpiInventory();
+    VaccinationFullCoverage vaccinationFullCoverage = new VaccinationFullCoverage();
+    FacilityDistribution facilityDistribution = new FacilityDistribution(facilityVisit, epiUse, distributionRefrigerators, epiInventory, vaccinationFullCoverage, null);
+
+    facilityDistributionService.save(facilityDistribution);
+
+    verify(facilityVisitService).save(facilityVisit);
+    verify(epiUseService).save(epiUse);
+    verify(vaccinationCoverageService).saveFullCoverage(vaccinationFullCoverage);
+
+    verify(epiInventoryService, never()).save(epiInventory);
+    verify(distributionRefrigeratorsService, never()).save(1234L, distributionRefrigerators);
   }
 
   @Test

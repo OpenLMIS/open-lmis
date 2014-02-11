@@ -16,6 +16,7 @@ public class FacilityVisitService {
   FacilityVisitRepository repository;
 
   public FacilityVisit save(FacilityVisit facilityVisit) {
+    facilityVisit.setApplicableVisitInfo();
     return repository.save(facilityVisit);
   }
 

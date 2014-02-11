@@ -89,10 +89,12 @@ public class FacilityDistributionService {
 
   public FacilityDistribution save(FacilityDistribution facilityDistribution) {
     facilityVisitService.save(facilityDistribution.getFacilityVisit());
+    if (facilityDistribution.getFacilityVisit().getVisited()) {
+      epiInventoryService.save(facilityDistribution.getEpiInventory());
+      distributionRefrigeratorsService.save(facilityDistribution.getFacilityVisit().getFacilityId(), facilityDistribution.getRefrigerators());
+    }
     epiUseService.save(facilityDistribution.getEpiUse());
-    distributionRefrigeratorsService.save(facilityDistribution.getFacilityVisit().getFacilityId(), facilityDistribution.getRefrigerators());
     vaccinationCoverageService.saveFullCoverage(facilityDistribution.getFullCoverage());
-    epiInventoryService.save(facilityDistribution.getEpiInventory());
     return facilityDistribution;
   }
 
