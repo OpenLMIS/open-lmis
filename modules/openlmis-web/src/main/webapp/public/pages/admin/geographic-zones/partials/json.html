@@ -42,13 +42,17 @@
   </div>
   <br/>
 
+  <div class="clear-both"></div>
+  <div class="pull-right">
+    <leaflet center="center" width="500px" height="400px" geojson="geojson"></leaflet>
+  </div>
   <div class="row">
     <div class="span5">
       <div ng-show="geojson != undefined">
         <h2>GIS Data</h2>
         Search <input type="text" ng-model="search_geo">
         <table class="table">
-          <tr ng-hide="(hide_mapped && feature.properties.mapped) || (search_geo != undefined && search_geo != '' && feature.properties.ADM2.indexOf(search_geo) < 0 && feature.properties.ADM1.indexOf(search_geo) < 0 )"
+          <tr style="cursor: hand" ng-hide="(hide_mapped && feature.properties.mapped) || (search_geo != undefined && search_geo != '' && feature.properties.ADM2.indexOf(search_geo) < 0 && feature.properties.ADM1.indexOf(search_geo) < 0 )"
               ng-class="feature.properties.mapped == true? 'message alert alert-success':''" ui-draggable="true"
               drag="feature" on-drop-success="dropSuccessHandler($event,feature)" ng-repeat="feature in features">
             <td>{{ feature.properties.ADM1 }}</td>
@@ -72,7 +76,8 @@
       </span>
         Search <input type="text" ng-model="search_zone">
         <table class="table">
-          <tr ng-hide="(hide_mapped && zone.mapped) || ( (search_zone != undefined && search_zone != '' && ( zone.adm2.indexOf(search_zone) < 0  && zone.adm3.indexOf(search_zone) < 0)))" ng-class="zone.mapped == true? 'message alert alert-success':''"
+          <tr ng-hide="(hide_mapped && zone.mapped) || ( (search_zone != undefined && search_zone != '' && ( zone.adm2.indexOf(search_zone) < 0  && zone.adm3.indexOf(search_zone) < 0)))"
+              ng-class="zone.mapped == true? 'message alert alert-success':''"
               ng-repeat="zone in geographicZones"
               ui-on-Drop="onDrop($event,$data, zone)">
             <!--<td>{{ zone.adm1 }}</td>-->
@@ -86,15 +91,16 @@
     </div>
   </div>
 </div>
-<!--<div class="clear-both"></div>-->
-<!--<div>-->
-<!--<leaflet center="center" width="650px" height="450px" geojson="geojson"></leaflet>-->
-<!--</div>-->
 
 
 <div form-toolbar id="action_buttons" class="action-buttons" ng-show="geojson != undefined && level != undefined">
   <div class="form-cell button-row">
-    <a class="btn btn-primary">Save</a>
+    <div class="form-cell button-row">
+      <a class="btn btn-primary pull-left" ng-click="save();">Save</a>
+
+      <div class="toolbar-success" ng-show="message">{{ message }}</div>
+    </div>
+
   </div>
 </div>
 

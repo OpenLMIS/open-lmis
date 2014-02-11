@@ -8,7 +8,7 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-function GeographicZonesJsonController($scope, leafletData, FlatGeographicZoneList, GeographicLevels) {
+function GeographicZonesJsonController($scope, leafletData, FlatGeographicZoneList, GeographicLevels, SaveGeographicInfo) {
   $scope.features = [];
 
   $scope.importFile = function (event) {
@@ -23,25 +23,33 @@ function GeographicZonesJsonController($scope, leafletData, FlatGeographicZoneLi
         $scope.features.push(feature);
       });
 
-      angular.extend($scope, {
-        geojson: {
-          data: $scope.json,
-          style: {
-            fillColor: "green",
-            weight: 1,
-            opacity: 1,
-            color: 'white',
-            dashArray: '1',
-            fillOpacity: 0.7
-          },
-          resetStyleOnMouseout: true
-        }
-      });
-
-      $scope.$apply();
+      $scope.drawMap($scope.json);
       $scope.centerJSON();
     };
     reader.readAsText(fi.files[0]);
+  };
+
+  $scope.style = function(feature){
+    return {
+      fillColor: (feature.properties.mapped)?"red":"green",
+      weight: 1,
+      opacity: 1,
+      color: 'white',
+      dashArray: '1',
+      fillOpacity: 0.7
+    };
+  };
+
+  $scope.drawMap = function(json){
+
+    angular.extend($scope, {
+      geojson: {
+        data: json,
+        style: $scope.style,
+        resetStyleOnMouseout: true
+      }
+    });
+    $scope.$apply();
   };
 
   $scope.centerJSON = function () {
@@ -93,16 +101,36 @@ function GeographicZonesJsonController($scope, leafletData, FlatGeographicZoneLi
   });
 
 
-  $scope.dropSuccessHandler = function($event,dragged){
+  $scope.dropSuccessHandler = function ($event, dragged) {
     dragged.properties.mapped = true;
+    $scope.drawMap( {
+      "type": "FeatureCollection",
+      "features": $scope.features
+    } );
   };
 
-  $scope.onDrop = function($event,$data, zone){
+  $scope.onDrop = function ($event, $data, zone) {
     zone.mapped = true;
     $data.properties.mapped = true;
     zone.newId = $data.properties.ID;
     zone.geometry = $data.geometry;
   };
+
+  $scope.save = function () {
+
+    // convert the format of the submission to the DTO format
+    var features = [];
+    angular.forEach($scope.geographicZones, function(obj, index){
+        if(obj.mapped){
+          features.push({zoneId: obj.id, geoJsonId : obj.newId, geometry: JSON.stringify(obj.geometry) });
+        }
+    });
+
+    SaveGeographicInfo.post({features: features},function(){
+        $scope.message = "Your GIS Mappings have been saved!";
+    });
+  };
+
 
 }
 
