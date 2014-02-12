@@ -50,7 +50,6 @@ Feature: Smoke Tests
     When I access regimen tab for view requisition
     Then I verify values on regimen page as patientsOnTreatment "100" patientsToInitiateTreatment "200" patientsStoppedTreatment "300" remarks "Regimens data filled"
 
-
   @smokeRequisition
   Scenario: Verifying Forgot Password functionality
     Given I am on forgot password screen
@@ -347,7 +346,6 @@ Feature: Smoke Tests
     Then I should see period "Period14"
     And I click view load amount
 
-
   @smokeDistribution
   Scenario: User should able to override ISA
     Given I have the following data for override ISA:
@@ -363,7 +361,6 @@ Feature: Smoke Tests
     Then I should see save successfully
     When I search facility
     Then I should see overridden ISA "24"
-
 
   @smokeDistribution
   Scenario: Distribution user should view ISA, Override ISA and NoRecords for different delivery zone, program & period combination
@@ -397,7 +394,6 @@ Feature: Smoke Tests
     And I select period "Period14"
     And I click view load amount
     Then I should see message "No records found"
-
 
   @smokeDistribution
   Scenario: Distribution user should view aggregate ISA for delivery zone
@@ -437,10 +433,9 @@ Feature: Smoke Tests
     And I should see No facility selected
     And I should see "active" facilities that support the program "VACCINES" and delivery zone "Delivery Zone First"
     When I choose facility "F10"
-    Then I should verify facility zone "Health center" in the header
+    Then I should verify facility zone "Health Center" in the header
     And  I should verify facility name "Village Dispensary" in the header
     And I verify legends
-
 
   @smokeDistribution
   Scenario: User should be able to add/edit/delete refrigerator
@@ -527,7 +522,6 @@ Feature: Smoke Tests
       | vehicleId | observations     | confirmedByName | confirmedByTitle | verifiedByName | verifiedByTitle |
       | 023!YU-09 | some observation | samuel          | fc               | Verifier       | X YZ            |
 
-
   @smokeDistribution
   Scenario: User should fill Visit Information when facility was not visited
     Given I have the following data for distribution:
@@ -566,7 +560,6 @@ Feature: Smoke Tests
     And I access show
     Then I see "refrigerator" fields disabled
 
-
   @smokeDistribution
   Scenario: User should fill EPI use data
     Given I have the following data for distribution:
@@ -601,7 +594,6 @@ Feature: Smoke Tests
     And I choose facility "F10"
     Then Verify "epi use" indicator should be "GREEN"
 
-
   @smokeDistribution
   Scenario: User should fill EPI Inventory data
     Given I have the following data for distribution:
@@ -631,7 +623,6 @@ Feature: Smoke Tests
       | existingQuantity | deliveredQuantity | spoiledQuantity |
       | 100              | 50                | 100             |
       | 10               | 5                 | 10              |
-
 
   @smokeDistribution
   Scenario: User should fill Full Coverage data
