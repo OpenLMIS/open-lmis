@@ -78,8 +78,6 @@ describe('Child Coverage Controller', function () {
       'Polio 3rd dose': childCoverageLineItem5
     };
 
-    childCoverageLineItem2.outReach23Months.notRecorded = true;
-    childCoverageLineItem2.healthCenter23Months.notRecorded = true;
     expect(scope.childCoverageMap).toEqual(childCoverageMap);
   });
 

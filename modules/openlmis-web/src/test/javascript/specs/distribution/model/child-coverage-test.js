@@ -9,7 +9,6 @@
  */
 
 describe('Child coverage', function () {
-
   var childCoverage;
 
   beforeEach(function () {
@@ -30,38 +29,80 @@ describe('Child coverage', function () {
 
   });
 
-  it('should set NR to true for polio new born for 12-23 months HC and outreach upon creation', function () {
-    var polioNewBorn = _.findWhere(childCoverage.childCoverageLineItems, {vaccination: 'Polio (Newborn)'});
+  describe('Apply NR to all', function () {
 
-    expect(polioNewBorn.healthCenter23Months.notRecorded).toBeTruthy();
-    expect(polioNewBorn.outReach23Months.notRecorded).toBeTruthy();
+    function verifyCoverageLineItemNotRecordedSet(lineItem) {
+      expect(lineItem.healthCenter11Months.notRecorded).toBeTruthy();
+      expect(lineItem.outReach11Months.notRecorded).toBeTruthy();
+      expect(lineItem.healthCenter23Months.notRecorded).toBeTruthy();
+      expect(lineItem.outReach23Months.notRecorded).toBeTruthy();
+    }
+
+    it('should set all NR flags to true', function () {
+      childCoverage.setNotRecorded();
+
+      verifyCoverageLineItemNotRecordedSet(childCoverage.childCoverageLineItems[0]);
+      verifyCoverageLineItemNotRecordedSet(childCoverage.childCoverageLineItems[1]);
+
+      expect(childCoverage.openedVialLineItems[0].openedVial.notRecorded).toBeTruthy();
+      expect(childCoverage.openedVialLineItems[1].openedVial.notRecorded).toBeTruthy();
+    });
+
+    it('should create child coverage object from JSON', function () {
+      spyOn($, 'extend');
+      var childCoverageJSON = {blah: 'blah blah'};
+
+      var childCoverage = new ChildCoverage(123, childCoverageJSON);
+
+      expect($.extend).toHaveBeenCalledWith(true, childCoverage, childCoverageJSON);
+    });
   });
 
-  function verifyCoverageLineItemNotRecordedSet(lineItem) {
-    expect(lineItem.healthCenter11Months.notRecorded).toBeTruthy();
-    expect(lineItem.outReach11Months.notRecorded).toBeTruthy();
-    expect(lineItem.healthCenter23Months.notRecorded).toBeTruthy();
-    expect(lineItem.outReach23Months.notRecorded).toBeTruthy();
-  }
+  describe('compute status', function () {
+    it('should set status as is-empty if form is blank', function () {
+      var emptyChildCoverage = new ChildCoverage(12, {
+        childCoverageLineItems: [
+          {"id": 5, "facilityVisitId": 3, "vaccination": "BCG"},
+          {"id": 26, "facilityVisitId": 3, "vaccination": "Polio (Newborn)"}
+        ],
+        openedVialLineItems: [
+          {"id": 15, "facilityVisitId": 3, "productVialName": "BCG", "packSize": 10},
+          {"id": 16, "facilityVisitId": 3, "productVialName": "Polio10", "packSize": 10}
+        ]
+      });
+      var status = emptyChildCoverage.computeStatus();
+      expect(status).toEqual(DistributionStatus.EMPTY);
+    });
 
-  it('should set all NR flags to true', function () {
-    childCoverage.setNotRecorded();
+    it('should set status as is-empty if no fields filled', function () {
+      var unfilledChildCoverage = new ChildCoverage(12, {
+        childCoverageLineItems: [
+          {"id": 5, "facilityVisitId": 3, "vaccination": "BCG", healthCenter11Months: {value: undefined}, outReach11Months: {value: undefined}, healthCenter23Months: {value: undefined}, outReach23Months: {value: undefined}},
+          {"id": 26, "facilityVisitId": 3, "vaccination": "Polio (Newborn)", healthCenter11Months: {value: undefined}, outReach11Months: {value: undefined}, healthCenter23Months: {value: undefined}, outReach23Months: {value: undefined}}
+        ],
+        openedVialLineItems: [
+          {"id": 15, "facilityVisitId": 3, "productVialName": "BCG", "packSize": 10,  openedVial: {value: undefined}},
+          {"id": 16, "facilityVisitId": 3, "productVialName": "Polio10", "packSize": 10,  openedVial: {value: undefined}}
+        ]
+      });
+      var status = unfilledChildCoverage.computeStatus();
+      expect(status).toEqual(DistributionStatus.EMPTY);
+    });
 
-    verifyCoverageLineItemNotRecordedSet(childCoverage.childCoverageLineItems[0]);
-    verifyCoverageLineItemNotRecordedSet(childCoverage.childCoverageLineItems[1]);
+    it('should set status as is-incomplete if some child coverage fields filled', function () {
+      var partiallyFilledChildCoverage = new ChildCoverage(12, {
+        childCoverageLineItems: [
+          {"id": 5, "facilityVisitId": 3, "vaccination": "BCG", healthCenter11Months: {value: 56}, outReach11Months: {value: undefined}, healthCenter23Months: {value: undefined}, outReach23Months: {value: undefined}},
+          {"id": 26, "facilityVisitId": 3, "vaccination": "Polio (Newborn)", healthCenter11Months: {value: undefined}, outReach11Months: {value: undefined}, healthCenter23Months: {value: undefined}, outReach23Months: {value: undefined}}
+        ],
+        openedVialLineItems: [
+          {"id": 15, "facilityVisitId": 3, "productVialName": "BCG", "packSize": 10,  openedVial: {value: undefined}},
+          {"id": 16, "facilityVisitId": 3, "productVialName": "Polio10", "packSize": 10,  openedVial: {value: undefined}}
+        ]
+      });
+      var status = partiallyFilledChildCoverage.computeStatus();
+      expect(status).toEqual(DistributionStatus.INCOMPLETE);
+    });
 
-    expect(childCoverage.openedVialLineItems[0].openedVial.notRecorded).toBeTruthy();
-    expect(childCoverage.openedVialLineItems[1].openedVial.notRecorded).toBeTruthy();
   });
-
-  it('should create child coverage object from JSON', function () {
-    spyOn($, 'extend');
-    var childCoverageJSON = {blah: 'blah blah'};
-
-    var childCoverage = new ChildCoverage(123, childCoverageJSON);
-
-    expect($.extend).toHaveBeenCalledWith(true, childCoverage, childCoverageJSON);
-  });
-
-
 });

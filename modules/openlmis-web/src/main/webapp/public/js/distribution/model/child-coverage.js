@@ -11,15 +11,44 @@
 function ChildCoverage(facilityVisitId, childCoverageJSON) {
   $.extend(true, this, childCoverageJSON);
   this.facilityVisitId = facilityVisitId;
-
-  $(this.childCoverageLineItems).each(function (index, lineItem) {
-    if (lineItem.vaccination === 'Polio (Newborn)') {
-      lineItem.outReach23Months = lineItem.healthCenter23Months = {notRecorded: true};
-      return false;
-    }
-    return true;
-  });
 }
+
+ChildCoverage.prototype.computeStatus = function () {
+  var status;
+
+  var isValid = function (field) {
+    if (!field)
+      return false;
+    return !(isUndefined(field.value) && !field.notRecorded);
+  };
+
+  function validateLineItems(lineItems, mandatoryFields) {
+    $(lineItems).each(function (index, lineItem) {
+      $(mandatoryFields).each(function (index, field) {
+        if (lineItem.vaccination === 'Polio (Newborn)' && ['healthCenter23Months', 'outReach23Months'].indexOf(field) !== -1)
+          return true;
+        if ((status === DistributionStatus.COMPLETE || !status) && isValid(lineItem[field])) {
+          status = DistributionStatus.COMPLETE;
+          return true;
+        } else if ((status === DistributionStatus.EMPTY || !status) && !isValid(lineItem[field])) {
+          status = DistributionStatus.EMPTY;
+          return true;
+        } else if ((status === DistributionStatus.EMPTY && isValid(lineItem[field])) || (status === DistributionStatus.COMPLETE && !isValid(lineItem[field]))) {
+          status = DistributionStatus.INCOMPLETE;
+          return false;
+        }
+        return true;
+      });
+      return status !== DistributionStatus.INCOMPLETE;
+    });
+  }
+
+  validateLineItems(this.childCoverageLineItems, ['healthCenter11Months', 'outReach11Months', 'healthCenter23Months', 'outReach23Months']);
+  validateLineItems(this.openedVialLineItems, ['openedVial']);
+
+  this.status = status;
+  return this.status;
+};
 
 ChildCoverage.prototype.setNotRecorded = function () {
   this.childCoverageLineItems.forEach(function (lineItem) {
