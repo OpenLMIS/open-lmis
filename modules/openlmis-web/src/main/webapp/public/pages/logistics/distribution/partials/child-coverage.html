@@ -109,10 +109,12 @@
                                        openlmis-message="label.not.recorded"></label>
                             </td>
                             <td class="col-complete-vaccinated col-total">
-                                <span ng-bind="getTotal(lineItem.healthCenter11Months, lineItem.outReach11Months)"></span>
+                                <span id="total0{{$index}}"
+                                      ng-bind="getTotal(lineItem.healthCenter11Months, lineItem.outReach11Months)"></span>
                             </td>
                             <td class="col-complete-vaccinated col-coverage-rate">
                 <span
+                        id="coverageRateCalculated{{$index}}"
                         ng-bind="calculateCoverageRate(getTotal(lineItem.healthCenter11Months, lineItem.outReach11Months), lineItem.targetGroup)"></span>
                             </td>
                             <td class="col-complete-vaccinated">
@@ -161,10 +163,11 @@
                 </span>
                             </td>
                             <td class="col-complete-vaccinated col-total">
-                                <span ng-bind="getTotal(lineItem.healthCenter23Months, lineItem.outReach23Months)"></span>
+                                <span id="total1{{$index}}"
+                                      ng-bind="getTotal(lineItem.healthCenter23Months, lineItem.outReach23Months)"></span>
                             </td>
                             <td class="col-complete-vaccinated col-total">
-                                <span ng-bind="getTotalVaccinations(lineItem)"></span>
+                                <span id="total2{{$index}}" ng-bind="getTotalVaccinations(lineItem)"></span>
                             </td>
                             <td class="col-complete-vaccinated opened-vials"
                                 ng-hide="hideCell('{{lineItem.vaccination}}')"
@@ -195,7 +198,8 @@
                             <td class="col-complete-vaccinated col-opened-vial"
                                 ng-hide="hideCell('{{lineItem.vaccination}}')"
                                 rowspan="{{productsMap[lineItem.vaccination].rowSpan}}">
-                                <span ng-bind="calculateWastageRate(productsMap[lineItem.vaccination])"></span>
+                                <span id="wastageRateCalculated{{$index}}"
+                                      ng-bind="calculateWastageRate(productsMap[lineItem.vaccination])"></span>
                             </td>
                         </tr>
                         </tbody>

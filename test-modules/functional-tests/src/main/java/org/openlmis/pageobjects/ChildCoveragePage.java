@@ -3,6 +3,7 @@ package org.openlmis.pageobjects;
 
 import org.openlmis.UiUtils.TestWebDriver;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
@@ -95,25 +96,40 @@ public class ChildCoveragePage extends DistributionTab {
   private static WebElement headerChildrenAgeGroup2 = null;
 
   @FindBy(how = ID, using = "BCG")
-  private static WebElement OpenedVialsBCG = null;
+  private static WebElement openedVialsBCGLabel = null;
 
   @FindBy(how = ID, using = "Polio10")
-  private static WebElement OpenedVialsPolio10 = null;
+  private static WebElement openedVialsPolio10Label = null;
 
   @FindBy(how = ID, using = "Polio20")
-  private static WebElement OpenedVialsPolio20 = null;
+  private static WebElement openedVialsPolio20Label = null;
 
   @FindBy(how = ID, using = "Penta1")
-  private static WebElement OpenedVialsPenta1 = null;
+  private static WebElement openedVialsPenta1Label = null;
 
   @FindBy(how = ID, using = "Penta10")
-  private static WebElement OpenedVialsPenta10 = null;
+  private static WebElement openedVialsPenta10Label = null;
 
   @FindBy(how = ID, using = "PCV")
-  private static WebElement OpenedVialsPCV = null;
+  private static WebElement openedVialsPCVLabel = null;
 
   @FindBy(how = ID, using = "Measles")
-  private static WebElement OpenedVialsMeasles = null;
+  private static WebElement openedVialsMeaslesLabel = null;
+
+  @FindBy(how = ID, using = "coverageOpenedVial00")
+  private static WebElement openedVialsBcgNR = null;
+
+  @FindBy(how = ID, using = "coverageOpenedVial11")
+  private static WebElement openedVialsPolioNR = null;
+
+  @FindBy(how = ID, using = "coverageOpenedVial51")
+  private static WebElement openedVialsPentaNR = null;
+
+  @FindBy(how = ID, using = "coverageOpenedVial80")
+  private static WebElement openedVialsPcvNR = null;
+
+  @FindBy(how = ID, using = "coverageOpenedVial110")
+  private static WebElement openedVialsMeaslesNR = null;
 
   @FindBy(how = ID, using = "childCoverageTable")
   private static WebElement childCoverageTable = null;
@@ -278,38 +294,38 @@ public class ChildCoveragePage extends DistributionTab {
   }
 
   public String getTextOfOpenedVialsBCG() {
-    testWebDriver.waitForElementToAppear(OpenedVialsBCG);
-    return OpenedVialsBCG.getText();
+    testWebDriver.waitForElementToAppear(openedVialsBCGLabel);
+    return openedVialsBCGLabel.getText();
   }
 
   public String getTextOfOpenedVialsPolio10() {
-    testWebDriver.waitForElementToAppear(OpenedVialsPolio10);
-    return OpenedVialsPolio10.getText();
+    testWebDriver.waitForElementToAppear(openedVialsPolio10Label);
+    return openedVialsPolio10Label.getText();
   }
 
   public String getTextOfOpenedVialsPolio20() {
-    testWebDriver.waitForElementToAppear(OpenedVialsPolio20);
-    return OpenedVialsPolio20.getText();
+    testWebDriver.waitForElementToAppear(openedVialsPolio20Label);
+    return openedVialsPolio20Label.getText();
   }
 
   public String getTextOfOpenedVialsPenta1() {
-    testWebDriver.waitForElementToAppear(OpenedVialsPenta1);
-    return OpenedVialsPenta1.getText();
+    testWebDriver.waitForElementToAppear(openedVialsPenta1Label);
+    return openedVialsPenta1Label.getText();
   }
 
   public String getTextOfOpenedVialsPenta10() {
-    testWebDriver.waitForElementToAppear(OpenedVialsPenta10);
-    return OpenedVialsPenta10.getText();
+    testWebDriver.waitForElementToAppear(openedVialsPenta10Label);
+    return openedVialsPenta10Label.getText();
   }
 
   public String getTextOfOpenedVialsPCV() {
-    testWebDriver.waitForElementToAppear(OpenedVialsPCV);
-    return OpenedVialsPCV.getText();
+    testWebDriver.waitForElementToAppear(openedVialsPCVLabel);
+    return openedVialsPCVLabel.getText();
   }
 
   public String getTextOfOpenedVialsMeasles() {
-    testWebDriver.waitForElementToAppear(OpenedVialsMeasles);
-    return OpenedVialsMeasles.getText();
+    testWebDriver.waitForElementToAppear(openedVialsMeaslesLabel);
+    return openedVialsMeaslesLabel.getText();
   }
 
   public String getTextOfTargetGroupValue(int rowNumber) {
@@ -325,5 +341,116 @@ public class ChildCoveragePage extends DistributionTab {
   public String getTextOfChildCoverageTable() {
     testWebDriver.waitForElementToAppear(childCoverageTable);
     return childCoverageTable.getText();
+  }
+
+  public void enterHealthCenter11MonthsDataForGivenRow(int rowNumber, String value) {
+    WebElement healthCenter11Months = testWebDriver.getElementById("healthCenter11Months" + rowNumber);
+    testWebDriver.waitForElementToAppear(healthCenter11Months);
+    healthCenter11Months.sendKeys(value);
+    healthCenter11Months.sendKeys(Keys.TAB);
+  }
+
+  public void enterOutReach11MonthsDataForGivenRow(int rowNumber, String value) {
+    WebElement outReach11Months = testWebDriver.getElementById("outReach11Months" + rowNumber);
+    testWebDriver.waitForElementToAppear(outReach11Months);
+    outReach11Months.sendKeys(value);
+    outReach11Months.sendKeys(Keys.TAB);
+  }
+
+  public void enterHealthCenter23MonthsDataForGivenRow(int rowNumber, String value) {
+    WebElement healthCenter23Months = testWebDriver.getElementById("healthCenter23Months" + rowNumber);
+    testWebDriver.waitForElementToAppear(healthCenter23Months);
+    healthCenter23Months.sendKeys(value);
+    healthCenter23Months.sendKeys(Keys.TAB);
+  }
+
+  public void enterOutReach23MonthsDataForGivenRow(int rowNumber, String value) {
+    WebElement outReach23Months = testWebDriver.getElementById("outReach23Months" + rowNumber);
+    testWebDriver.waitForElementToAppear(outReach23Months);
+    outReach23Months.sendKeys(value);
+    outReach23Months.sendKeys(Keys.TAB);
+  }
+
+  public void applyNRToHealthCenter11MonthsForGivenRow(int rowNumber) {
+    WebElement healthCenter11MonthsNR = testWebDriver.getElementById("coverageHealthCenter11Months" + rowNumber);
+    testWebDriver.waitForElementToAppear(healthCenter11MonthsNR);
+    healthCenter11MonthsNR.click();
+    removeFocusFromElement();
+  }
+
+  public void applyNRToOutReach11MonthsForGivenRow(int rowNumber) {
+    WebElement outReach11MonthsNR = testWebDriver.getElementById("coverageOutReach11Months" + rowNumber);
+    testWebDriver.waitForElementToAppear(outReach11MonthsNR);
+    outReach11MonthsNR.click();
+    removeFocusFromElement();
+  }
+
+  public void applyNRToHealthCenter23MonthsForGivenRow(int rowNumber) {
+    WebElement healthCenter23MonthsNR = testWebDriver.getElementById("coverageHealthCenter23Months" + rowNumber);
+    testWebDriver.waitForElementToAppear(healthCenter23MonthsNR);
+    healthCenter23MonthsNR.click();
+    removeFocusFromElement();
+  }
+
+  public void applyNRToOutReach23MonthsDataForGivenRow(int rowNumber) {
+    WebElement outReach23MonthsNR = testWebDriver.getElementById("coverageOutReach23Months" + rowNumber);
+    testWebDriver.waitForElementToAppear(outReach23MonthsNR);
+    outReach23MonthsNR.click();
+    removeFocusFromElement();
+  }
+
+  public void enterOpenedVialsCountForGivenGroupAndRow(int groupNumber, int rowNumber, String value) {
+    WebElement openedVialsTextField = testWebDriver.getElementById("openedVial" + groupNumber + rowNumber);
+    testWebDriver.waitForElementToAppear(openedVialsTextField);
+    openedVialsTextField.sendKeys(value);
+    openedVialsTextField.sendKeys(Keys.TAB);
+  }
+
+  public void applyNrToBcgOpenedVials() {
+    testWebDriver.waitForElementToAppear(openedVialsBcgNR);
+    openedVialsBcgNR.click();
+    removeFocusFromElement();
+  }
+
+  public void applyNrToPolioOpenedVials() {
+    testWebDriver.waitForElementToAppear(openedVialsPolioNR);
+    openedVialsPolioNR.click();
+    removeFocusFromElement();
+  }
+
+  public void applyNrToPentaOpenedVials() {
+    testWebDriver.waitForElementToAppear(openedVialsPentaNR);
+    openedVialsPentaNR.click();
+    removeFocusFromElement();
+  }
+
+  public void applyNrToPcvOpenedVials() {
+    testWebDriver.waitForElementToAppear(openedVialsPcvNR);
+    openedVialsPcvNR.click();
+    removeFocusFromElement();
+  }
+
+  public void applyNrToMeaslesOpenedVials() {
+    testWebDriver.waitForElementToAppear(openedVialsMeaslesNR);
+    openedVialsMeaslesNR.click();
+    removeFocusFromElement();
+  }
+
+  public String getTotalForGivenColumnAndRow(int columnNumber, int rowNumber) {
+    WebElement total = testWebDriver.getElementById("total" + columnNumber + rowNumber);
+    testWebDriver.waitForElementToAppear(total);
+    return total.getText();
+  }
+
+  public String getWastageRateForGivenRow(int rowNumber) {
+    WebElement wastageRate = testWebDriver.getElementById("wastageRateCalculated" + rowNumber);
+    testWebDriver.waitForElementToAppear(wastageRate);
+    return wastageRate.getText();
+  }
+
+  public String getCoverageRateForGivenRow(int rowNumber) {
+    WebElement coverageRate = testWebDriver.getElementById("coverageRateCalculated" + rowNumber);
+    testWebDriver.waitForElementToAppear(coverageRate);
+    return coverageRate.getText();
   }
 }
