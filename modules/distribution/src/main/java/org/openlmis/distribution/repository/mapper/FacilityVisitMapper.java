@@ -21,8 +21,8 @@ import java.util.List;
 @Repository
 public interface FacilityVisitMapper {
 
-  @Insert({"INSERT INTO facility_visits (distributionId, facilityId, synced, createdBy, modifiedBy)",
-    "VALUES (#{distributionId}, #{facilityId}, #{synced}, #{createdBy}, #{modifiedBy})"})
+  @Insert({"INSERT INTO facility_visits (distributionId, facilityId, facilityCatchmentPopulation, synced, createdBy, modifiedBy)",
+    "VALUES (#{distributionId}, #{facilityId}, #{facilityCatchmentPopulation}, #{synced}, #{createdBy}, #{modifiedBy})"})
   @Options(useGeneratedKeys = true)
   public void insert(FacilityVisit facilityVisit);
 

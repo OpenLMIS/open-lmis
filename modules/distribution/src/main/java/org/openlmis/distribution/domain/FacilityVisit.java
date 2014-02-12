@@ -33,6 +33,7 @@ public class FacilityVisit extends BaseModel {
 
   private Long distributionId;
   private Long facilityId;
+  private Long facilityCatchmentPopulation;
   private Facilitator confirmedBy;
   private Facilitator verifiedBy;
   private String observations;
@@ -47,6 +48,7 @@ public class FacilityVisit extends BaseModel {
   public FacilityVisit(Facility facility, Distribution distribution) {
     this.distributionId = distribution.getId();
     this.facilityId = facility.getId();
+    this.facilityCatchmentPopulation = facility.getCatchmentPopulation();
     this.createdBy = distribution.getCreatedBy();
   }
 
