@@ -80,7 +80,7 @@ public class DistributionChildCoverageSyncTest extends TestCaseHelper {
   }
 
   @Test(groups = {"distribution"})
-  public void testShouldVerifyTargetGroupIfCatchmentPopulationAndWhoRatioPresent() throws SQLException {
+  public void testShouldVerifyTargetGroupAndCoverageRateIfCatchmentPopulationAndWhoRatioPresent() throws SQLException {
     HomePage homePage = loginPage.loginAs("Admin123", "Admin123");
     ProgramProductISAPage programProductISAPage = homePage.navigateProgramProductISA();
     programProductISAPage.fillProgramProductISA(childCoverageData.get(VACCINES_PROGRAM), "90", "1", "50", "30", "0", "100", "2000", "333");
@@ -101,10 +101,30 @@ public class DistributionChildCoverageSyncTest extends TestCaseHelper {
 
     ResultSet childCoverageDetails = dbWrapper.getChildCoverageDetails(childCoveragePage.getTextOfRegimenPCV10Dose1(), "F10");
     assertEquals("300", childCoverageDetails.getInt("targetGroup"));
+
+    assertEquals("0", childCoveragePage.getCoverageRateForGivenRow(9));
+    assertEquals("0", childCoveragePage.getCoverageRateForGivenRow(10));
+    assertEquals("0", childCoveragePage.getCoverageRateForGivenRow(11));
+    assertEquals("", childCoveragePage.getCoverageRateForGivenRow(1));
+    assertEquals("", childCoveragePage.getCoverageRateForGivenRow(12));
+
+    childCoveragePage.enterOutReach11MonthsDataForGivenRow(9, "10");
+    assertEquals("3", childCoveragePage.getCoverageRateForGivenRow(9));
+    assertEquals("0", childCoveragePage.getCoverageRateForGivenRow(10));
+    assertEquals("0", childCoveragePage.getCoverageRateForGivenRow(11));
+    assertEquals("", childCoveragePage.getCoverageRateForGivenRow(1));
+    assertEquals("", childCoveragePage.getCoverageRateForGivenRow(12));
+
+    childCoveragePage.enterHealthCenter11MonthsDataForGivenRow(9, "19");
+    assertEquals("10", childCoveragePage.getCoverageRateForGivenRow(9));
+    assertEquals("0", childCoveragePage.getCoverageRateForGivenRow(10));
+    assertEquals("0", childCoveragePage.getCoverageRateForGivenRow(11));
+    assertEquals("", childCoveragePage.getCoverageRateForGivenRow(1));
+    assertEquals("", childCoveragePage.getCoverageRateForGivenRow(12));
   }
 
   @Test(groups = {"distribution"})
-  public void testShouldVerifyTargetGroupIfOnlyCatchmentPopulationPresent() {
+  public void testShouldVerifyTargetGroupAndCoverageRateIfOnlyCatchmentPopulationPresent() {
     HomePage homePage = loginPage.loginAs(childCoverageData.get(USER), childCoverageData.get(PASSWORD));
     DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
     distributionPage.initiate(childCoverageData.get(FIRST_DELIVERY_ZONE_NAME), childCoverageData.get(VACCINES_PROGRAM));
@@ -117,10 +137,20 @@ public class DistributionChildCoverageSyncTest extends TestCaseHelper {
     assertEquals(childCoveragePage.getTextOfTargetGroupValue(11), "");
     assertEquals(childCoveragePage.getTextOfTargetGroupValue(1), "");
     assertEquals(childCoveragePage.getTextOfTargetGroupValue(12), "");
+
+    assertEquals("", childCoveragePage.getCoverageRateForGivenRow(9));
+    assertEquals("", childCoveragePage.getCoverageRateForGivenRow(10));
+    assertEquals("", childCoveragePage.getCoverageRateForGivenRow(11));
+    assertEquals("", childCoveragePage.getCoverageRateForGivenRow(1));
+    assertEquals("", childCoveragePage.getCoverageRateForGivenRow(12));
+
+    childCoveragePage.enterHealthCenter11MonthsDataForGivenRow(9, "19");
+    childCoveragePage.enterOutReach11MonthsDataForGivenRow(9, "10");
+    assertEquals("", childCoveragePage.getCoverageRateForGivenRow(9));
   }
 
   @Test(groups = {"distribution"})
-  public void testShouldVerifyTargetGroupIfOnlyWhoRatioPresent() {
+  public void testShouldVerifyTargetGroupAndCoverageRateIfOnlyWhoRatioPresent() {
     HomePage homePage = loginPage.loginAs("Admin123", "Admin123");
     ProgramProductISAPage programProductISAPage = homePage.navigateProgramProductISA();
     programProductISAPage.fillProgramProductISA(childCoverageData.get(VACCINES_PROGRAM), "90", "1", "50", "30", "0", "100", "2000", "333");
@@ -146,15 +176,25 @@ public class DistributionChildCoverageSyncTest extends TestCaseHelper {
     assertEquals(childCoveragePage.getTextOfTargetGroupValue(11), "");
     assertEquals(childCoveragePage.getTextOfTargetGroupValue(1), "");
     assertEquals(childCoveragePage.getTextOfTargetGroupValue(12), "");
+
+    assertEquals("", childCoveragePage.getCoverageRateForGivenRow(9));
+    assertEquals("", childCoveragePage.getCoverageRateForGivenRow(10));
+    assertEquals("", childCoveragePage.getCoverageRateForGivenRow(11));
+    assertEquals("", childCoveragePage.getCoverageRateForGivenRow(1));
+    assertEquals("", childCoveragePage.getCoverageRateForGivenRow(12));
+
+    childCoveragePage.enterHealthCenter11MonthsDataForGivenRow(9, "19");
+    childCoveragePage.enterOutReach11MonthsDataForGivenRow(9, "10");
+    assertEquals("", childCoveragePage.getCoverageRateForGivenRow(9));
   }
 
   @Test(groups = {"distribution"})
-  public void testShouldVerifyAllRegimensWithTargetValuePopulatedWhenRegimenMappedToProductInactiveAtGlobalLevel() throws SQLException {
+  public void testShouldVerifyAllRegimensWithTargetValuePopulatedAndCoverageRateWhenRegimenMappedToProductInactiveAtGlobalLevel() throws SQLException {
     dbWrapper.updateFieldValue("products", "active", "f", "code", "P10");
 
     HomePage homePage = loginPage.loginAs("Admin123", "Admin123");
     ProgramProductISAPage programProductISAPage = homePage.navigateProgramProductISA();
-    programProductISAPage.fillProgramProductISA(childCoverageData.get(VACCINES_PROGRAM), "90", "1", "50", "30", "0", "100", "2000", "333");
+    programProductISAPage.fillProgramProductISA(childCoverageData.get(VACCINES_PROGRAM), "0", "1", "50", "30", "0", "100", "2000", "333");
     homePage.logout();
 
     homePage = loginPage.loginAs(childCoverageData.get(USER), childCoverageData.get(PASSWORD));
@@ -166,23 +206,34 @@ public class DistributionChildCoverageSyncTest extends TestCaseHelper {
 
     verifyRegimentsPresent();
     verifyOpenVialsPresent();
-    assertEquals(childCoveragePage.getTextOfTargetGroupValue(9), "300");
-    assertEquals(childCoveragePage.getTextOfTargetGroupValue(10), "300");
-    assertEquals(childCoveragePage.getTextOfTargetGroupValue(11), "300");
+    assertEquals(childCoveragePage.getTextOfTargetGroupValue(9), "0");
+    assertEquals(childCoveragePage.getTextOfTargetGroupValue(10), "0");
+    assertEquals(childCoveragePage.getTextOfTargetGroupValue(11), "0");
     assertEquals(childCoveragePage.getTextOfTargetGroupValue(1), "");
     assertEquals(childCoveragePage.getTextOfTargetGroupValue(12), "");
 
     dbWrapper.updateFieldValue("products", "active", "t", "code", "P10");
+
+    assertEquals("", childCoveragePage.getCoverageRateForGivenRow(9));
+    assertEquals("", childCoveragePage.getCoverageRateForGivenRow(10));
+    assertEquals("", childCoveragePage.getCoverageRateForGivenRow(11));
+    assertEquals("", childCoveragePage.getCoverageRateForGivenRow(1));
+    assertEquals("", childCoveragePage.getCoverageRateForGivenRow(12));
+
+    childCoveragePage.enterHealthCenter11MonthsDataForGivenRow(9, "19");
+    childCoveragePage.enterOutReach11MonthsDataForGivenRow(9, "10");
+    assertEquals("", childCoveragePage.getCoverageRateForGivenRow(9));
   }
 
   @Test(groups = {"distribution"})
-  public void testShouldVerifyAllRegimensWithTargetValuePopulatedWhenRegimenMappedToProductInactiveAtProgramLevel() throws SQLException {
+  public void testShouldVerifyAllRegimensWithTargetValuePopulatedAndCoverageRateWhenRegimenMappedToProductInactiveAtProgramLevel() throws SQLException {
     String productId = dbWrapper.getAttributeFromTable("products", "id", "code", "P10");
-    dbWrapper.updateFieldValue("program_products", "active", "f", "productid", productId);
+    dbWrapper.updateFieldValue("program_products", "active", "f", "productId", productId);
 
     HomePage homePage = loginPage.loginAs("Admin123", "Admin123");
     ProgramProductISAPage programProductISAPage = homePage.navigateProgramProductISA();
-    programProductISAPage.fillProgramProductISA(childCoverageData.get(VACCINES_PROGRAM), "50", "1", "50", "30", "0", "100", "2000", "333");
+    programProductISAPage.fillProgramProductISA(childCoverageData.get(VACCINES_PROGRAM), "58", "1", "50", "30", "0", "100", "2000", "333");
+    dbWrapper.updateFieldValue("facilities", "catchmentPopulation", "297", "code", childCoverageData.get(FIRST_FACILITY_CODE));
     homePage.logout();
 
     homePage = loginPage.loginAs(childCoverageData.get(USER), childCoverageData.get(PASSWORD));
@@ -194,14 +245,26 @@ public class DistributionChildCoverageSyncTest extends TestCaseHelper {
 
     verifyRegimentsPresent();
     verifyOpenVialsPresent();
-    assertEquals(childCoveragePage.getTextOfTargetGroupValue(9), "167");
-    assertEquals(childCoveragePage.getTextOfTargetGroupValue(10), "167");
-    assertEquals(childCoveragePage.getTextOfTargetGroupValue(11), "167");
+    assertEquals(childCoveragePage.getTextOfTargetGroupValue(9), "172");
+    assertEquals(childCoveragePage.getTextOfTargetGroupValue(10), "172");
+    assertEquals(childCoveragePage.getTextOfTargetGroupValue(11), "172");
     assertEquals(childCoveragePage.getTextOfTargetGroupValue(1), "");
     assertEquals(childCoveragePage.getTextOfTargetGroupValue(2), "");
 
-    dbWrapper.updateFieldValue("program_products", "active", "t", "productid", productId);
+    assertEquals("0", childCoveragePage.getCoverageRateForGivenRow(9));
+    assertEquals("0", childCoveragePage.getCoverageRateForGivenRow(10));
+    assertEquals("0", childCoveragePage.getCoverageRateForGivenRow(11));
+    assertEquals("", childCoveragePage.getCoverageRateForGivenRow(1));
+    assertEquals("", childCoveragePage.getCoverageRateForGivenRow(12));
 
+    childCoveragePage.enterHealthCenter11MonthsDataForGivenRow(9, "19");
+    childCoveragePage.enterOutReach11MonthsDataForGivenRow(9, "10");
+    assertEquals("17", childCoveragePage.getCoverageRateForGivenRow(9));
+
+    childCoveragePage.enterHealthCenter11MonthsDataForGivenRow(9, "162");
+    assertEquals("100", childCoveragePage.getCoverageRateForGivenRow(9));
+
+    dbWrapper.updateFieldValue("program_products", "active", "t", "productId", productId);
   }
 
   @Test(groups = {"distribution"})
@@ -223,7 +286,6 @@ public class DistributionChildCoverageSyncTest extends TestCaseHelper {
     assertFalse(childCoveragePage.getTextOfChildCoverageTable().contains("Glycerine"));
     assertFalse(childCoveragePage.getTextOfChildCoverageTable().contains("Paracetamol"));
   }
-
 
   @Test(groups = {"distribution"})
   public void testShouldVerifyAllRegimensWhenLessThan12RegimensInMappingTable() throws SQLException {
@@ -296,46 +358,46 @@ public class DistributionChildCoverageSyncTest extends TestCaseHelper {
     ChildCoveragePage childCoveragePage = visitInformationPage.navigateToChildCoverage();
 
     childCoveragePage.applyNrToPolioOpenedVials();
-    assertFalse(childCoveragePage.isOpenVialEnabled(1, 0));
-    assertFalse(childCoveragePage.isOpenVialEnabled(1, 1));
+    assertFalse(childCoveragePage.isOpenVialEnabled(2, 1));
+    assertFalse(childCoveragePage.isOpenVialEnabled(2, 2));
     childCoveragePage.applyNrToPolioOpenedVials();
-    assertTrue(childCoveragePage.isOpenVialEnabled(1, 0));
-    assertTrue(childCoveragePage.isOpenVialEnabled(1, 1));
-    childCoveragePage.enterOpenedVialsCountForGivenGroupAndRow(1, 0, "5");
+    assertTrue(childCoveragePage.isOpenVialEnabled(2, 1));
+    assertTrue(childCoveragePage.isOpenVialEnabled(2, 2));
+    childCoveragePage.enterOpenedVialsCountForGivenGroupAndRow(2, 1, "5");
 
-    childCoveragePage.enterHealthCenter11MonthsDataForGivenRow(0, "10");
-    assertEquals("10", childCoveragePage.getTotalForGivenColumnAndRow(0, 0));
-    assertEquals("0", childCoveragePage.getTotalForGivenColumnAndRow(1, 0));
-    assertEquals("10", childCoveragePage.getTotalForGivenColumnAndRow(2, 0));
+    childCoveragePage.enterHealthCenter11MonthsDataForGivenRow(1, "10");
+    assertEquals("10", childCoveragePage.getTotalForGivenColumnAndRow(1, 1));
+    assertEquals("0", childCoveragePage.getTotalForGivenColumnAndRow(2, 1));
+    assertEquals("10", childCoveragePage.getTotalForGivenColumnAndRow(3, 1));
 
-    childCoveragePage.enterHealthCenter23MonthsDataForGivenRow(0, "032");
-    assertEquals("10", childCoveragePage.getTotalForGivenColumnAndRow(0, 0));
-    assertEquals("32", childCoveragePage.getTotalForGivenColumnAndRow(1, 0));
-    assertEquals("42", childCoveragePage.getTotalForGivenColumnAndRow(2, 0));
+    childCoveragePage.enterHealthCenter23MonthsDataForGivenRow(1, "032");
+    assertEquals("10", childCoveragePage.getTotalForGivenColumnAndRow(1, 1));
+    assertEquals("32", childCoveragePage.getTotalForGivenColumnAndRow(2, 1));
+    assertEquals("42", childCoveragePage.getTotalForGivenColumnAndRow(3, 1));
 
-    childCoveragePage.enterOutReach11MonthsDataForGivenRow(0, "27");
-    assertEquals("37", childCoveragePage.getTotalForGivenColumnAndRow(0, 0));
-    assertEquals("32", childCoveragePage.getTotalForGivenColumnAndRow(1, 0));
-    assertEquals("69", childCoveragePage.getTotalForGivenColumnAndRow(2, 0));
+    childCoveragePage.enterOutReach11MonthsDataForGivenRow(1, "27");
+    assertEquals("37", childCoveragePage.getTotalForGivenColumnAndRow(1, 1));
+    assertEquals("32", childCoveragePage.getTotalForGivenColumnAndRow(2, 1));
+    assertEquals("69", childCoveragePage.getTotalForGivenColumnAndRow(3, 1));
 
-    childCoveragePage.enterOutReach23MonthsDataForGivenRow(0, "0");
-    assertEquals("37", childCoveragePage.getTotalForGivenColumnAndRow(0, 0));
-    assertEquals("32", childCoveragePage.getTotalForGivenColumnAndRow(1, 0));
-    assertEquals("69", childCoveragePage.getTotalForGivenColumnAndRow(2, 0));
+    childCoveragePage.enterOutReach23MonthsDataForGivenRow(1, "0");
+    assertEquals("37", childCoveragePage.getTotalForGivenColumnAndRow(1, 1));
+    assertEquals("32", childCoveragePage.getTotalForGivenColumnAndRow(2, 1));
+    assertEquals("69", childCoveragePage.getTotalForGivenColumnAndRow(3, 1));
 
-    childCoveragePage.applyNRToHealthCenter11MonthsForGivenRow(0);
-    assertEquals("27", childCoveragePage.getTotalForGivenColumnAndRow(0, 0));
-    assertEquals("32", childCoveragePage.getTotalForGivenColumnAndRow(1, 0));
-    assertEquals("59", childCoveragePage.getTotalForGivenColumnAndRow(2, 0));
+    childCoveragePage.applyNRToHealthCenter11MonthsForGivenRow(1);
+    assertEquals("27", childCoveragePage.getTotalForGivenColumnAndRow(1, 1));
+    assertEquals("32", childCoveragePage.getTotalForGivenColumnAndRow(2, 1));
+    assertEquals("59", childCoveragePage.getTotalForGivenColumnAndRow(3, 1));
 
-    childCoveragePage.applyNRToHealthCenter11MonthsForGivenRow(0);
-    childCoveragePage.enterHealthCenter11MonthsDataForGivenRow(0, "9999999");
-    childCoveragePage.enterHealthCenter23MonthsDataForGivenRow(0, "9999999");
-    childCoveragePage.enterOutReach11MonthsDataForGivenRow(0, "9999999");
-    childCoveragePage.enterOutReach23MonthsDataForGivenRow(0, "9999999");
-    assertEquals("19999998", childCoveragePage.getTotalForGivenColumnAndRow(0, 0));
-    assertEquals("19999998", childCoveragePage.getTotalForGivenColumnAndRow(1, 0));
-    assertEquals("39999996", childCoveragePage.getTotalForGivenColumnAndRow(2, 0));
+    childCoveragePage.applyNRToHealthCenter11MonthsForGivenRow(1);
+    childCoveragePage.enterHealthCenter11MonthsDataForGivenRow(1, "9999999");
+    childCoveragePage.enterHealthCenter23MonthsDataForGivenRow(1, "9999999");
+    childCoveragePage.enterOutReach11MonthsDataForGivenRow(1, "9999999");
+    childCoveragePage.enterOutReach23MonthsDataForGivenRow(1, "9999999");
+    assertEquals("19999998", childCoveragePage.getTotalForGivenColumnAndRow(1, 1));
+    assertEquals("19999998", childCoveragePage.getTotalForGivenColumnAndRow(2, 1));
+    assertEquals("39999996", childCoveragePage.getTotalForGivenColumnAndRow(3, 1));
   }
 
   private void verifyOpenVialsPresent() {
