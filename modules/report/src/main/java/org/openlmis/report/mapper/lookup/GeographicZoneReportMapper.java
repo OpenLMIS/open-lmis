@@ -10,7 +10,9 @@
 
 package org.openlmis.report.mapper.lookup;
 
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
+import org.openlmis.report.model.GeoReportData;
 import org.openlmis.report.model.dto.FlatGeographicZone;
 import org.openlmis.report.model.dto.GeographicZone;
 import org.springframework.stereotype.Repository;
@@ -37,4 +39,37 @@ public interface GeographicZoneReportMapper {
     " order by ADM1, ADM2, ADM3")
   List<FlatGeographicZone> getFlatGeographicZoneList();
 
+  @Select("select gzz.id, gzz.name, gjson.geometry, COALESCE(total.count) total, COALESCE(ever.count,0) as ever, COALESCE(period.count,0) as period  " +
+    " from \n" +
+        " geographic_zones gzz\n" +
+      " left join \n" +
+         " geographic_zone_geojson gjson on \n" +
+          " gzz.id = gjson.zoneid\n" +
+      " left join\n" +
+        " (select geographiczoneid, count(*) from facilities \n" +
+          " join programs_supported ps on ps.facilityid = facilities.id\n" +
+          " join geographic_zones gz on gz.id = facilities.geographiczoneid\n" +
+          " where gz.levelid = 4 and ps.programid = #{programId}\n" +
+          " group by geographiczoneid" +
+        " ) total\n" +
+          " on gzz.id =total.geographiczoneid\n" +
+    " left join \n" +
+        " (select geographiczoneid, count(*) from facilities \n" +
+        " join programs_supported ps on ps.facilityid = facilities.id\n" +
+        " join geographic_zones gz on gz.id = facilities.geographiczoneid\n" +
+        " where ps.programid = #{programId} and facilities.id in \n" +
+          "(select facilityid from requisitions)\n" +
+            "group by geographiczoneid" +
+        " ) ever\n" +
+        " on gzz.id = ever.geographiczoneid\n" +
+     " left join\n" +
+         " (select geographiczoneid, count(*) from facilities \n" +
+             " join programs_supported ps on ps.facilityid = facilities.id\n" +
+             " join geographic_zones gz on gz.id = facilities.geographiczoneid\n" +
+             " where  ps.programid = #{programId} and facilities.id in \n" +
+             " (select facilityid from requisitions where periodid = #{processingPeriodId})\n" +
+              " group by geographiczoneid" +
+    " ) period" +
+    " on gzz.id = period.geographiczoneid" )
+  List<GeoReportData> getGeoReportingRate(@Param("programId") Long programId, @Param("processingPeriodId") Long processingPeriodId);
 }

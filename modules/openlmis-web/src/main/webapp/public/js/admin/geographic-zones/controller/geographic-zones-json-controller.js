@@ -30,7 +30,6 @@ function GeographicZonesJsonController($scope, leafletData, FlatGeographicZoneLi
   };
 
   function interpolate(value, count){
-
     var val =  parseFloat( value ) / parseFloat(count);
     var interpolator = chroma.interpolate.bezier(['green', 'yellow', 'red' ]);
     return interpolator(val).hex();
