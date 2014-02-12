@@ -69,7 +69,7 @@ function ChildCoverageController($scope, $routeParams, distributionService) {
     },
     "PCV10 1st dose": {
       products: ['PCV'],
-      vaccinations: ['PCV10 1st dose', 'PCV10 1st dose', 'PCV10 1st dose'],
+      vaccinations: ['PCV10 1st dose', 'PCV10 2nd dose', 'PCV10 3rd dose'],
       rowSpan: 3
     },
     "Measles": {
