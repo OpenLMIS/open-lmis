@@ -14,6 +14,9 @@ import static org.openqa.selenium.support.How.ID;
 
 public class ChildCoveragePage extends DistributionTab {
 
+  @FindBy(how = ID, using = "childCoverageTabLabel")
+  private static WebElement childCoverageTab = null;
+
   @FindBy(how = ID, using = "coverageHeader")
   private static WebElement childCoverageHeader = null;
 
@@ -155,7 +158,9 @@ public class ChildCoveragePage extends DistributionTab {
 
   @Override
   public void navigate() {
-    //To change body of implemented methods use File | Settings | File Templates.
+    testWebDriver.waitForElementToAppear(childCoverageTab);
+    childCoverageTab.click();
+    removeFocusFromElement();
   }
 
   @Override
@@ -346,6 +351,7 @@ public class ChildCoveragePage extends DistributionTab {
   public void enterHealthCenter11MonthsDataForGivenRow(int rowNumber, String value) {
     WebElement healthCenter11Months = testWebDriver.getElementById("healthCenter11Months" + rowNumber);
     testWebDriver.waitForElementToAppear(healthCenter11Months);
+    healthCenter11Months.clear();
     healthCenter11Months.sendKeys(value);
     healthCenter11Months.sendKeys(Keys.TAB);
   }
@@ -353,6 +359,7 @@ public class ChildCoveragePage extends DistributionTab {
   public void enterOutReach11MonthsDataForGivenRow(int rowNumber, String value) {
     WebElement outReach11Months = testWebDriver.getElementById("outReach11Months" + rowNumber);
     testWebDriver.waitForElementToAppear(outReach11Months);
+    outReach11Months.clear();
     outReach11Months.sendKeys(value);
     outReach11Months.sendKeys(Keys.TAB);
   }
@@ -360,6 +367,7 @@ public class ChildCoveragePage extends DistributionTab {
   public void enterHealthCenter23MonthsDataForGivenRow(int rowNumber, String value) {
     WebElement healthCenter23Months = testWebDriver.getElementById("healthCenter23Months" + rowNumber);
     testWebDriver.waitForElementToAppear(healthCenter23Months);
+    healthCenter23Months.clear();
     healthCenter23Months.sendKeys(value);
     healthCenter23Months.sendKeys(Keys.TAB);
   }
@@ -367,6 +375,7 @@ public class ChildCoveragePage extends DistributionTab {
   public void enterOutReach23MonthsDataForGivenRow(int rowNumber, String value) {
     WebElement outReach23Months = testWebDriver.getElementById("outReach23Months" + rowNumber);
     testWebDriver.waitForElementToAppear(outReach23Months);
+    outReach23Months.clear();
     outReach23Months.sendKeys(value);
     outReach23Months.sendKeys(Keys.TAB);
   }
@@ -402,6 +411,7 @@ public class ChildCoveragePage extends DistributionTab {
   public void enterOpenedVialsCountForGivenGroupAndRow(int groupNumber, int rowNumber, String value) {
     WebElement openedVialsTextField = testWebDriver.getElementById("openedVial" + groupNumber + rowNumber);
     testWebDriver.waitForElementToAppear(openedVialsTextField);
+    openedVialsTextField.clear();
     openedVialsTextField.sendKeys(value);
     openedVialsTextField.sendKeys(Keys.TAB);
   }
@@ -452,5 +462,35 @@ public class ChildCoveragePage extends DistributionTab {
     WebElement coverageRate = testWebDriver.getElementById("coverageRateCalculated" + rowNumber);
     testWebDriver.waitForElementToAppear(coverageRate);
     return coverageRate.getText();
+  }
+
+  public boolean isOpenVialEnabled(int groupNumber, int rowNumber) {
+    WebElement openedVialsTextField = testWebDriver.getElementById("openedVial" + groupNumber + rowNumber);
+    testWebDriver.waitForElementToAppear(openedVialsTextField);
+    return openedVialsTextField.isEnabled();
+  }
+
+  public boolean isHealthCenter11MonthsEnabledForGivenRow(int rowNumber) {
+    WebElement healthCenter11Months = testWebDriver.getElementById("healthCenter11Months" + rowNumber);
+    testWebDriver.waitForElementToAppear(healthCenter11Months);
+    return healthCenter11Months.isEnabled();
+  }
+
+  public boolean isOutReach11MonthsEnabledForGivenRow(int rowNumber) {
+    WebElement outReach11Months = testWebDriver.getElementById("outReach11Months" + rowNumber);
+    testWebDriver.waitForElementToAppear(outReach11Months);
+    return outReach11Months.isEnabled();
+  }
+
+  public boolean isHealthCenter23MonthsEnabledForGivenRow(int rowNumber) {
+    WebElement healthCenter23Months = testWebDriver.getElementById("healthCenter23Months" + rowNumber);
+    testWebDriver.waitForElementToAppear(healthCenter23Months);
+    return healthCenter23Months.isEnabled();
+  }
+
+  public boolean isOutReach23MonthsEnabledForGivenRow(int rowNumber) {
+    WebElement outReach23Months = testWebDriver.getElementById("outReach23Months" + rowNumber);
+    testWebDriver.waitForElementToAppear(outReach23Months);
+    return outReach23Months.isEnabled();
   }
 }

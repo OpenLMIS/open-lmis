@@ -15,8 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.thoughtworks.selenium.SeleneseTestBase.assertEquals;
-import static com.thoughtworks.selenium.SeleneseTestBase.assertFalse;
+import static com.thoughtworks.selenium.SeleneseTestBase.*;
 import static java.util.Arrays.asList;
 
 
@@ -289,7 +288,6 @@ public class DistributionChildCoverageSyncTest extends TestCaseHelper {
 
   @Test(groups = {"distribution"})
   public void testIndividualFieldNRHandlingAndTotalCalculation() throws SQLException {
-
     HomePage homePage = loginPage.loginAs(childCoverageData.get(USER), childCoverageData.get(PASSWORD));
     DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
     distributionPage.initiate(childCoverageData.get(FIRST_DELIVERY_ZONE_NAME), childCoverageData.get(VACCINES_PROGRAM));
@@ -297,6 +295,47 @@ public class DistributionChildCoverageSyncTest extends TestCaseHelper {
     VisitInformationPage visitInformationPage = facilityListPage.selectFacility(childCoverageData.get(FIRST_FACILITY_CODE));
     ChildCoveragePage childCoveragePage = visitInformationPage.navigateToChildCoverage();
 
+    childCoveragePage.applyNrToPolioOpenedVials();
+    assertFalse(childCoveragePage.isOpenVialEnabled(1, 0));
+    assertFalse(childCoveragePage.isOpenVialEnabled(1, 1));
+    childCoveragePage.applyNrToPolioOpenedVials();
+    assertTrue(childCoveragePage.isOpenVialEnabled(1, 0));
+    assertTrue(childCoveragePage.isOpenVialEnabled(1, 1));
+    childCoveragePage.enterOpenedVialsCountForGivenGroupAndRow(1, 0, "5");
+
+    childCoveragePage.enterHealthCenter11MonthsDataForGivenRow(0, "10");
+    assertEquals("10", childCoveragePage.getTotalForGivenColumnAndRow(0, 0));
+    assertEquals("0", childCoveragePage.getTotalForGivenColumnAndRow(1, 0));
+    assertEquals("10", childCoveragePage.getTotalForGivenColumnAndRow(2, 0));
+
+    childCoveragePage.enterHealthCenter23MonthsDataForGivenRow(0, "032");
+    assertEquals("10", childCoveragePage.getTotalForGivenColumnAndRow(0, 0));
+    assertEquals("32", childCoveragePage.getTotalForGivenColumnAndRow(1, 0));
+    assertEquals("42", childCoveragePage.getTotalForGivenColumnAndRow(2, 0));
+
+    childCoveragePage.enterOutReach11MonthsDataForGivenRow(0, "27");
+    assertEquals("37", childCoveragePage.getTotalForGivenColumnAndRow(0, 0));
+    assertEquals("32", childCoveragePage.getTotalForGivenColumnAndRow(1, 0));
+    assertEquals("69", childCoveragePage.getTotalForGivenColumnAndRow(2, 0));
+
+    childCoveragePage.enterOutReach23MonthsDataForGivenRow(0, "0");
+    assertEquals("37", childCoveragePage.getTotalForGivenColumnAndRow(0, 0));
+    assertEquals("32", childCoveragePage.getTotalForGivenColumnAndRow(1, 0));
+    assertEquals("69", childCoveragePage.getTotalForGivenColumnAndRow(2, 0));
+
+    childCoveragePage.applyNRToHealthCenter11MonthsForGivenRow(0);
+    assertEquals("27", childCoveragePage.getTotalForGivenColumnAndRow(0, 0));
+    assertEquals("32", childCoveragePage.getTotalForGivenColumnAndRow(1, 0));
+    assertEquals("59", childCoveragePage.getTotalForGivenColumnAndRow(2, 0));
+
+    childCoveragePage.applyNRToHealthCenter11MonthsForGivenRow(0);
+    childCoveragePage.enterHealthCenter11MonthsDataForGivenRow(0, "9999999");
+    childCoveragePage.enterHealthCenter23MonthsDataForGivenRow(0, "9999999");
+    childCoveragePage.enterOutReach11MonthsDataForGivenRow(0, "9999999");
+    childCoveragePage.enterOutReach23MonthsDataForGivenRow(0, "9999999");
+    assertEquals("19999998", childCoveragePage.getTotalForGivenColumnAndRow(0, 0));
+    assertEquals("19999998", childCoveragePage.getTotalForGivenColumnAndRow(1, 0));
+    assertEquals("39999996", childCoveragePage.getTotalForGivenColumnAndRow(2, 0));
   }
 
   private void verifyOpenVialsPresent() {
