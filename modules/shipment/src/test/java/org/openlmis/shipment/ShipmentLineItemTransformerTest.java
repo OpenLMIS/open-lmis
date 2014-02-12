@@ -55,6 +55,28 @@ public class ShipmentLineItemTransformerTest {
   }
 
   @Test
+  public void shouldThrowErrorIfCostIsNegative() {
+    ShipmentLineItemDTO dto = dtoWithMandatoryFields();
+    dto.setCost("-3333.33");
+
+    expectException.expect(DataException.class);
+    expectException.expectMessage("error.cost.negative");
+
+    transformer.transform(dto, SIMPLE_DATE_FORMAT, SIMPLE_DATE_FORMAT, new Date());
+  }
+
+  @Test
+  public void shouldThrowErrorIfQuantityShippedIsMoreThanEightCharacters() {
+    ShipmentLineItemDTO dto = dtoWithMandatoryFields();
+    dto.setQuantityShipped("123456789");
+
+    expectException.expect(DataException.class);
+    expectException.expectMessage("invalid.quantity.shipped");
+
+    transformer.transform(dto, SIMPLE_DATE_FORMAT, SIMPLE_DATE_FORMAT, new Date());
+  }
+
+  @Test
   public void shouldThrowErrorIfPackedDateIsDifferentFromFormat() {
     String packedDate = "10/10/2013 ";
 
