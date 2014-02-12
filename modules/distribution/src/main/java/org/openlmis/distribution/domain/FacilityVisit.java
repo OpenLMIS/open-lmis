@@ -60,7 +60,6 @@ public class FacilityVisit extends BaseModel {
       return;
     }
     this.observations = null;
-    this.visited = null;
     this.confirmedBy = null;
     this.verifiedBy = null;
     this.vehicleId = null;

@@ -20,6 +20,7 @@ import org.openlmis.db.categories.UnitTests;
 import java.util.Date;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 
 @Category(UnitTests.class)
@@ -80,6 +81,7 @@ public class FacilityVisitTest {
 
     assertThat(facilityVisit.getOtherReasonDescription(), is("other reasons"));
     assertThat(facilityVisit.getReasonForNotVisiting(), is(ReasonForNotVisiting.HEALTH_CENTER_NOT_IN_DLS));
+    assertFalse(facilityVisit.getVisited());
   }
 
   @Test
