@@ -10,15 +10,16 @@
  */
 
 function AdminDashboardController($scope) {
+
     /* Bar Chart */
-    var barChartTicks = [[1, "Tab1"], [2, "Tab2"], [3, "Tab3"]];
+    var barChartTicks = [[1, "Tab1"], [2, "Tab2"], [3, "Tab3"],[4, "Tab4"],[5, "Tab5"]];
 
     function GenerateSeries(added){
         var data = [];
         var start = 0 + added;
         var end = 100 + added;
 
-        for(i=1;i<=3;i++){
+        for(i=1;i<=5;i++){
             var d = Math.floor(Math.random() * (end - start + 1) + start);
             data.push([i, d]);
             start++;
@@ -36,7 +37,8 @@ function AdminDashboardController($scope) {
         },
         bars: {
             align: "center",
-            barWidth: 0.5
+            fillColor:  "#5482FF",
+            barWidth: 0.3
         },
         xaxis: {
             axisLabel: "Sample tabs",
@@ -57,23 +59,36 @@ function AdminDashboardController($scope) {
             }
         },
         legend: {
-            noColumns: 0,
-            labelBoxBorderColor: "#000000",
-            position: "nw"
+            container:$("#barChartLegend"),
+            noColumns: 0
         },
         grid:{
             clickable:true,
             hoverable: true,
             borderWidth: 2,
             backgroundColor: { colors: ["#ffffff", "#EDF5FF"] }
+        },tooltip: true,
+        tooltipOpts: {
+            content: "%s of %x.0 is %y",
+            shifts: {
+                x: 20,
+                y: 0
+            },
+            defaultTheme: false
         }
     };
 
 
     $("#afloat1").bind("plotclick", function (event, pos, item) {
 
-        var showTab = 2- item.dataIndex;
-        $('#dashboard-tabs li:eq('+showTab+') a').tab('show');
+        var barIndex =  item.datapoint[0];
+        barIndex++;
+        if(barIndex <=4){
+            var tabId ='dashboard-tab-'+ barIndex;
+
+            createTab(tabId);
+        }
+
     });
 
     /* End Bar Chart */
@@ -114,6 +129,18 @@ function AdminDashboardController($scope) {
         },
         legend: {
             show: true
+        },
+        grid:{
+            hoverable: true
+        },
+        tooltip: true,
+        tooltipOpts: {
+            content: "%p.0%, %s",
+            shifts: {
+                x: 20,
+                y: 0
+            },
+            defaultTheme: false
         }
     };
 
@@ -245,8 +272,13 @@ function AdminDashboardController($scope) {
             max:100,
             axisLabel: 'Value',
             axisLabelUseCanvas: true,
-            axisLabelFontSizePixels: 12 ,
-            axisLabelPadding: 3
+            axisLabelFontSizePixels: 12,
+            axisLabelFontFamily: 'Verdana, Arial',
+            axisLabelPadding: 3,
+
+            tickFormatter: function (v, axis) {
+                return v + "%";
+            }
         },
         grid: {
             hoverable: true,
@@ -254,11 +286,13 @@ function AdminDashboardController($scope) {
             borderWidth: 1
         },
         legend: {
+            container:$("#multiBarsLegend"),
+            noColumns: 0,
             labelBoxBorderColor: "none"
         },
         tooltip: true,
         tooltipOpts: {
-            content: getTooltip,//"<h4>%s</h4><ul><li>X is %x</li><li>Y is %y</li></ul>",
+            content: getTooltip,
             shifts: {
                 x: 10,
                 y: 20
@@ -273,6 +307,7 @@ function AdminDashboardController($scope) {
             bars: {
                 order: 1,
                 fillColor:  "#05BC57"
+
             },
             color: "#05BC57"
         },
@@ -298,8 +333,7 @@ function AdminDashboardController($scope) {
         }
     ];
      function getTooltip(label, xval, yval, flotItem){
-
-         return label+' '+xval+' '+yval;
+         return flotItem.series.xaxis.ticks[xval].label+' '+label+' '+xval+' '+yval+' '+flotItem.series.xaxis.ticks[xval].label;
      }
 
 

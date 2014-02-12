@@ -9,7 +9,23 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 angular.module('dashboard',['openlmis', 'ui.calendar', 'ui.bootstrap','easypiechart']).config(['$routeProvider', function ($routeProvider) {
+
     $routeProvider.
         when('/dashboard', {controller: AdminDashboardController, templateUrl: 'partials/dashboard.html'}).
+        when('/piechart',{controller: PieChartController,templateUrl:'partials/piechart.html'}).
         otherwise({redirectTo: '/dashboard'});
+
+    /*$routeSegmentProvider.options.autoLoadTemplates = true;
+
+    $routeSegmentProvider.
+        when('/dashboard','s1')
+        .when('/dashboard/pie',    's1.pie')
+
+        .segment('s1',{templateUrl: 'partials/dashboard.html', controller: AdminDashboardController})
+    .within()
+
+        .segment('pie', {templateUrl: 'partials/piechart.html'})
+
+        .up();*/
+
 }]);
