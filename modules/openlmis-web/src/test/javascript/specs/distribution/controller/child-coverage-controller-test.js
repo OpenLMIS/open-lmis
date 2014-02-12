@@ -24,7 +24,8 @@ describe('Child Coverage Controller', function () {
       "outReach11Months": {value: undefined}, "healthCenter23Months": {value: undefined}, "outReach23Months": {value: undefined}};
     childCoverageLineItem2 = {"id": 26, "facilityVisitId": 3, "vaccination": "Polio (Newborn)", "healthCenter11Months": {value: undefined},
       "outReach11Months": {value: undefined}, "healthCenter23Months": {value: undefined}, "outReach23Months": {value: undefined}};
-    childCoverageLineItem3 = {"id": 27, "facilityVisitId": 3, "vaccination": "Polio 1st dose"};
+    childCoverageLineItem3 = {"id": 27, "facilityVisitId": 3, "vaccination": "Polio 1st dose", "healthCenter11Months": {value: undefined},
+      "outReach11Months": {value: undefined}, "healthCenter23Months": {value: undefined}, "outReach23Months": {value: undefined}};
     childCoverageLineItem4 = {"id": 28, "facilityVisitId": 3, "vaccination": "Polio 2nd dose"};
     childCoverageLineItem5 = {"id": 29, "facilityVisitId": 3, "vaccination": "Polio 3rd dose"};
 
@@ -76,10 +77,13 @@ describe('Child Coverage Controller', function () {
       'Polio 2nd dose': childCoverageLineItem4,
       'Polio 3rd dose': childCoverageLineItem5
     };
+
+    childCoverageLineItem2.outReach23Months.notRecorded = true;
+    childCoverageLineItem2.healthCenter23Months.notRecorded = true;
     expect(scope.childCoverageMap).toEqual(childCoverageMap);
   });
 
-  it('should set childCoverageMap in scope', function () {
+  it('should set openedVialsMap in scope', function () {
     var openedVialMap = {
       'BCG': openedVialLineItem1,
       'Polio10': openedVialLineItem2,
@@ -185,10 +189,10 @@ describe('Child Coverage Controller', function () {
       vaccinations: ['Polio (Newborn)', 'Polio 1st dose', 'Polio 2nd dose', 'Polio 3rd dose'],
       rowSpan: 4
     };
-    childCoverage.childCoverageLineItems[1].healthCenter11Months.value = 5;
-    childCoverage.childCoverageLineItems[1].healthCenter23Months.value = 5;
-    childCoverage.childCoverageLineItems[1].outReach11Months.value = 10;
-    childCoverage.childCoverageLineItems[1].outReach23Months.value = 10;
+    childCoverage.childCoverageLineItems[2].healthCenter11Months.value = 5;
+    childCoverage.childCoverageLineItems[2].healthCenter23Months.value = 5;
+    childCoverage.childCoverageLineItems[2].outReach11Months.value = 10;
+    childCoverage.childCoverageLineItems[2].outReach23Months.value = 10;
     childCoverage.openedVialLineItems[1].openedVial.value = 2;
 
     var wastageRate = scope.calculateWastageRate(productsForVaccination);

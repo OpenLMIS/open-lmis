@@ -30,6 +30,13 @@ describe('Child coverage', function () {
 
   });
 
+  it('should set NR to true for polio new born for 12-23 months HC and outreach upon creation', function () {
+    var polioNewBorn = _.findWhere(childCoverage.childCoverageLineItems, {vaccination: 'Polio (Newborn)'});
+
+    expect(polioNewBorn.healthCenter23Months.notRecorded).toBeTruthy();
+    expect(polioNewBorn.outReach23Months.notRecorded).toBeTruthy();
+  });
+
   function verifyCoverageLineItemNotRecordedSet(lineItem) {
     expect(lineItem.healthCenter11Months.notRecorded).toBeTruthy();
     expect(lineItem.outReach11Months.notRecorded).toBeTruthy();
@@ -55,4 +62,6 @@ describe('Child coverage', function () {
 
     expect($.extend).toHaveBeenCalledWith(true, childCoverage, childCoverageJSON);
   });
+
+
 });

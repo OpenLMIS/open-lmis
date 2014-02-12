@@ -11,6 +11,14 @@
 function ChildCoverage(facilityVisitId, childCoverageJSON) {
   $.extend(true, this, childCoverageJSON);
   this.facilityVisitId = facilityVisitId;
+
+  $(this.childCoverageLineItems).each(function (index, lineItem) {
+    if (lineItem.vaccination === 'Polio (Newborn)') {
+      lineItem.outReach23Months = lineItem.healthCenter23Months = {notRecorded: true};
+      return false;
+    }
+    return true;
+  });
 }
 
 ChildCoverage.prototype.setNotRecorded = function () {
