@@ -51,6 +51,9 @@ public class FacilityVisit extends BaseModel {
   }
 
   public void setApplicableVisitInfo() {
+    if (this.visited == null) {
+      return;
+    }
     if (this.visited) {
       this.reasonForNotVisiting = null;
       this.otherReasonDescription = null;

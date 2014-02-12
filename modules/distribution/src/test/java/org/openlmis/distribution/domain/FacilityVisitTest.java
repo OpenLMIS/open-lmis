@@ -81,4 +81,19 @@ public class FacilityVisitTest {
     assertThat(facilityVisit.getOtherReasonDescription(), is("other reasons"));
     assertThat(facilityVisit.getReasonForNotVisiting(), is(ReasonForNotVisiting.HEALTH_CENTER_NOT_IN_DLS));
   }
+
+  @Test
+  public void shouldNoChangeFacilityVisitIfVisitedFlagIsNull() throws Exception {
+    FacilityVisit facilityVisit = new FacilityVisit();
+    facilityVisit.setObservations("some observation");
+    facilityVisit.setVisited(null);
+    facilityVisit.setReasonForNotVisiting(ReasonForNotVisiting.HEALTH_CENTER_NOT_IN_DLS);
+    facilityVisit.setOtherReasonDescription("other reasons");
+
+    facilityVisit.setApplicableVisitInfo();
+
+    assertThat(facilityVisit.getOtherReasonDescription(), is("other reasons"));
+    assertThat(facilityVisit.getReasonForNotVisiting(), is(ReasonForNotVisiting.HEALTH_CENTER_NOT_IN_DLS));
+    assertThat(facilityVisit.getObservations(), is("some observation"));
+  }
 }
