@@ -65,7 +65,7 @@ public enum Right {
 
   VIEW_FACILITY_REPORT("Report - Facility Listing (V1)", REPORT, "Permission to view Facility List Report",32),
   VIEW_MAILING_LABEL_REPORT("Report - Facility Listing (V2)", REPORT, "Permission to view mailing labels for facilities",33),
-  VIEW_SUMMARY_REPORT("Report - Summary Report", REPORT, "Permission to view Sumamry Report",34),
+  VIEW_SUMMARY_REPORT("Report - Summary Report", REPORT, "Permission to view Summary Report",34),
   VIEW_CONSUMPTION_REPORT("Report - Consumption Report", REPORT, "Permission to view consumption report",35),
   VIEW_AVERAGE_CONSUMPTION_REPORT("Report - Average Consumption Report", REPORT, "Permission to view average consumption report",36),
   VIEW_REPORTING_RATE_REPORT("Report - Reporting Rate Report", REPORT, "Permission to view reporting rate report",37),
@@ -79,7 +79,8 @@ public enum Right {
   VIEW_RNR_FEEDBACK_REPORT("Report - Report and Requisition Feedback", REPORT, "Permission to view Report and Requisition Feedback Report",47),
   VIEW_ORDER_FILL_RATE_REPORT("Report - Order Fill Rate Report", REPORT, "Permission to view Order Fill Rate Report",48),
   VIEW_REGIMEN_SUMMARY_REPORT("Report - Regimen Summary Report", REPORT, "Permission to view Regimen Summary Report",49),
-  VIEW_DISTRICT_FINANCIAL_SUMMARY_REPORT("Report - District Financial Summary Report", REPORT, "Permission to view District Financial Summary Report",50);
+  VIEW_DISTRICT_FINANCIAL_SUMMARY_REPORT("Report - District Financial Summary Report", REPORT, "Permission to view District Financial Summary Report",50),
+  VIEW_DASHBOARD_POC("Report - View Dashboard POC", REPORT, "View Dashboard POC",51);
 
 
 

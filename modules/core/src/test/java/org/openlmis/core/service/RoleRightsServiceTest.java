@@ -108,7 +108,9 @@ public class RoleRightsServiceTest {
             VIEW_RNR_FEEDBACK_REPORT,
             VIEW_ORDER_FILL_RATE_REPORT,
             VIEW_REGIMEN_SUMMARY_REPORT,
-            VIEW_DISTRICT_FINANCIAL_SUMMARY_REPORT);
+            VIEW_DISTRICT_FINANCIAL_SUMMARY_REPORT,
+            VIEW_DASHBOARD_POC
+      );
 
     assertThat(allRights, is(alphabeticalRights));
   }
