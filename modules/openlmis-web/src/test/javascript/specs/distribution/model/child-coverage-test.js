@@ -23,7 +23,7 @@ describe('Child coverage', function () {
     openedVialLineItem1 = {"id": 15, "facilityVisitId": 3, "productVialName": "BCG", "packSize": 10, openedVial: {value: null, notRecorded: true}};
     openedVialLineItem2 = {"id": 16, "facilityVisitId": 3, "productVialName": "Polio10", "packSize": 10, openedVial: {value: null, notRecorded: true}};
 
-    childCoverage = new ChildCoverage({
+    childCoverage = new ChildCoverage(123, {
       childCoverageLineItems: [childCoverageLineItem1, childCoverageLineItem2],
       openedVialLineItems: [openedVialLineItem1, openedVialLineItem2]
     });
@@ -51,7 +51,7 @@ describe('Child coverage', function () {
     spyOn($, 'extend');
     var childCoverageJSON = {blah: 'blah blah'};
 
-    var childCoverage = new ChildCoverage(childCoverageJSON);
+    var childCoverage = new ChildCoverage(123, childCoverageJSON);
 
     expect($.extend).toHaveBeenCalledWith(true, childCoverage, childCoverageJSON);
   });

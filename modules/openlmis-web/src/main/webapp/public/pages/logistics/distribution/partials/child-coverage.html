@@ -15,15 +15,14 @@
 
   <div class="facility-info" ng-init="facilityData = distribution.facilityDistributions[selectedFacilityId]">
     <div id="coverageContainer" class="refrigerator-container" disable-form="{{facilityData.isDisabled()}}">
-      <h3 id="coverageHeader" openlmis-message="label.coverage.children"></h3>
+      <h3>
+        <span id="coverageHeader" openlmis-message="label.coverage.children"></span>
+        <input id="applyNRAll" type="button" ng-click="applyNRAll()" class="pull-right btn"
+               openlmis-message="button.apply.nr.all"/>
+      </h3>
 
       <div id="childCoverageTable" class="facility-distribution-form-table"
            disable-form="{{facilityData.isDisabled()}}">
-        <!--<div id="applyNRContainer" class="clearfix">-->
-        <!--<input id="CoverageFormApplyNRToAll" type="button" ng-click="applyNRAll()"-->
-        <!--class="pull-right btn"-->
-        <!--openlmis-message="button.apply.nr.all"/>-->
-        <!--</div>-->
         <form auto-save="distribution" object-store="distributions">
           <table class="table table-bordered">
             <thead>

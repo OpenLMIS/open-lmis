@@ -18,6 +18,7 @@ function FacilityDistribution(facilityDistribution) {
   this.refrigerators = new Refrigerators(this.facilityVisitId, facilityDistribution.refrigerators);
   this.facilityVisit = new FacilityVisit(facilityDistribution.facilityVisit);
   this.fullCoverage = new FullCoverage(this.facilityVisitId, facilityDistribution.fullCoverage);
+  this.childCoverage = new ChildCoverage(this.facilityVisitId, facilityDistribution.childCoverage);
 
   this.status = facilityDistribution.status;
 

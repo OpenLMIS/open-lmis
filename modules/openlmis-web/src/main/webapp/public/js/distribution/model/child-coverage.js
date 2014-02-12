@@ -8,18 +8,19 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
  */
 
-function ChildCoverage(childCoverageJSON) {
+function ChildCoverage(facilityVisitId, childCoverageJSON) {
   $.extend(true, this, childCoverageJSON);
+  this.facilityVisitId = facilityVisitId;
 }
 
 ChildCoverage.prototype.setNotRecorded = function () {
-  this.childCoverageLineItems.forEach(function(lineItem) {
-    lineItem.healthCenter11Months.notRecorded = true;
-    lineItem.healthCenter23Months.notRecorded = true;
-    lineItem.outReach11Months.notRecorded = true;
-    lineItem.outReach23Months.notRecorded = true;
+  this.childCoverageLineItems.forEach(function (lineItem) {
+    lineItem.healthCenter11Months = {notRecorded: true};
+    lineItem.healthCenter23Months = {notRecorded: true};
+    lineItem.outReach11Months = {notRecorded: true};
+    lineItem.outReach23Months = {notRecorded: true};
   });
-  this.openedVialLineItems.forEach(function(lineItem) {
-    lineItem.openedVial.notRecorded = true;
+  this.openedVialLineItems.forEach(function (lineItem) {
+    lineItem.openedVial = {notRecorded: true};
   });
 };

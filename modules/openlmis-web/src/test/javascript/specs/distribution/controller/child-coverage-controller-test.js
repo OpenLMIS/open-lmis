@@ -34,7 +34,7 @@ describe('Child Coverage Controller', function () {
     openedVialLineItem4 = {"id": 16, "facilityVisitId": 3, "productVialName": "Penta1", "packSize": 10, openedVial: {value: null, notRecorded: true}};
     openedVialLineItem5 = {"id": 17, "facilityVisitId": 3, "productVialName": "Penta10", "packSize": 10, openedVial: {value: null, notRecorded: true}};
 
-    childCoverage = new ChildCoverage({
+    childCoverage = new ChildCoverage(234, {
       childCoverageLineItems: [
         childCoverageLineItem1,
         childCoverageLineItem2,
