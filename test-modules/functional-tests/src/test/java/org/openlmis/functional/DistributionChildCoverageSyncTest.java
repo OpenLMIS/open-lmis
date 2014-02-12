@@ -287,6 +287,18 @@ public class DistributionChildCoverageSyncTest extends TestCaseHelper {
     dbWrapper.updateFieldValue("products", "active", "t", "code", "P10");
   }
 
+  @Test(groups = {"distribution"})
+  public void testIndividualFieldNRHandlingAndTotalCalculation() throws SQLException {
+
+    HomePage homePage = loginPage.loginAs(childCoverageData.get(USER), childCoverageData.get(PASSWORD));
+    DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
+    distributionPage.initiate(childCoverageData.get(FIRST_DELIVERY_ZONE_NAME), childCoverageData.get(VACCINES_PROGRAM));
+    FacilityListPage facilityListPage = distributionPage.clickRecordData(1);
+    VisitInformationPage visitInformationPage = facilityListPage.selectFacility(childCoverageData.get(FIRST_FACILITY_CODE));
+    ChildCoveragePage childCoveragePage = visitInformationPage.navigateToChildCoverage();
+
+  }
+
   private void verifyOpenVialsPresent() {
     ChildCoveragePage childCoveragePage = PageFactory.getInstanceOfChildCoveragePage(testWebDriver);
     assertEquals(childCoveragePage.getTextOfOpenedVialsBCG(), "BCG");

@@ -94,25 +94,25 @@ public class ChildCoveragePage extends DistributionTab {
   @FindBy(how = ID, using = "childrenAgeGroup2")
   private static WebElement headerChildrenAgeGroup2 = null;
 
-  @FindBy(how = ID, using = "BCGContainer")
+  @FindBy(how = ID, using = "BCG")
   private static WebElement OpenedVialsBCG = null;
 
-  @FindBy(how = ID, using = "Polio10Container")
+  @FindBy(how = ID, using = "Polio10")
   private static WebElement OpenedVialsPolio10 = null;
 
-  @FindBy(how = ID, using = "Polio20Container")
+  @FindBy(how = ID, using = "Polio20")
   private static WebElement OpenedVialsPolio20 = null;
 
-  @FindBy(how = ID, using = "Penta1Container")
+  @FindBy(how = ID, using = "Penta1")
   private static WebElement OpenedVialsPenta1 = null;
 
-  @FindBy(how = ID, using = "Penta10Container")
+  @FindBy(how = ID, using = "Penta10")
   private static WebElement OpenedVialsPenta10 = null;
 
-  @FindBy(how = ID, using = "PCVContainer")
+  @FindBy(how = ID, using = "PCV")
   private static WebElement OpenedVialsPCV = null;
 
-  @FindBy(how = ID, using = "MeaslesContainer")
+  @FindBy(how = ID, using = "Measles")
   private static WebElement OpenedVialsMeasles = null;
 
   @FindBy(how = ID, using = "childCoverageTable")
