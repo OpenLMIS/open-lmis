@@ -48,8 +48,8 @@ public class DistributionService {
 
   @Transactional
   public FacilityDistribution sync(FacilityDistribution facilityDistribution) {
-    facilityDistributionService.save(facilityDistribution);
-    return facilityDistributionService.setSynced(facilityDistribution);
+    FacilityDistribution syncedDistribution = facilityDistributionService.setSynced(facilityDistribution);
+    return facilityDistributionService.save(syncedDistribution);
   }
 
   public Distribution get(Distribution distribution) {

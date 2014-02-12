@@ -51,7 +51,7 @@ public class DistributionServiceTest {
   private FacilityVisitService facilityVisitService;
 
   @Test
-  public void shouldCreateDistribution() throws Exception {
+  public void shouldCreateDistribution() {
     Distribution distribution = new Distribution();
     Distribution expectedDistribution = new Distribution();
     when(repository.create(distribution)).thenReturn(expectedDistribution);
@@ -73,21 +73,23 @@ public class DistributionServiceTest {
     when(facilityDistribution.getFacilityVisit()).thenReturn(facilityVisit);
 
     FacilityDistribution syncedFacilityDistribution = new FacilityDistribution();
+    FacilityDistribution savedFacilityDistribution = new FacilityDistribution();
     FacilityVisit syncedVisit = new FacilityVisit();
-    syncedVisit.setSynced(true);
     syncedFacilityDistribution.setFacilityVisit(syncedVisit);
+
     when(facilityDistributionService.setSynced(facilityDistribution)).thenReturn(syncedFacilityDistribution);
+    when(facilityDistributionService.save(syncedFacilityDistribution)).thenReturn(savedFacilityDistribution);
 
     FacilityDistribution returnedFacilityDistribution = service.sync(facilityDistribution);
 
-    verify(facilityDistributionService).save(facilityDistribution);
     verify(facilityDistributionService).setSynced(facilityDistribution);
+    verify(facilityDistributionService).save(syncedFacilityDistribution);
 
-    assertThat(returnedFacilityDistribution, is(syncedFacilityDistribution));
+    assertThat(returnedFacilityDistribution, is(savedFacilityDistribution));
   }
 
   @Test
-  public void shouldGetDistributionIfExists() throws Exception {
+  public void shouldGetDistributionIfExists() {
     Distribution distribution = new Distribution();
 
     service.get(distribution);

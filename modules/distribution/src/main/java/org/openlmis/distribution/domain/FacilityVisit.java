@@ -43,7 +43,7 @@ public class FacilityVisit extends BaseModel {
   private ReasonForNotVisiting reasonForNotVisiting;
   private String otherReasonDescription;
 
-  private Boolean synced = false;
+  private Boolean synced;
 
   public FacilityVisit(Facility facility, Distribution distribution) {
     this.distributionId = distribution.getId();
