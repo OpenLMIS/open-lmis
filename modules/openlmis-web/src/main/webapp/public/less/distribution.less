@@ -67,7 +67,10 @@
 
   #visitDateContainer, #vehicleIdContainer {
     display: inline-block;
-    width: 297px;
+    width: 300px;
+    input[type="text"] {
+      width: 82%;
+    }
   }
 }
 
@@ -403,15 +406,20 @@
   label {
     font-weight: bold;
   }
+  .form-group {
+    padding: 0;
+    border: none;
+  }
   .form-row {
     padding-left: 0;
+    margin: 12px 0;
   }
   textarea {
     width: 550px;
     height: 150px;
+    margin-bottom: 0;
   }
   .signatures {
-    margin-top: 14px;
     .details-container {
       float: left;
       width: 262px;
@@ -442,6 +450,16 @@
           }
         }
       }
+    }
+  }
+  .not-visit-reason-form {
+    margin-top: 0;
+    .form-row {
+      margin: 0 0 5px;
+    }
+    #otherTextBox {
+      width: 206px;
+      height: auto;
     }
   }
   form {
