@@ -97,7 +97,7 @@ function ChildCoverageController($scope, $routeParams, distributionService) {
 
   $scope.getTotalVaccinations = function (childCoverageLineItem) {
     return $scope.getTotal(childCoverageLineItem.healthCenter11Months, childCoverageLineItem.outReach11Months) +
-        $scope.getTotal(childCoverageLineItem.healthCenter23Months, childCoverageLineItem.outReach23Months);
+      $scope.getTotal(childCoverageLineItem.healthCenter23Months, childCoverageLineItem.outReach23Months);
   };
 
   $scope.calculateCoverageRate = function (total, targetGroup) {
@@ -121,5 +121,11 @@ function ChildCoverageController($scope, $routeParams, distributionService) {
       });
     }
     return totalDosesConsumed === 0 ? null : Math.round(((totalDosesConsumed - totalVaccinations) / totalDosesConsumed) * 100);
+  };
+
+  $scope.applyNRAll = function () {
+    distributionService.applyNR(function () {
+      $scope.childCoverage.setNotRecorded();
+    });
   };
 }

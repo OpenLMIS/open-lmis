@@ -11,8 +11,8 @@
 describe('Child Coverage Controller', function () {
 
   var scope, distributionService, routeParams, childCoverage,
-      childCoverageLineItem1, childCoverageLineItem2, childCoverageLineItem3, childCoverageLineItem4, childCoverageLineItem5,
-      openedVialLineItem1, openedVialLineItem2, openedVialLineItem3, openedVialLineItem4, openedVialLineItem5;
+    childCoverageLineItem1, childCoverageLineItem2, childCoverageLineItem3, childCoverageLineItem4, childCoverageLineItem5,
+    openedVialLineItem1, openedVialLineItem2, openedVialLineItem3, openedVialLineItem4, openedVialLineItem5;
 
   beforeEach(module('distribution'));
   beforeEach(inject(function ($controller, $rootScope, _distributionService_) {
@@ -34,7 +34,7 @@ describe('Child Coverage Controller', function () {
     openedVialLineItem4 = {"id": 16, "facilityVisitId": 3, "productVialName": "Penta1", "packSize": 10, openedVial: {value: null, notRecorded: true}};
     openedVialLineItem5 = {"id": 17, "facilityVisitId": 3, "productVialName": "Penta10", "packSize": 10, openedVial: {value: null, notRecorded: true}};
 
-    childCoverage = {
+    childCoverage = new ChildCoverage({
       childCoverageLineItems: [
         childCoverageLineItem1,
         childCoverageLineItem2,
@@ -49,7 +49,7 @@ describe('Child Coverage Controller', function () {
         openedVialLineItem4,
         openedVialLineItem5
       ]
-    };
+    });
 
     distributionService.distribution = {facilityDistributions: {1: {childCoverage: childCoverage}, 2: {}}};
     routeParams = {facility: 1};
@@ -101,11 +101,11 @@ describe('Child Coverage Controller', function () {
   });
 
   it('should synchronize NR state of Polio10 with Polio20 and Penta1 with Penta10', function () {
-    openedVialLineItem3.openedVial.notRecorded = false;
-    openedVialLineItem5.openedVial.notRecorded = false;
+    childCoverage.openedVialLineItems[2].openedVial.notRecorded = false;
+    childCoverage.openedVialLineItems[4].openedVial.notRecorded = false;
     scope.$apply();
-    expect(openedVialLineItem2.openedVial.notRecorded).toBeFalsy();
-    expect(openedVialLineItem4.openedVial.notRecorded).toBeFalsy();
+    expect(childCoverage.openedVialLineItems[1].openedVial.notRecorded).toBeFalsy();
+    expect(childCoverage.openedVialLineItems[3].openedVial.notRecorded).toBeFalsy();
   });
 
   it('should add value of healthCenter and outReach if not undefined', function () {
@@ -149,11 +149,11 @@ describe('Child Coverage Controller', function () {
       vaccinations: ['BCG'],
       rowSpan: 1
     };
-    childCoverageLineItem1.healthCenter11Months.value = 5;
-    childCoverageLineItem1.healthCenter23Months.value = 5;
-    childCoverageLineItem1.outReach11Months.value = 10;
-    childCoverageLineItem1.outReach23Months.value = 10;
-    openedVialLineItem1.openedVial.value = 2;
+    childCoverage.childCoverageLineItems[0].healthCenter11Months.value = 5;
+    childCoverage.childCoverageLineItems[0].healthCenter23Months.value = 5;
+    childCoverage.childCoverageLineItems[0].outReach11Months.value = 10;
+    childCoverage.childCoverageLineItems[0].outReach23Months.value = 10;
+    childCoverage.openedVialLineItems[0].openedVial.value = 2;
 
     var wastageRate = scope.calculateWastageRate(productsForVaccination);
 
@@ -167,12 +167,12 @@ describe('Child Coverage Controller', function () {
       vaccinations: ['BCG'],
       rowSpan: 1
     };
-    childCoverageLineItem1.healthCenter11Months.value = 5;
-    childCoverageLineItem1.healthCenter23Months.value = 5;
-    childCoverageLineItem1.outReach11Months.value = 10;
-    childCoverageLineItem1.outReach23Months.value = 10;
-    openedVialLineItem1.openedVial.value = 2;
-    openedVialLineItem1.packSize = undefined;
+    childCoverage.childCoverageLineItems[0].healthCenter11Months.value = 5;
+    childCoverage.childCoverageLineItems[0].healthCenter23Months.value = 5;
+    childCoverage.childCoverageLineItems[0].outReach11Months.value = 10;
+    childCoverage.childCoverageLineItems[0].outReach23Months.value = 10;
+    childCoverage.openedVialLineItems[0].openedVial.value = 2;
+    childCoverage.openedVialLineItems[0].packSize = undefined;
 
     var wastageRate = scope.calculateWastageRate(productsForVaccination);
 
@@ -185,15 +185,28 @@ describe('Child Coverage Controller', function () {
       vaccinations: ['Polio (Newborn)', 'Polio 1st dose', 'Polio 2nd dose', 'Polio 3rd dose'],
       rowSpan: 4
     };
-    childCoverageLineItem2.healthCenter11Months.value = 5;
-    childCoverageLineItem2.healthCenter23Months.value = 5;
-    childCoverageLineItem2.outReach11Months.value = 10;
-    childCoverageLineItem2.outReach23Months.value = 10;
-    openedVialLineItem2.openedVial.value = 2;
+    childCoverage.childCoverageLineItems[1].healthCenter11Months.value = 5;
+    childCoverage.childCoverageLineItems[1].healthCenter23Months.value = 5;
+    childCoverage.childCoverageLineItems[1].outReach11Months.value = 10;
+    childCoverage.childCoverageLineItems[1].outReach23Months.value = 10;
+    childCoverage.openedVialLineItems[1].openedVial.value = 2;
 
     var wastageRate = scope.calculateWastageRate(productsForVaccination);
 
     expect(wastageRate).toEqual(-50);
+  });
+
+  it('should applyNR to all readings', function () {
+    spyOn(distributionService, 'applyNR');
+    spyOn(scope.childCoverage, 'setNotRecorded');
+
+    scope.applyNRAll();
+
+    expect(distributionService.applyNR).toHaveBeenCalled();
+
+    distributionService.applyNR.calls[0].args[0]();
+
+    expect(scope.childCoverage.setNotRecorded).toHaveBeenCalled();
   });
 
 });
