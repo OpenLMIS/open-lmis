@@ -25,10 +25,6 @@ public class FacilityVisitRepository {
   @Autowired
   FacilityVisitMapper mapper;
 
-  public void insert(FacilityVisit facilityVisit) {
-    mapper.insert(facilityVisit);
-  }
-
   public FacilityVisit get(FacilityVisit facilityVisit) {
     return mapper.getBy(facilityVisit.getFacilityId(), facilityVisit.getDistributionId());
   }

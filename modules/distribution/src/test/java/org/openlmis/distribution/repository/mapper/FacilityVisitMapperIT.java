@@ -10,6 +10,7 @@ import org.openlmis.db.categories.IntegrationTests;
 import org.openlmis.distribution.domain.Distribution;
 import org.openlmis.distribution.domain.Facilitator;
 import org.openlmis.distribution.domain.FacilityVisit;
+import org.openlmis.distribution.domain.ReasonForNotVisiting;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -108,7 +109,8 @@ public class FacilityVisitMapperIT {
     FacilityVisit facilityVisit = new FacilityVisit(facility, distribution);
     Facilitator confirmedBy = new Facilitator("Barack", "President");
     Facilitator verifiedBy = new Facilitator("ManMohan", "Spectator");
-
+    facilityVisit.setReasonForNotVisiting(ReasonForNotVisiting.OTHER);
+    facilityVisit.setOtherReasonDescription("Manmohan will not be PM again");
     mapper.insert(facilityVisit);
 
     facilityVisit.setConfirmedBy(confirmedBy);

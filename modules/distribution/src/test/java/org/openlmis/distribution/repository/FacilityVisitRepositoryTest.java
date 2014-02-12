@@ -46,14 +46,6 @@ public class FacilityVisitRepositoryTest {
   FacilityVisitRepository facilityVisitRepository;
 
   @Test
-  public void shouldInsertFacilityVisit() {
-    FacilityVisit facilityVisit = new FacilityVisit();
-    facilityVisitRepository.insert(facilityVisit);
-
-    verify(facilityVisitMapper).insert(facilityVisit);
-  }
-
-  @Test
   public void shouldReturnFacilityVisit() {
     Distribution distribution = new Distribution();
     distribution.setId(1L);
