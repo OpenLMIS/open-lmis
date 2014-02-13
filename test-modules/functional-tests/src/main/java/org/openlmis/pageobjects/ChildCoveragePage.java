@@ -577,4 +577,19 @@ public class ChildCoveragePage extends DistributionTab {
     testWebDriver.waitForElementToAppear(outReach23Months);
     return outReach23Months.isEnabled();
   }
+
+  public void applyNRToAll() {
+    testWebDriver.waitForElementToAppear(applyNrToAllButton);
+    applyNrToAllButton.click();
+  }
+
+  public void clickOK() {
+    testWebDriver.waitForElementToAppear(okButton);
+    okButton.click();
+  }
+
+  public void clickCancel() {
+    testWebDriver.waitForElementToAppear(cancelButton);
+    cancelButton.click();
+  }
 }

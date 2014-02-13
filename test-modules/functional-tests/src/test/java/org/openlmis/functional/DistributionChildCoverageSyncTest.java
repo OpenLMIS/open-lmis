@@ -533,6 +533,57 @@ public class DistributionChildCoverageSyncTest extends TestCaseHelper {
     assertEquals("67", childCoveragePage.getWastageRateForGivenRow(6));
   }
 
+  @Test(groups = {"distribution"})
+  public void testShouldVerifyApplyNRToAll() {
+    HomePage homePage = loginPage.loginAs(childCoverageData.get(USER), childCoverageData.get(PASSWORD));
+    DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
+    distributionPage.initiate(childCoverageData.get(FIRST_DELIVERY_ZONE_NAME), childCoverageData.get(VACCINES_PROGRAM));
+    FacilityListPage facilityListPage = distributionPage.clickRecordData(1);
+    VisitInformationPage visitInformationPage = facilityListPage.selectFacility(childCoverageData.get(FIRST_FACILITY_CODE));
+    ChildCoveragePage childCoveragePage = visitInformationPage.navigateToChildCoverage();
+
+    childCoveragePage.verifyIndicator("RED");
+
+    childCoveragePage.enterHealthCenter11MonthsDataForGivenRow(6, "9");
+    childCoveragePage.verifyIndicator("AMBER");
+    childCoveragePage.enterOpenedVialsCountForGivenGroupAndRow(6, 1, "7");
+    childCoveragePage.enterOpenedVialsCountForGivenGroupAndRow(6, 2, "9");
+
+    childCoveragePage.applyNRToAll();
+    childCoveragePage.clickCancel();
+    assertTrue(childCoveragePage.isOpenVialEnabled(1, 1));
+    childCoveragePage.applyNRToAll();
+    childCoveragePage.clickOK();
+    childCoveragePage.verifyAllFieldsDisabled();
+    childCoveragePage.verifyIndicator("GREEN");
+
+    testWebDriver.refresh();
+    childCoveragePage.verifyAllFieldsDisabled();
+    childCoveragePage.applyNRToAll();
+    childCoveragePage.clickOK();
+    childCoveragePage.verifyAllFieldsDisabled();
+
+    EpiInventoryPage epiInventoryPage = childCoveragePage.navigateToEpiInventory();
+    epiInventoryPage.navigateToChildCoverage();
+    childCoveragePage.verifyAllFieldsDisabled();
+    childCoveragePage.applyNRToAll();
+    childCoveragePage.clickCancel();
+    childCoveragePage.verifyAllFieldsDisabled();
+
+    childCoveragePage.applyNrToPolioOpenedVials();
+    childCoveragePage.verifyIndicator("AMBER");
+    childCoveragePage.enterOpenedVialsCountForGivenGroupAndRow(2, 1, "89");
+    childCoveragePage.verifyIndicator("AMBER");
+    childCoveragePage.enterOpenedVialsCountForGivenGroupAndRow(2, 2, "9");
+    childCoveragePage.verifyIndicator("GREEN");
+
+    childCoveragePage.applyNRToHealthCenter11MonthsForGivenRow(1);
+    childCoveragePage.verifyIndicator("AMBER");
+
+    assertTrue(childCoveragePage.isOpenVialEnabled(2, 1));
+    assertFalse(childCoveragePage.isOpenVialEnabled(1, 1));
+  }
+
   public void insertOpenedVialsProductMapping() throws SQLException {
     dbWrapper.insertOpenedVialsProductsInMappingTable("BCG", "P10");
     dbWrapper.insertOpenedVialsProductsInMappingTable("Polio10", "P11");
