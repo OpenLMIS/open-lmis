@@ -29,9 +29,15 @@ function GeographicZonesJsonController($scope, leafletData, FlatGeographicZoneLi
     reader.readAsText(fi.files[0]);
   };
 
+  function interpolate(value, count){
+    var val =  parseFloat( value ) / parseFloat(count);
+    var interpolator = chroma.interpolate.bezier(['green', 'yellow', 'red' ]);
+    return interpolator(val).hex();
+  }
+
   $scope.style = function(feature){
     return {
-      fillColor: (feature.properties.mapped)?"red":"green",
+      fillColor: (feature.properties.mapped)?"red":interpolate(feature.properties.ID, $scope.features.length),
       weight: 1,
       opacity: 1,
       color: 'white',

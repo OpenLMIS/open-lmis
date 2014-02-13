@@ -8,13 +8,31 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-angular.module('reporting_rate', ['openlmis', 'ui.bootstrap.modal', 'leaflet-directive', 'ui.bootstrap.dropdownToggle'])
-        .config(['$routeProvider', function ($routeProvider) {
-            $routeProvider.
-                when('/list', {controller:ReportingRateController, templateUrl:'partials/list.html',reloadOnSearch:false}).
-                otherwise({redirectTo:'/list'});
-        }]).run(
-        function ($rootScope, AuthorizationService) {
-            AuthorizationService.preAuthorize('VIEW_REPORTING_RATE_REPORT');
-        }
-    );
+package org.openlmis.report.service;
+
+import lombok.NoArgsConstructor;
+import org.apache.ibatis.session.RowBounds;
+import org.openlmis.core.service.ConfigurationSettingService;
+import org.openlmis.report.mapper.SupplyStatusReportMapper;
+import org.openlmis.report.mapper.lookup.GeographicZoneReportMapper;
+import org.openlmis.report.model.GeoReportData;
+import org.openlmis.report.model.ReportData;
+import org.openlmis.report.util.SelectedFilterHelper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import java.util.List;
+import java.util.Map;
+
+@Component
+@NoArgsConstructor
+public class GeographicReportProvider  {
+
+  @Autowired
+  GeographicZoneReportMapper geoMapper;
+
+  public List<GeoReportData> getReportingRateReport(Long programId, Long processingPeriodId){
+    return geoMapper.getGeoReportingRate(programId, processingPeriodId);
+  }
+
+}

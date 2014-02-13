@@ -8,9 +8,7 @@
   ~
   ~ You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
   -->
-
 <html lang="en" ng-app="reporting_rate">
-
 <head>
   <meta charset="utf-8">
   <title openlmis-message="app.title"></title>
@@ -19,6 +17,7 @@
 
   <!-- library files-->
   <title openlmis-message="app.title"></title>
+  <script src="/public/lib/leaflet/leaflet.js"></script>
   <script src="/public/lib/jquery/jquery-2.0.0.min.js"></script>
   <script src="/public/lib/jquery/jquery-ui-1.9.2.custom.min.js"></script>
   <script src="/public/lib/angular/angular.min.js"></script>
@@ -33,16 +32,22 @@
   <script src="/public/lib/angular-ui/ng-grid-flexible-height.js"></script>
   <script src="/public/lib/select2/select2.js"></script>
 
+  <script src="/public/lib/leaflet/angular-leaflet-directive.min.js"></script>
+  <script src="/public/lib/leaflet/chroma.min.js"></script>
+  <script src="/public/lib/leaflet/draganddrop.js"></script>
+
   <!-- Style sheet files-->
   <link rel="stylesheet" href="/public/lib/bootstrap/css/bootstrap.min.css">
   <link rel="stylesheet" href="/public/lib/angular-ui/angular-ui.min.css">
   <link rel="stylesheet" href="/public/lib/select2/select2.css">
+  <link rel="stylesheet" href="/public/lib/leaflet/leaflet.css">
 
   <!-- Services -->
   <script src="/public/js/shared/services/services.js"></script>
   <script src="/public/js/shared/services/extension-services.js"></script>
   <script type="text/javascript" src="/public/js/shared/services/message-service.js"></script>
   <script type="text/javascript" src="/public/js/shared/services/authorization-service.js"></script>
+  <script src="/public/js/shared/services/navigate-back-service.js"></script>
 
   <script src="/public/js/shared/app.js"></script>
 
@@ -57,21 +62,21 @@
   <script src="/public/js/shared/open-lmis-dialog.js"></script>
   <script src="/public/js/shared/localStorageKeys.js"></script>
 
+
   <link rel="stylesheet" href="/public/css/app.css">
   <link rel="stylesheet" href="/public/css/ng-grid.css">
   <link rel="stylesheet" href="/public/css/report.css">
-  <link rel="stylesheet" href="/public/css/style.css">
 
   <!-- Shared controller files -->
   <script src="/public/js/shared/controller/login-controller.js"></script>
   <script src="/public/js/shared/controller/locale-controller.js"></script>
   <script src="/public/js/shared/controller/header-controller.js"></script>
   <script src="/public/js/shared/controller/navigation-controller.js"></script>
+  <script src="/public/js/shared/controller/manage-menu-controller.js"></script>
 
   <!-- Page specific files -->
   <script src="/public/js/reports/reporting-rate/module/reporting-rate-module.js"></script>
   <script src="/public/js/reports/reporting-rate/controller/reporting-rate-controller.js"></script>
-
 
   <link type="text/css" rel="stylesheet" charset="UTF-8" href="/public/css/app.css">
   <!--[if IE 9]>
