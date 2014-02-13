@@ -10,6 +10,7 @@ import org.openqa.selenium.support.FindBy;
 import java.util.List;
 import java.util.Map;
 
+import static com.thoughtworks.selenium.SeleneseTestBase.assertEquals;
 import static org.openqa.selenium.support.How.ID;
 
 public class ChildCoveragePage extends DistributionTab {
@@ -147,13 +148,39 @@ public class ChildCoveragePage extends DistributionTab {
   }
 
   @Override
-  public void enterValues(List<Map<String, String>> dataMapList) {
-    //To change body of implemented methods use File | Settings | File Templates.
+  public void enterValues(List<Map<String, String>> data) {
+    Map<String, String> dataMap = data.get(0);
+    for (int rowNumber = 1; rowNumber <= 12; rowNumber++) {
+      enterHealthCenter11MonthsDataForGivenRow(rowNumber, dataMap.get("healthCenter11"));
+      enterOutReach11MonthsDataForGivenRow(rowNumber, dataMap.get("outReach11"));
+      if (rowNumber != 2) {
+        enterHealthCenter23MonthsDataForGivenRow(rowNumber, dataMap.get("healthCenter23"));
+        enterOutReach23MonthsDataForGivenRow(rowNumber, dataMap.get("outReach23"));
+      }
+    }
+    enterOpenedVialsCountForGivenGroupAndRow(1, 1, dataMap.get("openedVial"));
+    enterOpenedVialsCountForGivenGroupAndRow(2, 1, dataMap.get("openedVial"));
+    enterOpenedVialsCountForGivenGroupAndRow(2, 2, dataMap.get("openedVial"));
+    enterOpenedVialsCountForGivenGroupAndRow(6, 1, dataMap.get("openedVial"));
+    enterOpenedVialsCountForGivenGroupAndRow(6, 2, dataMap.get("openedVial"));
+    enterOpenedVialsCountForGivenGroupAndRow(9, 1, dataMap.get("openedVial"));
+    enterOpenedVialsCountForGivenGroupAndRow(12, 1, dataMap.get("openedVial"));
   }
 
   @Override
-  public void verifyData(List<Map<String, String>> map) {
-    //To change body of implemented methods use File | Settings | File Templates.
+  public void verifyData(List<Map<String, String>> data) {
+    Map<String, String> dataMap = data.get(0);
+    assertEquals(dataMap.get("targetGroup"), getTextOfTargetGroupValue(9));
+    assertEquals(dataMap.get("healthCenter11"), getHealthCenter11MonthsDataForGivenRow(9));
+    assertEquals(dataMap.get("outReach11"), getOutReach11MonthsDataForGivenRow(9));
+    assertEquals(dataMap.get("total1"), getTotalForGivenColumnAndRow(1, 9));
+    assertEquals(dataMap.get("coverageRate"), getCoverageRateForGivenRow(9));
+    assertEquals(dataMap.get("healthCenter23"), getHealthCenter23MonthsDataForGivenRow(9));
+    assertEquals(dataMap.get("outReach23"), getOutReach23MonthsDataForGivenRow(9));
+    assertEquals(dataMap.get("total2"), getTotalForGivenColumnAndRow(2, 9));
+    assertEquals(dataMap.get("total3"), getTotalForGivenColumnAndRow(3, 9));
+    assertEquals(dataMap.get("openedVial"), getOpenedVialsCountForGivenGroupAndRow(9, 1));
+    assertEquals(dataMap.get("wastageRate"), getWastageRateForGivenRow(9));
   }
 
   @Override
@@ -380,6 +407,30 @@ public class ChildCoveragePage extends DistributionTab {
     outReach23Months.sendKeys(Keys.TAB);
   }
 
+  public String getHealthCenter11MonthsDataForGivenRow(int rowNumber) {
+    WebElement healthCenter11Months = testWebDriver.getElementById("healthCenter11Months" + (rowNumber - 1));
+    testWebDriver.waitForElementToAppear(healthCenter11Months);
+    return healthCenter11Months.getAttribute("value");
+  }
+
+  public String getOutReach11MonthsDataForGivenRow(int rowNumber) {
+    WebElement outReach11Months = testWebDriver.getElementById("outReach11Months" + (rowNumber - 1));
+    testWebDriver.waitForElementToAppear(outReach11Months);
+    return outReach11Months.getAttribute("value");
+  }
+
+  public String getHealthCenter23MonthsDataForGivenRow(int rowNumber) {
+    WebElement healthCenter23Months = testWebDriver.getElementById("healthCenter23Months" + (rowNumber - 1));
+    testWebDriver.waitForElementToAppear(healthCenter23Months);
+    return healthCenter23Months.getAttribute("value");
+  }
+
+  public String getOutReach23MonthsDataForGivenRow(int rowNumber) {
+    WebElement outReach23Months = testWebDriver.getElementById("outReach23Months" + (rowNumber - 1));
+    testWebDriver.waitForElementToAppear(outReach23Months);
+    return outReach23Months.getAttribute("value");
+  }
+
   public void applyNRToHealthCenter11MonthsForGivenRow(int rowNumber) {
     WebElement healthCenter11MonthsNR = testWebDriver.getElementById("coverageHealthCenter11Months" + (rowNumber - 1));
     testWebDriver.waitForElementToAppear(healthCenter11MonthsNR);
@@ -408,12 +459,18 @@ public class ChildCoveragePage extends DistributionTab {
     removeFocusFromElement();
   }
 
-  public void enterOpenedVialsCountForGivenGroupAndRow(int groupNumber, int rowNumber, String value) {
-    WebElement openedVialsTextField = testWebDriver.getElementById("openedVial" + (groupNumber - 1) + (rowNumber - 1));
+  public void enterOpenedVialsCountForGivenGroupAndRow(int rowNumber, int position, String value) {
+    WebElement openedVialsTextField = testWebDriver.getElementById("openedVial" + (rowNumber - 1) + (position - 1));
     testWebDriver.waitForElementToAppear(openedVialsTextField);
     openedVialsTextField.clear();
     openedVialsTextField.sendKeys(value);
     openedVialsTextField.sendKeys(Keys.TAB);
+  }
+
+  public String getOpenedVialsCountForGivenGroupAndRow(int rowNumber, int position) {
+    WebElement openedVialsTextField = testWebDriver.getElementById("openedVial" + (rowNumber - 1) + (position - 1));
+    testWebDriver.waitForElementToAppear(openedVialsTextField);
+    return openedVialsTextField.getAttribute("value");
   }
 
   public void applyNrToBcgOpenedVials() {

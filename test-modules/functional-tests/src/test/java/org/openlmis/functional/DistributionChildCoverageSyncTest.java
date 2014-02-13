@@ -1,5 +1,7 @@
 package org.openlmis.functional;
 
+import cucumber.api.java.en.And;
+import cucumber.api.java.en.When;
 import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.UiUtils.TestWebDriver;
 import org.openlmis.pageobjects.*;
@@ -492,9 +494,16 @@ public class DistributionChildCoverageSyncTest extends TestCaseHelper {
     assertEquals("-8", childCoveragePage.getWastageRateForGivenRow(2));
 
     childCoveragePage.applyNRToHealthCenter11MonthsForGivenRow(3);
+    assertFalse(childCoveragePage.isHealthCenter11MonthsEnabledForGivenRow(3));
+    assertEquals("0", childCoveragePage.getWastageRateForGivenRow(2));
+    childCoveragePage.applyNRToHealthCenter11MonthsForGivenRow(3);
+    assertTrue(childCoveragePage.isHealthCenter11MonthsEnabledForGivenRow(3));
+    assertEquals("", childCoveragePage.getHealthCenter11MonthsDataForGivenRow(3));
     assertEquals("0", childCoveragePage.getWastageRateForGivenRow(2));
 
     childCoveragePage.applyNrToPolioOpenedVials();
+    assertFalse(childCoveragePage.isOpenVialEnabled(2, 1));
+    assertFalse(childCoveragePage.isOpenVialEnabled(2, 2));
     assertEquals("", childCoveragePage.getWastageRateForGivenRow(2));
   }
 
@@ -607,6 +616,18 @@ public class DistributionChildCoverageSyncTest extends TestCaseHelper {
     dbWrapper.insertRegimensProductsInMappingTable("PCV10 2nd dose", "P10");
     dbWrapper.insertRegimensProductsInMappingTable("PCV10 3rd dose", "P10");
     dbWrapper.insertRegimensProductsInMappingTable("Measles", "Measles");
+  }
+
+  @When("^I apply NR to healthCenter11Months for rowNumber \"([^\"]*)\"$")
+  public void applyNrToHealthCenter11(String rowNumber) {
+    ChildCoveragePage childCoveragePage = PageFactory.getInstanceOfChildCoveragePage(testWebDriver);
+    childCoveragePage.applyNRToHealthCenter11MonthsForGivenRow(Integer.parseInt(rowNumber));
+  }
+
+  @And("^I enter healthCenter11Months for rowNumber \"([^\"]*)\" as \"([^\"]*)\"$")
+  public void enterHealthCenter11Data(String rowNumber, String value) {
+    ChildCoveragePage childCoveragePage = PageFactory.getInstanceOfChildCoveragePage(testWebDriver);
+    childCoveragePage.enterHealthCenter11MonthsDataForGivenRow(Integer.parseInt(rowNumber), value);
   }
 
   @AfterMethod(groups = "distribution")

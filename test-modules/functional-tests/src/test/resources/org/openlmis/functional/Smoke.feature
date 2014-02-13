@@ -654,6 +654,14 @@ Feature: Smoke Tests
       | storeInCharge | DZ1                   | DZ2                    | Delivery Zone First   | Delivery Zone Second   | F10               | F11                | VACCINES     | TB            | M        |
     And I have data available for "Multiple" facilities attached to delivery zones
     And I assign delivery zone "DZ1" to user "storeInCharge" having role "store in-charge"
+    And I have following ISA values:
+      | Program  | Product | whoRatio | dosesPerYear | wastageFactor | bufferPercentage | minimumValue | maximumValue | adjustmentValue |
+      | VACCINES | P10     | 10       | 10           | 10            | 10               | null         | null         | 0               |
+    And I have following override ISA values:
+      | Facility Code | Program  | Product | ISA  |
+      | F11           | VACCINES | P11     | 1005 |
+    And I update population of facility "F10" as "342"
+    And I setup mapping for child coverage
     When I am logged in as "storeInCharge"
     And I access plan my distribution page
     And I select delivery zone "Delivery Zone First"
@@ -664,6 +672,18 @@ Feature: Smoke Tests
     And I choose facility "F10"
     And I navigate to Child Coverage tab
     Then Verify "child coverage" indicator should be "RED"
+    And I Enter "child coverage" values:
+      | healthCenter11 | outReach11 | healthCenter23 | outReach23 | openedVial |
+      | 123            | 22         | 23             | 34         | 4          |
+  #    Then Verify "child coverage" indicator should be "GREEN"
+  #    When I apply NR to healthCenter11Months for rowNumber "12"
+  #    Then Verify "child coverage" indicator should be "AMBER"
+  #    When I apply NR to healthCenter11Months for rowNumber "12"
+  #    And I enter healthCenter11Months for rowNumber "12" as "34"
+  #    Then Verify "child coverage" indicator should be "GREEN"
+    And I verify saved "child coverage" values:
+      | targetGroup | healthCenter11 | outReach11 | total1 | coverageRate | healthCenter23 | outReach23 | total2 | total3 | openedVial | wastageRate |
+      | 34          | 123            | 22         | 145    | 426          | 23             | 34         | 57     | 202    | 4          | -1415       |
 
   @smokeDistribution
   Scenario: User should verify facility and sync status when facility was visited

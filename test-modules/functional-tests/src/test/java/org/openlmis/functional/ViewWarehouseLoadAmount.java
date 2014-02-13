@@ -77,8 +77,6 @@ public class ViewWarehouseLoadAmount extends TestCaseHelper {
     dbWrapper.insertProgramProduct("Product5", programFirst, "10", "false");
     dbWrapper.insertProgramProduct("Product6", programFirst, "10", "true");
     dbWrapper.updateFieldValue("products", "active", "false", "code", "Product6");
-
-
   }
 
   @And("^I have data available for \"([^\"]*)\" (facility|facilities) attached to delivery zones$")

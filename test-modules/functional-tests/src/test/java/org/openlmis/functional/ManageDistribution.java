@@ -109,6 +109,28 @@ public class ManageDistribution extends TestCaseHelper {
       programFirst, userSIC, "200", rightsList, programSecond, "District1", "Ngorongoro", "Ngorongoro");
   }
 
+  @And("^I setup mapping for child coverage$")
+  public void insertMappingForChildCoverage() throws SQLException {
+    dbWrapper.insertProductsForChildCoverage();
+    dbWrapper.insertRegimensProductsInMappingTable("BCG", "BCG");
+    dbWrapper.insertRegimensProductsInMappingTable("Polio 1st dose", "polio20dose");
+    dbWrapper.insertRegimensProductsInMappingTable("Polio 2nd dose", "polio10dose");
+    dbWrapper.insertRegimensProductsInMappingTable("Polio 3rd dose", "polio20dose");
+    dbWrapper.insertRegimensProductsInMappingTable("Penta 1st dose", "penta1");
+    dbWrapper.insertRegimensProductsInMappingTable("Penta 2nd dose", "penta10");
+    dbWrapper.insertRegimensProductsInMappingTable("Penta 3rd dose", "penta1");
+    dbWrapper.insertRegimensProductsInMappingTable("PCV10 1st dose", "P10");
+    dbWrapper.insertRegimensProductsInMappingTable("PCV10 2nd dose", "P10");
+    dbWrapper.insertRegimensProductsInMappingTable("PCV10 3rd dose", "P10");
+    dbWrapper.insertRegimensProductsInMappingTable("Measles", "Measles");
+    dbWrapper.insertOpenedVialsProductsInMappingTable("Polio10", "P11");
+    dbWrapper.insertOpenedVialsProductsInMappingTable("Polio20", "P10");
+    dbWrapper.insertOpenedVialsProductsInMappingTable("Penta1", "penta1");
+    dbWrapper.insertOpenedVialsProductsInMappingTable("Penta10", "P11");
+    dbWrapper.insertOpenedVialsProductsInMappingTable("PCV", "P10");
+    dbWrapper.insertOpenedVialsProductsInMappingTable("Measles", "Measles");
+  }
+
   @Then("^I verify that I am on visit information page")
   public void onVisitInformationPage() throws SQLException {
     visitInformationPage = PageFactory.getInstanceOfVisitInformation(testWebDriver);
