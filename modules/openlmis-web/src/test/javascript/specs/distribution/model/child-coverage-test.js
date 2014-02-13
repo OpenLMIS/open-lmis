@@ -81,8 +81,8 @@ describe('Child coverage', function () {
           {"id": 26, "facilityVisitId": 3, "vaccination": "Polio (Newborn)", healthCenter11Months: {value: undefined}, outReach11Months: {value: undefined}, healthCenter23Months: {value: undefined}, outReach23Months: {value: undefined}}
         ],
         openedVialLineItems: [
-          {"id": 15, "facilityVisitId": 3, "productVialName": "BCG", "packSize": 10,  openedVial: {value: undefined}},
-          {"id": 16, "facilityVisitId": 3, "productVialName": "Polio10", "packSize": 10,  openedVial: {value: undefined}}
+          {"id": 15, "facilityVisitId": 3, "productVialName": "BCG", "packSize": 10, openedVial: {value: undefined}},
+          {"id": 16, "facilityVisitId": 3, "productVialName": "Polio10", "packSize": 10, openedVial: {value: undefined}}
         ]
       });
       var status = unfilledChildCoverage.computeStatus();
@@ -96,13 +96,71 @@ describe('Child coverage', function () {
           {"id": 26, "facilityVisitId": 3, "vaccination": "Polio (Newborn)", healthCenter11Months: {value: undefined}, outReach11Months: {value: undefined}, healthCenter23Months: {value: undefined}, outReach23Months: {value: undefined}}
         ],
         openedVialLineItems: [
-          {"id": 15, "facilityVisitId": 3, "productVialName": "BCG", "packSize": 10,  openedVial: {value: undefined}},
-          {"id": 16, "facilityVisitId": 3, "productVialName": "Polio10", "packSize": 10,  openedVial: {value: undefined}}
+          {"id": 15, "facilityVisitId": 3, "productVialName": "BCG", "packSize": 10, openedVial: {value: undefined}},
+          {"id": 16, "facilityVisitId": 3, "productVialName": "Polio10", "packSize": 10, openedVial: {value: undefined}}
         ]
       });
       var status = partiallyFilledChildCoverage.computeStatus();
       expect(status).toEqual(DistributionStatus.INCOMPLETE);
     });
 
+    it('should set status as complete if all child coverage fields are filled', function () {
+      var partiallyFilledChildCoverage = new ChildCoverage(12, {
+        childCoverageLineItems: [
+          {"id": 5, "facilityVisitId": 3, "vaccination": "BCG", healthCenter11Months: {value: 56}, outReach11Months: {value: 12}, healthCenter23Months: {value: 13}, outReach23Months: {notRecorded: true}}
+        ],
+        openedVialLineItems: [
+          {"id": 15, "facilityVisitId": 3, "productVialName": "BCG", "packSize": 10, openedVial: {value: 21}},
+          {"id": 16, "facilityVisitId": 3, "productVialName": "Polio10", "packSize": 10, openedVial: {notRecorded: true}}
+        ]
+      });
+      var status = partiallyFilledChildCoverage.computeStatus();
+      expect(status).toEqual(DistributionStatus.COMPLETE);
+    });
+
+    it('should set status as complete even if polio new born 23 month data is not filled', function () {
+      var partiallyFilledChildCoverage = new ChildCoverage(12, {
+        childCoverageLineItems: [
+          {"id": 5, "facilityVisitId": 3, "vaccination": "BCG", healthCenter11Months: {value: 56}, outReach11Months: {value: 12}, healthCenter23Months: {value: 13}, outReach23Months: {notRecorded: true}},
+          {"id": 26, "facilityVisitId": 3, "vaccination": "Polio (Newborn)", healthCenter11Months: {notRecorded: true}, outReach11Months: {value: 2}, healthCenter23Months: {value: undefined}, outReach23Months: {value: undefined}}
+        ],
+        openedVialLineItems: [
+          {"id": 15, "facilityVisitId": 3, "productVialName": "BCG", "packSize": 10, openedVial: {value: 21}},
+          {"id": 16, "facilityVisitId": 3, "productVialName": "Polio10", "packSize": 10, openedVial: {notRecorded: true}}
+        ]
+      });
+      var status = partiallyFilledChildCoverage.computeStatus();
+      expect(status).toEqual(DistributionStatus.COMPLETE);
+    });
+
+    it('should set status as complete if all field are not recorded', function () {
+      var partiallyFilledChildCoverage = new ChildCoverage(12, {
+        childCoverageLineItems: [
+          {"id": 5, "facilityVisitId": 3, "vaccination": "BCG", healthCenter11Months: {notRecorded: true}, outReach11Months: {notRecorded: true}, healthCenter23Months: {notRecorded: true}, outReach23Months: {notRecorded: true}},
+          {"id": 26, "facilityVisitId": 3, "vaccination": "Polio10", healthCenter11Months: {notRecorded: true}, outReach11Months: {notRecorded: true}, healthCenter23Months: {notRecorded: true}, outReach23Months: {notRecorded: true}}
+        ],
+        openedVialLineItems: [
+          {"id": 15, "facilityVisitId": 3, "productVialName": "BCG", "packSize": 10, openedVial: {notRecorded: true}},
+          {"id": 16, "facilityVisitId": 3, "productVialName": "Polio10", "packSize": 10, openedVial: {notRecorded: true}}
+        ]
+      });
+      var status = partiallyFilledChildCoverage.computeStatus();
+      expect(status).toEqual(DistributionStatus.COMPLETE);
+    });
+
+    it('should set status as incomplete if some opened vial not filled', function () {
+      var partiallyFilledChildCoverage = new ChildCoverage(12, {
+        childCoverageLineItems: [
+          {"id": 5, "facilityVisitId": 3, "vaccination": "BCG", healthCenter11Months: {notRecorded: true}, outReach11Months: {notRecorded: true}, healthCenter23Months: {notRecorded: true}, outReach23Months: {notRecorded: true}},
+          {"id": 26, "facilityVisitId": 3, "vaccination": "Polio10", healthCenter11Months: {notRecorded: true}, outReach11Months: {notRecorded: true}, healthCenter23Months: {notRecorded: true}, outReach23Months: {notRecorded: true}}
+        ],
+        openedVialLineItems: [
+          {"id": 15, "facilityVisitId": 3, "productVialName": "BCG", "packSize": 10, openedVial: {}},
+          {"id": 16, "facilityVisitId": 3, "productVialName": "Polio10", "packSize": 10, openedVial: {}}
+        ]
+      });
+      var status = partiallyFilledChildCoverage.computeStatus();
+      expect(status).toEqual(DistributionStatus.INCOMPLETE);
+    });
   });
 });
