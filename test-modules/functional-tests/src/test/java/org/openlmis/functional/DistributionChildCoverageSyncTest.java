@@ -400,6 +400,141 @@ public class DistributionChildCoverageSyncTest extends TestCaseHelper {
     assertEquals("39999996", childCoveragePage.getTotalForGivenColumnAndRow(3, 1));
   }
 
+  @Test(groups = {"distribution"})
+  public void testShouldVerifyWastageCoverageWhenPackSizeUpdatedAfterInitiatingDistribution() throws SQLException {
+    dbWrapper.updateFieldValue("products", "packSize", "3", "code", "P11");
+    insertOpenedVialsProductMapping();
+
+    HomePage homePage = loginPage.loginAs(childCoverageData.get(USER), childCoverageData.get(PASSWORD));
+    DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
+    distributionPage.initiate(childCoverageData.get(FIRST_DELIVERY_ZONE_NAME), childCoverageData.get(VACCINES_PROGRAM));
+    FacilityListPage facilityListPage = distributionPage.clickRecordData(1);
+    VisitInformationPage visitInformationPage = facilityListPage.selectFacility(childCoverageData.get(FIRST_FACILITY_CODE));
+    ChildCoveragePage childCoveragePage = visitInformationPage.navigateToChildCoverage();
+
+    childCoveragePage.enterHealthCenter11MonthsDataForGivenRow(9, "9");
+    assertEquals("9", childCoveragePage.getTotalForGivenColumnAndRow(1, 9));
+    assertEquals("0", childCoveragePage.getTotalForGivenColumnAndRow(2, 9));
+    assertEquals("9", childCoveragePage.getTotalForGivenColumnAndRow(3, 9));
+    childCoveragePage.enterOpenedVialsCountForGivenGroupAndRow(9, 1, "5");
+    assertEquals("82", childCoveragePage.getWastageRateForGivenRow(9));
+    dbWrapper.updateFieldValue("products", "packSize", "5", "code", "P10");
+    childCoveragePage.enterOpenedVialsCountForGivenGroupAndRow(9, 1, "8");
+    assertEquals("89", childCoveragePage.getWastageRateForGivenRow(9));
+
+    dbWrapper.updateFieldValue("products", "active", "t", "code", "P11");
+  }
+
+  @Test(groups = {"distribution"})
+  public void testShouldVerifyWastageCoverageWhenProductInactiveAndProductNotInProgram() throws SQLException {
+    dbWrapper.updateFieldValue("products", "active", "f", "code", "P11");
+    dbWrapper.updateFieldValue("products", "packSize", "3", "code", "P11");
+    insertOpenedVialsProductMapping();
+    dbWrapper.deleteRowFromTable("coverage_product_vials", "vial", "PCV");
+
+    HomePage homePage = loginPage.loginAs(childCoverageData.get(USER), childCoverageData.get(PASSWORD));
+    DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
+    distributionPage.initiate(childCoverageData.get(FIRST_DELIVERY_ZONE_NAME), childCoverageData.get(VACCINES_PROGRAM));
+    FacilityListPage facilityListPage = distributionPage.clickRecordData(1);
+    VisitInformationPage visitInformationPage = facilityListPage.selectFacility(childCoverageData.get(FIRST_FACILITY_CODE));
+    ChildCoveragePage childCoveragePage = visitInformationPage.navigateToChildCoverage();
+
+    childCoveragePage.enterOpenedVialsCountForGivenGroupAndRow(1, 1, "9999999");
+    assertEquals("100", childCoveragePage.getWastageRateForGivenRow(1));
+
+    childCoveragePage.enterOpenedVialsCountForGivenGroupAndRow(9, 1, "9999999");
+    assertEquals("", childCoveragePage.getWastageRateForGivenRow(9));
+
+    childCoveragePage.enterOpenedVialsCountForGivenGroupAndRow(12, 1, "99");
+    assertEquals("", childCoveragePage.getWastageRateForGivenRow(12));
+    childCoveragePage.enterOutReach11MonthsDataForGivenRow(12, "67");
+    assertEquals("", childCoveragePage.getWastageRateForGivenRow(12));
+
+    dbWrapper.updateFieldValue("products", "active", "t", "code", "P11");
+  }
+
+  @Test(groups = {"distribution"})
+  public void testShouldVerifyWastageCoverageWhenVialsInRegimenMappedToDifferentProductsAndVerifyNegativeValueAndNR() throws SQLException {
+    dbWrapper.updateFieldValue("products", "packSize", "3", "code", "P11");
+    insertOpenedVialsProductMapping();
+
+    HomePage homePage = loginPage.loginAs(childCoverageData.get(USER), childCoverageData.get(PASSWORD));
+    DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
+    distributionPage.initiate(childCoverageData.get(FIRST_DELIVERY_ZONE_NAME), childCoverageData.get(VACCINES_PROGRAM));
+    FacilityListPage facilityListPage = distributionPage.clickRecordData(1);
+    VisitInformationPage visitInformationPage = facilityListPage.selectFacility(childCoverageData.get(FIRST_FACILITY_CODE));
+    ChildCoveragePage childCoveragePage = visitInformationPage.navigateToChildCoverage();
+
+    childCoveragePage.enterHealthCenter11MonthsDataForGivenRow(2, "9");
+    assertEquals("9", childCoveragePage.getTotalForGivenColumnAndRow(1, 2));
+    assertEquals("9", childCoveragePage.getTotalForGivenColumnAndRow(3, 2));
+    childCoveragePage.enterOpenedVialsCountForGivenGroupAndRow(2, 1, "7");
+    assertEquals("57", childCoveragePage.getWastageRateForGivenRow(2));
+    childCoveragePage.enterHealthCenter11MonthsDataForGivenRow(2, "9999999");
+    childCoveragePage.enterOutReach11MonthsDataForGivenRow(2, "9999999");
+    childCoveragePage.enterHealthCenter11MonthsDataForGivenRow(3, "99999999");
+    childCoveragePage.enterOutReach11MonthsDataForGivenRow(3, "99999999");
+    childCoveragePage.enterHealthCenter23MonthsDataForGivenRow(3, "99999999");
+    childCoveragePage.enterOutReach23MonthsDataForGivenRow(3, "99999999");
+    childCoveragePage.enterHealthCenter11MonthsDataForGivenRow(4, "99999999");
+    childCoveragePage.enterOutReach11MonthsDataForGivenRow(4, "99999999");
+    childCoveragePage.enterHealthCenter23MonthsDataForGivenRow(4, "99999999");
+    childCoveragePage.enterOutReach23MonthsDataForGivenRow(4, "99999999");
+    childCoveragePage.enterHealthCenter11MonthsDataForGivenRow(5, "99999999");
+    childCoveragePage.enterOutReach11MonthsDataForGivenRow(5, "99999999");
+    childCoveragePage.enterHealthCenter23MonthsDataForGivenRow(5, "99999999");
+    childCoveragePage.enterOutReach23MonthsDataForGivenRow(5, "99999999");
+    assertEquals("-666666500", childCoveragePage.getWastageRateForGivenRow(2));
+
+    childCoveragePage.enterOpenedVialsCountForGivenGroupAndRow(2, 1, "9999999");
+    assertEquals("-367", childCoveragePage.getWastageRateForGivenRow(2));
+
+    childCoveragePage.enterOpenedVialsCountForGivenGroupAndRow(2, 2, "9999999");
+    assertEquals("-8", childCoveragePage.getWastageRateForGivenRow(2));
+
+    childCoveragePage.applyNRToHealthCenter11MonthsForGivenRow(3);
+    assertEquals("0", childCoveragePage.getWastageRateForGivenRow(2));
+
+    childCoveragePage.applyNrToPolioOpenedVials();
+    assertEquals("", childCoveragePage.getWastageRateForGivenRow(2));
+  }
+
+  @Test(groups = {"distribution"})
+  public void testShouldVerifyWastageCoverageWhenOnlyOneVialInRegimenIsMappedToProductSupportedByProgram() throws SQLException {
+    dbWrapper.updateFieldValue("products", "packSize", "3", "code", "P11");
+    insertOpenedVialsProductMapping();
+
+    HomePage homePage = loginPage.loginAs(childCoverageData.get(USER), childCoverageData.get(PASSWORD));
+    DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
+    distributionPage.initiate(childCoverageData.get(FIRST_DELIVERY_ZONE_NAME), childCoverageData.get(VACCINES_PROGRAM));
+    FacilityListPage facilityListPage = distributionPage.clickRecordData(1);
+    VisitInformationPage visitInformationPage = facilityListPage.selectFacility(childCoverageData.get(FIRST_FACILITY_CODE));
+    ChildCoveragePage childCoveragePage = visitInformationPage.navigateToChildCoverage();
+
+    childCoveragePage.enterHealthCenter11MonthsDataForGivenRow(6, "9");
+    assertEquals("9", childCoveragePage.getTotalForGivenColumnAndRow(1, 6));
+    assertEquals("0", childCoveragePage.getTotalForGivenColumnAndRow(2, 6));
+    assertEquals("9", childCoveragePage.getTotalForGivenColumnAndRow(3, 6));
+    childCoveragePage.enterOpenedVialsCountForGivenGroupAndRow(6, 1, "7");
+    assertEquals("", childCoveragePage.getWastageRateForGivenRow(6));
+
+    childCoveragePage.enterOpenedVialsCountForGivenGroupAndRow(6, 2, "9");
+    assertEquals("67", childCoveragePage.getWastageRateForGivenRow(6));
+
+    childCoveragePage.enterOpenedVialsCountForGivenGroupAndRow(6, 1, "89");
+    assertEquals("67", childCoveragePage.getWastageRateForGivenRow(6));
+  }
+
+  public void insertOpenedVialsProductMapping() throws SQLException {
+    dbWrapper.insertOpenedVialsProductsInMappingTable("BCG", "P10");
+    dbWrapper.insertOpenedVialsProductsInMappingTable("Polio10", "P11");
+    dbWrapper.insertOpenedVialsProductsInMappingTable("Polio20", "P10");
+    dbWrapper.insertOpenedVialsProductsInMappingTable("Penta1", "penta1");
+    dbWrapper.insertOpenedVialsProductsInMappingTable("Penta10", "P11");
+    dbWrapper.insertOpenedVialsProductsInMappingTable("PCV", "P10");
+    dbWrapper.insertOpenedVialsProductsInMappingTable("Measles", "Measles");
+  }
+
   private void verifyOpenVialsPresent() {
     ChildCoveragePage childCoveragePage = PageFactory.getInstanceOfChildCoveragePage(testWebDriver);
     assertEquals(childCoveragePage.getTextOfOpenedVialsBCG(), "BCG");
@@ -416,11 +551,11 @@ public class DistributionChildCoverageSyncTest extends TestCaseHelper {
     assertEquals(childCoveragePage.getTextOfHeaderChildrenVaccination(), "Child Vaccinations (doses)");
     assertEquals(childCoveragePage.getTextOfHeaderTargetGroup(), "Target Group");
     assertEquals(childCoveragePage.getTextOfHeaderHealthCenter1(), "Health Center");
-    assertEquals(childCoveragePage.getTextOfHeaderMobileBrigade1(), "Mobile Brigade");
+    assertEquals(childCoveragePage.getTextOfHeaderMobileBrigade1(), "Outreach");
     assertEquals(childCoveragePage.getTextOfHeaderTotal1(), "Total");
     assertEquals(childCoveragePage.getTextOfHeaderCoverageRate(), "Coverage Rate");
     assertEquals(childCoveragePage.getTextOfHeaderHealthCenter2(), "Health Center");
-    assertEquals(childCoveragePage.getTextOfHeaderMobileBrigade2(), "Mobile Brigade");
+    assertEquals(childCoveragePage.getTextOfHeaderMobileBrigade2(), "Outreach");
     assertEquals(childCoveragePage.getTextOfHeaderTotal2(), "Total");
     assertEquals(childCoveragePage.getTextOfHeaderTotalVaccination(), "Total Vaccination");
     assertEquals(childCoveragePage.getTextOfHeaderOpenedVials(), "Opened Vials");
@@ -456,12 +591,7 @@ public class DistributionChildCoverageSyncTest extends TestCaseHelper {
       facilityCodeFirst, facilityCodeSecond, programFirst, programSecond, schedule);
     dbWrapper.insertRoleAssignmentForDistribution(userSIC, "store in-charge", deliveryZoneCodeFirst);
     dbWrapper.insertRoleAssignmentForDistribution(userSIC, "store in-charge", deliveryZoneCodeSecond);
-    dbWrapper.insertProductGroup(productGroupCode);
-    dbWrapper.insertProductWithGroup("Product5", "ProductName5", productGroupCode, true);
-    dbWrapper.insertProductWithGroup("Product6", "ProductName6", productGroupCode, true);
-    dbWrapper.insertProgramProduct("Product5", programFirst, "10", "false");
-    dbWrapper.insertProgramProduct("Product6", programFirst, "10", "true");
-    dbWrapper.setUpDataForChildCoverage();
+    dbWrapper.insertProductsForChildCoverage();
     insertRegimenProductMapping();
   }
 

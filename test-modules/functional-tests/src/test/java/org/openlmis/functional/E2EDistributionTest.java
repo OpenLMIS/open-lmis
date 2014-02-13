@@ -60,7 +60,7 @@ public class E2EDistributionTest extends TestCaseHelper {
     dbWrapper.insertProgramProduct("Product5", programFirst, "10", "false");
     dbWrapper.insertProgramProduct("Product6", programFirst, "10", "true");
     dbWrapper.deleteDeliveryZoneMembers(facilityCodeSecond);
-    dbWrapper.setUpDataForChildCoverage();
+    dbWrapper.insertProductsForChildCoverage();
     insertRegimenProductMapping();
     configureISA();
 
@@ -213,11 +213,11 @@ public class E2EDistributionTest extends TestCaseHelper {
     assertTrue("Incorrect Sync Facility", distributionPage.getSyncMessage().contains("F10-Village Dispensary"));
 
     distributionPage.syncDistributionMessageDone();
-    assertEquals(distributionPage.getDistributionStatus(),"SYNCED");
+    assertEquals(distributionPage.getDistributionStatus(), "SYNCED");
     assertFalse(distributionPage.getTextDistributionList().contains("sync"));
 
-    Map<String,String> distributionDetails=dbWrapper.getDistributionDetails(deliveryZoneNameFirst,programFirst,"Period14");
-    assertEquals(distributionDetails.get("status"),"SYNCED");
+    Map<String, String> distributionDetails = dbWrapper.getDistributionDetails(deliveryZoneNameFirst, programFirst, "Period14");
+    assertEquals(distributionDetails.get("status"), "SYNCED");
 
     distributionPage.clickRecordData(1);
     facilityListPage.selectFacility(facilityCodeFirst);
@@ -302,7 +302,7 @@ public class E2EDistributionTest extends TestCaseHelper {
     dbWrapper.insertProgramProduct("Product5", programFirst, "10", "false");
     dbWrapper.insertProgramProduct("Product6", programFirst, "10", "true");
     dbWrapper.deleteDeliveryZoneMembers(facilityCodeSecond);
-    dbWrapper.setUpDataForChildCoverage();
+    dbWrapper.insertProductsForChildCoverage();
     insertRegimenProductMapping();
     configureISA();
 
