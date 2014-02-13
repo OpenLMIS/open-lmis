@@ -44,14 +44,18 @@
           <div class="span2" ng-bind="distribution.program.name"></div>
           <div class="span2" ng-bind="distribution.period.name"></div>
           <div id=distributionStatus class="span2" ng-bind="distribution.status"></div>
-          <div class="span2"><a id="recordData{{$index}}" href="javascript:void(0)"
-                                openlmis-message="label.record.data"
-                                ng-href="#/record-facility-data/{{distribution.id}}"></a></div>
-          <div class="span1"><a id="sync{{$index}}" href="javascript:void(0)" openlmis-message="label.sync"
-                                ng-show="distribution.status != 'SYNCED'"
-                                ng-click="showConfirmDistributionSync(distribution.id)"></a></div>
+          <div class="span2">
+            <a id="recordData{{$index}}" href="javascript:void(0)" openlmis-message="label.record.data"
+              ng-href="#/record-facility-data/{{distribution.id}}">
+            </a>
+          </div>
           <div class="span1">
-            <a href="" ng-click="deleteDistribution(distribution.id)">
+            <a id="sync{{$index}}" href="javascript:void(0)" openlmis-message="label.sync"
+              ng-show="distribution.status != 'SYNCED'" ng-click="showConfirmDistributionSync(distribution.id)">
+            </a>
+          </div>
+          <div class="span1">
+            <a id="deleteDistributionLink" href="" ng-click="deleteDistribution(distribution.id)">
               <i id="deleteDistribution{{$index}}" class="icon-remove-sign"></i>
             </a>
           </div>
@@ -75,15 +79,15 @@
       <div class="row-fluid info-box">
         <div class="span4 info-box-labels">
           <strong openlmis-message="label.delivery.zone"> </strong> :&nbsp;<span
-            ng-bind="distributionData.deliveryZone.name"></span>
+          ng-bind="distributionData.deliveryZone.name"></span>
         </div>
         <div class="span4 info-box-labels">
           <strong openlmis-message="label.program"></strong> :&nbsp;<span
-            ng-bind="distributionData.program.name"></span>
+          ng-bind="distributionData.program.name"></span>
         </div>
         <div class="span4 info-box-labels">
           <strong openlmis-message="label.period"> </strong> :&nbsp;<span
-            ng-bind="distributionData.period.name"></span>
+          ng-bind="distributionData.period.name"></span>
         </div>
       </div>
       <div ng-show="requestInProgress" class="row-fluid">
