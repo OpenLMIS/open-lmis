@@ -23,7 +23,7 @@ distributionModule.service('distributionService', function ($dialog, SharedDistr
       return function (result) {
         if (!result) return;
 
-        applyFunc(_this.distribution);
+        applyFunc();
         _this.save(_this.distribution);
       };
     };

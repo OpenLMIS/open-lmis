@@ -13,9 +13,9 @@ function EPIUseController($scope, $routeParams, distributionService) {
   $scope.inputClass = "warning-error";
   $scope.selectedFacilityId = $routeParams.facility;
 
-  $scope.applyNRAll = function() {
-    distributionService.applyNR(function(distribution) {
-      distribution.setEpiUseNotRecorded($routeParams.facility);
+  $scope.applyNRAll = function () {
+    distributionService.applyNR(function () {
+      $scope.distribution.facilityDistributions[$routeParams.facility].epiUse.setNotRecorded();
     });
   };
 }
