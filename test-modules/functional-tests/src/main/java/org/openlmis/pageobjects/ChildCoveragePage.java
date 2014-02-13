@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.assertEquals;
+import static com.thoughtworks.selenium.SeleneseTestBase.assertFalse;
 import static org.openqa.selenium.support.How.ID;
 
 public class ChildCoveragePage extends DistributionTab {
@@ -138,13 +139,25 @@ public class ChildCoveragePage extends DistributionTab {
   @FindBy(how = ID, using = "childCoverageTable")
   private static WebElement childCoverageTable = null;
 
+  @FindBy(how = ID, using = "applyNRAll")
+  private static WebElement applyNrToAllButton = null;
+
+  @FindBy(how = ID, using = "button_OK")
+  private static WebElement okButton = null;
+
+  @FindBy(how = ID, using = "button_Cancel")
+  private static WebElement cancelButton = null;
+
+  @FindBy(how = ID, using = "childCoverageTabIcon")
+  private static WebElement childCoverageStatusIcon = null;
+
   public ChildCoveragePage(TestWebDriver driver) {
     super(driver);
   }
 
   @Override
   public void verifyIndicator(String color) {
-    //To change body of implemented methods use File | Settings | File Templates.
+    verifyOverallIndicator(childCoverageStatusIcon, color);
   }
 
   @Override
@@ -192,7 +205,21 @@ public class ChildCoveragePage extends DistributionTab {
 
   @Override
   public void verifyAllFieldsDisabled() {
-    //To change body of implemented methods use File | Settings | File Templates.
+    for (int rowNumber = 1; rowNumber <= 12; rowNumber++) {
+      assertFalse(isHealthCenter11MonthsEnabledForGivenRow(rowNumber));
+      assertFalse(isOutReach11MonthsEnabledForGivenRow(rowNumber));
+      if (rowNumber != 2) {
+        assertFalse(isHealthCenter23MonthsEnabledForGivenRow(rowNumber));
+        assertFalse(isOutReach23MonthsEnabledForGivenRow(rowNumber));
+      }
+    }
+    assertFalse(isOpenVialEnabled(1, 1));
+    assertFalse(isOpenVialEnabled(2, 1));
+    assertFalse(isOpenVialEnabled(2, 2));
+    assertFalse(isOpenVialEnabled(6, 1));
+    assertFalse(isOpenVialEnabled(6, 2));
+    assertFalse(isOpenVialEnabled(9, 1));
+    assertFalse(isOpenVialEnabled(12, 1));
   }
 
   public String getTextOfRegimenBCG() {
