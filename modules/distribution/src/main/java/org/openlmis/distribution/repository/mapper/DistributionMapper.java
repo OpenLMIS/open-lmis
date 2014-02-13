@@ -16,6 +16,8 @@ import org.openlmis.distribution.domain.Distribution;
 import org.openlmis.distribution.domain.DistributionStatus;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface DistributionMapper {
 
@@ -38,4 +40,7 @@ public interface DistributionMapper {
 
   @Update({"UPDATE distributions SET status =  #{status} WHERE id = #{id}"})
   void updateDistributionStatus(@Param("id") Long id, @Param("status") DistributionStatus status);
+
+  @Select({"SELECT periodId from distributions where deliveryZoneId = #{deliveryZoneId} AND programId = #{programId} and status = 'SYNCED'"})
+  List<Long> getSyncedPeriodsForDeliveryZoneAndProgram(@Param("deliveryZoneId") Long deliveryZoneId, @Param("programId") Long programId);
 }

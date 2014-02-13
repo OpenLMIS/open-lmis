@@ -17,12 +17,13 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.openlmis.web.response.OpenLmisResponse;
-import org.openlmis.core.service.AllocationPermissionService;
-import org.openlmis.core.service.DeliveryZoneProgramScheduleService;
 import org.openlmis.authentication.web.UserAuthenticationSuccessHandler;
 import org.openlmis.core.domain.ProcessingPeriod;
+import org.openlmis.core.service.AllocationPermissionService;
+import org.openlmis.core.service.DeliveryZoneProgramScheduleService;
 import org.openlmis.db.categories.UnitTests;
+import org.openlmis.distribution.service.DistributionService;
+import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpSession;
@@ -30,6 +31,7 @@ import org.springframework.mock.web.MockHttpSession;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.verify;
@@ -51,8 +53,10 @@ public class DeliveryZoneProgramScheduleControllerTest {
   @Mock
   AllocationPermissionService permissionService;
 
-  MockHttpServletRequest request;
+  @Mock
+  private DistributionService distributionService;
 
+  MockHttpServletRequest request;
   private static final String USER = "user";
   private static final Long USER_ID = 1l;
 
@@ -68,14 +72,20 @@ public class DeliveryZoneProgramScheduleControllerTest {
   }
 
   @Test
-  public void shouldFetchPeriodForAProgramInADeliveryZone() throws Exception {
-    List<ProcessingPeriod> expectedPeriods = new ArrayList<>();
-    when(scheduleService.getPeriodsForDeliveryZoneAndProgram(1l, 3l)).thenReturn(expectedPeriods);
+  public void shouldFetchUnsyncedPeriodForAProgramInADeliveryZone() throws Exception {
+    ProcessingPeriod period1 = new ProcessingPeriod(1L);
+    ProcessingPeriod period2 = new ProcessingPeriod(2L);
+    List<ProcessingPeriod> expectedPeriods = asList(period1, period2);
+    Long zoneId = 1L;
+    Long programId = 3L;
+    when(scheduleService.getPeriodsForDeliveryZoneAndProgram(zoneId, programId)).thenReturn(expectedPeriods);
+    when(distributionService.getSyncedPeriodsForDeliveryZoneAndProgram(zoneId, programId)).thenReturn(asList(1L));
 
-    ResponseEntity<OpenLmisResponse> response = controller.getPeriodsForProgramInDeliveryZone(request, ZONE_ID, 3l);
+    ResponseEntity<OpenLmisResponse> response = controller.getPeriodsForProgramInDeliveryZone(request, ZONE_ID, programId);
 
-    assertThat(expectedPeriods, is(response.getBody().getData().get("periods")));
-    verify(scheduleService).getPeriodsForDeliveryZoneAndProgram(1l, 3l);
+    assertThat((List<ProcessingPeriod>) response.getBody().getData().get("periods"), is(asList(period2)));
+    verify(scheduleService).getPeriodsForDeliveryZoneAndProgram(zoneId, programId);
+    verify(distributionService).getSyncedPeriodsForDeliveryZoneAndProgram(zoneId, programId);
   }
 
   @Test

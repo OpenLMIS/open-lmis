@@ -18,12 +18,13 @@ function FacilityDistribution(facilityDistribution) {
   this.refrigerators = new Refrigerators(this.facilityVisitId, facilityDistribution.refrigerators);
   this.facilityVisit = new FacilityVisit(facilityDistribution.facilityVisit);
   this.fullCoverage = new FullCoverage(this.facilityVisitId, facilityDistribution.fullCoverage);
+  this.childCoverage = new ChildCoverage(this.facilityVisitId, facilityDistribution.childCoverage);
 
   this.status = facilityDistribution.status;
 
   FacilityDistribution.prototype.computeStatus = function () {
 
-    var forms = [this.epiUse, this.refrigerators, this.facilityVisit, this.epiInventory, this.fullCoverage];
+    var forms = [this.epiUse, this.refrigerators, this.facilityVisit, this.epiInventory, this.fullCoverage, this.childCoverage];
     var overallStatus;
     if (this.status === DistributionStatus.SYNCED || this.status === DistributionStatus.DUPLICATE) {
       return this.status;

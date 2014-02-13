@@ -37,11 +37,19 @@ public class VaccinationCoverageRepository {
 
   public void saveChildCoverage(VaccinationChildCoverage childCoverage) {
     for (ChildCoverageLineItem childCoverageLineItem : childCoverage.getChildCoverageLineItems()) {
-      mapper.insertChildVaccinationCoverageLineItem(childCoverageLineItem);
+      if (childCoverageLineItem.getId() == null) {
+        mapper.insertChildCoverageLineItem(childCoverageLineItem);
+      } else {
+        mapper.updateChildCoverageLineItem(childCoverageLineItem);
+      }
     }
 
     for (OpenedVialLineItem openedVialLineItem : childCoverage.getOpenedVialLineItems()) {
-      mapper.insertOpenedVialLineItem(openedVialLineItem);
+      if (openedVialLineItem.getId() == null) {
+        mapper.insertOpenedVialLineItem(openedVialLineItem);
+      } else {
+        mapper.updateOpenedVialLineItem(openedVialLineItem);
+      }
     }
   }
 

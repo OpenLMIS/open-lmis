@@ -33,18 +33,38 @@ public class FacilityVisit extends BaseModel {
 
   private Long distributionId;
   private Long facilityId;
+  private Long facilityCatchmentPopulation;
   private Facilitator confirmedBy;
   private Facilitator verifiedBy;
   private String observations;
   private Date visitDate;
   private Boolean visited;
   private String vehicleId;
+  private ReasonForNotVisiting reasonForNotVisiting;
+  private String otherReasonDescription;
 
-  private Boolean synced = false;
+  private Boolean synced;
 
   public FacilityVisit(Facility facility, Distribution distribution) {
     this.distributionId = distribution.getId();
     this.facilityId = facility.getId();
+    this.facilityCatchmentPopulation = facility.getCatchmentPopulation();
     this.createdBy = distribution.getCreatedBy();
+  }
+
+  public void setApplicableVisitInfo() {
+    if (this.visited == null) {
+      return;
+    }
+    if (this.visited) {
+      this.reasonForNotVisiting = null;
+      this.otherReasonDescription = null;
+      return;
+    }
+    this.observations = null;
+    this.confirmedBy = null;
+    this.verifiedBy = null;
+    this.vehicleId = null;
+    this.visitDate = null;
   }
 }

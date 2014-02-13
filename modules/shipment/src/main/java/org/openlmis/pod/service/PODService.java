@@ -110,6 +110,9 @@ public class PODService {
   @Transactional
   public OrderPOD save(OrderPOD orderPOD) {
     OrderPOD existingPod = repository.getPOD(orderPOD.getId());
+    if (orderService.hasStatus(existingPod.getOrderId(), OrderStatus.RECEIVED)) {
+      throw new DataException("error.pod.already.submitted");
+    }
     checkPermissions(existingPod);
 
     existingPod.copy(orderPOD);

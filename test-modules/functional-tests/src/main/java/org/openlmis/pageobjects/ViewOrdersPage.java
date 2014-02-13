@@ -83,7 +83,7 @@ public class ViewOrdersPage extends RequisitionPage {
     assertEquals(facilityCodeNameOnOrderScreen.getText().trim(), facilityCodeName);
     assertEquals(periodDetailsOnViewOrderScreen.getText().trim(), periodDetails);
     assertEquals(supplyDepotOnViewOrderScreen.getText().trim(), supplyFacilityName);
-    SeleneseTestNgHelper.assertEquals(orderStatusOnViewOrderScreen.getText().trim(), orderStatus);
+    assertEquals(orderStatusOnViewOrderScreen.getText().trim(), orderStatus);
     if (downloadLinkPresent)
       assertTrue("'Download CSV' link should show up", downloadCSVLink.isDisplayed());
     else
@@ -109,5 +109,11 @@ public class ViewOrdersPage extends RequisitionPage {
     testWebDriver.waitForElementToAppear(testWebDriver.getElementByXpath("(//div[@class='ngCellText ng-scope col2 colt2']/span)[" + row + "]"));
     String actualProgram = testWebDriver.getElementByXpath("(//div[@class='ngCellText ng-scope col2 colt2']/span)[" + row + "]").getText();
     SeleneseTestNgHelper.assertEquals(actualProgram, program);
+  }
+
+  public String getOrderStatus(int rowNumber) {
+    WebElement orderStatus = testWebDriver.getElementByXpath("(//div[@id='orderStatus'])[" + rowNumber + "]");
+    testWebDriver.waitForElementToAppear(orderStatus);
+    return orderStatus.getText();
   }
 }

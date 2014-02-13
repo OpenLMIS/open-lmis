@@ -20,6 +20,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.authentication.web.UserAuthenticationSuccessHandler;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.User;
+import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.MessageService;
 import org.openlmis.core.service.UserService;
 import org.openlmis.db.categories.UnitTests;
@@ -40,8 +41,7 @@ import java.util.Map;
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static java.util.Collections.EMPTY_LIST;
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 import static org.openlmis.core.builder.UserBuilder.defaultUser;
 import static org.openlmis.distribution.builder.DistributionBuilder.*;
@@ -143,7 +143,11 @@ public class DistributionControllerTest {
     facilityDistributionDTO.setFacilityVisit(new FacilityVisit());
     FacilityDistribution facilityDistributionData = new FacilityDistribution(null, null, new DistributionRefrigerators(EMPTY_LIST), null, null, null);
 
-    when(service.sync(facilityDistributionData)).thenReturn(true);
+    FacilityDistribution syncedFacilityDistribution = new FacilityDistribution();
+    FacilityVisit syncedFacilityVisit = new FacilityVisit();
+    syncedFacilityVisit.setSynced(true);
+    syncedFacilityDistribution.setFacilityVisit(syncedFacilityVisit);
+    when(service.sync(facilityDistributionData)).thenReturn(syncedFacilityDistribution);
     when(service.updateDistributionStatus(distribution.getId())).thenReturn(SYNCED);
     doReturn(facilityDistributionData).when(facilityDistributionDTO).transform();
     doNothing().when(facilityDistributionDTO).setModifiedBy(USER_ID);
@@ -160,4 +164,21 @@ public class DistributionControllerTest {
     verify(facilityDistributionDTO).setDistributionId(distribution.getId());
   }
 
+  @Test
+  public void shouldSetSyncStatusToFalseIfAlreadySynced() throws Exception {
+    Facility facility = new Facility(3L);
+    Distribution distribution = new Distribution();
+    distribution.setId(1L);
+    FacilityDistributionDTO facilityDistributionDTO = spy(new FacilityDistributionDTO());
+    facilityDistributionDTO.setFacilityVisit(new FacilityVisit());
+    FacilityDistribution facilityDistribution = new FacilityDistribution();
+    doNothing().when(facilityDistributionDTO).setModifiedBy(USER_ID);
+    doReturn(facilityDistribution).when(facilityDistributionDTO).transform();
+
+    doThrow(new DataException("error.facility.already.synced")).when(service).sync(facilityDistribution);
+
+    ResponseEntity<OpenLmisResponse> response = controller.sync(facilityDistributionDTO, distribution.getId(), facility.getId(), httpServletRequest);
+
+    assertFalse((Boolean) response.getBody().getData().get("syncStatus"));
+  }
 }

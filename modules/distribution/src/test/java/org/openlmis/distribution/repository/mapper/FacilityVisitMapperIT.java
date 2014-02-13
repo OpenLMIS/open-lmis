@@ -10,6 +10,7 @@ import org.openlmis.db.categories.IntegrationTests;
 import org.openlmis.distribution.domain.Distribution;
 import org.openlmis.distribution.domain.Facilitator;
 import org.openlmis.distribution.domain.FacilityVisit;
+import org.openlmis.distribution.domain.ReasonForNotVisiting;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -89,7 +90,6 @@ public class FacilityVisitMapperIT {
       with(program, program1)));
 
     distributionMapper.insert(distribution);
-
   }
 
   @Test
@@ -99,6 +99,7 @@ public class FacilityVisitMapperIT {
 
     FacilityVisit actualFacilityVisit = mapper.getBy(facilityVisit.getFacilityId(), facilityVisit.getDistributionId());
 
+    facilityVisit.setSynced(false);
     assertThat(actualFacilityVisit, is(facilityVisit));
     assertThat(actualFacilityVisit.getCreatedBy(), is(1l));
   }
@@ -108,7 +109,8 @@ public class FacilityVisitMapperIT {
     FacilityVisit facilityVisit = new FacilityVisit(facility, distribution);
     Facilitator confirmedBy = new Facilitator("Barack", "President");
     Facilitator verifiedBy = new Facilitator("ManMohan", "Spectator");
-
+    facilityVisit.setReasonForNotVisiting(ReasonForNotVisiting.OTHER);
+    facilityVisit.setOtherReasonDescription("Manmohan will not be PM again");
     mapper.insert(facilityVisit);
 
     facilityVisit.setConfirmedBy(confirmedBy);
@@ -129,14 +131,16 @@ public class FacilityVisitMapperIT {
 
     FacilityVisit savedFacilityVisit = mapper.getById(facilityVisit.getId());
 
+    facilityVisit.setSynced(false);
     assertThat(savedFacilityVisit, is(facilityVisit));
   }
 
   @Test
   public void shouldGetFacilityVisitsWhichAreNotSyncedYet() {
     FacilityVisit facilityVisit1 = new FacilityVisit(facility, distribution);
-    facilityVisit1.setSynced(true);
     mapper.insert(facilityVisit1);
+    facilityVisit1.setSynced(true);
+    mapper.update(facilityVisit1);
 
     Facility facility1 = make(a(defaultFacility, with(code, "F999")));
     facilityMapper.insert(facility1);
@@ -152,8 +156,9 @@ public class FacilityVisitMapperIT {
   @Test
   public void shouldGetCountOfUnsyncedFacilities() {
     FacilityVisit facilityVisit1 = new FacilityVisit(facility, distribution);
-    facilityVisit1.setSynced(true);
     mapper.insert(facilityVisit1);
+    facilityVisit1.setSynced(true);
+    mapper.update(facilityVisit1);
 
     Facility facility1 = make(a(defaultFacility, with(code, "F999")));
     facilityMapper.insert(facility1);

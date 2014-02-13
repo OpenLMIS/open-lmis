@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.assertFalse;
 import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
@@ -59,8 +60,8 @@ public class E2EDistributionTest extends TestCaseHelper {
     dbWrapper.insertProgramProduct("Product5", programFirst, "10", "false");
     dbWrapper.insertProgramProduct("Product6", programFirst, "10", "true");
     dbWrapper.deleteDeliveryZoneMembers(facilityCodeSecond);
-    dbWrapper.setUpDataForChildCoverage();
-    dbWrapper.insertRegimenProductMapping();
+    dbWrapper.insertProductsForChildCoverage();
+    insertRegimenProductMapping();
     configureISA();
 
     LoginPage loginPage = PageFactory.getInstanceOfLoginPage(testWebDriver, baseUrlGlobal);
@@ -203,6 +204,7 @@ public class E2EDistributionTest extends TestCaseHelper {
     distributionPage.syncDistribution(1);
     assertTrue(distributionPage.isFacilitySyncFailed());
 
+
     switchOnNetworkInterface(wifiInterface);
     testWebDriver.sleep(7000);
 
@@ -211,6 +213,12 @@ public class E2EDistributionTest extends TestCaseHelper {
     assertTrue("Incorrect Sync Facility", distributionPage.getSyncMessage().contains("F10-Village Dispensary"));
 
     distributionPage.syncDistributionMessageDone();
+    assertEquals(distributionPage.getDistributionStatus(), "SYNCED");
+    assertFalse(distributionPage.getTextDistributionList().contains("sync"));
+
+    Map<String, String> distributionDetails = dbWrapper.getDistributionDetails(deliveryZoneNameFirst, programFirst, "Period14");
+    assertEquals(distributionDetails.get("status"), "SYNCED");
+
     distributionPage.clickRecordData(1);
     facilityListPage.selectFacility(facilityCodeFirst);
     facilityListPage.verifyFacilityIndicatorColor("Overall", "BLUE");
@@ -218,7 +226,7 @@ public class E2EDistributionTest extends TestCaseHelper {
     verifyEpiUseDataInDatabase(10, 20, 30, null, 50, "10/2011", "PG1", facilityCodeFirst);
     verifyRefrigeratorReadingDataInDatabase(facilityCodeFirst, "GR-J287PGHV", 3F, "Y", 1, 0, "D", "miscellaneous");
     verifyRefrigeratorProblemDataNullInDatabase("GR-J287PGHV", facilityCodeFirst);
-    verifyVisitInformationDataWhenFacilityWasVisitedInDatabase(facilityCodeFirst, "some observations", "samuel", "Doe", "Verifier", "XYZ", null);
+    verifyFacilityVisitInformationInDatabase(facilityCodeFirst, "some observations", "samuel", "Doe", "Verifier", "XYZ", null,"t","t");
     verifyFullCoveragesDataInDatabase(5, 7, 0, 9999999, facilityCodeFirst);
     verifyEpiInventoryDataInDatabase(null, "10", null, "P10", facilityCodeFirst);
     verifyEpiInventoryDataInDatabase(null, "20", null, "Product6", facilityCodeFirst);
@@ -251,6 +259,9 @@ public class E2EDistributionTest extends TestCaseHelper {
 
     distributionPage.selectValueFromDeliveryZone(deliveryZoneNameFirst);
     distributionPage.selectValueFromProgram(programFirst);
+    String str = distributionPage.getPeriodDropDownList();
+    assertFalse(str.contains("Period14"));
+
     distributionPage.clickInitiateDistribution();
 
     testWebDriver.sleep(1000);
@@ -291,8 +302,8 @@ public class E2EDistributionTest extends TestCaseHelper {
     dbWrapper.insertProgramProduct("Product5", programFirst, "10", "false");
     dbWrapper.insertProgramProduct("Product6", programFirst, "10", "true");
     dbWrapper.deleteDeliveryZoneMembers(facilityCodeSecond);
-    dbWrapper.setUpDataForChildCoverage();
-    dbWrapper.insertRegimenProductMapping();
+    dbWrapper.insertProductsForChildCoverage();
+    insertRegimenProductMapping();
     configureISA();
 
     LoginPage loginPage = PageFactory.getInstanceOfLoginPage(testWebDriver, baseUrlGlobal);
@@ -413,6 +424,21 @@ public class E2EDistributionTest extends TestCaseHelper {
     ProgramProductISAPage programProductISAPage = homePage.navigateProgramProductISA();
     programProductISAPage.fillProgramProductISA("VACCINES", "90", "1", "50", "30", "0", "100", "2000", "333");
     homePage.logout();
+  }
+
+  private void insertRegimenProductMapping() throws SQLException {
+    dbWrapper.insertRegimensProductsInMappingTable("BCG", "BCG");
+    dbWrapper.insertRegimensProductsInMappingTable("Polio (Newborn)", "polio10dose");
+    dbWrapper.insertRegimensProductsInMappingTable("Polio 1st dose", "polio20dose");
+    dbWrapper.insertRegimensProductsInMappingTable("Polio 2nd dose", "polio10dose");
+    dbWrapper.insertRegimensProductsInMappingTable("Polio 3rd dose", "polio20dose");
+    dbWrapper.insertRegimensProductsInMappingTable("Penta 1st dose", "penta1");
+    dbWrapper.insertRegimensProductsInMappingTable("Penta 2nd dose", "penta10");
+    dbWrapper.insertRegimensProductsInMappingTable("Penta 3rd dose", "penta1");
+    dbWrapper.insertRegimensProductsInMappingTable("PCV10 1st dose", "P10");
+    dbWrapper.insertRegimensProductsInMappingTable("PCV10 2nd dose", "P10");
+    dbWrapper.insertRegimensProductsInMappingTable("PCV10 3rd dose", "P10");
+    dbWrapper.insertRegimensProductsInMappingTable("Measles", "Measles");
   }
 
   @AfterMethod(groups = {"offline"})

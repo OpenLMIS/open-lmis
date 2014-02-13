@@ -907,6 +907,7 @@ angular.module('ui.directives').directive('uiSelect2', ['ui.config', '$timeout',
   }
   return {
     require: '?ngModel',
+    priority: 1,
     compile: function (tElm, tAttrs) {
       var watch,
         repeatOption,

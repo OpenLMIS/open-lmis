@@ -85,6 +85,11 @@ public class DistributionPage extends Page {
   @FindBy(how = XPATH, using = "//span[@openlmis-message='syncProgressHeader']")
   private WebElement syncStatusMessage = null;
 
+  @FindBy(how = ID, using = "distributionList")
+  private WebElement distributionList = null;
+
+  @FindBy(how = ID, using = "distributionStatus")
+  private WebElement distributionStatus = null;
 
   public DistributionPage(TestWebDriver driver) {
     super(driver);
@@ -214,19 +219,19 @@ public class DistributionPage extends Page {
     return testWebDriver.getFirstSelectedOption(selectPeriodSelectBox);
   }
 
-  public boolean IsDisplayedSelectDeliveryZoneSelectBox() {
+  public boolean isDisplayedSelectDeliveryZoneSelectBox() {
     return selectDeliveryZoneSelectBox.isDisplayed();
   }
 
-  public boolean IsDisplayedSelectProgramSelectBox() {
+  public boolean isDisplayedSelectProgramSelectBox() {
     return selectProgramSelectBox.isDisplayed();
   }
 
-  public boolean IsDisplayedSelectPeriodSelectBox() {
+  public boolean isDisplayedSelectPeriodSelectBox() {
     return selectPeriodSelectBox.isDisplayed();
   }
 
-  public boolean IsDisplayedViewLoadAmountButton() {
+  public boolean isDisplayedViewLoadAmountButton() {
     return viewLoadAmountButton.isDisplayed();
   }
 
@@ -299,5 +304,20 @@ public class DistributionPage extends Page {
   public String getSyncStatusMessage() {
     testWebDriver.waitForElementToAppear(syncStatusMessage);
     return syncStatusMessage.getText();
+  }
+
+  public String getPeriodDropDownList() {
+    testWebDriver.waitForElementToAppear(selectPeriodSelectBox);
+    return selectPeriodSelectBox.getText();
+  }
+
+  public String getTextDistributionList() {
+    testWebDriver.waitForAjax();
+    return distributionList.getText();
+  }
+
+  public String getDistributionStatus() {
+    testWebDriver.waitForAjax();
+    return distributionStatus.getText();
   }
 }

@@ -63,7 +63,7 @@ function DistributionController($scope, deliveryZones, DeliveryZoneActiveProgram
 
     function callback(result) {
       if (result) {
-        distributionService.put(data.distribution);
+        distributionService.save(data.distribution);
         $scope.message = message;
       }
     }
@@ -94,7 +94,7 @@ function DistributionController($scope, deliveryZones, DeliveryZoneActiveProgram
         return;
       }
 
-      distributionService.put(distribution);
+      distributionService.save(distribution);
       $scope.message = message;
     }
   };

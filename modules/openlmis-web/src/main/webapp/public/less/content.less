@@ -612,7 +612,8 @@ span[class^="tpl-"] {
 }
 
 .rnr-table td,
-.facility-distribution-form-table td {
+.facility-distribution-form-table td,
+.refrigerator-form {
   .rnr-form-error {
     min-width: 92px;
     padding: 0px 6px;
@@ -736,7 +737,7 @@ table .productCategory,
 
 input[ui-date] {
   background: #FFF url(../images/calendar-icon.png) no-repeat 98% center;
-  cursor: default;
+  cursor: pointer;
   &[disabled] {
     background-color: #EEE;
   }
@@ -2552,10 +2553,13 @@ input[rnr-validator="positiveInteger"] {
   .col-quantityReceived {
     width: 150px;
     input {
-      width: 93%;
+      width: 90%;
     }
   }
   .col-notes {
     width: 300px;
+  }
+  .col-remarks {
+    width: 90%;
   }
 }

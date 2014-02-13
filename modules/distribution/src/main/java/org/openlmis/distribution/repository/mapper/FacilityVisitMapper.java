@@ -21,8 +21,8 @@ import java.util.List;
 @Repository
 public interface FacilityVisitMapper {
 
-  @Insert({"INSERT INTO facility_visits (distributionId, facilityId, synced, createdBy, modifiedBy)",
-    "VALUES (#{distributionId}, #{facilityId}, #{synced}, #{createdBy}, #{modifiedBy})"})
+  @Insert({"INSERT INTO facility_visits (distributionId, facilityId, facilityCatchmentPopulation, createdBy, modifiedBy)",
+    "VALUES (#{distributionId}, #{facilityId}, #{facilityCatchmentPopulation}, #{createdBy}, #{modifiedBy})"})
   @Options(useGeneratedKeys = true)
   public void insert(FacilityVisit facilityVisit);
 
@@ -38,7 +38,8 @@ public interface FacilityVisitMapper {
   @Update({"UPDATE facility_visits SET visited = #{visited}, visitDate = #{visitDate}, vehicleId = #{vehicleId}, ",
     "confirmedByName = #{confirmedBy.name}, confirmedByTitle = #{confirmedBy.title}, ",
     "verifiedByName = #{verifiedBy.name}, verifiedByTitle = #{verifiedBy.title}, ",
-    "observations = #{observations}, synced = #{synced}, modifiedBy = #{modifiedBy}, modifiedDate = DEFAULT WHERE id = #{id}"})
+    "observations = #{observations}, synced = #{synced}, modifiedBy = #{modifiedBy}, modifiedDate = DEFAULT," +
+      "reasonForNotVisiting = #{reasonForNotVisiting}, otherReasonDescription = #{otherReasonDescription} WHERE id = #{id}"})
   public void update(FacilityVisit facilityVisit);
 
 

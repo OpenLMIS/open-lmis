@@ -37,6 +37,8 @@ public class ShipmentLineItemTransformer extends LineItemTransformer {
     try {
       setMandatoryFields(lineItem, shipmentLineItemDTO);
       setOptionalFields(lineItem, shipmentLineItemDTO, packedDateFormat, shippedDateFormat, creationDate);
+    } catch (DataException e) {
+      throw e;
     } catch (Exception e) {
       throw new DataException("wrong.data.type");
     }
@@ -51,7 +53,11 @@ public class ShipmentLineItemTransformer extends LineItemTransformer {
                                  Date creationDate) throws ParseException {
 
     if (!isBlank(dto.getCost())) {
-      lineItem.setCost(new BigDecimal(dto.getCost().trim()));
+      BigDecimal cost = new BigDecimal(dto.getCost().trim());
+      if (cost.compareTo(new BigDecimal(0)) == -1) {
+        throw new DataException("error.cost.negative");
+      }
+      lineItem.setCost(cost);
     }
 
     Date packedDate = (!isBlank(dto.getPackedDate())) ? parseDate(packedDateFormat,
@@ -84,6 +90,10 @@ public class ShipmentLineItemTransformer extends LineItemTransformer {
   private void setMandatoryFields(ShipmentLineItem lineItem, ShipmentLineItemDTO shipmentLineItemDTO) {
     lineItem.setProductCode(shipmentLineItemDTO.getProductCode().trim());
     lineItem.setOrderId(Long.valueOf(shipmentLineItemDTO.getOrderId().trim()));
-    lineItem.setQuantityShipped(Integer.valueOf(shipmentLineItemDTO.getQuantityShipped().trim()));
+    String quantityShipped = shipmentLineItemDTO.getQuantityShipped().trim();
+    if (quantityShipped.length() > 8) {
+      throw new DataException("invalid.quantity.shipped");
+    }
+    lineItem.setQuantityShipped(Integer.valueOf(quantityShipped));
   }
 }

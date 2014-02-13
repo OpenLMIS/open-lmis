@@ -82,4 +82,21 @@ describe('RefrigeratorController', function () {
     expect(IndexedDB.put).toHaveBeenCalledWith('distributions', scope.distribution);
   });
 
+  it('should return true if facility visit is false', function () {
+    scope.distribution = distribution;
+    scope.distribution.facilityVisit = {
+      id: 1,
+      visitied: false
+    };
+    scope.selectedFacilityId = 1;
+    expect(scope.isFormDisabled()).toEqual(true);
+  });
+
+  it('should return true if facility distribution is syned', function () {
+    distribution.status = "is-synced";
+    scope.distribution = distribution;
+    scope.selectedFacilityId = 1;
+    expect(scope.isFormDisabled()).toEqual(true);
+  });
+
 });

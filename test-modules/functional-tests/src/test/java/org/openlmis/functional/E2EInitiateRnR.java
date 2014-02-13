@@ -19,7 +19,6 @@ import org.openlmis.UiUtils.CaptureScreenshotOnFailureListener;
 import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.pageobjects.*;
 import org.openlmis.pageobjects.edi.ConvertOrderPage;
-import org.openqa.selenium.By;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Listeners;
 
@@ -30,11 +29,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import static com.thoughtworks.selenium.SeleneseTestBase.assertFalse;
 import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
 import static java.lang.Integer.parseInt;
 import static java.lang.Math.round;
-import static org.junit.Assert.assertTrue;
 
 @Listeners(CaptureScreenshotOnFailureListener.class)
 
@@ -441,9 +438,20 @@ public class E2EInitiateRnR extends TestCaseHelper {
     homePage.navigateViewOrders();
   }
 
+  @And("^I verify order status as \"([^\"]*)\" in row \"([^\"]*)\"$")
+  public void verifyOrderStatus(String orderStatus, String rowNumber) {
+    ViewOrdersPage viewOrdersPage = PageFactory.getInstanceOfViewOrdersPage(testWebDriver);
+    assertEquals(orderStatus, viewOrdersPage.getOrderStatus(Integer.parseInt(rowNumber)));
+  }
+
   @Then("^I should see ordered list with download link$")
   public void verifyOrderListWithDownloadLink() throws SQLException {
     verifyOrderedList(true);
+  }
+
+  @And("^I change order status to \"([^\"]*)\"$")
+  public void updateOrderStatus(String orderStatus) throws SQLException {
+    dbWrapper.updateOrderStatus(orderStatus);
   }
 
   @When("^I do not have anything to pack to ship$")
@@ -466,41 +474,6 @@ public class E2EInitiateRnR extends TestCaseHelper {
   public void verifyEmergencyRnRText() {
     InitiateRnRPage initiateRnRPage = PageFactory.getInstanceOfInitiateRnRPage(testWebDriver);
     assertEquals(initiateRnRPage.getEmergencyLabelText(), "Emergency");
-  }
-
-  @When("^I access Manage POD page$")
-  public void navigateManagePodPage() {
-    HomePage homePage = PageFactory.getInstanceOfHomePage(testWebDriver);
-    homePage.navigateManagePOD();
-  }
-
-  @Then("^I should see list of orders to manage POD for \"([^\"]*)\" Rnr$")
-  public void verifyListOfOrdersOnPodScreen(String rnrType) {
-    testWebDriver.sleep(1000);
-    assertEquals("Central Hospital", testWebDriver.findElement(By.xpath("//div/span[contains(text(),'Central Hospital')]")).getText());
-    assertEquals("HIV", testWebDriver.findElement(By.xpath("//div/span[contains(text(),'HIV')]")).getText());
-    assertEquals("Transfer failed", testWebDriver.findElement(By.xpath("//div/span[contains(text(),'Transfer failed')]")).getText());
-    assertTrue(testWebDriver.findElement(By.xpath("//div/span[contains(text(),'Period1')]")).getText().contains("Period1"));
-    assertEquals("Update POD", testWebDriver.findElement(By.xpath("//div/a[contains(text(),'Update POD')]")).getText());
-    //TODO find proper xpath or give id for facility_code
-    if (rnrType.equals("Emergency")) {
-      assertTrue(testWebDriver.findElement(By.xpath("//i[@class='icon-ok']")).isDisplayed());
-    }
-  }
-
-  @When("^I click on update Pod link for Row \"([^\"]*)\"$")
-  public void navigateUploadPodPage(Integer rowNumber) {
-    HomePage homePage = PageFactory.getInstanceOfHomePage(testWebDriver);
-    ManagePodPage managePodPage = homePage.navigateManagePOD();
-    managePodPage.selectRequisitionToUpdatePod(rowNumber);
-  }
-
-  @Then("^I should see all products to update pod$")
-  public void verifyUpdatePodPage() {
-    UpdatePodPage updatePodPage = PageFactory.getInstanceOfUpdatePodPage(testWebDriver);
-    assertTrue(updatePodPage.getProductCode(1).contains("P10"));
-    assertTrue(updatePodPage.getProductName(1).contains("antibiotic"));
-    assertFalse(updatePodPage.getProductCode(1).contains("P11"));
   }
 
   private void createUserAndAssignRoles(String passwordUsers, String userEmail, String userFirstName, String userLastName,

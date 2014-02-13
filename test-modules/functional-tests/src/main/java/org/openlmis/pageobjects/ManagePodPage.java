@@ -1,7 +1,6 @@
 package org.openlmis.pageobjects;
 
 
-import com.thoughtworks.selenium.SeleneseTestNgHelper;
 import org.openlmis.UiUtils.TestWebDriver;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -9,6 +8,7 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 
+import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
 import static org.openqa.selenium.support.How.ID;
 import static org.openqa.selenium.support.How.XPATH;
 
@@ -132,10 +132,10 @@ public class ManagePodPage extends Page {
     return testWebDriver.getText(updatePodLinkOnManagePodScreen);
   }
 
-  public void verifyMessageOnManagePodScreen() {
+  public void verifyNoOrderMessage() {
     testWebDriver.sleep(500);
     testWebDriver.refresh();
-    SeleneseTestNgHelper.assertTrue("Message not Displayed on Manage Pod Screen", noOrderPresentMessageOnPodScreen.isDisplayed());
+    assertTrue("Message not Displayed on Manage Pod Screen", noOrderPresentMessageOnPodScreen.isDisplayed());
   }
 
   public UpdatePodPage selectRequisitionToUpdatePod(int rowNumber) {

@@ -10,10 +10,7 @@
 
 package org.openlmis.distribution.service;
 
-import org.openlmis.distribution.domain.ProductVial;
-import org.openlmis.distribution.domain.VaccinationChildCoverage;
-import org.openlmis.distribution.domain.VaccinationFullCoverage;
-import org.openlmis.distribution.domain.VaccinationProduct;
+import org.openlmis.distribution.domain.*;
 import org.openlmis.distribution.repository.VaccinationCoverageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,8 +23,9 @@ public class VaccinationCoverageService {
   @Autowired
   private VaccinationCoverageRepository repository;
 
-  public void saveFullCoverage(VaccinationFullCoverage fullCoverage) {
-    repository.saveFullCoverage(fullCoverage);
+  public void save(FacilityDistribution facilityDistribution) {
+    repository.saveFullCoverage(facilityDistribution.getFullCoverage());
+    repository.saveChildCoverage(facilityDistribution.getChildCoverage());
   }
 
   public VaccinationFullCoverage getFullCoverageBy(Long facilityVisitId) {

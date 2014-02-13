@@ -13,11 +13,11 @@ function VisitInfoController($scope, distributionService, $routeParams) {
   $scope.selectedFacility = $routeParams.facility;
 
   $scope.reasons = {
-    badWeather: "BAD_WEATHER",
-    noTransport: "NO_TRANSPORT",
-    facilityClosed: "FACILITY_CLOSED",
-    unavailableFunds: "UNAVAILABLE_FUNDS",
-    notPartOfProgram: "NOT_PART_OF_PROGRAM",
+    badWeather: "ROAD_IMPASSABLE",
+    noTransport: "TRANSPORT_UNAVAILABLE",
+    facilityClosed: "HEALTH_CENTER_CLOSED",
+    unavailableFunds: "FUEL_FUNDS_UNAVAILABLE",
+    notPartOfProgram: "HEALTH_CENTER_NOT_IN_DLS",
     other: "OTHER"
   };
 }

@@ -31,6 +31,10 @@ public class ChildCoverageLineItem extends BaseModel {
   private Long facilityVisitId;
   private String vaccination;
   private Integer targetGroup;
+  private Integer healthCenter11Months;
+  private Integer outreach11Months;
+  private Integer healthCenter23Months;
+  private Integer outreach23Months;
 
   public ChildCoverageLineItem(FacilityVisit facilityVisit, Facility facility, VaccinationProduct vaccinationProduct, String vaccination) {
     this.facilityVisitId = facilityVisit.getId();

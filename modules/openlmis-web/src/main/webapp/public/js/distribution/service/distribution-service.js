@@ -23,8 +23,8 @@ distributionModule.service('distributionService', function ($dialog, SharedDistr
       return function (result) {
         if (!result) return;
 
-        applyFunc(_this.distribution);
-        $($('input[not-recorded]').last()).trigger("click"); //for auto save
+        applyFunc();
+        _this.save(_this.distribution);
       };
     };
 
@@ -41,13 +41,6 @@ distributionModule.service('distributionService', function ($dialog, SharedDistr
 
   this.save = function (distribution) {
     IndexedDB.put('distributions', distribution, null, null, SharedDistributions.update);
-  };
-
-  this.put = function (distribution) {
-    IndexedDB.put('distributions', distribution, function () {
-    }, {}, function () {
-      SharedDistributions.update();
-    });
   };
 
   this.deleteDistribution = function (id) {

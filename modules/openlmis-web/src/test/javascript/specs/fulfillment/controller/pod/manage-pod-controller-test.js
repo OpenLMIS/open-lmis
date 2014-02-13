@@ -54,9 +54,6 @@ describe('ManagePODController', function () {
     scope.createPOD(orderId);
     $httpBackend.flush();
 
-    expect(scope.$parent.pod).toEqual(data.orderPOD);
-    expect(scope.$parent.order).toEqual(data.order);
-    expect(scope.$parent.requisitionType).toEqual("requisition.type.emergency");
     expect(location.url).toHaveBeenCalledWith('/pods/1?page=1');
   });
 });

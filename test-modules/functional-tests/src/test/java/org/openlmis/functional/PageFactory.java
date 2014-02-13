@@ -45,6 +45,7 @@ public class PageFactory {
   private static ConfigureShipmentPage instanceOfConfigureShipmentPage;
   private static ConfigureBudgetPage instanceOfConfigureBudgetPage;
   private static ConfigureEDIPage instanceOfConfigureEdiPage;
+  private static ManagePodPage instanceOfManagePodPage;
 
   public static ManageFacilityPage getInstanceOfManageFacilityPage(TestWebDriver testWebDriver) {
     if (instanceOfManageFacilityPage == null) {
@@ -249,5 +250,12 @@ public class PageFactory {
       instanceOfConfigureEdiPage = new ConfigureEDIPage(testWebDriver);
     }
     return instanceOfConfigureEdiPage;
+  }
+
+  public static ManagePodPage getInstanceOfManagePodPage(TestWebDriver testWebDriver) {
+    if (instanceOfManagePodPage == null) {
+      instanceOfManagePodPage = new ManagePodPage(testWebDriver);
+    }
+    return instanceOfManagePodPage;
   }
 }

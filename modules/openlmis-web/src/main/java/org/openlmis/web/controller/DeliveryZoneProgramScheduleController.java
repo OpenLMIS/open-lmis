@@ -10,8 +10,12 @@
 
 package org.openlmis.web.controller;
 
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.Predicate;
+import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.core.service.AllocationPermissionService;
 import org.openlmis.core.service.DeliveryZoneProgramScheduleService;
+import org.openlmis.distribution.service.DistributionService;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,6 +25,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Collection;
+import java.util.List;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
@@ -35,11 +41,23 @@ public class DeliveryZoneProgramScheduleController extends BaseController {
   @Autowired
   AllocationPermissionService permissionService;
 
+  @Autowired
+  DistributionService distributionService;
+
   @RequestMapping(value = "deliveryZones/{zoneId}/programs/{programId}/periods", method = GET, headers = ACCEPT_JSON)
   public ResponseEntity<OpenLmisResponse> getPeriodsForProgramInDeliveryZone(HttpServletRequest request, @PathVariable long zoneId,
-                                                                             @PathVariable long programId) {
+                                                                             @PathVariable final long programId) {
     if (permissionService.hasPermissionOnZone(loggedInUserId(request), zoneId)) {
-      return OpenLmisResponse.response(PERIODS, scheduleService.getPeriodsForDeliveryZoneAndProgram(zoneId, programId));
+      List<ProcessingPeriod> periodsForDeliveryZoneAndProgram = scheduleService.getPeriodsForDeliveryZoneAndProgram(zoneId, programId);
+      final List<Long> syncedPeriods = distributionService.getSyncedPeriodsForDeliveryZoneAndProgram(zoneId, programId);
+      Collection unsyncedPeriodsForZoneAndProgram = CollectionUtils.select(periodsForDeliveryZoneAndProgram, new Predicate() {
+        @Override
+        public boolean evaluate(Object o) {
+          ProcessingPeriod period = (ProcessingPeriod) o;
+          return !syncedPeriods.contains(period.getId());
+        }
+      });
+      return OpenLmisResponse.response(PERIODS, unsyncedPeriodsForZoneAndProgram);
     } else {
       return OpenLmisResponse.error(FORBIDDEN_EXCEPTION, HttpStatus.UNAUTHORIZED);
     }

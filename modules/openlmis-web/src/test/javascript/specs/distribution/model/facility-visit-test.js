@@ -90,7 +90,7 @@ describe('Facility Visit', function () {
   });
 
   it('should return complete if not visited and a reason provided', function () {
-    var facilityVisit = new FacilityVisit({visited: false, reasonForNoVisit: "BAD WEATHER"});
+    var facilityVisit = new FacilityVisit({visited: false, reasonForNotVisiting: "BAD WEATHER"});
 
     var status = facilityVisit.computeStatus();
 
@@ -98,7 +98,7 @@ describe('Facility Visit', function () {
   });
 
   it('should return complete if not visited and a reason selected as other and described', function () {
-    var facilityVisit = new FacilityVisit({visited: false, reasonForNoVisit: "OTHER", otherReason: "I was ill"});
+    var facilityVisit = new FacilityVisit({visited: false, reasonForNotVisiting: "OTHER", otherReasonDescription: "I was ill"});
 
     var status = facilityVisit.computeStatus();
 
@@ -106,7 +106,7 @@ describe('Facility Visit', function () {
   });
 
   it('should return incomplete if not visited and a reason selected as other but not described', function () {
-    var facilityVisit = new FacilityVisit({visited: false, reasonForNoVisit: "OTHER"});
+    var facilityVisit = new FacilityVisit({visited: false, reasonForNotVisiting: "OTHER"});
 
     var status = facilityVisit.computeStatus();
 
