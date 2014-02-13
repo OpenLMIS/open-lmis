@@ -675,12 +675,12 @@ Feature: Smoke Tests
     And I Enter "child coverage" values:
       | healthCenter11 | outReach11 | healthCenter23 | outReach23 | openedVial |
       | 123            | 22         | 23             | 34         | 4          |
-  #    Then Verify "child coverage" indicator should be "GREEN"
-  #    When I apply NR to healthCenter11Months for rowNumber "12"
-  #    Then Verify "child coverage" indicator should be "AMBER"
-  #    When I apply NR to healthCenter11Months for rowNumber "12"
-  #    And I enter healthCenter11Months for rowNumber "12" as "34"
-  #    Then Verify "child coverage" indicator should be "GREEN"
+    Then Verify "child coverage" indicator should be "GREEN"
+    When I apply NR to healthCenter11Months for rowNumber "12"
+    Then Verify "child coverage" indicator should be "AMBER"
+    When I apply NR to healthCenter11Months for rowNumber "12"
+    And I enter healthCenter11Months for rowNumber "12" as "34"
+    Then Verify "child coverage" indicator should be "GREEN"
     And I verify saved "child coverage" values:
       | targetGroup | healthCenter11 | outReach11 | total1 | coverageRate | healthCenter23 | outReach23 | total2 | total3 | openedVial | wastageRate |
       | 34          | 123            | 22         | 145    | 426          | 23             | 34         | 57     | 202    | 4          | -1415       |
