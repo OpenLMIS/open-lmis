@@ -218,26 +218,16 @@ function AdminDashboardController($scope) {
 
 
     /* Easy pie chart */
-    $scope.option1  = { animate:false, barColor:'#FEBA50', scaleColor:false, lineWidth:5, lineCap:'butt' };
+    var $scaleColor = '#D7D5D5';
+    var $lineWidth = 5;
+    $scope.option1  = {animate:3000, barColor:'#FEBA50', scaleColor:$scaleColor, lineWidth: $lineWidth};
     $scope.percent1 = 55;
-    $scope.option2  = { animate:false, barColor:'#E23E3E', scaleColor:false, lineWidth:5 };
+    $scope.option2  = {animate:2500, barColor:'#E23E3E', scaleColor:$scaleColor, lineWidth: $lineWidth };
     $scope.percent2 = -46;
-    $scope.option3  = { animate:false, barColor:'#38AB49', scaleColor:false, lineWidth:5, lineCap:'butt' };
+    $scope.option3  = {animate:2000, barColor:'#38AB49', scaleColor:$scaleColor, lineWidth: $lineWidth};
     $scope.percent3 = 85;
-    $scope.option4  = { animate:false, barColor:'#FFB848', scaleColor:false, lineWidth:5, lineCap:'butt' };
+    $scope.option4  = { animate:1500, barColor:'#FFB848', scaleColor:$scaleColor, lineWidth: $lineWidth};
     $scope.percent4 = 55;
-
-    $scope.anotherPercent = -45;
-    $scope.anotherOptions = {
-        animate:{
-            duration:0,
-            enabled:false
-        },
-        barColor:'#2C3E50',
-        scaleColor:false,
-        lineWidth:5,
-       lineCap:'butt'
-    };
 
     /* End of Easy pie chart */
 
