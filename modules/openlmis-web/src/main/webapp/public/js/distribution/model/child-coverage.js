@@ -25,7 +25,7 @@ ChildCoverage.prototype.computeStatus = function () {
   function validateLineItems(lineItems, mandatoryFields) {
     $(lineItems).each(function (index, lineItem) {
       $(mandatoryFields).each(function (index, field) {
-        if (lineItem.vaccination === 'Polio (Newborn)' && ['healthCenter23Months', 'outReach23Months'].indexOf(field) !== -1)
+        if (lineItem.vaccination === 'Polio (Newborn)' && ['healthCenter23Months', 'outreach23Months'].indexOf(field) !== -1)
           return true;
         if ((status === DistributionStatus.COMPLETE || !status) && isValid(lineItem[field])) {
           status = DistributionStatus.COMPLETE;
@@ -43,7 +43,7 @@ ChildCoverage.prototype.computeStatus = function () {
     });
   }
 
-  validateLineItems(this.childCoverageLineItems, ['healthCenter11Months', 'outReach11Months', 'healthCenter23Months', 'outReach23Months']);
+  validateLineItems(this.childCoverageLineItems, ['healthCenter11Months', 'outreach11Months', 'healthCenter23Months', 'outreach23Months']);
   validateLineItems(this.openedVialLineItems, ['openedVial']);
 
   this.status = status;
@@ -54,8 +54,8 @@ ChildCoverage.prototype.setNotRecorded = function () {
   this.childCoverageLineItems.forEach(function (lineItem) {
     lineItem.healthCenter11Months = {notRecorded: true};
     lineItem.healthCenter23Months = {notRecorded: true};
-    lineItem.outReach11Months = {notRecorded: true};
-    lineItem.outReach23Months = {notRecorded: true};
+    lineItem.outreach11Months = {notRecorded: true};
+    lineItem.outreach23Months = {notRecorded: true};
   });
   this.openedVialLineItems.forEach(function (lineItem) {
     lineItem.openedVial = {notRecorded: true};

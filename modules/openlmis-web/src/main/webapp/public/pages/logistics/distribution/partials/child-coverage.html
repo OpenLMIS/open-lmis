@@ -90,30 +90,30 @@
               <td class="col-complete-vaccinated">
                 <div>
                   <span class="input-error-parent-cell">
-                    <input id="outReach11Months{{$index}}" type="text"
-                           ng-model="lineItem.outReach11Months.value"
+                    <input id="outreach11Months{{$index}}" type="text"
+                           ng-model="lineItem.outreach11Months.value"
                            name="coverageOutReach11Months{{$index}}"
                            numeric-validator="positiveInteger" maxlength="7" ng-trim=false
-                           error-holder="outReach11MonthsError{{$index}}"/>
-                    <span id="outReach11MonthsError{{$index}}"
+                           error-holder="outreach11MonthsError{{$index}}"/>
+                    <span id="outreach11MonthsError{{$index}}"
                           class="rnr-form-error"
                           openlmis-message="error.number.only"
                           style="display: none"></span>
                   </span>
                 </div>
                 <input id="coverageOutReach11Months{{$index}}" type="checkbox"
-                       ng-model="lineItem.outReach11Months.notRecorded"
+                       ng-model="lineItem.outreach11Months.notRecorded"
                        not-recorded/>
                 <label class="checkbox-label" for="coverageOutReach11Months{{$index}}"
                        openlmis-message="label.not.recorded"></label>
               </td>
               <td class="col-complete-vaccinated col-total">
                 <span id="total0{{$index}}"
-                      ng-bind="getTotal(lineItem.healthCenter11Months, lineItem.outReach11Months)"></span>
+                      ng-bind="getTotal(lineItem.healthCenter11Months, lineItem.outreach11Months)"></span>
               </td>
               <td class="col-complete-vaccinated col-coverage-rate">
                 <span id="coverageRateCalculated{{$index}}"
-                      ng-bind="calculateCoverageRate(getTotal(lineItem.healthCenter11Months, lineItem.outReach11Months), lineItem.targetGroup)"></span>
+                      ng-bind="calculateCoverageRate(getTotal(lineItem.healthCenter11Months, lineItem.outreach11Months), lineItem.targetGroup)"></span>
               </td>
               <td class="col-complete-vaccinated">
                 <span ng-hide="lineItem.vaccination == 'Polio (Newborn)'">
@@ -141,19 +141,19 @@
                 <span ng-hide="lineItem.vaccination == 'Polio (Newborn)'">
                   <div>
                     <span class="input-error-parent-cell">
-                      <input id="outReach23Months{{$index}}" type="text"
-                             ng-model="lineItem.outReach23Months.value"
+                      <input id="outreach23Months{{$index}}" type="text"
+                             ng-model="lineItem.outreach23Months.value"
                              name="coverageOutReach23Months{{$index}}"
                              numeric-validator="positiveInteger" maxlength="7" ng-trim=false
-                             error-holder="outReach23MonthsError{{$index}}"/>
-                      <span id="outReach23MonthsError{{$index}}"
+                             error-holder="outreach23MonthsError{{$index}}"/>
+                      <span id="outreach23MonthsError{{$index}}"
                             class="rnr-form-error"
                             openlmis-message="error.number.only"
                             style="display: none"></span>
                     </span>
                   </div>
                   <input id="coverageOutReach23Months{{$index}}" type="checkbox"
-                         ng-model="lineItem.outReach23Months.notRecorded"
+                         ng-model="lineItem.outreach23Months.notRecorded"
                          not-recorded/>
 
                   <label class="checkbox-label" for="coverageOutReach23Months{{$index}}"
@@ -162,7 +162,7 @@
               </td>
               <td class="col-complete-vaccinated col-total">
                 <span id="total1{{$index}}"
-                      ng-bind="getTotal(lineItem.healthCenter23Months, lineItem.outReach23Months)"></span>
+                      ng-bind="getTotal(lineItem.healthCenter23Months, lineItem.outreach23Months)"></span>
               </td>
               <td class="col-complete-vaccinated col-total">
                 <span id="total2{{$index}}" ng-bind="getTotalVaccinations(lineItem)"></span>

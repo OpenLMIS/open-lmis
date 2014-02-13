@@ -96,8 +96,8 @@ function ChildCoverageController($scope, $routeParams, distributionService) {
   };
 
   $scope.getTotalVaccinations = function (childCoverageLineItem) {
-    return $scope.getTotal(childCoverageLineItem.healthCenter11Months, childCoverageLineItem.outReach11Months) +
-      $scope.getTotal(childCoverageLineItem.healthCenter23Months, childCoverageLineItem.outReach23Months);
+    return $scope.getTotal(childCoverageLineItem.healthCenter11Months, childCoverageLineItem.outreach11Months) +
+        $scope.getTotal(childCoverageLineItem.healthCenter23Months, childCoverageLineItem.outreach23Months);
   };
 
   $scope.calculateCoverageRate = function (total, targetGroup) {

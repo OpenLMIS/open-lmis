@@ -21,11 +21,11 @@ describe('Child Coverage Controller', function () {
     distributionService = _distributionService_;
 
     childCoverageLineItem1 = {"id": 5, "facilityVisitId": 3, "vaccination": "BCG", "healthCenter11Months": {value: undefined},
-      "outReach11Months": {value: undefined}, "healthCenter23Months": {value: undefined}, "outReach23Months": {value: undefined}};
+      "outreach11Months": {value: undefined}, "healthCenter23Months": {value: undefined}, "outreach23Months": {value: undefined}};
     childCoverageLineItem2 = {"id": 26, "facilityVisitId": 3, "vaccination": "Polio (Newborn)", "healthCenter11Months": {value: undefined},
-      "outReach11Months": {value: undefined}, "healthCenter23Months": {value: undefined}, "outReach23Months": {value: undefined}};
+      "outreach11Months": {value: undefined}, "healthCenter23Months": {value: undefined}, "outreach23Months": {value: undefined}};
     childCoverageLineItem3 = {"id": 27, "facilityVisitId": 3, "vaccination": "Polio 1st dose", "healthCenter11Months": {value: undefined},
-      "outReach11Months": {value: undefined}, "healthCenter23Months": {value: undefined}, "outReach23Months": {value: undefined}};
+      "outreach11Months": {value: undefined}, "healthCenter23Months": {value: undefined}, "outreach23Months": {value: undefined}};
     childCoverageLineItem4 = {"id": 28, "facilityVisitId": 3, "vaccination": "Polio 2nd dose"};
     childCoverageLineItem5 = {"id": 29, "facilityVisitId": 3, "vaccination": "Polio 3rd dose"};
 
@@ -112,15 +112,15 @@ describe('Child Coverage Controller', function () {
 
   it('should add value of healthCenter and outReach if not undefined', function () {
     childCoverageLineItem1.healthCenter11Months.value = 5;
-    childCoverageLineItem1.outReach11Months.value = 10;
-    var total = scope.getTotal(childCoverageLineItem1.healthCenter11Months, childCoverageLineItem1.outReach11Months);
+    childCoverageLineItem1.outreach11Months.value = 10;
+    var total = scope.getTotal(childCoverageLineItem1.healthCenter11Months, childCoverageLineItem1.outreach11Months);
 
     expect(total).toEqual(15);
   });
 
   it('should return total as 0 if value of healthCenter and outReach is undefined', function () {
-    childCoverageLineItem1.outReach11Months = undefined;
-    var total = scope.getTotal(childCoverageLineItem1.healthCenter11Months, childCoverageLineItem1.outReach11Months);
+    childCoverageLineItem1.outreach11Months = undefined;
+    var total = scope.getTotal(childCoverageLineItem1.healthCenter11Months, childCoverageLineItem1.outreach11Months);
 
     expect(total).toEqual(0);
   });
@@ -128,8 +128,8 @@ describe('Child Coverage Controller', function () {
   it('should get total vaccination for childCoverageLineItem', function () {
     childCoverageLineItem1.healthCenter11Months.value = 5;
     childCoverageLineItem1.healthCenter23Months.value = 5;
-    childCoverageLineItem1.outReach11Months.value = 10;
-    childCoverageLineItem1.outReach23Months.value = 10;
+    childCoverageLineItem1.outreach11Months.value = 10;
+    childCoverageLineItem1.outreach23Months.value = 10;
     var total = scope.getTotalVaccinations(childCoverageLineItem1);
 
     expect(total).toEqual(30);
@@ -153,8 +153,8 @@ describe('Child Coverage Controller', function () {
     };
     childCoverage.childCoverageLineItems[0].healthCenter11Months.value = 5;
     childCoverage.childCoverageLineItems[0].healthCenter23Months.value = 5;
-    childCoverage.childCoverageLineItems[0].outReach11Months.value = 10;
-    childCoverage.childCoverageLineItems[0].outReach23Months.value = 10;
+    childCoverage.childCoverageLineItems[0].outreach11Months.value = 10;
+    childCoverage.childCoverageLineItems[0].outreach23Months.value = 10;
     childCoverage.openedVialLineItems[0].openedVial.value = 2;
 
     var wastageRate = scope.calculateWastageRate(productsForVaccination);
@@ -171,8 +171,8 @@ describe('Child Coverage Controller', function () {
     };
     childCoverage.childCoverageLineItems[0].healthCenter11Months.value = 5;
     childCoverage.childCoverageLineItems[0].healthCenter23Months.value = 5;
-    childCoverage.childCoverageLineItems[0].outReach11Months.value = 10;
-    childCoverage.childCoverageLineItems[0].outReach23Months.value = 10;
+    childCoverage.childCoverageLineItems[0].outreach11Months.value = 10;
+    childCoverage.childCoverageLineItems[0].outreach23Months.value = 10;
     childCoverage.openedVialLineItems[0].openedVial.value = 2;
     childCoverage.openedVialLineItems[0].packSize = undefined;
 
@@ -189,8 +189,8 @@ describe('Child Coverage Controller', function () {
     };
     childCoverage.childCoverageLineItems[2].healthCenter11Months.value = 5;
     childCoverage.childCoverageLineItems[2].healthCenter23Months.value = 5;
-    childCoverage.childCoverageLineItems[2].outReach11Months.value = 10;
-    childCoverage.childCoverageLineItems[2].outReach23Months.value = 10;
+    childCoverage.childCoverageLineItems[2].outreach11Months.value = 10;
+    childCoverage.childCoverageLineItems[2].outreach23Months.value = 10;
     childCoverage.openedVialLineItems[1].openedVial.value = 2;
 
     var wastageRate = scope.calculateWastageRate(productsForVaccination);

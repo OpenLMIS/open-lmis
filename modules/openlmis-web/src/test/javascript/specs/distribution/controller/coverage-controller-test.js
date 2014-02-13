@@ -31,7 +31,7 @@ describe('Coverage controller', function () {
     spyOn(distributionService, 'applyNR');
 
     var coverage = jasmine.createSpyObj('Coverage', ['setNotRecorded']);
-    scope.distribution = {facilityDistributions: {2: {coverage: coverage}}};
+    scope.distribution = {facilityDistributions: {2: {fullCoverage: coverage}}};
 
     scope.applyNRAll();
 

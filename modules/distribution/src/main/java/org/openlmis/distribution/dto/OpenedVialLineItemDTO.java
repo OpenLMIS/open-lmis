@@ -11,19 +11,27 @@
 package org.openlmis.distribution.dto;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.openlmis.core.domain.BaseModel;
 import org.openlmis.distribution.domain.OpenedVialLineItem;
 
+import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
+
 @Data
+@JsonSerialize(include = NON_EMPTY)
+@EqualsAndHashCode(callSuper = false)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class OpenedVialLineItemDTO extends BaseModel {
 
-  private Reading openedVials;
+  private Reading openedVial;
 
   public OpenedVialLineItem transform() {
     OpenedVialLineItem lineItem = new OpenedVialLineItem();
     lineItem.setId(this.id);
     lineItem.setModifiedBy(this.modifiedBy);
-    lineItem.setOpenedVials(openedVials.parsePositiveInt());
+    lineItem.setOpenedVials(openedVial.parsePositiveInt());
     return lineItem;
   }
 }

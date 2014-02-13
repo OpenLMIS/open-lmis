@@ -411,7 +411,7 @@ public class ChildCoveragePage extends DistributionTab {
   }
 
   public void enterOutReach11MonthsDataForGivenRow(int rowNumber, String value) {
-    WebElement outReach11Months = testWebDriver.getElementById("outReach11Months" + (rowNumber - 1));
+    WebElement outReach11Months = testWebDriver.getElementById("outreach11Months" + (rowNumber - 1));
     testWebDriver.waitForElementToAppear(outReach11Months);
     outReach11Months.clear();
     outReach11Months.sendKeys(value);
@@ -427,7 +427,7 @@ public class ChildCoveragePage extends DistributionTab {
   }
 
   public void enterOutReach23MonthsDataForGivenRow(int rowNumber, String value) {
-    WebElement outReach23Months = testWebDriver.getElementById("outReach23Months" + (rowNumber - 1));
+    WebElement outReach23Months = testWebDriver.getElementById("outreach23Months" + (rowNumber - 1));
     testWebDriver.waitForElementToAppear(outReach23Months);
     outReach23Months.clear();
     outReach23Months.sendKeys(value);
@@ -561,7 +561,7 @@ public class ChildCoveragePage extends DistributionTab {
   }
 
   public boolean isOutReach11MonthsEnabledForGivenRow(int rowNumber) {
-    WebElement outReach11Months = testWebDriver.getElementById("outReach11Months" + (rowNumber - 1));
+    WebElement outReach11Months = testWebDriver.getElementById("outreach11Months" + (rowNumber - 1));
     testWebDriver.waitForElementToAppear(outReach11Months);
     return outReach11Months.isEnabled();
   }
@@ -573,7 +573,7 @@ public class ChildCoveragePage extends DistributionTab {
   }
 
   public boolean isOutReach23MonthsEnabledForGivenRow(int rowNumber) {
-    WebElement outReach23Months = testWebDriver.getElementById("outReach23Months" + (rowNumber - 1));
+    WebElement outReach23Months = testWebDriver.getElementById("outreach23Months" + (rowNumber - 1));
     testWebDriver.waitForElementToAppear(outReach23Months);
     return outReach23Months.isEnabled();
   }
