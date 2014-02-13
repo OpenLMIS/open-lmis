@@ -19,8 +19,8 @@ function ChildCoverageController($scope, $routeParams, distributionService) {
   };
 
   var syncNR = function (product1, product2) {
-    if (!isUndefined($scope.openedVialMap[product2].openedVial))
-      $scope.openedVialMap[product1].openedVial = {notRecorded: $scope.openedVialMap[product2].openedVial.notRecorded};
+    if (!isUndefined($scope.openedVialMap[product2].openedVial) && !isUndefined($scope.openedVialMap[product1].openedVial))
+      $scope.openedVialMap[product1].openedVial.notRecorded = $scope.openedVialMap[product2].openedVial.notRecorded;
   };
 
   var convertListToMap = function (list, key) {
