@@ -432,10 +432,6 @@ Feature: Smoke Tests
     Then I should see Delivery Zone "Delivery Zone First", Program "VACCINES" and Period "Period14" in the header
     And I should see No facility selected
     And I should see "active" facilities that support the program "VACCINES" and delivery zone "Delivery Zone First"
-    When I choose facility "F10"
-    Then I should verify facility zone "Health Center" in the header
-    And  I should verify facility name "Village Dispensary" in the header
-    And I verify legends
 
   @smokeDistribution
   Scenario: User should be able to add/edit/delete refrigerator
@@ -739,7 +735,7 @@ Feature: Smoke Tests
     When I done sync message
     And I view visit information in DB for facility "F10":
       | observations     | confirmedByName | confirmedByTitle | verifiedByName | verifiedByTitle | vehicleId | synced |
-      | some observation | samuel          | fc               | Verifier       | XYZ             | null      |    t   |
+      | some observation | samuel          | fc               | Verifier       | XYZ             | null      | t      |
     And I view epi use data in DB for facility "F10" and product group "penta":
       | distributed | expirationDate | loss | received | firstOfMonth | endOfMonth |
       | 16          | 11/2012        | 1    | 10       | 12           | 5          |

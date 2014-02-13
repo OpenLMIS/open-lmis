@@ -756,6 +756,34 @@ public class ManageDistribution extends TestCaseHelper {
     verifyInactiveProductsNotDisplayedOnViewLoadAmount();
   }
 
+  @Test(groups = {"distribution"}, dataProvider = "Data-Provider-Function")
+  public void testVerifyLegendsOnDistributionPage(String userSIC, String password, String deliveryZoneCodeFirst,
+                                                  String deliveryZoneCodeSecond, String deliveryZoneNameFirst,
+                                                  String deliveryZoneNameSecond, String facilityCodeFirst,
+                                                  String facilityCodeSecond, String programFirst, String programSecond,
+                                                  String schedule, String period, Integer totalNumberOfPeriods) throws SQLException {
+    setupData(userSIC, deliveryZoneCodeFirst, deliveryZoneCodeSecond, deliveryZoneNameFirst, deliveryZoneNameSecond, facilityCodeFirst,
+      facilityCodeSecond, programFirst, programSecond, schedule);
+    dbWrapper.insertProductGroup(productGroupCode);
+    dbWrapper.insertProductWithGroup("Product5", "ProductName5", productGroupCode, true);
+    dbWrapper.insertProductWithGroup("Product6", "ProductName6", productGroupCode, true);
+    dbWrapper.insertProgramProduct("Product5", programFirst, "10", "false");
+    dbWrapper.insertProgramProduct("Product6", programFirst, "10", "true");
+    dbWrapper.updateFieldValue("products", "active", "false", "code", "Product6");
+
+    HomePage homePage = loginPage.loginAs(userSIC, password);
+    DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
+    distributionPage.selectValueFromDeliveryZone(deliveryZoneNameFirst);
+    distributionPage.selectValueFromProgram(programFirst);
+
+    distributionPage.clickInitiateDistribution();
+    FacilityListPage facilityListPage = distributionPage.clickRecordData(1);
+    facilityListPage.selectFacility(facilityCodeFirst);
+    facilityListPage.verifyFacilityZoneInHeader("Health Center");
+    facilityListPage.verifyFacilityNameInHeader("Village Dispensary");
+    facilityListPage.verifyLegend();
+  }
+
   private void setupData(String userSIC, String deliveryZoneCodeFirst, String deliveryZoneCodeSecond, String deliveryZoneNameFirst,
                          String deliveryZoneNameSecond, String facilityCodeFirst, String facilityCodeSecond, String programFirst, String programSecond, String schedule) throws SQLException {
     List<String> rightsList = asList("MANAGE_DISTRIBUTION");
