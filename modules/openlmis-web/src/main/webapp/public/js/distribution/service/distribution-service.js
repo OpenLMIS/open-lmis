@@ -43,13 +43,6 @@ distributionModule.service('distributionService', function ($dialog, SharedDistr
     IndexedDB.put('distributions', distribution, null, null, SharedDistributions.update);
   };
 
-  this.put = function (distribution) {
-    IndexedDB.put('distributions', distribution, function () {
-    }, {}, function () {
-      SharedDistributions.update();
-    });
-  };
-
   this.deleteDistribution = function (id) {
     IndexedDB.delete('distributions', id, null, null, function () {
       SharedDistributions.update();
