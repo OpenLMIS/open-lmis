@@ -49,6 +49,11 @@ function RefrigeratorController($scope, $dialog, IndexedDB, $routeParams, distri
     $scope.addRefrigeratorModal = $scope.isDuplicateSerialNumber = undefined;
   };
 
+  $scope.isFormDisabled = function () {
+    return ($scope.distribution.facilityDistributions[$scope.selectedFacilityId].status === $scope.SYNCED) ||
+      ($scope.distribution.facilityDistributions[$scope.selectedFacilityId].facilityVisit.visited === false);
+  };
+
   $scope.showDeleteRefrigeratorConfirmationModel = function (serialNumberToDelete) {
     var dialogOpts = {
       id: "deleteRefrigeratorInfo",
@@ -71,8 +76,8 @@ function RefrigeratorController($scope, $dialog, IndexedDB, $routeParams, distri
     OpenLmisDialog.newDialog(dialogOpts, callback(serialNumberToDelete), $dialog);
   };
 
-  $scope.showProblemsDiv = function(idSent) {
-    setTimeout(function() {
+  $scope.showProblemsDiv = function (idSent) {
+    setTimeout(function () {
       $('body,html').animate({
         scrollTop: utils.parseIntWithBaseTen($('#' + idSent).offset().top) + 'px'
       }, 'fast');
