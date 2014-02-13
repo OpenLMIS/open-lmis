@@ -36,6 +36,7 @@ public class TestCaseHelper {
 
   public static final String DEFAULT_BROWSER = "firefox";
   public static final String DEFAULT_BASE_URL = "http://localhost:9091/";
+  public static final String NULL_VALUE = "null";
   public static DBWrapper dbWrapper;
   protected static String baseUrlGlobal;
   protected static String DOWNLOAD_FILE_PATH;
@@ -539,9 +540,9 @@ public class TestCaseHelper {
                                                String productCode, String facilityCode) throws SQLException {
     ResultSet epiInventoryDetails = dbWrapper.getEpiInventoryDetails(productCode, facilityCode);
 
-    assertEquals(existingQuantity, epiInventoryDetails.getString("existingQuantity"));
-    assertEquals(deliveredQuantity, epiInventoryDetails.getString("deliveredQuantity"));
-    assertEquals(spoiledQuantity, epiInventoryDetails.getString("spoiledQuantity"));
+    assertEqualsAndNulls(epiInventoryDetails.getString("existingQuantity"), existingQuantity);
+    assertEqualsAndNulls(epiInventoryDetails.getString("deliveredQuantity"),deliveredQuantity);
+    assertEqualsAndNulls(epiInventoryDetails.getString("spoiledQuantity"),spoiledQuantity);
   }
 
   public void verifyRefrigeratorReadingDataInDatabase(String facilityCode, String refrigeratorSerialNumber, Float temperature,
@@ -618,6 +619,15 @@ public class TestCaseHelper {
     dbWrapper.insertShipmentData(id, productCode, quantityShipped);
     dbWrapper.updateFieldValue("shipment_line_items", "packsToShip", packsToShip);
     dbWrapper.updateFieldValue("shipment_line_items", "fullSupply", fullSupplyFlag);
+  }
+
+  public void assertEqualsAndNulls(Object actual, String expected) {
+    if(expected.equals(NULL_VALUE)) {
+      assertEquals(actual, null);
+    }
+    else {
+      assertEquals(actual, expected);
+    }
   }
 }
 

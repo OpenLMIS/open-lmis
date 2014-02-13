@@ -519,11 +519,13 @@ Feature: Smoke Tests
       | 023!YU-09 | some observation | samuel          | fc               | Verifier       | X YZ            |
 
   @smokeDistribution
-  Scenario: User should fill Visit Information when facility was not visited
+  Scenario: User should verify facility and sync status when facility was not visited
     Given I have the following data for distribution:
       | userSIC       | deliveryZoneCodeFirst | deliveryZoneCodeSecond | deliveryZoneNameFirst | deliveryZoneNameSecond | facilityCodeFirst | facilityCodeSecond | programFirst | programSecond | schedule |
       | storeInCharge | DZ1                   | DZ2                    | Delivery Zone First   | Delivery Zone Second   | F10               | F11                | VACCINES     | TB            | M        |
+    And I update product "P10" to have product group "penta"
     And I have data available for "Multiple" facilities attached to delivery zones
+    And I disassociate "F11" from delivery zone
     And I assign delivery zone "DZ1" to user "storeInCharge" having role "store in-charge"
     When I am logged in as "storeInCharge"
     And I access plan my distribution page
@@ -536,6 +538,15 @@ Feature: Smoke Tests
     And I verify that I am on visit information page
     Then I see "Overall" facility icon as "AMBER"
     And I see "Individual" facility icon as "AMBER"
+    And I navigate to "epi use" tab
+    And I Enter "epi use" values:
+      | distributed | expirationDate | loss | received | firstOfMonth | endOfMonth |
+      | 16          | 11/2012        | 1    | 10       | 12           |            |
+    And I enter EPI end of month as "5"
+    And I navigate to "full coverage" tab
+    And I Enter "full coverage" values:
+      | femaleHealthCenter | femaleMobileBrigade | maleHealthCenter | maleMobileBrigade |
+      | 123                | 22                  | 23               | 242               |
     And I navigate to "refrigerator" tab
     When I add new refrigerator
     When I enter Brand "LG"
@@ -547,14 +558,47 @@ Feature: Smoke Tests
     When I select "no" facility visited
     And I select No Transport reason
     Then Verify "visit information" indicator should be "GREEN"
-    Then I see "Overall" facility icon as "AMBER"
+    Then I see "Overall" facility icon as "GREEN"
     And Verify "refrigerator" indicator should be "GREEN"
-    Then Verify "epi inventory" indicator should be "GREEN"
+    And Verify "epi inventory" indicator should be "GREEN"
     When I navigate to "epi inventory" tab
     Then I see "epi inventory" fields disabled
     When I navigate to "refrigerator" tab
     And I access show
     Then I see "refrigerator" fields disabled
+    And I see "Overall" facility icon as "GREEN"
+    When I access plan my distribution page
+    And I sync recorded data
+    And I check confirm sync message as "F10-Village Dispensary"
+    And I done sync message
+    And I view visit information in DB for facility "F10":
+      | observations     | confirmedByName | confirmedByTitle | verifiedByName | verifiedByTitle | vehicleId | synced | visited |
+      | null             |   null          | null             |  null          | null            | null      | t      |   f     |
+    And I view epi use data in DB for facility "F10" and product group "penta":
+      | distributed | expirationDate | loss | received | firstOfMonth | endOfMonth |
+      | 16          | 11/2012        | 1    | 10       | 12           | 5          |
+    And I view full coverage readings in DB for facility "F10":
+      | femaleHealthCenter | femaleOutreach | maleHealthCenter | maleOutreach |
+      | 123                | 22             | 23               | 242          |
+    And I view epi inventory readings in DB for facility "F10" for product "P10":
+      | existingQuantity | deliveredQuantity | spoiledQuantity |
+      | null             | null              | null            |
+    And I view epi inventory readings in DB for facility "F10" for product "P11":
+      | existingQuantity | deliveredQuantity | spoiledQuantity |
+      | null             | null              | null            |
+    And I see distribution status as synced
+    When I record data for distribution "1"
+    And I choose facility "F10"
+    Then I see "Overall" facility icon as "BLUE"
+    Then I see "visit information" fields disabled
+    When I navigate to "epi use" tab
+    Then I see "epi use" fields disabled
+    When I navigate to "full coverage" tab
+    Then I see "full coverage" fields disabled
+    When I navigate to "refrigerator" tab
+    And I access show
+    Then I see "refrigerator" fields disabled
+
 
   @smokeDistribution
   Scenario: User should fill EPI use data

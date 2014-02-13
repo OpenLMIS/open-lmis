@@ -365,16 +365,18 @@ public class ManageDistribution extends TestCaseHelper {
   @Then("^I view visit information in DB for facility \"([^\"]*)\":$")
   public void verifyVisitInformationDataInDB(String facility, DataTable tableData) throws SQLException {
     List<Map<String, String>> data = tableData.asMaps();
-    for (Map map : data) {
+    for (Map<String, String> map : data) {
       Map<String, String> facilityVisitDetails = dbWrapper.getFacilityVisitDetails(facility);
-      assertEquals(facilityVisitDetails.get("observations"), map.get("observations"));
-      assertEquals(facilityVisitDetails.get("confirmedByName"), map.get("confirmedByName"));
-      assertEquals(facilityVisitDetails.get("confirmedByTitle"), map.get("confirmedByTitle"));
-      assertEquals(facilityVisitDetails.get("verifiedByName"), map.get("verifiedByName"));
-      assertEquals(facilityVisitDetails.get("verifiedByTitle"), map.get("verifiedByTitle"));
-      assertEquals(facilityVisitDetails.get("visited"), "t");
-      assertEquals(facilityVisitDetails.get("synced"), "t");
-      assertEquals(facilityVisitDetails.get("visitDate"), new SimpleDateFormat("yyyy-MM").format(new Date()) + "-01 00:00:00");
+      assertEqualsAndNulls(facilityVisitDetails.get("observations"), map.get("observations"));
+      assertEqualsAndNulls(facilityVisitDetails.get("confirmedByName"), map.get("confirmedByName"));
+      assertEqualsAndNulls(facilityVisitDetails.get("confirmedByTitle"), map.get("confirmedByTitle"));
+      assertEqualsAndNulls(facilityVisitDetails.get("verifiedByName"), map.get("verifiedByName"));
+      assertEqualsAndNulls(facilityVisitDetails.get("verifiedByTitle"), map.get("verifiedByTitle"));
+      assertEqualsAndNulls(facilityVisitDetails.get("visited"), map.get("visited"));
+      assertEqualsAndNulls(facilityVisitDetails.get("synced"), map.get("synced"));
+      if(facilityVisitDetails.get("visited")=="t"){
+        assertEquals(new SimpleDateFormat("yyyy-MM").format(new Date()) + "-01 00:00:00",facilityVisitDetails.get("visitDate"));
+      }
       if (!map.get("vehicleId").equals("null"))
         assertEquals(facilityVisitDetails.get("vehicleId"), map.get("vehicleId"));
     }
@@ -425,7 +427,8 @@ public class ManageDistribution extends TestCaseHelper {
   }
 
   @And("^I view epi inventory readings in DB for facility \"([^\"]*)\" for product \"([^\"]*)\":$")
-  public void verifyEpiInventoryDataInDB(String facilityCode, String productCode, DataTable tableData) throws SQLException {
+  public void
+  verifyEpiInventoryDataInDB(String facilityCode, String productCode, DataTable tableData) throws SQLException {
     List<Map<String, String>> data = tableData.asMaps();
     for (Map map : data) {
       verifyEpiInventoryDataInDatabase(map.get("existingQuantity").toString(), map.get("deliveredQuantity").toString(), map.get("spoiledQuantity").toString(), productCode, facilityCode);
