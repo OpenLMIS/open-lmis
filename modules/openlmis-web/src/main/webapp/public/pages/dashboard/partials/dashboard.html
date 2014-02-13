@@ -45,8 +45,6 @@
         float: left!important;
     }
 
-
-
 </style>
 
 <!-- BEGIN CONTAINER -->
@@ -64,7 +62,7 @@
                 <div class="portlet-body">
                     <div class=" portlet-tabs">
                         <ul class="nav nav-tabs" id="dashboard-tabs">
-                            <li class="active"><a id="dashboard-tab-1" href="#dashboard-tab-1-1" data-toggle="tab">Tab 1</a></li>
+                            <li id="dashboard-tab-1" class="active"><a href="#dashboard-tab-1-1" data-toggle="tab">Tab 1</a></li>
                         </ul>
                         <div class="tab-content">
                             <div class="tab-pane active" id="dashboard-tab-1-1">
@@ -108,7 +106,6 @@
                 </div>
             </div>
             <!-- END TAB PORTLET-->
-            <button type="submit" class="btn" id="composeButton">Compose</button>
             <div class="well">
                 <div class="row-fluid">
                     <div class="span4">
@@ -147,16 +144,5 @@
         </div>
     </div>
 </div>
-<script>
-    $(document).ready(function() {
-        $("#dashboard-tabs").on("click", "a", function (e) {
-            e.preventDefault();
-
-            $(this).tab('show');
-        });
-
-        registerCloseEvent();
-    });
-</script>
 
 

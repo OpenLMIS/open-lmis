@@ -12,20 +12,5 @@ angular.module('dashboard',['openlmis', 'ui.calendar', 'ui.bootstrap','easypiech
 
     $routeProvider.
         when('/dashboard', {controller: AdminDashboardController, templateUrl: 'partials/dashboard.html'}).
-        when('/piechart',{controller: PieChartController,templateUrl:'partials/piechart.html'}).
         otherwise({redirectTo: '/dashboard'});
-
-    /*$routeSegmentProvider.options.autoLoadTemplates = true;
-
-    $routeSegmentProvider.
-        when('/dashboard','s1')
-        .when('/dashboard/pie',    's1.pie')
-
-        .segment('s1',{templateUrl: 'partials/dashboard.html', controller: AdminDashboardController})
-    .within()
-
-        .segment('pie', {templateUrl: 'partials/piechart.html'})
-
-        .up();*/
-
 }]);
