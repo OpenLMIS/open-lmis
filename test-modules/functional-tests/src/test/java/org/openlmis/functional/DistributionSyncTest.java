@@ -15,9 +15,7 @@ import org.openlmis.UiUtils.CaptureScreenshotOnFailureListener;
 import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.UiUtils.TestWebDriver;
 import org.openlmis.pageobjects.*;
-import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
-import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Listeners;
@@ -136,11 +134,11 @@ public class DistributionSyncTest extends TestCaseHelper {
     assertTrue(distributionPage.getSyncMessage().contains("F11-Central Hospital"));
 
     distributionPage.syncDistributionMessageDone();
-    assertEquals(distributionPage.getDistributionStatus(),"SYNCED");
+    assertEquals(distributionPage.getDistributionStatus(), "SYNCED");
     assertFalse(distributionPage.getTextDistributionList().contains("sync"));
 
-    Map <String,String> distributionDetails=dbWrapper.getDistributionDetails(distributionTestData.get(FIRST_DELIVERY_ZONE_NAME),distributionTestData.get(VACCINES_PROGRAM),"Period14");
-    assertEquals(distributionDetails.get("status"),"SYNCED");
+    Map<String, String> distributionDetails = dbWrapper.getDistributionDetails(distributionTestData.get(FIRST_DELIVERY_ZONE_NAME), distributionTestData.get(VACCINES_PROGRAM), "Period14");
+    assertEquals(distributionDetails.get("status"), "SYNCED");
 
     Map<String, String> facilityVisitF10 = dbWrapper.getFacilityVisitDetails("F10");
     assertEquals(facilityVisitF10.get("observations"), "Some observations");
@@ -189,7 +187,7 @@ public class DistributionSyncTest extends TestCaseHelper {
     distributionPage.clickOk();
 
     verifyEpiUseDataInDatabase(70, 80, 90, 100, 9999999, "10/2011", "PG1", distributionTestData.get(SECOND_FACILITY_CODE));
-    verifyVisitInformationDataWhenFacilityWasVisitedInDatabase(distributionTestData.get(SECOND_FACILITY_CODE), "Some observations", "samuel D", "Doe Abc", "Verifier", "Verifier Title", null);
+    verifyFacilityVisitInformationInDatabase(distributionTestData.get(SECOND_FACILITY_CODE), "Some observations", "samuel D", "Doe Abc", "Verifier", "Verifier Title", null, "t", "t");
     verifyFullCoveragesDataInDatabase(null, null, null, null, distributionTestData.get(SECOND_FACILITY_CODE));
     verifyEpiInventoryDataInDatabase(null, "2", null, "P10", distributionTestData.get(SECOND_FACILITY_CODE));
     verifyEpiInventoryDataInDatabase(null, "4", null, "Product6", distributionTestData.get(SECOND_FACILITY_CODE));
@@ -258,7 +256,7 @@ public class DistributionSyncTest extends TestCaseHelper {
     distributionPage.syncDistributionMessageDone();
 
     verifyEpiUseDataInDatabase(70, 80, 90, 100, 9999999, "10/2011", "PG1", distributionTestData.get(FIRST_FACILITY_CODE));
-    verifyVisitInformationDataWhenFacilityWasVisitedInDatabase(distributionTestData.get(FIRST_FACILITY_CODE), "Some observations", "samuel D", "Doe Abc", "Verifier", "Verifier Title", null);
+    verifyFacilityVisitInformationInDatabase(distributionTestData.get(FIRST_FACILITY_CODE), "Some observations", "samuel D", "Doe Abc", "Verifier", "Verifier Title", null, "t", "t");
     verifyRefrigeratorProblemDataNullInDatabase("GNR7878", distributionTestData.get(FIRST_FACILITY_CODE));
     verifyRefrigeratorReadingDataInDatabase(distributionTestData.get(FIRST_FACILITY_CODE), "GNR7878", 3.0F, "Y", 2, 5, null, null);
     verifyFullCoveragesDataInDatabase(null, null, null, null, distributionTestData.get(FIRST_FACILITY_CODE));
@@ -292,7 +290,7 @@ public class DistributionSyncTest extends TestCaseHelper {
     distributionPage.syncDistributionMessageDone();
 
     verifyEpiUseDataInDatabase(70, 80, 90, 100, 9999999, "10/2011", "PG1", distributionTestData.get(FIRST_FACILITY_CODE));
-    verifyVisitInformationDataWhenFacilityWasVisitedInDatabase(distributionTestData.get(FIRST_FACILITY_CODE), "Some observations", "samuel D", "Doe Abc", "Verifier", "Verifier Title", null);
+    verifyFacilityVisitInformationInDatabase(distributionTestData.get(FIRST_FACILITY_CODE), "Some observations", "samuel D", "Doe Abc", "Verifier", "Verifier Title", null, "t", "t");
     verifyRefrigeratorProblemDataNullInDatabase("GNR7878", distributionTestData.get(FIRST_FACILITY_CODE));
     verifyRefrigeratorReadingDataInDatabase(distributionTestData.get(FIRST_FACILITY_CODE), "GNR7878", 3.0F, "Y", 2, 5, null, null);
 
@@ -531,7 +529,7 @@ public class DistributionSyncTest extends TestCaseHelper {
     distributionPage.syncDistribution(1);
     distributionPage.syncDistributionMessageDone();
 
-    verifyVisitInformationDataWhenFacilityWasVisitedInDatabase(distributionTestData.get(FIRST_FACILITY_CODE), "Some observations", "samuel D", "Doe Abc", "Verifier", "Verifier Title", null);
+    verifyFacilityVisitInformationInDatabase(distributionTestData.get(FIRST_FACILITY_CODE), "Some observations", "samuel D", "Doe Abc", "Verifier", "Verifier Title", null, "t", "t");
     verifyRefrigeratorProblemDataNullInDatabase("GNR7878", distributionTestData.get(FIRST_FACILITY_CODE));
     verifyRefrigeratorReadingDataInDatabase(distributionTestData.get(FIRST_FACILITY_CODE), "GNR7878", 3.0F, "Y", 2, 5, null, null);
     verifyFullCoveragesDataInDatabase(null, null, null, null, distributionTestData.get(FIRST_FACILITY_CODE));
@@ -652,6 +650,180 @@ public class DistributionSyncTest extends TestCaseHelper {
     assertNull(epiInventoryPage.getNoProductsAddedMessage());
   }
 
+  @Test(groups = {"distribution"})
+  public void testSyncOfUnvisitedFacility() throws SQLException {
+    dbWrapper.addRefrigeratorToFacility("LG", "800L", "GNR7878", "F11");
+    HomePage homePage = loginPage.loginAs(distributionTestData.get(USER), distributionTestData.get(PASSWORD));
+    initiateDistribution(distributionTestData.get(FIRST_DELIVERY_ZONE_NAME), distributionTestData.get(VACCINES_PROGRAM));
+    VisitInformationPage visitInformationPage = facilityListPage.selectFacility(distributionTestData.get(FIRST_FACILITY_CODE));
+
+    facilityListPage.verifyFacilityIndicatorColor("Overall", "RED");
+    visitInformationPage.enterDataWhenFacilityVisited("Some observations", "samuel D", "Doe Abc", "Verifier", "Verifier Title");
+
+    RefrigeratorPage refrigeratorPage = visitInformationPage.navigateToRefrigerators();
+    refrigeratorPage.verifyRefrigeratorColor("overall", "RED");
+    refrigeratorPage.clickShowForRefrigerator1();
+    refrigeratorPage.enterValueInRefrigeratorTemperature("3");
+    refrigeratorPage.clickFunctioningCorrectlyYesRadio();
+    refrigeratorPage.enterValueInLowAlarmEvents("2");
+    refrigeratorPage.enterValueInHighAlarmEvents("5");
+    refrigeratorPage.clickDone();
+    refrigeratorPage.verifyRefrigeratorColor("overall", "AMBER");
+
+    EpiInventoryPage epiInventoryPage = refrigeratorPage.navigateToEpiInventory();
+    epiInventoryPage.verifyIndicator("RED");
+    epiInventoryPage.fillExistingQuantity(1, "1");
+    epiInventoryPage.fillDeliveredQuantity(1, "2");
+    epiInventoryPage.fillSpoiledQuantity(1, "3");
+    epiInventoryPage.verifyIndicator("AMBER");
+
+    visitInformationPage.navigateToVisitInformation();
+    visitInformationPage.selectFacilityVisitedNo();
+    visitInformationPage.selectReasonNoTransport();
+
+    refrigeratorPage.verifyRefrigeratorColor("overall", "GREEN");
+    epiInventoryPage.verifyIndicator("GREEN");
+
+    EPIUsePage epiUsePage = refrigeratorPage.navigateToEpiUse();
+    epiUsePage.enterData(70, 80, 90, 100, 9999999, "10/2011", 1);
+
+    FullCoveragePage fullCoveragePage = epiUsePage.navigateToFullCoverage();
+    fullCoveragePage.clickApplyNRToAll();
+
+    fullCoveragePage.navigateToEpiInventory();
+    facilityListPage.verifyFacilityIndicatorColor("Overall", "GREEN");
+
+    homePage.navigateHomePage();
+    DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
+    distributionPage.syncDistribution(1);
+    distributionPage.syncDistributionMessageDone();
+
+    verifyEpiUseDataInDatabase(70, 80, 90, 100, 9999999, "10/2011", "PG1", distributionTestData.get(FIRST_FACILITY_CODE));
+    verifyFacilityVisitInformationInDatabase(distributionTestData.get(FIRST_FACILITY_CODE), null, null, null, null, null, null, "t", "f");
+    verifyFullCoveragesDataInDatabase(null, null, null, null, distributionTestData.get(FIRST_FACILITY_CODE));
+    verifyEpiInventoryDataInDatabase(null, null, null, "P10", distributionTestData.get(FIRST_FACILITY_CODE));
+    verifyEpiInventoryDataInDatabase(null, null, null, "Product6", distributionTestData.get(FIRST_FACILITY_CODE));
+    verifyEpiInventoryDataInDatabase(null, null, null, "P11", distributionTestData.get(FIRST_FACILITY_CODE));
+
+    distributionPage.clickRecordData(1);
+    facilityListPage.selectFacility("F10");
+    facilityListPage.verifyFacilityIndicatorColor("Overall", "BLUE");
+    facilityListPage.verifyFacilityIndicatorColor("individual", "BLUE");
+
+    verifyAllFieldsDisabled();
+  }
+
+  @Test(groups = {"distribution"})
+  public void testSyncOfUnvisitedFacilityWhenFacilityInactiveAfterCaching() throws SQLException {
+    dbWrapper.addRefrigeratorToFacility("LG", "800L", "GNR7878", "F11");
+    HomePage homePage = loginPage.loginAs(distributionTestData.get(USER), distributionTestData.get(PASSWORD));
+    initiateDistribution(distributionTestData.get(FIRST_DELIVERY_ZONE_NAME), distributionTestData.get(VACCINES_PROGRAM));
+    VisitInformationPage visitInformationPage = facilityListPage.selectFacility(distributionTestData.get(FIRST_FACILITY_CODE));
+
+    dbWrapper.updateFieldValue("facilities", "active", "false", "code", "F10");
+    facilityListPage.verifyFacilityIndicatorColor("Overall", "RED");
+
+    RefrigeratorPage refrigeratorPage = visitInformationPage.navigateToRefrigerators();
+    refrigeratorPage.verifyRefrigeratorColor("overall", "RED");
+
+    EpiInventoryPage epiInventoryPage = refrigeratorPage.navigateToEpiInventory();
+    epiInventoryPage.verifyIndicator("RED");
+
+    visitInformationPage.navigateToVisitInformation();
+    visitInformationPage.selectFacilityVisitedNo();
+    visitInformationPage.selectReasonNoTransport();
+
+    refrigeratorPage.verifyRefrigeratorColor("overall", "GREEN");
+    epiInventoryPage.verifyIndicator("GREEN");
+
+    EPIUsePage epiUsePage = refrigeratorPage.navigateToEpiUse();
+    epiUsePage.enterData(70, 80, 90, 100, 9999999, "10/2011", 1);
+
+    FullCoveragePage fullCoveragePage = epiUsePage.navigateToFullCoverage();
+    fullCoveragePage.clickApplyNRToAll();
+
+    facilityListPage.verifyFacilityIndicatorColor("Overall", "GREEN");
+
+    homePage.navigateHomePage();
+    DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
+    distributionPage.syncDistribution(1);
+    distributionPage.syncDistributionMessageDone();
+
+    verifyEpiUseDataInDatabase(70, 80, 90, 100, 9999999, "10/2011", "PG1", distributionTestData.get(FIRST_FACILITY_CODE));
+    verifyFacilityVisitInformationInDatabase(distributionTestData.get(FIRST_FACILITY_CODE), null, null, null, null, null, null, "t", "f");
+    verifyFullCoveragesDataInDatabase(null, null, null, null, distributionTestData.get(FIRST_FACILITY_CODE));
+    verifyEpiInventoryDataInDatabase(null, null, null, "P10", distributionTestData.get(FIRST_FACILITY_CODE));
+    verifyEpiInventoryDataInDatabase(null, null, null, "Product6", distributionTestData.get(FIRST_FACILITY_CODE));
+    verifyEpiInventoryDataInDatabase(null, null, null, "P11", distributionTestData.get(FIRST_FACILITY_CODE));
+  }
+
+  @Test(groups = {"distribution"})
+  public void testSyncOfMultipleFacilityWhenFacilityUnvisited() throws SQLException {
+    dbWrapper.addRefrigeratorToFacility("LG", "800L", "GNR7878", "F11");
+    HomePage homePage = loginPage.loginAs(distributionTestData.get(USER), distributionTestData.get(PASSWORD));
+    initiateDistribution(distributionTestData.get(FIRST_DELIVERY_ZONE_NAME), distributionTestData.get(VACCINES_PROGRAM));
+    VisitInformationPage visitInformationPage = facilityListPage.selectFacility(distributionTestData.get(FIRST_FACILITY_CODE));
+
+    facilityListPage.verifyFacilityIndicatorColor("Overall", "RED");
+
+    visitInformationPage.navigateToVisitInformation();
+    visitInformationPage.selectFacilityVisitedNo();
+    visitInformationPage.selectReasonNoTransport();
+
+    EPIUsePage epiUsePage = visitInformationPage.navigateToEpiUse();
+    epiUsePage.enterData(70, 80, 90, 100, 9999999, "10/2011", 1);
+
+    FullCoveragePage fullCoveragePage = epiUsePage.navigateToFullCoverage();
+    fullCoveragePage.clickApplyNRToAll();
+
+    facilityListPage.verifyFacilityIndicatorColor("Overall", "GREEN");
+
+    facilityListPage.selectFacility(distributionTestData.get(SECOND_FACILITY_CODE));
+
+    facilityListPage.verifyFacilityIndicatorColor("Overall", "RED");
+
+    visitInformationPage.navigateToVisitInformation();
+    visitInformationPage.selectFacilityVisitedNo();
+    visitInformationPage.selectReasonNoTransport();
+
+    epiUsePage = visitInformationPage.navigateToEpiUse();
+    epiUsePage.enterData(170, 1180, 90, 1100, 1239999, "10/2011", 1);
+
+    epiUsePage.navigateToFullCoverage();
+    fullCoveragePage.clickApplyNRToAll();
+
+    facilityListPage.verifyFacilityIndicatorColor("Overall", "GREEN");
+
+    homePage.navigateHomePage();
+    DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
+    distributionPage.syncDistribution(1);
+    distributionPage.syncDistributionMessageDone();
+
+    verifyEpiUseDataInDatabase(70, 80, 90, 100, 9999999, "10/2011", "PG1", distributionTestData.get(FIRST_FACILITY_CODE));
+    verifyFacilityVisitInformationInDatabase(distributionTestData.get(FIRST_FACILITY_CODE), null, null, null, null, null, null, "t", "f");
+    verifyFullCoveragesDataInDatabase(null, null, null, null, distributionTestData.get(FIRST_FACILITY_CODE));
+    verifyEpiInventoryDataInDatabase(null, null, null, "P10", distributionTestData.get(FIRST_FACILITY_CODE));
+    verifyEpiInventoryDataInDatabase(null, null, null, "Product6", distributionTestData.get(FIRST_FACILITY_CODE));
+    verifyEpiInventoryDataInDatabase(null, null, null, "P11", distributionTestData.get(FIRST_FACILITY_CODE));
+
+    verifyEpiUseDataInDatabase(170, 1180, 90, 1100, 1239999, "10/2011", "PG1", distributionTestData.get(SECOND_FACILITY_CODE));
+    verifyFacilityVisitInformationInDatabase(distributionTestData.get(SECOND_FACILITY_CODE), null, null, null, null, null, null, "t", "f");
+    verifyFullCoveragesDataInDatabase(null, null, null, null, distributionTestData.get(SECOND_FACILITY_CODE));
+    verifyEpiInventoryDataInDatabase(null, null, null, "P10", distributionTestData.get(SECOND_FACILITY_CODE));
+    verifyEpiInventoryDataInDatabase(null, null, null, "Product6", distributionTestData.get(SECOND_FACILITY_CODE));
+    verifyEpiInventoryDataInDatabase(null, null, null, "P11", distributionTestData.get(SECOND_FACILITY_CODE));
+
+    distributionPage.clickRecordData(1);
+    facilityListPage.selectFacility("F10");
+    facilityListPage.verifyFacilityIndicatorColor("Overall", "BLUE");
+    facilityListPage.verifyFacilityIndicatorColor("individual", "BLUE");
+    verifyAllFieldsDisabled();
+
+    facilityListPage.selectFacility("F11");
+    facilityListPage.verifyFacilityIndicatorColor("Overall", "BLUE");
+    facilityListPage.verifyFacilityIndicatorColor("individual", "BLUE");
+    verifyAllFieldsDisabled();
+  }
 
   public void setupDataForDistributionTest(String userSIC, String deliveryZoneCodeFirst, String deliveryZoneCodeSecond,
                                            String deliveryZoneNameFirst, String deliveryZoneNameSecond,
@@ -679,6 +851,7 @@ public class DistributionSyncTest extends TestCaseHelper {
     RefrigeratorPage refrigeratorPage = visitInformationPage.navigateToRefrigerators();
     refrigeratorPage.navigateToRefrigerators();
     refrigeratorPage.clickDelete();
+
     refrigeratorPage.clickOKButton();
 
     refrigeratorPage.clickAddNew();
@@ -714,7 +887,7 @@ public class DistributionSyncTest extends TestCaseHelper {
 
     verifyEpiUseDataInDatabase(10, 20, 30, 40, 50, "10/2011", "PG1", facilityCode);
 
-    verifyVisitInformationDataWhenFacilityWasVisitedInDatabase(facilityCode, "Some observations", "samuel", "Doe", "Verifier", "XYZ", null);
+    verifyFacilityVisitInformationInDatabase(facilityCode, "Some observations", "samuel", "Doe", "Verifier", "XYZ", null, "t", "t");
 
     verifyFullCoveragesDataInDatabase(23, 66, 77, 45, facilityCode);
 

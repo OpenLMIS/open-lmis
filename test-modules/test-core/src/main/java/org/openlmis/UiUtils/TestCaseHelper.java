@@ -506,18 +506,21 @@ public class TestCaseHelper {
     assertEquals(testWebDriver.getElementById("previousPageLink").getCssValue("color"), "rgba(204, 204, 204, 1)");
   }
 
-  public void verifyVisitInformationDataWhenFacilityWasVisitedInDatabase(String facilityCode, String observation, String confirmedByName,
-                                                                         String confirmedByTitle, String verifiedByName,
-                                                                         String verifiedByTitle, String vehicleId) throws SQLException {
+  public void verifyFacilityVisitInformationInDatabase(String facilityCode, String observation, String confirmedByName,
+                                                       String confirmedByTitle, String verifiedByName,
+                                                       String verifiedByTitle, String vehicleId,String synced,String visited) throws SQLException {
     Map<String, String> visitInformation = dbWrapper.getFacilityVisitDetails(facilityCode);
     assertEquals(observation, visitInformation.get("observations"));
     assertEquals(confirmedByName, visitInformation.get("confirmedByName"));
     assertEquals(confirmedByTitle, visitInformation.get("confirmedByTitle"));
     assertEquals(verifiedByName, visitInformation.get("verifiedByName"));
     assertEquals(verifiedByTitle, visitInformation.get("verifiedByTitle"));
-    assertEquals(new SimpleDateFormat("yyyy-MM").format(new Date()) + "-01 00:00:00", visitInformation.get("visitDate"));
     assertEquals(vehicleId, visitInformation.get("vehicleId"));
-    assertEquals("t", visitInformation.get("visited"));
+    assertEquals(synced, visitInformation.get("synced"));
+    assertEquals(visited, visitInformation.get("visited"));
+    if(visitInformation.get("visited")=="t"){
+      assertEquals(new SimpleDateFormat("yyyy-MM").format(new Date()) + "-01 00:00:00", visitInformation.get("visitDate"));
+    }
   }
 
   public void verifyEpiUseDataInDatabase(Integer stockAtFirstOfMonth, Integer receivedValue, Integer distributedValue, Integer loss,
