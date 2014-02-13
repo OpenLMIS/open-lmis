@@ -170,7 +170,7 @@
               <td class="col-complete-vaccinated opened-vials" ng-hide="hideCell('{{lineItem.vaccination}}')"
                   rowspan="{{productsMap[lineItem.vaccination].rowSpan}}">
                 <div id="{{product}}Container" ng-repeat="product in productsMap[lineItem.vaccination].products">
-                  <span ng-bind="product"></span>
+                  <span id="{{product}}" ng-bind="product"></span>
                   <span class="input-error-parent-cell">
                     <input id="openedVial{{$parent.$index}}{{$index}}" type="text"
                            ng-model="openedVialMap[product].openedVial.value"
