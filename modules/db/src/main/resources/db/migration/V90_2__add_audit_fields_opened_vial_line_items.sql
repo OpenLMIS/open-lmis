@@ -8,7 +8,9 @@
 -- You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
 --
 
-ALTER TABLE facility_visits
-ADD COLUMN synced BOOLEAN DEFAULT FALSE,
-ADD COLUMN modifiedDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-ADD COLUMN modifiedBy INTEGER;
+
+ALTER TABLE opened_vial_line_items
+ADD COLUMN createdBy INTEGER,
+ADD COLUMN createdDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+ADD COLUMN modifiedBy INTEGER,
+ADD COLUMN modifiedDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP;

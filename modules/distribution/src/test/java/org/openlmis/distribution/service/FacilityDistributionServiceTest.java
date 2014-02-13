@@ -206,7 +206,7 @@ public class FacilityDistributionServiceTest {
 
     verify(facilityVisitService).save(facilityVisit);
     verify(epiUseService).save(epiUse);
-    verify(vaccinationCoverageService).saveFullCoverage(vaccinationFullCoverage);
+    verify(vaccinationCoverageService).save(facilityDistribution);
     verify(epiInventoryService).save(epiInventory);
     verify(distributionRefrigeratorsService).save(1234L, distributionRefrigerators);
   }
@@ -226,7 +226,7 @@ public class FacilityDistributionServiceTest {
 
     verify(facilityVisitService).save(facilityVisit);
     verify(epiUseService).save(epiUse);
-    verify(vaccinationCoverageService).saveFullCoverage(vaccinationFullCoverage);
+    verify(vaccinationCoverageService).save(facilityDistribution);
 
     verify(epiInventoryService, never()).save(epiInventory);
     verify(distributionRefrigeratorsService, never()).save(1234L, distributionRefrigerators);

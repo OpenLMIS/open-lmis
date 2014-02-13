@@ -94,7 +94,7 @@ public class FacilityDistributionService {
       distributionRefrigeratorsService.save(facilityDistribution.getFacilityVisit().getFacilityId(), facilityDistribution.getRefrigerators());
     }
     epiUseService.save(facilityDistribution.getEpiUse());
-    vaccinationCoverageService.saveFullCoverage(facilityDistribution.getFullCoverage());
+    vaccinationCoverageService.save(facilityDistribution);
     return facilityDistribution;
   }
 
