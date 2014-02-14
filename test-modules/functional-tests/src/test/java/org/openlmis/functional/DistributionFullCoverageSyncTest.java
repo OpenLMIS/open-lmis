@@ -102,7 +102,11 @@ public class DistributionFullCoverageSyncTest extends TestCaseHelper {
     EPIUsePage epiUsePage = fullCoveragePage.navigateToEpiUse();
     epiUsePage.enterData(10, 20, 30, 40, 50, "10/2011", 1);
 
-    epiUsePage.navigateToEpiInventory();
+    ChildCoveragePage childCoveragePage = epiUsePage.navigateToChildCoverage();
+    childCoveragePage.applyNRToAll();
+    childCoveragePage.clickOK();
+
+    childCoveragePage.navigateToEpiInventory();
     fillEpiInventoryWithOnlyDeliveredQuantity("2", "4", "6");
 
     facilityListPage.verifyFacilityIndicatorColor("Overall", "GREEN");
@@ -149,7 +153,11 @@ public class DistributionFullCoverageSyncTest extends TestCaseHelper {
     EPIUsePage epiUsePage = fullCoveragePage.navigateToEpiUse();
     epiUsePage.enterData(10, 20, 30, 40, 50, "10/2011", 1);
 
-    RefrigeratorPage refrigeratorPage = epiUsePage.navigateToRefrigerators();
+    ChildCoveragePage childCoveragePage = epiUsePage.navigateToChildCoverage();
+    childCoveragePage.applyNRToAll();
+    childCoveragePage.clickOK();
+
+    RefrigeratorPage refrigeratorPage = childCoveragePage.navigateToRefrigerators();
     refrigeratorPage.clickDelete();
     refrigeratorPage.clickOKButton();
 
@@ -192,7 +200,11 @@ public class DistributionFullCoverageSyncTest extends TestCaseHelper {
     EPIUsePage epiUsePage = fullCoveragePage.navigateToEpiUse();
     epiUsePage.enterData(10, 20, 30, 40, 50, "10/2011", 1);
 
-    epiUsePage.navigateToEpiInventory();
+    ChildCoveragePage childCoveragePage = epiUsePage.navigateToChildCoverage();
+    childCoveragePage.applyNRToAll();
+    childCoveragePage.clickOK();
+
+    childCoveragePage.navigateToEpiInventory();
     fillEpiInventoryWithOnlyDeliveredQuantity("2", "4", "6");
 
     facilityListPage.verifyFacilityIndicatorColor("Overall", "GREEN");
@@ -230,7 +242,11 @@ public class DistributionFullCoverageSyncTest extends TestCaseHelper {
     verifyDataOnFullCoveragePage("67", "", "33", "");
     verifyEnableStatusOfFields(true, true, true, false);
 
-    epiUsePage.navigateToEpiInventory();
+    ChildCoveragePage childCoveragePage = epiUsePage.navigateToChildCoverage();
+    childCoveragePage.applyNRToAll();
+    childCoveragePage.clickOK();
+
+    childCoveragePage.navigateToEpiInventory();
     fillEpiInventoryWithOnlyDeliveredQuantity("2", "4", "6");
 
     facilityListPage.verifyFacilityIndicatorColor("Overall", "AMBER");

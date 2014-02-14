@@ -105,7 +105,11 @@ public class DistributionSyncTest extends TestCaseHelper {
     EPIUsePage epiUsePage = visitInformationPage.navigateToEpiUse();
     epiUsePage.enterData(70, 80, 90, 100, 9999999, "10/2011", 1);
 
-    FullCoveragePage fullCoveragePage = epiUsePage.navigateToFullCoverage();
+    ChildCoveragePage childCoveragePage = epiUsePage.navigateToChildCoverage();
+    childCoveragePage.applyNRToAll();
+    childCoveragePage.clickOK();
+
+    FullCoveragePage fullCoveragePage = childCoveragePage.navigateToFullCoverage();
     fullCoveragePage.clickApplyNRToAll();
 
     fullCoveragePage.navigateToEpiInventory();
@@ -236,6 +240,7 @@ public class DistributionSyncTest extends TestCaseHelper {
     refrigeratorPage.enterValueInLowAlarmEvents("2");
     refrigeratorPage.enterValueInHighAlarmEvents("5");
     refrigeratorPage.clickProblemSinceLastVisitNR();
+    testWebDriver.sleep(500);
     refrigeratorPage.verifyRefrigeratorColor("overall", "GREEN");
     refrigeratorPage.verifyRefrigeratorColor("individual", "GREEN");
     refrigeratorPage.clickDone();
@@ -243,7 +248,11 @@ public class DistributionSyncTest extends TestCaseHelper {
     EPIUsePage epiUsePage = refrigeratorPage.navigateToEpiUse();
     epiUsePage.enterData(70, 80, 90, 100, 9999999, "10/2011", 1);
 
-    FullCoveragePage fullCoveragePage = epiUsePage.navigateToFullCoverage();
+    ChildCoveragePage childCoveragePage = epiUsePage.navigateToChildCoverage();
+    childCoveragePage.applyNRToAll();
+    childCoveragePage.clickOK();
+
+    FullCoveragePage fullCoveragePage = childCoveragePage.navigateToFullCoverage();
     fullCoveragePage.clickApplyNRToAll();
 
     fullCoveragePage.navigateToEpiInventory();
@@ -520,8 +529,12 @@ public class DistributionSyncTest extends TestCaseHelper {
 
     FullCoveragePage fullCoveragePage = refrigeratorPage.navigateToFullCoverage();
     fullCoveragePage.clickApplyNRToAll();
-
     verifyProductsAreNotDisplayed();
+
+    ChildCoveragePage childCoveragePage = fullCoveragePage.navigateToChildCoverage();
+    childCoveragePage.applyNRToAll();
+    childCoveragePage.clickOK();
+
     facilityListPage.verifyFacilityIndicatorColor("Overall", "GREEN");
 
     homePage.navigateHomePage();
@@ -690,7 +703,11 @@ public class DistributionSyncTest extends TestCaseHelper {
     FullCoveragePage fullCoveragePage = epiUsePage.navigateToFullCoverage();
     fullCoveragePage.clickApplyNRToAll();
 
-    fullCoveragePage.navigateToEpiInventory();
+    ChildCoveragePage childCoveragePage = fullCoveragePage.navigateToChildCoverage();
+    childCoveragePage.applyNRToAll();
+    childCoveragePage.clickOK();
+
+    childCoveragePage.navigateToEpiInventory();
     facilityListPage.verifyFacilityIndicatorColor("Overall", "GREEN");
 
     homePage.navigateHomePage();
@@ -741,7 +758,11 @@ public class DistributionSyncTest extends TestCaseHelper {
     EPIUsePage epiUsePage = refrigeratorPage.navigateToEpiUse();
     epiUsePage.enterData(70, 80, 90, 100, 9999999, "10/2011", 1);
 
-    FullCoveragePage fullCoveragePage = epiUsePage.navigateToFullCoverage();
+    ChildCoveragePage childCoveragePage = epiUsePage.navigateToChildCoverage();
+    childCoveragePage.applyNRToAll();
+    childCoveragePage.clickOK();
+
+    FullCoveragePage fullCoveragePage = childCoveragePage.navigateToFullCoverage();
     fullCoveragePage.clickApplyNRToAll();
 
     facilityListPage.verifyFacilityIndicatorColor("Overall", "GREEN");
@@ -778,6 +799,10 @@ public class DistributionSyncTest extends TestCaseHelper {
     FullCoveragePage fullCoveragePage = epiUsePage.navigateToFullCoverage();
     fullCoveragePage.clickApplyNRToAll();
 
+    ChildCoveragePage childCoveragePage = fullCoveragePage.navigateToChildCoverage();
+    childCoveragePage.applyNRToAll();
+    childCoveragePage.clickOK();
+
     facilityListPage.verifyFacilityIndicatorColor("Overall", "GREEN");
 
     facilityListPage.selectFacility(distributionTestData.get(SECOND_FACILITY_CODE));
@@ -793,6 +818,10 @@ public class DistributionSyncTest extends TestCaseHelper {
 
     epiUsePage.navigateToFullCoverage();
     fullCoveragePage.clickApplyNRToAll();
+
+    childCoveragePage = epiUsePage.navigateToChildCoverage();
+    childCoveragePage.applyNRToAll();
+    childCoveragePage.clickOK();
 
     facilityListPage.verifyFacilityIndicatorColor("Overall", "GREEN");
 
@@ -872,7 +901,11 @@ public class DistributionSyncTest extends TestCaseHelper {
     EPIUsePage epiUsePage = refrigeratorPage.navigateToEpiUse();
     epiUsePage.enterData(10, 20, 30, 40, 50, "10/2011", 1);
 
-    EpiInventoryPage epiInventoryPage = epiUsePage.navigateToEpiInventory();
+    ChildCoveragePage childCoveragePage = epiUsePage.navigateToChildCoverage();
+    childCoveragePage.applyNRToAll();
+    childCoveragePage.clickOK();
+
+    EpiInventoryPage epiInventoryPage = childCoveragePage.navigateToEpiInventory();
     fillEpiInventoryWithOnlyDeliveredQuantity("2", "4", "6");
 
     FullCoveragePage fullCoveragePage = epiInventoryPage.navigateToFullCoverage();

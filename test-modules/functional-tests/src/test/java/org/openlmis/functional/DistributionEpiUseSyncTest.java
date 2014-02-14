@@ -88,7 +88,11 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
     epiUsePage.enterData(10, 20, 30, 40, 50, "10/2011", 1);
     epiUsePage.verifyIndicator("GREEN");
 
-    FullCoveragePage fullCoveragePage = epiUsePage.navigateToFullCoverage();
+    ChildCoveragePage childCoveragePage = epiUsePage.navigateToChildCoverage();
+    childCoveragePage.applyNRToAll();
+    childCoveragePage.clickOK();
+
+    FullCoveragePage fullCoveragePage = childCoveragePage.navigateToFullCoverage();
     fullCoveragePage.enterData(12, 34, 45, "56");
 
     fullCoveragePage.navigateToEpiInventory();
@@ -178,7 +182,11 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
     FullCoveragePage fullCoveragePage = epiUsePage.navigateToFullCoverage();
     fullCoveragePage.enterData(12, 34, 45, "56");
 
-    fullCoveragePage.navigateToEpiInventory();
+    ChildCoveragePage childCoveragePage = fullCoveragePage.navigateToChildCoverage();
+    childCoveragePage.applyNRToAll();
+    childCoveragePage.clickOK();
+
+    childCoveragePage.navigateToEpiInventory();
     fillEpiInventoryWithOnlyDeliveredQuantity("2", "4", "6");
 
     DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
@@ -202,7 +210,11 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
     epiUsePage.enterValueInStockAtFirstOfMonth("10", 1);
     epiUsePage.verifyIndicator("AMBER");
 
-    FullCoveragePage fullCoveragePage = epiUsePage.navigateToFullCoverage();
+    ChildCoveragePage childCoveragePage = epiUsePage.navigateToChildCoverage();
+    childCoveragePage.applyNRToAll();
+    childCoveragePage.clickOK();
+
+    FullCoveragePage fullCoveragePage = childCoveragePage.navigateToFullCoverage();
     fullCoveragePage.enterData(12, 34, 45, "56");
 
     fullCoveragePage.navigateToEpiInventory();
@@ -238,7 +250,11 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
     epiUsePage.verifyStockAtEndOfMonthStatus(false, 1);
     epiUsePage.verifyExpirationDateStatus(false, 1);
 
-    FullCoveragePage fullCoveragePage = epiUsePage.navigateToFullCoverage();
+    ChildCoveragePage childCoveragePage = epiUsePage.navigateToChildCoverage();
+    childCoveragePage.applyNRToAll();
+    childCoveragePage.clickOK();
+
+    FullCoveragePage fullCoveragePage = childCoveragePage.navigateToFullCoverage();
     fullCoveragePage.enterData(12, 34, 45, "56");
 
     fullCoveragePage.navigateToEpiInventory();
@@ -280,7 +296,11 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
     epiUsePage.enterData(10, 20, 30, 40, 50, "10/2011", 2);
     epiUsePage.verifyIndicator("GREEN");
 
-    FullCoveragePage fullCoveragePage = epiUsePage.navigateToFullCoverage();
+    ChildCoveragePage childCoveragePage = epiUsePage.navigateToChildCoverage();
+    childCoveragePage.applyNRToAll();
+    childCoveragePage.clickOK();
+
+    FullCoveragePage fullCoveragePage = childCoveragePage.navigateToFullCoverage();
     fullCoveragePage.enterData(12, 34, 45, "56");
 
     EpiInventoryPage epiInventoryPage = fullCoveragePage.navigateToEpiInventory();

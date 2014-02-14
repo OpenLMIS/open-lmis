@@ -112,7 +112,11 @@ public class DistributionRefrigeratorSyncTest extends TestCaseHelper {
     EPIUsePage epiUsePage = refrigeratorPage.navigateToEpiUse();
     epiUsePage.enterData(10, 20, 30, 40, 50, "10/2011", 1);
 
-    FullCoveragePage fullCoveragePage = epiUsePage.navigateToFullCoverage();
+    ChildCoveragePage childCoveragePage = epiUsePage.navigateToChildCoverage();
+    childCoveragePage.applyNRToAll();
+    childCoveragePage.clickOK();
+
+    FullCoveragePage fullCoveragePage = childCoveragePage.navigateToFullCoverage();
     fullCoveragePage.enterData(45, 67, 89, "90");
 
     fullCoveragePage.navigateToEpiInventory();
@@ -159,7 +163,11 @@ public class DistributionRefrigeratorSyncTest extends TestCaseHelper {
     EPIUsePage epiUsePage = refrigeratorPage.navigateToEpiUse();
     epiUsePage.enterData(10, 20, 30, 40, 50, "10/2011", 1);
 
-    FullCoveragePage fullCoveragePage = refrigeratorPage.navigateToFullCoverage();
+    ChildCoveragePage childCoveragePage = epiUsePage.navigateToChildCoverage();
+    childCoveragePage.applyNRToAll();
+    childCoveragePage.clickOK();
+
+    FullCoveragePage fullCoveragePage = childCoveragePage.navigateToFullCoverage();
     fullCoveragePage.enterData(67, 44, 22, "11");
 
     fullCoveragePage.navigateToEpiInventory();
@@ -205,7 +213,11 @@ public class DistributionRefrigeratorSyncTest extends TestCaseHelper {
     EPIUsePage epiUsePage = refrigeratorPage.navigateToEpiUse();
     epiUsePage.enterData(10, 20, 30, 40, 50, "10/2011", 1);
 
-    FullCoveragePage fullCoveragePage = epiUsePage.navigateToFullCoverage();
+    ChildCoveragePage childCoveragePage = epiUsePage.navigateToChildCoverage();
+    childCoveragePage.applyNRToAll();
+    childCoveragePage.clickOK();
+
+    FullCoveragePage fullCoveragePage = childCoveragePage.navigateToFullCoverage();
     fullCoveragePage.enterData(77, 56, 78, "34");
 
     fullCoveragePage.navigateToEpiInventory();
@@ -245,7 +257,11 @@ public class DistributionRefrigeratorSyncTest extends TestCaseHelper {
     EPIUsePage epiUsePage = refrigeratorPage.navigateToEpiUse();
     epiUsePage.enterData(10, 20, 30, 40, 50, "10/2011", 1);
 
-    FullCoveragePage fullCoveragePage = epiUsePage.navigateToFullCoverage();
+    ChildCoveragePage childCoveragePage = epiUsePage.navigateToChildCoverage();
+    childCoveragePage.applyNRToAll();
+    childCoveragePage.clickOK();
+
+    FullCoveragePage fullCoveragePage = childCoveragePage.navigateToFullCoverage();
     fullCoveragePage.enterData(78, 67, 34, "12");
 
     fullCoveragePage.navigateToEpiInventory();
@@ -283,7 +299,11 @@ public class DistributionRefrigeratorSyncTest extends TestCaseHelper {
     refrigeratorPage.navigateToEpiUse();
     epiUsePage.enterData(10, 20, 30, 40, 50, "10/2011", 1);
 
-    epiUsePage.navigateToVisitInformation();
+    epiUsePage.navigateToChildCoverage();
+    childCoveragePage.applyNRToAll();
+    childCoveragePage.clickOK();
+
+    childCoveragePage.navigateToVisitInformation();
     visitInformationPage.enterDataWhenFacilityVisited("some observations", "samuel", "Doe", "Verifier", "XYZ");
 
     visitInformationPage.navigateToFullCoverage();
@@ -335,7 +355,11 @@ public class DistributionRefrigeratorSyncTest extends TestCaseHelper {
     EPIUsePage epiUsePage = refrigeratorPage.navigateToEpiUse();
     epiUsePage.enterData(10, 20, 30, 40, 50, "10/2011", 1);
 
-    FullCoveragePage fullCoveragePage = epiUsePage.navigateToFullCoverage();
+    ChildCoveragePage childCoveragePage = epiUsePage.navigateToChildCoverage();
+    childCoveragePage.applyNRToAll();
+    childCoveragePage.clickOK();
+
+    FullCoveragePage fullCoveragePage = childCoveragePage.navigateToFullCoverage();
     fullCoveragePage.enterData(12, 34, 45, "56");
 
     fullCoveragePage.navigateToEpiInventory();
@@ -382,10 +406,14 @@ public class DistributionRefrigeratorSyncTest extends TestCaseHelper {
     refrigeratorPage.verifyRefrigeratorColor("individual", "GREEN");
     refrigeratorPage.clickDone();
 
-    EPIUsePage epiUse = refrigeratorPage.navigateToEpiUse();
-    epiUse.enterData(10, 20, 30, 40, 50, "10/2011", 1);
+    EPIUsePage epiUsePage = refrigeratorPage.navigateToEpiUse();
+    epiUsePage.enterData(10, 20, 30, 40, 50, "10/2011", 1);
 
-    FullCoveragePage fullCoveragePage = epiUse.navigateToFullCoverage();
+    ChildCoveragePage childCoveragePage = epiUsePage.navigateToChildCoverage();
+    childCoveragePage.applyNRToAll();
+    childCoveragePage.clickOK();
+
+    FullCoveragePage fullCoveragePage = childCoveragePage.navigateToFullCoverage();
     fullCoveragePage.enterData(67, 8, 33, "54");
 
     fullCoveragePage.navigateToEpiInventory();

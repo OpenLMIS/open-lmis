@@ -152,7 +152,7 @@ public class DistributionVisitInformationSyncTest extends TestCaseHelper {
     distributionPage.syncDistributionMessageDone();
 
     verifyFacilityVisitInformationInDatabase(visitInformationData.get(FIRST_FACILITY_CODE), "Some Observations",
-      "ConfirmName", "ConfirmTitle", "VerifyName", "VerifyTitle", "012U3-93","t","t");
+      "ConfirmName", "ConfirmTitle", "VerifyName", "VerifyTitle", "012U3-93", "t", "t");
     homePage.navigateToDistributionWhenOnline();
     distributionPage.clickRecordData(1);
     facilityListPage.selectFacility(visitInformationData.get(FIRST_FACILITY_CODE));
@@ -398,7 +398,11 @@ public class DistributionVisitInformationSyncTest extends TestCaseHelper {
     EPIUsePage epiUsePage = visitInformationPage.navigateToEpiUse();
     epiUsePage.enterData(10, 20, 30, 40, 50, "10/2011", 1);
 
-    FullCoveragePage fullCoveragePage = epiUsePage.navigateToFullCoverage();
+    ChildCoveragePage childCoveragePage = epiUsePage.navigateToChildCoverage();
+    childCoveragePage.applyNRToAll();
+    childCoveragePage.clickOK();
+
+    FullCoveragePage fullCoveragePage = childCoveragePage.navigateToFullCoverage();
     fullCoveragePage.enterData(23, 66, 77, "45");
 
     fullCoveragePage.navigateToVisitInformation();

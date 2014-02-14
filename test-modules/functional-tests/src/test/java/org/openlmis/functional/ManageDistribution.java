@@ -387,12 +387,12 @@ public class ManageDistribution extends TestCaseHelper {
     List<Map<String, String>> data = tableData.asMaps();
     Map<String, String> epiDetails = dbWrapper.getEpiUseDetails(productGroupCode, facilityCode);
     for (Map map : data) {
-      assertEquals(map.get("firstOfMonth").toString(), epiDetails.get("stockatfirstofmonth"));
-      assertEquals(map.get("received").toString(), epiDetails.get("received"));
-      assertEquals(map.get("distributed").toString(), epiDetails.get("distributed"));
-      assertEquals(map.get("loss").toString(), epiDetails.get("loss"));
-      assertEquals(map.get("endOfMonth").toString(), epiDetails.get("stockatendofmonth"));
-      assertEquals(map.get("expirationDate").toString(), epiDetails.get("expirationdate"));
+      assertEqualsAndNulls(epiDetails.get("stockatfirstofmonth"), map.get("firstOfMonth").toString());
+      assertEqualsAndNulls(epiDetails.get("received"), map.get("received").toString());
+      assertEqualsAndNulls(epiDetails.get("distributed"), map.get("distributed").toString());
+      assertEqualsAndNulls(epiDetails.get("loss"), map.get("loss").toString());
+      assertEqualsAndNulls(epiDetails.get("stockatendofmonth"), map.get("endOfMonth").toString());
+      assertEqualsAndNulls(epiDetails.get("expirationdate"), map.get("expirationDate").toString());
     }
   }
 
@@ -401,16 +401,12 @@ public class ManageDistribution extends TestCaseHelper {
     List<Map<String, String>> data = tableData.asMaps();
     ResultSet resultSet = dbWrapper.getRefrigeratorReadings(refrigeratorSerialNumber, facilityCode);
     for (Map map : data) {
-      assertEquals(map.get("temperature"), resultSet.getString("temperature"));
-      assertEquals(map.get("functioningCorrectly"), resultSet.getString("functioningCorrectly"));
-      assertEquals(map.get("lowAlarmEvents"), resultSet.getString("lowAlarmEvents"));
-      assertEquals(map.get("highAlarmEvents"), resultSet.getString("highAlarmEvents"));
-      assertEquals(map.get("problemSinceLastTime"), resultSet.getString("problemSinceLastTime"));
-      String notes = (String) map.get("notes");
-      if (notes.equals("null")) {
-        notes = null;
-      }
-      assertEquals(notes, resultSet.getString("notes"));
+      assertEqualsAndNulls(resultSet.getString("temperature"), map.get("temperature").toString());
+      assertEqualsAndNulls(resultSet.getString("functioningCorrectly"), map.get("functioningCorrectly").toString());
+      assertEqualsAndNulls(resultSet.getString("lowAlarmEvents"), map.get("lowAlarmEvents").toString());
+      assertEqualsAndNulls(resultSet.getString("highAlarmEvents"), map.get("highAlarmEvents").toString());
+      assertEqualsAndNulls(resultSet.getString("problemSinceLastTime"), map.get("problemSinceLastTime").toString());
+      assertEqualsAndNulls(resultSet.getString("notes"), map.get("notes").toString());
     }
   }
 
@@ -419,10 +415,10 @@ public class ManageDistribution extends TestCaseHelper {
     List<Map<String, String>> data = tableData.asMaps();
     Map<String, String> fullCoveragesDetails = dbWrapper.getFullCoveragesDetails(facilityCode);
     for (Map map : data) {
-      assertEquals(map.get("femaleHealthCenter").toString(), fullCoveragesDetails.get("femalehealthcenter"));
-      assertEquals(map.get("femaleOutreach").toString(), fullCoveragesDetails.get("femaleoutreach"));
-      assertEquals(map.get("maleHealthCenter").toString(), fullCoveragesDetails.get("malehealthcenter"));
-      assertEquals(map.get("maleOutreach").toString(), fullCoveragesDetails.get("maleoutreach"));
+      assertEqualsAndNulls(fullCoveragesDetails.get("femalehealthcenter"), map.get("femaleHealthCenter").toString());
+      assertEqualsAndNulls(fullCoveragesDetails.get("femaleoutreach"), map.get("femaleOutreach").toString());
+      assertEqualsAndNulls(fullCoveragesDetails.get("malehealthcenter"), map.get("maleHealthCenter").toString());
+      assertEqualsAndNulls(fullCoveragesDetails.get("maleoutreach"), map.get("maleOutreach").toString());
     }
   }
 
@@ -431,7 +427,11 @@ public class ManageDistribution extends TestCaseHelper {
   verifyEpiInventoryDataInDB(String facilityCode, String productCode, DataTable tableData) throws SQLException {
     List<Map<String, String>> data = tableData.asMaps();
     for (Map map : data) {
-      verifyEpiInventoryDataInDatabase(map.get("existingQuantity").toString(), map.get("deliveredQuantity").toString(), map.get("spoiledQuantity").toString(), productCode, facilityCode);
+      ResultSet epiInventoryDetails = dbWrapper.getEpiInventoryDetails(productCode, facilityCode);
+
+      assertEqualsAndNulls(epiInventoryDetails.getString("existingQuantity"), map.get("existingQuantity").toString());
+      assertEqualsAndNulls(epiInventoryDetails.getString("deliveredQuantity"), map.get("deliveredQuantity").toString());
+      assertEqualsAndNulls(epiInventoryDetails.getString("spoiledQuantity"), map.get("spoiledQuantity").toString());
     }
   }
 

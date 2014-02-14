@@ -250,6 +250,10 @@ public class DistributionEpiInventoryTest extends TestCaseHelper {
     EPIUsePage epiUsePage = fullCoveragePage.navigateToEpiUse();
     epiUsePage.enterData(70, 80, 90, 100, 9999999, "10/2011", 1);
 
+    ChildCoveragePage childCoveragePage = epiUsePage.navigateToChildCoverage();
+    childCoveragePage.applyNRToAll();
+    childCoveragePage.clickOK();
+
     DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
     distributionPage.syncDistribution(1);
     SeleneseTestBase.assertTrue(distributionPage.getSyncMessage().contains("F10-Village Dispensary"));
@@ -308,6 +312,10 @@ public class DistributionEpiInventoryTest extends TestCaseHelper {
     EPIUsePage epiUsePage = fullCoveragePage.navigateToEpiUse();
     epiUsePage.enterData(70, 80, 90, 100, 9999999, "10/2011", 1);
 
+    ChildCoveragePage childCoveragePage = epiUsePage.navigateToChildCoverage();
+    childCoveragePage.applyNRToAll();
+    childCoveragePage.clickOK();
+
     DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
     distributionPage.syncDistribution(1);
     SeleneseTestBase.assertTrue(distributionPage.getSyncMessage().contains("F10-Village Dispensary"));
@@ -347,6 +355,10 @@ public class DistributionEpiInventoryTest extends TestCaseHelper {
 
     EPIUsePage epiUsePage = fullCoveragePage.navigateToEpiUse();
     epiUsePage.enterData(70, 80, 90, 100, 9999999, "10/2011", 1);
+
+    ChildCoveragePage childCoveragePage = epiUsePage.navigateToChildCoverage();
+    childCoveragePage.applyNRToAll();
+    childCoveragePage.clickOK();
 
     DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
     distributionPage.syncDistribution(1);

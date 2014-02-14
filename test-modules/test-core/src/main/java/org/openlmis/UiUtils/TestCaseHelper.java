@@ -509,7 +509,7 @@ public class TestCaseHelper {
 
   public void verifyFacilityVisitInformationInDatabase(String facilityCode, String observation, String confirmedByName,
                                                        String confirmedByTitle, String verifiedByName,
-                                                       String verifiedByTitle, String vehicleId,String synced,String visited) throws SQLException {
+                                                       String verifiedByTitle, String vehicleId, String synced, String visited) throws SQLException {
     Map<String, String> visitInformation = dbWrapper.getFacilityVisitDetails(facilityCode);
     assertEquals(observation, visitInformation.get("observations"));
     assertEquals(confirmedByName, visitInformation.get("confirmedByName"));
@@ -519,7 +519,7 @@ public class TestCaseHelper {
     assertEquals(vehicleId, visitInformation.get("vehicleId"));
     assertEquals(synced, visitInformation.get("synced"));
     assertEquals(visited, visitInformation.get("visited"));
-    if(visitInformation.get("visited")=="t"){
+    if (visitInformation.get("visited") == "t") {
       assertEquals(new SimpleDateFormat("yyyy-MM").format(new Date()) + "-01 00:00:00", visitInformation.get("visitDate"));
     }
   }
@@ -540,9 +540,9 @@ public class TestCaseHelper {
                                                String productCode, String facilityCode) throws SQLException {
     ResultSet epiInventoryDetails = dbWrapper.getEpiInventoryDetails(productCode, facilityCode);
 
-    assertEqualsAndNulls(epiInventoryDetails.getString("existingQuantity"), existingQuantity);
-    assertEqualsAndNulls(epiInventoryDetails.getString("deliveredQuantity"),deliveredQuantity);
-    assertEqualsAndNulls(epiInventoryDetails.getString("spoiledQuantity"),spoiledQuantity);
+    assertEquals(epiInventoryDetails.getString("existingQuantity"), existingQuantity);
+    assertEquals(epiInventoryDetails.getString("deliveredQuantity"), deliveredQuantity);
+    assertEquals(epiInventoryDetails.getString("spoiledQuantity"), spoiledQuantity);
   }
 
   public void verifyRefrigeratorReadingDataInDatabase(String facilityCode, String refrigeratorSerialNumber, Float temperature,
@@ -622,10 +622,9 @@ public class TestCaseHelper {
   }
 
   public void assertEqualsAndNulls(Object actual, String expected) {
-    if(expected.equals(NULL_VALUE)) {
+    if (expected.equals(NULL_VALUE)) {
       assertEquals(actual, null);
-    }
-    else {
+    } else {
       assertEquals(actual, expected);
     }
   }
