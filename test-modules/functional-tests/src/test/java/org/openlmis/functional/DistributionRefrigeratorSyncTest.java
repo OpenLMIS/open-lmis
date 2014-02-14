@@ -194,15 +194,15 @@ public class DistributionRefrigeratorSyncTest extends TestCaseHelper {
     refrigeratorPage.clickShowForRefrigerator1();
     refrigeratorPage.verifyRefrigeratorColor("individual", "RED");
     refrigeratorPage.applyNRToRefrigeratorTemperature();
-    refrigeratorPage.clickFunctioningCorrectlyYesRadio();
-    refrigeratorPage.clickFunctioningCorrectlyNR();
+    refrigeratorPage.clickProblemSinceLastVisitNoRadio();
+    refrigeratorPage.clickProblemSinceLastVisitNR();
     refrigeratorPage.enterValueInLowAlarmEvents("1");
     refrigeratorPage.applyNRToLowAlarmEvent();
     refrigeratorPage.applyNRToHighAlarmEvent();
     refrigeratorPage.verifyRefrigeratorColor("overall", "AMBER");
-    refrigeratorPage.clickProblemSinceLastVisitYesRadio();
+    refrigeratorPage.clickFunctioningCorrectlyNoRadio();
     refrigeratorPage.selectGasLeakProblem();
-    refrigeratorPage.clickProblemSinceLastVisitNR();
+    refrigeratorPage.clickFunctioningCorrectlyNR();
 
     refrigeratorPage.verifyFieldsDisabledWhenAllNRSelected();
 
@@ -244,8 +244,8 @@ public class DistributionRefrigeratorSyncTest extends TestCaseHelper {
     refrigeratorPage.clickShowForRefrigerator1();
     refrigeratorPage.verifyRefrigeratorColor("individual", "RED");
     refrigeratorPage.enterValueInRefrigeratorTemperature("3");
-    refrigeratorPage.clickFunctioningCorrectlyYesRadio();
     refrigeratorPage.clickFunctioningCorrectlyNoRadio();
+    refrigeratorPage.clickFunctioningCorrectlyYesRadio();
     refrigeratorPage.enterValueInLowAlarmEvents("1");
     refrigeratorPage.enterValueInHighAlarmEvents("0");
     refrigeratorPage.clickProblemSinceLastVisitNoRadio();
@@ -282,7 +282,7 @@ public class DistributionRefrigeratorSyncTest extends TestCaseHelper {
     refrigeratorPage.clickShowForRefrigerator1();
     refrigeratorPage.verifyRefrigeratorColor("individual", "RED");
     refrigeratorPage.enterValueInRefrigeratorTemperature("3");
-    refrigeratorPage.clickFunctioningCorrectlyYesRadio();
+    refrigeratorPage.clickFunctioningCorrectlyNoRadio();
     refrigeratorPage.enterValueInLowAlarmEvents("2");
     refrigeratorPage.enterValueInHighAlarmEvents("2");
     refrigeratorPage.clickProblemSinceLastVisitYesRadio();
