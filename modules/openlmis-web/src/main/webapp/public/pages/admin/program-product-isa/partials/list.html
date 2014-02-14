@@ -75,14 +75,12 @@
         <div class="row-fluid">
           <div class="span6">
             <label for="who-ratio"><span openlmis-message="label.who.ratio"></span><span
-                class="label-required"> *</span></label>
+              class="label-required"> *</span></label>
           </div>
           <div class="span4">
-            <input id="who-ratio" name="whoRatio" type="text" ng-required="true"
+            <input id="who-ratio" name="whoRatio" type="text" ng-required="true" ng-trim="false"
                    ng-model="currentProgramProduct.programProductIsa.whoRatio"
-                   numeric-validator="positiveNumericValue,3,3"
-                   maxlength="7"
-                   ng-change="error=''"
+                   numeric-validator="positiveNumericValue,3,3" maxlength="7" ng-change="error=''"
                    ng-class="highlightRequired(currentProgramProduct.programProductIsa.whoRatio)"/>
             <span>%</span>
 
@@ -93,14 +91,12 @@
         <div class="row-fluid">
           <div class="span6">
             <label for="doses-per-year"><span openlmis-message="label.doses.per.patient.per.year"></span><span
-                class="label-required"> *</span></label>
+              class="label-required"> *</span></label>
           </div>
           <div class="span4">
             <input id="doses-per-year" name="dosesPerYear" type="text" ng-required="true"
                    ng-model="currentProgramProduct.programProductIsa.dosesPerYear"
-                   numeric-validator="positiveInteger" ng-trim=false
-                   maxlength="3"
-                   ng-change="error=''"
+                   numeric-validator="positiveInteger" ng-trim="false" maxlength="3" ng-change="error=''"
                    ng-class="highlightRequired(currentProgramProduct.programProductIsa.dosesPerYear)"/>
 
             <div id="dosesPerYear" class="form-error" openlmis-message="error.enter.number.only"></div>
@@ -110,14 +106,12 @@
         <div class="row-fluid">
           <div class="span6">
             <label for="wastage-factor"><span openlmis-message="label.average.wastage.rate"></span><span
-                class="label-required"> *</span></label>
+              class="label-required"> *</span></label>
           </div>
           <div class="span4">
             <input id="wastage-factor" name="wastageFactor" type="text" ng-required="true"
-                   ng-model="currentProgramProduct.programProductIsa.wastageFactor"
-                   ng-change="error=''"
-                   maxlength="7"
-                   numeric-validator="positiveNumericValue,3,3"
+                   ng-model="currentProgramProduct.programProductIsa.wastageFactor" ng-trim="false"
+                   ng-change="error=''" maxlength="7" numeric-validator="positiveNumericValue,3,3"
                    ng-class="highlightRequired(currentProgramProduct.programProductIsa.wastageFactor)"/>
 
             <div id="wastageFactor" class="form-error" openlmis-message="error.enter.numeric.value"></div>
@@ -127,14 +121,12 @@
         <div class="row-fluid">
           <div class="span6">
             <label for="buffer-percentage"><span openlmis-message="label.buffer.stock.level"></span><span
-                class="label-required"> *</span></label>
+              class="label-required"> *</span></label>
           </div>
           <div class="span4">
             <input id="buffer-percentage" name="bufferPercentage" type="text" ng-required="true"
-                   ng-model="currentProgramProduct.programProductIsa.bufferPercentage"
-                   numeric-validator="positiveNumericValue,3,3"
-                   maxlength="7"
-                   ng-change="error=''"
+                   ng-model="currentProgramProduct.programProductIsa.bufferPercentage" ng-trim="false"
+                   numeric-validator="positiveNumericValue,3,3" maxlength="7" ng-change="error=''"
                    ng-class="highlightRequired(currentProgramProduct.programProductIsa.bufferPercentage)"/>
             <span>%</span>
 
@@ -145,14 +137,12 @@
         <div class="row-fluid">
           <div class="span6">
             <label for="adjustment-value"><span openlmis-message="label.adjustment.quantity"></span><span
-                class="label-required"> *</span></label>
+              class="label-required"> *</span></label>
           </div>
           <div class="span4">
             <input id="adjustment-value" name="adjustmentValue" type="text" ng-required="true"
                    ng-model="currentProgramProduct.programProductIsa.adjustmentValue"
-                   ng-change="error=''"
-                   maxlength="7"
-                   numeric-validator="integer"
+                   ng-change="error=''" maxlength="7" numeric-validator="integer" ng-trim="false"
                    ng-class="highlightRequired(currentProgramProduct.programProductIsa.adjustmentValue)"/>
             <span>(+/-)</span>
 
@@ -166,10 +156,8 @@
           </div>
           <div class="span4">
             <input id="minimum-value" name="minimumValue" type="text"
-                   ng-model="currentProgramProduct.programProductIsa.minimumValue"
-                   ng-change="error=''"
-                   numeric-validator="positiveInteger" ng-trim=false
-                   maxlength="6"/>
+                   ng-model="currentProgramProduct.programProductIsa.minimumValue" ng-change="error=''"
+                   numeric-validator="positiveInteger" ng-trim="false" maxlength="6"/>
 
             <div id="minimumValue" class="form-error" openlmis-message="error.enter.number.only"></div>
           </div>
@@ -181,10 +169,8 @@
           </div>
           <div class="span4">
             <input id="maximum-value" name="maximumValue" type="text"
-                   ng-change="error=''"
-                   ng-model="currentProgramProduct.programProductIsa.maximumValue"
-                   numeric-validator="positiveInteger" ng-trim=false
-                   maxlength="6"/>
+                   ng-change="error=''" ng-model="currentProgramProduct.programProductIsa.maximumValue"
+                   numeric-validator="positiveInteger" ng-trim="false" maxlength="6"/>
 
             <div id="maximumValue" class="form-error" openlmis-message="error.enter.number.only"></div>
           </div>

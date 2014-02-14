@@ -82,10 +82,8 @@
             <label openlmis-message="label.number.low.alarms"></label>
             <span class="input-error-parent-cell">
               <input type="text" name="lowAlarmEvent{{$index}}" ng-model="refrigeratorReading.lowAlarmEvents.value"
-                     numeric-validator="positiveInteger" ng-trim=false
-                     maxlength="3"
-                     error-holder="lowAlarmError{{$index}}"
-                     class="right-justified"/>
+                     numeric-validator="positiveInteger" ng-trim="false" maxlength="3"
+                     error-holder="lowAlarmError{{$index}}" class="right-justified"/>
               <span id="lowAlarmError{{$index}}" class="rnr-form-error" openlmis-message="error.enter.number.only"
                     style="display: none"></span>
             </span>
@@ -102,10 +100,8 @@
             <label class="form-questions" openlmis-message="label.number.high.alarms"></label>
             <span class="input-error-parent-cell">
               <input name="highAlarmEvent{{$index}}" type="text" ng-model="refrigeratorReading.highAlarmEvents.value"
-                     numeric-validator="positiveInteger"
-                     maxlength="3"
-                     error-holder="highAlarmError{{$index}}"
-                     class="right-justified"/>
+                     numeric-validator="positiveInteger" maxlength="3" error-holder="highAlarmError{{$index}}"
+                     class="right-justified" ng-trim="false"/>
               <span id="highAlarmError{{$index}}" class="rnr-form-error" openlmis-message="error.enter.number.only"
                     style="display: none"></span>
             </span>
