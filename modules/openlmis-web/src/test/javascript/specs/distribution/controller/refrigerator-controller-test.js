@@ -36,7 +36,8 @@ describe('RefrigeratorController', function () {
             {refrigerator: {serialNumber: "XYZ"}}
           ]
         }, facilityVisit: {
-          id: 1
+          id: 1,
+          visited: true
         }
         }
       }
@@ -84,18 +85,18 @@ describe('RefrigeratorController', function () {
 
   it('should return true if facility visit is false', function () {
     scope.distribution = distribution;
-    scope.distribution.facilityVisit = {
-      id: 1,
-      visitied: false
-    };
     scope.selectedFacilityId = 1;
+    scope.distribution.facilityDistributions[1].facilityVisit = {
+      id: 1,
+      visited: false
+    };
     expect(scope.isFormDisabled()).toEqual(true);
   });
 
-  it('should return true if facility distribution is syned', function () {
-    distribution.status = "is-synced";
-    scope.distribution = distribution;
+  it('should return true if facility distribution is synced', function () {
     scope.selectedFacilityId = 1;
+    scope.distribution = distribution;
+    scope.distribution.facilityDistributions[1].status = DistributionStatus.SYNCED;
     expect(scope.isFormDisabled()).toEqual(true);
   });
 
