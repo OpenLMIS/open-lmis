@@ -13,7 +13,7 @@ apply plugin: 'java'
 
 dependencies {
     compile 'org.seleniumhq.selenium:selenium-java:2.35.0',
-            'org.seleniumhq.selenium:selenium-firefox-driver:2.33.0',
+            'org.seleniumhq.selenium:selenium-firefox-driver:2.37.1',
             'org.seleniumhq.selenium:selenium-ie-driver:2.33.0',
             'org.seleniumhq.selenium:selenium-chrome-driver:2.33.0',
             'net.sf.json-lib:json-lib:0.9',
