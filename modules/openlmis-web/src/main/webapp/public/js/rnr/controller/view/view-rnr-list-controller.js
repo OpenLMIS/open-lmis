@@ -8,16 +8,53 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-function ViewRnrListController($scope, facilities, RequisitionsForViewing, ProgramsToViewRequisitions, $location, messageService) {
+function ViewRnrListController($scope, facilities, RequisitionsForViewing, ProgramsToViewRequisitions, $location, messageService, navigateBackService) {
   $scope.facilities = facilities;
   $scope.facilityLabel = (!$scope.facilities.length) ? messageService.get("label.none.assigned") : messageService.get("label.select.facility");
   $scope.programLabel = messageService.get("label.none.assigned");
   $scope.selectedItems = [];
 
+
+  $scope.loadRequisitions = function () {
+    if ($scope.viewRequisitionForm && $scope.viewRequisitionForm.$invalid) {
+      $scope.errorShown = true;
+      return;
+    }
+    var requisitionQueryParameters = {
+      facilityId: $scope.selectedFacilityId,
+      dateRangeStart: $scope.startDate,
+      dateRangeEnd: $scope.endDate
+    };
+
+    if ($scope.selectedProgramId) requisitionQueryParameters.programId = $scope.selectedProgramId;
+
+    RequisitionsForViewing.get(requisitionQueryParameters, function (data) {
+
+      $scope.requisitions = $scope.filteredRequisitions = data.rnr_list;
+
+      setRequisitionsFoundMessage();
+    }, function () {
+    });
+  };
+
+  $scope.selectedFacilityId = navigateBackService.facilityId;
+  $scope.startDate = navigateBackService.dateRangeStart;
+  $scope.endDate = navigateBackService.dateRangeEnd;
+  $scope.programs = navigateBackService.programs;
+  if (navigateBackService.programId) {
+    $scope.selectedProgramId = navigateBackService.programId;
+    $scope.program = _.findWhere($scope.programs, {id: utils.parseIntWithBaseTen($scope.selectedProgramId)});
+    setOptions();
+  }
+  if ($scope.selectedFacilityId && $scope.startDate && $scope.endDate) {
+    $scope.loadRequisitions();
+  }
+
   var selectionFunc = function () {
     $scope.$parent.rnrStatus = $scope.selectedItems[0].status;
     $scope.openRequisition();
   };
+
 
   $scope.rnrListGrid = { data: 'filteredRequisitions',
     displayFooter: false,
@@ -46,6 +83,15 @@ function ViewRnrListController($scope, facilities, RequisitionsForViewing, Progr
   };
 
   $scope.openRequisition = function () {
+    var data = {
+      facilityId: $scope.selectedFacilityId,
+      dateRangeStart: $scope.startDate,
+      dateRangeEnd: $scope.endDate,
+      programs: $scope.programs
+    };
+    if ($scope.selectedProgramId) data.programId = $scope.selectedProgramId;
+    navigateBackService.setData(data);
+
     var url = "requisition/";
     url += $scope.selectedItems[0].id + "/" + $scope.selectedItems[0].programId + "?supplyType=fullSupply&page=1";
     $location.url(url);
@@ -92,27 +138,6 @@ function ViewRnrListController($scope, facilities, RequisitionsForViewing, Progr
     return string.toLowerCase().indexOf(query.toLowerCase()) != -1;
   }
 
-  $scope.loadRequisitions = function () {
-    if ($scope.viewRequisitionForm.$invalid) {
-      $scope.errorShown = true;
-      return;
-    }
-    var requisitionQueryParameters = {
-      facilityId: $scope.selectedFacilityId,
-      dateRangeStart: $scope.startDate,
-      dateRangeEnd: $scope.endDate
-    };
-
-    if ($scope.selectedProgramId) requisitionQueryParameters.programId = $scope.selectedProgramId;
-
-    RequisitionsForViewing.get(requisitionQueryParameters, function (data) {
-
-      $scope.requisitions = $scope.filteredRequisitions = data.rnr_list;
-
-      setRequisitionsFoundMessage();
-    }, function () {
-    });
-  };
   $scope.setEndDateOffset = function () {
     if ($scope.endDate < $scope.startDate) {
       $scope.endDate = undefined;
