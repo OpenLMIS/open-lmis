@@ -10,7 +10,7 @@
 
 function EpiInventory(epiInventory) {
   $.extend(true, this, epiInventory);
-  $(this.lineItems).each(function (index, lineItem) {
+  $(this.lineItems).each(function (lineItem) {
     lineItem.existingQuantity = this.existingQuantity || {};
     lineItem.spoiledQuantity = this.spoiledQuantity || {};
   });

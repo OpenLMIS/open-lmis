@@ -8,7 +8,7 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 describe('Facility Distribution data', function () {
-  var facilityDistribution, epiUse, refrigerators, facilityVisit, epiInventory, coverage;
+  var facilityDistribution, epiUse, refrigerators, facilityVisit, epiInventory, fullCoverage, childCoverage;
 
   beforeEach(function () {
     facilityDistribution = new FacilityDistribution({facilityVisit: {id: 1}});
@@ -16,7 +16,8 @@ describe('Facility Distribution data', function () {
     refrigerators = facilityDistribution.refrigerators;
     facilityVisit = facilityDistribution.facilityVisit;
     epiInventory = facilityDistribution.epiInventory;
-    coverage = facilityDistribution.fullCoverage;
+    fullCoverage = facilityDistribution.fullCoverage;
+    childCoverage = facilityDistribution.childCoverage;
   });
 
   it("should compute status as complete when all the forms for the facility are COMPLETE", function () {
@@ -24,7 +25,8 @@ describe('Facility Distribution data', function () {
     spyOn(refrigerators, "computeStatus").andReturn(DistributionStatus.COMPLETE);
     spyOn(facilityVisit, "computeStatus").andReturn(DistributionStatus.COMPLETE);
     spyOn(epiInventory, "computeStatus").andReturn(DistributionStatus.COMPLETE);
-    spyOn(coverage, "computeStatus").andReturn(DistributionStatus.COMPLETE);
+    spyOn(fullCoverage, "computeStatus").andReturn(DistributionStatus.COMPLETE);
+    spyOn(childCoverage, "computeStatus").andReturn(DistributionStatus.COMPLETE);
 
     expect(facilityDistribution.computeStatus()).toEqual(DistributionStatus.COMPLETE);
   });
@@ -34,6 +36,8 @@ describe('Facility Distribution data', function () {
     spyOn(refrigerators, "computeStatus").andReturn(DistributionStatus.EMPTY);
     spyOn(facilityVisit, "computeStatus").andReturn(DistributionStatus.EMPTY);
     spyOn(epiInventory, "computeStatus").andReturn(DistributionStatus.EMPTY);
+    spyOn(fullCoverage, "computeStatus").andReturn(DistributionStatus.EMPTY);
+    spyOn(childCoverage, "computeStatus").andReturn(DistributionStatus.EMPTY);
 
     expect(facilityDistribution.computeStatus()).toEqual(DistributionStatus.EMPTY);
   });
@@ -54,7 +58,7 @@ describe('Facility Distribution data', function () {
     expect(facilityDistribution.computeStatus()).toEqual(DistributionStatus.INCOMPLETE);
   });
 
-  it("should disable all forms if already synced", function () {
+  it("should disable all forms if synced", function () {
     facilityDistribution.status = DistributionStatus.SYNCED;
     expect(facilityDistribution.isDisabled()).toEqual(true);
   });

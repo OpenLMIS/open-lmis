@@ -11,6 +11,10 @@
 function ChildCoverage(facilityVisitId, childCoverageJSON) {
   $.extend(true, this, childCoverageJSON);
   this.facilityVisitId = facilityVisitId;
+  $(this.childCoverageLineItems).each(function (lineItem) {
+    lineItem.healthCenter23Months = lineItem.healthCenter23Months || {};
+    lineItem.outreach23Months = lineItem.outreach23Months || {};
+  });
 }
 
 ChildCoverage.prototype.computeStatus = function () {
