@@ -11,8 +11,8 @@
 describe('Child Coverage Controller', function () {
 
   var scope, distributionService, routeParams, childCoverage,
-    childCoverageLineItem1, childCoverageLineItem2, childCoverageLineItem3, childCoverageLineItem4, childCoverageLineItem5,
-    openedVialLineItem1, openedVialLineItem2, openedVialLineItem3, openedVialLineItem4, openedVialLineItem5;
+      childCoverageLineItem1, childCoverageLineItem2, childCoverageLineItem3, childCoverageLineItem4, childCoverageLineItem5,
+      openedVialLineItem1, openedVialLineItem2, openedVialLineItem3, openedVialLineItem4, openedVialLineItem5;
 
   beforeEach(module('distribution'));
   beforeEach(inject(function ($controller, $rootScope, _distributionService_) {
@@ -35,7 +35,7 @@ describe('Child Coverage Controller', function () {
     openedVialLineItem4 = {"id": 16, "facilityVisitId": 3, "productVialName": "Penta1", "packSize": 10, openedVial: {value: null, notRecorded: true}};
     openedVialLineItem5 = {"id": 17, "facilityVisitId": 3, "productVialName": "Penta10", "packSize": 10, openedVial: {value: null, notRecorded: true}};
 
-    childCoverage = new ChildCoverage(234, {
+    childCoverage = {facilityVisitId: 234,
       childCoverageLineItems: [
         childCoverageLineItem1,
         childCoverageLineItem2,
@@ -49,8 +49,7 @@ describe('Child Coverage Controller', function () {
         openedVialLineItem3,
         openedVialLineItem4,
         openedVialLineItem5
-      ]
-    });
+      ]};
 
     distributionService.distribution = {facilityDistributions: {1: {childCoverage: childCoverage}, 2: {}}};
     routeParams = {facility: 1};
@@ -199,6 +198,7 @@ describe('Child Coverage Controller', function () {
   });
 
   it('should applyNR to all readings', function () {
+    scope.childCoverage = new ChildCoverage(234, scope.childCoverage);
     spyOn(distributionService, 'applyNR');
     spyOn(scope.childCoverage, 'setNotRecorded');
 
