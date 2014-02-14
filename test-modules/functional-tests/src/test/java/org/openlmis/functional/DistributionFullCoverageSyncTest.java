@@ -78,7 +78,7 @@ public class DistributionFullCoverageSyncTest extends TestCaseHelper {
     VisitInformationPage visitInformationPage = facilityListPage.selectFacility(fullCoverageData.get(FIRST_FACILITY_CODE));
     visitInformationPage.enterDataWhenFacilityVisited("some observations", "samuel", "Doe", "Verifier", "XYZ");
 
-    facilityListPage.verifyFacilityIndicatorColor("Overall", "AMBER");
+    facilityListPage.verifyOverallFacilityIndicatorColor("AMBER");
 
     FullCoveragePage fullCoveragePage = visitInformationPage.navigateToFullCoverage();
     fullCoveragePage.verifyIndicator("RED");
@@ -109,7 +109,7 @@ public class DistributionFullCoverageSyncTest extends TestCaseHelper {
     childCoveragePage.navigateToEpiInventory();
     fillEpiInventoryWithOnlyDeliveredQuantity("2", "4", "6");
 
-    facilityListPage.verifyFacilityIndicatorColor("Overall", "GREEN");
+    facilityListPage.verifyOverallFacilityIndicatorColor("GREEN");
 
     homePage.navigateToDistributionWhenOnline();
     distributionPage.syncDistribution(1);
@@ -128,7 +128,7 @@ public class DistributionFullCoverageSyncTest extends TestCaseHelper {
     FacilityListPage facilityListPage = distributionPage.clickRecordData(1);
     VisitInformationPage visitInformationPage = facilityListPage.selectFacility(fullCoverageData.get(FIRST_FACILITY_CODE));
 
-    facilityListPage.verifyFacilityIndicatorColor("Overall", "RED");
+    facilityListPage.verifyOverallFacilityIndicatorColor("RED");
     visitInformationPage.enterDataWhenFacilityVisited("some observations", "samuel", "Doe", "Verifier", "XYZ");
 
     FullCoveragePage fullCoveragePage = visitInformationPage.navigateToFullCoverage();
@@ -148,7 +148,7 @@ public class DistributionFullCoverageSyncTest extends TestCaseHelper {
     verifyEnableStatusOfFields(true, false, true, false);
     verifyDataOnFullCoveragePage("9999999", "", "10", "");
 
-    facilityListPage.verifyFacilityIndicatorColor("Overall", "AMBER");
+    facilityListPage.verifyOverallFacilityIndicatorColor("AMBER");
 
     EPIUsePage epiUsePage = fullCoveragePage.navigateToEpiUse();
     epiUsePage.enterData(10, 20, 30, 40, 50, "10/2011", 1);
@@ -164,7 +164,7 @@ public class DistributionFullCoverageSyncTest extends TestCaseHelper {
     refrigeratorPage.navigateToEpiInventory();
     fillEpiInventoryWithOnlyDeliveredQuantity("2", "4", "6");
 
-    facilityListPage.verifyFacilityIndicatorColor("Overall", "GREEN");
+    facilityListPage.verifyOverallFacilityIndicatorColor("GREEN");
 
     homePage.navigateToDistributionWhenOnline();
     distributionPage.syncDistribution(1);
@@ -174,7 +174,7 @@ public class DistributionFullCoverageSyncTest extends TestCaseHelper {
     distributionPage.clickRecordData(1);
     facilityListPage.selectFacility(fullCoverageData.get(FIRST_FACILITY_CODE));
 
-    facilityListPage.verifyFacilityIndicatorColor("Overall", "BLUE");
+    facilityListPage.verifyOverallFacilityIndicatorColor("BLUE");
 
     refrigeratorPage.navigateToFullCoverage();
     verifyAllFieldsDisabled();
@@ -189,7 +189,7 @@ public class DistributionFullCoverageSyncTest extends TestCaseHelper {
     FacilityListPage facilityListPage = distributionPage.clickRecordData(1);
     VisitInformationPage visitInformationPage = facilityListPage.selectFacility(fullCoverageData.get(FIRST_FACILITY_CODE));
 
-    facilityListPage.verifyFacilityIndicatorColor("Overall", "AMBER");
+    facilityListPage.verifyOverallFacilityIndicatorColor("AMBER");
     visitInformationPage.enterDataWhenFacilityVisited("some observations", "samuel", "Doe", "Verifier", "XYZ");
 
     FullCoveragePage fullCoveragePage = visitInformationPage.navigateToFullCoverage();
@@ -207,7 +207,7 @@ public class DistributionFullCoverageSyncTest extends TestCaseHelper {
     childCoveragePage.navigateToEpiInventory();
     fillEpiInventoryWithOnlyDeliveredQuantity("2", "4", "6");
 
-    facilityListPage.verifyFacilityIndicatorColor("Overall", "GREEN");
+    facilityListPage.verifyOverallFacilityIndicatorColor("GREEN");
 
     homePage.navigateToDistributionWhenOnline();
     distributionPage.syncDistribution(1);
@@ -224,7 +224,7 @@ public class DistributionFullCoverageSyncTest extends TestCaseHelper {
     FacilityListPage facilityListPage = distributionPage.clickRecordData(1);
     VisitInformationPage visitInformationPage = facilityListPage.selectFacility(fullCoverageData.get(FIRST_FACILITY_CODE));
 
-    facilityListPage.verifyFacilityIndicatorColor("Overall", "AMBER");
+    facilityListPage.verifyOverallFacilityIndicatorColor("AMBER");
     visitInformationPage.enterDataWhenFacilityVisited("some observations", "samuel", "Doe", "Verifier", "XYZ");
 
     FullCoveragePage fullCoveragePage = visitInformationPage.navigateToFullCoverage();
@@ -249,7 +249,7 @@ public class DistributionFullCoverageSyncTest extends TestCaseHelper {
     childCoveragePage.navigateToEpiInventory();
     fillEpiInventoryWithOnlyDeliveredQuantity("2", "4", "6");
 
-    facilityListPage.verifyFacilityIndicatorColor("Overall", "AMBER");
+    facilityListPage.verifyOverallFacilityIndicatorColor("AMBER");
 
     homePage.navigateToDistributionWhenOnline();
     distributionPage.clickSyncDistribution(1);

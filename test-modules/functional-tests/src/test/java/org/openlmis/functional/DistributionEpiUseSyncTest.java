@@ -221,7 +221,7 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
     fillEpiInventoryWithOnlyDeliveredQuantity("2", "4", "6");
 
     facilityListPage.selectFacility(epiUseData.get(FIRST_FACILITY_CODE));
-    facilityListPage.verifyFacilityIndicatorColor("Overall", "AMBER");
+    facilityListPage.verifyOverallFacilityIndicatorColor("AMBER");
 
     verifyEpiUseDataInDatabase(null, null, null, null, null, null, epiUseData.get(PRODUCT_GROUP_CODE), epiUseData.get(FIRST_FACILITY_CODE));
   }
@@ -267,7 +267,7 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
 
     distributionPage.clickRecordData(1);
     facilityListPage.selectFacility("F10");
-    facilityListPage.verifyFacilityIndicatorColor("Overall", "BLUE");
+    facilityListPage.verifyOverallFacilityIndicatorColor("BLUE");
 
     verifyEpiUseDataInDatabase(null, null, null, null, null, null, epiUseData.get(PRODUCT_GROUP_CODE), epiUseData.get(FIRST_FACILITY_CODE));
   }

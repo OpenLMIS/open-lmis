@@ -89,7 +89,7 @@ public class E2EDistributionTest extends TestCaseHelper {
     FacilityListPage facilityListPage = PageFactory.getInstanceOfFacilityListPage(testWebDriver);
     VisitInformationPage visitInformationPage = facilityListPage.selectFacility(facilityCodeFirst);
     RefrigeratorPage refrigeratorPage = visitInformationPage.navigateToRefrigerators();
-    facilityListPage.verifyFacilityIndicatorColor("Overall", "AMBER");
+    facilityListPage.verifyOverallFacilityIndicatorColor("AMBER");
 
     refrigeratorPage.onRefrigeratorScreen();
     refrigeratorPage.clickAddNew();
@@ -111,7 +111,7 @@ public class E2EDistributionTest extends TestCaseHelper {
         refrigeratorDetails[i]);
     }
 
-    facilityListPage.verifyFacilityIndicatorColor("Overall", "RED");
+    facilityListPage.verifyOverallFacilityIndicatorColor("RED");
 
     refrigeratorPage.verifyRefrigeratorColor("overall", "RED");
     refrigeratorPage.clickShowForRefrigerator1();
@@ -226,7 +226,7 @@ public class E2EDistributionTest extends TestCaseHelper {
     assertEquals("96", childCoveragePage.getOpenedVialsCountForGivenGroupAndRow(9, 1));
     assertEquals("-131", childCoveragePage.getWastageRateForGivenRow(9));
 
-    facilityListPage.verifyFacilityIndicatorColor("Overall", "GREEN");
+    facilityListPage.verifyOverallFacilityIndicatorColor("GREEN");
 
     homePage.navigateHomePage();
     homePage.navigateOfflineDistribution();
@@ -251,7 +251,7 @@ public class E2EDistributionTest extends TestCaseHelper {
 
     distributionPage.clickRecordData(1);
     facilityListPage.selectFacility(facilityCodeFirst);
-    facilityListPage.verifyFacilityIndicatorColor("Overall", "BLUE");
+    facilityListPage.verifyOverallFacilityIndicatorColor("BLUE");
 
     verifyEpiUseDataInDatabase(10, 20, 30, null, 50, "10/2011", "PG1", facilityCodeFirst);
     verifyRefrigeratorReadingDataInDatabase(facilityCodeFirst, "GR-J287PGHV", 3F, "Y", 1, 0, "D", "miscellaneous");
@@ -306,7 +306,7 @@ public class E2EDistributionTest extends TestCaseHelper {
     distributionPage.clickRecordData(1);
     assertTrue(facilityListPage.getFacilitiesInDropDown().contains("F10"));
     visitInformationPage = facilityListPage.selectFacility(facilityCodeFirst);
-    facilityListPage.verifyFacilityIndicatorColor("Overall", "RED");
+    facilityListPage.verifyOverallFacilityIndicatorColor("RED");
     visitInformationPage.navigateToRefrigerators();
 
     refrigeratorPage.verifyIndicator("RED");
@@ -360,7 +360,7 @@ public class E2EDistributionTest extends TestCaseHelper {
     FacilityListPage facilityListPage = PageFactory.getInstanceOfFacilityListPage(testWebDriver);
     VisitInformationPage visitInformationPage = facilityListPage.selectFacility(facilityCodeFirst);
     RefrigeratorPage refrigeratorPage = visitInformationPage.navigateToRefrigerators();
-    facilityListPage.verifyFacilityIndicatorColor("Overall", "AMBER");
+    facilityListPage.verifyOverallFacilityIndicatorColor("AMBER");
 
     refrigeratorPage.onRefrigeratorScreen();
     refrigeratorPage.clickAddNew();
@@ -369,7 +369,7 @@ public class E2EDistributionTest extends TestCaseHelper {
     refrigeratorPage.enterValueInManufacturingSerialNumberModal("GR-J287PGHV");
     refrigeratorPage.clickDoneOnModal();
 
-    facilityListPage.verifyFacilityIndicatorColor("Overall", "RED");
+    facilityListPage.verifyOverallFacilityIndicatorColor("RED");
 
     refrigeratorPage.verifyRefrigeratorColor("overall", "RED");
     refrigeratorPage.clickShowForRefrigerator1();
@@ -464,7 +464,7 @@ public class E2EDistributionTest extends TestCaseHelper {
     visitInformationPage.navigateToChildCoverage();
     childCoveragePage.verifyAllFieldsDisabled();
 
-    facilityListPage.verifyFacilityIndicatorColor("Overall", "GREEN");
+    facilityListPage.verifyOverallFacilityIndicatorColor("GREEN");
 
     homePage.navigateHomePage();
     homePage.navigateOfflineDistribution();
@@ -488,7 +488,7 @@ public class E2EDistributionTest extends TestCaseHelper {
 
     distributionPage.clickRecordData(1);
     facilityListPage.selectFacility(facilityCodeFirst);
-    facilityListPage.verifyFacilityIndicatorColor("Overall", "BLUE");
+    facilityListPage.verifyOverallFacilityIndicatorColor("BLUE");
 
     verifyEpiUseDataInDatabase(10, 20, 30, null, 50, "10/2011", "PG1", facilityCodeFirst);
     verifyFacilityVisitInformationInDatabase(facilityCodeFirst, null, null, null, null, null, null, "t", "f");

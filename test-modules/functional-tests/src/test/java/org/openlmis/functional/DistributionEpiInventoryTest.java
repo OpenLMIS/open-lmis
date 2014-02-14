@@ -186,14 +186,14 @@ public class DistributionEpiInventoryTest extends TestCaseHelper {
     EpiInventoryPage epiInventoryPage = refrigeratorPage.navigateToEpiInventory();
 
     epiInventoryPage.verifyIndicator("RED");
-    facilityListPage.verifyFacilityIndicatorColor("Overall", "RED");
+    facilityListPage.verifyOverallFacilityIndicatorColor("RED");
 
     epiInventoryPage.fillDeliveredQuantity(1, "1");
     epiInventoryPage.fillDeliveredQuantity(2, "2");
     epiInventoryPage.fillDeliveredQuantity(3, "3");
 
     epiInventoryPage.verifyIndicator("AMBER");
-    facilityListPage.verifyFacilityIndicatorColor("Overall", "AMBER");
+    facilityListPage.verifyOverallFacilityIndicatorColor("AMBER");
 
     epiInventoryPage.applyNRToAll();
     assertTrue(epiInventoryPage.getDeliveredQuantityStatus(1));

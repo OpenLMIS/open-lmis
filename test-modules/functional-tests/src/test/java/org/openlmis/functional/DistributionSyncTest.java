@@ -97,7 +97,7 @@ public class DistributionSyncTest extends TestCaseHelper {
     VisitInformationPage visitInformationPage = facilityListPage.selectFacility(distributionTestData.get(SECOND_FACILITY_CODE));
 
 
-    facilityListPage.verifyFacilityIndicatorColor("Overall", "AMBER");
+    facilityListPage.verifyOverallFacilityIndicatorColor("AMBER");
     assertEquals("Was " + dbWrapper.getAttributeFromTable("facilities", "name", "code", distributionTestData.get(SECOND_FACILITY_CODE)) +
       " visited in " + "Period14" + "?", visitInformationPage.getWasFacilityVisitedLabel());
     visitInformationPage.enterDataWhenFacilityVisited("Some observations", "samuel D", "Doe Abc", "Verifier", "Verifier Title");
@@ -115,19 +115,19 @@ public class DistributionSyncTest extends TestCaseHelper {
     fullCoveragePage.navigateToEpiInventory();
     fillEpiInventoryWithOnlyDeliveredQuantity("2", "4", "6");
 
-    facilityListPage.verifyFacilityIndicatorColor("Overall", "GREEN");
+    facilityListPage.verifyOverallFacilityIndicatorColor("GREEN");
 
     homePage.navigateHomePage();
     initiateDistribution(distributionTestData.get(FIRST_DELIVERY_ZONE_NAME), distributionTestData.get(VACCINES_PROGRAM));
     facilityListPage = PageFactory.getInstanceOfFacilityListPage(testWebDriver);
     facilityListPage.selectFacility(distributionTestData.get(FIRST_FACILITY_CODE));
 
-    facilityListPage.verifyFacilityIndicatorColor("Overall", "RED");
+    facilityListPage.verifyOverallFacilityIndicatorColor("RED");
     assertEquals("Was " + dbWrapper.getAttributeFromTable("facilities", "name", "code", distributionTestData.get(FIRST_FACILITY_CODE)) +
       " visited in " + "Period14" + "?", visitInformationPage.getWasFacilityVisitedLabel());
 
     fillFacilityData();
-    facilityListPage.verifyFacilityIndicatorColor("Overall", "GREEN");
+    facilityListPage.verifyOverallFacilityIndicatorColor("GREEN");
 
     homePage.navigateHomePage();
     homePage.navigateToDistributionWhenOnline();
@@ -161,16 +161,18 @@ public class DistributionSyncTest extends TestCaseHelper {
     assertEquals(facilityVisitF11.get("synced"), "t");
 
     distributionPage.clickRecordData(1);
-    facilityListPage.selectFacility("F10");
-    facilityListPage.verifyFacilityIndicatorColor("Overall", "BLUE");
-    facilityListPage.verifyFacilityIndicatorColor("individual", "BLUE");
+    facilityListPage.selectFacility(distributionTestData.get(FIRST_FACILITY_CODE));
+    facilityListPage.verifyOverallFacilityIndicatorColor("BLUE");
+    facilityListPage.verifyIndividualFacilityIndicatorColor(distributionTestData.get(FIRST_FACILITY_CODE), "BLUE");
 
     verifyAllFieldsDisabled();
 
     homePage.navigateToDistributionWhenOnline();
     distributionPage.clickRecordData(1);
-    facilityListPage.selectFacility("F11");
-    facilityListPage.verifyFacilityIndicatorColor("Overall", "BLUE");
+    facilityListPage.selectFacility(distributionTestData.get(FIRST_FACILITY_CODE));
+    facilityListPage.verifyOverallFacilityIndicatorColor("BLUE");
+    facilityListPage.verifyIndividualFacilityIndicatorColor(distributionTestData.get(SECOND_FACILITY_CODE), "BLUE");
+    facilityListPage.selectFacility(distributionTestData.get(SECOND_FACILITY_CODE));
     assertEquals("Was " + dbWrapper.getAttributeFromTable("facilities", "name", "code", distributionTestData.get(SECOND_FACILITY_CODE)) +
       " visited in " + "Period14" + "?", visitInformationPage.getWasFacilityVisitedLabel());
 
@@ -228,7 +230,7 @@ public class DistributionSyncTest extends TestCaseHelper {
     initiateDistribution(distributionTestData.get(FIRST_DELIVERY_ZONE_NAME), distributionTestData.get(VACCINES_PROGRAM));
     VisitInformationPage visitInformationPage = facilityListPage.selectFacility(distributionTestData.get(FIRST_FACILITY_CODE));
 
-    facilityListPage.verifyFacilityIndicatorColor("Overall", "RED");
+    facilityListPage.verifyOverallFacilityIndicatorColor("RED");
     assertEquals("Was " + dbWrapper.getAttributeFromTable("facilities", "name", "code", distributionTestData.get(FIRST_FACILITY_CODE)) +
       " visited in " + "Period14" + "?", visitInformationPage.getWasFacilityVisitedLabel());
     visitInformationPage.enterDataWhenFacilityVisited("Some observations", "samuel D", "Doe Abc", "Verifier", "Verifier Title");
@@ -257,7 +259,7 @@ public class DistributionSyncTest extends TestCaseHelper {
 
     fullCoveragePage.navigateToEpiInventory();
     fillEpiInventoryWithOnlyDeliveredQuantity("2", "4", "6");
-    facilityListPage.verifyFacilityIndicatorColor("Overall", "GREEN");
+    facilityListPage.verifyOverallFacilityIndicatorColor("GREEN");
 
     homePage.navigateHomePage();
     DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
@@ -321,7 +323,7 @@ public class DistributionSyncTest extends TestCaseHelper {
     facilityListPage.selectFacility(distributionTestData.get(FIRST_FACILITY_CODE));
     verifyProductsAreDisplayed();
 
-    facilityListPage.verifyFacilityIndicatorColor("Overall", "RED");
+    facilityListPage.verifyOverallFacilityIndicatorColor("RED");
 
     fillFacilityData();
 
@@ -361,7 +363,7 @@ public class DistributionSyncTest extends TestCaseHelper {
     facilityListPage.selectFacility(distributionTestData.get(FIRST_FACILITY_CODE));
     verifyProductsAreDisplayed();
 
-    facilityListPage.verifyFacilityIndicatorColor("Overall", "RED");
+    facilityListPage.verifyOverallFacilityIndicatorColor("RED");
 
     fillFacilityData();
 
@@ -397,7 +399,7 @@ public class DistributionSyncTest extends TestCaseHelper {
     facilityListPage.selectFacility(distributionTestData.get(FIRST_FACILITY_CODE));
     verifyProductsAreDisplayed();
 
-    facilityListPage.verifyFacilityIndicatorColor("Overall", "RED");
+    facilityListPage.verifyOverallFacilityIndicatorColor("RED");
 
     fillFacilityData();
 
@@ -426,7 +428,7 @@ public class DistributionSyncTest extends TestCaseHelper {
     assertTrue(facilityListPage.getFacilitiesInDropDown().contains(distributionTestData.get(FIRST_FACILITY_CODE)));
     facilityListPage.selectFacility(distributionTestData.get(FIRST_FACILITY_CODE));
 
-    facilityListPage.verifyFacilityIndicatorColor("Overall", "RED");
+    facilityListPage.verifyOverallFacilityIndicatorColor("RED");
     verifyProductsAreDisplayed();
 
     fillFacilityData();
@@ -463,7 +465,7 @@ public class DistributionSyncTest extends TestCaseHelper {
     assertEquals("Was " + dbWrapper.getAttributeFromTable("facilities", "name", "code", distributionTestData.get(FIRST_FACILITY_CODE)) +
       " visited in " + "Period14" + "?", visitInformationPage.getWasFacilityVisitedLabel());
 
-    facilityListPage.verifyFacilityIndicatorColor("Overall", "RED");
+    facilityListPage.verifyOverallFacilityIndicatorColor("RED");
     verifyProductsAreDisplayed();
 
     fillFacilityData();
@@ -484,7 +486,7 @@ public class DistributionSyncTest extends TestCaseHelper {
     initiateNextDistributionForGivenPeriod(distributionTestData.get(FIRST_DELIVERY_ZONE_NAME), distributionTestData.get(VACCINES_PROGRAM), "Period13");
     assertTrue(facilityListPage.getFacilitiesInDropDown().contains(distributionTestData.get(FIRST_FACILITY_CODE)));
     facilityListPage.selectFacility(distributionTestData.get(FIRST_FACILITY_CODE));
-    facilityListPage.verifyFacilityIndicatorColor("Overall", "AMBER");
+    facilityListPage.verifyOverallFacilityIndicatorColor("AMBER");
     assertEquals("Was " + dbWrapper.getAttributeFromTable("facilities", "name", "code", distributionTestData.get(FIRST_FACILITY_CODE)) +
       " visited in " + "Period13" + "?", visitInformationPage.getWasFacilityVisitedLabel());
     verifyProductsAreNotDisplayed();
@@ -535,7 +537,7 @@ public class DistributionSyncTest extends TestCaseHelper {
     childCoveragePage.applyNRToAll();
     childCoveragePage.clickOK();
 
-    facilityListPage.verifyFacilityIndicatorColor("Overall", "GREEN");
+    facilityListPage.verifyOverallFacilityIndicatorColor("GREEN");
 
     homePage.navigateHomePage();
     DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
@@ -569,7 +571,7 @@ public class DistributionSyncTest extends TestCaseHelper {
     assertTrue(facilityListPage.getFacilitiesInDropDown().contains(distributionTestData.get(FIRST_FACILITY_CODE)));
     VisitInformationPage visitInformationPage = facilityListPage.selectFacility(distributionTestData.get(FIRST_FACILITY_CODE));
 
-    facilityListPage.verifyFacilityIndicatorColor("Overall", "RED");
+    facilityListPage.verifyOverallFacilityIndicatorColor("RED");
     verifyProductsAreDisplayed();
 
     fillFacilityData();
@@ -590,7 +592,7 @@ public class DistributionSyncTest extends TestCaseHelper {
     initiateNextDistributionForGivenPeriod(distributionTestData.get(FIRST_DELIVERY_ZONE_NAME), distributionTestData.get(VACCINES_PROGRAM), "Period13");
     assertTrue(facilityListPage.getFacilitiesInDropDown().contains(distributionTestData.get(FIRST_FACILITY_CODE)));
     facilityListPage.selectFacility(distributionTestData.get(FIRST_FACILITY_CODE));
-    facilityListPage.verifyFacilityIndicatorColor("Overall", "RED");
+    facilityListPage.verifyOverallFacilityIndicatorColor("RED");
 
     EPIUsePage epiUsePage = visitInformationPage.navigateToEpiUse();
     assertTrue(epiUsePage.getProductGroup(1).equals("PG1-Name"));
@@ -626,7 +628,7 @@ public class DistributionSyncTest extends TestCaseHelper {
     assertTrue(facilityListPage.getFacilitiesInDropDown().contains(distributionTestData.get(FIRST_FACILITY_CODE)));
     VisitInformationPage visitInformationPage = facilityListPage.selectFacility(distributionTestData.get(FIRST_FACILITY_CODE));
 
-    facilityListPage.verifyFacilityIndicatorColor("Overall", "RED");
+    facilityListPage.verifyOverallFacilityIndicatorColor("RED");
     verifyProductsAreDisplayed();
 
     fillFacilityData();
@@ -647,7 +649,7 @@ public class DistributionSyncTest extends TestCaseHelper {
     initiateNextDistributionForGivenPeriod(distributionTestData.get(FIRST_DELIVERY_ZONE_NAME), distributionTestData.get(VACCINES_PROGRAM), "Period13");
     assertTrue(facilityListPage.getFacilitiesInDropDown().contains(distributionTestData.get(FIRST_FACILITY_CODE)));
     facilityListPage.selectFacility(distributionTestData.get(FIRST_FACILITY_CODE));
-    facilityListPage.verifyFacilityIndicatorColor("Overall", "RED");
+    facilityListPage.verifyOverallFacilityIndicatorColor("RED");
 
     EPIUsePage epiUsePage = visitInformationPage.navigateToEpiUse();
     assertTrue(epiUsePage.getProductGroup(1).equals("PG1-Name"));
@@ -670,7 +672,7 @@ public class DistributionSyncTest extends TestCaseHelper {
     initiateDistribution(distributionTestData.get(FIRST_DELIVERY_ZONE_NAME), distributionTestData.get(VACCINES_PROGRAM));
     VisitInformationPage visitInformationPage = facilityListPage.selectFacility(distributionTestData.get(FIRST_FACILITY_CODE));
 
-    facilityListPage.verifyFacilityIndicatorColor("Overall", "RED");
+    facilityListPage.verifyOverallFacilityIndicatorColor("RED");
     visitInformationPage.enterDataWhenFacilityVisited("Some observations", "samuel D", "Doe Abc", "Verifier", "Verifier Title");
 
     RefrigeratorPage refrigeratorPage = visitInformationPage.navigateToRefrigerators();
@@ -708,7 +710,7 @@ public class DistributionSyncTest extends TestCaseHelper {
     childCoveragePage.clickOK();
 
     childCoveragePage.navigateToEpiInventory();
-    facilityListPage.verifyFacilityIndicatorColor("Overall", "GREEN");
+    facilityListPage.verifyOverallFacilityIndicatorColor("GREEN");
 
     homePage.navigateHomePage();
     DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
@@ -723,9 +725,10 @@ public class DistributionSyncTest extends TestCaseHelper {
     verifyEpiInventoryDataInDatabase(null, null, null, "P11", distributionTestData.get(FIRST_FACILITY_CODE));
 
     distributionPage.clickRecordData(1);
-    facilityListPage.selectFacility("F10");
-    facilityListPage.verifyFacilityIndicatorColor("Overall", "BLUE");
-    facilityListPage.verifyFacilityIndicatorColor("individual", "BLUE");
+    facilityListPage.selectFacility(distributionTestData.get(FIRST_FACILITY_CODE));
+    facilityListPage.verifyOverallFacilityIndicatorColor("BLUE");
+    facilityListPage.verifyIndividualFacilityIndicatorColor(distributionTestData.get(FIRST_FACILITY_CODE), "BLUE");
+    facilityListPage.verifyIndividualFacilityIndicatorColor(distributionTestData.get(SECOND_FACILITY_CODE), "RED");
 
     verifyAllFieldsDisabled();
     testWebDriver.refresh();
@@ -740,7 +743,7 @@ public class DistributionSyncTest extends TestCaseHelper {
     VisitInformationPage visitInformationPage = facilityListPage.selectFacility(distributionTestData.get(FIRST_FACILITY_CODE));
 
     dbWrapper.updateFieldValue("facilities", "active", "false", "code", "F10");
-    facilityListPage.verifyFacilityIndicatorColor("Overall", "RED");
+    facilityListPage.verifyOverallFacilityIndicatorColor("RED");
 
     RefrigeratorPage refrigeratorPage = visitInformationPage.navigateToRefrigerators();
     refrigeratorPage.verifyRefrigeratorColor("overall", "RED");
@@ -765,7 +768,7 @@ public class DistributionSyncTest extends TestCaseHelper {
     FullCoveragePage fullCoveragePage = childCoveragePage.navigateToFullCoverage();
     fullCoveragePage.clickApplyNRToAll();
 
-    facilityListPage.verifyFacilityIndicatorColor("Overall", "GREEN");
+    facilityListPage.verifyOverallFacilityIndicatorColor("GREEN");
 
     homePage.navigateHomePage();
     DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
@@ -787,7 +790,7 @@ public class DistributionSyncTest extends TestCaseHelper {
     initiateDistribution(distributionTestData.get(FIRST_DELIVERY_ZONE_NAME), distributionTestData.get(VACCINES_PROGRAM));
     VisitInformationPage visitInformationPage = facilityListPage.selectFacility(distributionTestData.get(FIRST_FACILITY_CODE));
 
-    facilityListPage.verifyFacilityIndicatorColor("Overall", "RED");
+    facilityListPage.verifyOverallFacilityIndicatorColor("RED");
 
     visitInformationPage.navigateToVisitInformation();
     visitInformationPage.selectFacilityVisitedNo();
@@ -803,11 +806,11 @@ public class DistributionSyncTest extends TestCaseHelper {
     childCoveragePage.applyNRToAll();
     childCoveragePage.clickOK();
 
-    facilityListPage.verifyFacilityIndicatorColor("Overall", "GREEN");
+    facilityListPage.verifyOverallFacilityIndicatorColor("GREEN");
 
     facilityListPage.selectFacility(distributionTestData.get(SECOND_FACILITY_CODE));
 
-    facilityListPage.verifyFacilityIndicatorColor("Overall", "RED");
+    facilityListPage.verifyOverallFacilityIndicatorColor("RED");
 
     visitInformationPage.navigateToVisitInformation();
     visitInformationPage.selectFacilityVisitedNo();
@@ -823,7 +826,7 @@ public class DistributionSyncTest extends TestCaseHelper {
     childCoveragePage.applyNRToAll();
     childCoveragePage.clickOK();
 
-    facilityListPage.verifyFacilityIndicatorColor("Overall", "GREEN");
+    facilityListPage.verifyOverallFacilityIndicatorColor("GREEN");
 
     homePage.navigateHomePage();
     DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
@@ -845,14 +848,14 @@ public class DistributionSyncTest extends TestCaseHelper {
     verifyEpiInventoryDataInDatabase(null, null, null, "P11", distributionTestData.get(SECOND_FACILITY_CODE));
 
     distributionPage.clickRecordData(1);
-    facilityListPage.selectFacility("F10");
-    facilityListPage.verifyFacilityIndicatorColor("Overall", "BLUE");
-    facilityListPage.verifyFacilityIndicatorColor("individual", "BLUE");
+    facilityListPage.selectFacility(distributionTestData.get(FIRST_FACILITY_CODE));
+    facilityListPage.verifyOverallFacilityIndicatorColor("BLUE");
+    facilityListPage.verifyIndividualFacilityIndicatorColor(distributionTestData.get(FIRST_FACILITY_CODE), "BLUE");
     verifyAllFieldsDisabled();
 
     facilityListPage.selectFacility("F11");
-    facilityListPage.verifyFacilityIndicatorColor("Overall", "BLUE");
-    facilityListPage.verifyFacilityIndicatorColor("individual", "BLUE");
+    facilityListPage.verifyOverallFacilityIndicatorColor("BLUE");
+    facilityListPage.verifyIndividualFacilityIndicatorColor(distributionTestData.get(FIRST_FACILITY_CODE), "BLUE");
     verifyAllFieldsDisabled();
   }
 
@@ -895,6 +898,7 @@ public class DistributionSyncTest extends TestCaseHelper {
     refrigeratorPage.enterValueInHighAlarmEvents("5");
     refrigeratorPage.clickProblemSinceLastVisitNR();
     refrigeratorPage.clickDone();
+    testWebDriver.sleep(500);
     refrigeratorPage.verifyRefrigeratorColor("overall", "GREEN");
     refrigeratorPage.verifyRefrigeratorColor("individual", "GREEN");
 
@@ -1019,6 +1023,7 @@ public class DistributionSyncTest extends TestCaseHelper {
 
     EpiInventoryPage epiInventoryPage = fullCoveragePage.navigateToEpiInventory();
     epiInventoryPage.verifyAllFieldsDisabled();
+    epiInventoryPage.navigateToVisitInformation();
   }
 
   @AfterMethod(groups = "distribution")

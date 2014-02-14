@@ -258,11 +258,18 @@ public class ManageDistribution extends TestCaseHelper {
     distributionPage.clickInitiateDistribution();
   }
 
-  @Then("^I see \"([^\"]*)\" facility icon as \"([^\"]*)\"$")
-  public void verifyOverAllFacilityIndicator(String whichIcon, String color) {
+  @Then("^I see Overall facility icon as \"([^\"]*)\"$")
+  public void verifyOverAllFacilityIndicator(String color) {
     testWebDriver.setImplicitWait(1000);
     facilityListPage = PageFactory.getInstanceOfFacilityListPage(testWebDriver);
-    facilityListPage.verifyFacilityIndicatorColor(whichIcon, color);
+    facilityListPage.verifyOverallFacilityIndicatorColor(color);
+  }
+
+  @Then("^I see \"([^\"]*)\" facility indicator icon as \"([^\"]*)\"$")
+  public void verifyFacilityIndicator(String facilityCode, String color) {
+    testWebDriver.setImplicitWait(1000);
+    facilityListPage = PageFactory.getInstanceOfFacilityListPage(testWebDriver);
+    facilityListPage.verifyIndividualFacilityIndicatorColor(facilityCode, color);
   }
 
   @When("^I record data for distribution \"([^\"]*)\"$")

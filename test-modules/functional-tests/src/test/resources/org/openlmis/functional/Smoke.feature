@@ -536,8 +536,8 @@ Feature: Smoke Tests
     And I record data for distribution "1"
     And I choose facility "F10"
     And I verify that I am on visit information page
-    Then I see "Overall" facility icon as "AMBER"
-    And I see "Individual" facility icon as "AMBER"
+    Then I see Overall facility icon as "AMBER"
+    And I see "F10" facility indicator icon as "AMBER"
     And I navigate to "child coverage" tab
     Then Verify "child coverage" indicator should be "RED"
     And I apply NR to all fields on child coverage page
@@ -561,7 +561,7 @@ Feature: Smoke Tests
     When I select "no" facility visited
     And I select No Transport reason
     Then Verify "visit information" indicator should be "GREEN"
-    Then I see "Overall" facility icon as "GREEN"
+    Then I see Overall facility icon as "GREEN"
     And Verify "refrigerator" indicator should be "GREEN"
     And Verify "epi inventory" indicator should be "GREEN"
     When I navigate to "epi inventory" tab
@@ -569,7 +569,7 @@ Feature: Smoke Tests
     When I navigate to "refrigerator" tab
     And I access show
     Then I see "refrigerator" fields disabled
-    And I see "Overall" facility icon as "GREEN"
+    And I see Overall facility icon as "GREEN"
     When I access plan my distribution page
     And I sync recorded data
     And I check confirm sync message as "F10-Village Dispensary"
@@ -592,7 +592,7 @@ Feature: Smoke Tests
     And I see distribution status as synced
     When I record data for distribution "1"
     And I choose facility "F10"
-    Then I see "Overall" facility icon as "BLUE"
+    Then I see Overall facility icon as "BLUE"
     Then I see "visit information" fields disabled
     When I navigate to "epi use" tab
     Then I see "epi use" fields disabled
@@ -750,15 +750,15 @@ Feature: Smoke Tests
     And I initiate distribution
     When I record data for distribution "1"
     And I choose facility "F10"
-    Then I see "Overall" facility icon as "AMBER"
-    And I see "Individual" facility icon as "AMBER"
+    Then I see Overall facility icon as "AMBER"
+    And I see "F10" facility indicator icon as "AMBER"
     And I navigate to "refrigerator" tab
     When I add new refrigerator
     When I enter Brand "LG"
     And I enter Modal "800 LITRES"
     And I enter Serial Number "GR-J287PGHV"
     And I access done
-    Then I see "Overall" facility icon as "RED"
+    Then I see Overall facility icon as "RED"
     When I access plan my distribution page
     When I try to sync recorded data
     Then I verify sync message as "No facility for the chosen zone, program and period is ready to be sync"
@@ -799,7 +799,7 @@ Feature: Smoke Tests
       | existingQuantity | deliveredQuantity | spoiledQuantity |
       | 20               | 100               | 5               |
       | 10               | 50                | 3               |
-    Then I see "Overall" facility icon as "GREEN"
+    Then I see Overall facility icon as "GREEN"
     When I access plan my distribution page
 
     When I sync recorded data
@@ -827,7 +827,7 @@ Feature: Smoke Tests
     And I see distribution status as synced
     When I record data for distribution "1"
     And I choose facility "F10"
-    Then I see "Overall" facility icon as "BLUE"
+    Then I see Overall facility icon as "BLUE"
     Then I see "visit information" fields disabled
     When I navigate to "epi use" tab
     Then I see "epi use" fields disabled
@@ -850,7 +850,7 @@ Feature: Smoke Tests
     And I initiate distribution
     When I record data for distribution "1"
     And I choose facility "F10"
-    Then I see "Overall" facility icon as "RED"
+    Then I see Overall facility icon as "RED"
     And I navigate to "refrigerator" tab
-    And I see "overall" refrigerator icon as "RED"
+    And I see "Overall" refrigerator icon as "RED"
     And I verify the refrigerator "LG;800 LITRES;GR-J287PGHV" present

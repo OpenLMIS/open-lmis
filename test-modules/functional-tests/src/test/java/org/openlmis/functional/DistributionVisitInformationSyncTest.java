@@ -111,13 +111,13 @@ public class DistributionVisitInformationSyncTest extends TestCaseHelper {
     HomePage homePage = loginPage.loginAs(visitInformationData.get(USER), visitInformationData.get(PASSWORD));
     initiateDistribution(visitInformationData.get(FIRST_DELIVERY_ZONE_NAME), visitInformationData.get(VACCINES_PROGRAM));
     VisitInformationPage visitInformationPage = facilityListPage.selectFacility(visitInformationData.get(FIRST_FACILITY_CODE));
-    facilityListPage.verifyFacilityIndicatorColor("Overall", "RED");
+    facilityListPage.verifyOverallFacilityIndicatorColor("RED");
     assertEquals("Was " + dbWrapper.getAttributeFromTable("facilities", "name", "code", visitInformationData.get(FIRST_FACILITY_CODE)) +
       " visited in " + "Period14" + "?", visitInformationPage.getWasFacilityVisitedLabel());
     visitInformationPage.verifyIndicator("RED");
     visitInformationPage.selectFacilityVisitedYes();
     visitInformationPage.verifyIndicator("AMBER");
-    facilityListPage.verifyFacilityIndicatorColor("Overall", "AMBER");
+    facilityListPage.verifyOverallFacilityIndicatorColor("AMBER");
     visitInformationPage.enterVisitDateAsFirstOfCurrentMonth();
     visitInformationPage.verifyIndicator("AMBER");
     visitInformationPage.enterObservations("Some Observations");
@@ -137,14 +137,14 @@ public class DistributionVisitInformationSyncTest extends TestCaseHelper {
     distributionPage.clickRecordData(1);
     facilityListPage.selectFacility(visitInformationData.get(FIRST_FACILITY_CODE));
 
-    facilityListPage.verifyFacilityIndicatorColor("Overall", "AMBER");
+    facilityListPage.verifyOverallFacilityIndicatorColor("AMBER");
     visitInformationPage.enterVerifiedByTitle("VerifyTitle");
     visitInformationPage.verifyIndicator("GREEN");
-    facilityListPage.verifyFacilityIndicatorColor("Overall", "GREEN");
+    facilityListPage.verifyOverallFacilityIndicatorColor("GREEN");
     visitInformationPage.enterVehicleId("12U3-93");
     visitInformationPage.verifyIndicator("GREEN");
     visitInformationPage.enterVehicleId("012U3-93");
-    facilityListPage.verifyFacilityIndicatorColor("Overall", "GREEN");
+    facilityListPage.verifyOverallFacilityIndicatorColor("GREEN");
 
     distributionPage = homePage.navigateToDistributionWhenOnline();
     distributionPage.syncDistribution(1);
@@ -311,7 +311,7 @@ public class DistributionVisitInformationSyncTest extends TestCaseHelper {
     loginPage.loginAs(visitInformationData.get(USER), visitInformationData.get(PASSWORD));
     initiateDistribution(visitInformationData.get(FIRST_DELIVERY_ZONE_NAME), visitInformationData.get(VACCINES_PROGRAM));
     VisitInformationPage visitInformationPage = facilityListPage.selectFacility(visitInformationData.get(FIRST_FACILITY_CODE));
-    facilityListPage.verifyFacilityIndicatorColor("Overall", "RED");
+    facilityListPage.verifyOverallFacilityIndicatorColor("RED");
     assertEquals("Was " + dbWrapper.getAttributeFromTable("facilities", "name", "code", visitInformationData.get(FIRST_FACILITY_CODE)) +
       " visited in " + "Period14" + "?", visitInformationPage.getWasFacilityVisitedLabel());
     visitInformationPage.verifyIndicator("RED");
@@ -323,10 +323,10 @@ public class DistributionVisitInformationSyncTest extends TestCaseHelper {
     visitInformationPage.verifyIndicator("AMBER");
 
     fillFacilityData(false);
-    facilityListPage.verifyFacilityIndicatorColor("Overall", "AMBER");
+    facilityListPage.verifyOverallFacilityIndicatorColor("AMBER");
     visitInformationPage.enterOtherReasonInTextBox("Reason for not visiting the facility");
     visitInformationPage.verifyIndicator("GREEN");
-    facilityListPage.verifyFacilityIndicatorColor("Overall", "GREEN");
+    facilityListPage.verifyOverallFacilityIndicatorColor("GREEN");
   }
 
   private void verifyLabels() {

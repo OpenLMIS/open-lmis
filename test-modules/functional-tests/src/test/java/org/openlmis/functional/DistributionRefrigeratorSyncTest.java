@@ -275,7 +275,7 @@ public class DistributionRefrigeratorSyncTest extends TestCaseHelper {
     initiateDistributionForPeriod("Period13");
     distributionPage.clickRecordData(2);
     facilityListPage.selectFacility(refrigeratorTestData.get(FIRST_FACILITY_CODE));
-    facilityListPage.verifyFacilityIndicatorColor("Overall", "RED");
+    facilityListPage.verifyOverallFacilityIndicatorColor("RED");
     visitInformationPage.navigateToRefrigerators();
     refrigeratorPage.verifyRefrigeratorColor("overall", "RED");
 
@@ -289,6 +289,7 @@ public class DistributionRefrigeratorSyncTest extends TestCaseHelper {
     refrigeratorPage.verifyRefrigeratorColor("overall", "AMBER");
     refrigeratorPage.selectOtherProblem();
     refrigeratorPage.enterTextInOtherProblemTextBox("others");
+    testWebDriver.sleep(500);
     refrigeratorPage.verifyRefrigeratorColor("overall", "GREEN");
     refrigeratorPage.verifyRefrigeratorColor("individual", "GREEN");
     refrigeratorPage.clickDone();
@@ -390,7 +391,7 @@ public class DistributionRefrigeratorSyncTest extends TestCaseHelper {
     refrigeratorPage.clickOKButton();
 
     facilityListPage = new FacilityListPage(testWebDriver);
-    facilityListPage.verifyFacilityIndicatorColor("overall", "AMBER");
+    facilityListPage.verifyOverallFacilityIndicatorColor("AMBER");
 
     refrigeratorPage.clickAddNew();
     refrigeratorPage.addNewRefrigerator("LG", "800L1", "GNR7878");
