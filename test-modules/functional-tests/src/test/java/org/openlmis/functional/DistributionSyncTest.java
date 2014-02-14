@@ -711,6 +711,8 @@ public class DistributionSyncTest extends TestCaseHelper {
     facilityListPage.verifyFacilityIndicatorColor("individual", "BLUE");
 
     verifyAllFieldsDisabled();
+    testWebDriver.refresh();
+    verifyAllFieldsDisabled();
   }
 
   @Test(groups = {"distribution"})

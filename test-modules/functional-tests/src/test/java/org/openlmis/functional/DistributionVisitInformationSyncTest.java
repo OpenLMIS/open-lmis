@@ -297,6 +297,8 @@ public class DistributionVisitInformationSyncTest extends TestCaseHelper {
     assertFalse(refrigeratorPage.isAddNewButtonEnabled());
     refrigeratorPage.clickShowForRefrigerator1();
     refrigeratorPage.verifyAllFieldsDisabled();
+    testWebDriver.refresh();
+    refrigeratorPage.verifyAllFieldsDisabled();
     refrigeratorPage.navigateToEpiInventory();
 
     epiInventoryPage.verifyIndicator("GREEN");
