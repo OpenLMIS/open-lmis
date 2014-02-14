@@ -12,13 +12,15 @@ package org.openlmis.distribution.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.BaseModel;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class VaccinationProduct extends BaseModel{
+@EqualsAndHashCode(callSuper = false)
+public class VaccinationProduct extends BaseModel {
 
   private String vaccination;
   private String productCode;

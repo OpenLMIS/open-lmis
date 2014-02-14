@@ -12,6 +12,7 @@ package org.openlmis.distribution.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.openlmis.core.domain.BaseModel;
@@ -23,6 +24,7 @@ import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPT
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonSerialize(include = NON_EMPTY)
+@EqualsAndHashCode(callSuper = false)
 public class OpenedVialLineItem extends BaseModel {
 
   private Long facilityVisitId;
