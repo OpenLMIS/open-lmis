@@ -538,7 +538,10 @@ Feature: Smoke Tests
     And I verify that I am on visit information page
     Then I see "Overall" facility icon as "AMBER"
     And I see "Individual" facility icon as "AMBER"
-    And I navigate to "epi use" tab
+    And I navigate to "child coverage" tab
+    Then Verify "child coverage" indicator should be "RED"
+    And I apply NR to all fields on child coverage page
+    Then I navigate to "epi use" tab
     And I Enter "epi use" values:
       | distributed | expirationDate | loss | received | firstOfMonth | endOfMonth |
       | 16          | 11/2012        | 1    | 10       | 12           |            |
@@ -572,8 +575,8 @@ Feature: Smoke Tests
     And I check confirm sync message as "F10-Village Dispensary"
     And I done sync message
     And I view visit information in DB for facility "F10":
-      | observations     | confirmedByName | confirmedByTitle | verifiedByName | verifiedByTitle | vehicleId | synced | visited |
-      | null             |   null          | null             |  null          | null            | null      | t      |   f     |
+      | observations | confirmedByName | confirmedByTitle | verifiedByName | verifiedByTitle | vehicleId | synced | visited |
+      | null         | null            | null             | null           | null            | null      | t      | f       |
     And I view epi use data in DB for facility "F10" and product group "penta":
       | distributed | expirationDate | loss | received | firstOfMonth | endOfMonth |
       | 16          | 11/2012        | 1    | 10       | 12           | 5          |
@@ -714,10 +717,10 @@ Feature: Smoke Tests
     And I initiate distribution
     And I record data for distribution "1"
     And I choose facility "F10"
-    And I navigate to Child Coverage tab
+    And I navigate to "child coverage" tab
     Then Verify "child coverage" indicator should be "RED"
     And I Enter "child coverage" values:
-      | healthCenter11 | outReach11 | healthCenter23 | outReach23 | openedVial |
+      | healthCenter11 | outreach11 | healthCenter23 | outreach23 | openedVial |
       | 123            | 22         | 23             | 34         | 4          |
     Then Verify "child coverage" indicator should be "GREEN"
     When I apply NR to healthCenter11Months for rowNumber "12"
@@ -727,7 +730,7 @@ Feature: Smoke Tests
     When I enter healthCenter11Months for rowNumber "12" as "34"
     Then Verify "child coverage" indicator should be "GREEN"
     And I verify saved "child coverage" values:
-      | targetGroup | healthCenter11 | outReach11 | total1 | coverageRate | healthCenter23 | outReach23 | total2 | total3 | openedVial | wastageRate |
+      | targetGroup | healthCenter11 | outreach11 | total1 | coverageRate | healthCenter23 | outreach23 | total2 | total3 | openedVial | wastageRate |
       | 34          | 123            | 22         | 145    | 426          | 23             | 34         | 57     | 202    | 4          | -1415       |
 
   @smokeDistribution
@@ -783,6 +786,10 @@ Feature: Smoke Tests
       | 16          | 11/2012        | 1    | 10       | 12           |            |
     And I enter EPI end of month as "5"
 
+    And I navigate to "child coverage" tab
+    Then Verify "child coverage" indicator should be "RED"
+    And I apply NR to all fields on child coverage page
+
     And I navigate to "full coverage" tab
     And I Enter "full coverage" values:
       | femaleHealthCenter | femaleMobileBrigade | maleHealthCenter | maleMobileBrigade |
@@ -799,8 +806,8 @@ Feature: Smoke Tests
     Then I check confirm sync message as "F10-Village Dispensary"
     When I done sync message
     And I view visit information in DB for facility "F10":
-      | observations     | confirmedByName | confirmedByTitle | verifiedByName | verifiedByTitle | vehicleId | synced |
-      | some observation | samuel          | fc               | Verifier       | XYZ             | null      | t      |
+      | observations     | confirmedByName | confirmedByTitle | verifiedByName | verifiedByTitle | vehicleId | synced | visited |
+      | some observation | samuel          | fc               | Verifier       | XYZ             | null      | t      | t       |
     And I view epi use data in DB for facility "F10" and product group "penta":
       | distributed | expirationDate | loss | received | firstOfMonth | endOfMonth |
       | 16          | 11/2012        | 1    | 10       | 12           | 5          |

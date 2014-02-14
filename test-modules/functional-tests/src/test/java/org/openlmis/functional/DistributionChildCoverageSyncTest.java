@@ -681,6 +681,13 @@ public class DistributionChildCoverageSyncTest extends TestCaseHelper {
     childCoveragePage.enterHealthCenter11MonthsDataForGivenRow(Integer.parseInt(rowNumber), value);
   }
 
+  @And("^I apply NR to all fields on child coverage page$")
+  public void applyNrToAll() {
+    ChildCoveragePage childCoveragePage = PageFactory.getInstanceOfChildCoveragePage(testWebDriver);
+    childCoveragePage.applyNRToAll();
+    childCoveragePage.clickOK();
+  }
+
   @AfterMethod(groups = "distribution")
   public void tearDown() throws SQLException {
     testWebDriver.sleep(500);
