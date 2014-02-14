@@ -226,7 +226,7 @@ public class E2EDistributionTest extends TestCaseHelper {
     verifyEpiUseDataInDatabase(10, 20, 30, null, 50, "10/2011", "PG1", facilityCodeFirst);
     verifyRefrigeratorReadingDataInDatabase(facilityCodeFirst, "GR-J287PGHV", 3F, "Y", 1, 0, "D", "miscellaneous");
     verifyRefrigeratorProblemDataNullInDatabase("GR-J287PGHV", facilityCodeFirst);
-    verifyFacilityVisitInformationInDatabase(facilityCodeFirst, "some observations", "samuel", "Doe", "Verifier", "XYZ", null,"t","t");
+    verifyFacilityVisitInformationInDatabase(facilityCodeFirst, "some observations", "samuel", "Doe", "Verifier", "XYZ", null, "t", "t");
     verifyFullCoveragesDataInDatabase(5, 7, 0, 9999999, facilityCodeFirst);
     verifyEpiInventoryDataInDatabase(null, "10", null, "P10", facilityCodeFirst);
     verifyEpiInventoryDataInDatabase(null, "20", null, "Product6", facilityCodeFirst);
@@ -414,6 +414,48 @@ public class E2EDistributionTest extends TestCaseHelper {
 
     facilityListPage.verifyFacilityIndicatorColor("Overall", "GREEN");
 
+    homePage.navigateHomePage();
+    homePage.navigateOfflineDistribution();
+
+    distributionPage.syncDistribution(1);
+    assertTrue(distributionPage.isFacilitySyncFailed());
+
+    switchOnNetworkInterface(wifiInterface);
+    testWebDriver.sleep(7000);
+
+    distributionPage.clickRetryButton();
+    assertEquals(distributionPage.getSyncStatusMessage(), "Sync Status");
+    assertTrue("Incorrect Sync Facility", distributionPage.getSyncMessage().contains("F10-Village Dispensary"));
+
+    distributionPage.syncDistributionMessageDone();
+    assertEquals(distributionPage.getDistributionStatus(), "SYNCED");
+    assertFalse(distributionPage.getTextDistributionList().contains("sync"));
+
+    Map<String, String> distributionDetails = dbWrapper.getDistributionDetails(deliveryZoneNameFirst, programFirst, "Period14");
+    assertEquals(distributionDetails.get("status"), "SYNCED");
+
+    distributionPage.clickRecordData(1);
+    facilityListPage.selectFacility(facilityCodeFirst);
+    facilityListPage.verifyFacilityIndicatorColor("Overall", "BLUE");
+
+    verifyEpiUseDataInDatabase(10, 20, 30, null, 50, "10/2011", "PG1", facilityCodeFirst);
+    verifyFacilityVisitInformationInDatabase(facilityCodeFirst, null, null, null, null, null, null, "t", "f");
+    verifyFullCoveragesDataInDatabase(5, 7, 0, 9999999, facilityCodeFirst);
+    verifyEpiInventoryDataInDatabase(null, null, null, "P10", facilityCodeFirst);
+    verifyEpiInventoryDataInDatabase(null, null, null, "Product6", facilityCodeFirst);
+    verifyEpiInventoryDataInDatabase(null, null, null, "P11", facilityCodeFirst);
+
+    visitInformationPage.verifyAllFieldsDisabled();
+
+    visitInformationPage.navigateToEpiUse();
+    epiUsePage.verifyAllFieldsDisabled();
+
+    epiUsePage.navigateToRefrigerators();
+    refrigeratorPage.clickShowForRefrigerator1();
+    refrigeratorPage.verifyAllFieldsDisabled();
+
+    refrigeratorPage.navigateToFullCoverage();
+    fullCoveragePage.verifyAllFieldsDisabled();
 
   }
 
