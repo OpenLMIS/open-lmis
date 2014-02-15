@@ -16,6 +16,7 @@ import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.UiUtils.TestWebDriver;
 import org.openlmis.pageobjects.*;
 import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.WebElement;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Listeners;
@@ -405,6 +406,7 @@ public class DistributionSyncTest extends TestCaseHelper {
 
     DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
     distributionPage.syncDistribution(1);
+    assertEquals(distributionPage.getSyncStatusMessage(), "Sync Status");
     assertTrue(distributionPage.getSyncMessage().contains("F10-Village Dispensary"));
     distributionPage.syncDistributionMessageDone();
 
@@ -413,37 +415,11 @@ public class DistributionSyncTest extends TestCaseHelper {
     deleteDistribution();
 
     distributionPage.selectValueFromDeliveryZone(distributionTestData.get(FIRST_DELIVERY_ZONE_NAME));
-    assertFalse(distributionPage.getAllSelectOptionsFromProgram().contains(distributionTestData.get(VACCINES_PROGRAM)));
+    for (WebElement webElement : distributionPage.getAllSelectOptionsFromProgram()) {
+      assertFalse(webElement.getText().contains(distributionTestData.get(VACCINES_PROGRAM)));
+    }
 
     //dbWrapper.updateActiveStatusOfProgram("VACCINES", true);
-  }
-
-  @Test(groups = {"distribution"})
-  public void testSyncWhenProgramDeletedAfterCaching() throws SQLException {
-    HomePage homePage = loginPage.loginAs(distributionTestData.get(USER), distributionTestData.get(PASSWORD));
-
-    initiateDistribution(distributionTestData.get(FIRST_DELIVERY_ZONE_NAME), distributionTestData.get(VACCINES_PROGRAM));
-    dbWrapper.deleteProgramToFacilityMapping("VACCINES");
-
-    assertTrue(facilityListPage.getFacilitiesInDropDown().contains(distributionTestData.get(FIRST_FACILITY_CODE)));
-    facilityListPage.selectFacility(distributionTestData.get(FIRST_FACILITY_CODE));
-
-    facilityListPage.verifyOverallFacilityIndicatorColor("RED");
-    verifyProductsAreDisplayed();
-
-    fillFacilityData();
-
-    DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
-    distributionPage.syncDistribution(1);
-    assertTrue(distributionPage.getSyncMessage().contains("F10-Village Dispensary"));
-    distributionPage.syncDistributionMessageDone();
-
-    verifySyncedDataInDatabase(distributionTestData.get(FIRST_FACILITY_CODE));
-
-    deleteDistribution();
-
-    distributionPage.selectValueFromDeliveryZone(distributionTestData.get(FIRST_DELIVERY_ZONE_NAME));
-    assertFalse(distributionPage.getAllSelectOptionsFromProgram().contains(distributionTestData.get(VACCINES_PROGRAM)));
   }
 
   @Test(groups = {"distribution"})
@@ -723,6 +699,8 @@ public class DistributionSyncTest extends TestCaseHelper {
     verifyEpiInventoryDataInDatabase(null, null, null, "P10", distributionTestData.get(FIRST_FACILITY_CODE));
     verifyEpiInventoryDataInDatabase(null, null, null, "Product6", distributionTestData.get(FIRST_FACILITY_CODE));
     verifyEpiInventoryDataInDatabase(null, null, null, "P11", distributionTestData.get(FIRST_FACILITY_CODE));
+    verifyRefrigeratorReadingsNullInDatabase("GNR7878", distributionTestData.get(FIRST_FACILITY_CODE));
+    verifyRefrigeratorsDataInDatabase(distributionTestData.get(FIRST_FACILITY_CODE), "GNR7878", "LG", "800L", "t");
 
     distributionPage.clickRecordData(1);
     facilityListPage.selectFacility(distributionTestData.get(FIRST_FACILITY_CODE));
@@ -737,7 +715,6 @@ public class DistributionSyncTest extends TestCaseHelper {
 
   @Test(groups = {"distribution"})
   public void testSyncOfUnvisitedFacilityWhenFacilityInactiveAfterCaching() throws SQLException {
-    dbWrapper.addRefrigeratorToFacility("LG", "800L", "GNR7878", "F11");
     HomePage homePage = loginPage.loginAs(distributionTestData.get(USER), distributionTestData.get(PASSWORD));
     initiateDistribution(distributionTestData.get(FIRST_DELIVERY_ZONE_NAME), distributionTestData.get(VACCINES_PROGRAM));
     VisitInformationPage visitInformationPage = facilityListPage.selectFacility(distributionTestData.get(FIRST_FACILITY_CODE));
@@ -751,22 +728,14 @@ public class DistributionSyncTest extends TestCaseHelper {
     EpiInventoryPage epiInventoryPage = refrigeratorPage.navigateToEpiInventory();
     epiInventoryPage.verifyIndicator("RED");
 
-    visitInformationPage.navigateToVisitInformation();
-    visitInformationPage.selectFacilityVisitedNo();
-    visitInformationPage.selectReasonNoTransport();
+    epiInventoryPage.navigateToVisitInformation();
+
+    fillFacilityDataWhenUnvisited();
+
+    visitInformationPage.navigateToRefrigerators();
 
     refrigeratorPage.verifyRefrigeratorColor("overall", "GREEN");
     epiInventoryPage.verifyIndicator("GREEN");
-
-    EPIUsePage epiUsePage = refrigeratorPage.navigateToEpiUse();
-    epiUsePage.enterData(70, 80, 90, 100, 9999999, "10/2011", 1);
-
-    ChildCoveragePage childCoveragePage = epiUsePage.navigateToChildCoverage();
-    childCoveragePage.applyNRToAll();
-    childCoveragePage.clickOK();
-
-    FullCoveragePage fullCoveragePage = childCoveragePage.navigateToFullCoverage();
-    fullCoveragePage.clickApplyNRToAll();
 
     facilityListPage.verifyOverallFacilityIndicatorColor("GREEN");
 
@@ -775,12 +744,7 @@ public class DistributionSyncTest extends TestCaseHelper {
     distributionPage.syncDistribution(1);
     distributionPage.syncDistributionMessageDone();
 
-    verifyEpiUseDataInDatabase(70, 80, 90, 100, 9999999, "10/2011", "PG1", distributionTestData.get(FIRST_FACILITY_CODE));
-    verifyFacilityVisitInformationInDatabase(distributionTestData.get(FIRST_FACILITY_CODE), null, null, null, null, null, null, "t", "f");
-    verifyFullCoveragesDataInDatabase(null, null, null, null, distributionTestData.get(FIRST_FACILITY_CODE));
-    verifyEpiInventoryDataInDatabase(null, null, null, "P10", distributionTestData.get(FIRST_FACILITY_CODE));
-    verifyEpiInventoryDataInDatabase(null, null, null, "Product6", distributionTestData.get(FIRST_FACILITY_CODE));
-    verifyEpiInventoryDataInDatabase(null, null, null, "P11", distributionTestData.get(FIRST_FACILITY_CODE));
+    verifySyncedDataInDatabaseWhenFacilityUnvisited(distributionTestData.get(FIRST_FACILITY_CODE));
   }
 
   @Test(groups = {"distribution"})
@@ -839,6 +803,8 @@ public class DistributionSyncTest extends TestCaseHelper {
     verifyEpiInventoryDataInDatabase(null, null, null, "P10", distributionTestData.get(FIRST_FACILITY_CODE));
     verifyEpiInventoryDataInDatabase(null, null, null, "Product6", distributionTestData.get(FIRST_FACILITY_CODE));
     verifyEpiInventoryDataInDatabase(null, null, null, "P11", distributionTestData.get(FIRST_FACILITY_CODE));
+    verifyRefrigeratorReadingsNullInDatabase("GNR7878", distributionTestData.get(FIRST_FACILITY_CODE));
+    verifyRefrigeratorsDataInDatabase(distributionTestData.get(FIRST_FACILITY_CODE), "GNR7878", "LG", "800L", "t");
 
     verifyEpiUseDataInDatabase(170, 1180, 90, 1100, 1239999, "10/2011", "PG1", distributionTestData.get(SECOND_FACILITY_CODE));
     verifyFacilityVisitInformationInDatabase(distributionTestData.get(SECOND_FACILITY_CODE), null, null, null, null, null, null, "t", "f");
@@ -846,6 +812,8 @@ public class DistributionSyncTest extends TestCaseHelper {
     verifyEpiInventoryDataInDatabase(null, null, null, "P10", distributionTestData.get(SECOND_FACILITY_CODE));
     verifyEpiInventoryDataInDatabase(null, null, null, "Product6", distributionTestData.get(SECOND_FACILITY_CODE));
     verifyEpiInventoryDataInDatabase(null, null, null, "P11", distributionTestData.get(SECOND_FACILITY_CODE));
+    verifyRefrigeratorReadingsNullInDatabase("GNR7878", distributionTestData.get(SECOND_FACILITY_CODE));
+    verifyRefrigeratorsDataInDatabase(distributionTestData.get(SECOND_FACILITY_CODE), "GNR7878", "LG", "800L", "t");
 
     distributionPage.clickRecordData(1);
     facilityListPage.selectFacility(distributionTestData.get(FIRST_FACILITY_CODE));
@@ -857,6 +825,79 @@ public class DistributionSyncTest extends TestCaseHelper {
     facilityListPage.verifyOverallFacilityIndicatorColor("BLUE");
     facilityListPage.verifyIndividualFacilityIndicatorColor(distributionTestData.get(FIRST_FACILITY_CODE), "BLUE");
     verifyAllFieldsDisabled();
+  }
+
+  @Test(groups = {"distribution"})
+  public void testSyncWhenFacilityUnvisitedAndDisabledAfterCaching() throws SQLException {
+    HomePage homePage = loginPage.loginAs(distributionTestData.get(USER), distributionTestData.get(PASSWORD));
+
+    initiateDistribution(distributionTestData.get(FIRST_DELIVERY_ZONE_NAME), distributionTestData.get(VACCINES_PROGRAM));
+    dbWrapper.updateFieldValue("facilities", "enabled", "false", "code", distributionTestData.get(FIRST_FACILITY_CODE));
+    dbWrapper.updateFieldValue("facilities", "active", "false", "code", distributionTestData.get(FIRST_FACILITY_CODE));
+    assertTrue(facilityListPage.getFacilitiesInDropDown().contains(distributionTestData.get(FIRST_FACILITY_CODE)));
+    deleteDistribution();
+
+    initiateNextDistributionForSamePeriod(distributionTestData.get(FIRST_DELIVERY_ZONE_NAME), distributionTestData.get(VACCINES_PROGRAM));
+    assertTrue(facilityListPage.getFacilitiesInDropDown().contains(distributionTestData.get(FIRST_FACILITY_CODE)));
+
+    facilityListPage.selectFacility(distributionTestData.get(FIRST_FACILITY_CODE));
+    verifyProductsAreDisplayed();
+
+    facilityListPage.verifyOverallFacilityIndicatorColor("RED");
+
+    fillFacilityDataWhenUnvisited();
+
+    DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
+    distributionPage.syncDistribution(1);
+    assertTrue(distributionPage.getSyncMessage().contains("F10-Village Dispensary"));
+    distributionPage.syncDistributionMessageDone();
+
+    verifySyncedDataInDatabaseWhenFacilityUnvisited(distributionTestData.get(FIRST_FACILITY_CODE));
+
+    deleteDistribution();
+
+    initiateNextDistributionForSamePeriod(distributionTestData.get(FIRST_DELIVERY_ZONE_NAME), distributionTestData.get(VACCINES_PROGRAM));
+    assertFalse(facilityListPage.getFacilitiesInDropDown().contains(distributionTestData.get(FIRST_FACILITY_CODE)));
+    deleteDistribution();
+
+    initiateNextDistributionForGivenPeriod(distributionTestData.get(FIRST_DELIVERY_ZONE_NAME), distributionTestData.get(VACCINES_PROGRAM), "Period13");
+    assertFalse(facilityListPage.getFacilitiesInDropDown().contains(distributionTestData.get(FIRST_FACILITY_CODE)));
+
+    //dbWrapper.updateFacilityFieldBYCode("enabled", "true", "F10");
+    //dbWrapper.updateActiveStatusOfFacility(distributionTestData.get(FIRST_FACILITY_CODE), "true");
+  }
+
+  @Test(groups = {"distribution"})
+  public void testSyncWhenFacilityUnvisitedAndAllProgramInactiveAfterCaching() throws SQLException {
+    HomePage homePage = loginPage.loginAs(distributionTestData.get(USER), distributionTestData.get(PASSWORD));
+
+    initiateDistribution(distributionTestData.get(FIRST_DELIVERY_ZONE_NAME), distributionTestData.get(VACCINES_PROGRAM));
+    dbWrapper.updateFieldValue("programs", "active", "false", "code", "VACCINES");
+
+    assertTrue(facilityListPage.getFacilitiesInDropDown().contains(distributionTestData.get(FIRST_FACILITY_CODE)));
+
+    facilityListPage.selectFacility(distributionTestData.get(FIRST_FACILITY_CODE));
+    verifyProductsAreDisplayed();
+
+    facilityListPage.verifyOverallFacilityIndicatorColor("RED");
+
+    fillFacilityDataWhenUnvisited();
+
+    DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
+    distributionPage.syncDistribution(1);
+    assertTrue(distributionPage.getSyncMessage().contains("F10-Village Dispensary"));
+    distributionPage.syncDistributionMessageDone();
+
+    verifySyncedDataInDatabaseWhenFacilityUnvisited(distributionTestData.get(FIRST_FACILITY_CODE));
+
+    deleteDistribution();
+
+    distributionPage.selectValueFromDeliveryZone(distributionTestData.get(FIRST_DELIVERY_ZONE_NAME));
+    for (WebElement webElement : distributionPage.getAllSelectOptionsFromProgram()) {
+      assertFalse(webElement.getText().contains(distributionTestData.get(VACCINES_PROGRAM)));
+    }
+
+    //dbWrapper.updateActiveStatusOfProgram("VACCINES", true);
   }
 
   public void setupDataForDistributionTest(String userSIC, String deliveryZoneCodeFirst, String deliveryZoneCodeSecond,
@@ -916,6 +957,34 @@ public class DistributionSyncTest extends TestCaseHelper {
     fullCoveragePage.enterData(23, 66, 77, "45");
 
     fullCoveragePage.navigateToVisitInformation();
+    return visitInformationPage;
+  }
+
+  private VisitInformationPage fillFacilityDataWhenUnvisited() {
+    VisitInformationPage visitInformationPage = PageFactory.getInstanceOfVisitInformation(testWebDriver);
+
+    RefrigeratorPage refrigeratorPage = visitInformationPage.navigateToRefrigerators();
+    refrigeratorPage.navigateToRefrigerators();
+    refrigeratorPage.clickDelete();
+
+    refrigeratorPage.clickOKButton();
+
+    refrigeratorPage.clickAddNew();
+    refrigeratorPage.addNewRefrigerator("SAM", "800L", "GNR7876");
+
+    ChildCoveragePage childCoveragePage = refrigeratorPage.navigateToChildCoverage();
+    childCoveragePage.applyNRToAll();
+    childCoveragePage.clickOK();
+
+    EPIUsePage epiUsePage = childCoveragePage.navigateToEpiUse();
+    epiUsePage.enterData(70, 80, 90, 100, 9999999, "10/2011", 1);
+
+    FullCoveragePage fullCoveragePage = epiUsePage.navigateToFullCoverage();
+    fullCoveragePage.enterData(23, 66, 77, "45");
+
+    fullCoveragePage.navigateToVisitInformation();
+    visitInformationPage.selectFacilityVisitedNo();
+    visitInformationPage.selectReasonNoTransport();
 
     return visitInformationPage;
   }
@@ -933,6 +1002,21 @@ public class DistributionSyncTest extends TestCaseHelper {
     verifyEpiInventoryDataInDatabase(null, "2", null, "P10", facilityCode);
     verifyEpiInventoryDataInDatabase(null, "4", null, "Product6", facilityCode);
     verifyEpiInventoryDataInDatabase(null, "6", null, "P11", facilityCode);
+  }
+
+  private void verifySyncedDataInDatabaseWhenFacilityUnvisited(String facilityCode) throws SQLException {
+    verifyRefrigeratorReadingsNullInDatabase("GNR7878", facilityCode);
+    verifyRefrigeratorsDataInDatabase(facilityCode, "GNR7878", "LG", "800L", "t");
+
+    verifyEpiUseDataInDatabase(70, 80, 90, 100, 9999999, "10/2011", "PG1", facilityCode);
+
+    verifyFacilityVisitInformationInDatabase(facilityCode, null, null, null, null, null, null, "t", "f");
+
+    verifyFullCoveragesDataInDatabase(23, 66, 77, 45, facilityCode);
+
+    verifyEpiInventoryDataInDatabase(null, null, null, "P10", facilityCode);
+    verifyEpiInventoryDataInDatabase(null, null, null, "Product6", facilityCode);
+    verifyEpiInventoryDataInDatabase(null, null, null, "P11", facilityCode);
   }
 
   public void fillEpiInventoryWithOnlyDeliveredQuantity(String deliveredQuantity1, String deliveredQuantity2, String deliveredQuantity3) {

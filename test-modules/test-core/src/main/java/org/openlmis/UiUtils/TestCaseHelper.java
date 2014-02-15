@@ -519,7 +519,7 @@ public class TestCaseHelper {
     assertEquals(vehicleId, visitInformation.get("vehicleId"));
     assertEquals(synced, visitInformation.get("synced"));
     assertEquals(visited, visitInformation.get("visited"));
-    if (visitInformation.get("visited") == "t") {
+    if (visitInformation.get("visited").equals("t")) {
       assertEquals(new SimpleDateFormat("yyyy-MM").format(new Date()) + "-01 00:00:00", visitInformation.get("visitDate"));
     }
   }
@@ -569,6 +569,11 @@ public class TestCaseHelper {
     ResultSet resultSet = dbWrapper.getRefrigeratorReadings(refrigeratorSerialNumber, facilityCode);
     Long readingId = resultSet.getLong("id");
     resultSet = dbWrapper.getRefrigeratorProblems(readingId);
+    assertFalse(resultSet.next());
+  }
+
+  public void verifyRefrigeratorReadingsNullInDatabase(String refrigeratorSerialNumber, String facilityCode) throws SQLException {
+    ResultSet resultSet = dbWrapper.getRefrigeratorReadings(refrigeratorSerialNumber, facilityCode);
     assertFalse(resultSet.next());
   }
 

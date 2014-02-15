@@ -381,7 +381,7 @@ public class ManageDistribution extends TestCaseHelper {
       assertEqualsAndNulls(facilityVisitDetails.get("verifiedByTitle"), map.get("verifiedByTitle"));
       assertEqualsAndNulls(facilityVisitDetails.get("visited"), map.get("visited"));
       assertEqualsAndNulls(facilityVisitDetails.get("synced"), map.get("synced"));
-      if (facilityVisitDetails.get("visited") == "t") {
+      if (facilityVisitDetails.get("visited").equals("t")) {
         assertEquals(new SimpleDateFormat("yyyy-MM").format(new Date()) + "-01 00:00:00", facilityVisitDetails.get("visitDate"));
       }
       if (!map.get("vehicleId").equals("null"))
@@ -529,7 +529,10 @@ public class ManageDistribution extends TestCaseHelper {
 
   @Then("^I should not see already cached facility \"([^\"]*)\"$")
   public void verifyAlreadyCachedDistributionFacilityNotPresentInDropDown(String facilityCodeFirst) throws SQLException {
-    assertFalse(facilityListPage.getAllFacilitiesFromDropDown().contains(facilityCodeFirst));
+    facilityListPage = PageFactory.getInstanceOfFacilityListPage(testWebDriver);
+    for (WebElement webElement : facilityListPage.getAllFacilitiesFromDropDown()) {
+      assertFalse(webElement.getText().contains(facilityCodeFirst));
+    }
     facilityListPage.clickFacilityListDropDown();
   }
 

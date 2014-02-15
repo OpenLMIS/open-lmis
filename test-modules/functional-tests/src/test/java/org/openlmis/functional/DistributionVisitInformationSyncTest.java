@@ -459,6 +459,30 @@ public class DistributionVisitInformationSyncTest extends TestCaseHelper {
     visitInformationPage.selectReasonNoTransport();
   }
 
+  @And("^I select Others reason$")
+  public void selectOtherReason() {
+    VisitInformationPage visitInformationPage = PageFactory.getInstanceOfVisitInformation(testWebDriver);
+    visitInformationPage.selectReasonOther();
+  }
+
+  @And("^I enter Other reason as \"([^\"]*)\"$")
+  public void enterOtherReason(String reason) {
+    VisitInformationPage visitInformationPage = PageFactory.getInstanceOfVisitInformation(testWebDriver);
+    visitInformationPage.enterOtherReasonInTextBox(reason);
+  }
+
+  @And("^I verify Others reason selected$")
+  public void isNoTransportReasonSelected() {
+    VisitInformationPage visitInformationPage = PageFactory.getInstanceOfVisitInformation(testWebDriver);
+    visitInformationPage.isOtherReasonSelected();
+  }
+
+  @And("^I verify Other reason entered as \"([^\"]*)\"$")
+  public void verifyOtherReason(String reason) {
+    VisitInformationPage visitInformationPage = PageFactory.getInstanceOfVisitInformation(testWebDriver);
+    assertEquals(reason, visitInformationPage.getOtherReason());
+  }
+
   @AfterMethod(groups = "distribution")
   public void tearDown() throws SQLException {
     testWebDriver.sleep(500);
