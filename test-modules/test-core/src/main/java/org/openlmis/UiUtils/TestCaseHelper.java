@@ -509,7 +509,7 @@ public class TestCaseHelper {
 
   public void verifyFacilityVisitInformationInDatabase(String facilityCode, String observation, String confirmedByName,
                                                        String confirmedByTitle, String verifiedByName,
-                                                       String verifiedByTitle, String vehicleId, String synced, String visited) throws SQLException {
+                                                       String verifiedByTitle, String vehicleId, String synced, String visited, String reasonForNotVisiting, String otherReasonDescription) throws SQLException {
     Map<String, String> visitInformation = dbWrapper.getFacilityVisitDetails(facilityCode);
     assertEquals(observation, visitInformation.get("observations"));
     assertEquals(confirmedByName, visitInformation.get("confirmedByName"));
@@ -519,6 +519,8 @@ public class TestCaseHelper {
     assertEquals(vehicleId, visitInformation.get("vehicleId"));
     assertEquals(synced, visitInformation.get("synced"));
     assertEquals(visited, visitInformation.get("visited"));
+    assertEquals(reasonForNotVisiting, visitInformation.get("reasonForNotVisiting"));
+    assertEquals(otherReasonDescription, visitInformation.get("otherReasonDescription"));
     if (visitInformation.get("visited").equals("t")) {
       assertEquals(new SimpleDateFormat("yyyy-MM").format(new Date()) + "-01 00:00:00", visitInformation.get("visitDate"));
     }

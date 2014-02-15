@@ -37,6 +37,7 @@ import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
 import static java.util.Arrays.asList;
 import static java.util.Collections.addAll;
 import static org.testng.AssertJUnit.assertFalse;
+import static org.testng.AssertJUnit.assertNull;
 
 @Listeners(CaptureScreenshotOnFailureListener.class)
 
@@ -381,11 +382,15 @@ public class ManageDistribution extends TestCaseHelper {
       assertEqualsAndNulls(facilityVisitDetails.get("verifiedByTitle"), map.get("verifiedByTitle"));
       assertEqualsAndNulls(facilityVisitDetails.get("visited"), map.get("visited"));
       assertEqualsAndNulls(facilityVisitDetails.get("synced"), map.get("synced"));
+      assertEqualsAndNulls(facilityVisitDetails.get("visited"), map.get("visited"));
+      assertEqualsAndNulls(facilityVisitDetails.get("reasonForNotVisiting"), map.get("reasonForNotVisiting"));
+      assertEqualsAndNulls(facilityVisitDetails.get("otherReasonDescription"), map.get("otherReasonDescription"));
+      assertEqualsAndNulls(facilityVisitDetails.get("vehicleId"), map.get("vehicleId"));
       if (facilityVisitDetails.get("visited").equals("t")) {
         assertEquals(new SimpleDateFormat("yyyy-MM").format(new Date()) + "-01 00:00:00", facilityVisitDetails.get("visitDate"));
+      } else {
+        assertNull(facilityVisitDetails.get("visitDate"));
       }
-      if (!map.get("vehicleId").equals("null"))
-        assertEquals(facilityVisitDetails.get("vehicleId"), map.get("vehicleId"));
     }
   }
 
@@ -394,12 +399,12 @@ public class ManageDistribution extends TestCaseHelper {
     List<Map<String, String>> data = tableData.asMaps();
     Map<String, String> epiDetails = dbWrapper.getEpiUseDetails(productGroupCode, facilityCode);
     for (Map map : data) {
-      assertEqualsAndNulls(epiDetails.get("stockatfirstofmonth"), map.get("firstOfMonth").toString());
+      assertEqualsAndNulls(epiDetails.get("stockAtFirstOfMonth".toLowerCase()), map.get("firstOfMonth").toString());
       assertEqualsAndNulls(epiDetails.get("received"), map.get("received").toString());
       assertEqualsAndNulls(epiDetails.get("distributed"), map.get("distributed").toString());
       assertEqualsAndNulls(epiDetails.get("loss"), map.get("loss").toString());
-      assertEqualsAndNulls(epiDetails.get("stockatendofmonth"), map.get("endOfMonth").toString());
-      assertEqualsAndNulls(epiDetails.get("expirationdate"), map.get("expirationDate").toString());
+      assertEqualsAndNulls(epiDetails.get("stockAtEndOfMonth".toLowerCase()), map.get("endOfMonth").toString());
+      assertEqualsAndNulls(epiDetails.get("expirationDate".toLowerCase()), map.get("expirationDate").toString());
     }
   }
 
@@ -422,10 +427,10 @@ public class ManageDistribution extends TestCaseHelper {
     List<Map<String, String>> data = tableData.asMaps();
     Map<String, String> fullCoveragesDetails = dbWrapper.getFullCoveragesDetails(facilityCode);
     for (Map map : data) {
-      assertEqualsAndNulls(fullCoveragesDetails.get("femalehealthcenter"), map.get("femaleHealthCenter").toString());
-      assertEqualsAndNulls(fullCoveragesDetails.get("femaleoutreach"), map.get("femaleOutreach").toString());
-      assertEqualsAndNulls(fullCoveragesDetails.get("malehealthcenter"), map.get("maleHealthCenter").toString());
-      assertEqualsAndNulls(fullCoveragesDetails.get("maleoutreach"), map.get("maleOutreach").toString());
+      assertEqualsAndNulls(fullCoveragesDetails.get("femaleHealthCenter".toLowerCase()), map.get("femaleHealthCenter").toString());
+      assertEqualsAndNulls(fullCoveragesDetails.get("femaleOutreach".toLowerCase()), map.get("femaleOutreach").toString());
+      assertEqualsAndNulls(fullCoveragesDetails.get("maleHealthCenter".toLowerCase()), map.get("maleHealthCenter").toString());
+      assertEqualsAndNulls(fullCoveragesDetails.get("maleOutreach".toLowerCase()), map.get("maleOutreach").toString());
     }
   }
 

@@ -769,8 +769,8 @@ Feature: Smoke Tests
     Then I check confirm sync message as "F10-Village Dispensary"
     When I done sync message
     And I view visit information in DB for facility "F10":
-      | observations     | confirmedByName | confirmedByTitle | verifiedByName | verifiedByTitle | vehicleId | synced | visited |
-      | some observation | samuel          | fc               | Verifier       | XYZ             | null      | t      | t       |
+      | observations     | confirmedByName | confirmedByTitle | verifiedByName | verifiedByTitle | vehicleId | synced | visited | reasonForNotVisiting | otherReasonDescription |
+      | some observation | samuel          | fc               | Verifier       | XYZ             | null      | t      | t       | null                 | null                   |
     And I view epi use data in DB for facility "F10" and product group "penta":
       | distributed | expirationDate | loss | received | firstOfMonth | endOfMonth |
       | 16          | 11/2012        | 1    | 10       | 12           | 5          |
@@ -876,8 +876,8 @@ Feature: Smoke Tests
     And I check confirm sync message as "F10-Village Dispensary"
     And I done sync message
     And I view visit information in DB for facility "F10":
-      | observations | confirmedByName | confirmedByTitle | verifiedByName | verifiedByTitle | vehicleId | synced | visited |
-      | null         | null            | null             | null           | null            | null      | t      | f       |
+      | observations | confirmedByName | confirmedByTitle | verifiedByName | verifiedByTitle | vehicleId | synced | visited | reasonForNotVisiting  | otherReasonDescription |
+      | null         | null            | null             | null           | null            | null      | t      | f       | TRANSPORT_UNAVAILABLE | null                   |
     And I view epi use data in DB for facility "F10" and product group "penta":
       | distributed | expirationDate | loss | received | firstOfMonth | endOfMonth |
       | 16          | 11/2012        | 1    | 10       | 12           | 5          |

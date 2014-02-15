@@ -1027,7 +1027,7 @@ public class DBWrapper {
   public Map<String, String> getFacilityVisitDetails(String facilityCode) throws SQLException {
     Map<String, String> facilityVisitsDetails = new HashMap<>();
     try (ResultSet rs = query("SELECT observations,confirmedByName,confirmedByTitle,verifiedByName,verifiedByTitle, visited, synced, " +
-      "visitDate, vehicleId from facility_visits WHERE facilityId = (SELECT id FROM facilities WHERE code = '" + facilityCode + "');")) {
+      "visitDate, vehicleId, reasonForNotVisiting, otherReasonDescription from facility_visits WHERE facilityId = (SELECT id FROM facilities WHERE code = '" + facilityCode + "');")) {
       while (rs.next()) {
         facilityVisitsDetails.put("observations", rs.getString("observations"));
         facilityVisitsDetails.put("confirmedByName", rs.getString("confirmedByName"));
@@ -1038,6 +1038,8 @@ public class DBWrapper {
         facilityVisitsDetails.put("visitDate", rs.getString("visitDate"));
         facilityVisitsDetails.put("vehicleId", rs.getString("vehicleId"));
         facilityVisitsDetails.put("synced", rs.getString("synced"));
+        facilityVisitsDetails.put("reasonForNotVisiting", rs.getString("reasonForNotVisiting"));
+        facilityVisitsDetails.put("otherReasonDescription", rs.getString("otherReasonDescription"));
       }
       return facilityVisitsDetails;
     }
