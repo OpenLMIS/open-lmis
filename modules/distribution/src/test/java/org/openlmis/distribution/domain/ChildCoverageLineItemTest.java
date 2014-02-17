@@ -33,6 +33,7 @@ public class ChildCoverageLineItemTest {
     Facility facility = mock(Facility.class);
     FacilityVisit facilityVisit = new FacilityVisit();
     facilityVisit.setId(3L);
+    facilityVisit.setCreatedBy(33L);
     VaccinationProduct vaccinationProduct = new VaccinationProduct("BCG", "BCG", true);
 
     when(facility.getWhoRatioFor("BCG")).thenReturn(2.4);
@@ -43,6 +44,7 @@ public class ChildCoverageLineItemTest {
     assertThat(childCoverageLineItem.getVaccination(), is("BCG"));
     assertThat(childCoverageLineItem.getTargetGroup(), is(2));
     assertThat(childCoverageLineItem.getFacilityVisitId(), is(3L));
+    assertThat(childCoverageLineItem.getCreatedBy(), is(33L));
   }
 
   @Test

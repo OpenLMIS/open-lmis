@@ -43,6 +43,7 @@ public class ChildCoverageLineItem extends BaseModel {
     this.targetGroup = vaccinationProduct != null ? calculateTargetGroup(facility.getWhoRatioFor(vaccinationProduct.getProductCode()),
       facility.getCatchmentPopulation()) : null;
     this.vaccination = vaccination;
+    this.createdBy = facilityVisit.getCreatedBy();
   }
 
   private Integer calculateTargetGroup(Double whoRatio, Long catchmentPopulation) {
