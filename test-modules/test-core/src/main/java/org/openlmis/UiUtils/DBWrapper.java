@@ -722,7 +722,7 @@ public class DBWrapper {
       update("update " + tableName + " set " + fieldName + "='" + value + "' where " + queryParam + "='" + queryValue + "';");
   }
 
-  public void updateFieldValue(String tableName, String fieldName, Boolean value) throws SQLException {
+  public void updateFieldValue(String tableName, String fieldName, boolean value) throws SQLException {
     update("update " + tableName + " set " + fieldName + "=" + value + ";");
   }
 

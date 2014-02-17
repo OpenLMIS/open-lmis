@@ -37,8 +37,6 @@ import static org.testng.Assert.assertNull;
 @Listeners(CaptureScreenshotOnFailureListener.class)
 
 public class DistributionSyncTest extends TestCaseHelper {
-
-
   public static final String USER = "user";
   public static final String PASSWORD = "password";
   public static final String FIRST_DELIVERY_ZONE_CODE = "firstDeliveryZoneCode";
@@ -93,10 +91,22 @@ public class DistributionSyncTest extends TestCaseHelper {
 
   @Test(groups = {"distribution"})
   public void testMultipleFacilityFinalSyncAndRestrictAlreadySyncedPeriod() throws SQLException {
+    dbWrapper.updateFieldValue("facilities", "catchmentPopulation", "999", "code", distributionTestData.get(SECOND_FACILITY_CODE));
+    String actualFacilityCatchmentPopulationForFacility1 = dbWrapper.getAttributeFromTable("facilities", "catchmentPopulation", "code", distributionTestData.get(FIRST_FACILITY_CODE));
+    String actualFacilityCatchmentPopulationForFacility2 = dbWrapper.getAttributeFromTable("facilities", "catchmentPopulation", "code", distributionTestData.get(SECOND_FACILITY_CODE));
+
     HomePage homePage = loginPage.loginAs(distributionTestData.get(USER), distributionTestData.get(PASSWORD));
     initiateDistribution(distributionTestData.get(FIRST_DELIVERY_ZONE_NAME), distributionTestData.get(VACCINES_PROGRAM));
-    VisitInformationPage visitInformationPage = facilityListPage.selectFacility(distributionTestData.get(SECOND_FACILITY_CODE));
 
+    String expectedFacilityCatchmentPopulationForFacility1 = dbWrapper.getAttributeFromTable("facility_visits", "facilityCatchmentPopulation", "facilityId", dbWrapper.getAttributeFromTable("facilities", "id", "code", distributionTestData.get(FIRST_FACILITY_CODE)));
+    String expectedFacilityCatchmentPopulationForFacility2 = dbWrapper.getAttributeFromTable("facility_visits", "facilityCatchmentPopulation", "facilityId", dbWrapper.getAttributeFromTable("facilities", "id", "code", distributionTestData.get(SECOND_FACILITY_CODE)));
+
+    assertEqualsAndNulls(actualFacilityCatchmentPopulationForFacility1, expectedFacilityCatchmentPopulationForFacility1);
+    assertEqualsAndNulls(actualFacilityCatchmentPopulationForFacility2, expectedFacilityCatchmentPopulationForFacility2);
+
+    dbWrapper.updateFieldValue("facilities", "catchmentPopulation", "10000", "code", distributionTestData.get(SECOND_FACILITY_CODE));
+
+    VisitInformationPage visitInformationPage = facilityListPage.selectFacility(distributionTestData.get(SECOND_FACILITY_CODE));
 
     facilityListPage.verifyOverallFacilityIndicatorColor("AMBER");
     assertEquals("Was " + dbWrapper.getAttributeFromTable("facilities", "name", "code", distributionTestData.get(SECOND_FACILITY_CODE)) +
@@ -206,7 +216,10 @@ public class DistributionSyncTest extends TestCaseHelper {
     verifyEpiInventoryDataInDatabase(null, "4", null, "Product6", distributionTestData.get(SECOND_FACILITY_CODE));
     verifyEpiInventoryDataInDatabase(null, "6", null, "P11", distributionTestData.get(SECOND_FACILITY_CODE));
 
+    assertEqualsAndNulls(actualFacilityCatchmentPopulationForFacility2, expectedFacilityCatchmentPopulationForFacility2);
+
     verifySyncedDataInDatabase(distributionTestData.get(FIRST_FACILITY_CODE));
+    assertEqualsAndNulls(actualFacilityCatchmentPopulationForFacility1, expectedFacilityCatchmentPopulationForFacility1);
 
     homePage.navigateHomePage();
     homePage.navigateToDistributionWhenOnline();
@@ -680,9 +693,22 @@ public class DistributionSyncTest extends TestCaseHelper {
 
   @Test(groups = {"distribution"})
   public void testSyncOfMultipleFacilityWhenFacilityUnvisited() throws SQLException {
+    dbWrapper.updateFieldValue("facilities", "catchmentPopulation", null);
+    dbWrapper.updateFieldValue("facilities", "catchmentPopulation", "0", "code", distributionTestData.get(SECOND_FACILITY_CODE));
+    String actualFacilityCatchmentPopulationForFacility2 = dbWrapper.getAttributeFromTable("facilities", "catchmentPopulation", "code", distributionTestData.get(SECOND_FACILITY_CODE));
+
     dbWrapper.addRefrigeratorToFacility("LG", "800L", "GNR7878", "F11");
     HomePage homePage = loginPage.loginAs(distributionTestData.get(USER), distributionTestData.get(PASSWORD));
     initiateDistribution(distributionTestData.get(FIRST_DELIVERY_ZONE_NAME), distributionTestData.get(VACCINES_PROGRAM));
+
+    String expectedFacilityCatchmentPopulationForFacility1 = dbWrapper.getAttributeFromTable("facility_visits", "facilityCatchmentPopulation", "facilityId", dbWrapper.getAttributeFromTable("facilities", "id", "code", distributionTestData.get(FIRST_FACILITY_CODE)));
+    String expectedFacilityCatchmentPopulationForFacility2 = dbWrapper.getAttributeFromTable("facility_visits", "facilityCatchmentPopulation", "facilityId", dbWrapper.getAttributeFromTable("facilities", "id", "code", distributionTestData.get(SECOND_FACILITY_CODE)));
+
+    assertNull(expectedFacilityCatchmentPopulationForFacility1);
+    assertEqualsAndNulls(actualFacilityCatchmentPopulationForFacility2, expectedFacilityCatchmentPopulationForFacility2);
+
+    dbWrapper.updateFieldValue("facilities", "catchmentPopulation", "10000", "code", distributionTestData.get(SECOND_FACILITY_CODE));
+
     VisitInformationPage visitInformationPage = facilityListPage.selectFacility(distributionTestData.get(FIRST_FACILITY_CODE));
 
     facilityListPage.verifyOverallFacilityIndicatorColor("RED");
@@ -745,6 +771,9 @@ public class DistributionSyncTest extends TestCaseHelper {
     verifyEpiInventoryDataInDatabase(null, null, null, "P11", distributionTestData.get(SECOND_FACILITY_CODE));
     verifyRefrigeratorReadingsNullInDatabase("GNR7878", distributionTestData.get(SECOND_FACILITY_CODE));
     verifyRefrigeratorsDataInDatabase(distributionTestData.get(SECOND_FACILITY_CODE), "GNR7878", "LG", "800L", "t");
+
+    assertNull(expectedFacilityCatchmentPopulationForFacility1);
+    assertEqualsAndNulls(actualFacilityCatchmentPopulationForFacility2, expectedFacilityCatchmentPopulationForFacility2);
 
     distributionPage.clickRecordData(1);
     facilityListPage.selectFacility(distributionTestData.get(FIRST_FACILITY_CODE));
