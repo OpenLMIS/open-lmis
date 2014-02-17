@@ -76,7 +76,7 @@ public class VaccinationChildCoverageTest {
     ProductVial productVial = new ProductVial("bcg", "BCG");
 
     ChildCoverageLineItem lineItem = new ChildCoverageLineItem();
-    lineItem.setVaccination("BCG");
+    lineItem.setTargetGroupEntity("BCG");
 
     OpenedVialLineItem openedVialLineItem = new OpenedVialLineItem();
 
@@ -89,7 +89,7 @@ public class VaccinationChildCoverageTest {
 
     assertThat(vaccinationChildCoverage.getChildCoverageLineItems().size(), is(12));
     assertThat(vaccinationChildCoverage.getOpenedVialLineItems().size(), is(7));
-    assertTrue(vaccinationChildCoverage.getChildCoverageLineItems().get(0).getVaccination().equals("BCG"));
+    assertTrue(vaccinationChildCoverage.getChildCoverageLineItems().get(0).getTargetGroupEntity().equals("BCG"));
     verifyNew(ChildCoverageLineItem.class).withArguments(facilityVisit, facility, null, "BCG");
   }
 
@@ -103,7 +103,7 @@ public class VaccinationChildCoverageTest {
     List<ProductVial> productVials = asList(invalidProductVial);
 
     ChildCoverageLineItem lineItem = new ChildCoverageLineItem();
-    lineItem.setVaccination("BCG");
+    lineItem.setTargetGroupEntity("BCG");
 
     OpenedVialLineItem openedVialLineItem = new OpenedVialLineItem();
     openedVialLineItem.setProductVialName("BCG");

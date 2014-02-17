@@ -150,11 +150,11 @@ public class VaccinationCoverageMapperIT {
     productMapper.insert(product);
     TargetGroupProduct childTargetGroupProduct = new TargetGroupProduct("BCG", product.getCode(), true);
 
-    queryExecutor.executeUpdate("INSERT INTO coverage_target_group_products (vaccination, productCode, childCoverage) VALUES (?, ?, ?)",
+    queryExecutor.executeUpdate("INSERT INTO coverage_target_group_products (targetGroupEntity, productCode, childCoverage) VALUES (?, ?, ?)",
       childTargetGroupProduct.getTargetGroupEntity(), childTargetGroupProduct.getProductCode(), childTargetGroupProduct.getChildCoverage());
 
     TargetGroupProduct adultTargetGroupProduct = new TargetGroupProduct("Pregnant Women", product.getCode(), false);
-    queryExecutor.executeUpdate("INSERT INTO coverage_target_group_products (vaccination, productCode, childCoverage) VALUES (?, ?, ?)",
+    queryExecutor.executeUpdate("INSERT INTO coverage_target_group_products (targetGroupEntity, productCode, childCoverage) VALUES (?, ?, ?)",
       adultTargetGroupProduct.getTargetGroupEntity(), adultTargetGroupProduct.getProductCode(), adultTargetGroupProduct.getChildCoverage());
     List<TargetGroupProduct> targetGroupProducts = mapper.getVaccinationProducts();
 
@@ -170,10 +170,14 @@ public class VaccinationCoverageMapperIT {
     productMapper.insert(product);
     TargetGroupProduct targetGroupProduct = new TargetGroupProduct("BCG", product.getCode(), true);
 
-    queryExecutor.executeUpdate("INSERT INTO coverage_target_group_products (vaccination, productCode, childCoverage) VALUES (?, ?, ?)",
+    queryExecutor.executeUpdate("INSERT INTO coverage_target_group_products (targetGroupEntity, productCode, childCoverage) VALUES (?, ?, ?)",
       targetGroupProduct.getTargetGroupEntity(), targetGroupProduct.getProductCode(), targetGroupProduct.getChildCoverage());
 
-    ChildCoverageLineItem childCoverageLineItem = new ChildCoverageLineItem(facilityVisit.getId(), "BCG", 56, null, null, null, null);
+    Integer nullInteger = null;
+    ChildCoverageLineItem childCoverageLineItem = new ChildCoverageLineItem(nullInteger, nullInteger, nullInteger, nullInteger);
+    childCoverageLineItem.setFacilityVisitId(facilityVisit.getId());
+    childCoverageLineItem.setTargetGroup(56);
+    childCoverageLineItem.setTargetGroupEntity("BCG");
     childCoverageLineItem.setCreatedBy(123L);
     mapper.insertChildCoverageLineItem(childCoverageLineItem);
 
@@ -192,10 +196,14 @@ public class VaccinationCoverageMapperIT {
     productMapper.insert(product);
     TargetGroupProduct targetGroupProduct = new TargetGroupProduct("BCG", product.getCode(), true);
 
-    queryExecutor.executeUpdate("INSERT INTO coverage_target_group_products (vaccination, productCode, childCoverage) VALUES (?, ?, ?)",
+    queryExecutor.executeUpdate("INSERT INTO coverage_target_group_products (targetGroupEntity, productCode, childCoverage) VALUES (?, ?, ?)",
       targetGroupProduct.getTargetGroupEntity(), targetGroupProduct.getProductCode(), targetGroupProduct.getChildCoverage());
 
-    ChildCoverageLineItem childCoverageLineItem = new ChildCoverageLineItem(facilityVisit.getId(), "BCG", 56, null, null, null, null);
+    Integer nullInteger = null;
+    ChildCoverageLineItem childCoverageLineItem = new ChildCoverageLineItem(nullInteger, nullInteger, nullInteger, nullInteger);
+    childCoverageLineItem.setFacilityVisitId(facilityVisit.getId());
+    childCoverageLineItem.setTargetGroup(56);
+    childCoverageLineItem.setTargetGroupEntity("BCG");
     mapper.insertChildCoverageLineItem(childCoverageLineItem);
 
     List<ChildCoverageLineItem> fetchedChildCoverageLineItems = mapper.getChildCoverageLineItemsBy(facilityVisit.getId());
@@ -242,7 +250,12 @@ public class VaccinationCoverageMapperIT {
 
   @Test
   public void shouldUpdateChildCoverageLineItem() {
-    ChildCoverageLineItem childCoverageLineItem = new ChildCoverageLineItem(facilityVisit.getId(), "BCG", 56, null, null, null, null);
+    Integer nullInteger = null;
+    ChildCoverageLineItem childCoverageLineItem = new ChildCoverageLineItem(nullInteger, nullInteger, nullInteger, nullInteger);
+    childCoverageLineItem.setFacilityVisitId(facilityVisit.getId());
+    childCoverageLineItem.setTargetGroup(56);
+    childCoverageLineItem.setTargetGroupEntity("BCG");
+
     mapper.insertChildCoverageLineItem(childCoverageLineItem);
 
     childCoverageLineItem.setHealthCenter11Months(1234);

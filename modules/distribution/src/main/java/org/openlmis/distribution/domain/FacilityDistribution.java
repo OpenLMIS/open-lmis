@@ -40,6 +40,7 @@ public class FacilityDistribution {
   private EpiInventory epiInventory;
   private VaccinationFullCoverage fullCoverage;
   private VaccinationChildCoverage childCoverage;
+  private VaccinationAdultCoverage adultCoverage;
 
   public FacilityDistribution(FacilityVisit facilityVisit,
                               Facility facility,
@@ -53,6 +54,7 @@ public class FacilityDistribution {
     this.refrigerators = new DistributionRefrigerators(facilityVisit, readings);
     this.epiInventory = new EpiInventory(facilityVisit, facility, distribution);
     this.childCoverage = new VaccinationChildCoverage(facilityVisit, facility, childrenTargetGroupProducts, productVials);
+    this.adultCoverage = new VaccinationAdultCoverage(facilityVisit, facility, adultTargetGroupProducts);
   }
 
   public FacilityDistribution(FacilityVisit facilityVisit, EpiUse epiUse, DistributionRefrigerators refrigerators, EpiInventory epiInventory, VaccinationFullCoverage fullCoverage, VaccinationChildCoverage childCoverage) {

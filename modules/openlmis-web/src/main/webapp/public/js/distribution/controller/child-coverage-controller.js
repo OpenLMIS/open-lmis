@@ -31,7 +31,7 @@ function ChildCoverageController($scope, $routeParams, distributionService) {
     return map;
   };
 
-  $scope.childCoverageMap = convertListToMap($scope.childCoverage.childCoverageLineItems, 'vaccination');
+  $scope.childCoverageMap = convertListToMap($scope.childCoverage.childCoverageLineItems, 'targetGroupEntity');
   $scope.openedVialMap = convertListToMap($scope.childCoverage.openedVialLineItems, 'productVialName');
 
   $scope.columns = {

@@ -1378,7 +1378,7 @@ public class DBWrapper {
   }
 
   public void insertRegimensProductsInMappingTable(String vaccination, String productCode) throws SQLException {
-    update("INSERT INTO coverage_target_group_products (vaccination, productCode, childCoverage) values ('%s' ,'%s' , TRUE)", vaccination, productCode);
+    update("INSERT INTO coverage_target_group_products (targetGroupEntity, productCode, childCoverage) values ('%s' ,'%s' , TRUE)", vaccination, productCode);
   }
 
   public Map<String, String> getDistributionDetails(String deliveryZoneName, String programName, String periodName) throws SQLException {

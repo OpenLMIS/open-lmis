@@ -15,7 +15,6 @@
 \i ../../test- DATA / SQL/processing_schedules.sql
 \i ../../test- DATA / SQL /requisition_groups.sql
 \i ../../test- DATA / SQL/regimens.sql
-
 \i ../../test- DATA / SQL /delivery_zones.sql
 \i ../../test- DATA / SQL/allocation_users.sql
 \i ../../test- DATA / SQL /budget.sql

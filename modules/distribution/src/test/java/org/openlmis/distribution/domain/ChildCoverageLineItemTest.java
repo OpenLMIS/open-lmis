@@ -41,7 +41,7 @@ public class ChildCoverageLineItemTest {
 
     ChildCoverageLineItem childCoverageLineItem = new ChildCoverageLineItem(facilityVisit, facility, targetGroupProduct, "BCG");
 
-    assertThat(childCoverageLineItem.getVaccination(), is("BCG"));
+    assertThat(childCoverageLineItem.getTargetGroupEntity(), is("BCG"));
     assertThat(childCoverageLineItem.getTargetGroup(), is(2));
     assertThat(childCoverageLineItem.getFacilityVisitId(), is(3L));
     assertThat(childCoverageLineItem.getCreatedBy(), is(33L));
@@ -59,7 +59,7 @@ public class ChildCoverageLineItemTest {
 
     ChildCoverageLineItem childCoverageLineItem = new ChildCoverageLineItem(facilityVisit, facility, targetGroupProduct, "BCG");
 
-    assertThat(childCoverageLineItem.getVaccination(), is("BCG"));
+    assertThat(childCoverageLineItem.getTargetGroupEntity(), is("BCG"));
     assertThat(childCoverageLineItem.getTargetGroup(), is(2));
     assertThat(childCoverageLineItem.getFacilityVisitId(), is(3L));
   }
@@ -76,7 +76,7 @@ public class ChildCoverageLineItemTest {
 
     ChildCoverageLineItem childCoverageLineItem = new ChildCoverageLineItem(facilityVisit, facility, targetGroupProduct, "BCG");
 
-    assertThat(childCoverageLineItem.getVaccination(), is("BCG"));
+    assertThat(childCoverageLineItem.getTargetGroupEntity(), is("BCG"));
     assertThat(childCoverageLineItem.getTargetGroup(), is(nullValue()));
     assertThat(childCoverageLineItem.getFacilityVisitId(), is(3L));
   }
@@ -93,7 +93,7 @@ public class ChildCoverageLineItemTest {
 
     ChildCoverageLineItem childCoverageLineItem = new ChildCoverageLineItem(facilityVisit, facility, targetGroupProduct, "BCG");
 
-    assertThat(childCoverageLineItem.getVaccination(), is("BCG"));
+    assertThat(childCoverageLineItem.getTargetGroupEntity(), is("BCG"));
     assertThat(childCoverageLineItem.getTargetGroup(), is(nullValue()));
     assertThat(childCoverageLineItem.getFacilityVisitId(), is(3L));
   }

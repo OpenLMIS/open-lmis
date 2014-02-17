@@ -10,7 +10,9 @@
 
 package org.openlmis.distribution.domain;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
@@ -24,7 +26,9 @@ import static java.util.Arrays.asList;
 
 @Data
 @NoArgsConstructor
-public class VaccinationChildCoverage {
+@AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
+public class VaccinationChildCoverage extends VaccinationCoverage {
 
   private List<ChildCoverageLineItem> childCoverageLineItems = new ArrayList<>();
   private List<OpenedVialLineItem> openedVialLineItems = new ArrayList<>();
@@ -46,6 +50,18 @@ public class VaccinationChildCoverage {
     createOpenedVialLineItems(facilityVisit, facility, productVials, validProductVials);
   }
 
+  private void createChildCoverageLineItems(FacilityVisit facilityVisit, Facility facility, List<TargetGroupProduct> targetGroupProducts, List<String> validVaccinations) {
+    for (String vaccination : validVaccinations) {
+
+      TargetGroupProduct targetGroup = getTargetGroupForLineItem(targetGroupProducts, vaccination);
+      this.childCoverageLineItems.add(new ChildCoverageLineItem(facilityVisit, facility, targetGroup, vaccination));
+    }
+  }
+
+  public VaccinationChildCoverage(List<ChildCoverageLineItem> childCoverageLineItems) {
+    this.childCoverageLineItems = childCoverageLineItems;
+  }
+
   private void createOpenedVialLineItems(FacilityVisit facilityVisit,
                                          Facility facility, List<ProductVial> productVials,
                                          List<String> validProductVials) {
@@ -63,25 +79,4 @@ public class VaccinationChildCoverage {
     }
   }
 
-  private void createChildCoverageLineItems(FacilityVisit facilityVisit,
-                                            Facility facility,
-                                            List<TargetGroupProduct> targetGroupProducts,
-                                            List<String> validVaccinations) {
-    TargetGroupProduct targetGroupProduct;
-
-    for (final String vaccination : validVaccinations) {
-      targetGroupProduct = (TargetGroupProduct) CollectionUtils.find(targetGroupProducts, new Predicate() {
-        @Override
-        public boolean evaluate(Object o) {
-          return ((TargetGroupProduct) o).getTargetGroupEntity().equalsIgnoreCase(vaccination);
-        }
-      });
-      this.childCoverageLineItems.add(new ChildCoverageLineItem(facilityVisit, facility, targetGroupProduct, vaccination));
-    }
-  }
-
-  public VaccinationChildCoverage(List<ChildCoverageLineItem> childCoverageLineItems, List<OpenedVialLineItem> openedVialLineItems) {
-    this.childCoverageLineItems = childCoverageLineItems;
-    this.openedVialLineItems = openedVialLineItems;
-  }
 }

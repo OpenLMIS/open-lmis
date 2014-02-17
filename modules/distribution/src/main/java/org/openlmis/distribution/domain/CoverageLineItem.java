@@ -12,26 +12,36 @@ package org.openlmis.distribution.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import org.codehaus.jackson.annotate.JsonIgnoreProperties;
-import org.codehaus.jackson.map.annotate.JsonSerialize;
+import org.openlmis.core.domain.BaseModel;
 import org.openlmis.core.domain.Facility;
 
-import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
+import static java.lang.Math.round;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@JsonSerialize(include = NON_EMPTY)
-@JsonIgnoreProperties(ignoreUnknown = true)
-public class ChildCoverageLineItem extends CoverageLineItem {
+@EqualsAndHashCode(callSuper = false)
+public class CoverageLineItem extends BaseModel {
 
-  private Integer healthCenter11Months;
-  private Integer outreach11Months;
-  private Integer healthCenter23Months;
-  private Integer outreach23Months;
+  protected Long facilityVisitId;
+  protected Integer targetGroup;
+  protected String targetGroupEntity;
 
-  public ChildCoverageLineItem(FacilityVisit facilityVisit, Facility facility, TargetGroupProduct targetGroupProduct, String vaccination) {
-    super(facilityVisit, facility, targetGroupProduct, vaccination);
+  public CoverageLineItem(FacilityVisit facilityVisit, Facility facility, TargetGroupProduct targetGroupProduct, String targetGroupEntity) {
+    this.targetGroupEntity = targetGroupEntity;
+    this.facilityVisitId = facilityVisit.getId();
+    this.targetGroup = targetGroupProduct != null ? calculateTargetGroup(facility.getWhoRatioFor(targetGroupProduct.getProductCode()),
+      facility.getCatchmentPopulation()) : null;
+    this.createdBy = facilityVisit.getCreatedBy();
+  }
+
+  protected Integer calculateTargetGroup(Double whoRatio, Long catchmentPopulation) {
+    Integer targetGroup = null;
+    if (whoRatio != null && catchmentPopulation != null) {
+      targetGroup = (int) round(catchmentPopulation * whoRatio / 100);
+    }
+    return targetGroup;
   }
 }

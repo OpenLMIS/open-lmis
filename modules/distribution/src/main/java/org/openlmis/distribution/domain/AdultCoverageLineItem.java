@@ -10,28 +10,15 @@
 
 package org.openlmis.distribution.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import org.codehaus.jackson.annotate.JsonIgnoreProperties;
-import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.openlmis.core.domain.Facility;
 
-import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
-
-@Data
 @NoArgsConstructor
-@AllArgsConstructor
-@JsonSerialize(include = NON_EMPTY)
-@JsonIgnoreProperties(ignoreUnknown = true)
-public class ChildCoverageLineItem extends CoverageLineItem {
+@EqualsAndHashCode(callSuper = true)
+public class AdultCoverageLineItem extends CoverageLineItem {
 
-  private Integer healthCenter11Months;
-  private Integer outreach11Months;
-  private Integer healthCenter23Months;
-  private Integer outreach23Months;
-
-  public ChildCoverageLineItem(FacilityVisit facilityVisit, Facility facility, TargetGroupProduct targetGroupProduct, String vaccination) {
-    super(facilityVisit, facility, targetGroupProduct, vaccination);
+  public AdultCoverageLineItem(FacilityVisit facilityVisit, Facility facility, TargetGroupProduct targetGroupForLineItem, String category) {
+    super(facilityVisit, facility, targetGroupForLineItem, category);
   }
 }
