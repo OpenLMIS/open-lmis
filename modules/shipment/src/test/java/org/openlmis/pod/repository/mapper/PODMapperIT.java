@@ -84,8 +84,9 @@ public class PODMapperIT extends ApplicationTestContext {
     mapper.insertPOD(orderPod);
 
     Integer quantityShipped = 1000;
+    Integer quantityReturned = 55;
     OrderPODLineItem orderPodLineItem = new OrderPODLineItem(orderPod.getId(), productCode, productCategory,
-      productCategoryDisplayOrder, productDisplayOrder, 100, productName, dispensingUnit, 10, quantityShipped, null, true,
+      productCategoryDisplayOrder, productDisplayOrder, 100, productName, dispensingUnit, 10, quantityShipped, quantityReturned, true,
       "notes");
     mapper.insertPODLineItem(orderPodLineItem);
 
@@ -99,6 +100,7 @@ public class PODMapperIT extends ApplicationTestContext {
     assertThat(orderPodLineItems.get(0).getProductCategoryDisplayOrder(), is(productCategoryDisplayOrder));
     assertThat(orderPodLineItems.get(0).getProductDisplayOrder(), is(productDisplayOrder));
     assertThat(orderPodLineItems.get(0).getQuantityShipped(), is(quantityShipped));
+    assertThat(orderPodLineItems.get(0).getQuantityReturned(), is(quantityReturned));
   }
 
   @Test
