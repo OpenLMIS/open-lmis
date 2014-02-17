@@ -57,4 +57,7 @@ public interface VaccinationCoverageMapper {
 
   @Update({"UPDATE opened_vial_line_items SET openedVials = #{openedVials}, modifiedBy = #{modifiedBy}, modifiedDate = DEFAULT WHERE id = #{id}"})
   void updateOpenedVialLineItem(OpenedVialLineItem openedVialLineItem);
+
+  @Select({"SELECT * FROM opened_vial_line_items WHERE facilityVisitId = #{facilityVisitId}"})
+  List<OpenedVialLineItem> getOpenedVialLineItemsBy(Long facilityVisitId);
 }

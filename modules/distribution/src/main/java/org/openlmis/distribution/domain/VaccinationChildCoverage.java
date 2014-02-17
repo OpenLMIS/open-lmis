@@ -80,7 +80,8 @@ public class VaccinationChildCoverage {
     }
   }
 
-  public VaccinationChildCoverage(List<ChildCoverageLineItem> childCoverageLineItems) {
+  public VaccinationChildCoverage(List<ChildCoverageLineItem> childCoverageLineItems, List<OpenedVialLineItem> openedVialLineItems) {
     this.childCoverageLineItems = childCoverageLineItems;
+    this.openedVialLineItems = openedVialLineItems;
   }
 }
