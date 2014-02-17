@@ -10,5 +10,5 @@
 
 
 ALTER TABLE pod_line_items
-ADD COLUMN quantityReturned INTEGER CONSTRAINT positive_quantity_returned CHECK (quantityReturned >= 0);
+ADD COLUMN quantityReturned INTEGER;
 

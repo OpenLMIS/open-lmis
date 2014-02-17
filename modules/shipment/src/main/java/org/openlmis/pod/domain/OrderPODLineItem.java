@@ -67,12 +67,14 @@ public class OrderPODLineItem extends BaseModel {
     if (quantityReceived < 0) {
       throw new DataException(new OpenLmisMessage("error.invalid.received.quantity"));
     }
+    if (quantityReturned != null && quantityReturned < 0) {
+      throw new DataException(new OpenLmisMessage("error.invalid.returned.quantity"));
+    }
   }
 
   private void create(RnrLineItem rnrLineItem, Long createdBy) {
     this.setProductCode(rnrLineItem.getProductCode());
     this.setProductCategory(rnrLineItem.getProductCategory());
-    this.setProductCategoryDisplayOrder(rnrLineItem.getProductCategoryDisplayOrder());
     this.setProductDisplayOrder(rnrLineItem.getProductDisplayOrder());
     this.setProductName(rnrLineItem.getProduct());
     this.setDispensingUnit(rnrLineItem.getDispensingUnit());
