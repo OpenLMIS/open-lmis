@@ -330,7 +330,51 @@ public class ViewRequisition extends TestCaseHelper {
     viewRequisitionPage.verifySkippedProductsOnRnRScreen(1);
   }
 
-  @AfterMethod(groups = "requisition")
+  @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-Including-Regimen")
+  public void testRetainSearchResultOnViewRequisitionPage(String program,
+                                                           String userSIC,
+                                                           String categoryCode,
+                                                           String password,
+                                                           String regimenCode,
+                                                           String regimenName,
+                                                           String regimenCode2,
+                                                           String regimenName2) throws SQLException {
+    List<String> rightsList = asList("CREATE_REQUISITION", "VIEW_REQUISITION");
+
+    setupTestDataToInitiateRnR(true, program, userSIC, "200", rightsList);
+    dbWrapper.insertRegimenTemplateConfiguredForProgram(program, categoryCode, regimenCode, regimenName, true);
+    dbWrapper.insertRegimenTemplateConfiguredForProgram(program, categoryCode, regimenCode2, regimenName2, false);
+    dbWrapper.insertRegimenTemplateColumnsForProgram(program);
+    dbWrapper.assignRight(STORE_IN_CHARGE, APPROVE_REQUISITION);
+    dbWrapper.assignRight(STORE_IN_CHARGE, CONVERT_TO_ORDER);
+    dbWrapper.assignRight(STORE_IN_CHARGE, VIEW_ORDER);
+    dbWrapper.insertFulfilmentRoleAssignment(userSIC, STORE_IN_CHARGE, "F10");
+
+    HomePage homePage = loginPage.loginAs(userSIC, password);
+    homePage.navigateAndInitiateRnr(program);
+    InitiateRnRPage initiateRnRPage = homePage.clickProceed();
+    HomePage homePage1 = initiateRnRPage.clickHome();
+
+    dbWrapper.insertValuesInRequisition(true);
+    dbWrapper.insertValuesInRegimenLineItems(patientsOnTreatment, patientsToInitiateTreatment, patientsStoppedTreatment,
+      remarks);
+    dbWrapper.updateRequisitionStatus(SUBMITTED, userSIC, "HIV");
+    dbWrapper.updateFieldValue("requisition_line_items", "quantityApproved", 10);
+    dbWrapper.updateRequisitionStatus(AUTHORIZED, userSIC, "HIV");
+
+    ViewRequisitionPage viewRequisitionPage = homePage1.navigateViewRequisition();
+    viewRequisitionPage.enterViewSearchCriteria();
+    viewRequisitionPage.clickSearch();
+    String url=testWebDriver.getCurrentUrl() ;
+    viewRequisitionPage.clickRnRList();
+
+    testWebDriver.sleep(200);
+    testWebDriver.getUrl(url);
+    testWebDriver.setImplicitWait(100);
+    viewRequisitionPage.isViewRnRListPresent();
+    viewRequisitionPage.isRnRListReq1Present();
+   }
+    @AfterMethod(groups = "requisition")
   public void tearDown() throws SQLException {
     testWebDriver.sleep(500);
     if (!testWebDriver.getElementById("username").isDisplayed()) {
