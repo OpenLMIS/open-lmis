@@ -1,0 +1,251 @@
+<!--
+  ~ This program is part of the OpenLMIS logistics management information system platform software.
+  ~ Copyright © 2013 VillageReach
+  ~
+  ~  This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+  ~
+  ~  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+  ~  You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
+  -->
+
+<ng-include
+    src="'/public/pages/logistics/distribution/partials/record-facility-data.html'"></ng-include>
+<div class="clearfix facility-container">
+<ng-include
+    src="'/public/pages/logistics/distribution/partials/record-facility-menu.html'"></ng-include>
+
+<div class="facility-info" ng-init="facilityData = distribution.facilityDistributions[selectedFacilityId]">
+<div id="coverageContainer" class="refrigerator-container" disable-form="{{facilityData.isDisabled()}}">
+<h3>
+  <span id="adultHeader" openlmis-message="label.coverage.adult"></span>
+  <!--<input id="applyNRAll" type="button" ng-click="applyNRAll()" class="pull-right btn"-->
+  <!--openlmis-message="button.apply.nr.all"/>-->
+</h3>
+
+<div id="adultCoverageTable" class="facility-distribution-form-table coverage-table">
+<form auto-save="distribution" object-store="distributions">
+<table class="table table-bordered">
+<thead>
+<tr>
+  <th openlmis-message="label.adult.group.vaccinations" rowspan="2" colspan="2"></th>
+  <th openlmis-message="label.coverage.target.Group" rowspan="2"></th>
+  <th colspan="3">Tetanus 1st dose</th>
+  <th colspan="3">Tetanus 2nd-5th dose</th>
+  <th openlmis-message="label.total" rowspan="2"></th>
+  <th openlmis-message="label.total" rowspan="2"><span>&nbsp;Tetanus</span></th>
+  <th openlmis-message="label.coverage.rate" rowspan="2"></th>
+  <th openlmis-message="label.coverage.opened.vials" rowspan="2"></th>
+  <th openlmis-message="label.coverage.opened.vials.wastage.rate" rowspan="2"></th>
+</tr>
+<tr>
+  <th openlmis-message="label.coverage.health.center"></th>
+  <th openlmis-message="label.coverage.outreach"></th>
+  <th openlmis-message="label.total"></th>
+  <th openlmis-message="label.coverage.health.center"></th>
+  <th openlmis-message="label.coverage.outreach"></th>
+  <th openlmis-message="label.total"></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td openlmis-message="label.coverage.pregnant.women" colspan="2"></td>
+  <td></td>
+  <td>
+    <input type="text" numeric-validator="positiveInteger" maxlength="7" ng-trim=false/>
+    <input type="checkbox" not-recorded/>
+    <label class="checkbox-label" openlmis-message="label.not.recorded"></label>
+  </td>
+  <td>
+    <input type="text" numeric-validator="positiveInteger" maxlength="7" ng-trim=false/>
+    <input type="checkbox" not-recorded/>
+    <label class="checkbox-label" openlmis-message="label.not.recorded"></label>
+  </td>
+  <td></td>
+  <td>
+    <input type="text" numeric-validator="positiveInteger" maxlength="7" ng-trim=false/>
+    <input type="checkbox" not-recorded/>
+    <label class="checkbox-label" openlmis-message="label.not.recorded"></label>
+  </td>
+  <td>
+    <input type="text" numeric-validator="positiveInteger" maxlength="7" ng-trim=false/>
+    <input type="checkbox" not-recorded/>
+    <label class="checkbox-label" openlmis-message="label.not.recorded"></label>
+  </td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td rowspan="7"></td>
+  <td></td>
+  <td></td>
+</tr>
+<tr>
+  <td openlmis-message="label.coverage.mif" rowspan="3"></td>
+  <td openlmis-message="label.coverage.community"></td>
+  <td></td>
+  <td>
+    <input type="text" numeric-validator="positiveInteger" maxlength="7" ng-trim=false/>
+    <input type="checkbox" not-recorded/>
+    <label class="checkbox-label" openlmis-message="label.not.recorded"></label>
+  </td>
+  <td>
+    <input type="text" numeric-validator="positiveInteger" maxlength="7" ng-trim=false/>
+    <input type="checkbox" not-recorded/>
+    <label class="checkbox-label" openlmis-message="label.not.recorded"></label>
+  </td>
+  <td></td>
+  <td>
+    <input type="text" numeric-validator="positiveInteger" maxlength="7" ng-trim=false/>
+    <input type="checkbox" not-recorded/>
+    <label class="checkbox-label" openlmis-message="label.not.recorded"></label>
+  </td>
+  <td>
+    <input type="text" numeric-validator="positiveInteger" maxlength="7" ng-trim=false/>
+    <input type="checkbox" not-recorded/>
+    <label class="checkbox-label" openlmis-message="label.not.recorded"></label>
+  </td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+</tr>
+<tr>
+  <td openlmis-message="label.coverage.students"></td>
+  <td></td>
+  <td></td>
+  <td>
+    <input type="text" numeric-validator="positiveInteger" maxlength="7" ng-trim=false/>
+    <input type="checkbox" not-recorded/>
+    <label class="checkbox-label" openlmis-message="label.not.recorded"></label>
+  </td>
+  <td></td>
+  <td></td>
+  <td>
+    <input type="text" numeric-validator="positiveInteger" maxlength="7" ng-trim=false/>
+    <input type="checkbox" not-recorded/>
+    <label class="checkbox-label" openlmis-message="label.not.recorded"></label>
+  </td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+</tr>
+<tr>
+  <td openlmis-message="label.coverage.workers"></td>
+  <td></td>
+  <td></td>
+  <td>
+    <input type="text" numeric-validator="positiveInteger" maxlength="7" ng-trim=false/>
+    <input type="checkbox" not-recorded/>
+    <label class="checkbox-label" openlmis-message="label.not.recorded"></label>
+  </td>
+  <td></td>
+  <td></td>
+  <td>
+    <input type="text" numeric-validator="positiveInteger" maxlength="7" ng-trim=false/>
+    <input type="checkbox" not-recorded/>
+    <label class="checkbox-label" openlmis-message="label.not.recorded"></label>
+  </td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+</tr>
+<tr>
+  <td openlmis-message="label.coverage.students.not.mif" colspan="2"></td>
+  <td></td>
+  <td></td>
+  <td>
+    <input type="text" numeric-validator="positiveInteger" maxlength="7" ng-trim=false/>
+    <input type="checkbox" not-recorded/>
+    <label class="checkbox-label" openlmis-message="label.not.recorded"></label>
+  </td>
+  <td></td>
+  <td></td>
+  <td>
+    <input type="text" numeric-validator="positiveInteger" maxlength="7" ng-trim=false/>
+    <input type="checkbox" not-recorded/>
+    <label class="checkbox-label" openlmis-message="label.not.recorded"></label>
+  </td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+</tr>
+<tr>
+  <td openlmis-message="label.coverage.workers.not.mif" colspan="2"></td>
+  <td></td>
+  <td></td>
+  <td>
+    <input type="text" numeric-validator="positiveInteger" maxlength="7" ng-trim=false/>
+    <input type="checkbox" not-recorded/>
+    <label class="checkbox-label" openlmis-message="label.not.recorded"></label>
+  </td>
+  <td></td>
+  <td></td>
+  <td>
+    <input type="text" numeric-validator="positiveInteger" maxlength="7" ng-trim=false/>
+    <input type="checkbox" not-recorded/>
+    <label class="checkbox-label" openlmis-message="label.not.recorded"></label>
+  </td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+</tr>
+<tr>
+  <td openlmis-message="label.coverage.other.not.mif" colspan="2"></td>
+  <td></td>
+  <td>
+    <input type="text" numeric-validator="positiveInteger" maxlength="7" ng-trim=false/>
+    <input type="checkbox" not-recorded/>
+    <label class="checkbox-label" openlmis-message="label.not.recorded"></label>
+  </td>
+  <td>
+    <input type="text" numeric-validator="positiveInteger" maxlength="7" ng-trim=false/>
+    <input type="checkbox" not-recorded/>
+    <label class="checkbox-label" openlmis-message="label.not.recorded"></label>
+  </td>
+  <td></td>
+  <td>
+    <input type="text" numeric-validator="positiveInteger" maxlength="7" ng-trim=false/>
+    <input type="checkbox" not-recorded/>
+    <label class="checkbox-label" openlmis-message="label.not.recorded"></label>
+  </td>
+  <td>
+    <input type="text" numeric-validator="positiveInteger" maxlength="7" ng-trim=false/>
+    <input type="checkbox" not-recorded/>
+    <label class="checkbox-label" openlmis-message="label.not.recorded"></label>
+  </td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+</tr>
+<tr>
+  <td openlmis-message="label.total" colspan="2"></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+</tr>
+</tbody>
+
+</table>
+</form>
+</div>
+</div>
+</div>
+</div>
