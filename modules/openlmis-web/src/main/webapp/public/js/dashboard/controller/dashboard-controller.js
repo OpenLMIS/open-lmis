@@ -326,7 +326,39 @@ function AdminDashboardController($scope) {
      }
     /* End Custom Bar Chart */
 
-    /* Bootstrap Dynamic Tab Utility  */
+
+   /* Gauge Chart */
+
+    $scope.gaugeChartData = [[340]];
+
+    $scope.gaugeChartOption = {
+        title:'Order Fill Rate',
+        seriesDefaults:{
+            renderer:$.jqplot.MeterGaugeRenderer,
+            rendererOptions: {
+                label: 'Order Sub/App',
+                labelPosition: 'bottom',
+                labelHeightAdjust: -5,
+                min: 100,
+                max: 500,
+                intervals:[200, 300, 400, 500],
+                intervalColors:['#66cc66', '#93b75f', '#E7E658', '#cc6666']
+            }
+        }
+    };
+
+    /* End Gauge Chart * /
+
+
+
+
+
+
+
+
+
+
+     /* Bootstrap Dynamic Tab Utility  */
     function createTab(tabId){
         var tabNum = tabId.substr(tabId.length - 1);
         var contentId = tabId +'-'+ tabNum;
@@ -353,6 +385,8 @@ function AdminDashboardController($scope) {
 
         $('#dashboard-tabs #' + tabId + ' a').tab('show');
     }
+
+
 
 
 
