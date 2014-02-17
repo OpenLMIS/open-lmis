@@ -42,6 +42,7 @@ public class OrderPODLineItem extends BaseModel {
   private String dispensingUnit;
   private Integer packsToShip;
   private Integer quantityShipped;
+  private Integer quantityReturned;
   private Boolean fullSupply;
   private String notes;
 

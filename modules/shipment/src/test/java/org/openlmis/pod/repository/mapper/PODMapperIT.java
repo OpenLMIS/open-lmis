@@ -85,7 +85,7 @@ public class PODMapperIT extends ApplicationTestContext {
 
     Integer quantityShipped = 1000;
     OrderPODLineItem orderPodLineItem = new OrderPODLineItem(orderPod.getId(), productCode, productCategory,
-      productCategoryDisplayOrder, productDisplayOrder, 100, productName, dispensingUnit, 10, quantityShipped, true,
+      productCategoryDisplayOrder, productDisplayOrder, 100, productName, dispensingUnit, 10, quantityShipped, null, true,
       "notes");
     mapper.insertPODLineItem(orderPodLineItem);
 
@@ -117,8 +117,7 @@ public class PODMapperIT extends ApplicationTestContext {
     Integer productDisplayOrder1 = 1;
     queryExecutor.executeUpdate(
       "INSERT INTO pod_line_items (podId, productCode, productCategory, productCategoryDisplayOrder, productDisplayOrder, quantityReceived, createdBy, modifiedBy) values(?, ?, ?, ?, ?, ?, ?, ?)",
-      orderPod.getId(), productCode, this.productCategory, this.productCategoryDisplayOrder, productDisplayOrder, 100,
-      1, 1);
+      orderPod.getId(), productCode, this.productCategory, this.productCategoryDisplayOrder, productDisplayOrder, 100, 1, 1);
     queryExecutor.executeUpdate(
       "INSERT INTO pod_line_items (podId, productCode, productCategory, productCategoryDisplayOrder, productDisplayOrder, quantityReceived, createdBy, modifiedBy) values(?, ?, ?, ?, ?, ?, ?, ?)",
       orderPod.getId(), productCode1, productCategory, productCategoryDisplayOrder1, productDisplayOrder1, 100, 1, 1);
@@ -179,7 +178,7 @@ public class PODMapperIT extends ApplicationTestContext {
     mapper.insertPOD(expectedOrderPod);
 
     OrderPODLineItem lineItem1 = new OrderPODLineItem(expectedOrderPod.getId(), productCode, productCategory,
-      productCategoryDisplayOrder, productDisplayOrder, 100, productName, dispensingUnit, 10, null, true, null);
+      productCategoryDisplayOrder, productDisplayOrder, 100, productName, dispensingUnit, 10, null, null, true, null);
     mapper.insertPODLineItem(lineItem1);
 
     OrderPOD orderPOD = mapper.getPODById(expectedOrderPod.getId());
@@ -216,6 +215,7 @@ public class PODMapperIT extends ApplicationTestContext {
 
     orderPodLineItem.setNotes("notes");
     orderPodLineItem.setQuantityReceived(345);
+    orderPodLineItem.setQuantityReturned(100);
     orderPodLineItem.setModifiedBy(3L);
     mapper.updateLineItem(orderPodLineItem);
 
