@@ -8,16 +8,5 @@
 -- You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
 --
 
-\i ../../test- DATA / SQL/products.sql
-\i ../../test- DATA / SQL /facilities.sql
-\i ../../test- DATA / SQL/rnr_template.sql
-\i ../../test- DATA / SQL /users.sql
-\i ../../test- DATA / SQL/processing_schedules.sql
-\i ../../test- DATA / SQL /requisition_groups.sql
-\i ../../test- DATA / SQL/regimens.sql
-
-\i ../../test- DATA / SQL /delivery_zones.sql
-\i ../../test- DATA / SQL/allocation_users.sql
-\i ../../test- DATA / SQL /budget.sql
-\i ../../test- DATA / SQL/coverage_target_group_products.sql
-\i ../../test- DATA / SQL /coverage_product_vials.sql
+ALTER TABLE coverage_vaccination_products RENAME TO coverage_target_group_products;
+ALTER TABLE coverage_target_group_products RENAME COLUMN vaccination TO targetGroupEntity;

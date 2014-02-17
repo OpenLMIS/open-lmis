@@ -38,9 +38,9 @@ public class ChildCoverageLineItem extends BaseModel {
   private Integer healthCenter23Months;
   private Integer outreach23Months;
 
-  public ChildCoverageLineItem(FacilityVisit facilityVisit, Facility facility, VaccinationProduct vaccinationProduct, String vaccination) {
+  public ChildCoverageLineItem(FacilityVisit facilityVisit, Facility facility, TargetGroupProduct targetGroupProduct, String vaccination) {
     this.facilityVisitId = facilityVisit.getId();
-    this.targetGroup = vaccinationProduct != null ? calculateTargetGroup(facility.getWhoRatioFor(vaccinationProduct.getProductCode()),
+    this.targetGroup = targetGroupProduct != null ? calculateTargetGroup(facility.getWhoRatioFor(targetGroupProduct.getProductCode()),
       facility.getCatchmentPopulation()) : null;
     this.vaccination = vaccination;
     this.createdBy = facilityVisit.getCreatedBy();

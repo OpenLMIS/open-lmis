@@ -34,12 +34,12 @@ public class ChildCoverageLineItemTest {
     FacilityVisit facilityVisit = new FacilityVisit();
     facilityVisit.setId(3L);
     facilityVisit.setCreatedBy(33L);
-    VaccinationProduct vaccinationProduct = new VaccinationProduct("BCG", "BCG", true);
+    TargetGroupProduct targetGroupProduct = new TargetGroupProduct("BCG", "BCG", true);
 
     when(facility.getWhoRatioFor("BCG")).thenReturn(2.4);
     when(facility.getCatchmentPopulation()).thenReturn((long) 80);
 
-    ChildCoverageLineItem childCoverageLineItem = new ChildCoverageLineItem(facilityVisit, facility, vaccinationProduct, "BCG");
+    ChildCoverageLineItem childCoverageLineItem = new ChildCoverageLineItem(facilityVisit, facility, targetGroupProduct, "BCG");
 
     assertThat(childCoverageLineItem.getVaccination(), is("BCG"));
     assertThat(childCoverageLineItem.getTargetGroup(), is(2));
@@ -52,12 +52,12 @@ public class ChildCoverageLineItemTest {
     Facility facility = mock(Facility.class);
     FacilityVisit facilityVisit = new FacilityVisit();
     facilityVisit.setId(3L);
-    VaccinationProduct vaccinationProduct = new VaccinationProduct("BCG", "BCG", true);
+    TargetGroupProduct targetGroupProduct = new TargetGroupProduct("BCG", "BCG", true);
 
     when(facility.getWhoRatioFor("BCG")).thenReturn(2.6);
     when(facility.getCatchmentPopulation()).thenReturn((long) 80);
 
-    ChildCoverageLineItem childCoverageLineItem = new ChildCoverageLineItem(facilityVisit, facility, vaccinationProduct, "BCG");
+    ChildCoverageLineItem childCoverageLineItem = new ChildCoverageLineItem(facilityVisit, facility, targetGroupProduct, "BCG");
 
     assertThat(childCoverageLineItem.getVaccination(), is("BCG"));
     assertThat(childCoverageLineItem.getTargetGroup(), is(2));
@@ -69,12 +69,12 @@ public class ChildCoverageLineItemTest {
     Facility facility = mock(Facility.class);
     FacilityVisit facilityVisit = new FacilityVisit();
     facilityVisit.setId(3L);
-    VaccinationProduct vaccinationProduct = new VaccinationProduct("BCG", "BCG", true);
+    TargetGroupProduct targetGroupProduct = new TargetGroupProduct("BCG", "BCG", true);
 
     when(facility.getWhoRatioFor("BCG")).thenReturn(null);
     when(facility.getCatchmentPopulation()).thenReturn((long) 8);
 
-    ChildCoverageLineItem childCoverageLineItem = new ChildCoverageLineItem(facilityVisit, facility, vaccinationProduct, "BCG");
+    ChildCoverageLineItem childCoverageLineItem = new ChildCoverageLineItem(facilityVisit, facility, targetGroupProduct, "BCG");
 
     assertThat(childCoverageLineItem.getVaccination(), is("BCG"));
     assertThat(childCoverageLineItem.getTargetGroup(), is(nullValue()));
@@ -86,12 +86,12 @@ public class ChildCoverageLineItemTest {
     Facility facility = mock(Facility.class);
     FacilityVisit facilityVisit = new FacilityVisit();
     facilityVisit.setId(3L);
-    VaccinationProduct vaccinationProduct = new VaccinationProduct("BCG", "BCG", true);
+    TargetGroupProduct targetGroupProduct = new TargetGroupProduct("BCG", "BCG", true);
 
     when(facility.getWhoRatioFor("BCG")).thenReturn((double) 2);
     when(facility.getCatchmentPopulation()).thenReturn(null);
 
-    ChildCoverageLineItem childCoverageLineItem = new ChildCoverageLineItem(facilityVisit, facility, vaccinationProduct, "BCG");
+    ChildCoverageLineItem childCoverageLineItem = new ChildCoverageLineItem(facilityVisit, facility, targetGroupProduct, "BCG");
 
     assertThat(childCoverageLineItem.getVaccination(), is("BCG"));
     assertThat(childCoverageLineItem.getTargetGroup(), is(nullValue()));

@@ -24,6 +24,8 @@ import org.openlmis.distribution.domain.*;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -83,10 +85,11 @@ public class FacilityDistributionServiceTest {
 
     when(facilityService.getAllForDeliveryZoneAndProgram(1L, 3L)).thenReturn(facilities);
     when(refrigeratorService.getRefrigeratorsForADeliveryZoneAndProgram(1L, 3L)).thenReturn(refrigerators);
-    when(vaccinationCoverageService.getVaccinationProducts(true)).thenReturn(null);
+    List<TargetGroupProduct> emptyTargetGroupProductList = Collections.<TargetGroupProduct>emptyList();
+    when(vaccinationCoverageService.getVaccinationProducts()).thenReturn(emptyTargetGroupProductList);
     when(vaccinationCoverageService.getProductVials()).thenReturn(null);
 
-    doReturn(facilityDistribution).when(spyFacilityDistributionService).createDistributionData(facility, distribution, refrigerators, null, null);
+    doReturn(facilityDistribution).when(spyFacilityDistributionService).createDistributionData(facility, distribution, refrigerators, emptyTargetGroupProductList, emptyTargetGroupProductList, null);
 
     Map<Long, FacilityDistribution> facilityDistributionDataMap = spyFacilityDistributionService.createFor(distribution);
 
@@ -101,8 +104,11 @@ public class FacilityDistributionServiceTest {
     List<Refrigerator> refrigerators = asList(refrigerator);
     RefrigeratorReading refrigeratorReading = new RefrigeratorReading(refrigerator);
 
-    VaccinationProduct vaccinationProduct = new VaccinationProduct("BCG", "BCG", true);
-    List<VaccinationProduct> vaccinationProducts = asList(vaccinationProduct);
+    TargetGroupProduct childTargetGroupProduct = new TargetGroupProduct("BCG", "BCG", true);
+    List<TargetGroupProduct> childTargetGroupProducts = asList(childTargetGroupProduct);
+
+    TargetGroupProduct adultTargetGroupProduct = new TargetGroupProduct("Pregnant Women", "Tetanus", false);
+    List<TargetGroupProduct> adultTargetGroupProducts = asList(adultTargetGroupProduct);
 
     List<ProductVial> productVials = asList(new ProductVial("BCG", "BCG"));
 
@@ -112,16 +118,16 @@ public class FacilityDistributionServiceTest {
 
     FacilityVisit facilityVisit = new FacilityVisit();
     whenNew(FacilityVisit.class).withArguments(facility, distribution).thenReturn(facilityVisit);
-    whenNew(FacilityDistribution.class).withArguments(facilityVisit, facility, distribution, asList(refrigeratorReading), vaccinationProducts, productVials).thenReturn(mock(FacilityDistribution.class));
+    whenNew(FacilityDistribution.class).withArguments(facilityVisit, facility, distribution, asList(refrigeratorReading), childTargetGroupProducts, adultTargetGroupProducts, productVials).thenReturn(mock(FacilityDistribution.class));
 
-    FacilityDistribution distributionData = facilityDistributionService.createDistributionData(facility, distribution, refrigerators, vaccinationProducts, productVials);
+    FacilityDistribution distributionData = facilityDistributionService.createDistributionData(facility, distribution, refrigerators, childTargetGroupProducts, adultTargetGroupProducts, productVials);
 
     verify(epiUseService).save(distributionData.getEpiUse());
     verify(facilityVisitService).save(facilityVisit);
     verify(epiInventoryService).save(distributionData.getEpiInventory());
     verify(vaccinationCoverageService).saveChildCoverage(distributionData.getChildCoverage());
     verifyNew(FacilityVisit.class).withArguments(facility, distribution);
-    verifyNew(FacilityDistribution.class).withArguments(facilityVisit, facility, distribution, asList(refrigeratorReading), vaccinationProducts, productVials);
+    verifyNew(FacilityDistribution.class).withArguments(facilityVisit, facility, distribution, asList(refrigeratorReading), childTargetGroupProducts, adultTargetGroupProducts, productVials);
   }
 
   @Test
@@ -130,15 +136,16 @@ public class FacilityDistributionServiceTest {
     Distribution distribution = new Distribution();
     EpiInventory epiInventory = new EpiInventory();
     List<Refrigerator> refrigerators = emptyList();
-    List<VaccinationProduct> vaccinationProducts = emptyList();
+    List<TargetGroupProduct> childTargetGroupProducts = emptyList();
+    List<TargetGroupProduct> adultTargetGroupProducts = emptyList();
     List<ProductVial> productVials = emptyList();
     FacilityDistribution distributionData = mock(FacilityDistribution.class);
 
     FacilityVisit facilityVisit = new FacilityVisit();
-    whenNew(FacilityDistribution.class).withArguments(facilityVisit, facility, distribution, refrigerators, vaccinationProducts, productVials).thenReturn(distributionData);
+    whenNew(FacilityDistribution.class).withArguments(facilityVisit, facility, distribution, refrigerators, childTargetGroupProducts, adultTargetGroupProducts, productVials).thenReturn(distributionData);
     when(distributionData.getEpiInventory()).thenReturn(epiInventory);
 
-    facilityDistributionService.createDistributionData(facility, distribution, refrigerators, vaccinationProducts, productVials);
+    facilityDistributionService.createDistributionData(facility, distribution, refrigerators, childTargetGroupProducts, adultTargetGroupProducts, productVials);
 
     verify(epiInventoryService).save(epiInventory);
   }
@@ -151,17 +158,18 @@ public class FacilityDistributionServiceTest {
     List<Refrigerator> refrigerators = asList(new Refrigerator(), new Refrigerator());
     Facility facility1 = new Facility(9l);
     Facility facility2 = new Facility(12L);
-    FacilityDistribution facilityDistribution1 = new FacilityDistribution(new FacilityVisit(), new EpiUse(), null, null, new VaccinationFullCoverage(), new VaccinationChildCoverage());
-    FacilityDistribution facilityDistribution2 = new FacilityDistribution(new FacilityVisit(), new EpiUse(), null, null, new VaccinationFullCoverage(), new VaccinationChildCoverage());
+    FacilityDistribution facilityDistribution1 = new FacilityDistribution(new FacilityVisit(), new EpiUse(), new DistributionRefrigerators(), null, new VaccinationFullCoverage(), new VaccinationChildCoverage());
+    FacilityDistribution facilityDistribution2 = new FacilityDistribution(new FacilityVisit(), new EpiUse(), new DistributionRefrigerators(), null, new VaccinationFullCoverage(), new VaccinationChildCoverage());
     FacilityDistributionService service = spy(facilityDistributionService);
 
     when(refrigeratorService.getRefrigeratorsForADeliveryZoneAndProgram(4L, 16L)).thenReturn(refrigerators);
     when(facilityService.getAllForDeliveryZoneAndProgram(4L, 16L)).thenReturn(asList(facility1, facility2));
-    when(vaccinationCoverageService.getVaccinationProducts(true)).thenReturn(null);
+    List<TargetGroupProduct> emptyTargetGroupProductList = Collections.<TargetGroupProduct>emptyList();
+    when(vaccinationCoverageService.getVaccinationProducts()).thenReturn(emptyTargetGroupProductList);
     when(vaccinationCoverageService.getProductVials()).thenReturn(null);
 
-    doReturn(facilityDistribution1).when(service).createDistributionData(facility1, distribution, refrigerators, null, null);
-    doReturn(facilityDistribution2).when(service).createDistributionData(facility2, distribution, refrigerators, null, null);
+    doReturn(facilityDistribution1).when(service).createDistributionData(facility1, distribution, refrigerators, emptyTargetGroupProductList, emptyTargetGroupProductList, null);
+    doReturn(facilityDistribution2).when(service).createDistributionData(facility2, distribution, refrigerators, emptyTargetGroupProductList, emptyTargetGroupProductList, null);
 
     Map<Long, FacilityDistribution> facilityDistributions = service.createFor(distribution);
 
@@ -183,11 +191,12 @@ public class FacilityDistributionServiceTest {
     expectedFacilityDistribution.setEpiUse(new EpiUse());
     FacilityVisit facilityVisit = new FacilityVisit();
     whenNew(FacilityVisit.class).withArguments(facility, distribution).thenReturn(facilityVisit);
-    whenNew(FacilityDistribution.class).withArguments(facilityVisit, facility, distribution, asList(facilityRefReading), null, null).thenReturn(expectedFacilityDistribution);
+    List<TargetGroupProduct> emptyTargetGroupProductList = new ArrayList<>();
+    whenNew(FacilityDistribution.class).withArguments(facilityVisit, facility, distribution, asList(facilityRefReading), emptyTargetGroupProductList, emptyTargetGroupProductList, null).thenReturn(expectedFacilityDistribution);
 
-    FacilityDistribution facilityDistribution = facilityDistributionService.createDistributionData(facility, distribution, refrigerators, null, null);
+    FacilityDistribution facilityDistribution = facilityDistributionService.createDistributionData(facility, distribution, refrigerators, emptyTargetGroupProductList, emptyTargetGroupProductList, null);
 
-    verifyNew(FacilityDistribution.class).withArguments(facilityVisit, facility, distribution, asList(facilityRefReading), null, null);
+    verifyNew(FacilityDistribution.class).withArguments(facilityVisit, facility, distribution, asList(facilityRefReading), emptyTargetGroupProductList, emptyTargetGroupProductList, null);
     assertThat(facilityDistribution, is(expectedFacilityDistribution));
   }
 

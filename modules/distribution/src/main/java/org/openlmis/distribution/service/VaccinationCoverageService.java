@@ -32,8 +32,8 @@ public class VaccinationCoverageService {
     return repository.getFullCoverageBy(facilityVisitId);
   }
 
-  public List<VaccinationProduct> getVaccinationProducts(Boolean isChildCoverage) {
-    return repository.getVaccinationProducts(isChildCoverage);
+  public List<TargetGroupProduct> getVaccinationProducts() {
+    return repository.getVaccinationProducts();
   }
 
   public void saveChildCoverage(VaccinationChildCoverage childCoverage) {

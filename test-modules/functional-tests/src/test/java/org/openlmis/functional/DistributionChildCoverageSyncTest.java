@@ -290,8 +290,8 @@ public class DistributionChildCoverageSyncTest extends TestCaseHelper {
 
   @Test(groups = {"distribution"})
   public void testShouldVerifyAllRegimensWhenLessThan12RegimensInMappingTable() throws SQLException {
-    dbWrapper.deleteRowFromTable("coverage_vaccination_products", "vaccination", "BCG");
-    dbWrapper.deleteRowFromTable("coverage_vaccination_products", "vaccination", "Measles");
+    dbWrapper.deleteRowFromTable("coverage_target_group_products", "vaccination", "BCG");
+    dbWrapper.deleteRowFromTable("coverage_target_group_products", "vaccination", "Measles");
 
     HomePage homePage = loginPage.loginAs(childCoverageData.get(USER), childCoverageData.get(PASSWORD));
     DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
@@ -306,8 +306,8 @@ public class DistributionChildCoverageSyncTest extends TestCaseHelper {
 
   @Test(groups = {"distribution"})
   public void testShouldVerifyAllRegimensWhenInsertedInDifferentOrderInMappingTableAndMappedToPullTypePrograms() throws SQLException {
-    dbWrapper.deleteRowFromTable("coverage_vaccination_products", "vaccination", "BCG");
-    dbWrapper.deleteRowFromTable("coverage_vaccination_products", "vaccination", "Measles");
+    dbWrapper.deleteRowFromTable("coverage_target_group_products", "vaccination", "BCG");
+    dbWrapper.deleteRowFromTable("coverage_target_group_products", "vaccination", "Measles");
     dbWrapper.insertRegimensProductsInMappingTable("Measles", "P10");
     dbWrapper.insertRegimensProductsInMappingTable("BCG", "P10");
 

@@ -339,7 +339,7 @@ public class DBWrapper {
     update("delete from refrigerator_readings");
     update("delete from full_coverages");
     update("delete from vaccination_child_coverage_line_items;");
-    update("delete from coverage_vaccination_products;");
+    update("delete from coverage_target_group_products;");
     update("delete from opened_vial_line_items;");
     update("delete from facility_visits");
     update("delete from distributions");
@@ -351,7 +351,7 @@ public class DBWrapper {
     update("delete from facility_approved_products");
     update("delete from facility_program_products");
     update("delete from program_products");
-    update("delete from coverage_vaccination_products");
+    update("delete from coverage_target_group_products");
     update("delete from coverage_product_vials");
     update("delete from products");
     update("delete from product_categories");
@@ -1378,7 +1378,7 @@ public class DBWrapper {
   }
 
   public void insertRegimensProductsInMappingTable(String vaccination, String productCode) throws SQLException {
-    update("INSERT INTO coverage_vaccination_products (vaccination, productCode, childCoverage) values ('%s' ,'%s' , TRUE)", vaccination, productCode);
+    update("INSERT INTO coverage_target_group_products (vaccination, productCode, childCoverage) values ('%s' ,'%s' , TRUE)", vaccination, productCode);
   }
 
   public Map<String, String> getDistributionDetails(String deliveryZoneName, String programName, String periodName) throws SQLException {

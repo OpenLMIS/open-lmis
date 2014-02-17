@@ -42,8 +42,8 @@ public interface VaccinationCoverageMapper {
   @Select({"SELECT * FROM full_coverages WHERE facilityVisitId = #{facilityVisitId}"})
   VaccinationFullCoverage getFullCoverageBy(Long facilityVisitId);
 
-  @Select({"SELECT * FROM coverage_vaccination_products WHERE childCoverage = #{isChildCoverage}"})
-  List<VaccinationProduct> getVaccinationProducts(Boolean isChildCoverage);
+  @Select({"SELECT * FROM coverage_target_group_products"})
+  List<TargetGroupProduct> getVaccinationProducts();
 
   @Select({"SELECT * FROM vaccination_child_coverage_line_items WHERE facilityVisitId = #{facilityVisitId}"})
   List<ChildCoverageLineItem> getChildCoverageLineItemsBy(Long facilityVisitId);

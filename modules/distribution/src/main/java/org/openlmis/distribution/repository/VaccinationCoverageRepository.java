@@ -31,8 +31,8 @@ public class VaccinationCoverageRepository {
     return mapper.getFullCoverageBy(facilityVisitId);
   }
 
-  public List<VaccinationProduct> getVaccinationProducts(Boolean isChildCoverage) {
-    return mapper.getVaccinationProducts(isChildCoverage);
+  public List<TargetGroupProduct> getVaccinationProducts() {
+    return mapper.getVaccinationProducts();
   }
 
   public void saveChildCoverage(VaccinationChildCoverage childCoverage) {

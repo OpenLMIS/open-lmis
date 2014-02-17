@@ -30,7 +30,7 @@ public class VaccinationChildCoverage {
   private List<OpenedVialLineItem> openedVialLineItems = new ArrayList<>();
 
   public VaccinationChildCoverage(FacilityVisit facilityVisit, Facility facility,
-                                  List<VaccinationProduct> vaccinationProducts, List<ProductVial> productVials) {
+                                  List<TargetGroupProduct> targetGroupProducts, List<ProductVial> productVials) {
 
     List<String> validVaccinations = Collections.unmodifiableList(
       asList("BCG", "Polio (Newborn)", "Polio 1st dose", "Polio 2nd dose",
@@ -41,7 +41,7 @@ public class VaccinationChildCoverage {
       "BCG", "Polio10", "Polio20",
       "Penta1", "Penta10", "PCV", "Measles"));
 
-    createChildCoverageLineItems(facilityVisit, facility, vaccinationProducts, validVaccinations);
+    createChildCoverageLineItems(facilityVisit, facility, targetGroupProducts, validVaccinations);
 
     createOpenedVialLineItems(facilityVisit, facility, productVials, validProductVials);
   }
@@ -65,18 +65,18 @@ public class VaccinationChildCoverage {
 
   private void createChildCoverageLineItems(FacilityVisit facilityVisit,
                                             Facility facility,
-                                            List<VaccinationProduct> vaccinationProducts,
+                                            List<TargetGroupProduct> targetGroupProducts,
                                             List<String> validVaccinations) {
-    VaccinationProduct vaccinationProduct;
+    TargetGroupProduct targetGroupProduct;
 
     for (final String vaccination : validVaccinations) {
-      vaccinationProduct = (VaccinationProduct) CollectionUtils.find(vaccinationProducts, new Predicate() {
+      targetGroupProduct = (TargetGroupProduct) CollectionUtils.find(targetGroupProducts, new Predicate() {
         @Override
         public boolean evaluate(Object o) {
-          return ((VaccinationProduct) o).getVaccination().equalsIgnoreCase(vaccination);
+          return ((TargetGroupProduct) o).getTargetGroupEntity().equalsIgnoreCase(vaccination);
         }
       });
-      this.childCoverageLineItems.add(new ChildCoverageLineItem(facilityVisit, facility, vaccinationProduct, vaccination));
+      this.childCoverageLineItems.add(new ChildCoverageLineItem(facilityVisit, facility, targetGroupProduct, vaccination));
     }
   }
 

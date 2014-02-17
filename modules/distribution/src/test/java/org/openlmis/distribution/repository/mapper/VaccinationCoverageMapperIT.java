@@ -148,18 +148,19 @@ public class VaccinationCoverageMapperIT {
     Product product = make(a(ProductBuilder.defaultProduct));
 
     productMapper.insert(product);
-    VaccinationProduct vaccinationProduct = new VaccinationProduct("BCG", product.getCode(), true);
+    TargetGroupProduct childTargetGroupProduct = new TargetGroupProduct("BCG", product.getCode(), true);
 
-    queryExecutor.executeUpdate("INSERT INTO coverage_vaccination_products (vaccination, productCode, childCoverage) VALUES (?, ?, ?)",
-      vaccinationProduct.getVaccination(), vaccinationProduct.getProductCode(), vaccinationProduct.getChildCoverage());
+    queryExecutor.executeUpdate("INSERT INTO coverage_target_group_products (vaccination, productCode, childCoverage) VALUES (?, ?, ?)",
+      childTargetGroupProduct.getTargetGroupEntity(), childTargetGroupProduct.getProductCode(), childTargetGroupProduct.getChildCoverage());
 
-    List<VaccinationProduct> vaccinationProducts = mapper.getVaccinationProducts(true);
+    TargetGroupProduct adultTargetGroupProduct = new TargetGroupProduct("Pregnant Women", product.getCode(), false);
+    queryExecutor.executeUpdate("INSERT INTO coverage_target_group_products (vaccination, productCode, childCoverage) VALUES (?, ?, ?)",
+      adultTargetGroupProduct.getTargetGroupEntity(), adultTargetGroupProduct.getProductCode(), adultTargetGroupProduct.getChildCoverage());
+    List<TargetGroupProduct> targetGroupProducts = mapper.getVaccinationProducts();
 
-    assertThat(vaccinationProducts.size(), is(1));
-    VaccinationProduct vaccinationProductFromDB = vaccinationProducts.get(0);
-    assertThat(vaccinationProductFromDB.getVaccination(), is(vaccinationProduct.getVaccination()));
-    assertThat(vaccinationProductFromDB.getProductCode(), is(vaccinationProduct.getProductCode()));
-    assertThat(vaccinationProductFromDB.getChildCoverage(), is(vaccinationProduct.getChildCoverage()));
+    assertThat(targetGroupProducts.size(), is(2));
+    assertTrue(targetGroupProducts.contains(childTargetGroupProduct));
+    assertTrue(targetGroupProducts.contains(adultTargetGroupProduct));
   }
 
   @Test
@@ -167,10 +168,10 @@ public class VaccinationCoverageMapperIT {
     Product product = make(a(ProductBuilder.defaultProduct));
 
     productMapper.insert(product);
-    VaccinationProduct vaccinationProduct = new VaccinationProduct("BCG", product.getCode(), true);
+    TargetGroupProduct targetGroupProduct = new TargetGroupProduct("BCG", product.getCode(), true);
 
-    queryExecutor.executeUpdate("INSERT INTO coverage_vaccination_products (vaccination, productCode, childCoverage) VALUES (?, ?, ?)",
-      vaccinationProduct.getVaccination(), vaccinationProduct.getProductCode(), vaccinationProduct.getChildCoverage());
+    queryExecutor.executeUpdate("INSERT INTO coverage_target_group_products (vaccination, productCode, childCoverage) VALUES (?, ?, ?)",
+      targetGroupProduct.getTargetGroupEntity(), targetGroupProduct.getProductCode(), targetGroupProduct.getChildCoverage());
 
     ChildCoverageLineItem childCoverageLineItem = new ChildCoverageLineItem(facilityVisit.getId(), "BCG", 56, null, null, null, null);
     childCoverageLineItem.setCreatedBy(123L);
@@ -189,10 +190,10 @@ public class VaccinationCoverageMapperIT {
     Product product = make(a(ProductBuilder.defaultProduct));
 
     productMapper.insert(product);
-    VaccinationProduct vaccinationProduct = new VaccinationProduct("BCG", product.getCode(), true);
+    TargetGroupProduct targetGroupProduct = new TargetGroupProduct("BCG", product.getCode(), true);
 
-    queryExecutor.executeUpdate("INSERT INTO coverage_vaccination_products (vaccination, productCode, childCoverage) VALUES (?, ?, ?)",
-      vaccinationProduct.getVaccination(), vaccinationProduct.getProductCode(), vaccinationProduct.getChildCoverage());
+    queryExecutor.executeUpdate("INSERT INTO coverage_target_group_products (vaccination, productCode, childCoverage) VALUES (?, ?, ?)",
+      targetGroupProduct.getTargetGroupEntity(), targetGroupProduct.getProductCode(), targetGroupProduct.getChildCoverage());
 
     ChildCoverageLineItem childCoverageLineItem = new ChildCoverageLineItem(facilityVisit.getId(), "BCG", 56, null, null, null, null);
     mapper.insertChildCoverageLineItem(childCoverageLineItem);
@@ -202,7 +203,7 @@ public class VaccinationCoverageMapperIT {
     assertThat(fetchedChildCoverageLineItems.size(), is(1));
     assertThat(fetchedChildCoverageLineItems.get(0).getFacilityVisitId(), is(facilityVisit.getId()));
   }
-  
+
   @Test
   public void shouldReturnProductVialsMapping() throws SQLException {
     Product product = make(a(ProductBuilder.defaultProduct));

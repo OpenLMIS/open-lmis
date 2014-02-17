@@ -20,9 +20,9 @@ import org.openlmis.core.domain.BaseModel;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-public class VaccinationProduct extends BaseModel {
+public class TargetGroupProduct extends BaseModel {
 
-  private String vaccination;
+  private String targetGroupEntity;
   private String productCode;
   private Boolean childCoverage;
 
