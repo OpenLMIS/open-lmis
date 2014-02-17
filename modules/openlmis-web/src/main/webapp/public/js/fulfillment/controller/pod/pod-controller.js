@@ -25,6 +25,7 @@ function PODController($scope, orderPOD, OrderPOD, pageSize, $routeParams, $loca
     {label: "header.packs.to.ship", name: "packsToShip"},
     {label: "header.quantity.shipped", name: "quantityShipped"},
     {label: "header.quantity.received", name: "quantityReceived"},
+    {label: "header.quantity.returned", name: "quantityReturned"},
     {label: "header.notes", name: "notes"}
   ];
 

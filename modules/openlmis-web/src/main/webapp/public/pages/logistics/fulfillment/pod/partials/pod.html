@@ -82,6 +82,20 @@
                   style="display: none"></span>
             </div>
           </td>
+          <td class="cell-input col-quantityReturned">
+            <input id="quantityReturned{{$index}}" type="text"
+                   ng-model="podLineItem.quantityReturned" ng-trim=false
+                   numeric-validator="positiveInteger" maxlength="8"
+                   error-holder="returnedQuantityError{{$index}}"
+                   ng-disabled="podAlreadySubmitted"/>
+
+            <div class="input-error-parent-cell">
+            <span id="returnedQuantityError{{$index}}"
+                  class="rnr-form-error"
+                  openlmis-message="error.number.only"
+                  style="display: none"></span>
+            </div>
+          </td>
           <td class="cell-input">
             <input class="col-remarks" type="text" maxlength="250" ng-model="podLineItem.notes"
                    id="notes{{$index}}" ng-disabled="podAlreadySubmitted"></span>

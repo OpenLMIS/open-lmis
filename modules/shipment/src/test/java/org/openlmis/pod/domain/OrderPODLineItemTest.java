@@ -124,10 +124,12 @@ public class OrderPODLineItemTest {
     OrderPODLineItem otherLineItem = new OrderPODLineItem(1L, "P1", 30);
     otherLineItem.setNotes(notes);
     otherLineItem.setModifiedBy(modifiedBy);
+    otherLineItem.setQuantityReturned(300);
 
     lineItem.copy(otherLineItem);
 
     assertThat(lineItem.getQuantityReceived(), is(30));
+    assertThat(lineItem.getQuantityReturned(), is(300));
     assertThat(lineItem.getNotes(), is(notes));
     assertThat(lineItem.getModifiedBy(), is(modifiedBy));
   }

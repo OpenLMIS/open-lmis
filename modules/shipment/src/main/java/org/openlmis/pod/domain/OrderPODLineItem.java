@@ -75,6 +75,7 @@ public class OrderPODLineItem extends BaseModel {
   private void create(RnrLineItem rnrLineItem, Long createdBy) {
     this.setProductCode(rnrLineItem.getProductCode());
     this.setProductCategory(rnrLineItem.getProductCategory());
+    this.setProductCategoryDisplayOrder(rnrLineItem.getProductCategoryDisplayOrder());
     this.setProductDisplayOrder(rnrLineItem.getProductDisplayOrder());
     this.setProductName(rnrLineItem.getProduct());
     this.setDispensingUnit(rnrLineItem.getDispensingUnit());
@@ -100,6 +101,7 @@ public class OrderPODLineItem extends BaseModel {
 
   public void copy(OrderPODLineItem lineItem) {
     this.setQuantityReceived(lineItem.getQuantityReceived());
+    this.setQuantityReturned(lineItem.getQuantityReturned());
     this.setNotes(lineItem.getNotes());
     this.setModifiedBy(lineItem.getModifiedBy());
   }

@@ -290,8 +290,7 @@ span[class^="tpl-"] {
       position: relative;
       border: 1px solid #DDD;
       border-top: 0;
-      border-color: transparent #BBB #DDD
-    ;
+      border-color: transparent #BBB #DDD;
       background: #FCFCFC;
       font-size: 0.9em;
 
@@ -772,12 +771,12 @@ th.col-reasonForLossesAndAdjustments {
 
 td.col-beginningBalance,
 td.col-quantityReceived,
+td.col-quantityReturned,
 td.col-quantityDispensed,
 td.col-newPatientCount,
 td.col-stockOutDays,
 td.col-expirationDate,
 td.col-quantityRequested,
-td.col-quantityReceived,
 td.col-quantityApproved {
   input[type="text"] {
     width: 89%;
@@ -787,6 +786,7 @@ td.col-quantityApproved {
 
 td.col-beginningBalance,
 td.col-quantityReceived,
+td.col-quantityReturned,
 td.col-quantityDispensed,
 td.col-newPatientCount,
 td.col-stockOutDays,
@@ -802,7 +802,6 @@ td.col-quantityApproved {
 
 td.col-beginningBalance,
 td.col-total,
-td.col-stockInHand,
 td.col-stockInHand,
 td.col-normalizedConsumption,
 td.col-amc,
@@ -2550,7 +2549,7 @@ input[rnr-validator="positiveInteger"] {
       text-align: right;
     }
   }
-  .col-quantityReceived {
+  .col-quantityReceived .col-quantityReturned {
     width: 150px;
     input {
       width: 90%;
