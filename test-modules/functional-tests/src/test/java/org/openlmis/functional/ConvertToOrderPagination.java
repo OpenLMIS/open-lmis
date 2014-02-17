@@ -54,6 +54,21 @@ public class ConvertToOrderPagination extends TestCaseHelper {
     dbWrapper.insertFulfilmentRoleAssignment(userSIC, "store in-charge", "F10");
   }
 
+  @And("^I have a/an \"([^\"]*)\" order in \"([^\"]*)\" status$")
+  public void setupDataForOrderInGivenState(String requisitionType, String orderStatus) throws SQLException {
+    boolean isEmergency = true;
+    if (requisitionType.toLowerCase().equals("regular")) {
+      isEmergency = false;
+    }
+    String userSIC = "storeInCharge";
+    setUpData("HIV", userSIC);
+    dbWrapper.insertRequisitions(1, "HIV", true, "2012-12-01", "2015-12-01", "F10", isEmergency);
+    dbWrapper.updateRequisitionStatus("APPROVED", userSIC, "HIV");
+    dbWrapper.updateFieldValue("requisition_line_items", "packsToShip", 10);
+    dbWrapper.convertRequisitionToOrder(dbWrapper.getMaxRnrID(), orderStatus, userSIC);
+    dbWrapper.insertFulfilmentRoleAssignment(userSIC, "store in-charge", "F10");
+  }
+
   @And("^I select \"([^\"]*)\" requisition on page \"([^\"]*)\"$")
   public void selectRequisition(String numberOfRequisitions, String page) {
     testWebDriver.sleep(5000);
@@ -64,8 +79,8 @@ public class ConvertToOrderPagination extends TestCaseHelper {
     new ConvertOrderPage(testWebDriver).selectRequisitionToBeConvertedToOrder(Integer.parseInt(numberOfRequisitions));
   }
 
-  @And("^I access convert to order$")
-  public void accessConvertToOrder() {
+  @And("^I convert selected requisitions to order$")
+  public void convertSelectedRequisitionToOrder() {
     PageFactory.getInstanceOfConvertOrderPage(testWebDriver);
     convertToOrder();
   }

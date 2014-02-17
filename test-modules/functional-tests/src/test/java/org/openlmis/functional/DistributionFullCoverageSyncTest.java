@@ -89,7 +89,7 @@ public class DistributionFullCoverageSyncTest extends TestCaseHelper {
     assertEquals("Females", fullCoveragePage.getTextOfFemaleHeader());
     assertEquals("Males", fullCoveragePage.getTextOfMaleHeader());
     assertEquals("Health Center", fullCoveragePage.getTextOfHealthCenterHeader());
-    assertEquals("Mobile Brigade", fullCoveragePage.getTextOfMobileBrigadeHeader());
+    assertEquals("Outreach", fullCoveragePage.getTextOfMobileBrigadeHeader());
 
     fullCoveragePage.enterFemaleHealthCenter(5);
     fullCoveragePage.clickApplyNRToAll();

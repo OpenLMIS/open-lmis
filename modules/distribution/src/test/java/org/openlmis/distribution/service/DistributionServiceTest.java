@@ -30,7 +30,6 @@ import java.util.Map;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
 import static org.openlmis.distribution.domain.DistributionStatus.INITIATED;
 import static org.openlmis.distribution.domain.DistributionStatus.SYNCED;
@@ -52,7 +51,7 @@ public class DistributionServiceTest {
   private FacilityVisitService facilityVisitService;
 
   @Test
-  public void shouldCreateDistribution() throws Exception {
+  public void shouldCreateDistribution() {
     Distribution distribution = new Distribution();
     Distribution expectedDistribution = new Distribution();
     when(repository.create(distribution)).thenReturn(expectedDistribution);
@@ -67,20 +66,30 @@ public class DistributionServiceTest {
   }
 
   @Test
-  public void shouldSyncFacilityDistributionDataAndReturnSyncStatus() {
+  public void shouldSyncFacilityDistributionData() {
     FacilityVisit facilityVisit = new FacilityVisit();
 
     FacilityDistribution facilityDistribution = mock(FacilityDistribution.class);
     when(facilityDistribution.getFacilityVisit()).thenReturn(facilityVisit);
-    when(facilityDistributionService.save(facilityDistribution)).thenReturn(true);
-    boolean syncStatus = service.sync(facilityDistribution);
 
-    verify(facilityDistributionService).save(facilityDistribution);
-    assertTrue(syncStatus);
+    FacilityDistribution syncedFacilityDistribution = new FacilityDistribution();
+    FacilityDistribution savedFacilityDistribution = new FacilityDistribution();
+    FacilityVisit syncedVisit = new FacilityVisit();
+    syncedFacilityDistribution.setFacilityVisit(syncedVisit);
+
+    when(facilityDistributionService.setSynced(facilityDistribution)).thenReturn(syncedFacilityDistribution);
+    when(facilityDistributionService.save(syncedFacilityDistribution)).thenReturn(savedFacilityDistribution);
+
+    FacilityDistribution returnedFacilityDistribution = service.sync(facilityDistribution);
+
+    verify(facilityDistributionService).setSynced(facilityDistribution);
+    verify(facilityDistributionService).save(syncedFacilityDistribution);
+
+    assertThat(returnedFacilityDistribution, is(savedFacilityDistribution));
   }
 
   @Test
-  public void shouldGetDistributionIfExists() throws Exception {
+  public void shouldGetDistributionIfExists() {
     Distribution distribution = new Distribution();
 
     service.get(distribution);

@@ -17,7 +17,10 @@ import org.junit.experimental.categories.Category;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.db.categories.UnitTests;
 
+import java.util.Date;
+
 import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 
 @Category(UnitTests.class)
@@ -35,5 +38,64 @@ public class FacilityVisitTest {
     assertThat(facilityVisit.getDistributionId(), is(distribution.getId()));
     assertThat(facilityVisit.getFacilityId(), is(facility.getId()));
     assertThat(facilityVisit.getCreatedBy(), is(distribution.getCreatedBy()));
+  }
+
+  @Test
+  public void shouldGetVisitDetailsIfFacilityVisited() throws Exception {
+    Date visitedDate = new Date();
+    FacilityVisit facilityVisit = new FacilityVisit();
+    facilityVisit.setObservations("some");
+    facilityVisit.setVisited(true);
+    facilityVisit.setConfirmedBy(new Facilitator());
+    facilityVisit.setVerifiedBy(new Facilitator());
+    facilityVisit.setVehicleId("123");
+    facilityVisit.setVisitDate(visitedDate);
+    facilityVisit.setReasonForNotVisiting(ReasonForNotVisiting.HEALTH_CENTER_NOT_IN_DLS);
+
+    facilityVisit.setApplicableVisitInfo();
+
+    FacilityVisit expectedFacilityVisit = new FacilityVisit();
+    expectedFacilityVisit.setObservations("some");
+    expectedFacilityVisit.setVisited(true);
+    expectedFacilityVisit.setConfirmedBy(new Facilitator());
+    expectedFacilityVisit.setVerifiedBy(new Facilitator());
+    expectedFacilityVisit.setVehicleId("123");
+    expectedFacilityVisit.setVisitDate(visitedDate);
+    assertThat(facilityVisit, is(expectedFacilityVisit));
+  }
+
+  @Test
+  public void shouldGetUnvisitedFacilityDetails() throws Exception {
+    Date visitedDate = new Date();
+    FacilityVisit facilityVisit = new FacilityVisit();
+    facilityVisit.setObservations("some");
+    facilityVisit.setVisited(false);
+    facilityVisit.setConfirmedBy(new Facilitator());
+    facilityVisit.setVerifiedBy(new Facilitator());
+    facilityVisit.setVehicleId("123");
+    facilityVisit.setVisitDate(visitedDate);
+    facilityVisit.setReasonForNotVisiting(ReasonForNotVisiting.HEALTH_CENTER_NOT_IN_DLS);
+    facilityVisit.setOtherReasonDescription("other reasons");
+
+    facilityVisit.setApplicableVisitInfo();
+
+    assertThat(facilityVisit.getOtherReasonDescription(), is("other reasons"));
+    assertThat(facilityVisit.getReasonForNotVisiting(), is(ReasonForNotVisiting.HEALTH_CENTER_NOT_IN_DLS));
+    assertFalse(facilityVisit.getVisited());
+  }
+
+  @Test
+  public void shouldNoChangeFacilityVisitIfVisitedFlagIsNull() throws Exception {
+    FacilityVisit facilityVisit = new FacilityVisit();
+    facilityVisit.setObservations("some observation");
+    facilityVisit.setVisited(null);
+    facilityVisit.setReasonForNotVisiting(ReasonForNotVisiting.HEALTH_CENTER_NOT_IN_DLS);
+    facilityVisit.setOtherReasonDescription("other reasons");
+
+    facilityVisit.setApplicableVisitInfo();
+
+    assertThat(facilityVisit.getOtherReasonDescription(), is("other reasons"));
+    assertThat(facilityVisit.getReasonForNotVisiting(), is(ReasonForNotVisiting.HEALTH_CENTER_NOT_IN_DLS));
+    assertThat(facilityVisit.getObservations(), is("some observation"));
   }
 }

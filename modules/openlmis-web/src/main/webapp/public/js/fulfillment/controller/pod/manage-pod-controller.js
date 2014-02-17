@@ -41,10 +41,7 @@ function ManagePODController($scope, OrdersForManagePOD, messageService, OrderPO
 
   $scope.createPOD = function (orderId) {
     OrderPOD.save({orderId: orderId}, {}, function (data) {
-      $scope.$parent.pod = data.orderPOD;
-      $scope.$parent.order = data.order;
-      $scope.$parent.requisitionType = $scope.order.emergency ? "requisition.type.emergency" : "requisition.type.regular";
-      $location.url('/pods/' + $scope.pod.id + '?page=1');
+      $location.url('/pods/' + data.orderPOD.id + '?page=1');
     }, {});
   };
 

@@ -1,5 +1,8 @@
 package org.openlmis.functional;
 
+import cucumber.api.java.en.And;
+import cucumber.api.java.en.Then;
+import cucumber.api.java.en.When;
 import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.pageobjects.HomePage;
 import org.openlmis.pageobjects.LoginPage;
@@ -46,7 +49,7 @@ public class UpdatePod extends TestCaseHelper {
   }};
 
   @BeforeMethod(groups = "requisition")
-  public void setUp() throws InterruptedException, SQLException, IOException {
+  public void setUp() throws Exception {
     super.setup();
     dbWrapper.deleteData();
     setUpData(updatePODData.get(PROGRAM), updatePODData.get(USER));
@@ -55,7 +58,7 @@ public class UpdatePod extends TestCaseHelper {
   }
 
   @Test(groups = {"requisition"})
-  public void testVerifyUpdatePODForReleasedOrdersValidFlowForRegularRnR() throws Exception {
+  public void testVerifyUpdatePODForReleasedOrdersValidFlowForRegularRnR() throws SQLException {
     initiateRnrAndConvertToOrder(false, 100);
 
     HomePage homePage = loginPage.loginAs(updatePODData.get(USER), updatePODData.get(PASSWORD));
@@ -73,16 +76,23 @@ public class UpdatePod extends TestCaseHelper {
     verifyRequisitionTypeAndColor("regular");
 
     updatePodPage.enterPodData("200", "openlmis open source logistic management system", 1);
+    updatePodPage.clickSave();
+    assertTrue(updatePodPage.isPodSuccessMessageDisplayed());
+    testWebDriver.refresh();
     updatePodPage.verifyQuantityReceivedAndNotes("200", "openlmis open source logistic management system", 1);
     verifyPodDataInDatabase("200", "openlmis open source logistic management system", "P10");
 
     updatePodPage.enterPodData("990", "openlmis project", 1);
+    updatePodPage.clickSave();
+    assertTrue(updatePodPage.isPodSuccessMessageDisplayed());
+    testWebDriver.refresh();
+
     updatePodPage.verifyQuantityReceivedAndNotes("990", "openlmis project", 1);
     verifyPodDataInDatabase("990", "openlmis project", "P10");
   }
 
   @Test(groups = {"requisition"})
-  public void testVerifyUpdatePODForReleasedOrdersValidFlowForEmergencyRnR() throws Exception {
+  public void testVerifyUpdatePODForReleasedOrdersValidFlowForEmergencyRnR() throws SQLException {
     initiateRnrAndConvertToOrder(true, 100);
 
     HomePage homePage = loginPage.loginAs(updatePODData.get(USER), updatePODData.get(PASSWORD));
@@ -93,7 +103,7 @@ public class UpdatePod extends TestCaseHelper {
   }
 
   @Test(groups = {"requisition"})
-  public void testVerifyUpdatePODForReleasedOrdersWhenPacksToShipIsZero() throws Exception {
+  public void testVerifyUpdatePODForReleasedOrdersWhenPacksToShipIsZero() throws SQLException {
     initiateRnrAndConvertToOrder(false, 0);
 
     HomePage homePage = loginPage.loginAs(updatePODData.get(USER), updatePODData.get(PASSWORD));
@@ -109,7 +119,7 @@ public class UpdatePod extends TestCaseHelper {
   }
 
   @Test(groups = {"requisition"})
-  public void testVerifyUpdatePODForReleasedOrdersWhenMultipleProducts() throws Exception {
+  public void testVerifyUpdatePODForReleasedOrdersWhenMultipleProducts() throws SQLException {
     dbWrapper.setupMultipleProducts(updatePODData.get(PROGRAM), "Lvl3 Hospital", 1, true);
     dbWrapper.insertRequisitionWithMultipleLineItems(1, updatePODData.get(PROGRAM), true, "F10", false);
     dbWrapper.convertRequisitionToOrder(dbWrapper.getMaxRnrID(), "READY_TO_PACK", updatePODData.get(USER));
@@ -187,7 +197,7 @@ public class UpdatePod extends TestCaseHelper {
   }
 
   @Test(groups = {"requisition"})
-  public void testVerifyUpdatePODForPackedOrdersWhenPacksToShipAndQuantityShippedIsZero() throws SQLException {
+  public void testUpdatePODForPackedOrdersWhenPacksToShipAndQuantityShippedIsZeroAndSubmitPod() throws SQLException {
     initiateRnrAndConvertToOrder(false, 0);
     super.testDataForShipment(0, true, "P10", 0);
     dbWrapper.updateFieldValue("orders", "status", "PACKED", null, null);
@@ -197,8 +207,54 @@ public class UpdatePod extends TestCaseHelper {
     managePodPage.selectRequisitionToUpdatePod(1);
 
     verifyValuesOfPodTableOnUpdatePODScreen(1, "P10", "antibiotic Capsule 300/200/600 mg", "0", "Strip", "0");
+    updatePodPage.enterPodData("45", "Some notes", 1);
+    updatePodPage.clickSubmitButton();
+    updatePodPage.clickOkButton();
+    verifyPodDataInDatabase("45", "Some notes", "P10");
   }
 
+  @And("^I enter \"([^\"]*)\" as quantity received and \"([^\"]*)\" as notes in row \"([^\"]*)\"$")
+  public void enterPodDetails(String quantityReceived, String notes, String rowNumber) {
+    UpdatePodPage updatePodPage = PageFactory.getInstanceOfUpdatePodPage(testWebDriver);
+    updatePodPage.enterPodData(quantityReceived, notes, Integer.parseInt(rowNumber));
+  }
+
+  @And("^I submit POD$")
+  public void submitPOD() {
+    UpdatePodPage updatePodPage = PageFactory.getInstanceOfUpdatePodPage(testWebDriver);
+    updatePodPage.clickSubmitButton();
+    updatePodPage.clickCancelButton();
+    updatePodPage.clickSubmitButton();
+    updatePodPage.clickOkButton();
+  }
+
+  @When("^I click on update Pod link for Row \"([^\"]*)\"$")
+  public void navigateUploadPodPage(Integer rowNumber) {
+    HomePage homePage = PageFactory.getInstanceOfHomePage(testWebDriver);
+    ManagePodPage managePodPage = homePage.navigateManagePOD();
+    managePodPage.selectRequisitionToUpdatePod(rowNumber);
+  }
+
+  @Then("^I should see all products to update pod$")
+  public void verifyUpdatePodPage() {
+    UpdatePodPage updatePodPage = PageFactory.getInstanceOfUpdatePodPage(testWebDriver);
+    assertTrue(updatePodPage.getProductCode(1).contains("P10"));
+    assertTrue(updatePodPage.getProductName(1).contains("antibiotic"));
+    assertFalse(updatePodPage.getProductCode(1).contains("P11"));
+  }
+
+  @Then("^I verify quantity received and notes disabled$")
+  public void verifyPodPageDisabled() {
+    testWebDriver.sleep(1000);
+    UpdatePodPage updatePodPage = PageFactory.getInstanceOfUpdatePodPage(testWebDriver);
+    assertFalse(updatePodPage.isQuantityReceivedEnabled(1));
+    assertFalse(updatePodPage.isNotesEnabled(1));
+  }
+
+  @And("^I verify in database quantity received as \"([^\"]*)\" and notes as \"([^\"]*)\"$")
+  public void verifyPodDataSavedInDatabase(String quantityReceived, String notes) throws SQLException {
+    verifyPodDataInDatabase(quantityReceived, notes, "P10");
+  }
 
   private void initiateRnrAndConvertToOrder(boolean isEmergencyRegular, int packsToShip) throws SQLException {
     dbWrapper.insertRequisitions(1, "HIV", true, "2012-12-01", "2015-12-01", "F10", isEmergencyRegular);

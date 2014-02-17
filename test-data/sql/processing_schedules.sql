@@ -14,73 +14,15 @@ INSERT INTO processing_schedules (code, name, description) VALUES ('M', 'Monthly
 
 INSERT INTO processing_periods
 (name, description, startDate, endDate, numberOfMonths, scheduleId, modifiedBy) VALUES
-('Period1', 'first period', '2012-12-01', '2013-02-28 23:59:59', 2, (SELECT
-                                                                       id
-                                                                     FROM processing_schedules
-                                                                     WHERE code = 'Q1stM'), (SELECT
-                                                                                               id
-                                                                                             FROM users
-                                                                                             LIMIT 1)),
-('Period2', 'second period', '2013-03-01', '2013-05-31 23:59:59', 2, (SELECT
-                                                                        id
-                                                                      FROM processing_schedules
-                                                                      WHERE code = 'Q1stM'), (SELECT
-                                                                                                id
-                                                                                              FROM users
-                                                                                              LIMIT 1)),
-('Dec2012', 'Dec2012', '2012-12-01', '2012-12-31 23:59:59', 1, (SELECT
-                                                                  id
-                                                                FROM processing_schedules
-                                                                WHERE code = 'M'), (SELECT
-                                                                                      id
-                                                                                    FROM users
-                                                                                    LIMIT 1)),
-('Jan2013', 'Jan2013', '2013-01-01', '2013-01-31 23:59:59', 1, (SELECT
-                                                                  id
-                                                                FROM processing_schedules
-                                                                WHERE code = 'M'), (SELECT
-                                                                                      id
-                                                                                    FROM users
-                                                                                    LIMIT 1)),
-('Feb2013', 'Feb2013', '2013-02-01', '2013-02-28 23:59:59', 1, (SELECT
-                                                                  id
-                                                                FROM processing_schedules
-                                                                WHERE code = 'M'), (SELECT
-                                                                                      id
-                                                                                    FROM users
-                                                                                    LIMIT 1)),
-('Mar2013', 'Mar2013', '2013-03-01', '2013-03-31 23:59:59', 1, (SELECT
-                                                                  id
-                                                                FROM processing_schedules
-                                                                WHERE code = 'M'), (SELECT
-                                                                                      id
-                                                                                    FROM users
-                                                                                    LIMIT 1)),
-('Apr2013', 'Apr2013', '2013-04-01', '2013-04-30 23:59:59', 1, (SELECT
-                                                                  id
-                                                                FROM processing_schedules
-                                                                WHERE code = 'M'), (SELECT
-                                                                                      id
-                                                                                    FROM users
-                                                                                    LIMIT 1)),
-('May2013', 'May2013', '2013-05-01', '2013-05-31 23:59:59', 1, (SELECT
-                                                                  id
-                                                                FROM processing_schedules
-                                                                WHERE code = 'M'), (SELECT
-                                                                                      id
-                                                                                    FROM users
-                                                                                    LIMIT 1)),
-('June2013', 'June2013', '2013-06-01', '2013-06-30 23:59:59', 1, (SELECT
-                                                                    id
-                                                                  FROM processing_schedules
-                                                                  WHERE code = 'M'), (SELECT
-                                                                                        id
-                                                                                      FROM users
-                                                                                      LIMIT 1)),
-('Current Period', 'Current Period', '2013-07-01', '2016-06-30 23:59:59', 1, (SELECT
-                                                                                id
-                                                                              FROM processing_schedules
-                                                                              WHERE code = 'M'), (SELECT
-                                                                                                    id
-                                                                                                  FROM users
-                                                                                                  LIMIT 1));
+('Sept2013', 'Sept2013', '2013-09-01', '2013-09-30 23:59:59', 1, (SELECT id FROM processing_schedules WHERE code = 'M'), (SELECT id FROM users LIMIT 1)),
+('Oct2013', 'Oct2013', '2013-10-01', '2013-10-31 23:59:59', 1, (SELECT id FROM processing_schedules WHERE code = 'M'), (SELECT id FROM users LIMIT 1)),
+('Nov2013', 'Nov2013', '2013-11-01', '2013-11-30 23:59:59', 1, (SELECT id FROM processing_schedules WHERE code = 'M'), (SELECT id FROM users LIMIT 1)),
+('Dec2013', 'Dec2013', '2013-12-01', '2013-12-31 23:59:59', 1, (SELECT id FROM processing_schedules WHERE code = 'M'), (SELECT id FROM users LIMIT 1)),
+('Jan2014', 'Jan2014', '2014-01-01', '2014-01-31 23:59:59', 1, (SELECT id FROM processing_schedules WHERE code = 'M'), (SELECT id FROM users LIMIT 1)),
+('Feb2014', 'Feb2014', '2014-02-01', '2014-02-28 23:59:59', 1, (SELECT id FROM processing_schedules WHERE code = 'M'), (SELECT id FROM users LIMIT 1)),
+('Mar2014', 'Mar2014', '2014-03-01', '2014-03-31 23:59:59', 1, (SELECT id FROM processing_schedules WHERE code = 'M'), (SELECT id FROM users LIMIT 1)),
+('Apr2014', 'Apr2014', '2014-04-01', '2014-04-30 23:59:59', 1, (SELECT id FROM processing_schedules WHERE code = 'M'), (SELECT id FROM users LIMIT 1)),
+('May2014', 'May2014', '2014-05-01', '2014-05-31 23:59:59', 1, (SELECT id FROM processing_schedules WHERE code = 'M'), (SELECT id FROM users LIMIT 1)),
+('June2014', 'June2014', '2014-06-01', '2014-06-30 23:59:59', 1, (SELECT id FROM processing_schedules WHERE code = 'M'), (SELECT id FROM users LIMIT 1)),
+('July2014', 'July2014', '2014-07-01', '2014-07-31 23:59:59', 1, (SELECT id FROM processing_schedules WHERE code = 'M'), (SELECT id FROM users LIMIT 1)),
+('Aug2014', 'Aug2014', '2014-08-01', '2014-08-31 23:59:59', 1, (SELECT id FROM processing_schedules WHERE code = 'M'), (SELECT id FROM users LIMIT 1));

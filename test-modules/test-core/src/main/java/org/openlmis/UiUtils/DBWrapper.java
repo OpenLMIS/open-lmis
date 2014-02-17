@@ -328,7 +328,6 @@ public class DBWrapper {
     update("delete from program_product_price_history");
     update("delete from pod_line_items");
     update("delete from pod");
-    update("delete from shipment_file_info");
     update("delete from shipment_line_items");
     update("delete from orders");
     update("delete from requisition_status_changes");
@@ -1039,7 +1038,7 @@ public class DBWrapper {
 
   public Map<String, String> getFacilityVisitDetails(String facilityCode) throws SQLException {
     Map<String, String> facilityVisitsDetails = new HashMap<>();
-    try (ResultSet rs = query("SELECT observations,confirmedByName,confirmedByTitle,verifiedByName,verifiedByTitle, visited, " +
+    try (ResultSet rs = query("SELECT observations,confirmedByName,confirmedByTitle,verifiedByName,verifiedByTitle, visited, synced, " +
       "visitDate, vehicleId from facility_visits WHERE facilityId = (SELECT id FROM facilities WHERE code = '" + facilityCode + "');")) {
       while (rs.next()) {
         facilityVisitsDetails.put("observations", rs.getString("observations"));
@@ -1050,6 +1049,7 @@ public class DBWrapper {
         facilityVisitsDetails.put("visited", rs.getString("visited"));
         facilityVisitsDetails.put("visitDate", rs.getString("visitDate"));
         facilityVisitsDetails.put("vehicleId", rs.getString("vehicleId"));
+        facilityVisitsDetails.put("synced", rs.getString("synced"));
       }
       return facilityVisitsDetails;
     }
@@ -1291,7 +1291,7 @@ public class DBWrapper {
     update("delete from products;");
   }
 
-  public void setUpDataForChildCoverage() throws SQLException {
+  public void insertProductsForChildCoverage() throws SQLException {
     update("INSERT INTO products\n" +
       "(code,    alternateItemCode,  manufacturer,       manufacturerCode,  manufacturerBarcode,   mohBarcode,   gtin,   type,         primaryName,    fullName,       genericName,    alternateName,    description,      strength,    formId,  dosageUnitId, dispensingUnit,  dosesPerDispensingUnit,  packSize,  alternatePackSize,  storeRefrigerated,   storeRoomTemperature,   hazardous,  flammable,   controlledSubstance,  lightSensitive,  approvedByWho,  contraceptiveCyp,  packLength,  packWidth, packHeight,  packWeight,  packsPerCarton, cartonLength,  cartonWidth,   cartonHeight, cartonsPerPallet,  expectedShelfLife,  specialStorageInstructions, specialTransportInstructions, active,  fullSupply, tracer,   packRoundingThreshold,  roundToZero,  archived, displayOrder, categoryId) values\n" +
       "('Measles',   'a',            'Glaxo and Smith',  'a',              'a',                    'a',          'a',    'antibiotic', 'Measles',   'TDF/FTC/EFV',  'TDF/FTC/EFV',  'TDF/FTC/EFV',    'TDF/FTC/EFV',  '300/200/600',  2,        1,            'Strip',           10,                     10,        30,                   TRUE,                  TRUE,                TRUE,       TRUE,         TRUE,                 TRUE,             TRUE,               1,          2.2,            2,          2,            2,            2,            2,              2,              2,              2,                    2,                    'a',                          'a',          TRUE,     TRUE,       TRUE,         1,                    FALSE,      TRUE,    1, (Select id from product_categories where code='C1')),\n" +
@@ -1301,24 +1301,6 @@ public class DBWrapper {
       "('penta1',     'a',           'Glaxo and Smith',  'a',              'a',                    'a',          'a',    'antibiotic', 'penta1',   'TDF/FTC/EFV',  'TDF/FTC/EFV',  'TDF/FTC/EFV',    'TDF/FTC/EFV',  '300/200/600',  2,        1,            'Strip',           10,                     10,        30,                   TRUE,                  TRUE,                TRUE,       TRUE,         TRUE,                 TRUE,             TRUE,               1,          2.2,            2,          2,            2,            2,            2,              2,              2,              2,                    2,                    'a',                          'a',          TRUE,     TRUE,       TRUE,         1,                    FALSE,      TRUE,    1, (Select id from product_categories where code='C1')),\n" +
       "('penta10',    'a',           'Glaxo and Smith',  'a',              'a',                    'a',          'a',    'antibiotic', 'penta10',   'TDF/FTC/EFV',  'TDF/FTC/EFV',  'TDF/FTC/EFV',    'TDF/FTC/EFV',  '300/200/600',  2,        1,            'Strip',           10,                     10,        30,                   TRUE,                  TRUE,                TRUE,       TRUE,         TRUE,                 TRUE,             TRUE,               1,          2.2,            2,          2,            2,            2,            2,              2,              2,              2,                    2,                    'a',                          'a',          TRUE,     FALSE,       TRUE,         1,                    FALSE,      TRUE,   5, (Select id from product_categories where code='C1'));\n");
 
-  }
-
-
-  public void insertRegimenProductMapping() throws SQLException {
-    update("INSERT INTO coverage_vaccination_products\n" +
-      "(vaccination, productCode, childCoverage) values\n" +
-      "('BCG', 'BCG', TRUE),\n" +
-      "('Polio (Newborn)', 'polio10dose',TRUE),\n" +
-      "('Polio 1st dose', 'polio20dose' ,TRUE),\n" +
-      "('Polio 2nd dose', 'polio10dose' ,TRUE),\n" +
-      "('Polio 3rd dose', 'polio20dose' ,TRUE),\n" +
-      "('Penta 1st dose', 'penta1',TRUE),\n" +
-      "('Penta 2nd dose', 'penta10',TRUE),\n" +
-      "('Penta 3rd dose', 'penta1',TRUE),\n" +
-      "('PCV10 1st dose', 'P10',TRUE),\n" +
-      "('PCV10 2nd dose', 'P10', TRUE),\n" +
-      "('PCV10 3rd dose', 'P10', TRUE),\n" +
-      "('Measles', 'Measles',TRUE);\n");
   }
 
   public ResultSet getChildCoverageDetails(String vaccination, String facilityCode) throws SQLException {
@@ -1403,5 +1385,21 @@ public class DBWrapper {
   public Map<String, String> getPodLineItemFor(Integer orderId, String productCode) throws SQLException {
 
     return select("select * from pod_line_items where productCode = '%s' AND podid =(Select id from pod where orderId= %d )", productCode, orderId).get(0);
+  }
+
+  public void insertRegimensProductsInMappingTable(String vaccination, String productCode) throws SQLException {
+    update("INSERT INTO coverage_vaccination_products (vaccination, productCode, childCoverage) values ('%s' ,'%s' , TRUE)", vaccination, productCode);
+  }
+
+  public Map<String, String> getDistributionDetails(String deliveryZoneName, String programName, String periodName) throws SQLException {
+    return select("select * from distributions where deliveryZoneId =(Select id from delivery_zones where name= '%s')AND programid = (Select id from programs where name = '%s') AND periodid=(Select id from processing_periods where name= '%s' )", deliveryZoneName, programName, periodName).get(0);
+  }
+
+  public void updateOrderStatus(String orderStatus) throws SQLException {
+    update("UPDATE orders set status = '" + orderStatus + "' WHERE id = " + getMaxRnrID());
+  }
+
+  public void insertOpenedVialsProductsInMappingTable(String vial, String productCode) throws SQLException {
+    update("INSERT INTO coverage_product_vials (vial, productCode) values ('%s' ,'%s')", vial, productCode);
   }
 }

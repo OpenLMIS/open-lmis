@@ -39,7 +39,7 @@ describe('Distribution Service', function () {
     expect(distributionService.isCached(distribution)).toEqual(true);
   });
 
-  it('should prepare distribution and put in database', function () {
+  it('should prepare distribution and save in database', function () {
     var distribution =
     {
       "id": 6,
@@ -48,12 +48,12 @@ describe('Distribution Service', function () {
       "period": {"id": 3, "scheduleId": 2, "name": "Dec2012", "description": "Dec2012", "startDate": 1354300200000, "endDate": 1356892200000, "numberOfMonths": 1},
       "facilityDistributions": { "44": {"refrigerators": {}}},
       "status": "INITIATED", "zpp": "8_5_3"
-    }
+    };
 
-    distributionService.put(distribution);
+    distributionService.save(distribution);
 
     expect(distribution.facilityDistributions).toEqual({ "44": {"refrigerators": {}}});
-    expect(indexedDB.put.calls[0].args).toEqual(['distributions', distribution, jasmine.any(Function), {}, jasmine.any(Function)]);
+    expect(indexedDB.put.calls[0].args).toEqual(['distributions', distribution, null, null, jasmine.any(Function)]);
   });
 
   it('should delete distribution from cache', function () {

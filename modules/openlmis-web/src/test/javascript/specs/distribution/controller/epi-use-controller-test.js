@@ -8,7 +8,7 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-describe('EPI Use controller', function () {
+describe('EPI Use row controller', function () {
 
   var scope, controller;
 
@@ -48,16 +48,45 @@ describe('EPI Use controller', function () {
     expect(total).toEqual(0);
   });
 
-  it('should set input class to true if not recorded is set for a field', function() {
+  it('should set input class to true if not recorded is set for a field', function () {
     scope.clearError(true);
 
     expect(scope.inputClass).toBeTruthy();
   });
 
-  it('should set input class to warning class if not recorded is not set for a field', function() {
+  it('should set input class to warning class if not recorded is not set for a field', function () {
     scope.clearError(false);
 
     expect(scope.inputClass).toEqual('warning-error');
+  });
+});
+
+describe('Epi use controller', function () {
+
+  var scope, controller, distributionService;
+
+  beforeEach(module('distribution'));
+  beforeEach(inject(function ($rootScope, $controller, _distributionService_, $routeParams) {
+    scope = $rootScope.$new();
+    $routeParams.facility = 3;
+    distributionService = _distributionService_;
+    controller = $controller(EPIUseController, {$scope: scope});
+  }));
+
+
+  it('should apply NR to all epi Use fields', function () {
+    spyOn(distributionService, 'applyNR');
+
+    var epiUse = jasmine.createSpyObj('Epi Use', ['setNotRecorded']);
+    scope.distribution = {id: 1, facilityDistributions: {3: {epiUse: epiUse}}};
+
+    scope.applyNRAll();
+
+    expect(distributionService.applyNR).toHaveBeenCalled();
+
+    distributionService.applyNR.calls[0].args[0]();
+
+    expect(epiUse.setNotRecorded).toHaveBeenCalled();
   });
 
 });

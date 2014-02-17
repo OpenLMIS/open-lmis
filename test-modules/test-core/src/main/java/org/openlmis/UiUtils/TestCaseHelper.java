@@ -36,6 +36,7 @@ public class TestCaseHelper {
 
   public static final String DEFAULT_BROWSER = "firefox";
   public static final String DEFAULT_BASE_URL = "http://localhost:9091/";
+  public static final String NULL_VALUE = "null";
   public static DBWrapper dbWrapper;
   protected static String baseUrlGlobal;
   protected static String DOWNLOAD_FILE_PATH;
@@ -214,17 +215,21 @@ public class TestCaseHelper {
                                        String facilityCodeFirst, String facilityCodeSecond,
                                        String programFirst, String programSecond, String schedule) throws SQLException {
     dbWrapper.insertDeliveryZone(deliveryZoneCodeFirst, deliveryZoneNameFirst);
-    if (multipleFacilityInstances)
+    if (multipleFacilityInstances) {
       dbWrapper.insertDeliveryZone(deliveryZoneCodeSecond, deliveryZoneNameSecond);
+    }
     dbWrapper.insertDeliveryZoneMembers(deliveryZoneCodeFirst, facilityCodeFirst);
     dbWrapper.insertDeliveryZoneMembers(deliveryZoneCodeFirst, facilityCodeSecond);
-    if (multipleFacilityInstances)
+    if (multipleFacilityInstances) {
       dbWrapper.insertDeliveryZoneMembers(deliveryZoneCodeSecond, facilityCodeSecond);
+    }
     dbWrapper.insertProcessingPeriodForDistribution(14, schedule);
     dbWrapper.insertDeliveryZoneProgramSchedule(deliveryZoneCodeFirst, programFirst, schedule);
     dbWrapper.insertDeliveryZoneProgramSchedule(deliveryZoneCodeFirst, programSecond, schedule);
-    if (multipleFacilityInstances)
+    if (multipleFacilityInstances) {
       dbWrapper.insertDeliveryZoneProgramSchedule(deliveryZoneCodeSecond, programSecond, schedule);
+      dbWrapper.insertDeliveryZoneProgramSchedule(deliveryZoneCodeSecond, programFirst, schedule);
+    }
   }
 
   public void addOnDataSetupForDeliveryZoneForMultipleFacilitiesAttachedWithSingleDeliveryZone(String deliveryZoneCodeFirst,
@@ -502,18 +507,21 @@ public class TestCaseHelper {
     assertEquals(testWebDriver.getElementById("previousPageLink").getCssValue("color"), "rgba(204, 204, 204, 1)");
   }
 
-  public void verifyVisitInformationDataWhenFacilityWasVisitedInDatabase(String facilityCode, String observation, String confirmedByName,
-                                                                         String confirmedByTitle, String verifiedByName,
-                                                                         String verifiedByTitle, String vehicleId) throws SQLException {
+  public void verifyFacilityVisitInformationInDatabase(String facilityCode, String observation, String confirmedByName,
+                                                       String confirmedByTitle, String verifiedByName,
+                                                       String verifiedByTitle, String vehicleId,String synced,String visited) throws SQLException {
     Map<String, String> visitInformation = dbWrapper.getFacilityVisitDetails(facilityCode);
     assertEquals(observation, visitInformation.get("observations"));
     assertEquals(confirmedByName, visitInformation.get("confirmedByName"));
     assertEquals(confirmedByTitle, visitInformation.get("confirmedByTitle"));
     assertEquals(verifiedByName, visitInformation.get("verifiedByName"));
     assertEquals(verifiedByTitle, visitInformation.get("verifiedByTitle"));
-    assertEquals(new SimpleDateFormat("yyyy-MM").format(new Date()) + "-01 00:00:00", visitInformation.get("visitDate"));
     assertEquals(vehicleId, visitInformation.get("vehicleId"));
-    assertEquals("t", visitInformation.get("visited"));
+    assertEquals(synced, visitInformation.get("synced"));
+    assertEquals(visited, visitInformation.get("visited"));
+    if(visitInformation.get("visited")=="t"){
+      assertEquals(new SimpleDateFormat("yyyy-MM").format(new Date()) + "-01 00:00:00", visitInformation.get("visitDate"));
+    }
   }
 
   public void verifyEpiUseDataInDatabase(Integer stockAtFirstOfMonth, Integer receivedValue, Integer distributedValue, Integer loss,
@@ -532,9 +540,9 @@ public class TestCaseHelper {
                                                String productCode, String facilityCode) throws SQLException {
     ResultSet epiInventoryDetails = dbWrapper.getEpiInventoryDetails(productCode, facilityCode);
 
-    assertEquals(existingQuantity, epiInventoryDetails.getString("existingQuantity"));
-    assertEquals(deliveredQuantity, epiInventoryDetails.getString("deliveredQuantity"));
-    assertEquals(spoiledQuantity, epiInventoryDetails.getString("spoiledQuantity"));
+    assertEqualsAndNulls(epiInventoryDetails.getString("existingQuantity"), existingQuantity);
+    assertEqualsAndNulls(epiInventoryDetails.getString("deliveredQuantity"),deliveredQuantity);
+    assertEqualsAndNulls(epiInventoryDetails.getString("spoiledQuantity"),spoiledQuantity);
   }
 
   public void verifyRefrigeratorReadingDataInDatabase(String facilityCode, String refrigeratorSerialNumber, Float temperature,
@@ -611,6 +619,15 @@ public class TestCaseHelper {
     dbWrapper.insertShipmentData(id, productCode, quantityShipped);
     dbWrapper.updateFieldValue("shipment_line_items", "packsToShip", packsToShip);
     dbWrapper.updateFieldValue("shipment_line_items", "fullSupply", fullSupplyFlag);
+  }
+
+  public void assertEqualsAndNulls(Object actual, String expected) {
+    if(expected.equals(NULL_VALUE)) {
+      assertEquals(actual, null);
+    }
+    else {
+      assertEquals(actual, expected);
+    }
   }
 }
 

@@ -11,10 +11,7 @@
 package org.openlmis.functional;
 
 import org.openlmis.UiUtils.TestCaseHelper;
-import org.openlmis.pageobjects.HomePage;
-import org.openlmis.pageobjects.LoginPage;
-import org.openlmis.pageobjects.ManagePodPage;
-import org.openlmis.pageobjects.UpdatePodPage;
+import org.openlmis.pageobjects.*;
 import org.openqa.selenium.WebElement;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
@@ -46,13 +43,13 @@ public class PODPagination extends TestCaseHelper {
   UpdatePodPage updatePodPage;
 
   @BeforeMethod(groups = {"requisition"})
-  public void setUp() throws SQLException, IOException, InterruptedException {
+  public void setUp() throws Exception {
     super.setup();
     updatePodPage = PageFactory.getInstanceOfUpdatePodPage(testWebDriver);
 
     dbWrapper.insertFacilities("F10", "F11");
     dbWrapper.configureTemplate(podPaginationData.get(PROGRAM));
-    List<String> rightsList = asList("MANAGE_POD");
+    List<String> rightsList = asList("VIEW_ORDER", "MANAGE_POD");
 
     setupTestUserRoleRightsData("200", podPaginationData.get(USER), rightsList);
     dbWrapper.insertSupervisoryNode("F10", "N1", "Node 1", "null");
@@ -121,7 +118,7 @@ public class PODPagination extends TestCaseHelper {
   }
 
   @Test(groups = {"requisition"})
-  public void testRnRPaginationAndSpecificDisplayOrder() throws Exception {
+  public void testRnRPaginationAndSpecificDisplayOrder() throws SQLException {
     dbWrapper.setupMultipleProducts(podPaginationData.get(PROGRAM), "Lvl3 Hospital", 11, false);
     dbWrapper.insertRequisitionWithMultipleLineItems(11, podPaginationData.get(PROGRAM), true, "F10", false);
     dbWrapper.convertRequisitionToOrder(dbWrapper.getMaxRnrID(), "READY_TO_PACK", podPaginationData.get(USER));
@@ -145,7 +142,7 @@ public class PODPagination extends TestCaseHelper {
   }
 
   @Test(groups = {"requisition"})
-  public void testCategoryDefaultDisplayOrder() throws Exception {
+  public void testCategoryDefaultDisplayOrder() throws SQLException {
     dbWrapper.setupMultipleCategoryProducts(podPaginationData.get(PROGRAM), "Lvl3 Hospital", 11, true);
     dbWrapper.insertRequisitionWithMultipleLineItems(11, podPaginationData.get(PROGRAM), true, "F10", false);
     dbWrapper.convertRequisitionToOrder(dbWrapper.getMaxRnrID(), "READY_TO_PACK", podPaginationData.get(USER));
@@ -169,7 +166,7 @@ public class PODPagination extends TestCaseHelper {
   }
 
   @Test(groups = {"requisition"})
-  public void testCategorySpecificDisplayOrder() throws Exception {
+  public void testCategorySpecificDisplayOrder() throws SQLException {
     dbWrapper.setupMultipleCategoryProducts(podPaginationData.get(PROGRAM), "Lvl3 Hospital", 11, false);
     dbWrapper.insertRequisitionWithMultipleLineItems(11, podPaginationData.get(PROGRAM), true, "F10", false);
     dbWrapper.convertRequisitionToOrder(dbWrapper.getMaxRnrID(), "READY_TO_PACK", podPaginationData.get(USER));
@@ -213,7 +210,13 @@ public class PODPagination extends TestCaseHelper {
     verifyProductDisplayOrderOnPage(new String[]{"F0", "F1", "F2", "F3", "F4", "F5", "F6", "F7", "F8", "F9"});
     verifyCategoryDisplayOrderOnPage(new String[]{"Antibiotic", "", "", "", "", "", "", "", "", ""});
     updatePodPage.enterPodData("110", "openlmis openlmis", 1);
+    updatePodPage.clickSave();
+    assertTrue(updatePodPage.isPodSuccessMessageDisplayed());
+    testWebDriver.refresh();
     updatePodPage.enterPodData("200", "openlmis openlmis", 5);
+    updatePodPage.clickSave();
+    assertTrue(updatePodPage.isPodSuccessMessageDisplayed());
+    testWebDriver.refresh();
 
     navigateToPage(2);
     verifyPageNumberSelected(2);
@@ -222,8 +225,13 @@ public class PODPagination extends TestCaseHelper {
     verifyProductDisplayOrderOnPage(new String[]{"NF0", "NF1", "NF2", "NF3", "NF4", "NF5", "NF6", "NF7", "NF8", "NF9"});
     verifyCategoryDisplayOrderOnPage(new String[]{"Antibiotic", "", "", "", "", "", "", "", "", ""});
     updatePodPage.enterPodData("10", "openlmis", 1);
+    updatePodPage.clickSave();
+    assertTrue(updatePodPage.isPodSuccessMessageDisplayed());
+    testWebDriver.refresh();
     updatePodPage.enterPodData("11", "openlmis openlmis project", 10);
-
+    updatePodPage.clickSave();
+    assertTrue(updatePodPage.isPodSuccessMessageDisplayed());
+    testWebDriver.refresh();
 
     updatePodPage.navigateToFirstPage();
     updatePodPage.verifyQuantityReceivedAndNotes("110", "openlmis openlmis", 1);
@@ -244,6 +252,122 @@ public class PODPagination extends TestCaseHelper {
     verifyPodDataInDatabase("10", "openlmis", "NF0");
     updatePodPage.verifyQuantityReceivedAndNotes("11", "openlmis openlmis project", 10);
     verifyPodDataInDatabase("11", "openlmis openlmis project", "NF9");
+  }
+
+  @Test(groups = {"requisition"})
+  public void testSubmitPod() throws SQLException {
+    dbWrapper.setupMultipleProducts(podPaginationData.get(PROGRAM), "Lvl3 Hospital", 11, false);
+    dbWrapper.insertRequisitionWithMultipleLineItems(11, podPaginationData.get(PROGRAM), true, "F10", false);
+    dbWrapper.convertRequisitionToOrder(dbWrapper.getMaxRnrID(), "READY_TO_PACK", podPaginationData.get(USER));
+
+    LoginPage loginPage = PageFactory.getInstanceOfLoginPage(testWebDriver, baseUrlGlobal);
+    HomePage homePage = loginPage.loginAs(podPaginationData.get(USER), podPaginationData.get(PASSWORD));
+    ManagePodPage managePodPage = homePage.navigateManagePOD();
+    managePodPage.selectRequisitionToUpdatePod(1);
+
+    for (int i = 1; i <= 10; i++) {
+      updatePodPage.enterPodData("1" + i, "notes", i);
+    }
+
+    navigateToPage(2);
+    for (int i = 1; i <= 10; i++) {
+      updatePodPage.enterPodData("2" + i, "notes", i);
+    }
+
+    navigateToPage(3);
+    updatePodPage.enterPodData("31", "notes", 1);
+    updatePodPage.enterPodData("32", "notes", 2);
+
+    updatePodPage.clickSubmitButton();
+    updatePodPage.clickCancelButton();
+
+    ViewOrdersPage viewOrdersPage = homePage.navigateViewOrders();
+    assertEquals("Ready to pack", viewOrdersPage.getOrderStatus(1));
+
+    homePage.navigateManagePOD();
+    managePodPage.selectRequisitionToUpdatePod(1);
+    updatePodPage.clickSubmitButton();
+    updatePodPage.clickOkButton();
+    assertTrue(updatePodPage.isPodSuccessMessageDisplayed());
+    assertEquals("Proof of Delivery submitted successfully", updatePodPage.getPodSuccessMessage());
+
+    assertFalse(updatePodPage.isQuantityReceivedEnabled(1));
+    assertFalse(updatePodPage.isNotesEnabled(1));
+    assertFalse(updatePodPage.isQuantityReceivedEnabled(10));
+    assertFalse(updatePodPage.isNotesEnabled(10));
+
+    navigateToPage(2);
+    assertFalse(updatePodPage.isQuantityReceivedEnabled(1));
+    assertFalse(updatePodPage.isNotesEnabled(1));
+    assertFalse(updatePodPage.isQuantityReceivedEnabled(10));
+    assertFalse(updatePodPage.isNotesEnabled(10));
+
+    navigateToPage(3);
+    assertFalse(updatePodPage.isQuantityReceivedEnabled(1));
+    assertFalse(updatePodPage.isNotesEnabled(1));
+    assertFalse(updatePodPage.isQuantityReceivedEnabled(2));
+    assertFalse(updatePodPage.isNotesEnabled(2));
+
+    homePage.navigateViewOrders();
+    assertEquals("Received", viewOrdersPage.getOrderStatus(1));
+
+    homePage.navigateManagePOD();
+    managePodPage.verifyNoOrderMessage();
+  }
+
+  @Test(groups = {"requisition"})
+  public void testSubmitPodFail() throws SQLException {
+    dbWrapper.setupMultipleProducts(podPaginationData.get(PROGRAM), "Lvl3 Hospital", 11, false);
+    dbWrapper.insertRequisitionWithMultipleLineItems(11, podPaginationData.get(PROGRAM), true, "F10", false);
+    dbWrapper.convertRequisitionToOrder(dbWrapper.getMaxRnrID(), "READY_TO_PACK", podPaginationData.get(USER));
+
+    LoginPage loginPage = PageFactory.getInstanceOfLoginPage(testWebDriver, baseUrlGlobal);
+    HomePage homePage = loginPage.loginAs(podPaginationData.get(USER), podPaginationData.get(PASSWORD));
+    ManagePodPage managePodPage = homePage.navigateManagePOD();
+    managePodPage.selectRequisitionToUpdatePod(1);
+
+    for (int i = 1; i <= 10; i++) {
+      updatePodPage.enterPodData("1" + i, "notes", i);
+    }
+
+    updatePodPage.clickSubmitButton();
+    assertTrue(updatePodPage.isPodFailMessageDisplayed());
+    assertEquals("Received quantity can not be blank", updatePodPage.getPodFailMessage());
+    assertEquals("Errors found on 2 pages", updatePodPage.getPageErrorsMessage());
+    assertTrue(updatePodPage.isQuantityReceivedEnabled(1));
+    assertTrue(updatePodPage.isNotesEnabled(1));
+
+    ViewOrdersPage viewOrdersPage = homePage.navigateViewOrders();
+    assertEquals("Ready to pack", viewOrdersPage.getOrderStatus(1));
+
+    homePage.navigateManagePOD();
+    managePodPage.selectRequisitionToUpdatePod(1);
+    updatePodPage.clickSubmitButton();
+    updatePodPage.clickPageErrorsMessage();
+    updatePodPage.clickErrorPage(2);
+
+    verifyProductDisplayOrderOnPage(new String[]{"F5", "NF5", "F6", "NF6", "F7", "NF7", "F8", "NF8", "F9", "NF9"});
+    for (int i = 1; i <= 10; i++) {
+      updatePodPage.enterPodData("2" + i, "notes", i);
+    }
+
+    updatePodPage.clickPageErrorsMessage();
+    updatePodPage.clickErrorPage(3);
+    updatePodPage.enterPodData("31", "", 1);
+    updatePodPage.enterPodData("32", "", 2);
+
+    updatePodPage.clickSubmitButton();
+    updatePodPage.clickOkButton();
+    assertTrue(updatePodPage.isPodSuccessMessageDisplayed());
+
+    assertFalse(updatePodPage.isQuantityReceivedEnabled(1));
+    assertFalse(updatePodPage.isNotesEnabled(1));
+
+    homePage.navigateViewOrders();
+    assertEquals("Received", viewOrdersPage.getOrderStatus(1));
+
+    homePage.navigateManagePOD();
+    managePodPage.verifyNoOrderMessage();
   }
 
   private void enterTestDataForShipment() throws SQLException {

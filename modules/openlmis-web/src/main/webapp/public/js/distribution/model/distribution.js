@@ -12,29 +12,12 @@ function Distribution(distributionJson) {
 
   $.extend(true, this, distributionJson);
 
-  if (distributionJson.facilityDistributions) {
-    var _this = this;
-    this.facilityDistributions = {};
-    $.each(distributionJson.facilityDistributions, function (key, value) {
-      _this.facilityDistributions[key] = new FacilityDistribution(value);
-    });
-  }
+  var _this = this;
+  this.facilityDistributions = {};
 
-  Distribution.prototype.setEpiUseNotRecorded = function (facilityId) {
-    this.facilityDistributions[facilityId].epiUse.setNotRecorded();
-  };
-
-  Distribution.prototype.setEpiInventoryNotRecorded = function (facilityId) {
-    this.facilityDistributions[facilityId].epiInventory.setNotRecorded();
-  };
-
-  Distribution.prototype.setCoverageNotRecorded = function (facilityId) {
-    this.facilityDistributions[facilityId].fullCoverage.setNotRecorded();
-  };
-
-  Distribution.prototype.setChildCoverageNotRecorded = function (facilityId) {
-    this.facilityDistributions[facilityId].childCoverage.setNotRecorded();
-  };
+  $.each(distributionJson.facilityDistributions, function (facilityId, facilityDistributionJSON) {
+    _this.facilityDistributions[facilityId] = new FacilityDistribution(facilityDistributionJSON);
+  });
 
   return this;
 }

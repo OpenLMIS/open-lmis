@@ -11,7 +11,10 @@
 INSERT INTO budget_file_info (filename, processingError) VALUES ('abc.csv', false);
 
 INSERT INTO budget_line_items (periodId, budgetFileId, facilityId, programId, periodDate, allocatedBudget) VALUES (
-  (SELECT id FROM processing_periods WHERE name = 'Dec2012'),
+  (SELECT
+     id
+   FROM processing_periods
+   WHERE name = 'Dec2013'),
   (SELECT id FROM budget_file_info WHERE id = 1),
   (SELECT id FROM facilities WHERE code = 'F10'),
   (SELECT id FROM programs WHERE code = 'MALARIA'), now(), 123);

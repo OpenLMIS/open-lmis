@@ -34,9 +34,9 @@ function ReportingRateController($scope, leafletData) {
     leafletData.getMap().then(function (map) {
       var latlngs = [];
       for (var c = 0; c < $scope.features.length; c++) {
-        if ($scope.features[c].geometry == null)
+        if ($scope.features[c].geometry === null || angular.isUndefined($scope.features[c].geometry))
           continue;
-        if ($scope.features[c].geometry.coordinates == null)
+        if ($scope.features[c].geometry.coordinates === null || angular.isUndefined($scope.features[c].geometry.coordinates))
           continue;
         for (var i = 0; i < $scope.features[c].geometry.coordinates.length; i++) {
           var coord = $scope.features[c].geometry.coordinates[i];
@@ -68,7 +68,7 @@ function ReportingRateController($scope, leafletData) {
       click: zoomToFeature
     });
     layer.bindPopup(popupFormat(feature));
-  };
+  }
 
   function popupFormat(feature){
     return '<b>' + feature.properties.name + '</b><br /><div>Total Facilities: ' + feature.total + '</div><div>Reporting Facilities: ' + feature.ever + '</div>';

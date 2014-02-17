@@ -13,6 +13,7 @@ package org.openlmis.distribution.repository.mapper;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 import org.openlmis.distribution.domain.*;
 import org.springframework.stereotype.Repository;
 
@@ -28,16 +29,21 @@ public interface VaccinationCoverageMapper {
   @Options(useGeneratedKeys = true)
   void insertFullVaccinationCoverage(VaccinationFullCoverage vaccinationFullCoverage);
 
+  @Insert({"INSERT INTO vaccination_child_coverage_line_items (facilityVisitId, vaccination, targetGroup, createdBy, modifiedBy)",
+    "VALUES (#{facilityVisitId}, #{vaccination}, #{targetGroup}, #{createdBy}, #{modifiedBy})"})
+  @Options(useGeneratedKeys = true)
+  void insertChildCoverageLineItem(ChildCoverageLineItem childCoverageLineItem);
+
+  @Insert({"INSERT INTO opened_vial_line_items (facilityVisitId, productVialName, packSize, createdBy, modifiedBy)",
+    "VALUES (#{facilityVisitId}, #{productVialName}, #{packSize}, #{createdBy}, #{modifiedBy})"})
+  @Options(useGeneratedKeys = true)
+  void insertOpenedVialLineItem(OpenedVialLineItem openedVialLineItem);
+
   @Select({"SELECT * FROM full_coverages WHERE facilityVisitId = #{facilityVisitId}"})
   VaccinationFullCoverage getFullCoverageBy(Long facilityVisitId);
 
   @Select({"SELECT * FROM coverage_vaccination_products WHERE childCoverage = #{isChildCoverage}"})
   List<VaccinationProduct> getVaccinationProducts(Boolean isChildCoverage);
-
-  @Insert({"INSERT INTO vaccination_child_coverage_line_items (facilityVisitId, vaccination, targetGroup)",
-    "VALUES (#{facilityVisitId}, #{vaccination}, #{targetGroup})"})
-  @Options(useGeneratedKeys = true)
-  void insertChildVaccinationCoverageLineItem(ChildCoverageLineItem childCoverageLineItem);
 
   @Select({"SELECT * FROM vaccination_child_coverage_line_items WHERE facilityVisitId = #{facilityVisitId}"})
   List<ChildCoverageLineItem> getChildCoverageLineItemsBy(Long facilityVisitId);
@@ -45,8 +51,10 @@ public interface VaccinationCoverageMapper {
   @Select({"SELECT * FROM coverage_product_vials"})
   List<ProductVial> getProductVials();
 
-  @Insert({"INSERT INTO opened_vial_line_items (facilityVisitId, productVialName, packSize) ",
-    "VALUES (#{facilityVisitId}, #{productVialName}, #{packSize})"})
-    @Options(useGeneratedKeys = true)
-  void insertOpenedVialLineItem(OpenedVialLineItem openedVialLineItem);
+  @Update({"UPDATE vaccination_child_coverage_line_items SET healthCenter11Months = #{healthCenter11Months}, outreach11Months = #{outreach11Months},",
+    "healthCenter23Months = #{healthCenter23Months}, outreach23Months = #{outreach23Months}, modifiedBy = #{modifiedBy}, modifiedDate = DEFAULT WHERE id = #{id}"})
+  void updateChildCoverageLineItem(ChildCoverageLineItem childCoverageLineItem);
+
+  @Update({"UPDATE opened_vial_line_items SET openedVials = #{openedVials}, modifiedBy = #{modifiedBy}, modifiedDate = DEFAULT WHERE id = #{id}"})
+  void updateOpenedVialLineItem(OpenedVialLineItem openedVialLineItem);
 }

@@ -195,6 +195,21 @@ public class PODServiceTest {
   }
 
   @Test
+  public void shouldNotSaveAnAlreadySubmittedPOD() throws Exception {
+    OrderPOD existingPOD = mock(OrderPOD.class);
+    when(repository.getPOD(podId)).thenReturn(existingPOD);
+    when(existingPOD.getModifiedBy()).thenReturn(userId);
+    when(existingPOD.getOrderId()).thenReturn(orderId);
+    doNothing().when(podService).checkPermissions(existingPOD);
+    when(orderService.hasStatus(orderId, RECEIVED)).thenReturn(true);
+
+    expectedException.expect(DataException.class);
+    expectedException.expectMessage("error.pod.already.submitted");
+
+    podService.save(orderPod);
+  }
+
+  @Test
   public void shouldNotSubmitPODIfUserDoesNotHaveTheRight() throws Exception {
     OrderPOD orderPOD = new OrderPOD();
     orderPOD.setId(1234L);
@@ -210,7 +225,7 @@ public class PODServiceTest {
   }
 
   @Test
-  public void shouldValidatePODLienItems() throws Exception {
+  public void shouldValidatePODLineItems() throws Exception {
     long podId = 1234L;
     OrderPOD orderPOD = mock(OrderPOD.class);
     long orderId = 2345L;

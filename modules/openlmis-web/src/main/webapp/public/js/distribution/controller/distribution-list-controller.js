@@ -26,14 +26,26 @@ function DistributionListController($scope, SharedDistributions, SyncFacilityDis
     $scope.syncProgressHeader = SYNC_IN_PROGRESS;
     $scope.requestInProgress = $scope.synchronizationModal = true;
     var promises = [];
-
+    var incompleteFacilities = [];
     syncFacilities();
+
+    function updateFacilityStatus() {
+      $.each($scope.distributionData.facilityDistributions, function (facilityId, facilityDistribution) {
+        if (_.contains(incompleteFacilities, facilityId) && facilityDistribution.status != $scope.SYNCED) {
+          facilityDistribution.status = DistributionStatus.DUPLICATE;
+          $scope.syncResult[$scope.DUPLICATE].push(facilityDistribution);
+        }
+      });
+    }
 
     function syncFacilities() {
       var synchronizedFacilityCount = $scope.progressValue = totalFacilityCount = 0;
 
       $.each($scope.distributionData.facilityDistributions, function (facilityId, facilityDistribution) {
-        if (facilityDistribution.status !== $scope.COMPLETE)  return;
+        if (facilityDistribution.status !== $scope.COMPLETE) {
+          incompleteFacilities.push(facilityId);
+          return;
+        }
         ++totalFacilityCount;
 
         facilityId = utils.parseIntWithBaseTen(facilityId);
@@ -64,11 +76,15 @@ function DistributionListController($scope, SharedDistributions, SyncFacilityDis
       $q.all(promises).then(function (resolves) {
         $scope.requestInProgress = false;
         $scope.syncProgressHeader = SYNC_STATUS;
-        distributionService.save($scope.distributionData);
 
         $scope.syncResult = _.groupBy(resolves, function (resolve) {
           return resolve.status;
         });
+        if ($scope.distributionData.status === 'SYNCED') {
+          updateFacilityStatus();
+        }
+        distributionService.save($scope.distributionData);
+
       });
     }
   };

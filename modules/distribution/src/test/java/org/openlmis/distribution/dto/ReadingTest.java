@@ -20,6 +20,7 @@ import org.openlmis.db.categories.UnitTests;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 @Category(UnitTests.class)
 public class ReadingTest {
@@ -40,19 +41,17 @@ public class ReadingTest {
   }
 
   @Test
-  public void shouldThrowErrorIfValueIsNullAndNRIsFalse() throws Exception {
-    expectedException.expect(DataException.class);
-    expectedException.expectMessage("error.invalid.reading.value");
+  public void shouldSetNRToTrueIfValueIsNullAndNRIsFalse() throws Exception {
+    Reading reading = new Reading(null, false);
 
-    new Reading(null, false);
+    assertTrue(reading.getNotRecorded());
   }
 
   @Test
-  public void shouldThrowErrorIfValueIsEmptyAndNRIsFalse() throws Exception {
-    expectedException.expect(DataException.class);
-    expectedException.expectMessage("error.invalid.reading.value");
+  public void shouldSetNRToTrueIfValueIsEmptyAndNRIsFalse() throws Exception {
+    Reading reading = new Reading("", false);
 
-    new Reading("", false);
+    assertTrue(reading.getNotRecorded());
   }
 
   @Test

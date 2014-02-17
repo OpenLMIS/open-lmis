@@ -22,10 +22,10 @@ function FacilityVisit(facilityVisitJson) {
       return visitedObservationStatus === DistributionStatus.EMPTY ? DistributionStatus.INCOMPLETE : visitedObservationStatus;
     }
 
-    if (this.reasonForNoVisit === 'OTHER') {
-      return (isUndefined(this.otherReason) ? DistributionStatus.INCOMPLETE : DistributionStatus.COMPLETE);
+    if (this.reasonForNotVisiting === 'OTHER') {
+      return (isUndefined(this.otherReasonDescription) ? DistributionStatus.INCOMPLETE : DistributionStatus.COMPLETE);
     }
-    return isUndefined(this.reasonForNoVisit) ? DistributionStatus.INCOMPLETE : DistributionStatus.COMPLETE;
+    return isUndefined(this.reasonForNotVisiting) ? DistributionStatus.INCOMPLETE : DistributionStatus.COMPLETE;
   };
 
   function computeStatusForObservation() {

@@ -27,7 +27,7 @@ describe('DistributionController', function () {
     httpBackend = $httpBackend;
 
     distributionService = _distributionService_;
-    spyOn(distributionService, 'put');
+    spyOn(distributionService, 'save');
 
     spyOn(OpenLmisDialog, 'newDialog');
 
@@ -103,7 +103,7 @@ describe('DistributionController', function () {
     expect(OpenLmisDialog.newDialog.calls[0].args[0].body).toEqual(postResponse.message);
     OpenLmisDialog.newDialog.calls[0].args[1](true);
 
-    expect(distributionService.put).toHaveBeenCalledWith(postResponse.distribution);
+    expect(distributionService.save).toHaveBeenCalledWith(postResponse.distribution);
     expect(scope.message).toEqual(postResponse.success);
   });
 });

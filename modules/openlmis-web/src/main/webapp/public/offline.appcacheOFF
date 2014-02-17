@@ -64,6 +64,8 @@ CACHE:
 /public/js/distribution/model/facility-visit.js
 /public/js/distribution/model/facility-distribution-data.js
 /public/js/distribution/model/coverage.js
+/public/js/distribution/model/child-coverage.js
+
 
 /public/js/distribution/service/shared-distributions.js
 /public/js/distribution/service/distribution-service.js

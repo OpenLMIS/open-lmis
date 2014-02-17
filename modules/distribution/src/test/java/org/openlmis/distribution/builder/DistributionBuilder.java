@@ -17,6 +17,7 @@ import org.openlmis.core.domain.DeliveryZone;
 import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.core.domain.Program;
 import org.openlmis.distribution.domain.Distribution;
+import org.openlmis.distribution.domain.DistributionStatus;
 
 import java.util.Date;
 
@@ -31,6 +32,7 @@ public class DistributionBuilder {
   public static Property<Distribution, Long> modifiedBy = newProperty();
   public static Property<Distribution, Long> createdBy = newProperty();
   public static Property<Distribution, Date> createdDate = newProperty();
+  public static Property<Distribution, DistributionStatus> status = newProperty();
 
   public static final long DEFAULT_MODIFIED_BY = 1l;
   public static final long DEFAULT_CREATED_BY = 1l;
@@ -60,6 +62,7 @@ public class DistributionBuilder {
     distribution.setDeliveryZone(lookup.valueOf(deliveryZone, new DeliveryZone()));
     distribution.setProgram(lookup.valueOf(program, new Program()));
     distribution.setPeriod(lookup.valueOf(period, new ProcessingPeriod()));
+    distribution.setStatus(lookup.valueOf(status, DistributionStatus.INITIATED));
     distribution.setCreatedBy(lookup.valueOf(createdBy, DEFAULT_CREATED_BY));
     distribution.setModifiedBy(lookup.valueOf(modifiedBy, DEFAULT_MODIFIED_BY));
     distribution.setCreatedDate(lookup.valueOf(createdDate, DEFAULT_CREATED_DATE));

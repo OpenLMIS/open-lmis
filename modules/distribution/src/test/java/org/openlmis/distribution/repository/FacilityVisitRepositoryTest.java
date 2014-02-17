@@ -46,14 +46,6 @@ public class FacilityVisitRepositoryTest {
   FacilityVisitRepository facilityVisitRepository;
 
   @Test
-  public void shouldInsertFacilityVisit() {
-    FacilityVisit facilityVisit = new FacilityVisit();
-    facilityVisitRepository.insert(facilityVisit);
-
-    verify(facilityVisitMapper).insert(facilityVisit);
-  }
-
-  @Test
   public void shouldReturnFacilityVisit() {
     Distribution distribution = new Distribution();
     distribution.setId(1L);
@@ -67,6 +59,27 @@ public class FacilityVisitRepositoryTest {
 
     assertThat(expectedFacilityVisit, is(facilityVisit));
 
+  }
+
+  @Test
+  public void shouldCreateFacilityVisitIfIdNotPresent() {
+    FacilityVisit facilityVisit = new FacilityVisit();
+
+    FacilityVisit returnedFacilityVisit = facilityVisitRepository.save(facilityVisit);
+
+    verify(facilityVisitMapper).insert(facilityVisit);
+    assertThat(returnedFacilityVisit, is(facilityVisit));
+  }
+
+  @Test
+  public void shouldUpdateFacilityVisitIfIdPresent() {
+    FacilityVisit facilityVisit = new FacilityVisit();
+    facilityVisit.setId(2L);
+
+    FacilityVisit returnedFacilityVisit = facilityVisitRepository.save(facilityVisit);
+
+    verify(facilityVisitMapper).update(facilityVisit);
+    assertThat(returnedFacilityVisit, is(facilityVisit));
   }
 }
 

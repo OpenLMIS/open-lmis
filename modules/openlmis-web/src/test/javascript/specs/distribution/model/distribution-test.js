@@ -10,35 +10,24 @@
 
 describe('Distribution', function () {
 
-  it('should set all Not Recorded flags to true for Epi Use', function () {
-    var facilityId = '4';
-    var epiUse = jasmine.createSpyObj('EpiUse', ['setNotRecorded']);
-    var distribution = new Distribution({facilityDistributions: {4: {epiUse: epiUse, facilityVisit: {id: 1}}}});
+  it('should create a distribution object filled with facility distributions', function () {
+    spyOn(window, 'FacilityDistribution');
+    var distributionJson = {facilityDistributions: {1: {name: 'facilityDistribution1'}, 2: {name: 'facilityDistribution2'}}};
 
-    distribution.setEpiUseNotRecorded(facilityId);
+    new Distribution(distributionJson);
 
-    expect(epiUse.setNotRecorded).toHaveBeenCalled();
+    expect(window.FacilityDistribution.calls[0].args[0]).toEqual(distributionJson.facilityDistributions[1]);
+    expect(window.FacilityDistribution.calls[1].args[0]).toEqual(distributionJson.facilityDistributions[2]);
   });
 
+  it('should create a distribution object filled with a copy of all distribution data', function () {
+    spyOn($, 'extend');
+    spyOn(window, 'FacilityDistribution');
+    var distributionJson = {id: 2, periodId: 3, facilityDistributions: {1: {name: 'facilityDistribution1'}, 2: {name: 'facilityDistribution2'}}};
 
-  it('should set all Not Recorded flags to true for Epi Inventory', function () {
-    var facilityId = '4';
-    var epiInventory = jasmine.createSpyObj('EpiInventory', ['setNotRecorded']);
-    var distribution = new Distribution({facilityDistributions: {4: {epiInventory: epiInventory, facilityVisit: {id: 1}}}});
+    var distribution = new Distribution(distributionJson);
 
-    distribution.setEpiInventoryNotRecorded(facilityId);
-
-    expect(epiInventory.setNotRecorded).toHaveBeenCalled();
-  });
-
-  it('should set all Not Recorded flags to true for FullCoverage', function () {
-    var facilityId = '4';
-    var coverage = jasmine.createSpyObj('FullCoverage', ['setNotRecorded']);
-    var distribution = new Distribution({facilityDistributions: {4: {fullCoverage: coverage, facilityVisit: {id: 1}}}});
-
-    distribution.setCoverageNotRecorded(facilityId);
-
-    expect(coverage.setNotRecorded).toHaveBeenCalled();
+    expect($.extend).toHaveBeenCalledWith(true, distribution, distributionJson);
   });
 
 });

@@ -32,8 +32,7 @@ import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
-import static com.thoughtworks.selenium.SeleneseTestBase.fail;
+import static com.thoughtworks.selenium.SeleneseTestBase.*;
 import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
 import static java.util.Arrays.asList;
 import static java.util.Collections.addAll;
@@ -108,6 +107,28 @@ public class ManageDistribution extends TestCaseHelper {
     rightsList.add("MANAGE_DISTRIBUTION");
     setupTestDataToInitiateRnRAndDistribution("F10", "F11", true,
       programFirst, userSIC, "200", rightsList, programSecond, "District1", "Ngorongoro", "Ngorongoro");
+  }
+
+  @And("^I setup mapping for child coverage$")
+  public void insertMappingForChildCoverage() throws SQLException {
+    dbWrapper.insertProductsForChildCoverage();
+    dbWrapper.insertRegimensProductsInMappingTable("BCG", "BCG");
+    dbWrapper.insertRegimensProductsInMappingTable("Polio 1st dose", "polio20dose");
+    dbWrapper.insertRegimensProductsInMappingTable("Polio 2nd dose", "polio10dose");
+    dbWrapper.insertRegimensProductsInMappingTable("Polio 3rd dose", "polio20dose");
+    dbWrapper.insertRegimensProductsInMappingTable("Penta 1st dose", "penta1");
+    dbWrapper.insertRegimensProductsInMappingTable("Penta 2nd dose", "penta10");
+    dbWrapper.insertRegimensProductsInMappingTable("Penta 3rd dose", "penta1");
+    dbWrapper.insertRegimensProductsInMappingTable("PCV10 1st dose", "P10");
+    dbWrapper.insertRegimensProductsInMappingTable("PCV10 2nd dose", "P10");
+    dbWrapper.insertRegimensProductsInMappingTable("PCV10 3rd dose", "P10");
+    dbWrapper.insertRegimensProductsInMappingTable("Measles", "Measles");
+    dbWrapper.insertOpenedVialsProductsInMappingTable("Polio10", "P11");
+    dbWrapper.insertOpenedVialsProductsInMappingTable("Polio20", "P10");
+    dbWrapper.insertOpenedVialsProductsInMappingTable("Penta1", "penta1");
+    dbWrapper.insertOpenedVialsProductsInMappingTable("Penta10", "P11");
+    dbWrapper.insertOpenedVialsProductsInMappingTable("PCV", "P10");
+    dbWrapper.insertOpenedVialsProductsInMappingTable("Measles", "Measles");
   }
 
   @Then("^I verify that I am on visit information page")
@@ -215,6 +236,15 @@ public class ManageDistribution extends TestCaseHelper {
   public void selectPeriod(String period) {
     distributionPage = PageFactory.getInstanceOfDistributionPage(testWebDriver);
     distributionPage.selectValueFromPeriod(period);
+  }
+
+  @Then("^I verify period \"([^\"]*)\" not present$")
+  public void verifyPeriodNotPresent(String period) {
+    distributionPage = PageFactory.getInstanceOfDistributionPage(testWebDriver);
+    for (WebElement webElement : distributionPage.getAllSelectOptionsFromPeriod()) {
+      assertFalse(webElement.getText().contains(period));
+    }
+    assertNotEquals(period, distributionPage.getFirstSelectedOptionFromPeriod().getText());
   }
 
   @And("^I verify Distributions data is not synchronised$")
@@ -335,15 +365,18 @@ public class ManageDistribution extends TestCaseHelper {
   @Then("^I view visit information in DB for facility \"([^\"]*)\":$")
   public void verifyVisitInformationDataInDB(String facility, DataTable tableData) throws SQLException {
     List<Map<String, String>> data = tableData.asMaps();
-    for (Map map : data) {
+    for (Map<String, String> map : data) {
       Map<String, String> facilityVisitDetails = dbWrapper.getFacilityVisitDetails(facility);
-      assertEquals(facilityVisitDetails.get("observations"), map.get("observations"));
-      assertEquals(facilityVisitDetails.get("confirmedByName"), map.get("confirmedByName"));
-      assertEquals(facilityVisitDetails.get("confirmedByTitle"), map.get("confirmedByTitle"));
-      assertEquals(facilityVisitDetails.get("verifiedByName"), map.get("verifiedByName"));
-      assertEquals(facilityVisitDetails.get("verifiedByTitle"), map.get("verifiedByTitle"));
-      assertEquals(facilityVisitDetails.get("visited"), "t");
-      assertEquals(facilityVisitDetails.get("visitDate"), new SimpleDateFormat("yyyy-MM").format(new Date()) + "-01 00:00:00");
+      assertEqualsAndNulls(facilityVisitDetails.get("observations"), map.get("observations"));
+      assertEqualsAndNulls(facilityVisitDetails.get("confirmedByName"), map.get("confirmedByName"));
+      assertEqualsAndNulls(facilityVisitDetails.get("confirmedByTitle"), map.get("confirmedByTitle"));
+      assertEqualsAndNulls(facilityVisitDetails.get("verifiedByName"), map.get("verifiedByName"));
+      assertEqualsAndNulls(facilityVisitDetails.get("verifiedByTitle"), map.get("verifiedByTitle"));
+      assertEqualsAndNulls(facilityVisitDetails.get("visited"), map.get("visited"));
+      assertEqualsAndNulls(facilityVisitDetails.get("synced"), map.get("synced"));
+      if(facilityVisitDetails.get("visited")=="t"){
+        assertEquals(new SimpleDateFormat("yyyy-MM").format(new Date()) + "-01 00:00:00",facilityVisitDetails.get("visitDate"));
+      }
       if (!map.get("vehicleId").equals("null"))
         assertEquals(facilityVisitDetails.get("vehicleId"), map.get("vehicleId"));
     }
@@ -394,7 +427,8 @@ public class ManageDistribution extends TestCaseHelper {
   }
 
   @And("^I view epi inventory readings in DB for facility \"([^\"]*)\" for product \"([^\"]*)\":$")
-  public void verifyEpiInventoryDataInDB(String facilityCode, String productCode, DataTable tableData) throws SQLException {
+  public void
+  verifyEpiInventoryDataInDB(String facilityCode, String productCode, DataTable tableData) throws SQLException {
     List<Map<String, String>> data = tableData.asMaps();
     for (Map map : data) {
       verifyEpiInventoryDataInDatabase(map.get("existingQuantity").toString(), map.get("deliveredQuantity").toString(), map.get("spoiledQuantity").toString(), productCode, facilityCode);
@@ -506,6 +540,15 @@ public class ManageDistribution extends TestCaseHelper {
     distributionPage.verifyNoDistributionCachedMessage();
   }
 
+  @And("^I see distribution status as synced$")
+  public void verifyDistributionStatus() throws SQLException {
+    distributionPage = PageFactory.getInstanceOfDistributionPage(testWebDriver);
+    Map<String, String> distributionDetails = dbWrapper.getDistributionDetails("Delivery Zone First", "VACCINES", "Period14");
+    assertEquals(distributionDetails.get("status"), "SYNCED");
+    assertEquals(distributionPage.getDistributionStatus(), "SYNCED");
+    assertFalse(distributionPage.getTextDistributionList().contains("sync"));
+  }
+
   private void verifyElementsInTable(String deliveryZoneNameFirst, String programFirst, String periodDisplayedByDefault) {
     assertEquals(testWebDriver.getElementByXpath("//div[@id='cachedDistributions']/div[2]/div[1]/div[1]/div").getText(), deliveryZoneNameFirst);
     assertEquals(testWebDriver.getElementByXpath("//div[@id='cachedDistributions']/div[2]/div[1]/div[2]").getText(), programFirst);
@@ -586,6 +629,7 @@ public class ManageDistribution extends TestCaseHelper {
 
     distributionPage.selectValueFromDeliveryZone(deliveryZoneNameSecond);
     List<String> secondProgramValuesToBeVerified = new ArrayList<>();
+    secondProgramValuesToBeVerified.add(programFirst);
     secondProgramValuesToBeVerified.add(programSecond);
     valuesPresentInDropDown = distributionPage.getAllSelectOptionsFromProgram();
     verifyAllSelectFieldValues(secondProgramValuesToBeVerified, valuesPresentInDropDown);
@@ -737,6 +781,34 @@ public class ManageDistribution extends TestCaseHelper {
     verifyInactiveProductsNotDisplayedOnViewLoadAmount();
   }
 
+  @Test(groups = {"distribution"}, dataProvider = "Data-Provider-Function")
+  public void testVerifyLegendsOnDistributionPage(String userSIC, String password, String deliveryZoneCodeFirst,
+                                                  String deliveryZoneCodeSecond, String deliveryZoneNameFirst,
+                                                  String deliveryZoneNameSecond, String facilityCodeFirst,
+                                                  String facilityCodeSecond, String programFirst, String programSecond,
+                                                  String schedule, String period, Integer totalNumberOfPeriods) throws SQLException {
+    setupData(userSIC, deliveryZoneCodeFirst, deliveryZoneCodeSecond, deliveryZoneNameFirst, deliveryZoneNameSecond, facilityCodeFirst,
+      facilityCodeSecond, programFirst, programSecond, schedule);
+    dbWrapper.insertProductGroup(productGroupCode);
+    dbWrapper.insertProductWithGroup("Product5", "ProductName5", productGroupCode, true);
+    dbWrapper.insertProductWithGroup("Product6", "ProductName6", productGroupCode, true);
+    dbWrapper.insertProgramProduct("Product5", programFirst, "10", "false");
+    dbWrapper.insertProgramProduct("Product6", programFirst, "10", "true");
+    dbWrapper.updateFieldValue("products", "active", "false", "code", "Product6");
+
+    HomePage homePage = loginPage.loginAs(userSIC, password);
+    DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
+    distributionPage.selectValueFromDeliveryZone(deliveryZoneNameFirst);
+    distributionPage.selectValueFromProgram(programFirst);
+
+    distributionPage.clickInitiateDistribution();
+    FacilityListPage facilityListPage = distributionPage.clickRecordData(1);
+    facilityListPage.selectFacility(facilityCodeFirst);
+    facilityListPage.verifyFacilityZoneInHeader("Health Center");
+    facilityListPage.verifyFacilityNameInHeader("Village Dispensary");
+    facilityListPage.verifyLegend();
+  }
+
   private void setupData(String userSIC, String deliveryZoneCodeFirst, String deliveryZoneCodeSecond, String deliveryZoneNameFirst,
                          String deliveryZoneNameSecond, String facilityCodeFirst, String facilityCodeSecond, String programFirst, String programSecond, String schedule) throws SQLException {
     List<String> rightsList = asList("MANAGE_DISTRIBUTION");
@@ -754,10 +826,10 @@ public class ManageDistribution extends TestCaseHelper {
 
   private void verifyElementsPresent() {
     distributionPage = PageFactory.getInstanceOfDistributionPage(testWebDriver);
-    assertTrue("selectDeliveryZoneSelectBox should be present", distributionPage.IsDisplayedSelectDeliveryZoneSelectBox());
-    assertTrue("selectProgramSelectBox should be present", distributionPage.IsDisplayedSelectProgramSelectBox());
-    assertTrue("selectPeriodSelectBox should be present", distributionPage.IsDisplayedSelectPeriodSelectBox());
-    assertTrue("proceedButton should be present", distributionPage.IsDisplayedViewLoadAmountButton());
+    assertTrue("selectDeliveryZoneSelectBox should be present", distributionPage.isDisplayedSelectDeliveryZoneSelectBox());
+    assertTrue("selectProgramSelectBox should be present", distributionPage.isDisplayedSelectProgramSelectBox());
+    assertTrue("selectPeriodSelectBox should be present", distributionPage.isDisplayedSelectPeriodSelectBox());
+    assertTrue("proceedButton should be present", distributionPage.isDisplayedViewLoadAmountButton());
   }
 
   private void verifyAllSelectFieldValues(List<String> valuesToBeVerified, List<WebElement> valuesPresentInDropDown) {

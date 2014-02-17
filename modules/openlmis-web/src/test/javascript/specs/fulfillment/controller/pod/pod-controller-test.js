@@ -88,12 +88,34 @@ describe('PODController', function () {
     });
 
     it('should return false if category is same for the current and previous line item same', function () {
-      scope.pod.podLineItems[0].productCategory = 'anti-fungal';
-      expect(scope.isCategorySameAsPreviousLineItem(1)).toBeFalsy();
+      scope.pageLineItems = [
+        {},
+        {},
+        {},
+        {},
+        {productCategory: 'anti-fungal'},
+        {productCategory: 'anti-fungal'}
+      ];
+      expect(scope.isCategoryDifferentFromPreviousLineItem(5)).toBeFalsy();
     });
 
     it('should return true if category are different', function () {
-      expect(scope.isCategorySameAsPreviousLineItem(1)).toBeTruthy();
+      scope.pageLineItems = [
+        {},
+        {},
+        {},
+        {},
+        {productCategory: 'anti-fungal'},
+        {productCategory: 'antibiotic'}
+      ];
+      expect(scope.isCategoryDifferentFromPreviousLineItem(5)).toBeTruthy();
+    });
+
+    it('should return true if first line item on page', function () {
+      scope.pageLineItems = [
+        {}
+      ];
+      expect(scope.isCategoryDifferentFromPreviousLineItem(0)).toBeTruthy();
     });
 
     it('should return error class if quantity received is undefined or null and errors shown', function () {

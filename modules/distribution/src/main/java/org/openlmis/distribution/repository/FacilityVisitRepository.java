@@ -25,10 +25,6 @@ public class FacilityVisitRepository {
   @Autowired
   FacilityVisitMapper mapper;
 
-  public void insert(FacilityVisit facilityVisit) {
-    mapper.insert(facilityVisit);
-  }
-
   public FacilityVisit get(FacilityVisit facilityVisit) {
     return mapper.getBy(facilityVisit.getFacilityId(), facilityVisit.getDistributionId());
   }
@@ -51,5 +47,14 @@ public class FacilityVisitRepository {
 
   public Integer getUnsyncedFacilityCountForDistribution(Long distributionId) {
     return mapper.getUnsyncedFacilityCountForDistribution(distributionId);
+  }
+
+  public FacilityVisit save(FacilityVisit facilityVisit) {
+    if (facilityVisit.getId() == null) {
+      mapper.insert(facilityVisit);
+    } else {
+      mapper.update(facilityVisit);
+    }
+    return facilityVisit;
   }
 }

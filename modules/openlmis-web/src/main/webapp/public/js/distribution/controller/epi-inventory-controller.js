@@ -14,8 +14,8 @@ function EPIInventoryController($scope, $routeParams, distributionService) {
   $scope.selectedFacilityId = $routeParams.facility;
 
   $scope.applyNRAll = function() {
-    distributionService.applyNR(function(distribution) {
-      distribution.setEpiInventoryNotRecorded($scope.selectedFacilityId);
+    distributionService.applyNR(function() {
+      $scope.distribution.facilityDistributions[$routeParams.facility].epiInventory.setNotRecorded();
     });
   };
 }

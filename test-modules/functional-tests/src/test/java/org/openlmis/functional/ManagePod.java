@@ -1,5 +1,8 @@
 package org.openlmis.functional;
 
+import cucumber.api.java.en.And;
+import cucumber.api.java.en.Then;
+import cucumber.api.java.en.When;
 import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.pageobjects.HomePage;
 import org.openlmis.pageobjects.LoginPage;
@@ -15,8 +18,10 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 
-import static com.thoughtworks.selenium.SeleneseTestBase.*;
+import static com.thoughtworks.selenium.SeleneseTestBase.assertFalse;
+import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
 import static java.util.Arrays.asList;
+import static org.testng.AssertJUnit.assertEquals;
 
 public class ManagePod extends TestCaseHelper {
 
@@ -60,7 +65,7 @@ public class ManagePod extends TestCaseHelper {
     convertOrderPage.clickConvertToOrderButton();
     convertOrderPage.clickOk();
     ManagePodPage managePodPage = homePage.navigateManagePOD();
-    managePodPage.verifyMessageOnManagePodScreen();
+    managePodPage.verifyNoOrderMessage();
     String id = String.valueOf(dbWrapper.getMaxRnrID());
     assertEquals("TRANSFER_FAILED", dbWrapper.getAttributeFromTable("orders", "status", "id", id));
     assertTrue(dbWrapper.getAttributeFromTable("orders", "ftpComment", "id", id).contains("supplyline.missing"));
@@ -88,7 +93,7 @@ public class ManagePod extends TestCaseHelper {
 
     HomePage homePage = loginPage.loginAs(userSIC, password);
     ManagePodPage managePodPage = homePage.navigateManagePOD();
-    managePodPage.verifyMessageOnManagePodScreen();
+    managePodPage.verifyNoOrderMessage();
   }
 
   @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-RnR")
@@ -101,7 +106,7 @@ public class ManagePod extends TestCaseHelper {
     dbWrapper.updateFieldValue("orders", "status", "RECEIVED", null, null);
     homePage.navigateHomePage();
     homePage.navigateManagePOD();
-    managePodPage.verifyMessageOnManagePodScreen();
+    managePodPage.verifyNoOrderMessage();
   }
 
   @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-RnR")
@@ -128,6 +133,32 @@ public class ManagePod extends TestCaseHelper {
     homePage.navigateHomePage();
     testWebDriver.sleep(1000);
     assertFalse(testWebDriver.findElement(By.id("orders-menu")).isDisplayed());
+  }
+
+  @When("^I access Manage POD page$")
+  public void navigateManagePodPage() {
+    HomePage homePage = PageFactory.getInstanceOfHomePage(testWebDriver);
+    homePage.navigateManagePOD();
+  }
+
+  @Then("^I should see list of orders to manage POD for \"([^\"]*)\" Rnr$")
+  public void verifyListOfOrdersOnPodScreen(String rnrType) {
+    testWebDriver.sleep(1000);
+    assertEquals("Central Hospital", testWebDriver.findElement(By.xpath("//div/span[contains(text(),'Central Hospital')]")).getText());
+    assertEquals("HIV", testWebDriver.findElement(By.xpath("//div/span[contains(text(),'HIV')]")).getText());
+    assertEquals("Transfer failed", testWebDriver.findElement(By.xpath("//div/span[contains(text(),'Transfer failed')]")).getText());
+    assertTrue(testWebDriver.findElement(By.xpath("//div/span[contains(text(),'Period1')]")).getText().contains("Period1"));
+    assertEquals("Update POD", testWebDriver.findElement(By.xpath("//div/a[contains(text(),'Update POD')]")).getText());
+    //TODO find proper xpath or give id for facility_code
+    if (rnrType.equals("Emergency")) {
+      assertTrue(testWebDriver.findElement(By.xpath("//i[@class='icon-ok']")).isDisplayed());
+    }
+  }
+
+  @And("^I verify order not present on manage pod page$")
+  public void verifyNoOrderPresent() {
+    ManagePodPage managePodPage = PageFactory.getInstanceOfManagePodPage(testWebDriver);
+    managePodPage.verifyNoOrderMessage();
   }
 
   private void verifyValuesOnManagePODScreen(ManagePodPage managePodPage) {

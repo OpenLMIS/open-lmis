@@ -151,8 +151,8 @@ public class DistributionVisitInformationSyncTest extends TestCaseHelper {
     assertTrue(distributionPage.getSyncMessage().contains(visitInformationData.get(FIRST_FACILITY_CODE) + "-Village Dispensary"));
     distributionPage.syncDistributionMessageDone();
 
-    verifyVisitInformationDataWhenFacilityWasVisitedInDatabase(visitInformationData.get(FIRST_FACILITY_CODE), "Some Observations",
-      "ConfirmName", "ConfirmTitle", "VerifyName", "VerifyTitle", "012U3-93");
+    verifyFacilityVisitInformationInDatabase(visitInformationData.get(FIRST_FACILITY_CODE), "Some Observations",
+      "ConfirmName", "ConfirmTitle", "VerifyName", "VerifyTitle", "012U3-93","t","t");
     homePage.navigateToDistributionWhenOnline();
     distributionPage.clickRecordData(1);
     facilityListPage.selectFacility(visitInformationData.get(FIRST_FACILITY_CODE));
