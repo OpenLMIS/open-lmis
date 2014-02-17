@@ -584,6 +584,42 @@ public class DistributionChildCoverageSyncTest extends TestCaseHelper {
     assertFalse(childCoveragePage.isOpenVialEnabled(1, 1));
   }
 
+  @Test(groups = {"distribution"})
+  public void testShouldVerifyChildCoverageSync() throws SQLException {
+    HomePage homePage = loginPage.loginAs("Admin123", "Admin123");
+    ProgramProductISAPage programProductISAPage = homePage.navigateProgramProductISA();
+    programProductISAPage.fillProgramProductISA(childCoverageData.get(VACCINES_PROGRAM), "90", "1", "50", "30", "0", "100", "2000", "333");
+    homePage.logout();
+
+    loginPage.loginAs(childCoverageData.get(USER), childCoverageData.get(PASSWORD));
+    DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
+    distributionPage.initiate(childCoverageData.get(FIRST_DELIVERY_ZONE_NAME), childCoverageData.get(VACCINES_PROGRAM));
+    FacilityListPage facilityListPage = distributionPage.clickRecordData(1);
+    VisitInformationPage visitInformationPage = facilityListPage.selectFacility(childCoverageData.get(FIRST_FACILITY_CODE));
+
+    ChildCoveragePage childCoveragePage = visitInformationPage.navigateToChildCoverage();
+
+    childCoveragePage.enterAllChildCoverageValues();
+    childCoveragePage.enterOpenedVialsData();
+
+    childCoveragePage.navigateToVisitInformation();
+    visitInformationPage.selectFacilityVisitedNo();
+    visitInformationPage.selectReasonNoTransport();
+
+    FullCoveragePage fullCoveragePage = visitInformationPage.navigateToFullCoverage();
+    fullCoveragePage.clickApplyNRToAll();
+
+    facilityListPage.verifyIndividualFacilityIndicatorColor("F10", "GREEN");
+    distributionPage = homePage.navigateToDistributionWhenOnline();
+    distributionPage.syncDistribution(1);
+    assertTrue(distributionPage.getSyncMessage().contains("F10-Village Dispensary"));
+    distributionPage.syncDistributionMessageDone();
+
+    ResultSet childCoverageDetails = dbWrapper.getChildCoverageDetails(dbWrapper.getAttributeFromTable("coverage_vaccination_products", "vaccination", "id", "9"), "F10");
+
+  }
+
+
   public void insertOpenedVialsProductMapping() throws SQLException {
     dbWrapper.insertOpenedVialsProductsInMappingTable("BCG", "P10");
     dbWrapper.insertOpenedVialsProductsInMappingTable("Polio10", "P11");

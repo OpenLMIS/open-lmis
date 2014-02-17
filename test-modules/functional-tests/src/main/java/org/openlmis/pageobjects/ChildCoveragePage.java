@@ -408,6 +408,7 @@ public class ChildCoveragePage extends DistributionTab {
     healthCenter11Months.clear();
     healthCenter11Months.sendKeys(value);
     healthCenter11Months.sendKeys(Keys.TAB);
+    testWebDriver.setImplicitWait(100);
   }
 
   public void enterOutreach11MonthsDataForGivenRow(int rowNumber, String value) {
@@ -591,5 +592,29 @@ public class ChildCoveragePage extends DistributionTab {
   public void clickCancel() {
     testWebDriver.waitForElementToAppear(cancelButton);
     cancelButton.click();
+  }
+
+  public void enterOpenedVialsData() {
+    enterOpenedVialsCountForGivenGroupAndRow(1, 1, "111");
+    enterOpenedVialsCountForGivenGroupAndRow(2, 1, "21");
+    enterOpenedVialsCountForGivenGroupAndRow(2, 2, "22");
+    enterOpenedVialsCountForGivenGroupAndRow(6, 1, "61");
+    enterOpenedVialsCountForGivenGroupAndRow(6, 2, "62");
+    enterOpenedVialsCountForGivenGroupAndRow(9, 1, "91");
+    enterOpenedVialsCountForGivenGroupAndRow(12, 1, "12");
+  }
+
+  public void enterAllChildCoverageValues() {
+    for (int i = 1; i <= 12; i++) {
+      if (i == 2) {
+        enterHealthCenter11MonthsDataForGivenRow(i, String.valueOf(i));
+        enterOutreach11MonthsDataForGivenRow(i, String.valueOf(i + 10));
+      } else {
+        enterHealthCenter11MonthsDataForGivenRow(i, String.valueOf(i));
+        enterOutreach11MonthsDataForGivenRow(i, String.valueOf(i + 10));
+        enterHealthCenter23MonthsDataForGivenRow(i, String.valueOf(i + 100));
+        enterOutreach23MonthsDataForGivenRow(i, String.valueOf(i + 11));
+      }
+    }
   }
 }
