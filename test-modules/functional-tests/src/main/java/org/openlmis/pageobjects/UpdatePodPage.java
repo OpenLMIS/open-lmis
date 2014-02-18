@@ -383,4 +383,10 @@ public class UpdatePodPage extends Page {
     testWebDriver.scrollToElement(notes);
     return notes.isEnabled();
   }
+
+  public boolean isQuantityReturnedEnabled(int rowNumber) {
+    WebElement quantityReturned = testWebDriver.getElementById("quantityReturned" + (rowNumber - 1));
+    testWebDriver.scrollToElement(quantityReturned);
+    return quantityReturned.isEnabled();
+  }
 }

@@ -212,10 +212,10 @@ public class UpdatePod extends TestCaseHelper {
     verifyPodDataInDatabase("45", "Some notes", "P10", null);
   }
 
-  @And("^I enter \"([^\"]*)\" as quantity received and \"([^\"]*)\" as notes in row \"([^\"]*)\"$")
-  public void enterPodDetails(String quantityReceived, String notes, String rowNumber) {
+  @And("^I enter \"([^\"]*)\" as quantity received, \"([^\"]*)\" as quantity returned and \"([^\"]*)\" as notes in row \"([^\"]*)\"$")
+  public void enterPodDetails(String quantityReceived, String quantityReturned, String notes, String rowNumber) {
     UpdatePodPage updatePodPage = PageFactory.getInstanceOfUpdatePodPage(testWebDriver);
-    updatePodPage.enterPodData(quantityReceived, notes, null, Integer.parseInt(rowNumber));
+    updatePodPage.enterPodData(quantityReceived, notes, quantityReturned, Integer.parseInt(rowNumber));
   }
 
   @And("^I submit POD$")
@@ -242,17 +242,18 @@ public class UpdatePod extends TestCaseHelper {
     assertFalse(updatePodPage.getProductCode(1).contains("P11"));
   }
 
-  @Then("^I verify quantity received and notes disabled$")
+  @Then("^I verify quantity received, quantity returned and notes disabled$")
   public void verifyPodPageDisabled() {
     testWebDriver.sleep(1000);
     UpdatePodPage updatePodPage = PageFactory.getInstanceOfUpdatePodPage(testWebDriver);
     assertFalse(updatePodPage.isQuantityReceivedEnabled(1));
     assertFalse(updatePodPage.isNotesEnabled(1));
+    assertFalse(updatePodPage.isQuantityReturnedEnabled(1));
   }
 
-  @And("^I verify in database quantity received as \"([^\"]*)\" and notes as \"([^\"]*)\"$")
-  public void verifyPodDataSavedInDatabase(String quantityReceived, String notes) throws SQLException {
-    verifyPodDataInDatabase(quantityReceived, notes, "P10", null);
+  @And("^I verify in database quantity received as \"([^\"]*)\", quantity returned as \"([^\"]*)\" and notes as \"([^\"]*)\"$")
+  public void verifyPodDataSavedInDatabase(String quantityReceived, String quantityReturned, String notes) throws SQLException {
+    verifyPodDataInDatabase(quantityReceived, notes, "P10", quantityReturned);
   }
 
   private void initiateRnrAndConvertToOrder(boolean isEmergencyRegular, int packsToShip) throws SQLException {

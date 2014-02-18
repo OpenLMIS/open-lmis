@@ -284,10 +284,10 @@ Feature: Smoke Tests
     And I receive shipment for the order
     And I access Manage POD page
     And I click on update Pod link for Row "1"
-    And I enter "10" as quantity received and "notes" as notes in row "1"
+    And I enter "10" as quantity received, "78" as quantity returned and "notes" as notes in row "1"
     And I submit POD
-    Then I verify quantity received and notes disabled
-    And I verify in database quantity received as "10" and notes as "notes"
+    Then I verify quantity received, quantity returned and notes disabled
+    And I verify in database quantity received as "10", quantity returned as "78" and notes as "notes"
     Then I access view orders page
     And I verify order status as "Received" in row "1"
     Then I access Manage POD page
