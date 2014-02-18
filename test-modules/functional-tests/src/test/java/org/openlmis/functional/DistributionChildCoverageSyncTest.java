@@ -103,7 +103,7 @@ public class DistributionChildCoverageSyncTest extends TestCaseHelper {
     String facilityId = dbWrapper.getAttributeFromTable("facilities", "id", "code", "F10");
     String facilityVisitId = dbWrapper.getAttributeFromTable("facility_visits", "id", "facilityId", facilityId);
 
-    ResultSet childCoverageDetails = dbWrapper.getChildCoverageDetails(childCoveragePage.getTextOfRegimenPCV10Dose1(),facilityVisitId);
+    ResultSet childCoverageDetails = dbWrapper.getChildCoverageDetails(childCoveragePage.getTextOfRegimenPCV10Dose1(), facilityVisitId);
 
     assertEquals("300", childCoverageDetails.getInt("targetGroup"));
 
@@ -330,7 +330,7 @@ public class DistributionChildCoverageSyncTest extends TestCaseHelper {
   public void testShouldVerifyAllRegimensWhenRegimenMappedToProductInactiveAtGlobalLevelAfterCaching() throws SQLException {
     HomePage homePage = loginPage.loginAs("Admin123", "Admin123");
     ProgramProductISAPage programProductISAPage = homePage.navigateProgramProductISA();
-    programProductISAPage.fillProgramProductISA(childCoverageData.get(VACCINES_PROGRAM), "90", "1", "50", "30", "0", "100", "2000", "333");
+    programProductISAPage.fillProgramProductISA(childCoverageData.get(VACCINES_PROGRAM), "0.879", "1", "50", "30", "0", "100", "2000", "333");
     homePage.logout();
 
     homePage = loginPage.loginAs(childCoverageData.get(USER), childCoverageData.get(PASSWORD));
@@ -344,9 +344,9 @@ public class DistributionChildCoverageSyncTest extends TestCaseHelper {
 
     verifyRegimentsPresent();
     verifyOpenVialsPresent();
-    assertEquals(childCoveragePage.getTextOfTargetGroupValue(9), "300");
-    assertEquals(childCoveragePage.getTextOfTargetGroupValue(10), "300");
-    assertEquals(childCoveragePage.getTextOfTargetGroupValue(11), "300");
+    assertEquals(childCoveragePage.getTextOfTargetGroupValue(9), "3");
+    assertEquals(childCoveragePage.getTextOfTargetGroupValue(10), "3");
+    assertEquals(childCoveragePage.getTextOfTargetGroupValue(11), "3");
     assertEquals(childCoveragePage.getTextOfTargetGroupValue(1), "");
     assertEquals(childCoveragePage.getTextOfTargetGroupValue(12), "");
 
@@ -687,10 +687,10 @@ public class DistributionChildCoverageSyncTest extends TestCaseHelper {
     assertEqualsAndNulls(childCoverageDetails.getString("outreach23months"), "7654321");
 
     ResultSet openedVialLineItem = dbWrapper.getOpenedVialLineItem("BCG", facilityVisitId);
-    assertEquals(openedVialLineItem.getString("openedVials"),"1234567");
+    assertEquals(openedVialLineItem.getString("openedVials"), "1234567");
 
     openedVialLineItem = dbWrapper.getOpenedVialLineItem("Measles", facilityVisitId);
-    assertEqualsAndNulls(openedVialLineItem.getString("openedVials"),"null");
+    assertEqualsAndNulls(openedVialLineItem.getString("openedVials"), "null");
   }
 
   @Test(groups = {"distribution"})

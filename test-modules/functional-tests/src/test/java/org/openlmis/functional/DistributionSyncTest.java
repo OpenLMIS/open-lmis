@@ -92,17 +92,17 @@ public class DistributionSyncTest extends TestCaseHelper {
   @Test(groups = {"distribution"})
   public void testMultipleFacilityFinalSyncAndRestrictAlreadySyncedPeriod() throws SQLException {
     dbWrapper.updateFieldValue("facilities", "catchmentPopulation", "999", "code", distributionTestData.get(SECOND_FACILITY_CODE));
-    String actualFacilityCatchmentPopulationForFacility1 = dbWrapper.getAttributeFromTable("facilities", "catchmentPopulation", "code", distributionTestData.get(FIRST_FACILITY_CODE));
-    String actualFacilityCatchmentPopulationForFacility2 = dbWrapper.getAttributeFromTable("facilities", "catchmentPopulation", "code", distributionTestData.get(SECOND_FACILITY_CODE));
+    String actualCatchmentPopulationForFacility1 = dbWrapper.getAttributeFromTable("facilities", "catchmentPopulation", "code", distributionTestData.get(FIRST_FACILITY_CODE));
+    String actualCatchmentPopulationForFacility2 = dbWrapper.getAttributeFromTable("facilities", "catchmentPopulation", "code", distributionTestData.get(SECOND_FACILITY_CODE));
 
     HomePage homePage = loginPage.loginAs(distributionTestData.get(USER), distributionTestData.get(PASSWORD));
     initiateDistribution(distributionTestData.get(FIRST_DELIVERY_ZONE_NAME), distributionTestData.get(VACCINES_PROGRAM));
 
-    String expectedFacilityCatchmentPopulationForFacility1 = dbWrapper.getAttributeFromTable("facility_visits", "facilityCatchmentPopulation", "facilityId", dbWrapper.getAttributeFromTable("facilities", "id", "code", distributionTestData.get(FIRST_FACILITY_CODE)));
-    String expectedFacilityCatchmentPopulationForFacility2 = dbWrapper.getAttributeFromTable("facility_visits", "facilityCatchmentPopulation", "facilityId", dbWrapper.getAttributeFromTable("facilities", "id", "code", distributionTestData.get(SECOND_FACILITY_CODE)));
+    String expectedCatchmentPopulationForFacility1 = dbWrapper.getAttributeFromTable("facility_visits", "facilityCatchmentPopulation", "facilityId", dbWrapper.getAttributeFromTable("facilities", "id", "code", distributionTestData.get(FIRST_FACILITY_CODE)));
+    String expectedCatchmentPopulationForFacility2 = dbWrapper.getAttributeFromTable("facility_visits", "facilityCatchmentPopulation", "facilityId", dbWrapper.getAttributeFromTable("facilities", "id", "code", distributionTestData.get(SECOND_FACILITY_CODE)));
 
-    assertEqualsAndNulls(actualFacilityCatchmentPopulationForFacility1, expectedFacilityCatchmentPopulationForFacility1);
-    assertEqualsAndNulls(actualFacilityCatchmentPopulationForFacility2, expectedFacilityCatchmentPopulationForFacility2);
+    assertEqualsAndNulls(actualCatchmentPopulationForFacility1, expectedCatchmentPopulationForFacility1);
+    assertEqualsAndNulls(actualCatchmentPopulationForFacility2, expectedCatchmentPopulationForFacility2);
 
     dbWrapper.updateFieldValue("facilities", "catchmentPopulation", "10000", "code", distributionTestData.get(SECOND_FACILITY_CODE));
 
@@ -155,28 +155,10 @@ public class DistributionSyncTest extends TestCaseHelper {
     Map<String, String> distributionDetails = dbWrapper.getDistributionDetails(distributionTestData.get(FIRST_DELIVERY_ZONE_NAME), distributionTestData.get(VACCINES_PROGRAM), "Period14");
     assertEquals(distributionDetails.get("status"), "SYNCED");
 
-    Map<String, String> facilityVisitF10 = dbWrapper.getFacilityVisitDetails("F10");
-    assertEquals(facilityVisitF10.get("observations"), "Some observations");
-    assertEquals(facilityVisitF10.get("confirmedByName"), "samuel");
-    assertEquals(facilityVisitF10.get("confirmedByTitle"), "Doe");
-    assertEquals(facilityVisitF10.get("verifiedByName"), "Verifier");
-    assertEquals(facilityVisitF10.get("verifiedByTitle"), "XYZ");
-    assertEquals(facilityVisitF10.get("synced"), "t");
-    assertEquals(facilityVisitF10.get("visited"), "t");
-    assertEquals(facilityVisitF10.get("reasonForNotVisiting"), (String) null);
-    assertEquals(facilityVisitF10.get("otherReasonDescription"), (String) null);
-
-    Map<String, String> facilityVisitF11 = dbWrapper.getFacilityVisitDetails("F11");
-    assertEquals(facilityVisitF11.get("observations"), "Some observations");
-    assertEquals(facilityVisitF11.get("confirmedByName"), "samuel D");
-    assertEquals(facilityVisitF11.get("confirmedByTitle"), "Doe Abc");
-    assertEquals(facilityVisitF11.get("verifiedByName"), "Verifier");
-    assertEquals(facilityVisitF11.get("verifiedByTitle"), "Verifier Title");
-    assertEquals(facilityVisitF11.get("synced"), "t");
-    assertEquals(facilityVisitF11.get("visited"), "t");
-    assertEquals(facilityVisitF11.get("reasonForNotVisiting"), (String) null);
-    assertEquals(facilityVisitF11.get("otherReasonDescription"), (String) null);
-
+    verifyFacilityVisitInformationInDatabase(distributionTestData.get(FIRST_FACILITY_CODE), "Some observations", "samuel", "Doe", "Verifier",
+      "XYZ", null, "t", "t", null, null);
+    verifyFacilityVisitInformationInDatabase(distributionTestData.get(SECOND_FACILITY_CODE), "Some observations", "samuel D", "Doe Abc",
+      "Verifier", "Verifier Title", null, "t", "t", null, null);
 
     distributionPage.clickRecordData(1);
     facilityListPage.selectFacility(distributionTestData.get(FIRST_FACILITY_CODE));
@@ -216,10 +198,10 @@ public class DistributionSyncTest extends TestCaseHelper {
     verifyEpiInventoryDataInDatabase(null, "4", null, "Product6", distributionTestData.get(SECOND_FACILITY_CODE));
     verifyEpiInventoryDataInDatabase(null, "6", null, "P11", distributionTestData.get(SECOND_FACILITY_CODE));
 
-    assertEqualsAndNulls(actualFacilityCatchmentPopulationForFacility2, expectedFacilityCatchmentPopulationForFacility2);
+    assertEqualsAndNulls(actualCatchmentPopulationForFacility2, expectedCatchmentPopulationForFacility2);
 
-    verifySyncedDataInDatabase(distributionTestData.get(FIRST_FACILITY_CODE));
-    assertEqualsAndNulls(actualFacilityCatchmentPopulationForFacility1, expectedFacilityCatchmentPopulationForFacility1);
+    verifySyncedDataInDatabaseWhenFacilityVisited(distributionTestData.get(FIRST_FACILITY_CODE));
+    assertEqualsAndNulls(actualCatchmentPopulationForFacility1, expectedCatchmentPopulationForFacility1);
 
     homePage.navigateHomePage();
     homePage.navigateToDistributionWhenOnline();
@@ -248,6 +230,11 @@ public class DistributionSyncTest extends TestCaseHelper {
     VisitInformationPage visitInformationPage = facilityListPage.selectFacility(distributionTestData.get(FIRST_FACILITY_CODE));
 
     facilityListPage.verifyOverallFacilityIndicatorColor("RED");
+    Map<String, String> distributionDetails = dbWrapper.getDistributionDetails(distributionTestData.get(FIRST_DELIVERY_ZONE_NAME), distributionTestData.get(VACCINES_PROGRAM), "Period14");
+    assertEquals(distributionDetails.get("status"), "INITIATED");
+
+    assertEquals("f", dbWrapper.getFacilityVisitDetails(distributionTestData.get(FIRST_FACILITY_CODE)).get("synced"));
+
     assertEquals("Was " + dbWrapper.getAttributeFromTable("facilities", "name", "code", distributionTestData.get(FIRST_FACILITY_CODE)) +
       " visited in " + "Period14" + "?", visitInformationPage.getWasFacilityVisitedLabel());
     visitInformationPage.enterDataWhenFacilityVisited("Some observations", "samuel D", "Doe Abc", "Verifier", "Verifier Title");
@@ -283,6 +270,9 @@ public class DistributionSyncTest extends TestCaseHelper {
     distributionPage.syncDistribution(1);
     distributionPage.syncDistributionMessageDone();
 
+    distributionDetails = dbWrapper.getDistributionDetails(distributionTestData.get(FIRST_DELIVERY_ZONE_NAME), distributionTestData.get(VACCINES_PROGRAM), "Period14");
+    assertEquals(distributionDetails.get("status"), "INITIATED");
+
     verifyEpiUseDataInDatabase(70, 80, 90, 100, 9999999, "10/2011", "PG1", distributionTestData.get(FIRST_FACILITY_CODE));
     verifyFacilityVisitInformationInDatabase(distributionTestData.get(FIRST_FACILITY_CODE), "Some observations", "samuel D", "Doe Abc", "Verifier", "Verifier Title", null, "t", "t", null, null);
     verifyRefrigeratorProblemDataNullInDatabase("GNR7878", distributionTestData.get(FIRST_FACILITY_CODE));
@@ -317,12 +307,15 @@ public class DistributionSyncTest extends TestCaseHelper {
 
     distributionPage.syncDistributionMessageDone();
 
+    distributionDetails = dbWrapper.getDistributionDetails(distributionTestData.get(FIRST_DELIVERY_ZONE_NAME), distributionTestData.get(VACCINES_PROGRAM), "Period14");
+    assertEquals(distributionDetails.get("status"), "SYNCED");
+
     verifyEpiUseDataInDatabase(70, 80, 90, 100, 9999999, "10/2011", "PG1", distributionTestData.get(FIRST_FACILITY_CODE));
     verifyFacilityVisitInformationInDatabase(distributionTestData.get(FIRST_FACILITY_CODE), "Some observations", "samuel D", "Doe Abc", "Verifier", "Verifier Title", null, "t", "t", null, null);
     verifyRefrigeratorProblemDataNullInDatabase("GNR7878", distributionTestData.get(FIRST_FACILITY_CODE));
     verifyRefrigeratorReadingDataInDatabase(distributionTestData.get(FIRST_FACILITY_CODE), "GNR7878", 3.0F, "Y", 2, 5, null, null);
 
-    verifySyncedDataInDatabase(distributionTestData.get(SECOND_FACILITY_CODE));
+    verifySyncedDataInDatabaseWhenFacilityVisited(distributionTestData.get(SECOND_FACILITY_CODE));
   }
 
   @Test(groups = {"distribution"})
@@ -350,7 +343,7 @@ public class DistributionSyncTest extends TestCaseHelper {
     assertEquals(distributionPage.getSyncStatusMessage(), "Sync Status");
     distributionPage.syncDistributionMessageDone();
 
-    verifySyncedDataInDatabase(distributionTestData.get(FIRST_FACILITY_CODE));
+    verifySyncedDataInDatabaseWhenFacilityVisited(distributionTestData.get(FIRST_FACILITY_CODE));
 
     deleteDistribution();
 
@@ -389,7 +382,7 @@ public class DistributionSyncTest extends TestCaseHelper {
     assertTrue(distributionPage.getSyncMessage().contains("F10-Village Dispensary"));
     distributionPage.syncDistributionMessageDone();
 
-    verifySyncedDataInDatabase(distributionTestData.get(FIRST_FACILITY_CODE));
+    verifySyncedDataInDatabaseWhenFacilityVisited(distributionTestData.get(FIRST_FACILITY_CODE));
 
     deleteDistribution();
 
@@ -426,7 +419,7 @@ public class DistributionSyncTest extends TestCaseHelper {
     assertTrue(distributionPage.getSyncMessage().contains("F10-Village Dispensary"));
     distributionPage.syncDistributionMessageDone();
 
-    verifySyncedDataInDatabase(distributionTestData.get(FIRST_FACILITY_CODE));
+    verifySyncedDataInDatabaseWhenFacilityVisited(distributionTestData.get(FIRST_FACILITY_CODE));
 
     deleteDistribution();
 
@@ -467,7 +460,7 @@ public class DistributionSyncTest extends TestCaseHelper {
     assertTrue(distributionPage.getSyncMessage().contains("F10-Village Dispensary"));
     distributionPage.syncDistributionMessageDone();
 
-    verifySyncedDataInDatabase(distributionTestData.get(FIRST_FACILITY_CODE));
+    verifySyncedDataInDatabaseWhenFacilityVisited(distributionTestData.get(FIRST_FACILITY_CODE));
 
     deleteDistribution();
 
@@ -949,7 +942,7 @@ public class DistributionSyncTest extends TestCaseHelper {
     return visitInformationPage;
   }
 
-  private void verifySyncedDataInDatabase(String facilityCode) throws SQLException {
+  private void verifySyncedDataInDatabaseWhenFacilityVisited(String facilityCode) throws SQLException {
     verifyRefrigeratorProblemDataNullInDatabase("GNR7876", facilityCode);
     verifyRefrigeratorReadingDataInDatabase(facilityCode, "GNR7876", 3.0F, "Y", 2, 5, null, null);
 
