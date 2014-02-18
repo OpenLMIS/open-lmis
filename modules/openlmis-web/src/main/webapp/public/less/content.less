@@ -775,26 +775,23 @@ td.col-quantityReturned,
 td.col-quantityDispensed,
 td.col-newPatientCount,
 td.col-stockOutDays,
-td.col-expirationDate,
 td.col-quantityRequested,
 td.col-quantityApproved {
   input[type="text"] {
     width: 89%;
-    //    margin-right: 10%;
+    text-align: right;
   }
 }
 
-td.col-beginningBalance,
-td.col-quantityReceived,
-td.col-quantityReturned,
-td.col-quantityDispensed,
-td.col-newPatientCount,
-td.col-stockOutDays,
-td.col-quantityRequested,
+td.col-expirationDate {
+  input[type="text"] {
+    width: 89%;
+  }
+}
+
 td.col-patientsOnTreatment,
 td.col-patientsToInitiateTreatment,
-td.col-patientsStoppedTreatment,
-td.col-quantityApproved {
+td.col-patientsStoppedTreatment {
   input[type="text"] {
     text-align: right;
   }
@@ -822,46 +819,26 @@ td.col-lossesAndAdjustments {
   }
 }
 
-#viewRnr {
-  td.col-beginningBalance,
-  td.col-quantityReceived,
-  td.col-quantityDispensed,
-  td.col-stockInHand,
-  td.col-newPatientCount,
-  td.col-stockOutDays,
-  td.col-quantityRequested,
-  td.col-patientsOnTreatment,
-  td.col-patientsToInitiateTreatment,
-  td.col-patientsStoppedTreatment,
-  td.col-quantityApproved {
-    span {
-      text-align: right;
-      display: block;
-    }
+td.col-quantityReceived,
+td.col-quantityDispensed,
+td.col-newPatientCount,
+td.col-stockOutDays,
+td.col-quantityRequested,
+td.col-patientsOnTreatment,
+td.col-patientsToInitiateTreatment,
+td.col-patientsStoppedTreatment,
+td.col-quantityApproved,
+td.col-packsToShip,
+td.col-quantityShipped {
+  span {
+    text-align: right;
+    display: block;
   }
 }
 
-#approveRnr {
-  td.col-beginningBalance,
-  td.col-stockInHand,
-  td.col-quantityReceived,
-  td.col-quantityDispensed,
-  td.col-newPatientCount,
-  td.col-stockOutDays,
-  td.col-stockInHand,
-  td.col-quantityRequested,
-  td.col-patientsOnTreatment,
-  td.col-patientsToInitiateTreatment,
-  td.col-patientsStoppedTreatment, {
-    span {
-      text-align: right;
-      display: block;
-    }
-  }
-  td.col-remarks {
-    input[type="text"] {
-      width: 93%;
-    }
+td.col-remarks {
+  input[type="text"] {
+    width: 93%;
   }
 }
 
@@ -2542,12 +2519,6 @@ input[rnr-validator="positiveInteger"] {
   .col-productName {
     width: 482px;
     min-width: 250px;
-  }
-  td.col-packsToShip, td.col-quantityShipped {
-    span {
-      display: block;
-      text-align: right;
-    }
   }
   .col-quantityReceived .col-quantityReturned {
     width: 150px;
