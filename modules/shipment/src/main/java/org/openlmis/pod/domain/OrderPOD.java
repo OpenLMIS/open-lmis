@@ -14,17 +14,20 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.apache.commons.collections.Predicate;
+import org.joda.time.DateTime;
 import org.openlmis.core.domain.BaseModel;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.rnr.domain.LineItem;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.domain.RnrLineItem;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import static org.apache.commons.collections.CollectionUtils.find;
+import static org.joda.time.format.DateTimeFormat.forPattern;
 
 @Data
 @NoArgsConstructor
@@ -83,7 +86,10 @@ public class OrderPOD extends BaseModel {
   }
 
   public void copy(OrderPOD orderPOD) {
-    this.setModifiedBy(orderPOD.getModifiedBy());
+    this.modifiedBy = orderPOD.getModifiedBy();
+    this.receivedDate = orderPOD.getReceivedDate();
+    this.acceptedBy = orderPOD.getAcceptedBy();
+    this.deliveredBy = orderPOD.getDeliveredBy();
     for (final OrderPODLineItem newLineItem : orderPOD.podLineItems) {
       OrderPODLineItem existingLineItem = (OrderPODLineItem) find(this.podLineItems, new Predicate() {
         @Override
@@ -95,4 +101,7 @@ public class OrderPOD extends BaseModel {
     }
   }
 
+  public String getStringReceivedDate() throws ParseException {
+    return forPattern("yyyy-MM-dd").print(new DateTime(this.receivedDate));
+  }
 }
