@@ -314,4 +314,18 @@ public class VaccinationCoverageMapperIT {
     assertThat(resultSet.getLong("id"), is(lineItem.getId()));
     assertThat(resultSet.getLong("facilityVisitId"), is(lineItem.getFacilityVisitId()));
   }
+
+  @Test
+  public void shouldReturnAdultCoverageLineItemsByFacilityVisitId(){
+    AdultCoverageLineItem adultCoverageLineItem = new AdultCoverageLineItem();
+    adultCoverageLineItem.setFacilityVisitId(facilityVisit.getId());
+    adultCoverageLineItem.setTargetGroup(56);
+    adultCoverageLineItem.setTargetGroupEntity("Pregnant Women");
+    mapper.insertAdultCoverageLineItem(adultCoverageLineItem);
+
+    List<AdultCoverageLineItem> fetchedAdultCoverageLineItems = mapper.getAdultCoverageLineItemsBy(facilityVisit.getId());
+
+    assertThat(fetchedAdultCoverageLineItems.size(), is(1));
+    assertThat(fetchedAdultCoverageLineItems.get(0).getFacilityVisitId(), is(facilityVisit.getId()));
+  }
 }

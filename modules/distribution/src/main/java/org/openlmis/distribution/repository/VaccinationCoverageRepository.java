@@ -68,4 +68,8 @@ public class VaccinationCoverageRepository {
         mapper.insertAdultCoverageLineItem(adultCoverageLineItem);
     }
   }
+
+  public VaccinationAdultCoverage getAdultCoverageBy(Long facilityVisitId) {
+    return new VaccinationAdultCoverage(mapper.getAdultCoverageLineItemsBy(facilityVisitId));
+  }
 }

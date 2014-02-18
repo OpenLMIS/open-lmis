@@ -51,4 +51,8 @@ public class VaccinationCoverageService {
   public void saveAdultCoverage(VaccinationAdultCoverage adultCoverage) {
     repository.saveAdultCoverage(adultCoverage);
   }
+
+  public VaccinationAdultCoverage getAdultCoverageBy(Long facilityVisitId) {
+    return repository.getAdultCoverageBy(facilityVisitId);
+  }
 }

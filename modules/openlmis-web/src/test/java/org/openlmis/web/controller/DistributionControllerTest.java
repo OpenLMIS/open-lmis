@@ -141,7 +141,7 @@ public class DistributionControllerTest {
     distribution.setId(1L);
     FacilityDistributionDTO facilityDistributionDTO = spy(new FacilityDistributionDTO());
     facilityDistributionDTO.setFacilityVisit(new FacilityVisit());
-    FacilityDistribution facilityDistributionData = new FacilityDistribution(null, null, new DistributionRefrigerators(EMPTY_LIST), null, null, null);
+    FacilityDistribution facilityDistributionData = new FacilityDistribution(null, null, new DistributionRefrigerators(EMPTY_LIST), null, null, null, null);
 
     FacilityDistribution syncedFacilityDistribution = new FacilityDistribution();
     FacilityVisit syncedFacilityVisit = new FacilityVisit();

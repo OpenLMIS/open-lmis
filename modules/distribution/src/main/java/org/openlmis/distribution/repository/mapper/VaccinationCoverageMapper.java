@@ -65,4 +65,7 @@ public interface VaccinationCoverageMapper {
     "VALUES (#{facilityVisitId}, #{targetGroup}, #{targetGroupEntity}, #{createdBy}, #{modifiedBy})"})
   @Options(useGeneratedKeys = true)
   void insertAdultCoverageLineItem(AdultCoverageLineItem lineItem);
+
+  @Select({"SELECT * FROM vaccination_adult_coverage_line_items WHERE facilityVisitId = #{facilityVisitId}"})
+  List<AdultCoverageLineItem> getAdultCoverageLineItemsBy(Long facilityVisitId);
 }

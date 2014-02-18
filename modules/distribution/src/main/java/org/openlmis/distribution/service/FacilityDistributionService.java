@@ -161,8 +161,10 @@ public class FacilityDistributionService {
     EpiInventory epiInventory = epiInventoryService.getBy(facilityVisit.getId());
     VaccinationFullCoverage coverage = vaccinationCoverageService.getFullCoverageBy(facilityVisit.getId());
     VaccinationChildCoverage childCoverage = vaccinationCoverageService.getChildCoverageBy(facilityVisit.getId());
+    VaccinationAdultCoverage adultCoverage = vaccinationCoverageService.getAdultCoverageBy(facilityVisit.getId());
 
-    FacilityDistribution facilityDistribution = new FacilityDistribution(facilityVisit, epiUse, distributionRefrigerators, epiInventory, coverage, childCoverage);
+    FacilityDistribution facilityDistribution = new FacilityDistribution(facilityVisit, epiUse, distributionRefrigerators, epiInventory, coverage,
+      childCoverage, adultCoverage);
     facilityDistribution.setFacility(facility);
     return facilityDistribution;
   }

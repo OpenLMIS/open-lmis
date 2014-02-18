@@ -36,7 +36,7 @@ public class FacilityDistributionDTO {
 
   public FacilityDistribution transform() {
     return new FacilityDistribution(facilityVisit, epiUse.transform(), refrigerators.transform(),
-      epiInventory.transform(), fullCoverage.transform(), childCoverage.transform());
+      epiInventory.transform(), fullCoverage.transform(), childCoverage.transform(), null);
   }
 
   public void setDistributionId(Long distributionId) {

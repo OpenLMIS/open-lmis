@@ -57,13 +57,15 @@ public class FacilityDistribution {
     this.adultCoverage = new VaccinationAdultCoverage(facilityVisit, facility, adultTargetGroupProducts);
   }
 
-  public FacilityDistribution(FacilityVisit facilityVisit, EpiUse epiUse, DistributionRefrigerators refrigerators, EpiInventory epiInventory, VaccinationFullCoverage fullCoverage, VaccinationChildCoverage childCoverage) {
+  public FacilityDistribution(FacilityVisit facilityVisit, EpiUse epiUse, DistributionRefrigerators refrigerators, EpiInventory epiInventory,
+                              VaccinationFullCoverage fullCoverage, VaccinationChildCoverage childCoverage,  VaccinationAdultCoverage adultCoverage) {
     this.facilityVisit = facilityVisit;
     this.epiUse = epiUse;
     this.refrigerators = refrigerators;
     this.epiInventory = epiInventory;
     this.fullCoverage = fullCoverage;
     this.childCoverage = childCoverage;
+    this.adultCoverage = adultCoverage;
   }
 
   public void setFacility(Facility facility) {
