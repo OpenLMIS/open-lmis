@@ -595,13 +595,13 @@ public class ChildCoveragePage extends DistributionTab {
   }
 
   public void enterOpenedVialsData() {
-    enterOpenedVialsCountForGivenGroupAndRow(1, 1, "111");
-    enterOpenedVialsCountForGivenGroupAndRow(2, 1, "21");
-    enterOpenedVialsCountForGivenGroupAndRow(2, 2, "22");
-    enterOpenedVialsCountForGivenGroupAndRow(6, 1, "61");
-    enterOpenedVialsCountForGivenGroupAndRow(6, 2, "62");
-    enterOpenedVialsCountForGivenGroupAndRow(9, 1, "91");
-    enterOpenedVialsCountForGivenGroupAndRow(12, 1, "12");
+    enterOpenedVialsCountForGivenGroupAndRow(1, 1, "100");
+    enterOpenedVialsCountForGivenGroupAndRow(2, 1, "200");
+    enterOpenedVialsCountForGivenGroupAndRow(2, 2, "300");
+    enterOpenedVialsCountForGivenGroupAndRow(6, 1, "400");
+    enterOpenedVialsCountForGivenGroupAndRow(6, 2, "500");
+    enterOpenedVialsCountForGivenGroupAndRow(9, 1, "600");
+    enterOpenedVialsCountForGivenGroupAndRow(12, 1, "700");
   }
 
   public void enterAllChildCoverageValues() {

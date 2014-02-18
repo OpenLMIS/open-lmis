@@ -100,7 +100,11 @@ public class DistributionChildCoverageSyncTest extends TestCaseHelper {
     assertEquals(childCoveragePage.getTextOfTargetGroupValue(1), "");
     assertEquals(childCoveragePage.getTextOfTargetGroupValue(12), "");
 
-    ResultSet childCoverageDetails = dbWrapper.getChildCoverageDetails(childCoveragePage.getTextOfRegimenPCV10Dose1(), "F10");
+    String facilityId = dbWrapper.getAttributeFromTable("facilities", "id", "code", "F10");
+    String facilityVisitId = dbWrapper.getAttributeFromTable("facility_visits", "id", "facilityId", facilityId);
+
+    ResultSet childCoverageDetails = dbWrapper.getChildCoverageDetails(childCoveragePage.getTextOfRegimenPCV10Dose1(),facilityVisitId);
+
     assertEquals("300", childCoverageDetails.getInt("targetGroup"));
 
     assertEquals("0", childCoveragePage.getCoverageRateForGivenRow(9));
@@ -534,7 +538,7 @@ public class DistributionChildCoverageSyncTest extends TestCaseHelper {
   }
 
   @Test(groups = {"distribution"})
-  public void testShouldVerifyApplyNRToAll() {
+  public void testShouldVerifyApplyNRToAllAndSync() throws SQLException {
     HomePage homePage = loginPage.loginAs(childCoverageData.get(USER), childCoverageData.get(PASSWORD));
     DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
     distributionPage.initiate(childCoverageData.get(FIRST_DELIVERY_ZONE_NAME), childCoverageData.get(VACCINES_PROGRAM));
@@ -582,6 +586,111 @@ public class DistributionChildCoverageSyncTest extends TestCaseHelper {
 
     assertTrue(childCoveragePage.isOpenVialEnabled(2, 1));
     assertFalse(childCoveragePage.isOpenVialEnabled(1, 1));
+
+    childCoveragePage.applyNRToAll();
+    childCoveragePage.clickOK();
+
+    childCoveragePage.navigateToVisitInformation();
+    visitInformationPage.selectFacilityVisitedNo();
+    visitInformationPage.selectReasonNoTransport();
+
+    FullCoveragePage fullCoveragePage = visitInformationPage.navigateToFullCoverage();
+    fullCoveragePage.clickApplyNRToAll();
+
+    facilityListPage.verifyIndividualFacilityIndicatorColor("F10", "GREEN");
+    distributionPage = homePage.navigateToDistributionWhenOnline();
+    distributionPage.syncDistribution(1);
+    assertTrue(distributionPage.getSyncMessage().contains("F10-Village Dispensary"));
+    distributionPage.syncDistributionMessageDone();
+
+    String facilityId = dbWrapper.getAttributeFromTable("facilities", "id", "code", "F10");
+    String facilityVisitId = dbWrapper.getAttributeFromTable("facility_visits", "id", "facilityId", facilityId);
+    List<String> vaccinations = asList("BCG", "Polio (Newborn)", "Polio 1st dose", "Polio 2nd dose", "Polio 3rd dose", "Penta 1st dose", "Penta 2nd dose", "Penta 3rd dose", "PCV10 1st dose", "PCV10 2nd dose", "PCV10 3rd dose", "Measles");
+
+    for (int i = 1; i <= 12; i++) {
+      ResultSet childCoverageDetails = dbWrapper.getChildCoverageDetails(vaccinations.get(i - 1), facilityVisitId);
+      assertEqualsAndNulls(childCoverageDetails.getString("healthCenter11months"), "null");
+      assertEqualsAndNulls(childCoverageDetails.getString("outreach11months"), "null");
+      if (i != 2) {
+        assertEqualsAndNulls(childCoverageDetails.getString("healthCenter23months"), "null");
+        assertEqualsAndNulls(childCoverageDetails.getString("outreach23months"), "null");
+      }
+    }
+    List<String> openedVials = asList("BCG", "Polio10", "Polio20", "Penta1", "Penta10", "PCV", "Measles");
+    for (int i = 1; i <= 7; i++) {
+      ResultSet openedVialLineItem = dbWrapper.getOpenedVialLineItem(openedVials.get(i - 1), facilityVisitId);
+      assertEqualsAndNulls(openedVialLineItem.getString("openedVials"), "null");
+    }
+  }
+
+  @Test(groups = {"distribution"})
+  public void testShouldVerifyApplyNRToSomeFieldsAndSync() throws SQLException {
+    HomePage homePage = loginPage.loginAs(childCoverageData.get(USER), childCoverageData.get(PASSWORD));
+    DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
+    distributionPage.initiate(childCoverageData.get(FIRST_DELIVERY_ZONE_NAME), childCoverageData.get(VACCINES_PROGRAM));
+    FacilityListPage facilityListPage = distributionPage.clickRecordData(1);
+    VisitInformationPage visitInformationPage = facilityListPage.selectFacility(childCoverageData.get(FIRST_FACILITY_CODE));
+    ChildCoveragePage childCoveragePage = visitInformationPage.navigateToChildCoverage();
+
+    childCoveragePage.applyNRToAll();
+    childCoveragePage.clickOK();
+    childCoveragePage.applyNRToHealthCenter11MonthsForGivenRow(1);
+    childCoveragePage.applyNRToOutreach11MonthsForGivenRow(2);
+    childCoveragePage.applyNRToHealthCenter23MonthsForGivenRow(11);
+    childCoveragePage.applyNRToOutreach23MonthsDataForGivenRow(12);
+    childCoveragePage.enterHealthCenter11MonthsDataForGivenRow(1, "9");
+    childCoveragePage.enterOutreach11MonthsDataForGivenRow(2, "23");
+    childCoveragePage.enterHealthCenter23MonthsDataForGivenRow(11, "1234567");
+    childCoveragePage.enterOutreach23MonthsDataForGivenRow(12, "7654321");
+
+    childCoveragePage.applyNrToBcgOpenedVials();
+    childCoveragePage.enterOpenedVialsCountForGivenGroupAndRow(1, 1, "1234567");
+
+    childCoveragePage.navigateToVisitInformation();
+    visitInformationPage.selectFacilityVisitedNo();
+    visitInformationPage.selectReasonNoTransport();
+
+    FullCoveragePage fullCoveragePage = visitInformationPage.navigateToFullCoverage();
+    fullCoveragePage.clickApplyNRToAll();
+
+    facilityListPage.verifyIndividualFacilityIndicatorColor("F10", "GREEN");
+    distributionPage = homePage.navigateToDistributionWhenOnline();
+    distributionPage.syncDistribution(1);
+    assertTrue(distributionPage.getSyncMessage().contains("F10-Village Dispensary"));
+    distributionPage.syncDistributionMessageDone();
+
+    String facilityId = dbWrapper.getAttributeFromTable("facilities", "id", "code", "F10");
+    String facilityVisitId = dbWrapper.getAttributeFromTable("facility_visits", "id", "facilityId", facilityId);
+
+    ResultSet childCoverageDetails = dbWrapper.getChildCoverageDetails("BCG", facilityVisitId);
+    assertEqualsAndNulls(childCoverageDetails.getString("healthcenter11months"), "9");
+    assertEqualsAndNulls(childCoverageDetails.getString("outreach11months"), "null");
+    assertEqualsAndNulls(childCoverageDetails.getString("healthcenter23months"), "null");
+    assertEqualsAndNulls(childCoverageDetails.getString("outreach23months"), "null");
+
+    childCoverageDetails = dbWrapper.getChildCoverageDetails("Polio (Newborn)", facilityVisitId);
+    assertEqualsAndNulls(childCoverageDetails.getString("healthcenter11months"), "null");
+    assertEqualsAndNulls(childCoverageDetails.getString("outreach11months"), "23");
+    assertEqualsAndNulls(childCoverageDetails.getString("healthcenter23months"), "null");
+    assertEqualsAndNulls(childCoverageDetails.getString("outreach23months"), "null");
+
+    childCoverageDetails = dbWrapper.getChildCoverageDetails("PCV10 3rd dose", facilityVisitId);
+    assertEqualsAndNulls(childCoverageDetails.getString("healthcenter11months"), "null");
+    assertEqualsAndNulls(childCoverageDetails.getString("outreach11months"), "null");
+    assertEqualsAndNulls(childCoverageDetails.getString("healthcenter23months"), "1234567");
+    assertEqualsAndNulls(childCoverageDetails.getString("outreach23months"), "null");
+
+    childCoverageDetails = dbWrapper.getChildCoverageDetails("Measles", facilityVisitId);
+    assertEqualsAndNulls(childCoverageDetails.getString("healthcenter11months"), "null");
+    assertEqualsAndNulls(childCoverageDetails.getString("outreach11months"), "null");
+    assertEqualsAndNulls(childCoverageDetails.getString("healthcenter23months"), "null");
+    assertEqualsAndNulls(childCoverageDetails.getString("outreach23months"), "7654321");
+
+    ResultSet openedVialLineItem = dbWrapper.getOpenedVialLineItem("BCG", facilityVisitId);
+    assertEquals(openedVialLineItem.getString("openedVials"),"1234567");
+
+    openedVialLineItem = dbWrapper.getOpenedVialLineItem("Measles", facilityVisitId);
+    assertEqualsAndNulls(openedVialLineItem.getString("openedVials"),"null");
   }
 
   @Test(groups = {"distribution"})
@@ -615,8 +724,27 @@ public class DistributionChildCoverageSyncTest extends TestCaseHelper {
     assertTrue(distributionPage.getSyncMessage().contains("F10-Village Dispensary"));
     distributionPage.syncDistributionMessageDone();
 
-    ResultSet childCoverageDetails = dbWrapper.getChildCoverageDetails(dbWrapper.getAttributeFromTable("coverage_vaccination_products", "vaccination", "id", "9"), "F10");
+    String facilityId = dbWrapper.getAttributeFromTable("facilities", "id", "code", "F10");
+    String facilityVisitId = dbWrapper.getAttributeFromTable("facility_visits", "id", "facilityId", facilityId);
 
+    List<String> vaccinations = asList("BCG", "Polio (Newborn)", "Polio 1st dose", "Polio 2nd dose", "Polio 3rd dose", "Penta 1st dose", "Penta 2nd dose", "Penta 3rd dose", "PCV10 1st dose", "PCV10 2nd dose", "PCV10 3rd dose", "Measles");
+
+    for (int i = 1; i <= 12; i++) {
+      ResultSet childCoverageDetails = dbWrapper.getChildCoverageDetails(vaccinations.get(i - 1), facilityVisitId);
+
+      assertEquals(childCoverageDetails.getString("healthCenter11months"), String.valueOf(i));
+      assertEquals(childCoverageDetails.getString("outreach11months"), String.valueOf(i + 10));
+      if (i != 2) {
+        assertEquals(childCoverageDetails.getString("healthCenter23months"), String.valueOf(i + 100));
+        assertEquals(childCoverageDetails.getString("outreach23months"), String.valueOf(i + 11));
+      }
+    }
+
+    List<String> openedVials = asList("BCG", "Polio10", "Polio20", "Penta1", "Penta10", "PCV", "Measles");
+    for (int i = 1; i <= 7; i++) {
+      ResultSet openedVialLineItem = dbWrapper.getOpenedVialLineItem(openedVials.get(i - 1), facilityVisitId);
+      assertEquals(openedVialLineItem.getString("openedVials"), String.valueOf(i * 100));
+    }
   }
 
 
