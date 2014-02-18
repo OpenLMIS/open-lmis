@@ -100,11 +100,13 @@
                         </select>
                     </div>
                 </div>
+                <br/>
                 <div class="form-cell horizontalFilters" >
                     <label class="labels">Product</label>
 
                     <div class="form-field">
-                        <select ui-select2 style="width:200px;" name="product"  ng-model="productId" >
+                        <select ui-select2="{maximumSelectionSize : 4}" style="width:200px;" name="product" class="input-large"  ng-model="productId" openlmis-message="placeholder.select.product"
+                                multiple="multiple" >
                             <option  ng-repeat="option in products" value="{{ option.id }}">{{ option.name }}</option>
                         </select>
                     </div>

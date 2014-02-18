@@ -453,7 +453,7 @@ function AdminDashboardController($scope,ReportPrograms, ReportSchedules, Report
         }
     ];
      function getTooltip(label, xval, yval, flotItem){
-         return flotItem.series.xaxis.ticks[xval].label+' '+label+' '+xval+' '+yval+' '+flotItem.series.xaxis.ticks[xval].label;
+         return flotItem.series.xaxis.ticks[xval].label+' '+label+' '+' '+yval+'%';
      }
     /* End Custom Bar Chart */
 
