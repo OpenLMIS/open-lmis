@@ -21,6 +21,7 @@ import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.domain.RnrLineItem;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import static org.apache.commons.collections.CollectionUtils.find;
@@ -35,6 +36,9 @@ public class OrderPOD extends BaseModel {
   private Long programId;
   private Long periodId;
   private List<OrderPODLineItem> podLineItems;
+  private String deliveredBy;
+  private String acceptedBy;
+  private Date receivedDate;
 
   public OrderPOD(Long id) {
     this.id = id;

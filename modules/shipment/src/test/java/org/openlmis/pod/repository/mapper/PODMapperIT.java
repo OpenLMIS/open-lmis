@@ -25,6 +25,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -65,6 +66,10 @@ public class PODMapperIT extends ApplicationTestContext {
   public void shouldInsertPOD() {
     OrderPOD orderPod = new OrderPOD();
     orderPod.setOrderId(order.getId());
+    orderPod.setDeliveredBy("deliveredBy");
+    orderPod.setAcceptedBy("acceptedBy");
+    Date receivedDate = new Date();
+    orderPod.setReceivedDate(receivedDate);
     Rnr rnr = order.getRnr();
     orderPod.fillPOD(rnr);
     mapper.insertPOD(orderPod);
@@ -75,6 +80,9 @@ public class PODMapperIT extends ApplicationTestContext {
     assertThat(savedOrderPod.getFacilityId(), is(rnr.getFacility().getId()));
     assertThat(savedOrderPod.getProgramId(), is(rnr.getProgram().getId()));
     assertThat(savedOrderPod.getPeriodId(), is(rnr.getPeriod().getId()));
+    assertThat(savedOrderPod.getDeliveredBy(), is("deliveredBy"));
+    assertThat(savedOrderPod.getAcceptedBy(), is("acceptedBy"));
+    assertThat(savedOrderPod.getReceivedDate(), is(receivedDate));
   }
 
   @Test
@@ -201,10 +209,17 @@ public class PODMapperIT extends ApplicationTestContext {
     mapper.insertPOD(orderPod);
 
     orderPod.setModifiedBy(modifiedBy);
+    orderPod.setAcceptedBy("acceptedBy");
+    orderPod.setDeliveredBy("deliveredBy");
+    Date receivedDate = new Date();
+    orderPod.setReceivedDate(receivedDate);
     mapper.update(orderPod);
 
     OrderPOD updatedPOD = mapper.getPODById(orderPod.getId());
     assertThat(updatedPOD.getModifiedBy(), is(modifiedBy));
+    assertThat(updatedPOD.getReceivedDate(), is(receivedDate));
+    assertThat(updatedPOD.getAcceptedBy(), is("acceptedBy"));
+    assertThat(updatedPOD.getDeliveredBy(), is("deliveredBy"));
   }
 
   @Test

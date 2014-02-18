@@ -36,8 +36,8 @@ public interface PODMapper {
   List<OrderPODLineItem> getPODLineItemsByPODId(Long podId);
 
   @Insert(
-    {"INSERT INTO pod (orderId, facilityId, programId, periodId, receivedDate, createdBy, modifiedBy) VALUES ",
-      "(#{orderId}, #{facilityId}, #{programId}, #{periodId}, DEFAULT, #{createdBy}, #{modifiedBy} )"})
+    {"INSERT INTO pod (orderId, facilityId, programId, periodId, receivedDate, deliveredBy, acceptedBy, createdBy, modifiedBy) VALUES ",
+      "(#{orderId}, #{facilityId}, #{programId}, #{periodId}, #{receivedDate}, #{deliveredBy}, #{acceptedBy}, #{createdBy}, #{modifiedBy} )"})
   @Options(useGeneratedKeys = true)
   void insertPOD(OrderPOD orderPod);
 
@@ -65,7 +65,8 @@ public interface PODMapper {
     many = @Many(select = "org.openlmis.pod.repository.mapper.PODMapper.getPODLineItemsByPODId")),})
   OrderPOD getPODByOrderId(Long orderId);
 
-  @Update({"UPDATE pod SET modifiedBy = #{modifiedBy}, modifiedDate = DEFAULT WHERE id = #{id}"})
+  @Update({"UPDATE pod SET modifiedBy = #{modifiedBy}, receivedDate = #{receivedDate}, acceptedBy = #{acceptedBy},",
+    " deliveredBy = #{deliveredBy}, modifiedDate = DEFAULT WHERE id = #{id}"})
   void update(OrderPOD orderPOD);
 
   @Update({"UPDATE pod_line_items SET quantityReceived = #{quantityReceived}, quantityReturned = #{quantityReturned}, ",
