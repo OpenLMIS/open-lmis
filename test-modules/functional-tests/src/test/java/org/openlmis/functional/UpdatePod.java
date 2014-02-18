@@ -12,7 +12,6 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import java.io.IOException;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -71,24 +70,24 @@ public class UpdatePod extends TestCaseHelper {
     verifyValuesOfPodTableOnUpdatePODScreen(1, "P10", "antibiotic Capsule 300/200/600 mg", "100", "Strip", "");
     assertEquals("", updatePodPage.getQuantityReceived(1));
     assertEquals("", updatePodPage.getNotes(1));
-    verifyPodDataInDatabase(null, null, "P10");
+    verifyPodDataInDatabase(null, null, "P10", null);
     assertTrue(updatePodPage.isFullSupplyTickIconDisplayed(1));
     verifyRequisitionTypeAndColor("regular");
 
-    updatePodPage.enterPodData("200", "openlmis open source logistic management system", 1);
+    updatePodPage.enterPodData("200", "openlmis open source logistic management system", null, 1);
     updatePodPage.clickSave();
     assertTrue(updatePodPage.isPodSuccessMessageDisplayed());
     testWebDriver.refresh();
     updatePodPage.verifyQuantityReceivedAndNotes("200", "openlmis open source logistic management system", 1);
-    verifyPodDataInDatabase("200", "openlmis open source logistic management system", "P10");
+    verifyPodDataInDatabase("200", "openlmis open source logistic management system", "P10", null);
 
-    updatePodPage.enterPodData("990", "openlmis project", 1);
+    updatePodPage.enterPodData("990", "openlmis project", "90", 1);
     updatePodPage.clickSave();
     assertTrue(updatePodPage.isPodSuccessMessageDisplayed());
     testWebDriver.refresh();
 
     updatePodPage.verifyQuantityReceivedAndNotes("990", "openlmis project", 1);
-    verifyPodDataInDatabase("990", "openlmis project", "P10");
+    verifyPodDataInDatabase("990", "openlmis project", "P10", "90");
   }
 
   @Test(groups = {"requisition"})
@@ -207,16 +206,16 @@ public class UpdatePod extends TestCaseHelper {
     managePodPage.selectRequisitionToUpdatePod(1);
 
     verifyValuesOfPodTableOnUpdatePODScreen(1, "P10", "antibiotic Capsule 300/200/600 mg", "0", "Strip", "0");
-    updatePodPage.enterPodData("45", "Some notes", 1);
+    updatePodPage.enterPodData("45", "Some notes", null, 1);
     updatePodPage.clickSubmitButton();
     updatePodPage.clickOkButton();
-    verifyPodDataInDatabase("45", "Some notes", "P10");
+    verifyPodDataInDatabase("45", "Some notes", "P10", null);
   }
 
   @And("^I enter \"([^\"]*)\" as quantity received and \"([^\"]*)\" as notes in row \"([^\"]*)\"$")
   public void enterPodDetails(String quantityReceived, String notes, String rowNumber) {
     UpdatePodPage updatePodPage = PageFactory.getInstanceOfUpdatePodPage(testWebDriver);
-    updatePodPage.enterPodData(quantityReceived, notes, Integer.parseInt(rowNumber));
+    updatePodPage.enterPodData(quantityReceived, notes, null, Integer.parseInt(rowNumber));
   }
 
   @And("^I submit POD$")
@@ -253,7 +252,7 @@ public class UpdatePod extends TestCaseHelper {
 
   @And("^I verify in database quantity received as \"([^\"]*)\" and notes as \"([^\"]*)\"$")
   public void verifyPodDataSavedInDatabase(String quantityReceived, String notes) throws SQLException {
-    verifyPodDataInDatabase(quantityReceived, notes, "P10");
+    verifyPodDataInDatabase(quantityReceived, notes, "P10", null);
   }
 
   private void initiateRnrAndConvertToOrder(boolean isEmergencyRegular, int packsToShip) throws SQLException {
@@ -280,7 +279,8 @@ public class UpdatePod extends TestCaseHelper {
     assertEquals("Packs to Ship", testWebDriver.getElementByXpath("//table[@id='podTable']/thead/tr/th[5]/span").getText());
     assertEquals("Quantity Shipped", testWebDriver.getElementByXpath("//table[@id='podTable']/thead/tr/th[6]/span").getText());
     assertEquals("Quantity Received", testWebDriver.getElementByXpath("//table[@id='podTable']/thead/tr/th[7]/span").getText());
-    assertEquals("Notes", testWebDriver.getElementByXpath("//table[@id='podTable']/thead/tr/th[8]/span").getText());
+    assertEquals("Quantity Returned", testWebDriver.getElementByXpath("//table[@id='podTable']/thead/tr/th[8]/span").getText());
+    assertEquals("Notes", testWebDriver.getElementByXpath("//table[@id='podTable']/thead/tr/th[9]/span").getText());
   }
 
   private void verifyHeadersWithValuesOnUpdatePODScreen() throws SQLException {

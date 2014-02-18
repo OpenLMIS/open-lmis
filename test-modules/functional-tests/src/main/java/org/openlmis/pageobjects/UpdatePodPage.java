@@ -297,14 +297,31 @@ public class UpdatePodPage extends Page {
     return podSuccessMsg.isDisplayed();
   }
 
-  public void enterPodData(String quantityReceived, String notes, int rowNumber) {
+  public void enterPodData(String quantityReceived, String notes, String quantityReturned, int rowNumber) {
     setQuantityReceived(rowNumber, quantityReceived);
     setNotes(rowNumber, notes);
+    setQuantityReturned(rowNumber, quantityReturned);
+  }
+
+  public void setQuantityReturned(int rowNumber, String quantityReturned) {
+    WebElement elementQuantityReceived = testWebDriver.findElement(By.id("quantityReturned" + (rowNumber - 1)));
+    elementQuantityReceived.clear();
+    elementQuantityReceived.sendKeys(quantityReturned);
   }
 
   public void verifyQuantityReceivedAndNotes(String quantityReceived, String notes, Integer rowNumber) {
     assertEquals(quantityReceived, getQuantityReceived(rowNumber));
     assertEquals(notes, getNotes(rowNumber));
+  }
+
+  public void verifyQuantityReturnedOnUI(String quantityReturned, Integer rowNumber) {
+    assertEquals(quantityReturned, getQuantityReturned(rowNumber));
+  }
+
+  public String getQuantityReturned(int rowNumber) {
+    WebElement quantityReturned = testWebDriver.getElementById("quantityReturned" + (rowNumber - 1));
+    testWebDriver.scrollToElement(quantityReturned);
+    return quantityReturned.getAttribute("value");
   }
 
   public void clickSubmitButton() {

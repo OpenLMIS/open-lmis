@@ -17,7 +17,6 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import java.io.IOException;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
@@ -190,10 +189,12 @@ public class PODPagination extends TestCaseHelper {
   }
 
   @Test(groups = {"requisition"})
-  public void testRnRPaginationAndDefaultDisplayOrderForPackedOrders() throws SQLException {
+  public void testRnRPaginationAndDefaultDisplayOrderForPackedOrdersAndSave() throws SQLException {
     dbWrapper.setupMultipleProducts(podPaginationData.get(PROGRAM), "Lvl3 Hospital", 11, true);
     dbWrapper.insertRequisitionWithMultipleLineItems(11, podPaginationData.get(PROGRAM), true, "F10", false);
     dbWrapper.convertRequisitionToOrder(dbWrapper.getMaxRnrID(), "READY_TO_PACK", podPaginationData.get(USER));
+    dbWrapper.insertOneProduct("ZX");
+    dbWrapper.insertOneProduct("ZX1");
 
     enterTestDataForShipment();
 
@@ -201,7 +202,7 @@ public class PODPagination extends TestCaseHelper {
     HomePage homePage = loginPage.loginAs(podPaginationData.get(USER), podPaginationData.get(PASSWORD));
     ManagePodPage managePodPage = homePage.navigateManagePOD();
     managePodPage.selectRequisitionToUpdatePod(1);
-    verifyNumberOFPageLinksDisplayed(20, 10);
+    verifyNumberOFPageLinksDisplayed(22, 10);
     verifyPageNumberLinksDisplayed();
     verifyPageNumberSelected(1);
     verifyNextAndLastPageLinksEnabled();
@@ -209,14 +210,16 @@ public class PODPagination extends TestCaseHelper {
     verifyNumberOfProductsVisibleOnPage(10);
     verifyProductDisplayOrderOnPage(new String[]{"F0", "F1", "F2", "F3", "F4", "F5", "F6", "F7", "F8", "F9"});
     verifyCategoryDisplayOrderOnPage(new String[]{"Antibiotic", "", "", "", "", "", "", "", "", ""});
-    updatePodPage.enterPodData("110", "openlmis openlmis", 1);
+    updatePodPage.enterPodData("110", "openlmis openlmis", null, 1);
+    updatePodPage.clickSave();
+    assertTrue(updatePodPage.isPodSuccessMessageDisplayed());
+    verifyPodDataInDatabase("110", "openlmis openlmis", "F0", null);
+    testWebDriver.refresh();
+    updatePodPage.enterPodData("200", "openlmis openlmis", "65", 5);
     updatePodPage.clickSave();
     assertTrue(updatePodPage.isPodSuccessMessageDisplayed());
     testWebDriver.refresh();
-    updatePodPage.enterPodData("200", "openlmis openlmis", 5);
-    updatePodPage.clickSave();
-    assertTrue(updatePodPage.isPodSuccessMessageDisplayed());
-    testWebDriver.refresh();
+    verifyPodDataInDatabase("200", "openlmis openlmis", "F4", "65");
 
     navigateToPage(2);
     verifyPageNumberSelected(2);
@@ -224,34 +227,48 @@ public class PODPagination extends TestCaseHelper {
     verifyNumberOfProductsVisibleOnPage(10);
     verifyProductDisplayOrderOnPage(new String[]{"NF0", "NF1", "NF2", "NF3", "NF4", "NF5", "NF6", "NF7", "NF8", "NF9"});
     verifyCategoryDisplayOrderOnPage(new String[]{"Antibiotic", "", "", "", "", "", "", "", "", ""});
-    updatePodPage.enterPodData("10", "openlmis", 1);
+    updatePodPage.enterPodData("10", "openlmis", "7", 1);
     updatePodPage.clickSave();
     assertTrue(updatePodPage.isPodSuccessMessageDisplayed());
     testWebDriver.refresh();
-    updatePodPage.enterPodData("11", "openlmis openlmis project", 10);
-    updatePodPage.clickSave();
-    assertTrue(updatePodPage.isPodSuccessMessageDisplayed());
-    testWebDriver.refresh();
+    updatePodPage.enterPodData("5", "openlmis openlmis", null, 1);
+    updatePodPage.enterPodData("11", "openlmis openlmis project", "99999999", 10);
+
+    updatePodPage.navigateToLastPage();
+    verifyPageNumberSelected(3);
+    verifyNextAndLastPageLinksDisabled();
+    verifyFirstAndPreviousPageLinksEnabled();
+    verifyNumberOfProductsVisibleOnPage(2);
+    updatePodPage.verifyQuantityReturnedOnUI("", 1);
+    updatePodPage.enterPodData("11", "some notes", "99999999", 1);
+    updatePodPage.enterPodData("110", "Notes", null, 2);
 
     updatePodPage.navigateToFirstPage();
-    updatePodPage.verifyQuantityReceivedAndNotes("110", "openlmis openlmis", 1);
-    verifyPodDataInDatabase("110", "openlmis openlmis", "F0");
-    updatePodPage.verifyQuantityReceivedAndNotes("200", "openlmis openlmis", 5);
-    verifyPodDataInDatabase("200", "openlmis openlmis", "F4");
-
     verifyPageNumberSelected(1);
     verifyNextAndLastPageLinksEnabled();
     verifyFirstAndPreviousPageLinksDisabled();
     verifyNumberOfProductsVisibleOnPage(10);
+    updatePodPage.verifyQuantityReturnedOnUI("", 10);
+
+    verifyPodDataInDatabase("11", "some notes", "ZX", "99999999");
+    verifyPodDataInDatabase("110", "Notes", "ZX1", null);
+
+    verifyPodDataInDatabase("5", "openlmis openlmis", "NF0", null);
+    updatePodPage.verifyQuantityReceivedAndNotes("110", "openlmis openlmis", 1);
+    verifyPodDataInDatabase("110", "openlmis openlmis", "F0", null);
+    updatePodPage.verifyQuantityReceivedAndNotes("200", "openlmis openlmis", 5);
+    verifyPodDataInDatabase("200", "openlmis openlmis", "F4", "65");
 
     homePage.navigateHomePage();
     homePage.navigateManagePOD();
     managePodPage.selectRequisitionToUpdatePod(1);
     navigateToPage(2);
-    updatePodPage.verifyQuantityReceivedAndNotes("10", "openlmis", 1);
-    verifyPodDataInDatabase("10", "openlmis", "NF0");
+    updatePodPage.verifyQuantityReceivedAndNotes("5", "openlmis openlmis", 1);
+    updatePodPage.verifyQuantityReturnedOnUI("", 1);
+    updatePodPage.verifyQuantityReturnedOnUI("99999999", 10);
+    verifyPodDataInDatabase("5", "openlmis openlmis", "NF0", null);
     updatePodPage.verifyQuantityReceivedAndNotes("11", "openlmis openlmis project", 10);
-    verifyPodDataInDatabase("11", "openlmis openlmis project", "NF9");
+    verifyPodDataInDatabase("11", "openlmis openlmis project", "NF9", "99999999");
   }
 
   @Test(groups = {"requisition"})
@@ -266,17 +283,17 @@ public class PODPagination extends TestCaseHelper {
     managePodPage.selectRequisitionToUpdatePod(1);
 
     for (int i = 1; i <= 10; i++) {
-      updatePodPage.enterPodData("1" + i, "notes", i);
+      updatePodPage.enterPodData("1" + i, "notes", null, i);
     }
 
     navigateToPage(2);
     for (int i = 1; i <= 10; i++) {
-      updatePodPage.enterPodData("2" + i, "notes", i);
+      updatePodPage.enterPodData("2" + i, "notes", "56", i);
     }
 
     navigateToPage(3);
-    updatePodPage.enterPodData("31", "notes", 1);
-    updatePodPage.enterPodData("32", "notes", 2);
+    updatePodPage.enterPodData("31", "notes", null, 1);
+    updatePodPage.enterPodData("32", "notes", null, 2);
 
     updatePodPage.clickSubmitButton();
     updatePodPage.clickCancelButton();
@@ -327,7 +344,7 @@ public class PODPagination extends TestCaseHelper {
     managePodPage.selectRequisitionToUpdatePod(1);
 
     for (int i = 1; i <= 10; i++) {
-      updatePodPage.enterPodData("1" + i, "notes", i);
+      updatePodPage.enterPodData("1" + i, "notes", null, i);
     }
 
     updatePodPage.clickSubmitButton();
@@ -348,13 +365,13 @@ public class PODPagination extends TestCaseHelper {
 
     verifyProductDisplayOrderOnPage(new String[]{"F5", "NF5", "F6", "NF6", "F7", "NF7", "F8", "NF8", "F9", "NF9"});
     for (int i = 1; i <= 10; i++) {
-      updatePodPage.enterPodData("2" + i, "notes", i);
+      updatePodPage.enterPodData("2" + i, "notes", null, i);
     }
 
     updatePodPage.clickPageErrorsMessage();
     updatePodPage.clickErrorPage(3);
-    updatePodPage.enterPodData("31", "", 1);
-    updatePodPage.enterPodData("32", "", 2);
+    updatePodPage.enterPodData("31", "", null, 1);
+    updatePodPage.enterPodData("32", "", null, 2);
 
     updatePodPage.clickSubmitButton();
     updatePodPage.clickOkButton();
@@ -375,6 +392,8 @@ public class PODPagination extends TestCaseHelper {
       testDataForShipment(0, true, "F" + i, i);
     for (Integer i = 0; i < 10; i++)
       testDataForShipment(0, true, "NF" + i, i);
+    testDataForShipment(0, false, "ZX", 78);
+    testDataForShipment(0, true, "ZX1", 78);
     dbWrapper.updateFieldValue("orders", "status", "PACKED", null, null);
   }
 

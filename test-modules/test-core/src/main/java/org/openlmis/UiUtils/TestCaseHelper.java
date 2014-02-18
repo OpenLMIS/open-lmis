@@ -605,11 +605,13 @@ public class TestCaseHelper {
     assertEquals(maleMobileBrigadeReading, fullCoveragesDetails.get("maleoutreach"));
   }
 
-  public void verifyPodDataInDatabase(String quantityReceived, String notes, String productCode) throws SQLException {
+  public void verifyPodDataInDatabase(String quantityReceived, String notes, String productCode, String quantityReturned) throws SQLException {
     Integer id = dbWrapper.getMaxRnrID();
     Map<String, String> podLineItemFor = dbWrapper.getPodLineItemFor(id, productCode);
     assertEquals(quantityReceived, podLineItemFor.get("quantityreceived"));
     assertEquals(notes, podLineItemFor.get("notes"));
+    assertEquals(quantityReturned, podLineItemFor.get("quantityreturned"));
+
   }
 
   public static Boolean parsePostgresBoolean(String value) {
