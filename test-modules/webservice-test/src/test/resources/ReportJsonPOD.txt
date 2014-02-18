@@ -2,7 +2,8 @@
     "podLineItems": [
         {
             "productCode": "",
-            "quantityReceived": ""
+            "quantityReceived": "",
+            "quantityReturned": ""
         }
     ]
 }
