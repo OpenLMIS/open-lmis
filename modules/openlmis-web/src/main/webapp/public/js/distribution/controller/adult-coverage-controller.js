@@ -11,5 +11,15 @@
 function AdultCoverageController($scope, $routeParams, distributionService) {
   $scope.distribution = distributionService.distribution;
   $scope.selectedFacilityId = $routeParams.facility;
+  $scope.adultCoverage = $scope.distribution.facilityDistributions[$scope.selectedFacilityId].adultCoverage;
 
+  var convertListToMap = function () {
+    var map = {};
+    $scope.adultCoverage.adultCoverageLineItems.forEach(function (lineItem) {
+      map[lineItem.targetGroupEntity] = lineItem;
+    });
+    return map;
+  };
+
+  $scope.adultCoverageMap = convertListToMap();
 }

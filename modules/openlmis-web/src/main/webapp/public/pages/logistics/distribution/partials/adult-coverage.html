@@ -29,10 +29,10 @@
 <tr>
   <th openlmis-message="label.adult.group.vaccinations" rowspan="2" colspan="2"></th>
   <th openlmis-message="label.coverage.target.Group" rowspan="2"></th>
-  <th colspan="3">Tetanus 1st dose</th>
-  <th colspan="3">Tetanus 2nd-5th dose</th>
+  <th colspan="3" openlmis-message="label.adult.tetanus.first"></th>
+  <th colspan="3" openlmis-message="label.adult.tetanus.second.fifth"></th>
   <th openlmis-message="label.total" rowspan="2"></th>
-  <th openlmis-message="label.total" rowspan="2"><span>&nbsp;Tetanus</span></th>
+  <th openlmis-message="label.total.tetanus" rowspan="2"></th>
   <th openlmis-message="label.coverage.rate" rowspan="2"></th>
   <th openlmis-message="label.coverage.opened.vials" rowspan="2"></th>
   <th openlmis-message="label.coverage.opened.vials.wastage.rate" rowspan="2"></th>
@@ -49,25 +49,25 @@
 <tbody>
 <tr>
   <td openlmis-message="label.coverage.pregnant.women" colspan="2"></td>
+  <td ng-bind="adultCoverageMap['Pregnant Women'].targetGroup"></td>
+  <td>
+    <input type="text"  maxlength="7" />
+    <input type="checkbox" not-recorded/>
+    <label class="checkbox-label" openlmis-message="label.not.recorded"></label>
+  </td>
+  <td>
+    <input type="text"  maxlength="7" />
+    <input type="checkbox" not-recorded/>
+    <label class="checkbox-label" openlmis-message="label.not.recorded"></label>
+  </td>
   <td></td>
   <td>
-    <input type="text" numeric-validator="positiveInteger" maxlength="7" ng-trim=false/>
+    <input type="text"  maxlength="7" />
     <input type="checkbox" not-recorded/>
     <label class="checkbox-label" openlmis-message="label.not.recorded"></label>
   </td>
   <td>
-    <input type="text" numeric-validator="positiveInteger" maxlength="7" ng-trim=false/>
-    <input type="checkbox" not-recorded/>
-    <label class="checkbox-label" openlmis-message="label.not.recorded"></label>
-  </td>
-  <td></td>
-  <td>
-    <input type="text" numeric-validator="positiveInteger" maxlength="7" ng-trim=false/>
-    <input type="checkbox" not-recorded/>
-    <label class="checkbox-label" openlmis-message="label.not.recorded"></label>
-  </td>
-  <td>
-    <input type="text" numeric-validator="positiveInteger" maxlength="7" ng-trim=false/>
+    <input type="text"  maxlength="7" />
     <input type="checkbox" not-recorded/>
     <label class="checkbox-label" openlmis-message="label.not.recorded"></label>
   </td>
@@ -76,7 +76,7 @@
   <td></td>
   <td></td>
   <td rowspan="7">
-    <input type="text" numeric-validator="positiveInteger" maxlength="7" ng-trim=false/>
+    <input type="text"  maxlength="7" />
     <input type="checkbox" not-recorded/>
     <label class="checkbox-label" openlmis-message="label.not.recorded"></label>
   </td>
@@ -85,25 +85,25 @@
 <tr>
   <td openlmis-message="label.coverage.mif" rowspan="3"></td>
   <td openlmis-message="label.coverage.community"></td>
+  <td ng-bind="adultCoverageMap['MIF 15-49 years - Community'].targetGroup"></td>
+  <td>
+    <input type="text"  maxlength="7" />
+    <input type="checkbox" not-recorded/>
+    <label class="checkbox-label" openlmis-message="label.not.recorded"></label>
+  </td>
+  <td>
+    <input type="text"  maxlength="7" />
+    <input type="checkbox" not-recorded/>
+    <label class="checkbox-label" openlmis-message="label.not.recorded"></label>
+  </td>
   <td></td>
   <td>
-    <input type="text" numeric-validator="positiveInteger" maxlength="7" ng-trim=false/>
+    <input type="text"  maxlength="7" />
     <input type="checkbox" not-recorded/>
     <label class="checkbox-label" openlmis-message="label.not.recorded"></label>
   </td>
   <td>
-    <input type="text" numeric-validator="positiveInteger" maxlength="7" ng-trim=false/>
-    <input type="checkbox" not-recorded/>
-    <label class="checkbox-label" openlmis-message="label.not.recorded"></label>
-  </td>
-  <td></td>
-  <td>
-    <input type="text" numeric-validator="positiveInteger" maxlength="7" ng-trim=false/>
-    <input type="checkbox" not-recorded/>
-    <label class="checkbox-label" openlmis-message="label.not.recorded"></label>
-  </td>
-  <td>
-    <input type="text" numeric-validator="positiveInteger" maxlength="7" ng-trim=false/>
+    <input type="text"  maxlength="7" />
     <input type="checkbox" not-recorded/>
     <label class="checkbox-label" openlmis-message="label.not.recorded"></label>
   </td>
@@ -115,17 +115,17 @@
 </tr>
 <tr>
   <td openlmis-message="label.coverage.students"></td>
-  <td></td>
+  <td ng-bind="adultCoverageMap['MIF 15-49 years - Students'].targetGroup"></td>
   <td></td>
   <td>
-    <input type="text" numeric-validator="positiveInteger" maxlength="7" ng-trim=false/>
+    <input type="text"  maxlength="7" />
     <input type="checkbox" not-recorded/>
     <label class="checkbox-label" openlmis-message="label.not.recorded"></label>
   </td>
   <td></td>
   <td></td>
   <td>
-    <input type="text" numeric-validator="positiveInteger" maxlength="7" ng-trim=false/>
+    <input type="text"  maxlength="7" />
     <input type="checkbox" not-recorded/>
     <label class="checkbox-label" openlmis-message="label.not.recorded"></label>
   </td>
@@ -137,17 +137,17 @@
 </tr>
 <tr>
   <td openlmis-message="label.coverage.workers"></td>
-  <td></td>
+  <td ng-bind="adultCoverageMap['MIF 15-49 years - Workers'].targetGroup"></td>
   <td></td>
   <td>
-    <input type="text" numeric-validator="positiveInteger" maxlength="7" ng-trim=false/>
+    <input type="text"  maxlength="7" />
     <input type="checkbox" not-recorded/>
     <label class="checkbox-label" openlmis-message="label.not.recorded"></label>
   </td>
   <td></td>
   <td></td>
   <td>
-    <input type="text" numeric-validator="positiveInteger" maxlength="7" ng-trim=false/>
+    <input type="text"  maxlength="7" />
     <input type="checkbox" not-recorded/>
     <label class="checkbox-label" openlmis-message="label.not.recorded"></label>
   </td>
@@ -159,17 +159,17 @@
 </tr>
 <tr>
   <td openlmis-message="label.coverage.students.not.mif" colspan="2"></td>
-  <td></td>
+  <td ng-bind="adultCoverageMap['Students not MIF'].targetGroup"></td>
   <td></td>
   <td>
-    <input type="text" numeric-validator="positiveInteger" maxlength="7" ng-trim=false/>
+    <input type="text"  maxlength="7" />
     <input type="checkbox" not-recorded/>
     <label class="checkbox-label" openlmis-message="label.not.recorded"></label>
   </td>
   <td></td>
   <td></td>
   <td>
-    <input type="text" numeric-validator="positiveInteger" maxlength="7" ng-trim=false/>
+    <input type="text"  maxlength="7" />
     <input type="checkbox" not-recorded/>
     <label class="checkbox-label" openlmis-message="label.not.recorded"></label>
   </td>
@@ -181,17 +181,17 @@
 </tr>
 <tr>
   <td openlmis-message="label.coverage.workers.not.mif" colspan="2"></td>
-  <td></td>
+  <td ng-bind="adultCoverageMap['Workers not MIF'].targetGroup"></td>
   <td></td>
   <td>
-    <input type="text" numeric-validator="positiveInteger" maxlength="7" ng-trim=false/>
+    <input type="text"  maxlength="7" />
     <input type="checkbox" not-recorded/>
     <label class="checkbox-label" openlmis-message="label.not.recorded"></label>
   </td>
   <td></td>
   <td></td>
   <td>
-    <input type="text" numeric-validator="positiveInteger" maxlength="7" ng-trim=false/>
+    <input type="text"  maxlength="7" />
     <input type="checkbox" not-recorded/>
     <label class="checkbox-label" openlmis-message="label.not.recorded"></label>
   </td>
@@ -203,25 +203,25 @@
 </tr>
 <tr>
   <td openlmis-message="label.coverage.other.not.mif" colspan="2"></td>
+  <td ng-bind="adultCoverageMap['Other not MIF'].targetGroup"></td>
+  <td>
+    <input type="text"  maxlength="7" />
+    <input type="checkbox" not-recorded/>
+    <label class="checkbox-label" openlmis-message="label.not.recorded"></label>
+  </td>
+  <td>
+    <input type="text"  maxlength="7" />
+    <input type="checkbox" not-recorded/>
+    <label class="checkbox-label" openlmis-message="label.not.recorded"></label>
+  </td>
   <td></td>
   <td>
-    <input type="text" numeric-validator="positiveInteger" maxlength="7" ng-trim=false/>
+    <input type="text"  maxlength="7" />
     <input type="checkbox" not-recorded/>
     <label class="checkbox-label" openlmis-message="label.not.recorded"></label>
   </td>
   <td>
-    <input type="text" numeric-validator="positiveInteger" maxlength="7" ng-trim=false/>
-    <input type="checkbox" not-recorded/>
-    <label class="checkbox-label" openlmis-message="label.not.recorded"></label>
-  </td>
-  <td></td>
-  <td>
-    <input type="text" numeric-validator="positiveInteger" maxlength="7" ng-trim=false/>
-    <input type="checkbox" not-recorded/>
-    <label class="checkbox-label" openlmis-message="label.not.recorded"></label>
-  </td>
-  <td>
-    <input type="text" numeric-validator="positiveInteger" maxlength="7" ng-trim=false/>
+    <input type="text"  maxlength="7" />
     <input type="checkbox" not-recorded/>
     <label class="checkbox-label" openlmis-message="label.not.recorded"></label>
   </td>

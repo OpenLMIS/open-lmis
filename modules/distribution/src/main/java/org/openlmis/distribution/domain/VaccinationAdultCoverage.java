@@ -24,7 +24,7 @@ public class VaccinationAdultCoverage extends VaccinationCoverage {
 
     List<String> validCategories = Collections.unmodifiableList(
       asList("Pregnant Women", "MIF 15-49 years - Community", "MIF 15-49 years - Students", "MIF 15-49 years - Workers",
-        "Students Not MIF", "Workers Not MIF", "Others Not MIF"));
+        "Students not MIF", "Workers not MIF", "Other not MIF"));
 
     createAdultCoverageLineItems(facilityVisit, facility, adultTargetGroupProducts, validCategories);
   }
