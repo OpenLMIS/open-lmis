@@ -17,12 +17,12 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.db.categories.UnitTests;
-import org.openlmis.distribution.domain.ChildCoverageLineItem;
-import org.openlmis.distribution.domain.OpenedVialLineItem;
-import org.openlmis.distribution.domain.VaccinationChildCoverage;
+import org.openlmis.distribution.domain.*;
 import org.openlmis.distribution.repository.mapper.VaccinationCoverageMapper;
 
 import static java.util.Arrays.asList;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -63,5 +63,13 @@ public class VaccinationCoverageRepositoryTest {
 
     verify(mapper).updateChildCoverageLineItem(childCoverageLineItem);
     verify(mapper).updateOpenedVialLineItem(openedVialLineItem);
+  }
+
+  @Test
+  public void shouldInsertAdultCoverageLineItems(){
+    VaccinationAdultCoverage adultCoverage = new VaccinationAdultCoverage(asList(new AdultCoverageLineItem(), new AdultCoverageLineItem()));
+    repository.saveAdultCoverage(adultCoverage);
+
+    verify(mapper, times(2)).insertAdultCoverageLineItem(any(AdultCoverageLineItem.class));
   }
 }

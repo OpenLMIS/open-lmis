@@ -106,6 +106,7 @@ public class FacilityDistributionService {
     epiUseService.save(facilityDistribution.getEpiUse());
     epiInventoryService.save(facilityDistribution.getEpiInventory());
     vaccinationCoverageService.saveChildCoverage(facilityDistribution.getChildCoverage());
+    vaccinationCoverageService.saveAdultCoverage(facilityDistribution.getAdultCoverage());
     return facilityDistribution;
   }
 

@@ -298,4 +298,20 @@ public class VaccinationCoverageMapperIT {
     assertThat(lineItem.getOpenedVials(), is(55));
     assertThat(lineItem.getModifiedBy(), is(123L));
   }
+
+  @Test
+  public void shouldInsertAdultCoverageLineItem() throws SQLException {
+
+    AdultCoverageLineItem lineItem = new AdultCoverageLineItem();
+    lineItem.setFacilityVisitId(facilityVisit.getId());
+    lineItem.setTargetGroup(45);
+    lineItem.setTargetGroupEntity("Pregnant Women");
+    mapper.insertAdultCoverageLineItem(lineItem);
+
+    ResultSet resultSet = queryExecutor.execute("SELECT * FROM vaccination_adult_coverage_line_items WHERE targetGroupEntity = 'Pregnant Women'");
+
+    assertTrue(resultSet.next());
+    assertThat(resultSet.getLong("id"), is(lineItem.getId()));
+    assertThat(resultSet.getLong("facilityVisitId"), is(lineItem.getFacilityVisitId()));
+  }
 }

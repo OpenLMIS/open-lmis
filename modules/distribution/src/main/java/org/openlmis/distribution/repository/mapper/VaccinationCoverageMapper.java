@@ -60,4 +60,9 @@ public interface VaccinationCoverageMapper {
 
   @Select({"SELECT * FROM opened_vial_line_items WHERE facilityVisitId = #{facilityVisitId}"})
   List<OpenedVialLineItem> getOpenedVialLineItemsBy(Long facilityVisitId);
+
+  @Insert({"INSERT INTO vaccination_adult_coverage_line_items (facilityVisitId, targetGroup, targetGroupEntity, createdBy, modifiedBy) " +
+    "VALUES (#{facilityVisitId}, #{targetGroup}, #{targetGroupEntity}, #{createdBy}, #{modifiedBy})"})
+  @Options(useGeneratedKeys = true)
+  void insertAdultCoverageLineItem(AdultCoverageLineItem lineItem);
 }

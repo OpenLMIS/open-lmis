@@ -47,4 +47,8 @@ public class VaccinationCoverageService {
   public List<ProductVial> getProductVials() {
     return repository.getProductVials();
   }
+
+  public void saveAdultCoverage(VaccinationAdultCoverage adultCoverage) {
+    repository.saveAdultCoverage(adultCoverage);
+  }
 }

@@ -35,6 +35,7 @@ public class CoverageLineItem extends BaseModel {
     this.targetGroup = targetGroupProduct != null ? calculateTargetGroup(facility.getWhoRatioFor(targetGroupProduct.getProductCode()),
       facility.getCatchmentPopulation()) : null;
     this.createdBy = facilityVisit.getCreatedBy();
+    this.modifiedBy = facilityVisit.getModifiedBy();
   }
 
   protected Integer calculateTargetGroup(Double whoRatio, Long catchmentPopulation) {

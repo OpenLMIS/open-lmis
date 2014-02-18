@@ -61,4 +61,11 @@ public class VaccinationCoverageRepository {
   public List<ProductVial> getProductVials() {
     return mapper.getProductVials();
   }
+
+  public void saveAdultCoverage(VaccinationAdultCoverage adultCoverage) {
+    for (AdultCoverageLineItem adultCoverageLineItem : adultCoverage.getAdultCoverageLineItems()) {
+      if (adultCoverageLineItem.getId() == null)
+        mapper.insertAdultCoverageLineItem(adultCoverageLineItem);
+    }
+  }
 }
