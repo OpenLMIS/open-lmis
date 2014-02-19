@@ -726,7 +726,6 @@ Feature: Smoke Tests
     When I try to sync recorded data
     Then I verify sync message as "No facility for the chosen zone, program and period is ready to be sync"
     When I record data for distribution "1"
-
     And I choose facility "F10"
     And I navigate to "refrigerator" tab
     When I edit refrigerator
@@ -735,7 +734,6 @@ Feature: Smoke Tests
     And I enter low alarm events "1"
     And I enter high alarm events "0"
     And I verify "No" that there is a problem with refrigerator since last visit
-
     And I navigate to "visit information" tab
     When I select "yes" facility visited
     And I select visit date as current date
@@ -751,8 +749,10 @@ Feature: Smoke Tests
 
     And I navigate to "child coverage" tab
     Then Verify "child coverage" indicator should be "RED"
-    And I apply NR to all fields on child coverage page
-
+    And I Enter "child coverage" values:
+      | healthCenter11 | outreach11 | healthCenter23 | outreach23 | openedVial |
+      | 123            | 22         | 23             | 34         | 4          |
+    Then Verify "child coverage" indicator should be "GREEN"
     And I navigate to "full coverage" tab
     And I Enter "full coverage" values:
       | femaleHealthCenter | femaleMobileBrigade | maleHealthCenter | maleMobileBrigade |
@@ -786,6 +786,9 @@ Feature: Smoke Tests
     And I view epi inventory readings in DB for facility "F10" for product "P11":
       | existingQuantity | deliveredQuantity | spoiledQuantity |
       | 10               | 50                | 3               |
+    And I view child coverage values in DB for facility "F10":
+      |healthCenter11 | outreach11 | total1 | coverageRate | healthCenter23 | outreach23 | total2 | total3 | openedVial |
+      |123            | 22         | 145    | 426          | 23             | 34         | 57     | 202    | 4          |
     And I verify no record present in refrigerator problem table for refrigerator serial number "GR-J287PGHV" and facility "F10"
     And I see distribution status as synced
     When I record data for distribution "1"
@@ -817,6 +820,8 @@ Feature: Smoke Tests
     And I navigate to "refrigerator" tab
     And I see "Overall" refrigerator icon as "RED"
     And I verify the refrigerator "LG;800 LITRES;GR-J287PGHV" present
+    When I navigate to "child coverage" tab
+    Then I see "child coverage" fields disabled
 
 
   @smokeDistribution
@@ -841,7 +846,10 @@ Feature: Smoke Tests
     And I see "F10" facility indicator icon as "AMBER"
     And I navigate to "child coverage" tab
     Then Verify "child coverage" indicator should be "RED"
-    And I apply NR to all fields on child coverage page
+    And I Enter "child coverage" values:
+      | healthCenter11 | outreach11 | healthCenter23 | outreach23 | openedVial |
+      | 123            | 22         | 23             | 34         | 4          |
+    Then Verify "child coverage" indicator should be "GREEN"
     Then I navigate to "epi use" tab
     And I Enter "epi use" values:
       | distributed | expirationDate | loss | received | firstOfMonth | endOfMonth |
@@ -890,6 +898,9 @@ Feature: Smoke Tests
     And I view epi inventory readings in DB for facility "F10" for product "P11":
       | existingQuantity | deliveredQuantity | spoiledQuantity |
       | null             | null              | null            |
+    And I view child coverage values in DB for facility "F10":
+      |healthCenter11 | outreach11 | total1 | coverageRate | healthCenter23 | outreach23 | total2 | total3 | openedVial |
+      |123            | 22         | 145    | 426          | 23             | 34         | 57     | 202    | 4          |
     And I see distribution status as synced
     When I record data for distribution "1"
     And I choose facility "F10"
@@ -902,3 +913,5 @@ Feature: Smoke Tests
     When I navigate to "refrigerator" tab
     And I access show
     Then I see "refrigerator" fields disabled
+    When I navigate to "child coverage" tab
+    Then I see "child coverage" fields disabled
