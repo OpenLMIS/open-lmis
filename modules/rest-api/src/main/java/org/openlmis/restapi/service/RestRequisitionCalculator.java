@@ -48,7 +48,7 @@ public class RestRequisitionCalculator {
       searchCriteria.setProgramId(reportingProgram.getId());
       searchCriteria.setFacilityId(reportingFacility.getId());
 
-      if (!requisitionService.getCurrentPeriod(searchCriteria).getId().equals
+      if (requisitionService.getCurrentPeriod(searchCriteria) != null && !requisitionService.getCurrentPeriod(searchCriteria).getId().equals
         (requisitionService.getPeriodForInitiating(reportingFacility, reportingProgram).getId())) {
         throw new DataException("error.rnr.previous.not.filled");
       }
