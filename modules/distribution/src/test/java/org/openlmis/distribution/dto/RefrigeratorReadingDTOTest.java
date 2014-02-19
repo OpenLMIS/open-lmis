@@ -57,7 +57,7 @@ public class RefrigeratorReadingDTOTest {
   }
 
   @Test
-  public void shouldValidateRefrigeratorProblemsIfProblemSinceLastVisitIsTrue() throws Exception {
+  public void shouldValidateRefrigeratorProblemsIfFunctioningCorrectlySinceLastVisitIsFalse() throws Exception {
     Long facilityVisitId = 5L;
     Reading temperature = new Reading("32.4", false);
     Reading functioningCorrectly = new Reading("N", false);
