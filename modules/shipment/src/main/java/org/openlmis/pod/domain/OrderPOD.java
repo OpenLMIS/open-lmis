@@ -91,6 +91,7 @@ public class OrderPOD extends BaseModel {
     this.acceptedBy = orderPOD.getAcceptedBy();
     this.deliveredBy = orderPOD.getDeliveredBy();
     for (final OrderPODLineItem newLineItem : orderPOD.podLineItems) {
+      newLineItem.setModifiedBy(orderPOD.getModifiedBy());
       OrderPODLineItem existingLineItem = (OrderPODLineItem) find(this.podLineItems, new Predicate() {
         @Override
         public boolean evaluate(Object o) {
