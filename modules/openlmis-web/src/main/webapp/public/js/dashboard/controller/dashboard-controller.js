@@ -475,8 +475,8 @@ function AdminDashboardController($scope,ReportPrograms, ReportSchedules, Report
     $scope.itemFillRates = [{option:{animate:3000, barColor:'#FEBA50', scaleColor:'#D7D5D5', lineWidth: 5},percent:55},{option: {animate:2500, barColor:'#E23E3E', scaleColor:'#D7D5D5', lineWidth: 5 }, percent:45}];
 
     /* Easy pie chart */
-    var $scaleColor = '#D7D5D5';
-    var $lineWidth = 5;
+    $scaleColor = '#D7D5D5';
+    $lineWidth = 5;
     $scope.option1  = {animate:3000, barColor:'#FEBA50', scaleColor:$scaleColor, lineWidth: $lineWidth};
     $scope.percent1 = 55;
     $scope.option2  = {animate:2500, barColor:'#E23E3E', scaleColor:$scaleColor, lineWidth: $lineWidth };
