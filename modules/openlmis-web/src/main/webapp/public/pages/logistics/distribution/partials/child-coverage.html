@@ -61,7 +61,7 @@
             <tbody>
             <tr ng-repeat="lineItem in childCoverage.childCoverageLineItems">
               <td class="col-complete-vaccinated">
-                <span id="col{{lineItem.targetGroupEntity}}" ng-bind="lineItem.targetGroupEntity"></span>
+                <span id="col{{lineItem.vaccination}}" ng-bind="lineItem.vaccination"></span>
               </td>
               <td class="col-complete-vaccinated col-target-group" id="target{{$index}}">
                 <span ng-bind="lineItem.targetGroup"></span>
@@ -115,7 +115,7 @@
                       ng-bind="calculateCoverageRate(getTotal(lineItem.healthCenter11Months, lineItem.outreach11Months), lineItem.targetGroup)"></span>
               </td>
               <td class="col-complete-vaccinated">
-                <span ng-hide="lineItem.targetGroupEntity == 'Polio (Newborn)'">
+                <span ng-hide="lineItem.vaccination == 'Polio (Newborn)'">
                   <div>
                     <span class="input-error-parent-cell">
                       <input id="healthCenter23Months{{$index}}" type="text"
@@ -137,7 +137,7 @@
                 </span>
               </td>
               <td class="col-complete-vaccinated">
-                <span ng-hide="lineItem.targetGroupEntity == 'Polio (Newborn)'">
+                <span ng-hide="lineItem.vaccination == 'Polio (Newborn)'">
                   <div>
                     <span class="input-error-parent-cell">
                       <input id="outreach23Months{{$index}}" type="text"
@@ -167,10 +167,10 @@
                 <span id="total2{{$index}}" ng-bind="getTotalVaccinations(lineItem)"></span>
               </td>
               <td class="col-complete-vaccinated opened-vials"
-                  ng-hide="hideCell('{{lineItem.targetGroupEntity}}')"
-                  rowspan="{{productsMap[lineItem.targetGroupEntity].rowSpan}}">
+                  ng-hide="hideCell('{{lineItem.vaccination}}')"
+                  rowspan="{{productsMap[lineItem.vaccination].rowSpan}}">
                 <div id="{{product}}Container"
-                     ng-repeat="product in productsMap[lineItem.targetGroupEntity].products">
+                     ng-repeat="product in productsMap[lineItem.vaccination].products">
                   <span id="{{product}}" ng-bind="product"></span>
                   <span class="input-error-parent-cell">
                     <input id="openedVial{{$parent.$index}}{{$index}}" type="text"
@@ -193,10 +193,10 @@
                 </div>
               </td>
               <td class="col-complete-vaccinated col-opened-vial"
-                  ng-hide="hideCell('{{lineItem.targetGroupEntity}}')"
-                  rowspan="{{productsMap[lineItem.targetGroupEntity].rowSpan}}">
+                  ng-hide="hideCell('{{lineItem.vaccination}}')"
+                  rowspan="{{productsMap[lineItem.vaccination].rowSpan}}">
                 <span id="wastageRateCalculated{{$index}}"
-                      ng-bind="calculateWastageRate(productsMap[lineItem.targetGroupEntity])"></span>
+                      ng-bind="calculateWastageRate(productsMap[lineItem.vaccination])"></span>
               </td>
             </tr>
             </tbody>

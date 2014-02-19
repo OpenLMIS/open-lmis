@@ -19,9 +19,9 @@ describe('Child Coverage Controller', function () {
     scope = $rootScope.$new();
     distributionService = _distributionService_;
 
-    adultCoverageLineItem1 = {"id": 5, "facilityVisitId": 3, "targetGroupEntity": "Pregnant Women"};
-    adultCoverageLineItem2 = {"id": 26, "facilityVisitId": 3, "targetGroupEntity": "Students not MIF"};
-    adultCoverageLineItem3 = {"id": 27, "facilityVisitId": 3, "targetGroupEntity": "Workers not MIF"};
+    adultCoverageLineItem1 = {"id": 5, "facilityVisitId": 3, "demographicGroup": "Pregnant Women"};
+    adultCoverageLineItem2 = {"id": 26, "facilityVisitId": 3, "demographicGroup": "Students not MIF"};
+    adultCoverageLineItem3 = {"id": 27, "facilityVisitId": 3, "demographicGroup": "Workers not MIF"};
 
     adultCoverage = {facilityVisitId: 234,
       adultCoverageLineItems: [

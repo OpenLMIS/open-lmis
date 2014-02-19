@@ -20,14 +20,14 @@ describe('Child Coverage Controller', function () {
     scope = $rootScope.$new();
     distributionService = _distributionService_;
 
-    childCoverageLineItem1 = {"id": 5, "facilityVisitId": 3, "targetGroupEntity": "BCG", "healthCenter11Months": {value: undefined},
+    childCoverageLineItem1 = {"id": 5, "facilityVisitId": 3, "vaccination": "BCG", "healthCenter11Months": {value: undefined},
       "outreach11Months": {value: undefined}, "healthCenter23Months": {value: undefined}, "outreach23Months": {value: undefined}};
-    childCoverageLineItem2 = {"id": 26, "facilityVisitId": 3, "targetGroupEntity": "Polio (Newborn)", "healthCenter11Months": {value: undefined},
+    childCoverageLineItem2 = {"id": 26, "facilityVisitId": 3, "vaccination": "Polio (Newborn)", "healthCenter11Months": {value: undefined},
       "outreach11Months": {value: undefined}, "healthCenter23Months": {value: undefined}, "outreach23Months": {value: undefined}};
-    childCoverageLineItem3 = {"id": 27, "facilityVisitId": 3, "targetGroupEntity": "Polio 1st dose", "healthCenter11Months": {value: undefined},
+    childCoverageLineItem3 = {"id": 27, "facilityVisitId": 3, "vaccination": "Polio 1st dose", "healthCenter11Months": {value: undefined},
       "outreach11Months": {value: undefined}, "healthCenter23Months": {value: undefined}, "outreach23Months": {value: undefined}};
-    childCoverageLineItem4 = {"id": 28, "facilityVisitId": 3, "targetGroupEntity": "Polio 2nd dose"};
-    childCoverageLineItem5 = {"id": 29, "facilityVisitId": 3, "targetGroupEntity": "Polio 3rd dose"};
+    childCoverageLineItem4 = {"id": 28, "facilityVisitId": 3, "vaccination": "Polio 2nd dose"};
+    childCoverageLineItem5 = {"id": 29, "facilityVisitId": 3, "vaccination": "Polio 3rd dose"};
 
     openedVialLineItem1 = {"id": 15, "facilityVisitId": 3, "productVialName": "BCG", "packSize": 10, openedVial: {value: null, notRecorded: true}};
     openedVialLineItem2 = {"id": 16, "facilityVisitId": 3, "productVialName": "Polio10", "packSize": 10, openedVial: {value: null, notRecorded: true}};
@@ -92,12 +92,12 @@ describe('Child Coverage Controller', function () {
   });
 
   it('should return false if vaccination present in show cell list', function () {
-    var isVisible = scope.hideCell(childCoverage.childCoverageLineItems[0].targetGroupEntity);
+    var isVisible = scope.hideCell(childCoverage.childCoverageLineItems[0].vaccination);
     expect(isVisible).toBeFalsy();
   });
 
   it('should return true if vaccination is not present in show cell list', function () {
-    var isVisible = scope.hideCell(childCoverage.childCoverageLineItems[2].targetGroupEntity);
+    var isVisible = scope.hideCell(childCoverage.childCoverageLineItems[2].vaccination);
     expect(isVisible).toBeTruthy();
   });
 

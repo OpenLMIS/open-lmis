@@ -22,17 +22,17 @@ public class VaccinationAdultCoverage extends VaccinationCoverage {
 
   public VaccinationAdultCoverage(FacilityVisit facilityVisit, Facility facility, List<TargetGroupProduct> adultTargetGroupProducts) {
 
-    List<String> validCategories = Collections.unmodifiableList(
+    List<String> validDemographicGroups = Collections.unmodifiableList(
       asList("Pregnant Women", "MIF 15-49 years - Community", "MIF 15-49 years - Students", "MIF 15-49 years - Workers",
         "Students not MIF", "Workers not MIF", "Other not MIF"));
 
-    createAdultCoverageLineItems(facilityVisit, facility, adultTargetGroupProducts, validCategories);
+    createAdultCoverageLineItems(facilityVisit, facility, adultTargetGroupProducts, validDemographicGroups);
   }
 
-  private void createAdultCoverageLineItems(FacilityVisit facilityVisit, Facility facility, List<TargetGroupProduct> adultTargetGroupProducts, List<String> validCategories) {
-    for (String category : validCategories) {
-      TargetGroupProduct targetGroupForLineItem = getTargetGroupForLineItem(adultTargetGroupProducts, category);
-      this.adultCoverageLineItems.add(new AdultCoverageLineItem(facilityVisit, facility, targetGroupForLineItem, category));
+  private void createAdultCoverageLineItems(FacilityVisit facilityVisit, Facility facility, List<TargetGroupProduct> adultTargetGroupProducts, List<String> demographicGroups) {
+    for (String demographicGroup : demographicGroups) {
+      TargetGroupProduct targetGroupForLineItem = getTargetGroupForLineItem(adultTargetGroupProducts, demographicGroup);
+      this.adultCoverageLineItems.add(new AdultCoverageLineItem(facilityVisit, facility, targetGroupForLineItem, demographicGroup));
     }
   }
 }

@@ -34,7 +34,7 @@ ChildCoverage.prototype.computeStatus = function () {
   function validateLineItems(lineItems, mandatoryFields) {
     $(lineItems).each(function (index, lineItem) {
       $(mandatoryFields).each(function (index, field) {
-        if (lineItem.targetGroupEntity === 'Polio (Newborn)' && ['healthCenter23Months', 'outreach23Months'].indexOf(field) !== -1)
+        if (lineItem.vaccination === 'Polio (Newborn)' && ['healthCenter23Months', 'outreach23Months'].indexOf(field) !== -1)
           return true;
         if ((status === DistributionStatus.COMPLETE || !status) && isValid(lineItem[field])) {
           status = DistributionStatus.COMPLETE;

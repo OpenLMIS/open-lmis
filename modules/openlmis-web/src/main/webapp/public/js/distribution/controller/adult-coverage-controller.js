@@ -16,7 +16,7 @@ function AdultCoverageController($scope, $routeParams, distributionService) {
   var convertListToMap = function () {
     var map = {};
     $scope.adultCoverage.adultCoverageLineItems.forEach(function (lineItem) {
-      map[lineItem.targetGroupEntity] = lineItem;
+      map[lineItem.demographicGroup] = lineItem;
     });
     return map;
   };
