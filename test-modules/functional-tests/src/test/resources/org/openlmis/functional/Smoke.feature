@@ -802,6 +802,8 @@ Feature: Smoke Tests
     When I navigate to "refrigerator" tab
     And I access show
     Then I see "refrigerator" fields disabled
+    When I navigate to "child coverage" tab
+    Then I see "child coverage" fields disabled
 
     And I access plan my distribution page
     And I delete already cached data for distribution
@@ -820,8 +822,6 @@ Feature: Smoke Tests
     And I navigate to "refrigerator" tab
     And I see "Overall" refrigerator icon as "RED"
     And I verify the refrigerator "LG;800 LITRES;GR-J287PGHV" present
-    When I navigate to "child coverage" tab
-    Then I see "child coverage" fields disabled
 
 
   @smokeDistribution
