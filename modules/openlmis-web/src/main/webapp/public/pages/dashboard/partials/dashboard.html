@@ -105,9 +105,18 @@
                     <label class="labels">Product</label>
 
                     <div class="form-field">
-                        <select ui-select2="{maximumSelectionSize : 4}" style="width:200px;" name="product" class="input-large"  ng-model="productIds" openlmis-message="placeholder.select.product"
+                        <select ui-select2="productSelectOption" style="width:200px;" name="product" class="input-large"  ng-model="productIdList" openlmis-message="placeholder.select.product"
                                 multiple="multiple" >
                             <option  ng-repeat="option in products" value="{{ option.id }}">{{ option.name }}</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-cell horizontalFilters" >
+                    <label class="labels">Facility Type</label>
+
+                    <div class="form-field">
+                        <select ui-select2 style="width:200px;" name="facilityTypeElement"   ng-model="facilityTypeId">
+                            <option ng-repeat="option in facilityTypes" value="{{option.id}}">{{option.name}}</option>
                         </select>
                     </div>
                 </div>
@@ -131,7 +140,7 @@
                                     <div class="span3">
                                         <div class="form-field">
                                             <span class="caption">Facility</span>
-                                            <select ui-select2 style="width:200px;" id="facility-name"  name="facility" ng-model="orderFillRate.facilityId" ng-change="filterGrid();" required="true">
+                                            <select ui-select2 style="width:200px;" id="facility-name"  name="facility" ng-model="fillRate.facilityId" ng-change="filterGrid();" required="true">
                                                 <option  ng-repeat="option in allFacilities" value="{{ option.id }}">{{ option.code }} - {{ option.name }}</option>
                                             </select>
                                         </div>

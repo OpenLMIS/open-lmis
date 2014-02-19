@@ -9,11 +9,13 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-function AdminDashboardController($scope,ReportPrograms, ReportSchedules, ReportPeriods, RequisitionGroupsByProgram, ReportProductsByProgram, OperationYears, ReportPeriodsByScheduleAndYear, OrderFillRate) {
+function AdminDashboardController($scope,ReportPrograms, ReportSchedules, ReportPeriods, RequisitionGroupsByProgram,RequisitionGroupsByProgramSchedule, ReportProductsByProgram, OperationYears, ReportPeriodsByScheduleAndYear, ReportFacilityTypes, GetFacilityByFacilityType, FacilitiesByProgramParams, OrderFillRate) {
 
     $scope.filterObject = {};
 
     $scope.startYears = [];
+
+    $scope.productSelectOption = {maximumSelectionSize : 4};
 
     var itemFillRateColors = [{'minRange': -100, 'maxRange': 0, 'color' : '#E23E3E', 'description' : 'Red color for product with a fill rate <= 0 '},
         {'minRange': 1, 'maxRange': 50, 'color' : '#FEBA50', 'description' : 'Yellow color for product with a fill rate > 0 and <= 50 '},
@@ -37,6 +39,13 @@ function AdminDashboardController($scope,ReportPrograms, ReportSchedules, Report
 
     });
 
+    ReportFacilityTypes.get(function (data) {
+        $scope.facilityTypes = data.facilityTypes;
+        $scope.facilityTypes.unshift({'name':'-- All Facility Types --','id':'0'});
+
+        $scope.allFacilities = [];
+        $scope.allFacilities.unshift({code:'-- Select a Facility --',id:'0'});
+    });
 
     OperationYears.get(function (data) {
         $scope.startYears = data.years;
@@ -54,11 +63,55 @@ function AdminDashboardController($scope,ReportPrograms, ReportSchedules, Report
 
     });
 
+    $scope.$watch('facilityTypeId', function (selection) {
+        if (selection == "All") {
+            $scope.filterObject.facilityTypeId = -1;
+        } else if (selection !== undefined || selection === "") {
+            $scope.filterObject.facilityTypeId = selection;
+            $.each($scope.facilityTypes, function (item, idx) {
+                if (idx.id == selection) {
+                    $scope.filterObject.facilityType = idx.name;
+                }
+            });
+        } else {
+            $scope.filterObject.facilityTypeId = 0;
+        }
+        $scope.loadFacilities();
+
+    });
+
+    $scope.$watch('fillRate.facilityId', function (selection) {
+        if (selection == "All") {
+            $scope.filterObject.facilityId = -1;
+        } else if (selection !== undefined || selection === "") {
+            $scope.filterObject.facilityId = selection;
+            $.each($scope.allFacilities, function (item, idx) {
+                if (idx.id == selection) {
+                    $scope.filterObject.facility = idx.name;
+                }
+            });
+
+        } else {
+            $scope.filterObject.facilityId = 0;
+            $scope.filterObject.facility = "";
+        }
+       // $scope.loadFillRates();
+    });
+
     $scope.$watch('programId', function(selection){
+
         if(selection !== undefined || selection === ""){
             if (selection === '') {
+                $scope.filterObject.programId = 0;
                 return;
             }
+
+            $scope.filterObject.programId = selection;
+            $.each($scope.programs, function (item, idx) {
+                if (idx.id == selection) {
+                    $scope.filterObject.program = idx.name;
+                }
+            });
 
             ReportProductsByProgram.get({programId: selection}, function(data){
                 $scope.products = data.productList;
@@ -69,9 +122,51 @@ function AdminDashboardController($scope,ReportPrograms, ReportSchedules, Report
                 $scope.requisitionGroups.unshift({'name':'-- All Requisition Groups --'});
             });
         }
+        //$scope.loadFacilities();
     });
 
+    $scope.$watch('productIdList',function(selection){
+        $scope.filterObject.productIdList = $scope.productIdList;
+    });
 
+    $scope.loadFillRates = function(){
+        OrderFillRate.get({
+            geographicZone: $scope.filterObject.geographicZoneId ,
+            period: $scope.filterObject.periodId,
+            products: $scope.filterObject.productIdList
+        }, function (data){
+            $scope.itemFills = data.itemFillRate;
+            $scope.productItemFillRates = [];
+            $.each($scope.itemFills, function (item, idx) {
+                $.each(itemFillRateColors, function(index, item){
+                    if(idx.fillRate <= item.maxRange && idx.fillRate >= item.minRange){
+                        barColor = item.color;
+                    }
+                });
+                $scope.productItemFillRates.push({'option': {animate:3000, barColor: barColor, scaleColor: $scaleColor, lineWidth: $lineWidth}, 'percent': idx.fillRate, 'name': idx.product});
+            });
+
+        });
+
+    };
+
+    $scope.loadFacilities = function(){
+        if(isUndefined($scope.filterObject.programId) || isUndefined($scope.filterObject.scheduleId)){
+            return;
+        }
+
+        // load facilities
+        FacilitiesByProgramParams.get({
+                program: $scope.filterObject.programId ,
+                schedule: $scope.filterObject.scheduleId,
+                type: $scope.filterObject.facilityTypeId
+            }, function(data){
+                $scope.allFacilities = data.facilities;
+                $scope.allFacilities.unshift({code:'-- Select a Facility --',id:''});
+
+            }
+        );
+    };
 
     $scope.ChangeSchedule = function(scheduleBy){
         if(scheduleBy == 'byYear'){
@@ -89,6 +184,13 @@ function AdminDashboardController($scope,ReportPrograms, ReportSchedules, Report
 
             });
         }
+
+        RequisitionGroupsByProgramSchedule.get({program: $scope.filterObject.programId, schedule:$scope.filterObject.scheduleId}, function(data){
+            $scope.requisitionGroups = data.requisitionGroupList;
+            $scope.requisitionGroups.unshift({'name':'-- All Requisition Groups --','id':'0'});
+        });
+
+        $scope.loadFacilities();
     };
 
     $scope.$watch('rgroupId', function (selection) {
