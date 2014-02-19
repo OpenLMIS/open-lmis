@@ -10,15 +10,20 @@
 
 package org.openlmis.distribution.domain;
 
+import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.Facility;
 
+@Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 public class AdultCoverageLineItem extends CoverageLineItem {
 
-  public AdultCoverageLineItem(FacilityVisit facilityVisit, Facility facility, TargetGroupProduct targetGroupForLineItem, String category) {
-    super(facilityVisit, facility, targetGroupForLineItem, category);
+  private String demographicGroup;
+
+  public AdultCoverageLineItem(FacilityVisit facilityVisit, Facility facility, TargetGroupProduct targetGroupForLineItem, String demographicGroup) {
+    super(facilityVisit, facility, targetGroupForLineItem);
+    this.demographicGroup = demographicGroup;
   }
 }

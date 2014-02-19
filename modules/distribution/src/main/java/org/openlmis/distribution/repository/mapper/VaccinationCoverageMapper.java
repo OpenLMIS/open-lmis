@@ -30,7 +30,7 @@ public interface VaccinationCoverageMapper {
   void insertFullVaccinationCoverage(VaccinationFullCoverage vaccinationFullCoverage);
 
   @Insert({"INSERT INTO vaccination_child_coverage_line_items (facilityVisitId, vaccination, targetGroup, createdBy, modifiedBy)",
-    "VALUES (#{facilityVisitId}, #{targetGroupEntity}, #{targetGroup}, #{createdBy}, #{modifiedBy})"})
+    "VALUES (#{facilityVisitId}, #{vaccination}, #{targetGroup}, #{createdBy}, #{modifiedBy})"})
   @Options(useGeneratedKeys = true)
   void insertChildCoverageLineItem(ChildCoverageLineItem childCoverageLineItem);
 
@@ -61,8 +61,8 @@ public interface VaccinationCoverageMapper {
   @Select({"SELECT * FROM opened_vial_line_items WHERE facilityVisitId = #{facilityVisitId}"})
   List<OpenedVialLineItem> getOpenedVialLineItemsBy(Long facilityVisitId);
 
-  @Insert({"INSERT INTO vaccination_adult_coverage_line_items (facilityVisitId, targetGroup, targetGroupEntity, createdBy, modifiedBy) " +
-    "VALUES (#{facilityVisitId}, #{targetGroup}, #{targetGroupEntity}, #{createdBy}, #{modifiedBy})"})
+  @Insert({"INSERT INTO vaccination_adult_coverage_line_items (facilityVisitId, targetGroup, demographicGroup, createdBy, modifiedBy) " +
+    "VALUES (#{facilityVisitId}, #{targetGroup}, #{demographicGroup}, #{createdBy}, #{modifiedBy})"})
   @Options(useGeneratedKeys = true)
   void insertAdultCoverageLineItem(AdultCoverageLineItem lineItem);
 

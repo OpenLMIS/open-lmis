@@ -39,11 +39,10 @@ public class CoverageLineItemTest {
     TargetGroupProduct targetGroupProduct = new TargetGroupProduct("BCG", productCode, true);
     when(facility.getWhoRatioFor(productCode)).thenReturn(67D);
 
-    CoverageLineItem coverageLineItem = new CoverageLineItem(facilityVisit, facility, targetGroupProduct, "BCG");
+    CoverageLineItem coverageLineItem = new CoverageLineItem(facilityVisit, facility, targetGroupProduct);
 
     assertThat(coverageLineItem.getFacilityVisitId(), is(facilityVisit.getId()));
     assertThat(coverageLineItem.getTargetGroup(), is(67));
-    assertThat(coverageLineItem.getTargetGroupEntity(), is("BCG"));
   }
 
   @Test
@@ -52,11 +51,10 @@ public class CoverageLineItemTest {
     facilityVisit.setId(1L);
     Facility facility = mock(Facility.class);
 
-    CoverageLineItem coverageLineItem = new CoverageLineItem(facilityVisit, facility, null, "BCG");
+    CoverageLineItem coverageLineItem = new CoverageLineItem(facilityVisit, facility, null);
 
     assertThat(coverageLineItem.getFacilityVisitId(), is(facilityVisit.getId()));
     assertThat(coverageLineItem.getTargetGroup(), is(nullValue()));
-    assertThat(coverageLineItem.getTargetGroupEntity(), is("BCG"));
   }
 
 

@@ -27,10 +27,9 @@ public class CoverageLineItem extends BaseModel {
 
   protected Long facilityVisitId;
   protected Integer targetGroup;
-  protected String targetGroupEntity;
 
-  public CoverageLineItem(FacilityVisit facilityVisit, Facility facility, TargetGroupProduct targetGroupProduct, String targetGroupEntity) {
-    this.targetGroupEntity = targetGroupEntity;
+
+  public CoverageLineItem(FacilityVisit facilityVisit, Facility facility, TargetGroupProduct targetGroupProduct) {
     this.facilityVisitId = facilityVisit.getId();
     this.targetGroup = targetGroupProduct != null ? calculateTargetGroup(facility.getWhoRatioFor(targetGroupProduct.getProductCode()),
       facility.getCatchmentPopulation()) : null;

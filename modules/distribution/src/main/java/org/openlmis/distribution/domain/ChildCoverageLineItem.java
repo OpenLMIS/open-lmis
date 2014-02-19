@@ -26,12 +26,14 @@ import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPT
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ChildCoverageLineItem extends CoverageLineItem {
 
+  private String vaccination;
   private Integer healthCenter11Months;
   private Integer outreach11Months;
   private Integer healthCenter23Months;
   private Integer outreach23Months;
 
   public ChildCoverageLineItem(FacilityVisit facilityVisit, Facility facility, TargetGroupProduct targetGroupProduct, String vaccination) {
-    super(facilityVisit, facility, targetGroupProduct, vaccination);
+    super(facilityVisit, facility, targetGroupProduct);
+    this.vaccination = vaccination;
   }
 }

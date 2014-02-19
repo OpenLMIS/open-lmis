@@ -174,10 +174,9 @@ public class VaccinationCoverageMapperIT {
       targetGroupProduct.getTargetGroupEntity(), targetGroupProduct.getProductCode(), targetGroupProduct.getChildCoverage());
 
     Integer nullInteger = null;
-    ChildCoverageLineItem childCoverageLineItem = new ChildCoverageLineItem(nullInteger, nullInteger, nullInteger, nullInteger);
+    ChildCoverageLineItem childCoverageLineItem = new ChildCoverageLineItem("BCG", nullInteger, nullInteger, nullInteger, nullInteger);
     childCoverageLineItem.setFacilityVisitId(facilityVisit.getId());
     childCoverageLineItem.setTargetGroup(56);
-    childCoverageLineItem.setTargetGroupEntity("BCG");
     childCoverageLineItem.setCreatedBy(123L);
     mapper.insertChildCoverageLineItem(childCoverageLineItem);
 
@@ -200,10 +199,9 @@ public class VaccinationCoverageMapperIT {
       targetGroupProduct.getTargetGroupEntity(), targetGroupProduct.getProductCode(), targetGroupProduct.getChildCoverage());
 
     Integer nullInteger = null;
-    ChildCoverageLineItem childCoverageLineItem = new ChildCoverageLineItem(nullInteger, nullInteger, nullInteger, nullInteger);
+    ChildCoverageLineItem childCoverageLineItem = new ChildCoverageLineItem("BCG", nullInteger, nullInteger, nullInteger, nullInteger);
     childCoverageLineItem.setFacilityVisitId(facilityVisit.getId());
     childCoverageLineItem.setTargetGroup(56);
-    childCoverageLineItem.setTargetGroupEntity("BCG");
     mapper.insertChildCoverageLineItem(childCoverageLineItem);
 
     List<ChildCoverageLineItem> fetchedChildCoverageLineItems = mapper.getChildCoverageLineItemsBy(facilityVisit.getId());
@@ -251,10 +249,9 @@ public class VaccinationCoverageMapperIT {
   @Test
   public void shouldUpdateChildCoverageLineItem() {
     Integer nullInteger = null;
-    ChildCoverageLineItem childCoverageLineItem = new ChildCoverageLineItem(nullInteger, nullInteger, nullInteger, nullInteger);
+    ChildCoverageLineItem childCoverageLineItem = new ChildCoverageLineItem("BCG", nullInteger, nullInteger, nullInteger, nullInteger);
     childCoverageLineItem.setFacilityVisitId(facilityVisit.getId());
     childCoverageLineItem.setTargetGroup(56);
-    childCoverageLineItem.setTargetGroupEntity("BCG");
 
     mapper.insertChildCoverageLineItem(childCoverageLineItem);
 
@@ -305,10 +302,10 @@ public class VaccinationCoverageMapperIT {
     AdultCoverageLineItem lineItem = new AdultCoverageLineItem();
     lineItem.setFacilityVisitId(facilityVisit.getId());
     lineItem.setTargetGroup(45);
-    lineItem.setTargetGroupEntity("Pregnant Women");
+    lineItem.setDemographicGroup("Pregnant Women");
     mapper.insertAdultCoverageLineItem(lineItem);
 
-    ResultSet resultSet = queryExecutor.execute("SELECT * FROM vaccination_adult_coverage_line_items WHERE targetGroupEntity = 'Pregnant Women'");
+    ResultSet resultSet = queryExecutor.execute("SELECT * FROM vaccination_adult_coverage_line_items WHERE demographicGroup = 'Pregnant Women'");
 
     assertTrue(resultSet.next());
     assertThat(resultSet.getLong("id"), is(lineItem.getId()));
@@ -320,7 +317,7 @@ public class VaccinationCoverageMapperIT {
     AdultCoverageLineItem adultCoverageLineItem = new AdultCoverageLineItem();
     adultCoverageLineItem.setFacilityVisitId(facilityVisit.getId());
     adultCoverageLineItem.setTargetGroup(56);
-    adultCoverageLineItem.setTargetGroupEntity("Pregnant Women");
+    adultCoverageLineItem.setDemographicGroup("Pregnant Women");
     mapper.insertAdultCoverageLineItem(adultCoverageLineItem);
 
     List<AdultCoverageLineItem> fetchedAdultCoverageLineItems = mapper.getAdultCoverageLineItemsBy(facilityVisit.getId());
