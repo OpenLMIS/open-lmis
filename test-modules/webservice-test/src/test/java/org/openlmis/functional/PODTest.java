@@ -162,7 +162,7 @@ public class PODTest extends JsonUtility {
     String response = responseEntity.getResponse();
 
     assertEquals(400, responseEntity.getStatus());
-    assertEquals(response, "{\"error\":\"Invalid quantity returned\"}");
+    assertEquals(response, "{\"error\":\"Invalid returned quantity\"}");
     assertEquals("RELEASED", dbWrapper.getAttributeFromTable("orders", "status", "id", id));
 
     String wrongJson = "{\"podLineItems\": [" +
