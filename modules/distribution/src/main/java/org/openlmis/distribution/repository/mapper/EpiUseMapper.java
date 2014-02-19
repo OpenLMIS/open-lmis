@@ -21,7 +21,7 @@ public interface EpiUseMapper {
 
   @Insert({"INSERT INTO epi_use_line_items (facilityVisitId, productGroupId, productGroupName, stockAtFirstOfMonth, received, ",
     "distributed, loss, stockAtEndOfMonth, expirationDate, createdBy, modifiedBy) VALUES (#{facilityVisitId}, #{productGroup.id}, #{productGroup.name}, #{stockAtFirstOfMonth},",
-    " #{received}, #{distributed}, #{loss}, #{stockAtEndOfMonth}, #{expirationDate}, #{createdBy}, #{createdBy})"})
+    " #{received}, #{distributed}, #{loss}, #{stockAtEndOfMonth}, #{expirationDate}, #{createdBy}, #{modifiedBy})"})
   @Options(useGeneratedKeys = true)
   public void insertLineItem(EpiUseLineItem epiUseLineItem);
 

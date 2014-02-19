@@ -39,20 +39,20 @@ public class EpiUse extends BaseModel {
 
     if (facility.getSupportedPrograms().size() != 0) {
       List<FacilityProgramProduct> programProducts = FacilityProgramProduct.filterActiveProducts(facility.getSupportedPrograms().get(0).getProgramProducts());
-      this.populateEpiUseLineItems(programProducts, facilityVisit.getCreatedBy(), facilityVisit.getId());
+      this.populateEpiUseLineItems(programProducts, facilityVisit.getCreatedBy(), facilityVisit.getModifiedBy(), facilityVisit.getId());
     }
 
     Comparator<EpiUseLineItem> productNameComparator = new ProductNameComparator();
     Collections.sort(lineItems, productNameComparator);
   }
 
-  private void populateEpiUseLineItems(List<FacilityProgramProduct> programProducts, Long createdBy, Long facilityVisitId) {
+  private void populateEpiUseLineItems(List<FacilityProgramProduct> programProducts, Long createdBy, Long modifiedBy, Long facilityVisitId) {
     Set<ProductGroup> productGroupSet = new HashSet<>();
 
     for (FacilityProgramProduct facilityProgramProduct : programProducts) {
       ProductGroup productGroup = facilityProgramProduct.getActiveProductGroup();
       if (productGroup != null && productGroupSet.add(productGroup)) {
-        this.lineItems.add(new EpiUseLineItem(facilityVisitId, productGroup, createdBy));
+        this.lineItems.add(new EpiUseLineItem(facilityVisitId, productGroup, createdBy, modifiedBy));
       }
     }
   }

@@ -25,7 +25,8 @@ import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPT
 @AllArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonSerialize(include = NON_EMPTY)
-public class FacilityDistributionDTO {
+public class
+  FacilityDistributionDTO {
 
   private FacilityVisit facilityVisit;
   private EpiUseDTO epiUse;
@@ -50,6 +51,7 @@ public class FacilityDistributionDTO {
     refrigerators.setCreatedBy(modifiedBy);
     refrigerators.setModifiedBy(modifiedBy);
     fullCoverage.setModifiedBy(modifiedBy);
+    fullCoverage.setCreatedBy(modifiedBy);
     childCoverage.setModifiedBy(modifiedBy);
   }
 }

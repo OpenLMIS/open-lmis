@@ -85,7 +85,7 @@ public class DistributionController extends BaseController {
     } catch (DataException e) {
       response = response("syncStatus", false);
     }
-    response.getBody().addData("distributionStatus", distributionService.updateDistributionStatus(id));
+    response.getBody().addData("distributionStatus", distributionService.updateDistributionStatus(id, loggedInUserId(httpServletRequest)));
     return response;
   }
 

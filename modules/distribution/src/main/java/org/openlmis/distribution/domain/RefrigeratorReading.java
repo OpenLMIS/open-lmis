@@ -45,5 +45,19 @@ public class RefrigeratorReading extends BaseModel {
   public RefrigeratorReading(Refrigerator refrigerator) {
     this.refrigerator = refrigerator;
   }
+
+  public void setCreatedBy(Long createdBy) {
+    this.createdBy = createdBy;
+    if (this.problem != null) {
+      this.problem.setCreatedBy(createdBy);
+    }
+  }
+
+  public void setModifiedBy(Long modifiedBy) {
+    this.modifiedBy = modifiedBy;
+    if (this.problem != null) {
+      this.problem.setModifiedBy(modifiedBy);
+    }
+  }
 }
 

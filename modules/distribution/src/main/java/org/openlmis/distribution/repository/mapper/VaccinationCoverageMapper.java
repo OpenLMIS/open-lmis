@@ -25,7 +25,7 @@ public interface VaccinationCoverageMapper {
   @Insert({"INSERT INTO full_coverages (facilityVisitId, femaleHealthCenter, femaleOutreach, maleHealthCenter, maleOutreach,",
     "createdBy, modifiedBy)",
     "VALUES (#{facilityVisitId}, #{femaleHealthCenter}, #{femaleOutreach}, #{maleHealthCenter}, #{maleOutreach},",
-    "#{createdBy}, #{createdBy})"})
+    "#{createdBy}, #{modifiedBy})"})
   @Options(useGeneratedKeys = true)
   void insertFullVaccinationCoverage(VaccinationFullCoverage vaccinationFullCoverage);
 
