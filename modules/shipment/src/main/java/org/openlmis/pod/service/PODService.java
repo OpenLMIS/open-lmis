@@ -73,15 +73,6 @@ public class PODService {
     orderService.updateOrderStatus(order);
   }
 
-  public void insertLineItems(OrderPOD orderPod) {
-    for (OrderPODLineItem orderPodLineItem : orderPod.getPodLineItems()) {
-      orderPodLineItem.setPodId(orderPod.getId());
-      orderPodLineItem.setCreatedBy(orderPod.getCreatedBy());
-      orderPodLineItem.setModifiedBy(orderPod.getModifiedBy());
-      repository.insertPODLineItem(orderPodLineItem);
-    }
-  }
-
   public void checkPermissions(OrderPOD orderPod) {
     if (!fulfillmentPermissionService.hasPermission(orderPod.getModifiedBy(), orderPod.getOrderId(), MANAGE_POD)) {
       throw new DataException("error.permission.denied");
@@ -134,5 +125,9 @@ public class PODService {
     orderService.updateOrderStatus(new Order(orderPOD.getOrderId(), RECEIVED));
 
     return repository.update(orderPOD);
+  }
+
+  public void insertPODLineItem(OrderPODLineItem orderPodLineItem) {
+    repository.insertPODLineItem(orderPodLineItem);
   }
 }

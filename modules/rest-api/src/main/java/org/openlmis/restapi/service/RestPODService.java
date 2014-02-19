@@ -46,8 +46,17 @@ public class RestPODService {
     List<OrderPODLineItem> orderPodLineItems = orderPod.getPodLineItems();
     validatePODLineItems(orderPodLineItems);
 
-    podService.insertLineItems(orderPod);
+    insertLineItems(orderPod);
     podService.updateOrderStatus(orderPod);
+  }
+
+  private void insertLineItems(OrderPOD orderPod) {
+    for (OrderPODLineItem orderPodLineItem : orderPod.getPodLineItems()) {
+      orderPodLineItem.setPodId(orderPod.getId());
+      orderPodLineItem.setCreatedBy(orderPod.getCreatedBy());
+      orderPodLineItem.setModifiedBy(orderPod.getModifiedBy());
+      podService.insertPODLineItem(orderPodLineItem);
+    }
   }
 
   private void validatePODLineItems(List<OrderPODLineItem> orderPodLineItems) {
