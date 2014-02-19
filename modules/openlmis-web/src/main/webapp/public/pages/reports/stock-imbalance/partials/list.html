@@ -108,7 +108,7 @@
                                     <label class="labels">Facility Name</label>
 
                                     <div class="form-field">
-                                        <select ui-select2 style="width:200px;" id="facility-name"  name="facility" ng-model="orderFillRate.facilityId" ng-change="filterGrid();" required="true">
+                                        <select ui-select2 style="width:200px;" id="facility-name"  name="facility" ng-model="stockImbalance.facilityId" ng-change="filterGrid();" required="true">
                                             <option  ng-repeat="option in allFacilities" value="{{ option.id }}">{{ option.code }} - {{ option.name }}</option>
                                         </select>
                                     </div>

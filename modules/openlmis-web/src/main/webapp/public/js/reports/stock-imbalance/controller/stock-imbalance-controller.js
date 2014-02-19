@@ -128,7 +128,7 @@ function StockImbalanceController($scope, $filter, ngTableParams,
     });
 
 
-    $scope.$watch('orderFillRate.facilityId', function (selection) {
+    $scope.$watch('stockImbalance.facilityId', function (selection) {
         if (selection == "All") {
             $scope.filterObject.facilityId = -1;
         } else if (selection !== undefined || selection === "") {
