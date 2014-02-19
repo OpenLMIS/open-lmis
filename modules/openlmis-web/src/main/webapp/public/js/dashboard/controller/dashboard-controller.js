@@ -9,11 +9,34 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-function AdminDashboardController($scope,ReportPrograms, ReportSchedules, ReportPeriods, RequisitionGroupsByProgram, ReportProductsByProgram, OperationYears, ReportPeriodsByScheduleAndYear, RequisitionGroupsByProgramSchedule) {
+function AdminDashboardController($scope,ReportPrograms, ReportSchedules, ReportPeriods, RequisitionGroupsByProgram, ReportProductsByProgram, OperationYears, ReportPeriodsByScheduleAndYear, OrderFillRate) {
 
     $scope.filterObject = {};
 
     $scope.startYears = [];
+
+    var itemFillRateColors = [{'minRange': -100, 'maxRange': 0, 'color' : '#E23E3E', 'description' : 'Red color for product with a fill rate <= 0 '},
+        {'minRange': 1, 'maxRange': 50, 'color' : '#FEBA50', 'description' : 'Yellow color for product with a fill rate > 0 and <= 50 '},
+        {'minRange': 51, 'maxRange': 100, 'color' : '#38AB49', 'description' : 'Green color for product with a fill rate > 50 '}];
+    var $scaleColor = '#D7D5D5';
+    var defaultBarColor = '#FEBA50';
+    var $lineWidth = 5;
+    var barColor = defaultBarColor;
+
+    OrderFillRate.get(function (data){
+        $scope.itemFills = data.itemFillRate;
+        $scope.productItemFillRates = [];
+        $.each($scope.itemFills, function (item, idx) {
+            $.each(itemFillRateColors, function(index, item){
+               if(idx.fillRate <= item.maxRange && idx.fillRate >= item.minRange){
+                   barColor = item.color;
+               }
+            });
+            $scope.productItemFillRates.push({'option': {animate:3000, barColor: barColor, scaleColor: $scaleColor, lineWidth: $lineWidth}, 'percent': idx.fillRate, 'name': idx.product});
+        });
+
+    });
+
 
     OperationYears.get(function (data) {
         $scope.startYears = data.years;
@@ -346,7 +369,8 @@ function AdminDashboardController($scope,ReportPrograms, ReportSchedules, Report
     $scope.eventSources = [$scope.events];
 
     /* End Calendar  */
-
+   // $scope.itemFillRates = [55,45,-60];
+    $scope.itemFillRates = [{option:{animate:3000, barColor:'#FEBA50', scaleColor:'#D7D5D5', lineWidth: 5},percent:55},{option: {animate:2500, barColor:'#E23E3E', scaleColor:'#D7D5D5', lineWidth: 5 }, percent:45}];
 
     /* Easy pie chart */
     var $scaleColor = '#D7D5D5';

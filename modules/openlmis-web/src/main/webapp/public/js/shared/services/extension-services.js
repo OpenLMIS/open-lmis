@@ -401,3 +401,10 @@ services.factory('DistrictFinancialSummaryReport', function ($resource) {
 services.factory('SaveGeographicInfo', function($resource){
    return $resource('/geographic-zone/save-gis.json',{}, {post:{method:'POST'}});
 });
+
+/* Dashboard data factories */
+
+services.factory('OrderFillRate', function($resource){
+    return $resource('/dashboard/itemFillRate.json',{}, {});
+});
+/* End Dashboard data factories */
