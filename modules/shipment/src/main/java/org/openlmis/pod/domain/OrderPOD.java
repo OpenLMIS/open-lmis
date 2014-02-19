@@ -14,6 +14,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.apache.commons.collections.Predicate;
+import org.codehaus.jackson.annotate.JsonIgnore;
 import org.joda.time.DateTime;
 import org.openlmis.core.domain.BaseModel;
 import org.openlmis.core.exception.DataException;
@@ -102,6 +103,7 @@ public class OrderPOD extends BaseModel {
     }
   }
 
+  @JsonIgnore
   public String getStringReceivedDate() throws ParseException {
     return forPattern("yyyy-MM-dd").print(new DateTime(this.receivedDate));
   }

@@ -38,9 +38,9 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
-import static org.openlmis.web.controller.PODController.ORDER;
-import static org.openlmis.web.controller.PODController.ORDER_POD;
+import static org.openlmis.web.controller.PODController.*;
 import static org.powermock.api.mockito.PowerMockito.*;
+import static org.powermock.api.mockito.PowerMockito.spy;
 import static org.powermock.api.mockito.PowerMockito.when;
 
 @Category(UnitTests.class)
@@ -121,9 +121,11 @@ public class PODControllerTest {
 
     OrderPOD orderPOD = new OrderPOD();
     orderPOD.setOrderId(orderId);
+    OrderPOD spyOrderPOD = spy(orderPOD);
     mockStatic(OrderPODDTO.class);
 
-    when(service.getPodById(podId)).thenReturn(orderPOD);
+    when(service.getPodById(podId)).thenReturn(spyOrderPOD);
+    when(spyOrderPOD.getStringReceivedDate()).thenReturn("2014-02-10");
 
     Order order = new Order();
     when(orderService.getOrder(orderId)).thenReturn(order);
@@ -134,8 +136,9 @@ public class PODControllerTest {
     ResponseEntity<OpenLmisResponse> response = controller.getPOD(podId);
 
     verify(service).getPodById(podId);
-    assertThat((OrderPOD) response.getBody().getData().get(ORDER_POD), is(orderPOD));
+    assertThat((OrderPOD) response.getBody().getData().get(ORDER_POD), is(spyOrderPOD));
     assertThat((OrderPODDTO) response.getBody().getData().get(ORDER), is(orderPODDTO));
+    assertThat((String) response.getBody().getData().get(RECEIVED_DATE), is("2014-02-10"));
     assertThat(response.getStatusCode(), is(HttpStatus.OK));
   }
 

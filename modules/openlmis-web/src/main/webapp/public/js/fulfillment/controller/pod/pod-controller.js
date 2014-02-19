@@ -12,7 +12,7 @@ function PODController($scope, orderPOD, OrderPOD, pageSize, $routeParams, $loca
 
   $scope.pageSize = pageSize;
   $scope.pod = new ProofOfDelivery(orderPOD.orderPOD);
-  $scope.pod.receivedDate = $scope.pod.stringReceivedDate;
+  $scope.pod.receivedDate = orderPOD.receivedDate;
   $scope.order = orderPOD.order;
   $scope.podAlreadySubmitted = orderPOD.order.alreadyReceived;
   $scope.numberOfPages = Math.ceil($scope.pod.podLineItems.length / $scope.pageSize) || 1;
