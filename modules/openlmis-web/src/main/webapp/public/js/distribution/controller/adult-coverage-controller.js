@@ -21,5 +21,5 @@ function AdultCoverageController($scope, $routeParams, distributionService) {
     return map;
   };
 
-  $scope.adultCoverageMap = convertListToMap();
+$scope.adultCoverageMap = convertListToMap();
 }
