@@ -166,13 +166,13 @@ public class E2EDistributionTest extends TestCaseHelper {
         childCoveragePage.enterOutreach23MonthsDataForGivenRow(rowNumber, "4" + rowNumber);
       }
     }
-    childCoveragePage.enterOpenedVialsCountForGivenGroupAndRow(1, 1, "91");
-    childCoveragePage.enterOpenedVialsCountForGivenGroupAndRow(2, 1, "92");
-    childCoveragePage.enterOpenedVialsCountForGivenGroupAndRow(2, 2, "93");
-    childCoveragePage.enterOpenedVialsCountForGivenGroupAndRow(6, 1, "94");
-    childCoveragePage.enterOpenedVialsCountForGivenGroupAndRow(6, 2, "95");
-    childCoveragePage.enterOpenedVialsCountForGivenGroupAndRow(9, 1, "96");
-    childCoveragePage.enterOpenedVialsCountForGivenGroupAndRow(12, 1, "97");
+    childCoveragePage.enterOpenedVialsCountForGivenGroupAndRow(1, 1, "1");
+    childCoveragePage.enterOpenedVialsCountForGivenGroupAndRow(2, 1, "2");
+    childCoveragePage.enterOpenedVialsCountForGivenGroupAndRow(2, 2, "3");
+    childCoveragePage.enterOpenedVialsCountForGivenGroupAndRow(6, 1, "4");
+    childCoveragePage.enterOpenedVialsCountForGivenGroupAndRow(6, 2, "5");
+    childCoveragePage.enterOpenedVialsCountForGivenGroupAndRow(9, 1, "6");
+    childCoveragePage.enterOpenedVialsCountForGivenGroupAndRow(12, 1, "7");
 
     homePage.navigateHomePage();
     homePage.navigateOfflineDistribution();
@@ -261,7 +261,7 @@ public class E2EDistributionTest extends TestCaseHelper {
     verifyEpiInventoryDataInDatabase(null, "10", null, "P10", facilityCodeFirst);
     verifyEpiInventoryDataInDatabase(null, "20", null, "Product6", facilityCodeFirst);
     verifyEpiInventoryDataInDatabase(null, "30", null, "P11", facilityCodeFirst);
-
+    verifyChildCoverageDataInDatabase();
     ResultSet childCoverageDetails = dbWrapper.getChildCoverageDetails("PCV10 1st dose", "F10");
     assertEquals("300", childCoverageDetails.getInt("targetGroup"));
 
