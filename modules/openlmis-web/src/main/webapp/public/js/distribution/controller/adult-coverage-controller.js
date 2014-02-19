@@ -13,6 +13,16 @@ function AdultCoverageController($scope, $routeParams, distributionService) {
   $scope.selectedFacilityId = $routeParams.facility;
   $scope.adultCoverage = $scope.distribution.facilityDistributions[$scope.selectedFacilityId].adultCoverage;
 
+  $scope.categories = {
+    PREGNANT_WOMEN: 'Pregnant Women',
+    MIF_COMMUNITY: 'MIF 15-49 years - Community',
+    MIF_STUDENTS: 'MIF 15-49 years - Students',
+    MIF_WORKERS: 'MIF 15-49 years - Workers',
+    STUDENTS_NOT_MIF: 'Students not MIF',
+    WORKERS_NOT_MIF: 'Workers not MIF',
+    OTHER_NOT_MIF: 'Other not MIF'
+  };
+
   var convertListToMap = function () {
     var map = {};
     $scope.adultCoverage.adultCoverageLineItems.forEach(function (lineItem) {
