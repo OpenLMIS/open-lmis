@@ -205,12 +205,12 @@ public class DistributionVisitInformationSyncTest extends TestCaseHelper {
     refrigeratorPage.clickAddNew();
     refrigeratorPage.addNewRefrigerator("SAM", "800L", "GNR7876");
 
-    refrigeratorPage.clickShowForRefrigerator1();
-    refrigeratorPage.enterValueInRefrigeratorTemperature("3");
-    refrigeratorPage.clickFunctioningCorrectlyYesRadio();
-    refrigeratorPage.enterValueInLowAlarmEvents("2");
-    refrigeratorPage.enterValueInHighAlarmEvents("5");
-    refrigeratorPage.clickProblemSinceLastVisitNR();
+    refrigeratorPage.clickShowForRefrigerator(1);
+    refrigeratorPage.enterValueInRefrigeratorTemperature("3", 1);
+    refrigeratorPage.clickFunctioningCorrectlyYesRadio(1);
+    refrigeratorPage.enterValueInLowAlarmEvents("2", 1);
+    refrigeratorPage.enterValueInHighAlarmEvents("5", 1);
+    refrigeratorPage.clickProblemSinceLastVisitNR(1);
     refrigeratorPage.clickDone();
     refrigeratorPage.verifyRefrigeratorColor("overall", "GREEN");
     refrigeratorPage.verifyRefrigeratorColor("individual", "GREEN");
@@ -239,7 +239,7 @@ public class DistributionVisitInformationSyncTest extends TestCaseHelper {
 
     refrigeratorPage.verifyIndicator("GREEN");
     assertFalse(refrigeratorPage.isAddNewButtonEnabled());
-    refrigeratorPage.clickShowForRefrigerator1();
+    refrigeratorPage.clickShowForRefrigerator(1);
     refrigeratorPage.verifyAllFieldsDisabled();
     refrigeratorPage.navigateToEpiInventory();
 
@@ -289,11 +289,11 @@ public class DistributionVisitInformationSyncTest extends TestCaseHelper {
 
     RefrigeratorPage refrigeratorPage = visitInformationPage.navigateToRefrigerators();
     refrigeratorPage.verifyRefrigeratorColor("overall", "RED");
-    refrigeratorPage.clickShowForRefrigerator1();
-    refrigeratorPage.enterValueInRefrigeratorTemperature("3");
-    refrigeratorPage.clickFunctioningCorrectlyYesRadio();
-    refrigeratorPage.enterValueInLowAlarmEvents("2");
-    refrigeratorPage.enterValueInHighAlarmEvents("5");
+    refrigeratorPage.clickShowForRefrigerator(1);
+    refrigeratorPage.enterValueInRefrigeratorTemperature("3", 1);
+    refrigeratorPage.clickFunctioningCorrectlyYesRadio(1);
+    refrigeratorPage.enterValueInLowAlarmEvents("2", 1);
+    refrigeratorPage.enterValueInHighAlarmEvents("5", 1);
     refrigeratorPage.clickDone();
     refrigeratorPage.verifyRefrigeratorColor("overall", "AMBER");
 
@@ -418,16 +418,16 @@ public class DistributionVisitInformationSyncTest extends TestCaseHelper {
       refrigeratorPage.clickAddNew();
       refrigeratorPage.addNewRefrigerator("SAM", "800L", "GNR7876");
 
-      refrigeratorPage.clickShowForRefrigerator1();
-      refrigeratorPage.enterValueInRefrigeratorTemperature("3");
-      refrigeratorPage.clickFunctioningCorrectlyNR();
+      refrigeratorPage.clickShowForRefrigerator(1);
+      refrigeratorPage.enterValueInRefrigeratorTemperature("3", 1);
+      refrigeratorPage.clickFunctioningCorrectlyNR(1);
       EpiInventoryPage epiInventoryPage = refrigeratorPage.navigateToEpiInventory();
       epiInventoryPage.navigateToRefrigerators();
-      refrigeratorPage.clickShowForRefrigerator1();
-      assertTrue(refrigeratorPage.isFunctioningCorrectlyNRSelected());
-      refrigeratorPage.enterValueInLowAlarmEvents("2");
-      refrigeratorPage.enterValueInHighAlarmEvents("5");
-      refrigeratorPage.clickProblemSinceLastVisitNR();
+      refrigeratorPage.clickShowForRefrigerator(1);
+      assertTrue(refrigeratorPage.isFunctioningCorrectlyNRSelected(1));
+      refrigeratorPage.enterValueInLowAlarmEvents("2", 1);
+      refrigeratorPage.enterValueInHighAlarmEvents("5", 1);
+      refrigeratorPage.clickProblemSinceLastVisitNR(1);
       refrigeratorPage.clickDone();
       refrigeratorPage.verifyRefrigeratorColor("overall", "GREEN");
       refrigeratorPage.verifyRefrigeratorColor("individual", "GREEN");
@@ -459,7 +459,7 @@ public class DistributionVisitInformationSyncTest extends TestCaseHelper {
     visitInformationPage.verifyAllFieldsDisabled();
 
     RefrigeratorPage refrigeratorPage = visitInformationPage.navigateToRefrigerators();
-    refrigeratorPage.clickShowForRefrigerator1();
+    refrigeratorPage.clickShowForRefrigerator(1);
     refrigeratorPage.verifyAllFieldsDisabled();
 
     EPIUsePage epiUsePage = refrigeratorPage.navigateToEpiUse();

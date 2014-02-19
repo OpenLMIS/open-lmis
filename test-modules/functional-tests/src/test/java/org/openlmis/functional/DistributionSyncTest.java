@@ -240,12 +240,12 @@ public class DistributionSyncTest extends TestCaseHelper {
     visitInformationPage.enterDataWhenFacilityVisited("Some observations", "samuel D", "Doe Abc", "Verifier", "Verifier Title");
     RefrigeratorPage refrigeratorPage = visitInformationPage.navigateToRefrigerators();
 
-    refrigeratorPage.clickShowForRefrigerator1();
-    refrigeratorPage.enterValueInRefrigeratorTemperature("3");
-    refrigeratorPage.clickFunctioningCorrectlyYesRadio();
-    refrigeratorPage.enterValueInLowAlarmEvents("2");
-    refrigeratorPage.enterValueInHighAlarmEvents("5");
-    refrigeratorPage.clickProblemSinceLastVisitNR();
+    refrigeratorPage.clickShowForRefrigerator(1);
+    refrigeratorPage.enterValueInRefrigeratorTemperature("3", 1);
+    refrigeratorPage.clickFunctioningCorrectlyYesRadio(1);
+    refrigeratorPage.enterValueInLowAlarmEvents("2", 1);
+    refrigeratorPage.enterValueInHighAlarmEvents("5", 1);
+    refrigeratorPage.clickProblemSinceLastVisitNR(1);
     testWebDriver.sleep(500);
     refrigeratorPage.verifyRefrigeratorColor("overall", "GREEN");
     refrigeratorPage.verifyRefrigeratorColor("individual", "GREEN");
@@ -504,12 +504,12 @@ public class DistributionSyncTest extends TestCaseHelper {
 
     RefrigeratorPage refrigeratorPage = visitInformationPage.navigateToRefrigerators();
 
-    refrigeratorPage.clickShowForRefrigerator1();
-    refrigeratorPage.enterValueInRefrigeratorTemperature("3");
-    refrigeratorPage.clickFunctioningCorrectlyYesRadio();
-    refrigeratorPage.enterValueInLowAlarmEvents("2");
-    refrigeratorPage.enterValueInHighAlarmEvents("5");
-    refrigeratorPage.clickProblemSinceLastVisitNR();
+    refrigeratorPage.clickShowForRefrigerator(1);
+    refrigeratorPage.enterValueInRefrigeratorTemperature("3", 1);
+    refrigeratorPage.clickFunctioningCorrectlyYesRadio(1);
+    refrigeratorPage.enterValueInLowAlarmEvents("2", 1);
+    refrigeratorPage.enterValueInHighAlarmEvents("5", 1);
+    refrigeratorPage.clickProblemSinceLastVisitNR(1);
     refrigeratorPage.verifyRefrigeratorColor("overall", "GREEN");
     refrigeratorPage.verifyRefrigeratorColor("individual", "GREEN");
     refrigeratorPage.clickDone();
@@ -885,12 +885,12 @@ public class DistributionSyncTest extends TestCaseHelper {
     refrigeratorPage.clickAddNew();
     refrigeratorPage.addNewRefrigerator("SAM", "800L", "GNR7876");
 
-    refrigeratorPage.clickShowForRefrigerator1();
-    refrigeratorPage.enterValueInRefrigeratorTemperature("3");
-    refrigeratorPage.clickFunctioningCorrectlyYesRadio();
-    refrigeratorPage.enterValueInLowAlarmEvents("2");
-    refrigeratorPage.enterValueInHighAlarmEvents("5");
-    refrigeratorPage.clickProblemSinceLastVisitNR();
+    refrigeratorPage.clickShowForRefrigerator(1);
+    refrigeratorPage.enterValueInRefrigeratorTemperature("3", 1);
+    refrigeratorPage.clickFunctioningCorrectlyYesRadio(1);
+    refrigeratorPage.enterValueInLowAlarmEvents("2", 1);
+    refrigeratorPage.enterValueInHighAlarmEvents("5", 1);
+    refrigeratorPage.clickProblemSinceLastVisitNR(1);
     refrigeratorPage.clickDone();
     testWebDriver.sleep(500);
     refrigeratorPage.verifyRefrigeratorColor("overall", "GREEN");
@@ -1049,7 +1049,7 @@ public class DistributionSyncTest extends TestCaseHelper {
     visitInformationPage.verifyAllFieldsDisabled();
 
     RefrigeratorPage refrigeratorPage = visitInformationPage.navigateToRefrigerators();
-    refrigeratorPage.clickShowForRefrigerator1();
+    refrigeratorPage.clickShowForRefrigerator(1);
     refrigeratorPage.verifyAllFieldsDisabled();
 
     EPIUsePage epiUsePage = refrigeratorPage.navigateToEpiUse();

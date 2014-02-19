@@ -86,27 +86,29 @@ public class DistributionRefrigeratorSyncTest extends TestCaseHelper {
     visitInformationPage.enterDataWhenFacilityVisited("some observations", "samuel", "Doe", "Verifier", "XYZ");
     RefrigeratorPage refrigeratorPage = visitInformationPage.navigateToRefrigerators();
 
-    refrigeratorPage.clickShowForRefrigerator1();
+    refrigeratorPage.clickShowForRefrigerator(1);
     refrigeratorPage.verifyRefrigeratorColor("individual", "RED");
-    refrigeratorPage.enterValueInRefrigeratorTemperature("999.9");
+    refrigeratorPage.enterValueInRefrigeratorTemperature("999.9", 1);
     refrigeratorPage.verifyRefrigeratorColor("overall", "AMBER");
     refrigeratorPage.verifyRefrigeratorColor("individual", "AMBER");
-    refrigeratorPage.clickFunctioningCorrectlyYesRadio();
-    refrigeratorPage.enterValueInLowAlarmEvents("1");
-    refrigeratorPage.enterValueInHighAlarmEvents("0");
-    refrigeratorPage.clickProblemSinceLastVisitDoNotKnowRadio();
-    refrigeratorPage.enterValueInNotesTextArea("miscellaneous");
+    refrigeratorPage.clickFunctioningCorrectlyYesRadio(1);
+    refrigeratorPage.enterValueInLowAlarmEvents("1", 1);
+    refrigeratorPage.enterValueInHighAlarmEvents("0", 1);
+    refrigeratorPage.clickProblemSinceLastVisitDoNotKnowRadio(1);
+    refrigeratorPage.enterValueInNotesTextArea("miscellaneous", 1);
     refrigeratorPage.clickDone();
     refrigeratorPage.verifyRefrigeratorColor("individual", "GREEN");
     refrigeratorPage.verifyRefrigeratorColor("overall", "AMBER");
 
-    refrigeratorPage.clickShowForRefrigerator2();
-    refrigeratorPage.enterValueInRefrigeratorTemperatureForSecondRefrigerator("5");
-    refrigeratorPage.clickFunctioningCorrectlyNoRadioForSecondRefrigerator();
-    refrigeratorPage.enterValueInLowAlarmEventsForSecondRefrigerator("10");
-    refrigeratorPage.enterValueInHighAlarmEventsForSecondRefrigerator("05");
-    refrigeratorPage.clickProblemSinceLastVisitNoRadioForSecondRefrigerator();
-    refrigeratorPage.verifyRefrigeratorColor("individual", "GREEN");
+    refrigeratorPage.clickShowForRefrigerator(2);
+    refrigeratorPage.enterValueInRefrigeratorTemperature("5", 2);
+    refrigeratorPage.clickProblemSinceLastVisitNoRadio(2);
+    refrigeratorPage.enterValueInLowAlarmEvents("10", 2);
+    refrigeratorPage.enterValueInHighAlarmEvents("05", 2);
+    refrigeratorPage.clickFunctioningCorrectlyNoRadio(2);
+    refrigeratorPage.selectBurnerProblem(2);
+    refrigeratorPage.selectOtherProblem(2);
+    refrigeratorPage.enterTextInOtherProblemTextBox("other problem", 2);
     refrigeratorPage.verifyRefrigeratorColor("overall", "GREEN");
 
     EPIUsePage epiUsePage = refrigeratorPage.navigateToEpiUse();
@@ -130,7 +132,7 @@ public class DistributionRefrigeratorSyncTest extends TestCaseHelper {
     verifyRefrigeratorReadingDataInDatabase(refrigeratorTestData.get(FIRST_FACILITY_CODE), "GNR7878", 999.9F, "Y", 1, 0, "D", "miscellaneous");
     verifyRefrigeratorProblemDataNullInDatabase("GNR7878", refrigeratorTestData.get(FIRST_FACILITY_CODE));
     verifyRefrigeratorReadingDataInDatabase(refrigeratorTestData.get(FIRST_FACILITY_CODE), "TGNR7878", 5F, "N", 10, 5, "N", null);
-    verifyRefrigeratorProblemDataNullInDatabase("TGNR7878", refrigeratorTestData.get(FIRST_FACILITY_CODE));
+    verifyRefrigeratorProblemDataInDatabase(refrigeratorTestData.get(FIRST_FACILITY_CODE), "TGNR7878", false, true, false, false, false, true, "other problem");
   }
 
   @Test(groups = {"distribution"})
@@ -142,20 +144,20 @@ public class DistributionRefrigeratorSyncTest extends TestCaseHelper {
 
     RefrigeratorPage refrigeratorPage = visitInformationPage.navigateToRefrigerators();
 
-    refrigeratorPage.clickShowForRefrigerator1();
+    refrigeratorPage.clickShowForRefrigerator(1);
     refrigeratorPage.verifyRefrigeratorColor("individual", "RED");
-    refrigeratorPage.enterValueInRefrigeratorTemperature("-999.9");
-    refrigeratorPage.clickFunctioningCorrectlyYesRadio();
-    refrigeratorPage.clickFunctioningCorrectlyNoRadio();
-    refrigeratorPage.enterValueInLowAlarmEvents("1");
-    refrigeratorPage.enterValueInHighAlarmEvents("0");
-    refrigeratorPage.clickProblemSinceLastVisitYesRadio();
+    refrigeratorPage.enterValueInRefrigeratorTemperature("-999.9", 1);
+    refrigeratorPage.clickFunctioningCorrectlyYesRadio(1);
+    refrigeratorPage.clickFunctioningCorrectlyNoRadio(1);
+    refrigeratorPage.enterValueInLowAlarmEvents("1", 1);
+    refrigeratorPage.enterValueInHighAlarmEvents("0", 1);
+    refrigeratorPage.clickProblemSinceLastVisitYesRadio(11);
     refrigeratorPage.verifyRefrigeratorColor("overall", "AMBER");
-    refrigeratorPage.selectOtherProblem();
+    refrigeratorPage.selectOtherProblem(1);
     refrigeratorPage.verifyRefrigeratorColor("overall", "AMBER");
     refrigeratorPage.verifyRefrigeratorColor("individual", "AMBER");
-    refrigeratorPage.enterTextInOtherProblemTextBox("others");
-    refrigeratorPage.selectGasLeakProblem();
+    refrigeratorPage.enterTextInOtherProblemTextBox("others", 1);
+    refrigeratorPage.selectGasLeakProblem(1);
     refrigeratorPage.verifyRefrigeratorColor("overall", "GREEN");
     refrigeratorPage.verifyRefrigeratorColor("individual", "GREEN");
     refrigeratorPage.clickDone();
@@ -191,18 +193,18 @@ public class DistributionRefrigeratorSyncTest extends TestCaseHelper {
 
     RefrigeratorPage refrigeratorPage = visitInformationPage.navigateToRefrigerators();
 
-    refrigeratorPage.clickShowForRefrigerator1();
+    refrigeratorPage.clickShowForRefrigerator(1);
     refrigeratorPage.verifyRefrigeratorColor("individual", "RED");
-    refrigeratorPage.applyNRToRefrigeratorTemperature();
-    refrigeratorPage.clickProblemSinceLastVisitNoRadio();
-    refrigeratorPage.clickProblemSinceLastVisitNR();
-    refrigeratorPage.enterValueInLowAlarmEvents("1");
-    refrigeratorPage.applyNRToLowAlarmEvent();
-    refrigeratorPage.applyNRToHighAlarmEvent();
+    refrigeratorPage.applyNRToRefrigeratorTemperature(1);
+    refrigeratorPage.clickProblemSinceLastVisitNoRadio(1);
+    refrigeratorPage.clickProblemSinceLastVisitNR(1);
+    refrigeratorPage.enterValueInLowAlarmEvents("1", 1);
+    refrigeratorPage.applyNRToLowAlarmEvent(1);
+    refrigeratorPage.applyNRToHighAlarmEvent(1);
     refrigeratorPage.verifyRefrigeratorColor("overall", "AMBER");
-    refrigeratorPage.clickFunctioningCorrectlyNoRadio();
-    refrigeratorPage.selectGasLeakProblem();
-    refrigeratorPage.clickFunctioningCorrectlyNR();
+    refrigeratorPage.clickFunctioningCorrectlyNoRadio(1);
+    refrigeratorPage.selectGasLeakProblem(1);
+    refrigeratorPage.clickFunctioningCorrectlyNR(1);
 
     refrigeratorPage.verifyFieldsDisabledWhenAllNRSelected();
 
@@ -241,14 +243,14 @@ public class DistributionRefrigeratorSyncTest extends TestCaseHelper {
 
     RefrigeratorPage refrigeratorPage = visitInformationPage.navigateToRefrigerators();
 
-    refrigeratorPage.clickShowForRefrigerator1();
+    refrigeratorPage.clickShowForRefrigerator(1);
     refrigeratorPage.verifyRefrigeratorColor("individual", "RED");
-    refrigeratorPage.enterValueInRefrigeratorTemperature("3");
-    refrigeratorPage.clickFunctioningCorrectlyNoRadio();
-    refrigeratorPage.clickFunctioningCorrectlyYesRadio();
-    refrigeratorPage.enterValueInLowAlarmEvents("1");
-    refrigeratorPage.enterValueInHighAlarmEvents("0");
-    refrigeratorPage.clickProblemSinceLastVisitNoRadio();
+    refrigeratorPage.enterValueInRefrigeratorTemperature("3", 1);
+    refrigeratorPage.clickFunctioningCorrectlyNoRadio(1);
+    refrigeratorPage.clickFunctioningCorrectlyYesRadio(1);
+    refrigeratorPage.enterValueInLowAlarmEvents("1", 1);
+    refrigeratorPage.enterValueInHighAlarmEvents("0", 1);
+    refrigeratorPage.clickProblemSinceLastVisitNoRadio(1);
 
     refrigeratorPage.verifyRefrigeratorColor("overall", "GREEN");
     refrigeratorPage.verifyRefrigeratorColor("individual", "GREEN");
@@ -279,16 +281,16 @@ public class DistributionRefrigeratorSyncTest extends TestCaseHelper {
     visitInformationPage.navigateToRefrigerators();
     refrigeratorPage.verifyRefrigeratorColor("overall", "RED");
 
-    refrigeratorPage.clickShowForRefrigerator1();
+    refrigeratorPage.clickShowForRefrigerator(1);
     refrigeratorPage.verifyRefrigeratorColor("individual", "RED");
-    refrigeratorPage.enterValueInRefrigeratorTemperature("3");
-    refrigeratorPage.clickFunctioningCorrectlyNoRadio();
-    refrigeratorPage.enterValueInLowAlarmEvents("2");
-    refrigeratorPage.enterValueInHighAlarmEvents("2");
-    refrigeratorPage.clickProblemSinceLastVisitYesRadio();
+    refrigeratorPage.enterValueInRefrigeratorTemperature("3", 1);
+    refrigeratorPage.clickFunctioningCorrectlyNoRadio(1);
+    refrigeratorPage.enterValueInLowAlarmEvents("2", 1);
+    refrigeratorPage.enterValueInHighAlarmEvents("2", 1);
+    refrigeratorPage.clickProblemSinceLastVisitYesRadio(1);
     refrigeratorPage.verifyRefrigeratorColor("overall", "AMBER");
-    refrigeratorPage.selectOtherProblem();
-    refrigeratorPage.enterTextInOtherProblemTextBox("others");
+    refrigeratorPage.selectOtherProblem(1);
+    refrigeratorPage.enterTextInOtherProblemTextBox("others", 1);
     testWebDriver.sleep(500);
     refrigeratorPage.verifyRefrigeratorColor("overall", "GREEN");
     refrigeratorPage.verifyRefrigeratorColor("individual", "GREEN");
@@ -343,12 +345,12 @@ public class DistributionRefrigeratorSyncTest extends TestCaseHelper {
 
     refrigeratorPage.clickAddNew();
     refrigeratorPage.addNewRefrigerator("LG22", "800L22", "GNR7878");
-    refrigeratorPage.clickShowForRefrigerator1();
-    refrigeratorPage.enterValueInRefrigeratorTemperature("3");
-    refrigeratorPage.clickFunctioningCorrectlyYesRadio();
-    refrigeratorPage.enterValueInLowAlarmEvents("2");
-    refrigeratorPage.enterValueInHighAlarmEvents("2");
-    refrigeratorPage.clickProblemSinceLastVisitNR();
+    refrigeratorPage.clickShowForRefrigerator(1);
+    refrigeratorPage.enterValueInRefrigeratorTemperature("3", 1);
+    refrigeratorPage.clickFunctioningCorrectlyYesRadio(1);
+    refrigeratorPage.enterValueInLowAlarmEvents("2", 1);
+    refrigeratorPage.enterValueInHighAlarmEvents("2", 1);
+    refrigeratorPage.clickProblemSinceLastVisitNR(1);
     refrigeratorPage.verifyRefrigeratorColor("overall", "GREEN");
     refrigeratorPage.verifyRefrigeratorColor("individual", "GREEN");
     refrigeratorPage.clickDone();
@@ -396,13 +398,13 @@ public class DistributionRefrigeratorSyncTest extends TestCaseHelper {
     refrigeratorPage.clickAddNew();
     refrigeratorPage.addNewRefrigerator("LG", "800L1", "GNR7878");
     refrigeratorPage.verifyRefrigeratorColor("overall", "RED");
-    refrigeratorPage.clickShowForRefrigerator1();
+    refrigeratorPage.clickShowForRefrigerator(1);
     refrigeratorPage.verifyRefrigeratorColor("individual", "RED");
-    refrigeratorPage.enterValueInRefrigeratorTemperature("3");
-    refrigeratorPage.clickFunctioningCorrectlyYesRadio();
-    refrigeratorPage.enterValueInLowAlarmEvents("2");
-    refrigeratorPage.enterValueInHighAlarmEvents("2");
-    refrigeratorPage.clickProblemSinceLastVisitNR();
+    refrigeratorPage.enterValueInRefrigeratorTemperature("3", 1);
+    refrigeratorPage.clickFunctioningCorrectlyYesRadio(1);
+    refrigeratorPage.enterValueInLowAlarmEvents("2", 1);
+    refrigeratorPage.enterValueInHighAlarmEvents("2", 1);
+    refrigeratorPage.clickProblemSinceLastVisitNR(1);
     refrigeratorPage.verifyRefrigeratorColor("overall", "GREEN");
     refrigeratorPage.verifyRefrigeratorColor("individual", "GREEN");
     refrigeratorPage.clickDone();

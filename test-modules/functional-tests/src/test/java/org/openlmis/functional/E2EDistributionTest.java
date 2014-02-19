@@ -114,22 +114,22 @@ public class E2EDistributionTest extends TestCaseHelper {
     facilityListPage.verifyOverallFacilityIndicatorColor("RED");
 
     refrigeratorPage.verifyRefrigeratorColor("overall", "RED");
-    refrigeratorPage.clickShowForRefrigerator1();
+    refrigeratorPage.clickShowForRefrigerator(1);
     refrigeratorPage.verifyRefrigeratorColor("individual", "RED");
 
-    refrigeratorPage.enterValueInRefrigeratorTemperature("3");
+    refrigeratorPage.enterValueInRefrigeratorTemperature("3", 1);
     refrigeratorPage.verifyRefrigeratorColor("overall", "AMBER");
     refrigeratorPage.verifyRefrigeratorColor("individual", "AMBER");
 
-    refrigeratorPage.clickFunctioningCorrectlyYesRadio();
-    refrigeratorPage.enterValueInLowAlarmEvents("1");
-    refrigeratorPage.enterValueInHighAlarmEvents("0");
-    refrigeratorPage.clickProblemSinceLastVisitDoNotKnowRadio();
+    refrigeratorPage.clickFunctioningCorrectlyYesRadio(1);
+    refrigeratorPage.enterValueInLowAlarmEvents("1", 1);
+    refrigeratorPage.enterValueInHighAlarmEvents("0", 1);
+    refrigeratorPage.clickProblemSinceLastVisitDoNotKnowRadio(1);
 
     refrigeratorPage.verifyRefrigeratorColor("overall", "GREEN");
     refrigeratorPage.verifyRefrigeratorColor("individual", "GREEN");
 
-    refrigeratorPage.enterValueInNotesTextArea("miscellaneous");
+    refrigeratorPage.enterValueInNotesTextArea("miscellaneous", 1);
     refrigeratorPage.clickDone();
 
     EPIUsePage epiUsePage = refrigeratorPage.navigateToEpiUse();
@@ -180,11 +180,11 @@ public class E2EDistributionTest extends TestCaseHelper {
     facilityListPage.selectFacility(facilityCodeFirst);
     visitInformationPage.navigateToRefrigerators();
 
-    refrigeratorPage.clickShowForRefrigerator1();
-    assertEquals(refrigeratorPage.getRefrigeratorTemperateTextFieldValue(), "3");
-    assertEquals(refrigeratorPage.getLowAlarmEventsTextFieldValue(), "1");
-    assertEquals(refrigeratorPage.getHighAlarmEventsTextFieldValue(), "0");
-    assertEquals(refrigeratorPage.getNotesTextAreaValue(), "miscellaneous");
+    refrigeratorPage.clickShowForRefrigerator(1);
+    assertEquals(refrigeratorPage.getRefrigeratorTemperateTextFieldValue(1), "3");
+    assertEquals(refrigeratorPage.getLowAlarmEventsTextFieldValue(1), "1");
+    assertEquals(refrigeratorPage.getHighAlarmEventsTextFieldValue(1), "0");
+    assertEquals(refrigeratorPage.getNotesTextAreaValue(1), "miscellaneous");
     refrigeratorPage.verifyRefrigeratorColor("overall", "GREEN");
     refrigeratorPage.verifyRefrigeratorColor("individual", "GREEN");
 
@@ -271,7 +271,7 @@ public class E2EDistributionTest extends TestCaseHelper {
     epiUsePage.verifyAllFieldsDisabled();
 
     epiUsePage.navigateToRefrigerators();
-    refrigeratorPage.clickShowForRefrigerator1();
+    refrigeratorPage.clickShowForRefrigerator(1);
     refrigeratorPage.verifyAllFieldsDisabled();
 
     refrigeratorPage.navigateToFullCoverage();
@@ -372,7 +372,7 @@ public class E2EDistributionTest extends TestCaseHelper {
     facilityListPage.verifyOverallFacilityIndicatorColor("RED");
 
     refrigeratorPage.verifyRefrigeratorColor("overall", "RED");
-    refrigeratorPage.clickShowForRefrigerator1();
+    refrigeratorPage.clickShowForRefrigerator(1);
     refrigeratorPage.verifyRefrigeratorColor("individual", "RED");
 
     refrigeratorPage.clickDone();
@@ -454,7 +454,7 @@ public class E2EDistributionTest extends TestCaseHelper {
     epiInventoryPage.verifyAllFieldsDisabled();
 
     epiInventoryPage.navigateToRefrigerators();
-    refrigeratorPage.clickShowForRefrigerator1();
+    refrigeratorPage.clickShowForRefrigerator(1);
     refrigeratorPage.verifyAllFieldsDisabled();
 
     refrigeratorPage.navigateToVisitInformation();
@@ -503,7 +503,7 @@ public class E2EDistributionTest extends TestCaseHelper {
     epiUsePage.verifyAllFieldsDisabled();
 
     epiUsePage.navigateToRefrigerators();
-    refrigeratorPage.clickShowForRefrigerator1();
+    refrigeratorPage.clickShowForRefrigerator(1);
     refrigeratorPage.verifyAllFieldsDisabled();
 
     refrigeratorPage.navigateToFullCoverage();

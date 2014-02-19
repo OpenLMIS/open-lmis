@@ -288,7 +288,7 @@ public class ManageDistribution extends TestCaseHelper {
   @Then("^I access show$")
   public void accessShow() {
     refrigeratorPage = PageFactory.getInstanceOfRefrigeratorPage(testWebDriver);
-    refrigeratorPage.clickShowForRefrigerator1();
+    refrigeratorPage.clickShowForRefrigerator(1);
   }
 
   @Then("^I see \"([^\"]*)\" fields disabled$")
