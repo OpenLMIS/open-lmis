@@ -104,4 +104,9 @@ public class LoginPage extends Page {
   public String getLoginErrorMessage() {
     return loginErrorLabel.getText();
   }
+
+  public void clearUserName() {
+    testWebDriver.waitForElementToAppear(userNameField);
+    userNameField.clear();
+  }
 }

@@ -313,7 +313,7 @@ public class ManageRolesAndUsers extends TestCaseHelper {
     loginPage.loginAs(LAB_IN_CHARGE, credentials[1]);
     assertEquals(loginPage.getLoginErrorMessage(),
       "The username or password you entered is incorrect. Please try again.");
-
+    loginPage.clearUserName();
     loginPage.loginAs(credentials[0], credentials[1]);
     homePage.navigateToUser();
     userPage.searchUser(LAB_IN_CHARGE);
