@@ -22,6 +22,3 @@ INSERT INTO coverage_target_group_products (targetGroupEntity, productCode, chil
 INSERT INTO coverage_target_group_products (targetGroupEntity, productCode, childCoverage) VALUES ('Measles', 'Measles', TRUE);
 
 INSERT INTO coverage_target_group_products (targetGroupEntity, productCode, childCoverage) VALUES ('Pregnant Women', 'Tetanus', FALSE);
-INSERT INTO coverage_target_group_products (targetGroupEntity, productCode, childCoverage) VALUES ('Students not MIF', 'Tetanus', FALSE);
-INSERT INTO coverage_target_group_products (targetGroupEntity, productCode, childCoverage) VALUES ('Workers not MIF', 'Tetanus', FALSE
-);
