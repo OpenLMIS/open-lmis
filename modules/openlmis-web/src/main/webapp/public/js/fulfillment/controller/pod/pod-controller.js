@@ -51,7 +51,7 @@ function PODController($scope, orderPOD, OrderPOD, pageSize, $routeParams, $loca
       saveDefer.resolve();
       return saveDefer.promise;
     }
-    OrderPOD.update({id: $routeParams.id}, {deliveredBy: $scope.pod.deliveredBy, acceptedBy: $scope.pod.acceptedBy,
+    OrderPOD.update({id: $routeParams.id}, {deliveredBy: $scope.pod.deliveredBy, receivedBy: $scope.pod.receivedBy,
       receivedDate: $scope.pod.receivedDate, podLineItems: $scope.pageLineItems}, function (data) {
       $scope.message = data.success;
       $scope.error = undefined;
