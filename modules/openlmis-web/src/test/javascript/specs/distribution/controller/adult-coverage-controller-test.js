@@ -42,9 +42,9 @@ describe('Child Coverage Controller', function () {
   });
 
   it('should convert adult coverage line items to map', function() {
-    expect(scope.adultCoverageMap).toBeDefined();
-    expect(scope.adultCoverageMap['Pregnant Women']).toEqual(adultCoverageLineItem1);
-    expect(scope.adultCoverageMap['Students not MIF']).toEqual(adultCoverageLineItem2);
-    expect(scope.adultCoverageMap['Workers not MIF']).toEqual(adultCoverageLineItem3);
+    expect(scope.adultCoverageTargetGroupMap).toBeDefined();
+    expect(scope.adultCoverageTargetGroupMap['Pregnant Women']).toEqual(adultCoverageLineItem1);
+    expect(scope.adultCoverageTargetGroupMap['Students not MIF']).toEqual(adultCoverageLineItem2);
+    expect(scope.adultCoverageTargetGroupMap['Workers not MIF']).toEqual(adultCoverageLineItem3);
   });
 });

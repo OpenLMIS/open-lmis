@@ -23,13 +23,17 @@ function AdultCoverageController($scope, $routeParams, distributionService) {
     OTHER_NOT_MIF: 'Other not MIF'
   };
 
-  var convertListToMap = function () {
+  var convertListToMap = function (list, key) {
     var map = {};
-    $scope.adultCoverage.adultCoverageLineItems.forEach(function (lineItem) {
-      map[lineItem.demographicGroup] = lineItem;
-    });
+    if (list !== null && list.length > 0) {
+      list.forEach(function (lineItem) {
+        map[lineItem[key]] = lineItem;
+      });
+    }
     return map;
   };
 
-$scope.adultCoverageMap = convertListToMap();
+  $scope.adultCoverageTargetGroupMap = convertListToMap($scope.adultCoverage.adultCoverageLineItems, 'demographicGroup');
+  $scope.adultCoverageOpenedVialsMap = convertListToMap($scope.adultCoverage.openedVialLineItems, 'productVialName');
+
 }
