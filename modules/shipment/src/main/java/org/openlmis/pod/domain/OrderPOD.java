@@ -41,7 +41,7 @@ public class OrderPOD extends BaseModel {
   private Long periodId;
   private List<OrderPODLineItem> podLineItems;
   private String deliveredBy;
-  private String acceptedBy;
+  private String receivedBy;
   private Date receivedDate;
 
   public OrderPOD(Long id) {
@@ -89,7 +89,7 @@ public class OrderPOD extends BaseModel {
   public void copy(OrderPOD orderPOD) {
     this.modifiedBy = orderPOD.getModifiedBy();
     this.receivedDate = orderPOD.getReceivedDate();
-    this.acceptedBy = orderPOD.getAcceptedBy();
+    this.receivedBy = orderPOD.getReceivedBy();
     this.deliveredBy = orderPOD.getDeliveredBy();
     for (final OrderPODLineItem newLineItem : orderPOD.podLineItems) {
       newLineItem.setModifiedBy(orderPOD.getModifiedBy());

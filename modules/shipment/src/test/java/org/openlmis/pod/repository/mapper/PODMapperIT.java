@@ -67,7 +67,7 @@ public class PODMapperIT extends ApplicationTestContext {
     OrderPOD orderPod = new OrderPOD();
     orderPod.setOrderId(order.getId());
     orderPod.setDeliveredBy("deliveredBy");
-    orderPod.setAcceptedBy("acceptedBy");
+    orderPod.setReceivedBy("acceptedBy");
     Date receivedDate = new Date();
     orderPod.setReceivedDate(receivedDate);
     Rnr rnr = order.getRnr();
@@ -81,7 +81,7 @@ public class PODMapperIT extends ApplicationTestContext {
     assertThat(savedOrderPod.getProgramId(), is(rnr.getProgram().getId()));
     assertThat(savedOrderPod.getPeriodId(), is(rnr.getPeriod().getId()));
     assertThat(savedOrderPod.getDeliveredBy(), is("deliveredBy"));
-    assertThat(savedOrderPod.getAcceptedBy(), is("acceptedBy"));
+    assertThat(savedOrderPod.getReceivedBy(), is("acceptedBy"));
     assertThat(savedOrderPod.getReceivedDate(), is(receivedDate));
   }
 
@@ -209,7 +209,7 @@ public class PODMapperIT extends ApplicationTestContext {
     mapper.insertPOD(orderPod);
 
     orderPod.setModifiedBy(modifiedBy);
-    orderPod.setAcceptedBy("acceptedBy");
+    orderPod.setReceivedBy("acceptedBy");
     orderPod.setDeliveredBy("deliveredBy");
     Date receivedDate = new Date();
     orderPod.setReceivedDate(receivedDate);
@@ -218,7 +218,7 @@ public class PODMapperIT extends ApplicationTestContext {
     OrderPOD updatedPOD = mapper.getPODById(orderPod.getId());
     assertThat(updatedPOD.getModifiedBy(), is(modifiedBy));
     assertThat(updatedPOD.getReceivedDate(), is(receivedDate));
-    assertThat(updatedPOD.getAcceptedBy(), is("acceptedBy"));
+    assertThat(updatedPOD.getReceivedBy(), is("acceptedBy"));
     assertThat(updatedPOD.getDeliveredBy(), is("deliveredBy"));
   }
 
