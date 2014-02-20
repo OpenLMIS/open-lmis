@@ -39,6 +39,7 @@ public class EpiUseLineItem extends BaseModel {
   public EpiUseLineItem(Long facilityVisitId, ProductGroup productGroup, Long createdBy, Long modifiedBy) {
     this.productGroup = productGroup;
     this.createdBy = createdBy;
+    this.modifiedBy = modifiedBy;
     this.facilityVisitId = facilityVisitId;
   }
 }
