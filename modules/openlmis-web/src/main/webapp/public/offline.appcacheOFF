@@ -66,6 +66,7 @@ CACHE:
 /public/js/distribution/model/facility-distribution-data.js
 /public/js/distribution/model/coverage.js
 /public/js/distribution/model/child-coverage.js
+/public/js/distribution/model/adult-coverage.js
 
 
 /public/js/distribution/service/shared-distributions.js
