@@ -11,6 +11,7 @@
 
 package org.openlmis.pod.domain;
 
+import org.apache.commons.lang.time.DateUtils;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -29,12 +30,15 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Matchers.isNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.openlmis.rnr.builder.RnrLineItemBuilder.defaultRnrLineItem;
@@ -52,9 +56,9 @@ public class OrderPODTest {
 
   @Test
   public void shouldThrowErrorIfOrderIdIsBlank() {
-    OrderPOD orderPod = new OrderPOD(1l);
+    OrderPOD orderPod = new OrderPOD(1L);
     orderPod.setOrderId(null);
-    List<OrderPODLineItem> orderPodLineItems = asList(new OrderPODLineItem(1l, "P100", 100));
+    List<OrderPODLineItem> orderPodLineItems = asList(new OrderPODLineItem(1L, "P100", 100));
     orderPod.setPodLineItems(orderPodLineItems);
 
     expectedException.expect(DataException.class);
@@ -73,6 +77,29 @@ public class OrderPODTest {
     assertThat(orderPod.getFacilityId(), is(2L));
     assertThat(orderPod.getProgramId(), is(3L));
     assertThat(orderPod.getPeriodId(), is(4L));
+  }
+
+  @Test
+  public void shouldGetStringReceivedDate() throws Exception {
+    OrderPOD orderPod = new OrderPOD();
+    orderPod.setReceivedDate(DateUtils.parseDate("01-09-12 05:30:00", new String[]{"dd-MM-yy HH:mm:ss"}));
+
+    assertThat(orderPod.getStringReceivedDate(), is("2012-09-01"));
+  }
+
+  @Test
+  public void shouldTrimHoursFromReceivedDate() throws Exception {
+    OrderPOD orderPod = new OrderPOD();
+    orderPod.setReceivedDate(DateUtils.parseDate("01-09-12 05:30:00", new String[]{"dd-MM-yy HH:mm:ss"}));
+
+    assertThat(orderPod.trimHoursFromDate(orderPod.getReceivedDate()), is(DateUtils.parseDate("01-09-12 00:00:00", new String[]{"dd-MM-yy HH:mm:ss"})));
+  }
+
+  @Test
+  public void shouldGetStringReceivedDateAsNullIfReceivedDateIsNull() throws Exception {
+    OrderPOD orderPod = new OrderPOD();
+
+    assertThat(orderPod.getStringReceivedDate(), nullValue());
   }
 
   @Test

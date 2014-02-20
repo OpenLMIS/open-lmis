@@ -23,6 +23,7 @@ import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.domain.RnrLineItem;
 
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -86,9 +87,9 @@ public class OrderPOD extends BaseModel {
     return !lineItem.isRnrLineItem() || ((RnrLineItem) lineItem).getPacksToShip() > 0;
   }
 
-  public void copy(OrderPOD orderPOD) {
+  public void copy(OrderPOD orderPOD) throws ParseException {
     this.modifiedBy = orderPOD.getModifiedBy();
-    this.receivedDate = orderPOD.getReceivedDate();
+    this.receivedDate = trimHoursFromDate(orderPOD.getReceivedDate());
     this.receivedBy = orderPOD.getReceivedBy();
     this.deliveredBy = orderPOD.getDeliveredBy();
     for (final OrderPODLineItem newLineItem : orderPOD.podLineItems) {
@@ -105,6 +106,15 @@ public class OrderPOD extends BaseModel {
 
   @JsonIgnore
   public String getStringReceivedDate() throws ParseException {
+    if (this.receivedDate == null)
+      return null;
     return forPattern("yyyy-MM-dd").print(new DateTime(this.receivedDate));
+  }
+
+  public Date trimHoursFromDate(Date receivedDate) throws ParseException {
+    if (receivedDate == null)
+      return null;
+    SimpleDateFormat dateFormatWithoutTime = new SimpleDateFormat("dd/MM/yyyy");
+    return dateFormatWithoutTime.parse(dateFormatWithoutTime.format(receivedDate));
   }
 }

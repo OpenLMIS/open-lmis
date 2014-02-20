@@ -77,7 +77,7 @@ public class PODController extends BaseController {
 
   @RequestMapping(value = "/pods/{id}", method = PUT, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'MANAGE_POD')")
-  public ResponseEntity<OpenLmisResponse> save(@RequestBody OrderPOD orderPOD, @PathVariable Long id, HttpServletRequest request) {
+  public ResponseEntity<OpenLmisResponse> save(@RequestBody OrderPOD orderPOD, @PathVariable Long id, HttpServletRequest request) throws ParseException {
     try {
       orderPOD.setModifiedBy(loggedInUserId(request));
       orderPOD.setId(id);

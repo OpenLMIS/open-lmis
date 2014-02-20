@@ -28,6 +28,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
 
@@ -99,7 +100,7 @@ public class PODService {
   }
 
   @Transactional
-  public OrderPOD save(OrderPOD orderPOD) {
+  public OrderPOD save(OrderPOD orderPOD) throws ParseException {
     OrderPOD existingPod = repository.getPOD(orderPOD.getId());
     if (orderService.hasStatus(existingPod.getOrderId(), OrderStatus.RECEIVED)) {
       throw new DataException("error.pod.already.submitted");
