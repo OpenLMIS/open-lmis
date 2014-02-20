@@ -51,7 +51,7 @@
   <td ng-bind="pregnantWomenCoverage.targetGroup"></td>
   <td>
     <span class="input-error-parent-cell">
-    <input type="text" maxlength="7" ng-model="pregnantWomenCoverage.healthCenterTetanus1.value" ng-trim="false"
+    <input class="right-justified" type="text" maxlength="7" ng-model="pregnantWomenCoverage.healthCenterTetanus1.value" ng-trim="false"
            numeric-validator="positiveInteger"
            name="pregnantWomenTetanus1"
            error-holder="pregnantWomenHealthCenterTetanus1Error"/>
@@ -66,7 +66,7 @@
   </td>
   <td>
     <span class="input-error-parent-cell">
-    <input type="text" maxlength="7" ng-model="pregnantWomenCoverage.outreachTetanus1.value" ng-trim="false"
+    <input class="right-justified" type="text" maxlength="7" ng-model="pregnantWomenCoverage.outreachTetanus1.value" ng-trim="false"
            name="pregnantWomenOutReach1" numeric-validator="positiveInteger" error-holder="outreachTetanus1"/>
     <span id="outreachTetanus1" class="rnr-form-error" openlmis-message="error.number.only"
           style="display: none"></span>
@@ -79,7 +79,7 @@
   <td id="totalTetanusPregnantWomen1" ng-bind="pregnantWomenCoverage.totalTetanus1()"></td>
   <td>
     <span class="input-error-parent-cell">
-    <input type="text" maxlength="7" ng-model="pregnantWomenCoverage.healthCenterTetanus2To5.value" ng-trim="false"
+    <input class="right-justified" type="text" maxlength="7" ng-model="pregnantWomenCoverage.healthCenterTetanus2To5.value" ng-trim="false"
            name="pregnantWomenHealthCenter2To5" numeric-validator="positiveInteger"
            error-holder="pregnantWomenHealthCenter2To5Error"/>
     <span id="pregnantWomenHealthCenter2To5Error" class="rnr-form-error" openlmis-message="error.number.only"
@@ -91,7 +91,7 @@
   </td>
   <td>
     <span class="input-error-parent-cell">
-    <input type="text" maxlength="7" ng-model="pregnantWomenCoverage.outreachTetanus2To5.value" ng-trim="false"
+    <input class="right-justified" type="text" maxlength="7" ng-model="pregnantWomenCoverage.outreachTetanus2To5.value" ng-trim="false"
            name="pregnantWomenOutReach2To5"
            numeric-validator="positiveInteger" error-holder="pregnantWomenOutReach2To5Error"/>
     <span id="pregnantWomenOutReach2To5Error" class="rnr-form-error" openlmis-message="error.number.only"
@@ -106,7 +106,7 @@
   <td id="pregnantWomenCoverageRate" ng-bind="pregnantWomenCoverage.coverageRate()"></td>
   <td class="vertical-middle-aligned" rowspan="7">
     <span class="input-error-parent-cell">
-    <input type="text" maxlength="7" ng-model="adultCoverageOpenedVialsMap['Tetanus'].value" ng-trim="false"
+    <input class="right-justified" type="text" maxlength="7" ng-model="adultCoverageOpenedVialsMap['Tetanus'].value" ng-trim="false"
            name="openedVial"
            numeric-validator="positiveInteger" error-holder="openedVialError"/>
     <span id="openedVialError" class="rnr-form-error" openlmis-message="error.number.only"
@@ -124,7 +124,7 @@
   <td ng-bind="mifCommunityCoverage.targetGroup"></td>
   <td>
     <span class="input-error-parent-cell">
-    <input type="text" maxlength="7" ng-model="mifCommunityCoverage.healthCenterTetanus1.value" ng-trim="false"
+    <input class="right-justified" type="text" maxlength="7" ng-model="mifCommunityCoverage.healthCenterTetanus1.value" ng-trim="false"
            name="mifCommunityHealthCenter1"
            numeric-validator="positiveInteger" error-holder="mifCommunityHealthCenterTetanus1Error"/>
     <span id="mifCommunityHealthCenterTetanus1Error" class="rnr-form-error" openlmis-message="error.number.only"
@@ -136,7 +136,7 @@
   </td>
   <td>
     <span class="input-error-parent-cell">
-    <input type="text" maxlength="7" ng-model="mifCommunityCoverage.outreachTetanus1.value" ng-trim="false"
+    <input class="right-justified" type="text" maxlength="7" ng-model="mifCommunityCoverage.outreachTetanus1.value" ng-trim="false"
            name="mifCommunityOutreach1"
            numeric-validator="positiveInteger" error-holder="mifCommunityOutreachTetanus1Error"/>
     <span id="mifCommunityOutreachTetanus1Error" class="rnr-form-error" openlmis-message="error.number.only"
@@ -149,7 +149,7 @@
   <td id="totalTetanus1MIFCommunity" ng-bind="mifCommunityCoverage.totalTetanus1()"></td>
   <td>
     <span class="input-error-parent-cell">
-    <input type="text" maxlength="7" ng-model="mifCommunityCoverage.healthCenterTetanus2To5.value" ng-trim="false"
+    <input class="right-justified" type="text" maxlength="7" ng-model="mifCommunityCoverage.healthCenterTetanus2To5.value" ng-trim="false"
            name="mifCommunityHealthCenter2To5"
            numeric-validator="positiveInteger" error-holder="mifCommunityHealthCenter2To5Error"/>
     <span id="mifCommunityHealthCenter2To5Error" class="rnr-form-error" openlmis-message="error.number.only"
@@ -161,7 +161,7 @@
   </td>
   <td>
     <span class="input-error-parent-cell">
-    <input type="text" maxlength="7" ng-model="mifCommunityCoverage.outreachTetanus2To5.value" ng-trim="false"
+    <input class="right-justified" type="text" maxlength="7" ng-model="mifCommunityCoverage.outreachTetanus2To5.value" ng-trim="false"
            name="mifCommunityOutreach2To5"
            numeric-validator="positiveInteger" error-holder="mifCommunityOutreachTetanus2To5Error"/>
     <span id="mifCommunityOutreachTetanus2To5Error" class="rnr-form-error" openlmis-message="error.number.only"
@@ -181,7 +181,7 @@
   <td></td>
   <td>
     <span class="input-error-parent-cell">
-    <input type="text" maxlength="7" ng-model="mifStudentCoverage.outreachTetanus1.value" ng-trim="false"
+    <input class="right-justified" type="text" maxlength="7" ng-model="mifStudentCoverage.outreachTetanus1.value" ng-trim="false"
            name="mifStudentOutreach1"
            numeric-validator="positiveInteger" error-holder="mifStudentOutreach1Error"/>
     <span id="mifStudentOutreach1Error" class="rnr-form-error" openlmis-message="error.number.only"
@@ -195,7 +195,7 @@
   <td></td>
   <td>
     <span class="input-error-parent-cell">
-    <input type="text" maxlength="7" ng-model="mifStudentCoverage.outreachTetanus2To5.value" ng-trim="false"
+    <input class="right-justified" type="text" maxlength="7" ng-model="mifStudentCoverage.outreachTetanus2To5.value" ng-trim="false"
            name="mifStudentOutreach2To5"
            numeric-validator="positiveInteger" error-holder="mifStudentOutreachTetanus2To5Error"/>
     <span id="mifStudentOutreachTetanus2To5Error" class="rnr-form-error" openlmis-message="error.number.only"
@@ -215,7 +215,7 @@
   <td></td>
   <td>
     <span class="input-error-parent-cell">
-    <input type="text" maxlength="7" ng-model="mifWorkerCoverage.outreachTetanus1.value" ng-trim="false"
+    <input class="right-justified" type="text" maxlength="7" ng-model="mifWorkerCoverage.outreachTetanus1.value" ng-trim="false"
            name="mifWorkerOutreach1"
            numeric-validator="positiveInteger" error-holder="mifWorkerOutreach1Error"/>
     <span id="mifWorkerOutreach1Error" class="rnr-form-error" openlmis-message="error.number.only"
@@ -229,7 +229,7 @@
   <td></td>
   <td>
     <span class="input-error-parent-cell">
-    <input type="text" maxlength="7" ng-model="mifWorkerCoverage.outreachTetanus2To5.value" ng-trim="false"
+    <input class="right-justified" type="text" maxlength="7" ng-model="mifWorkerCoverage.outreachTetanus2To5.value" ng-trim="false"
            name="mifWorkerOutreach2To5"
            numeric-validator="positiveInteger" error-holder="mifWorkerOutreachTetanus2To5Error"/>
     <span id="mifWorkerOutreachTetanus2To5Error" class="rnr-form-error" openlmis-message="error.number.only"
@@ -249,7 +249,7 @@
   <td></td>
   <td>
     <span class="input-error-parent-cell">
-    <input type="text" maxlength="7" ng-model="studentNotMIFCoverage.outreachTetanus1.value" ng-trim="false"
+    <input class="right-justified" type="text" maxlength="7" ng-model="studentNotMIFCoverage.outreachTetanus1.value" ng-trim="false"
            name="studentNotMIFOutreach1"
            numeric-validator="positiveInteger" error-holder="studentNotMIFOutreach1Error"/>
     <span id="studentNotMIFOutreach1Error" class="rnr-form-error" openlmis-message="error.number.only"
@@ -263,7 +263,7 @@
   <td></td>
   <td>
     <span class="input-error-parent-cell">
-    <input type="text" maxlength="7" ng-model="studentNotMIFCoverage.outreachTetanus2To5.value" ng-trim="false"
+    <input class="right-justified" type="text" maxlength="7" ng-model="studentNotMIFCoverage.outreachTetanus2To5.value" ng-trim="false"
            name="studentNotMIFOutreach2To5"
            numeric-validator="positiveInteger" error-holder="studentNotMIFOutreachTetanus2To5Error"/>
     <span id="studentNotMIFOutreachTetanus2To5Error" class="rnr-form-error" openlmis-message="error.number.only"
@@ -283,7 +283,7 @@
   <td></td>
   <td>
     <span class="input-error-parent-cell">
-    <input type="text" maxlength="7" ng-model="workerNotMIFCoverage.outreachTetanus1.value" ng-trim="false"
+    <input class="right-justified" type="text" maxlength="7" ng-model="workerNotMIFCoverage.outreachTetanus1.value" ng-trim="false"
            name="workerNotMIFOutreach1"
            numeric-validator="positiveInteger" error-holder="workerNotMIFOutreach1Error"/>
     <span id="workerNotMIFOutreach1Error" class="rnr-form-error" openlmis-message="error.number.only"
@@ -297,7 +297,7 @@
   <td></td>
   <td>
     <span class="input-error-parent-cell">
-    <input type="text" maxlength="7" ng-model="workerNotMIFCoverage.outreachTetanus2To5.value" ng-trim="false"
+    <input class="right-justified" type="text" maxlength="7" ng-model="workerNotMIFCoverage.outreachTetanus2To5.value" ng-trim="false"
            name="workerNotMIFOutreach2To5"
            numeric-validator="positiveInteger" error-holder="workerNotMIFOutreachTetanus2To5Error"/>
     <span id="workerNotMIFOutreachTetanus2To5Error" class="rnr-form-error" openlmis-message="error.number.only"
@@ -316,7 +316,7 @@
   <td ng-bind="otherNotMIFCoverage.targetGroup"></td>
   <td>
     <span class="input-error-parent-cell">
-    <input type="text" maxlength="7" ng-model="otherNotMIFCoverage.healthCenterTetanus1.value" ng-trim="false"
+    <input class="right-justified" type="text" maxlength="7" ng-model="otherNotMIFCoverage.healthCenterTetanus1.value" ng-trim="false"
            numeric-validator="positiveInteger"
            name="otherNotMIFTetanus1"
            error-holder="otherNotMIFHealthCenterTetanus1Error"/>
@@ -331,7 +331,7 @@
   </td>
   <td>
     <span class="input-error-parent-cell">
-    <input type="text" maxlength="7" ng-model="otherNotMIFCoverage.outreachTetanus1.value" ng-trim="false"
+    <input class="right-justified" type="text" maxlength="7" ng-model="otherNotMIFCoverage.outreachTetanus1.value" ng-trim="false"
            name="otherNotMIFOutReach1" numeric-validator="positiveInteger" error-holder="otherNotMIFOutReach1Error"/>
     <span id="otherNotMIFOutReach1Error" class="rnr-form-error" openlmis-message="error.number.only"
           style="display: none"></span>
@@ -344,7 +344,7 @@
   <td id="totalTetanusOtherNotMIF1" ng-bind="otherNotMIFCoverage.totalTetanus1()"></td>
   <td>
     <span class="input-error-parent-cell">
-    <input type="text" maxlength="7" ng-model="otherNotMIFCoverage.healthCenterTetanus2To5.value" ng-trim="false"
+    <input class="right-justified" type="text" maxlength="7" ng-model="otherNotMIFCoverage.healthCenterTetanus2To5.value" ng-trim="false"
            name="otherNotMIFHealthCenter2To5" numeric-validator="positiveInteger"
            error-holder="otherNotMIFHealthCenter2To5Error"/>
     <span id="otherNotMIFHealthCenter2To5Error" class="rnr-form-error" openlmis-message="error.number.only"
@@ -356,7 +356,7 @@
   </td>
   <td>
     <span class="input-error-parent-cell">
-    <input type="text" maxlength="7" ng-model="otherNotMIFCoverage.outreachTetanus2To5.value" ng-trim="false"
+    <input class="right-justified" type="text" maxlength="7" ng-model="otherNotMIFCoverage.outreachTetanus2To5.value" ng-trim="false"
            name="otherNotMIFOutReach2To5"
            numeric-validator="positiveInteger" error-holder="otherNotMIFOutReach2To5Error"/>
     <span id="otherNotMIFOutReach2To5Error" class="rnr-form-error" openlmis-message="error.number.only"
