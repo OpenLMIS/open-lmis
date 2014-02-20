@@ -536,13 +536,13 @@ public class E2EDistributionTest extends TestCaseHelper {
   }
 
   public void insertOpenedVialsProductMapping() throws SQLException {
-    dbWrapper.insertOpenedVialsProductsInMappingTable("BCG", "P10");
-    dbWrapper.insertOpenedVialsProductsInMappingTable("Polio10", "P11");
-    dbWrapper.insertOpenedVialsProductsInMappingTable("Polio20", "P10");
-    dbWrapper.insertOpenedVialsProductsInMappingTable("Penta1", "penta1");
-    dbWrapper.insertOpenedVialsProductsInMappingTable("Penta10", "P11");
-    dbWrapper.insertOpenedVialsProductsInMappingTable("PCV", "P10");
-    dbWrapper.insertOpenedVialsProductsInMappingTable("Measles", "Measles");
+    dbWrapper.insertChildCoverageProductVial("BCG", "P10");
+    dbWrapper.insertChildCoverageProductVial("Polio10", "P11");
+    dbWrapper.insertChildCoverageProductVial("Polio20", "P10");
+    dbWrapper.insertChildCoverageProductVial("Penta1", "penta1");
+    dbWrapper.insertChildCoverageProductVial("Penta10", "P11");
+    dbWrapper.insertChildCoverageProductVial("PCV", "P10");
+    dbWrapper.insertChildCoverageProductVial("Measles", "Measles");
   }
 
   @AfterMethod(groups = {"offline"})

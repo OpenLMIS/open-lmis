@@ -1389,8 +1389,8 @@ public class DBWrapper {
     update("UPDATE orders set status = '" + orderStatus + "' WHERE id = " + getMaxRnrID());
   }
 
-  public void insertOpenedVialsProductsInMappingTable(String vial, String productCode) throws SQLException {
-    update("INSERT INTO coverage_product_vials (vial, productCode) values ('%s' ,'%s')", vial, productCode);
+  public void insertChildCoverageProductVial(String vial, String productCode) throws SQLException {
+    update("INSERT INTO coverage_product_vials (vial, productCode, childCoverage) values ('%s' ,'%s', TRUE)", vial, productCode);
   }
 
   public ResultSet getOpenedVialLineItem(String productVialName, String facilityVisitId) throws SQLException {

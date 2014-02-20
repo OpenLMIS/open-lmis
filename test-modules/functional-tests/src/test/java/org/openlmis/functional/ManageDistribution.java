@@ -124,12 +124,12 @@ public class ManageDistribution extends TestCaseHelper {
     dbWrapper.insertRegimensProductsInMappingTable("PCV10 2nd dose", "P10");
     dbWrapper.insertRegimensProductsInMappingTable("PCV10 3rd dose", "P10");
     dbWrapper.insertRegimensProductsInMappingTable("Measles", "Measles");
-    dbWrapper.insertOpenedVialsProductsInMappingTable("Polio10", "P11");
-    dbWrapper.insertOpenedVialsProductsInMappingTable("Polio20", "P10");
-    dbWrapper.insertOpenedVialsProductsInMappingTable("Penta1", "penta1");
-    dbWrapper.insertOpenedVialsProductsInMappingTable("Penta10", "P11");
-    dbWrapper.insertOpenedVialsProductsInMappingTable("PCV", "P10");
-    dbWrapper.insertOpenedVialsProductsInMappingTable("Measles", "Measles");
+    dbWrapper.insertChildCoverageProductVial("Polio10", "P11");
+    dbWrapper.insertChildCoverageProductVial("Polio20", "P10");
+    dbWrapper.insertChildCoverageProductVial("Penta1", "penta1");
+    dbWrapper.insertChildCoverageProductVial("Penta10", "P11");
+    dbWrapper.insertChildCoverageProductVial("PCV", "P10");
+    dbWrapper.insertChildCoverageProductVial("Measles", "Measles");
   }
 
   @Then("^I verify that I am on visit information page")

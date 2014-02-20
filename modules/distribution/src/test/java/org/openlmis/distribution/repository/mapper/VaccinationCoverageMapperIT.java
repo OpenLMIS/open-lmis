@@ -217,7 +217,7 @@ public class VaccinationCoverageMapperIT {
     productMapper.insert(product);
     ProductVial productVial = new ProductVial("BCGVial", product.getCode());
 
-    queryExecutor.executeUpdate("INSERT INTO coverage_product_vials (vial, productCode) VALUES (?, ?)",
+    queryExecutor.executeUpdate("INSERT INTO coverage_product_vials (vial, productCode, childCoverage) VALUES (?, ?, TRUE)",
       productVial.getVial(), productVial.getProductCode());
 
     List<ProductVial> productVials = mapper.getProductVials();
