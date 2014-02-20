@@ -50,7 +50,7 @@ AdultCoverage.prototype.sumOfAttributes = function (attribute) {
     total = utils.sum(total, currentValue);
   });
   return total;
-}
+};
 
 function AdultCoverageLineItem(lineItem) {
   $.extend(true, this, lineItem);
