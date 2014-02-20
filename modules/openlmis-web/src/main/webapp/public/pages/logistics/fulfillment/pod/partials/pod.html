@@ -118,26 +118,30 @@
       <div class="toolbar-error" id="saveFailMessage" fade-out="3000" openlmis-message="error" ng-show="error"></div>
       <div class="toolbar-success" id="saveSuccessMsgDiv" fade-out="3000" openlmis-message="message"
            ng-show="message"></div>
-    </div>
-    <div class="info-box clearfix">
-      <div class="row-fluid">
-        <div class="span4">
-          <label><strong openlmis-message="label.acceptedBy"></strong></label>
-          <input id="acceptedBy" type="text" ng-model="pod.acceptedBy" ng-trim=false
-                 maxlength="100" ng-disabled="podAlreadySubmitted"/>
-        </div>
 
-        <div class="span4">
-          <label><strong openlmis-message="label.deliveredBy"></strong></label>
-          <input id="deliveredBy" type="text" ng-model="pod.deliveredBy" ng-trim=false
-                 maxlength="100" ng-disabled="podAlreadySubmitted"/>
-        </div>
+      <div id="podFooter">
+        <div class="info-box clearfix">
+          <div class="row-fluid">
+            <div class="span3 cell-input">
+              <strong openlmis-message="label.deliveredBy"></strong>
+              <input id="deliveredBy" type="text" ng-model="pod.deliveredBy" ng-trim=false
+                     maxlength="100" ng-disabled="podAlreadySubmitted"/>
+            </div>
 
-        <div class="span4">
-          <label><strong openlmis-message="label.receivedDate"></strong></label>
-          <input name="receivedDate" id="receivedDate" type="text"
-                 ui-date="{dateFormat: 'dd/mm/yy', changeYear: true}"
-                 ui-date-format="yy-mm-dd" ng-model="pod.receivedDate" ng-disabled="podAlreadySubmitted"/>
+            <div class="span3 cell-input">
+              <strong openlmis-message="label.acceptedBy"></strong>
+              <input id="acceptedBy" type="text" ng-model="pod.acceptedBy" ng-trim=false
+                     maxlength="100" ng-disabled="podAlreadySubmitted"/>
+            </div>
+
+            <div class="span3 cell-input">
+              <strong openlmis-message="label.receivedDate"></strong>
+              <input name="receivedDate" id="receivedDate" type="text"
+                     ui-date="{dateFormat: 'dd/mm/yy', changeYear: true}"
+                     ui-date-format="yy-mm-dd" ng-model="pod.receivedDate"
+                     ng-disabled="podAlreadySubmitted"/>
+            </div>
+          </div>
         </div>
       </div>
     </div>

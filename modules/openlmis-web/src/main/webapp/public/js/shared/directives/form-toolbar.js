@@ -26,6 +26,7 @@ app.directive('formToolbar',function () {
 var fixToolbarWidth = function() {
   var toolbarWidth = $(document).width() - 26;
   angular.element("#action_buttons").css("width", toolbarWidth + "px");
+  angular.element("#podFooter").css("width", (toolbarWidth - 30) + "px");
 
   var headerHeight = $(".header").outerHeight(true);
   var navHeight = $(".navigation").outerHeight(true);
