@@ -25,7 +25,7 @@ function AdultCoverageController($scope, $routeParams, distributionService) {
 
   var convertListToMap = function (list, key) {
     var map = {};
-    if (list !== null && list.length > 0) {
+    if (list !== null && list !== undefined && list.length > 0) {
       list.forEach(function (lineItem) {
         map[lineItem[key]] = lineItem;
       });
