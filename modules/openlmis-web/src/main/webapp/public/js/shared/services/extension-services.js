@@ -405,6 +405,11 @@ services.factory('SaveGeographicInfo', function($resource){
 /* Dashboard data factories */
 
 services.factory('OrderFillRate', function($resource){
+    return $resource('/dashboard/orderFillRate.json',{}, {});
+});
+
+services.factory('ItemFillRate', function($resource){
     return $resource('/dashboard/itemFillRate.json',{}, {});
 });
+
 /* End Dashboard data factories */

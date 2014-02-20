@@ -2,6 +2,7 @@ package org.openlmis.report.service.lookup;
 
 import org.openlmis.report.mapper.lookup.DashboardMapper;
 import org.openlmis.report.model.dto.ItemFillRate;
+import org.openlmis.report.model.dto.OrderFillRate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,5 +22,9 @@ public class DashboardLookupService {
 
     public List<ItemFillRate> getItemFillRate(){
         return dashboardMapper.getItemFillRate();
+    }
+
+    public OrderFillRate getOrderFillRate(Long geographiczoneId, Long facilityId, Long periodId, List<Long> productIdList){
+        return dashboardMapper.getOrderFillRate(geographiczoneId, periodId, facilityId);
     }
 }

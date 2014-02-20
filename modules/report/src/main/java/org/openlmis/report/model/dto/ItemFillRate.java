@@ -13,6 +13,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ItemFillRate {
-    private int fillRate;
+    private float fillRate;
     private String product;
 }

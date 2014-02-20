@@ -9,7 +9,7 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-function AdminDashboardController($scope,ReportPrograms, ReportSchedules, ReportPeriods, RequisitionGroupsByProgram,RequisitionGroupsByProgramSchedule, ReportProductsByProgram, OperationYears, ReportPeriodsByScheduleAndYear, ReportFacilityTypes, GetFacilityByFacilityType, FacilitiesByProgramParams, OrderFillRate) {
+function AdminDashboardController($scope,ReportPrograms, ReportSchedules, ReportPeriods, RequisitionGroupsByProgram,RequisitionGroupsByProgramSchedule, ReportProductsByProgram, OperationYears, ReportPeriodsByScheduleAndYear, ReportFacilityTypes, FacilitiesByProgramParams, OrderFillRate, ItemFillRate) {
 
     $scope.filterObject = {};
 
@@ -25,7 +25,7 @@ function AdminDashboardController($scope,ReportPrograms, ReportSchedules, Report
     var $lineWidth = 5;
     var barColor = defaultBarColor;
 
-    OrderFillRate.get(function (data){
+    ItemFillRate.get(function (data){
         $scope.itemFills = data.itemFillRate;
         $scope.productItemFillRates = [];
         $.each($scope.itemFills, function (item, idx) {
@@ -37,6 +37,32 @@ function AdminDashboardController($scope,ReportPrograms, ReportSchedules, Report
             $scope.productItemFillRates.push({'option': {animate:3000, barColor: barColor, scaleColor: $scaleColor, lineWidth: $lineWidth}, 'percent': idx.fillRate, 'name': idx.product});
         });
 
+    });
+
+    OrderFillRate.get({geographiczoneId:1,periodId:1,facilityId:1},function(data){
+       $scope.orderFill = data.orderFillRate;
+
+        var fillRate = [];
+        if($scope.orderFill !== undefined ){
+            fillRate.push([$scope.orderFill.fillRate]);
+            $scope.orderFillChart = {
+                'option':{
+                    title:'Order Fill Rate',
+                    seriesDefaults:{
+                        renderer:$.jqplot.MeterGaugeRenderer,
+                        rendererOptions: {
+                            label: 'Order Sub/App',
+                            labelPosition: 'bottom',
+                            labelHeightAdjust: -5,
+                            min: 0,
+                            max: 100,
+                            intervals:[25, 50, 75, 100],
+                            intervalColors:['#66cc66', '#93b75f', '#E7E658', '#cc6666']
+                        }
+                    }
+                },'data': fillRate
+            };
+        }
     });
 
     ReportFacilityTypes.get(function (data) {
@@ -130,7 +156,7 @@ function AdminDashboardController($scope,ReportPrograms, ReportSchedules, Report
     });
 
     $scope.loadFillRates = function(){
-        OrderFillRate.get({
+        /*ItemFillRate.get({
             geographicZone: $scope.filterObject.geographicZoneId ,
             period: $scope.filterObject.periodId,
             products: $scope.filterObject.productIdList
@@ -146,7 +172,7 @@ function AdminDashboardController($scope,ReportPrograms, ReportSchedules, Report
                 $scope.productItemFillRates.push({'option': {animate:3000, barColor: barColor, scaleColor: $scaleColor, lineWidth: $lineWidth}, 'percent': idx.fillRate, 'name': idx.product});
             });
 
-        });
+        });*/
 
     };
 
@@ -586,7 +612,7 @@ function AdminDashboardController($scope,ReportPrograms, ReportSchedules, Report
 
    /* Gauge Chart */
 
-    $scope.gaugeChartData = [[340]];
+   /* $scope.gaugeChartData = [[ 66.666664]];
 
     $scope.gaugeChartOption = {
         title:'Order Fill Rate',
@@ -596,13 +622,13 @@ function AdminDashboardController($scope,ReportPrograms, ReportSchedules, Report
                 label: 'Order Sub/App',
                 labelPosition: 'bottom',
                 labelHeightAdjust: -5,
-                min: 100,
-                max: 500,
-                intervals:[200, 300, 400, 500],
+                min: 0,
+                max: 100,
+                intervals:[25, 50, 75, 100],
                 intervalColors:['#66cc66', '#93b75f', '#E7E658', '#cc6666']
             }
         }
-    };
+    };*/
 
     /* End Gauge Chart * /
 
