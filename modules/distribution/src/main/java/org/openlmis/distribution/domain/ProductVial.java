@@ -24,5 +24,6 @@ public class ProductVial extends BaseModel {
 
   private String vial;
   private String productCode;
+  private Boolean childCoverage;
 
 }

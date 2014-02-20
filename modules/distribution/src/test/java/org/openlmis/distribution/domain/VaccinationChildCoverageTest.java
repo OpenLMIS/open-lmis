@@ -52,7 +52,7 @@ public class VaccinationChildCoverageTest {
     ChildCoverageLineItem lineItem = new ChildCoverageLineItem();
     OpenedVialLineItem openedVialLineItem = new OpenedVialLineItem();
 
-    ProductVial productVial = new ProductVial("bcg", "BCG");
+    ProductVial productVial = new ProductVial("bcg", "BCG", true);
     List<ProductVial> productVials = asList(productVial);
 
     whenNew(ChildCoverageLineItem.class).withArguments(facilityVisit, facility, targetGroupProduct, "BCG").thenReturn(
@@ -73,7 +73,7 @@ public class VaccinationChildCoverageTest {
     invalidVaccination.setTargetGroupEntity("BCG1234");
     List<TargetGroupProduct> targetGroupProducts = asList(invalidVaccination);
 
-    ProductVial productVial = new ProductVial("bcg", "BCG");
+    ProductVial productVial = new ProductVial("bcg", "BCG", true);
 
     ChildCoverageLineItem lineItem = new ChildCoverageLineItem();
     lineItem.setVaccination("BCG");
@@ -99,7 +99,7 @@ public class VaccinationChildCoverageTest {
     targetGroupProduct.setTargetGroupEntity("BCG");
     List<TargetGroupProduct> targetGroupProducts = asList(targetGroupProduct);
 
-    ProductVial invalidProductVial = new ProductVial("invalidVial", "BCG");
+    ProductVial invalidProductVial = new ProductVial("invalidVial", "BCG", true);
     List<ProductVial> productVials = asList(invalidProductVial);
 
     ChildCoverageLineItem lineItem = new ChildCoverageLineItem();

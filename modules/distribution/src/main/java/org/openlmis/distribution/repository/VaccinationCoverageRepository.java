@@ -54,8 +54,9 @@ public class VaccinationCoverageRepository {
   }
 
   public VaccinationChildCoverage getChildCoverageBy(Long facilityVisitId) {
-    return new VaccinationChildCoverage(mapper.getChildCoverageLineItemsBy(facilityVisitId),
-      mapper.getOpenedVialLineItemsBy(facilityVisitId));
+    VaccinationChildCoverage childCoverage = new VaccinationChildCoverage(mapper.getChildCoverageLineItemsBy(facilityVisitId));
+    childCoverage.setOpenedVialLineItems(mapper.getOpenedVialLineItemsBy(facilityVisitId));
+    return childCoverage;
   }
 
   public List<ProductVial> getProductVials() {

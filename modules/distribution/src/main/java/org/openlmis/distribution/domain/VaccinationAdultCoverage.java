@@ -18,9 +18,13 @@ import static java.util.Arrays.asList;
 @EqualsAndHashCode(callSuper = true)
 public class VaccinationAdultCoverage extends VaccinationCoverage {
 
+  private static final List<String> validProductVials = Collections.unmodifiableList(asList("Tetanus"));
+
   List<AdultCoverageLineItem> adultCoverageLineItems = new ArrayList<>();
 
-  public VaccinationAdultCoverage(FacilityVisit facilityVisit, Facility facility, List<TargetGroupProduct> adultTargetGroupProducts) {
+  public VaccinationAdultCoverage(FacilityVisit facilityVisit, Facility facility,
+                                  List<TargetGroupProduct> adultTargetGroupProducts, List<ProductVial> adultProductVial) {
+    super(facilityVisit, facility, adultProductVial, validProductVials);
 
     List<String> validDemographicGroups = Collections.unmodifiableList(
       asList("Pregnant Women", "MIF 15-49 years - Community", "MIF 15-49 years - Students", "MIF 15-49 years - Workers",
@@ -29,7 +33,8 @@ public class VaccinationAdultCoverage extends VaccinationCoverage {
     createAdultCoverageLineItems(facilityVisit, facility, adultTargetGroupProducts, validDemographicGroups);
   }
 
-  private void createAdultCoverageLineItems(FacilityVisit facilityVisit, Facility facility, List<TargetGroupProduct> adultTargetGroupProducts, List<String> demographicGroups) {
+  private void createAdultCoverageLineItems(FacilityVisit facilityVisit, Facility facility,
+                                            List<TargetGroupProduct> adultTargetGroupProducts, List<String> demographicGroups) {
     for (String demographicGroup : demographicGroups) {
       TargetGroupProduct targetGroupForLineItem = getTargetGroupForLineItem(adultTargetGroupProducts, demographicGroup);
       this.adultCoverageLineItems.add(new AdultCoverageLineItem(facilityVisit, facility, targetGroupForLineItem, demographicGroup));

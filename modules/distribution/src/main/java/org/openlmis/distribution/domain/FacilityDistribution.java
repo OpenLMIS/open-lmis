@@ -47,14 +47,14 @@ public class FacilityDistribution {
                               Distribution distribution,
                               List<RefrigeratorReading> readings,
                               List<TargetGroupProduct> childrenTargetGroupProducts,
-                              List<TargetGroupProduct> adultTargetGroupProducts, List<ProductVial> productVials) {
+                              List<TargetGroupProduct> adultTargetGroupProducts, List<ProductVial> childProductVials, List<ProductVial> adultProductVials) {
     this.setFacility(facility);
     this.facilityVisit = facilityVisit;
     this.epiUse = new EpiUse(facility, facilityVisit);
     this.refrigerators = new DistributionRefrigerators(facilityVisit, readings);
     this.epiInventory = new EpiInventory(facilityVisit, facility, distribution);
-    this.childCoverage = new VaccinationChildCoverage(facilityVisit, facility, childrenTargetGroupProducts, productVials);
-    this.adultCoverage = new VaccinationAdultCoverage(facilityVisit, facility, adultTargetGroupProducts);
+    this.childCoverage = new VaccinationChildCoverage(facilityVisit, facility, childrenTargetGroupProducts, childProductVials);
+    this.adultCoverage = new VaccinationAdultCoverage(facilityVisit, facility, adultTargetGroupProducts, adultProductVials);
   }
 
   public FacilityDistribution(FacilityVisit facilityVisit, EpiUse epiUse, DistributionRefrigerators refrigerators, EpiInventory epiInventory,

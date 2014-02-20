@@ -68,13 +68,31 @@ public class FacilityDistributionService {
     List<TargetGroupProduct> adultTargetGroupProducts = new ArrayList<>();
     filterTargetGroupProducts(targetGroupProducts, childrenTargetGroupProducts, adultTargetGroupProducts);
     List<ProductVial> productVials = vaccinationCoverageService.getProductVials();
+    List<ProductVial> childProductVials = new ArrayList<>();
+    List<ProductVial> adultProductVials = new ArrayList<>();
+    filterProductVials(productVials, childProductVials, adultProductVials);
 
     for (Facility facility : facilities) {
       facilityDistributions.put(facility.getId(), createDistributionData(facility, distribution, distributionRefrigerators, childrenTargetGroupProducts,
-        adultTargetGroupProducts, productVials));
+        adultTargetGroupProducts, childProductVials, adultProductVials));
     }
 
     return facilityDistributions;
+  }
+
+  private void filterProductVials(List<ProductVial> productVials, List<ProductVial> childProductVials, List<ProductVial> adultProductVials) {
+    CollectionUtils.select(productVials, new Predicate() {
+      @Override
+      public boolean evaluate(Object o) {
+        return ((ProductVial) o).getChildCoverage();
+      }
+    }, childProductVials);
+    CollectionUtils.selectRejected(productVials, new Predicate() {
+      @Override
+      public boolean evaluate(Object o) {
+        return ((ProductVial) o).getChildCoverage();
+      }
+    }, adultProductVials);
   }
 
   private void filterTargetGroupProducts(List<TargetGroupProduct> targetGroupProducts, List<TargetGroupProduct> childrenTargetGroupProducts, List<TargetGroupProduct> adultTargetGroupProducts) {
@@ -96,13 +114,14 @@ public class FacilityDistributionService {
                                               Distribution distribution,
                                               List<Refrigerator> refrigerators,
                                               List<TargetGroupProduct> childrenTargetGroupProducts,
-                                              List<TargetGroupProduct> adultTargetGroupProducts, List<ProductVial> productVials) {
+                                              List<TargetGroupProduct> adultTargetGroupProducts,
+                                              List<ProductVial> childProductVials, List<ProductVial> adultProductVials) {
     List<RefrigeratorReading> refrigeratorReadings = getRefrigeratorReadings(facility.getId(), refrigerators);
 
     FacilityVisit facilityVisit = new FacilityVisit(facility, distribution);
     facilityVisitService.save(facilityVisit);
     FacilityDistribution facilityDistribution = new FacilityDistribution(facilityVisit, facility, distribution, refrigeratorReadings,
-      childrenTargetGroupProducts, adultTargetGroupProducts, productVials);
+      childrenTargetGroupProducts, adultTargetGroupProducts, childProductVials, adultProductVials);
     epiUseService.save(facilityDistribution.getEpiUse());
     epiInventoryService.save(facilityDistribution.getEpiInventory());
     vaccinationCoverageService.saveChildCoverage(facilityDistribution.getChildCoverage());

@@ -50,8 +50,9 @@ public class VaccinationAdultCoverageTest {
     whenNew(AdultCoverageLineItem.class).withArguments(facilityVisit, facility, targetGroupProduct, "pregnant women").thenReturn(
       lineItem);
 
+    List<ProductVial> productVials = asList(new ProductVial("Tetanus", "Tetanus", false));
     VaccinationAdultCoverage vaccinationAdultCoverage = new VaccinationAdultCoverage(facilityVisit, facility,
-      targetGroupProducts);
+      targetGroupProducts, productVials);
 
     assertThat(vaccinationAdultCoverage.getAdultCoverageLineItems().size(), is(7));
   }
