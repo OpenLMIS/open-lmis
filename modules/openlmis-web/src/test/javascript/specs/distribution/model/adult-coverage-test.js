@@ -192,11 +192,25 @@ describe('Adult coverage', function () {
     spyOn(adultCoverage, 'totalTetanus').andReturn(100);
     expect(adultCoverage.wastageRate(openedVialLineItem)).toEqual(96);
   });
-  it("should calculate wastage rate as null if packSize is undefined", function () {
+  it("should calculate wastage rate as null if openedVials value is 0", function () {
     var adultCoverageLineItem, openedVialLineItem;
     adultCoverageLineItem = {};
 
-    openedVialLineItem = {value: 100, productVialName: "Tetanus" }
+    openedVialLineItem = {value: 0, packSize: 10, productVialName: "Tetanus" }
+    var adultCoverage = new AdultCoverage(123, {
+      adultCoverageLineItems: [adultCoverageLineItem],
+      openedVialLineItems: [openedVialLineItem]
+    });
+
+    spyOn(adultCoverage, 'totalTetanus').andReturn(100);
+    expect(adultCoverage.wastageRate(openedVialLineItem)).toBeNull();
+  });
+
+  it("should calculate wastage rate as null if packSize is 0", function () {
+    var adultCoverageLineItem, openedVialLineItem;
+    adultCoverageLineItem = {};
+
+    openedVialLineItem = {value: 10, packSize: 0, productVialName: "Tetanus" }
     var adultCoverage = new AdultCoverage(123, {
       adultCoverageLineItems: [adultCoverageLineItem],
       openedVialLineItems: [openedVialLineItem]
