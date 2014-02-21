@@ -19,7 +19,7 @@ function AdultCoverage(facilityVisitId, adultCoverageJSON) {
 
 }
 AdultCoverage.prototype.wastageRate = function (openedVialLineItem) {
-  if (isUndefined(openedVialLineItem.value) || isUndefined(openedVialLineItem.packSize)) return null;
+  if (isUndefined(openedVialLineItem) || isUndefined(openedVialLineItem.value) || isUndefined(openedVialLineItem.packSize)) return null;
   var totalDosesConsumed = openedVialLineItem.value * openedVialLineItem.packSize;
   if (totalDosesConsumed === 0) return null;
   return Math.round((totalDosesConsumed - this.totalTetanus()) / totalDosesConsumed * 100);
