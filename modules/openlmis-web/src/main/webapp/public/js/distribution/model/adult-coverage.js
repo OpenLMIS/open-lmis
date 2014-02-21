@@ -16,6 +16,10 @@ function AdultCoverage(facilityVisitId, adultCoverageJSON) {
   $(this.adultCoverageLineItems).each(function (i, lineItem) {
     _this.adultCoverageLineItems[i] = new AdultCoverageLineItem(lineItem);
   });
+
+  $(this.openedVialLineItems).each(function (i, lineItem) {
+    _this.openedVialLineItems[i] = new OpenedVialLineItem(lineItem);
+  });
 }
 
 AdultCoverage.prototype.computeStatus = function () {
@@ -58,13 +62,10 @@ AdultCoverage.prototype.computeStatus = function () {
 
   this.status = status;
   return this.status;
-}
+};
 
-AdultCoverage.prototype.wastageRate = function (openedVialLineItem) {
-  if (isUndefined(openedVialLineItem) || isUndefined(openedVialLineItem.value) || isUndefined(openedVialLineItem.packSize)) return null;
-  var totalDosesConsumed = openedVialLineItem.value * openedVialLineItem.packSize;
-  if (totalDosesConsumed === 0) return null;
-  return Math.round((totalDosesConsumed - this.totalTetanus()) / totalDosesConsumed * 100);
+AdultCoverage.prototype.wastageRate = function (lineItem) {
+  return lineItem.wastageRate(this.totalTetanus());
 };
 
 AdultCoverage.prototype.setNotRecorded = function () {
@@ -73,7 +74,7 @@ AdultCoverage.prototype.setNotRecorded = function () {
   });
 
   $(this.openedVialLineItems).each(function (i, lineItem) {
-    lineItem.openedVial = {notRecorded: true};
+    lineItem.setNotRecorded();
   });
 };
 
@@ -141,4 +142,19 @@ AdultCoverageLineItem.prototype.totalTetanus = function () {
 AdultCoverageLineItem.prototype.coverageRate = function () {
   if (isUndefined(this.targetGroup) || this.targetGroup === 0) return null;
   return Math.round((this.totalTetanus() / this.targetGroup) * 100);
+};
+
+function OpenedVialLineItem(lineItem) {
+  $.extend(true, this, lineItem);
+}
+
+OpenedVialLineItem.prototype.wastageRate = function (totalTetanus) {
+  if (isUndefined(this.openedVial) || isUndefined(this.openedVial.value)|| isUndefined(this.packSize)) return null;
+  var totalDosesConsumed = this.openedVial.value * this.packSize;
+  if (totalDosesConsumed === 0) return null;
+  return Math.round((totalDosesConsumed - totalTetanus) / totalDosesConsumed * 100);
+};
+
+OpenedVialLineItem.prototype.setNotRecorded = function () {
+  this.openedVial = {notRecorded: true};
 };
