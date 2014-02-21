@@ -25,6 +25,16 @@ AdultCoverage.prototype.wastageRate = function (openedVialLineItem) {
   return Math.round((totalDosesConsumed - this.totalTetanus()) / totalDosesConsumed * 100);
 };
 
+AdultCoverage.prototype.setNotRecorded = function () {
+  $(this.adultCoverageLineItems).each(function (i, lineItem) {
+    lineItem.setNotRecorded();
+  });
+
+  $(this.openedVialLineItems).each(function (i, lineItem) {
+    lineItem.openedVial = {notRecorded: true};
+  });
+};
+
 AdultCoverage.prototype.totalHealthCenterTetanus1 = function () {
   return this.sumOfAttributes('healthCenterTetanus1');
 };
@@ -62,6 +72,13 @@ AdultCoverage.prototype.sumOfAttributes = function (attribute) {
 function AdultCoverageLineItem(lineItem) {
   $.extend(true, this, lineItem);
 }
+
+AdultCoverageLineItem.prototype.setNotRecorded = function () {
+  this.healthCenterTetanus1 = {notRecorded : true};
+  this.outreachTetanus1= {notRecorded : true};
+  this.healthCenterTetanus2To5= {notRecorded : true};
+  this.outreachTetanus2To5= {notRecorded : true};
+};
 
 AdultCoverageLineItem.prototype.totalTetanus1 = function () {
   var value1 = isUndefined(this.healthCenterTetanus1) ? 0 : this.healthCenterTetanus1.value;

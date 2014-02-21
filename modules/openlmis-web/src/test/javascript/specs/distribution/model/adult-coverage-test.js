@@ -14,7 +14,7 @@ describe('Adult coverage', function () {
     var adultCoverageLineItem1, adultCoverageLineItem2;
     adultCoverageLineItem1 = {"id": 5, "facilityVisitId": 3, "demographicGroup": "Pregnant Women", "healthCenterTetanus1": {value: 1},
       "outreachTetanus1": {value: undefined}, "healthCenterTetanus2To5": {value: 3}, "outreachTetanus2To5": {value: undefined}};
-    adultCoverageLineItem2 = {"id": 26, "facilityVisitId": 3, "demographicGroup": "Students not MIF", "healthCenter11Months": {value: undefined},
+    adultCoverageLineItem2 = {"id": 26, "facilityVisitId": 3, "demographicGroup": "Students not MIF", "healthCenterTetanus1": {value: undefined},
       "outreachTetanus1": {value: undefined}, "healthCenterTetanus2To5": {value: undefined}, "outreachTetanus2To5": {value: undefined}};
 
     var adultCoverage = new AdultCoverage(123, {
@@ -204,6 +204,44 @@ describe('Adult coverage', function () {
 
       spyOn(adultCoverage, 'totalTetanus').andReturn(100);
       expect(adultCoverage.wastageRate(openedVialLineItem)).toBeNull();
+    });
+  });
+
+  it("should set not recorder for all line items", function () {
+    var adultCoverageLineItem1, adultCoverageLineItem2, openedVialLineItem;
+    adultCoverageLineItem1 = {"id": 5, "facilityVisitId": 3, "demographicGroup": "Pregnant Women", "healthCenterTetanus1": {value: 1},
+      "outreachTetanus1": {value: undefined}, "healthCenterTetanus2To5": {value: 3}, "outreachTetanus2To5": {value: undefined}};
+    adultCoverageLineItem2 = {"id": 26, "facilityVisitId": 3, "demographicGroup": "Students not MIF", "healthCenterTetanus1": {value: undefined},
+      "outreachTetanus1": {value: undefined}, "healthCenterTetanus2To5": {value: undefined}, "outreachTetanus2To5": {value: undefined}};
+
+    openedVialLineItem = { facilityVisitId: 100, productVialName: "Tetanus", openedVial: {value: "10"}, packSize: 100 };
+
+    var adultCoverage = new AdultCoverage(123, {
+      adultCoverageLineItems: [adultCoverageLineItem1, adultCoverageLineItem2],
+      openedVialLineItems: [ openedVialLineItem ]
+    });
+
+    spyOn(adultCoverage.adultCoverageLineItems[0],'setNotRecorded');
+    spyOn(adultCoverage.adultCoverageLineItems[1],'setNotRecorded');
+
+    adultCoverage.setNotRecorded();
+
+    expect(adultCoverage.openedVialLineItems[0].openedVial.notRecorded).toBeTruthy();
+    expect(adultCoverage.adultCoverageLineItems[0].setNotRecorded).toHaveBeenCalled();
+    expect(adultCoverage.adultCoverageLineItems[1].setNotRecorded).toHaveBeenCalled();
+  });
+
+  describe("adult coverage line items", function(){
+    it("should set not recorded for all four attributes", function(){
+      var adultCoverageLineItem = new AdultCoverageLineItem({"id": 5, "facilityVisitId": 3, "demographicGroup": "Pregnant Women", "healthCenterTetanus1": {value: 1},
+        "outreachTetanus1": {value: undefined}, "healthCenterTetanus2To5": {value: 3}, "outreachTetanus2To5": {value: undefined}});
+
+      adultCoverageLineItem.setNotRecorded();
+
+      expect(adultCoverageLineItem.healthCenterTetanus1.notRecorded).toBeTruthy();
+      expect(adultCoverageLineItem.outreachTetanus1.notRecorded).toBeTruthy();
+      expect(adultCoverageLineItem.healthCenterTetanus2To5.notRecorded).toBeTruthy();
+      expect(adultCoverageLineItem.outreachTetanus2To5.notRecorded).toBeTruthy();
     });
   });
 });

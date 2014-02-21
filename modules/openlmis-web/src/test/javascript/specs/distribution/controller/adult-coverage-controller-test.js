@@ -8,9 +8,9 @@
  *  You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
  */
 
-describe('Child Coverage Controller', function () {
+describe('Adult Coverage Controller', function () {
 
-  var scope, distributionService, routeParams, adultCoverage,
+  var scope, distributionService, routeParams, adultCoverageJSON,
     adultCoverageLineItem1, adultCoverageLineItem2, adultCoverageLineItem3;
 
   beforeEach(module('distribution'));
@@ -23,22 +23,22 @@ describe('Child Coverage Controller', function () {
     adultCoverageLineItem2 = {"id": 26, "facilityVisitId": 3, "demographicGroup": "Students not MIF"};
     adultCoverageLineItem3 = {"id": 27, "facilityVisitId": 3, "demographicGroup": "Workers not MIF"};
 
-    adultCoverage = {facilityVisitId: 234,
+    adultCoverageJSON = {facilityVisitId: 234,
       adultCoverageLineItems: [
         adultCoverageLineItem1,
         adultCoverageLineItem2,
         adultCoverageLineItem3
       ]};
 
-    distributionService.distribution = {facilityDistributions: {1: {adultCoverage: adultCoverage}, 2: {}}};
+    distributionService.distribution = {facilityDistributions: {1: {adultCoverage: adultCoverageJSON}, 2: {}}};
     routeParams = {facility: 1};
     $controller(AdultCoverageController, {$scope: scope, $routeParams: routeParams, distributionService: distributionService});
   }));
 
-  it('should set distribution, facilityId and adultCoverage in scope', function(){
-    expect(scope.distribution).toEqual({facilityDistributions: {1: {adultCoverage: adultCoverage}, 2: {}}});
+  it('should set distribution, facilityId and adultCoverageJSON in scope', function(){
+    expect(scope.distribution).toEqual({facilityDistributions: {1: {adultCoverage: adultCoverageJSON}, 2: {}}});
     expect(scope.selectedFacilityId).toEqual(1);
-    expect(scope.adultCoverage).toEqual(adultCoverage);
+    expect(scope.adultCoverage).toEqual(adultCoverageJSON);
   });
 
   it('should convert adult coverage line items to map', function() {
@@ -47,4 +47,19 @@ describe('Child Coverage Controller', function () {
     expect(scope.adultCoverageTargetGroupMap['Students not MIF']).toEqual(adultCoverageLineItem2);
     expect(scope.adultCoverageTargetGroupMap['Workers not MIF']).toEqual(adultCoverageLineItem3);
   });
+
+  it('should applyNR to all readings', function () {
+    scope.adultCoverage = new AdultCoverage(234, adultCoverageJSON);
+    spyOn(distributionService, 'applyNR');
+    spyOn(scope.adultCoverage, 'setNotRecorded');
+
+    scope.applyNRAll();
+
+    expect(distributionService.applyNR).toHaveBeenCalled();
+
+    distributionService.applyNR.calls[0].args[0]();
+
+    expect(scope.adultCoverage.setNotRecorded).toHaveBeenCalled();
+  });
+
 });

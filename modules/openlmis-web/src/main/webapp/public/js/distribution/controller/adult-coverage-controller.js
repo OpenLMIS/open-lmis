@@ -36,4 +36,9 @@ function AdultCoverageController($scope, $routeParams, distributionService) {
   $scope.adultCoverageTargetGroupMap = convertListToMap($scope.adultCoverage.adultCoverageLineItems, 'demographicGroup');
   $scope.adultCoverageOpenedVialsMap = convertListToMap($scope.adultCoverage.openedVialLineItems, 'productVialName');
 
+  $scope.applyNRAll = function () {
+    distributionService.applyNR(function () {
+      $scope.adultCoverage.setNotRecorded();
+    });
+  };
 }
