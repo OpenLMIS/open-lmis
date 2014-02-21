@@ -33,6 +33,9 @@ function DistributionListController($scope, SharedDistributions, SyncFacilityDis
       $.each($scope.distributionData.facilityDistributions, function (facilityId, facilityDistribution) {
         if (_.contains(incompleteFacilities, facilityId) && facilityDistribution.status != $scope.SYNCED) {
           facilityDistribution.status = DistributionStatus.DUPLICATE;
+          if(isUndefined( $scope.syncResult[$scope.DUPLICATE])) {
+            $scope.syncResult[$scope.DUPLICATE] = [];
+          }
           $scope.syncResult[$scope.DUPLICATE].push(facilityDistribution);
         }
       });
