@@ -221,8 +221,8 @@ describe('Adult coverage', function () {
       openedVialLineItems: [ openedVialLineItem ]
     });
 
-    spyOn(adultCoverage.adultCoverageLineItems[0],'setNotRecorded');
-    spyOn(adultCoverage.adultCoverageLineItems[1],'setNotRecorded');
+    spyOn(adultCoverage.adultCoverageLineItems[0], 'setNotRecorded');
+    spyOn(adultCoverage.adultCoverageLineItems[1], 'setNotRecorded');
 
     adultCoverage.setNotRecorded();
 
@@ -231,8 +231,8 @@ describe('Adult coverage', function () {
     expect(adultCoverage.adultCoverageLineItems[1].setNotRecorded).toHaveBeenCalled();
   });
 
-  describe("adult coverage line items", function(){
-    it("should set not recorded for all four attributes", function(){
+  describe("adult coverage line items", function () {
+    it("should set not recorded for all four attributes", function () {
       var adultCoverageLineItem = new AdultCoverageLineItem({"id": 5, "facilityVisitId": 3, "demographicGroup": "Pregnant Women", "healthCenterTetanus1": {value: 1},
         "outreachTetanus1": {value: undefined}, "healthCenterTetanus2To5": {value: 3}, "outreachTetanus2To5": {value: undefined}});
 
@@ -244,4 +244,171 @@ describe('Adult coverage', function () {
       expect(adultCoverageLineItem.outreachTetanus2To5.notRecorded).toBeTruthy();
     });
   });
+
+  describe("status computation", function () {
+    it("should return empty status if all fields are blank and NR not set", function () {
+      var adultCoverageLineItem1, adultCoverageLineItem2, openedVialLineItem;
+      adultCoverageLineItem1 = {"id": 5, "facilityVisitId": 3, "demographicGroup": "Pregnant Women",
+        "healthCenterTetanus1": {value: undefined, notRecorded: false},
+        "outreachTetanus1": {value: undefined, notRecorded: false},
+        "healthCenterTetanus2To5": {value: undefined, notRecorded: false},
+        "outreachTetanus2To5": {value: undefined, notRecorded: false}};
+      adultCoverageLineItem2 = {"id": 26, "facilityVisitId": 3, "demographicGroup": "Students not MIF",
+        "healthCenterTetanus1": {value: undefined, notRecorded: false},
+        "outreachTetanus1": {value: undefined, notRecorded: false},
+        "healthCenterTetanus2To5": {value: undefined, notRecorded: false},
+        "outreachTetanus2To5": {value: undefined, notRecorded: false}};
+
+      openedVialLineItem = { facilityVisitId: 100, productVialName: "Tetanus", openedVial: {value: undefined, notRecorded: false}, packSize: 100 };
+
+      var adultCoverage = new AdultCoverage(123, {
+        adultCoverageLineItems: [adultCoverageLineItem1, adultCoverageLineItem2],
+        openedVialLineItems: [ openedVialLineItem ]
+      });
+
+      expect(adultCoverage.computeStatus()).toBe(DistributionStatus.EMPTY);
+    });
+
+
+    it("should return empty status if all fields are blank and NR not undefined", function () {
+      var adultCoverageLineItem1, adultCoverageLineItem2, openedVialLineItem;
+      adultCoverageLineItem1 = {"id": 5, "facilityVisitId": 3, "demographicGroup": "Pregnant Women",
+        "healthCenterTetanus1": {value: undefined},
+        "outreachTetanus1": {value: undefined},
+        "healthCenterTetanus2To5": {value: undefined},
+        "outreachTetanus2To5": {value: undefined}};
+      adultCoverageLineItem2 = {"id": 26, "facilityVisitId": 3, "demographicGroup": "Students not MIF",
+        "healthCenterTetanus1": {value: undefined},
+        "outreachTetanus1": {value: undefined},
+        "healthCenterTetanus2To5": {value: undefined},
+        "outreachTetanus2To5": {value: undefined}};
+
+      openedVialLineItem = { facilityVisitId: 100, productVialName: "Tetanus", openedVial: {value: undefined}, packSize: 100 };
+
+      var adultCoverage = new AdultCoverage(123, {
+        adultCoverageLineItems: [adultCoverageLineItem1, adultCoverageLineItem2],
+        openedVialLineItems: [ openedVialLineItem ]
+      });
+
+      expect(adultCoverage.computeStatus()).toBe(DistributionStatus.EMPTY);
+    });
+
+    it("should return incomplete status if form is partially filled", function () {
+      var adultCoverageLineItem1, adultCoverageLineItem2, openedVialLineItem;
+      adultCoverageLineItem1 = {"id": 5, "facilityVisitId": 3, "demographicGroup": "Pregnant Women",
+        "healthCenterTetanus1": {value: 10, notRecorded: false},
+        "outreachTetanus1": {value: 1, notRecorded: false},
+        "healthCenterTetanus2To5": {value: undefined, notRecorded: false},
+        "outreachTetanus2To5": {value: undefined, notRecorded: false}};
+      adultCoverageLineItem2 = {"id": 26, "facilityVisitId": 3, "demographicGroup": "Students not MIF",
+        "healthCenterTetanus1": {value: undefined, notRecorded: false},
+        "outreachTetanus1": {value: undefined, notRecorded: false},
+        "healthCenterTetanus2To5": {value: undefined, notRecorded: false},
+        "outreachTetanus2To5": {value: undefined, notRecorded: false}};
+
+      openedVialLineItem = { facilityVisitId: 100, productVialName: "Tetanus", openedVial: {value: 100, notRecorded: false}, packSize: 100 };
+
+      var adultCoverage = new AdultCoverage(123, {
+        adultCoverageLineItems: [adultCoverageLineItem1, adultCoverageLineItem2],
+        openedVialLineItems: [ openedVialLineItem ]
+      });
+
+      expect(adultCoverage.computeStatus()).toBe(DistributionStatus.INCOMPLETE);
+    });
+
+  });
+
+  it("should return complete status if form is completely filled", function () {
+    var adultCoverageLineItem1, adultCoverageLineItem2, openedVialLineItem;
+    adultCoverageLineItem1 = {"id": 5, "facilityVisitId": 3, "demographicGroup": "Pregnant Women",
+      "healthCenterTetanus1": {value: 10, notRecorded: false},
+      "outreachTetanus1": {value: 1, notRecorded: false},
+      "healthCenterTetanus2To5": {value: 1000, notRecorded: false},
+      "outreachTetanus2To5": {value: 500, notRecorded: false}};
+    adultCoverageLineItem2 = {"id": 26, "facilityVisitId": 3, "demographicGroup": "Students not MIF",
+      "healthCenterTetanus1": {value: 100, notRecorded: false},
+      "outreachTetanus1": {value: 20, notRecorded: false},
+      "healthCenterTetanus2To5": {value: 40, notRecorded: false},
+      "outreachTetanus2To5": {value: 50, notRecorded: false}};
+
+    openedVialLineItem = { facilityVisitId: 100, productVialName: "Tetanus", openedVial: {value: 100, notRecorded: false}, packSize: 100 };
+
+    var adultCoverage = new AdultCoverage(123, {
+      adultCoverageLineItems: [adultCoverageLineItem1, adultCoverageLineItem2],
+      openedVialLineItems: [ openedVialLineItem ]
+    });
+
+    expect(adultCoverage.computeStatus()).toBe(DistributionStatus.COMPLETE);
+  });
+
+  it("should return complete status if form all NRs are set", function () {
+    var adultCoverageLineItem1, adultCoverageLineItem2, openedVialLineItem;
+    adultCoverageLineItem1 = {"id": 5, "facilityVisitId": 3, "demographicGroup": "Pregnant Women",
+      "healthCenterTetanus1": {value: undefined, notRecorded: true},
+      "outreachTetanus1": {value: undefined, notRecorded: true},
+      "healthCenterTetanus2To5": {value: undefined, notRecorded: true},
+      "outreachTetanus2To5": {value: undefined, notRecorded: true}};
+    adultCoverageLineItem2 = {"id": 26, "facilityVisitId": 3, "demographicGroup": "Students not MIF",
+      "healthCenterTetanus1": {value: undefined, notRecorded: true},
+      "outreachTetanus1": {value: undefined, notRecorded: true},
+      "healthCenterTetanus2To5": {value: undefined, notRecorded: true},
+      "outreachTetanus2To5": {value: undefined, notRecorded: true}};
+
+    openedVialLineItem = { facilityVisitId: 100, productVialName: "Tetanus", openedVial: {value: undefined, notRecorded: true}, packSize: 100 };
+
+    var adultCoverage = new AdultCoverage(123, {
+      adultCoverageLineItems: [adultCoverageLineItem1, adultCoverageLineItem2],
+      openedVialLineItems: [ openedVialLineItem ]
+    });
+
+    expect(adultCoverage.computeStatus()).toBe(DistributionStatus.COMPLETE);
+  });
+
+  it("should return incomplete status if only opened vials is not filled", function () {
+    var adultCoverageLineItem1, adultCoverageLineItem2, openedVialLineItem;
+    adultCoverageLineItem1 = {"id": 5, "facilityVisitId": 3, "demographicGroup": "Pregnant Women",
+      "healthCenterTetanus1": {value: 10, notRecorded: false},
+      "outreachTetanus1": {value: 20, notRecorded: false},
+      "healthCenterTetanus2To5": {value: 200, notRecorded: false},
+      "outreachTetanus2To5": {value: 250, notRecorded: false}};
+    adultCoverageLineItem2 = {"id": 26, "facilityVisitId": 3, "demographicGroup": "Students not MIF",
+      "healthCenterTetanus1": {value: 40, notRecorded: false},
+      "outreachTetanus1": {value: 76, notRecorded: false},
+      "healthCenterTetanus2To5": {value: 73, notRecorded: false},
+      "outreachTetanus2To5": {value: 72, notRecorded: false}};
+
+    openedVialLineItem = { facilityVisitId: 100, productVialName: "Tetanus", openedVial: {value: undefined, notRecorded: false}, packSize: 100 };
+
+    var adultCoverage = new AdultCoverage(123, {
+      adultCoverageLineItems: [adultCoverageLineItem1, adultCoverageLineItem2],
+      openedVialLineItems: [ openedVialLineItem ]
+    });
+
+    expect(adultCoverage.computeStatus()).toBe(DistributionStatus.INCOMPLETE);
+  });
+
+
+  it("should return incomplete status if only opened vials is not filled", function () {
+    var adultCoverageLineItem1, adultCoverageLineItem2, openedVialLineItem;
+    adultCoverageLineItem1 = {"id": 5, "facilityVisitId": 3, "demographicGroup": "Pregnant Women",
+      "healthCenterTetanus1": {value: 10, notRecorded: false},
+      "outreachTetanus1": {value: 20, notRecorded: false},
+      "healthCenterTetanus2To5": {value: 200, notRecorded: false},
+      "outreachTetanus2To5": {value: 250, notRecorded: false}};
+    adultCoverageLineItem2 = {"id": 26, "facilityVisitId": 3, "demographicGroup": "Students not MIF",
+      "healthCenterTetanus1": {value: 40, notRecorded: false},
+      "outreachTetanus1": {value: 76, notRecorded: false},
+      "healthCenterTetanus2To5": {value: 73, notRecorded: false},
+      "outreachTetanus2To5": {value: 72, notRecorded: false}};
+
+    openedVialLineItem = { facilityVisitId: 100, productVialName: "Tetanus", openedVial: {value: undefined, notRecorded: false}, packSize: 100 };
+
+    var adultCoverage = new AdultCoverage(123, {
+      adultCoverageLineItems: [adultCoverageLineItem1, adultCoverageLineItem2],
+      openedVialLineItems: [ openedVialLineItem ]
+    });
+
+    expect(adultCoverage.computeStatus()).toBe(DistributionStatus.INCOMPLETE);
+  });
+
 });

@@ -16,8 +16,50 @@ function AdultCoverage(facilityVisitId, adultCoverageJSON) {
   $(this.adultCoverageLineItems).each(function (i, lineItem) {
     _this.adultCoverageLineItems[i] = new AdultCoverageLineItem(lineItem);
   });
-
 }
+
+AdultCoverage.prototype.computeStatus = function () {
+  var status;
+
+  var isValid = function (field) {
+    if (!field)
+      return false;
+    return !(isUndefined(field.value) && !field.notRecorded);
+  };
+
+  function validateLineItems(lineItems, mandatoryFields) {
+
+    var nonHealthCenterDemographicGroups = ["MIF 15-49 years - Students", "MIF 15-49 years - Workers", "Students not MIF", "Workers not MIF"];
+    var attributesNotDefined = ["healthCenterTetanus1", "healthCenterTetanus2To5"];
+
+    $(lineItems).each(function (index, lineItem) {
+      $(mandatoryFields).each(function (index, field) {
+        if (nonHealthCenterDemographicGroups.indexOf(lineItem.demographicGroup) >= 0 && attributesNotDefined.indexOf(field) >= 0)
+          return true;
+        if (isValid(lineItem[field]) && (status === DistributionStatus.COMPLETE || !status)) {
+          status = DistributionStatus.COMPLETE;
+          return true;
+        } else if (!isValid(lineItem[field]) && (status === DistributionStatus.EMPTY || !status)) {
+          status = DistributionStatus.EMPTY;
+          return true;
+        } else if ((isValid(lineItem[field]) && status === DistributionStatus.EMPTY) ||
+          (!isValid(lineItem[field])) && status === DistributionStatus.COMPLETE) {
+          status = DistributionStatus.INCOMPLETE;
+          return false;
+        }
+        return true;
+      });
+      return status !== DistributionStatus.INCOMPLETE;
+    });
+  }
+
+  validateLineItems(this.adultCoverageLineItems, ['healthCenterTetanus1', 'outreachTetanus1', 'healthCenterTetanus2To5', 'outreachTetanus2To5']);
+  validateLineItems(this.openedVialLineItems, ['openedVial']);
+
+  this.status = status;
+  return this.status;
+}
+
 AdultCoverage.prototype.wastageRate = function (openedVialLineItem) {
   if (isUndefined(openedVialLineItem) || isUndefined(openedVialLineItem.value) || isUndefined(openedVialLineItem.packSize)) return null;
   var totalDosesConsumed = openedVialLineItem.value * openedVialLineItem.packSize;
@@ -74,10 +116,10 @@ function AdultCoverageLineItem(lineItem) {
 }
 
 AdultCoverageLineItem.prototype.setNotRecorded = function () {
-  this.healthCenterTetanus1 = {notRecorded : true};
-  this.outreachTetanus1= {notRecorded : true};
-  this.healthCenterTetanus2To5= {notRecorded : true};
-  this.outreachTetanus2To5= {notRecorded : true};
+  this.healthCenterTetanus1 = {notRecorded: true};
+  this.outreachTetanus1 = {notRecorded: true};
+  this.healthCenterTetanus2To5 = {notRecorded: true};
+  this.outreachTetanus2To5 = {notRecorded: true};
 };
 
 AdultCoverageLineItem.prototype.totalTetanus1 = function () {

@@ -51,7 +51,7 @@
       </a>
     </li>
     <li id="adultCoverageStatus"
-        class="is-empty">
+        ng-class="[distributionData.adultCoverage.computeStatus(), isSelected('adult-coverage')]">
       <a id="adultCoverageTab" href="" ng-click="changeRoute('adult-coverage')">
         <span id="adultCoverageTabIcon" class="status-icon"></span>
         <span id="adultCoverageTabLabel" openlmis-message="label.coverage.adult"></span>
