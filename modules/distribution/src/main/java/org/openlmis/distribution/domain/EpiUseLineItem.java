@@ -36,10 +36,10 @@ public class EpiUseLineItem extends BaseModel {
   private Integer distributed;
   private String expirationDate;
 
-  public EpiUseLineItem(Long facilityVisitId, ProductGroup productGroup, Long createdBy, Long modifiedBy) {
+  public EpiUseLineItem(FacilityVisit facilityVisit, ProductGroup productGroup) {
+    this.facilityVisitId = facilityVisit.getId();
     this.productGroup = productGroup;
-    this.createdBy = createdBy;
-    this.modifiedBy = modifiedBy;
-    this.facilityVisitId = facilityVisitId;
+    this.createdBy = facilityVisit.getCreatedBy();
+    this.modifiedBy = facilityVisit.getModifiedBy();
   }
 }
