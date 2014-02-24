@@ -69,7 +69,8 @@ public interface FacilityMapper {
 
   @Select("SELECT * FROM users U, facilities F " +
     "WHERE U.facilityId = F.id AND U.id = #{userId} AND f.active = TRUE AND f.virtualFacility = FALSE")
-  @Results(value = {@Result(property = "id", column = "facilityId")})
+  @Results(value = {@Result(property = "id", column = "facilityId"),
+                    @Result(property = "geographicZone.id", column = "geographicZoneId"),})
   Facility getHomeFacility(Long userId);
 
   @Select("SELECT * FROM facility_types ORDER BY displayOrder")

@@ -255,6 +255,14 @@ public class ReportLookupService {
     return facilityReportMapper.getFacilitiesByPrgraomScheduleType(program, schedule, type);
   }
 
+  public List<Facility> getFacilitiesBy(Long geographicZone, Long requisitionGroup, Long program, Long schedule) {
+      if (geographicZone == 0)
+          return null;
+
+      return facilityReportMapper.getFacilitiesBy(geographicZone, requisitionGroup, program, schedule);
+
+  }
+
   public List<ProcessingPeriod> getAllProcessingPeriods() {
     return processingPeriodMapper.getAll();
   }
