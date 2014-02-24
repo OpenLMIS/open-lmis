@@ -64,4 +64,25 @@ public class FacilityDistributionDTOTest {
     assertThat(facilityDistribution.getChildCoverage(), is(childCoverage));
     assertThat(facilityDistribution.getAdultCoverage(), is(adultCoverage));
   }
+
+  @Test
+  public void shouldSetModifiedByForAllDistributionForms() throws Exception {
+    FacilityDistributionDTO facilityDistributionDTO = new FacilityDistributionDTO(new FacilityVisit(), new EpiUseDTO(), new EpiInventoryDTO(),
+      new DistributionRefrigeratorsDTO(), new VaccinationFullCoverageDTO(), new ChildCoverageDTO(),
+      new AdultCoverageDTO());
+
+    facilityDistributionDTO.setModifiedBy(4L);
+
+    assertThat(facilityDistributionDTO.getFacilityVisit().getModifiedBy(), is(4L));
+    assertThat(facilityDistributionDTO.getEpiInventory().getModifiedBy(), is(4L));
+    assertThat(facilityDistributionDTO.getEpiUse().getModifiedBy(), is(4L));
+    assertThat(facilityDistributionDTO.getChildCoverage().getModifiedBy(), is(4L));
+    assertThat(facilityDistributionDTO.getAdultCoverage().getModifiedBy(), is(4L));
+
+    assertThat(facilityDistributionDTO.getFullCoverage().getModifiedBy(), is(4L));
+    assertThat(facilityDistributionDTO.getFullCoverage().getCreatedBy(), is(4L));
+
+    assertThat(facilityDistributionDTO.getRefrigerators().getModifiedBy(), is(4L));
+    assertThat(facilityDistributionDTO.getRefrigerators().getCreatedBy(), is(4L));
+  }
 }

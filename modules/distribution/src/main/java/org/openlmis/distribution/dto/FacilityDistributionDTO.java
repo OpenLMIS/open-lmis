@@ -53,5 +53,6 @@ public class FacilityDistributionDTO {
     fullCoverage.setModifiedBy(modifiedBy);
     fullCoverage.setCreatedBy(modifiedBy);
     childCoverage.setModifiedBy(modifiedBy);
+    adultCoverage.setModifiedBy(modifiedBy);
   }
 }
