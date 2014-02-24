@@ -49,7 +49,9 @@
 <tbody>
 <tr ng-init="pregnantWomenCoverage = adultCoverageTargetGroupMap[categories.PREGNANT_WOMEN]">
   <td id="pregnantWomenLabel" openlmis-message="label.coverage.pregnant.women" colspan="2"></td>
-  <td id="targetGroup_1" ng-bind="pregnantWomenCoverage.targetGroup"></td>
+  <td id="targetGroup_1" class="col-target-group">
+    <span ng-bind="pregnantWomenCoverage.targetGroup"></span>
+  </td>
   <td>
     <span class="input-error-parent-cell">
     <input id="healthCenter1_1" type="text" maxlength="7"
@@ -81,7 +83,9 @@
            ng-model="pregnantWomenCoverage.outreachTetanus1.notRecorded" not-recorded/>
     <label for="outreach1Nr_1" class="checkbox-label" openlmis-message="label.not.recorded"></label>
   </td>
-  <td id="totalTetanus1_1" ng-bind="pregnantWomenCoverage.totalTetanus1()"></td>
+  <td id="totalTetanus1_1" class="col-total">
+    <span ng-bind="pregnantWomenCoverage.totalTetanus1()"></span>
+  </td>
   <td>
     <span class="input-error-parent-cell">
     <input id="healthCenter2To5_1" type="text" maxlength="7"
@@ -108,12 +112,19 @@
            ng-model="pregnantWomenCoverage.outreachTetanus2To5.notRecorded" not-recorded/>
     <label for="outreach2To5Nr_1" class="checkbox-label" openlmis-message="label.not.recorded"></label>
   </td>
-  <td id="totalTetanus2To5_1" ng-bind="pregnantWomenCoverage.totalTetanus2To5()"></td>
-  <td id="totalTetanus_1" ng-bind="pregnantWomenCoverage.totalTetanus()"></td>
-  <td id="coverageRate_1" ng-bind="pregnantWomenCoverage.coverageRate()"></td>
+  <td id="totalTetanus2To5_1" class="col-total">
+    <span ng-bind="pregnantWomenCoverage.totalTetanus2To5()"></span>
+  </td>
+  <td id="totalTetanus_1" class="col-total">
+    <span ng-bind="pregnantWomenCoverage.totalTetanus()"></span>
+  </td>
+  <td id="coverageRate_1" class="col-coverage-rate">
+    <span ng-bind="pregnantWomenCoverage.coverageRate()"></span>
+  </td>
   <td class="vertical-middle-aligned" rowspan="7">
     <span class="input-error-parent-cell">
-    <input id="openedVialInputField" type="text" maxlength="7" ng-model="adultCoverageOpenedVialsMap['Tetanus'].openedVial.value"
+    <input id="openedVialInputField" type="text" maxlength="7"
+           ng-model="adultCoverageOpenedVialsMap['Tetanus'].openedVial.value"
            ng-trim="false"
            class="right-justified" name="openedVial"
            numeric-validator="positiveInteger" error-holder="openedVialError"/>
@@ -124,13 +135,17 @@
            not-recorded/>
     <label for="openedVial" class="checkbox-label" openlmis-message="label.not.recorded"></label>
   </td>
-  <td id="wastageRate" class="vertical-middle-aligned" rowspan="7"
-      ng-bind="adultCoverage.wastageRate(adultCoverageOpenedVialsMap['Tetanus'])"></td>
+  <td id="wastageRate" class="col-opened-vial vertical-middle-aligned" rowspan="7">
+    <span ng-bind="adultCoverage.wastageRate(adultCoverageOpenedVialsMap['Tetanus'])"></span>
+  </td>
 </tr>
+
 <tr ng-init="mifCommunityCoverage = adultCoverageTargetGroupMap[categories.MIF_COMMUNITY]">
   <td id="mifLabel" class="vertical-middle-aligned" openlmis-message="label.coverage.mif" rowspan="3"></td>
-  <td id="communityCell"><strong><span openlmis-message="label.coverage.community"></span></strong></td>
-  <td id="targetGroup_2" ng-bind="mifCommunityCoverage.targetGroup"></td>
+  <td id="communityCell"><strong openlmis-message="label.coverage.community"></strong></td>
+  <td id="targetGroup_2" class="col-target-group">
+    <span ng-bind="mifCommunityCoverage.targetGroup"></span>
+  </td>
   <td>
     <span class="input-error-parent-cell">
     <input id="healthCenter1_2" class="right-justified" type="text" maxlength="7"
@@ -157,7 +172,9 @@
            ng-model="mifCommunityCoverage.outreachTetanus1.notRecorded" not-recorded/>
     <label for="outreach1Nr_2" class="checkbox-label" openlmis-message="label.not.recorded"></label>
   </td>
-  <td id="totalTetanus1_2" ng-bind="mifCommunityCoverage.totalTetanus1()"></td>
+  <td id="totalTetanus1_2" class="col-total">
+    <span ng-bind="mifCommunityCoverage.totalTetanus1()"></span>
+  </td>
   <td>
     <span class="input-error-parent-cell">
     <input id="healthCenter2To5_2" class="right-justified" type="text" maxlength="7"
@@ -184,13 +201,19 @@
            ng-model="mifCommunityCoverage.outreachTetanus2To5.notRecorded" not-recorded/>
     <label for="outreach2To5Nr_2" class="checkbox-label" openlmis-message="label.not.recorded"></label>
   </td>
-  <td id="totalTetanus2To5_2" ng-bind="mifCommunityCoverage.totalTetanus2To5()"></td>
-  <td id="totalTetanus_2" ng-bind="mifCommunityCoverage.totalTetanus()"></td>
-  <td></td>
+  <td id="totalTetanus2To5_2" class="col-total">
+    <span ng-bind="mifCommunityCoverage.totalTetanus2To5()"></span>
+  </td>
+  <td id="totalTetanus_2" class="col-total">
+    <span ng-bind="mifCommunityCoverage.totalTetanus()"></span>
+  </td>
+  <td class="col-coverage-rate"><span></span></td>
 </tr>
 <tr ng-init="mifStudentCoverage = adultCoverageTargetGroupMap[categories.MIF_STUDENTS]">
   <td id="studentsLabel" openlmis-message="label.coverage.students"></td>
-  <td id="targetGroup_3" ng-bind="adultCoverageTargetGroupMap[categories.MIF_STUDENTS].targetGroup"></td>
+  <td id="targetGroup_3" class="col-target-group">
+    <span ng-bind="adultCoverageTargetGroupMap[categories.MIF_STUDENTS].targetGroup"></span>
+  </td>
   <td></td>
   <td>
     <span class="input-error-parent-cell">
@@ -205,7 +228,9 @@
            ng-model="mifStudentCoverage.outreachTetanus1.notRecorded" not-recorded/>
     <label for="outreach1Nr_3" class="checkbox-label" openlmis-message="label.not.recorded"></label>
   </td>
-  <td id="totalTetanus1_3" ng-bind="mifStudentCoverage.totalTetanus1()"></td>
+  <td id="totalTetanus1_3" class="col-total">
+    <span ng-bind="mifStudentCoverage.totalTetanus1()"></span>
+  </td>
   <td></td>
   <td>
     <span class="input-error-parent-cell">
@@ -220,13 +245,21 @@
            ng-model="mifStudentCoverage.outreachTetanus2To5.notRecorded" not-recorded/>
     <label for="outreach2To5Nr_3" class="checkbox-label" openlmis-message="label.not.recorded"></label>
   </td>
-  <td id="totalTetanus2To5_3" ng-bind="mifStudentCoverage.totalTetanus2To5()"></td>
-  <td id="totalTetanus_3" ng-bind="mifStudentCoverage.totalTetanus()"></td>
-  <td></td>
+  <td id="totalTetanus2To5_3" class="col-total">
+    <span ng-bind="mifStudentCoverage.totalTetanus2To5()"></span>
+  </td>
+  <td id="totalTetanus_3" class="col-total">
+    <span ng-bind="mifStudentCoverage.totalTetanus()"></span>
+  </td>
+  <td class="col-coverage-rate">
+    <span></span>
+  </td>
 </tr>
 <tr ng-init="mifWorkerCoverage = adultCoverageTargetGroupMap[categories.MIF_WORKERS]">
   <td id="workersLabel" openlmis-message="label.coverage.workers"></td>
-  <td id="targetGroup_4" ng-bind="adultCoverageTargetGroupMap[categories.MIF_WORKERS].targetGroup"></td>
+  <td id="targetGroup_4" class="col-target-group">
+    <span ng-bind="adultCoverageTargetGroupMap[categories.MIF_WORKERS].targetGroup"></span>
+  </td>
   <td></td>
   <td>
     <span class="input-error-parent-cell">
@@ -241,7 +274,9 @@
            ng-model="mifWorkerCoverage.outreachTetanus1.notRecorded" not-recorded/>
     <label for="outreach1Nr_4" class="checkbox-label" openlmis-message="label.not.recorded"></label>
   </td>
-  <td id="totalTetanus1_4" ng-bind="mifWorkerCoverage.totalTetanus1()"></td>
+  <td id="totalTetanus1_4" class="col-total">
+    <span ng-bind="mifWorkerCoverage.totalTetanus1()"></span>
+  </td>
   <td></td>
   <td>
     <span class="input-error-parent-cell">
@@ -256,14 +291,21 @@
            ng-model="mifWorkerCoverage.outreachTetanus2To5.notRecorded" not-recorded/>
     <label for="outreach2To5Nr_4" class="checkbox-label" openlmis-message="label.not.recorded"></label>
   </td>
-  <td id="totalTetanus2To5_4" ng-bind="mifWorkerCoverage.totalTetanus2To5()"></td>
-  <td id="totalTetanus_4" ng-bind="mifWorkerCoverage.totalTetanus()"></td>
-  <td></td>
+  <td id="totalTetanus2To5_4" class="col-total">
+    <span ng-bind="mifWorkerCoverage.totalTetanus2To5()"></span>
+  </td>
+  <td id="totalTetanus_4" class="col-total">
+    <span ng-bind="mifWorkerCoverage.totalTetanus()"></span>
+  </td>
+  <td class="col-coverage-rate">
+    <span></span>
+  </td>
 </tr>
 <tr ng-init="studentNotMIFCoverage = adultCoverageTargetGroupMap[categories.STUDENTS_NOT_MIF]">
   <td id="studentNotMifLabel" openlmis-message="label.coverage.students.not.mif" colspan="2"></td>
-  <td id="targetGroup_5"
-      ng-bind="adultCoverageTargetGroupMap[categories.STUDENTS_NOT_MIF].targetGroup"></td>
+  <td id="targetGroup_5" class="col-target-group">
+    <span ng-bind="adultCoverageTargetGroupMap[categories.STUDENTS_NOT_MIF].targetGroup"></span>
+  </td>
   <td></td>
   <td>
     <span class="input-error-parent-cell">
@@ -278,7 +320,9 @@
            ng-model="studentNotMIFCoverage.outreachTetanus1.notRecorded" not-recorded/>
     <label for="outreach1Nr_5" class="checkbox-label" openlmis-message="label.not.recorded"></label>
   </td>
-  <td id="totalTetanus1_5" ng-bind="studentNotMIFCoverage.totalTetanus1()"></td>
+  <td id="totalTetanus1_5" class="col-total">
+    <span ng-bind="studentNotMIFCoverage.totalTetanus1()"></span>
+  </td>
   <td></td>
   <td>
     <span class="input-error-parent-cell">
@@ -293,13 +337,21 @@
            ng-model="studentNotMIFCoverage.outreachTetanus2To5.notRecorded" not-recorded/>
     <label for="outreach2To5Nr_5" class="checkbox-label" openlmis-message="label.not.recorded"></label>
   </td>
-  <td id="totalTetanus2To5_5" ng-bind="studentNotMIFCoverage.totalTetanus2To5()"></td>
-  <td id="totalTetanus_5" ng-bind="studentNotMIFCoverage.totalTetanus()"></td>
-  <td></td>
+  <td id="totalTetanus2To5_5" class="col-total">
+    <span ng-bind="studentNotMIFCoverage.totalTetanus2To5()"></span>
+  </td>
+  <td id="totalTetanus_5" class="col-total">
+    <span ng-bind="studentNotMIFCoverage.totalTetanus()"></span>
+  </td>
+  <td class="col-coverage-rate">
+    <span></span>
+  </td>
 </tr>
 <tr ng-init="workerNotMIFCoverage = adultCoverageTargetGroupMap[categories.WORKERS_NOT_MIF]">
   <td id="workerNotMif" openlmis-message="label.coverage.workers.not.mif" colspan="2"></td>
-  <td id="targetGroup_6" ng-bind="workerNotMIFCoverage.targetGroup"></td>
+  <td id="targetGroup_6" class="col-target-group">
+    <span ng-bind="workerNotMIFCoverage.targetGroup"></span>
+  </td>
   <td></td>
   <td>
     <span class="input-error-parent-cell">
@@ -314,7 +366,9 @@
            ng-model="workerNotMIFCoverage.outreachTetanus1.notRecorded" not-recorded/>
     <label for="outreach1Nr_6" class="checkbox-label" openlmis-message="label.not.recorded"></label>
   </td>
-  <td id="totalTetanus1_6" ng-bind="workerNotMIFCoverage.totalTetanus1()"></td>
+  <td id="totalTetanus1_6" class="col-total">
+    <span ng-bind="workerNotMIFCoverage.totalTetanus1()"></span>
+  </td>
   <td></td>
   <td>
     <span class="input-error-parent-cell">
@@ -329,13 +383,21 @@
            ng-model="workerNotMIFCoverage.outreachTetanus2To5.notRecorded" not-recorded/>
     <label for="outreach2To5Nr_6" class="checkbox-label" openlmis-message="label.not.recorded"></label>
   </td>
-  <td id="totalTetanus2To5_6" ng-bind="workerNotMIFCoverage.totalTetanus2To5()"></td>
-  <td id="totalTetanus_6" ng-bind="workerNotMIFCoverage.totalTetanus()"></td>
-  <td></td>
+  <td id="totalTetanus2To5_6" class="col-total">
+    <span ng-bind="workerNotMIFCoverage.totalTetanus2To5()"></span>
+  </td>
+  <td id="totalTetanus_6" class="col-total">
+    <span ng-bind="workerNotMIFCoverage.totalTetanus()"></span>
+  </td>
+  <td class="col-coverage-rate">
+    <span></span>
+  </td>
 </tr>
 <tr ng-init="otherNotMIFCoverage = adultCoverageTargetGroupMap[categories.OTHER_NOT_MIF]">
   <td id="otherNotMifLabel" openlmis-message="label.coverage.other.not.mif" colspan="2"></td>
-  <td id="targetGroup_7" ng-bind="otherNotMIFCoverage.targetGroup"></td>
+  <td id="targetGroup_7" class="col-target-group">
+    <span ng-bind="otherNotMIFCoverage.targetGroup"></span>
+  </td>
   <td>
     <span class="input-error-parent-cell">
     <input id="healthCenter1_7" class="right-justified" type="text" maxlength="7"
@@ -365,7 +427,9 @@
            ng-model="otherNotMIFCoverage.outreachTetanus1.notRecorded" not-recorded/>
     <label for="outreach1Nr_7" class="checkbox-label" openlmis-message="label.not.recorded"></label>
   </td>
-  <td id="totalTetanus1_7" ng-bind="otherNotMIFCoverage.totalTetanus1()"></td>
+  <td id="totalTetanus1_7" class="col-total">
+    <span ng-bind="otherNotMIFCoverage.totalTetanus1()"></span>
+  </td>
   <td>
     <span class="input-error-parent-cell">
     <input id="healthCenter2To5_7" class="right-justified" type="text" maxlength="7"
@@ -392,23 +456,45 @@
            ng-model="otherNotMIFCoverage.outreachTetanus2To5.notRecorded" not-recorded/>
     <label for="outreach2To5Nr_7" class="checkbox-label" openlmis-message="label.not.recorded"></label>
   </td>
-  <td id="totalTetanus2To5_7" ng-bind="otherNotMIFCoverage.totalTetanus2To5()"></td>
-  <td id="totalTetanus_7" ng-bind="otherNotMIFCoverage.totalTetanus()"></td>
-  <td></td>
+  <td id="totalTetanus2To5_7" class="col-total">
+    <span ng-bind="otherNotMIFCoverage.totalTetanus2To5()"></span>
+  </td>
+  <td id="totalTetanus_7" class="col-total">
+    <span ng-bind="otherNotMIFCoverage.totalTetanus()"></span>
+  </td>
+  <td class="col-coverage-rate">
+    <span></span>
+  </td>
 </tr>
 <tr>
-  <td id="totalRowLabel" openlmis-message="label.total" colspan="2"></td>
-  <td></td>
-  <td id="totalHealthCenterTetanus1" ng-bind="adultCoverage.totalHealthCenterTetanus1()"></td>
-  <td id="totalOutreachTetanus1" ng-bind="adultCoverage.totalOutreachTetanus1()"></td>
-  <td id="totalTetanus1" ng-bind="adultCoverage.totalTetanus1()"></td>
-  <td id="totalHealthCenterTetanus2To5" ng-bind="adultCoverage.totalHealthCenterTetanus2To5()"></td>
-  <td id="totalOutreachTetanus2To5" ng-bind="adultCoverage.totalOutreachTetanus2To5()"></td>
-  <td id="totalTetanus2To5" ng-bind="adultCoverage.totalTetanus2To5()"></td>
-  <td id="totalTetanus" ng-bind="adultCoverage.totalTetanus()"></td>
-  <td></td>
-  <td></td>
-  <td></td>
+  <td id="totalRowLabel" class="col-total" colspan="2">
+    <span openlmis-message="label.total"></span>
+  </td>
+  <td class="col-total"><span></span></td>
+  <td id="totalHealthCenterTetanus1" class="col-total">
+    <span ng-bind="adultCoverage.totalHealthCenterTetanus1()"></span>
+  </td>
+  <td id="totalOutreachTetanus1" class="col-total">
+    <span ng-bind="adultCoverage.totalOutreachTetanus1()"></span>
+  </td>
+  <td id="totalTetanus1" class="col-total">
+    <span ng-bind="adultCoverage.totalTetanus1()"></span>
+  </td>
+  <td id="totalHealthCenterTetanus2To5" class="col-total">
+    <span ng-bind="adultCoverage.totalHealthCenterTetanus2To5()"></span>
+  </td>
+  <td id="totalOutreachTetanus2To5" class="col-total">
+    <span ng-bind="adultCoverage.totalOutreachTetanus2To5()"></span>
+  </td>
+  <td id="totalTetanus2To5" class="col-total">
+    <span ng-bind="adultCoverage.totalTetanus2To5()"></span>
+  </td>
+  <td id="totalTetanus" class="col-total">
+    <span ng-bind="adultCoverage.totalTetanus()"></span>
+  </td>
+  <td class="col-total"><span></span></td>
+  <td class="col-total"><span></span></td>
+  <td class="col-total"><span></span></td>
 </tr>
 </tbody>
 
