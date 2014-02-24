@@ -52,6 +52,10 @@ abstract public class DistributionTab extends Page {
   @FindBy(how = ID, using = "childCoverageTabLabel")
   private static WebElement childCoverageTab = null;
 
+  @FindBy(how = ID, using = "adultCoverageTabLabel")
+  private static WebElement adultCoverageTab = null;
+
+
   public DistributionTab(TestWebDriver driver) {
     super(driver);
     PageFactory.initElements(new AjaxElementLocatorFactory(TestWebDriver.getDriver(), 10), this);
@@ -101,5 +105,10 @@ abstract public class DistributionTab extends Page {
   public ChildCoveragePage navigateToChildCoverage() {
     childCoverageTab.click();
     return new ChildCoveragePage(testWebDriver);
+  }
+
+  public AdultCoveragePage navigateToAdultCoverage() {
+    adultCoverageTab.click();
+    return new AdultCoveragePage(testWebDriver);
   }
 }
