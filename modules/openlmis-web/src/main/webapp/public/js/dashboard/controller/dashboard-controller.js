@@ -9,11 +9,21 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-function AdminDashboardController($scope,ReportPrograms, ReportSchedules, ReportPeriods, RequisitionGroupsByProgram,RequisitionGroupsByProgramSchedule, ReportProductsByProgram, OperationYears, ReportPeriodsByScheduleAndYear, ReportFacilityTypes, FacilitiesByProgramParams, OrderFillRate, ItemFillRate) {
+function AdminDashboardController($scope,UserFacilityList,ReportPrograms, ReportSchedules, ReportPeriods, RequisitionGroupsByProgram,RequisitionGroupsByProgramSchedule, ReportProductsByProgram, OperationYears, ReportPeriodsByScheduleAndYear, FacilitiesByGeographicZoneAndProgramParams, OrderFillRate, ItemFillRate, ngTableParams) {
 
     $scope.filterObject = {};
 
     $scope.startYears = [];
+
+
+    UserFacilityList.get({}, function (data) {
+       // $scope.facilities = data.facilityList;
+        $scope.userFacility = data.facilityList[0];
+        if ($scope.userFacility) {
+           $scope.filterObject.geographicZoneId = $scope.userFacility.geographicZone.id;
+        }
+    });
+
 
     $scope.productSelectOption = {maximumSelectionSize : 4};
 
@@ -65,14 +75,14 @@ function AdminDashboardController($scope,ReportPrograms, ReportSchedules, Report
         }
     });
 
-    ReportFacilityTypes.get(function (data) {
+   /* ReportFacilityTypes.get(function (data) {
         $scope.facilityTypes = data.facilityTypes;
         $scope.facilityTypes.unshift({'name':'-- All Facility Types --','id':'0'});
 
         $scope.allFacilities = [];
         $scope.allFacilities.unshift({code:'-- Select a Facility --',id:'0'});
     });
-
+*/
     OperationYears.get(function (data) {
         $scope.startYears = data.years;
         $scope.startYears.unshift('-- All Years --');
@@ -148,7 +158,7 @@ function AdminDashboardController($scope,ReportPrograms, ReportSchedules, Report
                 $scope.requisitionGroups.unshift({'name':'-- All Requisition Groups --'});
             });
         }
-        //$scope.loadFacilities();
+        $scope.loadFacilities();
     });
 
     $scope.$watch('productIdList',function(selection){
@@ -156,7 +166,7 @@ function AdminDashboardController($scope,ReportPrograms, ReportSchedules, Report
     });
 
     $scope.loadFillRates = function(){
-        /*ItemFillRate.get({
+        ItemFillRate.get({
             geographicZone: $scope.filterObject.geographicZoneId ,
             period: $scope.filterObject.periodId,
             products: $scope.filterObject.productIdList
@@ -172,20 +182,19 @@ function AdminDashboardController($scope,ReportPrograms, ReportSchedules, Report
                 $scope.productItemFillRates.push({'option': {animate:3000, barColor: barColor, scaleColor: $scaleColor, lineWidth: $lineWidth}, 'percent': idx.fillRate, 'name': idx.product});
             });
 
-        });*/
+        });
 
     };
 
     $scope.loadFacilities = function(){
-        if(isUndefined($scope.filterObject.programId) || isUndefined($scope.filterObject.scheduleId)){
-            return;
-        }
-
-        // load facilities
-        FacilitiesByProgramParams.get({
-                program: $scope.filterObject.programId ,
-                schedule: $scope.filterObject.scheduleId,
-                type: $scope.filterObject.facilityTypeId
+        if(isUndefined($scope.filterObject.geographicZoneId))
+        return;
+       // load facilities
+        FacilitiesByGeographicZoneAndProgramParams.get({
+                geographicZoneId: $scope.filterObject.geographicZoneId ,
+                rgroupId: isUndefined($scope.filterObject.rgroupId) ? 0 : $scope.filterObject.rgroupId ,
+                programId: isUndefined($scope.filterObject.programId)? 0 : $scope.filterObject.programId ,
+                scheduleId: isUndefined($scope.filterObject.scheduleId) ? 0 : $scope.filterObject.scheduleId
             }, function(data){
                 $scope.allFacilities = data.facilities;
                 $scope.allFacilities.unshift({code:'-- Select a Facility --',id:''});
@@ -232,7 +241,8 @@ function AdminDashboardController($scope,ReportPrograms, ReportSchedules, Report
         } else {
             $scope.filterObject.rgroupId = 0;
         }
-       // $scope.filterGrid();
+
+        $scope.loadFacilities();
     });
 
     $scope.$watch('periodId', function (selection) {
@@ -270,6 +280,20 @@ function AdminDashboardController($scope,ReportPrograms, ReportSchedules, Report
         $scope.ChangeSchedule('');
 
     });
+
+   /* $scope.getUserGeographicZoneId = function(){
+       if(isUndefined($scope.filterObject.geographicZoneId)){
+           UserFacilityList.get({}, function (data) {
+               // $scope.facilities = data.facilityList;
+               $scope.userFacility = data.facilityList[0];
+               if ($scope.userFacility) {
+                   $scope.filterObject.geographicZoneId = $scope.userFacility.geographicZone.id;
+               }
+           });
+       }
+       return isUndefined($scope.filterObject.geographicZoneId) ? 0 : $scope.filterObject.geographicZoneId;
+    };*/
+
 
 
     $scope.$watch('year', function (selection) {
@@ -630,6 +654,95 @@ function AdminDashboardController($scope,ReportPrograms, ReportSchedules, Report
         }
     };*/
 
+    $scope.data   = [
+        {alert: "Requisitions Pending Approval", percent: 10},
+        {alert: "Facilities stocked out", percent: 20},
+        {alert: "Commodities have been rationed", percent: 30},
+        {alert: "products have been recalled", percent: 46},
+        {alert: "Requisitions Pending Approval", percent: 17},
+        {alert: "Facilities stocked out", percent: 25},
+        {alert: "Commodities have been rationed", percent: 36},
+        {alert: "products have been recalled", percent: 42},
+        {alert: "Requisitions Pending Approval", percent: 70},
+        {alert: "Facilities stocked out", percent: 27},
+        {alert: "Commodities have been rationed", percent: 33},
+        {alert: "products have been recalled", percent: 46},
+        {alert: "Requisitions Pending Approval", percent: 18},
+        {alert: "Facilities stocked out", percent: 20},
+        {alert: "Commodities have been rationed", percent: 50},
+        {alert: "products have been recalled", percent: 76},
+        {alert: "Requisitions Pending Approval", percent: 10},
+        {alert: "Facilities stocked out", percent: 21},
+        {alert: "Commodities have been rationed", percent: 32},
+        {alert: "products have been recalled", percent: 44},
+        {alert: "Requisitions Pending Approval", percent: 15},
+        {alert: "Facilities stocked out", percent: 29},
+        {alert: "Commodities have been rationed", percent: 31},
+        {alert: "products have been recalled", percent: 67},
+        {alert: "Requisitions Pending Approval", percent: 45},
+        {alert: "Facilities stocked out", percent: 55},
+        {alert: "Commodities have been rationed", percent: 88},
+        {alert: "products have been recalled", percent: 99}];
+
+    $scope.totalAlerts = $scope.data.length;
+    // the grid options
+    $scope.tableParams = new ngTableParams({
+        page: 1,            // show first page
+        total:0,
+        count: 5,
+        counts:[]            // count per page
+    });
+    var data = $scope.data;
+
+    $scope.datarows = data.slice(($scope.tableParams.page - 1) * $scope.tableParams.count, $scope.tableParams.page * $scope.tableParams.count);
+
+    $scope.loadData =  function(params){
+
+        if(params === undefined || params === null){
+            params = new ngTableParams();
+        }
+        if($scope.data === undefined){
+            $scope.datarows = [];
+            params.total = 0;
+        }else{
+            var data = $scope.data;
+            var total = data.length;
+
+            params.counts = [];
+            if((params.count * (params.page + 1)) < total){
+
+                params.page = params.page ? params.page + 1 : 1;
+
+                $scope.datarows = data.slice((1 - 1) * params.count, params.page * params.count);
+            }
+        }
+    };
+
+
+   /* $scope.paramsChanged = function (params) {
+
+        // slice array data on pages
+        if ($scope.data === undefined) {
+            $scope.datarows = [];
+           // params.total = 0;
+        } else {
+            var data = $scope.data;
+            params.counts = [];
+
+            params.total = data.length;
+            $scope.datarows = data.slice((params.page - 1) * params.count, params.page * params.count);
+            var i = 0;
+            var baseIndex = params.count * (params.page - 1) + 1;
+            while (i < $scope.datarows.length) {
+                $scope.datarows[i].no = baseIndex + i;
+                i++;
+            }
+        }
+    };*/
+
+    // watch for changes of parameters
+   // $scope.$watch('tableParams', $scope.paramsChanged, true);
+
     /* End Gauge Chart * /
 
 
@@ -669,9 +782,9 @@ function AdminDashboardController($scope,ReportPrograms, ReportSchedules, Report
         $('#dashboard-tabs #' + tabId + ' a').tab('show');
     }
 
+   /* $(function () {
+        $scope.paramsChanged($scope.tableParams);
 
-
-
-
-
+    });*/
 }
+
