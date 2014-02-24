@@ -156,9 +156,10 @@ public class DistributionAdultCoverageSyncTest extends TestCaseHelper {
   }
 
   @Test(groups = {"distribution"})
-  public void testShouldVerifyTargetGroupWhenMappingWhenProductInactiveAtProgram() throws SQLException {
+  public void testShouldVerifyTargetGroupAndWastageRateWhenMappingWhenProductInactiveAtProgram() throws SQLException {
     dbWrapper.updateActiveStatusOfProgramProduct("tetanus", "VACCINES", "false");
     insertProductMappingToGroup();
+    dbWrapper.insertAdultCoverageOpenedVialMapping("tetanus");
     dbWrapper.insertProgramProductISA("VACCINES", "tetanus", "4", "12", "3", "4", "4", "2", "4");
     dbWrapper.updateFieldValue("facilities", "catchmentpopulation", 8989);
 
@@ -177,10 +178,14 @@ public class DistributionAdultCoverageSyncTest extends TestCaseHelper {
       verifyTargetGroup(rowNumber, "360");
       verifyCoverageRate(rowNumber, "0");
     }
+
+    adultCoveragePage.enterOpenedVialInputField("90");
+    assertEquals("100", adultCoveragePage.getWastageRate());
   }
 
   @Test(groups = {"distribution"})
-  public void testShouldVerifyTargetGroupWhenMappingWhenProductGloballyInactive() throws SQLException {
+  public void testShouldVerifyTargetGroupAndWastageRateWhenMappingWhenProductGloballyInactive() throws SQLException {
+    dbWrapper.insertAdultCoverageOpenedVialMapping("tetanus");
     dbWrapper.updateFieldValue("products", "active", false);
     insertProductMappingToGroup();
     dbWrapper.insertProgramProductISA("VACCINES", "tetanus", "400", "12", "3", "4", "4", "2", "4");
@@ -201,11 +206,15 @@ public class DistributionAdultCoverageSyncTest extends TestCaseHelper {
       verifyTargetGroup(rowNumber, "35956");
       verifyCoverageRate(rowNumber, "0");
     }
+
+    adultCoveragePage.enterOpenedVialInputField("90");
+    assertEquals("100", adultCoveragePage.getWastageRate());
   }
 
   @Test(groups = {"distribution"})
-  public void testShouldVerifyTargetGroupWhenNoCatchmentPopulation() throws SQLException {
+  public void testShouldVerifyTargetGroupAndWastageRateWhenNoCatchmentPopulation() throws SQLException {
     insertProductMappingToGroup();
+    dbWrapper.insertAdultCoverageOpenedVialMapping("tetanus");
     dbWrapper.insertProgramProductISA("VACCINES", "tetanus", "45", "12", "3", "4", "4", "2", "4");
     dbWrapper.updateFieldValue("facilities", "catchmentpopulation", null);
 
@@ -224,11 +233,15 @@ public class DistributionAdultCoverageSyncTest extends TestCaseHelper {
       verifyTargetGroup(rowNumber, "");
       verifyCoverageRate(rowNumber, "");
     }
+
+    adultCoveragePage.enterOpenedVialInputField("90");
+    assertEquals("100", adultCoveragePage.getWastageRate());
   }
 
   @Test(groups = {"distribution"})
-  public void testShouldVerifyTargetGroupWhenNoWhoRatio() throws SQLException {
+  public void testShouldVerifyTargetGroupAndWastageRateWhenNoWhoRatio() throws SQLException {
     insertProductMappingToGroup();
+    dbWrapper.insertAdultCoverageOpenedVialMapping("tetanus");
     dbWrapper.updateFieldValue("facilities", "catchmentpopulation", "8980", "code", adultCoverageData.get(FIRST_FACILITY_CODE));
     HomePage homePage = loginPage.loginAs(adultCoverageData.get(USER), adultCoverageData.get(PASSWORD));
     DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
@@ -245,11 +258,15 @@ public class DistributionAdultCoverageSyncTest extends TestCaseHelper {
       verifyTargetGroup(rowNumber, "");
       verifyCoverageRate(rowNumber, "");
     }
+
+    adultCoveragePage.enterOpenedVialInputField("90");
+    assertEquals("100", adultCoveragePage.getWastageRate());
   }
 
   @Test(groups = {"distribution"})
-  public void testShouldVerifyTargetGroupForAllGroups() throws SQLException {
+  public void testShouldVerifyWastageRateAndTargetGroupForAllGroups() throws SQLException {
     insertProductMappingToGroup();
+    dbWrapper.insertAdultCoverageOpenedVialMapping("tetanus");
     dbWrapper.insertProgramProductISA("VACCINES", "tetanus", "45", "12", "3", "4", "4", "2", "4");
     dbWrapper.updateFieldValue("facilities", "catchmentpopulation", "8984", "code", adultCoverageData.get(FIRST_FACILITY_CODE));
 
@@ -268,6 +285,9 @@ public class DistributionAdultCoverageSyncTest extends TestCaseHelper {
       verifyTargetGroup(rowNumber, "4043");
       verifyCoverageRate(rowNumber, "0");
     }
+
+    adultCoveragePage.enterOpenedVialInputField("90");
+    assertEquals("100", adultCoveragePage.getWastageRate());
   }
 
   @Test(groups = {"distribution"})
@@ -334,8 +354,9 @@ public class DistributionAdultCoverageSyncTest extends TestCaseHelper {
   }
 
   @Test(groups = {"distribution"})
-  public void testShouldVerifyCoverageRateCalculation() throws SQLException {
+  public void testShouldVerifyCoverageRateAndWastageRateCalculation() throws SQLException {
     insertProductMappingToGroup();
+    dbWrapper.insertAdultCoverageOpenedVialMapping("tetanus");
     dbWrapper.insertProgramProductISA("VACCINES", "tetanus", "405", "12", "3", "4", "4", "2", "4");
     dbWrapper.updateFieldValue("facilities", "catchmentpopulation", "89", "code", adultCoverageData.get(FIRST_FACILITY_CODE));
 
@@ -362,13 +383,17 @@ public class DistributionAdultCoverageSyncTest extends TestCaseHelper {
     assertEquals("1558917", adultCoveragePage.getCoverageRate(5));
     assertEquals("1558922", adultCoveragePage.getCoverageRate(6));
     assertEquals("1558928", adultCoveragePage.getCoverageRate(7));
+
+    adultCoveragePage.enterOpenedVialInputField("90");
+    assertEquals("-2120051", adultCoveragePage.getWastageRate());
   }
 
   @Test(groups = {"distribution"})
-  public void testShouldVerifyCoverageRateCalculationWhenCatchmentPopulationZero() throws SQLException {
+  public void testShouldVerifyCoverageAndWastageRateCalculationWhenCatchmentPopulationZero() throws SQLException {
     insertProductMappingToGroup();
+    dbWrapper.insertAdultCoverageOpenedVialMapping("tetanus");
     dbWrapper.insertProgramProductISA("VACCINES", "tetanus", "45", "12", "3", "4", "4", "2", "4");
-    dbWrapper.updateFieldValue("facilities", "catchmentpopulation", "", "code", adultCoverageData.get(FIRST_FACILITY_CODE));
+    dbWrapper.updateFieldValue("facilities", "catchmentpopulation", "0", "code", adultCoverageData.get(FIRST_FACILITY_CODE));
 
     HomePage homePage = loginPage.loginAs(adultCoverageData.get(USER), adultCoverageData.get(PASSWORD));
     DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
@@ -389,6 +414,9 @@ public class DistributionAdultCoverageSyncTest extends TestCaseHelper {
       verifyTargetGroup(rowNumber, "0");
       verifyCoverageRate(rowNumber, "");
     }
+
+    adultCoveragePage.enterOpenedVialInputField("1234567");
+    assertEquals("97", adultCoveragePage.getWastageRate());
   }
 
 

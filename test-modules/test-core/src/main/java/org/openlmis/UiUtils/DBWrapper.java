@@ -1406,4 +1406,8 @@ public class DBWrapper {
     resultSet.next();
     return resultSet;
   }
+
+  public void insertAdultCoverageOpenedVialMapping(String productCode) throws SQLException {
+    update("INSERT INTO coverage_product_vials (vial, productCode, childCoverage) values ('Tetanus' ,'%s', FALSE)", productCode);
+  }
 }
