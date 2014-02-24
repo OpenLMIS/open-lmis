@@ -238,6 +238,14 @@ describe('Adult coverage', function () {
     });
   });
 
+  it('should initialize empty health center readings if not defined', function() {
+    var adultCoverageLineItem = new AdultCoverageLineItem({"id": 5, "facilityVisitId": 3, "demographicGroup": "Pregnant Women",
+      "outreachTetanus1": {value: undefined}, "healthCenterTetanus2To5": {value: 3}, "outreachTetanus2To5": {value: undefined}});
+
+    expect(adultCoverageLineItem.healthCenterTetanus1).toEqual({});
+    expect(adultCoverageLineItem.healthCenterTetanus2To5).toEqual({value: 3});
+  });
+
   describe("status computation", function () {
     it("should return empty status if all fields are blank and NR not set", function () {
       var adultCoverageLineItem1, adultCoverageLineItem2, openedVialLineItem;

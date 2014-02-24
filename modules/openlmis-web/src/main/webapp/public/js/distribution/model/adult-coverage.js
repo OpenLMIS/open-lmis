@@ -114,6 +114,8 @@ AdultCoverage.prototype.sumOfAttributes = function (attribute) {
 
 function AdultCoverageLineItem(lineItem) {
   $.extend(true, this, lineItem);
+  this.healthCenterTetanus1 = this.healthCenterTetanus1 || {};
+  this.healthCenterTetanus2To5 = this.healthCenterTetanus2To5 || {};
 }
 
 AdultCoverageLineItem.prototype.setNotRecorded = function () {
@@ -149,7 +151,7 @@ function OpenedVialLineItem(lineItem) {
 }
 
 OpenedVialLineItem.prototype.wastageRate = function (totalTetanus) {
-  if (isUndefined(this.openedVial) || isUndefined(this.openedVial.value)|| isUndefined(this.packSize)) return null;
+  if (isUndefined(this.openedVial) || isUndefined(this.openedVial.value) || isUndefined(this.packSize)) return null;
   var totalDosesConsumed = this.openedVial.value * this.packSize;
   if (totalDosesConsumed === 0) return null;
   return Math.round((totalDosesConsumed - totalTetanus) / totalDosesConsumed * 100);

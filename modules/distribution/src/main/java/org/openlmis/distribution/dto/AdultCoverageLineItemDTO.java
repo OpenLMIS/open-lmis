@@ -12,11 +12,17 @@ package org.openlmis.distribution.dto;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.openlmis.core.domain.BaseModel;
 import org.openlmis.distribution.domain.AdultCoverageLineItem;
 
+import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
+
 @Data
 @EqualsAndHashCode(callSuper = false)
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonSerialize(include = NON_EMPTY)
 public class AdultCoverageLineItemDTO extends BaseModel {
 
   private Reading healthCenterTetanus1;
@@ -27,12 +33,12 @@ public class AdultCoverageLineItemDTO extends BaseModel {
 
   public AdultCoverageLineItem transform() {
     AdultCoverageLineItem adultCoverageLineItem = new AdultCoverageLineItem();
+    adultCoverageLineItem.setId(this.id);
     adultCoverageLineItem.setHealthCenterTetanus1(this.healthCenterTetanus1.parsePositiveInt());
     adultCoverageLineItem.setOutreachTetanus1(this.outreachTetanus1.parsePositiveInt());
     adultCoverageLineItem.setHealthCenterTetanus2To5(this.healthCenterTetanus2To5.parsePositiveInt());
     adultCoverageLineItem.setOutreachTetanus2To5(this.outreachTetanus2To5.parsePositiveInt());
     adultCoverageLineItem.setModifiedBy(this.modifiedBy);
-    adultCoverageLineItem.setId(this.id);
     return adultCoverageLineItem;
   }
 }

@@ -10,10 +10,10 @@
 
 package org.openlmis.distribution.dto;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.openlmis.core.domain.BaseModel;
 import org.openlmis.distribution.domain.AdultCoverageLineItem;
 import org.openlmis.distribution.domain.OpenedVialLineItem;
@@ -22,10 +22,12 @@ import org.openlmis.distribution.domain.VaccinationAdultCoverage;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
+
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonSerialize(include = NON_EMPTY)
 public class AdultCoverageDTO extends BaseModel{
 
   private List<AdultCoverageLineItemDTO> adultCoverageLineItems = new ArrayList<>();
