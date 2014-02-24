@@ -212,6 +212,18 @@ public class ReportLookupController extends BaseController {
     return OpenLmisResponse.response("facilities", reportLookupService.getFacilities( program, schedule, type ));
   }
 
+
+    @RequestMapping(value = "/facilities/geographicZone/{geographicZoneId}/requisitionGroup/{rgroupId}/program/{programId}/schedule/{scheduleId}", method = GET, headers = BaseController.ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getFacilities(
+            @PathVariable("geographicZoneId") Long geographicZoneId,
+            @PathVariable("rgroupId") Long requisitionGroupId,
+            @PathVariable("programId") Long programId,
+            @PathVariable("scheduleId") Long scheduleId,
+            HttpServletRequest request
+    ) {
+        return OpenLmisResponse.response("facilities", reportLookupService.getFacilitiesBy(geographicZoneId,requisitionGroupId,programId,scheduleId));
+    }
+
   @RequestMapping(value = "/schedules/{scheduleId}/periods", method = GET, headers = ACCEPT_JSON)
   public ResponseEntity<OpenLmisResponse> getAll(@PathVariable("scheduleId") Long scheduleId) {
     List<ProcessingPeriod> periodList = processingScheduleService.getAllPeriods(scheduleId);

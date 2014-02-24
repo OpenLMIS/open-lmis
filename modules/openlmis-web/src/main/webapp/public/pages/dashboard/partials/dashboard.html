@@ -49,6 +49,29 @@
 
 
 <div class="box-content"  >
+
+<div class="row-fluid">
+    <div class="span6">
+        <!--<div class="pull-right legend">Showing records {{ ((tableParams.page - 1) *
+            tableParams.count) + 1 }} to {{ (tableParams.page +1 ) * tableParams.count }} of {{totalAlerts}}
+        </div>-->
+        <div>Alerts</div>
+        <table ng-show="datarows.length > 0" class="table-bordered table table-striped pull-right"
+               ng-table="tableParams" ng-table-Scroller  loading-method="loadData(tableParams)" style="display: block; height: 150px;overflow: auto;">
+            <tbody >
+            <tr ng-repeat="alert in datarows" >
+                <td data-title="Alerts">
+                    {{alert.percent}} {{alert.alert}}
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="span6">
+
+    </div>
+</div>
+
     <div class="app-form" style="padding: 5px;">
         <form  name="filterForm" novalidate>
             <div >
@@ -318,7 +341,7 @@
                                 <button class="btn" ng-click="changeView('month', myCalendar)">Month</button>
                             </div>
                         </div>
-                        <div class="calendar" ng-model="eventSources" calendar="myCalendar" config="uiConfig.calendar" ui-calendar="uiConfig.calendar"></div>
+                        <div class="calendar"  ng-model="eventSources" calendar="myCalendar" config="uiConfig.calendar" ui-calendar="uiConfig.calendar"></div>
                     </div>
                 </div>
             </div>
@@ -326,3 +349,4 @@
         </div>
     </div>
 </div>
+

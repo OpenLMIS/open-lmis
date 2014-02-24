@@ -403,6 +403,9 @@ services.factory('SaveGeographicInfo', function($resource){
 });
 
 /* Dashboard data factories */
+services.factory("FacilitiesByGeographicZoneAndProgramParams",function($resource)  {
+    return   $resource('/reports/facilities/geographicZone/:geographicZoneId/requisitionGroup/:rgroupId/program/:programId/schedule/:scheduleId.json', {}, {});
+});
 
 services.factory('OrderFillRate', function($resource){
     return $resource('/dashboard/orderFillRate.json',{}, {});
