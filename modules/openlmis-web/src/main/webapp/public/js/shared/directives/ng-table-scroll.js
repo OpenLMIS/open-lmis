@@ -15,7 +15,7 @@ app.directive('ngTableScroller', function() {
             rawElement = elem[0];
             scope.showSpinner = false;
 
-            scope.loadingFn = attrs['loadingMethod'];
+            scope.loadingFn = attrs.loadingMethod;
 
             scope.$watch(attrs.ngTable, function(newParams){
 
