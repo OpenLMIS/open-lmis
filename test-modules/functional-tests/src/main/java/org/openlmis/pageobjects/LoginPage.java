@@ -60,9 +60,10 @@ public class LoginPage extends Page {
   public HomePage loginAs(String username, String password) {
     testWebDriver.waitForElementToAppear(userNameField);
     testWebDriver.waitForElementToAppear(passwordField);
-    userNameField.sendKeys(username);
-    passwordField.sendKeys(password);
-    testWebDriver.sleep(500);
+
+    sendKeys(userNameField, username);
+    sendKeys(passwordField, password);
+
     userNameField.submit();
     return new HomePage(testWebDriver);
   }
