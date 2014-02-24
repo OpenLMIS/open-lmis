@@ -274,9 +274,9 @@ public class DistributionChildCoverageSyncTest extends TestCaseHelper {
 
   @Test(groups = {"distribution"})
   public void testShouldVerifyAllRegimensWhenMoreThan12RegimensInMappingTable() throws SQLException {
-    dbWrapper.insertRegimensProductsInMappingTable("Antibiotic", "BCG");
-    dbWrapper.insertRegimensProductsInMappingTable("Glycerine", "P11");
-    dbWrapper.insertRegimensProductsInMappingTable("Paracetamol", "P10");
+    dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("Antibiotic", "BCG", true);
+    dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("Glycerine", "P11", true);
+    dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("Paracetamol", "P10", true);
 
     HomePage homePage = loginPage.loginAs(childCoverageData.get(USER), childCoverageData.get(PASSWORD));
     DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
@@ -312,8 +312,8 @@ public class DistributionChildCoverageSyncTest extends TestCaseHelper {
   public void testShouldVerifyAllRegimensWhenInsertedInDifferentOrderInMappingTableAndMappedToPullTypePrograms() throws SQLException {
     dbWrapper.deleteRowFromTable("coverage_target_group_products", "targetGroupEntity", "BCG");
     dbWrapper.deleteRowFromTable("coverage_target_group_products", "targetGroupEntity", "Measles");
-    dbWrapper.insertRegimensProductsInMappingTable("Measles", "P10");
-    dbWrapper.insertRegimensProductsInMappingTable("BCG", "P10");
+    dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("Measles", "P10", true);
+    dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("BCG", "P10", true);
 
     HomePage homePage = loginPage.loginAs(childCoverageData.get(USER), childCoverageData.get(PASSWORD));
     DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
@@ -819,18 +819,18 @@ public class DistributionChildCoverageSyncTest extends TestCaseHelper {
   }
 
   private void insertRegimenProductMapping() throws SQLException {
-    dbWrapper.insertRegimensProductsInMappingTable("BCG", "BCG");
-    dbWrapper.insertRegimensProductsInMappingTable("Polio (Newborn)", "polio10dose");
-    dbWrapper.insertRegimensProductsInMappingTable("Polio 1st dose", "polio20dose");
-    dbWrapper.insertRegimensProductsInMappingTable("Polio 2nd dose", "polio10dose");
-    dbWrapper.insertRegimensProductsInMappingTable("Polio 3rd dose", "polio20dose");
-    dbWrapper.insertRegimensProductsInMappingTable("Penta 1st dose", "penta1");
-    dbWrapper.insertRegimensProductsInMappingTable("Penta 2nd dose", "penta10");
-    dbWrapper.insertRegimensProductsInMappingTable("Penta 3rd dose", "penta1");
-    dbWrapper.insertRegimensProductsInMappingTable("PCV10 1st dose", "P10");
-    dbWrapper.insertRegimensProductsInMappingTable("PCV10 2nd dose", "P10");
-    dbWrapper.insertRegimensProductsInMappingTable("PCV10 3rd dose", "P10");
-    dbWrapper.insertRegimensProductsInMappingTable("Measles", "Measles");
+    dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("BCG", "BCG", true);
+    dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("Polio (Newborn)", "polio10dose", true);
+    dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("Polio 1st dose", "polio20dose", true);
+    dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("Polio 2nd dose", "polio10dose", true);
+    dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("Polio 3rd dose", "polio20dose", true);
+    dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("Penta 1st dose", "penta1", true);
+    dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("Penta 2nd dose", "penta10", true);
+    dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("Penta 3rd dose", "penta1", true);
+    dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("PCV10 1st dose", "P10", true);
+    dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("PCV10 2nd dose", "P10", true);
+    dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("PCV10 3rd dose", "P10", true);
+    dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("Measles", "Measles", true);
   }
 
   @When("^I apply NR to healthCenter11Months for rowNumber \"([^\"]*)\"$")

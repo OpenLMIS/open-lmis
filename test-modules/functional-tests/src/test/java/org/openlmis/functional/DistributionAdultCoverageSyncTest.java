@@ -69,7 +69,7 @@ public class DistributionAdultCoverageSyncTest extends TestCaseHelper {
   }
 
   @Test(groups = {"distribution"})
-  public void testShouldVerifyAllLabelsAndDefaultValues() {
+  public void testShouldVerifyAllLabelsAndDefaultValuesWhenNoMapping() {
     HomePage homePage = loginPage.loginAs(adultCoverageData.get(USER), adultCoverageData.get(PASSWORD));
     DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
     distributionPage.initiate(adultCoverageData.get(FIRST_DELIVERY_ZONE_NAME), adultCoverageData.get(VACCINES_PROGRAM));
@@ -153,6 +153,122 @@ public class DistributionAdultCoverageSyncTest extends TestCaseHelper {
     assertEquals("0", adultCoveragePage.getTotalOutreachTetanus2To5());
   }
 
+  @Test(groups = {"distribution"})
+  public void testShouldVerifyTargetGroupWhenMappingWhenProductInactiveAtProgram() throws SQLException {
+    dbWrapper.updateActiveStatusOfProgramProduct("tetanus", "VACCINES", "false");
+    insertProductMappingToGroup();
+    dbWrapper.insertProgramProductISA("VACCINES", "tetanus", "4", "12", "3", "4", "4", "2", "4");
+    dbWrapper.updateFieldValue("facilities", "catchmentpopulation", 8989);
+
+    HomePage homePage = loginPage.loginAs(adultCoverageData.get(USER), adultCoverageData.get(PASSWORD));
+    DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
+    distributionPage.initiate(adultCoverageData.get(FIRST_DELIVERY_ZONE_NAME), adultCoverageData.get(VACCINES_PROGRAM));
+    FacilityListPage facilityListPage = distributionPage.clickRecordData(1);
+    VisitInformationPage visitInformationPage = facilityListPage.selectFacility(adultCoverageData.get(FIRST_FACILITY_CODE));
+
+    facilityListPage.verifyOverallFacilityIndicatorColor("AMBER");
+
+    AdultCoveragePage adultCoveragePage = visitInformationPage.navigateToAdultCoverage();
+    adultCoveragePage.verifyIndicator("RED");
+
+    for (int rowNumber = 1; rowNumber <= 7; rowNumber++) {
+      verifyTargetGroup(rowNumber, "360");
+      verifyCoverageRate(rowNumber, "0");
+    }
+  }
+
+  @Test(groups = {"distribution"})
+  public void testShouldVerifyTargetGroupWhenMappingWhenProductGloballyInactive() throws SQLException {
+    dbWrapper.updateFieldValue("products", "active", false);
+    insertProductMappingToGroup();
+    dbWrapper.insertProgramProductISA("VACCINES", "tetanus", "400", "12", "3", "4", "4", "2", "4");
+    dbWrapper.updateFieldValue("facilities", "catchmentpopulation", 8989);
+
+    HomePage homePage = loginPage.loginAs(adultCoverageData.get(USER), adultCoverageData.get(PASSWORD));
+    DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
+    distributionPage.initiate(adultCoverageData.get(FIRST_DELIVERY_ZONE_NAME), adultCoverageData.get(VACCINES_PROGRAM));
+    FacilityListPage facilityListPage = distributionPage.clickRecordData(1);
+    VisitInformationPage visitInformationPage = facilityListPage.selectFacility(adultCoverageData.get(FIRST_FACILITY_CODE));
+
+    facilityListPage.verifyOverallFacilityIndicatorColor("AMBER");
+
+    AdultCoveragePage adultCoveragePage = visitInformationPage.navigateToAdultCoverage();
+    adultCoveragePage.verifyIndicator("RED");
+
+    for (int rowNumber = 1; rowNumber <= 7; rowNumber++) {
+      verifyTargetGroup(rowNumber, "35956");
+      verifyCoverageRate(rowNumber, "0");
+    }
+  }
+
+  @Test(groups = {"distribution"})
+  public void testShouldVerifyTargetGroupWhenNoCatchmentPopulation() throws SQLException {
+    insertProductMappingToGroup();
+    dbWrapper.insertProgramProductISA("VACCINES", "tetanus", "45", "12", "3", "4", "4", "2", "4");
+    dbWrapper.updateFieldValue("facilities", "catchmentpopulation", null);
+
+    HomePage homePage = loginPage.loginAs(adultCoverageData.get(USER), adultCoverageData.get(PASSWORD));
+    DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
+    distributionPage.initiate(adultCoverageData.get(FIRST_DELIVERY_ZONE_NAME), adultCoverageData.get(VACCINES_PROGRAM));
+    FacilityListPage facilityListPage = distributionPage.clickRecordData(1);
+    VisitInformationPage visitInformationPage = facilityListPage.selectFacility(adultCoverageData.get(FIRST_FACILITY_CODE));
+
+    facilityListPage.verifyOverallFacilityIndicatorColor("AMBER");
+
+    AdultCoveragePage adultCoveragePage = visitInformationPage.navigateToAdultCoverage();
+    adultCoveragePage.verifyIndicator("RED");
+
+    for (int rowNumber = 1; rowNumber <= 7; rowNumber++) {
+      verifyTargetGroup(rowNumber, "");
+      verifyCoverageRate(rowNumber, "");
+    }
+  }
+
+  @Test(groups = {"distribution"})
+  public void testShouldVerifyTargetGroupWhenNoWhoRatio() throws SQLException {
+    insertProductMappingToGroup();
+    dbWrapper.updateFieldValue("facilities", "catchmentpopulation", "8980", "code", adultCoverageData.get(FIRST_FACILITY_CODE));
+    HomePage homePage = loginPage.loginAs(adultCoverageData.get(USER), adultCoverageData.get(PASSWORD));
+    DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
+    distributionPage.initiate(adultCoverageData.get(FIRST_DELIVERY_ZONE_NAME), adultCoverageData.get(VACCINES_PROGRAM));
+    FacilityListPage facilityListPage = distributionPage.clickRecordData(1);
+    VisitInformationPage visitInformationPage = facilityListPage.selectFacility(adultCoverageData.get(FIRST_FACILITY_CODE));
+
+    facilityListPage.verifyOverallFacilityIndicatorColor("AMBER");
+
+    AdultCoveragePage adultCoveragePage = visitInformationPage.navigateToAdultCoverage();
+    adultCoveragePage.verifyIndicator("RED");
+
+    for (int rowNumber = 1; rowNumber <= 7; rowNumber++) {
+      verifyTargetGroup(rowNumber, "");
+      verifyCoverageRate(rowNumber, "");
+    }
+  }
+
+  @Test(groups = {"distribution"})
+  public void testShouldVerifyTargetGroupForAllGroups() throws SQLException {
+    insertProductMappingToGroup();
+    dbWrapper.insertProgramProductISA("VACCINES", "tetanus", "45", "12", "3", "4", "4", "2", "4");
+    dbWrapper.updateFieldValue("facilities", "catchmentpopulation", "8984", "code", adultCoverageData.get(FIRST_FACILITY_CODE));
+
+    HomePage homePage = loginPage.loginAs(adultCoverageData.get(USER), adultCoverageData.get(PASSWORD));
+    DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
+    distributionPage.initiate(adultCoverageData.get(FIRST_DELIVERY_ZONE_NAME), adultCoverageData.get(VACCINES_PROGRAM));
+    FacilityListPage facilityListPage = distributionPage.clickRecordData(1);
+    VisitInformationPage visitInformationPage = facilityListPage.selectFacility(adultCoverageData.get(FIRST_FACILITY_CODE));
+
+    facilityListPage.verifyOverallFacilityIndicatorColor("AMBER");
+
+    AdultCoveragePage adultCoveragePage = visitInformationPage.navigateToAdultCoverage();
+    adultCoveragePage.verifyIndicator("RED");
+
+    for (int rowNumber = 1; rowNumber <= 7; rowNumber++) {
+      verifyTargetGroup(rowNumber, "4043");
+      verifyCoverageRate(rowNumber, "0");
+    }
+  }
+
+
   public void setupDataForDistributionTest(String userSIC, String deliveryZoneCodeFirst, String deliveryZoneCodeSecond,
                                            String deliveryZoneNameFirst, String deliveryZoneNameSecond,
                                            String facilityCodeFirst, String facilityCodeSecond,
@@ -164,8 +280,7 @@ public class DistributionAdultCoverageSyncTest extends TestCaseHelper {
       facilityCodeFirst, facilityCodeSecond, programFirst, programSecond, schedule);
     dbWrapper.insertRoleAssignmentForDistribution(userSIC, "store in-charge", deliveryZoneCodeFirst);
     dbWrapper.insertRoleAssignmentForDistribution(userSIC, "store in-charge", deliveryZoneCodeSecond);
-    dbWrapper.insertProductsForChildCoverage();
-
+    dbWrapper.insertProductsForAdultCoverage();
   }
 
   public void verifyTargetGroup(int rowNumber, String value) {
@@ -251,6 +366,16 @@ public class DistributionAdultCoverageSyncTest extends TestCaseHelper {
   public void verifyHealthCenter2To5NrSelected(int rowNumber, boolean value) {
     AdultCoveragePage adultCoveragePage = PageFactory.getInstanceOfAdultCoveragePage(testWebDriver);
     assertEquals(value, adultCoveragePage.isHealthCenter2To5NrSelected(rowNumber));
+  }
+
+  public void insertProductMappingToGroup() throws SQLException {
+    dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("Pregnant Women", "tetanus", false);
+    dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("MIF 15-49 years - Community", "tetanus", false);
+    dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("MIF 15-49 years - Students", "tetanus", false);
+    dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("MIF 15-49 years - Workers", "tetanus", false);
+    dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("Students not MIF", "tetanus", false);
+    dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("Workers not MIF", "tetanus", false);
+    dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("Other not MIF", "tetanus", false);
   }
 
   @AfterMethod(groups = "distribution")

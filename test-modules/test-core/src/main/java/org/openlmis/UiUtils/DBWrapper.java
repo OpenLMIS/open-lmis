@@ -1294,6 +1294,13 @@ public class DBWrapper {
 
   }
 
+  public void insertProductsForAdultCoverage() throws SQLException {
+    update("INSERT INTO products\n" +
+      "(code,    alternateItemCode,  manufacturer,       manufacturerCode,  manufacturerBarcode,   mohBarcode,   gtin,   type,         primaryName,    fullName,       genericName,    alternateName,    description,      strength,    formId,  dosageUnitId, dispensingUnit,  dosesPerDispensingUnit,  packSize,  alternatePackSize,  storeRefrigerated,   storeRoomTemperature,   hazardous,  flammable,   controlledSubstance,  lightSensitive,  approvedByWho,  contraceptiveCyp,  packLength,  packWidth, packHeight,  packWeight,  packsPerCarton, cartonLength,  cartonWidth,   cartonHeight, cartonsPerPallet,  expectedShelfLife,  specialStorageInstructions, specialTransportInstructions, active,  fullSupply, tracer,   packRoundingThreshold,  roundToZero,  archived, displayOrder, categoryId) values\n" +
+      "('tetanus',    'a',           'Glaxo and Smith',  'a',              'a',                    'a',          'a',    'antibiotic', 'penta10',   'TDF/FTC/EFV',  'TDF/FTC/EFV',  'TDF/FTC/EFV',    'TDF/FTC/EFV',  '300/200/600',  2,        1,            'Strip',           10,                     10,        30,                   TRUE,                  TRUE,                TRUE,       TRUE,         TRUE,                 TRUE,             TRUE,               1,          2.2,            2,          2,            2,            2,            2,              2,              2,              2,                    2,                    'a',                          'a',          TRUE,     FALSE,       TRUE,         1,                    FALSE,      TRUE,   5, (Select id from product_categories where code='C1'));\n");
+    insertProgramProduct("tetanus", "VACCINES", "10", "true");
+  }
+
   public ResultSet getChildCoverageDetails(String vaccination, String facilityVisitId) throws SQLException {
     ResultSet resultSet = query("SELECT * FROM vaccination_child_coverage_line_items WHERE vaccination = '%s' " +
       "AND facilityVisitId = %s;", vaccination, facilityVisitId);
@@ -1377,8 +1384,8 @@ public class DBWrapper {
     return select("select * from pod_line_items where productCode = '%s' AND podid =(Select id from pod where orderId= %d )", productCode, orderId).get(0);
   }
 
-  public void insertRegimensProductsInMappingTable(String vaccination, String productCode) throws SQLException {
-    update("INSERT INTO coverage_target_group_products (targetGroupEntity, productCode, childCoverage) values ('%s' ,'%s' , TRUE)", vaccination, productCode);
+  public void insertTargetGroupEntityAndProductsInMappingTable(String targetGroupEntity, String productCode, boolean isChildCoverageMapping) throws SQLException {
+    update("INSERT INTO coverage_target_group_products (targetGroupEntity, productCode, childCoverage) values ('%s' ,'%s' , %s)", targetGroupEntity, productCode, isChildCoverageMapping);
   }
 
   public Map<String, String> getDistributionDetails(String deliveryZoneName, String programName, String periodName) throws SQLException {

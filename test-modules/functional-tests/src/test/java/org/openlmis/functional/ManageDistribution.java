@@ -113,17 +113,17 @@ public class ManageDistribution extends TestCaseHelper {
   @And("^I setup mapping for child coverage$")
   public void insertMappingForChildCoverage() throws SQLException {
     dbWrapper.insertProductsForChildCoverage();
-    dbWrapper.insertRegimensProductsInMappingTable("BCG", "BCG");
-    dbWrapper.insertRegimensProductsInMappingTable("Polio 1st dose", "polio20dose");
-    dbWrapper.insertRegimensProductsInMappingTable("Polio 2nd dose", "polio10dose");
-    dbWrapper.insertRegimensProductsInMappingTable("Polio 3rd dose", "polio20dose");
-    dbWrapper.insertRegimensProductsInMappingTable("Penta 1st dose", "penta1");
-    dbWrapper.insertRegimensProductsInMappingTable("Penta 2nd dose", "penta10");
-    dbWrapper.insertRegimensProductsInMappingTable("Penta 3rd dose", "penta1");
-    dbWrapper.insertRegimensProductsInMappingTable("PCV10 1st dose", "P10");
-    dbWrapper.insertRegimensProductsInMappingTable("PCV10 2nd dose", "P10");
-    dbWrapper.insertRegimensProductsInMappingTable("PCV10 3rd dose", "P10");
-    dbWrapper.insertRegimensProductsInMappingTable("Measles", "Measles");
+    dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("BCG", "BCG", true);
+    dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("Polio 1st dose", "polio20dose", true);
+    dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("Polio 2nd dose", "polio10dose", true);
+    dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("Polio 3rd dose", "polio20dose", true);
+    dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("Penta 1st dose", "penta1", true);
+    dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("Penta 2nd dose", "penta10", true);
+    dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("Penta 3rd dose", "penta1", true);
+    dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("PCV10 1st dose", "P10", true);
+    dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("PCV10 2nd dose", "P10", true);
+    dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("PCV10 3rd dose", "P10", true);
+    dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("Measles", "Measles", true);
     dbWrapper.insertChildCoverageProductVial("Polio10", "P11");
     dbWrapper.insertChildCoverageProductVial("Polio20", "P10");
     dbWrapper.insertChildCoverageProductVial("Penta1", "penta1");
@@ -454,25 +454,25 @@ public class ManageDistribution extends TestCaseHelper {
     String facilityVisitId = dbWrapper.getAttributeFromTable("facility_visits", "id", "facilityId", facilityId);
     List<Map<String, String>> data = tableData.asMaps();
     for (Map map : data) {
-    List<String> vaccinations = asList("BCG", "Polio (Newborn)", "Polio 1st dose", "Polio 2nd dose", "Polio 3rd dose", "Penta 1st dose", "Penta 2nd dose", "Penta 3rd dose", "PCV10 1st dose", "PCV10 2nd dose", "PCV10 3rd dose", "Measles");
+      List<String> vaccinations = asList("BCG", "Polio (Newborn)", "Polio 1st dose", "Polio 2nd dose", "Polio 3rd dose", "Penta 1st dose", "Penta 2nd dose", "Penta 3rd dose", "PCV10 1st dose", "PCV10 2nd dose", "PCV10 3rd dose", "Measles");
 
-    for (int i = 1; i <= 12; i++) {
-      ResultSet childCoverageDetails = dbWrapper.getChildCoverageDetails(vaccinations.get(i - 1), facilityVisitId);
+      for (int i = 1; i <= 12; i++) {
+        ResultSet childCoverageDetails = dbWrapper.getChildCoverageDetails(vaccinations.get(i - 1), facilityVisitId);
 
-      assertEquals(childCoverageDetails.getString("healthCenter11months"),map.get("healthCenter11"));
-      assertEquals(childCoverageDetails.getString("outreach11months"), map.get("outreach11"));
-      if (i != 2) {
-        assertEquals(childCoverageDetails.getString("healthCenter23months"), map.get("healthCenter23"));
-        assertEquals(childCoverageDetails.getString("outreach23months"),map.get("outreach23"));
+        assertEquals(childCoverageDetails.getString("healthCenter11months"), map.get("healthCenter11"));
+        assertEquals(childCoverageDetails.getString("outreach11months"), map.get("outreach11"));
+        if (i != 2) {
+          assertEquals(childCoverageDetails.getString("healthCenter23months"), map.get("healthCenter23"));
+          assertEquals(childCoverageDetails.getString("outreach23months"), map.get("outreach23"));
+        }
+      }
+
+      List<String> openedVials = asList("BCG", "Polio10", "Polio20", "Penta1", "Penta10", "PCV", "Measles");
+      for (int i = 1; i <= 7; i++) {
+        ResultSet openedVialLineItem = dbWrapper.getOpenedVialLineItem(openedVials.get(i - 1), facilityVisitId);
+        assertEquals(openedVialLineItem.getString("openedVials"), map.get("openedVial"));
       }
     }
-
-    List<String> openedVials = asList("BCG", "Polio10", "Polio20", "Penta1", "Penta10", "PCV", "Measles");
-    for (int i = 1; i <= 7; i++) {
-      ResultSet openedVialLineItem = dbWrapper.getOpenedVialLineItem(openedVials.get(i - 1), facilityVisitId);
-      assertEquals(openedVialLineItem.getString("openedVials"),map.get("openedVial"));
-    }
-   }
   }
 
   @Then("^I verify no record present in refrigerator problem table for refrigerator serial number \"([^\"]*)\" and facility \"([^\"]*)\"$")
