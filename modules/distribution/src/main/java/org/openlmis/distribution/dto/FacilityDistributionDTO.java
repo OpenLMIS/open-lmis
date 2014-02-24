@@ -25,8 +25,7 @@ import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPT
 @AllArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonSerialize(include = NON_EMPTY)
-public class
-  FacilityDistributionDTO {
+public class FacilityDistributionDTO {
 
   private FacilityVisit facilityVisit;
   private EpiUseDTO epiUse;
@@ -34,10 +33,11 @@ public class
   private DistributionRefrigeratorsDTO refrigerators;
   private VaccinationFullCoverageDTO fullCoverage;
   private ChildCoverageDTO childCoverage;
+  private AdultCoverageDTO adultCoverage;
 
   public FacilityDistribution transform() {
     return new FacilityDistribution(facilityVisit, epiUse.transform(), refrigerators.transform(),
-      epiInventory.transform(), fullCoverage.transform(), childCoverage.transform(), null);
+      epiInventory.transform(), fullCoverage.transform(), childCoverage.transform(), adultCoverage.transform());
   }
 
   public void setDistributionId(Long distributionId) {

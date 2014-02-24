@@ -10,6 +10,7 @@
 
 package org.openlmis.distribution.domain;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -20,11 +21,17 @@ import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPT
 
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @JsonSerialize(include = NON_EMPTY)
 public class AdultCoverageLineItem extends CoverageLineItem {
 
   private String demographicGroup;
+  private Integer healthCenterTetanus1;
+  private Integer outreachTetanus1;
+  private Integer healthCenterTetanus2To5;
+  private Integer outreachTetanus2To5;
+
 
   public AdultCoverageLineItem(FacilityVisit facilityVisit, Facility facility, TargetGroupProduct targetGroupForLineItem, String demographicGroup) {
     super(facilityVisit, facility, targetGroupForLineItem);

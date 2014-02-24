@@ -25,16 +25,16 @@ public class FacilityDistributionDTOTest {
 
   @Test
   public void shouldTransformDTOIntoRealObject() throws Exception {
-
     FacilityVisit facilityVisit = new FacilityVisit();
     EpiUseDTO epiUseDTO = mock(EpiUseDTO.class);
     DistributionRefrigeratorsDTO distributionRefrigeratorsDTO = mock(DistributionRefrigeratorsDTO.class);
     VaccinationFullCoverageDTO coverageDTO = mock(VaccinationFullCoverageDTO.class);
     EpiInventoryDTO epiInventoryDTO = mock(EpiInventoryDTO.class);
     ChildCoverageDTO childCoverageDTO = mock(ChildCoverageDTO.class);
+    AdultCoverageDTO adultCoverageDTO = mock(AdultCoverageDTO.class);
 
     FacilityDistributionDTO facilityDistributionDTO = new FacilityDistributionDTO(facilityVisit, epiUseDTO,
-      epiInventoryDTO, distributionRefrigeratorsDTO, coverageDTO, childCoverageDTO);
+      epiInventoryDTO, distributionRefrigeratorsDTO, coverageDTO, childCoverageDTO, adultCoverageDTO);
 
     EpiUse epiUse = new EpiUse();
     when(epiUseDTO.transform()).thenReturn(epiUse);
@@ -51,6 +51,9 @@ public class FacilityDistributionDTOTest {
     VaccinationChildCoverage childCoverage = new VaccinationChildCoverage();
     when(childCoverageDTO.transform()).thenReturn(childCoverage);
 
+    VaccinationAdultCoverage adultCoverage = new VaccinationAdultCoverage();
+    when(adultCoverageDTO.transform()).thenReturn(adultCoverage);
+
     FacilityDistribution facilityDistribution = facilityDistributionDTO.transform();
 
     assertThat(facilityDistribution.getFacilityVisit(), is(facilityDistributionDTO.getFacilityVisit()));
@@ -59,5 +62,6 @@ public class FacilityDistributionDTOTest {
     assertThat(facilityDistribution.getFullCoverage(), is(vaccinationFullCoverage));
     assertThat(facilityDistribution.getEpiInventory(), is(epiInventory));
     assertThat(facilityDistribution.getChildCoverage(), is(childCoverage));
+    assertThat(facilityDistribution.getAdultCoverage(), is(adultCoverage));
   }
 }
