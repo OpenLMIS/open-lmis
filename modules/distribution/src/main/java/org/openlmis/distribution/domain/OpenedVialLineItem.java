@@ -40,5 +40,6 @@ public class OpenedVialLineItem extends BaseModel {
     this.productVialName = productVialName;
     this.packSize = productVial != null ? facility.getPackSizeFor(productVial.getProductCode()) : null;
     this.createdBy = facilityVisit.getCreatedBy();
+    this.modifiedBy = facilityVisit.getModifiedBy();
   }
 }

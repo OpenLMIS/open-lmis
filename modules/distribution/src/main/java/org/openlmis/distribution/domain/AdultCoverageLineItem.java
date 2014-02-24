@@ -13,11 +13,15 @@ package org.openlmis.distribution.domain;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.openlmis.core.domain.Facility;
+
+import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
+@JsonSerialize(include = NON_EMPTY)
 public class AdultCoverageLineItem extends CoverageLineItem {
 
   private String demographicGroup;

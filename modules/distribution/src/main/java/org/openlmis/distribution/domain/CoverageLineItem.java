@@ -28,7 +28,6 @@ public class CoverageLineItem extends BaseModel {
   protected Long facilityVisitId;
   protected Integer targetGroup;
 
-
   public CoverageLineItem(FacilityVisit facilityVisit, Facility facility, TargetGroupProduct targetGroupProduct) {
     this.facilityVisitId = facilityVisit.getId();
     this.targetGroup = targetGroupProduct != null ? calculateTargetGroup(facility.getWhoRatioFor(targetGroupProduct.getProductCode()),
