@@ -46,6 +46,7 @@ public class PageFactory {
   private static ConfigureBudgetPage instanceOfConfigureBudgetPage;
   private static ConfigureEDIPage instanceOfConfigureEdiPage;
   private static ManagePodPage instanceOfManagePodPage;
+  private static AdultCoveragePage instanceOfAdultCoveragePage;
 
   public static ManageFacilityPage getInstanceOfManageFacilityPage(TestWebDriver testWebDriver) {
     if (instanceOfManageFacilityPage == null) {
@@ -257,5 +258,12 @@ public class PageFactory {
       instanceOfManagePodPage = new ManagePodPage(testWebDriver);
     }
     return instanceOfManagePodPage;
+  }
+
+  public static AdultCoveragePage getInstanceOfAdultCoveragePage(TestWebDriver testWebDriver) {
+    if (instanceOfAdultCoveragePage == null) {
+      instanceOfAdultCoveragePage = new AdultCoveragePage(testWebDriver);
+    }
+    return instanceOfAdultCoveragePage;
   }
 }

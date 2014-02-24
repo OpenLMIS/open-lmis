@@ -387,6 +387,30 @@ public class AdultCoveragePage extends DistributionTab {
     return outreach2To5.getAttribute("value");
   }
 
+  public boolean isHealthCenterFirstEnabled(int rowNumber) {
+    WebElement healthCenter1 = testWebDriver.getElementById("healthCenter1_" + rowNumber);
+    testWebDriver.waitForElementToAppear(healthCenter1);
+    return healthCenter1.isEnabled();
+  }
+
+  public boolean isHealthCenter2To5Enabled(int rowNumber) {
+    WebElement healthCenter2To5 = testWebDriver.getElementById("healthCenter2To5_" + rowNumber);
+    testWebDriver.waitForElementToAppear(healthCenter2To5);
+    return healthCenter2To5.isEnabled();
+  }
+
+  public boolean isOutreachFirstEnabled(int rowNumber) {
+    WebElement outreach1 = testWebDriver.getElementById("outreach1_" + rowNumber);
+    testWebDriver.waitForElementToAppear(outreach1);
+    return outreach1.isEnabled();
+  }
+
+  public boolean isOutreach2To5Enabled(int rowNumber) {
+    WebElement outreach2To5 = testWebDriver.getElementById("outreach2To5_" + rowNumber);
+    testWebDriver.waitForElementToAppear(outreach2To5);
+    return outreach2To5.isEnabled();
+  }
+
   public void applyHealthCenterFirstNr(int rowNumber) {
     WebElement healthCenter1Nr = testWebDriver.getElementById("healthCenter1Nr_" + rowNumber);
     testWebDriver.waitForElementToAppear(healthCenter1Nr);
@@ -413,6 +437,30 @@ public class AdultCoveragePage extends DistributionTab {
     testWebDriver.waitForElementToAppear(outreach2To5Nr);
     outreach2To5Nr.click();
     removeFocusFromElement();
+  }
+
+  public boolean isHealthCenterFirstNrSelected(int rowNumber) {
+    WebElement healthCenter1Nr = testWebDriver.getElementById("healthCenter1Nr_" + rowNumber);
+    testWebDriver.waitForElementToAppear(healthCenter1Nr);
+    return healthCenter1Nr.isSelected();
+  }
+
+  public boolean isHealthCenter2To5NrSelected(int rowNumber) {
+    WebElement healthCenter2To5Nr = testWebDriver.getElementById("healthCenter2To5Nr_" + rowNumber);
+    testWebDriver.waitForElementToAppear(healthCenter2To5Nr);
+    return healthCenter2To5Nr.isSelected();
+  }
+
+  public boolean isOutreachFirstNrSelected(int rowNumber) {
+    WebElement outreach1Nr = testWebDriver.getElementById("outreach1Nr_" + rowNumber);
+    testWebDriver.waitForElementToAppear(outreach1Nr);
+    return outreach1Nr.isSelected();
+  }
+
+  public boolean isOutreach2To5NrSelected(int rowNumber) {
+    WebElement outreach2To5Nr = testWebDriver.getElementById("outreach2To5Nr_" + rowNumber);
+    testWebDriver.waitForElementToAppear(outreach2To5Nr);
+    return outreach2To5Nr.isSelected();
   }
 
   public void enterOpenedVialInputField(String value) {
@@ -450,7 +498,7 @@ public class AdultCoveragePage extends DistributionTab {
     return totalTetanus.getText();
   }
 
-  public String getCoverageRate(int rowNumber, String value) {
+  public String getCoverageRate(int rowNumber) {
     WebElement coverageRate = testWebDriver.getElementById("coverageRate_" + rowNumber);
     testWebDriver.waitForElementToAppear(coverageRate);
     return coverageRate.getText();
