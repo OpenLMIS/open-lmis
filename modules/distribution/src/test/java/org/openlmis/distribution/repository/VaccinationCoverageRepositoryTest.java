@@ -46,7 +46,7 @@ public class VaccinationCoverageRepositoryTest {
     repository.saveChildCoverage(vaccinationChildCoverage);
 
     verify(mapper).insertChildCoverageLineItem(childCoverageLineItem);
-    verify(mapper).insertOpenedVialLineItem(openedVialLineItem);
+    verify(mapper).insertChildCoverageOpenedVialLineItem(openedVialLineItem);
   }
 
   @Test
@@ -62,14 +62,34 @@ public class VaccinationCoverageRepositoryTest {
     repository.saveChildCoverage(vaccinationChildCoverage);
 
     verify(mapper).updateChildCoverageLineItem(childCoverageLineItem);
-    verify(mapper).updateOpenedVialLineItem(openedVialLineItem);
+    verify(mapper).updateChildCoverageOpenedVialLineItem(openedVialLineItem);
   }
 
   @Test
-  public void shouldInsertAdultCoverageLineItems(){
+  public void shouldInsertAdultCoverageLineItemsAndOpenedVialLineItems(){
     VaccinationAdultCoverage adultCoverage = new VaccinationAdultCoverage(asList(new AdultCoverageLineItem(), new AdultCoverageLineItem()));
+    OpenedVialLineItem openedVialLineItem = new OpenedVialLineItem();
+    adultCoverage.setOpenedVialLineItems(asList(openedVialLineItem));
+
     repository.saveAdultCoverage(adultCoverage);
 
     verify(mapper, times(2)).insertAdultCoverageLineItem(any(AdultCoverageLineItem.class));
+    verify(mapper).insertAdultCoverageOpenedVialLineItem(openedVialLineItem);
+  }
+
+  @Test
+  public void shouldUpdateAdultCoverageLineItemsAndOpenedVialLineItemsIfAlreadyExists() throws Exception {
+    AdultCoverageLineItem adultCoverageLineItem = new AdultCoverageLineItem();
+    adultCoverageLineItem.setId(1L);
+    VaccinationAdultCoverage adultCoverage = new VaccinationAdultCoverage(asList(adultCoverageLineItem));
+    OpenedVialLineItem openedVialLineItem = new OpenedVialLineItem();
+    openedVialLineItem.setId(2L);
+    adultCoverage.setOpenedVialLineItems(asList(openedVialLineItem));
+
+    repository.saveAdultCoverage(adultCoverage);
+
+    verify(mapper).updateAdultCoverageLineItem(adultCoverageLineItem);
+    verify(mapper).updateAdultCoverageOpenedVialLineItem(openedVialLineItem);
+
   }
 }

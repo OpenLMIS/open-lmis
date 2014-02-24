@@ -46,9 +46,9 @@ public class VaccinationCoverageRepository {
 
     for (OpenedVialLineItem openedVialLineItem : childCoverage.getOpenedVialLineItems()) {
       if (openedVialLineItem.getId() == null) {
-        mapper.insertOpenedVialLineItem(openedVialLineItem);
+        mapper.insertChildCoverageOpenedVialLineItem(openedVialLineItem);
       } else {
-        mapper.updateOpenedVialLineItem(openedVialLineItem);
+        mapper.updateChildCoverageOpenedVialLineItem(openedVialLineItem);
       }
     }
   }
@@ -65,8 +65,19 @@ public class VaccinationCoverageRepository {
 
   public void saveAdultCoverage(VaccinationAdultCoverage adultCoverage) {
     for (AdultCoverageLineItem adultCoverageLineItem : adultCoverage.getAdultCoverageLineItems()) {
-      if (adultCoverageLineItem.getId() == null)
+      if (adultCoverageLineItem.getId() == null) {
         mapper.insertAdultCoverageLineItem(adultCoverageLineItem);
+      } else {
+        mapper.updateAdultCoverageLineItem(adultCoverageLineItem);
+      }
+    }
+
+    for (OpenedVialLineItem openedVialLineItem : adultCoverage.getOpenedVialLineItems()) {
+      if (openedVialLineItem.getId() == null) {
+        mapper.insertAdultCoverageOpenedVialLineItem(openedVialLineItem);
+      } else {
+        mapper.updateAdultCoverageOpenedVialLineItem(openedVialLineItem);
+      }
     }
   }
 

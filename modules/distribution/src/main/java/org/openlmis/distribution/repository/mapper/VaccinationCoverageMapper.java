@@ -37,7 +37,12 @@ public interface VaccinationCoverageMapper {
   @Insert({"INSERT INTO child_coverage_opened_vial_line_items (facilityVisitId, productVialName, packSize, createdBy, modifiedBy)",
     "VALUES (#{facilityVisitId}, #{productVialName}, #{packSize}, #{createdBy}, #{modifiedBy})"})
   @Options(useGeneratedKeys = true)
-  void insertOpenedVialLineItem(OpenedVialLineItem openedVialLineItem);
+  void insertChildCoverageOpenedVialLineItem(OpenedVialLineItem openedVialLineItem);
+
+  @Insert({"INSERT INTO adult_coverage_opened_vial_line_items (facilityVisitId, productVialName, packSize, createdBy, modifiedBy)",
+    "VALUES (#{facilityVisitId}, #{productVialName}, #{packSize}, #{createdBy}, #{createdBy})"})
+  @Options(useGeneratedKeys = true)
+  void insertAdultCoverageOpenedVialLineItem(OpenedVialLineItem openedVialLineItem);
 
   @Select({"SELECT * FROM full_coverages WHERE facilityVisitId = #{facilityVisitId}"})
   VaccinationFullCoverage getFullCoverageBy(Long facilityVisitId);
@@ -56,7 +61,10 @@ public interface VaccinationCoverageMapper {
   void updateChildCoverageLineItem(ChildCoverageLineItem childCoverageLineItem);
 
   @Update({"UPDATE child_coverage_opened_vial_line_items SET openedVials = #{openedVials}, modifiedBy = #{modifiedBy}, modifiedDate = DEFAULT WHERE id = #{id}"})
-  void updateOpenedVialLineItem(OpenedVialLineItem openedVialLineItem);
+  void updateChildCoverageOpenedVialLineItem(OpenedVialLineItem openedVialLineItem);
+
+  @Update({"UPDATE adult_coverage_opened_vial_line_items SET openedVials = #{openedVials}, modifiedBy = #{modifiedBy}, modifiedDate = DEFAULT WHERE id = #{id}"})
+  void updateAdultCoverageOpenedVialLineItem(OpenedVialLineItem openedVialLineItem);
 
   @Select({"SELECT * FROM child_coverage_opened_vial_line_items WHERE facilityVisitId = #{facilityVisitId}"})
   List<OpenedVialLineItem> getOpenedVialLineItemsBy(Long facilityVisitId);
@@ -68,4 +76,10 @@ public interface VaccinationCoverageMapper {
 
   @Select({"SELECT * FROM vaccination_adult_coverage_line_items WHERE facilityVisitId = #{facilityVisitId}"})
   List<AdultCoverageLineItem> getAdultCoverageLineItemsBy(Long facilityVisitId);
+
+  @Update({"UPDATE vaccination_adult_coverage_line_items SET healthCenterTetanus1=#{healthCenterTetanus1},",
+    "outreachTetanus1=#{outreachTetanus1}, healthCenterTetanus2To5=#{healthCenterTetanus2To5},",
+    "outreachTetanus2To5=#{outreachTetanus2To5}, modifiedDate=DEFAULT, modifiedBy=#{modifiedBy}",
+    "WHERE id=#{id}"})
+  void updateAdultCoverageLineItem(AdultCoverageLineItem adultCoverageLineItem);
 }

@@ -228,13 +228,13 @@ public class VaccinationCoverageMapperIT {
   }
 
   @Test
-  public void shouldInsertOpenedVialLineItem() throws SQLException {
+  public void shouldInsertChildCoverageOpenedVialLineItem() throws SQLException {
     String productVialName = "BCG";
     OpenedVialLineItem lineItem = new OpenedVialLineItem(facilityVisit.getId(), productVialName, null, 10);
     lineItem.setCreatedBy(123L);
     lineItem.setModifiedBy(123L);
 
-    mapper.insertOpenedVialLineItem(lineItem);
+    mapper.insertChildCoverageOpenedVialLineItem(lineItem);
 
     ResultSet resultSet = queryExecutor.execute(
       "SELECT * FROM child_coverage_opened_vial_line_items WHERE facilityVisitId = " + facilityVisit.getId());
@@ -276,7 +276,7 @@ public class VaccinationCoverageMapperIT {
   public void shouldGetOpenedVialLineItems() throws Exception {
     String productVialName = "BCG";
     OpenedVialLineItem lineItem = new OpenedVialLineItem(facilityVisit.getId(), productVialName, null, 10);
-    mapper.insertOpenedVialLineItem(lineItem);
+    mapper.insertChildCoverageOpenedVialLineItem(lineItem);
 
     List<OpenedVialLineItem> openedVialLineItems = mapper.getOpenedVialLineItemsBy(facilityVisit.getId());
 
@@ -285,17 +285,21 @@ public class VaccinationCoverageMapperIT {
   }
 
   @Test
-  public void shouldUpdateOpenedVialLineItem() {
+  public void shouldUpdateChildCoverageOpenedVialLineItem() throws SQLException {
     String productVialName = "BCG";
     OpenedVialLineItem lineItem = new OpenedVialLineItem(facilityVisit.getId(), productVialName, null, 10);
-    mapper.insertOpenedVialLineItem(lineItem);
+    mapper.insertChildCoverageOpenedVialLineItem(lineItem);
 
     lineItem.setOpenedVials(55);
     lineItem.setModifiedBy(123L);
-    mapper.updateOpenedVialLineItem(lineItem);
+    mapper.updateChildCoverageOpenedVialLineItem(lineItem);
 
-    assertThat(lineItem.getOpenedVials(), is(55));
-    assertThat(lineItem.getModifiedBy(), is(123L));
+    ResultSet resultSet = queryExecutor.execute(
+      "SELECT * FROM child_coverage_opened_vial_line_items WHERE facilityVisitId = " + facilityVisit.getId());
+
+    resultSet.next();
+    assertThat(resultSet.getInt("openedVials"), is(55));
+    assertThat(resultSet.getLong("modifiedBy"), is(123L));
   }
 
   @Test
@@ -315,7 +319,7 @@ public class VaccinationCoverageMapperIT {
   }
 
   @Test
-  public void shouldReturnAdultCoverageLineItemsByFacilityVisitId(){
+  public void shouldReturnAdultCoverageLineItemsByFacilityVisitId() {
     AdultCoverageLineItem adultCoverageLineItem = new AdultCoverageLineItem();
     adultCoverageLineItem.setFacilityVisitId(facilityVisit.getId());
     adultCoverageLineItem.setTargetGroup(56);
@@ -326,5 +330,71 @@ public class VaccinationCoverageMapperIT {
 
     assertThat(fetchedAdultCoverageLineItems.size(), is(1));
     assertThat(fetchedAdultCoverageLineItems.get(0).getFacilityVisitId(), is(facilityVisit.getId()));
+  }
+
+  @Test
+  public void shouldUpdateAdultCoverageLineItems() throws Exception {
+
+    Integer nullInteger = null;
+    AdultCoverageLineItem adultCovergaeLineItem = new AdultCoverageLineItem("Pregnant Women", nullInteger, nullInteger, nullInteger, nullInteger);
+    adultCovergaeLineItem.setFacilityVisitId(facilityVisit.getId());
+    adultCovergaeLineItem.setTargetGroup(56);
+
+    mapper.insertAdultCoverageLineItem(adultCovergaeLineItem);
+
+    adultCovergaeLineItem.setHealthCenterTetanus1(1234);
+    adultCovergaeLineItem.setOutreachTetanus1(34);
+    adultCovergaeLineItem.setHealthCenterTetanus2To5(43);
+    adultCovergaeLineItem.setOutreachTetanus2To5(4234);
+    adultCovergaeLineItem.setModifiedBy(123L);
+
+    mapper.updateAdultCoverageLineItem(adultCovergaeLineItem);
+
+    AdultCoverageLineItem returnedLineItem = mapper.getAdultCoverageLineItemsBy(facilityVisit.getId()).get(0);
+
+    assertThat(returnedLineItem.getHealthCenterTetanus1(), is(1234));
+    assertThat(returnedLineItem.getOutreachTetanus1(), is(34));
+    assertThat(returnedLineItem.getHealthCenterTetanus2To5(), is(43));
+    assertThat(returnedLineItem.getOutreachTetanus2To5(), is(4234));
+    assertThat(returnedLineItem.getModifiedBy(), is(123L));
+  }
+
+
+  @Test
+  public void shouldInsertAdultCoverageOpenedVialLineItem() throws SQLException {
+    String productVialName = "Tetanus";
+    OpenedVialLineItem lineItem = new OpenedVialLineItem(facilityVisit.getId(), productVialName, null, 10);
+    lineItem.setCreatedBy(123L);
+
+    mapper.insertAdultCoverageOpenedVialLineItem(lineItem);
+
+    ResultSet resultSet = queryExecutor.execute(
+      "SELECT * FROM adult_coverage_opened_vial_line_items WHERE facilityVisitId = " + facilityVisit.getId());
+
+    resultSet.next();
+    assertThat(resultSet.getInt("packSize"), is(10));
+    assertThat(resultSet.getString("productVialName"), is(productVialName));
+    assertThat(resultSet.getLong("facilityVisitId"), is(facilityVisit.getId()));
+    assertThat(resultSet.getLong("id"), is(notNullValue()));
+    assertThat(resultSet.getLong("createdBy"), is(123L));
+  }
+
+  @Test
+  public void shouldUpdateAdultCoverageOpenedVialLineItem() throws SQLException {
+    String productVialName = "Tetanus";
+    OpenedVialLineItem lineItem = new OpenedVialLineItem(facilityVisit.getId(), productVialName, null, 10);
+    mapper.insertAdultCoverageOpenedVialLineItem(lineItem);
+
+    lineItem.setOpenedVials(55);
+    lineItem.setModifiedBy(123L);
+    mapper.updateAdultCoverageOpenedVialLineItem(lineItem);
+
+    ResultSet resultSet = queryExecutor.execute(
+      "SELECT * FROM adult_coverage_opened_vial_line_items WHERE facilityVisitId = " + facilityVisit.getId());
+
+    resultSet.next();
+    assertThat(resultSet.getInt("openedVials"), is(55));
+    assertThat(resultSet.getLong("modifiedBy"), is(123L));
+
   }
 }

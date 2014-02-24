@@ -26,6 +26,7 @@ public class VaccinationCoverageService {
   public void save(FacilityDistribution facilityDistribution) {
     repository.saveFullCoverage(facilityDistribution.getFullCoverage());
     repository.saveChildCoverage(facilityDistribution.getChildCoverage());
+    repository.saveAdultCoverage(facilityDistribution.getAdultCoverage());
   }
 
   public VaccinationFullCoverage getFullCoverageBy(Long facilityVisitId) {
