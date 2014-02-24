@@ -207,7 +207,9 @@
   <td id="totalTetanus_2" class="col-total">
     <span ng-bind="mifCommunityCoverage.totalTetanus()"></span>
   </td>
-  <td class="col-coverage-rate"><span></span></td>
+  <td id="coverageRate_2" class="col-coverage-rate">
+    <span ng-bind="mifCommunityCoverage.coverageRate()"></span>
+  </td>
 </tr>
 <tr ng-init="mifStudentCoverage = adultCoverageTargetGroupMap[categories.MIF_STUDENTS]">
   <td id="studentsLabel" openlmis-message="label.coverage.students"></td>
@@ -251,8 +253,8 @@
   <td id="totalTetanus_3" class="col-total">
     <span ng-bind="mifStudentCoverage.totalTetanus()"></span>
   </td>
-  <td class="col-coverage-rate">
-    <span></span>
+  <td id="coverageRate_3" class="col-coverage-rate">
+    <span ng-bind="mifStudentCoverage.coverageRate()"></span>
   </td>
 </tr>
 <tr ng-init="mifWorkerCoverage = adultCoverageTargetGroupMap[categories.MIF_WORKERS]">
@@ -297,8 +299,8 @@
   <td id="totalTetanus_4" class="col-total">
     <span ng-bind="mifWorkerCoverage.totalTetanus()"></span>
   </td>
-  <td class="col-coverage-rate">
-    <span></span>
+  <td id="coverageRate_4" class="col-coverage-rate">
+    <span ng-bind="mifWorkerCoverage.coverageRate()"></span>
   </td>
 </tr>
 <tr ng-init="studentNotMIFCoverage = adultCoverageTargetGroupMap[categories.STUDENTS_NOT_MIF]">
@@ -343,8 +345,8 @@
   <td id="totalTetanus_5" class="col-total">
     <span ng-bind="studentNotMIFCoverage.totalTetanus()"></span>
   </td>
-  <td class="col-coverage-rate">
-    <span></span>
+  <td id="coverageRate_5" class="col-coverage-rate">
+    <span ng-bind="studentNotMIFCoverage.coverageRate()"></span>
   </td>
 </tr>
 <tr ng-init="workerNotMIFCoverage = adultCoverageTargetGroupMap[categories.WORKERS_NOT_MIF]">
@@ -389,8 +391,8 @@
   <td id="totalTetanus_6" class="col-total">
     <span ng-bind="workerNotMIFCoverage.totalTetanus()"></span>
   </td>
-  <td class="col-coverage-rate">
-    <span></span>
+  <td id="coverageRate_6" class="col-coverage-rate">
+    <span ng-bind="workerNotMIFCoverage.coverageRate()"></span>
   </td>
 </tr>
 <tr ng-init="otherNotMIFCoverage = adultCoverageTargetGroupMap[categories.OTHER_NOT_MIF]">
@@ -462,12 +464,12 @@
   <td id="totalTetanus_7" class="col-total">
     <span ng-bind="otherNotMIFCoverage.totalTetanus()"></span>
   </td>
-  <td class="col-coverage-rate">
-    <span></span>
+  <td id="coverageRate_7" class="col-coverage-rate">
+    <span ng-bind="otherNotMIFCoverage.coverageRate()"></span>
   </td>
 </tr>
 <tr>
-  <td id="totalRowLabel" class="col-total" colspan="2">
+  <td id="totalRowLabel" colspan="2">
     <span openlmis-message="label.total"></span>
   </td>
   <td class="col-total"><span></span></td>
