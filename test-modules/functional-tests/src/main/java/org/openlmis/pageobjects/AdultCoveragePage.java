@@ -150,7 +150,16 @@ public class AdultCoveragePage extends DistributionTab {
 
   @Override
   public void enterValues(List<Map<String, String>> dataMapList) {
-    //To change body of implemented methods use File | Settings | File Templates.
+    Map<String, String> dataMap = dataMapList.get(0);
+    for (int rowNumber = 1; rowNumber <= 7; rowNumber++) {
+      enterOutreachFirstInput(rowNumber, dataMap.get("outreach1"));
+      enterOutreach2To5Input(rowNumber, dataMap.get("outreach25"));
+      if (rowNumber < 3 || rowNumber > 6) {
+        enterHealthCenterFirstInput(rowNumber, dataMap.get("healthCenter1"));
+        enterHealthCenter2To5Input(rowNumber, dataMap.get("healthCenter25"));
+      }
+    }
+    enterOpenedVialInputField(dataMap.get("openedVial"));
   }
 
   @Override

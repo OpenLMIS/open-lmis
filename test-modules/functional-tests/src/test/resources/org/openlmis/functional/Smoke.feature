@@ -697,6 +697,30 @@ Feature: Smoke Tests
       | 34          | 123            | 22         | 145    | 426          | 23             | 34         | 57     | 202    | 4          | -1415       |
 
   @smokeDistribution
+  Scenario: User should fill Adult Coverage data
+    Given I have the following data for distribution:
+      | userSIC       | deliveryZoneCodeFirst | deliveryZoneCodeSecond | deliveryZoneNameFirst | deliveryZoneNameSecond | facilityCodeFirst | facilityCodeSecond | programFirst | programSecond | schedule |
+      | storeInCharge | DZ1                   | DZ2                    | Delivery Zone First   | Delivery Zone Second   | F10               | F11                | VACCINES     | TB            | M        |
+    And I have data available for "Multiple" facilities attached to delivery zones
+    And I assign delivery zone "DZ1" to user "storeInCharge" having role "store in-charge"
+    And I update population of facility "F10" as "342"
+    And I setup mapping for adult coverage
+    When I am logged in as "storeInCharge"
+    And I access plan my distribution page
+    And I select delivery zone "Delivery Zone First"
+    And I select program "VACCINES"
+    And I select period "Period14"
+    And I initiate distribution
+    And I record data for distribution "1"
+    And I choose facility "F10"
+    And I navigate to "adult coverage" tab
+    Then Verify "adult coverage" indicator should be "RED"
+    And I Enter "adult coverage" values:
+      | healthCenter1 | outreach1 | healthCenter25 | outreach25 | openedVial |
+      | 123           | 22        | 23             | 34         | 4          |
+    Then Verify "adult coverage" indicator should be "GREEN"
+
+  @smokeDistribution
   Scenario: User should verify facility and sync status when facility was visited
     Given I have the following data for distribution:
       | userSIC       | deliveryZoneCodeFirst | deliveryZoneCodeSecond | deliveryZoneNameFirst | deliveryZoneNameSecond | facilityCodeFirst | facilityCodeSecond | programFirst | programSecond | schedule |
@@ -787,8 +811,8 @@ Feature: Smoke Tests
       | existingQuantity | deliveredQuantity | spoiledQuantity |
       | 10               | 50                | 3               |
     And I view child coverage values in DB for facility "F10":
-      |healthCenter11 | outreach11 | total1 | coverageRate | healthCenter23 | outreach23 | total2 | total3 | openedVial |
-      |123            | 22         | 145    | 426          | 23             | 34         | 57     | 202    | 4          |
+      | healthCenter11 | outreach11 | total1 | coverageRate | healthCenter23 | outreach23 | total2 | total3 | openedVial |
+      | 123            | 22         | 145    | 426          | 23             | 34         | 57     | 202    | 4          |
     And I verify no record present in refrigerator problem table for refrigerator serial number "GR-J287PGHV" and facility "F10"
     And I see distribution status as synced
     When I record data for distribution "1"
@@ -899,8 +923,8 @@ Feature: Smoke Tests
       | existingQuantity | deliveredQuantity | spoiledQuantity |
       | null             | null              | null            |
     And I view child coverage values in DB for facility "F10":
-      |healthCenter11 | outreach11 | total1 | coverageRate | healthCenter23 | outreach23 | total2 | total3 | openedVial |
-      |123            | 22         | 145    | 426          | 23             | 34         | 57     | 202    | 4          |
+      | healthCenter11 | outreach11 | total1 | coverageRate | healthCenter23 | outreach23 | total2 | total3 | openedVial |
+      | 123            | 22         | 145    | 426          | 23             | 34         | 57     | 202    | 4          |
     And I see distribution status as synced
     When I record data for distribution "1"
     And I choose facility "F10"

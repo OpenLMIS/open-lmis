@@ -61,6 +61,7 @@ public class ManageDistribution extends TestCaseHelper {
   EPIUsePage epiUsePage;
   EpiInventoryPage epiInventoryPage;
   ChildCoveragePage childCoveragePage;
+  AdultCoveragePage adultCoveragePage;
   LoginPage loginPage;
   String productGroupCode = "PG1";
 
@@ -75,6 +76,7 @@ public class ManageDistribution extends TestCaseHelper {
     epiInventoryPage = PageFactory.getInstanceOfEpiInventoryPage(testWebDriver);
     childCoveragePage = PageFactory.getInstanceOfChildCoveragePage(testWebDriver);
     refrigeratorPage = PageFactory.getInstanceOfRefrigeratorPage(testWebDriver);
+    adultCoveragePage = PageFactory.getInstanceOfAdultCoveragePage(testWebDriver);
     loginPage = PageFactory.getInstanceOfLoginPage(testWebDriver, baseUrlGlobal);
 
     tabMap = new HashMap<String, DistributionTab>() {{
@@ -83,7 +85,7 @@ public class ManageDistribution extends TestCaseHelper {
       put("full coverage", fullCoveragePage);
       put("epi inventory", epiInventoryPage);
       put("refrigerator", refrigeratorPage);
-
+      put("adult coverage", adultCoveragePage);
       put("child coverage", childCoveragePage);
     }};
   }
@@ -130,6 +132,14 @@ public class ManageDistribution extends TestCaseHelper {
     dbWrapper.insertChildCoverageProductVial("Penta10", "P11");
     dbWrapper.insertChildCoverageProductVial("PCV", "P10");
     dbWrapper.insertChildCoverageProductVial("Measles", "Measles");
+  }
+
+  @And("^I setup mapping for adult coverage")
+  public void insertMappingsForAdultCoverage() throws SQLException {
+    dbWrapper.insertProductsForAdultCoverage();
+    dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("Pregnant Women", "tetanus", false);
+    dbWrapper.insertAdultCoverageOpenedVialMapping("tetanus");
+    dbWrapper.insertProgramProductISA("VACCINES", "tetanus", "405", "12", "3", "4", "4", "2", "4");
   }
 
   @Then("^I verify that I am on visit information page")
