@@ -35,7 +35,7 @@ public interface VaccinationCoverageMapper {
   void insertChildCoverageLineItem(ChildCoverageLineItem childCoverageLineItem);
 
   @Insert({"INSERT INTO opened_vial_line_items (facilityVisitId, productVialName, packSize, createdBy, modifiedBy)",
-    "VALUES (#{facilityVisitId}, #{productVialName}, #{packSize}, #{createdBy}, #{createdBy})"})
+    "VALUES (#{facilityVisitId}, #{productVialName}, #{packSize}, #{createdBy}, #{modifiedBy})"})
   @Options(useGeneratedKeys = true)
   void insertOpenedVialLineItem(OpenedVialLineItem openedVialLineItem);
 

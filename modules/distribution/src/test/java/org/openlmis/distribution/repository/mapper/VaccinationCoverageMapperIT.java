@@ -232,6 +232,7 @@ public class VaccinationCoverageMapperIT {
     String productVialName = "BCG";
     OpenedVialLineItem lineItem = new OpenedVialLineItem(facilityVisit.getId(), productVialName, null, 10);
     lineItem.setCreatedBy(123L);
+    lineItem.setModifiedBy(123L);
 
     mapper.insertOpenedVialLineItem(lineItem);
 
@@ -244,6 +245,7 @@ public class VaccinationCoverageMapperIT {
     assertThat(resultSet.getLong("facilityVisitId"), is(facilityVisit.getId()));
     assertThat(resultSet.getLong("id"), is(notNullValue()));
     assertThat(resultSet.getLong("createdBy"), is(123L));
+    assertThat(resultSet.getLong("modifiedBy"), is(123L));
   }
 
   @Test
