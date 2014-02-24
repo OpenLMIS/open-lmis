@@ -2508,6 +2508,15 @@ input[rnr-validator="positiveInteger"] {
   }
 }
 
+#podForm {
+  .pagination {
+    margin-bottom: 130px;
+  }
+  .action-buttons {
+    z-index: 6;
+  }
+}
+
 #pod {
   .col-fullSupply {
     min-width: 50px;
@@ -2534,15 +2543,19 @@ input[rnr-validator="positiveInteger"] {
   }
 }
 
+#podPageContent {
+  position: relative;
+}
+
 #podFooter {
-  position: fixed;
+  position: absolute;
   bottom: 48px;
-  left: 27px;
+  left: 15px;
   strong {
-    margin-right: 10px;
+    display: block;
   }
   input {
-    width: 206px;
+    width: 80%;
     height: 20px;
     padding: 4px 6px;
     margin-bottom: 9px;

@@ -104,9 +104,32 @@
         </tbody>
       </table>
     </div>
-    <div>
-      <openlmis-pagination num-pages="numberOfPages" current-page="currentPage" max-size="10"
-                           error-pages="errorPages"></openlmis-pagination>
+    <openlmis-pagination num-pages="numberOfPages" current-page="currentPage" max-size="10"
+                         error-pages="errorPages"></openlmis-pagination>
+    <div id="podFooter">
+      <div class="info-box clearfix">
+        <div class="row-fluid">
+          <div class="span3 cell-input">
+            <strong openlmis-message="label.deliveredBy"></strong>
+            <input id="deliveredBy" type="text" ng-model="pod.deliveredBy" ng-trim=false
+                   maxlength="100" ng-disabled="podAlreadySubmitted"/>
+          </div>
+
+          <div class="span3 cell-input">
+            <strong openlmis-message="label.receivedBy"></strong>
+            <input id="receivedBy" type="text" ng-model="pod.receivedBy" ng-trim=false
+                   maxlength="100" ng-disabled="podAlreadySubmitted"/>
+          </div>
+
+          <div class="span3 cell-input">
+            <strong openlmis-message="label.receivedDate"></strong>
+            <input name="receivedDate" id="receivedDate" type="text"
+                   ui-date="{dateFormat: 'dd/mm/yy', changeYear: true}"
+                   ui-date-format="yy-mm-dd" ng-model="pod.receivedDate"
+                   ng-disabled="podAlreadySubmitted"/>
+          </div>
+        </div>
+      </div>
     </div>
     <div form-toolbar id="action_buttons" class="action-buttons">
       <div class="form-cell button-row">
@@ -119,31 +142,7 @@
       <div class="toolbar-success" id="saveSuccessMsgDiv" fade-out="3000" openlmis-message="message"
            ng-show="message"></div>
 
-      <div id="podFooter">
-        <div class="info-box clearfix">
-          <div class="row-fluid">
-            <div class="span3 cell-input">
-              <strong openlmis-message="label.deliveredBy"></strong>
-              <input id="deliveredBy" type="text" ng-model="pod.deliveredBy" ng-trim=false
-                     maxlength="100" ng-disabled="podAlreadySubmitted"/>
-            </div>
 
-            <div class="span3 cell-input">
-              <strong openlmis-message="label.receivedBy"></strong>
-              <input id="receivedBy" type="text" ng-model="pod.receivedBy" ng-trim=false
-                     maxlength="100" ng-disabled="podAlreadySubmitted"/>
-            </div>
-
-            <div class="span3 cell-input">
-              <strong openlmis-message="label.receivedDate"></strong>
-              <input name="receivedDate" id="receivedDate" type="text"
-                     ui-date="{dateFormat: 'dd/mm/yy', changeYear: true}"
-                     ui-date-format="yy-mm-dd" ng-model="pod.receivedDate"
-                     ng-disabled="podAlreadySubmitted"/>
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
   </form>
 </div>
