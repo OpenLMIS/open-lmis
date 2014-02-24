@@ -26,6 +26,8 @@ import java.util.Map;
 
 import static com.thoughtworks.selenium.SeleneseTestCase.assertEquals;
 import static java.util.Arrays.asList;
+import static junit.framework.Assert.assertFalse;
+import static junit.framework.Assert.assertTrue;
 
 public class DistributionAdultCoverageSyncTest extends TestCaseHelper {
 
@@ -266,6 +268,69 @@ public class DistributionAdultCoverageSyncTest extends TestCaseHelper {
       verifyTargetGroup(rowNumber, "4043");
       verifyCoverageRate(rowNumber, "0");
     }
+  }
+
+  @Test(groups = {"distribution"})
+  public void testShouldVerifyTotalAndApplyNrToIndividualField() throws SQLException {
+    insertProductMappingToGroup();
+    dbWrapper.insertProgramProductISA("VACCINES", "tetanus", "45", "12", "3", "4", "4", "2", "4");
+    dbWrapper.updateFieldValue("facilities", "catchmentpopulation", "8984", "code", adultCoverageData.get(FIRST_FACILITY_CODE));
+
+    HomePage homePage = loginPage.loginAs(adultCoverageData.get(USER), adultCoverageData.get(PASSWORD));
+    DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
+    distributionPage.initiate(adultCoverageData.get(FIRST_DELIVERY_ZONE_NAME), adultCoverageData.get(VACCINES_PROGRAM));
+    FacilityListPage facilityListPage = distributionPage.clickRecordData(1);
+    VisitInformationPage visitInformationPage = facilityListPage.selectFacility(adultCoverageData.get(FIRST_FACILITY_CODE));
+
+    facilityListPage.verifyOverallFacilityIndicatorColor("AMBER");
+
+    AdultCoveragePage adultCoveragePage = visitInformationPage.navigateToAdultCoverage();
+    adultCoveragePage.verifyIndicator("RED");
+
+    for (int rowNumber = 1; rowNumber <= 2; rowNumber++) {
+      adultCoveragePage.enterHealthCenterFirstInput(rowNumber, "5611" + rowNumber);
+      adultCoveragePage.enterHealthCenter2To5Input(rowNumber, "5623" + rowNumber);
+      adultCoveragePage.enterOutreachFirstInput(rowNumber, "5612" + rowNumber);
+      adultCoveragePage.enterOutreach2To5Input(rowNumber, "5624" + rowNumber);
+    }
+
+    assertEquals("112232", adultCoveragePage.getTotalTetanusFirst(1));
+    assertEquals("112472", adultCoveragePage.getTotalTetanus2To5(1));
+    assertEquals("224704", adultCoveragePage.getTotalTetanus(1));
+    assertEquals("112234", adultCoveragePage.getTotalTetanusFirst(2));
+    assertEquals("112474", adultCoveragePage.getTotalTetanus2To5(2));
+    assertEquals("224708", adultCoveragePage.getTotalTetanus(2));
+
+    assertEquals("224466", adultCoveragePage.getTotalTetanus1());
+    assertEquals("224946", adultCoveragePage.getTotalTetanus2To5());
+    assertEquals("449412", adultCoveragePage.getTotalTetanus());
+    assertEquals("112223", adultCoveragePage.getTotalHealthCenterTetanus1());
+    assertEquals("112463", adultCoveragePage.getTotalHealthCenterTetanus2To5());
+    assertEquals("112243", adultCoveragePage.getTotalOutreachTetanus1());
+    assertEquals("112483", adultCoveragePage.getTotalOutreachTetanus2To5());
+
+    adultCoveragePage.applyHealthCenter2To5Nr(2);
+    assertTrue(adultCoveragePage.isHealthCenter2To5NrSelected(2));
+    assertFalse(adultCoveragePage.isHealthCenter2To5Enabled(2));
+    assertEquals("", adultCoveragePage.getHealthCenter2To5Input(2));
+
+    assertEquals("56242", adultCoveragePage.getTotalTetanus2To5(2));
+    assertEquals("168476", adultCoveragePage.getTotalTetanus(2));
+
+    assertEquals("168714", adultCoveragePage.getTotalTetanus2To5());
+    assertEquals("393180", adultCoveragePage.getTotalTetanus());
+
+    adultCoveragePage.applyHealthCenter2To5Nr(2);
+    assertFalse(adultCoveragePage.isHealthCenter2To5NrSelected(2));
+    assertTrue(adultCoveragePage.isHealthCenter2To5Enabled(2));
+
+    assertEquals("56242", adultCoveragePage.getTotalTetanus2To5(2));
+    assertEquals("168476", adultCoveragePage.getTotalTetanus(2));
+
+    assertEquals("168714", adultCoveragePage.getTotalTetanus2To5());
+    assertEquals("393180", adultCoveragePage.getTotalTetanus());
+
+    assertEquals("", adultCoveragePage.getWastageRate());
   }
 
 
