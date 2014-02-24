@@ -34,7 +34,7 @@ public interface VaccinationCoverageMapper {
   @Options(useGeneratedKeys = true)
   void insertChildCoverageLineItem(ChildCoverageLineItem childCoverageLineItem);
 
-  @Insert({"INSERT INTO opened_vial_line_items (facilityVisitId, productVialName, packSize, createdBy, modifiedBy)",
+  @Insert({"INSERT INTO child_coverage_opened_vial_line_items (facilityVisitId, productVialName, packSize, createdBy, modifiedBy)",
     "VALUES (#{facilityVisitId}, #{productVialName}, #{packSize}, #{createdBy}, #{modifiedBy})"})
   @Options(useGeneratedKeys = true)
   void insertOpenedVialLineItem(OpenedVialLineItem openedVialLineItem);
@@ -55,10 +55,10 @@ public interface VaccinationCoverageMapper {
     "healthCenter23Months = #{healthCenter23Months}, outreach23Months = #{outreach23Months}, modifiedBy = #{modifiedBy}, modifiedDate = DEFAULT WHERE id = #{id}"})
   void updateChildCoverageLineItem(ChildCoverageLineItem childCoverageLineItem);
 
-  @Update({"UPDATE opened_vial_line_items SET openedVials = #{openedVials}, modifiedBy = #{modifiedBy}, modifiedDate = DEFAULT WHERE id = #{id}"})
+  @Update({"UPDATE child_coverage_opened_vial_line_items SET openedVials = #{openedVials}, modifiedBy = #{modifiedBy}, modifiedDate = DEFAULT WHERE id = #{id}"})
   void updateOpenedVialLineItem(OpenedVialLineItem openedVialLineItem);
 
-  @Select({"SELECT * FROM opened_vial_line_items WHERE facilityVisitId = #{facilityVisitId}"})
+  @Select({"SELECT * FROM child_coverage_opened_vial_line_items WHERE facilityVisitId = #{facilityVisitId}"})
   List<OpenedVialLineItem> getOpenedVialLineItemsBy(Long facilityVisitId);
 
   @Insert({"INSERT INTO vaccination_adult_coverage_line_items (facilityVisitId, targetGroup, demographicGroup, createdBy, modifiedBy) " +

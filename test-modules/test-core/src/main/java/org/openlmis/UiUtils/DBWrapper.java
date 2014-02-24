@@ -341,7 +341,7 @@ public class DBWrapper {
     update("delete from vaccination_child_coverage_line_items;");
     update("delete from vaccination_adult_coverage_line_items;");
     update("delete from coverage_target_group_products;");
-    update("delete from opened_vial_line_items;");
+    update("delete from child_coverage_opened_vial_line_items;");
     update("delete from facility_visits");
     update("delete from distributions");
     update("delete from refrigerators");
@@ -1401,7 +1401,7 @@ public class DBWrapper {
   }
 
   public ResultSet getOpenedVialLineItem(String productVialName, String facilityVisitId) throws SQLException {
-    ResultSet resultSet = query("SELECT * FROM opened_vial_line_items WHERE productVialName = '%s' " +
+    ResultSet resultSet = query("SELECT * FROM child_coverage_opened_vial_line_items WHERE productVialName = '%s' " +
       "AND facilityVisitId = %s;", productVialName, facilityVisitId);
     resultSet.next();
     return resultSet;

@@ -237,7 +237,7 @@ public class VaccinationCoverageMapperIT {
     mapper.insertOpenedVialLineItem(lineItem);
 
     ResultSet resultSet = queryExecutor.execute(
-      "SELECT * FROM opened_vial_line_items WHERE facilityVisitId = " + facilityVisit.getId());
+      "SELECT * FROM child_coverage_opened_vial_line_items WHERE facilityVisitId = " + facilityVisit.getId());
     resultSet.next();
 
     assertThat(resultSet.getInt("packSize"), is(10));
