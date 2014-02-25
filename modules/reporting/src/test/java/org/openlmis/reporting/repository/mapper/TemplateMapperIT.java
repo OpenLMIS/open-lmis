@@ -83,12 +83,12 @@ public class TemplateMapperIT {
     Template template1 = createReportTemplate("report1", "Consistency Report");
     createReportTemplate("report2", "Print");
 
-    List<Template> result = templateMapper.getAllConsistencyReportTemplates();
+    List<Template> templates = templateMapper.getAllConsistencyReportTemplates();
 
-    assertThat(result.size(), is(8));
-    assertThat(result.get(0).getName(), is("Facilities Missing Supporting Requisition Group"));
-    assertThat(result.get(7).getName(), is("report1"));
-    assertThat(result.get(7).getId(), is(template1.getId()));
+    assertThat(templates.size(), is(8));
+    assertThat(templates.get(0).getName(), is("Facilities Missing Supporting Requisition Group"));
+    assertThat(templates.get(7).getName(), is("report1"));
+    assertThat(templates.get(7).getId(), is(template1.getId()));
   }
 
   private Template createReportTemplate(String name, String type) {
@@ -96,12 +96,7 @@ public class TemplateMapperIT {
     template.setName(name);
     template.setType(type);
     template.setData(new byte[1]);
-    List<String> parameterList = new ArrayList<>();
-    parameterList.add("rnrId");
-    template.setParameters(parameterList);
-    template.setModifiedBy(1L);
-    Date currentTimeStamp = new Date();
-    template.setModifiedDate(currentTimeStamp);
+    template.setCreatedBy(1L);
     templateMapper.insert(template);
     return template;
   }
