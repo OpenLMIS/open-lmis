@@ -273,15 +273,27 @@ public class VaccinationCoverageMapperIT {
   }
 
   @Test
-  public void shouldGetOpenedVialLineItems() throws Exception {
+  public void shouldGetChildCoverageOpenedVialLineItems() throws Exception {
     String productVialName = "BCG";
     OpenedVialLineItem lineItem = new OpenedVialLineItem(facilityVisit.getId(), productVialName, null, 10);
     mapper.insertChildCoverageOpenedVialLineItem(lineItem);
 
-    List<OpenedVialLineItem> openedVialLineItems = mapper.getOpenedVialLineItemsBy(facilityVisit.getId());
+    List<OpenedVialLineItem> openedVialLineItems = mapper.getChildCoverageOpenedVialLineItemsBy(facilityVisit.getId());
 
     assertThat(openedVialLineItems.size(), is(1));
     assertThat(openedVialLineItems.get(0).getProductVialName(), is("BCG"));
+  }
+
+  @Test
+  public void shouldGetAdultCoverageOpenedVialLineItems() throws Exception {
+    String productVialName = "Tetanus";
+    OpenedVialLineItem lineItem = new OpenedVialLineItem(facilityVisit.getId(), productVialName, null, 10);
+    mapper.insertAdultCoverageOpenedVialLineItem(lineItem);
+
+    List<OpenedVialLineItem> openedVialLineItems = mapper.getAdultCoverageOpenedVialLineItemsBy(facilityVisit.getId());
+
+    assertThat(openedVialLineItems.size(), is(1));
+    assertThat(openedVialLineItems.get(0).getProductVialName(), is("Tetanus"));
   }
 
   @Test

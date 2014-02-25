@@ -67,7 +67,10 @@ public interface VaccinationCoverageMapper {
   void updateAdultCoverageOpenedVialLineItem(OpenedVialLineItem openedVialLineItem);
 
   @Select({"SELECT * FROM child_coverage_opened_vial_line_items WHERE facilityVisitId = #{facilityVisitId}"})
-  List<OpenedVialLineItem> getOpenedVialLineItemsBy(Long facilityVisitId);
+  List<OpenedVialLineItem> getChildCoverageOpenedVialLineItemsBy(Long facilityVisitId);
+
+  @Select({"SELECT * FROM adult_coverage_opened_vial_line_items WHERE facilityVisitId = #{facilityVisitId}"})
+  List<OpenedVialLineItem> getAdultCoverageOpenedVialLineItemsBy(Long facilityVisitId);
 
   @Insert({"INSERT INTO vaccination_adult_coverage_line_items (facilityVisitId, targetGroup, demographicGroup, createdBy, modifiedBy) " +
     "VALUES (#{facilityVisitId}, #{targetGroup}, #{demographicGroup}, #{createdBy}, #{modifiedBy})"})
