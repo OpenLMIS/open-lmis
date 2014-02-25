@@ -51,6 +51,32 @@
 <div class="box-content"  >
 
 <div class="row-fluid">
+  <!--  <div class="panel-group" id="accordion1">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a class="pull-right" data-toggle="collapse" data-parent="#accordion1" data-target="#collapseOne">
+                        Expand
+                    </a>
+                </h4>
+            </div>
+            <div id="collapseOne" class="panel-collapse collapse in">
+                <div class="panel-body">
+                    <div>Alerts</div>
+                    <table ng-show="datarows.length > 0" class="table-bordered table table-striped pull-right"
+                           ng-table="tableParams" ng-table-Scroller  loading-method="loadData(tableParams)" style="display: block; height: 150px;overflow: auto;">
+                        <tbody >
+                        <tr ng-repeat="alert in datarows" >
+                            <td data-title="Alerts">
+                                {{alert.percent}} {{alert.alert}}
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>-->
     <div class="span6">
         <!--<div class="pull-right legend">Showing records {{ ((tableParams.page - 1) *
             tableParams.count) + 1 }} to {{ (tableParams.page +1 ) * tableParams.count }} of {{totalAlerts}}
@@ -125,7 +151,7 @@
                 </div>
                 <br/>
                 <div class="form-cell horizontalFilters" >
-                    <label class="labels">Product</label>
+                    <label class="labels">Product<span class="label-required">*</span></label>
 
                     <div class="form-field">
                         <select ui-select2="productSelectOption" style="width:200px;" name="product" class="input-large"  ng-model="productIdList" openlmis-message="placeholder.select.product"
@@ -134,15 +160,7 @@
                         </select>
                     </div>
                 </div>
-                <div class="form-cell horizontalFilters" >
-                    <label class="labels">Facility Type</label>
 
-                    <div class="form-field">
-                        <select ui-select2 style="width:200px;" name="facilityTypeElement"   ng-model="facilityTypeId">
-                            <option ng-repeat="option in facilityTypes" value="{{option.id}}">{{option.name}}</option>
-                        </select>
-                    </div>
-                </div>
                 <div class="clearfix"></div>
 
             </div>
@@ -162,8 +180,8 @@
                                 <div class="row-fluid">
                                     <div class="span3">
                                         <div class="form-field">
-                                            <span class="caption">Facility</span>
-                                            <select ui-select2 style="width:200px;" id="facility-name"  name="facility" ng-model="fillRate.facilityId" ng-change="filterGrid();" required="true">
+                                            <span class="caption">Facility<span class="label-required">*</span></span>
+                                            <select ui-select2 style="width:200px;" id="facility-name"  name="facility" ng-model="fillRate.facilityId"  required="true">
                                                 <option  ng-repeat="option in allFacilities" value="{{ option.id }}">{{ option.code }} - {{ option.name }}</option>
                                             </select>
                                         </div>
@@ -186,10 +204,10 @@
                             <div class="portlet-body">
                                 <div class="row-fluid">
                                     <div class="span6">
-                                        <div ui-chart="orderFillChart.data" chart-options="orderFillChart.option" style="width:360px;height:300px;"></div>
+                                        <div ng-show="orderFillChart.data" ui-chart="orderFillChart.data" chart-options="orderFillChart.option" style="width:360px;height:300px;"></div>
                                     </div>
                                     <div class="span6">
-                                        <table>
+                                        <table ng-show="productItemFillRates">
                                             <tr>
                                                 <td ng-repeat="itemFillRate in productItemFillRates">
                                         <span class="easychart" style="height: 75px" easypiechart options="itemFillRate.option"  percent="itemFillRate.percent">
@@ -231,13 +249,16 @@
            <div class="row-fluid">
                 <div class="span6"> <!-- District Reporting Performance -->
                     <div class="portlet box light-grey">
-                        <div class="portlet-title">
+                        <div class="portlet-title"  id="accordion2">
                             <div class="caption">
-                                <i class="fa fa-reorder"></i>District Reporting Performance
+                                <i class="fa fa-reorder"></i><a data-toggle="collapse" data-parent="#accordion2" data-target="#collapseTwo" >District Reporting Performance</a>
                             </div>
+                            <!--<div class="tools">
+
+                            </div>-->
                         </div>
-                        <div class="portlet-body">
-                            <h2>District Reporting Performance</h2>
+                        <div class="portlet-body" id="collapseTwo">
+                            <!--<h2>District Reporting Performance</h2>-->
                             <a-float id="district-reporting" af-option="pieChartOption" af-data="pieChartData" class="chart"></a-float>
                         </div>
                     </div>
