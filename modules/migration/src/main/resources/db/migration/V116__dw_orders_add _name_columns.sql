@@ -8,7 +8,16 @@ BEGIN
         END;
     END;
 
-    BEGIN
+   BEGIN
+        BEGIN
+            ALTER TABLE dw_orders ADD COLUMN facilityname character varying(50);
+        EXCEPTION
+            WHEN duplicate_column THEN RAISE NOTICE 'column facilityname already exists in dw_orders.';
+        END;
+    END;
+
+ 
+ BEGIN
         BEGIN
             ALTER TABLE dw_orders ADD COLUMN productprimaryname character varying(150);
         EXCEPTION
