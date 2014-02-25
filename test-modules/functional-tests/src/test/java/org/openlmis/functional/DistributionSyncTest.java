@@ -123,7 +123,11 @@ public class DistributionSyncTest extends TestCaseHelper {
     FullCoveragePage fullCoveragePage = childCoveragePage.navigateToFullCoverage();
     fullCoveragePage.clickApplyNRToAll();
 
-    fullCoveragePage.navigateToEpiInventory();
+    AdultCoveragePage adultCoveragePage = childCoveragePage.navigateToAdultCoverage();
+    adultCoveragePage.clickApplyNrToAll();
+    adultCoveragePage.clickOK();
+
+    adultCoveragePage.navigateToEpiInventory();
     fillEpiInventoryWithOnlyDeliveredQuantity("2", "4", "6");
 
     facilityListPage.verifyOverallFacilityIndicatorColor("GREEN");
@@ -261,7 +265,11 @@ public class DistributionSyncTest extends TestCaseHelper {
     FullCoveragePage fullCoveragePage = childCoveragePage.navigateToFullCoverage();
     fullCoveragePage.clickApplyNRToAll();
 
-    fullCoveragePage.navigateToEpiInventory();
+    AdultCoveragePage adultCoveragePage = childCoveragePage.navigateToAdultCoverage();
+    adultCoveragePage.clickApplyNrToAll();
+    adultCoveragePage.clickOK();
+
+    adultCoveragePage.navigateToEpiInventory();
     fillEpiInventoryWithOnlyDeliveredQuantity("2", "4", "6");
     facilityListPage.verifyOverallFacilityIndicatorColor("GREEN");
 
@@ -518,7 +526,11 @@ public class DistributionSyncTest extends TestCaseHelper {
     fullCoveragePage.clickApplyNRToAll();
     verifyProductsAreNotDisplayed();
 
-    ChildCoveragePage childCoveragePage = fullCoveragePage.navigateToChildCoverage();
+    AdultCoveragePage adultCoveragePage = fullCoveragePage.navigateToAdultCoverage();
+    adultCoveragePage.clickApplyNrToAll();
+    adultCoveragePage.clickOK();
+
+    ChildCoveragePage childCoveragePage = adultCoveragePage.navigateToChildCoverage();
     childCoveragePage.applyNRToAll();
     childCoveragePage.clickOK();
 
@@ -720,6 +732,10 @@ public class DistributionSyncTest extends TestCaseHelper {
     childCoveragePage.applyNRToAll();
     childCoveragePage.clickOK();
 
+    AdultCoveragePage adultCoveragePage = childCoveragePage.navigateToAdultCoverage();
+    adultCoveragePage.clickApplyNrToAll();
+    adultCoveragePage.clickOK();
+
     facilityListPage.verifyOverallFacilityIndicatorColor("GREEN");
 
     facilityListPage.selectFacility(distributionTestData.get(SECOND_FACILITY_CODE));
@@ -739,6 +755,10 @@ public class DistributionSyncTest extends TestCaseHelper {
     childCoveragePage = epiUsePage.navigateToChildCoverage();
     childCoveragePage.applyNRToAll();
     childCoveragePage.clickOK();
+
+    childCoveragePage.navigateToAdultCoverage();
+    adultCoveragePage.clickApplyNrToAll();
+    adultCoveragePage.clickOK();
 
     facilityListPage.verifyOverallFacilityIndicatorColor("GREEN");
 
@@ -909,7 +929,10 @@ public class DistributionSyncTest extends TestCaseHelper {
     FullCoveragePage fullCoveragePage = epiInventoryPage.navigateToFullCoverage();
     fullCoveragePage.enterData(23, 66, 77, "45");
 
-    fullCoveragePage.navigateToVisitInformation();
+    AdultCoveragePage adultCoveragePage = fullCoveragePage.navigateToAdultCoverage();
+    adultCoveragePage.enterDataInAllFields();
+
+    adultCoveragePage.navigateToVisitInformation();
     return visitInformationPage;
   }
 
@@ -935,7 +958,10 @@ public class DistributionSyncTest extends TestCaseHelper {
     FullCoveragePage fullCoveragePage = epiUsePage.navigateToFullCoverage();
     fullCoveragePage.enterData(23, 66, 77, "45");
 
-    fullCoveragePage.navigateToVisitInformation();
+    AdultCoveragePage adultCoveragePage = fullCoveragePage.navigateToAdultCoverage();
+    adultCoveragePage.enterDataInAllFields();
+
+    adultCoveragePage.navigateToVisitInformation();
     visitInformationPage.selectFacilityVisitedNo();
     visitInformationPage.selectReasonNoTransport();
 
@@ -952,6 +978,8 @@ public class DistributionSyncTest extends TestCaseHelper {
 
     verifyFullCoveragesDataInDatabase(23, 66, 77, 45, facilityCode);
 
+    verifyAdultCoverageDataInDatabase();
+
     verifyEpiInventoryDataInDatabase(null, "2", null, "P10", facilityCode);
     verifyEpiInventoryDataInDatabase(null, "4", null, "Product6", facilityCode);
     verifyEpiInventoryDataInDatabase(null, "6", null, "P11", facilityCode);
@@ -966,6 +994,8 @@ public class DistributionSyncTest extends TestCaseHelper {
     verifyFacilityVisitInformationInDatabase(facilityCode, null, null, null, null, null, null, "t", "f", "TRANSPORT_UNAVAILABLE", null);
 
     verifyFullCoveragesDataInDatabase(23, 66, 77, 45, facilityCode);
+
+    verifyAdultCoverageDataInDatabase();
 
     verifyEpiInventoryDataInDatabase(null, null, null, "P10", facilityCode);
     verifyEpiInventoryDataInDatabase(null, null, null, "Product6", facilityCode);
