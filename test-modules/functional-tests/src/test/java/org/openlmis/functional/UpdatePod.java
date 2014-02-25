@@ -75,21 +75,24 @@ public class UpdatePod extends TestCaseHelper {
     verifyRequisitionTypeAndColor("regular");
 
     updatePodPage.enterPodData("200", "openlmis open source logistic management system", null, 1);
+    updatePodPage.enterDeliveryDetailsInPodScreen("Delivered Person","","");
     updatePodPage.clickSave();
     assertTrue(updatePodPage.isPodSuccessMessageDisplayed());
     testWebDriver.refresh();
     updatePodPage.verifyQuantityReceivedAndNotes("200", "openlmis open source logistic management system", 1);
     verifyPodDataInDatabase("200", "openlmis open source logistic management system", "P10", null);
+    updatePodPage.verifyDeliveryDetailsOnPodScreenUI("Delivered Person","","");
+    verifyDeliveryDetailsOfPodScreenInDatabase("Delivered Person",null,null);
 
     updatePodPage.enterPodData("990", "openlmis project", "90", 1);
-    updatePodPage.enterDeliveryDetailsInPodScreen("Delivered Person","Received Person","27/02/2014");
+    updatePodPage.enterDeliveryDetailsInPodScreen("Delivered","Received Person","27/02/2014");
     updatePodPage.clickSave();
     assertTrue(updatePodPage.isPodSuccessMessageDisplayed());
     testWebDriver.refresh();
-    updatePodPage.verifyDeliveryDetailsOnPodScreenUI("Delivered Person","Received Person","27/02/2014");
+    updatePodPage.verifyDeliveryDetailsOnPodScreenUI("Delivered","Received Person","27/02/2014");
     updatePodPage.verifyQuantityReceivedAndNotes("990", "openlmis project", 1);
     verifyPodDataInDatabase("990", "openlmis project", "P10", "90");
-    verifyDeliveryDetailsOfPodScreenInDatabase("Delivered Person","Received Person","2014-02-27 00:00:00");
+    verifyDeliveryDetailsOfPodScreenInDatabase("Delivered","Received Person","2014-02-27 00:00:00");
   }
 
   @Test(groups = {"requisition"})

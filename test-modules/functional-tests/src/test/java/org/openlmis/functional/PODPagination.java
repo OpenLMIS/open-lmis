@@ -210,23 +210,36 @@ public class PODPagination extends TestCaseHelper {
     verifyNumberOfProductsVisibleOnPage(10);
     verifyProductDisplayOrderOnPage(new String[]{"F0", "F1", "F2", "F3", "F4", "F5", "F6", "F7", "F8", "F9"});
     verifyCategoryDisplayOrderOnPage(new String[]{"Antibiotic", "", "", "", "", "", "", "", "", ""});
+
     updatePodPage.enterPodData("110", "openlmis openlmis", null, 1);
+    updatePodPage.enterDeliveryDetailsInPodScreen("Delivered Person","Received Person","27/02/2014");
     updatePodPage.clickSave();
+
     assertTrue(updatePodPage.isPodSuccessMessageDisplayed());
-    verifyPodDataInDatabase("110", "openlmis openlmis", "F0", null);
     testWebDriver.refresh();
+
+    verifyPodDataInDatabase("110", "openlmis openlmis", "F0", null);
+    updatePodPage.verifyDeliveryDetailsOnPodScreenUI("Delivered Person","Received Person","27/02/2014");
+    verifyDeliveryDetailsOfPodScreenInDatabase("Delivered Person","Received Person","2014-02-27 00:00:00");
+
+    updatePodPage.enterDeliveryDetailsInPodScreen("Delivered Person new"," ","25/02/2014");
     updatePodPage.enterPodData("200", "openlmis openlmis", "65", 5);
     updatePodPage.clickSave();
     assertTrue(updatePodPage.isPodSuccessMessageDisplayed());
     testWebDriver.refresh();
     verifyPodDataInDatabase("200", "openlmis openlmis", "F4", "65");
+    updatePodPage.verifyDeliveryDetailsOnPodScreenUI("Delivered Person new"," ","25/02/2014");
+    verifyDeliveryDetailsOfPodScreenInDatabase("Delivered Person new"," ","2014-02-25 00:00:00");
 
+    updatePodPage.enterDeliveryDetailsInPodScreen("Delivered Person new openLMIS", " ", "25/02/2014");
     navigateToPage(2);
     verifyPageNumberSelected(2);
     verifyFirstAndPreviousPageLinksEnabled();
     verifyNumberOfProductsVisibleOnPage(10);
     verifyProductDisplayOrderOnPage(new String[]{"NF0", "NF1", "NF2", "NF3", "NF4", "NF5", "NF6", "NF7", "NF8", "NF9"});
     verifyCategoryDisplayOrderOnPage(new String[]{"Antibiotic", "", "", "", "", "", "", "", "", ""});
+    updatePodPage.verifyDeliveryDetailsOnPodScreenUI("Delivered Person new openLMIS"," ","25/02/2014");
+    verifyDeliveryDetailsOfPodScreenInDatabase("Delivered Person new openLMIS"," ","2014-02-25 00:00:00");
     updatePodPage.enterPodData("10", "openlmis", "7", 1);
     updatePodPage.clickSave();
     assertTrue(updatePodPage.isPodSuccessMessageDisplayed());
@@ -242,6 +255,7 @@ public class PODPagination extends TestCaseHelper {
     updatePodPage.verifyQuantityReturnedOnUI("", 1);
     updatePodPage.enterPodData("11", "some notes", "99999999", 1);
     updatePodPage.enterPodData("110", "Notes", null, 2);
+    updatePodPage.enterDeliveryDetailsInPodScreen("Delivered", "Received by facility incharge", "25/02/2013");
 
     updatePodPage.navigateToFirstPage();
     verifyPageNumberSelected(1);
@@ -249,6 +263,7 @@ public class PODPagination extends TestCaseHelper {
     verifyFirstAndPreviousPageLinksDisabled();
     verifyNumberOfProductsVisibleOnPage(10);
     updatePodPage.verifyQuantityReturnedOnUI("", 10);
+    updatePodPage.verifyDeliveryDetailsOnPodScreenUI("Delivered", "Received by facility incharge", "25/02/2013");
 
     verifyPodDataInDatabase("11", "some notes", "ZX", "99999999");
     verifyPodDataInDatabase("110", "Notes", "ZX1", null);
@@ -269,6 +284,7 @@ public class PODPagination extends TestCaseHelper {
     verifyPodDataInDatabase("5", "openlmis openlmis", "NF0", null);
     updatePodPage.verifyQuantityReceivedAndNotes("11", "openlmis openlmis project", 10);
     verifyPodDataInDatabase("11", "openlmis openlmis project", "NF9", "99999999");
+    verifyDeliveryDetailsOfPodScreenInDatabase("Delivered","Received by facility incharge","2013-02-25 00:00:00");
   }
 
   @Test(groups = {"requisition"})
@@ -294,7 +310,7 @@ public class PODPagination extends TestCaseHelper {
     navigateToPage(3);
     updatePodPage.enterPodData("31", "notes", null, 1);
     updatePodPage.enterPodData("32", "notes", null, 2);
-
+    updatePodPage.enterDeliveryDetailsInPodScreen("openlmis","facility incharge","27/02/2014");
     updatePodPage.clickSubmitButton();
     updatePodPage.clickCancelButton();
 
@@ -312,24 +328,35 @@ public class PODPagination extends TestCaseHelper {
     assertFalse(updatePodPage.isNotesEnabled(1));
     assertFalse(updatePodPage.isQuantityReceivedEnabled(10));
     assertFalse(updatePodPage.isNotesEnabled(10));
+    assertFalse(updatePodPage.isDeliveryByFieldEnabled());
+    assertFalse(updatePodPage.isReceivedByFieldEnabled());
+    assertFalse(updatePodPage.isReceivedDateFieldEnabled());
 
     navigateToPage(2);
     assertFalse(updatePodPage.isQuantityReceivedEnabled(1));
     assertFalse(updatePodPage.isNotesEnabled(1));
     assertFalse(updatePodPage.isQuantityReceivedEnabled(10));
     assertFalse(updatePodPage.isNotesEnabled(10));
+    assertFalse(updatePodPage.isDeliveryByFieldEnabled());
+    assertFalse(updatePodPage.isReceivedByFieldEnabled());
+    assertFalse(updatePodPage.isReceivedDateFieldEnabled());
 
     navigateToPage(3);
     assertFalse(updatePodPage.isQuantityReceivedEnabled(1));
     assertFalse(updatePodPage.isNotesEnabled(1));
     assertFalse(updatePodPage.isQuantityReceivedEnabled(2));
     assertFalse(updatePodPage.isNotesEnabled(2));
+    assertFalse(updatePodPage.isDeliveryByFieldEnabled());
+    assertFalse(updatePodPage.isReceivedByFieldEnabled());
+    assertFalse(updatePodPage.isReceivedDateFieldEnabled());
 
     homePage.navigateViewOrders();
     assertEquals("Received", viewOrdersPage.getOrderStatus(1));
 
     homePage.navigateManagePOD();
     managePodPage.verifyNoOrderMessage();
+    verifyDeliveryDetailsOfPodScreenInDatabase("openlmis","facility incharge","2014-02-27 00:00:00");
+
   }
 
   @Test(groups = {"requisition"})
@@ -353,6 +380,9 @@ public class PODPagination extends TestCaseHelper {
     assertEquals("Errors found on 2 pages", updatePodPage.getPageErrorsMessage());
     assertTrue(updatePodPage.isQuantityReceivedEnabled(1));
     assertTrue(updatePodPage.isNotesEnabled(1));
+    assertTrue(updatePodPage.isDeliveryByFieldEnabled());
+    assertTrue(updatePodPage.isReceivedByFieldEnabled());
+    assertTrue(updatePodPage.isReceivedDateFieldEnabled());
 
     ViewOrdersPage viewOrdersPage = homePage.navigateViewOrders();
     assertEquals("Ready to pack", viewOrdersPage.getOrderStatus(1));

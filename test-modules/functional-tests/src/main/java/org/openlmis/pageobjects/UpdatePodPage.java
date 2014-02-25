@@ -401,10 +401,14 @@ public class UpdatePodPage extends Page {
 
   public void enterDeliveryDetailsInPodScreen(String deliveredByValue, String receivedByValue, String receivedDateValue) {
     testWebDriver.waitForElementToAppear(deliveredBy);
+    testWebDriver.scrollToElement(deliveredBy);
+    deliveredBy.clear();
     sendKeys(deliveredBy, deliveredByValue);
     testWebDriver.waitForElementToAppear(receivedBy);
+    receivedBy.clear();
     sendKeys(receivedBy, receivedByValue);
     testWebDriver.waitForElementToAppear(receivedDate);
+    receivedDate.clear();
     sendKeys(receivedDate, receivedDateValue);
   }
 
@@ -427,5 +431,23 @@ public class UpdatePodPage extends Page {
     assertEquals(deliveredByValue, getDeliveredByValue());
     assertEquals(receivedByValue, getReceivedByValue());
     assertEquals(receivedDateValue, getReceivedDate());
+  }
+
+  public boolean isDeliveryByFieldEnabled() {
+    testWebDriver.waitForElementToAppear(deliveredBy);
+    testWebDriver.scrollToElement(deliveredBy);
+    return deliveredBy.isEnabled();
+  }
+
+  public boolean isReceivedByFieldEnabled() {
+    testWebDriver.waitForElementToAppear(receivedBy);
+    testWebDriver.scrollToElement(receivedBy);
+    return receivedBy.isEnabled();
+  }
+
+  public boolean isReceivedDateFieldEnabled() {
+    testWebDriver.waitForElementToAppear(receivedDate);
+    testWebDriver.scrollToElement(receivedDate);
+    return receivedDate.isEnabled();
   }
 }
