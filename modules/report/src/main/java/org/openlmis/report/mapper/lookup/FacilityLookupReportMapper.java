@@ -70,20 +70,6 @@ public interface FacilityLookupReportMapper {
       "        order by f.name")
     List<Facility> getFacilitiesByPrgraomScheduleType(@Param("program") Long program, @Param("schedule") Long schedule, @Param("type") Long type);
 
-    @Select("SELECT DISTINCT f.id, f.code, f.name\n" +
-            "         FROM  \n" +
-            "             facilities f\n" +
-            "                join geographic_zones gz on gz.id = f.geographicZoneId  \n" +
-            "                join programs_supported ps \n" +
-            "                on ps.facilityid = f.id\n" +
-            "                join requisition_group_members m \n" +
-            "                on m.facilityId = f.id\n" +
-            "                join requisition_group_program_schedules rps\n" +
-            "                on m.requisitionGroupId = rps.requisitionGroupId and ps.programId = rps.programId\n" +
-            "              where gz.id = #{geographicZoneId} \n"+
-            "              and ps.active = true\n"+
-            "              order by f.name")
-    List<Facility> getFacilitiesByGeographicZone(@Param("geographicZoneId") Long geographicZoneId);
 
     @Select("SELECT DISTINCT f.id, f.code, f.name\n" +
             "         FROM  \n" +
@@ -95,28 +81,10 @@ public interface FacilityLookupReportMapper {
             "                on m.facilityId = f.id\n" +
             "                join requisition_group_program_schedules rps\n" +
             "                on m.requisitionGroupId = rps.requisitionGroupId and ps.programId = rps.programId\n" +
-            "              where gz.id = #{geographicZoneId} \n"+
-            "              and m.requisitionGroupId = #{requisitionGroupId}\n" +
-            "              and ps.programid = #{programId}\n"+
-            "              and ps.active = true\n"+
-            "              order by f.name")
-    List<Facility> getFacilitiesBy(@Param("geographicZoneId") Long geographicZoneId,@Param("requisitionGroupId") Long requisitionGroupId,@Param("programId") Long programId);
-
-    @Select("SELECT DISTINCT f.id, f.code, f.name\n" +
-            "         FROM  \n" +
-            "             facilities f\n" +
-            "                join geographic_zones gz on gz.id = f.geographicZoneId  \n" +
-            "                join programs_supported ps \n" +
-            "                on ps.facilityid = f.id\n" +
-            "                join requisition_group_members m \n" +
-            "                on m.facilityId = f.id\n" +
-            "                join requisition_group_program_schedules rps\n" +
-            "                on m.requisitionGroupId = rps.requisitionGroupId and ps.programId = rps.programId\n" +
-            "              where gz.id =  #{geographicZoneId} \n"+
-            "              and m.requisitionGroupId = CASE WHEN #{requisitionGroupId} = 0 THEN m.requisitionGroupId ELSE #{requisitionGroupId} END\n" +
+            "               where gz.id =  #{geographicZoneId} \n"+
+            "               and m.requisitionGroupId = CASE WHEN #{requisitionGroupId} = 0 THEN m.requisitionGroupId ELSE #{requisitionGroupId} END \n" +
             "              and ps.programid = CASE WHEN #{programId} = 0 THEN ps.programid ELSE #{programId} END  \n"+
             "              and rps.scheduleid = CASE WHEN #{scheduleId} = 0 THEN rps.scheduleid ELSE #{scheduleId} END \n"+
-            "              and ps.active = true\n"+
             "              order by f.name")
     List<Facility> getFacilitiesBy(@Param("geographicZoneId") Long geographicZoneId,@Param("requisitionGroupId") Long requisitionGroupId, @Param("programId") Long programId, @Param("scheduleId") Long scheduleId);
 }

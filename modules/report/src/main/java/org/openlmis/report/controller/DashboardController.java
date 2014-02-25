@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 
+import java.util.List;
+
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
 /**
@@ -27,15 +29,18 @@ public class DashboardController extends BaseController {
     DashboardLookupService lookupService;
 
     @RequestMapping(value = "/itemFillRate", method = GET, headers = BaseController.ACCEPT_JSON)
-    public ResponseEntity<OpenLmisResponse>  getItemFillRate(){
-      return OpenLmisResponse.response("itemFillRate", this.lookupService.getItemFillRate());
+    public ResponseEntity<OpenLmisResponse>  getItemFillRate(@RequestParam("geographicZoneId") Long geographicZoneId,
+                                                             @RequestParam("periodId") Long periodId,
+                                                             @RequestParam("facilityId") Long facilityId,
+                                                             @RequestParam("productListId")List<Long> productListId){
+      return OpenLmisResponse.response("itemFillRate", this.lookupService.getItemFillRate(geographicZoneId, periodId, facilityId, productListId));
     }
 
     @RequestMapping(value = "/orderFillRate", method = GET, headers = BaseController.ACCEPT_JSON)
-    public ResponseEntity<OpenLmisResponse>  getOrderFillRate(@RequestParam("geographiczoneId") Long geographiczoneId,
+    public ResponseEntity<OpenLmisResponse>  getOrderFillRate(@RequestParam("geographicZoneId") Long geographicZoneId,
                                                               @RequestParam("periodId") Long periodId,
                                                               @RequestParam("facilityId") Long facilityId,
-                                                              HttpServletRequest request){
-        return OpenLmisResponse.response("orderFillRate", this.lookupService.getOrderFillRate(geographiczoneId,facilityId,periodId,null));
+                                                              @RequestParam("productListId")List<Long> productListId){
+        return OpenLmisResponse.response("orderFillRate", this.lookupService.getOrderFillRate(geographicZoneId,periodId,facilityId,productListId));
     }
 }

@@ -23,8 +23,8 @@ public interface DashboardMapper {
             "select -75 , 'Product 3' \n" +
             "UNION ALL\n" +
             "select 85 , 'Product 4';")
-    List<ItemFillRate> getItemFillRate();
+    List<ItemFillRate> getItemFillRate(@Param("geographicZoneid") Long geographicZoneid, @Param("periodId")  Long periodId, @Param("facilityId")  Long facilityId, @Param("products") String productIds);
 
-    @Select("select order_fill_rate as fillRate from dw_order_fill_rate_vw where periodid = #{periodId} and geographiczoneid = #{geographiczoneid} and facilityid = #{facilityId}")
-    OrderFillRate getOrderFillRate(@Param("geographiczoneid") Long geographiczoneid, @Param("periodId")  Long periodId, @Param("facilityId")  Long facilityId);
+    @Select("select order_fill_rate as fillRate from dw_order_fill_rate_vw where periodid = #{periodId} and geographicZoneid = #{geographicZoneid} and facilityid = #{facilityId} and productid = ANY(#{products}::int[])")
+    OrderFillRate getOrderFillRate(@Param("geographicZoneid") Long geographicZoneid, @Param("periodId")  Long periodId, @Param("facilityId")  Long facilityId, @Param("products") String productIds);
 }
