@@ -15,16 +15,6 @@ function AdminDashboardController($scope,UserFacilityList,ReportPrograms, Report
 
     $scope.startYears = [];
 
-
-    UserFacilityList.get({}, function (data) {
-       // $scope.facilities = data.facilityList;
-        $scope.userFacility = data.facilityList[0];
-        if ($scope.userFacility) {
-           $scope.filterObject.geographicZoneId = $scope.userFacility.geographicZone.id;
-        }
-    });
-
-
     $scope.productSelectOption = {maximumSelectionSize : 4};
 
     var itemFillRateColors = [{'minRange': -100, 'maxRange': 0, 'color' : '#E23E3E', 'description' : 'Red color for product with a fill rate <= 0 '},
@@ -35,54 +25,6 @@ function AdminDashboardController($scope,UserFacilityList,ReportPrograms, Report
     var $lineWidth = 5;
     var barColor = defaultBarColor;
 
-    ItemFillRate.get(function (data){
-        $scope.itemFills = data.itemFillRate;
-        $scope.productItemFillRates = [];
-        $.each($scope.itemFills, function (item, idx) {
-            $.each(itemFillRateColors, function(index, item){
-               if(idx.fillRate <= item.maxRange && idx.fillRate >= item.minRange){
-                   barColor = item.color;
-               }
-            });
-            $scope.productItemFillRates.push({'option': {animate:3000, barColor: barColor, scaleColor: $scaleColor, lineWidth: $lineWidth}, 'percent': idx.fillRate, 'name': idx.product});
-        });
-
-    });
-
-    OrderFillRate.get({geographiczoneId:1,periodId:1,facilityId:1},function(data){
-       $scope.orderFill = data.orderFillRate;
-
-        var fillRate = [];
-        if($scope.orderFill !== undefined ){
-            fillRate.push([$scope.orderFill.fillRate]);
-            $scope.orderFillChart = {
-                'option':{
-                    title:'Order Fill Rate',
-                    seriesDefaults:{
-                        renderer:$.jqplot.MeterGaugeRenderer,
-                        rendererOptions: {
-                            label: 'Order Sub/App',
-                            labelPosition: 'bottom',
-                            labelHeightAdjust: -5,
-                            min: 0,
-                            max: 100,
-                            intervals:[25, 50, 75, 100],
-                            intervalColors:['#66cc66', '#93b75f', '#E7E658', '#cc6666']
-                        }
-                    }
-                },'data': fillRate
-            };
-        }
-    });
-
-   /* ReportFacilityTypes.get(function (data) {
-        $scope.facilityTypes = data.facilityTypes;
-        $scope.facilityTypes.unshift({'name':'-- All Facility Types --','id':'0'});
-
-        $scope.allFacilities = [];
-        $scope.allFacilities.unshift({code:'-- Select a Facility --',id:'0'});
-    });
-*/
     OperationYears.get(function (data) {
         $scope.startYears = data.years;
         $scope.startYears.unshift('-- All Years --');
@@ -99,21 +41,11 @@ function AdminDashboardController($scope,UserFacilityList,ReportPrograms, Report
 
     });
 
-    $scope.$watch('facilityTypeId', function (selection) {
-        if (selection == "All") {
-            $scope.filterObject.facilityTypeId = -1;
-        } else if (selection !== undefined || selection === "") {
-            $scope.filterObject.facilityTypeId = selection;
-            $.each($scope.facilityTypes, function (item, idx) {
-                if (idx.id == selection) {
-                    $scope.filterObject.facilityType = idx.name;
-                }
-            });
-        } else {
-            $scope.filterObject.facilityTypeId = 0;
+    UserFacilityList.get({}, function (data) {
+        $scope.userFacility = data.facilityList[0];
+        if ($scope.userFacility) {
+            $scope.filterObject.geographicZoneId = $scope.userFacility.geographicZone.id;
         }
-        $scope.loadFacilities();
-
     });
 
     $scope.$watch('fillRate.facilityId', function (selection) {
@@ -131,7 +63,10 @@ function AdminDashboardController($scope,UserFacilityList,ReportPrograms, Report
             $scope.filterObject.facilityId = 0;
             $scope.filterObject.facility = "";
         }
-       // $scope.loadFillRates();
+        if(!isUndefined($scope.filterObject.facilityId) && $scope.filterObject.facilityId != 0){
+
+            $scope.loadFillRates();
+        }
     });
 
     $scope.$watch('programId', function(selection){
@@ -163,32 +98,73 @@ function AdminDashboardController($scope,UserFacilityList,ReportPrograms, Report
 
     $scope.$watch('productIdList',function(selection){
         $scope.filterObject.productIdList = $scope.productIdList;
+        $scope.loadFillRates();
     });
 
     $scope.loadFillRates = function(){
-        ItemFillRate.get({
-            geographicZone: $scope.filterObject.geographicZoneId ,
-            period: $scope.filterObject.periodId,
-            products: $scope.filterObject.productIdList
-        }, function (data){
-            $scope.itemFills = data.itemFillRate;
-            $scope.productItemFillRates = [];
-            $.each($scope.itemFills, function (item, idx) {
-                $.each(itemFillRateColors, function(index, item){
-                    if(idx.fillRate <= item.maxRange && idx.fillRate >= item.minRange){
-                        barColor = item.color;
-                    }
-                });
-                $scope.productItemFillRates.push({'option': {animate:3000, barColor: barColor, scaleColor: $scaleColor, lineWidth: $lineWidth}, 'percent': idx.fillRate, 'name': idx.product});
-            });
+       //Facility and Products are required for Order and Item Fill Rates
 
-        });
+       if(!isUndefined($scope.filterObject.facilityId) && $scope.filterObject.facilityId != 0 && !isUndefined($scope.filterObject.productIdList)){
+
+           //Item Fill Rate
+           ItemFillRate.get({
+               geographicZoneId: $scope.filterObject.geographicZoneId ,
+               periodId: $scope.filterObject.periodId,
+               facilityId: $scope.filterObject.facilityId,
+               productListId: $scope.filterObject.productIdList
+           },function (data){
+
+               $scope.itemFills = data.itemFillRate;
+               $scope.productItemFillRates = [];
+               if(!isUndefined($scope.itemFills)){
+                   $.each($scope.itemFills, function (item, idx) {
+                       $.each(itemFillRateColors, function(index, item){
+                           if(idx.fillRate <= item.maxRange && idx.fillRate >= item.minRange){
+                               barColor = item.color;
+                           }
+                       });
+                       $scope.productItemFillRates.push({'option': {animate:3000, barColor: barColor, scaleColor: $scaleColor, lineWidth: $lineWidth}, 'percent': idx.fillRate, 'name': idx.product});
+                   });
+               }
+           });
+
+           //Order Fill Rate
+           OrderFillRate.get({geographicZoneId: $scope.filterObject.geographicZoneId,
+               periodId: $scope.filterObject.periodId,
+               facilityId:$scope.filterObject.facilityId,
+               productListId: $scope.filterObject.productIdList},function(data){
+               alert('order fill rate '+JSON.stringify(data.orderFillRate))
+               $scope.orderFill = data.orderFillRate;
+               var fillRate = [];
+               if($scope.orderFill !== undefined ){
+                   fillRate.push([$scope.orderFill.fillRate]);
+                   $scope.orderFillChart = {
+                       'option':{
+                           title:'Order Fill Rate',
+                           seriesDefaults:{
+                               renderer:$.jqplot.MeterGaugeRenderer,
+                               rendererOptions: {
+                                   label: 'Order Sub/App',
+                                   labelPosition: 'bottom',
+                                   labelHeightAdjust: -5,
+                                   min: 0,
+                                   max: 100,
+                                   intervals:[25, 50, 75, 100],
+                                   intervalColors:['#66cc66', '#93b75f', '#E7E658', '#cc6666']
+                               }
+                           }
+                       },'data': fillRate
+                   };
+               }
+           });
+       }
 
     };
 
     $scope.loadFacilities = function(){
-        if(isUndefined($scope.filterObject.geographicZoneId))
-        return;
+        if(isUndefined($scope.filterObject.geographicZoneId)){
+            $scope.getUserGeographicZoneId();
+        }
        // load facilities
         FacilitiesByGeographicZoneAndProgramParams.get({
                 geographicZoneId: $scope.filterObject.geographicZoneId ,
@@ -281,7 +257,7 @@ function AdminDashboardController($scope,UserFacilityList,ReportPrograms, Report
 
     });
 
-   /* $scope.getUserGeographicZoneId = function(){
+    $scope.getUserGeographicZoneId = function(){
        if(isUndefined($scope.filterObject.geographicZoneId)){
            UserFacilityList.get({}, function (data) {
                // $scope.facilities = data.facilityList;
@@ -292,7 +268,7 @@ function AdminDashboardController($scope,UserFacilityList,ReportPrograms, Report
            });
        }
        return isUndefined($scope.filterObject.geographicZoneId) ? 0 : $scope.filterObject.geographicZoneId;
-    };*/
+    };
 
 
 
@@ -654,7 +630,7 @@ function AdminDashboardController($scope,UserFacilityList,ReportPrograms, Report
         }
     };*/
 
-    $scope.data   = [
+    $scope.alertData   = [
         {alert: "Requisitions Pending Approval", percent: 10},
         {alert: "Facilities stocked out", percent: 20},
         {alert: "Commodities have been rationed", percent: 30},
@@ -684,7 +660,7 @@ function AdminDashboardController($scope,UserFacilityList,ReportPrograms, Report
         {alert: "Commodities have been rationed", percent: 88},
         {alert: "products have been recalled", percent: 99}];
 
-    $scope.totalAlerts = $scope.data.length;
+    $scope.totalAlerts = $scope.alertData.length;
     // the grid options
     $scope.tableParams = new ngTableParams({
         page: 1,            // show first page
@@ -692,9 +668,8 @@ function AdminDashboardController($scope,UserFacilityList,ReportPrograms, Report
         count: 5,
         counts:[]            // count per page
     });
-    var data = $scope.data;
 
-    $scope.datarows = data.slice(($scope.tableParams.page - 1) * $scope.tableParams.count, $scope.tableParams.page * $scope.tableParams.count);
+    $scope.datarows = $scope.alertData.slice(($scope.tableParams.page - 1) * $scope.tableParams.count, $scope.tableParams.page * $scope.tableParams.count);
 
     $scope.loadData =  function(params){
 
@@ -705,7 +680,7 @@ function AdminDashboardController($scope,UserFacilityList,ReportPrograms, Report
             $scope.datarows = [];
             params.total = 0;
         }else{
-            var data = $scope.data;
+            var data = $scope.alertData;
             var total = data.length;
 
             params.counts = [];
