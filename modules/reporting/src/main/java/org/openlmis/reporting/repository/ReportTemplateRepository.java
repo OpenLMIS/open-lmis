@@ -34,6 +34,6 @@ public class ReportTemplateRepository {
   }
 
   public List<ReportTemplate> getAll() {
-    return mapper.getAll();
+    return mapper.getAllConsistencyReportTemplates();
   }
 }

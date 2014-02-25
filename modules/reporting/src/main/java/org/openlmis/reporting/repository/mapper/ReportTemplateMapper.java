@@ -24,11 +24,11 @@ public interface ReportTemplateMapper {
   @Select("SELECT * from templates WHERE id=#{id}")
   ReportTemplate getById(Long id);
 
-  @Insert("INSERT INTO templates (name, data, commaSeparatedParameters, createdBy, createdDate) " +
-    "VALUES (#{name}, #{data}, #{commaSeparatedParameters}, #{modifiedBy}, COALESCE(#{modifiedDate}, NOW()))")
+  @Insert("INSERT INTO templates (name, data, type, commaSeparatedParameters, createdBy) " +
+    "VALUES (#{name}, #{data}, #{type}, #{commaSeparatedParameters}, #{createdBy})")
   @Options(useGeneratedKeys = true)
   void insert(ReportTemplate reportTemplate);
 
-  @Select("SELECT id, name from templates order by createdDate")
-  List<ReportTemplate> getAll();
+  @Select("SELECT id, name from templates WHERE type = 'Consistency Report' order by createdDate")
+  List<ReportTemplate> getAllConsistencyReportTemplates();
 }

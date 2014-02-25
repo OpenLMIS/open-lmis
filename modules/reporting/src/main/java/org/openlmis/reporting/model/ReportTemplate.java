@@ -41,6 +41,8 @@ public class ReportTemplate extends BaseModel {
 
   private String commaSeparatedParameters;
 
+  private String type;
+
   public void setParameters(List<String> parameters) {
     this.parameters = parameters;
     this.commaSeparatedParameters = commaSeparatedParameters();

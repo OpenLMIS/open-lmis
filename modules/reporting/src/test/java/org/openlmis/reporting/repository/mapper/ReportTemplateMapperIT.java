@@ -10,8 +10,6 @@
 
 package org.openlmis.reporting.repository.mapper;
 
-import org.hamcrest.CoreMatchers;
-import org.junit.Assert;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
@@ -31,6 +29,7 @@ import java.util.List;
 
 import static org.apache.commons.io.FileUtils.readFileToByteArray;
 import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 
 @Category(IntegrationTests.class)
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -44,17 +43,58 @@ public class ReportTemplateMapperIT {
 
   @Test
   public void shouldGetById() throws Exception {
-    ReportTemplate reportTemplate = createReportTemplate("Sample Report");
+    ReportTemplate reportTemplate = createReportTemplate("Sample Report", "Consistency Report");
 
     ReportTemplate returnedTemplate = reportTemplateMapper.getById(reportTemplate.getId());
 
-    Assert.assertThat(returnedTemplate.getName(), is(reportTemplate.getName()));
-    Assert.assertThat(returnedTemplate.getData(), is(reportTemplate.getData()));
+    assertThat(returnedTemplate.getName(), is(reportTemplate.getName()));
+    assertThat(returnedTemplate.getData(), is(reportTemplate.getData()));
   }
 
-  private ReportTemplate createReportTemplate(String name) {
+  @Test
+  public void shouldInsertConsistencyReportForXmlTemplateFile() throws Exception {
+    String type = "Consistency Report";
+    String name = "Requisition expectedReportTemplate";
+    Long createdBy = 1L;
+    ReportTemplate expectedReportTemplate = new ReportTemplate();
+    expectedReportTemplate.setType(type);
+    expectedReportTemplate.setName(name);
+    List<String> parameters = new ArrayList<>();
+    parameters.add("rnrId");
+    expectedReportTemplate.setParameters(parameters);
+    File file = new ClassPathResource("report1.jrxml").getFile();
+
+    expectedReportTemplate.setData(readFileToByteArray(file));
+    expectedReportTemplate.setCreatedDate(new Date());
+    expectedReportTemplate.setCreatedBy(createdBy);
+
+    reportTemplateMapper.insert(expectedReportTemplate);
+
+    ReportTemplate reportTemplateDB = reportTemplateMapper.getById(expectedReportTemplate.getId());
+
+    assertThat(reportTemplateDB.getType(), is(type));
+    assertThat(reportTemplateDB.getName(), is(name));
+    assertThat(reportTemplateDB.getData(), is(readFileToByteArray(file)));
+    assertThat(reportTemplateDB.getCreatedBy(), is(createdBy));
+  }
+
+  @Test
+  public void shouldGetAllReportTemplatesAccordingToCreatedDate() throws Exception {
+    ReportTemplate reportTemplate1 = createReportTemplate("report1", "Consistency Report");
+    createReportTemplate("report2", "Print");
+
+    List<ReportTemplate> result = reportTemplateMapper.getAllConsistencyReportTemplates();
+
+    assertThat(result.size(), is(8));
+    assertThat(result.get(0).getName(), is("Facilities Missing Supporting Requisition Group"));
+    assertThat(result.get(7).getName(), is("report1"));
+    assertThat(result.get(7).getId(), is(reportTemplate1.getId()));
+  }
+
+  private ReportTemplate createReportTemplate(String name, String type) {
     ReportTemplate reportTemplate = new ReportTemplate();
     reportTemplate.setName(name);
+    reportTemplate.setType(type);
     reportTemplate.setData(new byte[1]);
     List<String> parameterList = new ArrayList<>();
     parameterList.add("rnrId");
@@ -64,35 +104,5 @@ public class ReportTemplateMapperIT {
     reportTemplate.setModifiedDate(currentTimeStamp);
     reportTemplateMapper.insert(reportTemplate);
     return reportTemplate;
-  }
-
-  @Test
-  public void shouldInsertReportForXmlTemplateFile() throws Exception {
-
-    ReportTemplate reportTemplate = new ReportTemplate();
-    reportTemplate.setName("Requisition reportTemplate");
-    List<String> parameters = new ArrayList<>();
-    parameters.add("rnrId");
-    reportTemplate.setParameters(parameters);
-    File file = new ClassPathResource("report1.jrxml").getFile();
-
-    reportTemplate.setData(readFileToByteArray(file));
-    reportTemplate.setModifiedDate(new Date());
-    reportTemplate.setModifiedBy(1L);
-
-    reportTemplateMapper.insert(reportTemplate);
-  }
-
-  @Test
-  public void shouldGetAllReportTemplatesAccordingToCreatedDate() throws Exception {
-    ReportTemplate reportTemplate1 = createReportTemplate("report1");
-    createReportTemplate("report2");
-
-    List<ReportTemplate> result = reportTemplateMapper.getAll();
-
-    Assert.assertThat(result.size(), CoreMatchers.is(9));
-    Assert.assertThat(result.get(0).getName(), CoreMatchers.is("Facilities Missing Supporting Requisition Group"));
-    Assert.assertThat(result.get(7).getName(), CoreMatchers.is("report1"));
-    Assert.assertThat(result.get(7).getId(), is(reportTemplate1.getId()));
   }
 }
