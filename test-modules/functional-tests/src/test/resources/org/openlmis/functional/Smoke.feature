@@ -285,9 +285,11 @@ Feature: Smoke Tests
     And I access Manage POD page
     And I click on update Pod link for Row "1"
     And I enter "10" as quantity received, "78" as quantity returned and "notes" as notes in row "1"
+    And I enter "openLMIS" as deliveredBy,"Facility Incharge" as receivedBy and "27/02/2014" as receivedDate
     And I submit POD
-    Then I verify quantity received, quantity returned and notes disabled
+    Then I verify quantity received, quantity returned,notes,deliveredBy,receivedBy,receivedDate disabled
     And I verify in database quantity received as "10", quantity returned as "78" and notes as "notes"
+    And I verify in database deliveredBy as "openLMIS",receivedBy as "Facility Incharge" and receivedDate as "2014-02-27 00:00:00"
     Then I access view orders page
     And I verify order status as "Received" in row "1"
     Then I access Manage POD page

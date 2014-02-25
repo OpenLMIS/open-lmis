@@ -62,7 +62,7 @@ public class UpdatePod extends TestCaseHelper {
 
     HomePage homePage = loginPage.loginAs(updatePODData.get(USER), updatePODData.get(PASSWORD));
     ManagePodPage managePodPage = homePage.navigateManagePOD();
-    UpdatePodPage updatePodPage = managePodPage.selectRequisitionToUpdatePod(1);
+    updatePodPage = managePodPage.selectRequisitionToUpdatePod(1);
 
     assertEquals("Proof of Delivery", updatePodPage.getTitle());
     verifyHeadersWithValuesOnUpdatePODScreen();
@@ -75,24 +75,24 @@ public class UpdatePod extends TestCaseHelper {
     verifyRequisitionTypeAndColor("regular");
 
     updatePodPage.enterPodData("200", "openlmis open source logistic management system", null, 1);
-    updatePodPage.enterDeliveryDetailsInPodScreen("Delivered Person","","");
+    updatePodPage.enterDeliveryDetailsInPodScreen("Delivered Person", "", "");
     updatePodPage.clickSave();
     assertTrue(updatePodPage.isPodSuccessMessageDisplayed());
     testWebDriver.refresh();
     updatePodPage.verifyQuantityReceivedAndNotes("200", "openlmis open source logistic management system", 1);
     verifyPodDataInDatabase("200", "openlmis open source logistic management system", "P10", null);
-    updatePodPage.verifyDeliveryDetailsOnPodScreenUI("Delivered Person","","");
-    verifyDeliveryDetailsOfPodScreenInDatabase("Delivered Person",null,null);
+    updatePodPage.verifyDeliveryDetailsOnPodScreenUI("Delivered Person", "", "");
+    verifyDeliveryDetailsOfPodScreenInDatabase("Delivered Person", null, null);
 
     updatePodPage.enterPodData("990", "openlmis project", "90", 1);
-    updatePodPage.enterDeliveryDetailsInPodScreen("Delivered","Received Person","27/02/2014");
+    updatePodPage.enterDeliveryDetailsInPodScreen("Delivered", "Received Person", "27/02/2014");
     updatePodPage.clickSave();
     assertTrue(updatePodPage.isPodSuccessMessageDisplayed());
     testWebDriver.refresh();
-    updatePodPage.verifyDeliveryDetailsOnPodScreenUI("Delivered","Received Person","27/02/2014");
+    updatePodPage.verifyDeliveryDetailsOnPodScreenUI("Delivered", "Received Person", "27/02/2014");
     updatePodPage.verifyQuantityReceivedAndNotes("990", "openlmis project", 1);
     verifyPodDataInDatabase("990", "openlmis project", "P10", "90");
-    verifyDeliveryDetailsOfPodScreenInDatabase("Delivered","Received Person","2014-02-27 00:00:00");
+    verifyDeliveryDetailsOfPodScreenInDatabase("Delivered", "Received Person", "2014-02-27 00:00:00");
   }
 
   @Test(groups = {"requisition"})
@@ -112,7 +112,7 @@ public class UpdatePod extends TestCaseHelper {
 
     HomePage homePage = loginPage.loginAs(updatePODData.get(USER), updatePODData.get(PASSWORD));
     ManagePodPage managePodPage = homePage.navigateManagePOD();
-    UpdatePodPage updatePodPage = managePodPage.selectRequisitionToUpdatePod(1);
+    updatePodPage = managePodPage.selectRequisitionToUpdatePod(1);
 
     assertEquals("No products.", updatePodPage.getNoProductsMessage());
     assertFalse(updatePodPage.getPodTableData().contains("P10"));
@@ -163,7 +163,7 @@ public class UpdatePod extends TestCaseHelper {
 
     HomePage homePage = loginPage.loginAs(updatePODData.get(USER), updatePODData.get(PASSWORD));
     ManagePodPage managePodPage = homePage.navigateManagePOD();
-    UpdatePodPage updatePodPage = managePodPage.selectRequisitionToUpdatePod(1);
+    updatePodPage = managePodPage.selectRequisitionToUpdatePod(1);
 
     assertEquals("Proof of Delivery", updatePodPage.getTitle());
     verifyHeadersWithValuesOnUpdatePODScreen();
@@ -187,7 +187,7 @@ public class UpdatePod extends TestCaseHelper {
 
     HomePage homePage = loginPage.loginAs(updatePODData.get(USER), updatePODData.get(PASSWORD));
     ManagePodPage managePodPage = homePage.navigateManagePOD();
-    UpdatePodPage updatePodPage = managePodPage.selectRequisitionToUpdatePod(1);
+    updatePodPage = managePodPage.selectRequisitionToUpdatePod(1);
 
     assertEquals("Proof of Delivery", updatePodPage.getTitle());
     verifyHeadersWithValuesOnUpdatePODScreen();
@@ -219,13 +219,20 @@ public class UpdatePod extends TestCaseHelper {
 
   @And("^I enter \"([^\"]*)\" as quantity received, \"([^\"]*)\" as quantity returned and \"([^\"]*)\" as notes in row \"([^\"]*)\"$")
   public void enterPodDetails(String quantityReceived, String quantityReturned, String notes, String rowNumber) {
-    UpdatePodPage updatePodPage = PageFactory.getInstanceOfUpdatePodPage(testWebDriver);
+    updatePodPage = PageFactory.getInstanceOfUpdatePodPage(testWebDriver);
     updatePodPage.enterPodData(quantityReceived, notes, quantityReturned, Integer.parseInt(rowNumber));
   }
 
+  @And("^I enter \"([^\"]*)\" as deliveredBy,\"([^\"]*)\" as receivedBy and \"([^\"]*)\" as receivedDate$")
+  public void enterDeliveryDetailsOnPodScreen(String deliveredBy, String receivedBy, String receivedDate) {
+    updatePodPage = PageFactory.getInstanceOfUpdatePodPage(testWebDriver);
+    updatePodPage.enterDeliveryDetailsInPodScreen(deliveredBy, receivedBy, receivedDate);
+  }
+
+
   @And("^I submit POD$")
   public void submitPOD() {
-    UpdatePodPage updatePodPage = PageFactory.getInstanceOfUpdatePodPage(testWebDriver);
+    updatePodPage = PageFactory.getInstanceOfUpdatePodPage(testWebDriver);
     updatePodPage.clickSubmitButton();
     updatePodPage.clickCancelButton();
     updatePodPage.clickSubmitButton();
@@ -241,24 +248,32 @@ public class UpdatePod extends TestCaseHelper {
 
   @Then("^I should see all products to update pod$")
   public void verifyUpdatePodPage() {
-    UpdatePodPage updatePodPage = PageFactory.getInstanceOfUpdatePodPage(testWebDriver);
+    updatePodPage = PageFactory.getInstanceOfUpdatePodPage(testWebDriver);
     assertTrue(updatePodPage.getProductCode(1).contains("P10"));
     assertTrue(updatePodPage.getProductName(1).contains("antibiotic"));
     assertFalse(updatePodPage.getProductCode(1).contains("P11"));
   }
 
-  @Then("^I verify quantity received, quantity returned and notes disabled$")
+  @Then("^I verify quantity received, quantity returned,notes,deliveredBy,receivedBy,receivedDate disabled$")
   public void verifyPodPageDisabled() {
     testWebDriver.sleep(1000);
-    UpdatePodPage updatePodPage = PageFactory.getInstanceOfUpdatePodPage(testWebDriver);
+    updatePodPage = PageFactory.getInstanceOfUpdatePodPage(testWebDriver);
     assertFalse(updatePodPage.isQuantityReceivedEnabled(1));
     assertFalse(updatePodPage.isNotesEnabled(1));
     assertFalse(updatePodPage.isQuantityReturnedEnabled(1));
+    assertFalse(updatePodPage.isDeliveryByFieldEnabled());
+    assertFalse(updatePodPage.isReceivedByFieldEnabled());
+    assertFalse(updatePodPage.isReceivedDateFieldEnabled());
   }
 
   @And("^I verify in database quantity received as \"([^\"]*)\", quantity returned as \"([^\"]*)\" and notes as \"([^\"]*)\"$")
   public void verifyPodDataSavedInDatabase(String quantityReceived, String quantityReturned, String notes) throws SQLException {
     verifyPodDataInDatabase(quantityReceived, notes, "P10", quantityReturned);
+  }
+
+  @And("^I verify in database deliveredBy as \"([^\"]*)\",receivedBy as \"([^\"]*)\" and receivedDate as \"([^\"]*)\"$")
+  public void verifyDeliveryDetailsOfPodScreenSavedInDatabase(String deliveredBy, String receivedBy, String receivedDate) throws SQLException {
+    verifyDeliveryDetailsOfPodScreenInDatabase(deliveredBy, receivedBy, receivedDate);
   }
 
   private void initiateRnrAndConvertToOrder(boolean isEmergencyRegular, int packsToShip) throws SQLException {
