@@ -55,10 +55,11 @@ public class Template extends BaseModel {
     }
   }
 
-  public Template(String name, MultipartFile file, Long modifiedBy) throws IOException {
+  public Template(String name, MultipartFile file, Long createdBy, String type) throws IOException {
     validateFile(file);
     this.name = name;
-    this.modifiedBy = modifiedBy;
+    this.type = type;
+    this.createdBy = createdBy;
   }
 
   private String commaSeparatedParameters() {

@@ -37,6 +37,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.MockitoAnnotations.initMocks;
+import static org.openlmis.web.controller.ReportTemplateController.CONSISTENCY_REPORT;
 import static org.openlmis.web.controller.ReportTemplateController.JASPER_CREATE_REPORT_SUCCESS;
 import static org.powermock.api.mockito.PowerMockito.when;
 import static org.powermock.api.mockito.PowerMockito.whenNew;
@@ -44,7 +45,7 @@ import static org.powermock.api.mockito.PowerMockito.whenNew;
 @Category(UnitTests.class)
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(ReportTemplateController.class)
-public class TemplateControllerTest {
+public class ReportTemplateControllerTest {
 
   @Mock
   private TemplateService templateService;
@@ -71,7 +72,7 @@ public class TemplateControllerTest {
   public void shouldUploadJasperTemplateFileIfValid() throws Exception {
     MockMultipartFile reportTemplateFile = new MockMultipartFile("template.jrxml","template.jrxml","", new byte[1]);
     Template report = new Template();
-    whenNew(Template.class).withArguments("reportName", reportTemplateFile, USER).thenReturn(report);
+    whenNew(Template.class).withArguments("reportName", reportTemplateFile, USER, CONSISTENCY_REPORT).thenReturn(report);
     when(messageService.message(JASPER_CREATE_REPORT_SUCCESS)).thenReturn("Report created successfully");
       ResponseEntity < OpenLmisResponse > response = controller.createJasperReportTemplate(request, reportTemplateFile, "reportName");
 

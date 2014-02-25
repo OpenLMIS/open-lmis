@@ -49,7 +49,7 @@ public class TemplateTest {
   public void shouldThrowErrorIfFileNotOfTypeJasperXML() throws Exception {
     expectedException.expect(DataException.class);
     expectedException.expectMessage("report.template.error.file.type");
-    new Template("report", new MockMultipartFile("report.pdf", new byte[1]), 1L);
+    new Template("report", new MockMultipartFile("report.pdf", new byte[1]), 1L, "Consistency Report");
   }
 
   @Test
@@ -58,21 +58,21 @@ public class TemplateTest {
     expectedException.expectMessage("report.template.error.file.empty");
     MockMultipartFile file = new MockMultipartFile("report.jrxml", "report.jrxml", "", new byte[0]);
 
-    new Template("report", file, 1L);
+    new Template("report", file, 1L, "Consistency Report");
   }
 
   @Test
   public void shouldThrowErrorIfFileNotPresent() throws Exception {
     expectedException.expect(DataException.class);
     expectedException.expectMessage("report.template.error.file.missing");
-    new Template("report", null, 1L);
+    new Template("report", null, 1L, "Consistency Report");
   }
 
   @Test
   public void shouldThrowErrorIfFileIsInvalid() throws Exception {
     expectedException.expect(DataException.class);
     expectedException.expectMessage("report.template.error.file.invalid");
-    new Template("report", new MockMultipartFile("report.jrxml", "report.jrxml", "", new byte[1]), 1L);
+    new Template("report", new MockMultipartFile("report.jrxml", "report.jrxml", "", new byte[1]), 1L, "Consistency Report");
   }
 
   @Test
@@ -97,7 +97,7 @@ public class TemplateTest {
     byte[] byteData = new byte[1];
     when(byteOutputStream.toByteArray()).thenReturn(byteData);
 
-    Template template = new Template("report", file, 1L);
+    Template template = new Template("report", file, 1L, "Consistency Report");
 
     assertThat(template.getData(), is(byteData));
     assertThat(template.getParameters().size(), is(2));

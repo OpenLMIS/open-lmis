@@ -38,6 +38,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 public class ReportTemplateController extends BaseController {
   public static final String JASPER_CREATE_REPORT_SUCCESS = "create.report.success";
   public static final String JASPER_CREATE_REPORT_ERROR = "create.report.error";
+  public static final String CONSISTENCY_REPORT = "Consistency Report";
 
   TemplateService templateService;
 
@@ -50,7 +51,7 @@ public class ReportTemplateController extends BaseController {
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_REPORT')")
   public ResponseEntity<OpenLmisResponse> createJasperReportTemplate(HttpServletRequest request, MultipartFile file, String name) {
     try {
-      Template template = new Template(name, file, loggedInUserId(request));
+      Template template = new Template(name, file, loggedInUserId(request), CONSISTENCY_REPORT);
       templateService.insert(template);
       return success(messageService.message(JASPER_CREATE_REPORT_SUCCESS), MediaType.TEXT_HTML_VALUE);
     } catch (IOException e) {
