@@ -797,6 +797,10 @@ Feature: Smoke Tests
       | existingQuantity | deliveredQuantity | spoiledQuantity |
       | 20               | 100               | 5               |
       | 10               | 50                | 3               |
+    And I navigate to "adult coverage" tab
+    And I Enter "adult coverage" values:
+      | healthCenter1 | outreach1 | healthCenter25 | outreach25 | openedVial |
+      | 123           | 22        | 23             | 34         | 4          |
     Then I see Overall facility icon as "GREEN"
     When I access plan my distribution page
 
@@ -894,6 +898,10 @@ Feature: Smoke Tests
     And I Enter "full coverage" values:
       | femaleHealthCenter | femaleMobileBrigade | maleHealthCenter | maleMobileBrigade |
       | 123                | 22                  | 23               | 242               |
+    And I navigate to "adult coverage" tab
+    And I Enter "adult coverage" values:
+      | healthCenter1 | outreach1 | healthCenter25 | outreach25 | openedVial |
+      | 123           | 22        | 23             | 34         | 4          |
     And I navigate to "refrigerator" tab
     When I add new refrigerator
     When I enter Brand "LG"
