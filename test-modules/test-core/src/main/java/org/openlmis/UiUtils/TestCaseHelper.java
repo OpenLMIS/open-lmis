@@ -660,6 +660,14 @@ public class TestCaseHelper {
       assertEquals(actual, expected);
     }
   }
+
+  public void verifyDeliveryDetailsOfPodScreenInDatabase(String deliveredByValue, String receivedByValue, String receivedDateValue) throws SQLException {
+    Integer orderId = dbWrapper.getMaxRnrID();
+    Map<String, String> pod = dbWrapper.getPodData(orderId);
+    assertEquals(deliveredByValue, pod.get("deliveredby"));
+    assertEquals(receivedByValue, pod.get("receivedby"));
+    assertEquals(receivedDateValue, pod.get("receiveddate"));
+  }
 }
 
 

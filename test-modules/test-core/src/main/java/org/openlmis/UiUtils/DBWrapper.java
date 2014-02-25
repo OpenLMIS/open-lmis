@@ -1410,4 +1410,8 @@ public class DBWrapper {
   public void insertAdultCoverageOpenedVialMapping(String productCode) throws SQLException {
     update("INSERT INTO coverage_product_vials (vial, productCode, childCoverage) values ('Tetanus' ,'%s', FALSE)", productCode);
   }
+
+  public Map<String, String> getPodData(Integer orderId) throws SQLException {
+    return select("select * from pod where id = %d ", orderId).get(0);
+  }
 }

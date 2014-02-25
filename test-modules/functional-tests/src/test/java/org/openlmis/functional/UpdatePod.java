@@ -82,12 +82,14 @@ public class UpdatePod extends TestCaseHelper {
     verifyPodDataInDatabase("200", "openlmis open source logistic management system", "P10", null);
 
     updatePodPage.enterPodData("990", "openlmis project", "90", 1);
+    updatePodPage.enterDeliveryDetailsInPodScreen("Delivered Person","Received Person","27/02/2014");
     updatePodPage.clickSave();
     assertTrue(updatePodPage.isPodSuccessMessageDisplayed());
     testWebDriver.refresh();
-
+    updatePodPage.verifyDeliveryDetailsOnPodScreenUI("Delivered Person","Received Person","27/02/2014");
     updatePodPage.verifyQuantityReceivedAndNotes("990", "openlmis project", 1);
     verifyPodDataInDatabase("990", "openlmis project", "P10", "90");
+    verifyDeliveryDetailsOfPodScreenInDatabase("Delivered Person","Received Person","2014-02-27 00:00:00");
   }
 
   @Test(groups = {"requisition"})

@@ -91,6 +91,15 @@ public class UpdatePodPage extends Page {
   @FindBy(how = ID, using = "button_Cancel")
   private WebElement cancelButton = null;
 
+  @FindBy(how = ID, using = "deliveredBy")
+  private WebElement deliveredBy = null;
+
+  @FindBy(how = ID, using = "receivedBy")
+  private WebElement receivedBy = null;
+
+  @FindBy(how = ID, using = "receivedDate")
+  private WebElement receivedDate = null;
+
   public UpdatePodPage(TestWebDriver testWebDriver) {
     super(testWebDriver);
     PageFactory.initElements(new AjaxElementLocatorFactory(TestWebDriver.getDriver(), 10), this);
@@ -388,5 +397,35 @@ public class UpdatePodPage extends Page {
     WebElement quantityReturned = testWebDriver.getElementById("quantityReturned" + (rowNumber - 1));
     testWebDriver.scrollToElement(quantityReturned);
     return quantityReturned.isEnabled();
+  }
+
+  public void enterDeliveryDetailsInPodScreen(String deliveredByValue, String receivedByValue, String receivedDateValue) {
+    testWebDriver.waitForElementToAppear(deliveredBy);
+    sendKeys(deliveredBy, deliveredByValue);
+    testWebDriver.waitForElementToAppear(receivedBy);
+    sendKeys(receivedBy, receivedByValue);
+    testWebDriver.waitForElementToAppear(receivedDate);
+    sendKeys(receivedDate, receivedDateValue);
+  }
+
+  public String getDeliveredByValue() {
+    testWebDriver.waitForElementToAppear(deliveredBy);
+    return deliveredBy.getAttribute("value");
+  }
+
+  public String getReceivedByValue() {
+    testWebDriver.waitForElementToAppear(receivedBy);
+    return receivedBy.getAttribute("value");
+  }
+
+  public String getReceivedDate() {
+    testWebDriver.waitForElementToAppear(receivedDate);
+    return receivedDate.getAttribute("value");
+  }
+
+  public void verifyDeliveryDetailsOnPodScreenUI(String deliveredByValue, String receivedByValue, String receivedDateValue) {
+    assertEquals(deliveredByValue, getDeliveredByValue());
+    assertEquals(receivedByValue, getReceivedByValue());
+    assertEquals(receivedDateValue, getReceivedDate());
   }
 }
