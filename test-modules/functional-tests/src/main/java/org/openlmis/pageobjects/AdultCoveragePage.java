@@ -489,6 +489,11 @@ public class AdultCoveragePage extends DistributionTab {
     removeFocusFromElement();
   }
 
+  public boolean isOpenedVialsEnabled() {
+    testWebDriver.waitForElementToAppear(openedVialInputField);
+    return openedVialInputField.isEnabled();
+  }
+
   public String getTotalTetanusFirst(int rowNumber) {
     WebElement totalTetanus1 = testWebDriver.getElementById("totalTetanus1_" + rowNumber);
     testWebDriver.waitForElementToAppear(totalTetanus1);

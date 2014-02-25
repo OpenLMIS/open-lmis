@@ -389,6 +389,7 @@ public class DistributionAdultCoverageSyncTest extends TestCaseHelper {
 
   @Test(groups = {"distribution"})
   public void testShouldVerifyCoverageAndWastageRateCalculationWhenCatchmentPopulationZero() throws SQLException {
+    dbWrapper.updateFieldValue("products", "packSize", 11);
     insertProductMappingToGroup();
     dbWrapper.insertAdultCoverageOpenedVialMapping("tetanus");
     dbWrapper.insertProgramProductISA("VACCINES", "tetanus", "45", "12", "3", "4", "4", "2", "4");
@@ -416,6 +417,104 @@ public class DistributionAdultCoverageSyncTest extends TestCaseHelper {
 
     adultCoveragePage.enterOpenedVialInputField("1234567");
     assertEquals("97", adultCoveragePage.getWastageRate());
+  }
+
+  @Test(groups = {"distribution"})
+  public void testShouldVerifyCoverageAndWastageRateCalculationWhenPackSizeChangedAfterInitiatingDistribution() throws SQLException {
+    dbWrapper.updateFieldValue("products", "packSize", 10);
+    insertProductMappingToGroup();
+    dbWrapper.insertAdultCoverageOpenedVialMapping("tetanus");
+    dbWrapper.insertProgramProductISA("VACCINES", "tetanus", "45", "12", "3", "4", "4", "2", "4");
+    dbWrapper.updateFieldValue("facilities", "catchmentpopulation", "0", "code", adultCoverageData.get(FIRST_FACILITY_CODE));
+
+    HomePage homePage = loginPage.loginAs(adultCoverageData.get(USER), adultCoverageData.get(PASSWORD));
+    DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
+    distributionPage.initiate(adultCoverageData.get(FIRST_DELIVERY_ZONE_NAME), adultCoverageData.get(VACCINES_PROGRAM));
+    FacilityListPage facilityListPage = distributionPage.clickRecordData(1);
+    dbWrapper.updateFieldValue("products", "packSize", 15);
+    VisitInformationPage visitInformationPage = facilityListPage.selectFacility(adultCoverageData.get(FIRST_FACILITY_CODE));
+
+    facilityListPage.verifyOverallFacilityIndicatorColor("AMBER");
+
+    AdultCoveragePage adultCoveragePage = visitInformationPage.navigateToAdultCoverage();
+    adultCoveragePage.verifyIndicator("RED");
+
+    for (int rowNumber = 1; rowNumber <= 7; rowNumber++) {
+      adultCoveragePage.enterOutreachFirstInput(rowNumber, "5612" + rowNumber);
+    }
+
+    for (int rowNumber = 1; rowNumber <= 7; rowNumber++) {
+      assertEquals("0", adultCoveragePage.getTargetGroup(rowNumber));
+      assertEquals("", adultCoveragePage.getCoverageRate(rowNumber));
+    }
+
+    adultCoveragePage.enterOpenedVialInputField("1234567");
+    assertEquals("97", adultCoveragePage.getWastageRate());
+  }
+
+  @Test(groups = {"distribution"})
+  public void testShouldVerifyFormStatusAndApplyNrToAll() throws SQLException {
+    dbWrapper.updateFieldValue("products", "packSize", 10);
+    insertProductMappingToGroup();
+    dbWrapper.insertAdultCoverageOpenedVialMapping("tetanus");
+    dbWrapper.insertProgramProductISA("VACCINES", "tetanus", "45", "12", "3", "4", "4", "2", "4");
+    dbWrapper.updateFieldValue("facilities", "catchmentpopulation", "0", "code", adultCoverageData.get(FIRST_FACILITY_CODE));
+
+    HomePage homePage = loginPage.loginAs(adultCoverageData.get(USER), adultCoverageData.get(PASSWORD));
+    DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
+    distributionPage.initiate(adultCoverageData.get(FIRST_DELIVERY_ZONE_NAME), adultCoverageData.get(VACCINES_PROGRAM));
+    FacilityListPage facilityListPage = distributionPage.clickRecordData(1);
+    VisitInformationPage visitInformationPage = facilityListPage.selectFacility(adultCoverageData.get(FIRST_FACILITY_CODE));
+
+    facilityListPage.verifyOverallFacilityIndicatorColor("AMBER");
+
+    AdultCoveragePage adultCoveragePage = visitInformationPage.navigateToAdultCoverage();
+    adultCoveragePage.verifyIndicator("RED");
+
+    for (int rowNumber = 1; rowNumber <= 7; rowNumber++) {
+      adultCoveragePage.enterOutreachFirstInput(rowNumber, "5612" + rowNumber);
+    }
+
+    adultCoveragePage.enterOpenedVialInputField("1234567");
+    assertEquals("97", adultCoveragePage.getWastageRate());
+
+    adultCoveragePage.verifyIndicator("AMBER");
+
+    adultCoveragePage.clickApplyNrToAll();
+    adultCoveragePage.clickCancel();
+
+    adultCoveragePage.verifyIndicator("AMBER");
+    assertTrue(adultCoveragePage.isOutreachFirstEnabled(4));
+    assertTrue(adultCoveragePage.isOpenedVialsEnabled());
+    assertEquals("97", adultCoveragePage.getWastageRate());
+    assertEquals("56123", adultCoveragePage.getOutreachFirstInput(3));
+    assertEquals("1234567", adultCoveragePage.getOpenedVialInputField());
+
+    adultCoveragePage.clickApplyNrToAll();
+    adultCoveragePage.clickOK();
+
+    adultCoveragePage.verifyIndicator("GREEN");
+    assertFalse(adultCoveragePage.isOutreachFirstEnabled(4));
+    assertFalse(adultCoveragePage.isOpenedVialsEnabled());
+    assertEquals("", adultCoveragePage.getWastageRate());
+    assertEquals("", adultCoveragePage.getOutreachFirstInput(3));
+    assertEquals("", adultCoveragePage.getOpenedVialInputField());
+
+    adultCoveragePage.clickApplyNrToAll();
+    adultCoveragePage.clickOK();
+
+    adultCoveragePage.verifyIndicator("GREEN");
+
+    adultCoveragePage.clickApplyNrToAll();
+    adultCoveragePage.clickCancel();
+
+    adultCoveragePage.verifyIndicator("GREEN");
+
+    adultCoveragePage.applyNrToOpenedVials();
+    adultCoveragePage.verifyIndicator("AMBER");
+    adultCoveragePage.enterOpenedVialInputField("23");
+    adultCoveragePage.verifyIndicator("GREEN");
+    assertEquals("100", adultCoveragePage.getWastageRate());
   }
 
   public void setupDataForDistributionTest() throws SQLException {

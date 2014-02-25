@@ -410,6 +410,7 @@ public class DistributionChildCoverageSyncTest extends TestCaseHelper {
     HomePage homePage = loginPage.loginAs(childCoverageData.get(USER), childCoverageData.get(PASSWORD));
     DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
     distributionPage.initiate(childCoverageData.get(FIRST_DELIVERY_ZONE_NAME), childCoverageData.get(VACCINES_PROGRAM));
+    dbWrapper.updateFieldValue("products", "packSize", "5", "code", "P10");
     FacilityListPage facilityListPage = distributionPage.clickRecordData(1);
     VisitInformationPage visitInformationPage = facilityListPage.selectFacility(childCoverageData.get(FIRST_FACILITY_CODE));
     ChildCoveragePage childCoveragePage = visitInformationPage.navigateToChildCoverage();
@@ -420,7 +421,7 @@ public class DistributionChildCoverageSyncTest extends TestCaseHelper {
     assertEquals("9", childCoveragePage.getTotalForGivenColumnAndRow(3, 9));
     childCoveragePage.enterOpenedVialsCountForGivenGroupAndRow(9, 1, "5");
     assertEquals("82", childCoveragePage.getWastageRateForGivenRow(9));
-    dbWrapper.updateFieldValue("products", "packSize", "5", "code", "P10");
+
     childCoveragePage.enterOpenedVialsCountForGivenGroupAndRow(9, 1, "8");
     assertEquals("89", childCoveragePage.getWastageRateForGivenRow(9));
 
