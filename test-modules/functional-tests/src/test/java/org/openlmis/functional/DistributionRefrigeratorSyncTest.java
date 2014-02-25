@@ -118,7 +118,11 @@ public class DistributionRefrigeratorSyncTest extends TestCaseHelper {
     childCoveragePage.applyNRToAll();
     childCoveragePage.clickOK();
 
-    FullCoveragePage fullCoveragePage = childCoveragePage.navigateToFullCoverage();
+    AdultCoveragePage adultCoveragePage = childCoveragePage.navigateToAdultCoverage();
+    adultCoveragePage.clickApplyNrToAll();
+    adultCoveragePage.clickOK();
+
+    FullCoveragePage fullCoveragePage = adultCoveragePage.navigateToFullCoverage();
     fullCoveragePage.enterData(45, 67, 89, "90");
 
     fullCoveragePage.navigateToEpiInventory();
@@ -172,7 +176,11 @@ public class DistributionRefrigeratorSyncTest extends TestCaseHelper {
     FullCoveragePage fullCoveragePage = childCoveragePage.navigateToFullCoverage();
     fullCoveragePage.enterData(67, 44, 22, "11");
 
-    fullCoveragePage.navigateToEpiInventory();
+    AdultCoveragePage adultCoveragePage = fullCoveragePage.navigateToAdultCoverage();
+    adultCoveragePage.clickApplyNrToAll();
+    adultCoveragePage.clickOK();
+
+    adultCoveragePage.navigateToEpiInventory();
     fillEpiInventoryWithOnlyDeliveredQuantity("2", "4", "6");
 
     DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
@@ -219,7 +227,11 @@ public class DistributionRefrigeratorSyncTest extends TestCaseHelper {
     childCoveragePage.applyNRToAll();
     childCoveragePage.clickOK();
 
-    FullCoveragePage fullCoveragePage = childCoveragePage.navigateToFullCoverage();
+    AdultCoveragePage adultCoveragePage = childCoveragePage.navigateToAdultCoverage();
+    adultCoveragePage.clickApplyNrToAll();
+    adultCoveragePage.clickOK();
+
+    FullCoveragePage fullCoveragePage = adultCoveragePage.navigateToFullCoverage();
     fullCoveragePage.enterData(77, 56, 78, "34");
 
     fullCoveragePage.navigateToEpiInventory();
@@ -263,7 +275,11 @@ public class DistributionRefrigeratorSyncTest extends TestCaseHelper {
     childCoveragePage.applyNRToAll();
     childCoveragePage.clickOK();
 
-    FullCoveragePage fullCoveragePage = childCoveragePage.navigateToFullCoverage();
+    AdultCoveragePage adultCoveragePage = childCoveragePage.navigateToAdultCoverage();
+    adultCoveragePage.clickApplyNrToAll();
+    adultCoveragePage.clickOK();
+
+    FullCoveragePage fullCoveragePage = adultCoveragePage.navigateToFullCoverage();
     fullCoveragePage.enterData(78, 67, 34, "12");
 
     fullCoveragePage.navigateToEpiInventory();
@@ -306,7 +322,11 @@ public class DistributionRefrigeratorSyncTest extends TestCaseHelper {
     childCoveragePage.applyNRToAll();
     childCoveragePage.clickOK();
 
-    childCoveragePage.navigateToVisitInformation();
+    childCoveragePage.navigateToAdultCoverage();
+    adultCoveragePage.clickApplyNrToAll();
+    adultCoveragePage.clickOK();
+
+    adultCoveragePage.navigateToVisitInformation();
     visitInformationPage.enterDataWhenFacilityVisited("some observations", "samuel", "Doe", "Verifier", "XYZ");
 
     visitInformationPage.navigateToFullCoverage();
@@ -362,7 +382,11 @@ public class DistributionRefrigeratorSyncTest extends TestCaseHelper {
     childCoveragePage.applyNRToAll();
     childCoveragePage.clickOK();
 
-    FullCoveragePage fullCoveragePage = childCoveragePage.navigateToFullCoverage();
+    AdultCoveragePage adultCoveragePage = childCoveragePage.navigateToAdultCoverage();
+    adultCoveragePage.clickApplyNrToAll();
+    adultCoveragePage.clickOK();
+
+    FullCoveragePage fullCoveragePage = adultCoveragePage.navigateToFullCoverage();
     fullCoveragePage.enterData(12, 34, 45, "56");
 
     fullCoveragePage.navigateToEpiInventory();
@@ -405,6 +429,7 @@ public class DistributionRefrigeratorSyncTest extends TestCaseHelper {
     refrigeratorPage.enterValueInLowAlarmEvents("2", 1);
     refrigeratorPage.enterValueInHighAlarmEvents("2", 1);
     refrigeratorPage.clickProblemSinceLastVisitNR(1);
+    testWebDriver.sleep(1000);
     refrigeratorPage.verifyRefrigeratorColor("overall", "GREEN");
     refrigeratorPage.verifyRefrigeratorColor("individual", "GREEN");
     refrigeratorPage.clickDone();
@@ -416,7 +441,11 @@ public class DistributionRefrigeratorSyncTest extends TestCaseHelper {
     childCoveragePage.applyNRToAll();
     childCoveragePage.clickOK();
 
-    FullCoveragePage fullCoveragePage = childCoveragePage.navigateToFullCoverage();
+    AdultCoveragePage adultCoveragePage = childCoveragePage.navigateToAdultCoverage();
+    adultCoveragePage.clickApplyNrToAll();
+    adultCoveragePage.clickOK();
+
+    FullCoveragePage fullCoveragePage = adultCoveragePage.navigateToFullCoverage();
     fullCoveragePage.enterData(67, 8, 33, "54");
 
     fullCoveragePage.navigateToEpiInventory();
