@@ -10,11 +10,15 @@
 
 package org.openlmis.web.controller;
 
+import net.sf.jasperreports.engine.JRException;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.order.dto.OrderPODDTO;
 import org.openlmis.order.service.OrderService;
 import org.openlmis.pod.domain.OrderPOD;
 import org.openlmis.pod.service.PODService;
+import org.openlmis.reporting.controller.JasperReportsViewFactory;
+import org.openlmis.reporting.model.Template;
+import org.openlmis.reporting.service.TemplateService;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -26,9 +30,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.view.jasperreports.JasperReportsMultiFormatView;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.text.ParseException;
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.openlmis.web.response.OpenLmisResponse.*;
 import static org.springframework.web.bind.annotation.RequestMethod.*;
@@ -39,12 +48,19 @@ public class PODController extends BaseController {
   public static final String ORDER_POD = "orderPOD";
   public static final String ORDER = "order";
   public static final String RECEIVED_DATE = "receivedDate";
+  public static final String PRINT_POD = "Print POD";
 
   @Autowired
   private PODService service;
 
   @Autowired
   private OrderService orderService;
+
+  @Autowired
+  private TemplateService templateService;
+
+  @Autowired
+  private JasperReportsViewFactory jasperReportsViewFactory;
 
   @RequestMapping(value = "/pods", method = POST, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'MANAGE_POD')")
@@ -98,4 +114,14 @@ public class PODController extends BaseController {
       return error(exception, HttpStatus.BAD_REQUEST);
     }
   }
+
+  @RequestMapping(value = "/pods/{id}/print", method = GET, headers = ACCEPT_JSON)
+  public ModelAndView print(@PathVariable Long id) throws JRException, IOException, ClassNotFoundException {
+    Template podPrintTemplate = templateService.getByName(PRINT_POD);
+    JasperReportsMultiFormatView jasperView = jasperReportsViewFactory.getJasperReportsView(podPrintTemplate);
+    Map<String, Object> map = new HashMap<>();
+    map.put("format", "pdf");
+    return new ModelAndView(jasperView, map);
+  }
+
 }
