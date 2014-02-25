@@ -5,5 +5,8 @@
             "quantityReceived": "",
             "quantityReturned": ""
         }
-    ]
+    ],
+    "deliveredBy": "",
+    "receivedBy" : "",
+    "receivedDate": ""
 }
