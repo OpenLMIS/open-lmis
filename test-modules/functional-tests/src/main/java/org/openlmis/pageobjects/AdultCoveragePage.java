@@ -17,6 +17,8 @@ import org.openqa.selenium.support.FindBy;
 import java.util.List;
 import java.util.Map;
 
+import static com.thoughtworks.selenium.SeleneseTestBase.assertEquals;
+import static com.thoughtworks.selenium.SeleneseTestBase.assertFalse;
 import static org.openqa.selenium.support.How.ID;
 
 public class AdultCoveragePage extends DistributionTab {
@@ -164,7 +166,18 @@ public class AdultCoveragePage extends DistributionTab {
 
   @Override
   public void verifyData(List<Map<String, String>> map) {
-    //To change body of implemented methods use File | Settings | File Templates.
+    Map<String, String> dataMap = map.get(0);
+    assertEquals(dataMap.get("targetGroup"), getTargetGroup(1));
+    assertEquals(dataMap.get("healthCenter1"), getHealthCenterFirstInput(1));
+    assertEquals(dataMap.get("outreach1"), getOutreachFirstInput(1));
+    assertEquals(dataMap.get("total1"), getTotalTetanusFirst(1));
+    assertEquals(dataMap.get("healthCenter25"), getHealthCenter2To5Input(1));
+    assertEquals(dataMap.get("outreach25"), getOutreach2To5Input(1));
+    assertEquals(dataMap.get("total2"), getTotalTetanus2To5(1));
+    assertEquals(dataMap.get("total3"), getTotalTetanus(1));
+    assertEquals(dataMap.get("coverageRate"), getCoverageRate(1));
+    assertEquals(dataMap.get("openedVial"), getOpenedVialInputField());
+    assertEquals(dataMap.get("wastageRate"), getWastageRate());
   }
 
   @Override
@@ -176,7 +189,15 @@ public class AdultCoveragePage extends DistributionTab {
 
   @Override
   public void verifyAllFieldsDisabled() {
-    //To change body of implemented methods use File | Settings | File Templates.
+    for (int rowNumber = 1; rowNumber <= 7; rowNumber++) {
+      assertFalse(isOutreachFirstEnabled(rowNumber));
+      assertFalse(isOutreach2To5Enabled(rowNumber));
+      if (rowNumber < 3 || rowNumber > 6) {
+        assertFalse(isHealthCenterFirstEnabled(rowNumber));
+        assertFalse(isHealthCenter2To5Enabled(rowNumber));
+      }
+    }
+    assertFalse(isOpenedVialsEnabled());
   }
 
   public void removeFocusFromElement() {

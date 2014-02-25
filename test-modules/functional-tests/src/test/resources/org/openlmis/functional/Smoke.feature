@@ -719,6 +719,15 @@ Feature: Smoke Tests
       | healthCenter1 | outreach1 | healthCenter25 | outreach25 | openedVial |
       | 123           | 22        | 23             | 34         | 4          |
     Then Verify "adult coverage" indicator should be "GREEN"
+    When I apply NR to outreach2To5 for rowNumber "1"
+    Then Verify "adult coverage" indicator should be "GREEN"
+    And I apply NR to outreach2To5 for rowNumber "1"
+    Then Verify "adult coverage" indicator should be "AMBER"
+    When I enter outreach2To5 for rowNumber "1" as "31"
+    Then Verify "adult coverage" indicator should be "GREEN"
+    And I verify saved "adult coverage" values:
+      | targetGroup | healthCenter1 | outreach1 | total1 | healthCenter25 | outreach25 | total2 | total3 | coverageRate | openedVial | wastageRate |
+      | 1385        | 123           | 22        | 145    | 23             | 31         | 54     | 199    | 14           | 4          | -1967       |
 
   @smokeDistribution
   Scenario: User should verify facility and sync status when facility was visited

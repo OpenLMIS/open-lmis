@@ -10,6 +10,8 @@
 
 package org.openlmis.functional;
 
+import cucumber.api.java.en.And;
+import cucumber.api.java.en.When;
 import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.UiUtils.TestWebDriver;
 import org.openlmis.pageobjects.*;
@@ -494,8 +496,7 @@ public class DistributionAdultCoverageSyncTest extends TestCaseHelper {
     adultCoveragePage.clickOK();
 
     adultCoveragePage.verifyIndicator("GREEN");
-    assertFalse(adultCoveragePage.isOutreachFirstEnabled(4));
-    assertFalse(adultCoveragePage.isOpenedVialsEnabled());
+    adultCoveragePage.verifyAllFieldsDisabled();
     assertEquals("", adultCoveragePage.getWastageRate());
     assertEquals("", adultCoveragePage.getOutreachFirstInput(3));
     assertEquals("", adultCoveragePage.getOpenedVialInputField());
@@ -509,6 +510,7 @@ public class DistributionAdultCoverageSyncTest extends TestCaseHelper {
     adultCoveragePage.clickCancel();
 
     adultCoveragePage.verifyIndicator("GREEN");
+    adultCoveragePage.verifyAllFieldsDisabled();
 
     adultCoveragePage.applyNrToOpenedVials();
     adultCoveragePage.verifyIndicator("AMBER");
@@ -545,6 +547,18 @@ public class DistributionAdultCoverageSyncTest extends TestCaseHelper {
     dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("Students not MIF", "tetanus", false);
     dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("Workers not MIF", "tetanus", false);
     dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("Other not MIF", "tetanus", false);
+  }
+
+  @When("^I apply NR to outreach2To5 for rowNumber \"([^\"]*)\"$")
+  public void applyNrToHealthCenter11(String rowNumber) {
+    AdultCoveragePage adultCoveragePage = PageFactory.getInstanceOfAdultCoveragePage(testWebDriver);
+    adultCoveragePage.applyOutreach2To5Nr(Integer.parseInt(rowNumber));
+  }
+
+  @And("^I enter outreach2To5 for rowNumber \"([^\"]*)\" as \"([^\"]*)\"$")
+  public void enterHealthCenter11Data(String rowNumber, String value) {
+    AdultCoveragePage adultCoveragePage = PageFactory.getInstanceOfAdultCoveragePage(testWebDriver);
+    adultCoveragePage.enterOutreach2To5Input(Integer.parseInt(rowNumber), value);
   }
 
   @AfterMethod(groups = "distribution")
