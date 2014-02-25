@@ -828,6 +828,9 @@ Feature: Smoke Tests
     And I view child coverage values in DB for facility "F10":
       | healthCenter11 | outreach11 | total1 | coverageRate | healthCenter23 | outreach23 | total2 | total3 | openedVial |
       | 123            | 22         | 145    | 426          | 23             | 34         | 57     | 202    | 4          |
+    And I view adult coverage values in DB for facility "F10":
+      | healthCenter1 | outreach1 | total1 | healthCenter25 | outreach25 | total2 | total3 | openedVial |
+      | 123           | 22        | 145    | 23             | 34         | 57     | 202    | 4          |
     And I verify no record present in refrigerator problem table for refrigerator serial number "GR-J287PGHV" and facility "F10"
     And I see distribution status as synced
     When I record data for distribution "1"
@@ -944,6 +947,9 @@ Feature: Smoke Tests
     And I view child coverage values in DB for facility "F10":
       | healthCenter11 | outreach11 | total1 | coverageRate | healthCenter23 | outreach23 | total2 | total3 | openedVial |
       | 123            | 22         | 145    | 426          | 23             | 34         | 57     | 202    | 4          |
+    And I view adult coverage values in DB for facility "F10":
+      | healthCenter1 | outreach1 | total1 | healthCenter25 | outreach25 | total2 | total3 | openedVial |
+      | 123           | 22        | 145    | 23             | 34         | 57     | 202    | 4          |
     And I see distribution status as synced
     When I record data for distribution "1"
     And I choose facility "F10"

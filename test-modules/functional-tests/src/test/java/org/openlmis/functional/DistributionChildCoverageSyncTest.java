@@ -616,7 +616,7 @@ public class DistributionChildCoverageSyncTest extends TestCaseHelper {
     }
     List<String> openedVials = asList("BCG", "Polio10", "Polio20", "Penta1", "Penta10", "PCV", "Measles");
     for (int i = 1; i <= 7; i++) {
-      ResultSet openedVialLineItem = dbWrapper.getOpenedVialLineItem(openedVials.get(i - 1), facilityVisitId);
+      ResultSet openedVialLineItem = dbWrapper.getChildOpenedVialLineItem(openedVials.get(i - 1), facilityVisitId);
       assertEqualsAndNulls(openedVialLineItem.getString("openedVials"), "null");
     }
   }
@@ -684,10 +684,10 @@ public class DistributionChildCoverageSyncTest extends TestCaseHelper {
     assertEqualsAndNulls(childCoverageDetails.getString("healthcenter23months"), "null");
     assertEqualsAndNulls(childCoverageDetails.getString("outreach23months"), "7654321");
 
-    ResultSet openedVialLineItem = dbWrapper.getOpenedVialLineItem("BCG", facilityVisitId);
+    ResultSet openedVialLineItem = dbWrapper.getChildOpenedVialLineItem("BCG", facilityVisitId);
     assertEquals(openedVialLineItem.getString("openedVials"), "1234567");
 
-    openedVialLineItem = dbWrapper.getOpenedVialLineItem("Measles", facilityVisitId);
+    openedVialLineItem = dbWrapper.getChildOpenedVialLineItem("Measles", facilityVisitId);
     assertEqualsAndNulls(openedVialLineItem.getString("openedVials"), "null");
   }
 
@@ -740,7 +740,7 @@ public class DistributionChildCoverageSyncTest extends TestCaseHelper {
 
     List<String> openedVials = asList("BCG", "Polio10", "Polio20", "Penta1", "Penta10", "PCV", "Measles");
     for (int i = 1; i <= 7; i++) {
-      ResultSet openedVialLineItem = dbWrapper.getOpenedVialLineItem(openedVials.get(i - 1), facilityVisitId);
+      ResultSet openedVialLineItem = dbWrapper.getChildOpenedVialLineItem(openedVials.get(i - 1), facilityVisitId);
       assertEquals(openedVialLineItem.getString("openedVials"), String.valueOf(i * 100));
     }
   }

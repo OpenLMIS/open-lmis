@@ -565,4 +565,16 @@ public class AdultCoveragePage extends DistributionTab {
     cancelButton.click();
   }
 
+  public void enterDataInAllFields() {
+    for (int rowNumber = 1; rowNumber <= 7; rowNumber++) {
+      enterOutreachFirstInput(rowNumber, "2" + rowNumber);
+      enterOutreach2To5Input(rowNumber, "4" + rowNumber);
+      if (rowNumber < 3 || rowNumber > 6) {
+        enterHealthCenterFirstInput(rowNumber, "1" + rowNumber);
+        enterHealthCenter2To5Input(rowNumber, "3" + rowNumber);
+      }
+    }
+    enterOpenedVialInputField("999");
+  }
+
 }

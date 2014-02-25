@@ -21,6 +21,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.io.IOException;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
@@ -97,6 +98,7 @@ public class DistributionAdultCoverageSyncTest extends TestCaseHelper {
     assertEquals("Total Tetanus", adultCoveragePage.getTotalTetanusLabel());
     assertEquals("Coverage Rate", adultCoveragePage.getCoverageRateLabel());
     assertEquals("Opened Vials", adultCoveragePage.getOpenedVialsLabel());
+    assertEquals("Opened Vials Wastage Rate", adultCoveragePage.getWastageRateLabel());
     assertEquals("Pregnant Women", adultCoveragePage.getPregnantWomenLabel());
     assertEquals("MIF 15-49 years", adultCoveragePage.getMifLabel());
     assertEquals("Community", adultCoveragePage.getCommunityLabel());
@@ -427,7 +429,7 @@ public class DistributionAdultCoverageSyncTest extends TestCaseHelper {
     insertProductMappingToGroup();
     dbWrapper.insertAdultCoverageOpenedVialMapping("tetanus");
     dbWrapper.insertProgramProductISA("VACCINES", "tetanus", "45", "12", "3", "4", "4", "2", "4");
-    dbWrapper.updateFieldValue("facilities", "catchmentpopulation", "0", "code", adultCoverageData.get(FIRST_FACILITY_CODE));
+    dbWrapper.updateFieldValue("facilities", "catchmentPopulation", "0", "code", adultCoverageData.get(FIRST_FACILITY_CODE));
 
     HomePage homePage = loginPage.loginAs(adultCoverageData.get(USER), adultCoverageData.get(PASSWORD));
     DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
@@ -460,7 +462,7 @@ public class DistributionAdultCoverageSyncTest extends TestCaseHelper {
     insertProductMappingToGroup();
     dbWrapper.insertAdultCoverageOpenedVialMapping("tetanus");
     dbWrapper.insertProgramProductISA("VACCINES", "tetanus", "45", "12", "3", "4", "4", "2", "4");
-    dbWrapper.updateFieldValue("facilities", "catchmentpopulation", "0", "code", adultCoverageData.get(FIRST_FACILITY_CODE));
+    dbWrapper.updateFieldValue("facilities", "catchmentPopulation", "0", "code", adultCoverageData.get(FIRST_FACILITY_CODE));
 
     HomePage homePage = loginPage.loginAs(adultCoverageData.get(USER), adultCoverageData.get(PASSWORD));
     DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
@@ -547,6 +549,26 @@ public class DistributionAdultCoverageSyncTest extends TestCaseHelper {
     dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("Students not MIF", "tetanus", false);
     dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("Workers not MIF", "tetanus", false);
     dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("Other not MIF", "tetanus", false);
+  }
+
+  public void verifyAdultCoverageDataNullInDatabase() throws SQLException {
+    String facilityId = dbWrapper.getAttributeFromTable("facilities", "id", "code", "F10");
+    String facilityVisitId = dbWrapper.getAttributeFromTable("facility_visits", "id", "facilityId", facilityId);
+
+    List<String> demographicGroups = asList("Pregnant Women", "MIF 15-49 years - Community", "MIF 15-49 years - Students",
+      "MIF 15-49 years - Workers", "Students not MIF", "Workers not MIF", "Other not MIF");
+
+    for (int rowNumber = 1; rowNumber <= 7; rowNumber++) {
+      ResultSet adultCoverageDetails = dbWrapper.getAdultCoverageDetails(demographicGroups.get(rowNumber - 1), facilityVisitId);
+      assertEquals(adultCoverageDetails.getString("outreachTetanus1"), "null");
+      assertEquals(adultCoverageDetails.getString("outreachTetanus2To5"), "null");
+      if (rowNumber < 3 || rowNumber > 6) {
+        assertEquals(adultCoverageDetails.getString("healthCenterTetanus1"), "null");
+        assertEquals(adultCoverageDetails.getString("healthCenterTetanus2To5"), "null");
+      }
+    }
+    ResultSet adultOpenedVialLineItem = dbWrapper.getAdultOpenedVialLineItem(facilityVisitId);
+    assertEquals(adultOpenedVialLineItem.getString("openedVials"), "null");
   }
 
   @When("^I apply NR to outreach2To5 for rowNumber \"([^\"]*)\"$")

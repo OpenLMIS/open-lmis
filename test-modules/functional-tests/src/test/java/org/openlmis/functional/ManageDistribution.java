@@ -479,10 +479,27 @@ public class ManageDistribution extends TestCaseHelper {
 
       List<String> openedVials = asList("BCG", "Polio10", "Polio20", "Penta1", "Penta10", "PCV", "Measles");
       for (int i = 1; i <= 7; i++) {
-        ResultSet openedVialLineItem = dbWrapper.getOpenedVialLineItem(openedVials.get(i - 1), facilityVisitId);
+        ResultSet openedVialLineItem = dbWrapper.getChildOpenedVialLineItem(openedVials.get(i - 1), facilityVisitId);
         assertEquals(openedVialLineItem.getString("openedVials"), map.get("openedVial"));
       }
     }
+  }
+
+  @And("^I view adult coverage values in DB for facility \"([^\"]*)\":$")
+  public void verifyAdultCoverageDataInDB(String facilityCode, DataTable tableData) throws SQLException {
+
+    String facilityId = dbWrapper.getAttributeFromTable("facilities", "id", "code", facilityCode);
+    String facilityVisitId = dbWrapper.getAttributeFromTable("facility_visits", "id", "facilityId", facilityId);
+    Map<String, String> dataMap = tableData.asMaps().get(0);
+    ResultSet adultCoverageDetails = dbWrapper.getAdultCoverageDetails("Pregnant Women", facilityVisitId);
+    assertEquals(dataMap.get("targetGroup"), adultCoverageDetails.getString("targetGroup"));
+    assertEquals(dataMap.get("healthCenter1"), adultCoverageDetails.getString("healthCenterTetanus1"));
+    assertEquals(dataMap.get("outreach1"), adultCoverageDetails.getString("outreachTetanus1"));
+    assertEquals(dataMap.get("healthCenter25"), adultCoverageDetails.getString("healthCenterTetanus2To5"));
+    assertEquals(dataMap.get("outreach25"), adultCoverageDetails.getString("outreachTetanus2To5"));
+
+    ResultSet openedVialLineItem = dbWrapper.getAdultOpenedVialLineItem(facilityVisitId);
+    assertEquals(dataMap.get("openedVial"), openedVialLineItem.getString("openedVials"));
   }
 
   @Then("^I verify no record present in refrigerator problem table for refrigerator serial number \"([^\"]*)\" and facility \"([^\"]*)\"$")

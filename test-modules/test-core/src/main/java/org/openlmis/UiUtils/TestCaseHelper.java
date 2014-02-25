@@ -632,9 +632,29 @@ public class TestCaseHelper {
     }
     List<String> openedVials = asList("BCG", "Polio10", "Polio20", "Penta1", "Penta10", "PCV", "Measles");
     for (int i = 1; i <= 7; i++) {
-      ResultSet openedVialLineItem = dbWrapper.getOpenedVialLineItem(openedVials.get(i - 1), facilityVisitId);
+      ResultSet openedVialLineItem = dbWrapper.getChildOpenedVialLineItem(openedVials.get(i - 1), facilityVisitId);
       assertEquals(openedVialLineItem.getString("openedVials"), String.valueOf(i));
     }
+  }
+
+  public void verifyAdultCoverageDataInDatabase() throws SQLException {
+    String facilityId = dbWrapper.getAttributeFromTable("facilities", "id", "code", "F10");
+    String facilityVisitId = dbWrapper.getAttributeFromTable("facility_visits", "id", "facilityId", facilityId);
+
+    List<String> demographicGroups = asList("Pregnant Women", "MIF 15-49 years - Community", "MIF 15-49 years - Students",
+      "MIF 15-49 years - Workers", "Students not MIF", "Workers not MIF", "Other not MIF");
+
+    for (int rowNumber = 1; rowNumber <= 7; rowNumber++) {
+      ResultSet adultCoverageDetails = dbWrapper.getAdultCoverageDetails(demographicGroups.get(rowNumber - 1), facilityVisitId);
+      assertEquals(adultCoverageDetails.getString("outreachTetanus1"), "2" + rowNumber);
+      assertEquals(adultCoverageDetails.getString("outreachTetanus2To5"), "4" + rowNumber);
+      if (rowNumber < 3 || rowNumber > 6) {
+        assertEquals(adultCoverageDetails.getString("healthCenterTetanus1"), "1" + rowNumber);
+        assertEquals(adultCoverageDetails.getString("healthCenterTetanus2To5"), "3" + rowNumber);
+      }
+    }
+    ResultSet adultOpenedVialLineItem = dbWrapper.getAdultOpenedVialLineItem(facilityVisitId);
+    assertEquals(adultOpenedVialLineItem.getString("openedVials"), "999");
   }
 
   public static Boolean parsePostgresBoolean(String value) {

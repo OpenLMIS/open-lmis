@@ -250,6 +250,10 @@ public class DistributionVisitInformationSyncTest extends TestCaseHelper {
     childCoveragePage.applyNRToAll();
     childCoveragePage.clickOK();
 
+    AdultCoveragePage adultCoveragePage = childCoveragePage.navigateToAdultCoverage();
+    adultCoveragePage.clickApplyNrToAll();
+    adultCoveragePage.clickOK();
+
     facilityListPage.verifyOverallFacilityIndicatorColor("GREEN");
 
     homePage.navigateHomePage();
@@ -321,7 +325,11 @@ public class DistributionVisitInformationSyncTest extends TestCaseHelper {
     childCoveragePage.applyNRToAll();
     childCoveragePage.clickOK();
 
-    childCoveragePage.navigateToEpiInventory();
+    AdultCoveragePage adultCoveragePage = childCoveragePage.navigateToAdultCoverage();
+    adultCoveragePage.clickApplyNrToAll();
+    adultCoveragePage.clickOK();
+
+    adultCoveragePage.navigateToEpiInventory();
     facilityListPage.verifyOverallFacilityIndicatorColor("GREEN");
 
     homePage.navigateHomePage();
@@ -449,7 +457,10 @@ public class DistributionVisitInformationSyncTest extends TestCaseHelper {
     FullCoveragePage fullCoveragePage = childCoveragePage.navigateToFullCoverage();
     fullCoveragePage.enterData(23, 66, 77, "45");
 
-    fullCoveragePage.navigateToVisitInformation();
+    AdultCoveragePage adultCoveragePage = fullCoveragePage.navigateToAdultCoverage();
+    adultCoveragePage.enterDataInAllFields();
+
+    adultCoveragePage.navigateToVisitInformation();
 
     return visitInformationPage;
   }
