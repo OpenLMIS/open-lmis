@@ -106,7 +106,11 @@ public class DistributionFullCoverageSyncTest extends TestCaseHelper {
     childCoveragePage.applyNRToAll();
     childCoveragePage.clickOK();
 
-    childCoveragePage.navigateToEpiInventory();
+    AdultCoveragePage adultCoveragePage = childCoveragePage.navigateToAdultCoverage();
+    adultCoveragePage.clickApplyNrToAll();
+    adultCoveragePage.clickOK();
+
+    adultCoveragePage.navigateToEpiInventory();
     fillEpiInventoryWithOnlyDeliveredQuantity("2", "4", "6");
 
     facilityListPage.verifyOverallFacilityIndicatorColor("GREEN");
@@ -157,7 +161,11 @@ public class DistributionFullCoverageSyncTest extends TestCaseHelper {
     childCoveragePage.applyNRToAll();
     childCoveragePage.clickOK();
 
-    RefrigeratorPage refrigeratorPage = childCoveragePage.navigateToRefrigerators();
+    AdultCoveragePage adultCoveragePage = childCoveragePage.navigateToAdultCoverage();
+    adultCoveragePage.clickApplyNrToAll();
+    adultCoveragePage.clickOK();
+
+    RefrigeratorPage refrigeratorPage = adultCoveragePage.navigateToRefrigerators();
     refrigeratorPage.clickDelete();
     refrigeratorPage.clickOKButton();
 
@@ -204,7 +212,11 @@ public class DistributionFullCoverageSyncTest extends TestCaseHelper {
     childCoveragePage.applyNRToAll();
     childCoveragePage.clickOK();
 
-    childCoveragePage.navigateToEpiInventory();
+    AdultCoveragePage adultCoveragePage = childCoveragePage.navigateToAdultCoverage();
+    adultCoveragePage.clickApplyNrToAll();
+    adultCoveragePage.clickOK();
+
+    adultCoveragePage.navigateToEpiInventory();
     fillEpiInventoryWithOnlyDeliveredQuantity("2", "4", "6");
 
     facilityListPage.verifyOverallFacilityIndicatorColor("GREEN");
@@ -246,7 +258,11 @@ public class DistributionFullCoverageSyncTest extends TestCaseHelper {
     childCoveragePage.applyNRToAll();
     childCoveragePage.clickOK();
 
-    childCoveragePage.navigateToEpiInventory();
+    AdultCoveragePage adultCoveragePage = childCoveragePage.navigateToAdultCoverage();
+    adultCoveragePage.clickApplyNrToAll();
+    adultCoveragePage.clickOK();
+
+    adultCoveragePage.navigateToEpiInventory();
     fillEpiInventoryWithOnlyDeliveredQuantity("2", "4", "6");
 
     facilityListPage.verifyOverallFacilityIndicatorColor("AMBER");
