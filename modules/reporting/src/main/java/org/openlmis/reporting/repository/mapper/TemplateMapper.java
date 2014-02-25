@@ -21,7 +21,7 @@ import java.util.List;
 @Repository
 public interface TemplateMapper {
 
-  @Select("SELECT * FROM templates WHERE id=#{id}")
+  @Select("SELECT * FROM templates WHERE id = #{id}")
   Template getById(Long id);
 
   @Insert("INSERT INTO templates (name, data, type, commaSeparatedParameters, createdBy) " +
@@ -31,4 +31,7 @@ public interface TemplateMapper {
 
   @Select("SELECT id, name FROM templates WHERE type = 'Consistency Report' ORDER BY createdDate")
   List<Template> getAllConsistencyReportTemplates();
+
+  @Select("SELECT * FROM templates WHERE name = #{name}")
+  Template getByName(String name);
 }

@@ -30,4 +30,8 @@ public class TemplateService {
   public List<Template> getAll() {
     return repository.getAll();
   }
+
+  public Template getByName(String name) {
+    return repository.getByName(name);
+  }
 }

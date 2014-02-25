@@ -91,6 +91,16 @@ public class TemplateMapperIT {
     assertThat(templates.get(7).getId(), is(template1.getId()));
   }
 
+  @Test
+  public void shouldGetByName() throws Exception {
+    Template template = createReportTemplate("Sample Report", "Consistency Report");
+
+    Template returnedTemplate = templateMapper.getByName("Sample Report");
+
+    assertThat(returnedTemplate.getName(), is(template.getName()));
+    assertThat(returnedTemplate.getData(), is(template.getData()));
+  }
+
   private Template createReportTemplate(String name, String type) {
     Template template = new Template();
     template.setName(name);

@@ -36,4 +36,8 @@ public class TemplateRepository {
   public List<Template> getAll() {
     return mapper.getAllConsistencyReportTemplates();
   }
+
+  public Template getByName(String name) {
+    return mapper.getByName(name);
+  }
 }
