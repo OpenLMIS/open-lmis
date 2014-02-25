@@ -63,10 +63,7 @@ public class DistributionAdultCoverageSyncTest extends TestCaseHelper {
   @BeforeMethod(groups = {"distribution"})
   public void setUp() throws InterruptedException, SQLException, IOException {
     super.setup();
-    Map<String, String> dataMap = adultCoverageData;
-    setupDataForDistributionTest(dataMap.get(USER), dataMap.get(FIRST_DELIVERY_ZONE_CODE), dataMap.get(SECOND_DELIVERY_ZONE_CODE),
-      dataMap.get(FIRST_DELIVERY_ZONE_NAME), dataMap.get(SECOND_DELIVERY_ZONE_NAME), dataMap.get(FIRST_FACILITY_CODE),
-      dataMap.get(SECOND_FACILITY_CODE), dataMap.get(VACCINES_PROGRAM), dataMap.get(TB_PROGRAM), dataMap.get(SCHEDULE));
+    setupDataForDistributionTest();
     loginPage = PageFactory.getInstanceOfLoginPage(testWebDriver, baseUrlGlobal);
   }
 
@@ -109,42 +106,44 @@ public class DistributionAdultCoverageSyncTest extends TestCaseHelper {
     assertEquals("Total", adultCoveragePage.getTotalRowLabel());
 
     for (int rowNumber = 1; rowNumber <= 7; rowNumber++) {
-      verifyTargetGroup(rowNumber, "");
-      verifyTetanusTotalFirst(rowNumber, "0");
-      verifyTetanusTotal2To5(rowNumber, "0");
-      verifyTotalTetanus(rowNumber, "0");
-      verifyCoverageRate(rowNumber, "");
-      verifyOutreachFirstInput(rowNumber, "");
-      verifyOutreach2To5Input(rowNumber, "");
-      verifyOutreachFirstEnabled(rowNumber, true);
-      verifyOutreach2To5Enabled(rowNumber, true);
-      verifyOutreachFirstNrSelected(rowNumber, false);
-      verifyOutreach2To5NrSelected(rowNumber, false);
+      assertEquals("", adultCoveragePage.getTargetGroup(rowNumber));
+      assertEquals("0", adultCoveragePage.getTotalTetanusFirst(rowNumber));
+      assertEquals("0", adultCoveragePage.getTotalTetanus2To5(rowNumber));
+      assertEquals("0", adultCoveragePage.getTotalTetanus(rowNumber));
+      assertEquals("", adultCoveragePage.getCoverageRate(rowNumber));
+      assertEquals("", adultCoveragePage.getOutreachFirstInput(rowNumber));
+      assertEquals("", adultCoveragePage.getOutreach2To5Input(rowNumber));
+      assertEquals(true, adultCoveragePage.isOutreachFirstEnabled(rowNumber));
+      assertEquals(true, adultCoveragePage.isOutreach2To5Enabled(rowNumber));
+      assertEquals(false, adultCoveragePage.isOutreachFirstNrSelected(rowNumber));
+      assertEquals(false, adultCoveragePage.isOutreach2To5NrSelected(rowNumber));
     }
 
     assertEquals("", adultCoveragePage.getWastageRate());
     assertEquals("", adultCoveragePage.getOpenedVialInputField());
 
-    verifyHealthCenterFirstInput(1, "");
-    verifyHealthCenterFirstInput(2, "");
-    verifyHealthCenterFirstInput(7, "");
-    verifyHealthCenter2To5Input(1, "");
-    verifyHealthCenter2To5Input(2, "");
-    verifyHealthCenter2To5Input(7, "");
+    assertEquals("", adultCoveragePage.getHealthCenterFirstInput(1));
+    assertEquals("", adultCoveragePage.getHealthCenterFirstInput(2));
+    assertEquals("", adultCoveragePage.getHealthCenterFirstInput(7));
+    assertEquals("", adultCoveragePage.getHealthCenterFirstInput(2));
+    assertEquals("", adultCoveragePage.getHealthCenterFirstInput(7));
+    assertEquals("", adultCoveragePage.getHealthCenter2To5Input(1));
+    assertEquals("", adultCoveragePage.getHealthCenter2To5Input(2));
+    assertEquals("", adultCoveragePage.getHealthCenter2To5Input(7));
 
-    verifyHealthCenterFirstEnabled(1, true);
-    verifyHealthCenterFirstEnabled(2, true);
-    verifyHealthCenterFirstEnabled(7, true);
-    verifyHealthCenter2To5Enabled(1, true);
-    verifyHealthCenter2To5Enabled(2, true);
-    verifyHealthCenter2To5Enabled(7, true);
+    assertEquals(true, adultCoveragePage.isHealthCenterFirstEnabled(1));
+    assertEquals(true, adultCoveragePage.isHealthCenterFirstEnabled(2));
+    assertEquals(true, adultCoveragePage.isHealthCenterFirstEnabled(7));
+    assertEquals(true, adultCoveragePage.isHealthCenter2To5Enabled(1));
+    assertEquals(true, adultCoveragePage.isHealthCenter2To5Enabled(2));
+    assertEquals(true, adultCoveragePage.isHealthCenter2To5Enabled(7));
 
-    verifyHealthCenterFirstNrSelected(1, false);
-    verifyHealthCenterFirstNrSelected(2, false);
-    verifyHealthCenterFirstNrSelected(7, false);
-    verifyHealthCenter2To5NrSelected(1, false);
-    verifyHealthCenter2To5NrSelected(2, false);
-    verifyHealthCenter2To5NrSelected(7, false);
+    assertEquals(false, adultCoveragePage.isHealthCenterFirstNrSelected(1));
+    assertEquals(false, adultCoveragePage.isHealthCenterFirstNrSelected(2));
+    assertEquals(false, adultCoveragePage.isHealthCenterFirstNrSelected(7));
+    assertEquals(false, adultCoveragePage.isHealthCenter2To5NrSelected(1));
+    assertEquals(false, adultCoveragePage.isHealthCenter2To5NrSelected(2));
+    assertEquals(false, adultCoveragePage.isHealthCenter2To5NrSelected(7));
 
     assertEquals("0", adultCoveragePage.getTotalTetanus1());
     assertEquals("0", adultCoveragePage.getTotalTetanus2To5());
@@ -161,7 +160,7 @@ public class DistributionAdultCoverageSyncTest extends TestCaseHelper {
     insertProductMappingToGroup();
     dbWrapper.insertAdultCoverageOpenedVialMapping("tetanus");
     dbWrapper.insertProgramProductISA("VACCINES", "tetanus", "4", "12", "3", "4", "4", "2", "4");
-    dbWrapper.updateFieldValue("facilities", "catchmentpopulation", 8989);
+    dbWrapper.updateFieldValue("facilities", "catchmentPopulation", 8989);
 
     HomePage homePage = loginPage.loginAs(adultCoverageData.get(USER), adultCoverageData.get(PASSWORD));
     DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
@@ -175,8 +174,8 @@ public class DistributionAdultCoverageSyncTest extends TestCaseHelper {
     adultCoveragePage.verifyIndicator("RED");
 
     for (int rowNumber = 1; rowNumber <= 7; rowNumber++) {
-      verifyTargetGroup(rowNumber, "360");
-      verifyCoverageRate(rowNumber, "0");
+      assertEquals("360", adultCoveragePage.getTargetGroup(rowNumber));
+      assertEquals("0", adultCoveragePage.getCoverageRate(rowNumber));
     }
 
     adultCoveragePage.enterOpenedVialInputField("90");
@@ -189,7 +188,7 @@ public class DistributionAdultCoverageSyncTest extends TestCaseHelper {
     dbWrapper.updateFieldValue("products", "active", false);
     insertProductMappingToGroup();
     dbWrapper.insertProgramProductISA("VACCINES", "tetanus", "400", "12", "3", "4", "4", "2", "4");
-    dbWrapper.updateFieldValue("facilities", "catchmentpopulation", 8989);
+    dbWrapper.updateFieldValue("facilities", "catchmentPopulation", 8989);
 
     HomePage homePage = loginPage.loginAs(adultCoverageData.get(USER), adultCoverageData.get(PASSWORD));
     DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
@@ -203,8 +202,8 @@ public class DistributionAdultCoverageSyncTest extends TestCaseHelper {
     adultCoveragePage.verifyIndicator("RED");
 
     for (int rowNumber = 1; rowNumber <= 7; rowNumber++) {
-      verifyTargetGroup(rowNumber, "35956");
-      verifyCoverageRate(rowNumber, "0");
+      assertEquals("35956", adultCoveragePage.getTargetGroup(rowNumber));
+      assertEquals("0", adultCoveragePage.getCoverageRate(rowNumber));
     }
 
     adultCoveragePage.enterOpenedVialInputField("90");
@@ -216,7 +215,7 @@ public class DistributionAdultCoverageSyncTest extends TestCaseHelper {
     insertProductMappingToGroup();
     dbWrapper.insertAdultCoverageOpenedVialMapping("tetanus");
     dbWrapper.insertProgramProductISA("VACCINES", "tetanus", "45", "12", "3", "4", "4", "2", "4");
-    dbWrapper.updateFieldValue("facilities", "catchmentpopulation", null);
+    dbWrapper.updateFieldValue("facilities", "catchmentPopulation", null);
 
     HomePage homePage = loginPage.loginAs(adultCoverageData.get(USER), adultCoverageData.get(PASSWORD));
     DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
@@ -230,8 +229,8 @@ public class DistributionAdultCoverageSyncTest extends TestCaseHelper {
     adultCoveragePage.verifyIndicator("RED");
 
     for (int rowNumber = 1; rowNumber <= 7; rowNumber++) {
-      verifyTargetGroup(rowNumber, "");
-      verifyCoverageRate(rowNumber, "");
+      assertEquals("", adultCoveragePage.getTargetGroup(rowNumber));
+      assertEquals("", adultCoveragePage.getCoverageRate(rowNumber));
     }
 
     adultCoveragePage.enterOpenedVialInputField("90");
@@ -242,7 +241,7 @@ public class DistributionAdultCoverageSyncTest extends TestCaseHelper {
   public void testShouldVerifyTargetGroupAndWastageRateWhenNoWhoRatio() throws SQLException {
     insertProductMappingToGroup();
     dbWrapper.insertAdultCoverageOpenedVialMapping("tetanus");
-    dbWrapper.updateFieldValue("facilities", "catchmentpopulation", "8980", "code", adultCoverageData.get(FIRST_FACILITY_CODE));
+    dbWrapper.updateFieldValue("facilities", "catchmentPopulation", "8980", "code", adultCoverageData.get(FIRST_FACILITY_CODE));
     HomePage homePage = loginPage.loginAs(adultCoverageData.get(USER), adultCoverageData.get(PASSWORD));
     DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
     distributionPage.initiate(adultCoverageData.get(FIRST_DELIVERY_ZONE_NAME), adultCoverageData.get(VACCINES_PROGRAM));
@@ -255,8 +254,8 @@ public class DistributionAdultCoverageSyncTest extends TestCaseHelper {
     adultCoveragePage.verifyIndicator("RED");
 
     for (int rowNumber = 1; rowNumber <= 7; rowNumber++) {
-      verifyTargetGroup(rowNumber, "");
-      verifyCoverageRate(rowNumber, "");
+      assertEquals("", adultCoveragePage.getTargetGroup(rowNumber));
+      assertEquals("", adultCoveragePage.getCoverageRate(rowNumber));
     }
 
     adultCoveragePage.enterOpenedVialInputField("90");
@@ -268,7 +267,7 @@ public class DistributionAdultCoverageSyncTest extends TestCaseHelper {
     insertProductMappingToGroup();
     dbWrapper.insertAdultCoverageOpenedVialMapping("tetanus");
     dbWrapper.insertProgramProductISA("VACCINES", "tetanus", "45", "12", "3", "4", "4", "2", "4");
-    dbWrapper.updateFieldValue("facilities", "catchmentpopulation", "8984", "code", adultCoverageData.get(FIRST_FACILITY_CODE));
+    dbWrapper.updateFieldValue("facilities", "catchmentPopulation", "8984", "code", adultCoverageData.get(FIRST_FACILITY_CODE));
 
     HomePage homePage = loginPage.loginAs(adultCoverageData.get(USER), adultCoverageData.get(PASSWORD));
     DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
@@ -282,8 +281,8 @@ public class DistributionAdultCoverageSyncTest extends TestCaseHelper {
     adultCoveragePage.verifyIndicator("RED");
 
     for (int rowNumber = 1; rowNumber <= 7; rowNumber++) {
-      verifyTargetGroup(rowNumber, "4043");
-      verifyCoverageRate(rowNumber, "0");
+      assertEquals("4043", adultCoveragePage.getTargetGroup(rowNumber));
+      assertEquals("0", adultCoveragePage.getCoverageRate(rowNumber));
     }
 
     adultCoveragePage.enterOpenedVialInputField("90");
@@ -294,7 +293,7 @@ public class DistributionAdultCoverageSyncTest extends TestCaseHelper {
   public void testShouldVerifyTotalAndApplyNrToIndividualField() throws SQLException {
     insertProductMappingToGroup();
     dbWrapper.insertProgramProductISA("VACCINES", "tetanus", "45", "12", "3", "4", "4", "2", "4");
-    dbWrapper.updateFieldValue("facilities", "catchmentpopulation", "8984", "code", adultCoverageData.get(FIRST_FACILITY_CODE));
+    dbWrapper.updateFieldValue("facilities", "catchmentPopulation", "8984", "code", adultCoverageData.get(FIRST_FACILITY_CODE));
 
     HomePage homePage = loginPage.loginAs(adultCoverageData.get(USER), adultCoverageData.get(PASSWORD));
     DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
@@ -358,7 +357,7 @@ public class DistributionAdultCoverageSyncTest extends TestCaseHelper {
     insertProductMappingToGroup();
     dbWrapper.insertAdultCoverageOpenedVialMapping("tetanus");
     dbWrapper.insertProgramProductISA("VACCINES", "tetanus", "405", "12", "3", "4", "4", "2", "4");
-    dbWrapper.updateFieldValue("facilities", "catchmentpopulation", "89", "code", adultCoverageData.get(FIRST_FACILITY_CODE));
+    dbWrapper.updateFieldValue("facilities", "catchmentPopulation", "89", "code", adultCoverageData.get(FIRST_FACILITY_CODE));
 
     HomePage homePage = loginPage.loginAs(adultCoverageData.get(USER), adultCoverageData.get(PASSWORD));
     DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
@@ -373,7 +372,7 @@ public class DistributionAdultCoverageSyncTest extends TestCaseHelper {
 
     for (int rowNumber = 1; rowNumber <= 7; rowNumber++) {
       adultCoveragePage.enterOutreachFirstInput(rowNumber, "5612" + (rowNumber * 20));
-      verifyTargetGroup(rowNumber, "360");
+      assertEquals("360", adultCoveragePage.getTargetGroup(rowNumber));
     }
 
     assertEquals("155894", adultCoveragePage.getCoverageRate(1));
@@ -393,7 +392,7 @@ public class DistributionAdultCoverageSyncTest extends TestCaseHelper {
     insertProductMappingToGroup();
     dbWrapper.insertAdultCoverageOpenedVialMapping("tetanus");
     dbWrapper.insertProgramProductISA("VACCINES", "tetanus", "45", "12", "3", "4", "4", "2", "4");
-    dbWrapper.updateFieldValue("facilities", "catchmentpopulation", "0", "code", adultCoverageData.get(FIRST_FACILITY_CODE));
+    dbWrapper.updateFieldValue("facilities", "catchmentPopulation", "0", "code", adultCoverageData.get(FIRST_FACILITY_CODE));
 
     HomePage homePage = loginPage.loginAs(adultCoverageData.get(USER), adultCoverageData.get(PASSWORD));
     DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
@@ -411,112 +410,32 @@ public class DistributionAdultCoverageSyncTest extends TestCaseHelper {
     }
 
     for (int rowNumber = 1; rowNumber <= 7; rowNumber++) {
-      verifyTargetGroup(rowNumber, "0");
-      verifyCoverageRate(rowNumber, "");
+      assertEquals("0", adultCoveragePage.getTargetGroup(rowNumber));
+      assertEquals("", adultCoveragePage.getCoverageRate(rowNumber));
     }
 
     adultCoveragePage.enterOpenedVialInputField("1234567");
     assertEquals("97", adultCoveragePage.getWastageRate());
   }
 
+  public void setupDataForDistributionTest() throws SQLException {
+    String programSecond = adultCoverageData.get(TB_PROGRAM);
+    String programFirst = adultCoverageData.get(VACCINES_PROGRAM);
+    String facilityCodeSecond = adultCoverageData.get(SECOND_FACILITY_CODE);
+    String facilityCodeFirst = adultCoverageData.get(FIRST_FACILITY_CODE);
+    String deliveryZoneCodeSecond = adultCoverageData.get(SECOND_DELIVERY_ZONE_CODE);
+    String deliveryZoneCodeFirst = adultCoverageData.get(FIRST_DELIVERY_ZONE_CODE);
+    String userSIC = adultCoverageData.get(USER);
 
-  public void setupDataForDistributionTest(String userSIC, String deliveryZoneCodeFirst, String deliveryZoneCodeSecond,
-                                           String deliveryZoneNameFirst, String deliveryZoneNameSecond,
-                                           String facilityCodeFirst, String facilityCodeSecond,
-                                           String programFirst, String programSecond, String schedule) throws SQLException {
     List<String> rightsList = asList("MANAGE_DISTRIBUTION");
     setupTestDataToInitiateRnRAndDistribution(facilityCodeFirst, facilityCodeSecond, true, programFirst, userSIC, "200", rightsList,
       programSecond, "District1", "Ngorongoro", "Ngorongoro");
-    setupDataForDeliveryZone(true, deliveryZoneCodeFirst, deliveryZoneCodeSecond, deliveryZoneNameFirst, deliveryZoneNameSecond,
-      facilityCodeFirst, facilityCodeSecond, programFirst, programSecond, schedule);
+
+    setupDataForDeliveryZone(true, deliveryZoneCodeFirst, deliveryZoneCodeSecond, adultCoverageData.get(FIRST_DELIVERY_ZONE_NAME), adultCoverageData.get(SECOND_DELIVERY_ZONE_NAME),
+      facilityCodeFirst, facilityCodeSecond, programFirst, programSecond, adultCoverageData.get(SCHEDULE));
     dbWrapper.insertRoleAssignmentForDistribution(userSIC, "store in-charge", deliveryZoneCodeFirst);
     dbWrapper.insertRoleAssignmentForDistribution(userSIC, "store in-charge", deliveryZoneCodeSecond);
     dbWrapper.insertProductsForAdultCoverage();
-  }
-
-  public void verifyTargetGroup(int rowNumber, String value) {
-    AdultCoveragePage adultCoveragePage = PageFactory.getInstanceOfAdultCoveragePage(testWebDriver);
-    assertEquals(value, adultCoveragePage.getTargetGroup(rowNumber));
-  }
-
-  public void verifyTetanusTotalFirst(int rowNumber, String value) {
-    AdultCoveragePage adultCoveragePage = PageFactory.getInstanceOfAdultCoveragePage(testWebDriver);
-    assertEquals(value, adultCoveragePage.getTotalTetanusFirst(rowNumber));
-  }
-
-  public void verifyTetanusTotal2To5(int rowNumber, String value) {
-    AdultCoveragePage adultCoveragePage = PageFactory.getInstanceOfAdultCoveragePage(testWebDriver);
-    assertEquals(value, adultCoveragePage.getTotalTetanus2To5(rowNumber));
-  }
-
-  public void verifyTotalTetanus(int rowNumber, String value) {
-    AdultCoveragePage adultCoveragePage = PageFactory.getInstanceOfAdultCoveragePage(testWebDriver);
-    assertEquals(value, adultCoveragePage.getTotalTetanus(rowNumber));
-  }
-
-  public void verifyCoverageRate(int rowNumber, String value) {
-    AdultCoveragePage adultCoveragePage = PageFactory.getInstanceOfAdultCoveragePage(testWebDriver);
-    assertEquals(value, adultCoveragePage.getCoverageRate(rowNumber));
-  }
-
-  public void verifyOutreachFirstInput(int rowNumber, String value) {
-    AdultCoveragePage adultCoveragePage = PageFactory.getInstanceOfAdultCoveragePage(testWebDriver);
-    assertEquals(value, adultCoveragePage.getOutreachFirstInput(rowNumber));
-  }
-
-  public void verifyOutreach2To5Input(int rowNumber, String value) {
-    AdultCoveragePage adultCoveragePage = PageFactory.getInstanceOfAdultCoveragePage(testWebDriver);
-    assertEquals(value, adultCoveragePage.getOutreach2To5Input(rowNumber));
-  }
-
-  public void verifyHealthCenterFirstInput(int rowNumber, String value) {
-    AdultCoveragePage adultCoveragePage = PageFactory.getInstanceOfAdultCoveragePage(testWebDriver);
-    assertEquals(value, adultCoveragePage.getHealthCenterFirstInput(rowNumber));
-  }
-
-  public void verifyHealthCenter2To5Input(int rowNumber, String value) {
-    AdultCoveragePage adultCoveragePage = PageFactory.getInstanceOfAdultCoveragePage(testWebDriver);
-    assertEquals(value, adultCoveragePage.getHealthCenter2To5Input(rowNumber));
-  }
-
-  public void verifyOutreachFirstEnabled(int rowNumber, boolean value) {
-    AdultCoveragePage adultCoveragePage = PageFactory.getInstanceOfAdultCoveragePage(testWebDriver);
-    assertEquals(value, adultCoveragePage.isOutreachFirstEnabled(rowNumber));
-  }
-
-  public void verifyOutreach2To5Enabled(int rowNumber, boolean value) {
-    AdultCoveragePage adultCoveragePage = PageFactory.getInstanceOfAdultCoveragePage(testWebDriver);
-    assertEquals(value, adultCoveragePage.isOutreach2To5Enabled(rowNumber));
-  }
-
-  public void verifyHealthCenterFirstEnabled(int rowNumber, boolean value) {
-    AdultCoveragePage adultCoveragePage = PageFactory.getInstanceOfAdultCoveragePage(testWebDriver);
-    assertEquals(value, adultCoveragePage.isHealthCenterFirstEnabled(rowNumber));
-  }
-
-  public void verifyHealthCenter2To5Enabled(int rowNumber, boolean value) {
-    AdultCoveragePage adultCoveragePage = PageFactory.getInstanceOfAdultCoveragePage(testWebDriver);
-    assertEquals(value, adultCoveragePage.isHealthCenter2To5Enabled(rowNumber));
-  }
-
-  public void verifyOutreachFirstNrSelected(int rowNumber, boolean value) {
-    AdultCoveragePage adultCoveragePage = PageFactory.getInstanceOfAdultCoveragePage(testWebDriver);
-    assertEquals(value, adultCoveragePage.isOutreachFirstNrSelected(rowNumber));
-  }
-
-  public void verifyOutreach2To5NrSelected(int rowNumber, boolean value) {
-    AdultCoveragePage adultCoveragePage = PageFactory.getInstanceOfAdultCoveragePage(testWebDriver);
-    assertEquals(value, adultCoveragePage.isOutreach2To5NrSelected(rowNumber));
-  }
-
-  public void verifyHealthCenterFirstNrSelected(int rowNumber, boolean value) {
-    AdultCoveragePage adultCoveragePage = PageFactory.getInstanceOfAdultCoveragePage(testWebDriver);
-    assertEquals(value, adultCoveragePage.isHealthCenterFirstNrSelected(rowNumber));
-  }
-
-  public void verifyHealthCenter2To5NrSelected(int rowNumber, boolean value) {
-    AdultCoveragePage adultCoveragePage = PageFactory.getInstanceOfAdultCoveragePage(testWebDriver);
-    assertEquals(value, adultCoveragePage.isHealthCenter2To5NrSelected(rowNumber));
   }
 
   public void insertProductMappingToGroup() throws SQLException {

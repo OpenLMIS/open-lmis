@@ -55,10 +55,7 @@ public class DistributionChildCoverageSyncTest extends TestCaseHelper {
   @BeforeMethod(groups = {"distribution"})
   public void setUp() throws InterruptedException, SQLException, IOException {
     super.setup();
-    Map<String, String> dataMap = childCoverageData;
-    setupDataForDistributionTest(dataMap.get(USER), dataMap.get(FIRST_DELIVERY_ZONE_CODE), dataMap.get(SECOND_DELIVERY_ZONE_CODE),
-      dataMap.get(FIRST_DELIVERY_ZONE_NAME), dataMap.get(SECOND_DELIVERY_ZONE_NAME), dataMap.get(FIRST_FACILITY_CODE),
-      dataMap.get(SECOND_FACILITY_CODE), dataMap.get(VACCINES_PROGRAM), dataMap.get(TB_PROGRAM), dataMap.get(SCHEDULE));
+    setupDataForDistributionTest();
     loginPage = PageFactory.getInstanceOfLoginPage(testWebDriver, baseUrlGlobal);
   }
 
@@ -803,15 +800,22 @@ public class DistributionChildCoverageSyncTest extends TestCaseHelper {
     assertEquals(childCoveragePage.getTextOfRegimenMeasles(), "Measles");
   }
 
-  public void setupDataForDistributionTest(String userSIC, String deliveryZoneCodeFirst, String deliveryZoneCodeSecond,
-                                           String deliveryZoneNameFirst, String deliveryZoneNameSecond,
-                                           String facilityCodeFirst, String facilityCodeSecond,
-                                           String programFirst, String programSecond, String schedule) throws SQLException {
+  public void setupDataForDistributionTest() throws SQLException {
+    String programSecond = childCoverageData.get(TB_PROGRAM);
+    String programFirst = childCoverageData.get(VACCINES_PROGRAM);
+    String facilityCodeSecond = childCoverageData.get(SECOND_FACILITY_CODE);
+    String facilityCodeFirst = childCoverageData.get(FIRST_FACILITY_CODE);
+    String deliveryZoneCodeSecond = childCoverageData.get(SECOND_DELIVERY_ZONE_CODE);
+    String deliveryZoneCodeFirst = childCoverageData.get(FIRST_DELIVERY_ZONE_CODE);
+    String userSIC = childCoverageData.get(USER);
+
     List<String> rightsList = asList("MANAGE_DISTRIBUTION");
     setupTestDataToInitiateRnRAndDistribution(facilityCodeFirst, facilityCodeSecond, true, programFirst, userSIC, "200", rightsList,
       programSecond, "District1", "Ngorongoro", "Ngorongoro");
-    setupDataForDeliveryZone(true, deliveryZoneCodeFirst, deliveryZoneCodeSecond, deliveryZoneNameFirst, deliveryZoneNameSecond,
-      facilityCodeFirst, facilityCodeSecond, programFirst, programSecond, schedule);
+
+    setupDataForDeliveryZone(true, deliveryZoneCodeFirst, deliveryZoneCodeSecond, childCoverageData.get(FIRST_DELIVERY_ZONE_NAME),
+      childCoverageData.get(SECOND_DELIVERY_ZONE_NAME), facilityCodeFirst, facilityCodeSecond, programFirst, programSecond, childCoverageData.get(SCHEDULE));
+
     dbWrapper.insertRoleAssignmentForDistribution(userSIC, "store in-charge", deliveryZoneCodeFirst);
     dbWrapper.insertRoleAssignmentForDistribution(userSIC, "store in-charge", deliveryZoneCodeSecond);
     dbWrapper.insertProductsForChildCoverage();
