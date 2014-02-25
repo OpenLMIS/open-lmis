@@ -63,7 +63,7 @@ function AdminDashboardController($scope,UserFacilityList,ReportPrograms, Report
             $scope.filterObject.facilityId = 0;
             $scope.filterObject.facility = "";
         }
-        if(!isUndefined($scope.filterObject.facilityId) && $scope.filterObject.facilityId != 0){
+        if(!isUndefined($scope.filterObject.facilityId) && $scope.filterObject.facilityId !== 0){
 
             $scope.loadFillRates();
         }
@@ -104,7 +104,7 @@ function AdminDashboardController($scope,UserFacilityList,ReportPrograms, Report
     $scope.loadFillRates = function(){
        //Facility and Products are required for Order and Item Fill Rates
 
-       if(!isUndefined($scope.filterObject.facilityId) && $scope.filterObject.facilityId != 0 && !isUndefined($scope.filterObject.productIdList)){
+       if(!isUndefined($scope.filterObject.facilityId) && $scope.filterObject.facilityId !== 0 && !isUndefined($scope.filterObject.productIdList)){
 
            //Item Fill Rate
            ItemFillRate.get({
@@ -133,7 +133,6 @@ function AdminDashboardController($scope,UserFacilityList,ReportPrograms, Report
                periodId: $scope.filterObject.periodId,
                facilityId:$scope.filterObject.facilityId,
                productListId: $scope.filterObject.productIdList},function(data){
-               alert('order fill rate '+JSON.stringify(data.orderFillRate))
                $scope.orderFill = data.orderFillRate;
                var fillRate = [];
                if($scope.orderFill !== undefined ){
