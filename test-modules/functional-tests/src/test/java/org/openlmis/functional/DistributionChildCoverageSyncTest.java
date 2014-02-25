@@ -595,6 +595,10 @@ public class DistributionChildCoverageSyncTest extends TestCaseHelper {
     FullCoveragePage fullCoveragePage = visitInformationPage.navigateToFullCoverage();
     fullCoveragePage.clickApplyNRToAll();
 
+    AdultCoveragePage adultCoveragePage = fullCoveragePage.navigateToAdultCoverage();
+    adultCoveragePage.clickApplyNrToAll();
+    adultCoveragePage.clickOK();
+
     facilityListPage.verifyIndividualFacilityIndicatorColor("F10", "GREEN");
     distributionPage = homePage.navigateToDistributionWhenOnline();
     distributionPage.syncDistribution(1);
@@ -650,6 +654,10 @@ public class DistributionChildCoverageSyncTest extends TestCaseHelper {
 
     FullCoveragePage fullCoveragePage = visitInformationPage.navigateToFullCoverage();
     fullCoveragePage.clickApplyNRToAll();
+
+    AdultCoveragePage adultCoveragePage = fullCoveragePage.navigateToAdultCoverage();
+    adultCoveragePage.clickApplyNrToAll();
+    adultCoveragePage.clickOK();
 
     facilityListPage.verifyIndividualFacilityIndicatorColor("F10", "GREEN");
     distributionPage = homePage.navigateToDistributionWhenOnline();
@@ -715,6 +723,10 @@ public class DistributionChildCoverageSyncTest extends TestCaseHelper {
 
     FullCoveragePage fullCoveragePage = visitInformationPage.navigateToFullCoverage();
     fullCoveragePage.clickApplyNRToAll();
+
+    AdultCoveragePage adultCoveragePage = fullCoveragePage.navigateToAdultCoverage();
+    adultCoveragePage.clickApplyNrToAll();
+    adultCoveragePage.clickOK();
 
     facilityListPage.verifyIndividualFacilityIndicatorColor("F10", "GREEN");
     distributionPage = homePage.navigateToDistributionWhenOnline();
