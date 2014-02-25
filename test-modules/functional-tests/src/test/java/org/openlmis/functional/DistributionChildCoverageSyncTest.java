@@ -72,7 +72,7 @@ public class DistributionChildCoverageSyncTest extends TestCaseHelper {
     ChildCoveragePage childCoveragePage = visitInformationPage.navigateToChildCoverage();
     childCoveragePage.verifyIndicator("RED");
 
-    verifyRegimentsPresent();
+    verifyRegimensPresent();
     verifyHeadersPresent();
     verifyOpenVialsPresent();
   }
@@ -206,7 +206,7 @@ public class DistributionChildCoverageSyncTest extends TestCaseHelper {
     VisitInformationPage visitInformationPage = facilityListPage.selectFacility(childCoverageData.get(FIRST_FACILITY_CODE));
     ChildCoveragePage childCoveragePage = visitInformationPage.navigateToChildCoverage();
 
-    verifyRegimentsPresent();
+    verifyRegimensPresent();
     verifyOpenVialsPresent();
     assertEquals(childCoveragePage.getTextOfTargetGroupValue(9), "0");
     assertEquals(childCoveragePage.getTextOfTargetGroupValue(10), "0");
@@ -245,7 +245,7 @@ public class DistributionChildCoverageSyncTest extends TestCaseHelper {
     VisitInformationPage visitInformationPage = facilityListPage.selectFacility(childCoverageData.get(FIRST_FACILITY_CODE));
     ChildCoveragePage childCoveragePage = visitInformationPage.navigateToChildCoverage();
 
-    verifyRegimentsPresent();
+    verifyRegimensPresent();
     verifyOpenVialsPresent();
     assertEquals(childCoveragePage.getTextOfTargetGroupValue(9), "172");
     assertEquals(childCoveragePage.getTextOfTargetGroupValue(10), "172");
@@ -282,7 +282,7 @@ public class DistributionChildCoverageSyncTest extends TestCaseHelper {
     VisitInformationPage visitInformationPage = facilityListPage.selectFacility(childCoverageData.get(FIRST_FACILITY_CODE));
     ChildCoveragePage childCoveragePage = visitInformationPage.navigateToChildCoverage();
 
-    verifyRegimentsPresent();
+    verifyRegimensPresent();
     verifyOpenVialsPresent();
     assertFalse(childCoveragePage.getTextOfChildCoverageTable().contains("Antibiotic"));
     assertFalse(childCoveragePage.getTextOfChildCoverageTable().contains("Glycerine"));
@@ -301,7 +301,7 @@ public class DistributionChildCoverageSyncTest extends TestCaseHelper {
     VisitInformationPage visitInformationPage = facilityListPage.selectFacility(childCoverageData.get(FIRST_FACILITY_CODE));
     visitInformationPage.navigateToChildCoverage();
 
-    verifyRegimentsPresent();
+    verifyRegimensPresent();
     verifyOpenVialsPresent();
   }
 
@@ -319,7 +319,7 @@ public class DistributionChildCoverageSyncTest extends TestCaseHelper {
     VisitInformationPage visitInformationPage = facilityListPage.selectFacility(childCoverageData.get(FIRST_FACILITY_CODE));
     visitInformationPage.navigateToChildCoverage();
 
-    verifyRegimentsPresent();
+    verifyRegimensPresent();
     verifyOpenVialsPresent();
   }
 
@@ -339,7 +339,7 @@ public class DistributionChildCoverageSyncTest extends TestCaseHelper {
 
     dbWrapper.updateFieldValue("products", "active", "f", "code", "P10");
 
-    verifyRegimentsPresent();
+    verifyRegimensPresent();
     verifyOpenVialsPresent();
     assertEquals(childCoveragePage.getTextOfTargetGroupValue(9), "3");
     assertEquals(childCoveragePage.getTextOfTargetGroupValue(10), "3");
@@ -785,7 +785,7 @@ public class DistributionChildCoverageSyncTest extends TestCaseHelper {
     assertEquals(childCoveragePage.getTextOfHeaderCategory2(), "12-23 months");
   }
 
-  private void verifyRegimentsPresent() {
+  private void verifyRegimensPresent() {
     ChildCoveragePage childCoveragePage = PageFactory.getInstanceOfChildCoveragePage(testWebDriver);
     assertEquals(childCoveragePage.getTextOfRegimenBCG(), "BCG");
     assertEquals(childCoveragePage.getTextOfRegimenPolioNewBorn(), "Polio (Newborn)");
