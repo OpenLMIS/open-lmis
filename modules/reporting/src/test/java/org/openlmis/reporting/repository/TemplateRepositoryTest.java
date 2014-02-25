@@ -20,8 +20,8 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.db.categories.UnitTests;
-import org.openlmis.reporting.model.ReportTemplate;
-import org.openlmis.reporting.repository.mapper.ReportTemplateMapper;
+import org.openlmis.reporting.model.Template;
+import org.openlmis.reporting.repository.mapper.TemplateMapper;
 import org.springframework.dao.DataIntegrityViolationException;
 
 import static org.mockito.Mockito.doThrow;
@@ -29,29 +29,29 @@ import static org.mockito.Mockito.verify;
 
 @RunWith(MockitoJUnitRunner.class)
 @Category(UnitTests.class)
-public class ReportTemplateRepositoryTest {
+public class TemplateRepositoryTest {
   @Rule
   public ExpectedException expectedException = ExpectedException.none();
 
   @Mock
-  private ReportTemplateMapper reportTemplateMapper;
+  private TemplateMapper templateMapper;
   @InjectMocks
-  private ReportTemplateRepository reportTemplateRepository;
+  private TemplateRepository templateRepository;
 
   @Test
   public void shouldInsertReportTemplate() throws Exception {
-    ReportTemplate template = new ReportTemplate();
-    reportTemplateRepository.insert(template);
-    verify(reportTemplateMapper).insert(template);
+    Template template = new Template();
+    templateRepository.insert(template);
+    verify(templateMapper).insert(template);
   }
 
   @Test
   public void shouldThrowDataExceptionIfReportWithSameNameAlreadyExists() throws Exception {
-    ReportTemplate template = new ReportTemplate();
-    doThrow(DataIntegrityViolationException.class).when(reportTemplateMapper).insert(template);
+    Template template = new Template();
+    doThrow(DataIntegrityViolationException.class).when(templateMapper).insert(template);
 
     expectedException.expect(DataException.class);
     expectedException.expectMessage("report.template.name.already.exists");
-    reportTemplateRepository.insert(template);
+    templateRepository.insert(template);
   }
 }

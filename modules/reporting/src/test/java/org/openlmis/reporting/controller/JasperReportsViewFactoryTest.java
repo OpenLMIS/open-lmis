@@ -19,7 +19,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.openlmis.db.categories.UnitTests;
-import org.openlmis.reporting.model.ReportTemplate;
+import org.openlmis.reporting.model.Template;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.springframework.web.servlet.view.jasperreports.JasperReportsMultiFormatView;
@@ -51,7 +51,7 @@ public class JasperReportsViewFactoryTest {
   @InjectMocks
   private JasperReportsViewFactory viewFactory;
 
-  private ReportTemplate reportTemplate;
+  private Template template;
 
   private JasperReportsMultiFormatView jasperReportsView;
 
@@ -65,10 +65,10 @@ public class JasperReportsViewFactoryTest {
   @Before
   public void setUp() throws Exception {
     initMocks(this);
-    reportTemplate = mock(ReportTemplate.class);
-    when(reportTemplate.getName()).thenReturn("report1.jrxml");
+    template = mock(Template.class);
+    when(template.getName()).thenReturn("report1.jrxml");
     reportByteData = new byte[1];
-    when(reportTemplate.getData()).thenReturn(reportByteData);
+    when(template.getData()).thenReturn(reportByteData);
     jasperReport = mock(JasperReport.class);
 
     objectInputStream = mock(ObjectInputStream.class);
@@ -90,7 +90,7 @@ public class JasperReportsViewFactoryTest {
     when(byteArrayOutputStream.toByteArray()).thenReturn(reportByteData);
     Map<String, Object> parameterMap = new HashMap();
     parameterMap.put("createdBy", 1l);
-    JasperReportsMultiFormatView reportView = viewFactory.getJasperReportsView(reportTemplate);
+    JasperReportsMultiFormatView reportView = viewFactory.getJasperReportsView(template);
 
     assertThat(reportView, is(jasperReportsView));
     verify(jasperReportsView).setJdbcDataSource(dataSource);
@@ -108,7 +108,7 @@ public class JasperReportsViewFactoryTest {
     Map<JRExporterParameter, Object> exportParams = new HashMap<>();
     exportParams.put(IS_USING_IMAGES_TO_ALIGN, false);
 
-    viewFactory.getJasperReportsView(reportTemplate);
+    viewFactory.getJasperReportsView(template);
 
 
     verify(jasperReportsView).setExporterParameters(exportParams);

@@ -38,9 +38,9 @@ import static org.powermock.api.mockito.PowerMockito.*;
 import static org.powermock.api.mockito.PowerMockito.spy;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({ReportTemplate.class, JasperCompileManager.class})
+@PrepareForTest({Template.class, JasperCompileManager.class})
 @Category(UnitTests.class)
-public class ReportTemplateTest {
+public class TemplateTest {
 
   @Rule
   public ExpectedException expectedException = ExpectedException.none();
@@ -49,7 +49,7 @@ public class ReportTemplateTest {
   public void shouldThrowErrorIfFileNotOfTypeJasperXML() throws Exception {
     expectedException.expect(DataException.class);
     expectedException.expectMessage("report.template.error.file.type");
-    new ReportTemplate("report", new MockMultipartFile("report.pdf", new byte[1]), 1L);
+    new Template("report", new MockMultipartFile("report.pdf", new byte[1]), 1L);
   }
 
   @Test
@@ -58,21 +58,21 @@ public class ReportTemplateTest {
     expectedException.expectMessage("report.template.error.file.empty");
     MockMultipartFile file = new MockMultipartFile("report.jrxml", "report.jrxml", "", new byte[0]);
 
-    new ReportTemplate("report", file, 1L);
+    new Template("report", file, 1L);
   }
 
   @Test
   public void shouldThrowErrorIfFileNotPresent() throws Exception {
     expectedException.expect(DataException.class);
     expectedException.expectMessage("report.template.error.file.missing");
-    new ReportTemplate("report", null, 1L);
+    new Template("report", null, 1L);
   }
 
   @Test
   public void shouldThrowErrorIfFileIsInvalid() throws Exception {
     expectedException.expect(DataException.class);
     expectedException.expectMessage("report.template.error.file.invalid");
-    new ReportTemplate("report", new MockMultipartFile("report.jrxml", "report.jrxml", "", new byte[1]), 1L);
+    new Template("report", new MockMultipartFile("report.jrxml", "report.jrxml", "", new byte[1]), 1L);
   }
 
   @Test
@@ -97,9 +97,9 @@ public class ReportTemplateTest {
     byte[] byteData = new byte[1];
     when(byteOutputStream.toByteArray()).thenReturn(byteData);
 
-    ReportTemplate reportTemplate = new ReportTemplate("report", file, 1L);
+    Template template = new Template("report", file, 1L);
 
-    assertThat(reportTemplate.getData(), is(byteData));
-    assertThat(reportTemplate.getParameters().size(), is(2));
+    assertThat(template.getData(), is(byteData));
+    assertThat(template.getParameters().size(), is(2));
   }
 }

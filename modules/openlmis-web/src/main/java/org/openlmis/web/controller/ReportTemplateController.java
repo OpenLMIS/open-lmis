@@ -11,9 +11,9 @@
 package org.openlmis.web.controller;
 
 import lombok.NoArgsConstructor;
-import org.openlmis.reporting.model.ReportTemplate;
 import org.openlmis.core.exception.DataException;
-import org.openlmis.reporting.service.ReportTemplateService;
+import org.openlmis.reporting.model.Template;
+import org.openlmis.reporting.service.TemplateService;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -39,19 +39,19 @@ public class ReportTemplateController extends BaseController {
   public static final String JASPER_CREATE_REPORT_SUCCESS = "create.report.success";
   public static final String JASPER_CREATE_REPORT_ERROR = "create.report.error";
 
-  ReportTemplateService reportTemplateService;
+  TemplateService templateService;
 
   @Autowired
-  public ReportTemplateController(ReportTemplateService reportTemplateService) {
-    this.reportTemplateService = reportTemplateService;
+  public ReportTemplateController(TemplateService templateService) {
+    this.templateService = templateService;
   }
 
   @RequestMapping(value = "/report-templates", method = POST)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_REPORT')")
   public ResponseEntity<OpenLmisResponse> createJasperReportTemplate(HttpServletRequest request, MultipartFile file, String name) {
     try {
-      ReportTemplate reportTemplate = new ReportTemplate(name, file, loggedInUserId(request));
-      reportTemplateService.insert(reportTemplate);
+      Template template = new Template(name, file, loggedInUserId(request));
+      templateService.insert(template);
       return success(messageService.message(JASPER_CREATE_REPORT_SUCCESS), MediaType.TEXT_HTML_VALUE);
     } catch (IOException e) {
       return error(messageService.message(JASPER_CREATE_REPORT_ERROR), OK, MediaType.TEXT_HTML_VALUE);
@@ -62,7 +62,7 @@ public class ReportTemplateController extends BaseController {
 
   @RequestMapping(value = "/report-templates", method = GET)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_REPORT')")
-  public List<ReportTemplate> getAll() {
-    return reportTemplateService.getAll();
+  public List<Template> getAll() {
+    return templateService.getAll();
   }
 }

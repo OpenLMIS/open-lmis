@@ -13,7 +13,7 @@ package org.openlmis.reporting.controller;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JRExporterParameter;
 import net.sf.jasperreports.engine.JasperReport;
-import org.openlmis.reporting.model.ReportTemplate;
+import org.openlmis.reporting.model.Template;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.WebApplicationContext;
@@ -35,13 +35,13 @@ public class JasperReportsViewFactory {
   @Autowired
   DataSource replicationDataSource;
 
-  public JasperReportsMultiFormatView getJasperReportsView(ReportTemplate reportTemplate)
+  public JasperReportsMultiFormatView getJasperReportsView(Template template)
     throws IOException, ClassNotFoundException, JRException {
     JasperReportsMultiFormatView jasperView = new JasperReportsMultiFormatView();
 
     setExportParams(jasperView);
 
-    setDataSourceAndURLAndApplicationContext(reportTemplate, jasperView);
+    setDataSourceAndURLAndApplicationContext(template, jasperView);
 
     return jasperView;
   }
@@ -52,23 +52,23 @@ public class JasperReportsViewFactory {
     jasperView.setExporterParameters(reportFormatMap);
   }
 
-  private void setDataSourceAndURLAndApplicationContext(ReportTemplate reportTemplate,
+  private void setDataSourceAndURLAndApplicationContext(Template template,
                                                         JasperReportsMultiFormatView jasperView)
     throws IOException, ClassNotFoundException, JRException {
     WebApplicationContext ctx = getCurrentWebApplicationContext();
 
     jasperView.setJdbcDataSource(replicationDataSource);
-    jasperView.setUrl(getReportURLForReportData(reportTemplate));
+    jasperView.setUrl(getReportURLForReportData(template));
 
     if (ctx != null)
       jasperView.setApplicationContext(ctx);
   }
 
-  public String getReportURLForReportData(ReportTemplate reportTemplate)
+  public String getReportURLForReportData(Template template)
     throws IOException, ClassNotFoundException, JRException {
 
-    File tmpFile = createTempFile(reportTemplate.getName() + "_temp", ".jasper");
-    ObjectInputStream inputStream = new ObjectInputStream(new ByteArrayInputStream(reportTemplate.getData()));
+    File tmpFile = createTempFile(template.getName() + "_temp", ".jasper");
+    ObjectInputStream inputStream = new ObjectInputStream(new ByteArrayInputStream(template.getData()));
     JasperReport jasperReport = (JasperReport) inputStream.readObject();
     ByteArrayOutputStream bos = new ByteArrayOutputStream();
     ObjectOutputStream out = new ObjectOutputStream(bos);

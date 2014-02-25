@@ -8,27 +8,26 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-package org.openlmis.reporting.repository.mapper;
+package org.openlmis.reporting.service;
 
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Options;
-import org.apache.ibatis.annotations.Select;
-import org.openlmis.reporting.model.ReportTemplate;
-import org.springframework.stereotype.Repository;
+import org.openlmis.reporting.model.Template;
+import org.openlmis.reporting.repository.TemplateRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Repository
-public interface ReportTemplateMapper {
+@Service
+public class TemplateService {
 
-  @Select("SELECT * from templates WHERE id=#{id}")
-  ReportTemplate getById(Long id);
+  @Autowired
+  TemplateRepository repository;
 
-  @Insert("INSERT INTO templates (name, data, type, commaSeparatedParameters, createdBy) " +
-    "VALUES (#{name}, #{data}, #{type}, #{commaSeparatedParameters}, #{createdBy})")
-  @Options(useGeneratedKeys = true)
-  void insert(ReportTemplate reportTemplate);
+  public void insert(Template template) {
+    repository.insert(template);
+  }
 
-  @Select("SELECT id, name from templates WHERE type = 'Consistency Report' order by createdDate")
-  List<ReportTemplate> getAllConsistencyReportTemplates();
+  public List<Template> getAll() {
+    return repository.getAll();
+  }
 }

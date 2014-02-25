@@ -17,11 +17,11 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.openlmis.authentication.web.UserAuthenticationSuccessHandler;
+import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.MessageService;
 import org.openlmis.db.categories.UnitTests;
-import org.openlmis.reporting.model.ReportTemplate;
-import org.openlmis.core.exception.DataException;
-import org.openlmis.reporting.service.ReportTemplateService;
+import org.openlmis.reporting.model.Template;
+import org.openlmis.reporting.service.TemplateService;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
@@ -44,10 +44,10 @@ import static org.powermock.api.mockito.PowerMockito.whenNew;
 @Category(UnitTests.class)
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(ReportTemplateController.class)
-public class ReportTemplateControllerTest {
+public class TemplateControllerTest {
 
   @Mock
-  private ReportTemplateService reportTemplateService;
+  private TemplateService templateService;
 
   @Mock
   private MessageService messageService;
@@ -70,18 +70,18 @@ public class ReportTemplateControllerTest {
   @Test
   public void shouldUploadJasperTemplateFileIfValid() throws Exception {
     MockMultipartFile reportTemplateFile = new MockMultipartFile("template.jrxml","template.jrxml","", new byte[1]);
-    ReportTemplate report = new ReportTemplate();
-    whenNew(ReportTemplate.class).withArguments("reportName", reportTemplateFile, USER).thenReturn(report);
+    Template report = new Template();
+    whenNew(Template.class).withArguments("reportName", reportTemplateFile, USER).thenReturn(report);
     when(messageService.message(JASPER_CREATE_REPORT_SUCCESS)).thenReturn("Report created successfully");
       ResponseEntity < OpenLmisResponse > response = controller.createJasperReportTemplate(request, reportTemplateFile, "reportName");
 
     assertThat(response.getBody().getSuccessMsg(), is("Report created successfully"));
-    verify(reportTemplateService).insert(report);
+    verify(templateService).insert(report);
   }
 
   @Test
   public void shouldGiveErrorForInvalidReport() throws Exception {
-    whenNew(ReportTemplate.class).withAnyArguments().thenThrow(new DataException("Error message"));
+    whenNew(Template.class).withAnyArguments().thenThrow(new DataException("Error message"));
 
     ResponseEntity<OpenLmisResponse> response = controller.createJasperReportTemplate(request, null, "template");
 
@@ -90,8 +90,8 @@ public class ReportTemplateControllerTest {
 
   @Test
   public void shouldGetAllReportTemplates() throws Exception {
-    List<ReportTemplate> expected = new ArrayList<>();
-    when(reportTemplateService.getAll()).thenReturn(expected);
+    List<Template> expected = new ArrayList<>();
+    when(templateService.getAll()).thenReturn(expected);
 
     assertThat(controller.getAll(), is(expected));
   }

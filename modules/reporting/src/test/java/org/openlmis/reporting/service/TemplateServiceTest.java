@@ -10,24 +10,35 @@
 
 package org.openlmis.reporting.service;
 
-import org.openlmis.reporting.repository.ReportTemplateRepository;
-import org.openlmis.reporting.model.ReportTemplate;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.junit.Test;
+import org.junit.experimental.categories.Category;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.runners.MockitoJUnitRunner;
+import org.openlmis.db.categories.UnitTests;
+import org.openlmis.reporting.model.Template;
+import org.openlmis.reporting.repository.TemplateRepository;
 
-import java.util.List;
+@RunWith(MockitoJUnitRunner.class)
+@Category(UnitTests.class)
+public class TemplateServiceTest {
 
-@Service
-public class ReportTemplateService {
+  @Mock
+  TemplateRepository repository;
 
-  @Autowired
-  ReportTemplateRepository repository;
+  @InjectMocks
+  TemplateService service;
 
-  public void insert(ReportTemplate reportTemplate) {
-    repository.insert(reportTemplate);
+  @Test
+  public void shouldInsertReport() throws Exception {
+    Template template = Mockito.spy(new Template());
+
+    service.insert(template);
+
+    Mockito.verify(repository).insert(template);
   }
 
-  public List<ReportTemplate> getAll() {
-    return repository.getAll();
-  }
+
 }

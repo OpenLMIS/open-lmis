@@ -14,7 +14,7 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.openlmis.db.categories.IntegrationTests;
-import org.openlmis.reporting.model.ReportTemplate;
+import org.openlmis.reporting.model.Template;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.test.context.ContextConfiguration;
@@ -36,19 +36,19 @@ import static org.junit.Assert.assertThat;
 @ContextConfiguration(locations = "classpath:test-applicationContext-reporting.xml")
 @Transactional
 @TransactionConfiguration(defaultRollback = true, transactionManager = "openLmisTransactionManager")
-public class ReportTemplateMapperIT {
+public class TemplateMapperIT {
 
   @Autowired
-  ReportTemplateMapper reportTemplateMapper;
+  TemplateMapper templateMapper;
 
   @Test
   public void shouldGetById() throws Exception {
-    ReportTemplate reportTemplate = createReportTemplate("Sample Report", "Consistency Report");
+    Template template = createReportTemplate("Sample Report", "Consistency Report");
 
-    ReportTemplate returnedTemplate = reportTemplateMapper.getById(reportTemplate.getId());
+    Template returnedTemplate = templateMapper.getById(template.getId());
 
-    assertThat(returnedTemplate.getName(), is(reportTemplate.getName()));
-    assertThat(returnedTemplate.getData(), is(reportTemplate.getData()));
+    assertThat(returnedTemplate.getName(), is(template.getName()));
+    assertThat(returnedTemplate.getData(), is(template.getData()));
   }
 
   @Test
@@ -56,53 +56,53 @@ public class ReportTemplateMapperIT {
     String type = "Consistency Report";
     String name = "Requisition expectedReportTemplate";
     Long createdBy = 1L;
-    ReportTemplate expectedReportTemplate = new ReportTemplate();
-    expectedReportTemplate.setType(type);
-    expectedReportTemplate.setName(name);
+    Template expectedTemplate = new Template();
+    expectedTemplate.setType(type);
+    expectedTemplate.setName(name);
     List<String> parameters = new ArrayList<>();
     parameters.add("rnrId");
-    expectedReportTemplate.setParameters(parameters);
+    expectedTemplate.setParameters(parameters);
     File file = new ClassPathResource("report1.jrxml").getFile();
 
-    expectedReportTemplate.setData(readFileToByteArray(file));
-    expectedReportTemplate.setCreatedDate(new Date());
-    expectedReportTemplate.setCreatedBy(createdBy);
+    expectedTemplate.setData(readFileToByteArray(file));
+    expectedTemplate.setCreatedDate(new Date());
+    expectedTemplate.setCreatedBy(createdBy);
 
-    reportTemplateMapper.insert(expectedReportTemplate);
+    templateMapper.insert(expectedTemplate);
 
-    ReportTemplate reportTemplateDB = reportTemplateMapper.getById(expectedReportTemplate.getId());
+    Template templateDB = templateMapper.getById(expectedTemplate.getId());
 
-    assertThat(reportTemplateDB.getType(), is(type));
-    assertThat(reportTemplateDB.getName(), is(name));
-    assertThat(reportTemplateDB.getData(), is(readFileToByteArray(file)));
-    assertThat(reportTemplateDB.getCreatedBy(), is(createdBy));
+    assertThat(templateDB.getType(), is(type));
+    assertThat(templateDB.getName(), is(name));
+    assertThat(templateDB.getData(), is(readFileToByteArray(file)));
+    assertThat(templateDB.getCreatedBy(), is(createdBy));
   }
 
   @Test
   public void shouldGetAllReportTemplatesAccordingToCreatedDate() throws Exception {
-    ReportTemplate reportTemplate1 = createReportTemplate("report1", "Consistency Report");
+    Template template1 = createReportTemplate("report1", "Consistency Report");
     createReportTemplate("report2", "Print");
 
-    List<ReportTemplate> result = reportTemplateMapper.getAllConsistencyReportTemplates();
+    List<Template> result = templateMapper.getAllConsistencyReportTemplates();
 
     assertThat(result.size(), is(8));
     assertThat(result.get(0).getName(), is("Facilities Missing Supporting Requisition Group"));
     assertThat(result.get(7).getName(), is("report1"));
-    assertThat(result.get(7).getId(), is(reportTemplate1.getId()));
+    assertThat(result.get(7).getId(), is(template1.getId()));
   }
 
-  private ReportTemplate createReportTemplate(String name, String type) {
-    ReportTemplate reportTemplate = new ReportTemplate();
-    reportTemplate.setName(name);
-    reportTemplate.setType(type);
-    reportTemplate.setData(new byte[1]);
+  private Template createReportTemplate(String name, String type) {
+    Template template = new Template();
+    template.setName(name);
+    template.setType(type);
+    template.setData(new byte[1]);
     List<String> parameterList = new ArrayList<>();
     parameterList.add("rnrId");
-    reportTemplate.setParameters(parameterList);
-    reportTemplate.setModifiedBy(1L);
+    template.setParameters(parameterList);
+    template.setModifiedBy(1L);
     Date currentTimeStamp = new Date();
-    reportTemplate.setModifiedDate(currentTimeStamp);
-    reportTemplateMapper.insert(reportTemplate);
-    return reportTemplate;
+    template.setModifiedDate(currentTimeStamp);
+    templateMapper.insert(template);
+    return template;
   }
 }

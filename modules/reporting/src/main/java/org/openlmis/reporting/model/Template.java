@@ -31,7 +31,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-public class ReportTemplate extends BaseModel {
+public class Template extends BaseModel {
 
   private String name;
 
@@ -55,7 +55,7 @@ public class ReportTemplate extends BaseModel {
     }
   }
 
-  public ReportTemplate(String name, MultipartFile file, Long modifiedBy) throws IOException {
+  public Template(String name, MultipartFile file, Long modifiedBy) throws IOException {
     validateFile(file);
     this.name = name;
     this.modifiedBy = modifiedBy;
