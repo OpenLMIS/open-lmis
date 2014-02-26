@@ -159,11 +159,11 @@ public class E2EDistributionTest extends TestCaseHelper {
     assertEquals(childCoveragePage.getTextOfTargetGroupValue(12), "");
 
     for (int rowNumber = 1; rowNumber <= 12; rowNumber++) {
-      childCoveragePage.enterHealthCenter11MonthsDataForGivenRow(rowNumber, "1" + rowNumber);
-      childCoveragePage.enterOutreach11MonthsDataForGivenRow(rowNumber, "2" + rowNumber);
+      childCoveragePage.enterHealthCenter11MonthsDataForGivenRow(rowNumber, String.valueOf(rowNumber));
+      childCoveragePage.enterOutreach11MonthsDataForGivenRow(rowNumber, String.valueOf(rowNumber));
       if (rowNumber != 2) {
-        childCoveragePage.enterHealthCenter23MonthsDataForGivenRow(rowNumber, "3" + rowNumber);
-        childCoveragePage.enterOutreach23MonthsDataForGivenRow(rowNumber, "4" + rowNumber);
+        childCoveragePage.enterHealthCenter23MonthsDataForGivenRow(rowNumber, String.valueOf(rowNumber));
+        childCoveragePage.enterOutreach23MonthsDataForGivenRow(rowNumber, String.valueOf(rowNumber));
       }
     }
     childCoveragePage.enterOpenedVialsCountForGivenGroupAndRow(1, 1, "1");
@@ -173,6 +173,7 @@ public class E2EDistributionTest extends TestCaseHelper {
     childCoveragePage.enterOpenedVialsCountForGivenGroupAndRow(6, 2, "5");
     childCoveragePage.enterOpenedVialsCountForGivenGroupAndRow(9, 1, "6");
     childCoveragePage.enterOpenedVialsCountForGivenGroupAndRow(12, 1, "7");
+    childCoveragePage.removeFocusFromElement();
 
     AdultCoveragePage adultCoveragePage = childCoveragePage.navigateToAdultCoverage();
     adultCoveragePage.enterDataInAllFields();
@@ -218,16 +219,16 @@ public class E2EDistributionTest extends TestCaseHelper {
 
     fullCoveragePage.navigateToChildCoverage();
     assertEquals("300", childCoveragePage.getTextOfTargetGroupValue(9));
-    assertEquals("19", childCoveragePage.getHealthCenter11MonthsDataForGivenRow(9));
-    assertEquals("29", childCoveragePage.getOutreach11MonthsDataForGivenRow(9));
-    assertEquals("48", childCoveragePage.getTotalForGivenColumnAndRow(1, 9));
-    assertEquals("16", childCoveragePage.getCoverageRateForGivenRow(9));
-    assertEquals("39", childCoveragePage.getHealthCenter23MonthsDataForGivenRow(9));
-    assertEquals("49", childCoveragePage.getOutreach23MonthsDataForGivenRow(9));
-    assertEquals("88", childCoveragePage.getTotalForGivenColumnAndRow(2, 9));
-    assertEquals("136", childCoveragePage.getTotalForGivenColumnAndRow(3, 9));
-    assertEquals("96", childCoveragePage.getOpenedVialsCountForGivenGroupAndRow(9, 1));
-    assertEquals("-131", childCoveragePage.getWastageRateForGivenRow(9));
+    assertEquals("9", childCoveragePage.getHealthCenter11MonthsDataForGivenRow(9));
+    assertEquals("9", childCoveragePage.getOutreach11MonthsDataForGivenRow(9));
+    assertEquals("18", childCoveragePage.getTotalForGivenColumnAndRow(1, 9));
+    assertEquals("6", childCoveragePage.getCoverageRateForGivenRow(9));
+    assertEquals("9", childCoveragePage.getHealthCenter23MonthsDataForGivenRow(9));
+    assertEquals("9", childCoveragePage.getOutreach23MonthsDataForGivenRow(9));
+    assertEquals("18", childCoveragePage.getTotalForGivenColumnAndRow(2, 9));
+    assertEquals("36", childCoveragePage.getTotalForGivenColumnAndRow(3, 9));
+    assertEquals("6", childCoveragePage.getOpenedVialsCountForGivenGroupAndRow(9, 1));
+    assertEquals("-100", childCoveragePage.getWastageRateForGivenRow(9));
 
     facilityListPage.verifyOverallFacilityIndicatorColor("GREEN");
 
@@ -242,6 +243,7 @@ public class E2EDistributionTest extends TestCaseHelper {
     testWebDriver.sleep(7000);
 
     distributionPage.clickRetryButton();
+    testWebDriver.sleep(2000);
     assertEquals(distributionPage.getSyncStatusMessage(), "Sync Status");
     assertTrue("Incorrect Sync Facility", distributionPage.getSyncMessage().contains("F10-Village Dispensary"));
 
@@ -259,14 +261,17 @@ public class E2EDistributionTest extends TestCaseHelper {
     verifyEpiUseDataInDatabase(10, 20, 30, null, 50, "10/2011", "PG1", facilityCodeFirst);
     verifyRefrigeratorReadingDataInDatabase(facilityCodeFirst, "GR-J287PGHV", 3F, "Y", 1, 0, "D", "miscellaneous");
     verifyRefrigeratorProblemDataNullInDatabase("GR-J287PGHV", facilityCodeFirst);
-    verifyFacilityVisitInformationInDatabase(facilityCodeFirst, "some observations", "samuel", "Doe", "Verifier", "XYZ", null, "t", "t", null, null);
+    verifyFacilityVisitInformationInDatabase(facilityCodeFirst, "some observations", "samuel", "Doe", "Verifier", "XYZ", "90U-L!K3", "t", "t", null, null);
     verifyFullCoveragesDataInDatabase(5, 7, 0, 9999999, facilityCodeFirst);
     verifyEpiInventoryDataInDatabase(null, "10", null, "P10", facilityCodeFirst);
     verifyEpiInventoryDataInDatabase(null, "20", null, "Product6", facilityCodeFirst);
     verifyEpiInventoryDataInDatabase(null, "30", null, "P11", facilityCodeFirst);
     verifyChildCoverageDataInDatabase();
     verifyAdultCoverageDataInDatabase(facilityCodeFirst);
-    ResultSet childCoverageDetails = dbWrapper.getChildCoverageDetails("PCV10 1st dose", "F10");
+
+    String facilityId = dbWrapper.getAttributeFromTable("facilities", "id", "code", "F10");
+    String facilityVisitId = dbWrapper.getAttributeFromTable("facility_visits", "id", "facilityId", facilityId);
+    ResultSet childCoverageDetails = dbWrapper.getChildCoverageDetails("PCV10 1st dose", facilityVisitId);
     assertEquals("300", childCoverageDetails.getInt("targetGroup"));
 
     visitInformationPage.verifyAllFieldsDisabled();
@@ -283,6 +288,12 @@ public class E2EDistributionTest extends TestCaseHelper {
 
     fullCoveragePage.navigateToChildCoverage();
     childCoveragePage.verifyAllFieldsDisabled();
+
+    childCoveragePage.navigateToEpiInventory();
+    epiInventoryPage.verifyAllFieldsDisabled();
+
+    epiInventoryPage.navigateToAdultCoverage();
+    adultCoveragePage.verifyAllFieldsDisabled();
 
     loginPage = PageFactory.getInstanceOfLoginPage(testWebDriver, baseUrlGlobal);
     testWebDriver.sleep(1000);
@@ -321,7 +332,7 @@ public class E2EDistributionTest extends TestCaseHelper {
       assertEquals(testWebDriver.getElementByXpath("//div[@class='list-row ng-scope']/ng-include/form/div[1]/div[" + (i + 2) + "]").getText(), refrigeratorDetailsOnUI[i]);
   }
 
-  // @Test(groups = {"offline"}, dataProvider = "Data-Provider-Function")
+  @Test(groups = {"offline"}, dataProvider = "Data-Provider-Function")
   public void testE2EManageDistributionWhenFacilityNotVisited(String userSIC, String password, String deliveryZoneCodeFirst,
                                                               String deliveryZoneCodeSecond, String deliveryZoneNameFirst, String deliveryZoneNameSecond,
                                                               String facilityCodeFirst, String facilityCodeSecond,
@@ -407,8 +418,14 @@ public class E2EDistributionTest extends TestCaseHelper {
     visitInformationPage.selectReasonOther();
     visitInformationPage.verifyIndicator("AMBER");
 
+    visitInformationPage.navigateToEpiInventory();
     epiInventoryPage.verifyIndicator("GREEN");
+    epiInventoryPage.verifyAllFieldsDisabled();
+
+    epiInventoryPage.navigateToRefrigerators();
     refrigeratorPage.verifyIndicator("GREEN");
+    refrigeratorPage.clickShowForRefrigerator(1);
+    refrigeratorPage.verifyAllFieldsDisabled();
 
     ChildCoveragePage childCoveragePage = visitInformationPage.navigateToChildCoverage();
     assertEquals(childCoveragePage.getTextOfTargetGroupValue(9), "300");
@@ -420,21 +437,24 @@ public class E2EDistributionTest extends TestCaseHelper {
     AdultCoveragePage adultCoveragePage = childCoveragePage.navigateToAdultCoverage();
     adultCoveragePage.enterDataInAllFields();
 
+    adultCoveragePage.navigateToChildCoverage();
+
     for (int rowNumber = 1; rowNumber <= 12; rowNumber++) {
-      childCoveragePage.enterHealthCenter11MonthsDataForGivenRow(rowNumber, "1" + rowNumber);
-      childCoveragePage.enterOutreach11MonthsDataForGivenRow(rowNumber, "2" + rowNumber);
+      childCoveragePage.enterHealthCenter11MonthsDataForGivenRow(rowNumber, String.valueOf(rowNumber));
+      childCoveragePage.enterOutreach11MonthsDataForGivenRow(rowNumber, String.valueOf(rowNumber));
       if (rowNumber != 2) {
-        childCoveragePage.enterHealthCenter23MonthsDataForGivenRow(rowNumber, "3" + rowNumber);
-        childCoveragePage.enterOutreach23MonthsDataForGivenRow(rowNumber, "4" + rowNumber);
+        childCoveragePage.enterHealthCenter23MonthsDataForGivenRow(rowNumber, String.valueOf(rowNumber));
+        childCoveragePage.enterOutreach23MonthsDataForGivenRow(rowNumber, String.valueOf(rowNumber));
       }
     }
-    childCoveragePage.enterOpenedVialsCountForGivenGroupAndRow(1, 1, "91");
-    childCoveragePage.enterOpenedVialsCountForGivenGroupAndRow(2, 1, "92");
-    childCoveragePage.enterOpenedVialsCountForGivenGroupAndRow(2, 2, "93");
-    childCoveragePage.enterOpenedVialsCountForGivenGroupAndRow(6, 1, "94");
-    childCoveragePage.enterOpenedVialsCountForGivenGroupAndRow(6, 2, "95");
-    childCoveragePage.enterOpenedVialsCountForGivenGroupAndRow(9, 1, "96");
-    childCoveragePage.enterOpenedVialsCountForGivenGroupAndRow(12, 1, "97");
+    childCoveragePage.enterOpenedVialsCountForGivenGroupAndRow(1, 1, "1");
+    childCoveragePage.enterOpenedVialsCountForGivenGroupAndRow(2, 1, "2");
+    childCoveragePage.enterOpenedVialsCountForGivenGroupAndRow(2, 2, "3");
+    childCoveragePage.enterOpenedVialsCountForGivenGroupAndRow(6, 1, "4");
+    childCoveragePage.enterOpenedVialsCountForGivenGroupAndRow(6, 2, "5");
+    childCoveragePage.enterOpenedVialsCountForGivenGroupAndRow(9, 1, "6");
+    childCoveragePage.enterOpenedVialsCountForGivenGroupAndRow(12, 1, "7");
+    childCoveragePage.removeFocusFromElement();
 
     homePage.navigateHomePage();
     homePage.navigateOfflineDistribution();
@@ -469,7 +489,17 @@ public class E2EDistributionTest extends TestCaseHelper {
     visitInformationPage.verifyIndicator("GREEN");
 
     visitInformationPage.navigateToChildCoverage();
-    childCoveragePage.verifyAllFieldsDisabled();
+    assertEquals("300", childCoveragePage.getTextOfTargetGroupValue(9));
+    assertEquals("9", childCoveragePage.getHealthCenter11MonthsDataForGivenRow(9));
+    assertEquals("9", childCoveragePage.getOutreach11MonthsDataForGivenRow(9));
+    assertEquals("18", childCoveragePage.getTotalForGivenColumnAndRow(1, 9));
+    assertEquals("6", childCoveragePage.getCoverageRateForGivenRow(9));
+    assertEquals("9", childCoveragePage.getHealthCenter23MonthsDataForGivenRow(9));
+    assertEquals("9", childCoveragePage.getOutreach23MonthsDataForGivenRow(9));
+    assertEquals("18", childCoveragePage.getTotalForGivenColumnAndRow(2, 9));
+    assertEquals("36", childCoveragePage.getTotalForGivenColumnAndRow(3, 9));
+    assertEquals("6", childCoveragePage.getOpenedVialsCountForGivenGroupAndRow(9, 1));
+    assertEquals("", childCoveragePage.getWastageRateForGivenRow(9));
 
     facilityListPage.verifyOverallFacilityIndicatorColor("GREEN");
 
@@ -483,6 +513,7 @@ public class E2EDistributionTest extends TestCaseHelper {
     testWebDriver.sleep(7000);
 
     distributionPage.clickRetryButton();
+    testWebDriver.sleep(2000);
     assertEquals(distributionPage.getSyncStatusMessage(), "Sync Status");
     assertTrue("Incorrect Sync Facility", distributionPage.getSyncMessage().contains("F10-Village Dispensary"));
 
@@ -504,6 +535,12 @@ public class E2EDistributionTest extends TestCaseHelper {
     verifyEpiInventoryDataInDatabase(null, null, null, "Product6", facilityCodeFirst);
     verifyEpiInventoryDataInDatabase(null, null, null, "P11", facilityCodeFirst);
     verifyAdultCoverageDataInDatabase(facilityCodeFirst);
+    verifyChildCoverageDataInDatabase();
+
+    String facilityId = dbWrapper.getAttributeFromTable("facilities", "id", "code", "F10");
+    String facilityVisitId = dbWrapper.getAttributeFromTable("facility_visits", "id", "facilityId", facilityId);
+    ResultSet childCoverageDetails = dbWrapper.getChildCoverageDetails("PCV10 1st dose", facilityVisitId);
+    assertEquals("300", childCoverageDetails.getInt("targetGroup"));
 
     visitInformationPage.verifyAllFieldsDisabled();
 
@@ -517,6 +554,14 @@ public class E2EDistributionTest extends TestCaseHelper {
     refrigeratorPage.navigateToFullCoverage();
     fullCoveragePage.verifyAllFieldsDisabled();
 
+    fullCoveragePage.navigateToChildCoverage();
+    childCoveragePage.verifyAllFieldsDisabled();
+
+    childCoveragePage.navigateToEpiInventory();
+    epiInventoryPage.verifyAllFieldsDisabled();
+
+    epiInventoryPage.navigateToAdultCoverage();
+    adultCoveragePage.verifyAllFieldsDisabled();
   }
 
   private void configureISA() {
