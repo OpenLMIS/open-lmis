@@ -9,9 +9,12 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-function AdminDashboardController($scope,userFacilityData,ReportPrograms, ReportSchedules, ReportPeriods, RequisitionGroupsByProgram,RequisitionGroupsByProgramSchedule, ReportProductsByProgram, OperationYears, ReportPeriodsByScheduleAndYear, FacilitiesByGeographicZoneAndProgramParams, OrderFillRate, ItemFillRate, ngTableParams) {
+function AdminDashboardController($scope,userFacilityData, programs, schedules, ReportPeriods, RequisitionGroupsByProgram,RequisitionGroupsByProgramSchedule, ReportProductsByProgram, operationYears, ReportPeriodsByScheduleAndYear, FacilitiesByGeographicZoneAndProgramParams, OrderFillRate, ItemFillRate, ngTableParams) {
 
     $scope.filterObject = {};
+
+    $scope.formFilter = {
+    };
 
     $scope.startYears = [];
 
@@ -37,7 +40,14 @@ function AdminDashboardController($scope,userFacilityData,ReportPrograms, Report
     var $lineWidth = 5;
     var barColor = defaultBarColor;
 
-    OperationYears.get(function (data) {
+    $scope.startYears = operationYears;
+    $scope.startYears.unshift('-- All Years --');
+    $scope.programs = programs;
+    $scope.programs.unshift({'name': '-- Select Programs --'});
+    $scope.schedules = schedules;
+    $scope.schedules.unshift({'name':'-- Select a Schedule --', 'id':'0'}) ;
+
+    /*OperationYears.get(function (data) {
         $scope.startYears = data.years;
         $scope.startYears.unshift('-- All Years --');
     });
@@ -51,7 +61,7 @@ function AdminDashboardController($scope,userFacilityData,ReportPrograms, Report
         $scope.schedules = data.schedules;
         $scope.schedules.unshift({'name':'-- Select a Schedule --', 'id':'0'}) ;
 
-    });
+    });*/
 
     $scope.$watch('fillRate.facilityId', function (selection) {
         if (selection == "All") {
@@ -74,7 +84,7 @@ function AdminDashboardController($scope,userFacilityData,ReportPrograms, Report
         }
     });
 
-    $scope.$watch('programId', function(selection){
+    $scope.$watch('formFilter.programId', function(selection){
 
         if(selection !== undefined || selection === ""){
             if (selection === '') {
@@ -101,7 +111,7 @@ function AdminDashboardController($scope,userFacilityData,ReportPrograms, Report
         $scope.loadFacilities();
     });
 
-    $scope.$watch('productIdList',function(selection){
+    $scope.$watch('formFilter.productIdList',function(selection){
         $scope.filterObject.productIdList = $scope.productIdList;
         $scope.loadFillRates();
     });
@@ -206,7 +216,7 @@ function AdminDashboardController($scope,userFacilityData,ReportPrograms, Report
         $scope.loadFacilities();
     };
 
-    $scope.$watch('rgroupId', function (selection) {
+    $scope.$watch('formFilter.rgroupId', function (selection) {
         if (selection == "All") {
             $scope.filterObject.rgroupId = -1;
         } else if (selection !== undefined || selection === "") {
@@ -223,7 +233,7 @@ function AdminDashboardController($scope,userFacilityData,ReportPrograms, Report
         $scope.loadFacilities();
     });
 
-    $scope.$watch('periodId', function (selection) {
+    $scope.$watch('formFilter.periodId', function (selection) {
         if (selection == "All") {
             $scope.filterObject.periodId = -1;
         } else if (selection !== undefined || selection === "") {
@@ -241,7 +251,7 @@ function AdminDashboardController($scope,userFacilityData,ReportPrograms, Report
     });
 
 
-    $scope.$watch('scheduleId', function (selection) {
+    $scope.$watch('formFilter.scheduleId', function (selection) {
         if (selection == "All") {
             $scope.filterObject.scheduleId = -1;
         } else if (selection !== undefined || selection === "") {
@@ -274,7 +284,7 @@ function AdminDashboardController($scope,userFacilityData,ReportPrograms, Report
 */
 
 
-    $scope.$watch('year', function (selection) {
+    $scope.$watch('formFilter.year', function (selection) {
 
         if (selection == "-- All Years --") {
             $scope.filterObject.year = -1;
@@ -630,95 +640,11 @@ function AdminDashboardController($scope,userFacilityData,ReportPrograms, Report
                 intervalColors:['#66cc66', '#93b75f', '#E7E658', '#cc6666']
             }
         }
-    };*/
-
-    $scope.alertData   = [
-        {alert: "Requisitions Pending Approval", percent: 10},
-        {alert: "Facilities stocked out", percent: 20},
-        {alert: "Commodities have been rationed", percent: 30},
-        {alert: "products have been recalled", percent: 46},
-        {alert: "Requisitions Pending Approval", percent: 17},
-        {alert: "Facilities stocked out", percent: 25},
-        {alert: "Commodities have been rationed", percent: 36},
-        {alert: "products have been recalled", percent: 42},
-        {alert: "Requisitions Pending Approval", percent: 70},
-        {alert: "Facilities stocked out", percent: 27},
-        {alert: "Commodities have been rationed", percent: 33},
-        {alert: "products have been recalled", percent: 46},
-        {alert: "Requisitions Pending Approval", percent: 18},
-        {alert: "Facilities stocked out", percent: 20},
-        {alert: "Commodities have been rationed", percent: 50},
-        {alert: "products have been recalled", percent: 76},
-        {alert: "Requisitions Pending Approval", percent: 10},
-        {alert: "Facilities stocked out", percent: 21},
-        {alert: "Commodities have been rationed", percent: 32},
-        {alert: "products have been recalled", percent: 44},
-        {alert: "Requisitions Pending Approval", percent: 15},
-        {alert: "Facilities stocked out", percent: 29},
-        {alert: "Commodities have been rationed", percent: 31},
-        {alert: "products have been recalled", percent: 67},
-        {alert: "Requisitions Pending Approval", percent: 45},
-        {alert: "Facilities stocked out", percent: 55},
-        {alert: "Commodities have been rationed", percent: 88},
-        {alert: "products have been recalled", percent: 99}];
-
-    $scope.totalAlerts = $scope.alertData.length;
-    // the grid options
-    $scope.tableParams = new ngTableParams({
-        page: 1,            // show first page
-        total:0,
-        count: 5,
-        counts:[]            // count per page
-    });
-
-    $scope.datarows = $scope.alertData.slice(($scope.tableParams.page - 1) * $scope.tableParams.count, $scope.tableParams.page * $scope.tableParams.count);
-
-    $scope.loadData =  function(params){
-
-        if(params === undefined || params === null){
-            params = new ngTableParams();
-        }
-        if($scope.data === undefined){
-            $scope.datarows = [];
-            params.total = 0;
-        }else{
-            var data = $scope.alertData;
-            var total = data.length;
-
-            params.counts = [];
-            if((params.count * (params.page + 1)) < total){
-
-                params.page = params.page ? params.page + 1 : 1;
-
-                $scope.datarows = data.slice((1 - 1) * params.count, params.page * params.count);
-            }
-        }
-    };
+    };*//*
 
 
-   /* $scope.paramsChanged = function (params) {
 
-        // slice array data on pages
-        if ($scope.data === undefined) {
-            $scope.datarows = [];
-           // params.total = 0;
-        } else {
-            var data = $scope.data;
-            params.counts = [];
 
-            params.total = data.length;
-            $scope.datarows = data.slice((params.page - 1) * params.count, params.page * params.count);
-            var i = 0;
-            var baseIndex = params.count * (params.page - 1) + 1;
-            while (i < $scope.datarows.length) {
-                $scope.datarows[i].no = baseIndex + i;
-                i++;
-            }
-        }
-    };*/
-
-    // watch for changes of parameters
-   // $scope.$watch('tableParams', $scope.paramsChanged, true);
 
     /* End Gauge Chart * /
 
@@ -764,14 +690,14 @@ function AdminDashboardController($scope,userFacilityData,ReportPrograms, Report
 
     });*/
 }
-AdminDashboardController.resolve = {
+/*AdminDashboardController.resolve = {
     userFacilityData :function ($q, $timeout, UserFacilityList) {
-    var deferred = $q.defer();
-    $timeout(function () {
-        UserFacilityList.get({}, function (data) {
-            deferred.resolve(data);
-        }, {});
-    }, 100);
-    return deferred.promise;
-}
-};
+        var deferred = $q.defer();
+        $timeout(function () {
+            UserFacilityList.get({}, function (data) {
+                deferred.resolve(data);
+            }, {});
+        }, 100);
+        return deferred.promise;
+    }
+};*/

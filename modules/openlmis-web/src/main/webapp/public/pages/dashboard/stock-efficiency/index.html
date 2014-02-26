@@ -4,7 +4,7 @@
   ~
   ~ The U.S. Agency for International Development (USAID) funded this section of the application development under the terms of the USAID | DELIVER PROJECT contract no. GPO-I-00-06-00007-00.
   -->
-<html lang="en" ng-app="dashboard">
+<html lang="en" ng-app="stock">
 <head>
     <meta charset="utf-8">
     <title openlmis-message="app.title"></title>        <!-- Icons -->
@@ -30,8 +30,6 @@
     <link rel="stylesheet" href="/public/lib/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="/public/lib/angular-ui/angular-ui.min.css">
     <link rel="stylesheet" href="/public/lib/select2/select2.css">
-    <link rel="stylesheet" href="/public/lib/fullcalendar/fullcalendar.css">
-    <link rel="stylesheet" href="/public/lib/jquery/jquery.jqplot.min.css">
 
     <!-- Services -->
     <script src="/public/js/shared/services/services.js"></script>
@@ -52,42 +50,24 @@
     <script src="/public/js/shared/util.js"></script>
     <script src="/public/js/shared/open-lmis-dialog.js"></script>
     <script src="/public/js/shared/localStorageKeys.js"></script>
-    <script src="/public/js/shared/directives/angular-flot.js"></script>
     <script src="/public/js/shared/directives/ng-table-scroll.js"></script>
 
 
     <link rel="stylesheet" href="/public/css/app.css">
     <link rel="stylesheet" href="/public/css/style.css">
     <link rel="stylesheet" href="/public/css/report.css">
-    <link rel="stylesheet" href="/public/css/style-metronic-bootstrap.css">
-    <link rel="stylesheet" href="/public/css/style-metronic.css">
     <!-- Shared controller files -->
     <script src="/public/js/shared/controller/login-controller.js"></script>
     <script src="/public/js/shared/controller/locale-controller.js"></script>
     <script src="/public/js/shared/controller/header-controller.js"></script>
     <script src="/public/js/shared/controller/navigation-controller.js"></script>
+    <script src="/public/js/dashboard/shared/controller/alerts-controller.js"></script>
+    <script src="/public/js/dashboard/shared/controller/dashboard-form-data-resolve.js"></script>
+    <script src="/public/js/dashboard/shared/controller/dashboard-menu-controller.js"></script>
 
     <!-- Page specific files -->
-    <!-- charts tool (Bar, pie) -->
-    <script src="/public/lib/flot/jquery.flot.min.js"></script>
-    <script src="/public/lib/flot/jquery.flot.pie.min.js"></script>
-    <script src="/public/lib/flot/jquery.flot.axislabels.js"></script>
-    <script src="/public/lib/flot/jquery.flot.orderBars.js"></script>
-    <script src="/public/lib/flot/jquery.flot.tooltip.min.js"></script>
-    <!-- Calendar tool-->
-    <script src="/public/lib/fullcalendar/fullcalendar.min.js" ></script>
-    <!--<script src="/public/lib/fullcalendar/gcal.js" ></script>-->
-    <script src="/public/lib/ui-calendar/calendar.js"></script>
-
-    <!-- easypiechart -->
-    <script src="/public/lib/easypiechart/angular.easypiechart.min.js"></script>
-    <script src="/public/lib/jquery/jquery.jqplot.min.js"></script>
-    <script src="/public/lib/jquery/jqplot.meterGaugeRenderer.min.js"></script>
-
-    <script src="/public/js/dashboard/module/dashboard-module.js"></script>
-    <script src="/public/js/dashboard/controller/dashboard-controller.js"></script>
-
-    <script src="/public/lib/angular-ui/ui-jqplot/ui-jqplot-chart.js"></script>
+    <script src="/public/js/dashboard/stock-efficiency/module/stock-module.js"></script>
+    <script src="/public/js/dashboard/stock-efficiency/controller/stock-controller.js"></script>
 
 
     <link type="text/css" rel="stylesheet" charset="UTF-8" href="/public/css/app.css">
@@ -101,6 +81,7 @@
     <ng-include src="'/public/pages/header.html'"></ng-include>
     <ng-include src="'/public/pages/navigation.html'"></ng-include>
     <div class="content">
+        <ng-include src="'/public/pages/dashboard/shared/dashboard-header.html'"></ng-include>
         <div ng-view></div>
     </div>
 </div>
