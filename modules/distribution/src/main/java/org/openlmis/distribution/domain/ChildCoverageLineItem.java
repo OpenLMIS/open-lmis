@@ -15,10 +15,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
-import org.openlmis.core.domain.BaseModel;
 import org.openlmis.core.domain.Facility;
 
-import static java.lang.Math.round;
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 
 @Data
@@ -26,28 +24,16 @@ import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPT
 @AllArgsConstructor
 @JsonSerialize(include = NON_EMPTY)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ChildCoverageLineItem extends BaseModel {
+public class ChildCoverageLineItem extends CoverageLineItem {
 
-  private Long facilityVisitId;
   private String vaccination;
-  private Integer targetGroup;
   private Integer healthCenter11Months;
   private Integer outreach11Months;
   private Integer healthCenter23Months;
   private Integer outreach23Months;
 
-  public ChildCoverageLineItem(FacilityVisit facilityVisit, Facility facility, VaccinationProduct vaccinationProduct, String vaccination) {
-    this.facilityVisitId = facilityVisit.getId();
-    this.targetGroup = vaccinationProduct != null ? calculateTargetGroup(facility.getWhoRatioFor(vaccinationProduct.getProductCode()),
-      facility.getCatchmentPopulation()) : null;
+  public ChildCoverageLineItem(FacilityVisit facilityVisit, Facility facility, TargetGroupProduct targetGroupProduct, String vaccination) {
+    super(facilityVisit, facility, targetGroupProduct);
     this.vaccination = vaccination;
-  }
-
-  private Integer calculateTargetGroup(Double whoRatio, Long catchmentPopulation) {
-    Integer targetGroup = null;
-    if (whoRatio != null && catchmentPopulation != null) {
-      targetGroup = (int) round(catchmentPopulation * whoRatio / 100);
-    }
-    return targetGroup;
   }
 }

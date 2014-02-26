@@ -83,9 +83,9 @@
 
               <span ng-switch-when="quantityApproved" class="input-error-parent-cell">
                 <input ng-change='rnr.fillPacksToShip(rnrLineItem)' ng-required="true" type="text"
-                       ng-model="rnrLineItem[column.name]" rnr-validator="positiveInteger" maxlength="8"
+                       ng-model="rnrLineItem[column.name]" numeric-validator="positiveInteger" maxlength="8"
                        name="quantityApproved{{$parent.$parent.$index}}" ng-disabled="rnrLineItem['skipped']"
-                       id="{{getId(column.name, $parent)}}"
+                       id="{{getId(column.name, $parent)}}" ng-trim="false"
                        ng-class="highlightRequired(approvedQuantityRequiredFlag, rnrLineItem[column.name], rnrLineItem.skipped)"/>
                 <span class="rnr-form-error" id="quantityApproved{{$parent.$parent.$index}}"
                       style="display:none;" openlmis-message="error.number.only"></span>

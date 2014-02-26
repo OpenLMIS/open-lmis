@@ -10,7 +10,7 @@
 
 <div ng-controller="DistributionListController">
 
-  <h2 openlmis-message="label.initiated.distributions"></h2>
+  <h2 id="initiateDistributionLabel" openlmis-message="label.initiated.distributions"></h2>
 
   <div class="alert alert-info" id="noDistributionInitiated"
        ng-hide="sharedDistributions.distributionList.length > 0">

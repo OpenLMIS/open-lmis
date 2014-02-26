@@ -33,10 +33,11 @@ public class FacilityDistributionDTO {
   private DistributionRefrigeratorsDTO refrigerators;
   private VaccinationFullCoverageDTO fullCoverage;
   private ChildCoverageDTO childCoverage;
+  private AdultCoverageDTO adultCoverage;
 
   public FacilityDistribution transform() {
     return new FacilityDistribution(facilityVisit, epiUse.transform(), refrigerators.transform(),
-      epiInventory.transform(), fullCoverage.transform(), childCoverage.transform());
+      epiInventory.transform(), fullCoverage.transform(), childCoverage.transform(), adultCoverage.transform());
   }
 
   public void setDistributionId(Long distributionId) {
@@ -50,6 +51,8 @@ public class FacilityDistributionDTO {
     refrigerators.setCreatedBy(modifiedBy);
     refrigerators.setModifiedBy(modifiedBy);
     fullCoverage.setModifiedBy(modifiedBy);
+    fullCoverage.setCreatedBy(modifiedBy);
     childCoverage.setModifiedBy(modifiedBy);
+    adultCoverage.setModifiedBy(modifiedBy);
   }
 }

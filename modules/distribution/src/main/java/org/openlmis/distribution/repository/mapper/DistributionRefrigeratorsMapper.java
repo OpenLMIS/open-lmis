@@ -26,13 +26,13 @@ public interface DistributionRefrigeratorsMapper {
     "problemSinceLastTime, notes, facilityVisitId, refrigeratorId, refrigeratorSerialNumber, refrigeratorBrand, refrigeratorModel, createdBy, modifiedBy)",
     "VALUES",
     "(#{temperature}, #{functioningCorrectly}, #{lowAlarmEvents}, #{highAlarmEvents}, ",
-    "#{problemSinceLastTime}, #{notes}, #{facilityVisitId}, #{refrigerator.id}, #{refrigerator.serialNumber}, #{refrigerator.brand}, #{refrigerator.model}, #{createdBy}, #{createdBy})"})
+    "#{problemSinceLastTime}, #{notes}, #{facilityVisitId}, #{refrigerator.id}, #{refrigerator.serialNumber}, #{refrigerator.brand}, #{refrigerator.model}, #{createdBy}, #{modifiedBy})"})
   @Options(useGeneratedKeys = true)
   void insertReading(RefrigeratorReading refrigeratorReading);
 
   @Insert({"INSERT INTO refrigerator_problems(readingId, operatorError, burnerProblem, gasLeakage, egpFault, thermostatSetting, other, otherProblemExplanation, createdBy, modifiedBy) ",
     "VALUES (#{readingId}, COALESCE(#{operatorError}, FALSE), COALESCE(#{burnerProblem}, FALSE), COALESCE(#{gasLeakage}, FALSE),",
-    "COALESCE(#{egpFault}, FALSE), COALESCE(#{thermostatSetting}, FALSE), COALESCE(#{other}, FALSE), #{otherProblemExplanation}, #{createdBy}, #{createdBy})"})
+    "COALESCE(#{egpFault}, FALSE), COALESCE(#{thermostatSetting}, FALSE), COALESCE(#{other}, FALSE), #{otherProblemExplanation}, #{createdBy}, #{modifiedBy})"})
   @Options(useGeneratedKeys = true)
   void insertProblem(RefrigeratorProblem problem);
 

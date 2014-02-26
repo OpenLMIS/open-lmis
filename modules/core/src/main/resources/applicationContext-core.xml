@@ -81,7 +81,7 @@
     </bean>
 
     <int:channel id="budgetFtpInputChannel">
-        <int:dispatcher task-executor="messageDispatcher"></int:dispatcher>
+        <int:dispatcher task-executor="messageDispatcher"/>
     </int:channel>
 
 </beans>

@@ -28,6 +28,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
 
@@ -73,15 +74,6 @@ public class PODService {
     orderService.updateOrderStatus(order);
   }
 
-  public void insertLineItems(OrderPOD orderPod) {
-    for (OrderPODLineItem orderPodLineItem : orderPod.getPodLineItems()) {
-      orderPodLineItem.setPodId(orderPod.getId());
-      orderPodLineItem.setCreatedBy(orderPod.getCreatedBy());
-      orderPodLineItem.setModifiedBy(orderPod.getModifiedBy());
-      repository.insertPODLineItem(orderPodLineItem);
-    }
-  }
-
   public void checkPermissions(OrderPOD orderPod) {
     if (!fulfillmentPermissionService.hasPermission(orderPod.getModifiedBy(), orderPod.getOrderId(), MANAGE_POD)) {
       throw new DataException("error.permission.denied");
@@ -108,7 +100,7 @@ public class PODService {
   }
 
   @Transactional
-  public OrderPOD save(OrderPOD orderPOD) {
+  public OrderPOD save(OrderPOD orderPOD) throws ParseException {
     OrderPOD existingPod = repository.getPOD(orderPOD.getId());
     if (orderService.hasStatus(existingPod.getOrderId(), OrderStatus.RECEIVED)) {
       throw new DataException("error.pod.already.submitted");
@@ -134,5 +126,9 @@ public class PODService {
     orderService.updateOrderStatus(new Order(orderPOD.getOrderId(), RECEIVED));
 
     return repository.update(orderPOD);
+  }
+
+  public void insertPODLineItem(OrderPODLineItem orderPodLineItem) {
+    repository.insertPODLineItem(orderPodLineItem);
   }
 }

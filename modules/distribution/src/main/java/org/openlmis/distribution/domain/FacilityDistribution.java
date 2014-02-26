@@ -40,28 +40,32 @@ public class FacilityDistribution {
   private EpiInventory epiInventory;
   private VaccinationFullCoverage fullCoverage;
   private VaccinationChildCoverage childCoverage;
+  private VaccinationAdultCoverage adultCoverage;
 
   public FacilityDistribution(FacilityVisit facilityVisit,
                               Facility facility,
                               Distribution distribution,
                               List<RefrigeratorReading> readings,
-                              List<VaccinationProduct> vaccinationProducts,
-                              List<ProductVial> productVials) {
+                              List<TargetGroupProduct> childrenTargetGroupProducts,
+                              List<TargetGroupProduct> adultTargetGroupProducts, List<ProductVial> childProductVials, List<ProductVial> adultProductVials) {
     this.setFacility(facility);
     this.facilityVisit = facilityVisit;
     this.epiUse = new EpiUse(facility, facilityVisit);
     this.refrigerators = new DistributionRefrigerators(facilityVisit, readings);
     this.epiInventory = new EpiInventory(facilityVisit, facility, distribution);
-    this.childCoverage = new VaccinationChildCoverage(facilityVisit, facility, vaccinationProducts, productVials);
+    this.childCoverage = new VaccinationChildCoverage(facilityVisit, facility, childrenTargetGroupProducts, childProductVials);
+    this.adultCoverage = new VaccinationAdultCoverage(facilityVisit, facility, adultTargetGroupProducts, adultProductVials);
   }
 
-  public FacilityDistribution(FacilityVisit facilityVisit, EpiUse epiUse, DistributionRefrigerators refrigerators, EpiInventory epiInventory, VaccinationFullCoverage fullCoverage, VaccinationChildCoverage childCoverage) {
+  public FacilityDistribution(FacilityVisit facilityVisit, EpiUse epiUse, DistributionRefrigerators refrigerators, EpiInventory epiInventory,
+                              VaccinationFullCoverage fullCoverage, VaccinationChildCoverage childCoverage,  VaccinationAdultCoverage adultCoverage) {
     this.facilityVisit = facilityVisit;
     this.epiUse = epiUse;
     this.refrigerators = refrigerators;
     this.epiInventory = epiInventory;
     this.fullCoverage = fullCoverage;
     this.childCoverage = childCoverage;
+    this.adultCoverage = adultCoverage;
   }
 
   public void setFacility(Facility facility) {

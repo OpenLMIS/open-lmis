@@ -38,9 +38,9 @@ public class OpenedVialLineItemTest {
     facilityVisitId = 1L;
     facilityVisit = new FacilityVisit();
     facilityVisit.setId(facilityVisitId);
+    facilityVisit.setCreatedBy(33L);
     facility = mock(Facility.class);
     productVialName = "bcg";
-
   }
 
   @Test
@@ -56,6 +56,7 @@ public class OpenedVialLineItemTest {
     assertThat(lineItem.getFacilityVisitId(), is(facilityVisitId));
     assertThat(lineItem.getProductVialName(), is(productVialName));
     assertThat(lineItem.getPackSize(), is(packSize));
+    assertThat(lineItem.getCreatedBy(), is(33L));
   }
 
   @Test

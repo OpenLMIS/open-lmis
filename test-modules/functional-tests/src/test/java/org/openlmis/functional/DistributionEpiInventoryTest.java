@@ -24,11 +24,9 @@ import org.testng.annotations.Test;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
-import static java.util.Arrays.asList;
 import static org.testng.AssertJUnit.assertFalse;
 import static org.testng.AssertJUnit.assertTrue;
 
@@ -66,30 +64,13 @@ public class DistributionEpiInventoryTest extends TestCaseHelper {
   @BeforeMethod(groups = {"distribution"})
   public void setUp() throws InterruptedException, SQLException, IOException {
     super.setup();
-    Map<String, String> dataMap = epiInventoryData;
-    setupDataForDistributionTest(dataMap.get(USER), dataMap.get(FIRST_DELIVERY_ZONE_CODE), dataMap.get(SECOND_DELIVERY_ZONE_CODE),
-      dataMap.get(FIRST_DELIVERY_ZONE_NAME), dataMap.get(SECOND_DELIVERY_ZONE_NAME), dataMap.get(FIRST_FACILITY_CODE),
-      dataMap.get(SECOND_FACILITY_CODE), dataMap.get(VACCINES_PROGRAM), dataMap.get(TB_PROGRAM), dataMap.get(SCHEDULE),
-      dataMap.get(PRODUCT_GROUP_CODE));
+    setupDataForDistributionTest(epiInventoryData);
+    dbWrapper.insertProductGroup(epiInventoryData.get(PRODUCT_GROUP_CODE));
+    dbWrapper.insertProductWithGroup("Product5", "ProductName5", epiInventoryData.get(PRODUCT_GROUP_CODE), true);
+    dbWrapper.insertProductWithGroup("Product6", "ProductName6", epiInventoryData.get(PRODUCT_GROUP_CODE), true);
+    dbWrapper.insertProgramProduct("Product5", epiInventoryData.get(VACCINES_PROGRAM), "10", "false");
+    dbWrapper.insertProgramProduct("Product6", epiInventoryData.get(VACCINES_PROGRAM), "10", "true");
     loginPage = PageFactory.getInstanceOfLoginPage(testWebDriver, baseUrlGlobal);
-  }
-
-  public void setupDataForDistributionTest(String userSIC, String deliveryZoneCodeFirst, String deliveryZoneCodeSecond,
-                                           String deliveryZoneNameFirst, String deliveryZoneNameSecond,
-                                           String facilityCodeFirst, String facilityCodeSecond,
-                                           String programFirst, String programSecond, String schedule, String productGroupCode) throws SQLException {
-    List<String> rightsList = asList("MANAGE_DISTRIBUTION");
-    setupTestDataToInitiateRnRAndDistribution(facilityCodeFirst, facilityCodeSecond, true, programFirst, userSIC, "200", rightsList, programSecond,
-      "District1", "Ngorongoro", "Ngorongoro");
-    setupDataForDeliveryZone(true, deliveryZoneCodeFirst, deliveryZoneCodeSecond, deliveryZoneNameFirst, deliveryZoneNameSecond,
-      facilityCodeFirst, facilityCodeSecond, programFirst, programSecond, schedule);
-    dbWrapper.insertRoleAssignmentForDistribution(userSIC, "store in-charge", deliveryZoneCodeFirst);
-    dbWrapper.insertRoleAssignmentForDistribution(userSIC, "store in-charge", deliveryZoneCodeSecond);
-    dbWrapper.insertProductGroup(productGroupCode);
-    dbWrapper.insertProductWithGroup("Product5", "ProductName5", productGroupCode, true);
-    dbWrapper.insertProductWithGroup("Product6", "ProductName6", productGroupCode, true);
-    dbWrapper.insertProgramProduct("Product5", programFirst, "10", "false");
-    dbWrapper.insertProgramProduct("Product6", programFirst, "10", "true");
   }
 
   @Test(groups = {"distribution"})
@@ -186,14 +167,14 @@ public class DistributionEpiInventoryTest extends TestCaseHelper {
     EpiInventoryPage epiInventoryPage = refrigeratorPage.navigateToEpiInventory();
 
     epiInventoryPage.verifyIndicator("RED");
-    facilityListPage.verifyFacilityIndicatorColor("Overall", "RED");
+    facilityListPage.verifyOverallFacilityIndicatorColor("RED");
 
     epiInventoryPage.fillDeliveredQuantity(1, "1");
     epiInventoryPage.fillDeliveredQuantity(2, "2");
     epiInventoryPage.fillDeliveredQuantity(3, "3");
 
     epiInventoryPage.verifyIndicator("AMBER");
-    facilityListPage.verifyFacilityIndicatorColor("Overall", "AMBER");
+    facilityListPage.verifyOverallFacilityIndicatorColor("AMBER");
 
     epiInventoryPage.applyNRToAll();
     assertTrue(epiInventoryPage.getDeliveredQuantityStatus(1));
@@ -249,6 +230,14 @@ public class DistributionEpiInventoryTest extends TestCaseHelper {
 
     EPIUsePage epiUsePage = fullCoveragePage.navigateToEpiUse();
     epiUsePage.enterData(70, 80, 90, 100, 9999999, "10/2011", 1);
+
+    ChildCoveragePage childCoveragePage = epiUsePage.navigateToChildCoverage();
+    childCoveragePage.applyNRToAll();
+    childCoveragePage.clickOK();
+
+    AdultCoveragePage adultCoveragePage = childCoveragePage.navigateToAdultCoverage();
+    adultCoveragePage.clickApplyNrToAll();
+    adultCoveragePage.clickOK();
 
     DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
     distributionPage.syncDistribution(1);
@@ -308,9 +297,17 @@ public class DistributionEpiInventoryTest extends TestCaseHelper {
     EPIUsePage epiUsePage = fullCoveragePage.navigateToEpiUse();
     epiUsePage.enterData(70, 80, 90, 100, 9999999, "10/2011", 1);
 
+    ChildCoveragePage childCoveragePage = epiUsePage.navigateToChildCoverage();
+    childCoveragePage.applyNRToAll();
+    childCoveragePage.clickOK();
+
+    AdultCoveragePage adultCoveragePage = childCoveragePage.navigateToAdultCoverage();
+    adultCoveragePage.clickApplyNrToAll();
+    adultCoveragePage.clickOK();
+
     DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
     distributionPage.syncDistribution(1);
-    SeleneseTestBase.assertTrue(distributionPage.getSyncMessage().contains("F10-Village Dispensary"));
+    assertTrue(distributionPage.getSyncMessage().contains("F10-Village Dispensary"));
     distributionPage.syncDistributionMessageDone();
 
     verifyEpiInventoryDataInDatabase(null, "1", null, "P10", epiInventoryData.get(FIRST_FACILITY_CODE));
@@ -348,9 +345,17 @@ public class DistributionEpiInventoryTest extends TestCaseHelper {
     EPIUsePage epiUsePage = fullCoveragePage.navigateToEpiUse();
     epiUsePage.enterData(70, 80, 90, 100, 9999999, "10/2011", 1);
 
+    ChildCoveragePage childCoveragePage = epiUsePage.navigateToChildCoverage();
+    childCoveragePage.applyNRToAll();
+    childCoveragePage.clickOK();
+
+    AdultCoveragePage adultCoveragePage = childCoveragePage.navigateToAdultCoverage();
+    adultCoveragePage.clickApplyNrToAll();
+    adultCoveragePage.clickOK();
+
     DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
     distributionPage.syncDistribution(1);
-    SeleneseTestBase.assertTrue(distributionPage.getSyncMessage().contains("F10-Village Dispensary"));
+    assertTrue(distributionPage.getSyncMessage().contains("F10-Village Dispensary"));
     distributionPage.syncDistributionMessageDone();
 
     verifyEpiInventoryDataInDatabase("77", "1", null, "P10", epiInventoryData.get(FIRST_FACILITY_CODE));

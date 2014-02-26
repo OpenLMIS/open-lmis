@@ -166,7 +166,6 @@ public class ManageISA extends TestCaseHelper {
     manageFacilityPage.verifyOverriddenIsa("24");
   }
 
-
   @AfterMethod(groups = "admin")
   public void tearDown() throws SQLException {
     testWebDriver.sleep(500);
@@ -177,7 +176,6 @@ public class ManageISA extends TestCaseHelper {
     dbWrapper.deleteData();
     dbWrapper.closeConnection();
   }
-
 
   @DataProvider(name = "Data-Provider-Function")
   public Object[][] parameterIntTestProviderPositive() {

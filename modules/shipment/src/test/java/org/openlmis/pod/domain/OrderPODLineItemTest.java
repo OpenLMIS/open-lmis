@@ -36,7 +36,7 @@ public class OrderPODLineItemTest {
 
   @Test
   public void shouldThrowExceptionIfProductCodeIsEmpty() {
-    OrderPODLineItem orderPodLineItem = new OrderPODLineItem(1l, null, 100);
+    OrderPODLineItem orderPodLineItem = new OrderPODLineItem(1L, null, 100);
 
     expectedException.expect(DataException.class);
     expectedException.expectMessage("error.mandatory.fields.missing");
@@ -46,7 +46,7 @@ public class OrderPODLineItemTest {
 
   @Test
   public void shouldThrowExceptionIfQuantityReceivedIsEmpty() {
-    OrderPODLineItem orderPodLineItem = new OrderPODLineItem(1l, "P100", null);
+    OrderPODLineItem orderPodLineItem = new OrderPODLineItem(1L, "P100", null);
 
     expectedException.expect(DataException.class);
     expectedException.expectMessage("error.mandatory.fields.missing");
@@ -55,8 +55,19 @@ public class OrderPODLineItemTest {
   }
 
   @Test
+  public void shouldThrowExceptionIfQuantityReturnedIsNegative() {
+    OrderPODLineItem orderPodLineItem = new OrderPODLineItem(1L, "P100", 10);
+    orderPodLineItem.setQuantityReturned(-100);
+
+    expectedException.expect(DataException.class);
+    expectedException.expectMessage("error.invalid.returned.quantity");
+
+    orderPodLineItem.validate();
+  }
+
+  @Test
   public void shouldThrowExceptionIfQuantityReceivedIsNegative() {
-    OrderPODLineItem orderPodLineItem = new OrderPODLineItem(1l, "P100", -100);
+    OrderPODLineItem orderPodLineItem = new OrderPODLineItem(1L, "P100", -100);
 
     expectedException.expect(DataException.class);
     expectedException.expectMessage("error.invalid.received.quantity");
@@ -113,10 +124,12 @@ public class OrderPODLineItemTest {
     OrderPODLineItem otherLineItem = new OrderPODLineItem(1L, "P1", 30);
     otherLineItem.setNotes(notes);
     otherLineItem.setModifiedBy(modifiedBy);
+    otherLineItem.setQuantityReturned(300);
 
     lineItem.copy(otherLineItem);
 
     assertThat(lineItem.getQuantityReceived(), is(30));
+    assertThat(lineItem.getQuantityReturned(), is(300));
     assertThat(lineItem.getNotes(), is(notes));
     assertThat(lineItem.getModifiedBy(), is(modifiedBy));
   }

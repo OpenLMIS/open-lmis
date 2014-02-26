@@ -36,19 +36,19 @@ function ChildCoverageController($scope, $routeParams, distributionService) {
 
   $scope.columns = {
     vaccination: "label.child.vaccination.doses",
-    targetGroup: "label.child.coverage.target.Group",
+    targetGroup: "label.coverage.target.Group",
     childrenAgeGroup0To11: "label.children.age.group.zero.eleven.months",
     childrenAgeGroup12To23: "label.children.age.group.twelve.twenty.three.months",
     categoryOneHealthCenter: "label.coverage.health.center",
     categoryOneMobileBrigade: "label.coverage.outreach",
     categoryOneTotal: "label.child.coverage.first.total",
-    coverageRate: "label.child.coverage.coverage.rate",
+    coverageRate: "label.coverage.rate",
     categoryTwoHealthCenter: "label.coverage.health.center",
     categoryTwoMobileBrigade: "label.coverage.outreach",
     categoryTwoTotal: "label.child.coverage.first.total",
     totalVaccination: "label.child.coverage.total.vaccination",
-    openedVials: "label.child.coverage.opened.vials",
-    openedVialsWastageRate: "label.child.coverage.opened.vials.wastage.rate"
+    openedVials: "label.coverage.opened.vials",
+    openedVialsWastageRate: "label.coverage.opened.vials.wastage.rate"
   };
 
   $scope.productsMap = {
@@ -97,7 +97,7 @@ function ChildCoverageController($scope, $routeParams, distributionService) {
 
   $scope.getTotalVaccinations = function (childCoverageLineItem) {
     return $scope.getTotal(childCoverageLineItem.healthCenter11Months, childCoverageLineItem.outreach11Months) +
-        $scope.getTotal(childCoverageLineItem.healthCenter23Months, childCoverageLineItem.outreach23Months);
+      $scope.getTotal(childCoverageLineItem.healthCenter23Months, childCoverageLineItem.outreach23Months);
   };
 
   $scope.calculateCoverageRate = function (total, targetGroup) {

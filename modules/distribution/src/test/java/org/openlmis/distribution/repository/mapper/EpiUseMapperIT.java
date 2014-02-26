@@ -123,7 +123,7 @@ public class EpiUseMapperIT {
   @Test
   public void shouldSaveEpiUseLineItem() throws Exception {
 
-    EpiUseLineItem epiUseLineItem = new EpiUseLineItem(facilityVisit.getId(), productGroup, facilityVisit.getCreatedBy());
+    EpiUseLineItem epiUseLineItem = new EpiUseLineItem(facilityVisit, productGroup);
     epiUseLineItem.setProductGroup(productGroup);
     mapper.insertLineItem(epiUseLineItem);
 
@@ -135,7 +135,7 @@ public class EpiUseMapperIT {
   @Test
   public void shouldReturnEpiUseLineItem() throws Exception {
 
-    EpiUseLineItem epiUseLineItem = new EpiUseLineItem(facilityVisit.getId(), productGroup, facilityVisit.getCreatedBy());
+    EpiUseLineItem epiUseLineItem = new EpiUseLineItem(facilityVisit, productGroup);
     mapper.insertLineItem(epiUseLineItem);
 
     EpiUseLineItem epiUseLineItemFromDB = mapper.getLineItemById(epiUseLineItem);
@@ -148,7 +148,7 @@ public class EpiUseMapperIT {
   @Test
   public void shouldUpdateEpiUseLineItem() throws Exception {
 
-    EpiUseLineItem epiUseLineItem = new EpiUseLineItem(facilityVisit.getId(), productGroup, facilityVisit.getCreatedBy());
+    EpiUseLineItem epiUseLineItem = new EpiUseLineItem(facilityVisit, productGroup);
     mapper.insertLineItem(epiUseLineItem);
 
     epiUseLineItem.setReceived(10);
@@ -172,12 +172,12 @@ public class EpiUseMapperIT {
   @Test
   public void shouldGetEpiUseLineItemsByFacilityVisitId() {
 
-    EpiUseLineItem epiUseLineItem1 = new EpiUseLineItem(facilityVisit.getId(), productGroup, facilityVisit.getCreatedBy());
+    EpiUseLineItem epiUseLineItem1 = new EpiUseLineItem(facilityVisit, productGroup);
     mapper.insertLineItem(epiUseLineItem1);
 
     ProductGroup productGroup2 = new ProductGroup("PG0", "Product Group 0");
     productGroupMapper.insert(productGroup2);
-    EpiUseLineItem epiUseLineItem2 = new EpiUseLineItem(facilityVisit.getId(), productGroup2, facilityVisit.getCreatedBy());
+    EpiUseLineItem epiUseLineItem2 = new EpiUseLineItem(facilityVisit, productGroup2);
     mapper.insertLineItem(epiUseLineItem2);
 
     List<EpiUseLineItem> epiUseLineItems = mapper.getBy(facilityVisit.getId());

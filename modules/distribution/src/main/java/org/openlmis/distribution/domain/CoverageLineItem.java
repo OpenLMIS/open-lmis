@@ -12,16 +12,35 @@ package org.openlmis.distribution.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.BaseModel;
+import org.openlmis.core.domain.Facility;
+
+import static java.lang.Math.round;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
-public class VaccinationProduct extends BaseModel{
+@AllArgsConstructor
+@EqualsAndHashCode(callSuper = false)
+public class CoverageLineItem extends BaseModel {
 
-  private String vaccination;
-  private String productCode;
-  private Boolean childCoverage;
+  protected Long facilityVisitId;
+  protected Integer targetGroup;
 
+  public CoverageLineItem(FacilityVisit facilityVisit, Facility facility, TargetGroupProduct targetGroupProduct) {
+    this.facilityVisitId = facilityVisit.getId();
+    this.targetGroup = targetGroupProduct != null ? calculateTargetGroup(facility.getWhoRatioFor(targetGroupProduct.getProductCode()),
+      facility.getCatchmentPopulation()) : null;
+    this.createdBy = facilityVisit.getCreatedBy();
+    this.modifiedBy = facilityVisit.getModifiedBy();
+  }
+
+  protected Integer calculateTargetGroup(Double whoRatio, Long catchmentPopulation) {
+    Integer targetGroup = null;
+    if (whoRatio != null && catchmentPopulation != null) {
+      targetGroup = (int) round(catchmentPopulation * whoRatio / 100);
+    }
+    return targetGroup;
+  }
 }

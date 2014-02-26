@@ -203,7 +203,7 @@ public class DistributionMapperIT {
       with(DistributionBuilder.program, program)));
 
     mapper.insert(distribution);
-    mapper.updateDistributionStatus(distribution.getId(), SYNCED);
+    mapper.updateDistributionStatus(distribution.getId(), SYNCED, 1L);
 
     Distribution distributionFromDatabase = mapper.get(distribution);
 

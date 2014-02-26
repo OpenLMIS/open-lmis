@@ -79,8 +79,8 @@
     &nbsp;</td>
 </tr>
 <tr ng-class="getRowErrorClass(rnrLineItem)">
-<td class="cell-input col-{{column.name}}" ng-repeat="column in visibleColumns.fullSupply.scrollable">
-  <ng-switch on="column.source.name">
+  <td class="cell-input col-{{column.name}}" ng-repeat="column in visibleColumns.fullSupply.scrollable">
+    <ng-switch on="column.source.name">
     <span ng-switch-when="USER_INPUT">
       <ng-switch on="column.name">
         <span ng-switch-when="beginningBalance"
@@ -90,7 +90,7 @@
                    ng-disabled="formDisabled || rnrLineItem.skipped"
                    name="beginningBalance{{rnrLineItem['id']}}"
                    ng-model="rnrLineItem[column.name]"
-                   rnr-validator="positiveInteger" maxlength="8"
+                   numeric-validator="positiveInteger" maxlength="8"
                    ng-change="rnr.fillConsumptionOrStockInHand(rnrLineItem)"
                    ng-class="highlightRequired(showError, rnrLineItem[column.name], rnrLineItem.skipped)"/>
             <span class="rnr-form-error" id="beginningBalance{{rnrLineItem['id']}}"
@@ -110,7 +110,7 @@
                    id="{{getId(column.name, $parent)}}" type="text"
                    name="quantityReceived{{rnrLineItem['id']}}"
                    ng-model="rnrLineItem[column.name]"
-                   rnr-validator="positiveInteger" maxlength="8"
+                   numeric-validator="positiveInteger" maxlength="8"
                    ng-change="rnr.fillConsumptionOrStockInHand(rnrLineItem)"
                    ng-class="highlightRequired(showError, rnrLineItem[column.name], rnrLineItem.skipped)"/>
             <span class="rnr-form-error" id="quantityReceived{{rnrLineItem['id']}}"
@@ -125,11 +125,11 @@
         <span ng-switch-when="expirationDate">
           <input ng-disabled="formDisabled || rnrLineItem.skipped"
                  id="{{getId(column.name, $parent)}}" type="text"
-                 name="expirationDate{{rnrLineItem['id']}}"
+                 error-holder="expirationDate{{rnrLineItem['id']}}"
                  maxlength="7"
                  ng-model="rnrLineItem[column.name]"
                  showError="showError"
-                 rnr-validator="date"/>
+                 date-validator="date" />
           <span class="alert alert-warning warning-alert" id="expirationDate{{rnrLineItem['id']}}"
                 style="display:none;" openlmis-message="error.invalid.date.format"
                 ng-hide="rnrLineItem.expirationDate && rnrLineItem.skipped">
@@ -143,7 +143,7 @@
                    id="{{getId(column.name, $parent)}}" type="text"
                    name="quantityDispensed{{rnrLineItem['id']}}"
                    ng-model="rnrLineItem[column.name]"
-                   rnr-validator="positiveInteger"
+                   numeric-validator="positiveInteger"
                    ng-change="rnr.fillConsumptionOrStockInHand(rnrLineItem)"
                    maxlength="8"
                    ng-class="highlightRequired(showError, rnrLineItem[column.name], rnrLineItem.skipped)"/>
@@ -176,7 +176,7 @@
                    id="{{getId(column.name, $parent)}}" type="text"
                    name="stockInHand{{rnrLineItem['id']}}"
                    ng-model="rnrLineItem[column.name]"
-                   rnr-validator="positiveInteger"
+                   numeric-validator="positiveInteger"
                    ng-change="rnr.fillConsumptionOrStockInHand(rnrLineItem)"
                    maxlength="8"
                    ng-class="highlightRequired(showError, rnrLineItem[column.name], rnrLineItem.skipped)"
@@ -197,7 +197,7 @@
                    type="text"
                    name="newPatientCount{{rnrLineItem['id']}}"
                    ng-model="rnrLineItem[column.name]"
-                   rnr-validator="positiveInteger" maxlength="8"
+                   numeric-validator="positiveInteger" maxlength="8"
                    ng-change="rnr.fillNormalizedConsumption(rnrLineItem)"
                    ng-class="highlightRequired(showError, rnrLineItem[column.name], rnrLineItem.skipped)"/>
             <span class="rnr-form-error" id="newPatientCount{{rnrLineItem['id']}}"
@@ -206,11 +206,9 @@
           </span>
 
         <span ng-switch-when="quantityRequested" class="input-error-parent-cell">
-            <input ng-disabled="formDisabled || rnrLineItem.skipped"
-                   id="{{getId(column.name, $parent)}}" type="text"
-                   name="quantityRequested{{rnrLineItem['id']}}"
-                   ng-model="rnrLineItem[column.name]"
-                   rnr-validator="positiveInteger" maxlength="8"
+            <input ng-disabled="formDisabled || rnrLineItem.skipped" id="{{getId(column.name, $parent)}}" type="text"
+                   name="quantityRequested{{rnrLineItem['id']}}" ng-model="rnrLineItem[column.name]"
+                   numeric-validator="positiveInteger" ng-trim="false" maxlength="8"
                    ng-change="rnr.fillPacksToShip(rnrLineItem)"/>
             <span class="rnr-form-error" id="quantityRequested{{rnrLineItem['id']}}"
                   style="display:none;" openlmis-message="error.number.only">
@@ -245,7 +243,7 @@
                    id="{{getId(column.name, $parent)}}"
                    type="text" name="stockOutDays{{rnrLineItem['id']}}"
                    ng-model="rnrLineItem[column.name]"
-                   rnr-validator="positiveInteger" maxlength="8"
+                   numeric-validator="positiveInteger" maxlength="8"
                    ng-change="rnr.fillNormalizedConsumption(rnrLineItem)"
                    ng-class="highlightRequired(showError, rnrLineItem[column.name], rnrLineItem.skipped)"/>
             <span class="rnr-form-error" id="stockOutDays{{rnrLineItem['id']}}"
@@ -277,8 +275,8 @@
               class="cell-text"></span>
       </ng-switch>
     </span>
-  </ng-switch>
-</td>
+    </ng-switch>
+  </td>
 </tr>
 </tbody>
 </table>
@@ -303,12 +301,9 @@
           </select>
         </div>
         <div class="span3">
-          <input ng-disabled="formDisabled || currentRnrLineItem.skipped"
-                 type="text"
-                 name="quantity{{currentRnrLineItem.id}}"
-                 ng-model="lossAndAdjustment.quantity"
-                 rnr-validator="positiveInteger" prevent-rnr-error="true" maxlength="8"
-                 openlmis-message="placeholder.quantity"/>
+          <input ng-disabled="formDisabled || currentRnrLineItem.skipped" ng-trim="false"
+                 type="text" name="quantity{{currentRnrLineItem.id}}" ng-model="lossAndAdjustment.quantity"
+                 numeric-validator="positiveInteger" maxlength="8" openlmis-message="placeholder.quantity"/>
 
           <div class="rnr-form-error"
                id="quantity{{currentRnrLineItem.id}}"
@@ -347,7 +342,7 @@
                    ng-model="adjustment.quantity"
                    openlmis-message="placeholder.quantity"
                    ng-change="currentRnrLineItem.reEvaluateTotalLossesAndAdjustments(rnr, programRnrColumnList); resetModalErrorAndSetFormDirty()"
-                   rnr-validator="positiveInteger"
+                   numeric-validator="positiveInteger"
                    maxlength="8"
                    ng-class="highlightRequiredFieldInModal(adjustment.quantity)"
                    keyboard="false"

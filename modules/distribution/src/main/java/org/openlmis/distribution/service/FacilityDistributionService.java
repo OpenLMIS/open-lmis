@@ -11,6 +11,7 @@
 package org.openlmis.distribution.service;
 
 import lombok.NoArgsConstructor;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.Transformer;
 import org.openlmis.core.domain.Facility;
@@ -21,6 +22,7 @@ import org.openlmis.distribution.domain.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -61,29 +63,69 @@ public class FacilityDistributionService {
 
     List<Facility> facilities = facilityService.getAllForDeliveryZoneAndProgram(deliveryZoneId, programId);
     List<Refrigerator> distributionRefrigerators = refrigeratorService.getRefrigeratorsForADeliveryZoneAndProgram(deliveryZoneId, programId);
-    List<VaccinationProduct> vaccinationProducts = vaccinationCoverageService.getVaccinationProducts(true);
+    List<TargetGroupProduct> targetGroupProducts = vaccinationCoverageService.getVaccinationProducts();
+    List<TargetGroupProduct> childrenTargetGroupProducts = new ArrayList<>();
+    List<TargetGroupProduct> adultTargetGroupProducts = new ArrayList<>();
+    filterTargetGroupProducts(targetGroupProducts, childrenTargetGroupProducts, adultTargetGroupProducts);
     List<ProductVial> productVials = vaccinationCoverageService.getProductVials();
+    List<ProductVial> childProductVials = new ArrayList<>();
+    List<ProductVial> adultProductVials = new ArrayList<>();
+    filterProductVials(productVials, childProductVials, adultProductVials);
 
     for (Facility facility : facilities) {
-      facilityDistributions.put(facility.getId(), createDistributionData(facility, distribution, distributionRefrigerators, vaccinationProducts, productVials));
+      facilityDistributions.put(facility.getId(), createDistributionData(facility, distribution, distributionRefrigerators, childrenTargetGroupProducts,
+        adultTargetGroupProducts, childProductVials, adultProductVials));
     }
 
     return facilityDistributions;
   }
 
+  private void filterProductVials(List<ProductVial> productVials, List<ProductVial> childProductVials, List<ProductVial> adultProductVials) {
+    CollectionUtils.select(productVials, new Predicate() {
+      @Override
+      public boolean evaluate(Object o) {
+        return ((ProductVial) o).getChildCoverage();
+      }
+    }, childProductVials);
+    CollectionUtils.selectRejected(productVials, new Predicate() {
+      @Override
+      public boolean evaluate(Object o) {
+        return ((ProductVial) o).getChildCoverage();
+      }
+    }, adultProductVials);
+  }
+
+  private void filterTargetGroupProducts(List<TargetGroupProduct> targetGroupProducts, List<TargetGroupProduct> childrenTargetGroupProducts, List<TargetGroupProduct> adultTargetGroupProducts) {
+    CollectionUtils.select(targetGroupProducts, new Predicate() {
+      @Override
+      public boolean evaluate(Object o) {
+        return ((TargetGroupProduct) o).getChildCoverage();
+      }
+    }, childrenTargetGroupProducts);
+    CollectionUtils.selectRejected(targetGroupProducts, new Predicate() {
+      @Override
+      public boolean evaluate(Object o) {
+        return ((TargetGroupProduct) o).getChildCoverage();
+      }
+    }, adultTargetGroupProducts);
+  }
+
   FacilityDistribution createDistributionData(final Facility facility,
                                               Distribution distribution,
                                               List<Refrigerator> refrigerators,
-                                              List<VaccinationProduct> vaccinationProducts,
-                                              List<ProductVial> productVials) {
+                                              List<TargetGroupProduct> childrenTargetGroupProducts,
+                                              List<TargetGroupProduct> adultTargetGroupProducts,
+                                              List<ProductVial> childProductVials, List<ProductVial> adultProductVials) {
     List<RefrigeratorReading> refrigeratorReadings = getRefrigeratorReadings(facility.getId(), refrigerators);
 
     FacilityVisit facilityVisit = new FacilityVisit(facility, distribution);
     facilityVisitService.save(facilityVisit);
-    FacilityDistribution facilityDistribution = new FacilityDistribution(facilityVisit, facility, distribution, refrigeratorReadings, vaccinationProducts, productVials);
+    FacilityDistribution facilityDistribution = new FacilityDistribution(facilityVisit, facility, distribution, refrigeratorReadings,
+      childrenTargetGroupProducts, adultTargetGroupProducts, childProductVials, adultProductVials);
     epiUseService.save(facilityDistribution.getEpiUse());
     epiInventoryService.save(facilityDistribution.getEpiInventory());
     vaccinationCoverageService.saveChildCoverage(facilityDistribution.getChildCoverage());
+    vaccinationCoverageService.saveAdultCoverage(facilityDistribution.getAdultCoverage());
     return facilityDistribution;
   }
 
@@ -138,8 +180,10 @@ public class FacilityDistributionService {
     EpiInventory epiInventory = epiInventoryService.getBy(facilityVisit.getId());
     VaccinationFullCoverage coverage = vaccinationCoverageService.getFullCoverageBy(facilityVisit.getId());
     VaccinationChildCoverage childCoverage = vaccinationCoverageService.getChildCoverageBy(facilityVisit.getId());
+    VaccinationAdultCoverage adultCoverage = vaccinationCoverageService.getAdultCoverageBy(facilityVisit.getId());
 
-    FacilityDistribution facilityDistribution = new FacilityDistribution(facilityVisit, epiUse, distributionRefrigerators, epiInventory, coverage, childCoverage);
+    FacilityDistribution facilityDistribution = new FacilityDistribution(facilityVisit, epiUse, distributionRefrigerators, epiInventory, coverage,
+      childCoverage, adultCoverage);
     facilityDistribution.setFacility(facility);
     return facilityDistribution;
   }

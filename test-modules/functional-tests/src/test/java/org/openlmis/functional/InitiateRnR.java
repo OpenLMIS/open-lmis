@@ -181,25 +181,25 @@ public class InitiateRnR extends TestCaseHelper {
   @When("^I type patients on treatment \"([^\"]*)\"$")
   public void typePatientsOnTreatment(String value) {
     initiateRnRPage = PageFactory.getInstanceOfInitiateRnRPage(testWebDriver);
-    initiateRnRPage.enterValuesOnRegimenScreen(3, 2, value);
+    initiateRnRPage.enterValuesOnRegimenScreen(3, 1, value);
   }
 
   @When("^I type patients initiated treatment \"([^\"]*)\"$")
   public void typePatientsInitiatedTreatment(String value) {
     initiateRnRPage = PageFactory.getInstanceOfInitiateRnRPage(testWebDriver);
-    initiateRnRPage.enterValuesOnRegimenScreen(4, 2, value);
+    initiateRnRPage.enterValuesOnRegimenScreen(4, 1, value);
   }
 
   @When("^I type patients stopped treatment \"([^\"]*)\"$")
   public void typePatientsStoppedTreatment(String value) {
     initiateRnRPage = PageFactory.getInstanceOfInitiateRnRPage(testWebDriver);
-    initiateRnRPage.enterValuesOnRegimenScreen(5, 2, value);
+    initiateRnRPage.enterValuesOnRegimenScreen(5, 1, value);
   }
 
   @When("^I type remarks \"([^\"]*)\"$")
   public void typeRemarks(String value) {
     initiateRnRPage = PageFactory.getInstanceOfInitiateRnRPage(testWebDriver);
-    initiateRnRPage.enterValuesOnRegimenScreen(6, 2, value);
+    initiateRnRPage.enterValuesOnRegimenScreen(6, 1, value);
   }
 
   @When("^I click save$")
@@ -285,13 +285,13 @@ public class InitiateRnR extends TestCaseHelper {
     initiateRnRPage.clickRegimenTab();
 
     verifyRegimenFieldsPresentOnRegimenTab(regimenCode, regimenName);
-    initiateRnRPage.enterValuesOnRegimenScreen(3, 2, "100");
-    initiateRnRPage.enterValuesOnRegimenScreen(4, 2, "200");
-    initiateRnRPage.enterValuesOnRegimenScreen(6, 2, "400");
+    initiateRnRPage.enterValuesOnRegimenScreen(3, 1, "100");
+    initiateRnRPage.enterValuesOnRegimenScreen(4, 1, "200");
+    initiateRnRPage.enterValuesOnRegimenScreen(6, 1, "400");
 
     initiateRnRPage.clickSubmitButton();
     initiateRnRPage.verifySubmitRnrErrorMsg();
-    initiateRnRPage.enterValuesOnRegimenScreen(5, 2, "300");
+    initiateRnRPage.enterValuesOnRegimenScreen(5, 1, "300");
     initiateRnRPage.clickSubmitButton();
     initiateRnRPage.clickOk();
     initiateRnRPage.verifySubmitSuccessMsg();

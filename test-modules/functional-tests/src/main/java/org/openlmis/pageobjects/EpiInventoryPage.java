@@ -19,7 +19,7 @@ import static org.openqa.selenium.support.How.ID;
 public class EpiInventoryPage extends DistributionTab {
 
 
-  @FindBy(how = ID, using = "applyNRAll")
+  @FindBy(how = ID, using = "epiInventoryApplyNRAll")
   private static WebElement applyNRToAllButton = null;
 
   @FindBy(how = ID, using = "button_OK")
@@ -83,7 +83,10 @@ public class EpiInventoryPage extends DistributionTab {
   }
 
   public void fillDeliveredQuantity(int rowNumber, String deliveredQuantity) {
-    testWebDriver.findElement(By.id("deliveredQuantity" + (rowNumber - 1))).sendKeys(deliveredQuantity);
+    WebElement element = testWebDriver.findElement(By.id("deliveredQuantity" + (rowNumber - 1)));
+    element.sendKeys(deliveredQuantity);
+    element.sendKeys(Keys.TAB);
+
   }
 
   public String getProductName(int rowNumber) {

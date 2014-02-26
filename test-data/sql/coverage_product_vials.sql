@@ -8,10 +8,11 @@
 -- You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
 --
 
-INSERT INTO coverage_product_vials (vial, productCode) VALUES ('BCG', 'BCG');
-INSERT INTO coverage_product_vials (vial, productCode) VALUES ('Polio10', 'polio10dose');
-INSERT INTO coverage_product_vials (vial, productCode) VALUES ('Polio20', 'polio20dose');
-INSERT INTO coverage_product_vials (vial, productCode) VALUES ('Penta1', 'penta1');
-INSERT INTO coverage_product_vials (vial, productCode) VALUES ('Penta10', 'penta10');
-INSERT INTO coverage_product_vials (vial, productCode) VALUES ('PCV', 'P10');
-INSERT INTO coverage_product_vials (vial, productCode) VALUES ('Measles', 'Measles');
+INSERT INTO coverage_product_vials (vial, productCode, childCoverage) VALUES ('BCG', 'BCG', true);
+INSERT INTO coverage_product_vials (vial, productCode, childCoverage) VALUES ('Polio10', 'polio10dose', true);
+INSERT INTO coverage_product_vials (vial, productCode, childCoverage) VALUES ('Polio20', 'polio20dose', true);
+INSERT INTO coverage_product_vials (vial, productCode, childCoverage) VALUES ('Penta1', 'penta1', true);
+INSERT INTO coverage_product_vials (vial, productCode, childCoverage) VALUES ('Penta10', 'penta10', true);
+INSERT INTO coverage_product_vials (vial, productCode, childCoverage) VALUES ('PCV', 'P10', true);
+INSERT INTO coverage_product_vials (vial, productCode, childCoverage) VALUES ('Measles', 'Measles', true);
+INSERT INTO coverage_product_vials (vial, productCode, childCoverage) VALUES ('Tetanus', 'Tetanus', false);

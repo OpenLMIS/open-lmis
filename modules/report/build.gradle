@@ -8,6 +8,9 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
+
+apply plugin: 'cobertura'
+
 dependencies {
     compile 'org.springframework:spring-core:3.1.1.RELEASE',
             'org.springframework:spring-web:3.1.1.RELEASE',

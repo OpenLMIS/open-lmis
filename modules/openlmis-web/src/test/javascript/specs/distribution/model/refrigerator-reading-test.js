@@ -37,7 +37,7 @@ describe('RefrigeratorReading', function () {
 
   it('should return yellow status class if internal refrigerator form fields are partially filled and not recorded flag undefined',
     function () {
-      refrigeratorReading = new RefrigeratorReading(facilityVisitId, {temperature: {value: 7}, functioningCorrectly: {value: 'Y'},
+      refrigeratorReading = new RefrigeratorReading(facilityVisitId, {temperature: {value: 7}, functioningCorrectly: {value: 'N'},
         lowAlarmEvents: {notRecorded: undefined}, highAlarmEvents: {value: undefined, notRecorded: undefined}, problemSinceLastTime: {value: 'Y'}});
 
       var status = refrigeratorReading.computeStatus();
@@ -47,7 +47,7 @@ describe('RefrigeratorReading', function () {
 
   it('should return yellow status class if internal refrigerator form fields are empty string and not recorded flag undefined',
     function () {
-      refrigeratorReading = new RefrigeratorReading(facilityVisitId, {temperature: {value: 7}, functioningCorrectly: {value: 'Y'},
+      refrigeratorReading = new RefrigeratorReading(facilityVisitId, {temperature: {value: 7}, functioningCorrectly: {value: 'N'},
         lowAlarmEvents: {value: 3}, highAlarmEvents: {value: ''}, problemSinceLastTime: {value: 'Y'}});
 
       var status = refrigeratorReading.computeStatus();
@@ -84,8 +84,8 @@ describe('RefrigeratorReading', function () {
     });
 
   it('should return yellow status class if all fields filled but not even 1 problem selected', function () {
-    refrigeratorReading = new RefrigeratorReading(facilityVisitId, {temperature: {notRecorded: true}, functioningCorrectly: {value: 'Y'},
-      lowAlarmEvents: {value: 3}, highAlarmEvents: {value: 6, notRecorded: true}, problemSinceLastTime: {value: 'Y', notRecorded: false}});
+    refrigeratorReading = new RefrigeratorReading(facilityVisitId, {temperature: {notRecorded: true}, functioningCorrectly: {value: 'N'},
+      lowAlarmEvents: {value: 3}, highAlarmEvents: {value: 6, notRecorded: true}, problemSinceLastTime: {value: 'N', notRecorded: false}});
 
 
     var status = refrigeratorReading.computeStatus();
@@ -94,8 +94,8 @@ describe('RefrigeratorReading', function () {
   });
 
   it('should return green status class if all fields filled and problems selected', function () {
-    refrigeratorReading = new RefrigeratorReading(facilityVisitId, {temperature: {notRecorded: true}, functioningCorrectly: {value: 'Y'},
-      lowAlarmEvents: {value: 3}, highAlarmEvents: {value: 6, notRecorded: true}, problemSinceLastTime: {value: 'Y', notRecorded: false}});
+    refrigeratorReading = new RefrigeratorReading(facilityVisitId, {temperature: {notRecorded: true}, functioningCorrectly: {value: 'N'},
+      lowAlarmEvents: {value: 3}, highAlarmEvents: {value: 6, notRecorded: true}, problemSinceLastTime: {value: 'N'}});
 
     refrigeratorReading.problems = {operatorError: true};
     var status = refrigeratorReading.computeStatus();
@@ -103,7 +103,7 @@ describe('RefrigeratorReading', function () {
     expect(status).toEqual(DistributionStatus.COMPLETE);
   });
 
-  it('should return yellow status class if all fields filled and problems selected', function () {
+  it('should return red status class if all fields are not filled and no problems selected', function () {
     refrigeratorReading = new RefrigeratorReading(facilityVisitId, {temperature: {notRecorded: false}, functioningCorrectly: undefined,
       lowAlarmEvents: undefined, highAlarmEvents: undefined, problemSinceLastTime: undefined});
 
@@ -112,8 +112,8 @@ describe('RefrigeratorReading', function () {
     expect(status).toEqual(DistributionStatus.EMPTY);
   });
 
-  it('should return green status class if all fields filled and problems selected', function () {
-    refrigeratorReading = new RefrigeratorReading(facilityVisitId, {temperature: {notRecorded: true}, functioningCorrectly: {value: 'Y'},
+  it('should return yellow status class if some fields are filled and some problems selected', function () {
+    refrigeratorReading = new RefrigeratorReading(facilityVisitId, {temperature: {notRecorded: true}, functioningCorrectly: {value: 'N'},
       lowAlarmEvents: {value: 3}, highAlarmEvents: {value: 6, notRecorded: true}, problemSinceLastTime: {value: 'Y', notRecorded: false}});
 
     refrigeratorReading.problems = {problemMap: {'problem': false, 'problem2': undefined}};

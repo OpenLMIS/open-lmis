@@ -25,6 +25,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -65,6 +66,10 @@ public class PODMapperIT extends ApplicationTestContext {
   public void shouldInsertPOD() {
     OrderPOD orderPod = new OrderPOD();
     orderPod.setOrderId(order.getId());
+    orderPod.setDeliveredBy("deliveredBy");
+    orderPod.setReceivedBy("acceptedBy");
+    Date receivedDate = new Date();
+    orderPod.setReceivedDate(receivedDate);
     Rnr rnr = order.getRnr();
     orderPod.fillPOD(rnr);
     mapper.insertPOD(orderPod);
@@ -75,6 +80,9 @@ public class PODMapperIT extends ApplicationTestContext {
     assertThat(savedOrderPod.getFacilityId(), is(rnr.getFacility().getId()));
     assertThat(savedOrderPod.getProgramId(), is(rnr.getProgram().getId()));
     assertThat(savedOrderPod.getPeriodId(), is(rnr.getPeriod().getId()));
+    assertThat(savedOrderPod.getDeliveredBy(), is("deliveredBy"));
+    assertThat(savedOrderPod.getReceivedBy(), is("acceptedBy"));
+    assertThat(savedOrderPod.getReceivedDate(), is(receivedDate));
   }
 
   @Test
@@ -84,8 +92,9 @@ public class PODMapperIT extends ApplicationTestContext {
     mapper.insertPOD(orderPod);
 
     Integer quantityShipped = 1000;
+    Integer quantityReturned = 55;
     OrderPODLineItem orderPodLineItem = new OrderPODLineItem(orderPod.getId(), productCode, productCategory,
-      productCategoryDisplayOrder, productDisplayOrder, 100, productName, dispensingUnit, 10, quantityShipped, true,
+      productCategoryDisplayOrder, productDisplayOrder, 100, productName, dispensingUnit, 10, quantityShipped, quantityReturned, true,
       "notes");
     mapper.insertPODLineItem(orderPodLineItem);
 
@@ -99,6 +108,7 @@ public class PODMapperIT extends ApplicationTestContext {
     assertThat(orderPodLineItems.get(0).getProductCategoryDisplayOrder(), is(productCategoryDisplayOrder));
     assertThat(orderPodLineItems.get(0).getProductDisplayOrder(), is(productDisplayOrder));
     assertThat(orderPodLineItems.get(0).getQuantityShipped(), is(quantityShipped));
+    assertThat(orderPodLineItems.get(0).getQuantityReturned(), is(quantityReturned));
   }
 
   @Test
@@ -117,8 +127,7 @@ public class PODMapperIT extends ApplicationTestContext {
     Integer productDisplayOrder1 = 1;
     queryExecutor.executeUpdate(
       "INSERT INTO pod_line_items (podId, productCode, productCategory, productCategoryDisplayOrder, productDisplayOrder, quantityReceived, createdBy, modifiedBy) values(?, ?, ?, ?, ?, ?, ?, ?)",
-      orderPod.getId(), productCode, this.productCategory, this.productCategoryDisplayOrder, productDisplayOrder, 100,
-      1, 1);
+      orderPod.getId(), productCode, this.productCategory, this.productCategoryDisplayOrder, productDisplayOrder, 100, 1, 1);
     queryExecutor.executeUpdate(
       "INSERT INTO pod_line_items (podId, productCode, productCategory, productCategoryDisplayOrder, productDisplayOrder, quantityReceived, createdBy, modifiedBy) values(?, ?, ?, ?, ?, ?, ?, ?)",
       orderPod.getId(), productCode1, productCategory, productCategoryDisplayOrder1, productDisplayOrder1, 100, 1, 1);
@@ -179,7 +188,7 @@ public class PODMapperIT extends ApplicationTestContext {
     mapper.insertPOD(expectedOrderPod);
 
     OrderPODLineItem lineItem1 = new OrderPODLineItem(expectedOrderPod.getId(), productCode, productCategory,
-      productCategoryDisplayOrder, productDisplayOrder, 100, productName, dispensingUnit, 10, null, true, null);
+      productCategoryDisplayOrder, productDisplayOrder, 100, productName, dispensingUnit, 10, null, null, true, null);
     mapper.insertPODLineItem(lineItem1);
 
     OrderPOD orderPOD = mapper.getPODById(expectedOrderPod.getId());
@@ -200,10 +209,17 @@ public class PODMapperIT extends ApplicationTestContext {
     mapper.insertPOD(orderPod);
 
     orderPod.setModifiedBy(modifiedBy);
+    orderPod.setReceivedBy("acceptedBy");
+    orderPod.setDeliveredBy("deliveredBy");
+    Date receivedDate = new Date();
+    orderPod.setReceivedDate(receivedDate);
     mapper.update(orderPod);
 
     OrderPOD updatedPOD = mapper.getPODById(orderPod.getId());
     assertThat(updatedPOD.getModifiedBy(), is(modifiedBy));
+    assertThat(updatedPOD.getReceivedDate(), is(receivedDate));
+    assertThat(updatedPOD.getReceivedBy(), is("acceptedBy"));
+    assertThat(updatedPOD.getDeliveredBy(), is("deliveredBy"));
   }
 
   @Test
@@ -216,6 +232,7 @@ public class PODMapperIT extends ApplicationTestContext {
 
     orderPodLineItem.setNotes("notes");
     orderPodLineItem.setQuantityReceived(345);
+    orderPodLineItem.setQuantityReturned(100);
     orderPodLineItem.setModifiedBy(3L);
     mapper.updateLineItem(orderPodLineItem);
 

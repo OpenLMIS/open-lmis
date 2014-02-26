@@ -38,8 +38,8 @@ public interface DistributionMapper {
   })
   Distribution get(Distribution distribution);
 
-  @Update({"UPDATE distributions SET status =  #{status} WHERE id = #{id}"})
-  void updateDistributionStatus(@Param("id") Long id, @Param("status") DistributionStatus status);
+  @Update({"UPDATE distributions SET status =  #{status}, modifiedBy = #{modifiedBy}, modifiedDate = DEFAULT WHERE id = #{id}"})
+  void updateDistributionStatus(@Param("id") Long id, @Param("status") DistributionStatus status, @Param("modifiedBy") Long modifiedBy);
 
   @Select({"SELECT periodId from distributions where deliveryZoneId = #{deliveryZoneId} AND programId = #{programId} and status = 'SYNCED'"})
   List<Long> getSyncedPeriodsForDeliveryZoneAndProgram(@Param("deliveryZoneId") Long deliveryZoneId, @Param("programId") Long programId);

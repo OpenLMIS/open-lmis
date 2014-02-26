@@ -507,9 +507,28 @@ public class TestCaseHelper {
     assertEquals(testWebDriver.getElementById("previousPageLink").getCssValue("color"), "rgba(204, 204, 204, 1)");
   }
 
+  public void setupDataForDistributionTest(Map<String, String> dataMap) throws SQLException {
+    String programSecond = dataMap.get("secondProgram");
+    String programFirst = dataMap.get("vaccinesProgram");
+    String facilityCodeSecond = dataMap.get("secondFacilityCode");
+    String facilityCodeFirst = dataMap.get("firstFacilityCode");
+    String deliveryZoneCodeSecond = dataMap.get("secondDeliveryZoneCode");
+    String deliveryZoneCodeFirst = dataMap.get("firstDeliveryZoneCode");
+    String userSIC = dataMap.get("user");
+
+    List<String> rightsList = asList("MANAGE_DISTRIBUTION");
+    setupTestDataToInitiateRnRAndDistribution(facilityCodeFirst, facilityCodeSecond, true, programFirst, userSIC, "200", rightsList,
+      programSecond, "District1", "Ngorongoro", "Ngorongoro");
+
+    setupDataForDeliveryZone(true, deliveryZoneCodeFirst, deliveryZoneCodeSecond, dataMap.get("firstDeliveryZoneName"),
+      dataMap.get("secondDeliveryZoneName"), facilityCodeFirst, facilityCodeSecond, programFirst, programSecond, dataMap.get("schedule"));
+    dbWrapper.insertRoleAssignmentForDistribution(userSIC, "store in-charge", deliveryZoneCodeFirst);
+    dbWrapper.insertRoleAssignmentForDistribution(userSIC, "store in-charge", deliveryZoneCodeSecond);
+  }
+
   public void verifyFacilityVisitInformationInDatabase(String facilityCode, String observation, String confirmedByName,
                                                        String confirmedByTitle, String verifiedByName,
-                                                       String verifiedByTitle, String vehicleId,String synced,String visited) throws SQLException {
+                                                       String verifiedByTitle, String vehicleId, String synced, String visited, String reasonForNotVisiting, String otherReasonDescription) throws SQLException {
     Map<String, String> visitInformation = dbWrapper.getFacilityVisitDetails(facilityCode);
     assertEquals(observation, visitInformation.get("observations"));
     assertEquals(confirmedByName, visitInformation.get("confirmedByName"));
@@ -519,7 +538,9 @@ public class TestCaseHelper {
     assertEquals(vehicleId, visitInformation.get("vehicleId"));
     assertEquals(synced, visitInformation.get("synced"));
     assertEquals(visited, visitInformation.get("visited"));
-    if(visitInformation.get("visited")=="t"){
+    assertEquals(reasonForNotVisiting, visitInformation.get("reasonForNotVisiting"));
+    assertEquals(otherReasonDescription, visitInformation.get("otherReasonDescription"));
+    if (visitInformation.get("visited").equals("t")) {
       assertEquals(new SimpleDateFormat("yyyy-MM").format(new Date()) + "-01 00:00:00", visitInformation.get("visitDate"));
     }
   }
@@ -540,9 +561,9 @@ public class TestCaseHelper {
                                                String productCode, String facilityCode) throws SQLException {
     ResultSet epiInventoryDetails = dbWrapper.getEpiInventoryDetails(productCode, facilityCode);
 
-    assertEqualsAndNulls(epiInventoryDetails.getString("existingQuantity"), existingQuantity);
-    assertEqualsAndNulls(epiInventoryDetails.getString("deliveredQuantity"),deliveredQuantity);
-    assertEqualsAndNulls(epiInventoryDetails.getString("spoiledQuantity"),spoiledQuantity);
+    assertEquals(epiInventoryDetails.getString("existingQuantity"), existingQuantity);
+    assertEquals(epiInventoryDetails.getString("deliveredQuantity"), deliveredQuantity);
+    assertEquals(epiInventoryDetails.getString("spoiledQuantity"), spoiledQuantity);
   }
 
   public void verifyRefrigeratorReadingDataInDatabase(String facilityCode, String refrigeratorSerialNumber, Float temperature,
@@ -572,6 +593,11 @@ public class TestCaseHelper {
     assertFalse(resultSet.next());
   }
 
+  public void verifyRefrigeratorReadingsNullInDatabase(String refrigeratorSerialNumber, String facilityCode) throws SQLException {
+    ResultSet resultSet = dbWrapper.getRefrigeratorReadings(refrigeratorSerialNumber, facilityCode);
+    assertFalse(resultSet.next());
+  }
+
   public void verifyRefrigeratorProblemDataInDatabase(String facilityCode, String refrigeratorSerialNumber, Boolean operatorError,
                                                       Boolean burnerProblem, Boolean gasLeakage, Boolean egpFault,
                                                       Boolean thermostatSetting, Boolean other, String otherProblemExplanation) throws SQLException {
@@ -598,11 +624,55 @@ public class TestCaseHelper {
     assertEquals(maleMobileBrigadeReading, fullCoveragesDetails.get("maleoutreach"));
   }
 
-  public void verifyPodDataInDatabase(String quantityReceived, String notes, String productCode) throws SQLException {
+  public void verifyPodDataInDatabase(String quantityReceived, String notes, String productCode, String quantityReturned) throws SQLException {
     Integer id = dbWrapper.getMaxRnrID();
     Map<String, String> podLineItemFor = dbWrapper.getPodLineItemFor(id, productCode);
     assertEquals(quantityReceived, podLineItemFor.get("quantityreceived"));
     assertEquals(notes, podLineItemFor.get("notes"));
+    assertEquals(quantityReturned, podLineItemFor.get("quantityreturned"));
+  }
+
+  public void verifyChildCoverageDataInDatabase() throws SQLException {
+    String facilityId = dbWrapper.getAttributeFromTable("facilities", "id", "code", "F10");
+    String facilityVisitId = dbWrapper.getAttributeFromTable("facility_visits", "id", "facilityId", facilityId);
+
+    List<String> vaccinations = asList("BCG", "Polio (Newborn)", "Polio 1st dose", "Polio 2nd dose", "Polio 3rd dose", "Penta 1st dose", "Penta 2nd dose", "Penta 3rd dose", "PCV10 1st dose", "PCV10 2nd dose", "PCV10 3rd dose", "Measles");
+
+    for (int i = 1; i <= 12; i++) {
+      ResultSet childCoverageDetails = dbWrapper.getChildCoverageDetails(vaccinations.get(i - 1), facilityVisitId);
+
+      assertEquals(childCoverageDetails.getString("healthCenter11months"), String.valueOf(i));
+      assertEquals(childCoverageDetails.getString("outreach11months"), String.valueOf(i));
+      if (i != 2) {
+        assertEquals(childCoverageDetails.getString("healthCenter23months"), String.valueOf(i));
+        assertEquals(childCoverageDetails.getString("outreach23months"), String.valueOf(i));
+      }
+    }
+    List<String> openedVials = asList("BCG", "Polio10", "Polio20", "Penta1", "Penta10", "PCV", "Measles");
+    for (int i = 1; i <= 7; i++) {
+      ResultSet openedVialLineItem = dbWrapper.getChildOpenedVialLineItem(openedVials.get(i - 1), facilityVisitId);
+      assertEquals(openedVialLineItem.getString("openedVials"), String.valueOf(i));
+    }
+  }
+
+  public void verifyAdultCoverageDataInDatabase(String facilityCode) throws SQLException {
+    String facilityId = dbWrapper.getAttributeFromTable("facilities", "id", "code", facilityCode);
+    String facilityVisitId = dbWrapper.getAttributeFromTable("facility_visits", "id", "facilityId", facilityId);
+
+    List<String> demographicGroups = asList("Pregnant Women", "MIF 15-49 years - Community", "MIF 15-49 years - Students",
+      "MIF 15-49 years - Workers", "Students not MIF", "Workers not MIF", "Other not MIF");
+
+    for (int rowNumber = 1; rowNumber <= 7; rowNumber++) {
+      ResultSet adultCoverageDetails = dbWrapper.getAdultCoverageDetails(demographicGroups.get(rowNumber - 1), facilityVisitId);
+      assertEquals(adultCoverageDetails.getString("outreachTetanus1"), "2" + rowNumber);
+      assertEquals(adultCoverageDetails.getString("outreachTetanus2To5"), "4" + rowNumber);
+      if (rowNumber < 3 || rowNumber > 6) {
+        assertEquals(adultCoverageDetails.getString("healthCenterTetanus1"), "1" + rowNumber);
+        assertEquals(adultCoverageDetails.getString("healthCenterTetanus2To5"), "3" + rowNumber);
+      }
+    }
+    ResultSet adultOpenedVialLineItem = dbWrapper.getAdultOpenedVialLineItem(facilityVisitId);
+    assertEquals(adultOpenedVialLineItem.getString("openedVials"), "999");
   }
 
   public static Boolean parsePostgresBoolean(String value) {
@@ -622,12 +692,39 @@ public class TestCaseHelper {
   }
 
   public void assertEqualsAndNulls(Object actual, String expected) {
-    if(expected.equals(NULL_VALUE)) {
+    if (expected.equals(NULL_VALUE)) {
       assertEquals(actual, null);
-    }
-    else {
+    } else {
       assertEquals(actual, expected);
     }
+  }
+
+  public void verifyDeliveryDetailsOfPodScreenInDatabase(String deliveredByValue, String receivedByValue, String receivedDateValue) throws SQLException {
+    Integer orderId = dbWrapper.getMaxRnrID();
+    Map<String, String> pod = dbWrapper.getPodData(orderId);
+    assertEquals(deliveredByValue, pod.get("deliveredby"));
+    assertEquals(receivedByValue, pod.get("receivedby"));
+    assertEquals(receivedDateValue, pod.get("receiveddate"));
+  }
+
+  public void verifyAdultCoverageDataNullInDatabase(String facilityCode) throws SQLException {
+    String facilityId = dbWrapper.getAttributeFromTable("facilities", "id", "code", facilityCode);
+    String facilityVisitId = dbWrapper.getAttributeFromTable("facility_visits", "id", "facilityId", facilityId);
+
+    List<String> demographicGroups = asList("Pregnant Women", "MIF 15-49 years - Community", "MIF 15-49 years - Students",
+      "MIF 15-49 years - Workers", "Students not MIF", "Workers not MIF", "Other not MIF");
+
+    for (int rowNumber = 1; rowNumber <= 7; rowNumber++) {
+      ResultSet adultCoverageDetails = dbWrapper.getAdultCoverageDetails(demographicGroups.get(rowNumber - 1), facilityVisitId);
+      assertEquals(adultCoverageDetails.getString("outreachTetanus1"), (String) null);
+      assertEquals(adultCoverageDetails.getString("outreachTetanus2To5"), (String) null);
+      if (rowNumber < 3 || rowNumber > 6) {
+        assertEquals(adultCoverageDetails.getString("healthCenterTetanus1"), (String) null);
+        assertEquals(adultCoverageDetails.getString("healthCenterTetanus2To5"), (String) null);
+      }
+    }
+    ResultSet adultOpenedVialLineItem = dbWrapper.getAdultOpenedVialLineItem(facilityVisitId);
+    assertEquals(adultOpenedVialLineItem.getString("openedVials"), (String) null);
   }
 }
 

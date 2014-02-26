@@ -213,7 +213,7 @@ Feature: Smoke Tests
     Given I have the following data for regimen:
       | HIV | storeInCharge | ADULTS | RegimenCode1 | RegimenName1 | RegimenCode2 | RegimenName2 |
     Given I have "storeInCharge" user with "CREATE_REQUISITION,VIEW_REQUISITION" rights and data to initiate requisition
-    And I am logged in as "storeInCharge"
+    And I am logged in as "StoreInCharge"
     And I access initiate emergency requisition page
     Then I got error message "No current period defined. Please contact the Admin."
     When I have period "currentPeriod" associated with schedule "M"
@@ -284,10 +284,12 @@ Feature: Smoke Tests
     And I receive shipment for the order
     And I access Manage POD page
     And I click on update Pod link for Row "1"
-    And I enter "10" as quantity received and "notes" as notes in row "1"
+    And I enter "10" as quantity received, "78" as quantity returned and "notes" as notes in row "1"
+    And I enter "openLMIS" as deliveredBy,"Facility Incharge" as receivedBy and "27/02/2014" as receivedDate
     And I submit POD
-    Then I verify quantity received and notes disabled
-    And I verify in database quantity received as "10" and notes as "notes"
+    Then I verify quantity received, quantity returned,notes,deliveredBy,receivedBy,receivedDate disabled
+    And I verify in database quantity received as "10", quantity returned as "78" and notes as "notes"
+    And I verify in database deliveredBy as "openLMIS",receivedBy as "Facility Incharge" and receivedDate as "2014-02-27 00:00:00"
     Then I access view orders page
     And I verify order status as "Received" in row "1"
     Then I access Manage POD page
@@ -517,15 +519,16 @@ Feature: Smoke Tests
     And I verify saved "visit information" values:
       | vehicleId | observations     | confirmedByName | confirmedByTitle | verifiedByName | verifiedByTitle |
       | 023!YU-09 | some observation | samuel          | fc               | Verifier       | X YZ            |
+    When I navigate to "epi inventory" tab
+    Then Verify "epi inventory" indicator should be "RED"
 
   @smokeDistribution
-  Scenario: User should verify facility and sync status when facility was not visited
+  Scenario: User should fill Visit Information when facility was not visited
     Given I have the following data for distribution:
       | userSIC       | deliveryZoneCodeFirst | deliveryZoneCodeSecond | deliveryZoneNameFirst | deliveryZoneNameSecond | facilityCodeFirst | facilityCodeSecond | programFirst | programSecond | schedule |
       | storeInCharge | DZ1                   | DZ2                    | Delivery Zone First   | Delivery Zone Second   | F10               | F11                | VACCINES     | TB            | M        |
     And I update product "P10" to have product group "penta"
     And I have data available for "Multiple" facilities attached to delivery zones
-    And I disassociate "F11" from delivery zone
     And I assign delivery zone "DZ1" to user "storeInCharge" having role "store in-charge"
     When I am logged in as "storeInCharge"
     And I access plan my distribution page
@@ -536,17 +539,8 @@ Feature: Smoke Tests
     And I record data for distribution "1"
     And I choose facility "F10"
     And I verify that I am on visit information page
-    Then I see "Overall" facility icon as "AMBER"
-    And I see "Individual" facility icon as "AMBER"
-    And I navigate to "epi use" tab
-    And I Enter "epi use" values:
-      | distributed | expirationDate | loss | received | firstOfMonth | endOfMonth |
-      | 16          | 11/2012        | 1    | 10       | 12           |            |
-    And I enter EPI end of month as "5"
-    And I navigate to "full coverage" tab
-    And I Enter "full coverage" values:
-      | femaleHealthCenter | femaleMobileBrigade | maleHealthCenter | maleMobileBrigade |
-      | 123                | 22                  | 23               | 242               |
+    Then I see Overall facility icon as "AMBER"
+    And I see "F10" facility indicator icon as "AMBER"
     And I navigate to "refrigerator" tab
     When I add new refrigerator
     When I enter Brand "LG"
@@ -556,9 +550,11 @@ Feature: Smoke Tests
     And I navigate to "visit information" tab
     Then Verify "visit information" indicator should be "RED"
     When I select "no" facility visited
-    And I select No Transport reason
+    Then Verify "visit information" indicator should be "AMBER"
+    And I select Others reason
+    Then Verify "visit information" indicator should be "AMBER"
+    And I enter Other reason as "reason for not visiting"
     Then Verify "visit information" indicator should be "GREEN"
-    Then I see "Overall" facility icon as "GREEN"
     And Verify "refrigerator" indicator should be "GREEN"
     And Verify "epi inventory" indicator should be "GREEN"
     When I navigate to "epi inventory" tab
@@ -566,38 +562,10 @@ Feature: Smoke Tests
     When I navigate to "refrigerator" tab
     And I access show
     Then I see "refrigerator" fields disabled
-    And I see "Overall" facility icon as "GREEN"
-    When I access plan my distribution page
-    And I sync recorded data
-    And I check confirm sync message as "F10-Village Dispensary"
-    And I done sync message
-    And I view visit information in DB for facility "F10":
-      | observations     | confirmedByName | confirmedByTitle | verifiedByName | verifiedByTitle | vehicleId | synced | visited |
-      | null             |   null          | null             |  null          | null            | null      | t      |   f     |
-    And I view epi use data in DB for facility "F10" and product group "penta":
-      | distributed | expirationDate | loss | received | firstOfMonth | endOfMonth |
-      | 16          | 11/2012        | 1    | 10       | 12           | 5          |
-    And I view full coverage readings in DB for facility "F10":
-      | femaleHealthCenter | femaleOutreach | maleHealthCenter | maleOutreach |
-      | 123                | 22             | 23               | 242          |
-    And I view epi inventory readings in DB for facility "F10" for product "P10":
-      | existingQuantity | deliveredQuantity | spoiledQuantity |
-      | null             | null              | null            |
-    And I view epi inventory readings in DB for facility "F10" for product "P11":
-      | existingQuantity | deliveredQuantity | spoiledQuantity |
-      | null             | null              | null            |
-    And I see distribution status as synced
-    When I record data for distribution "1"
-    And I choose facility "F10"
-    Then I see "Overall" facility icon as "BLUE"
-    Then I see "visit information" fields disabled
-    When I navigate to "epi use" tab
-    Then I see "epi use" fields disabled
-    When I navigate to "full coverage" tab
-    Then I see "full coverage" fields disabled
-    When I navigate to "refrigerator" tab
-    And I access show
-    Then I see "refrigerator" fields disabled
+    When I navigate to "visit information" tab
+    Then I verify radio button "No" is selected
+    And I verify Others reason selected
+    And I verify Other reason entered as "reason for not visiting"
 
 
   @smokeDistribution
@@ -714,10 +682,10 @@ Feature: Smoke Tests
     And I initiate distribution
     And I record data for distribution "1"
     And I choose facility "F10"
-    And I navigate to Child Coverage tab
+    And I navigate to "child coverage" tab
     Then Verify "child coverage" indicator should be "RED"
     And I Enter "child coverage" values:
-      | healthCenter11 | outReach11 | healthCenter23 | outReach23 | openedVial |
+      | healthCenter11 | outreach11 | healthCenter23 | outreach23 | openedVial |
       | 123            | 22         | 23             | 34         | 4          |
     Then Verify "child coverage" indicator should be "GREEN"
     When I apply NR to healthCenter11Months for rowNumber "12"
@@ -727,8 +695,41 @@ Feature: Smoke Tests
     When I enter healthCenter11Months for rowNumber "12" as "34"
     Then Verify "child coverage" indicator should be "GREEN"
     And I verify saved "child coverage" values:
-      | targetGroup | healthCenter11 | outReach11 | total1 | coverageRate | healthCenter23 | outReach23 | total2 | total3 | openedVial | wastageRate |
+      | targetGroup | healthCenter11 | outreach11 | total1 | coverageRate | healthCenter23 | outreach23 | total2 | total3 | openedVial | wastageRate |
       | 34          | 123            | 22         | 145    | 426          | 23             | 34         | 57     | 202    | 4          | -1415       |
+
+  @smokeDistribution
+  Scenario: User should fill Adult Coverage data
+    Given I have the following data for distribution:
+      | userSIC       | deliveryZoneCodeFirst | deliveryZoneCodeSecond | deliveryZoneNameFirst | deliveryZoneNameSecond | facilityCodeFirst | facilityCodeSecond | programFirst | programSecond | schedule |
+      | storeInCharge | DZ1                   | DZ2                    | Delivery Zone First   | Delivery Zone Second   | F10               | F11                | VACCINES     | TB            | M        |
+    And I have data available for "Multiple" facilities attached to delivery zones
+    And I assign delivery zone "DZ1" to user "storeInCharge" having role "store in-charge"
+    And I update population of facility "F10" as "342"
+    And I setup mapping for adult coverage
+    When I am logged in as "storeInCharge"
+    And I access plan my distribution page
+    And I select delivery zone "Delivery Zone First"
+    And I select program "VACCINES"
+    And I select period "Period14"
+    And I initiate distribution
+    And I record data for distribution "1"
+    And I choose facility "F10"
+    And I navigate to "adult coverage" tab
+    Then Verify "adult coverage" indicator should be "RED"
+    And I Enter "adult coverage" values:
+      | healthCenter1 | outreach1 | healthCenter25 | outreach25 | openedVial |
+      | 123           | 22        | 23             | 34         | 4          |
+    Then Verify "adult coverage" indicator should be "GREEN"
+    When I apply NR to outreach2To5 for rowNumber "1"
+    Then Verify "adult coverage" indicator should be "GREEN"
+    And I apply NR to outreach2To5 for rowNumber "1"
+    Then Verify "adult coverage" indicator should be "AMBER"
+    When I enter outreach2To5 for rowNumber "1" as "31"
+    Then Verify "adult coverage" indicator should be "GREEN"
+    And I verify saved "adult coverage" values:
+      | targetGroup | healthCenter1 | outreach1 | total1 | healthCenter25 | outreach25 | total2 | total3 | coverageRate | openedVial | wastageRate |
+      | 1385        | 123           | 22        | 145    | 23             | 31         | 54     | 199    | 14           | 4          | -1967       |
 
   @smokeDistribution
   Scenario: User should verify facility and sync status when facility was visited
@@ -747,20 +748,19 @@ Feature: Smoke Tests
     And I initiate distribution
     When I record data for distribution "1"
     And I choose facility "F10"
-    Then I see "Overall" facility icon as "AMBER"
-    And I see "Individual" facility icon as "AMBER"
+    Then I see Overall facility icon as "AMBER"
+    And I see "F10" facility indicator icon as "AMBER"
     And I navigate to "refrigerator" tab
     When I add new refrigerator
     When I enter Brand "LG"
     And I enter Modal "800 LITRES"
     And I enter Serial Number "GR-J287PGHV"
     And I access done
-    Then I see "Overall" facility icon as "RED"
+    Then I see Overall facility icon as "RED"
     When I access plan my distribution page
     When I try to sync recorded data
     Then I verify sync message as "No facility for the chosen zone, program and period is ready to be sync"
     When I record data for distribution "1"
-
     And I choose facility "F10"
     And I navigate to "refrigerator" tab
     When I edit refrigerator
@@ -769,7 +769,6 @@ Feature: Smoke Tests
     And I enter low alarm events "1"
     And I enter high alarm events "0"
     And I verify "No" that there is a problem with refrigerator since last visit
-
     And I navigate to "visit information" tab
     When I select "yes" facility visited
     And I select visit date as current date
@@ -783,6 +782,12 @@ Feature: Smoke Tests
       | 16          | 11/2012        | 1    | 10       | 12           |            |
     And I enter EPI end of month as "5"
 
+    And I navigate to "child coverage" tab
+    Then Verify "child coverage" indicator should be "RED"
+    And I Enter "child coverage" values:
+      | healthCenter11 | outreach11 | healthCenter23 | outreach23 | openedVial |
+      | 123            | 22         | 23             | 34         | 4          |
+    Then Verify "child coverage" indicator should be "GREEN"
     And I navigate to "full coverage" tab
     And I Enter "full coverage" values:
       | femaleHealthCenter | femaleMobileBrigade | maleHealthCenter | maleMobileBrigade |
@@ -792,15 +797,19 @@ Feature: Smoke Tests
       | existingQuantity | deliveredQuantity | spoiledQuantity |
       | 20               | 100               | 5               |
       | 10               | 50                | 3               |
-    Then I see "Overall" facility icon as "GREEN"
+    And I navigate to "adult coverage" tab
+    And I Enter "adult coverage" values:
+      | healthCenter1 | outreach1 | healthCenter25 | outreach25 | openedVial |
+      | 123           | 22        | 23             | 34         | 4          |
+    Then I see Overall facility icon as "GREEN"
     When I access plan my distribution page
 
     When I sync recorded data
     Then I check confirm sync message as "F10-Village Dispensary"
     When I done sync message
     And I view visit information in DB for facility "F10":
-      | observations     | confirmedByName | confirmedByTitle | verifiedByName | verifiedByTitle | vehicleId | synced |
-      | some observation | samuel          | fc               | Verifier       | XYZ             | null      | t      |
+      | observations     | confirmedByName | confirmedByTitle | verifiedByName | verifiedByTitle | vehicleId | synced | visited | reasonForNotVisiting | otherReasonDescription |
+      | some observation | samuel          | fc               | Verifier       | XYZ             | null      | t      | t       | null                 | null                   |
     And I view epi use data in DB for facility "F10" and product group "penta":
       | distributed | expirationDate | loss | received | firstOfMonth | endOfMonth |
       | 16          | 11/2012        | 1    | 10       | 12           | 5          |
@@ -816,11 +825,17 @@ Feature: Smoke Tests
     And I view epi inventory readings in DB for facility "F10" for product "P11":
       | existingQuantity | deliveredQuantity | spoiledQuantity |
       | 10               | 50                | 3               |
+    And I view child coverage values in DB for facility "F10":
+      | healthCenter11 | outreach11 | total1 | coverageRate | healthCenter23 | outreach23 | total2 | total3 | openedVial |
+      | 123            | 22         | 145    | 426          | 23             | 34         | 57     | 202    | 4          |
+    And I view adult coverage values in DB for facility "F10":
+      | healthCenter1 | outreach1 | total1 | healthCenter25 | outreach25 | total2 | total3 | openedVial |
+      | 123           | 22        | 145    | 23             | 34         | 57     | 202    | 4          |
     And I verify no record present in refrigerator problem table for refrigerator serial number "GR-J287PGHV" and facility "F10"
     And I see distribution status as synced
     When I record data for distribution "1"
     And I choose facility "F10"
-    Then I see "Overall" facility icon as "BLUE"
+    Then I see Overall facility icon as "BLUE"
     Then I see "visit information" fields disabled
     When I navigate to "epi use" tab
     Then I see "epi use" fields disabled
@@ -829,6 +844,8 @@ Feature: Smoke Tests
     When I navigate to "refrigerator" tab
     And I access show
     Then I see "refrigerator" fields disabled
+    When I navigate to "child coverage" tab
+    Then I see "child coverage" fields disabled
 
     And I access plan my distribution page
     And I delete already cached data for distribution
@@ -843,7 +860,107 @@ Feature: Smoke Tests
     And I initiate distribution
     When I record data for distribution "1"
     And I choose facility "F10"
-    Then I see "Overall" facility icon as "RED"
+    Then I see Overall facility icon as "RED"
     And I navigate to "refrigerator" tab
-    And I see "overall" refrigerator icon as "RED"
+    And I see "Overall" refrigerator icon as "RED"
     And I verify the refrigerator "LG;800 LITRES;GR-J287PGHV" present
+
+
+  @smokeDistribution
+  Scenario: User should verify facility and sync status when facility was not visited
+    Given I have the following data for distribution:
+      | userSIC       | deliveryZoneCodeFirst | deliveryZoneCodeSecond | deliveryZoneNameFirst | deliveryZoneNameSecond | facilityCodeFirst | facilityCodeSecond | programFirst | programSecond | schedule |
+      | storeInCharge | DZ1                   | DZ2                    | Delivery Zone First   | Delivery Zone Second   | F10               | F11                | VACCINES     | TB            | M        |
+    And I update product "P10" to have product group "penta"
+    And I have data available for "Multiple" facilities attached to delivery zones
+    And I disassociate "F11" from delivery zone
+    And I assign delivery zone "DZ1" to user "storeInCharge" having role "store in-charge"
+    When I am logged in as "storeInCharge"
+    And I access plan my distribution page
+    And I select delivery zone "Delivery Zone First"
+    And I select program "VACCINES"
+    And I select period "Period14"
+    And I initiate distribution
+    And I record data for distribution "1"
+    And I choose facility "F10"
+    And I verify that I am on visit information page
+    Then I see Overall facility icon as "AMBER"
+    And I see "F10" facility indicator icon as "AMBER"
+    And I navigate to "child coverage" tab
+    Then Verify "child coverage" indicator should be "RED"
+    And I Enter "child coverage" values:
+      | healthCenter11 | outreach11 | healthCenter23 | outreach23 | openedVial |
+      | 123            | 22         | 23             | 34         | 4          |
+    Then Verify "child coverage" indicator should be "GREEN"
+    Then I navigate to "epi use" tab
+    And I Enter "epi use" values:
+      | distributed | expirationDate | loss | received | firstOfMonth | endOfMonth |
+      | 16          | 11/2012        | 1    | 10       | 12           |            |
+    And I enter EPI end of month as "5"
+    And I navigate to "full coverage" tab
+    And I Enter "full coverage" values:
+      | femaleHealthCenter | femaleMobileBrigade | maleHealthCenter | maleMobileBrigade |
+      | 123                | 22                  | 23               | 242               |
+    And I navigate to "adult coverage" tab
+    And I Enter "adult coverage" values:
+      | healthCenter1 | outreach1 | healthCenter25 | outreach25 | openedVial |
+      | 123           | 22        | 23             | 34         | 4          |
+    And I navigate to "refrigerator" tab
+    When I add new refrigerator
+    When I enter Brand "LG"
+    And I enter Modal "800 LITRES"
+    And I enter Serial Number "GR-J287PGHV"
+    And I access done
+    And I navigate to "visit information" tab
+    Then Verify "visit information" indicator should be "RED"
+    When I select "no" facility visited
+    And I select No Transport reason
+    Then Verify "visit information" indicator should be "GREEN"
+    Then I see Overall facility icon as "GREEN"
+    And Verify "refrigerator" indicator should be "GREEN"
+    And Verify "epi inventory" indicator should be "GREEN"
+    When I navigate to "epi inventory" tab
+    Then I see "epi inventory" fields disabled
+    When I navigate to "refrigerator" tab
+    And I access show
+    Then I see "refrigerator" fields disabled
+    And I see Overall facility icon as "GREEN"
+    When I access plan my distribution page
+    And I sync recorded data
+    And I check confirm sync message as "F10-Village Dispensary"
+    And I done sync message
+    And I view visit information in DB for facility "F10":
+      | observations | confirmedByName | confirmedByTitle | verifiedByName | verifiedByTitle | vehicleId | synced | visited | reasonForNotVisiting  | otherReasonDescription |
+      | null         | null            | null             | null           | null            | null      | t      | f       | TRANSPORT_UNAVAILABLE | null                   |
+    And I view epi use data in DB for facility "F10" and product group "penta":
+      | distributed | expirationDate | loss | received | firstOfMonth | endOfMonth |
+      | 16          | 11/2012        | 1    | 10       | 12           | 5          |
+    And I view full coverage readings in DB for facility "F10":
+      | femaleHealthCenter | femaleOutreach | maleHealthCenter | maleOutreach |
+      | 123                | 22             | 23               | 242          |
+    And I view epi inventory readings in DB for facility "F10" for product "P10":
+      | existingQuantity | deliveredQuantity | spoiledQuantity |
+      | null             | null              | null            |
+    And I view epi inventory readings in DB for facility "F10" for product "P11":
+      | existingQuantity | deliveredQuantity | spoiledQuantity |
+      | null             | null              | null            |
+    And I view child coverage values in DB for facility "F10":
+      | healthCenter11 | outreach11 | total1 | coverageRate | healthCenter23 | outreach23 | total2 | total3 | openedVial |
+      | 123            | 22         | 145    | 426          | 23             | 34         | 57     | 202    | 4          |
+    And I view adult coverage values in DB for facility "F10":
+      | healthCenter1 | outreach1 | total1 | healthCenter25 | outreach25 | total2 | total3 | openedVial |
+      | 123           | 22        | 145    | 23             | 34         | 57     | 202    | 4          |
+    And I see distribution status as synced
+    When I record data for distribution "1"
+    And I choose facility "F10"
+    Then I see Overall facility icon as "BLUE"
+    Then I see "visit information" fields disabled
+    When I navigate to "epi use" tab
+    Then I see "epi use" fields disabled
+    When I navigate to "full coverage" tab
+    Then I see "full coverage" fields disabled
+    When I navigate to "refrigerator" tab
+    And I access show
+    Then I see "refrigerator" fields disabled
+    When I navigate to "child coverage" tab
+    Then I see "child coverage" fields disabled

@@ -372,10 +372,10 @@ public class ManageBudget extends TestCaseHelper {
     initiateRnR.checkWhetherBudgetExceedWarningPresent(true);
 
     initiateRnRPage.clickRegimenTab();
-    initiateRnRPage.enterValuesOnRegimenScreen(3, 2, "8");
-    initiateRnRPage.enterValuesOnRegimenScreen(4, 2, "9");
-    initiateRnRPage.enterValuesOnRegimenScreen(5, 2, "10");
-    initiateRnRPage.enterValuesOnRegimenScreen(6, 2, "11");
+    initiateRnRPage.enterValuesOnRegimenScreen(3, 1, "8");
+    initiateRnRPage.enterValuesOnRegimenScreen(4, 1, "9");
+    initiateRnRPage.enterValuesOnRegimenScreen(5, 1, "10");
+    initiateRnRPage.enterValuesOnRegimenScreen(6, 1, "11");
     initiateRnR.verifyBudgetAmountPresentOnFooter("$200.00");
     initiateRnR.checkWhetherBudgetExceedWarningPresent(true);
 

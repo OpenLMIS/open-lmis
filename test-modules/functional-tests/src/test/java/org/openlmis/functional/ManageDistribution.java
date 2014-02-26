@@ -37,6 +37,7 @@ import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
 import static java.util.Arrays.asList;
 import static java.util.Collections.addAll;
 import static org.testng.AssertJUnit.assertFalse;
+import static org.testng.AssertJUnit.assertNull;
 
 @Listeners(CaptureScreenshotOnFailureListener.class)
 
@@ -60,6 +61,7 @@ public class ManageDistribution extends TestCaseHelper {
   EPIUsePage epiUsePage;
   EpiInventoryPage epiInventoryPage;
   ChildCoveragePage childCoveragePage;
+  AdultCoveragePage adultCoveragePage;
   LoginPage loginPage;
   String productGroupCode = "PG1";
 
@@ -74,6 +76,7 @@ public class ManageDistribution extends TestCaseHelper {
     epiInventoryPage = PageFactory.getInstanceOfEpiInventoryPage(testWebDriver);
     childCoveragePage = PageFactory.getInstanceOfChildCoveragePage(testWebDriver);
     refrigeratorPage = PageFactory.getInstanceOfRefrigeratorPage(testWebDriver);
+    adultCoveragePage = PageFactory.getInstanceOfAdultCoveragePage(testWebDriver);
     loginPage = PageFactory.getInstanceOfLoginPage(testWebDriver, baseUrlGlobal);
 
     tabMap = new HashMap<String, DistributionTab>() {{
@@ -82,7 +85,7 @@ public class ManageDistribution extends TestCaseHelper {
       put("full coverage", fullCoveragePage);
       put("epi inventory", epiInventoryPage);
       put("refrigerator", refrigeratorPage);
-
+      put("adult coverage", adultCoveragePage);
       put("child coverage", childCoveragePage);
     }};
   }
@@ -112,23 +115,31 @@ public class ManageDistribution extends TestCaseHelper {
   @And("^I setup mapping for child coverage$")
   public void insertMappingForChildCoverage() throws SQLException {
     dbWrapper.insertProductsForChildCoverage();
-    dbWrapper.insertRegimensProductsInMappingTable("BCG", "BCG");
-    dbWrapper.insertRegimensProductsInMappingTable("Polio 1st dose", "polio20dose");
-    dbWrapper.insertRegimensProductsInMappingTable("Polio 2nd dose", "polio10dose");
-    dbWrapper.insertRegimensProductsInMappingTable("Polio 3rd dose", "polio20dose");
-    dbWrapper.insertRegimensProductsInMappingTable("Penta 1st dose", "penta1");
-    dbWrapper.insertRegimensProductsInMappingTable("Penta 2nd dose", "penta10");
-    dbWrapper.insertRegimensProductsInMappingTable("Penta 3rd dose", "penta1");
-    dbWrapper.insertRegimensProductsInMappingTable("PCV10 1st dose", "P10");
-    dbWrapper.insertRegimensProductsInMappingTable("PCV10 2nd dose", "P10");
-    dbWrapper.insertRegimensProductsInMappingTable("PCV10 3rd dose", "P10");
-    dbWrapper.insertRegimensProductsInMappingTable("Measles", "Measles");
-    dbWrapper.insertOpenedVialsProductsInMappingTable("Polio10", "P11");
-    dbWrapper.insertOpenedVialsProductsInMappingTable("Polio20", "P10");
-    dbWrapper.insertOpenedVialsProductsInMappingTable("Penta1", "penta1");
-    dbWrapper.insertOpenedVialsProductsInMappingTable("Penta10", "P11");
-    dbWrapper.insertOpenedVialsProductsInMappingTable("PCV", "P10");
-    dbWrapper.insertOpenedVialsProductsInMappingTable("Measles", "Measles");
+    dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("BCG", "BCG", true);
+    dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("Polio 1st dose", "polio20dose", true);
+    dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("Polio 2nd dose", "polio10dose", true);
+    dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("Polio 3rd dose", "polio20dose", true);
+    dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("Penta 1st dose", "penta1", true);
+    dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("Penta 2nd dose", "penta10", true);
+    dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("Penta 3rd dose", "penta1", true);
+    dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("PCV10 1st dose", "P10", true);
+    dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("PCV10 2nd dose", "P10", true);
+    dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("PCV10 3rd dose", "P10", true);
+    dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("Measles", "Measles", true);
+    dbWrapper.insertChildCoverageProductVial("Polio10", "P11");
+    dbWrapper.insertChildCoverageProductVial("Polio20", "P10");
+    dbWrapper.insertChildCoverageProductVial("Penta1", "penta1");
+    dbWrapper.insertChildCoverageProductVial("Penta10", "P11");
+    dbWrapper.insertChildCoverageProductVial("PCV", "P10");
+    dbWrapper.insertChildCoverageProductVial("Measles", "Measles");
+  }
+
+  @And("^I setup mapping for adult coverage")
+  public void insertMappingsForAdultCoverage() throws SQLException {
+    dbWrapper.insertProductsForAdultCoverage();
+    dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("Pregnant Women", "tetanus", false);
+    dbWrapper.insertAdultCoverageOpenedVialMapping("tetanus");
+    dbWrapper.insertProgramProductISA("VACCINES", "tetanus", "405", "12", "3", "4", "4", "2", "4");
   }
 
   @Then("^I verify that I am on visit information page")
@@ -258,11 +269,18 @@ public class ManageDistribution extends TestCaseHelper {
     distributionPage.clickInitiateDistribution();
   }
 
-  @Then("^I see \"([^\"]*)\" facility icon as \"([^\"]*)\"$")
-  public void verifyOverAllFacilityIndicator(String whichIcon, String color) {
+  @Then("^I see Overall facility icon as \"([^\"]*)\"$")
+  public void verifyOverAllFacilityIndicator(String color) {
     testWebDriver.setImplicitWait(1000);
     facilityListPage = PageFactory.getInstanceOfFacilityListPage(testWebDriver);
-    facilityListPage.verifyFacilityIndicatorColor(whichIcon, color);
+    facilityListPage.verifyOverallFacilityIndicatorColor(color);
+  }
+
+  @Then("^I see \"([^\"]*)\" facility indicator icon as \"([^\"]*)\"$")
+  public void verifyFacilityIndicator(String facilityCode, String color) {
+    testWebDriver.setImplicitWait(1000);
+    facilityListPage = PageFactory.getInstanceOfFacilityListPage(testWebDriver);
+    facilityListPage.verifyIndividualFacilityIndicatorColor(facilityCode, color);
   }
 
   @When("^I record data for distribution \"([^\"]*)\"$")
@@ -280,7 +298,7 @@ public class ManageDistribution extends TestCaseHelper {
   @Then("^I access show$")
   public void accessShow() {
     refrigeratorPage = PageFactory.getInstanceOfRefrigeratorPage(testWebDriver);
-    refrigeratorPage.clickShowForRefrigerator1();
+    refrigeratorPage.clickShowForRefrigerator(1);
   }
 
   @Then("^I see \"([^\"]*)\" fields disabled$")
@@ -374,11 +392,15 @@ public class ManageDistribution extends TestCaseHelper {
       assertEqualsAndNulls(facilityVisitDetails.get("verifiedByTitle"), map.get("verifiedByTitle"));
       assertEqualsAndNulls(facilityVisitDetails.get("visited"), map.get("visited"));
       assertEqualsAndNulls(facilityVisitDetails.get("synced"), map.get("synced"));
-      if(facilityVisitDetails.get("visited")=="t"){
-        assertEquals(new SimpleDateFormat("yyyy-MM").format(new Date()) + "-01 00:00:00",facilityVisitDetails.get("visitDate"));
+      assertEqualsAndNulls(facilityVisitDetails.get("visited"), map.get("visited"));
+      assertEqualsAndNulls(facilityVisitDetails.get("reasonForNotVisiting"), map.get("reasonForNotVisiting"));
+      assertEqualsAndNulls(facilityVisitDetails.get("otherReasonDescription"), map.get("otherReasonDescription"));
+      assertEqualsAndNulls(facilityVisitDetails.get("vehicleId"), map.get("vehicleId"));
+      if (facilityVisitDetails.get("visited").equals("t")) {
+        assertEquals(new SimpleDateFormat("yyyy-MM").format(new Date()) + "-01 00:00:00", facilityVisitDetails.get("visitDate"));
+      } else {
+        assertNull(facilityVisitDetails.get("visitDate"));
       }
-      if (!map.get("vehicleId").equals("null"))
-        assertEquals(facilityVisitDetails.get("vehicleId"), map.get("vehicleId"));
     }
   }
 
@@ -387,12 +409,12 @@ public class ManageDistribution extends TestCaseHelper {
     List<Map<String, String>> data = tableData.asMaps();
     Map<String, String> epiDetails = dbWrapper.getEpiUseDetails(productGroupCode, facilityCode);
     for (Map map : data) {
-      assertEquals(map.get("firstOfMonth").toString(), epiDetails.get("stockatfirstofmonth"));
-      assertEquals(map.get("received").toString(), epiDetails.get("received"));
-      assertEquals(map.get("distributed").toString(), epiDetails.get("distributed"));
-      assertEquals(map.get("loss").toString(), epiDetails.get("loss"));
-      assertEquals(map.get("endOfMonth").toString(), epiDetails.get("stockatendofmonth"));
-      assertEquals(map.get("expirationDate").toString(), epiDetails.get("expirationdate"));
+      assertEqualsAndNulls(epiDetails.get("stockAtFirstOfMonth".toLowerCase()), map.get("firstOfMonth").toString());
+      assertEqualsAndNulls(epiDetails.get("received"), map.get("received").toString());
+      assertEqualsAndNulls(epiDetails.get("distributed"), map.get("distributed").toString());
+      assertEqualsAndNulls(epiDetails.get("loss"), map.get("loss").toString());
+      assertEqualsAndNulls(epiDetails.get("stockAtEndOfMonth".toLowerCase()), map.get("endOfMonth").toString());
+      assertEqualsAndNulls(epiDetails.get("expirationDate".toLowerCase()), map.get("expirationDate").toString());
     }
   }
 
@@ -401,16 +423,12 @@ public class ManageDistribution extends TestCaseHelper {
     List<Map<String, String>> data = tableData.asMaps();
     ResultSet resultSet = dbWrapper.getRefrigeratorReadings(refrigeratorSerialNumber, facilityCode);
     for (Map map : data) {
-      assertEquals(map.get("temperature"), resultSet.getString("temperature"));
-      assertEquals(map.get("functioningCorrectly"), resultSet.getString("functioningCorrectly"));
-      assertEquals(map.get("lowAlarmEvents"), resultSet.getString("lowAlarmEvents"));
-      assertEquals(map.get("highAlarmEvents"), resultSet.getString("highAlarmEvents"));
-      assertEquals(map.get("problemSinceLastTime"), resultSet.getString("problemSinceLastTime"));
-      String notes = (String) map.get("notes");
-      if (notes.equals("null")) {
-        notes = null;
-      }
-      assertEquals(notes, resultSet.getString("notes"));
+      assertEqualsAndNulls(resultSet.getString("temperature"), map.get("temperature").toString());
+      assertEqualsAndNulls(resultSet.getString("functioningCorrectly"), map.get("functioningCorrectly").toString());
+      assertEqualsAndNulls(resultSet.getString("lowAlarmEvents"), map.get("lowAlarmEvents").toString());
+      assertEqualsAndNulls(resultSet.getString("highAlarmEvents"), map.get("highAlarmEvents").toString());
+      assertEqualsAndNulls(resultSet.getString("problemSinceLastTime"), map.get("problemSinceLastTime").toString());
+      assertEqualsAndNulls(resultSet.getString("notes"), map.get("notes").toString());
     }
   }
 
@@ -419,10 +437,10 @@ public class ManageDistribution extends TestCaseHelper {
     List<Map<String, String>> data = tableData.asMaps();
     Map<String, String> fullCoveragesDetails = dbWrapper.getFullCoveragesDetails(facilityCode);
     for (Map map : data) {
-      assertEquals(map.get("femaleHealthCenter").toString(), fullCoveragesDetails.get("femalehealthcenter"));
-      assertEquals(map.get("femaleOutreach").toString(), fullCoveragesDetails.get("femaleoutreach"));
-      assertEquals(map.get("maleHealthCenter").toString(), fullCoveragesDetails.get("malehealthcenter"));
-      assertEquals(map.get("maleOutreach").toString(), fullCoveragesDetails.get("maleoutreach"));
+      assertEqualsAndNulls(fullCoveragesDetails.get("femaleHealthCenter".toLowerCase()), map.get("femaleHealthCenter").toString());
+      assertEqualsAndNulls(fullCoveragesDetails.get("femaleOutreach".toLowerCase()), map.get("femaleOutreach").toString());
+      assertEqualsAndNulls(fullCoveragesDetails.get("maleHealthCenter".toLowerCase()), map.get("maleHealthCenter").toString());
+      assertEqualsAndNulls(fullCoveragesDetails.get("maleOutreach".toLowerCase()), map.get("maleOutreach").toString());
     }
   }
 
@@ -431,8 +449,57 @@ public class ManageDistribution extends TestCaseHelper {
   verifyEpiInventoryDataInDB(String facilityCode, String productCode, DataTable tableData) throws SQLException {
     List<Map<String, String>> data = tableData.asMaps();
     for (Map map : data) {
-      verifyEpiInventoryDataInDatabase(map.get("existingQuantity").toString(), map.get("deliveredQuantity").toString(), map.get("spoiledQuantity").toString(), productCode, facilityCode);
+      ResultSet epiInventoryDetails = dbWrapper.getEpiInventoryDetails(productCode, facilityCode);
+
+      assertEqualsAndNulls(epiInventoryDetails.getString("existingQuantity"), map.get("existingQuantity").toString());
+      assertEqualsAndNulls(epiInventoryDetails.getString("deliveredQuantity"), map.get("deliveredQuantity").toString());
+      assertEqualsAndNulls(epiInventoryDetails.getString("spoiledQuantity"), map.get("spoiledQuantity").toString());
     }
+  }
+
+  @And("^I view child coverage values in DB for facility \"([^\"]*)\":$")
+  public void verifyChildCoverageDataInDB(String facilityCode, DataTable tableData) throws SQLException {
+
+    String facilityId = dbWrapper.getAttributeFromTable("facilities", "id", "code", facilityCode);
+    String facilityVisitId = dbWrapper.getAttributeFromTable("facility_visits", "id", "facilityId", facilityId);
+    List<Map<String, String>> data = tableData.asMaps();
+    for (Map map : data) {
+      List<String> vaccinations = asList("BCG", "Polio (Newborn)", "Polio 1st dose", "Polio 2nd dose", "Polio 3rd dose", "Penta 1st dose", "Penta 2nd dose", "Penta 3rd dose", "PCV10 1st dose", "PCV10 2nd dose", "PCV10 3rd dose", "Measles");
+
+      for (int i = 1; i <= 12; i++) {
+        ResultSet childCoverageDetails = dbWrapper.getChildCoverageDetails(vaccinations.get(i - 1), facilityVisitId);
+
+        assertEquals(childCoverageDetails.getString("healthCenter11months"), map.get("healthCenter11"));
+        assertEquals(childCoverageDetails.getString("outreach11months"), map.get("outreach11"));
+        if (i != 2) {
+          assertEquals(childCoverageDetails.getString("healthCenter23months"), map.get("healthCenter23"));
+          assertEquals(childCoverageDetails.getString("outreach23months"), map.get("outreach23"));
+        }
+      }
+
+      List<String> openedVials = asList("BCG", "Polio10", "Polio20", "Penta1", "Penta10", "PCV", "Measles");
+      for (int i = 1; i <= 7; i++) {
+        ResultSet openedVialLineItem = dbWrapper.getChildOpenedVialLineItem(openedVials.get(i - 1), facilityVisitId);
+        assertEquals(openedVialLineItem.getString("openedVials"), map.get("openedVial"));
+      }
+    }
+  }
+
+  @And("^I view adult coverage values in DB for facility \"([^\"]*)\":$")
+  public void verifyAdultCoverageDataInDB(String facilityCode, DataTable tableData) throws SQLException {
+
+    String facilityId = dbWrapper.getAttributeFromTable("facilities", "id", "code", facilityCode);
+    String facilityVisitId = dbWrapper.getAttributeFromTable("facility_visits", "id", "facilityId", facilityId);
+    Map<String, String> dataMap = tableData.asMaps().get(0);
+    ResultSet adultCoverageDetails = dbWrapper.getAdultCoverageDetails("Pregnant Women", facilityVisitId);
+    assertEquals(dataMap.get("targetGroup"), adultCoverageDetails.getString("targetGroup"));
+    assertEquals(dataMap.get("healthCenter1"), adultCoverageDetails.getString("healthCenterTetanus1"));
+    assertEquals(dataMap.get("outreach1"), adultCoverageDetails.getString("outreachTetanus1"));
+    assertEquals(dataMap.get("healthCenter25"), adultCoverageDetails.getString("healthCenterTetanus2To5"));
+    assertEquals(dataMap.get("outreach25"), adultCoverageDetails.getString("outreachTetanus2To5"));
+
+    ResultSet openedVialLineItem = dbWrapper.getAdultOpenedVialLineItem(facilityVisitId);
+    assertEquals(dataMap.get("openedVial"), openedVialLineItem.getString("openedVials"));
   }
 
   @Then("^I verify no record present in refrigerator problem table for refrigerator serial number \"([^\"]*)\" and facility \"([^\"]*)\"$")
@@ -522,7 +589,10 @@ public class ManageDistribution extends TestCaseHelper {
 
   @Then("^I should not see already cached facility \"([^\"]*)\"$")
   public void verifyAlreadyCachedDistributionFacilityNotPresentInDropDown(String facilityCodeFirst) throws SQLException {
-    assertFalse(facilityListPage.getAllFacilitiesFromDropDown().contains(facilityCodeFirst));
+    facilityListPage = PageFactory.getInstanceOfFacilityListPage(testWebDriver);
+    for (WebElement webElement : facilityListPage.getAllFacilitiesFromDropDown()) {
+      assertFalse(webElement.getText().contains(facilityCodeFirst));
+    }
     facilityListPage.clickFacilityListDropDown();
   }
 

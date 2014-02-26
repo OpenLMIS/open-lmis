@@ -15,6 +15,8 @@ public class GeoReportData {
 
   private String geometry;
 
+  private float expected;
+
   private float total;
 
   private float ever;

@@ -10,6 +10,12 @@
 
 function ReportingRateController($scope, leafletData) {
 
+  $scope.indicator_types = [{code: 'ever_over_total',name:'Ever Reported / Total Facilities'},
+                            {code: 'ever_over_expected',name:'Ever Reported / Expected Facilities'},
+                            {code: 'period_over_expected',name:'Reported during period / Expected Facilities'}];
+
+  $scope.indicator_type = 'period_over_expected';
+
   $scope.geojson = {};
 
   function interpolate(value, count) {
@@ -19,14 +25,15 @@ function ReportingRateController($scope, leafletData) {
   }
 
   $scope.style = function (feature) {
-    var val = parseFloat(feature.ever) / parseFloat(feature.total);
+    //var val = parseFloat(feature.period) / parseFloat(feature.total);
+    var color = ($scope.indicator_type == 'ever_over_total')?interpolate(feature.ever, feature.total):($scope.indicator_type == 'ever_over_expected')? interpolate(feature.ever, feature.expected):interpolate(feature.period, feature.expected);
     return {
-      fillColor: interpolate(feature.ever, feature.total),
+      fillColor: color,
       weight: 1,
       opacity: 1,
       color: 'white',
       dashArray: '1',
-      fillOpacity: ( val > 0.5 ) ? val : 0.5
+      fillOpacity: 0.7
     };
   };
 
@@ -58,12 +65,35 @@ function ReportingRateController($scope, leafletData) {
         style: $scope.style,
         onEachFeature: onEachFeature,
         resetStyleOnMouseout: true
+      },
+//      layers: {
+//        baselayers: {
+//          googleTerrain: {
+//            name: 'Google Terrain',
+//            layerType: 'TERRAIN',
+//            type: 'google'
+//          },
+//          googleHybrid: {
+//            name: 'Google Hybrid',
+//            layerType: 'HYBRID',
+//            type: 'google'
+//          },
+//          googleRoadmap: {
+//            name: 'Google Streets',
+//            layerType: 'ROADMAP',
+//            type: 'google'
+//          }
+//        }
+//      },
+      defaults: {
+        scrollWheelZoom: false
       }
     });
     $scope.$apply();
   };
 
   function onEachFeature(feature, layer) {
+
     layer.on({
       click: zoomToFeature
     });
@@ -71,32 +101,40 @@ function ReportingRateController($scope, leafletData) {
   }
 
   function popupFormat(feature){
-    return '<b>' + feature.properties.name + '</b><br /><div>Total Facilities: ' + feature.total + '</div><div>Reporting Facilities: ' + feature.ever + '</div>';
+    return '<b>' + feature.properties.name + '</b><br />' +
+        '<div>Expected Facilities: ' + feature.expected + '</div>' +
+        '<div>Reported This Period: ' + feature.period + '</div>' +
+        '<div>Ever Reported: ' + feature.ever + '</div>' +
+        '<div>Total Facilities: ' + feature.total + '</div> ';
   }
 
   function zoomToFeature(e) {
-    console.info(e);
+
   }
 
-  $.getJSON('/gis/reporting-rate.json', function (data) {
-    $scope.features = data.map;
+  $scope.OnFilterChanged = function(){
+    $.getJSON('/gis/reporting-rate.json',{program: $scope.program, period: $scope.period }, function (data) {
+      $scope.features = data.map;
 
-    angular.forEach($scope.features, function (feature) {
-      feature.geometry_text = feature.geometry;
-      feature.geometry = JSON.parse(feature.geometry);
-      feature.type = "Feature";
-      feature.properties = {};
-      feature.properties.total = feature.total;
-      feature.properties.name = feature.name;
-      feature.properties.id = feature.id;
-    });
+      angular.forEach($scope.features, function (feature) {
+        feature.geometry_text = feature.geometry;
+        feature.geometry = JSON.parse(feature.geometry);
+        feature.type = "Feature";
+        feature.properties = {};
+        feature.properties.name = feature.name;
+        feature.properties.id = feature.id;
+      });
 
-    $scope.drawMap({
-      "type": "FeatureCollection",
-      "features": $scope.features
+      $scope.drawMap({
+        "type": "FeatureCollection",
+        "features": $scope.features
+      });
+      $scope.centerJSON();
     });
-    $scope.centerJSON();
-  });
+  };
+
+
+
 
 
 }

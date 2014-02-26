@@ -17,8 +17,15 @@ app.directive('formToolbar',function () {
   return {
     restrict:'A',
     link:function (scope, element, attrs) {
-      setTimeout(fixToolbarWidth, 0);
+      setTimeout(fixToolbarWidth, 100);
       $(window).on('resize', fixToolbarWidth);
+      scope.$watch(function() {
+        return $('.content').width();
+      }, function(newValue, oldValue) {
+        if(newValue !== oldValue) {
+          fixToolbarWidth();
+        }
+      });
     }
   };
 });
@@ -26,6 +33,7 @@ app.directive('formToolbar',function () {
 var fixToolbarWidth = function() {
   var toolbarWidth = $(document).width() - 26;
   angular.element("#action_buttons").css("width", toolbarWidth + "px");
+  angular.element("#podFooter").css("width", (toolbarWidth - 28) + "px");
 
   var headerHeight = $(".header").outerHeight(true);
   var navHeight = $(".navigation").outerHeight(true);
