@@ -11,6 +11,6 @@
 angular.module('dashboard',['openlmis', 'ui.calendar', 'ui.bootstrap','easypiechart','ui.chart','ngTable']).config(['$routeProvider', function ($routeProvider) {
 
     $routeProvider.
-        when('/dashboard', {controller: AdminDashboardController, templateUrl: 'partials/dashboard.html'}).
+        when('/dashboard', {controller: AdminDashboardController, templateUrl: 'partials/dashboard.html', resolve : AdminDashboardController.resolve}).
         otherwise({redirectTo: '/dashboard'});
 }]);
