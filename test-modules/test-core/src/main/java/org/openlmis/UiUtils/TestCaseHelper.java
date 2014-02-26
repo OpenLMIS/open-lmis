@@ -688,6 +688,26 @@ public class TestCaseHelper {
     assertEquals(receivedByValue, pod.get("receivedby"));
     assertEquals(receivedDateValue, pod.get("receiveddate"));
   }
+
+  public void verifyAdultCoverageDataNullInDatabase() throws SQLException {
+    String facilityId = dbWrapper.getAttributeFromTable("facilities", "id", "code", "F10");
+    String facilityVisitId = dbWrapper.getAttributeFromTable("facility_visits", "id", "facilityId", facilityId);
+
+    List<String> demographicGroups = asList("Pregnant Women", "MIF 15-49 years - Community", "MIF 15-49 years - Students",
+      "MIF 15-49 years - Workers", "Students not MIF", "Workers not MIF", "Other not MIF");
+
+    for (int rowNumber = 1; rowNumber <= 7; rowNumber++) {
+      ResultSet adultCoverageDetails = dbWrapper.getAdultCoverageDetails(demographicGroups.get(rowNumber - 1), facilityVisitId);
+      assertEquals(adultCoverageDetails.getString("outreachTetanus1"), (String) null);
+      assertEquals(adultCoverageDetails.getString("outreachTetanus2To5"), (String) null);
+      if (rowNumber < 3 || rowNumber > 6) {
+        assertEquals(adultCoverageDetails.getString("healthCenterTetanus1"), (String) null);
+        assertEquals(adultCoverageDetails.getString("healthCenterTetanus2To5"), (String) null);
+      }
+    }
+    ResultSet adultOpenedVialLineItem = dbWrapper.getAdultOpenedVialLineItem(facilityVisitId);
+    assertEquals(adultOpenedVialLineItem.getString("openedVials"), (String) null);
+  }
 }
 
 

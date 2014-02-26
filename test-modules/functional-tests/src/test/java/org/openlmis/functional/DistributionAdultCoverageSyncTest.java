@@ -521,6 +521,224 @@ public class DistributionAdultCoverageSyncTest extends TestCaseHelper {
     assertEquals("100", adultCoveragePage.getWastageRate());
   }
 
+  @Test(groups = {"distribution"})
+  public void testShouldVerifyFacilityStatusAndApplyNrToAllSync() throws SQLException {
+    dbWrapper.addRefrigeratorToFacility("LG", "800L", "GNR7878", "F10");
+    dbWrapper.insertProductGroup("PG-1");
+    dbWrapper.insertProductWithGroup("Product5", "ProductName5", "PG-1", true);
+    dbWrapper.insertProgramProduct("Product5", "VACCINES", "10", "true");
+
+    insertProductMappingToGroup();
+    dbWrapper.insertAdultCoverageOpenedVialMapping("tetanus");
+    dbWrapper.insertProgramProductISA("VACCINES", "tetanus", "45", "12", "3", "4", "4", "2", "4");
+
+    HomePage homePage = loginPage.loginAs(adultCoverageData.get(USER), adultCoverageData.get(PASSWORD));
+    DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
+    distributionPage.initiate(adultCoverageData.get(FIRST_DELIVERY_ZONE_NAME), adultCoverageData.get(VACCINES_PROGRAM));
+    FacilityListPage facilityListPage = distributionPage.clickRecordData(1);
+    VisitInformationPage visitInformationPage = facilityListPage.selectFacility(adultCoverageData.get(FIRST_FACILITY_CODE));
+
+    facilityListPage.verifyOverallFacilityIndicatorColor("RED");
+
+    AdultCoveragePage adultCoveragePage = visitInformationPage.navigateToAdultCoverage();
+    adultCoveragePage.verifyIndicator("RED");
+
+    adultCoveragePage.enterOutreachFirstInput(1, "5612");
+
+    adultCoveragePage.verifyIndicator("AMBER");
+    facilityListPage.verifyOverallFacilityIndicatorColor("AMBER");
+
+    adultCoveragePage.navigateToVisitInformation();
+    visitInformationPage.enterDataWhenFacilityVisited("obs", "CN", "CT", "VN", "VT");
+
+    EPIUsePage epiUsePage = visitInformationPage.navigateToEpiUse();
+    epiUsePage.checkApplyNRToAllFields(true);
+
+    RefrigeratorPage refrigeratorPage = visitInformationPage.navigateToRefrigerators();
+    refrigeratorPage.clickDelete();
+    refrigeratorPage.clickOKButton();
+
+    EpiInventoryPage epiInventoryPage = refrigeratorPage.navigateToEpiInventory();
+    epiInventoryPage.applyNRToAll();
+    epiInventoryPage.fillDeliveredQuantity(1, "1");
+    epiInventoryPage.fillDeliveredQuantity(2, "2");
+    epiInventoryPage.fillDeliveredQuantity(3, "3");
+    epiInventoryPage.fillDeliveredQuantity(4, "4");
+
+    FullCoveragePage fullCoveragePage = epiInventoryPage.navigateToFullCoverage();
+    fullCoveragePage.clickApplyNRToAll();
+
+    ChildCoveragePage childCoveragePage = fullCoveragePage.navigateToChildCoverage();
+    childCoveragePage.applyNRToAll();
+    childCoveragePage.clickOK();
+
+    facilityListPage.verifyOverallFacilityIndicatorColor("AMBER");
+
+    childCoveragePage.navigateToAdultCoverage();
+    adultCoveragePage.enterDataInAllFields();
+
+    adultCoveragePage.verifyIndicator("GREEN");
+    facilityListPage.verifyOverallFacilityIndicatorColor("GREEN");
+
+    adultCoveragePage.navigateToRefrigerators();
+    refrigeratorPage.navigateToAdultCoverage();
+    adultCoveragePage.verifyIndicator("GREEN");
+
+    adultCoveragePage.clickApplyNrToAll();
+    adultCoveragePage.clickOK();
+    adultCoveragePage.navigateToChildCoverage();
+    childCoveragePage.navigateToAdultCoverage();
+    adultCoveragePage.verifyIndicator("GREEN");
+    adultCoveragePage.verifyAllFieldsDisabled();
+    facilityListPage.verifyOverallFacilityIndicatorColor("GREEN");
+
+    homePage.navigateToDistributionWhenOnline();
+    distributionPage.syncDistribution(1);
+    assertTrue(distributionPage.getSyncMessage().contains("F10-Village Dispensary"));
+    distributionPage.syncDistributionMessageDone();
+
+    verifyAdultCoverageDataNullInDatabase();
+  }
+
+  @Test(groups = {"distribution"})
+  public void testShouldVerifyFacilityStatusAndSyncWhenAllFieldsFilled() throws SQLException {
+    insertProductMappingToGroup();
+    dbWrapper.insertAdultCoverageOpenedVialMapping("tetanus");
+    dbWrapper.insertProgramProductISA("VACCINES", "tetanus", "45", "12", "3", "4", "4", "2", "4");
+
+    HomePage homePage = loginPage.loginAs(adultCoverageData.get(USER), adultCoverageData.get(PASSWORD));
+    DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
+    distributionPage.initiate(adultCoverageData.get(FIRST_DELIVERY_ZONE_NAME), adultCoverageData.get(VACCINES_PROGRAM));
+    FacilityListPage facilityListPage = distributionPage.clickRecordData(1);
+    VisitInformationPage visitInformationPage = facilityListPage.selectFacility(adultCoverageData.get(FIRST_FACILITY_CODE));
+
+    facilityListPage.verifyOverallFacilityIndicatorColor("AMBER");
+
+    AdultCoveragePage adultCoveragePage = visitInformationPage.navigateToAdultCoverage();
+    adultCoveragePage.verifyIndicator("RED");
+
+    adultCoveragePage.applyNrToOpenedVials();
+
+    adultCoveragePage.verifyIndicator("AMBER");
+    facilityListPage.verifyOverallFacilityIndicatorColor("AMBER");
+    adultCoveragePage.applyNrToOpenedVials();
+
+    adultCoveragePage.navigateToVisitInformation();
+    visitInformationPage.selectFacilityVisitedNo();
+    visitInformationPage.selectReasonBadWeather();
+
+    FullCoveragePage fullCoveragePage = visitInformationPage.navigateToFullCoverage();
+    fullCoveragePage.clickApplyNRToAll();
+
+    ChildCoveragePage childCoveragePage = fullCoveragePage.navigateToChildCoverage();
+    childCoveragePage.applyNRToAll();
+    childCoveragePage.clickOK();
+
+    facilityListPage.verifyOverallFacilityIndicatorColor("AMBER");
+
+    childCoveragePage.navigateToAdultCoverage();
+    adultCoveragePage.enterDataInAllFields();
+
+    adultCoveragePage.verifyIndicator("GREEN");
+    facilityListPage.verifyOverallFacilityIndicatorColor("GREEN");
+
+    adultCoveragePage.navigateToFullCoverage();
+    fullCoveragePage.navigateToAdultCoverage();
+    adultCoveragePage.verifyIndicator("GREEN");
+
+    adultCoveragePage.navigateToChildCoverage();
+    childCoveragePage.navigateToAdultCoverage();
+    adultCoveragePage.verifyIndicator("GREEN");
+    facilityListPage.verifyOverallFacilityIndicatorColor("GREEN");
+
+    homePage.navigateToDistributionWhenOnline();
+    distributionPage.syncDistribution(1);
+    assertTrue(distributionPage.getSyncMessage().contains("F10-Village Dispensary"));
+    distributionPage.syncDistributionMessageDone();
+
+    verifyAdultCoverageDataInDatabase();
+  }
+
+  @Test(groups = {"distribution"})
+  public void testShouldVerifyFacilityStatusAndSyncWhenFewFieldsNR() throws SQLException {
+    insertProductMappingToGroup();
+    dbWrapper.insertAdultCoverageOpenedVialMapping("tetanus");
+    dbWrapper.insertProgramProductISA("VACCINES", "tetanus", "45", "12", "3", "4", "4", "2", "4");
+
+    HomePage homePage = loginPage.loginAs(adultCoverageData.get(USER), adultCoverageData.get(PASSWORD));
+    DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
+    distributionPage.initiate(adultCoverageData.get(FIRST_DELIVERY_ZONE_NAME), adultCoverageData.get(VACCINES_PROGRAM));
+    FacilityListPage facilityListPage = distributionPage.clickRecordData(1);
+    VisitInformationPage visitInformationPage = facilityListPage.selectFacility(adultCoverageData.get(FIRST_FACILITY_CODE));
+
+    facilityListPage.verifyOverallFacilityIndicatorColor("AMBER");
+
+    AdultCoveragePage adultCoveragePage = visitInformationPage.navigateToAdultCoverage();
+    adultCoveragePage.verifyIndicator("RED");
+
+    adultCoveragePage.applyNrToOpenedVials();
+
+    adultCoveragePage.verifyIndicator("AMBER");
+    facilityListPage.verifyOverallFacilityIndicatorColor("AMBER");
+    adultCoveragePage.applyNrToOpenedVials();
+
+    adultCoveragePage.navigateToVisitInformation();
+    visitInformationPage.selectFacilityVisitedNo();
+    visitInformationPage.selectReasonBadWeather();
+
+    FullCoveragePage fullCoveragePage = visitInformationPage.navigateToFullCoverage();
+    fullCoveragePage.clickApplyNRToAll();
+
+    ChildCoveragePage childCoveragePage = fullCoveragePage.navigateToChildCoverage();
+    childCoveragePage.applyNRToAll();
+    childCoveragePage.clickOK();
+
+    facilityListPage.verifyOverallFacilityIndicatorColor("AMBER");
+
+    homePage.navigateToDistributionWhenOnline();
+    distributionPage.clickSyncDistribution(1);
+    distributionPage.clickRecordData(1);
+    facilityListPage.selectFacility(adultCoverageData.get(FIRST_FACILITY_CODE));
+
+    visitInformationPage.navigateToAdultCoverage();
+    adultCoveragePage.enterDataInAllFields();
+
+    adultCoveragePage.verifyIndicator("GREEN");
+    facilityListPage.verifyOverallFacilityIndicatorColor("GREEN");
+    adultCoveragePage.applyNrToOpenedVials();
+    adultCoveragePage.applyHealthCenter2To5Nr(7);
+    adultCoveragePage.applyHealthCenterFirstNr(7);
+
+    adultCoveragePage.verifyIndicator("GREEN");
+    facilityListPage.verifyOverallFacilityIndicatorColor("GREEN");
+
+    homePage.navigateToDistributionWhenOnline();
+    distributionPage.syncDistribution(1);
+    assertTrue(distributionPage.getSyncMessage().contains("F10-Village Dispensary"));
+    distributionPage.syncDistributionMessageDone();
+
+    String facilityId = dbWrapper.getAttributeFromTable("facilities", "id", "code", "F10");
+    String facilityVisitId = dbWrapper.getAttributeFromTable("facility_visits", "id", "facilityId", facilityId);
+
+    List<String> demographicGroups = asList("Pregnant Women", "MIF 15-49 years - Community", "MIF 15-49 years - Students",
+      "MIF 15-49 years - Workers", "Students not MIF", "Workers not MIF", "Other not MIF");
+
+    for (int rowNumber = 1; rowNumber <= 7; rowNumber++) {
+      ResultSet adultCoverageDetails = dbWrapper.getAdultCoverageDetails(demographicGroups.get(rowNumber - 1), facilityVisitId);
+      assertEquals(adultCoverageDetails.getString("outreachTetanus1"), "2" + rowNumber);
+      assertEquals(adultCoverageDetails.getString("outreachTetanus2To5"), "4" + rowNumber);
+      if (rowNumber < 3) {
+        assertEquals(adultCoverageDetails.getString("healthCenterTetanus1"), "1" + rowNumber);
+        assertEquals(adultCoverageDetails.getString("healthCenterTetanus2To5"), "3" + rowNumber);
+      } else if (rowNumber == 7) {
+        assertEquals(adultCoverageDetails.getString("healthCenterTetanus1"), (String) null);
+        assertEquals(adultCoverageDetails.getString("healthCenterTetanus2To5"), (String) null);
+      }
+    }
+    ResultSet adultOpenedVialLineItem = dbWrapper.getAdultOpenedVialLineItem(facilityVisitId);
+    assertEquals(adultOpenedVialLineItem.getString("openedVials"), (String) null);
+  }
+
   public void setupDataForDistributionTest() throws SQLException {
     String programSecond = adultCoverageData.get(TB_PROGRAM);
     String programFirst = adultCoverageData.get(VACCINES_PROGRAM);
@@ -549,26 +767,6 @@ public class DistributionAdultCoverageSyncTest extends TestCaseHelper {
     dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("Students not MIF", "tetanus", false);
     dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("Workers not MIF", "tetanus", false);
     dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("Other not MIF", "tetanus", false);
-  }
-
-  public void verifyAdultCoverageDataNullInDatabase() throws SQLException {
-    String facilityId = dbWrapper.getAttributeFromTable("facilities", "id", "code", "F10");
-    String facilityVisitId = dbWrapper.getAttributeFromTable("facility_visits", "id", "facilityId", facilityId);
-
-    List<String> demographicGroups = asList("Pregnant Women", "MIF 15-49 years - Community", "MIF 15-49 years - Students",
-      "MIF 15-49 years - Workers", "Students not MIF", "Workers not MIF", "Other not MIF");
-
-    for (int rowNumber = 1; rowNumber <= 7; rowNumber++) {
-      ResultSet adultCoverageDetails = dbWrapper.getAdultCoverageDetails(demographicGroups.get(rowNumber - 1), facilityVisitId);
-      assertEquals(adultCoverageDetails.getString("outreachTetanus1"), "null");
-      assertEquals(adultCoverageDetails.getString("outreachTetanus2To5"), "null");
-      if (rowNumber < 3 || rowNumber > 6) {
-        assertEquals(adultCoverageDetails.getString("healthCenterTetanus1"), "null");
-        assertEquals(adultCoverageDetails.getString("healthCenterTetanus2To5"), "null");
-      }
-    }
-    ResultSet adultOpenedVialLineItem = dbWrapper.getAdultOpenedVialLineItem(facilityVisitId);
-    assertEquals(adultOpenedVialLineItem.getString("openedVials"), "null");
   }
 
   @When("^I apply NR to outreach2To5 for rowNumber \"([^\"]*)\"$")
