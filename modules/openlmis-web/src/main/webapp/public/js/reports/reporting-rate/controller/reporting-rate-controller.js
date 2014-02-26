@@ -10,9 +10,9 @@
 
 function ReportingRateController($scope, leafletData) {
 
-  $scope.indicator_types = [{code: 'ever_over_total',name:'Ever Reported / Total Facilities'}
-                            ,{code: 'ever_over_expected',name:'Ever Reported / Expected Facilities'}
-                            ,{code: 'period_over_expected',name:'Reported during period / Expected Facilities'}];
+  $scope.indicator_types = [{code: 'ever_over_total',name:'Ever Reported / Total Facilities'},
+                            {code: 'ever_over_expected',name:'Ever Reported / Expected Facilities'},
+                            {code: 'period_over_expected',name:'Reported during period / Expected Facilities'}];
 
   $scope.indicator_type = 'period_over_expected';
 

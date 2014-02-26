@@ -1,11 +1,11 @@
 app.directive('filters', function(){
-  return{
+  return {
     restrict: 'E',
     link: function(scope, elm, attrs){
 
     },
     template: '<div class="filters"></div>'
-  }
+  } ;
 });
 
 // now comes the program filter
@@ -23,7 +23,7 @@ app.directive('programFilter',['ReportPrograms' , function(ReportPrograms){
                       '<option ng-repeat="program in programs" value="{{ program.id }}">{{program.name}}</option>' +
                    '</select>' +
                 '</div>'
-   }
+   };
 }]);
 
 app.directive('yearFilter',['OperationYears' , function(OperationYears){
@@ -40,7 +40,7 @@ app.directive('yearFilter',['OperationYears' , function(OperationYears){
           '<option ng-repeat="year in years" value="{{ year }}">{{year}}</option>' +
         '</select>' +
         '</div>'
-  }
+  };
 }]);
 
 app.directive('scheduleFilter',['ReportSchedules' , function(ReportSchedules){
@@ -57,7 +57,7 @@ app.directive('scheduleFilter',['ReportSchedules' , function(ReportSchedules){
           '<option ng-repeat="schedule in schedules" value="{{ schedule.id }}">{{schedule.name}}</option>' +
         '</select>' +
         '</div>'
-  }
+  };
 }]);
 
 
@@ -99,5 +99,5 @@ app.directive('periodFilter',['ReportPeriods','ReportPeriodsByScheduleAndYear' ,
           '<option ng-repeat="period in periods" value="{{ period.id }}">{{period.name}}</option>' +
         '</select>' +
         '</div>'
-  }
+  };
 }]);
