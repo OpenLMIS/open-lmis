@@ -21,12 +21,10 @@ import org.testng.annotations.Test;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.assertEquals;
 import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
-import static java.util.Arrays.asList;
 
 public class DistributionFullCoverageSyncTest extends TestCaseHelper {
   public static final String USER = "user";
@@ -61,11 +59,12 @@ public class DistributionFullCoverageSyncTest extends TestCaseHelper {
   @BeforeMethod(groups = {"distribution"})
   public void setUp() throws InterruptedException, SQLException, IOException {
     super.setup();
-    Map<String, String> dataMap = fullCoverageData;
-    setupDataForDistributionTest(dataMap.get(USER), dataMap.get(FIRST_DELIVERY_ZONE_CODE), dataMap.get(SECOND_DELIVERY_ZONE_CODE),
-      dataMap.get(FIRST_DELIVERY_ZONE_NAME), dataMap.get(SECOND_DELIVERY_ZONE_NAME), dataMap.get(FIRST_FACILITY_CODE),
-      dataMap.get(SECOND_FACILITY_CODE), dataMap.get(VACCINES_PROGRAM), dataMap.get(TB_PROGRAM), dataMap.get(SCHEDULE),
-      dataMap.get(PRODUCT_GROUP_CODE));
+    setupDataForDistributionTest(fullCoverageData);
+    dbWrapper.insertProductGroup(fullCoverageData.get(PRODUCT_GROUP_CODE));
+    dbWrapper.insertProductWithGroup("Product5", "ProductName5", fullCoverageData.get(PRODUCT_GROUP_CODE), true);
+    dbWrapper.insertProductWithGroup("Product6", "ProductName6", fullCoverageData.get(PRODUCT_GROUP_CODE), true);
+    dbWrapper.insertProgramProduct("Product5", fullCoverageData.get(VACCINES_PROGRAM), "10", "false");
+    dbWrapper.insertProgramProduct("Product6", fullCoverageData.get(VACCINES_PROGRAM), "10", "true");
     loginPage = PageFactory.getInstanceOfLoginPage(testWebDriver, baseUrlGlobal);
   }
 
@@ -270,24 +269,6 @@ public class DistributionFullCoverageSyncTest extends TestCaseHelper {
     homePage.navigateToDistributionWhenOnline();
     distributionPage.clickSyncDistribution(1);
     assertEquals("No facility for the chosen zone, program and period is ready to be sync", distributionPage.getSyncAlertMessage());
-  }
-
-  public void setupDataForDistributionTest(String userSIC, String deliveryZoneCodeFirst, String deliveryZoneCodeSecond,
-                                           String deliveryZoneNameFirst, String deliveryZoneNameSecond,
-                                           String facilityCodeFirst, String facilityCodeSecond,
-                                           String programFirst, String programSecond, String schedule, String productGroupCode) throws SQLException {
-    List<String> rightsList = asList("MANAGE_DISTRIBUTION");
-    setupTestDataToInitiateRnRAndDistribution(facilityCodeFirst, facilityCodeSecond, true, programFirst, userSIC, "200", rightsList,
-      programSecond, "District1", "Ngorongoro", "Ngorongoro");
-    setupDataForDeliveryZone(true, deliveryZoneCodeFirst, deliveryZoneCodeSecond, deliveryZoneNameFirst, deliveryZoneNameSecond,
-      facilityCodeFirst, facilityCodeSecond, programFirst, programSecond, schedule);
-    dbWrapper.insertRoleAssignmentForDistribution(userSIC, "store in-charge", deliveryZoneCodeFirst);
-    dbWrapper.insertRoleAssignmentForDistribution(userSIC, "store in-charge", deliveryZoneCodeSecond);
-    dbWrapper.insertProductGroup(productGroupCode);
-    dbWrapper.insertProductWithGroup("Product5", "ProductName5", productGroupCode, true);
-    dbWrapper.insertProductWithGroup("Product6", "ProductName6", productGroupCode, true);
-    dbWrapper.insertProgramProduct("Product5", programFirst, "10", "false");
-    dbWrapper.insertProgramProduct("Product6", programFirst, "10", "true");
   }
 
   public void fillEpiInventoryWithOnlyDeliveredQuantity(String deliveredQuantity1, String deliveredQuantity2, String deliveredQuantity3) {

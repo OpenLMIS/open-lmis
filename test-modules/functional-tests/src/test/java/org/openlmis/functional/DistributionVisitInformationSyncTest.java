@@ -26,11 +26,9 @@ import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.*;
-import static java.util.Arrays.asList;
 
 public class DistributionVisitInformationSyncTest extends TestCaseHelper {
   public static final String USER = "user";
@@ -69,11 +67,12 @@ public class DistributionVisitInformationSyncTest extends TestCaseHelper {
     loginPage = PageFactory.getInstanceOfLoginPage(testWebDriver, baseUrlGlobal);
     facilityListPage = PageFactory.getInstanceOfFacilityListPage(testWebDriver);
 
-    Map<String, String> dataMap = visitInformationData;
-    setupDataForDistributionTest(dataMap.get(USER), dataMap.get(FIRST_DELIVERY_ZONE_CODE), dataMap.get(SECOND_DELIVERY_ZONE_CODE),
-      dataMap.get(FIRST_DELIVERY_ZONE_NAME), dataMap.get(SECOND_DELIVERY_ZONE_NAME), dataMap.get(FIRST_FACILITY_CODE),
-      dataMap.get(SECOND_FACILITY_CODE), dataMap.get(VACCINES_PROGRAM), dataMap.get(TB_PROGRAM), dataMap.get(SCHEDULE),
-      dataMap.get(PRODUCT_GROUP_CODE));
+    setupDataForDistributionTest(visitInformationData);
+    dbWrapper.insertProductGroup(visitInformationData.get(PRODUCT_GROUP_CODE));
+    dbWrapper.insertProductWithGroup("Product5", "ProductName5", visitInformationData.get(PRODUCT_GROUP_CODE), true);
+    dbWrapper.insertProductWithGroup("Product6", "ProductName6", visitInformationData.get(PRODUCT_GROUP_CODE), true);
+    dbWrapper.insertProgramProduct("Product5", visitInformationData.get(VACCINES_PROGRAM), "10", "false");
+    dbWrapper.insertProgramProduct("Product6", visitInformationData.get(VACCINES_PROGRAM), "10", "true");
   }
 
   @Test(groups = {"distribution"})
@@ -385,24 +384,6 @@ public class DistributionVisitInformationSyncTest extends TestCaseHelper {
     VisitInformationPage visitInformationPage = PageFactory.getInstanceOfVisitInformation(testWebDriver);
     assertEquals("Visit Info / Observations", visitInformationPage.getFacilityVisitTabLabel());
     assertEquals("Visit Info / Observations", visitInformationPage.getVisitInformationPageLabel());
-  }
-
-  public void setupDataForDistributionTest(String userSIC, String deliveryZoneCodeFirst, String deliveryZoneCodeSecond,
-                                           String deliveryZoneNameFirst, String deliveryZoneNameSecond,
-                                           String facilityCodeFirst, String facilityCodeSecond,
-                                           String programFirst, String programSecond, String schedule, String productGroupCode) throws SQLException {
-    List<String> rightsList = asList("MANAGE_DISTRIBUTION");
-    setupTestDataToInitiateRnRAndDistribution(facilityCodeFirst, facilityCodeSecond, true, programFirst, userSIC, "200", rightsList,
-      programSecond, "District1", "Ngorongoro", "Ngorongoro");
-    setupDataForDeliveryZone(true, deliveryZoneCodeFirst, deliveryZoneCodeSecond, deliveryZoneNameFirst, deliveryZoneNameSecond,
-      facilityCodeFirst, facilityCodeSecond, programFirst, programSecond, schedule);
-    dbWrapper.insertRoleAssignmentForDistribution(userSIC, "store in-charge", deliveryZoneCodeFirst);
-    dbWrapper.insertRoleAssignmentForDistribution(userSIC, "store in-charge", deliveryZoneCodeSecond);
-    dbWrapper.insertProductGroup(productGroupCode);
-    dbWrapper.insertProductWithGroup("Product5", "ProductName5", productGroupCode, true);
-    dbWrapper.insertProductWithGroup("Product6", "ProductName6", productGroupCode, true);
-    dbWrapper.insertProgramProduct("Product5", programFirst, "10", "false");
-    dbWrapper.insertProgramProduct("Product6", programFirst, "10", "true");
   }
 
   public void initiateDistribution(String deliveryZoneNameFirst, String programFirst) {

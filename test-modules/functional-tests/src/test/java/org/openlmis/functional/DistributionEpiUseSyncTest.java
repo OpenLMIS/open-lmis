@@ -24,11 +24,9 @@ import org.testng.annotations.Test;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
-import static java.util.Arrays.asList;
 
 public class DistributionEpiUseSyncTest extends TestCaseHelper {
 
@@ -68,11 +66,12 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
     loginPage = PageFactory.getInstanceOfLoginPage(testWebDriver, baseUrlGlobal);
     facilityListPage = PageFactory.getInstanceOfFacilityListPage(testWebDriver);
 
-    Map<String, String> dataMap = epiUseData;
-    setupDataForDistributionTest(dataMap.get(USER), dataMap.get(FIRST_DELIVERY_ZONE_CODE), dataMap.get(SECOND_DELIVERY_ZONE_CODE),
-      dataMap.get(FIRST_DELIVERY_ZONE_NAME), dataMap.get(SECOND_DELIVERY_ZONE_NAME), dataMap.get(FIRST_FACILITY_CODE),
-      dataMap.get(SECOND_FACILITY_CODE), dataMap.get(VACCINES_PROGRAM), dataMap.get(TB_PROGRAM), dataMap.get(SCHEDULE),
-      dataMap.get(PRODUCT_GROUP_CODE));
+    setupDataForDistributionTest(epiUseData);
+    dbWrapper.insertProductGroup(epiUseData.get(PRODUCT_GROUP_CODE));
+    dbWrapper.insertProductWithGroup("Product5", "ProductName5", epiUseData.get(PRODUCT_GROUP_CODE), true);
+    dbWrapper.insertProductWithGroup("Product6", "ProductName6", epiUseData.get(PRODUCT_GROUP_CODE), true);
+    dbWrapper.insertProgramProduct("Product5", epiUseData.get(VACCINES_PROGRAM), "10", "false");
+    dbWrapper.insertProgramProduct("Product6", epiUseData.get(VACCINES_PROGRAM), "10", "true");
   }
 
   @Test(groups = {"distribution"})
@@ -354,24 +353,6 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
     dbWrapper.updateFieldValue("products", "active", "true", "code", "P10");
     dbWrapper.updateFieldValue("products", "active", "true", "code", "P11");
     dbWrapper.updateFieldValue("products", "active", "true", "code", "Product6");
-  }
-
-  public void setupDataForDistributionTest(String userSIC, String deliveryZoneCodeFirst, String deliveryZoneCodeSecond,
-                                           String deliveryZoneNameFirst, String deliveryZoneNameSecond,
-                                           String facilityCodeFirst, String facilityCodeSecond,
-                                           String programFirst, String programSecond, String schedule, String productGroupCode) throws SQLException {
-    List<String> rightsList = asList("MANAGE_DISTRIBUTION");
-    setupTestDataToInitiateRnRAndDistribution(facilityCodeFirst, facilityCodeSecond, true, programFirst, userSIC, "200", rightsList,
-      programSecond, "District1", "Ngorongoro", "Ngorongoro");
-    setupDataForDeliveryZone(true, deliveryZoneCodeFirst, deliveryZoneCodeSecond, deliveryZoneNameFirst, deliveryZoneNameSecond,
-      facilityCodeFirst, facilityCodeSecond, programFirst, programSecond, schedule);
-    dbWrapper.insertRoleAssignmentForDistribution(userSIC, "store in-charge", deliveryZoneCodeFirst);
-    dbWrapper.insertRoleAssignmentForDistribution(userSIC, "store in-charge", deliveryZoneCodeSecond);
-    dbWrapper.insertProductGroup(productGroupCode);
-    dbWrapper.insertProductWithGroup("Product5", "ProductName5", productGroupCode, true);
-    dbWrapper.insertProductWithGroup("Product6", "ProductName6", productGroupCode, true);
-    dbWrapper.insertProgramProduct("Product5", programFirst, "10", "false");
-    dbWrapper.insertProgramProduct("Product6", programFirst, "10", "true");
   }
 
   public void initiateDistribution(String deliveryZoneNameFirst, String programFirst) {

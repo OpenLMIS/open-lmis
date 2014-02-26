@@ -25,13 +25,11 @@ import org.testng.annotations.Test;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.assertFalse;
 import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
 import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertTrue;
-import static java.util.Arrays.asList;
 import static org.testng.Assert.assertNull;
 
 @Listeners(CaptureScreenshotOnFailureListener.class)
@@ -73,11 +71,13 @@ public class DistributionSyncTest extends TestCaseHelper {
     loginPage = PageFactory.getInstanceOfLoginPage(testWebDriver, baseUrlGlobal);
     facilityListPage = PageFactory.getInstanceOfFacilityListPage(testWebDriver);
 
-    Map<String, String> dataMap = distributionTestData;
-    setupDataForDistributionTest(dataMap.get(USER), dataMap.get(FIRST_DELIVERY_ZONE_CODE), dataMap.get(SECOND_DELIVERY_ZONE_CODE),
-      dataMap.get(FIRST_DELIVERY_ZONE_NAME), dataMap.get(SECOND_DELIVERY_ZONE_NAME), dataMap.get(FIRST_FACILITY_CODE),
-      dataMap.get(SECOND_FACILITY_CODE), dataMap.get(VACCINES_PROGRAM), dataMap.get(TB_PROGRAM), dataMap.get(SCHEDULE),
-      dataMap.get(PRODUCT_GROUP_CODE));
+    setupDataForDistributionTest(distributionTestData);
+
+    dbWrapper.insertProductGroup(distributionTestData.get(PRODUCT_GROUP_CODE));
+    dbWrapper.insertProductWithGroup("Product5", "ProductName5", distributionTestData.get(PRODUCT_GROUP_CODE), true);
+    dbWrapper.insertProductWithGroup("Product6", "ProductName6", distributionTestData.get(PRODUCT_GROUP_CODE), true);
+    dbWrapper.insertProgramProduct("Product5", distributionTestData.get(VACCINES_PROGRAM), "10", "false");
+    dbWrapper.insertProgramProduct("Product6", distributionTestData.get(VACCINES_PROGRAM), "10", "true");
 
     dbWrapper.addRefrigeratorToFacility("LG", "800L", "GNR7878", "F10");
     dbWrapper.updateFieldValue("facilities", "active", "true", "code", "F10");
@@ -153,6 +153,9 @@ public class DistributionSyncTest extends TestCaseHelper {
     assertTrue(distributionPage.getSyncMessage().contains("F11-Central Hospital"));
 
     distributionPage.syncDistributionMessageDone();
+    assertEquals(distributionPage.getDistributionStatus(), "SYNCED");
+    assertFalse(distributionPage.getTextDistributionList().contains("sync"));
+    testWebDriver.refresh();
     assertEquals(distributionPage.getDistributionStatus(), "SYNCED");
     assertFalse(distributionPage.getTextDistributionList().contains("sync"));
 
@@ -875,24 +878,6 @@ public class DistributionSyncTest extends TestCaseHelper {
     }
 
     //dbWrapper.updateActiveStatusOfProgram("VACCINES", true);
-  }
-
-  public void setupDataForDistributionTest(String userSIC, String deliveryZoneCodeFirst, String deliveryZoneCodeSecond,
-                                           String deliveryZoneNameFirst, String deliveryZoneNameSecond,
-                                           String facilityCodeFirst, String facilityCodeSecond,
-                                           String programFirst, String programSecond, String schedule, String productGroupCode) throws SQLException {
-    List<String> rightsList = asList("MANAGE_DISTRIBUTION");
-    setupTestDataToInitiateRnRAndDistribution(facilityCodeFirst, facilityCodeSecond, true, programFirst, userSIC, "200", rightsList,
-      programSecond, "District1", "Ngorongoro", "Ngorongoro");
-    setupDataForDeliveryZone(true, deliveryZoneCodeFirst, deliveryZoneCodeSecond, deliveryZoneNameFirst, deliveryZoneNameSecond,
-      facilityCodeFirst, facilityCodeSecond, programFirst, programSecond, schedule);
-    dbWrapper.insertRoleAssignmentForDistribution(userSIC, "store in-charge", deliveryZoneCodeFirst);
-    dbWrapper.insertRoleAssignmentForDistribution(userSIC, "store in-charge", deliveryZoneCodeSecond);
-    dbWrapper.insertProductGroup(productGroupCode);
-    dbWrapper.insertProductWithGroup("Product5", "ProductName5", productGroupCode, true);
-    dbWrapper.insertProductWithGroup("Product6", "ProductName6", productGroupCode, true);
-    dbWrapper.insertProgramProduct("Product5", programFirst, "10", "false");
-    dbWrapper.insertProgramProduct("Product6", programFirst, "10", "true");
   }
 
   private VisitInformationPage fillFacilityData() {

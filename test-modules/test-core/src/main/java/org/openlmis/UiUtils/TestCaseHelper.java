@@ -507,6 +507,25 @@ public class TestCaseHelper {
     assertEquals(testWebDriver.getElementById("previousPageLink").getCssValue("color"), "rgba(204, 204, 204, 1)");
   }
 
+  public void setupDataForDistributionTest(Map<String, String> dataMap) throws SQLException {
+    String programSecond = dataMap.get("secondProgram");
+    String programFirst = dataMap.get("vaccinesProgram");
+    String facilityCodeSecond = dataMap.get("secondFacilityCode");
+    String facilityCodeFirst = dataMap.get("firstFacilityCode");
+    String deliveryZoneCodeSecond = dataMap.get("secondDeliveryZoneCode");
+    String deliveryZoneCodeFirst = dataMap.get("firstDeliveryZoneCode");
+    String userSIC = dataMap.get("user");
+
+    List<String> rightsList = asList("MANAGE_DISTRIBUTION");
+    setupTestDataToInitiateRnRAndDistribution(facilityCodeFirst, facilityCodeSecond, true, programFirst, userSIC, "200", rightsList,
+      programSecond, "District1", "Ngorongoro", "Ngorongoro");
+
+    setupDataForDeliveryZone(true, deliveryZoneCodeFirst, deliveryZoneCodeSecond, dataMap.get("firstDeliveryZoneName"),
+      dataMap.get("secondDeliveryZoneName"), facilityCodeFirst, facilityCodeSecond, programFirst, programSecond, dataMap.get("schedule"));
+    dbWrapper.insertRoleAssignmentForDistribution(userSIC, "store in-charge", deliveryZoneCodeFirst);
+    dbWrapper.insertRoleAssignmentForDistribution(userSIC, "store in-charge", deliveryZoneCodeSecond);
+  }
+
   public void verifyFacilityVisitInformationInDatabase(String facilityCode, String observation, String confirmedByName,
                                                        String confirmedByTitle, String verifiedByName,
                                                        String verifiedByTitle, String vehicleId, String synced, String visited, String reasonForNotVisiting, String otherReasonDescription) throws SQLException {
@@ -611,7 +630,6 @@ public class TestCaseHelper {
     assertEquals(quantityReceived, podLineItemFor.get("quantityreceived"));
     assertEquals(notes, podLineItemFor.get("notes"));
     assertEquals(quantityReturned, podLineItemFor.get("quantityreturned"));
-
   }
 
   public void verifyChildCoverageDataInDatabase() throws SQLException {

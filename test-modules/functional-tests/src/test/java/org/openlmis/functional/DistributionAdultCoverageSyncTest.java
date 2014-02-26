@@ -66,7 +66,8 @@ public class DistributionAdultCoverageSyncTest extends TestCaseHelper {
   @BeforeMethod(groups = {"distribution"})
   public void setUp() throws InterruptedException, SQLException, IOException {
     super.setup();
-    setupDataForDistributionTest();
+    setupDataForDistributionTest(adultCoverageData);
+    dbWrapper.insertProductsForAdultCoverage();
     loginPage = PageFactory.getInstanceOfLoginPage(testWebDriver, baseUrlGlobal);
   }
 
@@ -737,26 +738,6 @@ public class DistributionAdultCoverageSyncTest extends TestCaseHelper {
     }
     ResultSet adultOpenedVialLineItem = dbWrapper.getAdultOpenedVialLineItem(facilityVisitId);
     assertEquals(adultOpenedVialLineItem.getString("openedVials"), (String) null);
-  }
-
-  public void setupDataForDistributionTest() throws SQLException {
-    String programSecond = adultCoverageData.get(TB_PROGRAM);
-    String programFirst = adultCoverageData.get(VACCINES_PROGRAM);
-    String facilityCodeSecond = adultCoverageData.get(SECOND_FACILITY_CODE);
-    String facilityCodeFirst = adultCoverageData.get(FIRST_FACILITY_CODE);
-    String deliveryZoneCodeSecond = adultCoverageData.get(SECOND_DELIVERY_ZONE_CODE);
-    String deliveryZoneCodeFirst = adultCoverageData.get(FIRST_DELIVERY_ZONE_CODE);
-    String userSIC = adultCoverageData.get(USER);
-
-    List<String> rightsList = asList("MANAGE_DISTRIBUTION");
-    setupTestDataToInitiateRnRAndDistribution(facilityCodeFirst, facilityCodeSecond, true, programFirst, userSIC, "200", rightsList,
-      programSecond, "District1", "Ngorongoro", "Ngorongoro");
-
-    setupDataForDeliveryZone(true, deliveryZoneCodeFirst, deliveryZoneCodeSecond, adultCoverageData.get(FIRST_DELIVERY_ZONE_NAME), adultCoverageData.get(SECOND_DELIVERY_ZONE_NAME),
-      facilityCodeFirst, facilityCodeSecond, programFirst, programSecond, adultCoverageData.get(SCHEDULE));
-    dbWrapper.insertRoleAssignmentForDistribution(userSIC, "store in-charge", deliveryZoneCodeFirst);
-    dbWrapper.insertRoleAssignmentForDistribution(userSIC, "store in-charge", deliveryZoneCodeSecond);
-    dbWrapper.insertProductsForAdultCoverage();
   }
 
   public void insertProductMappingToGroup() throws SQLException {

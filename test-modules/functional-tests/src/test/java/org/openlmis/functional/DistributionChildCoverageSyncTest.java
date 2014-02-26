@@ -55,7 +55,9 @@ public class DistributionChildCoverageSyncTest extends TestCaseHelper {
   @BeforeMethod(groups = {"distribution"})
   public void setUp() throws InterruptedException, SQLException, IOException {
     super.setup();
-    setupDataForDistributionTest();
+    setupDataForDistributionTest(childCoverageData);
+    dbWrapper.insertProductsForChildCoverage();
+    insertRegimenProductMapping();
     loginPage = PageFactory.getInstanceOfLoginPage(testWebDriver, baseUrlGlobal);
   }
 
@@ -811,28 +813,6 @@ public class DistributionChildCoverageSyncTest extends TestCaseHelper {
     assertEquals(childCoveragePage.getTextOfRegimenPCV10Dose2(), "PCV10 2nd dose");
     assertEquals(childCoveragePage.getTextOfRegimenPCV10Dose3(), "PCV10 3rd dose");
     assertEquals(childCoveragePage.getTextOfRegimenMeasles(), "Measles");
-  }
-
-  public void setupDataForDistributionTest() throws SQLException {
-    String programSecond = childCoverageData.get(TB_PROGRAM);
-    String programFirst = childCoverageData.get(VACCINES_PROGRAM);
-    String facilityCodeSecond = childCoverageData.get(SECOND_FACILITY_CODE);
-    String facilityCodeFirst = childCoverageData.get(FIRST_FACILITY_CODE);
-    String deliveryZoneCodeSecond = childCoverageData.get(SECOND_DELIVERY_ZONE_CODE);
-    String deliveryZoneCodeFirst = childCoverageData.get(FIRST_DELIVERY_ZONE_CODE);
-    String userSIC = childCoverageData.get(USER);
-
-    List<String> rightsList = asList("MANAGE_DISTRIBUTION");
-    setupTestDataToInitiateRnRAndDistribution(facilityCodeFirst, facilityCodeSecond, true, programFirst, userSIC, "200", rightsList,
-      programSecond, "District1", "Ngorongoro", "Ngorongoro");
-
-    setupDataForDeliveryZone(true, deliveryZoneCodeFirst, deliveryZoneCodeSecond, childCoverageData.get(FIRST_DELIVERY_ZONE_NAME),
-      childCoverageData.get(SECOND_DELIVERY_ZONE_NAME), facilityCodeFirst, facilityCodeSecond, programFirst, programSecond, childCoverageData.get(SCHEDULE));
-
-    dbWrapper.insertRoleAssignmentForDistribution(userSIC, "store in-charge", deliveryZoneCodeFirst);
-    dbWrapper.insertRoleAssignmentForDistribution(userSIC, "store in-charge", deliveryZoneCodeSecond);
-    dbWrapper.insertProductsForChildCoverage();
-    insertRegimenProductMapping();
   }
 
   private void insertRegimenProductMapping() throws SQLException {
