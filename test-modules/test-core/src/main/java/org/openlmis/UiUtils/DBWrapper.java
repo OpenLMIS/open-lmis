@@ -1413,7 +1413,7 @@ public class DBWrapper {
   }
 
   public Map<String, String> getPodData(Integer orderId) throws SQLException {
-    return select("select * from pod where id = %d ", orderId).get(0);
+    return select("select * from pod where orderId = %d ", orderId).get(0);
   }
 
   public ResultSet getAdultCoverageDetails(String demographicGroup, String facilityVisitId) throws SQLException {
