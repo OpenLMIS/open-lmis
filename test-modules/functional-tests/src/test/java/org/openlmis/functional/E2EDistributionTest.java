@@ -174,6 +174,9 @@ public class E2EDistributionTest extends TestCaseHelper {
     childCoveragePage.enterOpenedVialsCountForGivenGroupAndRow(9, 1, "6");
     childCoveragePage.enterOpenedVialsCountForGivenGroupAndRow(12, 1, "7");
 
+    AdultCoveragePage adultCoveragePage = childCoveragePage.navigateToAdultCoverage();
+    adultCoveragePage.enterDataInAllFields();
+
     homePage.navigateHomePage();
     homePage.navigateOfflineDistribution();
     distributionPage.clickRecordData(1);
@@ -262,6 +265,7 @@ public class E2EDistributionTest extends TestCaseHelper {
     verifyEpiInventoryDataInDatabase(null, "20", null, "Product6", facilityCodeFirst);
     verifyEpiInventoryDataInDatabase(null, "30", null, "P11", facilityCodeFirst);
     verifyChildCoverageDataInDatabase();
+    verifyAdultCoverageDataInDatabase(facilityCodeFirst);
     ResultSet childCoverageDetails = dbWrapper.getChildCoverageDetails("PCV10 1st dose", "F10");
     assertEquals("300", childCoverageDetails.getInt("targetGroup"));
 
@@ -413,6 +417,9 @@ public class E2EDistributionTest extends TestCaseHelper {
     assertEquals(childCoveragePage.getTextOfTargetGroupValue(1), "");
     assertEquals(childCoveragePage.getTextOfTargetGroupValue(12), "");
 
+    AdultCoveragePage adultCoveragePage = childCoveragePage.navigateToAdultCoverage();
+    adultCoveragePage.enterDataInAllFields();
+
     for (int rowNumber = 1; rowNumber <= 12; rowNumber++) {
       childCoveragePage.enterHealthCenter11MonthsDataForGivenRow(rowNumber, "1" + rowNumber);
       childCoveragePage.enterOutreach11MonthsDataForGivenRow(rowNumber, "2" + rowNumber);
@@ -496,6 +503,7 @@ public class E2EDistributionTest extends TestCaseHelper {
     verifyEpiInventoryDataInDatabase(null, null, null, "P10", facilityCodeFirst);
     verifyEpiInventoryDataInDatabase(null, null, null, "Product6", facilityCodeFirst);
     verifyEpiInventoryDataInDatabase(null, null, null, "P11", facilityCodeFirst);
+    verifyAdultCoverageDataInDatabase(facilityCodeFirst);
 
     visitInformationPage.verifyAllFieldsDisabled();
 
