@@ -880,6 +880,41 @@ public class DistributionSyncTest extends TestCaseHelper {
     //dbWrapper.updateActiveStatusOfProgram("VACCINES", true);
   }
 
+  @Test(groups = {"distribution"})
+  public void testSyncWhenAllProductDisplayOrderIsNull() throws SQLException {
+    dbWrapper.updateFieldValue("products", "displayOrder", null);
+    HomePage homePage = loginPage.loginAs(distributionTestData.get(USER), distributionTestData.get(PASSWORD));
+
+    initiateDistribution(distributionTestData.get(FIRST_DELIVERY_ZONE_NAME), distributionTestData.get(VACCINES_PROGRAM));
+    assertTrue(facilityListPage.getFacilitiesInDropDown().contains(distributionTestData.get(FIRST_FACILITY_CODE)));
+
+    facilityListPage.selectFacility(distributionTestData.get(FIRST_FACILITY_CODE));
+
+    facilityListPage.verifyOverallFacilityIndicatorColor("RED");
+
+    fillFacilityData();
+
+    DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
+    distributionPage.syncDistribution(1);
+    assertTrue(distributionPage.getSyncMessage().contains("F10-Village Dispensary"));
+    distributionPage.syncDistributionMessageDone();
+
+    verifyRefrigeratorProblemDataNullInDatabase("GNR7876", distributionTestData.get(FIRST_FACILITY_CODE));
+    verifyRefrigeratorReadingDataInDatabase(distributionTestData.get(FIRST_FACILITY_CODE), "GNR7876", 3.0F, "Y", 2, 5, null, null);
+
+    verifyEpiUseDataInDatabase(10, 20, 30, 40, 50, "10/2011", "PG1", distributionTestData.get(FIRST_FACILITY_CODE));
+
+    verifyFacilityVisitInformationInDatabase(distributionTestData.get(FIRST_FACILITY_CODE), "Some observations", "samuel", "Doe", "Verifier", "XYZ", null, "t", "t", null, null);
+
+    verifyFullCoveragesDataInDatabase(23, 66, 77, 45, distributionTestData.get(FIRST_FACILITY_CODE));
+
+    verifyAdultCoverageDataInDatabase(distributionTestData.get(FIRST_FACILITY_CODE));
+
+    verifyEpiInventoryDataInDatabase(null, "2", null, "P10", distributionTestData.get(FIRST_FACILITY_CODE));
+    verifyEpiInventoryDataInDatabase(null, "4", null, "P11", distributionTestData.get(FIRST_FACILITY_CODE));
+    verifyEpiInventoryDataInDatabase(null, "6", null, "Product6", distributionTestData.get(FIRST_FACILITY_CODE));
+  }
+
   private VisitInformationPage fillFacilityData() {
     VisitInformationPage visitInformationPage = PageFactory.getInstanceOfVisitInformation(testWebDriver);
     visitInformationPage.navigateToVisitInformation();
