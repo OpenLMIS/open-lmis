@@ -131,7 +131,7 @@ public class AdultCoveragePage extends DistributionTab {
   @FindBy(how = ID, using = "wastageRate")
   private static WebElement wastageRate = null;
 
-  @FindBy(how = ID, using = "applyNRAll")
+  @FindBy(how = ID, using = "adultCoverageApplyNRToAll")
   private static WebElement applyNRAllButton = null;
 
   @FindBy(how = ID, using = "button_OK")

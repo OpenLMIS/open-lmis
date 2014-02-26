@@ -14,7 +14,6 @@ import org.openlmis.UiUtils.TestWebDriver;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
-import org.openqa.selenium.support.How;
 
 import java.util.List;
 import java.util.Map;
@@ -34,7 +33,7 @@ public class EPIUsePage extends DistributionTab {
   @FindBy(how = XPATH, using = "//div[@class='left-navigation ng-scope']/ul/li[4]/a/span[1][@class='status-icon']")
   public static WebElement overallEPIUseIcon = null;
 
-  @FindBy(how = How.XPATH, using = "//input[@value='Apply NR to all fields']")
+  @FindBy(how = ID, using = "epiUseApplyNrAll")
   private static WebElement applyNRToAllFieldsCheckbox = null;
 
   @FindBy(how = ID, using = "button_OK")

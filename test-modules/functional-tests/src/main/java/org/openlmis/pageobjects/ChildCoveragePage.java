@@ -139,7 +139,7 @@ public class ChildCoveragePage extends DistributionTab {
   @FindBy(how = ID, using = "childCoverageTable")
   private static WebElement childCoverageTable = null;
 
-  @FindBy(how = ID, using = "applyNRAll")
+  @FindBy(how = ID, using = "childCoverageApplyNRAll")
   private static WebElement applyNrToAllButton = null;
 
   @FindBy(how = ID, using = "button_OK")

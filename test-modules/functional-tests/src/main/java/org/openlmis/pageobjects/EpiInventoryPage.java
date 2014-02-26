@@ -19,7 +19,7 @@ import static org.openqa.selenium.support.How.ID;
 public class EpiInventoryPage extends DistributionTab {
 
 
-  @FindBy(how = ID, using = "applyNRAll")
+  @FindBy(how = ID, using = "epiInventoryApplyNRAll")
   private static WebElement applyNRToAllButton = null;
 
   @FindBy(how = ID, using = "button_OK")

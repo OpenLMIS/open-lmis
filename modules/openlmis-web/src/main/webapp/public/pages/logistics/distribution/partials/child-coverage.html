@@ -8,66 +8,66 @@
   ~  You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
   -->
 <ng-include
-    src="'/public/pages/logistics/distribution/partials/record-facility-data.html'"></ng-include>
+        src="'/public/pages/logistics/distribution/partials/record-facility-data.html'"></ng-include>
 <div class="clearfix facility-container">
-  <ng-include
-      src="'/public/pages/logistics/distribution/partials/record-facility-menu.html'"></ng-include>
+    <ng-include
+            src="'/public/pages/logistics/distribution/partials/record-facility-menu.html'"></ng-include>
 
-  <div class="facility-info" ng-init="facilityData = distribution.facilityDistributions[selectedFacilityId]">
-    <div id="coverageContainer" class="refrigerator-container" disable-form="{{facilityData.isDisabled()}}">
-      <h3>
-        <span id="coverageHeader" openlmis-message="label.coverage.children"></span>
-        <input id="applyNRAll" type="button" ng-click="applyNRAll()" class="pull-right btn"
-               openlmis-message="button.apply.nr.all"/>
-      </h3>
+    <div class="facility-info" ng-init="facilityData = distribution.facilityDistributions[selectedFacilityId]">
+        <div id="coverageContainer" class="refrigerator-container" disable-form="{{facilityData.isDisabled()}}">
+            <h3>
+                <span id="coverageHeader" openlmis-message="label.coverage.children"></span>
+                <input id="childCoverageApplyNRAll" type="button" ng-click="applyNRAll()" class="pull-right btn"
+                       openlmis-message="button.apply.nr.all"/>
+            </h3>
 
-      <div id="childCoverageTable" class="facility-distribution-form-table coverage-table">
-        <form auto-save="distribution" object-store="distributions">
-          <table class="table table-bordered">
-            <thead>
-            <tr>
-              <th class="col-complete-vaccinated" id="vaccination" rowspan="2"
-                  openlmis-message={{columns.vaccination}}></th>
-              <th class="col-complete-vaccinated" id="targetGroup" rowspan="2"
-                  openlmis-message={{columns.targetGroup}}></th>
-              <th class="col-complete-vaccinated center-justified" id="childrenAgeGroup1" colspan="3"
-                  openlmis-message={{columns.childrenAgeGroup0To11}}></th>
-              <th class="col-complete-vaccinated" id="coverageRate" rowspan="2"
-                  openlmis-message={{columns.coverageRate}}></th>
-              <th class="col-complete-vaccinated center-justified" id="childrenAgeGroup2" colspan="3"
-                  openlmis-message={{columns.childrenAgeGroup12To23}}></th>
-              <th class="col-complete-vaccinated" id="totalVaccination" rowspan="2"
-                  openlmis-message={{columns.totalVaccination}}></th>
-              <th class="col-complete-vaccinated" id="openedVials" rowspan="2"
-                  openlmis-message={{columns.openedVials}}></th>
-              <th class="col-complete-vaccinated" id="openedVialsWastageRate" rowspan="2"
-                  openlmis-message={{columns.openedVialsWastageRate}}></th>
-            </tr>
-            <tr>
-              <th class="col-complete-vaccinated" id="categoryOneHealthCenter"
-                  openlmis-message={{columns.categoryOneHealthCenter}}></th>
-              <th class="col-complete-vaccinated" id="categoryOneMobileBrigade"
-                  openlmis-message={{columns.categoryOneMobileBrigade}}></th>
-              <th class="col-complete-vaccinated" id="categoryOneTotal"
-                  openlmis-message={{columns.categoryOneTotal}}></th>
-              <th class="col-complete-vaccinated" id="categoryTwoHealthCenter"
-                  openlmis-message={{columns.categoryTwoHealthCenter}}></th>
-              <th class="col-complete-vaccinated" id="categoryTwoMobileBrigade"
-                  openlmis-message={{columns.categoryTwoMobileBrigade}}></th>
-              <th class="col-complete-vaccinated" id="categoryTwoTotal"
-                  openlmis-message={{columns.categoryTwoTotal}}></th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr ng-repeat="lineItem in childCoverage.childCoverageLineItems">
-              <td class="col-complete-vaccinated">
-                <span id="col{{lineItem.vaccination}}" ng-bind="lineItem.vaccination"></span>
-              </td>
-              <td class="col-complete-vaccinated col-target-group" id="target{{$index}}">
-                <span ng-bind="lineItem.targetGroup"></span>
-              </td>
-              <td class="col-complete-vaccinated">
-                <div>
+            <div id="childCoverageTable" class="facility-distribution-form-table coverage-table">
+                <form auto-save="distribution" object-store="distributions">
+                    <table class="table table-bordered">
+                        <thead>
+                        <tr>
+                            <th class="col-complete-vaccinated" id="vaccination" rowspan="2"
+                                openlmis-message={{columns.vaccination}}></th>
+                            <th class="col-complete-vaccinated" id="targetGroup" rowspan="2"
+                                openlmis-message={{columns.targetGroup}}></th>
+                            <th class="col-complete-vaccinated center-justified" id="childrenAgeGroup1" colspan="3"
+                                openlmis-message={{columns.childrenAgeGroup0To11}}></th>
+                            <th class="col-complete-vaccinated" id="coverageRate" rowspan="2"
+                                openlmis-message={{columns.coverageRate}}></th>
+                            <th class="col-complete-vaccinated center-justified" id="childrenAgeGroup2" colspan="3"
+                                openlmis-message={{columns.childrenAgeGroup12To23}}></th>
+                            <th class="col-complete-vaccinated" id="totalVaccination" rowspan="2"
+                                openlmis-message={{columns.totalVaccination}}></th>
+                            <th class="col-complete-vaccinated" id="openedVials" rowspan="2"
+                                openlmis-message={{columns.openedVials}}></th>
+                            <th class="col-complete-vaccinated" id="openedVialsWastageRate" rowspan="2"
+                                openlmis-message={{columns.openedVialsWastageRate}}></th>
+                        </tr>
+                        <tr>
+                            <th class="col-complete-vaccinated" id="categoryOneHealthCenter"
+                                openlmis-message={{columns.categoryOneHealthCenter}}></th>
+                            <th class="col-complete-vaccinated" id="categoryOneMobileBrigade"
+                                openlmis-message={{columns.categoryOneMobileBrigade}}></th>
+                            <th class="col-complete-vaccinated" id="categoryOneTotal"
+                                openlmis-message={{columns.categoryOneTotal}}></th>
+                            <th class="col-complete-vaccinated" id="categoryTwoHealthCenter"
+                                openlmis-message={{columns.categoryTwoHealthCenter}}></th>
+                            <th class="col-complete-vaccinated" id="categoryTwoMobileBrigade"
+                                openlmis-message={{columns.categoryTwoMobileBrigade}}></th>
+                            <th class="col-complete-vaccinated" id="categoryTwoTotal"
+                                openlmis-message={{columns.categoryTwoTotal}}></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat="lineItem in childCoverage.childCoverageLineItems">
+                            <td class="col-complete-vaccinated">
+                                <span id="col{{lineItem.vaccination}}" ng-bind="lineItem.vaccination"></span>
+                            </td>
+                            <td class="col-complete-vaccinated col-target-group" id="target{{$index}}">
+                                <span ng-bind="lineItem.targetGroup"></span>
+                            </td>
+                            <td class="col-complete-vaccinated">
+                                <div>
                   <span class="input-error-parent-cell">
                     <input id="healthCenter11Months{{$index}}" type="text"
                            ng-model="lineItem.healthCenter11Months.value"
@@ -79,15 +79,15 @@
                           openlmis-message="error.number.only"
                           style="display: none"></span>
                   </span>
-                </div>
-                <input id="coverageHealthCenter11Months{{$index}}" type="checkbox"
-                       ng-model="lineItem.healthCenter11Months.notRecorded"
-                       not-recorded/>
-                <label class="checkbox-label" for="coverageHealthCenter11Months{{$index}}"
-                       openlmis-message="label.not.recorded"></label>
-              </td>
-              <td class="col-complete-vaccinated">
-                <div>
+                                </div>
+                                <input id="coverageHealthCenter11Months{{$index}}" type="checkbox"
+                                       ng-model="lineItem.healthCenter11Months.notRecorded"
+                                       not-recorded/>
+                                <label class="checkbox-label" for="coverageHealthCenter11Months{{$index}}"
+                                       openlmis-message="label.not.recorded"></label>
+                            </td>
+                            <td class="col-complete-vaccinated">
+                                <div>
                   <span class="input-error-parent-cell">
                     <input id="outreach11Months{{$index}}" type="text"
                            ng-model="lineItem.outreach11Months.value"
@@ -99,22 +99,22 @@
                           openlmis-message="error.number.only"
                           style="display: none"></span>
                   </span>
-                </div>
-                <input id="coverageOutreach11Months{{$index}}" type="checkbox"
-                       ng-model="lineItem.outreach11Months.notRecorded"
-                       not-recorded/>
-                <label class="checkbox-label" for="coverageOutreach11Months{{$index}}"
-                       openlmis-message="label.not.recorded"></label>
-              </td>
-              <td class="col-complete-vaccinated col-total">
+                                </div>
+                                <input id="coverageOutreach11Months{{$index}}" type="checkbox"
+                                       ng-model="lineItem.outreach11Months.notRecorded"
+                                       not-recorded/>
+                                <label class="checkbox-label" for="coverageOutreach11Months{{$index}}"
+                                       openlmis-message="label.not.recorded"></label>
+                            </td>
+                            <td class="col-complete-vaccinated col-total">
                 <span id="total0{{$index}}"
                       ng-bind="getTotal(lineItem.healthCenter11Months, lineItem.outreach11Months)"></span>
-              </td>
-              <td class="col-complete-vaccinated col-coverage-rate">
+                            </td>
+                            <td class="col-complete-vaccinated col-coverage-rate">
                 <span id="coverageRateCalculated{{$index}}"
                       ng-bind="calculateCoverageRate(getTotal(lineItem.healthCenter11Months, lineItem.outreach11Months), lineItem.targetGroup)"></span>
-              </td>
-              <td class="col-complete-vaccinated">
+                            </td>
+                            <td class="col-complete-vaccinated">
                 <span ng-hide="lineItem.vaccination == 'Polio (Newborn)'">
                   <div>
                     <span class="input-error-parent-cell">
@@ -135,8 +135,8 @@
                   <label class="checkbox-label" for="coverageHealthCenter23Months{{$index}}"
                          openlmis-message="label.not.recorded"></label>
                 </span>
-              </td>
-              <td class="col-complete-vaccinated">
+                            </td>
+                            <td class="col-complete-vaccinated">
                 <span ng-hide="lineItem.vaccination == 'Polio (Newborn)'">
                   <div>
                     <span class="input-error-parent-cell">
@@ -158,20 +158,20 @@
                   <label class="checkbox-label" for="coverageOutreach23Months{{$index}}"
                          openlmis-message="label.not.recorded"></label>
                 </span>
-              </td>
-              <td class="col-complete-vaccinated col-total">
+                            </td>
+                            <td class="col-complete-vaccinated col-total">
                 <span id="total1{{$index}}"
                       ng-bind="getTotal(lineItem.healthCenter23Months, lineItem.outreach23Months)"></span>
-              </td>
-              <td class="col-complete-vaccinated col-total">
-                <span id="total2{{$index}}" ng-bind="getTotalVaccinations(lineItem)"></span>
-              </td>
-              <td class="col-complete-vaccinated opened-vials"
-                  ng-hide="hideCell('{{lineItem.vaccination}}')"
-                  rowspan="{{productsMap[lineItem.vaccination].rowSpan}}">
-                <div id="{{product}}Container"
-                     ng-repeat="product in productsMap[lineItem.vaccination].products">
-                  <span id="{{product}}" ng-bind="product"></span>
+                            </td>
+                            <td class="col-complete-vaccinated col-total">
+                                <span id="total2{{$index}}" ng-bind="getTotalVaccinations(lineItem)"></span>
+                            </td>
+                            <td class="col-complete-vaccinated opened-vials"
+                                ng-hide="hideCell('{{lineItem.vaccination}}')"
+                                rowspan="{{productsMap[lineItem.vaccination].rowSpan}}">
+                                <div id="{{product}}Container"
+                                     ng-repeat="product in productsMap[lineItem.vaccination].products">
+                                    <span id="{{product}}" ng-bind="product"></span>
                   <span class="input-error-parent-cell">
                     <input id="openedVial{{$parent.$index}}{{$index}}" type="text"
                            ng-model="openedVialMap[product].openedVial.value"
@@ -183,26 +183,26 @@
                           openlmis-message="error.number.only"
                           style="display: none"></span>
                   </span>
-                  <input id="coverageOpenedVial{{$parent.$index}}{{$index}}" type="checkbox"
-                         ng-hide="(product == 'Polio10' || product == 'Penta1')"
-                         ng-model="openedVialMap[product].openedVial.notRecorded"
-                         not-recorded/>
-                  <label class="checkbox-label" for="coverageOpenedVial{{$parent.$index}}{{$index}}"
-                         ng-hide="(product == 'Polio10' || product == 'Penta1')"
-                         openlmis-message="label.not.recorded"></label>
-                </div>
-              </td>
-              <td class="col-complete-vaccinated col-opened-vial"
-                  ng-hide="hideCell('{{lineItem.vaccination}}')"
-                  rowspan="{{productsMap[lineItem.vaccination].rowSpan}}">
+                                    <input id="coverageOpenedVial{{$parent.$index}}{{$index}}" type="checkbox"
+                                           ng-hide="(product == 'Polio10' || product == 'Penta1')"
+                                           ng-model="openedVialMap[product].openedVial.notRecorded"
+                                           not-recorded/>
+                                    <label class="checkbox-label" for="coverageOpenedVial{{$parent.$index}}{{$index}}"
+                                           ng-hide="(product == 'Polio10' || product == 'Penta1')"
+                                           openlmis-message="label.not.recorded"></label>
+                                </div>
+                            </td>
+                            <td class="col-complete-vaccinated col-opened-vial"
+                                ng-hide="hideCell('{{lineItem.vaccination}}')"
+                                rowspan="{{productsMap[lineItem.vaccination].rowSpan}}">
                 <span id="wastageRateCalculated{{$index}}"
                       ng-bind="calculateWastageRate(productsMap[lineItem.vaccination])"></span>
-              </td>
-            </tr>
-            </tbody>
-          </table>
-        </form>
-      </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </form>
+            </div>
+        </div>
     </div>
-  </div>
 </div>
