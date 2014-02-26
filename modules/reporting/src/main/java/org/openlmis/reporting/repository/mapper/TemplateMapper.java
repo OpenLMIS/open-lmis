@@ -32,6 +32,6 @@ public interface TemplateMapper {
   @Select("SELECT id, name FROM templates WHERE type = 'Consistency Report' ORDER BY createdDate")
   List<Template> getAllConsistencyReportTemplates();
 
-  @Select("SELECT * FROM templates WHERE name = #{name}")
+  @Select("SELECT * FROM templates WHERE LOWER(name) = LOWER(#{name})")
   Template getByName(String name);
 }
