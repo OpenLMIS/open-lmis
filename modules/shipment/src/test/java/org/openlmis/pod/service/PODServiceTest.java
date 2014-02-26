@@ -34,6 +34,7 @@ import org.openlmis.rnr.service.RequisitionService;
 import org.openlmis.shipment.domain.ShipmentLineItem;
 import org.openlmis.shipment.service.ShipmentService;
 
+import java.text.ParseException;
 import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.a;
@@ -166,7 +167,7 @@ public class PODServiceTest {
   }
 
   @Test
-  public void shouldSavePODWithModifiedLineItems() {
+  public void shouldSavePODWithModifiedLineItems() throws ParseException {
     OrderPOD existingPOD = mock(OrderPOD.class);
     when(repository.getPOD(podId)).thenReturn(existingPOD);
     when(existingPOD.getModifiedBy()).thenReturn(userId);
@@ -181,7 +182,7 @@ public class PODServiceTest {
   }
 
   @Test
-  public void shouldNotSaveOrderPodIfUserDoesNotHavePermissions() {
+  public void shouldNotSaveOrderPodIfUserDoesNotHavePermissions() throws ParseException {
     OrderPOD existingPOD = mock(OrderPOD.class);
     when(repository.getPOD(podId)).thenReturn(existingPOD);
     when(existingPOD.getModifiedBy()).thenReturn(userId);

@@ -154,10 +154,7 @@ public class ManageProgramProductISA extends TestCaseHelper {
   }
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function-Verify-Push-Type-Program")
-  public void testPushTypeProgramsInDropDown(String userSIC,
-                                             String password,
-                                             String program1,
-                                             String program2) throws SQLException {
+  public void testPushTypeProgramsInDropDown(String userSIC, String password, String program1, String program2) throws SQLException {
     setUpTestDataForProgramProductISA();
     Login(userSIC, password);
     ProgramProductISAPage programProductISAPage = navigateConfigureProductISAPage();
@@ -179,14 +176,8 @@ public class ManageProgramProductISA extends TestCaseHelper {
   }
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function-Multiple-Programs")
-  public void testProgramProductsMappings(String userSIC,
-                                          String password,
-                                          String program1,
-                                          String program2,
-                                          String product1,
-                                          String product2,
-                                          String product3,
-                                          String product4) throws SQLException {
+  public void testProgramProductsMappings(String userSIC, String password, String program1, String program2, String product1,
+                                          String product2, String product3, String product4) throws SQLException {
     setUpTestDataForProgramProductISA();
     Login(userSIC, password);
     ProgramProductISAPage programProductISAPage = navigateConfigureProductISAPage();

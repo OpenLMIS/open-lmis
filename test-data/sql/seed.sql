@@ -15,11 +15,8 @@
 \i ../../test-data/sql/processing_schedules.sql
 \i ../../test-data/sql/requisition_groups.sql
 \i ../../test-data/sql/regimens.sql
-
---\i ../../test-data/sql/report.sql
-
 \i ../../test-data/sql/delivery_zones.sql
 \i ../../test-data/sql/allocation_users.sql
 \i ../../test-data/sql/budget.sql
-\i ../../test-data/sql/coverage_vaccination_products.sql
+\i ../../test-data/sql/coverage_target_group_products.sql
 \i ../../test-data/sql/coverage_product_vials.sql

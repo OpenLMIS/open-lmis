@@ -51,6 +51,7 @@ CACHE:
 /public/pages/logistics/distribution/partials/visit-info.html
 /public/pages/logistics/distribution/partials/full-coverage.html
 /public/pages/logistics/distribution/partials/child-coverage.html
+/public/pages/logistics/distribution/partials/adult-coverage.html
 
 /public/js/distribution/directives/auto-save.js
 /public/js/distribution/resolve/distribution-resolve.js
@@ -65,6 +66,7 @@ CACHE:
 /public/js/distribution/model/facility-distribution-data.js
 /public/js/distribution/model/coverage.js
 /public/js/distribution/model/child-coverage.js
+/public/js/distribution/model/adult-coverage.js
 
 
 /public/js/distribution/service/shared-distributions.js
@@ -81,6 +83,7 @@ CACHE:
 /public/js/distribution/controller/coverage-controller.js
 /public/js/distribution/controller/visit-info-controller.js
 /public/js/distribution/controller/child-coverage-controller.js
+/public/js/distribution/controller/adult-coverage-controller.js
 
 /public/js/shared/controller/locale-controller.js
 /public/lib/select2/select2.png

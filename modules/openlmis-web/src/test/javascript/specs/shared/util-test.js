@@ -38,4 +38,10 @@ describe("Util", function () {
     expect(utils.getValueFor(null)).toEqual(null);
     expect(utils.getValueFor(NaN)).toEqual(null);
   });
+
+  it("should add all arguments after parsing to int with base ten ignoring undefined, non parsable values", function () {
+    expect(utils.sum(1, 2, 3, "100")).toEqual(106);
+    expect(utils.sum(undefined, undefined)).toEqual(0);
+    expect(utils.sum(undefined, 100, "100")).toEqual(200);
+  });
 });

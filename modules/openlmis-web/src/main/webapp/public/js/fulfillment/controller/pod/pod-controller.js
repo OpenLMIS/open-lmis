@@ -12,6 +12,7 @@ function PODController($scope, orderPOD, OrderPOD, pageSize, $routeParams, $loca
 
   $scope.pageSize = pageSize;
   $scope.pod = new ProofOfDelivery(orderPOD.orderPOD);
+  $scope.pod.receivedDate = orderPOD.receivedDate;
   $scope.order = orderPOD.order;
   $scope.podAlreadySubmitted = orderPOD.order.alreadyReceived;
   $scope.numberOfPages = Math.ceil($scope.pod.podLineItems.length / $scope.pageSize) || 1;
@@ -25,6 +26,7 @@ function PODController($scope, orderPOD, OrderPOD, pageSize, $routeParams, $loca
     {label: "header.packs.to.ship", name: "packsToShip"},
     {label: "header.quantity.shipped", name: "quantityShipped"},
     {label: "header.quantity.received", name: "quantityReceived"},
+    {label: "header.quantity.returned", name: "quantityReturned"},
     {label: "header.notes", name: "notes"}
   ];
 
@@ -49,7 +51,8 @@ function PODController($scope, orderPOD, OrderPOD, pageSize, $routeParams, $loca
       saveDefer.resolve();
       return saveDefer.promise;
     }
-    OrderPOD.update({id: $routeParams.id}, {podLineItems: $scope.pageLineItems}, function (data) {
+    OrderPOD.update({id: $routeParams.id}, {deliveredBy: $scope.pod.deliveredBy, receivedBy: $scope.pod.receivedBy,
+      receivedDate: $scope.pod.receivedDate, podLineItems: $scope.pageLineItems}, function (data) {
       $scope.message = data.success;
       $scope.error = undefined;
       $scope.podForm.$setPristine();

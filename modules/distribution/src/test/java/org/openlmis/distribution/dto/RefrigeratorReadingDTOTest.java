@@ -30,7 +30,7 @@ public class RefrigeratorReadingDTOTest {
   public void shouldTransformRefrigeratorReadingToReading() throws Exception {
     Long facilityVisitId = 5L;
     Reading temperature = new Reading("32.4", false);
-    Reading functioningCorrectly = new Reading("Y", false);
+    Reading functioningCorrectly = new Reading("N", false);
     Reading lowAlarmEvents = new Reading("2", false);
     Reading highAlarmEvents = new Reading("", true);
     Reading problemSinceLastTime = new Reading("Y", false);
@@ -39,7 +39,7 @@ public class RefrigeratorReadingDTOTest {
     Long facilityId = 2L;
 
     RefrigeratorReading expectedReading = new RefrigeratorReading(new Refrigerator("brand", "model", "serial number", facilityId, true), facilityVisitId, 32.4F,
-      "Y", 2, null, "Y", problems, notes);
+      "N", 2, null, "Y", problems, notes);
 
     RefrigeratorReadingDTO refrigeratorReadingDTO = new RefrigeratorReadingDTO(new Refrigerator("brand", "model", "serial number", facilityId, true),
       facilityVisitId,
@@ -57,10 +57,10 @@ public class RefrigeratorReadingDTOTest {
   }
 
   @Test
-  public void shouldValidateRefrigeratorProblemsIfProblemSinceLastVisitIsTrue() throws Exception {
+  public void shouldValidateRefrigeratorProblemsIfFunctioningCorrectlySinceLastVisitIsFalse() throws Exception {
     Long facilityVisitId = 5L;
     Reading temperature = new Reading("32.4", false);
-    Reading functioningCorrectly = new Reading("Y", false);
+    Reading functioningCorrectly = new Reading("N", false);
     Reading lowAlarmEvents = new Reading("2", false);
     Reading highAlarmEvents = new Reading("", true);
     Reading problemSinceLastTime = new Reading("Y", false);
@@ -69,7 +69,7 @@ public class RefrigeratorReadingDTOTest {
     Long facilityId = 2L;
 
     RefrigeratorReading expectedReading = new RefrigeratorReading(new Refrigerator("brand", "model", "serial number", facilityId, true), facilityVisitId, 32.4F,
-      "Y", 2, null, "Y", problems, notes);
+      "N", 2, null, "Y", problems, notes);
 
     RefrigeratorReadingDTO refrigeratorReadingDTO = new RefrigeratorReadingDTO(new Refrigerator("brand", "model", "serial number", facilityId, true),
       facilityVisitId,

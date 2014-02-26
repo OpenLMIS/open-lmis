@@ -46,7 +46,7 @@ function RefrigeratorReading(facilityVisitId, refrigeratorReading) {
       });
     }
 
-    if (statusClass === DistributionStatus.COMPLETE && _this.problemSinceLastTime && _this.problemSinceLastTime.value === 'Y') {
+    if (statusClass === DistributionStatus.COMPLETE && _this.functioningCorrectly && _this.functioningCorrectly.value === 'N') {
       if (!_this.problems) statusClass = DistributionStatus.INCOMPLETE;
       else {
         var hasAtLeastOneProblem = _.find(_.values(_this.problems),

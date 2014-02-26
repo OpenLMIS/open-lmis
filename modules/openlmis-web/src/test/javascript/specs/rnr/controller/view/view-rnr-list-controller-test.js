@@ -9,15 +9,16 @@
  */
 
 describe('ViewRnrListController', function () {
-  var scope, httpBackend, controller, facilities, rnrList, location, messageService;
+  var scope, httpBackend, controller, facilities, rnrList, location, messageService, navigateBackService;
 
   beforeEach(module('openlmis'));
-  beforeEach(inject(function ($httpBackend, $rootScope, $controller, $location, _messageService_) {
+  beforeEach(inject(function ($httpBackend, $rootScope, $controller, $location, _messageService_, _navigateBackService_) {
     location = $location;
     scope = $rootScope.$new();
     httpBackend = $httpBackend;
     controller = $controller;
     messageService = _messageService_;
+    navigateBackService = _navigateBackService_;
     facilities = [
       {"id": 1}
     ];
@@ -158,6 +159,50 @@ describe('ViewRnrListController', function () {
     ];
     scope.openRequisition();
     expect(location.url()).toEqual("/requisition/1/2?supplyType=fullSupply&page=1");
+  });
+
+  it('should open a requisition with id 1 and for program 2 and full-supply and set data in navigateBackService', function () {
+    scope.selectedItems = [
+      {'id': 1, 'programId': 2}
+    ];
+
+    scope.selectedFacilityId = 1;
+    scope.startDate = "10/10/2004";
+    scope.endDate = "10/10/2014";
+    scope.programs = [
+      {id: 1}
+    ];
+    scope.selectedProgramId = 2;
+    scope.openRequisition();
+    expect(location.url()).toEqual("/requisition/1/2?supplyType=fullSupply&page=1");
+    expect(navigateBackService.facilityId).toEqual(1);
+    expect(navigateBackService.dateRangeStart).toEqual("10/10/2004");
+    expect(navigateBackService.dateRangeEnd).toEqual("10/10/2014");
+    expect(navigateBackService.programId).toEqual(2);
+    expect(navigateBackService.programs).toEqual([
+      {id: 1}
+    ]);
+  });
+
+  it('should set data in scope from previous search', function () {
+    var data = {
+      facilityId: 1,
+      dateRangeStart: "10/10/2004",
+      dateRangeEnd: "10/10/2014",
+      programId: 2,
+      programs: [
+        {id: 1}
+      ]
+    };
+    navigateBackService.setData(data);
+    controller(ViewRnrListController, {$scope: scope, facilities: facilities, $location: location});
+    expect(scope.selectedFacilityId).toEqual(1);
+    expect(scope.startDate).toEqual("10/10/2004");
+    expect(scope.endDate).toEqual("10/10/2014");
+    expect(scope.programs).toEqual([
+      {id: 1}
+    ]);
+    expect(scope.selectedProgramId).toEqual(2);
   });
 
   function loadRequisitions(expectedUrl, respondWith) {

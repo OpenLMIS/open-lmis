@@ -35,7 +35,7 @@ System Requirement
    * Install Nodejs as described [here](https://github.com/joyent/node/wiki/Installing-Node.js-via-package-manager#rhelcentosscientific-linux-6) based on your Linux flavour.
 
   ### For Mac users
-  * Install Node,js [directly](http://nodejs.org/) or using homebrew as described [link](http://)
+  * Install Node.js [directly](http://nodejs.org/) or using homebrew using `brew install nodejs`
   * Those who install Node.js using Homebrew should export the following (or include in ```$HOME/.bash_profile``` or ```$HOME/.profile``` or ```$HOME/.bashrc``` or ```$HOME/.zshrc```, depending on your shell.
       - **export NODE_PATH="/usr/local/bin/node"**
       - **export PATH="/usr/local/share/npm/bin:$PATH"**  

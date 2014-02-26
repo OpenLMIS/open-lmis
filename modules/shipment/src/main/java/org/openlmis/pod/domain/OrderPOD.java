@@ -14,16 +14,22 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.apache.commons.collections.Predicate;
+import org.codehaus.jackson.annotate.JsonIgnore;
+import org.joda.time.DateTime;
 import org.openlmis.core.domain.BaseModel;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.rnr.domain.LineItem;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.domain.RnrLineItem;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import static org.apache.commons.collections.CollectionUtils.find;
+import static org.joda.time.format.DateTimeFormat.forPattern;
 
 @Data
 @NoArgsConstructor
@@ -35,6 +41,9 @@ public class OrderPOD extends BaseModel {
   private Long programId;
   private Long periodId;
   private List<OrderPODLineItem> podLineItems;
+  private String deliveredBy;
+  private String receivedBy;
+  private Date receivedDate;
 
   public OrderPOD(Long id) {
     this.id = id;
@@ -78,9 +87,13 @@ public class OrderPOD extends BaseModel {
     return !lineItem.isRnrLineItem() || ((RnrLineItem) lineItem).getPacksToShip() > 0;
   }
 
-  public void copy(OrderPOD orderPOD) {
-    this.setModifiedBy(orderPOD.getModifiedBy());
+  public void copy(OrderPOD orderPOD) throws ParseException {
+    this.modifiedBy = orderPOD.getModifiedBy();
+    this.receivedDate = trimHoursFromDate(orderPOD.getReceivedDate());
+    this.receivedBy = orderPOD.getReceivedBy();
+    this.deliveredBy = orderPOD.getDeliveredBy();
     for (final OrderPODLineItem newLineItem : orderPOD.podLineItems) {
+      newLineItem.setModifiedBy(orderPOD.getModifiedBy());
       OrderPODLineItem existingLineItem = (OrderPODLineItem) find(this.podLineItems, new Predicate() {
         @Override
         public boolean evaluate(Object o) {
@@ -91,4 +104,17 @@ public class OrderPOD extends BaseModel {
     }
   }
 
+  @JsonIgnore
+  public String getStringReceivedDate() throws ParseException {
+    if (this.receivedDate == null)
+      return null;
+    return forPattern("yyyy-MM-dd").print(new DateTime(this.receivedDate));
+  }
+
+  public Date trimHoursFromDate(Date receivedDate) throws ParseException {
+    if (receivedDate == null)
+      return null;
+    SimpleDateFormat dateFormatWithoutTime = new SimpleDateFormat("dd/MM/yyyy");
+    return dateFormatWithoutTime.parse(dateFormatWithoutTime.format(receivedDate));
+  }
 }

@@ -50,6 +50,7 @@ public class FacilityVisit extends BaseModel {
     this.facilityId = facility.getId();
     this.facilityCatchmentPopulation = facility.getCatchmentPopulation();
     this.createdBy = distribution.getCreatedBy();
+    this.modifiedBy = distribution.getModifiedBy();
   }
 
   public void setApplicableVisitInfo() {

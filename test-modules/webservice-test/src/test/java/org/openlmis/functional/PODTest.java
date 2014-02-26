@@ -20,6 +20,7 @@ import org.testng.annotations.Test;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.Map;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.assertEquals;
 import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
@@ -52,22 +53,20 @@ public class PODTest extends JsonUtility {
     dbWrapper.setupUserForFulfillmentRole("commTrack", STORE_IN_CHARGE, "F10");
 
     HttpClient client = new HttpClient();
-
     client.createContext();
 
     createOrder(userName, "RELEASED", program);
     String id = String.valueOf(dbWrapper.getMaxRnrID());
 
-    OrderPOD OrderPODFromJson = JsonUtility.readObjectFromFile(FULL_JSON_POD_TXT_FILE_NAME, OrderPOD.class);
-    OrderPODFromJson.getPodLineItems().get(0).setProductCode("P10");
-    OrderPODFromJson.getPodLineItems().get(0).setQuantityReceived(65);
+    OrderPOD orderPODFromJson = JsonUtility.readObjectFromFile(FULL_JSON_POD_TXT_FILE_NAME, OrderPOD.class);
+    orderPODFromJson.getPodLineItems().get(0).setProductCode("P10");
+    orderPODFromJson.getPodLineItems().get(0).setQuantityReceived(65);
+    orderPODFromJson.getPodLineItems().get(0).setQuantityReturned(05);
+    orderPODFromJson.setDeliveredBy("openlmis");
+    orderPODFromJson.setReceivedBy("Incharge");
 
-    ResponseEntity responseEntity =
-      client.SendJSON(getJsonStringFor(OrderPODFromJson),
-        format(POD_URL, id),
-        "POST",
-        "commTrack",
-        "Admin123");
+    ResponseEntity responseEntity = client.SendJSON(getJsonStringFor(orderPODFromJson),
+      format(POD_URL, id), "POST", "commTrack", "Admin123");
 
     String response = responseEntity.getResponse();
 
@@ -75,14 +74,13 @@ public class PODTest extends JsonUtility {
     assertEquals(response, "{\"success\":\"POD updated successfully\"}");
     assertEquals("RECEIVED", dbWrapper.getAttributeFromTable("orders", "status", "id", id));
 
-    assertEquals(65, dbWrapper.getPODLineItemQuantityReceived(Long.parseLong(id), "P10"));
+    Map<String, String> podLineItemFor = dbWrapper.getPodLineItemFor(dbWrapper.getMaxRnrID(), "P10");
+    assertEquals("65", podLineItemFor.get("quantityreceived"));
+    assertEquals("5", podLineItemFor.get("quantityreturned"));
 
-    responseEntity =
-      client.SendJSON(getJsonStringFor(OrderPODFromJson),
-        format(POD_URL, id),
-        "POST",
-        "commTrack",
-        "Admin123");
+    responseEntity = client.SendJSON(getJsonStringFor(orderPODFromJson),
+      format(POD_URL, id), "POST", "commTrack", "Admin123");
+
     response = responseEntity.getResponse();
 
     assertEquals(400, responseEntity.getStatus());
@@ -90,56 +88,145 @@ public class PODTest extends JsonUtility {
   }
 
   @Test(groups = {"webservice"}, dataProvider = "Data-Provider")
-  public void verifyPODHavingProductNotAvailableInRnR(String userName, String program) throws SQLException, IOException {
+  public void testMandatoryFieldsMissing(String userName, String program) throws SQLException, IOException {
     dbWrapper.assignRight("store in-charge", "MANAGE_POD");
-    dbWrapper.setupUserForFulfillmentRole("commTrack", "store in-charge", "F10");
-    HttpClient client = new HttpClient();
+    dbWrapper.setupUserForFulfillmentRole("commTrack", STORE_IN_CHARGE, "F10");
 
+    HttpClient client = new HttpClient();
     client.createContext();
 
     createOrder(userName, "RELEASED", program);
     String id = String.valueOf(dbWrapper.getMaxRnrID());
 
-    OrderPOD OrderPODFromJson = JsonUtility.readObjectFromFile(FULL_JSON_POD_TXT_FILE_NAME, OrderPOD.class);
-    OrderPODFromJson.getPodLineItems().get(0).setProductCode("P11");
-    OrderPODFromJson.getPodLineItems().get(0).setQuantityReceived(650);
+    OrderPOD orderPODFromJson = JsonUtility.readObjectFromFile(FULL_JSON_POD_TXT_FILE_NAME, OrderPOD.class);
+    orderPODFromJson.getPodLineItems().get(0).setProductCode("P10");
+    orderPODFromJson.getPodLineItems().get(0).setQuantityReturned(5);
 
-    ResponseEntity responseEntity =
-      client.SendJSON(getJsonStringFor(OrderPODFromJson),
-        format(POD_URL, id),
-        "POST",
-        "commTrack",
-        "Admin123");
+    ResponseEntity responseEntity = client.SendJSON(getJsonStringFor(orderPODFromJson),
+      format(POD_URL, id), "POST", "commTrack", "Admin123");
+
+    String response = responseEntity.getResponse();
+
+    assertEquals(400, responseEntity.getStatus());
+    assertEquals(response, "{\"error\":\"Missing mandatory fields\"}");
+    assertEquals("RELEASED", dbWrapper.getAttributeFromTable("orders", "status", "id", id));
+
+    orderPODFromJson = JsonUtility.readObjectFromFile(FULL_JSON_POD_TXT_FILE_NAME, OrderPOD.class);
+    orderPODFromJson.getPodLineItems().get(0).setQuantityReceived(65);
+    orderPODFromJson.getPodLineItems().get(0).setQuantityReturned(5);
+
+    responseEntity = client.SendJSON(getJsonStringFor(orderPODFromJson),
+      format(POD_URL, id), "POST", "commTrack", "Admin123");
+
+    response = responseEntity.getResponse();
+
+    assertEquals(400, responseEntity.getStatus());
+    assertEquals(response, "{\"error\":\"Missing mandatory fields\"}");
+    assertEquals("RELEASED", dbWrapper.getAttributeFromTable("orders", "status", "id", id));
+
+    orderPODFromJson = JsonUtility.readObjectFromFile(FULL_JSON_POD_TXT_FILE_NAME, OrderPOD.class);
+    orderPODFromJson.getPodLineItems().get(0).setProductCode("P10");
+    orderPODFromJson.getPodLineItems().get(0).setQuantityReceived(65);
+
+    responseEntity = client.SendJSON(getJsonStringFor(orderPODFromJson),
+      format(POD_URL, id), "POST", "commTrack", "Admin123");
+
+    response = responseEntity.getResponse();
+
+    assertEquals(response, "{\"success\":\"POD updated successfully\"}");
+    assertEquals("RECEIVED", dbWrapper.getAttributeFromTable("orders", "status", "id", id));
+    assertEquals(200, responseEntity.getStatus());
+
+    Map<String, String> podLineItemFor = dbWrapper.getPodLineItemFor(dbWrapper.getMaxRnrID(), "P10");
+    assertEquals("65", podLineItemFor.get("quantityreceived"));
+    assertEquals(null, podLineItemFor.get("quantityreturned"));
+  }
+
+  @Test(groups = {"webservice"}, dataProvider = "Data-Provider")
+  public void testQuantityReturnedDataTypeValidation(String userName, String program) throws SQLException, IOException {
+    dbWrapper.assignRight("store in-charge", "MANAGE_POD");
+    dbWrapper.setupUserForFulfillmentRole("commTrack", STORE_IN_CHARGE, "F10");
+
+    HttpClient client = new HttpClient();
+    client.createContext();
+
+    createOrder(userName, "RELEASED", program);
+    String id = String.valueOf(dbWrapper.getMaxRnrID());
+
+    OrderPOD orderPODFromJson = JsonUtility.readObjectFromFile(FULL_JSON_POD_TXT_FILE_NAME, OrderPOD.class);
+    orderPODFromJson.getPodLineItems().get(0).setProductCode("P10");
+    orderPODFromJson.getPodLineItems().get(0).setQuantityReceived(65);
+    orderPODFromJson.getPodLineItems().get(0).setQuantityReturned(-5);
+
+    ResponseEntity responseEntity = client.SendJSON(getJsonStringFor(orderPODFromJson),
+      format(POD_URL, id), "POST", "commTrack", "Admin123");
+
+    String response = responseEntity.getResponse();
+
+    assertEquals(400, responseEntity.getStatus());
+    assertEquals(response, "{\"error\":\"Invalid returned quantity\"}");
+    assertEquals("RELEASED", dbWrapper.getAttributeFromTable("orders", "status", "id", id));
+
+    String wrongJson = "{\"podLineItems\": [" +
+      "        {" +
+      "            \"productCode\": \"P10\"," +
+      "            \"quantityReceived\": \"10\"," +
+      "            \"quantityReturned\": \"juhyhv\"," +
+      "        }" +
+      "    ]" +
+      "}";
+
+    responseEntity = client.SendJSON(wrongJson,
+      "http://localhost:9091/rest-api/orders/" + id + "/pod", POST, "commTrack", "Admin123");
+
+    assertEquals(400, responseEntity.getStatus());
+    assertEquals("RELEASED", dbWrapper.getAttributeFromTable("orders", "status", "id", id));
+    assertTrue(responseEntity.getResponse().contains("{\"error\":\"Could not read JSON:"));
+    assertTrue(responseEntity.getResponse().contains("not a valid Integer value"));
+  }
+
+  @Test(groups = {"webservice"}, dataProvider = "Data-Provider")
+  public void verifyPODHavingProductNotAvailableInRnR(String userName, String program) throws SQLException, IOException {
+    dbWrapper.assignRight("store in-charge", "MANAGE_POD");
+    dbWrapper.setupUserForFulfillmentRole("commTrack", "store in-charge", "F10");
+
+    HttpClient client = new HttpClient();
+    client.createContext();
+
+    createOrder(userName, "RELEASED", program);
+    String id = String.valueOf(dbWrapper.getMaxRnrID());
+
+    OrderPOD orderPODFromJson = JsonUtility.readObjectFromFile(FULL_JSON_POD_TXT_FILE_NAME, OrderPOD.class);
+    orderPODFromJson.getPodLineItems().get(0).setProductCode("P11");
+    orderPODFromJson.getPodLineItems().get(0).setQuantityReceived(650);
+
+    ResponseEntity responseEntity = client.SendJSON(getJsonStringFor(orderPODFromJson),
+      format(POD_URL, id), "POST", "commTrack", "Admin123");
 
     String response = responseEntity.getResponse();
 
     assertEquals(200, responseEntity.getStatus());
     assertEquals(response, "{\"success\":\"POD updated successfully\"}");
     assertEquals("RECEIVED", dbWrapper.getAttributeFromTable("orders", "status", "id", id));
-
     assertEquals(650, dbWrapper.getPODLineItemQuantityReceived(Long.parseLong(id), "P11"));
   }
 
   @Test(groups = {"webservice"}, dataProvider = "Data-Provider")
   public void verifyUserPermissionOnWarehouse(String userName, String program) throws SQLException, IOException {
     dbWrapper.assignRight("store in-charge", "MANAGE_POD");
-    HttpClient client = new HttpClient();
 
+    HttpClient client = new HttpClient();
     client.createContext();
 
     createOrder(userName, "READY_TO_PACK", program);
     String id = String.valueOf(dbWrapper.getMaxRnrID());
 
-    OrderPOD OrderPODFromJson = JsonUtility.readObjectFromFile(FULL_JSON_POD_TXT_FILE_NAME, OrderPOD.class);
-    OrderPODFromJson.getPodLineItems().get(0).setProductCode("P10");
-    OrderPODFromJson.getPodLineItems().get(0).setQuantityReceived(65);
+    OrderPOD orderPODFromJson = JsonUtility.readObjectFromFile(FULL_JSON_POD_TXT_FILE_NAME, OrderPOD.class);
+    orderPODFromJson.getPodLineItems().get(0).setProductCode("P10");
+    orderPODFromJson.getPodLineItems().get(0).setQuantityReceived(65);
 
-    ResponseEntity responseEntity =
-      client.SendJSON(getJsonStringFor(OrderPODFromJson),
-        format(POD_URL, id),
-        "POST",
-        "commTrack",
-        "Admin123");
+    ResponseEntity responseEntity = client.SendJSON(getJsonStringFor(orderPODFromJson),
+      format(POD_URL, id), "POST", "commTrack", "Admin123");
 
     String response = responseEntity.getResponse();
 
@@ -151,22 +238,19 @@ public class PODTest extends JsonUtility {
   @Test(groups = {"webservice"}, dataProvider = "Data-Provider")
   public void verifyRoleManagePOD(String userName, String program) throws SQLException, IOException {
     dbWrapper.setupUserForFulfillmentRole("commTrack", "store in-charge", "F10");
-    HttpClient client = new HttpClient();
 
+    HttpClient client = new HttpClient();
     client.createContext();
+
     createOrder(userName, "READY_TO_PACK", program);
     String id = String.valueOf(dbWrapper.getMaxRnrID());
 
-    OrderPOD OrderPODFromJson = JsonUtility.readObjectFromFile(FULL_JSON_POD_TXT_FILE_NAME, OrderPOD.class);
-    OrderPODFromJson.getPodLineItems().get(0).setProductCode("P10");
-    OrderPODFromJson.getPodLineItems().get(0).setQuantityReceived(65);
+    OrderPOD orderPODFromJson = JsonUtility.readObjectFromFile(FULL_JSON_POD_TXT_FILE_NAME, OrderPOD.class);
+    orderPODFromJson.getPodLineItems().get(0).setProductCode("P10");
+    orderPODFromJson.getPodLineItems().get(0).setQuantityReceived(65);
 
-    ResponseEntity responseEntity =
-      client.SendJSON(getJsonStringFor(OrderPODFromJson),
-        format(POD_URL, id),
-        "POST",
-        "commTrack",
-        "Admin123");
+    ResponseEntity responseEntity = client.SendJSON(getJsonStringFor(orderPODFromJson),
+      format(POD_URL, id), "POST", "commTrack", "Admin123");
 
     String response = responseEntity.getResponse();
 
@@ -178,19 +262,14 @@ public class PODTest extends JsonUtility {
   @Test(groups = {"webservice"})
   public void verifyInvalidOrderId() throws IOException {
     HttpClient client = new HttpClient();
-
     client.createContext();
 
-    OrderPOD OrderPODFromJson = JsonUtility.readObjectFromFile(FULL_JSON_POD_TXT_FILE_NAME, OrderPOD.class);
-    OrderPODFromJson.getPodLineItems().get(0).setProductCode("P10");
-    OrderPODFromJson.getPodLineItems().get(0).setQuantityReceived(65);
+    OrderPOD orderPODFromJson = JsonUtility.readObjectFromFile(FULL_JSON_POD_TXT_FILE_NAME, OrderPOD.class);
+    orderPODFromJson.getPodLineItems().get(0).setProductCode("P10");
+    orderPODFromJson.getPodLineItems().get(0).setQuantityReceived(65);
 
-    ResponseEntity responseEntity =
-      client.SendJSON(getJsonStringFor(OrderPODFromJson),
-        format(POD_URL, 19999999),
-        "POST",
-        "commTrack",
-        "Admin123");
+    ResponseEntity responseEntity = client.SendJSON(getJsonStringFor(orderPODFromJson),
+      format(POD_URL, 19999999), "POST", "commTrack", "Admin123");
 
     String response = responseEntity.getResponse();
 
@@ -202,23 +281,19 @@ public class PODTest extends JsonUtility {
   public void verifyInvalidProductCode(String userName, String program) throws SQLException, IOException {
     dbWrapper.assignRight("store in-charge", "MANAGE_POD");
     dbWrapper.setupUserForFulfillmentRole("commTrack", "store in-charge", "F10");
-    HttpClient client = new HttpClient();
 
+    HttpClient client = new HttpClient();
     client.createContext();
 
     createOrder(userName, "READY_TO_PACK", program);
     String id = String.valueOf(dbWrapper.getMaxRnrID());
 
-    OrderPOD OrderPODFromJson = JsonUtility.readObjectFromFile(FULL_JSON_POD_TXT_FILE_NAME, OrderPOD.class);
-    OrderPODFromJson.getPodLineItems().get(0).setProductCode("P1000000");
-    OrderPODFromJson.getPodLineItems().get(0).setQuantityReceived(65);
+    OrderPOD orderPODFromJson = JsonUtility.readObjectFromFile(FULL_JSON_POD_TXT_FILE_NAME, OrderPOD.class);
+    orderPODFromJson.getPodLineItems().get(0).setProductCode("P1000000");
+    orderPODFromJson.getPodLineItems().get(0).setQuantityReceived(65);
 
-    ResponseEntity responseEntity =
-      client.SendJSON(getJsonStringFor(OrderPODFromJson),
-        format(POD_URL, id),
-        "POST",
-        "commTrack",
-        "Admin123");
+    ResponseEntity responseEntity = client.SendJSON(getJsonStringFor(orderPODFromJson),
+      format(POD_URL, id), "POST", "commTrack", "Admin123");
 
     String response = responseEntity.getResponse();
 
@@ -231,23 +306,19 @@ public class PODTest extends JsonUtility {
   public void verifyAuthentication(String userName, String program) throws SQLException, IOException {
     dbWrapper.assignRight("store in-charge", "MANAGE_POD");
     dbWrapper.setupUserForFulfillmentRole("commTrack", "store in-charge", "F10");
-    HttpClient client = new HttpClient();
 
+    HttpClient client = new HttpClient();
     client.createContext();
 
     createOrder(userName, "READY_TO_PACK", program);
     String id = String.valueOf(dbWrapper.getMaxRnrID());
 
-    OrderPOD OrderPODFromJson = JsonUtility.readObjectFromFile(FULL_JSON_POD_TXT_FILE_NAME, OrderPOD.class);
-    OrderPODFromJson.getPodLineItems().get(0).setProductCode("P10");
-    OrderPODFromJson.getPodLineItems().get(0).setQuantityReceived(65);
+    OrderPOD orderPODFromJson = JsonUtility.readObjectFromFile(FULL_JSON_POD_TXT_FILE_NAME, OrderPOD.class);
+    orderPODFromJson.getPodLineItems().get(0).setProductCode("P10");
+    orderPODFromJson.getPodLineItems().get(0).setQuantityReceived(65);
 
-    ResponseEntity responseEntity =
-      client.SendJSON(getJsonStringFor(OrderPODFromJson),
-        format(POD_URL, id),
-        "POST",
-        "commTrack100",
-        "Admin123");
+    ResponseEntity responseEntity = client.SendJSON(getJsonStringFor(orderPODFromJson),
+      format(POD_URL, id), "POST", "commTrack100", "Admin123");
 
     String response = responseEntity.getResponse();
 
@@ -257,32 +328,46 @@ public class PODTest extends JsonUtility {
   }
 
   @Test(groups = {"webservice"}, dataProvider = "Data-Provider")
-  public void verifyInvalidQuantity(String userName, String program) throws SQLException, IOException {
+  public void verifyInvalidQuantityReceived(String userName, String program) throws SQLException, IOException {
     dbWrapper.assignRight("store in-charge", "MANAGE_POD");
     dbWrapper.setupUserForFulfillmentRole("commTrack", "store in-charge", "F10");
-    HttpClient client = new HttpClient();
 
+    HttpClient client = new HttpClient();
     client.createContext();
 
     createOrder(userName, "TRANSFER_FAILED", program);
     String id = String.valueOf(dbWrapper.getMaxRnrID());
 
-    OrderPOD OrderPODFromJson = JsonUtility.readObjectFromFile(FULL_JSON_POD_TXT_FILE_NAME, OrderPOD.class);
-    OrderPODFromJson.getPodLineItems().get(0).setProductCode("P10");
-    OrderPODFromJson.getPodLineItems().get(0).setQuantityReceived(-65);
+    OrderPOD orderPODFromJson = JsonUtility.readObjectFromFile(FULL_JSON_POD_TXT_FILE_NAME, OrderPOD.class);
+    orderPODFromJson.getPodLineItems().get(0).setProductCode("P10");
+    orderPODFromJson.getPodLineItems().get(0).setQuantityReceived(-65);
 
-    ResponseEntity responseEntity =
-      client.SendJSON(getJsonStringFor(OrderPODFromJson),
-        format(POD_URL, id),
-        "POST",
-        "commTrack",
-        "Admin123");
+    ResponseEntity responseEntity = client.SendJSON(getJsonStringFor(orderPODFromJson),
+      format(POD_URL, id), "POST", "commTrack", "Admin123");
 
     String response = responseEntity.getResponse();
 
     assertEquals(400, responseEntity.getStatus());
     assertEquals(response, "{\"error\":\"Invalid received quantity\"}");
     assertEquals("TRANSFER_FAILED", dbWrapper.getAttributeFromTable("orders", "status", "id", id));
+
+    String wrongJson = "{\"podLineItems\": [" +
+      "        {" +
+      "            \"productCode\": \"P10\"," +
+      "            \"quantityReceived\": \"uhj\"," +
+      "            \"quantityReturned\": \"12\"," +
+
+      "        }" +
+      "    ]" +
+      "}";
+
+    responseEntity = client.SendJSON(wrongJson,
+      "http://localhost:9091/rest-api/orders/" + id + "/pod", POST, "commTrack", "Admin123");
+
+    assertEquals(400, responseEntity.getStatus());
+    assertEquals("TRANSFER_FAILED", dbWrapper.getAttributeFromTable("orders", "status", "id", id));
+    assertTrue(responseEntity.getResponse().contains("{\"error\":\"Could not read JSON:"));
+    assertTrue(responseEntity.getResponse().contains("not a valid Integer value"));
   }
 
   @Test(groups = {"webservice"}, dataProvider = "Data-Provider")
@@ -305,15 +390,67 @@ public class PODTest extends JsonUtility {
       "        }" +
       "    ]" +
       "}";
-    ResponseEntity responseEntity =
-      client.SendJSON(wrongJson,
-        "http://localhost:9091/rest-api/orders/" + id + "/pod",
-        POST,
-        "commTrack",
-        "Admin123");
+
+    ResponseEntity responseEntity = client.SendJSON(wrongJson,
+      "http://localhost:9091/rest-api/orders/" + id + "/pod", POST, "commTrack", "Admin123");
 
     assertEquals(400, responseEntity.getStatus());
+    assertEquals("RELEASED", dbWrapper.getAttributeFromTable("orders", "status", "id", id));
     assertTrue(responseEntity.getResponse().contains("{\"error\":\"Could not read JSON: Unrecognized field"));
+  }
+
+  @Test(groups = {"webservice"}, dataProvider = "Data-Provider")
+  public void testVerifyDeliveryDetailsWhenSubmittedByConfirmDeliveryAPI(String userName, String program) throws SQLException, IOException {
+    dbWrapper.assignRight("store in-charge", "MANAGE_POD");
+    dbWrapper.setupUserForFulfillmentRole("commTrack", STORE_IN_CHARGE, "F10");
+
+    HttpClient client = new HttpClient();
+    client.createContext();
+
+    createOrder(userName, "RELEASED", program);
+    String orderId = String.valueOf(dbWrapper.getMaxRnrID());
+
+    OrderPOD orderPODFromJson = JsonUtility.readObjectFromFile(FULL_JSON_POD_TXT_FILE_NAME, OrderPOD.class);
+    orderPODFromJson.getPodLineItems().get(0).setProductCode("P10");
+    orderPODFromJson.getPodLineItems().get(0).setQuantityReceived(65);
+    orderPODFromJson.getPodLineItems().get(0).setQuantityReturned(95);
+    orderPODFromJson.setDeliveredBy("openLMIS");
+    orderPODFromJson.setReceivedBy("facility Incharge");
+
+    ResponseEntity responseEntity = client.SendJSON(getJsonStringFor(orderPODFromJson),
+      format(POD_URL, orderId), "POST", "commTrack", "Admin123");
+
+    String response = responseEntity.getResponse();
+
+    assertEquals(200, responseEntity.getStatus());
+    assertEquals(response, "{\"success\":\"POD updated successfully\"}");
+  }
+
+  @Test(groups = {"webservice"}, dataProvider = "Data-Provider")
+  public void testVerifyDeliveryDetailsWhen(String userName, String program) throws SQLException, IOException {
+    dbWrapper.assignRight("store in-charge", "MANAGE_POD");
+    dbWrapper.setupUserForFulfillmentRole("commTrack", STORE_IN_CHARGE, "F10");
+
+    HttpClient client = new HttpClient();
+    client.createContext();
+
+    createOrder(userName, "RELEASED", program);
+    String orderId = String.valueOf(dbWrapper.getMaxRnrID());
+
+    OrderPOD orderPODFromJson = JsonUtility.readObjectFromFile(FULL_JSON_POD_TXT_FILE_NAME, OrderPOD.class);
+    orderPODFromJson.getPodLineItems().get(0).setProductCode("P10");
+    orderPODFromJson.getPodLineItems().get(0).setQuantityReceived(65);
+    orderPODFromJson.getPodLineItems().get(0).setQuantityReturned(95);
+    orderPODFromJson.setDeliveredBy("openLMIS");
+    orderPODFromJson.setReceivedBy("facility Incharge");
+
+    ResponseEntity responseEntity = client.SendJSON(getJsonStringFor(orderPODFromJson),
+      format(POD_URL, orderId), "POST", "commTrack", "Admin123");
+
+    String response = responseEntity.getResponse();
+
+    assertEquals(200, responseEntity.getStatus());
+    assertEquals(response, "{\"success\":\"POD updated successfully\"}");
   }
 
   @DataProvider(name = "Data-Provider")

@@ -36,9 +36,12 @@ public class VaccinationFullCoverageDTO extends BaseModel {
   private Reading maleMobileBrigadeReading;
 
   public VaccinationFullCoverage transform() {
-    return new VaccinationFullCoverage(this.facilityVisitId, this.femaleHealthCenterReading.parsePositiveInt(),
+    VaccinationFullCoverage vaccinationFullCoverage = new VaccinationFullCoverage(this.facilityVisitId, this.femaleHealthCenterReading.parsePositiveInt(),
       this.femaleMobileBrigadeReading.parsePositiveInt(),
       this.maleHealthCenterReading.parsePositiveInt(),
       this.maleMobileBrigadeReading.parsePositiveInt());
+    vaccinationFullCoverage.setModifiedBy(this.modifiedBy);
+    vaccinationFullCoverage.setCreatedBy(this.createdBy);
+    return vaccinationFullCoverage;
   }
 }

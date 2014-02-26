@@ -349,13 +349,13 @@ public class VisitInformationPage extends DistributionTab {
     return verifiedByTitleField.getAttribute("value");
   }
 
-  public String getVisitDateAsFirstOfCurrentMonth() {
-    testWebDriver.waitForElementToAppear(visitDateField);
-    return visitDateField.getAttribute("value");
-  }
-
   public String getVehicleId() {
     testWebDriver.waitForElementToAppear(vehicleIdField);
     return vehicleIdField.getAttribute("value");
+  }
+
+  public String getOtherReason() {
+    testWebDriver.waitForElementToAppear(otherTextBox);
+    return otherTextBox.getAttribute("value");
   }
 }

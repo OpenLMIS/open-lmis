@@ -150,7 +150,7 @@ public class FacilityListPage extends RequisitionPage {
     assertEquals(facilityPageHeaderZone.getText(), facilityZone);
   }
 
-  public void verifyFacilityIndicatorColor(String whichIcon, String color) {
+  public void verifyOverallFacilityIndicatorColor(String color) {
     testWebDriver.waitForElementToAppear(facilityOverAllIndicator);
     if (color.toLowerCase().equals("RED".toLowerCase()))
       color = "rgba(203, 64, 64, 1)";
@@ -161,15 +161,26 @@ public class FacilityListPage extends RequisitionPage {
     else if (color.toLowerCase().equals("Blue".toLowerCase()))
       color = "rgba(22, 131, 230, 1)";
 
-    if (whichIcon.toLowerCase().equals("Overall".toLowerCase()))
-      assertEquals(facilityOverAllIndicator.getCssValue("background-color"), color);
-    else if (whichIcon.toLowerCase().equals("Individual".toLowerCase())) {
-      clickFacilityListDropDown();
-      testWebDriver.waitForElementToAppear(facilityListTextField);
-      testWebDriver.getElementByXpath("//*[@id='select2-drop']/ul/li[1]/div").click();
-      assertEquals(firstFacilityIndicator.getCssValue("background-color"), color);
-      inputFacilitySearch.sendKeys(Keys.ESCAPE);
-    }
+    assertEquals(facilityOverAllIndicator.getCssValue("background-color"), color);
+  }
+
+  public void verifyIndividualFacilityIndicatorColor(String facilityCode, String color) {
+    testWebDriver.waitForElementToAppear(facilityOverAllIndicator);
+    if (color.toLowerCase().equals("RED".toLowerCase()))
+      color = "rgba(203, 64, 64, 1)";
+    else if (color.toLowerCase().equals("GREEN".toLowerCase()))
+      color = "rgba(69, 182, 0, 1)";
+    else if (color.toLowerCase().equals("AMBER".toLowerCase()))
+      color = "rgba(240, 165, 19, 1)";
+    else if (color.toLowerCase().equals("Blue".toLowerCase()))
+      color = "rgba(22, 131, 230, 1)";
+
+    clickFacilityListDropDown();
+    testWebDriver.waitForElementToAppear(facilityListTextField);
+    inputFacilitySearch.sendKeys(facilityCode);
+    assertEquals(firstFacilityIndicator.getCssValue("background-color"), color);
+    inputFacilitySearch.clear();
+    inputFacilitySearch.sendKeys(Keys.ESCAPE);
   }
 
   public void verifyLegend() {

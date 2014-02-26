@@ -17,6 +17,7 @@ import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.openlmis.core.domain.Product;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.ProductService;
 import org.openlmis.db.categories.UnitTests;
@@ -58,19 +59,24 @@ public class RestPODServiceTest {
 
   @Test
   public void shouldUpdatePOD() {
+    OrderPODLineItem orderPodLineItem = new OrderPODLineItem();
+    orderPodLineItem.setProductCode("productCode");
     OrderPOD orderPod = new OrderPOD(3L);
     orderPod.setOrderId(4L);
+    orderPod.setPodLineItems(asList(orderPodLineItem));
 
     OrderPOD spyOrderPod = spy(orderPod);
     doNothing().when(spyOrderPod).validate();
     when(orderService.getOrder(4L)).thenReturn(new Order());
+    when(productService.getByCode("productCode")).thenReturn(new Product());
     doNothing().when(podService).checkPermissions(orderPod);
     when(podService.getPODByOrderId(4L)).thenReturn(null);
     Rnr rnr = new Rnr();
     when(requisitionService.getLWById(orderPod.getOrderId())).thenReturn(rnr);
+
     doNothing().when(spyOrderPod).fillPOD(rnr);
     doNothing().when(podService).insertPOD(orderPod);
-    doNothing().when(podService).insertLineItems(orderPod);
+    doNothing().when(podService).insertPODLineItem(orderPodLineItem);
     doNothing().when(podService).updateOrderStatus(orderPod);
 
     restPODService.updatePOD(spyOrderPod, 1L);
@@ -79,7 +85,7 @@ public class RestPODServiceTest {
     verify(podService).checkPermissions(orderPod);
     verify(podService).getPODByOrderId(4L);
     verify(podService).insertPOD(orderPod);
-    verify(podService).insertLineItems(orderPod);
+    verify(podService).insertPODLineItem(orderPodLineItem);
     verify(podService).updateOrderStatus(orderPod);
   }
 

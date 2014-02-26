@@ -35,8 +35,8 @@ public class DistributionRepository {
     return mapper.get(distribution);
   }
 
-  public void updateDistributionStatus(Long distributionId, DistributionStatus status) {
-    mapper.updateDistributionStatus(distributionId, status);
+  public void updateDistributionStatus(Long distributionId, DistributionStatus status, Long modifiedBy) {
+    mapper.updateDistributionStatus(distributionId, status, modifiedBy);
   }
 
 

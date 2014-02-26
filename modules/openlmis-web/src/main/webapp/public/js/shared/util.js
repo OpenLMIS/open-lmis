@@ -42,15 +42,26 @@ var utils = {
 
   isEmpty: function (value) {
     return (value === null || value === undefined || value.toString().trim().length === 0);
+  },
+
+  sum: function () {
+    var values = Array.prototype.slice.call(arguments), sum = 0;
+
+    values.forEach(function (value) {
+      if (!isUndefined(value)) {
+        sum += utils.parseIntWithBaseTen(value);
+      }
+    });
+    return sum;
   }
 
 };
 
-String.prototype.format = function() {
-    var formatted = this;
-    for (var i = 0; i < arguments.length; i++) {
-        var regexp = new RegExp('\\{'+i+'\\}', 'gi');
-        formatted = formatted.replace(regexp, arguments[i]);
-    }
-    return formatted;
+String.prototype.format = function () {
+  var formatted = this;
+  for (var i = 0; i < arguments.length; i++) {
+    var regexp = new RegExp('\\{' + i + '\\}', 'gi');
+    formatted = formatted.replace(regexp, arguments[i]);
+  }
+  return formatted;
 };

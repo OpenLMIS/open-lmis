@@ -25,16 +25,16 @@ public class FacilityDistributionDTOTest {
 
   @Test
   public void shouldTransformDTOIntoRealObject() throws Exception {
-
     FacilityVisit facilityVisit = new FacilityVisit();
     EpiUseDTO epiUseDTO = mock(EpiUseDTO.class);
     DistributionRefrigeratorsDTO distributionRefrigeratorsDTO = mock(DistributionRefrigeratorsDTO.class);
     VaccinationFullCoverageDTO coverageDTO = mock(VaccinationFullCoverageDTO.class);
     EpiInventoryDTO epiInventoryDTO = mock(EpiInventoryDTO.class);
     ChildCoverageDTO childCoverageDTO = mock(ChildCoverageDTO.class);
+    AdultCoverageDTO adultCoverageDTO = mock(AdultCoverageDTO.class);
 
     FacilityDistributionDTO facilityDistributionDTO = new FacilityDistributionDTO(facilityVisit, epiUseDTO,
-      epiInventoryDTO, distributionRefrigeratorsDTO, coverageDTO, childCoverageDTO);
+      epiInventoryDTO, distributionRefrigeratorsDTO, coverageDTO, childCoverageDTO, adultCoverageDTO);
 
     EpiUse epiUse = new EpiUse();
     when(epiUseDTO.transform()).thenReturn(epiUse);
@@ -51,6 +51,9 @@ public class FacilityDistributionDTOTest {
     VaccinationChildCoverage childCoverage = new VaccinationChildCoverage();
     when(childCoverageDTO.transform()).thenReturn(childCoverage);
 
+    VaccinationAdultCoverage adultCoverage = new VaccinationAdultCoverage();
+    when(adultCoverageDTO.transform()).thenReturn(adultCoverage);
+
     FacilityDistribution facilityDistribution = facilityDistributionDTO.transform();
 
     assertThat(facilityDistribution.getFacilityVisit(), is(facilityDistributionDTO.getFacilityVisit()));
@@ -59,5 +62,27 @@ public class FacilityDistributionDTOTest {
     assertThat(facilityDistribution.getFullCoverage(), is(vaccinationFullCoverage));
     assertThat(facilityDistribution.getEpiInventory(), is(epiInventory));
     assertThat(facilityDistribution.getChildCoverage(), is(childCoverage));
+    assertThat(facilityDistribution.getAdultCoverage(), is(adultCoverage));
+  }
+
+  @Test
+  public void shouldSetModifiedByForAllDistributionForms() throws Exception {
+    FacilityDistributionDTO facilityDistributionDTO = new FacilityDistributionDTO(new FacilityVisit(), new EpiUseDTO(), new EpiInventoryDTO(),
+      new DistributionRefrigeratorsDTO(), new VaccinationFullCoverageDTO(), new ChildCoverageDTO(),
+      new AdultCoverageDTO());
+
+    facilityDistributionDTO.setModifiedBy(4L);
+
+    assertThat(facilityDistributionDTO.getFacilityVisit().getModifiedBy(), is(4L));
+    assertThat(facilityDistributionDTO.getEpiInventory().getModifiedBy(), is(4L));
+    assertThat(facilityDistributionDTO.getEpiUse().getModifiedBy(), is(4L));
+    assertThat(facilityDistributionDTO.getChildCoverage().getModifiedBy(), is(4L));
+    assertThat(facilityDistributionDTO.getAdultCoverage().getModifiedBy(), is(4L));
+
+    assertThat(facilityDistributionDTO.getFullCoverage().getModifiedBy(), is(4L));
+    assertThat(facilityDistributionDTO.getFullCoverage().getCreatedBy(), is(4L));
+
+    assertThat(facilityDistributionDTO.getRefrigerators().getModifiedBy(), is(4L));
+    assertThat(facilityDistributionDTO.getRefrigerators().getCreatedBy(), is(4L));
   }
 }

@@ -339,8 +339,10 @@ public class DBWrapper {
     update("delete from refrigerator_readings");
     update("delete from full_coverages");
     update("delete from vaccination_child_coverage_line_items;");
-    update("delete from coverage_vaccination_products;");
-    update("delete from opened_vial_line_items;");
+    update("delete from vaccination_adult_coverage_line_items;");
+    update("delete from coverage_target_group_products;");
+    update("delete from child_coverage_opened_vial_line_items;");
+    update("delete from adult_coverage_opened_vial_line_items;");
     update("delete from facility_visits");
     update("delete from distributions");
     update("delete from refrigerators");
@@ -351,7 +353,7 @@ public class DBWrapper {
     update("delete from facility_approved_products");
     update("delete from facility_program_products");
     update("delete from program_products");
-    update("delete from coverage_vaccination_products");
+    update("delete from coverage_target_group_products");
     update("delete from coverage_product_vials");
     update("delete from products");
     update("delete from product_categories");
@@ -722,7 +724,7 @@ public class DBWrapper {
       update("update " + tableName + " set " + fieldName + "='" + value + "' where " + queryParam + "='" + queryValue + "';");
   }
 
-  public void updateFieldValue(String tableName, String fieldName, Boolean value) throws SQLException {
+  public void updateFieldValue(String tableName, String fieldName, boolean value) throws SQLException {
     update("update " + tableName + " set " + fieldName + "=" + value + ";");
   }
 
@@ -1039,7 +1041,7 @@ public class DBWrapper {
   public Map<String, String> getFacilityVisitDetails(String facilityCode) throws SQLException {
     Map<String, String> facilityVisitsDetails = new HashMap<>();
     try (ResultSet rs = query("SELECT observations,confirmedByName,confirmedByTitle,verifiedByName,verifiedByTitle, visited, synced, " +
-      "visitDate, vehicleId from facility_visits WHERE facilityId = (SELECT id FROM facilities WHERE code = '" + facilityCode + "');")) {
+      "visitDate, vehicleId, reasonForNotVisiting, otherReasonDescription from facility_visits WHERE facilityId = (SELECT id FROM facilities WHERE code = '" + facilityCode + "');")) {
       while (rs.next()) {
         facilityVisitsDetails.put("observations", rs.getString("observations"));
         facilityVisitsDetails.put("confirmedByName", rs.getString("confirmedByName"));
@@ -1050,6 +1052,8 @@ public class DBWrapper {
         facilityVisitsDetails.put("visitDate", rs.getString("visitDate"));
         facilityVisitsDetails.put("vehicleId", rs.getString("vehicleId"));
         facilityVisitsDetails.put("synced", rs.getString("synced"));
+        facilityVisitsDetails.put("reasonForNotVisiting", rs.getString("reasonForNotVisiting"));
+        facilityVisitsDetails.put("otherReasonDescription", rs.getString("otherReasonDescription"));
       }
       return facilityVisitsDetails;
     }
@@ -1303,10 +1307,16 @@ public class DBWrapper {
 
   }
 
-  public ResultSet getChildCoverageDetails(String vaccination, String facilityCode) throws SQLException {
-    ResultSet resultSet = query("SELECT * FROM vaccination_child_coverage_line_items WHERE vaccination = '%s'" +
-      "AND facilityVisitId=(Select id from facility_visits where facilityId=" +
-      "(Select id from facilities where code ='%s'));", vaccination, facilityCode);
+  public void insertProductsForAdultCoverage() throws SQLException {
+    update("INSERT INTO products\n" +
+      "(code,    alternateItemCode,  manufacturer,       manufacturerCode,  manufacturerBarcode,   mohBarcode,   gtin,   type,         primaryName,    fullName,       genericName,    alternateName,    description,      strength,    formId,  dosageUnitId, dispensingUnit,  dosesPerDispensingUnit,  packSize,  alternatePackSize,  storeRefrigerated,   storeRoomTemperature,   hazardous,  flammable,   controlledSubstance,  lightSensitive,  approvedByWho,  contraceptiveCyp,  packLength,  packWidth, packHeight,  packWeight,  packsPerCarton, cartonLength,  cartonWidth,   cartonHeight, cartonsPerPallet,  expectedShelfLife,  specialStorageInstructions, specialTransportInstructions, active,  fullSupply, tracer,   packRoundingThreshold,  roundToZero,  archived, displayOrder, categoryId) values\n" +
+      "('tetanus',    'a',           'Glaxo and Smith',  'a',              'a',                    'a',          'a',    'antibiotic', 'penta10',   'TDF/FTC/EFV',  'TDF/FTC/EFV',  'TDF/FTC/EFV',    'TDF/FTC/EFV',  '300/200/600',  2,        1,            'Strip',           10,                     10,        30,                   TRUE,                  TRUE,                TRUE,       TRUE,         TRUE,                 TRUE,             TRUE,               1,          2.2,            2,          2,            2,            2,            2,              2,              2,              2,                    2,                    'a',                          'a',          TRUE,     FALSE,       TRUE,         1,                    FALSE,      TRUE,   5, (Select id from product_categories where code='C1'));\n");
+    insertProgramProduct("tetanus", "VACCINES", "10", "true");
+  }
+
+  public ResultSet getChildCoverageDetails(String vaccination, String facilityVisitId) throws SQLException {
+    ResultSet resultSet = query("SELECT * FROM vaccination_child_coverage_line_items WHERE vaccination = '%s' " +
+      "AND facilityVisitId = %s;", vaccination, facilityVisitId);
     resultSet.next();
     return resultSet;
   }
@@ -1387,8 +1397,8 @@ public class DBWrapper {
     return select("select * from pod_line_items where productCode = '%s' AND podid =(Select id from pod where orderId= %d )", productCode, orderId).get(0);
   }
 
-  public void insertRegimensProductsInMappingTable(String vaccination, String productCode) throws SQLException {
-    update("INSERT INTO coverage_vaccination_products (vaccination, productCode, childCoverage) values ('%s' ,'%s' , TRUE)", vaccination, productCode);
+  public void insertTargetGroupEntityAndProductsInMappingTable(String targetGroupEntity, String productCode, boolean isChildCoverageMapping) throws SQLException {
+    update("INSERT INTO coverage_target_group_products (targetGroupEntity, productCode, childCoverage) values ('%s' ,'%s' , %s)", targetGroupEntity, productCode, isChildCoverageMapping);
   }
 
   public Map<String, String> getDistributionDetails(String deliveryZoneName, String programName, String periodName) throws SQLException {
@@ -1399,7 +1409,35 @@ public class DBWrapper {
     update("UPDATE orders set status = '" + orderStatus + "' WHERE id = " + getMaxRnrID());
   }
 
-  public void insertOpenedVialsProductsInMappingTable(String vial, String productCode) throws SQLException {
-    update("INSERT INTO coverage_product_vials (vial, productCode) values ('%s' ,'%s')", vial, productCode);
+  public void insertChildCoverageProductVial(String vial, String productCode) throws SQLException {
+    update("INSERT INTO coverage_product_vials (vial, productCode, childCoverage) values ('%s' ,'%s', TRUE)", vial, productCode);
+  }
+
+  public ResultSet getChildOpenedVialLineItem(String productVialName, String facilityVisitId) throws SQLException {
+    ResultSet resultSet = query("SELECT * FROM child_coverage_opened_vial_line_items WHERE productVialName = '%s' " +
+      "AND facilityVisitId = %s;", productVialName, facilityVisitId);
+    resultSet.next();
+    return resultSet;
+  }
+
+  public void insertAdultCoverageOpenedVialMapping(String productCode) throws SQLException {
+    update("INSERT INTO coverage_product_vials (vial, productCode, childCoverage) values ('Tetanus' ,'%s', FALSE)", productCode);
+  }
+
+  public Map<String, String> getPodData(Integer orderId) throws SQLException {
+    return select("select * from pod where orderId = %d ", orderId).get(0);
+  }
+
+  public ResultSet getAdultCoverageDetails(String demographicGroup, String facilityVisitId) throws SQLException {
+    ResultSet resultSet = query("SELECT * FROM vaccination_adult_coverage_line_items WHERE demographicgroup = '%s' " +
+      "AND facilityVisitId = %s;", demographicGroup, facilityVisitId);
+    resultSet.next();
+    return resultSet;
+  }
+
+  public ResultSet getAdultOpenedVialLineItem(String facilityVisitId) throws SQLException {
+    ResultSet resultSet = query("SELECT * FROM adult_coverage_opened_vial_line_items WHERE facilityVisitId = %s;", facilityVisitId);
+    resultSet.next();
+    return resultSet;
   }
 }
