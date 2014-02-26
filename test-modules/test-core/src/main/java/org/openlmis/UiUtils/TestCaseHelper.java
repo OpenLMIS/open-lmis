@@ -637,8 +637,8 @@ public class TestCaseHelper {
     }
   }
 
-  public void verifyAdultCoverageDataInDatabase() throws SQLException {
-    String facilityId = dbWrapper.getAttributeFromTable("facilities", "id", "code", "F10");
+  public void verifyAdultCoverageDataInDatabase(String facilityCode) throws SQLException {
+    String facilityId = dbWrapper.getAttributeFromTable("facilities", "id", "code", facilityCode);
     String facilityVisitId = dbWrapper.getAttributeFromTable("facility_visits", "id", "facilityId", facilityId);
 
     List<String> demographicGroups = asList("Pregnant Women", "MIF 15-49 years - Community", "MIF 15-49 years - Students",

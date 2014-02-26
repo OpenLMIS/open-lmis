@@ -978,7 +978,7 @@ public class DistributionSyncTest extends TestCaseHelper {
 
     verifyFullCoveragesDataInDatabase(23, 66, 77, 45, facilityCode);
 
-    verifyAdultCoverageDataInDatabase();
+    verifyAdultCoverageDataInDatabase(facilityCode);
 
     verifyEpiInventoryDataInDatabase(null, "2", null, "P10", facilityCode);
     verifyEpiInventoryDataInDatabase(null, "4", null, "Product6", facilityCode);
@@ -995,7 +995,7 @@ public class DistributionSyncTest extends TestCaseHelper {
 
     verifyFullCoveragesDataInDatabase(23, 66, 77, 45, facilityCode);
 
-    verifyAdultCoverageDataInDatabase();
+    verifyAdultCoverageDataInDatabase(facilityCode);
 
     verifyEpiInventoryDataInDatabase(null, null, null, "P10", facilityCode);
     verifyEpiInventoryDataInDatabase(null, null, null, "Product6", facilityCode);
