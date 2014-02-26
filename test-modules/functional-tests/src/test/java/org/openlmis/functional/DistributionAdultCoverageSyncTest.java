@@ -597,7 +597,7 @@ public class DistributionAdultCoverageSyncTest extends TestCaseHelper {
     assertTrue(distributionPage.getSyncMessage().contains("F10-Village Dispensary"));
     distributionPage.syncDistributionMessageDone();
 
-    verifyAdultCoverageDataNullInDatabase();
+    verifyAdultCoverageDataNullInDatabase(adultCoverageData.get(FIRST_FACILITY_CODE));
   }
 
   @Test(groups = {"distribution"})
