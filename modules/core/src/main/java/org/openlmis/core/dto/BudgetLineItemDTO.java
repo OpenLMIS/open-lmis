@@ -27,8 +27,8 @@ import java.util.List;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
 /**
- * DTO for BudgetLineItems, consilidates user provided information like facilityCode, programCode etc., to be later
- * referenced uding Ids in BudgetLineItem.
+ * DTO for BudgetLineItems, consolidates user provided information like facilityCode, programCode etc., to be later
+ * referenced using Ids in BudgetLineItem.
  */
 @Data
 @NoArgsConstructor
