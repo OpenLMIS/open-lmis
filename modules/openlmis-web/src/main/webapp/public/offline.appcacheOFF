@@ -2,7 +2,7 @@ CACHE MANIFEST
 #version @version@
 
 CACHE:
-/favicon.ico
+/public/favicon.ico
 /public/lib/jquery/jquery-2.0.0.min.js
 /public/lib/angular/angular.min.js
 /public/lib/angular/angular-route.min.js
