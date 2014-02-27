@@ -14,6 +14,9 @@ import org.openlmis.core.repository.mapper.BudgetFileMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+/**
+ * Repository class for BudgetFile related database operations.
+ */
 @Repository
 public class BudgetFileRepository {
 

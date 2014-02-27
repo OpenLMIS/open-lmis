@@ -14,6 +14,9 @@ import org.apache.ibatis.annotations.Update;
 import org.openlmis.core.domain.EDIConfiguration;
 import org.springframework.stereotype.Repository;
 
+/**
+ * It maps the BudgetFileConfiguration entity to corresponding representation in database.
+ */
 @Repository
 public interface BudgetConfigurationMapper {
 

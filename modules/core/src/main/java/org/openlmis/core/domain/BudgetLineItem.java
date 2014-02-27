@@ -19,6 +19,9 @@ import lombok.NoArgsConstructor;
 import java.math.BigDecimal;
 import java.util.Date;
 
+/**
+ * Represents each record of BudgetFile.
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

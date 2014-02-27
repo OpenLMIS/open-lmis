@@ -15,6 +15,10 @@ import org.openlmis.core.domain.ProgramProduct;
 import org.openlmis.core.domain.ProgramProductPrice;
 import org.springframework.stereotype.Repository;
 
+/**
+ * It maps ProgramProductPrice entity to corresponding representation in database. Allows operation to maintain
+ * program product price history along with basic CRUD operations.
+ */
 @Repository
 public interface ProgramProductPriceMapper {
   @Insert({"INSERT INTO program_product_price_history",

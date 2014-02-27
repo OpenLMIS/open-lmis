@@ -15,6 +15,9 @@ import org.openlmis.core.repository.BudgetFileRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+/**
+ * Exposes the services for handling BudgetFile entity.
+ */
 @Service
 public class BudgetFileService {
 

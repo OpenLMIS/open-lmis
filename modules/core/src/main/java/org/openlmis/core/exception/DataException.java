@@ -13,6 +13,10 @@ package org.openlmis.core.exception;
 import lombok.Getter;
 import org.openlmis.core.message.OpenLmisMessage;
 
+/**
+ * This is the base exception class for all application level exception. It provides ways to create custom exception
+ * with externalised messages and parameters.
+ */
 public class DataException extends RuntimeException {
 
   @Getter
