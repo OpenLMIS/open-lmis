@@ -64,10 +64,10 @@ public class ConfigureBudgetPage extends Page {
   @FindBy(how = ID, using = "saveSuccessMsgDiv")
   private static WebElement successMessageDiv = null;
 
-  @FindBy(how = XPATH, using = "//input[@value='Save']")
+  @FindBy(how = ID, using = "saveBudgetConfig")
   private static WebElement saveButton = null;
 
-  @FindBy(how = XPATH, using = "//a[contains(text(),'Cancel')]")
+  @FindBy(how = ID, using = "cancelBudgetConfig")
   private static WebElement cancelButton = null;
 
   @FindBy(how = XPATH, using = "//div[@id='select2-drop']/div/input")

@@ -9,77 +9,80 @@
   -->
 
 <div xmlns="http://www.w3.org/1999/html" tab-scroll>
-  <h2 openlmis-message="label.budget.file.format"></h2>
+    <h2 openlmis-message="label.budget.file.format"></h2>
 
-  <form ng-submit="saveBudgetFileTemplate()" id="create-budget-file-template" name="createBudgetFileFormat"
-        novalidate>
-    <div class="app-form" tab-scroll>
-      <div class="clearfix form-inline row-fluid">
-        <div class="span4 include-header-form">
-          <input type="checkbox" id="includeHeadersCheckbox"
-                 ng-model="budgetFileTemplate.configuration.headerInFile"/>
-          <label for="includeHeadersCheckbox" openlmis-message="label.column.include.headers"></label>
-        </div>
-      </div>
-    </div>
-
-    <hr/>
-
-    <div class="row-fluid">
-      <div class="span10">
-        <div id="budgetFileColumns">
-          <div class="list-header-container">
-            <div class="row-fluid list-header">
-              <div class="span1">
-                <span class="first-column" openlmis-message="label.include"></span>
-              </div>
-              <div class="span2" openlmis-message="label.data.field"></div>
-              <div class="span2"></div>
-              <div class="span4">
-                <div openlmis-message="label.position"></div>
-              </div>
+    <form ng-submit="saveBudgetFileTemplate()" id="create-budget-file-template" name="createBudgetFileFormat"
+          novalidate>
+        <div class="app-form" tab-scroll>
+            <div class="clearfix form-inline row-fluid">
+                <div class="span4 include-header-form">
+                    <input type="checkbox" id="includeHeadersCheckbox"
+                           ng-model="budgetFileTemplate.configuration.headerInFile"/>
+                    <label for="includeHeadersCheckbox" openlmis-message="label.column.include.headers"></label>
+                </div>
             </div>
-          </div>
+        </div>
 
-          <div class="rnr-template-columns list-container">
-            <div class="row-fluid list-row" ng-repeat="budgetFileColumn in budgetFileTemplate.columns">
-              <div class="span1">
+        <hr/>
+
+        <div class="row-fluid">
+            <div class="span10">
+                <div id="budgetFileColumns">
+                    <div class="list-header-container">
+                        <div class="row-fluid list-header">
+                            <div class="span1">
+                                <span class="first-column" openlmis-message="label.include"></span>
+                            </div>
+                            <div class="span2" openlmis-message="label.data.field"></div>
+                            <div class="span2"></div>
+                            <div class="span4">
+                                <div openlmis-message="label.position"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="rnr-template-columns list-container">
+                        <div class="row-fluid list-row" ng-repeat="budgetFileColumn in budgetFileTemplate.columns">
+                            <div class="span1">
                 <span class="first-column checkbox-column">
                   <input id="{{budgetFileColumn.name}}IncludeCheckbox" type="checkbox"
                          ng-model="budgetFileColumn.include"
                          ng-disabled='budgetFileColumn.mandatory'/>
                 </span>
-              </div>
-              <div class="span2">
-                <span openlmis-message="budgetFileColumn.dataFieldLabel"></span>
-              </div>
-              <div class="span2">
-                <div class="row-fluid" ng-show="budgetFileColumn.dataFieldLabel == 'header.period.start.date'">
-                  <select class="span12" ui-select2 ng-model="budgetFileColumn.datePattern"
-                          ng-options="dateFormat for dateFormat in dateFormats">
-                  </select>
+                            </div>
+                            <div class="span2">
+                                <span openlmis-message="budgetFileColumn.dataFieldLabel"></span>
+                            </div>
+                            <div class="span2">
+                                <div class="row-fluid"
+                                     ng-show="budgetFileColumn.dataFieldLabel == 'header.period.start.date'">
+                                    <select class="span12" ui-select2 ng-model="budgetFileColumn.datePattern"
+                                            ng-options="dateFormat for dateFormat in dateFormats">
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="span1">
+                                <input type="text" ng-model="budgetFileColumn.position" maxlength="3"
+                                       numeric-validator="positiveInteger" ng-trim=false
+                                       class="right-justified"
+                                       id="{{budgetFileColumn.name}}Position"/>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-              </div>
-              <div class="span1">
-                <input type="text" ng-model="budgetFileColumn.position" maxlength="3"
-                       numeric-validator="positiveInteger" ng-trim=false
-                       class="right-justified"
-                       id="{{budgetFileColumn.name}}Position"/>
-              </div>
             </div>
-          </div>
         </div>
-      </div>
-    </div>
 
-    <div form-toolbar id="action_buttons" class="action-buttons">
-      <div class="form-cell button-row">
-        <input type="submit" class="btn btn-primary save-button" openlmis-message="button.save"/>
-        <a ng-click="cancelEdiSave()" class="btn btn-cancel cancel-button" openlmis-message="button.cancel"></a>
-      </div>
-      <div class="toolbar-error" id="saveErrorMsgDiv" openlmis-message="error" ng-show="error"></div>
+        <div form-toolbar id="action_buttons" class="action-buttons">
+            <div class="form-cell button-row">
+                <input id='saveBudgetConfig' type="submit" class="btn btn-primary save-button"
+                       openlmis-message="button.save"/>
+                <a id='cancelBudgetConfig' ng-click="cancelEdiSave()" class="btn btn-cancel cancel-button"
+                   openlmis-message="button.cancel"></a>
+            </div>
+            <div class="toolbar-error" id="saveErrorMsgDiv" openlmis-message="error" ng-show="error"></div>
 
-    </div>
+        </div>
 
-  </form>
+    </form>
 </div>
