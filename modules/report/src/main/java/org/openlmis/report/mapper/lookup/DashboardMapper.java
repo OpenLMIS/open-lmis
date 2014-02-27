@@ -16,15 +16,9 @@ import java.util.List;
 @Repository
 public interface DashboardMapper {
 
-    @Select("select 45 as fillRate, 'Product 1' as product\n" +
-            "UNION ALL\n" +
-            "select 65 , 'Product 2' \n" +
-            "UNION ALL\n" +
-            "select -75 , 'Product 3' \n" +
-            "UNION ALL\n" +
-            "select 85 , 'Product 4';")
-    List<ItemFillRate> getItemFillRate(@Param("geographicZoneid") Long geographicZoneid, @Param("periodId")  Long periodId, @Param("facilityId")  Long facilityId, @Param("products") String productIds);
+    @Select("select order_fill_rate as fillRate, primaryname as product from dw_product_fill_rate_vw where programid = #{programId} and periodid = #{periodId} and geographicZoneid = #{geographicZoneid} and facilityid = #{facilityId} and productid = ANY(#{products}::int[])")
+    List<ItemFillRate> getItemFillRate(@Param("geographicZoneid") Long geographicZoneid, @Param("periodId")  Long periodId, @Param("facilityId")  Long facilityId,@Param("programId") Long programId , @Param("products") String productIds);
 
-    @Select("select order_fill_rate as fillRate from dw_order_fill_rate_vw where periodid = #{periodId} and geographicZoneid = #{geographicZoneid} and facilityid = #{facilityId} and productid = ANY(#{products}::int[])")
-    OrderFillRate getOrderFillRate(@Param("geographicZoneid") Long geographicZoneid, @Param("periodId")  Long periodId, @Param("facilityId")  Long facilityId, @Param("products") String productIds);
+    @Select("select order_fill_rate as fillRate from dw_order_fill_rate_vw where programid = #{programId} and periodid = #{periodId} and geographicZoneid = #{geographicZoneid} and facilityid = #{facilityId}")
+    OrderFillRate getOrderFillRate(@Param("geographicZoneid") Long geographicZoneid, @Param("periodId")  Long periodId, @Param("facilityId")  Long facilityId, @Param("programId") Long programId);
 }

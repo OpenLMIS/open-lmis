@@ -112,42 +112,47 @@ function AdminDashboardController($scope,userFacilityData, programs, schedules, 
     });
 
     $scope.$watch('formFilter.productIdList',function(selection){
-        $scope.filterObject.productIdList = $scope.productIdList;
+
+        $scope.filterObject.productIdList = $scope.formFilter.productIdList;
         $scope.loadFillRates();
     });
 
     $scope.loadFillRates = function(){
-       //Facility and Products are required for Order and Item Fill Rates
+       //Facility are required for Order and Item Fill Rates
 
-       if(!isUndefined($scope.filterObject.facilityId) && $scope.filterObject.facilityId !== 0 && !isUndefined($scope.filterObject.productIdList)){
+       if(!isUndefined($scope.filterObject.facilityId) && $scope.filterObject.facilityId !== 0 ){
 
-           //Item Fill Rate
-           ItemFillRate.get({
-               geographicZoneId: $scope.filterObject.geographicZoneId ,
-               periodId: $scope.filterObject.periodId,
-               facilityId: $scope.filterObject.facilityId,
-               productListId: $scope.filterObject.productIdList
-           },function (data){
+           if(!isUndefined($scope.filterObject.productIdList)){
+               //Item Fill Rate
+               ItemFillRate.get({
+                   geographicZoneId: $scope.filterObject.geographicZoneId ,
+                   periodId: $scope.filterObject.periodId,
+                   facilityId: $scope.filterObject.facilityId,
+                   programId: $scope.filterObject.programId,
+                   productListId: $scope.filterObject.productIdList
+               },function (data){
 
-               $scope.itemFills = data.itemFillRate;
-               $scope.productItemFillRates = [];
-               if(!isUndefined($scope.itemFills)){
-                   $.each($scope.itemFills, function (item, idx) {
-                       $.each(itemFillRateColors, function(index, item){
-                           if(idx.fillRate <= item.maxRange && idx.fillRate >= item.minRange){
-                               barColor = item.color;
-                           }
+                   $scope.itemFills = data.itemFillRate;
+                   $scope.productItemFillRates = [];
+                   if(!isUndefined($scope.itemFills)){
+                       $.each($scope.itemFills, function (item, idx) {
+                           $.each(itemFillRateColors, function(index, item){
+                               if(idx.fillRate <= item.maxRange && idx.fillRate >= item.minRange){
+                                   barColor = item.color;
+                               }
+                           });
+                           $scope.productItemFillRates.push({'option': {animate:3000, barColor: barColor, scaleColor: $scaleColor, lineWidth: $lineWidth}, 'percent': idx.fillRate, 'name': idx.product});
                        });
-                       $scope.productItemFillRates.push({'option': {animate:3000, barColor: barColor, scaleColor: $scaleColor, lineWidth: $lineWidth}, 'percent': idx.fillRate, 'name': idx.product});
-                   });
-               }
-           });
+                   }
+               });
+           }
 
            //Order Fill Rate
            OrderFillRate.get({geographicZoneId: $scope.filterObject.geographicZoneId,
                periodId: $scope.filterObject.periodId,
                facilityId:$scope.filterObject.facilityId,
-               productListId: $scope.filterObject.productIdList},function(data){
+               programId: $scope.filterObject.programId},function(data){
+
                $scope.orderFill = data.orderFillRate;
                var fillRate = [];
                if($scope.orderFill !== undefined ){
@@ -247,7 +252,7 @@ function AdminDashboardController($scope,userFacilityData, programs, schedules, 
         } else {
             $scope.filterObject.periodId = 0;
         }
-       // $scope.filterGrid();
+        $scope.loadFillRates();
     });
 
 

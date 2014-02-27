@@ -25,13 +25,13 @@ public class DashboardLookupService {
         return idList == null ? "{}" : idList.toString().replace("[", "{").replace("]", "}");
     }
 
-    public List<ItemFillRate> getItemFillRate(Long geographicZoneId, Long periodId, Long facilityId, List<Long> productListId){
+    public List<ItemFillRate> getItemFillRate(Long geographicZoneId, Long periodId, Long facilityId, Long programId, List<Long> productListId){
 
-        return dashboardMapper.getItemFillRate(geographicZoneId, periodId, facilityId, getCommaSeparatedIds(productListId));
+        return dashboardMapper.getItemFillRate(geographicZoneId, periodId, facilityId, programId, getCommaSeparatedIds(productListId));
     }
 
-    public OrderFillRate getOrderFillRate(Long geographicZoneId, Long periodId, Long facilityId, List<Long> productListId){
+    public OrderFillRate getOrderFillRate(Long geographicZoneId, Long periodId, Long facilityId, Long programId){
 
-        return dashboardMapper.getOrderFillRate(geographicZoneId, periodId, facilityId, getCommaSeparatedIds(productListId));
+        return dashboardMapper.getOrderFillRate(geographicZoneId, periodId, facilityId, programId);
     }
 }

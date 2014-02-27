@@ -32,15 +32,16 @@ public class DashboardController extends BaseController {
     public ResponseEntity<OpenLmisResponse>  getItemFillRate(@RequestParam("geographicZoneId") Long geographicZoneId,
                                                              @RequestParam("periodId") Long periodId,
                                                              @RequestParam("facilityId") Long facilityId,
+                                                             @RequestParam("programId") Long programId,
                                                              @RequestParam("productListId")List<Long> productListId){
-      return OpenLmisResponse.response("itemFillRate", this.lookupService.getItemFillRate(geographicZoneId, periodId, facilityId, productListId));
+      return OpenLmisResponse.response("itemFillRate", this.lookupService.getItemFillRate(geographicZoneId, periodId, facilityId, programId, productListId));
     }
 
     @RequestMapping(value = "/orderFillRate", method = GET, headers = BaseController.ACCEPT_JSON)
     public ResponseEntity<OpenLmisResponse>  getOrderFillRate(@RequestParam("geographicZoneId") Long geographicZoneId,
                                                               @RequestParam("periodId") Long periodId,
                                                               @RequestParam("facilityId") Long facilityId,
-                                                              @RequestParam("productListId")List<Long> productListId){
-        return OpenLmisResponse.response("orderFillRate", this.lookupService.getOrderFillRate(geographicZoneId,periodId,facilityId,productListId));
+                                                              @RequestParam("programId") Long programId){
+        return OpenLmisResponse.response("orderFillRate", this.lookupService.getOrderFillRate(geographicZoneId,periodId,facilityId,programId));
     }
 }
