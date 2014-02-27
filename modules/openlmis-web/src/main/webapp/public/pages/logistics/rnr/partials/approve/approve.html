@@ -10,19 +10,20 @@
 
 <ng-include src="'/public/pages/logistics/rnr/partials/header.html'"></ng-include>
 <div class="rnr-tabs clearfix">
-  <ul class="clearfix">
-    <li ng-class="{'selected': (visibleTab != 'nonFullSupply' && visibleTab != 'regimen'), 'has-error': fullSupplyTabError}">
-      <a href="" ng-click="switchSupplyType('fullSupply')" id="fullSupplyTab"
-         openlmis-message="label.full.supply.products"></a></li>
-    <li ng-class="{'selected': visibleTab == 'nonFullSupply', 'has-error': nonFullSupplyTabError}">
-      <a href="" ng-click="switchSupplyType('nonFullSupply')" id="nonFullSupplyTab"
-         openlmis-message="label.non.full.supply.products"></a></li>
-    <li ng-class="{'selected': visibleTab == 'regimen'}" ng-show="regimenCount">
-      <a href="" ng-click="switchSupplyType('regimen')" id="regimenTab" openlmis-message="label.regimens"></a></li>
-  </ul>
+    <ul class="clearfix">
+        <li ng-class="{'selected': (visibleTab != 'nonFullSupply' && visibleTab != 'regimen'), 'has-error': fullSupplyTabError}">
+            <a href="" ng-click="switchSupplyType('fullSupply')" id="fullSupplyTab"
+               openlmis-message="label.full.supply.products"></a></li>
+        <li ng-class="{'selected': visibleTab == 'nonFullSupply', 'has-error': nonFullSupplyTabError}">
+            <a href="" ng-click="switchSupplyType('nonFullSupply')" id="nonFullSupplyTab"
+               openlmis-message="label.non.full.supply.products"></a></li>
+        <li ng-class="{'selected': visibleTab == 'regimen'}" ng-show="regimenCount">
+            <a href="" ng-click="switchSupplyType('regimen')" id="regimenTab" openlmis-message="label.regimens"></a>
+        </li>
+    </ul>
   <span class="pull-right">
     <a full-screen href="" class="btn">
-      <i class="icon-resize-full"></i>
+        <i class="icon-resize-full"></i>
     </a>
   </span>
   <span class="pull-right print-button">
@@ -43,25 +44,27 @@
     <ng-include src="'/public/pages/logistics/rnr/partials/approve/approve-full-supply.html'"></ng-include>
   </span>
 
-  <div ng-hide="visibleTab === 'regimen'">
-    <openlmis-pagination num-pages="numberOfPages" current-page="currentPage" max-size="10"
-                         check-error-on-page="checkErrorOnPage(page)"></openlmis-pagination>
-  </div>
-
-  <br><br>
-
-  <div form-toolbar id="action_buttons" class="action-buttons">
-    <ng-include src="'/public/pages/logistics/rnr/partials/total-cost.html'"></ng-include>
-
-    <div class="form-cell button-row">
-      <input type="button" openlmis-message="button.save" ng-click="saveRnr()" class="btn btn-primary save-button"/>
-      <input type="button" ng-click="approveRnr()" class="btn btn-primary submit-button"
-             openlmis-message="button.approve"/>
-      <input id="comments" type="button" ng-click="showCommentBox=!showCommentBox" class="btn comments-button"
-             openlmis-message="comments.header"/>
-      <comment-box updatable="true" show="showCommentBox"></comment-box>
+    <div ng-hide="visibleTab === 'regimen'">
+        <openlmis-pagination num-pages="numberOfPages" current-page="currentPage" max-size="10"
+                             check-error-on-page="checkErrorOnPage(page)"></openlmis-pagination>
     </div>
-    <div class="toolbar-error" id="saveFailMessage" openlmis-message="error" ng-show="error"></div>
-    <div class="toolbar-success" id="saveSuccessMsgDiv" ng-show="message" fade-out="3000" openlmis-message="message"></div>
-  </div>
+
+    <br><br>
+
+    <div form-toolbar id="action_buttons" class="action-buttons">
+        <ng-include src="'/public/pages/logistics/rnr/partials/total-cost.html'"></ng-include>
+
+        <div class="form-cell button-row">
+            <input id='saveButton' type="button" openlmis-message="button.save" ng-click="saveRnr()"
+                   class="btn btn-primary save-button"/>
+            <input id='approveButton' type="button" ng-click="approveRnr()" class="btn btn-primary submit-button"
+                   openlmis-message="button.approve"/>
+            <input id="comments" type="button" ng-click="showCommentBox=!showCommentBox" class="btn comments-button"
+                   openlmis-message="comments.header"/>
+            <comment-box updatable="true" show="showCommentBox"></comment-box>
+        </div>
+        <div class="toolbar-error" id="saveFailMessage" openlmis-message="error" ng-show="error"></div>
+        <div class="toolbar-success" id="saveSuccessMsgDiv" ng-show="message" fade-out="3000"
+             openlmis-message="message"></div>
+    </div>
 </form>
