@@ -62,7 +62,7 @@
                             <td class="col-starting-stock">
                                 <div>
                   <span class="input-error-parent-cell">
-                    <input type="text"
+                    <input id="stockAtFirstOfMonthInput{{$index}}" type="text"
                            ng-model="lineItem.stockAtFirstOfMonth.value"
                            name="stockAtFirstOfMonth{{$index}}" ng-trim=false
                            numeric-validator="positiveInteger" maxlength="7"
@@ -83,7 +83,7 @@
                             <td class="col-received">
                                 <div>
                   <span class="input-error-parent-cell">
-                    <input type="text"
+                    <input id="receivedInput{{$index}}" type="text"
                            ng-model="lineItem.received.value"
                            name="received{{$index}}" ng-trim=false
                            numeric-validator="positiveInteger" maxlength="7"
@@ -106,7 +106,7 @@
                             <td class="col-distributed">
                                 <div>
                   <span class="input-error-parent-cell">
-                    <input type="text"
+                    <input id="distributedInput{{$index}}" type="text"
                            ng-model="lineItem.distributed.value"
                            name="distributed{{$index}}" ng-trim=false
                            numeric-validator="positiveInteger" maxlength="7"
@@ -126,7 +126,7 @@
                             <td class="col-loss">
                                 <div>
                   <span class="input-error-parent-cell">
-                    <input type="text"
+                    <input id="lossInput{{$index}}" type="text"
                            ng-model="lineItem.loss.value" ng-trim=false
                            name="loss{{$index}}" maxlength="7"
                            numeric-validator="positiveInteger"
@@ -145,7 +145,7 @@
                             <td class="col-ending-stock">
                                 <div>
                   <span class="input-error-parent-cell">
-                    <input type="text"
+                    <input id="stockAtEndOfMonthInput{{$index}}" type="text"
                            ng-model="lineItem.stockAtEndOfMonth.value"
                            name="stockAtEndOfMonth{{$index}}" ng-trim=false
                            numeric-validator="positiveInteger" maxlength="7"
@@ -166,7 +166,7 @@
                             <td class="expiration-date">
                                 <div>
                   <span class="input-error-parent-cell">
-                    <input type="text"
+                    <input id="expirationDateInput{{$index}}" type="text"
                            ng-model="lineItem.expirationDate.value"
                            name="expirationDate{{$index}}"
                            date-validator="date"
