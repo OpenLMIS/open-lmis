@@ -34,24 +34,7 @@ import static org.apache.commons.collections.CollectionUtils.select;
 
 @Service
 @NoArgsConstructor
-
-
 public class FacilityService {
-
-  public void save(Facility newFacility) {
-    newFacility.validate();
-
-    Facility storedFacility = facilityRepository.getById(newFacility.getId());
-
-    facilityRepository.save(newFacility);
-
-    if (!newFacility.equals(storedFacility)) {
-      notify(asList(newFacility));
-      if (canUpdateVirtualFacilities(newFacility, storedFacility)) {
-        updateAndNotifyForVirtualFacilities(newFacility);
-      }
-    }
-  }
 
   public static final String FACILITY_CATEGORY = "facilities";
   public static final String FACILITY_TITLE = "Facility";
@@ -121,7 +104,20 @@ public class FacilityService {
     return facilityRepository.getFacilitiesBy(programId, requisitionGroups);
   }
 
+  public void save(Facility newFacility) {
+    newFacility.validate();
 
+    Facility storedFacility = facilityRepository.getById(newFacility.getId());
+
+    facilityRepository.save(newFacility);
+
+    if (!newFacility.equals(storedFacility)) {
+      notify(asList(newFacility));
+      if (canUpdateVirtualFacilities(newFacility, storedFacility)) {
+        updateAndNotifyForVirtualFacilities(newFacility);
+      }
+    }
+  }
 
   public void updateAndNotifyForVirtualFacilities(Facility parentFacility) {
     facilityRepository.updateVirtualFacilities(parentFacility);

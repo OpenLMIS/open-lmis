@@ -19,6 +19,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
+import org.junit.runner.RunWith;
 import org.mockito.ArgumentMatcher;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -32,6 +33,8 @@ import org.openlmis.core.repository.GeographicZoneRepository;
 import org.openlmis.core.repository.ProgramRepository;
 import org.openlmis.db.categories.UnitTests;
 import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.util.*;
 
@@ -53,89 +56,9 @@ import static org.powermock.api.mockito.PowerMockito.*;
 import static org.powermock.api.mockito.PowerMockito.when;
 
 @Category(UnitTests.class)
+@RunWith(PowerMockRunner.class)
+@PrepareForTest({DateTime.class, FacilityService.class, FacilityServiceTest.class})
 public class FacilityServiceTest {
-
-  @Test
-  public void shouldUpdateFacilityAndNotifyForFeedIfCoreAttributeChanges() throws Exception {
-    Facility facility = make(a(FacilityBuilder.defaultFacility));
-    List<ProgramSupported> programsForFacility = new ArrayList<ProgramSupported>() {{
-      add(make(a(defaultProgramSupported)));
-      add(make(a(defaultProgramSupported, with(supportedProgram, new Program(2L)))));
-    }};
-    when(programSupportedService.getAllByFacilityId(facility.getId())).thenReturn(programsForFacility);
-    facility.setSupportedPrograms(programsForFacility);
-    Facility savedFacility = make(a(FacilityBuilder.defaultFacility));
-    savedFacility.setName("Updated Name");
-    when(facilityRepository.getById(facility.getId())).thenReturn(savedFacility);
-
-    facilityService.update(facility);
-
-    verify(facilityRepository).save(facility);
-    verify(programSupportedService).updateSupportedPrograms(facility);
-    verify(eventService).notify(any(Event.class));
-  }
-
-  @Test
-  public void shouldUpdateFacilityAndNotNotifyForFeedIfNoCoreAttributeChanges() throws Exception {
-    Facility facility = make(a(FacilityBuilder.defaultFacility));
-    List<ProgramSupported> programsForFacility = new ArrayList<ProgramSupported>() {{
-      add(make(a(defaultProgramSupported)));
-      add(make(a(defaultProgramSupported, with(supportedProgram, new Program(2L)))));
-    }};
-    facility.setSupportedPrograms(programsForFacility);
-    Facility savedFacility = make(a(FacilityBuilder.defaultFacility));
-    when(facilityRepository.getById(facility.getId())).thenReturn(savedFacility);
-
-    facilityService.update(facility);
-
-    verify(facilityRepository).save(facility);
-    verify(programSupportedService).updateSupportedPrograms(facility);
-    verify(eventService, never()).notify(any(Event.class));
-  }
-
-  @Test
-  public void shouldUpdateFacilityAndNotifyChildFacilitiesIfFacilityTypeChange() throws Exception {
-    Long parentId = 59L;
-    Facility parentFacility = make(a(defaultFacility, with(facilityId, parentId), with(type, "NGO")));
-    Facility savedFacility = make(a(defaultFacility, with(facilityId, parentId), with(type, "GOVT")));
-
-    Facility childFacility = make(a(defaultFacility, with(parentFacilityId, parentId)));
-
-    when(facilityRepository.getById(59L)).thenReturn(savedFacility);
-    when(facilityRepository.getChildFacilities(parentFacility)).thenReturn(asList(childFacility));
-
-    facilityService.update(parentFacility);
-
-    verify(facilityRepository).save(parentFacility);
-    verify(programSupportedService).updateSupportedPrograms(parentFacility);
-    verify(facilityRepository).getChildFacilities(parentFacility);
-    verify(facilityRepository).updateVirtualFacilities(parentFacility);
-    verify(eventService, times(2)).notify(any(Event.class));
-  }
-
-  @Test
-  public void shouldUpdateFacilityAndNotifyChildFacilitiesIfGeoZoneChange() throws Exception {
-    Long parentId = 59L;
-    Facility parentFacility = make(a(defaultFacility, with(facilityId, parentId), with(geographicZoneCode, "AAA")));
-    Facility savedFacility = make(a(defaultFacility, with(facilityId, parentId), with(geographicZoneCode, "BBB")));
-
-    Facility childFacility = make(a(defaultFacility, with(parentFacilityId, parentId)));
-
-    when(facilityRepository.getById(59L)).thenReturn(savedFacility);
-    when(facilityRepository.getChildFacilities(parentFacility)).thenReturn(asList(childFacility));
-
-    facilityService.update(parentFacility);
-
-    verify(facilityRepository).save(parentFacility);
-    verify(programSupportedService).updateSupportedPrograms(parentFacility);
-    verify(facilityRepository).getChildFacilities(parentFacility);
-    verify(facilityRepository).updateVirtualFacilities(parentFacility);
-    verify(eventService, times(2)).notify(any(Event.class));
-  }
-
-
-
-
   @Rule
   public ExpectedException expectedEx = ExpectedException.none();
 
@@ -280,6 +203,83 @@ public class FacilityServiceTest {
     facilityService.update(facility);
   }
 
+  @Test
+  public void shouldUpdateFacilityAndNotifyForFeedIfCoreAttributeChanges() throws Exception {
+    Facility facility = make(a(FacilityBuilder.defaultFacility));
+    List<ProgramSupported> programsForFacility = new ArrayList<ProgramSupported>() {{
+      add(make(a(defaultProgramSupported)));
+      add(make(a(defaultProgramSupported, with(supportedProgram, new Program(2L)))));
+    }};
+    when(programSupportedService.getAllByFacilityId(facility.getId())).thenReturn(programsForFacility);
+    facility.setSupportedPrograms(programsForFacility);
+    Facility savedFacility = make(a(FacilityBuilder.defaultFacility));
+    savedFacility.setName("Updated Name");
+    when(facilityRepository.getById(facility.getId())).thenReturn(savedFacility);
+
+    facilityService.update(facility);
+
+    verify(facilityRepository).save(facility);
+    verify(programSupportedService).updateSupportedPrograms(facility);
+    verify(eventService).notify(any(Event.class));
+  }
+
+  @Test
+  public void shouldUpdateFacilityAndNotNotifyForFeedIfNoCoreAttributeChanges() throws Exception {
+    Facility facility = make(a(FacilityBuilder.defaultFacility));
+    List<ProgramSupported> programsForFacility = new ArrayList<ProgramSupported>() {{
+      add(make(a(defaultProgramSupported)));
+      add(make(a(defaultProgramSupported, with(supportedProgram, new Program(2L)))));
+    }};
+    facility.setSupportedPrograms(programsForFacility);
+    Facility savedFacility = make(a(FacilityBuilder.defaultFacility));
+    when(facilityRepository.getById(facility.getId())).thenReturn(savedFacility);
+
+    facilityService.update(facility);
+
+    verify(facilityRepository).save(facility);
+    verify(programSupportedService).updateSupportedPrograms(facility);
+    verify(eventService, never()).notify(any(Event.class));
+  }
+
+  @Test
+  public void shouldUpdateFacilityAndNotifyChildFacilitiesIfFacilityTypeChange() throws Exception {
+    Long parentId = 59L;
+    Facility parentFacility = make(a(defaultFacility, with(facilityId, parentId), with(type, "NGO")));
+    Facility savedFacility = make(a(defaultFacility, with(facilityId, parentId), with(type, "GOVT")));
+
+    Facility childFacility = make(a(defaultFacility, with(parentFacilityId, parentId)));
+
+    when(facilityRepository.getById(59L)).thenReturn(savedFacility);
+    when(facilityRepository.getChildFacilities(parentFacility)).thenReturn(asList(childFacility));
+
+    facilityService.update(parentFacility);
+
+    verify(facilityRepository).save(parentFacility);
+    verify(programSupportedService).updateSupportedPrograms(parentFacility);
+    verify(facilityRepository).getChildFacilities(parentFacility);
+    verify(facilityRepository).updateVirtualFacilities(parentFacility);
+    verify(eventService, times(2)).notify(any(Event.class));
+  }
+
+  @Test
+  public void shouldUpdateFacilityAndNotifyChildFacilitiesIfGeoZoneChange() throws Exception {
+    Long parentId = 59L;
+    Facility parentFacility = make(a(defaultFacility, with(facilityId, parentId), with(geographicZoneCode, "AAA")));
+    Facility savedFacility = make(a(defaultFacility, with(facilityId, parentId), with(geographicZoneCode, "BBB")));
+
+    Facility childFacility = make(a(defaultFacility, with(parentFacilityId, parentId)));
+
+    when(facilityRepository.getById(59L)).thenReturn(savedFacility);
+    when(facilityRepository.getChildFacilities(parentFacility)).thenReturn(asList(childFacility));
+
+    facilityService.update(parentFacility);
+
+    verify(facilityRepository).save(parentFacility);
+    verify(programSupportedService).updateSupportedPrograms(parentFacility);
+    verify(facilityRepository).getChildFacilities(parentFacility);
+    verify(facilityRepository).updateVirtualFacilities(parentFacility);
+    verify(eventService, times(2)).notify(any(Event.class));
+  }
 
   @Test
   public void shouldGetAllFacilitiesForUserAndRights() throws Exception {
