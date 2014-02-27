@@ -11,53 +11,59 @@
 <h2 openlmis-message="label.requisition.convertOrder"></h2>
 <div class="alert alert-error" id="saveErrorMsgDiv" ng-show="error" openlmis-message="error"></div>
 <div class="alert alert-success" id="saveSuccessMsgDiv" ng-show="message" openlmis-message="message"></div>
-<div class="alert alert-info" id="noRequisitionSelectedMsgDiv" ng-show="noRequisitionSelectedMessage" openlmis-message="noRequisitionSelectedMessage"></div>
+<div class="alert alert-info" id="noRequisitionSelectedMsgDiv" ng-show="noRequisitionSelectedMessage"
+     openlmis-message="noRequisitionSelectedMessage"></div>
 
 <div class="row-fluid">
-  <div class="span5 offset7 search-in-category">
-    <div class="input-append input-prepend">
-      <div class="btn-group">
-        <button class="btn dropdown-toggle">
-          <span openlmis-message="selectedSearchOption.name"></span>
-          <span class="caret"></span>
-        </button>
-        <ul class="dropdown-menu">
-          <li ng-repeat="searchOption in searchOptions">
-            <a href="" openlmis-message="searchOption.name" ng-click="selectSearchType(searchOption)"></a>
-          </li>
-        </ul>
-      </div>
-      <input type="text" class="span5" ui-keypress="{13:'fetchFilteredRequisitions()'}" ui-event="{ keypress: 'inputKeypressHandler($event)' }"
-             ng-model="query" maxlength="50"/>
-      <button class="btn" ng-click="updateSearchParams()">
-        <i class="icon-search"></i>
-      </button>
+    <div class="span5 offset7 search-in-category">
+        <div class="input-append input-prepend">
+            <div class="btn-group">
+                <button id='searchOptionButton' class="btn dropdown-toggle">
+                    <span openlmis-message="selectedSearchOption.name"></span>
+                    <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                    <li ng-repeat="searchOption in searchOptions">
+                        <a href="" openlmis-message="searchOption.name" ng-click="selectSearchType(searchOption)"></a>
+                    </li>
+                </ul>
+            </div>
+            <input id='searchOnConvertToOrder' type="text" class="span5"
+                   ui-keypress="{13:'fetchFilteredRequisitions()'}"
+                   ui-event="{ keypress: 'inputKeypressHandler($event)' }"
+                   ng-model="query" maxlength="50"/>
+            <button class="btn" ng-click="updateSearchParams()">
+                <i id='searchIcon' class="icon-search"></i>
+            </button>
+        </div>
     </div>
-  </div>
 </div>
 
 <div class="alert alert-info" id="NoRequisitionsPendingMessage" ng-show="noRequisitions">
-  <span openlmis-message="message.no.requisitions.for.conversion"></span>
+    <span id='noRequisitionMessage' openlmis-message="message.no.requisitions.for.conversion"></span>
 </div>
 
 <div class="app-form" ng-show="filteredRequisitions.length">
-  <div class="form-group">
-    <h3 openlmis-message="label.requisition.list"></h3>
+    <div class="form-group">
+        <h3 openlmis-message="label.requisition.list"></h3>
 
-    <div class="alert alert-info" id="noSearchResults" ng-hide="filteredRequisitions.length">
-      <span openlmis-message="message.no.search.results"></span>
+        <div class="alert alert-info" id="noSearchResults" ng-hide="filteredRequisitions.length">
+            <span openlmis-message="message.no.search.results"></span>
+        </div>
+        <div id="convertToOrderGrid" class="gridStyle" ng-grid="gridOptions"
+             ng-show="filteredRequisitions.length"></div>
+        <div ng-show="filteredRequisitions.length">
+            <openlmis-pagination num-pages="numberOfPages" current-page="currentPage"
+                                 max-size="maxNumberOfPages"></openlmis-pagination>
+        </div>
+        <div form-toolbar id="action_buttons" class="action-buttons">
+            <div class="form-cell button-row">
+                <input id='covertToOrderButton' type="submit" ng-click="convertToOrder()"
+                       class="btn btn-primary save-button" openlmis-message="button.convert.to.order"
+                       ng-disabled="filteredRequisitions.length == 0"/>
+            </div>
+        </div>
     </div>
-    <div id="convertToOrderGrid" class="gridStyle" ng-grid="gridOptions" ng-show="filteredRequisitions.length"></div>
-    <div ng-show="filteredRequisitions.length">
-      <openlmis-pagination num-pages="numberOfPages" current-page="currentPage" max-size="maxNumberOfPages"></openlmis-pagination>
-    </div>
-    <div form-toolbar id="action_buttons" class="action-buttons">
-      <div class="form-cell button-row">
-        <input type="submit" ng-click="convertToOrder()" class="btn btn-primary save-button" openlmis-message="button.convert.to.order"
-               ng-disabled="filteredRequisitions.length == 0"/>
-      </div>
-    </div>
-  </div>
 </div>
 </div>
 
