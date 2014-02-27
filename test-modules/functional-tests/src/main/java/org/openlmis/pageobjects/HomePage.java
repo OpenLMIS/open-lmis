@@ -22,12 +22,13 @@ import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
 import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
-import static org.openqa.selenium.support.How.*;
+import static org.openqa.selenium.support.How.ID;
+import static org.openqa.selenium.support.How.XPATH;
 
 
 public class HomePage extends Page {
 
-  @FindBy(how = LINK_TEXT, using = "Logout")
+  @FindBy(how = ID, using = "logout")
   private static WebElement logoutLink = null;
 
   @FindBy(how = XPATH, using = "//div[@class='user-info ng-scope']/strong")
@@ -39,10 +40,10 @@ public class HomePage extends Page {
   @FindBy(how = ID, using = "distributions-menu")
   private static WebElement distributionsMenuItem = null;
 
-  @FindBy(how = XPATH, using = "//a[contains(text(),'Program Product ISA')]")
+  @FindBy(how = ID, using = "configureProgramProductIsa")
   private static WebElement programProductISAMenuItem = null;
 
-  @FindBy(how = XPATH, using = "//a[contains(text(),'Home')]")
+  @FindBy(how = ID, using = "homeMenu")
   private static WebElement homeMenuItem = null;
 
   @FindBy(how = ID, using = "reports-menu")
@@ -61,7 +62,7 @@ public class HomePage extends Page {
   private static WebElement AdministrationMenuItem = null;
 
   @FindBy(how = ID, using = "manage-option")
-  private static WebElement manageFacilityMenuItem = null;
+  private static WebElement manageLink = null;
 
   @FindBy(how = ID, using = "convertToOrderRnr")
   private static WebElement convertToOrderMenuItem = null;
@@ -96,16 +97,16 @@ public class HomePage extends Page {
   @FindBy(how = XPATH, using = "//div[@class='ng-scope']/div[@ng-hide='facility.id']/h2")
   private static WebElement facilityHeader = null;
 
-  @FindBy(how = LINK_TEXT, using = "Configure")
+  @FindBy(how = ID, using = "configure")
   private static WebElement TemplateConfigTab = null;
 
-  @FindBy(how = LINK_TEXT, using = "R & R Template")
+  @FindBy(how = ID, using = "configureRequisitionTemplate")
   private static WebElement RnRTemplateConfigTab = null;
 
-  @FindBy(how = LINK_TEXT, using = "EDI File")
+  @FindBy(how = ID, using = "configureEdi")
   private static WebElement ediFileTab = null;
 
-  @FindBy(how = LINK_TEXT, using = "Regimen Template")
+  @FindBy(how = ID, using = "configureRegimenTemplate")
   private static WebElement RegimenTemplateConfigTab = null;
 
   @FindBy(how = XPATH, using = "//h2[contains(text(),'Regimen Template')]")
@@ -123,10 +124,7 @@ public class HomePage extends Page {
   @FindBy(how = XPATH, using = "//input[@id='myFacilityRnr']")
   private static WebElement myFacilityRadioButton = null;
 
-  @FindBy(how = LINK_TEXT, using = "Manage")
-  private static WebElement manageLink = null;
-
-  @FindBy(how = XPATH, using = "//a[contains(text(),'Upload')]")
+  @FindBy(how = ID, using = "upload")
   private static WebElement uploadLink = null;
 
   @FindBy(how = XPATH, using = "//input[@ng-click='initRnr(row.entity)']")
@@ -199,8 +197,8 @@ public class HomePage extends Page {
   public ManageFacilityPage navigateManageFacility() {
     testWebDriver.waitForElementToAppear(AdministrationMenuItem);
     AdministrationMenuItem.click();
-    testWebDriver.waitForElementToAppear(manageFacilityMenuItem);
-    manageFacilityMenuItem.click();
+    testWebDriver.waitForElementToAppear(manageLink);
+    manageLink.click();
     return ManageFacilityPage.getInstance(testWebDriver);
   }
 
