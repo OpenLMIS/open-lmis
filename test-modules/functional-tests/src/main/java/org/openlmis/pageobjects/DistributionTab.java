@@ -79,36 +79,36 @@ abstract public class DistributionTab extends Page {
 
   public RefrigeratorPage navigateToRefrigerators() {
     refrigeratorTab.click();
-    return new RefrigeratorPage(testWebDriver);
+    return PageObjectFactory.getRefrigeratorPage(testWebDriver);
   }
 
   public EPIUsePage navigateToEpiUse() {
     epiUseTab.click();
-    return new EPIUsePage(testWebDriver);
+    return PageObjectFactory.getEpiUsePage(testWebDriver);
   }
 
   public EpiInventoryPage navigateToEpiInventory() {
     epiInventoryTab.click();
-    return new EpiInventoryPage(testWebDriver);
+    return PageObjectFactory.getEpiInventoryPage(testWebDriver);
   }
 
   public FullCoveragePage navigateToFullCoverage() {
     coverageTab.click();
-    return new FullCoveragePage(testWebDriver);
+    return PageObjectFactory.getFullCoveragePage(testWebDriver);
   }
 
   public VisitInformationPage navigateToVisitInformation() {
     visitInformationTab.click();
-    return new VisitInformationPage(testWebDriver);
+    return PageObjectFactory.getVisitInformationPage(testWebDriver);
   }
 
   public ChildCoveragePage navigateToChildCoverage() {
     childCoverageTab.click();
-    return new ChildCoveragePage(testWebDriver);
+    return PageObjectFactory.getChildCoveragePage(testWebDriver);
   }
 
   public AdultCoveragePage navigateToAdultCoverage() {
     adultCoverageTab.click();
-    return new AdultCoveragePage(testWebDriver);
+    return PageObjectFactory.getAdultCoveragePage(testWebDriver);
   }
 }

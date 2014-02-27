@@ -68,7 +68,7 @@ public class DistributionAdultCoverageSyncTest extends TestCaseHelper {
     super.setup();
     setupDataForDistributionTest(adultCoverageData);
     dbWrapper.insertProductsForAdultCoverage();
-    loginPage = PageFactory.getLoginPage(testWebDriver, baseUrlGlobal);
+    loginPage = PageObjectFactory.getLoginPage(testWebDriver, baseUrlGlobal);
   }
 
   @Test(groups = {"distribution"})
@@ -811,13 +811,13 @@ public class DistributionAdultCoverageSyncTest extends TestCaseHelper {
 
   @When("^I apply NR to outreach2To5 for rowNumber \"([^\"]*)\"$")
   public void applyNrToHealthCenter11(String rowNumber) {
-    AdultCoveragePage adultCoveragePage = PageFactory.getAdultCoveragePage(testWebDriver);
+    AdultCoveragePage adultCoveragePage = PageObjectFactory.getAdultCoveragePage(testWebDriver);
     adultCoveragePage.applyOutreach2To5Nr(Integer.parseInt(rowNumber));
   }
 
   @And("^I enter outreach2To5 for rowNumber \"([^\"]*)\" as \"([^\"]*)\"$")
   public void enterHealthCenter11Data(String rowNumber, String value) {
-    AdultCoveragePage adultCoveragePage = PageFactory.getAdultCoveragePage(testWebDriver);
+    AdultCoveragePage adultCoveragePage = PageObjectFactory.getAdultCoveragePage(testWebDriver);
     adultCoveragePage.enterOutreach2To5Input(Integer.parseInt(rowNumber), value);
   }
 
@@ -825,7 +825,7 @@ public class DistributionAdultCoverageSyncTest extends TestCaseHelper {
   public void tearDown() throws SQLException {
     testWebDriver.sleep(500);
     if (!testWebDriver.getElementById("username").isDisplayed()) {
-      HomePage homePage = PageFactory.getHomePage(testWebDriver);
+      HomePage homePage = PageObjectFactory.getHomePage(testWebDriver);
       homePage.logout(baseUrlGlobal);
       dbWrapper.deleteData();
       dbWrapper.closeConnection();

@@ -15,6 +15,7 @@ import org.openlmis.UiUtils.CaptureScreenshotOnFailureListener;
 import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.pageobjects.HomePage;
 import org.openlmis.pageobjects.InitiateRnRPage;
+import org.openlmis.pageobjects.PageObjectFactory;
 import org.testng.annotations.*;
 
 import java.io.IOException;
@@ -38,14 +39,14 @@ public class ManageRights extends TestCaseHelper {
     setupTestDataToInitiateRnR(true, program, userSIC, "200", rightsList);
 
     String[] expectedMenuItem = {"Create / Authorize", "View"};
-    HomePage homePage = PageFactory.getLoginPage(testWebDriver, baseUrlGlobal).loginAs(userSIC, password);
+    HomePage homePage = PageObjectFactory.getLoginPage(testWebDriver, baseUrlGlobal).loginAs(userSIC, password);
 
     homePage.clickRequisitionSubMenuItem();
     homePage.verifySubMenuItems(expectedMenuItem);
     homePage.navigateAndInitiateRnr(program);
     homePage.clickProceed();
 
-    InitiateRnRPage initiateRnRPage = PageFactory.getInitiateRnRPage(testWebDriver);
+    InitiateRnRPage initiateRnRPage = PageObjectFactory.getInitiateRnRPage(testWebDriver);
     initiateRnRPage.enterValueIfNotNull(10, "beginningBalanceFirstProduct");
     initiateRnRPage.enterValueIfNotNull(10, "quantityDispensedFirstProduct");
     initiateRnRPage.enterValueIfNotNull(10, "quantityReceivedFirstProduct");
@@ -59,7 +60,7 @@ public class ManageRights extends TestCaseHelper {
 
   @AfterMethod(groups = {"admin"})
   public void tearDown() throws SQLException {
-    HomePage homePage = PageFactory.getHomePage(testWebDriver);
+    HomePage homePage = PageObjectFactory.getHomePage(testWebDriver);
     homePage.logout(baseUrlGlobal);
     dbWrapper.deleteData();
     dbWrapper.closeConnection();

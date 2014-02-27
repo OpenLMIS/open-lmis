@@ -63,7 +63,7 @@ public class E2EInitiateRnR extends TestCaseHelper {
 
   @And("^I access create facility page$")
   public void navigateManageFacilityPage() {
-    HomePage homePage = PageFactory.getHomePage(testWebDriver);
+    HomePage homePage = PageObjectFactory.getHomePage(testWebDriver);
     homePage.navigateManageFacility();
     homePage.clickCreateFacilityButton();
   }
@@ -80,7 +80,7 @@ public class E2EInitiateRnR extends TestCaseHelper {
 
   @Then("^I should see message for successfully created facility$")
   public void verify() {
-    ManageFacilityPage manageFacilityPage = PageFactory.getManageFacilityPage(testWebDriver);
+    ManageFacilityPage manageFacilityPage = PageObjectFactory.getManageFacilityPage(testWebDriver);
     manageFacilityPage.verifyMessageOnFacilityScreen(facilityNamePrefix + date_time, "created");
   }
 
@@ -114,13 +114,13 @@ public class E2EInitiateRnR extends TestCaseHelper {
 
   @And("^I update user$")
   public void updateUser() {
-    UserPage userPage = PageFactory.getUserPage(testWebDriver);
+    UserPage userPage = PageObjectFactory.getUserPage(testWebDriver);
     userPage.clickSaveButton();
   }
 
   @And("^I assign warehouse \"([^\"]*)\" and role \"([^\"]*)\" to user$")
   public void assignWarehouse(String warehouse, String warehouseRole) {
-    UserPage userPage = PageFactory.getUserPage(testWebDriver);
+    UserPage userPage = PageObjectFactory.getUserPage(testWebDriver);
     userPage.assignWarehouse(warehouse, warehouseRole);
   }
 
@@ -134,7 +134,7 @@ public class E2EInitiateRnR extends TestCaseHelper {
 
   @And("^I setup period, schedule & requisition group data$")
   public void periodScheduleAndRequisitionGroupDataSetup() throws SQLException {
-    HomePage homePage = PageFactory.getHomePage(testWebDriver);
+    HomePage homePage = PageObjectFactory.getHomePage(testWebDriver);
     ManageSchedulePage manageSchedulePage = homePage.navigateToSchedule();
     manageSchedulePage.createSchedule("Q1stM", "M");
     manageSchedulePage.verifyScheduleCode("Q1stM", "M");
@@ -159,14 +159,14 @@ public class E2EInitiateRnR extends TestCaseHelper {
 
   @And("^I configure \"([^\"]*)\" template$")
   public void configureTemplate(String program) {
-    HomePage homePage = PageFactory.getHomePage(testWebDriver);
+    HomePage homePage = PageObjectFactory.getHomePage(testWebDriver);
     TemplateConfigPage templateConfigPage = homePage.selectProgramToConfigTemplate(program);
     templateConfigPage.configureTemplate();
   }
 
   @And("^I initiate and submit requisition$")
   public void initiateRnR() {
-    HomePage homePage = PageFactory.getHomePage(testWebDriver);
+    HomePage homePage = PageObjectFactory.getHomePage(testWebDriver);
     periodDetails = homePage.navigateAndInitiateRnr(program);
     InitiateRnRPage initiateRnRPage = homePage.clickProceed();
     initiateRnRPage.verifyRnRHeader(facilityCodePrefix, facilityNamePrefix, date_time, program, periodDetails, geoZone, parentGeoZone, operatedBy, facilityType);
@@ -176,7 +176,7 @@ public class E2EInitiateRnR extends TestCaseHelper {
 
   @And("^I enter beginning balance as \"([^\"]*)\", quantityDispensed as \"([^\"]*)\", quantityReceived as \"([^\"]*)\" and totalAdjustmentAndLoses as \"([^\"]*)\"$")
   public void enterValuesInRnR(String beginningBalance, String quantityDispensed, String quantityReceived, String totalAdjustmentAndLoses) {
-    InitiateRnRPage initiateRnRPage = PageFactory.getInitiateRnRPage(testWebDriver);
+    InitiateRnRPage initiateRnRPage = PageObjectFactory.getInitiateRnRPage(testWebDriver);
     initiateRnRPage.calculateAndVerifyStockOnHand(parseInt(beginningBalance), parseInt(quantityDispensed),
       parseInt(quantityReceived), parseInt(totalAdjustmentAndLoses));
     initiateRnRPage.verifyTotalField();
@@ -184,21 +184,21 @@ public class E2EInitiateRnR extends TestCaseHelper {
 
   @And("^I verify normalized consumption as \"([^\"]*)\" and amc as \"([^\"]*)\"$")
   public void verifyNormalisedConsumptionAndAmc(String normalisedConsumption, String amc) {
-    InitiateRnRPage initiateRnRPage = PageFactory.getInitiateRnRPage(testWebDriver);
+    InitiateRnRPage initiateRnRPage = PageObjectFactory.getInitiateRnRPage(testWebDriver);
     initiateRnRPage.verifyNormalizedConsumptionForFirstProduct(parseInt(normalisedConsumption));
     initiateRnRPage.verifyAmcForFirstProduct(parseInt(amc));
   }
 
   @And("^I submit RnR$")
   public void submitRnR() {
-    InitiateRnRPage initiateRnRPage = PageFactory.getInitiateRnRPage(testWebDriver);
+    InitiateRnRPage initiateRnRPage = PageObjectFactory.getInitiateRnRPage(testWebDriver);
     initiateRnRPage.submitRnR();
     initiateRnRPage.clickOk();
   }
 
   @And("^I initiate and submit emergency requisition$")
   public void initiateEmergencyRnR() {
-    HomePage homePage = PageFactory.getHomePage(testWebDriver);
+    HomePage homePage = PageObjectFactory.getHomePage(testWebDriver);
     homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Emergency");
     InitiateRnRPage initiateRnRPage = homePage.clickProceed();
 
@@ -214,13 +214,13 @@ public class E2EInitiateRnR extends TestCaseHelper {
 
   @And("^I access proceed$")
   public void accessProceed() {
-    HomePage homePage = PageFactory.getHomePage(testWebDriver);
+    HomePage homePage = PageObjectFactory.getHomePage(testWebDriver);
     homePage.clickProceed();
   }
 
   @And("^I add comments$")
   public void addComments() {
-    InitiateRnRPage initiateRnRPage = PageFactory.getInitiateRnRPage(testWebDriver);
+    InitiateRnRPage initiateRnRPage = PageObjectFactory.getInitiateRnRPage(testWebDriver);
     initiateRnRPage.clickCommentsButton();
     initiateRnRPage.typeCommentsInCommentsTextArea("Test comment.");
     initiateRnRPage.closeCommentPopUp();
@@ -233,7 +233,7 @@ public class E2EInitiateRnR extends TestCaseHelper {
 
   @And("^I update & verify ordered quantities$")
   public void enterAndVerifyOrderedQuantities() throws SQLException {
-    InitiateRnRPage initiateRnRPage = PageFactory.getInitiateRnRPage(testWebDriver);
+    InitiateRnRPage initiateRnRPage = PageObjectFactory.getInitiateRnRPage(testWebDriver);
     initiateRnRPage.enterValueIfNotNull(10, "newPatientFirstProduct");
     initiateRnRPage.enterValueIfNotNull(10, "totalStockOutDaysFirstProduct");
     int expectedCalculatedNC = calculatedExpectedNC(10, 10, 10);
@@ -244,7 +244,7 @@ public class E2EInitiateRnR extends TestCaseHelper {
 
   @And("^I update & verify quantities for emergency RnR$")
   public void enterAndVerifyOrderedQuantitiesForEmergencyRnR() throws SQLException {
-    InitiateRnRPage initiateRnRPage = PageFactory.getInitiateRnRPage(testWebDriver);
+    InitiateRnRPage initiateRnRPage = PageObjectFactory.getInitiateRnRPage(testWebDriver);
     initiateRnRPage.enterValueIfNotNull(10, "newPatientFirstProduct");
     initiateRnRPage.enterValueIfNotNull(10, "totalStockOutDaysFirstProduct");
     int expectedCalculatedNC = calculatedExpectedNC(10, 10, 10);
@@ -255,7 +255,7 @@ public class E2EInitiateRnR extends TestCaseHelper {
 
   @And("^I update & verify requested quantities$")
   public void enterAndVerifyRequestedQuantities() throws SQLException {
-    InitiateRnRPage initiateRnRPage = PageFactory.getInitiateRnRPage(testWebDriver);
+    InitiateRnRPage initiateRnRPage = PageObjectFactory.getInitiateRnRPage(testWebDriver);
     initiateRnRPage.enterValueIfNotNull(10, "requestedQuantityFirstProduct");
     initiateRnRPage.verifyRequestedQuantityExplanation();
     initiateRnRPage.enterExplanationReason();
@@ -267,7 +267,7 @@ public class E2EInitiateRnR extends TestCaseHelper {
 
   @And("^I add non full supply items & verify total cost$")
   public void enterNonFullSupplyAndVerifyTotalCost() throws SQLException {
-    InitiateRnRPage initiateRnRPage = PageFactory.getInitiateRnRPage(testWebDriver);
+    InitiateRnRPage initiateRnRPage = PageObjectFactory.getInitiateRnRPage(testWebDriver);
     initiateRnRPage.addNonFullSupplyLineItems("99", "Due to unforeseen event", "antibiotic", "P11", "Antibiotics");
     initiateRnRPage.calculateAndVerifyTotalCostNonFullSupply();
     initiateRnRPage.verifyCostOnFooterForProducts(1);
@@ -275,7 +275,7 @@ public class E2EInitiateRnR extends TestCaseHelper {
 
   @And("^I authorize RnR$")
   public void authorizeRnR() {
-    InitiateRnRPage initiateRnRPage = PageFactory.getInitiateRnRPage(testWebDriver);
+    InitiateRnRPage initiateRnRPage = PageObjectFactory.getInitiateRnRPage(testWebDriver);
     initiateRnRPage.authorizeRnR();
     initiateRnRPage.clickOk();
     initiateRnRPage.clickFullSupplyTab();
@@ -290,7 +290,7 @@ public class E2EInitiateRnR extends TestCaseHelper {
 
   @Then("^I verify cost & authorize message$")
   public void verifyAuthorizeRnR() {
-    InitiateRnRPage initiateRnRPage = PageFactory.getInitiateRnRPage(testWebDriver);
+    InitiateRnRPage initiateRnRPage = PageObjectFactory.getInitiateRnRPage(testWebDriver);
     initiateRnRPage.verifyTotalField();
     initiateRnRPage.verifyAuthorizeRnrSuccessMsg();
     initiateRnRPage.verifyApproveButtonNotPresent();
@@ -298,75 +298,75 @@ public class E2EInitiateRnR extends TestCaseHelper {
 
   @Then("^I should not see requisition to approve$")
   public void verifyNoRequisitionToApprove() {
-    HomePage homePage = PageFactory.getHomePage(testWebDriver);
+    HomePage homePage = PageObjectFactory.getHomePage(testWebDriver);
     ApprovePage approvePage = homePage.navigateToApprove();
     approvePage.verifyNoRequisitionPendingMessage();
   }
 
   @When("^I access requisition on approval page$")
   public void navigateRequisitionApprovalPage() {
-    HomePage homePage = PageFactory.getHomePage(testWebDriver);
+    HomePage homePage = PageObjectFactory.getHomePage(testWebDriver);
     ApprovePage approvePage = homePage.navigateToApprove();
     periodTopSNUser = approvePage.clickRequisitionPresentForApproval();
   }
 
   @Then("I access non full supply tab$")
   public void accessNonFullSupplyTab() {
-    ApprovePage approvePage = PageFactory.getApprovePage(testWebDriver);
+    ApprovePage approvePage = PageObjectFactory.getApprovePage(testWebDriver);
     approvePage.accessNonFullSupplyTab();
   }
 
   @Then("I should see RnR Header$")
   public void verifyRnRHeader() {
-    ApprovePage approvePage = PageFactory.getApprovePage(testWebDriver);
+    ApprovePage approvePage = PageObjectFactory.getApprovePage(testWebDriver);
     approvePage.verifyRnRHeader(facilityCodePrefix, facilityNamePrefix, date_time, program, periodDetails, geoZone, parentGeoZone, operatedBy, facilityType);
   }
 
   @Then("I should see full supply approved quantity$")
   public void verifyFullSupplyApprovedQuantity() {
-    ApprovePage approvePage = PageFactory.getApprovePage(testWebDriver);
+    ApprovePage approvePage = PageObjectFactory.getApprovePage(testWebDriver);
     approvePage.verifyFullSupplyApprovedQuantity();
   }
 
   @Then("I should see non full supply approved quantity$")
   public void verifyNonFullSupplyApprovedQuantity() {
-    ApprovePage approvePage = PageFactory.getApprovePage(testWebDriver);
+    ApprovePage approvePage = PageObjectFactory.getApprovePage(testWebDriver);
     approvePage.verifyNonFullSupplyApprovedQuantity();
   }
 
   @Then("I should see approved quantity from lower hierarchy$")
   public void verifyApprovedQuantityFromLastHierarchy() {
-    ApprovePage approvePage = PageFactory.getApprovePage(testWebDriver);
+    ApprovePage approvePage = PageObjectFactory.getApprovePage(testWebDriver);
     approvePage.verifyApprovedQuantityApprovedFromLowerHierarchy("290");
   }
 
   @When("I update full supply approve quantity as \"([^\"]*)\"$")
   public void updateFullSupplyApproveQuantity(String approvedQuantity) {
-    ApprovePage approvePage = PageFactory.getApprovePage(testWebDriver);
+    ApprovePage approvePage = PageObjectFactory.getApprovePage(testWebDriver);
     approvePage.editFullSupplyApproveQuantity(approvedQuantity);
   }
 
   @Then("I verify full supply cost for approved quantity \"([^\"]*)\"$")
   public void verifyFullSupplyCost(String approvedQuantity) {
-    ApprovePage approvePage = PageFactory.getApprovePage(testWebDriver);
+    ApprovePage approvePage = PageObjectFactory.getApprovePage(testWebDriver);
     approvePage.verifyFullSupplyCost(approvedQuantity);
   }
 
   @When("I update non full supply approve quantity as \"([^\"]*)\"$")
   public void updateNonFullSupplyApproveQuantity(String approvedQuantity) {
-    ApprovePage approvePage = PageFactory.getApprovePage(testWebDriver);
+    ApprovePage approvePage = PageObjectFactory.getApprovePage(testWebDriver);
     approvePage.editNonFullSupplyApproveQuantity(approvedQuantity);
   }
 
   @Then("I verify non full supply cost for approved quantity \"([^\"]*)\"$")
   public void verifyNonFullSupplyCost(String approvedQuantity) {
-    ApprovePage approvePage = PageFactory.getApprovePage(testWebDriver);
+    ApprovePage approvePage = PageObjectFactory.getApprovePage(testWebDriver);
     approvePage.verifyNonFullSupplyCost(approvedQuantity);
   }
 
   @And("I add comments without save$")
   public void addCommentWithoutSave() {
-    ApprovePage approvePage = PageFactory.getApprovePage(testWebDriver);
+    ApprovePage approvePage = PageObjectFactory.getApprovePage(testWebDriver);
     approvePage.clickCommentsButton();
     approvePage.typeCommentsInCommentsTextArea("Test comment.");
     approvePage.closeCommentPopUp();
@@ -375,33 +375,33 @@ public class E2EInitiateRnR extends TestCaseHelper {
 
   @Then("I should see blank comment section$")
   public void verifyBlankCommentTextArea() {
-    ApprovePage approvePage = PageFactory.getApprovePage(testWebDriver);
+    ApprovePage approvePage = PageObjectFactory.getApprovePage(testWebDriver);
     approvePage.verifyValueInCommentsTextArea("");
     approvePage.closeCommentPopUp();
   }
 
   @When("I add \"([^\"]*)\" comment$")
   public void addSpecificComment(String comment) {
-    ApprovePage approvePage = PageFactory.getApprovePage(testWebDriver);
+    ApprovePage approvePage = PageObjectFactory.getApprovePage(testWebDriver);
     approvePage.addComments(comment);
   }
 
   @Then("I should see \"([^\"]*)\" comments as \"([^\"]*)\"$")
   public void verifyCommentForUser(String user, String comment) {
-    ApprovePage approvePage = PageFactory.getApprovePage(testWebDriver);
+    ApprovePage approvePage = PageObjectFactory.getApprovePage(testWebDriver);
     approvePage.verifyComment(comment, user, 2);
   }
 
   @And("I should see correct total after authorize$")
   public void verifyTotalAfterAuthorization() {
-    ApprovePage approvePage = PageFactory.getApprovePage(testWebDriver);
+    ApprovePage approvePage = PageObjectFactory.getApprovePage(testWebDriver);
     approvePage.clickFullSupplyTab();
     approvePage.verifyTotalFieldPostAuthorize();
   }
 
   @When("I approve requisition$")
   public void approveRequisition() {
-    ApprovePage approvePage = PageFactory.getApprovePage(testWebDriver);
+    ApprovePage approvePage = PageObjectFactory.getApprovePage(testWebDriver);
     approvePage.clickSaveButton();
     approvePage.clickApproveButton();
     approvePage.clickOk();
@@ -409,19 +409,19 @@ public class E2EInitiateRnR extends TestCaseHelper {
 
   @Then("I should see no requisition pending message$")
   public void verifyNoRequisitionPendingMessage() {
-    ApprovePage approvePage = PageFactory.getApprovePage(testWebDriver);
+    ApprovePage approvePage = PageObjectFactory.getApprovePage(testWebDriver);
     approvePage.verifyNoRequisitionPendingMessage();
   }
 
   @When("^I access convert to order page$")
   public void navigateConvertToOrderPage() {
-    HomePage homePage = PageFactory.getHomePage(testWebDriver);
+    HomePage homePage = PageObjectFactory.getHomePage(testWebDriver);
     homePage.navigateConvertToOrder();
   }
 
   @Then("^I should see pending order list$")
   public void verifyPendingOrderList() throws SQLException {
-    ConvertOrderPage convertOrderPage = PageFactory.getConvertOrderPage(testWebDriver);
+    ConvertOrderPage convertOrderPage = PageObjectFactory.getConvertOrderPage(testWebDriver);
     String[] periods = periodTopSNUser.split("-");
     String supplyFacilityName = dbWrapper.getSupplyFacilityName("N1", program);
     convertOrderPage.verifyOrderListElements(program, facility_code, facility_name, periods[0].trim(), periods[1].trim(), supplyFacilityName);
@@ -434,13 +434,13 @@ public class E2EInitiateRnR extends TestCaseHelper {
 
   @When("^I access view orders page$")
   public void navigateViewOrdersPage() {
-    HomePage homePage = PageFactory.getHomePage(testWebDriver);
+    HomePage homePage = PageObjectFactory.getHomePage(testWebDriver);
     homePage.navigateViewOrders();
   }
 
   @And("^I verify order status as \"([^\"]*)\" in row \"([^\"]*)\"$")
   public void verifyOrderStatus(String orderStatus, String rowNumber) {
-    ViewOrdersPage viewOrdersPage = PageFactory.getViewOrdersPage(testWebDriver);
+    ViewOrdersPage viewOrdersPage = PageObjectFactory.getViewOrdersPage(testWebDriver);
     assertEquals(orderStatus, viewOrdersPage.getOrderStatus(Integer.parseInt(rowNumber)));
   }
 
@@ -466,20 +466,20 @@ public class E2EInitiateRnR extends TestCaseHelper {
 
   @Then("^I verify Regular RnR Type$")
   public void verifyRegularRnRText() {
-    InitiateRnRPage initiateRnRPage = PageFactory.getInitiateRnRPage(testWebDriver);
+    InitiateRnRPage initiateRnRPage = PageObjectFactory.getInitiateRnRPage(testWebDriver);
     assertEquals(initiateRnRPage.getRegularLabelText(), "Regular");
   }
 
   @Then("^I verify Emergency RnR Type$")
   public void verifyEmergencyRnRText() {
-    InitiateRnRPage initiateRnRPage = PageFactory.getInitiateRnRPage(testWebDriver);
+    InitiateRnRPage initiateRnRPage = PageObjectFactory.getInitiateRnRPage(testWebDriver);
     assertEquals(initiateRnRPage.getEmergencyLabelText(), "Emergency");
   }
 
   private void createUserAndAssignRoles(String passwordUsers, String userEmail, String userFirstName, String userLastName,
                                         String userUserName, String facility, String program, String supervisoryNode, String role,
                                         String roleType, String warehouse, String warehouseRole) throws SQLException {
-    HomePage homePage = PageFactory.getHomePage(testWebDriver);
+    HomePage homePage = PageObjectFactory.getHomePage(testWebDriver);
     UserPage userPage = homePage.navigateToUser();
     userPage.enterUserDetails(userUserName, userEmail, userFirstName, userLastName);
     userPage.clickViewHere();
@@ -491,7 +491,7 @@ public class E2EInitiateRnR extends TestCaseHelper {
   }
 
   private void verifyConvertToOrder() {
-    ConvertOrderPage convertOrderPageOrdersPending = PageFactory.getConvertOrderPage(testWebDriver);
+    ConvertOrderPage convertOrderPageOrdersPending = PageObjectFactory.getConvertOrderPage(testWebDriver);
     convertOrderPageOrdersPending.clickConvertToOrderButton();
     convertOrderPageOrdersPending.verifyMessageOnOrderScreen("Message 'Please select at least one Requisition for Converting to Order.' is not displayed");
     convertOrderPageOrdersPending.clickCheckBoxConvertToOrder();
@@ -500,14 +500,14 @@ public class E2EInitiateRnR extends TestCaseHelper {
   }
 
   private void createRoleAndAssignRights(List<String> userRoleList, String roleName, String roleDescription, String roleType) {
-    HomePage homePage = PageFactory.getHomePage(testWebDriver);
+    HomePage homePage = PageObjectFactory.getHomePage(testWebDriver);
     RolesPage rolesPage = homePage.navigateRoleAssignments();
     rolesPage.createRole(roleName, roleDescription, userRoleList, roleType);
     rolesPage.verifyCreatedRoleMessage(roleName);
   }
 
   private void verifyOrderedList(boolean downloadFlag) throws SQLException {
-    ViewOrdersPage viewOrdersPage = PageFactory.getViewOrdersPage(testWebDriver);
+    ViewOrdersPage viewOrdersPage = PageObjectFactory.getViewOrdersPage(testWebDriver);
     String[] periods = periodTopSNUser.split("-");
     String supplyFacilityName = dbWrapper.getSupplyFacilityName("N1", program);
     viewOrdersPage.verifyOrderListElements(program, dbWrapper.getMaxRnrID(), facility_code + " - " + facility_name, "Period1" + " (" + periods[0].trim() + " - " + periods[1].trim() + ")", supplyFacilityName, "Transfer failed", downloadFlag);

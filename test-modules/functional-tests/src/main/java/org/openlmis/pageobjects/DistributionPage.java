@@ -160,7 +160,7 @@ public class DistributionPage extends Page {
     testWebDriver.waitForElementToAppear(testWebDriver.findElement(By.id("recordData" + (rowNumber - 1))));
     WebElement recordDataButton = testWebDriver.findElement(By.id("recordData" + (rowNumber - 1)));
     recordDataButton.click();
-    return new FacilityListPage(testWebDriver);
+    return PageObjectFactory.getFacilityListPage(testWebDriver);
   }
 
   public void verifyDownloadSuccessFullMessage(String deliveryZone, String program, String period) {

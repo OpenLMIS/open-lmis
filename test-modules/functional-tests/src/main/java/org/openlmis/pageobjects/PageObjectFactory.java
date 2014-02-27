@@ -8,13 +8,12 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-package org.openlmis.functional;
+package org.openlmis.pageobjects;
 
 import org.openlmis.UiUtils.TestWebDriver;
-import org.openlmis.pageobjects.*;
 import org.openlmis.pageobjects.edi.*;
 
-public class PageFactory {
+public class PageObjectFactory {
 
   private static ManageFacilityPage instanceOfManageFacilityPage;
   private static DistributionPage instanceOfDistributionPage;
@@ -36,7 +35,6 @@ public class PageFactory {
   private static UpdatePodPage instanceOfUpdatePodPage;
   private static UserPage instanceOfUserPage;
   private static RolesPage instanceOfRolesPage;
-  private static InitiateRnR instanceOfInitiateRnR;
   private static ForgotPasswordPage instanceOfForgotPasswordPage;
   private static UploadPage instanceOfUploadPage;
   private static ApprovePage instanceOfApprovePage;
@@ -47,6 +45,10 @@ public class PageFactory {
   private static ConfigureEDIPage instanceOfConfigureEdiPage;
   private static ManagePodPage instanceOfManagePodPage;
   private static AdultCoveragePage instanceOfAdultCoveragePage;
+  private static ReportPage instanceOfReportPage;
+  private static ManageSchedulePage instanceOfManageSchedulePage;
+  private static TemplateConfigPage instanceOfTemplateConfigPage;
+  private static PeriodsPage instanceOfPeriodsPage;
 
   public static ManageFacilityPage getManageFacilityPage(TestWebDriver testWebDriver) {
     if (instanceOfManageFacilityPage == null) {
@@ -76,7 +78,7 @@ public class PageFactory {
     return instanceOfRefrigeratorPage;
   }
 
-  public static VisitInformationPage getVisitInformation(TestWebDriver testWebDriver) {
+  public static VisitInformationPage getVisitInformationPage(TestWebDriver testWebDriver) {
     if (instanceOfVisitInformationPage == null) {
       instanceOfVisitInformationPage = new VisitInformationPage(testWebDriver);
     }
@@ -190,13 +192,6 @@ public class PageFactory {
     return instanceOfRolesPage;
   }
 
-  public static InitiateRnR getInitiateRnR() {
-    if (instanceOfInitiateRnR == null) {
-      instanceOfInitiateRnR = new InitiateRnR();
-    }
-    return instanceOfInitiateRnR;
-  }
-
   public static ForgotPasswordPage getForgotPasswordPage(TestWebDriver testWebDriver) {
     if (instanceOfForgotPasswordPage == null) {
       instanceOfForgotPasswordPage = new ForgotPasswordPage(testWebDriver);
@@ -204,7 +199,7 @@ public class PageFactory {
     return instanceOfForgotPasswordPage;
   }
 
-  public static UploadPage getploadPage(TestWebDriver testWebDriver) {
+  public static UploadPage getUploadPage(TestWebDriver testWebDriver) {
     if (instanceOfUploadPage == null) {
       instanceOfUploadPage = new UploadPage(testWebDriver);
     }
@@ -265,5 +260,33 @@ public class PageFactory {
       instanceOfAdultCoveragePage = new AdultCoveragePage(testWebDriver);
     }
     return instanceOfAdultCoveragePage;
+  }
+
+  public static ReportPage getReportPage(TestWebDriver testWebDriver) {
+    if (instanceOfReportPage == null) {
+      instanceOfReportPage = new ReportPage(testWebDriver);
+    }
+    return instanceOfReportPage;
+  }
+
+  public static ManageSchedulePage getManageSchedulePage(TestWebDriver testWebDriver) {
+    if (instanceOfManageSchedulePage == null) {
+      instanceOfManageSchedulePage = new ManageSchedulePage(testWebDriver);
+    }
+    return instanceOfManageSchedulePage;
+  }
+
+  public static TemplateConfigPage getTemplateConfigPage(TestWebDriver testWebDriver) {
+    if (instanceOfTemplateConfigPage == null) {
+      instanceOfTemplateConfigPage = new TemplateConfigPage(testWebDriver);
+    }
+    return instanceOfTemplateConfigPage;
+  }
+
+  public static PeriodsPage getPeriodsPage(TestWebDriver testWebDriver) {
+    if (instanceOfPeriodsPage == null) {
+      instanceOfPeriodsPage = new PeriodsPage(testWebDriver);
+    }
+    return instanceOfPeriodsPage;
   }
 }

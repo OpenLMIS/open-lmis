@@ -225,7 +225,7 @@ public class ManageFacilityPage extends Page {
 
   public static ManageFacilityPage getInstance(TestWebDriver testWebDriver) {
     if (instance == null) {
-      instance = new ManageFacilityPage(testWebDriver);
+      instance = PageObjectFactory.getManageFacilityPage(testWebDriver);
     }
     return instance;
   }
@@ -479,7 +479,7 @@ public class ManageFacilityPage extends Page {
     okLink.click();
     testWebDriver.sleep(1000);
 
-    return new HomePage(testWebDriver);
+    return PageObjectFactory.getHomePage(testWebDriver);
   }
 
   public HomePage editFacility(String program, String catchmentPopulationValue,
@@ -508,7 +508,7 @@ public class ManageFacilityPage extends Page {
     addSupportedProgram.click();
     saveButton.click();
 
-    return new HomePage(testWebDriver);
+    return PageObjectFactory.getHomePage(testWebDriver);
   }
 
   public void verifyEditedFacility(String catchmentPopulationValue, String latitudeValue, String longitudeValue, String altitudeValue) {
@@ -533,7 +533,7 @@ public class ManageFacilityPage extends Page {
     }
     assertTrue(removeSupportedProgram.isDisplayed());
 
-    return new HomePage(testWebDriver);
+    return PageObjectFactory.getHomePage(testWebDriver);
   }
 
   public void editFacilityType(String facilityTypeValue) {

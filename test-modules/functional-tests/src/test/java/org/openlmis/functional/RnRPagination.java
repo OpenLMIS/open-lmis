@@ -13,10 +13,7 @@ package org.openlmis.functional;
 
 import org.openlmis.UiUtils.CaptureScreenshotOnFailureListener;
 import org.openlmis.UiUtils.TestCaseHelper;
-import org.openlmis.pageobjects.HomePage;
-import org.openlmis.pageobjects.InitiateRnRPage;
-import org.openlmis.pageobjects.LoginPage;
-import org.openlmis.pageobjects.ViewRequisitionPage;
+import org.openlmis.pageobjects.*;
 import org.testng.annotations.*;
 
 import java.io.IOException;
@@ -39,8 +36,8 @@ public class RnRPagination extends TestCaseHelper {
   @BeforeMethod(groups = {"requisition"})
   public void setUp() throws InterruptedException, SQLException, IOException {
     super.setup();
-    initiateRnRPage = PageFactory.getInitiateRnRPage(testWebDriver);
-    loginPage = PageFactory.getLoginPage(testWebDriver, baseUrlGlobal);
+    initiateRnRPage = PageObjectFactory.getInitiateRnRPage(testWebDriver);
+    loginPage = PageObjectFactory.getLoginPage(testWebDriver, baseUrlGlobal);
   }
 
   @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-Positive", enabled = false)
@@ -230,7 +227,7 @@ public class RnRPagination extends TestCaseHelper {
 
   @AfterMethod(groups = {"requisition"})
   public void tearDown() throws SQLException {
-    HomePage homePage = PageFactory.getHomePage(testWebDriver);
+    HomePage homePage = PageObjectFactory.getHomePage(testWebDriver);
     homePage.logout(baseUrlGlobal);
     dbWrapper.deleteData();
     dbWrapper.closeConnection();

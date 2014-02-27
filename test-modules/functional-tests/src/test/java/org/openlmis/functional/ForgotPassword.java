@@ -19,6 +19,7 @@ import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.pageobjects.ForgotPasswordPage;
 import org.openlmis.pageobjects.HomePage;
 import org.openlmis.pageobjects.LoginPage;
+import org.openlmis.pageobjects.PageObjectFactory;
 import org.openqa.selenium.NoSuchElementException;
 import org.testng.annotations.*;
 
@@ -36,8 +37,8 @@ public class ForgotPassword extends TestCaseHelper {
   @BeforeMethod(groups = "admin")
   public void setUp() throws Exception {
     super.setup();
-    loginPage = PageFactory.getLoginPage(testWebDriver, baseUrlGlobal);
-    forgotPasswordPage = PageFactory.getForgotPasswordPage(testWebDriver);
+    loginPage = PageObjectFactory.getLoginPage(testWebDriver, baseUrlGlobal);
+    forgotPasswordPage = PageObjectFactory.getForgotPasswordPage(testWebDriver);
   }
 
 
@@ -107,32 +108,32 @@ public class ForgotPassword extends TestCaseHelper {
 
   @Given("^I am on forgot password screen$")
   public void onForgotPageAndVerifyElements() {
-    loginPage = PageFactory.getLoginPage(testWebDriver, baseUrlGlobal);
+    loginPage = PageObjectFactory.getLoginPage(testWebDriver, baseUrlGlobal);
     forgotPasswordPage = loginPage.clickForgotPasswordLink();
     verifyElementsOnForgotPasswordScreen();
   }
 
   @When("^I type email \"([^\"]*)\"$")
   public void enterEmail(String email) {
-    forgotPasswordPage = PageFactory.getForgotPasswordPage(testWebDriver);
+    forgotPasswordPage = PageObjectFactory.getForgotPasswordPage(testWebDriver);
     forgotPasswordPage.enterEmail(email);
   }
 
   @When("^I type and username \"([^\"]*)\"$")
   public void enterPassword(String userName) {
-    forgotPasswordPage = PageFactory.getForgotPasswordPage(testWebDriver);
+    forgotPasswordPage = PageObjectFactory.getForgotPasswordPage(testWebDriver);
     forgotPasswordPage.enterUserName(userName);
   }
 
   @When("^I click submit button$")
   public void clickSubmit() {
-    forgotPasswordPage = PageFactory.getForgotPasswordPage(testWebDriver);
+    forgotPasswordPage = PageObjectFactory.getForgotPasswordPage(testWebDriver);
     forgotPasswordPage.clickSubmit();
   }
 
   @Then("^I should see email send successfully$")
   public void verifyEmailSendMessage() {
-    forgotPasswordPage = PageFactory.getForgotPasswordPage(testWebDriver);
+    forgotPasswordPage = PageObjectFactory.getForgotPasswordPage(testWebDriver);
     verifyEmailSendSuccessfullyMessage();
   }
 
@@ -174,7 +175,7 @@ public class ForgotPassword extends TestCaseHelper {
   public void tearDown() throws SQLException {
     try {
       if (!testWebDriver.getElementById("username").isDisplayed()) {
-        HomePage homePage = PageFactory.getHomePage(testWebDriver);
+        HomePage homePage = PageObjectFactory.getHomePage(testWebDriver);
         homePage.logout(baseUrlGlobal);
         dbWrapper.deleteData();
         dbWrapper.closeConnection();

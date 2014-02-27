@@ -4,10 +4,7 @@ import cucumber.api.java.en.And;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import org.openlmis.UiUtils.TestCaseHelper;
-import org.openlmis.pageobjects.HomePage;
-import org.openlmis.pageobjects.LoginPage;
-import org.openlmis.pageobjects.ManagePodPage;
-import org.openlmis.pageobjects.UpdatePodPage;
+import org.openlmis.pageobjects.*;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -52,8 +49,8 @@ public class UpdatePod extends TestCaseHelper {
     super.setup();
     dbWrapper.deleteData();
     setUpData(updatePODData.get(PROGRAM), updatePODData.get(USER));
-    updatePodPage = PageFactory.getUpdatePodPage(testWebDriver);
-    loginPage = PageFactory.getLoginPage(testWebDriver, baseUrlGlobal);
+    updatePodPage = PageObjectFactory.getUpdatePodPage(testWebDriver);
+    loginPage = PageObjectFactory.getLoginPage(testWebDriver, baseUrlGlobal);
   }
 
   @Test(groups = {"requisition"})
@@ -219,20 +216,20 @@ public class UpdatePod extends TestCaseHelper {
 
   @And("^I enter \"([^\"]*)\" as quantity received, \"([^\"]*)\" as quantity returned and \"([^\"]*)\" as notes in row \"([^\"]*)\"$")
   public void enterPodDetails(String quantityReceived, String quantityReturned, String notes, String rowNumber) {
-    updatePodPage = PageFactory.getUpdatePodPage(testWebDriver);
+    updatePodPage = PageObjectFactory.getUpdatePodPage(testWebDriver);
     updatePodPage.enterPodData(quantityReceived, notes, quantityReturned, Integer.parseInt(rowNumber));
   }
 
   @And("^I enter \"([^\"]*)\" as deliveredBy,\"([^\"]*)\" as receivedBy and \"([^\"]*)\" as receivedDate$")
   public void enterDeliveryDetailsOnPodScreen(String deliveredBy, String receivedBy, String receivedDate) {
-    updatePodPage = PageFactory.getUpdatePodPage(testWebDriver);
+    updatePodPage = PageObjectFactory.getUpdatePodPage(testWebDriver);
     updatePodPage.enterDeliveryDetailsInPodScreen(deliveredBy, receivedBy, receivedDate);
   }
 
 
   @And("^I submit POD$")
   public void submitPOD() {
-    updatePodPage = PageFactory.getUpdatePodPage(testWebDriver);
+    updatePodPage = PageObjectFactory.getUpdatePodPage(testWebDriver);
     updatePodPage.clickSubmitButton();
     updatePodPage.clickCancelButton();
     updatePodPage.clickSubmitButton();
@@ -241,14 +238,14 @@ public class UpdatePod extends TestCaseHelper {
 
   @When("^I click on update Pod link for Row \"([^\"]*)\"$")
   public void navigateUploadPodPage(Integer rowNumber) {
-    HomePage homePage = PageFactory.getHomePage(testWebDriver);
+    HomePage homePage = PageObjectFactory.getHomePage(testWebDriver);
     ManagePodPage managePodPage = homePage.navigateManagePOD();
     managePodPage.selectRequisitionToUpdatePod(rowNumber);
   }
 
   @Then("^I should see all products to update pod$")
   public void verifyUpdatePodPage() {
-    updatePodPage = PageFactory.getUpdatePodPage(testWebDriver);
+    updatePodPage = PageObjectFactory.getUpdatePodPage(testWebDriver);
     assertTrue(updatePodPage.getProductCode(1).contains("P10"));
     assertTrue(updatePodPage.getProductName(1).contains("antibiotic"));
     assertFalse(updatePodPage.getProductCode(1).contains("P11"));
@@ -257,7 +254,7 @@ public class UpdatePod extends TestCaseHelper {
   @Then("^I verify quantity received, quantity returned,notes,deliveredBy,receivedBy,receivedDate disabled$")
   public void verifyPodPageDisabled() {
     testWebDriver.sleep(1000);
-    updatePodPage = PageFactory.getUpdatePodPage(testWebDriver);
+    updatePodPage = PageObjectFactory.getUpdatePodPage(testWebDriver);
     assertFalse(updatePodPage.isQuantityReceivedEnabled(1));
     assertFalse(updatePodPage.isNotesEnabled(1));
     assertFalse(updatePodPage.isQuantityReturnedEnabled(1));
@@ -344,7 +341,7 @@ public class UpdatePod extends TestCaseHelper {
   public void tearDown() throws SQLException {
     testWebDriver.sleep(500);
     if (!testWebDriver.getElementById("username").isDisplayed()) {
-      HomePage homePage = PageFactory.getHomePage(testWebDriver);
+      HomePage homePage = PageObjectFactory.getHomePage(testWebDriver);
       homePage.logout(baseUrlGlobal);
       dbWrapper.deleteData();
       dbWrapper.closeConnection();

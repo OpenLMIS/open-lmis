@@ -25,7 +25,9 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.thoughtworks.selenium.SeleneseTestBase.*;
+import static com.thoughtworks.selenium.SeleneseTestBase.assertFalse;
+import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
+import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
 import static java.lang.Float.parseFloat;
 import static org.openlmis.UiUtils.TestCaseHelper.parsePostgresBoolean;
 import static org.openqa.selenium.support.How.*;
@@ -340,7 +342,7 @@ public class InitiateRnRPage extends RequisitionPage {
     testWebDriver.sleep(1000);
     testWebDriver.waitForElementToAppear(homeMenuItem);
     testWebDriver.keyPress(homeMenuItem);
-    return new HomePage(testWebDriver);
+    return PageObjectFactory.getHomePage(testWebDriver);
   }
 
   public void enterValueIfNotNull(Integer value, String elementName) {
@@ -900,5 +902,40 @@ public class InitiateRnRPage extends RequisitionPage {
 
   public String getPacksToShip() {
     return packsToShipForFirstProduct.getText();
+  }
+
+  public void verifyBudgetAmountPresentOnFooter(String budgetAmount) {
+    assertTrue(isAllocatedBudgetLabelDisplayed());
+    assertEquals("Allocated Budget", getAllocatedBudgetLabel());
+    assertTrue(isAllocatedBudgetAmountDisplayed());
+    assertEquals(budgetAmount, getAllocatedBudgetAmount());
+    assertFalse(isBudgetNotAllocatedDisplayed());
+  }
+
+  public void verifyBudgetAmountNotAllocated() {
+    assertTrue(isAllocatedBudgetLabelDisplayed());
+    assertEquals("Allocated Budget", getAllocatedBudgetLabel());
+    assertTrue(isBudgetNotAllocatedDisplayed());
+    assertEquals("Not allocated", getBudgetNotAllocatedText());
+    assertFalse(isAllocatedBudgetAmountDisplayed());
+  }
+
+  public void verifyBudgetNotDisplayed() {
+    assertFalse(isAllocatedBudgetLabelDisplayed());
+    assertFalse(isAllocatedBudgetAmountDisplayed());
+    assertFalse(isBudgetNotAllocatedDisplayed());
+  }
+
+  public void checkWhetherBudgetExceedWarningPresent(boolean isWarningPresentFlag) {
+    boolean flag = false;
+    if (isWarningPresentFlag) {
+      assertEquals("The total cost exceeds the allocated budget", getBudgetWarningMessage());
+      assertEquals("The total cost exceeds the allocated budget", getBudgetWarningMessageOnFooter());
+      flag = true;
+    }
+    assertEquals(flag, isBudgetWarningIconDisplayed());
+    assertEquals(flag, isBudgetWarningMessageDisplayed());
+    assertEquals(flag, isBudgetWarningIconOnFooterDisplayed());
+    assertEquals(flag, isBudgetWarningMessageOnFooterDisplayed());
   }
 }

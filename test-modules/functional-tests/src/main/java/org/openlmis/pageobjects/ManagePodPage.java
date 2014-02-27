@@ -143,7 +143,7 @@ public class ManagePodPage extends Page {
     WebElement uploadLink = testWebDriver.findElement(By.id("updatePod" + (rowNumber - 1)));
     testWebDriver.waitForElementToAppear(uploadLink);
     uploadLink.click();
-    return new UpdatePodPage(testWebDriver);
+    return PageObjectFactory.getUpdatePodPage(testWebDriver);
   }
 }
 

@@ -18,6 +18,7 @@ import org.openlmis.UiUtils.CaptureScreenshotOnFailureListener;
 import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.pageobjects.HomePage;
 import org.openlmis.pageobjects.LoginPage;
+import org.openlmis.pageobjects.PageObjectFactory;
 import org.openlmis.pageobjects.edi.ConfigureEDIPage;
 import org.openlmis.pageobjects.edi.ConfigureOrderPage;
 import org.testng.annotations.*;
@@ -39,49 +40,49 @@ public class ConfigureOrderTemplate extends TestCaseHelper {
     super.setup();
     dbWrapper.setupOrderFileConfiguration("O", "TRUE");
     dbWrapper.deleteRowFromTable("order_file_columns", "openLMISField", "false");
-    loginPage = PageFactory.getLoginPage(testWebDriver, baseUrlGlobal);
+    loginPage = PageObjectFactory.getLoginPage(testWebDriver, baseUrlGlobal);
   }
 
   @And("^I access configure order page$")
   public void accessOrderScreen() {
-    HomePage homePage = PageFactory.getHomePage(testWebDriver);
+    HomePage homePage = PageObjectFactory.getHomePage(testWebDriver);
     ConfigureEDIPage configureEDIPage = homePage.navigateEdiScreen();
     configureEDIPage.navigateConfigureOrderPage();
   }
 
   @Then("^I should see order file prefix \"([^\"]*)\"$")
   public void verifyOrderPrefix(String prefix) {
-    configureOrderPage = PageFactory.getConfigureOrderPage(testWebDriver);
+    configureOrderPage = PageObjectFactory.getConfigureOrderPage(testWebDriver);
     assertEquals(configureOrderPage.getOrderPrefix(), prefix);
   }
 
   @And("^I should see include column header as \"([^\"]*)\"$")
   public void verifyIncludeColumnHeader(String indicator) {
-    configureOrderPage = PageFactory.getConfigureOrderPage(testWebDriver);
+    configureOrderPage = PageObjectFactory.getConfigureOrderPage(testWebDriver);
     assertEquals(String.valueOf(configureOrderPage.getIncludeOrderHeader()), indicator);
   }
 
   @And("^I should see all column headers disabled$")
   public void verifyAllColumnsDisabled() {
-    configureOrderPage = PageFactory.getConfigureOrderPage(testWebDriver);
+    configureOrderPage = PageObjectFactory.getConfigureOrderPage(testWebDriver);
     configureOrderPage.verifyColumnHeadersDisabled();
   }
 
   @And("^I should see include checkbox \"([^\"]*)\" for all column headers$")
   public void verifyAllColumnsDisabled(String flag) {
-    configureOrderPage = PageFactory.getConfigureOrderPage(testWebDriver);
+    configureOrderPage = PageObjectFactory.getConfigureOrderPage(testWebDriver);
     configureOrderPage.verifyIncludeCheckboxForAllColumnHeaders(flag);
   }
 
   @When("^I save order file format$")
   public void clickSave() {
-    configureOrderPage = PageFactory.getConfigureOrderPage(testWebDriver);
+    configureOrderPage = PageObjectFactory.getConfigureOrderPage(testWebDriver);
     configureOrderPage.clickSaveButton();
   }
 
   @Then("^I should see \"([^\"]*)\"$")
   public void verifySaveSuccessfullyMessage(String message) {
-    configureOrderPage = PageFactory.getConfigureOrderPage(testWebDriver);
+    configureOrderPage = PageObjectFactory.getConfigureOrderPage(testWebDriver);
     configureOrderPage.verifySuccessMessage(message);
   }
 
@@ -222,7 +223,7 @@ public class ConfigureOrderTemplate extends TestCaseHelper {
   public void tearDown() throws SQLException {
     testWebDriver.sleep(500);
     if (!testWebDriver.getElementById("username").isDisplayed()) {
-      HomePage homePage = PageFactory.getHomePage(testWebDriver);
+      HomePage homePage = PageObjectFactory.getHomePage(testWebDriver);
       homePage.logout(baseUrlGlobal);
       dbWrapper.deleteData();
       dbWrapper.closeConnection();

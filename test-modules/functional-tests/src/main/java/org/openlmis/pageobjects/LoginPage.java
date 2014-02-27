@@ -65,13 +65,13 @@ public class LoginPage extends Page {
     sendKeys(passwordField, password);
 
     userNameField.submit();
-    return new HomePage(testWebDriver);
+    return PageObjectFactory.getHomePage(testWebDriver);
   }
 
   public ForgotPasswordPage clickForgotPasswordLink() {
     testWebDriver.waitForElementToAppear(forgotPasswordLink);
     forgotPasswordLink.click();
-    return new ForgotPasswordPage(testWebDriver);
+    return PageObjectFactory.getForgotPasswordPage(testWebDriver);
   }
 
   public String getEnglishColor() {

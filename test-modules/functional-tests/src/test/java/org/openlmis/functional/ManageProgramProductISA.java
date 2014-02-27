@@ -17,6 +17,7 @@ import org.openlmis.UiUtils.CaptureScreenshotOnFailureListener;
 import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.pageobjects.HomePage;
 import org.openlmis.pageobjects.LoginPage;
+import org.openlmis.pageobjects.PageObjectFactory;
 import org.openlmis.pageobjects.ProgramProductISAPage;
 import org.openqa.selenium.WebElement;
 import org.testng.annotations.*;
@@ -41,8 +42,8 @@ public class ManageProgramProductISA extends TestCaseHelper {
   @BeforeMethod(groups = "admin")
   public void setUp() throws InterruptedException, SQLException, IOException {
     super.setup();
-    homePage = PageFactory.getHomePage(testWebDriver);
-    loginPage = PageFactory.getLoginPage(testWebDriver, baseUrlGlobal);
+    homePage = PageObjectFactory.getHomePage(testWebDriver);
+    loginPage = PageObjectFactory.getLoginPage(testWebDriver, baseUrlGlobal);
   }
 
   @When("^I have data available for program product ISA$")
@@ -56,7 +57,7 @@ public class ManageProgramProductISA extends TestCaseHelper {
 
   @Given("^I access program product ISA page for \"([^\"]*)\"$")
   public void accessProgramProductISAPage(String program) {
-    programProductISAPage = PageFactory.getProgramProductIsaPage(testWebDriver);
+    programProductISAPage = PageObjectFactory.getProgramProductIsaPage(testWebDriver);
     programProductISAPage = navigateProgramProductISAPage(program);
   }
 
@@ -69,21 +70,21 @@ public class ManageProgramProductISA extends TestCaseHelper {
                                     String adjustmentValue,
                                     String minimumValue,
                                     String maximumValue) {
-    programProductISAPage = PageFactory.getProgramProductIsaPage(testWebDriver);
+    programProductISAPage = PageObjectFactory.getProgramProductIsaPage(testWebDriver);
     programProductISAPage.fillProgramProductISA(ratio, dosesPerYear, wastage, bufferPercentage, adjustmentValue,
       minimumValue, maximumValue);
   }
 
   @Then("^I verify calculated ISA value having population \"([^\"]*)\" as \"([^\"]*)\"$")
   public void verifyTestCalculatedISA(String population, String expectedISA) throws SQLException {
-    programProductISAPage = PageFactory.getProgramProductIsaPage(testWebDriver);
+    programProductISAPage = PageObjectFactory.getProgramProductIsaPage(testWebDriver);
     String actualISA = programProductISAPage.calculateISA(population);
     assertEquals(expectedISA, actualISA);
   }
 
   @Then("^I click cancel$")
   public void clickCancel() {
-    programProductISAPage = PageFactory.getProgramProductIsaPage(testWebDriver);
+    programProductISAPage = PageObjectFactory.getProgramProductIsaPage(testWebDriver);
     programProductISAPage.cancelISA();
   }
 
@@ -220,7 +221,7 @@ public class ManageProgramProductISA extends TestCaseHelper {
   }
 
   private ProgramProductISAPage navigateProgramProductISAPage(String program) {
-    homePage = PageFactory.getHomePage(testWebDriver);
+    homePage = PageObjectFactory.getHomePage(testWebDriver);
     ProgramProductISAPage programProductISAPage = homePage.navigateProgramProductISA();
     programProductISAPage.selectProgram(program);
     programProductISAPage.editFormula();
@@ -291,7 +292,7 @@ public class ManageProgramProductISA extends TestCaseHelper {
   public void tearDown() throws SQLException {
     testWebDriver.sleep(500);
     if (!testWebDriver.getElementById("username").isDisplayed()) {
-      HomePage homePage = PageFactory.getHomePage(testWebDriver);
+      HomePage homePage = PageObjectFactory.getHomePage(testWebDriver);
       homePage.logout(baseUrlGlobal);
       dbWrapper.deleteData();
       dbWrapper.closeConnection();

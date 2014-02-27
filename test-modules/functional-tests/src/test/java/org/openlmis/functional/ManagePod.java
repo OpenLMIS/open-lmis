@@ -7,6 +7,7 @@ import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.pageobjects.HomePage;
 import org.openlmis.pageobjects.LoginPage;
 import org.openlmis.pageobjects.ManagePodPage;
+import org.openlmis.pageobjects.PageObjectFactory;
 import org.openlmis.pageobjects.edi.ConvertOrderPage;
 import org.openqa.selenium.By;
 import org.testng.annotations.AfterMethod;
@@ -37,7 +38,7 @@ public class ManagePod extends TestCaseHelper {
   public void setUp() throws InterruptedException, SQLException, IOException {
     super.setup();
     dbWrapper.deleteData();
-    loginPage = PageFactory.getLoginPage(testWebDriver, baseUrlGlobal);
+    loginPage = PageObjectFactory.getLoginPage(testWebDriver, baseUrlGlobal);
   }
 
   @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-RnR")
@@ -137,7 +138,7 @@ public class ManagePod extends TestCaseHelper {
 
   @When("^I access Manage POD page$")
   public void navigateManagePodPage() {
-    HomePage homePage = PageFactory.getHomePage(testWebDriver);
+    HomePage homePage = PageObjectFactory.getHomePage(testWebDriver);
     homePage.navigateManagePOD();
   }
 
@@ -157,7 +158,7 @@ public class ManagePod extends TestCaseHelper {
 
   @And("^I verify order not present on manage pod page$")
   public void verifyNoOrderPresent() {
-    ManagePodPage managePodPage = PageFactory.getManagePodPage(testWebDriver);
+    ManagePodPage managePodPage = PageObjectFactory.getManagePodPage(testWebDriver);
     managePodPage.verifyNoOrderMessage();
   }
 
@@ -205,7 +206,7 @@ public class ManagePod extends TestCaseHelper {
   public void tearDown() throws SQLException {
     testWebDriver.sleep(500);
     if (!testWebDriver.getElementById("username").isDisplayed()) {
-      HomePage homePage = PageFactory.getHomePage(testWebDriver);
+      HomePage homePage = PageObjectFactory.getHomePage(testWebDriver);
       homePage.logout(baseUrlGlobal);
       dbWrapper.deleteData();
       dbWrapper.closeConnection();

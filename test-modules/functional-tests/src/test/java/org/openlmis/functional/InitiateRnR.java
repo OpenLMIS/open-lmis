@@ -53,7 +53,6 @@ public class InitiateRnR extends TestCaseHelper {
   public static final String VIEW_REQUISITION = "VIEW_REQUISITION";
   public static final String VIEW_ORDER = "VIEW_ORDER";
   private static final int MILLISECONDS_IN_ONE_DAY = 24 * 60 * 60 * 1000;
-  public final String ALLOCATED_BUDGET = "Allocated Budget";
   public String program, userSIC, categoryCode, password, regimenCode, regimenName, regimenCode2, regimenName2;
 
   public LoginPage loginPage;
@@ -64,9 +63,9 @@ public class InitiateRnR extends TestCaseHelper {
   public void setUp() throws InterruptedException, SQLException, IOException {
     super.setup();
     dbWrapper.deleteData();
-    loginPage = PageFactory.getLoginPage(testWebDriver, baseUrlGlobal);
-    initiateRnRPage = PageFactory.getInitiateRnRPage(testWebDriver);
-    homePage = PageFactory.getHomePage(testWebDriver);
+    loginPage = PageObjectFactory.getLoginPage(testWebDriver, baseUrlGlobal);
+    initiateRnRPage = PageObjectFactory.getInitiateRnRPage(testWebDriver);
+    homePage = PageObjectFactory.getHomePage(testWebDriver);
   }
 
   @Given("^I have the following data for regimen:$")
@@ -90,19 +89,19 @@ public class InitiateRnR extends TestCaseHelper {
 
   @Given("^I access initiate requisition page$")
   public void onInitiateRnRScreen() {
-    homePage = PageFactory.getHomePage(testWebDriver);
+    homePage = PageObjectFactory.getHomePage(testWebDriver);
     homePage.navigateAndInitiateRnr(program);
   }
 
   @Given("^I access initiate emergency requisition page$")
   public void onInitiateEmergencyRnRScreen() {
-    homePage = PageFactory.getHomePage(testWebDriver);
+    homePage = PageObjectFactory.getHomePage(testWebDriver);
     homePage.navigateAndInitiateEmergencyRnr(program);
   }
 
   @Then("I should see no period available$")
   public void verifyPeriodNotAvailable() {
-    homePage = PageFactory.getHomePage(testWebDriver);
+    homePage = PageObjectFactory.getHomePage(testWebDriver);
     assertEquals("No current period defined. Please contact the Admin.", homePage.getFirstPeriod());
   }
 
@@ -119,7 +118,7 @@ public class InitiateRnR extends TestCaseHelper {
 
   @When("^I click proceed$")
   public void clickOnProceed() {
-    homePage = PageFactory.getHomePage(testWebDriver);
+    homePage = PageObjectFactory.getHomePage(testWebDriver);
     homePage.navigateAndInitiateRnr(program);
     initiateRnRPage = homePage.clickProceed();
     testWebDriver.sleep(2000);
@@ -132,111 +131,111 @@ public class InitiateRnR extends TestCaseHelper {
 
   @When("^I access regimen tab$")
   public void clickRegimenTab() throws SQLException {
-    initiateRnRPage = PageFactory.getInitiateRnRPage(testWebDriver);
+    initiateRnRPage = PageObjectFactory.getInitiateRnRPage(testWebDriver);
     initiateRnRPage.clickRegimenTab();
   }
 
   @When("^I enter beginning balance \"([^\"]*)\"$")
   public void enterBeginningBalance(String beginningBalance) throws SQLException {
-    initiateRnRPage = PageFactory.getInitiateRnRPage(testWebDriver);
+    initiateRnRPage = PageObjectFactory.getInitiateRnRPage(testWebDriver);
     initiateRnRPage.enterValueIfNotNull(valueOf(beginningBalance), "beginningBalanceFirstProduct");
   }
 
   @When("^I enter quantity received \"([^\"]*)\"$")
   public void enterQuantityReceived(String quantityReceived) throws SQLException {
-    initiateRnRPage = PageFactory.getInitiateRnRPage(testWebDriver);
+    initiateRnRPage = PageObjectFactory.getInitiateRnRPage(testWebDriver);
     initiateRnRPage.enterValueIfNotNull(valueOf(quantityReceived), "quantityReceivedFirstProduct");
   }
 
   @When("^I enter quantity dispensed \"([^\"]*)\"$")
   public void enterQuantityDispensed(String quantityDispensed) throws SQLException {
-    initiateRnRPage = PageFactory.getInitiateRnRPage(testWebDriver);
+    initiateRnRPage = PageObjectFactory.getInitiateRnRPage(testWebDriver);
     initiateRnRPage.enterValueIfNotNull(valueOf(quantityDispensed), "quantityDispensedFirstProduct");
   }
 
   @Then("^I validate beginning balance \"([^\"]*)\"$")
   public void validateBeginningBalance(String beginningBalance) throws SQLException {
-    initiateRnRPage = PageFactory.getInitiateRnRPage(testWebDriver);
+    initiateRnRPage = PageObjectFactory.getInitiateRnRPage(testWebDriver);
     initiateRnRPage.verifyBeginningBalanceForFirstProduct(parseInt(beginningBalance));
   }
 
   @Then("^I validate quantity received \"([^\"]*)\"$")
   public void validateQuantityReceived(String quantityReceived) throws SQLException {
-    initiateRnRPage = PageFactory.getInitiateRnRPage(testWebDriver);
+    initiateRnRPage = PageObjectFactory.getInitiateRnRPage(testWebDriver);
     initiateRnRPage.verifyQuantityReceivedForFirstProduct(parseInt(quantityReceived));
   }
 
   @Then("^I validate quantity dispensed \"([^\"]*)\"$")
   public void validateQuantityDispensed(String quantityDispensed) throws SQLException {
-    initiateRnRPage = PageFactory.getInitiateRnRPage(testWebDriver);
+    initiateRnRPage = PageObjectFactory.getInitiateRnRPage(testWebDriver);
     initiateRnRPage.verifyQuantityDispensedForFirstProduct(parseInt(quantityDispensed));
   }
 
   @Then("^I should see regimen fields$")
   public void shouldSeeRegimenFields() {
-    initiateRnRPage = PageFactory.getInitiateRnRPage(testWebDriver);
+    initiateRnRPage = PageObjectFactory.getInitiateRnRPage(testWebDriver);
     verifyRegimenFieldsPresentOnRegimenTab(regimenCode, regimenName);
   }
 
   @When("^I type patients on treatment \"([^\"]*)\"$")
   public void typePatientsOnTreatment(String value) {
-    initiateRnRPage = PageFactory.getInitiateRnRPage(testWebDriver);
+    initiateRnRPage = PageObjectFactory.getInitiateRnRPage(testWebDriver);
     initiateRnRPage.enterValuesOnRegimenScreen(3, 1, value);
   }
 
   @When("^I type patients initiated treatment \"([^\"]*)\"$")
   public void typePatientsInitiatedTreatment(String value) {
-    initiateRnRPage = PageFactory.getInitiateRnRPage(testWebDriver);
+    initiateRnRPage = PageObjectFactory.getInitiateRnRPage(testWebDriver);
     initiateRnRPage.enterValuesOnRegimenScreen(4, 1, value);
   }
 
   @When("^I type patients stopped treatment \"([^\"]*)\"$")
   public void typePatientsStoppedTreatment(String value) {
-    initiateRnRPage = PageFactory.getInitiateRnRPage(testWebDriver);
+    initiateRnRPage = PageObjectFactory.getInitiateRnRPage(testWebDriver);
     initiateRnRPage.enterValuesOnRegimenScreen(5, 1, value);
   }
 
   @When("^I type remarks \"([^\"]*)\"$")
   public void typeRemarks(String value) {
-    initiateRnRPage = PageFactory.getInitiateRnRPage(testWebDriver);
+    initiateRnRPage = PageObjectFactory.getInitiateRnRPage(testWebDriver);
     initiateRnRPage.enterValuesOnRegimenScreen(6, 1, value);
   }
 
   @When("^I click save$")
   public void clickSave() {
-    initiateRnRPage = PageFactory.getInitiateRnRPage(testWebDriver);
+    initiateRnRPage = PageObjectFactory.getInitiateRnRPage(testWebDriver);
     initiateRnRPage.clickSaveButton();
   }
 
   @When("^I should see saved successfully$")
   public void shouldSeeSavedSuccessfully() {
-    initiateRnRPage = PageFactory.getInitiateRnRPage(testWebDriver);
+    initiateRnRPage = PageObjectFactory.getInitiateRnRPage(testWebDriver);
     initiateRnRPage.verifySaveSuccessMsg();
   }
 
   @When("^I click submit$")
   public void clickSubmit() {
-    initiateRnRPage = PageFactory.getInitiateRnRPage(testWebDriver);
+    initiateRnRPage = PageObjectFactory.getInitiateRnRPage(testWebDriver);
     initiateRnRPage.clickSubmitButton();
     testWebDriver.sleep(250);
   }
 
   @When("^I click ok$")
   public void clickOk() {
-    initiateRnRPage = PageFactory.getInitiateRnRPage(testWebDriver);
+    initiateRnRPage = PageObjectFactory.getInitiateRnRPage(testWebDriver);
     testWebDriver.sleep(1000);
     initiateRnRPage.clickOk();
   }
 
   @When("^I should see submit successfully$")
   public void shouldSeeSubmitSuccessfully() {
-    initiateRnRPage = PageFactory.getInitiateRnRPage(testWebDriver);
+    initiateRnRPage = PageObjectFactory.getInitiateRnRPage(testWebDriver);
     initiateRnRPage.verifySubmitSuccessMsg();
   }
 
   @Then("^I got error message \"([^\"]*)\"$")
   public void shouldSeeSubmitSuccessfully(String errorMsg) {
-    homePage = PageFactory.getHomePage(testWebDriver);
+    homePage = PageObjectFactory.getHomePage(testWebDriver);
     assertEquals(homePage.getErrorMessage(), errorMsg);
   }
 
@@ -248,7 +247,7 @@ public class InitiateRnR extends TestCaseHelper {
 
   @Then("^I should see all products listed in shipment file to update pod$")
   public void verifyDataForPodForPackedOrders() throws SQLException {
-    UpdatePodPage updatePodPage = PageFactory.getUpdatePodPage(testWebDriver);
+    UpdatePodPage updatePodPage = PageObjectFactory.getUpdatePodPage(testWebDriver);
     assertEquals("P10", updatePodPage.getProductCode(1));
     assertEquals("antibiotic Capsule 300/200/600 mg", updatePodPage.getProductName(1));
     assertEquals(100, updatePodPage.getPacksToShip(1));
@@ -779,7 +778,7 @@ public class InitiateRnR extends TestCaseHelper {
     dbWrapper.insertValuesInRequisition(false);
     homePage.navigateAndInitiateRnr(program);
     homePage.clickProceed();
-    initiateRnRPage = PageFactory.getInitiateRnRPage(testWebDriver);
+    initiateRnRPage = PageObjectFactory.getInitiateRnRPage(testWebDriver);
     initiateRnRPage.submitRnR();
     initiateRnRPage.clickOk();
     dbWrapper.updateRequisitionStatus("AUTHORIZED", "storeInCharge", "HIV");
@@ -869,7 +868,7 @@ public class InitiateRnR extends TestCaseHelper {
     dbWrapper.insertProcessingPeriod("current Period", "current Period", "2013-10-03", "2016-01-30", 1, "M");
     dbWrapper.updateFieldValue("products", "fullSupply", "true", "code", "P11");
 
-    homePage = PageFactory.getLoginPage(testWebDriver, baseUrlGlobal).loginAs(userSIC, password);
+    homePage = PageObjectFactory.getLoginPage(testWebDriver, baseUrlGlobal).loginAs(userSIC, password);
     homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Regular");
     homePage.clickProceed();
 
@@ -1028,47 +1027,11 @@ public class InitiateRnR extends TestCaseHelper {
     testWebDriver.getElementByXpath("(//input[@value='Proceed'])[" + row + "]").click();
   }
 
-  public void verifyBudgetAmountPresentOnFooter(String budgetAmount) {
-    assertTrue(initiateRnRPage.isAllocatedBudgetLabelDisplayed());
-    assertEquals(ALLOCATED_BUDGET, initiateRnRPage.getAllocatedBudgetLabel());
-    assertTrue(initiateRnRPage.isAllocatedBudgetAmountDisplayed());
-    assertEquals(budgetAmount, initiateRnRPage.getAllocatedBudgetAmount());
-    assertFalse(initiateRnRPage.isBudgetNotAllocatedDisplayed());
-  }
-
-  public void verifyBudgetAmountNotAllocated() {
-    assertTrue(initiateRnRPage.isAllocatedBudgetLabelDisplayed());
-    assertEquals(ALLOCATED_BUDGET, initiateRnRPage.getAllocatedBudgetLabel());
-    assertTrue(initiateRnRPage.isBudgetNotAllocatedDisplayed());
-    assertEquals("Not allocated", initiateRnRPage.getBudgetNotAllocatedText());
-    assertFalse(initiateRnRPage.isAllocatedBudgetAmountDisplayed());
-  }
-
-  public void verifyBudgetNotDisplayed() {
-    initiateRnRPage = PageFactory.getInitiateRnRPage(testWebDriver);
-    assertFalse(initiateRnRPage.isAllocatedBudgetLabelDisplayed());
-    assertFalse(initiateRnRPage.isAllocatedBudgetAmountDisplayed());
-    assertFalse(initiateRnRPage.isBudgetNotAllocatedDisplayed());
-  }
-
-  public void checkWhetherBudgetExceedWarningPresent(boolean isWarningPresentFlag) {
-    boolean flag = false;
-    if (isWarningPresentFlag) {
-      assertEquals("The total cost exceeds the allocated budget", initiateRnRPage.getBudgetWarningMessage());
-      assertEquals("The total cost exceeds the allocated budget", initiateRnRPage.getBudgetWarningMessageOnFooter());
-      flag = true;
-    }
-    assertEquals(flag, initiateRnRPage.isBudgetWarningIconDisplayed());
-    assertEquals(flag, initiateRnRPage.isBudgetWarningMessageDisplayed());
-    assertEquals(flag, initiateRnRPage.isBudgetWarningIconOnFooterDisplayed());
-    assertEquals(flag, initiateRnRPage.isBudgetWarningMessageOnFooterDisplayed());
-  }
-
   @AfterMethod(groups = "requisition")
   public void tearDown() throws SQLException {
     testWebDriver.sleep(500);
     if (!testWebDriver.getElementById("username").isDisplayed()) {
-      HomePage homePage = PageFactory.getHomePage(testWebDriver);
+      HomePage homePage = PageObjectFactory.getHomePage(testWebDriver);
       homePage.logout(baseUrlGlobal);
       dbWrapper.deleteData();
       dbWrapper.closeConnection();

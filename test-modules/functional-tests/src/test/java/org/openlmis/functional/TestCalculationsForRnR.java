@@ -13,10 +13,7 @@
 package org.openlmis.functional;
 
 import org.openlmis.UiUtils.TestCaseHelper;
-import org.openlmis.pageobjects.ApprovePage;
-import org.openlmis.pageobjects.HomePage;
-import org.openlmis.pageobjects.InitiateRnRPage;
-import org.openlmis.pageobjects.LoginPage;
+import org.openlmis.pageobjects.*;
 import org.openlmis.pageobjects.edi.ConvertOrderPage;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
@@ -49,9 +46,9 @@ public class TestCalculationsForRnR extends TestCaseHelper {
     List<String> rightsList = asList("CREATE_REQUISITION", "VIEW_REQUISITION", "AUTHORIZE_REQUISITION", "APPROVE_REQUISITION");
     setupTestDataToInitiateRnR(true, program, userSIC, "200", rightsList);
     dbWrapper.updateFieldValue("products", "fullSupply", "true", "code", "P11");
-    loginPage = PageFactory.getLoginPage(testWebDriver, baseUrlGlobal);
-    homePage = PageFactory.getHomePage(testWebDriver);
-    initiateRnRPage = PageFactory.getInitiateRnRPage(testWebDriver);
+    loginPage = PageObjectFactory.getLoginPage(testWebDriver, baseUrlGlobal);
+    homePage = PageObjectFactory.getHomePage(testWebDriver);
+    initiateRnRPage = PageObjectFactory.getInitiateRnRPage(testWebDriver);
   }
 
   @Test(groups = "requisition")
@@ -922,7 +919,7 @@ public class TestCalculationsForRnR extends TestCaseHelper {
   public void tearDown() throws SQLException {
     testWebDriver.sleep(500);
     if (!testWebDriver.getElementById("username").isDisplayed()) {
-      HomePage homePage = PageFactory.getHomePage(testWebDriver);
+      HomePage homePage = PageObjectFactory.getHomePage(testWebDriver);
       homePage.logout(baseUrlGlobal);
       dbWrapper.deleteData();
       dbWrapper.closeConnection();

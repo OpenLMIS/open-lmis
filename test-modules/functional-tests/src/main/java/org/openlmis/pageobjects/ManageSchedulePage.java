@@ -113,7 +113,7 @@ public class ManageSchedulePage extends Page {
     addPeriodButton.click();
     testWebDriver.sleep(1500);
     testWebDriver.waitForElementToAppear(namePeriod);
-    return new PeriodsPage(testWebDriver);
+    return PageObjectFactory.getPeriodsPage(testWebDriver);
   }
 
   public void enterEditScheduleDetails(String code, String name, String desc) {

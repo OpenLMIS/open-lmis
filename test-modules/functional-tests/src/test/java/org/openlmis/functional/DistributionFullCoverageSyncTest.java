@@ -65,7 +65,7 @@ public class DistributionFullCoverageSyncTest extends TestCaseHelper {
     dbWrapper.insertProductWithGroup("Product6", "ProductName6", fullCoverageData.get(PRODUCT_GROUP_CODE), true);
     dbWrapper.insertProgramProduct("Product5", fullCoverageData.get(VACCINES_PROGRAM), "10", "false");
     dbWrapper.insertProgramProduct("Product6", fullCoverageData.get(VACCINES_PROGRAM), "10", "true");
-    loginPage = PageFactory.getLoginPage(testWebDriver, baseUrlGlobal);
+    loginPage = PageObjectFactory.getLoginPage(testWebDriver, baseUrlGlobal);
   }
 
   @Test(groups = {"distribution"})
@@ -272,7 +272,7 @@ public class DistributionFullCoverageSyncTest extends TestCaseHelper {
   }
 
   public void fillEpiInventoryWithOnlyDeliveredQuantity(String deliveredQuantity1, String deliveredQuantity2, String deliveredQuantity3) {
-    EpiInventoryPage epiInventoryPage = PageFactory.getEpiInventoryPage(testWebDriver);
+    EpiInventoryPage epiInventoryPage = PageObjectFactory.getEpiInventoryPage(testWebDriver);
     epiInventoryPage.applyNRToAll();
     epiInventoryPage.fillDeliveredQuantity(1, deliveredQuantity1);
     epiInventoryPage.fillDeliveredQuantity(2, deliveredQuantity2);
@@ -281,7 +281,7 @@ public class DistributionFullCoverageSyncTest extends TestCaseHelper {
 
   private void verifyEnableStatusOfFields(boolean femaleHealthCenterFieldStatus, boolean femaleMobileBrigadeFieldStatus,
                                           boolean maleHealthCenterFieldStatus, boolean maleMobileBrigadeFieldStatus) {
-    FullCoveragePage fullCoveragePage = PageFactory.getFullCoveragePage(testWebDriver);
+    FullCoveragePage fullCoveragePage = PageObjectFactory.getFullCoveragePage(testWebDriver);
     assertEquals(femaleHealthCenterFieldStatus, fullCoveragePage.getStatusForField("femaleHealthCenter"));
     assertEquals(femaleMobileBrigadeFieldStatus, fullCoveragePage.getStatusForField("femaleMobileBrigade"));
     assertEquals(maleHealthCenterFieldStatus, fullCoveragePage.getStatusForField("maleHealthCenter"));
@@ -290,7 +290,7 @@ public class DistributionFullCoverageSyncTest extends TestCaseHelper {
 
   private void verifyDataOnFullCoveragePage(String femaleHealthCenterValue, String femaleMobileBrigadeValue,
                                             String maleHealthCenterValue, String maleMobileBrigadeValue) {
-    FullCoveragePage fullCoveragePage = PageFactory.getFullCoveragePage(testWebDriver);
+    FullCoveragePage fullCoveragePage = PageObjectFactory.getFullCoveragePage(testWebDriver);
     assertEquals(femaleHealthCenterValue, fullCoveragePage.getValueForField("femaleHealthCenter"));
     assertEquals(femaleMobileBrigadeValue, fullCoveragePage.getValueForField("femaleMobileBrigade"));
     assertEquals(maleHealthCenterValue, fullCoveragePage.getValueForField("maleHealthCenter"));
@@ -305,7 +305,7 @@ public class DistributionFullCoverageSyncTest extends TestCaseHelper {
   public void tearDown() throws SQLException {
     testWebDriver.sleep(500);
     if (!testWebDriver.getElementById("username").isDisplayed()) {
-      HomePage homePage = PageFactory.getHomePage(testWebDriver);
+      HomePage homePage = PageObjectFactory.getHomePage(testWebDriver);
       homePage.logout(baseUrlGlobal);
       dbWrapper.deleteData();
       dbWrapper.closeConnection();

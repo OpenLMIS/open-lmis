@@ -24,7 +24,6 @@ public class ManageBudget extends TestCaseHelper {
   public static final String password = "Admin123";
 
   public LoginPage loginPage;
-  InitiateRnR initiateRnR;
   InitiateRnRPage initiateRnRPage;
 
 
@@ -35,9 +34,8 @@ public class ManageBudget extends TestCaseHelper {
     setUpData(program, userSIC);
     dbWrapper.deleteTable("processing_periods");
     dbWrapper.insertCurrentPeriod("current Period", "current Period", 1, "M");
-    loginPage = PageFactory.getLoginPage(testWebDriver, baseUrlGlobal);
-    initiateRnR = PageFactory.getInitiateRnR();
-    initiateRnRPage = PageFactory.getInitiateRnRPage(testWebDriver);
+    loginPage = PageObjectFactory.getLoginPage(testWebDriver, baseUrlGlobal);
+    initiateRnRPage = PageObjectFactory.getInitiateRnRPage(testWebDriver);
   }
 
   @Test(groups = {"requisition"})
@@ -53,21 +51,21 @@ public class ManageBudget extends TestCaseHelper {
 
     enterDetailsInRnRForFirstProduct(100, 50, 50);
 
-    initiateRnR.verifyBudgetAmountPresentOnFooter("$200.00");
-    initiateRnR.checkWhetherBudgetExceedWarningPresent(false);
+    initiateRnRPage.verifyBudgetAmountPresentOnFooter("$200.00");
+    initiateRnRPage.checkWhetherBudgetExceedWarningPresent(false);
     initiateRnRPage.saveRnR();
 
     enterDetailsInRnRForFirstProduct(100, 100, 200);
     initiateRnRPage.clickSubmitButton();
     initiateRnRPage.clickOk();
-    initiateRnR.verifyBudgetAmountPresentOnFooter("$200.00");
-    initiateRnR.checkWhetherBudgetExceedWarningPresent(true);
+    initiateRnRPage.verifyBudgetAmountPresentOnFooter("$200.00");
+    initiateRnRPage.checkWhetherBudgetExceedWarningPresent(true);
 
     initiateRnRPage.enterValueIfNotNull(9, "requestedQuantityFirstProduct");
     initiateRnRPage.enterExplanationReason();
     initiateRnRPage.clickNonFullSupplyTab();
-    initiateRnR.verifyBudgetAmountPresentOnFooter("$200.00");
-    initiateRnR.checkWhetherBudgetExceedWarningPresent(false);
+    initiateRnRPage.verifyBudgetAmountPresentOnFooter("$200.00");
+    initiateRnRPage.checkWhetherBudgetExceedWarningPresent(false);
 
     initiateRnRPage.authorizeRnR();
     initiateRnRPage.clickOk();
@@ -75,15 +73,15 @@ public class ManageBudget extends TestCaseHelper {
     ApprovePage approvePage = homePage.navigateToApprove();
     approvePage.clickRequisitionPresentForApproval();
     approvePage.editFullSupplyApproveQuantity("200");
-    initiateRnR.verifyBudgetAmountPresentOnFooter("$200.00");
-    initiateRnR.checkWhetherBudgetExceedWarningPresent(true);
+    initiateRnRPage.verifyBudgetAmountPresentOnFooter("$200.00");
+    initiateRnRPage.checkWhetherBudgetExceedWarningPresent(true);
 
     approvePage.clickApproveButton();
     approvePage.clickOk();
 
     viewRequisition();
-    initiateRnR.verifyBudgetAmountPresentOnFooter("$200.00");
-    initiateRnR.checkWhetherBudgetExceedWarningPresent(true);
+    initiateRnRPage.verifyBudgetAmountPresentOnFooter("$200.00");
+    initiateRnRPage.checkWhetherBudgetExceedWarningPresent(true);
   }
 
   @Test(groups = {"requisition"})
@@ -97,33 +95,33 @@ public class ManageBudget extends TestCaseHelper {
 
     enterDetailsInRnRForFirstProduct(0, 70, 60);
 
-    initiateRnR.verifyBudgetAmountNotAllocated();
-    initiateRnR.checkWhetherBudgetExceedWarningPresent(false);
+    initiateRnRPage.verifyBudgetAmountNotAllocated();
+    initiateRnRPage.checkWhetherBudgetExceedWarningPresent(false);
 
     initiateRnRPage.clickSubmitButton();
     initiateRnRPage.clickOk();
 
-    initiateRnR.verifyBudgetAmountNotAllocated();
-    initiateRnR.checkWhetherBudgetExceedWarningPresent(false);
+    initiateRnRPage.verifyBudgetAmountNotAllocated();
+    initiateRnRPage.checkWhetherBudgetExceedWarningPresent(false);
 
     initiateRnRPage.clickNonFullSupplyTab();
-    initiateRnR.verifyBudgetAmountNotAllocated();
-    initiateRnR.checkWhetherBudgetExceedWarningPresent(false);
+    initiateRnRPage.verifyBudgetAmountNotAllocated();
+    initiateRnRPage.checkWhetherBudgetExceedWarningPresent(false);
 
     initiateRnRPage.authorizeRnR();
     initiateRnRPage.clickOk();
 
     ApprovePage approvePage = homePage.navigateToApprove();
     approvePage.clickRequisitionPresentForApproval();
-    initiateRnR.verifyBudgetAmountNotAllocated();
-    initiateRnR.checkWhetherBudgetExceedWarningPresent(false);
+    initiateRnRPage.verifyBudgetAmountNotAllocated();
+    initiateRnRPage.checkWhetherBudgetExceedWarningPresent(false);
 
     approvePage.clickApproveButton();
     approvePage.clickOk();
 
     viewRequisition();
-    initiateRnR.verifyBudgetAmountNotAllocated();
-    initiateRnR.checkWhetherBudgetExceedWarningPresent(false);
+    initiateRnRPage.verifyBudgetAmountNotAllocated();
+    initiateRnRPage.checkWhetherBudgetExceedWarningPresent(false);
   }
 
   @Test(groups = {"requisition"})
@@ -140,32 +138,32 @@ public class ManageBudget extends TestCaseHelper {
     enterDetailsInRnRForFirstProduct(0, 100, 0);
     initiateRnRPage.enterValueIfNotNull(90, "newPatientFirstProduct");
 
-    initiateRnR.verifyBudgetNotDisplayed();
-    initiateRnR.checkWhetherBudgetExceedWarningPresent(false);
+    initiateRnRPage.verifyBudgetNotDisplayed();
+    initiateRnRPage.checkWhetherBudgetExceedWarningPresent(false);
 
     initiateRnRPage.clickSubmitButton();
     initiateRnRPage.clickOk();
-    initiateRnR.verifyBudgetNotDisplayed();
-    initiateRnR.checkWhetherBudgetExceedWarningPresent(false);
+    initiateRnRPage.verifyBudgetNotDisplayed();
+    initiateRnRPage.checkWhetherBudgetExceedWarningPresent(false);
 
     initiateRnRPage.clickNonFullSupplyTab();
-    initiateRnR.verifyBudgetNotDisplayed();
-    initiateRnR.checkWhetherBudgetExceedWarningPresent(false);
+    initiateRnRPage.verifyBudgetNotDisplayed();
+    initiateRnRPage.checkWhetherBudgetExceedWarningPresent(false);
 
     initiateRnRPage.authorizeRnR();
     initiateRnRPage.clickOk();
 
     ApprovePage approvePage = homePage.navigateToApprove();
     approvePage.clickRequisitionPresentForApproval();
-    initiateRnR.verifyBudgetNotDisplayed();
-    initiateRnR.checkWhetherBudgetExceedWarningPresent(false);
+    initiateRnRPage.verifyBudgetNotDisplayed();
+    initiateRnRPage.checkWhetherBudgetExceedWarningPresent(false);
 
     approvePage.clickApproveButton();
     approvePage.clickOk();
 
     viewRequisition();
-    initiateRnR.verifyBudgetNotDisplayed();
-    initiateRnR.checkWhetherBudgetExceedWarningPresent(false);
+    initiateRnRPage.verifyBudgetNotDisplayed();
+    initiateRnRPage.checkWhetherBudgetExceedWarningPresent(false);
   }
 
 
@@ -182,32 +180,32 @@ public class ManageBudget extends TestCaseHelper {
 
     enterDetailsInRnRForFirstProduct(100, 100, 200);
 
-    initiateRnR.verifyBudgetNotDisplayed();
-    initiateRnR.checkWhetherBudgetExceedWarningPresent(false);
+    initiateRnRPage.verifyBudgetNotDisplayed();
+    initiateRnRPage.checkWhetherBudgetExceedWarningPresent(false);
 
     initiateRnRPage.clickSubmitButton();
     initiateRnRPage.clickOk();
-    initiateRnR.verifyBudgetNotDisplayed();
-    initiateRnR.checkWhetherBudgetExceedWarningPresent(false);
+    initiateRnRPage.verifyBudgetNotDisplayed();
+    initiateRnRPage.checkWhetherBudgetExceedWarningPresent(false);
 
     initiateRnRPage.clickNonFullSupplyTab();
-    initiateRnR.verifyBudgetNotDisplayed();
-    initiateRnR.checkWhetherBudgetExceedWarningPresent(false);
+    initiateRnRPage.verifyBudgetNotDisplayed();
+    initiateRnRPage.checkWhetherBudgetExceedWarningPresent(false);
 
     initiateRnRPage.authorizeRnR();
     initiateRnRPage.clickOk();
 
     ApprovePage approvePage = homePage.navigateToApprove();
     approvePage.clickRequisitionPresentForApproval();
-    initiateRnR.verifyBudgetNotDisplayed();
-    initiateRnR.checkWhetherBudgetExceedWarningPresent(false);
+    initiateRnRPage.verifyBudgetNotDisplayed();
+    initiateRnRPage.checkWhetherBudgetExceedWarningPresent(false);
 
     approvePage.clickApproveButton();
     approvePage.clickOk();
 
     viewRequisition();
-    initiateRnR.verifyBudgetNotDisplayed();
-    initiateRnR.checkWhetherBudgetExceedWarningPresent(false);
+    initiateRnRPage.verifyBudgetNotDisplayed();
+    initiateRnRPage.checkWhetherBudgetExceedWarningPresent(false);
   }
 
   @Test(groups = {"requisition"})
@@ -221,32 +219,32 @@ public class ManageBudget extends TestCaseHelper {
 
     enterDetailsInRnRForFirstProduct(100, 100, 0);
 
-    initiateRnR.verifyBudgetNotDisplayed();
-    initiateRnR.checkWhetherBudgetExceedWarningPresent(false);
+    initiateRnRPage.verifyBudgetNotDisplayed();
+    initiateRnRPage.checkWhetherBudgetExceedWarningPresent(false);
 
     initiateRnRPage.clickSubmitButton();
     initiateRnRPage.clickOk();
-    initiateRnR.verifyBudgetNotDisplayed();
-    initiateRnR.checkWhetherBudgetExceedWarningPresent(false);
+    initiateRnRPage.verifyBudgetNotDisplayed();
+    initiateRnRPage.checkWhetherBudgetExceedWarningPresent(false);
 
     initiateRnRPage.clickNonFullSupplyTab();
-    initiateRnR.verifyBudgetNotDisplayed();
-    initiateRnR.checkWhetherBudgetExceedWarningPresent(false);
+    initiateRnRPage.verifyBudgetNotDisplayed();
+    initiateRnRPage.checkWhetherBudgetExceedWarningPresent(false);
 
     initiateRnRPage.authorizeRnR();
     initiateRnRPage.clickOk();
 
     ApprovePage approvePage = homePage.navigateToApprove();
     approvePage.clickRequisitionPresentForApproval();
-    initiateRnR.verifyBudgetNotDisplayed();
-    initiateRnR.checkWhetherBudgetExceedWarningPresent(false);
+    initiateRnRPage.verifyBudgetNotDisplayed();
+    initiateRnRPage.checkWhetherBudgetExceedWarningPresent(false);
 
     approvePage.clickApproveButton();
     approvePage.clickOk();
 
     viewRequisition();
-    initiateRnR.verifyBudgetNotDisplayed();
-    initiateRnR.checkWhetherBudgetExceedWarningPresent(false);
+    initiateRnRPage.verifyBudgetNotDisplayed();
+    initiateRnRPage.checkWhetherBudgetExceedWarningPresent(false);
   }
 
   @Test(groups = {"requisition"})
@@ -263,32 +261,32 @@ public class ManageBudget extends TestCaseHelper {
 
     enterDetailsInRnRForFirstProduct(100, 100, 100);
 
-    initiateRnR.verifyBudgetAmountNotAllocated();
-    initiateRnR.checkWhetherBudgetExceedWarningPresent(false);
+    initiateRnRPage.verifyBudgetAmountNotAllocated();
+    initiateRnRPage.checkWhetherBudgetExceedWarningPresent(false);
 
     initiateRnRPage.clickSubmitButton();
     initiateRnRPage.clickOk();
-    initiateRnR.verifyBudgetAmountNotAllocated();
-    initiateRnR.checkWhetherBudgetExceedWarningPresent(false);
+    initiateRnRPage.verifyBudgetAmountNotAllocated();
+    initiateRnRPage.checkWhetherBudgetExceedWarningPresent(false);
 
     initiateRnRPage.clickNonFullSupplyTab();
-    initiateRnR.verifyBudgetAmountNotAllocated();
-    initiateRnR.checkWhetherBudgetExceedWarningPresent(false);
+    initiateRnRPage.verifyBudgetAmountNotAllocated();
+    initiateRnRPage.checkWhetherBudgetExceedWarningPresent(false);
 
     initiateRnRPage.authorizeRnR();
     initiateRnRPage.clickOk();
 
     ApprovePage approvePage = homePage.navigateToApprove();
     approvePage.clickRequisitionPresentForApproval();
-    initiateRnR.verifyBudgetAmountNotAllocated();
-    initiateRnR.checkWhetherBudgetExceedWarningPresent(false);
+    initiateRnRPage.verifyBudgetAmountNotAllocated();
+    initiateRnRPage.checkWhetherBudgetExceedWarningPresent(false);
 
     approvePage.clickApproveButton();
     approvePage.clickOk();
 
     viewRequisition();
-    initiateRnR.verifyBudgetAmountNotAllocated();
-    initiateRnR.checkWhetherBudgetExceedWarningPresent(false);
+    initiateRnRPage.verifyBudgetAmountNotAllocated();
+    initiateRnRPage.checkWhetherBudgetExceedWarningPresent(false);
 
     homePage.navigateHomePage();
     homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Regular");
@@ -296,8 +294,8 @@ public class ManageBudget extends TestCaseHelper {
 
     enterDetailsInRnRForFirstProduct(100, 100, 10);
     initiateRnRPage.enterValueIfNotNull(90, "newPatientFirstProduct");
-    initiateRnR.verifyBudgetAmountPresentOnFooter("$200.00");
-    initiateRnR.checkWhetherBudgetExceedWarningPresent(true);
+    initiateRnRPage.verifyBudgetAmountPresentOnFooter("$200.00");
+    initiateRnRPage.checkWhetherBudgetExceedWarningPresent(true);
   }
 
   @Test(groups = {"requisition"})
@@ -314,37 +312,37 @@ public class ManageBudget extends TestCaseHelper {
     enterDetailsInRnRForFirstProduct(100, 50, 90);
     initiateRnRPage.saveRnR();
 
-    initiateRnR.verifyBudgetAmountPresentOnFooter("$200.00");
-    initiateRnR.checkWhetherBudgetExceedWarningPresent(true);
+    initiateRnRPage.verifyBudgetAmountPresentOnFooter("$200.00");
+    initiateRnRPage.checkWhetherBudgetExceedWarningPresent(true);
     dbWrapper.updateFieldValue("budget_line_items", "allocatedBudget", "300", null, null);
     testWebDriver.refresh();
 
-    initiateRnR.verifyBudgetAmountPresentOnFooter("$200.00");
-    initiateRnR.checkWhetherBudgetExceedWarningPresent(true);
+    initiateRnRPage.verifyBudgetAmountPresentOnFooter("$200.00");
+    initiateRnRPage.checkWhetherBudgetExceedWarningPresent(true);
 
     initiateRnRPage.clickSubmitButton();
     initiateRnRPage.clickOk();
-    initiateRnR.verifyBudgetAmountPresentOnFooter("$200.00");
-    initiateRnR.checkWhetherBudgetExceedWarningPresent(true);
+    initiateRnRPage.verifyBudgetAmountPresentOnFooter("$200.00");
+    initiateRnRPage.checkWhetherBudgetExceedWarningPresent(true);
 
     initiateRnRPage.clickNonFullSupplyTab();
-    initiateRnR.verifyBudgetAmountPresentOnFooter("$200.00");
-    initiateRnR.checkWhetherBudgetExceedWarningPresent(true);
+    initiateRnRPage.verifyBudgetAmountPresentOnFooter("$200.00");
+    initiateRnRPage.checkWhetherBudgetExceedWarningPresent(true);
 
     initiateRnRPage.authorizeRnR();
     initiateRnRPage.clickOk();
 
     ApprovePage approvePage = homePage.navigateToApprove();
     approvePage.clickRequisitionPresentForApproval();
-    initiateRnR.verifyBudgetAmountPresentOnFooter("$200.00");
-    initiateRnR.checkWhetherBudgetExceedWarningPresent(true);
+    initiateRnRPage.verifyBudgetAmountPresentOnFooter("$200.00");
+    initiateRnRPage.checkWhetherBudgetExceedWarningPresent(true);
 
     approvePage.clickApproveButton();
     approvePage.clickOk();
 
     viewRequisition();
-    initiateRnR.verifyBudgetAmountPresentOnFooter("$200.00");
-    initiateRnR.checkWhetherBudgetExceedWarningPresent(true);
+    initiateRnRPage.verifyBudgetAmountPresentOnFooter("$200.00");
+    initiateRnRPage.checkWhetherBudgetExceedWarningPresent(true);
   }
 
   @Test(groups = {"requisition"})
@@ -363,32 +361,32 @@ public class ManageBudget extends TestCaseHelper {
 
     enterDetailsInRnRForFirstProduct(100, 50, 50);
 
-    initiateRnR.verifyBudgetAmountPresentOnFooter("$200.00");
-    initiateRnR.checkWhetherBudgetExceedWarningPresent(false);
+    initiateRnRPage.verifyBudgetAmountPresentOnFooter("$200.00");
+    initiateRnRPage.checkWhetherBudgetExceedWarningPresent(false);
 
     initiateRnRPage.clickNonFullSupplyTab();
     initiateRnRPage.addNonFullSupplyLineItems("120", "reason", "antibiotic", "P11", "Antibiotics");
-    initiateRnR.verifyBudgetAmountPresentOnFooter("$200.00");
-    initiateRnR.checkWhetherBudgetExceedWarningPresent(true);
+    initiateRnRPage.verifyBudgetAmountPresentOnFooter("$200.00");
+    initiateRnRPage.checkWhetherBudgetExceedWarningPresent(true);
 
     initiateRnRPage.clickRegimenTab();
     initiateRnRPage.enterValuesOnRegimenScreen(3, 1, "8");
     initiateRnRPage.enterValuesOnRegimenScreen(4, 1, "9");
     initiateRnRPage.enterValuesOnRegimenScreen(5, 1, "10");
     initiateRnRPage.enterValuesOnRegimenScreen(6, 1, "11");
-    initiateRnR.verifyBudgetAmountPresentOnFooter("$200.00");
-    initiateRnR.checkWhetherBudgetExceedWarningPresent(true);
+    initiateRnRPage.verifyBudgetAmountPresentOnFooter("$200.00");
+    initiateRnRPage.checkWhetherBudgetExceedWarningPresent(true);
 
     initiateRnRPage.clickSubmitButton();
     initiateRnRPage.clickOk();
     initiateRnRPage.clickFullSupplyTab();
     initiateRnRPage.skipAllProduct();
-    initiateRnR.verifyBudgetAmountPresentOnFooter("$200.00");
-    initiateRnR.checkWhetherBudgetExceedWarningPresent(false);
+    initiateRnRPage.verifyBudgetAmountPresentOnFooter("$200.00");
+    initiateRnRPage.checkWhetherBudgetExceedWarningPresent(false);
     initiateRnRPage.clickNonFullSupplyTab();
     initiateRnRPage.enterValueIfNotNull(200, "requestedQuantityFirstProduct");
-    initiateRnR.verifyBudgetAmountPresentOnFooter("$200.00");
-    initiateRnR.checkWhetherBudgetExceedWarningPresent(true);
+    initiateRnRPage.verifyBudgetAmountPresentOnFooter("$200.00");
+    initiateRnRPage.checkWhetherBudgetExceedWarningPresent(true);
 
     initiateRnRPage.authorizeRnR();
     initiateRnRPage.clickOk();
@@ -396,15 +394,15 @@ public class ManageBudget extends TestCaseHelper {
     ApprovePage approvePage = homePage.navigateToApprove();
     approvePage.clickRequisitionPresentForApproval();
     approvePage.editNonFullSupplyApproveQuantity("50");
-    initiateRnR.verifyBudgetAmountPresentOnFooter("$200.00");
-    initiateRnR.checkWhetherBudgetExceedWarningPresent(false);
+    initiateRnRPage.verifyBudgetAmountPresentOnFooter("$200.00");
+    initiateRnRPage.checkWhetherBudgetExceedWarningPresent(false);
 
     approvePage.clickApproveButton();
     approvePage.clickOk();
 
     viewRequisition();
-    initiateRnR.verifyBudgetAmountPresentOnFooter("$200.00");
-    initiateRnR.checkWhetherBudgetExceedWarningPresent(false);
+    initiateRnRPage.verifyBudgetAmountPresentOnFooter("$200.00");
+    initiateRnRPage.checkWhetherBudgetExceedWarningPresent(false);
   }
 
   private void setUpData(String program, String userSIC) throws SQLException {
@@ -430,7 +428,7 @@ public class ManageBudget extends TestCaseHelper {
   }
 
   public void viewRequisition() {
-    HomePage homePage = PageFactory.getHomePage(testWebDriver);
+    HomePage homePage = PageObjectFactory.getHomePage(testWebDriver);
     ViewRequisitionPage viewRequisitionPage = homePage.navigateViewRequisition();
     viewRequisitionPage.enterViewSearchCriteria();
     viewRequisitionPage.clickSearch();
@@ -441,7 +439,7 @@ public class ManageBudget extends TestCaseHelper {
   public void tearDown() throws SQLException {
     testWebDriver.sleep(500);
     if (!testWebDriver.getElementById("username").isDisplayed()) {
-      HomePage homePage = PageFactory.getHomePage(testWebDriver);
+      HomePage homePage = PageObjectFactory.getHomePage(testWebDriver);
       homePage.logout(baseUrlGlobal);
       dbWrapper.deleteData();
       dbWrapper.closeConnection();

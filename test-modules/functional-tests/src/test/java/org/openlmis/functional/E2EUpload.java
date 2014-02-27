@@ -13,10 +13,7 @@ package org.openlmis.functional;
 
 import org.openlmis.UiUtils.CaptureScreenshotOnFailureListener;
 import org.openlmis.UiUtils.TestCaseHelper;
-import org.openlmis.pageobjects.HomePage;
-import org.openlmis.pageobjects.LoginPage;
-import org.openlmis.pageobjects.RolesPage;
-import org.openlmis.pageobjects.UploadPage;
+import org.openlmis.pageobjects.*;
 import org.testng.annotations.*;
 
 import java.io.FileNotFoundException;
@@ -42,9 +39,9 @@ public class E2EUpload extends TestCaseHelper {
   @BeforeMethod(groups = {"admin"})
   public void setUp() throws InterruptedException, SQLException, IOException {
     super.setup();
-    loginPage = PageFactory.getLoginPage(testWebDriver, baseUrlGlobal);
-    uploadPage = PageFactory.getploadPage(testWebDriver);
-    rolesPage = PageFactory.getRolesPage(testWebDriver);
+    loginPage = PageObjectFactory.getLoginPage(testWebDriver, baseUrlGlobal);
+    uploadPage = PageObjectFactory.getUploadPage(testWebDriver);
+    rolesPage = PageObjectFactory.getRolesPage(testWebDriver);
   }
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function-Positive")
@@ -743,7 +740,7 @@ public class E2EUpload extends TestCaseHelper {
 
   @AfterMethod(groups = {"admin"})
   public void tearDown() throws SQLException {
-    HomePage homePage = PageFactory.getHomePage(testWebDriver);
+    HomePage homePage = PageObjectFactory.getHomePage(testWebDriver);
     homePage.logout(baseUrlGlobal);
     dbWrapper.deleteData();
     dbWrapper.closeConnection();

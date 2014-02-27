@@ -191,7 +191,7 @@ public class HomePage extends Page {
   public LoginPage logout(String baseUrl) {
     testWebDriver.waitForElementToAppear(logoutLink);
     logoutLink.click();
-    return new LoginPage(testWebDriver, baseUrl);
+    return PageObjectFactory.getLoginPage(testWebDriver, baseUrl);
   }
 
   public ManageFacilityPage navigateManageFacility() {
@@ -231,7 +231,7 @@ public class HomePage extends Page {
     testWebDriver.keyPress(RnRTemplateConfigTab);
     testWebDriver.waitForElementToAppear(testWebDriver.getElementById(programme));
     testWebDriver.getElementById(programme).click();
-    return new TemplateConfigPage(testWebDriver);
+    return PageObjectFactory.getTemplateConfigPage(testWebDriver);
   }
 
   public ConfigureEDIPage navigateEdiScreen() {
@@ -241,7 +241,7 @@ public class HomePage extends Page {
     testWebDriver.keyPress(TemplateConfigTab);
     testWebDriver.waitForElementToAppear(ediFileTab);
     testWebDriver.keyPress(ediFileTab);
-    return new ConfigureEDIPage(testWebDriver);
+    return PageObjectFactory.getConfigureEdiPage(testWebDriver);
   }
 
   public RegimenTemplateConfigPage navigateToRegimenConfigTemplate() {
@@ -252,7 +252,7 @@ public class HomePage extends Page {
     testWebDriver.waitForElementToAppear(RegimenTemplateConfigTab);
     testWebDriver.keyPress(RegimenTemplateConfigTab);
     testWebDriver.waitForElementToAppear(RegimenTemplateHeader);
-    return new RegimenTemplateConfigPage(testWebDriver);
+    return PageObjectFactory.getRegimenTemplateConfigPage(testWebDriver);
   }
 
   public String navigateAndInitiateRnr(String program) {
@@ -290,7 +290,7 @@ public class HomePage extends Page {
     testWebDriver.waitForElementToAppear(proceedButton);
     proceedButton.click();
     testWebDriver.sleep(1000);
-    return new InitiateRnRPage(testWebDriver);
+    return PageObjectFactory.getInitiateRnRPage(testWebDriver);
   }
 
   public ViewRequisitionPage navigateViewRequisition() {
@@ -300,14 +300,14 @@ public class HomePage extends Page {
     testWebDriver.waitForElementToAppear(viewRequisitionMenuItem);
     testWebDriver.keyPress(viewRequisitionMenuItem);
     testWebDriver.waitForElementToAppear(viewRequisitionHeader);
-    return new ViewRequisitionPage(testWebDriver);
+    return PageObjectFactory.getViewRequisitionPage(testWebDriver);
   }
 
   public ReportPage navigateReportScreen() {
     testWebDriver.waitForElementToAppear(reportMenuItem);
     testWebDriver.keyPress(reportMenuItem);
     testWebDriver.waitForElementToAppear(reportsTitle);
-    return new ReportPage(testWebDriver);
+    return PageObjectFactory.getReportPage(testWebDriver);
   }
 
   public ManageFacilityPage navigateSearchFacility() {
@@ -327,7 +327,7 @@ public class HomePage extends Page {
     testWebDriver.keyPress(manageLink);
     testWebDriver.waitForElementToAppear(rolesTab);
     testWebDriver.keyPress(rolesTab);
-    return new RolesPage(testWebDriver);
+    return PageObjectFactory.getRolesPage(testWebDriver);
   }
 
   public UploadPage navigateUploads() {
@@ -335,7 +335,7 @@ public class HomePage extends Page {
     testWebDriver.keyPress(AdministrationMenuItem);
     testWebDriver.waitForElementToAppear(uploadLink);
     uploadLink.click();
-    return new UploadPage(testWebDriver);
+    return PageObjectFactory.getUploadPage(testWebDriver);
   }
 
   public ManageSchedulePage navigateToSchedule() {
@@ -345,7 +345,7 @@ public class HomePage extends Page {
     testWebDriver.keyPress(manageLink);
     testWebDriver.waitForElementToAppear(schedulesTab);
     schedulesTab.click();
-    return new ManageSchedulePage(testWebDriver);
+    return PageObjectFactory.getManageSchedulePage(testWebDriver);
   }
 
   public UserPage navigateToUser() {
@@ -355,7 +355,7 @@ public class HomePage extends Page {
     testWebDriver.keyPress(manageLink);
     testWebDriver.waitForElementToAppear(usersTab);
     usersTab.click();
-    return new UserPage(testWebDriver);
+    return PageObjectFactory.getUserPage(testWebDriver);
   }
 
   public ApprovePage navigateToApprove() {
@@ -364,7 +364,7 @@ public class HomePage extends Page {
     testWebDriver.keyPress(requisitionMenuItem);
     testWebDriver.waitForElementToAppear(approveLink);
     testWebDriver.keyPress(approveLink);
-    return new ApprovePage(testWebDriver);
+    return PageObjectFactory.getApprovePage(testWebDriver);
   }
 
   public ConvertOrderPage navigateConvertToOrder() {
@@ -375,7 +375,7 @@ public class HomePage extends Page {
     testWebDriver.keyPress(convertToOrderMenuItem);
     testWebDriver.sleep(5000);
     testWebDriver.waitForElementToAppear(convertToOrderHeader);
-    return new ConvertOrderPage(testWebDriver);
+    return PageObjectFactory.getConvertOrderPage(testWebDriver);
   }
 
   public DistributionPage navigateToDistributionWhenOnline() {
@@ -384,7 +384,7 @@ public class HomePage extends Page {
     testWebDriver.waitForElementToAppear(manageDistributionMenuItem);
     testWebDriver.keyPress(manageDistributionMenuItem);
     testWebDriver.waitForElementToAppear(manageDistributionHeader);
-    return new DistributionPage(testWebDriver);
+    return PageObjectFactory.getDistributionPage(testWebDriver);
   }
 
   public DistributionPage navigateOfflineDistribution() {
@@ -392,7 +392,7 @@ public class HomePage extends Page {
     testWebDriver.keyPress(offlineDistributions);
     testWebDriver.waitForElementToAppear(manageDistributionMenuItem);
     testWebDriver.keyPress(manageDistributionMenuItem);
-    return new DistributionPage(testWebDriver);
+    return PageObjectFactory.getDistributionPage(testWebDriver);
   }
 
   public ProgramProductISAPage navigateProgramProductISA() {
@@ -403,14 +403,14 @@ public class HomePage extends Page {
     testWebDriver.waitForElementToAppear(programProductISAMenuItem);
     testWebDriver.keyPress(programProductISAMenuItem);
     testWebDriver.waitForElementToAppear(selectProgramSelectBox);
-    return new ProgramProductISAPage(testWebDriver);
+    return PageObjectFactory.getProgramProductIsaPage(testWebDriver);
   }
 
   public HomePage navigateHomePage() {
     testWebDriver.waitForElementToAppear(homeMenuItem);
     testWebDriver.keyPress(homeMenuItem);
     testWebDriver.sleep(500);
-    return new HomePage(testWebDriver);
+    return PageObjectFactory.getHomePage(testWebDriver);
   }
 
   public ViewOrdersPage navigateViewOrders() {
@@ -420,7 +420,7 @@ public class HomePage extends Page {
     testWebDriver.waitForElementToAppear(viewOrdersMenuItem);
     testWebDriver.keyPress(viewOrdersMenuItem);
     testWebDriver.waitForElementToAppear(viewOrdersHeader);
-    return new ViewOrdersPage(testWebDriver);
+    return PageObjectFactory.getViewOrdersPage(testWebDriver);
   }
 
   public String getErrorMessage() {
@@ -495,7 +495,7 @@ public class HomePage extends Page {
     testWebDriver.waitForElementToAppear(viewManagePODMenuItem);
     testWebDriver.keyPress(viewManagePODMenuItem);
     testWebDriver.waitForElementToAppear(viewManagePODHeader);
-    return new ManagePodPage(testWebDriver);
+    return PageObjectFactory.getManagePodPage(testWebDriver);
   }
 }
 

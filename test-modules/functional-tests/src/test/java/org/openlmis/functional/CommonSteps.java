@@ -20,6 +20,7 @@ import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.UiUtils.TestWebDriver;
 import org.openlmis.pageobjects.HomePage;
 import org.openlmis.pageobjects.LoginPage;
+import org.openlmis.pageobjects.PageObjectFactory;
 import org.openqa.selenium.JavascriptExecutor;
 
 import java.sql.SQLException;
@@ -33,19 +34,19 @@ public class CommonSteps extends TestCaseHelper {
 
   @And("^I logout$")
   public void logout() {
-    HomePage homePage = PageFactory.getHomePage(testWebDriver);
+    HomePage homePage = PageObjectFactory.getHomePage(testWebDriver);
     homePage.logout(baseUrlGlobal);
   }
 
   @And("^I am logged in as \"([^\"]*)\"$")
   public void login(String username) {
-    LoginPage loginPage = PageFactory.getLoginPage(testWebDriver, baseUrlGlobal);
+    LoginPage loginPage = PageObjectFactory.getLoginPage(testWebDriver, baseUrlGlobal);
     loginPage.loginAs(username, "Admin123");
   }
 
   @Given("^I am logged in as Admin$")
   public void adminLogin() {
-    LoginPage loginPage = PageFactory.getLoginPage(testWebDriver, baseUrlGlobal);
+    LoginPage loginPage = PageObjectFactory.getLoginPage(testWebDriver, baseUrlGlobal);
     loginPage.loginAs("Admin123", "Admin123");
   }
 
@@ -95,7 +96,7 @@ public class CommonSteps extends TestCaseHelper {
     }
     testWebDriver.sleep(500);
     if (!testWebDriver.getElementById("username").isDisplayed()) {
-      HomePage homePage = PageFactory.getHomePage(testWebDriver);
+      HomePage homePage = PageObjectFactory.getHomePage(testWebDriver);
       homePage.logout(baseUrlGlobal);
     }
     dbWrapper.deleteData();

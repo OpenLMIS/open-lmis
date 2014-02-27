@@ -53,8 +53,8 @@ public class ViewRequisition extends TestCaseHelper {
   @BeforeMethod(groups = "requisition")
   public void setUp() throws InterruptedException, SQLException, IOException {
     super.setup();
-    loginPage = PageFactory.getLoginPage(testWebDriver, baseUrlGlobal);
-    initiateRnRPage = PageFactory.getInitiateRnRPage(testWebDriver);
+    loginPage = PageObjectFactory.getLoginPage(testWebDriver, baseUrlGlobal);
+    initiateRnRPage = PageObjectFactory.getInitiateRnRPage(testWebDriver);
   }
 
   @When(
@@ -69,19 +69,19 @@ public class ViewRequisition extends TestCaseHelper {
 
   @When("^I access home page")
   public void accessHomePage() throws SQLException {
-    InitiateRnRPage initiateRnRPage = PageFactory.getInitiateRnRPage(testWebDriver);
+    InitiateRnRPage initiateRnRPage = PageObjectFactory.getInitiateRnRPage(testWebDriver);
     initiateRnRPage.clickHome();
   }
 
   @When("^I access view RnR screen$")
   public void accessViewRnRScreen() {
-    HomePage homePage = PageFactory.getHomePage(testWebDriver);
+    HomePage homePage = PageObjectFactory.getHomePage(testWebDriver);
     homePage.navigateViewRequisition();
   }
 
   @Then("^I should see elements on view requisition page$")
   public void shouldSeeElementsOnViewRequisitionPage() {
-    ViewRequisitionPage viewRequisitionPage = PageFactory.getViewRequisitionPage(testWebDriver);
+    ViewRequisitionPage viewRequisitionPage = PageObjectFactory.getViewRequisitionPage(testWebDriver);
     viewRequisitionPage.verifyElementsOnViewRequisitionScreen();
   }
 
@@ -92,25 +92,25 @@ public class ViewRequisition extends TestCaseHelper {
 
   @When("^I type view search criteria$")
   public void typeViewResultCriteria() throws SQLException {
-    ViewRequisitionPage viewRequisitionPage = PageFactory.getViewRequisitionPage(testWebDriver);
+    ViewRequisitionPage viewRequisitionPage = PageObjectFactory.getViewRequisitionPage(testWebDriver);
     viewRequisitionPage.enterViewSearchCriteria();
   }
 
   @When("^I click search$")
   public void clickSearch() throws SQLException {
-    ViewRequisitionPage viewRequisitionPage = PageFactory.getViewRequisitionPage(testWebDriver);
+    ViewRequisitionPage viewRequisitionPage = PageObjectFactory.getViewRequisitionPage(testWebDriver);
     viewRequisitionPage.clickSearch();
   }
 
   @When("^I access regimen tab for view requisition$")
   public void clickRegimenTab() throws SQLException {
-    ViewRequisitionPage viewRequisitionPage = PageFactory.getViewRequisitionPage(testWebDriver);
+    ViewRequisitionPage viewRequisitionPage = PageObjectFactory.getViewRequisitionPage(testWebDriver);
     viewRequisitionPage.clickRegimenTab();
   }
 
   @Then("^I should see no requisition found message$")
   public void shouldSeeNoRequisitionMessage() throws SQLException {
-    ViewRequisitionPage viewRequisitionPage = PageFactory.getViewRequisitionPage(testWebDriver);
+    ViewRequisitionPage viewRequisitionPage = PageObjectFactory.getViewRequisitionPage(testWebDriver);
     viewRequisitionPage.verifyNoRequisitionFound();
   }
 
@@ -121,19 +121,19 @@ public class ViewRequisition extends TestCaseHelper {
 
   @Then("^I should see requisition status as \"([^\"]*)\"$")
   public void verifyRequisitionStatus(String status) throws SQLException {
-    ViewRequisitionPage viewRequisitionPage = PageFactory.getViewRequisitionPage(testWebDriver);
+    ViewRequisitionPage viewRequisitionPage = PageObjectFactory.getViewRequisitionPage(testWebDriver);
     viewRequisitionPage.verifyStatus(status);
   }
 
   @When("^I click RnR List$")
   public void clickRnRList() throws SQLException {
-    ViewRequisitionPage viewRequisitionPage = PageFactory.getViewRequisitionPage(testWebDriver);
+    ViewRequisitionPage viewRequisitionPage = PageObjectFactory.getViewRequisitionPage(testWebDriver);
     viewRequisitionPage.clickRnRList();
   }
 
   @Then("^I verify total field$")
   public void verifyTotalField() throws SQLException {
-    ViewRequisitionPage viewRequisitionPage = PageFactory.getViewRequisitionPage(testWebDriver);
+    ViewRequisitionPage viewRequisitionPage = PageObjectFactory.getViewRequisitionPage(testWebDriver);
     viewRequisitionPage.verifyTotalFieldPostAuthorize();
   }
 
@@ -255,7 +255,7 @@ public class ViewRequisition extends TestCaseHelper {
                                            String patientsToInitiateTreatment,
                                            String patientsStoppedTreatment,
                                            String remarks) {
-    initiateRnRPage = PageFactory.getInitiateRnRPage(testWebDriver);
+    initiateRnRPage = PageObjectFactory.getInitiateRnRPage(testWebDriver);
     assertEquals(patientsOnTreatment, initiateRnRPage.getPatientsOnTreatmentValue());
     assertEquals(patientsToInitiateTreatment, initiateRnRPage.getPatientsToInitiateTreatmentValue());
     assertEquals(patientsStoppedTreatment, initiateRnRPage.getPatientsStoppedTreatmentValue());
@@ -297,7 +297,7 @@ public class ViewRequisition extends TestCaseHelper {
 
     homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Emergency");
     homePage.clickProceed();
-    InitiateRnRPage initiateRnRPage = PageFactory.getInitiateRnRPage(testWebDriver);
+    InitiateRnRPage initiateRnRPage = PageObjectFactory.getInitiateRnRPage(testWebDriver);
     initiateRnRPage.enterValueIfNotNull(1, "beginningBalanceFirstProduct");
     initiateRnRPage.enterValueIfNotNull(1, "quantityDispensedFirstProduct");
     initiateRnRPage.enterValueIfNotNull(2, "quantityReceivedFirstProduct");
@@ -379,7 +379,7 @@ public class ViewRequisition extends TestCaseHelper {
   public void tearDown() throws SQLException {
     testWebDriver.sleep(500);
     if (!testWebDriver.getElementById("username").isDisplayed()) {
-      HomePage homePage = PageFactory.getHomePage(testWebDriver);
+      HomePage homePage = PageObjectFactory.getHomePage(testWebDriver);
       homePage.logout(baseUrlGlobal);
       dbWrapper.deleteData();
       dbWrapper.closeConnection();
