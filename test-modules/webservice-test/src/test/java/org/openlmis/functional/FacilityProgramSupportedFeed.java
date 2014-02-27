@@ -13,10 +13,7 @@ package org.openlmis.functional;
 import org.apache.commons.lang3.StringUtils;
 import org.openlmis.UiUtils.HttpClient;
 import org.openlmis.UiUtils.ResponseEntity;
-import org.openlmis.pageobjects.HomePage;
-import org.openlmis.pageobjects.LoginPage;
-import org.openlmis.pageobjects.ManageFacilityPage;
-import org.openlmis.pageobjects.UploadPage;
+import org.openlmis.pageobjects.*;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
@@ -45,12 +42,12 @@ public class FacilityProgramSupportedFeed extends JsonUtility {
   public void setUp() throws InterruptedException, SQLException, IOException {
     super.setup();
     super.setupTestData(true);
-    loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+    loginPage = PageObjectFactory.getLoginPage(testWebDriver, baseUrlGlobal);
   }
 
   @AfterMethod(groups = {"webservice", "webserviceSmoke"})
   public void tearDown() throws SQLException {
-    HomePage homePage = new HomePage(testWebDriver);
+    HomePage homePage = PageObjectFactory.getHomePage(testWebDriver);
     homePage.logout(baseUrlGlobal);
     dbWrapper.deleteData();
     dbWrapper.closeConnection();
