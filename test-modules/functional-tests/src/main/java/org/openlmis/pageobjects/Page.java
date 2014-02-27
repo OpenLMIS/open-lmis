@@ -39,10 +39,18 @@ public abstract class Page {
   }
 
   public void sendKeys(WebElement locator, String value) {
-    int length = testWebDriver.getAttribute(locator, "value").length();
-    for (int i = 0; i < length; i++)
+    String locatorValueAttribute = testWebDriver.getAttribute(locator, "value");
+    System.out.println("already existing text in input : " + locatorValueAttribute);
+    int length = locatorValueAttribute.length();
+    for (int i = 0; i < length; i++) {
       locator.sendKeys("\u0008");
+    }
+    String locatorValueAttributeAfterClearing = testWebDriver.getAttribute(locator, "value");
+    System.out.println("value after clearing in input : " + locatorValueAttributeAfterClearing);
     locator.sendKeys(value);
+
+    String locatorValueAttributeAfterEnteringText = testWebDriver.getAttribute(locator, "value");
+    System.out.println("value after entering text : " + locatorValueAttributeAfterEnteringText);
   }
 
   public void downloadFileWhileSaveDialogOPen(WebElement element) throws InterruptedException {
