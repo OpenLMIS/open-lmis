@@ -37,7 +37,7 @@ public class ReportData extends TestCaseHelper {
 
   @Test(dataProvider = "Data-Provider-Function-Positive")
   public void testVerifyReport(String[] credentials) throws InterruptedException, IOException, SQLException {
-    LoginPage loginPage = PageFactory.getInstanceOfLoginPage(testWebDriver, baseUrlGlobal);
+    LoginPage loginPage = PageFactory.getLoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
     homePage.navigateReportScreen();
     getReportData(1);
@@ -53,7 +53,7 @@ public class ReportData extends TestCaseHelper {
 
   @AfterMethod(groups = {"distribution"})
   public void tearDown() throws SQLException {
-    HomePage homePage = PageFactory.getInstanceOfHomePage(testWebDriver);
+    HomePage homePage = PageFactory.getHomePage(testWebDriver);
     homePage.logout(baseUrlGlobal);
     dbWrapper.closeConnection();
   }

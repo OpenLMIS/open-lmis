@@ -72,7 +72,7 @@ public class DownloadOrderFile extends TestCaseHelper {
 
   @And("^I download order file$")
   public void downloadOrderFile() throws InterruptedException {
-    ViewOrdersPage viewOrdersPage = PageFactory.getInstanceOfViewOrdersPage(testWebDriver);
+    ViewOrdersPage viewOrdersPage = PageFactory.getViewOrdersPage(testWebDriver);
     viewOrdersPage.downloadCSV();
     testWebDriver.sleep(5000);
   }
@@ -155,7 +155,7 @@ public class DownloadOrderFile extends TestCaseHelper {
     dbWrapper.insertRoleAssignment("212", "lmu");
     dbWrapper.insertFulfilmentRoleAssignment("lmu", "lmu", "F10");
 
-    LoginPage loginPage = PageFactory.getInstanceOfLoginPage(testWebDriver, baseUrlGlobal);
+    LoginPage loginPage = PageFactory.getLoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(userSICUserName, password);
     homePage.navigateAndInitiateRnr(program);
     homePage.clickProceed();
@@ -171,7 +171,7 @@ public class DownloadOrderFile extends TestCaseHelper {
     loginPage.loginAs("lmu", password);
     homePage.navigateConvertToOrder();
 
-    ConvertOrderPage convertOrderPage = PageFactory.getInstanceOfConvertOrderPage(testWebDriver);
+    ConvertOrderPage convertOrderPage = PageFactory.getConvertOrderPage(testWebDriver);
     convertOrderPage.clickConvertToOrderButton();
     convertOrderPage.clickCheckBoxConvertToOrder();
     convertOrderPage.clickConvertToOrderButton();
@@ -184,7 +184,7 @@ public class DownloadOrderFile extends TestCaseHelper {
   public void tearDown() throws SQLException {
     testWebDriver.sleep(500);
     if (!testWebDriver.getElementById("username").isDisplayed()) {
-      HomePage homePage = PageFactory.getInstanceOfHomePage(testWebDriver);
+      HomePage homePage = PageFactory.getHomePage(testWebDriver);
       homePage.logout(baseUrlGlobal);
       dbWrapper.deleteData();
       dbWrapper.closeConnection();

@@ -462,7 +462,7 @@ public class DistributionRefrigeratorSyncTest extends TestCaseHelper {
   }
 
   private void initiateDistributionForPeriod(String periodName) {
-    DistributionPage distributionPage = PageFactory.getInstanceOfDistributionPage(testWebDriver);
+    DistributionPage distributionPage = PageFactory.getDistributionPage(testWebDriver);
     distributionPage.selectValueFromDeliveryZone(refrigeratorTestData.get(FIRST_DELIVERY_ZONE_NAME));
     distributionPage.selectValueFromProgram(refrigeratorTestData.get(VACCINES_PROGRAM));
     distributionPage.selectValueFromPeriod(periodName);
@@ -470,7 +470,7 @@ public class DistributionRefrigeratorSyncTest extends TestCaseHelper {
   }
 
   public void initiateDistribution(String deliveryZoneNameFirst, String programFirst) {
-    HomePage homePage = PageFactory.getInstanceOfHomePage(testWebDriver);
+    HomePage homePage = PageFactory.getHomePage(testWebDriver);
     DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
     distributionPage.selectValueFromDeliveryZone(deliveryZoneNameFirst);
     distributionPage.selectValueFromProgram(programFirst);
@@ -479,7 +479,7 @@ public class DistributionRefrigeratorSyncTest extends TestCaseHelper {
   }
 
   public void fillEpiInventoryWithOnlyDeliveredQuantity(String deliveredQuantity1, String deliveredQuantity2, String deliveredQuantity3) {
-    EpiInventoryPage epiInventoryPage = PageFactory.getInstanceOfEpiInventoryPage(testWebDriver);
+    EpiInventoryPage epiInventoryPage = PageFactory.getEpiInventoryPage(testWebDriver);
     epiInventoryPage.applyNRToAll();
     epiInventoryPage.fillDeliveredQuantity(1, deliveredQuantity1);
     epiInventoryPage.fillDeliveredQuantity(2, deliveredQuantity2);
@@ -490,7 +490,7 @@ public class DistributionRefrigeratorSyncTest extends TestCaseHelper {
   public void tearDown() throws SQLException {
     testWebDriver.sleep(500);
     if (!testWebDriver.getElementById("username").isDisplayed()) {
-      HomePage homePage = PageFactory.getInstanceOfHomePage(testWebDriver);
+      HomePage homePage = PageFactory.getHomePage(testWebDriver);
       homePage.logout(baseUrlGlobal);
       dbWrapper.deleteData();
       dbWrapper.closeConnection();

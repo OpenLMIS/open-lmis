@@ -62,7 +62,7 @@ public class CreateTestRequisition extends TestCaseHelper {
     dbWrapper.assignRight(STORE_IN_CHARGE, VIEW_ORDER);
     dbWrapper.insertFulfilmentRoleAssignment(userSIC, STORE_IN_CHARGE, "F10");
 
-    LoginPage loginPage = PageFactory.getInstanceOfLoginPage(testWebDriver, baseUrlGlobal);
+    LoginPage loginPage = PageFactory.getLoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(userSIC, password);
 
     homePage.navigateAndInitiateRnr(program);
@@ -122,7 +122,7 @@ public class CreateTestRequisition extends TestCaseHelper {
   public void tearDown() throws SQLException {
     testWebDriver.sleep(500);
     if (!testWebDriver.getElementById("username").isDisplayed()) {
-      HomePage homePage = PageFactory.getInstanceOfHomePage(testWebDriver);
+      HomePage homePage = PageFactory.getHomePage(testWebDriver);
       homePage.logout(baseUrlGlobal);
       dbWrapper.closeConnection();
     }

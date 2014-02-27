@@ -36,8 +36,8 @@ public class ForgotPassword extends TestCaseHelper {
   @BeforeMethod(groups = "admin")
   public void setUp() throws Exception {
     super.setup();
-    loginPage = PageFactory.getInstanceOfLoginPage(testWebDriver, baseUrlGlobal);
-    forgotPasswordPage = PageFactory.getInstanceOfForgotPasswordPage(testWebDriver);
+    loginPage = PageFactory.getLoginPage(testWebDriver, baseUrlGlobal);
+    forgotPasswordPage = PageFactory.getForgotPasswordPage(testWebDriver);
   }
 
 
@@ -107,32 +107,32 @@ public class ForgotPassword extends TestCaseHelper {
 
   @Given("^I am on forgot password screen$")
   public void onForgotPageAndVerifyElements() {
-    loginPage = PageFactory.getInstanceOfLoginPage(testWebDriver, baseUrlGlobal);
+    loginPage = PageFactory.getLoginPage(testWebDriver, baseUrlGlobal);
     forgotPasswordPage = loginPage.clickForgotPasswordLink();
     verifyElementsOnForgotPasswordScreen();
   }
 
   @When("^I type email \"([^\"]*)\"$")
   public void enterEmail(String email) {
-    forgotPasswordPage = PageFactory.getInstanceOfForgotPasswordPage(testWebDriver);
+    forgotPasswordPage = PageFactory.getForgotPasswordPage(testWebDriver);
     forgotPasswordPage.enterEmail(email);
   }
 
   @When("^I type and username \"([^\"]*)\"$")
   public void enterPassword(String userName) {
-    forgotPasswordPage = PageFactory.getInstanceOfForgotPasswordPage(testWebDriver);
+    forgotPasswordPage = PageFactory.getForgotPasswordPage(testWebDriver);
     forgotPasswordPage.enterUserName(userName);
   }
 
   @When("^I click submit button$")
   public void clickSubmit() {
-    forgotPasswordPage = PageFactory.getInstanceOfForgotPasswordPage(testWebDriver);
+    forgotPasswordPage = PageFactory.getForgotPasswordPage(testWebDriver);
     forgotPasswordPage.clickSubmit();
   }
 
   @Then("^I should see email send successfully$")
   public void verifyEmailSendMessage() {
-    forgotPasswordPage = PageFactory.getInstanceOfForgotPasswordPage(testWebDriver);
+    forgotPasswordPage = PageFactory.getForgotPasswordPage(testWebDriver);
     verifyEmailSendSuccessfullyMessage();
   }
 
@@ -174,7 +174,7 @@ public class ForgotPassword extends TestCaseHelper {
   public void tearDown() throws SQLException {
     try {
       if (!testWebDriver.getElementById("username").isDisplayed()) {
-        HomePage homePage = PageFactory.getInstanceOfHomePage(testWebDriver);
+        HomePage homePage = PageFactory.getHomePage(testWebDriver);
         homePage.logout(baseUrlGlobal);
         dbWrapper.deleteData();
         dbWrapper.closeConnection();

@@ -37,7 +37,7 @@ public class ManagePod extends TestCaseHelper {
   public void setUp() throws InterruptedException, SQLException, IOException {
     super.setup();
     dbWrapper.deleteData();
-    loginPage = PageFactory.getInstanceOfLoginPage(testWebDriver, baseUrlGlobal);
+    loginPage = PageFactory.getLoginPage(testWebDriver, baseUrlGlobal);
   }
 
   @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-RnR")
@@ -137,7 +137,7 @@ public class ManagePod extends TestCaseHelper {
 
   @When("^I access Manage POD page$")
   public void navigateManagePodPage() {
-    HomePage homePage = PageFactory.getInstanceOfHomePage(testWebDriver);
+    HomePage homePage = PageFactory.getHomePage(testWebDriver);
     homePage.navigateManagePOD();
   }
 
@@ -157,7 +157,7 @@ public class ManagePod extends TestCaseHelper {
 
   @And("^I verify order not present on manage pod page$")
   public void verifyNoOrderPresent() {
-    ManagePodPage managePodPage = PageFactory.getInstanceOfManagePodPage(testWebDriver);
+    ManagePodPage managePodPage = PageFactory.getManagePodPage(testWebDriver);
     managePodPage.verifyNoOrderMessage();
   }
 
@@ -205,7 +205,7 @@ public class ManagePod extends TestCaseHelper {
   public void tearDown() throws SQLException {
     testWebDriver.sleep(500);
     if (!testWebDriver.getElementById("username").isDisplayed()) {
-      HomePage homePage = PageFactory.getInstanceOfHomePage(testWebDriver);
+      HomePage homePage = PageFactory.getHomePage(testWebDriver);
       homePage.logout(baseUrlGlobal);
       dbWrapper.deleteData();
       dbWrapper.closeConnection();

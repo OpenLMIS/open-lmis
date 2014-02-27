@@ -65,7 +65,7 @@ public class E2EDistributionTest extends TestCaseHelper {
     insertOpenedVialsProductMapping();
     configureISA();
 
-    LoginPage loginPage = PageFactory.getInstanceOfLoginPage(testWebDriver, baseUrlGlobal);
+    LoginPage loginPage = PageFactory.getLoginPage(testWebDriver, baseUrlGlobal);
     testWebDriver.sleep(1000);
     HomePage homePage = loginPage.loginAs(userSIC, password);
     testWebDriver.sleep(1000);
@@ -86,7 +86,7 @@ public class E2EDistributionTest extends TestCaseHelper {
     assertFalse("Program selectBox displayed.", distributionPage.verifyProgramSelectBoxNotPresent());
 
     distributionPage.clickRecordData(1);
-    FacilityListPage facilityListPage = PageFactory.getInstanceOfFacilityListPage(testWebDriver);
+    FacilityListPage facilityListPage = PageFactory.getFacilityListPage(testWebDriver);
     VisitInformationPage visitInformationPage = facilityListPage.selectFacility(facilityCodeFirst);
     RefrigeratorPage refrigeratorPage = visitInformationPage.navigateToRefrigerators();
     facilityListPage.verifyOverallFacilityIndicatorColor("AMBER");
@@ -295,7 +295,7 @@ public class E2EDistributionTest extends TestCaseHelper {
     epiInventoryPage.navigateToAdultCoverage();
     adultCoveragePage.verifyAllFieldsDisabled();
 
-    loginPage = PageFactory.getInstanceOfLoginPage(testWebDriver, baseUrlGlobal);
+    loginPage = PageFactory.getLoginPage(testWebDriver, baseUrlGlobal);
     testWebDriver.sleep(1000);
     homePage = loginPage.loginAs(userSIC, password);
     testWebDriver.sleep(1000);
@@ -354,7 +354,7 @@ public class E2EDistributionTest extends TestCaseHelper {
     insertRegimenProductMapping();
     configureISA();
 
-    LoginPage loginPage = PageFactory.getInstanceOfLoginPage(testWebDriver, baseUrlGlobal);
+    LoginPage loginPage = PageFactory.getLoginPage(testWebDriver, baseUrlGlobal);
     testWebDriver.sleep(1000);
     HomePage homePage = loginPage.loginAs(userSIC, password);
     testWebDriver.sleep(1000);
@@ -372,7 +372,7 @@ public class E2EDistributionTest extends TestCaseHelper {
     homePage.navigateOfflineDistribution();
     distributionPage.clickRecordData(1);
 
-    FacilityListPage facilityListPage = PageFactory.getInstanceOfFacilityListPage(testWebDriver);
+    FacilityListPage facilityListPage = PageFactory.getFacilityListPage(testWebDriver);
     VisitInformationPage visitInformationPage = facilityListPage.selectFacility(facilityCodeFirst);
     RefrigeratorPage refrigeratorPage = visitInformationPage.navigateToRefrigerators();
     facilityListPage.verifyOverallFacilityIndicatorColor("AMBER");
@@ -565,7 +565,7 @@ public class E2EDistributionTest extends TestCaseHelper {
   }
 
   private void configureISA() {
-    LoginPage loginPage = PageFactory.getInstanceOfLoginPage(testWebDriver, baseUrlGlobal);
+    LoginPage loginPage = PageFactory.getLoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs("Admin123", "Admin123");
 
     ProgramProductISAPage programProductISAPage = homePage.navigateProgramProductISA();

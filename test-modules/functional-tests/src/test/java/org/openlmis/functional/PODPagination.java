@@ -44,7 +44,7 @@ public class PODPagination extends TestCaseHelper {
   @BeforeMethod(groups = {"requisition"})
   public void setUp() throws Exception {
     super.setup();
-    updatePodPage = PageFactory.getInstanceOfUpdatePodPage(testWebDriver);
+    updatePodPage = PageFactory.getUpdatePodPage(testWebDriver);
 
     dbWrapper.insertFacilities("F10", "F11");
     dbWrapper.configureTemplate(podPaginationData.get(PROGRAM));
@@ -68,7 +68,7 @@ public class PODPagination extends TestCaseHelper {
     dbWrapper.insertRequisitionWithMultipleLineItems(11, podPaginationData.get(PROGRAM), true, "F10", false);
     dbWrapper.convertRequisitionToOrder(dbWrapper.getMaxRnrID(), "READY_TO_PACK", podPaginationData.get(USER));
 
-    LoginPage loginPage = PageFactory.getInstanceOfLoginPage(testWebDriver, baseUrlGlobal);
+    LoginPage loginPage = PageFactory.getLoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(podPaginationData.get(USER), podPaginationData.get(PASSWORD));
     ManagePodPage managePodPage = homePage.navigateManagePOD();
     managePodPage.selectRequisitionToUpdatePod(1);
@@ -122,7 +122,7 @@ public class PODPagination extends TestCaseHelper {
     dbWrapper.insertRequisitionWithMultipleLineItems(11, podPaginationData.get(PROGRAM), true, "F10", false);
     dbWrapper.convertRequisitionToOrder(dbWrapper.getMaxRnrID(), "READY_TO_PACK", podPaginationData.get(USER));
 
-    LoginPage loginPage = PageFactory.getInstanceOfLoginPage(testWebDriver, baseUrlGlobal);
+    LoginPage loginPage = PageFactory.getLoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(podPaginationData.get(USER), podPaginationData.get(PASSWORD));
     ManagePodPage managePodPage = homePage.navigateManagePOD();
     managePodPage.selectRequisitionToUpdatePod(1);
@@ -146,7 +146,7 @@ public class PODPagination extends TestCaseHelper {
     dbWrapper.insertRequisitionWithMultipleLineItems(11, podPaginationData.get(PROGRAM), true, "F10", false);
     dbWrapper.convertRequisitionToOrder(dbWrapper.getMaxRnrID(), "READY_TO_PACK", podPaginationData.get(USER));
 
-    LoginPage loginPage = PageFactory.getInstanceOfLoginPage(testWebDriver, baseUrlGlobal);
+    LoginPage loginPage = PageFactory.getLoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(podPaginationData.get(USER), podPaginationData.get(PASSWORD));
     ManagePodPage managePodPage = homePage.navigateManagePOD();
     managePodPage.selectRequisitionToUpdatePod(1);
@@ -170,7 +170,7 @@ public class PODPagination extends TestCaseHelper {
     dbWrapper.insertRequisitionWithMultipleLineItems(11, podPaginationData.get(PROGRAM), true, "F10", false);
     dbWrapper.convertRequisitionToOrder(dbWrapper.getMaxRnrID(), "READY_TO_PACK", podPaginationData.get(USER));
 
-    LoginPage loginPage = PageFactory.getInstanceOfLoginPage(testWebDriver, baseUrlGlobal);
+    LoginPage loginPage = PageFactory.getLoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(podPaginationData.get(USER), podPaginationData.get(PASSWORD));
     ManagePodPage managePodPage = homePage.navigateManagePOD();
     managePodPage.selectRequisitionToUpdatePod(1);
@@ -198,7 +198,7 @@ public class PODPagination extends TestCaseHelper {
 
     enterTestDataForShipment();
 
-    LoginPage loginPage = PageFactory.getInstanceOfLoginPage(testWebDriver, baseUrlGlobal);
+    LoginPage loginPage = PageFactory.getLoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(podPaginationData.get(USER), podPaginationData.get(PASSWORD));
     ManagePodPage managePodPage = homePage.navigateManagePOD();
     managePodPage.selectRequisitionToUpdatePod(1);
@@ -212,24 +212,24 @@ public class PODPagination extends TestCaseHelper {
     verifyCategoryDisplayOrderOnPage(new String[]{"Antibiotic", "", "", "", "", "", "", "", "", ""});
 
     updatePodPage.enterPodData("110", "openlmis openlmis", null, 1);
-    updatePodPage.enterDeliveryDetailsInPodScreen("Delivered Person","Received Person","27/02/2014");
+    updatePodPage.enterDeliveryDetailsInPodScreen("Delivered Person", "Received Person", "27/02/2014");
     updatePodPage.clickSave();
 
     assertTrue(updatePodPage.isPodSuccessMessageDisplayed());
     testWebDriver.refresh();
 
     verifyPodDataInDatabase("110", "openlmis openlmis", "F0", null);
-    updatePodPage.verifyDeliveryDetailsOnPodScreenUI("Delivered Person","Received Person","27/02/2014");
-    verifyDeliveryDetailsOfPodScreenInDatabase("Delivered Person","Received Person","2014-02-27 00:00:00");
+    updatePodPage.verifyDeliveryDetailsOnPodScreenUI("Delivered Person", "Received Person", "27/02/2014");
+    verifyDeliveryDetailsOfPodScreenInDatabase("Delivered Person", "Received Person", "2014-02-27 00:00:00");
 
-    updatePodPage.enterDeliveryDetailsInPodScreen("Delivered Person new"," ","25/02/2014");
+    updatePodPage.enterDeliveryDetailsInPodScreen("Delivered Person new", " ", "25/02/2014");
     updatePodPage.enterPodData("200", "openlmis openlmis", "65", 5);
     updatePodPage.clickSave();
     assertTrue(updatePodPage.isPodSuccessMessageDisplayed());
     testWebDriver.refresh();
     verifyPodDataInDatabase("200", "openlmis openlmis", "F4", "65");
-    updatePodPage.verifyDeliveryDetailsOnPodScreenUI("Delivered Person new"," ","25/02/2014");
-    verifyDeliveryDetailsOfPodScreenInDatabase("Delivered Person new"," ","2014-02-25 00:00:00");
+    updatePodPage.verifyDeliveryDetailsOnPodScreenUI("Delivered Person new", " ", "25/02/2014");
+    verifyDeliveryDetailsOfPodScreenInDatabase("Delivered Person new", " ", "2014-02-25 00:00:00");
 
     updatePodPage.enterDeliveryDetailsInPodScreen("Delivered Person new openLMIS", " ", "25/02/2014");
     navigateToPage(2);
@@ -238,8 +238,8 @@ public class PODPagination extends TestCaseHelper {
     verifyNumberOfProductsVisibleOnPage(10);
     verifyProductDisplayOrderOnPage(new String[]{"NF0", "NF1", "NF2", "NF3", "NF4", "NF5", "NF6", "NF7", "NF8", "NF9"});
     verifyCategoryDisplayOrderOnPage(new String[]{"Antibiotic", "", "", "", "", "", "", "", "", ""});
-    updatePodPage.verifyDeliveryDetailsOnPodScreenUI("Delivered Person new openLMIS"," ","25/02/2014");
-    verifyDeliveryDetailsOfPodScreenInDatabase("Delivered Person new openLMIS"," ","2014-02-25 00:00:00");
+    updatePodPage.verifyDeliveryDetailsOnPodScreenUI("Delivered Person new openLMIS", " ", "25/02/2014");
+    verifyDeliveryDetailsOfPodScreenInDatabase("Delivered Person new openLMIS", " ", "2014-02-25 00:00:00");
     updatePodPage.enterPodData("10", "openlmis", "7", 1);
     updatePodPage.clickSave();
     assertTrue(updatePodPage.isPodSuccessMessageDisplayed());
@@ -284,7 +284,7 @@ public class PODPagination extends TestCaseHelper {
     verifyPodDataInDatabase("5", "openlmis openlmis", "NF0", null);
     updatePodPage.verifyQuantityReceivedAndNotes("11", "openlmis openlmis project", 10);
     verifyPodDataInDatabase("11", "openlmis openlmis project", "NF9", "99999999");
-    verifyDeliveryDetailsOfPodScreenInDatabase("Delivered","Received by facility incharge","2013-02-25 00:00:00");
+    verifyDeliveryDetailsOfPodScreenInDatabase("Delivered", "Received by facility incharge", "2013-02-25 00:00:00");
   }
 
   @Test(groups = {"requisition"})
@@ -293,7 +293,7 @@ public class PODPagination extends TestCaseHelper {
     dbWrapper.insertRequisitionWithMultipleLineItems(11, podPaginationData.get(PROGRAM), true, "F10", false);
     dbWrapper.convertRequisitionToOrder(dbWrapper.getMaxRnrID(), "READY_TO_PACK", podPaginationData.get(USER));
 
-    LoginPage loginPage = PageFactory.getInstanceOfLoginPage(testWebDriver, baseUrlGlobal);
+    LoginPage loginPage = PageFactory.getLoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(podPaginationData.get(USER), podPaginationData.get(PASSWORD));
     ManagePodPage managePodPage = homePage.navigateManagePOD();
     managePodPage.selectRequisitionToUpdatePod(1);
@@ -310,7 +310,7 @@ public class PODPagination extends TestCaseHelper {
     navigateToPage(3);
     updatePodPage.enterPodData("31", "notes", null, 1);
     updatePodPage.enterPodData("32", "notes", null, 2);
-    updatePodPage.enterDeliveryDetailsInPodScreen("openlmis","facility incharge","27/02/2014");
+    updatePodPage.enterDeliveryDetailsInPodScreen("openlmis", "facility incharge", "27/02/2014");
     updatePodPage.clickSubmitButton();
     updatePodPage.clickCancelButton();
 
@@ -355,7 +355,7 @@ public class PODPagination extends TestCaseHelper {
 
     homePage.navigateManagePOD();
     managePodPage.verifyNoOrderMessage();
-    verifyDeliveryDetailsOfPodScreenInDatabase("openlmis","facility incharge","2014-02-27 00:00:00");
+    verifyDeliveryDetailsOfPodScreenInDatabase("openlmis", "facility incharge", "2014-02-27 00:00:00");
 
   }
 
@@ -365,7 +365,7 @@ public class PODPagination extends TestCaseHelper {
     dbWrapper.insertRequisitionWithMultipleLineItems(11, podPaginationData.get(PROGRAM), true, "F10", false);
     dbWrapper.convertRequisitionToOrder(dbWrapper.getMaxRnrID(), "READY_TO_PACK", podPaginationData.get(USER));
 
-    LoginPage loginPage = PageFactory.getInstanceOfLoginPage(testWebDriver, baseUrlGlobal);
+    LoginPage loginPage = PageFactory.getLoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(podPaginationData.get(USER), podPaginationData.get(PASSWORD));
     ManagePodPage managePodPage = homePage.navigateManagePOD();
     managePodPage.selectRequisitionToUpdatePod(1);
@@ -497,7 +497,7 @@ public class PODPagination extends TestCaseHelper {
 
   @AfterMethod(groups = {"requisition"})
   public void tearDown() throws SQLException {
-    HomePage homePage = PageFactory.getInstanceOfHomePage(testWebDriver);
+    HomePage homePage = PageFactory.getHomePage(testWebDriver);
     homePage.logout(baseUrlGlobal);
     dbWrapper.deleteData();
     dbWrapper.closeConnection();

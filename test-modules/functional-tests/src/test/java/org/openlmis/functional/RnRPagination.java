@@ -39,8 +39,8 @@ public class RnRPagination extends TestCaseHelper {
   @BeforeMethod(groups = {"requisition"})
   public void setUp() throws InterruptedException, SQLException, IOException {
     super.setup();
-    initiateRnRPage = PageFactory.getInstanceOfInitiateRnRPage(testWebDriver);
-    loginPage = PageFactory.getInstanceOfLoginPage(testWebDriver, baseUrlGlobal);
+    initiateRnRPage = PageFactory.getInitiateRnRPage(testWebDriver);
+    loginPage = PageFactory.getLoginPage(testWebDriver, baseUrlGlobal);
   }
 
   @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-Positive", enabled = false)
@@ -230,7 +230,7 @@ public class RnRPagination extends TestCaseHelper {
 
   @AfterMethod(groups = {"requisition"})
   public void tearDown() throws SQLException {
-    HomePage homePage = PageFactory.getInstanceOfHomePage(testWebDriver);
+    HomePage homePage = PageFactory.getHomePage(testWebDriver);
     homePage.logout(baseUrlGlobal);
     dbWrapper.deleteData();
     dbWrapper.closeConnection();

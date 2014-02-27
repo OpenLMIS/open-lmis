@@ -34,7 +34,7 @@ public class ConfigureProgramTemplate extends TestCaseHelper {
   @BeforeMethod(groups = {"admin"})
   public void setUp() throws InterruptedException, SQLException, IOException {
     super.setup();
-    loginPage = PageFactory.getInstanceOfLoginPage(testWebDriver, baseUrlGlobal);
+    loginPage = PageFactory.getLoginPage(testWebDriver, baseUrlGlobal);
   }
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Program-Not-Configured")
@@ -97,7 +97,7 @@ public class ConfigureProgramTemplate extends TestCaseHelper {
 
   @AfterMethod(groups = {"admin"})
   public void tearDown() throws SQLException {
-    HomePage homePage = PageFactory.getInstanceOfHomePage(testWebDriver);
+    HomePage homePage = PageFactory.getHomePage(testWebDriver);
     homePage.logout(baseUrlGlobal);
     dbWrapper.deleteData();
     dbWrapper.closeConnection();

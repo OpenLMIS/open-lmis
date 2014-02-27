@@ -52,8 +52,8 @@ public class UpdatePod extends TestCaseHelper {
     super.setup();
     dbWrapper.deleteData();
     setUpData(updatePODData.get(PROGRAM), updatePODData.get(USER));
-    updatePodPage = PageFactory.getInstanceOfUpdatePodPage(testWebDriver);
-    loginPage = PageFactory.getInstanceOfLoginPage(testWebDriver, baseUrlGlobal);
+    updatePodPage = PageFactory.getUpdatePodPage(testWebDriver);
+    loginPage = PageFactory.getLoginPage(testWebDriver, baseUrlGlobal);
   }
 
   @Test(groups = {"requisition"})
@@ -219,20 +219,20 @@ public class UpdatePod extends TestCaseHelper {
 
   @And("^I enter \"([^\"]*)\" as quantity received, \"([^\"]*)\" as quantity returned and \"([^\"]*)\" as notes in row \"([^\"]*)\"$")
   public void enterPodDetails(String quantityReceived, String quantityReturned, String notes, String rowNumber) {
-    updatePodPage = PageFactory.getInstanceOfUpdatePodPage(testWebDriver);
+    updatePodPage = PageFactory.getUpdatePodPage(testWebDriver);
     updatePodPage.enterPodData(quantityReceived, notes, quantityReturned, Integer.parseInt(rowNumber));
   }
 
   @And("^I enter \"([^\"]*)\" as deliveredBy,\"([^\"]*)\" as receivedBy and \"([^\"]*)\" as receivedDate$")
   public void enterDeliveryDetailsOnPodScreen(String deliveredBy, String receivedBy, String receivedDate) {
-    updatePodPage = PageFactory.getInstanceOfUpdatePodPage(testWebDriver);
+    updatePodPage = PageFactory.getUpdatePodPage(testWebDriver);
     updatePodPage.enterDeliveryDetailsInPodScreen(deliveredBy, receivedBy, receivedDate);
   }
 
 
   @And("^I submit POD$")
   public void submitPOD() {
-    updatePodPage = PageFactory.getInstanceOfUpdatePodPage(testWebDriver);
+    updatePodPage = PageFactory.getUpdatePodPage(testWebDriver);
     updatePodPage.clickSubmitButton();
     updatePodPage.clickCancelButton();
     updatePodPage.clickSubmitButton();
@@ -241,14 +241,14 @@ public class UpdatePod extends TestCaseHelper {
 
   @When("^I click on update Pod link for Row \"([^\"]*)\"$")
   public void navigateUploadPodPage(Integer rowNumber) {
-    HomePage homePage = PageFactory.getInstanceOfHomePage(testWebDriver);
+    HomePage homePage = PageFactory.getHomePage(testWebDriver);
     ManagePodPage managePodPage = homePage.navigateManagePOD();
     managePodPage.selectRequisitionToUpdatePod(rowNumber);
   }
 
   @Then("^I should see all products to update pod$")
   public void verifyUpdatePodPage() {
-    updatePodPage = PageFactory.getInstanceOfUpdatePodPage(testWebDriver);
+    updatePodPage = PageFactory.getUpdatePodPage(testWebDriver);
     assertTrue(updatePodPage.getProductCode(1).contains("P10"));
     assertTrue(updatePodPage.getProductName(1).contains("antibiotic"));
     assertFalse(updatePodPage.getProductCode(1).contains("P11"));
@@ -257,7 +257,7 @@ public class UpdatePod extends TestCaseHelper {
   @Then("^I verify quantity received, quantity returned,notes,deliveredBy,receivedBy,receivedDate disabled$")
   public void verifyPodPageDisabled() {
     testWebDriver.sleep(1000);
-    updatePodPage = PageFactory.getInstanceOfUpdatePodPage(testWebDriver);
+    updatePodPage = PageFactory.getUpdatePodPage(testWebDriver);
     assertFalse(updatePodPage.isQuantityReceivedEnabled(1));
     assertFalse(updatePodPage.isNotesEnabled(1));
     assertFalse(updatePodPage.isQuantityReturnedEnabled(1));
@@ -344,7 +344,7 @@ public class UpdatePod extends TestCaseHelper {
   public void tearDown() throws SQLException {
     testWebDriver.sleep(500);
     if (!testWebDriver.getElementById("username").isDisplayed()) {
-      HomePage homePage = PageFactory.getInstanceOfHomePage(testWebDriver);
+      HomePage homePage = PageFactory.getHomePage(testWebDriver);
       homePage.logout(baseUrlGlobal);
       dbWrapper.deleteData();
       dbWrapper.closeConnection();

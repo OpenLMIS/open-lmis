@@ -44,38 +44,38 @@ public class ConfigureShipmentTemplate extends TestCaseHelper {
 
   @And("^I access configure shipment page$")
   public void accessOrderScreen() {
-    HomePage homePage = PageFactory.getInstanceOfHomePage(testWebDriver);
+    HomePage homePage = PageFactory.getHomePage(testWebDriver);
     ConfigureEDIPage configureEDIPage = homePage.navigateEdiScreen();
     configureEDIPage.navigateConfigureShipmentPage();
   }
 
   @And("^I should see include column headers unchecked$")
   public void verifyIncludeColumnHeader() {
-    ConfigureShipmentPage configureShipmentPage = PageFactory.getInstanceOfConfigureShipmentPage(testWebDriver);
+    ConfigureShipmentPage configureShipmentPage = PageFactory.getConfigureShipmentPage(testWebDriver);
     assertFalse(configureShipmentPage.getIncludeHeader());
   }
 
   @And("^I should see include checkbox for all data fields$")
   public void verifyDefaultDataFieldsCheckBox() {
-    ConfigureShipmentPage configureShipmentPage = PageFactory.getInstanceOfConfigureShipmentPage(testWebDriver);
+    ConfigureShipmentPage configureShipmentPage = PageFactory.getConfigureShipmentPage(testWebDriver);
     configureShipmentPage.verifyDefaultIncludeCheckboxForAllDataFields();
   }
 
   @And("^I should see default value of positions$")
   public void verifyDefaultPositionValues() {
-    ConfigureShipmentPage configureShipmentPage = PageFactory.getInstanceOfConfigureShipmentPage(testWebDriver);
+    ConfigureShipmentPage configureShipmentPage = PageFactory.getConfigureShipmentPage(testWebDriver);
     configureShipmentPage.verifyDefaultPositionValues();
   }
 
   @When("^I save shipment file format$")
   public void clickSave() {
-    ConfigureShipmentPage configureShipmentPage = PageFactory.getInstanceOfConfigureShipmentPage(testWebDriver);
+    ConfigureShipmentPage configureShipmentPage = PageFactory.getConfigureShipmentPage(testWebDriver);
     configureShipmentPage.clickSaveButton();
   }
 
   @Then("^I should see successful message \"([^\"]*)\"$")
   public void verifySaveSuccessfullyMessage(String message) {
-    ConfigureShipmentPage configureShipmentPage = PageFactory.getInstanceOfConfigureShipmentPage(testWebDriver);
+    ConfigureShipmentPage configureShipmentPage = PageFactory.getConfigureShipmentPage(testWebDriver);
     configureShipmentPage.verifyMessage(message);
   }
 
@@ -87,7 +87,7 @@ public class ConfigureShipmentTemplate extends TestCaseHelper {
   public void setUp() throws InterruptedException, SQLException, IOException {
     super.setup();
     dbWrapper.setupShipmentFileConfiguration("false");
-    loginPage = PageFactory.getInstanceOfLoginPage(testWebDriver, baseUrlGlobal);
+    loginPage = PageFactory.getLoginPage(testWebDriver, baseUrlGlobal);
   }
 
   @Test(groups = {"admin"})
@@ -198,7 +198,7 @@ public class ConfigureShipmentTemplate extends TestCaseHelper {
   }
 
   private void setDefaultPositionValues() {
-    ConfigureShipmentPage configureShipmentPage = PageFactory.getInstanceOfConfigureShipmentPage(testWebDriver);
+    ConfigureShipmentPage configureShipmentPage = PageFactory.getConfigureShipmentPage(testWebDriver);
     configureShipmentPage.unCheckIncludeHeader();
     configureShipmentPage.unCheckCostCheckBox();
     configureShipmentPage.unCheckPackedDateCheckBox();
@@ -218,7 +218,7 @@ public class ConfigureShipmentTemplate extends TestCaseHelper {
   @AfterMethod(groups = "admin")
   public void tearDown() throws SQLException {
     if (!testWebDriver.getElementById("username").isDisplayed()) {
-      HomePage homePage = PageFactory.getInstanceOfHomePage(testWebDriver);
+      HomePage homePage = PageFactory.getHomePage(testWebDriver);
       homePage.logout(baseUrlGlobal);
       dbWrapper.deleteData();
       dbWrapper.closeConnection();

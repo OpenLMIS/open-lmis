@@ -42,9 +42,9 @@ public class E2EUpload extends TestCaseHelper {
   @BeforeMethod(groups = {"admin"})
   public void setUp() throws InterruptedException, SQLException, IOException {
     super.setup();
-    loginPage = PageFactory.getInstanceOfLoginPage(testWebDriver, baseUrlGlobal);
-    uploadPage = PageFactory.getInstanceOfUploadPage(testWebDriver);
-    rolesPage = PageFactory.getInstanceOfRolesPage(testWebDriver);
+    loginPage = PageFactory.getLoginPage(testWebDriver, baseUrlGlobal);
+    uploadPage = PageFactory.getploadPage(testWebDriver);
+    rolesPage = PageFactory.getRolesPage(testWebDriver);
   }
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function-Positive")
@@ -743,7 +743,7 @@ public class E2EUpload extends TestCaseHelper {
 
   @AfterMethod(groups = {"admin"})
   public void tearDown() throws SQLException {
-    HomePage homePage = PageFactory.getInstanceOfHomePage(testWebDriver);
+    HomePage homePage = PageFactory.getHomePage(testWebDriver);
     homePage.logout(baseUrlGlobal);
     dbWrapper.deleteData();
     dbWrapper.closeConnection();

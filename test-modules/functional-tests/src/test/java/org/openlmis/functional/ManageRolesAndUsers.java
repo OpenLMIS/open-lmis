@@ -57,15 +57,15 @@ public class ManageRolesAndUsers extends TestCaseHelper {
   @BeforeMethod(groups = {"admin"})
   public void setUp() throws InterruptedException, SQLException, IOException {
     super.setup();
-    userPage = PageFactory.getInstanceOfUserPage(testWebDriver);
-    loginPage = PageFactory.getInstanceOfLoginPage(testWebDriver, baseUrlGlobal);
-    homePage = PageFactory.getInstanceOfHomePage(testWebDriver);
-    rolesPage = PageFactory.getInstanceOfRolesPage(testWebDriver);
+    userPage = PageFactory.getUserPage(testWebDriver);
+    loginPage = PageFactory.getLoginPage(testWebDriver, baseUrlGlobal);
+    homePage = PageFactory.getHomePage(testWebDriver);
+    rolesPage = PageFactory.getRolesPage(testWebDriver);
   }
 
   @And("^I create a user:$")
   public void createUser(DataTable userTable) {
-    HomePage homePage = PageFactory.getInstanceOfHomePage(testWebDriver);
+    HomePage homePage = PageFactory.getHomePage(testWebDriver);
     UserPage userPage = homePage.navigateToUser();
     List<Map<String, String>> data = userTable.asMaps();
     for (Map map : data)
@@ -76,7 +76,7 @@ public class ManageRolesAndUsers extends TestCaseHelper {
 
   @When("^I disable user \"([^\"]*)\"$")
   public void disableUser(String user) {
-    HomePage homePage = PageFactory.getInstanceOfHomePage(testWebDriver);
+    HomePage homePage = PageFactory.getHomePage(testWebDriver);
     UserPage userPage = homePage.navigateToUser();
     userPage.searchUser(user);
     userPage.clickEditUserButton();
@@ -85,19 +85,19 @@ public class ManageRolesAndUsers extends TestCaseHelper {
 
   @Then("^I should see disable user \"([^\"]*)\" message$")
   public void verifyDisableUser(String user) {
-    UserPage userPage = PageFactory.getInstanceOfUserPage(testWebDriver);
+    UserPage userPage = PageFactory.getUserPage(testWebDriver);
     userPage.verifyMessage("User \"" + user + "\" has been disabled");
   }
 
   @Then("^I should see user not verified$")
   public void notVerifiedUser() {
-    UserPage userPage = PageFactory.getInstanceOfUserPage(testWebDriver);
+    UserPage userPage = PageFactory.getUserPage(testWebDriver);
     assertEquals("No", userPage.getVerifiedLabel());
   }
 
   @Then("^I should see user \"([^\"]*)\" verified$")
   public void VerifiedUser(String user) {
-    HomePage homePage = PageFactory.getInstanceOfHomePage(testWebDriver);
+    HomePage homePage = PageFactory.getHomePage(testWebDriver);
     UserPage userPage = homePage.navigateToUser();
     userPage.searchUser(user);
     userPage.clickUserList();
@@ -106,7 +106,7 @@ public class ManageRolesAndUsers extends TestCaseHelper {
 
   @When("^I enable user \"([^\"]*)\"$")
   public void enableUser(String user) {
-    HomePage homePage = PageFactory.getInstanceOfHomePage(testWebDriver);
+    HomePage homePage = PageFactory.getHomePage(testWebDriver);
     UserPage userPage = homePage.navigateToUser();
     userPage.searchUser(user);
     userPage.clickUserList();
@@ -115,7 +115,7 @@ public class ManageRolesAndUsers extends TestCaseHelper {
 
   @Then("^I should see enable user \"([^\"]*)\" message$")
   public void verifyEnabledUser(String user) {
-    UserPage userPage = PageFactory.getInstanceOfUserPage(testWebDriver);
+    UserPage userPage = PageFactory.getUserPage(testWebDriver);
     userPage.verifyMessage("User \"" + user + "\" has been enabled");
   }
 
@@ -182,7 +182,7 @@ public class ManageRolesAndUsers extends TestCaseHelper {
   }
 
   public void testVerifyTabsForUserWithoutRights(String userName, String password) {
-    LoginPage loginPage = PageFactory.getInstanceOfLoginPage(testWebDriver, baseUrlGlobal);
+    LoginPage loginPage = PageFactory.getLoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(userName, password);
     assertTrue(homePage.isHomeMenuTabDisplayed());
     assertFalse(homePage.isRequisitionsMenuTabDisplayed());
@@ -420,7 +420,7 @@ public class ManageRolesAndUsers extends TestCaseHelper {
   public void tearDown() throws SQLException {
     testWebDriver.sleep(500);
     if (!testWebDriver.getElementById("username").isDisplayed()) {
-      HomePage homePage = PageFactory.getInstanceOfHomePage(testWebDriver);
+      HomePage homePage = PageFactory.getHomePage(testWebDriver);
       homePage.logout(baseUrlGlobal);
       dbWrapper.deleteData();
       dbWrapper.closeConnection();

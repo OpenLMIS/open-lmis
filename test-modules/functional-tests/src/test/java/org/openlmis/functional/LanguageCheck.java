@@ -32,7 +32,7 @@ public class LanguageCheck extends TestCaseHelper {
   @BeforeMethod(groups = "admin")
   public void setUp() throws InterruptedException, SQLException, IOException {
     super.setup();
-    loginPage = PageFactory.getInstanceOfLoginPage(testWebDriver, baseUrlGlobal);
+    loginPage = PageFactory.getLoginPage(testWebDriver, baseUrlGlobal);
   }
 
   @Test(groups = {"admin"})
@@ -82,7 +82,7 @@ public class LanguageCheck extends TestCaseHelper {
   }
 
   private void verifyPageIdentifierLabelOnForgotPasswordPage(String expectedLabel) {
-    ForgotPasswordPage forgotPasswordPage = PageFactory.getInstanceOfForgotPasswordPage(testWebDriver);
+    ForgotPasswordPage forgotPasswordPage = PageFactory.getForgotPasswordPage(testWebDriver);
     assertEquals(forgotPasswordPage.getPageIdentifierOnForgotPasswordPageAttribute(), expectedLabel);
   }
 
@@ -106,7 +106,7 @@ public class LanguageCheck extends TestCaseHelper {
   public void tearDown() throws SQLException {
     testWebDriver.sleep(500);
     if (!testWebDriver.getElementById("username").isDisplayed()) {
-      HomePage homePage = PageFactory.getInstanceOfHomePage(testWebDriver);
+      HomePage homePage = PageFactory.getHomePage(testWebDriver);
       homePage.logout(baseUrlGlobal);
       dbWrapper.deleteData();
       dbWrapper.closeConnection();

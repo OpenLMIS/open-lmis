@@ -49,9 +49,9 @@ public class TestCalculationsForRnR extends TestCaseHelper {
     List<String> rightsList = asList("CREATE_REQUISITION", "VIEW_REQUISITION", "AUTHORIZE_REQUISITION", "APPROVE_REQUISITION");
     setupTestDataToInitiateRnR(true, program, userSIC, "200", rightsList);
     dbWrapper.updateFieldValue("products", "fullSupply", "true", "code", "P11");
-    loginPage = PageFactory.getInstanceOfLoginPage(testWebDriver, baseUrlGlobal);
-    homePage = PageFactory.getInstanceOfHomePage(testWebDriver);
-    initiateRnRPage = PageFactory.getInstanceOfInitiateRnRPage(testWebDriver);
+    loginPage = PageFactory.getLoginPage(testWebDriver, baseUrlGlobal);
+    homePage = PageFactory.getHomePage(testWebDriver);
+    initiateRnRPage = PageFactory.getInitiateRnRPage(testWebDriver);
   }
 
   @Test(groups = "requisition")
@@ -922,7 +922,7 @@ public class TestCalculationsForRnR extends TestCaseHelper {
   public void tearDown() throws SQLException {
     testWebDriver.sleep(500);
     if (!testWebDriver.getElementById("username").isDisplayed()) {
-      HomePage homePage = PageFactory.getInstanceOfHomePage(testWebDriver);
+      HomePage homePage = PageFactory.getHomePage(testWebDriver);
       homePage.logout(baseUrlGlobal);
       dbWrapper.deleteData();
       dbWrapper.closeConnection();

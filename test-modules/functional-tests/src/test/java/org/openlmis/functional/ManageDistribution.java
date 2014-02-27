@@ -70,14 +70,14 @@ public class ManageDistribution extends TestCaseHelper {
   public void setUp() throws InterruptedException, SQLException, IOException {
     super.setup();
     dbWrapper.deleteData();
-    epiUsePage = PageFactory.getInstanceOfEpiUsePage(testWebDriver);
-    visitInformationPage = PageFactory.getInstanceOfVisitInformation(testWebDriver);
-    fullCoveragePage = PageFactory.getInstanceOfFullCoveragePage(testWebDriver);
-    epiInventoryPage = PageFactory.getInstanceOfEpiInventoryPage(testWebDriver);
-    childCoveragePage = PageFactory.getInstanceOfChildCoveragePage(testWebDriver);
-    refrigeratorPage = PageFactory.getInstanceOfRefrigeratorPage(testWebDriver);
-    adultCoveragePage = PageFactory.getInstanceOfAdultCoveragePage(testWebDriver);
-    loginPage = PageFactory.getInstanceOfLoginPage(testWebDriver, baseUrlGlobal);
+    epiUsePage = PageFactory.getEpiUsePage(testWebDriver);
+    visitInformationPage = PageFactory.getVisitInformation(testWebDriver);
+    fullCoveragePage = PageFactory.getFullCoveragePage(testWebDriver);
+    epiInventoryPage = PageFactory.getEpiInventoryPage(testWebDriver);
+    childCoveragePage = PageFactory.getChildCoveragePage(testWebDriver);
+    refrigeratorPage = PageFactory.getRefrigeratorPage(testWebDriver);
+    adultCoveragePage = PageFactory.getAdultCoveragePage(testWebDriver);
+    loginPage = PageFactory.getLoginPage(testWebDriver, baseUrlGlobal);
 
     tabMap = new HashMap<String, DistributionTab>() {{
       put("epi use", epiUsePage);
@@ -144,7 +144,7 @@ public class ManageDistribution extends TestCaseHelper {
 
   @Then("^I verify that I am on visit information page")
   public void onVisitInformationPage() throws SQLException {
-    visitInformationPage = PageFactory.getInstanceOfVisitInformation(testWebDriver);
+    visitInformationPage = PageFactory.getVisitInformation(testWebDriver);
     assertEquals("Visit Info / Observations", visitInformationPage.getVisitInformationPageLabel());
   }
 
@@ -167,7 +167,7 @@ public class ManageDistribution extends TestCaseHelper {
   @When("^I verify saved \"([^\"]*)\" values:$")
   public void verifySavedEPIValues(String tabName, DataTable tableData) {
     testWebDriver.sleep(1000);
-    refrigeratorPage = PageFactory.getInstanceOfRefrigeratorPage(testWebDriver);
+    refrigeratorPage = PageFactory.getRefrigeratorPage(testWebDriver);
     refrigeratorPage.navigateToRefrigeratorTab();
     DistributionTab tab = tabMap.get(tabName);
     tab.navigate();
@@ -187,20 +187,20 @@ public class ManageDistribution extends TestCaseHelper {
     List<String> firstProgramValuesToBeVerified = new ArrayList<>();
 
     addAll(firstProgramValuesToBeVerified, programs.split(","));
-    distributionPage = PageFactory.getInstanceOfDistributionPage(testWebDriver);
+    distributionPage = PageFactory.getDistributionPage(testWebDriver);
     List<WebElement> valuesPresentInDropDown = distributionPage.getAllSelectOptionsFromProgram();
     verifyAllSelectFieldValues(firstProgramValuesToBeVerified, valuesPresentInDropDown);
   }
 
   @Then("^I verify fields$")
   public void verifyFieldsOnScreen() throws SQLException {
-    distributionPage = PageFactory.getInstanceOfDistributionPage(testWebDriver);
+    distributionPage = PageFactory.getDistributionPage(testWebDriver);
     verifyElementsPresent();
   }
 
   @Then("^I should see period \"([^\"]*)\"$")
   public void verifyPeriod(String period) throws SQLException {
-    distributionPage = PageFactory.getInstanceOfDistributionPage(testWebDriver);
+    distributionPage = PageFactory.getDistributionPage(testWebDriver);
     WebElement actualSelectFieldElement = distributionPage.getFirstSelectedOptionFromPeriod();
     testWebDriver.sleep(100);
     verifySelectedOptionFromSelectField(period, actualSelectFieldElement);
@@ -208,20 +208,20 @@ public class ManageDistribution extends TestCaseHelper {
 
   @Then("^I should see deliveryZone \"([^\"]*)\"$")
   public void verifyDeliveryZone(String deliveryZone) throws SQLException {
-    distributionPage = PageFactory.getInstanceOfDistributionPage(testWebDriver);
+    distributionPage = PageFactory.getDistributionPage(testWebDriver);
     WebElement actualSelectFieldElement = distributionPage.getFirstSelectedOptionFromDeliveryZone();
     verifySelectedOptionFromSelectField(deliveryZone, actualSelectFieldElement);
   }
 
   @Given("^I login as user \"([^\"]*)\" having password \"([^\"]*)\"$")
   public void login(String user, String password) throws SQLException {
-    LoginPage loginPage = PageFactory.getInstanceOfLoginPage(testWebDriver, baseUrlGlobal);
+    LoginPage loginPage = PageFactory.getLoginPage(testWebDriver, baseUrlGlobal);
     loginPage.loginAs(user, password);
   }
 
   @And("^I access plan my distribution page$")
   public void accessDistributionPage() throws SQLException {
-    HomePage homePage = PageFactory.getInstanceOfHomePage(testWebDriver);
+    HomePage homePage = PageFactory.getHomePage(testWebDriver);
     homePage.navigateHomePage();
     homePage.navigateToDistributionWhenOnline();
   }
@@ -233,25 +233,25 @@ public class ManageDistribution extends TestCaseHelper {
 
   @When("^I select delivery zone \"([^\"]*)\"$")
   public void selectDeliveryZone(String deliveryZone) {
-    distributionPage = PageFactory.getInstanceOfDistributionPage(testWebDriver);
+    distributionPage = PageFactory.getDistributionPage(testWebDriver);
     distributionPage.selectValueFromDeliveryZone(deliveryZone);
   }
 
   @And("^I select program \"([^\"]*)\"$")
   public void selectProgram(String program) {
-    distributionPage = PageFactory.getInstanceOfDistributionPage(testWebDriver);
+    distributionPage = PageFactory.getDistributionPage(testWebDriver);
     distributionPage.selectValueFromProgram(program);
   }
 
   @And("^I select period \"([^\"]*)\"$")
   public void selectPeriod(String period) {
-    distributionPage = PageFactory.getInstanceOfDistributionPage(testWebDriver);
+    distributionPage = PageFactory.getDistributionPage(testWebDriver);
     distributionPage.selectValueFromPeriod(period);
   }
 
   @Then("^I verify period \"([^\"]*)\" not present$")
   public void verifyPeriodNotPresent(String period) {
-    distributionPage = PageFactory.getInstanceOfDistributionPage(testWebDriver);
+    distributionPage = PageFactory.getDistributionPage(testWebDriver);
     for (WebElement webElement : distributionPage.getAllSelectOptionsFromPeriod()) {
       assertFalse(webElement.getText().contains(period));
     }
@@ -265,39 +265,39 @@ public class ManageDistribution extends TestCaseHelper {
 
   @And("^I initiate distribution$")
   public void initiateDistribution() {
-    distributionPage = PageFactory.getInstanceOfDistributionPage(testWebDriver);
+    distributionPage = PageFactory.getDistributionPage(testWebDriver);
     distributionPage.clickInitiateDistribution();
   }
 
   @Then("^I see Overall facility icon as \"([^\"]*)\"$")
   public void verifyOverAllFacilityIndicator(String color) {
     testWebDriver.setImplicitWait(1000);
-    facilityListPage = PageFactory.getInstanceOfFacilityListPage(testWebDriver);
+    facilityListPage = PageFactory.getFacilityListPage(testWebDriver);
     facilityListPage.verifyOverallFacilityIndicatorColor(color);
   }
 
   @Then("^I see \"([^\"]*)\" facility indicator icon as \"([^\"]*)\"$")
   public void verifyFacilityIndicator(String facilityCode, String color) {
     testWebDriver.setImplicitWait(1000);
-    facilityListPage = PageFactory.getInstanceOfFacilityListPage(testWebDriver);
+    facilityListPage = PageFactory.getFacilityListPage(testWebDriver);
     facilityListPage.verifyIndividualFacilityIndicatorColor(facilityCode, color);
   }
 
   @When("^I record data for distribution \"([^\"]*)\"$")
   public void clickRecordDataForGivenRow(String rowNumber) {
-    distributionPage = PageFactory.getInstanceOfDistributionPage(testWebDriver);
+    distributionPage = PageFactory.getDistributionPage(testWebDriver);
     distributionPage.clickRecordData(Integer.parseInt(rowNumber));
   }
 
   @Then("^I should see No facility selected$")
   public void shouldSeeNoFacilitySelected() {
-    facilityListPage = PageFactory.getInstanceOfFacilityListPage(testWebDriver);
+    facilityListPage = PageFactory.getFacilityListPage(testWebDriver);
     facilityListPage.verifyNoFacilitySelected();
   }
 
   @Then("^I access show$")
   public void accessShow() {
-    refrigeratorPage = PageFactory.getInstanceOfRefrigeratorPage(testWebDriver);
+    refrigeratorPage = PageFactory.getRefrigeratorPage(testWebDriver);
     refrigeratorPage.clickShowForRefrigerator(1);
   }
 
@@ -316,7 +316,7 @@ public class ManageDistribution extends TestCaseHelper {
   @And("^I should see \"([^\"]*)\" facilities that support the program \"([^\"]*)\" and delivery zone \"([^\"]*)\"$")
   public void shouldSeeNoFacilitySelected(String active, String program, String deliveryZone) throws SQLException {
     boolean activeFlag = false;
-    facilityListPage = PageFactory.getInstanceOfFacilityListPage(testWebDriver);
+    facilityListPage = PageFactory.getFacilityListPage(testWebDriver);
     if (active.equalsIgnoreCase("active"))
       activeFlag = true;
     List<String> valuesToBeVerified = dbWrapper.getFacilityCodeNameForDeliveryZoneAndProgram(deliveryZone, program, activeFlag);
@@ -326,49 +326,49 @@ public class ManageDistribution extends TestCaseHelper {
 
   @When("^I choose facility \"([^\"]*)\"$")
   public void selectFacility(String facilityCode) {
-    facilityListPage = PageFactory.getInstanceOfFacilityListPage(testWebDriver);
+    facilityListPage = PageFactory.getFacilityListPage(testWebDriver);
     facilityListPage.selectFacility(facilityCode);
   }
 
   @And("^I should see Delivery Zone \"([^\"]*)\", Program \"([^\"]*)\" and Period \"([^\"]*)\" in the header$")
   public void shouldVerifyHeaderElements(String deliveryZone, String program, String period) throws SQLException {
-    facilityListPage = PageFactory.getInstanceOfFacilityListPage(testWebDriver);
+    facilityListPage = PageFactory.getFacilityListPage(testWebDriver);
     facilityListPage.verifyHeaderElements(deliveryZone, program, period);
   }
 
   @And("^I click view load amount$")
   public void clickViewLoadAmount() {
-    distributionPage = PageFactory.getInstanceOfDistributionPage(testWebDriver);
+    distributionPage = PageFactory.getDistributionPage(testWebDriver);
     distributionPage.clickViewLoadAmount();
   }
 
   @When("^I sync recorded data$")
   public void syncDistribution() {
-    distributionPage = PageFactory.getInstanceOfDistributionPage(testWebDriver);
+    distributionPage = PageFactory.getDistributionPage(testWebDriver);
     distributionPage.syncDistribution(1);
   }
 
   @When("^I try to sync recorded data$")
   public void clickSyncLink() {
-    distributionPage = PageFactory.getInstanceOfDistributionPage(testWebDriver);
+    distributionPage = PageFactory.getDistributionPage(testWebDriver);
     distributionPage.clickSyncDistribution(1);
   }
 
   @Then("^I verify sync message as \"([^\"]*)\"$")
   public void verifySyncMessage(String message) {
-    distributionPage = PageFactory.getInstanceOfDistributionPage(testWebDriver);
+    distributionPage = PageFactory.getDistributionPage(testWebDriver);
     assertEquals(message, distributionPage.getSyncAlertMessage());
   }
 
   @Then("^I check confirm sync message as \"([^\"]*)\"$")
   public void verifyConfirmSyncMessage(String message) {
-    distributionPage = PageFactory.getInstanceOfDistributionPage(testWebDriver);
+    distributionPage = PageFactory.getDistributionPage(testWebDriver);
     assertTrue("Incorrect Sync Facility", distributionPage.getSyncMessage().contains(message));
   }
 
   @When("^I done sync message$")
   public void doneSyncMessage() {
-    distributionPage = PageFactory.getInstanceOfDistributionPage(testWebDriver);
+    distributionPage = PageFactory.getDistributionPage(testWebDriver);
     distributionPage.syncDistributionMessageDone();
   }
 
@@ -509,26 +509,26 @@ public class ManageDistribution extends TestCaseHelper {
 
   @Then("^I should see data download successfully$")
   public void seeDownloadSuccessfully() {
-    distributionPage = PageFactory.getInstanceOfDistributionPage(testWebDriver);
+    distributionPage = PageFactory.getDistributionPage(testWebDriver);
     testWebDriver.waitForElementToAppear(testWebDriver.getElementById("cachedDistributions"));
     distributionPage.verifyDownloadSuccessFullMessage(deliveryZoneNameFirst, programFirst, periodDisplayedByDefault);
   }
 
   @Then("^I should verify facility name \"([^\"]*)\" in the header$")
   public void verifyFacilityNameInHeader(String facilityName) {
-    facilityListPage = PageFactory.getInstanceOfFacilityListPage(testWebDriver);
+    facilityListPage = PageFactory.getFacilityListPage(testWebDriver);
     facilityListPage.verifyFacilityNameInHeader(facilityName);
   }
 
   @Then("^I should verify facility zone \"([^\"]*)\" in the header$")
   public void verifyFacilityZoneInHeader(String facilityZone) {
-    facilityListPage = PageFactory.getInstanceOfFacilityListPage(testWebDriver);
+    facilityListPage = PageFactory.getFacilityListPage(testWebDriver);
     facilityListPage.verifyFacilityZoneInHeader(facilityZone);
   }
 
   @Then("^I verify legends$")
   public void verifyFacilityZoneInHeader() {
-    facilityListPage = PageFactory.getInstanceOfFacilityListPage(testWebDriver);
+    facilityListPage = PageFactory.getFacilityListPage(testWebDriver);
     facilityListPage.verifyLegend();
   }
 
@@ -539,57 +539,57 @@ public class ManageDistribution extends TestCaseHelper {
 
   @And("^I remove cached distribution$")
   public void deleteDistribution() {
-    distributionPage = PageFactory.getInstanceOfDistributionPage(testWebDriver);
+    distributionPage = PageFactory.getDistributionPage(testWebDriver);
     distributionPage.deleteDistribution();
   }
 
   @And("^I observe confirm delete distribution dialog$")
   public void verifyDeleteDistributionConfirmation() {
-    distributionPage = PageFactory.getInstanceOfDistributionPage(testWebDriver);
+    distributionPage = PageFactory.getDistributionPage(testWebDriver);
     distributionPage.verifyDeleteConfirmMessageAndHeader();
   }
 
   @And("I cancel delete distribution$")
   public void cancelDeleteDistributionConfirmation() {
-    distributionPage = PageFactory.getInstanceOfDistributionPage(testWebDriver);
+    distributionPage = PageFactory.getDistributionPage(testWebDriver);
     distributionPage.CancelDeleteDistribution();
   }
 
   @And("I confirm delete distribution$")
   public void confirmDeleteDistributionConfirmation() {
-    distributionPage = PageFactory.getInstanceOfDistributionPage(testWebDriver);
+    distributionPage = PageFactory.getDistributionPage(testWebDriver);
     distributionPage.clickOk();
   }
 
   @Then("I see no distribution in cache$")
   public void noDistributionInCache() {
-    distributionPage = PageFactory.getInstanceOfDistributionPage(testWebDriver);
+    distributionPage = PageFactory.getDistributionPage(testWebDriver);
     distributionPage.verifyNoDistributionCachedMessage();
   }
 
   @When("I enter EPI Inventory deliveredQuantity of Row \"([^\"]*)\" as \"([^\"]*)\"$")
   public void enterDeliveredQuantity(Integer rowNumber, String deliveredQuantity) {
-    epiInventoryPage = PageFactory.getInstanceOfEpiInventoryPage(testWebDriver);
+    epiInventoryPage = PageFactory.getEpiInventoryPage(testWebDriver);
     epiInventoryPage.fillDeliveredQuantity(rowNumber, deliveredQuantity);
   }
 
   @When("I enter coverage maleMobileBrigade as \"([^\"]*)\"$")
   public void enterCoverageMaleMobileBrigade(String maleMobileBrigade) {
-    fullCoveragePage = PageFactory.getInstanceOfFullCoveragePage(testWebDriver);
+    fullCoveragePage = PageFactory.getFullCoveragePage(testWebDriver);
     fullCoveragePage.enterMaleMobileBrigade(maleMobileBrigade);
   }
 
 
   @And("^I delete already cached data for distribution$")
   public void deleteAlreadyCachedDistribution() throws SQLException {
-    distributionPage = PageFactory.getInstanceOfDistributionPage(testWebDriver);
+    distributionPage = PageFactory.getDistributionPage(testWebDriver);
     distributionPage.deleteDistribution();
     distributionPage.clickOk();
   }
 
   @Then("^I should not see already cached facility \"([^\"]*)\"$")
   public void verifyAlreadyCachedDistributionFacilityNotPresentInDropDown(String facilityCodeFirst) throws SQLException {
-    facilityListPage = PageFactory.getInstanceOfFacilityListPage(testWebDriver);
+    facilityListPage = PageFactory.getFacilityListPage(testWebDriver);
     for (WebElement webElement : facilityListPage.getAllFacilitiesFromDropDown()) {
       assertFalse(webElement.getText().contains(facilityCodeFirst));
     }
@@ -598,21 +598,21 @@ public class ManageDistribution extends TestCaseHelper {
 
   @And("^I initiate already cached distribution$")
   public void initiateAlreadyCachedDistribution() {
-    distributionPage = PageFactory.getInstanceOfDistributionPage(testWebDriver);
+    distributionPage = PageFactory.getDistributionPage(testWebDriver);
     distributionPage.clickInitiateDistribution();
     distributionPage.clickOk();
   }
 
   @Then("^I verify distribution not initiated$")
   public void verifyDistributionNotInitiated() {
-    distributionPage = PageFactory.getInstanceOfDistributionPage(testWebDriver);
+    distributionPage = PageFactory.getDistributionPage(testWebDriver);
     distributionPage.verifyFacilityNotSupportedMessage("VACCINES", "Delivery Zone First");
     distributionPage.verifyNoDistributionCachedMessage();
   }
 
   @And("^I see distribution status as synced$")
   public void verifyDistributionStatus() throws SQLException {
-    distributionPage = PageFactory.getInstanceOfDistributionPage(testWebDriver);
+    distributionPage = PageFactory.getDistributionPage(testWebDriver);
     Map<String, String> distributionDetails = dbWrapper.getDistributionDetails("Delivery Zone First", "VACCINES", "Period14");
     assertEquals(distributionDetails.get("status"), "SYNCED");
     assertEquals(distributionPage.getDistributionStatus(), "SYNCED");
@@ -895,7 +895,7 @@ public class ManageDistribution extends TestCaseHelper {
   }
 
   private void verifyElementsPresent() {
-    distributionPage = PageFactory.getInstanceOfDistributionPage(testWebDriver);
+    distributionPage = PageFactory.getDistributionPage(testWebDriver);
     assertTrue("selectDeliveryZoneSelectBox should be present", distributionPage.isDisplayedSelectDeliveryZoneSelectBox());
     assertTrue("selectProgramSelectBox should be present", distributionPage.isDisplayedSelectProgramSelectBox());
     assertTrue("selectPeriodSelectBox should be present", distributionPage.isDisplayedSelectPeriodSelectBox());
@@ -968,7 +968,7 @@ public class ManageDistribution extends TestCaseHelper {
   public void tearDown() throws SQLException {
     testWebDriver.sleep(500);
     if (!testWebDriver.getElementById("username").isDisplayed()) {
-      HomePage homePage = PageFactory.getInstanceOfHomePage(testWebDriver);
+      HomePage homePage = PageFactory.getHomePage(testWebDriver);
       homePage.logout(baseUrlGlobal);
     }
     dbWrapper.deleteData();

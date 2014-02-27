@@ -47,7 +47,7 @@ public class ViewOrderPagination extends TestCaseHelper {
     dbWrapper.insertOrders("RELEASED", userSIC, "MALARIA");
     dbWrapper.insertOrders("RELEASED", userSIC, "TB");
 
-    LoginPage loginPage = PageFactory.getInstanceOfLoginPage(testWebDriver, baseUrlGlobal);
+    LoginPage loginPage = PageFactory.getLoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(userSIC, password);
     homePage.navigateViewOrders();
     verifyNumberOfPageLinks(51, 50);
@@ -81,7 +81,7 @@ public class ViewOrderPagination extends TestCaseHelper {
   public void tearDown() throws SQLException {
     testWebDriver.sleep(500);
     if (!testWebDriver.getElementById("username").isDisplayed()) {
-      HomePage homePage = PageFactory.getInstanceOfHomePage(testWebDriver);
+      HomePage homePage = PageFactory.getHomePage(testWebDriver);
       homePage.logout(baseUrlGlobal);
       dbWrapper.deleteData();
       dbWrapper.closeConnection();

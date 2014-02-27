@@ -38,14 +38,14 @@ public class ManageRights extends TestCaseHelper {
     setupTestDataToInitiateRnR(true, program, userSIC, "200", rightsList);
 
     String[] expectedMenuItem = {"Create / Authorize", "View"};
-    HomePage homePage = PageFactory.getInstanceOfLoginPage(testWebDriver, baseUrlGlobal).loginAs(userSIC, password);
+    HomePage homePage = PageFactory.getLoginPage(testWebDriver, baseUrlGlobal).loginAs(userSIC, password);
 
     homePage.clickRequisitionSubMenuItem();
     homePage.verifySubMenuItems(expectedMenuItem);
     homePage.navigateAndInitiateRnr(program);
     homePage.clickProceed();
 
-    InitiateRnRPage initiateRnRPage = PageFactory.getInstanceOfInitiateRnRPage(testWebDriver);
+    InitiateRnRPage initiateRnRPage = PageFactory.getInitiateRnRPage(testWebDriver);
     initiateRnRPage.enterValueIfNotNull(10, "beginningBalanceFirstProduct");
     initiateRnRPage.enterValueIfNotNull(10, "quantityDispensedFirstProduct");
     initiateRnRPage.enterValueIfNotNull(10, "quantityReceivedFirstProduct");
@@ -59,7 +59,7 @@ public class ManageRights extends TestCaseHelper {
 
   @AfterMethod(groups = {"admin"})
   public void tearDown() throws SQLException {
-    HomePage homePage = PageFactory.getInstanceOfHomePage(testWebDriver);
+    HomePage homePage = PageFactory.getHomePage(testWebDriver);
     homePage.logout(baseUrlGlobal);
     dbWrapper.deleteData();
     dbWrapper.closeConnection();

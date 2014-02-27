@@ -35,9 +35,9 @@ public class ManageBudget extends TestCaseHelper {
     setUpData(program, userSIC);
     dbWrapper.deleteTable("processing_periods");
     dbWrapper.insertCurrentPeriod("current Period", "current Period", 1, "M");
-    loginPage = PageFactory.getInstanceOfLoginPage(testWebDriver, baseUrlGlobal);
-    initiateRnR = PageFactory.getInstanceOfInitiateRnR();
-    initiateRnRPage = PageFactory.getInstanceOfInitiateRnRPage(testWebDriver);
+    loginPage = PageFactory.getLoginPage(testWebDriver, baseUrlGlobal);
+    initiateRnR = PageFactory.getInitiateRnR();
+    initiateRnRPage = PageFactory.getInitiateRnRPage(testWebDriver);
   }
 
   @Test(groups = {"requisition"})
@@ -430,7 +430,7 @@ public class ManageBudget extends TestCaseHelper {
   }
 
   public void viewRequisition() {
-    HomePage homePage = PageFactory.getInstanceOfHomePage(testWebDriver);
+    HomePage homePage = PageFactory.getHomePage(testWebDriver);
     ViewRequisitionPage viewRequisitionPage = homePage.navigateViewRequisition();
     viewRequisitionPage.enterViewSearchCriteria();
     viewRequisitionPage.clickSearch();
@@ -441,7 +441,7 @@ public class ManageBudget extends TestCaseHelper {
   public void tearDown() throws SQLException {
     testWebDriver.sleep(500);
     if (!testWebDriver.getElementById("username").isDisplayed()) {
-      HomePage homePage = PageFactory.getInstanceOfHomePage(testWebDriver);
+      HomePage homePage = PageFactory.getHomePage(testWebDriver);
       homePage.logout(baseUrlGlobal);
       dbWrapper.deleteData();
       dbWrapper.closeConnection();
