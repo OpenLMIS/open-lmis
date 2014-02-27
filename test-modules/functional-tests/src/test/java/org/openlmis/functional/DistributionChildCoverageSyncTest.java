@@ -459,6 +459,27 @@ public class DistributionChildCoverageSyncTest extends TestCaseHelper {
   }
 
   @Test(groups = {"distribution"})
+  public void testShouldVerifyWastageCoverageWhenMappingRemovedAfterCaching() throws SQLException {
+    insertOpenedVialsProductMapping();
+
+    HomePage homePage = loginPage.loginAs(childCoverageData.get(USER), childCoverageData.get(PASSWORD));
+    DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
+    distributionPage.initiate(childCoverageData.get(FIRST_DELIVERY_ZONE_NAME), childCoverageData.get(VACCINES_PROGRAM));
+    FacilityListPage facilityListPage = distributionPage.clickRecordData(1);
+    VisitInformationPage visitInformationPage = facilityListPage.selectFacility(childCoverageData.get(FIRST_FACILITY_CODE));
+    dbWrapper.deleteRowFromTable("coverage_target_group_products", "childCoverage", "true");
+    dbWrapper.deleteRowFromTable("coverage_product_vials", "childCoverage", "true");
+
+    ChildCoveragePage childCoveragePage = visitInformationPage.navigateToChildCoverage();
+
+    childCoveragePage.enterOpenedVialsCountForGivenGroupAndRow(1, 1, "9999999");
+    assertEquals("100", childCoveragePage.getWastageRateForGivenRow(1));
+
+    childCoveragePage.enterOpenedVialsCountForGivenGroupAndRow(9, 1, "9999999");
+    assertEquals("100", childCoveragePage.getWastageRateForGivenRow(9));
+  }
+
+  @Test(groups = {"distribution"})
   public void testShouldVerifyWastageCoverageWhenVialsInRegimenMappedToDifferentProductsAndVerifyNegativeValueAndNR() throws SQLException {
     dbWrapper.updateFieldValue("products", "packSize", "3", "code", "P11");
     insertOpenedVialsProductMapping();
