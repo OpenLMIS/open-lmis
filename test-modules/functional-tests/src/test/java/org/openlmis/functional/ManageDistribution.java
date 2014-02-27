@@ -787,7 +787,7 @@ public class ManageDistribution extends TestCaseHelper {
     dbWrapper.insertRoleAssignmentForDistribution(userSIC, "store in-charge", deliveryZoneCodeSecond);
     dbWrapper.updateFieldValue("facilities", "active", "false", "code", facilityCodeFirst);
     dbWrapper.updateFieldValue("facilities", "active", "false", "code", facilityCodeSecond);
-    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+    LoginPage loginPage = PageFactory.getLoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(userSIC, password);
     DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
     distributionPage.selectValueFromDeliveryZone(deliveryZoneNameFirst);
@@ -938,7 +938,7 @@ public class ManageDistribution extends TestCaseHelper {
   }
 
   public void verifyInactiveProductsNotDisplayedOnViewLoadAmount() {
-    WarehouseLoadAmountPage warehouseLoadAmountPage = new WarehouseLoadAmountPage(testWebDriver);
+    WarehouseLoadAmountPage warehouseLoadAmountPage = PageFactory.getWarehouseLoadAmountPage(testWebDriver);
     assertFalse(warehouseLoadAmountPage.getAggregateTableData().contains("ProductName6"));
     assertFalse(warehouseLoadAmountPage.getTable1Data().contains("ProductName6"));
 

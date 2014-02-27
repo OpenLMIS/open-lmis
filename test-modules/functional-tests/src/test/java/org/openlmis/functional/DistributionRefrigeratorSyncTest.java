@@ -64,8 +64,8 @@ public class DistributionRefrigeratorSyncTest extends TestCaseHelper {
   @BeforeMethod(groups = {"distribution"})
   public void setUp() throws InterruptedException, SQLException, IOException {
     super.setup();
-    loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
-    facilityListPage = new FacilityListPage(testWebDriver);
+    loginPage = PageFactory.getLoginPage(testWebDriver, baseUrlGlobal);
+    facilityListPage = PageFactory.getFacilityListPage(testWebDriver);
 
     setupDataForDistributionTest(refrigeratorTestData);
     dbWrapper.insertProductGroup(refrigeratorTestData.get(PRODUCT_GROUP_CODE));
@@ -416,7 +416,7 @@ public class DistributionRefrigeratorSyncTest extends TestCaseHelper {
     refrigeratorPage.clickDelete();
     refrigeratorPage.clickOKButton();
 
-    facilityListPage = new FacilityListPage(testWebDriver);
+    facilityListPage = PageFactory.getFacilityListPage(testWebDriver);
     facilityListPage.verifyOverallFacilityIndicatorColor("AMBER");
 
     refrigeratorPage.clickAddNew();

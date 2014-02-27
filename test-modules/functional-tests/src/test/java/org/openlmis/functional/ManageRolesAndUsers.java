@@ -207,7 +207,7 @@ public class ManageRolesAndUsers extends TestCaseHelper {
     List<String> userRoleList = asList(CREATE_REQUISITION, AUTHORIZE_REQUISITION, APPROVE_REQUISITION);
     createRoleAndAssignRights(userRoleList, LAB_IN_CHARGE, LAB_IN_CHARGE, "Requisition");
 
-    RolesPage rolesPage = new RolesPage(testWebDriver);
+    RolesPage rolesPage = PageFactory.getRolesPage(testWebDriver);
     rolesPage.clickARole(LAB_IN_CHARGE);
     rolesPage.verifyAdminRoleRadioNonEditable();
     rolesPage.verifyRoleSelected(userRoleList);

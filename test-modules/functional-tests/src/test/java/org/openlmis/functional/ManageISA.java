@@ -121,7 +121,7 @@ public class ManageISA extends TestCaseHelper {
   public void shouldOverrideIsaExistingFacility(String userSIC, String password, String program) throws SQLException {
     setupProgramProductTestDataWithCategories("P1", "antibiotic1", "C1", "VACCINES");
     setupProgramProductISA(program, "P1", "1", "2", "3", "100", "100", "1000", "5");
-    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+    LoginPage loginPage = PageFactory.getLoginPage(testWebDriver, baseUrlGlobal);
     loginPage.loginAs(userSIC, password);
     HomePage homePage = PageFactory.getHomePage(testWebDriver);
     manageFacilityPage = homePage.navigateManageFacility();

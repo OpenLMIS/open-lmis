@@ -248,7 +248,7 @@ public class InitiateRnR extends TestCaseHelper {
 
   @Then("^I should see all products listed in shipment file to update pod$")
   public void verifyDataForPodForPackedOrders() throws SQLException {
-    UpdatePodPage updatePodPage = new UpdatePodPage(testWebDriver);
+    UpdatePodPage updatePodPage = PageFactory.getUpdatePodPage(testWebDriver);
     assertEquals("P10", updatePodPage.getProductCode(1));
     assertEquals("antibiotic Capsule 300/200/600 mg", updatePodPage.getProductName(1));
     assertEquals(100, updatePodPage.getPacksToShip(1));
@@ -779,7 +779,7 @@ public class InitiateRnR extends TestCaseHelper {
     dbWrapper.insertValuesInRequisition(false);
     homePage.navigateAndInitiateRnr(program);
     homePage.clickProceed();
-    initiateRnRPage = new InitiateRnRPage(testWebDriver);
+    initiateRnRPage = PageFactory.getInitiateRnRPage(testWebDriver);
     initiateRnRPage.submitRnR();
     initiateRnRPage.clickOk();
     dbWrapper.updateRequisitionStatus("AUTHORIZED", "storeInCharge", "HIV");
@@ -869,7 +869,7 @@ public class InitiateRnR extends TestCaseHelper {
     dbWrapper.insertProcessingPeriod("current Period", "current Period", "2013-10-03", "2016-01-30", 1, "M");
     dbWrapper.updateFieldValue("products", "fullSupply", "true", "code", "P11");
 
-    homePage = new LoginPage(testWebDriver, baseUrlGlobal).loginAs(userSIC, password);
+    homePage = PageFactory.getLoginPage(testWebDriver, baseUrlGlobal).loginAs(userSIC, password);
     homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Regular");
     homePage.clickProceed();
 

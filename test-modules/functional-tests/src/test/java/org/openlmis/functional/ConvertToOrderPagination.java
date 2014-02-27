@@ -76,7 +76,7 @@ public class ConvertToOrderPagination extends TestCaseHelper {
     String url = ((JavascriptExecutor) TestWebDriver.getDriver()).executeScript("return window.location.href").toString();
     url = url.substring(0, url.length() - 1) + page;
     testWebDriver.getUrl(url);
-    new ConvertOrderPage(testWebDriver).selectRequisitionToBeConvertedToOrder(Integer.parseInt(numberOfRequisitions));
+    PageFactory.getConvertOrderPage(testWebDriver).selectRequisitionToBeConvertedToOrder(Integer.parseInt(numberOfRequisitions));
   }
 
   @And("^I convert selected requisitions to order$")

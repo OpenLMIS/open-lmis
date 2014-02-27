@@ -222,7 +222,7 @@ public class ConfigureOrderTemplate extends TestCaseHelper {
   public void tearDown() throws SQLException {
     testWebDriver.sleep(500);
     if (!testWebDriver.getElementById("username").isDisplayed()) {
-      HomePage homePage = new HomePage(testWebDriver);
+      HomePage homePage = PageFactory.getHomePage(testWebDriver);
       homePage.logout(baseUrlGlobal);
       dbWrapper.deleteData();
       dbWrapper.closeConnection();
