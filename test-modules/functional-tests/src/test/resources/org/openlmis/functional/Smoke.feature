@@ -213,7 +213,7 @@ Feature: Smoke Tests
     Given I have the following data for regimen:
       | HIV | storeInCharge | ADULTS | RegimenCode1 | RegimenName1 | RegimenCode2 | RegimenName2 |
     Given I have "storeInCharge" user with "CREATE_REQUISITION,VIEW_REQUISITION" rights and data to initiate requisition
-    And I am logged in as "storeInCharge"
+    And I am logged in as " storeInCharge"
     And I access initiate emergency requisition page
     Then I got error message "No current period defined. Please contact the Admin."
     When I have period "currentPeriod" associated with schedule "M"
