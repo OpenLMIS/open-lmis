@@ -175,7 +175,7 @@ public class HomePage extends Page {
   @FindBy(how = ID, using = "managePod")
   private static WebElement viewManagePODMenuItem = null;
 
-  @FindBy(how = XPATH, using = "managePodHeader")
+  @FindBy(how = ID, using = "managePodHeader")
   private static WebElement viewManagePODHeader = null;
 
   public HomePage(TestWebDriver driver) {
