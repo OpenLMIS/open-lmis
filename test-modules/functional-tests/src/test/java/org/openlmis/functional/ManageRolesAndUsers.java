@@ -362,7 +362,7 @@ public class ManageRolesAndUsers extends TestCaseHelper {
 
     homePage.navigateToUser();
     userPage.searchUser(LAB_IN_CHARGE);
-    userPage.focusOnFirstUserLink();
+    userPage.focusOnFirstUserLinkUsingTab();
     userPage.resetPassword("abcd1234", "abcd1234");
 
     homePage.logout(baseUrlGlobal);

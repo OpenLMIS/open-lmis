@@ -221,6 +221,14 @@ public class UserPage extends Page {
     testWebDriver.waitForElementToAppear(selectFirstEditUser);
   }
 
+  public void focusOnFirstUserLinkUsingTab() {
+    testWebDriver.waitForElementToAppear(firstUserLink);
+    searchUserTextField.click();
+    searchUserTextField.sendKeys(Keys.TAB);
+    testWebDriver.waitForElementToAppear(selectFirstEditUser);
+  }
+
+
   public void clickEditUser() {
     testWebDriver.waitForElementToAppear(selectFirstEditUser);
     selectFirstEditUser.click();
