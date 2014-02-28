@@ -34,7 +34,7 @@ public class User extends BaseModel implements Importable {
   @ImportField(mandatory = true, name = "User Name")
   private String userName;
 
-  @ImportField(mandatory = true, name = "Password")
+  @ImportField(name = "Password")
   @JsonIgnore
   private String password;
 
