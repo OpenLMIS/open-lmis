@@ -5,12 +5,12 @@
  * Time: 1:18 AM
  */
 
-app.directive('ngTableScroller', function() {
+app.directive('ngTableScroller', function($timeout) {
     return {
         restrict: 'A',
         replace: true,
         transclude: true,
-        template:'<div><table style="width:100%" ng-transclude></table><div ng-show="showSpinner">loading</div></div>',
+        template:'<div class="tableContainer"><table ng-transclude></table></div>',
         link: function (scope, elem, attrs) {
             rawElement = elem[0];
             scope.showSpinner = false;
@@ -19,7 +19,11 @@ app.directive('ngTableScroller', function() {
 
             scope.$watch(attrs.ngTable, function(newParams){
 
+
                scope.showSpinner = false;
+                $timeout(function () {
+                    alert(JSON.stringify(rawElement.scrollTop+' scroll height'+rawElement.scrollHeight));
+                }, 100);
             },true);
 
             elem.bind('scroll', function () {
