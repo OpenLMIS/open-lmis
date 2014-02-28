@@ -123,8 +123,13 @@ public class PODController extends BaseController {
     JasperReportsMultiFormatView jasperView = jasperReportsViewFactory.getJasperReportsView(podPrintTemplate);
     Map<String, Object> map = new HashMap<>();
     map.put("format", "pdf");
-    Resource resource = new ClassPathResource("subreports");
-    map.put("subreport_dir", resource.getFile().getAbsolutePath() + System.getProperty("file.separator"));
+
+    Resource reportResource = new ClassPathResource("subreports");
+    Resource imgResource = new ClassPathResource("images");
+
+    String separator = System.getProperty("file.separator");
+    map.put("subreport_dir", reportResource.getFile().getAbsolutePath() + separator);
+    map.put("image_dir", imgResource.getFile().getAbsolutePath() + separator);
     map.put("pod_id", id.intValue());
     return new ModelAndView(jasperView, map);
   }

@@ -46,6 +46,9 @@
 	<parameter name="pod_id" class="java.lang.Integer" isForPrompting="false">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
+	<parameter name="image_dir" class="java.lang.String" isForPrompting="false">
+  		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+  </parameter>
 	<queryString>
 		<![CDATA[SELECT fullsupply,
                     productcode,
@@ -365,7 +368,7 @@
 						<bottomPen lineWidth="0.0"/>
 						<rightPen lineWidth="0.0"/>
 					</box>
-					<imageExpression><![CDATA[System.getProperty("user.dir") + "/modules/openlmis-web/src/main/resources/images/ok-icon.png"]]></imageExpression>
+					<imageExpression><![CDATA[$P{image_dir} + "ok-icon.png"]]></imageExpression>
 				</image>
 			</frame>
 		</band>

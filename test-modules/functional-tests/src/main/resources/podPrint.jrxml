@@ -46,6 +46,9 @@
 	<parameter name="subreport_dir" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
+	<parameter name="image_dir" class="java.lang.String" isForPrompting="false">
+  		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+  </parameter>
 	<parameter name="pod_id" class="java.lang.Integer" isForPrompting="false">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
@@ -226,6 +229,9 @@
 				<subreportParameter name="pod_id">
 					<subreportParameterExpression><![CDATA[$P{pod_id}]]></subreportParameterExpression>
 				</subreportParameter>
+				<subreportParameter name="image_dir">
+        	<subreportParameterExpression><![CDATA[$P{image_dir}]]></subreportParameterExpression>
+        </subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 				<subreportExpression><![CDATA[JasperCompileManager.compileReport($P{subreport_dir} + "podLineItemPrint.jrxml")]]></subreportExpression>
 			</subreport>
