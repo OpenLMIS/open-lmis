@@ -17,7 +17,6 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
-import org.openqa.selenium.support.How;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 
@@ -33,40 +32,34 @@ import static org.openqa.selenium.support.How.XPATH;
 
 public class ManageFacilityPage extends Page {
 
-  @FindBy(how = How.ID, using = "searchFacility")
+  @FindBy(how = ID, using = "searchFacility")
   private static WebElement searchFacilityTextField = null;
 
-  @FindBy(how = How.XPATH, using = "//input[@class='btn btn-danger delete-button']")
+  @FindBy(how = ID, using = "disableButton")
   private static WebElement disableButton = null;
 
-  @FindBy(how = How.LINK_TEXT, using = "OK")
+  @FindBy(how = ID, using = "button_OK")
   private static WebElement okButton = null;
 
-  @FindBy(how = How.XPATH, using = "//div[@id='disableFacilityDialog']/div[@class='modal-body']/p")
-  private static WebElement disableMessageOnAlert = null;
+  @FindBy(how = ID, using = "dialogMessage")
+  private static WebElement dialogMessageOnAlert = null;
 
-  @FindBy(how = How.ID, using = "saveSuccessMsgDiv")
+  @FindBy(how = ID, using = "saveSuccessMsgDiv")
   private static WebElement successMessageDiv = null;
 
-  @FindBy(how = How.ID, using = "saveErrorMsgDiv")
+  @FindBy(how = ID, using = "saveErrorMsgDiv")
   private static WebElement saveErrorMsgDiv = null;
 
-  @FindBy(how = How.XPATH, using = "//ng-switch/span")
+  @FindBy(how = ID, using = "facilityEnabledYes")
   private static WebElement enabledFlag = null;
 
-  @FindBy(how = How.XPATH, using = "//input[@name='isActive' and @value='false']")
+  @FindBy(how = ID, using = "facilityActiveFalse")
   private static WebElement isActiveRadioNoOption = null;
 
-  @FindBy(how = How.XPATH, using = "//input[@class='btn btn-primary enable-button']")
+  @FindBy(how = ID, using = "enableButton")
   private static WebElement enableButton = null;
 
-  @FindBy(how = How.XPATH, using = "//div[@id='enableConfirmModal']/div[@class='modal-body']/p")
-  private static WebElement enableMessageOnAlert = null;
-
-  @FindBy(how = How.LINK_TEXT, using = "OK")
-  private static WebElement okLink = null;
-
-  @FindBy(how = How.ID, using = "remove0")
+  @FindBy(how = ID, using = "remove0")
   private static WebElement removeSupportedProgram = null;
 
   @FindBy(how = ID, using = "code")
@@ -120,10 +113,10 @@ public class ManageFacilityPage extends Page {
   @FindBy(how = ID, using = "cold-storage-net-capacity")
   private static WebElement coldStorageNetCapacity = null;
 
-  @FindBy(how = XPATH, using = "//input[@name='supplies-others' and @value='true']")
-  private static WebElement facilitySuppliesOthers = null;
+  @FindBy(how = ID, using = "suppliesOtherYes")
+  private static WebElement facilitySuppliesOthersYes = null;
 
-  @FindBy(how = XPATH, using = "//input[@name='isSdp' and @value='true']")
+  @FindBy(how = ID, using = "facilitySdpTrue")
   private static WebElement serviceDeliveryPoint = null;
 
   @FindBy(how = XPATH, using = "//input[@name='has-electricity' and @value='true']")
@@ -186,7 +179,7 @@ public class ManageFacilityPage extends Page {
   @FindBy(how = XPATH, using = "//a[contains(text(),'26')]")
   private static WebElement goDownDateCalender = null;
 
-  @FindBy(how = XPATH, using = "//div[@class='ng-scope']/div[@ng-hide='facility.id']/h2")
+  @FindBy(how = ID, using = "addNewFacilityHeader")
   private static WebElement facilityHeader = null;
 
   @FindBy(how = ID, using = "edit-facility-header")
@@ -207,13 +200,13 @@ public class ManageFacilityPage extends Page {
   @FindBy(how = ID, using = "use-calculated-button0")
   private static WebElement useCalculatedIsaButton = null;
 
-  @FindBy(how = XPATH, using = "//input[@value='Done']")
+  @FindBy(how = ID, using = "isaDoneButton")
   private static WebElement doneIsaButton = null;
 
-  @FindBy(how = XPATH, using = "//input[@value='Cancel']")
+  @FindBy(how = ID, using = "isaCancelButton")
   private static WebElement cancelIsaButton = null;
 
-  @FindBy(how = XPATH, using = "//a[@id='remove0']")
+  @FindBy(how = ID, using = "remove0")
   private static WebElement removeFirstProgramSupportedLink = null;
 
   private static ManageFacilityPage instance;
@@ -307,7 +300,7 @@ public class ManageFacilityPage extends Page {
 
     hasElectronicScc.click();
     hasElectronicDar.click();
-    facilitySuppliesOthers.click();
+    facilitySuppliesOthersYes.click();
     comments.sendKeys("Comments");
     return date_time;
   }
@@ -441,9 +434,9 @@ public class ManageFacilityPage extends Page {
 
   private void verifyDisableAlert(String expectedMessageOnAlert) {
     testWebDriver.sleep(1000);
-    testWebDriver.waitForElementToAppear(disableMessageOnAlert);
+    testWebDriver.waitForElementToAppear(dialogMessageOnAlert);
 
-    String disableMessageOnAlertValue = disableMessageOnAlert.getText();
+    String disableMessageOnAlertValue = dialogMessageOnAlert.getText();
     assertEquals(disableMessageOnAlertValue, expectedMessageOnAlert);
   }
 
@@ -473,10 +466,10 @@ public class ManageFacilityPage extends Page {
     testWebDriver.waitForElementToAppear(enableButton);
     testWebDriver.sleep(1000);
     enableButton.click();
-    testWebDriver.waitForElementToAppear(enableMessageOnAlert);
+    testWebDriver.waitForElementToAppear(dialogMessageOnAlert);
 
     testWebDriver.sleep(1000);
-    okLink.click();
+    okButton.click();
     testWebDriver.sleep(1000);
 
     return PageObjectFactory.getHomePage(testWebDriver);
