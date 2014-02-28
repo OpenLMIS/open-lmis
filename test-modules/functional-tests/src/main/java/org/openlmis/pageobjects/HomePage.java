@@ -82,20 +82,20 @@ public class HomePage extends Page {
   @FindBy(how = ID, using = "viewRequisitionHeader")
   private static WebElement viewRequisitionHeader = null;
 
-  @FindBy(how = XPATH, using = "//h2[contains(text(),'Convert Requisitions to Order')]")
+  @FindBy(how = ID, using = "convertToOrderHeader")
   private static WebElement convertToOrderHeader = null;
 
-  @FindBy(how = XPATH, using = "//h2[contains(text(),'Manage a Distribution')]")
+  @FindBy(how = ID, using = "manageDistributionHeader")
   private static WebElement manageDistributionHeader = null;
 
-  @FindBy(how = XPATH, using = "//h2[contains(text(),'View Orders')]")
+  @FindBy(how = ID, using = "viewOrderHeader")
   private static WebElement viewOrdersHeader = null;
 
   @FindBy(how = ID, using = "add-new-facility")
   private static WebElement createFacility = null;
 
-  @FindBy(how = XPATH, using = "//div[@class='ng-scope']/div[@ng-hide='facility.id']/h2")
-  private static WebElement facilityHeader = null;
+  @FindBy(how = ID, using = "addNewFacilityHeader")
+  private static WebElement addNewFacilityHeader = null;
 
   @FindBy(how = ID, using = "configure")
   private static WebElement TemplateConfigTab = null;
@@ -107,10 +107,10 @@ public class HomePage extends Page {
   private static WebElement ediFileTab = null;
 
   @FindBy(how = ID, using = "configureRegimenTemplate")
-  private static WebElement RegimenTemplateConfigTab = null;
+  private static WebElement regimenTemplateConfigTab = null;
 
-  @FindBy(how = XPATH, using = "//h2[contains(text(),'Regimen Template')]")
-  private static WebElement RegimenTemplateHeader = null;
+  @FindBy(how = ID, using = "regimenTemplateHeader")
+  private static WebElement regimenTemplateHeader = null;
 
   @FindBy(how = ID, using = "requisitions-menu")
   private static WebElement requisitionsLink = null;
@@ -121,7 +121,7 @@ public class HomePage extends Page {
   @FindBy(how = ID, using = "createRnr")
   private static WebElement createLink = null;
 
-  @FindBy(how = XPATH, using = "//input[@id='myFacilityRnr']")
+  @FindBy(how = ID, using = "myFacilityRnr")
   private static WebElement myFacilityRadioButton = null;
 
   @FindBy(how = ID, using = "upload")
@@ -160,22 +160,22 @@ public class HomePage extends Page {
   @FindBy(how = XPATH, using = "//div/div/div[1]/div[2]/div/span")
   private static WebElement firstPeriodLabel = null;
 
-  @FindBy(how = XPATH, using = "//input[@id='supervisedFacilityRnr']")
+  @FindBy(how = ID, using = "supervisedFacilityRnr")
   private static WebElement supervisedFacilityRadioButton = null;
 
-  @FindBy(how = XPATH, using = "//select[@id='programListSupervisedFacility']")
+  @FindBy(how = ID, using = "programListSupervisedFacility")
   private static WebElement ProgramDropDownSupervisedFacility = null;
 
   @FindBy(how = ID, using = "facilityList")
   private static WebElement facilityDropDown = null;
 
-  @FindBy(how = XPATH, using = "//select[@id='programListMyFacility']")
+  @FindBy(how = ID, using = "programListMyFacility")
   private static WebElement programDropDown = null;
 
-  @FindBy(how = XPATH, using = "//a[contains(text(),'Manage POD')]")
+  @FindBy(how = ID, using = "managePod")
   private static WebElement viewManagePODMenuItem = null;
 
-  @FindBy(how = XPATH, using = "//h2[contains(text(),'Manage Proof of Delivery')]")
+  @FindBy(how = XPATH, using = "managePodHeader")
   private static WebElement viewManagePODHeader = null;
 
   public HomePage(TestWebDriver driver) {
@@ -210,8 +210,8 @@ public class HomePage extends Page {
 
   public void verifyHeader(String headingToVerify) {
     testWebDriver.sleep(1000);
-    testWebDriver.waitForElementToAppear(facilityHeader);
-    assertEquals(facilityHeader.getText().trim(), headingToVerify);
+    testWebDriver.waitForElementToAppear(addNewFacilityHeader);
+    assertEquals(addNewFacilityHeader.getText().trim(), headingToVerify);
   }
 
   public void verifyAdminTabs() {
@@ -249,9 +249,9 @@ public class HomePage extends Page {
     testWebDriver.keyPress(AdministrationMenuItem);
     testWebDriver.waitForElementToAppear(TemplateConfigTab);
     testWebDriver.keyPress(TemplateConfigTab);
-    testWebDriver.waitForElementToAppear(RegimenTemplateConfigTab);
-    testWebDriver.keyPress(RegimenTemplateConfigTab);
-    testWebDriver.waitForElementToAppear(RegimenTemplateHeader);
+    testWebDriver.waitForElementToAppear(regimenTemplateConfigTab);
+    testWebDriver.keyPress(regimenTemplateConfigTab);
+    testWebDriver.waitForElementToAppear(regimenTemplateHeader);
     return PageObjectFactory.getRegimenTemplateConfigPage(testWebDriver);
   }
 
