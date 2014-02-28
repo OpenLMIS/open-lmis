@@ -9,7 +9,7 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-function StockController($scope,userFacilityData,programs, schedules, ReportPeriods, RequisitionGroupsByProgram,RequisitionGroupsByProgramSchedule, ReportProductsByProgram, operationYears, ReportPeriodsByScheduleAndYear, FacilitiesByGeographicZoneAndProgramParams, ngTableParams) {
+function StockController($scope,userFacilityData,ReportPrograms, ReportSchedules, ReportPeriods, RequisitionGroupsByProgram,RequisitionGroupsByProgramSchedule, ReportProductsByProgram, OperationYears, ReportPeriodsByScheduleAndYear, FacilitiesByGeographicZoneAndProgramParams, ngTableParams) {
 
     $scope.filterObject = {};
 
@@ -29,12 +29,21 @@ function StockController($scope,userFacilityData,programs, schedules, ReportPeri
         }
     }
 
-    $scope.startYears = operationYears;
-    $scope.startYears.unshift('-- All Years --');
-    $scope.programs = programs;
-    $scope.programs.unshift({'name': '-- Select Programs --'});
-    $scope.schedules = schedules;
-    $scope.schedules.unshift({'name':'-- Select a Schedule --', 'id':'0'}) ;
+    OperationYears.get(function (data) {
+        $scope.startYears = data.years;
+        $scope.startYears.unshift('-- All Years --');
+    });
+
+    ReportPrograms.get(function (data) {
+        $scope.programs = data.programs;
+        $scope.programs.unshift({'name': '-- Select Programs --'});
+    });
+
+    ReportSchedules.get(function(data){
+        $scope.schedules = data.schedules;
+        $scope.schedules.unshift({'name':'-- Select a Schedule --', 'id':'0'}) ;
+
+    });
 
 
     $scope.$watch('formFilter.programId', function(selection){

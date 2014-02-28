@@ -46,19 +46,18 @@ function AlertsController($scope, ngTableParams) {
     // the grid options
     $scope.tableParams = new ngTableParams({
         page: 1,            // show first page
-        total:0,
-        count: 5,
+        total:$scope.alertData.length,
+        count: 10,
         counts:[]            // count per page
     });
 
-    $scope.datarows = $scope.alertData.slice(($scope.tableParams.page - 1) * $scope.tableParams.count, $scope.tableParams.page * $scope.tableParams.count);
+    $scope.datarows = $scope.alertData.slice(($scope.tableParams.page- 1) * $scope.tableParams.count, $scope.tableParams.page * $scope.tableParams.count);
 
     $scope.loadData =  function(params){
-
         if(params === undefined || params === null){
             params = new ngTableParams();
         }
-        if($scope.data === undefined){
+        if($scope.alertData === undefined){
             $scope.datarows = [];
             params.total = 0;
         }else{
@@ -71,9 +70,15 @@ function AlertsController($scope, ngTableParams) {
                 params.page = params.page ? params.page + 1 : 1;
 
                 $scope.datarows = data.slice((1 - 1) * params.count, params.page * params.count);
+
             }
         }
     };
 
+   /* $scope.$watch('tableParams', function(selection){
+        $scope.loadData($scope.tableParams);
+        //alert('watch fired '+JSON.stringify($scope.tableParams));
+    },true);
+*/
 }
 

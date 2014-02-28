@@ -9,7 +9,7 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-function AdminDashboardController($scope,userFacilityData, programs, schedules, ReportPeriods, RequisitionGroupsByProgram,RequisitionGroupsByProgramSchedule, ReportProductsByProgram, operationYears, ReportPeriodsByScheduleAndYear, FacilitiesByGeographicZoneAndProgramParams, OrderFillRate, ItemFillRate, ngTableParams) {
+function AdminDashboardController($scope,userFacilityData, ReportPrograms, ReportSchedules, ReportPeriods, RequisitionGroupsByProgram,RequisitionGroupsByProgramSchedule, ReportProductsByProgram, OperationYears, ReportPeriodsByScheduleAndYear, FacilitiesByGeographicZoneAndProgramParams, OrderFillRate, ItemFillRate, ngTableParams) {
 
     $scope.filterObject = {};
 
@@ -40,14 +40,7 @@ function AdminDashboardController($scope,userFacilityData, programs, schedules, 
     var $lineWidth = 5;
     var barColor = defaultBarColor;
 
-    $scope.startYears = operationYears;
-    $scope.startYears.unshift('-- All Years --');
-    $scope.programs = programs;
-    $scope.programs.unshift({'name': '-- Select Programs --'});
-    $scope.schedules = schedules;
-    $scope.schedules.unshift({'name':'-- Select a Schedule --', 'id':'0'}) ;
-
-    /*OperationYears.get(function (data) {
+   OperationYears.get(function (data) {
         $scope.startYears = data.years;
         $scope.startYears.unshift('-- All Years --');
     });
@@ -61,7 +54,7 @@ function AdminDashboardController($scope,userFacilityData, programs, schedules, 
         $scope.schedules = data.schedules;
         $scope.schedules.unshift({'name':'-- Select a Schedule --', 'id':'0'}) ;
 
-    });*/
+    });
 
     $scope.$watch('fillRate.facilityId', function (selection) {
         if (selection == "All") {
@@ -273,21 +266,6 @@ function AdminDashboardController($scope,userFacilityData, programs, schedules, 
         $scope.ChangeSchedule('');
 
     });
-
-   /* $scope.getUserGeographicZoneId = function(){
-       if(isUndefined($scope.filterObject.geographicZoneId)){
-           UserFacilityList.get({}, function (data) {
-               // $scope.facilities = data.facilityList;
-               $scope.userFacility = data.facilityList[0];
-               if ($scope.userFacility) {
-                   $scope.filterObject.geographicZoneId = $scope.userFacility.geographicZone.id;
-               }
-           });
-       }
-       return isUndefined($scope.filterObject.geographicZoneId) ? 0 : $scope.filterObject.geographicZoneId;
-    };
-*/
-
 
     $scope.$watch('formFilter.year', function (selection) {
 
