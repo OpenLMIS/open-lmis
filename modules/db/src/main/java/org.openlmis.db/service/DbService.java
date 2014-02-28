@@ -17,6 +17,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 
+/**
+ * This service exposes methods for basic database utilities
+ */
 @Service
 @NoArgsConstructor
 public class DbService {
