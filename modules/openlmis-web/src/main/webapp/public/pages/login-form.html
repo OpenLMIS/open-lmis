@@ -15,7 +15,7 @@
     </div>
 
     <div class="login-form" ng-controller="LoginController">
-        <h2 openlmis-message="label.sign.in"></h2>
+        <h2 id="signInLabel" openlmis-message="label.sign.in"></h2>
 
         <form ng-submit="doLogin()" novalidate>
             <fieldset>
@@ -28,7 +28,7 @@
                     <input ng-model="password" type="password" id="password" openlmis-message="placeholder.password"
                            required/>
                 </div>
-                <div class="alert alert-error" ng-bind="loginError" ng-show="loginError"></div>
+                <div id="loginError" class="alert alert-error" ng-bind="loginError" ng-show="loginError"></div>
                 <div class="login-form-row">
                     <input class="btn btn-primary" type="submit" openlmis-message="button.sign.in"
                            ng-disabled="disableSignInButton"/>
