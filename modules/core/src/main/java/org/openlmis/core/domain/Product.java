@@ -84,10 +84,10 @@ public class Product extends BaseModel implements Importable {
   @ImportField(type = "String", name = "Dosage Units", nested = "code")
   private DosageUnit dosageUnit;
 
-  @ImportField(name = "Dispensing Units")
+  @ImportField(mandatory = true, name = "Dispensing Units")
   private String dispensingUnit;
 
-  @ImportField(type = "int", name = "Doses Per Dispensing Unit")
+  @ImportField(mandatory = true, type = "int", name = "Doses Per Dispensing Unit")
   private Integer dosesPerDispensingUnit;
 
   @ImportField(type = "boolean", name = "Store Refrigerated")
