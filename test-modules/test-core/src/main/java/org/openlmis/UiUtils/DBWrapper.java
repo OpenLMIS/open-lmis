@@ -452,7 +452,6 @@ public class DBWrapper {
         "((select id from requisition_groups where code='RG2'),(select id from programs where code='HIV'),(select id from processing_schedules where code='M'),TRUE);\n");
   }
 
-  //TODO
   public void insertRoleAssignment(String userID, String roleName) throws SQLException {
     update("delete from role_assignments where userId='" + userID + "';");
 
@@ -462,7 +461,6 @@ public class DBWrapper {
       "    ('" + userID + "', (SELECT id FROM roles WHERE name = '" + roleName + "'), 1, (SELECT id from supervisory_nodes WHERE code = 'N1'));");
   }
 
-  //TODO
   public void insertRoleAssignmentForSupervisoryNodeForProgramId1(String userID,
                                                                   String roleName,
                                                                   String supervisoryNode) throws SQLException {

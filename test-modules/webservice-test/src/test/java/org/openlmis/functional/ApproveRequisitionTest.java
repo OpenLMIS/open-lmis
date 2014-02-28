@@ -47,7 +47,6 @@ public class ApproveRequisitionTest extends JsonUtility {
     HttpClient client = new HttpClient();
     dbWrapper.updateFieldValue("facilities", "virtualFacility", "true", "code", "F10");
     client.createContext();
-    //TODO
     submitRequisition("commTrack1", "HIV");
     String id = String.valueOf(dbWrapper.getMaxRnrID());
     dbWrapper.updateRequisitionStatus("AUTHORIZED", "commTrack", "HIV");

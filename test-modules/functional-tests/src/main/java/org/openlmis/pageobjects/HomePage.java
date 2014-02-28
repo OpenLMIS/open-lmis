@@ -49,7 +49,7 @@ public class HomePage extends Page {
   @FindBy(how = ID, using = "reports-menu")
   private static WebElement reportMenuItem = null;
 
-  @FindBy(how = XPATH, using = "//h2/span[contains(text(),'Reports')]")
+  @FindBy(how = ID, using = "reportHeader")
   private static WebElement reportsTitle = null;
 
   @FindBy(how = ID, using = "orders-menu")
@@ -70,16 +70,16 @@ public class HomePage extends Page {
   @FindBy(how = ID, using = "manage-distribution")
   private static WebElement manageDistributionMenuItem = null;
 
-  @FindBy(how = XPATH, using = "//a[contains(text(),'Distributions')]")
+  @FindBy(how = ID, using = "distributions-menu")
   private static WebElement offlineDistributions = null;
 
-  @FindBy(how = XPATH, using = "//a[contains(text(),'View Orders')]")
+  @FindBy(how = ID, using = "viewOrder")
   private static WebElement viewOrdersMenuItem = null;
 
   @FindBy(how = ID, using = "viewRnr")
   private static WebElement viewRequisitionMenuItem = null;
 
-  @FindBy(how = XPATH, using = "//h2[contains(text(),'View Requisitions')]")
+  @FindBy(how = ID, using = "viewRequisitionHeader")
   private static WebElement viewRequisitionHeader = null;
 
   @FindBy(how = XPATH, using = "//h2[contains(text(),'Convert Requisitions to Order')]")
