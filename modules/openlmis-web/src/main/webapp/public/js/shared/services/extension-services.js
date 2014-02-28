@@ -415,4 +415,8 @@ services.factory('ItemFillRate', function($resource){
     return $resource('/dashboard/itemFillRate.json',{}, {});
 });
 
+services.factory('ShipmentLeadTime', function($resource){
+    return $resource('/dashboard/shipmentLeadTime.json',{}, {});
+});
+
 /* End Dashboard data factories */

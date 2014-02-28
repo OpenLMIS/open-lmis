@@ -4,6 +4,7 @@ import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.openlmis.report.model.dto.ItemFillRate;
 import org.openlmis.report.model.dto.OrderFillRate;
+import org.openlmis.report.model.dto.ShipmentLeadTime;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -21,4 +22,7 @@ public interface DashboardMapper {
 
     @Select("select order_fill_rate as fillRate from dw_order_fill_rate_vw where programid = #{programId} and periodid = #{periodId} and geographicZoneid = #{geographicZoneid} and facilityid = #{facilityId}")
     OrderFillRate getOrderFillRate(@Param("geographicZoneid") Long geographicZoneid, @Param("periodId")  Long periodId, @Param("facilityId")  Long facilityId, @Param("programId") Long programId);
+
+    @Select("select code,name,leadTime from dw_product_lead_time_vw where programid = #{programId} and periodid = #{periodId} and geographicZoneid = #{geographicZoneid}")
+    List<ShipmentLeadTime> getShipmentLeadTime(@Param("geographicZoneid") Long geographicZoneid, @Param("periodId")  Long periodId, @Param("programId") Long programId);
 }
