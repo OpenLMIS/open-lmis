@@ -23,7 +23,7 @@ import org.openlmis.distribution.domain.EpiUseLineItem;
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 
 /**
- *  DTO for EpiUseLineItem. It contains a reference facilityVisitId and
+ *  DTO for EpiUseLineItem. It contains facilityVisitId and
  *  client side representation of EpiUseLineItem attributes.
  */
 
