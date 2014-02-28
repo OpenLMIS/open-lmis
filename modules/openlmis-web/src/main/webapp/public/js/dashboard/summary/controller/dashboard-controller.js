@@ -9,7 +9,7 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-function AdminDashboardController($scope,userFacilityData, ReportPrograms, ReportSchedules, ReportPeriods, RequisitionGroupsByProgram,RequisitionGroupsByProgramSchedule, ReportProductsByProgram, OperationYears, ReportPeriodsByScheduleAndYear, FacilitiesByGeographicZoneAndProgramParams, OrderFillRate, ItemFillRate, ngTableParams) {
+function AdminDashboardController($scope,$timeout,userFacilityData, ReportPrograms, ReportSchedules, ReportPeriods, RequisitionGroupsByProgram,RequisitionGroupsByProgramSchedule, ReportProductsByProgram, OperationYears, ReportPeriodsByScheduleAndYear, FacilitiesByGeographicZoneAndProgramParams, OrderFillRate, ItemFillRate, ngTableParams) {
 
     $scope.filterObject = {};
 
@@ -111,6 +111,9 @@ function AdminDashboardController($scope,userFacilityData, ReportPrograms, Repor
     });
 
     $scope.loadFillRates = function(){
+        //For managing visibility of chart rendering container. All most all javascript chart rendering tools needs the container to be visible before the render process starts.
+        $scope.showItemFill = false;
+        $scope.showOrderFill = false;
        //Facility are required for Order and Item Fill Rates
 
        if(!isUndefined($scope.filterObject.facilityId) && $scope.filterObject.facilityId !== 0 ){
@@ -124,10 +127,14 @@ function AdminDashboardController($scope,userFacilityData, ReportPrograms, Repor
                    programId: $scope.filterObject.programId,
                    productListId: $scope.filterObject.productIdList
                },function (data){
+                   if(!isUndefined(data)){//set visibility of item fill chart container to true if there is data to be rendered
 
+                       $scope.showItemFill = true;
+                   }
                    $scope.itemFills = data.itemFillRate;
-                   $scope.productItemFillRates = [];
+                   $scope.productItemFillRates = null;
                    if(!isUndefined($scope.itemFills)){
+                       $scope.productItemFillRates = [];
                        $.each($scope.itemFills, function (item, idx) {
                            $.each(itemFillRateColors, function(index, item){
                                if(idx.fillRate <= item.maxRange && idx.fillRate >= item.minRange){
@@ -138,39 +145,49 @@ function AdminDashboardController($scope,userFacilityData, ReportPrograms, Repor
                        });
                    }
                });
-           }
 
+           }
            //Order Fill Rate
            OrderFillRate.get({geographicZoneId: $scope.filterObject.geographicZoneId,
                periodId: $scope.filterObject.periodId,
                facilityId:$scope.filterObject.facilityId,
                programId: $scope.filterObject.programId},function(data){
-
+               $scope.orderFillChart = null; //reset
                $scope.orderFill = data.orderFillRate;
                var fillRate = [];
                if($scope.orderFill !== undefined ){
+
+                   if(!isUndefined($scope.orderFill.fillRate)){ //set visibility of order fill rate chart container to true
+                       $scope.showOrderFill = true;
+
+                   }
                    fillRate.push([$scope.orderFill.fillRate]);
-                   $scope.orderFillChart = {
-                       'option':{
-                           title:'Order Fill Rate',
-                           seriesDefaults:{
-                               renderer:$.jqplot.MeterGaugeRenderer,
-                               rendererOptions: {
-                                   label: 'Order Sub/App',
-                                   labelPosition: 'bottom',
-                                   labelHeightAdjust: -5,
-                                   min: 0,
-                                   max: 100,
-                                   intervals:[25, 50, 75, 100],
-                                   intervalColors:['#66cc66', '#93b75f', '#E7E658', '#cc6666']
+
+                   $timeout(function (){ //wait until the container fully visible
+
+                       $scope.orderFillChart = {
+                           'option':{
+                               title:'Order Fill Rate',
+                               seriesDefaults:{
+                                   renderer:$.jqplot.MeterGaugeRenderer,
+                                   rendererOptions: {
+                                       label: 'Order Sub/App',
+                                       labelPosition: 'bottom',
+                                       labelHeightAdjust: -5,
+                                       min: 0,
+                                       max: 100,
+                                       intervals:[25, 50, 75, 100],
+                                       intervalColors:['#66cc66', '#93b75f', '#E7E658', '#cc6666']
+                                   }
                                }
-                           }
-                       },'data': fillRate
-                   };
+                           },'data': fillRate
+                       };
+
+                   },100);
+
                }
            });
        }
-
     };
 
     $scope.loadFacilities = function(){
