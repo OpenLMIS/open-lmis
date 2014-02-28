@@ -10,7 +10,7 @@ app.directive('ngTableScroller', function($timeout) {
         restrict: 'A',
         replace: true,
         transclude: true,
-        template:'<div class="tableContainer"><table ng-transclude></table></div>',
+        template:'<div class="tableContainer"><table style="width: 100%" ng-transclude></table></div>',
         link: function (scope, elem, attrs) {
             rawElement = elem[0];
             scope.showSpinner = false;
@@ -22,7 +22,7 @@ app.directive('ngTableScroller', function($timeout) {
 
                scope.showSpinner = false;
                 $timeout(function () {
-                    alert(JSON.stringify(rawElement.scrollTop+' scroll height'+rawElement.scrollHeight));
+                   // alert(JSON.stringify(rawElement.scrollTop+' scroll height'+rawElement.scrollHeight));
                 }, 100);
             },true);
 

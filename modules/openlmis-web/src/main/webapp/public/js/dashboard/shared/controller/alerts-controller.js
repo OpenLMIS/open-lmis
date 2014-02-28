@@ -46,12 +46,11 @@ function AlertsController($scope, ngTableParams) {
     // the grid options
     $scope.tableParams = new ngTableParams({
         page: 1,            // show first page
-        total:$scope.alertData.length,
-        count: 10,
-        counts:[]            // count per page
+        total:0,
+        count: 5
     });
 
-    $scope.datarows = $scope.alertData.slice(($scope.tableParams.page- 1) * $scope.tableParams.count, $scope.tableParams.page * $scope.tableParams.count);
+   // $scope.datarows = $scope.alertData.slice(($scope.tableParams.page- 1) * $scope.tableParams.count, $scope.tableParams.page * $scope.tableParams.count);
 
     $scope.loadData =  function(params){
         if(params === undefined || params === null){
@@ -62,23 +61,51 @@ function AlertsController($scope, ngTableParams) {
             params.total = 0;
         }else{
             var data = $scope.alertData;
-            var total = data.length;
+            params.total = data.length;
+           // params.counts = [];
+           // if((params.count * (params.page + 1)) < total){
 
-            params.counts = [];
-            if((params.count * (params.page + 1)) < total){
+               // params.page = params.page ? params.page + 1 : 1;
 
-                params.page = params.page ? params.page + 1 : 1;
+                $scope.datarows = data.slice((params.page - 1) * params.count, params.page * params.count);
 
-                $scope.datarows = data.slice((1 - 1) * params.count, params.page * params.count);
-
-            }
+           // }
         }
     };
 
-   /* $scope.$watch('tableParams', function(selection){
+    $scope.$watch('tableParams', function(selection){
         $scope.loadData($scope.tableParams);
-        //alert('watch fired '+JSON.stringify($scope.tableParams));
     },true);
-*/
+
+    $scope.tableParams2 = new ngTableParams({
+        page: 1,            // show first page
+        total:0,
+        count: 5 ,
+        counts:[]
+    });
+
+    $scope.datarows2 = $scope.alertData.slice(($scope.tableParams2.page- 1) * $scope.tableParams2.count, $scope.tableParams2.page * $scope.tableParams2.count);
+
+    $scope.loadMoreData =  function(params){
+        if(params === undefined || params === null){
+            params = new ngTableParams();
+        }
+        if($scope.alertData === undefined){
+            $scope.datarows2 = [];
+            params.total = 0;
+        }else{
+            var data = $scope.alertData;
+            total = data.length;
+            //params.total = data.length;
+             params.counts = [];
+             if((params.count * (params.page + 1)) < total){
+
+             params.page = params.page ? params.page + 1 : 1;
+
+            $scope.datarows2 = data.slice((1 - 1) * params.count, params.page * params.count);
+
+             }
+        }
+    };
 }
 

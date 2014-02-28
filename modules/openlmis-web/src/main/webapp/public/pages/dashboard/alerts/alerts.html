@@ -20,11 +20,11 @@
     <div class="span6">
 
         <div>Alerts</div>
-        <table ng-show="datarows.length > 0" class="table-bordered table table-striped pull-right"
-               ng-table="tableParams"  ng-table-Scroller  loading-method="loadData(tableParams)" >
+        <table ng-show="datarows2.length > 0" class="table-bordered table table-striped pull-right"
+               ng-table="tableParams2"  ng-table-Scroller  loading-method="loadMoreData(tableParams2)" style="height: 200px; overflow: auto">
             <tbody >
-            <tr ng-repeat="alert in datarows" >
-                <td data-title="Alerts">
+            <tr ng-repeat="alert in datarows2" >
+                <td data-title="Alerts" style="width:100%">
                     {{alert.percent}} {{alert.alert}}
                 </td>
             </tr>
