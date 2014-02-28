@@ -21,6 +21,8 @@ import org.openlmis.reporting.model.Template;
 import org.openlmis.reporting.service.TemplateService;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PostAuthorize;
@@ -121,9 +123,9 @@ public class PODController extends BaseController {
     JasperReportsMultiFormatView jasperView = jasperReportsViewFactory.getJasperReportsView(podPrintTemplate);
     Map<String, Object> map = new HashMap<>();
     map.put("format", "pdf");
-    map.put("subreport_dir", System.getProperty("user.dir") + "/modules/openlmis-web/src/main/resources/subreports/");
+    Resource resource = new ClassPathResource("subreports");
+    map.put("subreport_dir", resource.getFile().getAbsolutePath() + System.getProperty("file.separator"));
     map.put("pod_id", id.intValue());
     return new ModelAndView(jasperView, map);
   }
-
 }
