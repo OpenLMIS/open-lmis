@@ -45,7 +45,7 @@ public class ApprovePage extends RequisitionPage {
   @FindBy(how = XPATH, using = "//div[@class='ngCellText ng-scope col4 colt4']/span")
   private static WebElement periodEndDate = null;
 
-  @FindBy(how = ID, using = "requisitionHeaderLabel")
+  @FindBy(how = ID, using = "requisition-header")
   private static WebElement requisitionHeader = null;
 
   @FindBy(how = ID, using = "facility")
