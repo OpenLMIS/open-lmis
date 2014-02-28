@@ -121,6 +121,8 @@ public class PODController extends BaseController {
     JasperReportsMultiFormatView jasperView = jasperReportsViewFactory.getJasperReportsView(podPrintTemplate);
     Map<String, Object> map = new HashMap<>();
     map.put("format", "pdf");
+    map.put("subreport_dir", System.getProperty("user.dir") + "/modules/openlmis-web/src/main/resources/subreports/");
+    map.put("pod_id", id.intValue());
     return new ModelAndView(jasperView, map);
   }
 

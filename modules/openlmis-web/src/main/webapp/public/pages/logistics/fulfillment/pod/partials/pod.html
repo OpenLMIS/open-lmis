@@ -10,6 +10,11 @@
 
 <div>
 
+  <span class="pull-right print-button">
+    <a class="btn btn-primary" ng-href="/pods/{{pod.id}}/print" openlmis-message="button.print"
+       target="_blank"></a>
+  </span>
+
   <h2 id="podPageTitle" openlmis-message="header.proof.of.delivery"></h2>
   <ng-include src="'/public/pages/logistics/fulfillment/pod/partials/header.html'"></ng-include>
 

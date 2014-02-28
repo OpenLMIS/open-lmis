@@ -25,7 +25,6 @@ import org.openlmis.order.service.OrderService;
 import org.openlmis.pod.domain.OrderPOD;
 import org.openlmis.pod.service.PODService;
 import org.openlmis.reporting.controller.JasperReportsViewFactory;
-import org.openlmis.reporting.model.Template;
 import org.openlmis.reporting.service.TemplateService;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -34,8 +33,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpSession;
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.view.jasperreports.JasperReportsMultiFormatView;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
@@ -200,15 +197,4 @@ public class PODControllerTest {
     assertThat(response.getStatusCode(), is(HttpStatus.BAD_REQUEST));
   }
 
-  @Test
-  public void shouldReturnJasperViewOfPrintPODScreen() throws Exception {
-    Long podId = 1L;
-    Template template = new Template();
-    when(templateService.getByName("Print Pod")).thenReturn(template);
-    JasperReportsMultiFormatView jasperView = new JasperReportsMultiFormatView();
-    when(jasperReportsViewFactory.getJasperReportsView(template)).thenReturn(jasperView);
-    ModelAndView modelAndView = controller.print(podId);
-
-    assertThat((JasperReportsMultiFormatView) modelAndView.getView(), is(jasperView));
-  }
 }
