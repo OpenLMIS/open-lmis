@@ -30,33 +30,34 @@ import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
 import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
 import static java.lang.Float.parseFloat;
 import static org.openlmis.UiUtils.TestCaseHelper.parsePostgresBoolean;
-import static org.openqa.selenium.support.How.*;
+import static org.openqa.selenium.support.How.ID;
+import static org.openqa.selenium.support.How.XPATH;
 
 
 public class InitiateRnRPage extends RequisitionPage {
 
-  @FindBy(how = XPATH, using = "//div[@id='requisition-header']/h2")
+  @FindBy(how = ID, using = "requisition-header")
   private static WebElement requisitionHeader = null;
 
-  @FindBy(how = XPATH, using = "//div[@id='requisition-header']/div/div[2]/div[1]/div[1]/span")
+  @FindBy(how = ID, using = "facility")
   private static WebElement facilityLabel = null;
 
-  @FindBy(how = XPATH, using = "//input[@value='Save']")
+  @FindBy(how = ID, using = "saveRnrButton")
   private static WebElement saveButton = null;
 
-  @FindBy(how = XPATH, using = "//input[@value='Submit']")
+  @FindBy(how = ID, using = "submitRnrButton")
   private static WebElement submitButton = null;
 
-  @FindBy(how = XPATH, using = "//input[@value='Authorize']")
+  @FindBy(how = ID, using = "authorizeRnrButton")
   private static WebElement authorizeButton = null;
 
-  @FindBy(how = XPATH, using = "//input[@value='Approve']")
+  @FindBy(how = ID, using = "approveButton")
   private static WebElement approveButton = null;
 
-  @FindBy(how = XPATH, using = "//div[@id='submitSuccessMsgDiv' and @openlmis-message='submitMessage']")
+  @FindBy(how = ID, using = "submitSuccessMsgDiv")
   private static WebElement submitSuccessMessage = null;
 
-  @FindBy(how = XPATH, using = "//div[@id='submitFailMessage' and @openlmis-message='submitError']")
+  @FindBy(how = ID, using = "submitFailMessage")
   private static WebElement submitErrorMessage = null;
 
   @FindBy(how = ID, using = "beginningBalance_0")
@@ -113,7 +114,7 @@ public class InitiateRnRPage extends RequisitionPage {
   @FindBy(how = ID, using = "nonFullSupplyItemsCost")
   private static WebElement totalCostNonFullSupplyFooter = null;
 
-  @FindBy(how = XPATH, using = "//span[@id='totalCost']")
+  @FindBy(how = ID, using = "totalCost")
   private static WebElement totalCostFooter = null;
 
   @FindBy(how = ID, using = "reasonForRequestedQuantity_0")
@@ -134,7 +135,7 @@ public class InitiateRnRPage extends RequisitionPage {
   @FindBy(how = ID, using = "totalCostPopupClose")
   private static WebElement closeRnrCostDetailsIcon = null;
 
-  @FindBy(how = XPATH, using = "//a[@class='rnr-adjustment']")
+  @FindBy(how = ID, using = "showLossesAdjustment")
   private static WebElement addDescription = null;
 
   @FindBy(how = XPATH, using = "//div[@class='adjustment-field']/div[@class='row-fluid']/div[@class='span5']/select")
@@ -161,31 +162,31 @@ public class InitiateRnRPage extends RequisitionPage {
   @FindBy(how = ID, using = "reasonForRequestedQuantity_0_warning")
   private static WebElement requestedQtyWarningMessage = null;
 
-  @FindBy(how = XPATH, using = "//div[@id='requisition-header']/div/div[2]/div[2]/div[3]/span")
+  @FindBy(how = ID, using = "reportingPeriod")
   private static WebElement reportingPeriodInitRnRScreen = null;
 
-  @FindBy(how = XPATH, using = "//span[@ng-bind='rnr.facility.geographicZone.name']")
+  @FindBy(how = ID, using = "geographicZone")
   private static WebElement geoZoneInitRnRScreen = null;
 
-  @FindBy(how = XPATH, using = "//span[@ng-bind='rnr.facility.geographicZone.parent.name']")
+  @FindBy(how = ID, using = "parentLevel")
   private static WebElement parentGeoZoneInitRnRScreen = null;
 
-  @FindBy(how = XPATH, using = "//span[@ng-bind='rnr.facility.operatedBy.text']")
+  @FindBy(how = ID, using = "operatedBy")
   private static WebElement operatedByInitRnRScreen = null;
 
   @FindBy(how = ID, using = "addNonFullSupply")
   private static WebElement addNonFullSupplyItemButton = null;
 
-  @FindBy(how = XPATH, using = "//input[@value='Add']")
+  @FindBy(how = ID, using = "showNonFullSupplyModal")
   private static WebElement addNonFullSupplyButtonScreen = null;
 
   @FindBy(how = ID, using = "fullSupplyTab")
   private static WebElement fullSupplyTab = null;
 
-  @FindBy(how = XPATH, using = "//select[@id='nonFullSupplyProductsCategory']")
+  @FindBy(how = ID, using = "nonFullSupplyProductsCategory")
   private static WebElement categoryDropDown = null;
 
-  @FindBy(how = XPATH, using = "//select[@id='nonFullSupplyProductsCodeAndName']")
+  @FindBy(how = ID, using = "nonFullSupplyProductsCodeAndName")
   private static WebElement productDropDown = null;
 
   @FindBy(how = XPATH, using = "//div[@id='s2id_nonFullSupplyProductsCategory']/a/span")
@@ -206,16 +207,16 @@ public class InitiateRnRPage extends RequisitionPage {
   @FindBy(how = XPATH, using = "//div[@class='select2-result-label']")
   private static WebElement categoryDropDownValue = null;
 
-  @FindBy(how = XPATH, using = "//input[@name='nonFullSupplyProductQuantityRequested0']")
+  @FindBy(how = ID, using = "nonFullSupplyQuantityRequested0")
   private static WebElement nonFullSupplyProductQuantityRequested = null;
 
-  @FindBy(how = XPATH, using = "//div[@id='nonFullSupplyProductCodeAndName']/label")
+  @FindBy(how = ID, using = "nonFullSupplyProductNameLabel")
   private static WebElement nonFullSupplyProductCodeAndName = null;
 
-  @FindBy(how = XPATH, using = "//div[@id='nonFullSupplyProductReasonForRequestedQuantity']/input")
+  @FindBy(how = ID, using = "nonFullSupplyRequestedReason")
   private static WebElement nonFullSupplyProductReasonForRequestedQuantity = null;
 
-  @FindBy(how = NAME, using = "newNonFullSupply.quantityRequested")
+  @FindBy(how = ID, using = "quantityRequested")
   private static WebElement requestedQuantityField = null;
 
   @FindBy(how = ID, using = "reasonForRequestedQuantity")
@@ -227,16 +228,16 @@ public class InitiateRnRPage extends RequisitionPage {
   @FindBy(how = ID, using = "addLossesAndAdjustment")
   private static WebElement addLossesAndAdjustmentButton = null;
 
-  @FindBy(how = XPATH, using = "//input[@value='Cancel']")
+  @FindBy(how = ID, using = "cancelNonFullSupply")
   private static WebElement cancelButton = null;
 
-  @FindBy(how = XPATH, using = "//input[@id='doneNonFullSupply']")
+  @FindBy(how = ID, using = "doneNonFullSupply")
   private static WebElement doneButtonNonFullSupply = null;
 
-  @FindBy(how = XPATH, using = "//a[contains(text(),'Home')]")
+  @FindBy(how = ID, using = "homeMenu")
   private static WebElement homeMenuItem = null;
 
-  @FindBy(how = XPATH, using = "//div[@openlmis-message='error']")
+  @FindBy(how = ID, using = "saveFailMessage")
   private static WebElement configureTemplateErrorDiv = null;
 
   @FindBy(how = XPATH, using = "//div[@id='requisition-header']/div/div[1]/div[@class='Emergency']/span")
@@ -257,7 +258,7 @@ public class InitiateRnRPage extends RequisitionPage {
   @FindBy(how = ID, using = "allocatedBudgetAmount")
   private static WebElement allocatedBudgetAmount = null;
 
-  @FindBy(how = XPATH, using = "//span[@openlmis-message='label.allocated.budget']")
+  @FindBy(how = ID, using = "allocatedBudgetLabel")
   private static WebElement allocatedBudgetLabel = null;
 
   @FindBy(how = ID, using = "allocatedBudgetNotApplicable")
@@ -272,7 +273,7 @@ public class InitiateRnRPage extends RequisitionPage {
   @FindBy(how = ID, using = "budgetWarningExtra")
   private static WebElement budgetWarningMessageOnFooter = null;
 
-  @FindBy(how = XPATH, using = "//*[@id=\"action_buttons\"]/ng-include/div/div/span[1]/strong/span[1]")
+  @FindBy(how = ID, using = "budgetWarningIcon")
   private static WebElement budgetWarningIconOnFooter = null;
 
   Float actualTotalCostFullSupply = 0.0f;
