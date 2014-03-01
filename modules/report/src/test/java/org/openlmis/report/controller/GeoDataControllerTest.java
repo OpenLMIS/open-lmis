@@ -11,15 +11,16 @@
 package org.openlmis.report.controller;
 
 import groovy.lang.Category;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.report.mapper.lookup.GeographicZoneReportMapper;
 import org.openlmis.report.model.GeoReportData;
 import org.openlmis.report.response.OpenLmisResponse;
+import org.powermock.modules.junit4.PowerMockRunner;
 import org.springframework.http.ResponseEntity;
 
 import java.util.ArrayList;
@@ -31,9 +32,13 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @Category(UnitTests.class)
-@RunWith(MockitoJUnitRunner.class)
-
+@RunWith(PowerMockRunner.class)
 public class GeoDataControllerTest {
+
+  @Before
+  public void setup(){
+
+  }
 
   @Mock
   private GeographicZoneReportMapper mapper;
@@ -51,7 +56,7 @@ public class GeoDataControllerTest {
     ResponseEntity<OpenLmisResponse> actual = controller.getReportingRateReport(1L, 1L);
 
     verify(mapper).getGeoReportingRate(1L, 1L);
-    assertEquals(actual.getBody().getData().get("map"), is( reportData );
+    assertEquals(actual.getBody().getData().get("map"), is( reportData ));
 
   }
 }
