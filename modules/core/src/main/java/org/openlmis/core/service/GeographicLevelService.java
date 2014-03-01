@@ -12,8 +12,6 @@ package org.openlmis.core.service;
 
 import org.openlmis.core.domain.GeographicLevel;
 import org.openlmis.core.repository.GeographicLevelRepository;
-import org.openlmis.core.repository.mapper.GeographicLevelMapperExtension;
-import org.springframework.beans.factory.annotation.Autowired;
 
 public class GeographicLevelService {
 
