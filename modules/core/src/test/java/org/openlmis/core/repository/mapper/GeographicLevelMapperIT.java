@@ -13,6 +13,7 @@ package org.openlmis.core.repository.mapper;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
+import org.openlmis.core.domain.GeographicLevel;
 import org.openlmis.db.categories.IntegrationTests;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -21,6 +22,7 @@ import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 
 @Category(IntegrationTests.class)
@@ -38,4 +40,9 @@ public class GeographicLevelMapperIT {
     assertThat(mapper.getLowestGeographicLevel(), is(4));
   }
 
+  @Test
+  public void shouldGetGeographicLevelById() throws Exception {
+    GeographicLevel actualLevel = mapper.getGeographicLevelById(1);
+    assertNotNull(actualLevel);
+  }
 }
