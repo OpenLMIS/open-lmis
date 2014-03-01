@@ -10,9 +10,9 @@
 
 package org.openlmis.report.controller;
 
-import groovy.lang.Category;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -20,25 +20,24 @@ import org.openlmis.db.categories.UnitTests;
 import org.openlmis.report.mapper.lookup.GeographicZoneReportMapper;
 import org.openlmis.report.model.GeoReportData;
 import org.openlmis.report.response.OpenLmisResponse;
+import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.mockito.MockitoAnnotations.initMocks;
 
-@Category(UnitTests.class)
 @RunWith(PowerMockRunner.class)
+@Category(UnitTests.class)
+@PrepareForTest(OpenLmisResponse.class)
 public class GeoDataControllerTest {
 
-  @Before
-  public void setup(){
 
-  }
 
   @Mock
   private GeographicZoneReportMapper mapper;
@@ -46,6 +45,10 @@ public class GeoDataControllerTest {
   @InjectMocks
   private GeoDataController controller;
 
+  @Before
+  public void setup(){
+    initMocks(this);
+  }
 
   @Test
   public void shouldGetReportingRateReport() throws Exception {
@@ -53,10 +56,11 @@ public class GeoDataControllerTest {
     reportData.add(new GeoReportData());
     when(mapper.getGeoReportingRate(1L, 1L)).thenReturn(reportData);
 
+    ResponseEntity<OpenLmisResponse> expectResponse = new ResponseEntity<>(new OpenLmisResponse(), HttpStatus.OK);
+    when(OpenLmisResponse.response("map", reportData)).thenReturn(expectResponse);
+
     ResponseEntity<OpenLmisResponse> actual = controller.getReportingRateReport(1L, 1L);
 
     verify(mapper).getGeoReportingRate(1L, 1L);
-    assertEquals(actual.getBody().getData().get("map"), is( reportData ));
-
   }
 }
