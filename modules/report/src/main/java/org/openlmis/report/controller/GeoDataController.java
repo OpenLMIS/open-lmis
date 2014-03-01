@@ -32,8 +32,8 @@ public class GeoDataController extends BaseController {
   private GeographicZoneReportMapper reportLookupService;
 
   @RequestMapping(value="/reporting-rate", method = GET, headers = BaseController.ACCEPT_JSON)
-  public ResponseEntity<OpenLmisResponse> getPrograms(@RequestParam(value = "program", required = true, defaultValue = "0") Long program,
-                                                      @RequestParam(value = "period", required = true, defaultValue = "0") Long period ){
+  public ResponseEntity<OpenLmisResponse> getReportingRateReport(@RequestParam(value = "program", required = true, defaultValue = "0") Long program,
+                                                                 @RequestParam(value = "period", required = true, defaultValue = "0") Long period){
       return OpenLmisResponse.response( "map", this.reportLookupService.getGeoReportingRate(program, period) );
   }
 

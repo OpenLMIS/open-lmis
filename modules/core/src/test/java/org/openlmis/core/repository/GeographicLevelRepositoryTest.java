@@ -10,19 +10,39 @@
 
 package org.openlmis.core.repository;
 
+import org.junit.Test;
+import org.junit.experimental.categories.Category;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.domain.GeographicLevel;
 import org.openlmis.core.repository.mapper.GeographicLevelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
+import org.openlmis.db.categories.UnitTests;
 
-@Repository
-public class GeographicLevelRepository {
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.verify;
+import static org.powermock.api.mockito.PowerMockito.when;
 
-    @Autowired
-    private GeographicLevelMapper mapper;
+@Category(UnitTests.class)
+@RunWith(MockitoJUnitRunner.class)
+public class GeographicLevelRepositoryTest {
 
-    public GeographicLevel getGeographicLevel (int geographicLevelID){
-        return mapper.getGeographicLevelById(geographicLevelID);
-    }
+  @Mock
+  private GeographicLevelMapper mapper;
 
+  @InjectMocks
+  private GeographicLevelRepository repository;
+
+  @Test
+  public void shouldGetGeographicLevel() throws Exception {
+    GeographicLevel expectedLevel = new GeographicLevel();
+    expectedLevel.setCode("code");
+    when(mapper.getGeographicLevelById(1)).thenReturn(expectedLevel);
+
+    GeographicLevel actual = repository.getGeographicLevel(1);
+
+    verify(mapper).getGeographicLevelById(1);
+    assertEquals(actual.getCode(), "code");
+  }
 }
