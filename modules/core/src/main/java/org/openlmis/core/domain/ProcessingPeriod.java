@@ -14,9 +14,11 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+import org.codehaus.jackson.map.annotate.JsonDeserialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.joda.time.DateTime;
 import org.openlmis.core.exception.DataException;
+import org.openlmis.core.serializer.DateDeserializer;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -36,9 +38,13 @@ public class ProcessingPeriod extends BaseModel {
   private Long scheduleId;
   private String name;
   private String description;
-  private Date startDate;
-  private Date endDate;
   private Integer numberOfMonths;
+
+  @JsonDeserialize(using = DateDeserializer.class)
+  private Date startDate;
+
+  @JsonDeserialize(using = DateDeserializer.class)
+  private Date endDate;
 
   public ProcessingPeriod(Long id) {
     this.id = id;
