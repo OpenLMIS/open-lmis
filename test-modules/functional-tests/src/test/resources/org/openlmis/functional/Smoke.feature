@@ -89,6 +89,7 @@ Feature: Smoke Tests
     And I type and username "Admin123"
     When I click submit button
     Then I should see email send successfully
+    And I am logged in as "Admin123"
 
   @smokeRequisition
   Scenario: Verify New Regimen Created
@@ -238,7 +239,6 @@ Feature: Smoke Tests
     And I verify order file line "2" having "F10,P10,10,16/01/2012,"
     And I verify order date format "yyyy/mm/dd" in line "2"
     And I verify order id in line "2"
-
 
   @smokeRequisition
   Scenario: Selected requisitions across pages should not convert to order
