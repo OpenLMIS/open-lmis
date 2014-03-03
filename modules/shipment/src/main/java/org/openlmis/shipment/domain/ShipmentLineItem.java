@@ -21,6 +21,11 @@ import org.openlmis.rnr.domain.RnrLineItem;
 import java.math.BigDecimal;
 import java.util.Date;
 
+/**
+ * Represents each record of ShipmentFile and keeps track of cost and quantity shipped of a product along with
+ * product details.
+ */
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

@@ -42,6 +42,11 @@ import java.util.*;
 import static java.lang.Long.parseLong;
 import static org.supercsv.prefs.CsvPreference.STANDARD_PREFERENCE;
 
+/**
+ * Exposes the services for processing shipment file and its line items. It validates the data received in
+ * shipment file, processes each record and then logs the errors if any.
+ */
+
 @Component
 @MessageEndpoint
 @NoArgsConstructor

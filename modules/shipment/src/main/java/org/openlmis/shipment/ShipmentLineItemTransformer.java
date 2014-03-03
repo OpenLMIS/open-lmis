@@ -22,6 +22,10 @@ import java.util.Date;
 
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
+/**
+ * ShipmentLineItemTransformer transforms ShipmentLineItemDTO to ShipmentLineItem.
+ */
+
 @Component
 public class ShipmentLineItemTransformer extends LineItemTransformer {
 

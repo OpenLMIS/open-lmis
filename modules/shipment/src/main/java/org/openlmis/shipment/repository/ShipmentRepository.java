@@ -21,6 +21,10 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+/**
+ * Repository class for shipment file related database operations.
+ */
+
 @Repository
 @NoArgsConstructor
 public class ShipmentRepository {
