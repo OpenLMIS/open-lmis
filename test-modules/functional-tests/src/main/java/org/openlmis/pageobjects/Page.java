@@ -18,13 +18,13 @@ import org.openqa.selenium.support.FindBy;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 
-import static org.openqa.selenium.support.How.LINK_TEXT;
+import static org.openqa.selenium.support.How.ID;
 
 public abstract class Page {
 
   public TestWebDriver testWebDriver;
 
-  @FindBy(how = LINK_TEXT, using = "Logout")
+  @FindBy(how = ID, using = "logout")
   private static WebElement logoutLink = null;
 
   protected Page(TestWebDriver driver) {
