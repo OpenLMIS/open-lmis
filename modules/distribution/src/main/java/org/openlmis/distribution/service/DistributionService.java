@@ -26,6 +26,10 @@ import java.util.Map;
 import static org.openlmis.distribution.domain.DistributionStatus.INITIATED;
 import static org.openlmis.distribution.domain.DistributionStatus.SYNCED;
 
+/**
+ * Exposes the services for handling Distribution entity.
+ */
+
 @Service
 public class DistributionService {
 

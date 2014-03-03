@@ -17,6 +17,10 @@ import org.openlmis.distribution.repository.EpiUseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+/**
+ * Exposes the services for handling EpiUse entity.
+ */
+
 @Service
 @NoArgsConstructor
 public class EpiUseService {
