@@ -27,67 +27,68 @@ import java.util.List;
 import static com.thoughtworks.selenium.SeleneseTestBase.assertFalse;
 import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
 import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
+import static org.openqa.selenium.support.How.ID;
 
 public class UserPage extends Page {
 
-  @FindBy(how = How.ID, using = "user-add-new")
+  @FindBy(how = ID, using = "user-add-new")
   private static WebElement addNewButton = null;
 
-  @FindBy(how = How.ID, using = "userName")
+  @FindBy(how = ID, using = "userName")
   private static WebElement userNameField = null;
 
-  @FindBy(how = How.ID, using = "email")
+  @FindBy(how = ID, using = "email")
   private static WebElement emailField = null;
 
-  @FindBy(how = How.ID, using = "firstName")
+  @FindBy(how = ID, using = "firstName")
   private static WebElement firstNameField = null;
 
-  @FindBy(how = How.ID, using = "lastName")
+  @FindBy(how = ID, using = "lastName")
   private static WebElement lastNameField = null;
 
-  @FindBy(how = How.XPATH, using = "//input[1][@class='btn btn-primary save-button']")
+  @FindBy(how = ID, using = "userSaveButton")
   private static WebElement saveButton = null;
 
-  @FindBy(how = How.XPATH, using = "//input[2][@class='btn btn-cancel cancel-button']")
+  @FindBy(how = ID, using = "userCancelButton")
   private static WebElement cancelButton = null;
 
-  @FindBy(how = How.XPATH, using = "//input[@class='btn btn-danger delete-button']")
+  @FindBy(how = ID, using = "userDisableButton")
   private static WebElement disableButton = null;
 
-  @FindBy(how = How.XPATH, using = "//input[@class='btn btn-primary enable-button']")
+  @FindBy(how = ID, using = "userEnableButton")
   private static WebElement enableButton = null;
 
-  @FindBy(how = How.ID, using = "searchUser")
+  @FindBy(how = ID, using = "searchUser")
   private static WebElement searchUserTextField = null;
 
-  @FindBy(how = How.ID, using = "resetPassword0")
+  @FindBy(how = ID, using = "resetPassword0")
   private static WebElement selectFirstResetPassword = null;
 
-  @FindBy(how = How.ID, using = "password1")
+  @FindBy(how = ID, using = "password1")
   private static WebElement newPasswordField = null;
 
-  @FindBy(how = How.ID, using = "password2")
+  @FindBy(how = ID, using = "password2")
   private static WebElement confirmPasswordField = null;
 
-  @FindBy(how = How.XPATH, using = "//div[@id='changePassword']/div/input[1]")
+  @FindBy(how = ID, using = "resetPasswordDone")
   private static WebElement resetPasswordDone = null;
 
-  @FindBy(how = How.LINK_TEXT, using = "OK")
+  @FindBy(how = ID, using = "button_OK")
   private static WebElement okButton = null;
 
-  @FindBy(how = How.ID, using = "user0")
+  @FindBy(how = ID, using = "user0")
   private static WebElement firstUserLink = null;
 
   @FindBy(how = How.XPATH, using = "//a[@ng-click='editUser(user.id)']")
   private static WebElement selectFirstEditUser = null;
 
-  @FindBy(how = How.XPATH, using = "//h2[contains(text(),'Edit User')]")
+  @FindBy(how = ID, using = "editUserLabel")
   private static WebElement editUserHeader = null;
 
-  @FindBy(how = How.ID, using = "searchFacility")
+  @FindBy(how = ID, using = "searchFacility")
   private static WebElement searchFacility = null;
 
-  @FindBy(how = How.ID, using = "result0")
+  @FindBy(how = ID, using = "result0")
   private static WebElement selectFacility = null;
 
   @FindBy(how = How.XPATH, using = "//form[@id='create-user']/div/div[1]/div[7]/div/ng-switch/span")
@@ -174,10 +175,7 @@ public class UserPage extends Page {
   @FindBy(how = How.LINK_TEXT, using = "View Here")
   private static WebElement viewHereLink = null;
 
-  @FindBy(how = How.XPATH, using = "//div[@id='saveSuccessMsgDiv']")
-  private static WebElement userUpdateSuccessMessage = null;
-
-  @FindBy(how = How.XPATH, using = "//div[@id='saveSuccessMsgDiv']")
+  @FindBy(how = ID, using = "saveSuccessMsgDiv")
   private static WebElement successMessage = null;
 
   @FindBy(how = How.XPATH, using = "//input[contains(text(),'Remove')]")
@@ -195,7 +193,7 @@ public class UserPage extends Page {
   @FindBy(how = How.XPATH, using = "//div[@class='form-field radio-group']/input[2]")
   private static WebElement restrictLoginNoOption = null;
 
-  @FindBy(how = How.ID, using = "resetPasswordOk")
+  @FindBy(how = ID, using = "resetPasswordOk")
   private static WebElement resetPasswordOkButton = null;
 
   public UserPage(TestWebDriver driver) {
@@ -415,8 +413,8 @@ public class UserPage extends Page {
   }
 
   public void verifyMessage(String message) {
-    testWebDriver.waitForElementToAppear(userUpdateSuccessMessage);
-    assertEquals(userUpdateSuccessMessage.getText(), message);
+    testWebDriver.waitForElementToAppear(successMessage);
+    assertEquals(successMessage.getText(), message);
   }
 
   public void enterDeliveryZoneData(String deliveryZoneCode, String program, String role) {

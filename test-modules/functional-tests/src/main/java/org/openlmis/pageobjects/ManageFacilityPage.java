@@ -113,7 +113,7 @@ public class ManageFacilityPage extends Page {
   @FindBy(how = ID, using = "cold-storage-net-capacity")
   private static WebElement coldStorageNetCapacity = null;
 
-  @FindBy(how = ID, using = "suppliesOtherYes")
+  @FindBy(how = ID, using = "suppliesOthersYes")
   private static WebElement facilitySuppliesOthersYes = null;
 
   @FindBy(how = ID, using = "facilitySdpTrue")
@@ -167,7 +167,7 @@ public class ManageFacilityPage extends Page {
   @FindBy(how = ID, using = "supported-program-add")
   private static WebElement addSupportedProgram = null;
 
-  @FindBy(how = ID, using = "save-button")
+  @FindBy(how = ID, using = "saveButton")
   public static WebElement saveButton = null;
 
   @FindBy(how = XPATH, using = "//div[@id='saveSuccessMsgDiv']/span")
