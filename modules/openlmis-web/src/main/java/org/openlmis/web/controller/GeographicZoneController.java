@@ -11,10 +11,8 @@
 package org.openlmis.web.controller;
 
 import org.openlmis.core.domain.GeographicZone;
-import org.openlmis.core.dto.GeographicZoneGeometry;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.GeographicZoneService;
-import org.openlmis.core.service.GeographicZoneServiceExtension;
 import org.openlmis.report.service.lookup.ReportLookupService;
 import org.openlmis.web.model.GeoZoneInfo;
 import org.openlmis.web.response.OpenLmisResponse;
@@ -33,8 +31,10 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 import java.util.List;
 
-import static org.openlmis.web.response.OpenLmisResponse.*;
-import static org.springframework.web.bind.annotation.RequestMethod.*;
+import static org.openlmis.web.response.OpenLmisResponse.error;
+import static org.openlmis.web.response.OpenLmisResponse.success;
+import static org.springframework.web.bind.annotation.RequestMethod.GET;
+import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 
 @Controller
@@ -42,10 +42,6 @@ public class GeographicZoneController extends BaseController {
 
   @Autowired
   private GeographicZoneService service;
-
-  @Autowired
-  private GeographicZoneServiceExtension geographicZoneServiceExt;
-
   @Autowired
   private ReportLookupService reportLookupService;
 
@@ -65,7 +61,7 @@ public class GeographicZoneController extends BaseController {
     geographicZone.setModifiedDate(new Date());
 
     try {
-      geographicZoneServiceExt.saveNew(geographicZone);
+      service.saveNew(geographicZone);
     } catch (DataException e) {
       return error(e, HttpStatus.BAD_REQUEST);
     }
@@ -84,9 +80,9 @@ public class GeographicZoneController extends BaseController {
     geographicZone.setModifiedBy(loggedInUserId(request));
     try {
       if (geographicZone.getId() == null) {
-        geographicZoneServiceExt.saveNew(geographicZone);
+        service.saveNew(geographicZone);
       } else {
-        geographicZoneServiceExt.update(geographicZone);
+        service.update(geographicZone);
       }
     } catch (DataException e) {
       return error(e, HttpStatus.BAD_REQUEST);
@@ -99,13 +95,13 @@ public class GeographicZoneController extends BaseController {
   @RequestMapping(value = "/geographicZone/getDetails/{id}", method = GET, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_GEOGRAPHIC_ZONES')")
   public ResponseEntity<OpenLmisResponse> getGeographicZone(@PathVariable(value = "id") int id) {
-    return OpenLmisResponse.response("geographicZone", geographicZoneServiceExt.getById(id));
+    return OpenLmisResponse.response("geographicZone", service.getById(id));
   }
 
   @RequestMapping(value = "/geographicZones", method = GET)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_GEOGRAPHIC_ZONES')")
   public List<GeographicZone> searchGeographicZone(@RequestParam(required = true) String param) {
-    return geographicZoneServiceExt.searchGeographicZone(param);
+    return service.searchGeographicZone(param);
   }
 
 
@@ -117,14 +113,14 @@ public class GeographicZoneController extends BaseController {
   @RequestMapping(value = "/geographicZone/getList", method = GET, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_GEOGRAPHIC_ZONES')")
   public ResponseEntity<OpenLmisResponse> getGeographicZoneList(HttpServletRequest request) {
-    return OpenLmisResponse.response("geographicZones", geographicZoneServiceExt.getAll());
+    return OpenLmisResponse.response("geographicZones", service.getAll());
   }
 
 
   @RequestMapping(value = "/geographic-zone/save-gis", method = POST, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_GEOGRAPHIC_ZONES')")
   public ResponseEntity<OpenLmisResponse> saveGeographicZoneGIS(@RequestBody GeoZoneInfo geoZoneGeometries, HttpServletRequest request) {
-    geographicZoneServiceExt.saveGisInfo(geoZoneGeometries.getFeatures(), loggedInUserId(request));
+    service.saveGisInfo(geoZoneGeometries.getFeatures(), loggedInUserId(request));
     return OpenLmisResponse.response("status", true);
   }
 
