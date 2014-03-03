@@ -8,7 +8,7 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-package org.openlmis.order.dto;
+package org.openlmis.shipment.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -22,6 +22,10 @@ import java.util.Collection;
 import java.util.List;
 
 import static org.apache.commons.lang3.StringUtils.isBlank;
+
+/**
+ *  DTO for ShipmentLineItem. It represents each record of Budget File received.
+ */
 
 @Data
 @AllArgsConstructor

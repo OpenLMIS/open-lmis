@@ -12,8 +12,8 @@ package org.openlmis.shipment;
 
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.transformer.LineItemTransformer;
-import org.openlmis.order.dto.ShipmentLineItemDTO;
 import org.openlmis.shipment.domain.ShipmentLineItem;
+import org.openlmis.shipment.dto.ShipmentLineItemDTO;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;

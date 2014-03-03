@@ -5,6 +5,7 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.openlmis.core.domain.EDIFileColumn;
 import org.openlmis.core.exception.DataException;
+import org.openlmis.shipment.dto.ShipmentLineItemDTO;
 
 import java.util.Collection;
 import java.util.List;
