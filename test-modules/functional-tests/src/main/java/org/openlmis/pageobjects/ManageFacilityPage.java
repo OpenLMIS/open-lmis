@@ -50,7 +50,7 @@ public class ManageFacilityPage extends Page {
   @FindBy(how = ID, using = "saveErrorMsgDiv")
   private static WebElement saveErrorMsgDiv = null;
 
-  @FindBy(how = ID, using = "facilityEnabledYes")
+  @FindBy(how = XPATH, using = "//ng-switch/span")
   private static WebElement enabledFlag = null;
 
   @FindBy(how = ID, using = "facilityActiveFalse")
