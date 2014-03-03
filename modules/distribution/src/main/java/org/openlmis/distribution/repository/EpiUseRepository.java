@@ -18,6 +18,10 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+/**
+ * Repository class for epi use related database operations.
+ */
+
 @Repository
 public class EpiUseRepository {
 

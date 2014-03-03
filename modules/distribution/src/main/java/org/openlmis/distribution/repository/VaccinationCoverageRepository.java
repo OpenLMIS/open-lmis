@@ -17,6 +17,10 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+/**
+ * Repository class for vaccination full coverage, child coverage and adult coverage related database operations.
+ */
+
 @Repository
 public class VaccinationCoverageRepository {
 

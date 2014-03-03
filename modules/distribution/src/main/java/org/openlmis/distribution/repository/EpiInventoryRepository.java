@@ -16,6 +16,10 @@ import org.openlmis.distribution.repository.mapper.EpiInventoryMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+/**
+ * Repository class for epi inventory related database operations.
+ */
+
 @Repository
 public class EpiInventoryRepository {
 
