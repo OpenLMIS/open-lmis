@@ -135,7 +135,7 @@ public class InitiateRnRPage extends RequisitionPage {
   @FindBy(how = ID, using = "totalCostPopupClose")
   private static WebElement closeRnrCostDetailsIcon = null;
 
-  @FindBy(how = ID, using = "showLossesAdjustment")
+  @FindBy(how = ID, using = "totalLossesAndAdjustment")
   private static WebElement addDescription = null;
 
   @FindBy(how = XPATH, using = "//div[@class='adjustment-field']/div[@class='row-fluid']/div[@class='span5']/select")
