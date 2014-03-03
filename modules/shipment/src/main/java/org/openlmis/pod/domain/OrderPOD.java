@@ -31,6 +31,11 @@ import java.util.List;
 import static org.apache.commons.collections.CollectionUtils.find;
 import static org.joda.time.format.DateTimeFormat.forPattern;
 
+/**
+ *  OrderPOD represents an entity that holds a list of OrderPODLineItem. It keeps track of delivery details of an order
+ *  generated for a facility, program and period.
+ */
+
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)

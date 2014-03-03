@@ -35,6 +35,10 @@ import java.util.List;
 import static org.openlmis.core.domain.Right.MANAGE_POD;
 import static org.openlmis.order.domain.OrderStatus.*;
 
+/**
+ * Exposes the services for handling OrderPOD entity.
+ */
+
 @Service
 public class PODService {
 
