@@ -21,6 +21,10 @@ import org.openlmis.core.domain.ProductGroup;
 
 import java.util.*;
 
+/**
+ *  EpiUse represents a container for list of EpiUseLineItem.
+ */
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

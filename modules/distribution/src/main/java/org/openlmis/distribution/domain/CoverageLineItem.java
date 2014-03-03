@@ -19,6 +19,11 @@ import org.openlmis.core.domain.Facility;
 
 import static java.lang.Math.round;
 
+/**
+ *  CoverageLineItem is a base class holding facilityVisitId and targetGroup. TargetGroup is calculated on basis of
+ *  target population percentage and catchment population of the corresponding facility.
+ */
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

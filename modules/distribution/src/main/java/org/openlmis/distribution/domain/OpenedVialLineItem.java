@@ -20,6 +20,11 @@ import org.openlmis.core.domain.Facility;
 
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 
+/**
+ *  OpenedVialLineItem represents the number of product vials consumed along with the pack size of that product
+ *  for a particular facility visited.
+ */
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
