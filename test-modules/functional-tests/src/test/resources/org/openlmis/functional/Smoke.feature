@@ -89,12 +89,11 @@ Feature: Smoke Tests
     And I type and username "Admin123"
     When I click submit button
     Then I should see email send successfully
-    And I am logged in as Admin
 
   @smokeRequisition
   Scenario: Verify New Regimen Created
     Given I have data available for programs configured
-    And I am logged in as Admin
+    And I am logged in as "Admin123"
     When I access regimen configuration page
     Then I should see configured program list
     When I configure program "ESSENTIAL MEDICINES" for regimen template
@@ -107,7 +106,7 @@ Feature: Smoke Tests
   @smokeRequisition
   Scenario: Verify New Regimen Reporting Field Configuration
     Given I have data available for programs configured
-    And I am logged in as Admin
+    And I am logged in as "Admin123"
     When I access regimen configuration page
     Then I should see configured program list
     When I configure program "ESSENTIAL MEDICINES" for regimen template
@@ -131,7 +130,7 @@ Feature: Smoke Tests
 
   @smokeRequisition
   Scenario: Admin user should not access requisition page
-    Given I am logged in as Admin
+    Given I am logged in as "Admin123"
     When I access initiate requisition page through URL
     Then I should see unauthorized access message
 
@@ -144,7 +143,7 @@ Feature: Smoke Tests
 
   @smokeRequisition
   Scenario: Admin can create, disable & restore user
-    Given I am logged in as Admin
+    Given I am logged in as "Admin123"
     When I create a user:
       | Email                   | FirstName | LastName | UserName |
       | Dummy_User@openlmis.com | Dummy     | User     | Dummy    |
@@ -161,7 +160,7 @@ Feature: Smoke Tests
     Given I configure order file:
       | File Prefix | Header In File |
       | O           | FALSE          |
-    And I am logged in as Admin
+    And I am logged in as "Admin123"
     And I access configure order page
     Then I should see order file prefix "O"
     And I should see include column header as "false"
@@ -172,7 +171,7 @@ Feature: Smoke Tests
 
   @smokeRequisition
   Scenario: User should be able to configure shipment file format using default format
-    When I am logged in as Admin
+    When I am logged in as "Admin123"
     And I access configure shipment page
     And I should see include column headers unchecked
     And I should see include checkbox for all data fields
@@ -182,7 +181,7 @@ Feature: Smoke Tests
 
   @smokeRequisition
   Scenario: User should be able to configure budget file format using default format
-    When I am logged in as Admin
+    When I am logged in as "Admin123"
     And I access configure budget page
     And I should see include column headers option unchecked
     And I verify default checkbox for all data fields
@@ -301,7 +300,7 @@ Feature: Smoke Tests
   @smokeDistribution
   Scenario: User should able to configure program product ISA
     Given I have data available for program product ISA
-    And I am logged in as Admin
+    And I am logged in as "Admin123"
     When I access program product ISA page for "VACCINES"
     And I type ratio "3.9" dosesPerYear "3" wastage "10" bufferPercentage "25" adjustmentValue "0" minimumValue "10" maximumValue "1000"
     Then I verify calculated ISA value having population "1000" as "122"
@@ -354,7 +353,7 @@ Feature: Smoke Tests
     Given I have the following data for override ISA:
       | user     | program  | product | productName | category | whoRatio | dosesPerYear | wastageFactor | bufferPercentage | minimumValue | maximumValue | adjustmentValue |
       | Admin123 | VACCINES | P1      | antibiotic1 | C1       | 1        | 2            | 3             | 4                | null         | null         | 5               |
-    And I am logged in as Admin
+    And I am logged in as "Admin123"
     And I access create facility page
     When I create facility
     And I override ISA "24"

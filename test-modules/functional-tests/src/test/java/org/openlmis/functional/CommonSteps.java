@@ -44,12 +44,6 @@ public class CommonSteps extends TestCaseHelper {
     loginPage.loginAs(username, "Admin123");
   }
 
-  @Given("^I am logged in as Admin$")
-  public void adminLogin() {
-    LoginPage loginPage = PageObjectFactory.getLoginPage(testWebDriver, baseUrlGlobal);
-    loginPage.loginAs("Admin123", "Admin123");
-  }
-
   @Given("^I have \"([^\"]*)\" user with \"([^\"]*)\" rights$")
   public void setupUserWithRights(String user, String rights) throws SQLException {
     String[] rightList = rights.split(",");
