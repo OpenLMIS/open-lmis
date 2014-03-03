@@ -12,9 +12,13 @@ package org.openlmis.core.service;
 
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.GeographicZone;
+import org.openlmis.core.dto.GeographicZoneGeometry;
 import org.openlmis.core.repository.GeographicZoneRepository;
+import org.openlmis.core.repository.mapper.GeographicZoneGeoJSONMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @NoArgsConstructor
@@ -22,6 +26,9 @@ public class GeographicZoneService {
 
   @Autowired
   GeographicZoneRepository repository;
+
+  @Autowired
+  GeographicZoneGeoJSONMapper geoJsonMapper;
 
   public void save(GeographicZone geographicZone) {
     geographicZone.setLevel(repository.getGeographicLevelByCode(geographicZone.getLevel().getCode()));
@@ -43,5 +50,41 @@ public class GeographicZoneService {
 
   public GeographicZone getById(long id) {
     return repository.getById(id);
+  }
+
+
+  public List<GeographicZone> searchGeographicZone(String geographicZoneSearchParam) {
+    return repository.searchGeographicZone(geographicZoneSearchParam);
+  }
+
+  public List<GeographicZone> getAll() {
+    return repository.getAllGeographicZones();
+  }
+
+  public void saveNew(GeographicZone geographicZone) {
+    repository.insert_Ext(geographicZone);
+  }
+
+  public void update(GeographicZone geographicZone) {
+    repository.update(geographicZone);
+  }
+
+  public GeographicZone getById(int id) {
+    return repository.getById(id);
+  }
+
+  public void saveGisInfo(List<GeographicZoneGeometry> geoZoneGeometries, Long userId) {
+    for(GeographicZoneGeometry geoData: geoZoneGeometries ){
+      // check if the zone has an entry
+      GeographicZoneGeometry existing = geoJsonMapper.getGeographicZoneGeoJSONbyZoneId(geoData.getZoneId());
+      geoData.setModifiedBy(userId);
+      if(existing != null){
+        geoData.setId(existing.getId());
+        geoJsonMapper.update(geoData);
+      }else{
+        geoData.setCreatedBy(userId);
+        geoJsonMapper.insert(geoData);
+      }
+    }
   }
 }

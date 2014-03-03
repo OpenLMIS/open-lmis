@@ -16,12 +16,12 @@ import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.report.mapper.lookup.GeographicZoneReportMapper;
 import org.openlmis.report.model.GeoReportData;
 import org.openlmis.report.response.OpenLmisResponse;
 import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -32,7 +32,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
-@RunWith(PowerMockRunner.class)
+@RunWith(MockitoJUnitRunner.class)
 @Category(UnitTests.class)
 @PrepareForTest(OpenLmisResponse.class)
 public class GeoDataControllerTest {
@@ -56,8 +56,9 @@ public class GeoDataControllerTest {
     reportData.add(new GeoReportData());
     when(mapper.getGeoReportingRate(1L, 1L)).thenReturn(reportData);
 
-    ResponseEntity<OpenLmisResponse> expectResponse = new ResponseEntity<>(new OpenLmisResponse(), HttpStatus.OK);
-    when(OpenLmisResponse.response("map", reportData)).thenReturn(expectResponse);
+    OpenLmisResponse response = new OpenLmisResponse();
+    response.addData("map", reportData);
+    ResponseEntity<OpenLmisResponse> expectResponse = new ResponseEntity<>(response, HttpStatus.OK);
 
     ResponseEntity<OpenLmisResponse> actual = controller.getReportingRateReport(1L, 1L);
 
