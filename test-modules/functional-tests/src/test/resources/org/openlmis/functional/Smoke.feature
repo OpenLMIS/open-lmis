@@ -1,6 +1,38 @@
 Feature: Smoke Tests
 
   @smokeRequisition
+  Scenario: User should be able to initiate and submit emergency RnR
+    Given I have the following data for regimen:
+      | HIV | storeInCharge | ADULTS | RegimenCode1 | RegimenName1 | RegimenCode2 | RegimenName2 |
+    Given I have "storeInCharge" user with "CREATE_REQUISITION,VIEW_REQUISITION" rights and data to initiate requisition
+    And I am logged in as "storeInCharge"
+    And I access initiate emergency requisition page
+    Then I got error message "No current period defined. Please contact the Admin."
+    When I have period "currentPeriod" associated with schedule "M"
+    And I access home page
+    And I access initiate emergency requisition page
+    Then I should verify "currentPeriod" with status "Not yet started" in row "1"
+    When I access proceed
+    And I access initiate emergency requisition page
+    Then I should verify "currentPeriod" with status "INITIATED" in row "2"
+    And I should verify "currentPeriod" with status "Not yet started" in row "1"
+    When I access proceed
+    And I enter beginning balance "100"
+    And I enter quantity dispensed "100"
+    And I enter quantity received "100"
+    And I click submit
+    And I click ok
+    Then I validate beginning balance "100"
+    And I validate quantity dispensed "100"
+    And I validate quantity received "100"
+    And I access home page
+    And I access initiate requisition page
+    And I access initiate emergency requisition page
+    Then I should verify "currentPeriod" with status "INITIATED" in row "3"
+    Then I should verify "currentPeriod" with status "SUBMITTED" in row "2"
+    And I should verify "currentPeriod" with status "Not yet started" in row "1"
+
+  @smokeRequisition
   Scenario: User should be able to save and submit regimen data
     Given I have the following data for regimen:
       | HIV | storeInCharge | ADULTS | RegimenCode1 | RegimenName1 | RegimenCode2 | RegimenName2 |
@@ -208,37 +240,6 @@ Feature: Smoke Tests
     And I verify order date format "yyyy/mm/dd" in line "2"
     And I verify order id in line "2"
 
-  @smokeRequisition
-  Scenario: User should be able to initiate and submit emergency RnR
-    Given I have the following data for regimen:
-      | HIV | storeInCharge | ADULTS | RegimenCode1 | RegimenName1 | RegimenCode2 | RegimenName2 |
-    Given I have "storeInCharge" user with "CREATE_REQUISITION,VIEW_REQUISITION" rights and data to initiate requisition
-    And I am logged in as " storeInCharge"
-    And I access initiate emergency requisition page
-    Then I got error message "No current period defined. Please contact the Admin."
-    When I have period "currentPeriod" associated with schedule "M"
-    And I access home page
-    And I access initiate emergency requisition page
-    Then I should verify "currentPeriod" with status "Not yet started" in row "1"
-    When I access proceed
-    And I access initiate emergency requisition page
-    Then I should verify "currentPeriod" with status "INITIATED" in row "2"
-    And I should verify "currentPeriod" with status "Not yet started" in row "1"
-    When I access proceed
-    And I enter beginning balance "100"
-    And I enter quantity dispensed "100"
-    And I enter quantity received "100"
-    And I click submit
-    And I click ok
-    Then I validate beginning balance "100"
-    And I validate quantity dispensed "100"
-    And I validate quantity received "100"
-    And I access home page
-    And I access initiate requisition page
-    And I access initiate emergency requisition page
-    Then I should verify "currentPeriod" with status "INITIATED" in row "3"
-    Then I should verify "currentPeriod" with status "SUBMITTED" in row "2"
-    And I should verify "currentPeriod" with status "Not yet started" in row "1"
 
   @smokeRequisition
   Scenario: Selected requisitions across pages should not convert to order
