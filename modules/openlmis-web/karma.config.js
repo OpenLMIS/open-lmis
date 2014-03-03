@@ -27,6 +27,10 @@ module.exports = function (config) {
       'lib/underscore/underscore-min.js',
       'lib/base2.js',
       'lib/select2/select2.min.js',
+      'lib/ui-calendar/calendar.js',
+      'lib/easypiechart/angular.easypiechart.min.js',
+      'lib/angular-ui/ui-jqplot/ui-jqplot-chart.js',
+      'lib/angular-ui/ng-table/ng-table.js',
 
       //Mocking library
       '../../../test/javascript/lib/angular-mocks.js',

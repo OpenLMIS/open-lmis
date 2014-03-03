@@ -7,42 +7,78 @@
  */
 
 describe("Dashboard Controller",function (){
-    var scope,rootScope, ctrl, httpBackend, location, facilities;
+    var scope,rootScope, ctrl, $httpBackend, location, facilities;
 
     beforeEach(module('openlmis'));
-    beforeEach(inject(function ($httpBackend, $rootScope, $location, $controller) {
+    beforeEach(module('dashboard'));
+
+    beforeEach(inject(function (_$httpBackend_, $rootScope, $location, $controller) {
         scope = $rootScope.$new();
         rootScope = $rootScope;
+
         rootScope.hasPermission = function () {
             return true;
         };
         location = $location;
-        httpBackend = $httpBackend;
+        $httpBackend = _$httpBackend_;
+
         facilities = [
-            {"id": "10134", "name": "National Warehouse", "description": null, "geographicZone" :{"id": 505}}
+            {"id": 10134, "name": "National Warehouse", "description": null, "geographicZone" :{"id": 505}}
         ];
-        ctrl = $controller(AdminDashboardController, {$scope: scope, $rootScope: rootScope});
+        var userFacilityData = {"facilityList": facilities};
 
-    }));
+        var operationYears = {"years" : [2010,2011,2012,2013,2014]};
 
-  /*  it('should load item fill rate data for selected facility ', function (){
+        var programs = {"programs":[
+            {"id":1,"name":"ARV","code":"ARV","description":"ARV"},
+            {"id":2,"name":"ILS","code":"ILS","description":"ILS"}
+        ]};
+
+        var schedules = {"schedules" : [
+            {"id":1,"name":"Oct-Nov","code":"schedule1","description":"schedule1"},
+            {"id":2,"name":"Sep-Oct","code":"schedule2","description":"schedule2"}
+        ]};
+
+        var periods = {"periods":[
+            {"id": 3, "scheduleId": 2, "name": "Dec2012", "description": "Dec2012", "startDate": 1354300200000, "endDate": 1356892200000, "numberOfMonths": 1}
+        ]};
+
+        var facilityResponse = {"facilities":[
+            {"id":1,"code":"F11","name":"lokesh"}
+        ]};
+
+        ctrl = $controller(AdminDashboardController, {$scope: scope, $rootScope: rootScope, userFacilityData : userFacilityData});
+
         scope.filterObject = {};
         scope.filterObject.facilityId =  10135;
         scope.filterObject.geographicZoneId = facilities[0].geographicZone.id;
+        scope.filterObject.rgroupId = 1;
+        scope.filterObject.periodId = 1;
         scope.filterObject.productIdList = [211,234];
         scope.filterObject.programId = 1;
+        scope.filterObject.scheduleId = 1;
+
+        $httpBackend.when('GET','/reports/operationYears.json').respond(operationYears);
+        $httpBackend.when('GET','/reports/programs.json').respond(200,programs);
+        $httpBackend.when('GET','/reports/schedules.json').respond(200,schedules);
+
+    }));
+
+    it('should load item fill rate data for selected facility ', function (){
 
         var itemFillRates = [
             {"product": "product 1", "fillRate": 45},
             {"product": "product 2", "fillRate": -55}
         ];
+        var orderFill = {"fillRate" : 45.6 } ;
 
-        httpBackend.expectGET('/dashboard/itemFillRate.json?geographicZoneId=505&facilityId=10135&programId=1&periodId=4&productIdList='+scope.filterObject.productIdList).respond({"itemFillRate": itemFillRates});
+        $httpBackend.when('GET','/dashboard/itemFillRate.json?facilityId=10135&geographicZoneId=505&periodId=1&productListId=211&productListId=234&programId=1').respond({"itemFillRate": itemFillRates});
+        $httpBackend.when('GET','/dashboard/orderFillRate.json?facilityId=10135&geographicZoneId=505&periodId=1&programId=1').respond({"orderFillRate": orderFill});
         scope.loadFillRates();
-
-        httpBackend.flush();
+        $httpBackend.flush();
 
         expect(scope.itemFills).toEqual(itemFillRates);
-    });*/
+        expect(scope.orderFill).toEqual(orderFill);
+    });
 
 });
