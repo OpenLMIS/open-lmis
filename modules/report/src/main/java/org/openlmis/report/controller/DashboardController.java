@@ -51,4 +51,14 @@ public class DashboardController extends BaseController {
                                                               @RequestParam("programId") Long programId){
         return OpenLmisResponse.response("leadTime", this.lookupService.getShipmentLeadTime(geographicZoneId,periodId,programId));
     }
+
+
+    @RequestMapping(value = "/stockEfficiency", method = GET, headers = BaseController.ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse>  getStockEfficiencyData(@RequestParam("geographicZoneId") Long geographicZoneId,
+                                                                    @RequestParam("periodId") Long periodId,
+                                                                    @RequestParam("programId") Long programId,
+                                                                    @RequestParam("productListId")List<Long> productListId){
+        return OpenLmisResponse.response("stocking", this.lookupService.getStockEfficiencyData(geographicZoneId, periodId, programId, productListId));
+    }
+
 }

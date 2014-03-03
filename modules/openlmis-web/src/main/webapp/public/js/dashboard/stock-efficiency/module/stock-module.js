@@ -15,5 +15,5 @@ angular.module('stock',['openlmis', 'ngTable']).config(['$routeProvider', functi
         otherwise({redirectTo: '/stock'});
 }]).run(function($rootScope){
         $rootScope.stockEfficiencySelected = 'selected';
-        $rootScope.showProductsFilter = false;
+        $rootScope.showProductsFilter = true;
     });

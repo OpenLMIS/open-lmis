@@ -4,6 +4,7 @@ import org.openlmis.report.mapper.lookup.DashboardMapper;
 import org.openlmis.report.model.dto.ItemFillRate;
 import org.openlmis.report.model.dto.OrderFillRate;
 import org.openlmis.report.model.dto.ShipmentLeadTime;
+import org.openlmis.report.model.dto.StockingInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -37,6 +38,11 @@ public class DashboardLookupService {
 
     public List<ShipmentLeadTime> getShipmentLeadTime(Long geographicZoneId, Long periodId, Long programId){
         return dashboardMapper.getShipmentLeadTime(geographicZoneId,periodId,programId);
+
+    }
+
+    public List<StockingInfo> getStockEfficiencyData(Long geographicZoneId, Long periodId, Long programId, List<Long> productListId){
+        return dashboardMapper.getStockEfficiencyData(geographicZoneId, periodId, programId, getCommaSeparatedIds(productListId));
 
     }
 }

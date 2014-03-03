@@ -5,6 +5,7 @@ import org.apache.ibatis.annotations.Select;
 import org.openlmis.report.model.dto.ItemFillRate;
 import org.openlmis.report.model.dto.OrderFillRate;
 import org.openlmis.report.model.dto.ShipmentLeadTime;
+import org.openlmis.report.model.dto.StockingInfo;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -25,4 +26,9 @@ public interface DashboardMapper {
 
     @Select("select code,name,leadTime from dw_product_lead_time_vw where programid = #{programId} and periodid = #{periodId} and geographicZoneid = #{geographicZoneid}")
     List<ShipmentLeadTime> getShipmentLeadTime(@Param("geographicZoneid") Long geographicZoneid, @Param("periodId")  Long periodId, @Param("programId") Long programId);
+
+    @Select("select primaryname as product,facilityname as facility,amc,soh,mos from dw_product_facility_stock_info_vw where programid = #{programId} and periodid = #{periodId} and geographicZoneid = #{geographicZoneid}  and productid = ANY(#{products}::int[]) ")
+    List<StockingInfo> getStockEfficiencyData(@Param("geographicZoneid") Long geographicZoneid, @Param("periodId")  Long periodId, @Param("programId") Long programId , @Param("products") String productIds);
+
 }
+

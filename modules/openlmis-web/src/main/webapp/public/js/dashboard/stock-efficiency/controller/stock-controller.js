@@ -9,7 +9,7 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-function StockController($scope,userFacilityData,ReportPrograms, ReportSchedules, ReportPeriods, RequisitionGroupsByProgram,RequisitionGroupsByProgramSchedule, ReportProductsByProgram, OperationYears, ReportPeriodsByScheduleAndYear, FacilitiesByGeographicZoneAndProgramParams, ngTableParams) {
+function StockController($scope,userFacilityData,ReportPrograms, ReportSchedules, ReportPeriods, RequisitionGroupsByProgram,RequisitionGroupsByProgramSchedule, ReportProductsByProgram, OperationYears, ReportPeriodsByScheduleAndYear, StockEfficiency, ngTableParams) {
 
     $scope.filterObject = {};
 
@@ -28,6 +28,8 @@ function StockController($scope,userFacilityData,ReportPrograms, ReportSchedules
             }
         }
     }
+
+    $scope.productSelectOption = {maximumSelectionSize : 4};
 
     OperationYears.get(function (data) {
         $scope.startYears = data.years;
@@ -127,7 +129,8 @@ function StockController($scope,userFacilityData,ReportPrograms, ReportSchedules
         } else {
             $scope.filterObject.periodId = 0;
         }
-       // $scope.filterGrid();
+        $scope.loadStockingData();
+
     });
 
 
@@ -169,36 +172,50 @@ function StockController($scope,userFacilityData,ReportPrograms, ReportSchedules
         }
     });
 
-     /* Bootstrap Dynamic Tab Utility  */
-    function createTab(tabId){
-        var tabNum = tabId.substr(tabId.length - 1);
-        var contentId = tabId +'-'+ tabNum;
+    $scope.$watch('formFilter.productIdList',function(selection){
 
-        if($('#'+tabId).length === 0){ //tab does not exist
-            $('.nav-tabs').prepend('<li id="'+tabId+'"><a href="#' + contentId + '" data-toggle="tab"'+'><button class="close closeTab" type="button" >×</button>Tab '+tabNum +'</a></li>');
-            showTab(tabId);
+        $scope.filterObject.productIdList = $scope.formFilter.productIdList;
+        $scope.loadStockingData();
+    });
 
-            registerCloseEvent();
+    // the grid options
+    $scope.tableParams = new ngTableParams({
+        page: 1,            // show first page
+        total: 0,           // length of data
+        count: 25           // count per page
+    });
 
-        }else{
-            showTab(tabId);
+    $scope.loadStockingData = function(){
+
+        if(!isUndefined($scope.filterObject.productIdList)){
+            StockEfficiency.get({
+                geographicZoneId: $scope.filterObject.geographicZoneId,
+                periodId: $scope.filterObject.periodId,
+                programId: $scope.filterObject.programId,
+                productListId: $scope.filterObject.productIdList
+            },function (data){
+                $scope.stockingList = data.stocking;
+                $scope.stockByProducts = groupStockingByProduct($scope.stockingList);
+            });
         }
-    }
+    };
 
-    function registerCloseEvent() {
-        $('#dashboard-tabs').on('click', ' li a .close', function(e) {
-            e.preventDefault();
-            $(this).parents('li').remove('li');
-            $('#dashboard-tabs a:first').tab('show');
+
+    var groupStockingByProduct = function (data) {
+        if(isUndefined(data)){
+            return data;
+        }
+        var groupedStockingInfo = [];
+        angular.forEach(data,function(stock){
+            if(groupedStockingInfo.indexOf(stock.product) == -1){
+                groupedStockingInfo.push(stock.product);
+            }
         });
-    }
-    function showTab(tabId) {
+        return groupedStockingInfo;
+    };
 
-        $('#dashboard-tabs #' + tabId + ' a').tab('show');
-    }
 
-   /* $(function () {
-        $scope.paramsChanged($scope.tableParams);
 
-    });*/
+
+
 }
