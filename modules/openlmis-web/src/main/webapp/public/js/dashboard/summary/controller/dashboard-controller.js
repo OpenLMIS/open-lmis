@@ -77,43 +77,44 @@ function AdminDashboardController($scope,$timeout,userFacilityData, ReportProgra
         }
     });
 
-    $scope.$watch('formFilter.programId', function(selection){
 
-        if(selection !== undefined || selection === ""){
-            if (selection === '') {
-                $scope.filterObject.programId = 0;
-                return;
-            }
-
-            $scope.filterObject.programId = selection;
-            $.each($scope.programs, function (item, idx) {
-                if (idx.id == selection) {
-                    $scope.filterObject.program = idx.name;
-                }
-            });
-
-            ReportProductsByProgram.get({programId: selection}, function(data){
-                $scope.products = data.productList;
-            });
-
-            RequisitionGroupsByProgram.get({program: selection }, function(data){
-                $scope.requisitionGroups = data.requisitionGroupList;
-                $scope.requisitionGroups.unshift({'name':'-- All Requisition Groups --'});
-            });
+    $scope.filterProductsByProgram = function (){
+        if(isUndefined($scope.formFilter.programId)){
+           return;
         }
-        $scope.loadFacilities();
-    });
+        $scope.filterObject.programId = $scope.formFilter.programId;
+        $.each($scope.programs, function (item, idx) {
+            if (idx.id == $scope.formFilter.programId) {
+                $scope.filterObject.program = idx.name;
+            }
+        });
 
-    $scope.$watch('formFilter.productIdList',function(selection){
+        ReportProductsByProgram.get({programId:  $scope.filterObject.programId}, function(data){
+            $scope.products = data.productList;
+        });
+
+        RequisitionGroupsByProgram.get({program: $scope.filterObject.programId }, function(data){
+            $scope.requisitionGroups = data.requisitionGroupList;
+            $scope.requisitionGroups.unshift({'name':'-- All Requisition Groups --'});
+        });
+
+        $scope.loadFacilities();
+
+    };
+
+    $scope.processProductsFilter = function (){
 
         $scope.filterObject.productIdList = $scope.formFilter.productIdList;
         $scope.loadFillRates();
-    });
+
+    };
+
 
     $scope.loadFillRates = function(){
         //For managing visibility of chart rendering container. All most all javascript chart rendering tools needs the container to be visible before the render process starts.
         $scope.showItemFill = false;
         $scope.showOrderFill = false;
+
        //Facility are required for Order and Item Fill Rates
 
        if(!isUndefined($scope.filterObject.facilityId) && $scope.filterObject.facilityId !== 0 ){
@@ -206,22 +207,27 @@ function AdminDashboardController($scope,$timeout,userFacilityData, ReportProgra
         );
     };
 
-    $scope.ChangeSchedule = function(scheduleBy){
-        if(scheduleBy == 'byYear'){
+    $scope.ChangeSchedule = function(){
 
-            ReportPeriodsByScheduleAndYear.get({scheduleId: $scope.filterObject.scheduleId, year: $scope.filterObject.year}, function(data){
-                $scope.periods = data.periods;
-                $scope.periods.unshift({'name':'-- Select a Period --','id':'0'});
+        if ($scope.formFilter.scheduleId == "All") {
+            $scope.filterObject.scheduleId = -1;
+        } else if ($scope.formFilter.scheduleId !== undefined || $scope.formFilter.scheduleId === "") {
+            $scope.filterObject.scheduleId = $scope.formFilter.scheduleId;
+            $.each($scope.schedules , function (item, idx) {
+                if (idx.id == $scope.formFilter.scheduleId) {
+                    $scope.filterObject.schedule = idx.name;
+                }
             });
 
-        }else{
-
-            ReportPeriods.get({ scheduleId : $scope.filterObject.scheduleId },function(data) {
-                $scope.periods = data.periods;
-                $scope.periods.unshift({'name':'-- Select a Period --','id':'0'});
-
-            });
+        } else {
+            $scope.filterObject.scheduleId = 0;
         }
+
+        ReportPeriods.get({ scheduleId : $scope.filterObject.scheduleId },function(data) {
+            $scope.periods = data.periods;
+            $scope.periods.unshift({'name':'-- Select a Period --','id':'0'});
+
+        });
 
         RequisitionGroupsByProgramSchedule.get({program: $scope.filterObject.programId, schedule:$scope.filterObject.scheduleId}, function(data){
             $scope.requisitionGroups = data.requisitionGroupList;
@@ -231,13 +237,13 @@ function AdminDashboardController($scope,$timeout,userFacilityData, ReportProgra
         $scope.loadFacilities();
     };
 
-    $scope.$watch('formFilter.rgroupId', function (selection) {
-        if (selection == "All") {
+    $scope.loadFacilitiesByRequisition = function(){
+        if ($scope.formFilter.rgroupId == "All") {
             $scope.filterObject.rgroupId = -1;
-        } else if (selection !== undefined || selection === "") {
-            $scope.filterObject.rgroupId = selection;
+        } else if ($scope.formFilter.rgroupId !== undefined || $scope.formFilter.rgroupId === "") {
+            $scope.filterObject.rgroupId = $scope.formFilter.rgroupId;
             $.each($scope.requisitionGroups, function (item, idx) {
-                if (idx.id == selection) {
+                if (idx.id == $scope.formFilter.rgroupId) {
                     $scope.filterObject.rgroup = idx.name;
                 }
             });
@@ -246,15 +252,15 @@ function AdminDashboardController($scope,$timeout,userFacilityData, ReportProgra
         }
 
         $scope.loadFacilities();
-    });
 
-    $scope.$watch('formFilter.periodId', function (selection) {
-        if (selection == "All") {
+    };
+    $scope.processPeriodFilter = function (){
+        if ( $scope.formFilter.periodId == "All") {
             $scope.filterObject.periodId = -1;
-        } else if (selection !== undefined || selection === "") {
-            $scope.filterObject.periodId = selection;
+        } else if ($scope.formFilter.periodId !== undefined || $scope.formFilter.periodId === "") {
+            $scope.filterObject.periodId = $scope.formFilter.periodId;
             $.each($scope.periods, function (item, idx) {
-                if (idx.id == selection) {
+                if (idx.id == $scope.formFilter.periodId) {
                     $scope.filterObject.period = idx.name;
                 }
             });
@@ -263,48 +269,39 @@ function AdminDashboardController($scope,$timeout,userFacilityData, ReportProgra
             $scope.filterObject.periodId = 0;
         }
         $scope.loadFillRates();
-    });
 
+    };
 
-    $scope.$watch('formFilter.scheduleId', function (selection) {
-        if (selection == "All") {
-            $scope.filterObject.scheduleId = -1;
-        } else if (selection !== undefined || selection === "") {
-            $scope.filterObject.scheduleId = selection;
-            $.each($scope.schedules , function (item, idx) {
-                if (idx.id == selection) {
-                    $scope.filterObject.schedule = idx.name;
-                }
-            });
+    $scope.changeScheduleByYear = function (){
 
-        } else {
-            $scope.filterObject.scheduleId = 0;
-        }
-        $scope.ChangeSchedule('');
-
-    });
-
-    $scope.$watch('formFilter.year', function (selection) {
-
-        if (selection == "-- All Years --") {
+        if ($scope.formFilter.year == "-- All Years --") {
             $scope.filterObject.year = -1;
-        } else if (selection !== undefined || selection === "") {
-            $scope.filterObject.year = selection;
+        } else if ($scope.formFilter.year !== undefined || $scope.formFilter.year === "") {
+            $scope.filterObject.year = $scope.formFilter.year;
 
         } else {
             $scope.filterObject.year = 0;
         }
 
         if($scope.filterObject.year === -1 || $scope.filterObject.year === 0){
+            $scope.ChangeSchedule();
 
-            $scope.ChangeSchedule('bySchedule');
         }else{
 
-            $scope.ChangeSchedule('byYear');
+            ReportPeriodsByScheduleAndYear.get({scheduleId: $scope.filterObject.scheduleId, year: $scope.filterObject.year}, function(data){
+                $scope.periods = data.periods;
+                $scope.periods.unshift({'name':'-- Select a Period --','id':'0'});
+            });
+
+            RequisitionGroupsByProgramSchedule.get({program: $scope.filterObject.programId, schedule:$scope.filterObject.scheduleId}, function(data){
+                $scope.requisitionGroups = data.requisitionGroupList;
+                $scope.requisitionGroups.unshift({'name':'-- All Requisition Groups --','id':'0'});
+            });
+
+            $scope.loadFacilities();
         }
-    });
 
-
+    };
     /* Bar Chart */
     var barChartTicks = [[1, "Tab1"], [2, "Tab2"], [3, "Tab3"],[4, "Tab4"],[5, "Tab5"]];
 
