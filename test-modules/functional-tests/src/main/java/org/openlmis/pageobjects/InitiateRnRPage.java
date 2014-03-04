@@ -237,7 +237,7 @@ public class InitiateRnRPage extends RequisitionPage {
   @FindBy(how = ID, using = "homeMenu")
   private static WebElement homeMenuItem = null;
 
-  @FindBy(how = ID, using = "saveFailMessage")
+  @FindBy(how = ID, using = "saveSuccessMsgDiv")
   private static WebElement configureTemplateErrorDiv = null;
 
   @FindBy(how = XPATH, using = "//div[@id='requisition-header']/div/div[1]/div[@class='Emergency']/span")
