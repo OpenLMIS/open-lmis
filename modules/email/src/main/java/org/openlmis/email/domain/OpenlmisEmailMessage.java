@@ -13,6 +13,11 @@ package org.openlmis.email.domain;
 import lombok.Data;
 import org.springframework.mail.SimpleMailMessage;
 
+/**
+ * OpenlmisEmailMessage is an entity that contains additional id attribute apart from basic attributes provided by
+ * SimpleMailMessage.
+ */
+
 @Data
 public class OpenlmisEmailMessage extends SimpleMailMessage {
 

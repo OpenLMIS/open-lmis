@@ -23,6 +23,10 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.concurrent.Future;
 
+/**
+ * Exposes the services for processing emails and sending them using MailSender.
+ */
+
 @Service
 @NoArgsConstructor
 public class EmailService {
