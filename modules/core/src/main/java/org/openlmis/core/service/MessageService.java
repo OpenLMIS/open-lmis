@@ -13,20 +13,19 @@ package org.openlmis.core.service;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.openlmis.core.message.ExposedMessageSource;
 import org.openlmis.core.message.OpenLmisMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Scope;
-import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Set;
 
 import static org.springframework.context.annotation.ScopedProxyMode.TARGET_CLASS;
-import static org.springframework.web.context.WebApplicationContext.SCOPE_REQUEST;
 import static org.springframework.web.context.WebApplicationContext.SCOPE_SESSION;
 
 @Service
@@ -34,7 +33,8 @@ import static org.springframework.web.context.WebApplicationContext.SCOPE_SESSIO
 @Scope(value = SCOPE_SESSION, proxyMode = TARGET_CLASS)
 public class MessageService {
 
-  private MessageSource messageSource;
+  @Autowired
+  private ExposedMessageSource messageSource;
 
   @Setter
   @Getter
@@ -44,17 +44,9 @@ public class MessageService {
   private String locales;
 
   @Autowired
-  public MessageService(MessageSource messageSource, @Value("${locales.supported}") String locales) {
-    this.messageSource = messageSource;
+  public MessageService(@Value("${locales.supported}") String locales) {
     this.locales = locales;
     this.currentLocale = Locale.getDefault();
-  }
-
-  @Scope(SCOPE_REQUEST)
-  public static MessageService getRequestInstance() {
-    ResourceBundleMessageSource resourceBundleMessageSource = new ResourceBundleMessageSource();
-    resourceBundleMessageSource.setBasename("messages");
-    return new MessageService(resourceBundleMessageSource, "en");
   }
 
   public String message(String key) {
@@ -85,4 +77,21 @@ public class MessageService {
     return localeSet;
   }
 
+  /**
+   * Return all messages using the current locale.
+   * @return a map of all messages.
+   */
+  public Map<String, String> allMessages() {
+    return allMessages(currentLocale);
+  }
+
+
+  /**
+   * Return all messages of the given locale.
+   * @param locale the locale of the messages to return.
+   * @return a map of all messages for the given locale.
+   */
+  public Map<String, String> allMessages(Locale locale) {
+     return messageSource.getAll(currentLocale);
+  }
 }
