@@ -9,7 +9,7 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-function AdminDashboardController($scope,$timeout,userFacilityData, ReportPrograms, ReportSchedules, ReportPeriods, RequisitionGroupsByProgram,RequisitionGroupsByProgramSchedule, ReportProductsByProgram, OperationYears, ReportPeriodsByScheduleAndYear, FacilitiesByGeographicZoneAndProgramParams, OrderFillRate, ItemFillRate, ngTableParams) {
+function AdminDashboardController($scope,$timeout,$filter, userFacilityData, ReportPrograms, ReportSchedules, ReportPeriods, RequisitionGroupsByProgram,RequisitionGroupsByProgramSchedule, ReportProductsByProgram, OperationYears, ReportPeriodsByScheduleAndYear, FacilitiesByGeographicZoneAndProgramParams, OrderFillRate, ItemFillRate, ngTableParams) {
 
     $scope.filterObject = {};
 
@@ -142,7 +142,7 @@ function AdminDashboardController($scope,$timeout,userFacilityData, ReportProgra
                                    barColor = item.color;
                                }
                            });
-                           $scope.productItemFillRates.push({'option': {animate:3000, barColor: barColor, scaleColor: $scaleColor, lineWidth: $lineWidth}, 'percent': idx.fillRate, 'name': idx.product});
+                           $scope.productItemFillRates.push({'option': {animate:3000, barColor: barColor, scaleColor: $scaleColor, lineWidth: $lineWidth}, 'percent': $filter('number')( idx.fillRate, 0), 'name': idx.product});
                        });
                    }
                });
@@ -162,7 +162,7 @@ function AdminDashboardController($scope,$timeout,userFacilityData, ReportProgra
                        $scope.showOrderFill = true;
 
                    }
-                   fillRate.push([$scope.orderFill.fillRate]);
+                   fillRate.push([$filter('number')($scope.orderFill.fillRate, 0)]);
 
                    $timeout(function (){ //wait until the container fully visible
 

@@ -19,7 +19,7 @@
                     <label class="labels">Schedule </label>
 
                     <div class="form-fields">
-                        <select ui-select2 style="width:200px;" class="large-input" name="schedule"  ng-model="formFilter.scheduleId" ng-change="ChangeSchedule()">
+                        <select ui-select2 style="width:180px;" class="large-input" name="schedule"  ng-model="formFilter.scheduleId" ng-change="ChangeSchedule()">
                             <option  ng-repeat="option in schedules" value="{{ option.id }}">{{ option.name }}</option>
                         </select>
                     </div>
@@ -29,7 +29,7 @@
                     <label class="labels">Year </label>
 
                     <div class="form-field">
-                        <select ui-select2 style="width:200px;" class="input-small" ng-required="true"  name="year" id="startYear" ng-model="formFilter.year" ng-change="changeScheduleByYear()">
+                        <select ui-select2 style="width:150px;" class="input-small" ng-required="true"  name="year" id="startYear" ng-model="formFilter.year" ng-change="changeScheduleByYear()">
                             <option ng-repeat="year in startYears" value="{{year}}">{{year}}</option>
                         </select>
 
@@ -40,7 +40,7 @@
                     <label class="labels">Period</label>
 
                     <div class="form-field">
-                        <select ui-select2 style="width:200px;" ng-required="true"  name="period" ng-model="formFilter.periodId" ng-change="processPeriodFilter()">
+                        <select ui-select2 style="width:180px;" ng-required="true"  name="period" ng-model="formFilter.periodId" ng-change="processPeriodFilter()">
                             <option ng-repeat="option in periods" value="{{option.id}}">{{option.name}}</option>
                         </select>
                     </div>
@@ -54,12 +54,11 @@
                         </select>
                     </div>
                 </div>
-                <br/>
                 <div class="form-cell horizontalFilters" ng-show="showProductsFilter" >
                     <label class="labels">Product<span class="label-required">*</span></label>
 
                     <div class="form-field">
-                        <select ui-select2="productSelectOption" style="width:200px;" name="product" class="input-large"  ng-model="formFilter.productIdList" ng-change="processProductsFilter()" openlmis-message="placeholder.select.product"
+                        <select ui-select2="productSelectOption" style="width:250px;" name="product" class="input-sm"  ng-model="formFilter.productIdList" ng-change="processProductsFilter()" openlmis-message="placeholder.select.product"
                                 multiple="multiple" >
                             <option  ng-repeat="option in products" value="{{ option.id }}">{{ option.name }}</option>
                         </select>
