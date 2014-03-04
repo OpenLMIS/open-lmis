@@ -54,7 +54,7 @@ public class ManageRolesAndUsers extends TestCaseHelper {
   HomePage homePage;
   RolesPage rolesPage;
 
-  @BeforeMethod(groups = {"admin"})
+  @BeforeMethod(groups = {"admin123"})
   public void setUp() throws InterruptedException, SQLException, IOException {
     super.setup();
     userPage = PageObjectFactory.getUserPage(testWebDriver);
@@ -415,7 +415,7 @@ public class ManageRolesAndUsers extends TestCaseHelper {
     assertTrue(userPage.getAllWarehouseToSelect().contains(warehouseName));
   }
 
-  @AfterMethod(groups = "functional2")
+  @AfterMethod(groups = "admin123")
   public void tearDown() throws SQLException {
     testWebDriver.sleep(500);
     if (!testWebDriver.getElementById("username").isDisplayed()) {
