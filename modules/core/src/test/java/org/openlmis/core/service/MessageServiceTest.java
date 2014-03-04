@@ -15,10 +15,10 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.openlmis.core.message.ExposedMessageSourceImpl;
 import org.openlmis.core.message.OpenLmisMessage;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import org.springframework.context.MessageSource;
 
 import java.util.Locale;
 import java.util.Set;
@@ -35,7 +35,7 @@ import static org.powermock.api.mockito.PowerMockito.when;
 public class MessageServiceTest {
 
   @Mock
-  MessageSource messageSource;
+  ExposedMessageSourceImpl messageSource;
 
   @InjectMocks
   MessageService messageService;
@@ -86,7 +86,7 @@ public class MessageServiceTest {
 
   @Test
   public void shouldReturnLocalesCodes() throws Exception {
-    MessageService service = new MessageService(messageSource, "en, pt, fr");
+    MessageService service = new MessageService("en, pt, fr");
 
     Set<String> locales = service.getLocales();
     assertThat(locales.size(), is(3));
