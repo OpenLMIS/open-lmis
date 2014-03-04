@@ -13,6 +13,9 @@ import org.apache.ibatis.annotations.*;
 import org.openlmis.core.domain.BudgetLineItem;
 import org.springframework.stereotype.Repository;
 
+/**
+ * It maps the BudgetLineItem entity to corresponding representation in database.
+ */
 @Repository
 public interface BudgetLineItemMapper {
 
