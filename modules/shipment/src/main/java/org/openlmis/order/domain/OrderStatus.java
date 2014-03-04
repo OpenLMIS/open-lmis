@@ -10,6 +10,10 @@
 
 package org.openlmis.order.domain;
 
+/**
+ *  Enum for statuses of an Order.
+ */
+
 public enum OrderStatus {
   IN_ROUTE,
   READY_TO_PACK,
