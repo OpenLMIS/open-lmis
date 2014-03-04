@@ -27,6 +27,7 @@ import static com.thoughtworks.selenium.SeleneseTestBase.assertFalse;
 import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
 import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
 import static org.openqa.selenium.support.How.ID;
+import static org.openqa.selenium.support.How.XPATH;
 
 public class UserPage extends Page {
 
@@ -60,7 +61,7 @@ public class UserPage extends Page {
   @FindBy(how = ID, using = "searchUser")
   private static WebElement searchUserTextField = null;
 
-  @FindBy(how = ID, using = "resetPassword0")
+  @FindBy(how = XPATH, using = "//a[@ng-click='user.active? changePassword(user): javascript(void);'] ")
   private static WebElement selectFirstResetPassword = null;
 
   @FindBy(how = ID, using = "password1")

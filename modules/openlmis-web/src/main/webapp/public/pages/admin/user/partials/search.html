@@ -45,7 +45,7 @@
                        ng-click="editUser(user.id)"></a>
                     <a id="resetPassword{{$index}}" href="" class="btn btn-primary btn-small"
                        ng-class="{'disabled': !user.active}" openlmis-message="button.reset.password"
-                       ng-click="user.active? changePassword(user): ''"></a>
+                       ng-click="user.active? changePassword(user): javascript(void);"></a>
                 </div>
             </li>
         </ul>
