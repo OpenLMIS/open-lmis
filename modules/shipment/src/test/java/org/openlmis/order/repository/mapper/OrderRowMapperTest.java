@@ -8,7 +8,7 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-package org.openlmis.order.domain;
+package org.openlmis.order.repository.mapper;
 
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -17,6 +17,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.db.categories.UnitTests;
+import org.openlmis.order.domain.Order;
 import org.springframework.test.context.ContextConfiguration;
 
 import java.sql.ResultSet;
