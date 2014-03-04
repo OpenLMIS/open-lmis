@@ -10,7 +10,6 @@
 
 package org.openlmis.order.helper;
 
-
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.jxpath.JXPathContext;
 import org.openlmis.order.domain.Order;
@@ -26,6 +25,10 @@ import java.util.List;
 
 import static org.apache.commons.collections.CollectionUtils.filter;
 import static org.joda.time.format.DateTimeFormat.forPattern;
+
+/**
+ * OrderCsvHelper provides helper methods to generate a csv file for Order entity.
+ */
 
 @Component
 public class OrderCsvHelper {

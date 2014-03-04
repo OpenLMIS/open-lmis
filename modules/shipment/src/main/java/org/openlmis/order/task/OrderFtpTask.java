@@ -37,6 +37,10 @@ import java.util.regex.Pattern;
 import static org.openlmis.order.domain.OrderStatus.RELEASED;
 import static org.openlmis.order.domain.OrderStatus.TRANSFER_FAILED;
 
+/**
+ * Exposes the services for processing orders, sending their order files to respective ftp locations.
+ */
+
 @Component
 public class OrderFtpTask {
 

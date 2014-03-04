@@ -19,6 +19,10 @@ import org.springframework.stereotype.Component;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+/**
+ * It maps each row of database representation of Order to corresponding Order entity.
+ */
+
 @Component
 public class OrderRowMapper implements RowMapper {
   @Override
