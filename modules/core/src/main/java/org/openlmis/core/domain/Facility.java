@@ -30,6 +30,11 @@ import static org.apache.commons.lang3.builder.EqualsBuilder.reflectionEquals;
 import static org.apache.commons.lang3.builder.HashCodeBuilder.reflectionHashCode;
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 
+/**
+ * Represents a real world Facility on ground. Defines the contract for upload, eg. the mandatory fields, field type
+ * and header for upload. Also provides utility methods to operate on facility/facility lists validation, filtering
+ * facilities for active products etc.
+ */
 @Setter
 @Getter
 @AllArgsConstructor

@@ -17,19 +17,23 @@ import org.codehaus.jackson.map.annotate.JsonSerialize;
 
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 
+/**
+ * Represents type of a facility and associated attributes, the code and name of facility, the level at which it operates,
+ * if it is active or not, etc.
+ */
 @Data
 @NoArgsConstructor
 @JsonSerialize(include = NON_EMPTY)
 @EqualsAndHashCode(callSuper = false)
-public class FacilityType extends BaseModel{
-    private String code;
-    private String name;
-    private String description;
-    private Integer levelId;
-    private Integer nominalMaxMonth;
-    private Double nominalEop;
-    private Integer displayOrder;
-    private boolean active;
+public class FacilityType extends BaseModel {
+  private String code;
+  private String name;
+  private String description;
+  private Integer levelId;
+  private Integer nominalMaxMonth;
+  private Double nominalEop;
+  private Integer displayOrder;
+  private boolean active;
 
   public FacilityType(String code) {
     this.code = code;

@@ -19,6 +19,10 @@ import org.openlmis.upload.annotation.ImportField;
 
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 
+/**
+ * Represents DeliveryZone entity, with its basic attributes code, name and description.
+ * It also defines the contract for entity upload, eg. code is mandatory and upload header for code is "Delivery zone code".
+ */
 @EqualsAndHashCode(callSuper = false)
 @Data
 @NoArgsConstructor

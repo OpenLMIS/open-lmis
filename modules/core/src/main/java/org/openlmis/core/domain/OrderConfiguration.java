@@ -14,6 +14,10 @@ package org.openlmis.core.domain;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+/**
+ * Represents the configuration for Order file to be downloaded. Extends EDIConfiguration for basic attributes like
+ * headerIncluded. Defines filePrefix for order file to be generated.
+ */
 @Data
 @EqualsAndHashCode(callSuper=true)
 public class OrderConfiguration extends EDIConfiguration {

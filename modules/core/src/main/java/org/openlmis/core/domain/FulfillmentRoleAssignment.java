@@ -26,6 +26,9 @@ import java.util.List;
 
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_NULL;
 
+/**
+ *
+ */
 @Data
 @AllArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)

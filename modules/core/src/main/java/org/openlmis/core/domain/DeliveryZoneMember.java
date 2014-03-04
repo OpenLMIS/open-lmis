@@ -17,6 +17,10 @@ import lombok.NoArgsConstructor;
 import org.openlmis.upload.Importable;
 import org.openlmis.upload.annotation.ImportField;
 
+/**
+ * Represents DeliveryZoneMember entity, the delivery zone and facility belongs to.
+ * Also defines the upload contract like Delivery zone code and facility code are mandatory.
+ */
 @EqualsAndHashCode(callSuper = false)
 @Data
 @AllArgsConstructor
