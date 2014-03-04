@@ -60,6 +60,11 @@
         <appender-ref ref="logFileAppender"/>
     </logger>
 
+    <logger name="org.springframework.integration">
+        <level value="DEBUG"/>
+        <appender-ref ref="consoleAppender"/>
+    </logger>
+
     <root>
         <level value="INFO"/>
         <appender-ref ref="logFileAppender"/>
