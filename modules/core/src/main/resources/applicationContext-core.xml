@@ -28,6 +28,10 @@
     <import resource="classpath*:applicationContext-upload.xml"/>
     <import resource="classpath*:openLmisAtomFeedContext.xml"/>
 
+    <bean id="messageSource" class="org.openlmis.core.message.ExposedMessageSourceImpl" autowire="byName">
+        <property name="defaultEncoding" value="UTF-8"/>
+        <property name="basename" value="classpath:messages" />
+    </bean>
 
     <bean id="budgetFtpSessionFactory"
           class="org.springframework.integration.ftp.session.DefaultFtpSessionFactory">
