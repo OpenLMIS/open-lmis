@@ -77,7 +77,7 @@ public class CommonSteps extends TestCaseHelper {
     dbWrapper.updateFieldValue("requisition_line_items", "quantityApproved", approvedQuantity);
   }
 
-  @And("^I reload the page")
+  @And("^I reload the page$")
   public void reloadPage() {
     testWebDriver.refresh();
   }
