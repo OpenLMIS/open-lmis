@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @NoArgsConstructor
 @Controller
 @RequestMapping(value="/report-api")
-public class ReportController extends BaseController{
+public class CustomReportController extends BaseController{
 
   @Autowired
   CustomReportRepository reportRepository;
