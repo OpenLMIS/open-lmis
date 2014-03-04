@@ -1,7 +1,6 @@
 package org.openlmis.restapi.controller; 
 
 import org.junit.Before;
-import org.junit.After;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
@@ -61,7 +60,7 @@ public class LookupControllerTest {
   public void shouldGetProducts() throws Exception {
     ResponseEntity<RestResponse> expectResponse = new ResponseEntity<>(new RestResponse(), HttpStatus.OK);
     when(RestResponse.response("products", new ArrayList<ProductList>())).thenReturn(expectResponse);
-    when(lookupService.getFullProductList()).thenReturn(new ArrayList<ProductList>());
+    when(lookupService.getFullProductList()).thenReturn(new ArrayList<org.openlmis.core.domain.Product>());
 
     ResponseEntity<RestResponse> response = controller.getProducts(principal);
 
