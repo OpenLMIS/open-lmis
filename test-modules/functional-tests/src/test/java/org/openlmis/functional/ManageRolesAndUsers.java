@@ -279,7 +279,6 @@ public class ManageRolesAndUsers extends TestCaseHelper {
                                                                 String facilityCodeFirst, String facilityCodeSecond,
                                                                 String programFirst, String programSecond, String schedule, String roleName) throws SQLException {
     setupDeliveryZoneRolesAndRights(deliveryZoneCodeFirst, deliveryZoneCodeSecond, deliveryZoneNameFirst, deliveryZoneNameSecond, facilityCodeFirst, facilityCodeSecond, programFirst, programSecond, schedule, roleName);
-
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
 
     String passwordUsers = "TQskzK3iiLfbRVHeM1muvBCiiKriibfl6lh8ipo91hb74G3OvsybvkzpPI4S3KIeWTXAiiwlUU0iiSxWii4wSuS8mokSAieie";
@@ -325,7 +324,7 @@ public class ManageRolesAndUsers extends TestCaseHelper {
     homePage.verifyLoggedInUser(LAB_IN_CHARGE);
   }
 
-  @Test(groups = {"admin"}, dataProvider = "Data-Provider-Role-Function")
+  @Test(groups = {"admin123"}, dataProvider = "Data-Provider-Role-Function")
   public void testCreateSearchResetPasswordUser(String[] credentials) throws SQLException {
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
 
