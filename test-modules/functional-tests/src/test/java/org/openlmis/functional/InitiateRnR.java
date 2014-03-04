@@ -259,8 +259,8 @@ public class InitiateRnR extends TestCaseHelper {
   public void verifyListOfOrdersOnPodScreen() {
     testWebDriver.sleep(1000);
     assertEquals("Village Dispensary", testWebDriver.findElement(By.xpath("//div/span[contains(text(),'Village Dispensary')]")).getText());
-    assertEquals("MALARIA", testWebDriver.findElement(By.xpath("//div/span[contains(text(),'MALARIA')]")).getText());
-    assertEquals("Transfer failed", testWebDriver.findElement(By.xpath("//div/span[contains(text(),'Transfer failed')]")).getText());
+    assertEquals("HIV", testWebDriver.findElement(By.xpath("//div/span[contains(text(),'HIV')]")).getText());
+    assertEquals("Ready to pack", testWebDriver.findElement(By.xpath("//div/span[contains(text(),'Ready to pack')]")).getText());
     assertEquals("PeriodName1 (01/12/2012 - 01/12/2015)", testWebDriver.findElement(By.xpath("//div/span[contains(text(),'PeriodName1 (01/12/2012 - 01/12/2015)')]")).getText());
     assertEquals("Update POD", testWebDriver.findElement(By.xpath("//div/a[contains(text(),'Update POD')]")).getText());
   }

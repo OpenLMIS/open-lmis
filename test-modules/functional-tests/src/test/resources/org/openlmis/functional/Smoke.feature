@@ -251,13 +251,10 @@ Feature: Smoke Tests
     Then "1" requisition converted to order
 
   @smokeRequisition
-  Scenario: User should able to see list of orders to update POD
+  Scenario: User should able to see list of orders to update POD for "Ready to pack" order
     Given I have "storeInCharge" user with "MANAGE_POD" rights
-    And I have "5" requisitions for convert to order
+    And I have a/an "Regular" order in "READY_TO_PACK" status
     And I am logged in as "storeInCharge"
-    And I access convert to order page
-    And I select "1" requisition on page "1"
-    And I convert selected requisitions to order
     When I access Manage POD page
     Then I should see list of orders to manage POD for Rnr
     When I click on update Pod link for Row "1"
@@ -266,12 +263,9 @@ Feature: Smoke Tests
   @smokeRequisition
   Scenario: User should able to see list of orders to update POD for packed orders
     Given I have "storeInCharge" user with "MANAGE_POD" rights
-    And I have "5" requisitions for convert to order
-    And I am logged in as "storeInCharge"
-    And I access convert to order page
-    And I select "5" requisition on page "1"
-    And I convert selected requisitions to order
+    And I have a/an "Regular" order in "RELEASED" status
     When I receive shipment for the order
+    And I am logged in as "storeInCharge"
     And I access Manage POD page
     And I click on update Pod link for Row "1"
     Then I should see all products listed in shipment file to update pod
@@ -566,7 +560,6 @@ Feature: Smoke Tests
     Then I verify radio button "No" is selected
     And I verify Others reason selected
     And I verify Other reason entered as "reason for not visiting"
-
 
   @smokeDistribution
   Scenario: User should fill EPI use data
