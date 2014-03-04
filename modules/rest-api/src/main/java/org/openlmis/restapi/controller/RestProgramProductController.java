@@ -31,6 +31,10 @@ import static org.openlmis.restapi.response.RestResponse.error;
 import static org.openlmis.restapi.response.RestResponse.response;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
+/*
+* This controller is responsible for handling API endpoint to get product list with details
+* for a program to support the replenishment process.
+*/
 
 @Controller
 @NoArgsConstructor
