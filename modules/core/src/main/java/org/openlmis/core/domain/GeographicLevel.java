@@ -19,6 +19,9 @@ import org.codehaus.jackson.map.annotate.JsonSerialize;
 
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 
+/**
+ * Represents the real world geographic level at which any facility is lo
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

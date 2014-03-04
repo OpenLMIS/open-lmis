@@ -27,7 +27,7 @@ import java.util.List;
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_NULL;
 
 /**
- *
+ * Represents the roles assigned to the user for functionality related to fulfillment process.
  */
 @Data
 @AllArgsConstructor
