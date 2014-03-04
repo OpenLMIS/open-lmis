@@ -12,6 +12,7 @@ package org.openlmis.reporting.controller;
 
 import org.openlmis.reporting.model.Template;
 import org.openlmis.reporting.repository.mapper.TemplateMapper;
+import org.openlmis.reporting.service.JasperReportsViewFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,6 +25,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
+
+/**
+ * ReportController defines the endpoints to be used by client for multi format reports related functionality.
+ */
 
 @Controller
 public class ReportController {

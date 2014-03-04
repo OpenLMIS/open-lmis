@@ -24,7 +24,7 @@ import org.openlmis.order.service.OrderService;
 import org.openlmis.pod.domain.OrderPOD;
 import org.openlmis.pod.dto.OrderPODDTO;
 import org.openlmis.pod.service.PODService;
-import org.openlmis.reporting.controller.JasperReportsViewFactory;
+import org.openlmis.reporting.service.JasperReportsViewFactory;
 import org.openlmis.reporting.service.TemplateService;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.powermock.core.classloader.annotations.PrepareForTest;
