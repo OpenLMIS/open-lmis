@@ -801,6 +801,7 @@ Feature: Smoke Tests
     And I Enter "adult coverage" values:
       | healthCenter1 | outreach1 | healthCenter25 | outreach25 | openedVial |
       | 123           | 22        | 23             | 34         | 4          |
+    And I navigate to "epi inventory" tab
     Then I see Overall facility icon as "GREEN"
     When I access plan my distribution page
 
