@@ -271,8 +271,8 @@ Feature: Smoke Tests
     And I access convert to order page
     And I select "5" requisition on page "1"
     And I convert selected requisitions to order
-    And I access Manage POD page
     When I receive shipment for the order
+    And I access Manage POD page
     And I click on update Pod link for Row "1"
     Then I should see all products listed in shipment file to update pod
 
