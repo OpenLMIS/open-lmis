@@ -75,12 +75,7 @@ public class OrderPOD extends BaseModel {
     this.periodId = requisition.getPeriod().getId();
   }
 
-  public void fillPODWithRequisition(Rnr requisition) {
-    fillPOD(requisition);
-    fillPodLineItems(requisition.getAllLineItems());
-  }
-
-  public void fillPodLineItems(List<? extends LineItem> lineItems) {
+  public void fillPODLineItems(List<? extends LineItem> lineItems) {
     this.podLineItems = new ArrayList<>();
     for (LineItem lineItem : lineItems) {
       if (!validPacksToShip(lineItem)) continue;
