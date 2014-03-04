@@ -8,8 +8,9 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-package org.openlmis.email.domain;
+package org.openlmis.email.mapper;
 
+import org.openlmis.email.domain.OpenlmisEmailMessage;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 

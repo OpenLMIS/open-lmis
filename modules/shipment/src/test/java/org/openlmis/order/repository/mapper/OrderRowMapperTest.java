@@ -18,7 +18,6 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.order.domain.Order;
-import org.springframework.test.context.ContextConfiguration;
 
 import java.sql.ResultSet;
 
@@ -29,7 +28,6 @@ import static org.mockito.Mockito.when;
 
 @Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
-@ContextConfiguration(locations = "classpath:test-applicationContext-shipment.xml")
 public class OrderRowMapperTest {
 
   @InjectMocks
