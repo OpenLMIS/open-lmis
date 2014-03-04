@@ -51,6 +51,17 @@ public class RestRequisitionController extends BaseController {
     return response(RNR, requisition.getId(), CREATED);
   }
 
+  @RequestMapping(value = "/rest-api/sdp-requisitions", method = POST, headers = ACCEPT_JSON)
+  public ResponseEntity<RestResponse> submitSDPRequisition(@RequestBody Report report, Principal principal) {
+    Rnr requisition;
+    try {
+      requisition = restRequisitionService.submitSdpReport(report, loggedInUserId(principal));
+    } catch (DataException e) {
+      return error(e.getOpenLmisMessage(), BAD_REQUEST);
+    }
+    return response(RNR, requisition.getId(), CREATED);
+  }
+
   @RequestMapping(value = "/rest-api/requisitions/{requisitionId}/approve", method = PUT, headers = ACCEPT_JSON)
   public ResponseEntity<RestResponse> approve(@PathVariable Long requisitionId, @RequestBody Report report, Principal principal) {
     try {

@@ -14,9 +14,11 @@ import lombok.NoArgsConstructor;
 import org.apache.commons.collections.Predicate;
 import org.apache.log4j.Logger;
 import org.openlmis.core.domain.Facility;
+import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.FacilityService;
+import org.openlmis.core.service.ProcessingPeriodService;
 import org.openlmis.core.service.ProgramService;
 import org.openlmis.order.service.OrderService;
 import org.openlmis.restapi.domain.ReplenishmentDTO;
@@ -58,6 +60,9 @@ public class RestRequisitionService {
   @Autowired
   private RestRequisitionCalculator restRequisitionCalculator;
 
+  @Autowired
+  private ProcessingPeriodService processingPeriodService;
+
   private static final Logger logger = Logger.getLogger(RestRequisitionService.class);
 
   @Transactional
@@ -86,6 +91,43 @@ public class RestRequisitionService {
 
     return requisitionService.authorize(rnr);
   }
+
+  @Transactional
+  public Rnr submitSdpReport(Report report, Long userId) {
+    report.validate();
+
+    Facility reportingFacility = facilityService.getOperativeFacilityByCode(report.getAgentCode());
+    Program reportingProgram = programService.getValidatedProgramByCode(report.getProgramCode());
+    ProcessingPeriod period = processingPeriodService.getById(report.getPeriodId());
+
+    //check if the requisition has already been initiated / submitted / authorized.
+    restRequisitionCalculator.validateCustomPeriod(reportingFacility, reportingProgram, period);
+
+
+    //TODO if the requisition was not initiated,  please do it now.
+    //if not jump to the submission route.
+    Rnr rnr = requisitionService.initiate(reportingFacility, reportingProgram, userId, report.getEmergency());
+
+    restRequisitionCalculator.validateProducts(report.getProducts(), rnr);
+
+    markSkippedLineItems(rnr, report);
+
+    //TODO: if the previous submission was already approved, a big no no here
+    // throw an exception
+
+    // if you have come this far, then do it, it is your day. make the submission.
+    if (reportingFacility.getVirtualFacility())
+      restRequisitionCalculator.setDefaultValues(rnr);
+
+    copyRegimens(rnr, report);
+
+    requisitionService.save(rnr);
+
+    rnr = requisitionService.submit(rnr);
+
+    return requisitionService.authorize(rnr);
+  }
+
 
   private void copyRegimens(Rnr rnr, Report report) {
     if (report.getRegimens() != null) {

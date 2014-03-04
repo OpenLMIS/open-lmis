@@ -22,10 +22,7 @@ import org.mockito.Mock;
 import org.openlmis.core.builder.FacilityBuilder;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
-import org.openlmis.core.service.FacilityService;
-import org.openlmis.core.service.ProductService;
-import org.openlmis.core.service.ProgramService;
-import org.openlmis.core.service.UserService;
+import org.openlmis.core.service.*;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.order.domain.Order;
 import org.openlmis.order.service.OrderService;
@@ -85,6 +82,9 @@ public class RestRequisitionServiceTest {
 
   @Mock
   private RestRequisitionCalculator restRequisitionCalculator;
+
+  @Mock
+  private ProcessingPeriodService periodService;
 
   @InjectMocks
   RestRequisitionService service;
@@ -161,6 +161,49 @@ public class RestRequisitionServiceTest {
   }
 
   @Test
+  public void sdpShouldCreateAndSubmitARequisition() throws Exception{
+    RnrLineItem rnrLineItem = make(a(defaultRnrLineItem, with(productCode, "P10")));
+    List<RnrLineItem> products = asList(rnrLineItem);
+    requisition.setFullSupplyLineItems(products);
+    requisition.setProgram(new Program());
+
+    RegimenLineItem regimenLineItem = make(a(defaultRegimenLineItem));
+    requisition.setRegimenLineItems(asList(regimenLineItem));
+
+
+    report.setProducts(products);
+    RegimenLineItem reportRegimenLineItem = make(a(defaultRegimenLineItem, with(patientsOnTreatment, 10), with(patientsStoppedTreatment, 5)));
+    report.setRegimens(asList(reportRegimenLineItem));
+    report.setPeriodId(1L);
+    report.setEmergency(false);
+
+    Long facility_id = 5L;
+
+    ProgramSupported programSupported = make(a(defaultProgramSupported));
+    Facility facility = make(a(defaultFacility, with(facilityId, facility_id), with(programSupportedList, asList(programSupported)), with(virtualFacility, true)));
+
+    when(facilityService.getOperativeFacilityByCode(DEFAULT_AGENT_CODE)).thenReturn(facility);
+    when(programService.getValidatedProgramByCode(DEFAULT_PROGRAM_CODE)).thenReturn(new Program(PROGRAM_ID));
+    when(requisitionService.initiate(facility, new Program(PROGRAM_ID), user.getId(), false)).thenReturn(requisition);
+    when(requisitionService.save(requisition)).thenReturn(requisition);
+    when(productService.getByCode(validProductCode)).thenReturn(new Product());
+    Rnr reportedRequisition = mock(Rnr.class);
+    whenNew(Rnr.class).withArguments(requisition.getId()).thenReturn(reportedRequisition);
+    when(rnrTemplateService.fetchProgramTemplateForRequisition(any(Long.class))).thenReturn(new ProgramRnrTemplate(new ArrayList<RnrColumn>()));
+
+    when(requisitionService.submit(requisition)).thenReturn(requisition);
+
+    service.submitSdpReport(report, 1L);
+
+    verify(facilityService).getOperativeFacilityByCode(DEFAULT_AGENT_CODE);
+    verify(programService).getValidatedProgramByCode(DEFAULT_PROGRAM_CODE);
+    verify(requisitionService).initiate(facility, new Program(PROGRAM_ID), 1L, false);
+    verify(requisitionService).submit(requisition);
+    assertThat(requisition.getRegimenLineItems().get(0).getPatientsOnTreatment(), is(10));
+    assertThat(requisition.getRegimenLineItems().get(0).getPatientsStoppedTreatment(), is(5));
+  }
+
+  @Test
   public void shouldThrowErrorIfPeriodValidationFails() throws Exception {
     expectedException.expect(DataException.class);
     expectedException.expectMessage("rnr.error");
@@ -168,6 +211,20 @@ public class RestRequisitionServiceTest {
     doThrow(new DataException("rnr.error")).when(restRequisitionCalculator).validatePeriod(any(Facility.class), any(Program.class));
 
     service.submitReport(report, 1l);
+
+    verify(requisitionService, never()).initiate(any(Facility.class), any(Program.class), any(Long.class), any(Boolean.class));
+    verify(requisitionService, never()).save(any(Rnr.class));
+    verify(requisitionService, never()).submit(any(Rnr.class));
+  }
+
+  @Test
+  public void sdpShouldThrowErrorIfPeriodValidationFails() throws Exception {
+    expectedException.expect(DataException.class);
+    expectedException.expectMessage("rnr.error");
+
+    doThrow(new DataException("rnr.error")).when(restRequisitionCalculator).validateCustomPeriod(any(Facility.class), any(Program.class), any(ProcessingPeriod.class));
+
+    service.submitSdpReport(report, 1l);
 
     verify(requisitionService, never()).initiate(any(Facility.class), any(Program.class), any(Long.class), any(Boolean.class));
     verify(requisitionService, never()).save(any(Rnr.class));

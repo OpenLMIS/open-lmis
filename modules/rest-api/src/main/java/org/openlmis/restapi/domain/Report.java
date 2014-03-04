@@ -20,7 +20,6 @@ import org.openlmis.rnr.domain.RnrLineItem;
 
 import java.util.List;
 
-import static org.apache.commons.collections.CollectionUtils.find;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 @Data
@@ -33,6 +32,9 @@ public class Report {
   private String programCode;
   private String approverName;
 
+  // added for the sdp version
+  private Long periodId;
+  private Boolean emergency;
 
   public void validate() {
     if (isEmpty(agentCode) || isEmpty(programCode)) {
