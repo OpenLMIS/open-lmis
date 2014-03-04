@@ -11,21 +11,21 @@
 package org.openlmis.email.domain;
 
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Component;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
 @Component
-public class EmailMessageRowMapper implements RowMapper {
+public class EmailMessageRowMapper implements RowMapper<OpenlmisEmailMessage> {
 
   @Override
-  public SimpleMailMessage mapRow(ResultSet rs, int rowNum) throws SQLException {
-    SimpleMailMessage emailMessage = new SimpleMailMessage();
+  public OpenlmisEmailMessage mapRow(ResultSet rs, int rowNum) throws SQLException {
+    OpenlmisEmailMessage emailMessage = new OpenlmisEmailMessage();
     emailMessage.setTo(rs.getString("receiver"));
     emailMessage.setSubject(rs.getString("subject"));
     emailMessage.setText(rs.getString("content"));
+    emailMessage.setId(rs.getLong("id"));
     return emailMessage;
   }
 }

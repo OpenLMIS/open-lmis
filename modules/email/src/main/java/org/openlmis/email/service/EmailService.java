@@ -14,7 +14,6 @@ import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.integration.annotation.Payload;
-import org.springframework.integration.annotation.ServiceActivator;
 import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.scheduling.annotation.Async;
@@ -47,7 +46,6 @@ public class EmailService {
     return new AsyncResult<>(true);
   }
 
-  @ServiceActivator(inputChannel = "inputChannel")
   public void processEmails(@Payload List<SimpleMailMessage> simpleMailMessage) {
     if (!mailSendingFlag) {
       return;
