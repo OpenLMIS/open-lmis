@@ -18,7 +18,7 @@ import org.codehaus.jackson.map.annotate.JsonSerialize;
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 
 /**
- * Represents type of a facility and associated attributes, the code and name of facility, the level at which it operates,
+ * FacilityType represents type of a facility and associated attributes, the code and name of facility, the level at which it operates,
  * if it is active or not, etc.
  */
 @Data

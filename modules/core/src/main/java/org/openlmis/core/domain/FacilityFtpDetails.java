@@ -22,8 +22,8 @@ import org.openlmis.upload.annotation.ImportField;
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 
 /**
- * Represents FacilityFtpDetails entity. It is a mapping between facility and its ftp details.
- * Defines the contract for upload of facility ftp details.
+ * FacilityFtpDetails represents FacilityFtpDetails entity. It is a mapping between facility and its ftp details.
+ * Defines the contract for creation/upload of facility ftp details.
  */
 @EqualsAndHashCode(callSuper = false)
 @Data

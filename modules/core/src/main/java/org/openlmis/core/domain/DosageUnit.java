@@ -15,7 +15,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 /**
- * Represents the Dosage Unit for any product.
+ * DosageUnit represents the Dosage Unit for any product.
  */
 @Data
 @NoArgsConstructor

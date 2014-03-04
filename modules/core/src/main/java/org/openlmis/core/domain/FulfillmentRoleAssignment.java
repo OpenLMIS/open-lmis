@@ -27,7 +27,7 @@ import java.util.List;
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_NULL;
 
 /**
- * Represents the roles assigned to the user for functionality related to fulfillment process.
+ * FulfillmentRoleAssignment represents the roles assigned to the user for functionality related to fulfillment process.
  */
 @Data
 @AllArgsConstructor
@@ -41,7 +41,7 @@ public class FulfillmentRoleAssignment extends BaseModel {
   private List<Long> roleIds = new ArrayList<>();
 
   @SuppressWarnings("unused (used for mybatis mapping)")
-  public void setRoleAsString(String roleIds){
+  public void setRoleAsString(String roleIds) {
     parseRoleIdsIntoList(roleIds);
   }
 

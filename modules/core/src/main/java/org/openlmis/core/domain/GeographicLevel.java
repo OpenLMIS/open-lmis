@@ -20,7 +20,8 @@ import org.codehaus.jackson.map.annotate.JsonSerialize;
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 
 /**
- * Represents the real world geographic level at which any facility is lo
+ * GeographicLevel represents the real world geographic level at which any facility is located for eg. Country, State, Province etc. Also
+ * provides validation methods on geographic level like if the level is root level, is level higher than other given level.
  */
 @Data
 @AllArgsConstructor

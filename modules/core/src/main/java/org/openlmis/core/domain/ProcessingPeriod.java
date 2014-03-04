@@ -26,6 +26,10 @@ import static org.apache.commons.lang.StringUtils.isBlank;
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 import static org.joda.time.format.DateTimeFormat.forPattern;
 
+/**
+ * ProcessingPeriod represents the time period belonging to a particular schedule according to which requisition life cycle
+ * will be followed.
+ */
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)

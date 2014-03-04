@@ -18,14 +18,14 @@ import org.openlmis.upload.Importable;
 import org.openlmis.upload.annotation.ImportField;
 
 /**
- * Represents DeliveryZoneMember entity, the delivery zone and facility belongs to.
- * Also defines the upload contract like Delivery zone code and facility code are mandatory.
+ * DeliveryZoneMember represents DeliveryZoneMember entity, the delivery zone and facility belongs to.
+ * Also defines the creation/upload contract like Delivery zone code and facility code are mandatory.
  */
 @EqualsAndHashCode(callSuper = false)
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class DeliveryZoneMember extends BaseModel implements Importable{
+public class DeliveryZoneMember extends BaseModel implements Importable {
 
   @ImportField(name = "Delivery Zone", nested = "code", mandatory = true)
   private DeliveryZone deliveryZone;

@@ -21,6 +21,9 @@ import org.openlmis.upload.annotation.ImportField;
 
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 
+/**
+ * Product represents real world entity Product. It also defines the contract for creation/upload of products like
+ */
 @Data
 @NoArgsConstructor
 @JsonSerialize(include = NON_EMPTY)

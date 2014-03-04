@@ -15,11 +15,11 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 /**
- * Represents the configuration for Order file to be downloaded. Extends EDIConfiguration for basic attributes like
+ * OrderConfiguration represents the configuration for Order file to be downloaded. Extends EDIConfiguration for basic attributes like
  * headerIncluded. Defines filePrefix for order file to be generated.
  */
 @Data
-@EqualsAndHashCode(callSuper=true)
+@EqualsAndHashCode(callSuper = true)
 public class OrderConfiguration extends EDIConfiguration {
 
   private String filePrefix;

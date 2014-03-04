@@ -30,6 +30,11 @@ import java.util.List;
 
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 
+/**
+ * ProgramSupported represents the Program supported by a Facility. Defines the contract for upload of such mapping like program code,
+ * facility code and if program is active for facility are mandatory for such mapping. It also provides methods to calculate
+ * whoRatio, packSize etc for a given ProgramSupported.
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

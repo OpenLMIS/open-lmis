@@ -14,12 +14,12 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 /**
- * Represents the operator for facility, the authority responsible for running a facility (for eg. WHO, MOH etc.)
+ * FacilityOperator represents the operator for facility, the authority responsible for running a facility (for eg. WHO, MOH etc.)
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class FacilityOperator extends BaseModel{
-    private String code;
-    private String text;
-    private Integer displayOrder;
+public class FacilityOperator extends BaseModel {
+  private String code;
+  private String text;
+  private Integer displayOrder;
 }

@@ -27,7 +27,7 @@ import java.util.Set;
 import static org.apache.commons.collections.CollectionUtils.select;
 
 /**
- * Represents base model for EDI file templates for all file exchanges in system like shipment, budget and order.
+ * EDIFileTemplate represents base model for EDI file templates for all file exchanges in system like shipment, budget and order.
  * It defines the basic configuration for a file like headers are included or not and details of individual
  * columns of the file.
  */

@@ -17,8 +17,8 @@ import org.openlmis.upload.Importable;
 import org.openlmis.upload.annotation.ImportField;
 
 /**
- * Represents DeliveryZoneProgramSchedule mapping entity for upload. It is a mapping between delivery zone, program and schedule.
- * Defines the contract for upload, program code, delivery zone code and processing schedule code is mandatory for a
+ * DeliveryZoneProgramSchedule represents DeliveryZoneProgramSchedule mapping entity for upload. It is a mapping between delivery zone, program and schedule.
+ * Defines the contract for creation/upload, program code, delivery zone code and processing schedule code is mandatory for a
  * DeliveryZoneProgramSchedule mapping.
  */
 @EqualsAndHashCode(callSuper = false)
