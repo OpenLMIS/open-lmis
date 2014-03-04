@@ -15,3 +15,4 @@ test-modules/functional-tests/src/main/resources/**/*.png
 build.gradle.swp
 node_modules/
 modules/openlmis-web/src/test/coverage/
+local-ftp-data/
