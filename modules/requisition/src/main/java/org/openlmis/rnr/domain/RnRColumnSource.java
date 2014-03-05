@@ -12,6 +12,8 @@ package org.openlmis.rnr.domain;
 
 import org.codehaus.jackson.map.annotate.JsonDeserialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
+import org.openlmis.rnr.serializer.RnrColumnSourceDeSerializer;
+import org.openlmis.rnr.serializer.RnrColumnSourceSerializer;
 
 /**
  * This class represents the source for values in the columns configured in rnr template for a program. The source can be
