@@ -16,7 +16,7 @@ import org.openlmis.core.domain.BudgetFileInfo;
 import org.springframework.stereotype.Repository;
 
 /**
- * It maps the BudgetFileInfo entity to corresponding representation in database.
+ * BudgetFileMapper maps the BudgetFileInfo entity to corresponding representation in database.
  */
 @Repository
 public interface BudgetFileMapper {

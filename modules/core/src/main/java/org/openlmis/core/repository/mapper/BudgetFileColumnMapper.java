@@ -17,7 +17,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 /**
- * It maps the BudgetFileColumn(EDIFileColumn) entity to corresponding representation in database.
+ * BudgetFileColumnMapper maps the BudgetFileColumn(EDIFileColumn) entity to corresponding representation in database.
  */
 @Repository
 public interface BudgetFileColumnMapper {

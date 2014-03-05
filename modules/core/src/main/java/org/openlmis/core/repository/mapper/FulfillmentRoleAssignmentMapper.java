@@ -24,7 +24,9 @@ import org.openlmis.core.domain.User;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-
+/**
+ * FulfillmentRoleAssignmentMapper maps the FulfillmentRoleAssignment entity to corresponding representation in database.
+ */
 @Repository
 public interface FulfillmentRoleAssignmentMapper {
 

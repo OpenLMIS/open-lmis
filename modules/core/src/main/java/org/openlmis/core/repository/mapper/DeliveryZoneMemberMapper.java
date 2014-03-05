@@ -17,8 +17,10 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+
 /**
- *
+ * DeliveryZoneMemberMapper maps the DeliveryZoneMember entity to corresponding representation in database. Apart from basic CRUD
+ * operations provides methods to get programs for a delivery zone and facility.
  */
 @Repository
 public interface DeliveryZoneMemberMapper {

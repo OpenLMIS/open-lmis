@@ -16,7 +16,10 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-
+/**
+ * DeliveryZoneProgramScheduleMapper maps the DeliveryZoneProgramSchedule mapping entity to corresponding representation
+ * in database.
+ */
 @Repository
 public interface DeliveryZoneProgramScheduleMapper {
 

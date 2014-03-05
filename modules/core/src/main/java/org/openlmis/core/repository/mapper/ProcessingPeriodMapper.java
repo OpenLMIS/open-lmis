@@ -17,6 +17,11 @@ import org.springframework.stereotype.Repository;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * ProcessingPeriodMapper maps the ProcessingPeriod entity to corresponding representation in database. Apart from basic
+ * CRUD provides operations like getting all periods falling on, before after a date/date range, getting "n" previous
+ * periods of a given period etc.
+ */
 @Repository
 public interface ProcessingPeriodMapper {
 

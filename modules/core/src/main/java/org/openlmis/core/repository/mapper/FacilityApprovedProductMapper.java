@@ -11,11 +11,16 @@
 package org.openlmis.core.repository.mapper;
 
 import org.apache.ibatis.annotations.*;
-import org.openlmis.core.domain.*;
+import org.openlmis.core.domain.DosageUnit;
+import org.openlmis.core.domain.FacilityTypeApprovedProduct;
+import org.openlmis.core.domain.ProductCategory;
+import org.openlmis.core.domain.ProductForm;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-
+/**
+ * FacilityApprovedProductMapper maps the FacilityTypeApprovedProduct mapping entity to corresponding representation in database.
+ */
 @Repository
 public interface FacilityApprovedProductMapper {
 

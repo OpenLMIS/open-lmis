@@ -14,6 +14,7 @@ import org.apache.ibatis.annotations.*;
 import org.openlmis.core.domain.*;
 import org.springframework.stereotype.Repository;
 
+
 @Repository
 public interface ProductMapper {
 

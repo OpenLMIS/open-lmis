@@ -19,6 +19,10 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+/**
+ * ProgramProductMapper maps the ProgramProduct mapping entity to corresponding representation in database. Provides
+ * methods to search ProgamProducts with varied criteria, to update current price of a ProgramProduct.
+ */
 @Repository
 public interface ProgramProductMapper {
 
