@@ -34,9 +34,4 @@ public class LossesAndAdjustments extends BaseModel {
   private LossesAndAdjustmentsType type;
   private Integer quantity;
 
-  public LossesAndAdjustments(Long id, LossesAndAdjustmentsType type, Integer quantity) {
-    this.id = id;
-    this.type = type;
-    this.quantity = quantity;
-  }
 }
