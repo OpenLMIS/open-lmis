@@ -24,6 +24,10 @@ import static lombok.AccessLevel.NONE;
 import static org.apache.commons.collections.CollectionUtils.collect;
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 
+/**
+ * FacilityFeedDTO consolidates facility information like facility code, name, type, geographic zone, etc.
+ * to be used while displaying facility information to user,  for eg. in feed.
+ */
 @Getter
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
