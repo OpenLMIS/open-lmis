@@ -20,6 +20,9 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * RoleRightsMapper maps the roles to rights entity to corresponding representation in database.
+ */
 @Repository
 public interface RoleRightsMapper {
 

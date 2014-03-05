@@ -19,6 +19,11 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+
+/**
+ * RoleAssignmentMapper maps the RoleAssignment entity to corresponding representation in database. Also provides methods
+ * to get Roles for a user on basis of varied criteria like roles on a program having given set of rights etc.
+ */
 @Repository
 public interface RoleAssignmentMapper {
 
