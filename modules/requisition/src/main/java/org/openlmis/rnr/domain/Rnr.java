@@ -32,6 +32,11 @@ import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_NULL
 import static org.openlmis.rnr.domain.ProgramRnrTemplate.BEGINNING_BALANCE;
 import static org.openlmis.rnr.domain.RnrStatus.*;
 
+/**
+ * This class represents a Requisition and Reporting entity and contains rnrLineItems, regimenLineItems, status, period, program
+ * and facility associated with that requisition and reporting(Rnr).
+ */
+
 @Data
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
