@@ -16,6 +16,10 @@ import org.codehaus.jackson.map.SerializerProvider;
 
 import java.io.IOException;
 
+/**
+ * This class represents the serializer for rnrColumnSource.
+ */
+
 public class RnrColumnSourceSerializer extends JsonSerializer<RnRColumnSource> {
 
     @Override

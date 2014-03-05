@@ -10,6 +10,11 @@
 
 package org.openlmis.rnr.domain;
 
+
+/**
+ * Enum for statuses of an rnr.
+ */
+
 public enum RnrStatus {
   INITIATED,
   SUBMITTED,

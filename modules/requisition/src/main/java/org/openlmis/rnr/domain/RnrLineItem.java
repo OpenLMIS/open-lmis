@@ -34,12 +34,17 @@ import static org.openlmis.rnr.domain.ProgramRnrTemplate.*;
 import static org.openlmis.rnr.domain.Rnr.RNR_VALIDATION_ERROR;
 import static org.openlmis.rnr.domain.RnrStatus.AUTHORIZED;
 
+/**
+ * This class represents the data captured against a product and contains methods to determine normalisedConsumption,
+ * averageMonthlyConsumption, stockOutDays, packsToShip, orderQuantity, maxStockQuantity and quantityDispensed of that
+ * product.
+ */
+
 @Data
 @NoArgsConstructor
 @JsonSerialize(include = NON_EMPTY)
 @EqualsAndHashCode(callSuper = true)
 public class RnrLineItem extends LineItem {
-
 
   public static final BigDecimal NUMBER_OF_DAYS = new BigDecimal(30);
 

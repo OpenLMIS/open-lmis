@@ -18,12 +18,16 @@ import org.codehaus.jackson.map.JsonDeserializer;
 
 import java.io.IOException;
 
+/**
+ * This class represents the deserializer for rnrColumnSource.
+ */
+
 public class RnrColumnSourceDeSerializer extends JsonDeserializer<RnRColumnSource> {
 
-    @Override
-    public RnRColumnSource deserialize(JsonParser jsonParser, DeserializationContext ctxt) throws IOException {
-        ObjectCodec oc = jsonParser.getCodec();
-        JsonNode node = oc.readTree(jsonParser);
-        return RnRColumnSource.getValueOf(node.get("code").getTextValue());
-    }
+  @Override
+  public RnRColumnSource deserialize(JsonParser jsonParser, DeserializationContext ctxt) throws IOException {
+    ObjectCodec oc = jsonParser.getCodec();
+    JsonNode node = oc.readTree(jsonParser);
+    return RnRColumnSource.getValueOf(node.get("code").getTextValue());
+  }
 }
