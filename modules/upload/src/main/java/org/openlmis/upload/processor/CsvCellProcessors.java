@@ -22,6 +22,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/*
+* This class has mappings from type to cell processors used for parsing value in a cell to corresponding data type
+* */
+
 public class CsvCellProcessors {
 
     private static final String format = "dd/MM/yyyy";

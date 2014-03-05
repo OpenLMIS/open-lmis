@@ -9,6 +9,9 @@
  */
 
 package org.openlmis.upload;
+/*
+* This interface is implemented by all those models which support importing.
+* */
 
 public interface Importable {
 

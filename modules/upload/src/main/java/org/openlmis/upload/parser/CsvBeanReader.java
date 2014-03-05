@@ -9,6 +9,10 @@
  */
 
 package org.openlmis.upload.parser;
+/*
+* This class has responsibility to instantiate a dozerBeanReader from given inputStream, and CsvPreferences.
+* Also is responsible for validating headers.
+* */
 
 import lombok.Getter;
 import org.openlmis.upload.Importable;
