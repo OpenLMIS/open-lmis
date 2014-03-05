@@ -59,6 +59,7 @@ public class RequisitionStatusChangeMapperIT {
 
   @Autowired
   ProcessingScheduleMapper processingScheduleMapper;
+
   @Autowired
   private ProcessingPeriodMapper processingPeriodMapper;
 
@@ -70,7 +71,6 @@ public class RequisitionStatusChangeMapperIT {
 
   @Autowired
   UserMapper userMapper;
-
 
   private ProcessingSchedule processingSchedule;
   private Facility facility;
@@ -130,7 +130,7 @@ public class RequisitionStatusChangeMapperIT {
     assertThat(statusChanges.size(), is(3));
     assertThat(statusChanges.get(0).getCreatedBy().getFirstName(), is(user.getFirstName()));
     assertThat(statusChanges.get(0).getCreatedBy().getLastName(), is(user.getLastName()));
-    assertThat(statusChanges.get(0).getName(), is("some random name"));
+    assertThat(statusChanges.get(0).getUserName(), is("some random name"));
     assertThat(statusChanges.get(0).getCreatedBy().getId(), is(user.getId()));
 
     assertStatusPresent(statusChanges, INITIATED);

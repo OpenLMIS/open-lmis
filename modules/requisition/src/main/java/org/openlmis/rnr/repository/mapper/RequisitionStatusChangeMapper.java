@@ -21,8 +21,8 @@ import java.util.List;
 public interface RequisitionStatusChangeMapper {
 
   @Insert({"INSERT INTO requisition_status_changes",
-      "(rnrId, status, name, createdBy, modifiedBy) VALUES ",
-      "(#{rnrId}, #{status}, #{name}, #{createdBy.id}, #{createdBy.id})"})
+    "(rnrId, status, userName, createdBy, modifiedBy) VALUES ",
+    "(#{rnrId}, #{status}, #{userName}, #{createdBy.id}, #{createdBy.id})"})
   @Options(useGeneratedKeys = true)
   void insert(RequisitionStatusChange statusChange);
 
