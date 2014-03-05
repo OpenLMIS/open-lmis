@@ -25,6 +25,10 @@ import static org.openlmis.core.domain.Right.*;
 import static org.openlmis.rnr.domain.RnrStatus.*;
 import static org.springframework.util.CollectionUtils.isEmpty;
 
+/**
+ * Exposes the services for handling Rnr entity.
+ */
+
 @Service
 public class RequisitionService {
 

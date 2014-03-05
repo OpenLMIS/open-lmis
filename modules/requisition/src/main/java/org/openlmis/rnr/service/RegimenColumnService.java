@@ -23,6 +23,10 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/**
+ * Exposes the services for handling RegimenColumn entity.
+ */
+
 @Service
 @NoArgsConstructor
 @AllArgsConstructor
