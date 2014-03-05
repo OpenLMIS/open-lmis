@@ -16,6 +16,10 @@ import org.openlmis.core.service.DeliveryZoneMemberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+/**
+ * DeliveryZoneMemberHandler is used for uploads of DeliveryZone members (facilities).
+ * It uploads each DeliveryZoneMember record by record.
+ */
 @Component
 public class DeliveryZoneMemberHandler extends AbstractModelPersistenceHandler {
 

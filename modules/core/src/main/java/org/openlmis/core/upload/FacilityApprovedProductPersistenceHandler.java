@@ -17,6 +17,7 @@ import org.openlmis.core.service.FacilityApprovedProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+
 @Component
 @NoArgsConstructor
 public class FacilityApprovedProductPersistenceHandler extends AbstractModelPersistenceHandler {

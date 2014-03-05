@@ -15,7 +15,10 @@ import org.openlmis.core.domain.DeliveryZoneWarehouse;
 import org.openlmis.core.service.DeliveryZoneWarehouseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
+/**
+ * DeliveryZoneWarehouseHandler is used for uploads of DeliveryZone and Warehouse mapping.
+ * It uploads each DeliveryZoneWarehouse record by record.
+ */
 @Component
 public class DeliveryZoneWarehouseHandler extends AbstractModelPersistenceHandler {
 
