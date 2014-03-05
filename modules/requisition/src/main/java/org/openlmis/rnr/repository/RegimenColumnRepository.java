@@ -19,6 +19,10 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+/**
+ * Repository class for Regimen Column related database operations.
+ */
+
 @Repository
 public class RegimenColumnRepository {
 
