@@ -8,4 +8,4 @@
 -- You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
 --
 
-ALTER TABLE requisition_status_changes RENAME COLUMN name TO userNamek;
+ALTER TABLE requisition_status_changes RENAME COLUMN name TO userName;
