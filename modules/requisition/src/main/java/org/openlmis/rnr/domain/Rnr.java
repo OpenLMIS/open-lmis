@@ -34,7 +34,7 @@ import static org.openlmis.rnr.domain.RnrStatus.*;
 
 /**
  * This class represents a Requisition and Reporting entity and contains rnrLineItems, regimenLineItems, status, period, program
- * and facility associated with that requisition and reporting(Rnr).
+ * and facility associated with that requisition and report(Rnr).
  */
 
 @Data

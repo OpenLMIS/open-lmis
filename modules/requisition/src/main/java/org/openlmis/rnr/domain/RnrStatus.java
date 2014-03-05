@@ -12,7 +12,7 @@ package org.openlmis.rnr.domain;
 
 
 /**
- * Enum for statuses of an rnr.
+ * Enum for statuses of a rnr.
  */
 
 public enum RnrStatus {

@@ -18,13 +18,18 @@ import org.openlmis.rnr.dto.RequisitionStatusFeedDTO;
 import java.net.URISyntaxException;
 import java.util.UUID;
 
+/**
+ * This class is responsible for generating a feed on the event of change of status of a rnr.
+ */
+
 public class RequisitionStatusChangeEvent extends Event {
+
   static final String FEED_TITLE = "Requisition Status";
   static final String FEED_CATEGORY = "requisition-status";
 
   public RequisitionStatusChangeEvent(Rnr requisition) throws URISyntaxException {
     super(UUID.randomUUID().toString(), FEED_TITLE, DateTime.now(), "",
-            new RequisitionStatusFeedDTO(requisition).getSerializedContents(), FEED_CATEGORY);
+      new RequisitionStatusFeedDTO(requisition).getSerializedContents(), FEED_CATEGORY);
   }
 
 }
