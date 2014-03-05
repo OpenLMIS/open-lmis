@@ -19,6 +19,9 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+/*
+* This class is responsible for checking if the user has the given rights.
+* */
 
 @Component
 @NoArgsConstructor

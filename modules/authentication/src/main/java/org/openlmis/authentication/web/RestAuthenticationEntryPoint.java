@@ -17,6 +17,9 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+/*
+* This class is responsible for responding with 401 response for ajax request made to webapp.
+* */
 
 public final class RestAuthenticationEntryPoint extends LoginUrlAuthenticationEntryPoint {
 

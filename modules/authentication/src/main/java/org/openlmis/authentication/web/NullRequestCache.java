@@ -15,6 +15,9 @@ import org.springframework.security.web.savedrequest.SavedRequest;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+/*
+* Null implementation of RequestCache. This is used since we don't want to cache request for handling authentication requests.
+* */
 
 public class NullRequestCache implements RequestCache {
   @Override

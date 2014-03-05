@@ -21,11 +21,13 @@ import org.springframework.security.core.AuthenticationException;
 
 import java.util.HashMap;
 import java.util.Map;
+/*
+* This class is acts as a authentication provider.
+* */
 
 public class UserAuthenticationProvider implements AuthenticationProvider {
 
   private UserAuthenticationService userAuthenticationService;
-
 
   @Autowired
   public UserAuthenticationProvider(UserAuthenticationService userAuthenticationService) {
