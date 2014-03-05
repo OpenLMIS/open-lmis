@@ -17,6 +17,10 @@ import org.springframework.stereotype.Repository;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * It maps the RequisitionStatusChange entity to corresponding representation in database.
+ */
+
 @Repository
 public interface RequisitionStatusChangeMapper {
 

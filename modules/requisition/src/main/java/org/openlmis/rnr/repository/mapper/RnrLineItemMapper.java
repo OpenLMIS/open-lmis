@@ -18,6 +18,10 @@ import org.springframework.stereotype.Repository;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * It maps the RnrLineItem entity to corresponding representation in database.
+ */
+
 @Repository
 public interface RnrLineItemMapper {
 
