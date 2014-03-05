@@ -19,6 +19,10 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+/**
+ * It maps the RegimenTemplate and RegimenColumn entity to corresponding representations in database.
+ */
+
 @Repository
 public interface RegimenColumnMapper {
 
