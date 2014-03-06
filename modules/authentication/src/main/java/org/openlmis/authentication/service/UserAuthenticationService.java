@@ -16,9 +16,10 @@ import org.openlmis.core.domain.User;
 import org.openlmis.core.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-/*
-* This service is responsible for authenticating the given username, credential combination
-* */
+
+/**
+ * This service is responsible for authenticating the given username, credential combination
+ */
 
 @Service
 @NoArgsConstructor
