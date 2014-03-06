@@ -13,14 +13,16 @@ package org.openlmis.report.mapper;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
-import org.mockito.runners.MockitoJUnitRunner;
-import org.openlmis.db.categories.UnitTests;
+import org.openlmis.db.categories.IntegrationTests;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.util.LinkedHashMap;
 
-@Category(UnitTests.class)
-@RunWith(MockitoJUnitRunner.class)
+@Category(IntegrationTests.class)
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = "classpath*:test-applicationContext-report.xml")
 public class CustomReportMapperTest {
 
   @Autowired
@@ -28,26 +30,26 @@ public class CustomReportMapperTest {
 
   @Test
   public void shouldGetListOfAllReports() throws Exception {
-       LinkedHashMap list = mapper.getListOfReports();
+     LinkedHashMap list = mapper.getListOfReports();
   }
 
   @Test
-  public void testGetReportData() throws Exception {
-
-  }
-
-  @Test
-  public void testGetCustomReportByKey() throws Exception {
+  public void shouldGetReportData() throws Exception {
 
   }
 
   @Test
-  public void testInsert() throws Exception {
+  public void shouldGetCustomReportByKey() throws Exception {
 
   }
 
   @Test
-  public void testUpdate() throws Exception {
+  public void shouldInsert() throws Exception {
+
+  }
+
+  @Test
+  public void shouldUpdate() throws Exception {
 
   }
 }
