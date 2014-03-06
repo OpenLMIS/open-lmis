@@ -23,6 +23,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * This is Repository class for RoleRights related database operations.
+ */
+
 @Repository
 @NoArgsConstructor
 public class RoleRightsRepository {

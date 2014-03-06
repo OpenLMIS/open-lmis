@@ -18,6 +18,10 @@ import org.openlmis.core.repository.mapper.SupplyLineMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+/**
+ * This is Repository class for SupplyLine related database operations.
+ */
+
 @Repository
 @NoArgsConstructor
 public class SupplyLineRepository {

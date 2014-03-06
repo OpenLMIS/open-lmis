@@ -12,7 +12,6 @@ package org.openlmis.core.repository;
 
 import lombok.NoArgsConstructor;
 import org.apache.commons.collections.Closure;
-import org.apache.commons.collections.CollectionUtils;
 import org.openlmis.core.domain.Right;
 import org.openlmis.core.domain.RoleAssignment;
 import org.openlmis.core.repository.mapper.RoleAssignmentMapper;
@@ -23,6 +22,10 @@ import java.util.List;
 
 import static org.apache.commons.collections.CollectionUtils.forAllDo;
 import static org.openlmis.core.domain.Right.commaSeparateRightNames;
+
+/**
+ * This is Repository class for RoleAssignment related database operations.
+ */
 
 @Repository
 @NoArgsConstructor
