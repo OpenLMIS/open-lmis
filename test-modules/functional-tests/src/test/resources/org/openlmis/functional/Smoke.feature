@@ -241,6 +241,10 @@ Feature: Smoke Tests
     And I verify order id in line "2"
 
   @smokeRequisition
+  Scenario: Blank
+    Given I have "storeInCharge" user with "MANAGE_POD" rights
+
+  @smokeRequisition
   Scenario: Selected requisitions across pages should not convert to order
     Given I have "51" requisitions for convert to order
     And I am logged in as "storeInCharge"
