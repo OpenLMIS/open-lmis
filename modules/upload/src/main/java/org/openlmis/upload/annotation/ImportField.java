@@ -14,9 +14,10 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-/*
-* This annotation is used to specify attributes of a field in POJO. This is used in importing data from CSV files to POJOs.
-* */
+
+/**
+ * This annotation is used to specify attributes of a field in POJO. This is used in importing data from CSV files to POJOs.
+ */
 
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)

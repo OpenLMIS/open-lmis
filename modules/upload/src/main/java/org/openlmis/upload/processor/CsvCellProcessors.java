@@ -22,41 +22,42 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/*
-* This class has mappings from type to cell processors used for parsing value in a cell to corresponding data type
-* */
+/**
+ * This class has mappings from type to cell processors used for parsing value in a cell to corresponding data type
+ */
 
 public class CsvCellProcessors {
 
-    private static final String format = "dd/MM/yyyy";
-    public static Map<String, CellProcessor> typeMappings = new HashMap<>();
-    static {
-        typeMappings.put("int", new ParseInt());
-        typeMappings.put("long", new ParseLong());
-        typeMappings.put("boolean", new ParseBool());
-        typeMappings.put("double", new ParseDouble());
-        typeMappings.put("intFromDouble", new ParseIntegerFromDouble());
-        typeMappings.put("Date", new StrRegEx("^\\d{1,2}/\\d{1,2}/\\d{4}$", new ParseDate(format))); //second parameter for leniency
-        typeMappings.put("String", new Trim());
-        typeMappings.put("BigDecimal", new ParseBigDecimal());
-    }
+  private static final String format = "dd/MM/yyyy";
+  public static Map<String, CellProcessor> typeMappings = new HashMap<>();
 
-    public static List<CellProcessor> getProcessors(ModelClass modelClass, List<String> headers) {
-        List<CellProcessor> processors = new ArrayList<>();
-        for (String header : headers) {
-            org.openlmis.upload.model.Field field =  modelClass.findImportFieldWithName(header);
-            CellProcessor processor = null;
-            if (field != null) {
-                processor = chainTypeProcessor(field);
-            }
-            processors.add(processor);
-        }
-        return processors;
+  static {
+    typeMappings.put("int", new ParseInt());
+    typeMappings.put("long", new ParseLong());
+    typeMappings.put("boolean", new ParseBool());
+    typeMappings.put("double", new ParseDouble());
+    typeMappings.put("intFromDouble", new ParseIntegerFromDouble());
+    typeMappings.put("Date", new StrRegEx("^\\d{1,2}/\\d{1,2}/\\d{4}$", new ParseDate(format))); //second parameter for leniency
+    typeMappings.put("String", new Trim());
+    typeMappings.put("BigDecimal", new ParseBigDecimal());
+  }
+
+  public static List<CellProcessor> getProcessors(ModelClass modelClass, List<String> headers) {
+    List<CellProcessor> processors = new ArrayList<>();
+    for (String header : headers) {
+      org.openlmis.upload.model.Field field = modelClass.findImportFieldWithName(header);
+      CellProcessor processor = null;
+      if (field != null) {
+        processor = chainTypeProcessor(field);
+      }
+      processors.add(processor);
     }
+    return processors;
+  }
 
 
-    private static CellProcessor chainTypeProcessor(Field field) {
-      CellProcessor mappedProcessor = typeMappings.get(field.getType());
-      return field.isMandatory() ? new NotNull(mappedProcessor) : new Optional(mappedProcessor);
-    }
+  private static CellProcessor chainTypeProcessor(Field field) {
+    CellProcessor mappedProcessor = typeMappings.get(field.getType());
+    return field.isMandatory() ? new NotNull(mappedProcessor) : new Optional(mappedProcessor);
+  }
 }

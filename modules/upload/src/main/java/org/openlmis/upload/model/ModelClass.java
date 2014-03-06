@@ -23,10 +23,11 @@ import org.openlmis.upload.exception.UploadException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-/*
-* This class represents a Java model to which the csv row is mapped.
-* This class encapsulates validation logic.
-* */
+
+/**
+ * This class represents a Java model to which the csv row is mapped.
+ * This class encapsulates validation logic.
+ */
 
 @Data
 @NoArgsConstructor

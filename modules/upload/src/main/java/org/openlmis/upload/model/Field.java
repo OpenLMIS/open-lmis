@@ -14,9 +14,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.openlmis.upload.annotation.ImportField;
 
-/*
-* This class corresponds to an attribute of a POJO, used in creating new POJOs from a row in csv file.
-* */
+/**
+ * This class corresponds to an attribute of a POJO, used in creating new POJOs from a row in csv file.
+ */
 
 @Data
 @NoArgsConstructor

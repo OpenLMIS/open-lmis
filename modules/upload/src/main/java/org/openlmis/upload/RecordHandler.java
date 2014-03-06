@@ -12,9 +12,9 @@ package org.openlmis.upload;
 
 import org.openlmis.upload.model.AuditFields;
 
-/*
-* This interface is implemented by all record handlers.
-* */
+/**
+ * This interface is implemented by all record handlers.
+ */
 
 public interface RecordHandler<I extends Importable> {
 

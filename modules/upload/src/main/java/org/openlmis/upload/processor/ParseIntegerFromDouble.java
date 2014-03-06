@@ -15,13 +15,13 @@ import org.supercsv.cellprocessor.ift.CellProcessor;
 import org.supercsv.cellprocessor.ift.StringCellProcessor;
 import org.supercsv.exception.SuperCsvCellProcessorException;
 import org.supercsv.util.CsvContext;
-/*
-* This is a custom cell processor used to parse integer from string which is parsable the integer part of double.
-* This is used in CsvCellProcessors.
-* */
+
+/**
+ * This is a custom cell processor used to parse integer from string which is parsable the integer part of double.
+ * This is used in CsvCellProcessors.
+ */
 
 public class ParseIntegerFromDouble extends CellProcessorAdaptor implements StringCellProcessor {
-
 
   public static final String DECIMAl_POINT = "\\.";
 

@@ -13,9 +13,9 @@ package org.openlmis.upload.exception;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-/*
-* This class represents exception occurred while processing upload.
-* */
+/**
+ * This class represents exception occurred while processing upload.
+ */
 
 @Data
 @EqualsAndHashCode(callSuper = false)
