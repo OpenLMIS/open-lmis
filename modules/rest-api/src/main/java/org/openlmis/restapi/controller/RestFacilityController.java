@@ -27,9 +27,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
-/*
-* This controller is responsible for handling API endpoint to get facility details.
-*/
+/**
+ * This controller is responsible for handling API endpoint to get facility details.
+ */
 
 @Controller
 public class RestFacilityController extends BaseController {

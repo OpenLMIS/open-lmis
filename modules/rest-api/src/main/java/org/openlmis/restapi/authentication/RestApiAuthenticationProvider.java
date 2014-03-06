@@ -23,10 +23,10 @@ import org.springframework.security.core.GrantedAuthority;
 
 import java.util.Collection;
 
-/*
-* This class extends org.springframework.security.authentication.AuthenticationProvider
-* and is responsible for handling authentication for REST API endpoints.
-*/
+/**
+ * This class extends org.springframework.security.authentication.AuthenticationProvider
+ * and is responsible for handling authentication for REST API endpoints.
+ */
 
 public class RestApiAuthenticationProvider implements AuthenticationProvider {
 

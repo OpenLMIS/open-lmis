@@ -23,10 +23,11 @@ import java.security.Principal;
 import static java.lang.Long.valueOf;
 import static org.openlmis.restapi.response.RestResponse.error;
 import static org.springframework.http.HttpStatus.*;
-/*
-* Controller which is extended by all controllers handling public API requests. Also contains method for handling
-* any exception that is thrown by its child controller, effectively returning error response.
-*/
+
+/**
+ * Controller which is extended by all controllers handling public API requests. Also contains method for handling
+ * any exception that is thrown by its child controller, effectively returning error response.
+ */
 
 public class BaseController {
   public static final String ACCEPT_JSON = "Accept=application/json";

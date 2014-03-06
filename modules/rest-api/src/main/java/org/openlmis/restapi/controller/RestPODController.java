@@ -16,10 +16,11 @@ import java.security.Principal;
 
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
-/*
-* This controller is responsible for handling API endpoint to update proof of delivery(POD) details for a specified
+
+/**
+ * This controller is responsible for handling API endpoint to update proof of delivery(POD) details for a specified
  * order id, along with other details(attributes of OrderPOD).
-*/
+ */
 
 @Controller
 @NoArgsConstructor
