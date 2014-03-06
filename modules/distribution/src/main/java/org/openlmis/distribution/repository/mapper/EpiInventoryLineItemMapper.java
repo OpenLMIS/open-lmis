@@ -24,8 +24,7 @@ import java.util.List;
  */
 
 @Repository
-public interface EpiInventoryMapper {
-
+public interface EpiInventoryLineItemMapper {
 
   @Insert({"INSERT INTO epi_inventory_line_items (facilityVisitId, programProductId, productCode, productName, productDisplayOrder, idealQuantity, createdBy, modifiedBy) VALUES ",
     "(#{facilityVisitId}, #{programProductId}, #{productCode}, #{productName}, #{productDisplayOrder}, #{idealQuantity}, #{createdBy}, #{modifiedBy})"})

@@ -57,10 +57,10 @@ import static org.openlmis.distribution.builder.DistributionBuilder.*;
 @RunWith(SpringJUnit4ClassRunner.class)
 @Transactional
 @TransactionConfiguration(defaultRollback = true, transactionManager = "openLmisTransactionManager")
-public class EpiInventoryMapperIT {
+public class EpiInventoryLineItemMapperIT {
 
   @Autowired
-  private EpiInventoryMapper mapper;
+  private EpiInventoryLineItemMapper mapper;
 
   @Autowired
   DeliveryZoneMapper deliveryZoneMapper;

@@ -19,7 +19,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.distribution.domain.EpiInventory;
 import org.openlmis.distribution.domain.EpiInventoryLineItem;
-import org.openlmis.distribution.repository.mapper.EpiInventoryMapper;
+import org.openlmis.distribution.repository.mapper.EpiInventoryLineItemMapper;
 
 import static java.util.Arrays.asList;
 import static org.mockito.Mockito.*;
@@ -29,7 +29,7 @@ import static org.mockito.Mockito.*;
 public class EpiInventoryRepositoryTest {
 
   @Mock
-  EpiInventoryMapper mapper;
+  EpiInventoryLineItemMapper mapper;
 
   @InjectMocks
   EpiInventoryRepository repository;
