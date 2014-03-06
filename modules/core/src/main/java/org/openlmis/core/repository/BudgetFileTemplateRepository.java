@@ -19,6 +19,10 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+/**
+ * BudgetFileTemplateRepository is  Repository class for BudgetFileTemplate (BudgetFileColumn and BudgetConfiguration)
+ * related database operations.
+ */
 @Repository
 public class BudgetFileTemplateRepository {
 
