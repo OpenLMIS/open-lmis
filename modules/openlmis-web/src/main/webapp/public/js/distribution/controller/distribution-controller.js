@@ -117,12 +117,18 @@ function DistributionController($scope, deliveryZones, DeliveryZoneActiveProgram
 }
 
 DistributionController.resolve = {
-  deliveryZones: function (UserDeliveryZones, $timeout, $q) {
+
+  deliveryZones: function (Locales, UserDeliveryZones, $timeout, $q, $window) {
     var deferred = $q.defer();
     $timeout(function () {
-      UserDeliveryZones.get({}, function (data) {
-        deferred.resolve(data.deliveryZones);
-      }, {});
+      Locales.get({}, function (data) {
+        if(!data.locales) {
+          $window.location = "/public/pages/logistics/distribution/offline.html#/list";
+        }
+        UserDeliveryZones.get({}, function (data) {
+          deferred.resolve(data.deliveryZones);
+        });
+      });
     }, 100);
     return deferred.promise;
   }

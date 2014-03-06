@@ -107,6 +107,8 @@ CACHE:
 /public/images/loader.gif
 /public/images/login-bg.png
 /public/images/warning_triangle.png
+/public/images/home-bg.png
+/public/images/home-glow.png
 
 /public/fonts/fontawesome-webfont.woff
 /public/fonts/HelveticaNeue-CondensedBold.woff
