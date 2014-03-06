@@ -230,8 +230,11 @@ public class RestRequisitionServiceTest {
     when(facilityService.getOperativeFacilityByCode(DEFAULT_AGENT_CODE)).thenReturn(facility);
     when(programService.getValidatedProgramByCode(DEFAULT_PROGRAM_CODE)).thenReturn(new Program(PROGRAM_ID));
 
+    expectedException.expect(DataException.class);
+    doThrow(new DataException("rnr.error")).when(restRequisitionCalculator).validateCustomPeriod(any(Facility.class), any(Program.class), any(ProcessingPeriod.class));
 
-    when(requisitionService.getRequisitionsFor(any(RequisitionSearchCriteria.class),new ArrayList<ProcessingPeriod>())).thenReturn(asList(new Rnr()));
+    ArrayList<ProcessingPeriod> array = new ArrayList<ProcessingPeriod>();
+    when(requisitionService.getRequisitionsFor(any(RequisitionSearchCriteria.class),any(array.getClass()))).thenReturn(asList(new Rnr()));
 
     service.submitSdpReport(report,1L);
     verify(requisitionService,never()).initiate(any(Facility.class),any(Program.class),any(Long.class),any(Boolean.class));
