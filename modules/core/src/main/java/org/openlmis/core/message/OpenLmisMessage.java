@@ -12,10 +12,9 @@ package org.openlmis.core.message;
 
 import lombok.Data;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.MissingResourceException;
-import java.util.ResourceBundle;
+/**
+ * This class is responsible for generating message given a key with parameters for internalization.
+ */
 
 @Data
 public class OpenLmisMessage {
