@@ -22,15 +22,8 @@ import java.util.LinkedHashMap;
 @Repository
 public interface CustomReportMapper {
 
-  static class PureSqlProvider {
-    public String sql(String sql) {
-      return sql;
-    }
-  }
-
   @Select("select * from custom_reports")
   public LinkedHashMap getListOfReports();
-
 
   @SelectProvider(type = PureSqlProvider.class, method = "sql")
   public LinkedHashMap getReportData(String sql);
