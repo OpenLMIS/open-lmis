@@ -17,19 +17,23 @@ import org.openlmis.rnr.domain.RnrColumn;
 
 import java.util.List;
 
+/**
+ * This entity is a container for RnrColumn list, and their source.
+ */
+
 @Data
 @NoArgsConstructor
 public class RnrTemplateForm {
 
-    RnrColumnList rnrColumns;
+  RnrColumnList rnrColumns;
 
-    List<RnRColumnSource> sources;
+  List<RnRColumnSource> sources;
 
-    public RnrTemplateForm(List<RnrColumn> rnrColumns, List<RnRColumnSource> sources) {
-        this.rnrColumns = new RnrColumnList();
-        for (RnrColumn rnrColumn : rnrColumns) {
-            this.rnrColumns.add(rnrColumn);
-        }
-        this.sources = sources;
+  public RnrTemplateForm(List<RnrColumn> rnrColumns, List<RnRColumnSource> sources) {
+    this.rnrColumns = new RnrColumnList();
+    for (RnrColumn rnrColumn : rnrColumns) {
+      this.rnrColumns.add(rnrColumn);
     }
+    this.sources = sources;
+  }
 }

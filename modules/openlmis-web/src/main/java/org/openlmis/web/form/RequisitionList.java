@@ -14,5 +14,9 @@ import org.openlmis.rnr.domain.Rnr;
 
 import java.util.ArrayList;
 
+/**
+ * This entity represents List of Rnr.
+ */
+
 public class RequisitionList extends ArrayList<Rnr> {
 }

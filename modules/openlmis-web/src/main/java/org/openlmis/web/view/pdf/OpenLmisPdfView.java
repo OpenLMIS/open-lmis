@@ -22,6 +22,10 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayOutputStream;
 import java.util.Map;
 
+/**
+ * This entity represents is used to handle PDF view.
+ */
+
 @Component("requisitionPDF")
 public class OpenLmisPdfView extends AbstractView {
 
@@ -32,7 +36,6 @@ public class OpenLmisPdfView extends AbstractView {
     this.messageService = messageService;
     setContentType("application/pdf");
   }
-
 
   @Override
   protected void renderMergedOutputModel(Map<String, Object> model, HttpServletRequest request, HttpServletResponse response) throws Exception {

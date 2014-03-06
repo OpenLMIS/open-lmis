@@ -14,5 +14,9 @@ import org.openlmis.rnr.domain.RnrColumn;
 
 import java.util.ArrayList;
 
+/**
+ * This entity represents List of RnrColumn.
+ */
+
 public class RnrColumnList extends ArrayList<RnrColumn> {
 }

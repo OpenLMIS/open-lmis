@@ -10,6 +10,7 @@
 
 package org.openlmis.order.helper;
 
+import lombok.NoArgsConstructor;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.jxpath.JXPathContext;
 import org.openlmis.order.domain.Order;
@@ -31,6 +32,7 @@ import static org.joda.time.format.DateTimeFormat.forPattern;
  */
 
 @Component
+@NoArgsConstructor
 public class OrderCsvHelper {
 
   public void writeCsvFile(Order order, OrderFileTemplateDTO orderFileTemplateDTO, Writer writer) throws IOException {
