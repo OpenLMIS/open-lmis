@@ -17,7 +17,9 @@ import org.openlmis.core.repository.mapper.ProgramProductIsaMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
+/**
+ * This is Repository class for FacilityProgramProduct related database operations.
+ */
 
 @Repository
 public class FacilityProgramProductRepository {
