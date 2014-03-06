@@ -27,10 +27,6 @@ public class DbService {
   @Autowired
   private DbRepository dbRepository;
 
-  public int getCount(String tableName) {
-    return dbRepository.getCount(tableName);
-  }
-
   public Date getCurrentTimestamp() {
     return dbRepository.getCurrentTimeStamp();
   }

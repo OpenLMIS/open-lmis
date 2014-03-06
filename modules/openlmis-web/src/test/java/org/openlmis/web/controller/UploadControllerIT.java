@@ -75,9 +75,9 @@ public class UploadControllerIT {
   public void setUp() throws Exception {
 
     when(uploadBeansMap.get("mandatoryFields")).thenReturn(
-      new UploadBean("mandatoryFields", handler, MandatoryFields.class, "products"));
+      new UploadBean("mandatoryFields", handler, MandatoryFields.class));
     when(uploadBeansMap.get("nonMandatoryFields")).thenReturn(
-      new UploadBean("nonMandatoryFields", handler, NonMandatoryFields.class, "products"));
+      new UploadBean("nonMandatoryFields", handler, NonMandatoryFields.class));
     when(uploadBeansMap.containsKey("mandatoryFields")).thenReturn(true);
     when(uploadBeansMap.containsKey("nonMandatoryFields")).thenReturn(true);
 
