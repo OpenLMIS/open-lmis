@@ -20,6 +20,10 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
 
+/**
+ * This class represents the deserializer for Date.
+ */
+
 public class DateDeserializer extends JsonDeserializer<Date> {
   @Override
   public Date deserialize(JsonParser jsonparser,
