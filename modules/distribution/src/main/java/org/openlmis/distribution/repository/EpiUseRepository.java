@@ -12,7 +12,7 @@ package org.openlmis.distribution.repository;
 
 import org.openlmis.distribution.domain.EpiUse;
 import org.openlmis.distribution.domain.EpiUseLineItem;
-import org.openlmis.distribution.repository.mapper.EpiUseMapper;
+import org.openlmis.distribution.repository.mapper.EpiUseLineItemMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -26,7 +26,7 @@ import java.util.List;
 public class EpiUseRepository {
 
   @Autowired
-  private EpiUseMapper mapper;
+  private EpiUseLineItemMapper mapper;
 
   public void saveLineItem(EpiUseLineItem epiUseLineItem) {
     if (epiUseLineItem.getId() == null) {
