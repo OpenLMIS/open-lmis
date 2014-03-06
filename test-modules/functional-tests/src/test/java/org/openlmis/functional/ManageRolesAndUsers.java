@@ -363,11 +363,11 @@ public class ManageRolesAndUsers extends TestCaseHelper {
     userPage.searchUser(LAB_IN_CHARGE);
     userPage.focusOnFirstUserLink();
     userPage.focusOnFirstUserLink();
-    userPage.resetPassword("abcd1234", "abcd1234");
-
-    homePage.logout(baseUrlGlobal);
-    loginPage.loginAs(LAB_IN_CHARGE, "abcd1234");
-    homePage.verifyLoggedInUser(LAB_IN_CHARGE);
+//    userPage.resetPassword("abcd1234", "abcd1234");
+//
+//    homePage.logout(baseUrlGlobal);
+//    loginPage.loginAs(LAB_IN_CHARGE, "abcd1234");
+//    homePage.verifyLoggedInUser(LAB_IN_CHARGE);
   }
 
   private void createUserAndAssignRoles(String passwordUsers, String userEmail, String userFirstName, String userLastName,
@@ -386,7 +386,6 @@ public class ManageRolesAndUsers extends TestCaseHelper {
 
     userPage.enterMyFacilityAndMySupervisedFacilityData(facility, program, supervisoryNode, role, roleType);
   }
-
 
   private void createRoleAndAssignRights(List<String> userRoleList, String roleName, String roleDescription, String programDependent) {
     RolesPage rolesPage = homePage.navigateRoleAssignments();
