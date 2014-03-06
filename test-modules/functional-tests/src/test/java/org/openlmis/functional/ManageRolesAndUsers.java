@@ -54,7 +54,7 @@ public class ManageRolesAndUsers extends TestCaseHelper {
   HomePage homePage;
   RolesPage rolesPage;
 
-  @BeforeMethod(groups = {"admin123"})
+  @BeforeMethod(groups = {"admin"})
   public void setUp() throws InterruptedException, SQLException, IOException {
     super.setup();
     userPage = PageObjectFactory.getUserPage(testWebDriver);
@@ -324,7 +324,7 @@ public class ManageRolesAndUsers extends TestCaseHelper {
     homePage.verifyLoggedInUser(LAB_IN_CHARGE);
   }
 
-  @Test(groups = {"admin123"}, dataProvider = "Data-Provider-Role-Function")
+  @Test(groups = {"admin"}, dataProvider = "Data-Provider-Role-Function")
   public void testCreateSearchResetPasswordUser(String[] credentials) throws SQLException {
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
 
@@ -416,7 +416,7 @@ public class ManageRolesAndUsers extends TestCaseHelper {
     assertTrue(userPage.getAllWarehouseToSelect().contains(warehouseName));
   }
 
-  @AfterMethod(groups = "admin123")
+  @AfterMethod(groups = "admin")
   public void tearDown() throws SQLException {
     testWebDriver.sleep(500);
     if (!testWebDriver.getElementById("username").isDisplayed()) {

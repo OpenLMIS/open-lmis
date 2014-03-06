@@ -12,7 +12,7 @@
   <test name="Openlmis admin test">
     <groups>
       <run>
-        <include name="admin123"/>
+        <include name="admin"/>
       </run>
     </groups>
     <packages>
