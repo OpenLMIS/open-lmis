@@ -24,6 +24,7 @@ import org.openlmis.order.service.OrderService;
 import org.openlmis.restapi.domain.ReplenishmentDTO;
 import org.openlmis.restapi.domain.Report;
 import org.openlmis.rnr.domain.*;
+import org.openlmis.rnr.search.criteria.RequisitionSearchCriteria;
 import org.openlmis.rnr.service.RequisitionService;
 import org.openlmis.rnr.service.RnrTemplateService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +34,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.lang.reflect.Field;
 import java.util.List;
 
+import static java.util.Arrays.asList;
 import static org.apache.commons.collections.CollectionUtils.find;
 import static org.openlmis.restapi.domain.ReplenishmentDTO.prepareForREST;
 
@@ -106,14 +108,22 @@ public class RestRequisitionService {
 
     //TODO if the requisition was not initiated,  please do it now.
     //if not jump to the submission route.
-    Rnr rnr = requisitionService.initiate(reportingFacility, reportingProgram, userId, report.getEmergency());
+    Rnr rnr;
+
+    RequisitionSearchCriteria searchCriteria = new RequisitionSearchCriteria();
+    searchCriteria.setProgramId(reportingProgram.getId());
+    searchCriteria.setFacilityId(reportingFacility.getId());
+    List<Rnr> rnrs = requisitionService.getRequisitionsFor(searchCriteria, asList(period));
+
+    if(rnrs.size() > 0){
+      rnr = rnrs.get(0);
+    }else{
+      rnr = requisitionService.initiate(reportingFacility, reportingProgram, userId, report.getEmergency());
+    }
 
     restRequisitionCalculator.validateProducts(report.getProducts(), rnr);
 
     markSkippedLineItems(rnr, report);
-
-    //TODO: if the previous submission was already approved, a big no no here
-    // throw an exception
 
     // if you have come this far, then do it, it is your day. make the submission.
     if (reportingFacility.getVirtualFacility())
