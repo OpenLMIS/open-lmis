@@ -15,12 +15,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Repository;
 
+/**
+ * BudgetLineItemRepository is Repository class for BudgetLineItem related database operations.
+ */
+
 @Repository
 public class BudgetLineItemRepository {
 
   @Autowired
   BudgetLineItemMapper mapper;
-
 
   public void save(BudgetLineItem budgetLineItem) {
     try {

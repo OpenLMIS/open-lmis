@@ -16,6 +16,10 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+/**
+ * This is Repository class for DeliveryZoneMember related database operations.
+ */
+
 @Repository
 public class DeliveryZoneMemberRepository {
 
