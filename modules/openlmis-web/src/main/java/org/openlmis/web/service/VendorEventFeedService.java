@@ -8,7 +8,7 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-package org.openlmis.web.controller;
+package org.openlmis.web.service;
 
 import com.sun.syndication.feed.atom.Content;
 import com.sun.syndication.feed.atom.Entry;
@@ -46,9 +46,12 @@ import static java.util.regex.Pattern.compile;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 
+/**
+ * This service handles Atom feeds generation.
+ */
+
 @Service
 public class VendorEventFeedService {
-
 
   @Autowired
   EventFeedService eventFeedService;

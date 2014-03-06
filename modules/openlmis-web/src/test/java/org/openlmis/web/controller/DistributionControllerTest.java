@@ -99,7 +99,6 @@ public class DistributionControllerTest {
     assertThat(response.getStatusCode(), is(CREATED));
     verify(service).get(distribution);
     verify(service).create(distribution);
-
   }
 
   @Test

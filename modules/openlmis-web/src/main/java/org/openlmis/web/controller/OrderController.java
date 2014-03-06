@@ -43,6 +43,11 @@ import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
+/**
+ * This controller handles endpoint related to create, get details for an Order.
+ * It also handle endpoints to handle create, list of order file template.
+ */
+
 @Controller
 public class OrderController extends BaseController {
 

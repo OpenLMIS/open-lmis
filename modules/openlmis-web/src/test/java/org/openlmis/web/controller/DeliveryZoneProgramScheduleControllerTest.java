@@ -45,13 +45,13 @@ public class DeliveryZoneProgramScheduleControllerTest {
 
   public static final long ZONE_ID = 1l;
   @InjectMocks
-  DeliveryZoneProgramScheduleController controller;
+  private DeliveryZoneProgramScheduleController controller;
 
   @Mock
-  DeliveryZoneProgramScheduleService scheduleService;
+  private DeliveryZoneProgramScheduleService scheduleService;
 
   @Mock
-  AllocationPermissionService permissionService;
+  private AllocationPermissionService permissionService;
 
   @Mock
   private DistributionService distributionService;

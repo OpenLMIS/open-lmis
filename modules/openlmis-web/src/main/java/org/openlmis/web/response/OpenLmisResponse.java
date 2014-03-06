@@ -26,6 +26,9 @@ import java.util.Map;
 import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
+/**
+ * This class wraps the ResponseEntity, in order to consistently return response containing either data/error and status code
+ */
 @NoArgsConstructor
 public class OpenLmisResponse {
   public static final String ERROR = "error";

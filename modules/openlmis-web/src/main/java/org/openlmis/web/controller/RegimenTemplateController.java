@@ -21,11 +21,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
+/**
+ * This controller handles endpoint related to configure regimen template.
+ */
+
 @Controller
 public class RegimenTemplateController extends BaseController {
 
   @Autowired
-  RegimenColumnService service;
+  private RegimenColumnService service;
 
   @RequestMapping(value = "/programId/{programId}/configureRegimenTemplate", method = GET, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_REGIMEN_TEMPLATE, VIEW_REQUISITION')")
@@ -37,6 +41,5 @@ public class RegimenTemplateController extends BaseController {
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_REQUISITION')")
   public ResponseEntity<OpenLmisResponse> getProgramRegimenTemplate(@PathVariable Long programId) {
     return OpenLmisResponse.response("template", service.getRegimenTemplateByProgramId(programId));
-
   }
 }

@@ -19,36 +19,40 @@ import org.springframework.util.MultiValueMap;
 
 import java.util.List;
 
+/**
+ * This class represents the reference data related to facility.
+ */
+
 public class FacilityReferenceData {
 
-    public static final String FACILITY_TYPES = "facilityTypes";
-    public static final String FACILITY_OPERATORS = "facilityOperators";
-    public static final String GEOGRAPHIC_ZONES = "geographicZones";
-    public static final String PROGRAMS = "programs";
-    MultiValueMap referenceData = new LinkedMultiValueMap<>();
+  public static final String FACILITY_TYPES = "facilityTypes";
+  public static final String FACILITY_OPERATORS = "facilityOperators";
+  public static final String GEOGRAPHIC_ZONES = "geographicZones";
+  public static final String PROGRAMS = "programs";
+  MultiValueMap referenceData = new LinkedMultiValueMap<>();
 
 
-    public FacilityReferenceData addFacilityTypes(List<FacilityType> facilityTypes) {
-        referenceData.put(FACILITY_TYPES, facilityTypes);
-        return this;
-    }
+  public FacilityReferenceData addFacilityTypes(List<FacilityType> facilityTypes) {
+    referenceData.put(FACILITY_TYPES, facilityTypes);
+    return this;
+  }
 
-    public FacilityReferenceData addFacilityOperators(List<FacilityOperator> allOperators) {
-        referenceData.put(FACILITY_OPERATORS, allOperators);
-        return this;
-    }
+  public FacilityReferenceData addFacilityOperators(List<FacilityOperator> allOperators) {
+    referenceData.put(FACILITY_OPERATORS, allOperators);
+    return this;
+  }
 
-    public FacilityReferenceData addGeographicZones(List<GeographicZone> allZones) {
-        referenceData.put(GEOGRAPHIC_ZONES, allZones);
-        return this;
-    }
+  public FacilityReferenceData addGeographicZones(List<GeographicZone> allZones) {
+    referenceData.put(GEOGRAPHIC_ZONES, allZones);
+    return this;
+  }
 
-    public MultiValueMap get() {
-        return referenceData;
-    }
+  public MultiValueMap get() {
+    return referenceData;
+  }
 
-    public FacilityReferenceData addPrograms(List<Program> programs) {
-        referenceData.put(PROGRAMS, programs);
-        return this;
-    }
+  public FacilityReferenceData addPrograms(List<Program> programs) {
+    referenceData.put(PROGRAMS, programs);
+    return this;
+  }
 }

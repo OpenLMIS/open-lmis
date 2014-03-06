@@ -30,6 +30,10 @@ import java.util.List;
 import static org.openlmis.web.response.OpenLmisResponse.*;
 import static org.springframework.web.bind.annotation.RequestMethod.*;
 
+/**
+ * This controller handles endpoint related to list, create, update, get details for a period for given schedule
+ */
+
 @Controller
 @NoArgsConstructor
 public class ProcessingPeriodController extends BaseController {
@@ -87,6 +91,4 @@ public class ProcessingPeriodController extends BaseController {
     ProcessingPeriod processingPeriod = processingScheduleService.getPeriodById(id);
     return response("period", processingPeriod);
   }
-
-
 }

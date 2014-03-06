@@ -28,6 +28,10 @@ import java.util.List;
 
 import static org.springframework.web.bind.annotation.RequestMethod.*;
 
+/**
+ * This controller handles endpoint related to get,override ISA for a given facility, program. Also has endpoints to create, update ISA.
+ */
+
 @Controller
 public class FacilityProgramProductController extends BaseController {
 
@@ -43,31 +47,28 @@ public class FacilityProgramProductController extends BaseController {
     return OpenLmisResponse.response(PROGRAM_PRODUCT_LIST, programProductsByProgram);
   }
 
-  @RequestMapping(value = "/programProducts/{programProductId}/isa", method = POST, headers = ACCEPT_JSON)
-  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_PROGRAM_PRODUCT')")
-  public void insertIsa(@PathVariable Long programProductId, @RequestBody ProgramProductISA programProductISA,HttpServletRequest request) {
-    programProductISA.setCreatedBy(loggedInUserId(request));
-    programProductISA.setModifiedBy(loggedInUserId(request));
-    programProductISA.setProgramProductId(programProductId);
-    service.insertISA(programProductISA);
-  }
-
-
-  @RequestMapping(value = "/programProducts/{programProductId}/isa/{isaId}", method = PUT, headers = ACCEPT_JSON)
-  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_PROGRAM_PRODUCT')")
-  public void updateIsa(@PathVariable Long isaId, @PathVariable Long programProductId, @RequestBody ProgramProductISA programProductISA,HttpServletRequest request) {
-    programProductISA.setId(isaId);
-    programProductISA.setProgramProductId(programProductId);
-    programProductISA.setModifiedBy(loggedInUserId(request));
-    service.updateISA(programProductISA);
-  }
-
   @RequestMapping(value = "/facility/{facilityId}/program/{programId}/isa", method = PUT, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_FACILITY')")
   public void overrideIsa(@PathVariable Long facilityId, @RequestBody FacilityProgramProductList products) {
     service.saveOverriddenIsa(facilityId, products);
   }
 
+  @RequestMapping(value = "/programProducts/{programProductId}/isa", method = POST, headers = ACCEPT_JSON)
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_PROGRAM_PRODUCT')")
+  public void insertIsa(@PathVariable Long programProductId, @RequestBody ProgramProductISA programProductISA, HttpServletRequest request) {
+    programProductISA.setCreatedBy(loggedInUserId(request));
+    programProductISA.setModifiedBy(loggedInUserId(request));
+    programProductISA.setProgramProductId(programProductId);
+    service.insertISA(programProductISA);
+  }
 
+  @RequestMapping(value = "/programProducts/{programProductId}/isa/{isaId}", method = PUT, headers = ACCEPT_JSON)
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_PROGRAM_PRODUCT')")
+  public void updateIsa(@PathVariable Long isaId, @PathVariable Long programProductId, @RequestBody ProgramProductISA programProductISA, HttpServletRequest request) {
+    programProductISA.setId(isaId);
+    programProductISA.setProgramProductId(programProductId);
+    programProductISA.setModifiedBy(loggedInUserId(request));
+    service.updateISA(programProductISA);
+  }
 }
 

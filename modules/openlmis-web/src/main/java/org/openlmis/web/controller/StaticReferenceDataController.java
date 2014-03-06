@@ -21,6 +21,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import static org.springframework.http.HttpStatus.OK;
 
+/**
+ * This controller handles endpoint to return page size used in pagination.
+ */
 
 @Controller
 @NoArgsConstructor
@@ -30,12 +33,11 @@ public class StaticReferenceDataController extends BaseController {
   public static final String LINE_ITEMS_PER_PAGE = "line.items.per.page";
 
   @Autowired
-  StaticReferenceDataService service;
+  private StaticReferenceDataService service;
 
   @RequestMapping(value = "/reference-data/pageSize", method = RequestMethod.GET)
   public ResponseEntity<OpenLmisResponse> getPageSize() {
     OpenLmisResponse response = new OpenLmisResponse(PAGE_SIZE, service.getPropertyValue(LINE_ITEMS_PER_PAGE));
     return new ResponseEntity(response, OK);
   }
-
 }

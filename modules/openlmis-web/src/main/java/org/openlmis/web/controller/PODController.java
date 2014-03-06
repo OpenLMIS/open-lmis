@@ -44,6 +44,10 @@ import java.util.Map;
 import static org.openlmis.web.response.OpenLmisResponse.*;
 import static org.springframework.web.bind.annotation.RequestMethod.*;
 
+/**
+ * This controller handles endpoint related to create, submit, update, print, get details for a POD(proof od delivery).
+ */
+
 @Controller
 public class PODController extends BaseController {
 

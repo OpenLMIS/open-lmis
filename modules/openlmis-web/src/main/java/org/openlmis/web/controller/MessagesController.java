@@ -24,13 +24,17 @@ import java.util.ResourceBundle;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
+/**
+ * This controller handles endpoint related to get messages in the current locale.
+ */
+
 @Controller
-public class MessagesController {
+public class MessagesController extends BaseController {
 
   public static final String MESSAGES = "messages";
 
   @Autowired
-  MessageService messageService;
+  private MessageService messageService;
 
   @RequestMapping(value = "/messages", method = GET, headers = "Accept=application/json")
   public ResponseEntity<OpenLmisResponse> getAllMessages() throws UnsupportedEncodingException {
