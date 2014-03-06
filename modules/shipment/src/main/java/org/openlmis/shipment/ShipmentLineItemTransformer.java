@@ -69,7 +69,7 @@ public class ShipmentLineItemTransformer extends LineItemTransformer {
     lineItem.setPackedDate(packedDate);
 
     if (!isBlank(dto.getShippedDate())) {
-      lineItem.setShippedDate(parseDate(shippedDateFormat, dto.getShippedDate()));
+      lineItem.setShippedDate(parseDate(shippedDateFormat, dto.getShippedDate().trim()));
     }
   }
 
