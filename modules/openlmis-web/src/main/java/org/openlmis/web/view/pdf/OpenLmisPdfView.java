@@ -23,7 +23,7 @@ import java.io.ByteArrayOutputStream;
 import java.util.Map;
 
 /**
- * This entity represents is used to handle PDF view.
+ * This entity is used to handle PDF view for requisition.
  */
 
 @Component("requisitionPDF")
