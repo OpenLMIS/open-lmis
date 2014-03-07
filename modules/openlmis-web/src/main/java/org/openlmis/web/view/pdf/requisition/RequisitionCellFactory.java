@@ -24,6 +24,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This is the class works as a factory of cells to be used in pdf report,
+ * it has methods to return a PdfCell with different formatting, like a textCell, headingCell.
+ */
+
 @Component
 public class RequisitionCellFactory {
   public static final float CELL_PADDING = 5f;

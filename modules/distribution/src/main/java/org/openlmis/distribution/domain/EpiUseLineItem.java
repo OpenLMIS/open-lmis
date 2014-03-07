@@ -20,6 +20,10 @@ import org.openlmis.core.domain.ProductGroup;
 
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 
+/**
+ *  EpiUseLineItem represents an entity which keeps record of distribution and consumption pattern of a product group.
+ */
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

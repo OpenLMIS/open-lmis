@@ -19,6 +19,10 @@ import org.openlmis.distribution.domain.ChildCoverageLineItem;
 
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 
+/**
+ *  DTO for ChildCoverageLineItem. It contains the client side representation of ChildCoverageLineItem attributes.
+ */
+
 @Data
 @EqualsAndHashCode(callSuper = false)
 @JsonIgnoreProperties(ignoreUnknown = true)

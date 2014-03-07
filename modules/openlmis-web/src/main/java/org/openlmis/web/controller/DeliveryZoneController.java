@@ -9,8 +9,6 @@
  */
 package org.openlmis.web.controller;
 
-
-import org.openlmis.core.service.AllocationPermissionService;
 import org.openlmis.core.service.DeliveryZoneService;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +24,10 @@ import static org.openlmis.core.domain.Right.MANAGE_DISTRIBUTION;
 import static org.openlmis.web.response.OpenLmisResponse.response;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
+/**
+ * This controller handles endpoint to get programs, active programs for a deliveryZones and delivery zone information.
+ */
+
 @Controller
 public class DeliveryZoneController extends BaseController {
 
@@ -33,10 +35,7 @@ public class DeliveryZoneController extends BaseController {
   public static final String DELIVERY_ZONE_PROGRAMS = "deliveryZonePrograms";
 
   @Autowired
-  DeliveryZoneService service;
-
-  @Autowired
-  AllocationPermissionService permissionService;
+  private DeliveryZoneService service;
 
   @RequestMapping(value = "user/deliveryZones", method = GET, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_DISTRIBUTION')")

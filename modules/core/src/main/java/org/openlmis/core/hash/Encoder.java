@@ -17,6 +17,9 @@ import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
+/**
+ * Utility class to encode the password for a user. The encoding used is base 62.
+ */
 public class Encoder {
   private static final String PASSWORD_HASH_ALGORITHM = "SHA-512";
   private static final String PASSWORD_HASH_ENCODING = "UTF-8";

@@ -16,6 +16,7 @@ import org.openlmis.UiUtils.ResponseEntity;
 import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.pageobjects.HomePage;
 import org.openlmis.pageobjects.LoginPage;
+import org.openlmis.pageobjects.PageObjectFactory;
 import org.openlmis.pageobjects.edi.ConvertOrderPage;
 import org.openlmis.pod.domain.OrderPOD;
 import org.openlmis.restapi.domain.Agent;
@@ -84,7 +85,7 @@ public class JsonUtility extends TestCaseHelper {
   }
 
   public static void convertToOrder(String userName, String password) {
-    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+    LoginPage loginPage = PageObjectFactory.getLoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(userName, password);
     ConvertOrderPage convertOrderPage = homePage.navigateConvertToOrder();
     convertOrderPage.convertToOrder();

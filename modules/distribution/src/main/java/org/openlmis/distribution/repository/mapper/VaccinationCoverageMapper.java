@@ -19,6 +19,11 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+/**
+ * It maps the VaccinationFullCoverage, ChildCoverageLineItem, AdultCoverageLineItem, OpenedVialLineItem,
+ * TargetGroupProduct and ProductVial entity to corresponding representation in database.
+ */
+
 @Repository
 public interface VaccinationCoverageMapper {
 

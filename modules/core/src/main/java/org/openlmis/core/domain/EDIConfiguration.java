@@ -16,6 +16,10 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+/**
+ * Base modal for all EDI files configurations like shipment, order and budget.
+ * Defines common fields applicable to all configurations.
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

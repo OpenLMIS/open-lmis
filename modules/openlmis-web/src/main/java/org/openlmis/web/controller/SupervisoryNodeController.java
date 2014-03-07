@@ -29,17 +29,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 
+/**
+ * This controller handles request to get list of supervisory nodes.
+ */
+
 @Controller
 @NoArgsConstructor
 public class SupervisoryNodeController extends BaseController {
 
   public static final String SUPERVISORY_NODES = "supervisoryNodes";
-  private SupervisoryNodeService supervisoryNodeService;
 
   @Autowired
-  public SupervisoryNodeController(SupervisoryNodeService supervisoryNodeService) {
-    this.supervisoryNodeService = supervisoryNodeService;
-  }
+  private SupervisoryNodeService supervisoryNodeService;
 
   @RequestMapping(value = "/supervisory-nodes", method = RequestMethod.GET)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_USER')")

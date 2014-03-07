@@ -9,7 +9,7 @@
  */
 
 function ListReportController($scope, reportTemplates, AuthorizationService) {
-  $scope.reportTemplates = reportTemplates.reportTemplateList;
+  $scope.reportTemplates = reportTemplates.templateList;
   $scope.hasPermission = AuthorizationService.hasPermission;
 }
 

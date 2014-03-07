@@ -20,17 +20,17 @@ import java.util.Map;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.*;
 import static java.lang.String.valueOf;
-import static org.openqa.selenium.support.How.*;
+import static org.openqa.selenium.support.How.ID;
 
 public class EPIUsePage extends DistributionTab {
 
   @FindBy(how = ID, using = "epiUsePageHeader")
   private static WebElement epiUsePageHeader = null;
 
-  @FindBy(how = XPATH, using = "//div[1]/div/div/ng-include/div/ul/li[4]/a/span[2]")
+  @FindBy(how = ID, using = "epiUseTabLabel")
   private static WebElement epiUseTab = null;
 
-  @FindBy(how = XPATH, using = "//div[@class='left-navigation ng-scope']/ul/li[4]/a/span[1][@class='status-icon']")
+  @FindBy(how = ID, using = "epiUseTabIcon")
   public static WebElement overallEPIUseIcon = null;
 
   @FindBy(how = ID, using = "epiUseApplyNrAll")
@@ -60,22 +60,22 @@ public class EPIUsePage extends DistributionTab {
   @FindBy(how = ID, using = "loss0")
   private static WebElement NRForLoss0 = null;
 
-  @FindBy(how = NAME, using = "stockAtFirstOfMonth0")
+  @FindBy(how = ID, using = "stockAtFirstOfMonthInput0")
   private static WebElement textBoxStockAtFirstOfMonth0 = null;
 
-  @FindBy(how = NAME, using = "received0")
+  @FindBy(how = ID, using = "receivedInput0")
   private static WebElement textBoxReceived0 = null;
 
-  @FindBy(how = NAME, using = "distributed0")
+  @FindBy(how = ID, using = "distributedInput0")
   private static WebElement textBoxDistributed0 = null;
 
-  @FindBy(how = NAME, using = "loss0")
+  @FindBy(how = ID, using = "lossInput0")
   private static WebElement textBoxLoss0 = null;
 
-  @FindBy(how = NAME, using = "stockAtEndOfMonth0")
+  @FindBy(how = ID, using = "stockAtEndOfMonthInput0")
   private static WebElement textBoxStockAtEndOfMonth0 = null;
 
-  @FindBy(how = NAME, using = "expirationDate0")
+  @FindBy(how = ID, using = "expirationDateInput0")
   private static WebElement textBoxExpirationDate0 = null;
 
   @FindBy(how = ID, using = "noLineItems")

@@ -12,15 +12,19 @@ package org.openlmis.distribution.repository;
 
 import org.openlmis.distribution.domain.EpiInventory;
 import org.openlmis.distribution.domain.EpiInventoryLineItem;
-import org.openlmis.distribution.repository.mapper.EpiInventoryMapper;
+import org.openlmis.distribution.repository.mapper.EpiInventoryLineItemMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+
+/**
+ * Repository class for epi inventory related database operations.
+ */
 
 @Repository
 public class EpiInventoryRepository {
 
   @Autowired
-  private EpiInventoryMapper mapper;
+  private EpiInventoryLineItemMapper mapper;
 
   public void save(EpiInventory epiInventory) {
     for (EpiInventoryLineItem lineItem : epiInventory.getLineItems()) {

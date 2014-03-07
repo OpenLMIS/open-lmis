@@ -17,7 +17,10 @@ import org.openlmis.core.service.RequisitionGroupProgramScheduleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-
+/**
+ * RequisitionGroupProgramScheduleHandler is used for uploads of Requisition Group, Program and Schedule mapping.
+ * It uploads each RequisitionGroupProgramSchedule record by record.
+ */
 @NoArgsConstructor
 @Component
 public class RequisitionGroupProgramScheduleHandler extends AbstractModelPersistenceHandler {

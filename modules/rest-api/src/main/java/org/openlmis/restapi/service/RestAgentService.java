@@ -11,7 +11,6 @@ package org.openlmis.restapi.service;
 
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.RequisitionGroupMember;
-import org.openlmis.core.domain.User;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.FacilityService;
 import org.openlmis.core.service.ProgramSupportedService;
@@ -24,6 +23,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
+
+/**
+ * This service exposes methods for managing Agent(a Facility-Like entity which can be associated with an Rnr e.g. CHW or a Virtual Facility)
+ */
 
 @Service
 public class RestAgentService {
@@ -56,7 +59,7 @@ public class RestAgentService {
 
   private void saveRequisitionGroupMembers(Facility facility, Long userId) {
     List<RequisitionGroupMember> requisitionGroupMembers =
-        requisitionGroupMemberService.getAllRequisitionGroupMembersByFacility(facility.getParentFacilityId());
+      requisitionGroupMemberService.getAllRequisitionGroupMembersByFacility(facility.getParentFacilityId());
     for (RequisitionGroupMember requisitionGroupMember : requisitionGroupMembers) {
       RequisitionGroupMember member = new RequisitionGroupMember(requisitionGroupMember.getRequisitionGroup(), facility);
       member.setCreatedBy(userId);
@@ -80,7 +83,7 @@ public class RestAgentService {
     chwFacility.setActive(Boolean.parseBoolean(agent.getActive()));
     Long previousParent = chwFacility.getParentFacilityId();
     fillBaseFacility(agent, chwFacility);
-    if(!previousParent.equals(chwFacility.getParentFacilityId())) {
+    if (!previousParent.equals(chwFacility.getParentFacilityId())) {
       requisitionGroupMemberService.deleteMembersFor(chwFacility);
       saveRequisitionGroupMembers(chwFacility, userId);
     }

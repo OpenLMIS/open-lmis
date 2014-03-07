@@ -20,6 +20,12 @@ import org.openlmis.distribution.serializer.DistributionReadingDeSerializer;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 
+/**
+ *  The reading class represents a composite entity containing value and notRecorded fields.
+ *  Reading objects will either hold a not null value and notRecorded as false or
+ *  null value and notRecorded as true.
+ */
+
 @Data
 @NoArgsConstructor
 @JsonDeserialize(using = DistributionReadingDeSerializer.class)

@@ -16,6 +16,9 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+/**
+ * BudgetFileInfo represents a Budget file entity, its attributes, and accessor methods.
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

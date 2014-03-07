@@ -19,6 +19,10 @@ import org.openlmis.rnr.domain.RnrStatus;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+/**
+ * DTO for RequisitionStatusFeed. It contains rnrId and client side representation of rnr details for feeds.
+ */
+
 @Data
 @EqualsAndHashCode(callSuper = false)
 public class RequisitionStatusFeedDTO extends BaseFeedDTO {

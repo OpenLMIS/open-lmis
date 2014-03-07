@@ -22,13 +22,16 @@ import java.math.BigDecimal;
 
 import static java.math.BigDecimal.ROUND_HALF_UP;
 
+/**
+ * Money represents data type for all monetary entities. Provides methods to add, multiply, compare monetary entitie.
+ */
 @Data
 @JsonSerialize(using = MoneySerializer.class)
 @JsonDeserialize(using = MoneyDeSerializer.class)
 @EqualsAndHashCode(callSuper = false)
 public class Money extends BaseModel {
 
-  private BigDecimal value ;
+  private BigDecimal value;
 
   public Money(String value) {
     this.value = new BigDecimal(value).setScale(2, ROUND_HALF_UP);
@@ -39,11 +42,11 @@ public class Money extends BaseModel {
   }
 
   public Money multiply(BigDecimal decimal) {
-      return new Money(value.multiply(decimal));
+    return new Money(value.multiply(decimal));
   }
 
   public boolean isNegative() {
-    return value.signum()<0;
+    return value.signum() < 0;
   }
 
   public Money add(Money other) {

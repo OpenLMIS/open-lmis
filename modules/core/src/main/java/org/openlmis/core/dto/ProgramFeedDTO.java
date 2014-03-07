@@ -14,9 +14,13 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.openlmis.core.domain.Program;
 
+/**
+ * ProgramFeedDTO consolidates program information like programCode and programName, to be used while displaying program
+ * information to user,  for eg. in feed.
+ */
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class ProgramFeedDTO extends BaseFeedDTO{
+public class ProgramFeedDTO extends BaseFeedDTO {
 
   private String programCode;
 

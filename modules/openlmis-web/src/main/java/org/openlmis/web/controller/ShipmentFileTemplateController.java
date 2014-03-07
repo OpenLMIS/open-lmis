@@ -28,11 +28,15 @@ import static org.openlmis.web.response.OpenLmisResponse.success;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
+/**
+ * This controller handles endpoint to list, create shipment file template
+ */
+
 @Controller
 public class ShipmentFileTemplateController extends BaseController {
 
   @Autowired
-  ShipmentFileTemplateService service;
+  private ShipmentFileTemplateService service;
 
   @RequestMapping(value = "/shipment-file-template", method = GET)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CONFIGURE_EDI')")
@@ -49,6 +53,4 @@ public class ShipmentFileTemplateController extends BaseController {
 
     return success("shipment.file.configuration.success");
   }
-
-
 }

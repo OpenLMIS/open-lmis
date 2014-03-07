@@ -44,8 +44,9 @@ function SaveRnrTemplateController($scope, rnrTemplateForm, program, messageServ
     }, function (data) {
       if (data !== null) {
         $scope.errorMap = data.data;
+        $scope.error = data.data.error;
       }
-      updateErrorMessage("form.error");
+      $scope.message = "";
     });
   };
 
@@ -58,11 +59,6 @@ function SaveRnrTemplateController($scope, rnrTemplateForm, program, messageServ
   $scope.sources.forEach(function (source) {
     source.description = messageService.get(source.description);
   });
-
-  function updateErrorMessage(message) {
-    $scope.error = message;
-    $scope.message = "";
-  }
 
 
   $scope.setArithmeticValidationMessageShown = function () {

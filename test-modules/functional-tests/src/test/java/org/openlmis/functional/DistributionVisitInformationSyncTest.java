@@ -64,8 +64,8 @@ public class DistributionVisitInformationSyncTest extends TestCaseHelper {
   @BeforeMethod(groups = {"distribution"})
   public void setUp() throws InterruptedException, SQLException, IOException {
     super.setup();
-    loginPage = PageFactory.getInstanceOfLoginPage(testWebDriver, baseUrlGlobal);
-    facilityListPage = PageFactory.getInstanceOfFacilityListPage(testWebDriver);
+    loginPage = PageObjectFactory.getLoginPage(testWebDriver, baseUrlGlobal);
+    facilityListPage = PageObjectFactory.getFacilityListPage(testWebDriver);
 
     setupDataForDistributionTest(visitInformationData);
     dbWrapper.insertProductGroup(visitInformationData.get(PRODUCT_GROUP_CODE));
@@ -381,13 +381,13 @@ public class DistributionVisitInformationSyncTest extends TestCaseHelper {
   }
 
   private void verifyLabels() {
-    VisitInformationPage visitInformationPage = PageFactory.getInstanceOfVisitInformation(testWebDriver);
+    VisitInformationPage visitInformationPage = PageObjectFactory.getVisitInformationPage(testWebDriver);
     assertEquals("Visit Info / Observations", visitInformationPage.getFacilityVisitTabLabel());
     assertEquals("Visit Info / Observations", visitInformationPage.getVisitInformationPageLabel());
   }
 
   public void initiateDistribution(String deliveryZoneNameFirst, String programFirst) {
-    HomePage homePage = PageFactory.getInstanceOfHomePage(testWebDriver);
+    HomePage homePage = PageObjectFactory.getHomePage(testWebDriver);
     DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
     distributionPage.selectValueFromDeliveryZone(deliveryZoneNameFirst);
     distributionPage.selectValueFromProgram(programFirst);
@@ -396,7 +396,7 @@ public class DistributionVisitInformationSyncTest extends TestCaseHelper {
   }
 
   private VisitInformationPage fillFacilityData(Boolean wasFacilityVisited) {
-    VisitInformationPage visitInformationPage = PageFactory.getInstanceOfVisitInformation(testWebDriver);
+    VisitInformationPage visitInformationPage = PageObjectFactory.getVisitInformationPage(testWebDriver);
 
     if (wasFacilityVisited) {
       RefrigeratorPage refrigeratorPage = visitInformationPage.navigateToRefrigerators();
@@ -447,7 +447,7 @@ public class DistributionVisitInformationSyncTest extends TestCaseHelper {
   }
 
   private void verifyAllFieldsDisabled() {
-    VisitInformationPage visitInformationPage = PageFactory.getInstanceOfVisitInformation(testWebDriver);
+    VisitInformationPage visitInformationPage = PageObjectFactory.getVisitInformationPage(testWebDriver);
     visitInformationPage.verifyAllFieldsDisabled();
 
     RefrigeratorPage refrigeratorPage = visitInformationPage.navigateToRefrigerators();
@@ -467,7 +467,7 @@ public class DistributionVisitInformationSyncTest extends TestCaseHelper {
 
   @When("^I verify radio button \"([^\"]*)\" is selected$")
   public void verifyRadioButtonSelected(String radioButtonSelected) {
-    VisitInformationPage visitInformationPage = PageFactory.getInstanceOfVisitInformation(testWebDriver);
+    VisitInformationPage visitInformationPage = PageObjectFactory.getVisitInformationPage(testWebDriver);
     if (radioButtonSelected.toLowerCase().equals("yes")) {
       assertTrue(visitInformationPage.isYesRadioButtonSelected());
       assertFalse(visitInformationPage.isNoRadioButtonSelected());
@@ -479,7 +479,7 @@ public class DistributionVisitInformationSyncTest extends TestCaseHelper {
 
   @And("^I verify visit date")
   public void verifyVisitDate() {
-    VisitInformationPage visitInformationPage = PageFactory.getInstanceOfVisitInformation(testWebDriver);
+    VisitInformationPage visitInformationPage = PageObjectFactory.getVisitInformationPage(testWebDriver);
     String actualDate = visitInformationPage.getVisitDate();
     String expectedDate = "01/" + new SimpleDateFormat("MM/yyyy").format(new Date());
     assertEquals(expectedDate, actualDate);
@@ -487,20 +487,20 @@ public class DistributionVisitInformationSyncTest extends TestCaseHelper {
 
   @And("^I select visit date as current date$")
   public void enterVisitDateAsFirstOfCurrentMonth() {
-    VisitInformationPage visitInformationPage = PageFactory.getInstanceOfVisitInformation(testWebDriver);
+    VisitInformationPage visitInformationPage = PageObjectFactory.getVisitInformationPage(testWebDriver);
     visitInformationPage.enterVisitDateAsFirstOfCurrentMonth();
   }
 
   @Then("^I enter vehicle id as \"([^\"]*)\"$")
   public void enterVehicleId(String vehicleId) {
-    VisitInformationPage visitInformationPage = PageFactory.getInstanceOfVisitInformation(testWebDriver);
+    VisitInformationPage visitInformationPage = PageObjectFactory.getVisitInformationPage(testWebDriver);
     visitInformationPage.enterVehicleId(vehicleId);
 
   }
 
   @When("^I select \"([^\"]*)\" facility visited$")
   public void selectFacilityVisitedOption(String option) {
-    VisitInformationPage visitInformationPage = PageFactory.getInstanceOfVisitInformation(testWebDriver);
+    VisitInformationPage visitInformationPage = PageObjectFactory.getVisitInformationPage(testWebDriver);
     if (option.toLowerCase().equals("yes")) {
       visitInformationPage.selectFacilityVisitedYes();
     } else if (option.toLowerCase().equals("no")) {
@@ -510,31 +510,31 @@ public class DistributionVisitInformationSyncTest extends TestCaseHelper {
 
   @And("^I select No Transport reason$")
   public void selectNoTransportReason() {
-    VisitInformationPage visitInformationPage = PageFactory.getInstanceOfVisitInformation(testWebDriver);
+    VisitInformationPage visitInformationPage = PageObjectFactory.getVisitInformationPage(testWebDriver);
     visitInformationPage.selectReasonNoTransport();
   }
 
   @And("^I select Others reason$")
   public void selectOtherReason() {
-    VisitInformationPage visitInformationPage = PageFactory.getInstanceOfVisitInformation(testWebDriver);
+    VisitInformationPage visitInformationPage = PageObjectFactory.getVisitInformationPage(testWebDriver);
     visitInformationPage.selectReasonOther();
   }
 
   @And("^I enter Other reason as \"([^\"]*)\"$")
   public void enterOtherReason(String reason) {
-    VisitInformationPage visitInformationPage = PageFactory.getInstanceOfVisitInformation(testWebDriver);
+    VisitInformationPage visitInformationPage = PageObjectFactory.getVisitInformationPage(testWebDriver);
     visitInformationPage.enterOtherReasonInTextBox(reason);
   }
 
   @And("^I verify Others reason selected$")
   public void isNoTransportReasonSelected() {
-    VisitInformationPage visitInformationPage = PageFactory.getInstanceOfVisitInformation(testWebDriver);
+    VisitInformationPage visitInformationPage = PageObjectFactory.getVisitInformationPage(testWebDriver);
     visitInformationPage.isOtherReasonSelected();
   }
 
   @And("^I verify Other reason entered as \"([^\"]*)\"$")
   public void verifyOtherReason(String reason) {
-    VisitInformationPage visitInformationPage = PageFactory.getInstanceOfVisitInformation(testWebDriver);
+    VisitInformationPage visitInformationPage = PageObjectFactory.getVisitInformationPage(testWebDriver);
     assertEquals(reason, visitInformationPage.getOtherReason());
   }
 
@@ -542,7 +542,7 @@ public class DistributionVisitInformationSyncTest extends TestCaseHelper {
   public void tearDown() throws SQLException {
     testWebDriver.sleep(500);
     if (!testWebDriver.getElementById("username").isDisplayed()) {
-      HomePage homePage = PageFactory.getInstanceOfHomePage(testWebDriver);
+      HomePage homePage = PageObjectFactory.getHomePage(testWebDriver);
       homePage.logout(baseUrlGlobal);
       dbWrapper.deleteData();
       dbWrapper.closeConnection();

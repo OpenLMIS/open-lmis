@@ -15,6 +15,10 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+/**
+ * ProgramProductISA represents the attributes to define and calculate ISA for a given product in a program.
+ * Also provides method to calculate isaValue on basis of user provided parameters.
+ */
 @EqualsAndHashCode(callSuper = false)
 @Data
 @AllArgsConstructor

@@ -17,7 +17,9 @@ import org.apache.ibatis.annotations.Update;
 import org.openlmis.core.domain.ProductCategory;
 import org.springframework.stereotype.Repository;
 
-
+/**
+ * ProductCategoryMapper maps the ProductCategory entity to corresponding representation in database.
+ */
 @Repository
 public interface ProductCategoryMapper {
 

@@ -64,7 +64,8 @@
                     <div class="row-fluid schedule-button-row">
                         <div class="span1"></div>
                         <div class="span2">
-                            <input type="submit" class="btn btn-primary btn-small" openlmis-message="button.create"/>
+                            <input id="createSchedule" type="submit" class="btn btn-primary btn-small"
+                                   openlmis-message="button.create"/>
                             <input type="button" class="btn btn-cancel btn-small" openlmis-message="button.cancel"
                                    ng-click="cancelAddNewSchedule()"/>
                         </div>
@@ -82,7 +83,8 @@
                 <div ng-class="schedulesBackupMap[schedule.id].editFormActive">
                     <div class="row-fluid list-row">
                         <div class="span1">
-                            <input type="button" ng-hide="schedulesBackupMap[schedule.id].edit"
+                            <input id="editButton{{$index}}" type="button"
+                                   ng-hide="schedulesBackupMap[schedule.id].edit"
                                    class="btn btn-mini pull-right"
                                    openlmis-message="button.edit"
                                    ng-click="startScheduleEdit(schedule, backupScheduleRow); schedulesBackupMap[schedule.id].edit=true;"/>
@@ -123,7 +125,7 @@
                         </div>
 
                         <div class="span1">
-                            <input ng-hide="schedulesBackupMap[schedule.id].edit" type=button
+                            <input id="addPeriod" ng-hide="schedulesBackupMap[schedule.id].edit" type=button
                                    ng-click="navigateToPeriodFor(schedule)"
                                    class="btn btn-small btn-primary" openlmis-message="schedule.add.period"/>
                         </div>
@@ -132,7 +134,8 @@
                     <div ng-show="schedulesBackupMap[schedule.id].edit" class="row-fluid schedule-button-row">
                         <div class="span1"></div>
                         <div class="span2">
-                            <input type="submit" class="btn btn-primary btn-small" openlmis-message="button.save"/>
+                            <input id="saveSchedule" type="submit" class="btn btn-primary btn-small"
+                                   openlmis-message="button.save"/>
                             <input type="button" class="btn btn-cancel btn-small" openlmis-message="button.cancel"
                                    ng-click="cancelScheduleEdit(schedule, backupScheduleRow); schedulesBackupMap[schedule.id].edit=false"/>
                         </div>

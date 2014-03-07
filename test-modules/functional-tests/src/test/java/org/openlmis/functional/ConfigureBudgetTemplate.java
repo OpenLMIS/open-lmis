@@ -18,6 +18,7 @@ import org.openlmis.UiUtils.CaptureScreenshotOnFailureListener;
 import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.pageobjects.HomePage;
 import org.openlmis.pageobjects.LoginPage;
+import org.openlmis.pageobjects.PageObjectFactory;
 import org.openlmis.pageobjects.edi.ConfigureBudgetPage;
 import org.openlmis.pageobjects.edi.ConfigureEDIPage;
 import org.testng.annotations.AfterMethod;
@@ -47,38 +48,38 @@ public class ConfigureBudgetTemplate extends TestCaseHelper {
 
   @And("^I access configure budget page$")
   public void accessOrderScreen() {
-    HomePage homePage = PageFactory.getInstanceOfHomePage(testWebDriver);
+    HomePage homePage = PageObjectFactory.getHomePage(testWebDriver);
     ConfigureEDIPage configureEDIPage = homePage.navigateEdiScreen();
     configureEDIPage.navigateConfigureBudgetPage();
   }
 
   @And("^I should see include column headers option unchecked$")
   public void verifyIncludeColumnHeader() {
-    ConfigureBudgetPage configureBudgetPage = PageFactory.getInstanceOfConfigureBudgetPage(testWebDriver);
+    ConfigureBudgetPage configureBudgetPage = PageObjectFactory.getConfigureBudgetPage(testWebDriver);
     assertFalse(configureBudgetPage.isHeaderIncluded());
   }
 
   @And("^I verify default checkbox for all data fields$")
   public void verifyDefaultDataFieldsCheckBox() {
-    ConfigureBudgetPage configureBudgetPage = PageFactory.getInstanceOfConfigureBudgetPage(testWebDriver);
+    ConfigureBudgetPage configureBudgetPage = PageObjectFactory.getConfigureBudgetPage(testWebDriver);
     configureBudgetPage.verifyDefaultIncludeCheckboxForAllDataFields();
   }
 
   @And("^I verify default value of positions$")
   public void verifyDefaultPositionValues() {
-    ConfigureBudgetPage configureBudgetPage = PageFactory.getInstanceOfConfigureBudgetPage(testWebDriver);
+    ConfigureBudgetPage configureBudgetPage = PageObjectFactory.getConfigureBudgetPage(testWebDriver);
     configureBudgetPage.verifyDefaultPositionValues();
   }
 
   @When("^I save budget file format$")
   public void clickSave() {
-    ConfigureBudgetPage configureBudgetPage = PageFactory.getInstanceOfConfigureBudgetPage(testWebDriver);
+    ConfigureBudgetPage configureBudgetPage = PageObjectFactory.getConfigureBudgetPage(testWebDriver);
     configureBudgetPage.clickSaveButton();
   }
 
   @Then("^I should see budget successful saved message as \"([^\"]*)\"$")
   public void verifySaveSuccessfullyMessage(String message) {
-    ConfigureBudgetPage configureBudgetPage = PageFactory.getInstanceOfConfigureBudgetPage(testWebDriver);
+    ConfigureBudgetPage configureBudgetPage = PageObjectFactory.getConfigureBudgetPage(testWebDriver);
     configureBudgetPage.verifyMessage(message);
   }
 
@@ -98,7 +99,7 @@ public class ConfigureBudgetTemplate extends TestCaseHelper {
     configureBudgetPage.verifyMessage("Budget file configuration saved successfully!");
 
     testWebDriver.refresh();
-    ConfigureEDIPage configureEDIPage = PageFactory.getInstanceOfConfigureEdiPage(testWebDriver);
+    ConfigureEDIPage configureEDIPage = PageObjectFactory.getConfigureEdiPage(testWebDriver);
     configureEDIPage.navigateConfigureBudgetPage();
 
     assertTrue(configureBudgetPage.isHeaderIncluded());
@@ -128,14 +129,14 @@ public class ConfigureBudgetTemplate extends TestCaseHelper {
   }
 
   private ConfigureBudgetPage gotToConfigureBudgetPage() {
-    LoginPage loginPage = PageFactory.getInstanceOfLoginPage(testWebDriver, baseUrlGlobal);
+    LoginPage loginPage = PageObjectFactory.getLoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(user, password);
     ConfigureEDIPage configureEDIPage = homePage.navigateEdiScreen();
     return configureEDIPage.navigateConfigureBudgetPage();
   }
 
   private void verifyDuplicatePositionError() {
-    ConfigureBudgetPage configureBudgetPage = PageFactory.getInstanceOfConfigureBudgetPage(testWebDriver);
+    ConfigureBudgetPage configureBudgetPage = PageObjectFactory.getConfigureBudgetPage(testWebDriver);
     configureBudgetPage.setAllocatedBudgetPosition("101");
     configureBudgetPage.setFacilityCodePosition("101");
     configureBudgetPage.clickSaveButton();
@@ -143,21 +144,21 @@ public class ConfigureBudgetTemplate extends TestCaseHelper {
   }
 
   private void verifyZeroPositionError() {
-    ConfigureBudgetPage configureBudgetPage = PageFactory.getInstanceOfConfigureBudgetPage(testWebDriver);
+    ConfigureBudgetPage configureBudgetPage = PageObjectFactory.getConfigureBudgetPage(testWebDriver);
     configureBudgetPage.setAllocatedBudgetPosition("0");
     configureBudgetPage.clickSaveButton();
     configureBudgetPage.verifyErrorMessage("Position number cannot be blank or zero for an included field");
   }
 
   private void verifyBlankPositionError() {
-    ConfigureBudgetPage configureBudgetPage = PageFactory.getInstanceOfConfigureBudgetPage(testWebDriver);
+    ConfigureBudgetPage configureBudgetPage = PageObjectFactory.getConfigureBudgetPage(testWebDriver);
     configureBudgetPage.setFacilityCodePosition("");
     configureBudgetPage.clickSaveButton();
     configureBudgetPage.verifyErrorMessage("Position number cannot be blank or zero for an included field");
   }
 
   private void verifyPositionMoreThan3Digits() {
-    ConfigureBudgetPage configureBudgetPage = PageFactory.getInstanceOfConfigureBudgetPage(testWebDriver);
+    ConfigureBudgetPage configureBudgetPage = PageObjectFactory.getConfigureBudgetPage(testWebDriver);
 
     configureBudgetPage.setFacilityCodePosition("12345");
     assertEquals(configureBudgetPage.getFacilityCodePosition(), "123");
@@ -175,7 +176,7 @@ public class ConfigureBudgetTemplate extends TestCaseHelper {
     assertEquals(configureBudgetPage.getPeriodStartDatePosition(), "523");
 
     configureBudgetPage.clickSaveButton();
-    ConfigureEDIPage configureEDIPage = PageFactory.getInstanceOfConfigureEdiPage(testWebDriver);
+    ConfigureEDIPage configureEDIPage = PageObjectFactory.getConfigureEdiPage(testWebDriver);
     configureEDIPage.navigateConfigureBudgetPage();
     assertEquals(configureBudgetPage.getFacilityCodePosition(), "123");
     assertEquals(configureBudgetPage.getAllocatedBudgetPosition(), "223");
@@ -188,7 +189,7 @@ public class ConfigureBudgetTemplate extends TestCaseHelper {
   public void tearDown() throws SQLException {
     testWebDriver.sleep(500);
     if (!testWebDriver.getElementById("username").isDisplayed()) {
-      HomePage homePage = PageFactory.getInstanceOfHomePage(testWebDriver);
+      HomePage homePage = PageObjectFactory.getHomePage(testWebDriver);
       homePage.logout(baseUrlGlobal);
       dbWrapper.deleteData();
       dbWrapper.closeConnection();

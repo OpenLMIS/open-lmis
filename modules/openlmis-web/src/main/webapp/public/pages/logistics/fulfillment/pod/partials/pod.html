@@ -10,6 +10,11 @@
 
 <div>
 
+  <span class="pull-right print-button">
+    <a class="btn btn-primary" ng-href="/pods/{{pod.id}}/print" openlmis-message="button.print"
+       target="_blank"></a>
+  </span>
+
   <h2 id="podPageTitle" openlmis-message="header.proof.of.delivery"></h2>
   <ng-include src="'/public/pages/logistics/fulfillment/pod/partials/header.html'"></ng-include>
 
@@ -133,9 +138,9 @@
     </div>
     <div form-toolbar id="action_buttons" class="action-buttons">
       <div class="form-cell button-row">
-        <input id=saveButton type="button" class="btn btn-primary save-button" ng-click="save()"
+        <input id="saveButton" type="button" class="btn btn-primary save-button" ng-click="save()"
                openlmis-message="button.save" ng-disabled="podAlreadySubmitted"/>
-        <input id=submitButton type="button" class="btn btn-primary submit-button" ng-click="submit()"
+        <input id="submitButton" type="button" class="btn btn-primary submit-button" ng-click="submit()"
                openlmis-message="button.submit" ng-disabled="podAlreadySubmitted"/>
       </div>
       <div class="toolbar-error" id="saveFailMessage" fade-out="3000" openlmis-message="error" ng-show="error"></div>

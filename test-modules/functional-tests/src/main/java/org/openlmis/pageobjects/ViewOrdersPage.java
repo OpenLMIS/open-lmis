@@ -15,7 +15,6 @@ import org.openlmis.UiUtils.TestWebDriver;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
-import org.openqa.selenium.support.How;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 
@@ -26,28 +25,28 @@ import static org.openqa.selenium.support.How.XPATH;
 
 public class ViewOrdersPage extends RequisitionPage {
 
-  @FindBy(how = How.XPATH, using = "//div[@class='ngCellText ng-scope col0 colt0']/span")
+  @FindBy(how = XPATH, using = "//div[@class='ngCellText ng-scope col0 colt0']/span")
   private static WebElement orderNumberOnViewOrdersScreen = null;
 
-  @FindBy(how = How.XPATH, using = "//div[@class='ngCellText ng-scope col2 colt2']/span")
+  @FindBy(how = XPATH, using = "//div[@class='ngCellText ng-scope col2 colt2']/span")
   private static WebElement programOnViewOrderScreen = null;
 
-  @FindBy(how = How.XPATH, using = "//div[@class='ng-scope ngRow even']/div[2]/div[2]/div/span")
+  @FindBy(how = XPATH, using = "//div[@class='ng-scope ngRow even']/div[2]/div[2]/div/span")
   private static WebElement facilityCodeNameOnOrderScreen = null;
 
-  @FindBy(how = How.XPATH, using = "//div[@class='ng-scope ngRow even']/div[4]/div[2]/div/span")
+  @FindBy(how = XPATH, using = "//div[@class='ng-scope ngRow even']/div[4]/div[2]/div/span")
   private static WebElement periodDetailsOnViewOrderScreen = null;
 
-  @FindBy(how = How.XPATH, using = "//div[@class='ng-scope ngRow even']/div[5]/div[2]/div/span")
+  @FindBy(how = XPATH, using = "//div[@class='ng-scope ngRow even']/div[5]/div[2]/div/span")
   private static WebElement supplyDepotOnViewOrderScreen = null;
 
-  @FindBy(how = How.XPATH, using = "(//div[@id='orderStatus'])[1]")
+  @FindBy(how = XPATH, using = "(//div[@id='orderStatus'])[1]")
   private static WebElement orderStatusOnViewOrderScreen = null;
 
-  @FindBy(how = How.XPATH, using = "//a[contains(text(),'Download CSV')]")
+  @FindBy(how = XPATH, using = "//a[contains(text(),'Download CSV')]")
   private static WebElement downloadCSVLink = null;
 
-  @FindBy(how = How.XPATH, using = "//span[contains(text(),'No products in this order')]")
+  @FindBy(how = XPATH, using = "//span[contains(text(),'No products in this order')]")
   private static WebElement noOrderMessage = null;
 
   @FindBy(how = XPATH, using = "//i[@class='icon-ok']")

@@ -14,32 +14,33 @@ package org.openlmis.pageobjects;
 import org.openlmis.UiUtils.TestWebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
-import org.openqa.selenium.support.How;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
+
+import static org.openqa.selenium.support.How.ID;
 
 
 public class LoginPage extends Page {
 
-  @FindBy(how = How.XPATH, using = "//div[@class='login-page']/ng-include/div/div[2]/h2")
+  @FindBy(how = ID, using = "signInLabel")
   private static WebElement pageIdentifierOnLoginPage = null;
 
-  @FindBy(how = How.ID, using = "username")
+  @FindBy(how = ID, using = "username")
   private static WebElement userNameField = null;
 
-  @FindBy(how = How.ID, using = "password")
+  @FindBy(how = ID, using = "password")
   private static WebElement passwordField = null;
 
-  @FindBy(how = How.XPATH, using = "//a[@openlmis-message='link.forgot.password']")
+  @FindBy(how = ID, using = "forgotPasswordLink")
   private static WebElement forgotPasswordLink = null;
 
-  @FindBy(how = How.ID, using = "locale_en")
+  @FindBy(how = ID, using = "locale_en")
   private static WebElement langEnglish = null;
 
-  @FindBy(how = How.ID, using = "locale_pt")
+  @FindBy(how = ID, using = "locale_pt")
   private static WebElement langPortuguese = null;
 
-  @FindBy(how = How.XPATH, using = "//div[3][@class='alert alert-error ng-binding']")
+  @FindBy(how = ID, using = "loginError")
   private static WebElement loginErrorLabel = null;
 
   public LoginPage(TestWebDriver driver, String baseUrl) {
@@ -58,6 +59,7 @@ public class LoginPage extends Page {
   }
 
   public HomePage loginAs(String username, String password) {
+    testWebDriver.sleep(1000);
     testWebDriver.waitForElementToAppear(userNameField);
     testWebDriver.waitForElementToAppear(passwordField);
 
@@ -65,13 +67,13 @@ public class LoginPage extends Page {
     sendKeys(passwordField, password);
 
     userNameField.submit();
-    return new HomePage(testWebDriver);
+    return PageObjectFactory.getHomePage(testWebDriver);
   }
 
   public ForgotPasswordPage clickForgotPasswordLink() {
     testWebDriver.waitForElementToAppear(forgotPasswordLink);
     forgotPasswordLink.click();
-    return new ForgotPasswordPage(testWebDriver);
+    return PageObjectFactory.getForgotPasswordPage(testWebDriver);
   }
 
   public String getEnglishColor() {

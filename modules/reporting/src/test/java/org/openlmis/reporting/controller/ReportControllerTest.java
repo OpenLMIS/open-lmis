@@ -17,8 +17,9 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.openlmis.db.categories.UnitTests;
-import org.openlmis.reporting.model.ReportTemplate;
-import org.openlmis.reporting.repository.mapper.ReportTemplateMapper;
+import org.openlmis.reporting.model.Template;
+import org.openlmis.reporting.repository.mapper.TemplateMapper;
+import org.openlmis.reporting.service.JasperReportsViewFactory;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -42,7 +43,7 @@ public class ReportControllerTest {
 
 
   @Mock
-  ReportTemplateMapper reportTemplateMapper;
+  TemplateMapper templateMapper;
 
   @Mock
   private JasperReportsViewFactory viewFactory;
@@ -68,19 +69,19 @@ public class ReportControllerTest {
 
   @Test
   public void shouldGenerateReportInRequestedFormat() throws Exception {
-    ReportTemplate reportTemplate = new ReportTemplate();
-    when(reportTemplateMapper.getById(1L)).thenReturn(reportTemplate);
+    Template template = new Template();
+    when(templateMapper.getById(1L)).thenReturn(template);
     JasperReportsMultiFormatView mockView = mock(JasperReportsMultiFormatView.class);
     HashMap<String, Object> parameterMap = new HashMap<>();
     parameterMap.put("createdBy", userId);
-    when(viewFactory.getJasperReportsView(reportTemplate)).thenReturn(mockView);
+    when(viewFactory.getJasperReportsView(template)).thenReturn(mockView);
     whenNew(HashMap.class).withNoArguments().thenReturn(parameterMap);
 
     ModelAndView modelAndView = reportController.generateReport(httpServletRequest, 1L, "pdf");
 
     assertThat((JasperReportsMultiFormatView) modelAndView.getView(), is(mockView));
-    verify(viewFactory).getJasperReportsView(reportTemplate);
-    verify(reportTemplateMapper).getById(1L);
+    verify(viewFactory).getJasperReportsView(template);
+    verify(templateMapper).getById(1L);
   }
 
 

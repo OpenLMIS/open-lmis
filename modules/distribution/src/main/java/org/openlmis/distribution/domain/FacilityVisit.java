@@ -24,6 +24,11 @@ import java.util.Date;
 
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 
+/**
+ *  FacilityVisit represents an entity which keeps track of whether facility was visited or not. If visited then
+ *  records visit date, vehicle and facilitator's information. And if not visited then records reason for not visiting.
+ */
+
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)

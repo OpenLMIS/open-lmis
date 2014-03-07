@@ -30,18 +30,19 @@ import javax.servlet.http.HttpServletRequest;
 import static org.openlmis.web.response.OpenLmisResponse.error;
 import static org.openlmis.web.response.OpenLmisResponse.success;
 
+/**
+ * This controller handles endpoint related to list, create, update, get details for a schedule
+ */
+
 @Controller
 @NoArgsConstructor
 public class ProcessingScheduleController extends BaseController {
 
   public static final String SCHEDULES = "schedules";
   public static final String SCHEDULE = "schedule";
-  private ProcessingScheduleService processingScheduleService;
 
   @Autowired
-  public ProcessingScheduleController(ProcessingScheduleService processingScheduleService) {
-    this.processingScheduleService = processingScheduleService;
-  }
+  private ProcessingScheduleService processingScheduleService;
 
   @RequestMapping(value = "/schedules", method = RequestMethod.GET, headers = "Accept=application/json")
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_SCHEDULE')")

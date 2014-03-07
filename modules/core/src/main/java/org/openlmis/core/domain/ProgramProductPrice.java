@@ -20,15 +20,20 @@ import org.openlmis.upload.annotation.ImportFields;
 
 import java.util.Date;
 
+/**
+ * ProgramProductPrice represents price for a product under a program for a given time period.
+ * Also defines the contract for creation/upload of this mapping like program code, product code, price per pack,
+ * are mandatory. You can also provide price per dosage unit and funding source for this mapping.
+ */
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 public class ProgramProductPrice extends BaseModel implements Importable {
 
   @ImportFields(importFields = {
-      @ImportField(name = "Program Code", type = "String", nested = "program.code", mandatory = true),
-      @ImportField(name = "Product Code", type = "String", nested = "product.code", mandatory = true),
-      @ImportField(name = "Price per pack", type = "BigDecimal", nested = "currentPrice", mandatory = true)
+    @ImportField(name = "Program Code", type = "String", nested = "program.code", mandatory = true),
+    @ImportField(name = "Product Code", type = "String", nested = "product.code", mandatory = true),
+    @ImportField(name = "Price per pack", type = "BigDecimal", nested = "currentPrice", mandatory = true)
   })
   private ProgramProduct programProduct;
 

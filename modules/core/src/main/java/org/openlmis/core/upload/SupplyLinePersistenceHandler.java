@@ -17,6 +17,9 @@ import org.openlmis.core.service.SupplyLineService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+/**
+ * SupplyLinePersistenceHandler is used for uploads of SupplyLines. It uploads each SupplyLine record by record.
+ */
 @Component
 @NoArgsConstructor
 public class SupplyLinePersistenceHandler extends AbstractModelPersistenceHandler {

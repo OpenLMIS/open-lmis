@@ -38,6 +38,10 @@ import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 import static org.springframework.web.bind.annotation.RequestMethod.PUT;
 
+/**
+ * This controller handles endpoint related to initiate, sync a distribution.
+ */
+
 @Controller
 @NoArgsConstructor
 public class DistributionController extends BaseController {

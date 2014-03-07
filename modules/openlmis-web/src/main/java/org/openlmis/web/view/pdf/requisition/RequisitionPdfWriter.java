@@ -23,6 +23,10 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Map;
 
+/**
+ * This is the pdf writer implementation used in printing requisition report.
+ */
+
 public class RequisitionPdfWriter extends PdfWriter {
 
   public static final Rectangle PAGE_SIZE = new Rectangle(1500, 1059);

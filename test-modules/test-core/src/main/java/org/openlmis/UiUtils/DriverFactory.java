@@ -84,7 +84,7 @@ public class DriverFactory {
         return createChromeDriver();
 
       case "chromeM":
-        //ToDO: To run offline test on Jenkins change CHROME_FOLDER to OUTPUT_FOLDER
+        // To run offline test on Jenkins change CHROME_FOLDER to OUTPUT_FOLDER
         driverType = setProperty("webdriver.chrome.driver", CHROME_FOLDER + "chromedriver");
         driverType = getProperty("webdriver.chrome.driver");
         return createChromeDriver();

@@ -21,6 +21,10 @@ import org.openlmis.upload.annotation.ImportField;
 
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 
+/**
+ * ProgramProduct represents a product available under a program and program-product specific attributes like currentPrice and dosesPerMonth.
+ * Also defines contract for upload of a ProgramProduct mapping.
+ */
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)

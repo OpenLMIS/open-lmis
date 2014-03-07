@@ -71,7 +71,7 @@ public class UploadControllerTest {
 
   private MockHttpServletRequest request;
 
-  private UploadBean productUploadBean = new UploadBean("product", handler, Product.class, "products");
+  private UploadBean productUploadBean = new UploadBean("product", handler, Product.class);
 
   @Spy
   Map<String, UploadBean> uploadBeansMap = new HashMap<String, UploadBean>() {{
@@ -189,7 +189,6 @@ public class UploadControllerTest {
     InputStream mockInputStream = mock(InputStream.class);
     when(mockMultiPartFile.getInputStream()).thenReturn(mockInputStream);
 
-    when(dbService.getCount(productUploadBean.getTableName())).thenReturn(10).thenReturn(25);
     when(csvParser.process(eq(mockMultiPartFile.getInputStream()), argThat(modelMatcher(Product.class)), eq(handler), eq(auditFields))).thenReturn(20);
 
     String uploadSuccessMessage = "File uploaded successfully. " +
@@ -209,12 +208,10 @@ public class UploadControllerTest {
     InputStream mockInputStream = mock(InputStream.class);
     when(mockMultiPartFile.getInputStream()).thenReturn(mockInputStream);
 
-    when(dbService.getCount(productUploadBean.getTableName())).thenReturn(10).thenReturn(25);
     when(csvParser.process(eq(mockMultiPartFile.getInputStream()), argThat(modelMatcher(Product.class)),
       eq(handler), eq(auditFields))).thenReturn(20);
 
     controller.upload(mockMultiPartFile, "product", request);
-
 
     verify(csvParser).process(eq(mockInputStream), argThat(modelMatcher(Product.class)), eq(handler), eq(auditFields));
     verify(dbService).getCurrentTimestamp();

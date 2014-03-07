@@ -30,6 +30,10 @@ import java.util.Map;
 import static org.apache.commons.collections.CollectionUtils.collect;
 import static org.apache.commons.collections.CollectionUtils.select;
 
+/**
+ * Exposes the services for handling FacilityDistribution entity.
+ */
+
 @Service
 @NoArgsConstructor
 public class FacilityDistributionService {

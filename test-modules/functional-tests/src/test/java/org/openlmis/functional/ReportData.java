@@ -15,6 +15,7 @@ import org.openlmis.UiUtils.CaptureScreenshotOnFailureListener;
 import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.pageobjects.HomePage;
 import org.openlmis.pageobjects.LoginPage;
+import org.openlmis.pageobjects.PageObjectFactory;
 import org.openqa.selenium.WebElement;
 import org.testng.annotations.*;
 
@@ -37,7 +38,7 @@ public class ReportData extends TestCaseHelper {
 
   @Test(dataProvider = "Data-Provider-Function-Positive")
   public void testVerifyReport(String[] credentials) throws InterruptedException, IOException, SQLException {
-    LoginPage loginPage = PageFactory.getInstanceOfLoginPage(testWebDriver, baseUrlGlobal);
+    LoginPage loginPage = PageObjectFactory.getLoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
     homePage.navigateReportScreen();
     getReportData(1);
@@ -53,7 +54,7 @@ public class ReportData extends TestCaseHelper {
 
   @AfterMethod(groups = {"distribution"})
   public void tearDown() throws SQLException {
-    HomePage homePage = PageFactory.getInstanceOfHomePage(testWebDriver);
+    HomePage homePage = PageObjectFactory.getHomePage(testWebDriver);
     homePage.logout(baseUrlGlobal);
     dbWrapper.closeConnection();
   }

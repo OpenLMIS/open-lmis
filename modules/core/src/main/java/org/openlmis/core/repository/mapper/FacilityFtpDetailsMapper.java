@@ -15,6 +15,9 @@ import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.FacilityFtpDetails;
 import org.springframework.stereotype.Repository;
 
+/**
+ * FacilityFtpDetailsMapper maps the FacilityFtpDetails entity to corresponding representation in database.
+ */
 @Repository
 public interface FacilityFtpDetailsMapper {
 

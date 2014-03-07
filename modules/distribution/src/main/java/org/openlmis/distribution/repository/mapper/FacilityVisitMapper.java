@@ -18,6 +18,10 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+/**
+ * It maps the FacilityVisit entity to corresponding representation in database.
+ */
+
 @Repository
 public interface FacilityVisitMapper {
 

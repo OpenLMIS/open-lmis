@@ -17,6 +17,10 @@ import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonIgnoreType;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 
+/**
+ * This class represents a column configured in rnr template for a program.
+ */
+
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)

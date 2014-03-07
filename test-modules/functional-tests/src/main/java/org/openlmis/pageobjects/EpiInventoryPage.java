@@ -49,9 +49,9 @@ public class EpiInventoryPage extends DistributionTab {
   public void enterValues(List<Map<String, String>> dataMapList) {
     for (int i = 0; i < dataMapList.size(); ++i) {
       Map<String, String> epiInventoryData = dataMapList.get(i);
-      fillDeliveredQuantity(i + 1, epiInventoryData.get("deliveredQuantity"));
       fillExistingQuantity(i + 1, epiInventoryData.get("existingQuantity"));
       fillSpoiledQuantity(i + 1, epiInventoryData.get("spoiledQuantity"));
+      fillDeliveredQuantity(i + 1, epiInventoryData.get("deliveredQuantity"));
     }
   }
 

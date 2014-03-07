@@ -35,13 +35,12 @@ import static org.mockito.Mockito.when;
 import static org.openlmis.authentication.web.UserAuthenticationSuccessHandler.USER_ID;
 import static org.springframework.http.HttpStatus.OK;
 
-
 @Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
 public class BudgetFileTemplateControllerTest {
 
-
   private MockHttpServletRequest httpServletRequest = new MockHttpServletRequest();
+
   @Mock
   BudgetFileTemplateService budgetFileTemplateService;
 
@@ -54,12 +53,10 @@ public class BudgetFileTemplateControllerTest {
     MockHttpSession mockHttpSession = new MockHttpSession();
     httpServletRequest.setSession(mockHttpSession);
     mockHttpSession.setAttribute(USER_ID, userId);
-
   }
 
   @Test
   public void shouldGetBudgetFileTemplate() {
-
     EDIFileTemplate expectedBudgetFileTemplate = new EDIFileTemplate();
 
     when(budgetFileTemplateService.get()).thenReturn(expectedBudgetFileTemplate);
@@ -78,7 +75,6 @@ public class BudgetFileTemplateControllerTest {
       new EDIConfiguration(true),
       asList(ediFileColumn1, ediFileColumn2));
 
-
     ResponseEntity<OpenLmisResponse> response = controller.update(budgetFileTemplate, httpServletRequest);
 
     assertThat(response.getStatusCode(), is(OK));
@@ -87,8 +83,6 @@ public class BudgetFileTemplateControllerTest {
     for (EDIFileColumn column : budgetFileTemplate.getColumns()) {
       assertThat(column.getModifiedBy(), is(userId));
     }
-
     verify(budgetFileTemplateService).update(budgetFileTemplate);
-
   }
 }

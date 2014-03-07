@@ -18,6 +18,10 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+/**
+ * RequisitionGroupMemberMapper maps the RequisitionGroupMember entity to corresponding representation in database. Also
+ * provides methods to replicate members to virtual facility.
+ */
 @Repository
 public interface RequisitionGroupMemberMapper {
 

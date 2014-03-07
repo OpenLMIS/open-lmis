@@ -22,6 +22,10 @@ import java.util.Date;
 
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 
+/**
+ * This class represents a comment entity associated to a Rnr.
+ */
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -33,4 +37,5 @@ public class Comment extends BaseModel {
   private User author;
   private String commentText;
   private Date createdDate;
+
 }

@@ -20,6 +20,7 @@ import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.UiUtils.TestWebDriver;
 import org.openlmis.pageobjects.EPIUsePage;
 import org.openlmis.pageobjects.HomePage;
+import org.openlmis.pageobjects.PageObjectFactory;
 import org.openqa.selenium.JavascriptExecutor;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
@@ -45,14 +46,14 @@ public class RecordEPIUse extends TestCaseHelper {
 
   @Then("^I should see product group \"([^\"]*)\"")
   public void verifyProductGroup(String productGroup) {
-    epiUsePage = PageFactory.getInstanceOfEpiUsePage(testWebDriver);
+    epiUsePage = PageObjectFactory.getEpiUsePage(testWebDriver);
     epiUsePage.verifyProductGroup(productGroup, 1);
   }
 
   @When("^I Enter EPI values without end of month:$")
   public void enterEPIValues(DataTable tableData) {
     Map<String, String> epiData = tableData.asMaps().get(0);
-    epiUsePage = PageFactory.getInstanceOfEpiUsePage(testWebDriver);
+    epiUsePage = PageObjectFactory.getEpiUsePage(testWebDriver);
     epiUsePage.enterValueInDistributed(epiData.get("distributed"), 1);
     epiUsePage.enterValueInExpirationDate(epiData.get("expirationDate"), 1);
     epiUsePage.enterValueInLoss(epiData.get("loss"), 1);
@@ -62,7 +63,7 @@ public class RecordEPIUse extends TestCaseHelper {
 
   @When("^I verify saved EPI values:$")
   public void verifySavedEPIValues(DataTable tableData) {
-    epiUsePage = PageFactory.getInstanceOfEpiUsePage(testWebDriver);
+    epiUsePage = PageObjectFactory.getEpiUsePage(testWebDriver);
     epiUsePage.navigateToRefrigerators();
     epiUsePage.navigateToEpiUse();
     List<Map<String, String>> epiData = tableData.asMaps();
@@ -71,19 +72,19 @@ public class RecordEPIUse extends TestCaseHelper {
 
   @And("^I verify total is \"([^\"]*)\"$")
   public void verifyTotalField(String total) {
-    epiUsePage = PageFactory.getInstanceOfEpiUsePage(testWebDriver);
+    epiUsePage = PageObjectFactory.getEpiUsePage(testWebDriver);
     epiUsePage.verifyTotal(total, 1);
   }
 
   @Then("^Verify indicator should be \"([^\"]*)\"$")
   public void shouldVerifyIndicatorColor(String color) throws SQLException {
-    epiUsePage = PageFactory.getInstanceOfEpiUsePage(testWebDriver);
+    epiUsePage = PageObjectFactory.getEpiUsePage(testWebDriver);
     epiUsePage.verifyIndicator(color);
   }
 
   @When("^I enter EPI end of month as \"([^\"]*)\"")
   public void enterEPIEndOfMonth(String endOfMonth) throws InterruptedException {
-    epiUsePage = PageFactory.getInstanceOfEpiUsePage(testWebDriver);
+    epiUsePage = PageObjectFactory.getEpiUsePage(testWebDriver);
     epiUsePage.enterValueInStockAtEndOfMonth(endOfMonth, 1);
   }
 
@@ -91,7 +92,7 @@ public class RecordEPIUse extends TestCaseHelper {
   public void tearDown() throws SQLException {
     testWebDriver.sleep(250);
     if (!testWebDriver.getElementById("username").isDisplayed()) {
-      HomePage homePage = PageFactory.getInstanceOfHomePage(testWebDriver);
+      HomePage homePage = PageObjectFactory.getHomePage(testWebDriver);
       homePage.logout(baseUrlGlobal);
       dbWrapper.deleteData();
       dbWrapper.closeConnection();

@@ -62,7 +62,6 @@ public class ManagePodPage extends Page {
   @FindBy(how = ID, using = "noOrdersPresent")
   private static WebElement noOrderPresentMessageOnPodScreen = null;
 
-
   @FindBy(how = XPATH, using = " //i[@class='icon-ok']")
   private static WebElement emergencyIconOnPodScreen = null;
 
@@ -143,7 +142,7 @@ public class ManagePodPage extends Page {
     WebElement uploadLink = testWebDriver.findElement(By.id("updatePod" + (rowNumber - 1)));
     testWebDriver.waitForElementToAppear(uploadLink);
     uploadLink.click();
-    return new UpdatePodPage(testWebDriver);
+    return PageObjectFactory.getUpdatePodPage(testWebDriver);
   }
 }
 

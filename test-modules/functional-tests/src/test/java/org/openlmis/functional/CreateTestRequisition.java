@@ -13,10 +13,7 @@ package org.openlmis.functional;
 
 import org.openlmis.UiUtils.CaptureScreenshotOnFailureListener;
 import org.openlmis.UiUtils.TestCaseHelper;
-import org.openlmis.pageobjects.ApprovePage;
-import org.openlmis.pageobjects.HomePage;
-import org.openlmis.pageobjects.InitiateRnRPage;
-import org.openlmis.pageobjects.LoginPage;
+import org.openlmis.pageobjects.*;
 import org.openlmis.pageobjects.edi.ConvertOrderPage;
 import org.testng.annotations.*;
 
@@ -62,7 +59,7 @@ public class CreateTestRequisition extends TestCaseHelper {
     dbWrapper.assignRight(STORE_IN_CHARGE, VIEW_ORDER);
     dbWrapper.insertFulfilmentRoleAssignment(userSIC, STORE_IN_CHARGE, "F10");
 
-    LoginPage loginPage = PageFactory.getInstanceOfLoginPage(testWebDriver, baseUrlGlobal);
+    LoginPage loginPage = PageObjectFactory.getLoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(userSIC, password);
 
     homePage.navigateAndInitiateRnr(program);
@@ -122,7 +119,7 @@ public class CreateTestRequisition extends TestCaseHelper {
   public void tearDown() throws SQLException {
     testWebDriver.sleep(500);
     if (!testWebDriver.getElementById("username").isDisplayed()) {
-      HomePage homePage = PageFactory.getInstanceOfHomePage(testWebDriver);
+      HomePage homePage = PageObjectFactory.getHomePage(testWebDriver);
       homePage.logout(baseUrlGlobal);
       dbWrapper.closeConnection();
     }

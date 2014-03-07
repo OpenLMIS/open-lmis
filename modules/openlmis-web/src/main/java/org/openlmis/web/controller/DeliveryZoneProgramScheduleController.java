@@ -30,19 +30,23 @@ import java.util.List;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
+/**
+ * This controller handles endpoint to get periods for a delivery zone, program combination.
+ */
+
 @Controller
 public class DeliveryZoneProgramScheduleController extends BaseController {
 
   public static final String PERIODS = "periods";
 
   @Autowired
-  DeliveryZoneProgramScheduleService scheduleService;
+  private DeliveryZoneProgramScheduleService scheduleService;
 
   @Autowired
-  AllocationPermissionService permissionService;
+  private AllocationPermissionService permissionService;
 
   @Autowired
-  DistributionService distributionService;
+  private DistributionService distributionService;
 
   @RequestMapping(value = "deliveryZones/{zoneId}/programs/{programId}/periods", method = GET, headers = ACCEPT_JSON)
   public ResponseEntity<OpenLmisResponse> getPeriodsForProgramInDeliveryZone(HttpServletRequest request, @PathVariable long zoneId,

@@ -17,6 +17,9 @@ import org.apache.ibatis.annotations.Update;
 import org.openlmis.core.domain.ProductGroup;
 import org.springframework.stereotype.Repository;
 
+/**
+ * ProductGroupMapper maps the ProductGroup entity to corresponding representation in database.
+ */
 @Repository
 public interface ProductGroupMapper {
 

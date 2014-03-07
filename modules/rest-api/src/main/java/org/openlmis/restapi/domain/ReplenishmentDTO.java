@@ -28,6 +28,11 @@ import java.util.List;
 import static org.apache.commons.collections.CollectionUtils.collect;
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 
+/**
+ * This class is used to represent Data Transfer Object for replenishment, effectively composing attributes from
+ * Rnr and attributes from order which are order specific like status, etc.
+ */
+
 @Data
 @NoArgsConstructor
 @JsonSerialize(include = NON_EMPTY)

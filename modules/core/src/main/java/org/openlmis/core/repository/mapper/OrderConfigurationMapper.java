@@ -16,6 +16,9 @@ import org.apache.ibatis.annotations.Update;
 import org.openlmis.core.domain.OrderConfiguration;
 import org.springframework.stereotype.Repository;
 
+/**
+ * OrderConfigurationMapper maps the OrderConfiguration entity to corresponding representation in database.
+ */
 @Repository
 public interface OrderConfigurationMapper {
 

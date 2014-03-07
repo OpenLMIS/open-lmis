@@ -301,7 +301,6 @@ public class UpdatePodPage extends Page {
   }
 
   public Boolean isPodSuccessMessageDisplayed() {
-    testWebDriver.waitForAjax();
     testWebDriver.waitForElementToAppear(podSuccessMsg);
     return podSuccessMsg.isDisplayed();
   }

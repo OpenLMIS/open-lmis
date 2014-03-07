@@ -17,6 +17,11 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/**
+ * Exposes the services for handling VaccinationFullCoverage, VaccinationChildCoverage and VaccinationAdultCoverage
+ * entity.
+ */
+
 @Service
 public class VaccinationCoverageService {
 

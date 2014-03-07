@@ -20,6 +20,10 @@ import org.springframework.stereotype.Repository;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * Repository class for OrderPOD related database operations.
+ */
+
 @Repository
 public class PODRepository {
 

@@ -72,16 +72,16 @@ public class ConfigureOrderPage extends Page {
   @FindBy(how = ID, using = "saveSuccessMsgDiv")
   private static WebElement successMessageDiv = null;
 
-  @FindBy(how = XPATH, using = "//input[@value='Save']")
+  @FindBy(how = ID, using = "saveOrderConfig")
   private static WebElement saveButton = null;
 
-  @FindBy(how = XPATH, using = "//a[contains(text(),'Cancel')]")
+  @FindBy(how = ID, using = "cancelOrderConfig")
   private static WebElement cancelButton = null;
 
-  @FindBy(how = XPATH, using = "//h2[contains(text(),'Order file')]")
+  @FindBy(how = ID, using = "configOrderHeader")
   private static WebElement configureOrderFileHeader = null;
 
-  @FindBy(how = XPATH, using = "//a[contains(text(),'+ Add new row')]")
+  @FindBy(how = ID, using = "addNewButton")
   private static WebElement addNewButton = null;
 
   @FindBy(how = XPATH, using = "//div[@id='s2id_autogen19']/a/div/b")

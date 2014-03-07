@@ -58,7 +58,7 @@ public class DistributionChildCoverageSyncTest extends TestCaseHelper {
     setupDataForDistributionTest(childCoverageData);
     dbWrapper.insertProductsForChildCoverage();
     insertRegimenProductMapping();
-    loginPage = PageFactory.getInstanceOfLoginPage(testWebDriver, baseUrlGlobal);
+    loginPage = PageObjectFactory.getLoginPage(testWebDriver, baseUrlGlobal);
   }
 
   @Test(groups = {"distribution"})
@@ -459,6 +459,27 @@ public class DistributionChildCoverageSyncTest extends TestCaseHelper {
   }
 
   @Test(groups = {"distribution"})
+  public void testShouldVerifyWastageCoverageWhenMappingRemovedAfterCaching() throws SQLException {
+    insertOpenedVialsProductMapping();
+
+    HomePage homePage = loginPage.loginAs(childCoverageData.get(USER), childCoverageData.get(PASSWORD));
+    DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
+    distributionPage.initiate(childCoverageData.get(FIRST_DELIVERY_ZONE_NAME), childCoverageData.get(VACCINES_PROGRAM));
+    FacilityListPage facilityListPage = distributionPage.clickRecordData(1);
+    VisitInformationPage visitInformationPage = facilityListPage.selectFacility(childCoverageData.get(FIRST_FACILITY_CODE));
+    dbWrapper.deleteRowFromTable("coverage_target_group_products", "childCoverage", "true");
+    dbWrapper.deleteRowFromTable("coverage_product_vials", "childCoverage", "true");
+
+    ChildCoveragePage childCoveragePage = visitInformationPage.navigateToChildCoverage();
+
+    childCoveragePage.enterOpenedVialsCountForGivenGroupAndRow(1, 1, "9999999");
+    assertEquals("100", childCoveragePage.getWastageRateForGivenRow(1));
+
+    childCoveragePage.enterOpenedVialsCountForGivenGroupAndRow(9, 1, "9999999");
+    assertEquals("100", childCoveragePage.getWastageRateForGivenRow(9));
+  }
+
+  @Test(groups = {"distribution"})
   public void testShouldVerifyWastageCoverageWhenVialsInRegimenMappedToDifferentProductsAndVerifyNegativeValueAndNR() throws SQLException {
     dbWrapper.updateFieldValue("products", "packSize", "3", "code", "P11");
     insertOpenedVialsProductMapping();
@@ -771,7 +792,7 @@ public class DistributionChildCoverageSyncTest extends TestCaseHelper {
   }
 
   private void verifyOpenVialsPresent() {
-    ChildCoveragePage childCoveragePage = PageFactory.getInstanceOfChildCoveragePage(testWebDriver);
+    ChildCoveragePage childCoveragePage = PageObjectFactory.getChildCoveragePage(testWebDriver);
     assertEquals(childCoveragePage.getTextOfOpenedVialsBCG(), "BCG");
     assertEquals(childCoveragePage.getTextOfOpenedVialsPolio10(), "Polio10");
     assertEquals(childCoveragePage.getTextOfOpenedVialsPolio20(), "Polio20");
@@ -782,7 +803,7 @@ public class DistributionChildCoverageSyncTest extends TestCaseHelper {
   }
 
   private void verifyHeadersPresent() {
-    ChildCoveragePage childCoveragePage = PageFactory.getInstanceOfChildCoveragePage(testWebDriver);
+    ChildCoveragePage childCoveragePage = PageObjectFactory.getChildCoveragePage(testWebDriver);
     assertEquals(childCoveragePage.getTextOfHeaderChildrenVaccination(), "Child Vaccinations (doses)");
     assertEquals(childCoveragePage.getTextOfHeaderTargetGroup(), "Target Group");
     assertEquals(childCoveragePage.getTextOfHeaderHealthCenter1(), "Health Center");
@@ -800,7 +821,7 @@ public class DistributionChildCoverageSyncTest extends TestCaseHelper {
   }
 
   private void verifyRegimensPresent() {
-    ChildCoveragePage childCoveragePage = PageFactory.getInstanceOfChildCoveragePage(testWebDriver);
+    ChildCoveragePage childCoveragePage = PageObjectFactory.getChildCoveragePage(testWebDriver);
     assertEquals(childCoveragePage.getTextOfRegimenBCG(), "BCG");
     assertEquals(childCoveragePage.getTextOfRegimenPolioNewBorn(), "Polio (Newborn)");
     assertEquals(childCoveragePage.getTextOfRegimenPolioDose1(), "Polio 1st dose");
@@ -832,19 +853,19 @@ public class DistributionChildCoverageSyncTest extends TestCaseHelper {
 
   @When("^I apply NR to healthCenter11Months for rowNumber \"([^\"]*)\"$")
   public void applyNrToHealthCenter11(String rowNumber) {
-    ChildCoveragePage childCoveragePage = PageFactory.getInstanceOfChildCoveragePage(testWebDriver);
+    ChildCoveragePage childCoveragePage = PageObjectFactory.getChildCoveragePage(testWebDriver);
     childCoveragePage.applyNRToHealthCenter11MonthsForGivenRow(Integer.parseInt(rowNumber));
   }
 
   @And("^I enter healthCenter11Months for rowNumber \"([^\"]*)\" as \"([^\"]*)\"$")
   public void enterHealthCenter11Data(String rowNumber, String value) {
-    ChildCoveragePage childCoveragePage = PageFactory.getInstanceOfChildCoveragePage(testWebDriver);
+    ChildCoveragePage childCoveragePage = PageObjectFactory.getChildCoveragePage(testWebDriver);
     childCoveragePage.enterHealthCenter11MonthsDataForGivenRow(Integer.parseInt(rowNumber), value);
   }
 
   @And("^I apply NR to all fields on child coverage page$")
   public void applyNrToAll() {
-    ChildCoveragePage childCoveragePage = PageFactory.getInstanceOfChildCoveragePage(testWebDriver);
+    ChildCoveragePage childCoveragePage = PageObjectFactory.getChildCoveragePage(testWebDriver);
     childCoveragePage.applyNRToAll();
     childCoveragePage.clickOK();
   }
@@ -853,7 +874,7 @@ public class DistributionChildCoverageSyncTest extends TestCaseHelper {
   public void tearDown() throws SQLException {
     testWebDriver.sleep(500);
     if (!testWebDriver.getElementById("username").isDisplayed()) {
-      HomePage homePage = PageFactory.getInstanceOfHomePage(testWebDriver);
+      HomePage homePage = PageObjectFactory.getHomePage(testWebDriver);
       homePage.logout(baseUrlGlobal);
       dbWrapper.deleteData();
       dbWrapper.closeConnection();

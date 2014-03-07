@@ -19,6 +19,12 @@ import org.openlmis.core.domain.SupplyLine;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.shipment.domain.ShipmentFileInfo;
 
+/**
+ * Requisition after approval is converted to an order which is an entity that keeps track of the supply line
+ * responsible for replenishment. It also tracks its current status and details of the shipment file
+ * received for that order.
+ */
+
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)

@@ -37,6 +37,10 @@ import static org.openlmis.rnr.domain.RnrStatus.SUBMITTED;
 import static org.openlmis.web.controller.RequisitionController.*;
 import static org.openlmis.web.view.pdf.requisition.RequisitionCellFactory.*;
 
+/**
+ * This entity is used to encapsulate rnr attributes, report formatting attributes to be used in requisition report.
+ */
+
 @Data
 @NoArgsConstructor
 public class RequisitionPdfModel {

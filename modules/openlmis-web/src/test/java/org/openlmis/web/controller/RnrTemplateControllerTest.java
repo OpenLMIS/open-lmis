@@ -97,6 +97,7 @@ public class RnrTemplateControllerTest {
     ResponseEntity<OpenLmisResponse> responseEntity = rnrTemplateController.saveRnRTemplateForProgram(existingProgramId, rnrColumns, request);
 
     assertThat((String) responseEntity.getBody().getData().get("key"), is("dummy message param1 param2"));
+    assertThat((String) responseEntity.getBody().getData().get("error"), is("form.error"));
 
   }
 }

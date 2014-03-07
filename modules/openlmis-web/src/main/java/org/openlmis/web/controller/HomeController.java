@@ -22,9 +22,12 @@ import static org.openlmis.web.response.OpenLmisResponse.response;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.PUT;
 
+/**
+ * This controller handles endpoint related list locales, also to change the current locale.
+ */
+
 @Controller
 public class HomeController extends BaseController {
-
 
   @RequestMapping(value = "", method = GET)
   public String homeDefault() {
@@ -33,9 +36,7 @@ public class HomeController extends BaseController {
 
   @RequestMapping(value = "/locales", method = GET)
   public ResponseEntity<OpenLmisResponse> getLocales(HttpServletRequest request) {
-    //TODO: smell
     messageService.setCurrentLocale(RequestContextUtils.getLocale(request));
-
     return response("locales", messageService.getLocales());
   }
 
@@ -43,5 +44,4 @@ public class HomeController extends BaseController {
   public void changeLocale(HttpServletRequest request) {
     messageService.setCurrentLocale(RequestContextUtils.getLocale(request));
   }
-
 }

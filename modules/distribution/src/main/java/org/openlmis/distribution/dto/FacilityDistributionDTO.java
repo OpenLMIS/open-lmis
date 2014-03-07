@@ -20,6 +20,12 @@ import org.openlmis.distribution.domain.FacilityVisit;
 
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 
+/**
+ *  This DTO represents a container for FacilityVisit entity, EpiUseDTO, EpiInventoryDTO, DistributionRefrigeratorsDTO,
+ *  VaccinationFullCoverageDTO, ChildCoverageDTO, AdultCoverageDTO. It holds all the client side forms included in a
+ *  distribution.
+ */
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

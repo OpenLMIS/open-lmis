@@ -23,6 +23,10 @@ import org.openlmis.upload.annotation.ImportField;
 
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 
+/**
+ * GeographicZone represents a real world entity for Geographic Zone. Also defines the contract for creation/upload of Geographic zone entity.
+ * This class also provides utility methods like finding the level for zone, if the zone parent is higher in hierarchy etc.
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

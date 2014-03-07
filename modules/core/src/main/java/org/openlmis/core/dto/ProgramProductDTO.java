@@ -18,6 +18,11 @@ import org.openlmis.core.domain.ProgramProduct;
 
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 
+/**
+ * ProgramProductDTO consolidates information about a product under a specific program
+ * like programCode, programName, productCode, productName, etc. to be used while displaying ProgramProduct
+ * information to user, for eg. in feed.
+ */
 @Data
 @EqualsAndHashCode
 @JsonSerialize(include = NON_EMPTY)

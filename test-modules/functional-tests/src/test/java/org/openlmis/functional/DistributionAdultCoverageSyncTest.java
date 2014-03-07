@@ -68,7 +68,7 @@ public class DistributionAdultCoverageSyncTest extends TestCaseHelper {
     super.setup();
     setupDataForDistributionTest(adultCoverageData);
     dbWrapper.insertProductsForAdultCoverage();
-    loginPage = PageFactory.getInstanceOfLoginPage(testWebDriver, baseUrlGlobal);
+    loginPage = PageObjectFactory.getLoginPage(testWebDriver, baseUrlGlobal);
   }
 
   @Test(groups = {"distribution"})
@@ -271,7 +271,7 @@ public class DistributionAdultCoverageSyncTest extends TestCaseHelper {
   public void testShouldVerifyWastageRateAndTargetGroupForAllGroups() throws SQLException {
     insertProductMappingToGroup();
     dbWrapper.insertAdultCoverageOpenedVialMapping("tetanus");
-    dbWrapper.insertProgramProductISA("VACCINES", "tetanus", "45", "12", "3", "4", "4", "2", "4");
+    dbWrapper.insertProgramProductISA("VACCINES", "tetanus", "0.45", "12", "3", "4", "4", "2", "4");
     dbWrapper.updateFieldValue("facilities", "catchmentPopulation", "8984", "code", adultCoverageData.get(FIRST_FACILITY_CODE));
 
     HomePage homePage = loginPage.loginAs(adultCoverageData.get(USER), adultCoverageData.get(PASSWORD));
@@ -286,12 +286,15 @@ public class DistributionAdultCoverageSyncTest extends TestCaseHelper {
     adultCoveragePage.verifyIndicator("RED");
 
     for (int rowNumber = 1; rowNumber <= 7; rowNumber++) {
-      assertEquals("4043", adultCoveragePage.getTargetGroup(rowNumber));
+      assertEquals("40", adultCoveragePage.getTargetGroup(rowNumber));
       assertEquals("0", adultCoveragePage.getCoverageRate(rowNumber));
     }
 
     adultCoveragePage.enterOpenedVialInputField("90");
     assertEquals("100", adultCoveragePage.getWastageRate());
+
+    adultCoveragePage.enterHealthCenterFirstInput(1, "544");
+    assertEquals("40", adultCoveragePage.getWastageRate());
   }
 
   @Test(groups = {"distribution"})
@@ -359,7 +362,16 @@ public class DistributionAdultCoverageSyncTest extends TestCaseHelper {
 
   @Test(groups = {"distribution"})
   public void testShouldVerifyCoverageRateAndWastageRateCalculation() throws SQLException {
-    insertProductMappingToGroup();
+    dbWrapper.updateFieldValue("products", "active", false);
+    dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("Other not MIF", "tetanus", false);
+    dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("abc", "tetanus", false);
+    dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("pregnant women", "tetanus", false);
+    dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("MIF 15-49 years - Workers", "tetanus", false);
+    dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("MIF 15-49 years - Community", "tetanus", false);
+    dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("MIF 15-49 years - Students", "tetanus", false);
+    dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("Students not MIF", "tetanus", false);
+    dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("Workers not MIF", "tetanus", false);
+
     dbWrapper.insertAdultCoverageOpenedVialMapping("tetanus");
     dbWrapper.insertProgramProductISA("VACCINES", "tetanus", "405", "12", "3", "4", "4", "2", "4");
     dbWrapper.updateFieldValue("facilities", "catchmentPopulation", "89", "code", adultCoverageData.get(FIRST_FACILITY_CODE));
@@ -371,6 +383,53 @@ public class DistributionAdultCoverageSyncTest extends TestCaseHelper {
     VisitInformationPage visitInformationPage = facilityListPage.selectFacility(adultCoverageData.get(FIRST_FACILITY_CODE));
 
     facilityListPage.verifyOverallFacilityIndicatorColor("AMBER");
+
+    AdultCoveragePage adultCoveragePage = visitInformationPage.navigateToAdultCoverage();
+    adultCoveragePage.verifyIndicator("RED");
+
+    for (int rowNumber = 1; rowNumber <= 7; rowNumber++) {
+      adultCoveragePage.enterOutreachFirstInput(rowNumber, "5612" + (rowNumber * 20));
+      assertEquals("360", adultCoveragePage.getTargetGroup(rowNumber));
+    }
+
+    assertEquals("155894", adultCoveragePage.getCoverageRate(1));
+    assertEquals("155900", adultCoveragePage.getCoverageRate(2));
+    assertEquals("155906", adultCoveragePage.getCoverageRate(3));
+    assertEquals("155911", adultCoveragePage.getCoverageRate(4));
+    assertEquals("1558917", adultCoveragePage.getCoverageRate(5));
+    assertEquals("1558922", adultCoveragePage.getCoverageRate(6));
+    assertEquals("1558928", adultCoveragePage.getCoverageRate(7));
+
+    adultCoveragePage.enterOpenedVialInputField("90");
+    assertEquals("-2120051", adultCoveragePage.getWastageRate());
+  }
+
+  @Test(groups = {"distribution"})
+  public void testShouldVerifyCoverageRateAndWastageRateCalculationWhenMappingRemovedAfterCatching() throws SQLException {
+    dbWrapper.updateFieldValue("products", "active", false);
+    dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("Other not MIF", "tetanus", false);
+    dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("abc", "tetanus", false);
+    dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("pregnant women", "tetanus", false);
+    dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("MIF 15-49 years - Workers", "tetanus", false);
+    dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("MIF 15-49 years - Community", "tetanus", false);
+    dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("MIF 15-49 years - Students", "tetanus", false);
+    dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("Students not MIF", "tetanus", false);
+    dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("Workers not MIF", "tetanus", false);
+
+    dbWrapper.insertAdultCoverageOpenedVialMapping("tetanus");
+    dbWrapper.insertProgramProductISA("VACCINES", "tetanus", "405", "12", "3", "4", "4", "2", "4");
+    dbWrapper.updateFieldValue("facilities", "catchmentPopulation", "89", "code", adultCoverageData.get(FIRST_FACILITY_CODE));
+
+    HomePage homePage = loginPage.loginAs(adultCoverageData.get(USER), adultCoverageData.get(PASSWORD));
+    DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
+    distributionPage.initiate(adultCoverageData.get(FIRST_DELIVERY_ZONE_NAME), adultCoverageData.get(VACCINES_PROGRAM));
+    FacilityListPage facilityListPage = distributionPage.clickRecordData(1);
+    VisitInformationPage visitInformationPage = facilityListPage.selectFacility(adultCoverageData.get(FIRST_FACILITY_CODE));
+
+    facilityListPage.verifyOverallFacilityIndicatorColor("AMBER");
+
+    dbWrapper.deleteRowFromTable("coverage_target_group_products", "childCoverage", "false");
+    dbWrapper.deleteRowFromTable("coverage_product_vials", "childCoverage", "false");
 
     AdultCoveragePage adultCoveragePage = visitInformationPage.navigateToAdultCoverage();
     adultCoveragePage.verifyIndicator("RED");
@@ -752,13 +811,13 @@ public class DistributionAdultCoverageSyncTest extends TestCaseHelper {
 
   @When("^I apply NR to outreach2To5 for rowNumber \"([^\"]*)\"$")
   public void applyNrToHealthCenter11(String rowNumber) {
-    AdultCoveragePage adultCoveragePage = PageFactory.getInstanceOfAdultCoveragePage(testWebDriver);
+    AdultCoveragePage adultCoveragePage = PageObjectFactory.getAdultCoveragePage(testWebDriver);
     adultCoveragePage.applyOutreach2To5Nr(Integer.parseInt(rowNumber));
   }
 
   @And("^I enter outreach2To5 for rowNumber \"([^\"]*)\" as \"([^\"]*)\"$")
   public void enterHealthCenter11Data(String rowNumber, String value) {
-    AdultCoveragePage adultCoveragePage = PageFactory.getInstanceOfAdultCoveragePage(testWebDriver);
+    AdultCoveragePage adultCoveragePage = PageObjectFactory.getAdultCoveragePage(testWebDriver);
     adultCoveragePage.enterOutreach2To5Input(Integer.parseInt(rowNumber), value);
   }
 
@@ -766,7 +825,7 @@ public class DistributionAdultCoverageSyncTest extends TestCaseHelper {
   public void tearDown() throws SQLException {
     testWebDriver.sleep(500);
     if (!testWebDriver.getElementById("username").isDisplayed()) {
-      HomePage homePage = PageFactory.getInstanceOfHomePage(testWebDriver);
+      HomePage homePage = PageObjectFactory.getHomePage(testWebDriver);
       homePage.logout(baseUrlGlobal);
       dbWrapper.deleteData();
       dbWrapper.closeConnection();

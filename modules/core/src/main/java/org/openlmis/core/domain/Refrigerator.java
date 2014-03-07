@@ -21,6 +21,9 @@ import org.openlmis.core.exception.DataException;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 
+/**
+ * Refrigerator represents real world Refrigerator entity with its attributes. Also provides methods to validate a refrigerator.
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

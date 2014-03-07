@@ -16,6 +16,11 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.BaseModel;
 
+/**
+ *  VaccinationFullCoverage represents an entity that records overall coverage data including in-clinic vaccinations
+ *  and out-in-the-community vaccinations for males and females in a facility.
+ */
+
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)

@@ -18,6 +18,10 @@ import org.openlmis.core.dto.ProgramFeedDTO;
 import java.net.URISyntaxException;
 import java.util.UUID;
 
+/**
+ * This class is responsible for generating a feed on the event of change in supported programs of a facility.
+ */
+
 public class ProgramChangeEvent extends Event {
 
   public static final String FEED_CATEGORY = "program-catalog-changes";

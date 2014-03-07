@@ -24,6 +24,10 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/**
+ * Exposes the services for handling Shipment file and shipment file line items
+ */
+
 @Service
 @NoArgsConstructor
 public class ShipmentService {

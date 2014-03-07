@@ -14,41 +14,39 @@ package org.openlmis.pageobjects;
 import org.openlmis.UiUtils.TestWebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
-import org.openqa.selenium.support.How;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 
+import static org.openqa.selenium.support.How.ID;
+
 public class ForgotPasswordPage extends Page {
 
-  @FindBy(how = How.ID, using = "email")
+  @FindBy(how = ID, using = "email")
   private static WebElement emailTextField = null;
 
-  @FindBy(how = How.ID, using = "username")
+  @FindBy(how = ID, using = "username")
   private static WebElement usernameTextField = null;
 
-  @FindBy(how = How.XPATH, using = "//input[@value='Submit']")
+  @FindBy(how = ID, using = "submitPasswordButton")
   private static WebElement submitButton = null;
 
-  @FindBy(how = How.XPATH, using = "//input[@value='Cancel']")
+  @FindBy(how = ID, using = "cancelPasswordButton")
   private static WebElement cancelButton = null;
 
-  @FindBy(how = How.XPATH, using = "//h2[contains(text(),'Forgot Password')]")
+  @FindBy(how = ID, using = "forgotPasswordHeader")
   private static WebElement forgotPasswordHeader = null;
 
-  @FindBy(how = How.XPATH, using = "//a[contains(text(),'Forgot password?')]")
+  @FindBy(how = ID, using = "forgotPasswordLink")
   private static WebElement forgotPasswordLink = null;
 
-  @FindBy(how = How.ID, using = "saveFailMessage")
+  @FindBy(how = ID, using = "saveFailMessage")
   private static WebElement saveFailMessage = null;
 
-  @FindBy(how = How.XPATH, using = "//h2[contains(text(),'Email Sent!')]")
+  @FindBy(how = ID, using = "emailSentHeader")
   private static WebElement emailSendSuccessMessage = null;
 
-  @FindBy(how = How.XPATH, using = "//div[contains(text(),'Please check your email and click on reset password link.')]")
+  @FindBy(how = ID, using = "emailCheckMessage")
   private static WebElement pleaseCheckMailDiv = null;
-
-  @FindBy(how = How.XPATH, using = "//body/div/div/div[2][@class='forgot-password-form']//input[1][@class='btn btn-primary']")
-  public static WebElement pageIdentifierOnForgotPasswordPage = null;
 
   public WebElement getEmailTextField() {
     return emailTextField;
@@ -117,7 +115,7 @@ public class ForgotPasswordPage extends Page {
 
   public String getPageIdentifierOnForgotPasswordPageAttribute() {
     testWebDriver.sleep(1000);
-    testWebDriver.waitForElementToAppear(pageIdentifierOnForgotPasswordPage);
-    return testWebDriver.getAttribute(pageIdentifierOnForgotPasswordPage, "value");
+    testWebDriver.waitForElementToAppear(submitButton);
+    return testWebDriver.getAttribute(submitButton, "value");
   }
 }

@@ -16,15 +16,20 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Utility class to convert object lists to comma separated lists of their Ids
+ *
+ * @param <T> Any class that extends BaseModel
+ */
 @Component
 public class CommaSeparator<T extends BaseModel> {
 
-    public String commaSeparateIds(List<T> list) {
-        List<Long> ids = new ArrayList<>();
+  public String commaSeparateIds(List<T> list) {
+    List<Long> ids = new ArrayList<>();
 
-        for (T t : list) {
-            ids.add(t.getId());
-        }
-        return ids.toString().replace("[", "{").replace("]", "}");
+    for (T t : list) {
+      ids.add(t.getId());
     }
+    return ids.toString().replace("[", "{").replace("]", "}");
+  }
 }

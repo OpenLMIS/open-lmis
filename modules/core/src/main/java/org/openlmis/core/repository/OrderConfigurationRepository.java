@@ -14,6 +14,10 @@ import org.openlmis.core.repository.mapper.OrderConfigurationMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+/**
+ * This is Repository class for OrderConfiguration related database operations.
+ */
+
 @Repository
 public class OrderConfigurationRepository {
 

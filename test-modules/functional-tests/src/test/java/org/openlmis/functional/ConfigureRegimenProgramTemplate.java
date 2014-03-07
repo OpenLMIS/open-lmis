@@ -18,10 +18,7 @@ import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import org.openlmis.UiUtils.CaptureScreenshotOnFailureListener;
 import org.openlmis.UiUtils.TestCaseHelper;
-import org.openlmis.pageobjects.HomePage;
-import org.openlmis.pageobjects.InitiateRnRPage;
-import org.openlmis.pageobjects.LoginPage;
-import org.openlmis.pageobjects.RegimenTemplateConfigPage;
+import org.openlmis.pageobjects.*;
 import org.testng.annotations.*;
 
 import java.io.IOException;
@@ -53,8 +50,8 @@ public class ConfigureRegimenProgramTemplate extends TestCaseHelper {
   @BeforeMethod(groups = "admin")
   public void setUp() throws InterruptedException, SQLException, IOException {
     super.setup();
-    regimenTemplateConfigPage = PageFactory.getInstanceOfRegimenTemplateConfigPage(testWebDriver);
-    loginPage = PageFactory.getInstanceOfLoginPage(testWebDriver, baseUrlGlobal);
+    regimenTemplateConfigPage = PageObjectFactory.getRegimenTemplateConfigPage(testWebDriver);
+    loginPage = PageObjectFactory.getLoginPage(testWebDriver, baseUrlGlobal);
   }
 
   @Given("^I have data available for programs configured$")
@@ -65,7 +62,7 @@ public class ConfigureRegimenProgramTemplate extends TestCaseHelper {
 
   @When("^I access regimen configuration page$")
   public void navigatesToRegimenConfigurationPage() {
-    HomePage homePage = PageFactory.getInstanceOfHomePage(testWebDriver);
+    HomePage homePage = PageObjectFactory.getHomePage(testWebDriver);
     homePage.navigateToRegimenConfigTemplate();
   }
 
@@ -78,20 +75,20 @@ public class ConfigureRegimenProgramTemplate extends TestCaseHelper {
 
   @When("^I configure program \"([^\"]*)\" for regimen template$")
   public void createProgramForRegimenTemplate(String program) {
-    regimenTemplateConfigPage = PageFactory.getInstanceOfRegimenTemplateConfigPage(testWebDriver);
+    regimenTemplateConfigPage = PageObjectFactory.getRegimenTemplateConfigPage(testWebDriver);
     regimenTemplateConfigPage.configureProgram(program);
   }
 
   @When("^I edit program \"([^\"]*)\" for regimen template$")
   public void editProgramForRegimenTemplate(String program) throws InterruptedException {
-    regimenTemplateConfigPage = PageFactory.getInstanceOfRegimenTemplateConfigPage(testWebDriver);
+    regimenTemplateConfigPage = PageObjectFactory.getRegimenTemplateConfigPage(testWebDriver);
     regimenTemplateConfigPage.clickEditProgram(program);
   }
 
   @When("^I add new regimen:$")
   public void addRegimen(DataTable regimenTable) {
     List<Map<String, String>> data = regimenTable.asMaps();
-    regimenTemplateConfigPage = PageFactory.getInstanceOfRegimenTemplateConfigPage(testWebDriver);
+    regimenTemplateConfigPage = PageObjectFactory.getRegimenTemplateConfigPage(testWebDriver);
     for (Map map : data)
       regimenTemplateConfigPage.AddNewRegimen(map.get("Category").toString(), map.get("Code").toString(),
         map.get("Name").toString(), Boolean.parseBoolean(map.get("Active").toString()));
@@ -99,7 +96,7 @@ public class ConfigureRegimenProgramTemplate extends TestCaseHelper {
 
   @And("^I save regimen$")
   public void saveRegimen() {
-    regimenTemplateConfigPage = PageFactory.getInstanceOfRegimenTemplateConfigPage(testWebDriver);
+    regimenTemplateConfigPage = PageObjectFactory.getRegimenTemplateConfigPage(testWebDriver);
     regimenTemplateConfigPage.SaveRegime();
   }
 
@@ -110,7 +107,7 @@ public class ConfigureRegimenProgramTemplate extends TestCaseHelper {
 
   @And("^I access regimen reporting fields tab$")
   public void accessRegimenReportingField() {
-    regimenTemplateConfigPage = PageFactory.getInstanceOfRegimenTemplateConfigPage(testWebDriver);
+    regimenTemplateConfigPage = PageObjectFactory.getRegimenTemplateConfigPage(testWebDriver);
     regimenTemplateConfigPage.clickReportingFieldTab();
   }
 
@@ -122,7 +119,7 @@ public class ConfigureRegimenProgramTemplate extends TestCaseHelper {
   @When("^I add new regimen reporting field:$")
   public void addRegimenReportingField(DataTable regimenReportingTable) {
     List<Map<String, String>> data = regimenReportingTable.asMaps();
-    regimenTemplateConfigPage = PageFactory.getInstanceOfRegimenTemplateConfigPage(testWebDriver);
+    regimenTemplateConfigPage = PageObjectFactory.getRegimenTemplateConfigPage(testWebDriver);
     for (Map map : data) {
       regimenTemplateConfigPage.NoOfPatientsOnTreatmentCheckBox(
         Boolean.parseBoolean(map.get("NoOfPatientsOnTreatment").toString()));
@@ -139,7 +136,7 @@ public class ConfigureRegimenProgramTemplate extends TestCaseHelper {
 
   @When("^I activate Number Of Patients On Treatment$")
   public void activeNoOfPatientsOnTreatment() {
-    regimenTemplateConfigPage = PageFactory.getInstanceOfRegimenTemplateConfigPage(testWebDriver);
+    regimenTemplateConfigPage = PageObjectFactory.getRegimenTemplateConfigPage(testWebDriver);
     regimenTemplateConfigPage.NoOfPatientsOnTreatmentCheckBox(true);
   }
 
@@ -438,7 +435,7 @@ public class ConfigureRegimenProgramTemplate extends TestCaseHelper {
   public void tearDown() throws SQLException {
     testWebDriver.sleep(500);
     if (!testWebDriver.getElementById("username").isDisplayed()) {
-      HomePage homePage = PageFactory.getInstanceOfHomePage(testWebDriver);
+      HomePage homePage = PageObjectFactory.getHomePage(testWebDriver);
       homePage.logout(baseUrlGlobal);
       dbWrapper.deleteData();
       dbWrapper.closeConnection();

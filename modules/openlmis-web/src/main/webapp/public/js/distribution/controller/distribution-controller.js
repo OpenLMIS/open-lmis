@@ -74,7 +74,7 @@ function DistributionController($scope, deliveryZones, DeliveryZoneActiveProgram
 
     if (distributionService.isCached(distribution)) {
       $scope.message = messageService.get("message.distribution.already.cached", $scope.selectedZone.name,
-        $scope.selectedProgram.name, $scope.selectedPeriod.name);
+          $scope.selectedProgram.name, $scope.selectedPeriod.name);
       return;
     }
 
@@ -86,7 +86,7 @@ function DistributionController($scope, deliveryZones, DeliveryZoneActiveProgram
 
       if (!distribution.facilityDistributions) {
         $scope.message = messageService.get("message.no.facility.available", $scope.selectedProgram.name,
-          $scope.selectedZone.name);
+            $scope.selectedZone.name);
         return;
       }
       if (status === 200) {
@@ -111,18 +111,26 @@ function DistributionController($scope, deliveryZones, DeliveryZoneActiveProgram
     };
     navigateBackService.setData(data);
     var path = "/view-load-amounts/".concat($scope.selectedZone.id).concat("/")
-      .concat($scope.selectedProgram.id).concat("/").concat($scope.selectedPeriod.id);
+        .concat($scope.selectedProgram.id).concat("/").concat($scope.selectedPeriod.id);
     $location.path(path);
   };
 }
 
 DistributionController.resolve = {
-  deliveryZones: function (UserDeliveryZones, $timeout, $q) {
+
+  deliveryZones: function (Locales, UserDeliveryZones, $timeout, $q, $window) {
     var deferred = $q.defer();
     $timeout(function () {
-      UserDeliveryZones.get({}, function (data) {
-        deferred.resolve(data.deliveryZones);
-      }, {});
+      Locales.get({}, function (data) {
+        if (!data.locales) {
+          $window.location = "/public/pages/logistics/distribution/offline.html#/list";
+          $q.reject();
+          return;
+        }
+        UserDeliveryZones.get({}, function (data) {
+          deferred.resolve(data.deliveryZones);
+        });
+      });
     }, 100);
     return deferred.promise;
   }

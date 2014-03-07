@@ -13,6 +13,10 @@ import org.apache.ibatis.annotations.*;
 import org.openlmis.core.domain.DeliveryZoneWarehouse;
 import org.springframework.stereotype.Repository;
 
+/**
+ * DeliveryZoneMemberMapper maps the DeliveryZoneMember entity to corresponding representation in database. Apart from basic CRUD
+ * operations provides methods to get programs for a delivery zone and facility.
+ */
 @Repository
 public interface DeliveryZoneWarehouseMapper {
 

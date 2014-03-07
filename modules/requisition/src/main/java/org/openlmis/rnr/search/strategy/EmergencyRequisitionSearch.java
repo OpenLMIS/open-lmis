@@ -10,6 +10,10 @@
 
 package org.openlmis.rnr.search.strategy;
 
+/**
+ * This class is a strategy to search for emergency requisitions.
+ */
+
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.repository.RequisitionRepository;
 import org.openlmis.rnr.search.criteria.RequisitionSearchCriteria;

@@ -19,6 +19,12 @@ import org.openlmis.core.domain.Facility;
 
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 
+/**
+ *  ChildCoverageLineItem represents data captured against a vaccination to determine coverage for a particular
+ *  category. It extends CoverageLineItem to inherit the facilityVisitId and targetGroup for the corresponding
+ *  vaccination.
+ */
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

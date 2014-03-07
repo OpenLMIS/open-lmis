@@ -9,38 +9,38 @@
   -->
 
 <div class="total-cost-container">
-  <div class="cost-values">
+    <div class="cost-values">
     <span ng-show="rnr.program.budgetingApplies && !rnr.emergency && rnr.costExceedsBudget && rnr.allocatedBudget"
           class="budget-exceeds-detailed">
       <strong>
-        <span class="icon-warning-sign budget-exceeded-icon"></span>
-        <span id="budgetWarningExtra" openlmis-message="msg.cost.exceeds.budget"></span>
+          <span class="icon-warning-sign budget-exceeded-icon"></span>
+          <span id="budgetWarningExtra" openlmis-message="msg.cost.exceeds.budget"></span>
       </strong>
     </span>
-    <strong ng-show="rnr.program.budgetingApplies && !rnr.emergency">
-      <span openlmis-message="label.allocated.budget"></span><span>:</span>
+        <strong ng-show="rnr.program.budgetingApplies && !rnr.emergency">
+            <span id="allocatedBudgetLabel" openlmis-message="label.allocated.budget"></span><span>:</span>
       <span id="allocatedBudgetAmount" class="cell-text" ng-bind="rnr.allocatedBudget | currency:currency"
             ng-show="rnr.allocatedBudget"></span>
       <span id="allocatedBudgetNotApplicable" class="cell-text" openlmis-message="msg.budget.not.allocated"
             ng-hide="rnr.allocatedBudget"></span>
-      &nbsp;|&nbsp;
-    </strong>
+            &nbsp;|&nbsp;
+        </strong>
     <span id="budgetWarningIcon" ng-show="rnr.costExceedsBudget" class="icon-warning-sign budget-exceeded-icon">
       <div class="rnr-form-error budget-exceeded" id="budgetWarningMessage"
            openlmis-message="msg.cost.exceeds.budget"></div>
     </span>
 
 
-    <strong>
-      <span openlmis-message="label.total.rnr.cost"></span>
+        <strong>
+            <span openlmis-message="label.total.rnr.cost"></span>
       <span id="totalCost" class="cell-text"
             ng-bind="rnr.calculateTotalLineItemCost() | currency:currency"></span>
-    </strong>
+        </strong>
     <span id="dividedCost" ng-click="showCost=!showCost" class="list-icon-container"
           ng-class="{'is-icon-ul-selected': showCost}">
       <i class="icon-list-ul"></i>
     </span>
-    <display-cost show="showCost" full-supply-cost="rnr.fullSupplyItemsSubmittedCost"
-                  non-full-supply-cost="rnr.nonFullSupplyItemsSubmittedCost"></display-cost>
-  </div>
+        <display-cost show="showCost" full-supply-cost="rnr.fullSupplyItemsSubmittedCost"
+                      non-full-supply-cost="rnr.nonFullSupplyItemsSubmittedCost"></display-cost>
+    </div>
 </div>

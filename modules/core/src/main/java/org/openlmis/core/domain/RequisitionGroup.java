@@ -16,6 +16,10 @@ import lombok.NoArgsConstructor;
 import org.openlmis.upload.Importable;
 import org.openlmis.upload.annotation.ImportField;
 
+/**
+ * RequisitionGroup represents a group of facilities which follow a particular schedule for a program. It also defines
+ * the contract for creation/upload of RequisitionGroup.
+ */
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)

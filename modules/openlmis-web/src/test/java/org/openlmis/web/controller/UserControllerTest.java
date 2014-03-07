@@ -13,6 +13,7 @@ package org.openlmis.web.controller;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
+import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.openlmis.authentication.web.UserAuthenticationSuccessHandler;
@@ -24,6 +25,7 @@ import org.openlmis.core.service.RoleRightsService;
 import org.openlmis.core.service.UserService;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.web.response.OpenLmisResponse;
+import org.powermock.modules.junit4.PowerMockRunner;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -43,7 +45,6 @@ import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
-import static org.mockito.MockitoAnnotations.initMocks;
 import static org.openlmis.authentication.web.UserAuthenticationSuccessHandler.USER;
 import static org.openlmis.authentication.web.UserAuthenticationSuccessHandler.USER_ID;
 import static org.openlmis.core.builder.UserBuilder.defaultUser;
@@ -51,12 +52,15 @@ import static org.openlmis.web.controller.UserController.*;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
 @Category(UnitTests.class)
+@RunWith(PowerMockRunner.class)
 public class UserControllerTest {
 
   private Long userId;
 
+  @Mock
   private MockHttpSession session;
 
+  @Mock
   private MockHttpServletRequest httpServletRequest;
 
   @Mock
@@ -74,16 +78,15 @@ public class UserControllerTest {
   @InjectMocks
   private UserController userController;
 
-  private String baseUrl = "http://localhost:9091";
+  @Mock
+  String baseUrl = "http://localhost:9091";
 
   @Before
   public void setUp() {
-    initMocks(this);
     userId = 3L;
     httpServletRequest = new MockHttpServletRequest();
     session = new MockHttpSession();
     httpServletRequest.setSession(session);
-    userController = new UserController(roleRightService, userService, sessionRegistry, messageService, baseUrl);
   }
 
   @Test

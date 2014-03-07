@@ -20,6 +20,11 @@ import org.openlmis.upload.annotation.ImportFields;
 
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 
+/**
+ * FacilityTypeApprovedProduct represents the product approved by the facility type for a particular program. Also defines contract for upload of this
+ * mapping. Facility type, program code, product code and maximum months of stock that can be stocked for this product by
+ * the facility type is mandatory for upload of such mapping.
+ */
 @Data
 @NoArgsConstructor
 @JsonSerialize(include = NON_EMPTY)
@@ -30,8 +35,8 @@ public class FacilityTypeApprovedProduct extends BaseModel implements Importable
   private FacilityType facilityType;
 
   @ImportFields(importFields = {
-      @ImportField(name = "Program Code", nested = "program.code", mandatory = true),
-      @ImportField(name = "Product Code", nested = "product.code", mandatory = true)})
+    @ImportField(name = "Program Code", nested = "program.code", mandatory = true),
+    @ImportField(name = "Product Code", nested = "product.code", mandatory = true)})
   private ProgramProduct programProduct;
 
   @ImportField(name = "Max months of stock", mandatory = true, type = "int")

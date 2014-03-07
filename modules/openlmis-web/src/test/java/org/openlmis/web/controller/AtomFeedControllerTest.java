@@ -18,6 +18,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.openlmis.db.categories.UnitTests;
+import org.openlmis.web.service.VendorEventFeedService;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import javax.servlet.http.HttpServletRequest;
@@ -61,8 +62,6 @@ public class AtomFeedControllerTest {
 
   @Test
   public void shouldFeedById() throws Exception {
-
-
     String category = "category1";
     String vendor = "vendor1";
     String baseUrl = "baseUrl";

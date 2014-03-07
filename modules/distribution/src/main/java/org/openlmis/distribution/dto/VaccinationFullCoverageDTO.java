@@ -21,6 +21,11 @@ import org.openlmis.distribution.domain.VaccinationFullCoverage;
 
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 
+/**
+ *  DTO for VaccinationFullCoverage. It contains facilityVisitId and
+ *  client side representation of VaccinationFullCoverage attributes.
+ */
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

@@ -20,6 +20,10 @@ import java.util.List;
 
 import static org.apache.commons.collections.CollectionUtils.find;
 
+/**
+ * This class corresponds to Regimen Template for a program and is a container for columns in that Template.
+ */
+
 @Data
 @EqualsAndHashCode(callSuper = true)
 @AllArgsConstructor

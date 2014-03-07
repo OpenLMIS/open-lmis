@@ -16,6 +16,10 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+/**
+ * RefrigeratorMapper maps the Refrigerator entity to corresponding representation in database. Apart from basic CRUD operations
+ * provides methods like getting all refrigerators in a delivery zone for a program.
+ */
 @Repository
 public interface RefrigeratorMapper {
 

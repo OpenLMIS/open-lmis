@@ -30,19 +30,20 @@ import java.util.List;
 import static org.openlmis.core.domain.Right.*;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
+/**
+ * This controller handles endpoint related to listing products for a different criterias, like products related to a facility,
+ * program for which requisition can be created, pull based programs, push based programs, details of a program, all programs.
+ */
+
 @Controller
 @NoArgsConstructor
 public class ProgramController extends BaseController {
 
   public static final String PROGRAM = "program";
-  private ProgramService programService;
   public static final String PROGRAMS = "programs";
 
-
   @Autowired
-  public ProgramController(ProgramService programService) {
-    this.programService = programService;
-  }
+  private ProgramService programService;
 
   @RequestMapping(value = "/facilities/{facilityId}/programs", method = GET, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CREATE_REQUISITION, AUTHORIZE_REQUISITION, MANAGE_USER')")
@@ -96,7 +97,6 @@ public class ProgramController extends BaseController {
   public ResponseEntity<OpenLmisResponse> getAllPrograms() {
     return OpenLmisResponse.response(PROGRAMS, programService.getAll());
   }
-
 
   @RequestMapping(value = "/facilities/{facilityId}/programsList", method = GET, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_PRODUCT_ALLOWED_FOR_FACILITY')")
