@@ -243,6 +243,7 @@ Feature: Smoke Tests
   @smokeRequisition
   Scenario: Blank
     Given I have "storeInCharge" user with "MANAGE_POD" rights
+    And I am logged in as "storeInCharge"
 
   @smokeRequisition
   Scenario: Selected requisitions across pages should not convert to order
