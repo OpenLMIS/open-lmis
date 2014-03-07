@@ -107,17 +107,20 @@ public class RestRequisitionService {
     ProcessingPeriod period = processingPeriodService.getById(report.getPeriodId());
 
     //check if the requisition has already been initiated / submitted / authorized.
-    restRequisitionCalculator.validateCustomPeriod(reportingFacility, reportingProgram, period);
+    restRequisitionCalculator.validateCustomPeriod(reportingFacility, reportingProgram, period, userId);
 
     Rnr rnr;
 
     RequisitionSearchCriteria searchCriteria = new RequisitionSearchCriteria();
     searchCriteria.setProgramId(reportingProgram.getId());
     searchCriteria.setFacilityId(reportingFacility.getId());
+    searchCriteria.setWithoutLineItems(true);
+    searchCriteria.setUserId(userId);
     List<Rnr> rnrs = requisitionService.getRequisitionsFor(searchCriteria, asList(period));
 
     if(rnrs.size() > 0){
-      rnr = rnrs.get(0);
+      rnr = requisitionService.getFullRequisitionById( rnrs.get(0).getId() );
+
     }else{
       rnr = requisitionService.initiate(reportingFacility, reportingProgram, userId, report.getEmergency(), period);
     }

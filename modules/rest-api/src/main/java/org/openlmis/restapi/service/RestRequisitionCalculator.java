@@ -61,7 +61,7 @@ public class RestRequisitionCalculator {
     }
   }
 
-  public void validateCustomPeriod(Facility reportingFacility, Program reportingProgram, ProcessingPeriod period){
+  public void validateCustomPeriod(Facility reportingFacility, Program reportingProgram, ProcessingPeriod period, Long userId){
 
     RequisitionSearchCriteria searchCriteria = new RequisitionSearchCriteria();
     searchCriteria.setProgramId(reportingProgram.getId());
@@ -70,8 +70,9 @@ public class RestRequisitionCalculator {
     List<ProcessingPeriod> periods = new ArrayList<ProcessingPeriod>();
     periods.add(period);
 
-    ProcessingPeriod defaultPeriod = requisitionService.getPeriodForInitiating(reportingFacility, reportingProgram);
-
+    //ProcessingPeriod defaultPeriod = requisitionService.getPeriodForInitiating(reportingFacility, reportingProgram);
+    searchCriteria.setWithoutLineItems(true);
+    searchCriteria.setUserId( userId );
     List<Rnr> list = requisitionService.getRequisitionsFor(searchCriteria, periods);
     if(list != null && list.size() > 0){
       if(list.get(0).getStatus() != RnrStatus.INITIATED && list.get(0).getStatus() != RnrStatus.SUBMITTED){
