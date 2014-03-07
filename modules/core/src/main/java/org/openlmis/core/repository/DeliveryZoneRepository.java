@@ -20,7 +20,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 /**
- * This is Repository class for DeliveryZone related database operations.
+ * DeliveryZoneRepository is repository class for DeliveryZone related database operations.
  */
 
 @Repository

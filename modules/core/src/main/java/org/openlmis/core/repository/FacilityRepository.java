@@ -26,7 +26,7 @@ import java.util.List;
 import static org.openlmis.core.domain.Right.commaSeparateRightNames;
 
 /**
- * This is Repository class for Facility related database operations.
+ * FacilityRepository is repository class for Facility related database operations.
  */
 
 @Component

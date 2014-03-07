@@ -23,7 +23,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 /**
- * This is Repository class for GeographicZone related database operations.
+ * GeographicZoneRepository is repository class for GeographicZone related database operations.
  */
 
 @Repository

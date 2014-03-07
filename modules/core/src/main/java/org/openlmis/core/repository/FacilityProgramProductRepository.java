@@ -18,7 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 /**
- * This is Repository class for FacilityProgramProduct related database operations.
+ * FacilityProgramProductRepository is repository class for FacilityProgramProduct related database operations.
  */
 
 @Repository

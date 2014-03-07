@@ -18,7 +18,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 /**
- * This is Repository class for DeliveryZoneProgramSchedule related database operations.
+ * DeliveryZoneProgramScheduleRepository is repository class for DeliveryZoneProgramSchedule related database operations.
  */
 
 @Repository

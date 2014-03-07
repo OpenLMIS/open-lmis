@@ -21,7 +21,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 /**
- * This is Repository class for FacilityApprovedProduct related database operations.
+ * FacilityApprovedProductRepository is repository class for FacilityApprovedProduct related database operations.
  */
 
 @Component

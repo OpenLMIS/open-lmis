@@ -13,7 +13,7 @@ package org.openlmis.core.message;
 import lombok.Data;
 
 /**
- * This class is responsible for generating message given a key with parameters for internalization.
+ * OpenLmisMessage class is responsible for generating message given a key with parameters for internalization.
  */
 
 @Data
@@ -32,14 +32,14 @@ public class OpenLmisMessage {
   }
 
   @Override
-  public String toString(){
-    if(params.length == 0) return code;
+  public String toString() {
+    if (params.length == 0) return code;
 
-    StringBuilder messageBuilder = new StringBuilder("code: "+code+ ", params: { ");
-    for(String param : params){
+    StringBuilder messageBuilder = new StringBuilder("code: " + code + ", params: { ");
+    for (String param : params) {
       messageBuilder.append("; ").append(param);
     }
     messageBuilder.append(" }");
-    return messageBuilder.toString().replaceFirst("; ","");
+    return messageBuilder.toString().replaceFirst("; ", "");
   }
 }

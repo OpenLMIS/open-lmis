@@ -15,7 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 /**
- * This is Repository class for DeliveryZoneWarehouse related database operations.
+ * DeliveryZoneWarehouseRepository is repository class for DeliveryZoneWarehouse related database operations.
  */
 
 @Repository
