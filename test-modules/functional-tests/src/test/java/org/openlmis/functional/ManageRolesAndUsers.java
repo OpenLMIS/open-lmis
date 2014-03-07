@@ -325,14 +325,14 @@ public class ManageRolesAndUsers extends TestCaseHelper {
   }
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Role-Function")
-  public void testCreateSearchResetPasswordUser(String[] credentials) throws SQLException {
+  public void testSearchUserFunctionality(String[] credentials) throws SQLException {
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
 
     String passwordUsers = "TQskzK3iiLfbRVHeM1muvBCiiKriibfl6lh8ipo91hb74G3OvsybvkzpPI4S3KIeWTXAiiwlUU0iiSxWii4wSuS8mokSAieie";
     UserPage userPage = homePage.navigateToUser();
-
     String email = "Jasmine_Doe@openlmis.com";
     userPage.enterUserDetails(LAB_IN_CHARGE, email, "Jasmine", "Doe");
+
     userPage.clickViewHere();
     dbWrapper.updateUser(passwordUsers, email);
 
@@ -349,6 +349,21 @@ public class ManageRolesAndUsers extends TestCaseHelper {
     userPage.verifyUserOnList("Jasmine Doe");
 
     userPage.focusOnFirstUserLink();
+    userPage.clickEditUser();
+  }
+
+  @Test(groups = {"admin"}, dataProvider = "Data-Provider-Role-Function")
+  public void testResetPasswordLinkForDisabledUser(String[] credentials) throws SQLException {
+    HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
+    UserPage userPage = homePage.navigateToUser();
+    String email = "Jasmine_Doe@openlmis.com";
+    userPage.enterUserDetails(LAB_IN_CHARGE, email, "Jasmine", "Doe");
+
+    homePage.navigateToUser();
+    userPage.searchUser(LAB_IN_CHARGE);
+    userPage.verifyUserOnList(LAB_IN_CHARGE);
+
+    userPage.focusOnFirstUserLink();
 
     userPage.clickEditUser();
     userPage.clickDisableButton();
@@ -356,18 +371,26 @@ public class ManageRolesAndUsers extends TestCaseHelper {
     userPage.searchUser(LAB_IN_CHARGE);
     userPage.focusOnFirstUserLink();
     userPage.verifyDisabledResetPassword();
-    userPage.clickEditUser();
-    userPage.clickEnableButton();
+  }
+
+  @Test(groups = {"admin"}, dataProvider = "Data-Provider-Role-Function")
+  public void testResetPassword(String[] credentials) throws SQLException {
+    HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
+    UserPage userPage = homePage.navigateToUser();
+    String email = "Jasmine_Doe@openlmis.com";
+    userPage.enterUserDetails(LAB_IN_CHARGE, email, "Jasmine", "Doe");
 
     homePage.navigateToUser();
     userPage.searchUser(LAB_IN_CHARGE);
+    userPage.verifyUserOnList(LAB_IN_CHARGE);
+
     userPage.focusOnFirstUserLink();
-    userPage.focusOnFirstUserLink();
-//    userPage.resetPassword("abcd1234", "abcd1234");
-//
-//    homePage.logout(baseUrlGlobal);
-//    loginPage.loginAs(LAB_IN_CHARGE, "abcd1234");
-//    homePage.verifyLoggedInUser(LAB_IN_CHARGE);
+    userPage.resetPassword("abcd1234", "abcd1234");
+
+    homePage.logout(baseUrlGlobal);
+    dbWrapper.updateFieldValue("users", "verified", true);
+    loginPage.loginAs(LAB_IN_CHARGE, "abcd1234");
+    homePage.verifyLoggedInUser(LAB_IN_CHARGE);
   }
 
   private void createUserAndAssignRoles(String passwordUsers, String userEmail, String userFirstName, String userLastName,
