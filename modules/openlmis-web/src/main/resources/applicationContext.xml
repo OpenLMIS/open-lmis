@@ -66,6 +66,7 @@
 
   <import resource="classpath:/springSecurityContext.xml"/>
   <import resource="classpath:/applicationContext-authentication.xml"/>
+  <import resource="classpath:/applicationContext-report.xml"/>
   <import resource="classpath:/applicationContext-core.xml"/>
   <import resource="classpath:/applicationContext-restapi.xml"/>
   <import resource="classpath:/applicationContext-shipment.xml"/>
