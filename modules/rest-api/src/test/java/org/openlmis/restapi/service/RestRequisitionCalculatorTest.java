@@ -114,7 +114,7 @@ public class RestRequisitionCalculatorTest {
     when(requisitionService.getCurrentPeriod(any(RequisitionSearchCriteria.class))).thenReturn(currentPeriod);
     when(requisitionService.getPeriodForInitiating(reportingFacility, reportingProgram)).thenReturn(nextEligiblePeriod);
 
-    restRequisitionCalculator.validateCustomPeriod(reportingFacility, reportingProgram, randomPeriod);
+    restRequisitionCalculator.validateCustomPeriod(reportingFacility, reportingProgram, randomPeriod, 1L);
   }
 
   @Test
@@ -127,20 +127,17 @@ public class RestRequisitionCalculatorTest {
     Rnr requisition = new Rnr();
     requisition.setStatus(RnrStatus.APPROVED);
 
-    List<Rnr> requisitions  = new ArrayList<Rnr>();
-    requisitions.add(requisition);
-
     List<ProcessingPeriod> periods = new ArrayList<ProcessingPeriod>();
     periods.add(nextEligiblePeriod);
 
     when(requisitionService.getCurrentPeriod(any(RequisitionSearchCriteria.class))).thenReturn(currentPeriod);
     when(requisitionService.getPeriodForInitiating(reportingFacility, reportingProgram)).thenReturn(nextEligiblePeriod);
 
-    when(requisitionService.getRequisitionsFor(new RequisitionSearchCriteria(),periods)).thenReturn(requisitions);
+    when(requisitionService.getRequisitionsFor(any(RequisitionSearchCriteria.class), any(periods.getClass()))).thenReturn(asList(requisition));
 
     expectedException.expect(DataException.class);
 
-    restRequisitionCalculator.validateCustomPeriod(reportingFacility, reportingProgram, nextEligiblePeriod);
+    restRequisitionCalculator.validateCustomPeriod(reportingFacility, reportingProgram, nextEligiblePeriod, 1L);
   }
 
   @Test

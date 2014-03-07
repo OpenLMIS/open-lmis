@@ -231,7 +231,7 @@ public class RestRequisitionServiceTest {
     when(programService.getValidatedProgramByCode(DEFAULT_PROGRAM_CODE)).thenReturn(new Program(PROGRAM_ID));
 
     expectedException.expect(DataException.class);
-    doThrow(new DataException("rnr.error")).when(restRequisitionCalculator).validateCustomPeriod(any(Facility.class), any(Program.class), any(ProcessingPeriod.class));
+    doThrow(new DataException("rnr.error")).when(restRequisitionCalculator).validateCustomPeriod(any(Facility.class), any(Program.class), any(ProcessingPeriod.class), any(Long.class));
 
     ArrayList<ProcessingPeriod> array = new ArrayList<ProcessingPeriod>();
     when(requisitionService.getRequisitionsFor(any(RequisitionSearchCriteria.class),any(array.getClass()))).thenReturn(asList(new Rnr()));
@@ -260,7 +260,7 @@ public class RestRequisitionServiceTest {
     expectedException.expect(DataException.class);
     expectedException.expectMessage("rnr.error");
 
-    doThrow(new DataException("rnr.error")).when(restRequisitionCalculator).validateCustomPeriod(any(Facility.class), any(Program.class), any(ProcessingPeriod.class));
+    doThrow(new DataException("rnr.error")).when(restRequisitionCalculator).validateCustomPeriod(any(Facility.class), any(Program.class), any(ProcessingPeriod.class), any(Long.class));
 
     service.submitSdpReport(report, 1l);
 
