@@ -80,7 +80,7 @@ public class RestRequisitionService {
 
     restRequisitionCalculator.validatePeriod(reportingFacility, reportingProgram);
 
-    Rnr rnr = requisitionService.initiate(reportingFacility, reportingProgram, userId, EMERGENCY);
+    Rnr rnr = requisitionService.initiate(reportingFacility, reportingProgram, userId, EMERGENCY, null);
 
     restRequisitionCalculator.validateProducts(report.getProducts(), rnr);
 
@@ -109,9 +109,6 @@ public class RestRequisitionService {
     //check if the requisition has already been initiated / submitted / authorized.
     restRequisitionCalculator.validateCustomPeriod(reportingFacility, reportingProgram, period);
 
-
-    //TODO if the requisition was not initiated,  please do it now.
-    //if not jump to the submission route.
     Rnr rnr;
 
     RequisitionSearchCriteria searchCriteria = new RequisitionSearchCriteria();
@@ -122,7 +119,7 @@ public class RestRequisitionService {
     if(rnrs.size() > 0){
       rnr = rnrs.get(0);
     }else{
-      rnr = requisitionService.initiate(reportingFacility, reportingProgram, userId, report.getEmergency());
+      rnr = requisitionService.initiate(reportingFacility, reportingProgram, userId, report.getEmergency(), period);
     }
 
     restRequisitionCalculator.validateProducts(report.getProducts(), rnr);

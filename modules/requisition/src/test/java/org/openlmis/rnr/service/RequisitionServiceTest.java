@@ -187,7 +187,7 @@ public class RequisitionServiceTest {
 
     when(programService.getById(PROGRAM.getId())).thenReturn(PROGRAM);
     when(budgetLineItemService.get(FACILITY.getId(), PROGRAM.getId(), PERIOD.getId())).thenReturn(new BudgetLineItem());
-    Rnr rnr = spyRequisitionService.initiate(FACILITY, PROGRAM, 1L, false);
+    Rnr rnr = spyRequisitionService.initiate(FACILITY, PROGRAM, 1L, false, null);
 
     verify(facilityApprovedProductService).getFullSupplyFacilityApprovedProductByFacilityAndProgram(FACILITY.getId(), PROGRAM.getId());
     verify(processingScheduleService).getPeriodById(PERIOD.getId());
@@ -235,7 +235,7 @@ public class RequisitionServiceTest {
     requisition.setPeriod(PERIOD);
     whenNew(Rnr.class).withArguments(FACILITY, requisitionProgram, PERIOD, false, facilityApprovedProducts, regimens, USER_ID).thenReturn(requisition);
 
-    spyRequisitionService.initiate(FACILITY, requisitionProgram, USER_ID, false);
+    spyRequisitionService.initiate(FACILITY, requisitionProgram, USER_ID, false, null);
 
     verify(calculationService).fillFieldsForInitiatedRequisition(requisition, rnrTemplate, regimenTemplate);
     assertThat(requisition.getAllocatedBudget(), is(allocatedBudget));
@@ -318,7 +318,7 @@ public class RequisitionServiceTest {
     expectedException.expect(DataException.class);
     expectedException.expectMessage("error.rnr.template.not.defined");
 
-    Rnr rnr = requisitionService.initiate(FACILITY, PROGRAM, USER_ID, false);
+    Rnr rnr = requisitionService.initiate(FACILITY, PROGRAM, USER_ID, false, null);
 
     Long HIV = 1L;
     verify(facilityApprovedProductService, never()).getFullSupplyFacilityApprovedProductByFacilityAndProgram(FACILITY.getId(), HIV);
@@ -805,7 +805,7 @@ public class RequisitionServiceTest {
     expectedException.expect(DataException.class);
     expectedException.expectMessage(RNR_OPERATION_UNAUTHORIZED);
 
-    requisitionService.initiate(FACILITY, PROGRAM, USER_ID, false);
+    requisitionService.initiate(FACILITY, PROGRAM, USER_ID, false, null);
   }
 
   @Test
@@ -892,7 +892,7 @@ public class RequisitionServiceTest {
     when(programService.getById(requisition.getProgram().getId())).thenReturn(PROGRAM);
     when(budgetLineItemService.get(FACILITY.getId(), PROGRAM.getId(), PERIOD.getId())).thenReturn(new BudgetLineItem());
 
-    spyRequisitionService.initiate(FACILITY, PROGRAM, 1L, false);
+    spyRequisitionService.initiate(FACILITY, PROGRAM, 1L, false, null);
 
     verify(requisitionEventService).notifyForStatusChange(requisition);
   }
@@ -1355,7 +1355,7 @@ public class RequisitionServiceTest {
     when(budgetLineItemService.get(FACILITY.getId(), requisitionProgram.getId(), PERIOD.getId())).thenReturn(new BudgetLineItem());
     when(programService.getById(requisitionProgram.getId())).thenReturn(requisitionProgram);
 
-    spyRequisitionService.initiate(FACILITY, requisitionProgram, USER_ID, false);
+    spyRequisitionService.initiate(FACILITY, requisitionProgram, USER_ID, false, null);
 
     verify(calculationService).fillReportingDays(requisition);
     verify(requisition).setCreatedDate(createdDateFromDB);

@@ -98,7 +98,7 @@ public class RequisitionService {
   }
 
   @Transactional
-  public Rnr initiate(Facility facility, Program program, Long modifiedBy, Boolean emergency) {
+  public Rnr initiate(Facility facility, Program program, Long modifiedBy, Boolean emergency, ProcessingPeriod proposedPeriod) {
     if (!requisitionPermissionService.hasPermission(modifiedBy, facility, program, CREATE_REQUISITION)) {
       throw new DataException(RNR_OPERATION_UNAUTHORIZED);
     }
@@ -110,6 +110,14 @@ public class RequisitionService {
 
     program = programService.getById(program.getId());
     ProcessingPeriod period = findPeriod(facility, program, emergency);
+
+    if(proposedPeriod != null){
+      if(proposedPeriod.getId() != period.getId()){
+        // take caution in this case.
+        // todo: log a warning here.
+        period = proposedPeriod;
+      }
+    }
 
     List<FacilityTypeApprovedProduct> facilityTypeApprovedProducts = facilityApprovedProductService.getFullSupplyFacilityApprovedProductByFacilityAndProgram(
       facility.getId(), program.getId());

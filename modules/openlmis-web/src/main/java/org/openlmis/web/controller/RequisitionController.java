@@ -89,7 +89,7 @@ public class RequisitionController extends BaseController {
                                                       @RequestParam("emergency") Boolean emergency,
                                                       HttpServletRequest request) {
     try {
-      return response(RNR, requisitionService.initiate(new Facility(facilityId), new Program(programId), loggedInUserId(request), emergency));
+      return response(RNR, requisitionService.initiate(new Facility(facilityId), new Program(programId), loggedInUserId(request), emergency, null));
     } catch (DataException e) {
       return error(e, BAD_REQUEST);
     }
