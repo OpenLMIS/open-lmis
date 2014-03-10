@@ -113,11 +113,13 @@ public class RequisitionPdfModelTest {
   public void shouldGetHeaderForEmergencyRnr() throws Exception {
     mockMessageServiceCalls();
     when(messageService.message("requisition.type.emergency")).thenReturn("Emergency");
+    when(messageService.message("header.facility.code")).thenReturn("Facility code");
+
 
     PdfPTable header = requisitionPdfModel.getRequisitionHeader();
     assertRowValues(header.getRow(0), "Report and Requisition for: Yellow Fever (Central Warehouse)");
     assertRowValues(header.getRow(1), "Facility: F1", "Operated By: MOH", "Maximum Stock level: 100", "Emergency Order Point: 50.5");
-    assertRowValues(header.getRow(2), "levelName: Lusaka", "parentLevelName: Zambia", "Reporting Period: 01/01/2012 - 01/02/2012", "Requisition Type: Emergency");
+    assertRowValues(header.getRow(2), "Facility code: F10010","levelName: Lusaka", "parentLevelName: Zambia", "Reporting Period: 01/01/2012 - 01/02/2012", "Requisition Type: Emergency");
     assertThat(header.getSpacingAfter(), is(RequisitionPdfModel.PARAGRAPH_SPACING));
   }
 
@@ -125,13 +127,14 @@ public class RequisitionPdfModelTest {
   public void shouldGetHeaderForRegularRnr() throws Exception {
     mockMessageServiceCalls();
     when(messageService.message("requisition.type.regular")).thenReturn("Regular");
+    when(messageService.message("header.facility.code")).thenReturn("Facility code");
 
     requisition.setEmergency(false);
 
     PdfPTable header = requisitionPdfModel.getRequisitionHeader();
     assertRowValues(header.getRow(0), "Report and Requisition for: Yellow Fever (Central Warehouse)");
     assertRowValues(header.getRow(1), "Facility: F1", "Operated By: MOH", "Maximum Stock level: 100", "Emergency Order Point: 50.5");
-    assertRowValues(header.getRow(2), "levelName: Lusaka", "parentLevelName: Zambia", "Reporting Period: 01/01/2012 - 01/02/2012", "Requisition Type: Regular");
+    assertRowValues(header.getRow(2), "Facility code: F10010", "levelName: Lusaka", "parentLevelName: Zambia", "Reporting Period: 01/01/2012 - 01/02/2012", "Requisition Type: Regular");
     assertThat(header.getSpacingAfter(), is(RequisitionPdfModel.PARAGRAPH_SPACING));
   }
 
