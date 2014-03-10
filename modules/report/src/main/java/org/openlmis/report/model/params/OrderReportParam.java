@@ -14,7 +14,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import org.openlmis.report.model.ReportData;
 import org.openlmis.report.model.ReportParameter;
 
 @Data
@@ -29,16 +28,16 @@ public class OrderReportParam
   private int facilityTypeId;
   private String facilityType;
   private String facility;
-  private int facilityId;
+  private Long facilityId;
   private int productId;
   private String product;
   private int productCategoryId;
   private String productCategory;
-  private int programId;
+  private Long programId;
   private String program;
   private String orderType;
   private int zoneId;
-  private int periodId;
+  private Long periodId;
   private String period;
   private int scheduleId;
   private String schedule;

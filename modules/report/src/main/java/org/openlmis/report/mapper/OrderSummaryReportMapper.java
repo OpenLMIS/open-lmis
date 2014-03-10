@@ -10,15 +10,14 @@
 
 package org.openlmis.report.mapper;
 
-import org.apache.ibatis.annotations.Options;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.SelectProvider;
+import org.apache.ibatis.annotations.*;
 import org.apache.ibatis.mapping.ResultSetType;
 import org.apache.ibatis.session.RowBounds;
+import org.openlmis.core.domain.User;
 import org.openlmis.report.builder.OrderSummaryQueryBuilder;
-import org.openlmis.report.model.ReportData;
 import org.openlmis.report.model.ReportParameter;
 import org.openlmis.report.model.report.OrderSummaryReport;
+import org.openlmis.rnr.domain.RequisitionStatusChange;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -26,6 +25,7 @@ import java.util.Map;
 
 @Repository
 public interface OrderSummaryReportMapper {
+
   @SelectProvider(type = OrderSummaryQueryBuilder.class, method = "SelectFilteredSortedPagedRecords")
   @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize = 10, timeout = 0, useCache = true, flushCache = true)
   public List<OrderSummaryReport> getOrderSummaryReport(
@@ -34,5 +34,14 @@ public interface OrderSummaryReportMapper {
     @Param("RowBounds") RowBounds rowBounds
   );
 
+  @Select("select * from requisition_status_changes where rnrid = #{rnrId} and status = #{status} order by id desc")
+  @Results(value = {@Result(property = "createdBy", column = "createdBy", javaType = User.class,
+      one = @One(select = "org.openlmis.core.repository.mapper.UserMapper.getById"))})
+  public List<RequisitionStatusChange> getLastUsersWhoActedOnRnr(@Param("rnrId")Long rnrid,
+                                                                  @Param("status")String status);
 
+  @Select("select max(id) from requisitions where facilityId = #{facilityId} and programId = #{programId} and periodId = #{periodId}")
+  public Long getRequisitionId(@Param("facilityId") Long facilityId,
+                               @Param("programId") Long programId,
+                               @Param("periodId") Long periodId);
 }

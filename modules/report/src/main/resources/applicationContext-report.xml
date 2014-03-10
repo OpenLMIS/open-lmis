@@ -21,8 +21,9 @@
 
   <import resource="classpath:applicationContext-db.xml"/>
   <import resource="classpath:applicationContext-core.xml"/>
+  <import resource="classpath:applicationContext-requisition.xml"/>
 
-  <context:component-scan base-package="org.openlmis"/>
+    <context:component-scan base-package="org.openlmis"/>
 
     <!-- Integrates with report module -->
     <bean id="reportManager" class="org.openlmis.report.ReportManager">
