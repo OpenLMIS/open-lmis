@@ -44,7 +44,7 @@ describe("NavigationController", function () {
 
       $httpBackend.flush();
       expect(window.location).toEqual("/page/index.html#/manage");
-      expect(scope.isOffline).toBeFalsy();
+      expect(scope.showNetworkError).toBeFalsy();
     });
 
     it("should set offline flag and not change URI if network is disconnected", function () {
@@ -55,7 +55,7 @@ describe("NavigationController", function () {
 
       $httpBackend.flush();
       expect(window.location).toEqual("/pages/test");
-      expect(scope.isOffline).toBeTruthy();
+      expect(scope.showNetworkError).toBeTruthy();
     });
   });
 });

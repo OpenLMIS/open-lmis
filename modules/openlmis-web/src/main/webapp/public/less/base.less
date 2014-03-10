@@ -7,6 +7,7 @@
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
+@import url("mixins.less");
 
 body {
   background-color: #808080;
@@ -117,7 +118,7 @@ input[type="color"]:focus,
 .uneditable-input:focus {
   border-color: #17888f;
   outline: 0;
-  outline: thin dotted \9;
+  outline: thin dotted  \9;
   /* IE6-9 */
 
   -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(23, 136, 143, 0.6);
@@ -157,4 +158,31 @@ select {
 
 .center-justified {
   text-align: center !important;
+}
+
+.warning-popup {
+  width: 250px;
+  position: absolute;
+  border-radius: 4px;
+  left: -132px;
+  padding: 7px 9px;
+  bottom: 25px;
+  background: rgba(0, 0, 0, 0.7);
+  font-size: 0.8em;
+  text-align: center;
+  white-space: normal;
+  color: #FFFFFF;
+  .box-shadow(0 0 15px rgba(0, 0, 0, 0.5));
+  &:after {
+    height: 0;
+    width: 0;
+    border-top: 7px solid rgba(0, 0, 0, 0.7);
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-bottom: 0;
+    position: absolute;
+    left: 132px;
+    bottom: -6px;
+    content: "";
+  }
 }
