@@ -22,6 +22,12 @@ import java.util.List;
 
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 
+/**
+ * Report represents an entity which holds RnrLineItem list, RegimenLineItem list along with additional meta attributes
+ * to represent Rnr. The purpose for having an additional object is to restrict/validate unwanted attributes
+ * in API request,also include some validations on data sent in request.
+ */
+
 @Data
 @NoArgsConstructor
 public class Report {

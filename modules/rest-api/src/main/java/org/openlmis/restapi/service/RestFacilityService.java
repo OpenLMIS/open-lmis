@@ -20,6 +20,10 @@ import org.openlmis.core.service.FacilityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+/**
+ * This service exposes methods for get facility details accepting facility code as input.
+ */
+
 @Service
 public class RestFacilityService {
   @Autowired

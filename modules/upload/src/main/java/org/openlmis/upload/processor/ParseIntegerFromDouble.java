@@ -16,6 +16,11 @@ import org.supercsv.cellprocessor.ift.StringCellProcessor;
 import org.supercsv.exception.SuperCsvCellProcessorException;
 import org.supercsv.util.CsvContext;
 
+/**
+ * This is a custom cell processor used to parse integer from string which is parsable the integer part of double.
+ * This is used in CsvCellProcessors.
+ */
+
 public class ParseIntegerFromDouble extends CellProcessorAdaptor implements StringCellProcessor {
 
   public static final String DECIMAl_POINT = "\\.";
@@ -45,8 +50,8 @@ public class ParseIntegerFromDouble extends CellProcessorAdaptor implements Stri
     } else {
       final String actualClassName = value.getClass().getName();
       throw new SuperCsvCellProcessorException(String.format(
-          "the input value should be of type Integer or String but is of type %s", actualClassName), context,
-          this);
+        "the input value should be of type Integer or String but is of type %s", actualClassName), context,
+        this);
     }
 
     final Integer finalResult = result;
@@ -63,17 +68,17 @@ public class ParseIntegerFromDouble extends CellProcessorAdaptor implements Stri
       String integerPart = stringValue.split(DECIMAl_POINT)[0];
 
       if (integerPart.length() > 10) throw new SuperCsvCellProcessorException(
-          String.format("'%s' could not be parsed as an Integer", value), context, this, e);
+        String.format("'%s' could not be parsed as an Integer", value), context, this, e);
 
       Long longValue = Long.valueOf(integerPart);
       if (longValue > Integer.MAX_VALUE) throw new SuperCsvCellProcessorException(
-          String.format("'%s' could not be parsed as an Integer", value), context, this, e);
+        String.format("'%s' could not be parsed as an Integer", value), context, this, e);
 
       result = longValue.intValue();
 
     } catch (NumberFormatException e1) {
       throw new SuperCsvCellProcessorException(
-          String.format("'%s' could not be parsed as an Integer", value), context, this, e);
+        String.format("'%s' could not be parsed as an Integer", value), context, this, e);
 
     }
     return result;

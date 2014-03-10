@@ -17,14 +17,18 @@ import org.openlmis.core.domain.User;
 
 import java.util.Date;
 
+/**
+ * This class corresponds to a change in requisition status.
+ */
+
 @Data
 @NoArgsConstructor
 public class RequisitionStatusChange {
-  private Long id;
 
+  private Long id;
   private Long rnrId;
   private RnrStatus status;
-  private String name;
+  private String userName;
   private User createdBy;
   private Date createdDate;
 
@@ -36,9 +40,8 @@ public class RequisitionStatusChange {
 
   public RequisitionStatusChange(Rnr requisition, String name) {
     this(requisition);
-    this.name = name;
+    this.userName = name;
   }
-
 
   public RequisitionStatusChange(Long rnrId, RnrStatus status, User createdBy, Date createdDate) {
     this.rnrId = rnrId;

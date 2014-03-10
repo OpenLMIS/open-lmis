@@ -11,7 +11,6 @@
 package org.openlmis.pageobjects;
 
 
-import com.thoughtworks.selenium.SeleneseTestNgHelper;
 import org.openlmis.UiUtils.TestWebDriver;
 import org.openqa.selenium.ElementNotVisibleException;
 import org.openqa.selenium.Keys;
@@ -27,82 +26,84 @@ import java.util.List;
 import static com.thoughtworks.selenium.SeleneseTestBase.assertFalse;
 import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
 import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
+import static org.openqa.selenium.support.How.ID;
+import static org.openqa.selenium.support.How.XPATH;
 
 public class UserPage extends Page {
 
-  @FindBy(how = How.ID, using = "user-add-new")
+  @FindBy(how = ID, using = "user-add-new")
   private static WebElement addNewButton = null;
 
-  @FindBy(how = How.ID, using = "userName")
+  @FindBy(how = ID, using = "userName")
   private static WebElement userNameField = null;
 
-  @FindBy(how = How.ID, using = "email")
+  @FindBy(how = ID, using = "email")
   private static WebElement emailField = null;
 
-  @FindBy(how = How.ID, using = "firstName")
+  @FindBy(how = ID, using = "firstName")
   private static WebElement firstNameField = null;
 
-  @FindBy(how = How.ID, using = "lastName")
+  @FindBy(how = ID, using = "lastName")
   private static WebElement lastNameField = null;
 
-  @FindBy(how = How.XPATH, using = "//input[1][@class='btn btn-primary save-button']")
+  @FindBy(how = ID, using = "userSaveButton")
   private static WebElement saveButton = null;
 
-  @FindBy(how = How.XPATH, using = "//input[2][@class='btn btn-cancel cancel-button']")
+  @FindBy(how = ID, using = "userCancelButton")
   private static WebElement cancelButton = null;
 
-  @FindBy(how = How.XPATH, using = "//input[@class='btn btn-danger delete-button']")
+  @FindBy(how = ID, using = "userDisableButton")
   private static WebElement disableButton = null;
 
-  @FindBy(how = How.XPATH, using = "//input[@class='btn btn-primary enable-button']")
+  @FindBy(how = ID, using = "userEnableButton")
   private static WebElement enableButton = null;
 
-  @FindBy(how = How.ID, using = "searchUser")
+  @FindBy(how = ID, using = "searchUser")
   private static WebElement searchUserTextField = null;
 
-  @FindBy(how = How.ID, using = "resetPassword0")
+  @FindBy(how = XPATH, using = "//a[@ng-click='user.active? changePassword(user): javascript(void);'] ")
   private static WebElement selectFirstResetPassword = null;
 
-  @FindBy(how = How.ID, using = "password1")
+  @FindBy(how = ID, using = "password1")
   private static WebElement newPasswordField = null;
 
-  @FindBy(how = How.ID, using = "password2")
+  @FindBy(how = ID, using = "password2")
   private static WebElement confirmPasswordField = null;
 
-  @FindBy(how = How.XPATH, using = "//div[@id='changePassword']/div/input[1]")
+  @FindBy(how = ID, using = "resetPasswordDone")
   private static WebElement resetPasswordDone = null;
 
-  @FindBy(how = How.LINK_TEXT, using = "OK")
+  @FindBy(how = ID, using = "button_OK")
   private static WebElement okButton = null;
 
-  @FindBy(how = How.ID, using = "user0")
+  @FindBy(how = ID, using = "user0")
   private static WebElement firstUserLink = null;
 
   @FindBy(how = How.XPATH, using = "//a[@ng-click='editUser(user.id)']")
   private static WebElement selectFirstEditUser = null;
 
-  @FindBy(how = How.XPATH, using = "//h2[contains(text(),'Edit User')]")
+  @FindBy(how = ID, using = "editUserLabel")
   private static WebElement editUserHeader = null;
 
-  @FindBy(how = How.ID, using = "searchFacility")
+  @FindBy(how = ID, using = "searchFacility")
   private static WebElement searchFacility = null;
 
-  @FindBy(how = How.ID, using = "result0")
+  @FindBy(how = ID, using = "result0")
   private static WebElement selectFacility = null;
 
   @FindBy(how = How.XPATH, using = "//form[@id='create-user']/div/div[1]/div[7]/div/ng-switch/span")
   private static WebElement verifiedLabel = null;
 
-  @FindBy(how = How.XPATH, using = "//div[1][@class='pull-right control-accordion']/a[1]")
+  @FindBy(how = ID, using = "expandAll")
   private static WebElement expandAllOption = null;
 
-  @FindBy(how = How.XPATH, using = "//div[1][@class='pull-right control-accordion']/a[2]")
+  @FindBy(how = ID, using = "collapseAll")
   private static WebElement collapseAllOption = null;
 
-  @FindBy(how = How.XPATH, using = "//a[contains(text(),'Home Facility Roles')]")
+  @FindBy(how = ID, using = "homeFacilityRoles")
   private static WebElement homeFacilityRolesAccordion = null;
 
-  @FindBy(how = How.XPATH, using = "//select[@ng-model='programSelected']")
+  @FindBy(how = ID, using = "programSelected")
   private static WebElement homeFacilityPrograms = null;
 
   @FindBy(how = How.XPATH, using = "(//input[@type='text'])[12]")
@@ -111,16 +112,16 @@ public class UserPage extends Page {
   @FindBy(how = How.XPATH, using = "//div[@class='select2-result-label']/span")
   private static WebElement rolesSelectFieldHomeFacility = null;
 
-  @FindBy(how = How.XPATH, using = "//input[@ng-click='addHomeFacilityRole()']")
+  @FindBy(how = ID, using = "addHomeRole")
   private static WebElement addHomeFacilityRolesButton = null;
 
-  @FindBy(how = How.XPATH, using = "//a[contains(text(),'Supervisory Roles')]")
+  @FindBy(how = ID, using = "supervisoryRoles")
   private static WebElement supervisoryRolesAccordion = null;
 
-  @FindBy(how = How.XPATH, using = "//select[@ng-model='selectedProgramIdToSupervise']")
+  @FindBy(how = ID, using = "programToSupervise")
   private static WebElement programsToSupervise = null;
 
-  @FindBy(how = How.XPATH, using = "//select[@ng-model='selectedSupervisoryNodeIdToSupervise']")
+  @FindBy(how = ID, using = "supervisoryNodeToSupervise")
   private static WebElement supervisoryNodeToSupervise = null;
 
   @FindBy(how = How.XPATH, using = "(//input[@type='text'])[14]")
@@ -129,11 +130,11 @@ public class UserPage extends Page {
   @FindBy(how = How.XPATH, using = "//div[@class='select2-result-label']/span")
   private static WebElement rolesSelectFieldSupervisoryRole = null;
 
-  @FindBy(how = How.XPATH, using = "//input[@ng-click='addSupervisoryRole()']")
+  @FindBy(how = ID, using = "addSupervisoryRole")
   private static WebElement addSupervisoryRoleButton = null;
 
-  @FindBy(how = How.XPATH, using = "//a[contains(text(),'Order Fulfillment Roles')]")
-  private static WebElement warehouseRolesAccordion = null;
+  @FindBy(how = ID, using = "orderFulfillmentRoles")
+  private static WebElement orderFulfillmentRolesAccordion = null;
 
   @FindBy(how = How.XPATH, using = "(//input[@type='text'])[16]")
   private static WebElement rolesInputFieldWarehouse = null;
@@ -141,19 +142,19 @@ public class UserPage extends Page {
   @FindBy(how = How.XPATH, using = "//div[@class='select2-result-label']/span")
   private static WebElement rolesSelectFieldWarehouse = null;
 
-  @FindBy(how = How.XPATH, using = "//select[@ng-model='warehouseRole.facilityId']")
+  @FindBy(how = ID, using = "warehouseToSelect")
   private static WebElement warehouseToSelect = null;
 
-  @FindBy(how = How.XPATH, using = "//input[@ng-click='addFulfillmentRole()']")
+  @FindBy(how = ID, using = "addFulfillmentRole")
   private static WebElement addWarehouseRoleButton = null;
 
-  @FindBy(how = How.XPATH, using = "//a[contains(text(),'Delivery zones')]")
+  @FindBy(how = ID, using = "allocationRoles")
   private static WebElement deliveryZonesAccordion = null;
 
-  @FindBy(how = How.XPATH, using = "//select[@name='selectDeliveryZone']")
+  @FindBy(how = ID, using = "deliveryZoneToSelect")
   private static WebElement zoneToDelivery = null;
 
-  @FindBy(how = How.XPATH, using = "//select[@name='selectDeliveryZoneProgram']")
+  @FindBy(how = ID, using = "programToDelivery")
   private static WebElement programToDeliver = null;
 
   @FindBy(how = How.XPATH, using = "(//input[@type='text'])[18]")
@@ -162,22 +163,19 @@ public class UserPage extends Page {
   @FindBy(how = How.XPATH, using = "(//input[@type='text'])[15]")
   private static WebElement rolesInputFieldDeliveryZone = null;
 
-  @FindBy(how = How.XPATH, using = "//input[@ng-click='addAllocationRole()']")
+  @FindBy(how = ID, using = "addAllocationRole")
   private static WebElement addDeliveryZoneRoleButton = null;
 
-  @FindBy(how = How.XPATH, using = "//a[contains(text(),'Admin and General Operations Roles')]")
+  @FindBy(how = ID, using = "adminRoles")
   private static WebElement adminAndGeneralOperationsRolesAccordion = null;
 
   @FindBy(how = How.XPATH, using = "(//input[@type='text'])[17]")
   private static WebElement adminRolesInputField = null;
 
-  @FindBy(how = How.LINK_TEXT, using = "View Here")
+  @FindBy(how = ID, using = "viewHereLink")
   private static WebElement viewHereLink = null;
 
-  @FindBy(how = How.XPATH, using = "//div[@id='saveSuccessMsgDiv']")
-  private static WebElement userUpdateSuccessMessage = null;
-
-  @FindBy(how = How.XPATH, using = "//div[@id='saveSuccessMsgDiv']")
+  @FindBy(how = ID, using = "saveSuccessMsgDiv")
   private static WebElement successMessage = null;
 
   @FindBy(how = How.XPATH, using = "//input[contains(text(),'Remove')]")
@@ -189,13 +187,13 @@ public class UserPage extends Page {
   @FindBy(how = How.XPATH, using = "//a[contains(text(),'No matches found for')]")
   private static WebElement noMatchFoundLink = null;
 
-  @FindBy(how = How.XPATH, using = "//div[@class='form-field radio-group']/input[1]")
+  @FindBy(how = ID, using = "restrictLoginYes")
   private static WebElement restrictLoginYesOption = null;
 
-  @FindBy(how = How.XPATH, using = "//div[@class='form-field radio-group']/input[2]")
+  @FindBy(how = ID, using = "restrictLoginNo")
   private static WebElement restrictLoginNoOption = null;
 
-  @FindBy(how = How.ID, using = "resetPasswordOk")
+  @FindBy(how = ID, using = "resetPasswordOk")
   private static WebElement resetPasswordOkButton = null;
 
   public UserPage(TestWebDriver driver) {
@@ -303,7 +301,7 @@ public class UserPage extends Page {
   }
 
   public void verifyNoMatchedFoundMessage() {
-    SeleneseTestNgHelper.assertTrue("No match found link should show up", noMatchFoundLink.isDisplayed());
+    assertTrue("No match found link should show up", noMatchFoundLink.isDisplayed());
   }
 
   public void ExpandAll() {
@@ -395,8 +393,8 @@ public class UserPage extends Page {
   }
 
   public void assignWarehouse(String warehouse, String role) {
-    testWebDriver.waitForElementToAppear(warehouseRolesAccordion);
-    warehouseRolesAccordion.click();
+    testWebDriver.waitForElementToAppear(orderFulfillmentRolesAccordion);
+    orderFulfillmentRolesAccordion.click();
     testWebDriver.waitForElementToAppear(warehouseToSelect);
     testWebDriver.selectByVisibleText(warehouseToSelect, warehouse);
     testWebDriver.waitForElementToAppear(rolesInputFieldWarehouse);
@@ -410,13 +408,13 @@ public class UserPage extends Page {
     addWarehouseRoleButton.click();
     testWebDriver.sleep(1000);
     verifyWarehouseSelectedNotAvailable(warehouse);
-    testWebDriver.waitForElementToAppear(warehouseRolesAccordion);
-    warehouseRolesAccordion.click();
+    testWebDriver.waitForElementToAppear(orderFulfillmentRolesAccordion);
+    orderFulfillmentRolesAccordion.click();
   }
 
   public void verifyMessage(String message) {
-    testWebDriver.waitForElementToAppear(userUpdateSuccessMessage);
-    assertEquals(userUpdateSuccessMessage.getText(), message);
+    testWebDriver.waitForElementToAppear(successMessage);
+    assertEquals(successMessage.getText(), message);
   }
 
   public void enterDeliveryZoneData(String deliveryZoneCode, String program, String role) {
@@ -563,8 +561,8 @@ public class UserPage extends Page {
   }
 
   public void clickWarehouseRolesAccordion() {
-    testWebDriver.waitForElementToAppear(warehouseRolesAccordion);
-    warehouseRolesAccordion.click();
+    testWebDriver.waitForElementToAppear(orderFulfillmentRolesAccordion);
+    orderFulfillmentRolesAccordion.click();
   }
 
   public void clickHomeFacilityRolesAccordion() {

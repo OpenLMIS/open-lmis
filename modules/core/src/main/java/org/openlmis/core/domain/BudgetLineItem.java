@@ -20,7 +20,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 /**
- * Represents each record of BudgetFile.
+ *  BudgetLineItem represents each record of BudgetFile.
  */
 @Data
 @AllArgsConstructor

@@ -26,6 +26,10 @@ import java.util.List;
 
 import static org.openlmis.core.domain.Right.VIEW_REQUISITION;
 
+/**
+ * This class is a strategy to search for requisitions based on facility and date range.
+ */
+
 @NoArgsConstructor
 public class FacilityDateRangeSearch extends RequisitionSearchStrategy {
 
@@ -40,8 +44,8 @@ public class FacilityDateRangeSearch extends RequisitionSearchStrategy {
                                  ProcessingScheduleService processingScheduleService,
                                  RequisitionRepository requisitionRepository,
                                  ProgramService programService) {
-    this.criteria = criteria;
 
+    this.criteria = criteria;
     this.requisitionPermissionService = requisitionPermissionService;
     this.programService = programService;
     this.processingScheduleService = processingScheduleService;

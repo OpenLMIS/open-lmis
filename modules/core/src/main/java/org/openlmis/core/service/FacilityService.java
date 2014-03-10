@@ -32,6 +32,10 @@ import java.util.*;
 import static java.util.Arrays.asList;
 import static org.apache.commons.collections.CollectionUtils.select;
 
+/**
+ * Exposes the services for handling Facility entity.
+ */
+
 @Service
 @NoArgsConstructor
 public class FacilityService {

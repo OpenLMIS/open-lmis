@@ -66,7 +66,7 @@ task smokeTest(type: Test) {
             systemProperties System.properties
             main = "cucumber.api.cli.Main"
             classpath = configurations.cucumberRuntime + sourceSets.main.output + sourceSets.test.output
-            args = ['-f', htmlformat, '-f', jsonformat, '--glue', 'org.openlmis.functional', '--tags', '@smokeRequisition,@smokeDistribution','--tags','~@WIP', 'src/test/resources']
+            args = ['-f', htmlformat, '-f', jsonformat, '--glue', 'org.openlmis.functional', '--tags', '@smokeRequisition,@smokeDistribution', '--tags', '~@WIP', 'src/test/resources']
         }
     }
 }
@@ -89,7 +89,7 @@ task requisitionSmokeTest(type: Test) {
             systemProperties System.properties
             main = "cucumber.api.cli.Main"
             classpath = configurations.cucumberRuntime + sourceSets.main.output + sourceSets.test.output
-            args = ['-f', htmlformat, '-f', jsonformat, '--glue', 'org.openlmis.functional', '--tags', '@smokeRequisition','--tags','~@WIP', 'src/test/resources']
+            args = ['-f', htmlformat, '-f', jsonformat, '--glue', 'org.openlmis.functional', '--tags', '@smokeRequisition', '--tags', '~@WIP', 'src/test/resources']
         }
     }
 }
@@ -112,7 +112,7 @@ task distributionSmokeTest(type: Test) {
             systemProperties System.properties
             main = "cucumber.api.cli.Main"
             classpath = configurations.cucumberRuntime + sourceSets.main.output + sourceSets.test.output
-            args = ['-f', htmlformat, '-f', jsonformat, '--glue', 'org.openlmis.functional', '--tags', '@smokeDistribution','--tags','~@WIP', 'src/test/resources']
+            args = ['-f', htmlformat, '-f', jsonformat, '--glue', 'org.openlmis.functional', '--tags', '@smokeDistribution', '--tags', '~@WIP', 'src/test/resources']
         }
     }
 }
@@ -135,7 +135,7 @@ task e2eTestChrome(type: Test) {
             systemProperties System.properties
             main = "cucumber.api.cli.Main"
             classpath = configurations.cucumberRuntime + sourceSets.main.output + sourceSets.test.output
-            args = ['-f', htmlformat, '-f', jsonformat, '--glue', 'org.openlmis.functional', '--tags', '@e2e','--tags','~@WIP', 'src/test/resources']
+            args = ['-f', htmlformat, '-f', jsonformat, '--glue', 'org.openlmis.functional', '--tags', '@e2e', '--tags', '~@WIP', 'src/test/resources']
         }
     }
 }
@@ -154,7 +154,7 @@ task requisitionSmokeTestChrome(type: Test) {
             systemProperties System.properties
             main = "cucumber.api.cli.Main"
             classpath = configurations.cucumberRuntime + sourceSets.main.output + sourceSets.test.output
-            args = ['-f', htmlformat, '-f', jsonformat, '--glue', 'org.openlmis.functional', '--tags', '@smokeRequisition', '--tags','~@WIP', 'src/test/resources']
+            args = ['-f', htmlformat, '-f', jsonformat, '--glue', 'org.openlmis.functional', '--tags', '@smokeRequisition', '--tags', '~@WIP', 'src/test/resources']
         }
     }
 }
@@ -174,7 +174,7 @@ task distributionSmokeTestChrome(type: Test) {
             systemProperties System.properties
             main = "cucumber.api.cli.Main"
             classpath = configurations.cucumberRuntime + sourceSets.main.output + sourceSets.test.output
-            args = ['-f', htmlformat, '-f', jsonformat, '--glue', 'org.openlmis.functional', '--tags', '@smokeDistribution', '--tags','~@WIP', 'src/test/resources']
+            args = ['-f', htmlformat, '-f', jsonformat, '--glue', 'org.openlmis.functional', '--tags', '@smokeDistribution', '--tags', '~@WIP', 'src/test/resources']
         }
     }
 }
@@ -194,7 +194,7 @@ task requisitionSmokeTestIE(type: Test) {
             systemProperties System.properties
             main = "cucumber.api.cli.Main"
             classpath = configurations.cucumberRuntime + sourceSets.main.output + sourceSets.test.output
-            args = ['-f', htmlformat, '-f', jsonformat, '--glue', 'org.openlmis.functional', '--tags', '@smokeRequisition','--tags','~@WIP', 'src/test/resources']
+            args = ['-f', htmlformat, '-f', jsonformat, '--glue', 'org.openlmis.functional', '--tags', '@smokeRequisition', '--tags', '~@WIP', 'src/test/resources']
         }
     }
 }
@@ -214,7 +214,7 @@ task distributionSmokeTestIE(type: Test) {
             systemProperties System.properties
             main = "cucumber.api.cli.Main"
             classpath = configurations.cucumberRuntime + sourceSets.main.output + sourceSets.test.output
-            args = ['-f', htmlformat, '-f', jsonformat, '--glue', 'org.openlmis.functional', '--tags', '@smokeDistribution','--tags','~@WIP', 'src/test/resources']
+            args = ['-f', htmlformat, '-f', jsonformat, '--glue', 'org.openlmis.functional', '--tags', '@smokeDistribution', '--tags', '~@WIP', 'src/test/resources']
         }
     }
 }
@@ -250,6 +250,25 @@ task adminTest(type: Test) {
 }
 
 adminTest.doFirst() {
+    buildOpenLmis.execute()
+}
+
+task adminTest2(type: Test) {
+    useTestNG() {
+        systemProperties['browser'] = 'firefox'
+        systemProperties['dbUrl'] = connectionString
+        systemProperties['baseurl'] = "$baseurl"
+
+        suites 'src/test/java/org/openlmis/functional/testng-admin2.xml'
+    }
+    options {
+        listeners << 'org.uncommons.reportng.HTMLReporter'
+        listeners << 'org.uncommons.reportng.JUnitXMLReporter'
+    }
+    workingDir = 'build/'
+}
+
+adminTest2.doFirst() {
     buildOpenLmis.execute()
 }
 

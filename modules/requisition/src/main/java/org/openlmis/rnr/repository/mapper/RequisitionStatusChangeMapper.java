@@ -17,12 +17,16 @@ import org.springframework.stereotype.Repository;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * It maps the RequisitionStatusChange entity to corresponding representation in database.
+ */
+
 @Repository
 public interface RequisitionStatusChangeMapper {
 
   @Insert({"INSERT INTO requisition_status_changes",
-      "(rnrId, status, name, createdBy, modifiedBy) VALUES ",
-      "(#{rnrId}, #{status}, #{name}, #{createdBy.id}, #{createdBy.id})"})
+    "(rnrId, status, userName, createdBy, modifiedBy) VALUES ",
+    "(#{rnrId}, #{status}, #{userName}, #{createdBy.id}, #{createdBy.id})"})
   @Options(useGeneratedKeys = true)
   void insert(RequisitionStatusChange statusChange);
 

@@ -44,6 +44,10 @@ import static org.apache.commons.collections.CollectionUtils.collect;
 import static org.apache.commons.lang.ArrayUtils.contains;
 import static org.openlmis.order.domain.OrderStatus.*;
 
+/**
+ * Exposes the services for handling Order entity.
+ */
+
 @Service
 @NoArgsConstructor
 public class OrderService {

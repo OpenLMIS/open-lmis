@@ -62,7 +62,6 @@ public class ManagePodPage extends Page {
   @FindBy(how = ID, using = "noOrdersPresent")
   private static WebElement noOrderPresentMessageOnPodScreen = null;
 
-
   @FindBy(how = XPATH, using = " //i[@class='icon-ok']")
   private static WebElement emergencyIconOnPodScreen = null;
 

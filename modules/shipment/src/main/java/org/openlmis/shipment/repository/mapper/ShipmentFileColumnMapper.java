@@ -17,6 +17,10 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+/**
+ * It maps the Shipment File Column(EDIFileColumn) entity to corresponding representation in database.
+ */
+
 @Repository
 public interface ShipmentFileColumnMapper {
 

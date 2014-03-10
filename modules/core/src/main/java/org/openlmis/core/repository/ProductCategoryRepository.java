@@ -20,10 +20,13 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Repository;
 
+/**
+ * ProductCategoryRepository is Repository class for ProductCategory related database operations.
+ */
+
 @Repository
 @NoArgsConstructor
 public class ProductCategoryRepository {
-
 
   private ProductCategoryMapper categoryMapper;
 
@@ -33,7 +36,6 @@ public class ProductCategoryRepository {
   }
 
   public void insert(ProductCategory productCategory) {
-
     try {
       categoryMapper.insert(productCategory);
     } catch (DuplicateKeyException duplicateKeyException) {

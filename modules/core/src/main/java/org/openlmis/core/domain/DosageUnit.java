@@ -14,10 +14,13 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+/**
+ * DosageUnit represents the Dosage Unit for any product.
+ */
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-public class DosageUnit extends BaseModel{
-    private String code;
-    private int displayOrder;
+public class DosageUnit extends BaseModel {
+  private String code;
+  private int displayOrder;
 }

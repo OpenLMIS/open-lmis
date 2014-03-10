@@ -20,6 +20,10 @@ import org.openlmis.core.domain.FacilityProgramProduct;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ *  EpiInventory represents a container for list of EpiInventoryLineItem.
+ */
+
 @Data
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)

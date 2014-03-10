@@ -8,14 +8,26 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-package org.openlmis.web.form;
+package org.openlmis.order.repository.mapper;
 
-import lombok.Data;
-import org.openlmis.rnr.dto.RnrDTO;
+import org.openlmis.core.domain.SupplyLine;
+import org.openlmis.order.domain.Order;
+import org.openlmis.rnr.domain.Rnr;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Component;
 
-import java.util.List;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
-@Data
-public class RnrList {
-  private List<RnrDTO> rnrList;
+/**
+ * It maps each row of database representation of Order to corresponding Order entity.
+ */
+
+@Component
+public class OrderRowMapper implements RowMapper {
+  @Override
+  public Order mapRow(ResultSet rs, int rowNum) throws SQLException {
+    return new Order(new Rnr(Long.parseLong(rs.getString("id"))),
+      new SupplyLine(Long.parseLong(rs.getString("supplyLineId"))));
+  }
 }

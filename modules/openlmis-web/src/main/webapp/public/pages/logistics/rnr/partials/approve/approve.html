@@ -27,7 +27,8 @@
     </a>
   </span>
   <span class="pull-right print-button">
-    <a class="btn btn-primary" ng-href="/requisitions/{{rnr.id}}/print.pdf" openlmis-message="button.print"
+    <a id="printButton" class="btn btn-primary" ng-href="/requisitions/{{rnr.id}}/print.pdf"
+       openlmis-message="button.print"
        target="_blank"></a>
   </span>
 </div>
@@ -55,9 +56,9 @@
         <ng-include src="'/public/pages/logistics/rnr/partials/total-cost.html'"></ng-include>
 
         <div class="form-cell button-row">
-            <input id='saveButton' type="button" openlmis-message="button.save" ng-click="saveRnr()"
+            <input id="saveButton" type="button" openlmis-message="button.save" ng-click="saveRnr()"
                    class="btn btn-primary save-button"/>
-            <input id='approveButton' type="button" ng-click="approveRnr()" class="btn btn-primary submit-button"
+            <input id="approveButton" type="button" ng-click="approveRnr()" class="btn btn-primary submit-button"
                    openlmis-message="button.approve"/>
             <input id="comments" type="button" ng-click="showCommentBox=!showCommentBox" class="btn comments-button"
                    openlmis-message="comments.header"/>

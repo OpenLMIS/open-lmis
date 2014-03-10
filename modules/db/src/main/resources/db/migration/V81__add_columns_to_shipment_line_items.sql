@@ -9,7 +9,7 @@
 --
 
 ALTER TABLE shipment_line_items
-  ADD COLUMN productName VARCHAR(250)  NOT NULL,
+ADD COLUMN productName VARCHAR(250) NOT NULL,
 ADD COLUMN dispensingUnit VARCHAR(20) NOT NULL,
-ADD COLUMN productCategory VARCHAR(100)  NOT NULL,
+ADD COLUMN productCategory VARCHAR(100) NOT NULL,
 ADD COLUMN packsToShip INTEGER;

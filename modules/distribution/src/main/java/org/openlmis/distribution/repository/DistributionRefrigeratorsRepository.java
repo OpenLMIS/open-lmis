@@ -17,6 +17,10 @@ import org.openlmis.distribution.repository.mapper.DistributionRefrigeratorsMapp
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+/**
+ * Repository class for refrigerator reading and refrigerator problems related database operations.
+ */
+
 @Repository
 public class DistributionRefrigeratorsRepository {
 

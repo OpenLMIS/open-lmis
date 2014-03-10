@@ -22,6 +22,9 @@ import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * ProcessingPeriodRepository is Repository class for ProcessingPeriod related database operations.
+ */
 
 @Repository
 @NoArgsConstructor

@@ -17,6 +17,10 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/**
+ * Exposes the services for handling Refrigerator entity.
+ */
+
 @Service
 public class RefrigeratorService {
 
@@ -31,7 +35,6 @@ public class RefrigeratorService {
     repository.disableAllFor(facilityId);
   }
 
-
   public List<Refrigerator> getAllBy(Long facilityId) {
     return repository.getAllBy(facilityId);
   }
@@ -42,7 +45,6 @@ public class RefrigeratorService {
     } else {
       repository.update(refrigerator);
     }
-
   }
 
 }

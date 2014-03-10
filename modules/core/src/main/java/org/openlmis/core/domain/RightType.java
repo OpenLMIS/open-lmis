@@ -10,7 +10,10 @@
 
 package org.openlmis.core.domain;
 
-
+/**
+ * Enum for right types. All rights in the system are divided into four basic types: Admin, Allocation, Requisition and
+ * Fulfillment.
+ */
 public enum RightType {
 
   ADMIN,

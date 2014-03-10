@@ -28,6 +28,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * Template represents an entity that records a byte array of data, type of template, list of parameters and comma
+ * separated parameters that are used to configure jasper report views.
+ */
+
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)

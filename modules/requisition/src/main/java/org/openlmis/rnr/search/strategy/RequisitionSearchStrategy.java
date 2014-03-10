@@ -18,6 +18,10 @@ import java.util.List;
 import static java.util.Collections.emptyList;
 import static org.openlmis.core.domain.Right.VIEW_REQUISITION;
 
+/**
+ * This class is a abstract class to search for requisitions and acts as base class for other strategies.
+ */
+
 public abstract class RequisitionSearchStrategy {
 
   boolean isSearchable(Right right) {

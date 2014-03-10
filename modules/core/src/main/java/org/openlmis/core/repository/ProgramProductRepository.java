@@ -23,6 +23,10 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+/**
+ * ProgramProductRepository is Repository class for DeliveryZoneMember related database operations.
+ */
+
 @Component
 @NoArgsConstructor
 public class ProgramProductRepository {

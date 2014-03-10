@@ -8,24 +8,25 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-package org.openlmis.email.domain;
+package org.openlmis.email.mapper;
 
+import org.openlmis.email.domain.OpenlmisEmailMessage;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Component;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
 @Component
-public class EmailMessageRowMapper implements RowMapper {
+public class EmailMessageRowMapper implements RowMapper<OpenlmisEmailMessage> {
 
   @Override
-  public SimpleMailMessage mapRow(ResultSet rs, int rowNum) throws SQLException {
-    SimpleMailMessage emailMessage = new SimpleMailMessage();
+  public OpenlmisEmailMessage mapRow(ResultSet rs, int rowNum) throws SQLException {
+    OpenlmisEmailMessage emailMessage = new OpenlmisEmailMessage();
     emailMessage.setTo(rs.getString("receiver"));
     emailMessage.setSubject(rs.getString("subject"));
     emailMessage.setText(rs.getString("content"));
+    emailMessage.setId(rs.getLong("id"));
     return emailMessage;
   }
 }

@@ -14,6 +14,9 @@ import org.apache.ibatis.annotations.*;
 import org.openlmis.core.domain.*;
 import org.springframework.stereotype.Repository;
 
+/**
+ * ProductMapper maps the Product entity to corresponding representation in database.
+ */
 @Repository
 public interface ProductMapper {
 

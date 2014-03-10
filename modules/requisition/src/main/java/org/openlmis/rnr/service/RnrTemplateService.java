@@ -22,12 +22,16 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Exposes the services for handling RnrColumn and ProgramRnrTemplate entity.
+ */
 
 @Service
 public class RnrTemplateService {
 
   @Autowired
   private RnrTemplateRepository rnrRepository;
+
   @Autowired
   private ProgramService programService;
 
@@ -46,7 +50,6 @@ public class RnrTemplateService {
 
     return errors;
   }
-
 
   public List<RnrColumn> fetchColumnsForRequisition(Long programId) {
     return rnrRepository.fetchColumnsForRequisition(programId);

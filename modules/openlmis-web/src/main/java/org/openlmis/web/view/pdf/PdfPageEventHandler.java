@@ -18,6 +18,10 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+/**
+ * This class implements event handler for Pdf page.
+ */
+
 public class PdfPageEventHandler extends PdfPageEventHelper {
 
   public static final int PAGE_TEXT_WIDTH = 100;

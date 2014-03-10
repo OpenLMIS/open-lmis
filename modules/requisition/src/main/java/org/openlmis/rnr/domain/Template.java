@@ -17,6 +17,10 @@ import org.codehaus.jackson.annotate.JsonIgnore;
 
 import java.util.List;
 
+/**
+ * This class is a base class holding programId for a template associated with that program.
+ */
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

@@ -26,9 +26,13 @@ import static org.apache.commons.collections.CollectionUtils.exists;
 import static org.openlmis.core.domain.Right.*;
 import static org.openlmis.rnr.domain.RnrStatus.*;
 
+/**
+ * Exposes the services to determine permissions for performing operations on rnr based on status, program, facility
+ * and user rights.
+ */
+
 @Service
 public class RequisitionPermissionService {
-
 
   @Autowired
   private RoleRightsService roleRightsService;

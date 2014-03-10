@@ -20,6 +20,10 @@ import org.openlmis.core.domain.Money;
 
 import java.io.IOException;
 
+/**
+ * MoneyDeSerializer class represents the deserializer for Money.
+ */
+
 public class MoneyDeSerializer extends JsonDeserializer<Money> {
   @Override
   public Money deserialize(JsonParser jsonParser, DeserializationContext ctxt) throws IOException, JsonProcessingException {

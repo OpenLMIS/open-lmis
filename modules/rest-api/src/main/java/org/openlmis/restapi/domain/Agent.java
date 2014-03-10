@@ -15,6 +15,10 @@ import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.openlmis.core.exception.DataException;
 
+/**
+ * Agent represents a Facility-Like entity which can be associated with an Rnr e.g. CHW or a Virtual Facility.
+ */
+
 @Data
 @NoArgsConstructor
 public class Agent {

@@ -16,6 +16,10 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+/**
+ * SupervisoryNodeMapper maps the SupervisoryNode entity to corresponding representation in database. Also provides
+ * methods like getting supervisory node hierarchy.
+ */
 @Repository
 public interface SupervisoryNodeMapper {
 

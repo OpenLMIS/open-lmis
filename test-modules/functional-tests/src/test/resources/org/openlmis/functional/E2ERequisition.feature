@@ -2,7 +2,7 @@ Feature: End to end requisition flow
 
   @e2e
   Scenario: Requisition initiate, authorize, approve & convert to order.
-    Given I am logged in as Admin
+    Given I am logged in as "Admin123"
     And I access create facility page
     When I create "HIV" program supported facility
     Then I should see message for successfully created facility

@@ -8,21 +8,22 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-package org.openlmis.order.domain;
+package org.openlmis.core.message;
 
-import org.openlmis.core.domain.SupplyLine;
-import org.openlmis.rnr.domain.Rnr;
-import org.springframework.jdbc.core.RowMapper;
-import org.springframework.stereotype.Component;
+import org.springframework.context.MessageSource;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.util.Locale;
+import java.util.Map;
 
-@Component
-public class OrderRowMapper implements RowMapper {
-  @Override
-  public Order mapRow(ResultSet rs, int rowNum) throws SQLException {
-    return new Order(new Rnr(Long.parseLong(rs.getString("id"))),
-      new SupplyLine(Long.parseLong(rs.getString("supplyLineId"))));
-  }
+/**
+ * Extends {@link org.springframework.context.MessageSource} interface to provide a way to get all key/message pairs
+ * known.
+ */
+public interface ExposedMessageSource extends MessageSource {
+    /**
+     * Returns all key/message pairs for the given locale.
+     * @param locale the desired locale of the messages.
+     * @return a map of all key/message pairs for the given locale.
+     */
+    public Map<String,String> getAll(Locale locale);
 }

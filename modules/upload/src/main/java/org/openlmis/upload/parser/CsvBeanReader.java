@@ -26,6 +26,11 @@ import java.util.List;
 
 import static java.util.Arrays.asList;
 
+/**
+ * This class has responsibility to instantiate a dozerBeanReader from given inputStream, and CsvPreferences.
+ * Also is responsible for validating headers.
+ */
+
 public class CsvBeanReader {
 
   private ModelClass modelClass;

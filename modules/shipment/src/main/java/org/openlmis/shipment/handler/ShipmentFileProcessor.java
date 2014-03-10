@@ -15,10 +15,10 @@ import org.apache.log4j.Logger;
 import org.openlmis.core.domain.EDIFileColumn;
 import org.openlmis.core.domain.EDIFileTemplate;
 import org.openlmis.core.exception.DataException;
-import org.openlmis.order.dto.ShipmentLineItemDTO;
 import org.openlmis.order.service.OrderService;
 import org.openlmis.shipment.ShipmentLineItemTransformer;
 import org.openlmis.shipment.domain.ShipmentLineItem;
+import org.openlmis.shipment.dto.ShipmentLineItemDTO;
 import org.openlmis.shipment.service.ShipmentFileTemplateService;
 import org.openlmis.shipment.service.ShipmentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +41,11 @@ import java.util.*;
 
 import static java.lang.Long.parseLong;
 import static org.supercsv.prefs.CsvPreference.STANDARD_PREFERENCE;
+
+/**
+ * Exposes the services for processing shipment file and its line items. It validates the data received in
+ * shipment file, processes each record and then logs the errors if any.
+ */
 
 @Component
 @MessageEndpoint

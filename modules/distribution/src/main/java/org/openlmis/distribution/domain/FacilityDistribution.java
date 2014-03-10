@@ -23,6 +23,12 @@ import java.util.List;
 
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 
+/**
+ *  FacilityDistribution represents a container for Facility related attributes, FacilityVisit, EpiUse, EpiInventory,
+ *  DistributionRefrigerators, VaccinationFullCoverage, VaccinationChildCoverage, VaccinationAdultCoverage.
+ *  It represents the distribution information about vaccines for an entire facility.
+ */
+
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)

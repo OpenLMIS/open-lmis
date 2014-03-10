@@ -19,6 +19,10 @@ import org.openlmis.core.domain.Right;
 
 import java.io.IOException;
 
+/**
+ * RightDeSerializer class represents the deserializer for Right.
+ */
+
 public class RightDeSerializer extends JsonDeserializer<Right> {
     @Override
     public Right deserialize(JsonParser jsonParser, DeserializationContext ctxt) throws IOException {

@@ -23,6 +23,11 @@ import java.util.Map;
 
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 
+/**
+ *  Distribution is a mapping of DeliveryZone, Program and ProcessingPeriod which holds the data recorded for
+ *  facilities under that delivery zone. Also it holds DistributionStatus.
+ */
+
 @EqualsAndHashCode(callSuper = false)
 @Data
 @JsonSerialize(include = NON_EMPTY)

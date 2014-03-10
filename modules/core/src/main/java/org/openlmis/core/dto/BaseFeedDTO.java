@@ -19,6 +19,9 @@ import org.openlmis.core.exception.DataException;
 
 import java.io.IOException;
 
+/**
+ * BaseFeedDTO is the base class for all DTO objects which provides utility methods like getting a serialized DTO object.
+ */
 @Data
 @NoArgsConstructor
 public abstract class BaseFeedDTO {

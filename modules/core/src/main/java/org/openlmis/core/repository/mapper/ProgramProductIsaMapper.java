@@ -16,6 +16,9 @@ import org.apache.ibatis.annotations.Update;
 import org.openlmis.core.domain.ProgramProductISA;
 import org.springframework.stereotype.Repository;
 
+/**
+ * ProgramProductIsaMapper maps the ProgramProductISA entity to corresponding representation in database.
+ */
 @Repository
 public interface ProgramProductIsaMapper {
 

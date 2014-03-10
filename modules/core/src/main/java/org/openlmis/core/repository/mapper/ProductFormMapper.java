@@ -14,6 +14,9 @@ import org.apache.ibatis.annotations.Select;
 import org.openlmis.core.domain.ProductForm;
 import org.springframework.stereotype.Repository;
 
+/**
+ * ProductFormMapper maps the ProductForm entity to corresponding representation in database.
+ */
 @Repository
 public interface ProductFormMapper {
 

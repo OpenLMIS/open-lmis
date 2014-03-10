@@ -19,6 +19,10 @@ import org.springframework.stereotype.Repository;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * It maps the OrderPOD and OrderPODLineItem entity to corresponding representation in database.
+ */
+
 @Repository
 public interface PODMapper {
 

@@ -10,6 +10,11 @@ import org.openlmis.core.domain.Facility;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ *  VaccinationCoverage is a base class for VaccinationChildCoverage and VaccinationAdultCoverage
+ *  containing list of OpenedVialLineItem.
+ */
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

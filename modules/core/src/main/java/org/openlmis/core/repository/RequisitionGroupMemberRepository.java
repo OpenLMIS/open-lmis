@@ -22,6 +22,10 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+/**
+ * RequisitionGroupMemberRepository is Repository class for RequisitionGroupMember related database operations.
+ */
+
 @Repository
 @NoArgsConstructor
 public class RequisitionGroupMemberRepository {

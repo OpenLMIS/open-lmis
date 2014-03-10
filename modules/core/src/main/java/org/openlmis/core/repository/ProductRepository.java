@@ -23,6 +23,10 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Component;
 
+/**
+ * ProductRepository is Repository class for Product related database operations.
+ */
+
 @Component
 @NoArgsConstructor
 public class ProductRepository {

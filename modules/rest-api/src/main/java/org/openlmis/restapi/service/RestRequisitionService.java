@@ -34,6 +34,10 @@ import java.util.List;
 import static org.apache.commons.collections.CollectionUtils.find;
 import static org.openlmis.restapi.domain.ReplenishmentDTO.prepareForREST;
 
+/**
+ * This service exposes methods for creating, approving a requisition.
+ */
+
 @Service
 @NoArgsConstructor
 public class RestRequisitionService {

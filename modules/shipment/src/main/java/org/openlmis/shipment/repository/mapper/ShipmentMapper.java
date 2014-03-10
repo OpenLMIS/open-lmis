@@ -21,6 +21,9 @@ import org.springframework.stereotype.Repository;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * It maps the ShipmentFileInfo and ShipmentLineItem entity to corresponding representation in database.
+ */
 
 @Repository
 public interface ShipmentMapper {

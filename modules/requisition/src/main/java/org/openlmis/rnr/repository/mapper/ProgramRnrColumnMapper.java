@@ -17,6 +17,10 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+/**
+ * It maps the RnrTemplate and RnrColumn entity to corresponding representations in database.
+ */
+
 @Repository
 public interface ProgramRnrColumnMapper {
 
@@ -60,11 +64,9 @@ public interface ProgramRnrColumnMapper {
       "ORDER BY visible DESC, position"})
   List<RnrColumn> getVisibleProgramRnrColumns(Long programId);
 
-
   @Select("SELECT * FROM master_rnr_columns")
   @Results(value = {@Result(property = "sourceString", column = "source")})
   List<RnrColumn> fetchAllMasterRnRColumns();
-
 
   @Select({"SELECT COUNT(DISTINCT(true)) = 1 FROM program_rnr_columns",
       "WHERE formulaValidationRequired = TRUE AND programId = #{id}"})

@@ -9,7 +9,7 @@
   -->
 
 <div class="navigation toggleFullScreen" ng-controller="NavigationController" ui-nav>
-  <ul class="clearfix" style="display:none">
+  <ul class="clearfix pull-left" style="display:none">
     <li><a href="/public/pages/offline.html" openlmis-message="link.home"></a></li>
 
     <li>
@@ -24,6 +24,14 @@
           <li class="beak"></li>
         </ul>
       </div>
+    </li>
+  </ul>
+  <ul id="goOnlineNavigation" class="clearfix pull-right">
+    <li>
+      <a href="javascript: void(0)" ng-click="goOnline()">
+        <i class="icon-rss"></i>
+        <span openlmis-message="link.go.online"></span>
+      </a>
     </li>
   </ul>
 </div>

@@ -91,7 +91,7 @@
                     class="label-required"> *</span></label>
 
             <div class="form-field radio-group">
-                <input type="radio" name="isSdp" ng-value="true" ng-model="facility.sdp"
+                <input id="facilitySdpTrue" type="radio" name="isSdp" ng-value="true" ng-model="facility.sdp"
                        ng-required="facility.sdp === null || facility.sdp === undefined"/>
                 <strong openlmis-message="button.yes"></strong>
                 &nbsp; &nbsp; &nbsp;
@@ -110,7 +110,8 @@
                 <input ng-model="facility.active" type="radio" name="isActive" ng-value="true"
                        ng-required="facility.active == null || facility.active == undefined"/>
                 <strong openlmis-message="button.yes"></strong> &nbsp; &nbsp; &nbsp;
-                <input ng-model="facility.active" type="radio" name="isActive" ng-value="false"/>
+                <input id="facilityActiveFalse" ng-model="facility.active" type="radio" name="isActive"
+                       ng-value="false"/>
                 <strong openlmis-message="button.no"></strong>
         <span class="field-error" ng-show="facilityForm.isActive.$error.required && showError"
               openlmis-message="select.value">
@@ -349,8 +350,10 @@
         </div>
 
         <div class="modal-footer">
-            <input type="button" class="btn btn-primary" openlmis-message="button.done" ng-click="updateISA()"/>
-            <input type="button" class="btn btn-cancel" openlmis-message="button.cancel" ng-click="resetISAModal()"/>
+            <input id="isaDoneButton" type="button" class="btn btn-primary" openlmis-message="button.done"
+                   ng-click="updateISA()"/>
+            <input id="isaCancelButton" type="button" class="btn btn-cancel" openlmis-message="button.cancel"
+                   ng-click="resetISAModal()"/>
             <input type="button" ng-show="currentProgramProducts.length > 0" class="btn btn-warning pull-right"
                    openlmis-message="button.use.all.calculated" ng-click="resetAllToCalculatedIsa()"/>
         </div>
@@ -530,7 +533,7 @@
         <div class="form-cell">
             <label openlmis-message="create.facility.enabled"></label>
             <ng-switch on="facility.enabled">
-                <span ng-switch-when="true" openlmis-message="button.yes"></span>
+                <span id="facilityEnabledYes" ng-switch-when="true" openlmis-message="button.yes"></span>
                 <span ng-switch-when="false" openlmis-message="button.no"></span>
             </ng-switch>
         </div>
@@ -539,7 +542,8 @@
             <label openlmis-message="create.facility.suppliesOthers"></label>
 
             <div class="form-field radio-group">
-                <input ng-model="facility.suppliesOthers" type="radio" name="supplies-others" ng-value="true"/>
+                <input id="suppliesOthersYes" ng-model="facility.suppliesOthers" type="radio" name="supplies-others"
+                       ng-value="true"/>
                 <strong openlmis-message="button.yes"></strong>
                 &nbsp; &nbsp; &nbsp;
                 <input ng-model="facility.suppliesOthers" type="radio" name="supplies-others" ng-value="false"/>
@@ -562,14 +566,15 @@
 
 <div form-toolbar id="action_buttons" class="action-buttons">
     <div class="form-cell button-row">
-        <input type="submit" id="save-button" class="btn btn-primary save-button" openlmis-message="button.save"/>
-        <input type="button" class="btn btn-cancel cancel-button" openlmis-message="button.cancel"
+        <input id="saveButton" type="submit" id="save-button" class="btn btn-primary save-button"
+               openlmis-message="button.save"/>
+        <input id="cancelButton" type="button" class="btn btn-cancel cancel-button" openlmis-message="button.cancel"
                ng-click="cancelUserSave()"/>
-        <input type="button" class="btn btn-primary enable-button"
+        <input id="enableButton" type="button" class="btn btn-primary enable-button"
                ng-show="facility.id!=null && !facility.enabled"
                ng-click="showConfirmFacilityEnable()"
                openlmis-message="button.enable"/>
-        <input type="button" class="btn btn-danger delete-button"
+        <input id="disableButton" type="button" class="btn btn-danger delete-button"
                ng-show="facility.id != null && facility.enabled"
                ng-click="showConfirmFacilityDisableWindow()" openlmis-message="button.disable"/>
     </div>

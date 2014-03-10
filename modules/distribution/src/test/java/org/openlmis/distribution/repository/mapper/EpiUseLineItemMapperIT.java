@@ -46,25 +46,25 @@ import static org.openlmis.distribution.builder.DistributionBuilder.*;
 @RunWith(SpringJUnit4ClassRunner.class)
 @Transactional
 @TransactionConfiguration(defaultRollback = true, transactionManager = "openLmisTransactionManager")
-public class EpiUseMapperIT {
+public class EpiUseLineItemMapperIT {
 
   @Autowired
-  DeliveryZoneMapper deliveryZoneMapper;
+  private DeliveryZoneMapper deliveryZoneMapper;
 
   @Autowired
-  ProgramMapper programMapper;
+  private ProgramMapper programMapper;
 
   @Autowired
-  ProcessingPeriodMapper periodMapper;
+  private ProcessingPeriodMapper periodMapper;
 
   @Autowired
-  DistributionMapper distributionMapper;
+  private DistributionMapper distributionMapper;
 
   @Autowired
   private ProcessingScheduleMapper scheduleMapper;
 
   @Autowired
-  EpiUseMapper mapper;
+  private EpiUseLineItemMapper mapper;
 
   @Autowired
   private QueryExecutor queryExecutor;
@@ -112,17 +112,12 @@ public class EpiUseMapperIT {
     productGroup = new ProductGroup("PG1", "Product Group 1");
     productGroupMapper.insert(productGroup);
 
-
-    Long createdBy = 1L;
-
     facilityVisit = new FacilityVisit(facility, distribution);
     facilityVisitMapper.insert(facilityVisit);
-
   }
 
   @Test
   public void shouldSaveEpiUseLineItem() throws Exception {
-
     EpiUseLineItem epiUseLineItem = new EpiUseLineItem(facilityVisit, productGroup);
     epiUseLineItem.setProductGroup(productGroup);
     mapper.insertLineItem(epiUseLineItem);
@@ -134,7 +129,6 @@ public class EpiUseMapperIT {
 
   @Test
   public void shouldReturnEpiUseLineItem() throws Exception {
-
     EpiUseLineItem epiUseLineItem = new EpiUseLineItem(facilityVisit, productGroup);
     mapper.insertLineItem(epiUseLineItem);
 
@@ -147,7 +141,6 @@ public class EpiUseMapperIT {
 
   @Test
   public void shouldUpdateEpiUseLineItem() throws Exception {
-
     EpiUseLineItem epiUseLineItem = new EpiUseLineItem(facilityVisit, productGroup);
     mapper.insertLineItem(epiUseLineItem);
 
@@ -171,7 +164,6 @@ public class EpiUseMapperIT {
 
   @Test
   public void shouldGetEpiUseLineItemsByFacilityVisitId() {
-
     EpiUseLineItem epiUseLineItem1 = new EpiUseLineItem(facilityVisit, productGroup);
     mapper.insertLineItem(epiUseLineItem1);
 

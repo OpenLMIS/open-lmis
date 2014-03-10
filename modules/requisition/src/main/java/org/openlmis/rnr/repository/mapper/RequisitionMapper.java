@@ -19,6 +19,10 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * It maps the Rnr entity to corresponding representation in database.
+ */
+
 @Repository
 public interface RequisitionMapper {
 
@@ -164,7 +168,7 @@ public interface RequisitionMapper {
   Integer getCountOfApprovedRequisitionsForCriteria(@Param("searchType") String searchType, @Param("searchVal") String searchVal,
                                                     @Param("userId") Long userId, @Param("right") Right right);
 
-  @Select({"SELECT facilityid FROM requisitions WHERE id = #{id}"})
+  @Select({"SELECT facilityId FROM requisitions WHERE id = #{id}"})
   Long getFacilityId(Long id);
 
   @Select({"SELECT * FROM requisitions WHERE facilityId = #{facility.id} AND programId = #{program.id} AND emergency = false",
@@ -237,7 +241,7 @@ public interface RequisitionMapper {
       } else if (searchType.equalsIgnoreCase(RequisitionService.SEARCH_SUPPLYING_DEPOT_NAME)) {
         sql.append("WHERE LOWER(SF.name) LIKE '%" + searchVal + "%' AND ");
       }
-      sql.append("FRA.userid = " + userId + " AND RR.rightName = '" + right + "' AND ");
+      sql.append("FRA.userId = " + userId + " AND RR.rightName = '" + right + "' AND ");
       sql.append("R.status = 'APPROVED'");
     }
   }

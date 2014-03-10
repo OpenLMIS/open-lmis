@@ -20,6 +20,10 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+/**
+ * ProcessingScheduleRepository is Repository class for ProcessingSchedule related database operations.
+ */
+
 @Repository
 @NoArgsConstructor
 public class ProcessingScheduleRepository {

@@ -8,6 +8,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/**
+ * Exposes the services for handling FacilityVisit entity.
+ */
 
 @Service
 public class FacilityVisitService {

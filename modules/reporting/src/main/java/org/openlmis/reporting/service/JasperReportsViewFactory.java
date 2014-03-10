@@ -8,7 +8,7 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-package org.openlmis.reporting.controller;
+package org.openlmis.reporting.service;
 
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JRExporterParameter;
@@ -28,6 +28,10 @@ import static java.io.File.createTempFile;
 import static net.sf.jasperreports.engine.export.JRHtmlExporterParameter.IS_USING_IMAGES_TO_ALIGN;
 import static org.apache.commons.io.FileUtils.writeByteArrayToFile;
 import static org.springframework.web.context.ContextLoader.getCurrentWebApplicationContext;
+
+/**
+ * Exposes the services for generating jasper report multi format view using a data source to fetch data.
+ */
 
 @Service
 public class JasperReportsViewFactory {

@@ -22,6 +22,10 @@ import org.openlmis.core.repository.SupplyLineRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+/**
+ * Exposes the services for handling SupplyLine entity.
+ */
+
 @Service
 @NoArgsConstructor
 public class SupplyLineService {

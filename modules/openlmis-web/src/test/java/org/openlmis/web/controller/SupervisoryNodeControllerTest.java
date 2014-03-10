@@ -13,6 +13,7 @@ package org.openlmis.web.controller;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.domain.SupervisoryNode;
@@ -28,17 +29,19 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+
 @Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
 public class SupervisoryNodeControllerTest {
 
   @Mock
-  SupervisoryNodeService supervisoryNodeService;
+  private SupervisoryNodeService supervisoryNodeService;
 
+  @InjectMocks
+  private SupervisoryNodeController controller;
 
   @Test
   public void shouldGetAllSupervisoryNodes() throws Exception {
-    SupervisoryNodeController controller = new SupervisoryNodeController(supervisoryNodeService);
     List<SupervisoryNode> expectedSupervisoryNodes = new ArrayList<>();
     when(supervisoryNodeService.getAll()).thenReturn(expectedSupervisoryNodes);
 

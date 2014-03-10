@@ -10,6 +10,10 @@
 
 package org.openlmis.distribution.domain;
 
+/**
+ *  Enum for Reasons for not visiting facility.
+ */
+
 public enum ReasonForNotVisiting {
   ROAD_IMPASSABLE,
   TRANSPORT_UNAVAILABLE,

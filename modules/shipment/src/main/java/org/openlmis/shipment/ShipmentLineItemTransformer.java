@@ -12,8 +12,8 @@ package org.openlmis.shipment;
 
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.transformer.LineItemTransformer;
-import org.openlmis.order.dto.ShipmentLineItemDTO;
 import org.openlmis.shipment.domain.ShipmentLineItem;
+import org.openlmis.shipment.dto.ShipmentLineItemDTO;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
@@ -21,6 +21,10 @@ import java.text.ParseException;
 import java.util.Date;
 
 import static org.apache.commons.lang3.StringUtils.isBlank;
+
+/**
+ * ShipmentLineItemTransformer transforms ShipmentLineItemDTO to ShipmentLineItem.
+ */
 
 @Component
 public class ShipmentLineItemTransformer extends LineItemTransformer {
@@ -65,7 +69,7 @@ public class ShipmentLineItemTransformer extends LineItemTransformer {
     lineItem.setPackedDate(packedDate);
 
     if (!isBlank(dto.getShippedDate())) {
-      lineItem.setShippedDate(parseDate(shippedDateFormat, dto.getShippedDate()));
+      lineItem.setShippedDate(parseDate(shippedDateFormat, dto.getShippedDate().trim()));
     }
   }
 

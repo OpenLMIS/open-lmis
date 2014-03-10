@@ -19,6 +19,7 @@ import org.mockito.Mock;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.reporting.model.Template;
 import org.openlmis.reporting.repository.mapper.TemplateMapper;
+import org.openlmis.reporting.service.JasperReportsViewFactory;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.springframework.mock.web.MockHttpServletRequest;

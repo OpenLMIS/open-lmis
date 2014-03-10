@@ -30,14 +30,14 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 @Category(UnitTests.class)
 public class GeographicZoneControllerTest {
-
   @Mock
   private GeographicZoneService service;
 
   @InjectMocks
   private GeographicZoneController controller;
+
   @Test
-  public void shouldGetGeographicZoneById(){
+  public void shouldGetGeographicZoneById() {
     GeographicZone geographicZone = new GeographicZone();
     Long geoZoneId = 1l;
     when(service.getById(geoZoneId)).thenReturn(geographicZone);

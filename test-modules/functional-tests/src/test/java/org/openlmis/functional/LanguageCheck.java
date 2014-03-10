@@ -48,6 +48,7 @@ public class LanguageCheck extends TestCaseHelper {
     loginPage.setLangAsPortuguese();
     verifyColorOfTextAsGray(loginPage.getPortugueseColor());
     verifyPageIdentifierLabelOnLoginPage("Entrar");
+    loginPage.setLangAsEnglish();
   }
 
   @Test(groups = {"admin"})
@@ -56,6 +57,7 @@ public class LanguageCheck extends TestCaseHelper {
     loginPage.clickForgotPasswordLink();
     verifyColorOfTextAsGray(loginPage.getPortugueseColor());
     verifyPageIdentifierLabelOnForgotPasswordPage("Submeter");
+    loginPage.setLangAsEnglish();
   }
 
   @Test(groups = {"admin"})
@@ -72,6 +74,7 @@ public class LanguageCheck extends TestCaseHelper {
     loginPage.setLangAsPortuguese();
     verifyColorOfTextAsGray(loginPage.getPortugueseColor());
     verifyPageIdentifierLabelOnForgotPasswordPage("Submeter");
+    loginPage.setLangAsEnglish();
   }
 
   private void verifyColorOfTextAsGray(String color) {

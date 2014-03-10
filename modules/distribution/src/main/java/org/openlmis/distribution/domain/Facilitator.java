@@ -4,6 +4,10 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ *  Facilitator entity represents the name and role of a person.
+ */
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

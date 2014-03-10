@@ -19,9 +19,12 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-@Repository
-public interface EpiInventoryMapper {
+/**
+ * It maps the EpiInventoryLineItem entity to corresponding representation in database.
+ */
 
+@Repository
+public interface EpiInventoryLineItemMapper {
 
   @Insert({"INSERT INTO epi_inventory_line_items (facilityVisitId, programProductId, productCode, productName, productDisplayOrder, idealQuantity, createdBy, modifiedBy) VALUES ",
     "(#{facilityVisitId}, #{programProductId}, #{productCode}, #{productName}, #{productDisplayOrder}, #{idealQuantity}, #{createdBy}, #{modifiedBy})"})

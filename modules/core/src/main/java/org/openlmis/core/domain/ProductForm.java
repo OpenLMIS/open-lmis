@@ -14,6 +14,9 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+/**
+ * ProductForm represents real world entity for product form.
+ */
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)

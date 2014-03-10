@@ -8,16 +8,17 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-package org.openlmis.web.controller;
+package org.openlmis.web.service;
 
 import org.junit.Test;
-
-import java.io.IOException;
+import org.junit.experimental.categories.Category;
+import org.openlmis.db.categories.UnitTests;
 
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
 
+@Category(UnitTests.class)
 public class VendorEventFeedServiceTest {
 
   VendorEventFeedService vendorEventFeedService = new VendorEventFeedService();
@@ -26,7 +27,6 @@ public class VendorEventFeedServiceTest {
   public void shouldReturnAtomFeedActualContent() {
     String atomFeedData = "{\"code\":\"12312\"}";
     String atomFeedContentValue = "<![CDATA[" + atomFeedData + "]]>";
-
 
     assertThat(vendorEventFeedService.parseAtomFeedContent(atomFeedContentValue), is(atomFeedData));
   }
@@ -45,12 +45,12 @@ public class VendorEventFeedServiceTest {
   }
 
   @Test
-  public void shouldReturnNullIfVendorMappingTemplateNotFound() throws IOException {
+  public void shouldReturnNullIfVendorMappingTemplateNotFound() {
     assertNull(vendorEventFeedService.vendorMappingTemplate("vendorMapping_xyz_facility.xml"));
   }
 
   @Test
-  public void shouldReturnFileIfVendorMappingTemplateExists() throws IOException {
-    assertNotNull(vendorEventFeedService.vendorMappingTemplate("vendorMapping_commtrack_facility.xml"));
+  public void shouldReturnFileIfVendorMappingTemplateExists() {
+    assertNotNull(vendorEventFeedService.vendorMappingTemplate("vendorMapping_commtrack_facilities.xml"));
   }
 }

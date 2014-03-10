@@ -18,6 +18,10 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+/**
+ * RequisitionGroupMapper maps the RequisitionGroup entity to corresponding representation in database. Also provides
+ * methods like getting all requisition groups for a supervisory node, getting requisition group for a program and facility.
+ */
 @Repository
 public interface RequisitionGroupMapper {
 

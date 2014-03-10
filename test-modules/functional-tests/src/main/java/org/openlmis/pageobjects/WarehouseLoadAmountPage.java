@@ -18,49 +18,51 @@ import org.openqa.selenium.support.How;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 
+import static org.openqa.selenium.support.How.ID;
+
 
 public class WarehouseLoadAmountPage extends Page {
 
-  @FindBy(how = How.ID, using = "aggregateTable")
+  @FindBy(how = ID, using = "aggregateTable")
   private WebElement aggregateTable = null;
 
   @FindBy(how = How.XPATH, using = "//div[@class='facilities-isa-amount-table']")
   private WebElement Table1 = null;
 
-  @FindBy(how = How.ID, using = "warehouseLoadAmountLabel")
+  @FindBy(how = ID, using = "warehouseLoadAmountLabel")
   private WebElement warehouseLoadAmountLabel = null;
 
-  @FindBy(how = How.ID, using = "deliveryZoneLabel")
+  @FindBy(how = ID, using = "deliveryZoneLabel")
   private WebElement deliveryZoneLabel = null;
 
-  @FindBy(how = How.ID, using = "deliveryZoneName")
+  @FindBy(how = ID, using = "deliveryZoneName")
   private WebElement deliveryZoneName = null;
 
-  @FindBy(how = How.ID, using = "programLabel")
+  @FindBy(how = ID, using = "programLabel")
   private WebElement programLabel = null;
 
-  @FindBy(how = How.ID, using = "programName")
+  @FindBy(how = ID, using = "programName")
   private WebElement programName = null;
 
-  @FindBy(how = How.ID, using = "periodLabel")
+  @FindBy(how = ID, using = "periodLabel")
   private WebElement periodLabel = null;
 
-  @FindBy(how = How.ID, using = "periodName")
+  @FindBy(how = ID, using = "periodName")
   private WebElement periodName = null;
 
-  @FindBy(how = How.ID, using = "deliveryZoneNameLabel")
+  @FindBy(how = ID, using = "deliveryZoneNameLabel")
   private WebElement deliveryZoneNameLabel = null;
 
-  @FindBy(how = How.ID, using = "totalLabel")
+  @FindBy(how = ID, using = "totalLabel")
   private WebElement totalLabel = null;
 
-  @FindBy(how = How.ID, using = "geoZoneLevelName")
+  @FindBy(how = ID, using = "geoZoneLevelName")
   private WebElement geoZoneLevelName = null;
 
-  @FindBy(how = How.ID, using = "aggregatePopulationLabel")
+  @FindBy(how = ID, using = "aggregatePopulationLabel")
   private WebElement aggregatePopulationLabel = null;
 
-  @FindBy(how = How.ID, using = "zoneTotalLabel")
+  @FindBy(how = ID, using = "zoneTotalLabel")
   private WebElement zoneTotalLabel = null;
 
   public WarehouseLoadAmountPage(TestWebDriver driver) {

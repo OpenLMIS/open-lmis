@@ -10,6 +10,11 @@
 
 package org.openlmis.distribution.domain;
 
+/**
+ *  Enum for statuses of a distribution. These distribution statuses are used to get/set the current status of an
+ *  initiated distribution.
+ */
+
 public enum DistributionStatus {
 
   INITIATED,

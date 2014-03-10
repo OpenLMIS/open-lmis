@@ -20,6 +20,10 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/**
+ * Exposes the services for handling RequisitionGroup entity.
+ */
+
 @Service
 @NoArgsConstructor
 public class RequisitionGroupService {

@@ -20,17 +20,18 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+/**
+ * This controller handles request to get list of supervisory nodes.
+ */
+
 @Controller
 @NoArgsConstructor
-public class SupervisoryNodeController {
+public class SupervisoryNodeController extends BaseController {
 
   public static final String SUPERVISORY_NODES = "supervisoryNodes";
-  private SupervisoryNodeService supervisoryNodeService;
 
   @Autowired
-  public SupervisoryNodeController(SupervisoryNodeService supervisoryNodeService) {
-    this.supervisoryNodeService = supervisoryNodeService;
-  }
+  private SupervisoryNodeService supervisoryNodeService;
 
   @RequestMapping(value = "/supervisory-nodes", method = RequestMethod.GET)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_USER')")

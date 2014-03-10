@@ -21,6 +21,10 @@ import org.openlmis.core.exception.DataException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
+/**
+ * ProcessingSchedule represents time schedule requisition life cycle will follow. Each processing schedule consists
+ * of periods for which requisitions are initiated and submitted.
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

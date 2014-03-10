@@ -19,6 +19,11 @@ import org.openlmis.core.domain.BaseModel;
 
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 
+/**
+ * This class represents a lossesAndAdjustment entity associated with a RnrLineItem. It includes the type and quantity
+ * for that loss/Adjustment.
+ */
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -29,9 +34,4 @@ public class LossesAndAdjustments extends BaseModel {
   private LossesAndAdjustmentsType type;
   private Integer quantity;
 
-  public LossesAndAdjustments(Long id, LossesAndAdjustmentsType type, Integer quantity) {
-    this.id = id;
-    this.type = type;
-    this.quantity = quantity;
-  }
 }

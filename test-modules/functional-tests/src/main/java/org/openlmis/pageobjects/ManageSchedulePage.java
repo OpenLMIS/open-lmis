@@ -14,56 +14,56 @@ package org.openlmis.pageobjects;
 import org.openlmis.UiUtils.TestWebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
-import org.openqa.selenium.support.How;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
 import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
+import static org.openqa.selenium.support.How.ID;
 
 
 public class ManageSchedulePage extends Page {
 
-  @FindBy(how = How.ID, using = "schedule-add-new")
+  @FindBy(how = ID, using = "schedule-add-new")
   private static WebElement addScheduleButton = null;
 
-  @FindBy(how = How.ID, using = "code")
+  @FindBy(how = ID, using = "code")
   private static WebElement codeTextField = null;
 
-  @FindBy(how = How.ID, using = "code_0")
+  @FindBy(how = ID, using = "code_0")
   private static WebElement codeEditTextField = null;
 
-  @FindBy(how = How.ID, using = "name")
+  @FindBy(how = ID, using = "name")
   private static WebElement nameTextField = null;
 
-  @FindBy(how = How.ID, using = "name_0")
+  @FindBy(how = ID, using = "name_0")
   private static WebElement nameEditTextField = null;
 
-  @FindBy(how = How.ID, using = "desc_0")
+  @FindBy(how = ID, using = "desc_0")
   private static WebElement descriptionEditTextField = null;
 
-  @FindBy(how = How.ID, using = "description")
+  @FindBy(how = ID, using = "description")
   private static WebElement descriptionTextField = null;
 
-  @FindBy(how = How.XPATH, using = "//input[@value='Create']")
+  @FindBy(how = ID, using = "createSchedule")
   private static WebElement createButton = null;
 
-  @FindBy(how = How.ID, using = "saveSuccessMsgDiv")
+  @FindBy(how = ID, using = "saveSuccessMsgDiv")
   private static WebElement saveSuccessMsgDiv = null;
 
-  @FindBy(how = How.XPATH, using = "//input[@value='Edit']")
+  @FindBy(how = ID, using = "editButton0")
   private static WebElement editFirstButton = null;
 
-  @FindBy(how = How.XPATH, using = "(//input[@value='Edit'])[2]")
+  @FindBy(how = ID, using = "editButton1")
   private static WebElement editSecondButton = null;
 
-  @FindBy(how = How.XPATH, using = " //input[@type='submit' and @value='Save']")
+  @FindBy(how = ID, using = "saveSchedule")
   private static WebElement saveButton = null;
 
-  @FindBy(how = How.XPATH, using = "//input[@value='Add Period']")
+  @FindBy(how = ID, using = "addPeriod")
   private static WebElement addPeriodButton = null;
 
-  @FindBy(how = How.ID, using = "name")
+  @FindBy(how = ID, using = "name")
   private static WebElement namePeriod = null;
 
 

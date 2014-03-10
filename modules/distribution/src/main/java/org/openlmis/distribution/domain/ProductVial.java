@@ -16,6 +16,11 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.BaseModel;
 
+/**
+ *  ProductVial represents the mapping of a vaccination/drug to valid product. Also it keeps track if the mapping
+ *  is for child coverage or adult coverage calculations.
+ */
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

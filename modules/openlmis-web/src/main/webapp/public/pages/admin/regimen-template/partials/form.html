@@ -9,28 +9,29 @@
   -->
 
 <div tab-scroll xmlns="http://www.w3.org/1999/html">
-  <h2 openlmis-message="label.admin.configure.regimenTemplate"></h2>
+    <h2 openlmis-message="label.admin.configure.regimenTemplate"></h2>
 
-  <div class="info-box">
-    <p><strong openlmis-message="template.programName"></strong>
-      <span ng-bind="program.name"></span>
-      <a ng-href="{{selectProgramUrl}}" openlmis-message="template.change"></a>
-    </p>
-  </div>
-  <div class="rnr-tabs clearfix">
-    <ul>
-      <li class="selected" ng-class="{'selected' : showReportingFields}">
-        <a id="reportingFieldsTab" openlmis-message="label.reporting.fields" href="" ng-click="showReportingFields=true;"></a>
-      </li>
-      <li ng-class="{'selected' : !showReportingFields}">
-        <a id="regimensTab" openlmis-message="label.regimens" href="" ng-click="showReportingFields=false;"></a>
-      </li>
-    </ul>
-  </div>
+    <div class="info-box">
+        <p><strong openlmis-message="template.programName"></strong>
+            <span ng-bind="program.name"></span>
+            <a ng-href="{{selectProgramUrl}}" openlmis-message="template.change"></a>
+        </p>
+    </div>
+    <div class="rnr-tabs clearfix">
+        <ul>
+            <li class="selected" ng-class="{'selected' : showReportingFields}">
+                <a id="reportingFieldsTab" openlmis-message="label.reporting.fields" href=""
+                   ng-click="showReportingFields=true;"></a>
+            </li>
+            <li ng-class="{'selected' : !showReportingFields}">
+                <a id="regimensTab" openlmis-message="label.regimens" href="" ng-click="showReportingFields=false;"></a>
+            </li>
+        </ul>
+    </div>
 
-  <form name="regimenEditForm" class="regimenForm" ng-submit="save()">
+    <form name="regimenEditForm" class="regimenForm" ng-submit="save()">
 
-    <ng-switch on="showReportingFields">
+        <ng-switch on="showReportingFields">
       <span ng-switch-when="true">
         <ng-include src="'/public/pages/admin/regimen-template/partials/reporting-fields.html'"></ng-include>
       </span>
@@ -38,16 +39,18 @@
         <ng-include src="'/public/pages/admin/regimen-template/partials/new-regimen.html'"></ng-include>
         <ng-include src="'/public/pages/admin/regimen-template/partials/edit-regimen-form.html'"></ng-include>
       </span>
-    </ng-switch>
+        </ng-switch>
 
-    <div form-toolbar id="action_buttons" class="action-buttons">
-      <div class="FORM-cell button-row">
-        <input type="submit" class="btn btn-primary save-button" openlmis-message="button.save"/>
-        <a ng-href="{{selectProgramUrl}}" class="btn btn-cancel cancel-button" openlmis-message="button.cancel"></a>
-      </div>
-      <div class="toolbar-error" id="saveErrorMsgDiv" openlmis-message="error" ng-show="error"></div>
-    </div>
+        <div form-toolbar id="action_buttons" class="action-buttons">
+            <div class="FORM-cell button-row">
+                <input id="saveRegimen" type="submit" class="btn btn-primary save-button"
+                       openlmis-message="button.save"/>
+                <a id="cancelRegimen" ng-href="{{selectProgramUrl}}" class="btn btn-cancel cancel-button"
+                   openlmis-message="button.cancel"></a>
+            </div>
+            <div class="toolbar-error" id="saveErrorMsgDiv" openlmis-message="error" ng-show="error"></div>
+        </div>
 
-  </form>
+    </form>
 
 </div>

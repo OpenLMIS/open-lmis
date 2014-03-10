@@ -28,6 +28,11 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * This class acts as helper class exposing methods to validate requisition attributes,
+ * also has methods to compute attributes like quantity received, beginning balance.
+ */
+
 @Component
 public class RestRequisitionCalculator {
 

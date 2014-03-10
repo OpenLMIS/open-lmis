@@ -30,7 +30,6 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
@@ -38,7 +37,6 @@ import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Matchers.isNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.openlmis.rnr.builder.RnrLineItemBuilder.defaultRnrLineItem;
@@ -150,7 +148,7 @@ public class OrderPODTest {
     whenNew(OrderPODLineItem.class).withArguments(rnrLineItem1, createdBy).thenReturn(mock(OrderPODLineItem.class));
 
     OrderPOD orderPOD = new OrderPOD();
-    orderPOD.fillPodLineItems(rnrLineItems);
+    orderPOD.fillPODLineItems(rnrLineItems);
 
     assertThat(orderPOD.getPodLineItems().size(), is(1));
   }
@@ -162,7 +160,7 @@ public class OrderPODTest {
     shipmentLineItem.setPacksToShip(0);
     List<ShipmentLineItem> shipmentLineItems = asList(shipmentLineItem);
     OrderPOD orderPOD = new OrderPOD();
-    orderPOD.fillPodLineItems(shipmentLineItems);
+    orderPOD.fillPODLineItems(shipmentLineItems);
 
     whenNew(OrderPODLineItem.class).withArguments(shipmentLineItem, createdBy).thenReturn(mock(OrderPODLineItem.class));
 

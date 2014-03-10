@@ -1,4 +1,4 @@
-package org.openlmis.order.dto;
+package org.openlmis.shipment.dto;
 
 import org.junit.Rule;
 import org.junit.Test;

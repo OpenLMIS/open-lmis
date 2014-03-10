@@ -27,6 +27,10 @@ import java.util.List;
 import static org.apache.commons.lang3.StringUtils.trimToEmpty;
 import static org.apache.commons.lang3.StringUtils.trimToNull;
 
+/**
+ * Exposes the services for handling ProgramProduct entity.
+ */
+
 @Component
 @NoArgsConstructor
 public class ProgramProductService {

@@ -23,6 +23,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/**
+ * Exposes the services for handling Product entity.
+ */
 
 @Service
 @NoArgsConstructor
@@ -84,7 +87,6 @@ public class ProductService {
 
     }
   }
-
 
   private void validateAndSetProductCategory(Product product) {
     ProductCategory category = product.getCategory();

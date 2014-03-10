@@ -438,8 +438,9 @@ public class HomePage extends Page {
     myFacilityRadioButton.click();
     testWebDriver.sleep(1000);
     testWebDriver.waitForElementToAppear(programDropDown);
-    testWebDriver.selectByVisibleText(programDropDown, program);
     testWebDriver.selectByVisibleText(rnrTypeSelectBox, "Emergency");
+    testWebDriver.selectByVisibleText(programDropDown, program);
+    testWebDriver.waitForAjax();
   }
 
   public String getFirstPeriod() {

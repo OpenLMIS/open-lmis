@@ -33,6 +33,10 @@ import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
+/**
+ * This controller handles endpoint to handle requisition operations like save , submit, approve, authorize, init.
+ */
+
 @Controller
 @NoArgsConstructor
 public class ReportTemplateController extends BaseController {
@@ -40,12 +44,8 @@ public class ReportTemplateController extends BaseController {
   public static final String JASPER_CREATE_REPORT_ERROR = "create.report.error";
   public static final String CONSISTENCY_REPORT = "Consistency Report";
 
-  TemplateService templateService;
-
   @Autowired
-  public ReportTemplateController(TemplateService templateService) {
-    this.templateService = templateService;
-  }
+  private TemplateService templateService;
 
   @RequestMapping(value = "/report-templates", method = POST)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_REPORT')")

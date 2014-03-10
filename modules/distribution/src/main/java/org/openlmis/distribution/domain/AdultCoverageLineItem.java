@@ -19,6 +19,12 @@ import org.openlmis.core.domain.Facility;
 
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 
+/**
+ *  AdultCoverageLineItem represents the data captured against a demographic group to determine coverage of a
+ *  vaccination in that group. It extends CoverageLineItem to inherit the facilityVisitId and targetGroup for the
+ *  corresponding demographic group.
+ */
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

@@ -68,10 +68,10 @@
     border: 1px solid #fff;
     background: #DDD; /* Old browsers */
     background: -moz-linear-gradient(top, #ffffff 0%, #ffffff 15%, #e0e0e0 100%); /* FF3.6+ */
-    background: -webkit-linear-gradient(top, #ffffff 0%, #ffffff 15%,#e0e0e0 100%); /* Chrome10+,Safari5.1+ */
-    background: -ms-linear-gradient(top, #ffffff 0%, #ffffff 15%,#e0e0e0 100%); /* IE10+ */
-    background: linear-gradient(to bottom, #ffffff 0%, #ffffff 15%,#e0e0e0 100%); /* W3C */
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#e0e0e0',GradientType=0 ); /* IE6-9 */
+    background: -webkit-linear-gradient(top, #ffffff 0%, #ffffff 15%, #e0e0e0 100%); /* Chrome10+,Safari5.1+ */
+    background: -ms-linear-gradient(top, #ffffff 0%, #ffffff 15%, #e0e0e0 100%); /* IE10+ */
+    background: linear-gradient(to bottom, #ffffff 0%, #ffffff 15%, #e0e0e0 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#e0e0e0', GradientType=0); /* IE6-9 */
     .submenu {
       padding: 0 0 0 10px;
       left: 97%;
@@ -83,9 +83,9 @@
       border-bottom: 0;
       white-space: nowrap;
       &.beak {
-        width: 0; 
+        width: 0;
         height: 0;
-        border-left: 8px solid transparent; 
+        border-left: 8px solid transparent;
         border-right: 8px solid transparent;
         border-bottom: 8px solid #FFF;
         position: absolute;
@@ -95,7 +95,7 @@
       }
       li {
         &.beak {
-          border-right: 8px solid #FFF; 
+          border-right: 8px solid #FFF;
           border-top: 8px solid transparent;
           border-bottom: 8px solid transparent;
           position: absolute;
@@ -117,17 +117,23 @@
     }
   }
 }
+
 .navigation ul li.is-selected a {
   color: #FFF;
   text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.4);
 }
+
 .navigation ul li.has-children {
   background: url(../images/left-arrow.png) no-repeat 95% center;
 }
+
 .navigation ul li:hover > .submenu {
   display: block !important;
 }
 
+.icon-rss {
+  color: #fff;
+}
 
 //tabs for admin
 
@@ -150,7 +156,7 @@
     background: -webkit-linear-gradient(top, #ffffff 0%, #d9d9d9 100%); /* Chrome10+,Safari5.1+ */
     background: -ms-linear-gradient(top, #ffffff 0%, #d9d9d9 100%); /* IE10+ */
     background: linear-gradient(to bottom, #ffffff 0%, #d9d9d9 100%); /* W3C */
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#d9d9d9',GradientType=0 ); /* IE6-9 */
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#d9d9d9', GradientType=0); /* IE6-9 */
     &:first-child {
       margin-left: 5px;
     }
@@ -163,7 +169,7 @@
         background: -webkit-linear-gradient(top, #d9d9d9 0%, #ffffff 100%); /* Chrome10+,Safari5.1+ */
         background: -ms-linear-gradient(top, #d9d9d9 0%, #ffffff 100%); /* IE10+ */
         background: linear-gradient(to bottom, #d9d9d9 0%, #ffffff 100%); /* W3C */
-        filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#d9d9d9', endColorstr='#ffffff',GradientType=0 ); /* IE6-9 */
+        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#d9d9d9', endColorstr='#ffffff', GradientType=0); /* IE6-9 */
       }
     }
   }
@@ -177,6 +183,7 @@
     }
   }
 }
+
 .navigation-locale-bar {
   .locale-container {
     ul {

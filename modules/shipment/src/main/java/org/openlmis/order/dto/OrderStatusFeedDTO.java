@@ -16,6 +16,10 @@ import org.openlmis.order.domain.Order;
 import org.openlmis.order.domain.OrderStatus;
 import org.openlmis.rnr.dto.RequisitionStatusFeedDTO;
 
+/**
+ * OrderStatusFeedDTO contains information for publishing feeds for order status changes.
+ */
+
 @Data
 @EqualsAndHashCode(callSuper = false)
 public class OrderStatusFeedDTO extends RequisitionStatusFeedDTO {

@@ -22,6 +22,10 @@ import java.util.List;
 
 import static java.util.Arrays.asList;
 
+/**
+ * This class is a strategy to search for a requisition without its line items based on facility, program and period.
+ */
+
 public class RequisitionOnlySearch extends RequisitionSearchStrategy {
   RequisitionSearchCriteria criteria;
 

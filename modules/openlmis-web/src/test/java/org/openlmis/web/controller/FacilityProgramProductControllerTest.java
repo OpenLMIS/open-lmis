@@ -17,14 +17,12 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.openlmis.authentication.web.UserAuthenticationSuccessHandler;
-import org.openlmis.db.categories.UnitTests;
 import org.openlmis.core.domain.ProgramProductISA;
 import org.openlmis.core.service.FacilityProgramProductService;
+import org.openlmis.db.categories.UnitTests;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpSession;
-
-import javax.servlet.http.HttpServletRequest;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -33,7 +31,6 @@ import static org.mockito.Mockito.verify;
 @Category(UnitTests.class)
 @RunWith(PowerMockRunner.class)
 public class FacilityProgramProductControllerTest {
-
 
   @Mock
   private FacilityProgramProductService service;
@@ -62,7 +59,7 @@ public class FacilityProgramProductControllerTest {
 
     session.setAttribute(UserAuthenticationSuccessHandler.USER, username);
 
-    controller.insertIsa(programProductId, programProductISA,httpServletRequest);
+    controller.insertIsa(programProductId, programProductISA, httpServletRequest);
 
     verify(service).insertISA(programProductISA);
     assertThat(programProductISA.getProgramProductId(), is(1l));
@@ -74,7 +71,7 @@ public class FacilityProgramProductControllerTest {
     Long isaId = 1l;
     Long programProductId = 2l;
 
-    controller.updateIsa(isaId, programProductId, programProductISA,httpServletRequest);
+    controller.updateIsa(isaId, programProductId, programProductISA, httpServletRequest);
 
     verify(service).updateISA(programProductISA);
   }

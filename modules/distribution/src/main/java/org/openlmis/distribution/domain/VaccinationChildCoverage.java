@@ -22,6 +22,10 @@ import java.util.List;
 
 import static java.util.Arrays.asList;
 
+/**
+ *  VaccinationChildCoverage represents a container for list of ChildCoverageLineItem.
+ */
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

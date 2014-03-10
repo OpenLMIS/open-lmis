@@ -8,27 +8,27 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-package org.openlmis.web.model;
+package org.openlmis.rnr.serializer;
 
-import org.openlmis.rnr.domain.LossesAndAdjustmentsType;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
+import org.codehaus.jackson.JsonNode;
+import org.codehaus.jackson.JsonParser;
+import org.codehaus.jackson.ObjectCodec;
+import org.codehaus.jackson.map.DeserializationContext;
+import org.codehaus.jackson.map.JsonDeserializer;
+import org.openlmis.rnr.domain.RnRColumnSource;
 
-import java.util.List;
+import java.io.IOException;
 
-public class RnrReferenceData {
+/**
+ * This class represents the deserializer for rnrColumnSource.
+ */
 
-    public static final String LOSSES_AND_ADJUSTMENTS_TYPES = "lossAdjustmentTypes";
-    MultiValueMap referenceData = new LinkedMultiValueMap<>();
+public class RnrColumnSourceDeSerializer extends JsonDeserializer<RnRColumnSource> {
 
-
-    public RnrReferenceData addLossesAndAdjustmentsTypes(List<LossesAndAdjustmentsType> lossesAndAdjustmentsTypes) {
-        referenceData.put(LOSSES_AND_ADJUSTMENTS_TYPES, lossesAndAdjustmentsTypes);
-        return this;
-    }
-
-
-    public MultiValueMap get() {
-        return referenceData;
-    }
+  @Override
+  public RnRColumnSource deserialize(JsonParser jsonParser, DeserializationContext ctxt) throws IOException {
+    ObjectCodec oc = jsonParser.getCodec();
+    JsonNode node = oc.readTree(jsonParser);
+    return RnRColumnSource.getValueOf(node.get("code").getTextValue());
+  }
 }

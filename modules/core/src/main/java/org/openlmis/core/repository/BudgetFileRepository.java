@@ -15,7 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 /**
- * Repository class for BudgetFile related database operations.
+ * BudgetFileRepository is repository class for BudgetFile related database operations.
  */
 @Repository
 public class BudgetFileRepository {

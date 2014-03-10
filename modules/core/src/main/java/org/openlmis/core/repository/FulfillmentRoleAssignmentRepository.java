@@ -26,6 +26,10 @@ import java.util.List;
 
 import static org.apache.commons.collections.CollectionUtils.forAllDo;
 
+/**
+ * FulfillmentRoleAssignmentRepository is repository class for Shipment RoleAssignments related database operations.
+ */
+
 @Repository
 public class FulfillmentRoleAssignmentRepository {
 

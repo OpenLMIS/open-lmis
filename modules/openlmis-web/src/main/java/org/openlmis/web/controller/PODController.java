@@ -12,12 +12,12 @@ package org.openlmis.web.controller;
 
 import net.sf.jasperreports.engine.JRException;
 import org.openlmis.core.exception.DataException;
-import org.openlmis.order.dto.OrderPODDTO;
 import org.openlmis.order.service.OrderService;
 import org.openlmis.pod.domain.OrderPOD;
+import org.openlmis.pod.dto.OrderPODDTO;
 import org.openlmis.pod.service.PODService;
-import org.openlmis.reporting.controller.JasperReportsViewFactory;
 import org.openlmis.reporting.model.Template;
+import org.openlmis.reporting.service.JasperReportsViewFactory;
 import org.openlmis.reporting.service.TemplateService;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +43,10 @@ import java.util.Map;
 
 import static org.openlmis.web.response.OpenLmisResponse.*;
 import static org.springframework.web.bind.annotation.RequestMethod.*;
+
+/**
+ * This controller handles endpoint related to create, submit, update, print, get details for a POD(proof od delivery).
+ */
 
 @Controller
 public class PODController extends BaseController {

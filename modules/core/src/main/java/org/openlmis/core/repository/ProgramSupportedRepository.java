@@ -24,6 +24,10 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
+/**
+ * ProgramSupportedRepository is Repository class for FacilitySupportedProgram related database operations.
+ */
+
 @NoArgsConstructor
 @Repository
 public class ProgramSupportedRepository {

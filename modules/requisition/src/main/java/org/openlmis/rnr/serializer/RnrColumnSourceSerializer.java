@@ -8,13 +8,18 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-package org.openlmis.rnr.domain;
+package org.openlmis.rnr.serializer;
 
 import org.codehaus.jackson.JsonGenerator;
 import org.codehaus.jackson.map.JsonSerializer;
 import org.codehaus.jackson.map.SerializerProvider;
+import org.openlmis.rnr.domain.RnRColumnSource;
 
 import java.io.IOException;
+
+/**
+ * This class represents the serializer for rnrColumnSource.
+ */
 
 public class RnrColumnSourceSerializer extends JsonSerializer<RnRColumnSource> {
 

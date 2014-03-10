@@ -11,13 +11,17 @@
 package org.openlmis.core.repository;
 
 import org.openlmis.core.domain.DeliveryZone;
-import org.openlmis.core.repository.mapper.DeliveryZoneMapper;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.Right;
+import org.openlmis.core.repository.mapper.DeliveryZoneMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+
+/**
+ * DeliveryZoneRepository is repository class for DeliveryZone related database operations.
+ */
 
 @Repository
 public class DeliveryZoneRepository {
@@ -37,11 +41,11 @@ public class DeliveryZoneRepository {
     return mapper.getByCode(code);
   }
 
-  public List<DeliveryZone> getByUserForRight(long userId, Right right) {
+  public List<DeliveryZone> getByUserForRight(Long userId, Right right) {
     return mapper.getByUserForRight(userId, right);
   }
 
-  public List<Program> getPrograms(long id) {
+  public List<Program> getPrograms(Long id) {
     return mapper.getPrograms(id);
   }
 

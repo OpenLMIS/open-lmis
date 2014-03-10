@@ -16,15 +16,18 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+/**
+ * It maps the EpiUseLineItem entity to corresponding representation in database.
+ */
+
 @Repository
-public interface EpiUseMapper {
+public interface EpiUseLineItemMapper {
 
   @Insert({"INSERT INTO epi_use_line_items (facilityVisitId, productGroupId, productGroupName, stockAtFirstOfMonth, received, ",
     "distributed, loss, stockAtEndOfMonth, expirationDate, createdBy, modifiedBy) VALUES (#{facilityVisitId}, #{productGroup.id}, #{productGroup.name}, #{stockAtFirstOfMonth},",
     " #{received}, #{distributed}, #{loss}, #{stockAtEndOfMonth}, #{expirationDate}, #{createdBy}, #{modifiedBy})"})
   @Options(useGeneratedKeys = true)
   public void insertLineItem(EpiUseLineItem epiUseLineItem);
-
 
   @Select({"SELECT * FROM epi_use_line_items WHERE id = #{id}"})
   @Results(value = {

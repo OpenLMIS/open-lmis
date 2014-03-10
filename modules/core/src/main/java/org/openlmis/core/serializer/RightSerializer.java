@@ -17,8 +17,11 @@ import org.openlmis.core.domain.Right;
 
 import java.io.IOException;
 
-public class RightSerializer extends JsonSerializer<Right> {
+/**
+ * RightSerializer class represents the serializer for Right.
+ */
 
+public class RightSerializer extends JsonSerializer<Right> {
 
   @Override
   public void serialize(Right right, JsonGenerator generator,

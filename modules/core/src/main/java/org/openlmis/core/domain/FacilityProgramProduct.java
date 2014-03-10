@@ -24,6 +24,10 @@ import java.util.List;
 
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 
+/**
+ * FacilityProgramProduct represents product supported by given facility for a given program. This mapping is used by distribution module
+ * to identify products supported by a facility and overriddenISA for that product in that facility.
+ */
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)

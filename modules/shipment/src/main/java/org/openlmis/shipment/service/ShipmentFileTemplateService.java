@@ -20,6 +20,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+/**
+ * Exposes the services for handling shipment file template and its configuration.
+ */
+
 @Service
 public class ShipmentFileTemplateService {
 

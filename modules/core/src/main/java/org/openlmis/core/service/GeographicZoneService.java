@@ -16,6 +16,10 @@ import org.openlmis.core.repository.GeographicZoneRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+/**
+ * Exposes the services for handling GeographicZone entity.
+ */
+
 @Service
 @NoArgsConstructor
 public class GeographicZoneService {

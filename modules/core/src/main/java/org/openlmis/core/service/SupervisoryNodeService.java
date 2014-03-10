@@ -23,6 +23,10 @@ import java.util.List;
 
 import static org.openlmis.core.domain.Right.APPROVE_REQUISITION;
 
+/**
+ * Exposes the services for handling SupervisoryNode entity.
+ */
+
 @Service
 @NoArgsConstructor
 public class SupervisoryNodeService {
