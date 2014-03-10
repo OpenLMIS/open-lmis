@@ -27,7 +27,7 @@ public class StockedOutReportQueryBuilder {
         BEGIN();
         SELECT("DISTINCT supplyingfacility,facilitycode, facility, product, facilitytypename, location, processing_period_name");
         FROM("vw_stock_status");
-        WHERE("status = 'SO'");
+        WHERE("status = 'SO' and reported_figures > 0");
         writePredicates(filter);
         ORDER_BY(QueryHelpers.getSortOrder(sortCriteria, StockedOutReport.class,"supplyingfacility asc, facility asc, product asc, processing_period_name asc"));
         // copy the sql over to a variable, this makes the debugging much more possible.
@@ -89,7 +89,7 @@ public class StockedOutReportQueryBuilder {
         BEGIN();
         SELECT("COUNT(*) facilityCount");
         FROM("vw_stock_status");
-        WHERE("status = 'SO'");
+        WHERE("status = 'SO' and reported_figures > 0");
         writePredicates(filter);
         return SQL();
     }
