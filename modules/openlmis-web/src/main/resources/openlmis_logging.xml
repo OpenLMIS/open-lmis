@@ -31,37 +31,38 @@
     </appender>
 
     <logger name="java.sql" additivity="false">
-        <level value="DEBUG"/>
+        <level value="ERROR"/>
         <appender-ref ref="consoleAppender"/>
     </logger>
 
     <logger name="org.openlmis.rnr.repository.mapper">
-        <level value="DEBUG"/>
+        <level value="ERROR"/>
         <appender-ref ref="consoleAppender"/>
     </logger>
 
     <logger name="org.openlmis.db.repository.mapper">
-        <level value="DEBUG"/>
+        <level value="ERROR"/>
         <appender-ref ref="consoleAppender"/>
     </logger>
 
     <logger name="org.openlmis.core.repository.mapper">
-        <level value="DEBUG"/>
+        <level value="ERROR"/>
         <appender-ref ref="consoleAppender"/>
     </logger>
 
     <logger name="org.openlmis.shipment.repository.mapper">
-        <level value="DEBUG"/>
+        <level value="ERROR"/>
         <appender-ref ref="consoleAppender"/>
     </logger>
 
     <logger name="org.openlmis.web">
-        <level value="INFO"/>
+        <level value="ERROR"/>
         <appender-ref ref="logFileAppender"/>
     </logger>
 
     <root>
-        <level value="INFO"/>
+        <level value="ERROR"/>
         <appender-ref ref="logFileAppender"/>
+        <appender-ref ref="consoleAppender"/>
     </root>
 </log4j:configuration>
