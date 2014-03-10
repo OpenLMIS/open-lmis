@@ -23,6 +23,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/**
+ * Exposes the services for handling FulfillmentRole entity.
+ */
 
 @Service
 public class FulfillmentRoleService {
@@ -37,7 +40,6 @@ public class FulfillmentRoleService {
   public void saveFulfillmentRoles(User user) {
     fulfillmentRoleAssignmentRepository.insertFulfillmentRoles(user);
   }
-
 
   public List<FulfillmentRoleAssignment> getRolesWithRight(Long userId, Right right) {
     return fulfillmentRoleAssignmentRepository.getRolesWithRight(userId, right);

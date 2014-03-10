@@ -34,6 +34,10 @@ import java.util.List;
 import static org.openlmis.core.dto.BudgetLineItemDTO.populate;
 import static org.supercsv.prefs.CsvPreference.STANDARD_PREFERENCE;
 
+/**
+ * Exposes the services for processing Budget File.
+ */
+
 @Component
 @MessageEndpoint
 @NoArgsConstructor

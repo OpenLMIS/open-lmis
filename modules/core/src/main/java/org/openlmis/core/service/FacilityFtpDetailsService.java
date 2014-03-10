@@ -18,6 +18,10 @@ import org.openlmis.core.repository.FacilityFtpDetailsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+/**
+ * Exposes the services for handling FacilityFtpDetails entity.
+ */
+
 @Service
 @NoArgsConstructor
 public class FacilityFtpDetailsService {

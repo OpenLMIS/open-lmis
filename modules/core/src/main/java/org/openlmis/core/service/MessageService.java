@@ -30,6 +30,10 @@ import static org.springframework.context.annotation.ScopedProxyMode.TARGET_CLAS
 import static org.springframework.web.context.WebApplicationContext.SCOPE_REQUEST;
 import static org.springframework.web.context.WebApplicationContext.SCOPE_SESSION;
 
+/**
+ * Exposes the services for translating keys to corresponding message according to the selected locale.
+ */
+
 @Service
 @NoArgsConstructor
 @Scope(value = SCOPE_SESSION, proxyMode = TARGET_CLASS)
@@ -41,7 +45,6 @@ public class MessageService {
   @Setter
   @Getter
   private Locale currentLocale;
-
 
   private String locales;
 
