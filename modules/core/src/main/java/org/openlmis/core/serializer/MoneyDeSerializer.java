@@ -21,7 +21,7 @@ import org.openlmis.core.domain.Money;
 import java.io.IOException;
 
 /**
- * This class represents the deserializer for Money.
+ * MoneyDeSerializer class represents the deserializer for Money.
  */
 
 public class MoneyDeSerializer extends JsonDeserializer<Money> {
