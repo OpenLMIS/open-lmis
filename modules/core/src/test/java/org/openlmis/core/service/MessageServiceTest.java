@@ -86,7 +86,7 @@ public class MessageServiceTest {
 
   @Test
   public void shouldReturnLocalesCodes() throws Exception {
-    MessageService service = new MessageService("en, pt, fr");
+    MessageService service = new MessageService(messageSource, "en, pt, fr");
 
     Set<String> locales = service.getLocales();
     assertThat(locales.size(), is(3));

@@ -33,8 +33,7 @@ public class RestApiAuthenticationProvider implements AuthenticationProvider {
   @Autowired
   private UserService userService;
 
-  @Autowired
-  MessageService messageService;
+  MessageService messageService = MessageService.getRequestInstance();
 
   @Override
   public Authentication authenticate(Authentication authentication) throws AuthenticationException {

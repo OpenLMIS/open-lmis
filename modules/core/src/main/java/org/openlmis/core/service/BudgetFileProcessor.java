@@ -65,8 +65,7 @@ public class BudgetFileProcessor {
   @Autowired
   private BudgetFilePostProcessHandler budgetFilePostProcessHandler;
 
-  @Autowired
-  private MessageService messageService;
+  private MessageService messageService = MessageService.getRequestInstance();
 
   @Autowired
   private ApplicationContext applicationContext;
