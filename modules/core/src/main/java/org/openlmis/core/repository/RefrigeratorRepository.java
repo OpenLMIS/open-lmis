@@ -19,7 +19,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 /**
- * This is Repository class for Refrigerator related database operations.
+ * RefrigeratorRepository is Repository class for Refrigerator related database operations.
  */
 
 @Repository

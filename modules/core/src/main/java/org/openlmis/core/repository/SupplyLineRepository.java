@@ -19,7 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 /**
- * This is Repository class for SupplyLine related database operations.
+ * SupplyLineRepository is Repository class for SupplyLine related database operations.
  */
 
 @Repository

@@ -22,12 +22,13 @@ import java.util.List;
 import static org.openlmis.core.domain.Right.commaSeparateRightNames;
 
 /**
- * This is Repository class for SupervisoryNode related database operations.
+ * SupervisoryNodeRepository is Repository class for SupervisoryNode related database operations.
  */
 
 @Component
 @NoArgsConstructor
 public class SupervisoryNodeRepository {
+
   private SupervisoryNodeMapper supervisoryNodeMapper;
   private FacilityRepository facilityRepository;
   private RequisitionGroupRepository requisitionGroupRepository;

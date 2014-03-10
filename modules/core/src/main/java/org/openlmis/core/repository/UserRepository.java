@@ -27,7 +27,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 /**
- * This is Repository class for User related database operations.
+ * UserRepository is Repository class for User related database operations.
  */
 
 @Repository

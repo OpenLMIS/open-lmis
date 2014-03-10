@@ -24,7 +24,7 @@ import static org.apache.commons.collections.CollectionUtils.forAllDo;
 import static org.openlmis.core.domain.Right.commaSeparateRightNames;
 
 /**
- * This is Repository class for RoleAssignment related database operations.
+ * RoleAssignmentRepository is Repository class for RoleAssignment related database operations.
  */
 
 @Repository

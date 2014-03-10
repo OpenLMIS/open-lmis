@@ -23,7 +23,7 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * This is Repository class for ProcessingPeriod related database operations.
+ * ProcessingPeriodRepository is Repository class for ProcessingPeriod related database operations.
  */
 
 @Repository
