@@ -27,11 +27,10 @@ import static junit.framework.Assert.assertTrue;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.verify;
-import static org.powermock.api.mockito.PowerMockito.mockStatic;
-import static org.powermock.api.mockito.PowerMockito.when;
+import static org.powermock.api.mockito.PowerMockito.*;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest(Locale.class)
+@PrepareForTest({Locale.class, MessageService.class})
 public class MessageServiceTest {
 
   @Mock
@@ -58,6 +57,21 @@ public class MessageServiceTest {
     String message = messageService.message(key);
     verify(messageSource).getMessage(key, null, key, usLocale);
     assertThat(message, is(expectedMessage));
+  }
+
+  @Test
+  public void shouldGetRequestScopedMessageServiceInstance() throws Exception {
+    ExposedMessageSourceImpl exposedMessageService = mock(ExposedMessageSourceImpl.class);
+    whenNew(ExposedMessageSourceImpl.class).withNoArguments().thenReturn(exposedMessageService);
+    MessageService messageServiceRequestInstance = mock(MessageService.class);
+    whenNew(MessageService.class).withArguments(exposedMessageService, "en").thenReturn(messageServiceRequestInstance);
+
+    MessageService requestInstanceMessageService = MessageService.getRequestInstance();
+
+    verifyNew(ExposedMessageSourceImpl.class).withNoArguments();
+    verify(exposedMessageService).setBasename("messages");
+    verifyNew(MessageService.class).withArguments(exposedMessageService, "en");
+    assertThat(requestInstanceMessageService, is(messageServiceRequestInstance));
   }
 
   @Test
