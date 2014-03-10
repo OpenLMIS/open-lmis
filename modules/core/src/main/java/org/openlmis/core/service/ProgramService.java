@@ -25,14 +25,20 @@ import java.net.URISyntaxException;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * Exposes the services for handling Program entity.
+ */
+
 @Service
 @NoArgsConstructor
 public class ProgramService {
 
   @Autowired
   private ProgramRepository programRepository;
+
   @Autowired
   private ProgramSupportedRepository programSupportedRepository;
+
   @Autowired
   private EventService eventService;
 
