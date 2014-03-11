@@ -119,7 +119,7 @@ public class RefrigeratorPage extends DistributionTab {
   @FindBy(how = XPATH, using = "//ng-include/div/ul/li[2]/a/span[@class='status-icon']")
   public static WebElement overallRefrigeratorIcon = null;
 
-  @FindBy(how = XPATH, using = "//div[@id='addRefrigeratorModal']/div[2]/div[3]/div/div")
+  @FindBy(how = ID, using = "duplicateSerialNumberError")
   public static WebElement duplicateRefrigeratorMessage = null;
 
   @FindBy(how = ID, using = "noRefrigerators")

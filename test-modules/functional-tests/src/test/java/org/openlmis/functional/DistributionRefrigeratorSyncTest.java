@@ -351,7 +351,7 @@ public class DistributionRefrigeratorSyncTest extends TestCaseHelper {
 
     refrigeratorPage.clickAddNew();
     refrigeratorPage.addNewRefrigerator("LG", "800L1", "GNR7878");
-    refrigeratorPage.verifyDuplicateErrorMessage("Duplicate Manufacturer Serial Number");
+    refrigeratorPage.verifyDuplicateErrorMessage("Duplicate Identifier / Serial number");
   }
 
   @Test(groups = {"distribution"})
