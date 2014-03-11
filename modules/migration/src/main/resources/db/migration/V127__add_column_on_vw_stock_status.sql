@@ -2,11 +2,11 @@
 DROP VIEW IF EXISTS vw_stock_status;
 CREATE OR REPLACE VIEW vw_stock_status AS
  SELECT fn_get_supplying_facility_name(requisitions.supervisorynodeid) AS supplyingfacility,
-    facilities.code AS facilitycode, facilities.name AS facility,
-    requisitions.status AS req_status,
-    requisition_line_items.product,
-    requisition_line_items.stockinhand,
-    requisition_line_items.stockinhand + requisition_line_items.beginningbalance + requisition_line_items.quantitydispensed + requisition_line_items.quantityreceived + requisition_line_items.totallossesandadjustments as reported_figures,
+    facilities.code AS facilitycode, requisitions.id AS rnrid,
+    facilities.name AS facility, requisitions.status AS req_status,
+    requisition_line_items.product, requisition_line_items.stockinhand,
+    requisition_line_items.stockinhand + requisition_line_items.beginningbalance + requisition_line_items.quantitydispensed + requisition_line_items.quantityreceived + requisition_line_items.totallossesandadjustments AS reported_figures,
+    requisitions.id as rnrid,
     requisition_line_items.amc,
         CASE
             WHEN COALESCE(requisition_line_items.amc, 0) = 0 THEN 0::numeric
@@ -29,11 +29,11 @@ CREATE OR REPLACE VIEW vw_stock_status AS
                 END
             END
         END AS status,
-    facility_types.name AS facilitytypename, geographic_zones.id AS gz_id, geographic_zones.name AS location,
-    products.id AS productid, processing_periods.startdate,
-    programs.id AS programid, processing_schedules.id AS psid,
-    processing_periods.enddate, processing_periods.id AS periodid,
-    facility_types.id AS facilitytypeid,
+    facility_types.name AS facilitytypename, geographic_zones.id AS gz_id,
+    geographic_zones.name AS location, products.id AS productid,
+    processing_periods.startdate, programs.id AS programid,
+    processing_schedules.id AS psid, processing_periods.enddate,
+    processing_periods.id AS periodid, facility_types.id AS facilitytypeid,
     requisition_group_members.requisitiongroupid AS rgid, products.categoryid,
     products.tracer AS indicator_product, facilities.id AS facility_id,
     processing_periods.name AS processing_period_name
@@ -48,8 +48,7 @@ CREATE OR REPLACE VIEW vw_stock_status AS
    JOIN programs ON programs.id = requisitions.programid
    JOIN requisition_group_members ON requisition_group_members.facilityid = facilities.id
    JOIN geographic_zones ON geographic_zones.id = facilities.geographiczoneid
-  WHERE requisition_line_items.stockinhand IS NOT NULL
-        and requisition_line_items.skipped = false;
+  WHERE requisition_line_items.stockinhand IS NOT NULL AND requisition_line_items.skipped = false;
 
 ALTER TABLE vw_stock_status
   OWNER TO postgres;
