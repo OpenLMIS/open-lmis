@@ -12,10 +12,7 @@ package org.openlmis.pageobjects;
 
 
 import org.openlmis.UiUtils.TestWebDriver;
-import org.openqa.selenium.ElementNotVisibleException;
-import org.openqa.selenium.Keys;
-import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.How;
 import org.openqa.selenium.support.PageFactory;
@@ -245,7 +242,9 @@ public class UserPage extends Page {
   public void resetPassword(String newPassword, String confirmPassword) {
     testWebDriver.waitForElementToAppear(selectFirstResetPassword);
     testWebDriver.sleep(300);
-    testWebDriver.moveToElement(selectFirstResetPassword);
+    JavascriptExecutor jse = (JavascriptExecutor) testWebDriver.getDriver();
+    jse.executeScript("document.getElementById('resetPassword0').focus();");
+   // testWebDriver.moveToElement(selectFirstResetPassword);
     selectFirstResetPassword.click();
 
     testWebDriver.waitForElementToAppear(newPasswordField);
