@@ -24,6 +24,7 @@ import org.openlmis.rnr.domain.RnrStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -111,13 +112,13 @@ public class OrderSummaryReportDataProvider extends ReportDataProvider {
     if(changes.size() > 0){
 
       result.put("AUTHORIZED_BY", changes.get(0).getCreatedBy().getFirstName() + " " + changes.get(0).getCreatedBy().getLastName() );
-      result.put("AUTHORIZED_DATE", changes.get(0).getCreatedDate().toString());
+      result.put("AUTHORIZED_DATE", new SimpleDateFormat("dd/MM/yy h:m a").format(changes.get(0).getCreatedDate()) );
     }
 
     changes = reportMapper.getLastUsersWhoActedOnRnr(orderReportParam.getOrderId(), RnrStatus.APPROVED.name());
     if(changes.size() > 0){
       result.put("APPROVED_BY", changes.get(0).getCreatedBy().getFirstName() + " " + changes.get(0).getCreatedBy().getLastName()  );
-      result.put("APPROVED_DATE", changes.get(0).getCreatedDate().toString());
+      result.put("APPROVED_DATE", new SimpleDateFormat("dd/MM/yy h:m a").format(changes.get(0).getCreatedDate()) );
     }
     return result;
   }

@@ -296,14 +296,14 @@
 					<text><![CDATA[Approved By:]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="406" y="90" width="70" height="20" uuid="7651950f-7427-469b-a85f-e50d03ef8065">
+					<reportElement x="399" y="90" width="54" height="20" uuid="7651950f-7427-469b-a85f-e50d03ef8065">
 						<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() != "XLS"]]></printWhenExpression>
 					</reportElement>
 					<textElement textAlignment="Right" verticalAlignment="Bottom"/>
 					<text><![CDATA[Date]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="406" y="111" width="70" height="20" uuid="81938a4e-7b1e-49d6-9944-5484270f77a4">
+					<reportElement x="399" y="111" width="54" height="20" uuid="81938a4e-7b1e-49d6-9944-5484270f77a4">
 						<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() != "XLS"]]></printWhenExpression>
 					</reportElement>
 					<textElement textAlignment="Right" verticalAlignment="Bottom"/>
@@ -372,7 +372,7 @@
 					</graphicElement>
 				</line>
 				<line>
-					<reportElement x="481" y="109" width="70" height="1" uuid="2690b11f-8a28-4c2d-9aa8-24ebe9a05a27">
+					<reportElement x="456" y="110" width="98" height="1" uuid="2690b11f-8a28-4c2d-9aa8-24ebe9a05a27">
 						<property name="local_mesure_unitx" value="pixel"/>
 						<property name="com.jaspersoft.studio.unit.x" value="px"/>
 						<property name="local_mesure_unitwidth" value="pixel"/>
@@ -384,7 +384,7 @@
 					</graphicElement>
 				</line>
 				<line>
-					<reportElement x="481" y="129" width="70" height="1" uuid="29bc132b-a847-4c9a-9868-c7bc5710c3f7">
+					<reportElement x="456" y="130" width="98" height="1" uuid="29bc132b-a847-4c9a-9868-c7bc5710c3f7">
 						<property name="local_mesure_unitx" value="pixel"/>
 						<property name="com.jaspersoft.studio.unit.x" value="px"/>
 						<property name="local_mesure_unitwidth" value="pixel"/>
@@ -396,7 +396,7 @@
 					</graphicElement>
 				</line>
 				<staticText>
-					<reportElement x="406" y="132" width="70" height="20" uuid="7f532554-9da7-484b-b216-2cc1443f1024">
+					<reportElement x="399" y="132" width="54" height="20" uuid="7f532554-9da7-484b-b216-2cc1443f1024">
 						<property name="local_mesure_unity" value="pixel"/>
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
 						<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() != "XLS"]]></printWhenExpression>
@@ -421,7 +421,7 @@
 					<text><![CDATA[Signature]]></text>
 				</staticText>
 				<line>
-					<reportElement x="481" y="151" width="70" height="1" uuid="39f7e5e8-4153-45ca-bfd5-115977676194">
+					<reportElement x="456" y="152" width="98" height="1" uuid="39f7e5e8-4153-45ca-bfd5-115977676194">
 						<property name="local_mesure_unitx" value="pixel"/>
 						<property name="com.jaspersoft.studio.unit.x" value="px"/>
 						<property name="local_mesure_unitwidth" value="pixel"/>
@@ -491,28 +491,34 @@
 					<textFieldExpression><![CDATA[$P{GENERATED_BY}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="480" y="89" width="71" height="19" uuid="ffbc4d14-3ae0-4873-b0bc-c98a79439313">
+					<reportElement x="455" y="90" width="105" height="19" uuid="ffbc4d14-3ae0-4873-b0bc-c98a79439313">
 						<property name="local_mesure_unity" value="pixel"/>
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					</reportElement>
-					<textElement verticalAlignment="Bottom"/>
-					<textFieldExpression><![CDATA[($P{AUTHORIZED_DATE} != null && !$P{AUTHORIZED_DATE}.isEmpty())?(new SimpleDateFormat("dd/MM/yy").format(new Date($P{AUTHORIZED_DATE}))):""]]></textFieldExpression>
+					<textElement verticalAlignment="Bottom">
+						<font size="9"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$P{AUTHORIZED_DATE}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="480" y="110" width="71" height="18" uuid="de3e4df7-a12c-4af1-8b4f-11e80df7aff2">
+					<reportElement x="455" y="111" width="105" height="18" uuid="de3e4df7-a12c-4af1-8b4f-11e80df7aff2">
 						<property name="local_mesure_unity" value="pixel"/>
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					</reportElement>
-					<textElement verticalAlignment="Bottom"/>
-					<textFieldExpression><![CDATA[($P{APPROVED_DATE} != null && !$P{APPROVED_DATE}.isEmpty())?(new SimpleDateFormat("dd/MM/yy").format(new Date($P{APPROVED_DATE}))):""]]></textFieldExpression>
+					<textElement verticalAlignment="Bottom">
+						<font size="9"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$P{APPROVED_DATE}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="481" y="131" width="70" height="19" uuid="adcfd2b5-5e8a-49bd-9455-e1300c50a161">
+					<reportElement x="456" y="132" width="104" height="19" uuid="adcfd2b5-5e8a-49bd-9455-e1300c50a161">
 						<property name="local_mesure_unity" value="pixel"/>
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					</reportElement>
-					<textElement verticalAlignment="Bottom"/>
-					<textFieldExpression><![CDATA[(new SimpleDateFormat("dd/MM/yy").format(new Date()))]]></textFieldExpression>
+					<textElement verticalAlignment="Bottom">
+						<font size="9"/>
+					</textElement>
+					<textFieldExpression><![CDATA[(new SimpleDateFormat("dd/MM/yy h:m a").format(new Date()))]]></textFieldExpression>
 				</textField>
 			</band>
 		</groupFooter>
