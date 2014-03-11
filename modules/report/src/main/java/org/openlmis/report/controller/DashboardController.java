@@ -11,7 +11,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
@@ -59,6 +61,13 @@ public class DashboardController extends BaseController {
                                                                     @RequestParam("programId") Long programId,
                                                                     @RequestParam("productListId")List<Long> productListId){
         return OpenLmisResponse.response("stocking", this.lookupService.getStockEfficiencyData(geographicZoneId, periodId, programId, productListId));
+    }
+    @RequestMapping(value = "/stockEfficiencyDetail", method = GET, headers = BaseController.ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse>  getStockEfficiencyDetailData(@RequestParam("geographicZoneId") Long geographicZoneId,
+                                                                    @RequestParam("periodId") Long periodId,
+                                                                    @RequestParam("programId") Long programId,
+                                                                    @RequestParam("productListId")List<Long> productListId){
+        return OpenLmisResponse.response("stocking", this.lookupService.getStockEfficiencyDetailData(geographicZoneId, periodId, programId, productListId));
     }
 
 }

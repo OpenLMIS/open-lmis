@@ -1,8 +1,4 @@
 
-
-<div class="box-content">
-    <!-- Common filter form -->
-
     <div class="app-form" style="padding: 5px;">
         <form  name="filterForm" novalidate>
             <div >
@@ -10,7 +6,7 @@
                     <label class="labels">Program</label>
 
                     <div class="form-fields">
-                        <select ui-select2 style="width:200px;" class="large-input" name="program"  ng-model="formFilter.programId" ng-change="filterProductsByProgram()">
+                        <select ui-select2 style="width:160px;" class="large-input" name="program"  ng-model="formFilter.programId" ng-change="filterProductsByProgram()">
                             <option ng-repeat="option in programs" value="{{option.id}}">{{option.name}}</option>
                         </select>
                     </div>
@@ -19,7 +15,7 @@
                     <label class="labels">Schedule </label>
 
                     <div class="form-fields">
-                        <select ui-select2 style="width:180px;" class="large-input" name="schedule"  ng-model="formFilter.scheduleId" ng-change="ChangeSchedule()">
+                        <select ui-select2 style="width:160px;" class="large-input" name="schedule"  ng-model="formFilter.scheduleId" ng-change="changeSchedule()">
                             <option  ng-repeat="option in schedules" value="{{ option.id }}">{{ option.name }}</option>
                         </select>
                     </div>
@@ -29,7 +25,7 @@
                     <label class="labels">Year </label>
 
                     <div class="form-field">
-                        <select ui-select2 style="width:150px;" class="input-small" ng-required="true"  name="year" id="startYear" ng-model="formFilter.year" ng-change="changeScheduleByYear()">
+                        <select ui-select2 style="width:100px;" class="input-small" ng-required="true"  name="year" id="startYear" ng-model="formFilter.year" ng-change="changeScheduleByYear()">
                             <option ng-repeat="year in startYears" value="{{year}}">{{year}}</option>
                         </select>
 
@@ -49,8 +45,16 @@
                     <label class="labels">Requisition Groups</label>
 
                     <div class="form-fields">
-                        <select ui-select2 style="width:200px;" name="requisitionGroup"  ng-model="formFilter.rgroupId" ng-change="loadFacilitiesByRequisition()">
+                        <select ui-select2 style="width:170px;" name="requisitionGroup"  ng-model="formFilter.rgroupId" ng-change="loadFacilitiesByRequisition()">
                             <option ng-repeat="option in requisitionGroups" value="{{option.id}}">{{option.name}}</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-cell horizontalFilters" ng-if="showStockStatusFilter">
+                    <label class="labels">Status</label>
+                    <div class="form-fields">
+                        <select ui-select2 style="width:140px;" name="status"  ng-model="formFilter.status" ng-change="processStockStatusFilter()">
+                            <option ng-repeat="option in stockStatusMapping" value="{{option.value}}">{{option.name}}</option>
                         </select>
                     </div>
                 </div>
@@ -65,11 +69,9 @@
                     </div>
                 </div>
 
+
                 <div class="clearfix"></div>
 
             </div>
         </form>
     </div>
-
-
-</div>
