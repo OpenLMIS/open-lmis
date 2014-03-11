@@ -217,7 +217,7 @@ public class DistributionVisitInformationSyncTest extends TestCaseHelper {
     EPIUsePage epiUsePage = refrigeratorPage.navigateToEpiUse();
     epiUsePage.enterData(10, 20, 30, 40, 50, "10/2011", 1);
 
-    EpiInventoryPage epiInventoryPage = epiUsePage.navigateToEpiInventory();
+    EpiInventoryPage epiInventoryPage = refrigeratorPage.navigateToEpiInventory();
     epiInventoryPage.applyNRToAll();
     epiInventoryPage.fillDeliveredQuantity(1, "2");
     epiInventoryPage.fillDeliveredQuantity(2, "4");
@@ -260,7 +260,7 @@ public class DistributionVisitInformationSyncTest extends TestCaseHelper {
     distributionPage.syncDistribution(1);
     distributionPage.syncDistributionMessageDone();
 
-    verifyEpiUseDataInDatabase(10, 20, 30, 40, 50, "10/2011", "PG1", visitInformationData.get(FIRST_FACILITY_CODE));
+    verifyEpiUseDataInDatabase(null, null, null, null, null, null, "PG1", visitInformationData.get(FIRST_FACILITY_CODE));
     verifyFacilityVisitInformationInDatabase(visitInformationData.get(FIRST_FACILITY_CODE), null, null, null, null, null, null, "t", "f", "ROAD_IMPASSABLE", null);
     verifyFullCoveragesDataInDatabase(23, 66, 77, 45, visitInformationData.get(FIRST_FACILITY_CODE));
     verifyEpiInventoryDataInDatabase(null, null, null, "P10", visitInformationData.get(FIRST_FACILITY_CODE));
@@ -314,10 +314,10 @@ public class DistributionVisitInformationSyncTest extends TestCaseHelper {
     refrigeratorPage.verifyRefrigeratorColor("overall", "GREEN");
     epiInventoryPage.verifyIndicator("GREEN");
 
-    EPIUsePage epiUsePage = refrigeratorPage.navigateToEpiUse();
-    epiUsePage.enterData(70, 80, 90, 100, 9999999, "10/2011", 1);
+//    EPIUsePage epiUsePage = refrigeratorPage.navigateToEpiUse();
+//    epiUsePage.enterData(70, 80, 90, 100, 9999999, "10/2011", 1);
 
-    FullCoveragePage fullCoveragePage = epiUsePage.navigateToFullCoverage();
+    FullCoveragePage fullCoveragePage = refrigeratorPage.navigateToFullCoverage();
     fullCoveragePage.clickApplyNRToAll();
 
     ChildCoveragePage childCoveragePage = fullCoveragePage.navigateToChildCoverage();
@@ -336,7 +336,7 @@ public class DistributionVisitInformationSyncTest extends TestCaseHelper {
     distributionPage.syncDistribution(1);
     distributionPage.syncDistributionMessageDone();
 
-    verifyEpiUseDataInDatabase(70, 80, 90, 100, 9999999, "10/2011", "PG1", visitInformationData.get(FIRST_FACILITY_CODE));
+    verifyEpiUseDataInDatabase(null, null, null, null, null, null, "PG1", visitInformationData.get(FIRST_FACILITY_CODE));
     verifyFacilityVisitInformationInDatabase(visitInformationData.get(FIRST_FACILITY_CODE), null, null, null, null, null, null, "t", "f", "TRANSPORT_UNAVAILABLE", null);
     verifyFullCoveragesDataInDatabase(null, null, null, null, visitInformationData.get(FIRST_FACILITY_CODE));
     verifyEpiInventoryDataInDatabase(null, null, null, "P10", visitInformationData.get(FIRST_FACILITY_CODE));
@@ -428,10 +428,10 @@ public class DistributionVisitInformationSyncTest extends TestCaseHelper {
       epiInventoryPage.fillDeliveredQuantity(3, "6");
     }
 
-    EPIUsePage epiUsePage = visitInformationPage.navigateToEpiUse();
-    epiUsePage.enterData(10, 20, 30, 40, 50, "10/2011", 1);
+//    EPIUsePage epiUsePage = visitInformationPage.navigateToEpiUse();
+//    epiUsePage.enterData(10, 20, 30, 40, 50, "10/2011", 1);
 
-    ChildCoveragePage childCoveragePage = epiUsePage.navigateToChildCoverage();
+    ChildCoveragePage childCoveragePage = visitInformationPage.navigateToChildCoverage();
     childCoveragePage.applyNRToAll();
     childCoveragePage.clickOK();
 
