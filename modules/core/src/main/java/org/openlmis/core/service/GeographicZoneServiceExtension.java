@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.List;
 
 @Primary
@@ -32,6 +33,9 @@ public class GeographicZoneServiceExtension extends GeographicZoneService {
   @Autowired
   GeographicZoneGeoJSONMapper geoJsonMapper;
 
+  @Autowired
+  private SMSService smsService;
+
   public List<GeographicZone> searchGeographicZone(String geographicZoneSearchParam) {
     return repository.searchGeographicZone(geographicZoneSearchParam);
   }
@@ -40,8 +44,15 @@ public class GeographicZoneServiceExtension extends GeographicZoneService {
     return repository.getAllGeographicZones();
   }
 
-  public void saveNew(GeographicZone geographicZone) {
+  public void saveNew(GeographicZone geographicZone) throws IOException {
     repository.insert_Ext(geographicZone);
+    try{
+        smsService.SendSMSMessage(String.format("Geo zone %s just added to the database.",geographicZone.getName()),"0911305468");
+    }
+    catch (IOException e){
+        throw e;
+    }
+
   }
 
   public void update(GeographicZone geographicZone) {

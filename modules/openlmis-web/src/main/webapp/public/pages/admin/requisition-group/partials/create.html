@@ -85,7 +85,9 @@
                 <div class="alert alert-success" id="saveSuccessMsgDiv" ng-show="requisitionGroupMemberId">
                     <span ng-bind="message"></span>.
                 </div>
-                <h2><span>Associated Facilities</span>
+                <h2><span>Associated Facilities</span> <br>
+                    <input id="txtFilterAssociatedFacilities" class="search-query input-xlarge" type="text" ng-model="facilityFilterToken"
+                           ng-keyup="filterAssociatedFacilityList()" placeholder="Filter Facility Name/Code"/>
                     <a ng-click="addNewMemberFacility()"  ng-show="facilitiesLoaded" class="pull-right btn btn-primary"><span
                             id="requisition-group-facility-add-new">Add New</span></a>
                 </h2>
@@ -102,7 +104,7 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr ng-repeat="facility in facilities">
+                    <tr ng-repeat="facility in associatedfacilitiesFiltered">
                         <td>
                             <div>{{facility.code}} - {{facility.name}}</div>
                         </td>

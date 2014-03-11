@@ -11,17 +11,20 @@
 function RequisitionGroupController($scope,sharedSpace, ReportFacilityTypes, $routeParams, $location, SupervisoryNodes, SaveRequisitionGroup, GetRequisitionGroup, FacilityCompleteListInRequisitionGroup, GeographicZoneCompleteList, GetFacilityCompleteList, SaveRequisitionGroupMember, RemoveRequisitionGroupMember, $dialog, messageService, RemoveRequisitionGroup) {
     $scope.geographicZoneNameInvalid = false;
     $scope.requisitionGroup = {};
-    $scope.facilities = {};
+    $scope.associatedFacilities = {};
     $scope.geographicZones = {};
     $scope.message={};
     $scope.facilitiesLoaded = false;
+    $scope.associatedFacilitiesLoaded = false;
 
     $scope.loadMemberFacilities = function(){
+        $scope.associatedFacilitiesLoaded = false;
         FacilityCompleteListInRequisitionGroup.get({id:$routeParams.requisitionGroupId},function(data){
-            $scope.facilities = data.facilities;
+            $scope.associatedFacilities = data.facilities;
+            $scope.associatedFacilitiesLoaded = true;
+            $scope.filterAssociatedFacilityList();
         });
     };
-
 
     if ($routeParams.requisitionGroupId) {
         GetRequisitionGroup.get({id: $routeParams.requisitionGroupId}, function (data) {
@@ -48,6 +51,25 @@ function RequisitionGroupController($scope,sharedSpace, ReportFacilityTypes, $ro
     $scope.facilityTypes = ReportFacilityTypes.get(function(data){
         $scope.facilityTypes = data.facilityTypes;
     });
+
+    $scope.filterAssociatedFacilityList = function(){
+        if(!$scope.associatedFacilitiesLoaded){
+            return;
+        }
+        $scope.associatedfacilitiesFiltered = [];
+        if(!$scope.facilityFilterToken){
+            $scope.associatedfacilitiesFiltered = $scope.associatedFacilities;
+        }
+        else{
+            angular.forEach($scope.associatedFacilities,function(facility){
+
+                if(facility.name.toLowerCase().indexOf($scope.facilityFilterToken.trim().toLowerCase()) !== -1 ||
+                    facility.code.toLowerCase().indexOf($scope.facilityFilterToken.trim().toLowerCase()) !== -1){
+                    $scope.associatedfacilitiesFiltered.push(facility);
+                }
+            });
+        }
+    };
 
     $scope.saveRequisitionGroup = function () {
         var successHandler = function (response) {
@@ -132,7 +154,7 @@ function RequisitionGroupController($scope,sharedSpace, ReportFacilityTypes, $ro
     };
 
     $scope.showRemoveRequisitionGroupMemberConfirmDialog = function (index) {
-        var memberFacility = $scope.facilities[index];
+        var memberFacility = $scope.associatedfacilitiesFiltered[index];
         $scope.index = index;
         $scope.selectedFacility = memberFacility;
         var options = {
@@ -145,14 +167,20 @@ function RequisitionGroupController($scope,sharedSpace, ReportFacilityTypes, $ro
 
     $scope.removeRequisitionGroupMemberConfirm = function (result) {
         if (result) {
-            $scope.facilities.splice($scope.index,1);
             $scope.removeMemberFacility();
+
         }
-        $scope.selectedFacility = undefined;
+        else{
+            $scope.selectedFacility = undefined;
+        }
     };
 
     $scope.removeMemberFacility = function(){
-        RemoveRequisitionGroupMember.get({rgId: $scope.requisitionGroup.id, facId: $scope.selectedFacility.id});
+        RemoveRequisitionGroupMember.get({rgId: $scope.requisitionGroup.id, facId: $scope.selectedFacility.id},function(data){
+            $scope.associatedFacilitiesLoaded = false;
+            $scope.associatedfacilitiesFiltered.splice($scope.index,1);
+            $scope.selectedFacility = undefined;
+        },{});
     };
 
 
