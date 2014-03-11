@@ -19,6 +19,10 @@ import org.openlmis.distribution.domain.AdultCoverageLineItem;
 
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 
+/**
+ *  DTO for AdultCoverageLineItem. It contains the client side representation of AdultCoverageLineItem attributes.
+ */
+
 @Data
 @EqualsAndHashCode(callSuper = false)
 @JsonIgnoreProperties(ignoreUnknown = true)

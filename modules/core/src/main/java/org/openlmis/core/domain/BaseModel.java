@@ -18,6 +18,11 @@ import org.codehaus.jackson.map.annotate.JsonSerialize;
 
 import java.util.Date;
 
+/**
+ * Class BaseModel is the root of the domain objects hierarchy. It defines identity and audit fields for any entity.
+ * Most domain objects have BaseModel as a superclass which defines its primary attributes.
+ */
+
 @Data
 @JsonSerialize()
 @EqualsAndHashCode(callSuper = false)

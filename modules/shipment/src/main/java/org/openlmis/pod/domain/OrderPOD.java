@@ -31,6 +31,11 @@ import java.util.List;
 import static org.apache.commons.collections.CollectionUtils.find;
 import static org.joda.time.format.DateTimeFormat.forPattern;
 
+/**
+ *  OrderPOD represents an entity that holds a list of OrderPODLineItem. It keeps track of delivery details of an order
+ *  generated for a facility, program and period.
+ */
+
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
@@ -70,12 +75,7 @@ public class OrderPOD extends BaseModel {
     this.periodId = requisition.getPeriod().getId();
   }
 
-  public void fillPODWithRequisition(Rnr requisition) {
-    fillPOD(requisition);
-    fillPodLineItems(requisition.getAllLineItems());
-  }
-
-  public void fillPodLineItems(List<? extends LineItem> lineItems) {
+  public void fillPODLineItems(List<? extends LineItem> lineItems) {
     this.podLineItems = new ArrayList<>();
     for (LineItem lineItem : lineItems) {
       if (!validPacksToShip(lineItem)) continue;

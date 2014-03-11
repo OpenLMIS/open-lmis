@@ -10,12 +10,15 @@
 
 package org.openlmis.rnr.repository.mapper;
 
-
 import org.apache.ibatis.annotations.*;
 import org.openlmis.rnr.domain.RegimenLineItem;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+
+/**
+ * It maps the RegimenLineItem entity to corresponding representation in database.
+ */
 
 @Repository
 public interface RegimenLineItemMapper {

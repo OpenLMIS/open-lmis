@@ -25,6 +25,10 @@ import org.openlmis.shipment.domain.ShipmentLineItem;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 
+/**
+ *  OrderPODLineItem represents an entity that keeps track of delivered and returned quantities of a product.
+ */
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

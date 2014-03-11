@@ -15,6 +15,7 @@ import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.pageobjects.HomePage;
 import org.openlmis.pageobjects.LoginPage;
 import org.openlmis.pageobjects.ManageFacilityPage;
+import org.openlmis.pageobjects.PageObjectFactory;
 import org.testng.annotations.*;
 
 import java.io.IOException;
@@ -32,7 +33,7 @@ public class ManageFacility extends TestCaseHelper {
   @BeforeMethod(groups = {"admin"})
   public void setUp() throws InterruptedException, SQLException, IOException {
     super.setup();
-    loginPage = PageFactory.getInstanceOfLoginPage(testWebDriver, baseUrlGlobal);
+    loginPage = PageObjectFactory.getLoginPage(testWebDriver, baseUrlGlobal);
   }
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function-Positive")
@@ -189,7 +190,7 @@ public class ManageFacility extends TestCaseHelper {
 
   @AfterMethod(groups = {"admin"})
   public void tearDown() throws SQLException {
-    HomePage homePage = PageFactory.getInstanceOfHomePage(testWebDriver);
+    HomePage homePage = PageObjectFactory.getHomePage(testWebDriver);
     homePage.logout(baseUrlGlobal);
     dbWrapper.deleteData();
     dbWrapper.closeConnection();

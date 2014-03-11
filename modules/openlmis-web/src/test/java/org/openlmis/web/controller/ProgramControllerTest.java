@@ -13,6 +13,7 @@ package org.openlmis.web.controller;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.openlmis.authentication.web.UserAuthenticationSuccessHandler;
 import org.openlmis.core.domain.Program;
@@ -38,21 +39,21 @@ import static org.openlmis.authentication.web.UserAuthenticationSuccessHandler.U
 import static org.openlmis.core.domain.Right.*;
 import static org.openlmis.web.controller.ProgramController.PROGRAM;
 import static org.openlmis.web.controller.ProgramController.PROGRAMS;
+
 @Category(UnitTests.class)
 public class ProgramControllerTest {
 
   public static final Long USER_ID = 1L;
   @Mock
-  @SuppressWarnings("unused")
   private ProgramService programService;
 
+  @InjectMocks
   ProgramController controller;
   private MockHttpServletRequest httpServletRequest;
 
   @Before
   public void init() {
     initMocks(this);
-    controller = new ProgramController(programService);
     httpServletRequest = new MockHttpServletRequest();
     MockHttpSession mockHttpSession = new MockHttpSession();
     httpServletRequest.setSession(mockHttpSession);

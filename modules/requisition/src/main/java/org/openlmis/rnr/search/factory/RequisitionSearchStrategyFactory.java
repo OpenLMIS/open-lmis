@@ -20,6 +20,11 @@ import org.openlmis.rnr.service.RequisitionPermissionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+/**
+ * This class is responsible for generating appropriate strategy, based on RequisitionSearchCriteria supplied, to search
+ * for rnr in database.
+ */
+
 @NoArgsConstructor
 @Component
 public class RequisitionSearchStrategyFactory {

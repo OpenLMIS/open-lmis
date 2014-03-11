@@ -47,7 +47,6 @@ public class FacilityAPI extends JsonUtility {
   public void testFacilityAPI() throws SQLException {
     HttpClient client = new HttpClient();
     client.createContext();
-//TODO set parent facility, facility type
     ResponseEntity responseEntity = client.SendJSON("", format(URL, "F10"), GET, commTrackUser, "Admin123");
     String response = responseEntity.getResponse();
     assertTrue("Response entity : " + response, response.contains("\"code\":\"F10\""));

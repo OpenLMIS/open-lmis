@@ -15,6 +15,10 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This service exposes methods for to update proof of delivery details.
+ */
+
 @Service
 public class RestPODService {
 

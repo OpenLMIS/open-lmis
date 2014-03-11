@@ -27,6 +27,11 @@ import java.util.UUID;
 
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 
+/**
+ * ProgramSupportedEventDTO consolidates information about programs supported by a facility
+ * like facilityCode, and list of programs to be used while displaying ProgramSupported
+ * information to user, for eg. in feed.
+ */
 @Data
 @EqualsAndHashCode(callSuper = false)
 @JsonSerialize(include = NON_EMPTY)
@@ -51,6 +56,9 @@ public class ProgramSupportedEventDTO extends BaseFeedDTO {
     }
   }
 
+  /**
+   * ProgramSupportedDTO consolidates information about program like code, name, active etc. which is more user readable.
+   */
   @AllArgsConstructor
   @Data
   @JsonSerialize(include = NON_EMPTY)

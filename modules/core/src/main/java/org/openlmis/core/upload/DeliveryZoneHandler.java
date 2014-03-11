@@ -16,6 +16,9 @@ import org.openlmis.core.service.DeliveryZoneService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+/**
+ * DeliveryZoneHandler is used for uploads of DeliveryZone. It uploads each delivery zone record by record.
+ */
 @Component
 public class DeliveryZoneHandler extends AbstractModelPersistenceHandler {
 

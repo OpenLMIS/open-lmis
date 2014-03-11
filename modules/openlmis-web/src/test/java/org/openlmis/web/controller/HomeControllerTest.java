@@ -56,7 +56,6 @@ public class HomeControllerTest {
     when(request.getSession()).thenReturn(session);
   }
 
-
   @Test
   public void shouldRedirectToHomePage() {
     String homePageURl = homeController.homeDefault();
@@ -86,5 +85,4 @@ public class HomeControllerTest {
 
     verify(messageService).setCurrentLocale(Locale.getDefault());
   }
-
 }

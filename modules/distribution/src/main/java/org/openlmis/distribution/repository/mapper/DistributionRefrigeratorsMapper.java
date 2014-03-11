@@ -17,6 +17,10 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+/**
+ * It maps the RefrigeratorReading and RefrigeratorProblem entity to corresponding representation in database.
+ */
+
 @Repository
 public interface DistributionRefrigeratorsMapper {
 

@@ -19,14 +19,15 @@ import org.openlmis.rnr.domain.RegimenColumn;
 
 import java.util.List;
 
-@NoArgsConstructor
+/**
+ * This entity represents DTO for regimen form.
+ */
+
 @Data
+@NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 @AllArgsConstructor
 public class RegimenFormDTO {
-
   List<Regimen> regimens;
-
   List<RegimenColumn> regimenColumnList;
-
 }

@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.Set;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.*;
+import static java.lang.String.format;
 import static org.apache.http.HttpStatus.SC_BAD_REQUEST;
 import static org.apache.http.HttpStatus.SC_UNAUTHORIZED;
 import static org.testng.Assert.assertNull;
@@ -56,7 +57,7 @@ public class CreateUpdateCHW extends JsonUtility {
     super.setup();
     super.setupTestData(true);
     dbWrapper.updateRestrictLogin("commTrack", true);
-    loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+    loginPage = PageObjectFactory.getLoginPage(testWebDriver, baseUrlGlobal);
   }
 
   @AfterMethod(groups = {"webservice", "webserviceSmoke"})
@@ -69,6 +70,8 @@ public class CreateUpdateCHW extends JsonUtility {
   @Test(groups = {"webservice"}, dataProvider = "Data-Provider-Function-Positive")
   public void shouldNotShowVirtualFacilityOnManageUserScreen(String[] credentials) throws SQLException {
     dbWrapper.updateFieldValue("facilities", "virtualFacility", ACTIVE_STATUS, "code", DEFAULT_PARENT_FACILITY_CODE);
+    String parentFacilityId = dbWrapper.getAttributeFromTable("facilities", "id", "code", DEFAULT_PARENT_FACILITY_CODE);
+    dbWrapper.updateFieldValue("facilities", "parentFacilityId", parentFacilityId, "code", DEFAULT_PARENT_FACILITY_CODE);
 
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
     UserPage userPage = homePage.navigateToUser();
@@ -77,6 +80,16 @@ public class CreateUpdateCHW extends JsonUtility {
     userPage.enterUserHomeFacility(DEFAULT_PARENT_FACILITY_CODE);
     userPage.verifyNoMatchedFoundMessage();
     homePage.logout(baseUrlGlobal);
+
+    HttpClient client = new HttpClient();
+    client.createContext();
+    ResponseEntity responseEntity = client.SendJSON("", format("http://localhost:9091/rest-api/facilities/%s", "F10"), "GET", commTrackUser, "Admin123");
+    String response = responseEntity.getResponse();
+    assertTrue("Response entity : " + response, response.contains("\"code\":\"F10\""));
+    assertTrue("Response entity : " + response, response.contains("\"name\":\"Village Dispensary\""));
+    assertTrue("Response entity : " + response, response.contains("\"facilityType\":\"Lvl3 Hospital\""));
+    assertTrue("Response entity : " + response, response.contains("\"virtualFacility\":true"));
+    assertFalse("Response entity : " + response, response.contains("\"parentFacility\":" + parentFacilityId));
   }
 
   @Test(groups = {"webservice"}, dataProvider = "Data-Provider-Function-Positive")

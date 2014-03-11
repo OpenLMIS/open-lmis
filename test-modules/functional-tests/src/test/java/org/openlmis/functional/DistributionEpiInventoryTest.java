@@ -70,7 +70,7 @@ public class DistributionEpiInventoryTest extends TestCaseHelper {
     dbWrapper.insertProductWithGroup("Product6", "ProductName6", epiInventoryData.get(PRODUCT_GROUP_CODE), true);
     dbWrapper.insertProgramProduct("Product5", epiInventoryData.get(VACCINES_PROGRAM), "10", "false");
     dbWrapper.insertProgramProduct("Product6", epiInventoryData.get(VACCINES_PROGRAM), "10", "true");
-    loginPage = PageFactory.getInstanceOfLoginPage(testWebDriver, baseUrlGlobal);
+    loginPage = PageObjectFactory.getLoginPage(testWebDriver, baseUrlGlobal);
   }
 
   @Test(groups = {"distribution"})
@@ -202,7 +202,7 @@ public class DistributionEpiInventoryTest extends TestCaseHelper {
     HomePage homePage = loginPage.loginAs(epiInventoryData.get(USER), epiInventoryData.get(PASSWORD));
     initiateDistribution(epiInventoryData.get(FIRST_DELIVERY_ZONE_NAME), epiInventoryData.get(VACCINES_PROGRAM));
 
-    FacilityListPage facilityListPage = PageFactory.getInstanceOfFacilityListPage(testWebDriver);
+    FacilityListPage facilityListPage = PageObjectFactory.getFacilityListPage(testWebDriver);
     VisitInformationPage visitInformationPage = facilityListPage.selectFacility(epiInventoryData.get(FIRST_FACILITY_CODE));
     visitInformationPage.enterDataWhenFacilityVisited("some observations", "samuel", "Doe", "Verifier", "XYZ");
 
@@ -258,7 +258,7 @@ public class DistributionEpiInventoryTest extends TestCaseHelper {
     dbWrapper.insertProgramProduct("Product7", "VACCINES", "10", "true");
     dbWrapper.insertProgramProduct("Product8", "VACCINES", "10", "true");
 
-    FacilityListPage facilityListPage = PageFactory.getInstanceOfFacilityListPage(testWebDriver);
+    FacilityListPage facilityListPage = PageObjectFactory.getFacilityListPage(testWebDriver);
     VisitInformationPage visitInformationPage = facilityListPage.selectFacility(epiInventoryData.get(FIRST_FACILITY_CODE));
 
     EpiInventoryPage epiInventoryPage = visitInformationPage.navigateToEpiInventory();
@@ -274,7 +274,7 @@ public class DistributionEpiInventoryTest extends TestCaseHelper {
   public void testEpiInventoryPageSyncWhenApplyNRAll() throws SQLException {
     HomePage homePage = loginPage.loginAs(epiInventoryData.get(USER), epiInventoryData.get(PASSWORD));
     initiateDistribution(epiInventoryData.get(FIRST_DELIVERY_ZONE_NAME), epiInventoryData.get(VACCINES_PROGRAM));
-    FacilityListPage facilityListPage = PageFactory.getInstanceOfFacilityListPage(testWebDriver);
+    FacilityListPage facilityListPage = PageObjectFactory.getFacilityListPage(testWebDriver);
     VisitInformationPage visitInformationPage = facilityListPage.selectFacility(epiInventoryData.get(FIRST_FACILITY_CODE));
     visitInformationPage.enterDataWhenFacilityVisited("some observations", "samuel", "Doe", "Verifier", "XYZ");
 
@@ -319,7 +319,7 @@ public class DistributionEpiInventoryTest extends TestCaseHelper {
   public void testEpiInventoryPageSyncWhenApplyNRToFewFields() throws SQLException {
     HomePage homePage = loginPage.loginAs(epiInventoryData.get(USER), epiInventoryData.get(PASSWORD));
     initiateDistribution(epiInventoryData.get(FIRST_DELIVERY_ZONE_NAME), epiInventoryData.get(VACCINES_PROGRAM));
-    FacilityListPage facilityListPage = PageFactory.getInstanceOfFacilityListPage(testWebDriver);
+    FacilityListPage facilityListPage = PageObjectFactory.getFacilityListPage(testWebDriver);
     VisitInformationPage visitInformationPage = facilityListPage.selectFacility(epiInventoryData.get(FIRST_FACILITY_CODE));
     visitInformationPage.enterDataWhenFacilityVisited("some observations", "samuel", "Doe", "Verifier", "XYZ");
 
@@ -364,7 +364,7 @@ public class DistributionEpiInventoryTest extends TestCaseHelper {
   }
 
   public void initiateDistribution(String deliveryZoneNameFirst, String programFirst) {
-    HomePage homePage = PageFactory.getInstanceOfHomePage(testWebDriver);
+    HomePage homePage = PageObjectFactory.getHomePage(testWebDriver);
     DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
     distributionPage.selectValueFromDeliveryZone(deliveryZoneNameFirst);
     distributionPage.selectValueFromProgram(programFirst);
@@ -373,7 +373,7 @@ public class DistributionEpiInventoryTest extends TestCaseHelper {
   }
 
   public void verifyLabels() {
-    EpiInventoryPage epiInventoryPage = PageFactory.getInstanceOfEpiInventoryPage(testWebDriver);
+    EpiInventoryPage epiInventoryPage = PageObjectFactory.getEpiInventoryPage(testWebDriver);
     assertEquals(epiInventoryPage.getLabelVialsUnitsLabel(), "(Vials/Units)");
     assertEquals(epiInventoryPage.getLabelIdealQuantity(), "Ideal Quantity");
     assertEquals(epiInventoryPage.getLabelExistingQuantity(), "Existing Quantity");
@@ -385,7 +385,7 @@ public class DistributionEpiInventoryTest extends TestCaseHelper {
   public void tearDown() throws SQLException {
     testWebDriver.sleep(500);
     if (!testWebDriver.getElementById("username").isDisplayed()) {
-      HomePage homePage = PageFactory.getInstanceOfHomePage(testWebDriver);
+      HomePage homePage = PageObjectFactory.getHomePage(testWebDriver);
       homePage.logout(baseUrlGlobal);
       dbWrapper.deleteData();
       dbWrapper.closeConnection();

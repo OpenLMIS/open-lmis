@@ -16,6 +16,9 @@ import lombok.NoArgsConstructor;
 import org.openlmis.upload.Importable;
 import org.openlmis.upload.annotation.ImportField;
 
+/**
+ * SupplyLine represents Supply Line entity and its attributes. Also defines the contract for SupplyLine upload.
+ */
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
@@ -36,7 +39,7 @@ public class SupplyLine extends BaseModel implements Importable {
   @ImportField(mandatory = true, type = "boolean", name = "Export Orders")
   private Boolean exportOrders;
 
-  public SupplyLine(Long id){
+  public SupplyLine(Long id) {
     this.id = id;
   }
 }

@@ -24,6 +24,10 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * OrderDTO holds Requisition DTO and order related attributes like order status, supply line, shipment error etc.
+ */
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

@@ -19,6 +19,10 @@ import org.openlmis.distribution.dto.Reading;
 
 import java.io.IOException;
 
+/**
+ * DistributionReadingDeSerializer is a custom deserializer for Reading.
+ */
+
 public class DistributionReadingDeSerializer extends JsonDeserializer<Reading> {
   @Override
   public Reading deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException {

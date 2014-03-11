@@ -43,15 +43,15 @@
           </div>
           <div class="span2" ng-bind="distribution.program.name"></div>
           <div class="span2" ng-bind="distribution.period.name"></div>
-          <div id=distributionStatus class="span2" ng-bind="distribution.status"></div>
+          <div id="distributionStatus" class="span2" ng-bind="distribution.status"></div>
           <div class="span2">
             <a id="recordData{{$index}}" href="javascript:void(0)" openlmis-message="label.record.data"
-              ng-href="#/record-facility-data/{{distribution.id}}">
+               ng-href="#/record-facility-data/{{distribution.id}}">
             </a>
           </div>
           <div class="span1">
             <a id="sync{{$index}}" href="javascript:void(0)" openlmis-message="label.sync"
-              ng-show="distribution.status != 'SYNCED'" ng-click="showConfirmDistributionSync(distribution.id)">
+               ng-show="distribution.status != 'SYNCED'" ng-click="showConfirmDistributionSync(distribution.id)">
             </a>
           </div>
           <div class="span1">

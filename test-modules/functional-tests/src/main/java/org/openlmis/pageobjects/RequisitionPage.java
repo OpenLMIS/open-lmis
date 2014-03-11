@@ -343,10 +343,10 @@ public class RequisitionPage extends Page {
   }
 
   public void verifySkippedProductsOnRnRScreen(int rowNumber) {
+    testWebDriver.waitForAjax();
     WebElement skipCheckBox = testWebDriver.getElementById("skip_" + (rowNumber - 1));
     testWebDriver.waitForElementToAppear(skipCheckBox);
     assertTrue(skipCheckBox.isSelected());
-    skipCheckBox = null;
     skipCheckBox = testWebDriver.getElementById("skip_" + (rowNumber));
     assertFalse(skipCheckBox.isSelected());
   }

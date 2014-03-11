@@ -22,6 +22,10 @@ import java.lang.reflect.Field;
 import static java.lang.reflect.Modifier.isStatic;
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 
+/**
+ * DTO for RnrLineItem. It contains rnrId and client side representation of rnrLineItem with its attributes.
+ */
+
 @Data
 @JsonSerialize(include = NON_EMPTY)
 public class RnrLineItemDTO {

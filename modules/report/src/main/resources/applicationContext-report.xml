@@ -21,8 +21,10 @@
 
   <import resource="classpath:applicationContext-db.xml"/>
   <import resource="classpath:applicationContext-core.xml"/>
+  <import resource="classpath:applicationContext-requisition.xml"/>
 
-  <context:component-scan base-package="org.openlmis.report"/>
+    <context:component-scan base-package="org.openlmis"/>
+
     <!-- Integrates with report module -->
     <bean id="reportManager" class="org.openlmis.report.ReportManager">
         <constructor-arg index="0">
@@ -180,9 +182,6 @@
                     <property name="title" value="District Order Compilation Report"/>
                     <property name="version" value="1.0"/>
                 </bean>
-
-
-
 
             </list>
         </constructor-arg>

@@ -44,6 +44,11 @@ import static org.openlmis.web.response.OpenLmisResponse.success;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.web.bind.annotation.RequestMethod.*;
 
+/**
+ * This controller handles endpoint related to create, get, update, disable facility, also has endpoints to return home facility,
+ * supervised facility for a user.
+ */
+
 @Controller
 @NoArgsConstructor
 public class FacilityController extends BaseController {
@@ -85,11 +90,9 @@ public class FacilityController extends BaseController {
 
   @RequestMapping(value = "/facilities/{id}", method = GET, headers = ACCEPT_JSON)
   //@PreAuthorize("@permissionEvaluator.hasPermission(principal, 'MANAGE_FACILITY')")
-  //this method is also being used by the reports
   public ResponseEntity<OpenLmisResponse> getFacility(@PathVariable(value = "id") Long id) {
     return response("facility", facilityService.getById(id));
   }
-
 
   @RequestMapping(value = "/create/requisition/supervised/{programId}/facilities.json", method = GET)
   public ResponseEntity<ModelMap> getUserSupervisedFacilitiesSupportingProgram(@PathVariable(
@@ -155,7 +158,6 @@ public class FacilityController extends BaseController {
     return response.successEntity(successMessage);
   }
 
-
   @RequestMapping(value = "/facilities/{id}/restore", method = PUT, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_FACILITY')")
   public ResponseEntity<OpenLmisResponse> restore(HttpServletRequest request, @PathVariable("id") long facilityId) {
@@ -214,5 +216,4 @@ public class FacilityController extends BaseController {
   public ResponseEntity<OpenLmisResponse> getSupplyingFacilitiesCompleteList() {
       return OpenLmisResponse.response("facilities",facilityService.getSupplyingFacilitiesCompleteList());
   }
-
 }

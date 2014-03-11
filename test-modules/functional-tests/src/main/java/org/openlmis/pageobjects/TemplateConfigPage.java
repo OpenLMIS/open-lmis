@@ -297,7 +297,7 @@ public class TemplateConfigPage extends Page {
     testWebDriver.waitForElementToAppear(SaveButton);
     SaveButton.click();
     testWebDriver.sleep(100);
-    return new HomePage(testWebDriver);
+    return PageObjectFactory.getHomePage(testWebDriver);
   }
 
   public void verifyErrorMessageDivTotalConsumedQuantity(String totalConsumedQuantityError) {

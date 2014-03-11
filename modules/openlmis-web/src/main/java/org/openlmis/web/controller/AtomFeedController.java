@@ -10,6 +10,7 @@
 
 package org.openlmis.web.controller;
 
+import org.openlmis.web.service.VendorEventFeedService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -26,7 +27,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 public class AtomFeedController extends BaseController {
 
   @Autowired
-  VendorEventFeedService vendorEventFeedService;
+  private VendorEventFeedService vendorEventFeedService;
 
   @RequestMapping(method = GET, value = "feeds/{category}/recent", produces = "application/atom+xml")
   @ResponseBody

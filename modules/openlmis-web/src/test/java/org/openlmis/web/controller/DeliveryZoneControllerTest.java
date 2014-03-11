@@ -42,8 +42,6 @@ import static org.openlmis.web.controller.DeliveryZoneController.DELIVERY_ZONES;
 @Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
 public class DeliveryZoneControllerTest {
-
-
   @InjectMocks
   DeliveryZoneController controller;
 
@@ -52,7 +50,6 @@ public class DeliveryZoneControllerTest {
 
   @Mock
   AllocationPermissionService permissionService;
-
 
   MockHttpServletRequest request;
   private static final String USER = "user";
@@ -70,7 +67,6 @@ public class DeliveryZoneControllerTest {
 
   @Test
   public void shouldGetAllDeliveryZonesForUser() throws Exception {
-
     List<DeliveryZone> deliveryZones = new ArrayList<>();
     when(service.getByUserForRight(USER_ID, MANAGE_DISTRIBUTION)).thenReturn(deliveryZones);
 
@@ -118,6 +114,5 @@ public class DeliveryZoneControllerTest {
 
     verify(service).getById(1l);
     assertThat((DeliveryZone) response.getBody().getData().get("zone"), is(zone));
-
   }
 }

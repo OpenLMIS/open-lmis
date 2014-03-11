@@ -16,6 +16,10 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+/**
+ * RequisitionGroupProgramScheduleMapper maps the RequisitionGroupProgramSchedule mapping entity to corresponding
+ * representation in database.
+ */
 @Repository
 public interface RequisitionGroupProgramScheduleMapper {
 

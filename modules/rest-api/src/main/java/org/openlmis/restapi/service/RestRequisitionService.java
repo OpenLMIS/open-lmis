@@ -14,14 +14,17 @@ import lombok.NoArgsConstructor;
 import org.apache.commons.collections.Predicate;
 import org.apache.log4j.Logger;
 import org.openlmis.core.domain.Facility;
+import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.FacilityService;
+import org.openlmis.core.service.ProcessingPeriodService;
 import org.openlmis.core.service.ProgramService;
 import org.openlmis.order.service.OrderService;
 import org.openlmis.restapi.domain.ReplenishmentDTO;
 import org.openlmis.restapi.domain.Report;
 import org.openlmis.rnr.domain.*;
+import org.openlmis.rnr.search.criteria.RequisitionSearchCriteria;
 import org.openlmis.rnr.service.RequisitionService;
 import org.openlmis.rnr.service.RnrTemplateService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,8 +34,13 @@ import org.springframework.transaction.annotation.Transactional;
 import java.lang.reflect.Field;
 import java.util.List;
 
+import static java.util.Arrays.asList;
 import static org.apache.commons.collections.CollectionUtils.find;
 import static org.openlmis.restapi.domain.ReplenishmentDTO.prepareForREST;
+
+/**
+ * This service exposes methods for creating, approving a requisition.
+ */
 
 @Service
 @NoArgsConstructor
@@ -58,6 +66,9 @@ public class RestRequisitionService {
   @Autowired
   private RestRequisitionCalculator restRequisitionCalculator;
 
+  @Autowired
+  private ProcessingPeriodService processingPeriodService;
+
   private static final Logger logger = Logger.getLogger(RestRequisitionService.class);
 
   @Transactional
@@ -69,7 +80,7 @@ public class RestRequisitionService {
 
     restRequisitionCalculator.validatePeriod(reportingFacility, reportingProgram);
 
-    Rnr rnr = requisitionService.initiate(reportingFacility, reportingProgram, userId, EMERGENCY);
+    Rnr rnr = requisitionService.initiate(reportingFacility, reportingProgram, userId, EMERGENCY, null);
 
     restRequisitionCalculator.validateProducts(report.getProducts(), rnr);
 
@@ -86,6 +97,51 @@ public class RestRequisitionService {
 
     return requisitionService.authorize(rnr);
   }
+
+  @Transactional
+  public Rnr submitSdpReport(Report report, Long userId) {
+    report.validate();
+
+    Facility reportingFacility = facilityService.getOperativeFacilityByCode(report.getAgentCode());
+    Program reportingProgram = programService.getValidatedProgramByCode(report.getProgramCode());
+    ProcessingPeriod period = processingPeriodService.getById(report.getPeriodId());
+
+    //check if the requisition has already been initiated / submitted / authorized.
+    restRequisitionCalculator.validateCustomPeriod(reportingFacility, reportingProgram, period, userId);
+
+    Rnr rnr;
+
+    RequisitionSearchCriteria searchCriteria = new RequisitionSearchCriteria();
+    searchCriteria.setProgramId(reportingProgram.getId());
+    searchCriteria.setFacilityId(reportingFacility.getId());
+    searchCriteria.setWithoutLineItems(true);
+    searchCriteria.setUserId(userId);
+    List<Rnr> rnrs = requisitionService.getRequisitionsFor(searchCriteria, asList(period));
+
+    if(rnrs.size() > 0){
+      rnr = requisitionService.getFullRequisitionById( rnrs.get(0).getId() );
+
+    }else{
+      rnr = requisitionService.initiate(reportingFacility, reportingProgram, userId, report.getEmergency(), period);
+    }
+
+    restRequisitionCalculator.validateProducts(report.getProducts(), rnr);
+
+    markSkippedLineItems(rnr, report);
+
+    // if you have come this far, then do it, it is your day. make the submission.
+    if (reportingFacility.getVirtualFacility())
+      restRequisitionCalculator.setDefaultValues(rnr);
+
+    copyRegimens(rnr, report);
+
+    requisitionService.save(rnr);
+
+    rnr = requisitionService.submit(rnr);
+
+    return requisitionService.authorize(rnr);
+  }
+
 
   private void copyRegimens(Rnr rnr, Report report) {
     if (report.getRegimens() != null) {

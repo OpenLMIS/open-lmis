@@ -16,7 +16,7 @@ import cucumber.api.java.en.When;
 import org.openlmis.UiUtils.CaptureScreenshotOnFailureListener;
 import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.pageobjects.AccessDeniedPage;
-import org.openlmis.pageobjects.HomePage;
+import org.openlmis.pageobjects.PageObjectFactory;
 import org.testng.annotations.Listeners;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.assertEquals;
@@ -27,14 +27,14 @@ public class PageAccessAuthentication extends TestCaseHelper {
 
   @When("^I access initiate requisition page through URL$")
   public void accessInitiateRequisitionPageThroughURL() {
-    testWebDriver.waitForElementToAppear(new HomePage(testWebDriver).getLogoutLink());
+    testWebDriver.waitForElementToAppear(PageObjectFactory.getHomePage(testWebDriver).getLogoutLink());
     testWebDriver.getUrl(baseUrlGlobal + "public/pages/logistics/rnr/index.html#/init-rnr");
     testWebDriver.sleep(2000);
   }
 
   @When("^I access create facility page through URL$")
   public void accessCreateFacilityPageThroughURL() {
-    testWebDriver.waitForElementToAppear(new HomePage(testWebDriver).getLogoutLink());
+    testWebDriver.waitForElementToAppear(PageObjectFactory.getHomePage(testWebDriver).getLogoutLink());
     testWebDriver.getUrl(baseUrlGlobal + "public/pages/admin/facility/index.html#/create-facility");
     testWebDriver.sleep(2000);
   }

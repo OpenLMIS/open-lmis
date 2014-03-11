@@ -36,12 +36,16 @@ import static org.openlmis.web.response.OpenLmisResponse.success;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
+/**
+ * This controller handles endpoint related to get geographicZones details for given id.
+ */
 
 @Controller
 public class GeographicZoneController extends BaseController {
 
   @Autowired
   private GeographicZoneService service;
+
   @Autowired
   private ReportLookupService reportLookupService;
 

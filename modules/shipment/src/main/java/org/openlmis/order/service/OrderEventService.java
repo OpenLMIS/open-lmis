@@ -19,6 +19,10 @@ import org.springframework.stereotype.Service;
 
 import java.net.URISyntaxException;
 
+/**
+ * Exposes the services for handling events related to Order entity and notifying these events.
+ */
+
 @Service
 public class OrderEventService {
 

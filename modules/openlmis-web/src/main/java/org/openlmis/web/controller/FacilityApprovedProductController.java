@@ -32,6 +32,10 @@ import static org.openlmis.web.response.OpenLmisResponse.error;
 import static org.openlmis.web.response.OpenLmisResponse.response;
 import static org.openlmis.web.response.OpenLmisResponse.success;
 
+/**
+ * This controller handles endpoint related to get non full supply products for a given facility, program combination.
+ */
+
 @Controller
 @NoArgsConstructor
 public class FacilityApprovedProductController extends BaseController {
@@ -39,15 +43,11 @@ public class FacilityApprovedProductController extends BaseController {
   public static final String NON_FULL_SUPPLY_PRODUCTS = "nonFullSupplyProducts";
   public static final String PRODUCTS = "products";
 
-  private FacilityApprovedProductService facilityApprovedProductService;
-
+  @Autowired
   private ProgramProductService programProductService;
 
-
   @Autowired
-  public FacilityApprovedProductController(FacilityApprovedProductService facilityApprovedProductService) {
-    this.facilityApprovedProductService = facilityApprovedProductService;
-  }
+  private FacilityApprovedProductService facilityApprovedProductService;
 
   @RequestMapping(value = "/facilityApprovedProducts/facility/{facilityId}/program/{programId}/nonFullSupply", method = RequestMethod.GET, headers = "Accept=application/json")
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CREATE_REQUISITION, AUTHORIZE_REQUISITION')")

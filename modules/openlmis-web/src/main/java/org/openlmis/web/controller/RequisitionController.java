@@ -47,17 +47,21 @@ import static org.openlmis.web.response.OpenLmisResponse.*;
 import static org.springframework.http.HttpStatus.*;
 import static org.springframework.web.bind.annotation.RequestMethod.*;
 
+/**
+ * This controller handles endpoint related to requisition operations like initialize, save, submit, authorize, approve,
+ * print, view Rnr, save comments.
+ */
+
 @Controller
 @NoArgsConstructor
 public class RequisitionController extends BaseController {
+
   public static final String RNR = "rnr";
   public static final String RNR_SAVE_SUCCESS = "msg.rnr.save.success";
   public static final String RNR_LIST = "rnr_list";
   public static final String RNR_TEMPLATE = "rnr_template";
-
   public static final String PERIODS = "periods";
   public static final String CURRENCY = "currency";
-
   public static final String COMMENTS = "comments";
   public static final String REGIMEN_TEMPLATE = "regimen_template";
   public static final String LOSS_ADJUSTMENT_TYPES = "lossAdjustmentTypes";
@@ -79,14 +83,13 @@ public class RequisitionController extends BaseController {
 
   private static final Logger logger = LoggerFactory.getLogger(RequisitionController.class);
 
-
   @RequestMapping(value = "/requisitions", method = POST, headers = ACCEPT_JSON)
   public ResponseEntity<OpenLmisResponse> initiateRnr(@RequestParam("facilityId") Long facilityId,
                                                       @RequestParam("programId") Long programId,
                                                       @RequestParam("emergency") Boolean emergency,
                                                       HttpServletRequest request) {
     try {
-      return response(RNR, requisitionService.initiate(new Facility(facilityId), new Program(programId), loggedInUserId(request), emergency));
+      return response(RNR, requisitionService.initiate(new Facility(facilityId), new Program(programId), loggedInUserId(request), emergency, null));
     } catch (DataException e) {
       return error(e, BAD_REQUEST);
     }
@@ -123,7 +126,7 @@ public class RequisitionController extends BaseController {
       Rnr submittedRnr = requisitionService.submit(rnr);
 
       return success(messageService.message(requisitionService.getSubmitMessageBasedOnSupervisoryNode(submittedRnr.getFacility(),
-          submittedRnr.getProgram())));
+        submittedRnr.getProgram())));
     } catch (DataException e) {
       return error(e, BAD_REQUEST);
     }
@@ -145,7 +148,7 @@ public class RequisitionController extends BaseController {
       rnr.setModifiedBy(loggedInUserId(request));
       Rnr authorizedRnr = requisitionService.authorize(rnr);
       return success(messageService.message(requisitionService.getAuthorizeMessageBasedOnSupervisoryNode(
-          authorizedRnr.getFacility(), authorizedRnr.getProgram())));
+        authorizedRnr.getFacility(), authorizedRnr.getProgram())));
     } catch (DataException e) {
       return error(e, BAD_REQUEST);
     }
@@ -186,7 +189,7 @@ public class RequisitionController extends BaseController {
     try {
       Integer numberOfPages = requisitionService.getNumberOfPagesOfApprovedRequisitionsForCriteria(searchType, searchVal, loggedInUserId(request), Right.CONVERT_TO_ORDER);
       List<Rnr> approvedRequisitions = requisitionService.getApprovedRequisitionsForCriteriaAndPageNumber(
-          searchType, searchVal, page, numberOfPages, loggedInUserId(request), Right.CONVERT_TO_ORDER, sortBy, sortDirection);
+        searchType, searchVal, page, numberOfPages, loggedInUserId(request), Right.CONVERT_TO_ORDER, sortBy, sortDirection);
       List<RnrDTO> rnrDTOs = prepareForListApproval(approvedRequisitions);
       OpenLmisResponse response = new OpenLmisResponse(RNR_LIST, rnrDTOs);
       response.addData(NUMBER_OF_PAGES, numberOfPages);
@@ -199,7 +202,7 @@ public class RequisitionController extends BaseController {
   @RequestMapping(value = "/logistics/periods", method = GET, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'CREATE_REQUISITION, AUTHORIZE_REQUISITION')")
   public ResponseEntity<OpenLmisResponse> getAllPeriodsForInitiatingRequisitionWithRequisitionStatus(
-      RequisitionSearchCriteria criteria, HttpServletRequest request) {
+    RequisitionSearchCriteria criteria, HttpServletRequest request) {
 
     criteria.setUserId(loggedInUserId(request));
 

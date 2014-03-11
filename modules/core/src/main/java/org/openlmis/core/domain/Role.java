@@ -21,6 +21,9 @@ import java.util.Set;
 import static org.apache.commons.lang.StringUtils.isBlank;
 import static org.openlmis.core.domain.Right.VIEW_REQUISITION;
 
+/**
+ * Role represents Role entity which is a set of rights. Also provides methods to validate if a role contains related rights.
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

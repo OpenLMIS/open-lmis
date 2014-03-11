@@ -16,6 +16,9 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+/**
+ * RegimenMapper maps the Regimen entity to corresponding representation in database.
+ */
 @Repository
 public interface RegimenMapper {
 

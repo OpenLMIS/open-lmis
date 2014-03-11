@@ -8,7 +8,7 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-function NavigationController($scope, localStorageService) {
+function NavigationController($scope, localStorageService, Locales, $location, $window) {
   $scope.loadRights = function () {
     $scope.rights = localStorageService.get(localStorageKeys.RIGHT);
 
@@ -25,4 +25,16 @@ function NavigationController($scope, localStorageService) {
     return ($scope.rights && ($scope.rights.indexOf(permission) > -1));
   };
 
+
+  $scope.goOnline = function () {
+    Locales.get({}, function (data) {
+      if (data.locales) {
+        var currentURI = $location.absUrl();
+        $window.location = currentURI.replace('offline.html', 'index.html').replace('#/list', '#/manage');
+        $scope.isOffline = false;
+        return;
+      }
+      $scope.isOffline = true;
+    }, {});
+  };
 }

@@ -19,6 +19,10 @@ import org.openlmis.core.domain.BaseModel;
 
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 
+/**
+ * This class is a base class holding rnrId. RnrLineItem and RegimenLineItem belonging to a Rnr extends this class.
+ */
+
 @Data
 @NoArgsConstructor
 @JsonSerialize(include = NON_EMPTY)

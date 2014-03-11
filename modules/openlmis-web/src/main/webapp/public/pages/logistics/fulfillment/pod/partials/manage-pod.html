@@ -8,15 +8,15 @@
   ~ You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
   -->
 
-<h2 openlmis-message="header.pod.manage"></h2>
+<h2 id="managePodHeader" openlmis-message="header.pod.manage"></h2>
 
 <div class="app-form">
-  <div class="form-group">
-    <h3 openlmis-message="label.order.list"></h3>
+    <div class="form-group">
+        <h3 openlmis-message="label.order.list"></h3>
 
-    <div class="alert alert-info" id="noOrdersPresent" ng-hide="orders && orders.length">
-      <span openlmis-message="message.no.order"></span>
+        <div class="alert alert-info" id="noOrdersPresent" ng-hide="orders && orders.length">
+            <span openlmis-message="message.no.order"></span>
+        </div>
+        <div ng-show="orders && orders.length" class="gridStyle" ng-grid="gridOptions"></div>
     </div>
-    <div ng-show="orders && orders.length" class="gridStyle" ng-grid="gridOptions"></div>
-  </div>
 </div>

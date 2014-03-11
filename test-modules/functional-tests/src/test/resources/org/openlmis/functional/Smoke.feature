@@ -1,6 +1,38 @@
 Feature: Smoke Tests
 
   @smokeRequisition
+  Scenario: User should be able to initiate and submit emergency RnR
+    Given I have the following data for regimen:
+      | HIV | storeInCharge | ADULTS | RegimenCode1 | RegimenName1 | RegimenCode2 | RegimenName2 |
+    Given I have "storeInCharge" user with "CREATE_REQUISITION,VIEW_REQUISITION" rights and data to initiate requisition
+    And I am logged in as "storeInCharge"
+    And I access initiate emergency requisition page
+    Then I got error message "No current period defined. Please contact the Admin."
+    When I have period "currentPeriod" associated with schedule "M"
+    And I access home page
+    And I access initiate emergency requisition page
+    Then I should verify "currentPeriod" with status "Not yet started" in row "1"
+    When I access proceed
+    And I access initiate emergency requisition page
+    Then I should verify "currentPeriod" with status "INITIATED" in row "2"
+    And I should verify "currentPeriod" with status "Not yet started" in row "1"
+    When I access proceed
+    And I enter beginning balance "100"
+    And I enter quantity dispensed "100"
+    And I enter quantity received "100"
+    And I click submit
+    And I click ok
+    Then I validate beginning balance "100"
+    And I validate quantity dispensed "100"
+    And I validate quantity received "100"
+    And I access home page
+    And I access initiate requisition page
+    And I access initiate emergency requisition page
+    Then I should verify "currentPeriod" with status "INITIATED" in row "3"
+    Then I should verify "currentPeriod" with status "SUBMITTED" in row "2"
+    And I should verify "currentPeriod" with status "Not yet started" in row "1"
+
+  @smokeRequisition
   Scenario: User should be able to save and submit regimen data
     Given I have the following data for regimen:
       | HIV | storeInCharge | ADULTS | RegimenCode1 | RegimenName1 | RegimenCode2 | RegimenName2 |
@@ -57,12 +89,12 @@ Feature: Smoke Tests
     And I type and username "Admin123"
     When I click submit button
     Then I should see email send successfully
-    And I am logged in as Admin
+    And I am logged in as "Admin123"
 
   @smokeRequisition
   Scenario: Verify New Regimen Created
     Given I have data available for programs configured
-    And I am logged in as Admin
+    And I am logged in as "Admin123"
     When I access regimen configuration page
     Then I should see configured program list
     When I configure program "ESSENTIAL MEDICINES" for regimen template
@@ -75,7 +107,7 @@ Feature: Smoke Tests
   @smokeRequisition
   Scenario: Verify New Regimen Reporting Field Configuration
     Given I have data available for programs configured
-    And I am logged in as Admin
+    And I am logged in as "Admin123"
     When I access regimen configuration page
     Then I should see configured program list
     When I configure program "ESSENTIAL MEDICINES" for regimen template
@@ -99,7 +131,7 @@ Feature: Smoke Tests
 
   @smokeRequisition
   Scenario: Admin user should not access requisition page
-    Given I am logged in as Admin
+    Given I am logged in as "Admin123"
     When I access initiate requisition page through URL
     Then I should see unauthorized access message
 
@@ -112,7 +144,7 @@ Feature: Smoke Tests
 
   @smokeRequisition
   Scenario: Admin can create, disable & restore user
-    Given I am logged in as Admin
+    Given I am logged in as "Admin123"
     When I create a user:
       | Email                   | FirstName | LastName | UserName |
       | Dummy_User@openlmis.com | Dummy     | User     | Dummy    |
@@ -129,7 +161,7 @@ Feature: Smoke Tests
     Given I configure order file:
       | File Prefix | Header In File |
       | O           | FALSE          |
-    And I am logged in as Admin
+    And I am logged in as "Admin123"
     And I access configure order page
     Then I should see order file prefix "O"
     And I should see include column header as "false"
@@ -140,7 +172,7 @@ Feature: Smoke Tests
 
   @smokeRequisition
   Scenario: User should be able to configure shipment file format using default format
-    When I am logged in as Admin
+    When I am logged in as "Admin123"
     And I access configure shipment page
     And I should see include column headers unchecked
     And I should see include checkbox for all data fields
@@ -150,7 +182,7 @@ Feature: Smoke Tests
 
   @smokeRequisition
   Scenario: User should be able to configure budget file format using default format
-    When I am logged in as Admin
+    When I am logged in as "Admin123"
     And I access configure budget page
     And I should see include column headers option unchecked
     And I verify default checkbox for all data fields
@@ -209,36 +241,9 @@ Feature: Smoke Tests
     And I verify order id in line "2"
 
   @smokeRequisition
-  Scenario: User should be able to initiate and submit emergency RnR
-    Given I have the following data for regimen:
-      | HIV | storeInCharge | ADULTS | RegimenCode1 | RegimenName1 | RegimenCode2 | RegimenName2 |
-    Given I have "storeInCharge" user with "CREATE_REQUISITION,VIEW_REQUISITION" rights and data to initiate requisition
-    And I am logged in as "StoreInCharge"
-    And I access initiate emergency requisition page
-    Then I got error message "No current period defined. Please contact the Admin."
-    When I have period "currentPeriod" associated with schedule "M"
-    And I access home page
-    And I access initiate emergency requisition page
-    Then I should verify "currentPeriod" with status "Not yet started" in row "1"
-    When I access proceed
-    And I access initiate emergency requisition page
-    Then I should verify "currentPeriod" with status "INITIATED" in row "2"
-    And I should verify "currentPeriod" with status "Not yet started" in row "1"
-    When I access proceed
-    And I enter beginning balance "100"
-    And I enter quantity dispensed "100"
-    And I enter quantity received "100"
-    And I click submit
-    And I click ok
-    Then I validate beginning balance "100"
-    And I validate quantity dispensed "100"
-    And I validate quantity received "100"
-    And I access home page
-    And I access initiate requisition page
-    And I access initiate emergency requisition page
-    Then I should verify "currentPeriod" with status "INITIATED" in row "3"
-    Then I should verify "currentPeriod" with status "SUBMITTED" in row "2"
-    And I should verify "currentPeriod" with status "Not yet started" in row "1"
+  Scenario: Blank
+    Given I have "storeInCharge" user with "MANAGE_POD" rights
+    And I am logged in as "storeInCharge"
 
   @smokeRequisition
   Scenario: Selected requisitions across pages should not convert to order
@@ -251,13 +256,10 @@ Feature: Smoke Tests
     Then "1" requisition converted to order
 
   @smokeRequisition
-  Scenario: User should able to see list of orders to update POD
+  Scenario: User should able to see list of orders to update POD for "Ready to pack" order
     Given I have "storeInCharge" user with "MANAGE_POD" rights
-    And I have "5" requisitions for convert to order
+    And I have a/an "Regular" order in "READY_TO_PACK" status
     And I am logged in as "storeInCharge"
-    And I access convert to order page
-    And I select "1" requisition on page "1"
-    And I convert selected requisitions to order
     When I access Manage POD page
     Then I should see list of orders to manage POD for Rnr
     When I click on update Pod link for Row "1"
@@ -266,13 +268,10 @@ Feature: Smoke Tests
   @smokeRequisition
   Scenario: User should able to see list of orders to update POD for packed orders
     Given I have "storeInCharge" user with "MANAGE_POD" rights
-    And I have "5" requisitions for convert to order
-    And I am logged in as "storeInCharge"
-    And I access convert to order page
-    And I select "5" requisition on page "1"
-    And I convert selected requisitions to order
-    And I access Manage POD page
+    And I have a/an "Regular" order in "RELEASED" status
     When I receive shipment for the order
+    And I am logged in as "storeInCharge"
+    And I access Manage POD page
     And I click on update Pod link for Row "1"
     Then I should see all products listed in shipment file to update pod
 
@@ -300,7 +299,7 @@ Feature: Smoke Tests
   @smokeDistribution
   Scenario: User should able to configure program product ISA
     Given I have data available for program product ISA
-    And I am logged in as Admin
+    And I am logged in as "Admin123"
     When I access program product ISA page for "VACCINES"
     And I type ratio "3.9" dosesPerYear "3" wastage "10" bufferPercentage "25" adjustmentValue "0" minimumValue "10" maximumValue "1000"
     Then I verify calculated ISA value having population "1000" as "122"
@@ -353,7 +352,7 @@ Feature: Smoke Tests
     Given I have the following data for override ISA:
       | user     | program  | product | productName | category | whoRatio | dosesPerYear | wastageFactor | bufferPercentage | minimumValue | maximumValue | adjustmentValue |
       | Admin123 | VACCINES | P1      | antibiotic1 | C1       | 1        | 2            | 3             | 4                | null         | null         | 5               |
-    And I am logged in as Admin
+    And I am logged in as "Admin123"
     And I access create facility page
     When I create facility
     And I override ISA "24"
@@ -566,7 +565,6 @@ Feature: Smoke Tests
     Then I verify radio button "No" is selected
     And I verify Others reason selected
     And I verify Other reason entered as "reason for not visiting"
-
 
   @smokeDistribution
   Scenario: User should fill EPI use data
@@ -801,6 +799,7 @@ Feature: Smoke Tests
     And I Enter "adult coverage" values:
       | healthCenter1 | outreach1 | healthCenter25 | outreach25 | openedVial |
       | 123           | 22        | 23             | 34         | 4          |
+    And I navigate to "epi inventory" tab
     Then I see Overall facility icon as "GREEN"
     When I access plan my distribution page
 

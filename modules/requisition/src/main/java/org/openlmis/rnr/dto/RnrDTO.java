@@ -23,6 +23,10 @@ import java.util.List;
 
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 
+/**
+ * DTO for Rnr. It is a client side representation of Rnr with its attributes.
+ */
+
 @Data
 @NoArgsConstructor
 @JsonSerialize(include = NON_EMPTY)

@@ -9,5 +9,5 @@
 --
 
 
-ALTER TABLE requisitions ALTER COLUMN fullsupplyitemssubmittedcost SET DATA TYPE NUMERIC(15, 2);
-ALTER TABLE requisitions ALTER COLUMN nonfullsupplyitemssubmittedcost SET DATA TYPE NUMERIC(15, 2);
+ALTER TABLE requisitions ALTER COLUMN fullSupplyItemsSubmittedCost SET DATA TYPE NUMERIC(15, 2);
+ALTER TABLE requisitions ALTER COLUMN nonFullSupplyItemsSubmittedCost SET DATA TYPE NUMERIC(15, 2);

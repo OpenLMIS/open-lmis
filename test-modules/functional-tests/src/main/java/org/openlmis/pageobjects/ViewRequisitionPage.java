@@ -161,14 +161,14 @@ public class ViewRequisitionPage extends RequisitionPage {
     testWebDriver.waitForElementToAppear(totalCostPreApproval);
     assertEquals(totalCostPreApproval.getText().substring(1), cost);
     assertEquals(newPatient.getText().trim(), newPatientValue);
-    return new HomePage(testWebDriver);
+    return PageObjectFactory.getHomePage(testWebDriver);
   }
 
   public HomePage verifyFieldsPostApproval(String cost, String newPatientValue) {
     testWebDriver.waitForElementToAppear(totalCostPostApproval);
     assertEquals(totalCostPostApproval.getText().substring(1), cost);
     assertEquals(newPatient.getText().trim(), newPatientValue);
-    return new HomePage(testWebDriver);
+    return PageObjectFactory.getHomePage(testWebDriver);
   }
 
   public boolean isViewRnRListPresent() {

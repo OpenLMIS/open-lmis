@@ -24,6 +24,10 @@ import java.util.List;
 
 import static org.apache.commons.collections.CollectionUtils.collect;
 
+/**
+ * Exposes the services for calculating reference data for rnr and rnrLineItem.
+ */
+
 @Service
 public class CalculationService {
 

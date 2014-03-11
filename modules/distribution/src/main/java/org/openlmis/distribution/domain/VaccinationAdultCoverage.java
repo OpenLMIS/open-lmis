@@ -12,6 +12,10 @@ import java.util.List;
 
 import static java.util.Arrays.asList;
 
+/**
+ *  VaccinationAdultCoverage represents a container for list of AdultCoverageLineItem.
+ */
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

@@ -18,7 +18,11 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Date;
 import java.util.List;
-
+/**
+ * FacilityMapper maps the Facility entity to corresponding representation in database. Apart from basic CRUD operations
+ * provides methods like getting all facilities in a requisition group/delivery zone, searching facility by name, code
+ * or type (virtual, non-virtual), getting child facilities for a facility etc.
+ */
 @Repository
 public interface FacilityMapper {
 

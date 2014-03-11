@@ -22,6 +22,10 @@ import java.util.Date;
 import static java.lang.Boolean.FALSE;
 import static lombok.AccessLevel.NONE;
 
+/**
+ * This class holds various parameters on which rnr can be searched against in database.
+ */
+
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
 @NoArgsConstructor

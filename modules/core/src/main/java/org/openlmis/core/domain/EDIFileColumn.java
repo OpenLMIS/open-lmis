@@ -19,6 +19,11 @@ import org.openlmis.core.exception.DataException;
 
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 
+/**
+ * EDIFileColumn represents the attributes for a column in EDI file. It provides configuration for each column like name, label,
+ * if it is included or not, if it is mandatory or not, position, and date format in case the data point for this column
+ * is of type date.
+ */
 @Data
 @EqualsAndHashCode(callSuper = false)
 @AllArgsConstructor

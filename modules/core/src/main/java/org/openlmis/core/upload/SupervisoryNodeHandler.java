@@ -17,6 +17,9 @@ import org.openlmis.core.service.SupervisoryNodeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+/**
+ * SupervisoryNodeHandler is used for uploads of supervisory nodes. It uploads each supervisory node record by record.
+ */
 @Component
 @NoArgsConstructor
 public class SupervisoryNodeHandler extends AbstractModelPersistenceHandler {

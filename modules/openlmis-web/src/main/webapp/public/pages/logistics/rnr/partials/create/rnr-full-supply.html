@@ -10,16 +10,16 @@
 
 <div ng-controller="CreateFullSupplyController">
 <div id="pageErrors" class="page-errors" ng-show="errorPages.fullSupply">
-  <div ng-switch on="errorPages.fullSupply.length" class="dropdown">
-    <a href="" ng-switch-when="1" class="dropdown-toggle" openlmis-message="error.one.page"></a>
-    <a href="" ng-switch-default class="dropdown-toggle"
-       openlmis-message="error.multiple.pages|fullSupplyErrorPagesCount"></a>
-    <ul class="dropdown-menu">
-      <li ng-repeat="page in errorPages.fullSupply">
-        <a href="" ng-click="goToPage(page, $event)">{{page}}</a>
-      </li>
-    </ul>
-  </div>
+    <div ng-switch on="errorPages.fullSupply.length" class="dropdown">
+        <a href="" ng-switch-when="1" class="dropdown-toggle" openlmis-message="error.one.page"></a>
+        <a href="" ng-switch-default class="dropdown-toggle"
+           openlmis-message="error.multiple.pages|fullSupplyErrorPagesCount"></a>
+        <ul class="dropdown-menu">
+            <li ng-repeat="page in errorPages.fullSupply">
+                <a href="" ng-click="goToPage(page, $event)">{{page}}</a>
+            </li>
+        </ul>
+    </div>
 
 </div>
 
@@ -27,28 +27,28 @@
 
 <div class="rnr-table" ng-show="page.fullSupply.length" tab-scroll bottom-offset="180" adjust-height>
 <div class="float-left left-table">
-  <table id="fullSupplyFrozenTable" class="table table-bordered" fixed-table-header>
-    <thead>
-    <tr>
-      <th class="col-{{column.name}}" ng-repeat="column in visibleColumns.fullSupply.fixed">
-        <span ng-bind="column.label"></span>
+    <table id="fullSupplyFrozenTable" class="table table-bordered" fixed-table-header>
+        <thead>
+        <tr>
+            <th class="col-{{column.name}}" ng-repeat="column in visibleColumns.fullSupply.fixed">
+                <span ng-bind="column.label"></span>
         <span ng-if="column.name == 'skipped'">
         <a href="" id="selectAll" ng-click="setSkipAll(true)" openlmis-message="label.select.all"></a>&nbsp;|
         <a href="" id="selectNone" ng-click="setSkipAll(false)" openlmis-message="label.select.none"></a>
         </span>
-      </th>
-    </tr>
-    </thead>
-    <tbody ng-show="visibleColumns.fullSupply && (rnr.fullSupplyLineItems.length > 0)"
-           ng-repeat="rnrLineItem in page.fullSupply">
-    <tr>
-      <td class="productCategory" id="category_{{ $index }}" colspan="{{visibleColumns.fullSupply.fixed.length}}"
-          ng-show="showCategory($index)"
-          ng-bind="rnrLineItem.productCategory"></td>
-    </tr>
-    <tr ng-class="getRowErrorClass(rnrLineItem)">
-      <td class="cell-input col-{{column.name}}" ng-repeat="column in visibleColumns.fullSupply.fixed">
-        <ng-switch on="column.name">
+            </th>
+        </tr>
+        </thead>
+        <tbody ng-show="visibleColumns.fullSupply && (rnr.fullSupplyLineItems.length > 0)"
+               ng-repeat="rnrLineItem in page.fullSupply">
+        <tr>
+            <td class="productCategory" id="category_{{ $index }}" colspan="{{visibleColumns.fullSupply.fixed.length}}"
+                ng-show="showCategory($index)"
+                ng-bind="rnrLineItem.productCategory"></td>
+        </tr>
+        <tr ng-class="getRowErrorClass(rnrLineItem)">
+            <td class="cell-input col-{{column.name}}" ng-repeat="column in visibleColumns.fullSupply.fixed">
+                <ng-switch on="column.name">
           <span ng-switch-when="skipped">
             <input ng-model="rnrLineItem[column.name]"
                    ng-disabled="formDisabled"
@@ -58,29 +58,30 @@
           <span ng-switch-default ng-bind="rnrLineItem[column.name]" id="{{column.name}}_{{$parent.$parent.$index}}"
                 class="cell-text">
           </span>
-        </ng-switch>
-      </td>
-    </tr>
-    </tbody>
-  </table>
+                </ng-switch>
+            </td>
+        </tr>
+        </tbody>
+    </table>
 </div>
 <div class="float-left right-table" custom-horizontal-scroll>
 <table id="fullSupplyTable" class="table table-bordered scrollable" fixed-table-header>
 <thead>
 <tr>
-  <th class="col-{{column.name}}" ng-repeat="column in visibleColumns.fullSupply.scrollable"
-      ng-bind="column.label"></th>
+    <th class="col-{{column.name}}" ng-repeat="column in visibleColumns.fullSupply.scrollable"
+        ng-bind="column.label"></th>
 </tr>
 </thead>
 <tbody ng-show="visibleColumns.fullSupply && (rnr.fullSupplyLineItems.length > 0)"
        ng-repeat="rnrLineItem in page.fullSupply">
 <tr>
-  <td class="productCategory" colspan="{{visibleColumns.fullSupply.scrollable.length}}" ng-show="showCategory($index)">
-    &nbsp;</td>
+    <td class="productCategory" colspan="{{visibleColumns.fullSupply.scrollable.length}}"
+        ng-show="showCategory($index)">
+        &nbsp;</td>
 </tr>
 <tr ng-class="getRowErrorClass(rnrLineItem)">
-  <td class="cell-input col-{{column.name}}" ng-repeat="column in visibleColumns.fullSupply.scrollable">
-    <ng-switch on="column.source.name">
+    <td class="cell-input col-{{column.name}}" ng-repeat="column in visibleColumns.fullSupply.scrollable">
+        <ng-switch on="column.source.name">
     <span ng-switch-when="USER_INPUT">
       <ng-switch on="column.name">
         <span ng-switch-when="beginningBalance"
@@ -129,7 +130,7 @@
                  maxlength="7"
                  ng-model="rnrLineItem[column.name]"
                  showError="showError"
-                 date-validator="date" />
+                 date-validator="date"/>
           <span class="alert alert-warning warning-alert" id="expirationDate{{rnrLineItem['id']}}"
                 style="display:none;" openlmis-message="error.invalid.date.format"
                 ng-hide="rnrLineItem.expirationDate && rnrLineItem.skipped">
@@ -160,11 +161,12 @@
         <span ng-switch-when="lossesAndAdjustments">
           <div ng-init="controllerScope = $parent.$parent.$parent.$parent"
                ng-class="highlightNestedFieldsWithError(rnrLineItem[column.name], 'quantity')">
-            <a id="{{getId('lossesAndAdjustmentLink', $parent)}}" href=""
-               ng-click="showLossesAndAdjustments(rnrLineItem); controllerScope.currentLinkId = getId('lossesAndAdjustmentLink', $parent)"
-               class="rnr-adjustment">
-              <span class="adjustment-value" ng-bind="rnrLineItem.totalLossesAndAdjustments"></span>
-            </a>
+              <a id="{{getId('lossesAndAdjustmentLink', $parent)}}" href=""
+                 ng-click="showLossesAndAdjustments(rnrLineItem); controllerScope.currentLinkId = getId('lossesAndAdjustmentLink', $parent)"
+                 class="rnr-adjustment">
+                  <span class="adjustment-value" id="totalLossesAndAdjustment"
+                        ng-bind="rnrLineItem.totalLossesAndAdjustments"></span>
+              </a>
           </div>
         </span>
 
@@ -275,8 +277,8 @@
               class="cell-text"></span>
       </ng-switch>
     </span>
-    </ng-switch>
-  </td>
+        </ng-switch>
+    </td>
 </tr>
 </tbody>
 </table>
@@ -287,46 +289,46 @@
 
 <div id="lossesAndAdjustments" modal="lossesAndAdjustmentsModal"
      options="{'backdrop':'static', 'escape':false}">
-  <div class="modal-header"><h3 openlmis-message="label.losses.adjustments"></h3></div>
-  <div class="modal-body">
-    <div class="adjustment-field">
-      <h5 openlmis-message="label.add.losses.adjustments"></h5>
+    <div class="modal-header"><h3 openlmis-message="label.losses.adjustments"></h3></div>
+    <div class="modal-body">
+        <div class="adjustment-field">
+            <h5 openlmis-message="label.add.losses.adjustments"></h5>
 
-      <div class="row-fluid">
-        <div class="span5">
-          <select ng-disabled="formDisabled || currentRnrLineItem.skipped"
-                  ng-model="lossAndAdjustment.type"
-                  ng-options="i as i.description for i in lossesAndAdjustmentTypesToDisplay">
-            <option value="" openlmis-message="label.select.type"></option>
-          </select>
+            <div class="row-fluid">
+                <div class="span5">
+                    <select ng-disabled="formDisabled || currentRnrLineItem.skipped"
+                            ng-model="lossAndAdjustment.type"
+                            ng-options="i as i.description for i in lossesAndAdjustmentTypesToDisplay">
+                        <option value="" openlmis-message="label.select.type"></option>
+                    </select>
+                </div>
+                <div class="span3">
+                    <input ng-disabled="formDisabled || currentRnrLineItem.skipped" ng-trim="false"
+                           type="text" name="quantity{{currentRnrLineItem.id}}" ng-model="lossAndAdjustment.quantity"
+                           numeric-validator="positiveInteger" maxlength="8" openlmis-message="placeholder.quantity"/>
+
+                    <div class="rnr-form-error"
+                         id="quantity{{currentRnrLineItem.id}}"
+                         style="display:none;" openlmis-message="error.number.only">
+                    </div>
+                </div>
+                <div class="span4">
+                    <input type="button" id="addLossesAndAdjustment"
+                           ng-click="addLossAndAdjustment(lossAndAdjustment)"
+                           ng-disabled="!(lossAndAdjustment.type && lossAndAdjustment.quantity)"
+                           class="btn btn-primary"
+                           openlmis-message="button.add"/>
+                </div>
+            </div>
+
+
         </div>
-        <div class="span3">
-          <input ng-disabled="formDisabled || currentRnrLineItem.skipped" ng-trim="false"
-                 type="text" name="quantity{{currentRnrLineItem.id}}" ng-model="lossAndAdjustment.quantity"
-                 numeric-validator="positiveInteger" maxlength="8" openlmis-message="placeholder.quantity"/>
-
-          <div class="rnr-form-error"
-               id="quantity{{currentRnrLineItem.id}}"
-               style="display:none;" openlmis-message="error.number.only">
-          </div>
-        </div>
-        <div class="span4">
-          <input type="button" id="addLossesAndAdjustment"
-                 ng-click="addLossAndAdjustment(lossAndAdjustment)"
-                 ng-disabled="!(lossAndAdjustment.type && lossAndAdjustment.quantity)"
-                 class="btn btn-primary"
-                 openlmis-message="button.add"/>
-        </div>
-      </div>
-
-
-    </div>
-    <hr ng-show="currentRnrLineItem.lossesAndAdjustments.length > 0"/>
-    <div class="adjustment-list"
-         ng-show="currentRnrLineItem.lossesAndAdjustments.length > 0">
-      <ul>
-        <li ng-repeat="adjustment in currentRnrLineItem.lossesAndAdjustments"
-            class="clearfix">
+        <hr ng-show="currentRnrLineItem.lossesAndAdjustments.length > 0"/>
+        <div class="adjustment-list"
+             ng-show="currentRnrLineItem.lossesAndAdjustments.length > 0">
+            <ul>
+                <li ng-repeat="adjustment in currentRnrLineItem.lossesAndAdjustments"
+                    class="clearfix">
           <span class="tpl-adjustment-type"
                 ng-bind="adjustment.type.description"></span>
           <span class="tpl-adjustment-delete">
@@ -346,36 +348,36 @@
                    maxlength="8"
                    ng-class="highlightRequiredFieldInModal(adjustment.quantity)"
                    keyboard="false"
-              />
+                    />
 
             <div class="rnr-form-error"
                  id="{{adjustment.type.displayOrder}}"
                  style="display:none;" openlmis-message="error.number.only">
             </div>
           </span>
-        </li>
-      </ul>
-    </div>
+                </li>
+            </ul>
+        </div>
 
-    <div class="adjustment-total clearfix alert alert-warning"
-         ng-show="currentRnrLineItem.lossesAndAdjustments.length > 0">
-      <span class="pull-left" openlmis-message="label.losses.total"></span><span
-      ng-bind="currentRnrLineItem.totalLossesAndAdjustments"></span>
+        <div class="adjustment-total clearfix alert alert-warning"
+             ng-show="currentRnrLineItem.lossesAndAdjustments.length > 0">
+            <span class="pull-left" openlmis-message="label.losses.total"></span><span
+                ng-bind="currentRnrLineItem.totalLossesAndAdjustments"></span>
+        </div>
+        <div class="alert alert-danger" id="modalErrorMessage"
+             ng-show="currentRnrLineItem.lossesAndAdjustments.length > 0 && modalError"
+             ng-bind="modalError"></div>
     </div>
-    <div class="alert alert-danger" id="modalErrorMessage"
-         ng-show="currentRnrLineItem.lossesAndAdjustments.length > 0 && modalError"
-         ng-bind="modalError"></div>
-  </div>
-  <div class="modal-footer">
-    <input type="button" id="lossesAndAdjustmentsDone" class="btn btn-primary save-button"
-           ng-click="saveLossesAndAdjustmentsForRnRLineItem()"
-           openlmis-message="button.done"/>
-    <input type="button"
-           ng-click="clearAndCloseLossesAndAdjustmentModal();modalError=''"
-           class="btn btn-cancel"
-           openlmis-message="button.cancel"/>
+    <div class="modal-footer">
+        <input type="button" id="lossesAndAdjustmentsDone" class="btn btn-primary save-button"
+               ng-click="saveLossesAndAdjustmentsForRnRLineItem()"
+               openlmis-message="button.done"/>
+        <input type="button"
+               ng-click="clearAndCloseLossesAndAdjustmentModal();modalError=''"
+               class="btn btn-cancel"
+               openlmis-message="button.cancel"/>
 
-  </div>
+    </div>
 </div>
 
 </div>

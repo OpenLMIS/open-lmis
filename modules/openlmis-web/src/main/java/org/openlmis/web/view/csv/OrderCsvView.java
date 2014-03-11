@@ -10,9 +10,7 @@
 
 package org.openlmis.web.view.csv;
 
-
 import org.openlmis.core.exception.DataException;
-import org.openlmis.core.service.MessageService;
 import org.openlmis.order.domain.Order;
 import org.openlmis.order.dto.OrderFileTemplateDTO;
 import org.openlmis.order.helper.OrderCsvHelper;
@@ -29,17 +27,14 @@ import java.util.Map;
 import static org.openlmis.web.controller.OrderController.ORDER;
 import static org.openlmis.web.controller.OrderController.ORDER_FILE_TEMPLATE;
 
+/**
+ * This entity represents view to be shown in csv report for order.
+ */
 @Component
 public class OrderCsvView extends AbstractView {
 
-  MessageService messageService;
-  private OrderCsvHelper csvHelper;
-
   @Autowired
-  public OrderCsvView(MessageService messageService, OrderCsvHelper csvHelper) {
-    this.messageService = messageService;
-    this.csvHelper = csvHelper;
-  }
+  private OrderCsvHelper csvHelper;
 
   @Override
   protected void renderMergedOutputModel(Map<String, Object> model, HttpServletRequest request, HttpServletResponse response) {

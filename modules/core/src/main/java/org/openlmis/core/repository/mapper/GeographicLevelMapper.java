@@ -13,7 +13,10 @@ package org.openlmis.core.repository.mapper;
 import org.apache.ibatis.annotations.Select;
 import org.openlmis.core.domain.GeographicLevel;
 import org.springframework.stereotype.Repository;
-
+/**
+ * GeographicLevelMapper maps the GeographicLevel entity to corresponding representation in database. Provides methods
+ * like finding lowest Geographic Level.
+ */
 @Repository
 public interface GeographicLevelMapper {
 

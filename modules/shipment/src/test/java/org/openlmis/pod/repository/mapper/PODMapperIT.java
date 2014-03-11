@@ -43,8 +43,8 @@ public class PODMapperIT extends ApplicationTestContext {
   @Autowired
   QueryExecutor queryExecutor;
 
-  String productCode;
-  Order order;
+  private String productCode;
+  private Order order;
   private String dispensingUnit;
   private String productCategory;
   private String productName;
@@ -89,6 +89,9 @@ public class PODMapperIT extends ApplicationTestContext {
   public void shouldInsertPODLineItem() {
     OrderPOD orderPod = new OrderPOD();
     orderPod.setOrderId(order.getId());
+    orderPod.setFacilityId(order.getRnr().getFacility().getId());
+    orderPod.setPeriodId(order.getRnr().getPeriod().getId());
+    orderPod.setProgramId(1L);
     mapper.insertPOD(orderPod);
 
     Integer quantityShipped = 1000;
@@ -115,6 +118,9 @@ public class PODMapperIT extends ApplicationTestContext {
   public void shouldGetPodLineItemsByOrderId() throws SQLException {
     OrderPOD orderPod = new OrderPOD();
     orderPod.setOrderId(order.getId());
+    orderPod.setFacilityId(order.getRnr().getFacility().getId());
+    orderPod.setPeriodId(order.getRnr().getPeriod().getId());
+    orderPod.setProgramId(1L);
     mapper.insertPOD(orderPod);
     String productCode1 = "productCode 1";
     String productCode2 = "ProductCode 2";
@@ -158,7 +164,8 @@ public class PODMapperIT extends ApplicationTestContext {
   public void shouldGetPODByOrderId() throws SQLException {
     OrderPOD orderPod = new OrderPOD();
     orderPod.setOrderId(order.getId());
-    queryExecutor.executeUpdate("INSERT INTO pod(orderId) values(?)", order.getId());
+    queryExecutor.executeUpdate("INSERT INTO pod(orderId, facilityId, programId, periodId) values(?,?,?,?)", order.getId(), order.getRnr().getFacility().getId(),
+      1L, order.getRnr().getPeriod().getId());
 
     OrderPOD savedOrderPOD = mapper.getPODByOrderId(order.getId());
     assertThat(savedOrderPOD, is(notNullValue()));
@@ -185,6 +192,9 @@ public class PODMapperIT extends ApplicationTestContext {
   public void shouldGetPODWithLineItemsByPODId() throws Exception {
     OrderPOD expectedOrderPod = new OrderPOD();
     expectedOrderPod.setOrderId(order.getId());
+    expectedOrderPod.setFacilityId(order.getRnr().getFacility().getId());
+    expectedOrderPod.setPeriodId(order.getRnr().getPeriod().getId());
+    expectedOrderPod.setProgramId(1L);
     mapper.insertPOD(expectedOrderPod);
 
     OrderPODLineItem lineItem1 = new OrderPODLineItem(expectedOrderPod.getId(), productCode, productCategory,
@@ -202,6 +212,9 @@ public class PODMapperIT extends ApplicationTestContext {
     Long createdBy = 1L;
     Long modifiedBy = 2L;
     OrderPOD orderPod = new OrderPOD();
+    orderPod.setFacilityId(order.getRnr().getFacility().getId());
+    orderPod.setPeriodId(order.getRnr().getPeriod().getId());
+    orderPod.setProgramId(1L);
     orderPod.setOrderId(order.getId());
     orderPod.setCreatedBy(createdBy);
     orderPod.setModifiedBy(createdBy);
@@ -226,6 +239,9 @@ public class PODMapperIT extends ApplicationTestContext {
   public void shouldUpdatePODLineItem() throws Exception {
     OrderPOD orderPod = new OrderPOD();
     orderPod.setOrderId(order.getId());
+    orderPod.setFacilityId(order.getRnr().getFacility().getId());
+    orderPod.setPeriodId(order.getRnr().getPeriod().getId());
+    orderPod.setProgramId(1L);
     mapper.insertPOD(orderPod);
     OrderPODLineItem orderPodLineItem = new OrderPODLineItem(orderPod.getId(), productCode, null);
     mapper.insertPODLineItem(orderPodLineItem);

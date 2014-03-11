@@ -24,6 +24,10 @@ import java.util.List;
 
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 
+/**
+ *  This DTO represents a container for the list of ChildCoverageLineItemDTO and list of OpenedVialLineItemDTO.
+ */
+
 @Data
 @JsonSerialize(include = NON_EMPTY)
 @EqualsAndHashCode(callSuper = false)

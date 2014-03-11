@@ -19,6 +19,9 @@ import org.codehaus.jackson.map.annotate.JsonSerialize;
 
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 
+/**
+ * Regimen contains information about Regimen for a given program.
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

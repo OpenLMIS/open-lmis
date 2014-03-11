@@ -15,6 +15,10 @@ import org.openlmis.core.service.DeliveryZoneProgramScheduleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+/**
+ * DeliveryZoneProgramScheduleHandler is used for uploads of DeliveryZone, Program and Schedule mapping.
+ * It uploads each DeliveryZoneProgramSchedule record by record.
+ */
 @Component
 public class DeliveryZoneProgramScheduleHandler extends AbstractModelPersistenceHandler {
 

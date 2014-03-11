@@ -16,6 +16,11 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.BaseModel;
 
+/**
+ *  TargetGroupProduct represents the mapping of a targetGroupEntity to valid product. Also it keeps track if the mapping
+ *  is for child coverage or adult coverage calculations.
+ */
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

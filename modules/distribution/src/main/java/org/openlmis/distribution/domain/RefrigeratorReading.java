@@ -22,6 +22,11 @@ import org.openlmis.core.domain.Refrigerator;
 
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 
+/**
+ *  RefrigeratorReading represents an entity which keeps track of performance and operating issues of a refrigerator.
+ *  It holds Refrigerator Problem entity.
+ */
+
 @Data
 @EqualsAndHashCode(callSuper = false)
 @NoArgsConstructor

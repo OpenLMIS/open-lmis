@@ -18,7 +18,9 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Date;
 
-
+/**
+ * Repository to interact with DBMapper for utility methods.
+ */
 @Repository
 @NoArgsConstructor
 public class DbRepository {

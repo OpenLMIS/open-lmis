@@ -12,6 +12,7 @@ package org.openlmis.pageobjects.edi;
 
 import org.openlmis.UiUtils.TestWebDriver;
 import org.openlmis.pageobjects.Page;
+import org.openlmis.pageobjects.PageObjectFactory;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
@@ -41,18 +42,18 @@ public class ConfigureEDIPage extends Page {
   public ConfigureOrderPage navigateConfigureOrderPage() {
     testWebDriver.waitForElementToAppear(configureOrderButton);
     configureOrderButton.click();
-    return new ConfigureOrderPage(testWebDriver);
+    return PageObjectFactory.getConfigureOrderPage(testWebDriver);
   }
 
   public ConfigureShipmentPage navigateConfigureShipmentPage() {
     testWebDriver.waitForElementToAppear(configureShipmentButton);
     configureShipmentButton.click();
-    return new ConfigureShipmentPage(testWebDriver);
+    return PageObjectFactory.getConfigureShipmentPage(testWebDriver);
   }
 
   public ConfigureBudgetPage navigateConfigureBudgetPage() {
     testWebDriver.waitForElementToAppear(configureBudgetButton);
     configureBudgetButton.click();
-    return new ConfigureBudgetPage(testWebDriver);
+    return PageObjectFactory.getConfigureBudgetPage(testWebDriver);
   }
 }

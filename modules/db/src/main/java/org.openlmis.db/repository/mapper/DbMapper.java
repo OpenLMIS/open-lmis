@@ -16,6 +16,9 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Date;
 
+/**
+ * This class provides utility methods to interact with DB, like getting timestamp and record count for a table
+ */
 @Repository
 public interface DbMapper {
 

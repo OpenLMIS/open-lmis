@@ -23,20 +23,21 @@ import java.util.Date;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.assertEquals;
 import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
+import static org.openqa.selenium.support.How.ID;
 
 
 public class PeriodsPage extends Page {
 
-  @FindBy(how = How.ID, using = "name")
+  @FindBy(how = ID, using = "name")
   private static WebElement namePeriod = null;
 
-  @FindBy(how = How.ID, using = "description")
+  @FindBy(how = ID, using = "description")
   private static WebElement descriptionPeriod = null;
 
-  @FindBy(how = How.ID, using = "startDate")
+  @FindBy(how = ID, using = "startDate")
   private static WebElement startDatePeriod = null;
 
-  @FindBy(how = How.ID, using = "endDate")
+  @FindBy(how = ID, using = "endDate")
   private static WebElement endDatePeriod = null;
 
   @FindBy(how = How.XPATH, using = "//span[contains(text(),'Prev')]")
@@ -57,10 +58,10 @@ public class PeriodsPage extends Page {
   @FindBy(how = How.XPATH, using = "//a[contains(text(),'28')]")
   private static WebElement endDateThirdCalender = null;
 
-  @FindBy(how = How.XPATH, using = "//span[@id='numberOfMonths']")
+  @FindBy(how = ID, using = "numberOfMonths")
   private static WebElement numberOfMonthsPeriods = null;
 
-  @FindBy(how = How.XPATH, using = "//input[@value='Add']")
+  @FindBy(how = ID, using = "periodAdd")
   private static WebElement addButton = null;
 
   @FindBy(how = How.XPATH, using = "//input[@value='Delete']")

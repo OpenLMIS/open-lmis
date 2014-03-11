@@ -33,7 +33,7 @@ public class ApprovePage extends RequisitionPage {
   @FindBy(how = ID, using = "NoRequisitionsPendingMessage")
   private static WebElement NoRequisitionsPendingMessage = null;
 
-  @FindBy(how = XPATH, using = "//div[@class='form-group']/h3")
+  @FindBy(how = ID, using = "requisitionListLabel")
   private static WebElement requisitionListHeader = null;
 
   @FindBy(how = XPATH, using = "//div[@class='ngCellText ng-scope col0 colt0']")
@@ -45,10 +45,10 @@ public class ApprovePage extends RequisitionPage {
   @FindBy(how = XPATH, using = "//div[@class='ngCellText ng-scope col4 colt4']/span")
   private static WebElement periodEndDate = null;
 
-  @FindBy(how = XPATH, using = "//div[@id='requisition-header']/h2")
+  @FindBy(how = ID, using = "requisition-header")
   private static WebElement requisitionHeader = null;
 
-  @FindBy(how = XPATH, using = "//div[@id='requisition-head-block']/div[1]/span")
+  @FindBy(how = ID, using = "facility")
   private static WebElement facilityLabel = null;
 
   @FindBy(how = ID, using = "calculatedOrderQuantity_0")
@@ -96,22 +96,22 @@ public class ApprovePage extends RequisitionPage {
   @FindBy(how = ID, using = "remarks_0")
   private static WebElement remarks = null;
 
-  @FindBy(how = XPATH, using = "//input[@value='Approve']")
+  @FindBy(how = ID, using = "approveButton")
   private static WebElement approveButton = null;
 
-  @FindBy(how = XPATH, using = "//input[@value='Save']")
+  @FindBy(how = ID, using = "saveButton")
   private static WebElement saveButton = null;
 
-  @FindBy(how = XPATH, using = "//div[@id='requisition-header']/div/div[2]/div[2]/div[3]/span")
+  @FindBy(how = ID, using = "reportingPeriod")
   private static WebElement reportingPeriodInitRnRScreen = null;
 
-  @FindBy(how = XPATH, using = "//span[@ng-bind='rnr.facility.geographicZone.name']")
+  @FindBy(how = ID, using = "geographicZone")
   private static WebElement geoZoneInitRnRScreen = null;
 
-  @FindBy(how = XPATH, using = "//span[@ng-bind='rnr.facility.geographicZone.parent.name']")
+  @FindBy(how = ID, using = "parentLevel")
   private static WebElement parentGeoZoneInitRnRScreen = null;
 
-  @FindBy(how = XPATH, using = "//span[@ng-bind='rnr.facility.operatedBy.text']")
+  @FindBy(how = ID, using = "operatedBy")
   private static WebElement operatedByInitRnRScreen = null;
 
   @FindBy(how = XPATH, using = "//i[@class='icon-ok']")

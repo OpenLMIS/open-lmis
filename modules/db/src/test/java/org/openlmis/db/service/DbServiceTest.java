@@ -25,6 +25,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+
 @Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
 public class DbServiceTest {
@@ -42,18 +43,8 @@ public class DbServiceTest {
 
     Date currentTimeStamp = dbService.getCurrentTimestamp();
 
-    assertThat(currentTimeStamp,is(expectedTimestamp));
+    assertThat(currentTimeStamp, is(expectedTimestamp));
     verify(dbRepository).getCurrentTimeStamp();
   }
 
-  @Test
-  public void shouldGetCountByTableName() throws Exception {
-    String table = "facilities";
-    when(dbRepository.getCount(table)).thenReturn(15);
-
-    int facilityCount = dbService.getCount(table);
-
-    assertThat(facilityCount, is(15));
-    verify(dbRepository).getCount(table);
-  }
 }

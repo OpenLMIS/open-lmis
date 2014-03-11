@@ -13,6 +13,9 @@ package org.openlmis.authentication;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
+/**
+ * This class represents a user token consisting username, id and authenticated flag.
+ */
 @Data
 @AllArgsConstructor
 public class UserToken {

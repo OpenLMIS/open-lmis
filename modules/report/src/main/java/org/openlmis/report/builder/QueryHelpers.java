@@ -50,6 +50,7 @@ public class QueryHelpers {
         }
         StringBuilder sortOrder = new StringBuilder("");
 
+      if(filterCriteria != null){
         for(Object entryObject : filterCriteria.keySet()){
 
             String entry = entryObject.toString();
@@ -58,7 +59,7 @@ public class QueryHelpers {
                             sortOrder.append(columnMapping.get(entry.substring(5)).toString()).append("  ").append(((String[])filterCriteria.get(entry))[0]) :
                              sortOrder.append(",").append(columnMapping.get(entry.substring(5)).toString()).append("  ").append(((String[])filterCriteria.get(entry))[0]) ;
         }
-
+      }
         return sortOrder.toString().equals("") ? defaultSortOrder : sortOrder.toString();
 
     }

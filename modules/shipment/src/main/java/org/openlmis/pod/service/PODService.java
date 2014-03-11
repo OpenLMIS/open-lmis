@@ -35,6 +35,10 @@ import java.util.List;
 import static org.openlmis.core.domain.Right.MANAGE_POD;
 import static org.openlmis.order.domain.OrderStatus.*;
 
+/**
+ * Exposes the services for handling OrderPOD entity.
+ */
+
 @Service
 public class PODService {
 
@@ -57,12 +61,14 @@ public class PODService {
   public OrderPOD createPOD(OrderPOD orderPOD) {
     checkPermissions(orderPOD);
 
+    Rnr requisition = requisitionService.getFullRequisitionById(orderPOD.getOrderId());
+    orderPOD.fillPOD(requisition);
+
     if (orderService.hasStatus(orderPOD.getOrderId(), RELEASED, READY_TO_PACK, TRANSFER_FAILED)) {
-      Rnr requisition = requisitionService.getFullRequisitionById(orderPOD.getOrderId());
-      orderPOD.fillPODWithRequisition(requisition);
+      orderPOD.fillPODLineItems(requisition.getAllLineItems());
     } else if (orderService.hasStatus(orderPOD.getOrderId(), PACKED)) {
       List<ShipmentLineItem> shipmentLineItems = shipmentService.getLineItems(orderPOD.getOrderId());
-      orderPOD.fillPodLineItems(shipmentLineItems);
+      orderPOD.fillPODLineItems(shipmentLineItems);
     }
 
     return repository.insert(orderPOD);

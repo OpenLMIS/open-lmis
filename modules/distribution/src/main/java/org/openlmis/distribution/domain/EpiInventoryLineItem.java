@@ -19,6 +19,10 @@ import org.openlmis.core.domain.FacilityProgramProduct;
 
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 
+/**
+ *  EpiInventoryLineItem represents an entity which keeps record of delivery and stock information of a product.
+ */
+
 @Data
 @NoArgsConstructor
 @JsonSerialize(include = NON_EMPTY)

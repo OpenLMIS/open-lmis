@@ -30,6 +30,13 @@ import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.web.bind.annotation.RequestMethod.*;
 
+/**
+ * This controller is responsible for handling API endpoint to create/approve a requisition.
+ * A user of any external integrated system can submit a request to this endpoint triggering actions like create or approve.
+ * The system responds with the requisition Number on success and specific error messages on failure.
+ * It also acts as an end point to get requisition details.
+ */
+
 @Controller
 @NoArgsConstructor
 public class RestRequisitionController extends BaseController {
@@ -45,6 +52,17 @@ public class RestRequisitionController extends BaseController {
 
     try {
       requisition = restRequisitionService.submitReport(report, loggedInUserId(principal));
+    } catch (DataException e) {
+      return error(e.getOpenLmisMessage(), BAD_REQUEST);
+    }
+    return response(RNR, requisition.getId(), CREATED);
+  }
+
+  @RequestMapping(value = "/rest-api/sdp-requisitions", method = POST, headers = ACCEPT_JSON)
+  public ResponseEntity<RestResponse> submitSDPRequisition(@RequestBody Report report, Principal principal) {
+    Rnr requisition;
+    try {
+      requisition = restRequisitionService.submitSdpReport(report, loggedInUserId(principal));
     } catch (DataException e) {
       return error(e.getOpenLmisMessage(), BAD_REQUEST);
     }

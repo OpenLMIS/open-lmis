@@ -39,6 +39,10 @@ import static org.springframework.http.MediaType.TEXT_HTML_VALUE;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
+/**
+ * This controller handles endpoints to related to uploads.
+ */
+
 @Controller
 public class UploadController extends BaseController {
 
@@ -55,7 +59,7 @@ public class UploadController extends BaseController {
   private CSVParser csvParser;
 
   @Autowired
-  DbService dbService;
+  private DbService dbService;
 
   @Autowired
   private HashMap<String, UploadBean> uploadBeansMap;

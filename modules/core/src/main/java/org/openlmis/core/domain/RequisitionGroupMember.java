@@ -16,6 +16,10 @@ import lombok.NoArgsConstructor;
 import org.openlmis.upload.Importable;
 import org.openlmis.upload.annotation.ImportField;
 
+/**
+ * RequisitionGroupMember represents a facility which is a member of a Requisition Group. It also defines the contract
+ * for upload of RequisitionGroupMember.
+ */
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)

@@ -15,7 +15,6 @@ import org.openlmis.UiUtils.TestWebDriver;
 import org.openlmis.pageobjects.RequisitionPage;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
-import org.openqa.selenium.support.How;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 
@@ -23,50 +22,51 @@ import java.util.List;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
 import static com.thoughtworks.selenium.SeleneseTestCase.assertEquals;
+import static org.openqa.selenium.support.How.ID;
 import static org.openqa.selenium.support.How.XPATH;
 
 public class ConvertOrderPage extends RequisitionPage {
 
-  @FindBy(how = How.XPATH, using = "//div[@class='ngCellText ng-scope col1 colt1']/span")
+  @FindBy(how = XPATH, using = "//div[@class='ngCellText ng-scope col1 colt1']/span")
   private static WebElement programOnOrderScreen = null;
 
-  @FindBy(how = How.XPATH, using = "//div[@class='ngCellText ng-scope col2 colt2']/span")
+  @FindBy(how = XPATH, using = "//div[@class='ngCellText ng-scope col2 colt2']/span")
   private static WebElement facilityCodeOnOrderScreen = null;
 
-  @FindBy(how = How.XPATH, using = "//div[@class='ngCellText ng-scope col3 colt3']/span")
+  @FindBy(how = XPATH, using = "//div[@class='ngCellText ng-scope col3 colt3']/span")
   private static WebElement facilityNameOnOrderScreen = null;
 
-  @FindBy(how = How.XPATH, using = "//div[@class='ngCellText ng-scope col4 colt4']/span")
+  @FindBy(how = XPATH, using = "//div[@class='ngCellText ng-scope col4 colt4']/span")
   private static WebElement periodStartDateOnOrderScreen = null;
 
-  @FindBy(how = How.XPATH, using = "//div[@class='ngCellText ng-scope col5 colt5']/span")
+  @FindBy(how = XPATH, using = "//div[@class='ngCellText ng-scope col5 colt5']/span")
   private static WebElement periodEndDateOnOrderScreen = null;
 
-  @FindBy(how = How.XPATH, using = "//div[@class='ngCellText ng-scope col8 colt8']/span")
+  @FindBy(how = XPATH, using = "//div[@class='ngCellText ng-scope col8 colt8']/span")
   private static WebElement supplyDepotOnOrderScreen = null;
 
-  @FindBy(how = How.XPATH, using = "//input[@class='ngSelectionCheckbox']")
+  @FindBy(how = XPATH, using = "//input[@class='ngSelectionCheckbox']")
   private static WebElement checkboxOnOrderScreen = null;
 
-  @FindBy(how = How.XPATH, using = "//input[@value='Convert To Order']")
+  @FindBy(how = ID, using = "covertToOrderButton")
   private static WebElement convertToOrderButton = null;
 
-  @FindBy(how = How.XPATH, using = "//div[@id='noRequisitionSelectedMsgDiv']")
+  @FindBy(how = ID, using = "noRequisitionSelectedMsgDiv")
   private static WebElement noRequisitionSelectedDiv = null;
 
-  @FindBy(how = How.XPATH, using = "//div[@class='input-append input-prepend']/input")
+  @FindBy(how = ID, using = "searchOnConvertToOrder")
   private static WebElement searchTextBox = null;
 
-  @FindBy(how = How.XPATH, using = "//button[@ng-click='updateSearchParams()']")
+  @FindBy(how = ID, using = "searchIcon")
   private static WebElement searchButton = null;
 
-  @FindBy(how = How.XPATH, using = "//div[@class='input-append input-prepend']/div/button")
+  @FindBy(how = ID, using = "searchOptionButton")
   private static WebElement searchOptionButton = null;
 
   @FindBy(how = XPATH, using = "//i[@class='icon-ok']")
   private static WebElement emergencyIcon = null;
 
-  @FindBy(how = XPATH, using = "//span[@openlmis-message='message.no.requisitions.for.conversion']")
+  @FindBy(how = ID, using = "noRequisitionMessage")
   private static WebElement noRequisitionPending = null;
 
   public ConvertOrderPage(TestWebDriver driver) {

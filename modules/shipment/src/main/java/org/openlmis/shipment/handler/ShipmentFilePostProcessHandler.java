@@ -12,7 +12,6 @@ package org.openlmis.shipment.handler;
 
 import lombok.NoArgsConstructor;
 import org.apache.log4j.Logger;
-import org.openlmis.order.service.OrderEventService;
 import org.openlmis.order.service.OrderService;
 import org.openlmis.shipment.domain.ShipmentFileInfo;
 import org.openlmis.shipment.service.ShipmentService;
@@ -27,6 +26,11 @@ import java.util.Set;
 
 import static org.apache.commons.io.FileUtils.deleteQuietly;
 import static org.springframework.integration.support.MessageBuilder.withPayload;
+
+/**
+ * ShipmentFilePostProcessHandler sends the shipment file to archive folder if successfully processed
+ * else to the error folder.
+ */
 
 @Component
 @NoArgsConstructor

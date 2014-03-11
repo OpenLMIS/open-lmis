@@ -18,6 +18,9 @@ import org.codehaus.jackson.map.annotate.JsonSerialize;
 
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 
+/**
+ * Program represents a Program and its attributes.
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

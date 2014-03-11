@@ -20,43 +20,45 @@ import org.openqa.selenium.support.How;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 
+import static org.openqa.selenium.support.How.ID;
+
 
 public class RegimenTemplateConfigPage extends Page {
 
-  @FindBy(how = How.XPATH, using = "//input[@value='Save']")
+  @FindBy(how = ID, using = "saveRegimen")
   private static WebElement SaveButton = null;
 
-  @FindBy(how = How.XPATH, using = "//a[contains(text(),'Cancel')]")
+  @FindBy(how = ID, using = "cancelRegimen")
   private static WebElement CancelButton = null;
 
-  @FindBy(how = How.ID, using = "saveSuccessMsgDiv")
+  @FindBy(how = ID, using = "saveSuccessMsgDiv")
   private static WebElement saveSuccessMsgDiv = null;
 
-  @FindBy(how = How.ID, using = "saveErrorMsgDiv")
+  @FindBy(how = ID, using = "saveErrorMsgDiv")
   private static WebElement saveErrorMsgDiv = null;
 
-  @FindBy(how = How.ID, using = "newRegimenCategory")
+  @FindBy(how = ID, using = "newRegimenCategory")
   private static WebElement newRegimenCategoryDropDown = null;
 
-  @FindBy(how = How.ID, using = "newRegimenCode")
+  @FindBy(how = ID, using = "newRegimenCode")
   private static WebElement newRegimenCodeTextBox = null;
 
-  @FindBy(how = How.ID, using = "newRegimenName")
+  @FindBy(how = ID, using = "newRegimenName")
   private static WebElement newRegimenNameTextBox = null;
 
-  @FindBy(how = How.ID, using = "newRegimenActive")
+  @FindBy(how = ID, using = "newRegimenActive")
   private static WebElement newRegimenActiveCheckBox = null;
 
-  @FindBy(how = How.ID, using = "addNewRegimen")
+  @FindBy(how = ID, using = "addNewRegimen")
   private static WebElement addButton = null;
 
-  @FindBy(how = How.XPATH, using = "//input[@value='Edit']")
+  @FindBy(how = ID, using = "editRegimen")
   private static WebElement editButton = null;
 
-  @FindBy(how = How.XPATH, using = "//input[@value='Done']")
+  @FindBy(how = ID, using = "regimenDone")
   private static WebElement doneButton = null;
 
-  @FindBy(how = How.ID, using = "doneFailMessage")
+  @FindBy(how = ID, using = "doneFailMessage")
   private static WebElement doneFailMessage = null;
 
   @FindBy(how = How.XPATH, using = ".//*[@id='wrap']/div/div/div/div[2]/ul/li[1]/a")
@@ -98,7 +100,7 @@ public class RegimenTemplateConfigPage extends Page {
   @FindBy(how = How.XPATH, using = ".//*[@id='reportingFields']/div[2]/div[4]/div/div[3]/span")
   private static WebElement remarksDataType = null;
 
-  @FindBy(how = How.ID, using = "regimensTab")
+  @FindBy(how = ID, using = "regimensTab")
   private static WebElement regimensTab = null;
 
   private static String baseRegimenDivXpath = "//div[@id='sortable']/div";

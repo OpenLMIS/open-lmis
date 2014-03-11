@@ -29,13 +29,13 @@ public class FacilityListPage extends RequisitionPage {
   @FindBy(how = XPATH, using = "//*[@id='select2-drop']/div/input")
   private static WebElement inputFacilitySearch = null;
 
-  @FindBy(how = XPATH, using = "//h2[contains(text(),'No facility selected')]")
+  @FindBy(how = ID, using = "noFacilitySelectedMessage")
   private static WebElement noFacilitySelectedHeader = null;
 
-  @FindBy(how = XPATH, using = "//div[@class='record-facility-data ng-scope']/div[1]/div[1]/h2/span[3]")
+  @FindBy(how = ID, using = "facilitySelected")
   private static WebElement facilityPageHeaderName = null;
 
-  @FindBy(how = XPATH, using = "//div[@class='record-facility-data ng-scope']/div[1]/div[1]/h2/span[1]")
+  @FindBy(how = ID, using = "healthCenterLabel")
   private static WebElement facilityPageHeaderZone = null;
 
   @FindBy(how = XPATH, using = "//*[@id='s2id_selectFacility']/a")
@@ -56,34 +56,34 @@ public class FacilityListPage extends RequisitionPage {
   @FindBy(how = XPATH, using = "//div[@class='select2-result-label']/div/span[@class='status-icon']")
   private static WebElement firstFacilityIndicator = null;
 
-  @FindBy(how = XPATH, using = "//div[@id='legend']/span[1]/span[2]")
+  @FindBy(how = ID, using = "notStartedLegendLabel")
   private static WebElement legendNotStartedText = null;
 
-  @FindBy(how = XPATH, using = "//div[@id='legend']/span[1]/span[1]")
+  @FindBy(how = ID, using = "notStartedLegendIcon")
   private static WebElement legendNotStartedIcon = null;
 
-  @FindBy(how = XPATH, using = "//div[@id='legend']/span[2]/span[2]")
+  @FindBy(how = ID, using = "partialLegendLabel")
   private static WebElement legendPartiallyCompletedText = null;
 
-  @FindBy(how = XPATH, using = "//div[@id='legend']/span[2]/span[1]")
+  @FindBy(how = ID, using = "partialLegendIcon")
   private static WebElement legendPartiallyCompletedIcon = null;
 
-  @FindBy(how = XPATH, using = "//div[@id='legend']/span[3]/span[2]")
+  @FindBy(how = ID, using = "completedLegendLabel")
   private static WebElement legendCompletedText = null;
 
-  @FindBy(how = XPATH, using = "//div[@id='legend']/span[3]/span[1]")
+  @FindBy(how = ID, using = "completedLegendIcon")
   private static WebElement legendCompletedIcon = null;
 
-  @FindBy(how = XPATH, using = "//div[@id='legend']/span[4]/span[2]")
+  @FindBy(how = ID, using = "syncedLegendLabel")
   private static WebElement legendSynchronizedText = null;
 
-  @FindBy(how = XPATH, using = "//div[@id='legend']/span[4]/span[1]")
+  @FindBy(how = ID, using = "syncedLegendIcon")
   private static WebElement legendSynchronizedIcon = null;
 
-  @FindBy(how = XPATH, using = "//div[@id='legend']/span[5]/span[2]")
+  @FindBy(how = ID, using = "cannotSyncLegendLabel")
   private static WebElement legendCannotSynchronizedText = null;
 
-  @FindBy(how = XPATH, using = "//div[@id='legend']/span[5]/span[1]")
+  @FindBy(how = ID, using = "cannotSyncLegendIcon")
   private static WebElement legendCannotSynchronizedIcon = null;
 
   public FacilityListPage(TestWebDriver driver) {
@@ -128,7 +128,7 @@ public class FacilityListPage extends RequisitionPage {
     testWebDriver.waitForElementToAppear(facilityListSelectField);
     facilityListSelectField.click();
     testWebDriver.sleep(250);
-    return new VisitInformationPage(testWebDriver);
+    return PageObjectFactory.getVisitInformationPage(testWebDriver);
   }
 
   public void clickFacilityListDropDown() {

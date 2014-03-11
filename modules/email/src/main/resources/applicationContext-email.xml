@@ -23,7 +23,6 @@
 
   <context:annotation-config/>
   <context:spring-configured/>
-  <int:annotation-config/>
 
   <context:component-scan base-package="org.openlmis.email"/>
   <import resource="classpath*:applicationContext-db.xml"/>
@@ -37,18 +36,29 @@
     <property name="javaMailProperties" ref="mailProperties"/>
   </bean>
 
-  <int:channel id="inputChannel"/>
+  <int:channel id="inputChannel">
+    <int:dispatcher task-executor="emailMessageDispatcher"></int:dispatcher>
+  </int:channel>
 
   <int-jdbc:inbound-channel-adapter channel="inputChannel"
                                     data-source="dataSource"
                                     query="SELECT * FROM email_notifications WHERE sent = false"
                                     row-mapper="emailMessageRowMapper"
                                     max-rows-per-poll="${email.notification.rows.per.poll}"
-                                    update="UPDATE email_notifications SET sent = true WHERE id IN (:id)">
-    <int:poller fixed-rate="${email.notification.polling.rate}">
+                                    update="UPDATE email_notifications SET sent = true WHERE id IN (:id)"
+                                    update-per-row="true">
+  <int:poller fixed-rate="${email.notification.polling.rate}">
       <int:transactional/>
     </int:poller>
   </int-jdbc:inbound-channel-adapter>
+
+  <bean id="emailMessageDispatcher" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
+    <property name="corePoolSize" value="1"/>
+    <property name="maxPoolSize" value="1"/>
+    <property name="queueCapacity" value="-1"/>
+  </bean>
+
+  <int:service-activator input-channel="inputChannel" ref="emailService" method="processEmails"/>
 
   <util:properties id="mailProperties">
     <prop key="mail.smtp.auth">${mail.smtp.auth}</prop>

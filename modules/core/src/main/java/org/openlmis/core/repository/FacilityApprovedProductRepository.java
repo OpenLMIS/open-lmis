@@ -22,6 +22,10 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+/**
+ * FacilityApprovedProductRepository is repository class for FacilityApprovedProduct related database operations.
+ */
+
 @Component
 @NoArgsConstructor
 public class FacilityApprovedProductRepository {
@@ -95,6 +99,6 @@ public class FacilityApprovedProductRepository {
 
   public FacilityTypeApprovedProduct getFacilityApprovedProductByProgramProductAndFacilityTypeCode(FacilityTypeApprovedProduct facilityTypeApprovedProduct) {
     return facilityApprovedProductMapper.getFacilityApprovedProductIdByProgramProductAndFacilityTypeCode(
-        facilityTypeApprovedProduct.getProgramProduct().getId(), facilityTypeApprovedProduct.getFacilityType().getCode());
+      facilityTypeApprovedProduct.getProgramProduct().getId(), facilityTypeApprovedProduct.getFacilityType().getCode());
   }
 }

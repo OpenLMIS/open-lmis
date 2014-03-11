@@ -18,13 +18,13 @@ import org.openqa.selenium.support.FindBy;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 
-import static org.openqa.selenium.support.How.LINK_TEXT;
+import static org.openqa.selenium.support.How.ID;
 
 public abstract class Page {
 
   public TestWebDriver testWebDriver;
 
-  @FindBy(how = LINK_TEXT, using = "Logout")
+  @FindBy(how = ID, using = "logout")
   private static WebElement logoutLink = null;
 
   protected Page(TestWebDriver driver) {
@@ -39,9 +39,11 @@ public abstract class Page {
   }
 
   public void sendKeys(WebElement locator, String value) {
-    int length = testWebDriver.getAttribute(locator, "value").length();
-    for (int i = 0; i < length; i++)
+    String locatorValueAttribute = testWebDriver.getAttribute(locator, "value");
+    int length = locatorValueAttribute.length();
+    for (int i = 0; i < length; i++) {
       locator.sendKeys("\u0008");
+    }
     locator.sendKeys(value);
   }
 

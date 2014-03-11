@@ -27,6 +27,11 @@ import java.util.List;
 import static org.apache.commons.collections.CollectionUtils.collect;
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 
+/**
+ *  This DTO represents a container for the list of RefrigeratorReadingDTO. It holds the client side representation of
+ *  all the Refrigerators, their respective Refrigerator Reading and Refrigerator problems.
+ */
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

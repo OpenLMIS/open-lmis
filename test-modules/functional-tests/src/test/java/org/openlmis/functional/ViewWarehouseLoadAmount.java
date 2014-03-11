@@ -18,10 +18,7 @@ import cucumber.api.java.en.Then;
 import org.openlmis.UiUtils.CaptureScreenshotOnFailureListener;
 import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.UiUtils.TestWebDriver;
-import org.openlmis.pageobjects.DistributionPage;
-import org.openlmis.pageobjects.HomePage;
-import org.openlmis.pageobjects.LoginPage;
-import org.openlmis.pageobjects.WarehouseLoadAmountPage;
+import org.openlmis.pageobjects.*;
 import org.openqa.selenium.JavascriptExecutor;
 import org.testng.annotations.*;
 
@@ -61,7 +58,7 @@ public class ViewWarehouseLoadAmount extends TestCaseHelper {
   @BeforeMethod(groups = "distribution")
   public void setUp() throws InterruptedException, SQLException, IOException {
     super.setup();
-    loginPage = PageFactory.getInstanceOfLoginPage(testWebDriver, baseUrlGlobal);
+    loginPage = PageObjectFactory.getLoginPage(testWebDriver, baseUrlGlobal);
   }
 
   @Given("^I have data available for distribution load amount$")
@@ -125,7 +122,7 @@ public class ViewWarehouseLoadAmount extends TestCaseHelper {
 
   @Then("^I should see aggregate ISA values as per multiple facilities in one delivery zone$")
   public void verifyISAAndOverrideISAValuesAggregatedForMultipleFacilities() {
-    warehouseLoadAmountPage = PageFactory.getInstanceOfWarehouseLoadAmountPage(testWebDriver);
+    warehouseLoadAmountPage = PageObjectFactory.getWarehouseLoadAmountPage(testWebDriver);
     assertEquals(String.valueOf(Integer.parseInt(warehouseLoadAmountPage.getFacilityPopulation(1, 1)) +
       Integer.parseInt(warehouseLoadAmountPage.getFacilityPopulation(1, 2))), warehouseLoadAmountPage.getTotalPopulation(1));
     assertEquals(String.valueOf(Integer.parseInt(warehouseLoadAmountPage.getProductIsa(1, 1, 1)) +
@@ -144,7 +141,7 @@ public class ViewWarehouseLoadAmount extends TestCaseHelper {
 
   @Then("^I should see ISA values as per delivery zone facilities$")
   public void verifyISAAndOverrideISA() {
-    warehouseLoadAmountPage = PageFactory.getInstanceOfWarehouseLoadAmountPage(testWebDriver);
+    warehouseLoadAmountPage = PageObjectFactory.getWarehouseLoadAmountPage(testWebDriver);
     assertEquals(facilityCodeSecond, warehouseLoadAmountPage.getFacilityCode(1, 1));
     assertEquals("Central Hospital", warehouseLoadAmountPage.getFacilityName(1, 1));
     assertEquals("333", warehouseLoadAmountPage.getFacilityPopulation(1, 1));
@@ -155,7 +152,7 @@ public class ViewWarehouseLoadAmount extends TestCaseHelper {
 
   @And("^I verify ISA values for Product1 as:$")
   public void verifyISAForProduct1(DataTable dataTable) {
-    warehouseLoadAmountPage = PageFactory.getInstanceOfWarehouseLoadAmountPage(testWebDriver);
+    warehouseLoadAmountPage = PageObjectFactory.getWarehouseLoadAmountPage(testWebDriver);
     List<Map<String, String>> facilityProductISAMaps = dataTable.asMaps();
     for (Map<String, String> facilityProductISAMap : facilityProductISAMaps) {
       assertEquals(facilityProductISAMap.get("Facility1"), warehouseLoadAmountPage.getProductIsa(1, 1, 1));
@@ -165,7 +162,7 @@ public class ViewWarehouseLoadAmount extends TestCaseHelper {
 
   @And("^I verify ISA values for Product2 as:$")
   public void verifyISAForProduct2(DataTable dataTable) {
-    warehouseLoadAmountPage = PageFactory.getInstanceOfWarehouseLoadAmountPage(testWebDriver);
+    warehouseLoadAmountPage = PageObjectFactory.getWarehouseLoadAmountPage(testWebDriver);
     List<Map<String, String>> facilityProductISAMaps = dataTable.asMaps();
     for (Map<String, String> facilityProductISAMap : facilityProductISAMaps) {
       assertEquals(facilityProductISAMap.get("Facility1"), warehouseLoadAmountPage.getProductIsa(1, 1, 2));
@@ -175,7 +172,7 @@ public class ViewWarehouseLoadAmount extends TestCaseHelper {
 
   @And("^I should not see inactive products on view load amount$")
   public void verifyInactiveProductsNotDisplayedOnViewLoadAmount() {
-    warehouseLoadAmountPage = PageFactory.getInstanceOfWarehouseLoadAmountPage(testWebDriver);
+    warehouseLoadAmountPage = PageObjectFactory.getWarehouseLoadAmountPage(testWebDriver);
     assertFalse(warehouseLoadAmountPage.getAggregateTableData().contains("ProductName6"));
     assertFalse(warehouseLoadAmountPage.getTable1Data().contains("ProductName6"));
 
@@ -188,7 +185,7 @@ public class ViewWarehouseLoadAmount extends TestCaseHelper {
 
   @Then("^I should see message \"([^\"]*)\"$")
   public void verifyNoRecordFoundMessage(String message) {
-    warehouseLoadAmountPage = PageFactory.getInstanceOfWarehouseLoadAmountPage(testWebDriver);
+    warehouseLoadAmountPage = PageObjectFactory.getWarehouseLoadAmountPage(testWebDriver);
     assertEquals(message, warehouseLoadAmountPage.getNoRecordFoundMessage());
   }
 
@@ -242,7 +239,7 @@ public class ViewWarehouseLoadAmount extends TestCaseHelper {
     distributionPage.selectValueFromPeriod(periodDisplayedByDefault);
     distributionPage.clickViewLoadAmount();
 
-    warehouseLoadAmountPage = PageFactory.getInstanceOfWarehouseLoadAmountPage(testWebDriver);
+    warehouseLoadAmountPage = PageObjectFactory.getWarehouseLoadAmountPage(testWebDriver);
 
     assertEquals(warehouseLoadAmountPage.getFacilityPopulation(1, 1), warehouseLoadAmountPage.getTotalPopulation(1));
     assertEquals("--", warehouseLoadAmountPage.getTotalProductIsa(1, 1));
@@ -315,7 +312,7 @@ public class ViewWarehouseLoadAmount extends TestCaseHelper {
     distributionPage.selectValueFromPeriod(periodDisplayedByDefault);
     distributionPage.clickViewLoadAmount();
 
-    warehouseLoadAmountPage = PageFactory.getInstanceOfWarehouseLoadAmountPage(testWebDriver);
+    warehouseLoadAmountPage = PageObjectFactory.getWarehouseLoadAmountPage(testWebDriver);
 
     verifyWarehouseLoadAmountHeader(deliveryZoneNameFirst, programFirst, periodDisplayedByDefault);
     assertEquals(facilityCodeSecond, warehouseLoadAmountPage.getFacilityCode(1, 1));
@@ -389,7 +386,7 @@ public class ViewWarehouseLoadAmount extends TestCaseHelper {
   public void tearDown() throws SQLException {
     testWebDriver.sleep(500);
     if (!testWebDriver.getElementById("username").isDisplayed()) {
-      HomePage homePage = PageFactory.getInstanceOfHomePage(testWebDriver);
+      HomePage homePage = PageObjectFactory.getHomePage(testWebDriver);
       homePage.logout(baseUrlGlobal);
       dbWrapper.deleteData();
       dbWrapper.closeConnection();

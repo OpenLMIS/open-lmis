@@ -14,8 +14,8 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.openlmis.core.exception.DataException;
-import org.openlmis.order.dto.ShipmentLineItemDTO;
 import org.openlmis.shipment.domain.ShipmentLineItem;
+import org.openlmis.shipment.dto.ShipmentLineItemDTO;
 
 import java.util.Date;
 

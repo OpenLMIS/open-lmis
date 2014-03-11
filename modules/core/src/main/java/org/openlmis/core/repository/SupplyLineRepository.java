@@ -18,7 +18,9 @@ import org.openlmis.core.repository.mapper.SupplyLineMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
+/**
+ * This is Repository class for SupplyLine related database operations.
+ */
 
 @Repository
 @NoArgsConstructor
@@ -48,7 +50,7 @@ public class SupplyLineRepository {
   }
   
   public SupplyLine get(Long id) {
-        return supplyLineMapper.get(id);
+        return supplyLineMapper.getById(id);
   }
 
   public SupplyLine getSupplyLineBySupervisoryNodeProgramAndFacility(SupplyLine supplyLine) {

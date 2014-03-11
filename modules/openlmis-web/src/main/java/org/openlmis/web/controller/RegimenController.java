@@ -13,7 +13,6 @@ package org.openlmis.web.controller;
 import org.openlmis.core.domain.Regimen;
 import org.openlmis.core.domain.RegimenCategory;
 import org.openlmis.core.exception.DataException;
-import org.openlmis.core.service.ProgramService;
 import org.openlmis.core.service.RegimenService;
 import org.openlmis.rnr.domain.RegimenTemplate;
 import org.openlmis.rnr.service.RegimenColumnService;
@@ -36,25 +35,24 @@ import static org.openlmis.web.response.OpenLmisResponse.*;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
+/**
+ * This controller handles endpoint related to create, list regimens
+ */
+
 @Controller
 public class RegimenController extends BaseController {
 
   public static final String REGIMENS_SAVED_SUCCESSFULLY = "regimens.saved.successfully";
 
   @Autowired
-  RegimenService regimenService;
+  private RegimenService regimenService;
 
   @Autowired
-  RegimenColumnService regimenColumnService;
-
-  @Autowired
-  ProgramService programService;
+  private RegimenColumnService regimenColumnService;
 
   public static final String REGIMENS = "regimens";
   public static final String REGIMEN_CATEGORIES = "regimen_categories";
 
-
-  //TODO : Move the logic to service layer (Balvinder)
   @Transactional
   @RequestMapping(value = "/programId/{programId}/regimens", method = POST, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_REGIMEN_TEMPLATE')")

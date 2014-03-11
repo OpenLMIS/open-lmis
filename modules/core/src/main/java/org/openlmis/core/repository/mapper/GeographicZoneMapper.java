@@ -16,7 +16,9 @@ import org.openlmis.core.domain.GeographicZone;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-
+/**
+ * GeographicZoneMapper maps the GeographicZone entity to corresponding representation in database.
+ */
 @Repository
 public interface GeographicZoneMapper {
 

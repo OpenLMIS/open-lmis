@@ -19,6 +19,10 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+/**
+ * It maps the Comment entity to corresponding representation in database.
+ */
+
 @Repository
 public interface CommentMapper {
 

@@ -32,6 +32,10 @@ import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 import static org.springframework.web.bind.annotation.RequestMethod.PUT;
 
+/**
+ * This controller is responsible for handling API endpoints to create/update a CHW/Virtual facility/Agent.
+ */
+
 @Controller
 @NoArgsConstructor
 public class RestAgentController extends BaseController {

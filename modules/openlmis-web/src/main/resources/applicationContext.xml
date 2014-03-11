@@ -24,303 +24,270 @@
         http://www.springframework.org/schema/aop/spring-aop-3.1.xsd
         http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-3.1.xsd">
 
-    <context:annotation-config/>
-    <mvc:annotation-driven/>
-    <aop:aspectj-autoproxy/>
-    <task:annotation-driven/>
-    <context:component-scan base-package="org.openlmis.web"/>
+  <context:annotation-config/>
+  <mvc:annotation-driven/>
+  <aop:aspectj-autoproxy/>
+  <task:annotation-driven/>
+  <context:component-scan base-package="org.openlmis.web"/>
 
+  <bean id="applicationProperties" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
 
-    <bean id="applicationProperties" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+    <property name="locations">
+      <list>
+        <value>classpath:/default.properties</value>
+        <value>classpath:${environmentName}/app.properties</value>
+      </list>
+    </property>
 
-        <property name="locations">
-            <list>
-                <value>classpath:/default.properties</value>
-                <value>classpath:${environmentName}/app.properties</value>
-            </list>
-        </property>
+    <property name="ignoreUnresolvablePlaceholders" value="true"/>
+    <property name="systemPropertiesModeName">
+      <value>SYSTEM_PROPERTIES_MODE_OVERRIDE</value>
+    </property>
+  </bean>
 
-        <property name="ignoreUnresolvablePlaceholders" value="true"/>
-        <property name="systemPropertiesModeName">
-            <value>SYSTEM_PROPERTIES_MODE_OVERRIDE</value>
-        </property>
+  <bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
+    <property name="basename">
+      <value>messages</value>
+    </property>
+    <property name="defaultEncoding" value="UTF-8"/>
+  </bean>
+
+  <bean id="localeChangeInterceptor"
+        class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
+    <property name="paramName" value="locale"/>
+  </bean>
+
+  <bean id="localeResolver"
+        class="org.springframework.web.servlet.i18n.CookieLocaleResolver">
+    <property name="cookieName" value="lang"/>
+    <property name="defaultLocale" value="${defaultLocale}"/>
+    <property name="cookieMaxAge" value="0x7fffffff"/>
+  </bean>
+
+  <import resource="classpath:/springSecurityContext.xml"/>
+  <import resource="classpath:/applicationContext-authentication.xml"/>
+  <import resource="classpath:/applicationContext-report.xml"/>
+  <import resource="classpath:/applicationContext-core.xml"/>
+  <import resource="classpath:/applicationContext-restapi.xml"/>
+  <import resource="classpath:/applicationContext-shipment.xml"/>
+  <import resource="classpath:/applicationContext-reporting.xml"/>
+  <import resource="classpath:/applicationContext-distribution.xml"/>
+
+  <bean id="userAuthenticationProvider" class="org.openlmis.authentication.web.UserAuthenticationProvider"/>
+
+  <bean id="multipartResolver"
+        class="org.springframework.web.multipart.commons.CommonsMultipartResolver"/>
+
+  <mvc:resources mapping="/public/**" location="/public/"/>
+  <mvc:resources mapping="/error/**" location="/public/"/>
+  <mvc:resources mapping="/favicon.ico" location="/"/>
+
+  <mvc:interceptors>
+    <bean id="noCacheInterceptor" class="org.springframework.web.servlet.mvc.WebContentInterceptor">
+      <property name="cacheSeconds" value="0"/>
+      <property name="useExpiresHeader" value="true"/>
+      <property name="useCacheControlHeader" value="true"/>
+      <property name="useCacheControlNoStore" value="true"/>
+      <property name="cacheMappings">
+        <props>
+          <prop key="/public/**">${public.pages.cache.duration}</prop>
+        </props>
+      </property>
     </bean>
-
-    <bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
-        <property name="basename">
-            <value>messages</value>
-        </property>
-        <property name="defaultEncoding" value="UTF-8"/>
-    </bean>
-
-    <bean id="localeChangeInterceptor"
-          class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
+    <mvc:interceptor>
+      <mvc:mapping path="/changeLocale**"/>
+      <bean class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
         <property name="paramName" value="locale"/>
-    </bean>
+      </bean>
+    </mvc:interceptor>
+  </mvc:interceptors>
 
-    <bean id="localeResolver"
-          class="org.springframework.web.servlet.i18n.CookieLocaleResolver">
-        <property name="cookieName" value="lang"/>
-        <property name="defaultLocale" value="${defaultLocale}"/>
-        <property name="cookieMaxAge" value="0x7fffffff"/>
-    </bean>
-
-
-    <import resource="classpath:/springSecurityContext.xml"/>
-    <import resource="classpath:/applicationContext-authentication.xml"/>
-    <import resource="classpath:/applicationContext-core.xml"/>
-    <import resource="classpath:/applicationContext-restapi.xml"/>
-    <import resource="classpath:/applicationContext-shipment.xml"/>
-    <import resource="classpath:/applicationContext-reporting.xml"/>
-    <import resource="classpath:/applicationContext-distribution.xml"/>
-    <import resource="classpath:/applicationContext-report.xml"/>
-    
-    <bean id="userAuthenticationProvider" class="org.openlmis.authentication.web.UserAuthenticationProvider"/>
-
-    <bean id="multipartResolver"
-          class="org.springframework.web.multipart.commons.CommonsMultipartResolver"/>
-
-    <mvc:resources mapping="/public/**" location="/public/"/>
-    <mvc:resources mapping="/error/**" location="/public/"/>
-    <mvc:resources mapping="/favicon.ico" location="/"/>
-
-    <mvc:interceptors>
-        <bean id="noCacheInterceptor" class="org.springframework.web.servlet.mvc.WebContentInterceptor">
-            <property name="cacheSeconds" value="0"/>
-            <property name="useExpiresHeader" value="true"/>
-            <property name="useCacheControlHeader" value="true"/>
-            <property name="useCacheControlNoStore" value="true"/>
-            <property name="cacheMappings">
-                <props>
-                    <prop key="/public/**">${public.pages.cache.duration}</prop>
-                </props>
+  <bean id="uploadBeansMap" class="java.util.HashMap">
+    <constructor-arg>
+      <map>
+        <entry key="product">
+          <bean class="org.openlmis.web.model.UploadBean">
+            <property name="displayName" value="label.products"/>
+            <property name="importableClass">
+              <value type="java.lang.Class">org.openlmis.core.domain.Product</value>
             </property>
-        </bean>
-        <mvc:interceptor>
-            <mvc:mapping path="/changeLocale**"/>
-            <bean class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
-                <property name="paramName" value="locale"/>
-            </bean>
-        </mvc:interceptor>
-    </mvc:interceptors>
-
-
-    <bean id="uploadBeansMap" class="java.util.HashMap">
-        <constructor-arg>
-            <map>
-                <entry key="product">
-                    <bean class="org.openlmis.web.model.UploadBean">
-                        <property name="displayName" value="label.products"/>
-                        <property name="importableClass">
-                            <value type="java.lang.Class">org.openlmis.core.domain.Product</value>
-                        </property>
-                        <property name="recordHandler" ref="productPersistenceHandler"/>
-                        <property name="tableName" value="products"/>
-                    </bean>
-                </entry>
-                <entry key="facility">
-                    <bean class="org.openlmis.web.model.UploadBean">
-                        <property name="displayName" value="menu.header.facilities"/>
-                        <property name="importableClass">
-                            <value type="java.lang.Class">org.openlmis.core.domain.Facility</value>
-                        </property>
-                        <property name="recordHandler" ref="facilityPersistenceHandler"/>
-                        <property name="tableName" value="facilities"/>
-                    </bean>
-                </entry>
-                <entry key="programSupported">
-                    <bean class="org.openlmis.web.model.UploadBean">
-                        <property name="displayName" value="label.program.supported.facilities"/>
-                        <property name="importableClass">
-                            <value type="java.lang.Class">org.openlmis.core.domain.ProgramSupported</value>
-                        </property>
-                        <property name="recordHandler" ref="programSupportedPersistenceHandler"/>
-                        <property name="tableName" value="programs_supported"/>
-                    </bean>
-                </entry>
-                <entry key="supervisoryNode">
-                    <bean class="org.openlmis.web.model.UploadBean">
-                        <property name="displayName" value="label.supervisory.node"/>
-                        <property name="importableClass">
-                            <value type="java.lang.Class">org.openlmis.core.domain.SupervisoryNode</value>
-                        </property>
-                        <property name="recordHandler" ref="supervisoryNodeHandler"/>
-                        <property name="tableName" value="supervisory_nodes"/>
-                    </bean>
-                </entry>
-                <entry key="requisitionGroup">
-                    <bean class="org.openlmis.web.model.UploadBean">
-                        <property name="displayName" value="label.requisition.group"/>
-                        <property name="importableClass">
-                            <value type="java.lang.Class">org.openlmis.core.domain.RequisitionGroup</value>
-                        </property>
-                        <property name="recordHandler" ref="requisitionGroupHandler"/>
-                        <property name="tableName" value="requisition_groups"/>
-                    </bean>
-                </entry>
-                <entry key="requisitionGroupProgramSchedule">
-                    <bean class="org.openlmis.web.model.UploadBean">
-                        <property name="displayName" value="label.map.program.schedule"/>
-                        <property name="importableClass">
-                            <value type="java.lang.Class">org.openlmis.core.domain.RequisitionGroupProgramSchedule
-                            </value>
-                        </property>
-                        <property name="recordHandler" ref="requisitionGroupProgramScheduleHandler"/>
-                        <property name="tableName" value="requisition_group_program_schedules"/>
-                    </bean>
-                </entry>
-                <entry key="requisitionGroupMember">
-                    <bean class="org.openlmis.web.model.UploadBean">
-                        <property name="displayName" value="label.requisition.group.member"/>
-                        <property name="importableClass">
-                            <value type="java.lang.Class">org.openlmis.core.domain.RequisitionGroupMember</value>
-                        </property>
-                        <property name="recordHandler" ref="requisitionGroupMemberHandler"/>
-                        <property name="tableName" value="requisition_group_members"/>
-                    </bean>
-                </entry>
-                <entry key="programProduct">
-                    <bean class="org.openlmis.web.model.UploadBean">
-                        <property name="displayName" value="label.program.products"/>
-                        <property name="importableClass">
-                            <value type="java.lang.Class">org.openlmis.core.domain.ProgramProduct</value>
-                        </property>
-                        <property name="recordHandler" ref="programProductPersistenceHandler"/>
-                        <property name="tableName" value="program_products"/>
-                    </bean>
-                </entry>
-                <entry key="supplyLine">
-                    <bean class="org.openlmis.web.model.UploadBean">
-                        <property name="displayName" value="label.supply.lines"/>
-                        <property name="importableClass">
-                            <value type="java.lang.Class">org.openlmis.core.domain.SupplyLine</value>
-                        </property>
-                        <property name="recordHandler" ref="supplyLinePersistenceHandler"/>
-                        <property name="tableName" value="supply_lines"/>
-                    </bean>
-                </entry>
-                <entry key="user">
-                    <bean class="org.openlmis.web.model.UploadBean">
-                        <property name="displayName" value="menu.header.users"/>
-                        <property name="importableClass">
-                            <value type="java.lang.Class">org.openlmis.core.domain.User</value>
-                        </property>
-                        <property name="recordHandler" ref="userPersistenceHandler"/>
-                        <property name="tableName" value="users"/>
-                    </bean>
-                </entry>
-                <entry key="facilityTypeApprovedProduct">
-                    <bean class="org.openlmis.web.model.UploadBean">
-                        <property name="displayName" value="label.facility.approved.products"/>
-                        <property name="importableClass">
-                            <value type="java.lang.Class">org.openlmis.core.domain.FacilityTypeApprovedProduct</value>
-                        </property>
-                        <property name="recordHandler" ref="facilityApprovedProductPersistenceHandler"/>
-                        <property name="tableName" value="facility_approved_products"/>
-                    </bean>
-                </entry>
-                <entry key="programProductPrice">
-                    <bean class="org.openlmis.web.model.UploadBean">
-                        <property name="displayName" value="label.product.prices.program"/>
-                        <property name="importableClass">
-                            <value type="java.lang.Class">org.openlmis.core.domain.ProgramProductPrice</value>
-                        </property>
-                        <property name="recordHandler" ref="programProductPricePersistenceHandler"/>
-                        <property name="tableName" value="program_products"/>
-                    </bean>
-                </entry>
-                <entry key="productCategory">
-                    <bean class="org.openlmis.web.model.UploadBean">
-                        <property name="displayName" value="label.product.category"/>
-                        <property name="importableClass">
-                            <value type="java.lang.Class">org.openlmis.core.domain.ProductCategory</value>
-                        </property>
-                        <property name="recordHandler" ref="productCategoryPersistenceHandler"/>
-                        <property name="tableName" value="product_categories"/>
-                    </bean>
-                </entry>
-                <entry key="geographicZone">
-                    <bean class="org.openlmis.web.model.UploadBean">
-                        <property name="displayName" value="label.geographic.zones"/>
-                        <property name="importableClass">
-                            <value type="java.lang.Class">org.openlmis.core.domain.GeographicZone</value>
-                        </property>
-                        <property name="recordHandler" ref="geographicZonePersistenceHandler"/>
-                        <property name="tableName" value="geographic_zones"/>
-                    </bean>
-                </entry>
-                <entry key="productGroup">
-                    <bean class="org.openlmis.web.model.UploadBean">
-                        <property name="displayName" value="label.product.groups"/>
-                        <property name="importableClass">
-                            <value type="java.lang.Class">org.openlmis.core.domain.ProductGroup</value>
-                        </property>
-                        <property name="recordHandler" ref="productGroupPersistenceHandler"/>
-                        <property name="tableName" value="product_groups"/>
-                    </bean>
-                </entry>
-                <entry key="deliveryZone">
-                    <bean class="org.openlmis.web.model.UploadBean">
-                        <property name="displayName" value="label.delivery.zones"/>
-                        <property name="importableClass">
-                            <value type="java.lang.Class">org.openlmis.core.domain.DeliveryZone</value>
-                        </property>
-                        <property name="recordHandler" ref="deliveryZoneHandler"/>
-                        <property name="tableName" value="delivery_zones"/>
-                    </bean>
-                </entry>
-                <entry key="deliveryZoneProgramSchedule">
-                    <bean class="org.openlmis.web.model.UploadBean">
-                        <property name="displayName" value="label.map.delivery.zone.program.schedules"/>
-                        <property name="importableClass">
-                            <value type="java.lang.Class">org.openlmis.core.domain.DeliveryZoneProgramSchedule</value>
-                        </property>
-                        <property name="recordHandler" ref="deliveryZoneProgramScheduleHandler"/>
-                        <property name="tableName" value="delivery_zone_program_schedules"/>
-                    </bean>
-                </entry>
-                <entry key="deliveryZoneMember">
-                    <bean class="org.openlmis.web.model.UploadBean">
-                        <property name="displayName" value="label.delivery.zone.members"/>
-                        <property name="importableClass">
-                            <value type="java.lang.Class">org.openlmis.core.domain.DeliveryZoneMember</value>
-                        </property>
-                        <property name="recordHandler" ref="deliveryZoneMemberHandler"/>
-                        <property name="tableName" value="delivery_zone_members"/>
-                    </bean>
-                </entry>
-                <entry key="deliveryZoneWarehouse">
-                    <bean class="org.openlmis.web.model.UploadBean">
-                        <property name="displayName" value="label.delivery.zone.warehouses"/>
-                        <property name="importableClass">
-                            <value type="java.lang.Class">org.openlmis.core.domain.DeliveryZoneWarehouse</value>
-                        </property>
-                        <property name="recordHandler" ref="deliveryZoneWarehouseHandler"/>
-                        <property name="tableName" value="delivery_zone_warehouses"/>
-                    </bean>
-                </entry>
-                <entry key="budget">
-                    <bean class="org.openlmis.web.model.UploadBean">
-                        <property name="displayName" value="Budget"/>
-                        <property name="importableClass">
-                            <value type="java.lang.Class">org.openlmis.core.domain.Budget</value>
-                        </property>
-                        <property name="recordHandler" ref="budgetHandler"/>
-                        <property name="tableName" value="budgets"/>
-                    </bean>
-                </entry>
-                <entry key="facilityFtpDetails">
-                    <bean class="org.openlmis.web.model.UploadBean">
-                        <property name="displayName" value="label.facility.ftp.details"/>
-                        <property name="importableClass">
-                            <value type="java.lang.Class">org.openlmis.core.domain.FacilityFtpDetails</value>
-                        </property>
-                        <property name="recordHandler" ref="facilityFtpDetailsPersistenceHandler"/>
-                        <property name="tableName" value="facility_ftp_details"/>
-                    </bean>
-                </entry>
-            </map>
-        </constructor-arg>
-    </bean>
+            <property name="recordHandler" ref="productPersistenceHandler"/>
+          </bean>
+        </entry>
+        <entry key="facility">
+          <bean class="org.openlmis.web.model.UploadBean">
+            <property name="displayName" value="menu.header.facilities"/>
+            <property name="importableClass">
+              <value type="java.lang.Class">org.openlmis.core.domain.Facility</value>
+            </property>
+            <property name="recordHandler" ref="facilityPersistenceHandler"/>
+          </bean>
+        </entry>
+        <entry key="programSupported">
+          <bean class="org.openlmis.web.model.UploadBean">
+            <property name="displayName" value="label.program.supported.facilities"/>
+            <property name="importableClass">
+              <value type="java.lang.Class">org.openlmis.core.domain.ProgramSupported</value>
+            </property>
+            <property name="recordHandler" ref="programSupportedPersistenceHandler"/>
+          </bean>
+        </entry>
+        <entry key="supervisoryNode">
+          <bean class="org.openlmis.web.model.UploadBean">
+            <property name="displayName" value="label.supervisory.node"/>
+            <property name="importableClass">
+              <value type="java.lang.Class">org.openlmis.core.domain.SupervisoryNode</value>
+            </property>
+            <property name="recordHandler" ref="supervisoryNodeHandler"/>
+          </bean>
+        </entry>
+        <entry key="requisitionGroup">
+          <bean class="org.openlmis.web.model.UploadBean">
+            <property name="displayName" value="label.requisition.group"/>
+            <property name="importableClass">
+              <value type="java.lang.Class">org.openlmis.core.domain.RequisitionGroup</value>
+            </property>
+            <property name="recordHandler" ref="requisitionGroupHandler"/>
+          </bean>
+        </entry>
+        <entry key="requisitionGroupProgramSchedule">
+          <bean class="org.openlmis.web.model.UploadBean">
+            <property name="displayName" value="label.map.program.schedule"/>
+            <property name="importableClass">
+              <value type="java.lang.Class">org.openlmis.core.domain.RequisitionGroupProgramSchedule
+              </value>
+            </property>
+            <property name="recordHandler" ref="requisitionGroupProgramScheduleHandler"/>
+          </bean>
+        </entry>
+        <entry key="requisitionGroupMember">
+          <bean class="org.openlmis.web.model.UploadBean">
+            <property name="displayName" value="label.requisition.group.member"/>
+            <property name="importableClass">
+              <value type="java.lang.Class">org.openlmis.core.domain.RequisitionGroupMember</value>
+            </property>
+            <property name="recordHandler" ref="requisitionGroupMemberHandler"/>
+          </bean>
+        </entry>
+        <entry key="programProduct">
+          <bean class="org.openlmis.web.model.UploadBean">
+            <property name="displayName" value="label.program.products"/>
+            <property name="importableClass">
+              <value type="java.lang.Class">org.openlmis.core.domain.ProgramProduct</value>
+            </property>
+            <property name="recordHandler" ref="programProductPersistenceHandler"/>
+          </bean>
+        </entry>
+        <entry key="supplyLine">
+          <bean class="org.openlmis.web.model.UploadBean">
+            <property name="displayName" value="label.supply.lines"/>
+            <property name="importableClass">
+              <value type="java.lang.Class">org.openlmis.core.domain.SupplyLine</value>
+            </property>
+            <property name="recordHandler" ref="supplyLinePersistenceHandler"/>
+          </bean>
+        </entry>
+        <entry key="user">
+          <bean class="org.openlmis.web.model.UploadBean">
+            <property name="displayName" value="menu.header.users"/>
+            <property name="importableClass">
+              <value type="java.lang.Class">org.openlmis.core.domain.User</value>
+            </property>
+            <property name="recordHandler" ref="userPersistenceHandler"/>
+          </bean>
+        </entry>
+        <entry key="facilityTypeApprovedProduct">
+          <bean class="org.openlmis.web.model.UploadBean">
+            <property name="displayName" value="label.facility.approved.products"/>
+            <property name="importableClass">
+              <value type="java.lang.Class">org.openlmis.core.domain.FacilityTypeApprovedProduct</value>
+            </property>
+            <property name="recordHandler" ref="facilityApprovedProductPersistenceHandler"/>
+          </bean>
+        </entry>
+        <entry key="programProductPrice">
+          <bean class="org.openlmis.web.model.UploadBean">
+            <property name="displayName" value="label.product.prices.program"/>
+            <property name="importableClass">
+              <value type="java.lang.Class">org.openlmis.core.domain.ProgramProductPrice</value>
+            </property>
+            <property name="recordHandler" ref="programProductPricePersistenceHandler"/>
+          </bean>
+        </entry>
+        <entry key="productCategory">
+          <bean class="org.openlmis.web.model.UploadBean">
+            <property name="displayName" value="label.product.category"/>
+            <property name="importableClass">
+              <value type="java.lang.Class">org.openlmis.core.domain.ProductCategory</value>
+            </property>
+            <property name="recordHandler" ref="productCategoryPersistenceHandler"/>
+          </bean>
+        </entry>
+        <entry key="geographicZone">
+          <bean class="org.openlmis.web.model.UploadBean">
+            <property name="displayName" value="label.geographic.zones"/>
+            <property name="importableClass">
+              <value type="java.lang.Class">org.openlmis.core.domain.GeographicZone</value>
+            </property>
+            <property name="recordHandler" ref="geographicZonePersistenceHandler"/>
+          </bean>
+        </entry>
+        <entry key="productGroup">
+          <bean class="org.openlmis.web.model.UploadBean">
+            <property name="displayName" value="label.product.groups"/>
+            <property name="importableClass">
+              <value type="java.lang.Class">org.openlmis.core.domain.ProductGroup</value>
+            </property>
+            <property name="recordHandler" ref="productGroupPersistenceHandler"/>
+          </bean>
+        </entry>
+        <entry key="deliveryZone">
+          <bean class="org.openlmis.web.model.UploadBean">
+            <property name="displayName" value="label.delivery.zones"/>
+            <property name="importableClass">
+              <value type="java.lang.Class">org.openlmis.core.domain.DeliveryZone</value>
+            </property>
+            <property name="recordHandler" ref="deliveryZoneHandler"/>
+          </bean>
+        </entry>
+        <entry key="deliveryZoneProgramSchedule">
+          <bean class="org.openlmis.web.model.UploadBean">
+            <property name="displayName" value="label.map.delivery.zone.program.schedules"/>
+            <property name="importableClass">
+              <value type="java.lang.Class">org.openlmis.core.domain.DeliveryZoneProgramSchedule</value>
+            </property>
+            <property name="recordHandler" ref="deliveryZoneProgramScheduleHandler"/>
+          </bean>
+        </entry>
+        <entry key="deliveryZoneMember">
+          <bean class="org.openlmis.web.model.UploadBean">
+            <property name="displayName" value="label.delivery.zone.members"/>
+            <property name="importableClass">
+              <value type="java.lang.Class">org.openlmis.core.domain.DeliveryZoneMember</value>
+            </property>
+            <property name="recordHandler" ref="deliveryZoneMemberHandler"/>
+          </bean>
+        </entry>
+        <entry key="deliveryZoneWarehouse">
+          <bean class="org.openlmis.web.model.UploadBean">
+            <property name="displayName" value="label.delivery.zone.warehouses"/>
+            <property name="importableClass">
+              <value type="java.lang.Class">org.openlmis.core.domain.DeliveryZoneWarehouse</value>
+            </property>
+            <property name="recordHandler" ref="deliveryZoneWarehouseHandler"/>
+          </bean>
+        </entry>
+        <entry key="facilityFtpDetails">
+          <bean class="org.openlmis.web.model.UploadBean">
+            <property name="displayName" value="label.facility.ftp.details"/>
+            <property name="importableClass">
+              <value type="java.lang.Class">org.openlmis.core.domain.FacilityFtpDetails</value>
+            </property>
+            <property name="recordHandler" ref="facilityFtpDetailsPersistenceHandler"/>
+          </bean>
+        </entry>
+      </map>
+    </constructor-arg>
+  </bean>
 
 </beans>

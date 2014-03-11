@@ -19,6 +19,10 @@ import org.openlmis.distribution.domain.OpenedVialLineItem;
 
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 
+/**
+ *  DTO for OpenedVialLineItem. It contains the client side representation of OpenedVialLineItem attributes.
+ */
+
 @Data
 @JsonSerialize(include = NON_EMPTY)
 @EqualsAndHashCode(callSuper = false)

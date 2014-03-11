@@ -25,7 +25,7 @@ import org.openlmis.order.helper.OrderCsvHelper;
 import org.openlmis.order.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.integration.annotation.ServiceActivator;
+import org.springframework.integration.annotation.Payload;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
@@ -36,6 +36,10 @@ import java.util.regex.Pattern;
 
 import static org.openlmis.order.domain.OrderStatus.RELEASED;
 import static org.openlmis.order.domain.OrderStatus.TRANSFER_FAILED;
+
+/**
+ * Exposes the services for processing orders, sending their order files to respective ftp locations.
+ */
 
 @Component
 public class OrderFtpTask {
@@ -69,8 +73,7 @@ public class OrderFtpTask {
   private static String PERMISSION_DENIED_COMMENT = "order.ftpComment.permission.denied";
   public static String FTP_CREDENTIAL_MISSING_COMMENT = "order.ftpComment.ftpcredential.missing";
 
-  @ServiceActivator(inputChannel = "orderInputChannel")
-  public void processOrder(List<Order> orders) {
+  public void processOrder(@Payload List<Order> orders) {
     for (Order order : orders) {
       order = orderService.getOrder(order.getId());
 

@@ -68,8 +68,8 @@ public class DistributionSyncTest extends TestCaseHelper {
   @BeforeMethod(groups = {"distribution"})
   public void setUp() throws InterruptedException, SQLException, IOException {
     super.setup();
-    loginPage = PageFactory.getInstanceOfLoginPage(testWebDriver, baseUrlGlobal);
-    facilityListPage = PageFactory.getInstanceOfFacilityListPage(testWebDriver);
+    loginPage = PageObjectFactory.getLoginPage(testWebDriver, baseUrlGlobal);
+    facilityListPage = PageObjectFactory.getFacilityListPage(testWebDriver);
 
     setupDataForDistributionTest(distributionTestData);
 
@@ -134,7 +134,7 @@ public class DistributionSyncTest extends TestCaseHelper {
 
     homePage.navigateHomePage();
     initiateDistribution(distributionTestData.get(FIRST_DELIVERY_ZONE_NAME), distributionTestData.get(VACCINES_PROGRAM));
-    facilityListPage = PageFactory.getInstanceOfFacilityListPage(testWebDriver);
+    facilityListPage = PageObjectFactory.getFacilityListPage(testWebDriver);
     facilityListPage.selectFacility(distributionTestData.get(FIRST_FACILITY_CODE));
 
     facilityListPage.verifyOverallFacilityIndicatorColor("RED");
@@ -916,7 +916,7 @@ public class DistributionSyncTest extends TestCaseHelper {
   }
 
   private VisitInformationPage fillFacilityData() {
-    VisitInformationPage visitInformationPage = PageFactory.getInstanceOfVisitInformation(testWebDriver);
+    VisitInformationPage visitInformationPage = PageObjectFactory.getVisitInformationPage(testWebDriver);
     visitInformationPage.navigateToVisitInformation();
     visitInformationPage.enterDataWhenFacilityVisited("Some observations", "samuel", "Doe", "Verifier", "XYZ");
 
@@ -961,7 +961,7 @@ public class DistributionSyncTest extends TestCaseHelper {
   }
 
   private VisitInformationPage fillFacilityDataWhenUnvisited() {
-    VisitInformationPage visitInformationPage = PageFactory.getInstanceOfVisitInformation(testWebDriver);
+    VisitInformationPage visitInformationPage = PageObjectFactory.getVisitInformationPage(testWebDriver);
 
     RefrigeratorPage refrigeratorPage = visitInformationPage.navigateToRefrigerators();
     refrigeratorPage.navigateToRefrigerators();
@@ -1027,7 +1027,7 @@ public class DistributionSyncTest extends TestCaseHelper {
   }
 
   public void fillEpiInventoryWithOnlyDeliveredQuantity(String deliveredQuantity1, String deliveredQuantity2, String deliveredQuantity3) {
-    EpiInventoryPage epiInventoryPage = PageFactory.getInstanceOfEpiInventoryPage(testWebDriver);
+    EpiInventoryPage epiInventoryPage = PageObjectFactory.getEpiInventoryPage(testWebDriver);
     epiInventoryPage.applyNRToAll();
     epiInventoryPage.fillDeliveredQuantity(1, deliveredQuantity1);
     epiInventoryPage.fillDeliveredQuantity(2, deliveredQuantity2);
@@ -1036,7 +1036,7 @@ public class DistributionSyncTest extends TestCaseHelper {
 
   public void initiateDistribution(String deliveryZoneNameFirst, String programFirst) {
 
-    HomePage homePage = PageFactory.getInstanceOfHomePage(testWebDriver);
+    HomePage homePage = PageObjectFactory.getHomePage(testWebDriver);
     DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
     distributionPage.selectValueFromDeliveryZone(deliveryZoneNameFirst);
     distributionPage.selectValueFromProgram(programFirst);
@@ -1045,7 +1045,7 @@ public class DistributionSyncTest extends TestCaseHelper {
   }
 
   public void initiateNextDistributionForGivenPeriod(String deliveryZoneNameFirst, String programFirst, String period) {
-    DistributionPage distributionPage = PageFactory.getInstanceOfDistributionPage(testWebDriver);
+    DistributionPage distributionPage = PageObjectFactory.getDistributionPage(testWebDriver);
     distributionPage.selectValueFromDeliveryZone(deliveryZoneNameFirst);
     distributionPage.selectValueFromProgram(programFirst);
     distributionPage.selectValueFromPeriod(period);
@@ -1054,7 +1054,7 @@ public class DistributionSyncTest extends TestCaseHelper {
   }
 
   private void initiateNextDistributionForSamePeriod(String deliveryZoneNameFirst, String programFirst) {
-    DistributionPage distributionPage = PageFactory.getInstanceOfDistributionPage(testWebDriver);
+    DistributionPage distributionPage = PageObjectFactory.getDistributionPage(testWebDriver);
     distributionPage.selectValueFromDeliveryZone(deliveryZoneNameFirst);
     distributionPage.selectValueFromProgram(programFirst);
     distributionPage.clickInitiateDistribution();
@@ -1063,14 +1063,14 @@ public class DistributionSyncTest extends TestCaseHelper {
   }
 
   private void deleteDistribution() {
-    HomePage homePage = PageFactory.getInstanceOfHomePage(testWebDriver);
+    HomePage homePage = PageObjectFactory.getHomePage(testWebDriver);
     DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
     distributionPage.deleteDistribution();
     distributionPage.clickOk();
   }
 
   private void verifyProductsAreDisplayed() {
-    VisitInformationPage visitInformationPage = PageFactory.getInstanceOfVisitInformation(testWebDriver);
+    VisitInformationPage visitInformationPage = PageObjectFactory.getVisitInformationPage(testWebDriver);
     EPIUsePage epiUsePage = visitInformationPage.navigateToEpiUse();
     assertTrue(epiUsePage.getProductGroup(1).equals("PG1-Name"));
     //assertNull(epiUsePage.getProductGroup(2));
@@ -1084,7 +1084,7 @@ public class DistributionSyncTest extends TestCaseHelper {
   }
 
   private void verifyProductsAreNotDisplayed() {
-    VisitInformationPage visitInformationPage = PageFactory.getInstanceOfVisitInformation(testWebDriver);
+    VisitInformationPage visitInformationPage = PageObjectFactory.getVisitInformationPage(testWebDriver);
     EPIUsePage epiUsePage = visitInformationPage.navigateToEpiUse();
     //assertNull(epiUsePage.getProductGroup(1));
     //assertNull(epiUsePage.getProductGroup(2));
@@ -1099,7 +1099,7 @@ public class DistributionSyncTest extends TestCaseHelper {
   }
 
   private void verifyAllFieldsDisabled() {
-    VisitInformationPage visitInformationPage = PageFactory.getInstanceOfVisitInformation(testWebDriver);
+    VisitInformationPage visitInformationPage = PageObjectFactory.getVisitInformationPage(testWebDriver);
     visitInformationPage.verifyAllFieldsDisabled();
 
     RefrigeratorPage refrigeratorPage = visitInformationPage.navigateToRefrigerators();
@@ -1121,7 +1121,7 @@ public class DistributionSyncTest extends TestCaseHelper {
   public void tearDown() throws SQLException {
     testWebDriver.sleep(500);
     if (!testWebDriver.getElementById("username").isDisplayed()) {
-      HomePage homePage = PageFactory.getInstanceOfHomePage(testWebDriver);
+      HomePage homePage = PageObjectFactory.getHomePage(testWebDriver);
       homePage.logout(baseUrlGlobal);
       dbWrapper.deleteData();
       dbWrapper.closeConnection();

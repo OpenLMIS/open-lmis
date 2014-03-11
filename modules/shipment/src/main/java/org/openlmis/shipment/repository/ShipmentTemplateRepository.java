@@ -19,6 +19,10 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+/**
+ * Repository class for shipment file template and its configuration related database operations.
+ */
+
 @Repository
 public class ShipmentTemplateRepository {
 

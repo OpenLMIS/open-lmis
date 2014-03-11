@@ -17,7 +17,6 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.openlmis.core.domain.OrderConfiguration;
-import org.openlmis.core.service.MessageService;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.order.domain.Order;
 import org.openlmis.order.dto.OrderFileTemplateDTO;
@@ -34,19 +33,16 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static org.mockito.Mockito.verify;
+import static org.mockito.MockitoAnnotations.initMocks;
 import static org.powermock.api.mockito.PowerMockito.*;
 
 @Category(UnitTests.class)
-@RunWith(PowerMockRunner.class)
 @PrepareForTest(OrderCsvView.class)
+@RunWith(PowerMockRunner.class)
 public class OrderCsvViewTest {
-
 
   @Mock
   OrderCsvHelper csvHelper;
-
-  @Mock
-  MessageService messageService;
 
   @InjectMocks
   OrderCsvView csvView;
@@ -64,6 +60,7 @@ public class OrderCsvViewTest {
 
   @Before
   public void setUp() throws Exception {
+    initMocks(this);
     response = mock(HttpServletResponse.class);
     request = mock(HttpServletRequest.class);
     model = new HashMap<>();
@@ -80,12 +77,10 @@ public class OrderCsvViewTest {
 
     when(response.getWriter()).thenReturn(writer);
     whenNew(BufferedWriter.class).withArguments(writer).thenReturn(bufferedWriter);
-
   }
 
   @Test
   public void shouldSetResponseInHeader() throws Exception {
-
     csvView.renderMergedOutputModel(model, request, response);
 
     String expectedFileName = FILE_PREFIX + orderId + ".csv";
@@ -97,10 +92,5 @@ public class OrderCsvViewTest {
     csvView.renderMergedOutputModel(model, request, response);
 
     verify(csvHelper).writeCsvFile(order, orderFileTemplateDTO, bufferedWriter);
-
   }
 }
-
-
-
-
