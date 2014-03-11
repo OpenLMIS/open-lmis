@@ -184,8 +184,8 @@ public class OrderMapperIT {
   public void shouldGetOrderFileTemplate() throws Exception {
     List<OrderFileColumn> orderFileColumns = mapper.getOrderFileColumns();
     String[] expectedDataFieldLabels = {"header.order.number", "create.facility.code", "header.product.code",
-      "header.quantity.approved", "label.period", "header.order.date"};
-    String[] expectedColumnLabels = {"Order number", "Facility code", "Product code", "Approved quantity",
+      "header.product.name", "header.quantity.approved", "label.period", "header.order.date"};
+    String[] expectedColumnLabels = {"Order number", "Facility code", "Product code", "Product name", "Approved quantity",
       "Period", "Order date"};
     assertThat(orderFileColumns.size(), is(expectedDataFieldLabels.length));
     for (int i = 0; i < expectedDataFieldLabels.length; i++) {
@@ -276,11 +276,11 @@ public class OrderMapperIT {
     insertOrderWithStatus(RELEASED, 5L);
     Long facilityId = supplyLine.getSupplyingFacility().getId();
 
-    List<Order> orders = mapper.getByWarehouseIdsAndStatuses("{"+ facilityId +"}", "{PACKED}");
+    List<Order> orders = mapper.getByWarehouseIdsAndStatuses("{" + facilityId + "}", "{PACKED}");
 
     assertThat(orders.size(), is(1));
 
-    List<Order> noOrders = mapper.getByWarehouseIdsAndStatuses("{"+ facilityId +"}", "{RECEIVED}");
+    List<Order> noOrders = mapper.getByWarehouseIdsAndStatuses("{" + facilityId + "}", "{RECEIVED}");
 
     assertThat(noOrders.size(), is(0));
   }
