@@ -107,20 +107,21 @@ public class DownloadOrderFile extends TestCaseHelper {
   @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function")
   public void testVerifyOrderFileForSpecificConfiguration(String password) throws SQLException, IOException, InterruptedException {
     dbWrapper.setupOrderFileConfiguration("Zero", "TRUE");
-    dbWrapper.setupOrderFileOpenLMISColumns("create.facility.code", "TRUE", "Facility code", 5, "");
-    dbWrapper.setupOrderFileOpenLMISColumns("header.order.number", "TRUE", "Order number", 7, "");
+    dbWrapper.setupOrderFileOpenLMISColumns("create.facility.code", "TRUE", "Facility code", 6, "");
+    dbWrapper.setupOrderFileOpenLMISColumns("header.order.number", "TRUE", "Order number", 8, "");
     dbWrapper.setupOrderFileOpenLMISColumns("header.quantity.approved", "TRUE", "Approved quantity", 2, "");
     dbWrapper.setupOrderFileOpenLMISColumns("header.product.code", "TRUE", "Product code", 3, "");
-    dbWrapper.setupOrderFileOpenLMISColumns("header.order.date", "TRUE", "Order date", 4, "MM-dd-yyyy");
-    dbWrapper.setupOrderFileOpenLMISColumns("label.period", "TRUE", "Period", 6, "yyyy-MM");
+    dbWrapper.setupOrderFileOpenLMISColumns("header.product.name", "TRUE", "Product name", 4, "");
+    dbWrapper.setupOrderFileOpenLMISColumns("header.order.date", "TRUE", "Order date", 5, "MM-dd-yyyy");
+    dbWrapper.setupOrderFileOpenLMISColumns("label.period", "TRUE", "Period", 7, "yyyy-MM");
     dbWrapper.deleteRowFromTable("order_file_columns", "openLMISField", "false");
     dbWrapper.setupOrderFileNonOpenLMISColumns("Not Applicable", "TRUE", "Extra 1", 1);
-    dbWrapper.setupOrderFileNonOpenLMISColumns("Not Applicable", "TRUE", "", 8);
+    dbWrapper.setupOrderFileNonOpenLMISColumns("Not Applicable", "TRUE", "", 9);
 
     setupDownloadOrderFileSetup(password);
     getOrderDataFromDownloadedFile("Zero");
-    checkOrderFileData(1, "Extra 1,Approved quantity,Product code,Order date,Facility code,Period,Order number,");
-    checkOrderFileData(2, ",10,P10,");
+    checkOrderFileData(1, "Extra 1,Approved quantity,Product code,Product name,Order date,Facility code,Period,Order number,");
+    checkOrderFileData(2, ",10,P10,antibiotic Capsule 300/200/600 mg");
     checkOrderFileData(2, ",F10,2012-01,");
     checkOrderFileOrderDate("MM-dd-yyyy", 2);
     checkOrderFileOrderId(2);
@@ -131,8 +132,8 @@ public class DownloadOrderFile extends TestCaseHelper {
     dbWrapper.setupOrderFileConfiguration("O", "TRUE");
     setupDownloadOrderFileSetup(password);
     getOrderDataFromDownloadedFile("O");
-    checkOrderFileData(1, "Order number,Facility code,Product code,Approved quantity,Period,Order date");
-    checkOrderFileData(2, ",F10,P10,10,01/12,");
+    checkOrderFileData(1, "Order number,Facility code,Product code,Product name,Approved quantity,Period,Order date");
+    checkOrderFileData(2, ",F10,P10,antibiotic Capsule 300/200/600 mg,10,01/12,");
     checkOrderFileOrderDate("dd/MM/yy", 2);
     checkOrderFileOrderId(2);
   }
@@ -142,7 +143,7 @@ public class DownloadOrderFile extends TestCaseHelper {
     dbWrapper.setupOrderFileConfiguration("O", "FALSE");
     setupDownloadOrderFileSetup(password);
     getOrderDataFromDownloadedFile("O");
-    checkOrderFileData(1, ",F10,P10,10,01/12,");
+    checkOrderFileData(1, ",F10,P10,antibiotic Capsule 300/200/600 mg,10,01/12,");
     checkOrderFileOrderDate("dd/MM/yy", 1);
     checkOrderFileOrderId(1);
   }
