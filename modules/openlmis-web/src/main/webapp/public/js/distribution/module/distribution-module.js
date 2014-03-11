@@ -21,50 +21,52 @@ String.prototype.endsWith = function (suffix) {
 };
 
 var distributionModule = angular.module('distribution',
-    ['openlmis', 'IndexedDB', 'ui.bootstrap.dialog', 'ui.bootstrap.modal']);
+  ['openlmis', 'IndexedDB', 'ui.bootstrap.dialog', 'ui.bootstrap.modal']);
 
 distributionModule.config(['$routeProvider', function ($routeProvider) {
-      $routeProvider.
-          when('/manage',
-          {controller: DistributionController, templateUrl: 'partials/init.html', resolve: DistributionController.resolve}).
-          when('/list', {controller: DistributionListController, templateUrl: 'partials/list.html'}).
-          when('/view-load-amounts/:deliveryZoneId/:programId/:periodId',
-          {controller: ViewLoadAmountController, templateUrl: 'partials/view-load-amount.html', resolve: ViewLoadAmountController.resolve}).
-          when('/record-facility-data/:distribution',
-          {templateUrl: 'partials/record-facility-data.html', resolve: ResolveDistribution}).
-          when('/record-facility-data/:distribution/:facility/refrigerator-data',
-          {controller: RefrigeratorController, templateUrl: 'partials/refrigerator.html', resolve: ResolveDistribution}).
-          when('/record-facility-data/:distribution/:facility/epi-use',
-          {controller: EPIUseController, templateUrl: 'partials/epi-use.html', resolve: ResolveDistribution}).
-          when('/record-facility-data/:distribution/:facility/epi-inventory',
-          {controller: EPIInventoryController, templateUrl: 'partials/epi-inventory.html', resolve: ResolveDistribution}).
-          when('/record-facility-data/:distribution/:facility/full-coverage',
-          {controller: CoverageController, templateUrl: 'partials/full-coverage.html', resolve: ResolveDistribution}).
-          when('/record-facility-data/:distribution/:facility/child-coverage',
-          {controller: ChildCoverageController, templateUrl: 'partials/child-coverage.html', resolve: ResolveDistribution}).
-          when('/record-facility-data/:distribution/:facility/visit-info',
-          {controller: VisitInfoController, templateUrl: 'partials/visit-info.html', resolve: ResolveDistribution}).
-          otherwise({redirectTo: '/manage'});
+    $routeProvider.
+      when('/manage',
+      {controller: DistributionController, templateUrl: 'partials/init.html', resolve: DistributionController.resolve}).
+      when('/list', {controller: DistributionListController, templateUrl: 'partials/list.html'}).
+      when('/view-load-amounts/:deliveryZoneId/:programId/:periodId',
+      {controller: ViewLoadAmountController, templateUrl: 'partials/view-load-amount.html', resolve: ViewLoadAmountController.resolve}).
+      when('/record-facility-data/:distribution',
+      {templateUrl: 'partials/record-facility-data.html', resolve: ResolveDistribution}).
+      when('/record-facility-data/:distribution/:facility/refrigerator-data',
+      {controller: RefrigeratorController, templateUrl: 'partials/refrigerator.html', resolve: ResolveDistribution}).
+      when('/record-facility-data/:distribution/:facility/epi-use',
+      {controller: EPIUseController, templateUrl: 'partials/epi-use.html', resolve: ResolveDistribution}).
+      when('/record-facility-data/:distribution/:facility/epi-inventory',
+      {controller: EPIInventoryController, templateUrl: 'partials/epi-inventory.html', resolve: ResolveDistribution}).
+      when('/record-facility-data/:distribution/:facility/full-coverage',
+      {controller: CoverageController, templateUrl: 'partials/full-coverage.html', resolve: ResolveDistribution}).
+      when('/record-facility-data/:distribution/:facility/child-coverage',
+      {controller: ChildCoverageController, templateUrl: 'partials/child-coverage.html', resolve: ResolveDistribution}).
+      when('/record-facility-data/:distribution/:facility/adult-coverage',
+      {controller: AdultCoverageController, templateUrl: 'partials/adult-coverage.html', resolve: ResolveDistribution}).
+      when('/record-facility-data/:distribution/:facility/visit-info',
+      {controller: VisitInfoController, templateUrl: 'partials/visit-info.html', resolve: ResolveDistribution}).
+      otherwise({redirectTo: '/manage'});
 
-    }]).config(function (IndexedDBProvider) {
-      IndexedDBProvider
-          .setDbName("open_lmis")
-          .migration(5, migrationFunc);
-    }).config(function ($httpProvider) {        //#1261
-      var interceptor = function (loginConfig) {
-        function responseHandler(response) {
-          if (response.config.url.endsWith('.json') && (typeof response.data === 'string')) {
-            loginConfig.preventReload = (response.config.method != 'GET');
-            loginConfig.modalShown = true;
-          } else {
-            return response;
-          }
+  }]).config(function (IndexedDBProvider) {
+    IndexedDBProvider
+      .setDbName("open_lmis")
+      .migration(5, migrationFunc);
+  }).config(function ($httpProvider) {        //#1261
+    var interceptor = function (loginConfig) {
+      function responseHandler(response) {
+        if (response.config.url.endsWith('deliveryZones.json') && (typeof response.data === 'string')) {
+          loginConfig.preventReload = (response.config.method != 'GET');
+          loginConfig.modalShown = true;
+        } else {
+          return response;
         }
+      }
 
-        return {response: responseHandler};
-      };
-      $httpProvider.interceptors.push(interceptor);
-    });
+      return {response: responseHandler};
+    };
+    $httpProvider.interceptors.push(interceptor);
+  });
 
 distributionModule.directive('notRecorded', function ($timeout) {
   return {

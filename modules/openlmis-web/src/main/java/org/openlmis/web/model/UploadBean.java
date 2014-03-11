@@ -20,10 +20,15 @@ import org.codehaus.jackson.annotate.JsonProperty;
 import org.openlmis.upload.Importable;
 import org.openlmis.upload.RecordHandler;
 
+/**
+ * This class represents the bean which holds mapping of record handler and importable class
+ */
+
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonAutoDetect(value = JsonMethod.NONE, fieldVisibility = JsonAutoDetect.Visibility.NONE)
 public class UploadBean {
+
   @Setter
   private String displayName;
 
@@ -34,11 +39,6 @@ public class UploadBean {
   @Setter
   @Getter
   private Class<? extends Importable> importableClass;
-
-  @Setter
-  @Getter
-  private String tableName;
-
 
   @JsonProperty
   @SuppressWarnings("unused")

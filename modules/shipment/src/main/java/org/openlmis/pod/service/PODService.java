@@ -28,11 +28,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
 
 import static org.openlmis.core.domain.Right.MANAGE_POD;
 import static org.openlmis.order.domain.OrderStatus.*;
+
+/**
+ * Exposes the services for handling OrderPOD entity.
+ */
 
 @Service
 public class PODService {
@@ -56,12 +61,14 @@ public class PODService {
   public OrderPOD createPOD(OrderPOD orderPOD) {
     checkPermissions(orderPOD);
 
+    Rnr requisition = requisitionService.getFullRequisitionById(orderPOD.getOrderId());
+    orderPOD.fillPOD(requisition);
+
     if (orderService.hasStatus(orderPOD.getOrderId(), RELEASED, READY_TO_PACK, TRANSFER_FAILED)) {
-      Rnr requisition = requisitionService.getFullRequisitionById(orderPOD.getOrderId());
-      orderPOD.fillPODWithRequisition(requisition);
+      orderPOD.fillPODLineItems(requisition.getAllLineItems());
     } else if (orderService.hasStatus(orderPOD.getOrderId(), PACKED)) {
       List<ShipmentLineItem> shipmentLineItems = shipmentService.getLineItems(orderPOD.getOrderId());
-      orderPOD.fillPodLineItems(shipmentLineItems);
+      orderPOD.fillPODLineItems(shipmentLineItems);
     }
 
     return repository.insert(orderPOD);
@@ -71,15 +78,6 @@ public class PODService {
     Order order = new Order(orderPod.getOrderId());
     order.setStatus(OrderStatus.RECEIVED);
     orderService.updateOrderStatus(order);
-  }
-
-  public void insertLineItems(OrderPOD orderPod) {
-    for (OrderPODLineItem orderPodLineItem : orderPod.getPodLineItems()) {
-      orderPodLineItem.setPodId(orderPod.getId());
-      orderPodLineItem.setCreatedBy(orderPod.getCreatedBy());
-      orderPodLineItem.setModifiedBy(orderPod.getModifiedBy());
-      repository.insertPODLineItem(orderPodLineItem);
-    }
   }
 
   public void checkPermissions(OrderPOD orderPod) {
@@ -108,7 +106,7 @@ public class PODService {
   }
 
   @Transactional
-  public OrderPOD save(OrderPOD orderPOD) {
+  public OrderPOD save(OrderPOD orderPOD) throws ParseException {
     OrderPOD existingPod = repository.getPOD(orderPOD.getId());
     if (orderService.hasStatus(existingPod.getOrderId(), OrderStatus.RECEIVED)) {
       throw new DataException("error.pod.already.submitted");
@@ -134,5 +132,9 @@ public class PODService {
     orderService.updateOrderStatus(new Order(orderPOD.getOrderId(), RECEIVED));
 
     return repository.update(orderPOD);
+  }
+
+  public void insertPODLineItem(OrderPODLineItem orderPodLineItem) {
+    repository.insertPODLineItem(orderPodLineItem);
   }
 }

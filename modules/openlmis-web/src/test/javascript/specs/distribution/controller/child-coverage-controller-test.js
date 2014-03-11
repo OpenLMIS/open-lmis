@@ -10,7 +10,7 @@
 
 describe('Child Coverage Controller', function () {
 
-  var scope, distributionService, routeParams, childCoverage,
+  var scope, distributionService, routeParams, childCoverageJSON,
     childCoverageLineItem1, childCoverageLineItem2, childCoverageLineItem3, childCoverageLineItem4, childCoverageLineItem5,
     openedVialLineItem1, openedVialLineItem2, openedVialLineItem3, openedVialLineItem4, openedVialLineItem5;
 
@@ -35,7 +35,7 @@ describe('Child Coverage Controller', function () {
     openedVialLineItem4 = {"id": 16, "facilityVisitId": 3, "productVialName": "Penta1", "packSize": 10, openedVial: {value: null, notRecorded: true}};
     openedVialLineItem5 = {"id": 17, "facilityVisitId": 3, "productVialName": "Penta10", "packSize": 10, openedVial: {value: null, notRecorded: true}};
 
-    childCoverage = new ChildCoverage(234, {
+    childCoverageJSON = {facilityVisitId: 234,
       childCoverageLineItems: [
         childCoverageLineItem1,
         childCoverageLineItem2,
@@ -49,10 +49,9 @@ describe('Child Coverage Controller', function () {
         openedVialLineItem3,
         openedVialLineItem4,
         openedVialLineItem5
-      ]
-    });
+      ]};
 
-    distributionService.distribution = {facilityDistributions: {1: {childCoverage: childCoverage}, 2: {}}};
+    distributionService.distribution = {facilityDistributions: {1: {childCoverage: childCoverageJSON}, 2: {}}};
     routeParams = {facility: 1};
     $controller(ChildCoverageController, {$scope: scope, $routeParams: routeParams, distributionService: distributionService});
   }));
@@ -66,7 +65,7 @@ describe('Child Coverage Controller', function () {
   });
 
   it('should set child coverage in scope', function () {
-    expect(scope.childCoverage).toEqual(childCoverage);
+    expect(scope.childCoverage).toEqual(childCoverageJSON);
   });
 
   it('should set childCoverageMap in scope', function () {
@@ -93,21 +92,21 @@ describe('Child Coverage Controller', function () {
   });
 
   it('should return false if vaccination present in show cell list', function () {
-    var isVisible = scope.hideCell(childCoverage.childCoverageLineItems[0].vaccination);
+    var isVisible = scope.hideCell(childCoverageJSON.childCoverageLineItems[0].vaccination);
     expect(isVisible).toBeFalsy();
   });
 
   it('should return true if vaccination is not present in show cell list', function () {
-    var isVisible = scope.hideCell(childCoverage.childCoverageLineItems[2].vaccination);
+    var isVisible = scope.hideCell(childCoverageJSON.childCoverageLineItems[2].vaccination);
     expect(isVisible).toBeTruthy();
   });
 
   it('should synchronize NR state of Polio10 with Polio20 and Penta1 with Penta10', function () {
-    childCoverage.openedVialLineItems[2].openedVial.notRecorded = false;
-    childCoverage.openedVialLineItems[4].openedVial.notRecorded = false;
+    childCoverageJSON.openedVialLineItems[2].openedVial.notRecorded = false;
+    childCoverageJSON.openedVialLineItems[4].openedVial.notRecorded = false;
     scope.$apply();
-    expect(childCoverage.openedVialLineItems[1].openedVial.notRecorded).toBeFalsy();
-    expect(childCoverage.openedVialLineItems[3].openedVial.notRecorded).toBeFalsy();
+    expect(childCoverageJSON.openedVialLineItems[1].openedVial.notRecorded).toBeFalsy();
+    expect(childCoverageJSON.openedVialLineItems[3].openedVial.notRecorded).toBeFalsy();
   });
 
   it('should add value of healthCenter and outReach if not undefined', function () {
@@ -151,11 +150,11 @@ describe('Child Coverage Controller', function () {
       vaccinations: ['BCG'],
       rowSpan: 1
     };
-    childCoverage.childCoverageLineItems[0].healthCenter11Months.value = 5;
-    childCoverage.childCoverageLineItems[0].healthCenter23Months.value = 5;
-    childCoverage.childCoverageLineItems[0].outreach11Months.value = 10;
-    childCoverage.childCoverageLineItems[0].outreach23Months.value = 10;
-    childCoverage.openedVialLineItems[0].openedVial.value = 2;
+    childCoverageJSON.childCoverageLineItems[0].healthCenter11Months.value = 5;
+    childCoverageJSON.childCoverageLineItems[0].healthCenter23Months.value = 5;
+    childCoverageJSON.childCoverageLineItems[0].outreach11Months.value = 10;
+    childCoverageJSON.childCoverageLineItems[0].outreach23Months.value = 10;
+    childCoverageJSON.openedVialLineItems[0].openedVial.value = 2;
 
     var wastageRate = scope.calculateWastageRate(productsForVaccination);
 
@@ -169,12 +168,12 @@ describe('Child Coverage Controller', function () {
       vaccinations: ['BCG'],
       rowSpan: 1
     };
-    childCoverage.childCoverageLineItems[0].healthCenter11Months.value = 5;
-    childCoverage.childCoverageLineItems[0].healthCenter23Months.value = 5;
-    childCoverage.childCoverageLineItems[0].outreach11Months.value = 10;
-    childCoverage.childCoverageLineItems[0].outreach23Months.value = 10;
-    childCoverage.openedVialLineItems[0].openedVial.value = 2;
-    childCoverage.openedVialLineItems[0].packSize = undefined;
+    childCoverageJSON.childCoverageLineItems[0].healthCenter11Months.value = 5;
+    childCoverageJSON.childCoverageLineItems[0].healthCenter23Months.value = 5;
+    childCoverageJSON.childCoverageLineItems[0].outreach11Months.value = 10;
+    childCoverageJSON.childCoverageLineItems[0].outreach23Months.value = 10;
+    childCoverageJSON.openedVialLineItems[0].openedVial.value = 2;
+    childCoverageJSON.openedVialLineItems[0].packSize = undefined;
 
     var wastageRate = scope.calculateWastageRate(productsForVaccination);
 
@@ -187,11 +186,11 @@ describe('Child Coverage Controller', function () {
       vaccinations: ['Polio (Newborn)', 'Polio 1st dose', 'Polio 2nd dose', 'Polio 3rd dose'],
       rowSpan: 4
     };
-    childCoverage.childCoverageLineItems[2].healthCenter11Months.value = 5;
-    childCoverage.childCoverageLineItems[2].healthCenter23Months.value = 5;
-    childCoverage.childCoverageLineItems[2].outreach11Months.value = 10;
-    childCoverage.childCoverageLineItems[2].outreach23Months.value = 10;
-    childCoverage.openedVialLineItems[1].openedVial.value = 2;
+    childCoverageJSON.childCoverageLineItems[2].healthCenter11Months.value = 5;
+    childCoverageJSON.childCoverageLineItems[2].healthCenter23Months.value = 5;
+    childCoverageJSON.childCoverageLineItems[2].outreach11Months.value = 10;
+    childCoverageJSON.childCoverageLineItems[2].outreach23Months.value = 10;
+    childCoverageJSON.openedVialLineItems[1].openedVial.value = 2;
 
     var wastageRate = scope.calculateWastageRate(productsForVaccination);
 
@@ -199,6 +198,7 @@ describe('Child Coverage Controller', function () {
   });
 
   it('should applyNR to all readings', function () {
+    scope.childCoverage = new ChildCoverage(234, scope.childCoverageJSON);
     spyOn(distributionService, 'applyNR');
     spyOn(scope.childCoverage, 'setNotRecorded');
 

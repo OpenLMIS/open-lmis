@@ -11,13 +11,23 @@
 package org.openlmis.report.service.lookup;
 
 import lombok.NoArgsConstructor;
+import org.openlmis.core.domain.*;
 import org.openlmis.core.domain.GeographicLevel;
-import org.openlmis.core.domain.ProductGroup;
-import org.openlmis.core.domain.ProductForm;
 import org.openlmis.core.service.ConfigurationSettingService;
 import org.openlmis.report.mapper.ReportRequisitionMapper;
 import org.openlmis.report.mapper.lookup.AdjustmentTypeReportMapper;
 import org.openlmis.report.mapper.lookup.*;
+import org.openlmis.report.model.dto.DosageUnit;
+import org.openlmis.report.model.dto.Facility;
+import org.openlmis.report.model.dto.FacilityType;
+import org.openlmis.report.model.dto.GeographicZone;
+import org.openlmis.report.model.dto.ProcessingPeriod;
+import org.openlmis.report.model.dto.Product;
+import org.openlmis.report.model.dto.ProductCategory;
+import org.openlmis.report.model.dto.Program;
+import org.openlmis.report.model.dto.Regimen;
+import org.openlmis.report.model.dto.RegimenCategory;
+import org.openlmis.report.model.dto.RequisitionGroup;
 import org.openlmis.report.util.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -130,7 +140,7 @@ public class ReportLookupService {
     return productMapper.getProductListByCategory(categoryId);
   }
 
-  public List<ProductList> getFullProductList() {
+  public List<org.openlmis.core.domain.Product> getFullProductList() {
     return productMapper.getFullProductList();
   }
 
@@ -253,6 +263,14 @@ public class ReportLookupService {
     }
 
     return facilityReportMapper.getFacilitiesByPrgraomScheduleType(program, schedule, type);
+  }
+
+  public List<Facility> getFacilitiesBy(Long geographicZone, Long requisitionGroup, Long program, Long schedule) {
+      if (geographicZone == 0)
+          return null;
+
+      return facilityReportMapper.getFacilitiesBy(geographicZone, requisitionGroup, program, schedule);
+
   }
 
   public List<ProcessingPeriod> getAllProcessingPeriods() {

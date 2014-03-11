@@ -12,6 +12,7 @@ package org.openlmis.distribution.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.openlmis.core.domain.BaseModel;
@@ -19,10 +20,16 @@ import org.openlmis.core.domain.Facility;
 
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 
+/**
+ *  OpenedVialLineItem represents the number of product vials consumed along with the pack size of that product
+ *  for a particular facility visited.
+ */
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonSerialize(include = NON_EMPTY)
+@EqualsAndHashCode(callSuper = false)
 public class OpenedVialLineItem extends BaseModel {
 
   private Long facilityVisitId;
@@ -37,5 +44,7 @@ public class OpenedVialLineItem extends BaseModel {
     this.facilityVisitId = facilityVisit.getId();
     this.productVialName = productVialName;
     this.packSize = productVial != null ? facility.getPackSizeFor(productVial.getProductCode()) : null;
+    this.createdBy = facilityVisit.getCreatedBy();
+    this.modifiedBy = facilityVisit.getModifiedBy();
   }
 }

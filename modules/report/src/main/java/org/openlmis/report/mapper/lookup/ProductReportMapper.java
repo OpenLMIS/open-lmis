@@ -13,7 +13,6 @@ package org.openlmis.report.mapper.lookup;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.openlmis.report.model.dto.Product;
-import org.openlmis.report.model.dto.ProductList;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -34,7 +33,7 @@ public interface ProductReportMapper {
     @Select("SELECT * " +
             "   FROM " +
             "       products")
-    List<ProductList> getFullProductList();
+    List<org.openlmis.core.domain.Product> getFullProductList();
 
   @Select("SELECT p.id, (p.primaryname || ' ' || form.code || ' ' || p.strength || ' ' || du.code) as name, p.code, p.categoryid, " +
     "CASE WHEN p.tracer = true THEN 'Indicator Product' ELSE 'Regular' END tracer" +

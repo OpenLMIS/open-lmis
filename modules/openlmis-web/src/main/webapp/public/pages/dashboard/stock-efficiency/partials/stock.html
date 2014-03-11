@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<div class="row-fluid sortable ui-sortable">
+    <div class="box span12">
+
+        <ng-include src="'/public/pages/dashboard/shared/dashboard-form.html'"></ng-include>
+
+        <div ng-repeat="product in stockByProducts">
+            <div>{{product}}</div>
+            <table class="table-bordered table table-striped pull-right" ng-table="tableParams" >
+                <tbody>
+                    <tr ng-repeat="stock in stockingList | filter: {'product':product}">
+                        <td data-title="'Facility'">{{stock.facility}}</td>
+                    </tr>
+                </tbody>
+            </table>
+
+        </div>
+
+    </div>
+</div>

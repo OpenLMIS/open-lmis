@@ -10,6 +10,7 @@
 
 package org.openlmis.report.service;
 
+import com.google.common.base.Strings;
 import lombok.NoArgsConstructor;
 import org.apache.ibatis.session.RowBounds;
 import org.openlmis.core.service.ConfigurationSettingService;
@@ -18,9 +19,12 @@ import org.openlmis.report.model.ReportData;
 import org.openlmis.report.model.params.OrderReportParam;
 import org.openlmis.report.service.lookup.ReportLookupService;
 import org.openlmis.report.util.Constants;
+import org.openlmis.rnr.domain.RequisitionStatusChange;
+import org.openlmis.rnr.domain.RnrStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -37,6 +41,7 @@ public class OrderSummaryReportDataProvider extends ReportDataProvider {
 
   @Autowired
   private ReportLookupService reportLookupService;
+
 
   private OrderReportParam orderReportParam;
 
@@ -66,24 +71,24 @@ public class OrderSummaryReportDataProvider extends ReportDataProvider {
         orderReportParam.setProduct("All products");
       } else {
 
-        orderReportParam.setFacilityTypeId(filterCriteria.get("facilityTypeId") == null ? 0 : Integer.parseInt(filterCriteria.get("facilityTypeId")[0])); //defaults to 0
-        orderReportParam.setFacilityId(filterCriteria.get("facilityId") == null ? 0 : Integer.parseInt(filterCriteria.get("facilityId")[0])); //defaults to 0
-        orderReportParam.setFacilityType((filterCriteria.get("facilityType") == null || filterCriteria.get("facilityType")[0].equals("")) ? "ALL Facilities" : filterCriteria.get("facilityType")[0]);
+        orderReportParam.setFacilityTypeId(Strings.isNullOrEmpty(filterCriteria.get("facilityType")[0]) ? 0 : Integer.parseInt(filterCriteria.get("facilityTypeId")[0])); //defaults to 0
+        orderReportParam.setFacilityId(Strings.isNullOrEmpty(filterCriteria.get("facilityId")[0]) ? 0L : Integer.parseInt(filterCriteria.get("facilityId")[0])); //defaults to 0
+        orderReportParam.setFacilityType((Strings.isNullOrEmpty(filterCriteria.get("facilityType")[0]) || filterCriteria.get("facilityType")[0].equals("")) ? "ALL Facilities" : filterCriteria.get("facilityType")[0]);
 
-        orderReportParam.setScheduleId(filterCriteria.get("scheduleId") == null ? 0 : Integer.parseInt(filterCriteria.get("scheduleId")[0])); //defaults to 0
-        orderReportParam.setSchedule(filterCriteria.get("schedule")[0]);
+        orderReportParam.setScheduleId(Strings.isNullOrEmpty(filterCriteria.get("scheduleId")[0] ) ? 0 : Integer.parseInt(filterCriteria.get("scheduleId")[0])); //defaults to 0
 
-        orderReportParam.setProductId(filterCriteria.get("productId") == null ? 0 : Integer.parseInt(filterCriteria.get("productId")[0])); //defaults to 0
+        orderReportParam.setProductId(Strings.isNullOrEmpty(filterCriteria.get("product")[0] ) ? 0 : Integer.parseInt(filterCriteria.get("productId")[0])); //defaults to 0
         if (orderReportParam.getProductId() == 0) {
           orderReportParam.setProduct("All Products");
         } else if (orderReportParam.getProductId() == -1) {
           orderReportParam.setProduct(configurationService.getConfigurationStringValue(Constants.CONF_INDICATOR_PRODUCTS).isEmpty() ? "Indicator Products" : configurationService.getConfigurationStringValue(Constants.CONF_INDICATOR_PRODUCTS));
         }
-        orderReportParam.setOrderType(filterCriteria.get("orderType") == null ? "" : filterCriteria.get("orderType")[0]);
-        orderReportParam.setPeriodId(filterCriteria.get("periodId") == null ? 0 : Integer.parseInt(filterCriteria.get("periodId")[0])); //defaults to 0
+        orderReportParam.setOrderType(Strings.isNullOrEmpty(filterCriteria.get("orderType")[0]) ? "" : filterCriteria.get("orderType")[0]);
+        orderReportParam.setPeriodId(Strings.isNullOrEmpty(filterCriteria.get("periodId")[0]) ? 0L : Integer.parseInt(filterCriteria.get("periodId")[0])); //defaults to 0
         orderReportParam.setPeriod(filterCriteria.get("period")[0]);
-        orderReportParam.setProgramId(filterCriteria.get("programId") == null ? 0 : Integer.parseInt(filterCriteria.get("programId")[0])); //defaults to 0
+        orderReportParam.setProgramId(Strings.isNullOrEmpty(filterCriteria.get("programId")[0]) ? 0L : Integer.parseInt(filterCriteria.get("programId")[0])); //defaults to 0
         orderReportParam.setProgram(filterCriteria.get("program")[0]);
+        orderReportParam.setOrderId(reportMapper.getRequisitionId(orderReportParam.getFacilityId(), orderReportParam.getProgramId(), orderReportParam.getPeriodId()));
       }
     }
     return orderReportParam;
@@ -101,6 +106,20 @@ public class OrderSummaryReportDataProvider extends ReportDataProvider {
     result.put("CUSTOM_REPORT_TITLE", configurationService.getConfigurationStringValue("ORDER_REPORT_TITLE"));
     result.put("ORDER_SUMMARY_SHOW_SIGNATURE_SPACE_FOR_CUSTOMER", configurationService.getConfigurationStringValue("ORDER_SUMMARY_SHOW_SIGNATURE_SPACE_FOR_CUSTOMER"));
     result.put("ORDER_SUMMARY_SHOW_DISCREPANCY_SECTION", configurationService.getConfigurationStringValue("ORDER_SUMMARY_SHOW_DISCREPANCY_SECTION"));
+
+    // get actors
+    List<RequisitionStatusChange> changes = reportMapper.getLastUsersWhoActedOnRnr(orderReportParam.getOrderId(), RnrStatus.AUTHORIZED.name());
+    if(changes.size() > 0){
+
+      result.put("AUTHORIZED_BY", changes.get(0).getCreatedBy().getFirstName() + " " + changes.get(0).getCreatedBy().getLastName() );
+      result.put("AUTHORIZED_DATE", new SimpleDateFormat("dd/MM/yy h:m a").format(changes.get(0).getCreatedDate()) );
+    }
+
+    changes = reportMapper.getLastUsersWhoActedOnRnr(orderReportParam.getOrderId(), RnrStatus.APPROVED.name());
+    if(changes.size() > 0){
+      result.put("APPROVED_BY", changes.get(0).getCreatedBy().getFirstName() + " " + changes.get(0).getCreatedBy().getLastName()  );
+      result.put("APPROVED_DATE", new SimpleDateFormat("dd/MM/yy h:m a").format(changes.get(0).getCreatedDate()) );
+    }
     return result;
   }
 }

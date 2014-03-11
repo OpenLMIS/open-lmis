@@ -38,6 +38,10 @@ import static org.openlmis.web.response.OpenLmisResponse.success;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
+/**
+ * This controller handles endpoint to list, create rnr template.
+ */
+
 @Controller
 public class RnrTemplateController extends BaseController {
 
@@ -69,9 +73,10 @@ public class RnrTemplateController extends BaseController {
     ProgramRnrTemplate programRnrTemplate = new ProgramRnrTemplate(programId, rnrColumnList);
     programRnrTemplate.setModifiedBy(loggedInUserId(request));
     Map<String, OpenLmisMessage> validationErrors = rnrTemplateService.saveRnRTemplateForProgram(programRnrTemplate);
-    ResponseEntity responseEntity;
+    ResponseEntity<OpenLmisResponse> responseEntity;
     if (!validationErrors.isEmpty()) {
       responseEntity = response(getMessages(validationErrors), HttpStatus.BAD_REQUEST);
+      responseEntity.getBody().addData("error", "form.error");
     } else {
       responseEntity = success(messageService.message(RNR_TEMPLATE_SAVE_SUCCESS));
     }

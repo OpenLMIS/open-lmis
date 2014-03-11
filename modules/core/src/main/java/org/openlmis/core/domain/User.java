@@ -25,6 +25,10 @@ import java.util.regex.Pattern;
 
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 
+/**
+ * User represents User of the system and its attributes. Defines the contract for creation/upload of users, mandatory
+ * attributes, their data type etc. Also provides methods to validate user and user email.
+ */
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
@@ -34,7 +38,7 @@ public class User extends BaseModel implements Importable {
   @ImportField(mandatory = true, name = "User Name")
   private String userName;
 
-  @ImportField(mandatory = true, name = "Password")
+  @ImportField(name = "Password")
   @JsonIgnore
   private String password;
 

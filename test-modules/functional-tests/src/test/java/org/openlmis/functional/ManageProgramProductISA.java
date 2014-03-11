@@ -17,6 +17,7 @@ import org.openlmis.UiUtils.CaptureScreenshotOnFailureListener;
 import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.pageobjects.HomePage;
 import org.openlmis.pageobjects.LoginPage;
+import org.openlmis.pageobjects.PageObjectFactory;
 import org.openlmis.pageobjects.ProgramProductISAPage;
 import org.openqa.selenium.WebElement;
 import org.testng.annotations.*;
@@ -41,8 +42,8 @@ public class ManageProgramProductISA extends TestCaseHelper {
   @BeforeMethod(groups = "admin")
   public void setUp() throws InterruptedException, SQLException, IOException {
     super.setup();
-    homePage = PageFactory.getInstanceOfHomePage(testWebDriver);
-    loginPage = PageFactory.getInstanceOfLoginPage(testWebDriver, baseUrlGlobal);
+    homePage = PageObjectFactory.getHomePage(testWebDriver);
+    loginPage = PageObjectFactory.getLoginPage(testWebDriver, baseUrlGlobal);
   }
 
   @When("^I have data available for program product ISA$")
@@ -56,7 +57,7 @@ public class ManageProgramProductISA extends TestCaseHelper {
 
   @Given("^I access program product ISA page for \"([^\"]*)\"$")
   public void accessProgramProductISAPage(String program) {
-    programProductISAPage = PageFactory.getInstanceOfProgramProductIsaPage(testWebDriver);
+    programProductISAPage = PageObjectFactory.getProgramProductIsaPage(testWebDriver);
     programProductISAPage = navigateProgramProductISAPage(program);
   }
 
@@ -69,21 +70,21 @@ public class ManageProgramProductISA extends TestCaseHelper {
                                     String adjustmentValue,
                                     String minimumValue,
                                     String maximumValue) {
-    programProductISAPage = PageFactory.getInstanceOfProgramProductIsaPage(testWebDriver);
+    programProductISAPage = PageObjectFactory.getProgramProductIsaPage(testWebDriver);
     programProductISAPage.fillProgramProductISA(ratio, dosesPerYear, wastage, bufferPercentage, adjustmentValue,
       minimumValue, maximumValue);
   }
 
   @Then("^I verify calculated ISA value having population \"([^\"]*)\" as \"([^\"]*)\"$")
   public void verifyTestCalculatedISA(String population, String expectedISA) throws SQLException {
-    programProductISAPage = PageFactory.getInstanceOfProgramProductIsaPage(testWebDriver);
+    programProductISAPage = PageObjectFactory.getProgramProductIsaPage(testWebDriver);
     String actualISA = programProductISAPage.calculateISA(population);
     assertEquals(expectedISA, actualISA);
   }
 
   @Then("^I click cancel$")
   public void clickCancel() {
-    programProductISAPage = PageFactory.getInstanceOfProgramProductIsaPage(testWebDriver);
+    programProductISAPage = PageObjectFactory.getProgramProductIsaPage(testWebDriver);
     programProductISAPage.cancelISA();
   }
 
@@ -154,10 +155,7 @@ public class ManageProgramProductISA extends TestCaseHelper {
   }
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function-Verify-Push-Type-Program")
-  public void testPushTypeProgramsInDropDown(String userSIC,
-                                             String password,
-                                             String program1,
-                                             String program2) throws SQLException {
+  public void testPushTypeProgramsInDropDown(String userSIC, String password, String program1, String program2) throws SQLException {
     setUpTestDataForProgramProductISA();
     Login(userSIC, password);
     ProgramProductISAPage programProductISAPage = navigateConfigureProductISAPage();
@@ -179,14 +177,8 @@ public class ManageProgramProductISA extends TestCaseHelper {
   }
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function-Multiple-Programs")
-  public void testProgramProductsMappings(String userSIC,
-                                          String password,
-                                          String program1,
-                                          String program2,
-                                          String product1,
-                                          String product2,
-                                          String product3,
-                                          String product4) throws SQLException {
+  public void testProgramProductsMappings(String userSIC, String password, String program1, String program2, String product1,
+                                          String product2, String product3, String product4) throws SQLException {
     setUpTestDataForProgramProductISA();
     Login(userSIC, password);
     ProgramProductISAPage programProductISAPage = navigateConfigureProductISAPage();
@@ -229,7 +221,7 @@ public class ManageProgramProductISA extends TestCaseHelper {
   }
 
   private ProgramProductISAPage navigateProgramProductISAPage(String program) {
-    homePage = PageFactory.getInstanceOfHomePage(testWebDriver);
+    homePage = PageObjectFactory.getHomePage(testWebDriver);
     ProgramProductISAPage programProductISAPage = homePage.navigateProgramProductISA();
     programProductISAPage.selectProgram(program);
     programProductISAPage.editFormula();
@@ -300,7 +292,7 @@ public class ManageProgramProductISA extends TestCaseHelper {
   public void tearDown() throws SQLException {
     testWebDriver.sleep(500);
     if (!testWebDriver.getElementById("username").isDisplayed()) {
-      HomePage homePage = PageFactory.getInstanceOfHomePage(testWebDriver);
+      HomePage homePage = PageObjectFactory.getHomePage(testWebDriver);
       homePage.logout(baseUrlGlobal);
       dbWrapper.deleteData();
       dbWrapper.closeConnection();

@@ -17,16 +17,15 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 
+/**
+ * This service exposes methods for basic database utilities
+ */
 @Service
 @NoArgsConstructor
 public class DbService {
 
   @Autowired
   private DbRepository dbRepository;
-
-  public int getCount(String tableName) {
-    return dbRepository.getCount(tableName);
-  }
 
   public Date getCurrentTimestamp() {
     return dbRepository.getCurrentTimeStamp();

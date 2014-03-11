@@ -25,6 +25,10 @@ import org.openlmis.shipment.domain.ShipmentLineItem;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 
+/**
+ *  OrderPODLineItem represents an entity that keeps track of delivered and returned quantities of a product.
+ */
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -42,6 +46,7 @@ public class OrderPODLineItem extends BaseModel {
   private String dispensingUnit;
   private Integer packsToShip;
   private Integer quantityShipped;
+  private Integer quantityReturned;
   private Boolean fullSupply;
   private String notes;
 
@@ -65,6 +70,9 @@ public class OrderPODLineItem extends BaseModel {
     }
     if (quantityReceived < 0) {
       throw new DataException(new OpenLmisMessage("error.invalid.received.quantity"));
+    }
+    if (quantityReturned != null && quantityReturned < 0) {
+      throw new DataException(new OpenLmisMessage("error.invalid.returned.quantity"));
     }
   }
 
@@ -97,6 +105,7 @@ public class OrderPODLineItem extends BaseModel {
 
   public void copy(OrderPODLineItem lineItem) {
     this.setQuantityReceived(lineItem.getQuantityReceived());
+    this.setQuantityReturned(lineItem.getQuantityReturned());
     this.setNotes(lineItem.getNotes());
     this.setModifiedBy(lineItem.getModifiedBy());
   }

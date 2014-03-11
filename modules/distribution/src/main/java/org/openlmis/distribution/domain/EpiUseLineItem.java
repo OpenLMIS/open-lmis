@@ -20,6 +20,10 @@ import org.openlmis.core.domain.ProductGroup;
 
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 
+/**
+ *  EpiUseLineItem represents an entity which keeps record of distribution and consumption pattern of a product group.
+ */
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -36,9 +40,10 @@ public class EpiUseLineItem extends BaseModel {
   private Integer distributed;
   private String expirationDate;
 
-  public EpiUseLineItem(Long facilityVisitId, ProductGroup productGroup, Long createdBy) {
+  public EpiUseLineItem(FacilityVisit facilityVisit, ProductGroup productGroup) {
+    this.facilityVisitId = facilityVisit.getId();
     this.productGroup = productGroup;
-    this.createdBy = createdBy;
-    this.facilityVisitId = facilityVisitId;
+    this.createdBy = facilityVisit.getCreatedBy();
+    this.modifiedBy = facilityVisit.getModifiedBy();
   }
 }

@@ -8,6 +8,8 @@
   ~ You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
   -->
 
-<div class="user-info" >
-  <span openlmis-message="message.loggedInAs"></span>&nbsp;<strong>{{user}}</strong> | <a ng-click="logout()" href="" openlmis-message="link.logout"></a>
+<div class="user-info">
+    <span openlmis-message="message.loggedInAs"></span>&nbsp;<strong>{{user}}</strong> | <a id='logout'
+                                                                                            ng-click="logout()" href=""
+                                                                                            openlmis-message="link.logout"></a>
 </div>

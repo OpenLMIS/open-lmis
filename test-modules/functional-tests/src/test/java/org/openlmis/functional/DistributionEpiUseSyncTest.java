@@ -24,11 +24,9 @@ import org.testng.annotations.Test;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
-import static java.util.Arrays.asList;
 
 public class DistributionEpiUseSyncTest extends TestCaseHelper {
 
@@ -65,14 +63,15 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
   @BeforeMethod(groups = {"distribution"})
   public void setUp() throws InterruptedException, SQLException, IOException {
     super.setup();
-    loginPage = PageFactory.getInstanceOfLoginPage(testWebDriver, baseUrlGlobal);
-    facilityListPage = PageFactory.getInstanceOfFacilityListPage(testWebDriver);
+    loginPage = PageObjectFactory.getLoginPage(testWebDriver, baseUrlGlobal);
+    facilityListPage = PageObjectFactory.getFacilityListPage(testWebDriver);
 
-    Map<String, String> dataMap = epiUseData;
-    setupDataForDistributionTest(dataMap.get(USER), dataMap.get(FIRST_DELIVERY_ZONE_CODE), dataMap.get(SECOND_DELIVERY_ZONE_CODE),
-      dataMap.get(FIRST_DELIVERY_ZONE_NAME), dataMap.get(SECOND_DELIVERY_ZONE_NAME), dataMap.get(FIRST_FACILITY_CODE),
-      dataMap.get(SECOND_FACILITY_CODE), dataMap.get(VACCINES_PROGRAM), dataMap.get(TB_PROGRAM), dataMap.get(SCHEDULE),
-      dataMap.get(PRODUCT_GROUP_CODE));
+    setupDataForDistributionTest(epiUseData);
+    dbWrapper.insertProductGroup(epiUseData.get(PRODUCT_GROUP_CODE));
+    dbWrapper.insertProductWithGroup("Product5", "ProductName5", epiUseData.get(PRODUCT_GROUP_CODE), true);
+    dbWrapper.insertProductWithGroup("Product6", "ProductName6", epiUseData.get(PRODUCT_GROUP_CODE), true);
+    dbWrapper.insertProgramProduct("Product5", epiUseData.get(VACCINES_PROGRAM), "10", "false");
+    dbWrapper.insertProgramProduct("Product6", epiUseData.get(VACCINES_PROGRAM), "10", "true");
   }
 
   @Test(groups = {"distribution"})
@@ -88,7 +87,15 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
     epiUsePage.enterData(10, 20, 30, 40, 50, "10/2011", 1);
     epiUsePage.verifyIndicator("GREEN");
 
-    FullCoveragePage fullCoveragePage = epiUsePage.navigateToFullCoverage();
+    ChildCoveragePage childCoveragePage = epiUsePage.navigateToChildCoverage();
+    childCoveragePage.applyNRToAll();
+    childCoveragePage.clickOK();
+
+    AdultCoveragePage adultCoveragePage = childCoveragePage.navigateToAdultCoverage();
+    adultCoveragePage.clickApplyNrToAll();
+    adultCoveragePage.clickOK();
+
+    FullCoveragePage fullCoveragePage = adultCoveragePage.navigateToFullCoverage();
     fullCoveragePage.enterData(12, 34, 45, "56");
 
     fullCoveragePage.navigateToEpiInventory();
@@ -178,7 +185,15 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
     FullCoveragePage fullCoveragePage = epiUsePage.navigateToFullCoverage();
     fullCoveragePage.enterData(12, 34, 45, "56");
 
-    fullCoveragePage.navigateToEpiInventory();
+    ChildCoveragePage childCoveragePage = fullCoveragePage.navigateToChildCoverage();
+    childCoveragePage.applyNRToAll();
+    childCoveragePage.clickOK();
+
+    AdultCoveragePage adultCoveragePage = childCoveragePage.navigateToAdultCoverage();
+    adultCoveragePage.clickApplyNrToAll();
+    adultCoveragePage.clickOK();
+
+    adultCoveragePage.navigateToEpiInventory();
     fillEpiInventoryWithOnlyDeliveredQuantity("2", "4", "6");
 
     DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
@@ -202,14 +217,22 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
     epiUsePage.enterValueInStockAtFirstOfMonth("10", 1);
     epiUsePage.verifyIndicator("AMBER");
 
-    FullCoveragePage fullCoveragePage = epiUsePage.navigateToFullCoverage();
+    ChildCoveragePage childCoveragePage = epiUsePage.navigateToChildCoverage();
+    childCoveragePage.applyNRToAll();
+    childCoveragePage.clickOK();
+
+    FullCoveragePage fullCoveragePage = childCoveragePage.navigateToFullCoverage();
     fullCoveragePage.enterData(12, 34, 45, "56");
 
-    fullCoveragePage.navigateToEpiInventory();
+    AdultCoveragePage adultCoveragePage = fullCoveragePage.navigateToAdultCoverage();
+    adultCoveragePage.clickApplyNrToAll();
+    adultCoveragePage.clickOK();
+
+    adultCoveragePage.navigateToEpiInventory();
     fillEpiInventoryWithOnlyDeliveredQuantity("2", "4", "6");
 
     facilityListPage.selectFacility(epiUseData.get(FIRST_FACILITY_CODE));
-    facilityListPage.verifyFacilityIndicatorColor("Overall", "AMBER");
+    facilityListPage.verifyOverallFacilityIndicatorColor("AMBER");
 
     verifyEpiUseDataInDatabase(null, null, null, null, null, null, epiUseData.get(PRODUCT_GROUP_CODE), epiUseData.get(FIRST_FACILITY_CODE));
   }
@@ -238,10 +261,18 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
     epiUsePage.verifyStockAtEndOfMonthStatus(false, 1);
     epiUsePage.verifyExpirationDateStatus(false, 1);
 
-    FullCoveragePage fullCoveragePage = epiUsePage.navigateToFullCoverage();
+    ChildCoveragePage childCoveragePage = epiUsePage.navigateToChildCoverage();
+    childCoveragePage.applyNRToAll();
+    childCoveragePage.clickOK();
+
+    FullCoveragePage fullCoveragePage = childCoveragePage.navigateToFullCoverage();
     fullCoveragePage.enterData(12, 34, 45, "56");
 
-    fullCoveragePage.navigateToEpiInventory();
+    AdultCoveragePage adultCoveragePage = fullCoveragePage.navigateToAdultCoverage();
+    adultCoveragePage.clickApplyNrToAll();
+    adultCoveragePage.clickOK();
+
+    adultCoveragePage.navigateToEpiInventory();
     fillEpiInventoryWithOnlyDeliveredQuantity("2", "4", "6");
 
     DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
@@ -251,7 +282,7 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
 
     distributionPage.clickRecordData(1);
     facilityListPage.selectFacility("F10");
-    facilityListPage.verifyFacilityIndicatorColor("Overall", "BLUE");
+    facilityListPage.verifyOverallFacilityIndicatorColor("BLUE");
 
     verifyEpiUseDataInDatabase(null, null, null, null, null, null, epiUseData.get(PRODUCT_GROUP_CODE), epiUseData.get(FIRST_FACILITY_CODE));
   }
@@ -280,10 +311,18 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
     epiUsePage.enterData(10, 20, 30, 40, 50, "10/2011", 2);
     epiUsePage.verifyIndicator("GREEN");
 
-    FullCoveragePage fullCoveragePage = epiUsePage.navigateToFullCoverage();
+    ChildCoveragePage childCoveragePage = epiUsePage.navigateToChildCoverage();
+    childCoveragePage.applyNRToAll();
+    childCoveragePage.clickOK();
+
+    FullCoveragePage fullCoveragePage = childCoveragePage.navigateToFullCoverage();
     fullCoveragePage.enterData(12, 34, 45, "56");
 
-    EpiInventoryPage epiInventoryPage = fullCoveragePage.navigateToEpiInventory();
+    AdultCoveragePage adultCoveragePage = fullCoveragePage.navigateToAdultCoverage();
+    adultCoveragePage.clickApplyNrToAll();
+    adultCoveragePage.clickOK();
+
+    EpiInventoryPage epiInventoryPage = adultCoveragePage.navigateToEpiInventory();
     fillEpiInventoryWithOnlyDeliveredQuantity("2", "4", "6");
     epiInventoryPage.fillDeliveredQuantity(4, "8");
 
@@ -316,26 +355,8 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
     dbWrapper.updateFieldValue("products", "active", "true", "code", "Product6");
   }
 
-  public void setupDataForDistributionTest(String userSIC, String deliveryZoneCodeFirst, String deliveryZoneCodeSecond,
-                                           String deliveryZoneNameFirst, String deliveryZoneNameSecond,
-                                           String facilityCodeFirst, String facilityCodeSecond,
-                                           String programFirst, String programSecond, String schedule, String productGroupCode) throws SQLException {
-    List<String> rightsList = asList("MANAGE_DISTRIBUTION");
-    setupTestDataToInitiateRnRAndDistribution(facilityCodeFirst, facilityCodeSecond, true, programFirst, userSIC, "200", rightsList,
-      programSecond, "District1", "Ngorongoro", "Ngorongoro");
-    setupDataForDeliveryZone(true, deliveryZoneCodeFirst, deliveryZoneCodeSecond, deliveryZoneNameFirst, deliveryZoneNameSecond,
-      facilityCodeFirst, facilityCodeSecond, programFirst, programSecond, schedule);
-    dbWrapper.insertRoleAssignmentForDistribution(userSIC, "store in-charge", deliveryZoneCodeFirst);
-    dbWrapper.insertRoleAssignmentForDistribution(userSIC, "store in-charge", deliveryZoneCodeSecond);
-    dbWrapper.insertProductGroup(productGroupCode);
-    dbWrapper.insertProductWithGroup("Product5", "ProductName5", productGroupCode, true);
-    dbWrapper.insertProductWithGroup("Product6", "ProductName6", productGroupCode, true);
-    dbWrapper.insertProgramProduct("Product5", programFirst, "10", "false");
-    dbWrapper.insertProgramProduct("Product6", programFirst, "10", "true");
-  }
-
   public void initiateDistribution(String deliveryZoneNameFirst, String programFirst) {
-    HomePage homePage = PageFactory.getInstanceOfHomePage(testWebDriver);
+    HomePage homePage = PageObjectFactory.getHomePage(testWebDriver);
     DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
     distributionPage.selectValueFromDeliveryZone(deliveryZoneNameFirst);
     distributionPage.selectValueFromProgram(programFirst);
@@ -344,7 +365,7 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
   }
 
   public void fillEpiInventoryWithOnlyDeliveredQuantity(String deliveredQuantity1, String deliveredQuantity2, String deliveredQuantity3) {
-    EpiInventoryPage epiInventoryPage = PageFactory.getInstanceOfEpiInventoryPage(testWebDriver);
+    EpiInventoryPage epiInventoryPage = PageObjectFactory.getEpiInventoryPage(testWebDriver);
     epiInventoryPage.applyNRToAll();
     epiInventoryPage.fillDeliveredQuantity(1, deliveredQuantity1);
     epiInventoryPage.fillDeliveredQuantity(2, deliveredQuantity2);
@@ -355,7 +376,7 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
   public void tearDown() throws SQLException {
     testWebDriver.sleep(500);
     if (!testWebDriver.getElementById("username").isDisplayed()) {
-      HomePage homePage = PageFactory.getInstanceOfHomePage(testWebDriver);
+      HomePage homePage = PageObjectFactory.getHomePage(testWebDriver);
       homePage.logout(baseUrlGlobal);
       dbWrapper.deleteData();
       dbWrapper.closeConnection();

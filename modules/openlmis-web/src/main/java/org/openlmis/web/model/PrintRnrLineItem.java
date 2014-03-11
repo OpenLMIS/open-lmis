@@ -22,6 +22,10 @@ import java.util.List;
 import static org.openlmis.rnr.domain.ProgramRnrTemplate.QUANTITY_DISPENSED;
 import static org.openlmis.rnr.domain.ProgramRnrTemplate.STOCK_IN_HAND;
 
+/**
+ * This class abstracts the calculation logic from RnrLineItem for printing purpose.
+ */
+
 @Data
 @AllArgsConstructor
 public class PrintRnrLineItem {

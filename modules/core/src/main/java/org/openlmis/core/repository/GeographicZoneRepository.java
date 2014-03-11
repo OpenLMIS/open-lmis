@@ -16,7 +16,6 @@ import org.openlmis.core.domain.GeographicZone;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.mapper.GeographicLevelMapper;
 import org.openlmis.core.repository.mapper.GeographicZoneMapper;
-import org.openlmis.core.repository.mapper.GeographicZoneMapperExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.DuplicateKeyException;
@@ -24,14 +23,15 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+/**
+ * GeographicZoneRepository is repository class for GeographicZone related database operations.
+ */
+
 @Repository
 @NoArgsConstructor
 public class GeographicZoneRepository {
 
   private GeographicZoneMapper mapper;
-
-  @Autowired
-  private GeographicZoneMapperExtension mapperExtension;
 
   private GeographicLevelMapper geographicLevelMapper;
 
@@ -74,7 +74,7 @@ public class GeographicZoneRepository {
   }
 
   public List<GeographicZone> getAllGeographicZones() {
-    return mapperExtension.getAllGeographicZones_Ext();
+    return mapper.getAllGeographicZones_Ext();
   }
 
   public GeographicLevel getGeographicLevelByCode(String code) {
@@ -83,5 +83,31 @@ public class GeographicZoneRepository {
 
   public GeographicZone getById(Long id) {
     return mapper.getWithParentById(id);
+  }
+
+  public List<GeographicZone> searchGeographicZone(String geographicZoneSearchParam) {
+    return mapper.getGeographicZoneWithSearchedName(geographicZoneSearchParam);
+  }
+
+  public GeographicZone getById(int id){
+    return mapper.getGeographicZoneById_Ext(id);
+  }
+
+  public void insert_Ext(GeographicZone geographicZone)
+  {
+    try {
+      mapper.insert_Ext(geographicZone);
+    }
+    catch (DataIntegrityViolationException e) {
+      throw new DataException("error.incorrect.length");
+    }
+  }
+
+  public void update(GeographicZone zone) {
+    try {
+      mapper.update(zone);
+    } catch (DataIntegrityViolationException e) {
+      throw new DataException("error.incorrect.length");
+    }
   }
 }

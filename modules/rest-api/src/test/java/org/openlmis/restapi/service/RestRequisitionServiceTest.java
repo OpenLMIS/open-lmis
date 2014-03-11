@@ -22,10 +22,7 @@ import org.mockito.Mock;
 import org.openlmis.core.builder.FacilityBuilder;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
-import org.openlmis.core.service.FacilityService;
-import org.openlmis.core.service.ProductService;
-import org.openlmis.core.service.ProgramService;
-import org.openlmis.core.service.UserService;
+import org.openlmis.core.service.*;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.order.domain.Order;
 import org.openlmis.order.service.OrderService;
@@ -34,6 +31,7 @@ import org.openlmis.restapi.domain.ReplenishmentDTO;
 import org.openlmis.restapi.domain.Report;
 import org.openlmis.rnr.builder.RequisitionBuilder;
 import org.openlmis.rnr.domain.*;
+import org.openlmis.rnr.search.criteria.RequisitionSearchCriteria;
 import org.openlmis.rnr.service.RequisitionService;
 import org.openlmis.rnr.service.RnrTemplateService;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -85,6 +83,9 @@ public class RestRequisitionServiceTest {
 
   @Mock
   private RestRequisitionCalculator restRequisitionCalculator;
+
+  @Mock
+  private ProcessingPeriodService periodService;
 
   @InjectMocks
   RestRequisitionService service;
@@ -141,7 +142,7 @@ public class RestRequisitionServiceTest {
 
     when(facilityService.getOperativeFacilityByCode(DEFAULT_AGENT_CODE)).thenReturn(facility);
     when(programService.getValidatedProgramByCode(DEFAULT_PROGRAM_CODE)).thenReturn(new Program(PROGRAM_ID));
-    when(requisitionService.initiate(facility, new Program(PROGRAM_ID), user.getId(), false)).thenReturn(requisition);
+    when(requisitionService.initiate(facility, new Program(PROGRAM_ID), user.getId(), false, null)).thenReturn(requisition);
     when(requisitionService.save(requisition)).thenReturn(requisition);
     when(productService.getByCode(validProductCode)).thenReturn(new Product());
     Rnr reportedRequisition = mock(Rnr.class);
@@ -154,10 +155,90 @@ public class RestRequisitionServiceTest {
 
     verify(facilityService).getOperativeFacilityByCode(DEFAULT_AGENT_CODE);
     verify(programService).getValidatedProgramByCode(DEFAULT_PROGRAM_CODE);
-    verify(requisitionService).initiate(facility, new Program(PROGRAM_ID), 1L, false);
+    verify(requisitionService).initiate(facility, new Program(PROGRAM_ID), 1L, false, null);
     verify(requisitionService).submit(requisition);
     assertThat(requisition.getRegimenLineItems().get(0).getPatientsOnTreatment(), is(10));
     assertThat(requisition.getRegimenLineItems().get(0).getPatientsStoppedTreatment(), is(5));
+  }
+
+  @Test
+  public void sdpShouldCreateAndSubmitARequisition() throws Exception{
+    RnrLineItem rnrLineItem = make(a(defaultRnrLineItem, with(productCode, "P10")));
+    List<RnrLineItem> products = asList(rnrLineItem);
+    requisition.setFullSupplyLineItems(products);
+    requisition.setProgram(new Program());
+
+    RegimenLineItem regimenLineItem = make(a(defaultRegimenLineItem));
+    requisition.setRegimenLineItems(asList(regimenLineItem));
+
+
+    report.setProducts(products);
+    RegimenLineItem reportRegimenLineItem = make(a(defaultRegimenLineItem, with(patientsOnTreatment, 10), with(patientsStoppedTreatment, 5)));
+    report.setRegimens(asList(reportRegimenLineItem));
+    report.setPeriodId(1L);
+    report.setEmergency(false);
+
+    Long facility_id = 5L;
+
+    ProgramSupported programSupported = make(a(defaultProgramSupported));
+    Facility facility = make(a(defaultFacility, with(facilityId, facility_id), with(programSupportedList, asList(programSupported)), with(virtualFacility, true)));
+
+    when(facilityService.getOperativeFacilityByCode(DEFAULT_AGENT_CODE)).thenReturn(facility);
+    when(programService.getValidatedProgramByCode(DEFAULT_PROGRAM_CODE)).thenReturn(new Program(PROGRAM_ID));
+    when(requisitionService.initiate(facility, new Program(PROGRAM_ID), user.getId(), false, null)).thenReturn(requisition);
+    when(requisitionService.save(requisition)).thenReturn(requisition);
+    when(productService.getByCode(validProductCode)).thenReturn(new Product());
+    Rnr reportedRequisition = mock(Rnr.class);
+    whenNew(Rnr.class).withArguments(requisition.getId()).thenReturn(reportedRequisition);
+    when(rnrTemplateService.fetchProgramTemplateForRequisition(any(Long.class))).thenReturn(new ProgramRnrTemplate(new ArrayList<RnrColumn>()));
+
+    when(requisitionService.submit(requisition)).thenReturn(requisition);
+
+    service.submitSdpReport(report, 1L);
+
+    verify(facilityService).getOperativeFacilityByCode(DEFAULT_AGENT_CODE);
+    verify(programService).getValidatedProgramByCode(DEFAULT_PROGRAM_CODE);
+    verify(requisitionService).initiate(facility, new Program(PROGRAM_ID), 1L, false, null);
+    verify(requisitionService).submit(requisition);
+    assertThat(requisition.getRegimenLineItems().get(0).getPatientsOnTreatment(), is(10));
+    assertThat(requisition.getRegimenLineItems().get(0).getPatientsStoppedTreatment(), is(5));
+  }
+
+  @Test
+  public void sdpShouldNotInitiateRnrIfRnrAlreadyExists() throws Exception{
+
+    RnrLineItem rnrLineItem = make(a(defaultRnrLineItem, with(productCode, "P10")));
+    List<RnrLineItem> products = asList(rnrLineItem);
+    requisition.setFullSupplyLineItems(products);
+    requisition.setProgram(new Program());
+
+    RegimenLineItem regimenLineItem = make(a(defaultRegimenLineItem));
+    requisition.setRegimenLineItems(asList(regimenLineItem));
+
+
+    report.setProducts(products);
+    RegimenLineItem reportRegimenLineItem = make(a(defaultRegimenLineItem, with(patientsOnTreatment, 10), with(patientsStoppedTreatment, 5)));
+    report.setRegimens(asList(reportRegimenLineItem));
+    report.setPeriodId(1L);
+    report.setEmergency(false);
+
+    Long facility_id = 5L;
+
+    ProgramSupported programSupported = make(a(defaultProgramSupported));
+    Facility facility = make(a(defaultFacility, with(facilityId, facility_id), with(programSupportedList, asList(programSupported)), with(virtualFacility, true)));
+
+    when(facilityService.getOperativeFacilityByCode(DEFAULT_AGENT_CODE)).thenReturn(facility);
+    when(programService.getValidatedProgramByCode(DEFAULT_PROGRAM_CODE)).thenReturn(new Program(PROGRAM_ID));
+
+    expectedException.expect(DataException.class);
+    doThrow(new DataException("rnr.error")).when(restRequisitionCalculator).validateCustomPeriod(any(Facility.class), any(Program.class), any(ProcessingPeriod.class), any(Long.class));
+
+    ArrayList<ProcessingPeriod> array = new ArrayList<ProcessingPeriod>();
+    when(requisitionService.getRequisitionsFor(any(RequisitionSearchCriteria.class),any(array.getClass()))).thenReturn(asList(new Rnr()));
+
+    service.submitSdpReport(report,1L);
+    verify(requisitionService,never()).initiate(any(Facility.class),any(Program.class),any(Long.class),any(Boolean.class), any(ProcessingPeriod.class));
+
   }
 
   @Test
@@ -169,7 +250,21 @@ public class RestRequisitionServiceTest {
 
     service.submitReport(report, 1l);
 
-    verify(requisitionService, never()).initiate(any(Facility.class), any(Program.class), any(Long.class), any(Boolean.class));
+    verify(requisitionService, never()).initiate(any(Facility.class), any(Program.class), any(Long.class), any(Boolean.class),any(ProcessingPeriod.class));
+    verify(requisitionService, never()).save(any(Rnr.class));
+    verify(requisitionService, never()).submit(any(Rnr.class));
+  }
+
+  @Test
+  public void sdpShouldThrowErrorIfPeriodValidationFails() throws Exception {
+    expectedException.expect(DataException.class);
+    expectedException.expectMessage("rnr.error");
+
+    doThrow(new DataException("rnr.error")).when(restRequisitionCalculator).validateCustomPeriod(any(Facility.class), any(Program.class), any(ProcessingPeriod.class), any(Long.class));
+
+    service.submitSdpReport(report, 1l);
+
+    verify(requisitionService, never()).initiate(any(Facility.class), any(Program.class), any(Long.class), any(Boolean.class), any(ProcessingPeriod.class));
     verify(requisitionService, never()).save(any(Rnr.class));
     verify(requisitionService, never()).submit(any(Rnr.class));
   }
@@ -253,7 +348,7 @@ public class RestRequisitionServiceTest {
 
     Rnr rnr = new Rnr();
     rnr.setProgram(program);
-    when(requisitionService.initiate(facility, program, 3l, false)).thenReturn(rnr);
+    when(requisitionService.initiate(facility, program, 3l, false, null)).thenReturn(rnr);
     when(rnrTemplateService.fetchProgramTemplateForRequisition(any(Long.class))).thenReturn(new ProgramRnrTemplate(new ArrayList<RnrColumn>()));
     service.submitReport(report, 3l);
 
@@ -275,7 +370,7 @@ public class RestRequisitionServiceTest {
 
     Rnr rnr = new Rnr();
     rnr.setProgram(program);
-    when(requisitionService.initiate(facility, program, 3l, false)).thenReturn(rnr);
+    when(requisitionService.initiate(facility, program, 3l, false, null)).thenReturn(rnr);
     when(rnrTemplateService.fetchProgramTemplateForRequisition(any(Long.class))).thenReturn(new ProgramRnrTemplate(new ArrayList<RnrColumn>()));
 
     expectedException.expect(DataException.class);
@@ -334,7 +429,7 @@ public class RestRequisitionServiceTest {
     rnr.setFullSupplyLineItems(asList(make(a(defaultRnrLineItem, with(productCode, "P10"))), make(a(defaultRnrLineItem, with(productCode, "P11")))));
     when(programService.getValidatedProgramByCode(report.getProgramCode())).thenReturn(program);
     when(facilityService.getOperativeFacilityByCode(report.getAgentCode())).thenReturn(facility);
-    when(requisitionService.initiate(facility, program, userId, false)).thenReturn(rnr);
+    when(requisitionService.initiate(facility, program, userId, false, null)).thenReturn(rnr);
     doThrow(new DataException("invalid product codes")).when(restRequisitionCalculator).validateProducts(productList, rnr);
 
     expectedException.expect(DataException.class);
@@ -362,7 +457,7 @@ public class RestRequisitionServiceTest {
     Rnr rnr = make(a(defaultRequisition, with(facility, reportFacility)));
     rnr.setFullSupplyLineItems(asList(rnrLineItem1, rnrLineItem2));
 
-    when(requisitionService.initiate(reportFacility, program, 3l, false)).thenReturn(rnr);
+    when(requisitionService.initiate(reportFacility, program, 3l, false, null)).thenReturn(rnr);
     when(rnrTemplateService.fetchProgramTemplateForRequisition(any(Long.class))).thenReturn(new ProgramRnrTemplate(new ArrayList<RnrColumn>()));
 
 
@@ -392,7 +487,7 @@ public class RestRequisitionServiceTest {
     Rnr rnr = make(a(defaultRequisition, with(facility, reportFacility), with(program, rnrProgram)));
     rnr.setFullSupplyLineItems(asList(initiatedLineItem));
 
-    when(requisitionService.initiate(reportFacility, rnrProgram, 3l, false)).thenReturn(rnr);
+    when(requisitionService.initiate(reportFacility, rnrProgram, 3l, false, null)).thenReturn(rnr);
 
     service.submitReport(report, 3l);
 
@@ -428,7 +523,7 @@ public class RestRequisitionServiceTest {
     Rnr rnr = make(a(defaultRequisition, with(facility, reportFacility), with(program, rnrProgram)));
     rnr.setFullSupplyLineItems(asList(initiatedLineItem));
 
-    when(requisitionService.initiate(reportFacility, rnrProgram, 3l, false)).thenReturn(rnr);
+    when(requisitionService.initiate(reportFacility, rnrProgram, 3l, false, null)).thenReturn(rnr);
 
     service.submitReport(report, 3l);
 
@@ -456,7 +551,7 @@ public class RestRequisitionServiceTest {
     when(facilityService.getOperativeFacilityByCode(facilityCode)).thenReturn(facility);
     when(programService.getValidatedProgramByCode(programCode)).thenReturn(program);
     Rnr rnr = new Rnr(facility, program, new ProcessingPeriod());
-    when(requisitionService.initiate(facility, program, 3l, false)).thenReturn(rnr);
+    when(requisitionService.initiate(facility, program, 3l, false, null)).thenReturn(rnr);
     when(requisitionService.submit(rnr)).thenReturn(rnr);
     when(requisitionService.authorize(rnr)).thenReturn(rnr);
 
@@ -477,7 +572,7 @@ public class RestRequisitionServiceTest {
     when(facilityService.getOperativeFacilityByCode(facilityCode)).thenReturn(facility);
     when(programService.getValidatedProgramByCode(programCode)).thenReturn(program);
     Rnr initiatedRnr = mock(Rnr.class);
-    when(requisitionService.initiate(facility, program, 3l, false)).thenReturn(initiatedRnr);
+    when(requisitionService.initiate(facility, program, 3l, false, null)).thenReturn(initiatedRnr);
     when(initiatedRnr.getFullSupplyLineItems()).thenReturn(new ArrayList<RnrLineItem>());
     when(initiatedRnr.getProgram()).thenReturn(program);
 

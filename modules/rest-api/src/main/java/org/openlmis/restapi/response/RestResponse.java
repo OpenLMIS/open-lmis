@@ -25,6 +25,10 @@ import org.springframework.stereotype.Component;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * RestResponse encapsulates ResponseEntity, HttpStatus in order to consistently return responses.
+ */
+
 @NoArgsConstructor
 @Component
 public class RestResponse {

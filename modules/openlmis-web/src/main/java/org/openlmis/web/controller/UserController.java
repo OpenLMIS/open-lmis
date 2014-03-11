@@ -13,7 +13,6 @@ package org.openlmis.web.controller;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.User;
 import org.openlmis.core.exception.DataException;
-import org.openlmis.core.service.MessageService;
 import org.openlmis.core.service.RoleRightsService;
 import org.openlmis.core.service.UserService;
 import org.openlmis.web.response.OpenLmisResponse;
@@ -42,6 +41,9 @@ import static org.openlmis.web.response.OpenLmisResponse.*;
 import static org.springframework.http.HttpStatus.*;
 import static org.springframework.web.bind.annotation.RequestMethod.*;
 
+/**
+ * This controller handles endpoints to related to user management like resetting password, disabling a user, etc.
+ */
 
 @Controller
 @NoArgsConstructor
@@ -65,19 +67,6 @@ public class UserController extends BaseController {
   public static final String TOKEN_VALID = "TOKEN_VALID";
 
   private static final String RESET_PASSWORD_PATH = "/public/pages/reset-password.html#/token/";
-
-  //TODO get rid of this constructor, only used in test
-  public UserController(RoleRightsService roleRightService,
-                        UserService userService,
-                        SessionRegistry sessionRegistry,
-                        MessageService messageService,
-                        String baseUrl) {
-    this.roleRightService = roleRightService;
-    this.userService = userService;
-    this.sessionRegistry = sessionRegistry;
-    this.messageService = messageService;
-    this.baseUrl = baseUrl;
-  }
 
   @RequestMapping(value = "/user-context", method = GET, headers = ACCEPT_JSON)
   public ResponseEntity<OpenLmisResponse> user(HttpServletRequest httpServletRequest) {

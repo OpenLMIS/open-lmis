@@ -77,6 +77,9 @@ public class ViewRequisitionPage extends RequisitionPage {
   @FindBy(how = ID, using = "fullSupplyTab")
   private static WebElement fullSupplyTab = null;
 
+  @FindBy(how = ID, using = "viewReqList")
+  private static WebElement viewReqList = null;
+
   public ViewRequisitionPage(TestWebDriver driver) {
     super(driver);
     PageFactory.initElements(new AjaxElementLocatorFactory(TestWebDriver.getDriver(), 1), this);
@@ -158,13 +161,21 @@ public class ViewRequisitionPage extends RequisitionPage {
     testWebDriver.waitForElementToAppear(totalCostPreApproval);
     assertEquals(totalCostPreApproval.getText().substring(1), cost);
     assertEquals(newPatient.getText().trim(), newPatientValue);
-    return new HomePage(testWebDriver);
+    return PageObjectFactory.getHomePage(testWebDriver);
   }
 
   public HomePage verifyFieldsPostApproval(String cost, String newPatientValue) {
     testWebDriver.waitForElementToAppear(totalCostPostApproval);
     assertEquals(totalCostPostApproval.getText().substring(1), cost);
     assertEquals(newPatient.getText().trim(), newPatientValue);
-    return new HomePage(testWebDriver);
+    return PageObjectFactory.getHomePage(testWebDriver);
+  }
+
+  public boolean isViewRnRListPresent() {
+    return viewReqList.isDisplayed();
+  }
+
+  public boolean isRnRListReq1Present() {
+    return emergencyIcon.isDisplayed();
   }
 }

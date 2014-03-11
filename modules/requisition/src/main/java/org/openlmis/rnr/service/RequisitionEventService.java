@@ -19,6 +19,10 @@ import org.springframework.stereotype.Service;
 
 import java.net.URISyntaxException;
 
+/**
+ * Exposes the services for handling event of change in rnr status.
+ */
+
 @Service
 public class RequisitionEventService {
 

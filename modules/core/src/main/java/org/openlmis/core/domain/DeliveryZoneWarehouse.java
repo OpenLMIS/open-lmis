@@ -17,6 +17,11 @@ import lombok.NoArgsConstructor;
 import org.openlmis.upload.Importable;
 import org.openlmis.upload.annotation.ImportField;
 
+/**
+ * DeliveryZoneWarehouse represents DeliveryZoneWarehouse mapping entity for upload. It is a mapping between delivery zone, and its warehouse.
+ * Defines the contract for creation/upload, delivery zone code and warehouse facility code is mandatory for a
+ * DeliveryZoneWarehouse mapping.
+ */
 @EqualsAndHashCode(callSuper = false)
 @Data
 @AllArgsConstructor

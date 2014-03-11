@@ -18,6 +18,10 @@ import org.openlmis.order.dto.OrderStatusFeedDTO;
 import java.net.URISyntaxException;
 import java.util.UUID;
 
+/**
+ * OrderStatusChangeEvent represents an order status change event.
+ */
+
 public class OrderStatusChangeEvent extends Event {
   static final String FEED_TITLE = "Requisition Status";
   static final String FEED_CATEGORY = "requisition-status";

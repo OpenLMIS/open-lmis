@@ -17,6 +17,10 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/**
+ * Exposes the services for handling RequisitionStatusChange entity.
+ */
+
 @Service
 public class RequisitionStatusChangeService {
 

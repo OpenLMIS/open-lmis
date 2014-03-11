@@ -15,10 +15,13 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+/**
+ * RegimenCategory represents category for a regimen (for eg. Adult or Child)
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode(callSuper=false)
+@EqualsAndHashCode(callSuper = false)
 public class RegimenCategory extends BaseModel {
 
   private String code;

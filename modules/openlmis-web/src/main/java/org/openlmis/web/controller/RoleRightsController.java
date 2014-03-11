@@ -35,18 +35,13 @@ import static org.springframework.web.bind.annotation.RequestMethod.*;
 @NoArgsConstructor
 public class RoleRightsController extends BaseController {
 
-
+  @Autowired
   private RoleRightsService roleRightsService;
 
   public static final String ROLE = "role";
   public static final String ROLES_MAP = "roles_map";
   public static final String RIGHTS = "rights";
   public static final String RIGHT_TYPE = "right_type";
-
-  @Autowired
-  public RoleRightsController(RoleRightsService roleRightsService) {
-    this.roleRightsService = roleRightsService;
-  }
 
   @RequestMapping(value = "/rights", method = GET)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_ROLE')")

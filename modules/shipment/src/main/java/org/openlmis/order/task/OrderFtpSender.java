@@ -20,6 +20,10 @@ import org.springframework.stereotype.Service;
 import java.io.File;
 import java.text.MessageFormat;
 
+/**
+ * Exposes the services for creating FTP URI and sending file through FTP.
+ */
+
 @Service
 public class OrderFtpSender {
   private static final String CAMEL_FTP_PATTERN = "ftp://{0}@{1}:{2}{3}?password={4}&passiveMode=false";

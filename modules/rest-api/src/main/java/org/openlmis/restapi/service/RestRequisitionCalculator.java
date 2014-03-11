@@ -19,6 +19,7 @@ import org.openlmis.pod.domain.OrderPODLineItem;
 import org.openlmis.pod.service.PODService;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.domain.RnrLineItem;
+import org.openlmis.rnr.domain.RnrStatus;
 import org.openlmis.rnr.search.criteria.RequisitionSearchCriteria;
 import org.openlmis.rnr.service.RequisitionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +28,11 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+/**
+ * This class acts as helper class exposing methods to validate requisition attributes,
+ * also has methods to compute attributes like quantity received, beginning balance.
+ */
 
 @Component
 public class RestRequisitionCalculator {
@@ -48,9 +54,29 @@ public class RestRequisitionCalculator {
       searchCriteria.setProgramId(reportingProgram.getId());
       searchCriteria.setFacilityId(reportingFacility.getId());
 
-      if (!requisitionService.getCurrentPeriod(searchCriteria).getId().equals
+      if (requisitionService.getCurrentPeriod(searchCriteria) != null && !requisitionService.getCurrentPeriod(searchCriteria).getId().equals
         (requisitionService.getPeriodForInitiating(reportingFacility, reportingProgram).getId())) {
         throw new DataException("error.rnr.previous.not.filled");
+      }
+    }
+  }
+
+  public void validateCustomPeriod(Facility reportingFacility, Program reportingProgram, ProcessingPeriod period, Long userId){
+
+    RequisitionSearchCriteria searchCriteria = new RequisitionSearchCriteria();
+    searchCriteria.setProgramId(reportingProgram.getId());
+    searchCriteria.setFacilityId(reportingFacility.getId());
+
+    List<ProcessingPeriod> periods = new ArrayList<ProcessingPeriod>();
+    periods.add(period);
+
+    //ProcessingPeriod defaultPeriod = requisitionService.getPeriodForInitiating(reportingFacility, reportingProgram);
+    searchCriteria.setWithoutLineItems(true);
+    searchCriteria.setUserId( userId );
+    List<Rnr> list = requisitionService.getRequisitionsFor(searchCriteria, periods);
+    if(list != null && list.size() > 0){
+      if(list.get(0).getStatus() != RnrStatus.INITIATED && list.get(0).getStatus() != RnrStatus.SUBMITTED){
+        throw new DataException("error.rnr.already.submitted.for.this.period");
       }
     }
   }

@@ -1,0 +1,57 @@
+
+<div class="row-fluid" ng-controller="AlertsController">
+
+    <div class="span6">
+        <!--<div class="pull-right legend">Showing records {{ ((tableParams.page - 1) *
+            tableParams.count) + 1 }} to {{ (tableParams.page +1 ) * tableParams.count }} of {{totalAlerts}}
+        </div>-->
+        <div>Alerts</div>
+        <table ng-show="datarows.length > 0" class="table-bordered table table-striped pull-right"
+               ng-table="tableParams"  ng-table-Scroller  loading-method="loadData(tableParams)" >
+            <tbody >
+            <tr ng-repeat="alert in datarows" >
+                <td data-title="Alerts">
+                    {{alert.percent}} {{alert.alert}}
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="span6">
+
+        <div>Alerts</div>
+        <table ng-show="datarows2.length > 0" class="table-bordered table table-striped pull-right"
+               ng-table="tableParams2"  ng-table-Scroller  loading-method="loadMoreData(tableParams2)" style="height: 200px; overflow: auto">
+            <tbody >
+            <tr ng-repeat="alert in datarows2" >
+                <td data-title="Alerts" style="width:100%">
+                    {{alert.percent}} {{alert.alert}}
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>
+<br/>
+<div class="clearfix"></div>
+
+<script type="text/ng-template" id="custom/pager">
+
+    <!--<ul class="pager ng-cloak">
+        <li ng-repeat="page in pages"
+            ng-class="{'disabled': !page.active, 'previous': page.type == 'prev', 'next': page.type == 'next'}"
+            ng-show="page.type == 'prev' || page.type == 'next'" ng-switch="page.type">
+            <a ng-switch-when="prev" ng-click="goToPage(page.number)" href="">&laquo; Previous</a>
+            <a ng-switch-when="next" ng-click="goToPage(page.number)" href="">Next &raquo;</a>
+        </li>
+        &lt;!&ndash;<li>
+            <div class="btn-group">
+                <button type="button" ng-class="{'active':params.count == 10}" ng-click="changeCount(10)" class="btn">10</button>
+                <button type="button" ng-class="{'active':params.count == 25}" ng-click="changeCount(25)" class="btn">25</button>
+                <button type="button" ng-class="{'active':params.count == 50}" ng-click="changeCount(50)" class="btn">50</button>
+                <button type="button" ng-class="{'active':params.count == 100}" ng-click="changeCount(100)" class="btn">100</button>
+            </div>
+        </li>&ndash;&gt;
+    </ul>-->
+</script>

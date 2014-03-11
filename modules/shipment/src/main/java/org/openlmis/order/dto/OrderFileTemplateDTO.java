@@ -19,6 +19,10 @@ import org.openlmis.order.domain.OrderFileColumn;
 
 import java.util.List;
 
+/**
+ * OrderFileTemplateDTO is a container for OrderConfiguration and list of OrderFileColumn.
+ */
+
 @AllArgsConstructor
 @Data
 @EqualsAndHashCode

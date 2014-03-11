@@ -10,12 +10,13 @@
 
 package org.openlmis.rnr.domain;
 
-public enum ColumnType {
+/**
+ * Enum for types of value a column shall have.
+ */
 
+public enum ColumnType {
   TEXT,
   NUMERIC,
   CURRENCY,
   BOOLEAN
-
-
 }

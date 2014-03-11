@@ -26,6 +26,10 @@ import static org.apache.commons.lang.StringUtils.isBlank;
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 import static org.joda.time.format.DateTimeFormat.forPattern;
 
+/**
+ * ProcessingPeriod represents the time period belonging to a particular schedule according to which requisition life cycle
+ * will be followed.
+ */
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
@@ -36,9 +40,13 @@ public class ProcessingPeriod extends BaseModel {
   private Long scheduleId;
   private String name;
   private String description;
-  private Date startDate;
-  private Date endDate;
   private Integer numberOfMonths;
+
+  //  @JsonDeserialize(using = DateDeserializer.class)
+  private Date startDate;
+
+  //  @JsonDeserialize(using = DateDeserializer.class)
+  private Date endDate;
 
   public ProcessingPeriod(Long id) {
     this.id = id;

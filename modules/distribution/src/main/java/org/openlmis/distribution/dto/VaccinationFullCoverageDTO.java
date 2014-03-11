@@ -21,6 +21,11 @@ import org.openlmis.distribution.domain.VaccinationFullCoverage;
 
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 
+/**
+ *  DTO for VaccinationFullCoverage. It contains facilityVisitId and
+ *  client side representation of VaccinationFullCoverage attributes.
+ */
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -36,9 +41,12 @@ public class VaccinationFullCoverageDTO extends BaseModel {
   private Reading maleMobileBrigadeReading;
 
   public VaccinationFullCoverage transform() {
-    return new VaccinationFullCoverage(this.facilityVisitId, this.femaleHealthCenterReading.parsePositiveInt(),
+    VaccinationFullCoverage vaccinationFullCoverage = new VaccinationFullCoverage(this.facilityVisitId, this.femaleHealthCenterReading.parsePositiveInt(),
       this.femaleMobileBrigadeReading.parsePositiveInt(),
       this.maleHealthCenterReading.parsePositiveInt(),
       this.maleMobileBrigadeReading.parsePositiveInt());
+    vaccinationFullCoverage.setModifiedBy(this.modifiedBy);
+    vaccinationFullCoverage.setCreatedBy(this.createdBy);
+    return vaccinationFullCoverage;
   }
 }

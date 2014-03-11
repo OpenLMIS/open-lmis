@@ -10,30 +10,31 @@
 
 <h2 openlmis-message="label.approve.requisitions"></h2>
 
-    <div class="alert alert-success" id="saveSuccessMsgDiv" ng-show="message" ng-bind="$parent.message"></div>
+<div class="alert alert-success" id="saveSuccessMsgDiv" ng-show="message" ng-bind="$parent.message"></div>
 
 <div class="app-form">
-  <div class="form-group">
-    <h3 openlmis-message="label.requisition.list"></h3>
+    <div class="form-group">
+        <h3 id='requisitionListLabel' openlmis-message="label.requisition.list"></h3>
 
-    <div class="alert alert-info" id="NoRequisitionsPendingMessage" ng-hide="requisitions.length" openlmis-message="message.no.rnr.pending.approval">
-    </div>
-    <div ng-show="requisitions.length">
-      <div class="row-fluid">
-        <div class="span6 offset6 grid-filters">
-          <input id="searchRequisition" class="search-query" ng-change="filterRequisitions()" type="text"
-                 ng-model="query" openlmis-message="placeholder.search"/>
-         <span openlmis-message="label.in"></span>
-          <select ng-model="searchField" ng-change="filterRequisitions()">
-            <option value="" openlmis-message="option.value.all"></option>
-            <option value="programName" openlmis-message="option.value.program"></option>
-            <option value="facilityCode" openlmis-message="option.value.facility.code"></option>
-            <option value="facilityName" openlmis-message="option.value.facility.name"></option>
-          </select>
+        <div class="alert alert-info" id="NoRequisitionsPendingMessage" ng-hide="requisitions.length"
+             openlmis-message="message.no.rnr.pending.approval">
         </div>
-      </div>
-      <div id="approveReqList" class="gridStyle" ng-grid="gridOptions" ng-show="requisitions.length"></div>
+        <div ng-show="requisitions.length">
+            <div class="row-fluid">
+                <div class="span6 offset6 grid-filters">
+                    <input id="searchRequisition" class="search-query" ng-change="filterRequisitions()" type="text"
+                           ng-model="query" openlmis-message="placeholder.search"/>
+                    <span openlmis-message="label.in"></span>
+                    <select ng-model="searchField" ng-change="filterRequisitions()">
+                        <option value="" openlmis-message="option.value.all"></option>
+                        <option value="programName" openlmis-message="option.value.program"></option>
+                        <option value="facilityCode" openlmis-message="option.value.facility.code"></option>
+                        <option value="facilityName" openlmis-message="option.value.facility.name"></option>
+                    </select>
+                </div>
+            </div>
+            <div id="approveReqList" class="gridStyle" ng-grid="gridOptions" ng-show="requisitions.length"></div>
+        </div>
     </div>
-  </div>
 </div>
 

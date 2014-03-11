@@ -23,6 +23,11 @@ import org.openlmis.distribution.domain.RefrigeratorReading;
 
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 
+/**
+ *  This DTO contains facilityVisitId, Refrigerator entity, Refrigerator Problem entity and client side
+ *  representation of Refrigerator Reading attributes.
+ */
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -46,7 +51,7 @@ public class RefrigeratorReadingDTO extends BaseModel {
     refrigerator.setModifiedBy(this.modifiedBy);
     refrigerator.setCreatedBy(this.createdBy);
     refrigerator.validate();
-    if ("Y".equalsIgnoreCase(problemSinceLastTime.getEffectiveValue())) {
+    if ("N".equalsIgnoreCase(functioningCorrectly.getEffectiveValue())) {
       problems.validate();
     } else {
       problems = null;

@@ -25,6 +25,9 @@ import static java.lang.Boolean.TRUE;
 import static java.util.Arrays.asList;
 import static org.openlmis.core.domain.RightType.*;
 
+/**
+ * Right represents the rights available in the system along with their type.
+ */
 @JsonSerialize(using = RightSerializer.class)
 @JsonDeserialize(using = RightDeSerializer.class)
 public enum Right {

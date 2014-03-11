@@ -19,12 +19,13 @@ function FacilityDistribution(facilityDistribution) {
   this.facilityVisit = new FacilityVisit(facilityDistribution.facilityVisit);
   this.fullCoverage = new FullCoverage(this.facilityVisitId, facilityDistribution.fullCoverage);
   this.childCoverage = new ChildCoverage(this.facilityVisitId, facilityDistribution.childCoverage);
+  this.adultCoverage = new AdultCoverage(this.facilityVisitId, facilityDistribution.adultCoverage);
 
   this.status = facilityDistribution.status;
 
   FacilityDistribution.prototype.computeStatus = function () {
 
-    var forms = [this.epiUse, this.refrigerators, this.facilityVisit, this.epiInventory, this.fullCoverage, this.childCoverage];
+    var forms = [this.epiUse, this.refrigerators, this.facilityVisit, this.epiInventory, this.fullCoverage, this.childCoverage, this.adultCoverage];
     var overallStatus;
     if (this.status === DistributionStatus.SYNCED || this.status === DistributionStatus.DUPLICATE) {
       return this.status;
@@ -37,7 +38,7 @@ function FacilityDistribution(facilityDistribution) {
       } else if (computedStatus === DistributionStatus.EMPTY && (!overallStatus || overallStatus == DistributionStatus.EMPTY)) {
         overallStatus = DistributionStatus.EMPTY;
       } else if (computedStatus === DistributionStatus.INCOMPLETE || (computedStatus === DistributionStatus.EMPTY && overallStatus === DistributionStatus.COMPLETE) ||
-          (computedStatus === DistributionStatus.COMPLETE && overallStatus === DistributionStatus.EMPTY)) {
+        (computedStatus === DistributionStatus.COMPLETE && overallStatus === DistributionStatus.EMPTY)) {
         overallStatus = DistributionStatus.INCOMPLETE;
         return false;
       }

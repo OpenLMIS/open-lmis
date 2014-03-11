@@ -91,6 +91,15 @@ public class UpdatePodPage extends Page {
   @FindBy(how = ID, using = "button_Cancel")
   private WebElement cancelButton = null;
 
+  @FindBy(how = ID, using = "deliveredBy")
+  private WebElement deliveredBy = null;
+
+  @FindBy(how = ID, using = "receivedBy")
+  private WebElement receivedBy = null;
+
+  @FindBy(how = ID, using = "receivedDate")
+  private WebElement receivedDate = null;
+
   public UpdatePodPage(TestWebDriver testWebDriver) {
     super(testWebDriver);
     PageFactory.initElements(new AjaxElementLocatorFactory(TestWebDriver.getDriver(), 10), this);
@@ -292,19 +301,35 @@ public class UpdatePodPage extends Page {
   }
 
   public Boolean isPodSuccessMessageDisplayed() {
-    testWebDriver.waitForAjax();
     testWebDriver.waitForElementToAppear(podSuccessMsg);
     return podSuccessMsg.isDisplayed();
   }
 
-  public void enterPodData(String quantityReceived, String notes, int rowNumber) {
+  public void enterPodData(String quantityReceived, String notes, String quantityReturned, int rowNumber) {
     setQuantityReceived(rowNumber, quantityReceived);
     setNotes(rowNumber, notes);
+    setQuantityReturned(rowNumber, quantityReturned);
+  }
+
+  public void setQuantityReturned(int rowNumber, String quantityReturned) {
+    WebElement elementQuantityReceived = testWebDriver.findElement(By.id("quantityReturned" + (rowNumber - 1)));
+    elementQuantityReceived.clear();
+    elementQuantityReceived.sendKeys(quantityReturned);
   }
 
   public void verifyQuantityReceivedAndNotes(String quantityReceived, String notes, Integer rowNumber) {
     assertEquals(quantityReceived, getQuantityReceived(rowNumber));
     assertEquals(notes, getNotes(rowNumber));
+  }
+
+  public void verifyQuantityReturnedOnUI(String quantityReturned, Integer rowNumber) {
+    assertEquals(quantityReturned, getQuantityReturned(rowNumber));
+  }
+
+  public String getQuantityReturned(int rowNumber) {
+    WebElement quantityReturned = testWebDriver.getElementById("quantityReturned" + (rowNumber - 1));
+    testWebDriver.scrollToElement(quantityReturned);
+    return quantityReturned.getAttribute("value");
   }
 
   public void clickSubmitButton() {
@@ -365,5 +390,63 @@ public class UpdatePodPage extends Page {
     WebElement notes = testWebDriver.getElementById("notes" + (rowNumber - 1));
     testWebDriver.scrollToElement(notes);
     return notes.isEnabled();
+  }
+
+  public boolean isQuantityReturnedEnabled(int rowNumber) {
+    WebElement quantityReturned = testWebDriver.getElementById("quantityReturned" + (rowNumber - 1));
+    testWebDriver.scrollToElement(quantityReturned);
+    return quantityReturned.isEnabled();
+  }
+
+  public void enterDeliveryDetailsInPodScreen(String deliveredByValue, String receivedByValue, String receivedDateValue) {
+    testWebDriver.waitForElementToAppear(deliveredBy);
+    testWebDriver.scrollToElement(deliveredBy);
+    deliveredBy.clear();
+    sendKeys(deliveredBy, deliveredByValue);
+    testWebDriver.waitForElementToAppear(receivedBy);
+    receivedBy.clear();
+    sendKeys(receivedBy, receivedByValue);
+    testWebDriver.waitForElementToAppear(receivedDate);
+    receivedDate.clear();
+    sendKeys(receivedDate, receivedDateValue);
+  }
+
+  public String getDeliveredByValue() {
+    testWebDriver.waitForElementToAppear(deliveredBy);
+    return deliveredBy.getAttribute("value");
+  }
+
+  public String getReceivedByValue() {
+    testWebDriver.waitForElementToAppear(receivedBy);
+    return receivedBy.getAttribute("value");
+  }
+
+  public String getReceivedDate() {
+    testWebDriver.waitForElementToAppear(receivedDate);
+    return receivedDate.getAttribute("value");
+  }
+
+  public void verifyDeliveryDetailsOnPodScreenUI(String deliveredByValue, String receivedByValue, String receivedDateValue) {
+    assertEquals(deliveredByValue, getDeliveredByValue());
+    assertEquals(receivedByValue, getReceivedByValue());
+    assertEquals(receivedDateValue, getReceivedDate());
+  }
+
+  public boolean isDeliveryByFieldEnabled() {
+    testWebDriver.waitForElementToAppear(deliveredBy);
+    testWebDriver.scrollToElement(deliveredBy);
+    return deliveredBy.isEnabled();
+  }
+
+  public boolean isReceivedByFieldEnabled() {
+    testWebDriver.waitForElementToAppear(receivedBy);
+    testWebDriver.scrollToElement(receivedBy);
+    return receivedBy.isEnabled();
+  }
+
+  public boolean isReceivedDateFieldEnabled() {
+    testWebDriver.waitForElementToAppear(receivedDate);
+    testWebDriver.scrollToElement(receivedDate);
+    return receivedDate.isEnabled();
   }
 }

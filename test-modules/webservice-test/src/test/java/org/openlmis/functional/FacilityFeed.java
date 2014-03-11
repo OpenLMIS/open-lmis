@@ -13,10 +13,7 @@ package org.openlmis.functional;
 import org.apache.commons.lang3.StringUtils;
 import org.openlmis.UiUtils.HttpClient;
 import org.openlmis.UiUtils.ResponseEntity;
-import org.openlmis.pageobjects.HomePage;
-import org.openlmis.pageobjects.LoginPage;
-import org.openlmis.pageobjects.ManageFacilityPage;
-import org.openlmis.pageobjects.UploadPage;
+import org.openlmis.pageobjects.*;
 import org.openlmis.restapi.domain.Agent;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
@@ -57,7 +54,7 @@ public class FacilityFeed extends JsonUtility {
     super.setup();
     super.setupTestData(true);
     dbWrapper.updateRestrictLogin("commTrack", true);
-    loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+    loginPage = PageObjectFactory.getLoginPage(testWebDriver, baseUrlGlobal);
   }
 
   @AfterMethod(groups = {"webservice", "webserviceSmoke"})
@@ -111,8 +108,8 @@ public class FacilityFeed extends JsonUtility {
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"active\":true"));
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"virtualFacility\":false"));
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"comment\":\"Comments\""));
-    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"stringGoLiveDate\":\"25-02-2014\""));
-    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"stringGoDownDate\":\"26-02-2014"));
+    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"stringGoLiveDate\":\"25-" + new SimpleDateFormat("MM-yyyy").format(new Date()) + "\""));
+    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"stringGoDownDate\":\"26-" + new SimpleDateFormat("MM-yyyy").format(new Date()) + "\""));
 
     homePage.navigateSearchFacility();
     manageFacilityPage.searchFacility(date_time);

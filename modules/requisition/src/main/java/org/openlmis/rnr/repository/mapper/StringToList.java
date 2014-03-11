@@ -10,6 +10,10 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This class is responsible for converting a comma-separated-string stored in database to a list.
+ */
+
 public class StringToList implements TypeHandler<List> {
   @Override
   public void setParameter(PreparedStatement ps, int i, List parameter, JdbcType jdbcType) throws SQLException {

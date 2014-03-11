@@ -107,7 +107,7 @@ public class FacilityServiceTest {
   }
 
   @Test
-  public void shouldUpdateFacilityEnabledAndActiveFor() throws Exception {
+  public void shouldUpdateFacilityEnabledAndActiveForFacility() throws Exception {
     Facility facility = make(a(defaultFacility));
     Facility parentFacility = new Facility(2l);
     parentFacility.setCode("PF");

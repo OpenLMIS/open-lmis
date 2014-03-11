@@ -9,73 +9,75 @@
   -->
 
 <div class="record-facility-data" ng-controller="RecordFacilityDataController">
-  <div class="row-fluid facility-heading">
-    <div class="span5" ng-show="facilitySelected">
+    <div class="row-fluid facility-heading">
+        <div class="span5" ng-show="facilitySelected">
       <span id="facilityStatus"
             ng-class="distribution.facilityDistributions[facilitySelected.facilityId].computeStatus()">
         <div id="facilityIndicator" class="status-icon pull-left position-fixing"></div>
       </span>
 
-      <h2>
-        <span openlmis-message="label.coverage.health.center"></span>
-        <span>:</span>
-        <span openlmis-message="facilitySelected.facilityName"></span>
-      </h2>
-    </div>
+            <h2>
+                <span id='healthCenterLabel' openlmis-message="label.coverage.health.center"></span>
+                <span>:</span>
+                <span id='facilitySelected' openlmis-message="facilitySelected.facilityName"></span>
+            </h2>
+        </div>
 
-    <div class="span5" id="noFacilitySelected" ng-show="!facilitySelected">
-      <h2 openlmis-message="message.no.facility.selected"></h2>
-    </div>
-    <div id="legend" class="pull-right distribution-legend">
+        <div class="span5" id="noFacilitySelected" ng-show="!facilitySelected">
+            <h2 id="noFacilitySelectedMessage" openlmis-message="message.no.facility.selected"></h2>
+        </div>
+        <div id="legend" class="pull-right distribution-legend">
       <span class="is-empty">
-        <span class="status-icon"></span>
-        <span openlmis-message="label.distribution.legend.not.started"></span>
+        <span id="notStartedLegendIcon" class="status-icon"></span>
+        <span id="notStartedLegendLabel" openlmis-message="label.distribution.legend.not.started"></span>
       </span>
       <span class="is-incomplete">
-        <span class="status-icon"></span>
-        <span openlmis-message="label.distribution.legend.partial.complete"></span>
+        <span id="partialLegendIcon" class="status-icon"></span>
+        <span id="partialLegendLabel" openlmis-message="label.distribution.legend.partial.complete"></span>
       </span>
       <span class="is-complete">
-        <span class="status-icon"></span>
-        <span openlmis-message="label.distribution.legend.not.complete"></span>
+        <span id="completedLegendIcon" class="status-icon"></span>
+        <span id="completedLegendLabel" openlmis-message="label.distribution.legend.not.complete"></span>
       </span>
       <span class="is-synced">
-        <span class="status-icon"></span>
-        <span openlmis-message="label.distribution.legend.synchronized"></span>
+        <span id="syncedLegendIcon" class="status-icon"></span>
+        <span id="syncedLegendLabel" openlmis-message="label.distribution.legend.synchronized"></span>
       </span>
       <span class="is-duplicate">
-        <span class="status-icon"></span>
-        <span openlmis-message="label.distribution.legend.cannot.synchronize"></span>
+        <span id="cannotSyncLegendIcon" class="status-icon"></span>
+        <span id="cannotSyncLegendLabel" openlmis-message="label.distribution.legend.cannot.synchronize"></span>
       </span>
-      </div>
+        </div>
     </div>
-  <div class="info-box">
-    <div class="row-fluid">
-      <div class="span3 facility-change-dropdown">
-        <select ui-select2="{formatResult: format}" openlmis-message="label" id="selectFacility"
-                ng-model="facilitySelected.facilityId"
-                ng-change="chooseFacility()">
-          <option value=""></option>
-          <optgroup ng-repeat="zone in geographicZones" label="{{ zone }}">
-            <option ng-repeat="facility in zoneFacilityMap[zone] | orderBy: 'facilityName'"
-                    value="{{ facility.facilityId }}"
-                    ng-class="distribution.facilityDistributions[facility.id].computeStatus()">
-              {{ facility.facilityCode }} - {{ facility.facilityName }}
-            </option>
-          </optgroup>
-        </select>
-      </div>
+    <div class="info-box">
+        <div class="row-fluid">
+            <div class="span3 facility-change-dropdown">
+                <select ui-select2="{formatResult: format}" openlmis-message="label" id="selectFacility"
+                        ng-model="facilitySelected.facilityId"
+                        ng-change="chooseFacility()">
+                    <option value=""></option>
+                    <optgroup ng-repeat="zone in geographicZones" label="{{ zone }}">
+                        <option ng-repeat="facility in zoneFacilityMap[zone] | orderBy: 'facilityName'"
+                                value="{{ facility.facilityId }}"
+                                ng-class="distribution.facilityDistributions[facility.id].computeStatus()">
+                            {{ facility.facilityCode }} - {{ facility.facilityName }}
+                        </option>
+                    </optgroup>
+                </select>
+            </div>
 
-      <div class="span3 offset1 info-box-labels">
-        <strong openlmis-message="label.delivery.zone"> </strong> :&nbsp;<span
-        ng-bind="distribution.deliveryZone.name"></span>
-      </div>
-      <div class="span3 info-box-labels">
-        <strong openlmis-message="label.program"></strong> :&nbsp;<span ng-bind="distribution.program.name"></span>
-      </div>
-      <div class="span2 info-box-labels">
-        <strong openlmis-message="label.period"> </strong> :&nbsp;<span ng-bind="distribution.period.name"></span>
-      </div>
+            <div class="span3 offset1 info-box-labels">
+                <strong openlmis-message="label.delivery.zone"> </strong> :&nbsp;<span
+                    ng-bind="distribution.deliveryZone.name"></span>
+            </div>
+            <div class="span3 info-box-labels">
+                <strong openlmis-message="label.program"></strong> :&nbsp;<span
+                    ng-bind="distribution.program.name"></span>
+            </div>
+            <div class="span2 info-box-labels">
+                <strong openlmis-message="label.period"> </strong> :&nbsp;<span
+                    ng-bind="distribution.period.name"></span>
+            </div>
+        </div>
     </div>
-  </div>
 </div>

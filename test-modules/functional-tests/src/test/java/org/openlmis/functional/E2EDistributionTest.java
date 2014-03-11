@@ -62,9 +62,10 @@ public class E2EDistributionTest extends TestCaseHelper {
     dbWrapper.deleteDeliveryZoneMembers(facilityCodeSecond);
     dbWrapper.insertProductsForChildCoverage();
     insertRegimenProductMapping();
+    insertOpenedVialsProductMapping();
     configureISA();
 
-    LoginPage loginPage = PageFactory.getInstanceOfLoginPage(testWebDriver, baseUrlGlobal);
+    LoginPage loginPage = PageObjectFactory.getLoginPage(testWebDriver, baseUrlGlobal);
     testWebDriver.sleep(1000);
     HomePage homePage = loginPage.loginAs(userSIC, password);
     testWebDriver.sleep(1000);
@@ -85,10 +86,10 @@ public class E2EDistributionTest extends TestCaseHelper {
     assertFalse("Program selectBox displayed.", distributionPage.verifyProgramSelectBoxNotPresent());
 
     distributionPage.clickRecordData(1);
-    FacilityListPage facilityListPage = PageFactory.getInstanceOfFacilityListPage(testWebDriver);
+    FacilityListPage facilityListPage = PageObjectFactory.getFacilityListPage(testWebDriver);
     VisitInformationPage visitInformationPage = facilityListPage.selectFacility(facilityCodeFirst);
     RefrigeratorPage refrigeratorPage = visitInformationPage.navigateToRefrigerators();
-    facilityListPage.verifyFacilityIndicatorColor("Overall", "AMBER");
+    facilityListPage.verifyOverallFacilityIndicatorColor("AMBER");
 
     refrigeratorPage.onRefrigeratorScreen();
     refrigeratorPage.clickAddNew();
@@ -110,25 +111,25 @@ public class E2EDistributionTest extends TestCaseHelper {
         refrigeratorDetails[i]);
     }
 
-    facilityListPage.verifyFacilityIndicatorColor("Overall", "RED");
+    facilityListPage.verifyOverallFacilityIndicatorColor("RED");
 
     refrigeratorPage.verifyRefrigeratorColor("overall", "RED");
-    refrigeratorPage.clickShowForRefrigerator1();
+    refrigeratorPage.clickShowForRefrigerator(1);
     refrigeratorPage.verifyRefrigeratorColor("individual", "RED");
 
-    refrigeratorPage.enterValueInRefrigeratorTemperature("3");
+    refrigeratorPage.enterValueInRefrigeratorTemperature("3", 1);
     refrigeratorPage.verifyRefrigeratorColor("overall", "AMBER");
     refrigeratorPage.verifyRefrigeratorColor("individual", "AMBER");
 
-    refrigeratorPage.clickFunctioningCorrectlyYesRadio();
-    refrigeratorPage.enterValueInLowAlarmEvents("1");
-    refrigeratorPage.enterValueInHighAlarmEvents("0");
-    refrigeratorPage.clickProblemSinceLastVisitDoNotKnowRadio();
+    refrigeratorPage.clickFunctioningCorrectlyYesRadio(1);
+    refrigeratorPage.enterValueInLowAlarmEvents("1", 1);
+    refrigeratorPage.enterValueInHighAlarmEvents("0", 1);
+    refrigeratorPage.clickProblemSinceLastVisitDoNotKnowRadio(1);
 
     refrigeratorPage.verifyRefrigeratorColor("overall", "GREEN");
     refrigeratorPage.verifyRefrigeratorColor("individual", "GREEN");
 
-    refrigeratorPage.enterValueInNotesTextArea("miscellaneous");
+    refrigeratorPage.enterValueInNotesTextArea("miscellaneous", 1);
     refrigeratorPage.clickDone();
 
     EPIUsePage epiUsePage = refrigeratorPage.navigateToEpiUse();
@@ -157,17 +158,37 @@ public class E2EDistributionTest extends TestCaseHelper {
     assertEquals(childCoveragePage.getTextOfTargetGroupValue(1), "");
     assertEquals(childCoveragePage.getTextOfTargetGroupValue(12), "");
 
+    for (int rowNumber = 1; rowNumber <= 12; rowNumber++) {
+      childCoveragePage.enterHealthCenter11MonthsDataForGivenRow(rowNumber, String.valueOf(rowNumber));
+      childCoveragePage.enterOutreach11MonthsDataForGivenRow(rowNumber, String.valueOf(rowNumber));
+      if (rowNumber != 2) {
+        childCoveragePage.enterHealthCenter23MonthsDataForGivenRow(rowNumber, String.valueOf(rowNumber));
+        childCoveragePage.enterOutreach23MonthsDataForGivenRow(rowNumber, String.valueOf(rowNumber));
+      }
+    }
+    childCoveragePage.enterOpenedVialsCountForGivenGroupAndRow(1, 1, "1");
+    childCoveragePage.enterOpenedVialsCountForGivenGroupAndRow(2, 1, "2");
+    childCoveragePage.enterOpenedVialsCountForGivenGroupAndRow(2, 2, "3");
+    childCoveragePage.enterOpenedVialsCountForGivenGroupAndRow(6, 1, "4");
+    childCoveragePage.enterOpenedVialsCountForGivenGroupAndRow(6, 2, "5");
+    childCoveragePage.enterOpenedVialsCountForGivenGroupAndRow(9, 1, "6");
+    childCoveragePage.enterOpenedVialsCountForGivenGroupAndRow(12, 1, "7");
+    childCoveragePage.removeFocusFromElement();
+
+    AdultCoveragePage adultCoveragePage = childCoveragePage.navigateToAdultCoverage();
+    adultCoveragePage.enterDataInAllFields();
+
     homePage.navigateHomePage();
     homePage.navigateOfflineDistribution();
     distributionPage.clickRecordData(1);
     facilityListPage.selectFacility(facilityCodeFirst);
     visitInformationPage.navigateToRefrigerators();
 
-    refrigeratorPage.clickShowForRefrigerator1();
-    assertEquals(refrigeratorPage.getRefrigeratorTemperateTextFieldValue(), "3");
-    assertEquals(refrigeratorPage.getLowAlarmEventsTextFieldValue(), "1");
-    assertEquals(refrigeratorPage.getHighAlarmEventsTextFieldValue(), "0");
-    assertEquals(refrigeratorPage.getNotesTextAreaValue(), "miscellaneous");
+    refrigeratorPage.clickShowForRefrigerator(1);
+    assertEquals(refrigeratorPage.getRefrigeratorTemperateTextFieldValue(1), "3");
+    assertEquals(refrigeratorPage.getLowAlarmEventsTextFieldValue(1), "1");
+    assertEquals(refrigeratorPage.getHighAlarmEventsTextFieldValue(1), "0");
+    assertEquals(refrigeratorPage.getNotesTextAreaValue(1), "miscellaneous");
     refrigeratorPage.verifyRefrigeratorColor("overall", "GREEN");
     refrigeratorPage.verifyRefrigeratorColor("individual", "GREEN");
 
@@ -196,7 +217,20 @@ public class E2EDistributionTest extends TestCaseHelper {
     fullCoveragePage.enterData(5, 7, 0, "9999999");
     fullCoveragePage.verifyIndicator("GREEN");
 
-    facilityListPage.verifyFacilityIndicatorColor("Overall", "GREEN");
+    fullCoveragePage.navigateToChildCoverage();
+    assertEquals("300", childCoveragePage.getTextOfTargetGroupValue(9));
+    assertEquals("9", childCoveragePage.getHealthCenter11MonthsDataForGivenRow(9));
+    assertEquals("9", childCoveragePage.getOutreach11MonthsDataForGivenRow(9));
+    assertEquals("18", childCoveragePage.getTotalForGivenColumnAndRow(1, 9));
+    assertEquals("6", childCoveragePage.getCoverageRateForGivenRow(9));
+    assertEquals("9", childCoveragePage.getHealthCenter23MonthsDataForGivenRow(9));
+    assertEquals("9", childCoveragePage.getOutreach23MonthsDataForGivenRow(9));
+    assertEquals("18", childCoveragePage.getTotalForGivenColumnAndRow(2, 9));
+    assertEquals("36", childCoveragePage.getTotalForGivenColumnAndRow(3, 9));
+    assertEquals("6", childCoveragePage.getOpenedVialsCountForGivenGroupAndRow(9, 1));
+    assertEquals("-100", childCoveragePage.getWastageRateForGivenRow(9));
+
+    facilityListPage.verifyOverallFacilityIndicatorColor("GREEN");
 
     homePage.navigateHomePage();
     homePage.navigateOfflineDistribution();
@@ -209,6 +243,7 @@ public class E2EDistributionTest extends TestCaseHelper {
     testWebDriver.sleep(7000);
 
     distributionPage.clickRetryButton();
+    testWebDriver.sleep(2000);
     assertEquals(distributionPage.getSyncStatusMessage(), "Sync Status");
     assertTrue("Incorrect Sync Facility", distributionPage.getSyncMessage().contains("F10-Village Dispensary"));
 
@@ -221,18 +256,22 @@ public class E2EDistributionTest extends TestCaseHelper {
 
     distributionPage.clickRecordData(1);
     facilityListPage.selectFacility(facilityCodeFirst);
-    facilityListPage.verifyFacilityIndicatorColor("Overall", "BLUE");
+    facilityListPage.verifyOverallFacilityIndicatorColor("BLUE");
 
     verifyEpiUseDataInDatabase(10, 20, 30, null, 50, "10/2011", "PG1", facilityCodeFirst);
     verifyRefrigeratorReadingDataInDatabase(facilityCodeFirst, "GR-J287PGHV", 3F, "Y", 1, 0, "D", "miscellaneous");
     verifyRefrigeratorProblemDataNullInDatabase("GR-J287PGHV", facilityCodeFirst);
-    verifyFacilityVisitInformationInDatabase(facilityCodeFirst, "some observations", "samuel", "Doe", "Verifier", "XYZ", null,"t","t");
+    verifyFacilityVisitInformationInDatabase(facilityCodeFirst, "some observations", "samuel", "Doe", "Verifier", "XYZ", "90U-L!K3", "t", "t", null, null);
     verifyFullCoveragesDataInDatabase(5, 7, 0, 9999999, facilityCodeFirst);
     verifyEpiInventoryDataInDatabase(null, "10", null, "P10", facilityCodeFirst);
     verifyEpiInventoryDataInDatabase(null, "20", null, "Product6", facilityCodeFirst);
     verifyEpiInventoryDataInDatabase(null, "30", null, "P11", facilityCodeFirst);
+    verifyChildCoverageDataInDatabase();
+    verifyAdultCoverageDataInDatabase(facilityCodeFirst);
 
-    ResultSet childCoverageDetails = dbWrapper.getChildCoverageDetails("PCV10 1st dose", "F10");
+    String facilityId = dbWrapper.getAttributeFromTable("facilities", "id", "code", "F10");
+    String facilityVisitId = dbWrapper.getAttributeFromTable("facility_visits", "id", "facilityId", facilityId);
+    ResultSet childCoverageDetails = dbWrapper.getChildCoverageDetails("PCV10 1st dose", facilityVisitId);
     assertEquals("300", childCoverageDetails.getInt("targetGroup"));
 
     visitInformationPage.verifyAllFieldsDisabled();
@@ -241,13 +280,22 @@ public class E2EDistributionTest extends TestCaseHelper {
     epiUsePage.verifyAllFieldsDisabled();
 
     epiUsePage.navigateToRefrigerators();
-    refrigeratorPage.clickShowForRefrigerator1();
+    refrigeratorPage.clickShowForRefrigerator(1);
     refrigeratorPage.verifyAllFieldsDisabled();
 
     refrigeratorPage.navigateToFullCoverage();
     fullCoveragePage.verifyAllFieldsDisabled();
 
-    loginPage = PageFactory.getInstanceOfLoginPage(testWebDriver, baseUrlGlobal);
+    fullCoveragePage.navigateToChildCoverage();
+    childCoveragePage.verifyAllFieldsDisabled();
+
+    childCoveragePage.navigateToEpiInventory();
+    epiInventoryPage.verifyAllFieldsDisabled();
+
+    epiInventoryPage.navigateToAdultCoverage();
+    adultCoveragePage.verifyAllFieldsDisabled();
+
+    loginPage = PageObjectFactory.getLoginPage(testWebDriver, baseUrlGlobal);
     testWebDriver.sleep(1000);
     homePage = loginPage.loginAs(userSIC, password);
     testWebDriver.sleep(1000);
@@ -273,7 +321,7 @@ public class E2EDistributionTest extends TestCaseHelper {
     distributionPage.clickRecordData(1);
     assertTrue(facilityListPage.getFacilitiesInDropDown().contains("F10"));
     visitInformationPage = facilityListPage.selectFacility(facilityCodeFirst);
-    facilityListPage.verifyFacilityIndicatorColor("Overall", "RED");
+    facilityListPage.verifyOverallFacilityIndicatorColor("RED");
     visitInformationPage.navigateToRefrigerators();
 
     refrigeratorPage.verifyIndicator("RED");
@@ -306,7 +354,7 @@ public class E2EDistributionTest extends TestCaseHelper {
     insertRegimenProductMapping();
     configureISA();
 
-    LoginPage loginPage = PageFactory.getInstanceOfLoginPage(testWebDriver, baseUrlGlobal);
+    LoginPage loginPage = PageObjectFactory.getLoginPage(testWebDriver, baseUrlGlobal);
     testWebDriver.sleep(1000);
     HomePage homePage = loginPage.loginAs(userSIC, password);
     testWebDriver.sleep(1000);
@@ -324,10 +372,10 @@ public class E2EDistributionTest extends TestCaseHelper {
     homePage.navigateOfflineDistribution();
     distributionPage.clickRecordData(1);
 
-    FacilityListPage facilityListPage = PageFactory.getInstanceOfFacilityListPage(testWebDriver);
+    FacilityListPage facilityListPage = PageObjectFactory.getFacilityListPage(testWebDriver);
     VisitInformationPage visitInformationPage = facilityListPage.selectFacility(facilityCodeFirst);
     RefrigeratorPage refrigeratorPage = visitInformationPage.navigateToRefrigerators();
-    facilityListPage.verifyFacilityIndicatorColor("Overall", "AMBER");
+    facilityListPage.verifyOverallFacilityIndicatorColor("AMBER");
 
     refrigeratorPage.onRefrigeratorScreen();
     refrigeratorPage.clickAddNew();
@@ -336,10 +384,10 @@ public class E2EDistributionTest extends TestCaseHelper {
     refrigeratorPage.enterValueInManufacturingSerialNumberModal("GR-J287PGHV");
     refrigeratorPage.clickDoneOnModal();
 
-    facilityListPage.verifyFacilityIndicatorColor("Overall", "RED");
+    facilityListPage.verifyOverallFacilityIndicatorColor("RED");
 
     refrigeratorPage.verifyRefrigeratorColor("overall", "RED");
-    refrigeratorPage.clickShowForRefrigerator1();
+    refrigeratorPage.clickShowForRefrigerator(1);
     refrigeratorPage.verifyRefrigeratorColor("individual", "RED");
 
     refrigeratorPage.clickDone();
@@ -370,8 +418,14 @@ public class E2EDistributionTest extends TestCaseHelper {
     visitInformationPage.selectReasonOther();
     visitInformationPage.verifyIndicator("AMBER");
 
+    visitInformationPage.navigateToEpiInventory();
     epiInventoryPage.verifyIndicator("GREEN");
+    epiInventoryPage.verifyAllFieldsDisabled();
+
+    epiInventoryPage.navigateToRefrigerators();
     refrigeratorPage.verifyIndicator("GREEN");
+    refrigeratorPage.clickShowForRefrigerator(1);
+    refrigeratorPage.verifyAllFieldsDisabled();
 
     ChildCoveragePage childCoveragePage = visitInformationPage.navigateToChildCoverage();
     assertEquals(childCoveragePage.getTextOfTargetGroupValue(9), "300");
@@ -379,6 +433,28 @@ public class E2EDistributionTest extends TestCaseHelper {
     assertEquals(childCoveragePage.getTextOfTargetGroupValue(11), "300");
     assertEquals(childCoveragePage.getTextOfTargetGroupValue(1), "");
     assertEquals(childCoveragePage.getTextOfTargetGroupValue(12), "");
+
+    AdultCoveragePage adultCoveragePage = childCoveragePage.navigateToAdultCoverage();
+    adultCoveragePage.enterDataInAllFields();
+
+    adultCoveragePage.navigateToChildCoverage();
+
+    for (int rowNumber = 1; rowNumber <= 12; rowNumber++) {
+      childCoveragePage.enterHealthCenter11MonthsDataForGivenRow(rowNumber, String.valueOf(rowNumber));
+      childCoveragePage.enterOutreach11MonthsDataForGivenRow(rowNumber, String.valueOf(rowNumber));
+      if (rowNumber != 2) {
+        childCoveragePage.enterHealthCenter23MonthsDataForGivenRow(rowNumber, String.valueOf(rowNumber));
+        childCoveragePage.enterOutreach23MonthsDataForGivenRow(rowNumber, String.valueOf(rowNumber));
+      }
+    }
+    childCoveragePage.enterOpenedVialsCountForGivenGroupAndRow(1, 1, "1");
+    childCoveragePage.enterOpenedVialsCountForGivenGroupAndRow(2, 1, "2");
+    childCoveragePage.enterOpenedVialsCountForGivenGroupAndRow(2, 2, "3");
+    childCoveragePage.enterOpenedVialsCountForGivenGroupAndRow(6, 1, "4");
+    childCoveragePage.enterOpenedVialsCountForGivenGroupAndRow(6, 2, "5");
+    childCoveragePage.enterOpenedVialsCountForGivenGroupAndRow(9, 1, "6");
+    childCoveragePage.enterOpenedVialsCountForGivenGroupAndRow(12, 1, "7");
+    childCoveragePage.removeFocusFromElement();
 
     homePage.navigateHomePage();
     homePage.navigateOfflineDistribution();
@@ -405,20 +481,91 @@ public class E2EDistributionTest extends TestCaseHelper {
     epiInventoryPage.verifyAllFieldsDisabled();
 
     epiInventoryPage.navigateToRefrigerators();
-    refrigeratorPage.clickShowForRefrigerator1();
+    refrigeratorPage.clickShowForRefrigerator(1);
     refrigeratorPage.verifyAllFieldsDisabled();
 
     refrigeratorPage.navigateToVisitInformation();
     visitInformationPage.enterOtherReasonInTextBox("Reason for not visiting the facility");
     visitInformationPage.verifyIndicator("GREEN");
 
-    facilityListPage.verifyFacilityIndicatorColor("Overall", "GREEN");
+    visitInformationPage.navigateToChildCoverage();
+    assertEquals("300", childCoveragePage.getTextOfTargetGroupValue(9));
+    assertEquals("9", childCoveragePage.getHealthCenter11MonthsDataForGivenRow(9));
+    assertEquals("9", childCoveragePage.getOutreach11MonthsDataForGivenRow(9));
+    assertEquals("18", childCoveragePage.getTotalForGivenColumnAndRow(1, 9));
+    assertEquals("6", childCoveragePage.getCoverageRateForGivenRow(9));
+    assertEquals("9", childCoveragePage.getHealthCenter23MonthsDataForGivenRow(9));
+    assertEquals("9", childCoveragePage.getOutreach23MonthsDataForGivenRow(9));
+    assertEquals("18", childCoveragePage.getTotalForGivenColumnAndRow(2, 9));
+    assertEquals("36", childCoveragePage.getTotalForGivenColumnAndRow(3, 9));
+    assertEquals("6", childCoveragePage.getOpenedVialsCountForGivenGroupAndRow(9, 1));
+    assertEquals("", childCoveragePage.getWastageRateForGivenRow(9));
 
+    facilityListPage.verifyOverallFacilityIndicatorColor("GREEN");
 
+    homePage.navigateHomePage();
+    homePage.navigateOfflineDistribution();
+
+    distributionPage.syncDistribution(1);
+    assertTrue(distributionPage.isFacilitySyncFailed());
+
+    switchOnNetworkInterface(wifiInterface);
+    testWebDriver.sleep(7000);
+
+    distributionPage.clickRetryButton();
+    testWebDriver.sleep(2000);
+    assertEquals(distributionPage.getSyncStatusMessage(), "Sync Status");
+    assertTrue("Incorrect Sync Facility", distributionPage.getSyncMessage().contains("F10-Village Dispensary"));
+
+    distributionPage.syncDistributionMessageDone();
+    assertEquals(distributionPage.getDistributionStatus(), "SYNCED");
+    assertFalse(distributionPage.getTextDistributionList().contains("sync"));
+
+    Map<String, String> distributionDetails = dbWrapper.getDistributionDetails(deliveryZoneNameFirst, programFirst, "Period14");
+    assertEquals(distributionDetails.get("status"), "SYNCED");
+
+    distributionPage.clickRecordData(1);
+    facilityListPage.selectFacility(facilityCodeFirst);
+    facilityListPage.verifyOverallFacilityIndicatorColor("BLUE");
+
+    verifyEpiUseDataInDatabase(10, 20, 30, null, 50, "10/2011", "PG1", facilityCodeFirst);
+    verifyFacilityVisitInformationInDatabase(facilityCodeFirst, null, null, null, null, null, null, "t", "f", "OTHER", "Reason for not visiting the facility");
+    verifyFullCoveragesDataInDatabase(5, 7, 0, 9999999, facilityCodeFirst);
+    verifyEpiInventoryDataInDatabase(null, null, null, "P10", facilityCodeFirst);
+    verifyEpiInventoryDataInDatabase(null, null, null, "Product6", facilityCodeFirst);
+    verifyEpiInventoryDataInDatabase(null, null, null, "P11", facilityCodeFirst);
+    verifyAdultCoverageDataInDatabase(facilityCodeFirst);
+    verifyChildCoverageDataInDatabase();
+
+    String facilityId = dbWrapper.getAttributeFromTable("facilities", "id", "code", "F10");
+    String facilityVisitId = dbWrapper.getAttributeFromTable("facility_visits", "id", "facilityId", facilityId);
+    ResultSet childCoverageDetails = dbWrapper.getChildCoverageDetails("PCV10 1st dose", facilityVisitId);
+    assertEquals("300", childCoverageDetails.getInt("targetGroup"));
+
+    visitInformationPage.verifyAllFieldsDisabled();
+
+    visitInformationPage.navigateToEpiUse();
+    epiUsePage.verifyAllFieldsDisabled();
+
+    epiUsePage.navigateToRefrigerators();
+    refrigeratorPage.clickShowForRefrigerator(1);
+    refrigeratorPage.verifyAllFieldsDisabled();
+
+    refrigeratorPage.navigateToFullCoverage();
+    fullCoveragePage.verifyAllFieldsDisabled();
+
+    fullCoveragePage.navigateToChildCoverage();
+    childCoveragePage.verifyAllFieldsDisabled();
+
+    childCoveragePage.navigateToEpiInventory();
+    epiInventoryPage.verifyAllFieldsDisabled();
+
+    epiInventoryPage.navigateToAdultCoverage();
+    adultCoveragePage.verifyAllFieldsDisabled();
   }
 
   private void configureISA() {
-    LoginPage loginPage = PageFactory.getInstanceOfLoginPage(testWebDriver, baseUrlGlobal);
+    LoginPage loginPage = PageObjectFactory.getLoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs("Admin123", "Admin123");
 
     ProgramProductISAPage programProductISAPage = homePage.navigateProgramProductISA();
@@ -427,18 +574,28 @@ public class E2EDistributionTest extends TestCaseHelper {
   }
 
   private void insertRegimenProductMapping() throws SQLException {
-    dbWrapper.insertRegimensProductsInMappingTable("BCG", "BCG");
-    dbWrapper.insertRegimensProductsInMappingTable("Polio (Newborn)", "polio10dose");
-    dbWrapper.insertRegimensProductsInMappingTable("Polio 1st dose", "polio20dose");
-    dbWrapper.insertRegimensProductsInMappingTable("Polio 2nd dose", "polio10dose");
-    dbWrapper.insertRegimensProductsInMappingTable("Polio 3rd dose", "polio20dose");
-    dbWrapper.insertRegimensProductsInMappingTable("Penta 1st dose", "penta1");
-    dbWrapper.insertRegimensProductsInMappingTable("Penta 2nd dose", "penta10");
-    dbWrapper.insertRegimensProductsInMappingTable("Penta 3rd dose", "penta1");
-    dbWrapper.insertRegimensProductsInMappingTable("PCV10 1st dose", "P10");
-    dbWrapper.insertRegimensProductsInMappingTable("PCV10 2nd dose", "P10");
-    dbWrapper.insertRegimensProductsInMappingTable("PCV10 3rd dose", "P10");
-    dbWrapper.insertRegimensProductsInMappingTable("Measles", "Measles");
+    dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("BCG", "BCG", true);
+    dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("Polio (Newborn)", "polio10dose", true);
+    dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("Polio 1st dose", "polio20dose", true);
+    dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("Polio 2nd dose", "polio10dose", true);
+    dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("Polio 3rd dose", "polio20dose", true);
+    dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("Penta 1st dose", "penta1", true);
+    dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("Penta 2nd dose", "penta10", true);
+    dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("Penta 3rd dose", "penta1", true);
+    dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("PCV10 1st dose", "P10", true);
+    dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("PCV10 2nd dose", "P10", true);
+    dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("PCV10 3rd dose", "P10", true);
+    dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("Measles", "Measles", true);
+  }
+
+  public void insertOpenedVialsProductMapping() throws SQLException {
+    dbWrapper.insertChildCoverageProductVial("BCG", "P10");
+    dbWrapper.insertChildCoverageProductVial("Polio10", "P11");
+    dbWrapper.insertChildCoverageProductVial("Polio20", "P10");
+    dbWrapper.insertChildCoverageProductVial("Penta1", "penta1");
+    dbWrapper.insertChildCoverageProductVial("Penta10", "P11");
+    dbWrapper.insertChildCoverageProductVial("PCV", "P10");
+    dbWrapper.insertChildCoverageProductVial("Measles", "Measles");
   }
 
   @AfterMethod(groups = {"offline"})

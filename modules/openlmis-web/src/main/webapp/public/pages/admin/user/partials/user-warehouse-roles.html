@@ -9,77 +9,79 @@
   -->
 
 <div ng-controller="UserRoleAssignmentController">
-  <div class="fluid-grid">
-    <div class="row-fluid fluid-grid-header">
-      <div class="span3">
-        <div class="fluid-grid-cell" openlmis-message="warehouse.header"></div>
-      </div>
-      <div class="span6">
-        <div class="fluid-grid-cell" openlmis-message="create.user.role"></div>
-      </div>
-      <div class="span3">
-        <div class="fluid-grid-cell">&nbsp;</div>
-      </div>
+    <div class="fluid-grid">
+        <div class="row-fluid fluid-grid-header">
+            <div class="span3">
+                <div class="fluid-grid-cell" openlmis-message="warehouse.header"></div>
+            </div>
+            <div class="span6">
+                <div class="fluid-grid-cell" openlmis-message="create.user.role"></div>
+            </div>
+            <div class="span3">
+                <div class="fluid-grid-cell">&nbsp;</div>
+            </div>
 
-      <div class="row-fluid" ng-repeat="roleAssignment in user.fulfillmentRoles" tab-scroll>
-        <div class="span3">
-          <div class="fluid-grid-cell">
-            <label ng-bind="getWarehouseName(roleAssignment.facilityId)"></label>
-          </div>
-        </div>
-        <div class="span7">
-          <div class="fluid-grid-cell">
-            <select ui-select2 ng-model="roleAssignment.roleIds" openlmis-message="placeholder.add.role"
-                    ng-options="role.id as role.name for role in rolesMap.FULFILLMENT" multiple="multiple" name="roles"
-                    id="roles">
-            </select>
+            <div class="row-fluid" ng-repeat="roleAssignment in user.fulfillmentRoles" tab-scroll>
+                <div class="span3">
+                    <div class="fluid-grid-cell">
+                        <label ng-bind="getWarehouseName(roleAssignment.facilityId)"></label>
+                    </div>
+                </div>
+                <div class="span7">
+                    <div class="fluid-grid-cell">
+                        <select ui-select2 ng-model="roleAssignment.roleIds" openlmis-message="placeholder.add.role"
+                                ng-options="role.id as role.name for role in rolesMap.FULFILLMENT" multiple="multiple"
+                                name="roles"
+                                id="roles">
+                        </select>
             <span ng-show="roleAssignment.roleIds.length == 0" class="field-error" openlmis-message="missing.value">
             </span>
-          </div>
+                    </div>
+                </div>
+                <div class="span2">
+                    <input type="button" class="btn delete-role" value="delete"
+                           ng-click="deleteCurrentRow($index, 'fulfillmentRoles')" openlmis-message="button.remove"/>
+                </div>
+            </div>
         </div>
-        <div class="span2">
-          <input type="button" class="btn delete-role" value="delete"
-                 ng-click="deleteCurrentRow($index, 'fulfillmentRoles')" openlmis-message="button.remove"/>
-        </div>
-      </div>
-    </div>
 
-    <div class="add-role-row" tab-scroll>
-      <div class="row-fluid">
+        <div class="add-role-row" tab-scroll>
+            <div class="row-fluid">
 
-        <div class="span3">
-          <div class="fluid-grid-cell">
-            <select
-              ng-options="warehouse.id as warehouse.name for warehouse in availableWarehouses()"
-              ng-model="warehouseRole.facilityId">
-              <option value="" openlmis-message="selectWarehouseMessage"></option>
-            </select>
+                <div class="span3">
+                    <div class="fluid-grid-cell">
+                        <select
+                                ng-options="warehouse.id as warehouse.name for warehouse in availableWarehouses()"
+                                id="warehouseToSelect" ng-model="warehouseRole.facilityId">
+                            <option value="" openlmis-message="selectWarehouseMessage"></option>
+                        </select>
              <span ng-show='hasMappingError(warehouseRoleMappingError, warehouseRole.facilityId)' class="field-error"
                    openlmis-message="create.user.select.warehouse">
             </span>
-          </div>
-        </div>
+                    </div>
+                </div>
 
-        <div class="span7 select2-roles">
-          <div class="fluid-grid-cell">
-            <select ui-select2 ng-model="warehouseRole.roleIds"
-                    ng-options="role.id as role.name for role in rolesMap.FULFILLMENT"
-                    openlmis-message="placeholder.add.role" multiple="multiple">
-            </select>
+                <div class="span7 select2-roles">
+                    <div class="fluid-grid-cell">
+                        <select ui-select2 ng-model="warehouseRole.roleIds"
+                                ng-options="role.id as role.name for role in rolesMap.FULFILLMENT"
+                                openlmis-message="placeholder.add.role" multiple="multiple">
+                        </select>
             <span ng-show='hasMappingError(warehouseRoleMappingError, warehouseRole.roleIds)' class="field-error"
                   openlmis-message="create.user.selectRoles">
             </span>
-          </div>
+                    </div>
+                </div>
+
+                <div class="span2">
+                    <div class="fluid-grid-cell">
+                        <input id="addFulfillmentRole" type="button" ng-click="addFulfillmentRole()"
+                               class="btn btn-primary" openlmis-message="button.add"/>
+                    </div>
+                </div>
+
+            </div>
         </div>
 
-        <div class="span2">
-          <div class="fluid-grid-cell">
-            <input type="button" ng-click="addFulfillmentRole()" class="btn btn-primary" openlmis-message="button.add"/>
-          </div>
-        </div>
-
-      </div>
     </div>
-
-  </div>
 </div>

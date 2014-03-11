@@ -52,7 +52,7 @@ public class LookupController {
 
     @RequestMapping(value = "/rest-api/lookup/product-by-code", method = RequestMethod.POST, headers = ACCEPT_JSON)
     public ResponseEntity getProductByCode( Principal principal ,@RequestBody String code) {
-        return RestResponse.response("product", lookupService.getProgramByCode(code));
+        return RestResponse.response("product", lookupService.getProductByCode(code));
     }
 
 

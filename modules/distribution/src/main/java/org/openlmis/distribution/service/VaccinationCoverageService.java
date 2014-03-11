@@ -17,6 +17,11 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/**
+ * Exposes the services for handling VaccinationFullCoverage, VaccinationChildCoverage and VaccinationAdultCoverage
+ * entity.
+ */
+
 @Service
 public class VaccinationCoverageService {
 
@@ -26,14 +31,15 @@ public class VaccinationCoverageService {
   public void save(FacilityDistribution facilityDistribution) {
     repository.saveFullCoverage(facilityDistribution.getFullCoverage());
     repository.saveChildCoverage(facilityDistribution.getChildCoverage());
+    repository.saveAdultCoverage(facilityDistribution.getAdultCoverage());
   }
 
   public VaccinationFullCoverage getFullCoverageBy(Long facilityVisitId) {
     return repository.getFullCoverageBy(facilityVisitId);
   }
 
-  public List<VaccinationProduct> getVaccinationProducts(Boolean isChildCoverage) {
-    return repository.getVaccinationProducts(isChildCoverage);
+  public List<TargetGroupProduct> getVaccinationProducts() {
+    return repository.getVaccinationProducts();
   }
 
   public void saveChildCoverage(VaccinationChildCoverage childCoverage) {
@@ -46,5 +52,13 @@ public class VaccinationCoverageService {
 
   public List<ProductVial> getProductVials() {
     return repository.getProductVials();
+  }
+
+  public void saveAdultCoverage(VaccinationAdultCoverage adultCoverage) {
+    repository.saveAdultCoverage(adultCoverage);
+  }
+
+  public VaccinationAdultCoverage getAdultCoverageBy(Long facilityVisitId) {
+    return repository.getAdultCoverageBy(facilityVisitId);
   }
 }

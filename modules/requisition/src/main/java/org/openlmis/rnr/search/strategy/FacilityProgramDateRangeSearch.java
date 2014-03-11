@@ -26,6 +26,10 @@ import org.openlmis.rnr.service.RequisitionPermissionService;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * This class is a strategy to search for requisitions based on facility, program and date range.
+ */
+
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)

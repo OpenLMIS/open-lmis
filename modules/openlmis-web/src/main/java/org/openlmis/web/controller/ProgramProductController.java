@@ -28,13 +28,17 @@ import java.util.List;
 import static org.openlmis.web.response.OpenLmisResponse.response;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
+/**
+ * This controller handles endpoint related to listing products for a given program.
+ */
+
 @Controller
-public class ProgramProductController {
+public class ProgramProductController extends BaseController {
 
   @Autowired
   ProgramProductService service;
   
-  
+  @Autowired
   private ProgramProductPriceListDataProvider programPriceService;
 
   private static final String PROGRAM_PRODUCT_LIST = "programProductList";
@@ -66,5 +70,4 @@ public class ProgramProductController {
     List<ProgramProduct> programProductsByProgram = service.getActiveByProgram(programId);
     return response(PROGRAM_PRODUCT_LIST, programProductsByProgram);
   }
-
 }

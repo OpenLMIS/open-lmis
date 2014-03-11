@@ -17,6 +17,9 @@ import org.openlmis.core.service.RequisitionGroupService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+/**
+ * RequisitionGroupHandler is used for uploads of RequisitionGroups. It uploads each requisition group record by record.
+ */
 @Component
 @NoArgsConstructor
 public class RequisitionGroupHandler extends AbstractModelPersistenceHandler {

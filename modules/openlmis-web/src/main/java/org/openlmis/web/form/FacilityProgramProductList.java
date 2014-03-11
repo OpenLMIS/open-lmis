@@ -14,5 +14,9 @@ import org.openlmis.core.domain.FacilityProgramProduct;
 
 import java.util.ArrayList;
 
-public class FacilityProgramProductList extends ArrayList<FacilityProgramProduct>{
+/**
+ * This entity represents List of FacilityProgramProduct.
+ */
+
+public class FacilityProgramProductList extends ArrayList<FacilityProgramProduct> {
 }

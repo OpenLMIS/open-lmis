@@ -401,3 +401,26 @@ services.factory('DistrictFinancialSummaryReport', function ($resource) {
 services.factory('SaveGeographicInfo', function($resource){
    return $resource('/geographic-zone/save-gis.json',{}, {post:{method:'POST'}});
 });
+
+/* Dashboard data factories */
+services.factory("FacilitiesByGeographicZoneAndProgramParams",function($resource)  {
+    return   $resource('/reports/facilities/geographicZone/:geographicZoneId/requisitionGroup/:rgroupId/program/:programId/schedule/:scheduleId.json', {}, {});
+});
+
+services.factory('OrderFillRate', function($resource){
+    return $resource('/dashboard/orderFillRate.json',{}, {});
+});
+
+services.factory('ItemFillRate', function($resource){
+    return $resource('/dashboard/itemFillRate.json',{}, {});
+});
+
+services.factory('ShipmentLeadTime', function($resource){
+    return $resource('/dashboard/shipmentLeadTime.json',{}, {});
+});
+
+services.factory('StockEfficiency', function($resource){
+    return $resource('/dashboard/stockEfficiency.json',{}, {});
+});
+
+/* End Dashboard data factories */

@@ -19,7 +19,9 @@ import org.openqa.selenium.support.FindBy;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.assertFalse;
 import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
@@ -243,10 +245,17 @@ public class RequisitionPage extends Page {
     return testWebDriver.getElementByXpath("//table[@id='regimenTable']/tbody[1]/tr[" + row + "]/td[" + fieldNumberInTable + "]/ng-switch/span/input").isDisplayed();
   }
 
-  public void enterValuesOnRegimenScreen(int fieldNumberInTable, int row, String value) {
-    testWebDriver.waitForElementToAppear(testWebDriver.getElementByXpath("//table[@id='regimenTable']/tbody[1]/tr[" + row + "]/td[" + fieldNumberInTable + "]/ng-switch/span/input"));
-    testWebDriver.getElementByXpath("//table[@id='regimenTable']/tbody[1]/tr[" + row + "]/td[" + fieldNumberInTable + "]/ng-switch/span/input").clear();
-    testWebDriver.getElementByXpath("//table[@id='regimenTable']/tbody[1]/tr[" + row + "]/td[" + fieldNumberInTable + "]/ng-switch/span/input").sendKeys(value);
+  public void enterValuesOnRegimenScreen(int columnNumber, int row, String value) {
+    Map<Integer, String> tableIdColumnMapper = new HashMap<>();
+    tableIdColumnMapper.put(3, "patientsOnTreatment");
+    tableIdColumnMapper.put(4, "patientsToInitiateTreatment");
+    tableIdColumnMapper.put(5, "patientsStoppedTreatment");
+    tableIdColumnMapper.put(6, "remarks");
+
+    WebElement element = testWebDriver.getElementById(tableIdColumnMapper.get(columnNumber) + "_" + (row - 1));
+    testWebDriver.waitForElementToAppear(element);
+    element.clear();
+    element.sendKeys(value);
   }
 
   public String getPatientsOnTreatmentValue() {
@@ -334,10 +343,10 @@ public class RequisitionPage extends Page {
   }
 
   public void verifySkippedProductsOnRnRScreen(int rowNumber) {
+    testWebDriver.waitForAjax();
     WebElement skipCheckBox = testWebDriver.getElementById("skip_" + (rowNumber - 1));
     testWebDriver.waitForElementToAppear(skipCheckBox);
     assertTrue(skipCheckBox.isSelected());
-    skipCheckBox = null;
     skipCheckBox = testWebDriver.getElementById("skip_" + (rowNumber));
     assertFalse(skipCheckBox.isSelected());
   }

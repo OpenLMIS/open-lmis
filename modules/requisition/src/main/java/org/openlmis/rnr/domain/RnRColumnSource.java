@@ -12,36 +12,43 @@ package org.openlmis.rnr.domain;
 
 import org.codehaus.jackson.map.annotate.JsonDeserialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
+import org.openlmis.rnr.serializer.RnrColumnSourceDeSerializer;
+import org.openlmis.rnr.serializer.RnrColumnSourceSerializer;
+
+/**
+ * This class represents the source for values in the columns configured in rnr template for a program. The source can be
+ * user input, calculated or some reference data.
+ */
 
 @JsonSerialize(using = RnrColumnSourceSerializer.class)
 @JsonDeserialize(using = RnrColumnSourceDeSerializer.class)
 public enum RnRColumnSource {
 
-    REFERENCE("R", "label.column.source.reference.data"),
-    USER_INPUT("U", "label.column.source.user.input"),
-    CALCULATED("C", "label.column.source.calculated");
+  REFERENCE("R", "label.column.source.reference.data"),
+  USER_INPUT("U", "label.column.source.user.input"),
+  CALCULATED("C", "label.column.source.calculated");
 
-    private final String code;
+  private final String code;
 
-    private final String description;
+  private final String description;
 
-    RnRColumnSource(String code, String description) {
-        this.code = code;
-        this.description = description;
+  RnRColumnSource(String code, String description) {
+    this.code = code;
+    this.description = description;
+  }
+
+  public static RnRColumnSource getValueOf(String value) {
+    for (RnRColumnSource columnSource : RnRColumnSource.values()) {
+      if (columnSource.code.equalsIgnoreCase(value)) return columnSource;
     }
+    return null;
+  }
 
-    public static RnRColumnSource getValueOf(String value) {
-        for (RnRColumnSource columnSource : RnRColumnSource.values()) {
-            if (columnSource.code.equalsIgnoreCase(value)) return columnSource;
-        }
-        return null;
-    }
+  public String getDescription() {
+    return description;
+  }
 
-    public String getDescription() {
-        return description;
-    }
-
-    public String getCode() {
-        return code;
-    }
+  public String getCode() {
+    return code;
+  }
 }

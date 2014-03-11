@@ -37,6 +37,10 @@ import static org.openlmis.rnr.domain.RnrStatus.SUBMITTED;
 import static org.openlmis.web.controller.RequisitionController.*;
 import static org.openlmis.web.view.pdf.requisition.RequisitionCellFactory.*;
 
+/**
+ * This entity is used to encapsulate rnr attributes, report formatting attributes to be used in requisition report.
+ */
+
 @Data
 @NoArgsConstructor
 public class RequisitionPdfModel {
@@ -183,7 +187,7 @@ public class RequisitionPdfModel {
       this.requisition.getFacility().getFacilityType().getName()), H1_FONT);
 
     PdfPCell cell = new PdfPCell(new Phrase(chunk));
-    cell.setColspan(4);
+    cell.setColspan(5);
     cell.setPadding(10);
     cell.setBorder(0);
     table.addCell(cell);
@@ -201,6 +205,7 @@ public class RequisitionPdfModel {
     text = String.format(messageService.message("label.facility.emergencyOrder") + ": %s",
       facility.getFacilityType().getNominalEop());
     insertCell(table, text, 1);
+    insertCell(table, "", 1);
   }
 
   private void insertCell(PdfPTable table, String text, int colSpan) {
@@ -215,6 +220,9 @@ public class RequisitionPdfModel {
   private void addSecondLine(Facility facility, PdfPTable table, Boolean emergency) {
     GeographicZone geographicZone = facility.getGeographicZone();
     GeographicZone parent = geographicZone.getParent();
+    String text = String.format(messageService.message("header.facility.code") + ": %s", facility.getCode());
+    insertCell(table,text, 1);
+
     StringBuilder builder = new StringBuilder();
     builder.append(geographicZone.getLevel().getName()).append(": ").append(geographicZone.getName());
     insertCell(table, builder.toString(), 1);
@@ -235,7 +243,7 @@ public class RequisitionPdfModel {
   }
 
   private PdfPTable prepareRequisitionHeaderTable() throws DocumentException {
-    int[] columnWidths = {200, 200, 200, 200};
+    int[] columnWidths = {160, 160, 160, 160, 160};
     PdfPTable table = new PdfPTable(columnWidths.length);
     table.setWidths(columnWidths);
     table.getDefaultCell().setBackgroundColor(HEADER_BACKGROUND);

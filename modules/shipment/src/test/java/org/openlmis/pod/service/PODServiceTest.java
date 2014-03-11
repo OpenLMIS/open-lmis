@@ -34,6 +34,7 @@ import org.openlmis.rnr.service.RequisitionService;
 import org.openlmis.shipment.domain.ShipmentLineItem;
 import org.openlmis.shipment.service.ShipmentService;
 
+import java.text.ParseException;
 import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.a;
@@ -98,13 +99,17 @@ public class PODServiceTest {
     when(orderService.hasStatus(orderId, PACKED)).thenReturn(true);
     List<ShipmentLineItem> shipmentLineItems = asList(mock(ShipmentLineItem.class));
     when(shipmentService.getLineItems(orderId)).thenReturn(shipmentLineItems);
-    doNothing().when(orderPOD).fillPodLineItems(shipmentLineItems);
+    Rnr requisition = make(a(RequisitionBuilder.defaultRequisition));
+    when(requisitionService.getFullRequisitionById(orderId)).thenReturn(requisition);
+    doNothing().when(orderPOD).fillPOD(requisition);
+    doNothing().when(orderPOD).fillPODLineItems(shipmentLineItems);
     when(repository.insert(orderPOD)).thenReturn(orderPOD);
 
     OrderPOD pod = podService.createPOD(orderPOD);
 
     verify(podService).checkPermissions(orderPOD);
-    verify(orderPOD).fillPodLineItems(shipmentLineItems);
+    verify(orderPOD).fillPOD(requisition);
+    verify(orderPOD).fillPODLineItems(shipmentLineItems);
     assertThat(pod, is(orderPOD));
   }
 
@@ -117,12 +122,13 @@ public class PODServiceTest {
     when(orderService.hasStatus(orderId, RELEASED, READY_TO_PACK, TRANSFER_FAILED)).thenReturn(true);
     Rnr requisition = make(a(RequisitionBuilder.defaultRequisition));
     when(requisitionService.getFullRequisitionById(orderId)).thenReturn(requisition);
-    doNothing().when(orderPOD).fillPODWithRequisition(requisition);
+    doNothing().when(orderPOD).fillPOD(requisition);
     when(repository.insert(orderPOD)).thenReturn(orderPOD);
 
     OrderPOD pod = podService.createPOD(orderPOD);
 
-    verify(orderPOD).fillPODWithRequisition(requisition);
+    verify(orderPOD).fillPOD(requisition);
+    verify(orderPOD).fillPODLineItems(requisition.getAllLineItems());
     verify(podService).checkPermissions(orderPOD);
     verify(repository).insert(orderPOD);
     assertThat(pod, is(orderPOD));
@@ -166,7 +172,7 @@ public class PODServiceTest {
   }
 
   @Test
-  public void shouldSavePODWithModifiedLineItems() {
+  public void shouldSavePODWithModifiedLineItems() throws ParseException {
     OrderPOD existingPOD = mock(OrderPOD.class);
     when(repository.getPOD(podId)).thenReturn(existingPOD);
     when(existingPOD.getModifiedBy()).thenReturn(userId);
@@ -181,7 +187,7 @@ public class PODServiceTest {
   }
 
   @Test
-  public void shouldNotSaveOrderPodIfUserDoesNotHavePermissions() {
+  public void shouldNotSaveOrderPodIfUserDoesNotHavePermissions() throws ParseException {
     OrderPOD existingPOD = mock(OrderPOD.class);
     when(repository.getPOD(podId)).thenReturn(existingPOD);
     when(existingPOD.getModifiedBy()).thenReturn(userId);

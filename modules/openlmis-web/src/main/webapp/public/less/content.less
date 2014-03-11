@@ -290,8 +290,7 @@ span[class^="tpl-"] {
       position: relative;
       border: 1px solid #DDD;
       border-top: 0;
-      border-color: transparent #BBB #DDD
-    ;
+      border-color: transparent #BBB #DDD;
       background: #FCFCFC;
       font-size: 0.9em;
 
@@ -560,6 +559,7 @@ span[class^="tpl-"] {
     }
     .ng-scope {
       display: block;
+      position: relative;
     }
   }
   .table-bordered th:first-child,
@@ -689,6 +689,12 @@ span[class^="tpl-"] {
   }
 }
 
+.refrigerator-form {
+  .rnr-form-error {
+    right: 0;
+  }
+}
+
 .header-fixed {
   position: fixed;
   top: 0px;
@@ -772,29 +778,27 @@ th.col-reasonForLossesAndAdjustments {
 
 td.col-beginningBalance,
 td.col-quantityReceived,
+td.col-quantityReturned,
 td.col-quantityDispensed,
 td.col-newPatientCount,
 td.col-stockOutDays,
-td.col-expirationDate,
 td.col-quantityRequested,
-td.col-quantityReceived,
 td.col-quantityApproved {
   input[type="text"] {
     width: 89%;
-    //    margin-right: 10%;
+    text-align: right;
   }
 }
 
-td.col-beginningBalance,
-td.col-quantityReceived,
-td.col-quantityDispensed,
-td.col-newPatientCount,
-td.col-stockOutDays,
-td.col-quantityRequested,
+td.col-expirationDate {
+  input[type="text"] {
+    width: 89%;
+  }
+}
+
 td.col-patientsOnTreatment,
 td.col-patientsToInitiateTreatment,
-td.col-patientsStoppedTreatment,
-td.col-quantityApproved {
+td.col-patientsStoppedTreatment {
   input[type="text"] {
     text-align: right;
   }
@@ -802,7 +806,6 @@ td.col-quantityApproved {
 
 td.col-beginningBalance,
 td.col-total,
-td.col-stockInHand,
 td.col-stockInHand,
 td.col-normalizedConsumption,
 td.col-amc,
@@ -823,46 +826,26 @@ td.col-lossesAndAdjustments {
   }
 }
 
-#viewRnr {
-  td.col-beginningBalance,
-  td.col-quantityReceived,
-  td.col-quantityDispensed,
-  td.col-stockInHand,
-  td.col-newPatientCount,
-  td.col-stockOutDays,
-  td.col-quantityRequested,
-  td.col-patientsOnTreatment,
-  td.col-patientsToInitiateTreatment,
-  td.col-patientsStoppedTreatment,
-  td.col-quantityApproved {
-    span {
-      text-align: right;
-      display: block;
-    }
+td.col-quantityReceived,
+td.col-quantityDispensed,
+td.col-newPatientCount,
+td.col-stockOutDays,
+td.col-quantityRequested,
+td.col-patientsOnTreatment,
+td.col-patientsToInitiateTreatment,
+td.col-patientsStoppedTreatment,
+td.col-quantityApproved,
+td.col-packsToShip,
+td.col-quantityShipped {
+  span {
+    text-align: right;
+    display: block;
   }
 }
 
-#approveRnr {
-  td.col-beginningBalance,
-  td.col-stockInHand,
-  td.col-quantityReceived,
-  td.col-quantityDispensed,
-  td.col-newPatientCount,
-  td.col-stockOutDays,
-  td.col-stockInHand,
-  td.col-quantityRequested,
-  td.col-patientsOnTreatment,
-  td.col-patientsToInitiateTreatment,
-  td.col-patientsStoppedTreatment, {
-    span {
-      text-align: right;
-      display: block;
-    }
-  }
-  td.col-remarks {
-    input[type="text"] {
-      width: 93%;
-    }
+td.col-remarks {
+  input[type="text"] {
+    width: 93%;
   }
 }
 
@@ -2532,6 +2515,15 @@ input[rnr-validator="positiveInteger"] {
   }
 }
 
+#podForm {
+  .pagination {
+    margin-bottom: 130px;
+  }
+  .action-buttons {
+    z-index: 6;
+  }
+}
+
 #pod {
   .col-fullSupply {
     min-width: 50px;
@@ -2544,13 +2536,7 @@ input[rnr-validator="positiveInteger"] {
     width: 482px;
     min-width: 250px;
   }
-  td.col-packsToShip, td.col-quantityShipped {
-    span {
-      display: block;
-      text-align: right;
-    }
-  }
-  .col-quantityReceived {
+  .col-quantityReceived .col-quantityReturned {
     width: 150px;
     input {
       width: 90%;
@@ -2561,5 +2547,26 @@ input[rnr-validator="positiveInteger"] {
   }
   .col-remarks {
     width: 90%;
+  }
+}
+
+#podPageContent {
+  position: relative;
+}
+
+#podFooter {
+  position: absolute;
+  bottom: 48px;
+  left: 15px;
+  strong {
+    display: block;
+  }
+  input {
+    width: 80%;
+    height: 20px;
+    padding: 4px 6px;
+    margin-bottom: 9px;
+    font-size: 1em;
+    margin-left: 0px;
   }
 }

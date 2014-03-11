@@ -20,7 +20,7 @@ import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 
 public class AccessDeniedPage extends Page {
 
-  @FindBy(how = How.XPATH, using = "//h3[@class='access-denied']")
+  @FindBy(how = How.ID, using = "authorisationError")
   private static WebElement accessDeniedHeader = null;
 
   public AccessDeniedPage(TestWebDriver driver) {

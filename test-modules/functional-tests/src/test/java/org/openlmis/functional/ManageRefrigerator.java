@@ -16,15 +16,11 @@ import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import org.openlmis.UiUtils.CaptureScreenshotOnFailureListener;
 import org.openlmis.UiUtils.TestCaseHelper;
-import org.openlmis.UiUtils.TestWebDriver;
-import org.openlmis.pageobjects.HomePage;
+import org.openlmis.pageobjects.PageObjectFactory;
 import org.openlmis.pageobjects.RefrigeratorPage;
-import org.openqa.selenium.JavascriptExecutor;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
-import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.DataProvider;
 import org.testng.annotations.Listeners;
 
 import java.io.IOException;
@@ -51,7 +47,7 @@ public class ManageRefrigerator extends TestCaseHelper {
 
   @When("^I add new refrigerator$")
   public void clickAddNewButton() throws SQLException {
-    refrigeratorPage = PageFactory.getInstanceOfRefrigeratorPage(testWebDriver);
+    refrigeratorPage = PageObjectFactory.getRefrigeratorPage(testWebDriver);
     refrigeratorPage.clickAddNew();
   }
 
@@ -62,25 +58,25 @@ public class ManageRefrigerator extends TestCaseHelper {
 
   @When("^I enter Brand \"([^\"]*)\"$")
   public void enterBrand(String brand) throws SQLException {
-    refrigeratorPage = PageFactory.getInstanceOfRefrigeratorPage(testWebDriver);
+    refrigeratorPage = PageObjectFactory.getRefrigeratorPage(testWebDriver);
     refrigeratorPage.enterValueInBrandModal(brand);
   }
 
   @And("^I enter Modal \"([^\"]*)\"$")
   public void enterModal(String modal) throws SQLException {
-    refrigeratorPage = PageFactory.getInstanceOfRefrigeratorPage(testWebDriver);
+    refrigeratorPage = PageObjectFactory.getRefrigeratorPage(testWebDriver);
     refrigeratorPage.enterValueInModelModal(modal);
   }
 
   @And("^I enter Serial Number \"([^\"]*)\"$")
   public void enterSerialNumber(String serial) throws SQLException {
-    refrigeratorPage = PageFactory.getInstanceOfRefrigeratorPage(testWebDriver);
+    refrigeratorPage = PageObjectFactory.getRefrigeratorPage(testWebDriver);
     refrigeratorPage.enterValueInManufacturingSerialNumberModal(serial);
   }
 
   @And("^I access done$")
   public void clickDoneOnModal() throws SQLException {
-    refrigeratorPage = PageFactory.getInstanceOfRefrigeratorPage(testWebDriver);
+    refrigeratorPage = PageObjectFactory.getRefrigeratorPage(testWebDriver);
     refrigeratorPage.clickDoneOnModal();
   }
 
@@ -96,19 +92,19 @@ public class ManageRefrigerator extends TestCaseHelper {
 
   @And("^I delete refrigerator")
   public void clickDelete() throws SQLException {
-    refrigeratorPage = PageFactory.getInstanceOfRefrigeratorPage(testWebDriver);
+    refrigeratorPage = PageObjectFactory.getRefrigeratorPage(testWebDriver);
     refrigeratorPage.clickDelete();
   }
 
   @And("^I edit refrigerator")
   public void clickEdit() throws SQLException {
-    refrigeratorPage = PageFactory.getInstanceOfRefrigeratorPage(testWebDriver);
-    refrigeratorPage.clickShowForRefrigerator1();
+    refrigeratorPage = PageObjectFactory.getRefrigeratorPage(testWebDriver);
+    refrigeratorPage.clickShowForRefrigerator(1);
   }
 
   @When("^I confirm delete$")
   public void clickOK() throws SQLException {
-    refrigeratorPage = PageFactory.getInstanceOfRefrigeratorPage(testWebDriver);
+    refrigeratorPage = PageObjectFactory.getRefrigeratorPage(testWebDriver);
     refrigeratorPage.clickOKButton();
   }
 
@@ -127,37 +123,37 @@ public class ManageRefrigerator extends TestCaseHelper {
 
   @And("^I enter refrigerator temperature \"([^\"]*)\"$")
   public void enterRefrigeratorTemperature(String temperature) throws SQLException {
-    refrigeratorPage = PageFactory.getInstanceOfRefrigeratorPage(testWebDriver);
-    refrigeratorPage.enterValueInRefrigeratorTemperature(temperature);
+    refrigeratorPage = PageObjectFactory.getRefrigeratorPage(testWebDriver);
+    refrigeratorPage.enterValueInRefrigeratorTemperature(temperature, 1);
   }
 
   @And("^I enter low alarm events \"([^\"]*)\"$")
   public void enterLowEvents(String event) throws SQLException {
-    refrigeratorPage = PageFactory.getInstanceOfRefrigeratorPage(testWebDriver);
-    refrigeratorPage.enterValueInLowAlarmEvents(event);
+    refrigeratorPage = PageObjectFactory.getRefrigeratorPage(testWebDriver);
+    refrigeratorPage.enterValueInLowAlarmEvents(event, 1);
   }
 
   @And("^I enter high alarm events \"([^\"]*)\"$")
   public void enterHighEvents(String event) throws SQLException {
-    refrigeratorPage = PageFactory.getInstanceOfRefrigeratorPage(testWebDriver);
-    refrigeratorPage.enterValueInHighAlarmEvents(event);
+    refrigeratorPage = PageObjectFactory.getRefrigeratorPage(testWebDriver);
+    refrigeratorPage.enterValueInHighAlarmEvents(event, 1);
   }
 
   @And("^I enter Notes \"([^\"]*)\"$")
   public void enterNotes(String notes) throws SQLException {
-    refrigeratorPage = PageFactory.getInstanceOfRefrigeratorPage(testWebDriver);
-    refrigeratorPage.enterValueInNotesTextArea(notes);
+    refrigeratorPage = PageObjectFactory.getRefrigeratorPage(testWebDriver);
+    refrigeratorPage.enterValueInNotesTextArea(notes, 1);
   }
 
   @And("^I add refrigerator$")
   public void clickDone() throws SQLException {
-    refrigeratorPage = PageFactory.getInstanceOfRefrigeratorPage(testWebDriver);
+    refrigeratorPage = PageObjectFactory.getRefrigeratorPage(testWebDriver);
     refrigeratorPage.clickDone();
   }
 
   @Then("^I see \"([^\"]*)\" refrigerator icon as \"([^\"]*)\"$")
   public void verifyIndividualRefrigeratorColor(String whichIcon, String color) throws SQLException {
-    refrigeratorPage = PageFactory.getInstanceOfRefrigeratorPage(testWebDriver);
+    refrigeratorPage = PageObjectFactory.getRefrigeratorPage(testWebDriver);
     refrigeratorPage.verifyRefrigeratorColor(whichIcon, color);
   }
 
@@ -173,34 +169,30 @@ public class ManageRefrigerator extends TestCaseHelper {
 
   @And("^I verify \"([^\"]*)\" it was working correctly when I left$")
   public void clickFunctioningCorrectly(String flag) throws InterruptedException {
-    refrigeratorPage = PageFactory.getInstanceOfRefrigeratorPage(testWebDriver);
+    refrigeratorPage = PageObjectFactory.getRefrigeratorPage(testWebDriver);
     Thread.sleep(1000);
-    if (flag.equalsIgnoreCase("Yes")) refrigeratorPage.clickFunctioningCorrectlyYesRadio();
-    else if (flag.equalsIgnoreCase("No")) refrigeratorPage.clickFunctioningCorrectlyNoRadio();
-    else if (flag.equalsIgnoreCase("Dont know")) refrigeratorPage.clickFunctioningCorrectlyDoNotKnowRadio();
-    else refrigeratorPage.clickFunctioningCorrectlyNR();
+    if (flag.equalsIgnoreCase("Yes")) refrigeratorPage.clickFunctioningCorrectlyYesRadio(1);
+    else if (flag.equalsIgnoreCase("No")) refrigeratorPage.clickFunctioningCorrectlyNoRadio(1);
+    else if (flag.equalsIgnoreCase("Dont know")) refrigeratorPage.clickFunctioningCorrectlyDoNotKnowRadio(1);
+    else refrigeratorPage.clickFunctioningCorrectlyNR(1);
   }
 
   @And("^I verify \"([^\"]*)\" that there is a problem with refrigerator since last visit$")
   public void clickProblemSinceLastVisit(String flag) throws SQLException {
-    refrigeratorPage = PageFactory.getInstanceOfRefrigeratorPage(testWebDriver);
-    if (flag.equalsIgnoreCase("Yes")) refrigeratorPage.clickProblemSinceLastVisitYesRadio();
-    else if (flag.equalsIgnoreCase("No")) refrigeratorPage.clickProblemSinceLastVisitNoRadio();
-    else if (flag.equalsIgnoreCase("Dont know")) refrigeratorPage.clickProblemSinceLastVisitDoNotKnowRadio();
-    else refrigeratorPage.clickProblemSinceLastVisitNR();
+    refrigeratorPage = PageObjectFactory.getRefrigeratorPage(testWebDriver);
+    if (flag.equalsIgnoreCase("Yes")) refrigeratorPage.clickProblemSinceLastVisitYesRadio(1);
+    else if (flag.equalsIgnoreCase("No")) refrigeratorPage.clickProblemSinceLastVisitNoRadio(1);
+    else if (flag.equalsIgnoreCase("Dont know")) refrigeratorPage.clickProblemSinceLastVisitDoNotKnowRadio(1);
+    else refrigeratorPage.clickProblemSinceLastVisitNR(1);
   }
 
-  @Then(
-    "^I should see refrigerator details as refrigerator temperature \"([^\"]*)\" low alarm events \"([^\"]*)\" high alarm events \"([^\"]*)\" notes \"([^\"]*)\"")
-  public void verifyRefrigeratorDetails(String temperature,
-                                        String low,
-                                        String high,
-                                        String notes) throws SQLException {
-    refrigeratorPage = PageFactory.getInstanceOfRefrigeratorPage(testWebDriver);
-    assertEquals(refrigeratorPage.getRefrigeratorTemperateTextFieldValue(), temperature);
-    assertEquals(refrigeratorPage.getNotesTextAreaValue(), notes);
-    assertEquals(refrigeratorPage.getLowAlarmEventsTextFieldValue(), low);
-    assertEquals(refrigeratorPage.getHighAlarmEventsTextFieldValue(), high);
+  @Then("^I should see refrigerator details as refrigerator temperature \"([^\"]*)\" low alarm events \"([^\"]*)\" high alarm events \"([^\"]*)\" notes \"([^\"]*)\"")
+  public void verifyRefrigeratorDetails(String temperature, String low, String high, String notes) throws SQLException {
+    refrigeratorPage = PageObjectFactory.getRefrigeratorPage(testWebDriver);
+    assertEquals(refrigeratorPage.getRefrigeratorTemperateTextFieldValue(1), temperature);
+    assertEquals(refrigeratorPage.getNotesTextAreaValue(1), notes);
+    assertEquals(refrigeratorPage.getLowAlarmEventsTextFieldValue(1), low);
+    assertEquals(refrigeratorPage.getHighAlarmEventsTextFieldValue(1), high);
   }
 
   public void verifyNewRefrigeratorModalWindowExist() {
@@ -227,22 +219,5 @@ public class ManageRefrigerator extends TestCaseHelper {
         "//div[@class='list-row ng-scope']/ng-include/form/div[1]/div[" + (i + 2) + "]").getText(),
         refrigeratorDetails[i]);
     }
-  }
-
-  @AfterMethod(groups = "distribution")
-  public void tearDown() throws SQLException {
-    testWebDriver.sleep(250);
-    if (!testWebDriver.getElementById("username").isDisplayed()) {
-      HomePage homePage = PageFactory.getInstanceOfHomePage(testWebDriver);
-      homePage.logout(baseUrlGlobal);
-      dbWrapper.deleteData();
-      dbWrapper.closeConnection();
-      ((JavascriptExecutor) TestWebDriver.getDriver()).executeScript("indexedDB.deleteDatabase('open_lmis');");
-    }
-  }
-
-  @DataProvider(name = "Data-Provider-Function")
-  public Object[][] parameterIntTestProviderPositive() {
-    return new Object[][]{{"storeInCharge", "Admin123", "DZ1", "DZ2", "Delivery Zone First", "Delivery Zone Second", "F10", "F11", "VACCINES", "TB", "M", "Period", 14}};
   }
 }

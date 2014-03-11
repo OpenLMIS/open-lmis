@@ -13,10 +13,7 @@ package org.openlmis.functional;
 
 import org.openlmis.UiUtils.CaptureScreenshotOnFailureListener;
 import org.openlmis.UiUtils.TestCaseHelper;
-import org.openlmis.pageobjects.HomePage;
-import org.openlmis.pageobjects.LoginPage;
-import org.openlmis.pageobjects.RolesPage;
-import org.openlmis.pageobjects.UploadPage;
+import org.openlmis.pageobjects.*;
 import org.testng.annotations.*;
 
 import java.io.FileNotFoundException;
@@ -42,9 +39,9 @@ public class E2EUpload extends TestCaseHelper {
   @BeforeMethod(groups = {"admin"})
   public void setUp() throws InterruptedException, SQLException, IOException {
     super.setup();
-    loginPage = PageFactory.getInstanceOfLoginPage(testWebDriver, baseUrlGlobal);
-    uploadPage = PageFactory.getInstanceOfUploadPage(testWebDriver);
-    rolesPage = PageFactory.getInstanceOfRolesPage(testWebDriver);
+    loginPage = PageObjectFactory.getLoginPage(testWebDriver, baseUrlGlobal);
+    uploadPage = PageObjectFactory.getUploadPage(testWebDriver);
+    rolesPage = PageObjectFactory.getRolesPage(testWebDriver);
   }
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function-Positive")
@@ -467,6 +464,12 @@ public class E2EUpload extends TestCaseHelper {
     assertEquals(dbWrapper.getRowsCountFromDB(tableName), "2");
     assertEquals(dbWrapper.getAttributeFromTable("users", "restrictLogin", "userName", "User123"), "f");
 
+    uploadPage.uploadUsers("QA_Users_Valid_withoutPassword.csv");
+    uploadPage.verifySuccessMessageOnUploadScreen();
+    assertEquals(dbWrapper.getRowsCountFromDB(tableName), "3");
+    assertEquals(dbWrapper.getAttributeFromTable("users", "restrictLogin", "userName", "User123"), "f");
+
+
     uploadPage.uploadUsers("QA_Users_Others.csv");
     uploadPage.verifySuccessMessageOnUploadScreen();
     assertEquals(dbWrapper.getAttributeFromTable("users", "restrictLogin", "userName", "User1234"), "f");
@@ -479,32 +482,32 @@ public class E2EUpload extends TestCaseHelper {
     uploadPage.uploadInvalidUserScenarios("QA_Users_Duplicate_Email.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
     uploadPage.validateErrorMessageOnUploadScreen("Duplicate email address in Record No");
-    assertEquals(dbWrapper.getRowsCountFromDB(tableName), "5");
+    assertEquals(dbWrapper.getRowsCountFromDB(tableName), "6");
 
     uploadPage.uploadInvalidUserScenarios("QA_Users_Duplicate_EmployeeId.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
     uploadPage.validateErrorMessageOnUploadScreen("Duplicate employee id in Record No");
-    assertEquals(dbWrapper.getRowsCountFromDB(tableName), "5");
+    assertEquals(dbWrapper.getRowsCountFromDB(tableName), "6");
 
     uploadPage.uploadInvalidUserScenarios("QA_Users_Duplicate_UserName.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
     uploadPage.validateErrorMessageOnUploadScreen("Duplicate User Name in Record No");
-    assertEquals(dbWrapper.getRowsCountFromDB(tableName), "5");
+    assertEquals(dbWrapper.getRowsCountFromDB(tableName), "6");
 
     uploadPage.uploadInvalidUserScenarios("QA_Users_Invalid_Supervisor.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
     uploadPage.validateErrorMessageOnUploadScreen("Supervisor User Name not present in the system in Record No");
-    assertEquals(dbWrapper.getRowsCountFromDB(tableName), "5");
+    assertEquals(dbWrapper.getRowsCountFromDB(tableName), "6");
 
     uploadPage.uploadInvalidUserScenarios("QA_Users_Subsequent_Duplicate_Username.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
     uploadPage.validateErrorMessageOnUploadScreen("Duplicate User Name in Record No");
-    assertEquals(dbWrapper.getRowsCountFromDB(tableName), "5");
+    assertEquals(dbWrapper.getRowsCountFromDB(tableName), "6");
 
     uploadPage.uploadInvalidUserScenarios("QA_Users_Subsequent_InvalidCombination.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
     uploadPage.validateErrorMessageOnUploadScreen("Duplicate User Name in Record No");
-    assertEquals(dbWrapper.getRowsCountFromDB(tableName), "5");
+    assertEquals(dbWrapper.getRowsCountFromDB(tableName), "6");
   }
 
   private void verifyValidProductCategoryUpload() throws SQLException, FileNotFoundException {
@@ -551,6 +554,16 @@ public class E2EUpload extends TestCaseHelper {
     uploadPage.uploadProductsInvalidScenarios("QA_Products_Invalid_PackSize_Zero.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
     uploadPage.validateErrorMessageOnUploadScreen("Invalid Pack size in Record No");
+    assertEquals(dbWrapper.getRowsCountFromDB(tableName), "0");
+
+    uploadPage.uploadProductsInvalidScenarios("QA_products_Invalid_missingDosesPerDispensingUnit.csv");
+    uploadPage.verifyErrorMessageOnUploadScreen();
+    uploadPage.validateErrorMessageOnUploadScreen("Missing Mandatory data in field : Doses Per Dispensing Unit of Record No");
+    assertEquals(dbWrapper.getRowsCountFromDB(tableName), "0");
+
+    uploadPage.uploadProductsInvalidScenarios("QA_products_Invalid_missingDispensingUnits.csv");
+    uploadPage.verifyErrorMessageOnUploadScreen();
+    uploadPage.validateErrorMessageOnUploadScreen("Missing Mandatory data in field : Dispensing Units of Record No");
     assertEquals(dbWrapper.getRowsCountFromDB(tableName), "0");
 
   }
@@ -743,7 +756,7 @@ public class E2EUpload extends TestCaseHelper {
 
   @AfterMethod(groups = {"admin"})
   public void tearDown() throws SQLException {
-    HomePage homePage = PageFactory.getInstanceOfHomePage(testWebDriver);
+    HomePage homePage = PageObjectFactory.getHomePage(testWebDriver);
     homePage.logout(baseUrlGlobal);
     dbWrapper.deleteData();
     dbWrapper.closeConnection();

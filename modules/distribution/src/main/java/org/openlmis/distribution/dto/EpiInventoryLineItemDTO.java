@@ -23,6 +23,11 @@ import org.openlmis.distribution.domain.EpiInventoryLineItem;
 
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 
+/**
+ *  DTO for EpiInventoryLineItem. It contains facilityVisitId and
+ *  client side representation of EpiInventoryLineItem attributes.
+ */
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

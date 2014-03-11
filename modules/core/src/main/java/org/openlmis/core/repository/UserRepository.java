@@ -26,6 +26,10 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+/**
+ * This is Repository class for User related database operations.
+ */
+
 @Repository
 @NoArgsConstructor
 public class UserRepository {

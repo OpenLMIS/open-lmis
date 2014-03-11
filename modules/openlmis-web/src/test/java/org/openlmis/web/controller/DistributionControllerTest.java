@@ -99,7 +99,6 @@ public class DistributionControllerTest {
     assertThat(response.getStatusCode(), is(CREATED));
     verify(service).get(distribution);
     verify(service).create(distribution);
-
   }
 
   @Test
@@ -141,14 +140,14 @@ public class DistributionControllerTest {
     distribution.setId(1L);
     FacilityDistributionDTO facilityDistributionDTO = spy(new FacilityDistributionDTO());
     facilityDistributionDTO.setFacilityVisit(new FacilityVisit());
-    FacilityDistribution facilityDistributionData = new FacilityDistribution(null, null, new DistributionRefrigerators(EMPTY_LIST), null, null, null);
+    FacilityDistribution facilityDistributionData = new FacilityDistribution(null, null, new DistributionRefrigerators(EMPTY_LIST), null, null, null, null);
 
     FacilityDistribution syncedFacilityDistribution = new FacilityDistribution();
     FacilityVisit syncedFacilityVisit = new FacilityVisit();
     syncedFacilityVisit.setSynced(true);
     syncedFacilityDistribution.setFacilityVisit(syncedFacilityVisit);
     when(service.sync(facilityDistributionData)).thenReturn(syncedFacilityDistribution);
-    when(service.updateDistributionStatus(distribution.getId())).thenReturn(SYNCED);
+    when(service.updateDistributionStatus(distribution.getId(), USER_ID)).thenReturn(SYNCED);
     doReturn(facilityDistributionData).when(facilityDistributionDTO).transform();
     doNothing().when(facilityDistributionDTO).setModifiedBy(USER_ID);
     doNothing().when(facilityDistributionDTO).setDistributionId(distribution.getId());
@@ -159,7 +158,7 @@ public class DistributionControllerTest {
     assertTrue((boolean) response.getBody().getData().get("syncStatus"));
     assertThat((DistributionStatus) response.getBody().getData().get("distributionStatus"), is(SYNCED));
     verify(service).sync(facilityDistributionData);
-    verify(service).updateDistributionStatus(distribution.getId());
+    verify(service).updateDistributionStatus(distribution.getId(), USER_ID);
     verify(facilityDistributionDTO).setModifiedBy(USER_ID);
     verify(facilityDistributionDTO).setDistributionId(distribution.getId());
   }

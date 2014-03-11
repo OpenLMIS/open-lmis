@@ -17,6 +17,9 @@ import lombok.NoArgsConstructor;
 import org.openlmis.upload.Importable;
 import org.openlmis.upload.annotation.ImportField;
 
+/**
+ * RequisitionGroupProgramSchedule represents the schedule to be
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

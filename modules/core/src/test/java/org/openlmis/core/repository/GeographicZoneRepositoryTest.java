@@ -20,10 +20,8 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.domain.GeographicLevel;
 import org.openlmis.core.domain.GeographicZone;
-import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.mapper.GeographicLevelMapper;
 import org.openlmis.core.repository.mapper.GeographicZoneMapper;
-import org.openlmis.core.repository.mapper.GeographicZoneMapperExtension;
 import org.openlmis.db.categories.UnitTests;
 import org.springframework.dao.DataIntegrityViolationException;
 

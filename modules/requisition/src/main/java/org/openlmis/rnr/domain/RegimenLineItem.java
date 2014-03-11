@@ -24,6 +24,10 @@ import java.lang.reflect.Field;
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 import static org.openlmis.rnr.domain.Rnr.RNR_VALIDATION_ERROR;
 
+/**
+ * This class represents a regimenLineItem belonging to a Rnr.
+ */
+
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)

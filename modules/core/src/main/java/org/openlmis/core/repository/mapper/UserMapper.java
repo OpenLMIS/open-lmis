@@ -19,6 +19,10 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+/**
+ * UserMapper maps the SupplyLine User to corresponding representation in database. Apart from CRUD provides methods related
+ * to password resets, sending email etc.
+ */
 @Repository
 public interface UserMapper {
 

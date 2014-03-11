@@ -9,273 +9,288 @@
   -->
 
 <script id="template/accordion/accordion.html" type="text/ng-template">
-  <div class="accordion" ng-transclude></div>
+    <div class="accordion" ng-transclude></div>
 </script>
 
 <script id="template/accordion/accordion-group.html" type="text/ng-template">
-  <div class="accordion-group">
-    <div class="accordion-heading"><a class="accordion-toggle" ng-click="isOpen = !isOpen">{{heading}}</a></div>
-    <div class="accordion-body" collapse="!isOpen">
-      <div class="accordion-inner" ng-transclude></div>
+    <div class="accordion-group">
+        <div class="accordion-heading"><a class="accordion-toggle" ng-click="isOpen = !isOpen">{{heading}}</a></div>
+        <div class="accordion-body" collapse="!isOpen">
+            <div class="accordion-inner" ng-transclude></div>
+        </div>
     </div>
-  </div>
 </script>
 
 <div xmlns="http://www.w3.org/1999/html" tab-scroll>
 <div ng-hide="user.id"><h2 openlmis-message="create.user.label"></h2></div>
 <div ng-show="user.id">
-  <h2 openlmis-message="edit.user.label"></h2>
+    <h2 id="editUserLabel" openlmis-message="edit.user.label"></h2>
 </div>
 
 <form ng-submit="saveUser()" id="create-user" name="userForm" novalidate select2-blur>
 <div class="app-form">
 
 <div class="form-group">
-  <h3 openlmis-message="label.basicInformation"></h3>
+    <h3 openlmis-message="label.basicInformation"></h3>
 
-  <div class="form-row clearfix">
-    <div class="form-cell">
-      <label for="userName" openlmis-message="create.user.userName"><span class="label-required"> *</span></label>
+    <div class="form-row clearfix">
+        <div class="form-cell">
+            <label for="userName" openlmis-message="create.user.userName"><span class="label-required"> *</span></label>
 
-      <div class="form-field">
-        <input ng-model="user.userName" name="userName" id="userName" type="text" maxlength="50"
-               ng-required="true" ng-change="validateUserName()"/>
+            <div class="form-field">
+                <input ng-model="user.userName" name="userName" id="userName" type="text" maxlength="50"
+                       ng-required="true" ng-change="validateUserName()"/>
         <span class="field-error" ng-show="userForm.userName.$error.required && showError"
               openlmis-message="missing.value">
         </span>
 
         <span class="field-error" ng-show="userNameInvalid" openlmis-message="create.user.invalid.userName">
         </span>
-      </div>
-    </div>
+            </div>
+        </div>
 
-    <div class="form-cell">
-      <label for="email" openlmis-message="create.user.email"><span class="label-required"> *</span></label>
+        <div class="form-cell">
+            <label for="email" openlmis-message="create.user.email"><span class="label-required"> *</span></label>
 
-      <div class="form-field">
-        <input ng-model="user.email" name="email" id="email" type="text" maxlength="50" ng-required="true"/>
+            <div class="form-field">
+                <input ng-model="user.email" name="email" id="email" type="text" maxlength="50" ng-required="true"/>
         <span class="field-error" ng-show="userForm.email.$error.required && showError"
               openlmis-message="missing.value">
         </span>
-      </div>
+            </div>
+        </div>
     </div>
-  </div>
 
-  <div class="form-row clearfix">
-    <div class="form-cell">
-      <label for="firstName" openlmis-message="create.user.firstName"><span class="label-required">
+    <div class="form-row clearfix">
+        <div class="form-cell">
+            <label for="firstName" openlmis-message="create.user.firstName"><span class="label-required">
         *</span></label>
 
-      <div class="form-field">
-        <input ng-model="user.firstName" name="firstName" id="firstName" type="text" maxlength="50"
-               ng-required="true"/>
+            <div class="form-field">
+                <input ng-model="user.firstName" name="firstName" id="firstName" type="text" maxlength="50"
+                       ng-required="true"/>
         <span class="field-error" ng-show="userForm.firstName.$error.required && showError"
               openlmis-message="missing.value">
         </span>
-      </div>
-    </div>
+            </div>
+        </div>
 
 
-    <div class="form-cell">
-      <label for="lastName" openlmis-message="create.user.lastName"><span class="label-required"> *</span></label>
+        <div class="form-cell">
+            <label for="lastName" openlmis-message="create.user.lastName"><span class="label-required"> *</span></label>
 
-      <div class="form-field">
-        <input ng-model="user.lastName" name="lastName" id="lastName" type="text" maxlength="50"
-               ng-required="true"/>
+            <div class="form-field">
+                <input ng-model="user.lastName" name="lastName" id="lastName" type="text" maxlength="50"
+                       ng-required="true"/>
         <span class="field-error" ng-show="userForm.lastName.$error.required && showError"
               openlmis-message="missing.value">
         </span>
-      </div>
-    </div>
-  </div>
-
-  <div class="form-row clearfix">
-    <div class="form-cell">
-      <label for="employeeId" openlmis-message="create.user.employeeId"></label>
-
-      <div class="form-field">
-        <input ng-model="user.employeeId" id="employeeId" type="text" maxlength="50"/>
-      </div>
+            </div>
+        </div>
     </div>
 
+    <div class="form-row clearfix">
+        <div class="form-cell">
+            <label for="employeeId" openlmis-message="create.user.employeeId"></label>
 
-    <div class="form-cell">
-      <label for="jobTitle" openlmis-message="create.user.jobTitle"> </label>
-
-      <div class="form-field">
-        <input ng-model="user.jobTitle" id="jobTitle" type="text" maxlength="50"/>
-      </div>
-    </div>
-  </div>
+            <div class="form-field">
+                <input ng-model="user.employeeId" id="employeeId" type="text" maxlength="50"/>
+            </div>
+        </div>
 
 
-  <div class="form-row clearfix">
-    <div class="form-cell">
-      <label for="officePhone" openlmis-message="create.user.officePhone"> </label>
+        <div class="form-cell">
+            <label for="jobTitle" openlmis-message="create.user.jobTitle"> </label>
 
-      <div class="form-field">
-        <input ng-model="user.officePhone" id="officePhone" type="text" maxlength="30"/>
-      </div>
+            <div class="form-field">
+                <input ng-model="user.jobTitle" id="jobTitle" type="text" maxlength="50"/>
+            </div>
+        </div>
     </div>
 
 
-    <div class="form-cell">
-      <label for="cellPhone" openlmis-message="create.user.cellPhone"> </label>
+    <div class="form-row clearfix">
+        <div class="form-cell">
+            <label for="officePhone" openlmis-message="create.user.officePhone"> </label>
 
-      <div class="form-field">
-        <input ng-model="user.cellPhone" id="cellPhone" type="text" maxlength="30"/>
-      </div>
+            <div class="form-field">
+                <input ng-model="user.officePhone" id="officePhone" type="text" maxlength="30"/>
+            </div>
+        </div>
+
+
+        <div class="form-cell">
+            <label for="cellPhone" openlmis-message="create.user.cellPhone"> </label>
+
+            <div class="form-field">
+                <input ng-model="user.cellPhone" id="cellPhone" type="text" maxlength="30"/>
+            </div>
+        </div>
     </div>
-  </div>
 
-  <div class="form-row clearfix">
-    <div class="form-cell">
-      <label for="primaryNotificationMethod" openlmis-message="create.user.primaryNotificationMethod"> </label>
+    <div class="form-row clearfix">
+        <div class="form-cell">
+            <label for="primaryNotificationMethod" openlmis-message="create.user.primaryNotificationMethod"> </label>
 
-      <div class="form-field">
-        <input ng-model="user.primaryNotificationMethod" id="primaryNotificationMethod" type="text"
-               maxlength="50"/>
-      </div>
-    </div>
+            <div class="form-field">
+                <input ng-model="user.primaryNotificationMethod" id="primaryNotificationMethod" type="text"
+                       maxlength="50"/>
+            </div>
+        </div>
 
-    <div class="form-cell">
-      <label openlmis-message="create.user.restrictLogin"><span class="label-required"> *</span></label>
+        <div class="form-cell">
+            <label openlmis-message="create.user.restrictLogin"><span class="label-required"> *</span></label>
 
-      <div class="form-field radio-group">
-        <input ng-model="user.restrictLogin" type="radio" name="restrictLogin" ng-value="true"
-               ng-required="user.restrictLogin == null || user.restrictLogin == undefined"/>
-        <strong openlmis-message="button.yes"></strong> &nbsp; &nbsp; &nbsp;
-        <input ng-model="user.restrictLogin" type="radio" name="restrictLogin" ng-value="false"/>
-        <strong openlmis-message="button.no"></strong>
+            <div class="form-field radio-group">
+                <input id="restrictLoginYes" ng-model="user.restrictLogin" type="radio" name="restrictLogin"
+                       ng-value="true"
+                       ng-required="user.restrictLogin == null || user.restrictLogin == undefined"/>
+                <strong openlmis-message="button.yes"></strong> &nbsp; &nbsp; &nbsp;
+                <input id="restrictLoginNo" ng-model="user.restrictLogin" type="radio" name="restrictLogin"
+                       ng-value="false"/>
+                <strong openlmis-message="button.no"></strong>
         <span class="field-error" ng-show="userForm.restrictLogin.$error.required && showError"
               openlmis-message="select.value">
         </span>
-      </div>
-    </div>
-
-  </div>
-
-  <div class="form-row clearfix">
-    <div class="form-cell">
-      <label for="searchFacility" openlmis-message="create.user.homeFacility"> </label>
-
-      <div class="form-field autosuggest-input">
-        <div class="suggest-field">
-          <input id="searchFacility" type="text" ng-change="showFacilitySearchResults()" ng-model="query"
-                 openlmis-message="placeholder.facility.search" ng-hide="facilitySelected"/>
-
-          <div class="facility-list" ng-show="query.length > 2">
-            <ul>
-              <li ng-repeat="facility in filteredFacilities">
-                <a href="" id="result{{$index}}" ng-click="setSelectedFacility(facility)">{{facility.code}} -
-                  {{facility.name}}</a>
-              </li>
-              <li ng-show="resultCount == 0">
-                <a href="" openlmis-message="msg.no.matches|query"></a>
-              </li>
-            </ul>
-          </div>
-          <div ng-show="facilitySelected">
-            <span ng-bind="facilitySelected.name"></span>
-            <a href="" class="clear-search" ng-click="confirmFacilityDelete()"
-               openlmis-message="create.user.clear"></a>
-          </div>
+            </div>
         </div>
-        <div class="form-tip" openlmis-message="search.threeCharacters"></div>
-      </div>
 
     </div>
-  </div>
 
-  <div class="form-row clearfix">
-    <div class="form-cell">
-      <label openlmis-message="label.is.verified"></label>
-      <ng-switch on="!!user.verified">
-        <span ng-switch-when="true" openlmis-message="button.yes"></span>
-        <span ng-switch-when="false" openlmis-message="button.no"></span>
-      </ng-switch>
+    <div class="form-row clearfix">
+        <div class="form-cell">
+            <label for="searchFacility" openlmis-message="create.user.homeFacility"> </label>
+
+            <div class="form-field autosuggest-input">
+                <div class="suggest-field">
+                    <input id="searchFacility" type="text" ng-change="showFacilitySearchResults()" ng-model="query"
+                           openlmis-message="placeholder.facility.search" ng-hide="facilitySelected"/>
+
+                    <div class="facility-list" ng-show="query.length > 2">
+                        <ul>
+                            <li ng-repeat="facility in filteredFacilities">
+                                <a href="" id="result{{$index}}" ng-click="setSelectedFacility(facility)">{{facility.code}}
+                                    -
+                                    {{facility.name}}</a>
+                            </li>
+                            <li ng-show="resultCount == 0">
+                                <a href="" openlmis-message="msg.no.matches|query"></a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div ng-show="facilitySelected">
+                        <span ng-bind="facilitySelected.name"></span>
+                        <a href="" class="clear-search" ng-click="confirmFacilityDelete()"
+                           openlmis-message="create.user.clear"></a>
+                    </div>
+                </div>
+                <div class="form-tip" openlmis-message="search.threeCharacters"></div>
+            </div>
+
+        </div>
     </div>
-  </div>
+
+    <div class="form-row clearfix">
+        <div class="form-cell">
+            <label openlmis-message="label.is.verified"></label>
+            <ng-switch on="!!user.verified">
+                <span ng-switch-when="true" openlmis-message="button.yes"></span>
+                <span ng-switch-when="false" openlmis-message="button.no"></span>
+            </ng-switch>
+        </div>
+    </div>
 
 </div>
 
 
 <div class="container-fluid">
-  <div class="row-fluid">
-    <div class="accordion">
-      <div class="pull-right control-accordion">
-        <a href="javascript:void(0);" onClick="expandCollapse('expand')">Expand All</a> / <a href="javascript:void(0);"
-                                                                                             onClick="expandCollapse('collapse')">Collapse
-        All</a>
-      </div>
-      <div class="clearfix"></div>
-      <div class="accordion-section" ng-show='facilitySelected'>
-        <div class="accordion-heading" onClick="expandCollapseToggle(this)">
-          <span><b>+</b><a href="javascript:void(0);">{{getMessage('create.user.homeFacility.roles')}}</a></span>
+    <div class="row-fluid">
+        <div class="accordion">
+            <div class="pull-right control-accordion">
+                <a id="expandAll" href="javascript:void(0);" onClick="expandCollapse('expand')">Expand All</a> / <a
+                    id="collapseAll"
+                    href="javascript:void(0);"
+                    onClick="expandCollapse('collapse')">Collapse
+                All</a>
+            </div>
+            <div class="clearfix"></div>
+            <div class="accordion-section" ng-show='facilitySelected'>
+                <div class="accordion-heading" onClick="expandCollapseToggle(this)">
+                    <span><b>+</b><a
+                            id="homeFacilityRoles" href="javascript:void(0);">{{getMessage('create.user.homeFacility.roles')}}</a></span>
+                </div>
+                <div class="accordion-body prog-role-grid">
+                    <ng-include src="'/public/pages/admin/user/partials/user-role-assignment.html'"></ng-include>
+                </div>
+            </div>
+            <div class="accordion-section">
+                <div class="accordion-heading" onClick="expandCollapseToggle(this)">
+                    <span><b>+</b><a
+                            id="supervisoryRoles" href="javascript:void(0);">{{getMessage('create.user.superVisoryRoles')}}</a></span>
+                </div>
+                <div class="accordion-body prog-role-grid">
+                    <ng-include
+                            src="'/public/pages/admin/user/partials/user-supervisory-role-assignment.html'"></ng-include>
+                </div>
+            </div>
+            <div class="accordion-section">
+                <div class="accordion-heading" onClick="expandCollapseToggle(this)">
+                    <span><b>+</b><a
+                            id="orderFulfillmentRoles" href="javascript:void(0);">{{getMessage('create.user.order.fulfillment.roles')}}</a></span>
+                </div>
+                <div class="accordion-body prog-role-grid">
+                    <ng-include src="'/public/pages/admin/user/partials/user-warehouse-roles.html'"></ng-include>
+                </div>
+            </div>
+            <div class="accordion-section">
+                <div class="accordion-heading" onClick="expandCollapseToggle(this)">
+                    <span><b>+</b><a
+                            id="allocationRoles" href="javascript:void(0);">{{getMessage('create.user.allocationRoles')}}</a></span>
+                </div>
+                <div class="accordion-body prog-role-grid">
+                    <ng-include
+                            src="'/public/pages/admin/user/partials/user-delivery-zone-role-assignment.html'"></ng-include>
+                </div>
+            </div>
+            <div class="accordion-section">
+                <div class="accordion-heading" onClick="expandCollapseToggle(this)">
+                    <span><b>+</b><a
+                            id="adminRoles"
+                            href="javascript:void(0);">{{getMessage('create.user.adminRoles')}}</a></span>
+                </div>
+                <div class="accordion-body prog-role-grid">
+                    <ng-include src="'/public/pages/admin/user/partials/user-admin-role-assignment.html'"></ng-include>
+                </div>
+            </div>
+            <div class="accordion-section">
+                <div class="accordion-heading" onClick="expandCollapseToggle(this)">
+                    <span><b>+</b><a href="javascript:void(0);">Report Viewing Role</a></span>
+                </div>
+                <div class="accordion-body prog-role-grid">
+                    <ng-include src="'/public/pages/admin/user/partials/user-report-role-assignment.html'"></ng-include>
+                </div>
+            </div>
+            
         </div>
-        <div class="accordion-body prog-role-grid">
-          <ng-include src="'/public/pages/admin/user/partials/user-role-assignment.html'"></ng-include>
-        </div>
-      </div>
-      <div class="accordion-section">
-        <div class="accordion-heading" onClick="expandCollapseToggle(this)">
-          <span><b>+</b><a href="javascript:void(0);">{{getMessage('create.user.superVisoryRoles')}}</a></span>
-        </div>
-        <div class="accordion-body prog-role-grid">
-          <ng-include src="'/public/pages/admin/user/partials/user-supervisory-role-assignment.html'"></ng-include>
-        </div>
-      </div>
-      <div class="accordion-section">
-        <div class="accordion-heading" onClick="expandCollapseToggle(this)">
-          <span><b>+</b><a href="javascript:void(0);">{{getMessage('create.user.order.fulfillment.roles')}}</a></span>
-        </div>
-        <div class="accordion-body prog-role-grid">
-          <ng-include src="'/public/pages/admin/user/partials/user-warehouse-roles.html'"></ng-include>
-        </div>
-      </div>
-      <div class="accordion-section">
-        <div class="accordion-heading" onClick="expandCollapseToggle(this)">
-          <span><b>+</b><a href="javascript:void(0);">{{getMessage('create.user.allocationRoles')}}</a></span>
-        </div>
-        <div class="accordion-body prog-role-grid">
-          <ng-include src="'/public/pages/admin/user/partials/user-delivery-zone-role-assignment.html'"></ng-include>
-        </div>
-      </div>
-      <div class="accordion-section">
-        <div class="accordion-heading" onClick="expandCollapseToggle(this)">
-          <span><b>+</b><a href="javascript:void(0);">{{getMessage('create.user.adminRoles')}}</a></span>
-        </div>
-        <div class="accordion-body prog-role-grid">
-          <ng-include src="'/public/pages/admin/user/partials/user-admin-role-assignment.html'"></ng-include>
-        </div>
-      </div>
-      <div class="accordion-section">
-        <div class="accordion-heading" onClick="expandCollapseToggle(this)">
-          <span><b>+</b><a href="javascript:void(0);">Report Viewing Role</a></span>
-        </div>
-        <div class="accordion-body prog-role-grid">
-          <ng-include src="'/public/pages/admin/user/partials/user-report-role-assignment.html'"></ng-include>
-        </div>
-      </div>
     </div>
-
-  </div>
 </div>
 
 
 <div form-toolbar id="action_buttons" class="action-buttons">
-  <div class="form-cell button-row">
-    <input type="submit" class="btn btn-primary save-button" openlmis-message="button.save"/>
-    <input type="button" class="btn btn-cancel cancel-button" openlmis-message="button.cancel"
-           ng-click="cancelUserSave()"/>
-    <input type="button" class="btn btn-danger delete-button" ng-show="user.active && user.id!=null"
-           ng-click="showConfirmUserDisableModal()" openlmis-message="button.disable"/>
-    <input type="button" class="btn btn-primary enable-button" ng-show="(!user.active && user.id!=null)"
-           openlmis-message="button.enable"
-           ng-click="showConfirmUserRestoreModal()"/>
-  </div>
-  <div class="toolbar-error" id="saveErrorMsgDiv" openlmis-message="error" ng-show="error"/>
-  <div class="toolbar-success" id="saveSuccessMsgDiv" openlmis-message="message" ng-show="message"/>
+    <div class="form-cell button-row">
+        <input id="userSaveButton" type="submit" class="btn btn-primary save-button" openlmis-message="button.save"/>
+        <input id="userCancelButton" type="button" class="btn btn-cancel cancel-button" openlmis-message="button.cancel"
+               ng-click="cancelUserSave()"/>
+        <input id="userDisableButton" type="button" class="btn btn-danger delete-button"
+               ng-show="user.active && user.id!=null"
+               ng-click="showConfirmUserDisableModal()" openlmis-message="button.disable"/>
+        <input id="userEnableButton" type="button" class="btn btn-primary enable-button"
+               ng-show="(!user.active && user.id!=null)"
+               openlmis-message="button.enable"
+               ng-click="showConfirmUserRestoreModal()"/>
+    </div>
+    <div class="toolbar-error" id="saveErrorMsgDiv" openlmis-message="error" ng-show="error"/>
+    <div class="toolbar-success" id="saveSuccessMsgDiv" openlmis-message="message" ng-show="message"/>
 </div>
 
 </div>

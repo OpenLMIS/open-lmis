@@ -19,6 +19,7 @@ import org.openlmis.UiUtils.CaptureScreenshotOnFailureListener;
 import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.pageobjects.HomePage;
 import org.openlmis.pageobjects.LoginPage;
+import org.openlmis.pageobjects.PageObjectFactory;
 import org.openlmis.pageobjects.edi.ConfigureEDIPage;
 import org.openlmis.pageobjects.edi.ConfigureShipmentPage;
 import org.testng.annotations.AfterMethod;
@@ -44,38 +45,38 @@ public class ConfigureShipmentTemplate extends TestCaseHelper {
 
   @And("^I access configure shipment page$")
   public void accessOrderScreen() {
-    HomePage homePage = PageFactory.getInstanceOfHomePage(testWebDriver);
+    HomePage homePage = PageObjectFactory.getHomePage(testWebDriver);
     ConfigureEDIPage configureEDIPage = homePage.navigateEdiScreen();
     configureEDIPage.navigateConfigureShipmentPage();
   }
 
   @And("^I should see include column headers unchecked$")
   public void verifyIncludeColumnHeader() {
-    ConfigureShipmentPage configureShipmentPage = PageFactory.getInstanceOfConfigureShipmentPage(testWebDriver);
+    ConfigureShipmentPage configureShipmentPage = PageObjectFactory.getConfigureShipmentPage(testWebDriver);
     assertFalse(configureShipmentPage.getIncludeHeader());
   }
 
   @And("^I should see include checkbox for all data fields$")
   public void verifyDefaultDataFieldsCheckBox() {
-    ConfigureShipmentPage configureShipmentPage = PageFactory.getInstanceOfConfigureShipmentPage(testWebDriver);
+    ConfigureShipmentPage configureShipmentPage = PageObjectFactory.getConfigureShipmentPage(testWebDriver);
     configureShipmentPage.verifyDefaultIncludeCheckboxForAllDataFields();
   }
 
   @And("^I should see default value of positions$")
   public void verifyDefaultPositionValues() {
-    ConfigureShipmentPage configureShipmentPage = PageFactory.getInstanceOfConfigureShipmentPage(testWebDriver);
+    ConfigureShipmentPage configureShipmentPage = PageObjectFactory.getConfigureShipmentPage(testWebDriver);
     configureShipmentPage.verifyDefaultPositionValues();
   }
 
   @When("^I save shipment file format$")
   public void clickSave() {
-    ConfigureShipmentPage configureShipmentPage = PageFactory.getInstanceOfConfigureShipmentPage(testWebDriver);
+    ConfigureShipmentPage configureShipmentPage = PageObjectFactory.getConfigureShipmentPage(testWebDriver);
     configureShipmentPage.clickSaveButton();
   }
 
   @Then("^I should see successful message \"([^\"]*)\"$")
   public void verifySaveSuccessfullyMessage(String message) {
-    ConfigureShipmentPage configureShipmentPage = PageFactory.getInstanceOfConfigureShipmentPage(testWebDriver);
+    ConfigureShipmentPage configureShipmentPage = PageObjectFactory.getConfigureShipmentPage(testWebDriver);
     configureShipmentPage.verifyMessage(message);
   }
 
@@ -87,7 +88,7 @@ public class ConfigureShipmentTemplate extends TestCaseHelper {
   public void setUp() throws InterruptedException, SQLException, IOException {
     super.setup();
     dbWrapper.setupShipmentFileConfiguration("false");
-    loginPage = PageFactory.getInstanceOfLoginPage(testWebDriver, baseUrlGlobal);
+    loginPage = PageObjectFactory.getLoginPage(testWebDriver, baseUrlGlobal);
   }
 
   @Test(groups = {"admin"})
@@ -198,7 +199,7 @@ public class ConfigureShipmentTemplate extends TestCaseHelper {
   }
 
   private void setDefaultPositionValues() {
-    ConfigureShipmentPage configureShipmentPage = PageFactory.getInstanceOfConfigureShipmentPage(testWebDriver);
+    ConfigureShipmentPage configureShipmentPage = PageObjectFactory.getConfigureShipmentPage(testWebDriver);
     configureShipmentPage.unCheckIncludeHeader();
     configureShipmentPage.unCheckCostCheckBox();
     configureShipmentPage.unCheckPackedDateCheckBox();
@@ -218,7 +219,7 @@ public class ConfigureShipmentTemplate extends TestCaseHelper {
   @AfterMethod(groups = "admin")
   public void tearDown() throws SQLException {
     if (!testWebDriver.getElementById("username").isDisplayed()) {
-      HomePage homePage = PageFactory.getInstanceOfHomePage(testWebDriver);
+      HomePage homePage = PageObjectFactory.getHomePage(testWebDriver);
       homePage.logout(baseUrlGlobal);
       dbWrapper.deleteData();
       dbWrapper.closeConnection();

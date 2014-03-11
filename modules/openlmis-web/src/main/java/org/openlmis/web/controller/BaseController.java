@@ -26,6 +26,10 @@ import javax.servlet.http.HttpServletRequest;
 import static org.openlmis.authentication.web.UserAuthenticationSuccessHandler.USER_ID;
 import static org.openlmis.web.response.OpenLmisResponse.error;
 
+/**
+ * This controller has responsibility to respond with appropriate error response for an exception. Every controller should extend this class.
+ */
+
 public class BaseController {
   private static Logger logger = LoggerFactory.getLogger(ApplicationLogger.class);
   public static final String UNEXPECTED_EXCEPTION = "unexpected.exception";

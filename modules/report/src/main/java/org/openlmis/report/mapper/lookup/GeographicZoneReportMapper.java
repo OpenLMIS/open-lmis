@@ -39,17 +39,29 @@ public interface GeographicZoneReportMapper {
     " order by ADM1, ADM2, ADM3")
   List<FlatGeographicZone> getFlatGeographicZoneList();
 
-  @Select("select gzz.id, gzz.name, gjson.geometry, COALESCE(total.count) total, COALESCE(ever.count,0) as ever, COALESCE(period.count,0) as period  " +
+  @Select("select gzz.id, gzz.name, gjson.geometry,COALESCE(expected.count) expected, COALESCE(total.count) total, COALESCE(ever.count,0) as ever, COALESCE(period.count,0) as period  " +
     " from \n" +
         " geographic_zones gzz\n" +
       " left join \n" +
          " geographic_zone_geojson gjson on \n" +
           " gzz.id = gjson.zoneid\n" +
+
+      " left join\n" +
+      " (select geographiczoneid, count(*) from facilities \n" +
+      " join programs_supported ps on ps.facilityid = facilities.id\n" +
+      " join geographic_zones gz on gz.id = facilities.geographiczoneid\n" +
+      " join requisition_group_members rgm on rgm.facilityid = facilities.id\n" +
+      " join requisition_group_program_schedules rgps on rgps.requisitiongroupid = rgm.requisitiongroupid and rgps.programid = ps.programid \n" +
+      " join processing_periods pp on pp.scheduleid = rgps.scheduleid and pp.id = #{processingPeriodId} \n" +
+      " where gz.levelid = 4 and ps.programid = #{programId}\n" +
+      " group by geographiczoneid" +
+      " ) expected\n" +
+      " on gzz.id =expected.geographiczoneid\n" +
+
       " left join\n" +
         " (select geographiczoneid, count(*) from facilities \n" +
-          " join programs_supported ps on ps.facilityid = facilities.id\n" +
           " join geographic_zones gz on gz.id = facilities.geographiczoneid\n" +
-          " where gz.levelid = 4 and ps.programid = #{programId}\n" +
+          " where gz.levelid = 4 \n" +
           " group by geographiczoneid" +
         " ) total\n" +
           " on gzz.id =total.geographiczoneid\n" +

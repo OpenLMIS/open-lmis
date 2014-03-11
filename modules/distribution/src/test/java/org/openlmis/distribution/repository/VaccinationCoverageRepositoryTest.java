@@ -17,12 +17,12 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.db.categories.UnitTests;
-import org.openlmis.distribution.domain.ChildCoverageLineItem;
-import org.openlmis.distribution.domain.OpenedVialLineItem;
-import org.openlmis.distribution.domain.VaccinationChildCoverage;
+import org.openlmis.distribution.domain.*;
 import org.openlmis.distribution.repository.mapper.VaccinationCoverageMapper;
 
 import static java.util.Arrays.asList;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -46,7 +46,7 @@ public class VaccinationCoverageRepositoryTest {
     repository.saveChildCoverage(vaccinationChildCoverage);
 
     verify(mapper).insertChildCoverageLineItem(childCoverageLineItem);
-    verify(mapper).insertOpenedVialLineItem(openedVialLineItem);
+    verify(mapper).insertChildCoverageOpenedVialLineItem(openedVialLineItem);
   }
 
   @Test
@@ -62,6 +62,34 @@ public class VaccinationCoverageRepositoryTest {
     repository.saveChildCoverage(vaccinationChildCoverage);
 
     verify(mapper).updateChildCoverageLineItem(childCoverageLineItem);
-    verify(mapper).updateOpenedVialLineItem(openedVialLineItem);
+    verify(mapper).updateChildCoverageOpenedVialLineItem(openedVialLineItem);
+  }
+
+  @Test
+  public void shouldInsertAdultCoverageLineItemsAndOpenedVialLineItems(){
+    VaccinationAdultCoverage adultCoverage = new VaccinationAdultCoverage(asList(new AdultCoverageLineItem(), new AdultCoverageLineItem()));
+    OpenedVialLineItem openedVialLineItem = new OpenedVialLineItem();
+    adultCoverage.setOpenedVialLineItems(asList(openedVialLineItem));
+
+    repository.saveAdultCoverage(adultCoverage);
+
+    verify(mapper, times(2)).insertAdultCoverageLineItem(any(AdultCoverageLineItem.class));
+    verify(mapper).insertAdultCoverageOpenedVialLineItem(openedVialLineItem);
+  }
+
+  @Test
+  public void shouldUpdateAdultCoverageLineItemsAndOpenedVialLineItemsIfAlreadyExists() throws Exception {
+    AdultCoverageLineItem adultCoverageLineItem = new AdultCoverageLineItem();
+    adultCoverageLineItem.setId(1L);
+    VaccinationAdultCoverage adultCoverage = new VaccinationAdultCoverage(asList(adultCoverageLineItem));
+    OpenedVialLineItem openedVialLineItem = new OpenedVialLineItem();
+    openedVialLineItem.setId(2L);
+    adultCoverage.setOpenedVialLineItems(asList(openedVialLineItem));
+
+    repository.saveAdultCoverage(adultCoverage);
+
+    verify(mapper).updateAdultCoverageLineItem(adultCoverageLineItem);
+    verify(mapper).updateAdultCoverageOpenedVialLineItem(openedVialLineItem);
+
   }
 }

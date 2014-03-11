@@ -20,10 +20,12 @@ import org.openlmis.authentication.web.UserAuthenticationSuccessHandler;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.order.domain.Order;
-import org.openlmis.order.dto.OrderPODDTO;
 import org.openlmis.order.service.OrderService;
 import org.openlmis.pod.domain.OrderPOD;
+import org.openlmis.pod.dto.OrderPODDTO;
 import org.openlmis.pod.service.PODService;
+import org.openlmis.reporting.service.JasperReportsViewFactory;
+import org.openlmis.reporting.service.TemplateService;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
@@ -32,15 +34,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpSession;
 
-import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
-import static org.openlmis.web.controller.PODController.ORDER;
-import static org.openlmis.web.controller.PODController.ORDER_POD;
+import static org.openlmis.web.controller.PODController.*;
 import static org.powermock.api.mockito.PowerMockito.*;
+import static org.powermock.api.mockito.PowerMockito.spy;
 import static org.powermock.api.mockito.PowerMockito.when;
 
 @Category(UnitTests.class)
@@ -57,6 +59,12 @@ public class PODControllerTest {
 
   @Mock
   private OrderService orderService;
+
+  @Mock
+  private TemplateService templateService;
+
+  @Mock
+  private JasperReportsViewFactory jasperReportsViewFactory;
 
   @InjectMocks
   private PODController controller;
@@ -121,9 +129,11 @@ public class PODControllerTest {
 
     OrderPOD orderPOD = new OrderPOD();
     orderPOD.setOrderId(orderId);
+    OrderPOD spyOrderPOD = spy(orderPOD);
     mockStatic(OrderPODDTO.class);
 
-    when(service.getPodById(podId)).thenReturn(orderPOD);
+    when(service.getPodById(podId)).thenReturn(spyOrderPOD);
+    when(spyOrderPOD.getStringReceivedDate()).thenReturn("2014-02-10");
 
     Order order = new Order();
     when(orderService.getOrder(orderId)).thenReturn(order);
@@ -134,8 +144,9 @@ public class PODControllerTest {
     ResponseEntity<OpenLmisResponse> response = controller.getPOD(podId);
 
     verify(service).getPodById(podId);
-    assertThat((OrderPOD) response.getBody().getData().get(ORDER_POD), is(orderPOD));
+    assertThat((OrderPOD) response.getBody().getData().get(ORDER_POD), is(spyOrderPOD));
     assertThat((OrderPODDTO) response.getBody().getData().get(ORDER), is(orderPODDTO));
+    assertThat((String) response.getBody().getData().get(RECEIVED_DATE), is("2014-02-10"));
     assertThat(response.getStatusCode(), is(HttpStatus.OK));
   }
 
@@ -185,4 +196,5 @@ public class PODControllerTest {
     assertThat(response.getBody().getErrorMsg(), is("msg.pod.submit.failure"));
     assertThat(response.getStatusCode(), is(HttpStatus.BAD_REQUEST));
   }
+
 }

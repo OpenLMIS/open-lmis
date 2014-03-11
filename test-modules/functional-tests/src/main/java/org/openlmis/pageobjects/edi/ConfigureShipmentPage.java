@@ -69,10 +69,10 @@ public class ConfigureShipmentPage extends Page {
   @FindBy(how = ID, using = "saveSuccessMsgDiv")
   private WebElement successMessageDiv = null;
 
-  @FindBy(how = XPATH, using = "//input[@value='Save']")
+  @FindBy(how = ID, using = "saveShipmentConfig")
   private WebElement saveButton = null;
 
-  @FindBy(how = XPATH, using = "//a[contains(text(),'Cancel')]")
+  @FindBy(how = ID, using = "cancelShipmentConfig")
   private WebElement cancelButton = null;
 
   @FindBy(how = XPATH, using = "//div[@id='select2-drop']/div/input")

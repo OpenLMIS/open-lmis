@@ -16,6 +16,9 @@ import lombok.Setter;
 import org.openlmis.upload.Importable;
 import org.openlmis.upload.annotation.ImportField;
 
+/**
+ * SupervisoryNode represents the Supervisory Node in a system. Also defines contract to upload SupervisoryNode.
+ */
 @Getter
 @Setter
 @NoArgsConstructor

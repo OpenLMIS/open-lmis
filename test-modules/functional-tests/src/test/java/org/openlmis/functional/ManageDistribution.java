@@ -37,6 +37,7 @@ import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
 import static java.util.Arrays.asList;
 import static java.util.Collections.addAll;
 import static org.testng.AssertJUnit.assertFalse;
+import static org.testng.AssertJUnit.assertNull;
 
 @Listeners(CaptureScreenshotOnFailureListener.class)
 
@@ -60,6 +61,7 @@ public class ManageDistribution extends TestCaseHelper {
   EPIUsePage epiUsePage;
   EpiInventoryPage epiInventoryPage;
   ChildCoveragePage childCoveragePage;
+  AdultCoveragePage adultCoveragePage;
   LoginPage loginPage;
   String productGroupCode = "PG1";
 
@@ -68,13 +70,14 @@ public class ManageDistribution extends TestCaseHelper {
   public void setUp() throws InterruptedException, SQLException, IOException {
     super.setup();
     dbWrapper.deleteData();
-    epiUsePage = PageFactory.getInstanceOfEpiUsePage(testWebDriver);
-    visitInformationPage = PageFactory.getInstanceOfVisitInformation(testWebDriver);
-    fullCoveragePage = PageFactory.getInstanceOfFullCoveragePage(testWebDriver);
-    epiInventoryPage = PageFactory.getInstanceOfEpiInventoryPage(testWebDriver);
-    childCoveragePage = PageFactory.getInstanceOfChildCoveragePage(testWebDriver);
-    refrigeratorPage = PageFactory.getInstanceOfRefrigeratorPage(testWebDriver);
-    loginPage = PageFactory.getInstanceOfLoginPage(testWebDriver, baseUrlGlobal);
+    epiUsePage = PageObjectFactory.getEpiUsePage(testWebDriver);
+    visitInformationPage = PageObjectFactory.getVisitInformationPage(testWebDriver);
+    fullCoveragePage = PageObjectFactory.getFullCoveragePage(testWebDriver);
+    epiInventoryPage = PageObjectFactory.getEpiInventoryPage(testWebDriver);
+    childCoveragePage = PageObjectFactory.getChildCoveragePage(testWebDriver);
+    refrigeratorPage = PageObjectFactory.getRefrigeratorPage(testWebDriver);
+    adultCoveragePage = PageObjectFactory.getAdultCoveragePage(testWebDriver);
+    loginPage = PageObjectFactory.getLoginPage(testWebDriver, baseUrlGlobal);
 
     tabMap = new HashMap<String, DistributionTab>() {{
       put("epi use", epiUsePage);
@@ -82,7 +85,7 @@ public class ManageDistribution extends TestCaseHelper {
       put("full coverage", fullCoveragePage);
       put("epi inventory", epiInventoryPage);
       put("refrigerator", refrigeratorPage);
-
+      put("adult coverage", adultCoveragePage);
       put("child coverage", childCoveragePage);
     }};
   }
@@ -112,28 +115,36 @@ public class ManageDistribution extends TestCaseHelper {
   @And("^I setup mapping for child coverage$")
   public void insertMappingForChildCoverage() throws SQLException {
     dbWrapper.insertProductsForChildCoverage();
-    dbWrapper.insertRegimensProductsInMappingTable("BCG", "BCG");
-    dbWrapper.insertRegimensProductsInMappingTable("Polio 1st dose", "polio20dose");
-    dbWrapper.insertRegimensProductsInMappingTable("Polio 2nd dose", "polio10dose");
-    dbWrapper.insertRegimensProductsInMappingTable("Polio 3rd dose", "polio20dose");
-    dbWrapper.insertRegimensProductsInMappingTable("Penta 1st dose", "penta1");
-    dbWrapper.insertRegimensProductsInMappingTable("Penta 2nd dose", "penta10");
-    dbWrapper.insertRegimensProductsInMappingTable("Penta 3rd dose", "penta1");
-    dbWrapper.insertRegimensProductsInMappingTable("PCV10 1st dose", "P10");
-    dbWrapper.insertRegimensProductsInMappingTable("PCV10 2nd dose", "P10");
-    dbWrapper.insertRegimensProductsInMappingTable("PCV10 3rd dose", "P10");
-    dbWrapper.insertRegimensProductsInMappingTable("Measles", "Measles");
-    dbWrapper.insertOpenedVialsProductsInMappingTable("Polio10", "P11");
-    dbWrapper.insertOpenedVialsProductsInMappingTable("Polio20", "P10");
-    dbWrapper.insertOpenedVialsProductsInMappingTable("Penta1", "penta1");
-    dbWrapper.insertOpenedVialsProductsInMappingTable("Penta10", "P11");
-    dbWrapper.insertOpenedVialsProductsInMappingTable("PCV", "P10");
-    dbWrapper.insertOpenedVialsProductsInMappingTable("Measles", "Measles");
+    dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("BCG", "BCG", true);
+    dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("Polio 1st dose", "polio20dose", true);
+    dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("Polio 2nd dose", "polio10dose", true);
+    dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("Polio 3rd dose", "polio20dose", true);
+    dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("Penta 1st dose", "penta1", true);
+    dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("Penta 2nd dose", "penta10", true);
+    dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("Penta 3rd dose", "penta1", true);
+    dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("PCV10 1st dose", "P10", true);
+    dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("PCV10 2nd dose", "P10", true);
+    dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("PCV10 3rd dose", "P10", true);
+    dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("Measles", "Measles", true);
+    dbWrapper.insertChildCoverageProductVial("Polio10", "P11");
+    dbWrapper.insertChildCoverageProductVial("Polio20", "P10");
+    dbWrapper.insertChildCoverageProductVial("Penta1", "penta1");
+    dbWrapper.insertChildCoverageProductVial("Penta10", "P11");
+    dbWrapper.insertChildCoverageProductVial("PCV", "P10");
+    dbWrapper.insertChildCoverageProductVial("Measles", "Measles");
+  }
+
+  @And("^I setup mapping for adult coverage")
+  public void insertMappingsForAdultCoverage() throws SQLException {
+    dbWrapper.insertProductsForAdultCoverage();
+    dbWrapper.insertTargetGroupEntityAndProductsInMappingTable("Pregnant Women", "tetanus", false);
+    dbWrapper.insertAdultCoverageOpenedVialMapping("tetanus");
+    dbWrapper.insertProgramProductISA("VACCINES", "tetanus", "405", "12", "3", "4", "4", "2", "4");
   }
 
   @Then("^I verify that I am on visit information page")
   public void onVisitInformationPage() throws SQLException {
-    visitInformationPage = PageFactory.getInstanceOfVisitInformation(testWebDriver);
+    visitInformationPage = PageObjectFactory.getVisitInformationPage(testWebDriver);
     assertEquals("Visit Info / Observations", visitInformationPage.getVisitInformationPageLabel());
   }
 
@@ -156,7 +167,7 @@ public class ManageDistribution extends TestCaseHelper {
   @When("^I verify saved \"([^\"]*)\" values:$")
   public void verifySavedEPIValues(String tabName, DataTable tableData) {
     testWebDriver.sleep(1000);
-    refrigeratorPage = PageFactory.getInstanceOfRefrigeratorPage(testWebDriver);
+    refrigeratorPage = PageObjectFactory.getRefrigeratorPage(testWebDriver);
     refrigeratorPage.navigateToRefrigeratorTab();
     DistributionTab tab = tabMap.get(tabName);
     tab.navigate();
@@ -176,20 +187,20 @@ public class ManageDistribution extends TestCaseHelper {
     List<String> firstProgramValuesToBeVerified = new ArrayList<>();
 
     addAll(firstProgramValuesToBeVerified, programs.split(","));
-    distributionPage = PageFactory.getInstanceOfDistributionPage(testWebDriver);
+    distributionPage = PageObjectFactory.getDistributionPage(testWebDriver);
     List<WebElement> valuesPresentInDropDown = distributionPage.getAllSelectOptionsFromProgram();
     verifyAllSelectFieldValues(firstProgramValuesToBeVerified, valuesPresentInDropDown);
   }
 
   @Then("^I verify fields$")
   public void verifyFieldsOnScreen() throws SQLException {
-    distributionPage = PageFactory.getInstanceOfDistributionPage(testWebDriver);
+    distributionPage = PageObjectFactory.getDistributionPage(testWebDriver);
     verifyElementsPresent();
   }
 
   @Then("^I should see period \"([^\"]*)\"$")
   public void verifyPeriod(String period) throws SQLException {
-    distributionPage = PageFactory.getInstanceOfDistributionPage(testWebDriver);
+    distributionPage = PageObjectFactory.getDistributionPage(testWebDriver);
     WebElement actualSelectFieldElement = distributionPage.getFirstSelectedOptionFromPeriod();
     testWebDriver.sleep(100);
     verifySelectedOptionFromSelectField(period, actualSelectFieldElement);
@@ -197,20 +208,20 @@ public class ManageDistribution extends TestCaseHelper {
 
   @Then("^I should see deliveryZone \"([^\"]*)\"$")
   public void verifyDeliveryZone(String deliveryZone) throws SQLException {
-    distributionPage = PageFactory.getInstanceOfDistributionPage(testWebDriver);
+    distributionPage = PageObjectFactory.getDistributionPage(testWebDriver);
     WebElement actualSelectFieldElement = distributionPage.getFirstSelectedOptionFromDeliveryZone();
     verifySelectedOptionFromSelectField(deliveryZone, actualSelectFieldElement);
   }
 
   @Given("^I login as user \"([^\"]*)\" having password \"([^\"]*)\"$")
   public void login(String user, String password) throws SQLException {
-    LoginPage loginPage = PageFactory.getInstanceOfLoginPage(testWebDriver, baseUrlGlobal);
+    LoginPage loginPage = PageObjectFactory.getLoginPage(testWebDriver, baseUrlGlobal);
     loginPage.loginAs(user, password);
   }
 
   @And("^I access plan my distribution page$")
   public void accessDistributionPage() throws SQLException {
-    HomePage homePage = PageFactory.getInstanceOfHomePage(testWebDriver);
+    HomePage homePage = PageObjectFactory.getHomePage(testWebDriver);
     homePage.navigateHomePage();
     homePage.navigateToDistributionWhenOnline();
   }
@@ -222,25 +233,25 @@ public class ManageDistribution extends TestCaseHelper {
 
   @When("^I select delivery zone \"([^\"]*)\"$")
   public void selectDeliveryZone(String deliveryZone) {
-    distributionPage = PageFactory.getInstanceOfDistributionPage(testWebDriver);
+    distributionPage = PageObjectFactory.getDistributionPage(testWebDriver);
     distributionPage.selectValueFromDeliveryZone(deliveryZone);
   }
 
   @And("^I select program \"([^\"]*)\"$")
   public void selectProgram(String program) {
-    distributionPage = PageFactory.getInstanceOfDistributionPage(testWebDriver);
+    distributionPage = PageObjectFactory.getDistributionPage(testWebDriver);
     distributionPage.selectValueFromProgram(program);
   }
 
   @And("^I select period \"([^\"]*)\"$")
   public void selectPeriod(String period) {
-    distributionPage = PageFactory.getInstanceOfDistributionPage(testWebDriver);
+    distributionPage = PageObjectFactory.getDistributionPage(testWebDriver);
     distributionPage.selectValueFromPeriod(period);
   }
 
   @Then("^I verify period \"([^\"]*)\" not present$")
   public void verifyPeriodNotPresent(String period) {
-    distributionPage = PageFactory.getInstanceOfDistributionPage(testWebDriver);
+    distributionPage = PageObjectFactory.getDistributionPage(testWebDriver);
     for (WebElement webElement : distributionPage.getAllSelectOptionsFromPeriod()) {
       assertFalse(webElement.getText().contains(period));
     }
@@ -254,33 +265,40 @@ public class ManageDistribution extends TestCaseHelper {
 
   @And("^I initiate distribution$")
   public void initiateDistribution() {
-    distributionPage = PageFactory.getInstanceOfDistributionPage(testWebDriver);
+    distributionPage = PageObjectFactory.getDistributionPage(testWebDriver);
     distributionPage.clickInitiateDistribution();
   }
 
-  @Then("^I see \"([^\"]*)\" facility icon as \"([^\"]*)\"$")
-  public void verifyOverAllFacilityIndicator(String whichIcon, String color) {
+  @Then("^I see Overall facility icon as \"([^\"]*)\"$")
+  public void verifyOverAllFacilityIndicator(String color) {
     testWebDriver.setImplicitWait(1000);
-    facilityListPage = PageFactory.getInstanceOfFacilityListPage(testWebDriver);
-    facilityListPage.verifyFacilityIndicatorColor(whichIcon, color);
+    facilityListPage = PageObjectFactory.getFacilityListPage(testWebDriver);
+    facilityListPage.verifyOverallFacilityIndicatorColor(color);
+  }
+
+  @Then("^I see \"([^\"]*)\" facility indicator icon as \"([^\"]*)\"$")
+  public void verifyFacilityIndicator(String facilityCode, String color) {
+    testWebDriver.setImplicitWait(1000);
+    facilityListPage = PageObjectFactory.getFacilityListPage(testWebDriver);
+    facilityListPage.verifyIndividualFacilityIndicatorColor(facilityCode, color);
   }
 
   @When("^I record data for distribution \"([^\"]*)\"$")
   public void clickRecordDataForGivenRow(String rowNumber) {
-    distributionPage = PageFactory.getInstanceOfDistributionPage(testWebDriver);
+    distributionPage = PageObjectFactory.getDistributionPage(testWebDriver);
     distributionPage.clickRecordData(Integer.parseInt(rowNumber));
   }
 
   @Then("^I should see No facility selected$")
   public void shouldSeeNoFacilitySelected() {
-    facilityListPage = PageFactory.getInstanceOfFacilityListPage(testWebDriver);
+    facilityListPage = PageObjectFactory.getFacilityListPage(testWebDriver);
     facilityListPage.verifyNoFacilitySelected();
   }
 
   @Then("^I access show$")
   public void accessShow() {
-    refrigeratorPage = PageFactory.getInstanceOfRefrigeratorPage(testWebDriver);
-    refrigeratorPage.clickShowForRefrigerator1();
+    refrigeratorPage = PageObjectFactory.getRefrigeratorPage(testWebDriver);
+    refrigeratorPage.clickShowForRefrigerator(1);
   }
 
   @Then("^I see \"([^\"]*)\" fields disabled$")
@@ -298,7 +316,7 @@ public class ManageDistribution extends TestCaseHelper {
   @And("^I should see \"([^\"]*)\" facilities that support the program \"([^\"]*)\" and delivery zone \"([^\"]*)\"$")
   public void shouldSeeNoFacilitySelected(String active, String program, String deliveryZone) throws SQLException {
     boolean activeFlag = false;
-    facilityListPage = PageFactory.getInstanceOfFacilityListPage(testWebDriver);
+    facilityListPage = PageObjectFactory.getFacilityListPage(testWebDriver);
     if (active.equalsIgnoreCase("active"))
       activeFlag = true;
     List<String> valuesToBeVerified = dbWrapper.getFacilityCodeNameForDeliveryZoneAndProgram(deliveryZone, program, activeFlag);
@@ -308,49 +326,49 @@ public class ManageDistribution extends TestCaseHelper {
 
   @When("^I choose facility \"([^\"]*)\"$")
   public void selectFacility(String facilityCode) {
-    facilityListPage = PageFactory.getInstanceOfFacilityListPage(testWebDriver);
+    facilityListPage = PageObjectFactory.getFacilityListPage(testWebDriver);
     facilityListPage.selectFacility(facilityCode);
   }
 
   @And("^I should see Delivery Zone \"([^\"]*)\", Program \"([^\"]*)\" and Period \"([^\"]*)\" in the header$")
   public void shouldVerifyHeaderElements(String deliveryZone, String program, String period) throws SQLException {
-    facilityListPage = PageFactory.getInstanceOfFacilityListPage(testWebDriver);
+    facilityListPage = PageObjectFactory.getFacilityListPage(testWebDriver);
     facilityListPage.verifyHeaderElements(deliveryZone, program, period);
   }
 
   @And("^I click view load amount$")
   public void clickViewLoadAmount() {
-    distributionPage = PageFactory.getInstanceOfDistributionPage(testWebDriver);
+    distributionPage = PageObjectFactory.getDistributionPage(testWebDriver);
     distributionPage.clickViewLoadAmount();
   }
 
   @When("^I sync recorded data$")
   public void syncDistribution() {
-    distributionPage = PageFactory.getInstanceOfDistributionPage(testWebDriver);
+    distributionPage = PageObjectFactory.getDistributionPage(testWebDriver);
     distributionPage.syncDistribution(1);
   }
 
   @When("^I try to sync recorded data$")
   public void clickSyncLink() {
-    distributionPage = PageFactory.getInstanceOfDistributionPage(testWebDriver);
+    distributionPage = PageObjectFactory.getDistributionPage(testWebDriver);
     distributionPage.clickSyncDistribution(1);
   }
 
   @Then("^I verify sync message as \"([^\"]*)\"$")
   public void verifySyncMessage(String message) {
-    distributionPage = PageFactory.getInstanceOfDistributionPage(testWebDriver);
+    distributionPage = PageObjectFactory.getDistributionPage(testWebDriver);
     assertEquals(message, distributionPage.getSyncAlertMessage());
   }
 
   @Then("^I check confirm sync message as \"([^\"]*)\"$")
   public void verifyConfirmSyncMessage(String message) {
-    distributionPage = PageFactory.getInstanceOfDistributionPage(testWebDriver);
+    distributionPage = PageObjectFactory.getDistributionPage(testWebDriver);
     assertTrue("Incorrect Sync Facility", distributionPage.getSyncMessage().contains(message));
   }
 
   @When("^I done sync message$")
   public void doneSyncMessage() {
-    distributionPage = PageFactory.getInstanceOfDistributionPage(testWebDriver);
+    distributionPage = PageObjectFactory.getDistributionPage(testWebDriver);
     distributionPage.syncDistributionMessageDone();
   }
 
@@ -374,11 +392,15 @@ public class ManageDistribution extends TestCaseHelper {
       assertEqualsAndNulls(facilityVisitDetails.get("verifiedByTitle"), map.get("verifiedByTitle"));
       assertEqualsAndNulls(facilityVisitDetails.get("visited"), map.get("visited"));
       assertEqualsAndNulls(facilityVisitDetails.get("synced"), map.get("synced"));
-      if(facilityVisitDetails.get("visited")=="t"){
-        assertEquals(new SimpleDateFormat("yyyy-MM").format(new Date()) + "-01 00:00:00",facilityVisitDetails.get("visitDate"));
+      assertEqualsAndNulls(facilityVisitDetails.get("visited"), map.get("visited"));
+      assertEqualsAndNulls(facilityVisitDetails.get("reasonForNotVisiting"), map.get("reasonForNotVisiting"));
+      assertEqualsAndNulls(facilityVisitDetails.get("otherReasonDescription"), map.get("otherReasonDescription"));
+      assertEqualsAndNulls(facilityVisitDetails.get("vehicleId"), map.get("vehicleId"));
+      if (facilityVisitDetails.get("visited").equals("t")) {
+        assertEquals(new SimpleDateFormat("yyyy-MM").format(new Date()) + "-01 00:00:00", facilityVisitDetails.get("visitDate"));
+      } else {
+        assertNull(facilityVisitDetails.get("visitDate"));
       }
-      if (!map.get("vehicleId").equals("null"))
-        assertEquals(facilityVisitDetails.get("vehicleId"), map.get("vehicleId"));
     }
   }
 
@@ -387,12 +409,12 @@ public class ManageDistribution extends TestCaseHelper {
     List<Map<String, String>> data = tableData.asMaps();
     Map<String, String> epiDetails = dbWrapper.getEpiUseDetails(productGroupCode, facilityCode);
     for (Map map : data) {
-      assertEquals(map.get("firstOfMonth").toString(), epiDetails.get("stockatfirstofmonth"));
-      assertEquals(map.get("received").toString(), epiDetails.get("received"));
-      assertEquals(map.get("distributed").toString(), epiDetails.get("distributed"));
-      assertEquals(map.get("loss").toString(), epiDetails.get("loss"));
-      assertEquals(map.get("endOfMonth").toString(), epiDetails.get("stockatendofmonth"));
-      assertEquals(map.get("expirationDate").toString(), epiDetails.get("expirationdate"));
+      assertEqualsAndNulls(epiDetails.get("stockAtFirstOfMonth".toLowerCase()), map.get("firstOfMonth").toString());
+      assertEqualsAndNulls(epiDetails.get("received"), map.get("received").toString());
+      assertEqualsAndNulls(epiDetails.get("distributed"), map.get("distributed").toString());
+      assertEqualsAndNulls(epiDetails.get("loss"), map.get("loss").toString());
+      assertEqualsAndNulls(epiDetails.get("stockAtEndOfMonth".toLowerCase()), map.get("endOfMonth").toString());
+      assertEqualsAndNulls(epiDetails.get("expirationDate".toLowerCase()), map.get("expirationDate").toString());
     }
   }
 
@@ -401,16 +423,12 @@ public class ManageDistribution extends TestCaseHelper {
     List<Map<String, String>> data = tableData.asMaps();
     ResultSet resultSet = dbWrapper.getRefrigeratorReadings(refrigeratorSerialNumber, facilityCode);
     for (Map map : data) {
-      assertEquals(map.get("temperature"), resultSet.getString("temperature"));
-      assertEquals(map.get("functioningCorrectly"), resultSet.getString("functioningCorrectly"));
-      assertEquals(map.get("lowAlarmEvents"), resultSet.getString("lowAlarmEvents"));
-      assertEquals(map.get("highAlarmEvents"), resultSet.getString("highAlarmEvents"));
-      assertEquals(map.get("problemSinceLastTime"), resultSet.getString("problemSinceLastTime"));
-      String notes = (String) map.get("notes");
-      if (notes.equals("null")) {
-        notes = null;
-      }
-      assertEquals(notes, resultSet.getString("notes"));
+      assertEqualsAndNulls(resultSet.getString("temperature"), map.get("temperature").toString());
+      assertEqualsAndNulls(resultSet.getString("functioningCorrectly"), map.get("functioningCorrectly").toString());
+      assertEqualsAndNulls(resultSet.getString("lowAlarmEvents"), map.get("lowAlarmEvents").toString());
+      assertEqualsAndNulls(resultSet.getString("highAlarmEvents"), map.get("highAlarmEvents").toString());
+      assertEqualsAndNulls(resultSet.getString("problemSinceLastTime"), map.get("problemSinceLastTime").toString());
+      assertEqualsAndNulls(resultSet.getString("notes"), map.get("notes").toString());
     }
   }
 
@@ -419,10 +437,10 @@ public class ManageDistribution extends TestCaseHelper {
     List<Map<String, String>> data = tableData.asMaps();
     Map<String, String> fullCoveragesDetails = dbWrapper.getFullCoveragesDetails(facilityCode);
     for (Map map : data) {
-      assertEquals(map.get("femaleHealthCenter").toString(), fullCoveragesDetails.get("femalehealthcenter"));
-      assertEquals(map.get("femaleOutreach").toString(), fullCoveragesDetails.get("femaleoutreach"));
-      assertEquals(map.get("maleHealthCenter").toString(), fullCoveragesDetails.get("malehealthcenter"));
-      assertEquals(map.get("maleOutreach").toString(), fullCoveragesDetails.get("maleoutreach"));
+      assertEqualsAndNulls(fullCoveragesDetails.get("femaleHealthCenter".toLowerCase()), map.get("femaleHealthCenter").toString());
+      assertEqualsAndNulls(fullCoveragesDetails.get("femaleOutreach".toLowerCase()), map.get("femaleOutreach").toString());
+      assertEqualsAndNulls(fullCoveragesDetails.get("maleHealthCenter".toLowerCase()), map.get("maleHealthCenter").toString());
+      assertEqualsAndNulls(fullCoveragesDetails.get("maleOutreach".toLowerCase()), map.get("maleOutreach").toString());
     }
   }
 
@@ -431,8 +449,57 @@ public class ManageDistribution extends TestCaseHelper {
   verifyEpiInventoryDataInDB(String facilityCode, String productCode, DataTable tableData) throws SQLException {
     List<Map<String, String>> data = tableData.asMaps();
     for (Map map : data) {
-      verifyEpiInventoryDataInDatabase(map.get("existingQuantity").toString(), map.get("deliveredQuantity").toString(), map.get("spoiledQuantity").toString(), productCode, facilityCode);
+      ResultSet epiInventoryDetails = dbWrapper.getEpiInventoryDetails(productCode, facilityCode);
+
+      assertEqualsAndNulls(epiInventoryDetails.getString("existingQuantity"), map.get("existingQuantity").toString());
+      assertEqualsAndNulls(epiInventoryDetails.getString("deliveredQuantity"), map.get("deliveredQuantity").toString());
+      assertEqualsAndNulls(epiInventoryDetails.getString("spoiledQuantity"), map.get("spoiledQuantity").toString());
     }
+  }
+
+  @And("^I view child coverage values in DB for facility \"([^\"]*)\":$")
+  public void verifyChildCoverageDataInDB(String facilityCode, DataTable tableData) throws SQLException {
+
+    String facilityId = dbWrapper.getAttributeFromTable("facilities", "id", "code", facilityCode);
+    String facilityVisitId = dbWrapper.getAttributeFromTable("facility_visits", "id", "facilityId", facilityId);
+    List<Map<String, String>> data = tableData.asMaps();
+    for (Map map : data) {
+      List<String> vaccinations = asList("BCG", "Polio (Newborn)", "Polio 1st dose", "Polio 2nd dose", "Polio 3rd dose", "Penta 1st dose", "Penta 2nd dose", "Penta 3rd dose", "PCV10 1st dose", "PCV10 2nd dose", "PCV10 3rd dose", "Measles");
+
+      for (int i = 1; i <= 12; i++) {
+        ResultSet childCoverageDetails = dbWrapper.getChildCoverageDetails(vaccinations.get(i - 1), facilityVisitId);
+
+        assertEquals(childCoverageDetails.getString("healthCenter11months"), map.get("healthCenter11"));
+        assertEquals(childCoverageDetails.getString("outreach11months"), map.get("outreach11"));
+        if (i != 2) {
+          assertEquals(childCoverageDetails.getString("healthCenter23months"), map.get("healthCenter23"));
+          assertEquals(childCoverageDetails.getString("outreach23months"), map.get("outreach23"));
+        }
+      }
+
+      List<String> openedVials = asList("BCG", "Polio10", "Polio20", "Penta1", "Penta10", "PCV", "Measles");
+      for (int i = 1; i <= 7; i++) {
+        ResultSet openedVialLineItem = dbWrapper.getChildOpenedVialLineItem(openedVials.get(i - 1), facilityVisitId);
+        assertEquals(openedVialLineItem.getString("openedVials"), map.get("openedVial"));
+      }
+    }
+  }
+
+  @And("^I view adult coverage values in DB for facility \"([^\"]*)\":$")
+  public void verifyAdultCoverageDataInDB(String facilityCode, DataTable tableData) throws SQLException {
+
+    String facilityId = dbWrapper.getAttributeFromTable("facilities", "id", "code", facilityCode);
+    String facilityVisitId = dbWrapper.getAttributeFromTable("facility_visits", "id", "facilityId", facilityId);
+    Map<String, String> dataMap = tableData.asMaps().get(0);
+    ResultSet adultCoverageDetails = dbWrapper.getAdultCoverageDetails("Pregnant Women", facilityVisitId);
+    assertEquals(dataMap.get("targetGroup"), adultCoverageDetails.getString("targetGroup"));
+    assertEquals(dataMap.get("healthCenter1"), adultCoverageDetails.getString("healthCenterTetanus1"));
+    assertEquals(dataMap.get("outreach1"), adultCoverageDetails.getString("outreachTetanus1"));
+    assertEquals(dataMap.get("healthCenter25"), adultCoverageDetails.getString("healthCenterTetanus2To5"));
+    assertEquals(dataMap.get("outreach25"), adultCoverageDetails.getString("outreachTetanus2To5"));
+
+    ResultSet openedVialLineItem = dbWrapper.getAdultOpenedVialLineItem(facilityVisitId);
+    assertEquals(dataMap.get("openedVial"), openedVialLineItem.getString("openedVials"));
   }
 
   @Then("^I verify no record present in refrigerator problem table for refrigerator serial number \"([^\"]*)\" and facility \"([^\"]*)\"$")
@@ -442,26 +509,26 @@ public class ManageDistribution extends TestCaseHelper {
 
   @Then("^I should see data download successfully$")
   public void seeDownloadSuccessfully() {
-    distributionPage = PageFactory.getInstanceOfDistributionPage(testWebDriver);
+    distributionPage = PageObjectFactory.getDistributionPage(testWebDriver);
     testWebDriver.waitForElementToAppear(testWebDriver.getElementById("cachedDistributions"));
     distributionPage.verifyDownloadSuccessFullMessage(deliveryZoneNameFirst, programFirst, periodDisplayedByDefault);
   }
 
   @Then("^I should verify facility name \"([^\"]*)\" in the header$")
   public void verifyFacilityNameInHeader(String facilityName) {
-    facilityListPage = PageFactory.getInstanceOfFacilityListPage(testWebDriver);
+    facilityListPage = PageObjectFactory.getFacilityListPage(testWebDriver);
     facilityListPage.verifyFacilityNameInHeader(facilityName);
   }
 
   @Then("^I should verify facility zone \"([^\"]*)\" in the header$")
   public void verifyFacilityZoneInHeader(String facilityZone) {
-    facilityListPage = PageFactory.getInstanceOfFacilityListPage(testWebDriver);
+    facilityListPage = PageObjectFactory.getFacilityListPage(testWebDriver);
     facilityListPage.verifyFacilityZoneInHeader(facilityZone);
   }
 
   @Then("^I verify legends$")
   public void verifyFacilityZoneInHeader() {
-    facilityListPage = PageFactory.getInstanceOfFacilityListPage(testWebDriver);
+    facilityListPage = PageObjectFactory.getFacilityListPage(testWebDriver);
     facilityListPage.verifyLegend();
   }
 
@@ -472,77 +539,80 @@ public class ManageDistribution extends TestCaseHelper {
 
   @And("^I remove cached distribution$")
   public void deleteDistribution() {
-    distributionPage = PageFactory.getInstanceOfDistributionPage(testWebDriver);
+    distributionPage = PageObjectFactory.getDistributionPage(testWebDriver);
     distributionPage.deleteDistribution();
   }
 
   @And("^I observe confirm delete distribution dialog$")
   public void verifyDeleteDistributionConfirmation() {
-    distributionPage = PageFactory.getInstanceOfDistributionPage(testWebDriver);
+    distributionPage = PageObjectFactory.getDistributionPage(testWebDriver);
     distributionPage.verifyDeleteConfirmMessageAndHeader();
   }
 
   @And("I cancel delete distribution$")
   public void cancelDeleteDistributionConfirmation() {
-    distributionPage = PageFactory.getInstanceOfDistributionPage(testWebDriver);
+    distributionPage = PageObjectFactory.getDistributionPage(testWebDriver);
     distributionPage.CancelDeleteDistribution();
   }
 
   @And("I confirm delete distribution$")
   public void confirmDeleteDistributionConfirmation() {
-    distributionPage = PageFactory.getInstanceOfDistributionPage(testWebDriver);
+    distributionPage = PageObjectFactory.getDistributionPage(testWebDriver);
     distributionPage.clickOk();
   }
 
   @Then("I see no distribution in cache$")
   public void noDistributionInCache() {
-    distributionPage = PageFactory.getInstanceOfDistributionPage(testWebDriver);
+    distributionPage = PageObjectFactory.getDistributionPage(testWebDriver);
     distributionPage.verifyNoDistributionCachedMessage();
   }
 
   @When("I enter EPI Inventory deliveredQuantity of Row \"([^\"]*)\" as \"([^\"]*)\"$")
   public void enterDeliveredQuantity(Integer rowNumber, String deliveredQuantity) {
-    epiInventoryPage = PageFactory.getInstanceOfEpiInventoryPage(testWebDriver);
+    epiInventoryPage = PageObjectFactory.getEpiInventoryPage(testWebDriver);
     epiInventoryPage.fillDeliveredQuantity(rowNumber, deliveredQuantity);
   }
 
   @When("I enter coverage maleMobileBrigade as \"([^\"]*)\"$")
   public void enterCoverageMaleMobileBrigade(String maleMobileBrigade) {
-    fullCoveragePage = PageFactory.getInstanceOfFullCoveragePage(testWebDriver);
+    fullCoveragePage = PageObjectFactory.getFullCoveragePage(testWebDriver);
     fullCoveragePage.enterMaleMobileBrigade(maleMobileBrigade);
   }
 
 
   @And("^I delete already cached data for distribution$")
   public void deleteAlreadyCachedDistribution() throws SQLException {
-    distributionPage = PageFactory.getInstanceOfDistributionPage(testWebDriver);
+    distributionPage = PageObjectFactory.getDistributionPage(testWebDriver);
     distributionPage.deleteDistribution();
     distributionPage.clickOk();
   }
 
   @Then("^I should not see already cached facility \"([^\"]*)\"$")
   public void verifyAlreadyCachedDistributionFacilityNotPresentInDropDown(String facilityCodeFirst) throws SQLException {
-    assertFalse(facilityListPage.getAllFacilitiesFromDropDown().contains(facilityCodeFirst));
+    facilityListPage = PageObjectFactory.getFacilityListPage(testWebDriver);
+    for (WebElement webElement : facilityListPage.getAllFacilitiesFromDropDown()) {
+      assertFalse(webElement.getText().contains(facilityCodeFirst));
+    }
     facilityListPage.clickFacilityListDropDown();
   }
 
   @And("^I initiate already cached distribution$")
   public void initiateAlreadyCachedDistribution() {
-    distributionPage = PageFactory.getInstanceOfDistributionPage(testWebDriver);
+    distributionPage = PageObjectFactory.getDistributionPage(testWebDriver);
     distributionPage.clickInitiateDistribution();
     distributionPage.clickOk();
   }
 
   @Then("^I verify distribution not initiated$")
   public void verifyDistributionNotInitiated() {
-    distributionPage = PageFactory.getInstanceOfDistributionPage(testWebDriver);
+    distributionPage = PageObjectFactory.getDistributionPage(testWebDriver);
     distributionPage.verifyFacilityNotSupportedMessage("VACCINES", "Delivery Zone First");
     distributionPage.verifyNoDistributionCachedMessage();
   }
 
   @And("^I see distribution status as synced$")
   public void verifyDistributionStatus() throws SQLException {
-    distributionPage = PageFactory.getInstanceOfDistributionPage(testWebDriver);
+    distributionPage = PageObjectFactory.getDistributionPage(testWebDriver);
     Map<String, String> distributionDetails = dbWrapper.getDistributionDetails("Delivery Zone First", "VACCINES", "Period14");
     assertEquals(distributionDetails.get("status"), "SYNCED");
     assertEquals(distributionPage.getDistributionStatus(), "SYNCED");
@@ -717,7 +787,7 @@ public class ManageDistribution extends TestCaseHelper {
     dbWrapper.insertRoleAssignmentForDistribution(userSIC, "store in-charge", deliveryZoneCodeSecond);
     dbWrapper.updateFieldValue("facilities", "active", "false", "code", facilityCodeFirst);
     dbWrapper.updateFieldValue("facilities", "active", "false", "code", facilityCodeSecond);
-    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+    LoginPage loginPage = PageObjectFactory.getLoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(userSIC, password);
     DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
     distributionPage.selectValueFromDeliveryZone(deliveryZoneNameFirst);
@@ -825,7 +895,7 @@ public class ManageDistribution extends TestCaseHelper {
   }
 
   private void verifyElementsPresent() {
-    distributionPage = PageFactory.getInstanceOfDistributionPage(testWebDriver);
+    distributionPage = PageObjectFactory.getDistributionPage(testWebDriver);
     assertTrue("selectDeliveryZoneSelectBox should be present", distributionPage.isDisplayedSelectDeliveryZoneSelectBox());
     assertTrue("selectProgramSelectBox should be present", distributionPage.isDisplayedSelectProgramSelectBox());
     assertTrue("selectPeriodSelectBox should be present", distributionPage.isDisplayedSelectPeriodSelectBox());
@@ -868,7 +938,7 @@ public class ManageDistribution extends TestCaseHelper {
   }
 
   public void verifyInactiveProductsNotDisplayedOnViewLoadAmount() {
-    WarehouseLoadAmountPage warehouseLoadAmountPage = new WarehouseLoadAmountPage(testWebDriver);
+    WarehouseLoadAmountPage warehouseLoadAmountPage = PageObjectFactory.getWarehouseLoadAmountPage(testWebDriver);
     assertFalse(warehouseLoadAmountPage.getAggregateTableData().contains("ProductName6"));
     assertFalse(warehouseLoadAmountPage.getTable1Data().contains("ProductName6"));
 
@@ -898,7 +968,7 @@ public class ManageDistribution extends TestCaseHelper {
   public void tearDown() throws SQLException {
     testWebDriver.sleep(500);
     if (!testWebDriver.getElementById("username").isDisplayed()) {
-      HomePage homePage = PageFactory.getInstanceOfHomePage(testWebDriver);
+      HomePage homePage = PageObjectFactory.getHomePage(testWebDriver);
       homePage.logout(baseUrlGlobal);
     }
     dbWrapper.deleteData();

@@ -23,6 +23,9 @@ import java.util.List;
 
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 
+/**
+ * Product represents real world entity Product. It also defines the contract for creation/upload of products like
+ */
 @Data
 @NoArgsConstructor
 @JsonSerialize(include = NON_EMPTY)
@@ -94,10 +97,10 @@ public class Product extends BaseModel implements Importable {
 
   private Long dosageUnitId;
 
-  @ImportField(name = "Dispensing Units")
+  @ImportField(mandatory = true, name = "Dispensing Units")
   private String dispensingUnit;
 
-  @ImportField(type = "int", name = "Doses Per Dispensing Unit")
+  @ImportField(mandatory = true, type = "int", name = "Doses Per Dispensing Unit")
   private Integer dosesPerDispensingUnit;
 
   @ImportField(type = "boolean", name = "Store Refrigerated")

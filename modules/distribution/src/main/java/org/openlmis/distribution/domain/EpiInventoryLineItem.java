@@ -13,12 +13,20 @@ package org.openlmis.distribution.domain;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.openlmis.core.domain.BaseModel;
 import org.openlmis.core.domain.FacilityProgramProduct;
 
+import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
+
+/**
+ *  EpiInventoryLineItem represents an entity which keeps record of delivery and stock information of a product.
+ */
+
 @Data
-@EqualsAndHashCode(callSuper = false)
 @NoArgsConstructor
+@JsonSerialize(include = NON_EMPTY)
+@EqualsAndHashCode(callSuper = false)
 public class EpiInventoryLineItem extends BaseModel {
 
   private Long facilityVisitId;
@@ -38,7 +46,6 @@ public class EpiInventoryLineItem extends BaseModel {
     this.productName = facilityProgramProduct.getProduct().getPrimaryName();
     this.productCode = facilityProgramProduct.getProduct().getCode();
     this.productDisplayOrder = facilityProgramProduct.getProduct().getDisplayOrder();
-
   }
 
   public EpiInventoryLineItem(Long facilityVisitId, Integer existingQuantity, Integer spoiledQuantity, Integer deliveredQuantity) {

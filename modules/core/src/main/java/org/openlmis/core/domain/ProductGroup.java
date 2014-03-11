@@ -21,6 +21,10 @@ import org.openlmis.upload.annotation.ImportField;
 
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 
+/**
+ * ProductGroup represents the group for product. Also defines the contract for creation/upload of ProductGroup like
+ * code and name mandatory, their respective data types and headers in upload csv.
+ */
 @EqualsAndHashCode(callSuper = false)
 @Data
 @NoArgsConstructor

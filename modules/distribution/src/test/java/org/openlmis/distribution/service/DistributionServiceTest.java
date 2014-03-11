@@ -100,22 +100,24 @@ public class DistributionServiceTest {
   @Test
   public void shouldUpdateAndReturnDistributionStatusIfAllFacilitiesAreSynced() {
     Long distributionId = 1L;
+    Long modifiedBy = 2L;
     when(facilityVisitService.getUnsyncedFacilityCountForDistribution(distributionId)).thenReturn(0);
 
-    DistributionStatus distributionStatus = service.updateDistributionStatus(distributionId);
+    DistributionStatus distributionStatus = service.updateDistributionStatus(distributionId, modifiedBy);
 
-    verify(repository).updateDistributionStatus(distributionId, SYNCED);
+    verify(repository).updateDistributionStatus(distributionId, SYNCED, modifiedBy);
     assertThat(distributionStatus, is(SYNCED));
   }
 
   @Test
   public void shouldNotUpdateDistributionIfAllFacilitiesAreNotSynced() {
     Long distributionId = 1L;
+    Long modifiedBy = 2L;
     when(facilityVisitService.getUnsyncedFacilityCountForDistribution(distributionId)).thenReturn(1);
 
-    DistributionStatus distributionStatus = service.updateDistributionStatus(distributionId);
+    DistributionStatus distributionStatus = service.updateDistributionStatus(distributionId, modifiedBy);
 
-    verify(repository, never()).updateDistributionStatus(distributionId, SYNCED);
+    verify(repository).updateDistributionStatus(distributionId, INITIATED, modifiedBy);
     assertThat(distributionStatus, is(INITIATED));
   }
 }

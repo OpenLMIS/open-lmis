@@ -19,7 +19,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import static org.openlmis.core.repository.UserRepository.DUPLICATE_USER_NAME_FOUND;
-
+/**
+ * UserPersistenceHandler is used for uploads of users. It uploads each User record by record.
+ */
 @Component
 @NoArgsConstructor
 public class UserPersistenceHandler extends AbstractModelPersistenceHandler {

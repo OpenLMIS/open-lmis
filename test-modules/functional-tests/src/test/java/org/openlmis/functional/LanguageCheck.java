@@ -14,6 +14,7 @@ import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.pageobjects.ForgotPasswordPage;
 import org.openlmis.pageobjects.HomePage;
 import org.openlmis.pageobjects.LoginPage;
+import org.openlmis.pageobjects.PageObjectFactory;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
@@ -32,7 +33,7 @@ public class LanguageCheck extends TestCaseHelper {
   @BeforeMethod(groups = "admin")
   public void setUp() throws InterruptedException, SQLException, IOException {
     super.setup();
-    loginPage = PageFactory.getInstanceOfLoginPage(testWebDriver, baseUrlGlobal);
+    loginPage = PageObjectFactory.getLoginPage(testWebDriver, baseUrlGlobal);
   }
 
   @Test(groups = {"admin"})
@@ -47,6 +48,7 @@ public class LanguageCheck extends TestCaseHelper {
     loginPage.setLangAsPortuguese();
     verifyColorOfTextAsGray(loginPage.getPortugueseColor());
     verifyPageIdentifierLabelOnLoginPage("Entrar");
+    loginPage.setLangAsEnglish();
   }
 
   @Test(groups = {"admin"})
@@ -55,6 +57,7 @@ public class LanguageCheck extends TestCaseHelper {
     loginPage.clickForgotPasswordLink();
     verifyColorOfTextAsGray(loginPage.getPortugueseColor());
     verifyPageIdentifierLabelOnForgotPasswordPage("Submeter");
+    loginPage.setLangAsEnglish();
   }
 
   @Test(groups = {"admin"})
@@ -71,6 +74,7 @@ public class LanguageCheck extends TestCaseHelper {
     loginPage.setLangAsPortuguese();
     verifyColorOfTextAsGray(loginPage.getPortugueseColor());
     verifyPageIdentifierLabelOnForgotPasswordPage("Submeter");
+    loginPage.setLangAsEnglish();
   }
 
   private void verifyColorOfTextAsGray(String color) {
@@ -82,7 +86,7 @@ public class LanguageCheck extends TestCaseHelper {
   }
 
   private void verifyPageIdentifierLabelOnForgotPasswordPage(String expectedLabel) {
-    ForgotPasswordPage forgotPasswordPage = PageFactory.getInstanceOfForgotPasswordPage(testWebDriver);
+    ForgotPasswordPage forgotPasswordPage = PageObjectFactory.getForgotPasswordPage(testWebDriver);
     assertEquals(forgotPasswordPage.getPageIdentifierOnForgotPasswordPageAttribute(), expectedLabel);
   }
 
@@ -106,7 +110,7 @@ public class LanguageCheck extends TestCaseHelper {
   public void tearDown() throws SQLException {
     testWebDriver.sleep(500);
     if (!testWebDriver.getElementById("username").isDisplayed()) {
-      HomePage homePage = PageFactory.getInstanceOfHomePage(testWebDriver);
+      HomePage homePage = PageObjectFactory.getHomePage(testWebDriver);
       homePage.logout(baseUrlGlobal);
       dbWrapper.deleteData();
       dbWrapper.closeConnection();

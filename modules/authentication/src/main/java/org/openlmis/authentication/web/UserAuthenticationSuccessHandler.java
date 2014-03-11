@@ -20,6 +20,9 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.Map;
 
+/**
+ * This class is used to handle a successful authentication request.
+ */
 
 public class UserAuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 

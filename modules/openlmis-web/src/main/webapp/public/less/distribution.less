@@ -189,11 +189,6 @@
   .status-cell {
     text-align: center;
   }
-  .form-group {
-    border: 1px solid #EEE;
-    margin-bottom: 16px;
-    padding: 0 3px;
-  }
   .list-row.is-expanded {
     background-color: #f9f9f9;
     border-bottom: 2px solid #CCC;
@@ -223,16 +218,24 @@
 .refrigerator-form {
   background: white;
   margin-top: 8px;
+  position: relative;
+  width: 100%;
+  border: 1px solid #EEE;
+  margin-bottom: 16px;
+  padding: 0 3px;
   .rnr-form-error {
     bottom: 20px;
   }
   .form-group {
+    width: 50%;
+    float: left;
     border: 0 none;
-    margin: 20px 0 0;
+    margin: 0;
     padding: 0;
+    min-width: 400px;
   }
   .form-cell {
-    width: 47%;
+    width: 100%;
     label {
       display: inline;
       &:first-child {
@@ -260,14 +263,26 @@
       line-height: normal;
     }
     .problem-form {
+      width: 100%;
+      margin-top: 26px;
+      .form-cell {
+        width: 47%;
+        padding-right: 0;
+        padding-bottom: 0;
+      }
       #otherTextbox {
         margin-left: 10px;
+        margin-bottom: 0;
+        width: 290px;
       }
     }
     #notes {
       width: 300px;
       height: 100px;
     }
+  }
+  #notesCell {
+    padding-top: 15px;
   }
 }
 
@@ -372,11 +387,14 @@
   }
 }
 
-#childCoverageTable {
-  td:first-child {
+.coverage-table td:first-child, #communityCell {
+    font-size: 13px;
     font-weight: bold;
-    background: linear-gradient(to bottom, #f9f9f9 0%, #e0e0e0 100%);
+    background: linear-gradient(to bottom, #f9f9f9 0%, #e0e0e0 100%) !important;
+    text-shadow: 0 1px 0 #FFF;
   }
+
+.coverage-table {
   #openedVials {
     width: 100px;
   }
@@ -595,4 +613,12 @@
     display: none;
     margin-bottom: 35px;
   }
+}
+
+.vertical-middle-aligned {
+  vertical-align: middle !important;
+}
+
+#adultCoverageTable tr:last-child td:first-child {
+  height: 50px;
 }

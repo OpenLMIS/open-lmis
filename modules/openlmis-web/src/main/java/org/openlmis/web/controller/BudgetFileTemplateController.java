@@ -28,6 +28,10 @@ import static org.openlmis.web.response.OpenLmisResponse.success;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
+/**
+ * This controller handles endpoint to get, create budget-file-template.
+ */
+
 @Controller
 public class BudgetFileTemplateController extends BaseController {
   @Autowired

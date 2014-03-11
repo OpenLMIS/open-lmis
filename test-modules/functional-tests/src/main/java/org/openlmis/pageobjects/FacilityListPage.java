@@ -29,13 +29,13 @@ public class FacilityListPage extends RequisitionPage {
   @FindBy(how = XPATH, using = "//*[@id='select2-drop']/div/input")
   private static WebElement inputFacilitySearch = null;
 
-  @FindBy(how = XPATH, using = "//h2[contains(text(),'No facility selected')]")
+  @FindBy(how = ID, using = "noFacilitySelectedMessage")
   private static WebElement noFacilitySelectedHeader = null;
 
-  @FindBy(how = XPATH, using = "//div[@class='record-facility-data ng-scope']/div[1]/div[1]/h2/span[3]")
+  @FindBy(how = ID, using = "facilitySelected")
   private static WebElement facilityPageHeaderName = null;
 
-  @FindBy(how = XPATH, using = "//div[@class='record-facility-data ng-scope']/div[1]/div[1]/h2/span[1]")
+  @FindBy(how = ID, using = "healthCenterLabel")
   private static WebElement facilityPageHeaderZone = null;
 
   @FindBy(how = XPATH, using = "//*[@id='s2id_selectFacility']/a")
@@ -56,34 +56,34 @@ public class FacilityListPage extends RequisitionPage {
   @FindBy(how = XPATH, using = "//div[@class='select2-result-label']/div/span[@class='status-icon']")
   private static WebElement firstFacilityIndicator = null;
 
-  @FindBy(how = XPATH, using = "//div[@id='legend']/span[1]/span[2]")
+  @FindBy(how = ID, using = "notStartedLegendLabel")
   private static WebElement legendNotStartedText = null;
 
-  @FindBy(how = XPATH, using = "//div[@id='legend']/span[1]/span[1]")
+  @FindBy(how = ID, using = "notStartedLegendIcon")
   private static WebElement legendNotStartedIcon = null;
 
-  @FindBy(how = XPATH, using = "//div[@id='legend']/span[2]/span[2]")
+  @FindBy(how = ID, using = "partialLegendLabel")
   private static WebElement legendPartiallyCompletedText = null;
 
-  @FindBy(how = XPATH, using = "//div[@id='legend']/span[2]/span[1]")
+  @FindBy(how = ID, using = "partialLegendIcon")
   private static WebElement legendPartiallyCompletedIcon = null;
 
-  @FindBy(how = XPATH, using = "//div[@id='legend']/span[3]/span[2]")
+  @FindBy(how = ID, using = "completedLegendLabel")
   private static WebElement legendCompletedText = null;
 
-  @FindBy(how = XPATH, using = "//div[@id='legend']/span[3]/span[1]")
+  @FindBy(how = ID, using = "completedLegendIcon")
   private static WebElement legendCompletedIcon = null;
 
-  @FindBy(how = XPATH, using = "//div[@id='legend']/span[4]/span[2]")
+  @FindBy(how = ID, using = "syncedLegendLabel")
   private static WebElement legendSynchronizedText = null;
 
-  @FindBy(how = XPATH, using = "//div[@id='legend']/span[4]/span[1]")
+  @FindBy(how = ID, using = "syncedLegendIcon")
   private static WebElement legendSynchronizedIcon = null;
 
-  @FindBy(how = XPATH, using = "//div[@id='legend']/span[5]/span[2]")
+  @FindBy(how = ID, using = "cannotSyncLegendLabel")
   private static WebElement legendCannotSynchronizedText = null;
 
-  @FindBy(how = XPATH, using = "//div[@id='legend']/span[5]/span[1]")
+  @FindBy(how = ID, using = "cannotSyncLegendIcon")
   private static WebElement legendCannotSynchronizedIcon = null;
 
   public FacilityListPage(TestWebDriver driver) {
@@ -128,7 +128,7 @@ public class FacilityListPage extends RequisitionPage {
     testWebDriver.waitForElementToAppear(facilityListSelectField);
     facilityListSelectField.click();
     testWebDriver.sleep(250);
-    return new VisitInformationPage(testWebDriver);
+    return PageObjectFactory.getVisitInformationPage(testWebDriver);
   }
 
   public void clickFacilityListDropDown() {
@@ -150,7 +150,7 @@ public class FacilityListPage extends RequisitionPage {
     assertEquals(facilityPageHeaderZone.getText(), facilityZone);
   }
 
-  public void verifyFacilityIndicatorColor(String whichIcon, String color) {
+  public void verifyOverallFacilityIndicatorColor(String color) {
     testWebDriver.waitForElementToAppear(facilityOverAllIndicator);
     if (color.toLowerCase().equals("RED".toLowerCase()))
       color = "rgba(203, 64, 64, 1)";
@@ -161,15 +161,26 @@ public class FacilityListPage extends RequisitionPage {
     else if (color.toLowerCase().equals("Blue".toLowerCase()))
       color = "rgba(22, 131, 230, 1)";
 
-    if (whichIcon.toLowerCase().equals("Overall".toLowerCase()))
-      assertEquals(facilityOverAllIndicator.getCssValue("background-color"), color);
-    else if (whichIcon.toLowerCase().equals("Individual".toLowerCase())) {
-      clickFacilityListDropDown();
-      testWebDriver.waitForElementToAppear(facilityListTextField);
-      testWebDriver.getElementByXpath("//*[@id='select2-drop']/ul/li[1]/div").click();
-      assertEquals(firstFacilityIndicator.getCssValue("background-color"), color);
-      inputFacilitySearch.sendKeys(Keys.ESCAPE);
-    }
+    assertEquals(facilityOverAllIndicator.getCssValue("background-color"), color);
+  }
+
+  public void verifyIndividualFacilityIndicatorColor(String facilityCode, String color) {
+    testWebDriver.waitForElementToAppear(facilityOverAllIndicator);
+    if (color.toLowerCase().equals("RED".toLowerCase()))
+      color = "rgba(203, 64, 64, 1)";
+    else if (color.toLowerCase().equals("GREEN".toLowerCase()))
+      color = "rgba(69, 182, 0, 1)";
+    else if (color.toLowerCase().equals("AMBER".toLowerCase()))
+      color = "rgba(240, 165, 19, 1)";
+    else if (color.toLowerCase().equals("Blue".toLowerCase()))
+      color = "rgba(22, 131, 230, 1)";
+
+    clickFacilityListDropDown();
+    testWebDriver.waitForElementToAppear(facilityListTextField);
+    inputFacilitySearch.sendKeys(facilityCode);
+    assertEquals(firstFacilityIndicator.getCssValue("background-color"), color);
+    inputFacilitySearch.clear();
+    inputFacilitySearch.sendKeys(Keys.ESCAPE);
   }
 
   public void verifyLegend() {

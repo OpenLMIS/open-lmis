@@ -20,6 +20,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.net.URISyntaxException;
 import java.util.UUID;
 
+/**
+ * This class is responsible for generating a feed on the event of change of status of a rnr.
+ */
+
 public class RequisitionStatusChangeEvent extends Event {
   static final String FEED_TITLE = "Requisition Status";
   static final String FEED_CATEGORY = "requisition-status";

@@ -14,7 +14,6 @@ package org.openlmis.pageobjects;
 import org.openlmis.UiUtils.TestWebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
-import org.openqa.selenium.support.How;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 
@@ -24,94 +23,95 @@ import java.util.Map;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
 import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
+import static org.openqa.selenium.support.How.ID;
 
 public class RolesPage extends Page {
 
-  @FindBy(how = How.ID, using = "role-add-new")
+  @FindBy(how = ID, using = "role-add-new")
   private static WebElement createNewRoleButton = null;
 
-  @FindBy(how = How.ID, using = "name")
+  @FindBy(how = ID, using = "name")
   private static WebElement roleNameField = null;
 
-  @FindBy(how = How.ID, using = "description")
+  @FindBy(how = ID, using = "description")
   private static WebElement roleDescription = null;
 
-  @FindBy(how = How.XPATH, using = "//div[@id='rights-CONFIGURE_RNR")
+  @FindBy(how = ID, using = "CONFIGURE_RNR")
   private static WebElement rightConfigureTemplate = null;
 
-  @FindBy(how = How.XPATH, using = "//div[@id='rights-MANAGE_FACILITY']/input")
+  @FindBy(how = ID, using = "MANAGE_FACILITY")
   private static WebElement rightManageFacilities = null;
 
-  @FindBy(how = How.XPATH, using = "//div[@id='rights-MANAGE_ROLE']/input")
+  @FindBy(how = ID, using = "MANAGE_ROLE")
   private static WebElement rightManageRoles = null;
 
-  @FindBy(how = How.XPATH, using = "//div[@id='allocationRights-MANAGE_DISTRIBUTION']/input")
+  @FindBy(how = ID, using = "MANAGE_DISTRIBUTION")
   private static WebElement rightManageDistribution = null;
 
-  @FindBy(how = How.XPATH, using = "//div[@id='rights-MANAGE_SCHEDULE']/input")
+  @FindBy(how = ID, using = "MANAGE_SCHEDULE")
   private static WebElement rightManageSchedules = null;
 
-  @FindBy(how = How.XPATH, using = "//div[@id='rights-UPLOADS']/input")
+  @FindBy(how = ID, using = "UPLOADS")
   private static WebElement rightUploads = null;
 
-  @FindBy(how = How.XPATH, using = "//div[@id='requisitionRights-CREATE_REQUISITION']/input")
+  @FindBy(how = ID, using = "CREATE_REQUISITION")
   private static WebElement rightCreateRequisition = null;
 
-  @FindBy(how = How.XPATH, using = "//div[@id='requisitionRights-AUTHORIZE_REQUISITION']/input")
+  @FindBy(how = ID, using = "AUTHORIZE_REQUISITION")
   private static WebElement rightAuthorizeRequisition = null;
 
-  @FindBy(how = How.XPATH, using = "//div[@id='requisitionRights-APPROVE_REQUISITION']/input")
+  @FindBy(how = ID, using = "APPROVE_REQUISITION")
   private static WebElement rightApproveRequisition = null;
 
-  @FindBy(how = How.ID, using = "CONVERT_TO_ORDER")
+  @FindBy(how = ID, using = "CONVERT_TO_ORDER")
   private static WebElement rightConvertToOrderRequisition = null;
 
-  @FindBy(how = How.ID, using = "VIEW_ORDER")
+  @FindBy(how = ID, using = "VIEW_ORDER")
   private static WebElement rightViewOrders = null;
 
-  @FindBy(how = How.XPATH, using = "//input[@value='Save']")
+  @FindBy(how = ID, using = "saveButton")
   private static WebElement saveButton = null;
 
-  @FindBy(how = How.XPATH, using = "//a[contains(text(),'Cancel')]")
+  @FindBy(how = ID, using = "cancelButton")
   private static WebElement cancelButton = null;
 
-  @FindBy(how = How.ID, using = "button_Cancel")
+  @FindBy(how = ID, using = "button_Cancel")
   private static WebElement cancelButtonOnModal = null;
 
-  @FindBy(how = How.ID, using = "saveSuccessMsgDiv")
+  @FindBy(how = ID, using = "saveSuccessMsgDiv")
   private static WebElement saveSuccessMsgDiv = null;
 
-  @FindBy(how = How.ID, using = "saveFailMessage")
+  @FindBy(how = ID, using = "saveFailMessage")
   private static WebElement saveErrorMsgDiv = null;
 
-  @FindBy(how = How.ID, using = "requisitionRoleType")
+  @FindBy(how = ID, using = "requisitionRoleType")
   private static WebElement requisitionRoleType = null;
 
-  @FindBy(how = How.ID, using = "adminRoleType")
+  @FindBy(how = ID, using = "adminRoleType")
   private static WebElement adminRoleType = null;
 
-  @FindBy(how = How.ID, using = "allocationRoleType")
+  @FindBy(how = ID, using = "allocationRoleType")
   private static WebElement allocationRoleType = null;
 
-  @FindBy(how = How.ID, using = "button_OK")
+  @FindBy(how = ID, using = "button_OK")
   private static WebElement continueButton = null;
 
-  @FindBy(how = How.XPATH, using = "//h2[contains(text(),'Edit role')]")
+  @FindBy(how = ID, using = "editRoleHeader")
   private static WebElement editRoleHeader = null;
 
-  @FindBy(how = How.XPATH, using = "//h2/span[contains(text(),'Roles')]")
+  @FindBy(how = ID, using = "rolesHeader")
   private static WebElement rolesHeader = null;
 
-  @FindBy(how = How.XPATH, using = "//h2[contains(text(),'Add new role')]")
+  @FindBy(how = ID, using = "addNewRoleHeader")
   private static WebElement addNewRoleHeader = null;
 
-  @FindBy(how = How.ID, using = "fulfillmentRoleType")
+  @FindBy(how = ID, using = "fulfillmentRoleType")
   private static WebElement facilityBasedRoleType = null;
 
-  @FindBy(how = How.XPATH, using = "//input[@id='FACILITY_FILL_SHIPMENT']")
+  @FindBy(how = ID, using = "FACILITY_FILL_SHIPMENT")
   private static WebElement rightFillShipment = null;
 
-  @FindBy(how = How.ID, using = "MANAGE_POD")
+  @FindBy(how = ID, using = "MANAGE_POD")
   private static WebElement rightManagePOD = null;
 
   private Map<String, WebElement> webElementMap = new HashMap<>();

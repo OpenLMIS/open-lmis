@@ -10,12 +10,16 @@
 package org.openlmis.core.repository;
 
 import org.openlmis.core.domain.DeliveryZoneProgramSchedule;
-import org.openlmis.core.repository.mapper.DeliveryZoneProgramScheduleMapper;
 import org.openlmis.core.domain.ProcessingSchedule;
+import org.openlmis.core.repository.mapper.DeliveryZoneProgramScheduleMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+
+/**
+ * DeliveryZoneProgramScheduleRepository is repository class for DeliveryZoneProgramSchedule related database operations.
+ */
 
 @Repository
 public class DeliveryZoneProgramScheduleRepository {
@@ -39,7 +43,7 @@ public class DeliveryZoneProgramScheduleRepository {
     return mapper.getProgramsIdsForDeliveryZones(deliveryZoneId);
   }
 
-  public ProcessingSchedule getProcessingScheduleByZoneAndProgram(long zoneId, long programId) {
+  public ProcessingSchedule getProcessingScheduleByZoneAndProgram(Long zoneId, Long programId) {
     return mapper.getProcessingScheduleByZoneAndProgram(zoneId, programId);
   }
 }

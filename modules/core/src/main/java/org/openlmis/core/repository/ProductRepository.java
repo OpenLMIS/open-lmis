@@ -13,7 +13,6 @@ package org.openlmis.core.repository;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.DosageUnit;
 import org.openlmis.core.domain.Product;
-import org.openlmis.core.domain.ProductCategory;
 import org.openlmis.core.domain.ProductForm;
 import org.openlmis.core.domain.ProductGroup;
 import org.openlmis.core.exception.DataException;
@@ -24,10 +23,9 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
+/**
+ * This is Repository class for Product related database operations.
+ */
 
 @Component
 @NoArgsConstructor
@@ -45,10 +43,10 @@ public class ProductRepository {
 
   public void insert(Product product) {
     try {
-      validateAndSetDosageUnit( product );
-      validateAndSetProductForm( product );
-      validateAndSetProductGroup( product );
-      Long id = mapper.insert( product );
+      validateAndSetDosageUnit(product);
+      validateAndSetProductForm(product);
+      validateAndSetProductGroup(product);
+      Long id = mapper.insert(product);
       product.setId( id );
     } catch (DuplicateKeyException duplicateKeyException) {
       throw new DataException("error.duplicate.product.code");
@@ -62,7 +60,7 @@ public class ProductRepository {
     }
   }
 
-  public void update(Product product){
+  public void update(Product product) {
     mapper.update(product);
   }
 

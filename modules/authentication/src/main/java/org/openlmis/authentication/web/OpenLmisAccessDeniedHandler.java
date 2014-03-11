@@ -18,6 +18,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+/**
+ * This class defines the access-denied strategy for the app. It responds with 403 for those requests.
+ */
+
 public class OpenLmisAccessDeniedHandler extends AccessDeniedHandlerImpl {
 
     @Override

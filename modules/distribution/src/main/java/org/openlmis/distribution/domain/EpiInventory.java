@@ -14,18 +14,21 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import org.openlmis.core.domain.BaseModel;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.FacilityProgramProduct;
 
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ *  EpiInventory represents a container for list of EpiInventoryLineItem.
+ */
+
 @Data
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 @NoArgsConstructor
-public class EpiInventory extends BaseModel {
+public class EpiInventory {
 
   private List<EpiInventoryLineItem> lineItems = new ArrayList<>();
 
@@ -35,6 +38,7 @@ public class EpiInventory extends BaseModel {
     for (FacilityProgramProduct facilityProgramProduct : programProducts) {
       EpiInventoryLineItem lineItem = new EpiInventoryLineItem(facilityVisit.getId(), facilityProgramProduct, facility.getCatchmentPopulation(), distribution.getPeriod().getNumberOfMonths());
       lineItem.setCreatedBy(facilityVisit.getCreatedBy());
+      lineItem.setModifiedBy(facilityVisit.getModifiedBy());
       lineItems.add(lineItem);
     }
   }

@@ -10,6 +10,10 @@
 
 package org.openlmis.order.domain;
 
+/**
+ *  Enum for Date Formats. Date formats used for Order Date have orderDate attribute set to true by default.
+ */
+
 import lombok.Getter;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.openlmis.order.serializer.DateFormatSerializer;

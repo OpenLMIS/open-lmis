@@ -15,6 +15,10 @@ import org.openlmis.distribution.repository.EpiInventoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+/**
+ * Exposes the services for handling EpiInventory entity.
+ */
+
 @Service
 public class EpiInventoryService {
 

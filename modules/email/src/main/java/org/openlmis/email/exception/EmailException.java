@@ -10,6 +10,10 @@
 
 package org.openlmis.email.exception;
 
+/**
+ * This is an exception that can be thrown during email sending process.
+ */
+
 public class EmailException extends RuntimeException {
 
   public EmailException(String message){

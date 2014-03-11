@@ -26,6 +26,10 @@ import java.util.Map;
 import static org.openlmis.distribution.domain.DistributionStatus.INITIATED;
 import static org.openlmis.distribution.domain.DistributionStatus.SYNCED;
 
+/**
+ * Exposes the services for handling Distribution entity.
+ */
+
 @Service
 public class DistributionService {
 
@@ -56,13 +60,13 @@ public class DistributionService {
     return repository.get(distribution);
   }
 
-  public DistributionStatus updateDistributionStatus(Long distributionId) {
-    if (facilityVisitService.getUnsyncedFacilityCountForDistribution(distributionId) > 0) {
-      return INITIATED;
-    } else {
-      repository.updateDistributionStatus(distributionId, DistributionStatus.SYNCED);
-      return SYNCED;
+  public DistributionStatus updateDistributionStatus(Long distributionId, Long modifiedBy) {
+    DistributionStatus distributionStatus = INITIATED;
+    if (facilityVisitService.getUnsyncedFacilityCountForDistribution(distributionId) == 0) {
+      distributionStatus = SYNCED;
     }
+    repository.updateDistributionStatus(distributionId, distributionStatus, modifiedBy);
+    return distributionStatus;
   }
 
   public List<Long> getSyncedPeriodsForDeliveryZoneAndProgram(Long zoneId, Long programId) {

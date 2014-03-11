@@ -19,20 +19,29 @@ import org.springframework.stereotype.Repository;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * It maps the OrderPOD and OrderPODLineItem entity to corresponding representation in database.
+ */
+
 @Repository
 public interface PODMapper {
 
   @Insert(
-    {"INSERT INTO pod_line_items ", "(podId, productCode, quantityReceived, quantityShipped, productName, dispensingUnit, packsToShip, fullSupply,", "productCategory, productCategoryDisplayOrder, productDisplayOrder, createdBy, modifiedBy, createdDate, modifiedDate) VALUES ", "(#{podId}, #{productCode}, #{quantityReceived}, #{quantityShipped}, #{productName}, #{dispensingUnit}, #{packsToShip}, #{fullSupply},", "#{productCategory}, #{productCategoryDisplayOrder}, #{productDisplayOrder}, #{createdBy}, #{modifiedBy}, DEFAULT, DEFAULT)"})
+    {"INSERT INTO pod_line_items ", "(podId, productCode, quantityReceived, quantityShipped, quantityReturned, productName, dispensingUnit, packsToShip, fullSupply,",
+      "productCategory, productCategoryDisplayOrder, productDisplayOrder, createdBy, modifiedBy, createdDate, modifiedDate) VALUES ",
+      "(#{podId}, #{productCode}, #{quantityReceived}, #{quantityShipped}, #{quantityReturned}, #{productName}, #{dispensingUnit}, #{packsToShip}, #{fullSupply},",
+      "#{productCategory}, #{productCategoryDisplayOrder}, #{productDisplayOrder}, #{createdBy}, #{modifiedBy}, DEFAULT, DEFAULT)"})
   @Options(useGeneratedKeys = true)
   void insertPODLineItem(OrderPODLineItem orderPodLineItem);
 
   @Select(
-    "SELECT * FROM pod_line_items WHERE podId = #{podId} ORDER BY productCategoryDisplayOrder, LOWER(productCategory), productDisplayOrder NULLS LAST, LOWER(productCode)")
+    {"SELECT * FROM pod_line_items WHERE podId = #{podId} ORDER BY productCategoryDisplayOrder,",
+      "LOWER(productCategory), productDisplayOrder NULLS LAST, LOWER(productCode)"})
   List<OrderPODLineItem> getPODLineItemsByPODId(Long podId);
 
   @Insert(
-    {"INSERT INTO pod (orderId, facilityId, programId, periodId, receivedDate, createdBy, modifiedBy) VALUES ", "(#{orderId}, #{facilityId}, #{programId}, #{periodId}, DEFAULT, #{createdBy}, #{modifiedBy} )"})
+    {"INSERT INTO pod (orderId, facilityId, programId, periodId, receivedDate, deliveredBy, receivedBy, createdBy, modifiedBy) VALUES ",
+      "(#{orderId}, #{facilityId}, #{programId}, #{periodId}, #{receivedDate}, #{deliveredBy}, #{receivedBy}, #{createdBy}, #{modifiedBy} )"})
   @Options(useGeneratedKeys = true)
   void insertPOD(OrderPOD orderPod);
 
@@ -60,10 +69,11 @@ public interface PODMapper {
     many = @Many(select = "org.openlmis.pod.repository.mapper.PODMapper.getPODLineItemsByPODId")),})
   OrderPOD getPODByOrderId(Long orderId);
 
-  @Update({"UPDATE pod SET modifiedBy = #{modifiedBy}, modifiedDate = DEFAULT WHERE id = #{id}"})
+  @Update({"UPDATE pod SET modifiedBy = #{modifiedBy}, receivedDate = #{receivedDate}, receivedBy = #{receivedBy},",
+    " deliveredBy = #{deliveredBy}, modifiedDate = DEFAULT WHERE id = #{id}"})
   void update(OrderPOD orderPOD);
 
-  @Update(
-    {"UPDATE pod_line_items SET quantityReceived = #{quantityReceived}, notes = #{notes}, modifiedBy = #{modifiedBy}, modifiedDate = DEFAULT WHERE id = #{id}"})
+  @Update({"UPDATE pod_line_items SET quantityReceived = #{quantityReceived}, quantityReturned = #{quantityReturned}, ",
+    "notes = #{notes}, modifiedBy = #{modifiedBy}, modifiedDate = DEFAULT WHERE id = #{id}"})
   void updateLineItem(OrderPODLineItem lineItem);
 }

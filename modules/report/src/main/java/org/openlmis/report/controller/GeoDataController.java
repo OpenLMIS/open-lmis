@@ -11,27 +11,13 @@
 package org.openlmis.report.controller;
 
 import lombok.NoArgsConstructor;
-import org.openlmis.core.domain.ProcessingPeriod;
-import org.openlmis.core.service.FacilityService;
-import org.openlmis.core.service.ProcessingScheduleService;
 import org.openlmis.report.mapper.lookup.GeographicZoneReportMapper;
-import org.openlmis.report.model.dto.*;
 import org.openlmis.report.response.OpenLmisResponse;
-import org.openlmis.report.service.lookup.ReportLookupService;
-import org.openlmis.report.util.InteractiveReportPeriodFilterParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-
-import javax.servlet.http.HttpServletRequest;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
@@ -42,20 +28,13 @@ public class GeoDataController extends BaseController {
 
   public static final String USER_ID = "USER_ID";
 
-  public static final String OPEN_LMIS_OPERATION_YEARS = "years";
-  public static final String OPEN_LMIS_OPERATION_MONTHS = "months";
-
   @Autowired
   private GeographicZoneReportMapper reportLookupService;
-  @Autowired
-  private FacilityService facilityService;
-
-  @Autowired
-  private ProcessingScheduleService processingScheduleService;
 
   @RequestMapping(value="/reporting-rate", method = GET, headers = BaseController.ACCEPT_JSON)
-  public ResponseEntity<OpenLmisResponse> getPrograms(){
-      return OpenLmisResponse.response( "map", this.reportLookupService.getGeoReportingRate(1L,1L) );
+  public ResponseEntity<OpenLmisResponse> getReportingRateReport(@RequestParam(value = "program", required = true, defaultValue = "0") Long program,
+                                                                 @RequestParam(value = "period", required = true, defaultValue = "0") Long period){
+      return OpenLmisResponse.response( "map", this.reportLookupService.getGeoReportingRate(program, period) );
   }
 
 }

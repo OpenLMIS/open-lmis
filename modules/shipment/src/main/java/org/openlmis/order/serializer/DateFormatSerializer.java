@@ -17,6 +17,10 @@ import org.openlmis.order.domain.DateFormat;
 
 import java.io.IOException;
 
+/**
+ * DateFormatSerializer is a custom serializer for DateFormat.
+ */
+
 public class DateFormatSerializer extends JsonSerializer<DateFormat> {
 
 

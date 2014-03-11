@@ -16,6 +16,10 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.BaseModel;
 
+/**
+ * Represents a Shipment file entity, its attributes, and accessor methods.
+ */
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

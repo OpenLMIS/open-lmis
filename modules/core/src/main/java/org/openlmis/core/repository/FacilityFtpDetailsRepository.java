@@ -17,6 +17,10 @@ import org.openlmis.core.repository.mapper.FacilityFtpDetailsMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+/**
+ * FacilityFtpDetailsRepository is rpository class for FacilityFtpDetails related database operations.
+ */
+
 @Component
 @NoArgsConstructor
 public class FacilityFtpDetailsRepository {

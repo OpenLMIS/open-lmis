@@ -18,18 +18,22 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+/**
+ * ProgramSupportedMapper maps the ProgramSupported mapping entity to corresponding representation in database. Also
+ * provides methods to replicate programs supported to virtual facility.
+ */
 @Repository
 public interface ProgramSupportedMapper {
   @Insert("INSERT INTO programs_supported" +
-      "(facilityId, programId, active, startDate, createdBy, modifiedBy, modifiedDate) VALUES (" +
-      "#{facilityId}, #{program.id}, #{active}, #{startDate}, #{createdBy}, #{modifiedBy}, #{modifiedDate})")
+    "(facilityId, programId, active, startDate, createdBy, modifiedBy, modifiedDate) VALUES (" +
+    "#{facilityId}, #{program.id}, #{active}, #{startDate}, #{createdBy}, #{modifiedBy}, #{modifiedDate})")
   @Options(flushCache = true, useGeneratedKeys = true)
   void insert(ProgramSupported programSupported);
 
   @Select("SELECT * FROM programs_supported WHERE facilityId = #{facilityId} AND programId = #{programId}")
   @Results({
-      @Result(property = "program", javaType = Program.class, column = "programId",
-          one = @One(select = "org.openlmis.core.repository.mapper.ProgramMapper.getById"))
+    @Result(property = "program", javaType = Program.class, column = "programId",
+      one = @One(select = "org.openlmis.core.repository.mapper.ProgramMapper.getById"))
   })
   ProgramSupported getBy(@Param("facilityId") Long facilityId, @Param("programId") Long programId);
 
@@ -37,34 +41,34 @@ public interface ProgramSupportedMapper {
   void delete(@Param(value = "facilityId") Long facilityId, @Param(value = "programId") Long programId);
 
   @Select({"SELECT * FROM programs_supported",
-      "WHERE facilityId = #{facilityId}",
-      "ORDER BY programId"})
+    "WHERE facilityId = #{facilityId}",
+    "ORDER BY programId"})
   @Results({
-      @Result(property = "program", javaType = Program.class, column = "programId", one = @One(select = "org.openlmis.core.repository.mapper.ProgramMapper.getById"))
+    @Result(property = "program", javaType = Program.class, column = "programId", one = @One(select = "org.openlmis.core.repository.mapper.ProgramMapper.getById"))
   })
   List<ProgramSupported> getAllByFacilityId(Long facilityId);
 
   @Update("UPDATE programs_supported SET active=#{active}, startDate=#{startDate}, modifiedDate=#{modifiedDate}, modifiedBy=#{modifiedBy}" +
-      "WHERE facilityId=#{facilityId} AND programId=#{program.id}")
+    "WHERE facilityId=#{facilityId} AND programId=#{program.id}")
     //TODO use COALESCE for modifiedDate
   void update(ProgramSupported programSupported);
 
   @Select({"SELECT P.code FROM programs_supported PS INNER JOIN programs P ON P.id = PS.programId ",
-      "WHERE PS.facilityId = #{facilityId} AND PS.active = TRUE AND P.active = TRUE"})
+    "WHERE PS.facilityId = #{facilityId} AND PS.active = TRUE AND P.active = TRUE"})
   @Results({
-      @Result(property = "program.code", column = "code")
+    @Result(property = "program.code", column = "code")
   })
   List<ProgramSupported> getActiveProgramsByFacilityId(Long facilityId);
 
 
   @Delete({"DELETE FROM programs_supported PS USING facilities F",
-      "WHERE PS.facilityId = F.id AND F.parentFacilityId = #{id}"})
+    "WHERE PS.facilityId = F.id AND F.parentFacilityId = #{id}"})
   int deleteVirtualFacilityProgramSupported(Facility parentFacility);
 
   @Insert({"INSERT INTO programs_supported(facilityId, programId, active, startDate, createdBy, modifiedBy)",
-      "SELECT C.virtualFacilityId, programId, active, startDate, createdBy, modifiedBy",
-      "FROM programs_supported PS, ",
-      "(SELECT id as virtualFacilityId FROM facilities where parentFacilityId=#{id}) AS C",
-      "WHERE PS.facilityId = #{id}"})
+    "SELECT C.virtualFacilityId, programId, active, startDate, createdBy, modifiedBy",
+    "FROM programs_supported PS, ",
+    "(SELECT id as virtualFacilityId FROM facilities where parentFacilityId=#{id}) AS C",
+    "WHERE PS.facilityId = #{id}"})
   void copyToVirtualFacilities(Facility parentFacility);
 }

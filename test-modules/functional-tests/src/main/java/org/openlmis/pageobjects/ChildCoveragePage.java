@@ -139,7 +139,7 @@ public class ChildCoveragePage extends DistributionTab {
   @FindBy(how = ID, using = "childCoverageTable")
   private static WebElement childCoverageTable = null;
 
-  @FindBy(how = ID, using = "applyNRAll")
+  @FindBy(how = ID, using = "childCoverageApplyNRAll")
   private static WebElement applyNrToAllButton = null;
 
   @FindBy(how = ID, using = "button_OK")
@@ -165,10 +165,10 @@ public class ChildCoveragePage extends DistributionTab {
     Map<String, String> dataMap = data.get(0);
     for (int rowNumber = 1; rowNumber <= 12; rowNumber++) {
       enterHealthCenter11MonthsDataForGivenRow(rowNumber, dataMap.get("healthCenter11"));
-      enterOutReach11MonthsDataForGivenRow(rowNumber, dataMap.get("outReach11"));
+      enterOutreach11MonthsDataForGivenRow(rowNumber, dataMap.get("outreach11"));
       if (rowNumber != 2) {
         enterHealthCenter23MonthsDataForGivenRow(rowNumber, dataMap.get("healthCenter23"));
-        enterOutReach23MonthsDataForGivenRow(rowNumber, dataMap.get("outReach23"));
+        enterOutreach23MonthsDataForGivenRow(rowNumber, dataMap.get("outreach23"));
       }
     }
     enterOpenedVialsCountForGivenGroupAndRow(1, 1, dataMap.get("openedVial"));
@@ -185,11 +185,11 @@ public class ChildCoveragePage extends DistributionTab {
     Map<String, String> dataMap = data.get(0);
     assertEquals(dataMap.get("targetGroup"), getTextOfTargetGroupValue(9));
     assertEquals(dataMap.get("healthCenter11"), getHealthCenter11MonthsDataForGivenRow(9));
-    assertEquals(dataMap.get("outReach11"), getOutReach11MonthsDataForGivenRow(9));
+    assertEquals(dataMap.get("outreach11"), getOutreach11MonthsDataForGivenRow(9));
     assertEquals(dataMap.get("total1"), getTotalForGivenColumnAndRow(1, 9));
     assertEquals(dataMap.get("coverageRate"), getCoverageRateForGivenRow(9));
     assertEquals(dataMap.get("healthCenter23"), getHealthCenter23MonthsDataForGivenRow(9));
-    assertEquals(dataMap.get("outReach23"), getOutReach23MonthsDataForGivenRow(9));
+    assertEquals(dataMap.get("outreach23"), getOutreach23MonthsDataForGivenRow(9));
     assertEquals(dataMap.get("total2"), getTotalForGivenColumnAndRow(2, 9));
     assertEquals(dataMap.get("total3"), getTotalForGivenColumnAndRow(3, 9));
     assertEquals(dataMap.get("openedVial"), getOpenedVialsCountForGivenGroupAndRow(9, 1));
@@ -207,10 +207,10 @@ public class ChildCoveragePage extends DistributionTab {
   public void verifyAllFieldsDisabled() {
     for (int rowNumber = 1; rowNumber <= 12; rowNumber++) {
       assertFalse(isHealthCenter11MonthsEnabledForGivenRow(rowNumber));
-      assertFalse(isOutReach11MonthsEnabledForGivenRow(rowNumber));
+      assertFalse(isOutreach11MonthsEnabledForGivenRow(rowNumber));
       if (rowNumber != 2) {
         assertFalse(isHealthCenter23MonthsEnabledForGivenRow(rowNumber));
-        assertFalse(isOutReach23MonthsEnabledForGivenRow(rowNumber));
+        assertFalse(isOutreach23MonthsEnabledForGivenRow(rowNumber));
       }
     }
     assertFalse(isOpenVialEnabled(1, 1));
@@ -408,14 +408,15 @@ public class ChildCoveragePage extends DistributionTab {
     healthCenter11Months.clear();
     healthCenter11Months.sendKeys(value);
     healthCenter11Months.sendKeys(Keys.TAB);
+    testWebDriver.setImplicitWait(100);
   }
 
-  public void enterOutReach11MonthsDataForGivenRow(int rowNumber, String value) {
-    WebElement outReach11Months = testWebDriver.getElementById("outreach11Months" + (rowNumber - 1));
-    testWebDriver.waitForElementToAppear(outReach11Months);
-    outReach11Months.clear();
-    outReach11Months.sendKeys(value);
-    outReach11Months.sendKeys(Keys.TAB);
+  public void enterOutreach11MonthsDataForGivenRow(int rowNumber, String value) {
+    WebElement outreach11Months = testWebDriver.getElementById("outreach11Months" + (rowNumber - 1));
+    testWebDriver.waitForElementToAppear(outreach11Months);
+    outreach11Months.clear();
+    outreach11Months.sendKeys(value);
+    outreach11Months.sendKeys(Keys.TAB);
   }
 
   public void enterHealthCenter23MonthsDataForGivenRow(int rowNumber, String value) {
@@ -426,12 +427,12 @@ public class ChildCoveragePage extends DistributionTab {
     healthCenter23Months.sendKeys(Keys.TAB);
   }
 
-  public void enterOutReach23MonthsDataForGivenRow(int rowNumber, String value) {
-    WebElement outReach23Months = testWebDriver.getElementById("outreach23Months" + (rowNumber - 1));
-    testWebDriver.waitForElementToAppear(outReach23Months);
-    outReach23Months.clear();
-    outReach23Months.sendKeys(value);
-    outReach23Months.sendKeys(Keys.TAB);
+  public void enterOutreach23MonthsDataForGivenRow(int rowNumber, String value) {
+    WebElement outreach23Months = testWebDriver.getElementById("outreach23Months" + (rowNumber - 1));
+    testWebDriver.waitForElementToAppear(outreach23Months);
+    outreach23Months.clear();
+    outreach23Months.sendKeys(value);
+    outreach23Months.sendKeys(Keys.TAB);
   }
 
   public String getHealthCenter11MonthsDataForGivenRow(int rowNumber) {
@@ -440,10 +441,10 @@ public class ChildCoveragePage extends DistributionTab {
     return healthCenter11Months.getAttribute("value");
   }
 
-  public String getOutReach11MonthsDataForGivenRow(int rowNumber) {
-    WebElement outReach11Months = testWebDriver.getElementById("outReach11Months" + (rowNumber - 1));
-    testWebDriver.waitForElementToAppear(outReach11Months);
-    return outReach11Months.getAttribute("value");
+  public String getOutreach11MonthsDataForGivenRow(int rowNumber) {
+    WebElement outreach11Months = testWebDriver.getElementById("outreach11Months" + (rowNumber - 1));
+    testWebDriver.waitForElementToAppear(outreach11Months);
+    return outreach11Months.getAttribute("value");
   }
 
   public String getHealthCenter23MonthsDataForGivenRow(int rowNumber) {
@@ -452,10 +453,10 @@ public class ChildCoveragePage extends DistributionTab {
     return healthCenter23Months.getAttribute("value");
   }
 
-  public String getOutReach23MonthsDataForGivenRow(int rowNumber) {
-    WebElement outReach23Months = testWebDriver.getElementById("outReach23Months" + (rowNumber - 1));
-    testWebDriver.waitForElementToAppear(outReach23Months);
-    return outReach23Months.getAttribute("value");
+  public String getOutreach23MonthsDataForGivenRow(int rowNumber) {
+    WebElement outreach23Months = testWebDriver.getElementById("outreach23Months" + (rowNumber - 1));
+    testWebDriver.waitForElementToAppear(outreach23Months);
+    return outreach23Months.getAttribute("value");
   }
 
   public void applyNRToHealthCenter11MonthsForGivenRow(int rowNumber) {
@@ -465,10 +466,10 @@ public class ChildCoveragePage extends DistributionTab {
     removeFocusFromElement();
   }
 
-  public void applyNRToOutReach11MonthsForGivenRow(int rowNumber) {
-    WebElement outReach11MonthsNR = testWebDriver.getElementById("coverageOutReach11Months" + (rowNumber - 1));
-    testWebDriver.waitForElementToAppear(outReach11MonthsNR);
-    outReach11MonthsNR.click();
+  public void applyNRToOutreach11MonthsForGivenRow(int rowNumber) {
+    WebElement outreach11MonthsNR = testWebDriver.getElementById("coverageOutreach11Months" + (rowNumber - 1));
+    testWebDriver.waitForElementToAppear(outreach11MonthsNR);
+    outreach11MonthsNR.click();
     removeFocusFromElement();
   }
 
@@ -479,10 +480,10 @@ public class ChildCoveragePage extends DistributionTab {
     removeFocusFromElement();
   }
 
-  public void applyNRToOutReach23MonthsDataForGivenRow(int rowNumber) {
-    WebElement outReach23MonthsNR = testWebDriver.getElementById("coverageOutReach23Months" + (rowNumber - 1));
-    testWebDriver.waitForElementToAppear(outReach23MonthsNR);
-    outReach23MonthsNR.click();
+  public void applyNRToOutreach23MonthsDataForGivenRow(int rowNumber) {
+    WebElement outreach23MonthsNR = testWebDriver.getElementById("coverageOutreach23Months" + (rowNumber - 1));
+    testWebDriver.waitForElementToAppear(outreach23MonthsNR);
+    outreach23MonthsNR.click();
     removeFocusFromElement();
   }
 
@@ -560,10 +561,10 @@ public class ChildCoveragePage extends DistributionTab {
     return healthCenter11Months.isEnabled();
   }
 
-  public boolean isOutReach11MonthsEnabledForGivenRow(int rowNumber) {
-    WebElement outReach11Months = testWebDriver.getElementById("outreach11Months" + (rowNumber - 1));
-    testWebDriver.waitForElementToAppear(outReach11Months);
-    return outReach11Months.isEnabled();
+  public boolean isOutreach11MonthsEnabledForGivenRow(int rowNumber) {
+    WebElement outreach11Months = testWebDriver.getElementById("outreach11Months" + (rowNumber - 1));
+    testWebDriver.waitForElementToAppear(outreach11Months);
+    return outreach11Months.isEnabled();
   }
 
   public boolean isHealthCenter23MonthsEnabledForGivenRow(int rowNumber) {
@@ -572,10 +573,10 @@ public class ChildCoveragePage extends DistributionTab {
     return healthCenter23Months.isEnabled();
   }
 
-  public boolean isOutReach23MonthsEnabledForGivenRow(int rowNumber) {
-    WebElement outReach23Months = testWebDriver.getElementById("outreach23Months" + (rowNumber - 1));
-    testWebDriver.waitForElementToAppear(outReach23Months);
-    return outReach23Months.isEnabled();
+  public boolean isOutreach23MonthsEnabledForGivenRow(int rowNumber) {
+    WebElement outreach23Months = testWebDriver.getElementById("outreach23Months" + (rowNumber - 1));
+    testWebDriver.waitForElementToAppear(outreach23Months);
+    return outreach23Months.isEnabled();
   }
 
   public void applyNRToAll() {
@@ -591,5 +592,29 @@ public class ChildCoveragePage extends DistributionTab {
   public void clickCancel() {
     testWebDriver.waitForElementToAppear(cancelButton);
     cancelButton.click();
+  }
+
+  public void enterOpenedVialsData() {
+    enterOpenedVialsCountForGivenGroupAndRow(1, 1, "100");
+    enterOpenedVialsCountForGivenGroupAndRow(2, 1, "200");
+    enterOpenedVialsCountForGivenGroupAndRow(2, 2, "300");
+    enterOpenedVialsCountForGivenGroupAndRow(6, 1, "400");
+    enterOpenedVialsCountForGivenGroupAndRow(6, 2, "500");
+    enterOpenedVialsCountForGivenGroupAndRow(9, 1, "600");
+    enterOpenedVialsCountForGivenGroupAndRow(12, 1, "700");
+  }
+
+  public void enterAllChildCoverageValues() {
+    for (int i = 1; i <= 12; i++) {
+      if (i == 2) {
+        enterHealthCenter11MonthsDataForGivenRow(i, String.valueOf(i));
+        enterOutreach11MonthsDataForGivenRow(i, String.valueOf(i + 10));
+      } else {
+        enterHealthCenter11MonthsDataForGivenRow(i, String.valueOf(i));
+        enterOutreach11MonthsDataForGivenRow(i, String.valueOf(i + 10));
+        enterHealthCenter23MonthsDataForGivenRow(i, String.valueOf(i + 100));
+        enterOutreach23MonthsDataForGivenRow(i, String.valueOf(i + 11));
+      }
+    }
   }
 }

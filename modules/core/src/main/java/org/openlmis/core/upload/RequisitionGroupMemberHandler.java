@@ -22,6 +22,10 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+/**
+ * RequisitionGroupMemberHandler is used for uploads of RequisitionGroup members (facilities).
+ * It uploads each RequisitionGroupMember record by record.
+ */
 @NoArgsConstructor
 @Component
 public class RequisitionGroupMemberHandler extends AbstractModelPersistenceHandler {

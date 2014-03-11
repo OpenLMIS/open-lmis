@@ -15,6 +15,11 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.EDIFileColumn;
 
+/**
+ * Represents the attributes for a column in Order file. It extends EDIFileColumn for basic configuration and provides
+ * configuration for each column like columnLabel, format.
+ */
+
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)

@@ -22,6 +22,11 @@ import org.openlmis.core.exception.DataException;
 import static org.apache.commons.lang3.BooleanUtils.isTrue;
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 
+/**
+ *  RefrigeratorProblem represents an entity which keeps track of the problems recorded for particular
+ *  refrigerator in a facility visit.
+ */
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

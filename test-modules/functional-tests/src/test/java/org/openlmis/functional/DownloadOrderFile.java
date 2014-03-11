@@ -17,6 +17,7 @@ import org.openlmis.UiUtils.CaptureScreenshotOnFailureListener;
 import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.pageobjects.HomePage;
 import org.openlmis.pageobjects.LoginPage;
+import org.openlmis.pageobjects.PageObjectFactory;
 import org.openlmis.pageobjects.ViewOrdersPage;
 import org.openlmis.pageobjects.edi.ConvertOrderPage;
 import org.testng.annotations.*;
@@ -72,7 +73,7 @@ public class DownloadOrderFile extends TestCaseHelper {
 
   @And("^I download order file$")
   public void downloadOrderFile() throws InterruptedException {
-    ViewOrdersPage viewOrdersPage = PageFactory.getInstanceOfViewOrdersPage(testWebDriver);
+    ViewOrdersPage viewOrdersPage = PageObjectFactory.getViewOrdersPage(testWebDriver);
     viewOrdersPage.downloadCSV();
     testWebDriver.sleep(5000);
   }
@@ -155,7 +156,7 @@ public class DownloadOrderFile extends TestCaseHelper {
     dbWrapper.insertRoleAssignment("212", "lmu");
     dbWrapper.insertFulfilmentRoleAssignment("lmu", "lmu", "F10");
 
-    LoginPage loginPage = PageFactory.getInstanceOfLoginPage(testWebDriver, baseUrlGlobal);
+    LoginPage loginPage = PageObjectFactory.getLoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(userSICUserName, password);
     homePage.navigateAndInitiateRnr(program);
     homePage.clickProceed();
@@ -171,7 +172,7 @@ public class DownloadOrderFile extends TestCaseHelper {
     loginPage.loginAs("lmu", password);
     homePage.navigateConvertToOrder();
 
-    ConvertOrderPage convertOrderPage = PageFactory.getInstanceOfConvertOrderPage(testWebDriver);
+    ConvertOrderPage convertOrderPage = PageObjectFactory.getConvertOrderPage(testWebDriver);
     convertOrderPage.clickConvertToOrderButton();
     convertOrderPage.clickCheckBoxConvertToOrder();
     convertOrderPage.clickConvertToOrderButton();
@@ -184,7 +185,7 @@ public class DownloadOrderFile extends TestCaseHelper {
   public void tearDown() throws SQLException {
     testWebDriver.sleep(500);
     if (!testWebDriver.getElementById("username").isDisplayed()) {
-      HomePage homePage = PageFactory.getInstanceOfHomePage(testWebDriver);
+      HomePage homePage = PageObjectFactory.getHomePage(testWebDriver);
       homePage.logout(baseUrlGlobal);
       dbWrapper.deleteData();
       dbWrapper.closeConnection();

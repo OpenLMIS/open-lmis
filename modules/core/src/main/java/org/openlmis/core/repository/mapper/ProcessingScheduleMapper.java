@@ -18,7 +18,9 @@ import org.openlmis.core.domain.ProcessingSchedule;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-
+/**
+ * ProcessingScheduleMapper maps the ProcessingSchedule entity to corresponding representation in database.
+ */
 @Repository
 public interface ProcessingScheduleMapper {
 

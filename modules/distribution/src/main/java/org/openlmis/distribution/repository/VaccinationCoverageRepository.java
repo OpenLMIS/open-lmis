@@ -17,6 +17,10 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+/**
+ * Repository class for vaccination full coverage, child coverage and adult coverage related database operations.
+ */
+
 @Repository
 public class VaccinationCoverageRepository {
 
@@ -31,8 +35,8 @@ public class VaccinationCoverageRepository {
     return mapper.getFullCoverageBy(facilityVisitId);
   }
 
-  public List<VaccinationProduct> getVaccinationProducts(Boolean isChildCoverage) {
-    return mapper.getVaccinationProducts(isChildCoverage);
+  public List<TargetGroupProduct> getVaccinationProducts() {
+    return mapper.getVaccinationProducts();
   }
 
   public void saveChildCoverage(VaccinationChildCoverage childCoverage) {
@@ -46,18 +50,44 @@ public class VaccinationCoverageRepository {
 
     for (OpenedVialLineItem openedVialLineItem : childCoverage.getOpenedVialLineItems()) {
       if (openedVialLineItem.getId() == null) {
-        mapper.insertOpenedVialLineItem(openedVialLineItem);
+        mapper.insertChildCoverageOpenedVialLineItem(openedVialLineItem);
       } else {
-        mapper.updateOpenedVialLineItem(openedVialLineItem);
+        mapper.updateChildCoverageOpenedVialLineItem(openedVialLineItem);
       }
     }
   }
 
   public VaccinationChildCoverage getChildCoverageBy(Long facilityVisitId) {
-    return new VaccinationChildCoverage(mapper.getChildCoverageLineItemsBy(facilityVisitId));
+    VaccinationChildCoverage childCoverage = new VaccinationChildCoverage(mapper.getChildCoverageLineItemsBy(facilityVisitId));
+    childCoverage.setOpenedVialLineItems(mapper.getChildCoverageOpenedVialLineItemsBy(facilityVisitId));
+    return childCoverage;
   }
 
   public List<ProductVial> getProductVials() {
     return mapper.getProductVials();
+  }
+
+  public void saveAdultCoverage(VaccinationAdultCoverage adultCoverage) {
+    for (AdultCoverageLineItem adultCoverageLineItem : adultCoverage.getAdultCoverageLineItems()) {
+      if (adultCoverageLineItem.getId() == null) {
+        mapper.insertAdultCoverageLineItem(adultCoverageLineItem);
+      } else {
+        mapper.updateAdultCoverageLineItem(adultCoverageLineItem);
+      }
+    }
+
+    for (OpenedVialLineItem openedVialLineItem : adultCoverage.getOpenedVialLineItems()) {
+      if (openedVialLineItem.getId() == null) {
+        mapper.insertAdultCoverageOpenedVialLineItem(openedVialLineItem);
+      } else {
+        mapper.updateAdultCoverageOpenedVialLineItem(openedVialLineItem);
+      }
+    }
+  }
+
+  public VaccinationAdultCoverage getAdultCoverageBy(Long facilityVisitId) {
+    VaccinationAdultCoverage adultCoverage = new VaccinationAdultCoverage(mapper.getAdultCoverageLineItemsBy(facilityVisitId));
+    adultCoverage.setOpenedVialLineItems(mapper.getAdultCoverageOpenedVialLineItemsBy(facilityVisitId));
+    return adultCoverage;
   }
 }

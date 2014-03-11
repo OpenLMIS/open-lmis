@@ -12,11 +12,8 @@ package org.openlmis.functional;
 
 
 import org.openlmis.UiUtils.CaptureScreenshotOnFailureListener;
-import org.openlmis.extension.functional.reports.ReportTestHelper;
-import org.openlmis.pageobjects.HomePage;
-import org.openlmis.pageobjects.InitiateRnRPage;
-import org.openlmis.pageobjects.LoginPage;
-import org.openlmis.pageobjects.ViewRequisitionPage;
+import org.openlmis.UiUtils.TestCaseHelper;
+import org.openlmis.pageobjects.*;
 import org.testng.annotations.*;
 
 import java.io.IOException;
@@ -28,7 +25,7 @@ import static java.util.Arrays.asList;
 
 @Listeners(CaptureScreenshotOnFailureListener.class)
 
-public class RnRPagination extends ReportTestHelper {
+public class RnRPagination extends TestCaseHelper {
 
   private static final String FULL_SUPPLY_BASE_LOCATOR = "//table[@id='fullSupplyTable']";
   private static final String NON_FULL_SUPPLY_BASE_LOCATOR = "//table[@id='nonFullSupplyTable']";
@@ -39,8 +36,8 @@ public class RnRPagination extends ReportTestHelper {
   @BeforeMethod(groups = {"requisition"})
   public void setUp() throws InterruptedException, SQLException, IOException {
     super.setup();
-    initiateRnRPage = PageFactory.getInstanceOfInitiateRnRPage(testWebDriver);
-    loginPage = PageFactory.getInstanceOfLoginPage(testWebDriver, baseUrlGlobal);
+    initiateRnRPage = PageObjectFactory.getInitiateRnRPage(testWebDriver);
+    loginPage = PageObjectFactory.getLoginPage(testWebDriver, baseUrlGlobal);
   }
 
   @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-Positive", enabled = false)
@@ -230,7 +227,7 @@ public class RnRPagination extends ReportTestHelper {
 
   @AfterMethod(groups = {"requisition"})
   public void tearDown() throws SQLException {
-    HomePage homePage = PageFactory.getInstanceOfHomePage(testWebDriver);
+    HomePage homePage = PageObjectFactory.getHomePage(testWebDriver);
     homePage.logout(baseUrlGlobal);
     dbWrapper.deleteData();
     dbWrapper.closeConnection();
