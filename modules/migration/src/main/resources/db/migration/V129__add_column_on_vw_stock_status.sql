@@ -2,10 +2,10 @@
 DROP VIEW IF EXISTS vw_stock_status;
 CREATE OR REPLACE VIEW vw_stock_status AS
  SELECT fn_get_supplying_facility_name(requisitions.supervisorynodeid) AS supplyingfacility,
-    facilities.code AS facilitycode, requisitions.id AS rnrid,
+    facilities.code AS facilitycode,
     facilities.name AS facility, requisitions.status AS req_status,
     requisition_line_items.product, requisition_line_items.stockinhand,
-    requisition_line_items.stockinhand + requisition_line_items.beginningbalance + requisition_line_items.quantitydispensed + requisition_line_items.quantityreceived + requisition_line_items.totallossesandadjustments AS reported_figures,
+    requisition_line_items.stockinhand + requisition_line_items.beginningbalance + requisition_line_items.quantitydispensed + requisition_line_items.quantityreceived + abs(requisition_line_items.totallossesandadjustments) AS reported_figures,
     requisitions.id as rnrid,
     requisition_line_items.amc,
         CASE
@@ -49,6 +49,3 @@ CREATE OR REPLACE VIEW vw_stock_status AS
    JOIN requisition_group_members ON requisition_group_members.facilityid = facilities.id
    JOIN geographic_zones ON geographic_zones.id = facilities.geographiczoneid
   WHERE requisition_line_items.stockinhand IS NOT NULL AND requisition_line_items.skipped = false;
-
-ALTER TABLE vw_stock_status
-  OWNER TO postgres;
