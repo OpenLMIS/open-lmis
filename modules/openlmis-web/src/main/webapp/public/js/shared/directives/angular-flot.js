@@ -8,8 +8,9 @@
 
 app.directive('aFloat', function() {
     function link(scope, element, attrs){
-        var data = scope.afData;
-        var options = scope.afOption;
+        scope.$watch('afData + afOption', function(){
+            init(scope.afData,scope.afOption);
+        });
 
         var totalWidth = element.width(), totalHeight = element.height();
 
@@ -20,21 +21,12 @@ app.directive('aFloat', function() {
         function init(o,d){
             $.plot(element, o , d);
         }
-
-        scope.$watch('afOption', function (o){
-          init(o,data);
-        });
-        scope.$watch('afData', function (d){
-           init(d,options);
-        });
-
     }
     return {
         restrict: 'EA',
         template: '<div></div>',
         link: link,
         replace:true,
-        transclude: false,
         scope: {
             afOption: '=',
             afData: '='
