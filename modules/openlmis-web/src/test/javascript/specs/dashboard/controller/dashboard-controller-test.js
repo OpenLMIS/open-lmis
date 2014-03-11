@@ -25,7 +25,7 @@ describe("Dashboard Controller",function (){
         facilities = [
             {"id": 10134, "name": "National Warehouse", "description": null, "geographicZone" :{"id": 505}}
         ];
-        var userFacilityData = {"facilityList": facilities};
+        var userGeographicZoneList = _.map(facilities, function(facility){return facility.geographicZone;});// {"facilityList": facilities};
 
         var operationYears = {"years" : [2010,2011,2012,2013,2014]};
 
@@ -47,7 +47,7 @@ describe("Dashboard Controller",function (){
             {"id":1,"code":"F11","name":"lokesh"}
         ]};
 
-        ctrl = $controller(AdminDashboardController, {$scope: scope, $rootScope: rootScope, userFacilityData : userFacilityData});
+        ctrl = $controller(AdminDashboardController, {$scope: scope, $rootScope: rootScope, userGeographicZoneList : userGeographicZoneList});
 
         scope.filterObject = {};
         scope.filterObject.facilityId =  10135;

@@ -9,7 +9,7 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-function AdminDashboardController($scope,$timeout,$filter, userFacilityData, ReportPrograms, ReportSchedules, ReportPeriods, RequisitionGroupsByProgram,RequisitionGroupsByProgramSchedule, ReportProductsByProgram, OperationYears, ReportPeriodsByScheduleAndYear, FacilitiesByGeographicZoneAndProgramParams, OrderFillRate, ItemFillRate, ngTableParams) {
+function AdminDashboardController($scope,$timeout,$filter,$window, userGeographicZoneList, ReportPrograms, ReportSchedules, ReportPeriods, RequisitionGroupsByProgram,RequisitionGroupsByProgramSchedule, ReportProductsByProgram, OperationYears, ReportPeriodsByScheduleAndYear, FacilitiesByGeographicZoneAndProgramParams, OrderFillRate, ItemFillRate, StockEfficiency,ngTableParams) {
 
     $scope.filterObject = {};
 
@@ -23,14 +23,11 @@ function AdminDashboardController($scope,$timeout,$filter, userFacilityData, Rep
     function initialize() {
         if(isUndefined($scope.filterObject.geographicZoneId)){
             $scope.filterObject.geographicZoneId = 0;
-            var userFacility = userFacilityData.facilityList[0];
-            if (userFacility) {
-                $scope.filterObject.geographicZoneId = userFacility.geographicZone.id;
+            if(!isUndefined(userGeographicZoneList) ){
+                $scope.filterObject.geographicZoneId = userGeographicZoneList[0] !== null ? userGeographicZoneList[0].id : undefined;
             }
         }
     }
-
-    $scope.productSelectOption = {maximumSelectionSize : 4};
 
     var itemFillRateColors = [{'minRange': -100, 'maxRange': 0, 'color' : '#E23E3E', 'description' : 'Red color for product with a fill rate <= 0 '},
         {'minRange': 1, 'maxRange': 50, 'color' : '#FEBA50', 'description' : 'Yellow color for product with a fill rate > 0 and <= 50 '},
@@ -99,6 +96,7 @@ function AdminDashboardController($scope,$timeout,$filter, userFacilityData, Rep
         });
 
         $scope.loadFacilities();
+        $scope.loadStockingData();
 
     };
 
@@ -106,6 +104,7 @@ function AdminDashboardController($scope,$timeout,$filter, userFacilityData, Rep
 
         $scope.filterObject.productIdList = $scope.formFilter.productIdList;
         $scope.loadFillRates();
+        $scope.loadStockingData();
 
     };
 
@@ -207,34 +206,31 @@ function AdminDashboardController($scope,$timeout,$filter, userFacilityData, Rep
         );
     };
 
-    $scope.ChangeSchedule = function(){
+    $scope.changeSchedule = function(){
 
         if ($scope.formFilter.scheduleId == "All") {
             $scope.filterObject.scheduleId = -1;
         } else if ($scope.formFilter.scheduleId !== undefined || $scope.formFilter.scheduleId === "") {
             $scope.filterObject.scheduleId = $scope.formFilter.scheduleId;
-            $.each($scope.schedules , function (item, idx) {
-                if (idx.id == $scope.formFilter.scheduleId) {
-                    $scope.filterObject.schedule = idx.name;
-                }
-            });
-
         } else {
             $scope.filterObject.scheduleId = 0;
         }
+        if(!isUndefined($scope.filterObject.scheduleId)){
+            ReportPeriods.get({ scheduleId : $scope.filterObject.scheduleId },function(data) {
+                $scope.periods = data.periods;
+                $scope.periods.unshift({'name':'-- Select a Period --','id':'0'});
 
-        ReportPeriods.get({ scheduleId : $scope.filterObject.scheduleId },function(data) {
-            $scope.periods = data.periods;
-            $scope.periods.unshift({'name':'-- Select a Period --','id':'0'});
+            });
 
-        });
-
-        RequisitionGroupsByProgramSchedule.get({program: $scope.filterObject.programId, schedule:$scope.filterObject.scheduleId}, function(data){
-            $scope.requisitionGroups = data.requisitionGroupList;
-            $scope.requisitionGroups.unshift({'name':'-- All Requisition Groups --','id':'0'});
-        });
-
+            if(!isUndefined($scope.filterObject.programId)){
+                RequisitionGroupsByProgramSchedule.get({program: $scope.filterObject.programId, schedule:$scope.filterObject.scheduleId}, function(data){
+                    $scope.requisitionGroups = data.requisitionGroupList;
+                    $scope.requisitionGroups.unshift({'name':'-- All Requisition Groups --','id':'0'});
+                });
+            }
+        }
         $scope.loadFacilities();
+        $scope.loadStockingData();
     };
 
     $scope.loadFacilitiesByRequisition = function(){
@@ -269,7 +265,7 @@ function AdminDashboardController($scope,$timeout,$filter, userFacilityData, Rep
             $scope.filterObject.periodId = 0;
         }
         $scope.loadFillRates();
-
+        $scope.loadStockingData();
     };
 
     $scope.changeScheduleByYear = function (){
@@ -284,21 +280,23 @@ function AdminDashboardController($scope,$timeout,$filter, userFacilityData, Rep
         }
 
         if($scope.filterObject.year === -1 || $scope.filterObject.year === 0){
-            $scope.ChangeSchedule();
+            $scope.changeSchedule();
 
         }else{
-
-            ReportPeriodsByScheduleAndYear.get({scheduleId: $scope.filterObject.scheduleId, year: $scope.filterObject.year}, function(data){
-                $scope.periods = data.periods;
-                $scope.periods.unshift({'name':'-- Select a Period --','id':'0'});
-            });
-
-            RequisitionGroupsByProgramSchedule.get({program: $scope.filterObject.programId, schedule:$scope.filterObject.scheduleId}, function(data){
-                $scope.requisitionGroups = data.requisitionGroupList;
-                $scope.requisitionGroups.unshift({'name':'-- All Requisition Groups --','id':'0'});
-            });
-
+            if(!isUndefined($scope.filterObject.scheduleId) && !isUndefined($scope.filterObject.year)){
+                ReportPeriodsByScheduleAndYear.get({scheduleId: $scope.filterObject.scheduleId, year: $scope.filterObject.year}, function(data){
+                    $scope.periods = data.periods;
+                    $scope.periods.unshift({'name':'-- Select a Period --','id':'0'});
+                });
+            }
+            if(!isUndefined($scope.filterObject.scheduleId) && !isUndefined($scope.filterObject.programId)){
+                RequisitionGroupsByProgramSchedule.get({program: $scope.filterObject.programId, schedule:$scope.filterObject.scheduleId}, function(data){
+                    $scope.requisitionGroups = data.requisitionGroupList;
+                    $scope.requisitionGroups.unshift({'name':'-- All Requisition Groups --','id':'0'});
+                });
+            }
             $scope.loadFacilities();
+            $scope.loadStockingData();
         }
 
     };
@@ -321,30 +319,23 @@ function AdminDashboardController($scope,$timeout,$filter, userFacilityData, Rep
     }
 
     $scope.barChartData =  [{ label: "Random Tabs Data Size", data:  GenerateSeries(0), color: "#5482FF" }];
-
     $scope.barChartOption = {
         series: {
-            bars: {show: true}
-        },
-        bars: {
-            align: "center",
-            fillColor:  "#5482FF",
-            barWidth: 0.3
+            bars: {show: true,
+                align: "center",
+                lineWidth:0,
+                fill: 0.6,
+                barWidth: 0.3
+            }
         },
         xaxis: {
             axisLabel: "Sample tabs",
-            axisLabelUseCanvas: true,
-            axisLabelFontSizePixels: 12,
-            axisLabelFontFamily: 'Verdana, Arial',
-            axisLabelPadding: 10,
+            axisLabelUseCanvas: false,
             ticks: barChartTicks
         },
         yaxis: {
             axisLabel: "Data Size",
-            axisLabelUseCanvas: true,
-            axisLabelFontSizePixels: 12,
-            axisLabelFontFamily: 'Verdana, Arial',
-            axisLabelPadding: 3,
+            axisLabelUseCanvas: false,
             tickFormatter: function (v, axis) {
                 return v + "kb";
             }
@@ -356,8 +347,14 @@ function AdminDashboardController($scope,$timeout,$filter, userFacilityData, Rep
         grid:{
             clickable:true,
             hoverable: true,
-            borderWidth: 2,
-            backgroundColor: { colors: ["#ffffff", "#EDF5FF"] }
+            //autoHighlight: true,
+            borderWidth: 1,
+            borderColor: "#d6d6d6",
+            minBorderMargin: 20,
+            labelMargin: 10,
+            backgroundColor: {
+                colors: ["#FFF", "#CCC"]
+            }
         },tooltip: true,
         tooltipOpts: {
             content: "%s of %x.0 is %y",
@@ -369,10 +366,15 @@ function AdminDashboardController($scope,$timeout,$filter, userFacilityData, Rep
         }
     };
 
-
     $("#afloat1").bind("plotclick", function (event, pos, item) {
+        alert('item clicked '+JSON.stringify(item));
         if(item) {
             var barIndex =  item.datapoint[0];
+            if (item.datapoint[0]) {
+                $("#afloat1").css('cursor','crosshair');
+            } else {
+                $("#afloat1").css('cursor','auto');
+            }
             if(++barIndex <=4){
                 var tabId ='dashboard-tab-'+ barIndex;
 
@@ -381,6 +383,22 @@ function AdminDashboardController($scope,$timeout,$filter, userFacilityData, Rep
         }
     });
 
+    function flotChartHoverCursorHandler(event,pos,item){
+        if(!isUndefined(item)) {
+            if (item.datapoint[0]) {
+                $(event.target).css('cursor','pointer');
+            } else {
+                $(event.target).css('cursor','auto');
+            }
+        }else{
+            $(event.target).css('cursor','auto');
+        }
+
+    }
+
+    $("#afloat1").bind("plothover", function (event, pos, item) {
+        flotChartHoverCursorHandler(event, pos, item);
+    });
     /* End Bar Chart */
 
     /* Pie Chart */
@@ -418,10 +436,19 @@ function AdminDashboardController($scope,$timeout,$filter, userFacilityData, Rep
             }
         },
         legend: {
-            show: true
+            container:$("#districtReportLegend"),
+            noColumns: 0,
+            labelBoxBorderColor: "none"
         },
         grid:{
-            hoverable: true
+            hoverable: true,
+            borderWidth: 1,
+            borderColor: "#d6d6d6",
+            //minBorderMargin: 20,
+            //labelMargin: 10,
+            backgroundColor: {
+                colors: ["#FFF", "#CCC"]
+            }
         },
         tooltip: true,
         tooltipOpts: {
@@ -523,138 +550,152 @@ function AdminDashboardController($scope,$timeout,$filter, userFacilityData, Rep
 
     /* End of Easy pie chart */
 
-    /* Custom Bar Chart */
-    var d1_1 = [[0, 95],[1, 70],[2, 94]];
+    $scope.loadStockingData = function(){
 
-    var d1_2 = [[0, 80],[1, 60],[2, 30]];
-
-    var d1_3 = [[0, 65],[1, 40],[2, 45]];
-
-    var multiBarsTicks = [[0, "District A"], [1, "District B"], [2, "District C"]];
-
-    $scope.multipleBarsOption = {
-        series: {
-            shadowSize: 1
-        },
-        bars: {
-            show: true,
-            barWidth: 0.2
-        },
-        xaxis: {
-            tickLength: 0, // hide gridlines
-            axisLabel: 'District',
-            axisLabelUseCanvas: true,
-            axisLabelFontSizePixels: 12,
-            ticks: multiBarsTicks
-
-        } ,
-        yaxis: {
-            min:0,
-            max:100,
-            axisLabel: 'Value',
-            axisLabelUseCanvas: true,
-            axisLabelFontSizePixels: 12,
-            axisLabelFontFamily: 'Verdana, Arial',
-            axisLabelPadding: 3,
-
-            tickFormatter: function (v, axis) {
-                return v + "%";
-            }
-        },
-        grid: {
-            hoverable: true,
-            clickable: false,
-            borderWidth: 1
-        },
-        legend: {
-            container:$("#multiBarsLegend"),
-            noColumns: 0,
-            labelBoxBorderColor: "none"
-        },
-        tooltip: true,
-        tooltipOpts: {
-            content: getTooltip,
-            shifts: {
-                x: 10,
-                y: 20
-            },
-            defaultTheme: false
+        if(!isUndefined($scope.filterObject.productIdList)){
+            StockEfficiency.get({
+                geographicZoneId: $scope.filterObject.geographicZoneId,
+                periodId: $scope.filterObject.periodId,
+                programId: $scope.filterObject.programId,
+                productListId: $scope.filterObject.productIdList
+            },function (data){
+                var stockingData =  data.stocking;
+                adjustStockingEfficiencyDataForChart(stockingData);
+            });
         }
     };
-    $scope.multiBarsData = [
-        {
-            label: "Reported on time",
-            data: d1_1,
-            bars: {
-                order: 1,
-                fillColor:  "#05BC57"
 
-            },
-            color: "#05BC57"
-        },
-        {
-            label: "Report late",
-            data: d1_2,
-            bars: {
+    var resetStockingChartData = function(){
+        $scope.multiBarsRenderedData = undefined;
+        $scope.multiBarsData = undefined;
+        $scope.multipleBarsOption = undefined;
 
-                order: 2,
-                fillColor:  "#FFFF05"
-            },
-            color: "#FFFF05"
-        },
-        {
-            label: "Did not report",
-            data: d1_3,
-            bars: {
+    };
 
-                order: 3,
-                fillColor:  "#CC0505"
-            },
-            color: "#CC0505"
+    var adjustStockingEfficiencyDataForChart = function(stockingData){
+        if(isUndefined(stockingData) || stockingData.length === 0){
+            resetStockingChartData();
+            return;
         }
-    ];
+        $scope.multiBarsRenderedData = {
+            products : _.pairs(_.object(_.range(stockingData.length), _.pluck(stockingData,'productId'))),
+            filterParams : _.pick(stockingData[0],'geographicZoneId','programId', 'periodId')
+        };
+        var multiBarsColors = ["#4F81BD","#C0504D","#9BBB59","#8064A2"];
+        var adequatelyStockedSeries =  _.pairs(_.object(_.range(stockingData.length), _.map(_.pluck(stockingData,'adequatelyStocked'),function(stat){ return _.isNull(stat) ? 0 : stat;})));
+        var stockedOutSeries =  _.pairs(_.object(_.range(stockingData.length), _.map(_.pluck(stockingData,'stockedOut'),function(stat){ return _.isNull(stat) ? 0 : stat;})));
+        var overstockedSeries =  _.pairs(_.object(_.range(stockingData.length), _.map(_.pluck(stockingData,'overStocked'),function(stat){ return _.isNull(stat) ? 0 : stat;})));
+        var understockedSeries =  _.pairs(_.object(_.range(stockingData.length), _.map(_.pluck(stockingData,'understocked'),function(stat){ return _.isNull(stat) ? 0 : stat;})));
+        var seriesLabel = ["Stocked out","Understocked","Overstocked","Adequately Stocked"];
+        var dataSeries = [stockedOutSeries,understockedSeries,overstockedSeries,adequatelyStockedSeries];
+        $scope.multiBarsData = _.map(dataSeries, function(series, key){
+            return {
+            label: seriesLabel[key],
+            data: series,
+            bars: {
+                order: key + 1
+            },
+            color: multiBarsColors[key]
+        }; });
+
+        var multiBarsTicks = _.pairs(_.object(_.range(stockingData.length), _.pluck(stockingData,'product')));
+        $scope.multipleBarsOption = generateMultipleBarsOption(multiBarsTicks);
+    };
+
+    function generateMultipleBarsOption(ticksLabel){
+        return {
+            series: {
+                bars: {
+                    show: true,
+                    fill: 0.5,
+                    lineWidth: 0,
+                    barWidth: 0.2
+                }
+            },
+            xaxis: {
+                //tickLength: 0, // hide gridlines
+                axisLabel: 'Product',
+                axisLabelUseCanvas: false,
+                ticks: ticksLabel
+
+            } ,
+            yaxis: {
+               // min:0,
+                tickSize:1,
+                axisLabel: '# of Facilities',
+                axisLabelUseCanvas: false//,
+                /*tickFormatter: function (v, axis) {
+                    return v ;
+                }*/
+            },
+            grid: {
+                hoverable: true,
+                clickable: true,
+                borderWidth: 1,
+                borderColor: "#d6d6d6",
+                backgroundColor: {
+                    colors: ["#FFF", "#CCC"]
+                }
+            },
+            legend: {
+                container:$("#multiBarsLegend"),
+                noColumns: 0,
+                labelBoxBorderColor: "none"
+            },
+            tooltip: true,
+            tooltipOpts: {
+                content: getTooltip,
+                shifts: {
+                    x: 10,
+                    y: 20
+                },
+                defaultTheme: true
+            }
+        };
+
+    }
+    $scope.multipleBarsOption = {};
+    $scope.multiBarsData =[];
+
      function getTooltip(label, xval, yval, flotItem){
-         return flotItem.series.xaxis.ticks[xval].label+' '+label+' '+' '+yval+'%';
+         console.log(flotItem.series);
+         return flotItem.series.xaxis.ticks[xval].label+' '+yval+' '+flotItem.series.yaxis.ticks[yval]+' ' +label;
      }
-    /* End Custom Bar Chart */
+    $scope.stockBarClickHandler = function (event, pos, item){
 
+        $scope.$parent.userGeographicZones = userGeographicZoneList;
+        var stockData = {};
+        if(item && !isUndefined(item.dataIndex)){
+            var productIndex = item.dataIndex;
+            if($scope.multiBarsRenderedData){
+                $scope.multiBarsRenderedData.filterParams.productId = $scope.multiBarsRenderedData.products[productIndex][1];
+                stockData = $scope.multiBarsRenderedData.filterParams;
+                stockData.year = $scope.filterObject.year;
+                stockData.scheduleId = $scope.filterObject.scheduleId;
+                stockData.status = item.seriesIndex;
 
-   /* Gauge Chart */
+                var viewStockPath;
+                viewStockPath = '/public/pages/dashboard/stock-efficiency/index.html#view-stock-detail/'+
+                    stockData.geographicZoneId  + '/' + stockData.programId+'/'+stockData.periodId+'/'+
+                    stockData.productId+"?year="+stockData.year+"&scheduleId="+stockData.scheduleId+"&status="+stockData.status;
+                $window.location = viewStockPath;
+                $scope.$apply();
 
-   /* $scope.gaugeChartData = [[ 66.666664]];
-
-    $scope.gaugeChartOption = {
-        title:'Order Fill Rate',
-        seriesDefaults:{
-            renderer:$.jqplot.MeterGaugeRenderer,
-            rendererOptions: {
-                label: 'Order Sub/App',
-                labelPosition: 'bottom',
-                labelHeightAdjust: -5,
-                min: 0,
-                max: 100,
-                intervals:[25, 50, 75, 100],
-                intervalColors:['#66cc66', '#93b75f', '#E7E658', '#cc6666']
             }
         }
-    };*//*
+    };
+
+    $("#stocking-efficiency").bind("plotclick", $scope.stockBarClickHandler);
+
+    $("#stocking-efficiency").bind("plothover", function (event, pos, item) {
+
+        flotChartHoverCursorHandler(event, pos, item);
 
 
+    });
+    /* End Custom Bar Chart */
 
-
-
-    /* End Gauge Chart * /
-
-
-
-
-
-
-
-
-
-
-     /* Bootstrap Dynamic Tab Utility  */
+    /* Bootstrap Dynamic Tab Utility  */
     function createTab(tabId){
         var tabNum = tabId.substr(tabId.length - 1);
         var contentId = tabId +'-'+ tabNum;
@@ -682,19 +723,4 @@ function AdminDashboardController($scope,$timeout,$filter, userFacilityData, Rep
         $('#dashboard-tabs #' + tabId + ' a').tab('show');
     }
 
-   /* $(function () {
-        $scope.paramsChanged($scope.tableParams);
-
-    });*/
 }
-/*AdminDashboardController.resolve = {
-    userFacilityData :function ($q, $timeout, UserFacilityList) {
-        var deferred = $q.defer();
-        $timeout(function () {
-            UserFacilityList.get({}, function (data) {
-                deferred.resolve(data);
-            }, {});
-        }, 100);
-        return deferred.promise;
-    }
-};*/

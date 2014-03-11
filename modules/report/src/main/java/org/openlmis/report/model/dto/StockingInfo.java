@@ -18,4 +18,15 @@ public class StockingInfo {
     private Integer SOH;
     private Double MOC;
     private String product;
+    private String stocking;
+    private Integer stockingStat;
+    private Long productId;
+    private Long periodId;
+    private Long programId;
+    private Long geographicZoneId;
+    private Long facilityId;
+    private Integer adequatelyStocked;
+    private Integer overStocked;
+    private Integer stockedOut;
+    private Integer understocked;
 }

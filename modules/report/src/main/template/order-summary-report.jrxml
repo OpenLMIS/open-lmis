@@ -32,6 +32,9 @@
 	<parameter name="APPROVED_BY" class="java.lang.String"/>
 	<parameter name="AUTHORIZED_DATE" class="java.lang.String"/>
 	<parameter name="APPROVED_DATE" class="java.lang.String"/>
+	<parameter name="ORDER_NO" class="java.lang.String">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+	</parameter>
 	<queryString>
 		<![CDATA[SELECT facilities.name facilityName, facilities.code facilityCode,geographic_zones.name as region, requisition_line_items.productcode::text ProductCode,products.description,requisition_line_items.packstoship packsToShip, requisition_line_items.packSize,requisition_line_item_losses_adjustments.quantity Discrepancy
         FROM  orders

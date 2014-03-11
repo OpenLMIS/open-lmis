@@ -14,6 +14,7 @@ angular.module('dashboard',['openlmis', 'ui.calendar', 'ui.bootstrap','easypiech
         when('/dashboard', {controller: AdminDashboardController, templateUrl: 'partials/dashboard.html', resolve : ResolveDashboardFormData}).
         otherwise({redirectTo: '/dashboard'});
 }]).run(function($rootScope){
+        $rootScope.productSelectOption = {maximumSelectionSize : 4};
         $rootScope.summarySelected = 'selected';
         $rootScope.showProductsFilter = true;
 });

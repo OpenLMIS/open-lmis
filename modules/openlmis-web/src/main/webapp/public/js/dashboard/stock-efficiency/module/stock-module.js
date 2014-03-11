@@ -12,8 +12,15 @@ angular.module('stock',['openlmis', 'ngTable']).config(['$routeProvider', functi
 
     $routeProvider.
         when('/stock', {controller: StockController, templateUrl: 'partials/stock.html', resolve : ResolveDashboardFormData }).
+        when('/view-stock-detail/:geographicZoneId/:programId/:periodId/:productId', {controller: StockController, templateUrl: 'partials/stock.html', resolve : ResolveDashboardFormData, reloadOnSearch: true}).
         otherwise({redirectTo: '/stock'});
 }]).run(function($rootScope){
+        $rootScope.stockStatusMapping = [{name: "Stocked out",key:"S", value:"0"},
+            {name: "Understocked",key:"U", value:"1"},
+            {name: "Overstocked",key:"O", value:"2"},
+            {name: "Adequately Stocked",key:"A", value:"3"}];
+
         $rootScope.stockEfficiencySelected = 'selected';
         $rootScope.showProductsFilter = true;
+        $rootScope.showStockStatusFilter = true;
     });
