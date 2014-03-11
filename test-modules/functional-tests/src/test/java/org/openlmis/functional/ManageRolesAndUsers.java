@@ -385,6 +385,7 @@ public class ManageRolesAndUsers extends TestCaseHelper {
     userPage.verifyUserOnList(LAB_IN_CHARGE);
 
     userPage.focusOnFirstUserLink();
+    testWebDriver.sleep(1000);
     userPage.resetPassword("abcd1234", "abcd1234");
 
     homePage.logout(baseUrlGlobal);
