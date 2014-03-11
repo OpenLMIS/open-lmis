@@ -200,11 +200,12 @@ Feature: Smoke Tests
 
     And I configure openlmis order file columns:
       | Data Field Label         | Include In Order File | Column Label | Position | Format     |
-      | header.order.number      | TRUE                  | ONUm         | 6        |            |
-      | header.order.date        | TRUE                  | Order Date   | 5        | yyyy/MM/dd |
-      | label.period             | TRUE                  | Period       | 4        | dd/MM/yyyy |
-      | header.quantity.approved | TRUE                  | AQTY         | 3        |            |
-      | header.product.code      | TRUE                  |              | 2        |            |
+      | header.order.number      | TRUE                  | ONUm         | 7        |            |
+      | header.order.date        | TRUE                  | Order Date   | 6        | yyyy/MM/dd |
+      | label.period             | TRUE                  | Period       | 5        | dd/MM/yyyy |
+      | header.quantity.approved | TRUE                  | AQTY         | 4        |            |
+      | header.product.code      | TRUE                  |              | 3        |            |
+      | header.product.name      | TRUE                  |              | 2        |            |
       | create.facility.code     | TRUE                  | FCCode       | 1        |            |
 
     And I configure non openlmis order file columns:
@@ -235,8 +236,12 @@ Feature: Smoke Tests
     And I access view orders page
     And I download order file
     And I get order data in file prefix "O"
-    Then I verify order file line "1" having "FCCode,,AQTY,Period,Order Date,ONUm,,Dummy"
-    And I verify order file line "2" having "F10,P10,10,16/01/2012,"
+    Then I verify order file line "1" having "FCCode,,,AQTY,Period,Order Date,ONUm,,Dummy"
+    And I verify order file line "2" having "F10"
+    And I verify order file line "2" having "antibiotic Capsule 300/200/600 mg"
+    And I verify order file line "2" having "P10"
+    And I verify order file line "2" having "10"
+    And I verify order file line "2" having "16/01/2012"
     And I verify order date format "yyyy/mm/dd" in line "2"
     And I verify order id in line "2"
 
@@ -803,8 +808,8 @@ Feature: Smoke Tests
     Then I check confirm sync message as "F10-Village Dispensary"
     When I done sync message
     And I view visit information in DB for facility "F10":
-      | observations     | confirmedByName | confirmedByTitle | verifiedByName | verifiedByTitle | vehicleId | synced | visited | reasonForNotVisiting | otherReasonDescription |
-      | null             | samuel          | fc               | Verifier       | XYZ             | null      | t      | t       | null                 | null                   |
+      | observations | confirmedByName | confirmedByTitle | verifiedByName | verifiedByTitle | vehicleId | synced | visited | reasonForNotVisiting | otherReasonDescription |
+      | null         | samuel          | fc               | Verifier       | XYZ             | null      | t      | t       | null                 | null                   |
     And I view epi use data in DB for facility "F10" and product group "penta":
       | distributed | expirationDate | loss | received | firstOfMonth | endOfMonth |
       | 16          | 11/2012        | 1    | 10       | 12           | 5          |
