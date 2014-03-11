@@ -9,7 +9,7 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-function StockController($scope,userFacilityData,ReportPrograms, ReportSchedules, ReportPeriods, RequisitionGroupsByProgram,RequisitionGroupsByProgramSchedule, ReportProductsByProgram, OperationYears, ReportPeriodsByScheduleAndYear, StockEfficiency, ngTableParams) {
+function StockController($scope, $location,$routeParams, userGeographicZoneList,ReportPrograms, ReportSchedules, ReportPeriods, RequisitionGroupsByProgram,RequisitionGroupsByProgramSchedule, ReportProductsByProgram, OperationYears, ReportPeriodsByScheduleAndYear, StockEfficiencyDetail, ngTableParams) {
 
     $scope.filterObject = {};
 
@@ -22,11 +22,13 @@ function StockController($scope,userFacilityData,ReportPrograms, ReportSchedules
     function initialize() {
         if(isUndefined($scope.filterObject.geographicZoneId)){
             $scope.filterObject.geographicZoneId = 0;
-            var userFacility = userFacilityData.facilityList[0];
-            if (userFacility) {
-                $scope.filterObject.geographicZoneId = userFacility.geographicZone.id;
+            if(!isUndefined(userGeographicZoneList) ){
+                $scope.filterObject.geographicZoneId = userGeographicZoneList[0] !== null ? userGeographicZoneList[0].id : undefined;
             }
         }
+
+        $scope.stockStatusMapping = $scope.$parent.stockStatusMapping;
+        $scope.stockStatusMapping.unshift({'name':'-- All --','value':-1});
     }
 
     $scope.productSelectOption = {maximumSelectionSize : 4};
@@ -47,137 +49,112 @@ function StockController($scope,userFacilityData,ReportPrograms, ReportSchedules
 
     });
 
-
-    $scope.$watch('formFilter.programId', function(selection){
-
-        if(selection !== undefined || selection === ""){
-            if (selection === '') {
-                $scope.filterObject.programId = 0;
-                return;
-            }
-            $scope.filterObject.programId = selection;
-            $.each($scope.programs, function (item, idx) {
-                if (idx.id == selection) {
-                    $scope.filterObject.program = idx.name;
-                }
-            });
-
-            ReportProductsByProgram.get({programId: selection}, function(data){
-                $scope.products = data.productList;
-            });
-
-            RequisitionGroupsByProgram.get({program: selection }, function(data){
-                $scope.requisitionGroups = data.requisitionGroupList;
-                $scope.requisitionGroups.unshift({'name':'-- All Requisition Groups --'});
-            });
+    $scope.filterProductsByProgram = function (){
+        if(isUndefined($scope.formFilter.programId)){
+            return;
         }
-    });
+        $scope.filterObject.programId = $scope.formFilter.programId;
 
+        ReportProductsByProgram.get({programId:  $scope.filterObject.programId}, function(data){
+            $scope.products = data.productList;
+        });
 
+        RequisitionGroupsByProgram.get({program: $scope.filterObject.programId }, function(data){
+            $scope.requisitionGroups = data.requisitionGroupList;
+            $scope.requisitionGroups.unshift({'name':'-- All Requisition Groups --'});
+        });
+    };
 
-    $scope.ChangeSchedule = function(scheduleBy){
-        if(scheduleBy == 'byYear'){
+    $scope.processProductsFilter = function (){
+        $scope.filterObject.productIdList = $scope.formFilter.productIdList;
 
-            ReportPeriodsByScheduleAndYear.get({scheduleId: $scope.filterObject.scheduleId, year: $scope.filterObject.year}, function(data){
-                $scope.periods = data.periods;
-                $scope.periods.unshift({'name':'-- Select a Period --','id':'0'});
-            });
+        $scope.loadStockingData();
 
-        }else{
+    };
 
+    $scope.changeSchedule = function(){
+
+        if ($scope.formFilter.scheduleId == "All") {
+            $scope.filterObject.scheduleId = -1;
+        } else if ($scope.formFilter.scheduleId !== undefined || $scope.formFilter.scheduleId === "") {
+            $scope.filterObject.scheduleId = $scope.formFilter.scheduleId;
+
+        } else {
+            $scope.filterObject.scheduleId = 0;
+        }
+
+        if(!isUndefined($scope.filterObject.scheduleId)){
             ReportPeriods.get({ scheduleId : $scope.filterObject.scheduleId },function(data) {
                 $scope.periods = data.periods;
                 $scope.periods.unshift({'name':'-- Select a Period --','id':'0'});
 
             });
+
+            if(!isUndefined($scope.filterObject.programId)){
+                RequisitionGroupsByProgramSchedule.get({program: $scope.filterObject.programId, schedule:$scope.filterObject.scheduleId}, function(data){
+                    $scope.requisitionGroups = data.requisitionGroupList;
+                    $scope.requisitionGroups.unshift({'name':'-- All Requisition Groups --','id':'0'});
+                });
+            }
+
+            $scope.loadStockingData();
         }
 
-        RequisitionGroupsByProgramSchedule.get({program: $scope.filterObject.programId, schedule:$scope.filterObject.scheduleId}, function(data){
-            $scope.requisitionGroups = data.requisitionGroupList;
-            $scope.requisitionGroups.unshift({'name':'-- All Requisition Groups --','id':'0'});
-        });
 
     };
 
-    $scope.$watch('formFilter.rgroupId', function (selection) {
-        if (selection == "All") {
-            $scope.filterObject.rgroupId = -1;
-        } else if (selection !== undefined || selection === "") {
-            $scope.filterObject.rgroupId = selection;
-            $.each($scope.requisitionGroups, function (item, idx) {
-                if (idx.id == selection) {
-                    $scope.filterObject.rgroup = idx.name;
-                }
-            });
-        } else {
-            $scope.filterObject.rgroupId = 0;
-        }
-
-    });
-
-    $scope.$watch('formFilter.periodId', function (selection) {
-        if (selection == "All") {
+    $scope.processPeriodFilter = function (){
+        if ( $scope.formFilter.periodId == "All") {
             $scope.filterObject.periodId = -1;
-        } else if (selection !== undefined || selection === "") {
-            $scope.filterObject.periodId = selection;
-            $.each($scope.periods, function (item, idx) {
-                if (idx.id == selection) {
-                    $scope.filterObject.period = idx.name;
-                }
-            });
+        } else if ($scope.formFilter.periodId !== undefined || $scope.formFilter.periodId === "") {
+            $scope.filterObject.periodId = $scope.formFilter.periodId;
 
         } else {
             $scope.filterObject.periodId = 0;
         }
+
         $scope.loadStockingData();
+    };
 
-    });
+    $scope.changeScheduleByYear = function (){
 
-
-    $scope.$watch('formFilter.scheduleId', function (selection) {
-        if (selection == "All") {
-            $scope.filterObject.scheduleId = -1;
-        } else if (selection !== undefined || selection === "") {
-            $scope.filterObject.scheduleId = selection;
-            $.each($scope.schedules , function (item, idx) {
-                if (idx.id == selection) {
-                    $scope.filterObject.schedule = idx.name;
-                }
-            });
-
-        } else {
-            $scope.filterObject.scheduleId = 0;
-        }
-        $scope.ChangeSchedule('');
-
-    });
-
-    $scope.$watch('formFilter.year', function (selection) {
-
-        if (selection == "-- All Years --") {
+        if ($scope.formFilter.year == "-- All Years --") {
             $scope.filterObject.year = -1;
-        } else if (selection !== undefined || selection === "") {
-            $scope.filterObject.year = selection;
+        } else if ($scope.formFilter.year !== undefined || $scope.formFilter.year === "") {
+            $scope.filterObject.year = $scope.formFilter.year;
 
         } else {
             $scope.filterObject.year = 0;
         }
 
         if($scope.filterObject.year === -1 || $scope.filterObject.year === 0){
+            $scope.changeSchedule();
 
-            $scope.ChangeSchedule('bySchedule');
         }else{
-
-            $scope.ChangeSchedule('byYear');
+            if(!isUndefined($scope.filterObject.scheduleId) && !isUndefined($scope.filterObject.year)){
+                ReportPeriodsByScheduleAndYear.get({scheduleId: $scope.filterObject.scheduleId, year: $scope.filterObject.year}, function(data){
+                    $scope.periods = data.periods;
+                    $scope.periods.unshift({'name':'-- Select a Period --','id':'0'});
+                });
+            }
+            if(!isUndefined($scope.filterObject.scheduleId) && !isUndefined($scope.filterObject.programId)){
+                RequisitionGroupsByProgramSchedule.get({program: $scope.filterObject.programId, schedule:$scope.filterObject.scheduleId}, function(data){
+                    $scope.requisitionGroups = data.requisitionGroupList;
+                    $scope.requisitionGroups.unshift({'name':'-- All Requisition Groups --','id':'0'});
+                });
+            }
+            $scope.loadStockingData();
         }
-    });
 
-    $scope.$watch('formFilter.productIdList',function(selection){
-
-        $scope.filterObject.productIdList = $scope.formFilter.productIdList;
+    };
+    $scope.processStockStatusFilter = function(){
+        if(!isUndefined($scope.formFilter.status)) {
+            $scope.formFilter.status = $scope.formFilter.status;
+        }else{
+            $scope.formFilter.status = -1;
+        }
         $scope.loadStockingData();
-    });
-
+    };
     // the grid options
     $scope.tableParams = new ngTableParams({
         page: 1,            // show first page
@@ -186,36 +163,83 @@ function StockController($scope,userFacilityData,ReportPrograms, ReportSchedules
     });
 
     $scope.loadStockingData = function(){
-
         if(!isUndefined($scope.filterObject.productIdList)){
-            StockEfficiency.get({
+            StockEfficiencyDetail.get({
                 geographicZoneId: $scope.filterObject.geographicZoneId,
                 periodId: $scope.filterObject.periodId,
                 programId: $scope.filterObject.programId,
                 productListId: $scope.filterObject.productIdList
             },function (data){
                 $scope.stockingList = data.stocking;
-                $scope.stockByProducts = groupStockingByProduct($scope.stockingList);
+
+                if($scope.formFilter.status && $scope.formFilter.status !== -1){
+
+                    var statusMap = _.findWhere($scope.stockStatusMapping,{value:$scope.formFilter.status});
+                    if(statusMap){
+                        $scope.stockingList = _.where( $scope.stockingList, {stocking:statusMap.key});
+                    }
+                }
+                $scope.stockByProductAndStock = groupStockingByProductAndStock($scope.stockingList);
+
+                //alert('groupedByProduct and stock '+JSON.stringify($scope.stockByProductAndStock));
+
             });
+        }else{
+            $scope.stockByProductAndStock = undefined;
         }
     };
 
-
-    var groupStockingByProduct = function (data) {
+    var groupStockingByProductAndStock = function (data) {
         if(isUndefined(data)){
             return data;
         }
-        var groupedStockingInfo = [];
-        angular.forEach(data,function(stock){
-            if(groupedStockingInfo.indexOf(stock.product) == -1){
-                groupedStockingInfo.push(stock.product);
-            }
+        var groupedByProductAndStocking = [];
+        var groupedByProduct = _.chain(data).groupBy('productId').map(function(value, key) { return {productId: key, product: _.first(value).product, stocks: value };}).value();
+
+        angular.forEach(groupedByProduct, function(productGroup){
+            var groupedByStocking = _.chain(productGroup.stocks).
+                                      groupBy('stocking').
+                                      map(function(value, key) {
+                                        var statusMap = _.findWhere($scope.stockStatusMapping,{key:key});
+                                        var stockStatusDesc = !isUndefined(statusMap) ? statusMap.name : key;
+
+                                        return {stocking: key, name: stockStatusDesc, facilities: value };
+
+                                      }).value();
+
+            groupedByProductAndStocking.push({productId: productGroup.productId, product: productGroup.product, stocks:groupedByStocking });
         });
-        return groupedStockingInfo;
+        return groupedByProductAndStocking;
     };
 
 
+    /* process if page is routed from another controller*/
+    $(function(){
+        if(!isUndefined($routeParams.programId)){
+            $scope.filterObject.programId = $scope.formFilter.programId = $routeParams.programId;
+            $scope.filterProductsByProgram();
+        }
+        if(!isUndefined($routeParams.scheduleId)){
+            $scope.filterObject.scheduleId = $scope.formFilter.scheduleId = $routeParams.scheduleId;
+            $scope.changeSchedule();
+        }
+        if(!isUndefined($routeParams.year)){
+            $scope.filterObject.year =  $scope.formFilter.year = $routeParams.year;
+            $scope.changeScheduleByYear();
+        }
+        if(!isUndefined($routeParams.periodId)){
+            $scope.filterObject.periodId =  $scope.formFilter.periodId = $routeParams.periodId;
+            $scope.changeScheduleByYear();
+        }
+        if(!isUndefined($routeParams.productId)){
+            $scope.filterObject.productIdList =  $scope.formFilter.productIdList = [$routeParams.productId];
+            $scope.processProductsFilter();
+        }
+        if(!isUndefined($routeParams.status)){
+            $scope.filterObject.status =  $scope.formFilter.status = $routeParams.status;
+            $scope.processStockStatusFilter();
+        }
 
-
+    });
 
 }

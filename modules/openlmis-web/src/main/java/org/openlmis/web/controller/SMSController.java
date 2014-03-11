@@ -1,4 +1,3 @@
-
 /*
  * This program was produced for the U.S. Agency for International Development. It was prepared by the USAID | DELIVER PROJECT, Task Order 4. It is part of a project which utilizes code originally licensed under the terms of the Mozilla Public License (MPL) v2 and therefore is licensed under MPL v2 or later.
  *
@@ -8,13 +7,28 @@
  *
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
-angular.module('dashboard',['openlmis', 'ui.calendar', 'ui.bootstrap','easypiechart','ui.chart','ngTable']).config(['$routeProvider', function ($routeProvider) {
 
-    $routeProvider.
-        when('/dashboard', {controller: AdminDashboardController, templateUrl: 'partials/dashboard.html', resolve : ResolveDashboardFormData}).
-        otherwise({redirectTo: '/dashboard'});
-}]).run(function($rootScope){
-        $rootScope.productSelectOption = {maximumSelectionSize : 4};
-        $rootScope.summarySelected = 'selected';
-        $rootScope.showProductsFilter = true;
-});
+package org.openlmis.web.controller;
+
+import lombok.NoArgsConstructor;
+import org.openlmis.core.service.SMSService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+
+
+@Controller
+@NoArgsConstructor
+public class SMSController extends BaseController {
+
+    @Autowired
+    private SMSService smsService;
+
+    @RequestMapping(value = "/sms", method = RequestMethod.GET)
+    public void IncomingSMS(@RequestParam(value = "message") String message, @RequestParam(value="phone_no") String phoneNumber){
+        smsService.SaveIncomingSMSMessage(message,phoneNumber);
+    }
+
+}

@@ -1,20 +1,34 @@
 <!DOCTYPE html>
-<div class="row-fluid sortable ui-sortable">
-    <div class="box span12">
 
+<h2><span>Stocking Efficiency</span></h2>
+<div class="row-fluid">
+    <div class="span12">
         <ng-include src="'/public/pages/dashboard/shared/dashboard-form.html'"></ng-include>
+    </div>
+</div>
+<div class="app-form" style="margin-top: 5px;" ng-repeat="productGroup in stockByProductAndStock">
 
-        <div ng-repeat="product in stockByProducts">
-            <div>{{product}}</div>
-            <table class="table-bordered table table-striped pull-right" ng-table="tableParams" >
-                <tbody>
-                    <tr ng-repeat="stock in stockingList | filter: {'product':product}">
-                        <td data-title="'Facility'">{{stock.facility}}</td>
-                    </tr>
-                </tbody>
-            </table>
+    <div style="margin-top: 5px;">
+         <h2>Product  {{productGroup.product}}</h2>
+        <div class="row-fluid" ng-repeat="stock in productGroup.stocks">
+            <div class="span12">
+                <span>{{stock.name}} facilities for {{productGroup.product}}</span>
+                <div >
+                    <table class="table-bordered table table-striped pull-right" ng-table="tableParams" >
+
+                        <tbody>
+                        <tr ng-repeat="facility in stock.facilities">
+                            <td data-title="'Facility'" >{{facility.facility}}</td>
+                            <td data-title="'AMC'" class="number" >{{facility.amc | number}}</td>
+                            <td data-title="'SOH'" class="number" >{{facility.soh | number}}</td>
+                            <td data-title="'MOS'">{{facility.mos}}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
 
         </div>
-
     </div>
+
 </div>

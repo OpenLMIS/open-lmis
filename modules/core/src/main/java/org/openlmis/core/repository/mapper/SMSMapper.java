@@ -1,4 +1,3 @@
-
 /*
  * This program was produced for the U.S. Agency for International Development. It was prepared by the USAID | DELIVER PROJECT, Task Order 4. It is part of a project which utilizes code originally licensed under the terms of the Mozilla Public License (MPL) v2 and therefore is licensed under MPL v2 or later.
  *
@@ -8,13 +7,20 @@
  *
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
-angular.module('dashboard',['openlmis', 'ui.calendar', 'ui.bootstrap','easypiechart','ui.chart','ngTable']).config(['$routeProvider', function ($routeProvider) {
 
-    $routeProvider.
-        when('/dashboard', {controller: AdminDashboardController, templateUrl: 'partials/dashboard.html', resolve : ResolveDashboardFormData}).
-        otherwise({redirectTo: '/dashboard'});
-}]).run(function($rootScope){
-        $rootScope.productSelectOption = {maximumSelectionSize : 4};
-        $rootScope.summarySelected = 'selected';
-        $rootScope.showProductsFilter = true;
-});
+package org.openlmis.core.repository.mapper;
+
+import org.apache.ibatis.annotations.Insert;
+import org.apache.ibatis.annotations.Options;
+import org.openlmis.core.domain.SMS;
+import org.springframework.stereotype.Repository;
+
+import java.util.Date;
+
+@Repository
+public interface SMSMapper {
+
+    @Insert("INSERT INTO ShortMessageLog(message,direction, phone_number, date_saved) VALUES (#{message},#{direction}, #{phoneNumber}, #{dateSaved})")
+    @Options(useGeneratedKeys = true)
+    void insert(SMS sms);
+}

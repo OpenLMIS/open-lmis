@@ -27,8 +27,15 @@ public interface DashboardMapper {
     @Select("select code,name,leadTime from dw_product_lead_time_vw where programid = #{programId} and periodid = #{periodId} and geographicZoneid = #{geographicZoneid}")
     List<ShipmentLeadTime> getShipmentLeadTime(@Param("geographicZoneid") Long geographicZoneid, @Param("periodId")  Long periodId, @Param("programId") Long programId);
 
-    @Select("select primaryname as product,facilityname as facility,amc,soh,mos from dw_product_facility_stock_info_vw where programid = #{programId} and periodid = #{periodId} and geographicZoneid = #{geographicZoneid}  and productid = ANY(#{products}::int[]) ")
-    List<StockingInfo> getStockEfficiencyData(@Param("geographicZoneid") Long geographicZoneid, @Param("periodId")  Long periodId, @Param("programId") Long programId , @Param("products") String productIds);
+   @Select("select geographicZoneid,programid,periodid,productid, primaryname as product,adequatelyStocked,overStocked,stockedOut,understocked \n"+
+           "from dw_product_stock_efficiency_statics_vw where programid = #{programId} and periodid = #{periodId} and geographicZoneid = #{geographicZoneid}  and productid = ANY(#{products}::int[])")
+
+   List<StockingInfo> getStockEfficiencyData(@Param("geographicZoneid") Long geographicZoneid, @Param("periodId")  Long periodId, @Param("programId") Long programId , @Param("products") String productIds);
+
+    @Select("select geographicZoneid,programid,periodid,productid, primaryname as product,facilityId, facilityname as facility,amc,soh,mos,stocking \n"+
+            "from dw_product_facility_stock_info_vw where programid = #{programId} and periodid = #{periodId} and geographicZoneid = #{geographicZoneid}  and productid = ANY(#{products}::int[])")
+
+    List<StockingInfo> getStockEfficiencyDetailData(@Param("geographicZoneid") Long geographicZoneid, @Param("periodId")  Long periodId, @Param("programId") Long programId , @Param("products") String productIds);
 
 }
 
