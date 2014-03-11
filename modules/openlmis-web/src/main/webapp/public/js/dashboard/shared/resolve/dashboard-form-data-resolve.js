@@ -7,11 +7,25 @@
  */
 
 ResolveDashboardFormData = {
-    userFacilityData :function ($q, $timeout, UserFacilityList) {
+    userGeographicZoneList :function ($q, $timeout,$rootScope, UserFacilityList) {
         var deferred = $q.defer();
         $timeout(function () {
+            var userGeographicZoneList = $rootScope.userGeographicZones;
+
+            if(userGeographicZoneList){
+                deferred.resolve(userGeographicZoneList);
+                $rootScope.userGeographicZones = undefined;
+                return;
+            }
             UserFacilityList.get({}, function (data) {
-                deferred.resolve(data);
+                var userFacilities = data.facilityList;
+                if(userFacilities){
+                    var zones = _.map(userFacilities, function(facility){return facility.geographicZone;});
+                    deferred.resolve(zones);
+                }else{
+
+                    deferred.resolve(null);
+                }
             }, {});
         }, 100);
         return deferred.promise;
