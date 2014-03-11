@@ -244,7 +244,6 @@ public class UserPage extends Page {
     testWebDriver.sleep(300);
     JavascriptExecutor jse = (JavascriptExecutor) testWebDriver.getDriver();
     jse.executeScript("document.getElementById('resetPassword0').focus();");
-   // testWebDriver.moveToElement(selectFirstResetPassword);
     selectFirstResetPassword.click();
 
     testWebDriver.waitForElementToAppear(newPasswordField);

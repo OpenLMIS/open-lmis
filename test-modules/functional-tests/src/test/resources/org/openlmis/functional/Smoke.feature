@@ -458,7 +458,7 @@ Feature: Smoke Tests
     And I access done
     And I verify Distributions data is not synchronised
     And I verify Refrigerator data is not synchronised
-    Then I should see refrigerator "LG;800 LITRES;GR-J287PGHV" added successfully
+    Then I should see refrigerator "GR-J287PGHV;LG;800 LITRES" added successfully
     And I see "overall" refrigerator icon as "RED"
     When I edit refrigerator
     Then I see "individual" refrigerator icon as "RED"
@@ -482,7 +482,7 @@ Feature: Smoke Tests
     When I delete refrigerator
     Then I should see confirmation for delete
     When I confirm delete
-    Then I should see refrigerator "LG;800 LITRES;GR-J287PGHV" deleted successfully
+    Then I should see refrigerator "GR-J287PGHV;LG;800 LITRES" deleted successfully
 
   @smokeDistribution
   Scenario: User should fill Visit Information when facility was visited
