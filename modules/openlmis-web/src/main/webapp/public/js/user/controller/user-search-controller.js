@@ -44,17 +44,19 @@ function UserSearchController($scope, $location, Users, navigateBackService, Upd
   };
 
   $scope.changePassword = function (user) {
-    $scope.userId = undefined;
-    $scope.password1 = $scope.password2 = $scope.message = $scope.error = "";
-    $scope.changePasswordModal = true;
-    $scope.user = user;
+    if (user.active) {
+      $scope.userId = undefined;
+      $scope.password1 = $scope.password2 = $scope.message = $scope.error = "";
+      $scope.changePasswordModal = true;
+      $scope.user = user;
+    }
   };
 
   $scope.updatePassword = function () {
     var reWhiteSpace = new RegExp("\\s");
     var digits = new RegExp("\\d");
     if ($scope.password1.length < 8 || $scope.password1.length > 16 || !digits.test($scope.password1) ||
-      reWhiteSpace.test($scope.password1)) {
+        reWhiteSpace.test($scope.password1)) {
       $scope.error = messageService.get("error.password.invalid");
       return;
     }
@@ -88,10 +90,10 @@ function UserSearchController($scope, $location, Users, navigateBackService, Upd
       var fullName = user.firstName.toLowerCase() + ' ' + user.lastName.toLowerCase();
 
       if (user.firstName.toLowerCase().indexOf() >= 0 ||
-        user.lastName.toLowerCase().indexOf(query.trim().toLowerCase()) >= 0 ||
-        fullName.indexOf(query.trim().toLowerCase()) >= 0 ||
-        user.email.toLowerCase().indexOf(query.trim().toLowerCase()) >= 0 ||
-        user.userName.toLowerCase().indexOf(query.trim().toLowerCase()) >= 0) {
+          user.lastName.toLowerCase().indexOf(query.trim().toLowerCase()) >= 0 ||
+          fullName.indexOf(query.trim().toLowerCase()) >= 0 ||
+          user.email.toLowerCase().indexOf(query.trim().toLowerCase()) >= 0 ||
+          user.userName.toLowerCase().indexOf(query.trim().toLowerCase()) >= 0) {
         $scope.filteredUsers.push(user);
       }
     });

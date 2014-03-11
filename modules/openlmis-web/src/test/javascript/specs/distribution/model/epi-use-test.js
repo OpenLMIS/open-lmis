@@ -92,4 +92,13 @@ describe('EPI Use', function () {
     expect(epiUse.lineItems[0].loss.notRecorded).toBeTruthy();
     expect(epiUse.lineItems[0].expirationDate.notRecorded).toBeTruthy();
   });
+
+  it('should set status as complete if facility is not visited', function () {
+    var epiUse = new EpiUse({lineItems: []});
+
+    var status = epiUse.computeStatus(false);
+
+    expect(status).toEqual(DistributionStatus.COMPLETE);
+  });
+
 });

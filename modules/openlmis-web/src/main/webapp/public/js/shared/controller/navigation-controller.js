@@ -31,10 +31,10 @@ function NavigationController($scope, localStorageService, Locales, $location, $
       if (data.locales) {
         var currentURI = $location.absUrl();
         $window.location = currentURI.replace('offline.html', 'index.html').replace('#/list', '#/manage');
-        $scope.isOffline = false;
+        $scope.showNetworkError = false;
         return;
       }
-      $scope.isOffline = true;
+      $scope.showNetworkError = true;
     }, {});
   };
 }

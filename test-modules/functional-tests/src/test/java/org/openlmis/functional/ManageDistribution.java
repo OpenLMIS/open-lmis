@@ -162,6 +162,7 @@ public class ManageDistribution extends TestCaseHelper {
   public void enterValuesInForm(String tabName, DataTable tableData) {
     List<Map<String, String>> data = tableData.asMaps();
     tabMap.get(tabName).enterValues(data);
+    tabMap.get(tabName).removeFocusFromElement();
   }
 
   @When("^I verify saved \"([^\"]*)\" values:$")
@@ -571,6 +572,7 @@ public class ManageDistribution extends TestCaseHelper {
   public void enterDeliveredQuantity(Integer rowNumber, String deliveredQuantity) {
     epiInventoryPage = PageObjectFactory.getEpiInventoryPage(testWebDriver);
     epiInventoryPage.fillDeliveredQuantity(rowNumber, deliveredQuantity);
+    epiInventoryPage.removeFocusFromElement();
   }
 
   @When("I enter coverage maleMobileBrigade as \"([^\"]*)\"$")

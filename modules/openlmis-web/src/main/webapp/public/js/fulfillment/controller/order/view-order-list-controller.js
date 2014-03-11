@@ -42,7 +42,7 @@ function ViewOrderListController($scope, Orders, messageService, $location, $rou
       {field: 'supplyLine.supplyingFacility.name', displayName: messageService.get("label.supplying.depot")},
       {field: 'stringCreatedDate', displayName: messageService.get("label.order.date.time")},
       {field: 'status', displayName: messageService.get("label.order.status"),
-        cellTemplate: "<div class='ngCellText'><span ng-cell-text><div id=\"orderStatus\"><a href='' class='custom-tooltip shipment-error'><i class='icon-warning-sign' ng-show='row.entity.shipmentError'></i><span class='custom-tooltip-msg' openlmis-message='error.shipment.file'></span></a>  <span ng-bind=\"getStatus(row.entity.status)\"></span></div> "},
+        cellTemplate: "<div class='ngCellText orderStatusCellText'><span ng-cell-text><div id=\"orderStatus\"><a href='' class='custom-tooltip shipment-error'><i class='icon-warning-sign' ng-show='row.entity.shipmentError'></i><span class='custom-tooltip-msg' openlmis-message='error.shipment.file'></span></a>  <span ng-bind=\"getStatus(row.entity.status)\"></span></div> "},
       {field: 'ftpComment', displayName: messageService.get("label.comment"),
         cellTemplate: "<div class=''><span ng-cell-text><div id=\"ftpComment\" class='ngCellText'> <span ng-show='row.entity.ftpComment' openlmis-message='row.entity.ftpComment'></span></div>"},
       {field: 'emergency', displayName: messageService.get("requisition.type.emergency"),

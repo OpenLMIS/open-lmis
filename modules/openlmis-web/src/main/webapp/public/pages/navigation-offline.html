@@ -27,11 +27,20 @@
     </li>
   </ul>
   <ul id="goOnlineNavigation" class="clearfix pull-right">
-    <li>
+    <li ng-class="{'is-nav-link-selected' : showNetworkError === true}">
       <a href="javascript: void(0)" ng-click="goOnline()">
-        <i class="icon-rss"></i>
         <span openlmis-message="link.go.online"></span>
       </a>
+
+      <div ng-show="showNetworkError" class="warning-popup clearfix" id="networkWarningPopup">
+          <a href="javascript: void(0)" class="link-minimize pull-right" ng-click="showNetworkError = false">
+            <i class="icon-remove"></i>
+          </a>
+        <div>
+          <i class="icon-exclamation-sign"></i>
+          <span openlmis-message="msg.unable.connect.server"></span>
+        </div>
+      </div>
     </li>
   </ul>
 </div>

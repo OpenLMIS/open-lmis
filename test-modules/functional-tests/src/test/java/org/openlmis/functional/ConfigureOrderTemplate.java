@@ -112,6 +112,7 @@ public class ConfigureOrderTemplate extends TestCaseHelper {
     String orderNumber = "ON";
     String approvedQuantity = "Approved quantityApproved quantityApproved quantit";
     String productCode = "PC";
+    String productName = "PName";
     String period = "Period1";
     String orderData = "OD";
     String orderPrefix = "OP";
@@ -126,6 +127,7 @@ public class ConfigureOrderTemplate extends TestCaseHelper {
     configureOrderPage.setOrderNumber(orderNumber);
     configureOrderPage.setApprovedQuantity(approvedQuantity);
     configureOrderPage.setProductCode(productCode);
+    configureOrderPage.setProductName(productName);
     configureOrderPage.setPeriod(period);
     configureOrderPage.setOrderDate(orderData);
     configureOrderPage.clickSaveButton();
@@ -148,6 +150,7 @@ public class ConfigureOrderTemplate extends TestCaseHelper {
     String orderNumber = "";
     String approvedQuantity = "";
     String productCode = "";
+    String productName = "";
     String period = "";
     String orderData = "";
     String orderPrefix = "";
@@ -162,6 +165,7 @@ public class ConfigureOrderTemplate extends TestCaseHelper {
     configureOrderPage.setOrderNumber(orderNumber);
     configureOrderPage.setApprovedQuantity(approvedQuantity);
     configureOrderPage.setProductCode(productCode);
+    configureOrderPage.setProductName(productName);
     configureOrderPage.setPeriod(period);
     configureOrderPage.setOrderDate(orderData);
     configureOrderPage.clickSaveButton();
@@ -207,14 +211,14 @@ public class ConfigureOrderTemplate extends TestCaseHelper {
     ConfigureEDIPage configureEDIPage = homePage.navigateEdiScreen();
     ConfigureOrderPage configureOrderPage = configureEDIPage.navigateConfigureOrderPage();
     configureOrderPage.clickAddNewButton();
-    configureOrderPage.verifyElementsOnAddNewButtonClick(6, "true", "Not applicable", "");
+    configureOrderPage.verifyElementsOnAddNewButtonClick(7, "true", "Not applicable", "");
     configureOrderPage.clickSaveButton();
     configureOrderPage.verifySuccessMessage(successMessage);
 
     testWebDriver.refresh();
     configureOrderPage = configureEDIPage.navigateConfigureOrderPage();
 
-    configureOrderPage.clickRemoveIcon(6);
+    configureOrderPage.clickRemoveIcon(7);
     configureOrderPage.clickSaveButton();
     configureOrderPage.verifySuccessMessage(successMessage);
   }

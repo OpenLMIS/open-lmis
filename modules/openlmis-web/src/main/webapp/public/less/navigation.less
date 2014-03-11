@@ -7,6 +7,7 @@
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
+@import url("mixins.less");
 
 .navigation {
   background: #42a7ad;
@@ -199,6 +200,52 @@
           color: #ccc;
         }
       }
+    }
+  }
+}
+
+.is-nav-link-selected {
+  background: #19565A;
+  .box-shadow(inset 1px 1px 1px rgba(0, 0, 0, 0.2));
+  border-radius: 3px;
+}
+
+#networkWarningPopup {
+  background: white;
+  color: black;
+  .box-shadow(0 0 15px rgba(0, 0, 0, 0.98));
+  top: 33px;
+  bottom: initial;
+  left: initial;
+  right: 0px;
+  width: 210px;
+  font-size: 1em;
+  &:after {
+    border-top: 0;
+    border-bottom: 7px solid white;
+    top: -7px;
+    left: initial;
+    right: 20px;
+  }
+  div {
+    font-weight: normal;
+    text-align: left;
+  }
+  .icon-exclamation-sign {
+    font-size: 1.2em;
+    width: 1em;
+    color: #cd1e24;
+  }
+}
+
+.link-minimize {
+  .icon-remove {
+    color: #737373;
+  }
+  &:hover {
+    text-decoration: none;
+    .icon-remove {
+      color: black;
     }
   }
 }
