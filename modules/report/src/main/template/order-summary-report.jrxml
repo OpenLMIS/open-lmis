@@ -496,7 +496,7 @@
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					</reportElement>
 					<textElement verticalAlignment="Bottom"/>
-					<textFieldExpression><![CDATA[($P{AUTHORIZED_DATE} != null)?(new SimpleDateFormat("dd/MM/yy").format(new Date($P{AUTHORIZED_DATE}))):""]]></textFieldExpression>
+					<textFieldExpression><![CDATA[($P{AUTHORIZED_DATE} != null && !$P{AUTHORIZED_DATE}.isEmpty())?(new SimpleDateFormat("dd/MM/yy").format(new Date($P{AUTHORIZED_DATE}))):""]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
 					<reportElement x="480" y="110" width="71" height="18" uuid="de3e4df7-a12c-4af1-8b4f-11e80df7aff2">
@@ -504,7 +504,7 @@
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					</reportElement>
 					<textElement verticalAlignment="Bottom"/>
-					<textFieldExpression><![CDATA[($P{APPROVED_DATE} != null)?(new SimpleDateFormat("dd/MM/yy").format(new Date($P{APPROVED_DATE}))):""]]></textFieldExpression>
+					<textFieldExpression><![CDATA[($P{APPROVED_DATE} != null && !$P{APPROVED_DATE}.isEmpty())?(new SimpleDateFormat("dd/MM/yy").format(new Date($P{APPROVED_DATE}))):""]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
 					<reportElement x="481" y="131" width="70" height="19" uuid="adcfd2b5-5e8a-49bd-9455-e1300c50a161">
