@@ -366,7 +366,6 @@ public class DistributionSyncTest extends TestCaseHelper {
     initiateNextDistributionForGivenPeriod(distributionTestData.get(FIRST_DELIVERY_ZONE_NAME), distributionTestData.get(VACCINES_PROGRAM), "Period13");
     assertFalse(facilityListPage.getFacilitiesInDropDown().contains(distributionTestData.get(FIRST_FACILITY_CODE)));
 
-    //dbWrapper.updateActiveStatusOfFacility("F10", "true");
   }
 
   @Test(groups = {"distribution"})
@@ -405,8 +404,6 @@ public class DistributionSyncTest extends TestCaseHelper {
     initiateNextDistributionForGivenPeriod(distributionTestData.get(FIRST_DELIVERY_ZONE_NAME), distributionTestData.get(VACCINES_PROGRAM), "Period13");
     assertFalse(facilityListPage.getFacilitiesInDropDown().contains(distributionTestData.get(FIRST_FACILITY_CODE)));
 
-    //dbWrapper.updateFacilityFieldBYCode("enabled", "true", "F10");
-    //dbWrapper.updateActiveStatusOfFacility(distributionTestData.get(FIRST_FACILITY_CODE), "true");
   }
 
   @Test(groups = {"distribution"})
@@ -440,7 +437,6 @@ public class DistributionSyncTest extends TestCaseHelper {
       assertFalse(webElement.getText().contains(distributionTestData.get(VACCINES_PROGRAM)));
     }
 
-    //dbWrapper.updateActiveStatusOfProgram("VACCINES", true);
   }
 
   @Test(groups = {"distribution"})
@@ -489,17 +485,13 @@ public class DistributionSyncTest extends TestCaseHelper {
     verifyProductsAreNotDisplayed();
 
     visitInformationPage.navigateToRefrigerators();
-    String data = "SAM;800L;GNR7876";
+    String data = "GNR7876;SAM;800L";
     String[] refrigeratorDetails = data.split(";");
 
     for (int i = 0; i < refrigeratorDetails.length; i++) {
       assertEquals(testWebDriver.getElementByXpath("//div[@class='list-row ng-scope']/ng-include/form/div[1]/div[" + (i + 2) + "]").getText(), refrigeratorDetails[i]);
     }
 
-    //dbWrapper.updateActiveStatusOfProduct("Product5", "true");
-    //dbWrapper.updateActiveStatusOfProduct("Product6", "true");
-    //dbWrapper.updateActiveStatusOfProduct("P10", "true");
-    //dbWrapper.updateActiveStatusOfProduct("P11", "true");
   }
 
   @Test(groups = {"distribution"})
@@ -551,10 +543,6 @@ public class DistributionSyncTest extends TestCaseHelper {
     verifyFullCoveragesDataInDatabase(null, null, null, null, distributionTestData.get(FIRST_FACILITY_CODE));
     verifyAdultCoverageDataNullInDatabase(distributionTestData.get(FIRST_FACILITY_CODE));
 
-    //dbWrapper.updateActiveStatusOfProduct("P10","true");
-    //dbWrapper.updateActiveStatusOfProduct("P11","true");
-    //dbWrapper.updateActiveStatusOfProduct("Product5","true");
-    //dbWrapper.updateActiveStatusOfProduct("Product6","true");
   }
 
   @Test(groups = {"distribution"})
@@ -610,7 +598,7 @@ public class DistributionSyncTest extends TestCaseHelper {
 
     epiInventoryPage.navigateToRefrigerators();
     ManageRefrigerator manageRefrigerator = new ManageRefrigerator();
-    manageRefrigerator.verifyRefrigeratorAdded("SAM;800L;GNR7876");
+    manageRefrigerator.verifyRefrigeratorAdded("GNR7876;SAM;800L");
   }
 
   @Test(groups = {"distribution"})
@@ -655,7 +643,6 @@ public class DistributionSyncTest extends TestCaseHelper {
 
     EPIUsePage epiUsePage = visitInformationPage.navigateToEpiUse();
     assertTrue(epiUsePage.getProductGroup(1).equals("PG1-Name"));
-    //assertNull(epiUsePage.getProductGroup(2));
     assertNull(epiUsePage.getNoProductsAddedMessage());
 
     EpiInventoryPage epiInventoryPage = epiUsePage.navigateToEpiInventory();
@@ -843,8 +830,6 @@ public class DistributionSyncTest extends TestCaseHelper {
     initiateNextDistributionForGivenPeriod(distributionTestData.get(FIRST_DELIVERY_ZONE_NAME), distributionTestData.get(VACCINES_PROGRAM), "Period13");
     assertFalse(facilityListPage.getFacilitiesInDropDown().contains(distributionTestData.get(FIRST_FACILITY_CODE)));
 
-    //dbWrapper.updateFacilityFieldBYCode("enabled", "true", "F10");
-    //dbWrapper.updateActiveStatusOfFacility(distributionTestData.get(FIRST_FACILITY_CODE), "true");
   }
 
   @Test(groups = {"distribution"})
@@ -877,7 +862,6 @@ public class DistributionSyncTest extends TestCaseHelper {
       assertFalse(webElement.getText().contains(distributionTestData.get(VACCINES_PROGRAM)));
     }
 
-    //dbWrapper.updateActiveStatusOfProgram("VACCINES", true);
   }
 
   @Test(groups = {"distribution"})
@@ -976,10 +960,10 @@ public class DistributionSyncTest extends TestCaseHelper {
     childCoveragePage.applyNRToAll();
     childCoveragePage.clickOK();
 
-    EPIUsePage epiUsePage = childCoveragePage.navigateToEpiUse();
-    epiUsePage.enterData(70, 80, 90, 100, 9999999, "10/2011", 1);
+//    EPIUsePage epiUsePage = childCoveragePage.navigateToEpiUse();
+//    epiUsePage.enterData(70, 80, 90, 100, 9999999, "10/2011", 1);
 
-    FullCoveragePage fullCoveragePage = epiUsePage.navigateToFullCoverage();
+    FullCoveragePage fullCoveragePage = childCoveragePage.navigateToFullCoverage();
     fullCoveragePage.enterData(23, 66, 77, "45");
 
     AdultCoveragePage adultCoveragePage = fullCoveragePage.navigateToAdultCoverage();
@@ -1013,7 +997,7 @@ public class DistributionSyncTest extends TestCaseHelper {
     verifyRefrigeratorReadingsNullInDatabase("GNR7878", facilityCode);
     verifyRefrigeratorsDataInDatabase(facilityCode, "GNR7878", "LG", "800L", "t");
 
-    verifyEpiUseDataInDatabase(70, 80, 90, 100, 9999999, "10/2011", "PG1", facilityCode);
+    verifyEpiUseDataInDatabase(null, null, null, null, null, null, "PG1", facilityCode);
 
     verifyFacilityVisitInformationInDatabase(facilityCode, null, null, null, null, null, null, "t", "f", "TRANSPORT_UNAVAILABLE", null);
 
@@ -1073,27 +1057,20 @@ public class DistributionSyncTest extends TestCaseHelper {
     VisitInformationPage visitInformationPage = PageObjectFactory.getVisitInformationPage(testWebDriver);
     EPIUsePage epiUsePage = visitInformationPage.navigateToEpiUse();
     assertTrue(epiUsePage.getProductGroup(1).equals("PG1-Name"));
-    //assertNull(epiUsePage.getProductGroup(2));
     assertNull(epiUsePage.getNoProductsAddedMessage());
     EpiInventoryPage epiInventoryPage = epiUsePage.navigateToEpiInventory();
     assertTrue(epiInventoryPage.getProductName(1).equals("antibiotic"));
     assertTrue(epiInventoryPage.getProductName(2).equals("ProductName6"));
     assertTrue(epiInventoryPage.getProductName(3).equals("antibiotic"));
-    //assertNull(epiInventoryPage.getProductName(4));
     assertNull(epiInventoryPage.getNoProductsAddedMessage());
   }
 
   private void verifyProductsAreNotDisplayed() {
     VisitInformationPage visitInformationPage = PageObjectFactory.getVisitInformationPage(testWebDriver);
     EPIUsePage epiUsePage = visitInformationPage.navigateToEpiUse();
-    //assertNull(epiUsePage.getProductGroup(1));
-    //assertNull(epiUsePage.getProductGroup(2));
     assertTrue(epiUsePage.getNoProductsAddedMessage().contains("No products added"));
     epiUsePage.verifyIndicator("GREEN");
     EpiInventoryPage epiInventoryPage = epiUsePage.navigateToEpiInventory();
-    //assertNull(epiInventoryPage.getProductName(1));
-    //assertNull(epiInventoryPage.getProductName(2));
-    //assertNull(epiInventoryPage.getProductName(3));
     assertTrue(epiInventoryPage.getNoProductsAddedMessage().contains("No products added"));
     epiInventoryPage.verifyIndicator("GREEN");
   }
