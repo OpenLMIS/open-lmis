@@ -61,7 +61,7 @@ public class UserPage extends Page {
   @FindBy(how = ID, using = "searchUser")
   private static WebElement searchUserTextField = null;
 
-  @FindBy(how = XPATH, using = "//a[@ng-click='user.active? changePassword(user): javascript(void);'] ")
+  @FindBy(how = XPATH, using = "//a[@ng-click='changePassword(user)']")
   private static WebElement selectFirstResetPassword = null;
 
   @FindBy(how = ID, using = "password1")
