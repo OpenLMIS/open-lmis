@@ -245,6 +245,7 @@ public class UserPage extends Page {
   public void resetPassword(String newPassword, String confirmPassword) {
     testWebDriver.waitForElementToAppear(selectFirstResetPassword);
     testWebDriver.sleep(300);
+    testWebDriver.moveToElement(selectFirstResetPassword);
     selectFirstResetPassword.click();
 
     testWebDriver.waitForElementToAppear(newPasswordField);
