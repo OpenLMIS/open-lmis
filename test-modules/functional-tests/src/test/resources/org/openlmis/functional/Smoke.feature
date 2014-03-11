@@ -861,7 +861,7 @@ Feature: Smoke Tests
     Then I see Overall facility icon as "RED"
     And I navigate to "refrigerator" tab
     And I see "Overall" refrigerator icon as "RED"
-    And I verify the refrigerator "LG;800 LITRES;GR-J287PGHV" present
+    And I verify the refrigerator "GR-J287PGHV;LG;800 LITRES" present
 
 
   @smokeDistribution
