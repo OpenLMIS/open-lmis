@@ -771,44 +771,40 @@ Feature: Smoke Tests
     When I select "yes" facility visited
     And I select visit date as current date
     And I Enter "visit information" values:
-      | observations     | confirmedByName | confirmedByTitle | verifiedByName | verifiedByTitle |
-      | some observation | samuel          | fc               | Verifier       | XYZ             |
-
+      | confirmedByName | confirmedByTitle | verifiedByName | verifiedByTitle |
+      | samuel          | fc               | Verifier       | XYZ             |
     And I navigate to "epi use" tab
     And I Enter "epi use" values:
       | distributed | expirationDate | loss | received | firstOfMonth | endOfMonth |
       | 16          | 11/2012        | 1    | 10       | 12           |            |
     And I enter EPI end of month as "5"
-
     And I navigate to "child coverage" tab
     Then Verify "child coverage" indicator should be "RED"
     And I Enter "child coverage" values:
       | healthCenter11 | outreach11 | healthCenter23 | outreach23 | openedVial |
       | 123            | 22         | 23             | 34         | 4          |
     Then Verify "child coverage" indicator should be "GREEN"
-    And I navigate to "full coverage" tab
+    Then I navigate to "full coverage" tab
     And I Enter "full coverage" values:
       | femaleHealthCenter | femaleMobileBrigade | maleHealthCenter | maleMobileBrigade |
       | 123                | 22                  | 23               | 242               |
-    And I navigate to "epi inventory" tab
+    Then I navigate to "epi inventory" tab
     And I Enter "epi inventory" values:
       | existingQuantity | deliveredQuantity | spoiledQuantity |
       | 20               | 100               | 5               |
       | 10               | 50                | 3               |
-    And I navigate to "adult coverage" tab
+    Then I navigate to "adult coverage" tab
     And I Enter "adult coverage" values:
       | healthCenter1 | outreach1 | healthCenter25 | outreach25 | openedVial |
       | 123           | 22        | 23             | 34         | 4          |
-    And I navigate to "epi inventory" tab
     Then I see Overall facility icon as "GREEN"
     When I access plan my distribution page
-
-    When I sync recorded data
+    And I sync recorded data
     Then I check confirm sync message as "F10-Village Dispensary"
     When I done sync message
     And I view visit information in DB for facility "F10":
       | observations     | confirmedByName | confirmedByTitle | verifiedByName | verifiedByTitle | vehicleId | synced | visited | reasonForNotVisiting | otherReasonDescription |
-      | some observation | samuel          | fc               | Verifier       | XYZ             | null      | t      | t       | null                 | null                   |
+      | null             | samuel          | fc               | Verifier       | XYZ             | null      | t      | t       | null                 | null                   |
     And I view epi use data in DB for facility "F10" and product group "penta":
       | distributed | expirationDate | loss | received | firstOfMonth | endOfMonth |
       | 16          | 11/2012        | 1    | 10       | 12           | 5          |
@@ -845,14 +841,12 @@ Feature: Smoke Tests
     Then I see "refrigerator" fields disabled
     When I navigate to "child coverage" tab
     Then I see "child coverage" fields disabled
-
     And I access plan my distribution page
     And I delete already cached data for distribution
     And I access plan my distribution page
     And I select delivery zone "Delivery Zone First"
     And I select program "VACCINES"
     Then I verify period "Period14" not present
-
     And I select delivery zone "Delivery Zone First"
     And I select program "VACCINES"
     And I select period "Period13"
@@ -891,12 +885,7 @@ Feature: Smoke Tests
       | healthCenter11 | outreach11 | healthCenter23 | outreach23 | openedVial |
       | 123            | 22         | 23             | 34         | 4          |
     Then Verify "child coverage" indicator should be "GREEN"
-    Then I navigate to "epi use" tab
-    And I Enter "epi use" values:
-      | distributed | expirationDate | loss | received | firstOfMonth | endOfMonth |
-      | 16          | 11/2012        | 1    | 10       | 12           |            |
-    And I enter EPI end of month as "5"
-    And I navigate to "full coverage" tab
+    Then I navigate to "full coverage" tab
     And I Enter "full coverage" values:
       | femaleHealthCenter | femaleMobileBrigade | maleHealthCenter | maleMobileBrigade |
       | 123                | 22                  | 23               | 242               |
@@ -918,8 +907,11 @@ Feature: Smoke Tests
     Then I see Overall facility icon as "GREEN"
     And Verify "refrigerator" indicator should be "GREEN"
     And Verify "epi inventory" indicator should be "GREEN"
+    And Verify "epi use" indicator should be "GREEN"
     When I navigate to "epi inventory" tab
     Then I see "epi inventory" fields disabled
+    When I navigate to "epi use" tab
+    Then I see "epi use" fields disabled
     When I navigate to "refrigerator" tab
     And I access show
     Then I see "refrigerator" fields disabled
@@ -933,7 +925,7 @@ Feature: Smoke Tests
       | null         | null            | null             | null           | null            | null      | t      | f       | TRANSPORT_UNAVAILABLE | null                   |
     And I view epi use data in DB for facility "F10" and product group "penta":
       | distributed | expirationDate | loss | received | firstOfMonth | endOfMonth |
-      | 16          | 11/2012        | 1    | 10       | 12           | 5          |
+      | null        | null           | null | null     | null         | null       |
     And I view full coverage readings in DB for facility "F10":
       | femaleHealthCenter | femaleOutreach | maleHealthCenter | maleOutreach |
       | 123                | 22             | 23               | 242          |

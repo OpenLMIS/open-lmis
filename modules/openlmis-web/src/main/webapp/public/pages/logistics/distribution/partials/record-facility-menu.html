@@ -31,7 +31,7 @@
         <span id="epiInventoryTabLabel" openlmis-message="label.epi.inventory"></span>
       </a>
     </li>
-    <li id="epiUseStatus" ng-class="[distributionData.epiUse.computeStatus(), isSelected('epi-use')]">
+    <li id="epiUseStatus" ng-class="[distributionData.epiUse.computeStatus(distributionData.facilityVisit.visited), isSelected('epi-use')]">
       <a id="epiUseTab" href="" ng-click="changeRoute('epi-use')">
         <span id="epiUseTabIcon" class="status-icon"></span>
         <span id="epiUseTabLabel" openlmis-message="label.epi.use"></span>

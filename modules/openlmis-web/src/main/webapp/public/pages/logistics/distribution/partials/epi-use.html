@@ -15,7 +15,7 @@
             src="'/public/pages/logistics/distribution/partials/record-facility-menu.html'"></ng-include>
 
     <div class="facility-info" ng-init="facilityData = distribution.facilityDistributions[selectedFacilityId]">
-        <div class="refrigerator-container" disable-form="{{facilityData.isDisabled()}}">
+        <div class="refrigerator-container" disable-form="{{facilityData.isDisabled('epi-use')}}">
             <h3>
                 <span id="epiUsePageHeader" openlmis-message="header.epi.use"></span>
                 <input id="epiUseApplyNrAll" type="button" ng-click="applyNRAll()"
