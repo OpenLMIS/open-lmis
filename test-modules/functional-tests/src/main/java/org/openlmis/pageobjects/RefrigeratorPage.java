@@ -466,6 +466,7 @@ public class RefrigeratorPage extends DistributionTab {
     return addNewButton.isEnabled();
   }
 
+  @Override
   public void removeFocusFromElement() {
     testWebDriver.waitForElementToAppear(refrigeratorsPageLabel);
     testWebDriver.moveToElement(refrigeratorsPageLabel);

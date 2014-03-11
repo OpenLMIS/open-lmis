@@ -314,6 +314,7 @@ public class VisitInformationPage extends DistributionTab {
     enterVerifiedByTitle(verifierTitle);
   }
 
+  @Override
   public void removeFocusFromElement() {
     testWebDriver.waitForElementToAppear(visitInformationLabel);
     testWebDriver.moveToElement(visitInformationLabel);

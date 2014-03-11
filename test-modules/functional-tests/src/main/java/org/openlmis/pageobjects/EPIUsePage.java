@@ -376,6 +376,7 @@ public class EPIUsePage extends DistributionTab {
     }
   }
 
+  @Override
   public void removeFocusFromElement() {
     testWebDriver.waitForElementToAppear(epiUsePageHeader);
     testWebDriver.moveToElement(epiUsePageHeader);

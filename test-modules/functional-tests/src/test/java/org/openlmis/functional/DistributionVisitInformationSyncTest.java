@@ -495,7 +495,7 @@ public class DistributionVisitInformationSyncTest extends TestCaseHelper {
   public void enterVehicleId(String vehicleId) {
     VisitInformationPage visitInformationPage = PageObjectFactory.getVisitInformationPage(testWebDriver);
     visitInformationPage.enterVehicleId(vehicleId);
-
+    visitInformationPage.removeFocusFromElement();
   }
 
   @When("^I select \"([^\"]*)\" facility visited$")
@@ -506,6 +506,7 @@ public class DistributionVisitInformationSyncTest extends TestCaseHelper {
     } else if (option.toLowerCase().equals("no")) {
       visitInformationPage.selectFacilityVisitedNo();
     }
+    visitInformationPage.removeFocusFromElement();
   }
 
   @And("^I select No Transport reason$")
@@ -524,6 +525,7 @@ public class DistributionVisitInformationSyncTest extends TestCaseHelper {
   public void enterOtherReason(String reason) {
     VisitInformationPage visitInformationPage = PageObjectFactory.getVisitInformationPage(testWebDriver);
     visitInformationPage.enterOtherReasonInTextBox(reason);
+    visitInformationPage.removeFocusFromElement();
   }
 
   @And("^I verify Others reason selected$")

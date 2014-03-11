@@ -184,6 +184,7 @@ public class EpiInventoryPage extends DistributionTab {
     return testWebDriver.findElement(By.id("existingQuantity" + (rowNumber - 1))).getAttribute("value");
   }
 
+  @Override
   public void removeFocusFromElement() {
     testWebDriver.waitForElementToAppear(epiInventoryPageLabel);
     testWebDriver.moveToElement(epiInventoryPageLabel);
