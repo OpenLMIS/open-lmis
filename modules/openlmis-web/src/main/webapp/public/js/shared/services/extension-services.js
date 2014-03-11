@@ -423,4 +423,8 @@ services.factory('StockEfficiency', function($resource){
     return $resource('/dashboard/stockEfficiency.json',{}, {});
 });
 
+services.factory('StockEfficiencyDetail', function($resource){
+    return $resource('/dashboard/stockEfficiencyDetail.json',{}, {});
+});
+
 /* End Dashboard data factories */
