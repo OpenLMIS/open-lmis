@@ -426,10 +426,11 @@ public class DistributionVisitInformationSyncTest extends TestCaseHelper {
       epiInventoryPage.fillDeliveredQuantity(1, "2");
       epiInventoryPage.fillDeliveredQuantity(2, "4");
       epiInventoryPage.fillDeliveredQuantity(3, "6");
+
+      EPIUsePage epiUsePage = visitInformationPage.navigateToEpiUse();
+      epiUsePage.enterData(10, 20, 30, 40, 50, "10/2011", 1);
     }
 
-//    EPIUsePage epiUsePage = visitInformationPage.navigateToEpiUse();
-//    epiUsePage.enterData(10, 20, 30, 40, 50, "10/2011", 1);
 
     ChildCoveragePage childCoveragePage = visitInformationPage.navigateToChildCoverage();
     childCoveragePage.applyNRToAll();
