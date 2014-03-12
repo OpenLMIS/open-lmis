@@ -301,6 +301,12 @@ public class DistributionPage extends Page {
     retryButton.click();
   }
 
+  public void clickCancelSyncRetry() {
+    WebElement cancelSyncButton = testWebDriver.getElementByXpath("//*[@id='synchronizationModal']/div[3]/input[3]");
+    testWebDriver.waitForElementToAppear(cancelSyncButton);
+    cancelSyncButton.click();
+  }
+
   public String getSyncStatusMessage() {
     testWebDriver.waitForElementToAppear(syncStatusMessage);
     return syncStatusMessage.getText();
@@ -319,5 +325,11 @@ public class DistributionPage extends Page {
   public String getDistributionStatus() {
     testWebDriver.waitForAjax();
     return distributionStatus.getText();
+  }
+
+  public void clickGoOnlineButton() {
+    WebElement goOnlineButton = testWebDriver.getElementByXpath("//*[@id='goOnlineNavigation']/li/a/span");
+    testWebDriver.waitForElementToAppear(goOnlineButton);
+    goOnlineButton.click();
   }
 }
