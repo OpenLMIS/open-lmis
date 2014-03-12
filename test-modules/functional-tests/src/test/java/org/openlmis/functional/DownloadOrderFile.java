@@ -121,8 +121,8 @@ public class DownloadOrderFile extends TestCaseHelper {
     setupDownloadOrderFileSetup(password);
     getOrderDataFromDownloadedFile("Zero");
     checkOrderFileData(1, "Extra 1,Approved quantity,Product code,Product name,Order date,Facility code,Period,Order number,");
-    checkOrderFileData(2, ",10,P10,antibiotic Capsule 300/200/600 mg");
-    checkOrderFileData(2, ",F10,2012-01,");
+    checkOrderFileData(2, ",\"10\",\"P10\",\"antibiotic Capsule 300/200/600 mg\"");
+    checkOrderFileData(2, ",\"F10\",\"2012-01\",");
     checkOrderFileOrderDate("MM-dd-yyyy", 2);
     checkOrderFileOrderId(2);
   }
@@ -133,7 +133,7 @@ public class DownloadOrderFile extends TestCaseHelper {
     setupDownloadOrderFileSetup(password);
     getOrderDataFromDownloadedFile("O");
     checkOrderFileData(1, "Order number,Facility code,Product code,Product name,Approved quantity,Period,Order date");
-    checkOrderFileData(2, ",F10,P10,antibiotic Capsule 300/200/600 mg,10,01/12,");
+    checkOrderFileData(2, ",\"F10\",\"P10\",\"antibiotic Capsule 300/200/600 mg\",\"10,01/12\",");
     checkOrderFileOrderDate("dd/MM/yy", 2);
     checkOrderFileOrderId(2);
   }
@@ -143,7 +143,7 @@ public class DownloadOrderFile extends TestCaseHelper {
     dbWrapper.setupOrderFileConfiguration("O", "FALSE");
     setupDownloadOrderFileSetup(password);
     getOrderDataFromDownloadedFile("O");
-    checkOrderFileData(1, ",F10,P10,antibiotic Capsule 300/200/600 mg,10,01/12,");
+    checkOrderFileData(1, ",\"F10\",\"P10\",\"antibiotic Capsule 300/200/600 mg\",\"10\",\"01/12\",");
     checkOrderFileOrderDate("dd/MM/yy", 1);
     checkOrderFileOrderId(1);
   }
