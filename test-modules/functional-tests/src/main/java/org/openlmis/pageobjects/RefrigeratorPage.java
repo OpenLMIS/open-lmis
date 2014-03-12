@@ -409,6 +409,11 @@ public class RefrigeratorPage extends DistributionTab {
     clickDoneOnModal();
   }
 
+  public void addNewRefrigerator(String manufacturerSerialNumber) {
+    enterValueInManufacturingSerialNumberModal(manufacturerSerialNumber);
+    clickDoneOnModal();
+  }
+
   public void verifyDuplicateErrorMessage(String message) {
     testWebDriver.waitForElementToAppear(duplicateRefrigeratorMessage);
     assertEquals(duplicateRefrigeratorMessage.getText(), message);
@@ -476,5 +481,9 @@ public class RefrigeratorPage extends DistributionTab {
     WebElement functioningCorrectlyNR = testWebDriver.getElementById("functioningCorrectly" + (refrigeratorNumber - 1));
     testWebDriver.waitForElementToAppear(functioningCorrectlyNR);
     return functioningCorrectlyNR.isSelected();
+  }
+
+  public boolean isDoneButtonEnabled() {
+    return doneButtonOnModal.isEnabled();
   }
 }
