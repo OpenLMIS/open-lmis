@@ -17,8 +17,10 @@
                 <program-filter class="form-cell horizontalFilters"></program-filter>
                 <schedule-filter class="form-cell horizontalFilters"></schedule-filter>
                 <year-filter class="form-cell horizontalFilters"></year-filter>
-                <period-filter class="form-cell horizontalFilters"></period-filter>
+                <period-filter class="form-cell horizontalFilters" required></period-filter>
+
                 <div class="form-cell horizontalFilters">
+                    <label class="labels">Indicator</label>
                     <select class="input-large" ui-select2 ng-model="indicator_type" ng-change="OnFilterChanged()" >
                         <option ng-repeat="type in indicator_types" value="{{type.code}}">{{type.name}}</option>
                     </select>
