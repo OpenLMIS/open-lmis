@@ -22,6 +22,10 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/**
+ * This class is responsible for checking if the user has the given right on a delivery zone.
+ */
+
 @Service
 public class DistributionPermissionService {
 
