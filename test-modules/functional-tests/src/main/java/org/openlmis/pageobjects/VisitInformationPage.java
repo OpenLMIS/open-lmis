@@ -303,11 +303,10 @@ public class VisitInformationPage extends DistributionTab {
     }
   }
 
-  public void enterDataWhenFacilityVisited(String observation, String confirmName, String confirmTitle, String verifierName,
+  public void enterDataWhenFacilityVisited(String confirmName, String confirmTitle, String verifierName,
                                            String verifierTitle) {
     selectFacilityVisitedYes();
     enterVisitDateAsFirstOfCurrentMonth();
-    enterObservations(observation);
     enterConfirmedByName(confirmName);
     enterConfirmedByTitle(confirmTitle);
     enterVerifiedByName(verifierName);

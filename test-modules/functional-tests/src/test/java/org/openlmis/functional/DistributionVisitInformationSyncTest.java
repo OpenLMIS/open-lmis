@@ -292,7 +292,7 @@ public class DistributionVisitInformationSyncTest extends TestCaseHelper {
     VisitInformationPage visitInformationPage = facilityListPage.selectFacility(visitInformationData.get(FIRST_FACILITY_CODE));
 
     facilityListPage.verifyOverallFacilityIndicatorColor("RED");
-    visitInformationPage.enterDataWhenFacilityVisited("Some observations", "samuel D", "Doe Abc", "Verifier", "Verifier Title");
+    visitInformationPage.enterDataWhenFacilityVisited("samuel D", "Doe Abc", "Verifier", "Verifier Title");
 
     RefrigeratorPage refrigeratorPage = visitInformationPage.navigateToRefrigerators();
     refrigeratorPage.verifyRefrigeratorColor("overall", "RED");

@@ -149,7 +149,8 @@ public class E2EDistributionTest extends TestCaseHelper {
 
     visitInformationPage = epiUsePage.navigateToVisitInformation();
     visitInformationPage.verifyIndicator("RED");
-    visitInformationPage.enterDataWhenFacilityVisited("some observations", "samuel", "Doe", "Verifier", "XYZ");
+    visitInformationPage.enterDataWhenFacilityVisited("samuel", "Doe", "Verifier", "XYZ");
+    visitInformationPage.enterObservations("some observations");
     visitInformationPage.verifyIndicator("GREEN");
     visitInformationPage.enterVehicleId("90U-L!K3");
 
