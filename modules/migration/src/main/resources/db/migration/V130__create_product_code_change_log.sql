@@ -1,5 +1,3 @@
-DROP TABLE IF EXISTS product_code_change_log;
-
 CREATE TABLE product_code_change_log
 (
   program character varying(4),
