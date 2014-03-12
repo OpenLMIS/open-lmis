@@ -27,6 +27,13 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 @RequestMapping(value = "/dashboard")
 public class DashboardController extends BaseController {
 
+    public static final String ITEM_FILL_RATE = "itemFillRate";
+    public static final String ORDER_FILL_RATE = "orderFillRate";
+    public static final String SHIPMENT_LEAD_TIME = "leadTime";
+    public static final String STOCKING_EFFICIENCY_STATICS = "stocking";
+    public static final String STOCKING_EFFICIENCY_DETAIL = "stocking";
+
+
     @Autowired
     DashboardLookupService lookupService;
 
@@ -36,7 +43,7 @@ public class DashboardController extends BaseController {
                                                              @RequestParam("facilityId") Long facilityId,
                                                              @RequestParam("programId") Long programId,
                                                              @RequestParam("productListId")List<Long> productListId){
-      return OpenLmisResponse.response("itemFillRate", this.lookupService.getItemFillRate(geographicZoneId, periodId, facilityId, programId, productListId));
+      return OpenLmisResponse.response(ITEM_FILL_RATE, this.lookupService.getItemFillRate(geographicZoneId, periodId, facilityId, programId, productListId));
     }
 
     @RequestMapping(value = "/orderFillRate", method = GET, headers = BaseController.ACCEPT_JSON)
@@ -44,14 +51,14 @@ public class DashboardController extends BaseController {
                                                               @RequestParam("periodId") Long periodId,
                                                               @RequestParam("facilityId") Long facilityId,
                                                               @RequestParam("programId") Long programId){
-        return OpenLmisResponse.response("orderFillRate", this.lookupService.getOrderFillRate(geographicZoneId,periodId,facilityId,programId));
+        return OpenLmisResponse.response(ORDER_FILL_RATE, this.lookupService.getOrderFillRate(geographicZoneId,periodId,facilityId,programId));
     }
 
     @RequestMapping(value = "/shipmentLeadTime", method = GET, headers = BaseController.ACCEPT_JSON)
     public ResponseEntity<OpenLmisResponse>  getShipmentLeadTime(@RequestParam("geographicZoneId") Long geographicZoneId,
                                                               @RequestParam("periodId") Long periodId,
                                                               @RequestParam("programId") Long programId){
-        return OpenLmisResponse.response("leadTime", this.lookupService.getShipmentLeadTime(geographicZoneId,periodId,programId));
+        return OpenLmisResponse.response(SHIPMENT_LEAD_TIME, this.lookupService.getShipmentLeadTime(geographicZoneId,periodId,programId));
     }
 
 
@@ -60,14 +67,14 @@ public class DashboardController extends BaseController {
                                                                     @RequestParam("periodId") Long periodId,
                                                                     @RequestParam("programId") Long programId,
                                                                     @RequestParam("productListId")List<Long> productListId){
-        return OpenLmisResponse.response("stocking", this.lookupService.getStockEfficiencyData(geographicZoneId, periodId, programId, productListId));
+        return OpenLmisResponse.response(STOCKING_EFFICIENCY_STATICS, this.lookupService.getStockEfficiencyData(geographicZoneId, periodId, programId, productListId));
     }
     @RequestMapping(value = "/stockEfficiencyDetail", method = GET, headers = BaseController.ACCEPT_JSON)
     public ResponseEntity<OpenLmisResponse>  getStockEfficiencyDetailData(@RequestParam("geographicZoneId") Long geographicZoneId,
                                                                     @RequestParam("periodId") Long periodId,
                                                                     @RequestParam("programId") Long programId,
                                                                     @RequestParam("productListId")List<Long> productListId){
-        return OpenLmisResponse.response("stocking", this.lookupService.getStockEfficiencyDetailData(geographicZoneId, periodId, programId, productListId));
+        return OpenLmisResponse.response(STOCKING_EFFICIENCY_DETAIL, this.lookupService.getStockEfficiencyDetailData(geographicZoneId, periodId, programId, productListId));
     }
 
 }
