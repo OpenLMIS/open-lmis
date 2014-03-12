@@ -107,7 +107,7 @@ public class E2EDistributionTest extends TestCaseHelper {
     facilityListPage.selectFacility(facilityCodeFirst);
     visitInformationPage.navigateToRefrigerators();
 
-    String[] refrigeratorDetails = "LG;800 LITRES;GR-J287PGHV".split(";");
+    String[] refrigeratorDetails = "GR-J287PGHV;LG;800 LITRES".split(";");
     for (int i = 0; i < refrigeratorDetails.length; i++) {
       assertEquals(testWebDriver.getElementByXpath("//div[@class='list-row ng-scope']/ng-include/form/div[1]/div[" + (i + 2) + "]").getText(),
         refrigeratorDetails[i]);
@@ -150,7 +150,6 @@ public class E2EDistributionTest extends TestCaseHelper {
     visitInformationPage = epiUsePage.navigateToVisitInformation();
     visitInformationPage.verifyIndicator("RED");
     visitInformationPage.enterDataWhenFacilityVisited("samuel", "Doe", "Verifier", "XYZ");
-    visitInformationPage.enterObservations("some observations");
     visitInformationPage.verifyIndicator("GREEN");
     visitInformationPage.enterVehicleId("90U-L!K3");
 
@@ -263,7 +262,7 @@ public class E2EDistributionTest extends TestCaseHelper {
     verifyEpiUseDataInDatabase(10, 20, 30, null, 50, "10/2011", "PG1", facilityCodeFirst);
     verifyRefrigeratorReadingDataInDatabase(facilityCodeFirst, "GR-J287PGHV", 3F, "Y", 1, 0, "D", "miscellaneous");
     verifyRefrigeratorProblemDataNullInDatabase("GR-J287PGHV", facilityCodeFirst);
-    verifyFacilityVisitInformationInDatabase(facilityCodeFirst, "some observations", "samuel", "Doe", "Verifier", "XYZ", "90U-L!K3", "t", "t", null, null);
+    verifyFacilityVisitInformationInDatabase(facilityCodeFirst, null, "samuel", "Doe", "Verifier", "XYZ", "90U-L!K3", "t", "t", null, null);
     verifyFullCoveragesDataInDatabase(5, 7, 0, 9999999, facilityCodeFirst);
     verifyEpiInventoryDataInDatabase(null, "10", null, "P10", facilityCodeFirst);
     verifyEpiInventoryDataInDatabase(null, "20", null, "Product6", facilityCodeFirst);
@@ -327,7 +326,7 @@ public class E2EDistributionTest extends TestCaseHelper {
 
     refrigeratorPage.verifyIndicator("RED");
 
-    String data = "LG;800 LITRES;GR-J287PGHV";
+    String data = "GR-J287PGHV;LG;800 LITRES";
     String[] refrigeratorDetailsOnUI = data.split(";");
     for (int i = 0; i < refrigeratorDetails.length; i++)
       assertEquals(testWebDriver.getElementByXpath("//div[@class='list-row ng-scope']/ng-include/form/div[1]/div[" + (i + 2) + "]").getText(), refrigeratorDetailsOnUI[i]);
@@ -430,7 +429,7 @@ public class E2EDistributionTest extends TestCaseHelper {
 
     refrigeratorPage.navigateToEpiUse();
     epiUsePage.verifyIndicator("GREEN");
-    //epiUsePage.verifyAllFieldsDisabled();
+    epiUsePage.verifyAllFieldsDisabled();
 
     ChildCoveragePage childCoveragePage = visitInformationPage.navigateToChildCoverage();
     assertEquals(childCoveragePage.getTextOfTargetGroupValue(9), "300");
@@ -549,7 +548,7 @@ public class E2EDistributionTest extends TestCaseHelper {
     facilityListPage.selectFacility(facilityCodeFirst);
     facilityListPage.verifyOverallFacilityIndicatorColor("BLUE");
 
-    verifyEpiUseDataInDatabase(10, 20, 30, null, 50, "10/2011", "PG1", facilityCodeFirst);
+    verifyEpiUseDataInDatabase(null, null, null, null, null, null, "PG1", facilityCodeFirst);
     verifyFacilityVisitInformationInDatabase(facilityCodeFirst, null, null, null, null, null, null, "t", "f", "OTHER", "Reason for not visiting the facility");
     verifyFullCoveragesDataInDatabase(5, 7, 0, 9999999, facilityCodeFirst);
     verifyEpiInventoryDataInDatabase(null, null, null, "P10", facilityCodeFirst);
