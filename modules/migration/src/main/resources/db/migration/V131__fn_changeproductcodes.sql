@@ -25,13 +25,11 @@ EXECUTE 'ALTER TABLE shipment_line_items DROP CONSTRAINT IF EXISTS shipment_line
 
 
 -- Step : Update product code to new code 
---/*
  update products p set code=m.new_code from product_code_change_log m where p.code=m.old_code and m.migrated = false;
  update requisition_line_items p set productcode=m.new_code from product_code_change_log m where p.productcode=m.old_code and m.migrated = false;
  update pod_line_items p set productcode=m.new_code from product_code_change_log m where p.productcode=m.old_code and m.migrated = false;
  update shipment_line_items p set productcode=m.new_code from product_code_change_log m where p.productcode=m.old_code and m.migrated = false;
  update product_code_change_log c set changeddate=now(), migrated = true from products p where c.new_code=p.code and c.migrated = false;
---*/
 
 
 
@@ -41,7 +39,7 @@ EXECUTE 'ALTER TABLE shipment_line_items DROP CONSTRAINT IF EXISTS shipment_line
  update requisition_line_items p set productcode=m.old_code from product_code_change_log m where p.productcode=m.new_code;
  update pod_line_items p set productcode=m.old_code from product_code_change_log m where p.productcode=m.new_code;
  update shipment_line_items p set productcode=m.old_code from product_code_change_log m where p.productcode=m.new_code;
---*/
+*/
 
 
 -- Step : Add constrains
