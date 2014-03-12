@@ -59,7 +59,7 @@ public class DistributionController extends BaseController {
   public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
 
   @RequestMapping(value = "/distributions", method = POST, headers = ACCEPT_JSON)
-  @PreAuthorize("@permissionEvaluator.hasPermissionOnDeliveryZone(principal, 'MANAGE_DISTRIBUTION')")
+  @PreAuthorize("@distributionPermissionService.hasPermission(principal, 'MANAGE_DISTRIBUTION', #distribution)")
   public ResponseEntity<OpenLmisResponse> create(@RequestBody Distribution distribution, HttpServletRequest request) {
     Distribution existingDistribution = distributionService.get(distribution);
 
@@ -79,7 +79,7 @@ public class DistributionController extends BaseController {
   }
 
   @RequestMapping(value = "/distributions/{id}/facilities/{facilityId}", method = PUT, headers = ACCEPT_JSON)
-  @PreAuthorize("@permissionEvaluator.hasPermissionOnDeliveryZone(principal, 'MANAGE_DISTRIBUTION')")
+  @PreAuthorize("@distributionPermissionService.hasPermission(principal, 'MANAGE_DISTRIBUTION', #id)")
   public ResponseEntity<OpenLmisResponse> sync(@RequestBody FacilityDistributionDTO facilityDistributionDTO, @PathVariable Long id,
                                                @PathVariable Long facilityId, HttpServletRequest httpServletRequest) {
     ResponseEntity<OpenLmisResponse> response;

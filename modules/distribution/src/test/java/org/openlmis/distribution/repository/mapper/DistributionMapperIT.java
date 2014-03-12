@@ -209,4 +209,20 @@ public class DistributionMapperIT {
 
     assertThat(distributionFromDatabase.getStatus(), is(SYNCED));
   }
+
+  @Test
+  public void shouldReturnDistributionById() {
+    Distribution distribution = make(a(defaultDistribution,
+      with(deliveryZone, zone),
+      with(period, processingPeriod),
+      with(DistributionBuilder.program, program)));
+
+    mapper.insert(distribution);
+
+    Distribution distributionFromDatabase = mapper.getBy(distribution.getId());
+
+    assertThat(distributionFromDatabase.getProgram().getId(), is(distribution.getProgram().getId()));
+    assertThat(distributionFromDatabase.getPeriod().getId(), is(distribution.getPeriod().getId()));
+    assertThat(distributionFromDatabase.getDeliveryZone().getId(), is(distribution.getDeliveryZone().getId()));
+  }
 }

@@ -16,18 +16,14 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.openlmis.core.domain.DeliveryZone;
 import org.openlmis.core.domain.Right;
 import org.openlmis.core.service.DeliveryZoneService;
 import org.openlmis.core.service.RoleRightsService;
 import org.openlmis.db.categories.UnitTests;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
-import static java.util.Arrays.asList;
-import static java.util.Collections.emptyList;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.when;
@@ -58,24 +54,6 @@ public class PermissionEvaluatorTest {
     assertThat(evaluator.hasPermission(userId, "AUTHORIZE_REQUISITION, CONFIGURE_RNR"), is(true));
     assertThat(evaluator.hasPermission(userId, "AUTHORIZE_REQUISITION"), is(true));
     assertThat(evaluator.hasPermission(userId, "MANAGE_FACILITY"), is(false));
-  }
-
-  @Test
-  public void shouldReturnTrueIfUserHasPermissionOnADeliveryZone() {
-    Long userId = 1L;
-    when(deliveryZoneService.getByUserForRight(userId, Right.MANAGE_DISTRIBUTION)).thenReturn(asList(new DeliveryZone()));
-
-    assertThat(evaluator.hasPermissionOnDeliveryZone(userId, "MANAGE_DISTRIBUTION"), is(true));
-  }
-
-  @Test
-  public void shouldReturnFalseIfUserHasPermissionOnADeliveryZone() {
-    Long userId = 1L;
-    List<DeliveryZone> deliveryZones = emptyList();
-    when(deliveryZoneService.getByUserForRight(userId, Right.MANAGE_DISTRIBUTION)).thenReturn(
-      deliveryZones);
-
-    assertThat(evaluator.hasPermissionOnDeliveryZone(userId, "MANAGE_DISTRIBUTION"), is(false));
   }
 
 }
