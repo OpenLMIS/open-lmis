@@ -167,7 +167,7 @@ public class DistributionSyncTest extends TestCaseHelper {
     verifyFacilityVisitInformationInDatabase(distributionTestData.get(SECOND_FACILITY_CODE), null, "samuel D", "Doe Abc",
       "Verifier", "Verifier Title", null, "t", "t", null, null);
 
-    distributionPage.clickRecordData(1);
+    distributionPage.clickViewData(1);
     facilityListPage.selectFacility(distributionTestData.get(FIRST_FACILITY_CODE));
     facilityListPage.verifyOverallFacilityIndicatorColor("BLUE");
     facilityListPage.verifyIndividualFacilityIndicatorColor(distributionTestData.get(FIRST_FACILITY_CODE), "BLUE");
@@ -175,7 +175,7 @@ public class DistributionSyncTest extends TestCaseHelper {
     verifyAllFieldsDisabled();
 
     homePage.navigateToDistributionWhenOnline();
-    distributionPage.clickRecordData(1);
+    distributionPage.clickViewData(1);
     facilityListPage.selectFacility(distributionTestData.get(FIRST_FACILITY_CODE));
     facilityListPage.verifyOverallFacilityIndicatorColor("BLUE");
     facilityListPage.verifyIndividualFacilityIndicatorColor(distributionTestData.get(SECOND_FACILITY_CODE), "BLUE");
@@ -776,7 +776,7 @@ public class DistributionSyncTest extends TestCaseHelper {
     assertNull(expectedFacilityCatchmentPopulationForFacility1);
     assertEqualsAndNulls(actualFacilityCatchmentPopulationForFacility2, expectedFacilityCatchmentPopulationForFacility2);
 
-    distributionPage.clickRecordData(1);
+    distributionPage.clickViewData(1);
     facilityListPage.selectFacility(distributionTestData.get(FIRST_FACILITY_CODE));
     facilityListPage.verifyOverallFacilityIndicatorColor("BLUE");
     facilityListPage.verifyIndividualFacilityIndicatorColor(distributionTestData.get(FIRST_FACILITY_CODE), "BLUE");

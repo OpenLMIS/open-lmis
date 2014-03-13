@@ -186,8 +186,6 @@ public class DistributionEpiInventoryTest extends TestCaseHelper {
 
     epiInventoryPage.toggleSpoiledQuantityNR(2);
     epiInventoryPage.fillSpoiledQuantity(2, "-");
-    assertTrue(epiInventoryPage.errorMessageDisplayed(2));
-
     epiInventoryPage.fillSpoiledQuantity(2, "4");
 
     epiInventoryPage = epiInventoryPage.navigateToVisitInformation().navigateToEpiInventory();
