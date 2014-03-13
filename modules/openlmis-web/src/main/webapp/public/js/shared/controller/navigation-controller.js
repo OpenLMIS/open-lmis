@@ -8,7 +8,12 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-function NavigationController($scope, localStorageService, Locales, $location, $window) {
+function NavigationController($scope, localStorageService, Locales, $location, $window, $cookies) {
+  //Deleting browser cookie explicitly in case logout was done when user was offline # 1391
+  if($location.absUrl().indexOf('j_spring_security_logout') != -1) {
+    $cookies.JSESSIONID = "";
+  }
+
   $scope.loadRights = function () {
     $scope.rights = localStorageService.get(localStorageKeys.RIGHT);
 

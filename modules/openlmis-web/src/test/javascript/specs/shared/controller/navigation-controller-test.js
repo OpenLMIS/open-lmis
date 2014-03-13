@@ -11,27 +11,29 @@
 
 describe("NavigationController", function () {
 
-  var scope, ctrl, $httpBackend, $location, window;
+  var scope, ctrl, $httpBackend, $location, window, $cookies, controller;
   beforeEach(module('openlmis'));
 
-  beforeEach(inject(function ($rootScope, $controller, _localStorageService_, _$httpBackend_, _$location_) {
+  beforeEach(inject(function ($rootScope, $controller, _localStorageService_, _$httpBackend_, _$location_, _$cookies_) {
     $httpBackend = _$httpBackend_;
     $location = _$location_;
     window = {};
     scope = $rootScope.$new();
+    $cookies = _$cookies_;
+    $cookies.JSESSIONID = "sessionId";
+    controller = $controller
     localStorageService = _localStorageService_;
     spyOn(localStorageService, 'get').andReturn('MANAGE_FACILITY,UPLOADS');
     //localStorageService.add(localStorageKeys.RIGHT,'MANAGE_FACILITY,UPLOADS'); [Code runs in browser but is not supported on jasmine headless mode ]
-    ctrl = $controller(NavigationController, {$scope: scope, localStorageService: localStorageService, $window: window});
+    ctrl = controller(NavigationController, {$scope: scope, localStorageService: localStorageService, $window: window, $cookies: $cookies});
   }));
 
-  it('should check permission', function () {
-    expect(true).toEqual(scope.hasPermission("MANAGE_FACILITY"));
-    expect(false).toEqual(scope.hasPermission("CREATE_REQUISITION"));
-  });
-
-  it('should set user rights into scope', function () {
-    expect(scope.rights).toEqual('MANAGE_FACILITY,UPLOADS');
+  describe("go offline", function () {
+    it("should delete browser cookies if user logs out when offline", function () {
+      spyOn($location, 'absUrl').andReturn('j_spring_security_logout');
+      ctrl = controller(NavigationController, {$scope: scope, localStorageService: localStorageService, $window: window, $cookies: $cookies});
+      expect($cookies.JSESSIONID).toEqual("");
+    });
   });
 
   describe("go online", function () {
@@ -45,6 +47,7 @@ describe("NavigationController", function () {
       $httpBackend.flush();
       expect(window.location).toEqual("/page/index.html#/manage");
       expect(scope.showNetworkError).toBeFalsy();
+      expect($cookies.JSESSIONID).toBeDefined();
     });
 
     it("should set offline flag and not change URI if network is disconnected", function () {
@@ -57,5 +60,15 @@ describe("NavigationController", function () {
       expect(window.location).toEqual("/pages/test");
       expect(scope.showNetworkError).toBeTruthy();
     });
+
+    it('should check permission', function () {
+      expect(true).toEqual(scope.hasPermission("MANAGE_FACILITY"));
+      expect(false).toEqual(scope.hasPermission("CREATE_REQUISITION"));
+    });
+
+    it('should set user rights into scope', function () {
+      expect(scope.rights).toEqual('MANAGE_FACILITY,UPLOADS');
+    });
+
   });
 });
