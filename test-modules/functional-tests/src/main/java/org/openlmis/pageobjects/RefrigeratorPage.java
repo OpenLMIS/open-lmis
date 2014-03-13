@@ -330,7 +330,6 @@ public class RefrigeratorPage extends DistributionTab {
   public void clickAddNew() {
     testWebDriver.waitForElementToAppear(addNewButton);
     addNewButton.click();
-    removeFocusFromElement();
     testWebDriver.waitForElementToAppear(newRefrigeratorHeaderOnModal);
   }
 
