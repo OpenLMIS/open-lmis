@@ -290,6 +290,12 @@ public class ManageDistribution extends TestCaseHelper {
     distributionPage.clickRecordData(Integer.parseInt(rowNumber));
   }
 
+  @When("^I view data for distribution \"([^\"]*)\"$")
+  public void clickViewDataForGivenRow(String rowNumber) {
+    distributionPage = PageObjectFactory.getDistributionPage(testWebDriver);
+    distributionPage.clickViewData(Integer.parseInt(rowNumber));
+  }
+
   @Then("^I should see No facility selected$")
   public void shouldSeeNoFacilitySelected() {
     facilityListPage = PageObjectFactory.getFacilityListPage(testWebDriver);

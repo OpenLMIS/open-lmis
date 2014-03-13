@@ -833,7 +833,7 @@ Feature: Smoke Tests
       | 123           | 22        | 145    | 23             | 34         | 57     | 202    | 4          |
     And I verify no record present in refrigerator problem table for refrigerator serial number "GR-J287PGHV" and facility "F10"
     And I see distribution status as synced
-    When I record data for distribution "1"
+    When I view data for distribution "1"
     And I choose facility "F10"
     Then I see Overall facility icon as "BLUE"
     Then I see "visit information" fields disabled
@@ -947,7 +947,7 @@ Feature: Smoke Tests
       | healthCenter1 | outreach1 | total1 | healthCenter25 | outreach25 | total2 | total3 | openedVial |
       | 123           | 22        | 145    | 23             | 34         | 57     | 202    | 4          |
     And I see distribution status as synced
-    When I record data for distribution "1"
+    When I view data for distribution "1"
     And I choose facility "F10"
     Then I see Overall facility icon as "BLUE"
     Then I see "visit information" fields disabled
