@@ -95,8 +95,6 @@ public class E2EDistributionTest extends TestCaseHelper {
 
     refrigeratorPage.onRefrigeratorScreen();
     refrigeratorPage.clickAddNew();
-    refrigeratorPage.enterValueInBrandModal("LG");
-    refrigeratorPage.enterValueInModelModal("800 LITRES");
     refrigeratorPage.enterValueInManufacturingSerialNumberModal("GR-J287PGHV");
     refrigeratorPage.clickDoneOnModal();
 
@@ -107,7 +105,7 @@ public class E2EDistributionTest extends TestCaseHelper {
     facilityListPage.selectFacility(facilityCodeFirst);
     visitInformationPage.navigateToRefrigerators();
 
-    String[] refrigeratorDetails = "GR-J287PGHV;LG;800 LITRES".split(";");
+    String[] refrigeratorDetails = "GR-J287PGHV;;".split(";");
     for (int i = 0; i < refrigeratorDetails.length; i++) {
       assertEquals(testWebDriver.getElementByXpath("//div[@class='list-row ng-scope']/ng-include/form/div[1]/div[" + (i + 2) + "]").getText(),
         refrigeratorDetails[i]);
@@ -262,6 +260,8 @@ public class E2EDistributionTest extends TestCaseHelper {
     verifyEpiUseDataInDatabase(10, 20, 30, null, 50, "10/2011", "PG1", facilityCodeFirst);
     verifyRefrigeratorReadingDataInDatabase(facilityCodeFirst, "GR-J287PGHV", 3F, "Y", 1, 0, "D", "miscellaneous");
     verifyRefrigeratorProblemDataNullInDatabase("GR-J287PGHV", facilityCodeFirst);
+    verifyRefrigeratorDetailsInReadingsTable(facilityCodeFirst, "GR-J287PGHV", null, null);
+    verifyRefrigeratorsDataInDatabase(facilityCodeFirst, "GR-J287PGHV", null, null, "t");
     verifyFacilityVisitInformationInDatabase(facilityCodeFirst, null, "samuel", "Doe", "Verifier", "XYZ", "90U-L!K3", "t", "t", null, null);
     verifyFullCoveragesDataInDatabase(5, 7, 0, 9999999, facilityCodeFirst);
     verifyEpiInventoryDataInDatabase(null, "10", null, "P10", facilityCodeFirst);
@@ -326,7 +326,7 @@ public class E2EDistributionTest extends TestCaseHelper {
 
     refrigeratorPage.verifyIndicator("RED");
 
-    String data = "GR-J287PGHV;LG;800 LITRES";
+    String data = "GR-J287PGHV;;";
     String[] refrigeratorDetailsOnUI = data.split(";");
     for (int i = 0; i < refrigeratorDetails.length; i++)
       assertEquals(testWebDriver.getElementByXpath("//div[@class='list-row ng-scope']/ng-include/form/div[1]/div[" + (i + 2) + "]").getText(), refrigeratorDetailsOnUI[i]);
@@ -379,8 +379,6 @@ public class E2EDistributionTest extends TestCaseHelper {
 
     refrigeratorPage.onRefrigeratorScreen();
     refrigeratorPage.clickAddNew();
-    refrigeratorPage.enterValueInBrandModal("LG");
-    refrigeratorPage.enterValueInModelModal("800 LITRES");
     refrigeratorPage.enterValueInManufacturingSerialNumberModal("GR-J287PGHV");
     refrigeratorPage.clickDoneOnModal();
 
