@@ -474,7 +474,7 @@ public class RefrigeratorPage extends DistributionTab {
   @Override
   public void removeFocusFromElement() {
     testWebDriver.waitForElementToAppear(refrigeratorsPageLabel);
-    testWebDriver.moveToElement(refrigeratorsPageLabel);
+    refrigeratorsPageLabel.click();
   }
 
   public boolean isFunctioningCorrectlyNRSelected(int refrigeratorNumber) {

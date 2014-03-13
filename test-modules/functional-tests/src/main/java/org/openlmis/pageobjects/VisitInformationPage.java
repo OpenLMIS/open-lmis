@@ -316,7 +316,7 @@ public class VisitInformationPage extends DistributionTab {
   @Override
   public void removeFocusFromElement() {
     testWebDriver.waitForElementToAppear(visitInformationLabel);
-    testWebDriver.moveToElement(visitInformationLabel);
+    visitInformationLabel.click();
   }
 
   public boolean isOtherReasonSelected() {

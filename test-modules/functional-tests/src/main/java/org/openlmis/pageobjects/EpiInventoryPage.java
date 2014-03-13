@@ -187,6 +187,6 @@ public class EpiInventoryPage extends DistributionTab {
   @Override
   public void removeFocusFromElement() {
     testWebDriver.waitForElementToAppear(epiInventoryPageLabel);
-    testWebDriver.moveToElement(epiInventoryPageLabel);
+    epiInventoryPageLabel.click();
   }
 }
