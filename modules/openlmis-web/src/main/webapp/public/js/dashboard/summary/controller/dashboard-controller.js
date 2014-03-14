@@ -52,8 +52,7 @@ function AdminDashboardController($scope,$timeout,$filter,$window, userGeographi
         $scope.schedules.unshift({'name':'-- Select a Schedule --', 'id':'0'}) ;
 
     });
-
-    $scope.$watch('fillRate.facilityId', function (selection) {
+    $scope.$watch('formFilter.facilityId', function (selection) {
         if (selection == "All") {
             $scope.filterObject.facilityId = -1;
         } else if (selection !== undefined || selection === "") {
@@ -108,11 +107,12 @@ function AdminDashboardController($scope,$timeout,$filter,$window, userGeographi
 
     };
 
-
+    $scope.fillRates = {openPanel:true};
     $scope.loadFillRates = function(){
         //For managing visibility of chart rendering container. All most all javascript chart rendering tools needs the container to be visible before the render process starts.
         $scope.showItemFill = false;
         $scope.showOrderFill = false;
+
 
        //Facility are required for Order and Item Fill Rates
 
@@ -130,6 +130,7 @@ function AdminDashboardController($scope,$timeout,$filter,$window, userGeographi
                    if(!isUndefined(data)){//set visibility of item fill chart container to true if there is data to be rendered
 
                        $scope.showItemFill = true;
+                       $scope.fillRates.openPanel = true;
                    }
                    $scope.itemFills = data.itemFillRate;
                    $scope.productItemFillRates = null;
@@ -159,6 +160,7 @@ function AdminDashboardController($scope,$timeout,$filter,$window, userGeographi
 
                    if(!isUndefined($scope.orderFill.fillRate)){ //set visibility of order fill rate chart container to true
                        $scope.showOrderFill = true;
+                       $scope.fillRates.openPanel = true;
 
                    }
                    fillRate.push([$filter('number')($scope.orderFill.fillRate, 0)]);
@@ -384,6 +386,7 @@ function AdminDashboardController($scope,$timeout,$filter,$window, userGeographi
     });
 
     function flotChartHoverCursorHandler(event,pos,item){
+        //alert('hover')
         if(!isUndefined(item)) {
             if (item.datapoint[0]) {
                 $(event.target).css('cursor','pointer');
@@ -402,64 +405,70 @@ function AdminDashboardController($scope,$timeout,$filter,$window, userGeographi
     /* End Bar Chart */
 
     /* Pie Chart */
+    $scope.districtReporting = {};
+    $scope.districtReporting.openPanel = true;
 
     var pieChartSeries = 3;
     var pieChartColors = ["#05BC57","#CC0505", "#FFFF05"];
     var pieChartLabels = ["Reported on time","Did not report","Reported late"];
+    $timeout(function(){
 
-    $scope.pieChartData = [];
-    var series = 3;
-    var colors = ["#05BC57","#CC0505", "#FFFF05"];
-    var labels = ["Reported on time","Did not report","Reported late"];
+        $scope.pieChartData = [];
+        var series = 3;
+        var colors = ["#05BC57","#CC0505", "#FFFF05"];
+        var labels = ["Reported on time","Did not report","Reported late"];
 
-    for (var i = 0; i < series; i++) {
-        $scope.pieChartData[i] = {
-            label: labels[i],
-            data: Math.floor(Math.random() * 100) + 1,
-            color: colors[i]
-        };
-    }
-    $scope.pieChartOption = {
-        series: {
-            pie: {
-                show: true,
-                radius: 1,
-
-                label: {
-                    show: true,
-                    radius: 2 / 3,
-                    formatter: function (label, series) {
-                        return '<div style="font-size:8pt;text-align:center;padding:2px;color:black;">' + Math.round(series.percent) + '%</div>';
-                    },
-                    threshold: 0.1
-                }
-            }
-        },
-        legend: {
-            container:$("#districtReportLegend"),
-            noColumns: 0,
-            labelBoxBorderColor: "none"
-        },
-        grid:{
-            hoverable: true,
-            borderWidth: 1,
-            borderColor: "#d6d6d6",
-            //minBorderMargin: 20,
-            //labelMargin: 10,
-            backgroundColor: {
-                colors: ["#FFF", "#CCC"]
-            }
-        },
-        tooltip: true,
-        tooltipOpts: {
-            content: "%p.0%, %s",
-            shifts: {
-                x: 20,
-                y: 0
-            },
-            defaultTheme: false
+        for (var i = 0; i < series; i++) {
+            $scope.pieChartData[i] = {
+                label: labels[i],
+                data: Math.floor(Math.random() * 100) + 1,
+                color: colors[i]
+            };
         }
-    };
+        $scope.pieChartOption = {
+            series: {
+                pie: {
+                    show: true,
+                    radius: 1,
+
+                    label: {
+                        show: true,
+                        radius: 2 / 3,
+                        formatter: function (label, series) {
+                            return '<div style="font-size:8pt;text-align:center;padding:2px;color:black;">' + Math.round(series.percent) + '%</div>';
+                        },
+                        threshold: 0.1
+                    }
+                }
+            },
+            legend: {
+                container:$("#districtReportLegend"),
+                noColumns: 0,
+                labelBoxBorderColor: "none"
+            },
+            grid:{
+                hoverable: true,
+                borderWidth: 1,
+                borderColor: "#d6d6d6",
+                //minBorderMargin: 20,
+                //labelMargin: 10,
+                backgroundColor: {
+                    colors: ["#FFF", "#CCC"]
+                }
+            },
+            tooltip: true,
+            tooltipOpts: {
+                content: "%p.0%, %s",
+                shifts: {
+                    x: 20,
+                    y: 0
+                },
+                defaultTheme: false
+            }
+        };
+
+    },100);
+
 
     /* End Pie Chart */
 
@@ -550,6 +559,7 @@ function AdminDashboardController($scope,$timeout,$filter,$window, userGeographi
 
     /* End of Easy pie chart */
 
+
     $scope.loadStockingData = function(){
 
         if(!isUndefined($scope.filterObject.productIdList)){
@@ -565,16 +575,18 @@ function AdminDashboardController($scope,$timeout,$filter,$window, userGeographi
         }
     };
 
-    var resetStockingChartData = function(){
+    $scope.resetStockingChartData = function(){
         $scope.multiBarsRenderedData = undefined;
         $scope.multiBarsData = undefined;
         $scope.multipleBarsOption = undefined;
+
+        $scope.stocking.openPanel =  !$scope.stocking.openPanel;
 
     };
 
     var adjustStockingEfficiencyDataForChart = function(stockingData){
         if(isUndefined(stockingData) || stockingData.length === 0){
-            resetStockingChartData();
+            $scope.resetStockingChartData();
             return;
         }
         $scope.multiBarsRenderedData = {
@@ -588,6 +600,8 @@ function AdminDashboardController($scope,$timeout,$filter,$window, userGeographi
         var understockedSeries =  _.pairs(_.object(_.range(stockingData.length), _.map(_.pluck(stockingData,'understocked'),function(stat){ return _.isNull(stat) ? 0 : stat;})));
         var seriesLabel = ["Stocked out","Understocked","Overstocked","Adequately Stocked"];
         var dataSeries = [stockedOutSeries,understockedSeries,overstockedSeries,adequatelyStockedSeries];
+        $scope.stocking.openPanel = true;
+
         $scope.multiBarsData = _.map(dataSeries, function(series, key){
             return {
             label: seriesLabel[key],
@@ -600,6 +614,10 @@ function AdminDashboardController($scope,$timeout,$filter,$window, userGeographi
 
         var multiBarsTicks = _.pairs(_.object(_.range(stockingData.length), _.pluck(stockingData,'product')));
         $scope.multipleBarsOption = generateMultipleBarsOption(multiBarsTicks);
+
+        //bind event
+        bindChartEvent("#stocking-efficiency","plotclick",$scope.stockBarClickHandler);
+        bindChartEvent("#stocking-efficiency","plothover", flotChartHoverCursorHandler);
     };
 
     function generateMultipleBarsOption(ticksLabel){
@@ -658,8 +676,8 @@ function AdminDashboardController($scope,$timeout,$filter,$window, userGeographi
     $scope.multiBarsData =[];
 
      function getTooltip(label, xval, yval, flotItem){
-         console.log(flotItem.series);
-         return flotItem.series.xaxis.ticks[xval].label+' '+yval+' '+flotItem.series.yaxis.ticks[yval]+' ' +label;
+
+         return flotItem.series.xaxis.ticks[xval].label+' '+yval+' '+'facilities'+' ' +label;
      }
     $scope.stockBarClickHandler = function (event, pos, item){
 
@@ -685,14 +703,10 @@ function AdminDashboardController($scope,$timeout,$filter,$window, userGeographi
         }
     };
 
-    $("#stocking-efficiency").bind("plotclick", $scope.stockBarClickHandler);
+    function bindChartEvent(elementSelector, eventType, callback){
+        $(elementSelector).bind(eventType, callback);
+    }
 
-    $("#stocking-efficiency").bind("plothover", function (event, pos, item) {
-
-        flotChartHoverCursorHandler(event, pos, item);
-
-
-    });
     /* End Custom Bar Chart */
 
     /* Bootstrap Dynamic Tab Utility  */
@@ -722,5 +736,28 @@ function AdminDashboardController($scope,$timeout,$filter,$window, userGeographi
 
         $('#dashboard-tabs #' + tabId + ' a').tab('show');
     }
+
+    $scope.oneAtATime = true;
+
+    $scope.stocking = {};
+    $scope.stocking.openPanel = false;
+    //$scope.$watch()
+    $scope.groups = [
+        {
+            title: "Dynamic Group Header - 1",
+            content: "Dynamic Group Body - 1"
+        },
+        {
+            title: "Dynamic Group Header - 2",
+            content: "Dynamic Group Body - 2"
+        }
+    ];
+
+    $scope.items = ['Item 1', 'Item 2', 'Item 3'];
+
+    $scope.addItem = function() {
+        var newItemNo = $scope.items.length + 1;
+        $scope.items.push('Item ' + newItemNo);
+    };
 
 }
