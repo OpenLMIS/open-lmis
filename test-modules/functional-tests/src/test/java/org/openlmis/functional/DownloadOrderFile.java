@@ -139,6 +139,54 @@ public class DownloadOrderFile extends TestCaseHelper {
   }
 
   @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function")
+  public void testVerifyOrderFileHavingStrengthFormDossierUnitIsNull(String password) throws InterruptedException, SQLException, IOException {
+    dbWrapper.setupOrderFileConfiguration("O", "TRUE");
+
+    List<String> rightsList = asList("CREATE_REQUISITION", "VIEW_REQUISITION", "APPROVE_REQUISITION");
+    setupTestDataToInitiateRnR(true, program, userSICUserName, "200", rightsList);
+
+    setupTestRoleRightsData("lmu", "CONVERT_TO_ORDER,VIEW_ORDER");
+    dbWrapper.insertUser("212", "lmu", passwordUsers, "F10", "Jake_Doe@openlmis.com");
+    dbWrapper.insertRoleAssignment("212", "lmu");
+    dbWrapper.insertFulfilmentRoleAssignment("lmu", "lmu", "F10");
+
+    dbWrapper.updateFieldValueToNull("products","strength","code","P10");
+    dbWrapper.updateFieldValueToNull("products","formid","code","P10");
+    dbWrapper.updateFieldValueToNull("products","dosageunitid","code","P10");
+
+    LoginPage loginPage = PageObjectFactory.getLoginPage(testWebDriver, baseUrlGlobal);
+    HomePage homePage = loginPage.loginAs(userSICUserName, password);
+    homePage.navigateAndInitiateRnr(program);
+    homePage.clickProceed();
+    testWebDriver.sleep(2000);
+    dbWrapper.insertValuesInRequisition(false);
+    dbWrapper.insertValuesInRegimenLineItems("100", "200", "300", "Regimens data filled");
+    dbWrapper.updateRequisitionStatus("SUBMITTED", userSICUserName, "HIV");
+    dbWrapper.updateRequisitionStatus("AUTHORIZED", userSICUserName, "HIV");
+    dbWrapper.updateFieldValue("requisition_line_items", "quantityApproved", 10);
+    dbWrapper.updateRequisitionStatus("APPROVED", userSICUserName, "HIV");
+
+    homePage.logout(baseUrlGlobal);
+    loginPage.loginAs("lmu", password);
+    homePage.navigateConvertToOrder();
+
+    ConvertOrderPage convertOrderPage = PageObjectFactory.getConvertOrderPage(testWebDriver);
+    convertOrderPage.clickConvertToOrderButton();
+    convertOrderPage.clickCheckBoxConvertToOrder();
+    convertOrderPage.clickConvertToOrderButton();
+    convertOrderPage.clickOk();
+    homePage.navigateViewOrders();
+    downloadOrderFile();
+
+    getOrderDataFromDownloadedFile("O");
+
+    checkOrderFileData(1, "Order number,Facility code,Product code,Product name,Approved quantity,Period,Order date");
+    checkOrderFileData(2, ",\"F10\",\"P10\",\"antibiotic   \",\"10\",\"01/12\",");
+    checkOrderFileOrderDate("dd/MM/yy", 2);
+    checkOrderFileOrderId(2);
+  }
+
+  @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function")
   public void testVerifyOrderFileForDefaultConfigurationWithNoHeaders(String password) throws InterruptedException, SQLException, IOException {
     dbWrapper.setupOrderFileConfiguration("O", "FALSE");
     setupDownloadOrderFileSetup(password);

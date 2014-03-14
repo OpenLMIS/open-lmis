@@ -1007,6 +1007,13 @@ public class DBWrapper {
     update("UPDATE products set productGroupId = (SELECT id from product_groups where code = '" + productGroup + "') where code = '" + product + "'");
   }
 
+  public void updateFieldValueToNull(String tableName, String fieldName, String queryParam, String queryValue) throws SQLException {
+    if (queryParam == null)
+      update("update " + tableName + " set " + fieldName + "= null;");
+    else
+      update("update " + tableName + " set " + fieldName + "= " + null + " where " + queryParam + "='" + queryValue + "';");
+  }
+
   public void insertOrders(String status, String username, String program) throws SQLException {
     ResultSet rs = query("select id from requisitions where programId=(select id from programs where code='" + program + "');");
     while (rs.next()) {
