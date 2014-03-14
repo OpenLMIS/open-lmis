@@ -30,7 +30,6 @@ public class ApproveRequisitionTest extends JsonUtility {
 
   @BeforeMethod(groups = {"webservice", "webserviceSmoke"})
   public void setUp() throws InterruptedException, SQLException, IOException {
-    dbWrapper.deleteData();
     super.setup();
     super.setupTestData(false);
     super.setupDataRequisitionApprove();
