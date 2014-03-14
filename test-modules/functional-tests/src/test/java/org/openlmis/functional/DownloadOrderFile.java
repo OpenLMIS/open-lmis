@@ -26,6 +26,8 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
 import static java.util.Arrays.asList;
@@ -90,6 +92,13 @@ public class DownloadOrderFile extends TestCaseHelper {
   public void checkOrderFileData(int lineNumber, String data) {
     testWebDriver.sleep(1000);
     assertTrue("Order data incorrect in line number " + lineNumber, csvRows[lineNumber - 1].contains(data));
+  }
+
+  public void checkOrderFileDataForPattern(int lineNumber, String data) {
+    Pattern orderDataPattern = Pattern.compile(data);
+    testWebDriver.sleep(1000);
+    Matcher matcher = orderDataPattern.matcher(csvRows[lineNumber - 1]);
+    assertTrue("Order data incorrect in line number " + lineNumber, !matcher.find());
   }
 
   @And("^I verify order date format \"([^\"]*)\" in line \"([^\"]*)\"$")
@@ -181,9 +190,7 @@ public class DownloadOrderFile extends TestCaseHelper {
     getOrderDataFromDownloadedFile("O");
 
     checkOrderFileData(1, "Order number,Facility code,Product code,Product name,Approved quantity,Period,Order date");
-    checkOrderFileData(2, ",\"F10\",\"P10\",\"antibiotic   \",\"10\",\"01/12\",");
-    checkOrderFileOrderDate("dd/MM/yy", 2);
-    checkOrderFileOrderId(2);
+    checkOrderFileDataForPattern(2, "\"//d*\",\"F10\",\"P10\",\"antibiotic   \",\"10\",\"01/12\",");
   }
 
   @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function")
