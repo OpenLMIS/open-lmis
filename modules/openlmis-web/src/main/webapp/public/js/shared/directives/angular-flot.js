@@ -12,14 +12,17 @@ app.directive('aFloat', function() {
             init(scope.afData,scope.afOption);
         });
 
-        var totalWidth = element.width(), totalHeight = element.height();
-
-        if (totalHeight === 0 || totalWidth === 0) {
-            throw new Error('Please set height and width for the aFloat element'+'width is '+ele);
-        }
-
         function init(o,d){
-            $.plot(element, o , d);
+
+            var totalWidth = element.width(), totalHeight = element.height();
+
+            if (totalHeight === 0 || totalWidth === 0) {
+                throw new Error('Please set height and width for the aFloat element'+'width is '+ele);
+            }
+
+            if(element.is(":visible") && !isUndefined(d)){
+                $.plot(element, o , d);
+            }
         }
     }
     return {
