@@ -202,6 +202,7 @@ public class ManageDistribution extends TestCaseHelper {
   @Then("^I should see period \"([^\"]*)\"$")
   public void verifyPeriod(String period) throws SQLException {
     distributionPage = PageObjectFactory.getDistributionPage(testWebDriver);
+    testWebDriver.waitForAjax();
     WebElement actualSelectFieldElement = distributionPage.getFirstSelectedOptionFromPeriod();
     testWebDriver.sleep(100);
     verifySelectedOptionFromSelectField(period, actualSelectFieldElement);
