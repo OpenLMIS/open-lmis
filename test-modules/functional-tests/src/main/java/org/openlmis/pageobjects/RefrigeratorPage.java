@@ -337,7 +337,6 @@ public class RefrigeratorPage extends DistributionTab {
     WebElement showButtonForRefrigerator1 = testWebDriver.getElementById("editReading" + (refrigeratorNumber - 1));
     testWebDriver.waitForElementToAppear(showButtonForRefrigerator1);
     showButtonForRefrigerator1.click();
-    removeFocusFromElement();
     testWebDriver.waitForElementToAppear(testWebDriver.getElementById("temperature" + (refrigeratorNumber - 1)));
   }
 

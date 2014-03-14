@@ -776,8 +776,8 @@ Feature: Smoke Tests
     When I select "yes" facility visited
     And I select visit date as current date
     And I Enter "visit information" values:
-      | confirmedByName | confirmedByTitle | verifiedByName | verifiedByTitle |
-      | samuel          | fc               | Verifier       | XYZ             |
+     | observations | confirmedByName | confirmedByTitle | verifiedByName | verifiedByTitle |
+     |              | samuel          | fc               | Verifier       | XYZ             |
     And I navigate to "epi use" tab
     And I Enter "epi use" values:
       | distributed | expirationDate | loss | received | firstOfMonth | endOfMonth |
