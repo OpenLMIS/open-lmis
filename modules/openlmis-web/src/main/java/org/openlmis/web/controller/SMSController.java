@@ -47,7 +47,7 @@ public class SMSController extends BaseController {
         }
     }
 
-    @RequestMapping(value = "/receiveSms",method = RequestMethod.GET)
+    @RequestMapping(value = "/getSMS",method = RequestMethod.GET)
     public void IncomingMessage(@RequestParam( "content") String message,@RequestParam("mobile") String phoneNumber){
         smsService.SaveIncomingSMS(message,phoneNumber);
     }

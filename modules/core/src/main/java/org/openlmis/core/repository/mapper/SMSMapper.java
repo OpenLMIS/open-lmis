@@ -27,14 +27,14 @@ public interface SMSMapper {
 
     //Adding Insert Query
 
-    @Insert("INSERT INTO ShortMessageLog(message,direction,sent, phone_number, date_saved) VALUES (#{message},#{direction},#{sent}, #{phoneNumber}, #{dateSaved})")
+    @Insert("INSERT INTO sms(message,direction,sent, phoneNumber, dateSaved) VALUES (#{message},#{direction},#{sent}, #{phoneNumber}, #{dateSaved})")
     @Options(useGeneratedKeys = true)
     void Insert(SMS sms);
 
     @Select("SELECT * FROM sms")
     public List<SMS> getAllSMSMessage();
 
-    @Select("select * from sms where phone_number = #{mobile}")
+    @Select("select * from sms where phoneNumber = #{mobile}")
     public java.util.List<SMS> getForMobile(@Param("mobile") String mobile);
 
 
