@@ -12,11 +12,15 @@ package org.openlmis.web.controller;
 
 import lombok.NoArgsConstructor;
 import org.openlmis.core.service.SMSService;
+import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import javax.servlet.http.HttpServletRequest;
 
 
 @Controller
@@ -29,6 +33,33 @@ public class SMSController extends BaseController {
     @RequestMapping(value = "/sms", method = RequestMethod.GET)
     public void IncomingSMS(@RequestParam(value = "message") String message, @RequestParam(value="phone_no") String phoneNumber){
         smsService.SaveIncomingSMSMessage(message,phoneNumber);
+    }
+
+
+    //Hassan Added methods
+    @RequestMapping(value = "/sms/setDetails",method = RequestMethod.GET,headers = ACCEPT_JSON)
+    public void getParameterForSendingSms(@RequestParam( "content") String message,@RequestParam("mobile") String phoneNumber){
+        try {
+            smsService.sendSms(message,phoneNumber);
+
+        } catch (Exception e){
+            System.out.print(e.fillInStackTrace());
+        }
+    }
+
+    @RequestMapping(value = "/getSMS",method = RequestMethod.GET)
+    public void IncomingMessage(@RequestParam( "content") String message,@RequestParam("mobile") String phoneNumber){
+        smsService.SaveIncomingSMS(message,phoneNumber);
+    }
+
+    @RequestMapping(value = "/sms/MessageList", method = RequestMethod.GET, headers = ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getAllSms(HttpServletRequest request) {
+        return OpenLmisResponse.response("sms", smsService.getSmsMessages());
+    }
+
+    @RequestMapping(value = "/sms/MessagesForMobile", method = RequestMethod.GET, headers = ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getMessagesForMobilePhone(@RequestParam("mobile") String mobile) {
+        return OpenLmisResponse.response("sms", smsService.getMessagesForMobile(mobile));
     }
 
 }
