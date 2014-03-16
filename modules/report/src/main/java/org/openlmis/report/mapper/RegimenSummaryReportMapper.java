@@ -29,7 +29,7 @@ public interface RegimenSummaryReportMapper {
                                                @Param("SortCriteria") Map<String, String[]> SortCriteria,
                                                @Param("RowBounds") RowBounds rowBounds);
 
-    @SelectProvider(type=RegimenSummaryQueryBuilder.class, method="getOrderFillRateQuery")
+    @SelectProvider(type=RegimenSummaryQueryBuilder.class, method="getQuery")
     @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize=10,timeout=0,useCache=true,flushCache=true)
     public List<RegimenSummaryReport> getReport(Map params);
 

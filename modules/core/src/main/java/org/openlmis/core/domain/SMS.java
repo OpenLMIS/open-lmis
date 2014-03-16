@@ -27,4 +27,7 @@ public class SMS {
     private String direction;
     private Date dateSaved;
 
+    //adding one column
+    private Integer sent;
+
 }

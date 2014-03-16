@@ -41,6 +41,8 @@
                 </a>
 
                 <div class="user-actions">
+                    <a href="/public/pages/admin/sms/index.html#/create-sms/{{user.id}}" class="btn btn-primary btn-small">SMS</a>
+
                     <a id="editUser{{$index}}" href="" class="btn btn-primary btn-small" openlmis-message="button.edit"
                        ng-click="editUser(user.id)"></a>
                     <a id="resetPassword{{$index}}" href="" class="btn btn-primary btn-small"
@@ -69,6 +71,7 @@
                 <td>{{ user.email }}</td>
                 <td ><span class="icon-{{(user.active)?'check':'question-sign'}}" ></span></td>
                 <td class="user-actions">
+                    <a href="/public/pages/admin/sms/index.html#/create-sms/{{user.id}}" class="btn btn-primary btn-small">SMS</a>
                     <a href="" class="btn btn-primary btn-small" openlmis-message="button.edit"
                        ng-click="editUser(user.id)"></a>
                     <a href="" class="btn btn-primary btn-small" ng-class="{'disabled': !user.active}" openlmis-message="button.reset.password"

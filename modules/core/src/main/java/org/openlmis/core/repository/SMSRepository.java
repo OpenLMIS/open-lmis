@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.Date;
+import java.util.List;
 
 @Repository
 @NoArgsConstructor
@@ -40,5 +41,24 @@ public class SMSRepository {
         smsMapper.insert(sms);
     }
 
+    //Adding Save SMS method
+      public void saveSMSMessage(String direction,Integer sent ,String message, String phoneNumber, Date date){
+        SMS sms = new SMS();
+          sms.setPhoneNumber(phoneNumber);
+          sms.setDateSaved(date);
+          sms.setDirection(direction);
+          sms.setMessage(message);
+          sms.setSent(sent);
+          smsMapper.Insert(sms);
+
+      }
+
+    public List<SMS>getAllSMS(){
+        return smsMapper.getAllSMSMessage();
+    }
+
+    public List<SMS> getForMobile(String mobile){
+        return smsMapper.getForMobile(mobile);
+    }
 
 }
