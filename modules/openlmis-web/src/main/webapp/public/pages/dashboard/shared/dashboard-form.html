@@ -3,7 +3,7 @@
         <form  name="filterForm" novalidate>
             <div >
                 <div class="form-cell horizontalFilters" >
-                    <label class="labels">Program</label>
+                    <label class="labels" openlmis-message="label.program"></label>
 
                     <div class="form-fields">
                         <select ui-select2 style="width:160px;" class="large-input" name="program"  ng-model="formFilter.programId" ng-change="filterProductsByProgram()">
@@ -68,8 +68,6 @@
                         </select>
                     </div>
                 </div>
-
-
                 <div class="clearfix"></div>
 
             </div>

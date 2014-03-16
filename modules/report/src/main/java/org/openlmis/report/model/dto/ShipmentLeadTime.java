@@ -15,5 +15,8 @@ import lombok.NoArgsConstructor;
 public class ShipmentLeadTime {
     private String code;
     private String name;
-    private Integer leadTime;
+    private Integer subToAuth;
+    private Integer authToInApproval;
+    private Integer inApprovalToApproved;
+    private Integer approvedToReleased;
 }

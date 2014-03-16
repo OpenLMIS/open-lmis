@@ -9,7 +9,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.openlmis.core.matchers.Matchers;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.report.model.dto.ItemFillRate;
 import org.openlmis.report.model.dto.OrderFillRate;
@@ -19,14 +18,14 @@ import org.openlmis.report.service.lookup.DashboardLookupService;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.springframework.http.ResponseEntity;
 
-import static org.mockito.Mockito.*;
-import static org.openlmis.report.controller.DashboardController.*;
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
-
-
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.openlmis.report.controller.DashboardController.*;
 
 /**
  * User: Issa
