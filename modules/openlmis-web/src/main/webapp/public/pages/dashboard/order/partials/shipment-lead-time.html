@@ -15,7 +15,11 @@
                 <td data-title="'#'" class="number" style="width:20px" >{{ row.no }}</td>
                 <td data-title="'Facility Code'" style="width:150px" sortable="code" >{{ row.code }}</td>
                 <td data-title="'Facility Name'" style="width:30%" sortable="name">{{ row.name }}</td>
-                <td class="number" data-title="'Average Lead Time(Days)'" style="width:30%" >{{ row.leadTime | number }}</td>
+                <td class="number" data-title="'Sub to Dist Auth(Days)'" style="width:30%" >{{ row.subToAuth | number }}</td>
+                <td class="number" data-title="'Dist Auth to LMU approval(Days)'" style="width:30%" >{{ row.authToInApproval | number }}</td>
+                <td class="number" data-title="'LMU approval to Order(Days)'" style="width:30%" >{{ row.inApprovalToApproved | number }}</td>
+                <td class="number" data-title="'Order to release(Days)'" style="width:30%" >{{ row.approvedToReleased | number }}</td>
+                <td class="number" data-title="'Average Lead Time(Days)'" style="width:30%" >{{ row.subToAuth+row.authToInApproval+ row.inApprovalToApproved+ row.approvedToReleased  | number }}</td>
             </tr>
             </tbody>
         </table>

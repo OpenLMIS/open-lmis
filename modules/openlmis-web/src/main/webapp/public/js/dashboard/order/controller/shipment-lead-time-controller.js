@@ -6,7 +6,7 @@
  * To change this template use File | Settings | File Templates.
  */
 
-function ShipmentLeadTimeController($scope,$filter,userFacilityData,ReportPrograms, ReportSchedules, ReportPeriods, RequisitionGroupsByProgram,RequisitionGroupsByProgramSchedule, ReportProductsByProgram, OperationYears, ReportPeriodsByScheduleAndYear,ShipmentLeadTime, ngTableParams) {
+function ShipmentLeadTimeController($scope,$filter,userGeographicZoneList,ReportPrograms, ReportSchedules, ReportPeriods, RequisitionGroupsByProgram,RequisitionGroupsByProgramSchedule, ReportProductsByProgram, OperationYears, ReportPeriodsByScheduleAndYear,ShipmentLeadTime, ngTableParams) {
 
     $scope.filterObject = {};
 
@@ -19,9 +19,8 @@ function ShipmentLeadTimeController($scope,$filter,userFacilityData,ReportProgra
     function initialize() {
         if(isUndefined($scope.filterObject.geographicZoneId)){
             $scope.filterObject.geographicZoneId = 0;
-            var userFacility = userFacilityData.facilityList[0];
-            if (userFacility) {
-                $scope.filterObject.geographicZoneId = userFacility.geographicZone.id;
+            if(!isUndefined(userGeographicZoneList) ){
+                $scope.filterObject.geographicZoneId = userGeographicZoneList[0] !== null ? userGeographicZoneList[0].id : undefined;
             }
         }
     }
@@ -54,20 +53,18 @@ function ShipmentLeadTimeController($scope,$filter,userFacilityData,ReportProgra
             }
         });
 
-        ReportProductsByProgram.get({programId:  $scope.filterObject.programId}, function(data){
-            $scope.products = data.productList;
-        });
-
         RequisitionGroupsByProgram.get({program: $scope.filterObject.programId }, function(data){
             $scope.requisitionGroups = data.requisitionGroupList;
             $scope.requisitionGroups.unshift({'name':'-- All Requisition Groups --'});
         });
 
+        $scope.getShipmentLeadTimeData();
+
 
     };
 
 
-    $scope.ChangeSchedule = function(scheduleBy){
+    $scope.changeSchedule = function(scheduleBy){
         if(scheduleBy == 'byYear'){
 
             ReportPeriodsByScheduleAndYear.get({scheduleId: $scope.filterObject.scheduleId, year: $scope.filterObject.year}, function(data){
@@ -123,32 +120,34 @@ function ShipmentLeadTimeController($scope,$filter,userFacilityData,ReportProgra
         $scope.getShipmentLeadTimeData();
     };
 
-    $scope.ChangeSchedule = function(){
+    $scope.changeSchedule = function(){
 
         if ($scope.formFilter.scheduleId == "All") {
             $scope.filterObject.scheduleId = -1;
         } else if ($scope.formFilter.scheduleId !== undefined || $scope.formFilter.scheduleId === "") {
             $scope.filterObject.scheduleId = $scope.formFilter.scheduleId;
-            $.each($scope.schedules , function (item, idx) {
-                if (idx.id == $scope.formFilter.scheduleId) {
-                    $scope.filterObject.schedule = idx.name;
-                }
-            });
 
         } else {
             $scope.filterObject.scheduleId = 0;
         }
 
-        ReportPeriods.get({ scheduleId : $scope.filterObject.scheduleId },function(data) {
-            $scope.periods = data.periods;
-            $scope.periods.unshift({'name':'-- Select a Period --','id':'0'});
+        if(!isUndefined($scope.filterObject.scheduleId)){
+            ReportPeriods.get({ scheduleId : $scope.filterObject.scheduleId },function(data) {
+                $scope.periods = data.periods;
+                $scope.periods.unshift({'name':'-- Select a Period --','id':'0'});
 
-        });
+            });
 
-        RequisitionGroupsByProgramSchedule.get({program: $scope.filterObject.programId, schedule:$scope.filterObject.scheduleId}, function(data){
-            $scope.requisitionGroups = data.requisitionGroupList;
-            $scope.requisitionGroups.unshift({'name':'-- All Requisition Groups --','id':'0'});
-        });
+            if(!isUndefined($scope.filterObject.programId)){
+                RequisitionGroupsByProgramSchedule.get({program: $scope.filterObject.programId, schedule:$scope.filterObject.scheduleId}, function(data){
+                    $scope.requisitionGroups = data.requisitionGroupList;
+                    $scope.requisitionGroups.unshift({'name':'-- All Requisition Groups --','id':'0'});
+                });
+            }
+
+            $scope.getShipmentLeadTimeData();
+        }
+
 
     };
 
@@ -164,20 +163,22 @@ function ShipmentLeadTimeController($scope,$filter,userFacilityData,ReportProgra
         }
 
         if($scope.filterObject.year === -1 || $scope.filterObject.year === 0){
-            $scope.ChangeSchedule();
+            $scope.changeSchedule();
 
         }else{
-
-            ReportPeriodsByScheduleAndYear.get({scheduleId: $scope.filterObject.scheduleId, year: $scope.filterObject.year}, function(data){
-                $scope.periods = data.periods;
-                $scope.periods.unshift({'name':'-- Select a Period --','id':'0'});
-            });
-
-            RequisitionGroupsByProgramSchedule.get({program: $scope.filterObject.programId, schedule:$scope.filterObject.scheduleId}, function(data){
-                $scope.requisitionGroups = data.requisitionGroupList;
-                $scope.requisitionGroups.unshift({'name':'-- All Requisition Groups --','id':'0'});
-            });
-
+            if(!isUndefined($scope.filterObject.scheduleId) && !isUndefined($scope.filterObject.year)){
+                ReportPeriodsByScheduleAndYear.get({scheduleId: $scope.filterObject.scheduleId, year: $scope.filterObject.year}, function(data){
+                    $scope.periods = data.periods;
+                    $scope.periods.unshift({'name':'-- Select a Period --','id':'0'});
+                });
+            }
+            if(!isUndefined($scope.filterObject.scheduleId) && !isUndefined($scope.filterObject.programId)){
+                RequisitionGroupsByProgramSchedule.get({program: $scope.filterObject.programId, schedule:$scope.filterObject.scheduleId}, function(data){
+                    $scope.requisitionGroups = data.requisitionGroupList;
+                    $scope.requisitionGroups.unshift({'name':'-- All Requisition Groups --','id':'0'});
+                });
+            }
+            $scope.getShipmentLeadTimeData();
         }
 
     };
