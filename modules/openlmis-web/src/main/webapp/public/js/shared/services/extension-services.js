@@ -427,6 +427,15 @@ services.factory('StockEfficiencyDetail', function($resource){
     return $resource('/dashboard/stockEfficiencyDetail.json',{}, {});
 });
 
+services.factory('StockedOutFacilities', function($resource){
+    return $resource('/dashboard/stockedOutFacilities.json',{}, {});
+});
+
+services.factory('StockedOutFacilitiesByDistrict', function($resource){
+    return $resource('/dashboard/stockedOutFacilitiesByDistrict.json',{}, {});
+});
+
+
 /* End Dashboard data factories */
 
 services.factory('SMSCompleteList',function($resource){

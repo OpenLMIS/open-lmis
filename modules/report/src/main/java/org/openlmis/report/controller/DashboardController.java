@@ -32,6 +32,7 @@ public class DashboardController extends BaseController {
     public static final String SHIPMENT_LEAD_TIME = "leadTime";
     public static final String STOCKING_EFFICIENCY_STATICS = "stocking";
     public static final String STOCKING_EFFICIENCY_DETAIL = "stocking";
+    public static final String STOCKED_OUT_FACILITIES = "stockedOutFacilities";
 
 
     @Autowired
@@ -76,5 +77,14 @@ public class DashboardController extends BaseController {
                                                                     @RequestParam("productListId")List<Long> productListId){
         return OpenLmisResponse.response(STOCKING_EFFICIENCY_DETAIL, this.lookupService.getStockEfficiencyDetailData(geographicZoneId, periodId, programId, productListId));
     }
+
+    @RequestMapping(value = "/stockedOut", method = GET, headers = BaseController.ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse>  getStockedOutFacilities(@RequestParam("geographicZoneId") Long geographicZoneId,
+                                                                          @RequestParam("periodId") Long periodId,
+                                                                          @RequestParam("programId") Long programId,
+                                                                          @RequestParam("productListId")List<Long> productListId){
+        return OpenLmisResponse.response(STOCKING_EFFICIENCY_DETAIL, this.lookupService.getStockEfficiencyDetailData(geographicZoneId, periodId, programId, productListId));
+    }
+
 
 }
