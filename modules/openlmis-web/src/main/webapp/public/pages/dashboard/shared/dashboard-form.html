@@ -12,7 +12,7 @@
                     </div>
                 </div>
                 <div class="form-cell horizontalFilters" >
-                    <label class="labels">Schedule </label>
+                    <label class="labels" openlmis-message="label.schedule"></label>
 
                     <div class="form-fields">
                         <select ui-select2 style="width:160px;" class="large-input" name="schedule"  ng-model="formFilter.scheduleId" ng-change="changeSchedule()">
@@ -22,7 +22,7 @@
                 </div>
 
                 <div class="form-cell horizontalFilters">
-                    <label class="labels">Year </label>
+                    <label class="labels" openlmis-message="label.year"></label>
 
                     <div class="form-field">
                         <select ui-select2 style="width:100px;" class="input-small" ng-required="true"  name="year" id="startYear" ng-model="formFilter.year" ng-change="changeScheduleByYear()">
@@ -33,7 +33,7 @@
                 </div>
 
                 <div class="form-cell horizontalFilters">
-                    <label class="labels">Period</label>
+                    <label class="labels" openlmis-message="label.period"></label>
 
                     <div class="form-field">
                         <select ui-select2 style="width:180px;" ng-required="true"  name="period" ng-model="formFilter.periodId" ng-change="processPeriodFilter()">
@@ -42,7 +42,7 @@
                     </div>
                 </div>
                 <div class="form-cell horizontalFilters" >
-                    <label class="labels">Requisition Groups</label>
+                    <label class="labels" openlmis-message="label.requisition.groups"></label>
 
                     <div class="form-fields">
                         <select ui-select2 style="width:170px;" name="requisitionGroup"  ng-model="formFilter.rgroupId" ng-change="loadFacilitiesByRequisition()">
@@ -51,7 +51,7 @@
                     </div>
                 </div>
                 <div class="form-cell horizontalFilters" ng-if="showStockStatusFilter">
-                    <label class="labels">Status</label>
+                    <label class="labels" openlmis-message="label.stock.status"></label>
                     <div class="form-fields">
                         <select ui-select2 style="width:140px;" name="status"  ng-model="formFilter.status" ng-change="processStockStatusFilter()">
                             <option ng-repeat="option in stockStatusMapping" value="{{option.value}}">{{option.name}}</option>
@@ -59,7 +59,7 @@
                     </div>
                 </div>
                 <div class="form-cell horizontalFilters" ng-show="showProductsFilter" >
-                    <label class="labels">Product<span class="label-required">*</span></label>
+                    <label class="labels" openlmis-message="label.product"><span class="label-required">*</span></label>
 
                     <div class="form-field">
                         <select ui-select2="productSelectOption" style="width:250px;" name="product" class="input-sm"  ng-model="formFilter.productIdList" ng-change="processProductsFilter()" openlmis-message="placeholder.select.product"

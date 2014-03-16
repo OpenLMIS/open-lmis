@@ -29,5 +29,15 @@ ResolveDashboardFormData = {
             }, {});
         }, 100);
         return deferred.promise;
+    },
+    formInputValue : function(messageService){
+               return {
+                yearOptionAll : messageService.get('input.year.option.all'),
+                programOptionSelect : messageService.get('input.program.option.select'),
+                scheduleOptionSelect : messageService.get('input.schedule.option.select'),
+                requisitionOptionAll : messageService.get('input.requisition.option.all'),
+                facilityOptionSelect : messageService.get('input.facility.option.select'),
+                periodOptionSelect : messageService.get('input.period.option.select')
+            };
     }
 };
