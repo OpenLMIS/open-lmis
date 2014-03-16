@@ -8,12 +8,15 @@
 
 app.directive('aFloat', function() {
     function link(scope, element, attrs){
-        scope.$watch('afData + afOption', function(){
+        scope.$watch('afData', function(){
+            init(scope.afData,scope.afOption);
+        });
+        scope.$watch('afOption', function(){
             init(scope.afData,scope.afOption);
         });
 
-        function init(o,d){
 
+        function init(o,d){
             var totalWidth = element.width(), totalHeight = element.height();
 
             if (totalHeight === 0 || totalWidth === 0) {

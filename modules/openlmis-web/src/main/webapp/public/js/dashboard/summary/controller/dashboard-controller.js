@@ -369,7 +369,7 @@ function AdminDashboardController($scope,$timeout,$filter,$window, userGeographi
     };
 
     $("#afloat1").bind("plotclick", function (event, pos, item) {
-        alert('item clicked '+JSON.stringify(item));
+
         if(item) {
             var barIndex =  item.datapoint[0];
             if (item.datapoint[0]) {
@@ -571,7 +571,9 @@ function AdminDashboardController($scope,$timeout,$filter,$window, userGeographi
             },function (data){
                 var stockingData =  data.stocking;
                 adjustStockingEfficiencyDataForChart(stockingData);
-            });
+              });
+        }else{
+            $scope.resetStockingChartData();
         }
     };
 
@@ -600,6 +602,7 @@ function AdminDashboardController($scope,$timeout,$filter,$window, userGeographi
         var understockedSeries =  _.pairs(_.object(_.range(stockingData.length), _.map(_.pluck(stockingData,'understocked'),function(stat){ return _.isNull(stat) ? 0 : stat;})));
         var seriesLabel = ["Stocked out","Understocked","Overstocked","Adequately Stocked"];
         var dataSeries = [stockedOutSeries,understockedSeries,overstockedSeries,adequatelyStockedSeries];
+
         $scope.stocking.openPanel = true;
 
         $scope.multiBarsData = _.map(dataSeries, function(series, key){
