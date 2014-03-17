@@ -22,8 +22,8 @@ function StockedOutController( $scope, $window, StockedOutReport ) {
   };
 
   $scope.exportReport = function (type) {
-    $scope.filterObject.pdformat = 1;
-    var params = jQuery.param($scope.filterObject);
+    $scope.filter.pdformat = 1;
+    var params = jQuery.param($scope.filter);
     var url = '/reports/download/stocked_out/' + type + '?' + params;
     $window.open(url);
   };
