@@ -10,6 +10,30 @@
 
 function ReportingRateController($scope, leafletData) {
 
+  angular.extend($scope, {
+    layers: {
+      baselayers: {
+        googleTerrain: {
+          name: 'Terrain',
+          layerType: 'TERRAIN',
+          type: 'google'
+        },
+        googleHybrid: {
+          name: 'Hybrid',
+          layerType: 'HYBRID',
+          type: 'google'
+        },
+        googleRoadmap: {
+          name: 'Streets',
+          layerType: 'ROADMAP',
+          type: 'google'
+        }
+      }
+    }
+  });
+
+
+
   $scope.indicator_types = [{code: 'ever_over_total',name:'Ever Reported / Total Facilities'},
                             {code: 'ever_over_expected',name:'Ever Reported / Expected Facilities'},
                             {code: 'period_over_expected',name:'Reported during period / Expected Facilities'}];
@@ -18,6 +42,10 @@ function ReportingRateController($scope, leafletData) {
 
   $scope.geojson = {};
 
+  $scope.width = 800;
+  $scope.height = 500;
+
+
   function interpolate(value, count) {
     var val = parseFloat(value) / parseFloat(count);
     var interpolator = chroma.interpolate.bezier(['red', 'yellow', 'green']);
@@ -25,8 +53,7 @@ function ReportingRateController($scope, leafletData) {
   }
 
   $scope.style = function (feature) {
-    //var val = parseFloat(feature.period) / parseFloat(feature.total);
-    var color = ($scope.indicator_type == 'ever_over_total')?interpolate(feature.ever, feature.total):($scope.indicator_type == 'ever_over_expected')? interpolate(feature.ever, feature.expected):interpolate(feature.period, feature.expected);
+    var color = ($scope.indicator_type == 'ever_over_total')? interpolate(feature.ever, feature.total):($scope.indicator_type == 'ever_over_expected')? interpolate(feature.ever, feature.expected):interpolate(feature.period, feature.expected);
     return {
       fillColor: color,
       weight: 1,
@@ -65,30 +92,9 @@ function ReportingRateController($scope, leafletData) {
         style: $scope.style,
         onEachFeature: onEachFeature,
         resetStyleOnMouseout: true
-      },
-//      layers: {
-//        baselayers: {
-//          googleTerrain: {
-//            name: 'Google Terrain',
-//            layerType: 'TERRAIN',
-//            type: 'google'
-//          },
-//          googleHybrid: {
-//            name: 'Google Hybrid',
-//            layerType: 'HYBRID',
-//            type: 'google'
-//          },
-//          googleRoadmap: {
-//            name: 'Google Streets',
-//            layerType: 'ROADMAP',
-//            type: 'google'
-//          }
-//        }
-//      },
-      defaults: {
-        scrollWheelZoom: false
       }
     });
+
     $scope.$apply();
   };
 
@@ -113,7 +119,7 @@ function ReportingRateController($scope, leafletData) {
   }
 
   $scope.OnFilterChanged = function(){
-    $.getJSON('/gis/reporting-rate.json',{program: $scope.program, period: $scope.period }, function (data) {
+    $.getJSON('/gis/reporting-rate.json', $scope.filter , function (data) {
       $scope.features = data.map;
 
       angular.forEach($scope.features, function (feature) {
@@ -131,10 +137,8 @@ function ReportingRateController($scope, leafletData) {
       });
       $scope.centerJSON();
     });
+
+    $scope.width += 50;
   };
-
-
-
-
 
 }
