@@ -34,7 +34,7 @@ public class SMSService {
 
     @Autowired
     private SMSRepository smsRepository;
-    private String relayWebsite = "http://127.0.0.1:8000/rapidsms_relay";
+    private String relayWebsite = "http://sms.tz.elmis-dev.org/rapidsms_relay";
 
     public void SaveIncomingSMSMessage(String message, String phoneNumber){
         smsRepository.SaveSMSMessage("I", message,phoneNumber, new Date());
