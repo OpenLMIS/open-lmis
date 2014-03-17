@@ -12,23 +12,29 @@
 package org.openlmis.core.service;
 
 import lombok.NoArgsConstructor;
+import org.openlmis.core.domain.SMS;
 import org.openlmis.core.repository.SMSRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
-
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Date;
+import java.util.List;
 
 @Service
 @NoArgsConstructor
 public class SMSService {
 
     @Autowired
+    ConfigurationSettingService configSetting;
+
+    @Autowired
     private SMSRepository smsRepository;
-    private String relayWebsite = "http://127.0.0.1:8000/rapidsms_relay";
+    private String relayWebsite = "http://sms.tz.elmis-dev.org/rapidsms_relay";
 
     public void SaveIncomingSMSMessage(String message, String phoneNumber){
         smsRepository.SaveSMSMessage("I", message,phoneNumber, new Date());
@@ -46,5 +52,57 @@ public class SMSService {
         }
 
     }
+
+
+
+
+    //Hassan Added Service Methods
+
+
+    //Saving Incoming SMS
+    public  void SaveIncomingSMS(String content,String phoneNumber){
+        smsRepository.saveSMSMessage("Incoming", 1, content, phoneNumber, new Date());
+
+    }
+
+    // sending sms
+    public void sendSms(String content,String phoneNumber) throws IOException{
+
+        String pushSmsUrl =  configSetting.getConfigurationStringValue("KANNEL_SETTINGS").toString();
+
+        String urlString = pushSmsUrl+"&text="+content+"&to="+phoneNumber;
+
+        try {
+            URL url = new URL(urlString.toString());
+            HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+
+            BufferedReader reader;
+            reader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
+            String line = "";
+            StringBuilder buffer = new StringBuilder();
+
+            while ((line = reader.readLine()) != null) {
+                buffer = buffer.append(line).append("\n");
+            }
+            smsRepository.saveSMSMessage("Incoming", 1, content, phoneNumber, new Date());
+            System.out.println("Submit request= " + urlString.toString());
+            System.out.println("response : "+buffer.toString());
+            System.out.println("INFO : all sent disconnect.");
+
+        } catch (Exception e){
+            e.fillInStackTrace();
+        }
+    }
+
+    //Get all sms
+    public List<SMS>getSmsMessages(){
+        return smsRepository.getAllSMS();
+    }
+
+    public List<SMS> getMessagesForMobile(String mobile){
+        return smsRepository.getForMobile(mobile);
+    }
+
+
 
 }

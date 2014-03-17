@@ -427,4 +427,22 @@ services.factory('StockEfficiencyDetail', function($resource){
     return $resource('/dashboard/stockEfficiencyDetail.json',{}, {});
 });
 
+services.factory('StockedOutFacilities', function($resource){
+    return $resource('/dashboard/stockedOutFacilities.json',{}, {});
+});
+
+
 /* End Dashboard data factories */
+
+services.factory('SMSCompleteList',function($resource){
+    return $resource('/sms/MessageList.json',{},{});
+});
+
+services.factory('GetSMSInfo', function($resource){
+    return $resource('/sms/setDetails',{}, {get:{method:'GET'}});
+});
+
+services.factory('GetMessagesForMobile', function($resource){
+    return $resource('/sms/MessagesForMobile',{}, {get:{method:'GET'}});
+});
+/*End SMS data Factories*/

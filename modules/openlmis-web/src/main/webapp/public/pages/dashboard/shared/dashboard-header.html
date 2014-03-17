@@ -5,17 +5,22 @@
     <ul class="clearfix">
         <li  ng-class="summarySelected">
             <a href="/public/pages/dashboard/summary/index.html">
-                <span id="summary-tab">Summary</span>
+                    <span openlmis-message="menu.header.dashboard.summary"></span>
             </a>
         </li>
         <li  ng-class="stockEfficiencySelected">
             <a id="stock-efficiency-tab" href="/public/pages/dashboard/stock-efficiency/index.html">
-                <span >Stock Efficiency</span>
+                    <span openlmis-message="menu.header.dashboard.stock.efficiency" ></span>
             </a>
         </li>
         <li  ng-class="orderTurnAroundSelected">
             <a href="/public/pages/dashboard/order/index.html">
-                <span id="order-turn-around-tab">Order Turn Around</span>
+                    <span openlmis-message="menu.header.dashboard.order.turn.around"></span>
+            </a>
+        </li>
+            <li  ng-class="stockedOutSelected">
+                <a href="/public/pages/dashboard/stocked-out/index.html">
+                    <span openlmis-message="menu.header.dashboard.stocked.out"></span>
             </a>
         </li>
     </ul>

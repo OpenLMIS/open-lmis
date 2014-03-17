@@ -12,15 +12,30 @@ package org.openlmis.core.repository.mapper;
 
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Options;
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 import org.openlmis.core.domain.SMS;
 import org.springframework.stereotype.Repository;
-
-import java.util.Date;
+import java.util.List;
 
 @Repository
 public interface SMSMapper {
 
-    @Insert("INSERT INTO ShortMessageLog(message,direction, phone_number, date_saved) VALUES (#{message},#{direction}, #{phoneNumber}, #{dateSaved})")
+    @Insert("INSERT INTO sms(message,direction, phoneNumber, dateSaved) VALUES (#{message},#{direction}, #{phoneNumber}, #{dateSaved})")
     @Options(useGeneratedKeys = true)
     void insert(SMS sms);
+
+    //Adding Insert Query
+
+    @Insert("INSERT INTO sms(message,direction,sent, phoneNumber, dateSaved) VALUES (#{message},#{direction},#{sent}, #{phoneNumber}, #{dateSaved})")
+    @Options(useGeneratedKeys = true)
+    void Insert(SMS sms);
+
+    @Select("SELECT * FROM sms")
+    public List<SMS> getAllSMSMessage();
+
+    @Select("select * from sms where phoneNumber = #{mobile}")
+    public java.util.List<SMS> getForMobile(@Param("mobile") String mobile);
+
+
 }

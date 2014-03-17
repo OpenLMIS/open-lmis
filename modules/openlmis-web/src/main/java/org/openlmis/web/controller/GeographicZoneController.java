@@ -13,6 +13,7 @@ package org.openlmis.web.controller;
 import org.openlmis.core.domain.GeographicZone;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.GeographicZoneService;
+import org.openlmis.core.service.SMSService;
 import org.openlmis.report.service.lookup.ReportLookupService;
 import org.openlmis.web.model.GeoZoneInfo;
 import org.openlmis.web.response.OpenLmisResponse;
@@ -28,6 +29,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
@@ -58,7 +60,7 @@ public class GeographicZoneController extends BaseController {
 
   @RequestMapping(value = "/geographicZone/insert.json", method = POST, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_GEOGRAPHIC_ZONES')")
-  public ResponseEntity<OpenLmisResponse> insert(@RequestBody GeographicZone geographicZone, HttpServletRequest request) {
+  public ResponseEntity<OpenLmisResponse> insert(@RequestBody GeographicZone geographicZone, HttpServletRequest request) throws IOException{
     ResponseEntity<OpenLmisResponse> successResponse;
     geographicZone.setCreatedBy(loggedInUserId(request));
     geographicZone.setModifiedBy(loggedInUserId(request));
@@ -69,6 +71,12 @@ public class GeographicZoneController extends BaseController {
     } catch (DataException e) {
       return error(e, HttpStatus.BAD_REQUEST);
     }
+
+    catch (IOException e){
+        return error(e.getMessage(),HttpStatus.BAD_REQUEST);
+    }
+
+
     successResponse = success("Geographic zone " + geographicZone.getName() + " has been successfully created");
     successResponse.getBody().addData("geographicZone", geographicZone);
     successResponse.getHeaders().setContentType(MediaType.APPLICATION_JSON);
@@ -79,7 +87,7 @@ public class GeographicZoneController extends BaseController {
   @RequestMapping(value = "/geographicZone/setDetails", method = POST, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_GEOGRAPHIC_ZONES')")
   public ResponseEntity<OpenLmisResponse> update(@RequestBody GeographicZone geographicZone,
-                                                 HttpServletRequest request) {
+                                                 HttpServletRequest request) throws IOException {
     ResponseEntity<OpenLmisResponse> successResponse;
     geographicZone.setModifiedBy(loggedInUserId(request));
     try {
@@ -91,6 +99,10 @@ public class GeographicZoneController extends BaseController {
     } catch (DataException e) {
       return error(e, HttpStatus.BAD_REQUEST);
     }
+    catch (IOException e){
+        return error(e.getMessage(),HttpStatus.BAD_REQUEST);
+    }
+
     successResponse = success("Geographic zone '" + geographicZone.getName() + "' has been successfully saved");
     successResponse.getBody().addData("geographicZone", geographicZone);
     return successResponse;
