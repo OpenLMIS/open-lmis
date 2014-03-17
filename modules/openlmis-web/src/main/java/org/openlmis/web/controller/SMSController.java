@@ -30,7 +30,7 @@ public class SMSController extends BaseController {
     @Autowired
     private SMSService smsService;
 
-    @RequestMapping(value = "/sms", method = RequestMethod.GET)
+    @RequestMapping(value = "/public/sms", method = RequestMethod.GET)
     public void IncomingSMS(@RequestParam(value = "message") String message, @RequestParam(value="phone_no") String phoneNumber){
         smsService.SaveIncomingSMSMessage(message,phoneNumber);
     }
