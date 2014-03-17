@@ -44,7 +44,7 @@
         <div class="row-fluid">
             <div class="span3">
                 <div class="form-field">
-                    <span>Facility<span class="label-required">*</span></span>
+                    <span openlmis-message="label.facility"><span class="label-required">*</span></span>
                     <select ui-select2 style="width:200px;" id="facility-name"  name="facility" ng-model="formFilter.facilityId"  required="true">
                         <option  ng-repeat="option in allFacilities" value="{{ option.id }}">{{ option.code }} - {{ option.name }}</option>
                     </select>

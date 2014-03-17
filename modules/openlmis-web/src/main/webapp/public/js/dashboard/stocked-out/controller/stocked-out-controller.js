@@ -1,29 +1,19 @@
 /**
  * Created with IntelliJ IDEA.
  * User: issa
- * Date: 2/28/14
- * Time: 4:40 PM
+ * Date: 3/16/14
+ * Time: 9:08 PM
  * To change this template use File | Settings | File Templates.
  */
 
-function ShipmentLeadTimeController($scope,$filter,userGeographicZoneList, formInputValue, ReportPrograms, ReportSchedules, ReportPeriods, RequisitionGroupsByProgram,RequisitionGroupsByProgramSchedule, ReportProductsByProgram, OperationYears, ReportPeriodsByScheduleAndYear,ShipmentLeadTime, ngTableParams) {
-
+function StockedOutController($scope, $location,$routeParams,formInputValue, ReportPrograms, ReportSchedules, ReportPeriods, RequisitionGroupsByProgram,RequisitionGroupsByProgramSchedule, ReportProductsByProgram, OperationYears, ReportPeriodsByScheduleAndYear, ngTableParams) {
     $scope.filterObject = {};
 
     $scope.formFilter = {};
 
     $scope.startYears = [];
 
-    initialize();
-
-    function initialize() {
-        if(isUndefined($scope.filterObject.geographicZoneId)){
-            $scope.filterObject.geographicZoneId = 0;
-            if(!isUndefined(userGeographicZoneList) ){
-                $scope.filterObject.geographicZoneId = userGeographicZoneList[0] !== null ? userGeographicZoneList[0].id : undefined;
-            }
-        }
-    }
+    $scope.productSelectOption = {maximumSelectionSize : 1};
 
     OperationYears.get(function (data) {
         $scope.startYears = data.years;
@@ -41,7 +31,6 @@ function ShipmentLeadTimeController($scope,$filter,userGeographicZoneList, formI
 
     });
 
-
     $scope.filterProductsByProgram = function (){
         if(isUndefined($scope.formFilter.programId)){
             return;
@@ -53,31 +42,47 @@ function ShipmentLeadTimeController($scope,$filter,userGeographicZoneList, formI
             }
         });
 
+        ReportProductsByProgram.get({programId:  $scope.filterObject.programId}, function(data){
+            $scope.products = data.productList;
+        });
+
         RequisitionGroupsByProgram.get({program: $scope.filterObject.programId }, function(data){
             $scope.requisitionGroups = data.requisitionGroupList;
             $scope.requisitionGroups.unshift({'name':formInputValue.requisitionOptionAll});
         });
 
-        $scope.getShipmentLeadTimeData();
+    };
+    $scope.processProductsFilter = function (){
 
+        $scope.filterObject.productIdList = $scope.formFilter.productIdList;
+        $scope.loadFillRates();
+        $scope.loadStockingData();
 
     };
 
+    $scope.changeSchedule = function(){
 
-    $scope.loadFacilitiesByRequisition = function(){
-        if ($scope.formFilter.rgroupId == "All") {
-            $scope.filterObject.rgroupId = -1;
-        } else if ($scope.formFilter.rgroupId !== undefined || $scope.formFilter.rgroupId === "") {
-            $scope.filterObject.rgroupId = $scope.formFilter.rgroupId;
-            $.each($scope.requisitionGroups, function (item, idx) {
-                if (idx.id == $scope.formFilter.rgroupId) {
-                    $scope.filterObject.rgroup = idx.name;
-                }
-            });
+        if ($scope.formFilter.scheduleId == "All") {
+            $scope.filterObject.scheduleId = -1;
+        } else if ($scope.formFilter.scheduleId !== undefined || $scope.formFilter.scheduleId === "") {
+            $scope.filterObject.scheduleId = $scope.formFilter.scheduleId;
         } else {
-            $scope.filterObject.rgroupId = 0;
+            $scope.filterObject.scheduleId = 0;
         }
+        if(!isUndefined($scope.filterObject.scheduleId)){
+            ReportPeriods.get({ scheduleId : $scope.filterObject.scheduleId },function(data) {
+                $scope.periods = data.periods;
+                $scope.periods.unshift({'name': formInputValue.periodOptionSelect,'id':'0'});
 
+            });
+
+            if(!isUndefined($scope.filterObject.programId)){
+                RequisitionGroupsByProgramSchedule.get({program: $scope.filterObject.programId, schedule:$scope.filterObject.scheduleId}, function(data){
+                    $scope.requisitionGroups = data.requisitionGroupList;
+                    $scope.requisitionGroups.unshift({'name':formInputValue.requisitionOptionAll,'id':'0'});
+                });
+            }
+        }
     };
 
     $scope.processPeriodFilter = function (){
@@ -94,38 +99,6 @@ function ShipmentLeadTimeController($scope,$filter,userGeographicZoneList, formI
         } else {
             $scope.filterObject.periodId = 0;
         }
-        $scope.getShipmentLeadTimeData();
-    };
-
-    $scope.changeSchedule = function(){
-
-        if ($scope.formFilter.scheduleId == "All") {
-            $scope.filterObject.scheduleId = -1;
-        } else if ($scope.formFilter.scheduleId !== undefined || $scope.formFilter.scheduleId === "") {
-            $scope.filterObject.scheduleId = $scope.formFilter.scheduleId;
-
-        } else {
-            $scope.filterObject.scheduleId = 0;
-        }
-
-        if(!isUndefined($scope.filterObject.scheduleId)){
-            ReportPeriods.get({ scheduleId : $scope.filterObject.scheduleId },function(data) {
-                $scope.periods = data.periods;
-                $scope.periods.unshift({'name': formInputValue.periodOptionSelect,'id':'0'});
-
-            });
-
-            if(!isUndefined($scope.filterObject.programId)){
-                RequisitionGroupsByProgramSchedule.get({program: $scope.filterObject.programId, schedule:$scope.filterObject.scheduleId}, function(data){
-                    $scope.requisitionGroups = data.requisitionGroupList;
-                    $scope.requisitionGroups.unshift({'name':formInputValue.requisitionOptionAll,'id':'0'});
-                });
-            }
-
-            $scope.getShipmentLeadTimeData();
-        }
-
-
     };
 
     $scope.changeScheduleByYear = function (){
@@ -146,7 +119,7 @@ function ShipmentLeadTimeController($scope,$filter,userGeographicZoneList, formI
             if(!isUndefined($scope.filterObject.scheduleId) && !isUndefined($scope.filterObject.year)){
                 ReportPeriodsByScheduleAndYear.get({scheduleId: $scope.filterObject.scheduleId, year: $scope.filterObject.year}, function(data){
                     $scope.periods = data.periods;
-                    $scope.periods.unshift({'name': formInputValue.periodOptionSelect,'id':'0'});
+                    $scope.periods.unshift({'name':formInputValue.periodOptionSelect,'id':'0'});
                 });
             }
             if(!isUndefined($scope.filterObject.scheduleId) && !isUndefined($scope.filterObject.programId)){
@@ -155,53 +128,8 @@ function ShipmentLeadTimeController($scope,$filter,userGeographicZoneList, formI
                     $scope.requisitionGroups.unshift({'name':formInputValue.requisitionOptionAll,'id':'0'});
                 });
             }
-            $scope.getShipmentLeadTimeData();
         }
 
     };
-
-    // the grid options
-    $scope.tableParams = new ngTableParams({
-        page: 1,            // show first page
-        total: 0,           // length of data
-        count: 25           // count per page
-    });
-
-    $scope.getShipmentLeadTimeData = function () {
-        if(isUndefined($scope.filterObject.periodId) || isUndefined($scope.filterObject.programId)){
-            return;
-        }
-
-        ShipmentLeadTime.get($scope.filterObject, function (data) {
-            $scope.data = data.leadTime;
-            $scope.paramsChanged($scope.tableParams);
-        });
-
-    };
-
-    $scope.paramsChanged = function(params) {
-
-        // slice array data on pages
-        if($scope.data === undefined ){
-            $scope.datarows = [];
-            params.total = 0;
-        }else{
-            var data = $scope.data;
-            var orderedData = params.filter ? $filter('filter')(data, params.filter) : data;
-            orderedData = params.sorting ?  $filter('orderBy')(orderedData, params.orderBy()) : data;
-
-            params.total = orderedData.length;
-            $scope.datarows = orderedData.slice( (params.page - 1) * params.count,  params.page * params.count );
-            var i = 0;
-            var baseIndex = params.count * (params.page - 1) + 1;
-            while(i < $scope.datarows.length){
-                $scope.datarows[i].no = baseIndex + i;
-                i++;
-            }
-        }
-    };
-
-    // watch for changes of parameters
-    $scope.$watch('tableParams', $scope.paramsChanged , true);
 
 }

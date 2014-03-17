@@ -21,7 +21,7 @@ import java.util.List;
 @Repository
 public interface SMSMapper {
 
-    @Insert("INSERT INTO ShortMessageLog(message,direction, phone_number, date_saved) VALUES (#{message},#{direction}, #{phoneNumber}, #{dateSaved})")
+    @Insert("INSERT INTO sms(message,direction, phoneNumber, dateSaved) VALUES (#{message},#{direction}, #{phoneNumber}, #{dateSaved})")
     @Options(useGeneratedKeys = true)
     void insert(SMS sms);
 

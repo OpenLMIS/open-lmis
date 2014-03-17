@@ -18,6 +18,7 @@ import org.openlmis.core.repository.mapper.GeographicZoneGeoJSONMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.List;
 
 @Service
@@ -30,7 +31,10 @@ public class GeographicZoneService {
   @Autowired
   GeographicZoneGeoJSONMapper geoJsonMapper;
 
-  public void save(GeographicZone geographicZone) {
+  @Autowired
+  private SMSService smsService;
+
+    public void save(GeographicZone geographicZone) {
     geographicZone.setLevel(repository.getGeographicLevelByCode(geographicZone.getLevel().getCode()));
     geographicZone.validateLevel();
 
@@ -61,8 +65,14 @@ public class GeographicZoneService {
     return repository.getAllGeographicZones();
   }
 
-  public void saveNew(GeographicZone geographicZone) {
+  public void saveNew(GeographicZone geographicZone) throws IOException {
     repository.insert_Ext(geographicZone);
+    try{
+        smsService.SendSMSMessage(String.format("Geo zone %s just added to the database.",geographicZone.getName()),"17033422762");
+    }
+    catch (IOException e){
+        throw e;
+    }
   }
 
   public void update(GeographicZone geographicZone) {
