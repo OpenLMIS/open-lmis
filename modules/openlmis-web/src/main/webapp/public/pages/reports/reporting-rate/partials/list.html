@@ -14,24 +14,25 @@
                     <h2>Reporting Rate Report</h2>
                 </div>
              <div filters>
+
                 <program-filter class="form-cell horizontalFilters"></program-filter>
                 <schedule-filter class="form-cell horizontalFilters"></schedule-filter>
                 <year-filter class="form-cell horizontalFilters"></year-filter>
-                <period-filter class="form-cell horizontalFilters" required></period-filter>
-
+                <period-filter class="form-cell horizontalFilters"></period-filter>
                 <div class="form-cell horizontalFilters">
                     <label class="labels">Indicator</label>
-                    <select class="input-large" ui-select2 ng-model="indicator_type" ng-change="OnFilterChanged()" >
+                    <select class="width: 400px;" ui-select2 ng-model="indicator_type" ng-change="OnFilterChanged()" >
                         <option ng-repeat="type in indicator_types" value="{{type.code}}">{{type.name}}</option>
                     </select>
                 </div>
             </div>
    </div>
     <div class="clear-both"></div>
-    <br />
+
     <div class="clear-both"></div>
-    <div class="box-content center-justified vertical-centered-div">
-        <leaflet center="center" width="1200px" height="500px" geojson="geojson" ></leaflet>
+    &nbsp;
+    <div class="">
+        <leaflet  width="{{ width }}px" height="{{ height }}px" geojson="geojson" layers="layers"></leaflet>
     </div>
   </div>
 
