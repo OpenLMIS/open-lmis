@@ -6,39 +6,28 @@
  * To change this template use File | Settings | File Templates.
  */
 
-function StockedOutController($scope, $location,$routeParams, userGeographicZoneList,ReportPrograms, ReportSchedules, ReportPeriods, RequisitionGroupsByProgram,RequisitionGroupsByProgramSchedule, ReportProductsByProgram, OperationYears, ReportPeriodsByScheduleAndYear, ngTableParams) {
+function StockedOutController($scope, $location,$routeParams,formInputValue, ReportPrograms, ReportSchedules, ReportPeriods, RequisitionGroupsByProgram,RequisitionGroupsByProgramSchedule, ReportProductsByProgram, OperationYears, ReportPeriodsByScheduleAndYear, ngTableParams) {
     $scope.filterObject = {};
 
     $scope.formFilter = {};
 
     $scope.startYears = [];
 
-    initialize();
-
-    function initialize() {
-        if(isUndefined($scope.filterObject.geographicZoneId)){
-            $scope.filterObject.geographicZoneId = 0;
-            if(!isUndefined(userGeographicZoneList) ){
-                $scope.filterObject.geographicZoneId = userGeographicZoneList[0] !== null ? userGeographicZoneList[0].id : undefined;
-            }
-        }
-
-    }
     $scope.productSelectOption = {maximumSelectionSize : 1};
 
     OperationYears.get(function (data) {
         $scope.startYears = data.years;
-        $scope.startYears.unshift('-- All Years --');
+        $scope.startYears.unshift(formInputValue.yearOptionAll);
     });
 
     ReportPrograms.get(function (data) {
         $scope.programs = data.programs;
-        $scope.programs.unshift({'name': '-- Select Programs --'});
+        $scope.programs.unshift({'name': formInputValue.programOptionSelect});
     });
 
     ReportSchedules.get(function(data){
         $scope.schedules = data.schedules;
-        $scope.schedules.unshift({'name':'-- Select a Schedule --', 'id':'0'}) ;
+        $scope.schedules.unshift({'name': formInputValue.scheduleOptionSelect, 'id':'0'}) ;
 
     });
 
@@ -47,6 +36,11 @@ function StockedOutController($scope, $location,$routeParams, userGeographicZone
             return;
         }
         $scope.filterObject.programId = $scope.formFilter.programId;
+        $.each($scope.programs, function (item, idx) {
+            if (idx.id == $scope.formFilter.programId) {
+                $scope.filterObject.program = idx.name;
+            }
+        });
 
         ReportProductsByProgram.get({programId:  $scope.filterObject.programId}, function(data){
             $scope.products = data.productList;
@@ -54,13 +48,14 @@ function StockedOutController($scope, $location,$routeParams, userGeographicZone
 
         RequisitionGroupsByProgram.get({program: $scope.filterObject.programId }, function(data){
             $scope.requisitionGroups = data.requisitionGroupList;
-            $scope.requisitionGroups.unshift({'name':'-- All Requisition Groups --'});
+            $scope.requisitionGroups.unshift({'name':formInputValue.requisitionOptionAll});
         });
+
     };
-
     $scope.processProductsFilter = function (){
-        $scope.filterObject.productIdList = $scope.formFilter.productIdList;
 
+        $scope.filterObject.productIdList = $scope.formFilter.productIdList;
+        $scope.loadFillRates();
         $scope.loadStockingData();
 
     };
@@ -71,29 +66,23 @@ function StockedOutController($scope, $location,$routeParams, userGeographicZone
             $scope.filterObject.scheduleId = -1;
         } else if ($scope.formFilter.scheduleId !== undefined || $scope.formFilter.scheduleId === "") {
             $scope.filterObject.scheduleId = $scope.formFilter.scheduleId;
-
         } else {
             $scope.filterObject.scheduleId = 0;
         }
-
         if(!isUndefined($scope.filterObject.scheduleId)){
             ReportPeriods.get({ scheduleId : $scope.filterObject.scheduleId },function(data) {
                 $scope.periods = data.periods;
-                $scope.periods.unshift({'name':'-- Select a Period --','id':'0'});
+                $scope.periods.unshift({'name': formInputValue.periodOptionSelect,'id':'0'});
 
             });
 
             if(!isUndefined($scope.filterObject.programId)){
                 RequisitionGroupsByProgramSchedule.get({program: $scope.filterObject.programId, schedule:$scope.filterObject.scheduleId}, function(data){
                     $scope.requisitionGroups = data.requisitionGroupList;
-                    $scope.requisitionGroups.unshift({'name':'-- All Requisition Groups --','id':'0'});
+                    $scope.requisitionGroups.unshift({'name':formInputValue.requisitionOptionAll,'id':'0'});
                 });
             }
-
-            $scope.loadStockingData();
         }
-
-
     };
 
     $scope.processPeriodFilter = function (){
@@ -101,12 +90,15 @@ function StockedOutController($scope, $location,$routeParams, userGeographicZone
             $scope.filterObject.periodId = -1;
         } else if ($scope.formFilter.periodId !== undefined || $scope.formFilter.periodId === "") {
             $scope.filterObject.periodId = $scope.formFilter.periodId;
+            $.each($scope.periods, function (item, idx) {
+                if (idx.id == $scope.formFilter.periodId) {
+                    $scope.filterObject.period = idx.name;
+                }
+            });
 
         } else {
             $scope.filterObject.periodId = 0;
         }
-
-        $scope.loadStockingData();
     };
 
     $scope.changeScheduleByYear = function (){
@@ -127,16 +119,15 @@ function StockedOutController($scope, $location,$routeParams, userGeographicZone
             if(!isUndefined($scope.filterObject.scheduleId) && !isUndefined($scope.filterObject.year)){
                 ReportPeriodsByScheduleAndYear.get({scheduleId: $scope.filterObject.scheduleId, year: $scope.filterObject.year}, function(data){
                     $scope.periods = data.periods;
-                    $scope.periods.unshift({'name':'-- Select a Period --','id':'0'});
+                    $scope.periods.unshift({'name':formInputValue.periodOptionSelect,'id':'0'});
                 });
             }
             if(!isUndefined($scope.filterObject.scheduleId) && !isUndefined($scope.filterObject.programId)){
                 RequisitionGroupsByProgramSchedule.get({program: $scope.filterObject.programId, schedule:$scope.filterObject.scheduleId}, function(data){
                     $scope.requisitionGroups = data.requisitionGroupList;
-                    $scope.requisitionGroups.unshift({'name':'-- All Requisition Groups --','id':'0'});
+                    $scope.requisitionGroups.unshift({'name':formInputValue.requisitionOptionAll,'id':'0'});
                 });
             }
-            $scope.loadStockingData();
         }
 
     };

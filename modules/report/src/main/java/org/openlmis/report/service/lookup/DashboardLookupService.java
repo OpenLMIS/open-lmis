@@ -52,4 +52,9 @@ public class DashboardLookupService {
 
     }
 
+    public List<StockingInfo> getStockOutFacilities(Long periodId, Long programId, List<Long> productListId){
+        return null;
+
+    }
+
 }

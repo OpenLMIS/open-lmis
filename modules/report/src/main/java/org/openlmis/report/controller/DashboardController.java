@@ -78,12 +78,11 @@ public class DashboardController extends BaseController {
         return OpenLmisResponse.response(STOCKING_EFFICIENCY_DETAIL, this.lookupService.getStockEfficiencyDetailData(geographicZoneId, periodId, programId, productListId));
     }
 
-    @RequestMapping(value = "/stockedOut", method = GET, headers = BaseController.ACCEPT_JSON)
-    public ResponseEntity<OpenLmisResponse>  getStockedOutFacilities(@RequestParam("geographicZoneId") Long geographicZoneId,
-                                                                          @RequestParam("periodId") Long periodId,
+    @RequestMapping(value = "/stockedOutFacilities", method = GET, headers = BaseController.ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse>  getStockedOutFacilities(     @RequestParam("periodId") Long periodId,
                                                                           @RequestParam("programId") Long programId,
                                                                           @RequestParam("productListId")List<Long> productListId){
-        return OpenLmisResponse.response(STOCKING_EFFICIENCY_DETAIL, this.lookupService.getStockEfficiencyDetailData(geographicZoneId, periodId, programId, productListId));
+        return OpenLmisResponse.response(STOCKING_EFFICIENCY_DETAIL, this.lookupService.getStockOutFacilities(periodId, programId, productListId));
     }
 
 
