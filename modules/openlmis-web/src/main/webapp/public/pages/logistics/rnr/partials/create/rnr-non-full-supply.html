@@ -90,14 +90,16 @@
                 </span>
               </span>
 
-              <span ng-switch-when="reasonForRequestedQuantity">
+              <span class="reasonForRequestedQuantityContainer" ng-switch-when="reasonForRequestedQuantity">
                 <input ng-disabled="formDisabled" id="{{getId(column.name, $parent)}}" type="text"
                        name="reasonForRequestedQuantity{{rnrLineItem['id']}}"
                        ng-model="rnrLineItem[column.name]"
                        ng-required="true"
-                       ng-class="highlightWarning(rnrLineItem.reasonForRequestedQuantity)"
+                       ng-class="highlightRequired(submitError && rnrLineItem.quantityRequested, rnrLineItem.reasonForRequestedQuantity, rnrLineItem.skipped) ||
+                                 highlightWarning(!submitError && rnrLineItem.quantityRequested, rnrLineItem.reasonForRequestedQuantity)"
                        maxlength="250"/>
-                <span class="alert alert-warning warning-alert" openlmis-message="error.reason.required"
+                <span ng-class="{'rnr-form-error': submitError, 'alert alert-warning warning-alert': !submitError}"
+                      openlmis-message="error.reason.required"
                       ng-show="rnrLineItem.quantityRequested && !rnrLineItem.reasonForRequestedQuantity">
                 </span>
               </span>
