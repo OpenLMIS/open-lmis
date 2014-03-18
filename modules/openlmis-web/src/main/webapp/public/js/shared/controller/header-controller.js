@@ -13,7 +13,7 @@ function HeaderController($scope, localStorageService, loginConfig, $window) {
   $scope.user = localStorageService.get(localStorageKeys.USERNAME);
 
   if(!$scope.user) {
-    $window.location = "/";
+    $window.location = "/public/pages/login.html";
   }
 
   $scope.logout = function () {
