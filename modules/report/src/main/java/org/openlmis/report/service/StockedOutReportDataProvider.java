@@ -52,8 +52,12 @@ public class StockedOutReportDataProvider extends ReportDataProvider {
     if (filterCriteria != null) {
       stockedOutReportParam = new StockedOutReportParam();
 
-      stockedOutReportParam.setFacilityTypeId(StringUtils.isBlank(filterCriteria.get("facilityType")[0]) ? 0 : Integer.parseInt(filterCriteria.get("facilityTypeId")[0])); //defaults to 0
-      stockedOutReportParam.setFacilityId(StringUtils.isBlank(filterCriteria.get("facility")[0]) ? 0 : Integer.parseInt(filterCriteria.get("facility")[0])); //defaults to 0
+      stockedOutReportParam.setFacilityTypeId(StringUtils.isBlank(filterCriteria.get("facilityType")[0]) ? 0 : Integer.parseInt(filterCriteria.get("facilityType")[0])); //defaults to 0
+      if(filterCriteria.containsKey("facility") && !StringUtils.isBlank(filterCriteria.get("facility")[0])){
+        stockedOutReportParam.setFacilityId(Integer.parseInt(filterCriteria.get("facility")[0])); //defaults to 0
+      }else{
+        stockedOutReportParam.setFacilityId(0);
+      }
       stockedOutReportParam.setRgroupId(StringUtils.isBlank(filterCriteria.get("requisitionGroup")[0]) ? 0 : Integer.parseInt(filterCriteria.get("requisitionGroup")[0])); //defaults to 0
       stockedOutReportParam.setProductCategoryId(StringUtils.isBlank(filterCriteria.get("productCategory")[0]) ? 0 : Integer.parseInt(filterCriteria.get("productCategory")[0])); //defaults to 0
       stockedOutReportParam.setProductId(StringUtils.isBlank(filterCriteria.get("product")[0]) ? 0 : Integer.parseInt(filterCriteria.get("product")[0]));

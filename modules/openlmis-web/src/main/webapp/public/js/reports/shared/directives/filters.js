@@ -21,12 +21,7 @@ app.directive('programFilter',['ReportPrograms' , function(ReportPrograms){
          scope.programs.unshift({'name': '-- Select Programs --'});
        });
      },
-     template: '<label class="labels">Program</label>' +
-         '<div>' +
-         ' <select class="input-large" ui-select2 ng-model="filter.program" >' +
-         '     <option ng-repeat="program in programs" value="{{ program.id }}">{{program.name}}</option>' +
-         ' </select>' +
-         '</div>'
+     templateUrl: 'program-template'
    };
 }]);
 
@@ -39,12 +34,7 @@ app.directive('yearFilter',['OperationYears' , function(OperationYears){
         scope.years.unshift('-- Select Year --');
       });
     },
-    template: '<label class="labels">Year</label>' +
-        '<div>' +
-        '<select class="input-medium" ui-select2 ng-model="filter.year">' +
-          '<option ng-repeat="year in years" value="{{ year }}">{{year}}</option>' +
-        '</select>' +
-        '</div>'
+    templateUrl: 'year-template'
   };
 }]);
 
@@ -57,12 +47,7 @@ app.directive('facilityTypeFilter',['ReportFacilityTypes' , function(ReportFacil
         scope.facilityTypes.unshift({'name': '-- All Facility Types --'});
       });
     },
-    template: '<label class="labels">Facility Type</label>' +
-        '<div>' +
-        ' <select class="input-large" ui-select2 ng-model="filter.facilityType" ng-change="OnFilterChanged()">' +
-        '     <option ng-repeat="type in facilityTypes" value="{{ type.id }}">{{type.name}}</option>' +
-        ' </select>' +
-        '</div>'
+    templateUrl: 'facility-type-template'
   };
 }]);
 
@@ -75,12 +60,7 @@ app.directive('scheduleFilter',['ReportSchedules' , function(ReportSchedules){
         scope.schedules.unshift({name:'-- Select Group --'});
       });
     },
-    template: '<label class="labels">Schedule</label>' +
-        '<div>' +
-        '<select class="input-medium" ui-select2 ng-model="filter.schedule">' +
-          '<option ng-repeat="schedule in schedules" value="{{ schedule.id }}">{{schedule.name}}</option>' +
-        '</select>' +
-        '</div>'
+    templateUrl: 'schedule-template'
   };
 }]);
 
@@ -89,7 +69,7 @@ app.directive('periodFilter',['ReportPeriods','ReportPeriodsByScheduleAndYear' ,
 
   var onCascadedVarsChanged = function($scope, newValue){
 
-    if($scope.filter.year !== undefined && $scope.filter.schedule !== undefined){
+    if(angular.isDefined($scope.filter) &&  $scope.filter.year !== undefined && $scope.filter.schedule !== undefined){
         ReportPeriodsByScheduleAndYear.get({scheduleId: $scope.filter.schedule, year: $scope.filter.year}, function(data){
           $scope.periods = data.periods;
           if(data.periods !== undefined && data.periods.length > 0)
@@ -97,11 +77,14 @@ app.directive('periodFilter',['ReportPeriods','ReportPeriodsByScheduleAndYear' ,
         });
 
       }else{
-        ReportPeriods.get({ scheduleId : $scope.filter.schedule },function(data) {
-          $scope.periods = data.periods;
-          if(data.periods !== undefined && data.periods.length > 0)
-            $scope.periods.unshift({'name':'-- Select a Period --','id':'0'});
-        });
+        if(angular.isDefined($scope.filter) && angular.isDefined($scope.filter.schedule)){
+          ReportPeriods.get({ scheduleId : $scope.filter.schedule },function(data) {
+            $scope.periods = data.periods;
+            if(data.periods !== undefined && data.periods.length > 0)
+              $scope.periods.unshift({'name':'-- Select a Period --','id':'0'});
+          });
+        }
+
       }
 
   };
@@ -118,11 +101,7 @@ app.directive('periodFilter',['ReportPeriods','ReportPeriodsByScheduleAndYear' ,
       });
 
     },
-    template: '<label class="labels">Period</label><div>' +
-        '<select class="input-medium" ui-select2 ng-model="filter.period" ng-change="OnFilterChanged();">' +
-          '<option ng-repeat="period in periods" value="{{ period.id }}">{{period.name}}</option>' +
-        '</select>' +
-        '</div>'
+    templateUrl: 'period-template'
   };
 }]);
 
@@ -131,16 +110,21 @@ app.directive('requisitionGroupFilter',['RequisitionGroupsByProgram' , function(
 
   var onRgCascadedVarsChanged = function($scope, newValue){
 
-    RequisitionGroupsByProgram.get({program: $scope.filter.program }, function (data) {
-          $scope.requisitionGroups = data.requisitionGroupList;
-          if ($scope.requisitionGroups === undefined || $scope.requisitionGroups.length === 0) {
-            $scope.requisitionGroups = [];
-            $scope.requisitionGroups.push({'name': '-- All Requisition Groups --'});
-          } else {
-            $scope.requisitionGroups.unshift({'name': '-- All Requisition Groups --'});
+    if(angular.isDefined($scope.filter) && angular.isDefined($scope.filter.program)){
+
+      RequisitionGroupsByProgram.get({program: $scope.filter.program }, function (data) {
+            $scope.requisitionGroups = data.requisitionGroupList;
+            if ($scope.requisitionGroups === undefined || $scope.requisitionGroups.length === 0) {
+              $scope.requisitionGroups = [];
+              $scope.requisitionGroups.push({'name': '-- All Requisition Groups --'});
+            } else {
+              $scope.requisitionGroups.unshift({'name': '-- All Requisition Groups --'});
+            }
           }
-        }
       );
+
+    }
+
   };
 
   return {
@@ -151,11 +135,7 @@ app.directive('requisitionGroupFilter',['RequisitionGroupsByProgram' , function(
       });
 
     },
-    template: '<label class="labels">Requisition Groups</label><div>' +
-        '<select class="input-large" ui-select2 ng-model="filter.requisitionGroup" ng-change="OnFilterChanged();">' +
-        '     <option ng-repeat="requisitionGroup in requisitionGroups" value="{{ requisitionGroup.id }}">{{requisitionGroup.name}}</option>' +
-        '</select>' +
-        '</div>'
+    templateUrl: 'requisition-group-template'
   };
 }]);
 
@@ -163,11 +143,15 @@ app.directive('requisitionGroupFilter',['RequisitionGroupsByProgram' , function(
 app.directive('productCategoryFilter',['ProductCategoriesByProgram' , function( ProductCategoriesByProgram ){
 
   var onPgCascadedVarsChanged = function($scope, newValue){
+
+    if(angular.isDefined($scope.filter) && angular.isDefined($scope.filter.program)){
       // load the program-product categories
       ProductCategoriesByProgram.get({programId: $scope.filter.program}, function (data) {
         $scope.productCategories = data.productCategoryList;
         $scope.productCategories.unshift({'name': '-- All Product Categories --'});
       });
+    }
+
   };
 
   return {
@@ -177,24 +161,26 @@ app.directive('productCategoryFilter',['ProductCategoriesByProgram' , function( 
         onPgCascadedVarsChanged(scope, value);
       });
     },
-    template: '<label class="labels">Product Category</label><div>' +
-        '<select class="input-large" ui-select2 ng-model="filter.productCategory" ng-change="OnFilterChanged();">' +
-        '   <option  ng-repeat="option in productCategories" value="{{ option.id }}">{{ option.name }}</option>' +
-        '</select>' +
-        '</div>'
+    templateUrl: 'product-category-template'
   };
 }]);
 
 app.directive('facilityFilter',['FacilitiesByProgramParams' , function( FacilitiesByProgramParams ){
 
   var onPgCascadedVarsChanged = function($scope, newValue){
+    var program = (angular.isDefined($scope.filter) && angular.isDefined($scope.filter.program))?$scope.filter.program : 0;
+    var schedule = (angular.isDefined($scope.filter) && angular.isDefined($scope.filter.schedule))?$scope.filter.schedule: 0;
+    var facilityType = (angular.isDefined($scope.filter) && angular.isDefined($scope.filter.facilityType))?$scope.filter.facilityType: 0;
     // load facilities
     FacilitiesByProgramParams.get({
-          program: $scope.filter.program,
-          schedule: angular.isDefined($scope.filter.schedule)?0: $scope.filter.schedule,
-          type: angular.isDefined($scope.filter.facilityType)?0: $scope.filter.facilityType
+          program: program,
+          schedule: schedule,
+          type: facilityType
         }, function (data) {
           $scope.facilities = data.facilities;
+          if($scope.facilities === null){
+            $scope.facilities = [];
+          }
           $scope.facilities.unshift({name: '-- All Facilities --'});
         }
     );
@@ -213,19 +199,15 @@ app.directive('facilityFilter',['FacilitiesByProgramParams' , function( Faciliti
         onPgCascadedVarsChanged(scope, value);
       });
     },
-    template: '<label class="labels">Facility</label><div>' +
-        '<select class="input-large" ui-select2 ng-model="filter.facility" ng-change="OnFilterChanged();">' +
-        '   <option  ng-repeat="option in facilities" value="{{ option.id }}">{{ option.name }}</option>' +
-        '</select>' +
-        '</div>'
+    templateUrl: 'facility-template'
   };
 }]);
 
 app.directive('productFilter',['ReportProductsByProgram' , function( ReportProductsByProgram ){
 
   var onPgCascadedVarsChanged = function($scope, newValue){
-
-    ReportProductsByProgram.get({programId: $scope.filter.program}, function (data) {
+    var program = (angular.isDefined($scope.filter) && angular.isDefined($scope.filter.program))?$scope.filter.program : 0;
+    ReportProductsByProgram.get({programId: program }, function (data) {
       $scope.products = data.productList;
       if ($scope.products.length === 0) {
         $scope.products.push({'name': '-- All Products --'});
@@ -236,18 +218,22 @@ app.directive('productFilter',['ReportProductsByProgram' , function( ReportProdu
 
   };
 
+
   return {
     restrict: 'E',
     link: function(scope, elm, attr){
+
+
+      scope.productCFilter = function(option){
+        return  ( !angular.isDefined(scope.filter) || !angular.isDefined(scope.filter.productCategory) ||  option.categoryId == scope.filter.productCategory );
+      };
+
+
       scope.$watch('filter.program',function(value){
         onPgCascadedVarsChanged(scope, value);
       });
     },
-    template: '<label class="labels">Product</label><div>' +
-        '<select class="input-large" ui-select2 ng-model="filter.product" ng-change="OnFilterChanged();">' +
-        '   <option  ng-repeat="option in products" value="{{ option.id }}">{{ option.name }}</option>' +
-        '</select>' +
-        '</div>'
+    templateUrl: 'product-template'
   };
 
 }]);
