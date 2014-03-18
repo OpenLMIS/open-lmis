@@ -200,8 +200,8 @@ function CreateRequisitionController($scope, requisition, pageSize, rnrColumns, 
     return null;
   };
 
-  $scope.highlightWarning = function (value) {
-    if ($scope.showError && (isUndefined(value) || value === false)) {
+  $scope.highlightWarning = function (showError, value) {
+    if (showError && (isUndefined(value) || value === false)) {
       return "warning-error";
     }
     return null;
