@@ -75,7 +75,7 @@ public class DistributionFullCoverageSyncTest extends TestCaseHelper {
     distributionPage.initiate(fullCoverageData.get(FIRST_DELIVERY_ZONE_NAME), fullCoverageData.get(VACCINES_PROGRAM));
     FacilityListPage facilityListPage = distributionPage.clickRecordData(1);
     VisitInformationPage visitInformationPage = facilityListPage.selectFacility(fullCoverageData.get(FIRST_FACILITY_CODE));
-    visitInformationPage.enterDataWhenFacilityVisited("some observations", "samuel", "Doe", "Verifier", "XYZ");
+    visitInformationPage.enterDataWhenFacilityVisited("samuel", "Doe", "Verifier", "XYZ");
 
     facilityListPage.verifyOverallFacilityIndicatorColor("AMBER");
 
@@ -132,7 +132,7 @@ public class DistributionFullCoverageSyncTest extends TestCaseHelper {
     VisitInformationPage visitInformationPage = facilityListPage.selectFacility(fullCoverageData.get(FIRST_FACILITY_CODE));
 
     facilityListPage.verifyOverallFacilityIndicatorColor("RED");
-    visitInformationPage.enterDataWhenFacilityVisited("some observations", "samuel", "Doe", "Verifier", "XYZ");
+    visitInformationPage.enterDataWhenFacilityVisited("samuel", "Doe", "Verifier", "XYZ");
 
     FullCoveragePage fullCoveragePage = visitInformationPage.navigateToFullCoverage();
     fullCoveragePage.verifyIndicator("RED");
@@ -197,7 +197,7 @@ public class DistributionFullCoverageSyncTest extends TestCaseHelper {
     VisitInformationPage visitInformationPage = facilityListPage.selectFacility(fullCoverageData.get(FIRST_FACILITY_CODE));
 
     facilityListPage.verifyOverallFacilityIndicatorColor("AMBER");
-    visitInformationPage.enterDataWhenFacilityVisited("some observations", "samuel", "Doe", "Verifier", "XYZ");
+    visitInformationPage.enterDataWhenFacilityVisited("samuel", "Doe", "Verifier", "XYZ");
 
     FullCoveragePage fullCoveragePage = visitInformationPage.navigateToFullCoverage();
     fullCoveragePage.verifyIndicator("RED");
@@ -236,7 +236,7 @@ public class DistributionFullCoverageSyncTest extends TestCaseHelper {
     VisitInformationPage visitInformationPage = facilityListPage.selectFacility(fullCoverageData.get(FIRST_FACILITY_CODE));
 
     facilityListPage.verifyOverallFacilityIndicatorColor("AMBER");
-    visitInformationPage.enterDataWhenFacilityVisited("some observations", "samuel", "Doe", "Verifier", "XYZ");
+    visitInformationPage.enterDataWhenFacilityVisited("samuel", "Doe", "Verifier", "XYZ");
 
     FullCoveragePage fullCoveragePage = visitInformationPage.navigateToFullCoverage();
     fullCoveragePage.verifyIndicator("RED");

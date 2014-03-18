@@ -24,7 +24,7 @@ import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Component;
 
 /**
- * This is Repository class for Product related database operations.
+ * ProductRepository is Repository class for Product related database operations.
  */
 
 @Component

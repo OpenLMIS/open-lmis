@@ -24,6 +24,10 @@ import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * Exposes the services for handling ProcessingSchedule entity.
+ */
+
 @Service
 @NoArgsConstructor
 public class ProcessingScheduleService {

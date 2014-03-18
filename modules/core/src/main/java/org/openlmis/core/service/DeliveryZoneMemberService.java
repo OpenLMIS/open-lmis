@@ -12,15 +12,19 @@ package org.openlmis.core.service;
 
 import org.openlmis.core.domain.DeliveryZone;
 import org.openlmis.core.domain.DeliveryZoneMember;
-import org.openlmis.core.repository.DeliveryZoneMemberRepository;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.exception.DataException;
+import org.openlmis.core.repository.DeliveryZoneMemberRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 import static org.apache.commons.collections.ListUtils.intersection;
+
+/**
+ * Exposes the services for handling DeliveryZoneMember entity.
+ */
 
 @Service
 public class DeliveryZoneMemberService {
@@ -56,13 +60,13 @@ public class DeliveryZoneMemberService {
 
   private List<Long> getCommonProgramsForDeliveryZoneAndFacliity(DeliveryZoneMember member) {
     List<Long> programIdsForDeliveryZones = deliveryZoneProgramScheduleService.
-        getProgramIdsForDeliveryZones(member.getDeliveryZone().getId());
+      getProgramIdsForDeliveryZones(member.getDeliveryZone().getId());
 
     if (programIdsForDeliveryZones.size() == 0)
       throw new DataException("no.program.mapped.for.delivery.zone");
 
     List<Long> deliveryZoneProgramIdsForFacility = repository.
-        getDeliveryZoneProgramIdsForFacility(member.getFacility().getId());
+      getDeliveryZoneProgramIdsForFacility(member.getFacility().getId());
 
     return intersection(programIdsForDeliveryZones, deliveryZoneProgramIdsForFacility);
   }

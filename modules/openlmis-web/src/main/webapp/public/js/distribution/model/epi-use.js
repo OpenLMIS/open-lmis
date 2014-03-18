@@ -32,9 +32,13 @@ function EpiUse(epiUse) {
     });
   };
 
-  EpiUse.prototype.computeStatus = function () {
+  EpiUse.prototype.computeStatus = function (visited) {
     var _this = this;
     var statusClass;
+
+    if (visited === false) {
+      return DistributionStatus.COMPLETE;
+    }
 
     function isEmpty(field, obj) {
       if (isUndefined(obj[field])) {

@@ -196,9 +196,9 @@ public class Product extends BaseModel implements Importable {
   @JsonIgnore
   public String getName() {
     return (getPrimaryName() == null ? "" : getPrimaryName())
-      + " " + (getForm().getCode() == null ? "" : getForm().getCode())
+      + " " + (getForm() == null || getForm().getCode() == null ? "" : getForm().getCode())
       + " " + (getStrength() == null ? "" : getStrength())
-      + " " + (getDosageUnit().getCode() == null ? "" : getDosageUnit().getCode());
+      + " " + (getDosageUnit() == null || getDosageUnit().getCode() == null ? "" : getDosageUnit().getCode());
   }
 
   private String programName;

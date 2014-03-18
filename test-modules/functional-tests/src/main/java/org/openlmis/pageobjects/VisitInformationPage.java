@@ -193,7 +193,8 @@ public class VisitInformationPage extends DistributionTab {
     visitDateField.click();
     testWebDriver.waitForElementToAppear(calender);
     calender.click();
-    removeFocusFromElement();
+    visitDateField.sendKeys(Keys.TAB);
+    visitDateField.sendKeys(Keys.TAB);
   }
 
   public void enterVehicleId(String vehicleId) {
@@ -303,20 +304,20 @@ public class VisitInformationPage extends DistributionTab {
     }
   }
 
-  public void enterDataWhenFacilityVisited(String observation, String confirmName, String confirmTitle, String verifierName,
+  public void enterDataWhenFacilityVisited(String confirmName, String confirmTitle, String verifierName,
                                            String verifierTitle) {
     selectFacilityVisitedYes();
     enterVisitDateAsFirstOfCurrentMonth();
-    enterObservations(observation);
     enterConfirmedByName(confirmName);
     enterConfirmedByTitle(confirmTitle);
     enterVerifiedByName(verifierName);
     enterVerifiedByTitle(verifierTitle);
   }
 
+  @Override
   public void removeFocusFromElement() {
     testWebDriver.waitForElementToAppear(visitInformationLabel);
-    testWebDriver.moveToElement(visitInformationLabel);
+    visitInformationLabel.click();
   }
 
   public boolean isOtherReasonSelected() {

@@ -49,6 +49,15 @@ describe('Facility Visit', function () {
     expect(status).toEqual(DistributionStatus.COMPLETE);
   });
 
+  it('should return complete if visit details valid and observations not filled', function () {
+    var facilityVisit = new FacilityVisit({visited: true, visitDate: new Date(),
+      verifiedBy: {name: 'Pint', title: 'title'}, confirmedBy: {name: 'something', title: 'title'}});
+
+    var status = facilityVisit.computeStatus();
+
+    expect(status).toEqual(DistributionStatus.COMPLETE);
+  });
+
   it('should retain its status', function () {
     var facilityVisit = new FacilityVisit({visited: true, visitDate: new Date(), observations: "blah blah blah", verifiedBy: {name: 'Pint', title: 'title'}, confirmedBy: {name: 'something', title: 'title'}});
 

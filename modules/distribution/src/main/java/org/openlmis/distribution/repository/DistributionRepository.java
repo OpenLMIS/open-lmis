@@ -47,4 +47,8 @@ public class DistributionRepository {
   public List<Long> getSyncedPeriodsForDeliveryZoneAndProgram(Long zoneId, Long programId) {
     return mapper.getSyncedPeriodsForDeliveryZoneAndProgram(zoneId, programId);
   }
+
+  public Distribution getBy(Long distributionId) {
+    return mapper.getBy(distributionId);
+  }
 }

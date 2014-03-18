@@ -54,7 +54,7 @@ function FacilityDistribution(facilityDistribution) {
     if ([DistributionStatus.SYNCED, DistributionStatus.DUPLICATE].indexOf(this.status) != -1) {
       return true;
     }
-    return (this.facilityVisit.visited === false && ["refrigerators", "epi-inventory"].indexOf(tabName) != -1);
+    return (this.facilityVisit.visited === false && ["refrigerators", "epi-inventory", "epi-use"].indexOf(tabName) != -1);
   };
 
 }

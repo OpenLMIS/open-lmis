@@ -96,7 +96,7 @@ public class OrderCsvHelper {
       if (columnValue instanceof Date) {
         columnValue = forPattern(orderFileColumn.getFormat()).print(((Date) columnValue).getTime());
       }
-      writer.write((columnValue).toString());
+      writer.write("\"" + (columnValue).toString() + "\"");
       if (orderFileColumns.indexOf(orderFileColumn) < orderFileColumns.size() - 1)
         writer.write(",");
     }

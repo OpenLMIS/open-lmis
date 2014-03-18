@@ -162,6 +162,7 @@ public class ManageDistribution extends TestCaseHelper {
   public void enterValuesInForm(String tabName, DataTable tableData) {
     List<Map<String, String>> data = tableData.asMaps();
     tabMap.get(tabName).enterValues(data);
+    tabMap.get(tabName).removeFocusFromElement();
   }
 
   @When("^I verify saved \"([^\"]*)\" values:$")
@@ -201,6 +202,7 @@ public class ManageDistribution extends TestCaseHelper {
   @Then("^I should see period \"([^\"]*)\"$")
   public void verifyPeriod(String period) throws SQLException {
     distributionPage = PageObjectFactory.getDistributionPage(testWebDriver);
+    testWebDriver.waitForAjax();
     WebElement actualSelectFieldElement = distributionPage.getFirstSelectedOptionFromPeriod();
     testWebDriver.sleep(100);
     verifySelectedOptionFromSelectField(period, actualSelectFieldElement);
@@ -287,6 +289,12 @@ public class ManageDistribution extends TestCaseHelper {
   public void clickRecordDataForGivenRow(String rowNumber) {
     distributionPage = PageObjectFactory.getDistributionPage(testWebDriver);
     distributionPage.clickRecordData(Integer.parseInt(rowNumber));
+  }
+
+  @When("^I view data for distribution \"([^\"]*)\"$")
+  public void clickViewDataForGivenRow(String rowNumber) {
+    distributionPage = PageObjectFactory.getDistributionPage(testWebDriver);
+    distributionPage.clickViewData(Integer.parseInt(rowNumber));
   }
 
   @Then("^I should see No facility selected$")
@@ -571,6 +579,7 @@ public class ManageDistribution extends TestCaseHelper {
   public void enterDeliveredQuantity(Integer rowNumber, String deliveredQuantity) {
     epiInventoryPage = PageObjectFactory.getEpiInventoryPage(testWebDriver);
     epiInventoryPage.fillDeliveredQuantity(rowNumber, deliveredQuantity);
+    epiInventoryPage.removeFocusFromElement();
   }
 
   @When("I enter coverage maleMobileBrigade as \"([^\"]*)\"$")

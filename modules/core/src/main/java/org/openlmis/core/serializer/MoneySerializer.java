@@ -19,7 +19,7 @@ import org.openlmis.core.domain.Money;
 import java.io.IOException;
 
 /**
- * This class represents the serializer for Money.
+ * MoneySerializer class represents the serializer for Money.
  */
 
 public class MoneySerializer extends JsonSerializer<Money> {
