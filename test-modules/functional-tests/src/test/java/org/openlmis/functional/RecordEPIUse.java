@@ -86,6 +86,7 @@ public class RecordEPIUse extends TestCaseHelper {
   public void enterEPIEndOfMonth(String endOfMonth) throws InterruptedException {
     epiUsePage = PageObjectFactory.getEpiUsePage(testWebDriver);
     epiUsePage.enterValueInStockAtEndOfMonth(endOfMonth, 1);
+    epiUsePage.removeFocusFromElement();
   }
 
   @AfterMethod(groups = {"distribution"})

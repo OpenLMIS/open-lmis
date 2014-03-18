@@ -20,7 +20,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 /**
- * This is Repository class for Regimen related database operations.
+ * RegimenRepository is Repository class for Regimen related database operations.
  */
 
 @Repository

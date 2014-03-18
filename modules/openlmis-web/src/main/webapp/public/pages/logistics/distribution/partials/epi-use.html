@@ -15,7 +15,7 @@
             src="'/public/pages/logistics/distribution/partials/record-facility-menu.html'"></ng-include>
 
     <div class="facility-info" ng-init="facilityData = distribution.facilityDistributions[selectedFacilityId]">
-        <div class="refrigerator-container" disable-form="{{facilityData.isDisabled()}}">
+        <div class="refrigerator-container" disable-form="{{facilityData.isDisabled('epi-use')}}">
             <h3>
                 <span id="epiUsePageHeader" openlmis-message="header.epi.use"></span>
                 <input id="epiUseApplyNrAll" type="button" ng-click="applyNRAll()"
@@ -170,10 +170,9 @@
                            ng-model="lineItem.expirationDate.value"
                            name="expirationDate{{$index}}"
                            date-validator="date"
-                           showError="inputClass"
                            error-holder="expirationDateError{{$index}}"
                            maxlength="7"/>
-                    <span class="alert alert-warning warning-alert"
+                    <span class="rnr-form-error"
                           id="expirationDateError{{$index}}"
                           style="display:none;"
                           openlmis-message="error.invalid.date.format"></span>

@@ -47,4 +47,13 @@ public interface DistributionMapper {
 
   @Select({"SELECT periodId from distributions where deliveryZoneId = #{deliveryZoneId} AND programId = #{programId} and status = 'SYNCED'"})
   List<Long> getSyncedPeriodsForDeliveryZoneAndProgram(@Param("deliveryZoneId") Long deliveryZoneId, @Param("programId") Long programId);
+
+  @Select({"SELECT * FROM distributions WHERE id = #{distributionId}"})
+  @Results(value = {
+    @Result(property = "deliveryZone", column = "deliveryZoneId", javaType = Long.class,
+      one = @One(select = "org.openlmis.core.repository.mapper.DeliveryZoneMapper.getById")),
+    @Result(property = "period.id", column = "periodId"),
+    @Result(property = "program.id", column = "programId")
+  })
+  Distribution getBy(Long distributionId);
 }

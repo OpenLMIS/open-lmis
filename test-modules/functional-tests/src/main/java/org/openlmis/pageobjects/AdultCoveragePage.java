@@ -200,9 +200,10 @@ public class AdultCoveragePage extends DistributionTab {
     assertFalse(isOpenedVialsEnabled());
   }
 
+  @Override
   public void removeFocusFromElement() {
     testWebDriver.waitForElementToAppear(adultHeaderLabel);
-    testWebDriver.moveToElement(adultHeaderLabel);
+    adultHeaderLabel.click();
   }
 
   public String getAdultCoveragePageHeader() {

@@ -25,7 +25,7 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * This is Repository class for FacilitySupportedProgram related database operations.
+ * ProgramSupportedRepository is Repository class for FacilitySupportedProgram related database operations.
  */
 
 @NoArgsConstructor

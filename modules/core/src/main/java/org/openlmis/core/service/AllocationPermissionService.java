@@ -20,6 +20,10 @@ import java.util.List;
 import static org.apache.commons.collections.CollectionUtils.exists;
 import static org.openlmis.core.domain.Right.MANAGE_DISTRIBUTION;
 
+/**
+ * Exposes the services for determining user permissions on DeliveryZone entity.
+ */
+
 @Service
 public class AllocationPermissionService {
 

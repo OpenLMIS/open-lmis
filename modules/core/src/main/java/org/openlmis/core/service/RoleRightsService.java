@@ -21,6 +21,10 @@ import java.util.*;
 
 import static java.util.Arrays.asList;
 
+/**
+ * Exposes the services for handling Role and Right entities.
+ */
+
 @Service
 @NoArgsConstructor
 public class RoleRightsService {

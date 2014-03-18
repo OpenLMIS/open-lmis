@@ -413,6 +413,14 @@ public class HomePage extends Page {
     return PageObjectFactory.getHomePage(testWebDriver);
   }
 
+  public HomePage navigateOfflineHomePage() {
+    WebElement homeOfflineMenu = testWebDriver.getElementByXpath("//ng-include[2]/div/ul[1]/li[1]/a");
+    testWebDriver.waitForElementToAppear(homeOfflineMenu);
+    testWebDriver.keyPress(homeOfflineMenu);
+    testWebDriver.sleep(500);
+    return PageObjectFactory.getHomePage(testWebDriver);
+  }
+
   public ViewOrdersPage navigateViewOrders() {
     testWebDriver.sleep(1000);
     testWebDriver.waitForElementToAppear(ordersMenuItem);

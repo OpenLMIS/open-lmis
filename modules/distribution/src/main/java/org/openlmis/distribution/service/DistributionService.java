@@ -72,4 +72,8 @@ public class DistributionService {
   public List<Long> getSyncedPeriodsForDeliveryZoneAndProgram(Long zoneId, Long programId) {
     return repository.getSyncedPeriodsForDeliveryZoneAndProgram(zoneId, programId);
   }
+
+  public Distribution getBy(Long distributionId) {
+    return repository.getBy(distributionId);
+  }
 }

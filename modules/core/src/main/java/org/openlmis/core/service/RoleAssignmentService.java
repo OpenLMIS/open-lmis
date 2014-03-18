@@ -23,6 +23,10 @@ import java.util.List;
 
 import static java.util.Arrays.asList;
 
+/**
+ * Exposes the services for handling RoleAssignment entity.
+ */
+
 @Service
 @NoArgsConstructor
 public class RoleAssignmentService {
@@ -56,7 +60,6 @@ public class RoleAssignmentService {
   public List<RoleAssignment> getHomeFacilityRolesForUserOnGivenProgramWithRights(Long userId, Long programId, Right... rights) {
     return roleAssignmentRepository.getHomeFacilityRolesForUserOnGivenProgramWithRights(userId, programId, rights);
   }
-
 
   public List<RoleAssignment> getRoleAssignments(Right right, Long userId) {
     return roleAssignmentRepository.getRoleAssignmentsForUserWithRight(right, userId);

@@ -16,6 +16,10 @@ import org.openlmis.core.repository.ProductGroupRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+/**
+ * Exposes the services for handling ProductGroup entity.
+ */
+
 @Service
 @NoArgsConstructor
 public class ProductGroupService {
@@ -24,11 +28,11 @@ public class ProductGroupService {
 
   @Autowired
   public ProductGroupService(ProductGroupRepository productGroupRepository) {
-      this.productGroupRepository = productGroupRepository;
+    this.productGroupRepository = productGroupRepository;
   }
 
   public void save(ProductGroup productGroup) {
-    if(productGroup.getId() == null) {
+    if (productGroup.getId() == null) {
       productGroupRepository.insert(productGroup);
     }
     productGroupRepository.update(productGroup);

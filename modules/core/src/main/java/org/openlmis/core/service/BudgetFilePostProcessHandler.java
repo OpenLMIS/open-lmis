@@ -24,6 +24,10 @@ import java.io.File;
 import static org.apache.commons.io.FileUtils.deleteQuietly;
 import static org.springframework.integration.support.MessageBuilder.withPayload;
 
+/**
+ * Exposes the services for saving budget file information and storing the budget file in archive/error directory.
+ */
+
 @Component
 @NoArgsConstructor
 public class BudgetFilePostProcessHandler {

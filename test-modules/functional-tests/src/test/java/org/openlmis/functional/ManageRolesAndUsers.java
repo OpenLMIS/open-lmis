@@ -385,6 +385,7 @@ public class ManageRolesAndUsers extends TestCaseHelper {
     userPage.verifyUserOnList(LAB_IN_CHARGE);
 
     userPage.focusOnFirstUserLink();
+    testWebDriver.sleep(1000);
     userPage.resetPassword("abcd1234", "abcd1234");
 
     homePage.logout(baseUrlGlobal);
@@ -438,7 +439,7 @@ public class ManageRolesAndUsers extends TestCaseHelper {
     assertTrue(userPage.getAllWarehouseToSelect().contains(warehouseName));
   }
 
-  @AfterMethod(groups = "admin")
+  @AfterMethod(groups = {"admin"})
   public void tearDown() throws SQLException {
     testWebDriver.sleep(500);
     if (!testWebDriver.getElementById("username").isDisplayed()) {

@@ -26,6 +26,9 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * Exposes the services for handling Product entity.
+ */
 
 @Service
 @NoArgsConstructor
@@ -86,7 +89,6 @@ public class ProductService {
       product.getProductGroup().setId(productGroup.getId());
     }
   }
-
 
   private void validateAndSetProductCategory(Product product) {
     ProductCategory category = product.getCategory();

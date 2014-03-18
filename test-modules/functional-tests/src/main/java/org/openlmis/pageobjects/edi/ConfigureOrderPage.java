@@ -57,16 +57,19 @@ public class ConfigureOrderPage extends Page {
   @FindBy(how = ID, using = "columnHeaderField1")
   private static WebElement facilityCodeTextField = null;
 
-  @FindBy(how = ID, using = "columnHeaderField3")
+  @FindBy(how = ID, using = "columnHeaderField4")
   private static WebElement approvedQuantityTextField = null;
 
   @FindBy(how = ID, using = "columnHeaderField2")
   private static WebElement productCodeTextField = null;
 
-  @FindBy(how = ID, using = "columnHeaderField5")
+  @FindBy(how = ID, using = "columnHeaderField3")
+  private static WebElement productNameTextField = null;
+
+  @FindBy(how = ID, using = "columnHeaderField6")
   private static WebElement orderDateTextField = null;
 
-  @FindBy(how = ID, using = "columnHeaderField4")
+  @FindBy(how = ID, using = "columnHeaderField5")
   private static WebElement periodTextField = null;
 
   @FindBy(how = ID, using = "saveSuccessMsgDiv")
@@ -84,7 +87,7 @@ public class ConfigureOrderPage extends Page {
   @FindBy(how = ID, using = "addNewButton")
   private static WebElement addNewButton = null;
 
-  @FindBy(how = XPATH, using = "//div[@id='s2id_autogen19']/a/div/b")
+  @FindBy(how = XPATH, using = "//div[@id='s2id_autogen23']/a/div/b")
   private static WebElement periodSelectBoxClickAbleLink = null;
 
   @FindBy(how = XPATH, using = "//div[@id='select2-drop']/div/input")
@@ -93,7 +96,7 @@ public class ConfigureOrderPage extends Page {
   @FindBy(how = XPATH, using = "//div[@id='select2-drop']/ul/li[1]/div")
   private static WebElement periodSelectBoxSelectableElement = null;
 
-  @FindBy(how = XPATH, using = "//div[@id='s2id_autogen21']/a/div/b")
+  @FindBy(how = XPATH, using = "//div[@id='s2id_autogen25']/a/div/b")
   private static WebElement orderDateSelectBoxClickAbleLink = null;
 
   @FindBy(how = XPATH, using = "//div[@id='select2-drop']/div/input")
@@ -102,10 +105,10 @@ public class ConfigureOrderPage extends Page {
   @FindBy(how = XPATH, using = "//div[@id='select2-drop']/ul/li[1]/div")
   private static WebElement orderDateSelectBoxSelectableElement = null;
 
-  @FindBy(how = XPATH, using = "//div[@id='s2id_autogen19']/a/span")
+  @FindBy(how = XPATH, using = "//div[@id='s2id_autogen23']/a/span")
   private static WebElement periodSelectBoxDefaultSelected = null;
 
-  @FindBy(how = XPATH, using = "//div[@id='s2id_autogen21']/a/span")
+  @FindBy(how = XPATH, using = "//div[@id='s2id_autogen25']/a/span")
   private static WebElement orderDateSelectBoxDefaultSelected = null;
 
   public ConfigureOrderPage(TestWebDriver driver) {
@@ -266,6 +269,11 @@ public class ConfigureOrderPage extends Page {
   public void setProductCode(String value) {
     testWebDriver.waitForElementToAppear(productCodeTextField);
     sendKeys(productCodeTextField, value);
+  }
+
+  public void setProductName(String value) {
+    testWebDriver.waitForElementToAppear(productNameTextField);
+    sendKeys(productNameTextField, value);
   }
 
   public String getOrderDate() {

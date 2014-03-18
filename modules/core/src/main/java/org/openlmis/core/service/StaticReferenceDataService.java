@@ -15,6 +15,10 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
+/**
+ * Exposes the services for getting reference data from properties file.
+ */
+
 @Service
 @PropertySource({"classpath:/default.properties", "classpath:${environmentName}/app.properties"})
 public class StaticReferenceDataService {

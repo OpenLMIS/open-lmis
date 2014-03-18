@@ -119,7 +119,7 @@ public class RefrigeratorPage extends DistributionTab {
   @FindBy(how = XPATH, using = "//ng-include/div/ul/li[2]/a/span[@class='status-icon']")
   public static WebElement overallRefrigeratorIcon = null;
 
-  @FindBy(how = XPATH, using = "//div[@id='addRefrigeratorModal']/div[2]/div[3]/div/div")
+  @FindBy(how = ID, using = "duplicateSerialNumberError")
   public static WebElement duplicateRefrigeratorMessage = null;
 
   @FindBy(how = ID, using = "noRefrigerators")
@@ -330,7 +330,6 @@ public class RefrigeratorPage extends DistributionTab {
   public void clickAddNew() {
     testWebDriver.waitForElementToAppear(addNewButton);
     addNewButton.click();
-    removeFocusFromElement();
     testWebDriver.waitForElementToAppear(newRefrigeratorHeaderOnModal);
   }
 
@@ -338,7 +337,6 @@ public class RefrigeratorPage extends DistributionTab {
     WebElement showButtonForRefrigerator1 = testWebDriver.getElementById("editReading" + (refrigeratorNumber - 1));
     testWebDriver.waitForElementToAppear(showButtonForRefrigerator1);
     showButtonForRefrigerator1.click();
-    removeFocusFromElement();
     testWebDriver.waitForElementToAppear(testWebDriver.getElementById("temperature" + (refrigeratorNumber - 1)));
   }
 
@@ -409,6 +407,11 @@ public class RefrigeratorPage extends DistributionTab {
     clickDoneOnModal();
   }
 
+  public void addNewRefrigerator(String manufacturerSerialNumber) {
+    enterValueInManufacturingSerialNumberModal(manufacturerSerialNumber);
+    clickDoneOnModal();
+  }
+
   public void verifyDuplicateErrorMessage(String message) {
     testWebDriver.waitForElementToAppear(duplicateRefrigeratorMessage);
     assertEquals(duplicateRefrigeratorMessage.getText(), message);
@@ -466,14 +469,19 @@ public class RefrigeratorPage extends DistributionTab {
     return addNewButton.isEnabled();
   }
 
+  @Override
   public void removeFocusFromElement() {
     testWebDriver.waitForElementToAppear(refrigeratorsPageLabel);
-    testWebDriver.moveToElement(refrigeratorsPageLabel);
+    refrigeratorsPageLabel.click();
   }
 
   public boolean isFunctioningCorrectlyNRSelected(int refrigeratorNumber) {
     WebElement functioningCorrectlyNR = testWebDriver.getElementById("functioningCorrectly" + (refrigeratorNumber - 1));
     testWebDriver.waitForElementToAppear(functioningCorrectlyNR);
     return functioningCorrectlyNR.isSelected();
+  }
+
+  public boolean isDoneButtonEnabled() {
+    return doneButtonOnModal.isEnabled();
   }
 }

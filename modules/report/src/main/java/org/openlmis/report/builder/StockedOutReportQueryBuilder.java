@@ -46,12 +46,9 @@ public class StockedOutReportQueryBuilder {
             if (filter.getZoneId() != 0 && filter.getZoneId() != -1) {
                 WHERE("gz_id = #{filterCriteria.zoneId}");
             }
-            if (filter.getStartDate() != null) {
-                WHERE("startdate >= #{filterCriteria.startDate, jdbcType=DATE, javaType=java.util.Date, mode=IN}");
-            }
-            if (filter.getEndDate() != null) {
-                WHERE("enddate <= #{filterCriteria.endDate, jdbcType=DATE, javaType=java.util.Date, mode=IN}");
-            }
+
+            WHERE("periodId = #{filterCriteria.periodId}");
+
             if(filter.getProductCategoryId() != 0 && filter.getProductCategoryId() != -1 ){
                 WHERE("categoryid = #{filterCriteria.productCategoryId}");
             }

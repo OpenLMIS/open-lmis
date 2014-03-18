@@ -29,9 +29,9 @@ import java.util.List;
 public interface ShipmentMapper {
 
   @Insert({"INSERT INTO shipment_line_items ",
-    "(orderId, concatenatedOrderId, facilityCode, programCode, productCode, quantityOrdered, quantityShipped, cost, substitutedProductCode, substitutedProductName, substitutedProductQuantityShipped, packSize, packedDate, shippedDate, productName, dispensingUnit, productCategory, packsToShip)",
+    "(orderId, concatenatedOrderId, facilityCode, programCode, productCode, quantityOrdered, quantityShipped, cost, substitutedProductCode, substitutedProductName, substitutedProductQuantityShipped, packSize, packedDate, shippedDate, productName, dispensingUnit, productCategory, packsToShip, productCategoryDisplayOrder, productDisplayOrder, fullSupply )",
     "VALUES",
-    "(#{orderId}, #{concatenatedOrderId}, #{facilityCode}, #{programCode}, #{productCode}, #{quantityOrdered}, #{quantityShipped}, #{cost}, #{substitutedProductCode}, #{substitutedProductName}, #{substitutedProductQuantityShipped}, #{packSize}, #{packedDate}, #{shippedDate}, #{productName}, #{dispensingUnit}, #{productCategory}, #{packsToShip})"})
+    "(#{orderId}, #{concatenatedOrderId}, #{facilityCode}, #{programCode}, #{productCode}, #{quantityOrdered}, #{quantityShipped}, #{cost}, #{substitutedProductCode}, #{substitutedProductName}, #{substitutedProductQuantityShipped}, #{packSize}, #{packedDate}, #{shippedDate}, #{productName}, #{dispensingUnit}, #{productCategory}, #{packsToShip}, #{productCategoryDisplayOrder},#{productDisplayOrder}, #{fullSupply})"})
   @Options(useGeneratedKeys = true)
   public void insertShippedLineItem(ShipmentLineItem shipmentLineItem);
 
@@ -42,11 +42,14 @@ public interface ShipmentMapper {
   @Select("SELECT * FROM shipment_file_info WHERE id = #{id}")
   ShipmentFileInfo getShipmentFileInfo(Long id);
 
-  @Select({"SELECT * FROM shipment_line_items WHERE orderId = #{orderId} AND productCode=#{productCode}"})
+  @Select({"SELECT * FROM shipment_line_items WHERE orderId = #{orderId} AND productCode = #{productCode}"})
   ShipmentLineItem getShippedLineItem(ShipmentLineItem shipmentLineItem);
 
-  @Update(
-    {"UPDATE shipment_line_items ", "SET orderId = #{orderId},", "productCode= #{productCode},", "quantityShipped= #{quantityShipped},", "modifiedDate = DEFAULT", "WHERE id= #{id}"})
+  @Update({"UPDATE shipment_line_items SET orderId = #{orderId},",
+    "productCode= #{productCode},",
+    "quantityShipped= #{quantityShipped},",
+    "modifiedDate = DEFAULT",
+    "WHERE orderId = #{orderId} AND productCode = #{productCode}"})
   void updateShippedLineItem(ShipmentLineItem shipmentLineItem);
 
   @Select("SELECT modifiedDate FROM shipment_line_items WHERE orderId = #{orderId} LIMIT 1")

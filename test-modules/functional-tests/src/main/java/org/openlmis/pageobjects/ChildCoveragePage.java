@@ -392,9 +392,10 @@ public class ChildCoveragePage extends DistributionTab {
     return testWebDriver.findElement(By.id("target" + (rowNumber - 1))).getText();
   }
 
+  @Override
   public void removeFocusFromElement() {
     testWebDriver.waitForElementToAppear(childCoverageHeader);
-    testWebDriver.moveToElement(childCoverageHeader);
+    childCoverageHeader.click();
   }
 
   public String getTextOfChildCoverageTable() {

@@ -262,7 +262,7 @@
 					<text><![CDATA[Pack Size]]></text>
 				</staticText>
 				<textField>
-					<reportElement x="10" y="0" width="140" height="110" uuid="04e65a67-2f47-4f8f-b9b1-c99a77b31e4b"/>
+					<reportElement x="10" y="0" width="240" height="140" uuid="04e65a67-2f47-4f8f-b9b1-c99a77b31e4b"/>
 					<textElement>
 						<paragraph lineSpacing="1_1_2"/>
 					</textElement>

@@ -19,6 +19,10 @@ import org.springframework.stereotype.Service;
 
 import java.util.Set;
 
+/**
+ * This class is responsible for checking if the user has the given right on a warehouse.
+ */
+
 @Service
 public class FulfillmentPermissionService {
 

@@ -79,7 +79,7 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
     HomePage homePage = loginPage.loginAs(epiUseData.get(USER), epiUseData.get(PASSWORD));
     initiateDistribution(epiUseData.get(FIRST_DELIVERY_ZONE_NAME), epiUseData.get(VACCINES_PROGRAM));
     VisitInformationPage visitInformationPage = facilityListPage.selectFacility(epiUseData.get(FIRST_FACILITY_CODE));
-    visitInformationPage.enterDataWhenFacilityVisited("some observations", "samuel", "Doe", "Verifier", "XYZ");
+    visitInformationPage.enterDataWhenFacilityVisited("samuel", "Doe", "Verifier", "XYZ");
 
     EPIUsePage epiUsePage = visitInformationPage.navigateToEpiUse();
     epiUsePage.verifyIndicator("RED");
@@ -114,7 +114,7 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
     HomePage homePage = loginPage.loginAs(epiUseData.get(USER), epiUseData.get(PASSWORD));
     initiateDistribution(epiUseData.get(FIRST_DELIVERY_ZONE_NAME), epiUseData.get(VACCINES_PROGRAM));
     VisitInformationPage visitInformationPage = facilityListPage.selectFacility(epiUseData.get(FIRST_FACILITY_CODE));
-    visitInformationPage.enterDataWhenFacilityVisited("some observations", "samuel", "Doe", "Verifier", "XYZ");
+    visitInformationPage.enterDataWhenFacilityVisited("samuel", "Doe", "Verifier", "XYZ");
 
     EPIUsePage epiUsePage = visitInformationPage.navigateToEpiUse();
     epiUsePage.verifyProductGroup("PG1-Name", 1);
@@ -209,7 +209,7 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
     loginPage.loginAs(epiUseData.get(USER), epiUseData.get(PASSWORD));
     initiateDistribution(epiUseData.get(FIRST_DELIVERY_ZONE_NAME), epiUseData.get(VACCINES_PROGRAM));
     VisitInformationPage visitInformationPage = facilityListPage.selectFacility(epiUseData.get(FIRST_FACILITY_CODE));
-    visitInformationPage.enterDataWhenFacilityVisited("some observations", "samuel", "Doe", "Verifier", "XYZ");
+    visitInformationPage.enterDataWhenFacilityVisited("samuel", "Doe", "Verifier", "XYZ");
 
     EPIUsePage epiUsePage = visitInformationPage.navigateToEpiUse();
     epiUsePage.verifyProductGroup("PG1-Name", 1);
@@ -242,7 +242,7 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
     HomePage homePage = loginPage.loginAs(epiUseData.get(USER), epiUseData.get(PASSWORD));
     initiateDistribution(epiUseData.get(FIRST_DELIVERY_ZONE_NAME), epiUseData.get(VACCINES_PROGRAM));
     VisitInformationPage visitInformationPage = facilityListPage.selectFacility(epiUseData.get(FIRST_FACILITY_CODE));
-    visitInformationPage.enterDataWhenFacilityVisited("some observations", "samuel", "Doe", "Verifier", "XYZ");
+    visitInformationPage.enterDataWhenFacilityVisited("samuel", "Doe", "Verifier", "XYZ");
 
     EPIUsePage epiUsePage = visitInformationPage.navigateToEpiUse();
 
@@ -296,7 +296,7 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
     HomePage homePage = loginPage.loginAs(epiUseData.get(USER), epiUseData.get(PASSWORD));
     initiateDistribution(epiUseData.get(FIRST_DELIVERY_ZONE_NAME), epiUseData.get(VACCINES_PROGRAM));
     VisitInformationPage visitInformationPage = facilityListPage.selectFacility(epiUseData.get(FIRST_FACILITY_CODE));
-    visitInformationPage.enterDataWhenFacilityVisited("some observations", "samuel", "Doe", "Verifier", "XYZ");
+    visitInformationPage.enterDataWhenFacilityVisited("samuel", "Doe", "Verifier", "XYZ");
 
     EPIUsePage epiUsePage = visitInformationPage.navigateToEpiUse();
     epiUsePage.verifyIndicator("RED");
