@@ -445,4 +445,9 @@ services.factory('GetSMSInfo', function($resource){
 services.factory('GetMessagesForMobile', function($resource){
     return $resource('/sms/MessagesForMobile',{}, {get:{method:'GET'}});
 });
+
+services.factory('GetReplyMessages', function($resource){
+    return $resource('/sms/getSMS',{}, {get:{method:'GET'}});
+});
+
 /*End SMS data Factories*/
