@@ -177,6 +177,7 @@ function CreateRequisitionController($scope, requisition, pageSize, rnrColumns, 
   function validateRegimenLineItems() {
     var setError = false;
     $.each($scope.rnr.regimenLineItems, function (index, regimenLineItem) {
+      regimenLineItem.hasError = false;
       $.each($scope.visibleRegimenColumns, function (index, regimenColumn) {
         if (regimenColumn.name !== "remarks" && isUndefined(regimenLineItem[regimenColumn.name])) {
           regimenLineItem.hasError = true;
