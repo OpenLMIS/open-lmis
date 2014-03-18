@@ -182,7 +182,8 @@ public class ApproveRequisitionTest extends JsonUtility {
     assertEquals(200, responseEntity.getStatus());
     assertTrue(response.contains("{\"success\":"));
     assertEquals("APPROVED", dbWrapper.getAttributeFromTable("requisitions", "status", "id", id));
-    assertTrue(reportFromJson.getApproverName(), dbWrapper.getAttributeFromTable("requisition_status_changes", "userName", "rnrId", id).equals("some random name"));
+    String approverName = dbWrapper.getAttributeFromTable("requisition_status_changes", "userName", "rnrId", id);
+    assertTrue(reportFromJson.getApproverName(), "some random name".equals(approverName));
     dbWrapper.updateActiveStatusOfProgramProduct("P10", "HIV", "True");
   }
 
@@ -211,9 +212,10 @@ public class ApproveRequisitionTest extends JsonUtility {
 
     String response = responseEntity.getResponse();
     assertEquals(200, responseEntity.getStatus());
-    assertTrue(response.contains("{\"success\":"));
+    assertTrue(response.contains("{\"success\":\"R&R approved successfully!\"}"));
     assertEquals("APPROVED", dbWrapper.getAttributeFromTable("requisitions", "status", "id", id));
-    assertTrue(reportFromJson.getApproverName(), dbWrapper.getAttributeFromTable("requisition_status_changes", "userName", "rnrId", id).equals("some random name"));
+    String approverName = dbWrapper.getAttributeFromTable("requisition_status_changes", "userName", "rnrId", id);
+    assertTrue(reportFromJson.getApproverName(), "some random name".equals(approverName));
     dbWrapper.updateFieldValue("programs", "active", "true", "code", "HIV");
   }
 
@@ -243,7 +245,8 @@ public class ApproveRequisitionTest extends JsonUtility {
     assertEquals(200, responseEntity.getStatus());
     assertTrue(response.contains("{\"success\":"));
     assertEquals("APPROVED", dbWrapper.getAttributeFromTable("requisitions", "status", "id", id));
-    assertTrue(reportFromJson.getApproverName(), dbWrapper.getAttributeFromTable("requisition_status_changes", "userName", "rnrId", id).equals("some random name"));
+    String approverName = dbWrapper.getAttributeFromTable("requisition_status_changes", "userName", "rnrId", id);
+    assertTrue(reportFromJson.getApproverName(), "some random name".equals(approverName));
     dbWrapper.updateFieldValue("products", "active", "true", "code", "P10");
   }
 
