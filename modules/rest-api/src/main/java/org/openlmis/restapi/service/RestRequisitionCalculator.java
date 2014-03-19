@@ -113,6 +113,7 @@ public class RestRequisitionCalculator {
 
     if (nRnrLineItems.size() != 0) {
       rnrLineItem.setBeginningBalance(nRnrLineItems.get(0).getStockInHand());
+      rnrLineItem.setPreviousStockInHand(nRnrLineItems.get(0).getStockInHand());
       return;
     }
 
