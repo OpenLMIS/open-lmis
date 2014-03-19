@@ -728,6 +728,28 @@ public class RnrLineItemTest {
     assertThat(lineItem.getNormalizedConsumption(), is(31));
   }
 
+  @Test
+  public void shouldSetBeginningBalanceWhenPreviousStockInHandAvailable(){
+    RnrLineItem lineItem = new RnrLineItem();
+    RnrLineItem previousRnrLineItem = new RnrLineItem();
+    previousRnrLineItem.setStockInHand(100);
+
+    lineItem.setBeginningBalanceWhenPreviousStockInHandAvailable(previousRnrLineItem);
+
+    assertThat(lineItem.getBeginningBalance(), is(100));
+    assertThat(lineItem.getPreviousStockInHand(), is(100));
+  }
+
+  @Test
+  public void shouldSetBeginningBalanceAsZeroWhenPreviousRnrLineItemNotAvailable(){
+    RnrLineItem lineItem = new RnrLineItem();
+
+    lineItem.setBeginningBalanceWhenPreviousStockInHandAvailable(null);
+
+    assertThat(lineItem.getBeginningBalance(), is(0));
+    assertThat(lineItem.getPreviousStockInHand(), is(nullValue()));
+  }
+
   private ArrayList<RnrColumn> getRnrColumns() {
     return new ArrayList<RnrColumn>() {{
       add(make(a(defaultRnrColumn, with(columnName, ProgramRnrTemplate.QUANTITY_RECEIVED), with(visible, false))));

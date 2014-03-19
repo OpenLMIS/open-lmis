@@ -67,6 +67,7 @@ public class RnrLineItem extends LineItem {
 
   private Integer quantityReceived;
   private Integer quantityDispensed;
+  private Integer previousStockInHand;
   private Integer beginningBalance;
   private List<LossesAndAdjustments> lossesAndAdjustments = new ArrayList<>();
   private Integer totalLossesAndAdjustments = 0;
@@ -137,6 +138,7 @@ public class RnrLineItem extends LineItem {
       return;
     }
     this.beginningBalance = previousLineItem.getStockInHand();
+    this.previousStockInHand = previousLineItem.getStockInHand();
   }
 
   public void setLineItemFieldsAccordingToTemplate(ProgramRnrTemplate template) {
