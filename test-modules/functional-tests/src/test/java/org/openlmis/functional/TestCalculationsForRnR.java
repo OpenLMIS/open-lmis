@@ -211,6 +211,9 @@ public class TestCalculationsForRnR extends TestCaseHelper {
     homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Regular");
     InitiateRnRPage initiateRnRPage = homePage.clickProceed();
 
+    assertEquals(null, dbWrapper.getAttributeFromTable("requisition_line_items", "previousStockInHand", "productCode", "P10"));
+    assertEquals(null, dbWrapper.getAttributeFromTable("requisition_line_items", "beginningBalance", "productCode", "P10"));
+
     enterDetailsForFirstProduct(10, 5, null, 14, 0, 5);
     assertEquals("9", initiateRnRPage.getPacksToShip());
     initiateRnRPage.verifyPacksToShip(10);
@@ -220,6 +223,9 @@ public class TestCalculationsForRnR extends TestCaseHelper {
 
     initiateRnRPage.submitRnR();
     initiateRnRPage.clickOk();
+
+    assertEquals(null, dbWrapper.getAttributeFromTable("requisition_line_items", "previousStockInHand", "productCode", "P10"));
+    assertEquals(10, dbWrapper.getAttributeFromTable("requisition_line_items", "beginningBalance", "productCode", "P10"));
 
     dbWrapper.updateFieldValue("products", "packRoundingThreshold", "7", "code", "P10");
     dbWrapper.updateFieldValue("products", "packRoundingThreshold", "9", "code", "P11");
@@ -414,8 +420,14 @@ public class TestCalculationsForRnR extends TestCaseHelper {
     homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Regular");
     initiateRnRPage = homePage.clickProceed();
 
+    assertEquals("7", dbWrapper.getAttributeFromTable("requisition_line_items", "previousStockInHand", "rnrId", String.valueOf(dbWrapper.getMaxRnrID())));
+    assertEquals("7", dbWrapper.getAttributeFromTable("requisition_line_items", "beginningBalance", "rnrId", String.valueOf(dbWrapper.getMaxRnrID())));
+
     enterDetailsForFirstProduct(10, 5, null, 10, 0, 2);
     submitAndAuthorizeRnR();
+
+    assertEquals("7", dbWrapper.getAttributeFromTable("requisition_line_items", "previousStockInHand", "rnrId", String.valueOf(dbWrapper.getMaxRnrID())));
+    assertEquals("10", dbWrapper.getAttributeFromTable("requisition_line_items", "beginningBalance", "rnrId", String.valueOf(dbWrapper.getMaxRnrID())));
 
     initiateRnRPage.verifyNormalizedConsumptionForFirstProduct(16);
     initiateRnRPage.verifyAmcForFirstProduct(20);
