@@ -35,9 +35,9 @@ import static org.openlmis.rnr.domain.Rnr.RNR_VALIDATION_ERROR;
 import static org.openlmis.rnr.domain.RnrStatus.AUTHORIZED;
 
 /**
- * This class represents the data captured against a product and contains methods to determine normalisedConsumption,
- * averageMonthlyConsumption, stockOutDays, packsToShip, orderQuantity, maxStockQuantity and quantityDispensed of that
- * product.
+ * This class represents the data captured against a product for each Requisition and contains methods to determine
+ * normalisedConsumption, averageMonthlyConsumption, stockOutDays, packsToShip, orderQuantity, maxStockQuantity and
+ * quantityDispensed of that product.
  */
 
 @Data
