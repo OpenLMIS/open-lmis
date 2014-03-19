@@ -125,6 +125,7 @@ public class RnrLineItemMapperIT {
     lineItem.setBeginningBalance(5);
     lineItem.setFullSupply(true);
     lineItem.setReportingDays(10);
+    lineItem.setPreviousStockInHand(5);
     rnrLineItemMapper.insert(lineItem, lineItem.getPreviousNormalizedConsumptions().toString());
 
     LossesAndAdjustments lossesAndAdjustmentsClinicReturn = new LossesAndAdjustments();
@@ -159,6 +160,7 @@ public class RnrLineItemMapperIT {
     assertThat(rnrLineItem.getPackSize(), is(10));
     assertThat(rnrLineItem.getPrice().compareTo(new Money("12.5")), is(0));
     assertThat(rnrLineItem.getBeginningBalance(), is(5));
+    assertThat(rnrLineItem.getPreviousStockInHand(), is(5));
     assertThat(rnrLineItem.getProductCategory(), is("Category 1"));
     assertThat(rnrLineItem.getReportingDays(), is(10));
   }
