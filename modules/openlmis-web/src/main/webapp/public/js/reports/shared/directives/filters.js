@@ -5,7 +5,7 @@ app.directive('filterContainer', function(){
     link: function(scope, elm, attrs){
      angular.extend(scope,{
         filter:{},
-        requiredFilters:{}
+        requiredFilters:{},
      });
     }
   } ;
@@ -88,6 +88,9 @@ app.directive('scheduleFilter',['ReportSchedules' , function(ReportSchedules){
 app.directive('periodFilter',['ReportPeriods','ReportPeriodsByScheduleAndYear' , function( ReportPeriods, ReportPeriodsByScheduleAndYear){
 
   var onCascadedVarsChanged = function($scope, newValue){
+    // don't call the server if you don't have all that it takes.
+    if(isUndefined($scope.filter) || isUndefined($scope.filter.year) || isUndefined($scope.filter.schedule))
+      return;
 
     if(angular.isDefined($scope.filter) &&  $scope.filter.year !== undefined && $scope.filter.schedule !== undefined){
         ReportPeriodsByScheduleAndYear.get({scheduleId: $scope.filter.schedule, year: $scope.filter.year}, function(data){
@@ -134,7 +137,8 @@ app.directive('requisitionGroupFilter',['RequisitionGroupsByProgram' , function(
 
   var onRgCascadedVarsChanged = function($scope, newValue){
 
-    if(angular.isDefined($scope.filter) && angular.isDefined($scope.filter.program)){
+    if(isUndefined($scope.filter) || isUndefined($scope.filter.program) || $scope.filter.program === 0)
+      return;
 
       RequisitionGroupsByProgram.get({program: $scope.filter.program }, function (data) {
             $scope.requisitionGroups = data.requisitionGroupList;
@@ -147,7 +151,7 @@ app.directive('requisitionGroupFilter',['RequisitionGroupsByProgram' , function(
           }
       );
 
-    }
+
 
   };
 
@@ -173,13 +177,15 @@ app.directive('productCategoryFilter',['ProductCategoriesByProgram' , function( 
 
   var onPgCascadedVarsChanged = function($scope, newValue){
 
-    if(angular.isDefined($scope.filter) && angular.isDefined($scope.filter.program)){
-      // load the program-product categories
-      ProductCategoriesByProgram.get({programId: $scope.filter.program}, function (data) {
-        $scope.productCategories = data.productCategoryList;
-        $scope.productCategories.unshift({'name': '-- All Product Categories --'});
-      });
-    }
+    if(isUndefined($scope.filter) || isUndefined($scope.filter.program) || $scope.filter.program === 0)
+      return;
+
+    // load the program-product categories
+    ProductCategoriesByProgram.get({programId: $scope.filter.program}, function (data) {
+      $scope.productCategories = data.productCategoryList;
+      $scope.productCategories.unshift({'name': '-- All Product Categories --'});
+    });
+
 
   };
 
@@ -202,6 +208,11 @@ app.directive('productCategoryFilter',['ProductCategoriesByProgram' , function( 
 app.directive('facilityFilter',['FacilitiesByProgramParams' , function( FacilitiesByProgramParams ){
 
   var onPgCascadedVarsChanged = function($scope, newValue){
+
+    if(isUndefined($scope.filter) || isUndefined($scope.filter.program) || $scope.filter.program === 0)
+      return;
+
+
     var program = (angular.isDefined($scope.filter) && angular.isDefined($scope.filter.program))?$scope.filter.program : 0;
     var schedule = (angular.isDefined($scope.filter) && angular.isDefined($scope.filter.schedule))?$scope.filter.schedule: 0;
     var facilityType = (angular.isDefined($scope.filter) && angular.isDefined($scope.filter.facilityType))?$scope.filter.facilityType: 0;
@@ -245,15 +256,16 @@ app.directive('facilityFilter',['FacilitiesByProgramParams' , function( Faciliti
 app.directive('productFilter',['ReportProductsByProgram' , function( ReportProductsByProgram ){
 
   var onPgCascadedVarsChanged = function($scope, newValue){
+
+    if(isUndefined($scope.filter) || isUndefined($scope.filter.program) || $scope.filter.program === 0)
+      return;
+
     var program = (angular.isDefined($scope.filter) && angular.isDefined($scope.filter.program))?$scope.filter.program : 0;
     ReportProductsByProgram.get({programId: program }, function (data) {
       $scope.products = data.productList;
+      $scope.products.unshift({'name': '-- Indicator Products --',id: 0});
+      $scope.products.unshift({'name': '-- All Products --',id: -1});
 
-      if ($scope.products.length === 0) {
-        $scope.products.push({'name': '-- All Products --'});
-      } else {
-        $scope.products.unshift({'name': '-- All Products --'});
-      }
     });
 
   };
