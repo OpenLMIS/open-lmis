@@ -276,6 +276,7 @@ public class RnrLineItem extends LineItem {
   }
 
   public void copyCreatorEditableFieldsForFullSupply(RnrLineItem lineItem, ProgramRnrTemplate template) {
+    this.previousStockInHand = lineItem.previousStockInHand;
     copyTotalLossesAndAdjustments(lineItem, template);
     for (Column column : template.getColumns()) {
       String fieldName = column.getName();

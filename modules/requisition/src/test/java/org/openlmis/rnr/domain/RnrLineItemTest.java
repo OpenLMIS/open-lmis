@@ -310,6 +310,17 @@ public class RnrLineItemTest {
     assertThat(lineItem.getTotalLossesAndAdjustments(), is(10));
   }
 
+
+  @Test
+  public void shouldCopyPreviousStockInHand() throws Exception {
+    RnrLineItem editedLineItem = make(a(defaultRnrLineItem));
+    editedLineItem.setPreviousStockInHand(10);
+
+    lineItem.copyCreatorEditableFieldsForFullSupply(editedLineItem, new ProgramRnrTemplate(getRnrColumns()));
+
+    assertThat(lineItem.getPreviousStockInHand(), is(10));
+  }
+
   @Test
   public void shouldCopyEditableFieldsForNonFullSupplyBasedOnTemplate() throws Exception {
     lineItem.copyCreatorEditableFieldsForNonFullSupply(make(a(defaultRnrLineItem, with(quantityRequested, 9),
