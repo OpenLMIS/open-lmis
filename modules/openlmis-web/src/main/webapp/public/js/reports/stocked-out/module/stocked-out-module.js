@@ -8,7 +8,7 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-angular.module('stocked_out', ['openlmis', 'ngTable', 'ui.bootstrap.modal', 'ui.bootstrap.dropdownToggle'])
+angular.module('stocked_out', ['openlmis','angularCombine', 'ngTable', 'ui.bootstrap.modal', 'ui.bootstrap.dropdownToggle'])
     .config(['$routeProvider', function ($routeProvider) {
       $routeProvider.
         when('/list', {controller:StockedOutController, templateUrl:'partials/list.html',reloadOnSearch:false}).
@@ -17,4 +17,6 @@ angular.module('stocked_out', ['openlmis', 'ngTable', 'ui.bootstrap.modal', 'ui.
     function ($rootScope, AuthorizationService) {
         AuthorizationService.preAuthorize('VIEW_STOCKED_OUT_REPORT');
     }
-);
+).config(function (angularCombineConfigProvider) {
+      angularCombineConfigProvider.addConf(/filter-/, '/public/pages/reports/shared/filters.html');
+    });

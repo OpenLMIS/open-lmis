@@ -1,13 +1,13 @@
 
-app.directive('filters', function(){
+app.directive('filterContainer', function(){
   return {
-    restrict: 'E',
+    restrict: 'EA',
     link: function(scope, elm, attrs){
      angular.extend(scope,{
-        filter:{}
+        filter:{},
+        requiredFilters:{}
      });
-    },
-    template: '<div class="filters"></div>'
+    }
   } ;
 });
 
@@ -16,12 +16,17 @@ app.directive('programFilter',['ReportPrograms' , function(ReportPrograms){
    return {
      restrict: 'E',
      link: function(scope, elm, attr){
+
+       if(attr.required){
+         scope.requiredFilters.program = true;
+       }
+
        ReportPrograms.get(function (data) {
          scope.programs = data.programs;
          scope.programs.unshift({'name': '-- Select Programs --'});
        });
      },
-     templateUrl: 'program-template'
+     templateUrl: 'filter-program-template'
    };
 }]);
 
@@ -29,12 +34,17 @@ app.directive('yearFilter',['OperationYears' , function(OperationYears){
   return {
     restrict: 'E',
     link: function(scope, elm, attr){
+
+      if(attr.required){
+        scope.requiredFilters.year = true;
+      }
+
       OperationYears.get(function (data) {
         scope.years = data.years;
         scope.years.unshift('-- Select Year --');
       });
     },
-    templateUrl: 'year-template'
+    templateUrl: 'filter-year-template'
   };
 }]);
 
@@ -42,12 +52,17 @@ app.directive('facilityTypeFilter',['ReportFacilityTypes' , function(ReportFacil
   return {
     restrict: 'E',
     link: function(scope, elm, attr){
+
+      if(attr.required){
+        scope.requiredFilters.facilityType = true;
+      }
+
       ReportFacilityTypes.get(function (data) {
         scope.facilityTypes = data.facilityTypes;
         scope.facilityTypes.unshift({'name': '-- All Facility Types --'});
       });
     },
-    templateUrl: 'facility-type-template'
+    templateUrl: 'filter-facility-type-template'
   };
 }]);
 
@@ -55,12 +70,17 @@ app.directive('scheduleFilter',['ReportSchedules' , function(ReportSchedules){
   return {
     restrict: 'E',
     link: function(scope, elm, attr){
+
+      if(attr.required){
+        scope.requiredFilters.schedule = true;
+      }
+
       ReportSchedules.get(function (data) {
         scope.schedules = data.schedules;
         scope.schedules.unshift({name:'-- Select Group --'});
       });
     },
-    templateUrl: 'schedule-template'
+    templateUrl: 'filter-schedule-template'
   };
 }]);
 
@@ -93,6 +113,10 @@ app.directive('periodFilter',['ReportPeriods','ReportPeriodsByScheduleAndYear' ,
     restrict: 'E',
     link: function(scope, elm, attr){
 
+      if(attr.required){
+        scope.requiredFilters.period = true;
+      }
+
       scope.$watch('filter.year',function(value){
           onCascadedVarsChanged(scope, value);
       });
@@ -101,7 +125,7 @@ app.directive('periodFilter',['ReportPeriods','ReportPeriodsByScheduleAndYear' ,
       });
 
     },
-    templateUrl: 'period-template'
+    templateUrl: 'filter-period-template'
   };
 }]);
 
@@ -130,12 +154,17 @@ app.directive('requisitionGroupFilter',['RequisitionGroupsByProgram' , function(
   return {
     restrict: 'E',
     link: function(scope, elm, attr){
+
+      if(attr.required){
+        scope.requiredFilters.requisitionGroup = true;
+      }
+
       scope.$watch('filter.program',function(value){
         onRgCascadedVarsChanged(scope, value);
       });
 
     },
-    templateUrl: 'requisition-group-template'
+    templateUrl: 'filter-requisition-group-template'
   };
 }]);
 
@@ -157,11 +186,16 @@ app.directive('productCategoryFilter',['ProductCategoriesByProgram' , function( 
   return {
     restrict: 'E',
     link: function(scope, elm, attr){
+
+      if(attr.required){
+        scope.requiredFilters.productCategory = true;
+      }
+
       scope.$watch('filter.program',function(value){
         onPgCascadedVarsChanged(scope, value);
       });
     },
-    templateUrl: 'product-category-template'
+    templateUrl: 'filter-product-category-template'
   };
 }]);
 
@@ -189,6 +223,11 @@ app.directive('facilityFilter',['FacilitiesByProgramParams' , function( Faciliti
   return {
     restrict: 'E',
     link: function(scope, elm, attr){
+
+      if(attr.required){
+        scope.requiredFilters.facility = true;
+      }
+
       scope.$watch('filter.program',function(value){
         onPgCascadedVarsChanged(scope, value);
       });
@@ -199,7 +238,7 @@ app.directive('facilityFilter',['FacilitiesByProgramParams' , function( Faciliti
         onPgCascadedVarsChanged(scope, value);
       });
     },
-    templateUrl: 'facility-template'
+    templateUrl: 'filter-facility-template'
   };
 }]);
 
@@ -224,6 +263,9 @@ app.directive('productFilter',['ReportProductsByProgram' , function( ReportProdu
     restrict: 'E',
     link: function(scope, elm, attr){
 
+      if(attr.required){
+        scope.requiredFilters.product = true;
+      }
 
       scope.productCFilter = function(option){
         return  ( !angular.isDefined(scope.filter) || !angular.isDefined(scope.filter.productCategory) || scope.filter.productCategory === '' ||  option.categoryId == scope.filter.productCategory );
@@ -234,7 +276,7 @@ app.directive('productFilter',['ReportProductsByProgram' , function( ReportProdu
         onPgCascadedVarsChanged(scope, value);
       });
     },
-    templateUrl: 'product-template'
+    templateUrl: 'filter-product-template'
   };
 
 }]);
