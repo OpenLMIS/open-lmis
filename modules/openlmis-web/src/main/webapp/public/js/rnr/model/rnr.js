@@ -32,8 +32,7 @@ var Rnr = function (rnr, programRnrColumns) {
   Rnr.prototype.getRegimenErrorLineItemIndexes = function () {
 
     var errorLineItems = [];
-    var lineItems   = this.regimenLineItems;
-    $(lineItems).each(function (i, lineItem) {
+    $(this.regimenLineItems).each(function (i, lineItem) {
       if(lineItem.hasError){
         errorLineItems.push(i);
       }

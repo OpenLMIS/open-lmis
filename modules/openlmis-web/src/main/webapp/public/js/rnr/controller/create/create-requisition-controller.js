@@ -179,7 +179,9 @@ function CreateRequisitionController($scope, requisition, pageSize, rnrColumns, 
     $.each($scope.rnr.regimenLineItems, function (index, regimenLineItem) {
       regimenLineItem.hasError = false;
       $.each($scope.visibleRegimenColumns, function (index, regimenColumn) {
-        if (regimenColumn.name !== "remarks" && isUndefined(regimenLineItem[regimenColumn.name])) {
+
+        if ((regimenColumn.name !== "remarks" && isUndefined(regimenLineItem[regimenColumn.name])) ) {
+
           regimenLineItem.hasError = true;
           setError = true;
           $scope.regimenLineItemInValid = true;
@@ -277,7 +279,7 @@ function CreateRequisitionController($scope, requisition, pageSize, rnrColumns, 
     var rnr = {"id": $scope.rnr.id, "fullSupplyLineItems": [], "nonFullSupplyLineItems": [], "regimenLineItems": []};
     if (!$scope.page[$scope.visibleTab].length) return rnr;
 
-    var nonLineItemFields = ['rnr', 'programRnrColumnList', 'numberOfMonths', 'rnrStatus', 'cost', 'productName'];
+    var nonLineItemFields = ['rnr', 'programRnrColumnList', 'numberOfMonths', 'rnrStatus', 'cost', 'productName', 'hasError'];
 
     function transform(copyFrom) {
       return _.map(copyFrom, function (lineItem) {
