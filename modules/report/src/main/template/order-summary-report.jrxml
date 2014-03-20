@@ -35,6 +35,8 @@
 	<parameter name="ORDER_NO" class="java.lang.String">
 		<parameterDescription><![CDATA[]]></parameterDescription>
 	</parameter>
+	<parameter name="IN_APPROVAL_BY" class="java.lang.String"/>
+	<parameter name="IN_APPROVAL_DATE" class="java.lang.String"/>
 	<queryString>
 		<![CDATA[SELECT facilities.name facilityName, facilities.code facilityCode,geographic_zones.name as region, requisition_line_items.productcode::text ProductCode,products.description,requisition_line_items.packstoship packsToShip, requisition_line_items.packSize,requisition_line_item_losses_adjustments.quantity Discrepancy
         FROM  orders
@@ -271,7 +273,7 @@
 			</band>
 		</groupHeader>
 		<groupFooter>
-			<band height="156">
+			<band height="199">
 				<staticText>
 					<reportElement stretchType="RelativeToBandHeight" x="0" y="2" width="272" height="20" uuid="9d59529d-daa2-434b-bb0e-ec1bd84622c5">
 						<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() != "XLS" && $P{SHOW_DISCREPANCY_SECTION}.toUpperCase().equals("TRUE")]]></printWhenExpression>
@@ -412,7 +414,7 @@
 						<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() != "XLS"]]></printWhenExpression>
 					</reportElement>
 					<textElement textAlignment="Right" verticalAlignment="Bottom"/>
-					<text><![CDATA[Printed By:]]></text>
+					<text><![CDATA[Approved By:]]></text>
 				</staticText>
 				<staticText>
 					<reportElement x="246" y="132" width="60" height="20" uuid="ff66a2f0-1c97-4962-b06d-3b7ee6940520">
@@ -481,7 +483,7 @@
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					</reportElement>
 					<textElement verticalAlignment="Bottom"/>
-					<textFieldExpression><![CDATA[$P{APPROVED_BY}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$P{IN_APPROVAL_BY}]]></textFieldExpression>
 				</textField>
 				<textField>
 					<reportElement x="100" y="131" width="130" height="19" uuid="fda1ae48-b2d2-4b6c-a429-b465397a5df5">
@@ -491,7 +493,7 @@
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					</reportElement>
 					<textElement verticalAlignment="Bottom"/>
-					<textFieldExpression><![CDATA[$P{GENERATED_BY}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$P{APPROVED_BY}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
 					<reportElement x="455" y="90" width="105" height="19" uuid="ffbc4d14-3ae0-4873-b0bc-c98a79439313">
@@ -511,7 +513,7 @@
 					<textElement verticalAlignment="Bottom">
 						<font size="9"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$P{APPROVED_DATE}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$P{IN_APPROVAL_DATE}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
 					<reportElement x="456" y="132" width="104" height="19" uuid="adcfd2b5-5e8a-49bd-9455-e1300c50a161">
@@ -521,8 +523,162 @@
 					<textElement verticalAlignment="Bottom">
 						<font size="9"/>
 					</textElement>
+					<textFieldExpression><![CDATA[$P{APPROVED_DATE}]]></textFieldExpression>
+				</textField>
+				<line>
+					<reportElement x="311" y="172" width="90" height="1" uuid="f0c82f83-4017-46b4-9e57-ab253bf46017">
+						<property name="local_mesure_unitwidth" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						<property name="local_mesure_unitx" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="local_mesure_unity" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() != "XLS"]]></printWhenExpression>
+					</reportElement>
+					<graphicElement>
+						<pen lineWidth="0.5"/>
+					</graphicElement>
+				</line>
+				<textField>
+					<reportElement x="100" y="152" width="130" height="19" uuid="cc0a2d58-c75a-4da3-9aee-31b878c59d1e">
+						<property name="local_mesure_unitheight" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="local_mesure_unity" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					</reportElement>
+					<textElement verticalAlignment="Bottom"/>
+					<textFieldExpression><![CDATA[$P{GENERATED_BY}]]></textFieldExpression>
+				</textField>
+				<line>
+					<reportElement x="456" y="173" width="98" height="1" uuid="039959ef-73ce-4a55-b5f1-857945009b72">
+						<property name="local_mesure_unitx" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="local_mesure_unitwidth" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						<property name="local_mesure_unity" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() != "XLS"]]></printWhenExpression>
+					</reportElement>
+					<graphicElement>
+						<pen lineWidth="0.5"/>
+					</graphicElement>
+				</line>
+				<staticText>
+					<reportElement x="246" y="153" width="60" height="20" uuid="e94a7fdd-267c-4dd6-9231-e54873ee14b6">
+						<property name="local_mesure_unity" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() != "XLS"]]></printWhenExpression>
+					</reportElement>
+					<textElement textAlignment="Right" verticalAlignment="Bottom"/>
+					<text><![CDATA[Signature]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="399" y="153" width="54" height="20" uuid="8f266009-83fd-452c-b41e-d19c90a17f20">
+						<property name="local_mesure_unity" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() != "XLS"]]></printWhenExpression>
+					</reportElement>
+					<textElement textAlignment="Right" verticalAlignment="Bottom"/>
+					<text><![CDATA[Date]]></text>
+				</staticText>
+				<line>
+					<reportElement x="99" y="172" width="120" height="1" uuid="79d8a409-c51f-43da-b530-841b1b0514d4">
+						<property name="local_mesure_unitx" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="local_mesure_unitwidth" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						<property name="local_mesure_unity" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() != "XLS"]]></printWhenExpression>
+					</reportElement>
+					<graphicElement>
+						<pen lineWidth="0.5"/>
+					</graphicElement>
+				</line>
+				<staticText>
+					<reportElement x="3" y="152" width="96" height="20" uuid="8976fa18-cbd5-4b66-92ee-63d0c1609842">
+						<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() != "XLS"]]></printWhenExpression>
+					</reportElement>
+					<textElement textAlignment="Right" verticalAlignment="Bottom"/>
+					<text><![CDATA[Printed By:]]></text>
+				</staticText>
+				<textField isBlankWhenNull="true">
+					<reportElement x="456" y="153" width="104" height="19" uuid="4dceace0-1749-47cc-bef0-36228c773671">
+						<property name="local_mesure_unity" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					</reportElement>
+					<textElement verticalAlignment="Bottom">
+						<font size="9"/>
+					</textElement>
 					<textFieldExpression><![CDATA[(new SimpleDateFormat("dd/MM/yy h:m a").format(new Date()))]]></textFieldExpression>
 				</textField>
+				<line>
+					<reportElement x="310" y="193" width="90" height="1" uuid="c86681ef-1a40-4485-a250-5a82e8550513">
+						<property name="local_mesure_unitwidth" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						<property name="local_mesure_unitx" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="local_mesure_unity" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() != "XLS"]]></printWhenExpression>
+					</reportElement>
+					<graphicElement>
+						<pen lineWidth="0.5"/>
+					</graphicElement>
+				</line>
+				<line>
+					<reportElement x="455" y="194" width="98" height="1" uuid="c2b8e000-9f99-4d3a-a65a-fa085a5dc2be">
+						<property name="local_mesure_unitx" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="local_mesure_unitwidth" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						<property name="local_mesure_unity" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() != "XLS"]]></printWhenExpression>
+					</reportElement>
+					<graphicElement>
+						<pen lineWidth="0.5"/>
+					</graphicElement>
+				</line>
+				<staticText>
+					<reportElement x="245" y="174" width="60" height="20" uuid="87474194-51a0-4d1b-bf2b-7770b5d09559">
+						<property name="local_mesure_unity" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() != "XLS"]]></printWhenExpression>
+					</reportElement>
+					<textElement textAlignment="Right" verticalAlignment="Bottom"/>
+					<text><![CDATA[Signature]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="398" y="174" width="54" height="20" uuid="38d47711-fb0e-4f0d-969d-00396081d734">
+						<property name="local_mesure_unity" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() != "XLS"]]></printWhenExpression>
+					</reportElement>
+					<textElement textAlignment="Right" verticalAlignment="Bottom"/>
+					<text><![CDATA[Date]]></text>
+				</staticText>
+				<line>
+					<reportElement x="98" y="193" width="120" height="1" uuid="6cd5807e-3c5e-435e-83e0-92ff4b1431b7">
+						<property name="local_mesure_unitx" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="local_mesure_unitwidth" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						<property name="local_mesure_unity" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() != "XLS"]]></printWhenExpression>
+					</reportElement>
+					<graphicElement>
+						<pen lineWidth="0.5"/>
+					</graphicElement>
+				</line>
+				<staticText>
+					<reportElement x="2" y="173" width="96" height="20" uuid="e1dbcbf8-01da-4e63-9c5c-92e16d2ffbd3">
+						<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() != "XLS"]]></printWhenExpression>
+					</reportElement>
+					<textElement textAlignment="Right" verticalAlignment="Bottom"/>
+					<text><![CDATA[Order Received By:]]></text>
+				</staticText>
 			</band>
 		</groupFooter>
 	</group>

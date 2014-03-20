@@ -115,6 +115,12 @@ public class OrderSummaryReportDataProvider extends ReportDataProvider {
       result.put("AUTHORIZED_DATE", new SimpleDateFormat("dd/MM/yy h:m a").format(changes.get(0).getCreatedDate()) );
     }
 
+    changes = reportMapper.getLastUsersWhoActedOnRnr(orderReportParam.getOrderId(), RnrStatus.IN_APPROVAL.name());
+    if(changes.size() > 0){
+      result.put("IN_APPROVAL_BY", changes.get(0).getCreatedBy().getFirstName() + " " + changes.get(0).getCreatedBy().getLastName()  );
+      result.put("IN_APPROVAL_DATE", new SimpleDateFormat("dd/MM/yy h:m a").format(changes.get(0).getCreatedDate()) );
+    }
+
     changes = reportMapper.getLastUsersWhoActedOnRnr(orderReportParam.getOrderId(), RnrStatus.APPROVED.name());
     if(changes.size() > 0){
       result.put("APPROVED_BY", changes.get(0).getCreatedBy().getFirstName() + " " + changes.get(0).getCreatedBy().getLastName()  );
