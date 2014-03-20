@@ -209,6 +209,7 @@ app.directive('productFilter',['ReportProductsByProgram' , function( ReportProdu
     var program = (angular.isDefined($scope.filter) && angular.isDefined($scope.filter.program))?$scope.filter.program : 0;
     ReportProductsByProgram.get({programId: program }, function (data) {
       $scope.products = data.productList;
+
       if ($scope.products.length === 0) {
         $scope.products.push({'name': '-- All Products --'});
       } else {
@@ -225,7 +226,7 @@ app.directive('productFilter',['ReportProductsByProgram' , function( ReportProdu
 
 
       scope.productCFilter = function(option){
-        return  ( !angular.isDefined(scope.filter) || !angular.isDefined(scope.filter.productCategory) ||  option.categoryId == scope.filter.productCategory );
+        return  ( !angular.isDefined(scope.filter) || !angular.isDefined(scope.filter.productCategory) || scope.filter.productCategory === '' ||  option.categoryId == scope.filter.productCategory );
       };
 
 
