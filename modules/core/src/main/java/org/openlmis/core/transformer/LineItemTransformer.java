@@ -16,7 +16,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
- *
+ * LineItemTransformer is a base class transformer.
  */
 public class LineItemTransformer {
   public Date parseDate(String dateFormat, String date) throws ParseException {

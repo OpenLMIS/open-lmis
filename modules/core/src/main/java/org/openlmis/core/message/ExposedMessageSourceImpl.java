@@ -9,16 +9,17 @@
  */
 
 package org.openlmis.core.message;
- 
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Locale;
-import java.util.Properties;
- 
+
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.stereotype.Component;
 
+import java.util.*;
+
+/**
+ * Implements {@link org.openlmis.core.message.ExposedMessageSource} and
+ * extends {@link org.springframework.context.support.ReloadableResourceBundleMessageSource} to provide a way to get
+ * all key/message pairs known.
+ */
 @Component
 public class ExposedMessageSourceImpl extends ReloadableResourceBundleMessageSource implements ExposedMessageSource {
  

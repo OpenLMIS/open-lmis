@@ -16,6 +16,9 @@ import org.openlmis.core.service.ProductGroupService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+/**
+ * ProductGroupPersistenceHandler is used for uploads of ProductGroup. It uploads each ProductGroup record by record.
+ */
 @Component
 public class ProductGroupPersistenceHandler extends AbstractModelPersistenceHandler {
 
