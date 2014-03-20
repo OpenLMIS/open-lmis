@@ -53,6 +53,7 @@ public interface RnrLineItemMapper {
   @Update({"UPDATE requisition_line_items",
     "SET quantityReceived = #{quantityReceived},",
     "quantityDispensed = #{quantityDispensed},",
+    "previousStockInHand = #{previousStockInHand},",
     "beginningBalance = #{beginningBalance},",
     "stockInHand = #{stockInHand},",
     "quantityRequested = #{quantityRequested},",
