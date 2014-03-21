@@ -8,7 +8,7 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-angular.module('reporting_rate', ['openlmis', 'ui.bootstrap.modal', 'leaflet-directive', 'ui.bootstrap.dropdownToggle'])
+angular.module('reporting_rate', ['openlmis', 'angularCombine', 'ui.bootstrap.modal', 'leaflet-directive', 'ui.bootstrap.dropdownToggle'])
         .config(['$routeProvider', function ($routeProvider) {
             $routeProvider.
                 when('/list', {controller:ReportingRateController, templateUrl:'partials/list.html',reloadOnSearch:false}).
@@ -17,4 +17,6 @@ angular.module('reporting_rate', ['openlmis', 'ui.bootstrap.modal', 'leaflet-dir
         function ($rootScope, AuthorizationService) {
             AuthorizationService.preAuthorize('VIEW_REPORTING_RATE_REPORT');
         }
-    );
+    ).config(function (angularCombineConfigProvider) {
+      angularCombineConfigProvider.addConf(/filter-/, '/public/pages/reports/shared/filters.html');
+    });;
