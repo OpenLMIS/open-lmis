@@ -25,7 +25,7 @@ public class StockedOutReportQueryBuilder {
         StockedOutReportParam filter  = (StockedOutReportParam)params.get("filterCriteria");
         Map sortCriteria = (Map) params.get("SortCriteria");
         BEGIN();
-        SELECT("DISTINCT supplyingfacility,facilitycode, facility, product, facilitytypename, location, processing_period_name");
+        SELECT("DISTINCT supplyingfacility, facilitycode, productCode, facility, product, facilitytypename, location, processing_period_name");
         FROM("vw_stock_status");
         WHERE("status = 'SO'" );
         WHERE("reported_figures > 0");
