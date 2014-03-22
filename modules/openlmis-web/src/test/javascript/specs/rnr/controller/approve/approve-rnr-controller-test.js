@@ -298,7 +298,7 @@ describe('Approve Requisition controller', function () {
     scope.pageSize = 5;
     scope.approvalForm.$dirty = true;
 
-    spyOn(scope.rnr, 'getErrorPages').andReturn({nonFullSupply: [1, 2], fullSupply: [2, 4]});
+    spyOn(scope.rnr, 'getErrorPages').andReturn({nonFullSupply: [1, 2], fullSupply: [2, 4], regimen: []});
     spyOn(scope.rnr, 'validateFullSupplyForApproval').andReturn("");
     spyOn(scope.rnr, 'validateNonFullSupplyForApproval').andReturn("some error");
 
@@ -307,7 +307,7 @@ describe('Approve Requisition controller', function () {
     scope.approveRnr();
     httpBackend.flush();
 
-    expect(scope.errorPages).toEqual({nonFullSupply: [1, 2], fullSupply: [2, 4]});
+    expect(scope.errorPages).toEqual({nonFullSupply: [1, 2], fullSupply: [2, 4], regimen: []});
     expect(scope.rnr.getErrorPages).toHaveBeenCalledWith(5);
   });
 

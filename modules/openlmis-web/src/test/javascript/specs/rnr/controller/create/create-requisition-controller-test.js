@@ -467,7 +467,7 @@ describe('CreateRequisitionController', function () {
     ], period: {numberOfMonths: 7}}, null);
 
     scope.pageSize = 5;
-    spyOn(scope.rnr, 'getErrorPages').andReturn({nonFullSupply: [1, 2], fullSupply: [2, 4]});
+    spyOn(scope.rnr, 'getErrorPages').andReturn({nonFullSupply: [1, 2], fullSupply: [2, 4], regimen: []});
     spyOn(scope.rnr, 'validateFullSupply').andReturn("");
     spyOn(scope.rnr, 'validateNonFullSupply').andReturn("some error");
     httpBackend.expect('PUT', '/requisitions/1/save.json').respond(200, {'success': "success message"});
@@ -475,7 +475,7 @@ describe('CreateRequisitionController', function () {
     scope.submitRnr();
 
     rootScope.$apply();
-    expect(scope.errorPages).toEqual({nonFullSupply: [1, 2], fullSupply: [2, 4]});
+    expect(scope.errorPages).toEqual({nonFullSupply: [1, 2], fullSupply: [2, 4], regimen: []});
   });
 
   it('should calculate pages which have errors on authorize', function () {
@@ -486,7 +486,7 @@ describe('CreateRequisitionController', function () {
     ], period: {numberOfMonths: 7}}, null);
 
     scope.pageSize = 5;
-    spyOn(scope.rnr, 'getErrorPages').andReturn({nonFullSupply: [1, 2], fullSupply: [2, 4]});
+    spyOn(scope.rnr, 'getErrorPages').andReturn({nonFullSupply: [1, 2], fullSupply: [2, 4], regimen: []});
     spyOn(scope.rnr, 'validateFullSupply').andReturn("");
     spyOn(scope.rnr, 'validateNonFullSupply').andReturn("some error");
     httpBackend.expect('PUT', '/requisitions/1/save.json').respond(200, {'success': "success message"});
@@ -494,7 +494,7 @@ describe('CreateRequisitionController', function () {
     scope.authorizeRnr();
 
     rootScope.$apply();
-    expect(scope.errorPages).toEqual({nonFullSupply: [1, 2], fullSupply: [2, 4]});
+    expect(scope.errorPages).toEqual({nonFullSupply: [1, 2], fullSupply: [2, 4], regimen:[ ]});
     expect(scope.rnr.getErrorPages).toHaveBeenCalledWith(5);
   });
 

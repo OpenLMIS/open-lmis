@@ -19,4 +19,4 @@ angular.module('reporting_rate', ['openlmis', 'angularCombine', 'ui.bootstrap.mo
         }
     ).config(function (angularCombineConfigProvider) {
       angularCombineConfigProvider.addConf(/filter-/, '/public/pages/reports/shared/filters.html');
-    });;
+    });

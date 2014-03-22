@@ -36,7 +36,7 @@ describe("requisitionService", function () {
   }));
 
   it('should set error pages count', function () {
-    var errorPages = {fullSupply: [1, 2], nonFullSupply: [5]};
+    var errorPages = {fullSupply: [1, 2], nonFullSupply: [5], regimen: []};
     scope.rnr = {getErrorPages: function () {
       return errorPages;
     }};

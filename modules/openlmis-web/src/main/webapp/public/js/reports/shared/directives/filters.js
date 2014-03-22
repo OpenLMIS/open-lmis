@@ -123,7 +123,7 @@ app.directive('periodFilter',['ReportPeriods','ReportPeriodsByScheduleAndYear' ,
     link: function(scope, elm, attr){
 
       scope.periods = [];
-      scope.periods.push({name: '-- Select Period --'})
+      scope.periods.push({name: '-- Select Period --'});
 
       if(attr.required){
         scope.requiredFilters.period = true;
