@@ -169,7 +169,8 @@ app.directive('requisitionGroupFilter',['RequisitionGroupsByProgram' , function(
     link: function(scope, elm, attr){
 
       scope.requisitionGroups = [];
-      scope.requisitionGroups.unshift({'name': '-- All Requisition Groups --'});
+      scope.requisitionGroups.unshift({'name': '-- All Requisition Groups --', id: 0});
+      scope.filter.requisitionGroup = 0;
 
       if(attr.required){
         scope.requiredFilters.requisitionGroup = true;
@@ -230,11 +231,13 @@ app.directive('facilityFilter',['FacilitiesByProgramParams' , function( Faciliti
     var program = (angular.isDefined($scope.filter) && angular.isDefined($scope.filter.program))?$scope.filter.program : 0;
     var schedule = (angular.isDefined($scope.filter) && angular.isDefined($scope.filter.schedule))?$scope.filter.schedule: 0;
     var facilityType = (angular.isDefined($scope.filter) && angular.isDefined($scope.filter.facilityType))?$scope.filter.facilityType: 0;
+    var requisitionGroup = (angular.isDefined($scope.filter) && angular.isDefined($scope.filter.requisitionGroup))?$scope.filter.requisitionGroup: 0;
     // load facilities
     FacilitiesByProgramParams.get({
           program: program,
           schedule: schedule,
-          type: facilityType
+          type: facilityType,
+          requisitionGroup: requisitionGroup
         }, function (data) {
           $scope.facilities = data.facilities;
           if($scope.facilities === null){
@@ -255,6 +258,10 @@ app.directive('facilityFilter',['FacilitiesByProgramParams' , function( Faciliti
       if(attr.required){
         scope.requiredFilters.facility = true;
       }
+
+      scope.$watch('filter.requisitionGroup',function(value){
+        onPgCascadedVarsChanged(scope, value);
+      });
 
       scope.$watch('filter.program',function(value){
         onPgCascadedVarsChanged(scope, value);

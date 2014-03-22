@@ -202,27 +202,31 @@ public class ReportLookupController extends BaseController {
       return OpenLmisResponse.response("allFacilities", reportLookupService.getAllFacilities());
   }
 
-  @RequestMapping(value = "/facilities/program/{program}/schedule/{schedule}/type/{type}", method = GET, headers = BaseController.ACCEPT_JSON)
+  @RequestMapping(value = "/facilities", method = GET, headers = BaseController.ACCEPT_JSON)
   public ResponseEntity<OpenLmisResponse> getFacilities(
-      @PathVariable("program") Long program,
-      @PathVariable("schedule") Long schedule,
-      @PathVariable("type") Long type,
-      HttpServletRequest request
+      @RequestParam("program") Long program,
+      @RequestParam("schedule") Long schedule,
+      @RequestParam(value = "type", defaultValue = "0" , required = false) Long type,
+      @RequestParam(value = "requisitionGroup", defaultValue = "0", required = false) Long requisitionGroup
   ) {
-    return OpenLmisResponse.response("facilities", reportLookupService.getFacilities( program, schedule, type ));
+    // set default for optional parameters
+    // turns out spring's optional parameter and default config is not cutting it.
+    type = (type != null)? type: 0L;
+    requisitionGroup = (requisitionGroup != null)?requisitionGroup: 0L;
+
+    return OpenLmisResponse.response("facilities", reportLookupService.getFacilities( program, schedule, type, requisitionGroup ));
   }
 
-
-    @RequestMapping(value = "/facilities/geographicZone/{geographicZoneId}/requisitionGroup/{rgroupId}/program/{programId}/schedule/{scheduleId}", method = GET, headers = BaseController.ACCEPT_JSON)
-    public ResponseEntity<OpenLmisResponse> getFacilities(
-            @PathVariable("geographicZoneId") Long geographicZoneId,
-            @PathVariable("rgroupId") Long requisitionGroupId,
-            @PathVariable("programId") Long programId,
-            @PathVariable("scheduleId") Long scheduleId,
-            HttpServletRequest request
-    ) {
-        return OpenLmisResponse.response("facilities", reportLookupService.getFacilitiesBy(geographicZoneId,requisitionGroupId,programId,scheduleId));
-    }
+  @RequestMapping(value = "/facilities/geographicZone/{geographicZoneId}/requisitionGroup/{rgroupId}/program/{programId}/schedule/{scheduleId}", method = GET, headers = BaseController.ACCEPT_JSON)
+  public ResponseEntity<OpenLmisResponse> getFacilities(
+          @PathVariable("geographicZoneId") Long geographicZoneId,
+          @PathVariable("rgroupId") Long requisitionGroupId,
+          @PathVariable("programId") Long programId,
+          @PathVariable("scheduleId") Long scheduleId,
+          HttpServletRequest request
+  ) {
+      return OpenLmisResponse.response("facilities", reportLookupService.getFacilitiesBy(geographicZoneId,requisitionGroupId,programId,scheduleId));
+  }
 
   @RequestMapping(value = "/schedules/{scheduleId}/periods", method = GET, headers = ACCEPT_JSON)
   public ResponseEntity<OpenLmisResponse> getAll(@PathVariable("scheduleId") Long scheduleId) {

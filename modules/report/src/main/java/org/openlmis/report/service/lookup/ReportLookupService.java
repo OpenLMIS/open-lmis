@@ -248,7 +248,7 @@ public class ReportLookupService {
     return facilityReportMapper.getFacilityByCode(code);
   }
 
-  public List<Facility> getFacilities(Long program, Long schedule, Long type) {
+  public List<Facility> getFacilities(Long program, Long schedule, Long type, Long requisitionGroup) {
     // this method does not work if no program is specified
     if (program == 0) {
       return null;
@@ -258,11 +258,19 @@ public class ReportLookupService {
       return facilityReportMapper.getFacilitiesByProgram(program);
     }
 
-    if (type == 0) {
+    if (type == 0 && requisitionGroup == 0) {
       return facilityReportMapper.getFacilitiesByProgramSchedule(program, schedule);
     }
 
-    return facilityReportMapper.getFacilitiesByPrgraomScheduleType(program, schedule, type);
+    if (type == 0 && requisitionGroup != 0) {
+      return facilityReportMapper.getFacilitiesByProgramScheduleAndRG(program, schedule, requisitionGroup);
+    }
+
+    if(requisitionGroup == 0){
+      facilityReportMapper.getFacilitiesByPrgraomScheduleType(program, schedule, type);
+    }
+
+    return facilityReportMapper.getFacilitiesByPrgraomScheduleTypeAndRG(program, schedule, type, requisitionGroup);
   }
 
   public List<Facility> getFacilitiesBy(Long geographicZone, Long requisitionGroup, Long program, Long schedule) {

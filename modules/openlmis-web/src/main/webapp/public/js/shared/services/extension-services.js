@@ -279,7 +279,8 @@ services.factory("AllFacilites",function($resource)  {
 });
 
 services.factory("FacilitiesByProgramParams",function($resource)  {
-    return   $resource('/reports/facilities/program/:program/schedule/:schedule/type/:type.json', {}, {});
+  //return   $resource('/reports/facilities/program/:program/schedule/:schedule/type/:type/requisitionGroup/:requisitionGroup.json', {}, {});
+  return   $resource('/reports/facilities.json', {}, {});
 });
 
 services.factory('SupervisoryNodeCompleteList',function($resource){

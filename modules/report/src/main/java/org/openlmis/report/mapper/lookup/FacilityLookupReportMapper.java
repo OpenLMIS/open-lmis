@@ -55,6 +55,24 @@ public interface FacilityLookupReportMapper {
 
   @Select("SELECT f.id, f.code, f.name" +
       "   FROM " +
+      "       facilities f  " +
+      "          join programs_supported ps \n" +
+      "            on ps.facilityid = f.id\n" +
+      "          join requisition_group_members m \n" +
+      "            on m.facilityId = f.id\n" +
+      "          join requisition_group_program_schedules rps\n" +
+      "            on m.requisitionGroupId = rps.requisitionGroupId and ps.programId = rps.programId " +
+      "        where " +
+      "             ps.programid = #{program} " +
+      "             and rps.scheduleid = #{schedule} " +
+      "             and ps.active = true  " +
+      "             and f.id in (select facilityId from requisition_group_members where requisitionGroupId = #{requisitionGroup})  " +
+      "        order by f.name")
+  List<Facility> getFacilitiesByProgramScheduleAndRG(@Param("program") Long program, @Param("schedule") Long schedule, @Param("requisitionGroup") Long requisitionGroup);
+
+
+  @Select("SELECT f.id, f.code, f.name" +
+      "   FROM " +
       "       facilities f " +
       "          join programs_supported ps \n" +
       "            on ps.facilityid = f.id\n" +
@@ -70,8 +88,27 @@ public interface FacilityLookupReportMapper {
       "        order by f.name")
     List<Facility> getFacilitiesByPrgraomScheduleType(@Param("program") Long program, @Param("schedule") Long schedule, @Param("type") Long type);
 
+    @Select("SELECT f.id, f.code, f.name" +
+        "   FROM " +
+        "       facilities f " +
+        "          join programs_supported ps \n" +
+        "            on ps.facilityid = f.id\n" +
+        "          join requisition_group_members m \n" +
+        "            on m.facilityId = f.id\n" +
+        "          join requisition_group_program_schedules rps\n" +
+        "            on m.requisitionGroupId = rps.requisitionGroupId and ps.programId = rps.programId\n" +
+        "        where " +
+        "             ps.programid = #{program} " +
+        "             and rps.scheduleid = #{schedule} " +
+        "             and f.typeid = #{type} " +
+        "             and ps.active = true  " +
+        "             and f.id in (select facilityid from requisition_group_members where requisitionGroupId = #{requisitionGroup})  " +
+        "        order by f.name")
+    List<Facility> getFacilitiesByPrgraomScheduleTypeAndRG(@Param("program") Long program, @Param("schedule") Long schedule, @Param("type") Long type, @Param("requisitionGroup") Long requisitionGroup);
 
-    @Select("SELECT DISTINCT f.id, f.code, f.name\n" +
+
+
+  @Select("SELECT DISTINCT f.id, f.code, f.name\n" +
             "         FROM  \n" +
             "             facilities f\n" +
             "                join geographic_zones gz on gz.id = f.geographicZoneId  \n" +
