@@ -54,13 +54,13 @@ public class ShipmentService {
       if (product == null) {
         throw new DataException("error.unknown.product");
       }
-
-      if(shipmentLineItem.getReplacedProductCode() != null) {
-        if (productService.getByCode(shipmentLineItem.getReplacedProductCode()) == null) {
-          throw new DataException("error.unknown.product");
-        }
-      }
       shipmentLineItem.fillReferenceFields(product);
+    }
+
+    if (shipmentLineItem.getReplacedProductCode() != null) {
+      if (productService.getByCode(shipmentLineItem.getReplacedProductCode()) == null) {
+        throw new DataException("error.unknown.product");
+      }
     }
 
     shipmentRepository.save(shipmentLineItem);
