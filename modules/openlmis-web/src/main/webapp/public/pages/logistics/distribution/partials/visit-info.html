@@ -120,6 +120,13 @@
                      openlmis-message="label.unavailable.funds"></label>
             </div>
             <div class="form-row clearfix">
+             <input id="unavailablePerDiemFunds{{ $index }}" type="radio"
+                     ng-model="facilityData.facilityVisit.reasonForNotVisiting"
+                     value="{{reasons.unavailablePerDiemFunds}}"/>
+             <label class="radio-label" for="unavailablePerDiemFunds{{ $index }}"
+                     openlmis-message="label.unavailable.perdiemfunds"></label>
+            </div>
+            <div class="form-row clearfix">
               <input id="notPartOfProgram{{ $index }}" type="radio"
                      ng-model="facilityData.facilityVisit.reasonForNotVisiting"
                      value="{{reasons.notPartOfProgram}}"/>
