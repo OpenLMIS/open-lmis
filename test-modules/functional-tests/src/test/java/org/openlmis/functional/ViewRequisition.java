@@ -370,7 +370,7 @@ public class ViewRequisition extends TestCaseHelper {
 
     testWebDriver.sleep(200);
     testWebDriver.getUrl(url);
-    testWebDriver.setImplicitWait(100);
+    testWebDriver.setImplicitWait(500);
     viewRequisitionPage.isViewRnRListPresent();
     viewRequisitionPage.isRnRListReq1Present();
   }
