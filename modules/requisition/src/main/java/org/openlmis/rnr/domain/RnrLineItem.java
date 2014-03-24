@@ -132,8 +132,8 @@ public class RnrLineItem extends LineItem {
     quantityApproved = fullSupply ? calculatedOrderQuantity : quantityRequested;
   }
 
-  public void setBeginningBalanceWhenPreviousStockInHandAvailable(RnrLineItem previousLineItem) {
-    if (previousLineItem == null) {
+  public void setBeginningBalanceWhenPreviousStockInHandAvailable(RnrLineItem previousLineItem, Boolean beginningBalanceVisible) {
+    if (previousLineItem == null || (!beginningBalanceVisible && previousLineItem.getSkipped())) {
       this.beginningBalance = 0;
       return;
     }
