@@ -10,6 +10,10 @@
 
 function ReportingRateController($scope, leafletData) {
 
+ $scope.expectedFilter = function(item){
+    return item.expected > 0;
+ }
+
   angular.extend($scope, {
     layers: {
       baselayers: {
@@ -41,10 +45,6 @@ function ReportingRateController($scope, leafletData) {
   $scope.indicator_type = 'period_over_expected';
 
   $scope.geojson = {};
-
-  $scope.width = 800;
-  $scope.height = 500;
-
 
   function interpolate(value, count) {
     var val = parseFloat(value) / parseFloat(count);
@@ -136,9 +136,11 @@ function ReportingRateController($scope, leafletData) {
         "features": $scope.features
       });
       $scope.centerJSON();
+
+
+
     });
 
-    $scope.width += 50;
   };
 
 }
