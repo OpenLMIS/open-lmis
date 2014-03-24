@@ -13,7 +13,6 @@ package org.openlmis.authentication.web;
 import lombok.NoArgsConstructor;
 import org.apache.commons.collections.CollectionUtils;
 import org.openlmis.core.domain.Right;
-import org.openlmis.core.service.DeliveryZoneService;
 import org.openlmis.core.service.RoleRightsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -31,9 +30,6 @@ public class PermissionEvaluator {
 
   @Autowired
   private RoleRightsService roleRightService;
-
-  @Autowired
-  private DeliveryZoneService deliveryZoneService;
 
 
   public Boolean hasPermission(Long userId, String commaSeparatedRights) {
