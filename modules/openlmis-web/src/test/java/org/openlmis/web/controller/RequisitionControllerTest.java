@@ -19,7 +19,6 @@ import org.junit.runner.RunWith;
 import org.mockito.ArgumentMatcher;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.openlmis.authentication.web.UserAuthenticationSuccessHandler;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.ProcessingPeriod;
@@ -33,10 +32,7 @@ import org.openlmis.db.categories.UnitTests;
 import org.openlmis.rnr.domain.*;
 import org.openlmis.rnr.dto.RnrDTO;
 import org.openlmis.rnr.search.criteria.RequisitionSearchCriteria;
-import org.openlmis.rnr.service.RegimenColumnService;
-import org.openlmis.rnr.service.RequisitionService;
-import org.openlmis.rnr.service.RequisitionStatusChangeService;
-import org.openlmis.rnr.service.RnrTemplateService;
+import org.openlmis.rnr.service.*;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
@@ -55,7 +51,7 @@ import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
@@ -77,8 +73,10 @@ public class RequisitionControllerTest {
 
   @Mock
   private RequisitionService requisitionService;
+
   @Mock
   private RnrTemplateService rnrTemplateService;
+
   @Mock
   private MessageService messageService;
 
@@ -98,6 +96,8 @@ public class RequisitionControllerTest {
   @Mock
   private StaticReferenceDataService staticReferenceDataService;
 
+  @Mock
+  private RequisitionPermissionService requisitionPermissionService;
 
   @Before
   public void setUp() throws Exception {
@@ -120,15 +120,58 @@ public class RequisitionControllerTest {
     assertThat(response.getStatusCode(), is(equalTo(HttpStatus.OK)));
   }
 
-
   @Test
   public void shouldGetRequisitionById() throws Exception {
     Rnr expectedRequisition = new Rnr();
-    Mockito.when(requisitionService.getFullRequisitionById(1L)).thenReturn(expectedRequisition);
-    ResponseEntity<OpenLmisResponse> response = controller.getById(1L);
+    expectedRequisition.setStatus(RnrStatus.AUTHORIZED);
+
+    when(requisitionService.getFullRequisitionById(1L)).thenReturn(expectedRequisition);
+    when(requisitionPermissionService.hasPermission(USER_ID, expectedRequisition, Right.APPROVE_REQUISITION)).thenReturn(true);
+
+    ResponseEntity<OpenLmisResponse> response = controller.getById(1L, request);
 
     assertThat((Rnr) response.getBody().getData().get(RequisitionController.RNR), is(expectedRequisition));
     verify(requisitionService).getFullRequisitionById(1L);
+    assertTrue((boolean) response.getBody().getData().get("canApproveRnr"));
+  }
+
+  @Test
+  public void shouldSetCanApproveFlagTrueIfRequisitionInApprovableState() throws Exception {
+    Rnr rnr = new Rnr();
+    rnr.setId(1000L);
+    rnr.setStatus(RnrStatus.AUTHORIZED);
+
+    when(requisitionService.getFullRequisitionById(1000L)).thenReturn(rnr);
+    when(requisitionPermissionService.hasPermission(USER_ID, rnr, Right.APPROVE_REQUISITION)).thenReturn(true);
+
+    ResponseEntity<OpenLmisResponse> requisitionData = controller.getById(1000L, request);
+    assertTrue((boolean) requisitionData.getBody().getData().get("canApproveRnr"));
+  }
+
+  @Test
+  public void shouldSetCanApproveFlagFalseIfRequisitionIsNotInApprovableState() throws Exception {
+    Rnr rnr = new Rnr();
+    rnr.setId(1000L);
+    rnr.setStatus(RnrStatus.RELEASED);
+
+    when(requisitionService.getFullRequisitionById(1000L)).thenReturn(rnr);
+    when(requisitionPermissionService.hasPermission(1L, rnr, Right.APPROVE_REQUISITION)).thenReturn(true);
+
+    ResponseEntity<OpenLmisResponse> requisitionData = controller.getById(1000L, request);
+    assertFalse((boolean) requisitionData.getBody().getData().get("canApproveRnr"));
+  }
+
+  @Test
+  public void shouldSetCanApproveFlagFalseIfUserDoesNotHavePermission() throws Exception {
+    Rnr rnr = new Rnr();
+    rnr.setId(1000L);
+    rnr.setStatus(RnrStatus.AUTHORIZED);
+
+    when(requisitionService.getFullRequisitionById(1000L)).thenReturn(rnr);
+    when(requisitionPermissionService.hasPermission(1L, rnr, Right.APPROVE_REQUISITION)).thenReturn(false);
+
+    ResponseEntity<OpenLmisResponse> requisitionData = controller.getById(1000L, request);
+    assertFalse((boolean) requisitionData.getBody().getData().get("canApproveRnr"));
   }
 
   @Test
