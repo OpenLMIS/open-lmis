@@ -11,16 +11,16 @@
 package org.openlmis.web.controller;
 
 import lombok.NoArgsConstructor;
-import org.openlmis.core.domain.*;
+import org.openlmis.core.domain.Facility;
+import org.openlmis.core.domain.ProcessingPeriod;
+import org.openlmis.core.domain.Program;
+import org.openlmis.core.domain.User;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.rnr.domain.Comment;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.dto.RnrDTO;
 import org.openlmis.rnr.search.criteria.RequisitionSearchCriteria;
-import org.openlmis.rnr.service.RegimenColumnService;
-import org.openlmis.rnr.service.RequisitionService;
-import org.openlmis.rnr.service.RequisitionStatusChangeService;
-import org.openlmis.rnr.service.RnrTemplateService;
+import org.openlmis.rnr.service.*;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,6 +39,8 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
+import static org.openlmis.core.domain.Right.APPROVE_REQUISITION;
+import static org.openlmis.core.domain.Right.CONVERT_TO_ORDER;
 import static org.openlmis.rnr.dto.RnrDTO.prepareForListApproval;
 import static org.openlmis.rnr.dto.RnrDTO.prepareForView;
 import static org.openlmis.rnr.service.RequisitionService.NUMBER_OF_PAGES;
@@ -80,6 +82,9 @@ public class RequisitionController extends BaseController {
 
   @Autowired
   private RegimenColumnService regimenColumnService;
+
+  @Autowired
+  private RequisitionPermissionService requisitionPermissionService;
 
   private static final Logger logger = LoggerFactory.getLogger(RequisitionController.class);
 
@@ -187,9 +192,9 @@ public class RequisitionController extends BaseController {
 
   {
     try {
-      Integer numberOfPages = requisitionService.getNumberOfPagesOfApprovedRequisitionsForCriteria(searchType, searchVal, loggedInUserId(request), Right.CONVERT_TO_ORDER);
+      Integer numberOfPages = requisitionService.getNumberOfPagesOfApprovedRequisitionsForCriteria(searchType, searchVal, loggedInUserId(request), CONVERT_TO_ORDER);
       List<Rnr> approvedRequisitions = requisitionService.getApprovedRequisitionsForCriteriaAndPageNumber(
-        searchType, searchVal, page, numberOfPages, loggedInUserId(request), Right.CONVERT_TO_ORDER, sortBy, sortDirection);
+        searchType, searchVal, page, numberOfPages, loggedInUserId(request), CONVERT_TO_ORDER, sortBy, sortDirection);
       List<RnrDTO> rnrDTOs = prepareForListApproval(approvedRequisitions);
       OpenLmisResponse response = new OpenLmisResponse(RNR_LIST, rnrDTOs);
       response.addData(NUMBER_OF_PAGES, numberOfPages);
@@ -220,9 +225,17 @@ public class RequisitionController extends BaseController {
 
   @RequestMapping(value = "/requisitions/{id}", method = GET)
   @PostAuthorize("@requisitionPermissionService.hasPermission(principal, returnObject.body.data.get(\"rnr\"), 'VIEW_REQUISITION')")
-  public ResponseEntity<OpenLmisResponse> getById(@PathVariable Long id) {
+  public ResponseEntity<OpenLmisResponse> getById(@PathVariable Long id, HttpServletRequest request) {
     try {
-      return response(RNR, requisitionService.getFullRequisitionById(id));
+      Rnr rnr = requisitionService.getFullRequisitionById(id);
+
+      boolean canApproveRnr = (rnr.isApprovable() &&
+        requisitionPermissionService.hasPermission(loggedInUserId(request), rnr, APPROVE_REQUISITION));
+
+      OpenLmisResponse response = new OpenLmisResponse(RNR, rnr);
+      response.addData("canApproveRnr", canApproveRnr);
+
+      return new ResponseEntity<>(response, OK);
     } catch (DataException dataException) {
       return error(dataException, NOT_FOUND);
     }
