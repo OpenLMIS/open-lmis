@@ -103,7 +103,7 @@ describe('CreateRequisitionController', function () {
 
     pageSize = "2";
 
-    ctrl = controller(CreateRequisitionController, {$scope: scope, $location: location, requisition: mockedRequisition,
+    ctrl = controller(CreateRequisitionController, {$scope: scope, $location: location, requisitionData: {rnr: mockedRequisition},
       rnrColumns: rnrColumns, regimenTemplate: regimenTemplate, currency: '$', lossesAndAdjustmentsTypes: lossesAndAdjustmentTypes,
       facilityApprovedProducts: facilityApprovedProducts, requisitionRights: requisitionRights, $routeParams: routeParams,
       $rootScope: rootScope, localStorageService: localStorageService, pageSize: pageSize});
@@ -395,7 +395,7 @@ describe('CreateRequisitionController', function () {
   it('should not set disable flag if rnr is initiated and user has create right', function () {
     var rnr = {id: "rnrId", fullSupplyLineItems: [], regimenLineItems: [], status: "INITIATED"};
 
-    ctrl = controller(CreateRequisitionController, {$scope: scope, $location: location, requisition: rnr, rnrColumns: [], regimenTemplate: regimenTemplate,
+    ctrl = controller(CreateRequisitionController, {$scope: scope, $location: location, requisitionData: {rnr: rnr}, rnrColumns: [], regimenTemplate: regimenTemplate,
       currency: '$', pageSize: pageSize, lossesAndAdjustmentsTypes: lossesAndAdjustmentTypes, facilityApprovedProducts: facilityApprovedProducts,
       requisitionRights: requisitionRights, $routeParams: routeParams, $rootScope: rootScope, localStorageService: localStorageService});
 
@@ -405,7 +405,7 @@ describe('CreateRequisitionController', function () {
   it('should not set disable flag if rnr is submitted and user have authorize right', function () {
     var rnr = {id: "rnrId", fullSupplyLineItems: [], regimenLineItems: [], status: "SUBMITTED"};
 
-    ctrl = controller(CreateRequisitionController, {$scope: scope, $location: location, requisition: rnr, rnrColumns: [], regimenTemplate: regimenTemplate,
+    ctrl = controller(CreateRequisitionController, {$scope: scope, $location: location, requisitionData: {rnr: rnr}, rnrColumns: [], regimenTemplate: regimenTemplate,
       currency: '$', pageSize: pageSize, lossesAndAdjustmentsTypes: lossesAndAdjustmentTypes, facilityApprovedProducts: facilityApprovedProducts,
       requisitionRights: requisitionRights, $routeParams: routeParams, $rootScope: rootScope, localStorageService: localStorageService});
 
@@ -415,7 +415,7 @@ describe('CreateRequisitionController', function () {
   it('should set disable flag if rnr is not initiated/submitted', function () {
     var rnr = {id: "rnrId", fullSupplyLineItems: [], regimenLineItems: [], status: "some random status"};
 
-    ctrl = controller(CreateRequisitionController, {$scope: scope, $location: location, requisition: rnr, rnrColumns: [], regimenTemplate: regimenTemplate,
+    ctrl = controller(CreateRequisitionController, {$scope: scope, $location: location, requisitionData: {rnr: rnr}, rnrColumns: [], regimenTemplate: regimenTemplate,
       currency: '$', pageSize: pageSize, lossesAndAdjustmentsTypes: lossesAndAdjustmentTypes, facilityApprovedProducts: facilityApprovedProducts,
       requisitionRights: requisitionRights, $routeParams: routeParams, $rootScope: rootScope, localStorageService: localStorageService});
 
@@ -424,12 +424,12 @@ describe('CreateRequisitionController', function () {
 
   it('should make rnr in scope as Rnr Instance', function () {
     var spyRnr = spyOn(window, 'Rnr').andCallThrough();
-    ctrl = controller(CreateRequisitionController, {$scope: scope, $location: location, requisition: mockedRequisition, rnrColumns: rnrColumns, regimenTemplate: regimenTemplate,
+    ctrl = controller(CreateRequisitionController, {$scope: scope, $location: location, requisitionData: {rnr: mockedRequisition, numberOfMonths: 5}, rnrColumns: rnrColumns, regimenTemplate: regimenTemplate,
       currency: '$', pageSize: pageSize, lossesAndAdjustmentsTypes: lossesAndAdjustmentTypes, facilityApprovedProducts: facilityApprovedProducts,
       requisitionRights: requisitionRights, $routeParams: routeParams, $rootScope: rootScope, localStorageService: localStorageService});
 
     expect(scope.rnr instanceof Rnr).toBeTruthy();
-    expect(spyRnr).toHaveBeenCalledWith(mockedRequisition, rnrColumns);
+    expect(spyRnr).toHaveBeenCalledWith(mockedRequisition, rnrColumns, 5);
   });
 
   it('should set message while saving if set message flag true', function () {
