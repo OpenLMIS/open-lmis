@@ -107,11 +107,11 @@ function ReportingRateController($scope, leafletData) {
   }
 
   function popupFormat(feature){
-    return '<b>' + feature.properties.name + '</b><br />' +
-        '<div>Expected Facilities: ' + feature.expected + '</div>' +
-        '<div>Reported This Period: ' + feature.period + '</div>' +
-        '<div>Ever Reported: ' + feature.ever + '</div>' +
-        '<div>Total Facilities: ' + feature.total + '</div> ';
+    return '<table class="table table-bordered" style="width: 250px"><tr><th colspan="2"><b>' + feature.properties.name + '</b></th></tr>' +
+        '<tr><td>Expected Facilities</td><td class="number">' + feature.expected + '</td></tr>' +
+        '<tr><td>Reported This Period</td><td class="number">' + feature.period + '</td></tr>' +
+        '<tr><td>Ever Reported</td><td class="number">' + feature.ever + '</td></tr>' +
+        '<tr><td class="bold">Total Facilities</b></td><td class="number bold">' + feature.total + '</td></tr>';
   }
 
   function zoomToFeature(e) {
