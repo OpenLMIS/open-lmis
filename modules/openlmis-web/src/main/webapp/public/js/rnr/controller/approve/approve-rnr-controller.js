@@ -10,7 +10,7 @@
 
 function ApproveRnrController($scope, requisitionData, Requisitions, rnrColumns, regimenTemplate, $location, pageSize, $routeParams, $dialog, requisitionService, $q) {
   $scope.canApproveRnr = requisitionData.canApproveRnr;
-  $scope.rnr = new Rnr(requisitionData.rnr, rnrColumns);
+  $scope.rnr = new Rnr(requisitionData.rnr, rnrColumns, requisitionData.numberOfMonths);
   $scope.rnrColumns = rnrColumns;
   $scope.regimenColumns = regimenTemplate ? regimenTemplate.columns : [];
   $scope.pageSize = pageSize;
