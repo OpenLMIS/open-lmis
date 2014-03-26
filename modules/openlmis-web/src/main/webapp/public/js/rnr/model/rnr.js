@@ -147,7 +147,6 @@ var Rnr = function (rnr, programRnrColumns, numberOfMonths) {
     return cost;
   };
 
-
   Rnr.prototype.fillCost = function (isFullSupply) {
     if (isFullSupply)
       this.calculateFullSupplyItemsSubmittedCost();
@@ -169,7 +168,6 @@ var Rnr = function (rnr, programRnrColumns, numberOfMonths) {
     rnrLineItem.fillPacksToShip();
     this.fillCost(rnrLineItem.fullSupply);
   };
-
 
   Rnr.prototype.periodDisplayName = function () {
     return this.period.stringStartDate + ' - ' + this.period.stringEndDate;
