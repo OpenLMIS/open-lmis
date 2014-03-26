@@ -47,6 +47,7 @@ import static org.openlmis.rnr.domain.RnrStatus.SUBMITTED;
 public class CalculationServiceTest {
 
   private Rnr rnr;
+  private Integer M;
   @Mock
   List<LossesAndAdjustmentsType> lossesAndAdjustmentsTypes;
 
@@ -64,7 +65,9 @@ public class CalculationServiceTest {
   public void setUp() throws Exception {
     initMocks(this);
     rnr = make(a(defaultRequisition));
+    M = 3;
     when(requisitionRepository.getLossesAndAdjustmentsTypes()).thenReturn(lossesAndAdjustmentsTypes);
+    when(processingScheduleService.findM(rnr.getPeriod())).thenReturn(M);
     emptyPeriodList = Collections.emptyList();
   }
 
@@ -105,10 +108,11 @@ public class CalculationServiceTest {
     when(firstLineItem.calculateCost()).thenReturn(new Money("10"));
     when(secondLineItem.calculateCost()).thenReturn(new Money("20"));
     ProgramRnrTemplate template = new ProgramRnrTemplate(programRequisitionColumns);
+    when(processingScheduleService.findM(period)).thenReturn(M);
 
     calculationService.perform(rnr, template);
 
-    verify(firstLineItem).calculateForFullSupply(eq(template), eq(SUBMITTED), eq(lossesAndAdjustmentsTypes));
+    verify(firstLineItem).calculateForFullSupply(eq(template), eq(SUBMITTED), eq(lossesAndAdjustmentsTypes), eq(M));
     verify(firstLineItem).calculateCost();
     verify(secondLineItem).calculateCost();
     verify(secondLineItem).calculatePacksToShip();
@@ -128,7 +132,7 @@ public class CalculationServiceTest {
 
     calculationService.perform(rnr, template);
 
-    verify(rnrLineItem1).calculateForFullSupply(eq(template), eq(rnr.getStatus()), eq(lossesAndAdjustmentsTypes));
+    verify(rnrLineItem1).calculateForFullSupply(eq(template), eq(rnr.getStatus()), eq(lossesAndAdjustmentsTypes), eq(M));
     verify(rnrLineItem1).validateMandatoryFields(template);
     verify(rnrLineItem1).validateCalculatedFields(template);
   }
@@ -152,7 +156,7 @@ public class CalculationServiceTest {
 
     verify(skippedLineItem, never()).calculateForFullSupply(any(ProgramRnrTemplate.class),
         any(RnrStatus.class),
-        anyListOf(LossesAndAdjustmentsType.class));
+        anyListOf(LossesAndAdjustmentsType.class), any(Integer.class));
 
     verify(skippedLineItem, never()).calculateCost();
     verify(nonSkippedLineItem).calculateCost();
