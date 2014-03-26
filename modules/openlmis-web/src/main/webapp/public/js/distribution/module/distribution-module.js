@@ -72,6 +72,7 @@ distributionModule.directive('notRecorded', function ($timeout) {
     require: '?ngModel',
     link: function (scope, element, attrs, ctrl) {
       $timeout(function () {
+        element.attr('tabindex', '-1');      //Not focusing on NR checkboxes while tabbing
         $.each(document.getElementsByName(element.attr('id')), function (index, ele) {
           ele.disabled = element.attr('disabled') || ctrl.$modelValue;
         });
