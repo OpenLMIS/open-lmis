@@ -64,6 +64,7 @@ public interface RnrLineItemMapper {
     "newPatientCount = #{newPatientCount},",
     "stockOutDays = #{stockOutDays},",
     "normalizedConsumption = #{normalizedConsumption},",
+    "periodNormalizedConsumption = #{periodNormalizedConsumption},",
     "amc = #{amc},",
     "maxStockQuantity = #{maxStockQuantity},",
     "packsToShip = #{packsToShip},",
@@ -96,7 +97,6 @@ public interface RnrLineItemMapper {
 
   @Select("SELECT * FROM requisition_line_items WHERE rnrId = #{rnrId} AND fullSupply = false")
   public List<RnrLineItem> getNonFullSupplyRnrLineItemsByRnrId(Long rnrId);
-
 
   @Delete("DELETE FROM requisition_line_items WHERE rnrId = #{rnrId} AND fullSupply = false")
   void deleteAllNonFullSupplyForRequisition(Long rnrId);
