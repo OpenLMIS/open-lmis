@@ -377,7 +377,7 @@ Feature: Smoke Tests
       | VACCINES | P10     | 10       | 10           | 10            | 10               | null         | null         | 0               |
     And I have following override ISA values:
       | Facility Code | Program  | Product | ISA  |
-      | F11           | VACCINES | P11     | 1005 |
+      | F11           | VACCINES | P11     | 1004 |
     And I update population of facility "F10" as "342"
     And I have role assigned to delivery zones
     When I am logged in as "fieldCoordinator"

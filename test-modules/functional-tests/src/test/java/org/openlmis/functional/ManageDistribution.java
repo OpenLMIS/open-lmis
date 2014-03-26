@@ -832,8 +832,6 @@ public class ManageDistribution extends TestCaseHelper {
     FacilityListPage facilityListPage = distributionPage.clickRecordData(1);
     facilityListPage.clickFacilityListDropDown();
     facilityListPage.verifyGeographicZoneOrder(geoZoneFirst, geoZoneSecond);
-
-
   }
 
   @Test(groups = {"distribution"}, dataProvider = "Data-Provider-Function")
