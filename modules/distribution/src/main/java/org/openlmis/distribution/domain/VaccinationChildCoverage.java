@@ -15,6 +15,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.Facility;
+import org.openlmis.core.domain.ProcessingPeriod;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -38,21 +39,24 @@ public class VaccinationChildCoverage extends VaccinationCoverage {
     "BCG", "Polio10", "Polio20", "Penta1", "Penta10", "PCV", "Measles"));
 
   public VaccinationChildCoverage(FacilityVisit facilityVisit, Facility facility,
-                                  List<TargetGroupProduct> targetGroupProducts, List<ProductVial> productVials) {
+                                  ProcessingPeriod period, List<TargetGroupProduct> targetGroupProducts,
+                                  List<ProductVial> productVials) {
     super(facilityVisit, facility, productVials, validProductVials);
     List<String> validVaccinations = Collections.unmodifiableList(
       asList("BCG", "Polio (Newborn)", "Polio 1st dose", "Polio 2nd dose",
         "Polio 3rd dose", "Penta 1st dose", "Penta 2nd dose", "Penta 3rd dose",
         "PCV10 1st dose", "PCV10 2nd dose", "PCV10 3rd dose", "Measles"));
 
-    createChildCoverageLineItems(facilityVisit, facility, targetGroupProducts, validVaccinations);
+    createChildCoverageLineItems(facilityVisit, facility, targetGroupProducts, validVaccinations, period.getNumberOfMonths());
   }
 
-  private void createChildCoverageLineItems(FacilityVisit facilityVisit, Facility facility, List<TargetGroupProduct> targetGroupProducts, List<String> validVaccinations) {
+  private void createChildCoverageLineItems(FacilityVisit facilityVisit, Facility facility,
+                                            List<TargetGroupProduct> targetGroupProducts, List<String> validVaccinations,
+                                            Integer processingPeriodMonths) {
     for (String vaccination : validVaccinations) {
 
       TargetGroupProduct targetGroup = getTargetGroupForLineItem(targetGroupProducts, vaccination);
-      this.childCoverageLineItems.add(new ChildCoverageLineItem(facilityVisit, facility, targetGroup, vaccination));
+      this.childCoverageLineItems.add(new ChildCoverageLineItem(facilityVisit, facility, targetGroup, vaccination, processingPeriodMonths));
     }
   }
 }
