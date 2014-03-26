@@ -16,7 +16,7 @@ var ProgramProduct = function (programProduct) {
       programProduct.isaAmount = "--";
     } else {
       programProduct.programProductIsa = new ProgramProductISA(programProduct.programProductIsa);
-      programProduct.isaAmount = programProduct.overriddenIsa ? programProduct.overriddenIsa : programProduct.programProductIsa.calculate(facility.catchmentPopulation);
+      programProduct.isaAmount = (!isUndefined(programProduct.overriddenIsa)) ? programProduct.overriddenIsa : programProduct.programProductIsa.calculate(facility.catchmentPopulation);
 //          TODO important need validation on packSize to be more than 0
       programProduct.isaAmount = programProduct.isaAmount ? Math.ceil((programProduct.isaAmount * period.numberOfMonths) / programProduct.product.packSize) : 0;
     }
