@@ -26,6 +26,7 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.thoughtworks.selenium.SeleneseTestBase.assertFalse;
 import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
 
 public class DistributionRefrigeratorSyncTest extends TestCaseHelper {
@@ -73,18 +74,19 @@ public class DistributionRefrigeratorSyncTest extends TestCaseHelper {
     dbWrapper.insertProductWithGroup("Product6", "ProductName6", refrigeratorTestData.get(PRODUCT_GROUP_CODE), true);
     dbWrapper.insertProgramProduct("Product5", refrigeratorTestData.get(VACCINES_PROGRAM), "10", "false");
     dbWrapper.insertProgramProduct("Product6", refrigeratorTestData.get(VACCINES_PROGRAM), "10", "true");
-    dbWrapper.addRefrigeratorToFacility("LG", "800L", "GNR7878", "F10");
   }
 
   @Test(groups = {"distribution"})
   public void testRefrigeratorPageSyncWith2Refrigerators() throws SQLException {
-    dbWrapper.addRefrigeratorToFacility("LG", "800L1", "TGNR7878", "F10");
-
+    dbWrapper.addRefrigeratorToFacility("LG", "", "GNR7878", "F10");
     HomePage homePage = loginPage.loginAs(refrigeratorTestData.get(USER), refrigeratorTestData.get(PASSWORD));
     initiateDistribution(refrigeratorTestData.get(FIRST_DELIVERY_ZONE_NAME), refrigeratorTestData.get(VACCINES_PROGRAM));
     VisitInformationPage visitInformationPage = facilityListPage.selectFacility(refrigeratorTestData.get(FIRST_FACILITY_CODE));
-    visitInformationPage.enterDataWhenFacilityVisited("some observations", "samuel", "Doe", "Verifier", "XYZ");
+    visitInformationPage.enterDataWhenFacilityVisited("samuel", "Doe", "Verifier", "XYZ");
     RefrigeratorPage refrigeratorPage = visitInformationPage.navigateToRefrigerators();
+
+    refrigeratorPage.clickAddNew();
+    refrigeratorPage.addNewRefrigerator("TGNR7878");
 
     refrigeratorPage.clickShowForRefrigerator(1);
     refrigeratorPage.verifyRefrigeratorColor("individual", "RED");
@@ -134,17 +136,22 @@ public class DistributionRefrigeratorSyncTest extends TestCaseHelper {
     distributionPage.syncDistributionMessageDone();
 
     verifyRefrigeratorReadingDataInDatabase(refrigeratorTestData.get(FIRST_FACILITY_CODE), "GNR7878", 999.9F, "Y", 1, 0, "D", "miscellaneous");
+    verifyRefrigeratorDetailsInReadingsTable(refrigeratorTestData.get(FIRST_FACILITY_CODE), "GNR7878", "LG", null);
+    verifyRefrigeratorsDataInDatabase(refrigeratorTestData.get(FIRST_FACILITY_CODE), "GNR7878", "LG", null, "t");
     verifyRefrigeratorProblemDataNullInDatabase("GNR7878", refrigeratorTestData.get(FIRST_FACILITY_CODE));
     verifyRefrigeratorReadingDataInDatabase(refrigeratorTestData.get(FIRST_FACILITY_CODE), "TGNR7878", 5F, "N", 10, 5, "N", null);
+    verifyRefrigeratorDetailsInReadingsTable(refrigeratorTestData.get(FIRST_FACILITY_CODE), "TGNR7878", null, null);
+    verifyRefrigeratorsDataInDatabase(refrigeratorTestData.get(FIRST_FACILITY_CODE), "TGNR7878", null, null, "t");
     verifyRefrigeratorProblemDataInDatabase(refrigeratorTestData.get(FIRST_FACILITY_CODE), "TGNR7878", false, true, false, false, false, true, "other problem");
   }
 
   @Test(groups = {"distribution"})
   public void testRefrigeratorSyncWhenRefrigeratorHasProblem() throws SQLException {
+    dbWrapper.addRefrigeratorToFacility("", "", "GNR7878", "F10");
     HomePage homePage = loginPage.loginAs(refrigeratorTestData.get(USER), refrigeratorTestData.get(PASSWORD));
     initiateDistribution(refrigeratorTestData.get(FIRST_DELIVERY_ZONE_NAME), refrigeratorTestData.get(VACCINES_PROGRAM));
     VisitInformationPage visitInformationPage = facilityListPage.selectFacility(refrigeratorTestData.get(FIRST_FACILITY_CODE));
-    visitInformationPage.enterDataWhenFacilityVisited("some observations", "samuel", "Doe", "Verifier", "XYZ");
+    visitInformationPage.enterDataWhenFacilityVisited("samuel", "Doe", "Verifier", "XYZ");
 
     RefrigeratorPage refrigeratorPage = visitInformationPage.navigateToRefrigerators();
 
@@ -190,6 +197,8 @@ public class DistributionRefrigeratorSyncTest extends TestCaseHelper {
 
     verifyRefrigeratorReadingDataInDatabase(refrigeratorTestData.get(FIRST_FACILITY_CODE), "GNR7878", -999.9F, "N", 1, 0, "Y", null);
     verifyRefrigeratorProblemDataInDatabase(refrigeratorTestData.get(FIRST_FACILITY_CODE), "GNR7878", false, false, true, false, false, true, "others");
+    verifyRefrigeratorsDataInDatabase(refrigeratorTestData.get(FIRST_FACILITY_CODE), "GNR7878", null, null, "t");
+    verifyRefrigeratorDetailsInReadingsTable(refrigeratorTestData.get(FIRST_FACILITY_CODE), "GNR7878", null, null);
   }
 
   @Test(groups = {"distribution"})
@@ -197,9 +206,11 @@ public class DistributionRefrigeratorSyncTest extends TestCaseHelper {
     HomePage homePage = loginPage.loginAs(refrigeratorTestData.get(USER), refrigeratorTestData.get(PASSWORD));
     initiateDistribution(refrigeratorTestData.get(FIRST_DELIVERY_ZONE_NAME), refrigeratorTestData.get(VACCINES_PROGRAM));
     VisitInformationPage visitInformationPage = facilityListPage.selectFacility(refrigeratorTestData.get(FIRST_FACILITY_CODE));
-    visitInformationPage.enterDataWhenFacilityVisited("some observations", "samuel", "Doe", "Verifier", "XYZ");
+    visitInformationPage.enterDataWhenFacilityVisited("samuel", "Doe", "Verifier", "XYZ");
 
     RefrigeratorPage refrigeratorPage = visitInformationPage.navigateToRefrigerators();
+    refrigeratorPage.clickAddNew();
+    refrigeratorPage.addNewRefrigerator("LG", "800L", "GNR7878");
 
     refrigeratorPage.clickShowForRefrigerator(1);
     refrigeratorPage.verifyRefrigeratorColor("individual", "RED");
@@ -244,6 +255,8 @@ public class DistributionRefrigeratorSyncTest extends TestCaseHelper {
 
     verifyRefrigeratorReadingDataInDatabase(refrigeratorTestData.get(FIRST_FACILITY_CODE), "GNR7878", null, null, null, null, null, null);
     verifyRefrigeratorProblemDataNullInDatabase("GNR7878", refrigeratorTestData.get(FIRST_FACILITY_CODE));
+    verifyRefrigeratorDetailsInReadingsTable(refrigeratorTestData.get(FIRST_FACILITY_CODE), "GNR7878", "LG", "800L");
+    verifyRefrigeratorsDataInDatabase(refrigeratorTestData.get(FIRST_FACILITY_CODE), "GNR7878", "LG", "800L", "t");
   }
 
   @Test(groups = {"distribution"})
@@ -251,9 +264,11 @@ public class DistributionRefrigeratorSyncTest extends TestCaseHelper {
     HomePage homePage = loginPage.loginAs(refrigeratorTestData.get(USER), refrigeratorTestData.get(PASSWORD));
     initiateDistribution(refrigeratorTestData.get(FIRST_DELIVERY_ZONE_NAME), refrigeratorTestData.get(VACCINES_PROGRAM));
     VisitInformationPage visitInformationPage = facilityListPage.selectFacility(refrigeratorTestData.get(FIRST_FACILITY_CODE));
-    visitInformationPage.enterDataWhenFacilityVisited("some observations", "samuel", "Doe", "Verifier", "XYZ");
+    visitInformationPage.enterDataWhenFacilityVisited("samuel", "Doe", "Verifier", "XYZ");
 
     RefrigeratorPage refrigeratorPage = visitInformationPage.navigateToRefrigerators();
+    refrigeratorPage.clickAddNew();
+    refrigeratorPage.addNewRefrigerator("GNR7878");
 
     refrigeratorPage.clickShowForRefrigerator(1);
     refrigeratorPage.verifyRefrigeratorColor("individual", "RED");
@@ -327,7 +342,7 @@ public class DistributionRefrigeratorSyncTest extends TestCaseHelper {
     adultCoveragePage.clickOK();
 
     adultCoveragePage.navigateToVisitInformation();
-    visitInformationPage.enterDataWhenFacilityVisited("some observations", "samuel", "Doe", "Verifier", "XYZ");
+    visitInformationPage.enterDataWhenFacilityVisited("samuel", "Doe", "Verifier", "XYZ");
 
     visitInformationPage.navigateToFullCoverage();
     fullCoveragePage.enterData(78, 67, 34, "12");
@@ -340,11 +355,13 @@ public class DistributionRefrigeratorSyncTest extends TestCaseHelper {
     assertTrue(distributionPage.getSyncMessage().contains("F10-Village Dispensary"));
     distributionPage.syncDistributionMessageDone();
 
-    verifyRefrigeratorsDataInDatabase("F10", "GNR7878", "LG", "800L", "f");
+    verifyRefrigeratorDetailsInReadingsTable(refrigeratorTestData.get(FIRST_FACILITY_CODE), "GNR7878", null, null);
+    verifyRefrigeratorsDataInDatabase(refrigeratorTestData.get(FIRST_FACILITY_CODE), "GNR7878", null, null, "f");
   }
 
   @Test(groups = {"distribution"})
-  public void testAddingDuplicateRefrigeratorForSameFacility() {
+  public void testAddingDuplicateRefrigeratorForSameFacility() throws SQLException {
+    dbWrapper.addRefrigeratorToFacility("LG", "800L", "GNR7878", "F10");
     loginPage.loginAs(refrigeratorTestData.get(USER), refrigeratorTestData.get(PASSWORD));
     initiateDistribution(refrigeratorTestData.get(FIRST_DELIVERY_ZONE_NAME), refrigeratorTestData.get(VACCINES_PROGRAM));
     RefrigeratorPage refrigeratorPage = facilityListPage.selectFacility(refrigeratorTestData.get(FIRST_FACILITY_CODE)).navigateToRefrigerators();
@@ -356,15 +373,18 @@ public class DistributionRefrigeratorSyncTest extends TestCaseHelper {
 
   @Test(groups = {"distribution"})
   public void testAddingDuplicateRefrigeratorForDifferentFacility() throws SQLException {
+    dbWrapper.addRefrigeratorToFacility("", "800L", "GNR7878", "F10");
     HomePage homePage = loginPage.loginAs(refrigeratorTestData.get(USER), refrigeratorTestData.get(PASSWORD));
     initiateDistribution(refrigeratorTestData.get(FIRST_DELIVERY_ZONE_NAME), refrigeratorTestData.get(VACCINES_PROGRAM));
     VisitInformationPage visitInformationPage = facilityListPage.selectFacility(refrigeratorTestData.get(SECOND_FACILITY_CODE));
-    visitInformationPage.enterDataWhenFacilityVisited("some observations", "samuel", "Doe", "Verifier", "XYZ");
+    visitInformationPage.enterDataWhenFacilityVisited("samuel", "Doe", "Verifier", "XYZ");
 
     RefrigeratorPage refrigeratorPage = visitInformationPage.navigateToRefrigerators();
 
     refrigeratorPage.clickAddNew();
-    refrigeratorPage.addNewRefrigerator("LG22", "800L22", "GNR7878");
+    refrigeratorPage.addNewRefrigerator("LG22", "800L22", null);
+    assertFalse(refrigeratorPage.isDoneButtonEnabled());
+    refrigeratorPage.addNewRefrigerator("GNR7878");
     refrigeratorPage.clickShowForRefrigerator(1);
     refrigeratorPage.enterValueInRefrigeratorTemperature("3", 1);
     refrigeratorPage.clickFunctioningCorrectlyYesRadio(1);
@@ -406,10 +426,11 @@ public class DistributionRefrigeratorSyncTest extends TestCaseHelper {
 
   @Test(groups = {"distribution"})
   public void testUpdatingRefrigeratorAndSync() throws SQLException {
+    dbWrapper.addRefrigeratorToFacility("LG", "800L", "GNR7878", "F10");
     HomePage homePage = loginPage.loginAs(refrigeratorTestData.get(USER), refrigeratorTestData.get(PASSWORD));
     initiateDistribution(refrigeratorTestData.get(FIRST_DELIVERY_ZONE_NAME), refrigeratorTestData.get(VACCINES_PROGRAM));
     VisitInformationPage visitInformationPage = facilityListPage.selectFacility(refrigeratorTestData.get(FIRST_FACILITY_CODE));
-    visitInformationPage.enterDataWhenFacilityVisited("some observations", "samuel", "Doe", "Verifier", "XYZ");
+    visitInformationPage.enterDataWhenFacilityVisited("samuel", "Doe", "Verifier", "XYZ");
 
     RefrigeratorPage refrigeratorPage = visitInformationPage.navigateToRefrigerators();
 

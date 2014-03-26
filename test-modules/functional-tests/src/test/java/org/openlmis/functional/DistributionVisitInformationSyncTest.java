@@ -240,12 +240,16 @@ public class DistributionVisitInformationSyncTest extends TestCaseHelper {
     assertFalse(refrigeratorPage.isAddNewButtonEnabled());
     refrigeratorPage.clickShowForRefrigerator(1);
     refrigeratorPage.verifyAllFieldsDisabled();
-    refrigeratorPage.navigateToEpiInventory();
 
+    refrigeratorPage.navigateToEpiInventory();
     epiInventoryPage.verifyIndicator("GREEN");
     epiInventoryPage.verifyAllFieldsDisabled();
 
-    ChildCoveragePage childCoveragePage = epiInventoryPage.navigateToChildCoverage();
+    epiInventoryPage.navigateToEpiUse();
+    epiUsePage.verifyIndicator("GREEN");
+    epiUsePage.verifyAllFieldsDisabled();
+
+    ChildCoveragePage childCoveragePage = epiUsePage.navigateToChildCoverage();
     childCoveragePage.applyNRToAll();
     childCoveragePage.clickOK();
 
@@ -288,7 +292,7 @@ public class DistributionVisitInformationSyncTest extends TestCaseHelper {
     VisitInformationPage visitInformationPage = facilityListPage.selectFacility(visitInformationData.get(FIRST_FACILITY_CODE));
 
     facilityListPage.verifyOverallFacilityIndicatorColor("RED");
-    visitInformationPage.enterDataWhenFacilityVisited("Some observations", "samuel D", "Doe Abc", "Verifier", "Verifier Title");
+    visitInformationPage.enterDataWhenFacilityVisited("samuel D", "Doe Abc", "Verifier", "Verifier Title");
 
     RefrigeratorPage refrigeratorPage = visitInformationPage.navigateToRefrigerators();
     refrigeratorPage.verifyRefrigeratorColor("overall", "RED");
@@ -307,15 +311,22 @@ public class DistributionVisitInformationSyncTest extends TestCaseHelper {
     epiInventoryPage.fillSpoiledQuantity(1, "3");
     epiInventoryPage.verifyIndicator("AMBER");
 
-    visitInformationPage.navigateToVisitInformation();
+    EPIUsePage epiUsePage = epiInventoryPage.navigateToEpiUse();
+    epiUsePage.verifyIndicator("RED");
+    epiUsePage.enterValueInDistributed("5", 1);
+    epiUsePage.verifyIndicator("AMBER");
+
+    epiUsePage.navigateToVisitInformation();
     visitInformationPage.selectFacilityVisitedNo();
     visitInformationPage.selectReasonNoTransport();
 
     refrigeratorPage.verifyRefrigeratorColor("overall", "GREEN");
     epiInventoryPage.verifyIndicator("GREEN");
+    epiInventoryPage.verifyAllFieldsDisabled();
 
-//    EPIUsePage epiUsePage = refrigeratorPage.navigateToEpiUse();
-//    epiUsePage.enterData(70, 80, 90, 100, 9999999, "10/2011", 1);
+    refrigeratorPage.navigateToEpiUse();
+    epiUsePage.verifyIndicator("GREEN");
+    epiUsePage.verifyAllFieldsDisabled();
 
     FullCoveragePage fullCoveragePage = refrigeratorPage.navigateToFullCoverage();
     fullCoveragePage.clickApplyNRToAll();
@@ -430,7 +441,6 @@ public class DistributionVisitInformationSyncTest extends TestCaseHelper {
       EPIUsePage epiUsePage = visitInformationPage.navigateToEpiUse();
       epiUsePage.enterData(10, 20, 30, 40, 50, "10/2011", 1);
     }
-
 
     ChildCoveragePage childCoveragePage = visitInformationPage.navigateToChildCoverage();
     childCoveragePage.applyNRToAll();

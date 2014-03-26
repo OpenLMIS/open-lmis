@@ -26,6 +26,8 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
 import static java.util.Arrays.asList;
@@ -92,6 +94,13 @@ public class DownloadOrderFile extends TestCaseHelper {
     assertTrue("Order data incorrect in line number " + lineNumber, csvRows[lineNumber - 1].contains(data));
   }
 
+  public void checkOrderFileDataForPattern(int lineNumber, String data) {
+    Pattern orderDataPattern = Pattern.compile(data);
+    testWebDriver.sleep(1000);
+    Matcher matcher = orderDataPattern.matcher(csvRows[lineNumber - 1]);
+    assertTrue("Order data incorrect in line number " + lineNumber, !matcher.find());
+  }
+
   @And("^I verify order date format \"([^\"]*)\" in line \"([^\"]*)\"$")
   public void checkOrderFileOrderDate(String dateFormat, int lineNumber) throws SQLException {
     String createdDate = dbWrapper.getCreatedDate("orders", dateFormat);
@@ -102,6 +111,73 @@ public class DownloadOrderFile extends TestCaseHelper {
   public void checkOrderFileOrderId(int lineNumber) throws SQLException {
     String orderId = String.valueOf(dbWrapper.getMaxRnrID());
     assertTrue("Order date incorrect.", csvRows[lineNumber - 1].contains(orderId));
+  }
+
+  @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function")
+  public void testVerifyOrderFileForDefaultConfiguration(String password) throws InterruptedException, SQLException, IOException {
+    dbWrapper.setupOrderFileConfiguration("O", "TRUE");
+    setupDownloadOrderFileSetup(password);
+    getOrderDataFromDownloadedFile("O");
+    checkOrderFileData(1, "Order number,Facility code,Product code,Product name,Approved quantity,Period,Order date");
+    checkOrderFileData(2, ",\"F10\",\"P10\",\"antibiotic Capsule 300/200/600 mg\",\"10\",\"01/12\",");
+    checkOrderFileOrderDate("dd/MM/yy", 2);
+    checkOrderFileOrderId(2);
+  }
+
+  @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function")
+  public void testVerifyOrderFileHavingStrengthFormDossageUnitIsNull(String password) throws InterruptedException, SQLException, IOException {
+    dbWrapper.setupOrderFileConfiguration("O", "TRUE");
+
+    List<String> rightsList = asList("CREATE_REQUISITION", "VIEW_REQUISITION", "APPROVE_REQUISITION");
+    setupTestDataToInitiateRnR(true, program, userSICUserName, "200", rightsList);
+
+    setupTestRoleRightsData("lmu", "CONVERT_TO_ORDER,VIEW_ORDER");
+    dbWrapper.insertUser("212", "lmu", passwordUsers, "F10", "Jake_Doe@openlmis.com");
+    dbWrapper.insertRoleAssignment("212", "lmu");
+    dbWrapper.insertFulfilmentRoleAssignment("lmu", "lmu", "F10");
+
+    dbWrapper.updateFieldValueToNull("products", "strength", "code", "P10");
+    dbWrapper.updateFieldValueToNull("products", "formid", "code", "P10");
+    dbWrapper.updateFieldValueToNull("products", "dosageunitid", "code", "P10");
+
+    LoginPage loginPage = PageObjectFactory.getLoginPage(testWebDriver, baseUrlGlobal);
+    HomePage homePage = loginPage.loginAs(userSICUserName, password);
+    homePage.navigateAndInitiateRnr(program);
+    homePage.clickProceed();
+    testWebDriver.sleep(2000);
+    dbWrapper.insertValuesInRequisition(false);
+    dbWrapper.insertValuesInRegimenLineItems("100", "200", "300", "Regimens data filled");
+    dbWrapper.updateRequisitionStatus("SUBMITTED", userSICUserName, "HIV");
+    dbWrapper.updateRequisitionStatus("AUTHORIZED", userSICUserName, "HIV");
+    dbWrapper.updateFieldValue("requisition_line_items", "quantityApproved", 10);
+    dbWrapper.updateRequisitionStatus("APPROVED", userSICUserName, "HIV");
+
+    homePage.logout(baseUrlGlobal);
+    loginPage.loginAs("lmu", password);
+    homePage.navigateConvertToOrder();
+
+    ConvertOrderPage convertOrderPage = PageObjectFactory.getConvertOrderPage(testWebDriver);
+    convertOrderPage.clickConvertToOrderButton();
+    convertOrderPage.clickCheckBoxConvertToOrder();
+    convertOrderPage.clickConvertToOrderButton();
+    convertOrderPage.clickOk();
+    homePage.navigateViewOrders();
+    downloadOrderFile();
+
+    getOrderDataFromDownloadedFile("O");
+
+    checkOrderFileData(1, "Order number,Facility code,Product code,Product name,Approved quantity,Period,Order date");
+    checkOrderFileDataForPattern(2, "//d*\",\"F10\",\"P10\",\"antibiotic   \",\"10\",\"01/12\",");
+  }
+
+  @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function")
+  public void testVerifyOrderFileForDefaultConfigurationWithNoHeaders(String password) throws InterruptedException, SQLException, IOException {
+    dbWrapper.setupOrderFileConfiguration("O", "FALSE");
+    setupDownloadOrderFileSetup(password);
+    getOrderDataFromDownloadedFile("O");
+    checkOrderFileData(1, ",\"F10\",\"P10\",\"antibiotic Capsule 300/200/600 mg\",\"10\",\"01/12\",");
+    checkOrderFileOrderDate("dd/MM/yy", 1);
+    checkOrderFileOrderId(1);
   }
 
   @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function")
@@ -121,31 +197,19 @@ public class DownloadOrderFile extends TestCaseHelper {
     setupDownloadOrderFileSetup(password);
     getOrderDataFromDownloadedFile("Zero");
     checkOrderFileData(1, "Extra 1,Approved quantity,Product code,Product name,Order date,Facility code,Period,Order number,");
-    checkOrderFileData(2, ",10,P10,antibiotic Capsule 300/200/600 mg");
-    checkOrderFileData(2, ",F10,2012-01,");
+    checkOrderFileData(2, ",\"10\",\"P10\",\"antibiotic Capsule 300/200/600 mg\"");
+    checkOrderFileData(2, ",\"F10\",\"2012-01\",");
     checkOrderFileOrderDate("MM-dd-yyyy", 2);
     checkOrderFileOrderId(2);
-  }
 
-  @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function")
-  public void testVerifyOrderFileForDefaultConfiguration(String password) throws InterruptedException, SQLException, IOException {
-    dbWrapper.setupOrderFileConfiguration("O", "TRUE");
-    setupDownloadOrderFileSetup(password);
-    getOrderDataFromDownloadedFile("O");
-    checkOrderFileData(1, "Order number,Facility code,Product code,Product name,Approved quantity,Period,Order date");
-    checkOrderFileData(2, ",F10,P10,antibiotic Capsule 300/200/600 mg,10,01/12,");
-    checkOrderFileOrderDate("dd/MM/yy", 2);
-    checkOrderFileOrderId(2);
-  }
-
-  @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function")
-  public void testVerifyOrderFileForDefaultConfigurationWithNoHeaders(String password) throws InterruptedException, SQLException, IOException {
-    dbWrapper.setupOrderFileConfiguration("O", "FALSE");
-    setupDownloadOrderFileSetup(password);
-    getOrderDataFromDownloadedFile("O");
-    checkOrderFileData(1, ",F10,P10,antibiotic Capsule 300/200/600 mg,10,01/12,");
-    checkOrderFileOrderDate("dd/MM/yy", 1);
-    checkOrderFileOrderId(1);
+    dbWrapper.setupOrderFileOpenLMISColumns("create.facility.code", "TRUE", "Facility code", 2, "");
+    dbWrapper.setupOrderFileOpenLMISColumns("header.order.number", "TRUE", "Order number", 1, "");
+    dbWrapper.setupOrderFileOpenLMISColumns("header.quantity.approved", "TRUE", "Approved quantity", 5, "");
+    dbWrapper.setupOrderFileOpenLMISColumns("header.product.code", "TRUE", "Product code", 3, "");
+    dbWrapper.setupOrderFileOpenLMISColumns("header.product.name", "TRUE", "Product name", 4, "");
+    dbWrapper.setupOrderFileOpenLMISColumns("header.order.date", "TRUE", "Order date", 7, "dd/MM/yy");
+    dbWrapper.setupOrderFileOpenLMISColumns("label.period", "TRUE", "Period", 6, "MM/yy");
+    dbWrapper.deleteRowFromTable("order_file_columns", "openLMISField", "false");
   }
 
   public void setupDownloadOrderFileSetup(String password) throws SQLException, InterruptedException {

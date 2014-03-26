@@ -24,8 +24,8 @@ public class RefrigeratorTest {
   public ExpectedException expectedException = ExpectedException.none();
 
   @Test
-  public void shouldThrowErrorIfAnyBlank() throws Exception {
-    Refrigerator refrigerator = new Refrigerator("", "SN", null, 3L, true);
+  public void shouldThrowErrorIfSerialNumberBlank() throws Exception {
+    Refrigerator refrigerator = new Refrigerator("", "", null, 3L, true);
 
     expectedException.expect(DataException.class);
     expectedException.expectMessage("error.invalid.reading.value");

@@ -253,25 +253,6 @@ adminTest.doFirst() {
     buildOpenLmis.execute()
 }
 
-task adminTest2(type: Test) {
-    useTestNG() {
-        systemProperties['browser'] = 'firefox'
-        systemProperties['dbUrl'] = connectionString
-        systemProperties['baseurl'] = "$baseurl"
-
-        suites 'src/test/java/org/openlmis/functional/testng-admin2.xml'
-    }
-    options {
-        listeners << 'org.uncommons.reportng.HTMLReporter'
-        listeners << 'org.uncommons.reportng.JUnitXMLReporter'
-    }
-    workingDir = 'build/'
-}
-
-adminTest2.doFirst() {
-    buildOpenLmis.execute()
-}
-
 task requisitionTest(type: Test) {
     useTestNG() {
         systemProperties['browser'] = 'firefox'

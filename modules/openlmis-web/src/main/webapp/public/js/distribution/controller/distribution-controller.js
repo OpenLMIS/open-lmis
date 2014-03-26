@@ -78,7 +78,11 @@ function DistributionController($scope, deliveryZones, DeliveryZoneActiveProgram
       return;
     }
 
-    $http.post('/distributions.json', distribution).success(onInitSuccess);
+    $http.post('/distributions.json', distribution).success(onInitSuccess).error(onInitFailure);
+
+    function onInitFailure(data) {
+        $scope.message = data.error;
+    }
 
     function onInitSuccess(data, status) {
       var message = data.success;

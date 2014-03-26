@@ -22,6 +22,7 @@ import org.openlmis.distribution.service.FacilityDistributionService;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -33,8 +34,7 @@ import java.util.Map;
 
 import static org.openlmis.web.response.OpenLmisResponse.SUCCESS;
 import static org.openlmis.web.response.OpenLmisResponse.response;
-import static org.springframework.http.HttpStatus.CREATED;
-import static org.springframework.http.HttpStatus.OK;
+import static org.springframework.http.HttpStatus.*;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 import static org.springframework.web.bind.annotation.RequestMethod.PUT;
 
@@ -58,6 +58,7 @@ public class DistributionController extends BaseController {
   public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
 
   @RequestMapping(value = "/distributions", method = POST, headers = ACCEPT_JSON)
+  @PreAuthorize("@distributionPermissionService.hasPermission(principal, 'MANAGE_DISTRIBUTION', #distribution)")
   public ResponseEntity<OpenLmisResponse> create(@RequestBody Distribution distribution, HttpServletRequest request) {
     Distribution existingDistribution = distributionService.get(distribution);
 
@@ -67,16 +68,20 @@ public class DistributionController extends BaseController {
 
     distribution.setCreatedBy(loggedInUserId(request));
     distribution.setModifiedBy(loggedInUserId(request));
-
+    try {
     Distribution initiatedDistribution = distributionService.create(distribution);
 
     OpenLmisResponse openLmisResponse = new OpenLmisResponse("distribution", initiatedDistribution);
     openLmisResponse.addData(SUCCESS, messageService.message("message.distribution.created.success",
       distribution.getDeliveryZone().getName(), distribution.getProgram().getName(), distribution.getPeriod().getName()));
     return openLmisResponse.response(CREATED);
+    } catch (DataException dataException) {
+      return OpenLmisResponse.error(dataException.getLocalizedMessage(), PRECONDITION_FAILED);
+    }
   }
 
   @RequestMapping(value = "/distributions/{id}/facilities/{facilityId}", method = PUT, headers = ACCEPT_JSON)
+  @PreAuthorize("@distributionPermissionService.hasPermission(principal, 'MANAGE_DISTRIBUTION', #id)")
   public ResponseEntity<OpenLmisResponse> sync(@RequestBody FacilityDistributionDTO facilityDistributionDTO, @PathVariable Long id,
                                                @PathVariable Long facilityId, HttpServletRequest httpServletRequest) {
     ResponseEntity<OpenLmisResponse> response;

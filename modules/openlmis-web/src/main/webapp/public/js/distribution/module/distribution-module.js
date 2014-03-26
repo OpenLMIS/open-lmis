@@ -56,8 +56,7 @@ distributionModule.config(['$routeProvider', function ($routeProvider) {
     var interceptor = function (loginConfig) {
       function responseHandler(response) {
         if (response.config.url.endsWith('deliveryZones.json') && (typeof response.data === 'string')) {
-          loginConfig.preventReload = (response.config.method != 'GET');
-          loginConfig.modalShown = true;
+          window.location = "/public/pages/login.html";
         } else {
           return response;
         }
@@ -73,6 +72,7 @@ distributionModule.directive('notRecorded', function ($timeout) {
     require: '?ngModel',
     link: function (scope, element, attrs, ctrl) {
       $timeout(function () {
+        element.attr('tabindex', '-1');      //Not focusing on NR checkboxes while tabbing
         $.each(document.getElementsByName(element.attr('id')), function (index, ele) {
           ele.disabled = element.attr('disabled') || ctrl.$modelValue;
         });

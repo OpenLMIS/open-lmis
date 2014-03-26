@@ -578,6 +578,13 @@ public class TestCaseHelper {
     assertEquals(notes, resultSet.getString("notes"));
   }
 
+  public void verifyRefrigeratorDetailsInReadingsTable(String facilityCode, String refrigeratorSerialNumber, String refrigeratorBrand,
+                                                       String refrigeratorModel) throws SQLException {
+    ResultSet resultSet = dbWrapper.getRefrigeratorReadings(refrigeratorSerialNumber, facilityCode);
+    assertEquals(refrigeratorBrand, resultSet.getString("refrigeratorBrand"));
+    assertEquals(refrigeratorModel, resultSet.getString("refrigeratorModel"));
+  }
+
   public void verifyRefrigeratorsDataInDatabase(String facilityCode, String refrigeratorSerialNumber, String brandName,
                                                 String modelName, String enabledFlag) throws SQLException {
     ResultSet resultSet = dbWrapper.getRefrigeratorsData(refrigeratorSerialNumber, facilityCode);

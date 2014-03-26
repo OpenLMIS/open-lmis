@@ -111,7 +111,7 @@ public class DistributionSyncTest extends TestCaseHelper {
     facilityListPage.verifyOverallFacilityIndicatorColor("AMBER");
     assertEquals("Was " + dbWrapper.getAttributeFromTable("facilities", "name", "code", distributionTestData.get(SECOND_FACILITY_CODE)) +
       " visited in " + "Period14" + "?", visitInformationPage.getWasFacilityVisitedLabel());
-    visitInformationPage.enterDataWhenFacilityVisited("Some observations", "samuel D", "Doe Abc", "Verifier", "Verifier Title");
+    visitInformationPage.enterDataWhenFacilityVisited("samuel D", "Doe Abc", "Verifier", "Verifier Title");
 
     EPIUsePage epiUsePage = visitInformationPage.navigateToEpiUse();
     epiUsePage.enterData(70, 80, 90, 100, 9999999, "10/2011", 1);
@@ -162,12 +162,12 @@ public class DistributionSyncTest extends TestCaseHelper {
     Map<String, String> distributionDetails = dbWrapper.getDistributionDetails(distributionTestData.get(FIRST_DELIVERY_ZONE_NAME), distributionTestData.get(VACCINES_PROGRAM), "Period14");
     assertEquals(distributionDetails.get("status"), "SYNCED");
 
-    verifyFacilityVisitInformationInDatabase(distributionTestData.get(FIRST_FACILITY_CODE), "Some observations", "samuel", "Doe", "Verifier",
+    verifyFacilityVisitInformationInDatabase(distributionTestData.get(FIRST_FACILITY_CODE), null, "samuel", "Doe", "Verifier",
       "XYZ", null, "t", "t", null, null);
-    verifyFacilityVisitInformationInDatabase(distributionTestData.get(SECOND_FACILITY_CODE), "Some observations", "samuel D", "Doe Abc",
+    verifyFacilityVisitInformationInDatabase(distributionTestData.get(SECOND_FACILITY_CODE), null, "samuel D", "Doe Abc",
       "Verifier", "Verifier Title", null, "t", "t", null, null);
 
-    distributionPage.clickRecordData(1);
+    distributionPage.clickViewData(1);
     facilityListPage.selectFacility(distributionTestData.get(FIRST_FACILITY_CODE));
     facilityListPage.verifyOverallFacilityIndicatorColor("BLUE");
     facilityListPage.verifyIndividualFacilityIndicatorColor(distributionTestData.get(FIRST_FACILITY_CODE), "BLUE");
@@ -175,7 +175,7 @@ public class DistributionSyncTest extends TestCaseHelper {
     verifyAllFieldsDisabled();
 
     homePage.navigateToDistributionWhenOnline();
-    distributionPage.clickRecordData(1);
+    distributionPage.clickViewData(1);
     facilityListPage.selectFacility(distributionTestData.get(FIRST_FACILITY_CODE));
     facilityListPage.verifyOverallFacilityIndicatorColor("BLUE");
     facilityListPage.verifyIndividualFacilityIndicatorColor(distributionTestData.get(SECOND_FACILITY_CODE), "BLUE");
@@ -199,7 +199,7 @@ public class DistributionSyncTest extends TestCaseHelper {
     distributionPage.clickOk();
 
     verifyEpiUseDataInDatabase(70, 80, 90, 100, 9999999, "10/2011", "PG1", distributionTestData.get(SECOND_FACILITY_CODE));
-    verifyFacilityVisitInformationInDatabase(distributionTestData.get(SECOND_FACILITY_CODE), "Some observations", "samuel D", "Doe Abc", "Verifier", "Verifier Title", null, "t", "t", null, null);
+    verifyFacilityVisitInformationInDatabase(distributionTestData.get(SECOND_FACILITY_CODE), null, "samuel D", "Doe Abc", "Verifier", "Verifier Title", null, "t", "t", null, null);
     verifyFullCoveragesDataInDatabase(null, null, null, null, distributionTestData.get(SECOND_FACILITY_CODE));
     verifyEpiInventoryDataInDatabase(null, "2", null, "P10", distributionTestData.get(SECOND_FACILITY_CODE));
     verifyEpiInventoryDataInDatabase(null, "4", null, "Product6", distributionTestData.get(SECOND_FACILITY_CODE));
@@ -244,7 +244,7 @@ public class DistributionSyncTest extends TestCaseHelper {
 
     assertEquals("Was " + dbWrapper.getAttributeFromTable("facilities", "name", "code", distributionTestData.get(FIRST_FACILITY_CODE)) +
       " visited in " + "Period14" + "?", visitInformationPage.getWasFacilityVisitedLabel());
-    visitInformationPage.enterDataWhenFacilityVisited("Some observations", "samuel D", "Doe Abc", "Verifier", "Verifier Title");
+    visitInformationPage.enterDataWhenFacilityVisited("samuel D", "Doe Abc", "Verifier", "Verifier Title");
     RefrigeratorPage refrigeratorPage = visitInformationPage.navigateToRefrigerators();
 
     refrigeratorPage.clickShowForRefrigerator(1);
@@ -285,7 +285,7 @@ public class DistributionSyncTest extends TestCaseHelper {
     assertEquals(distributionDetails.get("status"), "INITIATED");
 
     verifyEpiUseDataInDatabase(70, 80, 90, 100, 9999999, "10/2011", "PG1", distributionTestData.get(FIRST_FACILITY_CODE));
-    verifyFacilityVisitInformationInDatabase(distributionTestData.get(FIRST_FACILITY_CODE), "Some observations", "samuel D", "Doe Abc", "Verifier", "Verifier Title", null, "t", "t", null, null);
+    verifyFacilityVisitInformationInDatabase(distributionTestData.get(FIRST_FACILITY_CODE), null, "samuel D", "Doe Abc", "Verifier", "Verifier Title", null, "t", "t", null, null);
     verifyRefrigeratorProblemDataNullInDatabase("GNR7878", distributionTestData.get(FIRST_FACILITY_CODE));
     verifyRefrigeratorReadingDataInDatabase(distributionTestData.get(FIRST_FACILITY_CODE), "GNR7878", 3.0F, "Y", 2, 5, null, null);
     verifyFullCoveragesDataInDatabase(null, null, null, null, distributionTestData.get(FIRST_FACILITY_CODE));
@@ -323,7 +323,7 @@ public class DistributionSyncTest extends TestCaseHelper {
     assertEquals(distributionDetails.get("status"), "SYNCED");
 
     verifyEpiUseDataInDatabase(70, 80, 90, 100, 9999999, "10/2011", "PG1", distributionTestData.get(FIRST_FACILITY_CODE));
-    verifyFacilityVisitInformationInDatabase(distributionTestData.get(FIRST_FACILITY_CODE), "Some observations", "samuel D", "Doe Abc", "Verifier", "Verifier Title", null, "t", "t", null, null);
+    verifyFacilityVisitInformationInDatabase(distributionTestData.get(FIRST_FACILITY_CODE), null, "samuel D", "Doe Abc", "Verifier", "Verifier Title", null, "t", "t", null, null);
     verifyRefrigeratorProblemDataNullInDatabase("GNR7878", distributionTestData.get(FIRST_FACILITY_CODE));
     verifyRefrigeratorReadingDataInDatabase(distributionTestData.get(FIRST_FACILITY_CODE), "GNR7878", 3.0F, "Y", 2, 5, null, null);
 
@@ -504,7 +504,7 @@ public class DistributionSyncTest extends TestCaseHelper {
     HomePage homePage = loginPage.loginAs(distributionTestData.get(USER), distributionTestData.get(PASSWORD));
     initiateDistribution(distributionTestData.get(FIRST_DELIVERY_ZONE_NAME), distributionTestData.get(VACCINES_PROGRAM));
     VisitInformationPage visitInformationPage = facilityListPage.selectFacility(distributionTestData.get(FIRST_FACILITY_CODE));
-    visitInformationPage.enterDataWhenFacilityVisited("Some observations", "samuel D", "Doe Abc", "Verifier", "Verifier Title");
+    visitInformationPage.enterDataWhenFacilityVisited("samuel D", "Doe Abc", "Verifier", "Verifier Title");
 
     RefrigeratorPage refrigeratorPage = visitInformationPage.navigateToRefrigerators();
 
@@ -537,7 +537,7 @@ public class DistributionSyncTest extends TestCaseHelper {
     distributionPage.syncDistribution(1);
     distributionPage.syncDistributionMessageDone();
 
-    verifyFacilityVisitInformationInDatabase(distributionTestData.get(FIRST_FACILITY_CODE), "Some observations", "samuel D", "Doe Abc", "Verifier", "Verifier Title", null, "t", "t", null, null);
+    verifyFacilityVisitInformationInDatabase(distributionTestData.get(FIRST_FACILITY_CODE), null, "samuel D", "Doe Abc", "Verifier", "Verifier Title", null, "t", "t", null, null);
     verifyRefrigeratorProblemDataNullInDatabase("GNR7878", distributionTestData.get(FIRST_FACILITY_CODE));
     verifyRefrigeratorReadingDataInDatabase(distributionTestData.get(FIRST_FACILITY_CODE), "GNR7878", 3.0F, "Y", 2, 5, null, null);
     verifyFullCoveragesDataInDatabase(null, null, null, null, distributionTestData.get(FIRST_FACILITY_CODE));
@@ -714,9 +714,6 @@ public class DistributionSyncTest extends TestCaseHelper {
     visitInformationPage.selectFacilityVisitedNo();
     visitInformationPage.selectReasonNoTransport();
 
-//    EPIUsePage epiUsePage = visitInformationPage.navigateToEpiUse();
-//    epiUsePage.enterData(70, 80, 90, 100, 9999999, "10/2011", 1);
-
     FullCoveragePage fullCoveragePage = visitInformationPage.navigateToFullCoverage();
     fullCoveragePage.clickApplyNRToAll();
 
@@ -738,9 +735,6 @@ public class DistributionSyncTest extends TestCaseHelper {
     visitInformationPage.selectFacilityVisitedNo();
     visitInformationPage.selectReasonNoTransport();
 
-//    epiUsePage = visitInformationPage.navigateToEpiUse();
-//    epiUsePage.enterData(170, 1180, 90, 1100, 1239999, "10/2011", 1);
-
     visitInformationPage.navigateToFullCoverage();
     fullCoveragePage.clickApplyNRToAll();
 
@@ -759,7 +753,7 @@ public class DistributionSyncTest extends TestCaseHelper {
     distributionPage.syncDistribution(1);
     distributionPage.syncDistributionMessageDone();
 
-//    verifyEpiUseDataInDatabase(70, 80, 90, 100, 9999999, "10/2011", "PG1", distributionTestData.get(FIRST_FACILITY_CODE));
+    verifyEpiUseDataInDatabase(null, null, null, null, null, null, "PG1", distributionTestData.get(FIRST_FACILITY_CODE));
     verifyFacilityVisitInformationInDatabase(distributionTestData.get(FIRST_FACILITY_CODE), null, null, null, null, null, null, "t", "f", "TRANSPORT_UNAVAILABLE", null);
     verifyFullCoveragesDataInDatabase(null, null, null, null, distributionTestData.get(FIRST_FACILITY_CODE));
     verifyEpiInventoryDataInDatabase(null, null, null, "P10", distributionTestData.get(FIRST_FACILITY_CODE));
@@ -769,7 +763,7 @@ public class DistributionSyncTest extends TestCaseHelper {
     verifyRefrigeratorsDataInDatabase(distributionTestData.get(FIRST_FACILITY_CODE), "GNR7878", "LG", "800L", "t");
     verifyAdultCoverageDataNullInDatabase(distributionTestData.get(FIRST_FACILITY_CODE));
 
-//    verifyEpiUseDataInDatabase(170, 1180, 90, 1100, 1239999, "10/2011", "PG1", distributionTestData.get(SECOND_FACILITY_CODE));
+    verifyEpiUseDataInDatabase(null, null, null, null, null, null, "PG1", distributionTestData.get(SECOND_FACILITY_CODE));
     verifyFacilityVisitInformationInDatabase(distributionTestData.get(SECOND_FACILITY_CODE), null, null, null, null, null, null, "t", "f", "TRANSPORT_UNAVAILABLE", null);
     verifyFullCoveragesDataInDatabase(null, null, null, null, distributionTestData.get(SECOND_FACILITY_CODE));
     verifyEpiInventoryDataInDatabase(null, null, null, "P10", distributionTestData.get(SECOND_FACILITY_CODE));
@@ -782,7 +776,7 @@ public class DistributionSyncTest extends TestCaseHelper {
     assertNull(expectedFacilityCatchmentPopulationForFacility1);
     assertEqualsAndNulls(actualFacilityCatchmentPopulationForFacility2, expectedFacilityCatchmentPopulationForFacility2);
 
-    distributionPage.clickRecordData(1);
+    distributionPage.clickViewData(1);
     facilityListPage.selectFacility(distributionTestData.get(FIRST_FACILITY_CODE));
     facilityListPage.verifyOverallFacilityIndicatorColor("BLUE");
     facilityListPage.verifyIndividualFacilityIndicatorColor(distributionTestData.get(FIRST_FACILITY_CODE), "BLUE");
@@ -861,7 +855,6 @@ public class DistributionSyncTest extends TestCaseHelper {
     for (WebElement webElement : distributionPage.getAllSelectOptionsFromProgram()) {
       assertFalse(webElement.getText().contains(distributionTestData.get(VACCINES_PROGRAM)));
     }
-
   }
 
   @Test(groups = {"distribution"})
@@ -888,7 +881,7 @@ public class DistributionSyncTest extends TestCaseHelper {
 
     verifyEpiUseDataInDatabase(10, 20, 30, 40, 50, "10/2011", "PG1", distributionTestData.get(FIRST_FACILITY_CODE));
 
-    verifyFacilityVisitInformationInDatabase(distributionTestData.get(FIRST_FACILITY_CODE), "Some observations", "samuel", "Doe", "Verifier", "XYZ", null, "t", "t", null, null);
+    verifyFacilityVisitInformationInDatabase(distributionTestData.get(FIRST_FACILITY_CODE), null, "samuel", "Doe", "Verifier", "XYZ", null, "t", "t", null, null);
 
     verifyFullCoveragesDataInDatabase(23, 66, 77, 45, distributionTestData.get(FIRST_FACILITY_CODE));
 
@@ -902,7 +895,7 @@ public class DistributionSyncTest extends TestCaseHelper {
   private VisitInformationPage fillFacilityData() {
     VisitInformationPage visitInformationPage = PageObjectFactory.getVisitInformationPage(testWebDriver);
     visitInformationPage.navigateToVisitInformation();
-    visitInformationPage.enterDataWhenFacilityVisited("Some observations", "samuel", "Doe", "Verifier", "XYZ");
+    visitInformationPage.enterDataWhenFacilityVisited("samuel", "Doe", "Verifier", "XYZ");
 
     RefrigeratorPage refrigeratorPage = visitInformationPage.navigateToRefrigerators();
     refrigeratorPage.navigateToRefrigerators();
@@ -960,8 +953,8 @@ public class DistributionSyncTest extends TestCaseHelper {
     childCoveragePage.applyNRToAll();
     childCoveragePage.clickOK();
 
-//    EPIUsePage epiUsePage = childCoveragePage.navigateToEpiUse();
-//    epiUsePage.enterData(70, 80, 90, 100, 9999999, "10/2011", 1);
+    EPIUsePage epiUsePage = childCoveragePage.navigateToEpiUse();
+    epiUsePage.enterData(70, 80, 90, 100, 9999999, "10/2011", 1);
 
     FullCoveragePage fullCoveragePage = childCoveragePage.navigateToFullCoverage();
     fullCoveragePage.enterData(23, 66, 77, "45");
@@ -982,7 +975,7 @@ public class DistributionSyncTest extends TestCaseHelper {
 
     verifyEpiUseDataInDatabase(10, 20, 30, 40, 50, "10/2011", "PG1", facilityCode);
 
-    verifyFacilityVisitInformationInDatabase(facilityCode, "Some observations", "samuel", "Doe", "Verifier", "XYZ", null, "t", "t", null, null);
+    verifyFacilityVisitInformationInDatabase(facilityCode, null, "samuel", "Doe", "Verifier", "XYZ", null, "t", "t", null, null);
 
     verifyFullCoveragesDataInDatabase(23, 66, 77, 45, facilityCode);
 

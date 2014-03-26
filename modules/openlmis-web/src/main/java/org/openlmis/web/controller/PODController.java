@@ -11,6 +11,7 @@
 package org.openlmis.web.controller;
 
 import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JRParameter;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.order.service.OrderService;
 import org.openlmis.pod.domain.OrderPOD;
@@ -39,7 +40,9 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
+import java.util.ResourceBundle;
 
 import static org.openlmis.web.response.OpenLmisResponse.*;
 import static org.springframework.web.bind.annotation.RequestMethod.*;
@@ -127,6 +130,11 @@ public class PODController extends BaseController {
     JasperReportsMultiFormatView jasperView = jasperReportsViewFactory.getJasperReportsView(podPrintTemplate);
     Map<String, Object> map = new HashMap<>();
     map.put("format", "pdf");
+
+    Locale currentLocale = messageService.getCurrentLocale();
+    map.put(JRParameter.REPORT_LOCALE, currentLocale);
+    ResourceBundle resourceBundle = ResourceBundle.getBundle("messages", currentLocale);
+    map.put(JRParameter.REPORT_RESOURCE_BUNDLE, resourceBundle);
 
     Resource reportResource = new ClassPathResource("subreports");
     Resource imgResource = new ClassPathResource("images");

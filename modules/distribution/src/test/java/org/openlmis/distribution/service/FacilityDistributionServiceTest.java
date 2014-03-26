@@ -10,14 +10,18 @@
 
 package org.openlmis.distribution.service;
 
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
+import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.openlmis.core.builder.FacilityBuilder;
 import org.openlmis.core.domain.*;
+import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.FacilityService;
+import org.openlmis.core.service.MessageService;
 import org.openlmis.core.service.RefrigeratorService;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.distribution.domain.*;
@@ -65,8 +69,14 @@ public class FacilityDistributionServiceTest {
   @Mock
   private VaccinationCoverageService vaccinationCoverageService;
 
+  @Mock
+  private MessageService messageService;
+
   @InjectMocks
   FacilityDistributionService facilityDistributionService;
+
+  @Rule
+  public ExpectedException expectedException = ExpectedException.none();
 
   @Test
   public void shouldGetFacilityDistributionDataForADistribution() throws Exception {
@@ -97,6 +107,25 @@ public class FacilityDistributionServiceTest {
 
     assertThat(facilityDistributionDataMap.get(1234L), is(facilityDistribution));
   }
+
+  @Test
+  public void shouldThrowErrorIfThereAreNoFacilitiesInDeliveryZone(){
+    List<Facility> facilities = Collections.EMPTY_LIST;
+    when(facilityService.getAllForDeliveryZoneAndProgram(1L, 3L)).thenReturn(facilities);
+    when(messageService.message("message.no.facility.available", null, null)).thenReturn("no faicilites in delivery zone");
+    Distribution distribution = new Distribution();
+    DeliveryZone deliveryZone = new DeliveryZone(1L);
+    Program program = new Program(3L);
+    distribution.setDeliveryZone(deliveryZone);
+    distribution.setProgram(program);
+
+    expectedException.expect(DataException.class);
+    expectedException.expectMessage("no faicilites in delivery zone");
+
+    facilityDistributionService.createFor(distribution);
+  }
+
+
 
   @Test
   public void shouldGetFacilityDistributionDataForAFacilityAndDistribution() throws Exception {

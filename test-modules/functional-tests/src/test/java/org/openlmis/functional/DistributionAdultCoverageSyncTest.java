@@ -609,7 +609,7 @@ public class DistributionAdultCoverageSyncTest extends TestCaseHelper {
     facilityListPage.verifyOverallFacilityIndicatorColor("AMBER");
 
     adultCoveragePage.navigateToVisitInformation();
-    visitInformationPage.enterDataWhenFacilityVisited("obs", "CN", "CT", "VN", "VT");
+    visitInformationPage.enterDataWhenFacilityVisited("CN", "CT", "VN", "VT");
 
     EPIUsePage epiUsePage = visitInformationPage.navigateToEpiUse();
     epiUsePage.checkApplyNRToAllFields(true);

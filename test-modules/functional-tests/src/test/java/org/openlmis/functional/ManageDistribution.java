@@ -202,6 +202,7 @@ public class ManageDistribution extends TestCaseHelper {
   @Then("^I should see period \"([^\"]*)\"$")
   public void verifyPeriod(String period) throws SQLException {
     distributionPage = PageObjectFactory.getDistributionPage(testWebDriver);
+    testWebDriver.waitForAjax();
     WebElement actualSelectFieldElement = distributionPage.getFirstSelectedOptionFromPeriod();
     testWebDriver.sleep(100);
     verifySelectedOptionFromSelectField(period, actualSelectFieldElement);
@@ -288,6 +289,12 @@ public class ManageDistribution extends TestCaseHelper {
   public void clickRecordDataForGivenRow(String rowNumber) {
     distributionPage = PageObjectFactory.getDistributionPage(testWebDriver);
     distributionPage.clickRecordData(Integer.parseInt(rowNumber));
+  }
+
+  @When("^I view data for distribution \"([^\"]*)\"$")
+  public void clickViewDataForGivenRow(String rowNumber) {
+    distributionPage = PageObjectFactory.getDistributionPage(testWebDriver);
+    distributionPage.clickViewData(Integer.parseInt(rowNumber));
   }
 
   @Then("^I should see No facility selected$")
@@ -772,11 +779,11 @@ public class ManageDistribution extends TestCaseHelper {
   }
 
   @Test(groups = {"distribution"}, dataProvider = "Data-Provider-Function")
-  public void testVerifyNoFacilityToBeShownIfInactive(String userSIC, String password, String deliveryZoneCodeFirst,
-                                                      String deliveryZoneCodeSecond, String deliveryZoneNameFirst,
-                                                      String deliveryZoneNameSecond, String facilityCodeFirst,
-                                                      String facilityCodeSecond, String programFirst, String programSecond,
-                                                      String schedule, String period, Integer totalNumberOfPeriods) throws SQLException {
+  public void testVerifyNoFacilityToBeShownIfInactiveAndDistributionNotInitiated(String userSIC, String password, String deliveryZoneCodeFirst,
+                                                                                 String deliveryZoneCodeSecond, String deliveryZoneNameFirst,
+                                                                                 String deliveryZoneNameSecond, String facilityCodeFirst,
+                                                                                 String facilityCodeSecond, String programFirst, String programSecond,
+                                                                                 String schedule, String period, Integer totalNumberOfPeriods) throws SQLException {
     List<String> rightsList = new ArrayList<>();
     rightsList.add("MANAGE_DISTRIBUTION");
     setupTestDataToInitiateRnRAndDistribution("F10", "F11", true, programFirst, userSIC, "200", rightsList,
@@ -797,6 +804,10 @@ public class ManageDistribution extends TestCaseHelper {
     distributionPage.selectValueFromPeriod(period + totalNumberOfPeriods);
     distributionPage.clickInitiateDistribution();
     distributionPage.verifyFacilityNotSupportedMessage(programFirst, deliveryZoneNameFirst);
+    dbWrapper.updateFieldValue("facilities", "active", "true", "code", facilityCodeFirst);
+    dbWrapper.updateFieldValue("facilities", "active", "true", "code", facilityCodeSecond);
+    distributionPage.clickInitiateDistribution();
+    distributionPage.clickRecordData(1);
   }
 
   @Test(groups = {"distribution"}, dataProvider = "Data-Provider-Function")
@@ -825,8 +836,6 @@ public class ManageDistribution extends TestCaseHelper {
     FacilityListPage facilityListPage = distributionPage.clickRecordData(1);
     facilityListPage.clickFacilityListDropDown();
     facilityListPage.verifyGeographicZoneOrder(geoZoneFirst, geoZoneSecond);
-
-
   }
 
   @Test(groups = {"distribution"}, dataProvider = "Data-Provider-Function")

@@ -395,7 +395,7 @@ public class ChildCoveragePage extends DistributionTab {
   @Override
   public void removeFocusFromElement() {
     testWebDriver.waitForElementToAppear(childCoverageHeader);
-    testWebDriver.moveToElement(childCoverageHeader);
+    childCoverageHeader.click();
   }
 
   public String getTextOfChildCoverageTable() {

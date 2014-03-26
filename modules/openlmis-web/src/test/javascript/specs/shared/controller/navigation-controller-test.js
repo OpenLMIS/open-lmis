@@ -21,7 +21,6 @@ describe("NavigationController", function () {
     scope = $rootScope.$new();
     localStorageService = _localStorageService_;
     spyOn(localStorageService, 'get').andReturn('MANAGE_FACILITY,UPLOADS');
-    //localStorageService.add(localStorageKeys.RIGHT,'MANAGE_FACILITY,UPLOADS'); [Code runs in browser but is not supported on jasmine headless mode ]
     ctrl = $controller(NavigationController, {$scope: scope, localStorageService: localStorageService, $window: window});
   }));
 

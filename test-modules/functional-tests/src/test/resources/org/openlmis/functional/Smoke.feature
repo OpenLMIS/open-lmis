@@ -377,7 +377,7 @@ Feature: Smoke Tests
       | VACCINES | P10     | 10       | 10           | 10            | 10               | null         | null         | 0               |
     And I have following override ISA values:
       | Facility Code | Program  | Product | ISA  |
-      | F11           | VACCINES | P11     | 1005 |
+      | F11           | VACCINES | P11     | 1004 |
     And I update population of facility "F10" as "342"
     And I have role assigned to delivery zones
     When I am logged in as "fieldCoordinator"
@@ -389,7 +389,7 @@ Feature: Smoke Tests
     Then I should see ISA values as per delivery zone facilities
     And  I verify ISA values for Product1 as:
       | Facility1 | Facility2 |
-      | 31        | 31        |
+      | 31        | 32        |
     And  I verify ISA values for Product2 as:
       | Facility1 | Facility2 |
       | 101       | --        |
@@ -776,8 +776,8 @@ Feature: Smoke Tests
     When I select "yes" facility visited
     And I select visit date as current date
     And I Enter "visit information" values:
-      | confirmedByName | confirmedByTitle | verifiedByName | verifiedByTitle |
-      | samuel          | fc               | Verifier       | XYZ             |
+      | observations | confirmedByName | confirmedByTitle | verifiedByName | verifiedByTitle |
+      |              | samuel          | fc               | Verifier       | XYZ             |
     And I navigate to "epi use" tab
     And I Enter "epi use" values:
       | distributed | expirationDate | loss | received | firstOfMonth | endOfMonth |
@@ -833,7 +833,7 @@ Feature: Smoke Tests
       | 123           | 22        | 145    | 23             | 34         | 57     | 202    | 4          |
     And I verify no record present in refrigerator problem table for refrigerator serial number "GR-J287PGHV" and facility "F10"
     And I see distribution status as synced
-    When I record data for distribution "1"
+    When I view data for distribution "1"
     And I choose facility "F10"
     Then I see Overall facility icon as "BLUE"
     Then I see "visit information" fields disabled
@@ -947,7 +947,7 @@ Feature: Smoke Tests
       | healthCenter1 | outreach1 | total1 | healthCenter25 | outreach25 | total2 | total3 | openedVial |
       | 123           | 22        | 145    | 23             | 34         | 57     | 202    | 4          |
     And I see distribution status as synced
-    When I record data for distribution "1"
+    When I view data for distribution "1"
     And I choose facility "F10"
     Then I see Overall facility icon as "BLUE"
     Then I see "visit information" fields disabled

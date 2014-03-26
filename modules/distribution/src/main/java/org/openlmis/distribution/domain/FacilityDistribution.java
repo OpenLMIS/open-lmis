@@ -24,9 +24,9 @@ import java.util.List;
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 
 /**
- *  FacilityDistribution represents a container for Facility related attributes, FacilityVisit, EpiUse, EpiInventory,
- *  DistributionRefrigerators, VaccinationFullCoverage, VaccinationChildCoverage, VaccinationAdultCoverage.
- *  It represents the distribution information about vaccines for an entire facility.
+ * FacilityDistribution represents a container for Facility related attributes, FacilityVisit, EpiUse, EpiInventory,
+ * DistributionRefrigerators, VaccinationFullCoverage, VaccinationChildCoverage, VaccinationAdultCoverage.
+ * It represents the distribution information about vaccines for an entire facility.
  */
 
 @Data
@@ -59,12 +59,13 @@ public class FacilityDistribution {
     this.epiUse = new EpiUse(facility, facilityVisit);
     this.refrigerators = new DistributionRefrigerators(facilityVisit, readings);
     this.epiInventory = new EpiInventory(facilityVisit, facility, distribution);
-    this.childCoverage = new VaccinationChildCoverage(facilityVisit, facility, childrenTargetGroupProducts, childProductVials);
-    this.adultCoverage = new VaccinationAdultCoverage(facilityVisit, facility, adultTargetGroupProducts, adultProductVials);
+    this.childCoverage = new VaccinationChildCoverage(facilityVisit, facility, distribution.getPeriod(), childrenTargetGroupProducts, childProductVials);
+    this.adultCoverage = new VaccinationAdultCoverage(facilityVisit, facility, distribution.getPeriod(), adultTargetGroupProducts, adultProductVials);
   }
 
-  public FacilityDistribution(FacilityVisit facilityVisit, EpiUse epiUse, DistributionRefrigerators refrigerators, EpiInventory epiInventory,
-                              VaccinationFullCoverage fullCoverage, VaccinationChildCoverage childCoverage,  VaccinationAdultCoverage adultCoverage) {
+  public FacilityDistribution(FacilityVisit facilityVisit, EpiUse epiUse, DistributionRefrigerators refrigerators,
+                              EpiInventory epiInventory, VaccinationFullCoverage fullCoverage,
+                              VaccinationChildCoverage childCoverage, VaccinationAdultCoverage adultCoverage) {
     this.facilityVisit = facilityVisit;
     this.epiUse = epiUse;
     this.refrigerators = refrigerators;

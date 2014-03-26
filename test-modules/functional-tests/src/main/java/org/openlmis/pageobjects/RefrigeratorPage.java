@@ -330,7 +330,6 @@ public class RefrigeratorPage extends DistributionTab {
   public void clickAddNew() {
     testWebDriver.waitForElementToAppear(addNewButton);
     addNewButton.click();
-    removeFocusFromElement();
     testWebDriver.waitForElementToAppear(newRefrigeratorHeaderOnModal);
   }
 
@@ -338,7 +337,6 @@ public class RefrigeratorPage extends DistributionTab {
     WebElement showButtonForRefrigerator1 = testWebDriver.getElementById("editReading" + (refrigeratorNumber - 1));
     testWebDriver.waitForElementToAppear(showButtonForRefrigerator1);
     showButtonForRefrigerator1.click();
-    removeFocusFromElement();
     testWebDriver.waitForElementToAppear(testWebDriver.getElementById("temperature" + (refrigeratorNumber - 1)));
   }
 
@@ -409,6 +407,11 @@ public class RefrigeratorPage extends DistributionTab {
     clickDoneOnModal();
   }
 
+  public void addNewRefrigerator(String manufacturerSerialNumber) {
+    enterValueInManufacturingSerialNumberModal(manufacturerSerialNumber);
+    clickDoneOnModal();
+  }
+
   public void verifyDuplicateErrorMessage(String message) {
     testWebDriver.waitForElementToAppear(duplicateRefrigeratorMessage);
     assertEquals(duplicateRefrigeratorMessage.getText(), message);
@@ -469,12 +472,16 @@ public class RefrigeratorPage extends DistributionTab {
   @Override
   public void removeFocusFromElement() {
     testWebDriver.waitForElementToAppear(refrigeratorsPageLabel);
-    testWebDriver.moveToElement(refrigeratorsPageLabel);
+    refrigeratorsPageLabel.click();
   }
 
   public boolean isFunctioningCorrectlyNRSelected(int refrigeratorNumber) {
     WebElement functioningCorrectlyNR = testWebDriver.getElementById("functioningCorrectly" + (refrigeratorNumber - 1));
     testWebDriver.waitForElementToAppear(functioningCorrectlyNR);
     return functioningCorrectlyNR.isSelected();
+  }
+
+  public boolean isDoneButtonEnabled() {
+    return doneButtonOnModal.isEnabled();
   }
 }

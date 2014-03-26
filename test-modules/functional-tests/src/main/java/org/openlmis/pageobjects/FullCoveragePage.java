@@ -244,6 +244,6 @@ public class FullCoveragePage extends DistributionTab {
   @Override
   public void removeFocusFromElement() {
     testWebDriver.waitForElementToAppear(fullCoverageHeader);
-    testWebDriver.moveToElement(fullCoverageHeader);
+    fullCoverageHeader.click();
   }
 }

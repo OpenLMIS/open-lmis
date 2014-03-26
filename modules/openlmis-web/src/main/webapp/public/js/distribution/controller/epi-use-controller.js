@@ -10,7 +10,6 @@
 
 function EPIUseController($scope, $routeParams, distributionService) {
   $scope.distribution = distributionService.distribution;
-  $scope.inputClass = "warning-error";
   $scope.selectedFacilityId = $routeParams.facility;
 
   $scope.applyNRAll = function () {
@@ -26,10 +25,6 @@ function EpiUseRowController($scope) {
       return 0;
     }
     return getValue($scope.lineItem.stockAtFirstOfMonth) + getValue($scope.lineItem.received);
-  };
-
-  $scope.clearError = function (notRecorded) {
-    $scope.inputClass = notRecorded ? true : "warning-error";
   };
 
   var getValue = function (object) {

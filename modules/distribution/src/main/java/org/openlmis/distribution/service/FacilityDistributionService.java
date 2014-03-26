@@ -16,7 +16,9 @@ import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.Transformer;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.Refrigerator;
+import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.FacilityService;
+import org.openlmis.core.service.MessageService;
 import org.openlmis.core.service.RefrigeratorService;
 import org.openlmis.distribution.domain.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,6 +59,9 @@ public class FacilityDistributionService {
   private EpiInventoryService epiInventoryService;
 
   @Autowired
+  private MessageService messageService;
+
+  @Autowired
   private VaccinationCoverageService vaccinationCoverageService;
 
   public Map<Long, FacilityDistribution> createFor(Distribution distribution) {
@@ -66,6 +71,10 @@ public class FacilityDistributionService {
     Map<Long, FacilityDistribution> facilityDistributions = new HashMap<>();
 
     List<Facility> facilities = facilityService.getAllForDeliveryZoneAndProgram(deliveryZoneId, programId);
+    if (facilities.size() == 0) {
+      throw new DataException(messageService.message("message.no.facility.available", distribution.getProgram().getName(),
+        distribution.getDeliveryZone().getName()));
+    }
     List<Refrigerator> distributionRefrigerators = refrigeratorService.getRefrigeratorsForADeliveryZoneAndProgram(deliveryZoneId, programId);
     List<TargetGroupProduct> targetGroupProducts = vaccinationCoverageService.getVaccinationProducts();
     List<TargetGroupProduct> childrenTargetGroupProducts = new ArrayList<>();

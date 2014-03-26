@@ -9,6 +9,7 @@
  */
 
 function NavigationController($scope, localStorageService, Locales, $location, $window) {
+  //Deleting browser cookie explicitly in case logout was done when user was offline # 1391
   $scope.loadRights = function () {
     $scope.rights = localStorageService.get(localStorageKeys.RIGHT);
 

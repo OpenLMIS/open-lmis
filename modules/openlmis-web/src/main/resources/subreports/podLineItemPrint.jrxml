@@ -104,7 +104,7 @@
 	</pageHeader>
 	<columnHeader>
 		<band height="28">
-			<staticText>
+			<textField isStretchWithOverflow="true">
 				<reportElement x="46" y="0" width="67" height="28" uuid="a3153510-d287-46ad-835a-df817aa47786"/>
 				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
 					<pen lineWidth="0.5"/>
@@ -116,9 +116,9 @@
 				<textElement>
 					<font fontName="SansSerif" size="8" isBold="true" isUnderline="false"/>
 				</textElement>
-				<text><![CDATA[Product Code]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[$R{header.product.code}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
 				<reportElement x="280" y="0" width="44" height="28" uuid="7a2bce85-864e-42e7-9581-125974028476"/>
 				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
 					<pen lineWidth="0.5"/>
@@ -130,9 +130,9 @@
 				<textElement>
 					<font fontName="SansSerif" size="8" isBold="true" isUnderline="false"/>
 				</textElement>
-				<text><![CDATA[Unit Of Issue]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[$R{header.unit.of.issue}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
 				<reportElement x="324" y="0" width="50" height="28" uuid="0a3d67e1-d00c-4d03-960b-774f50e2e583"/>
 				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
 					<pen lineWidth="0.5"/>
@@ -144,9 +144,9 @@
 				<textElement>
 					<font fontName="SansSerif" size="8" isBold="true" isUnderline="false"/>
 				</textElement>
-				<text><![CDATA[Packs To Ship]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[$R{header.packs.to.ship}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
 				<reportElement x="374" y="0" width="50" height="28" uuid="715dcbae-dc74-4fa2-b7b4-b30a376656ba"/>
 				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
 					<pen lineWidth="0.5"/>
@@ -158,9 +158,9 @@
 				<textElement>
 					<font fontName="SansSerif" size="8" isBold="true" isUnderline="false"/>
 				</textElement>
-				<text><![CDATA[Quantity Shipped]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[$R{header.quantity.shipped}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
 				<reportElement x="424" y="0" width="50" height="28" uuid="10a02754-cce1-4337-a1d1-003a31f7a8ed"/>
 				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
 					<pen lineWidth="0.5"/>
@@ -172,9 +172,9 @@
 				<textElement>
 					<font fontName="SansSerif" size="8" isBold="true" isUnderline="false"/>
 				</textElement>
-				<text><![CDATA[Quantity Received]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[$R{header.quantity.received}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
 				<reportElement x="474" y="0" width="50" height="28" uuid="ef159a2f-33d9-42ba-9b59-6670c74bd785"/>
 				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
 					<pen lineWidth="0.5"/>
@@ -186,9 +186,9 @@
 				<textElement>
 					<font fontName="SansSerif" size="8" isBold="true" isUnderline="false"/>
 				</textElement>
-				<text><![CDATA[Quantity Returned]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[$R{header.quantity.returned}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
 				<reportElement x="524" y="0" width="304" height="28" uuid="ec4880d9-5932-4b50-9a5d-16077645a53c"/>
 				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
 					<pen lineWidth="0.5"/>
@@ -200,9 +200,9 @@
 				<textElement>
 					<font fontName="SansSerif" size="8" isBold="true" isUnderline="false"/>
 				</textElement>
-				<text><![CDATA[Notes]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[$R{label.notes}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
 				<reportElement x="13" y="0" width="33" height="28" uuid="5a7f10ba-925c-4ca7-b48a-4feb4161ed64"/>
 				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
 					<pen lineWidth="0.5"/>
@@ -214,9 +214,9 @@
 				<textElement>
 					<font fontName="SansSerif" size="8" isBold="true" isUnderline="false"/>
 				</textElement>
-				<text><![CDATA[Full Supply]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[$R{header.full.supply}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
 				<reportElement mode="Transparent" x="113" y="0" width="167" height="28" forecolor="#000000" backcolor="#FFFFFF" uuid="9a07393f-5522-4bce-9f72-d87cd57c5a0d"/>
 				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
 					<pen lineWidth="0.5"/>
@@ -229,8 +229,8 @@
 					<font fontName="SansSerif" size="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
-				<text><![CDATA[Product Name]]></text>
-			</staticText>
+				<textFieldExpression><![CDATA[$R{header.product.name}]]></textFieldExpression>
+			</textField>
 		</band>
 	</columnHeader>
 	<detail>
@@ -373,16 +373,4 @@
 			</frame>
 		</band>
 	</detail>
-	<pageFooter>
-		<band height="20">
-			<staticText>
-				<reportElement x="12" y="0" width="816" height="20" uuid="2e4a2985-b901-4963-b62f-68c26194b7c3"/>
-				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2"/>
-				<text><![CDATA[ ]]></text>
-			</staticText>
-		</band>
-	</pageFooter>
-	<noData>
-		<band height="179"/>
-	</noData>
 </jasperReport>

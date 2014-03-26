@@ -58,21 +58,29 @@ import static org.openlmis.shipment.builder.ShipmentLineItemBuilder.*;
 public class ShipmentMapperIT {
 
   @Autowired
-  ShipmentMapper mapper;
+  private ShipmentMapper mapper;
+
   @Autowired
-  ProductMapper productMapper;
+  private ProductMapper productMapper;
+
   @Autowired
-  OrderMapper orderMapper;
+  private OrderMapper orderMapper;
+
   @Autowired
-  RequisitionMapper requisitionMapper;
+  private RequisitionMapper requisitionMapper;
+
   @Autowired
-  FacilityMapper facilityMapper;
+  private FacilityMapper facilityMapper;
+
   @Autowired
   private ProgramMapper programMapper;
+
   @Autowired
   private ProcessingPeriodMapper processingPeriodMapper;
+
   @Autowired
   private ProcessingScheduleMapper processingScheduleMapper;
+
   @Autowired
   private QueryExecutor queryExecutor;
 
@@ -80,8 +88,7 @@ public class ShipmentMapperIT {
   private SupervisoryNodeMapper supervisoryNodeMapper;
 
   @Autowired
-  SupplyLineMapper supplyLineMapper;
-
+  private SupplyLineMapper supplyLineMapper;
 
   @Test
   public void shouldInsertShippedLineItems() throws Exception {
@@ -93,7 +100,9 @@ public class ShipmentMapperIT {
 
     String fetchShipmentFileInfoQuery = "Select * from shipment_line_items where id = ?";
     ResultSet shipmentFileInfoResultSet = queryExecutor.execute(fetchShipmentFileInfoQuery, shipmentLineItem.getId());
+
     shipmentFileInfoResultSet.next();
+
     assertThat(shipmentFileInfoResultSet.getLong("orderId"), is(shipmentLineItem.getOrderId()));
     assertThat(shipmentFileInfoResultSet.getString("productCode"), is(shipmentLineItem.getProductCode()));
     assertThat(shipmentFileInfoResultSet.getInt("quantityShipped"), is(shipmentLineItem.getQuantityShipped()));
@@ -102,6 +111,7 @@ public class ShipmentMapperIT {
     assertThat(shipmentFileInfoResultSet.getString("dispensingUnit"), is(shipmentLineItem.getDispensingUnit()));
     assertThat(shipmentFileInfoResultSet.getString("productCategory"), is(shipmentLineItem.getProductCategory()));
     assertThat(shipmentFileInfoResultSet.getInt("packsToShip"), is(shipmentLineItem.getPacksToShip()));
+
     assertThat(shipmentFileInfoResultSet.getInt("productCategoryDisplayOrder"),
       is(shipmentLineItem.getProductCategoryDisplayOrder()));
     assertThat(shipmentFileInfoResultSet.getInt("productDisplayOrder"), is(shipmentLineItem.getProductDisplayOrder()));
@@ -129,12 +139,10 @@ public class ShipmentMapperIT {
     order.setStatus(OrderStatus.IN_ROUTE);
     orderMapper.insert(order);
 
-
     productMapper.insert(product);
 
     return make(a(defaultShipmentLineItem, with(productCode, product.getCode()), with(orderId, order.getId()),
       with(quantityShipped, 23), with(shippedDate, new Date()), with(packedDate, new Date())));
-
   }
 
   private SupplyLine createSupplyLine(Facility facility, Program program) {
@@ -160,7 +168,6 @@ public class ShipmentMapperIT {
     mapper.insertShipmentFileInfo(shipmentFileInfo);
 
     assertThat(shipmentFileInfo.getId(), is(notNullValue()));
-
   }
 
   @Test
@@ -191,6 +198,7 @@ public class ShipmentMapperIT {
     ShipmentLineItem shipmentLineItem = createShippedLineItem();
     mapper.insertShippedLineItem(shipmentLineItem);
 
+    shipmentLineItem.setId(null);
     shipmentLineItem.setQuantityShipped(10);
 
     mapper.updateShippedLineItem(shipmentLineItem);
