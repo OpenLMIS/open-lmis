@@ -389,7 +389,7 @@ Feature: Smoke Tests
     Then I should see ISA values as per delivery zone facilities
     And  I verify ISA values for Product1 as:
       | Facility1 | Facility2 |
-      | 31        | 31        |
+      | 31        | 32        |
     And  I verify ISA values for Product2 as:
       | Facility1 | Facility2 |
       | 101       | --        |
@@ -776,8 +776,8 @@ Feature: Smoke Tests
     When I select "yes" facility visited
     And I select visit date as current date
     And I Enter "visit information" values:
-     | observations | confirmedByName | confirmedByTitle | verifiedByName | verifiedByTitle |
-     |              | samuel          | fc               | Verifier       | XYZ             |
+      | observations | confirmedByName | confirmedByTitle | verifiedByName | verifiedByTitle |
+      |              | samuel          | fc               | Verifier       | XYZ             |
     And I navigate to "epi use" tab
     And I Enter "epi use" values:
       | distributed | expirationDate | loss | received | firstOfMonth | endOfMonth |
