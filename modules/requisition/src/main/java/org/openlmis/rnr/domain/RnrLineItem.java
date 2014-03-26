@@ -79,6 +79,7 @@ public class RnrLineItem extends LineItem {
 
   private Integer amc;
   private Integer normalizedConsumption;
+  private Integer periodNormalizedConsumption;
   private Integer calculatedOrderQuantity;
   private Integer maxStockQuantity;
   private Integer quantityApproved;
@@ -125,6 +126,7 @@ public class RnrLineItem extends LineItem {
       this.quantityRequested = null;
       this.reasonForRequestedQuantity = null;
       this.normalizedConsumption = null;
+      this.periodNormalizedConsumption = null;
       this.packsToShip = null;
       this.remarks = null;
       this.expirationDate = null;
@@ -187,7 +189,7 @@ public class RnrLineItem extends LineItem {
 
   public void calculateForFullSupply(ProgramRnrTemplate template,
                                      RnrStatus rnrStatus,
-                                     List<LossesAndAdjustmentsType> lossesAndAdjustmentsTypes) {
+                                     List<LossesAndAdjustmentsType> lossesAndAdjustmentsTypes, Integer numberOfMonths) {
     calculateTotalLossesAndAdjustments(lossesAndAdjustmentsTypes);
 
     if (template.columnsCalculated(STOCK_IN_HAND)) {
@@ -200,6 +202,8 @@ public class RnrLineItem extends LineItem {
 
     calculateNormalizedConsumption();
 
+    calculatePeriodNormalizedConsumption(numberOfMonths);
+
     if (rnrStatus == AUTHORIZED) {
       calculateAmc();
       calculateMaxStockQuantity();
@@ -207,6 +211,10 @@ public class RnrLineItem extends LineItem {
     }
 
     calculatePacksToShip();
+  }
+
+  public void calculatePeriodNormalizedConsumption(Integer numberOfMonths) {
+    periodNormalizedConsumption = normalizedConsumption * numberOfMonths;
   }
 
   public void calculateAmc() {
