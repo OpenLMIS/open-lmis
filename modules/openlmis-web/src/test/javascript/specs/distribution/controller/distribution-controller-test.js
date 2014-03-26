@@ -89,6 +89,22 @@ describe('DistributionController', function () {
     expect(messageService.get).toHaveBeenCalledWith("message.distribution.already.cached", 'zone1', 'program1', 'period1');
   });
 
+  it('should not initiate and cache the distribution if errored response', function () {
+    scope.selectedZone = {id: 1, name: 'zone1'};
+    scope.selectedProgram = {id: 1, name: 'program1'};
+    scope.selectedPeriod = {id: 1, name: 'period1'};
+    spyOn(distributionService, 'isCached').andCallFake(function () {
+      return false;
+    });
+    var postResponse = {"data" :{"error" : "no facilities in delivery zone"}};
+    httpBackend.expect('POST', '/distributions.json').respond(412, postResponse);
+
+    scope.initiateDistribution();
+
+    expect(scope.message).toEqual(postResponse.error);
+  });
+
+
   it('should confirm caching of already initiated distribution', function () {
     scope.selectedZone = {id: 4, name: 'zone1'};
     scope.selectedProgram = {id: 4, name: 'program1'};

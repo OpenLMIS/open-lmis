@@ -46,8 +46,7 @@ import static org.mockito.Mockito.*;
 import static org.openlmis.core.builder.UserBuilder.defaultUser;
 import static org.openlmis.distribution.builder.DistributionBuilder.*;
 import static org.openlmis.distribution.domain.DistributionStatus.SYNCED;
-import static org.springframework.http.HttpStatus.CREATED;
-import static org.springframework.http.HttpStatus.OK;
+import static org.springframework.http.HttpStatus.*;
 
 @Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
@@ -99,6 +98,22 @@ public class DistributionControllerTest {
     assertThat(response.getStatusCode(), is(CREATED));
     verify(service).get(distribution);
     verify(service).create(distribution);
+  }
+
+  @Test
+  public void shouldReturnErroredResponseIfDistributionCannotBeInitiated() {
+    String username = "User";
+    session.setAttribute(UserAuthenticationSuccessHandler.USER, username);
+    Distribution distribution = make(a(defaultDistribution));
+
+
+    doThrow(new DataException("no facilities in delivery zone")).when(service).create(distribution);
+
+    ResponseEntity<OpenLmisResponse> response = controller.create(distribution, httpServletRequest);
+
+    assertThat(response.getStatusCode(), is(PRECONDITION_FAILED));
+    assertThat(response.getBody().getErrorMsg(), is("no facilities in delivery zone"));
+
   }
 
   @Test
