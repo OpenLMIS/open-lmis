@@ -42,7 +42,7 @@
               <input type="text" name="temperature{{$index}}" ng-model="refrigeratorReading.temperature.value"
                      numeric-validator="numericValue,3,1"
                      error-holder="temperatureError{{$index}}"
-                     class="right-justified"/>
+                     class="right-justified"  ng-trim="false"/>
               <span id="temperatureError{{$index}}" class="rnr-form-error" openlmis-message="error.number.only"
                     style="display: none"></span>
             </span>
