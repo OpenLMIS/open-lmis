@@ -263,10 +263,10 @@ CreateRequisitionController.resolve = {
   requisitionData: function ($q, $timeout, Requisitions, $route, $rootScope) {
     var deferred = $q.defer();
     $timeout(function () {
-      var rnr = $rootScope.rnr;
-      if (rnr) {
-        deferred.resolve(rnr);
-        $rootScope.rnr = undefined;
+      var rnrData = $rootScope.rnrData;
+      if (rnrData) {
+        deferred.resolve(rnrData);
+        $rootScope.rnrData = undefined;
         return;
       }
       Requisitions.get({id: $route.current.params.rnr}, function (data) {
