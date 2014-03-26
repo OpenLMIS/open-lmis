@@ -779,11 +779,11 @@ public class ManageDistribution extends TestCaseHelper {
   }
 
   @Test(groups = {"distribution"}, dataProvider = "Data-Provider-Function")
-  public void testVerifyNoFacilityToBeShownIfInactive(String userSIC, String password, String deliveryZoneCodeFirst,
-                                                      String deliveryZoneCodeSecond, String deliveryZoneNameFirst,
-                                                      String deliveryZoneNameSecond, String facilityCodeFirst,
-                                                      String facilityCodeSecond, String programFirst, String programSecond,
-                                                      String schedule, String period, Integer totalNumberOfPeriods) throws SQLException {
+  public void testVerifyNoFacilityToBeShownIfInactiveAndDistributionNotInitiated(String userSIC, String password, String deliveryZoneCodeFirst,
+                                                                                 String deliveryZoneCodeSecond, String deliveryZoneNameFirst,
+                                                                                 String deliveryZoneNameSecond, String facilityCodeFirst,
+                                                                                 String facilityCodeSecond, String programFirst, String programSecond,
+                                                                                 String schedule, String period, Integer totalNumberOfPeriods) throws SQLException {
     List<String> rightsList = new ArrayList<>();
     rightsList.add("MANAGE_DISTRIBUTION");
     setupTestDataToInitiateRnRAndDistribution("F10", "F11", true, programFirst, userSIC, "200", rightsList,
@@ -804,6 +804,10 @@ public class ManageDistribution extends TestCaseHelper {
     distributionPage.selectValueFromPeriod(period + totalNumberOfPeriods);
     distributionPage.clickInitiateDistribution();
     distributionPage.verifyFacilityNotSupportedMessage(programFirst, deliveryZoneNameFirst);
+    dbWrapper.updateFieldValue("facilities", "active", "true", "code", facilityCodeFirst);
+    dbWrapper.updateFieldValue("facilities", "active", "true", "code", facilityCodeSecond);
+    distributionPage.clickInitiateDistribution();
+    distributionPage.clickRecordData(1);
   }
 
   @Test(groups = {"distribution"}, dataProvider = "Data-Provider-Function")
