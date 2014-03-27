@@ -249,6 +249,9 @@ public class InitiateRnRPage extends RequisitionPage {
   @FindBy(how = ID, using = "beginningBalance_0")
   private static WebElement beginningBalanceLabel = null;
 
+  @FindBy(how = ID, using = "periodNormalizedConsumption_0")
+  private static WebElement periodNormalizedConsumption = null;
+
   @FindBy(how = ID, using = "selectAll")
   private static WebElement skipAllLink = null;
 
@@ -938,5 +941,10 @@ public class InitiateRnRPage extends RequisitionPage {
     assertEquals(flag, isBudgetWarningMessageDisplayed());
     assertEquals(flag, isBudgetWarningIconOnFooterDisplayed());
     assertEquals(flag, isBudgetWarningMessageOnFooterDisplayed());
+  }
+
+  public String getPeriodicNormalisedConsumption() {
+    testWebDriver.waitForElementToAppear(periodNormalizedConsumption);
+    return periodNormalizedConsumption.getText();
   }
 }
