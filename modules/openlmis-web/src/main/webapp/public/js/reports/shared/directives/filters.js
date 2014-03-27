@@ -240,7 +240,7 @@ app.directive('facilityFilter',['FacilitiesByProgramParams' , function( Faciliti
           requisitionGroup: requisitionGroup
         }, function (data) {
           $scope.facilities = data.facilities;
-          if($scope.facilities === null){
+          if( isUndefined( $scope.facilities) ){
             $scope.facilities = [];
           }
           $scope.facilities.unshift({name: '-- All Facilities --'});
