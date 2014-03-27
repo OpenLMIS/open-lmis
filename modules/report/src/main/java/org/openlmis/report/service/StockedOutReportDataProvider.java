@@ -13,7 +13,11 @@ package org.openlmis.report.service;
 import lombok.NoArgsConstructor;
 import org.apache.commons.lang.StringUtils;
 import org.apache.ibatis.session.RowBounds;
+import org.openlmis.core.domain.ProcessingPeriod;
+import org.openlmis.core.service.ProcessingPeriodService;
+import org.openlmis.core.service.ProgramService;
 import org.openlmis.report.mapper.StockedOutReportMapper;
+import org.openlmis.report.mapper.lookup.FacilityTypeReportMapper;
 import org.openlmis.report.model.ReportData;
 import org.openlmis.report.model.params.StockedOutReportParam;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +34,17 @@ public class StockedOutReportDataProvider extends ReportDataProvider {
   private StockedOutReportMapper reportMapper;
 
   private StockedOutReportParam stockedOutReportParam = null;
+  
+  @Autowired
+  private ProcessingPeriodService periodService;
+  
+  @Autowired
+  private ProgramService programService;
 
+  @Autowired
+  private FacilityTypeReportMapper facilityType;
+  
+  
   @Autowired
   public StockedOutReportDataProvider(StockedOutReportMapper mapper) {
     this.reportMapper = mapper;
@@ -52,17 +66,31 @@ public class StockedOutReportDataProvider extends ReportDataProvider {
     if (filterCriteria != null) {
       stockedOutReportParam = new StockedOutReportParam();
 
-      stockedOutReportParam.setFacilityTypeId(StringUtils.isBlank(filterCriteria.get("facilityType")[0]) ? 0 : Integer.parseInt(filterCriteria.get("facilityType")[0])); //defaults to 0
+      stockedOutReportParam.setFacilityTypeId(StringUtils.isBlank(filterCriteria.get("facilityType")[0]) ? 0L : Long.parseLong(filterCriteria.get("facilityType")[0]));
       if(filterCriteria.containsKey("facility") && !StringUtils.isBlank(filterCriteria.get("facility")[0])){
         stockedOutReportParam.setFacilityId(Integer.parseInt(filterCriteria.get("facility")[0])); //defaults to 0
       }else{
         stockedOutReportParam.setFacilityId(0);
       }
-      stockedOutReportParam.setRgroupId(StringUtils.isBlank(filterCriteria.get("requisitionGroup")[0]) ? 0 : Integer.parseInt(filterCriteria.get("requisitionGroup")[0])); //defaults to 0
-      stockedOutReportParam.setProductCategoryId(StringUtils.isBlank(filterCriteria.get("productCategory")[0]) ? 0 : Integer.parseInt(filterCriteria.get("productCategory")[0])); //defaults to 0
+      stockedOutReportParam.setRgroupId(StringUtils.isBlank(filterCriteria.get("requisitionGroup")[0]) ? 0 : Integer.parseInt(filterCriteria.get("requisitionGroup")[0]));
+      stockedOutReportParam.setProductCategoryId(StringUtils.isBlank(filterCriteria.get("productCategory")[0]) ? 0 : Integer.parseInt(filterCriteria.get("productCategory")[0]));
       stockedOutReportParam.setProductId(StringUtils.isBlank(filterCriteria.get("product")[0]) ? 0 : Integer.parseInt(filterCriteria.get("product")[0]));
-      stockedOutReportParam.setProgramId(StringUtils.isBlank(filterCriteria.get("program")[0]) ? 0 : Integer.parseInt(filterCriteria.get("program")[0]));
-      stockedOutReportParam.setPeriodId(StringUtils.isBlank(filterCriteria.get("period")[0]) ? 0 : Integer.parseInt(filterCriteria.get("period")[0]));
+      stockedOutReportParam.setProgramId(StringUtils.isBlank(filterCriteria.get("program")[0]) ? 0L : Long.parseLong(filterCriteria.get("program")[0]));
+      stockedOutReportParam.setPeriodId(StringUtils.isBlank(filterCriteria.get("period")[0]) ? 0L : Long.parseLong(filterCriteria.get("period")[0]));
+
+      ProcessingPeriod pPeriod = periodService.getById( stockedOutReportParam.getPeriodId());
+      // summarize the filters now. 
+      String summary = "Period: " + pPeriod.getName()
+                          .concat(" - ")
+                          .concat(pPeriod.getStringYear())
+                          .concat("\nProgram: ")
+                          .concat(programService.getById(stockedOutReportParam.getProgramId()).getName());
+      if(stockedOutReportParam.getFacilityTypeId() != 0){
+        summary.concat("\nFacility Types: ")
+            .concat(facilityType.getById(stockedOutReportParam.getFacilityTypeId()).getName());
+      }
+
+
 
     }
     return stockedOutReportParam;

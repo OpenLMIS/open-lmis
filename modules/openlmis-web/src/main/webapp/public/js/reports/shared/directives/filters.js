@@ -3,9 +3,15 @@ app.directive('filterContainer', function(){
   return {
     restrict: 'EA',
     link: function(scope, elm, attrs){
+
+
      angular.extend(scope,{
         filter:{},
-        requiredFilters:{}
+        requiredFilters:{},
+        showMoreFilters: false,
+        toggleMoreFilters: function(){
+            scope.showMoreFilters = ! scope.showMoreFilters;
+        }
      });
     }
   } ;
@@ -240,7 +246,7 @@ app.directive('facilityFilter',['FacilitiesByProgramParams' , function( Faciliti
           requisitionGroup: requisitionGroup
         }, function (data) {
           $scope.facilities = data.facilities;
-          if($scope.facilities === null){
+          if( isUndefined( $scope.facilities) ){
             $scope.facilities = [];
           }
           $scope.facilities.unshift({name: '-- All Facilities --'});

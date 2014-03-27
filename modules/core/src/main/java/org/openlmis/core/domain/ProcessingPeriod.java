@@ -97,6 +97,11 @@ public class ProcessingPeriod extends BaseModel {
     return simpleDateFormat.format(this.endDate);
   }
 
+  public String getStringYear(){
+    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy");
+    return simpleDateFormat.format(this.startDate);
+  }
+
   public String getNextStartDate() {
     return forPattern("yyyy-MM-dd").print(new DateTime(getEndDate()).plusDays(1));
   }
