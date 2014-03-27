@@ -102,6 +102,7 @@ public class OrderPODLineItemTest {
     OrderPODLineItem orderPODLineItem = new OrderPODLineItem(shipmentLineItem, createdBy);
 
     assertThat(orderPODLineItem.getProductCode(), is(shipmentLineItem.getProductCode()));
+    assertThat(orderPODLineItem.getReplacedProductCode(), is(shipmentLineItem.getReplacedProductCode()));
     assertThat(orderPODLineItem.getProductCategory(), is(shipmentLineItem.getProductCategory()));
     assertThat(orderPODLineItem.getProductCategoryDisplayOrder(),
       is(shipmentLineItem.getProductCategoryDisplayOrder()));
