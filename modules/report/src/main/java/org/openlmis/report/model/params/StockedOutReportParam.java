@@ -28,14 +28,14 @@ public class StockedOutReportParam
 
 
 
-  private int programId;
+  private Long programId;
   private int rgroupId;
   private int productCategoryId;
   private int productId;
-  private int facilityTypeId;
+  private Long facilityTypeId;
   private int facilityId;
   private int zoneId;
-  private int periodId;
+  private Long periodId;
 
   @Override
   public String toString() {
