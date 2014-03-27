@@ -48,6 +48,7 @@ public class OrderPODLineItem extends BaseModel {
   private Integer quantityShipped;
   private Integer quantityReturned;
   private Boolean fullSupply;
+  private String replacedProductCode;
   private String notes;
 
   public OrderPODLineItem(Long podId, String productCode, Integer quantityReceived) {
@@ -99,6 +100,7 @@ public class OrderPODLineItem extends BaseModel {
     this.setPacksToShip(shipmentLineItem.getPacksToShip());
     this.setFullSupply(shipmentLineItem.getFullSupply());
     this.setQuantityShipped(shipmentLineItem.getQuantityShipped());
+    this.setReplacedProductCode(shipmentLineItem.getReplacedProductCode());
     this.setCreatedBy(createdBy);
     this.setModifiedBy(createdBy);
   }
