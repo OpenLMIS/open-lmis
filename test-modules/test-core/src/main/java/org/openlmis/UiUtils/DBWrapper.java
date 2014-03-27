@@ -637,7 +637,8 @@ public class DBWrapper {
       "(21, (select id from programs where code = '" + program + "'), true, 'R', false,21, 'Price per pack'),\n" +
       "(22, (select id from programs where code = '" + program + "'), true, 'C', false,22, 'Total cost'),\n" +
       "(23, (select id from programs where code = '" + program + "'), true, 'U', false,23, 'Expiration Date'),\n" +
-      "(24, (select id from programs where code = '" + program + "'), true, 'U', false,24, 'Remarks');");
+      "(24, (select id from programs where code = '" + program + "'), true, 'U', false,24, 'Remarks'),\n" +
+      "(25, (select id from programs where code = '" + program + "'), true, 'C', false,25, 'Period Normalized Consumption')");
   }
 
   public void configureTemplateForCommTrack(String program) throws SQLException {
