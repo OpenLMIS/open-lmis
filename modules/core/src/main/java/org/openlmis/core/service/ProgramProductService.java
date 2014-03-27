@@ -11,10 +11,7 @@
 package org.openlmis.core.service;
 
 import lombok.NoArgsConstructor;
-import org.openlmis.core.domain.FacilityType;
-import org.openlmis.core.domain.Program;
-import org.openlmis.core.domain.ProgramProduct;
-import org.openlmis.core.domain.ProgramProductPrice;
+import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.FacilityRepository;
 import org.openlmis.core.repository.ProgramProductRepository;
@@ -50,6 +47,9 @@ public class ProgramProductService {
   @Autowired
   private FacilityRepository facilityRepository;
 
+  @Autowired
+  private ProductCategoryService categoryService;
+
   public Long getIdByProgramIdAndProductId(Long programId, Long productId) {
     return programProductRepository.getIdByProgramIdAndProductId(programId, productId);
   }
@@ -71,6 +71,7 @@ public class ProgramProductService {
   }
 
   public void save(ProgramProduct programProduct) {
+    validateAndSetProductCategory(programProduct);
     if (programProduct.getId() == null) {
       boolean globalProductStatus = productService.isActive(programProduct.getProduct().getCode());
       if (globalProductStatus && programProduct.isActive())
@@ -119,4 +120,15 @@ public class ProgramProductService {
     return programProductRepository.getNonFullSupplyProductsForProgram(program);
   }
 
+  private void validateAndSetProductCategory(ProgramProduct programProduct) {
+    ProductCategory category = programProduct.getProductCategory();
+    if (category == null) return;
+    String categoryCode = category.getCode();
+    if (categoryCode == null || categoryCode.isEmpty()) return;
+    Long categoryId = categoryService.getProductCategoryIdByCode(category.getCode());
+    if (categoryId == null) {
+      throw new DataException("error.reference.data.invalid.product");
+    }
+    category.setId(categoryId);
+  }
 }
