@@ -10,6 +10,8 @@
 
 function StockedOutController( $scope, $window, StockedOutReport ) {
 
+
+
   $scope.OnFilterChanged = function(){
     // clear old data if there was any
     $scope.data = $scope.datarows = [];

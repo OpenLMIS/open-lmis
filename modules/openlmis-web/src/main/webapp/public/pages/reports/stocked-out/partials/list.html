@@ -28,11 +28,22 @@
                                 <schedule-filter class="form-cell horizontalFilters" required="true"></schedule-filter>
                                 <year-filter class="form-cell horizontalFilters" required="true"></year-filter>
                                 <period-filter class="form-cell horizontalFilters" required="true"></period-filter>
-                                <requisition-group-filter class="form-cell horizontalFilters"></requisition-group-filter>
-                                <facility-type-filter class="form-cell horizontalFilters" ></facility-type-filter>
-                                <facility-filter class="form-cell horizontalFilters"></facility-filter>
-                                <product-category-filter class="form-cell horizontalFilters" ></product-category-filter>
-                                <product-filter class="form-cell horizontalFilters"></product-filter>
+                                <div ng-hide="showMoreFilters"  class="clearfix form-cell horizontalFilters" >
+                                    <br />
+                                    <a class="button" ng-click="toggleMoreFilters()">Show More Filters</a>
+                                </div>
+                                <div ng-hide="!showMoreFilters">
+                                    <requisition-group-filter class="form-cell horizontalFilters"></requisition-group-filter>
+                                    <facility-type-filter class="form-cell horizontalFilters" ></facility-type-filter>
+                                    <facility-filter class="form-cell horizontalFilters"></facility-filter>
+                                    <product-category-filter class="form-cell horizontalFilters" ></product-category-filter>
+                                    <product-filter class="form-cell horizontalFilters"></product-filter>
+                                    <div  class="clearfix form-cell horizontalFilters" >
+                                        <br />
+                                        <a class="button" ng-click="toggleMoreFilters()">Less Filters</a>
+                                    </div>
+                                </div>
+
                             </div>
                         </form>
                     </div>

@@ -3,9 +3,15 @@ app.directive('filterContainer', function(){
   return {
     restrict: 'EA',
     link: function(scope, elm, attrs){
+
+
      angular.extend(scope,{
         filter:{},
-        requiredFilters:{}
+        requiredFilters:{},
+        showMoreFilters: false,
+        toggleMoreFilters: function(){
+            scope.showMoreFilters = ! scope.showMoreFilters;
+        }
      });
     }
   } ;
