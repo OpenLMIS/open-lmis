@@ -51,14 +51,20 @@ public class ProgramProductServiceTest {
   @Mock
   private ProgramService programService;
 
-  @InjectMocks
-  private ProgramProductService programProductService;
-
   @Mock
   private ProgramRepository programRepository;
 
   @Mock
   private FacilityRepository facilityRepository;
+
+  @Mock
+  private ProductCategoryService categoryService;
+
+  @Rule
+  public ExpectedException expectedException = ExpectedException.none();
+
+  @InjectMocks
+  private ProgramProductService programProductService;
 
   @Test
   public void shouldUpdateCurrentPriceOfProgramProductCodeCombinationAndUpdatePriceHistory() throws Exception {
@@ -294,6 +300,34 @@ public class ProgramProductServiceTest {
     verify(facilityRepository, never()).getFacilityTypeByCode(any(FacilityType.class));
     verify(programRepository).getIdByCode("P1");
     verify(programProductRepository).getProgramProductsBy(10L, null);
+  }
+
+  @Test
+  public void shouldThrowExceptionIfCategoryDoesNotExist() {
+    ProgramProduct programProduct = new ProgramProduct();
+    ProductCategory category = new ProductCategory();
+    category.setCode("Invalid Code");
+    programProduct.setProductCategory(category);
+    when(categoryService.getProductCategoryIdByCode("Invalid Code")).thenReturn(null);
+
+    expectedException.expect(DataException.class);
+    expectedException.expectMessage("error.reference.data.invalid.product");
+
+    programProductService.save(programProduct);
+  }
+
+  @Test
+  public void shouldSetIdIfCategoryExists() {
+    Long categoryId = 5L;
+    ProgramProduct programProduct = make(a(defaultProgramProduct));
+    ProductCategory category = new ProductCategory();
+    category.setCode("Code");
+    programProduct.setProductCategory(category);
+    when(categoryService.getProductCategoryIdByCode("Code")).thenReturn(categoryId);
+
+    programProductService.save(programProduct);
+
+    assertThat(category.getId(), is(categoryId));
   }
 
 }
