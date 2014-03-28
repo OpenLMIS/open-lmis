@@ -688,6 +688,16 @@ span[class^="tpl-"] {
       content: "";
     }
   }
+  .reasonForRequestedQuantityContainer, .expirationDateContainer {
+    .rnr-form-error {
+      right: auto;
+      left: -6px;
+      &:after {
+        right: auto;
+        left: 11px;
+      }
+    }
+  }
 }
 
 .refrigerator-form {
@@ -782,6 +792,7 @@ td.col-quantityReceived,
 td.col-quantityReturned,
 td.col-quantityDispensed,
 td.col-newPatientCount,
+td.col-stockInHand,
 td.col-stockOutDays,
 td.col-quantityRequested,
 td.col-quantityApproved {
@@ -809,6 +820,7 @@ td.col-beginningBalance,
 td.col-total,
 td.col-stockInHand,
 td.col-normalizedConsumption,
+td.col-periodNormalizedConsumption,
 td.col-amc,
 td.col-maxStockQuantity,
 td.col-calculatedOrderQuantity,
@@ -1340,7 +1352,7 @@ input.required-error {
   }
 }
 
-input.warning-error, input.ng-invalid-date {
+input.warning-error {
   border-color: #9e811d !important;
   background-color: #feffe1;
   &:focus {

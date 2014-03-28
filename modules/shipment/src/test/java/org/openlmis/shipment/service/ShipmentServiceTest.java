@@ -47,7 +47,6 @@ public class ShipmentServiceTest {
   @Mock
   private ShipmentRepository shipmentRepository;
 
-
   @Mock
   private ProductService productService;
 
@@ -67,7 +66,9 @@ public class ShipmentServiceTest {
       with(orderId, 1L),
       with(quantityShipped, 500)));
 
+    shipmentLineItem.setReplacedProductCode(null);
     when(requisitionService.getNonSkippedLineItem(1L, "P10")).thenReturn(new RnrLineItem());
+    when(productService.getByCode(shipmentLineItem.getProductCode())).thenReturn(new Product());
     shipmentService.save(shipmentLineItem);
 
     verify(shipmentRepository).save(shipmentLineItem);
@@ -75,15 +76,12 @@ public class ShipmentServiceTest {
 
   @Test
   public void shouldNotInsertShipmentIfProductCodeIsNotValid() throws Exception {
-
     ShipmentLineItem shipmentLineItem = make(a(defaultShipmentLineItem,
       with(productCode, "P10"),
       with(orderId, 1L),
       with(quantityShipped, 500)));
 
     when(productService.getIdForCode("P10")).thenReturn(null);
-
-
     exException.expect(DataException.class);
     exException.expectMessage("error.unknown.product");
 
@@ -109,8 +107,10 @@ public class ShipmentServiceTest {
     ShipmentLineItem shipmentLineItem = spy(make(a(defaultShipmentLineItem, with(productCode, "P10"), with(orderId, 1L),
       with(quantityShipped, 20))));
 
+    shipmentLineItem.setReplacedProductCode(null);
     RnrLineItem lineItem = make(a(defaultRnrLineItem));
     when(requisitionService.getNonSkippedLineItem(shipmentLineItem.getOrderId(), "P10")).thenReturn(lineItem);
+    when(productService.getByCode(shipmentLineItem.getProductCode())).thenReturn(new Product());
 
     shipmentService.save(shipmentLineItem);
 
@@ -125,10 +125,12 @@ public class ShipmentServiceTest {
     when(requisitionService.getNonSkippedLineItem(shipmentLineItem.getOrderId(), "P10")).thenReturn(null);
     Product product = make(a(defaultProduct));
     when(productService.getByCode("P10")).thenReturn(product);
+    when(productService.getByCode("P133")).thenReturn(product);
 
     shipmentService.save(shipmentLineItem);
 
     verify(shipmentLineItem).fillReferenceFields(product);
+    verify(shipmentRepository).save(shipmentLineItem);
   }
 
   @Test
@@ -163,4 +165,21 @@ public class ShipmentServiceTest {
 
     assertThat(lineItems, is(expectedLineItems));
   }
+
+  @Test
+  public void shouldThrowExceptionIfInvalidReplacedProductCode() throws Exception {
+    ShipmentLineItem shipmentLineItem = spy(make(a(defaultShipmentLineItem, with(replacedProductCode, "P10"), with(orderId, 1L),
+      with(quantityShipped, 20))));
+
+    when(requisitionService.getNonSkippedLineItem(shipmentLineItem.getOrderId(), "P10")).thenReturn(null);
+    Product product = make(a(defaultProduct));
+    when(productService.getByCode("P123")).thenReturn(product);
+    when(productService.getByCode("P10")).thenReturn(null);
+
+    exException.expect(DataException.class);
+    exException.expectMessage("error.unknown.product");
+
+    shipmentService.save(shipmentLineItem);
+  }
+
 }

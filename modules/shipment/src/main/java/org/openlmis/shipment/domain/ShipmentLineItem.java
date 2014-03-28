@@ -44,6 +44,8 @@ public class ShipmentLineItem extends LineItem {
 
   private Integer quantityOrdered;
 
+  private String replacedProductCode;
+
   private Integer quantityShipped;
 
   private String productName;
@@ -63,7 +65,7 @@ public class ShipmentLineItem extends LineItem {
   private Integer substitutedProductQuantityShipped;
 
   private Integer packSize;
-
+  
   private Date packedDate;
 
   private Date shippedDate;

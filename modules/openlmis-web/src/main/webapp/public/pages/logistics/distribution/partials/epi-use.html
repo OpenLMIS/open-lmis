@@ -165,11 +165,12 @@
                             </td>
                             <td class="expiration-date">
                                 <div>
-                  <span class="input-error-parent-cell">
+                  <span class="expirationDateContainer input-error-parent-cell">
                     <input id="expirationDateInput{{$index}}" type="text"
                            ng-model="lineItem.expirationDate.value"
                            name="expirationDate{{$index}}"
                            date-validator="date"
+                           showError="lineItem.expirationDate.notRecorded"
                            error-holder="expirationDateError{{$index}}"
                            maxlength="7"/>
                     <span class="rnr-form-error"
@@ -180,7 +181,7 @@
                                 </div>
                                 <input id="expirationDate{{$index}}" type="checkbox"
                                        ng-model="lineItem.expirationDate.notRecorded"
-                                       not-recorded="clearError"/>
+                                       not-recorded />
                                 <label class="checkbox-label"
                                        for="expirationDate{{$index}}"
                                        openlmis-message="label.not.recorded"></label>

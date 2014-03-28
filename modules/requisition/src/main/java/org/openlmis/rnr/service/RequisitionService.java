@@ -512,5 +512,9 @@ public class RequisitionService {
   public String deleteRnR(Long rnrId) {
     return requisitionRepository.deleteRnR(rnrId);
   }
+
+  public Integer findM(ProcessingPeriod period) {
+    return processingScheduleService.findM(period);
+  }
 }
 

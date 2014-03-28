@@ -53,8 +53,8 @@ describe("HeaderController", function () {
       $controller(HeaderController, {$scope: scope, localStorageService: localStorageService, loginConfig: loginConfig, $window: window});
     }));
 
-    it('should redirect user to root', function () {
-      expect(window.location).toEqual("/");
+    it('should redirect user to login page', function () {
+      expect(window.location).toEqual("/public/pages/login.html");
     });
   });
 });
