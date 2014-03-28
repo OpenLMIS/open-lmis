@@ -93,6 +93,9 @@ public class ReportLookupService {
   @Autowired
   private ReportRequisitionMapper requisitionMapper;
 
+  @Autowired
+  private SupervisoryNodeReportMapper supervisoryNodeReportMapper;
+
   public List<Product> getAllProducts() {
     return productMapper.getAll();
   }
@@ -158,6 +161,10 @@ public class ReportLookupService {
 
   public List<RequisitionGroup> getRequisitionGroupsByProgramAndSchedule(int program, int schedule) {
     return this.rgMapper.getByProgramAndSchedule(program, schedule);
+  }
+
+  public List<RequisitionGroup> getBySupervisoryNodesAndProgramAndSchedule(String nodeIdList, Long programId, Long scheduleId){
+      return rgMapper.getBySupervisoryNodesAndProgramAndSchedule(nodeIdList,programId,scheduleId);
   }
 
   public List<RequisitionGroup> getRequisitionGroupsByProgram(int program) {
@@ -265,11 +272,9 @@ public class ReportLookupService {
     return facilityReportMapper.getFacilitiesByPrgraomScheduleType(program, schedule, type);
   }
 
-  public List<Facility> getFacilitiesBy(Long geographicZone, Long requisitionGroup, Long program, Long schedule) {
-      if (geographicZone == 0)
-          return null;
+  public List<Facility> getFacilitiesBy(String requisitionGroup, Long program, Long schedule) {
 
-      return facilityReportMapper.getFacilitiesBy(geographicZone, requisitionGroup, program, schedule);
+      return facilityReportMapper.getFacilitiesBy(requisitionGroup, program, schedule);
 
   }
 
@@ -306,5 +311,24 @@ public class ReportLookupService {
 
   public String getProgramNameForRnrId(Long rnrId) {
     return requisitionMapper.getProgramNameForRnrId(rnrId);
+  }
+
+  public List<Program> getAllUserSupervisedActivePrograms(Long userId){
+      return programMapper.getUserSupervisedActivePrograms(userId);
+  }
+  public List<Program> getUserSupervisedActiveProgramsBySupervisoryNode(Long userId, Long supervisoryNodeId){
+      return programMapper.getUserSupervisedActiveProgramsBySupervisoryNode(userId, supervisoryNodeId);
+  }
+
+  public List<SupervisoryNode> getAllUserSupervisoryNode(Long userId){
+      return supervisoryNodeReportMapper.getAllSupervisoryNodesInHierarchyByUser(userId);
+  }
+
+  public List<SupervisoryNode> getAllSupervisoryNodesByUserHavingActiveProgram(Long userId){
+      return supervisoryNodeReportMapper.getAllSupervisoryNodesByUserHavingActiveProgram(userId);
+  }
+
+  public List<SupervisoryNode> getAllSupervisoryNodesByParentNodeId(Long supervisoryNodeId){
+      return supervisoryNodeReportMapper.getAllSupervisoryNodesByParentNodeId(supervisoryNodeId);
   }
 }

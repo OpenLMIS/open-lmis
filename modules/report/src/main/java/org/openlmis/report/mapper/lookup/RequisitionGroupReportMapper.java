@@ -10,6 +10,7 @@
 
 package org.openlmis.report.mapper.lookup;
 
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.openlmis.report.model.dto.RequisitionGroup;
 import org.springframework.stereotype.Repository;
@@ -48,4 +49,14 @@ public interface RequisitionGroupReportMapper {
             " and  g.id in (select rgm.requisitiongroupid from requisition_group_members rgm join programs_supported ps on rgm.facilityid = ps.facilityid where ps.programid = cast(#{param1} as int4) ) " +
             " order by g.name")
     List<RequisitionGroup> getByProgram(int program);
+
+    @Select(" SELECT distinct g.id, g.name, g.code  \n" +
+            "       FROM requisition_groups g \n" +
+            "       join requisition_group_program_schedules rgps on rgps.requisitiongroupid = g.id\n" +
+            "       inner join  requisition_group_members rgm on rgm.requisitiongroupid = rgps.requisitiongroupid\n" +
+            "       inner join programs_supported ps on rgm.facilityid = ps.facilityid  \n" +
+            "     where  rgps.programid = cast( #{programId} as int4) and rgps.scheduleid = CASE WHEN COALESCE(#{scheduleId},0)=0 THEN rgps.scheduleid ELSE cast( #{scheduleId} as int4) END\n" +
+            "     and g.supervisoryNodeId = ANY(#{nodeIds}::int[]) \n" +
+            "     order by g.name")
+    List<RequisitionGroup> getBySupervisoryNodesAndProgramAndSchedule(@Param("nodeIds")String supervisoryNodes,@Param("programId") Long programId, @Param("scheduleId")Long scheduleId);
 }

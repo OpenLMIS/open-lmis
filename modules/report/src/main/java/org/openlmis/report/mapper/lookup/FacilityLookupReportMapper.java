@@ -81,10 +81,9 @@ public interface FacilityLookupReportMapper {
             "                on m.facilityId = f.id\n" +
             "                join requisition_group_program_schedules rps\n" +
             "                on m.requisitionGroupId = rps.requisitionGroupId and ps.programId = rps.programId\n" +
-            "               where gz.id =  #{geographicZoneId} \n"+
-            "               and m.requisitionGroupId = CASE WHEN #{requisitionGroupId} = 0 THEN m.requisitionGroupId ELSE #{requisitionGroupId} END \n" +
-            "              and ps.programid = CASE WHEN #{programId} = 0 THEN ps.programid ELSE #{programId} END  \n"+
+            "               where CASE WHEN #{rgroupId} ='{}' THEN m.requisitionGroupId = m.requisitionGroupId ELSE m.requisitionGroupId =  ANY( #{rgroupId}::int[]) END \n" +
+            "              and ps.programid =#{programId} \n"+
             "              and rps.scheduleid = CASE WHEN #{scheduleId} = 0 THEN rps.scheduleid ELSE #{scheduleId} END \n"+
             "              order by f.name")
-    List<Facility> getFacilitiesBy(@Param("geographicZoneId") Long geographicZoneId,@Param("requisitionGroupId") Long requisitionGroupId, @Param("programId") Long programId, @Param("scheduleId") Long scheduleId);
+    List<Facility>  getFacilitiesBy(@Param("rgroupId") String requisitionGroupId, @Param("programId") Long programId, @Param("scheduleId") Long scheduleId);
 }

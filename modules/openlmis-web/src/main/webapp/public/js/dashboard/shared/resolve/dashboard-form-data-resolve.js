@@ -7,28 +7,31 @@
  */
 
 ResolveDashboardFormData = {
-    userGeographicZoneList :function ($q, $timeout,$rootScope, UserFacilityList) {
+    programsList : function($q, $timeout, $rootScope, ProgramListBySupervisoryNodes){
         var deferred = $q.defer();
         $timeout(function () {
-            var userGeographicZoneList = $rootScope.userGeographicZones;
 
-            if(userGeographicZoneList){
-                deferred.resolve(userGeographicZoneList);
-                $rootScope.userGeographicZones = undefined;
-                return;
-            }
-            UserFacilityList.get({}, function (data) {
-                var userFacilities = data.facilityList;
-                if(userFacilities){
-                    var zones = _.map(userFacilities, function(facility){return facility.geographicZone;});
-                    deferred.resolve(zones);
-                }else{
+            ProgramListBySupervisoryNodes.get({}, function(data){
+                deferred.resolve(data.programs);
+            });
 
-                    deferred.resolve(null);
-                }
-            }, {});
-        }, 100);
+        },100);
+
         return deferred.promise;
+
+    },
+    userDefaultSupervisoryNode : function($q, $timeout, $rootScope, UserDefaultSupervisoryNode){
+        var deferred = $q.defer();
+        $timeout(function (){
+
+            UserDefaultSupervisoryNode.get({}, function(data){
+                deferred.resolve(data.supervisoryNode);
+            })
+
+        },100);
+
+        return deferred.promise;
+
     },
     formInputValue : function(messageService){
                return {
@@ -37,7 +40,8 @@ ResolveDashboardFormData = {
                 scheduleOptionSelect : messageService.get('input.schedule.option.select'),
                 requisitionOptionAll : messageService.get('input.requisition.option.all'),
                 facilityOptionSelect : messageService.get('input.facility.option.select'),
-                periodOptionSelect : messageService.get('input.period.option.select')
+                periodOptionSelect : messageService.get('input.period.option.select'),
+                supervisoryNodeOptionAll : messageService.get('input.supervisory.node.option.all')
             };
     }
 };

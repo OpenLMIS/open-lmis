@@ -403,8 +403,17 @@ services.factory('SaveGeographicInfo', function($resource){
 });
 
 /* Dashboard data factories */
-services.factory("FacilitiesByGeographicZoneAndProgramParams",function($resource)  {
-    return   $resource('/reports/facilities/geographicZone/:geographicZoneId/requisitionGroup/:rgroupId/program/:programId/schedule/:scheduleId.json', {}, {});
+services.factory('UserSupervisoryNodes', function($resource){
+    return $resource('/reports/user/supervisory-nodes.json',{},{});
+});
+services.factory('UserDefaultSupervisoryNode', function($resource){
+   return $resource('/reports/user/default-supervisory-node.json',{},{});
+});
+services.factory('ProgramListBySupervisoryNodes', function ($resource) {
+    return $resource('/reports/supervisory-nodes/programs.json', {}, {});
+});
+services.factory("FacilitiesByProgramAndRequisitionGroupParams",function($resource)  {
+    return   $resource('/reports/facilities/program/:programId/schedule/:scheduleId.json', {}, {});
 });
 
 services.factory('OrderFillRate', function($resource){
@@ -430,6 +439,26 @@ services.factory('StockEfficiencyDetail', function($resource){
 services.factory('StockedOutFacilities', function($resource){
     return $resource('/dashboard/stockedOutFacilities.json',{}, {});
 });
+
+services.factory('ReportProgramsBySupervisoryNode', function ($resource) {
+    return $resource('/reports/supervisory-node/:supervisoryNodeId/programs.json', {}, {});
+});
+
+services.factory('RequisitionGroupsBySupervisoryNodeProgramSchedule', function($resource){
+    return $resource('/reports/reporting_groups_by_supervisory_node_program_schedule.json', {}, {});
+});
+
+services.factory('StockedOutFacilitiesByRequisitionGroup', function($resource){
+    return $resource('/dashboard/requisitionGroup/:rgroupId/program/:programId/period/:periodId/product/:productId/stockedOutFacilities.json',{},{});
+
+});
+services.factory('Alerts', function($resource){
+    return $resource('/dashboard/alerts.json',{},{});
+
+});
+
+
+
 
 
 /* End Dashboard data factories */

@@ -12,8 +12,11 @@ package org.openlmis.report.controller;
 
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.ProcessingPeriod;
+import org.openlmis.core.domain.Right;
+import org.openlmis.core.domain.SupervisoryNode;
 import org.openlmis.core.service.FacilityService;
 import org.openlmis.core.service.ProcessingScheduleService;
+import org.openlmis.core.service.ProgramService;
 import org.openlmis.report.model.dto.*;
 import org.openlmis.report.response.OpenLmisResponse;
 import org.openlmis.report.service.lookup.ReportLookupService;
@@ -28,6 +31,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -43,6 +47,11 @@ public class ReportLookupController extends BaseController {
 
   public static final String OPEN_LMIS_OPERATION_YEARS = "years";
   public static final String OPEN_LMIS_OPERATION_MONTHS = "months";
+
+  private String  getCommaSeparatedIds(List<Long> idList){
+
+      return idList == null ? "{}" : idList.toString().replace("[", "{").replace("]", "}");
+  }
 
   @Autowired
   private ReportLookupService reportLookupService;
@@ -145,6 +154,25 @@ public class ReportLookupController extends BaseController {
       return this.reportLookupService.getRequisitionGroupsByProgramAndSchedule(program,schedule);
   }
 
+  @RequestMapping(value="/reporting_groups_by_supervisory_node_program_schedule", method = GET, headers = BaseController.ACCEPT_JSON)
+  public List<RequisitionGroup> getBySupervisoryNodesAndProgramAndSchedule(
+         @RequestParam(value = "programId") Long programId,
+         @RequestParam(value = "scheduleId") Long scheduleId,
+         @RequestParam(value = "supervisoryNodeId") Long supervisoryNodeId
+  ){
+      List<SupervisoryNode> supervisoryNodeList = reportLookupService.getAllSupervisoryNodesByParentNodeId(supervisoryNodeId);
+
+      List<Long> supervisoryNodeIds = null;
+
+      if (supervisoryNodeList != null && supervisoryNodeList.size() > 0){
+          supervisoryNodeIds = new ArrayList<>(supervisoryNodeList.size());
+          for(SupervisoryNode node : supervisoryNodeList){
+              supervisoryNodeIds.add(node.getId());
+          }
+      }
+      return this.reportLookupService.getBySupervisoryNodesAndProgramAndSchedule(getCommaSeparatedIds(supervisoryNodeIds),programId,scheduleId);
+  }
+
 
   @RequestMapping(value="/productCategories", method = GET, headers = BaseController.ACCEPT_JSON)
   public List<ProductCategory> getProductCategories(){
@@ -212,16 +240,22 @@ public class ReportLookupController extends BaseController {
     return OpenLmisResponse.response("facilities", reportLookupService.getFacilities( program, schedule, type ));
   }
 
+@RequestMapping(value = "/user/facilities", method = GET, headers = BaseController.ACCEPT_JSON)
+public ResponseEntity<OpenLmisResponse> getSupervisedFacilities(
+        HttpServletRequest request
+) {
+    return OpenLmisResponse.response("facilities", facilityService.getForUserAndRights(loggedInUserId(request),Right.VIEW_REQUISITION));
+}
 
-    @RequestMapping(value = "/facilities/geographicZone/{geographicZoneId}/requisitionGroup/{rgroupId}/program/{programId}/schedule/{scheduleId}", method = GET, headers = BaseController.ACCEPT_JSON)
+
+
+    @RequestMapping(value = "/facilities/program/{programId}/schedule/{scheduleId}", method = GET, headers = BaseController.ACCEPT_JSON)
     public ResponseEntity<OpenLmisResponse> getFacilities(
-            @PathVariable("geographicZoneId") Long geographicZoneId,
-            @PathVariable("rgroupId") Long requisitionGroupId,
             @PathVariable("programId") Long programId,
             @PathVariable("scheduleId") Long scheduleId,
-            HttpServletRequest request
+            @RequestParam("rgroupId") List<Long> requisitionGroupId
     ) {
-        return OpenLmisResponse.response("facilities", reportLookupService.getFacilitiesBy(geographicZoneId,requisitionGroupId,programId,scheduleId));
+        return OpenLmisResponse.response("facilities", reportLookupService.getFacilitiesBy(getCommaSeparatedIds(requisitionGroupId),programId,scheduleId));
     }
 
   @RequestMapping(value = "/schedules/{scheduleId}/periods", method = GET, headers = ACCEPT_JSON)
@@ -251,5 +285,32 @@ public class ReportLookupController extends BaseController {
       List<org.openlmis.report.model.dto.ProcessingPeriod> periodList = reportLookupService.getFilteredPeriods(startDate,endDate);
 
       return OpenLmisResponse.response("periods", periodList);
+  }
+
+  @RequestMapping(value = "/supervisory-nodes/programs", method = GET, headers = BaseController.ACCEPT_JSON)
+  public ResponseEntity<OpenLmisResponse> getProgramsForAllSupervisoryNodes(HttpServletRequest request){
+
+      List<Program> programList = reportLookupService.getAllUserSupervisedActivePrograms(loggedInUserId(request));
+      return OpenLmisResponse.response("programs",programList);
+  }
+  @RequestMapping(value = "/supervisory-node/{supervisoryNodeId}/programs", method = GET, headers = BaseController.ACCEPT_JSON)
+  public ResponseEntity<OpenLmisResponse> getProgramsForSupervisoryNode(@PathVariable("supervisoryNodeId") Long supervisoryNodeId, HttpServletRequest request){
+
+      List<Program> programList = reportLookupService.getUserSupervisedActiveProgramsBySupervisoryNode(loggedInUserId(request), supervisoryNodeId);
+      return OpenLmisResponse.response("programs",programList);
+  }
+  @RequestMapping(value = "/user/default-supervisory-node", method = GET, headers = BaseController.ACCEPT_JSON)
+  public ResponseEntity<OpenLmisResponse> getUserDefaultSupervisoryNode(HttpServletRequest request){
+      List<SupervisoryNode> defaultSupervisoryNode = reportLookupService.getAllSupervisoryNodesByUserHavingActiveProgram(loggedInUserId(request));
+      if (defaultSupervisoryNode != null && defaultSupervisoryNode.size() > 0){
+          return OpenLmisResponse.response("supervisoryNode",defaultSupervisoryNode.get(0));
+      }
+      return OpenLmisResponse.response("supervisoryNode",null);
+  }
+
+  @RequestMapping(value = "/user/supervisory-nodes", method = GET, headers = BaseController.ACCEPT_JSON)
+  public ResponseEntity<OpenLmisResponse> getUserSupervisoryNodes(HttpServletRequest request){
+      List<SupervisoryNode> supervisoryNodes = reportLookupService.getAllSupervisoryNodesByUserHavingActiveProgram(loggedInUserId(request));
+      return OpenLmisResponse.response("supervisoryNodes",supervisoryNodes);
   }
 }
