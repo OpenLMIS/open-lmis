@@ -12,7 +12,7 @@ function ReportingRateController($scope, leafletData) {
 
  $scope.expectedFilter = function(item){
     return item.expected > 0;
- }
+ };
 
   angular.extend($scope, {
     layers: {
