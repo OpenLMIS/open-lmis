@@ -74,6 +74,8 @@ public class RnrTest {
     FacilityTypeApprovedProduct facilityTypeApprovedProduct = make(a(defaultFacilityApprovedProduct));
     Product product = make(a(ProductBuilder.defaultProduct));
     facilityTypeApprovedProduct.getProgramProduct().setProduct(product);
+    ProductCategory productCategory = new ProductCategory();
+    facilityTypeApprovedProduct.getProgramProduct().setProductCategory(productCategory);
     List<FacilityTypeApprovedProduct> facilityTypeApprovedProducts = new ArrayList<>();
     facilityTypeApprovedProducts.add(facilityTypeApprovedProduct);
 

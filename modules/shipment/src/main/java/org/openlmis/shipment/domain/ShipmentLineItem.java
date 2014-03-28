@@ -75,8 +75,9 @@ public class ShipmentLineItem extends LineItem {
   }
 
   public void fillReferenceFields(Product product) {
-    this.setReferenceFields(product.getName(), product.getDispensingUnit(), product.getCategory().getName(), null,
-      product.getCategory().getDisplayOrder(), product.getDisplayOrder(), product.getFullSupply());
+    //TODO: Imp, handle when shipment for category changes is handled
+   /* this.setReferenceFields(product.getName(), product.getDispensingUnit(), product.getCategory().getName(), null,
+      product.getCategory().getDisplayOrder(), product.getDisplayOrder(), product.getFullSupply());*/
   }
 
   public void fillReferenceFields(RnrLineItem lineItem) {

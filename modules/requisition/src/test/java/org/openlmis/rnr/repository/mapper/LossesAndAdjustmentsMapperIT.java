@@ -68,6 +68,8 @@ public class LossesAndAdjustmentsMapperIT {
   private ProcessingPeriodMapper processingPeriodMapper;
   @Autowired
   private ProcessingScheduleMapper processingScheduleMapper;
+  @Autowired
+  private ProductCategoryMapper productCategoryMapper;
 
   private RnrLineItem rnrLineItem;
   private LossesAndAdjustments lossAndAdjustment;
@@ -80,7 +82,11 @@ public class LossesAndAdjustmentsMapperIT {
     Program program = make(a(ProgramBuilder.defaultProgram));
     programMapper.insert(program);
 
+    ProductCategory category = new ProductCategory("C1", "Category Name", 1);
+    productCategoryMapper.insert(category);
+
     ProgramProduct programProduct = new ProgramProduct(program, product, 30, true, new Money("12.5"));
+    programProduct.setProductCategory(category);
     programProductMapper.insert(programProduct);
 
     FacilityTypeApprovedProduct facilityTypeApprovedProduct = new FacilityTypeApprovedProduct("warehouse", programProduct, 3);

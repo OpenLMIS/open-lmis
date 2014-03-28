@@ -81,12 +81,15 @@ public class RnrLineItemMapperIT {
   @Autowired
   private RequisitionStatusChangeMapper requisitionStatusChangeMapper;
   @Autowired
+  private ProductCategoryMapper productCategoryMapper;
+  @Autowired
   QueryExecutor queryExecutor;
 
   private FacilityTypeApprovedProduct facilityTypeApprovedProduct;
   private Facility facility;
   private Rnr rnr;
   Program program;
+
   ProcessingPeriod processingPeriod;
 
   @Before
@@ -97,7 +100,12 @@ public class RnrLineItemMapperIT {
     program = make(a(ProgramBuilder.defaultProgram));
     programMapper.insert(program);
 
+
+    ProductCategory category = new ProductCategory("C1", "Category 1", 1);
+    productCategoryMapper.insert(category);
+
     ProgramProduct programProduct = new ProgramProduct(program, product, 30, true, new Money("12.5000"));
+    programProduct.setProductCategory(category);
     programProductMapper.insert(programProduct);
 
     facility = make(a(defaultFacility));
@@ -293,16 +301,16 @@ public class RnrLineItemMapperIT {
     for (int index = 1; index <= 10; index++) {
       String productCode = "P" + index;
       ProductCategory category = new ProductCategory();
-      category.setCode("C" + index);
+      category.setCode("C_" + index);
       category.setName("Category " + index);
       category.setDisplayOrder(1);
       categoryMapper.insert(category);
       Product product = make(a(ProductBuilder.defaultProduct, with(ProductBuilder.code, productCode),
         with(ProductBuilder.fullSupply, fullSupplyFlag)));
-      product.setCategory(category);
       productMapper.insert(product);
 
       ProgramProduct programProduct = new ProgramProduct(program, product, 30, true, new Money("12.5000"));
+      programProduct.setProductCategory(category);
       programProductMapper.insert(programProduct);
 
       FacilityTypeApprovedProduct facilityTypeApprovedProduct = make(a(defaultFacilityApprovedProduct));

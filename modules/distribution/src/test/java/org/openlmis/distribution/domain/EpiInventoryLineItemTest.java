@@ -31,9 +31,9 @@ public class EpiInventoryLineItemTest {
   @Test
   public void shouldCreateEpiInventoryLineItemFromFacilityProgramProduct() throws Exception {
     FacilityProgramProduct facilityProgramProduct = new FacilityProgramProduct(new ProgramProduct(), 4L, 567);
+    facilityProgramProduct.setDisplayOrder(1);
     Product product = new Product();
     product.setCode("P10");
-    product.setDisplayOrder(1);
     product.setPrimaryName("Primary Name");
     facilityProgramProduct.setProduct(product);
     FacilityProgramProduct spyFPP = spy(facilityProgramProduct);
