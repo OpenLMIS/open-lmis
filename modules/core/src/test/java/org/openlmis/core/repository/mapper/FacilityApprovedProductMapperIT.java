@@ -11,6 +11,7 @@
 package org.openlmis.core.repository.mapper;
 
 import org.hamcrest.core.Is;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
@@ -60,6 +61,13 @@ public class FacilityApprovedProductMapperIT {
   @Autowired
   private ProductCategoryMapper productCategoryMapper;
 
+  private ProductCategory category1;
+
+  @Before
+  public void setUp() throws Exception {
+    category1 = category("C1", "Category 1", 2);
+  }
+
   @Test
   public void shouldInsertFacilityApprovedProduct() throws Exception {
     Program program = make(a(ProgramBuilder.defaultProgram));
@@ -68,6 +76,7 @@ public class FacilityApprovedProductMapperIT {
     productMapper.insert(product);
 
     ProgramProduct programProduct = new ProgramProduct(program, product, 30, true);
+    programProduct.setProductCategory(category1);
     programProductMapper.insert(programProduct);
 
     FacilityType facilityType = new FacilityType();
@@ -89,19 +98,18 @@ public class FacilityApprovedProductMapperIT {
     programMapper.insert(bpProgram);
     programMapper.insert(yellowFeverProgram);
 
-    ProductCategory category1 = category("C1", "Category 1", 2);
     ProductCategory category2 = category("C2", "Category 2", 7);
     ProductCategory category3 = category("C3", "Category 3", 4);
     ProductCategory category4 = category("C4", "Category 4", 5);
     ProductCategory category6 = category("C6", "Category 6", 1);
 
 
-    Product pro01 = product("PRO01", true);   //
+    Product pro01 = product("PRO01", true);
     Product pro02 = product("PRO02", true);
     Product pro03 = product("PRO03", false);
     Product pro04 = product("PRO04", true);
-    Product pro05 = product("PRO05", true); //
-    Product pro06 = product("PRO06", true); //
+    Product pro05 = product("PRO05", true);
+    Product pro06 = product("PRO06", true);
     Product pro07 = product("PRO07", true);
 
     ProgramProduct programProduct1 = addToProgramProduct(yellowFeverProgram, pro01, true, category1, 6);
@@ -156,10 +164,7 @@ public class FacilityApprovedProductMapperIT {
   }
 
   private ProductCategory category(String categoryCode, String categoryName, int categoryDisplayOrder) {
-    ProductCategory productCategory = new ProductCategory();
-    productCategory.setCode(categoryCode);
-    productCategory.setDisplayOrder(categoryDisplayOrder);
-    productCategory.setName(categoryName);
+    ProductCategory productCategory = new ProductCategory(categoryCode, categoryName, categoryDisplayOrder);
     productCategoryMapper.insert(productCategory);
     return productCategory;
   }
@@ -195,7 +200,7 @@ public class FacilityApprovedProductMapperIT {
     Product product = make(a(defaultProduct));
     productMapper.insert(product);
 
-    ProgramProduct programProduct = addToProgramProduct(program, product, true, null, null);
+    ProgramProduct programProduct = addToProgramProduct(program, product, true, category1, null);
 
 
     insertFacilityApprovedProduct(FACILITY_TYPE_ID, programProduct);

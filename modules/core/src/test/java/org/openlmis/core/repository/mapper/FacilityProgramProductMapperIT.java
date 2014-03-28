@@ -55,6 +55,8 @@ public class FacilityProgramProductMapperIT {
 
   @Autowired
   FacilityMapper facilityMapper;
+  @Autowired
+  private ProductCategoryMapper productCategoryMapper;
 
   @Before
   public void setUp() throws Exception {
@@ -63,6 +65,9 @@ public class FacilityProgramProductMapperIT {
     program = make(a(ProgramBuilder.defaultProgram));
     programMapper.insert(program);
     programProduct = new ProgramProduct(program, product, 10, true);
+    ProductCategory productCategory = new ProductCategory("C1", "Category 1", 1);
+    productCategoryMapper.insert(productCategory);
+    programProduct.setProductCategory(productCategory);
     programProductMapper.insert(programProduct);
     facility = make(a(FacilityBuilder.defaultFacility));
     facilityMapper.insert(facility);

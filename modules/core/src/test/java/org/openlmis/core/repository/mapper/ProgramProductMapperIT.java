@@ -92,6 +92,7 @@ public class ProgramProductMapperIT {
   @Test
   public void shouldGetProgramProductIdByProgramIdAndProductId() throws Exception {
     ProgramProduct programProduct = new ProgramProduct(program, product, 10, true);
+    programProduct.setProductCategory(productCategory);
     programProductMapper.insert(programProduct);
 
     Long id = programProductMapper.getIdByProgramAndProductId(program.getId(), product.getId());
@@ -102,6 +103,7 @@ public class ProgramProductMapperIT {
   @Test
   public void shouldGetProgramProductByProgramIdAndProductId() throws Exception {
     ProgramProduct programProduct = new ProgramProduct(program, product, 10, true);
+    programProduct.setProductCategory(productCategory);
     programProductMapper.insert(programProduct);
 
     ProgramProduct result = programProductMapper.getByProgramAndProductId(program.getId(), product.getId());
@@ -114,6 +116,7 @@ public class ProgramProductMapperIT {
     ProgramProduct programProduct = new ProgramProduct(program, product, 10, true, new Money("100.0"));
     programProduct.setModifiedBy(1L);
     programProduct.setModifiedDate(new Date());
+    programProduct.setProductCategory(productCategory);
     programProductMapper.insert(programProduct);
     Money price = new Money("200.01");
     programProduct.setCurrentPrice(price);
@@ -129,7 +132,7 @@ public class ProgramProductMapperIT {
   @Test
   public void shouldUpdateProgramProduct() throws Exception {
     ProgramProduct programProduct = new ProgramProduct(program, product, 10, true);
-
+    programProduct.setProductCategory(productCategory);
     programProductMapper.insert(programProduct);
     programProduct.setDosesPerMonth(10);
     programProduct.setActive(false);
@@ -147,6 +150,7 @@ public class ProgramProductMapperIT {
   @Test
   public void shouldGetProgramProductsByProgram() {
     ProgramProduct programProduct = new ProgramProduct(program, product, 10, true);
+    programProduct.setProductCategory(productCategory);
     programProductMapper.insert(programProduct);
 
     ProgramProductISA programProductISA = new ProgramProductISA(programProduct.getId(), 1d, 2, 3.3, 5.6, 4, 5, 5);
@@ -164,7 +168,9 @@ public class ProgramProductMapperIT {
   public void shouldGetNonFullSuppProgramProductsByProgram() {
     Product product1 = make(a(ProductBuilder.defaultProduct, with(ProductBuilder.code, "P2"), with(fullSupply, false)));
     productMapper.insert(product1);
+
     ProgramProduct programProduct = new ProgramProduct(program, product1, 10, true);
+    programProduct.setProductCategory(productCategory);
     programProductMapper.insert(programProduct);
 
     List<ProgramProduct> programProducts = programProductMapper.getNonFullSupplyProductsForProgram(program);
@@ -177,7 +183,7 @@ public class ProgramProductMapperIT {
   public void shouldGetById() throws Exception {
 
     ProgramProduct programProduct = new ProgramProduct(program, product, 10, true);
-
+    programProduct.setProductCategory(productCategory);
     programProductMapper.insert(programProduct);
 
     ProgramProduct savedProgramProduct = programProductMapper.getById(programProduct.getId());
@@ -189,11 +195,12 @@ public class ProgramProductMapperIT {
   public void shouldGetByProductCode() throws Exception {
 
     ProgramProduct programProduct = new ProgramProduct(program, product, 10, true);
+    programProduct.setProductCategory(productCategory);
     Program hiv = new Program(1L);
     hiv.setCode("HIV");
 
     ProgramProduct programProduct2 = new ProgramProduct(hiv, product, 10, true);
-
+    programProduct2.setProductCategory(productCategory);
     programProductMapper.insert(programProduct);
     programProductMapper.insert(programProduct2);
 
@@ -208,7 +215,7 @@ public class ProgramProductMapperIT {
   public void shouldGetByProgramProductIdAndFacilityTypeCode() throws Exception {
 
     ProgramProduct programProduct = new ProgramProduct(program, product, 10, true);
-
+    programProduct.setProductCategory(productCategory);
     programProductMapper.insert(programProduct);
 
     String facilityTypeCode = "warehouse";
@@ -233,12 +240,12 @@ public class ProgramProductMapperIT {
   public void shouldGetAllProgramProductsForProgramIdWhenFacilityTypeCodeIsNull() throws Exception {
 
     ProgramProduct programProduct = new ProgramProduct(program, product, 10, true);
-
+    programProduct.setProductCategory(productCategory);
     Product product1 = make(a(ProductBuilder.defaultProduct, with(code, "P1")));
     productMapper.insert(product1);
 
     ProgramProduct programProduct2 = new ProgramProduct(program, product1, 10, true);
-
+    programProduct2.setProductCategory(productCategory);
     programProductMapper.insert(programProduct);
     programProductMapper.insert(programProduct2);
 

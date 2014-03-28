@@ -44,6 +44,8 @@ public class ProgramProductPriceMapperIT {
   ProgramProductMapper programProductMapper;
   @Autowired
   private ProgramProductPriceMapper programProductPriceMapper;
+  @Autowired
+  private ProductCategoryMapper productCategoryMapper;
 
   private Product product;
   private Program program;
@@ -57,6 +59,9 @@ public class ProgramProductPriceMapperIT {
     programMapper.insert(program);
     Money price = new Money("105.60");
     programProduct = new ProgramProduct(program, product, 10, true, price);
+    ProductCategory category = new ProductCategory("C1", "Category 1", 1);
+    productCategoryMapper.insert(category);
+    programProduct.setProductCategory(category);
     programProductMapper.insert(programProduct);
   }
 

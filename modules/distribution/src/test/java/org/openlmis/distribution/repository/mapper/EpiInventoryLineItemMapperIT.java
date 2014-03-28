@@ -90,11 +90,15 @@ public class EpiInventoryLineItemMapperIT {
 
   @Autowired
   private ProgramProductMapper programProductMapper;
+  @Autowired
+  private ProductCategoryMapper productCategoryMapper;
+
   DeliveryZone zone;
   Program program1;
   ProcessingPeriod processingPeriod;
   Distribution distribution;
   Facility facility;
+  private ProductCategory category;
 
   private EpiInventory epiInventory;
 
@@ -133,7 +137,12 @@ public class EpiInventoryLineItemMapperIT {
 
     Product product = make(a(ProductBuilder.defaultProduct));
     productMapper.insert(product);
+
+    category = new ProductCategory("C1", "Category 1", 1);
+    productCategoryMapper.insert(category);
+
     programProduct = new ProgramProduct(program1, product, 10, true);
+    programProduct.setProductCategory(category);
     programProductMapper.insert(programProduct);
 
   }
@@ -167,6 +176,7 @@ public class EpiInventoryLineItemMapperIT {
     Product product1 = make(a(ProductBuilder.defaultProduct, with(code, "P11")));
     productMapper.insert(product1);
     ProgramProduct programProduct1 = new ProgramProduct(program1, product1, 10, true);
+    programProduct1.setProductCategory(category);
     programProductMapper.insert(programProduct1);
 
     EpiInventoryLineItem lineItem2 = new EpiInventoryLineItem();
@@ -235,6 +245,7 @@ public class EpiInventoryLineItemMapperIT {
     Product product1 = make(a(ProductBuilder.defaultProduct, with(code, "P11")));
     productMapper.insert(product1);
     ProgramProduct programProduct1 = new ProgramProduct(program1, product1, 10, true);
+    programProduct1.setProductCategory(category);
     programProductMapper.insert(programProduct1);
 
     EpiInventoryLineItem lineItem2 = new EpiInventoryLineItem();
