@@ -14,6 +14,7 @@ import com.google.common.base.Strings;
 import lombok.NoArgsConstructor;
 import org.apache.ibatis.session.RowBounds;
 import org.openlmis.core.service.ConfigurationSettingService;
+import org.openlmis.core.service.ProcessingPeriodService;
 import org.openlmis.report.mapper.OrderSummaryReportMapper;
 import org.openlmis.report.model.ReportData;
 import org.openlmis.report.model.params.OrderReportParam;
@@ -21,6 +22,7 @@ import org.openlmis.report.service.lookup.ReportLookupService;
 import org.openlmis.report.util.Constants;
 import org.openlmis.rnr.domain.RequisitionStatusChange;
 import org.openlmis.rnr.domain.RnrStatus;
+import org.openlmis.rnr.service.RequisitionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -42,6 +44,11 @@ public class OrderSummaryReportDataProvider extends ReportDataProvider {
   @Autowired
   private ReportLookupService reportLookupService;
 
+  @Autowired
+  private RequisitionService requistionService;
+
+  @Autowired
+  private ProcessingPeriodService periodService;
 
   private OrderReportParam orderReportParam;
 
@@ -90,6 +97,11 @@ public class OrderSummaryReportDataProvider extends ReportDataProvider {
         orderReportParam.setProgram(filterCriteria.get("program")[0]);
         orderReportParam.setOrderId(reportMapper.getRequisitionId(orderReportParam.getFacilityId(), orderReportParam.getProgramId(), orderReportParam.getPeriodId()));
       }
+      ;
+      orderReportParam.setYear(
+          new SimpleDateFormat("yyyy").format(  periodService.getById(
+                                                                                  requistionService.getLWById(orderReportParam.getOrderId()).getPeriod().getId()).getStartDate()
+          ));
     }
     return orderReportParam;
   }
@@ -113,6 +125,12 @@ public class OrderSummaryReportDataProvider extends ReportDataProvider {
 
       result.put("AUTHORIZED_BY", changes.get(0).getCreatedBy().getFirstName() + " " + changes.get(0).getCreatedBy().getLastName() );
       result.put("AUTHORIZED_DATE", new SimpleDateFormat("dd/MM/yy h:m a").format(changes.get(0).getCreatedDate()) );
+    }
+
+    changes = reportMapper.getLastUsersWhoActedOnRnr(orderReportParam.getOrderId(), RnrStatus.IN_APPROVAL.name());
+    if(changes.size() > 0){
+      result.put("IN_APPROVAL_BY", changes.get(0).getCreatedBy().getFirstName() + " " + changes.get(0).getCreatedBy().getLastName()  );
+      result.put("IN_APPROVAL_DATE", new SimpleDateFormat("dd/MM/yy h:m a").format(changes.get(0).getCreatedDate()) );
     }
 
     changes = reportMapper.getLastUsersWhoActedOnRnr(orderReportParam.getOrderId(), RnrStatus.APPROVED.name());

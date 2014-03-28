@@ -16,6 +16,10 @@ import org.openlmis.core.repository.RequisitionGroupProgramScheduleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+/**
+ * Exposes the services for handling RequisitionGroupProgramSchedule entity.
+ */
+
 @Service
 @NoArgsConstructor
 public class RequisitionGroupProgramScheduleService {
@@ -25,7 +29,6 @@ public class RequisitionGroupProgramScheduleService {
   public RequisitionGroupProgramScheduleService(RequisitionGroupProgramScheduleRepository requisitionGroupProgramScheduleRepository) {
     this.requisitionGroupProgramScheduleRepository = requisitionGroupProgramScheduleRepository;
   }
-
 
   public void save(RequisitionGroupProgramSchedule requisitionGroupProgramSchedule) {
     if (requisitionGroupProgramSchedule.getId() != null) {

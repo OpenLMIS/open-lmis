@@ -90,6 +90,7 @@ function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, reg
     $scope.fullSupplyTabError = !!fullSupplyError;
     $scope.nonFullSupplyTabError = !!nonFullSupplyError;
 
+
     var error = fullSupplyError || nonFullSupplyError;
 
     if (error) {

@@ -186,8 +186,6 @@ public class DistributionEpiInventoryTest extends TestCaseHelper {
 
     epiInventoryPage.toggleSpoiledQuantityNR(2);
     epiInventoryPage.fillSpoiledQuantity(2, "-");
-    assertTrue(epiInventoryPage.errorMessageDisplayed(2));
-
     epiInventoryPage.fillSpoiledQuantity(2, "4");
 
     epiInventoryPage = epiInventoryPage.navigateToVisitInformation().navigateToEpiInventory();
@@ -204,7 +202,7 @@ public class DistributionEpiInventoryTest extends TestCaseHelper {
 
     FacilityListPage facilityListPage = PageObjectFactory.getFacilityListPage(testWebDriver);
     VisitInformationPage visitInformationPage = facilityListPage.selectFacility(epiInventoryData.get(FIRST_FACILITY_CODE));
-    visitInformationPage.enterDataWhenFacilityVisited("some observations", "samuel", "Doe", "Verifier", "XYZ");
+    visitInformationPage.enterDataWhenFacilityVisited("samuel", "Doe", "Verifier", "XYZ");
 
     EpiInventoryPage epiInventoryPage = visitInformationPage.navigateToEpiInventory();
     epiInventoryPage.verifyIndicator("RED");
@@ -276,7 +274,7 @@ public class DistributionEpiInventoryTest extends TestCaseHelper {
     initiateDistribution(epiInventoryData.get(FIRST_DELIVERY_ZONE_NAME), epiInventoryData.get(VACCINES_PROGRAM));
     FacilityListPage facilityListPage = PageObjectFactory.getFacilityListPage(testWebDriver);
     VisitInformationPage visitInformationPage = facilityListPage.selectFacility(epiInventoryData.get(FIRST_FACILITY_CODE));
-    visitInformationPage.enterDataWhenFacilityVisited("some observations", "samuel", "Doe", "Verifier", "XYZ");
+    visitInformationPage.enterDataWhenFacilityVisited("samuel", "Doe", "Verifier", "XYZ");
 
     EpiInventoryPage epiInventoryPage = visitInformationPage.navigateToEpiInventory();
     epiInventoryPage.verifyIndicator("RED");
@@ -321,7 +319,7 @@ public class DistributionEpiInventoryTest extends TestCaseHelper {
     initiateDistribution(epiInventoryData.get(FIRST_DELIVERY_ZONE_NAME), epiInventoryData.get(VACCINES_PROGRAM));
     FacilityListPage facilityListPage = PageObjectFactory.getFacilityListPage(testWebDriver);
     VisitInformationPage visitInformationPage = facilityListPage.selectFacility(epiInventoryData.get(FIRST_FACILITY_CODE));
-    visitInformationPage.enterDataWhenFacilityVisited("some observations", "samuel", "Doe", "Verifier", "XYZ");
+    visitInformationPage.enterDataWhenFacilityVisited("samuel", "Doe", "Verifier", "XYZ");
 
     EpiInventoryPage epiInventoryPage = visitInformationPage.navigateToEpiInventory();
     epiInventoryPage.verifyIndicator("RED");

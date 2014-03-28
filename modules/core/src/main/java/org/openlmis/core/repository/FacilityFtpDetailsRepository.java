@@ -18,7 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
- * FacilityFtpDetailsRepository is rpository class for FacilityFtpDetails related database operations.
+ * FacilityFtpDetailsRepository is repository class for FacilityFtpDetails related database operations.
  */
 
 @Component

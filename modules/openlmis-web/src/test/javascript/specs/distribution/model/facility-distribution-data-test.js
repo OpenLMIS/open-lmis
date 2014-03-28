@@ -88,14 +88,9 @@ describe('Facility Distribution data', function () {
     expect(facilityDistribution.isDisabled('epi-inventory')).toEqual(false);
   });
 
-  it("should not disable tabs other than refrigerator and epi-inventory if facility is not visited", function () {
+  it("should not disable tabs other than refrigerator, epi-inventory and epi-use if facility is not visited", function () {
     facilityDistribution.facilityVisit.visited = false;
-    expect(facilityDistribution.isDisabled('epi-use')).toEqual(false);
-  });
-
-  it("should not disable tabs other than refrigerator and epi-inventory if facility is visited", function () {
-    facilityDistribution.facilityVisit.visited = true;
-    expect(facilityDistribution.isDisabled('epi-use')).toEqual(false);
+    expect(facilityDistribution.isDisabled('child-coverage')).toEqual(false);
   });
 
 });

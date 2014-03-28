@@ -17,6 +17,7 @@
 
   <!-- library files-->
   <title openlmis-message="app.title"></title>
+
   <script src="/public/lib/leaflet/leaflet.js"></script>
   <script src="/public/lib/jquery/jquery-2.0.0.min.js"></script>
   <script src="/public/lib/jquery/jquery-ui-1.9.2.custom.min.js"></script>
@@ -54,6 +55,7 @@
   <script src="/public/js/shared/app.js"></script>
 
   <!-- App directives and shared utilites -->
+  <script src="/public/lib/angular/angular-combine.js"></script>
   <script src="/public/js/shared/directives/form-toolbar.js"></script>
   <script src="/public/js/shared/directives/openlmis-message.js"></script>
   <script src="/public/js/shared/directives/openlmis-pagination.js"></script>
@@ -78,7 +80,7 @@
 
   <!-- Page specific files -->
 
-  <script src="/public/js/reports/reporting-rate/directives/filters.js"></script>
+  <script src="/public/js/reports/shared/directives/filters.js"></script>
   <script src="/public/js/reports/reporting-rate/module/reporting-rate-module.js"></script>
   <script src="/public/js/reports/reporting-rate/controller/reporting-rate-controller.js"></script>
 
@@ -92,6 +94,7 @@
 <div id="wrap">
   <ng-include src="'/public/pages/header.html'"></ng-include>
   <ng-include src="'/public/pages/navigation.html'"></ng-include>
+  <ng-include src="'/public/pages/reports/shared/filters.html'"></ng-include>
   <div class="content">
     <div ng-view></div>
   </div>

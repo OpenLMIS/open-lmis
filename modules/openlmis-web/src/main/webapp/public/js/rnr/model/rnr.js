@@ -29,6 +29,17 @@ var Rnr = function (rnr, programRnrColumns) {
     return getInvalidLineItemIndexes(this.nonFullSupplyLineItems);
   };
 
+  Rnr.prototype.getRegimenErrorLineItemIndexes = function () {
+
+    var errorLineItems = [];
+    $(this.regimenLineItems).each(function (i, lineItem) {
+      if(lineItem.hasError){
+        errorLineItems.push(i);
+      }
+    });
+    return errorLineItems;
+  };
+
   Rnr.prototype.getErrorPages = function (pageSize) {
     function getErrorPages(lineItems) {
       var pagesWithErrors = [];
@@ -48,9 +59,15 @@ var Rnr = function (rnr, programRnrColumns) {
       return getErrorPages(nonFullSupplyErrorLIneItems);
     }
 
+    function getRegimenPagesWithError(){
+      var regimenErrorLineItems = thisRnr.getRegimenErrorLineItemIndexes();
+      return getErrorPages(regimenErrorLineItems);
+    }
+
     var errorPages = {};
     errorPages.fullSupply = getFullSupplyPagesWithError();
     errorPages.nonFullSupply = getNonFullSupplyPagesWithError();
+    errorPages.regimen = getRegimenPagesWithError();
     return errorPages;
   };
 

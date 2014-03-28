@@ -407,7 +407,7 @@ describe('R&R test', function () {
 
     var errorPages = rnr.getErrorPages(5);
 
-    expect(errorPages).toEqual({nonFullSupply: [1, 2], fullSupply: [2, 4]});
+    expect(errorPages).toEqual({nonFullSupply: [1, 2], fullSupply: [2, 4], regimen: [ ]});
     expect(rnr.getNonFullSupplyErrorLineItemIndexes).toHaveBeenCalled();
     expect(rnr.getFullSupplyErrorLineItemIndexes).toHaveBeenCalled();
   });

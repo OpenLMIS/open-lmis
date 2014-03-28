@@ -237,7 +237,7 @@ public class FacilityDistributionServiceTest {
   }
 
   @Test
-  public void shouldSaveOnlyFacilityVisitCoverageAndEpiUseDataIfFacilityNotVisited() throws Exception {
+  public void shouldSaveOnlyFacilityVisitCoverageIfFacilityNotVisited() throws Exception {
     EpiUse epiUse = new EpiUse();
     FacilityVisit facilityVisit = new FacilityVisit();
     facilityVisit.setFacilityId(1234L);
@@ -250,7 +250,7 @@ public class FacilityDistributionServiceTest {
     facilityDistributionService.save(facilityDistribution);
 
     verify(facilityVisitService).save(facilityVisit);
-    verify(epiUseService).save(epiUse);
+    verify(epiUseService, never()).save(epiUse);
     verify(vaccinationCoverageService).save(facilityDistribution);
 
     verify(epiInventoryService, never()).save(epiInventory);

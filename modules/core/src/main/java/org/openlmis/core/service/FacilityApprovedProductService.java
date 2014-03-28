@@ -11,8 +11,8 @@
 package org.openlmis.core.service;
 
 import lombok.NoArgsConstructor;
-import org.openlmis.core.domain.FacilityTypeApprovedProduct;
 import org.openlmis.core.domain.FacilityType;
+import org.openlmis.core.domain.FacilityTypeApprovedProduct;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.FacilityApprovedProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +21,9 @@ import org.springframework.stereotype.Service;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * Exposes the services for handling FacilityApprovedProduct entity.
+ */
 
 @Service
 @NoArgsConstructor
@@ -49,7 +52,7 @@ public class FacilityApprovedProductService {
     return repository.getFullSupplyProductsByFacilityAndProgram(facilityId, programId);
   }
 
-  public List<FacilityTypeApprovedProduct> getNonFullSupplyFacilityApprovedProductByFacilityAndProgram(Long facilityId, Long programId){
+  public List<FacilityTypeApprovedProduct> getNonFullSupplyFacilityApprovedProductByFacilityAndProgram(Long facilityId, Long programId) {
     return repository.getNonFullSupplyProductsByFacilityAndProgram(facilityId, programId);
   }
 
@@ -76,7 +79,7 @@ public class FacilityApprovedProductService {
   public void save(FacilityTypeApprovedProduct facilityTypeApprovedProduct) {
     fillProgramProductIds(facilityTypeApprovedProduct);
     FacilityType facilityType = facilityService.getFacilityTypeByCode(facilityTypeApprovedProduct.getFacilityType());
-    if(facilityType == null) throw new DataException(FACILITY_TYPE_DOES_NOT_EXIST);
+    if (facilityType == null) throw new DataException(FACILITY_TYPE_DOES_NOT_EXIST);
 
     facilityTypeApprovedProduct.getFacilityType().setId(facilityType.getId());
 

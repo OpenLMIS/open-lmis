@@ -30,33 +30,33 @@
     </layout>
   </appender>
 
-  <logger name="java.sql" additivity="false">
-    <level value="DEBUG"/>
-    <appender-ref ref="consoleAppender"/>
-  </logger>
+  <!--<logger name="java.sql" additivity="false">-->
+    <!--<level value="DEBUG"/>-->
+    <!--<appender-ref ref="consoleAppender"/>-->
+  <!--</logger>-->
 
-  <logger name="org.openlmis.rnr.repository.mapper">
-    <level value="DEBUG"/>
-    <appender-ref ref="consoleAppender"/>
-  </logger>
+  <!--<logger name="org.openlmis.rnr.repository.mapper">-->
+    <!--<level value="DEBUG"/>-->
+    <!--<appender-ref ref="consoleAppender"/>-->
+  <!--</logger>-->
 
-  <logger name="org.openlmis.db.repository.mapper">
-    <level value="DEBUG"/>
-    <appender-ref ref="consoleAppender"/>
-  </logger>
+  <!--<logger name="org.openlmis.db.repository.mapper">-->
+    <!--<level value="DEBUG"/>-->
+    <!--<appender-ref ref="consoleAppender"/>-->
+  <!--</logger>-->
 
-  <logger name="org.openlmis.core.repository.mapper">
-    <level value="DEBUG"/>
-    <appender-ref ref="consoleAppender"/>
-  </logger>
+  <!--<logger name="org.openlmis.core.repository.mapper">-->
+    <!--<level value="DEBUG"/>-->
+    <!--<appender-ref ref="consoleAppender"/>-->
+  <!--</logger>-->
 
-  <logger name="org.openlmis.shipment.repository.mapper">
-    <level value="DEBUG"/>
-    <appender-ref ref="consoleAppender"/>
-  </logger>
+  <!--<logger name="org.openlmis.shipment.repository.mapper">-->
+    <!--<level value="DEBUG"/>-->
+    <!--<appender-ref ref="consoleAppender"/>-->
+  <!--</logger>-->
 
   <logger name="org.openlmis.web">
-    <level value="INFO"/>
+    <level value="ERROR"/>
     <appender-ref ref="logFileAppender"/>
   </logger>
 
@@ -66,7 +66,7 @@
   <!--</logger>-->
 
   <root>
-    <level value="INFO"/>
+    <level value="ERROR"/>
     <appender-ref ref="logFileAppender"/>
   </root>
 </log4j:configuration>

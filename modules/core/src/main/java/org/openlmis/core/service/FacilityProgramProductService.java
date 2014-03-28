@@ -24,6 +24,10 @@ import java.util.List;
 
 import static org.apache.commons.collections.CollectionUtils.forAllDo;
 
+/**
+ * Exposes the services for handling FacilityProgramProduct entity.
+ */
+
 @Service
 public class FacilityProgramProductService {
 

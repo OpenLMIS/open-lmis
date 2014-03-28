@@ -83,7 +83,7 @@
                  </form>
              </td>
              <td>
-                 <table class="table" ng-show="list.length > 0">
+                 <table class="table" ng-show="list.length > 0" align="right">
                      <tr>
                        <th>Direction</th>
                        <th>Date</th>
@@ -91,8 +91,8 @@
                      </tr>
                       <tr ng-repeat="item in list">
                           <td>{{item.direction}}</td>
-                          <td>{{item.receiveddate}}</td>
-                          <td>{{item.content}}</td>
+                          <td>{{item.dateSaved |date:'medium'}}</td>
+                          <td>{{item.message}}</td>
                       </tr>
                  </table>
              </td>

@@ -20,7 +20,7 @@ import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Repository;
 
 /**
- * This is Repository class for ProductGroup related database operations.
+ * ProductGroupRepository is Repository class for ProductGroup related database operations.
  */
 
 @Repository

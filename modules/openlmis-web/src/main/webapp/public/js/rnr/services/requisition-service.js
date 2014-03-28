@@ -55,10 +55,11 @@ services.factory('requisitionService', function (messageService) {
     $scope.errorPages = $scope.rnr.getErrorPages($scope.pageSize);
     $scope.fullSupplyErrorPagesCount = $scope.errorPages.fullSupply.length;
     $scope.nonFullSupplyErrorPagesCount = $scope.errorPages.nonFullSupply.length;
+    $scope.regimenErrorPagesCount = $scope.errorPages.regimen.length;
   };
 
   var resetErrorPages = function ($scope) {
-    $scope.errorPages = {fullSupply: [], nonFullSupply: []};
+    $scope.errorPages = {fullSupply: [], nonFullSupply: [],regimen: []};
   };
 
   var refreshGrid = function ($scope, $location, $routeParams, save) {

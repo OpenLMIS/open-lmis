@@ -24,7 +24,7 @@ import java.util.List;
 import static org.openlmis.core.domain.Right.commaSeparateRightNames;
 
 /**
- * This is Repository class for Program related database operations.
+ * ProgramRepository is Repository class for Program related database operations.
  */
 
 @Component

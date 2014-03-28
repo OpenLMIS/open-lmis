@@ -24,64 +24,69 @@ public interface GeographicZoneReportMapper {
 
   @Select("SELECT g.id, g.code , g.name, p.name as parent" +
     "   FROM " +
-    "       geographic_zones g left join geographic_zones p on g.parentid = p.id order by p.name, g.name")
+    "       geographic_zones g left join geographic_zones p on g.parentId = p.id order by p.name, g.name")
   List<GeographicZone> getAll();
 
-  @Select("SELECT * FROM geographic_zones gz INNER JOIN geographic_levels gl ON gz.levelid = gl.id\n" +
-    "  where levelid = #{geographicLevelId} ORDER BY gz.id,gl.id")
+  @Select("SELECT * FROM geographic_zones gz INNER JOIN geographic_levels gl ON gz.levelId = gl.id " +
+    "  where levelId = #{geographicLevelId} ORDER BY gz.id,gl.id")
   List<GeographicZone> getGeographicZoneByLevel(Long id);
 
   @Select("select gz2.name ADM1,gz1.name ADM2, gz.name ADM3, gz.* from geographic_zones gz " +
         "left join geographic_zones gz1  " +
-        "   on gz.parentid = gz1.id " +
+        "   on gz.parentId = gz1.id " +
         " left join geographic_zones gz2 " +
-        "   on gz1.parentid = gz2.id" +
+        "   on gz1.parentId = gz2.id" +
     " order by ADM1, ADM2, ADM3")
   List<FlatGeographicZone> getFlatGeographicZoneList();
 
   @Select("select gzz.id, gzz.name, gjson.geometry,COALESCE(expected.count) expected, COALESCE(total.count) total, COALESCE(ever.count,0) as ever, COALESCE(period.count,0) as period  " +
-    " from \n" +
-        " geographic_zones gzz\n" +
-      " left join \n" +
-         " geographic_zone_geojson gjson on \n" +
-          " gzz.id = gjson.zoneid\n" +
+    " from  " +
+        " geographic_zones gzz " +
+      " left join  " +
+         " geographic_zone_geojson gjson on  " +
+          " gzz.id = gjson.zoneId " +
+      " left join " +
+      " (select geographicZoneId, count(*) from facilities  " +
+      " join programs_supported ps on ps.facilityId = facilities.id " +
+      " join geographic_zones gz on gz.id = facilities.geographicZoneId " +
+      " join requisition_group_members rgm on rgm.facilityId = facilities.id " +
+      " join requisition_group_program_schedules rgps on rgps.requisitionGroupId = rgm.requisitionGroupId and rgps.programId = ps.programId  " +
+      " join processing_periods pp on pp.scheduleId = rgps.scheduleId and pp.id = #{processingPeriodId}  " +
+      " where gz.levelId = (select max(id) from geographic_levels) and ps.programId = #{programId} " +
+      " group by geographicZoneId" +
+      " ) expected " +
+      " on gzz.id =expected.geographicZoneId " +
 
-      " left join\n" +
-      " (select geographiczoneid, count(*) from facilities \n" +
-      " join programs_supported ps on ps.facilityid = facilities.id\n" +
-      " join geographic_zones gz on gz.id = facilities.geographiczoneid\n" +
-      " join requisition_group_members rgm on rgm.facilityid = facilities.id\n" +
-      " join requisition_group_program_schedules rgps on rgps.requisitiongroupid = rgm.requisitiongroupid and rgps.programid = ps.programid \n" +
-      " join processing_periods pp on pp.scheduleid = rgps.scheduleid and pp.id = #{processingPeriodId} \n" +
-      " where gz.levelid = 4 and ps.programid = #{programId}\n" +
-      " group by geographiczoneid" +
-      " ) expected\n" +
-      " on gzz.id =expected.geographiczoneid\n" +
-
-      " left join\n" +
-        " (select geographiczoneid, count(*) from facilities \n" +
-          " join geographic_zones gz on gz.id = facilities.geographiczoneid\n" +
-          " where gz.levelid = 4 \n" +
-          " group by geographiczoneid" +
-        " ) total\n" +
-          " on gzz.id =total.geographiczoneid\n" +
-    " left join \n" +
-        " (select geographiczoneid, count(*) from facilities \n" +
-        " join programs_supported ps on ps.facilityid = facilities.id\n" +
-        " join geographic_zones gz on gz.id = facilities.geographiczoneid\n" +
-        " where ps.programid = #{programId} and facilities.id in \n" +
-          "(select facilityid from requisitions)\n" +
-            "group by geographiczoneid" +
-        " ) ever\n" +
-        " on gzz.id = ever.geographiczoneid\n" +
-     " left join\n" +
-         " (select geographiczoneid, count(*) from facilities \n" +
-             " join programs_supported ps on ps.facilityid = facilities.id\n" +
-             " join geographic_zones gz on gz.id = facilities.geographiczoneid\n" +
-             " where  ps.programid = #{programId} and facilities.id in \n" +
-             " (select facilityid from requisitions where periodid = #{processingPeriodId})\n" +
-              " group by geographiczoneid" +
+      " left join " +
+        " (select geographicZoneId, count(*) from facilities  " +
+          " join geographic_zones gz on gz.id = facilities.geographicZoneId " +
+          " where gz.levelId = (select max(id) from geographic_levels)  " +
+          " group by geographicZoneId" +
+        " ) total " +
+          " on gzz.id =total.geographicZoneId " +
+    " left join  " +
+        " (select geographicZoneId, count(*) from facilities  " +
+        " join programs_supported ps on ps.facilityId = facilities.id " +
+        " join geographic_zones gz on gz.id = facilities.geographicZoneId " +
+        " where ps.programId = #{programId} and facilities.id in  " +
+          "(select facilityId from requisitions) " +
+            "group by geographicZoneId" +
+        " ) ever " +
+        " on gzz.id = ever.geographicZoneId " +
+     " left join " +
+         " (select geographicZoneId, count(*) from facilities  " +
+             " join programs_supported ps on ps.facilityId = facilities.id " +
+             " join geographic_zones gz on gz.id = facilities.geographicZoneId " +
+             " where  ps.programId = #{programId} and facilities.id in  " +
+             " (select facilityId from requisitions where periodId = #{processingPeriodId}) " +
+              " group by geographicZoneId" +
     " ) period" +
-    " on gzz.id = period.geographiczoneid" )
+    " on gzz.id = period.geographicZoneId" )
   List<GeoReportData> getGeoReportingRate(@Param("programId") Long programId, @Param("processingPeriodId") Long processingPeriodId);
+
+  @Select("select * from facilities f " +
+      " left join (select * from requisitions r where r.programId = #{programId} and r.periodId = #{processingPeriodId})" +
+      " where f.geographicZoneId = #{geographicZoneId}")
+  List<GeoReportData> getDetailReportingFacilityList(@Param("programId") Long programId, @Param("geographicZoneId") Long geographicZoneId, @Param("processingPeriodId") Long processingPeriodId);
+
 }

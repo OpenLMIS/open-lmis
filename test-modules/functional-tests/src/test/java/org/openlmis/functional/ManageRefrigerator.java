@@ -184,6 +184,7 @@ public class ManageRefrigerator extends TestCaseHelper {
     else if (flag.equalsIgnoreCase("No")) refrigeratorPage.clickProblemSinceLastVisitNoRadio(1);
     else if (flag.equalsIgnoreCase("Dont know")) refrigeratorPage.clickProblemSinceLastVisitDoNotKnowRadio(1);
     else refrigeratorPage.clickProblemSinceLastVisitNR(1);
+    refrigeratorPage.removeFocusFromElement();
   }
 
   @Then("^I should see refrigerator details as refrigerator temperature \"([^\"]*)\" low alarm events \"([^\"]*)\" high alarm events \"([^\"]*)\" notes \"([^\"]*)\"")

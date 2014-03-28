@@ -14,6 +14,10 @@ import org.openlmis.core.repository.BudgetLineItemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+/**
+ * Exposes the services for handling BudgetLineItem entity.
+ */
+
 @Service
 public class BudgetLineItemService {
 

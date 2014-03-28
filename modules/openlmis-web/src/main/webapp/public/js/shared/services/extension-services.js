@@ -279,7 +279,8 @@ services.factory("AllFacilites",function($resource)  {
 });
 
 services.factory("FacilitiesByProgramParams",function($resource)  {
-    return   $resource('/reports/facilities/program/:program/schedule/:schedule/type/:type.json', {}, {});
+  //return   $resource('/reports/facilities/program/:program/schedule/:schedule/type/:type/requisitionGroup/:requisitionGroup.json', {}, {});
+  return   $resource('/reports/facilities.json', {}, {});
 });
 
 services.factory('SupervisoryNodeCompleteList',function($resource){
@@ -474,4 +475,9 @@ services.factory('GetSMSInfo', function($resource){
 services.factory('GetMessagesForMobile', function($resource){
     return $resource('/sms/MessagesForMobile',{}, {get:{method:'GET'}});
 });
+
+services.factory('GetReplyMessages', function($resource){
+    return $resource('/sms/getSMS',{}, {get:{method:'GET'}});
+});
+
 /*End SMS data Factories*/

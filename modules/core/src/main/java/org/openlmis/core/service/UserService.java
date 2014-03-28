@@ -24,8 +24,13 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * Exposes the services for handling User entity.
+ */
+
 @Service
 public class UserService {
+
   static final String USER_EMAIL_NOT_FOUND = "user.email.not.found";
   static final String USER_EMAIL_INCORRECT = "user.email.incorrect";
   static final String PASSWORD_RESET_TOKEN_INVALID = "user.password.reset.token.invalid";
@@ -33,10 +38,13 @@ public class UserService {
 
   @Autowired
   private UserRepository userRepository;
+
   @Autowired
   private EmailService emailService;
+
   @Autowired
   private RoleAssignmentService roleAssignmentService;
+
   @Autowired
   private MessageService messageService;
 
@@ -79,6 +87,7 @@ public class UserService {
     user.setSupervisorRoles(roleAssignmentService.getSupervisorRoles(id));
     user.setAdminRole(roleAssignmentService.getAdminRole(id));
     user.setAllocationRoles(roleAssignmentService.getAllocationRoles(id));
+    user.setReportRoles(roleAssignmentService.getReportRole(id));
     user.setFulfillmentRoles(roleAssignmentService.getFulfilmentRoles(id));
     return user;
   }

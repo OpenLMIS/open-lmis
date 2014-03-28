@@ -9,17 +9,17 @@
  */
 package org.openlmis.core.service;
 
-import org.openlmis.core.domain.DeliveryZone;
-import org.openlmis.core.domain.DeliveryZoneProgramSchedule;
-import org.openlmis.core.repository.DeliveryZoneProgramScheduleRepository;
-import org.openlmis.core.domain.ProcessingPeriod;
-import org.openlmis.core.domain.ProcessingSchedule;
-import org.openlmis.core.domain.Program;
+import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
+import org.openlmis.core.repository.DeliveryZoneProgramScheduleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+
+/**
+ * Exposes the services for handling DeliveryZoneProgramSchedule entity.
+ */
 
 @Service
 public class DeliveryZoneProgramScheduleService {

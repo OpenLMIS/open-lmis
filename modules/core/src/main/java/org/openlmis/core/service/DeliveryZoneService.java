@@ -20,6 +20,10 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Exposes the services for handling DeliveryZone entity.
+ */
+
 @Service
 public class DeliveryZoneService {
 

@@ -13,7 +13,7 @@ describe('DistributionListController', function () {
   var scope, location, q, messageService;
 
   var sharedDistribution, rootScope, distributionService;
-  var distribution, $httpBackend, dialog, element, compile;
+  var distribution, $httpBackend, dialog, element, compile, window;
 
   beforeEach(module('distribution'));
   beforeEach(module('openlmis.services'));
@@ -46,6 +46,7 @@ describe('DistributionListController', function () {
         spyOn(distributionService, 'save');
         q = $q;
         location = $location;
+        window = {};
 
         sharedDistribution = {update: function () {
         }};
@@ -84,7 +85,7 @@ describe('DistributionListController', function () {
         compile(element)(scope);
         scope.$digest();
         $controller(DistributionListController,
-          {$scope: scope, $location: location, SharedDistributions: sharedDistribution, messageService: messageService});
+          {$scope: scope, $location: location, SharedDistributions: sharedDistribution, messageService: messageService, $window: window});
 
         scope.distributionData = distribution;
       })
@@ -178,6 +179,20 @@ describe('DistributionListController', function () {
     expect(scope.syncResult[DistributionStatus.COMPLETE].length).toEqual(1);
     expect(scope.syncResult[DistributionStatus.SYNCED].length).toEqual(1);
     expect(scope.syncResult[DistributionStatus.DUPLICATE].length).toEqual(1);
+  });
+
+  it('should take user to root location if user logged out while syncing ', function () {
+    var distribution = {facilityDistributions: {44: {status: DistributionStatus.COMPLETE}}}
+
+    $httpBackend.when('PUT', '/distributions/1/facilities/44.json', distribution.facilityDistributions[44]).respond(401);
+
+    scope.distributionData = distribution;
+
+    var syncFacilitiesFunction = getSyncFacilitiesFunction();
+
+    $httpBackend.flush();
+
+    expect(window.location).toEqual("/");
   });
 
   it('should show message if no facility available for sync ', function () {

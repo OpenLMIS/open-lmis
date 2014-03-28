@@ -24,6 +24,9 @@ import java.util.List;
 
 import static org.apache.commons.collections.ListUtils.intersection;
 
+/**
+ * Exposes the services for handling RequisitionGroupMember entity.
+ */
 
 @Service
 @NoArgsConstructor

@@ -72,6 +72,8 @@ abstract public class DistributionTab extends Page {
 
   abstract public void verifyAllFieldsDisabled();
 
+  abstract public void removeFocusFromElement();
+
   public void verifyOverallIndicator(WebElement element, String color) {
     testWebDriver.sleep(500);
     assertEquals(colorMap.get(color.toLowerCase()), element.getCssValue("background-color"));

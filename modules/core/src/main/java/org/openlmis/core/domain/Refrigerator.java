@@ -39,7 +39,7 @@ public class Refrigerator extends BaseModel {
   private Boolean enabled;
 
   public void validate() {
-    if (isBlank(brand) || isBlank(serialNumber) || isBlank(model)) {
+    if (isBlank(serialNumber)) {
       throw new DataException("error.invalid.reading.value");
     }
   }
