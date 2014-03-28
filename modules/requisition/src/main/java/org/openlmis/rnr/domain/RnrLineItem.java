@@ -104,10 +104,10 @@ public class RnrLineItem extends LineItem {
     this.maxMonthsOfStock = facilityTypeApprovedProduct.getMaxMonthsOfStock();
     ProgramProduct programProduct = facilityTypeApprovedProduct.getProgramProduct();
     this.price = programProduct.getCurrentPrice();
-    ProductCategory category = programProduct.getProduct().getCategory();
+    ProductCategory category = programProduct.getProductCategory();
     this.productCategory = category.getName();
     this.productCategoryDisplayOrder = category.getDisplayOrder();
-    this.populateFromProduct(programProduct.getProduct());
+    this.populateFromProduct(programProduct);
     this.dosesPerMonth = programProduct.getDosesPerMonth();
     this.modifiedBy = modifiedBy;
     this.createdBy = createdBy;
@@ -351,7 +351,8 @@ public class RnrLineItem extends LineItem {
       this.totalLossesAndAdjustments = item.totalLossesAndAdjustments;
   }
 
-  private void populateFromProduct(Product product) {
+  private void populateFromProduct(ProgramProduct programProduct) {
+    Product product = programProduct.getProduct();
     this.productCode = product.getCode();
     this.dispensingUnit = product.getDispensingUnit();
     this.dosesPerDispensingUnit = product.getDosesPerDispensingUnit();
@@ -360,7 +361,7 @@ public class RnrLineItem extends LineItem {
     this.packRoundingThreshold = product.getPackRoundingThreshold();
     this.product = product.getName();
     this.fullSupply = product.getFullSupply();
-    this.productDisplayOrder = product.getDisplayOrder();
+    this.productDisplayOrder = programProduct.getDisplayOrder();
   }
 
   private void requestedQuantityConditionalValidation(ProgramRnrTemplate template) {

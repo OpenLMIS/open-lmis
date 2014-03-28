@@ -36,7 +36,8 @@ import static org.apache.commons.collections.CollectionUtils.exists;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
-import static org.openlmis.core.builder.ProductBuilder.*;
+import static org.openlmis.core.builder.ProductBuilder.code;
+import static org.openlmis.core.builder.ProductBuilder.fullSupply;
 import static org.openlmis.core.builder.ProgramBuilder.defaultProgram;
 
 @Category(IntegrationTests.class)
@@ -66,10 +67,9 @@ public class ProgramProductMapperIT {
 
   @Before
   public void setup() {
-    product = make(a(ProductBuilder.defaultProduct, with(displayOrder, 1)));
+    product = make(a(ProductBuilder.defaultProduct));
     productCategory = new ProductCategory("10", "P1", 1);
     productCategoryMapper.insert(productCategory);
-    product.setCategory(productCategory);
 
     productMapper.insert(product);
     program = make(a(defaultProgram));
@@ -235,7 +235,6 @@ public class ProgramProductMapperIT {
     ProgramProduct programProduct = new ProgramProduct(program, product, 10, true);
 
     Product product1 = make(a(ProductBuilder.defaultProduct, with(code, "P1")));
-    product1.setCategory(product.getCategory());
     productMapper.insert(product1);
 
     ProgramProduct programProduct2 = new ProgramProduct(program, product1, 10, true);

@@ -48,7 +48,6 @@ import static org.openlmis.core.builder.ProcessingPeriodBuilder.defaultProcessin
 import static org.openlmis.core.builder.ProcessingPeriodBuilder.scheduleId;
 import static org.openlmis.core.builder.ProcessingScheduleBuilder.defaultProcessingSchedule;
 import static org.openlmis.core.builder.ProductBuilder.code;
-import static org.openlmis.core.builder.ProductBuilder.displayOrder;
 import static org.openlmis.core.builder.ProgramBuilder.defaultProgram;
 import static org.openlmis.distribution.builder.DistributionBuilder.*;
 
@@ -132,7 +131,7 @@ public class EpiInventoryLineItemMapperIT {
     facilityVisitMapper.insert(facilityVisit);
 
 
-    Product product = make(a(ProductBuilder.defaultProduct, with(displayOrder, 2)));
+    Product product = make(a(ProductBuilder.defaultProduct));
     productMapper.insert(product);
     programProduct = new ProgramProduct(program1, product, 10, true);
     programProductMapper.insert(programProduct);
@@ -165,7 +164,7 @@ public class EpiInventoryLineItemMapperIT {
     lineItem.setIdealQuantity(76);
     lineItem.setCreatedBy(1L);
 
-    Product product1 = make(a(ProductBuilder.defaultProduct, with(code, "P11"), with(displayOrder, 2)));
+    Product product1 = make(a(ProductBuilder.defaultProduct, with(code, "P11")));
     productMapper.insert(product1);
     ProgramProduct programProduct1 = new ProgramProduct(program1, product1, 10, true);
     programProductMapper.insert(programProduct1);
@@ -233,7 +232,7 @@ public class EpiInventoryLineItemMapperIT {
     lineItem.setIdealQuantity(76);
     lineItem.setCreatedBy(1L);
 
-    Product product1 = make(a(ProductBuilder.defaultProduct, with(code, "P11"), with(displayOrder, 2)));
+    Product product1 = make(a(ProductBuilder.defaultProduct, with(code, "P11")));
     productMapper.insert(product1);
     ProgramProduct programProduct1 = new ProgramProduct(program1, product1, 10, true);
     programProductMapper.insert(programProduct1);

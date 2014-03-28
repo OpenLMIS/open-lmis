@@ -104,11 +104,14 @@ public class RequisitionMapperIT {
   @Autowired
   SupplyLineMapper supplyLineMapper;
   @Autowired
+  private ProductCategoryMapper productCategoryMapper;
+  @Autowired
   RequisitionStatusChangeMapper requisitionStatusChangeMapper;
 
   private SupervisoryNode supervisoryNode;
   private Role role;
   private Date modifiedDate;
+  private ProductCategory productCategory;
 
   @Before
   public void setUp() {
@@ -129,6 +132,10 @@ public class RequisitionMapperIT {
     insertSupplyLine(facility, supervisoryNode);
     role = insertRole();
     modifiedDate = new Date();
+
+    productCategory = new ProductCategory("C1", "Category 1", 1);
+    productCategoryMapper.insert(productCategory);
+
   }
 
   @Test
@@ -195,8 +202,8 @@ public class RequisitionMapperIT {
     Product fullSupplyProduct = insertProduct(true, "P1");
     Product nonFullSupplyProduct = insertProduct(false, "P2");
 
-    ProgramProduct fullSupplyProgramProduct = insertProgramProduct(fullSupplyProduct, program);
-    ProgramProduct nonFullSupplyProgramProduct = insertProgramProduct(nonFullSupplyProduct, program);
+    ProgramProduct fullSupplyProgramProduct = insertProgramProductWithProductCategory(fullSupplyProduct, program);
+    ProgramProduct nonFullSupplyProgramProduct = insertProgramProductWithProductCategory(nonFullSupplyProduct, program);
 
     FacilityTypeApprovedProduct fullSupplyFacilityTypeApprovedProduct = insertFacilityApprovedProduct(fullSupplyProgramProduct);
     FacilityTypeApprovedProduct nonFullSupplyFacilityTypeApprovedProduct = insertFacilityApprovedProduct(nonFullSupplyProgramProduct);
@@ -222,8 +229,8 @@ public class RequisitionMapperIT {
     Product fullSupplyProduct = insertProduct(true, "P1");
     Product nonFullSupplyProduct = insertProduct(false, "P2");
 
-    ProgramProduct fullSupplyProgramProduct = insertProgramProduct(fullSupplyProduct, program);
-    ProgramProduct nonFullSupplyProgramProduct = insertProgramProduct(nonFullSupplyProduct, program);
+    ProgramProduct fullSupplyProgramProduct = insertProgramProductWithProductCategory(fullSupplyProduct, program);
+    ProgramProduct nonFullSupplyProgramProduct = insertProgramProductWithProductCategory(nonFullSupplyProduct, program);
 
     FacilityTypeApprovedProduct fullSupplyFacilityTypeApprovedProduct = insertFacilityApprovedProduct(fullSupplyProgramProduct);
     FacilityTypeApprovedProduct nonFullSupplyFacilityTypeApprovedProduct = insertFacilityApprovedProduct(nonFullSupplyProgramProduct);
@@ -258,7 +265,7 @@ public class RequisitionMapperIT {
   public void shouldPopulateLineItemsWhenGettingRnrById() throws Exception {
     Rnr requisition = insertRequisition(processingPeriod1, program, INITIATED, false, facility, supervisoryNode, modifiedDate);
     Product product = insertProduct(true, "P1");
-    ProgramProduct programProduct = insertProgramProduct(product, program);
+    ProgramProduct programProduct = insertProgramProductWithProductCategory(product, program);
     FacilityTypeApprovedProduct facilityTypeApprovedProduct = insertFacilityApprovedProduct(programProduct);
 
     RnrLineItem item1 = insertRnrLineItem(requisition, facilityTypeApprovedProduct);
@@ -825,8 +832,9 @@ public class RequisitionMapperIT {
     return facilityTypeApprovedProduct;
   }
 
-  private ProgramProduct insertProgramProduct(Product product, Program program) {
+  private ProgramProduct insertProgramProductWithProductCategory(Product product, Program program) {
     ProgramProduct programProduct = new ProgramProduct(program, product, 30, true, new Money("12.5000"));
+    programProduct.setProductCategory(productCategory);
     programProductMapper.insert(programProduct);
     return programProduct;
   }
