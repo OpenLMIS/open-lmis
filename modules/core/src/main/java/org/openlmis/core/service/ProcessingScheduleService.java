@@ -124,12 +124,12 @@ public class ProcessingScheduleService {
     return periodRepository.getNPreviousPeriods(currentPeriod, n);
   }
 
-  public Integer findM(ProcessingPeriod currentPeriod) {
-    List<ProcessingPeriod> nPreviousPeriods = periodRepository.getNPreviousPeriods(currentPeriod, 1);
+  public Integer findM(ProcessingPeriod period) {
+    List<ProcessingPeriod> nPreviousPeriods = periodRepository.getNPreviousPeriods(period, 1);
     if (nPreviousPeriods.size() > 0) {
       return nPreviousPeriods.get(0).getNumberOfMonths();
     }
-    return currentPeriod.getNumberOfMonths();
+    return period.getNumberOfMonths();
   }
 
   public List<ProcessingPeriod> getAllPeriodsForScheduleAndYear(Long scheduleId, Long year) {

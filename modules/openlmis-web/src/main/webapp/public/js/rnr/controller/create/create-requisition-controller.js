@@ -8,14 +8,14 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-function CreateRequisitionController($scope, requisition, pageSize, rnrColumns, lossesAndAdjustmentsTypes, facilityApprovedProducts, requisitionRights, regimenTemplate, $location, Requisitions, DeleteRequisition, $routeParams, $dialog, requisitionService, $q) {
+function CreateRequisitionController($scope, requisitionData, pageSize, rnrColumns, lossesAndAdjustmentsTypes, facilityApprovedProducts, requisitionRights, regimenTemplate, $location, DeleteRequisition , Requisitions, $routeParams, $dialog, requisitionService, $q) {
 
   var NON_FULL_SUPPLY = 'nonFullSupply';
   var FULL_SUPPLY = 'fullSupply';
   var REGIMEN = 'regimen';
 
   $scope.pageSize = pageSize;
-  $scope.rnr = new Rnr(requisition, rnrColumns);
+  $scope.rnr = new Rnr(requisitionData.rnr, rnrColumns, requisitionData.numberOfMonths);
 
   $scope.deleteRnR = function( ){
 
@@ -235,8 +235,8 @@ function CreateRequisitionController($scope, requisition, pageSize, rnrColumns, 
     return null;
   };
 
-  $scope.highlightWarning = function (value) {
-    if ($scope.showError && (isUndefined(value) || value === false)) {
+  $scope.highlightWarning = function (showError, value) {
+    if (showError && (isUndefined(value) || value === false)) {
       return "warning-error";
     }
     return null;
@@ -295,17 +295,17 @@ function CreateRequisitionController($scope, requisition, pageSize, rnrColumns, 
 }
 
 CreateRequisitionController.resolve = {
-  requisition: function ($q, $timeout, Requisitions, $route, $rootScope) {
+  requisitionData: function ($q, $timeout, Requisitions, $route, $rootScope) {
     var deferred = $q.defer();
     $timeout(function () {
-      var rnr = $rootScope.rnr;
-      if (rnr) {
-        deferred.resolve(rnr);
-        $rootScope.rnr = undefined;
+      var rnrData = $rootScope.rnrData;
+      if (rnrData) {
+        deferred.resolve(rnrData);
+        $rootScope.rnrData = undefined;
         return;
       }
       Requisitions.get({id: $route.current.params.rnr}, function (data) {
-        deferred.resolve(data.rnr);
+        deferred.resolve(data);
       }, {});
     }, 100);
     return deferred.promise;

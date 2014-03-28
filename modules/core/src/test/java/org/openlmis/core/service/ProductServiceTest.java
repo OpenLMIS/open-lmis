@@ -10,19 +10,15 @@
 
 package org.openlmis.core.service;
 
-import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
-import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.domain.Product;
-import org.openlmis.core.domain.ProductCategory;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.ProgramProduct;
-import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.ProductRepository;
 import org.openlmis.db.categories.UnitTests;
 
@@ -38,9 +34,6 @@ import static org.openlmis.core.builder.ProgramProductBuilder.*;
 @Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
 public class ProductServiceTest {
-
-  @Rule
-  public ExpectedException expectedException = ExpectedException.none();
 
   @Mock
   private ProductCategoryService categoryService;
@@ -75,21 +68,6 @@ public class ProductServiceTest {
     productService.save(spyProduct);
 
     verify(spyProduct).validate();
-  }
-
-  @Test
-  public void shouldThrowExceptionIfCategoryDoesNotExist() {
-    Product product = new Product();
-    product.setPackSize(5);
-    ProductCategory category = new ProductCategory();
-    category.setCode("Invalid Code");
-    product.setCategory(category);
-    when(categoryService.getProductCategoryIdByCode("Invalid Code")).thenReturn(null);
-
-    expectedException.expect(DataException.class);
-    expectedException.expectMessage("error.reference.data.invalid.product");
-
-    productService.save(product);
   }
 
   @Test

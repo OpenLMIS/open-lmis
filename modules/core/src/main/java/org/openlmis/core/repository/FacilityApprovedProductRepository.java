@@ -55,7 +55,7 @@ public class FacilityApprovedProductRepository {
   private List<FacilityTypeApprovedProduct> applyCategoryOverride(List<FacilityTypeApprovedProduct> products){
     if (settingService != null && settingService.getBoolValue("ALLOW_PRODUCT_CATEGORY_PER_PROGRAM")){
       for(FacilityTypeApprovedProduct product: products){
-        product.getProgramProduct().getProduct().setCategory(productCategoryMapper.getProductCategoryById( product.getProgramProduct().getProductCategoryId()));
+        product.getProgramProduct().getProduct().setCategory(productCategoryMapper.getProductCategoryById( product.getProgramProduct().getProductCategory().getId()));
       }
     }
     return products;

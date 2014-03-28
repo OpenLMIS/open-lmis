@@ -25,21 +25,6 @@ import java.util.List;
 
 public class XmlUtils {
 
-
-  public static Element getRootElement(String response) throws ParserConfigurationException, SAXException {
-    try {
-      DocumentBuilderFactory factory = DocumentBuilderFactory
-        .newInstance();
-      DocumentBuilder builder = factory.newDocumentBuilder();
-      Document document = builder.parse(new ByteArrayInputStream(response.getBytes()));
-
-      Element rootElement = document.getDocumentElement();
-      return rootElement;
-    } catch (Exception e) {
-      return null;
-    }
-  }
-
   public static List<String> getNodeValues(String response, String tagName) throws ParserConfigurationException, SAXException {
     try {
       DocumentBuilderFactory factory = DocumentBuilderFactory

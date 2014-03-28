@@ -50,10 +50,17 @@ public class ShipmentService {
       shipmentLineItem.fillReferenceFields(lineItem);
     } else {
       Product product = productService.getByCode(shipmentLineItem.getProductCode());
+
       if (product == null) {
         throw new DataException("error.unknown.product");
       }
       shipmentLineItem.fillReferenceFields(product);
+    }
+
+    if (shipmentLineItem.getReplacedProductCode() != null) {
+      if (productService.getByCode(shipmentLineItem.getReplacedProductCode()) == null) {
+        throw new DataException("error.unknown.product");
+      }
     }
 
     shipmentRepository.save(shipmentLineItem);

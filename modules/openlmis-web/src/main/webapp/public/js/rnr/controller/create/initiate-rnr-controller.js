@@ -240,16 +240,16 @@ function InitiateRnrController($scope, $location, Requisitions, PeriodsForFacili
             $scope.error = messageService.get("error.requisition.not.submitted");
             return;
           }
-          $scope.$parent.rnr = data.rnr;
-          createRnrPath = '/create-rnr/' + $scope.$parent.rnr.id + '/' + $scope.selectedFacilityId + '/' + $scope.selectedProgram.id + "?supplyType=fullSupply&page=1";
+          $scope.$parent.rnrData = data;
+          createRnrPath = '/create-rnr/' + $scope.$parent.rnrData.rnr.id + '/' + $scope.selectedFacilityId + '/' + $scope.selectedProgram.id + "?supplyType=fullSupply&page=1";
           $location.url(createRnrPath);
         });
       } else if (hasPermission('CREATE_REQUISITION')) {
 
         Requisitions.save({facilityId: $scope.selectedFacilityId, programId: $scope.selectedProgram.id,
           periodId: selectedPeriod.id, emergency: $scope.selectedRnrType.emergency}, {}, function (data) {
-          $scope.$parent.rnr = data.rnr;
-          createRnrPath = '/create-rnr/' + $scope.$parent.rnr.id + '/' + $scope.selectedFacilityId + '/' + $scope.selectedProgram.id + "?supplyType=fullSupply&page=1";
+          $scope.$parent.rnrData = data;
+          createRnrPath = '/create-rnr/' + $scope.$parent.rnrData.rnr.id + '/' + $scope.selectedFacilityId + '/' + $scope.selectedProgram.id + "?supplyType=fullSupply&page=1";
           $location.url(createRnrPath);
         }, function (data) {
           $scope.error = data.data.error ? data.data.error : messageService.get("error.requisition.not.exist");

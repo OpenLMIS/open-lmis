@@ -1,4 +1,3 @@
-
 /*
  * This program is part of the OpenLMIS logistics management information system platform software.
  * Copyright © 2013 VillageReach
@@ -40,6 +39,7 @@ public class ShipmentLineItemDTO {
   private String programCode;
   private String productCode;
   private String quantityOrdered;
+  private String replacedProductCode;
   private String quantityShipped;
   private String cost;
   private String substitutedProductCode;

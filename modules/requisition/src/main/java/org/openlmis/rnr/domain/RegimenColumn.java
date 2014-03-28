@@ -15,7 +15,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 /**
- * This class represents a column configured in regimen template for a program.
+ * RegimenColumn represents a column configured in regimen template for a program.
  */
 
 @Data

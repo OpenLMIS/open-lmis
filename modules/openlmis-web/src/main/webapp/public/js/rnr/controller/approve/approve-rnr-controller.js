@@ -8,8 +8,9 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, regimenTemplate, $location, pageSize, $routeParams, $dialog, requisitionService, $q) {
-  $scope.rnr = new Rnr(requisition, rnrColumns);
+function ApproveRnrController($scope, requisitionData, Requisitions, rnrColumns, regimenTemplate, $location, pageSize, $routeParams, $dialog, requisitionService, $q) {
+  $scope.canApproveRnr = requisitionData.canApproveRnr;
+  $scope.rnr = new Rnr(requisitionData.rnr, rnrColumns, requisitionData.numberOfMonths);
   $scope.rnrColumns = rnrColumns;
   $scope.regimenColumns = regimenTemplate ? regimenTemplate.columns : [];
   $scope.pageSize = pageSize;
@@ -141,11 +142,11 @@ function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, reg
 
 ApproveRnrController.resolve = {
 
-  requisition: function ($q, $timeout, Requisitions, $route) {
+  requisitionData: function ($q, $timeout, Requisitions, $route) {
     var deferred = $q.defer();
     $timeout(function () {
       Requisitions.get({id: $route.current.params.rnr}, function (data) {
-        deferred.resolve(data.rnr);
+        deferred.resolve(data);
       }, {});
     }, 100);
     return deferred.promise;

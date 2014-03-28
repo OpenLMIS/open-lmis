@@ -17,6 +17,10 @@ import org.openlmis.core.service.FacilityFtpDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+/**
+ * FacilityFtpDetailsPersistenceHandler is used for uploads of FacilityFtpDetails. It uploads each FacilityFtpDetails
+ * record by record.
+ */
 @Component
 @NoArgsConstructor
 public class FacilityFtpDetailsPersistenceHandler extends AbstractModelPersistenceHandler {

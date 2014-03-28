@@ -32,7 +32,8 @@ describe('Approve Requisition controller', function () {
     lineItems = [];
     nonFullSupplyLineItems = [];
     regimenLineItems = [];
-    requisition = {'status': "AUTHORIZED", 'lineItems': lineItems, 'nonFullSupplyLineItems': nonFullSupplyLineItems, regimenLineItems: regimenLineItems, period: {numberOfMonths: 5}};
+    requisition = {'status': "AUTHORIZED", 'lineItems': lineItems, 'nonFullSupplyLineItems': nonFullSupplyLineItems,
+      regimenLineItems: regimenLineItems, period: {numberOfMonths: 5}};
     $rootScope.pageSize = 2;
     scope.approvalForm = {};
     programRnrColumnList = [
@@ -46,15 +47,16 @@ describe('Approve Requisition controller', function () {
     pageSize = 2;
     regimenTemplate = {regimenColumns: regimenColumns};
     rnrLineItem = new RegularRnrLineItem({"fullSupply": true});
-    ctrl = controller(ApproveRnrController, {$scope: scope, requisition: requisition, rnrColumns: programRnrColumnList,
+    ctrl = controller(ApproveRnrController, {$scope: scope, requisitionData: {rnr: requisition, canApproveRnr: true, numberOfMonths: 5}, rnrColumns: programRnrColumnList,
       regimenTemplate: regimenTemplate, pageSize: pageSize, $location: location, $routeParams: routeParams, requisitionService: requisitionService});
   }));
 
   it('should set rnr in scope', function () {
     var spyOnRnr = spyOn(window, 'Rnr').andCallThrough();
-    ctrl = controller(ApproveRnrController, {$scope: scope, requisition: requisition, rnrColumns: programRnrColumnList, regimenTemplate: regimenTemplate,
+    var requisitionData = {rnr: requisition, canApproveRnr: true};
+    ctrl = controller(ApproveRnrController, {$scope: scope, requisitionData: requisitionData, rnrColumns: programRnrColumnList, regimenTemplate: regimenTemplate,
       currency: '$', pageSize: pageSize, $location: location, $routeParams: routeParams});
-    expect(spyOnRnr).toHaveBeenCalledWith(requisition, programRnrColumnList);
+    expect(spyOnRnr).toHaveBeenCalledWith(requisitionData.rnr, programRnrColumnList, requisitionData.numberOfMonths);
   });
 
   it('should set scope variables', function () {
@@ -184,7 +186,9 @@ describe('Approve Requisition controller', function () {
       {'id': 3},
       {'id': 4}
     ];
-    ctrl = controller(ApproveRnrController, {$scope: scope, requisition: requisition, rnrColumns: programRnrColumnList, currency: '$', pageSize: pageSize,
+    var requisitionData = {rnr: requisition, canApproveRnr: true};
+
+    ctrl = controller(ApproveRnrController, {$scope: scope, requisitionData: requisitionData, rnrColumns: programRnrColumnList, currency: '$', pageSize: pageSize,
       regimenTemplate: regimenTemplate, $location: location, $routeParams: routeParams});
 
     expect(2).toEqual(scope.numberOfPages);
@@ -198,7 +202,9 @@ describe('Approve Requisition controller', function () {
       {'id': 3},
       {'id': 4}
     ];
-    ctrl = controller(ApproveRnrController, {$scope: scope, requisition: requisition, rnrColumns: programRnrColumnList, currency: '$', pageSize: pageSize,
+    var requisitionData = {rnr: requisition, canApproveRnr: true};
+
+    ctrl = controller(ApproveRnrController, {$scope: scope, requisitionData: requisitionData, rnrColumns: programRnrColumnList, currency: '$', pageSize: pageSize,
       regimenTemplate: regimenTemplate, $location: location, $routeParams: routeParams});
 
     expect(2).toEqual(scope.numberOfPages);
@@ -211,7 +217,9 @@ describe('Approve Requisition controller', function () {
       {'id': 3},
       {'id': 4}
     ];
-    ctrl = controller(ApproveRnrController, {$scope: scope, requisition: requisition, rnrColumns: programRnrColumnList, currency: '$', pageSize: pageSize,
+    var requisitionData = {rnr: requisition, canApproveRnr: true};
+
+    ctrl = controller(ApproveRnrController, {$scope: scope, requisitionData: requisitionData, rnrColumns: programRnrColumnList, currency: '$', pageSize: pageSize,
       regimenTemplate: regimenTemplate, $location: location, $routeParams: routeParams});
 
     expect(scope.page.fullSupply[0].id).toEqual(1);
@@ -227,7 +235,9 @@ describe('Approve Requisition controller', function () {
       {'id': 3},
       {'id': 4}
     ];
-    ctrl = controller(ApproveRnrController, {$scope: scope, requisition: requisition, rnrColumns: programRnrColumnList, currency: '$', pageSize: pageSize,
+    var requisitionData = {rnr: requisition, canApproveRnr: true};
+
+    ctrl = controller(ApproveRnrController, {$scope: scope, requisitionData: requisitionData, rnrColumns: programRnrColumnList, currency: '$', pageSize: pageSize,
       regimenTemplate: regimenTemplate, $location: location, $routeParams: routeParams});
 
     expect(scope.page.fullSupply[0].id).toEqual(3);
@@ -241,7 +251,9 @@ describe('Approve Requisition controller', function () {
 
   it('should set current page to 1 if page not within valid range', function () {
     routeParams.page = -95;
-    ctrl = controller(ApproveRnrController, {$scope: scope, requisition: requisition, rnrColumns: programRnrColumnList, currency: '$', pageSize: pageSize,
+    var requisitionData = {rnr: requisition, canApproveRnr: true};
+
+    ctrl = controller(ApproveRnrController, {$scope: scope, requisitionData: requisitionData, rnrColumns: programRnrColumnList, currency: '$', pageSize: pageSize,
       regimenTemplate: regimenTemplate, $location: location, $routeParams: routeParams});
 
     expect(scope.currentPage).toEqual(1);
