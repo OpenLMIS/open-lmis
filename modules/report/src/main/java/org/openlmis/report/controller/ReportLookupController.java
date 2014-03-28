@@ -245,7 +245,7 @@ public class ReportLookupController extends BaseController {
     return OpenLmisResponse.response("facilities", reportLookupService.getFacilities( program, schedule, type, requisitionGroup ));
   }
 
-  @RequestMapping(value = "/facilities/geographicZone/{geographicZoneId}/requisitionGroup/{rgroupId}/program/{programId}/schedule/{scheduleId}", method = GET, headers = BaseController.ACCEPT_JSON)
+/*  @RequestMapping(value = "/facilities/geographicZone/{geographicZoneId}/requisitionGroup/{rgroupId}/program/{programId}/schedule/{scheduleId}", method = GET, headers = BaseController.ACCEPT_JSON)
   public ResponseEntity<OpenLmisResponse> getFacilities(
           @PathVariable("geographicZoneId") Long geographicZoneId,
           @PathVariable("rgroupId") Long requisitionGroupId,
@@ -254,7 +254,7 @@ public class ReportLookupController extends BaseController {
           HttpServletRequest request
   ) {
       return OpenLmisResponse.response("facilities", reportLookupService.getFacilitiesBy(geographicZoneId,requisitionGroupId,programId,scheduleId));
-  }
+  }*/
 @RequestMapping(value = "/user/facilities", method = GET, headers = BaseController.ACCEPT_JSON)
 public ResponseEntity<OpenLmisResponse> getSupervisedFacilities(
         HttpServletRequest request
