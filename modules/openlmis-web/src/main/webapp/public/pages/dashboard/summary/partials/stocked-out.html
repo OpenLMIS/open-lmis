@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+
+<h2><span openlmis-message="label.stocked.out"></span></h2>
+<div class="row-fluid">
+    <div class="span12">
+        <ng-include src="'/public/pages/dashboard/shared/dashboard-form.html'"></ng-include>
+        <ng-include src="'/public/pages/dashboard/alerts/alerts.html'"></ng-include>
+    </div>
+</div>
+
+<div class="app-form">
+    <h2 openlmis-message="title.facilities.stock.out.district|2"></h2>
+    <div class="row-fluid">
+        <div class="span6">
+            <table class="table table-bordered" ng-show="datarows == undefined || datarows.length == 0">
+            <tr>
+                <td>No data to show under selected filters</td>
+            </tr>
+            </table>
+            <div ng-show ="datarows !== undefined && datarows.length > 0">
+                <table ng-show="datarows.length > 0" class="table-bordered table table-striped pull-right"
+                       ng-table="tableParams"   style="height: 200px; overflow: auto">
+                    <tbody>
+                    <tr ng-repeat="row in datarows">
+                        <td data-title="'District'" sortable="facility"  >{{row.location}}</td>
+                        <td data-title="'Facility Count'" class="number" >{{row.totalStockOut | number}}</td>
+                        <td data-title="'%'" class="number">{{getFacilityStockOutPercent(row.totalStockOut)}}</td>
+                    </tr>
+                    <tr style="font-weight: bold"><td openlmis-message="label.total.facilities.stock.out|2"></td><td class="number">{{totalStockOuts}}</td><td></td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+        <div class="span6">
+            <div ng-show="stockedOutPieChartData == undefined">
+                <label class="chart-note">
+                    No data to render chart
+                </label>
+            </div>
+            <div ng-show ="stockedOutPieChartData != undefined">
+                <a-float id="stocked-out-reporting" af-option="stockedOutPieChartOption" af-data="stockedOutPieChartData" class="chart"></a-float>
+                <div id="stockedOutReportLegend" class="chartLegend"></div>
+                <div style="margin-left: 10px; padding-left: 15px;font-weight: bold;" >
+                    <span openlmis-message="label.total.facilities.stock.out|2"></span><span> : {{totalStockOuts}}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div id="flotTip"></div>

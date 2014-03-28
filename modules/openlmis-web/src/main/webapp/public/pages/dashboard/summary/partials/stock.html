@@ -3,7 +3,9 @@
 <h2><span openlmis-message="label.stocking.efficiency"></span></h2>
 <div class="row-fluid">
     <div class="span12">
+
         <ng-include src="'/public/pages/dashboard/shared/dashboard-form.html'"></ng-include>
+        <ng-include src="'/public/pages/dashboard/alerts/alerts.html'"></ng-include>
     </div>
 </div>
 <table class="table table-bordered" ng-show="stockByProductAndStock == undefined || stockByProductAndStock.length == 0">
@@ -14,18 +16,18 @@
 <div class="app-form" style="margin-top: 5px;" ng-repeat="productGroup in stockByProductAndStock">
     <div style="margin-top: 5px;">
          <h2>Product : {{productGroup.product}}</h2>
-        <div class="row-fluid" ng-repeat="stock in productGroup.stocks">
+        <div class="row-fluid sortable ui-sortable" ng-repeat="stock in productGroup.stocks">
             <div class="span12">
                 <span>{{stock.name}} facilities for {{productGroup.product}}</span><span style="margin-left: 8px"><span openlmis-message="total.facilities"></span> : {{stock.facilities.length}}</span>
                 <div >
                     <table class="table-bordered table table-striped pull-right" ng-table="tableParams" >
 
                         <tbody>
-                        <tr ng-repeat="facility in stock.facilities">
-                            <td data-title="'Facility'" >{{facility.facility}}</td>
-                            <td data-title="'AMC'" class="number" >{{facility.amc | number}}</td>
-                            <td data-title="'SOH'" class="number" >{{facility.soh | number}}</td>
-                            <td data-title="'MOS'">{{facility.mos}}</td>
+                        <tr ng-repeat="row in stock.facilities">
+                            <td data-title="'Facility'" sortable="facility"  >{{row.facility}}</td>
+                            <td data-title="'AMC'" class="number" >{{row.amc | number}}</td>
+                            <td data-title="'SOH'" class="number" >{{row.soh | number}}</td>
+                            <td data-title="'MOS'">{{row.mos}}</td>
                         </tr>
                         </tbody>
                     </table>

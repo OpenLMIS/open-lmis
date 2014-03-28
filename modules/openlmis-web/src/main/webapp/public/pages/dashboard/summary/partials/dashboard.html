@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <script id="template/accordion/accordion.html" type="text/ng-template">
     <div class="accordion" ng-transclude></div>
 </script>
@@ -16,13 +17,14 @@
 
 <div xmlns="http://www.w3.org/1999/html">
 
-<h2><span>Summary</span></h2>
+<h2><span openlmis-message="menu.header.dashboard.summary"></span></h2>
 
 
 <div class="row-fluid">
     <div class="span12">
 
         <ng-include src="'/public/pages/dashboard/shared/dashboard-form.html'"></ng-include>
+        <ng-include src="'/public/pages/dashboard/alerts/alerts.html'"></ng-include>
     </div>
 </div>
 
@@ -65,7 +67,7 @@
                     <div ui-chart="orderFillChart.data" chart-options="orderFillChart.option" style="width:360px;height:300px;" ng-show="showOrderFill"></div>
                  </div>
                 <div class="app-form span6">
-                    <h2>Item Fill Rate</h2>
+                    <h2 openlmis-message="label.item.fill.rate"></h2>
                     <div ng-show="productItemFillRates == undefined || productItemFillRates.length == 0">
                         <label class="chart-note">No data to render chart</label>
                     </div>
@@ -231,4 +233,5 @@
     </div>
 </div>
 </div>
+<div id="flotTip"></div>
 

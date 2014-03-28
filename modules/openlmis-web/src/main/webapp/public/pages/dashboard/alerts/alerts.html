@@ -5,32 +5,55 @@
         <!--<div class="pull-right legend">Showing records {{ ((tableParams.page - 1) *
             tableParams.count) + 1 }} to {{ (tableParams.page +1 ) * tableParams.count }} of {{totalAlerts}}
         </div>-->
-        <div>Alerts</div>
-        <table ng-show="datarows.length > 0" class="table-bordered table table-striped pull-right"
-               ng-table="tableParams"  ng-table-Scroller  loading-method="loadData(tableParams)" >
+        <div ng-show="alertData.length > 0">
+            <!--<div>Alerts</div>-->
+            <table ng-show="alertData.length > 0" class="table-bordered table table-striped pull-right"
+            ng-table="alertTableParams"  >
             <tbody >
-            <tr ng-repeat="alert in datarows" >
+            <tr ng-repeat="alert in alertData" >
                 <td data-title="Alerts">
-                    {{alert.percent}} {{alert.alert}}
+                    {{alert.description}}
                 </td>
             </tr>
             </tbody>
-        </table>
+            </table>
+        </div>
+
     </div>
     <div class="span6">
-
-        <div>Alerts</div>
-        <table ng-show="datarows2.length > 0" class="table-bordered table table-striped pull-right"
-               ng-table="tableParams2"  ng-table-Scroller  loading-method="loadMoreData(tableParams2)" style="height: 200px; overflow: auto">
+        <!--<div class="pull-right legend">Showing records {{ ((tableParams.page - 1) *
+            tableParams.count) + 1 }} to {{ (tableParams.page +1 ) * tableParams.count }} of {{totalAlerts}}
+        </div>-->
+         <div ng-show="stockOutData.length > 0">
+             <!--<div>Alerts</div>-->
+            <table ng-show="stockOutData.length > 0" class="table-bordered table table-striped pull-right"
+            ng-table="stockOutsTableParams"  >
             <tbody >
-            <tr ng-repeat="alert in datarows2" >
-                <td data-title="Alerts" style="width:100%">
-                    {{alert.percent}} {{alert.alert}}
+            <tr ng-repeat="alert in stockOutData" >
+                <td data-title="'Stock outs'">
+                    {{alert.description}}
                 </td>
             </tr>
             </tbody>
-        </table>
+            </table>
+        </div>
+
     </div>
+   <!-- <div class="span6">
+        <div ng-show="stockOutData.length > 0">
+            &lt;!&ndash;<div>Alerts</div>&ndash;&gt;
+            <table ng-show="stockOutData.length > 0" class="table-bordered table table-striped pull-right"
+                   ng-table="tableParams"  >
+                <tbody >
+                <tr ng-repeat="row in stockOutData" >
+                    <td data-title="Stock outs">
+                        {{row.description}}
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>-->
 
 </div>
 <br/>

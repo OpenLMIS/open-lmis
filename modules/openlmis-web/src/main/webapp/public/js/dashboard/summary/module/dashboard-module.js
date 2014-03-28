@@ -12,9 +12,15 @@ angular.module('dashboard',['openlmis', 'ui.calendar', 'ui.bootstrap','easypiech
 
     $routeProvider.
         when('/dashboard', {controller: AdminDashboardController, templateUrl: 'partials/dashboard.html', resolve : ResolveDashboardFormData}).
+        when('/view-stock-detail/:programId/:periodId/:productId', {controller: StockController, templateUrl: 'partials/stock.html', resolve : ResolveDashboardFormData}).
+        when('/stock', {controller: StockController, templateUrl: 'partials/stock.html', resolve : ResolveDashboardFormData }).
+        when('/leadTime', {controller: ShipmentLeadTimeController, templateUrl: 'partials/shipment-lead-time.html', resolve : ResolveDashboardFormData }).
+        when('/stock-out', {controller: StockedOutController, templateUrl: 'partials/stocked-out.html', resolve : ResolveDashboardFormData }).
+        when('/requisition-group-stock-out/:programId/:periodId/:rgroupId/:productId', {controller: RequisitionGroupStockedOutController, templateUrl: 'partials/requisition-group-stocked-out.html', resolve : ResolveDashboardFormData }).
+        when('/stock-out-detail/:programId/:periodId/:rgroupId/:productId', {controller: StockedOutDetailController, templateUrl: 'partials/stocked-out-detail.html', resolve : ResolveDashboardFormData }).
         otherwise({redirectTo: '/dashboard'});
 }]).run(function($rootScope){
-        $rootScope.productSelectOption = {maximumSelectionSize : 4};
+       /* $rootScope.productSelectOption = {maximumSelectionSize : 4};
         $rootScope.summarySelected = 'selected';
-        $rootScope.showProductsFilter = true;
+        $rootScope.showProductsFilter = true;*/
 });
