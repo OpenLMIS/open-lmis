@@ -1,3 +1,4 @@
+DROP VIEW IF EXISTS dw_product_stock_efficiency_statics_vw;
 DROP VIEW IF EXISTS dw_product_facility_stock_info_vw;
 
 CREATE OR REPLACE VIEW dw_product_facility_stock_info_vw AS 
