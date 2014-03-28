@@ -20,10 +20,10 @@ app.directive('aFloat', function() {
             var totalWidth = element.width(), totalHeight = element.height();
 
             if (totalHeight === 0 || totalWidth === 0) {
-                throw new Error('Please set height and width for the aFloat element'+'width is '+ele);
+                throw new Error('Please set height and width for the aFloat element'+'width is '+element);
             }
 
-            if(element.is(":visible") && !isUndefined(d)){
+            if(element.is(":visible") && !isUndefined(d) && !isUndefined(o)){
                 $.plot(element, o , d);
             }
         }
