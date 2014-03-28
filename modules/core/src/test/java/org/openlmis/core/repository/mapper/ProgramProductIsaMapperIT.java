@@ -16,10 +16,7 @@ import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.openlmis.core.builder.ProductBuilder;
 import org.openlmis.core.builder.ProgramBuilder;
-import org.openlmis.core.domain.Product;
-import org.openlmis.core.domain.Program;
-import org.openlmis.core.domain.ProgramProduct;
-import org.openlmis.core.domain.ProgramProductISA;
+import org.openlmis.core.domain.*;
 import org.openlmis.db.categories.IntegrationTests;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -53,8 +50,15 @@ public class ProgramProductIsaMapperIT {
   @Autowired
   private ProgramProductIsaMapper mapper;
 
+  @Autowired
+  private ProductCategoryMapper productCategoryMapper;
+
+  private ProductCategory productCategory;
+
   @Before
   public void setUp() throws Exception {
+    productCategory = new ProductCategory("C1", "Category 1", 1);
+    productCategoryMapper.insert(productCategory);
     product = make(a(ProductBuilder.defaultProduct));
     productMapper.insert(product);
     program = make(a(ProgramBuilder.defaultProgram));
@@ -64,6 +68,7 @@ public class ProgramProductIsaMapperIT {
   @Test
   public void testUpdate() throws Exception {
     ProgramProduct programProduct = new ProgramProduct(program, product, 10, true);
+    programProduct.setProductCategory(productCategory);
     programProductMapper.insert(programProduct);
 
     ProgramProductISA programProductISA = new ProgramProductISA(programProduct.getId(), 23d, 4, 10d, 25d, 20, 50, 17);
@@ -80,6 +85,7 @@ public class ProgramProductIsaMapperIT {
   @Test
   public void shouldInsertISAForAProgramProduct() {
     ProgramProduct programProduct = new ProgramProduct(program, product, 10, true);
+    programProduct.setProductCategory(productCategory);
     programProductMapper.insert(programProduct);
 
     ProgramProductISA programProductISA = new ProgramProductISA(programProduct.getId(), 23d, 4, 10d, 25d, 20, 50, 17);
