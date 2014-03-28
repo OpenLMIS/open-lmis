@@ -26,7 +26,7 @@ ResolveDashboardFormData = {
 
             UserDefaultSupervisoryNode.get({}, function(data){
                 deferred.resolve(data.supervisoryNode);
-            })
+            });
 
         },100);
 

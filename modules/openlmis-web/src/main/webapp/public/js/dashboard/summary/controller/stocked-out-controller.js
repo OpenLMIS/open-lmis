@@ -65,7 +65,7 @@ function StockedOutController($scope, $location, programsList,formInputValue,Rep
                 },function(data){
                     $scope.requisitionGroups = data.requisitionGroupList;
                     $scope.requisitionGroups.unshift({'name':formInputValue.requisitionOptionAll});
-                })
+                });
         }else{
             RequisitionGroupsByProgram.get({program: $scope.filterObject.programId }, function(data){
                 $scope.requisitionGroups = data.requisitionGroupList;
@@ -99,8 +99,7 @@ function StockedOutController($scope, $location, programsList,formInputValue,Rep
 
             $scope.programs.unshift({'name': formInputValue.programOptionSelect});
         }else if(!isUndefined($scope.formFilter.supervisoryNodeId)){
-            ReportProgramsBySupervisoryNode.get({supervisoryNodeId : $scope.filterObject.supervisoryNodeId}
-                ,function(data){
+            ReportProgramsBySupervisoryNode.get({supervisoryNodeId : $scope.filterObject.supervisoryNodeId},function(data){
                     $scope.programs = data.programs;
                     $scope.programs.unshift({'name': formInputValue.programOptionSelect});
                 });
@@ -133,12 +132,11 @@ function StockedOutController($scope, $location, programsList,formInputValue,Rep
                     RequisitionGroupsBySupervisoryNodeProgramSchedule.get(
                         {programId: $scope.filterObject.programId,
                             scheduleId: $scope.filterObject.scheduleId,
-                            supervisoryNodeId: $scope.filterObject.supervisoryNodeId}
-                        , function(data){
+                            supervisoryNodeId: $scope.filterObject.supervisoryNodeId}, function(data){
                             $scope.requisitionGroups = data.requisitionGroupList;
                             $scope.requisitionGroups.unshift({'name':formInputValue.requisitionOptionAll});
 
-                        })
+                        });
                 }else{
                     RequisitionGroupsByProgramSchedule.get({program: $scope.filterObject.programId, schedule:$scope.filterObject.scheduleId}, function(data){
                         $scope.requisitionGroups = data.requisitionGroupList;

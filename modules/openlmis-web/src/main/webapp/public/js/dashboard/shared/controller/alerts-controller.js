@@ -17,8 +17,7 @@ function AlertsController($scope, Alerts, ngTableParams) {
             return;
         }
 
-        Alerts.get({supervisoryNodeId: $scope.formFilter.supervisoryNodeId}
-            ,function(data){
+        Alerts.get({supervisoryNodeId: $scope.formFilter.supervisoryNodeId},function(data){
                 if(!isUndefined(data.alerts)){
                     $scope.alertData = _.filter(data.alerts,function(alertData){if(alertData.category == 'ALERT'){return alertData;}});
                     $scope.stockOutData = _.filter(data.alerts,function(alertData){if(alertData.category == 'STOCkOUT'){return alertData;}});
