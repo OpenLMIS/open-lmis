@@ -742,7 +742,6 @@ function AdminDashboardController($scope,$timeout,$filter,$location, programsLis
                 };
                 stockData.isNavigatedBack = true;
                 navigateBackService.setData(stockData);
-               // $scope.$parent.stockEfficiencySelected = 'selected';
                 $location.path(viewStockPath).search(params);
                 $scope.$apply();
 

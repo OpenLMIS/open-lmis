@@ -24,7 +24,8 @@
     <div class="span12">
 
         <ng-include src="'/public/pages/dashboard/shared/dashboard-form.html'"></ng-include>
-        <ng-include src="'/public/pages/dashboard/alerts/alerts.html'"></ng-include>
+        <ng-include src="'/public/pages/dashboard/shared/alerts.html'"></ng-include>
+
     </div>
 </div>
 
@@ -35,7 +36,7 @@
             <accordion-heading>
                 <div class="accordion-title">
                     <div class="caption">
-                        <i  class="flaticon-speedometer1"/><span openlmis-message="label.fill.rates"></span>
+                        <i class="flaticon-speedometer1"></i><span openlmis-message="label.fill.rates"></span>
                     </div>
                     <div class="tools">
                         <i  ng-class="{'icon-minus-sign': fillRates.openPanel, 'icon-plus-sign': !fillRates.openPanel}"></i>
@@ -95,7 +96,7 @@
                     <accordion-heading>
                         <div class="accordion-title">
                             <div class="caption">
-                                <i  class="flaticon-pie2"/> <span openlmis-message="label.district.reporting"></span>
+                                <i class="flaticon-pie2"></i> <span openlmis-message="label.district.reporting"></span>
                             </div>
                             <div class="tools">
                                 <i  ng-class="{'icon-minus-sign': districtReporting.openPanel, 'icon-plus-sign': !districtReporting.openPanel}"></i>
@@ -118,7 +119,7 @@
                     <accordion-heading>
                         <div class="accordion-title">
                             <div class="caption">
-                                <i  class="flaticon-bar"/><span openlmis-message="label.stocking.efficiency"></span>
+                                <i  class="flaticon-bar"></i><span openlmis-message="label.stocking.efficiency"></span>
                             </div>
                             <div class="tools">
 

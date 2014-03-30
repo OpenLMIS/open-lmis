@@ -21,10 +21,7 @@
 
     </div>
     <div class="span6">
-        <!--<div class="pull-right legend">Showing records {{ ((tableParams.page - 1) *
-            tableParams.count) + 1 }} to {{ (tableParams.page +1 ) * tableParams.count }} of {{totalAlerts}}
-        </div>-->
-         <div ng-show="stockOutData.length > 0">
+            <div ng-show="stockOutData.length > 0">
              <!--<div>Alerts</div>-->
             <table ng-show="stockOutData.length > 0" class="table-bordered table table-striped pull-right"
             ng-table="stockOutsTableParams"  >
