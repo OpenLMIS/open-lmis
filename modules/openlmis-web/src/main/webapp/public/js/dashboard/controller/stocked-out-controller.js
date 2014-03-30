@@ -6,7 +6,7 @@
  * To change this template use File | Settings | File Templates.
  */
 
-function StockedOutController($scope, $location, programsList,formInputValue,ReportProgramsBySupervisoryNode,navigateBackService, userDefaultSupervisoryNode,RequisitionGroupsBySupervisoryNodeProgramSchedule, UserSupervisoryNodes,ReportSchedules, ReportPeriods, RequisitionGroupsByProgram,RequisitionGroupsByProgramSchedule, ReportProductsByProgram, OperationYears, ReportPeriodsByScheduleAndYear,StockedOutFacilities, ngTableParams) {
+function StockedOutController($scope, $location, programsList, dashboardMenuService, formInputValue,ReportProgramsBySupervisoryNode,navigateBackService, userDefaultSupervisoryNode,RequisitionGroupsBySupervisoryNodeProgramSchedule, UserSupervisoryNodes,ReportSchedules, ReportPeriods, RequisitionGroupsByProgram,RequisitionGroupsByProgramSchedule, ReportProductsByProgram, OperationYears, ReportPeriodsByScheduleAndYear,StockedOutFacilities, ngTableParams) {
     $scope.filterObject = {};
 
     $scope.formFilter = {};
@@ -275,8 +275,10 @@ function StockedOutController($scope, $location, programsList,formInputValue,Rep
 
     $scope.stockedOutChartClickHandler = function (event, pos, item){
         if(item){
-           var rgroupId = $scope.districts[item.seriesIndex][1];
-           var districtStockOutPath = '/requisition-group-stock-out/'+$scope.filterObject.programId+'/'+$scope.filterObject.periodId+'/'+rgroupId+'/'+$scope.filterObject.productIdList[0];
+            var rgroupId = $scope.districts[item.seriesIndex][1];
+            var districtStockOutPath = '/requisition-group-stock-out/'+$scope.filterObject.programId+'/'+$scope.filterObject.periodId+'/'+rgroupId+'/'+$scope.filterObject.productIdList[0];
+            dashboardMenuService.addTab('menu.header.dashboard.stocked.out.district','/public/pages/dashboard/index.html#'+districtStockOutPath,'DISTRICT-STOCK-OUT',true);
+
             $location.path(districtStockOutPath);
 
             navigateBackService.setData($scope.filterObject);

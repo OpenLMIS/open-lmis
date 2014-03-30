@@ -6,7 +6,7 @@
  * To change this template use File | Settings | File Templates.
  */
 
-function RequisitionGroupStockedOutController($scope,$location,$routeParams,messageService,StockedOutFacilitiesByRequisitionGroup) {
+function RequisitionGroupStockedOutController($scope,$location,$routeParams,dashboardMenuService,messageService,StockedOutFacilitiesByRequisitionGroup) {
     $scope.filterObject = {};
 
     $scope.formFilter = {};
@@ -72,7 +72,6 @@ function RequisitionGroupStockedOutController($scope,$location,$routeParams,mess
                 },function(stockData){
                     $scope.totalStockOuts = 0;
                     if(!isUndefined(stockData.stockOut)){
-                        $scope.stockedOutDetails = stockData.stockOut;
                         $scope.totalStockOuts = stockData.stockOut.length;
                         var suppliedInPast = _.filter(stockData.stockOut, function(stock){ if(stock.suppliedInPast === true){return stock;}});
 
@@ -114,6 +113,7 @@ function RequisitionGroupStockedOutController($scope,$location,$routeParams,mess
     $scope.stockedOutChartClickHandler = function (event, pos, item){
         if(item){
             var districtStockOutPath = '/stock-out-detail/'+$scope.filterObject.programId+'/'+$scope.filterObject.periodId+'/'+$scope.filterObject.rgroupId+'/'+$scope.filterObject.productId;
+            dashboardMenuService.addTab('menu.header.dashboard.stocked.out.district.detail','/public/pages/dashboard/index.html#'+districtStockOutPath,'DISTRICT-STOCK-OUT-DETAIL',true);
             $location.path(districtStockOutPath);
 
             $scope.$apply();

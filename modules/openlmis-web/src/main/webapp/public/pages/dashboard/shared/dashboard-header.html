@@ -1,38 +1,13 @@
 <div class="clearfix"></div>
-<div class="manage-nav" ng-controller="DashboardMenuController">
-    <ul class="clearfix">
-        <li  ng-class="{'selected': currentTab == 'SUMMARY'}">
-            <a href="/public/pages/dashboard/summary/index.html">
-                    <span openlmis-message="menu.header.dashboard.summary"></span>
+<div class="dashboard-nav" ng-controller="DashboardMenuController">
+    <ul id="dashboard-sub-tabs" class="clearfix">
+        <li ng-repeat="tab in dashboardTabs" ng-class="{'selected': currentTab == tab.name}">
+            <a ng-href="{{tab.content}}" style="display: inline-block;">
+                <span openlmis-message="{{tab.header}}"></span>
             </a>
-        </li>
-        <li  ng-class="{'selected': currentTab == 'STOCK'}">
-            <a id="stock-efficiency-tab" href="/public/pages/dashboard/summary/index.html#stock">
-                    <span openlmis-message="menu.header.dashboard.stock.efficiency" ></span>
-            </a>
-        </li>
-        <li  ng-class="{'selected': currentTab == 'ORDER'}">
-            <a href="/public/pages/dashboard/summary/index.html#leadTime">
-                    <span openlmis-message="menu.header.dashboard.order.turn.around"></span>
-            </a>
-        </li>
-        <li  ng-class="{'selected': currentTab == 'STOCK-OUT'}">
-                <a href="/public/pages/dashboard/summary/index.html#stock-out">
-                    <span openlmis-message="menu.header.dashboard.stocked.out"></span>
-            </a>
-        </li>
-        <li ng-if="currentTab == 'DISTRICT-STOCK-OUT' || currentTab == 'DISTRICT-STOCK-OUT-DETAIL'"  ng-class="{'selected': currentTab == 'DISTRICT-STOCK-OUT'}">
-            <a ><button class="close closeTab" type="button" style="padding-left:10px ">×</button>
-                <span openlmis-message="menu.header.dashboard.stocked.out.district"></span>
-            </a>
-        </li>
-        <li ng-if="currentTab == 'DISTRICT-STOCK-OUT-DETAIL'"  ng-class="{'selected': currentTab == 'DISTRICT-STOCK-OUT-DETAIL'}">
-            <a ><button class="close closeTab" type="button" style="padding-left:10px " >×</button>
-                <span openlmis-message="menu.header.dashboard.stocked.out.district.detail"></span>
-            </a>
-        </li>
+            <i ng-if="tab.closable" class="icon-remove-sign" ng-click="closeTab(tab.name)"></i>
 
-
+        </li>
     </ul>
 </div>
 <div class="clearfix"></div>
