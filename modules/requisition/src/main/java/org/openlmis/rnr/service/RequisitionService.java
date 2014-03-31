@@ -500,5 +500,9 @@ public class RequisitionService {
   public RnrLineItem getNonSkippedLineItem(Long rnrId, String productCode) {
     return requisitionRepository.getNonSkippedLineItem(rnrId, productCode);
   }
+
+  public Long getProgramId(Long rnrId) {
+    return requisitionRepository.getProgramId(rnrId);
+  }
 }
 

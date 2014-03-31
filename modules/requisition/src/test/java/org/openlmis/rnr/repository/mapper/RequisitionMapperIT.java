@@ -773,6 +773,13 @@ public class RequisitionMapperIT {
     assertThat(mapper.getFacilityId(requisition.getId()), is(requisition.getFacility().getId()));
   }
 
+  @Test
+  public void shouldGetProgramIdGivenRnrId() throws Exception {
+    Rnr requisition = insertRequisition(processingPeriod1, program, INITIATED, false, facility, supervisoryNode, modifiedDate);
+
+    assertThat(mapper.getProgramId(requisition.getId()), is(requisition.getProgram().getId()));
+  }
+
   private void insertRoleForApprovedRequisitions(Long facilityId, Long userId) throws SQLException {
     queryExecutor.executeUpdate("INSERT INTO fulfillment_role_assignments (userId,facilityId,roleId) values (?,?,?)", userId, facilityId, role.getId());
   }
