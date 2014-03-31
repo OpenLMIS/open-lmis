@@ -35,7 +35,6 @@ import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
 import static org.openlmis.core.builder.FacilityBuilder.FACILITY_TYPE_ID;
 import static org.openlmis.core.builder.ProductBuilder.*;
-import static org.openlmis.core.builder.ProductBuilder.displayOrder;
 import static org.openlmis.core.builder.ProgramBuilder.defaultProgram;
 import static org.openlmis.core.builder.ProgramBuilder.programCode;
 

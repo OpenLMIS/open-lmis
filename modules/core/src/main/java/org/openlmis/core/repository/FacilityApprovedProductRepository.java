@@ -14,9 +14,7 @@ import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.FacilityTypeApprovedProduct;
 import org.openlmis.core.repository.mapper.FacilityApprovedProductMapper;
 import org.openlmis.core.repository.mapper.FacilityMapper;
-import org.openlmis.core.repository.mapper.ProductCategoryMapper;
 import org.openlmis.core.repository.mapper.ProductMapper;
-import org.openlmis.core.service.ConfigurationSettingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -37,48 +35,30 @@ public class FacilityApprovedProductRepository {
   private ProductMapper productMapper;
 
   @Autowired
-  private ConfigurationSettingService settingService;
-
-  @Autowired
-  private ProductCategoryMapper productCategoryMapper;
-
-  @Autowired
   public FacilityApprovedProductRepository(FacilityApprovedProductMapper facilityApprovedProductMapper, FacilityMapper facilityMapper, ProductMapper productMapper) {
     this.facilityApprovedProductMapper = facilityApprovedProductMapper;
     this.facilityMapper = facilityMapper;
     this.productMapper = productMapper;
   }
 
-
-
-
-  private List<FacilityTypeApprovedProduct> applyCategoryOverride(List<FacilityTypeApprovedProduct> products){
-    if (settingService != null && settingService.getBoolValue("ALLOW_PRODUCT_CATEGORY_PER_PROGRAM")){
-      for(FacilityTypeApprovedProduct product: products){
-        product.getProgramProduct().getProduct().setCategory(productCategoryMapper.getProductCategoryById( product.getProgramProduct().getProductCategory().getId()));
-      }
-    }
-    return products;
-  }
-
   public List<FacilityTypeApprovedProduct> getFullSupplyProductsByFacilityAndProgram(Long facilityId, Long programId) {
-    return applyCategoryOverride( facilityApprovedProductMapper.getFullSupplyProductsByFacilityAndProgram(facilityId, programId));
+    return  facilityApprovedProductMapper.getFullSupplyProductsByFacilityAndProgram(facilityId, programId);
   }
 
   public List<FacilityTypeApprovedProduct> getNonFullSupplyProductsByFacilityAndProgram(Long facilityId, Long programId) {
-    return applyCategoryOverride(facilityApprovedProductMapper.getNonFullSupplyProductsByFacilityAndProgram(facilityId, programId));
+    return facilityApprovedProductMapper.getNonFullSupplyProductsByFacilityAndProgram(facilityId, programId);
   }
 
   public List<FacilityTypeApprovedProduct> getProductsCompleteListByFacilityAndProgram(Long facilityId, Long programId) {
-      return applyCategoryOverride(facilityApprovedProductMapper.getProductsCompleteListByFacilityAndProgram(facilityId, programId));
+      return facilityApprovedProductMapper.getProductsCompleteListByFacilityAndProgram(facilityId, programId);
   }
 
   public List<FacilityTypeApprovedProduct> getProductsCompleteListByFacilityTypeAndProgram(Long facilityTypeId, Long programId) {
-      return applyCategoryOverride(facilityApprovedProductMapper.getProductsCompleteListByFacilityTypeAndProgram(facilityTypeId, programId));
+      return facilityApprovedProductMapper.getProductsCompleteListByFacilityTypeAndProgram(facilityTypeId, programId);
   }
 
   public List<FacilityTypeApprovedProduct> getProductsAlreadyApprovedListByFacilityTypeAndProgram(Long facilityTypeId, Long programId) {
-      return applyCategoryOverride(facilityApprovedProductMapper.getProductsAlreadyApprovedListByFacilityTypeAndProgram(facilityTypeId, programId));
+      return facilityApprovedProductMapper.getProductsAlreadyApprovedListByFacilityTypeAndProgram(facilityTypeId, programId);
   }
 
   public FacilityTypeApprovedProduct getFacilityApprovedProductByProgramProductAndFacilityTypeId(Long facilityTypeId,Long programId,Long productId){
