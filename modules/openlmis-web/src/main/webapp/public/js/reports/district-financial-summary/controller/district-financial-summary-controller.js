@@ -1,5 +1,8 @@
+
+
+/*
 function DistrictFinancialSummaryControllers($scope, $filter, ngTableParams,
-                                             DistrictFinancialSummaryReport,ReportGeographicZonesByLevel ,GeographicZones,ReportGeographicLevels,ReportPeriodsByScheduleAndYear,ReportSchedules,ReportPrograms,ReportPeriods, OperationYears, SettingsByKey,localStorageService, $http, $routeParams, $location) {
+                                             DistrictFinancialSummaryReport,ReportGeographicZonesByLevel ,GeographicZones,ReportGeographicLevels,ReportPeriodsByScheduleAndYear,ReportSchedules,ReportPrograms,ReportPeriods, OperationYears, SettingsByKey,RequisitionGroupsByProgram, $http, $routeParams, $location) {
     //to minimize and maximize the filter section
     var section = 1;
     $scope.showMessage = true;
@@ -35,8 +38,8 @@ function DistrictFinancialSummaryControllers($scope, $filter, ngTableParams,
         scheduleId: $scope.schedule,
         schedule: "",
         year : "",
-        zoneId : $scope.zone,
-        zone:"" ,
+        rgroupId : $scope.rgroup,
+        rgroup:"" ,
         geographicLevelId: $scope.geographicLevel,
         geographicLevel:""
     };
@@ -44,7 +47,7 @@ function DistrictFinancialSummaryControllers($scope, $filter, ngTableParams,
     //filter form data section
     $scope.filterOptions = {
         period: $scope.filterObject.periodId,
-        zone : $scope.filterObject.zoneId,
+        rgroup : $scope.filterObject.rgroupId,
         filterText: "",
         useExternalFilter: false
     };
@@ -90,23 +93,52 @@ function DistrictFinancialSummaryControllers($scope, $filter, ngTableParams,
         }
     };
 
-  $scope.$watch('filterObject.zoneId', function(selection){
+  $scope.$watch('filterObject.rgroupId', function(selection){
 
         if(selection !== undefined || selection === ""){
-            $scope.filterObject.zoneId =  selection;
-            $.each( $scope.zones,function( item,idx){
+            $scope.filterObject.rgroupId =  selection;
+            $.each( $scope.requisitionGroups,function( item,idx){
                 if(idx.id == selection){
-                    $scope.filterObject.zone = idx.name;
+                    $scope.filterObject.rgroup = idx.name;
                 }
             });
         }else{
-            $scope.filterObject.zoneId = 0;
-            $scope.filterObject.zone = "";
+            $scope.filterObject.rgroupId = 0;
+            $scope.filterObject.rgroup = "";
+        }
+        $scope.filterGrid();
+    });
+
+    $scope.$watch('filterObject.programId', function (selection) {
+        if (selection !== undefined || selection === "") {
+            $scope.filterObject.programId = selection;
+
+            if (selection === '') {
+                return;
+            }
+        RequisitionGroupsByProgram.get({program: selection }, function (data) {
+                $scope.requisitionGroups = data.requisitionGroupList;
+                if ($scope.requisitionGroups === undefined || $scope.requisitionGroups.length === 0) {
+                    $scope.requisitionGroups = [];
+                    $scope.requisitionGroups.push({'name': '-- All Requisition Groups --'});
+                } else {
+                    $scope.requisitionGroups.unshift({'name': '-- All Requisition Groups --'});
+                }
+
+            });
+        } else {
+
+            return;
         }
         $scope.filterGrid();
     });
 
 
+
+
+
+
+/*
     $scope.$watch('filterObject.programId', function (selection) {
         if (selection !== undefined || selection === "") {
             $scope.filterObject.programId = selection;
@@ -248,4 +280,25 @@ function DistrictFinancialSummaryControllers($scope, $filter, ngTableParams,
 
 
 
+}*/
+
+function DistrictFinancialSummaryControllers( $scope, $window, DistrictFinancialSummaryReport ) {
+
+    $scope.OnFilterChanged = function(){
+        // clear old data if there was any
+        $scope.data = $scope.datarows = [];
+        DistrictFinancialSummaryReport.get($scope.filter, function (data) {
+            if (data.pages !== undefined && data.pages.rows !== undefined) {
+                $scope.data = data.pages.rows;
+                $scope.paramsChanged($scope.tableParams);
+            }
+        });
+    };
+
+    $scope.exportReport = function (type) {
+        $scope.filter.pdformat = 1;
+        var params = jQuery.param($scope.filter);
+        var url = '/reports/download/district_financial_summary/' + type + '?' + params;
+        $window.open(url);
+    };
 }

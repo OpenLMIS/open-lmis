@@ -7,8 +7,8 @@
  *
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
-
-angular.module('district_financial_summary', ['openlmis', 'ngTable', 'ui.bootstrap.modal', 'ui.bootstrap.dropdownToggle'])
+/*
+angular.module('district_financial_summary', ['openlmis', 'ngTable','angularCombine' ,'ui.bootstrap.modal', 'ui.bootstrap.dropdownToggle'])
     .config(['$routeProvider', function ($routeProvider) {
         $routeProvider.
             when('/list', {controller:DistrictFinancialSummaryControllers, templateUrl:'partials/list.html',reloadOnSearch:false}).
@@ -16,4 +16,17 @@ angular.module('district_financial_summary', ['openlmis', 'ngTable', 'ui.bootstr
     }]).run(function ($rootScope, AuthorizationService) {
         AuthorizationService.preAuthorize('VIEW_DISTRICT_FINANCIAL_SUMMARY_REPORT');
     });
+*/
 
+angular.module('district_financial_summary', ['openlmis','angularCombine', 'ngTable', 'ui.bootstrap.modal', 'ui.bootstrap.dropdownToggle'])
+    .config(['$routeProvider', function ($routeProvider) {
+        $routeProvider.
+            when('/list', {controller:DistrictFinancialSummaryControllers, templateUrl:'partials/list.html',reloadOnSearch:false}).
+            otherwise({redirectTo:'/list'});
+    }]).run(
+    function ($rootScope, AuthorizationService) {
+        AuthorizationService.preAuthorize('VIEW_DISTRICT_FINANCIAL_SUMMARY_REPORT');
+    }
+).config(function (angularCombineConfigProvider) {
+        angularCombineConfigProvider.addConf(/filter-/, '/public/pages/reports/shared/filters.html');
+    });
