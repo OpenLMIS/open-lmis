@@ -42,11 +42,11 @@ public class DistrictSummaryReportParam
   @Override
   public String toString() {
     DateFormat dateFormatter = DateFormat.getDateInstance(DateFormat.DEFAULT);
-    StringBuilder filtersValue = new StringBuilder("");
-    filtersValue.append("Period : ").append(this.period).append("\n").
-      append("Schedule : ").append(this.schedule).append("\n").
-      append("Program : ").append(this.program).append("\n").
-     append("Requisition Group : ").append(this.rgroup).append("\n");
+   StringBuilder filtersValue = new StringBuilder("");
+    //filtersValue.append("Period : ").append(this.period).append("\n").
+      //append("Schedule : ").append(this.schedule).append("\n").
+      //append("Program : ").append(this.program).append("\n").
+     //append("Requisition Group : ").append(this.rgroup).append("\n");
     return filtersValue.toString();
   }
 }
