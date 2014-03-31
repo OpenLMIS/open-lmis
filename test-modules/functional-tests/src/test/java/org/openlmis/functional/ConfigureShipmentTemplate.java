@@ -130,6 +130,8 @@ public class ConfigureShipmentTemplate extends TestCaseHelper {
     configureShipmentPage.checkShippedDateCheckBox();
     configureShipmentPage.setPackedDate("105");
     configureShipmentPage.setShippedDate("106");
+    configureShipmentPage.checkReplacedProductCodeCheckBox();
+    configureShipmentPage.setReplacedProductCode("7");
     configureShipmentPage.clickSaveButton();
     configureShipmentPage.verifyMessage("Shipment file configuration saved successfully!");
 
@@ -143,6 +145,7 @@ public class ConfigureShipmentTemplate extends TestCaseHelper {
     assertEquals("104", configureShipmentPage.getProductCode());
     assertEquals("105", configureShipmentPage.getPackedDate());
     assertEquals("106", configureShipmentPage.getShippedDate());
+    assertEquals("7", configureShipmentPage.getReplacedProductCode());
 
     setDefaultPositionValues();
   }
@@ -183,7 +186,8 @@ public class ConfigureShipmentTemplate extends TestCaseHelper {
     ConfigureEDIPage configureEDIPage = homePage.navigateEdiScreen();
     ConfigureShipmentPage configureShipmentPage = configureEDIPage.navigateConfigureShipmentPage();
     configureShipmentPage.setQuantityShipped("101");
-    configureShipmentPage.setOrderNumber("101");
+    configureShipmentPage.setShippedDate("6");
+    configureShipmentPage.setReplacedProductCode("6");
     configureShipmentPage.clickSaveButton();
     configureShipmentPage.verifyErrorMessage("Position numbers cannot have duplicate values");
 
@@ -204,6 +208,7 @@ public class ConfigureShipmentTemplate extends TestCaseHelper {
     configureShipmentPage.unCheckCostCheckBox();
     configureShipmentPage.unCheckPackedDateCheckBox();
     configureShipmentPage.unCheckShippedDateCheckBox();
+    configureShipmentPage.unCheckReplacedProductCode();
 
     configureShipmentPage.setOrderNumber("1");
     configureShipmentPage.setProductCode("2");
@@ -211,6 +216,7 @@ public class ConfigureShipmentTemplate extends TestCaseHelper {
     configureShipmentPage.setCost("4");
     configureShipmentPage.setPackedDate("5");
     configureShipmentPage.setShippedDate("6");
+    configureShipmentPage.setReplacedProductCode("7");
     configureShipmentPage.selectValueFromPackedDateDropDown("dd/MM/yy");
     configureShipmentPage.selectValueFromShippedDateDropDown("dd/MM/yy");
     configureShipmentPage.clickSaveButton();

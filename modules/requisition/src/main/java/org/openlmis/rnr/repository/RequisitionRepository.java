@@ -229,6 +229,10 @@ public class RequisitionRepository {
     return rnrLineItemMapper.getNonSkippedLineItem(rnrId, productCode);
   }
 
+  public Long getProgramId(Long rnrId) {
+    return requisitionMapper.getProgramId(rnrId);
+  }
+
   public String deleteRnR(Long rnrId) {
     return requisitionMapper.deleteRnR(rnrId.intValue());
   }

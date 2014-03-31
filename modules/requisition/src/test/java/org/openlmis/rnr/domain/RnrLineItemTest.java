@@ -35,8 +35,8 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
-import static org.openlmis.core.builder.ProductBuilder.*;
-import static org.openlmis.core.builder.ProductBuilder.productCategoryDisplayOrder;
+import static org.openlmis.core.builder.ProductBuilder.code;
+import static org.openlmis.core.builder.ProductBuilder.defaultProduct;
 import static org.openlmis.core.builder.ProgramBuilder.defaultProgram;
 import static org.openlmis.rnr.builder.RnrColumnBuilder.*;
 import static org.openlmis.rnr.builder.RnrLineItemBuilder.*;
@@ -113,10 +113,14 @@ public class RnrLineItemTest {
 
     Program program = make(a(defaultProgram));
     Product product = make(
-      a(defaultProduct, with(code, "ASPIRIN"), with(productCategoryDisplayOrder, 3), with(displayOrder, 9)));
+      a(defaultProduct, with(code, "ASPIRIN")));
     product.setDispensingUnit("Strip");
 
+    ProductCategory category = new ProductCategory("C1", "Category 1", 3);
     ProgramProduct programProduct = new ProgramProduct(program, product, 30, true);
+    programProduct.setDisplayOrder(9);
+    programProduct.setProductCategory(category);
+
     RnrLineItem rnrLineItem = new RnrLineItem(1L, new FacilityTypeApprovedProduct("warehouse", programProduct, 3), 1L, 1L);
 
     assertThat(rnrLineItem.getFullSupply(), is(product.getFullSupply()));

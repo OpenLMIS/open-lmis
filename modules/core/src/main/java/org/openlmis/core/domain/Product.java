@@ -56,9 +56,6 @@ public class Product extends BaseModel implements Importable {
   @ImportField(name = "Product Type")
   private String type;
 
-  @ImportField(name = "Display Order", type = "int")
-  private Integer displayOrder;
-
   @ImportField(mandatory = true, name = "Product Primary Name")
   private String primaryName;
 
@@ -81,11 +78,6 @@ public class Product extends BaseModel implements Importable {
   private ProductForm form;
 
   private Long formId;
-
-  @ImportField(mandatory = true, type = "String", name = "Product Category", nested = "code")
-  private ProductCategory category;
-
-  private Long categoryId;
 
   @ImportField(type = "String", name = "Product Group", nested = "code")
   private ProductGroup productGroup;

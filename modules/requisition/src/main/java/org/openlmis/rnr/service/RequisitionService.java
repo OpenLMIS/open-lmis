@@ -516,5 +516,9 @@ public class RequisitionService {
   public Integer findM(ProcessingPeriod period) {
     return processingScheduleService.findM(period);
   }
+
+  public Long getProgramId(Long rnrId) {
+    return requisitionRepository.getProgramId(rnrId);
+  }
 }
 
