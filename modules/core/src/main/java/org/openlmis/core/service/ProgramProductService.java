@@ -131,4 +131,8 @@ public class ProgramProductService {
     }
     category.setId(categoryId);
   }
+
+  public ProgramProduct getByProgramAndProductId(Long programId, Long productId) {
+    return programProductRepository.getByProgramAndProductId(programId, productId);
+  }
 }
