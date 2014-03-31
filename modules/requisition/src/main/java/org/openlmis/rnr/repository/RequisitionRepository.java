@@ -228,4 +228,8 @@ public class RequisitionRepository {
   public RnrLineItem getNonSkippedLineItem(Long rnrId, String productCode) {
     return rnrLineItemMapper.getNonSkippedLineItem(rnrId, productCode);
   }
+
+  public Long getProgramId(Long rnrId) {
+    return requisitionMapper.getProgramId(rnrId);
+  }
 }
