@@ -36,8 +36,7 @@ import static org.apache.commons.collections.CollectionUtils.exists;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
-import static org.openlmis.core.builder.ProductBuilder.code;
-import static org.openlmis.core.builder.ProductBuilder.fullSupply;
+import static org.openlmis.core.builder.ProductBuilder.*;
 import static org.openlmis.core.builder.ProgramBuilder.defaultProgram;
 
 @Category(IntegrationTests.class)
@@ -148,20 +147,39 @@ public class ProgramProductMapperIT {
   }
 
   @Test
-  public void shouldGetProgramProductsByProgram() {
-    ProgramProduct programProduct = new ProgramProduct(program, product, 10, true);
-    programProduct.setProductCategory(productCategory);
-    programProductMapper.insert(programProduct);
+  public void shouldGetProgramProductsByProgramInOrderOfDisplayOrderAndProductCode() {
+    ProgramProduct programProduct1 = new ProgramProduct(program, product, 10, true);
+    programProduct1.setProductCategory(productCategory);
+    programProduct1.setDisplayOrder(3);
+    programProductMapper.insert(programProduct1);
 
-    ProgramProductISA programProductISA = new ProgramProductISA(programProduct.getId(), 1d, 2, 3.3, 5.6, 4, 5, 5);
+    Product product1 = make(a(defaultProduct, with(code, "Product 1")));
+    productMapper.insert(product1);
+
+    Product product2 = make(a(defaultProduct, with(code, "Product 2")));
+    productMapper.insert(product2);
+    ProgramProduct programProduct2 = new ProgramProduct(program, product1, 10, true);
+    programProduct2.setProductCategory(productCategory);
+    programProduct2.setDisplayOrder(1);
+    programProductMapper.insert(programProduct2);
+
+    ProgramProduct programProduct3 = new ProgramProduct(program, product2, 10, true);
+    programProduct3.setProductCategory(productCategory);
+    programProduct3.setDisplayOrder(2);
+    programProductMapper.insert(programProduct3);
+
+    ProgramProductISA programProductISA = new ProgramProductISA(programProduct1.getId(), 1d, 2, 3.3, 5.6, 4, 5, 5);
 
     programProductISAMapper.insert(programProductISA);
 
     List<ProgramProduct> programProducts = programProductMapper.getByProgram(program);
 
-    assertThat(programProducts.size(), is(1));
-    assertThat(programProducts.get(0).getId(), is(programProduct.getId()));
-    assertThat(programProducts.get(0).getProgramProductIsa(), is(programProductISA));
+    assertThat(programProducts.size(), is(3));
+    assertThat(programProducts.get(0).getId(), is(programProduct2.getId()));
+    assertThat(programProducts.get(0).getDisplayOrder(), is(programProduct2.getDisplayOrder()));
+    assertThat(programProducts.get(1).getId(), is(programProduct3.getId()));
+    assertThat(programProducts.get(2).getId(), is(programProduct1.getId()));
+    assertThat(programProducts.get(2).getProgramProductIsa(), is(programProductISA));
   }
 
   @Test

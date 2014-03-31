@@ -46,7 +46,7 @@ public interface ProgramProductMapper {
   void update(ProgramProduct programProduct);
 
   @Select({"SELECT * FROM program_products pp INNER JOIN products p ON pp.productId = p.id WHERE pp.programId = #{id} ",
-    "ORDER BY p.displayOrder NULLS LAST, LOWER(p.code)"})
+    "ORDER BY pp.displayOrder NULLS LAST, LOWER(p.code)"})
   @Results(value = {
     @Result(property = "id", column = "id"),
     @Result(property = "program", column = "programId", javaType = Program.class,
