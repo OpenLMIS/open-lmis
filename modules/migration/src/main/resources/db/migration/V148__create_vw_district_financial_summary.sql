@@ -13,6 +13,6 @@ CREATE OR REPLACE VIEW vw_district_financial_summary AS
    JOIN geographic_zones ON geographic_zones.id = facilities.geographiczoneid
    JOIN programs p ON p.id = requisitions.programid;
 
-ALTER TABLE vw_district_financial_summary_t
+ALTER TABLE vw_district_financial_summary
   OWNER TO postgres;
 
