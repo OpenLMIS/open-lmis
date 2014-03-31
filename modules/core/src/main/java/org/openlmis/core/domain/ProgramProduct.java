@@ -81,5 +81,6 @@ public class ProgramProduct extends BaseModel implements Importable {
     this.active = programProduct.active;
     this.currentPrice = programProduct.currentPrice;
     this.programProductIsa = programProduct.programProductIsa;
+    this.displayOrder = programProduct.displayOrder;
   }
 }
