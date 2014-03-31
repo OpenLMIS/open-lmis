@@ -79,7 +79,7 @@ public interface ProgramProductMapper {
     "FROM program_products pp",
     "INNER JOIN products p  ON pp.productId=p.id",
     "INNER JOIN programs pr ON pr.id=pp.programId",
-    "LEFT OUTER JOIN product_categories pc ON pc.id = p.categoryId",
+    "LEFT OUTER JOIN product_categories pc ON pc.id = pp.productCategoryId",
     "LEFT OUTER JOIN facility_approved_products fap ON fap.programProductId=pp.id",
     "LEFT OUTER JOIN facility_types ft  ON ft.id=fap.facilityTypeId",
     "WHERE ",
