@@ -204,4 +204,11 @@ public class UserController extends BaseController {
     }
     return success(messageService.message("password.reset.success"));
   }
+
+
+  @RequestMapping(value = "/user/preferences", method = GET)
+  public ResponseEntity<OpenLmisResponse> getUserPreferences(HttpServletRequest request){
+    return response("preferences", userService.getPreferences(this.loggedInUserId(request)));
+  }
+
 }
