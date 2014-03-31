@@ -113,21 +113,22 @@ FROM ((((((((((((((((facilities
         (products.code)::text = (requisition_line_items.productcode)::text
       )
     ))
-  JOIN product_categories ON
-    (
-      (
-        product_categories.id = products.categoryid
-      )
-    ))
+
   JOIN program_products ON
     (
-      (program_products.productid = products.id)
+      (program_products.productid = products.id and requisitions.programId = program_products.programId)
     ))
+  JOIN product_categories ON
+  (
+    (
+      product_categories.id = program_products.productCategoryId
+    )
+  ))
   JOIN programs ON
     (
       (
-        (program_products.programid = programs.id) AND
-        (programs.id = requisitions.programid)
+        (program_products.programId = programs.id) AND
+        (programs.id = requisitions.programId)
       )
     ))
   JOIN programs_supported ON
