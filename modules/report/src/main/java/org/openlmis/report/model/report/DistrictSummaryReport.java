@@ -16,25 +16,15 @@ import org.openlmis.report.model.ReportData;
 
 import javax.persistence.Column;
 
-
-/**
- * Created with IntelliJ IDEA.
- * User: Hassan
- * Date: 11/25/13
- * Time: 6:06 PM
- * To change this template use File | Settings | File Templates.
- */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class DistrictSummaryReport implements ReportData {
 
-    @Column(name = "facility")
     private String facility;
     private Double totalcost;
-    @Column( name = "facilitycode")
     private String facilitycode;
-    @Column(name = "facilitytype")
     private  String facilitytype;
+    private String rgroup;
     private String region;
 }
