@@ -17,6 +17,7 @@ import org.openlmis.core.domain.SupervisoryNode;
 import org.openlmis.core.domain.User;
 import org.springframework.stereotype.Repository;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 
 /**
@@ -96,5 +97,11 @@ public interface UserMapper {
 
   @Update("UPDATE users SET active = FALSE, modifiedBy = #{modifiedBy}, modifiedDate = NOW() WHERE id = #{userId}")
   void disable(@Param(value = "userId") Long userId, @Param(value = "modifiedBy") Long modifiedBy);
+
+  @Select("select userPreferenceKey as key, value from user_preferences where userId = #{userId} " +
+      "UNION " +
+      "select key, defaultValue as value from user_preference_master " +
+      "   where key not in (select userPreferenceKey from user_preferences where userId = #{userId})")
+  List<LinkedHashMap> getPreferences(@Param(value = "userId") Long userId);
 
 }

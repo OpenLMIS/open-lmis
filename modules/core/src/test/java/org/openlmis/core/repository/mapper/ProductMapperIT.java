@@ -110,13 +110,11 @@ public class ProductMapperIT {
   @Test
   public void shouldReturnProductByCode() {
     Product product = make(a(defaultProduct));
-    productCategoryMapper.insert(product.getCategory());
     productMapper.insert(product);
     Product expectedProduct = productMapper.getByCode(product.getCode());
     assertThat(expectedProduct.getId(), is(product.getId()));
     assertThat(expectedProduct.getCode(), is(product.getCode()));
     assertThat(expectedProduct.getPrimaryName(), is(product.getPrimaryName()));
-    assertThat(expectedProduct.getCategory(), is(product.getCategory()));
     assertThat(expectedProduct.getForm().getCode(), is("Tablet"));
     assertThat(expectedProduct.getDosageUnit().getCode(), is("mg"));
   }

@@ -48,10 +48,10 @@ public class ManageProgramProductISA extends TestCaseHelper {
 
   @When("^I have data available for program product ISA$")
   public void setUpTestDataForProgramProductISA() throws SQLException {
-    setupProgramProductTestDataWithCategories("P1", "antibiotic1", "C1", "VACCINES");
-    setupProgramProductTestDataWithCategories("P2", "antibiotic2", "C2", "VACCINES");
-    setupProgramProductTestDataWithCategories("P3", "antibiotic3", "C3", "TB");
-    setupProgramProductTestDataWithCategories("P4", "antibiotic4", "C4", "TB");
+    setupProgramProductTestDataWithCategories("C1", "Category 1", "P1", "antibiotic1", "VACCINES");
+    setupProgramProductTestDataWithCategories("C2", "Category 2", "P2", "antibiotic2", "VACCINES");
+    setupProgramProductTestDataWithCategories("C3", "Category 3", "P3", "antibiotic3", "TB");
+    setupProgramProductTestDataWithCategories("C4", "Category 4", "P4", "antibiotic4", "TB");
     dbWrapper.updateProgramToAPushType("TB", false);
   }
 

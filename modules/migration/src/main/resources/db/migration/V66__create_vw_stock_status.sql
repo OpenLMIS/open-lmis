@@ -39,7 +39,8 @@ CREATE OR REPLACE VIEW vw_stock_status AS
     programs.id AS programid, processing_schedules.id AS psid,
     processing_periods.enddate, processing_periods.id AS periodid,
     facility_types.id AS facilitytypeid,
-    requisition_group_members.requisitiongroupid AS rgid, products.categoryid,
+    requisition_group_members.requisitiongroupid AS rgid,
+    program_products.productCategoryId categoryid,
     products.tracer AS indicator_product, facilities.id AS facility_id,
     processing_periods.name AS processing_period_name
    FROM requisition_line_items
@@ -49,7 +50,8 @@ CREATE OR REPLACE VIEW vw_stock_status AS
    JOIN processing_periods ON processing_periods.id = requisitions.periodid
    JOIN processing_schedules ON processing_schedules.id = processing_periods.scheduleid
    JOIN products ON products.code::text = requisition_line_items.productcode::text
-   JOIN product_categories ON product_categories.id = products.categoryid
+   JOIN program_products ON requisitions.programId = program_products.programId and products.id = program_products.productId
+   JOIN product_categories ON product_categories.id = program_products.productCategoryId
    JOIN programs ON programs.id = requisitions.programid
    JOIN requisition_group_members ON requisition_group_members.facilityid = facilities.id
    JOIN geographic_zones ON geographic_zones.id = facilities.geographiczoneid

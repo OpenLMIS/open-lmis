@@ -67,7 +67,8 @@ public class ManageISA extends TestCaseHelper {
       maximumValue = map.get("maximumValue").toString();
       adjustmentValue = map.get("adjustmentValue").toString();
 
-      setupProgramProductTestDataWithCategories(product, productName, category, program);
+      String categoryName = "Category 1";
+      setupProgramProductTestDataWithCategories(category, categoryName, product, productName, program);
       setupProgramProductISA(program, product, whoRatio, dosesPerYear, wastageFactor, bufferPercentage, minimumValue, maximumValue, adjustmentValue);
     }
   }
@@ -120,7 +121,7 @@ public class ManageISA extends TestCaseHelper {
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function")
   public void shouldOverrideIsaExistingFacility(String userSIC, String password, String program) throws SQLException {
-    setupProgramProductTestDataWithCategories("P1", "antibiotic1", "C1", "VACCINES");
+    setupProgramProductTestDataWithCategories("C1", "Category 1", "P1", "antibiotic1", "VACCINES");
     setupProgramProductISA(program, "P1", "1", "2", "3", "100", "100", "1000", "5");
     LoginPage loginPage = PageObjectFactory.getLoginPage(testWebDriver, baseUrlGlobal);
     loginPage.loginAs(userSIC, password);

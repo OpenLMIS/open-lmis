@@ -24,6 +24,7 @@ import org.springframework.dao.DuplicateKeyException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Repository;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 
 /**
@@ -143,5 +144,9 @@ public class UserRepository {
 
   public User getByUserName(String userName) {
     return userMapper.getByUserName(userName);
+  }
+
+  public List<LinkedHashMap> getPreferences(Long userId){
+    return userMapper.getPreferences(userId);
   }
 }

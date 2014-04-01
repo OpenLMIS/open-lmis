@@ -1,12 +1,3 @@
-/*
-
-2013-09-05 - changed call agrument for fn_get_supplying_facility_name from requisitions.supplylineid to requisitions.supervisorynodeid. Used V56__create_vw_supply_status_rev_5.
-??? Issa Fikadu - ???
-??? Muhammad Ahmed - created
- 
-*/
-DROP VIEW IF EXISTS vw_supply_status;
-
 CREATE OR REPLACE VIEW vw_supply_status AS
 SELECT requisition_line_items.id AS li_id,
     requisition_line_items.rnrid AS li_rnrid,
@@ -49,7 +40,7 @@ SELECT requisition_line_items.id AS li_id,
     programs.id AS pg_id, programs.code AS pg_code, programs.name AS pg_name,
     products.id AS p_id, products.code AS p_code,
     products.primaryname AS p_primaryname,
-    products.displayorder AS p_displayorder,
+    program_products.displayorder AS p_displayorder,
     products.tracer AS indicator_product,
     products.description AS p_description, facility_types.name AS facility_type_name,
     facility_types.id AS ft_id, facility_types.code AS ft_code,facility_types.nominalmaxmonth AS ft_nominalmaxmonth, facility_types.nominaleop AS ft_nominaleop,
@@ -69,12 +60,10 @@ SELECT requisition_line_items.id AS li_id,
    JOIN processing_periods ON processing_periods.id = requisitions.periodid
    JOIN processing_schedules ON processing_schedules.id = processing_periods.scheduleid
    JOIN products ON products.code::text = requisition_line_items.productcode::text
-   JOIN product_categories ON product_categories.id = products.categoryid
-   JOIN programs ON programs.id = requisitions.programid
+   JOIN program_products ON requisitions.programId = program_products.programId and products.id = program_products.productId
+   JOIN product_categories ON product_categories.id = program_products.productCategoryId
+   JOIN programs ON programs.id = requisitions.programId
    JOIN requisition_group_members ON requisition_group_members.facilityid = facilities.id
    JOIN geographic_zones ON geographic_zones.id = facilities.geographiczoneid
    JOIN facility_approved_products ON facility_types.id = facility_approved_products.facilitytypeid
-   JOIN program_products ON products.id = program_products.productid AND programs.id = program_products.programid AND program_products.id = facility_approved_products.programproductid;
-
-ALTER TABLE vw_supply_status
-  OWNER TO postgres;
+;

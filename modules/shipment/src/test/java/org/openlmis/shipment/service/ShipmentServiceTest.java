@@ -20,8 +20,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.domain.Product;
+import org.openlmis.core.domain.ProductCategory;
+import org.openlmis.core.domain.ProgramProduct;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.ProductService;
+import org.openlmis.core.service.ProgramProductService;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.rnr.domain.RnrLineItem;
 import org.openlmis.rnr.service.RequisitionService;
@@ -52,6 +55,9 @@ public class ShipmentServiceTest {
 
   @Mock
   private RequisitionService requisitionService;
+
+  @Mock
+  private ProgramProductService programproductService;
 
   @InjectMocks
   private ShipmentService shipmentService;
@@ -119,17 +125,26 @@ public class ShipmentServiceTest {
 
   @Test
   public void shouldFillProductInfoFromProductsIfLineItemDoesNotExist() throws Exception {
+    Long programId = 1L;
+    Long productId = 2L;
     ShipmentLineItem shipmentLineItem = spy(make(a(defaultShipmentLineItem, with(productCode, "P10"), with(orderId, 1L),
       with(quantityShipped, 20))));
 
     when(requisitionService.getNonSkippedLineItem(shipmentLineItem.getOrderId(), "P10")).thenReturn(null);
+    when(requisitionService.getProgramId(shipmentLineItem.getOrderId())).thenReturn(programId);
+
     Product product = make(a(defaultProduct));
+    product.setId(productId);
     when(productService.getByCode("P10")).thenReturn(product);
     when(productService.getByCode("P133")).thenReturn(product);
+    ProductCategory category = new ProductCategory("C1", "category 1", 1);
+    ProgramProduct programProduct = new ProgramProduct();
+    programProduct.setProductCategory(category);
+    when(programproductService.getByProgramAndProductId(programId, productId)).thenReturn(programProduct);
 
     shipmentService.save(shipmentLineItem);
 
-    verify(shipmentLineItem).fillReferenceFields(product);
+    verify(shipmentLineItem).fillReferenceFields(programProduct);
     verify(shipmentRepository).save(shipmentLineItem);
   }
 
@@ -168,14 +183,23 @@ public class ShipmentServiceTest {
 
   @Test
   public void shouldThrowExceptionIfInvalidReplacedProductCode() throws Exception {
+    Long productId = 2L;
+    Long programId = 1L;
     ShipmentLineItem shipmentLineItem = spy(make(a(defaultShipmentLineItem, with(replacedProductCode, "P10"), with(orderId, 1L),
       with(quantityShipped, 20))));
 
     when(requisitionService.getNonSkippedLineItem(shipmentLineItem.getOrderId(), "P10")).thenReturn(null);
+    when(requisitionService.getProgramId(shipmentLineItem.getOrderId())).thenReturn(programId);
+
     Product product = make(a(defaultProduct));
+    product.setId(productId);
     when(productService.getByCode("P123")).thenReturn(product);
     when(productService.getByCode("P10")).thenReturn(null);
 
+    ProgramProduct programProduct = new ProgramProduct();
+
+    when(programproductService.getByProgramAndProductId(programId, productId)).thenReturn(programProduct);
+    doNothing().when(shipmentLineItem).fillReferenceFields(programProduct);
     exException.expect(DataException.class);
     exException.expectMessage("error.unknown.product");
 

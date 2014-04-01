@@ -50,7 +50,7 @@ CREATE OR REPLACE VIEW vw_requisition_detail AS
     product_forms.code AS pf_code,
     products.dispensingunit,
     requisition_group_members.requisitiongroupid,
-    products.categoryid,
+    program_products.productCategoryid categoryid ,
     products.productgroupid,
     processing_periods.scheduleid
     
@@ -61,7 +61,8 @@ CREATE OR REPLACE VIEW vw_requisition_detail AS
    JOIN processing_periods ON processing_periods.id = requisitions.periodid
    JOIN processing_schedules ON processing_schedules.id = processing_periods.scheduleid
    JOIN products ON products.code::text = requisition_line_items.productcode::text
-   JOIN product_categories ON product_categories.id = products.categoryid
+   JOIN program_products ON requisitions.programId = program_products.programId and products.id = program_products.productId
+   JOIN product_categories ON product_categories.id = program_products.productCategoryId
    JOIN programs ON programs.id = requisitions.programid
    JOIN requisition_group_members ON requisition_group_members.facilityid = facilities.id
    JOIN geographic_zones ON geographic_zones.id = facilities.geographiczoneid

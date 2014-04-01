@@ -456,6 +456,10 @@ public class E2EUpload extends TestCaseHelper {
     uploadPage.verifyErrorMessageOnUploadScreen();
     uploadPage.validateErrorMessageOnUploadScreen("Invalid program code");
 
+    uploadPage.uploadProgramProductMappingInvalidScenarios("QA_program_product_missing_productCategory.csv");
+    uploadPage.verifyErrorMessageOnUploadScreen();
+    uploadPage.validateErrorMessageOnUploadScreen("Missing Mandatory columns in upload file: [Product Category]");
+
     uploadPage.uploadProgramProductMappingInvalidScenarios("QA_program_product_Invalid_ProductCategory.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
     uploadPage.validateErrorMessageOnUploadScreen("Invalid reference data Product Category");

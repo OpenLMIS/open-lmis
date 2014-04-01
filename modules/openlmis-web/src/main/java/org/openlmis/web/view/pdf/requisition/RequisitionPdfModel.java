@@ -28,6 +28,7 @@ import org.openlmis.web.model.PrintRnrLineItem;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -164,6 +165,7 @@ public class RequisitionPdfModel {
 
   public PdfPTable getNonFullSupplyTable() throws DocumentException, NoSuchFieldException, IllegalAccessException, IOException {
     List<RnrLineItem> nonFullSupplyLineItems = requisition.getNonFullSupplyLineItems();
+    Collections.sort(nonFullSupplyLineItems, new LineItemComparator());
     if (nonFullSupplyLineItems.size() == 0) return null;
 
     return getTableFor(nonFullSupplyLineItems, false, rnrColumnList);

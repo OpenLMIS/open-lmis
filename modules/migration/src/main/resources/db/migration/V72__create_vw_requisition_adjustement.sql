@@ -99,8 +99,8 @@ AS
    JOIN requisitions ON requisitions.facilityid = facilities.id
    JOIN requisition_line_items ON requisition_line_items.rnrid = requisitions.id
    JOIN products ON products.code::text = requisition_line_items.productcode::text
-   JOIN product_categories ON product_categories.id = products.categoryid
-   JOIN program_products ON program_products.productid = products.id
+   JOIN program_products ON requisitions.programId = program_products.programId and products.id = program_products.productId
+   JOIN product_categories ON product_categories.id = program_products.productCategoryId
    JOIN programs ON program_products.programid = programs.id AND programs.id = requisitions.programid
    JOIN programs_supported ON programs.id = programs_supported.programid AND facilities.id = programs_supported.facilityid
    JOIN requisition_group_members ON facilities.id = requisition_group_members.facilityid

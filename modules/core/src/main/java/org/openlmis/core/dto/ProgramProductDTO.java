@@ -43,7 +43,7 @@ public class ProgramProductDTO {
     this.productName = programProduct.getProduct().getPrimaryName();
     this.description = programProduct.getProduct().getDescription();
     this.unit = programProduct.getProduct().getDosesPerDispensingUnit();
-    this.category = (programProduct.getProduct().getCategory() != null) ? programProduct.getProduct().getCategory().getName() : null;
+    this.category = (programProduct.getProductCategory() != null) ? programProduct.getProductCategory().getName() : null;
   }
 
 }
