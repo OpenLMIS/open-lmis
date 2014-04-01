@@ -277,11 +277,13 @@ function StockedOutController($scope, $location, programsList, dashboardMenuServ
         if(item){
             var rgroupId = $scope.districts[item.seriesIndex][1];
             var districtStockOutPath = '/requisition-group-stock-out/'+$scope.filterObject.programId+'/'+$scope.filterObject.periodId+'/'+rgroupId+'/'+$scope.filterObject.productIdList[0];
-            dashboardMenuService.addTab('menu.header.dashboard.stocked.out.district','/public/pages/dashboard/index.html#'+districtStockOutPath,'DISTRICT-STOCK-OUT',true);
+            dashboardMenuService.addTab('menu.header.dashboard.stocked.out.district','/public/pages/dashboard/index.html#'+districtStockOutPath,'DISTRICT-STOCK-OUT',true, 4);
 
             $location.path(districtStockOutPath);
-
-            navigateBackService.setData($scope.filterObject);
+            $scope.filterObject.isNavigatedBack = true;
+            var pageCategory = $scope.$parent.currentTab;
+            navigateBackService[pageCategory] = $scope.filterObject;
+            navigateBackService.setData(navigateBackService);
             $scope.$apply();
         }
 
@@ -301,9 +303,21 @@ function StockedOutController($scope, $location, programsList, dashboardMenuServ
     }
 
     $scope.$on('$viewContentLoaded', function () {
-        if(navigateBackService.isNavigatedBack){
-            $scope.formFilter = navigateBackService;
-        }
+
+        if(isUndefined(navigateBackService[$scope.$parent.currentTab]) || navigateBackService[$scope.$parent.currentTab] === undefined ) return;
+
+            $scope.formFilter.supervisoryNodeId = navigateBackService[$scope.$parent.currentTab].supervisoryNodeId;
+            $scope.processSupervisoryNodeChange();
+            $scope.$watch('formFilter.programId',function(){
+                $scope.filterProductsByProgram();
+
+            });
+            $scope.$watch('formFilter.scheduleId', function(){
+                $scope.changeSchedule();
+
+            });
+            $scope.formFilter = $scope.filterObject = navigateBackService[$scope.$parent.currentTab];
+
 
     });
 

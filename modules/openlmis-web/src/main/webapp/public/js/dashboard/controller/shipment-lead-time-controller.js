@@ -6,13 +6,11 @@
  * To change this template use File | Settings | File Templates.
  */
 
-function ShipmentLeadTimeController($scope,$filter,programsList, formInputValue,RequisitionGroupsBySupervisoryNodeProgramSchedule,userDefaultSupervisoryNode,ReportProgramsBySupervisoryNode, UserSupervisoryNodes,ReportSchedules, ReportPeriods, RequisitionGroupsByProgram,RequisitionGroupsByProgramSchedule, ReportProductsByProgram, OperationYears, ReportPeriodsByScheduleAndYear,ShipmentLeadTime, ngTableParams) {
+function ShipmentLeadTimeController($scope,$filter,navigateBackService, programsList, formInputValue,RequisitionGroupsBySupervisoryNodeProgramSchedule,userDefaultSupervisoryNode,ReportProgramsBySupervisoryNode, UserSupervisoryNodes,ReportSchedules, ReportPeriods, RequisitionGroupsByProgram,RequisitionGroupsByProgramSchedule, ReportProductsByProgram, OperationYears, ReportPeriodsByScheduleAndYear,ShipmentLeadTime, ngTableParams) {
 
     $scope.filterObject = {};
 
     $scope.formFilter = {};
-
-    $scope.startYears = [];
 
     initialize();
 
@@ -133,6 +131,7 @@ function ShipmentLeadTimeController($scope,$filter,programsList, formInputValue,
     };
 
     $scope.changeSchedule = function(){
+
         if (!isUndefined($scope.formFilter.scheduleId)) {
             $scope.filterObject.scheduleId = $scope.formFilter.scheduleId;
         }
@@ -155,7 +154,7 @@ function ShipmentLeadTimeController($scope,$filter,programsList, formInputValue,
                     RequisitionGroupsBySupervisoryNodeProgramSchedule.get(
                         {programId: $scope.filterObject.programId,
                             scheduleId: $scope.filterObject.scheduleId,
-                            supervisoryNodeId: $scope.filterObject.supervisoryNodeId},function(data){
+                            supervisoryNodeId: $scope.filterObject.supervisoryNodeId}, function(data){
                             $scope.requisitionGroups = data.requisitionGroupList;
                             $scope.requisitionGroups.unshift({'name':formInputValue.requisitionOptionAll});
 
@@ -170,18 +169,27 @@ function ShipmentLeadTimeController($scope,$filter,programsList, formInputValue,
             }
         }
 
+
         $scope.getShipmentLeadTimeData();
     };
 
     $scope.changeScheduleByYear = function (){
 
-        if (!isUndefined($scope.formFilter.year) && $scope.formFilter.year !== formInputValue.yearOptionAll) {
+        if (!isUndefined($scope.formFilter.year)) {
             $scope.filterObject.year = $scope.formFilter.year;
 
         }
         $scope.changeSchedule();
 
     };
+
+    $scope.$on('$routeChangeStart', function(){
+        var data = {};
+        angular.extend(data,$scope.filterObject);
+        navigateBackService[$scope.$parent.currentTab] = data;
+        navigateBackService.setData(navigateBackService);
+    });
+
 
     // the grid options
     $scope.tableParams = new ngTableParams({
@@ -205,6 +213,28 @@ function ShipmentLeadTimeController($scope,$filter,programsList, formInputValue,
     $scope.resetShipmentLeadTimeData = function(){
          $scope.data = undefined;
     };
+
+    $scope.$on('$viewContentLoaded', function () {
+
+        if(isUndefined(navigateBackService) || navigateBackService[$scope.$parent.currentTab] === undefined){
+            $scope.defaultSupervisoryNodeId = $scope.filterObject.supervisoryNodeId = $scope.formFilter.supervisoryNodeId = !isUndefined(userDefaultSupervisoryNode) ? userDefaultSupervisoryNode.id : undefined ;
+            return;
+        }
+
+        $scope.formFilter.supervisoryNodeId = navigateBackService[$scope.$parent.currentTab].supervisoryNodeId;
+        $scope.processSupervisoryNodeChange();
+
+        $scope.$watch('formFilter.programId',function(){
+            $scope.filterProductsByProgram();
+
+        });
+        $scope.$watch('formFilter.scheduleId', function(){
+            $scope.changeSchedule();
+
+        });
+        $scope.formFilter = $scope.filterObject = navigateBackService[$scope.$parent.currentTab];
+
+    });
 
     $scope.paramsChanged = function(params) {
 

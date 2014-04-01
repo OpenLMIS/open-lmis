@@ -62,7 +62,7 @@ function AdminDashboardController($scope,$timeout,$filter,$location, programsLis
     $scope.filterProductsByProgram = function (){
         if(isUndefined($scope.formFilter.programId)){
             $scope.products = null;
-           $scope.requisitionGroups  = null;
+            $scope.requisitionGroups  = null;
             $scope.resetFillRates();
             $scope.resetStockingChartData();
            return;
@@ -189,6 +189,13 @@ function AdminDashboardController($scope,$timeout,$filter,$location, programsLis
        }else{
            $scope.resetFillRates();
        }
+       // $scope.setFilterData();
+
+    };
+
+    $scope.setFilterData = function(){
+        navigateBackService[$scope.$parent.currentTab]= $scope.filterObject;
+        navigateBackService.setData(navigateBackService);
     };
 
     $scope.loadFacilities = function(){
@@ -298,6 +305,11 @@ function AdminDashboardController($scope,$timeout,$filter,$location, programsLis
         $scope.changeSchedule();
 
     };
+
+    $scope.$on('$routeChangeStart', function(){
+        $scope.setFilterData();
+    });
+
     /* Bar Chart */
     var barChartTicks = [[1, "Tab1"], [2, "Tab2"], [3, "Tab3"],[4, "Tab4"],[5, "Tab5"]];
 
@@ -567,6 +579,7 @@ function AdminDashboardController($scope,$timeout,$filter,$location, programsLis
         }else{
             $scope.resetStockingChartData();
         }
+       // $scope.setFilterData();
     };
 
     $scope.resetStockingChartData = function(){
@@ -677,42 +690,23 @@ function AdminDashboardController($scope,$timeout,$filter,$location, programsLis
 
     $scope.$on('$viewContentLoaded', function () {
 
-        if(isUndefined(navigateBackService) || !navigateBackService.isNavigatedBack){
+        if(isUndefined(navigateBackService) || navigateBackService[$scope.$parent.currentTab] === undefined){
             $scope.defaultSupervisoryNodeId = $scope.filterObject.supervisoryNodeId = $scope.formFilter.supervisoryNodeId = !isUndefined(userDefaultSupervisoryNode) ? userDefaultSupervisoryNode.id : undefined ;
             return;
         }
-        if(!isUndefined(navigateBackService.supervisoryNodeId)){
-            $scope.filterObject.supervisoryNodeId =  $scope.formFilter.supervisoryNodeId = navigateBackService.supervisoryNodeId;
-            $scope.processSupervisoryNodeChange();
-        }
 
-        if(!isUndefined(navigateBackService.programId)){
-            $scope.filterObject.programId = $scope.formFilter.programId = navigateBackService.programId;
+        $scope.formFilter.supervisoryNodeId = navigateBackService[$scope.$parent.currentTab].supervisoryNodeId;
+        $scope.processSupervisoryNodeChange();
+
+        $scope.$watch('formFilter.programId',function(){
             $scope.filterProductsByProgram();
-        }
-        if(!isUndefined(navigateBackService.scheduleId)){
-            $scope.filterObject.scheduleId = $scope.formFilter.scheduleId = navigateBackService.scheduleId;
+
+        });
+        $scope.$watch('formFilter.scheduleId', function(){
             $scope.changeSchedule();
-        }
-        if(!isUndefined(navigateBackService.year)){
-            $scope.filterObject.year =  $scope.formFilter.year = navigateBackService.year;
-            $scope.changeScheduleByYear();
-        }
-        if(!isUndefined(navigateBackService.periodId)){
-            $scope.filterObject.periodId =  $scope.formFilter.periodId = navigateBackService.periodId;
-            $scope.changeScheduleByYear();
-        }
-        if(!isUndefined(navigateBackService.rgroupId)){
-            $scope.filterObject.rgroupId =  $scope.formFilter.rgroupId = navigateBackService.rgroupId;
-            $scope.processRequisitionFilter();
-        }
-        if(!isUndefined(navigateBackService.productIdList)){
-            $scope.filterObject.productIdList =  $scope.formFilter.productIdList = navigateBackService.productIdList;
-            $scope.processProductsFilter();
-        }
-        if(!isUndefined(navigateBackService.facilityId)){
-            $scope.filterObject.facilityId =  $scope.formFilter.facilityId = navigateBackService.facilityId;
-        }
+
+        });
+        $scope.formFilter = $scope.filterObject = navigateBackService[$scope.$parent.currentTab];
 
     });
     $scope.stockBarClickHandler = function (event, pos, item){
@@ -741,7 +735,7 @@ function AdminDashboardController($scope,$timeout,$filter,$location, programsLis
                     "supervisoryNodeId" : stockData.supervisoryNodeId
                 };
                 stockData.isNavigatedBack = true;
-                navigateBackService.setData(stockData);
+                $scope.setFilterData();
                 $location.path(viewStockPath).search(params);
                 $scope.$apply();
 

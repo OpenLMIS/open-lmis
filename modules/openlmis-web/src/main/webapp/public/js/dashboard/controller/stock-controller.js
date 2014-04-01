@@ -9,7 +9,7 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-function StockController($scope, $location,$routeParams,navigateBackService, programsList,formInputValue,UserSupervisoryNodes,userDefaultSupervisoryNode,RequisitionGroupsBySupervisoryNodeProgramSchedule,ReportProgramsBySupervisoryNode, ReportSchedules, ReportPeriods, RequisitionGroupsByProgram,RequisitionGroupsByProgramSchedule, ReportProductsByProgram, OperationYears, ReportPeriodsByScheduleAndYear, StockEfficiencyDetail, ngTableParams) {
+function StockController($scope, $routeParams,navigateBackService, programsList,formInputValue,UserSupervisoryNodes,userDefaultSupervisoryNode,RequisitionGroupsBySupervisoryNodeProgramSchedule,ReportProgramsBySupervisoryNode, ReportSchedules, ReportPeriods, RequisitionGroupsByProgram,RequisitionGroupsByProgramSchedule, ReportProductsByProgram, OperationYears, ReportPeriodsByScheduleAndYear, StockEfficiencyDetail, ngTableParams) {
 
     $scope.filterObject = {};
 
@@ -49,7 +49,11 @@ function StockController($scope, $location,$routeParams,navigateBackService, pro
     });
 
     $scope.filterProductsByProgram = function (){
+
         if(isUndefined($scope.formFilter.programId)){
+            $scope.products = null;
+            $scope.requisitionGroups  = null;
+            $scope.resetStockingData();
             return;
         }
         $scope.filterObject.programId = $scope.formFilter.programId;
@@ -73,6 +77,7 @@ function StockController($scope, $location,$routeParams,navigateBackService, pro
                 $scope.requisitionGroups.unshift({'name':formInputValue.requisitionOptionAll});
             });
         }
+
     };
 
     $scope.processProductsFilter = function (){
@@ -180,10 +185,15 @@ function StockController($scope, $location,$routeParams,navigateBackService, pro
         }else{
             $scope.stockByProductAndStock = undefined;
         }
+
+    };
+
+    $scope.resetStockingData = function(){
+        $scope.stockingList = $scope.stockByProductAndStock = null;
     };
 
     var groupStockingByProductAndStock = function (data) {
-        if(isUndefined(data)){
+        if(isUndefined(data) || _.isNull(data)){
             return data;
         }
         var groupedByProductAndStocking = [];
@@ -209,11 +219,11 @@ function StockController($scope, $location,$routeParams,navigateBackService, pro
 
         $scope.filterObject.supervisoryNodeId = $scope.formFilter.supervisoryNodeId;
 
-        if(isUndefined($scope.formFilter.supervisoryNodeId)){
+        if(isUndefined($scope.filterObject.supervisoryNodeId)){
             $scope.programs = _.filter(programsList, function(program){ return program.name !== formInputValue.programOptionSelect;});
-
             $scope.programs.unshift({'name': formInputValue.programOptionSelect});
-        }else if(!isUndefined($scope.formFilter.supervisoryNodeId)){
+
+        }else if(!isUndefined($scope.filterObject.supervisoryNodeId)){
             ReportProgramsBySupervisoryNode.get({supervisoryNodeId : $scope.filterObject.supervisoryNodeId} ,function(data){
                     $scope.programs = data.programs;
                     $scope.programs.unshift({'name': formInputValue.programOptionSelect});
@@ -233,43 +243,47 @@ function StockController($scope, $location,$routeParams,navigateBackService, pro
 
     $scope.$on('$viewContentLoaded', function () {
 
-        if(!isUndefined($routeParams.supervisoryNodeId) || (_.isEmpty($routeParams.supervisoryNodeId) && !isUndefined($routeParams.programId))){
-            $scope.filterObject.supervisoryNodeId =  $scope.formFilter.supervisoryNodeId = $routeParams.supervisoryNodeId;
+        if(_.isEmpty($routeParams) && isUndefined(navigateBackService[$scope.$parent.currentTab])){
+
+            $scope.defaultSupervisoryNodeId = $scope.filterObject.supervisoryNodeId = $scope.formFilter.supervisoryNodeId = !isUndefined(userDefaultSupervisoryNode) ? userDefaultSupervisoryNode.id : undefined ;
+            return;
+        }else if(!_.isEmpty($routeParams)){
+            $scope.formFilter.supervisoryNodeId = $routeParams.supervisoryNodeId;
             $scope.processSupervisoryNodeChange();
-        }else{
-           $scope.defaultSupervisoryNodeId = $scope.filterObject.supervisoryNodeId = $scope.formFilter.supervisoryNodeId = !isUndefined(userDefaultSupervisoryNode) ? userDefaultSupervisoryNode.id : undefined ;
+            $scope.$watch('formFilter.programId',function(){
+                $scope.filterProductsByProgram();
 
+            });
+            $scope.$watch('formFilter.scheduleId', function(){
+                $scope.changeSchedule();
+
+            });
+            $scope.formFilter = $scope.filterObject = $routeParams;
+            $scope.formFilter.productIdList = $scope.filterObject.productIdList = [$routeParams.productId];
+            return;
         }
-        if(!isUndefined($routeParams.programId)){
-            $scope.filterObject.programId = $scope.formFilter.programId = $routeParams.programId;
+
+        $scope.formFilter.supervisoryNodeId = navigateBackService[$scope.$parent.currentTab].supervisoryNodeId;
+        $scope.processSupervisoryNodeChange();
+
+        $scope.$watch('formFilter.programId',function(){
             $scope.filterProductsByProgram();
-        }
-        if(!isUndefined($routeParams.scheduleId)){
-            $scope.filterObject.scheduleId = $scope.formFilter.scheduleId = $routeParams.scheduleId;
+
+        });
+        $scope.$watch('formFilter.scheduleId', function(){
             $scope.changeSchedule();
-        }
 
-        if(!isUndefined($routeParams.year)){
-            $scope.filterObject.year =  $scope.formFilter.year = $routeParams.year;
-            $scope.changeScheduleByYear();
-        }
-        if(!isUndefined($routeParams.periodId)){
-            $scope.filterObject.periodId =  $scope.formFilter.periodId = $routeParams.periodId;
-            $scope.changeScheduleByYear();
-        }
-        if(!isUndefined($routeParams.productId)){
-            $scope.filterObject.productIdList =  $scope.formFilter.productIdList = [$routeParams.productId];
-            $scope.processProductsFilter();
-        }
-        if(!isUndefined($routeParams.status)){
-            $scope.filterObject.status =  $scope.formFilter.status = $routeParams.status;
-            $scope.processStockStatusFilter();
-        }
-        if(!isUndefined($routeParams.rgroupId)){
-            $scope.filterObject.rgroupId =  $scope.formFilter.rgroupId = $routeParams.rgroupId;
-            $scope.processRequisitionFilter();
-        }
+        });
 
+        $scope.formFilter = $scope.filterObject = navigateBackService[$scope.$parent.currentTab];
+
+    });
+
+    $scope.$on('$routeChangeStart', function(){
+        var data = {};
+        angular.extend(data,$scope.filterObject);
+        navigateBackService[$scope.$parent.currentTab] = data;
+        navigateBackService.setData(navigateBackService);
     });
 
 

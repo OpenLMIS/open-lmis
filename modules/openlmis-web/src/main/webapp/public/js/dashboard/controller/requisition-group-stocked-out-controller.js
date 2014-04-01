@@ -113,7 +113,7 @@ function RequisitionGroupStockedOutController($scope,$location,$routeParams,dash
     $scope.stockedOutChartClickHandler = function (event, pos, item){
         if(item){
             var districtStockOutPath = '/stock-out-detail/'+$scope.filterObject.programId+'/'+$scope.filterObject.periodId+'/'+$scope.filterObject.rgroupId+'/'+$scope.filterObject.productId;
-            dashboardMenuService.addTab('menu.header.dashboard.stocked.out.district.detail','/public/pages/dashboard/index.html#'+districtStockOutPath,'DISTRICT-STOCK-OUT-DETAIL',true);
+            dashboardMenuService.addTab('menu.header.dashboard.stocked.out.district.detail','/public/pages/dashboard/index.html#'+districtStockOutPath,'DISTRICT-STOCK-OUT-DETAIL',true, 5);
             $location.path(districtStockOutPath);
 
             $scope.$apply();
