@@ -11,13 +11,16 @@
 CREATE TABLE configurable_rnr_options (
   id                        SERIAL PRIMARY KEY,
   name                      varchar(200) NOT NULL UNIQUE,
+  label                     varchar(200) NOT NULL UNIQUE,
   createdBy INTEGER,
   createdDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   modifiedBy INTEGER,
   modifiedDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-INSERT INTO configurable_rnr_options (name) VALUES ('newPatientCount'), ('dispensingUnitsForNewPatients');
+INSERT INTO configurable_rnr_options (name, label)
+VALUES
+('newPatientCount', 'label.new.patient.count'), ('dispensingUnitsForNewPatients', 'label.dispensing.units.for.new.patients');
 
 
 
