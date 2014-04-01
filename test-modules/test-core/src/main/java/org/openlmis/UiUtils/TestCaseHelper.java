@@ -695,11 +695,14 @@ public class TestCaseHelper {
   }
 
   protected void testDataForShipment(Integer packsToShip, Boolean fullSupplyFlag, String productCode, int quantityShipped) throws SQLException {
-    dbWrapper.updateFieldValue("orders", "status", "RELEASED", null, null);
     int id = dbWrapper.getMaxRnrID();
-    dbWrapper.insertShipmentData(id, productCode, quantityShipped);
-    dbWrapper.updateFieldValue("shipment_line_items", "packsToShip", packsToShip);
-    dbWrapper.updateFieldValue("shipment_line_items", "fullSupply", fullSupplyFlag);
+    dbWrapper.insertShipmentData(id, productCode, quantityShipped, packsToShip, fullSupplyFlag);
+  }
+
+  protected void testDataForShipmentWithReplacedProduct(Integer packsToShip, Boolean fullSupplyFlag, String productCode,
+                                                        int quantityShipped, String replacedProductCode) throws SQLException {
+    int id = dbWrapper.getMaxRnrID();
+    dbWrapper.insertShipmentDataWithReplacedProduct(id, productCode, quantityShipped, replacedProductCode, packsToShip, fullSupplyFlag);
   }
 
   public void assertEqualsAndNulls(Object actual, String expected) {

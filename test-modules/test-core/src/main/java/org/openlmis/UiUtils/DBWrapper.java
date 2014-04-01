@@ -552,6 +552,12 @@ public class DBWrapper {
       "((SELECT ID from programs where code='" + program + "'), (SELECT id from products WHERE code = '" + product2 + "'), 30, 12.5, true, 5, (select id from product_categories where code = 'C1'));");
   }
 
+  public void insertProgramProductsWithoutDeleting(String product1, String product2, String program) throws SQLException {
+    update("INSERT INTO program_products(programId, productId, dosesPerMonth, currentPrice, active, displayOrder, productCategoryId) VALUES\n" +
+      "((SELECT ID from programs where code='" + program + "'), (SELECT id from products WHERE code = '" + product1 + "'), 30, 12.5, true, 1, (select id from product_categories where code = 'C1')),\n" +
+      "((SELECT ID from programs where code='" + program + "'), (SELECT id from products WHERE code = '" + product2 + "'), 30, 12.5, true, 5, (select id from product_categories where code = 'C1'));");
+  }
+
   public void insertProgramProduct(String product, String program, String doses, String active) throws SQLException {
     update("INSERT INTO program_products(programId, productId, dosesPerMonth, currentPrice, active, displayOrder, productCategoryId) VALUES\n" +
       "((SELECT ID from programs where code='" + program + "'), (SELECT id from products WHERE code = '" + product + "'), '" + doses + "', 12.5, '" + active + "', 1, (Select id from product_categories where code='C1'));");
@@ -588,7 +594,7 @@ public class DBWrapper {
       "program_products pp, products p, product_forms pf , dosage_units du where fap. facilityTypeId='" + facilityTypeID + "' " +
       "and p. fullSupply = false and p.active=true and pp.programId='" + programID + "' and p. code='" + productCode + "' " +
       "and pp.productId=p.id and fap. programProductId=pp.id and pp.active=true and pf.id=p.formId " +
-      "and du.id = p.dosageUnitId order by pp.displayOrder asc;");
+      "and du.id = p.dosageUnitId order by pp. displayOrder asc;");
     String nonFullSupplyValues = null;
     if (rs.next()) {
       nonFullSupplyValues = rs.getString("primaryName") + " " + rs.getString("productForm") + " " + rs.getString("strength") + " " + rs.getString("dosageUnit");
@@ -1281,8 +1287,8 @@ public class DBWrapper {
 
   public void insertOneProduct(String product) throws SQLException {
     update("INSERT INTO products\n" +
-      "(code,    alternateItemCode,  manufacturer,       manufacturerCode,  manufacturerBarcode,   mohBarcode,   gtin,   type,         primaryName,    fullName,       genericName,    alternateName,    description,      strength,    formId,  dosageUnitId, dispensingUnit,  dosesPerDispensingUnit,  packSize,  alternatePackSize,  storeRefrigerated,   storeRoomTemperature,   hazardous,  flammable,   controlledSubstance,  lightSensitive,  approvedByWho,  contraceptiveCyp,  packLength,  packWidth, packHeight,  packWeight,  packsPerCarton, cartonLength,  cartonWidth,   cartonHeight, cartonsPerPallet,  expectedShelfLife,  specialStorageInstructions, specialTransportInstructions, active,  fullSupply, tracer,   packRoundingThreshold,  roundToZero,  archived, displayOrder, categoryId) values\n" +
-      "('" + product + "',  'a',                'Glaxo and Smith',  'a',              'a',                    'a',          'a',    'antibiotic', 'antibiotic',   'TDF/FTC/EFV',  'TDF/FTC/EFV',  'TDF/FTC/EFV',    'TDF/FTC/EFV',  '300/200/600',  2,        1,            'Strip',           10,                     10,        30,                   TRUE,                  TRUE,                TRUE,       TRUE,         TRUE,                 TRUE,             TRUE,               1,          2.2,            2,          2,            2,            2,            2,              2,              2,              2,                    2,                    'a',                          'a',          TRUE,     FALSE,       TRUE,         1,                    FALSE,      TRUE,   5, (Select id from product_categories where code='C1'));\n");
+      "(code,    alternateItemCode,  manufacturer,       manufacturerCode,  manufacturerBarcode,   mohBarcode,   gtin,   type,         primaryName,    fullName,       genericName,    alternateName,    description,      strength,    formId,  dosageUnitId, dispensingUnit,  dosesPerDispensingUnit,  packSize,  alternatePackSize,  storeRefrigerated,   storeRoomTemperature,   hazardous,  flammable,   controlledSubstance,  lightSensitive,  approvedByWho,  contraceptiveCyp,  packLength,  packWidth, packHeight,  packWeight,  packsPerCarton, cartonLength,  cartonWidth,   cartonHeight, cartonsPerPallet,  expectedShelfLife,  specialStorageInstructions, specialTransportInstructions, active,  fullSupply, tracer,   packRoundingThreshold,  roundToZero,  archived) values\n" +
+      "('" + product + "',  'a',                'Glaxo and Smith',  'a',              'a',                    'a',          'a',    'antibiotic', 'antibiotic',   'TDF/FTC/EFV',  'TDF/FTC/EFV',  'TDF/FTC/EFV',    'TDF/FTC/EFV',  '300/200/600',  2,        1,            'Strip',           10,                     10,        30,                   TRUE,                  TRUE,                TRUE,       TRUE,         TRUE,                 TRUE,             TRUE,               1,          2.2,            2,          2,            2,            2,            2,              2,              2,              2,                    2,                    'a',                          'a',          TRUE,     FALSE,       TRUE,         1,                    FALSE,      TRUE);\n");
   }
 
   public void deleteAllProducts() throws SQLException {
@@ -1383,9 +1389,33 @@ public class DBWrapper {
     update("update facilities set catchmentPopulation=" + population + " where code='" + facility + "';");
   }
 
-  public void insertShipmentData(int orderID, String productCode, Integer quantityShipped) throws SQLException {
-    update("INSERT INTO shipment_line_items(orderId,productCode,quantityShipped,productName,dispensingUnit,productCategory) VALUES (%d, '%s', %d, %s, %s, %s)", orderID,
-      productCode, quantityShipped, "'antibiotic Capsule 300/200/600 mg'", "'Strip'", "'Antibiotic'");
+  public void insertShipmentData(int orderID, String productCode, Integer quantityShipped, Integer packsToShip, Boolean fullSupplyFlag) throws SQLException {
+    String programId = getAttributeFromTable("requisitions", "programId", "id", String.valueOf(orderID));
+    String programProductId = null;
+    ResultSet rs = (query("select id from program_products where programId=" + programId + " and productId = (Select id from products where code='" + productCode + "');"));
+    if (rs.next())
+      programProductId = rs.getString("id");
+
+    Integer productDisplayOrder = Integer.parseInt(getAttributeFromTable("program_products", "displayOrder", "id", programProductId));
+    String categoryId = getAttributeFromTable("program_products", "productCategoryId", "id", programProductId);
+    String categoryName = getAttributeFromTable("product_categories", "name", "id", categoryId);
+    Integer categoryDisplayOrder = Integer.parseInt(getAttributeFromTable("product_categories", "displayOrder", "id", categoryId));
+    update("INSERT INTO shipment_line_items(orderId,productCode,quantityShipped,productName,dispensingUnit,productCategory,productDisplayOrder,productCategoryDisplayOrder,packsToShip,fullSupply) VALUES (%d, '%s', %d, %s, %s, '%s',%d ,%d, %d, %b)", orderID, productCode, quantityShipped, "'antibiotic Capsule 300/200/600 mg'", "'Strip'", categoryName, productDisplayOrder, categoryDisplayOrder, packsToShip, fullSupplyFlag);
+  }
+
+  public void insertShipmentDataWithReplacedProduct(int orderID, String productCode, Integer quantityShipped,
+                                                    String replacedProductCode, Integer packsToShip, Boolean fullSupplyFlag) throws SQLException {
+    String programId = getAttributeFromTable("requisitions", "programId", "id", String.valueOf(orderID));
+    String programProductId = null;
+    ResultSet rs = (query("select id from program_products where programId=" + programId + " and productId = (Select id from products where code='" + productCode + "');"));
+    if (rs.next())
+      programProductId = rs.getString("id");
+
+    Integer productDisplayOrder = Integer.parseInt(getAttributeFromTable("program_products", "displayOrder", "id", programProductId));
+    String categoryId = getAttributeFromTable("program_products", "productCategoryId", "id", programProductId);
+    String categoryName = getAttributeFromTable("product_categories", "name", "id", categoryId);
+    Integer categoryDisplayOrder = Integer.parseInt(getAttributeFromTable("product_categories", "displayOrder", "id", categoryId));
+    update("INSERT INTO shipment_line_items(orderId,productCode,quantityShipped,productName,dispensingUnit,productCategory,productDisplayOrder,productCategoryDisplayOrder,replacedProductCode,packsToShip,fullSupply) VALUES (%d, '%s', %d, %s, %s, '%s',%d ,%d, '%s', %d, %b)", orderID, productCode, quantityShipped, "'antibiotic Capsule 300/200/600 mg'", "'Strip'", categoryName, productDisplayOrder, categoryDisplayOrder, replacedProductCode, packsToShip, fullSupplyFlag);
   }
 
   public Integer getProductId(String productCode) throws SQLException {
