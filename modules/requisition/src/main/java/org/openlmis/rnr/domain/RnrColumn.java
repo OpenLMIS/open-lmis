@@ -14,6 +14,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 /**
  * This class represents a column configured in rnr template for a program.
  */
@@ -32,6 +34,8 @@ public class RnrColumn extends Column {
   private boolean mandatory;
   private String description;
   private boolean formulaValidationRequired = true;
+  private RnrColumnOption configuredOption;
+  private List<RnrColumnOption> rnrColumnOptions;
   private Long createdBy;
 
   @SuppressWarnings(value = "unused")
