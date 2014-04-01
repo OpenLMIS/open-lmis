@@ -139,6 +139,7 @@ public class UpdatePod extends TestCaseHelper {
     dbWrapper.setupMultipleProducts(updatePODData.get(PROGRAM), "Lvl3 Hospital", 1, true);
     dbWrapper.insertRequisitionWithMultipleLineItems(1, updatePODData.get(PROGRAM), true, "F10", true);
     dbWrapper.convertRequisitionToOrder(dbWrapper.getMaxRnrID(), "READY_TO_PACK", updatePODData.get(USER));
+    dbWrapper.updateFieldValue("orders", "status", "RELEASED", null, null);
     testDataForShipment(50, false, "NF0", 999);
     dbWrapper.updateFieldValue("orders", "status", "PACKED", null, null);
 
@@ -155,6 +156,7 @@ public class UpdatePod extends TestCaseHelper {
   @Test(groups = {"requisition"})
   public void testVerifyUpdatePODForPackedOrdersValidFlowForRegularRnR() throws SQLException {
     initiateRnrAndConvertToOrder(false, 1111);
+    dbWrapper.updateFieldValue("orders", "status", "RELEASED", null, null);
     testDataForShipment(999, true, "P10", 99898998);
     dbWrapper.updateFieldValue("orders", "status", "PACKED", null, null);
 
@@ -177,8 +179,9 @@ public class UpdatePod extends TestCaseHelper {
     Integer id = dbWrapper.getProductId("P11");
     dbWrapper.updateFieldValue("program_products", "programid", "4", "id", id.toString());
     initiateRnrAndConvertToOrder(false, 1111);
+    dbWrapper.updateFieldValue("orders", "status", "RELEASED", null, null);
     testDataForShipment(999, true, "P10", 99898998);
-    dbWrapper.insertShipmentData(dbWrapper.getMaxRnrID(), "P11", 0);
+    dbWrapper.insertShipmentData(dbWrapper.getMaxRnrID(), "P11", 0, null, false);
     dbWrapper.updateFieldValue("orders", "status", "PACKED", null, null);
 
 
@@ -200,6 +203,7 @@ public class UpdatePod extends TestCaseHelper {
   @Test(groups = {"requisition"})
   public void testUpdatePODForPackedOrdersWhenPacksToShipAndQuantityShippedIsZeroAndSubmitPod() throws SQLException {
     initiateRnrAndConvertToOrder(false, 0);
+    dbWrapper.updateFieldValue("orders", "status", "RELEASED", null, null);
     super.testDataForShipment(0, true, "P10", 0);
     dbWrapper.updateFieldValue("orders", "status", "PACKED", null, null);
 
