@@ -39,13 +39,19 @@
           </span>
           <span class="tpl-source">
             <span ng-show="rnrColumn.sourceConfigurable">
-              <select ng-model="rnrColumn.source.code" ng-options="c.code as c.description for c in sources"
+              <select ng-model="rnrColumn.source.code" ng-options="c.code as getMessage(c.description) for c in sources"
                       ng-change="setArithmeticValidationMessageShown()">
               </select>
             </span>
             <span ng-hide="rnrColumn.sourceConfigurable" openlmis-message="rnrColumn.source.description"></span>
             <br/>
             <a class="rnr-column-formula" href="" ng-show="rnrColumn.formula" openlmis-message="rnrColumn.formula"></a>
+          </span>
+          <span class="tpl-source">
+            <span ng-show="rnrColumn.configuredOption">
+              <select ng-model="rnrColumn.configuredOption" ng-options="o as getMessage(o.label) for o in rnrColumn.rnrColumnOptions" >
+              </select>
+            </span>
           </span>
           <span class="tpl-error" ng-show="errorMap[rnrColumn.name]">
             <div class="alert alert-error" ng-bind="errorMap[rnrColumn.name]"></div>
@@ -68,13 +74,19 @@
           </span>
           <span class="tpl-source">
             <span ng-show="rnrColumn.sourceConfigurable">
-              <select ng-model="rnrColumn.source.code" ng-options="c.code as c.description for c in sources"
+              <select ng-model="rnrColumn.source.code" ng-options="c.code as getMessage(c.description) for c in sources"
                       ng-change="setArithmeticValidationMessageShown()">
               </select>
             </span>
             <span ng-hide="rnrColumn.sourceConfigurable" openlmis-message="rnrColumn.source.description"></span>
             <br/>
             <a class="rnr-column-formula" href="" ng-show="rnrColumn.formula" openlmis-message="rnrColumn.formula"></a>
+          </span>
+          <span class="tpl-source">
+            <span ng-show="rnrColumn.configuredOption">
+              <select ng-model="rnrColumn.configuredOption" ng-options="o as getMessage(o.label) for o in rnrColumn.rnrColumnOptions" >
+              </select>
+            </span>
           </span>
           <span class="tpl-error" ng-show="errorMap[rnrColumn.name]">
             <div class="alert alert-error" ng-bind="errorMap[rnrColumn.name]"></div>

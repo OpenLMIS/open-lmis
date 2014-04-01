@@ -31,6 +31,15 @@ function SaveRnrTemplateController($scope, rnrTemplateForm, program, messageServ
     });
   };
 
+  $scope.getMessage = function (key) {
+    return messageService.get(key);
+  };
+
+  $scope.rnrColumns.forEach(function(column) {
+    if(column.rnrColumnOptions) {
+      column.configuredOption = column.configuredOption ? _.findWhere(column.rnrColumnOptions, {name: column.configuredOption.name}) : column.rnrColumnOptions[0];
+    }
+  });
 
   $scope.save = function () {
     $scope.rnrColumns = _.union($scope.rnrNonSortableColumns, $scope.rnrSortableColumns);

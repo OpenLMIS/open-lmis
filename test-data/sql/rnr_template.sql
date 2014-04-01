@@ -10,7 +10,7 @@
 
 delete from program_rnr_columns;
 insert into program_rnr_columns
-(masterColumnId, rnr_option_id, programId, visible, source, position, label)
+(masterColumnId, rnrOptionId, programId, visible, source, position, label)
 values
 (1, null , (select id from programs where code = 'TB'), true,'U',   1,  'Skip'),
 (2, null , (select id from programs where code = 'TB'), true, 'R',  2,  'Product Code'),
