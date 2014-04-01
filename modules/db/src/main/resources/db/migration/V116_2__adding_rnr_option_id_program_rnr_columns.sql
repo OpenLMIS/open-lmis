@@ -9,5 +9,5 @@
 --
 
 ALTER TABLE program_rnr_columns
-    ADD COLUMN rnr_option_id INTEGER REFERENCES configurable_rnr_options(id);
+    ADD COLUMN rnrOptionId INTEGER REFERENCES configurable_rnr_options(id);
 
