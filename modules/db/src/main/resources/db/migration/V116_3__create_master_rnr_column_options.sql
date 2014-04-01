@@ -18,3 +18,8 @@ CREATE TABLE master_rnr_column_options (
   modifiedDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   UNIQUE (masterRnrColumnId, rnrOptionId)
 );
+
+INSERT INTO master_rnr_column_options (masterRnrColumnId, rnrOptionId)
+VALUES
+((select id from master_rnr_columns where name = 'newPatientCount'), (select id from configurable_rnr_options where name = 'newPatientCount')),
+((select id from master_rnr_columns where name = 'newPatientCount'), (select id from configurable_rnr_options where name = 'dispensingUnitsForNewPatients'));
