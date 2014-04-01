@@ -583,12 +583,12 @@ public class DBWrapper {
   }
 
   public String fetchNonFullSupplyData(String productCode, String facilityTypeID, String programID) throws SQLException {
-    ResultSet rs = query("Select p.code, p.displayOrder, p.primaryName, pf.code as ProductForm," +
+    ResultSet rs = query("Select p.code, pp.displayOrder, p.primaryName, pf.code as ProductForm," +
       "p.strength as Strength, du.code as DosageUnit from facility_approved_products fap, " +
       "program_products pp, products p, product_forms pf , dosage_units du where fap. facilityTypeId='" + facilityTypeID + "' " +
       "and p. fullSupply = false and p.active=true and pp.programId='" + programID + "' and p. code='" + productCode + "' " +
       "and pp.productId=p.id and fap. programProductId=pp.id and pp.active=true and pf.id=p.formId " +
-      "and du.id = p.dosageUnitId order by p. displayOrder asc;");
+      "and du.id = p.dosageUnitId order by pp.displayOrder asc;");
     String nonFullSupplyValues = null;
     if (rs.next()) {
       nonFullSupplyValues = rs.getString("primaryName") + " " + rs.getString("productForm") + " " + rs.getString("strength") + " " + rs.getString("dosageUnit");
