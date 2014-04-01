@@ -45,8 +45,8 @@ public interface ProgramProductMapper {
   @Update("UPDATE program_products SET  dosesPerMonth=#{dosesPerMonth}, productCategoryId = #{productCategory.id}, displayOrder = #{displayOrder}, active=#{active}, modifiedBy=#{modifiedBy}, modifiedDate=#{modifiedDate} WHERE programId=#{program.id} AND productId=#{product.id}")
   void update(ProgramProduct programProduct);
 
-  @Select({"SELECT * FROM program_products pp INNER JOIN products p ON pp.productId = p.id WHERE programId = #{id} and pp.active = true",
-    "ORDER BY p.displayOrder NULLS LAST, p.code"})
+  @Select({"SELECT * FROM program_products pp INNER JOIN products p ON pp.productId = p.id WHERE pp.programId = #{id} and pp.active = true",
+    "ORDER BY pp.displayOrder NULLS LAST, LOWER(p.code)"})
   @Results(value = {
     @Result(property = "id", column = "id"),
     @Result(property = "program", column = "programId", javaType = Program.class,
@@ -108,7 +108,7 @@ public interface ProgramProductMapper {
     "FROM program_products pp",
     "INNER JOIN products p  ON pp.productId=p.id",
     "INNER JOIN programs pr ON pr.id=pp.programId",
-    "LEFT OUTER JOIN product_categories pc ON pc.id = p.categoryId",
+    "LEFT OUTER JOIN product_categories pc ON pc.id = pp.productCategoryId",
     "LEFT OUTER JOIN facility_approved_products fap ON fap.programProductId=pp.id",
     "LEFT OUTER JOIN facility_types ft  ON ft.id=fap.facilityTypeId",
     "WHERE ",

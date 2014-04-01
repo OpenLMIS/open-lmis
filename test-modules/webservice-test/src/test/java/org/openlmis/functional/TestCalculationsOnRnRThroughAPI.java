@@ -191,6 +191,7 @@ public class TestCalculationsOnRnRThroughAPI extends JsonUtility {
     assertEquals(null, dbWrapper.getRequisitionLineItemFieldValue(id, "reportingDays", "P10"));
     assertEquals("2", dbWrapper.getRequisitionLineItemFieldValue(id, "normalizedConsumption", "P10"));
     assertEquals("2", dbWrapper.getRequisitionLineItemFieldValue(id, "amc", "P10"));
+    assertEquals("4", dbWrapper.getRequisitionLineItemFieldValue(id, "periodNormalizedConsumption", "P10"));
   }
 
   @Test(groups = {"webservice"})

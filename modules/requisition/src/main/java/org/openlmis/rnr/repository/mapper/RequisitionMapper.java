@@ -180,9 +180,12 @@ public interface RequisitionMapper {
   })
   Rnr getLastRegularRequisition(@Param("facility") Facility facility, @Param("program") Program program);
 
+  @Select("SELECT programId FROM requisitions WHERE id = #{rnrId}")
+  Long getProgramId(Long rnrId);
 
   @Select("select * from fn_delete_rnr( #{rnrId} )")
   String deleteRnR(@Param("rnrId")Integer rnrId);
+
 
   public class ApprovedRequisitionSearch {
 

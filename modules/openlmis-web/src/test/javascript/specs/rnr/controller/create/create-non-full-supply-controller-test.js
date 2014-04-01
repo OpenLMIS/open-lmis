@@ -35,18 +35,18 @@ describe('CreateNonFullSupplyController', function () {
     category3 = {"id": 3, "name": "cat3", "code": "cat3Code"};
     categoryList = [category1, category2, category3];
 
-    var product1 = {"id": 1, "code": "product1", "category": category1, "primaryName": "Product 1", "form": {"code": "Tablet"},
+    var product1 = {"id": 1, "code": "product1", "primaryName": "Product 1", "form": {"code": "Tablet"},
       "dosageUnit": {"code": "mg"}, "strength": "600"};
-    var product2 = {"id": 2, "code": "product2", "category": category2};
-    var product3 = {"id": 3, "code": "product3", "category": category3};
-    var product4 = {"id": 4, "code": "product4", "category": category1};
-    var product5 = {"id": 5, "code": "product5", "category": category2};
+    var product2 = {"id": 2, "code": "product2"};
+    var product3 = {"id": 3, "code": "product3"};
+    var product4 = {"id": 4, "code": "product4"};
+    var product5 = {"id": 5, "code": "product5"};
 
-    facilityApprovedProduct1 = {"programProduct": {"product": product1, "dosesPerMonth": 3, "currentPrice": 4, "displayOrder": 2}, "maxMonthsOfStock": 3};
-    facilityApprovedProduct2 = {"programProduct": {"product": product2}};
-    facilityApprovedProduct3 = {"programProduct": {"product": product3}};
-    facilityApprovedProduct4 = {"programProduct": {"product": product4}};
-    facilityApprovedProduct5 = {"programProduct": {"product": product5}};
+    facilityApprovedProduct1 = {"programProduct": {"product": product1, "dosesPerMonth": 3, "currentPrice": 4,"displayOrder": 2,  "productCategory": category1}, "maxMonthsOfStock": 3};
+    facilityApprovedProduct2 = {"programProduct": {"product": product2, "productCategory": category2}};
+    facilityApprovedProduct3 = {"programProduct": {"product": product3, "productCategory": category3}};
+    facilityApprovedProduct4 = {"programProduct": {"product": product4, "productCategory": category1}};
+    facilityApprovedProduct5 = {"programProduct": {"product": product5, "productCategory": category2}};
 
     facilityApprovedProducts = [facilityApprovedProduct1, facilityApprovedProduct2, facilityApprovedProduct3,
       facilityApprovedProduct4, facilityApprovedProduct5];

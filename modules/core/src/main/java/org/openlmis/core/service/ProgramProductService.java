@@ -161,4 +161,8 @@ public class ProgramProductService {
   public List<ProgramProduct> getActiveByProgram(Long programId) {
     return programProductRepository.getActiveByProgram(programId);
   }
+
+  public ProgramProduct getByProgramAndProductId(Long programId, Long productId) {
+    return programProductRepository.getByProgramAndProductId(programId, productId);
+  }
 }

@@ -10,7 +10,7 @@
 
 function CreateNonFullSupplyController($scope, messageService) {
   var map = _.map($scope.facilityApprovedProducts, function (facilitySupportedProduct) {
-    return facilitySupportedProduct.programProduct.product.category;
+    return facilitySupportedProduct.programProduct.productCategory;
   });
 
   $scope.nonFullSupplyProductsCategories = _.uniq(map, false, function (category) {
@@ -99,7 +99,7 @@ function CreateNonFullSupplyController($scope, messageService) {
     if ($scope.nonFullSupplyProductCategory !== undefined) {
       $scope.nonFullSupplyProductsToDisplay = $.grep($scope.facilityApprovedProducts, function (facilityApprovedProduct) {
         return $.inArray(facilityApprovedProduct.programProduct.product.code, addedNonFullSupplyProductList) == -1 &&
-          $.inArray(facilityApprovedProduct.programProduct.product.category.name, [$scope.nonFullSupplyProductCategory.name]) === 0;
+          $.inArray(facilityApprovedProduct.programProduct.productCategory.name, [$scope.nonFullSupplyProductCategory.name]) === 0;
       });
     }
   };
@@ -126,8 +126,8 @@ function CreateNonFullSupplyController($scope, messageService) {
       $scope.newNonFullSupply.maxMonthsOfStock = $scope.facilityApprovedProduct.maxMonthsOfStock;
       $scope.newNonFullSupply.dosesPerMonth = $scope.facilityApprovedProduct.programProduct.dosesPerMonth;
       $scope.newNonFullSupply.price = $scope.facilityApprovedProduct.programProduct.currentPrice;
-      $scope.newNonFullSupply.productCategory = $scope.facilityApprovedProduct.programProduct.product.category.name;
-      $scope.newNonFullSupply.productDisplayOrder = $scope.facilityApprovedProduct.programProduct.product.displayOrder;
+      $scope.newNonFullSupply.productCategory = $scope.facilityApprovedProduct.programProduct.productCategory.name;
+      $scope.newNonFullSupply.productDisplayOrder = $scope.facilityApprovedProduct.programProduct.displayOrder;
       $scope.newNonFullSupply.productCategoryDisplayOrder = $scope.nonFullSupplyProductCategory.displayOrder;
     }
   }

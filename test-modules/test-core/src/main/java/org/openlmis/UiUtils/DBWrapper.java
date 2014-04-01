@@ -493,13 +493,10 @@ public class DBWrapper {
     update("delete from epi_inventory_line_items;");
     update("delete from program_products;");
     update("delete from products;");
-    update("delete from product_categories;");
-
-    update("INSERT INTO product_categories (code, name, displayOrder) values ('C1', 'Antibiotics', 1);");
     update("INSERT INTO products\n" +
-      "(code,    alternateItemCode,  manufacturer,       manufacturerCode,  manufacturerBarcode,   mohBarcode,   gtin,   type,         primaryName,    fullName,       genericName,    alternateName,    description,      strength,    formId,  dosageUnitId, dispensingUnit,  dosesPerDispensingUnit,  packSize,  alternatePackSize,  storeRefrigerated,   storeRoomTemperature,   hazardous,  flammable,   controlledSubstance,  lightSensitive,  approvedByWho,  contraceptiveCyp,  packLength,  packWidth, packHeight,  packWeight,  packsPerCarton, cartonLength,  cartonWidth,   cartonHeight, cartonsPerPallet,  expectedShelfLife,  specialStorageInstructions, specialTransportInstructions, active,  fullSupply, tracer,   packRoundingThreshold,  roundToZero,  archived, displayOrder, categoryId) values\n" +
-      "('" + product1 + "',  'a',                'Glaxo and Smith',  'a',              'a',                    'a',          'a',    'antibiotic', 'antibiotic',   'TDF/FTC/EFV',  'TDF/FTC/EFV',  'TDF/FTC/EFV',    'TDF/FTC/EFV',  '300/200/600',  2,        1,            'Strip',           10,                     10,        30,                   TRUE,                  TRUE,                TRUE,       TRUE,         TRUE,                 TRUE,             TRUE,               1,          2.2,            2,          2,            2,            2,            2,              2,              2,              2,                    2,                    'a',                          'a',          TRUE,     TRUE,       TRUE,         1,                    FALSE,      TRUE,    1, (Select id from product_categories where code='C1')),\n" +
-      "('" + product2 + "',  'a',                'Glaxo and Smith',  'a',              'a',                    'a',          'a',    'antibiotic', 'antibiotic',   'TDF/FTC/EFV',  'TDF/FTC/EFV',  'TDF/FTC/EFV',    'TDF/FTC/EFV',  '300/200/600',  2,        1,            'Strip',           10,                     10,        30,                   TRUE,                  TRUE,                TRUE,       TRUE,         TRUE,                 TRUE,             TRUE,               1,          2.2,            2,          2,            2,            2,            2,              2,              2,              2,                    2,                    'a',                          'a',          TRUE,     FALSE,       TRUE,         1,                    FALSE,      TRUE,   5, (Select id from product_categories where code='C1'));\n");
+      "(code,    alternateItemCode,  manufacturer,       manufacturerCode,  manufacturerBarcode,   mohBarcode,   gtin,   type,         primaryName,    fullName,       genericName,    alternateName,    description,      strength,    formId,  dosageUnitId, dispensingUnit,  dosesPerDispensingUnit,  packSize,  alternatePackSize,  storeRefrigerated,   storeRoomTemperature,   hazardous,  flammable,   controlledSubstance,  lightSensitive,  approvedByWho,  contraceptiveCyp,  packLength,  packWidth, packHeight,  packWeight,  packsPerCarton, cartonLength,  cartonWidth,   cartonHeight, cartonsPerPallet,  expectedShelfLife,  specialStorageInstructions, specialTransportInstructions, active,  fullSupply, tracer,   packRoundingThreshold,  roundToZero,  archived) values\n" +
+      "('" + product1 + "',  'a',                'Glaxo and Smith',  'a',              'a',                    'a',          'a',    'antibiotic', 'antibiotic',   'TDF/FTC/EFV',  'TDF/FTC/EFV',  'TDF/FTC/EFV',    'TDF/FTC/EFV',  '300/200/600',  2,        1,            'Strip',           10,                     10,        30,                   TRUE,                  TRUE,                TRUE,       TRUE,         TRUE,                 TRUE,             TRUE,               1,          2.2,            2,          2,            2,            2,            2,              2,              2,              2,                    2,                    'a',                          'a',          TRUE,     TRUE,       TRUE,         1,                    FALSE,      TRUE  ),\n" +
+      "('" + product2 + "',  'a',                'Glaxo and Smith',  'a',              'a',                    'a',          'a',    'antibiotic', 'antibiotic',   'TDF/FTC/EFV',  'TDF/FTC/EFV',  'TDF/FTC/EFV',    'TDF/FTC/EFV',  '300/200/600',  2,        1,            'Strip',           10,                     10,        30,                   TRUE,                  TRUE,                TRUE,       TRUE,         TRUE,                 TRUE,             TRUE,               1,          2.2,            2,          2,            2,            2,            2,              2,              2,              2,                    2,                    'a',                          'a',          TRUE,     FALSE,       TRUE,         1,                    FALSE,      TRUE );\n");
   }
 
   public void deleteCategoryFromProducts() throws SQLException {
@@ -510,11 +507,14 @@ public class DBWrapper {
     update("UPDATE products SET description = null");
   }
 
-  public void insertProductWithCategory(String product, String productName, String category) throws SQLException {
-    update("INSERT INTO product_categories (code, name, displayOrder) values ('" + category + "', '" + productName + "', 1);");
+  public void insertProductCategory(String categoryCode, String categoryName) throws SQLException {
+    update("INSERT INTO product_categories (code, name, displayOrder) values ('" + categoryCode + "', '" + categoryName + "', 1);");
+  }
+
+  public void insertProduct(String product, String productName) throws SQLException {
     update("INSERT INTO products\n" +
-      "(code,    alternateItemCode,  manufacturer,       manufacturerCode,  manufacturerBarcode,   mohBarcode,   gtin,   type,         primaryName,    fullName,       genericName,    alternateName,    description,      strength,    formId,  dosageUnitId, dispensingUnit,  dosesPerDispensingUnit,  packSize,  alternatePackSize,  storeRefrigerated,   storeRoomTemperature,   hazardous,  flammable,   controlledSubstance,  lightSensitive,  approvedByWho,  contraceptiveCyp,  packLength,  packWidth, packHeight,  packWeight,  packsPerCarton, cartonLength,  cartonWidth,   cartonHeight, cartonsPerPallet,  expectedShelfLife,  specialStorageInstructions, specialTransportInstructions, active,  fullSupply, tracer,   packRoundingThreshold,  roundToZero,  archived, displayOrder, categoryId) values\n" +
-      "('" + product + "',  'a',                'Glaxo and Smith',  'a',              'a',                    'a',          'a',    '" + productName + "', '" + productName + "',   'TDF/FTC/EFV',  'TDF/FTC/EFV',  'TDF/FTC/EFV',    'TDF/FTC/EFV',  '300/200/600',  2,        1,            'Strip',           10,                     10,        30,                   TRUE,                  TRUE,                TRUE,       TRUE,         TRUE,                 TRUE,             TRUE,               1,          2.2,            2,          2,            2,            2,            2,              2,              2,              2,                    2,                    'a',                          'a',          TRUE,     TRUE,       TRUE,         1,                    FALSE,      TRUE,    1, (Select id from product_categories where code='C1'));\n");
+      "(code,    alternateItemCode,  manufacturer,       manufacturerCode,  manufacturerBarcode,   mohBarcode,   gtin,   type,         primaryName,    fullName,       genericName,    alternateName,    description,      strength,    formId,  dosageUnitId, dispensingUnit,  dosesPerDispensingUnit,  packSize,  alternatePackSize,  storeRefrigerated,   storeRoomTemperature,   hazardous,  flammable,   controlledSubstance,  lightSensitive,  approvedByWho,  contraceptiveCyp,  packLength,  packWidth, packHeight,  packWeight,  packsPerCarton, cartonLength,  cartonWidth,   cartonHeight, cartonsPerPallet,  expectedShelfLife,  specialStorageInstructions, specialTransportInstructions, active,  fullSupply, tracer,   packRoundingThreshold,  roundToZero,  archived) values\n" +
+      "('" + product + "',  'a',                'Glaxo and Smith',  'a',              'a',                    'a',          'a',    '" + productName + "', '" + productName + "',   'TDF/FTC/EFV',  'TDF/FTC/EFV',  'TDF/FTC/EFV',    'TDF/FTC/EFV',  '300/200/600',  2,        1,            'Strip',           10,                     10,        30,                   TRUE,                  TRUE,                TRUE,       TRUE,         TRUE,                 TRUE,             TRUE,               1,          2.2,            2,          2,            2,            2,            2,              2,              2,              2,                    2,                    'a',                          'a',          TRUE,     TRUE,       TRUE,         1,                    FALSE,      TRUE);\n");
   }
 
   public void insertProductGroup(String group) throws SQLException {
@@ -527,10 +527,10 @@ public class DBWrapper {
       " genericName, alternateName, description, strength, formId, dosageUnitId, dispensingUnit, dosesPerDispensingUnit, packSize, alternatePackSize," +
       " storeRefrigerated, storeRoomTemperature, hazardous, flammable, controlledSubstance, lightSensitive, approvedByWho, contraceptiveCyp, packLength, " +
       "packWidth, packHeight, packWeight, packsPerCarton, cartonLength, cartonWidth, cartonHeight, cartonsPerPallet, expectedShelfLife, specialStorageInstructions, " +
-      "specialTransportInstructions, active, fullSupply, tracer, packRoundingThreshold, roundToZero, archived, displayOrder, productGroupId) values" +
+      "specialTransportInstructions, active, fullSupply, tracer, packRoundingThreshold, roundToZero, archived, productGroupId) values" +
       "('" + product + "', 'a', 'Glaxo and Smith', 'a', 'a', 'a', 'a', '" + productName + "', '" + productName +
       "', 'TDF/FTC/EFV', 'TDF/FTC/EFV', 'TDF/FTC/EFV', 'TDF/FTC/EFV', '300/200/600', 2, 1, 'Strip', 10, 10, 30, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE," +
-      " 1, 2.2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 'a', 'a', " + status + ",TRUE, TRUE, 1, FALSE, TRUE, 1, (Select id from product_groups where code='" + group + "'));");
+      " 1, 2.2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 'a', 'a', " + status + ",TRUE, TRUE, 1, FALSE, TRUE, (Select id from product_groups where code='" + group + "'));");
   }
 
   public void updateProgramToAPushType(String program, boolean flag) throws SQLException {
@@ -538,6 +538,8 @@ public class DBWrapper {
   }
 
   public void insertProgramProducts(String product1, String product2, String program) throws SQLException {
+    update("delete from product_categories;");
+    update("INSERT INTO product_categories (code, name, displayOrder) values ('C1', 'Antibiotics', 1);");
     ResultSet rs = query("Select id from program_products;");
 
     if (rs.next()) {
@@ -545,19 +547,19 @@ public class DBWrapper {
       update("delete from program_products;");
     }
 
-    update("INSERT INTO program_products(programId, productId, dosesPerMonth, currentPrice, active) VALUES\n" +
-      "((SELECT ID from programs where code='" + program + "'), (SELECT id from products WHERE code = '" + product1 + "'), 30, 12.5, true),\n" +
-      "((SELECT ID from programs where code='" + program + "'), (SELECT id from products WHERE code = '" + product2 + "'), 30, 12.5, true);");
+    update("INSERT INTO program_products(programId, productId, dosesPerMonth, currentPrice, active, displayOrder, productCategoryId) VALUES\n" +
+      "((SELECT ID from programs where code='" + program + "'), (SELECT id from products WHERE code = '" + product1 + "'), 30, 12.5, true, 1, (select id from product_categories where code = 'C1')),\n" +
+      "((SELECT ID from programs where code='" + program + "'), (SELECT id from products WHERE code = '" + product2 + "'), 30, 12.5, true, 5, (select id from product_categories where code = 'C1'));");
   }
 
   public void insertProgramProduct(String product, String program, String doses, String active) throws SQLException {
-    update("INSERT INTO program_products(programId, productId, dosesPerMonth, currentPrice, active) VALUES\n" +
-      "((SELECT ID from programs where code='" + program + "'), (SELECT id from products WHERE code = '" + product + "'), '" + doses + "', 12.5, '" + active + "');");
+    update("INSERT INTO program_products(programId, productId, dosesPerMonth, currentPrice, active, displayOrder, productCategoryId) VALUES\n" +
+      "((SELECT ID from programs where code='" + program + "'), (SELECT id from products WHERE code = '" + product + "'), '" + doses + "', 12.5, '" + active + "', 1, (Select id from product_categories where code='C1'));");
   }
 
   public void insertProgramProductsWithCategory(String product, String program) throws SQLException {
-    update("INSERT INTO program_products(programId, productId, dosesPerMonth, currentPrice, active) VALUES\n" +
-      "((SELECT ID from programs where code='" + program + "'), (SELECT id from products WHERE code = '" + product + "'), 30, 12.5, true);");
+    update("INSERT INTO program_products(programId, productId, dosesPerMonth, currentPrice, active, displayOrder, productCategoryId) VALUES\n" +
+      "((SELECT ID from programs where code='" + program + "'), (SELECT id from products WHERE code = '" + product + "'), 30, 12.5, true, 1, (Select id from product_categories where code='C1'));");
   }
 
   public void insertProgramProductISA(String program, String product, String whoRatio, String dosesPerYear, String wastageFactor,
@@ -804,27 +806,28 @@ public class DBWrapper {
       "dosesPerDispensingUnit, packSize, alternatePackSize, storeRefrigerated, storeRoomTemperature, hazardous, flammable, " +
       "controlledSubstance, lightSensitive, approvedByWho, contraceptiveCyp, packLength, packWidth, packHeight, packWeight, " +
       "packsPerCarton, cartonLength, cartonWidth, cartonHeight, cartonsPerPallet, expectedShelfLife, specialStorageInstructions, " +
-      "specialTransportInstructions, active, fullSupply, tracer, packRoundingThreshold, roundToZero, archived, displayOrder, categoryId) " +
+      "specialTransportInstructions, active, fullSupply, tracer, packRoundingThreshold, roundToZero, archived) " +
       "values";
 
     for (int i = 0; i < numberOfProductsOfEachType; i++) {
-      if (defaultDisplayOrder) {
-        insertSql = insertSql + "('" + productCodeFullSupply + i + "', 'a', 'Glaxo and Smith', 'a', 'a', 'a', 'a', 'antibiotic', 'antibiotic', 'TDF/FTC/EFV', 'TDF/FTC/EFV', 'TDF/FTC/EFV', 'TDF/FTC/EFV', '300/200/600', 2, 1, 'Strip', 10, 10, 30, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, 1, 2.2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 'a', 'a', TRUE, TRUE, TRUE, 1, FALSE, TRUE, 1, " + categoryId + "),\n";
-        insertSql = insertSql + "('" + productCodeNonFullSupply + i + "', 'a', 'Glaxo and Smith', 'a', 'a', 'a', 'a', 'antibiotic', 'antibiotic', 'TDF/FTC/EFV', 'TDF/FTC/EFV', 'TDF/FTC/EFV', 'TDF/FTC/EFV', '300/200/600', 2, 1, 'Strip', 10, 10, 30, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, 1, 2.2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 'a', 'a', TRUE, FALSE, TRUE, 1, FALSE, TRUE, 1, " + categoryId + "),\n";
-      } else {
-        insertSql = insertSql + "('" + productCodeFullSupply + i + "', 'a', 'Glaxo and Smith', 'a', 'a', 'a', 'a', 'antibiotic', 'antibiotic', 'TDF/FTC/EFV', 'TDF/FTC/EFV', 'TDF/FTC/EFV', 'TDF/FTC/EFV', '300/200/600', 2, 1, 'Strip', 10, 10, 30, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, 1, 2.2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 'a', 'a', TRUE, TRUE, TRUE, 1, FALSE, TRUE, " + i + ", " + categoryId + "),\n";
-        insertSql = insertSql + "('" + productCodeNonFullSupply + i + "', 'a', 'Glaxo and Smith', 'a', 'a', 'a', 'a', 'antibiotic', 'antibiotic', 'TDF/FTC/EFV', 'TDF/FTC/EFV', 'TDF/FTC/EFV', 'TDF/FTC/EFV', '300/200/600', 2, 1, 'Strip', 10, 10, 30, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, 1, 2.2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 'a', 'a', TRUE, FALSE, TRUE, 1, FALSE, TRUE, " + i + ", " + categoryId + "),\n";
-      }
+
+      insertSql = insertSql + "('" + productCodeFullSupply + i + "', 'a', 'Glaxo and Smith', 'a', 'a', 'a', 'a', 'antibiotic', 'antibiotic', 'TDF/FTC/EFV', 'TDF/FTC/EFV', 'TDF/FTC/EFV', 'TDF/FTC/EFV', '300/200/600', 2, 1, 'Strip', 10, 10, 30, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, 1, 2.2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 'a', 'a', TRUE, TRUE, TRUE, 1, FALSE, TRUE),\n";
+      insertSql = insertSql + "('" + productCodeNonFullSupply + i + "', 'a', 'Glaxo and Smith', 'a', 'a', 'a', 'a', 'antibiotic', 'antibiotic', 'TDF/FTC/EFV', 'TDF/FTC/EFV', 'TDF/FTC/EFV', 'TDF/FTC/EFV', '300/200/600', 2, 1, 'Strip', 10, 10, 30, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, 1, 2.2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 'a', 'a', TRUE, FALSE, TRUE, 1, FALSE, TRUE),\n";
     }
 
     insertSql = insertSql.substring(0, insertSql.length() - 2) + ";\n";
     update(insertSql);
 
-    insertSql = "INSERT INTO program_products(programId, productId, dosesPerMonth, currentPrice, active) VALUES\n";
+    insertSql = "INSERT INTO program_products(programId, productId, dosesPerMonth, currentPrice, active, displayOrder, productCategoryId) VALUES\n";
 
     for (int i = 0; i < numberOfProductsOfEachType; i++) {
-      insertSql = insertSql + "((SELECT ID from programs where code='" + program + "'), (SELECT id from products WHERE code = '" + productCodeFullSupply + i + "'), 30, 12.5, true),\n";
-      insertSql = insertSql + "((SELECT ID from programs where code='" + program + "'), (SELECT id from products WHERE code = '" + productCodeNonFullSupply + i + "'), 30, 12.5, true),\n";
+      if (defaultDisplayOrder) {
+        insertSql = insertSql + "((SELECT ID from programs where code='" + program + "'), (SELECT id from products WHERE code = '" + productCodeFullSupply + i + "'), 30, 12.5, true, 1," + categoryId + "),\n";
+        insertSql = insertSql + "((SELECT ID from programs where code='" + program + "'), (SELECT id from products WHERE code = '" + productCodeNonFullSupply + i + "'), 30, 12.5, true, 1," + categoryId + "),\n";
+      } else {
+        insertSql = insertSql + "((SELECT ID from programs where code='" + program + "'), (SELECT id from products WHERE code = '" + productCodeFullSupply + i + "'), 30, 12.5, true, " + i + "," + categoryId + "),\n";
+        insertSql = insertSql + "((SELECT ID from programs where code='" + program + "'), (SELECT id from products WHERE code = '" + productCodeNonFullSupply + i + "'), 30, 12.5, true, " + i + "," + categoryId + "),\n";
+      }
     }
 
     insertSql = insertSql.substring(0, insertSql.length() - 2) + ";";
@@ -862,21 +865,21 @@ public class DBWrapper {
     insertSql = insertSql.substring(0, insertSql.length() - 2) + ";";
     update(insertSql);
 
-    insertSql = "INSERT INTO products (code,    alternateItemCode,  manufacturer,       manufacturerCode,  manufacturerBarcode,   mohBarcode,   gtin,   type,         primaryName,    fullName,       genericName,    alternateName,    description,      strength,    formId,  dosageUnitId, dispensingUnit,  dosesPerDispensingUnit,  packSize,  alternatePackSize,  storeRefrigerated,   storeRoomTemperature,   hazardous,  flammable,   controlledSubstance,  lightSensitive,  approvedByWho,  contraceptiveCyp,  packLength,  packWidth, packHeight,  packWeight,  packsPerCarton, cartonLength,  cartonWidth,   cartonHeight, cartonsPerPallet,  expectedShelfLife,  specialStorageInstructions, specialTransportInstructions, active,  fullSupply, tracer,   packRoundingThreshold,  roundToZero,  archived, displayOrder, categoryId) values\n";
+    insertSql = "INSERT INTO products (code,    alternateItemCode,  manufacturer,       manufacturerCode,  manufacturerBarcode,   mohBarcode,   gtin,   type,         primaryName,    fullName,       genericName,    alternateName,    description,      strength,    formId,  dosageUnitId, dispensingUnit,  dosesPerDispensingUnit,  packSize,  alternatePackSize,  storeRefrigerated,   storeRoomTemperature,   hazardous,  flammable,   controlledSubstance,  lightSensitive,  approvedByWho,  contraceptiveCyp,  packLength,  packWidth, packHeight,  packWeight,  packsPerCarton, cartonLength,  cartonWidth,   cartonHeight, cartonsPerPallet,  expectedShelfLife,  specialStorageInstructions, specialTransportInstructions, active,  fullSupply, tracer,   packRoundingThreshold,  roundToZero,  archived) values\n";
 
     for (int i = 0; i < 11; i++) {
-      insertSql = insertSql + "('" + productCodeFullSupply + i + "',  'a',                'Glaxo and Smith',  'a',              'a',                    'a',          'a',    'antibiotic', 'antibiotic',   'TDF/FTC/EFV',  'TDF/FTC/EFV',  'TDF/FTC/EFV',    'TDF/FTC/EFV',  '300/200/600',  2,        1,            'Strip',           10,                     10,        30,                   TRUE,                  TRUE,                TRUE,       TRUE,         TRUE,                 TRUE,             TRUE,               1,          2.2,            2,          2,            2,            2,            2,              2,              2,              2,                    2,                    'a',                          'a',          TRUE,     TRUE,       TRUE,         1,                 FALSE,      TRUE,    1, (select id from product_categories where code='C" + i + "')),\n";
-      insertSql = insertSql + "('" + productCodeNonFullSupply + i + "',  'a',             'Glaxo and Smith',  'a',              'a',                    'a',          'a',    'antibiotic', 'antibiotic',   'TDF/FTC/EFV',  'TDF/FTC/EFV',  'TDF/FTC/EFV',    'TDF/FTC/EFV',  '300/200/600',  2,        1,            'Strip',           10,                     10,        30,                   TRUE,                  TRUE,                TRUE,       TRUE,         TRUE,                 TRUE,             TRUE,               1,          2.2,            2,          2,            2,            2,            2,              2,              2,              2,                    2,                    'a',                          'a',          TRUE,     FALSE,      TRUE,         1,                 FALSE,      TRUE,    1, (select id from product_categories where code='C" + i + "')),\n";
+      insertSql = insertSql + "('" + productCodeFullSupply + i + "',  'a',                'Glaxo and Smith',  'a',              'a',                    'a',          'a',    'antibiotic', 'antibiotic',   'TDF/FTC/EFV',  'TDF/FTC/EFV',  'TDF/FTC/EFV',    'TDF/FTC/EFV',  '300/200/600',  2,        1,            'Strip',           10,                     10,        30,                   TRUE,                  TRUE,                TRUE,       TRUE,         TRUE,                 TRUE,             TRUE,               1,          2.2,            2,          2,            2,            2,            2,              2,              2,              2,                    2,                    'a',                          'a',          TRUE,     TRUE,       TRUE,         1,                 FALSE,      TRUE),\n";
+      insertSql = insertSql + "('" + productCodeNonFullSupply + i + "',  'a',             'Glaxo and Smith',  'a',              'a',                    'a',          'a',    'antibiotic', 'antibiotic',   'TDF/FTC/EFV',  'TDF/FTC/EFV',  'TDF/FTC/EFV',    'TDF/FTC/EFV',  '300/200/600',  2,        1,            'Strip',           10,                     10,        30,                   TRUE,                  TRUE,                TRUE,       TRUE,         TRUE,                 TRUE,             TRUE,               1,          2.2,            2,          2,            2,            2,            2,              2,              2,              2,                    2,                    'a',                          'a',          TRUE,     FALSE,      TRUE,         1,                 FALSE,      TRUE),\n";
     }
 
     insertSql = insertSql.substring(0, insertSql.length() - 2) + ";\n";
     update(insertSql);
 
-    insertSql = "INSERT INTO program_products(programId, productId, dosesPerMonth, currentPrice, active) VALUES\n";
+    insertSql = "INSERT INTO program_products(programId, productId, dosesPerMonth, currentPrice, active, displayOrder, productCategoryId) VALUES\n";
 
     for (int i = 0; i < 11; i++) {
-      insertSql = insertSql + "((SELECT ID from programs where code='" + program + "'), (SELECT id from products WHERE code = '" + productCodeFullSupply + i + "'), 30, 12.5, true),\n";
-      insertSql = insertSql + "((SELECT ID from programs where code='" + program + "'), (SELECT id from products WHERE code = '" + productCodeNonFullSupply + i + "'), 30, 12.5, true),\n";
+      insertSql = insertSql + "((SELECT ID from programs where code='" + program + "'), (SELECT id from products WHERE code = '" + productCodeFullSupply + i + "'), 30, 12.5, true, 1, (select id from product_categories where code='C" + i + "')),\n";
+      insertSql = insertSql + "((SELECT ID from programs where code='" + program + "'), (SELECT id from products WHERE code = '" + productCodeNonFullSupply + i + "'), 30, 12.5, true, 1, (select id from product_categories where code='C" + i + "')),\n";
     }
 
     insertSql = insertSql.substring(0, insertSql.length() - 2) + ";";
@@ -1342,8 +1345,14 @@ public class DBWrapper {
       "roundToZero,packRoundingThreshold,packsToShip) VALUES";
 
     for (int i = 0; i < numberOfLineItems; i++) {
-      String productDisplayOrder = getAttributeFromTable("products", "displayOrder", "code", "F" + i);
-      String categoryId = getAttributeFromTable("products", "categoryId", "code", "F" + i);
+      String programProductId = null;
+      ResultSet rs = (query("select id from program_products where programId= (Select id from programs " +
+        "where code='" + program + "') and productId = (Select id from products where code='F" + i + "');"));
+      if (rs.next())
+        programProductId = rs.getString("id");
+
+      String productDisplayOrder = getAttributeFromTable("program_products", "displayOrder", "id", programProductId);
+      String categoryId = getAttributeFromTable("program_products", "productCategoryId", "id", programProductId);
       String categoryCode = getAttributeFromTable("product_categories", "code", "id", categoryId);
       String categoryDisplayOrder = getAttributeFromTable("product_categories", "displayOrder", "id", categoryId);
 

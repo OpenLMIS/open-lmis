@@ -50,29 +50,16 @@ public class DistrictFinancialSummaryDataProvider extends ReportDataProvider {
   }
 
   public ReportParameter getReportFilterData(Map<String, String[]> filterCriteria) {
-    DistrictSummaryReportParam regimenSummaryReportFilter = null;
+      DistrictSummaryReportParam districtSummaryReportParam = null;
 
     if (filterCriteria != null) {
-      regimenSummaryReportFilter = new DistrictSummaryReportParam();
 
-      regimenSummaryReportFilter.setZoneId(StringUtils.isBlank(filterCriteria.get("zoneId")[0]) ? 0 : Integer.parseInt(filterCriteria.get("zoneId")[0]));  //defaults to 0
-      regimenSummaryReportFilter.setZone(StringUtils.isBlank(filterCriteria.get("zone")[0]) ? "All Geographic Zones" : filterCriteria.get("zone")[0]);
-
-      regimenSummaryReportFilter.setProgramId(StringUtils.isBlank(filterCriteria.get("programId")[0]) ? 0 : Integer.parseInt(filterCriteria.get("programId")[0]));  //defaults to 0
-      if (regimenSummaryReportFilter.getProgramId() == 0 || regimenSummaryReportFilter.getProgramId() == -1)
-        regimenSummaryReportFilter.setProgram("All Programs");
-      else
-        regimenSummaryReportFilter.setProgram(filterCriteria.get("program")[0]);
-
-      regimenSummaryReportFilter.setScheduleId(StringUtils.isBlank(filterCriteria.get("scheduleId")[0]) ? 0 : Integer.parseInt(filterCriteria.get("scheduleId")[0])); //defaults to 0
-      regimenSummaryReportFilter.setSchedule(StringUtils.isBlank(filterCriteria.get("schedule")[0]) ? "All Schedules" : filterCriteria.get("schedule")[0]);
-      regimenSummaryReportFilter.setPeriodId(StringUtils.isBlank(filterCriteria.get("periodId")[0]) ? 0 : Integer.parseInt(filterCriteria.get("periodId")[0])); //defaults to 0
-      regimenSummaryReportFilter.setPeriod(StringUtils.isBlank(filterCriteria.get("period")[0]) ? "All Periods" : filterCriteria.get("period")[0]);
-
-      regimenSummaryReportFilter.setYear(filterCriteria.get("year") == null ? 0 : Integer.parseInt(filterCriteria.get("year")[0]));
-
+            districtSummaryReportParam = new DistrictSummaryReportParam();
+            districtSummaryReportParam.setRgroupId(StringUtils.isBlank(filterCriteria.get("requisitionGroup")[0]) ? 0 : Integer.parseInt(filterCriteria.get("requisitionGroup")[0])); //defaults to 0
+            districtSummaryReportParam.setProgramId(StringUtils.isBlank(filterCriteria.get("program")[0]) ? 0 : Integer.parseInt(filterCriteria.get("program")[0]));
+            districtSummaryReportParam.setPeriodId(StringUtils.isBlank(filterCriteria.get("period")[0]) ? 0 : Integer.parseInt(filterCriteria.get("period")[0]));
     }
-    return regimenSummaryReportFilter;
+    return districtSummaryReportParam;
   }
 
   @Override

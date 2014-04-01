@@ -78,16 +78,18 @@ FROM ((((((((((((((facilities
         (products.code)::text = (requisition_line_items.productcode)::text
       )
     ))
+
+  JOIN program_products ON
+    (
+      (program_products.productid = products.id and program_products.programId = requisitions.programId)
+    ))
   JOIN product_categories ON
     (
       (
-        product_categories.id = products.categoryid
+        product_categories.id = program_products.productCategoryid
       )
     ))
-  JOIN program_products ON
-    (
-      (program_products.productid = products.id)
-    ))
+
   JOIN programs ON
     (
       (

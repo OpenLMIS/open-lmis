@@ -12,8 +12,10 @@ package org.openlmis.shipment.service;
 
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.Product;
+import org.openlmis.core.domain.ProgramProduct;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.ProductService;
+import org.openlmis.core.service.ProgramProductService;
 import org.openlmis.rnr.domain.RnrLineItem;
 import org.openlmis.rnr.service.RequisitionService;
 import org.openlmis.shipment.domain.ShipmentFileInfo;
@@ -40,6 +42,8 @@ public class ShipmentService {
   @Autowired
   private RequisitionService requisitionService;
 
+  @Autowired
+  private ProgramProductService programProductService;
 
   public void save(ShipmentLineItem shipmentLineItem) {
     if (shipmentLineItem.getQuantityShipped() < 0) {
@@ -50,11 +54,14 @@ public class ShipmentService {
       shipmentLineItem.fillReferenceFields(lineItem);
     } else {
       Product product = productService.getByCode(shipmentLineItem.getProductCode());
-
       if (product == null) {
         throw new DataException("error.unknown.product");
       }
-      shipmentLineItem.fillReferenceFields(product);
+
+      Long programId = requisitionService.getProgramId(shipmentLineItem.getOrderId());
+      ProgramProduct programProduct = programProductService.getByProgramAndProductId(programId, product.getId());
+      programProduct.setProduct(product);
+      shipmentLineItem.fillReferenceFields(programProduct);
     }
 
     if (shipmentLineItem.getReplacedProductCode() != null) {
