@@ -860,7 +860,7 @@ public class DistributionSyncTest extends TestCaseHelper {
 
   @Test(groups = {"distribution"})
   public void testSyncWhenAllProductDisplayOrderIsNull() throws SQLException {
-    dbWrapper.updateFieldValue("products", "displayOrder", null);
+    dbWrapper.updateFieldValue("Program_products", "displayOrder", null);
     HomePage homePage = loginPage.loginAs(distributionTestData.get(USER), distributionTestData.get(PASSWORD));
 
     initiateDistribution(distributionTestData.get(FIRST_DELIVERY_ZONE_NAME), distributionTestData.get(VACCINES_PROGRAM));
