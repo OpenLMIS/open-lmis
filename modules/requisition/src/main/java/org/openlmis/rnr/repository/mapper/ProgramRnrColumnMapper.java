@@ -58,6 +58,7 @@ public interface ProgramRnrColumnMapper {
 
   @Update("UPDATE program_rnr_columns SET " +
       "visible = #{rnrColumn.visible}, " +
+      "rnrOptionId = #{rnrColumn.configuredOption.id}, " +
       "label = #{rnrColumn.label}, " +
       "position = #{rnrColumn.position}, " +
       "source = #{rnrColumn.source.code}, " +
@@ -75,7 +76,7 @@ public interface ProgramRnrColumnMapper {
       "ORDER BY visible DESC, position"})
   List<RnrColumn> getVisibleProgramRnrColumns(Long programId);
 
-  @Select({"SELECT co.id, co.name FROM master_rnr_column_options mo INNER JOIN configurable_rnr_options co " ,
+  @Select({"SELECT co.id, co.name, co.label FROM master_rnr_column_options mo INNER JOIN configurable_rnr_options co " ,
     "ON mo.rnrOptionId = co.id WHERE masterrnrcolumnid = #{masterRnrColumnId}"})
   List<RnrColumnOption> getRnrColumnOptionsByMasterRnrColumnId(Integer masterRnrColumnId);
 

@@ -74,8 +74,12 @@ public class ProgramRnrColumnMapperIT {
   @Test
   public void shouldUpdateConfiguredDataForProgramColumn() throws Exception {
     RnrColumn rnrColumn = programRnrColumnMapper.fetchAllMasterRnRColumns().get(0);
-    addProgramRnrColumn(rnrColumn, null, 3, true, "Some Random Label", USER_INPUT, false);
-    updateProgramRnrColumn(rnrColumn.getId(), 5, false, "Some Random Label", RnRColumnSource.CALCULATED, true);
+    RnrColumnOption rnrColumnOption1 = programRnrColumnMapper.getRnrColumnOptionById(1);
+    addProgramRnrColumn(rnrColumn, rnrColumnOption1, 3, true, "Some Random Label", USER_INPUT, false);
+
+    RnrColumnOption rnrColumnOption2 = programRnrColumnMapper.getRnrColumnOptionById(2);
+    updateProgramRnrColumn(rnrColumn.getId(), 5, false, "Some Random Label", RnRColumnSource.CALCULATED, true,
+      rnrColumnOption2);
 
     RnrColumn updatedRnrColumn = programRnrColumnMapper.fetchDefinedRnrColumnsForProgram(PROGRAM_ID).get(0);
 
@@ -85,6 +89,7 @@ public class ProgramRnrColumnMapperIT {
     assertThat(updatedRnrColumn.getLabel(), is("Some Random Label"));
     assertThat(updatedRnrColumn.getSource(), is(RnRColumnSource.CALCULATED));
     assertThat(updatedRnrColumn.isFormulaValidationRequired(), is(true));
+    assertThat(updatedRnrColumn.getConfiguredOption(), is(rnrColumnOption2));
   }
 
   @Test
@@ -183,7 +188,13 @@ public class ProgramRnrColumnMapperIT {
     return programRnrColumnMapper.insert(PROGRAM_ID, rnrColumn);
   }
 
-  private void updateProgramRnrColumn(Long id, int position, boolean visible, String label, RnRColumnSource columnSource, Boolean validated) {
+  private void updateProgramRnrColumn(Long id,
+                                      int position,
+                                      boolean visible,
+                                      String label,
+                                      RnRColumnSource columnSource,
+                                      Boolean validated,
+                                      RnrColumnOption rnrColumnOption) {
     RnrColumn rnrColumn = new RnrColumn();
     rnrColumn.setId(id);
     rnrColumn.setLabel(label);
@@ -191,6 +202,7 @@ public class ProgramRnrColumnMapperIT {
     rnrColumn.setPosition(position);
     rnrColumn.setSource(columnSource);
     rnrColumn.setFormulaValidationRequired(validated);
+    rnrColumn.setConfiguredOption(rnrColumnOption);
     programRnrColumnMapper.update(PROGRAM_ID, rnrColumn);
   }
 
