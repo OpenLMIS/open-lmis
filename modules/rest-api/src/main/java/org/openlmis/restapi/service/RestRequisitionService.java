@@ -118,7 +118,7 @@ public class RestRequisitionService {
     searchCriteria.setUserId(userId);
     List<Rnr> rnrs = requisitionService.getRequisitionsFor(searchCriteria, asList(period));
 
-    if(rnrs.size() > 0){
+    if(rnrs == null || rnrs.size() > 0){
       rnr = requisitionService.getFullRequisitionById( rnrs.get(0).getId() );
 
     }else{
