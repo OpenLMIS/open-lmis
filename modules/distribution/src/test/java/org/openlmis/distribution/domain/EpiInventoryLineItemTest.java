@@ -38,10 +38,12 @@ public class EpiInventoryLineItemTest {
     facilityProgramProduct.setProduct(product);
     FacilityProgramProduct spyFPP = spy(facilityProgramProduct);
     doReturn(567).when(spyFPP).calculateIsa(420L, 5);
+    doReturn(57).when(spyFPP).calculateIsaByPackSize(420L, 5);
 
     EpiInventoryLineItem lineItem = new EpiInventoryLineItem(6L, spyFPP, 420L, 5);
 
     assertThat(lineItem.getIdealQuantity(), is(567));
+    assertThat(lineItem.getIdealQuantityByPackSize(), is(57));
     assertThat(lineItem.getProductName(), is("Primary Name"));
     assertThat(lineItem.getProductCode(), is("P10"));
     assertThat(lineItem.getProductDisplayOrder(), is(1));

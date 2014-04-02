@@ -49,10 +49,10 @@
                             <td id="productName{{ $index }}" class="col-vials">
                                 <span ng-bind="lineItem.productName"></span>
                             </td>
-                            <td id="idealQuantity{{ $index }}" class="col-ideal-quantity">
-                <span ng-show="(lineItem.idealQuantity === 0) || (lineItem.idealQuantity)"
-                      ng-bind="lineItem.idealQuantity"></span>
-                <span ng-hide="(lineItem.idealQuantity === 0) || (lineItem.idealQuantity)">--</span>
+                            <td id="idealQuantityByPackSize{{ $index }}" class="col-ideal-quantity">
+                <span ng-show="(lineItem.idealQuantityByPackSize === 0) || (lineItem.idealQuantityByPackSize)"
+                      ng-bind="lineItem.idealQuantityByPackSize"></span>
+                                <span ng-hide="(lineItem.idealQuantityByPackSize === 0) || (lineItem.idealQuantityByPackSize)">--</span>
               </td>
               <td class="col-existing-quantity">
                 <div>
