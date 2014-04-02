@@ -6,7 +6,7 @@
  * To change this template use File | Settings | File Templates.
  */
 
-function ShipmentLeadTimeController($scope,$filter,navigateBackService, programsList, formInputValue,RequisitionGroupsBySupervisoryNodeProgramSchedule,userDefaultSupervisoryNode,ReportProgramsBySupervisoryNode, UserSupervisoryNodes,ReportSchedules, ReportPeriods, RequisitionGroupsByProgram,RequisitionGroupsByProgramSchedule, ReportProductsByProgram, OperationYears, ReportPeriodsByScheduleAndYear,ShipmentLeadTime, ngTableParams) {
+function ShipmentLeadTimeController($scope,$filter,navigateBackService, programsList, formInputValue,RequisitionGroupsBySupervisoryNodeProgramSchedule,userPreferredFilterValues,ReportProgramsBySupervisoryNode, UserSupervisoryNodes,ReportSchedules, ReportPeriods, RequisitionGroupsByProgram,RequisitionGroupsByProgramSchedule, ReportProductsByProgram, OperationYears, ReportPeriodsByScheduleAndYear,ShipmentLeadTime, ngTableParams) {
 
     $scope.filterObject = {};
 
@@ -15,7 +15,6 @@ function ShipmentLeadTimeController($scope,$filter,navigateBackService, programs
     initialize();
 
     function initialize() {
-        $scope.defaultSupervisoryNodeId = $scope.filterObject.supervisoryNodeId = $scope.formFilter.supervisoryNodeId = !isUndefined(userDefaultSupervisoryNode) ? userDefaultSupervisoryNode.id : undefined ;
         $scope.showProductsFilter = false;
         $scope.$parent.currentTab = 'ORDER';
     }
@@ -217,12 +216,35 @@ function ShipmentLeadTimeController($scope,$filter,navigateBackService, programs
     $scope.$on('$viewContentLoaded', function () {
 
         if(isUndefined(navigateBackService) || navigateBackService[$scope.$parent.currentTab] === undefined){
-            $scope.defaultSupervisoryNodeId = $scope.filterObject.supervisoryNodeId = $scope.formFilter.supervisoryNodeId = !isUndefined(userDefaultSupervisoryNode) ? userDefaultSupervisoryNode.id : undefined ;
-            return;
+            if(!_.isEmpty(userPreferredFilterValues)){
+                var date = new Date();
+                $scope.filterObject.supervisoryNodeId = $scope.formFilter.supervisoryNodeId = userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_SUPERVISORY_NODE];
+                $scope.processSupervisoryNodeChange();
+
+                $scope.filterObject.programId = userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_PROGRAM];
+                $scope.filterObject.periodId = userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_PERIOD];
+                $scope.filterObject.scheduleId = userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_SCHEDULE];
+                $scope.filterObject.year = date.getFullYear() - 1;
+                $scope.filterObject.rgroupId = userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_REQUISITION_GROUP];
+
+                $scope.registerWatches();
+
+                $scope.formFilter = $scope.filterObject;
+
+            }
+
+        }else{
+            $scope.formFilter.supervisoryNodeId = navigateBackService[$scope.$parent.currentTab].supervisoryNodeId;
+            $scope.processSupervisoryNodeChange();
+
+            $scope.registerWatches();
+
+            $scope.formFilter = $scope.filterObject = navigateBackService[$scope.$parent.currentTab];
         }
 
-        $scope.formFilter.supervisoryNodeId = navigateBackService[$scope.$parent.currentTab].supervisoryNodeId;
-        $scope.processSupervisoryNodeChange();
+    });
+
+    $scope.registerWatches = function(){
 
         $scope.$watch('formFilter.programId',function(){
             $scope.filterProductsByProgram();
@@ -232,9 +254,8 @@ function ShipmentLeadTimeController($scope,$filter,navigateBackService, programs
             $scope.changeSchedule();
 
         });
-        $scope.formFilter = $scope.filterObject = navigateBackService[$scope.$parent.currentTab];
 
-    });
+    };
 
     $scope.paramsChanged = function(params) {
 

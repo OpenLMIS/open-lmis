@@ -20,17 +20,13 @@ ResolveDashboardFormData = {
         return deferred.promise;
 
     },
-    userDefaultSupervisoryNode : function($q, $timeout, $rootScope, UserDefaultSupervisoryNode){
-        var deferred = $q.defer();
-        $timeout(function (){
+    userPreferredFilterValues : function(localStorageService){
+        var preferredFilterValues = {};
+        for(var prefKey in localStorageKeys.PREFERENCE){
+            preferredFilterValues[localStorageKeys.PREFERENCE[prefKey]] =  localStorageService.get(localStorageKeys.PREFERENCE[prefKey]);
+        }
 
-            UserDefaultSupervisoryNode.get({}, function(data){
-                deferred.resolve(data.supervisoryNode);
-            });
-
-        },100);
-
-        return deferred.promise;
+        return preferredFilterValues;
 
     },
     formInputValue : function(messageService){

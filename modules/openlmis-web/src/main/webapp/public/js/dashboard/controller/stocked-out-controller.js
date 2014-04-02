@@ -6,7 +6,7 @@
  * To change this template use File | Settings | File Templates.
  */
 
-function StockedOutController($scope, $location, programsList, dashboardMenuService, formInputValue,ReportProgramsBySupervisoryNode,navigateBackService, userDefaultSupervisoryNode,RequisitionGroupsBySupervisoryNodeProgramSchedule, UserSupervisoryNodes,ReportSchedules, ReportPeriods, RequisitionGroupsByProgram,RequisitionGroupsByProgramSchedule, ReportProductsByProgram, OperationYears, ReportPeriodsByScheduleAndYear,StockedOutFacilities, ngTableParams) {
+function StockedOutController($scope, $location, programsList, dashboardMenuService, formInputValue,ReportProgramsBySupervisoryNode,navigateBackService,userPreferredFilterValues,RequisitionGroupsBySupervisoryNodeProgramSchedule, UserSupervisoryNodes,ReportSchedules, ReportPeriods, RequisitionGroupsByProgram,RequisitionGroupsByProgramSchedule, ReportProductsByProgram, OperationYears, ReportPeriodsByScheduleAndYear,StockedOutFacilities, ngTableParams) {
     $scope.filterObject = {};
 
     $scope.formFilter = {};
@@ -19,7 +19,6 @@ function StockedOutController($scope, $location, programsList, dashboardMenuServ
         $scope.$parent.currentTab = 'STOCK-OUT';
 
         $scope.productSelectOption = {maximumSelectionSize : 1};
-        $scope.defaultSupervisoryNodeId = $scope.filterObject.supervisoryNodeId = $scope.formFilter.supervisoryNodeId = !isUndefined(userDefaultSupervisoryNode) ? userDefaultSupervisoryNode.id : undefined ;
 
     }
     UserSupervisoryNodes.get(function (data){
@@ -304,22 +303,47 @@ function StockedOutController($scope, $location, programsList, dashboardMenuServ
 
     $scope.$on('$viewContentLoaded', function () {
 
-        if(isUndefined(navigateBackService[$scope.$parent.currentTab]) || navigateBackService[$scope.$parent.currentTab] === undefined ) return;
+        if(isUndefined(navigateBackService) || navigateBackService[$scope.$parent.currentTab] === undefined){
+            if(!_.isEmpty(userPreferredFilterValues)){
+                var date = new Date();
+                $scope.filterObject.supervisoryNodeId = $scope.formFilter.supervisoryNodeId = userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_SUPERVISORY_NODE];
+                $scope.processSupervisoryNodeChange();
+
+                $scope.filterObject.programId = userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_PROGRAM];
+                $scope.filterObject.periodId = userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_PERIOD];
+                $scope.filterObject.scheduleId = userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_SCHEDULE];
+                $scope.filterObject.year = date.getFullYear() - 1;
+                $scope.filterObject.rgroupId = userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_REQUISITION_GROUP];
+                $scope.filterObject.productIdList = [userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_PRODUCT]];
+
+                $scope.registerWatches();
+
+                $scope.formFilter = $scope.filterObject;
+
+            }
+        }else{
 
             $scope.formFilter.supervisoryNodeId = navigateBackService[$scope.$parent.currentTab].supervisoryNodeId;
             $scope.processSupervisoryNodeChange();
-            $scope.$watch('formFilter.programId',function(){
-                $scope.filterProductsByProgram();
-
-            });
-            $scope.$watch('formFilter.scheduleId', function(){
-                $scope.changeSchedule();
-
-            });
+            $scope.registerWatches();
             $scope.formFilter = $scope.filterObject = navigateBackService[$scope.$parent.currentTab];
 
+        }
 
     });
+    $scope.registerWatches = function(){
+
+        $scope.$watch('formFilter.programId',function(){
+            $scope.filterProductsByProgram();
+
+        });
+        $scope.$watch('formFilter.scheduleId', function(){
+            $scope.changeSchedule();
+
+        });
+
+    };
+
 
     $scope.tableParams = new ngTableParams({
         page: 1,            // show first page

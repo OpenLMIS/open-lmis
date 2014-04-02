@@ -407,9 +407,9 @@ services.factory('SaveGeographicInfo', function($resource){
 services.factory('UserSupervisoryNodes', function($resource){
     return $resource('/reports/user/supervisory-nodes.json',{},{});
 });
-services.factory('UserDefaultSupervisoryNode', function($resource){
+/*services.factory('UserDefaultSupervisoryNode', function($resource){
    return $resource('/reports/user/default-supervisory-node.json',{},{});
-});
+});*/
 services.factory('ProgramListBySupervisoryNodes', function ($resource) {
     return $resource('/reports/supervisory-nodes/programs.json', {}, {});
 });

@@ -9,7 +9,7 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-function StockController($scope, $routeParams,navigateBackService, programsList,formInputValue,UserSupervisoryNodes,userDefaultSupervisoryNode,RequisitionGroupsBySupervisoryNodeProgramSchedule,ReportProgramsBySupervisoryNode, ReportSchedules, ReportPeriods, RequisitionGroupsByProgram,RequisitionGroupsByProgramSchedule, ReportProductsByProgram, OperationYears, ReportPeriodsByScheduleAndYear, StockEfficiencyDetail, ngTableParams) {
+function StockController($scope, $routeParams,navigateBackService, programsList,formInputValue,UserSupervisoryNodes,userPreferredFilterValues,RequisitionGroupsBySupervisoryNodeProgramSchedule,ReportProgramsBySupervisoryNode, ReportSchedules, ReportPeriods, RequisitionGroupsByProgram,RequisitionGroupsByProgramSchedule, ReportProductsByProgram, OperationYears, ReportPeriodsByScheduleAndYear, StockEfficiencyDetail, ngTableParams) {
 
     $scope.filterObject = {};
 
@@ -245,26 +245,47 @@ function StockController($scope, $routeParams,navigateBackService, programsList,
 
         if(_.isEmpty($routeParams) && isUndefined(navigateBackService[$scope.$parent.currentTab])){
 
-            $scope.defaultSupervisoryNodeId = $scope.filterObject.supervisoryNodeId = $scope.formFilter.supervisoryNodeId = !isUndefined(userDefaultSupervisoryNode) ? userDefaultSupervisoryNode.id : undefined ;
+            if(!_.isEmpty(userPreferredFilterValues)){
+                var date = new Date();
+
+                $scope.filterObject.supervisoryNodeId = $scope.formFilter.supervisoryNodeId = userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_SUPERVISORY_NODE];
+                $scope.processSupervisoryNodeChange();
+
+                $scope.filterObject.programId = userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_PROGRAM];
+                $scope.filterObject.periodId = userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_PERIOD];
+                $scope.filterObject.scheduleId = userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_SCHEDULE];
+                $scope.filterObject.year = date.getFullYear() - 1;
+                $scope.filterObject.rgroupId = userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_REQUISITION_GROUP];
+                $scope.filterObject.productIdList = userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_PRODUCTS].split(',');
+
+                $scope.registerWatches();
+
+                $scope.formFilter = $scope.filterObject;
+            }
             return;
+
         }else if(!_.isEmpty($routeParams)){
+
             $scope.formFilter.supervisoryNodeId = $routeParams.supervisoryNodeId;
             $scope.processSupervisoryNodeChange();
-            $scope.$watch('formFilter.programId',function(){
-                $scope.filterProductsByProgram();
-
-            });
-            $scope.$watch('formFilter.scheduleId', function(){
-                $scope.changeSchedule();
-
-            });
+            $scope.registerWatches();
             $scope.formFilter = $scope.filterObject = $routeParams;
             $scope.formFilter.productIdList = $scope.filterObject.productIdList = [$routeParams.productId];
+
             return;
+        }else{
+            $scope.formFilter.supervisoryNodeId = navigateBackService[$scope.$parent.currentTab].supervisoryNodeId;
+            $scope.processSupervisoryNodeChange();
+            $scope.registerWatches();
+
+            $scope.formFilter = $scope.filterObject = navigateBackService[$scope.$parent.currentTab];
+
         }
 
-        $scope.formFilter.supervisoryNodeId = navigateBackService[$scope.$parent.currentTab].supervisoryNodeId;
-        $scope.processSupervisoryNodeChange();
+
+    });
+
+    $scope.registerWatches = function(){
 
         $scope.$watch('formFilter.programId',function(){
             $scope.filterProductsByProgram();
@@ -275,9 +296,7 @@ function StockController($scope, $routeParams,navigateBackService, programsList,
 
         });
 
-        $scope.formFilter = $scope.filterObject = navigateBackService[$scope.$parent.currentTab];
-
-    });
+    };
 
     $scope.$on('$routeChangeStart', function(){
         var data = {};

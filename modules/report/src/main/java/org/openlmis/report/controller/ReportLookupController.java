@@ -16,7 +16,6 @@ import org.openlmis.core.domain.Right;
 import org.openlmis.core.domain.SupervisoryNode;
 import org.openlmis.core.service.FacilityService;
 import org.openlmis.core.service.ProcessingScheduleService;
-import org.openlmis.core.service.ProgramService;
 import org.openlmis.report.model.dto.*;
 import org.openlmis.report.response.OpenLmisResponse;
 import org.openlmis.report.service.lookup.ReportLookupService;
@@ -314,14 +313,14 @@ public ResponseEntity<OpenLmisResponse> getSupervisedFacilities(
       List<Program> programList = reportLookupService.getUserSupervisedActiveProgramsBySupervisoryNode(loggedInUserId(request), supervisoryNodeId);
       return OpenLmisResponse.response("programs",programList);
   }
-  @RequestMapping(value = "/user/default-supervisory-node", method = GET, headers = BaseController.ACCEPT_JSON)
+  /*@RequestMapping(value = "/user/default-supervisory-node", method = GET, headers = BaseController.ACCEPT_JSON)
   public ResponseEntity<OpenLmisResponse> getUserDefaultSupervisoryNode(HttpServletRequest request){
       List<SupervisoryNode> defaultSupervisoryNode = reportLookupService.getAllSupervisoryNodesByUserHavingActiveProgram(loggedInUserId(request));
       if (defaultSupervisoryNode != null && defaultSupervisoryNode.size() > 0){
           return OpenLmisResponse.response("supervisoryNode",defaultSupervisoryNode.get(0));
       }
       return OpenLmisResponse.response("supervisoryNode",null);
-  }
+  }*/
 
   @RequestMapping(value = "/user/supervisory-nodes", method = GET, headers = BaseController.ACCEPT_JSON)
   public ResponseEntity<OpenLmisResponse> getUserSupervisoryNodes(HttpServletRequest request){

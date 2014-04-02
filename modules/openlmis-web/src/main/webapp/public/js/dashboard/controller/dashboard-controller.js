@@ -9,7 +9,7 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-function AdminDashboardController($scope,$timeout,$filter,$location, programsList,userDefaultSupervisoryNode,formInputValue,UserSupervisoryNodes,ReportProgramsBySupervisoryNode,RequisitionGroupsBySupervisoryNodeProgramSchedule, ReportSchedules, ReportPeriods, RequisitionGroupsByProgram,RequisitionGroupsByProgramSchedule, ReportProductsByProgram, OperationYears, ReportPeriodsByScheduleAndYear, FacilitiesByProgramAndRequisitionGroupParams, OrderFillRate, ItemFillRate, StockEfficiency,navigateBackService) {
+function AdminDashboardController($scope,$timeout,$filter,$location, programsList,userPreferredFilterValues,formInputValue,UserSupervisoryNodes,ReportProgramsBySupervisoryNode,RequisitionGroupsBySupervisoryNodeProgramSchedule, ReportSchedules, ReportPeriods, RequisitionGroupsByProgram,RequisitionGroupsByProgramSchedule, ReportProductsByProgram, OperationYears, ReportPeriodsByScheduleAndYear, FacilitiesByProgramAndRequisitionGroupParams, OrderFillRate, ItemFillRate, StockEfficiency,navigateBackService) {
 
     $scope.filterObject = {};
 
@@ -691,12 +691,33 @@ function AdminDashboardController($scope,$timeout,$filter,$location, programsLis
     $scope.$on('$viewContentLoaded', function () {
 
         if(isUndefined(navigateBackService) || navigateBackService[$scope.$parent.currentTab] === undefined){
-            $scope.defaultSupervisoryNodeId = $scope.filterObject.supervisoryNodeId = $scope.formFilter.supervisoryNodeId = !isUndefined(userDefaultSupervisoryNode) ? userDefaultSupervisoryNode.id : undefined ;
-            return;
+            if(!_.isEmpty(userPreferredFilterValues)){
+                var date = new Date();
+                $scope.filterObject.supervisoryNodeId = $scope.formFilter.supervisoryNodeId = userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_SUPERVISORY_NODE];
+                $scope.processSupervisoryNodeChange();
+
+                $scope.filterObject.programId = userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_PROGRAM];
+                $scope.filterObject.periodId = userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_PERIOD];
+                $scope.filterObject.scheduleId = userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_SCHEDULE];
+                $scope.filterObject.year = date.getFullYear() - 1;
+                $scope.filterObject.rgroupId = userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_REQUISITION_GROUP];
+                $scope.filterObject.productIdList = userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_PRODUCTS].split(',');
+
+                $scope.registerWatches();
+
+                $scope.formFilter = $scope.filterObject;
+            }
+        }else{
+
+            $scope.formFilter.supervisoryNodeId = navigateBackService[$scope.$parent.currentTab].supervisoryNodeId;
+            $scope.processSupervisoryNodeChange();
+            $scope.registerWatches();
+            $scope.formFilter = $scope.filterObject = navigateBackService[$scope.$parent.currentTab];
+
         }
 
-        $scope.formFilter.supervisoryNodeId = navigateBackService[$scope.$parent.currentTab].supervisoryNodeId;
-        $scope.processSupervisoryNodeChange();
+    });
+    $scope.registerWatches = function(){
 
         $scope.$watch('formFilter.programId',function(){
             $scope.filterProductsByProgram();
@@ -706,9 +727,9 @@ function AdminDashboardController($scope,$timeout,$filter,$location, programsLis
             $scope.changeSchedule();
 
         });
-        $scope.formFilter = $scope.filterObject = navigateBackService[$scope.$parent.currentTab];
 
-    });
+    };
+
     $scope.stockBarClickHandler = function (event, pos, item){
 
         var stockData = {};
