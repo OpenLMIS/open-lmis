@@ -93,9 +93,9 @@ public class DistributionChildCoverageSyncTest extends TestCaseHelper {
     VisitInformationPage visitInformationPage = facilityListPage.selectFacility(childCoverageData.get(FIRST_FACILITY_CODE));
 
     ChildCoveragePage childCoveragePage = visitInformationPage.navigateToChildCoverage();
-    assertEquals(childCoveragePage.getTextOfTargetGroupValue(9), "300");
-    assertEquals(childCoveragePage.getTextOfTargetGroupValue(10), "300");
-    assertEquals(childCoveragePage.getTextOfTargetGroupValue(11), "300");
+    assertEquals(childCoveragePage.getTextOfTargetGroupValue(9), "25");
+    assertEquals(childCoveragePage.getTextOfTargetGroupValue(10), "25");
+    assertEquals(childCoveragePage.getTextOfTargetGroupValue(11), "25");
     assertEquals(childCoveragePage.getTextOfTargetGroupValue(1), "");
     assertEquals(childCoveragePage.getTextOfTargetGroupValue(12), "");
 
@@ -104,7 +104,7 @@ public class DistributionChildCoverageSyncTest extends TestCaseHelper {
 
     ResultSet childCoverageDetails = dbWrapper.getChildCoverageDetails(childCoveragePage.getTextOfRegimenPCV10Dose1(), facilityVisitId);
 
-    assertEquals("300", childCoverageDetails.getInt("targetGroup"));
+    assertEquals("25", childCoverageDetails.getInt("targetGroup"));
 
     assertEquals("0", childCoveragePage.getCoverageRateForGivenRow(9));
     assertEquals("0", childCoveragePage.getCoverageRateForGivenRow(10));
@@ -113,14 +113,14 @@ public class DistributionChildCoverageSyncTest extends TestCaseHelper {
     assertEquals("", childCoveragePage.getCoverageRateForGivenRow(12));
 
     childCoveragePage.enterOutreach11MonthsDataForGivenRow(9, "10");
-    assertEquals("3", childCoveragePage.getCoverageRateForGivenRow(9));
+    assertEquals("40", childCoveragePage.getCoverageRateForGivenRow(9));
     assertEquals("0", childCoveragePage.getCoverageRateForGivenRow(10));
     assertEquals("0", childCoveragePage.getCoverageRateForGivenRow(11));
     assertEquals("", childCoveragePage.getCoverageRateForGivenRow(1));
     assertEquals("", childCoveragePage.getCoverageRateForGivenRow(12));
 
     childCoveragePage.enterHealthCenter11MonthsDataForGivenRow(9, "19");
-    assertEquals("10", childCoveragePage.getCoverageRateForGivenRow(9));
+    assertEquals("116", childCoveragePage.getCoverageRateForGivenRow(9));
     assertEquals("0", childCoveragePage.getCoverageRateForGivenRow(10));
     assertEquals("0", childCoveragePage.getCoverageRateForGivenRow(11));
     assertEquals("", childCoveragePage.getCoverageRateForGivenRow(1));
@@ -249,9 +249,9 @@ public class DistributionChildCoverageSyncTest extends TestCaseHelper {
 
     verifyRegimensPresent();
     verifyOpenVialsPresent();
-    assertEquals(childCoveragePage.getTextOfTargetGroupValue(9), "172");
-    assertEquals(childCoveragePage.getTextOfTargetGroupValue(10), "172");
-    assertEquals(childCoveragePage.getTextOfTargetGroupValue(11), "172");
+    assertEquals(childCoveragePage.getTextOfTargetGroupValue(9), "15");
+    assertEquals(childCoveragePage.getTextOfTargetGroupValue(10), "15");
+    assertEquals(childCoveragePage.getTextOfTargetGroupValue(11), "15");
     assertEquals(childCoveragePage.getTextOfTargetGroupValue(1), "");
     assertEquals(childCoveragePage.getTextOfTargetGroupValue(2), "");
 
@@ -263,10 +263,10 @@ public class DistributionChildCoverageSyncTest extends TestCaseHelper {
 
     childCoveragePage.enterHealthCenter11MonthsDataForGivenRow(9, "19");
     childCoveragePage.enterOutreach11MonthsDataForGivenRow(9, "10");
-    assertEquals("17", childCoveragePage.getCoverageRateForGivenRow(9));
+    assertEquals("193", childCoveragePage.getCoverageRateForGivenRow(9));
 
     childCoveragePage.enterHealthCenter11MonthsDataForGivenRow(9, "162");
-    assertEquals("100", childCoveragePage.getCoverageRateForGivenRow(9));
+    assertEquals("1147", childCoveragePage.getCoverageRateForGivenRow(9));
 
     dbWrapper.updateFieldValue("program_products", "active", "t", "productId", productId);
   }
@@ -343,9 +343,9 @@ public class DistributionChildCoverageSyncTest extends TestCaseHelper {
 
     verifyRegimensPresent();
     verifyOpenVialsPresent();
-    assertEquals(childCoveragePage.getTextOfTargetGroupValue(9), "3");
-    assertEquals(childCoveragePage.getTextOfTargetGroupValue(10), "3");
-    assertEquals(childCoveragePage.getTextOfTargetGroupValue(11), "3");
+    assertEquals(childCoveragePage.getTextOfTargetGroupValue(9), "1");
+    assertEquals(childCoveragePage.getTextOfTargetGroupValue(10), "1");
+    assertEquals(childCoveragePage.getTextOfTargetGroupValue(11), "1");
     assertEquals(childCoveragePage.getTextOfTargetGroupValue(1), "");
     assertEquals(childCoveragePage.getTextOfTargetGroupValue(12), "");
 
