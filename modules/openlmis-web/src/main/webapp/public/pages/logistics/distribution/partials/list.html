@@ -36,7 +36,7 @@
       </div>
 
       <div id="distributionList" class="list-container">
-        <div class="row-fluid list-row" ng-repeat="distribution in sharedDistributions.distributionList">
+        <div class="row-fluid list-row" ng-repeat="distribution in sharedDistributions.distributionList track by $index">
 
           <div class="span2">
             <div class="delivery-zone" ng-bind="distribution.deliveryZone.name"></div>
