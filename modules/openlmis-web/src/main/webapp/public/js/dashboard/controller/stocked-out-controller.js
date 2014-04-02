@@ -6,7 +6,7 @@
  * To change this template use File | Settings | File Templates.
  */
 
-function StockedOutController($scope, $location, programsList, dashboardMenuService, formInputValue,ReportProgramsBySupervisoryNode,navigateBackService,userPreferredFilterValues,RequisitionGroupsBySupervisoryNodeProgramSchedule, UserSupervisoryNodes,ReportSchedules, ReportPeriods, RequisitionGroupsByProgram,RequisitionGroupsByProgramSchedule, ReportProductsByProgram, OperationYears, ReportPeriodsByScheduleAndYear,StockedOutFacilities, ngTableParams) {
+function StockedOutController($scope, $location, programsList, dashboardMenuService, formInputValue,ReportProgramsBySupervisoryNode,dashboardFiltersHistoryService,userPreferredFilterValues,RequisitionGroupsBySupervisoryNodeProgramSchedule, UserSupervisoryNodes,ReportSchedules, ReportPeriods, RequisitionGroupsByProgram,RequisitionGroupsByProgramSchedule, ReportProductsByProgram, OperationYears, ReportPeriodsByScheduleAndYear,StockedOutFacilities, ngTableParams) {
     $scope.filterObject = {};
 
     $scope.formFilter = {};
@@ -280,9 +280,7 @@ function StockedOutController($scope, $location, programsList, dashboardMenuServ
 
             $location.path(districtStockOutPath);
             $scope.filterObject.isNavigatedBack = true;
-            var pageCategory = $scope.$parent.currentTab;
-            navigateBackService[pageCategory] = $scope.filterObject;
-            navigateBackService.setData(navigateBackService);
+            dashboardFiltersHistoryService.add($scope.$parent.currentTab,$scope.filterObject);
             $scope.$apply();
         }
 
@@ -302,8 +300,9 @@ function StockedOutController($scope, $location, programsList, dashboardMenuServ
     }
 
     $scope.$on('$viewContentLoaded', function () {
+        var filterHistory = dashboardFiltersHistoryService.get($scope.$parent.currentTab);
 
-        if(isUndefined(navigateBackService) || navigateBackService[$scope.$parent.currentTab] === undefined){
+        if(isUndefined(filterHistory)){
             if(!_.isEmpty(userPreferredFilterValues)){
                 var date = new Date();
                 $scope.filterObject.supervisoryNodeId = $scope.formFilter.supervisoryNodeId = userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_SUPERVISORY_NODE];
@@ -323,10 +322,10 @@ function StockedOutController($scope, $location, programsList, dashboardMenuServ
             }
         }else{
 
-            $scope.formFilter.supervisoryNodeId = navigateBackService[$scope.$parent.currentTab].supervisoryNodeId;
+            $scope.formFilter.supervisoryNodeId = filterHistory.supervisoryNodeId;
             $scope.processSupervisoryNodeChange();
             $scope.registerWatches();
-            $scope.formFilter = $scope.filterObject = navigateBackService[$scope.$parent.currentTab];
+            $scope.formFilter = $scope.filterObject = filterHistory;
 
         }
 

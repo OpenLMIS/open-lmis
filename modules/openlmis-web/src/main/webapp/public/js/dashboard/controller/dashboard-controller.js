@@ -9,7 +9,7 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-function AdminDashboardController($scope,$timeout,$filter,$location, programsList,userPreferredFilterValues,formInputValue,UserSupervisoryNodes,ReportProgramsBySupervisoryNode,RequisitionGroupsBySupervisoryNodeProgramSchedule, ReportSchedules, ReportPeriods, RequisitionGroupsByProgram,RequisitionGroupsByProgramSchedule, ReportProductsByProgram, OperationYears, ReportPeriodsByScheduleAndYear, FacilitiesByProgramAndRequisitionGroupParams, OrderFillRate, ItemFillRate, StockEfficiency,navigateBackService) {
+function AdminDashboardController($scope,$timeout,$filter,$location,dashboardFiltersHistoryService, programsList,userPreferredFilterValues,formInputValue,UserSupervisoryNodes,ReportProgramsBySupervisoryNode,RequisitionGroupsBySupervisoryNodeProgramSchedule, ReportSchedules, ReportPeriods, RequisitionGroupsByProgram,RequisitionGroupsByProgramSchedule, ReportProductsByProgram, OperationYears, ReportPeriodsByScheduleAndYear, FacilitiesByProgramAndRequisitionGroupParams, OrderFillRate, ItemFillRate, StockEfficiency) {
 
     $scope.filterObject = {};
 
@@ -194,8 +194,7 @@ function AdminDashboardController($scope,$timeout,$filter,$location, programsLis
     };
 
     $scope.setFilterData = function(){
-        navigateBackService[$scope.$parent.currentTab]= $scope.filterObject;
-        navigateBackService.setData(navigateBackService);
+        dashboardFiltersHistoryService.add($scope.$parent.currentTab,$scope.filterObject);
     };
 
     $scope.loadFacilities = function(){
@@ -689,8 +688,9 @@ function AdminDashboardController($scope,$timeout,$filter,$location, programsLis
      }
 
     $scope.$on('$viewContentLoaded', function () {
+        var filterHistory = dashboardFiltersHistoryService.get($scope.$parent.currentTab);
 
-        if(isUndefined(navigateBackService) || navigateBackService[$scope.$parent.currentTab] === undefined){
+        if(isUndefined(filterHistory)){
             if(!_.isEmpty(userPreferredFilterValues)){
                 var date = new Date();
                 $scope.filterObject.supervisoryNodeId = $scope.formFilter.supervisoryNodeId = userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_SUPERVISORY_NODE];
@@ -709,10 +709,10 @@ function AdminDashboardController($scope,$timeout,$filter,$location, programsLis
             }
         }else{
 
-            $scope.formFilter.supervisoryNodeId = navigateBackService[$scope.$parent.currentTab].supervisoryNodeId;
+            $scope.formFilter.supervisoryNodeId = filterHistory.supervisoryNodeId;
             $scope.processSupervisoryNodeChange();
             $scope.registerWatches();
-            $scope.formFilter = $scope.filterObject = navigateBackService[$scope.$parent.currentTab];
+            $scope.formFilter = $scope.filterObject = filterHistory;
 
         }
 

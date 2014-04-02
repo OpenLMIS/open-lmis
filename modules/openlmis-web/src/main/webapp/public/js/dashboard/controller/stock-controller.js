@@ -9,7 +9,7 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-function StockController($scope, $routeParams,navigateBackService, programsList,formInputValue,UserSupervisoryNodes,userPreferredFilterValues,RequisitionGroupsBySupervisoryNodeProgramSchedule,ReportProgramsBySupervisoryNode, ReportSchedules, ReportPeriods, RequisitionGroupsByProgram,RequisitionGroupsByProgramSchedule, ReportProductsByProgram, OperationYears, ReportPeriodsByScheduleAndYear, StockEfficiencyDetail, ngTableParams) {
+function StockController($scope, $routeParams,dashboardFiltersHistoryService, programsList,formInputValue,UserSupervisoryNodes,userPreferredFilterValues,RequisitionGroupsBySupervisoryNodeProgramSchedule,ReportProgramsBySupervisoryNode, ReportSchedules, ReportPeriods, RequisitionGroupsByProgram,RequisitionGroupsByProgramSchedule, ReportProductsByProgram, OperationYears, ReportPeriodsByScheduleAndYear, StockEfficiencyDetail, ngTableParams) {
 
     $scope.filterObject = {};
 
@@ -242,8 +242,9 @@ function StockController($scope, $routeParams,navigateBackService, programsList,
     };
 
     $scope.$on('$viewContentLoaded', function () {
+        var filterHistory = dashboardFiltersHistoryService.get($scope.$parent.currentTab);
 
-        if(_.isEmpty($routeParams) && isUndefined(navigateBackService[$scope.$parent.currentTab])){
+        if(_.isEmpty($routeParams) && isUndefined(filterHistory)){
 
             if(!_.isEmpty(userPreferredFilterValues)){
                 var date = new Date();
@@ -274,11 +275,11 @@ function StockController($scope, $routeParams,navigateBackService, programsList,
 
             return;
         }else{
-            $scope.formFilter.supervisoryNodeId = navigateBackService[$scope.$parent.currentTab].supervisoryNodeId;
+            $scope.formFilter.supervisoryNodeId = filterHistory.supervisoryNodeId;
             $scope.processSupervisoryNodeChange();
             $scope.registerWatches();
 
-            $scope.formFilter = $scope.filterObject = navigateBackService[$scope.$parent.currentTab];
+            $scope.formFilter = $scope.filterObject = filterHistory;
 
         }
 
@@ -301,8 +302,7 @@ function StockController($scope, $routeParams,navigateBackService, programsList,
     $scope.$on('$routeChangeStart', function(){
         var data = {};
         angular.extend(data,$scope.filterObject);
-        navigateBackService[$scope.$parent.currentTab] = data;
-        navigateBackService.setData(navigateBackService);
+        dashboardFiltersHistoryService.add($scope.$parent.currentTab, data);
     });
 
 
