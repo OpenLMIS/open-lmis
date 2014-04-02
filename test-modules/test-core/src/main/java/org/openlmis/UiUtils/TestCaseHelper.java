@@ -545,7 +545,7 @@ public class TestCaseHelper {
     assertEquals(reasonForNotVisiting, visitInformation.get("reasonForNotVisiting"));
     assertEquals(otherReasonDescription, visitInformation.get("otherReasonDescription"));
     if (visitInformation.get("visited").equals("t")) {
-      assertEquals(new SimpleDateFormat("yyyy-MM").format(new Date()) + "-01 00:00:00", visitInformation.get("visitDate"));
+      assertEquals(new SimpleDateFormat("yyyy-MM-dd").format(new Date()) + " 00:00:00", visitInformation.get("visitDate"));
     }
   }
 
