@@ -65,9 +65,9 @@ function SaveRnrTemplateController($scope, rnrTemplateForm, program, messageServ
     });
   }
 
-  $scope.sources.forEach(function (source) {
-    source.description = messageService.get(source.description);
-  });
+//  $scope.sources.forEach(function (source) {
+//    source.description = messageService.get(source.description);
+//  });
 
 
   $scope.setArithmeticValidationMessageShown = function () {
