@@ -77,6 +77,8 @@ public class UserController extends BaseController {
       OpenLmisResponse openLmisResponse = new OpenLmisResponse("name", userName);
       openLmisResponse.addData("authenticated", TRUE);
       openLmisResponse.addData("rights", roleRightService.getRights(userId));
+      openLmisResponse.addData("preferences", userService.getPreferences(userId));
+
       return openLmisResponse.response(OK);
     } else {
       return authenticationError();

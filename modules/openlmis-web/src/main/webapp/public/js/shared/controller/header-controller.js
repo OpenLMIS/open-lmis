@@ -23,6 +23,10 @@ function HeaderController($scope, localStorageService, loginConfig, $window) {
 
           localStorageService.remove(idx);
       });
+      $.each(localStorageKeys.PREFERENCE, function(item, idx){
+          localStorageService.remove(idx);
+
+      });
     document.cookie = 'JSESSIONID' + '=;expires=Thu, 01 Jan 1970 00:00:01 GMT; path=/';
     $window.location = "/j_spring_security_logout";
   };
