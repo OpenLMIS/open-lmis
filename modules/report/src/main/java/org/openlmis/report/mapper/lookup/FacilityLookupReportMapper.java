@@ -109,18 +109,22 @@ public interface FacilityLookupReportMapper {
 
 
   @Select("SELECT DISTINCT f.id, f.code, f.name\n" +
-            "         FROM  \n" +
-            "             facilities f\n" +
-            "                join geographic_zones gz on gz.id = f.geographicZoneId  \n" +
-            "                join programs_supported ps \n" +
-            "                on ps.facilityid = f.id\n" +
-            "                join requisition_group_members m \n" +
-            "                on m.facilityId = f.id\n" +
-            "                join requisition_group_program_schedules rps\n" +
-            "                on m.requisitionGroupId = rps.requisitionGroupId and ps.programId = rps.programId\n" +
-            "               where CASE WHEN #{rgroupId} ='{}' THEN m.requisitionGroupId = m.requisitionGroupId ELSE m.requisitionGroupId =  ANY( #{rgroupId}::int[]) END \n" +
-            "              and ps.programid =#{programId} \n"+
-            "              and rps.scheduleid = CASE WHEN #{scheduleId} = 0 THEN rps.scheduleid ELSE #{scheduleId} END \n"+
-            "              order by f.name")
-    List<Facility>  getFacilitiesBy(@Param("rgroupId") String requisitionGroupId, @Param("programId") Long programId, @Param("scheduleId") Long scheduleId);
+          "FROM facilities f\n" +
+          "INNER JOIN programs_supported ps on f.id = ps.facilityId\n" +
+          "INNER JOIN requisition_group_members rgm ON f.id = rgm.facilityId\n" +
+          "INNER JOIN requisition_group_program_schedules rgps ON (rgps.requisitionGroupId = rgm.requisitionGroupId and ps.programid = rgps.programid)\n" +
+          "INNER JOIN requisition_groups rg ON rg.id = rgm.requisitionGroupId\n" +
+          "INNER JOIN vw_user_supervisorynodes sn ON sn.id = rg.supervisoryNodeId and ps.programId = sn.programId \n" +
+          "INNER JOIN programs p ON p.id = ps.programId\n" +
+          "INNER JOIN processing_schedules psc ON psc.id = rgps.scheduleId\n" +
+          "WHERE ps.programId = CASE WHEN COALESCE(#{programId},0) = 0 THEN ps.programId ELSE #{programId} END\n" +
+          "    AND rgps.scheduleId = CASE WHEN COALESCE(#{scheduleId},0) = 0 THEN rgps.scheduleId ELSE #{scheduleId} END\n" +
+          "    AND CASE WHEN COALESCE(#{supervisoryNodeId},0) = 0 THEN sn.id = sn.id ELSE (sn.id = #{supervisoryNodeId} OR sn.parentId = #{supervisoryNodeId}) END\n" +
+          "    AND CASE WHEN #{rgroupId} ='{}' THEN rg.id = rg.id ELSE rg.id =  ANY( #{rgroupId}::int[]) END\n" +
+          "    AND sn.userId = #{userId}\n" +
+          "    AND f.active = TRUE \n" +
+          "    AND ps.active = TRUE\n" +
+          "    AND f.virtualFacility = FALSE\n"+
+          "order by f.name")
+    List<Facility>  getFacilitiesBy(@Param("userId") Long userId, @Param("supervisoryNodeId") Long supervisoryNodeId, @Param("rgroupId") String requisitionGroupId, @Param("programId") Long programId, @Param("scheduleId") Long scheduleId);
 }

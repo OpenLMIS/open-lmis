@@ -199,6 +199,7 @@ function AdminDashboardController($scope,$timeout,$filter,$location,dashboardFil
 
     $scope.loadFacilities = function(){
         FacilitiesByProgramAndRequisitionGroupParams.get({
+            supervisoryNodeId: isUndefined($scope.filterObject.supervisoryNodeId) ? 0 : $scope.filterObject.supervisoryNodeId,
             programId: isUndefined($scope.filterObject.programId)? 0 : $scope.filterObject.programId ,
             scheduleId: isUndefined($scope.filterObject.scheduleId) ? 0 : $scope.filterObject.scheduleId,
             rgroupId: $scope.filterObject.rgroupId
@@ -227,6 +228,8 @@ function AdminDashboardController($scope,$timeout,$filter,$location,dashboardFil
                     $scope.programs.unshift({'name': formInputValue.programOptionSelect});
                 });
         }
+
+        $scope.filterProductsByProgram();
 
     };
 
