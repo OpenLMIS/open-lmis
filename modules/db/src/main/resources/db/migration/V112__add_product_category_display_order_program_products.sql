@@ -8,6 +8,25 @@
 -- You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
 --
 
-ALTER TABLE program_products
-    ADD COLUMN productCategoryId INTEGER references product_categories(id),
-    ADD COLUMN displayOrder INTEGER;
+
+DO $$
+    BEGIN
+        BEGIN
+            ALTER TABLE program_products
+              ADD COLUMN productCategoryId INTEGER references product_categories(id);
+        EXCEPTION
+            WHEN duplicate_column THEN RAISE NOTICE 'column already exists in <table_name>.';
+        END;
+    END;
+$$
+
+DO $$
+    BEGIN
+        BEGIN
+            ALTER TABLE program_products
+              ADD COLUMN displayOrder INTEGER;
+        EXCEPTION
+            WHEN duplicate_column THEN RAISE NOTICE 'column already exists in <table_name>.';
+        END;
+    END;
+$$
