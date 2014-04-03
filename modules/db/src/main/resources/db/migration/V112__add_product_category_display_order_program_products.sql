@@ -14,16 +14,8 @@ DO $$
         BEGIN
             ALTER TABLE program_products
               ADD COLUMN productCategoryId INTEGER references product_categories(id);
-        EXCEPTION
-            WHEN duplicate_column THEN RAISE NOTICE 'column already exists in <table_name>.';
-        END;
-    END;
-$$
 
-DO $$
-    BEGIN
-        BEGIN
-            ALTER TABLE program_products
+              ALTER TABLE program_products
               ADD COLUMN displayOrder INTEGER;
         EXCEPTION
             WHEN duplicate_column THEN RAISE NOTICE 'column already exists in <table_name>.';

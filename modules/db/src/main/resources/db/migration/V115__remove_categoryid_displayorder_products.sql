@@ -9,7 +9,7 @@
 --
 
 ALTER TABLE products
-    DROP COLUMN categoryId,
-    DROP COLUMN displayOrder;
+    DROP COLUMN categoryId CASCADE ,
+    DROP COLUMN displayOrder CASCADE;
 
 
