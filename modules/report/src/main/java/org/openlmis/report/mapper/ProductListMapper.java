@@ -12,13 +12,11 @@ package org.openlmis.report.mapper;
 
 import org.apache.ibatis.annotations.*;
 import org.openlmis.core.domain.Product;
-import org.openlmis.core.domain.ProductGroup;
 import org.openlmis.report.model.dto.ProductList;
 import org.openlmis.report.model.dto.Program;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Set;
 
 @Repository
 public interface ProductListMapper {
@@ -28,10 +26,9 @@ public interface ProductListMapper {
             "products.id,\n" +
             "products.code,\n" +
             "products.fullname As fullName,\n" +
-            "products.primaryname As primaryName,\n" +
-            "product_categories.name AS type,\n" +
+            "products.primaryName As primaryName,\n" +
             "products.strength,\n" +
-            "products.dispensingunit AS dispensingUnit,\n" +
+            "products.dispensingUnit AS dispensingUnit,\n" +
             "dosage_units.code,\n" +
             "dosage_units.id AS dosageUnitId,\n" +
             "product_forms.code,\n" +
@@ -40,17 +37,14 @@ public interface ProductListMapper {
             "products.dosesperdispensingunit AS dosesPerDispensingUnit,\n" +
             "products.fullsupply AS fullSupply,\n" +
             "products.active AS active,\n" +
-            "products.displayorder AS displayOrder,\n" +
             "dosage_units.id AS dosageUnitId,\n" +
             "dosage_units.code AS dosageUnitCode,\n" +
-            "product_categories.id AS categoryId,\n" +
             "product_forms.id AS formId,\n" +
             "product_forms.code AS formCode \n" +
             "FROM \n" +
             "products \n" +
             "LEFT OUTER JOIN product_forms ON  products.formid  = product_forms.id  \n" +
-            "LEFT OUTER JOIN dosage_units ON  products.dosageunitid =  dosage_units.id  \n" +
-            "LEFT OUTER JOIN product_categories ON  products.categoryid = product_categories.id")
+            "LEFT OUTER JOIN dosage_units ON  products.dosageunitid =  dosage_units.id  \n")
     @Results(value = {
         @Result(property = "id", column = "id"),
         @Result(property = "programs", javaType = List.class, column = "id",
@@ -62,11 +56,9 @@ public interface ProductListMapper {
         "   join program_products pp on pp.programId = p.id and pp.productId = #{id} and pp.active = true")
     List<Program> getProgramsForProduct(Long id);
 
-    // mahmed - 07.11.2013 - delete supply line
     @Update("UPDATE products SET  active=false where id = #{productId}")
     int deleteById(Long productId);
 
-    // mahmed - 07.11.2013 - delete supply line
     @Update("UPDATE products SET  active=true where id = #{productId}")
     int restoreById(Long productId);
 
