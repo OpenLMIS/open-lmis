@@ -405,7 +405,7 @@ public class ManageDistribution extends TestCaseHelper {
       assertEqualsAndNulls(facilityVisitDetails.get("otherReasonDescription"), map.get("otherReasonDescription"));
       assertEqualsAndNulls(facilityVisitDetails.get("vehicleId"), map.get("vehicleId"));
       if (facilityVisitDetails.get("visited").equals("t")) {
-        assertEquals(new SimpleDateFormat("yyyy-MM").format(new Date()) + "-01 00:00:00", facilityVisitDetails.get("visitDate"));
+        assertEquals(new SimpleDateFormat("yyyy-MM-dd").format(new Date()) + " 00:00:00", facilityVisitDetails.get("visitDate"));
       } else {
         assertNull(facilityVisitDetails.get("visitDate"));
       }
