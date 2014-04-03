@@ -16,7 +16,7 @@ function VisitInfoController($scope, distributionService, $routeParams) {
     badWeather: "ROAD_IMPASSABLE",
     noTransport: "TRANSPORT_UNAVAILABLE",
     facilityClosed: "HEALTH_CENTER_CLOSED",
-    unavailableFunds: "FUEL_FUNDS_UNAVAILABLE",
+    unavailableFuelFunds: "FUEL_FUNDS_UNAVAILABLE",
     unavailablePerDiemFunds: "PERDIEM_FUNDS_UNAVAILABLE",
     notPartOfProgram: "HEALTH_CENTER_NOT_IN_DLS",
     other: "OTHER"
