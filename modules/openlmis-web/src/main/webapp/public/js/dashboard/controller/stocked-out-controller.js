@@ -63,12 +63,16 @@ function StockedOutController($scope, $location, programsList, dashboardMenuServ
                     supervisoryNodeId : $scope.filterObject.supervisoryNodeId
                 },function(data){
                     $scope.requisitionGroups = data.requisitionGroupList;
-                    $scope.requisitionGroups.unshift({'name':formInputValue.requisitionOptionAll});
+                    if(!isUndefined($scope.requisitionGroups)){
+                        $scope.requisitionGroups.unshift({'name':formInputValue.requisitionOptionAll});
+                    }
                 });
         }else{
             RequisitionGroupsByProgram.get({program: $scope.filterObject.programId }, function(data){
                 $scope.requisitionGroups = data.requisitionGroupList;
-                $scope.requisitionGroups.unshift({'name':formInputValue.requisitionOptionAll});
+                if(!isUndefined($scope.requisitionGroups)){
+                    $scope.requisitionGroups.unshift({'name':formInputValue.requisitionOptionAll});
+                }
             });
         }
     };
@@ -104,6 +108,8 @@ function StockedOutController($scope, $location, programsList, dashboardMenuServ
                 });
         }
 
+        $scope.filterProductsByProgram();
+
     };
 
 
@@ -133,13 +139,17 @@ function StockedOutController($scope, $location, programsList, dashboardMenuServ
                             scheduleId: $scope.filterObject.scheduleId,
                             supervisoryNodeId: $scope.filterObject.supervisoryNodeId}, function(data){
                             $scope.requisitionGroups = data.requisitionGroupList;
-                            $scope.requisitionGroups.unshift({'name':formInputValue.requisitionOptionAll});
+                            if(!isUndefined($scope.requisitionGroups)){
+                                $scope.requisitionGroups.unshift({'name':formInputValue.requisitionOptionAll});
+                            }
 
                         });
                 }else{
                     RequisitionGroupsByProgramSchedule.get({program: $scope.filterObject.programId, schedule:$scope.filterObject.scheduleId}, function(data){
                         $scope.requisitionGroups = data.requisitionGroupList;
-                        $scope.requisitionGroups.unshift({'name':formInputValue.requisitionOptionAll});
+                        if(!isUndefined($scope.requisitionGroups)){
+                            $scope.requisitionGroups.unshift({'name':formInputValue.requisitionOptionAll});
+                        }
                     });
                 }
 
