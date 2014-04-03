@@ -163,8 +163,8 @@ public class ReportLookupService {
     return this.rgMapper.getByProgramAndSchedule(program, schedule);
   }
 
-  public List<RequisitionGroup> getBySupervisoryNodesAndProgramAndSchedule(String nodeIdList, Long programId, Long scheduleId){
-      return rgMapper.getBySupervisoryNodesAndProgramAndSchedule(nodeIdList,programId,scheduleId);
+  public List<RequisitionGroup> getBySupervisoryNodesAndProgramAndSchedule(Long userId, Long nodeId, Long programId, Long scheduleId){
+      return rgMapper.getBySupervisoryNodesAndProgramAndSchedule(userId,nodeId,programId,scheduleId);
   }
 
   public List<RequisitionGroup> getRequisitionGroupsByProgram(int program) {
@@ -280,9 +280,9 @@ public class ReportLookupService {
     return facilityReportMapper.getFacilitiesByPrgraomScheduleTypeAndRG(program, schedule, type, requisitionGroup);
   }
 
-  public List<Facility> getFacilitiesBy(String requisitionGroup, Long program, Long schedule) {
+  public List<Facility> getFacilitiesBy(Long userId, Long supervisoryNodeId, String requisitionGroup, Long program, Long schedule) {
 
-      return facilityReportMapper.getFacilitiesBy(requisitionGroup, program, schedule);
+      return facilityReportMapper.getFacilitiesBy(userId,supervisoryNodeId, requisitionGroup, program, schedule);
 
   }
 

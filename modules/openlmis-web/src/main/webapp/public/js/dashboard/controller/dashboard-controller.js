@@ -80,12 +80,16 @@ function AdminDashboardController($scope,$timeout,$filter,$location,dashboardFil
                  supervisoryNodeId : $scope.filterObject.supervisoryNodeId
             },function(data){
                 $scope.requisitionGroups = data.requisitionGroupList;
-                $scope.requisitionGroups.unshift({'name':formInputValue.requisitionOptionAll});
+                if(!isUndefined($scope.requisitionGroups)){
+                    $scope.requisitionGroups.unshift({'name':formInputValue.requisitionOptionAll});
+                }
             });
         }else{
             RequisitionGroupsByProgram.get({program: $scope.filterObject.programId }, function(data){
                 $scope.requisitionGroups = data.requisitionGroupList;
-                $scope.requisitionGroups.unshift({'name':formInputValue.requisitionOptionAll});
+                if(!isUndefined($scope.requisitionGroups)){
+                    $scope.requisitionGroups.unshift({'name':formInputValue.requisitionOptionAll});
+                }
             });
         }
 
@@ -199,6 +203,7 @@ function AdminDashboardController($scope,$timeout,$filter,$location,dashboardFil
 
     $scope.loadFacilities = function(){
         FacilitiesByProgramAndRequisitionGroupParams.get({
+            supervisoryNodeId: isUndefined($scope.filterObject.supervisoryNodeId) ? 0 : $scope.filterObject.supervisoryNodeId,
             programId: isUndefined($scope.filterObject.programId)? 0 : $scope.filterObject.programId ,
             scheduleId: isUndefined($scope.filterObject.scheduleId) ? 0 : $scope.filterObject.scheduleId,
             rgroupId: $scope.filterObject.rgroupId
@@ -228,6 +233,8 @@ function AdminDashboardController($scope,$timeout,$filter,$location,dashboardFil
                 });
         }
 
+        $scope.filterProductsByProgram();
+
     };
 
     $scope.changeSchedule = function(){
@@ -256,13 +263,17 @@ function AdminDashboardController($scope,$timeout,$filter,$location,dashboardFil
                          scheduleId: $scope.filterObject.scheduleId,
                          supervisoryNodeId: $scope.filterObject.supervisoryNodeId},function(data){
                             $scope.requisitionGroups = data.requisitionGroupList;
-                            $scope.requisitionGroups.unshift({'name':formInputValue.requisitionOptionAll});
+                            if(!isUndefined($scope.requisitionGroups)){
+                                $scope.requisitionGroups.unshift({'name':formInputValue.requisitionOptionAll});
+                            }
 
                     });
                 }else{
                     RequisitionGroupsByProgramSchedule.get({program: $scope.filterObject.programId, schedule:$scope.filterObject.scheduleId}, function(data){
                         $scope.requisitionGroups = data.requisitionGroupList;
-                        $scope.requisitionGroups.unshift({'name':formInputValue.requisitionOptionAll});
+                        if(!isUndefined($scope.requisitionGroups)){
+                            $scope.requisitionGroups.unshift({'name':formInputValue.requisitionOptionAll});
+                        }
                     });
                 }
 

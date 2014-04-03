@@ -30,7 +30,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -157,9 +156,10 @@ public class ReportLookupController extends BaseController {
   public List<RequisitionGroup> getBySupervisoryNodesAndProgramAndSchedule(
          @RequestParam(value = "programId") Long programId,
          @RequestParam(value = "scheduleId") Long scheduleId,
-         @RequestParam(value = "supervisoryNodeId") Long supervisoryNodeId
+         @RequestParam(value = "supervisoryNodeId") Long supervisoryNodeId,
+         HttpServletRequest request
   ){
-      List<SupervisoryNode> supervisoryNodeList = reportLookupService.getAllSupervisoryNodesByParentNodeId(supervisoryNodeId);
+      /*List<SupervisoryNode> supervisoryNodeList = reportLookupService.getAllSupervisoryNodesByParentNodeId(supervisoryNodeId);
 
       List<Long> supervisoryNodeIds = null;
 
@@ -168,8 +168,8 @@ public class ReportLookupController extends BaseController {
           for(SupervisoryNode node : supervisoryNodeList){
               supervisoryNodeIds.add(node.getId());
           }
-      }
-      return this.reportLookupService.getBySupervisoryNodesAndProgramAndSchedule(getCommaSeparatedIds(supervisoryNodeIds),programId,scheduleId);
+      }*/
+      return this.reportLookupService.getBySupervisoryNodesAndProgramAndSchedule(loggedInUserId(request), supervisoryNodeId ,programId,scheduleId);
   }
 
 
@@ -263,13 +263,15 @@ public ResponseEntity<OpenLmisResponse> getSupervisedFacilities(
 
 
 
-    @RequestMapping(value = "/facilities/program/{programId}/schedule/{scheduleId}", method = GET, headers = BaseController.ACCEPT_JSON)
+    @RequestMapping(value = "/facilities/supervisory-node/{supervisoryNodeId}/program/{programId}/schedule/{scheduleId}", method = GET, headers = BaseController.ACCEPT_JSON)
     public ResponseEntity<OpenLmisResponse> getFacilities(
+            @PathVariable("supervisoryNodeId") Long supervisoryNodeId,
             @PathVariable("programId") Long programId,
             @PathVariable("scheduleId") Long scheduleId,
-            @RequestParam("rgroupId") List<Long> requisitionGroupId
+            @RequestParam("rgroupId") List<Long> requisitionGroupId,
+            HttpServletRequest request
     ) {
-        return OpenLmisResponse.response("facilities", reportLookupService.getFacilitiesBy(getCommaSeparatedIds(requisitionGroupId),programId,scheduleId));
+        return OpenLmisResponse.response("facilities", reportLookupService.getFacilitiesBy(loggedInUserId(request),supervisoryNodeId, getCommaSeparatedIds(requisitionGroupId),programId,scheduleId));
     }
 
   @RequestMapping(value = "/schedules/{scheduleId}/periods", method = GET, headers = ACCEPT_JSON)

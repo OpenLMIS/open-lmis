@@ -50,13 +50,17 @@ public interface RequisitionGroupReportMapper {
             " order by g.name")
     List<RequisitionGroup> getByProgram(int program);
 
-    @Select(" SELECT distinct g.id, g.name, g.code  \n" +
-            "       FROM requisition_groups g \n" +
-            "       join requisition_group_program_schedules rgps on rgps.requisitiongroupid = g.id\n" +
-            "       inner join  requisition_group_members rgm on rgm.requisitiongroupid = rgps.requisitiongroupid\n" +
-            "       inner join programs_supported ps on rgm.facilityid = ps.facilityid  \n" +
-            "     where  rgps.programid = cast( #{programId} as int4) and rgps.scheduleid = CASE WHEN COALESCE(#{scheduleId},0)=0 THEN rgps.scheduleid ELSE cast( #{scheduleId} as int4) END\n" +
-            "     and g.supervisoryNodeId = ANY(#{nodeIds}::int[]) \n" +
-            "     order by g.name")
-    List<RequisitionGroup> getBySupervisoryNodesAndProgramAndSchedule(@Param("nodeIds")String supervisoryNodes,@Param("programId") Long programId, @Param("scheduleId")Long scheduleId);
+    @Select("SELECT DISTINCT rg.id, rg.name, rg.code\n" +
+            "    FROM requisition_groups rg\n" +
+            "    INNER JOIN requisition_group_program_schedules rgps ON rg.id = rgps.requisitionGroupId\n" +
+            "    INNER JOIN requisition_group_members rgm ON rgm.requisitiongroupid = rgps.requisitiongroupid\n" +
+            "    INNER JOIN vw_user_supervisorynodes sn ON (rg.supervisorynodeId = sn.id and rgps.programid = sn.programid)\n" +
+            "    WHERE rgps.programid = cast( #{programId} as int4)\n" +
+            "    AND rgps.scheduleId = CASE WHEN COALESCE(#{scheduleId},0)=0 THEN rgps.scheduleId ELSE #{scheduleId} END\n" +
+            "    AND sn.userId = #{userId}\n" +
+            "    AND CASE WHEN COALESCE(#{supervisoryNodeId},0) = 0 THEN\n" +
+            "    sn.id = sn.id\n" +
+            "    ELSE (sn.id = #{supervisoryNodeId} OR sn.parentId = #{supervisoryNodeId}) END\n" +
+            "    ORDER BY rg.name")
+    List<RequisitionGroup> getBySupervisoryNodesAndProgramAndSchedule(@Param("userId") Long userId, @Param("supervisoryNodeId")Long supervisoryNodeId,@Param("programId") Long programId, @Param("scheduleId")Long scheduleId);
 }

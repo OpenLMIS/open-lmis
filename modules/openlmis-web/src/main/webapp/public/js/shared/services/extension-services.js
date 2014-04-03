@@ -414,7 +414,7 @@ services.factory('ProgramListBySupervisoryNodes', function ($resource) {
     return $resource('/reports/supervisory-nodes/programs.json', {}, {});
 });
 services.factory("FacilitiesByProgramAndRequisitionGroupParams",function($resource)  {
-    return   $resource('/reports/facilities/program/:programId/schedule/:scheduleId.json', {}, {});
+    return   $resource('/reports/facilities/supervisory-node/:supervisoryNodeId/program/:programId/schedule/:scheduleId.json', {}, {});
 });
 
 services.factory('OrderFillRate', function($resource){

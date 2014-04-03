@@ -55,12 +55,16 @@ function ShipmentLeadTimeController($scope,$filter, programsList,dashboardFilter
                     supervisoryNodeId : $scope.filterObject.supervisoryNodeId
                 },function(data){
                     $scope.requisitionGroups = data.requisitionGroupList;
-                    $scope.requisitionGroups.unshift({'name':formInputValue.requisitionOptionAll});
+                    if(!isUndefined($scope.requisitionGroups)){
+                        $scope.requisitionGroups.unshift({'name':formInputValue.requisitionOptionAll});
+                    }
                 });
         }else{
             RequisitionGroupsByProgram.get({program: $scope.filterObject.programId }, function(data){
                 $scope.requisitionGroups = data.requisitionGroupList;
-                $scope.requisitionGroups.unshift({'name':formInputValue.requisitionOptionAll});
+                if(!isUndefined($scope.requisitionGroups)){
+                    $scope.requisitionGroups.unshift({'name':formInputValue.requisitionOptionAll});
+                }
             });
         }
         $scope.getShipmentLeadTimeData();
@@ -97,6 +101,8 @@ function ShipmentLeadTimeController($scope,$filter, programsList,dashboardFilter
                     $scope.programs.unshift({'name': formInputValue.programOptionSelect});
                 });
         }
+
+        $scope.filterProductsByProgram();
 
     };
 
@@ -155,13 +161,17 @@ function ShipmentLeadTimeController($scope,$filter, programsList,dashboardFilter
                             scheduleId: $scope.filterObject.scheduleId,
                             supervisoryNodeId: $scope.filterObject.supervisoryNodeId}, function(data){
                             $scope.requisitionGroups = data.requisitionGroupList;
-                            $scope.requisitionGroups.unshift({'name':formInputValue.requisitionOptionAll});
+                            if(!isUndefined($scope.requisitionGroups)){
+                                $scope.requisitionGroups.unshift({'name':formInputValue.requisitionOptionAll});
+                            }
 
                         });
                 }else{
                     RequisitionGroupsByProgramSchedule.get({program: $scope.filterObject.programId, schedule:$scope.filterObject.scheduleId}, function(data){
                         $scope.requisitionGroups = data.requisitionGroupList;
-                        $scope.requisitionGroups.unshift({'name':formInputValue.requisitionOptionAll});
+                        if(!isUndefined($scope.requisitionGroups)){
+                            $scope.requisitionGroups.unshift({'name':formInputValue.requisitionOptionAll});
+                        }
                     });
                 }
 
