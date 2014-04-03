@@ -125,6 +125,10 @@ public interface FacilityLookupReportMapper {
           "    AND f.active = TRUE \n" +
           "    AND ps.active = TRUE\n" +
           "    AND f.virtualFacility = FALSE\n"+
-          "order by f.name")
+          "UNION\n" +
+          "SELECT f.id,f.code,f.name \n" +
+          "FROM users U, facilities F \n" +
+          "WHERE U.facilityId = F.id AND U.id = #{userId} AND f.active = TRUE AND f.virtualFacility = FALSE\n" +
+          "order by name")
     List<Facility>  getFacilitiesBy(@Param("userId") Long userId, @Param("supervisoryNodeId") Long supervisoryNodeId, @Param("rgroupId") String requisitionGroupId, @Param("programId") Long programId, @Param("scheduleId") Long scheduleId);
 }
