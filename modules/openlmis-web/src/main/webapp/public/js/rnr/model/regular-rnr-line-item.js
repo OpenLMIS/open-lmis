@@ -223,7 +223,12 @@ var RegularRnrLineItem = base2.Base.extend({
     var consumptionAdjustedWithStockOutDays = ((this.reportingDays) - this.stockOutDays) <= 0 ?
         this.quantityDispensed :
         ((this.quantityDispensed * 30) / ((this.reportingDays) - this.stockOutDays));
-    var adjustmentForNewPatients = (this.newPatientCount * Math.round(this.dosesPerMonth / dosesPerDispensingUnit) );
+    var adjustmentForNewPatients;
+    if (_.findWhere(this.programRnrColumnList, {name: 'newPatientCount'}).configuredOption.name === "newPatientCount") {
+      adjustmentForNewPatients = (this.newPatientCount * Math.round(this.dosesPerMonth / dosesPerDispensingUnit) );
+    } else {
+      adjustmentForNewPatients = this.newPatientCount;
+    }
     this.normalizedConsumption = Math.round(consumptionAdjustedWithStockOutDays + adjustmentForNewPatients);
   },
 
