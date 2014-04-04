@@ -45,15 +45,15 @@ import static org.openlmis.web.view.pdf.requisition.RequisitionCellFactory.*;
 @NoArgsConstructor
 public class RequisitionPdfModel {
   public static final String LABEL_CURRENCY_SYMBOL = "label.currency.symbol";
-  private List<RequisitionStatusChange> statusChanges;
   public static final float PARAGRAPH_SPACING = 30.0f;
   public static final BaseColor ROW_GREY_BACKGROUND = new BaseColor(235, 235, 235);
   public static final Font H1_FONT = FontFactory.getFont(FontFactory.TIMES, 30, Font.BOLD, BaseColor.BLACK);
   public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd/MM/yyyy");
   public static final int TABLE_SPACING = 25;
-
+  private List<RequisitionStatusChange> statusChanges;
   private List<? extends Column> rnrColumnList;
   private List<? extends Column> regimenColumnList;
+  private Integer numberOfMonths;
   private Rnr requisition;
   private List<LossesAndAdjustmentsType> lossesAndAdjustmentsTypes;
   private MessageService messageService;
@@ -64,6 +64,7 @@ public class RequisitionPdfModel {
     this.regimenColumnList = (List<RegimenColumn>) model.get(REGIMEN_TEMPLATE);
     this.requisition = (Rnr) model.get(RNR);
     this.lossesAndAdjustmentsTypes = (List<LossesAndAdjustmentsType>) model.get(LOSSES_AND_ADJUSTMENT_TYPES);
+    this.numberOfMonths = (Integer) model.get(NUMBER_OF_MONTHS);
     this.messageService = messageService;
   }
 
@@ -105,7 +106,7 @@ public class RequisitionPdfModel {
 
       if (lineItem.isRnrLineItem()) {
         PrintRnrLineItem printRnrLineItem = new PrintRnrLineItem((RnrLineItem) lineItem);
-        printRnrLineItem.calculate(rnrColumnList, lossesAndAdjustmentsTypes);
+        printRnrLineItem.calculate(rnrColumnList, lossesAndAdjustmentsTypes, numberOfMonths);
       }
 
       List<PdfPCell> cells = getCells(visibleColumns, lineItem, messageService.message(LABEL_CURRENCY_SYMBOL));

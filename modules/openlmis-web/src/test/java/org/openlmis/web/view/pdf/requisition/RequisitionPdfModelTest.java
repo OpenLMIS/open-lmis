@@ -50,12 +50,12 @@ import static org.openlmis.web.view.pdf.requisition.RequisitionPdfModel.DATE_FOR
 @RunWith(MockitoJUnitRunner.class)
 public class RequisitionPdfModelTest {
 
+  @Mock
+  MessageService messageService;
   private Map<String, Object> model;
   private Rnr requisition;
   private RequisitionPdfModel requisitionPdfModel;
   private List<LossesAndAdjustmentsType> lossesAndAdjustmentsList;
-  @Mock
-  MessageService messageService;
   private Date currentDate;
   private Date authorizedDate;
 
@@ -95,7 +95,6 @@ public class RequisitionPdfModelTest {
     final RequisitionStatusChange initiatedStatusChange = new RequisitionStatusChange(2L, INITIATED, initiatingUser, currentDate);
     final RequisitionStatusChange submittedStatusChange = new RequisitionStatusChange(2L, SUBMITTED, submittingUser, currentDate);
     final RequisitionStatusChange authorizedStatusChange = new RequisitionStatusChange(2L, AUTHORIZED, authorizingUser, authorizedDate);
-
 
     return new ArrayList<RequisitionStatusChange>() {{
       add(initiatedStatusChange);
@@ -236,7 +235,6 @@ public class RequisitionPdfModelTest {
     when(messageService.message("label.allocated.budget")).thenReturn("Allocated Budget");
     when(messageService.message("msg.cost.exceeds.budget")).thenReturn("The total cost exceeds the allocated budget");
 
-
     Program requisitionProgram = mock(Program.class);
     when(requisition.getProgram()).thenReturn(requisitionProgram);
     when(requisition.isEmergency()).thenReturn(false);
@@ -244,7 +242,6 @@ public class RequisitionPdfModelTest {
     when(requisition.getAllocatedBudget()).thenReturn(new BigDecimal(7));
 
     PdfPTable summary = requisitionPdfModel.getSummary();
-
 
     assertRowValues(summary.getRow(0), "Summary");
     assertRowValues(summary.getRow(1), "Allocated Budget", "$7.00");
@@ -273,7 +270,6 @@ public class RequisitionPdfModelTest {
     when(messageService.message("msg.cost.exceeds.budget")).thenReturn("The total cost exceeds the allocated budget");
     when(messageService.message("msg.budget.not.allocated")).thenReturn("Not Allocated");
 
-
     Program requisitionProgram = mock(Program.class);
     when(requisition.getProgram()).thenReturn(requisitionProgram);
     when(requisition.isEmergency()).thenReturn(false);
@@ -281,7 +277,6 @@ public class RequisitionPdfModelTest {
     when(requisition.getAllocatedBudget()).thenReturn(null);
 
     PdfPTable summary = requisitionPdfModel.getSummary();
-
 
     assertRowValues(summary.getRow(0), "Summary");
     assertRowValues(summary.getRow(1), "Allocated Budget", "Not Allocated");

@@ -11,7 +11,10 @@
 package org.openlmis.web.controller;
 
 import lombok.NoArgsConstructor;
-import org.openlmis.core.domain.*;
+import org.openlmis.core.domain.Facility;
+import org.openlmis.core.domain.ProcessingPeriod;
+import org.openlmis.core.domain.Program;
+import org.openlmis.core.domain.User;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.rnr.domain.Comment;
 import org.openlmis.rnr.domain.Rnr;
@@ -69,23 +72,17 @@ public class RequisitionController extends BaseController {
   public static final String LOSSES_AND_ADJUSTMENT_TYPES = "lossesAndAdjustmentTypes";
   public static final String NUMBER_OF_MONTHS = "numberOfMonths";
   public static final String CAN_APPROVE_RNR = "canApproveRnr";
-
+  private static final Logger logger = LoggerFactory.getLogger(RequisitionController.class);
   @Autowired
   private RequisitionService requisitionService;
-
   @Autowired
   private RnrTemplateService rnrTemplateService;
-
   @Autowired
   private RequisitionStatusChangeService requisitionStatusChangeService;
-
   @Autowired
   private RegimenColumnService regimenColumnService;
-
   @Autowired
   private RequisitionPermissionService requisitionPermissionService;
-
-  private static final Logger logger = LoggerFactory.getLogger(RequisitionController.class);
 
   @RequestMapping(value = "/requisitions", method = POST, headers = ACCEPT_JSON)
   public ResponseEntity<OpenLmisResponse> initiateRnr(@RequestParam("facilityId") Long facilityId,
@@ -256,10 +253,10 @@ public class RequisitionController extends BaseController {
     modelAndView.addObject(RNR_TEMPLATE, rnrTemplateService.fetchColumnsForRequisition(programId));
     modelAndView.addObject(REGIMEN_TEMPLATE, regimenColumnService.getRegimenColumnsForPrintByProgramId(programId));
     modelAndView.addObject(STATUS_CHANGES, requisitionStatusChangeService.getByRnrId(id));
+    modelAndView.addObject(NUMBER_OF_MONTHS, requisitionService.findM(requisition.getPeriod()));
 
     return modelAndView;
   }
-
 
   @RequestMapping(value = "/requisitions/{id}/comments", method = POST, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'CREATE_REQUISITION, AUTHORIZE_REQUISITION, APPROVE_REQUISITION')")
