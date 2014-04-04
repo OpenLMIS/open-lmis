@@ -37,7 +37,7 @@ public class PrintRnrLineItem {
     ProgramRnrTemplate template = new ProgramRnrTemplate(rnrColumns);
     if (template.columnsCalculated(STOCK_IN_HAND)) calculateStockInHand();
     if (template.columnsCalculated(QUANTITY_DISPENSED)) rnrLineItem.calculateQuantityDispensed();
-    calculateNormalizedConsumption();
+    calculateNormalizedConsumption(template);
     calculateAmc();
     calculateMaxStockQuantity();
     calculateLossesAndAdjustments(lossesAndAdjustmentsTypes);
@@ -70,9 +70,9 @@ public class PrintRnrLineItem {
     }
   }
 
-  private void calculateNormalizedConsumption() {
+  private void calculateNormalizedConsumption(ProgramRnrTemplate template) {
     try {
-      rnrLineItem.calculateNormalizedConsumption();
+      rnrLineItem.calculateNormalizedConsumption(template);
     } catch (NullPointerException e) {
       rnrLineItem.setNormalizedConsumption(null);
     }
