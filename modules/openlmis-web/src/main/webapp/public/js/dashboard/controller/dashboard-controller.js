@@ -610,7 +610,7 @@ function AdminDashboardController($scope,$timeout,$filter,$location,dashboardFil
             products : _.pairs(_.object(_.range(stockingData.length), _.pluck(stockingData,'productId'))),
             filterParams : _.pick(stockingData[0],'rgroupId','programId', 'periodId')
         };
-        var multiBarsColors = ["#4F81BD","#C0504D","#9BBB59","#8064A2"];
+        var multiBarsColors = ["#F83103","#37AC02","#02A8FA","#FAA702"];
         var adequatelyStockedSeries =  _.pairs(_.object(_.range(stockingData.length), _.map(_.pluck(stockingData,'adequatelyStocked'),function(stat){ return stat;})));
         var stockedOutSeries =  _.pairs(_.object(_.range(stockingData.length), _.map(_.pluck(stockingData,'stockedOut'),function(stat){ return  stat;})));
         var overstockedSeries =  _.pairs(_.object(_.range(stockingData.length), _.map(_.pluck(stockingData,'overStocked'),function(stat){ return  stat;})));
