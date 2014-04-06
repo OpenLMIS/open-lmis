@@ -448,7 +448,7 @@ function AdminDashboardController($scope,$timeout,$filter,$location,dashboardFil
                         show: true,
                         radius: 2 / 3,
                         formatter: function (label, series) {
-                            return '<div style="font-size:8pt;text-align:center;padding:2px;color:black;">' + Math.round(series.percent) + '%</div>';
+                            return '<div class="pieLabel">' + Math.round(series.percent) + '%</div>';
                         },
                         threshold: 0.1
                     }
@@ -656,13 +656,8 @@ function AdminDashboardController($scope,$timeout,$filter,$location,dashboardFil
 
             } ,
             yaxis: {
-               // min:0,
-              //  tickSize:1,
                 axisLabel: '# of Facilities',
-                axisLabelUseCanvas: false//,
-                /*tickFormatter: function (v, axis) {
-                    return v ;
-                }*/
+                axisLabelUseCanvas: false
             },
             grid: {
                 hoverable: true,
