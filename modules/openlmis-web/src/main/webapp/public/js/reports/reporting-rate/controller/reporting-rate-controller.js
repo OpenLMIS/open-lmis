@@ -8,11 +8,32 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-function ReportingRateController($scope, leafletData) {
+function ReportingRateController($scope, leafletData, ngTableParams) {
 
- $scope.expectedFilter = function(item){
-    return item.expected > 0;
- };
+
+  $scope.ReportingFacilities = function(feature){
+    $scope.zoomToSelectedFeature(feature);
+  };
+
+  $scope.NonReportingFacilities = function(feature){
+    alert("Offendors are here");
+    $scope.zoomToSelectedFeature(feature);
+  };
+
+//  $scope.tableParams = new ngTableParams({
+//    page: 1,            // show first page
+//    count: 10           // count per page
+//  }, {
+//    total: 56, // length of data
+//    getData: function($defer, params) {
+//      $defer.resolve(data.slice((params.page() - 1) * params.count(), params.page() * params.count()));
+//    }
+//  });
+
+
+  $scope.expectedFilter = function(item){
+      return item.expected > 0;
+  };
 
   angular.extend($scope, {
     layers: {
@@ -84,6 +105,21 @@ function ReportingRateController($scope, leafletData) {
     });
   };
 
+  $scope.zoomToSelectedFeature = function(zoomToFeature){
+    leafletData.getMap().then(function (map) {
+      var latlngs = [];
+
+      for (var i = 0; i < zoomToFeature.geometry.coordinates.length; i++) {
+        var coord = zoomToFeature.geometry.coordinates[i];
+        for (var j in coord) {
+          var points = coord[j];
+          latlngs.push(L.GeoJSON.coordsToLatLng(points));
+        }
+      }
+      map.fitBounds(latlngs);
+    });
+  };
+
   $scope.drawMap = function (json) {
 
     angular.extend($scope, {
@@ -137,7 +173,8 @@ function ReportingRateController($scope, leafletData) {
       });
       $scope.centerJSON();
 
-
+      $scope.data = $scope.features;
+      $scope.paramsChanged($scope.tableParams);
 
     });
 
