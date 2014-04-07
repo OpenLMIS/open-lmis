@@ -12,9 +12,10 @@ package org.openlmis.report.mapper.lookup;
 
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
-import org.openlmis.report.model.GeoReportData;
+import org.openlmis.report.model.GeoZoneReportingRate;
 import org.openlmis.report.model.dto.FlatGeographicZone;
 import org.openlmis.report.model.dto.GeographicZone;
+import org.openlmis.report.model.geo.GeoFacilityIndicator;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -82,11 +83,25 @@ public interface GeographicZoneReportMapper {
               " group by geographicZoneId" +
     " ) period" +
     " on gzz.id = period.geographicZoneId" )
-  List<GeoReportData> getGeoReportingRate(@Param("programId") Long programId, @Param("processingPeriodId") Long processingPeriodId);
+  List<GeoZoneReportingRate> getGeoReportingRate(@Param("programId") Long programId, @Param("processingPeriodId") Long processingPeriodId);
 
-  @Select("select * from facilities f " +
-      " left join (select * from requisitions r where r.programId = #{programId} and r.periodId = #{processingPeriodId})" +
-      " where f.geographicZoneId = #{geographicZoneId}")
-  List<GeoReportData> getDetailReportingFacilityList(@Param("programId") Long programId, @Param("geographicZoneId") Long geographicZoneId, @Param("processingPeriodId") Long processingPeriodId);
+  @Select("select f.id, f.name, f.mainphone, f.longitude, f.latitude from facilities f\n" +
+            "  join requisition_group_members m on f.id = m.facilityId\n" +
+            "  join requisition_group_program_schedules s on s.requisitionGroupId = m.requisitionGroupId and s.programId = #{programId}\n" +
+            "  join processing_periods pp on pp.scheduleId = s.scheduleId and pp.id = #{periodId}\n" +
+            "where f.id not in (select facilityId from requisitions r where r.programId = #{programId} and r.periodId = #{periodId}) \n" +
+            "  and f.enabled = true\n" +
+            "  and f.geographicZoneId = #{geographicZoneId}")
+  List<GeoFacilityIndicator> getNonReportingFacilities(@Param("programId") Long programId, @Param("geographicZoneId") Long geographicZoneId, @Param("periodId") Long processingPeriodId);
+
+  @Select("select f.id, f.name, f.mainphone, f.longitude, f.latitude from facilities f\n" +
+    "  join requisition_group_members m on f.id = m.facilityId\n" +
+    "  join requisition_group_program_schedules s on s.requisitionGroupId = m.requisitionGroupId and s.programId = #{programId}\n" +
+    "  join processing_periods pp on pp.scheduleId = s.scheduleId and pp.id = #{periodId}\n" +
+    "where f.id in (select facilityId from requisitions r where r.programId = #{programId} and r.periodId = #{periodId}) \n" +
+    "  and f.enabled = true\n" +
+    "  and f.geographicZoneId = #{geographicZoneId}")
+  List<GeoFacilityIndicator> getReportingFacilities(@Param("programId") Long programId, @Param("geographicZoneId") Long geographicZoneId, @Param("periodId") Long processingPeriodId);
+
 
 }

@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class GeoReportData {
+public class GeoZoneReportingRate {
 
   private long id;
 
