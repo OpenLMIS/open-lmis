@@ -1473,4 +1473,10 @@ public class DBWrapper {
     resultSet.next();
     return resultSet;
   }
+
+  public void updateProgramProducts(String productCode, String programCode, String field, String value) throws SQLException {
+    String productId = getAttributeFromTable("products", "id", "code", productCode);
+    String programId = getAttributeFromTable("programs", "id", "code", programCode);
+    update("UPDATE program_products SET %s = %s WHERE programId = %s and productId = %s;", field, value, programId, productId);
+  }
 }
