@@ -106,7 +106,7 @@ public class RequisitionPdfModel {
 
       if (lineItem.isRnrLineItem()) {
         PrintRnrLineItem printRnrLineItem = new PrintRnrLineItem((RnrLineItem) lineItem);
-        printRnrLineItem.calculate(rnrColumnList, lossesAndAdjustmentsTypes, numberOfMonths);
+        printRnrLineItem.calculate(rnrColumnList, lossesAndAdjustmentsTypes, numberOfMonths, requisition.getStatus());
       }
 
       List<PdfPCell> cells = getCells(visibleColumns, lineItem, messageService.message(LABEL_CURRENCY_SYMBOL));
