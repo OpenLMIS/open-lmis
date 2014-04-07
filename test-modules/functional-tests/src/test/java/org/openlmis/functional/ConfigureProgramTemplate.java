@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 
+import static com.thoughtworks.selenium.SeleneseTestBase.*;
 import static java.util.Arrays.asList;
 
 @Listeners(CaptureScreenshotOnFailureListener.class)
@@ -43,7 +44,6 @@ public class ConfigureProgramTemplate extends TestCaseHelper {
     homePage.navigateAndInitiateRnr(program);
     InitiateRnRPage initiateRnRPage = homePage.clickProceed();
     initiateRnRPage.verifyTemplateNotConfiguredMessage();
-
   }
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Verify-On-Rnr-Screen")
@@ -59,6 +59,14 @@ public class ConfigureProgramTemplate extends TestCaseHelper {
     templateConfigPage.checkSkip();
     templateConfigPage.setSkipTextBox("Product Skip");
     templateConfigPage.alterBeginningBalanceLabel(newColumnHeading);
+    assertTrue(templateConfigPage.isPatientOption1Selected());
+    assertFalse(templateConfigPage.isPatientOption2Selected());
+    testWebDriver.sleep(1000);
+    templateConfigPage.selectPatientOption2();
+    testWebDriver.sleep(1000);
+    assertTrue(templateConfigPage.isPatientOption2Selected());
+    assertFalse(templateConfigPage.isPatientOption1Selected());
+    templateConfigPage.saveConfiguration();
 
     homePage.logout(baseUrlGlobal);
     HomePage homePageSic = loginPage.loginAs(userSIC, password);
@@ -73,6 +81,8 @@ public class ConfigureProgramTemplate extends TestCaseHelper {
     initiateRnRPage.verifyColumnsHeadingPresent(tableFrozenXpathTillTr, "Product Skip\n" + "All | None", columns);
     initiateRnRPage.verifyColumnsHeadingPresent(tableFrozenXpathTillTr, "Product", columns);
     initiateRnRPage.verifyColumnsHeadingPresent(tableFrozenXpathTillTr, "Product Code", columns);
+    assertEquals("2", dbWrapper.getAttributeFromTable("program_rnr_columns", "rnroptionid", "label", "New Patients"));
+
   }
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Column-Label-Source")
