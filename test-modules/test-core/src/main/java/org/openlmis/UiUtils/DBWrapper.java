@@ -107,7 +107,7 @@ public class DBWrapper {
       "products.dosesPerDispensingUnit as unit, PG.name as pgName " +
       "from products, programs, program_products PP, product_categories PG " +
       "where programs.id = PP.programId and PP.productId=products.id and " +
-      "PG.id = products.categoryId and programs.code='" + programCode + "' " +
+      "PG.id = pp.categoryId and programs.code='" + programCode + "' " +
       "and products.active='true' and PP.active='true'");
 
     while (rs.next()) {
@@ -129,7 +129,7 @@ public class DBWrapper {
       "product.primaryName as productName, product.description as desc, product.dosesPerDispensingUnit as unit, " +
       "pg.name as pgName from products product, programs program, program_products pp, product_categories pg, " +
       "facility_approved_products fap, facility_types ft where program.id=pp.programId and pp.productId=product.id and " +
-      "pg.id = product.categoryId and fap. programProductId = pp.id and ft.id=fap.facilityTypeId and program.code='" +
+      "pg.id = pp.categoryId and fap. programProductId = pp.id and ft.id=fap.facilityTypeId and program.code='" +
       programCode + "' and ft.code='" + facilityCode + "' " + "and product.active='true' and pp.active='true'");
 
     while (rs.next()) {
