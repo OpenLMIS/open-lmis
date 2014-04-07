@@ -17,6 +17,8 @@ import lombok.NoArgsConstructor;
 import org.openlmis.report.model.ReportData;
 import org.openlmis.report.model.ReportParameter;
 
+import java.text.DateFormat;
+
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper=false)
@@ -33,23 +35,18 @@ public class DistrictSummaryReportParam
   private int periodId;
   private String period;
   private Integer year;
-  private Integer zoneId;
-  private String zone;
-  // private int geographicLevelId;
-  //private String geographicLevel;
+
+
 
 
   @Override
   public String toString() {
-
-    StringBuilder filtersValue = new StringBuilder("");
-    filtersValue.append("Period : ").append(this.period).append("\n").
-      append("Schedule : ").append(this.schedule).append("\n").
-      append("Program : ").append(this.program).append("\n").
-      // append("Geographic Level : ").append(this.geographicLevel).append("\n").
-        append("District : ").append(this.zone).append("\n");
-
-
+    DateFormat dateFormatter = DateFormat.getDateInstance(DateFormat.DEFAULT);
+   StringBuilder filtersValue = new StringBuilder("");
+    //filtersValue.append("Period : ").append(this.period).append("\n").
+      //append("Schedule : ").append(this.schedule).append("\n").
+      //append("Program : ").append(this.program).append("\n").
+     //append("Requisition Group : ").append(this.rgroup).append("\n");
     return filtersValue.toString();
   }
 }

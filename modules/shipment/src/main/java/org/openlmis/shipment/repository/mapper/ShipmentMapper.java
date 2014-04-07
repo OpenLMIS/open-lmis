@@ -18,7 +18,6 @@ import org.openlmis.shipment.domain.ShipmentFileInfo;
 import org.openlmis.shipment.domain.ShipmentLineItem;
 import org.springframework.stereotype.Repository;
 
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -28,10 +27,11 @@ import java.util.List;
 @Repository
 public interface ShipmentMapper {
 
+ 
   @Insert({"INSERT INTO shipment_line_items ",
-    "(orderId, concatenatedOrderId, facilityCode, programCode, productCode, quantityOrdered, quantityShipped, cost, substitutedProductCode, substitutedProductName, substitutedProductQuantityShipped, packSize, packedDate, shippedDate, productName, dispensingUnit, productCategory, packsToShip, productCategoryDisplayOrder, productDisplayOrder, fullSupply )",
+    "(orderId, concatenatedOrderId, facilityCode, programCode, productCode, quantityOrdered,replacedProductCode, quantityShipped, cost, substitutedProductCode, substitutedProductName, substitutedProductQuantityShipped, packSize, packedDate, shippedDate, productName, dispensingUnit, productCategory, packsToShip, productCategoryDisplayOrder, productDisplayOrder, fullSupply )",
     "VALUES",
-    "(#{orderId}, #{concatenatedOrderId}, #{facilityCode}, #{programCode}, #{productCode}, #{quantityOrdered}, #{quantityShipped}, #{cost}, #{substitutedProductCode}, #{substitutedProductName}, #{substitutedProductQuantityShipped}, #{packSize}, #{packedDate}, #{shippedDate}, #{productName}, #{dispensingUnit}, #{productCategory}, #{packsToShip}, #{productCategoryDisplayOrder},#{productDisplayOrder}, #{fullSupply})"})
+    "(#{orderId}, #{concatenatedOrderId}, #{facilityCode}, #{programCode}, #{productCode}, #{quantityOrdered},#{replacedProductCode}, #{quantityShipped}, #{cost}, #{substitutedProductCode}, #{substitutedProductName}, #{substitutedProductQuantityShipped}, #{packSize}, #{packedDate}, #{shippedDate}, #{productName}, #{dispensingUnit}, #{productCategory}, #{packsToShip}, #{productCategoryDisplayOrder},#{productDisplayOrder}, #{fullSupply})"})
   @Options(useGeneratedKeys = true)
   public void insertShippedLineItem(ShipmentLineItem shipmentLineItem);
 
@@ -51,9 +51,6 @@ public interface ShipmentMapper {
     "modifiedDate = DEFAULT",
     "WHERE orderId = #{orderId} AND productCode = #{productCode}"})
   void updateShippedLineItem(ShipmentLineItem shipmentLineItem);
-
-  @Select("SELECT modifiedDate FROM shipment_line_items WHERE orderId = #{orderId} LIMIT 1")
-  Date getProcessedTimeStamp(ShipmentLineItem shipmentLineItem);
 
   @Select({"SELECT * FROM shipment_line_items WHERE orderId = #{orderId}"})
   List<ShipmentLineItem> getLineItems(Long orderId);

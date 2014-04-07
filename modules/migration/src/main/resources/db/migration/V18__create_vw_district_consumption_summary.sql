@@ -59,7 +59,8 @@ FROM ((((((((((((((facilities
       (facilities.typeid = facility_types.id)
     ))
 	JOIN geographic_zones on
-	( (geographic_zones.id = facilities.geographiczoneid)
+	(
+	  (geographic_zones.id = facilities.geographiczoneid)
 	))
   JOIN requisitions ON
     (
@@ -75,16 +76,17 @@ FROM ((((((((((((((facilities
         (products.code)::text = (requisition_line_items.productcode)::text
       )
     ))
+ JOIN program_products ON
+    (
+      (program_products.productid = products.id and requisitions.programId = program_products.programId)
+    ))
   JOIN product_categories ON
     (
       (
-        product_categories.id = products.categoryid
+        product_categories.id = program_products.productCategoryId
       )
     ))
-  JOIN program_products ON
-    (
-      (program_products.productid = products.id)
-    ))
+
   JOIN programs ON
     (
       (
@@ -120,7 +122,7 @@ FROM ((((((((((((((facilities
     ))
   JOIN processing_periods ON
     (
-      (processing_periods.scheduleid = processing_schedules.id)
+      (processing_periods.scheduleId = processing_schedules.id)
     ))
 
   WHERE requisitions.status = 'APPROVED'

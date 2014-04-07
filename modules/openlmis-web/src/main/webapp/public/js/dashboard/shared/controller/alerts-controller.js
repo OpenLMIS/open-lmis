@@ -9,49 +9,38 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-function AlertsController($scope, ngTableParams) {
+function AlertsController($scope, Alerts, ngTableParams) {
+
+    $scope.$watch('formFilter.supervisoryNodeId', function(){
+        Alerts.get({supervisoryNodeId: $scope.formFilter.supervisoryNodeId},function(data){
+                if(!isUndefined(data.alerts)){
+                    $scope.alertData = _.filter(data.alerts,function(alertData){if(alertData.category == 'ALERT'){return alertData;}});
+                    $scope.stockOutData = _.filter(data.alerts,function(alertData){if(alertData.category == 'STOCkOUT'){return alertData;}});
+                }else{
+                    resetAlertsData();
+                }
+
+        });
 
 
-    $scope.alertData   = [
-        {alert: "Requisitions Pending Approval", percent: 10},
-        {alert: "Facilities stocked out", percent: 20},
-        {alert: "Commodities have been rationed", percent: 30},
-        {alert: "products have been recalled", percent: 46},
-        {alert: "Requisitions Pending Approval", percent: 17},
-        {alert: "Facilities stocked out", percent: 25},
-        {alert: "Commodities have been rationed", percent: 36},
-        {alert: "products have been recalled", percent: 42},
-        {alert: "Requisitions Pending Approval", percent: 70},
-        {alert: "Facilities stocked out", percent: 27},
-        {alert: "Commodities have been rationed", percent: 33},
-        {alert: "products have been recalled", percent: 46},
-        {alert: "Requisitions Pending Approval", percent: 18},
-        {alert: "Facilities stocked out", percent: 20},
-        {alert: "Commodities have been rationed", percent: 50},
-        {alert: "products have been recalled", percent: 76},
-        {alert: "Requisitions Pending Approval", percent: 10},
-        {alert: "Facilities stocked out", percent: 21},
-        {alert: "Commodities have been rationed", percent: 32},
-        {alert: "products have been recalled", percent: 44},
-        {alert: "Requisitions Pending Approval", percent: 15},
-        {alert: "Facilities stocked out", percent: 29},
-        {alert: "Commodities have been rationed", percent: 31},
-        {alert: "products have been recalled", percent: 67},
-        {alert: "Requisitions Pending Approval", percent: 45},
-        {alert: "Facilities stocked out", percent: 55},
-        {alert: "Commodities have been rationed", percent: 88},
-        {alert: "products have been recalled", percent: 99}];
+    });
+    var resetAlertsData = function(){
+      $scope.alertData = $scope.stockOutData = null;
+    };
 
-    $scope.totalAlerts = $scope.alertData.length;
-    // the grid options
-    $scope.tableParams = new ngTableParams({
+    $scope.alertTableParams = new ngTableParams({
         page: 1,            // show first page
         total:0,
-        count: 5
+        count: 5,
+        counts:[]
     });
-
-   // $scope.datarows = $scope.alertData.slice(($scope.tableParams.page- 1) * $scope.tableParams.count, $scope.tableParams.page * $scope.tableParams.count);
-
+    $scope.stockOutsTableParams = new ngTableParams({
+        page: 1,            // show first page
+        total:0,
+        count: 5,
+        counts:[]
+    });
+/*
     $scope.loadData =  function(params){
         if(params === undefined || params === null){
             params = new ngTableParams();
@@ -62,29 +51,28 @@ function AlertsController($scope, ngTableParams) {
         }else{
             var data = $scope.alertData;
             params.total = data.length;
-           // params.counts = [];
-           // if((params.count * (params.page + 1)) < total){
-
-               // params.page = params.page ? params.page + 1 : 1;
 
                 $scope.datarows = data.slice((params.page - 1) * params.count, params.page * params.count);
 
-           // }
         }
-    };
+    };*/
 
-    $scope.$watch('tableParams', function(selection){
+  /*  $scope.$watch('tableParams', function(selection){
         $scope.loadData($scope.tableParams);
-    },true);
-
-    $scope.tableParams2 = new ngTableParams({
+    },true);*/
+ /*   $scope.tableParam2 = new ngTableParams({
+        page: 1,            // show first page
+        total:0,
+        count: 5
+    });*/
+   /* $scope.tableParams2 = new ngTableParams({
         page: 1,            // show first page
         total:0,
         count: 5 ,
         counts:[]
-    });
+    });*/
 
-    $scope.datarows2 = $scope.alertData.slice(($scope.tableParams2.page- 1) * $scope.tableParams2.count, $scope.tableParams2.page * $scope.tableParams2.count);
+   /* $scope.datarows2 = $scope.alertData.slice(($scope.tableParams2.page- 1) * $scope.tableParams2.count, $scope.tableParams2.page * $scope.tableParams2.count);
 
     $scope.loadMoreData =  function(params){
         if(params === undefined || params === null){
@@ -106,6 +94,6 @@ function AlertsController($scope, ngTableParams) {
 
              }
         }
-    };
+    };*/
 }
 

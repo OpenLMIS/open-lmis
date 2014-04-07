@@ -21,6 +21,7 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.UUID;
 
@@ -64,6 +65,17 @@ public class UserService {
     user.validate();
     userRepository.update(user);
     roleAssignmentService.saveRolesForUser(user);
+  }
+
+  public LinkedHashMap getPreferences(Long userId){
+   List<LinkedHashMap> preferences =  userRepository.getPreferences(userId);
+   LinkedHashMap preference = new LinkedHashMap();
+   // transform the shape of the list
+   for(LinkedHashMap map: preferences){
+     preference.put(map.get("key"), map.get("value"));
+   }
+
+   return preference;
   }
 
   public void sendForgotPasswordEmail(User user, String resetPasswordLink) {

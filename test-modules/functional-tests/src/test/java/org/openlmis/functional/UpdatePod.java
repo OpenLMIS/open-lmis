@@ -298,7 +298,8 @@ public class UpdatePod extends TestCaseHelper {
     assertEquals("Quantity Shipped", testWebDriver.getElementByXpath("//table[@id='podTable']/thead/tr/th[6]/span").getText());
     assertEquals("Quantity Received", testWebDriver.getElementByXpath("//table[@id='podTable']/thead/tr/th[7]/span").getText());
     assertEquals("Quantity Returned", testWebDriver.getElementByXpath("//table[@id='podTable']/thead/tr/th[8]/span").getText());
-    assertEquals("Notes", testWebDriver.getElementByXpath("//table[@id='podTable']/thead/tr/th[9]/span").getText());
+    assertEquals("Replaced Product Code", testWebDriver.getElementByXpath("//table[@id='podTable']/thead/tr/th[9]/span").getText());
+    assertEquals("Notes", testWebDriver.getElementByXpath("//table[@id='podTable']/thead/tr/th[10]/span").getText());
   }
 
   private void verifyHeadersWithValuesOnUpdatePODScreen() throws SQLException {

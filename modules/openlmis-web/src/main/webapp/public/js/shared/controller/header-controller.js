@@ -13,7 +13,7 @@ function HeaderController($scope, localStorageService, loginConfig, $window) {
   $scope.user = localStorageService.get(localStorageKeys.USERNAME);
 
   if(!$scope.user) {
-    $window.location = "/";
+    $window.location = "/public/pages/login.html";
   }
 
   $scope.logout = function () {
@@ -22,6 +22,14 @@ function HeaderController($scope, localStorageService, loginConfig, $window) {
       $.each(localStorageKeys.REPORTS, function(itm,idx){
 
           localStorageService.remove(idx);
+      });
+      $.each(localStorageKeys.PREFERENCE, function(item, idx){
+          localStorageService.remove(idx);
+
+      });
+      $.each(localStorageKeys.DASHBOARD_FILTERS, function(item, idx){
+          localStorageService.remove(idx);
+
       });
     document.cookie = 'JSESSIONID' + '=;expires=Thu, 01 Jan 1970 00:00:01 GMT; path=/';
     $window.location = "/j_spring_security_logout";

@@ -56,8 +56,7 @@ distributionModule.config(['$routeProvider', function ($routeProvider) {
     var interceptor = function (loginConfig) {
       function responseHandler(response) {
         if (response.config.url.endsWith('deliveryZones.json') && (typeof response.data === 'string')) {
-          loginConfig.preventReload = (response.config.method != 'GET');
-          loginConfig.modalShown = true;
+          window.location = "/public/pages/login.html";
         } else {
           return response;
         }

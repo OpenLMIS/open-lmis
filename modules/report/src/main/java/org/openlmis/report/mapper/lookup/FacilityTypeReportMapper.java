@@ -19,8 +19,14 @@ import java.util.List;
 @Repository
 public interface FacilityTypeReportMapper {
 
-    @Select("SELECT id, name " +
-            "   FROM " +
-            "       facility_types order by name")
-    List<FacilityType> getAll();
+  @Select("SELECT id, name " +
+          "   FROM " +
+          "       facility_types order by name")
+  List<FacilityType> getAll();
+
+  @Select("SELECT id, name " +
+      "   FROM " +
+      "       facility_types where id = #{id}")
+  FacilityType getById(Long id);
+
 }

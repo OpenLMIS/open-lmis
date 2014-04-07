@@ -821,12 +821,32 @@ describe('RegularRnrLineItem', function () {
 
     it('should test execution flow when normalized consumption gets filled', function () {
       spyOn(regularRnrLineItem, "calculateNormalizedConsumption");
+      spyOn(regularRnrLineItem, "fillPeriodNormalizedConsumption");
       spyOn(regularRnrLineItem, "fillAMC");
 
       regularRnrLineItem.fillNormalizedConsumption();
 
       expect(regularRnrLineItem.calculateNormalizedConsumption).toHaveBeenCalled();
+      expect(regularRnrLineItem.fillPeriodNormalizedConsumption).toHaveBeenCalled();
       expect(regularRnrLineItem.fillAMC).toHaveBeenCalled();
+    });
+
+    it('should calculate period normalized consumption', function () {
+      regularRnrLineItem.normalizedConsumption = 10;
+      regularRnrLineItem.numberOfMonths = 2;
+
+      regularRnrLineItem.fillPeriodNormalizedConsumption();
+
+      expect(regularRnrLineItem.periodNormalizedConsumption).toEqual(20);
+    });
+
+    it('should calculate period normalized consumption as null if normalized consumption is also null', function () {
+      regularRnrLineItem.normalizedConsumption = null;
+      regularRnrLineItem.numberOfMonths = 2;
+
+      regularRnrLineItem.fillPeriodNormalizedConsumption();
+
+      expect(regularRnrLineItem.periodNormalizedConsumption).toEqual(null);
     });
 
     xit('should test execution flow when rnr line item cost gets filled when it is of full supply type', function () {

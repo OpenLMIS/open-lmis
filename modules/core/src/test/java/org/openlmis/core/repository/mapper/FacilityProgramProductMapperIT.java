@@ -18,22 +18,17 @@ import org.openlmis.core.builder.ProductBuilder;
 import org.openlmis.core.builder.ProgramBuilder;
 import org.openlmis.core.domain.*;
 import org.openlmis.db.categories.IntegrationTests;
-import org.openlmis.core.domain.FacilityProgramProduct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-
 import static com.natpryce.makeiteasy.MakeItEasy.a;
 import static com.natpryce.makeiteasy.MakeItEasy.make;
-import static com.natpryce.makeiteasy.MakeItEasy.with;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertThat;
-import static org.openlmis.core.builder.ProductBuilder.displayOrder;
 
 @Category(IntegrationTests.class)
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -60,14 +55,19 @@ public class FacilityProgramProductMapperIT {
 
   @Autowired
   FacilityMapper facilityMapper;
+  @Autowired
+  private ProductCategoryMapper productCategoryMapper;
 
   @Before
   public void setUp() throws Exception {
-    product = make(a(ProductBuilder.defaultProduct, with(displayOrder, 2)));
+    product = make(a(ProductBuilder.defaultProduct));
     productMapper.insert(product);
     program = make(a(ProgramBuilder.defaultProgram));
     programMapper.insert(program);
     programProduct = new ProgramProduct(program, product, 10, true);
+    ProductCategory productCategory = new ProductCategory("C1", "Category 1", 1);
+    productCategoryMapper.insert(productCategory);
+    programProduct.setProductCategory(productCategory);
     programProductMapper.insert(programProduct);
     facility = make(a(FacilityBuilder.defaultFacility));
     facilityMapper.insert(facility);

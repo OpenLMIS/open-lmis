@@ -45,6 +45,11 @@ function LoginController($scope, $http, localStorageService, messageService) {
         }
         localStorageService.add(localStorageKeys.RIGHT, getRights(data.rights));
         localStorageService.add(localStorageKeys.USERNAME, data.name);
+
+        for (var prefKey in data.preferences) {
+            localStorageService.add(prefKey, data.preferences[prefKey]);
+        }
+
         if (window.location.href.indexOf("login.html") != -1) {
           window.location = HOME_PAGE;
           return;

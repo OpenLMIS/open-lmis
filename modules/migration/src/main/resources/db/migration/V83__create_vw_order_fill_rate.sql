@@ -23,7 +23,8 @@ CREATE OR REPLACE VIEW vw_order_fill_rate AS
    JOIN processing_periods pp ON pp.id = r.periodid
    JOIN products pr ON pr.code::text = li.productcode::text
    JOIN geographic_zones gz ON gz.id = f.geographiczoneid
-   JOIN product_categories prc ON prc.id = pr.categoryid
+   JOIN program_products ON r.programId = program_products.programId and pr.id = program_products.productId
+   JOIN product_categories prc ON prc.id = program_products.productCategoryId
    JOIN programs ON r.programid = programs.id
    JOIN requisition_group_members ON requisition_group_members.facilityid = f.id
    JOIN requisition_groups rg ON rg.id = requisition_group_members.requisitiongroupid

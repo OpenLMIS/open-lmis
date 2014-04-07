@@ -77,6 +77,8 @@ public class UserController extends BaseController {
       OpenLmisResponse openLmisResponse = new OpenLmisResponse("name", userName);
       openLmisResponse.addData("authenticated", TRUE);
       openLmisResponse.addData("rights", roleRightService.getRights(userId));
+      openLmisResponse.addData("preferences", userService.getPreferences(userId));
+
       return openLmisResponse.response(OK);
     } else {
       return authenticationError();
@@ -204,4 +206,11 @@ public class UserController extends BaseController {
     }
     return success(messageService.message("password.reset.success"));
   }
+
+
+  @RequestMapping(value = "/user/preferences", method = GET)
+  public ResponseEntity<OpenLmisResponse> getUserPreferences(HttpServletRequest request){
+    return response("preferences", userService.getPreferences(this.loggedInUserId(request)));
+  }
+
 }

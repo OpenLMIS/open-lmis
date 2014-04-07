@@ -61,8 +61,7 @@
         <tbody ng-repeat="rnrLineItem in page.nonFullSupply">
         <tr>
           <td class="productCategory" colspan="{{visibleColumns.nonFullSupply.scrollable.length}}"
-              ng-show="showCategory($index)"
-              ng-bind="rnrLineItem.productCategory"></td>
+              ng-show="showCategory($index)"></td>
         </tr>
         <tr adjust-height="fixed-body{{ $index }}" class="scrollable-body{{ $index }}">
           <td class="cell-input col-{{ column.name }}" ng-repeat="column in visibleColumns.nonFullSupply.scrollable">

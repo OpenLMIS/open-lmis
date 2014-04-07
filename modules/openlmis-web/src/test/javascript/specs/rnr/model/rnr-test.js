@@ -13,15 +13,15 @@ describe('R&R test', function () {
   function createRegularRnr(json, columnsArray) {
     if (json == undefined)  json = {};
     json.emergency = false;
-    var regularRnr = new Rnr(json, columnsArray);
-    return  regularRnr;
+    var regularRnr = new Rnr(json, columnsArray, 3);
+    return regularRnr;
   }
 
   it('should sort non full supply line items during init', function () {
     var rnrLineItem1 = {productCategoryDisplayOrder: 3};
     var rnrLineItem2 = {productCategoryDisplayOrder: 1};
     var rnrLineItem3 = {productCategoryDisplayOrder: 2};
-    var rnrJson = {period: {numberOfMonths: 3}, 'nonFullSupplyLineItems': [rnrLineItem1, rnrLineItem2, rnrLineItem3]}
+    var rnrJson = {'nonFullSupplyLineItems': [rnrLineItem1, rnrLineItem2, rnrLineItem3]}
 
     var rnr = createRegularRnr();
     jQuery.extend(rnr, rnrJson);
@@ -40,7 +40,7 @@ describe('R&R test', function () {
     spyOn(lineItem2, 'reduceForApproval');
     spyOn(_, 'pick').andCallThrough();
 
-    var rnr = createRegularRnr({ fullSupplyLineItems: [lineItem1, lineItem2], period: {numberOfMonths: 3}}, []);
+    var rnr = createRegularRnr({ fullSupplyLineItems: [lineItem1, lineItem2]}, []);
 
     rnr.reduceForApproval();
 
@@ -54,15 +54,20 @@ describe('R&R test', function () {
     expect(rnr.skipAll).toBeFalsy();
   });
 
+  it("should set numberOfMonths on rnr creation", function () {
+    var rnr = new Rnr({}, [], 5);
+    expect(rnr.numberOfMonths).toEqual(5);
+  });
+
   it('should prepare line item objects inside rnr', function () {
     var lineItemSpy = spyOn(window, 'RegularRnrLineItem');
     var lineItem1 = {"lineItem": "lineItem1"};
     var lineItem2 = {};
 
-    var rnr = {emergency: false, 'fullSupplyLineItems': [lineItem1], 'nonFullSupplyLineItems': [lineItem2], period: {numberOfMonths: 5}, status: 'status'};
+    var rnr = {emergency: false, 'fullSupplyLineItems': [lineItem1], 'nonFullSupplyLineItems': [lineItem2], status: 'status'};
     var constructedRnr = createRegularRnr(rnr, null);
 
-    expect(lineItemSpy).toHaveBeenCalledWith(lineItem1, 5, null, 'status');
+    expect(lineItemSpy).toHaveBeenCalledWith(lineItem1, 3, null, 'status');
     expect(lineItemSpy.calls.length).toEqual(2);
     expect(constructedRnr.fullSupplyLineItems.length).toEqual(1);
     expect(constructedRnr.nonFullSupplyLineItems.length).toEqual(1);
@@ -407,7 +412,7 @@ describe('R&R test', function () {
 
     var errorPages = rnr.getErrorPages(5);
 
-    expect(errorPages).toEqual({nonFullSupply: [1, 2], fullSupply: [2, 4]});
+    expect(errorPages).toEqual({nonFullSupply: [1, 2], fullSupply: [2, 4], regimen: [ ]});
     expect(rnr.getNonFullSupplyErrorLineItemIndexes).toHaveBeenCalled();
     expect(rnr.getFullSupplyErrorLineItemIndexes).toHaveBeenCalled();
   });

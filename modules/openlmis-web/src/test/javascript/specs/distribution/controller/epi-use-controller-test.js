@@ -47,18 +47,6 @@ describe('EPI Use row controller', function () {
 
     expect(total).toEqual(0);
   });
-
-  it('should set input class to true if not recorded is set for a field', function () {
-    scope.clearError(true);
-
-    expect(scope.inputClass).toBeTruthy();
-  });
-
-  it('should set input class to warning class if not recorded is not set for a field', function () {
-    scope.clearError(false);
-
-    expect(scope.inputClass).toEqual('warning-error');
-  });
 });
 
 describe('Epi use controller', function () {

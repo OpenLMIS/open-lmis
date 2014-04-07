@@ -23,10 +23,10 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
-import static com.natpryce.makeiteasy.MakeItEasy.*;
+import static com.natpryce.makeiteasy.MakeItEasy.a;
+import static com.natpryce.makeiteasy.MakeItEasy.make;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
-import static org.openlmis.core.builder.ProductBuilder.displayOrder;
 import static org.openlmis.core.builder.ProgramBuilder.defaultProgram;
 
 @Category(IntegrationTests.class)
@@ -44,6 +44,8 @@ public class ProgramProductPriceMapperIT {
   ProgramProductMapper programProductMapper;
   @Autowired
   private ProgramProductPriceMapper programProductPriceMapper;
+  @Autowired
+  private ProductCategoryMapper productCategoryMapper;
 
   private Product product;
   private Program program;
@@ -51,12 +53,15 @@ public class ProgramProductPriceMapperIT {
 
   @Before
   public void setup() {
-    product = make(a(ProductBuilder.defaultProduct, with(displayOrder, 1)));
+    product = make(a(ProductBuilder.defaultProduct));
     productMapper.insert(product);
     program = make(a(defaultProgram));
     programMapper.insert(program);
     Money price = new Money("105.60");
     programProduct = new ProgramProduct(program, product, 10, true, price);
+    ProductCategory category = new ProductCategory("C1", "Category 1", 1);
+    productCategoryMapper.insert(category);
+    programProduct.setProductCategory(category);
     programProductMapper.insert(programProduct);
   }
 

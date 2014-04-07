@@ -16,6 +16,10 @@ import org.openlmis.core.service.GeographicZoneService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+/**
+ * GeographicZonePersistenceHandler is used for uploads of GeographicZone. It uploads each GeographicZone
+ * record by record.
+ */
 @Component
 public class GeographicZonePersistenceHandler extends AbstractModelPersistenceHandler {
   GeographicZoneService geographicZoneService;

@@ -9,7 +9,16 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-function DashboardMenuController($scope) {
+function DashboardMenuController($scope, $location, dashboardMenuService) {
+
+    $scope.dashboardTabs = dashboardMenuService.tabs;
+
+    $scope.$on('dashboardTabUpdated', function(){
+        $scope.dashboardTabs = dashboardMenuService.tabs;
+    });
+    $scope.closeTab = function(tabName){
+        dashboardMenuService.closeTab(tabName);
+    };
 
 }
 

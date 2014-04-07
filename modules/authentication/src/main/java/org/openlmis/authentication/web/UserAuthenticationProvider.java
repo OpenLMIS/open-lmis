@@ -10,7 +10,7 @@
 
 package org.openlmis.authentication.web;
 
-import org.openlmis.authentication.UserToken;
+import org.openlmis.authentication.domain.UserToken;
 import org.openlmis.authentication.service.UserAuthenticationService;
 import org.openlmis.core.domain.User;
 import org.springframework.beans.factory.annotation.Autowired;

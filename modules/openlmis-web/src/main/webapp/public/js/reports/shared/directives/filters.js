@@ -3,9 +3,15 @@ app.directive('filterContainer', function(){
   return {
     restrict: 'EA',
     link: function(scope, elm, attrs){
+
+
      angular.extend(scope,{
         filter:{},
         requiredFilters:{},
+        showMoreFilters: false,
+        toggleMoreFilters: function(){
+            scope.showMoreFilters = ! scope.showMoreFilters;
+        }
      });
     }
   } ;
@@ -41,7 +47,7 @@ app.directive('yearFilter',['OperationYears' , function(OperationYears){
 
       OperationYears.get(function (data) {
         scope.years = data.years;
-        scope.years.unshift('-- Select Year --');
+        scope.filter.year = data.years[0];
       });
     },
     templateUrl: 'filter-year-template'
@@ -52,6 +58,9 @@ app.directive('facilityTypeFilter',['ReportFacilityTypes' , function(ReportFacil
   return {
     restrict: 'E',
     link: function(scope, elm, attr){
+
+      scope.facilityTypes = [];
+      scope.facilityTypes.unshift({'name': '-- All Facility Types --'});
 
       if(attr.required){
         scope.requiredFilters.facilityType = true;
@@ -70,6 +79,9 @@ app.directive('scheduleFilter',['ReportSchedules' , function(ReportSchedules){
   return {
     restrict: 'E',
     link: function(scope, elm, attr){
+
+      scope.schedules = [];
+      scope.schedules.unshift({name:'-- Select Group --'});
 
       if(attr.required){
         scope.requiredFilters.schedule = true;
@@ -116,6 +128,9 @@ app.directive('periodFilter',['ReportPeriods','ReportPeriodsByScheduleAndYear' ,
     restrict: 'E',
     link: function(scope, elm, attr){
 
+      scope.periods = [];
+      scope.periods.push({name: '-- Select Period --'});
+
       if(attr.required){
         scope.requiredFilters.period = true;
       }
@@ -159,6 +174,10 @@ app.directive('requisitionGroupFilter',['RequisitionGroupsByProgram' , function(
     restrict: 'E',
     link: function(scope, elm, attr){
 
+      scope.requisitionGroups = [];
+      scope.requisitionGroups.unshift({'name': '-- All Requisition Groups --', id: 0});
+      scope.filter.requisitionGroup = 0;
+
       if(attr.required){
         scope.requiredFilters.requisitionGroup = true;
       }
@@ -193,6 +212,9 @@ app.directive('productCategoryFilter',['ProductCategoriesByProgram' , function( 
     restrict: 'E',
     link: function(scope, elm, attr){
 
+      scope.productCategories = [];
+      scope.productCategories.unshift({'name': '-- All Product Categories --'});
+
       if(attr.required){
         scope.requiredFilters.productCategory = true;
       }
@@ -212,18 +234,19 @@ app.directive('facilityFilter',['FacilitiesByProgramParams' , function( Faciliti
     if(isUndefined($scope.filter) || isUndefined($scope.filter.program) || $scope.filter.program === 0)
       return;
 
-
     var program = (angular.isDefined($scope.filter) && angular.isDefined($scope.filter.program))?$scope.filter.program : 0;
     var schedule = (angular.isDefined($scope.filter) && angular.isDefined($scope.filter.schedule))?$scope.filter.schedule: 0;
     var facilityType = (angular.isDefined($scope.filter) && angular.isDefined($scope.filter.facilityType))?$scope.filter.facilityType: 0;
+    var requisitionGroup = (angular.isDefined($scope.filter) && angular.isDefined($scope.filter.requisitionGroup))?$scope.filter.requisitionGroup: 0;
     // load facilities
     FacilitiesByProgramParams.get({
           program: program,
           schedule: schedule,
-          type: facilityType
+          type: facilityType,
+          requisitionGroup: requisitionGroup
         }, function (data) {
           $scope.facilities = data.facilities;
-          if($scope.facilities === null){
+          if( isUndefined( $scope.facilities) ){
             $scope.facilities = [];
           }
           $scope.facilities.unshift({name: '-- All Facilities --'});
@@ -235,9 +258,16 @@ app.directive('facilityFilter',['FacilitiesByProgramParams' , function( Faciliti
     restrict: 'E',
     link: function(scope, elm, attr){
 
+      scope.facilities = [];
+      scope.facilities.push({name: '-- All Facilities --'});
+
       if(attr.required){
         scope.requiredFilters.facility = true;
       }
+
+      scope.$watch('filter.requisitionGroup',function(value){
+        onPgCascadedVarsChanged(scope, value);
+      });
 
       scope.$watch('filter.program',function(value){
         onPgCascadedVarsChanged(scope, value);
@@ -274,6 +304,11 @@ app.directive('productFilter',['ReportProductsByProgram' , function( ReportProdu
   return {
     restrict: 'E',
     link: function(scope, elm, attr){
+
+      scope.products = [];
+      scope.products.push({'name': '-- All Products --',id: -1});
+
+      scope.filter.product = -1;
 
       if(attr.required){
         scope.requiredFilters.product = true;

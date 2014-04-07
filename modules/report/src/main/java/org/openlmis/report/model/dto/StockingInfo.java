@@ -23,7 +23,7 @@ public class StockingInfo {
     private Long productId;
     private Long periodId;
     private Long programId;
-    private Long geographicZoneId;
+    private Long rgroupId;
     private Long facilityId;
     private Integer adequatelyStocked;
     private Integer overStocked;

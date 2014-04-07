@@ -42,6 +42,9 @@ public class ConfigureShipmentPage extends Page {
   @FindBy(how = ID, using = "packedDateIncludeCheckbox")
   private WebElement packedDateCheckBox = null;
 
+  @FindBy(how = ID, using = "replacedProductCodeIncludeCheckbox")
+  private WebElement replacedProductCodeIncludeCheckbox = null;
+
   @FindBy(how = ID, using = "shippedDateIncludeCheckbox")
   private WebElement shippedDateCheckBox = null;
 
@@ -59,6 +62,9 @@ public class ConfigureShipmentPage extends Page {
 
   @FindBy(how = ID, using = "packedDatePosition")
   private WebElement packedDatePositionTextField = null;
+
+  @FindBy(how = ID, using = "replacedProductCodePosition")
+  private WebElement replacedProductCodePositionTextField = null;
 
   @FindBy(how = ID, using = "shippedDatePosition")
   private WebElement shippedDatePositionTextField = null;
@@ -182,10 +188,23 @@ public class ConfigureShipmentPage extends Page {
       shippedDateCheckBox.click();
   }
 
+  public void checkReplacedProductCodeCheckBox() {
+    testWebDriver.waitForElementToAppear(replacedProductCodeIncludeCheckbox);
+    if (!replacedProductCodeIncludeCheckbox.isSelected())
+      replacedProductCodeIncludeCheckbox.click();
+  }
+
+
   public void unCheckShippedDateCheckBox() {
     testWebDriver.waitForElementToAppear(shippedDateCheckBox);
     if (shippedDateCheckBox.isSelected())
       shippedDateCheckBox.click();
+  }
+
+  public void unCheckReplacedProductCode() {
+    testWebDriver.waitForElementToAppear(replacedProductCodeIncludeCheckbox);
+    if (replacedProductCodeIncludeCheckbox.isSelected())
+      replacedProductCodeIncludeCheckbox.click();
   }
 
   public String getQuantityShipped() {
@@ -243,9 +262,19 @@ public class ConfigureShipmentPage extends Page {
     return testWebDriver.getAttribute(shippedDatePositionTextField, "value");
   }
 
+  public String getReplacedProductCode() {
+    testWebDriver.waitForElementToAppear(replacedProductCodePositionTextField);
+    return testWebDriver.getAttribute(replacedProductCodePositionTextField, "value");
+  }
+
   public void setShippedDate(String value) {
     testWebDriver.waitForElementToAppear(shippedDatePositionTextField);
     sendKeys(shippedDatePositionTextField, value);
+  }
+
+  public void setReplacedProductCode(String value) {
+    testWebDriver.waitForElementToAppear(replacedProductCodePositionTextField);
+    sendKeys(replacedProductCodePositionTextField, value);
   }
 
   public void clickSaveButton() {

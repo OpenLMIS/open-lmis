@@ -18,7 +18,6 @@ import java.util.List;
 
 /**
  * Utility class to convert object lists to comma separated lists of their Ids
- *
  * @param <T> Any class that extends BaseModel
  */
 @Component
