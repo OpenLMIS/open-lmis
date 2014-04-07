@@ -48,21 +48,21 @@ public class DistrictFinancialSummaryQueryBuilder {
         if(filter != null){
 
 
-            if (filter.getRgroupId() != 0 && filter.getRgroupId() != -1) {
+            if (filter.getRgroupId() != 0 ) {
                 predicate = predicate.isEmpty() ?" where " : predicate + " and ";
                 predicate = predicate + " rgroupid = #{filterCriteria.rgroupId}";
             }
 
-            if(filter.getPeriodId() != 0 && filter.getPeriodId()!=-1){
+            if(filter.getPeriodId() != 0 ){
                 predicate = predicate.isEmpty() ?" where " : predicate + " and ";
                 predicate = predicate + " periodid= #{filterCriteria.periodId}";
             }
-            if(filter.getScheduleId() != 0 && filter.getScheduleId() !=-1){
+            if(filter.getScheduleId() != 0 ){
                 predicate = predicate.isEmpty() ?" where " : predicate + " and ";
                 predicate = predicate + " scheduleid= #{filterCriteria.scheduleId}";
             }
 
-            if(filter.getProgramId() != 0 && filter.getProgramId() != -1){
+            if(filter.getProgramId() != 0 ){
                 predicate = predicate.isEmpty() ?" where " : predicate +  " and ";
                 predicate = predicate + " programid = #{filterCriteria.programId}";
             }
