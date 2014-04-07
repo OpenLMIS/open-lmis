@@ -27,10 +27,10 @@
                 <span openlmis-message="message.no.product.groups"></span>
             </div>
 
-            <div id="epiInventoryContainer" class="facility-distribution-form-table" tab-scroll bottom-offset="180"
+            <div id="epiInventoryContainer" class="parent facility-distribution-form-table" tab-scroll bottom-offset="180"
                  ng-show="facilityData.epiInventory.lineItems.length">
                 <form auto-save="distribution" object-store="distributions">
-                    <table id="epiInventoryTable" class="table table-bordered">
+                    <table id="epiInventoryTable" class="table table-bordered" fixed-table-header>
                         <thead>
                         <tr>
                             <th id="vialsUnitsLabel" class="col-vials" openlmis-message="label.vials.unit"></th>
