@@ -189,6 +189,8 @@ function StockController($scope, $routeParams,dashboardFiltersHistoryService, pr
                 }
                 $scope.stockByProductAndStock = groupStockingByProductAndStock($scope.stockingList);
 
+                //alert('stocking '+JSON.stringify($scope.stockByProductAndStock))
+
             });
         }else{
             $scope.stockByProductAndStock = undefined;
@@ -316,12 +318,12 @@ function StockController($scope, $routeParams,dashboardFiltersHistoryService, pr
     });
 
 
-    $scope.paramsChanged = function(params) {
+    /*$scope.paramsChanged = function(params) {
 
 
-    };
+    };*/
 
     // watch for changes of parameters
-    $scope.$watch('tableParams', $scope.paramsChanged , true);
+    /*$scope.$watch('tableParams', $scope.paramsChanged , true);*/
 
 }

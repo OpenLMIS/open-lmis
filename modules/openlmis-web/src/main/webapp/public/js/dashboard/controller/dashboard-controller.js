@@ -663,10 +663,10 @@ function AdminDashboardController($scope,$timeout,$filter,$location,dashboardFil
                 hoverable: true,
                 clickable: true,
                 borderWidth: 1,
-                borderColor: "#d6d6d6",
-                backgroundColor: {
+                borderColor: "#d6d6d6"//,
+               /* backgroundColor: {
                     colors: ["#FFF", "#CCC"]
-                }
+                }*/
             },
             legend: {
                 container:$("#multiBarsLegend"),
