@@ -88,7 +88,7 @@ var RegularRnrLineItem = base2.Base.extend({
   },
 
   fillPeriodNormalizedConsumption: function () {
-    if (this.normalizedConsumption === null) {
+    if (isUndefined(this.normalizedConsumption)) {
       this.periodNormalizedConsumption = null;
       return;
     }
