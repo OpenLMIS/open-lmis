@@ -432,10 +432,10 @@ public class DistributionChildCoverageSyncTest extends TestCaseHelper {
     assertEquals("0", childCoveragePage.getTotalForGivenColumnAndRow(2, 9));
     assertEquals("9", childCoveragePage.getTotalForGivenColumnAndRow(3, 9));
     childCoveragePage.enterOpenedVialsCountForGivenGroupAndRow(9, 1, "5");
-    assertEquals("82", childCoveragePage.getWastageRateForGivenRow(9));
+    assertEquals("64", childCoveragePage.getWastageRateForGivenRow(9));
 
     childCoveragePage.enterOpenedVialsCountForGivenGroupAndRow(9, 1, "8");
-    assertEquals("89", childCoveragePage.getWastageRateForGivenRow(9));
+    assertEquals("78", childCoveragePage.getWastageRateForGivenRow(9));
 
     dbWrapper.updateFieldValue("products", "active", "t", "code", "P11");
   }
