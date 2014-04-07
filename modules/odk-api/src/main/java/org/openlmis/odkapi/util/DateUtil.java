@@ -12,7 +12,27 @@
  * User: Messay Yohannes <deliasmes@gmail.com>
  * To change this template use File | Settings | File Templates.
  */
-package org.openlmis.odkapi.response;
+package org.openlmis.odkapi.util;
 
-public class ODKResponse {
+import java.text.SimpleDateFormat;
+import java.text.ParseException;
+import java.util.Date;
+
+public class DateUtil {
+
+    public Date getCurrentDateByFormat(String dateFormat)
+    {
+        String currentDateTime = new SimpleDateFormat(dateFormat).format(new Date());
+        SimpleDateFormat format = new SimpleDateFormat(dateFormat);
+        try
+        {
+            Date date = format.parse(currentDateTime);
+            return date;
+        }
+        catch(ParseException parseException)
+        {
+          // handle
+        }
+        return null;
+    }
 }

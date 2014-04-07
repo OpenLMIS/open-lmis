@@ -66,6 +66,7 @@
     <import resource="classpath:/applicationContext-reporting.xml"/>
     <import resource="classpath:/applicationContext-report.xml"/>
     <import resource="classpath:/applicationContext-distribution.xml"/>
+    <import resource="classpath:/applicationContext-odkapi.xml"/>
 
     <bean id="userAuthenticationProvider" class="org.openlmis.authentication.web.UserAuthenticationProvider"/>
 

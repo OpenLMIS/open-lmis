@@ -37,11 +37,19 @@
     <beans:constructor-arg value="/public/pages/login.html"/>
   </beans:bean>
 
+   <beans:bean id="odkAuthenticationEntryPoint"
+                class="org.openlmis.authentication.web.ODKAuthenticationEntryPoint">
+   <beans:constructor-arg value="/public/pages/login.html"/>
+   </beans:bean>
+
   <beans:bean id="openLmisAccessDeniedHandler" class="org.openlmis.authentication.web.OpenLmisAccessDeniedHandler"/>
 
   <http pattern="/rest-api/**" use-expressions="true" authentication-manager-ref="restAuthenticationManager">
     <intercept-url pattern="/rest-api/**" access="isAuthenticated()" requires-channel="any"/>
     <http-basic/>
+  </http>
+
+  <http pattern="/odk-api/**" authentication-manager-ref="odkAuthenticationManager" entry-point-ref="odkAuthenticationEntryPoint">
   </http>
 
   <http use-expressions="true" entry-point-ref="restAuthenticationEntryPoint">
@@ -86,6 +94,7 @@
 
   <authentication-manager>
     <authentication-provider ref="userAuthenticationProvider"/>
+    <authentication-provider ref="odkAuthProvider" />
   </authentication-manager>
 
 

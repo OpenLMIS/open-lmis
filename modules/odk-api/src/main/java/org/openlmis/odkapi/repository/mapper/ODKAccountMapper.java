@@ -12,7 +12,20 @@
  * User: Messay Yohannes <deliasmes@gmail.com>
  * To change this template use File | Settings | File Templates.
  */
-package org.openlmis.odkapi.response;
+package org.openlmis.odkapi.repository.mapper;
 
-public class ODKResponse {
+import org.apache.ibatis.annotations.Select;
+import org.openlmis.odkapi.domain.ODKAccount;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public interface ODKAccountMapper
+{
+    @Select("SELECT * FROM odkaccount where id = #{id}")
+    public ODKAccount getODKAccountById(Long id);
+
+    @Select("SELECT * FROM odkaccount where deviceId = #{deviceId}")
+    public ODKAccount getODKAccountByDeviceId(String deviceId);
+
+
 }

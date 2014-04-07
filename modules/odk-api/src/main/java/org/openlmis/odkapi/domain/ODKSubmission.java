@@ -12,7 +12,23 @@
  * User: Messay Yohannes <deliasmes@gmail.com>
  * To change this template use File | Settings | File Templates.
  */
-package org.openlmis.odkapi.response;
+package org.openlmis.odkapi.domain;
 
-public class ODKResponse {
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
+import org.openlmis.core.domain.BaseModel;
+import java.util.Date;
+
+@Data
+@NoArgsConstructor
+@EqualsAndHashCode(callSuper = true)
+public class ODKSubmission extends BaseModel {
+
+    private Long odkAccountId;
+    private String formBuildId;
+    private String instanceId;
+    private boolean active;
+    private String comment;
 }

@@ -10,9 +10,11 @@
 /**
  * Created with IntelliJ IDEA.
  * User: Messay Yohannes <deliasmes@gmail.com>
+ * Date: 3/24/14
+ * Time: 12:45 AM
  * To change this template use File | Settings | File Templates.
  */
-package org.openlmis.odkapi.response;
+package org.openlmis.odkapi.validate;
 
-public class ODKResponse {
+public class ODKSubmissionValidator {
 }

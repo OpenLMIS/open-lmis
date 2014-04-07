@@ -12,7 +12,29 @@
  * User: Messay Yohannes <deliasmes@gmail.com>
  * To change this template use File | Settings | File Templates.
  */
-package org.openlmis.odkapi.response;
+package org.openlmis.odkapi.repository.mapper;
+import org.apache.ibatis.annotations.*;
+import org.openlmis.odkapi.domain.ODKSubmission;
+import org.springframework.stereotype.Repository;
 
-public class ODKResponse {
+@Repository
+public interface ODKSubmissionMapper {
+
+    @Insert("INSERT INTO odksubmission(" +
+            "odkAccountId," +
+            "formBuildId, " +
+            "instanceId, " +
+            "active, " +
+            "comment) " +
+            "VALUES (" +
+            "#{odkAccountId}, " +
+            "#{formBuildId}, " +
+            "#{instanceId}, " +
+            "#{active}," +
+            "#{comment})")
+    @Options(useGeneratedKeys = true)
+    void insert(ODKSubmission odkSubmission);
+
+    @Select("SELECT MAX(id) FROM odksubmission")
+    public Long getLastSubmissionId();
 }

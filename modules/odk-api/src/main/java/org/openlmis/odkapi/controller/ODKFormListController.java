@@ -10,11 +10,56 @@
 /**
  * Created with IntelliJ IDEA.
  * User: Messay Yohannes <deliasmes@gmail.com>
- * Date: 3/22/14
- * Time: 4:19 AM
  * To change this template use File | Settings | File Templates.
  */
 package org.openlmis.odkapi.controller;
 
-public class ODKFormListController {
+import org.openlmis.odkapi.domain.ODKXForm;
+import org.openlmis.odkapi.domain.ODKXFormList;
+import org.openlmis.odkapi.domain.ODKXFormDTO;
+import org.openlmis.odkapi.repository.ODKXFormRepository;
+import org.openlmis.odkapi.service.ODKXFormService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.util.ArrayList;
+import java.util.List;
+
+@Controller
+public class ODKFormListController extends  BaseController
+{
+    @Autowired
+    ODKXFormService odkxFormService;
+
+    ODKXForm odkxForm;
+
+    @RequestMapping(value="/odk-api/formList")
+    @ResponseBody
+    public ResponseEntity<ODKXFormList> getAvailableForms()
+    {
+        ODKXFormList odkxFormListXML = odkxFormService.getAvailableXFormDefinitions();
+        HttpHeaders responseHeaders = new HttpHeaders();
+        responseHeaders.set(OPEN_ROSA_VERSION_HEADER, OPEN_ROSA_VERSION);
+        responseHeaders.setContentType(MediaType.TEXT_XML);
+        return new ResponseEntity<ODKXFormList>(odkxFormListXML, responseHeaders, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/odk-api/getForm/{formId}")
+    @ResponseBody
+    public ResponseEntity<String> getForm(@PathVariable String formId)
+    {
+        odkxForm = odkxFormService.getXFormByFormId(formId);
+        HttpHeaders responseHeaders = new HttpHeaders();
+        responseHeaders.set(OPEN_ROSA_VERSION_HEADER, OPEN_ROSA_VERSION);
+        responseHeaders.setContentType(MediaType.TEXT_XML);
+        return new ResponseEntity<String>(odkxForm.getXMLString(), responseHeaders ,HttpStatus.OK);
+    }
 }

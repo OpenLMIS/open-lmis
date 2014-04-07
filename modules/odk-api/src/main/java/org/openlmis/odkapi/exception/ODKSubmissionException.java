@@ -10,11 +10,34 @@
 /**
  * Created with IntelliJ IDEA.
  * User: Messay Yohannes <deliasmes@gmail.com>
- * Date: 3/22/14
- * Time: 4:21 AM
+ * Date: 3/24/14
+ * Time: 12:31 AM
  * To change this template use File | Settings | File Templates.
  */
-package org.openlmis.odkapi.model;
+package org.openlmis.odkapi.exception;
 
-public class FacilityXFormSubmissionModel {
+public class ODKSubmissionException extends RuntimeException
+{
+    private String message;
+
+    public ODKSubmissionException(String message)
+    {
+        super(message);
+        this.message = message;
+    }
+
+   @Override
+    public String toString()
+   {
+          if (this.message == null)
+          {
+              return this.message;
+          }
+          else
+          {
+              return null;
+          }
+   }
 }
+
+

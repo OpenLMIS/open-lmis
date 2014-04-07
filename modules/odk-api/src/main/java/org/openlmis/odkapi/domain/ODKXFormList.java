@@ -12,7 +12,42 @@
  * User: Messay Yohannes <deliasmes@gmail.com>
  * To change this template use File | Settings | File Templates.
  */
-package org.openlmis.odkapi.response;
+package org.openlmis.odkapi.domain;
 
-public class ODKResponse {
+import javax.xml.bind.annotation.*;
+import java.util.List;
+import org.openlmis.odkapi.domain.ODKXFormDTO;
+
+
+@XmlRootElement(name = "xforms")
+public class ODKXFormList {
+
+    private String xmlns = "http://openrosa.org/xforms/xformsList";
+
+    @XmlAttribute(name="xmlns")
+    public String getXmlns() {
+        return xmlns;
+    }
+
+    public void setXmlns(String xmlns) {
+        this.xmlns = xmlns;
+    }
+    @XmlElement(name = "xform",required = true)
+    public List<ODKXFormDTO> odkxFormList;
+
+    public List<ODKXFormDTO> getData() {
+        return odkxFormList;
+    }
+
+    public ODKXFormList(String xmlns,List<ODKXFormDTO> odkxFormList) {
+        this();
+        this.xmlns = xmlns;
+        this.odkxFormList = odkxFormList;
+    }
+
+
+    public ODKXFormList() {
+    }
+
 }
+

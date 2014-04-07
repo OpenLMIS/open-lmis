@@ -12,7 +12,32 @@
  * User: Messay Yohannes <deliasmes@gmail.com>
  * To change this template use File | Settings | File Templates.
  */
-package org.openlmis.odkapi.response;
+package org.openlmis.odkapi.domain;
 
-public class ODKResponse {
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import org.openlmis.core.domain.BaseModel;
+
+import java.awt.*;
+import java.util.ArrayList;
+
+@Data
+@NoArgsConstructor
+@EqualsAndHashCode(callSuper = true)
+public class ODKSubmissionData extends BaseModel{
+
+    private Long ODKSubmissionId;
+    private Long facilityId;
+    private Double GPSLatitude;
+    private Double GPSLongitude;
+    private Double GPSAltitude;
+    private Double GPSAccuracy;
+    private ArrayList<byte[]> facilityPictures;
+    private byte[] firstPicture;
+    private byte[] secondPicture;
+    private byte[] thirdPicture;
+    private byte[] fourthPicture;
+    private byte[] fifthPicture;
+    private byte[] comment;
 }

@@ -12,7 +12,21 @@
  * User: Messay Yohannes <deliasmes@gmail.com>
  * To change this template use File | Settings | File Templates.
  */
-package org.openlmis.odkapi.response;
+package org.openlmis.odkapi.repository.mapper;
 
-public class ODKResponse {
+import org.apache.ibatis.annotations.Select;
+import org.openlmis.odkapi.domain.ODKXForm;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
+
+@Repository
+public interface ODKXFormMapper {
+
+    @Select("SELECT * FROM odkxform")
+    public List<ODKXForm> getAvailableXFormDefinitions();
+
+    @Select("SELECT * FROM odkxform WHERE formId = #{formId}")
+    public ODKXForm getXFormByFormId(String formId);
+
 }

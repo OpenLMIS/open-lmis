@@ -12,7 +12,27 @@
  * User: Messay Yohannes <deliasmes@gmail.com>
  * To change this template use File | Settings | File Templates.
  */
-package org.openlmis.odkapi.response;
+package org.openlmis.odkapi.domain;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
+import org.openlmis.core.domain.BaseModel;
+import java.util.Date;
 
-public class ODKResponse {
+@Data
+@NoArgsConstructor
+@EqualsAndHashCode(callSuper = false)
+public class ODKAccount extends BaseModel{
+
+    private Long userId;
+    private String deviceId;
+    private String SIMSerial;
+    private String phoneNumber;
+    private String subscriberId;
+    private String ODKUserName;
+    private String ODKEmail;
+    private boolean active;
+    private String comment;
+
 }

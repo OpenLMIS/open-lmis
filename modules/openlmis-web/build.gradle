@@ -173,7 +173,8 @@ dependencies {
     project(':modules:rest-api'),
     project(':modules:reporting'),
     project(':modules:report'),
-    project(':modules:distribution')
+    project(':modules:distribution'),
+    project(':modules:odk-api')
 
 
   testCompile 'org.springframework:spring-test:3.1.1.RELEASE',

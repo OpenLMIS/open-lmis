@@ -10,11 +10,26 @@
 /**
  * Created with IntelliJ IDEA.
  * User: Messay Yohannes <deliasmes@gmail.com>
- * Date: 3/22/14
- * Time: 4:21 AM
  * To change this template use File | Settings | File Templates.
  */
-package org.openlmis.odkapi.parser;
+package org.openlmis.odkapi.repository;
 
-public class XFormSAXHandler {
+import org.openlmis.odkapi.domain.ODKSubmission;
+import org.openlmis.odkapi.domain.ODKSubmissionData;
+import org.openlmis.odkapi.repository.mapper.ODKSubmissionDataMapper;
+import org.openlmis.odkapi.repository.mapper.ODKSubmissionMapper;
+import org.springframework.stereotype.Repository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
+
+@Repository
+public class ODKSubmissionDataRepository {
+    @Autowired
+    private ODKSubmissionDataMapper odkSubmissionDataMapper;
+
+    public void insert(ODKSubmissionData odkSubmissionData)
+    {
+        odkSubmissionDataMapper.insert(odkSubmissionData);
+    }
 }

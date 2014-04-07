@@ -10,11 +10,25 @@
 /**
  * Created with IntelliJ IDEA.
  * User: Messay Yohannes <deliasmes@gmail.com>
- * Date: 3/22/14
- * Time: 4:16 AM
  * To change this template use File | Settings | File Templates.
  */
 package org.openlmis.odkapi.controller;
 
 public class BaseController {
+
+    public static final String OPEN_ROSA_VERSION_HEADER = "X-OpenRosa-Version";
+    public static final String OPEN_ROSA_VERSION = "1.0";
+    public static final String OPEN_ROSA_ACCEPT_CONTENT_LENGTH_HEADER = "X-OpenRosa-Accept-Content-Length";
+    public static final String OPEN_ROSA_ACCEPT_CONTENT_LENGTH = "2000000";
+    public static final String successResponseMessage =  "<OpenRosaResponse xmlns=\"http://openrosa.org/http/response\">\n" +
+            "    <message nature=\"submit_success\"> Form submitted. </message>\n" +
+            "</OpenRosaResponse>";
+    public static final String errorResponseMessage =  "<OpenRosaResponse xmlns=\"http://openrosa.org/http/response\">\n" +
+            "    <message nature=\"submit_failure\"> Error during form submission. </message>\n" +
+            "</OpenRosaResponse>";
+    public static final String ODK_COLLECT_APP_APK_FILE_NAME = "ODK Collect v1.4 rev 1038.apk";
+    public static final String FILE_NOT_FOUND_ERROR_MESSAGE = "File not found.";
+    public static final String OUTPUT_STREAM_CANNOT_BE_GENERATED = "Could not generate output stream.";
+    public static final String CAN_NOT_READ_FILE = "File could not be read.";
+
 }

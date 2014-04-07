@@ -12,7 +12,38 @@
  * User: Messay Yohannes <deliasmes@gmail.com>
  * To change this template use File | Settings | File Templates.
  */
-package org.openlmis.odkapi.response;
+package org.openlmis.odkapi.domain;
 
-public class ODKResponse {
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import org.openlmis.core.domain.BaseModel;
+
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+
+@Data
+@NoArgsConstructor
+@EqualsAndHashCode(callSuper = false)
+public class ODKXForm extends BaseModel
+{
+
+    private String formId;
+
+    private String name;
+
+    private String version;
+
+    private String hash;
+
+    private String descriptionText;
+
+    private String downloadUrl;
+
+    private String XMLString;
+
+    private boolean active;
+
 }

@@ -12,7 +12,7 @@
  * User: Messay Yohannes <deliasmes@gmail.com>
  * To change this template use File | Settings | File Templates.
  */
-package org.openlmis.odkapi.response;
+package org.openlmis.odkapi.service;
 
-public class ODKResponse {
+public class ODKAccountServiceTest {
 }

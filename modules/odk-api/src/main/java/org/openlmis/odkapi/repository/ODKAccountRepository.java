@@ -12,7 +12,33 @@
  * User: Messay Yohannes <deliasmes@gmail.com>
  * To change this template use File | Settings | File Templates.
  */
-package org.openlmis.odkapi.response;
+package org.openlmis.odkapi.repository;
 
-public class ODKResponse {
+import org.openlmis.odkapi.domain.ODKAccount;
+import org.openlmis.odkapi.domain.ODKSubmission;
+import org.openlmis.odkapi.repository.mapper.ODKAccountMapper;
+import org.openlmis.odkapi.repository.mapper.ODKSubmissionMapper;
+import org.springframework.stereotype.Repository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
+import java.util.Date;
+import java.util.List;
+
+
+@Repository
+public class ODKAccountRepository {
+    @Autowired
+    private ODKAccountMapper odkAccountMapper;
+
+    public ODKAccount getODKAccountById(Long id)
+   {
+       return odkAccountMapper.getODKAccountById(id);
+   }
+
+    public ODKAccount getODKAccountByDeviceId(String deviceId)
+    {
+        return odkAccountMapper.getODKAccountByDeviceId(deviceId);
+    }
 }
+

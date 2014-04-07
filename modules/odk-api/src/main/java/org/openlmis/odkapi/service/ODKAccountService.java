@@ -12,7 +12,19 @@
  * User: Messay Yohannes <deliasmes@gmail.com>
  * To change this template use File | Settings | File Templates.
  */
-package org.openlmis.odkapi.response;
+package org.openlmis.odkapi.service;
 
-public class ODKResponse {
+import org.openlmis.odkapi.domain.ODKAccount;
+import org.openlmis.odkapi.repository.ODKAccountRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+
+public class ODKAccountService  {
+
+    @Autowired
+    ODKAccountRepository odkAccountRepository;
+
+    public ODKAccount validateApiAuthenticationToken(String token)
+    {
+        return odkAccountRepository.getODKAccountByDeviceId(token);
+    }
 }

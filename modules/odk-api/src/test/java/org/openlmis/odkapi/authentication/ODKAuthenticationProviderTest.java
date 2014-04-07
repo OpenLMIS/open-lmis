@@ -10,11 +10,9 @@
 /**
  * Created with IntelliJ IDEA.
  * User: Messay Yohannes <deliasmes@gmail.com>
- * Date: 3/22/14
- * Time: 4:23 AM
  * To change this template use File | Settings | File Templates.
  */
-package org.openlmis.odkapi.service;
+package org.openlmis.odkapi.authentication;
 
-public class FacilityXFormSubmissionService {
+public class ODKAuthenticationProviderTest {
 }
