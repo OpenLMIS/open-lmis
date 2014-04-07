@@ -403,6 +403,15 @@ services.factory('SaveGeographicInfo', function($resource){
    return $resource('/geographic-zone/save-gis.json',{}, {post:{method:'POST'}});
 });
 
+
+services.factory('ReportingFacilityList', function($resource){
+  return $resource('/gis/reporting-facilities.json',{}, {});
+});
+
+services.factory('NonReportingFacilityList', function($resource){
+  return $resource('/gis/non-reporting-facilities.json',{}, {});
+});
+
 /* Dashboard data factories */
 services.factory('UserSupervisoryNodes', function($resource){
     return $resource('/reports/user/supervisory-nodes.json',{},{});
