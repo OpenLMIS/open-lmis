@@ -152,6 +152,19 @@ describe('RegularRnrLineItem', function () {
       expect(regularRnrLineItem.normalizedConsumption).toEqual(16);
     });
 
+    it('should retain normalized consumption if rnr status is AUTHORIZED/APPROVED/IN_APPROVAL/RELEASED', function () {
+      var lineItem = {"beginningBalance": 1, "quantityReceived": 10, "quantityDispensed": 5,
+        "stockOutDays": 5, "newPatientCount": 10, "dosesPerMonth": 30, "dosesPerDispensingUnit": 28, "reportingDays": 30, "normalizedConsumption": 55};
+      var regularRnrLineItem = new RegularRnrLineItem({}, rnr, programRnrColumnList, "AUTHORIZED");
+      jQuery.extend(regularRnrLineItem, lineItem);
+
+      regularRnrLineItem.totalLossesAndAdjustments = -4;
+
+      regularRnrLineItem.calculateNormalizedConsumption();
+
+      expect(regularRnrLineItem.normalizedConsumption).toEqual(55);
+    });
+
     it('should not calculate normalized consumption when newPatientCount is displayed but not set', function () {
       var lineItem = {"beginningBalance": 1, "quantityReceived": 10, "quantityDispensed": 4, "totalLossesAndAdjustments": 4, "stockOutDays": 5, "newPatientCount": null};
       var regularRnrLineItem = new RegularRnrLineItem(lineItem, rnr, programRnrColumnList);

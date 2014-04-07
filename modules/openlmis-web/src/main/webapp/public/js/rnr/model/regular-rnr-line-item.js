@@ -207,6 +207,9 @@ var RegularRnrLineItem = base2.Base.extend({
   },
 
   calculateNormalizedConsumption: function () {
+    if (this.rnrStatus === 'AUTHORIZED' || this.rnrStatus === 'IN_APPROVAL' || this.rnrStatus === 'APPROVED' || this.rnrStatus === 'RELEASED') {
+      return;
+    }
     this.reportingDays = utils.getValueFor(this.reportingDays);
     this.stockOutDays = utils.getValueFor(this.stockOutDays);
     this.newPatientCount = utils.getValueFor(this.newPatientCount);
