@@ -94,7 +94,6 @@
 
   <authentication-manager>
     <authentication-provider ref="userAuthenticationProvider"/>
-    <authentication-provider ref="odkAuthProvider" />
   </authentication-manager>
 
 
