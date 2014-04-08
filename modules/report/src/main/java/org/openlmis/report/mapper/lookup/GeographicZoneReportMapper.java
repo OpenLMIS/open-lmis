@@ -40,6 +40,8 @@ public interface GeographicZoneReportMapper {
     " order by ADM1, ADM2, ADM3")
   List<FlatGeographicZone> getFlatGeographicZoneList();
 
+  // TODO: refactor this for simplicity,
+  // most of this query should move to a respective view.
   @Select("select gzz.id, gzz.name, gjson.geometry,COALESCE(expected.count) expected, COALESCE(total.count) total, COALESCE(ever.count,0) as ever, COALESCE(period.count,0) as period  " +
     " from  " +
         " geographic_zones gzz " +
@@ -82,7 +84,7 @@ public interface GeographicZoneReportMapper {
              " (select facilityId from requisitions where periodId = #{processingPeriodId}) " +
               " group by geographicZoneId" +
     " ) period" +
-    " on gzz.id = period.geographicZoneId" )
+    " on gzz.id = period.geographicZoneId order by gzz.name" )
   List<GeoZoneReportingRate> getGeoReportingRate(@Param("programId") Long programId, @Param("processingPeriodId") Long processingPeriodId);
 
   @Select("select f.id, f.name, f.mainphone, f.longitude, f.latitude from facilities f\n" +
@@ -91,7 +93,8 @@ public interface GeographicZoneReportMapper {
             "  join processing_periods pp on pp.scheduleId = s.scheduleId and pp.id = #{periodId}\n" +
             "where f.id not in (select facilityId from requisitions r where r.programId = #{programId} and r.periodId = #{periodId}) \n" +
             "  and f.enabled = true\n" +
-            "  and f.geographicZoneId = #{geographicZoneId}")
+            "  and f.geographicZoneId = #{geographicZoneId}" +
+            " order by f.name ")
   List<GeoFacilityIndicator> getNonReportingFacilities(@Param("programId") Long programId, @Param("geographicZoneId") Long geographicZoneId, @Param("periodId") Long processingPeriodId);
 
   @Select("select f.id, f.name, f.mainphone, f.longitude, f.latitude from facilities f\n" +
@@ -100,7 +103,8 @@ public interface GeographicZoneReportMapper {
     "  join processing_periods pp on pp.scheduleId = s.scheduleId and pp.id = #{periodId}\n" +
     "where f.id in (select facilityId from requisitions r where r.programId = #{programId} and r.periodId = #{periodId}) \n" +
     "  and f.enabled = true\n" +
-    "  and f.geographicZoneId = #{geographicZoneId}")
+    "  and f.geographicZoneId = #{geographicZoneId}" +
+    " order by f.name")
   List<GeoFacilityIndicator> getReportingFacilities(@Param("programId") Long programId, @Param("geographicZoneId") Long geographicZoneId, @Param("periodId") Long processingPeriodId);
 
 
