@@ -14,6 +14,7 @@
  */
 package org.openlmis.odkapi.controller;
 
+import org.openlmis.odkapi.domain.ODKXForm;
 import org.openlmis.odkapi.domain.ODKXFormList;
 import org.openlmis.odkapi.service.ODKXFormService;
 import org.springframework.beans.factory.annotation.Autowired;

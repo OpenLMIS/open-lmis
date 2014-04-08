@@ -14,6 +14,7 @@
  */
 package org.openlmis.odkapi.service;
 
+import org.openlmis.odkapi.domain.ODKXForm;
 import org.openlmis.odkapi.domain.ODKXFormDTO;
 import org.openlmis.odkapi.domain.ODKXFormList;
 import org.openlmis.odkapi.repository.ODKXFormRepository;
