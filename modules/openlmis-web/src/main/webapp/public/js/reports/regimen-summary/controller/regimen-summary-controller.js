@@ -1,17 +1,12 @@
 function RegimenSummaryControllers($scope, $filter, ngTableParams,
-                                 RegimenSummaryReport,ReportGeographicZonesByLevel ,GeographicZones,ReportGeographicLevels,ReportRegimens,ReportRegimenCategories,ReportRegimensByCategory,ReportPeriodsByScheduleAndYear,ReportSchedules,ReportRegimenPrograms,ReportPeriods, OperationYears, SettingsByKey,localStorageService, $http, $routeParams, $location) {
+                                 RegimenSummaryReport ,ReportGeographicLevels,ReportRegimens,ReportRegimenCategories,RequisitionGroupsByProgram,ReportRegimensByCategory,ReportPeriodsByScheduleAndYear,ReportSchedules,ReportRegimenPrograms,ReportPeriods, OperationYears, SettingsByKey,localStorageService, $http, $routeParams, $location) {
     //to minimize and maximize the filter section
     var section = 1;
     $scope.showMessage = true;
     $scope.message = "Indicates a required field.";
-
+    $scope.requisitionGroups = [];
     $scope.defaultFlag = true;
     // $scope.reporting = "quarterly";
-    $scope.IndicatorProductsKey = "INDICATOR_PRODUCTS";
-
-    SettingsByKey.get({key: $scope.IndicatorProductsKey},function (data){
-        $scope.IndicatorProductsDescription = data.settings.value;
-    });
 
     $scope.section = function (id) {
         section = id;
@@ -42,7 +37,9 @@ function RegimenSummaryControllers($scope, $filter, ngTableParams,
         regimenId: $scope.regimen,
         regimen:"" ,
         geographicLevelId: $scope.geographicLevel,
-        geographicLevel:""
+        geographicLevel:"",
+        rgroupId:$scope.rgroup,
+        rgroup:""
     };
 
    //filter form data section
@@ -59,19 +56,29 @@ function RegimenSummaryControllers($scope, $filter, ngTableParams,
         $scope.years.unshift('-- All Years --');
     });
 
-    ReportRegimens.get(function(data){
-        $scope.regimens = data.regimens;
-        $scope.regimens.unshift({'name': 'All Regimens','id':'-1'});
 
 
+    $scope.$watch('filterObject.rgroupId', function (selection) {
+        if (selection !== undefined || selection === "") {
+            $scope.filterObject.rgroupId = selection;
+            $.each($scope.requisitionGroups, function (item, idx) {
+                if (idx.id == selection) {
+                    $scope.filterObject.rgroup = idx.name;
+                }
+            });
+        } else {
+            $scope.filterObject.rgroupId = 0;
+            $scope.filterObject.rgroup = "";
+        }
+        $scope.filterGrid();
     });
-
-
+/*
     ReportGeographicLevels.get(function(data){
         $scope.geographicLevels = data.geographicLevels;
         $scope.geographicLevels.unshift({'name': '-- Select Geographic level --','id':'-1'});
 
     });
+    */
 
 
 
@@ -84,9 +91,9 @@ function RegimenSummaryControllers($scope, $filter, ngTableParams,
     ReportRegimenCategories.get(function(data){
 
         $scope.regimenCategories = data.regimenCategories;
-        $scope.regimenCategories.unshift({'name':'-- Select Regimen Category --','id':'-1'});
+        $scope.regimenCategories.unshift({'name':'-- All Regimen Category --','id':'0'});
     });
-
+/*
     $scope.ChangeGeographicLevel= function(){
 
         ReportGeographicZonesByLevel.get({geographicLevelId: $scope.filterObject.geographicLevelId}, function(data){
@@ -95,7 +102,7 @@ function RegimenSummaryControllers($scope, $filter, ngTableParams,
             $scope.zones.unshift({'name': '-- All Geographic Zones --','id':'0'});
         });
 
-    };
+    };*/
 
   $scope.RegimenCategoryChanged= function(){
 
@@ -108,14 +115,20 @@ function RegimenSummaryControllers($scope, $filter, ngTableParams,
 
   };
 
-    GeographicZones.get(function(data) {
+   /* GeographicZones.get(function(data) {
         $scope.zones = data.zones;
         $scope.zones.unshift({'name':'--All Geographic Zones--','id':'0'});
+    });*/
+    ReportRegimens.get(function(data){
+        $scope.regimens = data.regimens;
+        $scope.regimens.unshift({'name': 'All Regimens','id':'0'});
+
     });
+
 
     ReportSchedules.get(function(data){
         $scope.schedules = data.schedules;
-        $scope.schedules.unshift({'name':'-- Select a Schedule --', 'id':'-1'}) ;
+        $scope.schedules.unshift({'name':'-- Select a Schedule --', 'id':'0'}) ;
     });
 
     $scope.ChangeSchedule = function(scheduleBy){
@@ -136,6 +149,7 @@ function RegimenSummaryControllers($scope, $filter, ngTableParams,
             });
         }
     };
+  /*
     $scope.$watch('filterObject.geographicLevelId', function (selection) {
         if (selection !== undefined || selection === "") {
             $scope.filterObject.geographicLevelId = selection;
@@ -151,6 +165,7 @@ function RegimenSummaryControllers($scope, $filter, ngTableParams,
         }
         $scope.filterGrid();
     });
+    */
     $scope.$watch('filterObject.regimenCategoryId', function (selection) {
        if
         (selection !== undefined || selection === "") {
@@ -168,7 +183,7 @@ function RegimenSummaryControllers($scope, $filter, ngTableParams,
         $scope.filterGrid();
 
     });
-
+/*
     $scope.$watch('filterObject.zoneId', function(selection){
 
         if(selection !== undefined || selection === ""){
@@ -184,6 +199,7 @@ function RegimenSummaryControllers($scope, $filter, ngTableParams,
         }
         $scope.filterGrid();
     });
+*/
 
     $scope.$watch('filterObject.regimenId', function(selection){
         if(selection !== undefined || selection === ""){
@@ -195,23 +211,7 @@ function RegimenSummaryControllers($scope, $filter, ngTableParams,
             });
         }else{
 
-            $scope.filterObject.regimenId = " ";
-        }
-        $scope.filterGrid();
-    });
-
-
-
-    $scope.$watch('filterObject.rgroupId', function (selection) {
-        if (selection !== undefined || selection === "") {
-            $scope.filterObject.rgroupId = selection;
-            $.each($scope.requisitionGroups, function (item, idx) {
-                if (idx.id == selection) {
-                    $scope.filterObject.rgroup = idx.name;
-                }
-            });
-        } else {
-            $scope.filterObject.rgroupId = 0;
+            $scope.filterObject.regimenId = "";
         }
         $scope.filterGrid();
     });
@@ -223,6 +223,16 @@ function RegimenSummaryControllers($scope, $filter, ngTableParams,
                 if (idx.id == selection) {
                     $scope.filterObject.program = idx.name;
                 }
+            });
+            RequisitionGroupsByProgram.get({program: selection }, function (data) {
+                $scope.requisitionGroups = data.requisitionGroupList;
+                if ($scope.requisitionGroups === undefined || $scope.requisitionGroups.length === 0) {
+                    $scope.requisitionGroups = [];
+                    $scope.requisitionGroups.push({'name': '-- All Requisition Groups --','id':'0'});
+                } else {
+                    $scope.requisitionGroups.unshift({'name': '-- All Requisition Groups --','id':'0'});
+                }
+
             });
 
         } else {
