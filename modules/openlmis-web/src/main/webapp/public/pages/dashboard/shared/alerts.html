@@ -1,77 +1,60 @@
 
-<div class="row-fluid" ng-controller="AlertsController">
-
+<div class="row-fluid" style="margin-top: 5px" ng-controller="AlertsController">
     <div class="span6">
-        <!--<div class="pull-right legend">Showing records {{ ((tableParams.page - 1) *
-            tableParams.count) + 1 }} to {{ (tableParams.page +1 ) * tableParams.count }} of {{totalAlerts}}
-        </div>-->
+        <table class="table-bordered table table-striped" ng-show="alertData == undefined || alertData.length == 0">
+            <thead>
+                <tr class="gradient-header">
+                    <th openlmis-message="title.alerts" style="text-align: center"></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>No data to show under selected filters</td>
+                </tr>
+            </tbody>
+
+        </table>
         <div ng-show="alertData.length > 0">
-            <!--<div>Alerts</div>-->
             <table ng-show="alertData.length > 0" class="table-bordered table table-striped pull-right"
-            ng-table="alertTableParams"  >
-            <tbody >
-            <tr ng-repeat="alert in alertData" >
-                <td data-title="Alerts">
-                    {{alert.description}}
-                </td>
-            </tr>
-            </tbody>
-            </table>
-        </div>
-
-    </div>
-    <div class="span6">
-            <div ng-show="stockOutData.length > 0">
-             <!--<div>Alerts</div>-->
-            <table ng-show="stockOutData.length > 0" class="table-bordered table table-striped pull-right"
-            ng-table="stockOutsTableParams"  >
-            <tbody >
-            <tr ng-repeat="alert in stockOutData" >
-                <td data-title="'Stock outs'">
-                    {{alert.description}}
-                </td>
-            </tr>
-            </tbody>
-            </table>
-        </div>
-
-    </div>
-   <!-- <div class="span6">
-        <div ng-show="stockOutData.length > 0">
-            &lt;!&ndash;<div>Alerts</div>&ndash;&gt;
-            <table ng-show="stockOutData.length > 0" class="table-bordered table table-striped pull-right"
-                   ng-table="tableParams"  >
+                   ng-table="alertTableParams"  >
                 <tbody >
-                <tr ng-repeat="row in stockOutData" >
-                    <td data-title="Stock outs">
-                        {{row.description}}
+                <tr ng-repeat="alert in alertData" >
+                    <td data-title="Alerts">
+                        {{alert.description}}
                     </td>
                 </tr>
                 </tbody>
             </table>
         </div>
-    </div>-->
 
-</div>
-<br/>
-<div class="clearfix"></div>
+    </div>
+    <div class="span6">
+        <table class="table table-bordered" ng-show="stockOutData == undefined || stockOutData.length == 0">
+                <thead>
+                    <tr class="gradient-header" >
+                        <th openlmis-message="title.stock.outs" style="text-align: center"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>No data to show under selected filters</td>
+                    </tr>
+                </tbody>
 
-<script type="text/ng-template" id="custom/pager">
-
-    <!--<ul class="pager ng-cloak">
-        <li ng-repeat="page in pages"
-            ng-class="{'disabled': !page.active, 'previous': page.type == 'prev', 'next': page.type == 'next'}"
-            ng-show="page.type == 'prev' || page.type == 'next'" ng-switch="page.type">
-            <a ng-switch-when="prev" ng-click="goToPage(page.number)" href="">&laquo; Previous</a>
-            <a ng-switch-when="next" ng-click="goToPage(page.number)" href="">Next &raquo;</a>
-        </li>
-        &lt;!&ndash;<li>
-            <div class="btn-group">
-                <button type="button" ng-class="{'active':params.count == 10}" ng-click="changeCount(10)" class="btn">10</button>
-                <button type="button" ng-class="{'active':params.count == 25}" ng-click="changeCount(25)" class="btn">25</button>
-                <button type="button" ng-class="{'active':params.count == 50}" ng-click="changeCount(50)" class="btn">50</button>
-                <button type="button" ng-class="{'active':params.count == 100}" ng-click="changeCount(100)" class="btn">100</button>
+        </table>
+        <div ng-show="stockOutData.length > 0">
+                <table ng-show="stockOutData.length > 0" class="table-bordered table table-striped pull-right"
+                       ng-table="stockOutsTableParams"  >
+                    <tbody >
+                    <tr ng-repeat="alert in stockOutData" >
+                        <td data-title="'Stock outs'">
+                            {{alert.description}}
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
             </div>
-        </li>&ndash;&gt;
-    </ul>-->
-</script>
+    </div>
+</div>
+
+

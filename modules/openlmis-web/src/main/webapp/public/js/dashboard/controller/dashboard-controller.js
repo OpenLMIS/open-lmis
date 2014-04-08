@@ -448,7 +448,7 @@ function AdminDashboardController($scope,$timeout,$filter,$location,dashboardFil
                         show: true,
                         radius: 2 / 3,
                         formatter: function (label, series) {
-                            return '<div style="font-size:8pt;text-align:center;padding:2px;color:black;">' + Math.round(series.percent) + '%</div>';
+                            return '<div class="pieLabel">' + Math.round(series.percent) + '%</div>';
                         },
                         threshold: 0.1
                     }
@@ -610,7 +610,7 @@ function AdminDashboardController($scope,$timeout,$filter,$location,dashboardFil
             products : _.pairs(_.object(_.range(stockingData.length), _.pluck(stockingData,'productId'))),
             filterParams : _.pick(stockingData[0],'rgroupId','programId', 'periodId')
         };
-        var multiBarsColors = ["#4F81BD","#C0504D","#9BBB59","#8064A2"];
+        var multiBarsColors = ["#F83103","#37AC02","#02A8FA","#FAA702"];
         var adequatelyStockedSeries =  _.pairs(_.object(_.range(stockingData.length), _.map(_.pluck(stockingData,'adequatelyStocked'),function(stat){ return stat;})));
         var stockedOutSeries =  _.pairs(_.object(_.range(stockingData.length), _.map(_.pluck(stockingData,'stockedOut'),function(stat){ return  stat;})));
         var overstockedSeries =  _.pairs(_.object(_.range(stockingData.length), _.map(_.pluck(stockingData,'overStocked'),function(stat){ return  stat;})));
@@ -656,22 +656,17 @@ function AdminDashboardController($scope,$timeout,$filter,$location,dashboardFil
 
             } ,
             yaxis: {
-               // min:0,
-              //  tickSize:1,
                 axisLabel: '# of Facilities',
-                axisLabelUseCanvas: false//,
-                /*tickFormatter: function (v, axis) {
-                    return v ;
-                }*/
+                axisLabelUseCanvas: false
             },
             grid: {
                 hoverable: true,
                 clickable: true,
                 borderWidth: 1,
-                borderColor: "#d6d6d6",
-                backgroundColor: {
+                borderColor: "#d6d6d6"//,
+               /* backgroundColor: {
                     colors: ["#FFF", "#CCC"]
-                }
+                }*/
             },
             legend: {
                 container:$("#multiBarsLegend"),
