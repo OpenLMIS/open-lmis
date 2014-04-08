@@ -81,7 +81,7 @@ public class ConfigureProgramTemplate extends TestCaseHelper {
     initiateRnRPage.verifyColumnsHeadingPresent(tableFrozenXpathTillTr, "Product Skip\n" + "All | None", columns);
     initiateRnRPage.verifyColumnsHeadingPresent(tableFrozenXpathTillTr, "Product", columns);
     initiateRnRPage.verifyColumnsHeadingPresent(tableFrozenXpathTillTr, "Product Code", columns);
-    assertEquals("2", dbWrapper.getAttributeFromTable("program_rnr_columns", "rnroptionid", "label", "New Patients"));
+    assertEquals("2", dbWrapper.getAttributeFromTable("program_rnr_columns", "rnrOptionId", "label", "New Patients"));
 
   }
 
