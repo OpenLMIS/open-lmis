@@ -107,7 +107,7 @@ public class DBWrapper {
       "products.dosesPerDispensingUnit as unit, PG.name as pgName " +
       "from products, programs, program_products PP, product_categories PG " +
       "where programs.id = PP.programId and PP.productId=products.id and " +
-      "PG.id = pp.categoryId and programs.code='" + programCode + "' " +
+      "PG.id = pp.productCategoryId and programs.code='" + programCode + "' " +
       "and products.active='true' and PP.active='true'");
 
     while (rs.next()) {
@@ -129,7 +129,7 @@ public class DBWrapper {
       "product.primaryName as productName, product.description as desc, product.dosesPerDispensingUnit as unit, " +
       "pg.name as pgName from products product, programs program, program_products pp, product_categories pg, " +
       "facility_approved_products fap, facility_types ft where program.id=pp.programId and pp.productId=product.id and " +
-      "pg.id = pp.categoryId and fap. programProductId = pp.id and ft.id=fap.facilityTypeId and program.code='" +
+      "pg.id = pp.productCategoryId and fap. programProductId = pp.id and ft.id=fap.facilityTypeId and program.code='" +
       programCode + "' and ft.code='" + facilityCode + "' " + "and product.active='true' and pp.active='true'");
 
     while (rs.next()) {
@@ -497,10 +497,6 @@ public class DBWrapper {
       "(code,    alternateItemCode,  manufacturer,       manufacturerCode,  manufacturerBarcode,   mohBarcode,   gtin,   type,         primaryName,    fullName,       genericName,    alternateName,    description,      strength,    formId,  dosageUnitId, dispensingUnit,  dosesPerDispensingUnit,  packSize,  alternatePackSize,  storeRefrigerated,   storeRoomTemperature,   hazardous,  flammable,   controlledSubstance,  lightSensitive,  approvedByWho,  contraceptiveCyp,  packLength,  packWidth, packHeight,  packWeight,  packsPerCarton, cartonLength,  cartonWidth,   cartonHeight, cartonsPerPallet,  expectedShelfLife,  specialStorageInstructions, specialTransportInstructions, active,  fullSupply, tracer,   packRoundingThreshold,  roundToZero,  archived) values\n" +
       "('" + product1 + "',  'a',                'Glaxo and Smith',  'a',              'a',                    'a',          'a',    'antibiotic', 'antibiotic',   'TDF/FTC/EFV',  'TDF/FTC/EFV',  'TDF/FTC/EFV',    'TDF/FTC/EFV',  '300/200/600',  2,        1,            'Strip',           10,                     10,        30,                   TRUE,                  TRUE,                TRUE,       TRUE,         TRUE,                 TRUE,             TRUE,               1,          2.2,            2,          2,            2,            2,            2,              2,              2,              2,                    2,                    'a',                          'a',          TRUE,     TRUE,       TRUE,         1,                    FALSE,      TRUE  ),\n" +
       "('" + product2 + "',  'a',                'Glaxo and Smith',  'a',              'a',                    'a',          'a',    'antibiotic', 'antibiotic',   'TDF/FTC/EFV',  'TDF/FTC/EFV',  'TDF/FTC/EFV',    'TDF/FTC/EFV',  '300/200/600',  2,        1,            'Strip',           10,                     10,        30,                   TRUE,                  TRUE,                TRUE,       TRUE,         TRUE,                 TRUE,             TRUE,               1,          2.2,            2,          2,            2,            2,            2,              2,              2,              2,                    2,                    'a',                          'a',          TRUE,     FALSE,       TRUE,         1,                    FALSE,      TRUE );\n");
-  }
-
-  public void deleteCategoryFromProducts() throws SQLException {
-    update("UPDATE products SET categoryId = null");
   }
 
   public void deleteDescriptionFromProducts() throws SQLException {
