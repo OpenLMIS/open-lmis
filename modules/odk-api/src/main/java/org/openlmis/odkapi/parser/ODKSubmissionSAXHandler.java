@@ -39,6 +39,7 @@ public class ODKSubmissionSAXHandler extends DefaultHandler
     boolean bmeta;
     boolean binstanceID;
     boolean bfacility;
+    boolean bfacilityGPSLocation;
     boolean blatitude;
     boolean blongitude;
     boolean baltitude;
@@ -88,7 +89,10 @@ public class ODKSubmissionSAXHandler extends DefaultHandler
             }
 
         }
-
+        if (qName.equals("facilityGPSLocation"))
+        {
+            bfacilityGPSLocation = true;
+        }
         if (qName.equals("Latitude"))
         {
             blatitude = true;
@@ -202,25 +206,37 @@ public class ODKSubmissionSAXHandler extends DefaultHandler
             bfacility = false;
         }
 
+         else if (bfacilityGPSLocation)
+         {
+             // format : 8.9602334 38.7691866 0.0 2828.0
+             String temp = new String(ch, start, length);
+             String[] vals = temp.split(" ");
+             this.odkSubmissionData.setGPSLatitude(Double.parseDouble(vals[0]));
+             this.odkSubmissionData.setGPSLongitude(Double.parseDouble(vals[1]));
+             this.odkSubmissionData.setGPSAltitude(Double.parseDouble(vals[2]));
+             this.odkSubmissionData.setGPSAccuracy(Double.parseDouble(vals[3]));
+             bfacilityGPSLocation = false;
+         }
+
         else if (blatitude)
         {
-            this.odkSubmissionData.setGPSLatitude(Double.parseDouble(new String(ch, start, length)));
+           // this.odkSubmissionData.setGPSLatitude(Double.parseDouble(new String(ch, start, length)));
             blatitude = false;
         }
         else if (blongitude)
         {
-            this.odkSubmissionData.setGPSLongitude(Double.parseDouble(new String(ch, start, length)));
+          //  this.odkSubmissionData.setGPSLongitude(Double.parseDouble(new String(ch, start, length)));
             blongitude = false;
         }
         else if (baltitude)
         {
-            this.odkSubmissionData.setGPSAltitude(Double.parseDouble(new String(ch, start, length)));
+          //  this.odkSubmissionData.setGPSAltitude(Double.parseDouble(new String(ch, start, length)));
             baltitude = false;
         }
 
         else if (baccuracy)
         {
-            this.odkSubmissionData.setGPSAccuracy(Double.parseDouble(new String(ch, start, length)));
+           // this.odkSubmissionData.setGPSAccuracy(Double.parseDouble(new String(ch, start, length)));
             baccuracy = false;
         }
         else if (bfirstPicture)
