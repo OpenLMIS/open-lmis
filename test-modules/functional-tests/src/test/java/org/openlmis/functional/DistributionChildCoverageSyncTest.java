@@ -422,11 +422,10 @@ public class DistributionChildCoverageSyncTest extends TestCaseHelper {
     HomePage homePage = loginPage.loginAs(childCoverageData.get(USER), childCoverageData.get(PASSWORD));
     DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
     distributionPage.initiate(childCoverageData.get(FIRST_DELIVERY_ZONE_NAME), childCoverageData.get(VACCINES_PROGRAM));
-    dbWrapper.updateFieldValue("products", "packSize", "5", "code", "P10");
     FacilityListPage facilityListPage = distributionPage.clickRecordData(1);
     VisitInformationPage visitInformationPage = facilityListPage.selectFacility(childCoverageData.get(FIRST_FACILITY_CODE));
     ChildCoveragePage childCoveragePage = visitInformationPage.navigateToChildCoverage();
-
+    dbWrapper.updateFieldValue("products", "packSize", "5", "code", "P10");
     childCoveragePage.enterHealthCenter11MonthsDataForGivenRow(9, "9");
     assertEquals("9", childCoveragePage.getTotalForGivenColumnAndRow(1, 9));
     assertEquals("0", childCoveragePage.getTotalForGivenColumnAndRow(2, 9));
