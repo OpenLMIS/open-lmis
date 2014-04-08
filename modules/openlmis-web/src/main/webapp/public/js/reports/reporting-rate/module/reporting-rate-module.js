@@ -8,15 +8,23 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-angular.module('reporting_rate', ['openlmis', 'angularCombine',  'ngTable', 'ui.bootstrap.modal', 'leaflet-directive', 'ui.bootstrap.dropdownToggle'])
-        .config(['$routeProvider', function ($routeProvider) {
+angular.module('reporting_rate', ['openlmis', 'angularCombine', 'ngTable', 'ui.bootstrap.modal', 'leaflet-directive', 'ui.bootstrap.dropdownToggle'])
+    .config(['$routeProvider',
+        function($routeProvider) {
             $routeProvider.
-                when('/list', {controller:ReportingRateController, templateUrl:'partials/list.html',reloadOnSearch:false}).
-                otherwise({redirectTo:'/list'});
-        }]).run(
-        function ($rootScope, AuthorizationService) {
+            when('/list', {
+                controller: ReportingRateController,
+                templateUrl: 'partials/list.html',
+                reloadOnSearch: false
+            }).
+            otherwise({
+                redirectTo: '/list'
+            });
+        }
+    ]).run(
+        function($rootScope, AuthorizationService) {
             AuthorizationService.preAuthorize('VIEW_REPORTING_RATE_REPORT');
         }
-    ).config(function (angularCombineConfigProvider) {
-      angularCombineConfigProvider.addConf(/filter-/, '/public/pages/reports/shared/filters.html');
-    });
+).config(function(angularCombineConfigProvider) {
+    angularCombineConfigProvider.addConf(/filter-/, '/public/pages/reports/shared/filters.html');
+});
