@@ -8,7 +8,7 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-function ReportingRateController($scope, leafletData, ReportingFacilityList, NonReportingFacilityList) {
+function ReportingRateController($scope, leafletData, ReportingFacilityList, NonReportingFacilityList, $dialog, messageService) {
 
 
     $scope.ReportingFacilities = function(feature) {
@@ -17,7 +17,10 @@ function ReportingRateController($scope, leafletData, ReportingFacilityList, Non
             period: $scope.filter.period,
             geo_zone: feature.id
         }, function(data) {
-            alert(data.facilities.length);
+            $scope.facilities = data.facilities;
+            $scope.successModal = true;
+            $scope.title = 'Properly Reporting Facilities in ' + feature.name;
+
         });
         $scope.zoomToSelectedFeature(feature);
     };
@@ -28,11 +31,24 @@ function ReportingRateController($scope, leafletData, ReportingFacilityList, Non
             period: $scope.filter.period,
             geo_zone: feature.id
         }, function(data) {
-            alert(data.facilities.length);
+            $scope.facilities = data.facilities;
+            $scope.successModal = true;
+            $scope.title = 'Non Reporting Facilities in ' + feature.name;
+
         });
         $scope.zoomToSelectedFeature(feature);
     };
 
+
+    $scope.showDialog = function(title, data) {
+
+        var options = {
+            id: "popup-box",
+            header: title //,
+            // body: data.facilities.length + " Facilities were  " + title
+        };
+        OpenLmisDialog.newDialog(options, 'popup-box', $dialog, messageService);
+    };
 
 
     $scope.expectedFilter = function(item) {

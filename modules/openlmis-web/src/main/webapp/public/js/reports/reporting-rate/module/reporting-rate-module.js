@@ -8,7 +8,7 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-angular.module('reporting_rate', ['openlmis', 'angularCombine', 'ngTable', 'ui.bootstrap.modal', 'leaflet-directive', 'ui.bootstrap.dropdownToggle'])
+angular.module('reporting_rate', ['openlmis', 'angularCombine', 'ngTable', 'ui.bootstrap.modal', 'ui.bootstrap.dialog', 'leaflet-directive', 'ui.bootstrap.dropdownToggle'])
     .config(['$routeProvider',
         function($routeProvider) {
             $routeProvider.
