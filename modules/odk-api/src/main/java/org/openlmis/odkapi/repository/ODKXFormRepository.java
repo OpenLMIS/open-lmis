@@ -14,7 +14,6 @@
  */
 package org.openlmis.odkapi.repository;
 
-import org.openlmis.odkapi.domain.ODKXForm;
 import org.openlmis.odkapi.repository.mapper.ODKXFormMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;

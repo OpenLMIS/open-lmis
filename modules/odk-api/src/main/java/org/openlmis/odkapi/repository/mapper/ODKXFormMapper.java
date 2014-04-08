@@ -15,7 +15,6 @@
 package org.openlmis.odkapi.repository.mapper;
 
 import org.apache.ibatis.annotations.Select;
-import org.openlmis.odkapi.domain.ODKXForm;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;

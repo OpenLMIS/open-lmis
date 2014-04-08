@@ -20,24 +20,16 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.openlmis.db.categories.UnitTests;
-import org.openlmis.odkapi.domain.ODKXForm;
-import org.openlmis.odkapi.domain.ODKXFormList;
 import org.openlmis.odkapi.service.ODKSubmissionService;
-import org.openlmis.odkapi.service.ODKXFormService;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.security.Principal;
-import java.util.ArrayList;
-import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.*;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
 
 @RunWith(PowerMockRunner.class)
