@@ -177,7 +177,7 @@ public class UpdatePod extends TestCaseHelper {
   @Test(groups = {"requisition"})
   public void testVerifyUpdatePODForPackedOrdersAdditionalProduct() throws SQLException {
     Integer id = dbWrapper.getProductId("P11");
-    dbWrapper.updateFieldValue("program_products", "programid", "4", "id", id.toString());
+    dbWrapper.updateFieldValue("program_products", "programid", "4", "productId", id.toString());
     initiateRnrAndConvertToOrder(false, 1111);
     dbWrapper.updateFieldValue("orders", "status", "RELEASED", null, null);
     testDataForShipment(999, true, "P10", 99898998);
