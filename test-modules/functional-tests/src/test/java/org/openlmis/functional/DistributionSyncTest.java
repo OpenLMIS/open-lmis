@@ -82,11 +82,7 @@ public class DistributionSyncTest extends TestCaseHelper {
     dbWrapper.addRefrigeratorToFacility("LG", "800L", "GNR7878", "F10");
     dbWrapper.updateFieldValue("facilities", "active", "true", "code", "F10");
     dbWrapper.updateFieldValue("facilities", "enabled", "true", "code", "F10");
-//    dbWrapper.updateFieldValue("programs", "active", "true", "code", "VACCINES");
-//    dbWrapper.updateFieldValue("products", "active", "true", "code", "P10");
-//    dbWrapper.updateFieldValue("products", "active", "true", "code", "P11");
-//    dbWrapper.updateFieldValue("products", "active", "true", "code", "Product6");
-//    dbWrapper.updateFieldValue("products", "active", "true", "code", "Product5");
+    dbWrapper.updateFieldValue("programs", "active", "true", "code", "VACCINES");
   }
 
   @Test(groups = {"distribution"})
@@ -436,7 +432,6 @@ public class DistributionSyncTest extends TestCaseHelper {
     for (WebElement webElement : distributionPage.getAllSelectOptionsFromProgram()) {
       assertFalse(webElement.getText().contains(distributionTestData.get(VACCINES_PROGRAM)));
     }
-
   }
 
   @Test(groups = {"distribution"})
