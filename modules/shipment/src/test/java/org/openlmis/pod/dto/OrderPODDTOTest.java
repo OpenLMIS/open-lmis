@@ -44,7 +44,7 @@ public class OrderPODDTOTest {
 
     assertThat(orderPODDTO.getFacilityCode(), is(rnr.getFacility().getCode()));
     assertThat(orderPODDTO.getPeriodStartDate(), is(rnr.getPeriod().getStringStartDate()));
-    String createdDate = order.getCreatedDate() == null ? null : new SimpleDateFormat("dd/MM/yyyy hh:mm:ss").format(order.getCreatedDate());
+    String createdDate = order.getCreatedDate() == null ? null : new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(order.getCreatedDate());
     assertThat(orderPODDTO.getStringCreatedDate(), is(createdDate));
     assertThat(orderPODDTO.getId(), is(order.getId()));
     assertThat(orderPODDTO.getEmergency(), is(rnr.isEmergency()));

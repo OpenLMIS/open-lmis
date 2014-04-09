@@ -71,7 +71,7 @@ public class OrderDTOTest {
 
     assertThat(orderDTOs.get(0).getRnr(), is(dtoForOrder1));
     assertThat(orderDTOs.get(1).getRnr(), is(dtoForOrder2));
-    assertThat(orderDTOs.get(0).getStringCreatedDate(), is(new SimpleDateFormat("dd/MM/yyyy hh:mm:ss").format(createdDate)));
+    assertThat(orderDTOs.get(0).getStringCreatedDate(), is(new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(createdDate)));
     assertThat(orderDTOs.get(0).getShipmentError(), is(false));
     assertThat(orderDTOs.get(0).getSupplyLine(), is(supplyLine));
   }

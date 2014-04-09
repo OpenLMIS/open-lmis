@@ -57,7 +57,7 @@ public class OrderDTO {
     orderDTO.setRnr(RnrDTO.prepareForOrderView(order.getRnr()));
 
     orderDTO.setCreatedDate(order.getCreatedDate());
-    String createdDate = order.getCreatedDate() == null ? null : new SimpleDateFormat("dd/MM/yyyy hh:mm:ss").format(order.getCreatedDate());
+    String createdDate = order.getCreatedDate() == null ? null : new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(order.getCreatedDate());
     orderDTO.setStringCreatedDate(createdDate);
 
     orderDTO.setStatus(order.getStatus());
