@@ -187,6 +187,9 @@ var RegularRnrLineItem = base2.Base.extend({
   },
 
   calculateConsumption: function () {
+    if (this.rnrStatus === 'AUTHORIZED' || this.rnrStatus === 'IN_APPROVAL' || this.rnrStatus === 'APPROVED' || this.rnrStatus === 'RELEASED') {
+      return;
+    }
     if (this.getSource('quantityDispensed') !== 'CALCULATED') return;
 
     if (utils.isNumber(this.beginningBalance) && utils.isNumber(this.quantityReceived) && utils.isNumber(this.totalLossesAndAdjustments) && utils.isNumber(this.stockInHand)) {
@@ -197,6 +200,9 @@ var RegularRnrLineItem = base2.Base.extend({
   },
 
   calculateStockInHand: function () {
+    if (this.rnrStatus === 'AUTHORIZED' || this.rnrStatus === 'IN_APPROVAL' || this.rnrStatus === 'APPROVED' || this.rnrStatus === 'RELEASED') {
+      return;
+    }
     if (this.getSource('stockInHand') !== 'CALCULATED') return;
 
     if (utils.isNumber(this.beginningBalance) && utils.isNumber(this.quantityReceived) && utils.isNumber(this.quantityDispensed)) {

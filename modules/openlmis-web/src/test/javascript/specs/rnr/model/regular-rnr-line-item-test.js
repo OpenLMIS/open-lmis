@@ -60,6 +60,15 @@ describe('RegularRnrLineItem', function () {
       expect(regularRnrLineItem.quantityDispensed).toEqual(null);
     });
 
+    it('should not calculate consumption when one of the dependant columns is not set', function () {
+      var lineItem = {"beginningBalance": 1, "quantityReceived": 2, "quantityDispensed": null, "totalLossesAndAdjustments": 3, "stockInHand": null};
+      var regularRnrLineItem = new RegularRnrLineItem(lineItem, rnr, programRnrColumnList);
+
+      regularRnrLineItem.calculateConsumption();
+
+      expect(regularRnrLineItem.quantityDispensed).toEqual(null);
+    });
+
     it('should not calculate consumption when it is not a calculated field', function () {
       programRnrColumnList = [
         {"indicator": "C", "name": "quantityDispensed", "source": {"name": "USER_INPUT"}}
@@ -69,6 +78,17 @@ describe('RegularRnrLineItem', function () {
       regularRnrLineItem.calculateConsumption();
 
       expect(regularRnrLineItem.quantityDispensed).toEqual(null);
+    });
+
+    it('should not calculate consumption when rnr status is after authorized', function () {
+      programRnrColumnList = [
+        {"indicator": "C", "name": "quantityDispensed", "source": {"name": "USER_INPUT"}}
+      ];
+      var regularRnrLineItem = new RegularRnrLineItem({"quantityDispensed" : 666}, rnr, programRnrColumnList, "RELEASED");
+
+      regularRnrLineItem.calculateConsumption();
+
+      expect(regularRnrLineItem.quantityDispensed).toEqual(666);
     });
   });
 
@@ -89,6 +109,15 @@ describe('RegularRnrLineItem', function () {
       regularRnrLineItem.calculateStockInHand();
 
       expect(regularRnrLineItem.stockInHand).toEqual(0);
+    });
+
+    it('should not calculate stock in hand if rnr status is after athorized', function () {
+      var lineItem = {"beginningBalance": 0, "quantityReceived": 0, "quantityDispensed": 0, "totalLossesAndAdjustments": 0, "stockInHand": 78};
+      var regularRnrLineItem = new RegularRnrLineItem(lineItem, rnr, programRnrColumnList, "IN_APPROVAL");
+
+      regularRnrLineItem.calculateStockInHand();
+
+      expect(regularRnrLineItem.stockInHand).toEqual(78);
     });
 
     it('should calculate stock in hand', function () {
