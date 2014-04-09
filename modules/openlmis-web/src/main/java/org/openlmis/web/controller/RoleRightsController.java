@@ -31,9 +31,6 @@ import javax.servlet.http.HttpServletRequest;
 import static org.openlmis.web.response.OpenLmisResponse.*;
 import static org.springframework.web.bind.annotation.RequestMethod.*;
 
-/**
- * This controller handles endpoint related to get, create, update roles and rights.
- */
 @Controller
 @NoArgsConstructor
 public class RoleRightsController extends BaseController {

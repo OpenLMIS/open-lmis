@@ -153,7 +153,7 @@ public class Rnr extends BaseModel {
 
     for (RnrLineItem currentLineItem : this.fullSupplyLineItems) {
       RnrLineItem previousLineItem = previousRequisition.findCorrespondingLineItem(currentLineItem);
-      currentLineItem.setBeginningBalanceWhenPreviousStockInHandAvailable(previousLineItem, beginningBalanceVisible);
+      currentLineItem.setBeginningBalanceWhenPreviousStockInHandAvailable(previousLineItem);
     }
   }
 

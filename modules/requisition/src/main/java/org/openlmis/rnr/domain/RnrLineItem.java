@@ -35,9 +35,9 @@ import static org.openlmis.rnr.domain.Rnr.RNR_VALIDATION_ERROR;
 import static org.openlmis.rnr.domain.RnrStatus.AUTHORIZED;
 
 /**
- * This class represents the data captured against a product for each Requisition and contains methods to determine
- * normalisedConsumption, averageMonthlyConsumption, stockOutDays, packsToShip, orderQuantity, maxStockQuantity and
- * quantityDispensed of that product.
+ * This class represents the data captured against a product and contains methods to determine normalisedConsumption,
+ * averageMonthlyConsumption, stockOutDays, packsToShip, orderQuantity, maxStockQuantity and quantityDispensed of that
+ * product.
  */
 
 @Data
@@ -67,7 +67,6 @@ public class RnrLineItem extends LineItem {
 
   private Integer quantityReceived;
   private Integer quantityDispensed;
-  private Integer previousStockInHand;
   private Integer beginningBalance;
   private List<LossesAndAdjustments> lossesAndAdjustments = new ArrayList<>();
   private Integer totalLossesAndAdjustments = 0;
@@ -79,7 +78,6 @@ public class RnrLineItem extends LineItem {
 
   private Integer amc;
   private Integer normalizedConsumption;
-  private Integer periodNormalizedConsumption;
   private Integer calculatedOrderQuantity;
   private Integer maxStockQuantity;
   private Integer quantityApproved;
@@ -126,7 +124,6 @@ public class RnrLineItem extends LineItem {
       this.quantityRequested = null;
       this.reasonForRequestedQuantity = null;
       this.normalizedConsumption = null;
-      this.periodNormalizedConsumption = null;
       this.packsToShip = null;
       this.remarks = null;
       this.expirationDate = null;
@@ -134,13 +131,12 @@ public class RnrLineItem extends LineItem {
     quantityApproved = fullSupply ? calculatedOrderQuantity : quantityRequested;
   }
 
-  public void setBeginningBalanceWhenPreviousStockInHandAvailable(RnrLineItem previousLineItem, Boolean beginningBalanceVisible) {
-    if (previousLineItem == null || (!beginningBalanceVisible && previousLineItem.getSkipped())) {
+  public void setBeginningBalanceWhenPreviousStockInHandAvailable(RnrLineItem previousLineItem) {
+    if (previousLineItem == null) {
       this.beginningBalance = 0;
       return;
     }
     this.beginningBalance = previousLineItem.getStockInHand();
-    this.previousStockInHand = previousLineItem.getStockInHand();
   }
 
   public void setLineItemFieldsAccordingToTemplate(ProgramRnrTemplate template) {
@@ -189,7 +185,7 @@ public class RnrLineItem extends LineItem {
 
   public void calculateForFullSupply(ProgramRnrTemplate template,
                                      RnrStatus rnrStatus,
-                                     List<LossesAndAdjustmentsType> lossesAndAdjustmentsTypes, Integer numberOfMonths) {
+                                     List<LossesAndAdjustmentsType> lossesAndAdjustmentsTypes) {
     calculateTotalLossesAndAdjustments(lossesAndAdjustmentsTypes);
 
     if (template.columnsCalculated(STOCK_IN_HAND)) {
@@ -202,8 +198,6 @@ public class RnrLineItem extends LineItem {
 
     calculateNormalizedConsumption();
 
-    calculatePeriodNormalizedConsumption(numberOfMonths);
-
     if (rnrStatus == AUTHORIZED) {
       calculateAmc();
       calculateMaxStockQuantity();
@@ -211,10 +205,6 @@ public class RnrLineItem extends LineItem {
     }
 
     calculatePacksToShip();
-  }
-
-  public void calculatePeriodNormalizedConsumption(Integer numberOfMonths) {
-    periodNormalizedConsumption = normalizedConsumption * numberOfMonths;
   }
 
   public void calculateAmc() {
@@ -284,7 +274,6 @@ public class RnrLineItem extends LineItem {
   }
 
   public void copyCreatorEditableFieldsForFullSupply(RnrLineItem lineItem, ProgramRnrTemplate template) {
-    this.previousStockInHand = lineItem.previousStockInHand;
     copyTotalLossesAndAdjustments(lineItem, template);
     for (Column column : template.getColumns()) {
       String fieldName = column.getName();

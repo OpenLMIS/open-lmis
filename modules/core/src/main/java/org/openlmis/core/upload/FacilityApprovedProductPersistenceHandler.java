@@ -17,10 +17,7 @@ import org.openlmis.core.service.FacilityApprovedProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-/**
- * FacilityApprovedProductPersistenceHandler is used for uploads of FacilityTypeApprovedProduct.
- * It uploads each FacilityTypeApprovedProduct record by record.
- */
+
 @Component
 @NoArgsConstructor
 public class FacilityApprovedProductPersistenceHandler extends AbstractModelPersistenceHandler {

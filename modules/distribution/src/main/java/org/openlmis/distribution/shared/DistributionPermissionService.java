@@ -8,7 +8,7 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
  */
 
-package org.openlmis.distribution.service;
+package org.openlmis.distribution.shared;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
@@ -16,6 +16,7 @@ import org.openlmis.core.domain.DeliveryZone;
 import org.openlmis.core.domain.Right;
 import org.openlmis.core.service.DeliveryZoneService;
 import org.openlmis.distribution.domain.Distribution;
+import org.openlmis.distribution.service.DistributionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

@@ -97,14 +97,13 @@ public class PODMapperIT extends ApplicationTestContext {
     Integer quantityShipped = 1000;
     Integer quantityReturned = 55;
     OrderPODLineItem orderPodLineItem = new OrderPODLineItem(orderPod.getId(), productCode, productCategory,
-      productCategoryDisplayOrder, productDisplayOrder, 100, productName, dispensingUnit, 10, quantityShipped, quantityReturned, true, "P98",
+      productCategoryDisplayOrder, productDisplayOrder, 100, productName, dispensingUnit, 10, quantityShipped, quantityReturned, true,
       "notes");
     mapper.insertPODLineItem(orderPodLineItem);
 
     List<OrderPODLineItem> orderPodLineItems = mapper.getPODLineItemsByPODId(orderPod.getId());
     assertThat(orderPodLineItems.size(), is(1));
     assertThat(orderPodLineItems.get(0).getProductCode(), is(productCode));
-    assertThat(orderPodLineItems.get(0).getReplacedProductCode(), is("P98"));
     assertThat(orderPodLineItems.get(0).getDispensingUnit(), is(dispensingUnit));
     assertThat(orderPodLineItems.get(0).getPacksToShip(), is(10));
     assertThat(orderPodLineItems.get(0).getProductName(), is(productName));
@@ -199,7 +198,7 @@ public class PODMapperIT extends ApplicationTestContext {
     mapper.insertPOD(expectedOrderPod);
 
     OrderPODLineItem lineItem1 = new OrderPODLineItem(expectedOrderPod.getId(), productCode, productCategory,
-      productCategoryDisplayOrder, productDisplayOrder, 100, productName, dispensingUnit, 10, null, null, true, null, null);
+      productCategoryDisplayOrder, productDisplayOrder, 100, productName, dispensingUnit, 10, null, null, true, null);
     mapper.insertPODLineItem(lineItem1);
 
     OrderPOD orderPOD = mapper.getPODById(expectedOrderPod.getId());

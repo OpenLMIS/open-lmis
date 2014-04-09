@@ -323,7 +323,6 @@ public class InitiateRnR extends TestCaseHelper {
     dbWrapper.updateRequisitionStatus(AUTHORIZED, userSIC, "HIV");
 
     ApprovePage approvePage = homePage.navigateToApprove();
-    testWebDriver.waitForAjax();
     approvePage.clickRequisitionPresentForApproval();
     approvePage.clickRegimenTab();
     verifyValuesOnRegimenScreen("100", "200", "300", "testing");

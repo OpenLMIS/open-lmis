@@ -26,14 +26,14 @@ import java.util.List;
 public interface RnrLineItemMapper {
 
   @Insert({"INSERT INTO requisition_line_items",
-    "(rnrId, productCode, product, productDisplayOrder, productCategory, productCategoryDisplayOrder, previousStockInHand, beginningBalance,",
+    "(rnrId, productCode, product, productDisplayOrder, productCategory, productCategoryDisplayOrder, beginningBalance,",
     "quantityReceived, quantityDispensed, dispensingUnit,dosesPerMonth, dosesPerDispensingUnit, maxMonthsOfStock,",
     "totalLossesAndAdjustments, packsToShip, packSize, price, roundToZero, packRoundingThreshold, fullSupply,",
     "newPatientCount, stockOutDays, previousNormalizedConsumptions, reportingDays, ",
     "modifiedBy,createdBy)",
     "VALUES (",
     "#{lineItem.rnrId}, #{lineItem.productCode}, #{lineItem.product}, #{lineItem.productDisplayOrder}, #{lineItem.productCategory},",
-    "#{lineItem.productCategoryDisplayOrder}, #{lineItem.previousStockInHand}, #{lineItem.beginningBalance}, #{lineItem.quantityReceived}, #{lineItem.quantityDispensed},",
+    "#{lineItem.productCategoryDisplayOrder}, #{lineItem.beginningBalance}, #{lineItem.quantityReceived}, #{lineItem.quantityDispensed},",
     "#{lineItem.dispensingUnit},#{lineItem.dosesPerMonth}, #{lineItem.dosesPerDispensingUnit}, #{lineItem.maxMonthsOfStock},",
     "#{lineItem.totalLossesAndAdjustments}, #{lineItem.packsToShip}, #{lineItem.packSize}, #{lineItem.price},#{lineItem.roundToZero},",
     "#{lineItem.packRoundingThreshold}, #{lineItem.fullSupply}, #{lineItem.newPatientCount}, #{lineItem.stockOutDays},",
@@ -53,7 +53,6 @@ public interface RnrLineItemMapper {
   @Update({"UPDATE requisition_line_items",
     "SET quantityReceived = #{quantityReceived},",
     "quantityDispensed = #{quantityDispensed},",
-    "previousStockInHand = #{previousStockInHand},",
     "beginningBalance = #{beginningBalance},",
     "stockInHand = #{stockInHand},",
     "quantityRequested = #{quantityRequested},",
@@ -64,7 +63,6 @@ public interface RnrLineItemMapper {
     "newPatientCount = #{newPatientCount},",
     "stockOutDays = #{stockOutDays},",
     "normalizedConsumption = #{normalizedConsumption},",
-    "periodNormalizedConsumption = #{periodNormalizedConsumption},",
     "amc = #{amc},",
     "maxStockQuantity = #{maxStockQuantity},",
     "packsToShip = #{packsToShip},",
@@ -97,6 +95,7 @@ public interface RnrLineItemMapper {
 
   @Select("SELECT * FROM requisition_line_items WHERE rnrId = #{rnrId} AND fullSupply = false")
   public List<RnrLineItem> getNonFullSupplyRnrLineItemsByRnrId(Long rnrId);
+
 
   @Delete("DELETE FROM requisition_line_items WHERE rnrId = #{rnrId} AND fullSupply = false")
   void deleteAllNonFullSupplyForRequisition(Long rnrId);

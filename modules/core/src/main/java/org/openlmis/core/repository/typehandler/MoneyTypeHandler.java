@@ -21,12 +21,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-/**
- * MoneyTypeHandler is used for setting corresponding representation of Money object in prepared statement or getting
- * corresponding Money representation of value used in prepared statement. It is used for conversion of custom data type
- * Money into Java data types.
- */
-
 @MappedTypes(Money.class)
 public class MoneyTypeHandler implements TypeHandler {
 

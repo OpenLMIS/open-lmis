@@ -17,6 +17,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.domain.Right;
+import org.openlmis.core.service.DeliveryZoneService;
 import org.openlmis.core.service.RoleRightsService;
 import org.openlmis.db.categories.UnitTests;
 
@@ -33,6 +34,9 @@ public class PermissionEvaluatorTest {
 
   @Mock
   RoleRightsService roleRightsService;
+
+  @Mock
+  DeliveryZoneService deliveryZoneService;
 
   @InjectMocks
   PermissionEvaluator evaluator;

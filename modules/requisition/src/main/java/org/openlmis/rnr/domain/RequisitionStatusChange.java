@@ -18,7 +18,7 @@ import org.openlmis.core.domain.User;
 import java.util.Date;
 
 /**
- * This class corresponds to a change in requisition status. These status changes are used for logging and feed publishing.
+ * This class corresponds to a change in requisition status.
  */
 
 @Data

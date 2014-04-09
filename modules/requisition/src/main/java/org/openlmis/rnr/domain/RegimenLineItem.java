@@ -25,7 +25,7 @@ import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPT
 import static org.openlmis.rnr.domain.Rnr.RNR_VALIDATION_ERROR;
 
 /**
- * RegimenLineItem represents a regimenLineItem belonging to a Rnr.
+ * This class represents a regimenLineItem belonging to a Rnr.
  */
 
 @Data

@@ -18,8 +18,7 @@ import org.codehaus.jackson.annotate.JsonIgnore;
 import org.openlmis.core.domain.BaseModel;
 
 /**
- * Column is a base class holding name, label and visible flag for a column in a template. The columns represent
- * the column of templates like RnrTemplate and RegimenTemplate.
+ * This class is a base class holding name, label and visible flag for a column in a template.
  */
 
 @Data

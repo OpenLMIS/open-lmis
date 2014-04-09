@@ -36,13 +36,12 @@ public class ShipmentLineItemTransformerTest {
   public void shouldTrimAndParseFieldsWithSpaces() throws Exception {
     String orderIdWithSpaces = " 11 ";
     String productCodeWithSpaces = " P111 ";
-    String replacedProductCodeWithSpaces = " P151 ";
     String quantityShippedWithSpaces = " 22 ";
     String costWithSpaces = "21 ";
     String packedDateWithSpaces = " 10/10/2013 ";
     String shippedDateWithSpaces = "10/12/2013";
 
-    ShipmentLineItemDTO dto = new ShipmentLineItemDTO(orderIdWithSpaces, productCodeWithSpaces, replacedProductCodeWithSpaces,
+    ShipmentLineItemDTO dto = new ShipmentLineItemDTO(orderIdWithSpaces, productCodeWithSpaces,
       quantityShippedWithSpaces, costWithSpaces, packedDateWithSpaces, shippedDateWithSpaces);
 
     ShipmentLineItem lineItem = new ShipmentLineItemTransformer().transform(dto, "MM/dd/yyyy", "MM/dd/yyyy", new Date());
@@ -53,7 +52,6 @@ public class ShipmentLineItemTransformerTest {
     assertThat(lineItem.getPackedDate().toString(), is("Thu Oct 10 00:00:00 IST 2013"));
     assertThat(lineItem.getShippedDate().toString(), is("Sat Oct 12 00:00:00 IST 2013"));
     assertThat(lineItem.getCost().toString(), is("21"));
-    assertThat(lineItem.getReplacedProductCode(), is("P151"));
   }
 
   @Test
@@ -82,7 +80,7 @@ public class ShipmentLineItemTransformerTest {
   public void shouldThrowErrorIfPackedDateIsDifferentFromFormat() {
     String packedDate = "10/10/2013 ";
 
-    ShipmentLineItemDTO dto = new ShipmentLineItemDTO("11", "P111", "P151",
+    ShipmentLineItemDTO dto = new ShipmentLineItemDTO("11", "P111",
       "12", "34", packedDate, "10/09/2013");
 
     expectException.expect(DataException.class);
@@ -94,13 +92,14 @@ public class ShipmentLineItemTransformerTest {
   public void shouldThrowErrorIfShippedDateIsDifferentFromFormat() {
     String shippedDate = "10/10/13 ";
 
-    ShipmentLineItemDTO dto = new ShipmentLineItemDTO("11", "P111", "P151",
+    ShipmentLineItemDTO dto = new ShipmentLineItemDTO("11", "P111",
       "12", "34", "10/09/2013", shippedDate);
 
     expectException.expect(DataException.class);
     expectException.expectMessage("wrong.data.type");
     new ShipmentLineItemTransformer().transform(dto, "MM/dd/yyyy", "MM/dd/yyyy", new Date());
   }
+
 
   @Test
   public void shouldCreateLineItemIfOnlyMandatoryFieldsArePresent() throws Exception {
@@ -140,6 +139,7 @@ public class ShipmentLineItemTransformerTest {
 
     transformer.transform(dto, SIMPLE_DATE_FORMAT, SIMPLE_DATE_FORMAT, new Date());
   }
+
 
   @Test
   public void shouldThrowErrorForWrongQuantityShippedDataType() {

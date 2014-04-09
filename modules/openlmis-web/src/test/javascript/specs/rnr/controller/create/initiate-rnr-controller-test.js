@@ -133,7 +133,7 @@ describe('InitiateRnrController', function () {
 
     expect(location.url()).toEqual("/create-rnr/1/1/2?supplyType=fullSupply&page=1");
     expect(scope.error).toEqual("");
-    expect(scope.$parent.rnrData.rnr).toEqual({"id": 1, status: 'INITIATED'});
+    expect(scope.$parent.rnr).toEqual({"id": 1, status: 'INITIATED'});
   });
 
   it('should give error if user has authorize only access and an rnr is not submitted yet', function () {
@@ -186,7 +186,7 @@ describe('InitiateRnrController', function () {
 
     expect(location.url()).toEqual("/create-rnr/1/1/2?supplyType=fullSupply&page=1");
     expect(scope.error).toEqual("");
-    expect(scope.$parent.rnrData.rnr).toEqual({"id": 1, status: 'INITIATED'});
+    expect(scope.$parent.rnr).toEqual({"id": 1, status: 'INITIATED'});
   });
 
   it('should not create a rnr if rnr not already initiated and user does not have create requisition permission', function () {

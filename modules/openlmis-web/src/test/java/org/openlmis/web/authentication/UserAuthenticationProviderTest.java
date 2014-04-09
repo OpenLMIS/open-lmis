@@ -13,7 +13,7 @@ package org.openlmis.web.authentication;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
-import org.openlmis.authentication.domain.UserToken;
+import org.openlmis.authentication.UserToken;
 import org.openlmis.authentication.service.UserAuthenticationService;
 import org.openlmis.authentication.web.UserAuthenticationProvider;
 import org.openlmis.core.domain.User;

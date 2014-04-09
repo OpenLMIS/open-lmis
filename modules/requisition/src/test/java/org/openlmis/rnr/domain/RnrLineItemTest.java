@@ -31,7 +31,6 @@ import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.openlmis.core.builder.ProductBuilder.*;
@@ -58,9 +57,7 @@ public class RnrLineItemTest {
   private RnrLineItem lineItem;
   private List<RnrColumn> templateColumns;
   private List<LossesAndAdjustmentsType> lossesAndAdjustmentsList;
-  private ProgramRnrTemplate template;
-
-  Integer numberOfMonths;
+  ProgramRnrTemplate template;
 
   @Before
   public void setUp() throws Exception {
@@ -73,7 +70,6 @@ public class RnrLineItemTest {
     LossesAndAdjustmentsType subtractive1 = new LossesAndAdjustmentsType("subtractive1", "Subtractive 1", false, 3);
     LossesAndAdjustmentsType subtractive2 = new LossesAndAdjustmentsType("subtractive2", "Subtractive 2", false, 4);
     lossesAndAdjustmentsList = asList(additive1, additive2, subtractive1, subtractive2);
-    numberOfMonths = 3;
   }
 
   @Test
@@ -95,7 +91,6 @@ public class RnrLineItemTest {
     assertThat(lineItem.getQuantityRequested(), is(nullValue()));
     assertThat(lineItem.getQuantityApproved(), is(nullValue()));
     assertThat(lineItem.getNormalizedConsumption(), is(nullValue()));
-    assertThat(lineItem.getPeriodNormalizedConsumption(), is(nullValue()));
     assertThat(lineItem.getPacksToShip(), is(nullValue()));
     assertThat(lineItem.getRemarks(), is(nullValue()));
     assertThat(lineItem.getExpirationDate(), is(nullValue()));
@@ -279,7 +274,7 @@ public class RnrLineItemTest {
     RnrLineItem spyLineItem = spy(lineItem);
     doNothing().when(spyLineItem, "calculateNormalizedConsumption");
 
-    spyLineItem.calculateForFullSupply(template, AUTHORIZED, lossesAndAdjustmentsList, numberOfMonths);
+    spyLineItem.calculateForFullSupply(template, AUTHORIZED, lossesAndAdjustmentsList);
 
     verify(spyLineItem).calculateAmc();
     verify(spyLineItem).calculateMaxStockQuantity();
@@ -313,17 +308,6 @@ public class RnrLineItemTest {
     lineItem.copyCreatorEditableFieldsForFullSupply(editedLineItem, new ProgramRnrTemplate(getRnrColumns()));
 
     assertThat(lineItem.getTotalLossesAndAdjustments(), is(10));
-  }
-
-
-  @Test
-  public void shouldCopyPreviousStockInHand() throws Exception {
-    RnrLineItem editedLineItem = make(a(defaultRnrLineItem));
-    editedLineItem.setPreviousStockInHand(10);
-
-    lineItem.copyCreatorEditableFieldsForFullSupply(editedLineItem, new ProgramRnrTemplate(getRnrColumns()));
-
-    assertThat(lineItem.getPreviousStockInHand(), is(10));
   }
 
   @Test
@@ -408,12 +392,9 @@ public class RnrLineItemTest {
       add(make(a(defaultRnrColumn, with(source, USER_INPUT), with(columnName, QUANTITY_DISPENSED))));
     }};
 
-    spyLineItem.calculateForFullSupply(new ProgramRnrTemplate(columns), SUBMITTED, lossesAndAdjustmentsList, numberOfMonths);
+    spyLineItem.calculateForFullSupply(new ProgramRnrTemplate(columns), SUBMITTED, lossesAndAdjustmentsList);
 
     verify(spyLineItem).calculateStockInHand();
-    verify(spyLineItem).calculateNormalizedConsumption();
-    verify(spyLineItem).calculatePeriodNormalizedConsumption(eq(numberOfMonths));
-    verify(spyLineItem).calculatePacksToShip();
   }
 
   @Test
@@ -424,7 +405,7 @@ public class RnrLineItemTest {
       add(make(a(defaultRnrColumn, with(source, USER_INPUT), with(columnName, QUANTITY_DISPENSED))));
     }};
 
-    spyLineItem.calculateForFullSupply(new ProgramRnrTemplate(columns), SUBMITTED, lossesAndAdjustmentsList, numberOfMonths);
+    spyLineItem.calculateForFullSupply(new ProgramRnrTemplate(columns), SUBMITTED, lossesAndAdjustmentsList);
 
     verify(spyLineItem, never()).calculateStockInHand();
   }
@@ -437,7 +418,7 @@ public class RnrLineItemTest {
       add(make(a(defaultRnrColumn, with(source, CALCULATED), with(columnName, QUANTITY_DISPENSED))));
     }};
 
-    spyLineItem.calculateForFullSupply(new ProgramRnrTemplate(columns), SUBMITTED, lossesAndAdjustmentsList, numberOfMonths);
+    spyLineItem.calculateForFullSupply(new ProgramRnrTemplate(columns), SUBMITTED, lossesAndAdjustmentsList);
 
     verify(spyLineItem).calculateQuantityDispensed();
   }
@@ -450,7 +431,7 @@ public class RnrLineItemTest {
       add(make(a(defaultRnrColumn, with(source, USER_INPUT), with(columnName, QUANTITY_DISPENSED))));
     }};
 
-    spyLineItem.calculateForFullSupply(new ProgramRnrTemplate(columns), SUBMITTED, lossesAndAdjustmentsList, numberOfMonths);
+    spyLineItem.calculateForFullSupply(new ProgramRnrTemplate(columns), SUBMITTED, lossesAndAdjustmentsList);
 
     verify(spyLineItem, never()).calculateQuantityDispensed();
   }
@@ -703,15 +684,6 @@ public class RnrLineItemTest {
   }
 
   @Test
-  public void shouldCalculatePeriodNC() throws Exception {
-    RnrLineItem lineItem = new RnrLineItem();
-    lineItem.setNormalizedConsumption(10);
-
-    lineItem.calculatePeriodNormalizedConsumption(3);
-    assertThat(lineItem.getPeriodNormalizedConsumption(), is(30));
-  }
-
-  @Test
   public void shouldCalculateNormalizedConsumption() throws Exception {
     RnrLineItem lineItem = new RnrLineItem();
     lineItem.setStockOutDays(1);
@@ -754,50 +726,6 @@ public class RnrLineItemTest {
     lineItem.calculateNormalizedConsumption();
 
     assertThat(lineItem.getNormalizedConsumption(), is(31));
-  }
-
-  @Test
-  public void shouldSetBeginningBalanceWhenPreviousStockInHandAvailableAndColumnVisible() {
-    RnrLineItem lineItem = new RnrLineItem();
-    RnrLineItem previousRnrLineItem = new RnrLineItem();
-    previousRnrLineItem.setStockInHand(100);
-
-    lineItem.setBeginningBalanceWhenPreviousStockInHandAvailable(previousRnrLineItem, true);
-
-    assertThat(lineItem.getBeginningBalance(), is(100));
-    assertThat(lineItem.getPreviousStockInHand(), is(100));
-  }
-
-  @Test
-  public void shouldSetBeginningBalanceAsZeroWhenPreviousRnrLineItemSkippedAndColumnNotVisible() {
-    RnrLineItem lineItem = new RnrLineItem();
-    RnrLineItem previousRnrLineItem = new RnrLineItem();
-    previousRnrLineItem.setSkipped(true);
-
-    lineItem.setBeginningBalanceWhenPreviousStockInHandAvailable(previousRnrLineItem, false);
-
-    assertThat(lineItem.getBeginningBalance(), is(0));
-    assertThat(lineItem.getPreviousStockInHand(), is(nullValue()));
-  }
-
-  @Test
-  public void shouldSetBeginningBalanceAsZeroWhenPreviousRnrLineItemNotAvailableAndColumnVisible() {
-    RnrLineItem lineItem = new RnrLineItem();
-
-    lineItem.setBeginningBalanceWhenPreviousStockInHandAvailable(null, true);
-
-    assertThat(lineItem.getBeginningBalance(), is(0));
-    assertThat(lineItem.getPreviousStockInHand(), is(nullValue()));
-  }
-
-  @Test
-  public void shouldSetBeginningBalanceAsZeroWhenPreviousRnrLineItemNotAvailableAndColumnNotVisible() {
-    RnrLineItem lineItem = new RnrLineItem();
-
-    lineItem.setBeginningBalanceWhenPreviousStockInHandAvailable(null, false);
-
-    assertThat(lineItem.getBeginningBalance(), is(0));
-    assertThat(lineItem.getPreviousStockInHand(), is(nullValue()));
   }
 
   private ArrayList<RnrColumn> getRnrColumns() {

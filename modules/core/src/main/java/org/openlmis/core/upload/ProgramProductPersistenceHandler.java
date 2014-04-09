@@ -18,10 +18,6 @@ import org.openlmis.upload.model.AuditFields;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-/**
- * ProgramProductPersistenceHandler is used for uploads of ProgramProduct. It uploads each ProgramProduct
- * record by record.
- */
 @Component
 public class ProgramProductPersistenceHandler extends AbstractModelPersistenceHandler {
 

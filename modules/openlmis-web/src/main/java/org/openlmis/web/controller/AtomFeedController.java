@@ -23,10 +23,6 @@ import javax.servlet.http.HttpServletRequest;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
-/**
- * This controller handles endpoint related to get atom feeds which are recent or by a particular feed number.
- */
-
 @Controller
 public class AtomFeedController extends BaseController {
 

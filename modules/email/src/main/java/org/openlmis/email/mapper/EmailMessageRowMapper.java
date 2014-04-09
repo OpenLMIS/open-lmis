@@ -17,10 +17,6 @@ import org.springframework.stereotype.Component;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-/**
- * It maps each row of database representation of OpenlmisEmailMessage to corresponding OpenlmisEmailMessage entity.
- */
-
 @Component
 public class EmailMessageRowMapper implements RowMapper<OpenlmisEmailMessage> {
 

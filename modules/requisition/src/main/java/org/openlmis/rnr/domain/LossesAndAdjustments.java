@@ -20,7 +20,7 @@ import org.openlmis.core.domain.BaseModel;
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 
 /**
- * LossesAndAdjustments represents a lossesAndAdjustment entity associated with a RnrLineItem. It includes the type and quantity
+ * This class represents a lossesAndAdjustment entity associated with a RnrLineItem. It includes the type and quantity
  * for that loss/Adjustment.
  */
 

@@ -22,7 +22,7 @@ public class ShipmentLineItemDTOTest {
   @Test
   public void shouldThrowErrorIfProductCodeIsMissing() throws Exception {
     ShipmentLineItemDTO shipmentLineItemDTO = new ShipmentLineItemDTO("1l",
-      null, null,
+      null,
       "2",
       "45",
       "12-10-2013",
@@ -37,7 +37,7 @@ public class ShipmentLineItemDTOTest {
   @Test
   public void shouldThrowErrorIfOrderIdIsMissing() throws Exception {
     ShipmentLineItemDTO shipmentLineItemDTO = new ShipmentLineItemDTO(null,
-      "P10", null,
+      "P10",
       "2",
       "45",
       "12-10-2013",
@@ -52,7 +52,7 @@ public class ShipmentLineItemDTOTest {
   @Test
   public void shouldThrowErrorIfQuantityIsMissing() throws Exception {
     ShipmentLineItemDTO shipmentLineItemDTO = new ShipmentLineItemDTO("1l",
-      "P10", null,
+      "P10",
       null,
       "45",
       "12-10-2013",

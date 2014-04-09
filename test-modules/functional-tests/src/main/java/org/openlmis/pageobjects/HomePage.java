@@ -364,9 +364,7 @@ public class HomePage extends Page {
     testWebDriver.keyPress(requisitionMenuItem);
     testWebDriver.waitForElementToAppear(approveLink);
     testWebDriver.keyPress(approveLink);
-    ApprovePage approvePage = PageObjectFactory.getApprovePage(testWebDriver);
-    approvePage.waitForPageToAppear();
-    return approvePage;
+    return PageObjectFactory.getApprovePage(testWebDriver);
   }
 
   public ConvertOrderPage navigateConvertToOrder() {

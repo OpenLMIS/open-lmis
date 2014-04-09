@@ -64,10 +64,6 @@ public class ShipmentLineItemTransformer extends LineItemTransformer {
       lineItem.setCost(cost);
     }
 
-    if(!isBlank(dto.getReplacedProductCode())) {
-      lineItem.setReplacedProductCode(dto.getReplacedProductCode().trim());
-    }
-
     Date packedDate = (!isBlank(dto.getPackedDate())) ? parseDate(packedDateFormat,
       dto.getPackedDate().trim()) : creationDate;
     lineItem.setPackedDate(packedDate);

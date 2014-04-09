@@ -211,9 +211,6 @@ public class TestCalculationsForRnR extends TestCaseHelper {
     homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Regular");
     InitiateRnRPage initiateRnRPage = homePage.clickProceed();
 
-    assertEquals(null, dbWrapper.getAttributeFromTable("requisition_line_items", "previousStockInHand", "productCode", "P10"));
-    assertEquals(null, dbWrapper.getAttributeFromTable("requisition_line_items", "beginningBalance", "productCode", "P10"));
-
     enterDetailsForFirstProduct(10, 5, null, 14, 0, 5);
     assertEquals("9", initiateRnRPage.getPacksToShip());
     initiateRnRPage.verifyPacksToShip(10);
@@ -223,9 +220,6 @@ public class TestCalculationsForRnR extends TestCaseHelper {
 
     initiateRnRPage.submitRnR();
     initiateRnRPage.clickOk();
-
-    assertEquals(null, dbWrapper.getAttributeFromTable("requisition_line_items", "previousStockInHand", "productCode", "P10"));
-    assertEquals(10, dbWrapper.getAttributeFromTable("requisition_line_items", "beginningBalance", "productCode", "P10"));
 
     dbWrapper.updateFieldValue("products", "packRoundingThreshold", "7", "code", "P10");
     dbWrapper.updateFieldValue("products", "packRoundingThreshold", "9", "code", "P11");
@@ -266,7 +260,6 @@ public class TestCalculationsForRnR extends TestCaseHelper {
     submitAndAuthorizeRnR();
 
     verifyNormalizedConsumptionAndAmcInDatabase(164, 164, "P10");
-    assertEquals("164", dbWrapper.getAttributeFromTable("requisition_line_items", "periodNormalizedConsumption", "productCode", "P10"));
   }
 
   @Test(groups = "requisition")
@@ -421,14 +414,8 @@ public class TestCalculationsForRnR extends TestCaseHelper {
     homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Regular");
     initiateRnRPage = homePage.clickProceed();
 
-    assertEquals("7", dbWrapper.getAttributeFromTable("requisition_line_items", "previousStockInHand", "rnrId", String.valueOf(dbWrapper.getMaxRnrID())));
-    assertEquals("7", dbWrapper.getAttributeFromTable("requisition_line_items", "beginningBalance", "rnrId", String.valueOf(dbWrapper.getMaxRnrID())));
-
     enterDetailsForFirstProduct(10, 5, null, 10, 0, 2);
     submitAndAuthorizeRnR();
-
-    assertEquals("7", dbWrapper.getAttributeFromTable("requisition_line_items", "previousStockInHand", "rnrId", String.valueOf(dbWrapper.getMaxRnrID())));
-    assertEquals("10", dbWrapper.getAttributeFromTable("requisition_line_items", "beginningBalance", "rnrId", String.valueOf(dbWrapper.getMaxRnrID())));
 
     initiateRnRPage.verifyNormalizedConsumptionForFirstProduct(16);
     initiateRnRPage.verifyAmcForFirstProduct(20);
@@ -506,7 +493,6 @@ public class TestCalculationsForRnR extends TestCaseHelper {
 
   @Test(groups = "requisition")
   public void testCalculationTrackingOfAmcWhenMIs3() throws SQLException {
-    dbWrapper.updateConfigureTemplate("HIV", "source", "C", "true", "periodNormalizedConsumption");
     dbWrapper.updateFieldValue("products", "fullSupply", "false", "code", "P11");
     dbWrapper.deleteRowFromTable("processing_periods", "name", "Period2");
     dbWrapper.insertProcessingPeriod("feb13", "feb13", "2013-01-31", "2013-02-28", 3, "M");
@@ -518,13 +504,11 @@ public class TestCalculationsForRnR extends TestCaseHelper {
     InitiateRnRPage initiateRnRPage = homePage.clickProceed();
 
     enterDetailsForFirstProduct(10, 5, null, 8, 0, 1);
-    assertEquals("18", initiateRnRPage.getPeriodicNormalisedConsumption());
     submitAndAuthorizeRnR();
 
     initiateRnRPage.verifyNormalizedConsumptionForFirstProduct(6);
     initiateRnRPage.verifyAmcForFirstProduct(6);
     verifyNormalizedConsumptionAndAmcInDatabase(6, 6, "P10");
-    assertEquals("18", dbWrapper.getRequisitionLineItemFieldValue((long) dbWrapper.getMaxRnrID(), "periodNormalizedConsumption", "P10"));
 
     dbWrapper.updateCreatedDateInRequisitionStatusChanges("2013-02-08", (long) dbWrapper.getMaxRnrID());
 
@@ -532,13 +516,11 @@ public class TestCalculationsForRnR extends TestCaseHelper {
     initiateRnRPage = homePage.clickProceed();
 
     enterDetailsForFirstProduct(10, 5, null, 1, 1, 0);
-    assertEquals("0", initiateRnRPage.getPeriodicNormalisedConsumption());
     submitAndAuthorizeRnR();
 
     initiateRnRPage.verifyNormalizedConsumptionForFirstProduct(0);
     initiateRnRPage.verifyAmcForFirstProduct(0);
     verifyNormalizedConsumptionAndAmcInDatabase(0, 0, "P10");
-    assertEquals("0", dbWrapper.getRequisitionLineItemFieldValue((long) dbWrapper.getMaxRnrID(), "periodNormalizedConsumption", "P10"));
   }
 
   @Test(groups = "requisition")

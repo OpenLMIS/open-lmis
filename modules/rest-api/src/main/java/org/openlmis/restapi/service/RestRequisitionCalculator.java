@@ -106,19 +106,14 @@ public class RestRequisitionCalculator {
   }
 
   private void setBeginningBalance(RnrLineItem rnrLineItem, Rnr requisition, Date trackingDate) {
+    if (rnrLineItem.getBeginningBalance() != null)
+      return;
+
     List<RnrLineItem> nRnrLineItems = requisitionService.getNRnrLineItems(rnrLineItem.getProductCode(), requisition, 1, trackingDate);
 
     if (nRnrLineItems.size() != 0) {
-      if (rnrLineItem.getBeginningBalance() != null) {
-        rnrLineItem.setPreviousStockInHand(nRnrLineItems.get(0).getStockInHand());
-      } else {
-        rnrLineItem.setBeginningBalance(nRnrLineItems.get(0).getStockInHand());
-        rnrLineItem.setPreviousStockInHand(nRnrLineItems.get(0).getStockInHand());
-      }
+      rnrLineItem.setBeginningBalance(nRnrLineItems.get(0).getStockInHand());
       return;
-    } else {
-      if (rnrLineItem.getBeginningBalance() != null)
-        return;
     }
 
     Integer beginningBalance = rnrLineItem.getStockInHand() != null ? rnrLineItem.getStockInHand() : 0;

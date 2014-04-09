@@ -15,7 +15,7 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.openlmis.authentication.domain.UserToken;
+import org.openlmis.authentication.UserToken;
 import org.openlmis.core.domain.User;
 import org.openlmis.core.hash.Encoder;
 import org.openlmis.core.service.UserService;

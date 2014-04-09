@@ -152,12 +152,11 @@ public class CalculationService {
 
   private void calculateForFullSupply(Rnr requisition, ProgramRnrTemplate template) {
     List<LossesAndAdjustmentsType> lossesAndAdjustmentsTypes = requisitionRepository.getLossesAndAdjustmentsTypes();
-    Integer numberOfMonths = processingScheduleService.findM(requisition.getPeriod());
 
     for (RnrLineItem lineItem : requisition.getNonSkippedLineItems()) {
 
       lineItem.validateMandatoryFields(template);
-      lineItem.calculateForFullSupply(template, requisition.getStatus(), lossesAndAdjustmentsTypes, numberOfMonths);
+      lineItem.calculateForFullSupply(template, requisition.getStatus(), lossesAndAdjustmentsTypes);
       lineItem.validateCalculatedFields(template);
 
       requisition.addToFullSupplyCost(lineItem.calculateCost());

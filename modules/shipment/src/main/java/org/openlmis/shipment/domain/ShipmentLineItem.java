@@ -36,8 +36,6 @@ public class ShipmentLineItem extends LineItem {
 
   private String productCode;
 
-  private String replacedProductCode;
-
   private Integer quantityShipped;
 
   private String productName;

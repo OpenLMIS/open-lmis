@@ -8,7 +8,7 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
  */
 
-package org.openlmis.distribution.service;
+package org.openlmis.distribution.shared;
 
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -21,6 +21,7 @@ import org.openlmis.core.domain.Right;
 import org.openlmis.core.service.DeliveryZoneService;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.distribution.domain.Distribution;
+import org.openlmis.distribution.service.DistributionService;
 
 import java.util.List;
 

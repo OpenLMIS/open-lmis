@@ -21,10 +21,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-/**
- * ProgramSupportedPersistenceHandler is used for uploads of ProgramSupported. It uploads each ProgramSupported
- * record by record.
- */
 @Component
 public class ProgramSupportedPersistenceHandler extends AbstractModelPersistenceHandler {
 

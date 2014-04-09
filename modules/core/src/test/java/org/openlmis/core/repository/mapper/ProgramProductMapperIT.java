@@ -18,7 +18,6 @@ import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.openlmis.core.builder.ProductBuilder;
 import org.openlmis.core.domain.*;
-import org.openlmis.core.query.QueryExecutor;
 import org.openlmis.db.categories.IntegrationTests;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -26,12 +25,11 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.sql.ResultSet;
 import java.util.Date;
 import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
-import static junit.framework.Assert.assertTrue;
+import static junit.framework.Assert.*;
 import static org.apache.commons.collections.CollectionUtils.exists;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
@@ -57,8 +55,6 @@ public class ProgramProductMapperIT {
   private FacilityApprovedProductMapper facilityApprovedProductMapper;
   @Autowired
   private ProductCategoryMapper productCategoryMapper;
-  @Autowired
-  QueryExecutor executor;
 
   private Product product;
   private Program program;
@@ -79,14 +75,8 @@ public class ProgramProductMapperIT {
   @Test
   public void shouldInsertProductForAProgram() throws Exception {
     ProgramProduct programProduct = new ProgramProduct(program, product, 10, true);
-    programProduct.setProductCategory(productCategory);
-    programProduct.setDisplayOrder(1);
-    programProductMapper.insert(programProduct);
-    ResultSet resultSet = executor.execute("SELECT * FROM program_products");
-    resultSet.next();
-    assertThat(programProduct.getId(), is(notNullValue()));
-    assertThat(resultSet.getLong("productCategoryId"), is(productCategory.getId()));
-    assertThat(resultSet.getInt("displayOrder"), is(1));
+    assertEquals(1, programProductMapper.insert(programProduct).intValue());
+    assertNotNull(programProduct.getId());
   }
 
   @Test
@@ -133,7 +123,6 @@ public class ProgramProductMapperIT {
     programProductMapper.insert(programProduct);
     programProduct.setDosesPerMonth(10);
     programProduct.setActive(false);
-    programProduct.setProductCategory(productCategory);
 
     programProductMapper.update(programProduct);
 
@@ -141,7 +130,6 @@ public class ProgramProductMapperIT {
 
     assertThat(dbProgramProduct.getDosesPerMonth(), is(10));
     assertThat(dbProgramProduct.isActive(), is(false));
-    assertThat(dbProgramProduct.getProductCategory(), is(productCategory));
   }
 
   @Test

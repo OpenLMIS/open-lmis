@@ -25,8 +25,6 @@ public class ShipmentLineItemBuilder {
 
   public static Property<? super ShipmentLineItem, String> productCode = new Property<>();
 
-  public static Property<? super ShipmentLineItem, String> replacedProductCode = new Property<>();
-
   public static Property<? super ShipmentLineItem, BigDecimal> cost = new Property<>();
 
   public static Property<? super ShipmentLineItem, Integer> quantityShipped = new Property<>();
@@ -53,23 +51,21 @@ public class ShipmentLineItemBuilder {
   public static String defaultProductName = "P123 Product 123";
   public static String defaultProductDispensingUnit = "Tablet";
   public static String defaultProductCode = "P123";
-  public static String defaultReplacedProductCode = "P133";
   public static int defaultProductCategoryDisplayOrder = 1;
   public static int defaultProductDisplayOrder = 1;
   public static boolean defaultFullSupply = true;
   public static int defaultPacksToShip = 100;
-  public static BigDecimal nullCost = null;
 
   public static final Instantiator<ShipmentLineItem> defaultShipmentLineItem = new Instantiator<ShipmentLineItem>() {
 
     @Override
     public ShipmentLineItem instantiate(PropertyLookup<ShipmentLineItem> lookup) {
+      final BigDecimal nullCost = null;
 
       ShipmentLineItem lineItem = new ShipmentLineItem();
 
       lineItem.setOrderId(lookup.valueOf(orderId, 1L));
       lineItem.setProductCode(lookup.valueOf(productCode, defaultProductCode));
-      lineItem.setReplacedProductCode(lookup.valueOf(replacedProductCode, defaultReplacedProductCode));
       lineItem.setQuantityShipped(lookup.valueOf(quantityShipped, 0));
       lineItem.setCost(lookup.valueOf(cost, nullCost));
       lineItem.setShippedDate(lookup.valueOf(shippedDate, new Date()));

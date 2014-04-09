@@ -307,8 +307,4 @@ public class ApprovePage extends RequisitionPage {
   public String getPacksToShip() {
     return packsToShip.getText();
   }
-
-  public void waitForPageToAppear() {
-    testWebDriver.waitForElementToAppear(requisitionListHeader);
-  }
 }

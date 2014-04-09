@@ -13,7 +13,7 @@ import java.util.Date;
 import static java.math.RoundingMode.FLOOR;
 
 /**
- * BudgetLineItemTransformer transforms BudgetLineItemDTO into BudgetLineItem.
+ *
  */
 @Service
 public class BudgetLineItemTransformer extends LineItemTransformer {

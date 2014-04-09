@@ -26,6 +26,7 @@ import org.openlmis.order.repository.mapper.OrderMapper;
 import org.openlmis.rnr.builder.RequisitionBuilder;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.repository.mapper.RequisitionMapper;
+import org.openlmis.shipment.builder.ShipmentLineItemBuilder;
 import org.openlmis.shipment.domain.ShipmentFileInfo;
 import org.openlmis.shipment.domain.ShipmentLineItem;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -91,6 +92,7 @@ public class ShipmentMapperIT {
 
   @Test
   public void shouldInsertShippedLineItems() throws Exception {
+
     ShipmentLineItem shipmentLineItem = createShippedLineItem();
     mapper.insertShippedLineItem(shipmentLineItem);
 
@@ -114,39 +116,6 @@ public class ShipmentMapperIT {
       is(shipmentLineItem.getProductCategoryDisplayOrder()));
     assertThat(shipmentFileInfoResultSet.getInt("productDisplayOrder"), is(shipmentLineItem.getProductDisplayOrder()));
     assertThat(shipmentFileInfoResultSet.getBoolean("fullSupply"), is(shipmentLineItem.getFullSupply()));
-  }
-
-  @Test
-  public void shouldInsertShipmentFileInfo() throws Exception {
-    ShipmentFileInfo shipmentFileInfo = new ShipmentFileInfo();
-    shipmentFileInfo.setFileName("abc");
-
-    mapper.insertShipmentFileInfo(shipmentFileInfo);
-
-    assertThat(shipmentFileInfo.getId(), is(notNullValue()));
-  }
-
-  @Test
-  public void shouldGetShipmentFileInfoById() throws Exception {
-    ShipmentFileInfo shipmentFileInfo = new ShipmentFileInfo();
-    shipmentFileInfo.setFileName("abc");
-
-    mapper.insertShipmentFileInfo(shipmentFileInfo);
-
-    ShipmentFileInfo result = mapper.getShipmentFileInfo(shipmentFileInfo.getId());
-
-    assertThat(result.getId(), is(shipmentFileInfo.getId()));
-  }
-
-  @Test
-  public void shouldReturnLineItemsForAnOrder() throws Exception {
-    ShipmentLineItem shipmentLineItem = createShippedLineItem();
-    mapper.insertShippedLineItem(shipmentLineItem);
-
-    Long orderId = shipmentLineItem.getOrderId();
-    List<ShipmentLineItem> lineItems = mapper.getLineItems(orderId);
-
-    assertThat(lineItems, hasItem(shipmentLineItem));
   }
 
   private ShipmentLineItem createShippedLineItem() {
@@ -189,5 +158,100 @@ public class ShipmentMapperIT {
 
     supplyLineMapper.insert(supplyLine);
     return supplyLine;
+  }
+
+  @Test
+  public void shouldInsertShipmentFileInfo() throws Exception {
+    ShipmentFileInfo shipmentFileInfo = new ShipmentFileInfo();
+    shipmentFileInfo.setFileName("abc");
+
+    mapper.insertShipmentFileInfo(shipmentFileInfo);
+
+    assertThat(shipmentFileInfo.getId(), is(notNullValue()));
+  }
+
+  @Test
+  public void shouldGetShipmentFileInfoById() throws Exception {
+    ShipmentFileInfo shipmentFileInfo = new ShipmentFileInfo();
+    shipmentFileInfo.setFileName("abc");
+
+    mapper.insertShipmentFileInfo(shipmentFileInfo);
+
+    ShipmentFileInfo result = mapper.getShipmentFileInfo(shipmentFileInfo.getId());
+
+    assertThat(result.getId(), is(shipmentFileInfo.getId()));
+  }
+
+  @Test
+  public void shouldSelectShippedLineItem() throws Exception {
+    ShipmentLineItem shipmentLineItem = createShippedLineItem();
+
+    mapper.insertShippedLineItem(shipmentLineItem);
+
+    ShipmentLineItem returnedShipmentLineItem = mapper.getShippedLineItem(shipmentLineItem);
+
+    assertThat(returnedShipmentLineItem, is(shipmentLineItem));
+  }
+
+  @Test
+  public void shouldUpdateShippedLineItem() throws Exception {
+    ShipmentLineItem shipmentLineItem = createShippedLineItem();
+    mapper.insertShippedLineItem(shipmentLineItem);
+
+    shipmentLineItem.setId(null);
+    shipmentLineItem.setQuantityShipped(10);
+
+    mapper.updateShippedLineItem(shipmentLineItem);
+
+    ShipmentLineItem shipmentLineItemFromDB = mapper.getShippedLineItem(shipmentLineItem);
+
+    assertThat(shipmentLineItemFromDB.getQuantityShipped(), is(10));
+  }
+
+  @Test
+  public void shouldNotUpdateProductRelatedFieldsShippedLineItemFields() throws Exception {
+    ShipmentLineItem shipmentLineItem = createShippedLineItem();
+
+    mapper.insertShippedLineItem(shipmentLineItem);
+
+    shipmentLineItem.setQuantityShipped(10);
+    shipmentLineItem.setProductCategoryDisplayOrder(100);
+    shipmentLineItem.setProductDisplayOrder(200);
+    shipmentLineItem.setFullSupply(false);
+    shipmentLineItem.setProductCategory("New Category");
+
+    mapper.updateShippedLineItem(shipmentLineItem);
+
+    ShipmentLineItem shipmentLineItemFromDB = mapper.getShippedLineItem(shipmentLineItem);
+
+    assertThat(shipmentLineItemFromDB.getQuantityShipped(), is(10));
+    assertThat(shipmentLineItemFromDB.getProductCategoryDisplayOrder(),
+      is(ShipmentLineItemBuilder.defaultProductCategoryDisplayOrder));
+    assertThat(shipmentLineItemFromDB.getProductDisplayOrder(), is(ShipmentLineItemBuilder.defaultProductDisplayOrder));
+    assertThat(shipmentLineItemFromDB.getFullSupply(), is(ShipmentLineItemBuilder.defaultFullSupply));
+    assertThat(shipmentLineItemFromDB.getProductCategory(), is(ShipmentLineItemBuilder.defaultProductCategory));
+  }
+
+  @Test
+  public void shouldGetProcessedTimestampForShippedLineItem() throws Exception {
+    ShipmentLineItem shipmentLineItem = createShippedLineItem();
+    mapper.insertShippedLineItem(shipmentLineItem);
+
+    ShipmentLineItem shipmentLineItemFromDB = mapper.getShippedLineItem(shipmentLineItem);
+
+    Date date = mapper.getProcessedTimeStamp(shipmentLineItem);
+
+    assertThat(date, is(shipmentLineItemFromDB.getModifiedDate()));
+  }
+
+  @Test
+  public void shouldReturnLineItemsForAnOrder() throws Exception {
+    ShipmentLineItem shipmentLineItem = createShippedLineItem();
+    mapper.insertShippedLineItem(shipmentLineItem);
+
+    Long orderId = shipmentLineItem.getOrderId();
+    List<ShipmentLineItem> lineItems = mapper.getLineItems(orderId);
+
+    assertThat(lineItems, hasItem(shipmentLineItem));
   }
 }

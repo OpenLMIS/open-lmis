@@ -8,13 +8,13 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-function CreateRequisitionController($scope, requisitionData, pageSize, rnrColumns, lossesAndAdjustmentsTypes, facilityApprovedProducts, requisitionRights, regimenTemplate, $location, Requisitions, $routeParams, $dialog, requisitionService, $q) {
+function CreateRequisitionController($scope, requisition, pageSize, rnrColumns, lossesAndAdjustmentsTypes, facilityApprovedProducts, requisitionRights, regimenTemplate, $location, Requisitions, $routeParams, $dialog, requisitionService, $q) {
 
   var NON_FULL_SUPPLY = 'nonFullSupply';
   var FULL_SUPPLY = 'fullSupply';
 
   $scope.pageSize = pageSize;
-  $scope.rnr = new Rnr(requisitionData.rnr, rnrColumns, requisitionData.numberOfMonths);
+  $scope.rnr = new Rnr(requisition, rnrColumns);
 
   resetCostsIfNull();
 
@@ -260,17 +260,17 @@ function CreateRequisitionController($scope, requisitionData, pageSize, rnrColum
 }
 
 CreateRequisitionController.resolve = {
-  requisitionData: function ($q, $timeout, Requisitions, $route, $rootScope) {
+  requisition: function ($q, $timeout, Requisitions, $route, $rootScope) {
     var deferred = $q.defer();
     $timeout(function () {
-      var rnrData = $rootScope.rnrData;
-      if (rnrData) {
-        deferred.resolve(rnrData);
-        $rootScope.rnrData = undefined;
+      var rnr = $rootScope.rnr;
+      if (rnr) {
+        deferred.resolve(rnr);
+        $rootScope.rnr = undefined;
         return;
       }
       Requisitions.get({id: $route.current.params.rnr}, function (data) {
-        deferred.resolve(data);
+        deferred.resolve(data.rnr);
       }, {});
     }, 100);
     return deferred.promise;

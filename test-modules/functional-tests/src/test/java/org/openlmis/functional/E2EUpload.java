@@ -455,11 +455,6 @@ public class E2EUpload extends TestCaseHelper {
     uploadPage.uploadProgramProductMappingInvalidScenarios("QA_program_product_Invalid_ProgramCode.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
     uploadPage.validateErrorMessageOnUploadScreen("Invalid program code");
-
-    uploadPage.uploadProgramProductMappingInvalidScenarios("QA_program_product_Invalid_ProductCategory.csv");
-    uploadPage.verifyErrorMessageOnUploadScreen();
-    uploadPage.validateErrorMessageOnUploadScreen("Invalid reference data Product Category");
-
   }
 
   private void verifyValidUserUpload() throws SQLException, FileNotFoundException {

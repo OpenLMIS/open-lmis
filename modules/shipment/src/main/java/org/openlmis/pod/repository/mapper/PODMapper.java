@@ -27,10 +27,10 @@ import java.util.List;
 public interface PODMapper {
 
   @Insert(
-    {"INSERT INTO pod_line_items (podId, productCode, quantityReceived, quantityShipped, quantityReturned, productName, dispensingUnit, packsToShip, fullSupply,",
-      "productCategory, productCategoryDisplayOrder, productDisplayOrder, createdBy, modifiedBy, replacedProductCode, createdDate, modifiedDate) VALUES ",
+    {"INSERT INTO pod_line_items ", "(podId, productCode, quantityReceived, quantityShipped, quantityReturned, productName, dispensingUnit, packsToShip, fullSupply,",
+      "productCategory, productCategoryDisplayOrder, productDisplayOrder, createdBy, modifiedBy, createdDate, modifiedDate) VALUES ",
       "(#{podId}, #{productCode}, #{quantityReceived}, #{quantityShipped}, #{quantityReturned}, #{productName}, #{dispensingUnit}, #{packsToShip}, #{fullSupply},",
-      "#{productCategory}, #{productCategoryDisplayOrder}, #{productDisplayOrder}, #{createdBy}, #{modifiedBy}, #{replacedProductCode}, DEFAULT, DEFAULT)"})
+      "#{productCategory}, #{productCategoryDisplayOrder}, #{productDisplayOrder}, #{createdBy}, #{modifiedBy}, DEFAULT, DEFAULT)"})
   @Options(useGeneratedKeys = true)
   void insertPODLineItem(OrderPODLineItem orderPodLineItem);
 
