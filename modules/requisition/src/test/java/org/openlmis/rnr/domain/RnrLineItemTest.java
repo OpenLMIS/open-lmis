@@ -782,41 +782,48 @@ public class RnrLineItemTest {
   }
 
   @Test
-  public void shouldSetBeginningBalanceWhenPreviousStockInHandAvailable() {
+  public void shouldSetBeginningBalanceWhenPreviousStockInHandAvailableAndColumnVisible() {
     RnrLineItem lineItem = new RnrLineItem();
     RnrLineItem previousRnrLineItem = new RnrLineItem();
     previousRnrLineItem.setStockInHand(100);
 
-    lineItem.setBeginningBalanceWhenPreviousStockInHandAvailable(previousRnrLineItem);
+    lineItem.setBeginningBalanceWhenPreviousStockInHandAvailable(previousRnrLineItem, true);
 
     assertThat(lineItem.getBeginningBalance(), is(100));
     assertThat(lineItem.getPreviousStockInHand(), is(100));
   }
 
   @Test
-  public void shouldSetBeginningBalanceAsZeroWhenPreviousRnrLineItemSkipped() {
+  public void shouldSetBeginningBalanceAsZeroWhenPreviousRnrLineItemSkippedAndColumnNotVisible() {
     RnrLineItem lineItem = new RnrLineItem();
     RnrLineItem previousRnrLineItem = new RnrLineItem();
     previousRnrLineItem.setSkipped(true);
 
-    lineItem.setBeginningBalanceWhenPreviousStockInHandAvailable(previousRnrLineItem);
+    lineItem.setBeginningBalanceWhenPreviousStockInHandAvailable(previousRnrLineItem, false);
 
     assertThat(lineItem.getBeginningBalance(), is(0));
     assertThat(lineItem.getPreviousStockInHand(), is(nullValue()));
   }
-
 
   @Test
-  public void shouldSetBeginningBalanceAsZeroWhenPreviousRnrLineItemNotAvailable() {
+  public void shouldSetBeginningBalanceAsZeroWhenPreviousRnrLineItemNotAvailableAndColumnVisible() {
     RnrLineItem lineItem = new RnrLineItem();
 
-    lineItem.setBeginningBalanceWhenPreviousStockInHandAvailable(null);
+    lineItem.setBeginningBalanceWhenPreviousStockInHandAvailable(null, true);
 
     assertThat(lineItem.getBeginningBalance(), is(0));
     assertThat(lineItem.getPreviousStockInHand(), is(nullValue()));
   }
 
+  @Test
+  public void shouldSetBeginningBalanceAsZeroWhenPreviousRnrLineItemNotAvailableAndColumnNotVisible() {
+    RnrLineItem lineItem = new RnrLineItem();
 
+    lineItem.setBeginningBalanceWhenPreviousStockInHandAvailable(null, false);
+
+    assertThat(lineItem.getBeginningBalance(), is(0));
+    assertThat(lineItem.getPreviousStockInHand(), is(nullValue()));
+  }
 
   private ArrayList<RnrColumn> getRnrColumns() {
     return new ArrayList<RnrColumn>() {{
