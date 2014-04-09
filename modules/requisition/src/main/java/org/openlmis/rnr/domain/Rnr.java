@@ -29,7 +29,6 @@ import java.util.List;
 import static org.apache.commons.collections.CollectionUtils.find;
 import static org.apache.commons.collections.CollectionUtils.selectRejected;
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_NULL;
-import static org.openlmis.rnr.domain.ProgramRnrTemplate.BEGINNING_BALANCE;
 import static org.openlmis.rnr.domain.RnrStatus.*;
 
 /**
@@ -140,20 +139,18 @@ public class Rnr extends BaseModel {
     }
   }
 
-  private void setBeginningBalances(Rnr previousRequisition, boolean beginningBalanceVisible) {
+  private void setBeginningBalances(Rnr previousRequisition) {
     if (previousRequisition == null ||
       previousRequisition.status == INITIATED ||
       previousRequisition.status == SUBMITTED) {
 
-      if (!beginningBalanceVisible) {
-        resetBeginningBalances();
-      }
+      resetBeginningBalances();
       return;
     }
 
     for (RnrLineItem currentLineItem : this.fullSupplyLineItems) {
       RnrLineItem previousLineItem = previousRequisition.findCorrespondingLineItem(currentLineItem);
-      currentLineItem.setBeginningBalanceWhenPreviousStockInHandAvailable(previousLineItem, beginningBalanceVisible);
+      currentLineItem.setBeginningBalanceWhenPreviousStockInHandAvailable(previousLineItem);
     }
   }
 
@@ -207,7 +204,7 @@ public class Rnr extends BaseModel {
   }
 
   public void setFieldsAccordingToTemplateFrom(Rnr previousRequisition, ProgramRnrTemplate template, RegimenTemplate regimenTemplate) {
-    this.setBeginningBalances(previousRequisition, template.columnsVisible(BEGINNING_BALANCE));
+    this.setBeginningBalances(previousRequisition);
 
     for (RnrLineItem lineItem : this.fullSupplyLineItems) {
       lineItem.setLineItemFieldsAccordingToTemplate(template);
