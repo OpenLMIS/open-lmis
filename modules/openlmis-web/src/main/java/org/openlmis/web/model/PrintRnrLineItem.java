@@ -34,8 +34,9 @@ public class PrintRnrLineItem {
   public void calculate(List<? extends Column> rnrColumns,
                         List<LossesAndAdjustmentsType> lossesAndAdjustmentsTypes, Integer numberOfMonths, RnrStatus status) {
     ProgramRnrTemplate template = new ProgramRnrTemplate(rnrColumns);
-    if (template.columnsCalculated(STOCK_IN_HAND)) calculateStockInHand();
-    if (template.columnsCalculated(QUANTITY_DISPENSED)) rnrLineItem.calculateQuantityDispensed();
+    if (template.columnsCalculated(STOCK_IN_HAND)) calculateStockInHand(status);
+    if (template.columnsCalculated(QUANTITY_DISPENSED) && !statusList.contains(status))
+      rnrLineItem.calculateQuantityDispensed();
     calculateNormalizedConsumption(template, status);
     calculatePeriodNormalizedConsumption(numberOfMonths);
     calculateAmc();
@@ -54,9 +55,12 @@ public class PrintRnrLineItem {
     }
   }
 
-  private void calculateStockInHand() {
+  private void calculateStockInHand(RnrStatus status) {
+
     try {
-      rnrLineItem.calculateStockInHand();
+      if (!statusList.contains(status)) {
+        rnrLineItem.calculateStockInHand();
+      }
     } catch (NullPointerException e) {
       rnrLineItem.setStockInHand(null);
     }
