@@ -235,7 +235,6 @@ public class ProgramProductMapperIT {
     ProgramProduct programProduct = new ProgramProduct(program, product, 10, true);
     programProduct.setProductCategory(productCategory);
     programProductMapper.insert(programProduct);
-
     String facilityTypeCode = "warehouse";
 
     FacilityTypeApprovedProduct facilityTypeApprovedProduct = new FacilityTypeApprovedProduct();
@@ -252,6 +251,7 @@ public class ProgramProductMapperIT {
 
     assertThat(returnedProducts.size(), is(1));
     assertContainsProgramProduct(returnedProducts, programProduct);
+    assertThat(returnedProducts.get(0).getProductCategory(), is(productCategory));
   }
 
   @Test
