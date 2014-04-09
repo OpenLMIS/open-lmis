@@ -37,7 +37,7 @@ public class NonReportingFacilityReportDataProvider extends ReportDataProvider {
 
   @Override
   protected List<? extends ReportData> getResultSetReportData(Map<String, String[]> filterCriteria) {
-    return null;
+    return getMainReportData(filterCriteria, null, RowBounds.NO_ROW_OFFSET, RowBounds.NO_ROW_LIMIT);
   }
 
   @Override
