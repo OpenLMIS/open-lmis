@@ -11,7 +11,7 @@
 function ReportingRateController($scope, leafletData, ReportingFacilityList, NonReportingFacilityList, $dialog, messageService) {
 
 
-    $scope.ReportingFacilities = function(feature) {
+    $scope.ReportingFacilities = function(feature, element) {
         ReportingFacilityList.get({
             program: $scope.filter.program,
             period: $scope.filter.period,
@@ -20,12 +20,11 @@ function ReportingRateController($scope, leafletData, ReportingFacilityList, Non
             $scope.facilities = data.facilities;
             $scope.successModal = true;
             $scope.title = 'Properly Reporting Facilities in ' + feature.name;
-
         });
         $scope.zoomToSelectedFeature(feature);
     };
 
-    $scope.NonReportingFacilities = function(feature) {
+    $scope.NonReportingFacilities = function(feature, element) {
         NonReportingFacilityList.get({
             program: $scope.filter.program,
             period: $scope.filter.period,
@@ -38,18 +37,6 @@ function ReportingRateController($scope, leafletData, ReportingFacilityList, Non
         });
         $scope.zoomToSelectedFeature(feature);
     };
-
-
-    $scope.showDialog = function(title, data) {
-
-        var options = {
-            id: "popup-box",
-            header: title //,
-            // body: data.facilities.length + " Facilities were  " + title
-        };
-        OpenLmisDialog.newDialog(options, 'popup-box', $dialog, messageService);
-    };
-
 
     $scope.expectedFilter = function(item) {
         return item.expected > 0;
@@ -200,8 +187,6 @@ function ReportingRateController($scope, leafletData, ReportingFacilityList, Non
             });
             $scope.centerJSON();
 
-            $scope.data = $scope.features;
-            $scope.paramsChanged($scope.tableParams);
 
         });
 

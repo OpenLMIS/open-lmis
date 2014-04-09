@@ -56,8 +56,8 @@
                     <td>
                         <div class="number" style="float:right;" >{{((feature.period / feature.expected) * 100).toFixed(0)}} %</div>
                         <div class="progress" style="margin-bottom:0px;width:68%">
-                            <div class="bar bar-success leaflet-clickable" ng-click="ReportingFacilities(feature)" style="width: {{((feature.period / feature.expected) * 100).toFixed(2)}}%"></div>
-                            <div class="bar bar-danger leaflet-clickable"  ng-click="NonReportingFacilities(feature)" style="width: {{(100 - ((feature.period / feature.expected) * 100).toFixed(2))}}%"></div>
+                            <div class="bar bar-success leaflet-clickable" ng-click="ReportingFacilities(feature, this)" style="width: {{((feature.period / feature.expected) * 100).toFixed(2)}}%"></div>
+                            <div class="bar bar-danger leaflet-clickable" ng-click="NonReportingFacilities(feature, this)" style="width: {{(100 - ((feature.period / feature.expected) * 100).toFixed(2))}}%"></div>
                         </div>
                     </td>
                 </tr>
