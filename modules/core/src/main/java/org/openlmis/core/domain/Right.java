@@ -83,7 +83,8 @@ public enum Right {
   VIEW_ORDER_FILL_RATE_REPORT("Report - Order Fill Rate Report", REPORT, "Permission to view Order Fill Rate Report",48),
   VIEW_REGIMEN_SUMMARY_REPORT("Report - Regimen Summary Report", REPORT, "Permission to view Regimen Summary Report",49),
   VIEW_DISTRICT_FINANCIAL_SUMMARY_REPORT("Report - District Financial Summary Report", REPORT, "Permission to view District Financial Summary Report",50),
-  VIEW_DASHBOARD_POC("Report - View Dashboard POC", REPORT, "View Dashboard POC",51);
+  VIEW_DASHBOARD_POC("Report - View Dashboard POC", REPORT, "View Dashboard POC",51),
+  VIEW_USER_SUMMARY_REPORT("Report - View User Summary Report", REPORT, "Permission to view user summary Report",52);
 
 
 
