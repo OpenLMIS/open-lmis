@@ -12,7 +12,7 @@ function ReportingRateController($scope, leafletData, ReportingFacilityList, Non
 
     // TODO: move this to another controller
     SettingsByKey.get({key: 'LATE_RNR_NOTIFICATION_SMS_TEMPLATE'},function (data){
-      $scope.sms_template         = data.settings.value;
+      $scope.sms_template           = data.settings.value;
     });
 
     SettingsByKey.get({key: 'LATE_RNR_NOTIFICATION_EMAIL_TEMPLATE'},function (data){
@@ -99,11 +99,11 @@ function ReportingRateController($scope, leafletData, ReportingFacilityList, Non
     $scope.style = function(feature) {
         var color = ($scope.indicator_type == 'ever_over_total') ? interpolate(feature.ever, feature.total) : ($scope.indicator_type == 'ever_over_expected') ? interpolate(feature.ever, feature.expected) : interpolate(feature.period, feature.expected);
         return {
-            fillColor: color,
-            weight: 1,
-            opacity: 1,
-            color: 'white',
-            dashArray: '1',
+            fillColor:  color,
+            weight:     1,
+            opacity:    1,
+            color:      'white',
+            dashArray:  '1',
             fillOpacity: 0.7
         };
     };
