@@ -8,7 +8,16 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-function ReportingRateController($scope, leafletData, ReportingFacilityList, NonReportingFacilityList, $dialog, messageService) {
+function ReportingRateController($scope, leafletData, ReportingFacilityList, NonReportingFacilityList,SettingsByKey, $dialog, messageService) {
+
+    // TODO: move this to another controller
+    SettingsByKey.get({key: 'LATE_RNR_NOTIFICATION_SMS_TEMPLATE'},function (data){
+      $scope.sms_template         = data.settings.value;
+    });
+
+    SettingsByKey.get({key: 'LATE_RNR_NOTIFICATION_EMAIL_TEMPLATE'},function (data){
+      $scope.email_template         = data.settings.value;
+    });
 
 
     $scope.ReportingFacilities = function(feature, element) {
@@ -186,8 +195,6 @@ function ReportingRateController($scope, leafletData, ReportingFacilityList, Non
                 "features": $scope.features
             });
             $scope.centerJSON();
-
-
         });
 
     };
