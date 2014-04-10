@@ -19,6 +19,9 @@ function ReportingRateController($scope, leafletData, ReportingFacilityList, Non
       $scope.email_template         = data.settings.value;
     });
 
+    SettingsByKey.get({key: 'SMS_ENABLED'},function (data){
+      $scope.sms_enabled            = data.settings.value;
+    });
 
     $scope.ReportingFacilities = function(feature, element) {
         ReportingFacilityList.get({
