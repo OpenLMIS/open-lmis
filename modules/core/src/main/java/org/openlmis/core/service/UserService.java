@@ -10,6 +10,9 @@
 
 package org.openlmis.core.service;
 
+import org.openlmis.core.domain.Program;
+import org.openlmis.core.domain.Right;
+import org.openlmis.core.domain.SupervisoryNode;
 import org.openlmis.core.domain.User;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.hash.Encoder;
@@ -128,6 +131,14 @@ public class UserService {
   public void disable(Long userId, Long modifiedBy) {
     userRepository.disable(userId, modifiedBy);
     userRepository.deletePasswordResetTokenForUser(userId);
+  }
+
+  public List<User> getUsersWithRightInNodeForProgram(Program program, SupervisoryNode node, Right right) {
+    return userRepository.getUsersWithRightInNodeForProgram(program, node, right);
+  }
+
+  public List<User> getUsersWithRightInHierarchyUsingBaseNode(Long nodeId, Program program, Right right) {
+    return userRepository.getUsersWithRightInHierarchyUsingBaseNode(nodeId, program.getId(), right);
   }
 
   private void sendUserCreationEmail(User user, String resetPasswordLink) {

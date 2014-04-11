@@ -395,10 +395,23 @@ public class RequisitionService {
 
   private void logStatusChangeAndNotify(Rnr requisition, boolean notifyStatusChange, String name) {
     requisitionRepository.logStatusChange(requisition, name);
-
     if (notifyStatusChange) {
       requisitionEventService.notifyForStatusChange(requisition);
     }
+
+    sendRequisitionStatusChangeMail(requisition);
+  }
+
+  private void sendRequisitionStatusChangeMail(Rnr requisition) {
+    List<User> userList = new ArrayList<>();
+    if (requisition.getStatus().equals(SUBMITTED)) {
+      Long supervisoryNodeId = supervisoryNodeService.getFor(requisition.getFacility(), requisition.getProgram()).getId();
+      userList = userService.getUsersWithRightInHierarchyUsingBaseNode(supervisoryNodeId, requisition.getProgram(), AUTHORIZE_REQUISITION);
+      userList.addAll(userService.getUsersWithRightInNodeForProgram(requisition.getProgram(), new SupervisoryNode(), AUTHORIZE_REQUISITION));
+    } else if (requisition.getStatus().equals(AUTHORIZED) || requisition.getStatus().equals(IN_APPROVAL)) {
+      userList = userService.getUsersWithRightInNodeForProgram(requisition.getProgram(), new SupervisoryNode(requisition.getSupervisoryNodeId()), APPROVE_REQUISITION);
+    }
+    requisitionEventService.notifyUsers(requisition, userList);
   }
 
   private void insert(Rnr requisition) {

@@ -21,6 +21,7 @@ import org.openlmis.rnr.event.RequisitionStatusChangeEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.net.URISyntaxException;
@@ -64,6 +65,7 @@ public class RequisitionEventService {
     }
   }
 
+  @Async
   public void notifyUsers(Rnr requisition, List<User> users) {
     SimpleMailMessage mailMessage = new SimpleMailMessage();
     mailMessage.setSubject(messageService.message("msg.email.notification.subject"));

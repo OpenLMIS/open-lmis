@@ -41,6 +41,7 @@ import static org.openlmis.core.builder.ProgramBuilder.defaultProgram;
 import static org.openlmis.core.builder.ProgramBuilder.programCode;
 import static org.openlmis.core.builder.UserBuilder.*;
 import static org.openlmis.core.domain.Right.APPROVE_REQUISITION;
+import static org.openlmis.core.domain.Right.AUTHORIZE_REQUISITION;
 
 @Category(IntegrationTests.class)
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -154,6 +155,43 @@ public class UserMapperIT {
     someUser.getSupervisor().setModifiedDate(null);
     someUser.setModifiedDate(null);
     assertThat(users, hasItem(someUser));
+  }
+
+  @Test
+  public void shouldGetUsersWithGivenRightInNodeHierarchyForProgram() {
+    SupervisoryNode supervisoryNode1 = make(a(SupervisoryNodeBuilder.defaultSupervisoryNode, with(SupervisoryNodeBuilder.code, "SN1")));
+    supervisoryNode1.setParent(supervisoryNode);
+    supervisoryNode1.setFacility(facility);
+
+    supervisoryNodeMapper.insert(supervisoryNode1);
+
+    String nullString = null;
+    User someUser = make(a(defaultUser, with(facilityId, facility.getId()), with(supervisorUserName, nullString), with(active, true)));
+    userMapper.insert(someUser);
+
+    User someOtherUser = make(a(defaultUser, with(facilityId, facility.getId()), with(userName, "otherUser"),
+      with(email, "email"), with(employeeId, "3")));
+    userMapper.insert(someOtherUser);
+    Program program = insertProgram(make(a(defaultProgram, with(programCode, "p1"))));
+
+    Role role = insertRole();
+    roleRightsMapper.createRoleRight(role, AUTHORIZE_REQUISITION);
+
+    roleAssignmentMapper.insertRoleAssignment(someUser.getId(), program.getId(), supervisoryNode.getId(), role.getId());
+    roleAssignmentMapper.insertRoleAssignment(someOtherUser.getId(), program.getId(), supervisoryNode1.getId(), role.getId());
+
+    final List<User> users = userMapper.getUsersWithRightInHierarchyUsingBaseNode(supervisoryNode1.getId(), program.getId(), Right.AUTHORIZE_REQUISITION);
+    someUser.setSupervisor(null);
+    someUser.setPassword(null);
+    someUser.setModifiedDate(null);
+
+    someOtherUser.setSupervisor(null);
+    someOtherUser.setPassword(null);
+    someOtherUser.setModifiedDate(null);
+
+    assertThat(users.size(), is(2));
+    assertThat(users, hasItem(someUser));
+    assertThat(users, hasItem(someOtherUser));
   }
 
   @Test

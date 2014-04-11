@@ -51,6 +51,10 @@ public class UserRepository {
     return userMapper.getUsersWithRightInNodeForProgram(program, node, right);
   }
 
+  public List<User> getUsersWithRightInHierarchyUsingBaseNode(Long nodeId, Long programId, Right right) {
+    return userMapper.getUsersWithRightInHierarchyUsingBaseNode(nodeId, programId, right);
+  }
+
   public void create(User user) {
     validateAndSetSupervisor(user);
     try {
