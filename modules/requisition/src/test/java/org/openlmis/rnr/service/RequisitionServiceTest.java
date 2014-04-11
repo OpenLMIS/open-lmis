@@ -13,7 +13,6 @@ package org.openlmis.rnr.service;
 
 import org.joda.time.DateTime;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -42,10 +41,7 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static java.util.Arrays.asList;
@@ -902,7 +898,7 @@ public class RequisitionServiceTest {
   }
 
   @Test
-  public void shouldNotifyStatusChangeOnAuthorize() throws Exception {
+  public void shouldNotifyStatusChangeOnAuthorizeAndSendEmailToActiveUsers() throws Exception {
     Rnr savedRnr = getFilledSavedRequisitionWithDefaultFacilityProgramPeriod(submittedRnr, AUTHORIZE_REQUISITION);
     ProgramRnrTemplate template = new ProgramRnrTemplate(rnrColumns);
     when(rnrTemplateService.fetchProgramTemplate(PROGRAM.getId())).thenReturn(template);
@@ -912,9 +908,20 @@ public class RequisitionServiceTest {
     SupervisoryNode approverNode = new SupervisoryNode();
     when(supervisoryNodeService.getFor(FACILITY, PROGRAM)).thenReturn(approverNode);
 
+    User activeUser = make(a(UserBuilder.defaultUser, with(UserBuilder.active, true)));
+    User inactiveUser = make(a(UserBuilder.defaultUser, with(UserBuilder.active, false)));
+    List<User> users = asList(activeUser, activeUser, inactiveUser);
+
+    when(savedRnr.getProgram()).thenReturn(submittedRnr.getProgram());
+    when(savedRnr.getFacility()).thenReturn(submittedRnr.getFacility());
+    when(savedRnr.getSupervisoryNodeId()).thenReturn(1L);
+    when(userService.getUsersWithRightInNodeForProgram(submittedRnr.getProgram(), new SupervisoryNode(1L), Right.APPROVE_REQUISITION)).thenReturn(users);
+    when(supervisoryNodeService.getFor(submittedRnr.getFacility(), submittedRnr.getProgram())).thenReturn(new SupervisoryNode(1L));
+
     requisitionService.authorize(submittedRnr);
 
     verify(requisitionEventService).notifyForStatusChange(savedRnr);
+    verify(requisitionEventService).notifyUsers(savedRnr, asList(activeUser));
   }
 
   @Test
@@ -935,18 +942,25 @@ public class RequisitionServiceTest {
   }
 
   @Test
-  @Ignore
   public void shouldNotifyStatusChangeOnSubmit() throws Exception {
     Rnr savedRnr = getFilledSavedRequisitionWithDefaultFacilityProgramPeriod(initiatedRnr, CREATE_REQUISITION);
     ProgramRnrTemplate template = new ProgramRnrTemplate(rnrColumns);
+
     when(rnrTemplateService.fetchProgramTemplate(PROGRAM.getId())).thenReturn(template);
+
     doNothing().when(calculationService).perform(savedRnr, template);
 
+    when(savedRnr.getFacility()).thenReturn(initiatedRnr.getFacility());
+    when(savedRnr.getProgram()).thenReturn(initiatedRnr.getProgram());
+    when(supervisoryNodeService.getFor(initiatedRnr.getFacility(), initiatedRnr.getProgram())).thenReturn(new SupervisoryNode(1L));
+    when(userService.getUsersWithRightInHierarchyUsingBaseNode(1L, initiatedRnr.getProgram(), Right.AUTHORIZE_REQUISITION)).thenReturn(Collections.EMPTY_LIST);
+    when(userService.getUsersWithRightInNodeForProgram(eq(initiatedRnr.getProgram()), any(SupervisoryNode.class), eq(Right.AUTHORIZE_REQUISITION))).thenReturn(Collections.EMPTY_LIST);
     when(rnrTemplateService.fetchAllRnRColumns(PROGRAM.getId())).thenReturn(rnrColumns);
 
     requisitionService.submit(initiatedRnr);
 
     verify(requisitionEventService).notifyForStatusChange(savedRnr);
+    verify(requisitionEventService).notifyUsers(savedRnr, Collections.EMPTY_LIST);
   }
 
   @Test

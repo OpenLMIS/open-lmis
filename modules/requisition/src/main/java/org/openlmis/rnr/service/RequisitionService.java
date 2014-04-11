@@ -1,5 +1,7 @@
 package org.openlmis.rnr.service;
 
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.Predicate;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.message.OpenLmisMessage;
@@ -15,9 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
@@ -411,7 +411,18 @@ public class RequisitionService {
     } else if (requisition.getStatus().equals(AUTHORIZED) || requisition.getStatus().equals(IN_APPROVAL)) {
       userList = userService.getUsersWithRightInNodeForProgram(requisition.getProgram(), new SupervisoryNode(requisition.getSupervisoryNodeId()), APPROVE_REQUISITION);
     }
-    requisitionEventService.notifyUsers(requisition, userList);
+    requisitionEventService.notifyUsers(requisition, filterForActiveUsers(userList));
+  }
+
+  private ArrayList<User> filterForActiveUsers(List<User> userList) {
+    Set<User> users = new HashSet<>(userList);
+    CollectionUtils.filter(users, new Predicate() {
+      @Override
+      public boolean evaluate(Object o) {
+        return ((User) o).getActive();
+      }
+    });
+    return new ArrayList<>(users);
   }
 
   private void insert(Rnr requisition) {
