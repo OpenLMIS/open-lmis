@@ -631,3 +631,32 @@
 #adultCoverageTable tr:last-child td:first-child {
   height: 50px;
 }
+
+.app-cache-status-modal {
+  width: 400px;
+  margin: -170px 0 0 -200px;
+  .icon-ok-circle {
+    font-size: 20px;
+    color: #468847;
+    margin-right: 5px;
+  }
+  .icon-exclamation-sign {
+    font-size: 17px;
+    color: #cd1e24;
+    margin-right: 5px;
+  }
+  #downloadingLoader {
+    height: 20px;
+    background: url('../images/ajax-loader.gif') 38% 50% no-repeat;
+    margin-bottom: 6px;
+  }
+  #successMessage, #errorMessage, .icon {
+    vertical-align: middle;
+  }
+  .modal-footer {
+    padding: 10px;
+    btn {
+      margin-left: 0;
+    }
+  }
+}
