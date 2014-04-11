@@ -569,6 +569,19 @@ public class ManageDistribution extends TestCaseHelper {
     distributionPage.clickOk();
   }
 
+  @And("I change language as Portuguese on Distribution Page")
+  public void changeLanguageToPortuguese() {
+    distributionPage = PageObjectFactory.getDistributionPage(testWebDriver);
+    distributionPage.clickPortugueseLink();
+  }
+
+  @And("I change language as English on Distribution Page")
+  public void changeLanguageToEnglish() {
+    distributionPage = PageObjectFactory.getDistributionPage(testWebDriver);
+    distributionPage.clickEnglishLink();
+  }
+
+
   @Then("I see no distribution in cache$")
   public void noDistributionInCache() {
     distributionPage = PageObjectFactory.getDistributionPage(testWebDriver);
