@@ -18,6 +18,7 @@ import org.ict4h.atomfeed.server.service.Event;
 import org.ict4h.atomfeed.server.service.EventService;
 import org.joda.time.DateTime;
 import org.openlmis.core.domain.*;
+import org.openlmis.core.dto.FacilityContact;
 import org.openlmis.core.dto.FacilityFeedDTO;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.FacilityRepository;
@@ -256,6 +257,16 @@ public class FacilityService {
 
   public List<Facility> getSupplyingFacilitiesCompleteList() {
       return facilityRepository.getSupplyingFacilitiesCompleteList();
+  }
+
+  public List<FacilityContact> getContactList(Long facilityId, String type){
+    if(type.equalsIgnoreCase("SMS")){
+      return facilityRepository.getSmsContacts(facilityId);
+    }
+    if(type.equalsIgnoreCase("EMAIL")){
+      return facilityRepository.getEmailContacts(facilityId);
+    }
+    return null;
   }
 
 }
