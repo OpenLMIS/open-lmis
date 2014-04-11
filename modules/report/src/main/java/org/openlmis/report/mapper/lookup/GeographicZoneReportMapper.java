@@ -86,7 +86,7 @@ public interface GeographicZoneReportMapper {
     " on gzz.id = period.geographicZoneId order by gzz.name" )
   List<GeoZoneReportingRate> getGeoReportingRate(@Param("programId") Long programId, @Param("processingPeriodId") Long processingPeriodId);
 
-  @Select("select f.id, f.name, f.mainPhone, f.longitude, f.latitude , (select count(*) > 0 from users where users.facilityId = f.id) as hasContacts from facilities f\n" +
+  @Select("select f.id, f.name, f.mainPhone, f.longitude, f.latitude, false reported , (select count(*) > 0 from users where users.active = true and users.facilityId = f.id) as hasContacts from facilities f\n" +
             "  join requisition_group_members m on f.id = m.facilityId\n" +
             "  join requisition_group_program_schedules s on s.requisitionGroupId = m.requisitionGroupId and s.programId = #{programId}\n" +
             "  join processing_periods pp on pp.scheduleId = s.scheduleId and pp.id = #{periodId}\n" +
@@ -96,7 +96,7 @@ public interface GeographicZoneReportMapper {
             " order by f.name ")
   List<GeoFacilityIndicator> getNonReportingFacilities(@Param("programId") Long programId, @Param("geographicZoneId") Long geographicZoneId, @Param("periodId") Long processingPeriodId);
 
-  @Select("select f.id, f.name, f.mainPhone, f.longitude, f.latitude, (select count(*) > 0 from users where users.facilityId = f.id) as hasContacts from facilities f\n" +
+  @Select("select f.id, f.name, f.mainPhone, f.longitude, f.latitude, true reported, (select count(*) > 0 from users where users.active = true and users.facilityId = f.id) as hasContacts from facilities f\n" +
     "  join requisition_group_members m on f.id = m.facilityId\n" +
     "  join requisition_group_program_schedules s on s.requisitionGroupId = m.requisitionGroupId and s.programId = #{programId}\n" +
     "  join processing_periods pp on pp.scheduleId = s.scheduleId and pp.id = #{periodId}\n" +
