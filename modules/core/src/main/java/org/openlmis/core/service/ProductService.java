@@ -12,7 +12,6 @@ package org.openlmis.core.service;
 
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.Product;
-import org.openlmis.core.domain.ProductCategory;
 import org.openlmis.core.domain.ProductGroup;
 import org.openlmis.core.domain.ProgramProduct;
 import org.openlmis.core.exception.DataException;
@@ -49,7 +48,7 @@ public class ProductService {
   public void save(Product product) {
 
     product.validate();
-    validateAndSetProductCategory(product);
+//  validateAndSetProductCategory(product);
 
     if (product.getId() == null) {
       repository.insert(product);
@@ -86,18 +85,6 @@ public class ProductService {
       product.getProductGroup().setId(productGroup.getId());
 
     }
-  }
-
-  private void validateAndSetProductCategory(Product product) {
-    ProductCategory category = product.getCategory();
-    if (category == null) return;
-    String categoryCode = category.getCode();
-    if (categoryCode == null || categoryCode.isEmpty()) return;
-    Long categoryId = categoryService.getProductCategoryIdByCode(category.getCode());
-    if (categoryId == null) {
-      throw new DataException("error.reference.data.invalid.product");
-    }
-    category.setId(categoryId);
   }
 
   public Long getIdForCode(String code) {

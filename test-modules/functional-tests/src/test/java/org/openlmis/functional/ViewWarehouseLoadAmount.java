@@ -245,9 +245,9 @@ public class ViewWarehouseLoadAmount extends TestCaseHelper {
     assertEquals("--", warehouseLoadAmountPage.getTotalProductIsa(1, 1));
     assertEquals("--", warehouseLoadAmountPage.getProductIsa(1, 1, 1));
     assertEquals("--", warehouseLoadAmountPage.getProductIsa(1, 2, 1));
-    assertEquals("4355555", warehouseLoadAmountPage.getTotalProductIsa(1, 2));
+    assertEquals("4355556", warehouseLoadAmountPage.getTotalProductIsa(1, 2));
     assertEquals("4000000", warehouseLoadAmountPage.getProductIsa(1, 2, 2));
-    assertEquals("355555", warehouseLoadAmountPage.getProductIsa(1, 1, 2));
+    assertEquals("355556", warehouseLoadAmountPage.getProductIsa(1, 1, 2));
     assertEquals("--", warehouseLoadAmountPage.getFacilityPopulation(1, 2));
     assertEquals("333", warehouseLoadAmountPage.getFacilityPopulation(1, 1));
     assertEquals("333", warehouseLoadAmountPage.getTotalPopulation(1));
@@ -258,7 +258,7 @@ public class ViewWarehouseLoadAmount extends TestCaseHelper {
       Integer.parseInt(warehouseLoadAmountPage.getFacilityPopulation(2, 2)), warehouseLoadAmountPage.getTotalPopulation(2));
     assertEquals("--", warehouseLoadAmountPage.getProductIsa(2, 1, 1));
     assertEquals("23", warehouseLoadAmountPage.getProductIsa(2, 1, 2));
-    assertEquals("20", warehouseLoadAmountPage.getProductIsa(2, 2, 2));
+    assertEquals("21", warehouseLoadAmountPage.getProductIsa(2, 2, 2));
     assertEquals("26", warehouseLoadAmountPage.getProductIsa(2, 2, 1));
     assertEquals(warehouseLoadAmountPage.getProductIsa(2, 2, 1), warehouseLoadAmountPage.getTotalProductIsa(2, 1));
     assertEquals(String.valueOf(Integer.parseInt(warehouseLoadAmountPage.getProductIsa(2, 1, 2)) +

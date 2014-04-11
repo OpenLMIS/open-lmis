@@ -8,7 +8,7 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-function DistributionController($scope, deliveryZones, DeliveryZoneActivePrograms, messageService, DeliveryZoneProgramPeriods, navigateBackService, $http, $dialog, $location, distributionService) {
+function DistributionController($scope, $rootScope, deliveryZones, DeliveryZoneActivePrograms, messageService, DeliveryZoneProgramPeriods, navigateBackService, $http, $dialog, $location, distributionService) {
   $scope.deliveryZones = deliveryZones;
   var DELIVERY_ZONE_LABEL = messageService.get('label.select.deliveryZone');
   var NONE_ASSIGNED_LABEL = messageService.get('label.noneAssigned');
@@ -16,6 +16,14 @@ function DistributionController($scope, deliveryZones, DeliveryZoneActiveProgram
   var DEFAULT_PERIOD_MESSAGE = messageService.get('label.select.period');
 
   $scope.zonePlaceholder = !!$scope.deliveryZones.length ? DELIVERY_ZONE_LABEL : NONE_ASSIGNED_LABEL;
+
+  $scope.reload = function() {
+    window.location.reload();
+  };
+
+  $scope.close = function() {
+    $rootScope.appCacheState = undefined;
+  };
 
   $scope.loadPrograms = function () {
     $scope.programs = $scope.periods = [];
