@@ -23,4 +23,6 @@ public class GeoFacilityIndicator {
 
   private Long indicator;
 
+  private Boolean hasContacts;
+
 }

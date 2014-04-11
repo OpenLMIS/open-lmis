@@ -13,8 +13,8 @@
                 <div class="box-header">
                     <h2>Reporting Rate Report</h2>
                 </div>
+             <div class="clearfix"><br /></div>
              <filters>
-
                 <program-filter class="form-cell horizontalFilters"></program-filter>
                 <schedule-filter class="form-cell horizontalFilters"></schedule-filter>
                 <year-filter class="form-cell horizontalFilters"></year-filter>
@@ -68,11 +68,56 @@
     </div>
   </div>
   <div id="popup-box" modal="successModal">
+
     <div class="modal-header">
-       <h3>{{ title }} </h3>
+       <h3>{{ title }}</h3>
     </div>
     <div class="modal-body">
-      <table class="table" style="max-height: 350px">
+        <div ng-show="show_sms">
+             <div>
+                 <p>
+                     Please use the form below to customize and send sms notifications for <b>{{selected_facility.name}}</b>
+                 </p>
+                 <div>
+                     <div style="float:right; width: 200px; text-align: right;">
+                         Following contacts will recieve this notificaiton:
+                         <div>
+                             <table class="table table-bordered">
+                                 <tr ng-repeat="contact in contacts">
+                                     <td>{{contact.name}}</td>
+                                     <td>{{contact.contact}}</td>
+                                 </tr>
+                             </table>
+                         </div>
+                     </div>
+
+                     <textarea  rows="4" style="width:300px" ng-model="sms_template"></textarea>
+                 </div>
+
+             </div>
+        </div>
+        <div ng-show="show_email">
+            <div>
+                <p>
+                    Use this form to customize and send email notifications for <b>{{selected_facility.name}}</b>
+                </p>
+                <div>
+                    <div style="float:right; width:200px ; text-align: right;">
+                        who recieves this notificaiton?
+                        <div>
+                            <table class="table table-bordered">
+                                <tr ng-repeat="contact in contacts">
+                                    <td><b>{{contact.name}}</b></td>
+                                    <td>{{contact.contact}}</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <textarea rows="4" style="width:250px" ng-model="email_template"></textarea>
+                </div>
+            </div>
+        </div>
+      <table ng-show="!show_sms && !show_email" class="table" style="max-height: 350px">
         <thead>
         <tr>
           <th>Facility Name</th>
@@ -85,16 +130,24 @@
           <td>{{ row.name }}</td>
           <td>{{ row.mainPhone }}</td>
           <td>
-            <a class="btn-mini leaflet-clickable">Email</a>
-            <a class="btn-mini leaflet-clickable" ng-show="sms_enabled">SMS</a>
+              <div ng-show="row.hasContacts && !row.sent">
+                  <a href="#/list" class="btn btn-mini" ng-click="showSendEmail(row)">Email</a>
+                  <a href="#/list" class="btn btn-mini" ng-click="showSendSms(row)" ng-show="sms_enabled">SMS</a>
+              </div>
+              <div ng-show="!row.hasContacts">
+                   No Contacts
+              </div>
+              <div class="green" ng-show="row.hasContacts && row.sent">
+                  Sent
+              </div>
           </td>
         </tr>
         </tbody>
       </table>
     </div>
     <div class="modal-footer">
-      <a class="btn btn-primary pull-right" ng-click="successModal=false">Close</a>
-      <!--<a class="btn-mini pull-right leaflet-clickable" ng-click="">Show Other Facilities</a>-->
+      <a class="btn btn-primary pull-right" ng-click="successModal=false;">Close</a>
+      <a class="btn btn-primary pull-right" ng-show="show_sms || show_email" ng-click="selected_facility.sent=true;show_sms=false;show_email=false;">Send</a>
     </div>
   </div>
 

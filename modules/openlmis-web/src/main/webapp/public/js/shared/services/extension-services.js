@@ -412,6 +412,10 @@ services.factory('NonReportingFacilityList', function($resource){
   return $resource('/gis/non-reporting-facilities.json',{}, {});
 });
 
+services.factory('ContactList', function($resource){
+   return $resource('/facility-contacts',{},{});
+});
+
 /* Dashboard data factories */
 services.factory('UserSupervisoryNodes', function($resource){
     return $resource('/reports/user/supervisory-nodes.json',{},{});
@@ -464,7 +468,6 @@ services.factory('StockedOutFacilitiesByRequisitionGroup', function($resource){
 });
 services.factory('Alerts', function($resource){
     return $resource('/dashboard/alerts.json',{},{});
-
 });
 
 
