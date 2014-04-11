@@ -142,8 +142,8 @@
                             <td data-title="'#'" class="number" style="width:20px" >{{ row.no }}</td>
                             <td data-title="'Facility Name'" style="width:150px" sortable="facility" >{{ row.facility }}</td>
                             <td data-title="'Product'" style="width:30%" sortable="product"  >{{ row.product }}</td>
-                            <td data-title="'Physical Count'" class="number" style="width:80px" sortable="physicalCount"  >{{ row.physicalCount | number }}</td>
                             <td data-title="'AMC'" class="number" style="width:80px" sortable="amc"  >{{ row.amc | number }}</td>
+                            <td data-title="'Closing Balance'" class="number" style="width:80px" sortable="physicalCount"  >{{ row.physicalCount | number }}</td>
                             <td data-title="'MOS'" class="number" style="width:80px" sortable="months"  >{{ row.months | number }}</td>
                             <td data-title="'Order Quantity'" class="number" style="width:80px" sortable="orderQuantity"  >{{ row.orderQuantity | number }}</td>
                             <td data-title="'Status'" ng-class="{ red:'Stocked Out'}"  style="width:120px" sortable="status"> <div class="{{(row.status == 'Stocked Out')?'red':(row.status=='Below Minimum')?'green':(row.status=='Over Stocked')?'blue':'yellow'}}">
