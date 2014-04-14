@@ -254,6 +254,7 @@ function CreateRequisitionController($scope, requisitionData, pageSize, rnrColum
 
     //Who wrote this? This is awesome!!
     rnr[$scope.visibleTab + 'LineItems'] = transform($scope.page[$scope.visibleTab]);
+    rnr['nonFullSupplyLineItems'] = transform($scope.rnr.nonFullSupplyLineItems);
 
     return rnr;
   }
