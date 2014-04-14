@@ -1475,4 +1475,8 @@ public class DBWrapper {
     String programId = getAttributeFromTable("programs", "id", "code", programCode);
     update("UPDATE program_products SET %s = %s WHERE programId = %s and productId = %s;", field, value, programId, productId);
   }
+
+  public void insertProgram(String program) throws SQLException {
+    update("INSERT INTO programs (code, name, active) values ('" + program + "','" + program + "','t');");
+  }
 }

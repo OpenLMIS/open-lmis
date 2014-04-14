@@ -40,9 +40,11 @@ public class RnRPagination extends TestCaseHelper {
     loginPage = PageObjectFactory.getLoginPage(testWebDriver, baseUrlGlobal);
   }
 
-  @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-Positive", enabled = false)
+  @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-Positive")
   public void testRnRPaginationAndSpecificDisplayOrder(String program, String userSIC, String password) throws SQLException {
     dbWrapper.setupMultipleProducts(program, "Lvl3 Hospital", 11, false);
+    dbWrapper.insertProgramProduct("F5", "MALARIA", "70", "t");
+    dbWrapper.insertProgramProduct("NF4", "MALARIA", "90", "t");
     setupData(program, userSIC);
 
     HomePage homePage = loginPage.loginAs(userSIC, password);
@@ -54,21 +56,32 @@ public class RnRPagination extends TestCaseHelper {
     verifyNextAndLastLinksEnabled();
     verifyPreviousAndFirstLinksDisabled();
     verifyDisplayOrderFullSupply(10);
+    testWebDriver.getElementById("nextPageLink").click();
+    assertEquals(testWebDriver.getElementById("productCode_0").getText(), "F10");
+    testWebDriver.getElementById("firstPageLink").click();
 
     initiateRnRPage.PopulateMandatoryFullSupplyDetails(11, 10);
 
-    testWebDriver.getElementByXpath("//a[contains(text(), '2') and @class='ng-binding']").click();
-    assertEquals(testWebDriver.getElementByXpath(FULL_SUPPLY_BASE_LOCATOR + "/tbody[1]/tr[1]/td").getText(), "Antibiotics");
+    assertEquals(testWebDriver.getElementById("category_0").getText(), "Antibiotics");
+    testWebDriver.getElementById("firstPageLink").click();
+    assertEquals(testWebDriver.getElementById("category_0").getText(), "Antibiotics");
+    assertEquals(testWebDriver.getElementById("category_1").getText(), "");
+    testWebDriver.getElementById("nextPageLink").click();
     verifyPageLinksFromLastPage();
 
     initiateRnRPage.addMultipleNonFullSupplyLineItems(11, false);
     verifyDisplayOrderNonFullSupply(10);
+    testWebDriver.getElementById("nextPageLink").click();
+    assertEquals(testWebDriver.getElementById("productCode_0").getText(), "NF10");
+    testWebDriver.getElementById("firstPageLink").click();
     verifyNumberOfPageLinks(11, 10);
     verifyPreviousAndFirstLinksDisabled();
     verifyNextAndLastLinksEnabled();
 
-    testWebDriver.getElementByXpath("//a[contains(text(), '2') and @class='ng-binding']").click();
-    assertEquals(testWebDriver.getElementByXpath(NON_FULL_SUPPLY_BASE_LOCATOR + "/tbody[1]/tr[1]/td").getText(), "Antibiotics");
+    assertEquals(testWebDriver.getElementById("category_0").getText(), "Antibiotics");
+    assertEquals(testWebDriver.getElementById("category_1").getText(), "");
+    testWebDriver.getElementById("nextPageLink").click();
+    assertEquals(testWebDriver.getElementById("category_0").getText(), "Antibiotics");
     verifyPageLinksFromLastPage();
 
     initiateRnRPage.submitRnR();
@@ -83,21 +96,27 @@ public class RnRPagination extends TestCaseHelper {
     verifyNextAndLastLinksEnabled();
     verifyPreviousAndFirstLinksDisabled();
     verifyDisplayOrderFullSupplyOnViewRequisition(10);
+    testWebDriver.getElementById("nextPageLink").click();
+    assertEquals(testWebDriver.getElementById("productCode_0").getText(), "F10");
+    testWebDriver.getElementById("firstPageLink").click();
 
     testWebDriver.getElementByXpath("//a[contains(text(), '2') and @class='ng-binding']").click();
-    assertEquals(testWebDriver.getElementByXpath(FULL_SUPPLY_BASE_LOCATOR + "/tbody[1]/tr[1]/td").getText(), "Antibiotics");
+    assertEquals(testWebDriver.getElementById("category_0").getText(), "Antibiotics");
     verifyPageLinksFromLastPage();
 
     viewRequisitionPage.clickNonFullSupplyTab();
 
     verifyDisplayOrderNonFullSupplyOnViewRequisition(10);
+    testWebDriver.getElementById("nextPageLink").click();
+    assertEquals(testWebDriver.getElementById("productCode_0").getText(), "NF10");
+    testWebDriver.getElementById("firstPageLink").click();
 
     verifyNumberOfPageLinks(11, 10);
     verifyPreviousAndFirstLinksDisabled();
     verifyNextAndLastLinksEnabled();
 
     testWebDriver.getElementByXpath("//a[contains(text(), '2') and @class='ng-binding']").click();
-    assertEquals(testWebDriver.getElementByXpath(NON_FULL_SUPPLY_BASE_LOCATOR + "/tbody/tr[1]/td").getText(), "Antibiotics");
+    assertEquals(testWebDriver.getElementById("category_0").getText(), "Antibiotics");
 
     verifyPageLinksFromLastPage();
   }
@@ -127,9 +146,18 @@ public class RnRPagination extends TestCaseHelper {
     InitiateRnRPage initiateRnRPage = homePage.clickProceed();
 
     verifyDefaultDisplayOrderFullSupply();
+    assertEquals(testWebDriver.getElementById("category_0").getText(), "Antibiotics");
+    testWebDriver.getElementById("nextPageLink").click();
+    assertEquals(testWebDriver.getElementById("productCode_0").getText(), "F9");
+    testWebDriver.getElementById("firstPageLink").click();
+    assertEquals(testWebDriver.getElementById("category_0").getText(), "Antibiotics");
 
     initiateRnRPage.addMultipleNonFullSupplyLineItems(11, false);
     verifyDefaultDisplayOrderNonFullSupply();
+    testWebDriver.getElementById("nextPageLink").click();
+    assertEquals(testWebDriver.getElementById("productCode_0").getText(), "NF9");
+    testWebDriver.getElementById("firstPageLink").click();
+    assertEquals(testWebDriver.getElementById("category_0").getText(), "Antibiotics");
   }
 
   @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-Positive")
@@ -142,9 +170,11 @@ public class RnRPagination extends TestCaseHelper {
     InitiateRnRPage initiateRnRPage = homePage.clickProceed();
 
     verifyCategoryDisplayOrder(10);
+    verifyDisplayOrderFullSupply(11);
 
     initiateRnRPage.addMultipleNonFullSupplyLineItems(11, true);
     verifyCategoryDisplayOrder(10);
+    verifyDisplayOrderNonFullSupply(10);
   }
 
   @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-Positive")
@@ -157,15 +187,17 @@ public class RnRPagination extends TestCaseHelper {
     InitiateRnRPage initiateRnRPage = homePage.clickProceed();
 
     verifyCategoryDefaultDisplayOrderFullSupply();
+    verifyDefaultDisplayOrderFullSupply();
 
     initiateRnRPage.addMultipleNonFullSupplyLineItems(11, true);
     verifyCategoryDefaultDisplayOrderNonFullSupply();
+    verifyDefaultDisplayOrderNonFullSupply();
   }
 
   public void verifyDisplayOrderFullSupply(int numberOfLineItemsPerPage) {
     for (int i = 0; i < numberOfLineItemsPerPage; i++) {
       testWebDriver.waitForElementToAppear(testWebDriver.getElementByXpath(FULL_SUPPLY_BASE_LOCATOR + "/tbody[" + (i + 1) + "]/tr[2]/td[1]/ng-switch/span/ng-switch/span"));
-      assertEquals(testWebDriver.getElementByXpath(FULL_SUPPLY_BASE_LOCATOR + "/tbody[" + (i + 1) + "]/tr[2]/td[1]/ng-switch/span/ng-switch/span").getText(), "F" + i);
+      assertEquals(testWebDriver.getElementById("productCode_" + i).getText(), "F" + i);
     }
   }
 
@@ -179,7 +211,7 @@ public class RnRPagination extends TestCaseHelper {
   public void verifyDisplayOrderNonFullSupply(int numberOfLineItemsPerPage) {
     for (int i = 0; i < numberOfLineItemsPerPage; i++) {
       testWebDriver.waitForElementToAppear(testWebDriver.getElementByXpath(NON_FULL_SUPPLY_BASE_LOCATOR + "/tbody[" + (i + 1) + "]/tr[2]/td[1]/ng-switch/span"));
-      assertEquals(testWebDriver.getElementByXpath(NON_FULL_SUPPLY_BASE_LOCATOR + "/tbody[" + (i + 1) + "]/tr[2]/td[1]/ng-switch/span").getText(), "NF" + i);
+      assertEquals(testWebDriver.getElementById("productCode_" + i).getText(), "NF" + i);
     }
   }
 
