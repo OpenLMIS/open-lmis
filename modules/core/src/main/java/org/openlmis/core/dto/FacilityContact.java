@@ -8,23 +8,21 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-function ListSettingController($scope, $location, Settings, SettingUpdator) {
+package org.openlmis.core.dto;
 
-  $scope.current = '';
-  $scope.CreateHeader = function(setting) {
-    showHeader = (setting.toUpperCase() != $scope.current.toUpperCase());
-    $scope.current = setting;
-    return showHeader;
-  }
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-  Settings.get(function (data){
-     $scope.settings = data.settings;
-  });
+@Data
+@NoArgsConstructor
+public class FacilityContact {
 
-  $scope.saveSettings = function(){
-      SettingUpdator.post({}, $scope.settings, function (data){
-          $location.path('');
-          $scope.$parent.message = "The configuration changes were successfully updated.";
-      });
-  };
+  private Long userId;
+
+  private String name;
+
+  private String type;
+
+  private String contact;
+
 }

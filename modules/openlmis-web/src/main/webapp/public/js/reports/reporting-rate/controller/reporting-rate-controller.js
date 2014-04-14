@@ -8,35 +8,67 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-function ReportingRateController($scope, leafletData, ReportingFacilityList, NonReportingFacilityList, $dialog, messageService) {
+function ReportingRateController($scope, leafletData, ReportingFacilityList, NonReportingFacilityList, SettingsByKey, ContactList, $dialog, messageService) {
 
 
-    $scope.ReportingFacilities = function(feature, element) {
-        ReportingFacilityList.get({
-            program: $scope.filter.program,
-            period: $scope.filter.period,
-            geo_zone: feature.id
-        }, function(data) {
-            $scope.facilities = data.facilities;
-            $scope.successModal = true;
-            $scope.title = 'Properly Reporting Facilities in ' + feature.name;
-        });
-        $scope.zoomToSelectedFeature(feature);
-    };
+  $scope.showSendEmail = function(facility){
+    $scope.selected_facility = facility;
+    ContactList.get({type:'email', facilityId: facility.id}, function(data){
+      $scope.contacts = data.contacts;
+    });
+    $scope.show_email = !$scope.show_email;
+  };
 
-    $scope.NonReportingFacilities = function(feature, element) {
-        NonReportingFacilityList.get({
-            program: $scope.filter.program,
-            period: $scope.filter.period,
-            geo_zone: feature.id
-        }, function(data) {
-            $scope.facilities = data.facilities;
-            $scope.successModal = true;
-            $scope.title = 'Non Reporting Facilities in ' + feature.name;
+  $scope.showSendSms = function(facility){
+    $scope.selected_facility = facility;
+    ContactList.get({type:'sms', facilityId: facility.id}, function(data){
+      $scope.contacts = data.contacts;
+    });
+    $scope.show_sms = !$scope.show_sms;
+  };
 
-        });
-        $scope.zoomToSelectedFeature(feature);
-    };
+  SettingsByKey.get({key: 'LATE_RNR_NOTIFICATION_SMS_TEMPLATE'}, function (data){
+    $scope.sms_template           = data.settings.value;
+  });
+
+  SettingsByKey.get({key: 'LATE_RNR_NOTIFICATION_EMAIL_TEMPLATE'}, function (data){
+    $scope.email_template         = data.settings.value;
+  });
+
+  SettingsByKey.get({key: 'SMS_ENABLED'},function (data){
+    $scope.sms_enabled            = data.settings.value;
+  });
+
+
+
+  $scope.ReportingFacilities = function(feature, element) {
+    ReportingFacilityList.get({
+      program: $scope.filter.program,
+      period: $scope.filter.period,
+      geo_zone: feature.id
+    }, function(data) {
+      $scope.facilities = data.facilities;
+      $scope.successModal = true;
+      $scope.show_email = $scope.show_sms = false;
+      $scope.title = 'Properly Reporting Facilities in ' + feature.name;
+    });
+    $scope.zoomToSelectedFeature(feature);
+  };
+
+  $scope.NonReportingFacilities = function(feature, element) {
+    NonReportingFacilityList.get({
+      program: $scope.filter.program,
+      period: $scope.filter.period,
+      geo_zone: feature.id
+    }, function(data) {
+      $scope.facilities = data.facilities;
+      $scope.successModal = true;
+      $scope.show_email = $scope.show_sms = false;
+      $scope.title = 'Non Reporting Facilities in ' + feature.name;
+    });
+
+    $scope.zoomToSelectedFeature(feature);
+  };
 
     $scope.expectedFilter = function(item) {
         return item.expected > 0;
@@ -90,11 +122,11 @@ function ReportingRateController($scope, leafletData, ReportingFacilityList, Non
     $scope.style = function(feature) {
         var color = ($scope.indicator_type == 'ever_over_total') ? interpolate(feature.ever, feature.total) : ($scope.indicator_type == 'ever_over_expected') ? interpolate(feature.ever, feature.expected) : interpolate(feature.period, feature.expected);
         return {
-            fillColor: color,
-            weight: 1,
-            opacity: 1,
-            color: 'white',
-            dashArray: '1',
+            fillColor:  color,
+            weight:     1,
+            opacity:    1,
+            color:      'white',
+            dashArray:  '1',
             fillOpacity: 0.7
         };
     };
@@ -120,7 +152,10 @@ function ReportingRateController($scope, leafletData, ReportingFacilityList, Non
     };
 
     $scope.zoomToSelectedFeature = function(zoomToFeature) {
-        leafletData.getMap().then(function(map) {
+      //TODO: highlight the district instead of zoom
+      return;
+
+      leafletData.getMap().then(function(map) {
             var latlngs = [];
 
             for (var i = 0; i < zoomToFeature.geometry.coordinates.length; i++) {
@@ -186,8 +221,6 @@ function ReportingRateController($scope, leafletData, ReportingFacilityList, Non
                 "features": $scope.features
             });
             $scope.centerJSON();
-
-
         });
 
     };

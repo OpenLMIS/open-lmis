@@ -58,21 +58,20 @@ public interface GeographicZoneReportMapper {
       " where gz.levelId = (select max(id) from geographic_levels) and ps.programId = #{programId} " +
       " group by geographicZoneId" +
       " ) expected " +
-      " on gzz.id =expected.geographicZoneId " +
-
+      " on gzz.id = expected.geographicZoneId " +
       " left join " +
         " (select geographicZoneId, count(*) from facilities  " +
           " join geographic_zones gz on gz.id = facilities.geographicZoneId " +
           " where gz.levelId = (select max(id) from geographic_levels)  " +
           " group by geographicZoneId" +
         " ) total " +
-          " on gzz.id =total.geographicZoneId " +
+          " on gzz.id = total.geographicZoneId " +
     " left join  " +
         " (select geographicZoneId, count(*) from facilities  " +
         " join programs_supported ps on ps.facilityId = facilities.id " +
         " join geographic_zones gz on gz.id = facilities.geographicZoneId " +
         " where ps.programId = #{programId} and facilities.id in  " +
-          "(select facilityId from requisitions) " +
+          "(select facilityId from requisitions where programId = #{programId} ) " +
             "group by geographicZoneId" +
         " ) ever " +
         " on gzz.id = ever.geographicZoneId " +
@@ -81,13 +80,13 @@ public interface GeographicZoneReportMapper {
              " join programs_supported ps on ps.facilityId = facilities.id " +
              " join geographic_zones gz on gz.id = facilities.geographicZoneId " +
              " where  ps.programId = #{programId} and facilities.id in  " +
-             " (select facilityId from requisitions where periodId = #{processingPeriodId}) " +
+             " (select facilityId from requisitions where periodId = #{processingPeriodId} and programId = #{programId}) " +
               " group by geographicZoneId" +
     " ) period" +
     " on gzz.id = period.geographicZoneId order by gzz.name" )
   List<GeoZoneReportingRate> getGeoReportingRate(@Param("programId") Long programId, @Param("processingPeriodId") Long processingPeriodId);
 
-  @Select("select f.id, f.name, f.mainphone, f.longitude, f.latitude from facilities f\n" +
+  @Select("select f.id, f.name, f.mainPhone, f.longitude, f.latitude, false reported , (select count(*) > 0 from users where users.active = true and users.facilityId = f.id) as hasContacts from facilities f\n" +
             "  join requisition_group_members m on f.id = m.facilityId\n" +
             "  join requisition_group_program_schedules s on s.requisitionGroupId = m.requisitionGroupId and s.programId = #{programId}\n" +
             "  join processing_periods pp on pp.scheduleId = s.scheduleId and pp.id = #{periodId}\n" +
@@ -97,7 +96,7 @@ public interface GeographicZoneReportMapper {
             " order by f.name ")
   List<GeoFacilityIndicator> getNonReportingFacilities(@Param("programId") Long programId, @Param("geographicZoneId") Long geographicZoneId, @Param("periodId") Long processingPeriodId);
 
-  @Select("select f.id, f.name, f.mainphone, f.longitude, f.latitude from facilities f\n" +
+  @Select("select f.id, f.name, f.mainPhone, f.longitude, f.latitude, true reported, (select count(*) > 0 from users where users.active = true and users.facilityId = f.id) as hasContacts from facilities f\n" +
     "  join requisition_group_members m on f.id = m.facilityId\n" +
     "  join requisition_group_program_schedules s on s.requisitionGroupId = m.requisitionGroupId and s.programId = #{programId}\n" +
     "  join processing_periods pp on pp.scheduleId = s.scheduleId and pp.id = #{periodId}\n" +
