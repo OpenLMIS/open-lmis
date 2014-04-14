@@ -1,9 +1,7 @@
 package org.openlmis.report.service.lookup;
 
-import org.openlmis.core.service.ConfigurationSettingService;
 import org.openlmis.report.mapper.lookup.DashboardMapper;
 import org.openlmis.report.model.dto.*;
-import org.openlmis.report.util.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
