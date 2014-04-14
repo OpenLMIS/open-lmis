@@ -1,0 +1,46 @@
+/*
+ * This program is part of the OpenLMIS logistics management information system platform software.
+ * Copyright © 2013 VillageReach
+ *
+ * This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+ *  
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+ * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
+ */
+
+apply plugin: 'cobertura'
+
+dependencies {
+
+    compile 'org.springframework:spring-aspects:3.1.1.RELEASE',
+            'org.springframework:spring-webmvc:3.1.1.RELEASE',
+            'javax.mail:mail:1.4.5',
+            'org.springframework.integration:spring-integration-core:2.2.3.RELEASE',
+            'org.springframework.integration:spring-integration-jdbc:2.2.3.RELEASE',
+            'commons-collections:commons-collections:20040616',
+            'commons-lang:commons-lang:2.6',
+            project(':modules:db')
+
+    testCompile 'org.springframework:spring-test:3.1.1.RELEASE',
+            'org.springframework:spring-aspects:3.1.1.RELEASE',
+            'javax.mail:mail:1.4.5'
+
+    configurations {
+        testFixtures {
+            extendsFrom testRuntime
+        }
+    }
+
+    task testJar(type: Jar) {
+        from sourceSets.test.output
+        classifier = 'test'
+    }
+
+    artifacts {
+        testFixtures testJar
+    }
+}
+
+cobertura {
+    coverageFormats << 'xml'
+}
