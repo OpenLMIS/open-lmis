@@ -12,9 +12,6 @@ package org.openlmis.report.builder;
 
 import org.openlmis.report.model.report.SupplyStatusReport;
 
-import javax.persistence.Column;
-import java.lang.reflect.Field;
-import java.util.HashMap;
 import java.util.Map;
 
 public class SupplyStatusQueryBuilder {
@@ -48,7 +45,7 @@ public class SupplyStatusQueryBuilder {
         String program =   params.get("program") == null ? null : ((String[])params.get("program"))[0];
         String product =   params.get("product") == null ? null : ((String[])params.get("product"))[0];
         String zone =     params.get("zone") == null ? null : ((String[])params.get("zone"))[0];
-        String rgroup =     params.get("rgroup") == null ? null : ((String[])params.get("rgroup"))[0];
+        String rgroup =     params.get("requisitionGroup") == null ? null : ((String[])params.get("requisitionGroup"))[0];
         String schedule = params.get("schedule") == null ? null : ((String[])params.get("schedule"))[0];
 
         predicate += " and pp_id = "+ period;
@@ -67,7 +64,7 @@ public class SupplyStatusQueryBuilder {
 
             predicate += " and p_id = "+ product;
 
-        }else if(product != null &&  !product.equals("undefined") && !product.isEmpty() && product.equals("-1")){
+        }else if(product != null &&  !product.equals("undefined") && !product.isEmpty() && product.equals("0")){
             predicate += " and indicator_product = true";
         }
 

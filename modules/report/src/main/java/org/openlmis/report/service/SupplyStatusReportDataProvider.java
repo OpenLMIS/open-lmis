@@ -12,12 +12,12 @@ package org.openlmis.report.service;
 
 import lombok.NoArgsConstructor;
 import org.apache.ibatis.session.RowBounds;
-import org.openlmis.core.service.ConfigurationSettingService;
 import org.openlmis.report.mapper.SupplyStatusReportMapper;
 import org.openlmis.report.model.ReportData;
 import org.openlmis.report.util.SelectedFilterHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
@@ -30,9 +30,6 @@ public class SupplyStatusReportDataProvider extends ReportDataProvider {
   private SupplyStatusReportMapper reportMapper;
 
   @Autowired
-  private ConfigurationSettingService configurationService;
-
-  @Autowired
   private SelectedFilterHelper filterHelper;
 
   @Override
@@ -41,12 +38,14 @@ public class SupplyStatusReportDataProvider extends ReportDataProvider {
   }
 
   @Override
+  @Transactional
   public List<? extends ReportData> getMainReportData(Map<String, String[]> filterCriteria, Map<String, String[]> SortCriteria, int page, int pageSize) {
     RowBounds rowBounds = new RowBounds((page - 1) * pageSize, pageSize);
     return reportMapper.getSupplyStatus(filterCriteria, rowBounds);
   }
 
   @Override
+  @Transactional
   public String getFilterSummary(Map<String, String[]> params) {
     return filterHelper.getSelectedFilterString(params);
   }
