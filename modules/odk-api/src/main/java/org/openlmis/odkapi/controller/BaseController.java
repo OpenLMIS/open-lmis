@@ -27,6 +27,9 @@ public class BaseController {
             "    <message nature=\"submit_failure\"> Error during form submission. </message>\n" +
             "</OpenRosaResponse>";
     public static final String ODK_COLLECT_APP_APK_FILE_NAME = "ODK Collect v1.4 rev 1038.apk";
+    public static final String ODK_COLLECT_APP_APK_REQUEST_PARAMETER = "apk";
+    public static final String ODK_COLLECT_APP_ITEMSETS_CSV_FILE_NAME = "itemsets.csv";
+    public static final String ODK_COLLECT_APP_ITEMSETS_REQUEST_PARAMETER = "itemsets";
     public static final String FILE_NOT_FOUND_ERROR_MESSAGE = "File not found.";
     public static final String OUTPUT_STREAM_CANNOT_BE_GENERATED = "Could not generate output stream.";
     public static final String CAN_NOT_READ_FILE = "File could not be read.";

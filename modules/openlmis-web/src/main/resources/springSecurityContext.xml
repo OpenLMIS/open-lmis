@@ -37,10 +37,6 @@
     <beans:constructor-arg value="/public/pages/login.html"/>
   </beans:bean>
 
-   <beans:bean id="odkAuthenticationEntryPoint"
-                class="org.openlmis.authentication.web.ODKAuthenticationEntryPoint">
-   <beans:constructor-arg value="/public/pages/login.html"/>
-   </beans:bean>
 
   <beans:bean id="openLmisAccessDeniedHandler" class="org.openlmis.authentication.web.OpenLmisAccessDeniedHandler"/>
 
@@ -49,8 +45,7 @@
     <http-basic/>
   </http>
 
-  <http pattern="/odk-api/**" authentication-manager-ref="odkAuthenticationManager" entry-point-ref="odkAuthenticationEntryPoint">
-  </http>
+  <http pattern="/odk-api/**" security="none" />
 
   <http use-expressions="true" entry-point-ref="restAuthenticationEntryPoint">
     <intercept-url pattern="/j_spring_security_check" access="IS_AUTHENTICATED_ANONYMOUSLY" requires-channel="any"/>
