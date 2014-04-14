@@ -65,7 +65,7 @@ public class SMSService {
 
         String pushSmsUrl =  configSetting.getConfigurationStringValue("KANNEL_SETTINGS").toString();
 
-        String urlString = pushSmsUrl+"&text="+content+"&to="+phoneNumber;
+        String urlString = pushSmsUrl+"&text="+content.replaceAll(" ","+")+"&to="+phoneNumber.toString();
 
         try {
             URL url = new URL(urlString.toString());
@@ -79,7 +79,7 @@ public class SMSService {
             while ((line = reader.readLine()) != null) {
                 buffer = buffer.append(line).append("\n");
             }
-            smsRepository.saveSMSMessage("Incoming", 1, content, phoneNumber, new Date());
+            smsRepository.saveSMSMessage("Outgoing", 0, content, phoneNumber, new Date());
             System.out.println("Submit request= " + urlString.toString());
             System.out.println("response : "+buffer.toString());
             System.out.println("INFO : all sent disconnect.");

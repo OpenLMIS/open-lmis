@@ -11,18 +11,12 @@
 package org.openlmis.report.service;
 
 import lombok.NoArgsConstructor;
-import org.apache.ibatis.session.RowBounds;
-import org.openlmis.core.service.ConfigurationSettingService;
-import org.openlmis.report.mapper.SupplyStatusReportMapper;
 import org.openlmis.report.mapper.lookup.GeographicZoneReportMapper;
-import org.openlmis.report.model.GeoReportData;
-import org.openlmis.report.model.ReportData;
-import org.openlmis.report.util.SelectedFilterHelper;
+import org.openlmis.report.model.GeoZoneReportingRate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.Map;
 
 @Component
 @NoArgsConstructor
@@ -31,7 +25,7 @@ public class GeographicReportProvider  {
   @Autowired
   GeographicZoneReportMapper geoMapper;
 
-  public List<GeoReportData> getReportingRateReport(Long programId, Long processingPeriodId){
+  public List<GeoZoneReportingRate> getReportingRateReport(Long programId, Long processingPeriodId){
     return geoMapper.getGeoReportingRate(programId, processingPeriodId);
   }
 

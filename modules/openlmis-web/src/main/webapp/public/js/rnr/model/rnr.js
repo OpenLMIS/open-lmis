@@ -8,10 +8,11 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-var Rnr = function (rnr, programRnrColumns) {
+var Rnr = function (rnr, programRnrColumns, numberOfMonths) {
   $.extend(true, this, rnr);
   var thisRnr = this;
   this.skipAll = false;
+  this.numberOfMonths = numberOfMonths;
 
   var getInvalidLineItemIndexes = function (lineItems) {
     var errorLineItems = [];
@@ -27,6 +28,17 @@ var Rnr = function (rnr, programRnrColumns) {
 
   Rnr.prototype.getNonFullSupplyErrorLineItemIndexes = function () {
     return getInvalidLineItemIndexes(this.nonFullSupplyLineItems);
+  };
+
+  Rnr.prototype.getRegimenErrorLineItemIndexes = function () {
+
+    var errorLineItems = [];
+    $(this.regimenLineItems).each(function (i, lineItem) {
+      if(lineItem.hasError){
+        errorLineItems.push(i);
+      }
+    });
+    return errorLineItems;
   };
 
   Rnr.prototype.getErrorPages = function (pageSize) {
@@ -48,9 +60,15 @@ var Rnr = function (rnr, programRnrColumns) {
       return getErrorPages(nonFullSupplyErrorLIneItems);
     }
 
+    function getRegimenPagesWithError(){
+      var regimenErrorLineItems = thisRnr.getRegimenErrorLineItemIndexes();
+      return getErrorPages(regimenErrorLineItems);
+    }
+
     var errorPages = {};
     errorPages.fullSupply = getFullSupplyPagesWithError();
     errorPages.nonFullSupply = getNonFullSupplyPagesWithError();
+    errorPages.regimen = getRegimenPagesWithError();
     return errorPages;
   };
 
@@ -146,7 +164,6 @@ var Rnr = function (rnr, programRnrColumns) {
     return cost;
   };
 
-
   Rnr.prototype.fillCost = function (isFullSupply) {
     if (isFullSupply)
       this.calculateFullSupplyItemsSubmittedCost();
@@ -169,7 +186,6 @@ var Rnr = function (rnr, programRnrColumns) {
     this.fillCost(rnrLineItem.fullSupply);
   };
 
-
   Rnr.prototype.periodDisplayName = function () {
     return this.period.stringStartDate + ' - ' + this.period.stringEndDate;
   };
@@ -191,7 +207,7 @@ var Rnr = function (rnr, programRnrColumns) {
     function prepareLineItems(lineItems) {
       var regularLineItems = [];
       $(lineItems).each(function (i, lineItem) {
-        var regularLineItem = new RegularRnrLineItem(lineItem, thisRnr.period.numberOfMonths, programRnrColumns, thisRnr.status);
+        var regularLineItem = new RegularRnrLineItem(lineItem, thisRnr.numberOfMonths, programRnrColumns, thisRnr.status);
         regularLineItems.push(regularLineItem);
       });
       return regularLineItems;

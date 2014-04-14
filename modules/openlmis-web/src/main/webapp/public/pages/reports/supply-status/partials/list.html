@@ -119,7 +119,6 @@
             <tbody>
             <tr ng-repeat="row in datarows">
               <td data-title="'#'" class="number" style="width:20px">{{ row.no }}</td>
-              <td data-title="'Category'" style="width:150px" sortable="category">{{ row.category }}</td>
               <td data-title="'Product Code'" style="width:80px" sortable="code">{{ row.code }}</td>
               <td data-title="'Product'" style="width:30%" sortable="product">{{ row.product }}</td>
               <td data-title="'B. Balance'" class="number" style="width:80px" sortable="openingBalance">{{
@@ -145,7 +144,7 @@
               <td data-title="'Max Stock'" class="number" style="width:80px" sortable="maximumStock">{{ row.maximumStock
                 | number }}
               </td>
-              <td data-title="'Order Amount'" class="number" style="width:80px" sortable="reorderAmount">{{
+              <td data-title="'Quantity Ordered'" class="number" style="width:80px" sortable="reorderAmount">{{
                 row.reorderAmount | number }}
               </td>
             </tr>

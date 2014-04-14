@@ -15,6 +15,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.Product;
+import org.openlmis.core.domain.ProgramProduct;
 import org.openlmis.rnr.domain.LineItem;
 import org.openlmis.rnr.domain.RnrLineItem;
 
@@ -44,6 +45,8 @@ public class ShipmentLineItem extends LineItem {
 
   private Integer quantityOrdered;
 
+  private String replacedProductCode;
+
   private Integer quantityShipped;
 
   private String productName;
@@ -63,7 +66,7 @@ public class ShipmentLineItem extends LineItem {
   private Integer substitutedProductQuantityShipped;
 
   private Integer packSize;
-
+  
   private Date packedDate;
 
   private Date shippedDate;
@@ -90,9 +93,10 @@ public class ShipmentLineItem extends LineItem {
     this.fullSupply = fullSupply;
   }
 
-  public void fillReferenceFields(Product product) {
-    this.setReferenceFields(product.getName(), product.getDispensingUnit(), product.getCategory().getName(), null,
-      product.getCategory().getDisplayOrder(), product.getDisplayOrder(), product.getFullSupply());
+  public void fillReferenceFields(ProgramProduct programProduct) {
+    Product product = programProduct.getProduct();
+    this.setReferenceFields(product.getName(), product.getDispensingUnit(), programProduct.getProductCategory().getName(), null,
+      programProduct.getProductCategory().getDisplayOrder(), programProduct.getDisplayOrder(), product.getFullSupply());
   }
 
   public void fillReferenceFields(RnrLineItem lineItem) {

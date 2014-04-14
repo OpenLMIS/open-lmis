@@ -81,12 +81,15 @@ public class RnrLineItemMapperIT {
   @Autowired
   private RequisitionStatusChangeMapper requisitionStatusChangeMapper;
   @Autowired
+  private ProductCategoryMapper productCategoryMapper;
+  @Autowired
   QueryExecutor queryExecutor;
 
   private FacilityTypeApprovedProduct facilityTypeApprovedProduct;
   private Facility facility;
   private Rnr rnr;
   Program program;
+
   ProcessingPeriod processingPeriod;
 
   @Before
@@ -97,7 +100,12 @@ public class RnrLineItemMapperIT {
     program = make(a(ProgramBuilder.defaultProgram));
     programMapper.insert(program);
 
+
+    ProductCategory category = new ProductCategory("C1", "Category 1", 1);
+    productCategoryMapper.insert(category);
+
     ProgramProduct programProduct = new ProgramProduct(program, product, 30, true, new Money("12.5000"));
+    programProduct.setProductCategory(category);
     programProductMapper.insert(programProduct);
 
     facility = make(a(defaultFacility));
@@ -125,6 +133,7 @@ public class RnrLineItemMapperIT {
     lineItem.setBeginningBalance(5);
     lineItem.setFullSupply(true);
     lineItem.setReportingDays(10);
+    lineItem.setPreviousStockInHand(5);
     rnrLineItemMapper.insert(lineItem, lineItem.getPreviousNormalizedConsumptions().toString());
 
     LossesAndAdjustments lossesAndAdjustmentsClinicReturn = new LossesAndAdjustments();
@@ -159,6 +168,7 @@ public class RnrLineItemMapperIT {
     assertThat(rnrLineItem.getPackSize(), is(10));
     assertThat(rnrLineItem.getPrice().compareTo(new Money("12.5")), is(0));
     assertThat(rnrLineItem.getBeginningBalance(), is(5));
+    assertThat(rnrLineItem.getPreviousStockInHand(), is(5));
     assertThat(rnrLineItem.getProductCategory(), is("Category 1"));
     assertThat(rnrLineItem.getReportingDays(), is(10));
   }
@@ -205,6 +215,8 @@ public class RnrLineItemMapperIT {
     lineItem.setModifiedBy(anotherModifiedBy);
     lineItem.setBeginningBalance(43);
     lineItem.setTotalLossesAndAdjustments(20);
+    lineItem.setNormalizedConsumption(12);
+    lineItem.setPeriodNormalizedConsumption(12);
     lineItem.setExpirationDate("12/2014");
     lineItem.setReasonForRequestedQuantity("Quantity Requested more in liu of coming rains");
     lineItem.setReportingDays(5);
@@ -217,6 +229,8 @@ public class RnrLineItemMapperIT {
     assertThat(rnrLineItems.get(0).getBeginningBalance(), is(43));
     assertThat(rnrLineItems.get(0).getTotalLossesAndAdjustments(), is(20));
     assertThat(rnrLineItems.get(0).getProduct(), is("Primary Name Tablet strength mg"));
+    assertThat(rnrLineItems.get(0).getNormalizedConsumption(), is(12));
+    assertThat(rnrLineItems.get(0).getPeriodNormalizedConsumption(), is(12));
     assertThat(rnrLineItems.get(0).getExpirationDate(), is("12/2014"));
     assertThat(rnrLineItems.get(0).getReportingDays(), is(5));
     assertThat(rnrLineItems.get(0).getReasonForRequestedQuantity(),
@@ -293,16 +307,16 @@ public class RnrLineItemMapperIT {
     for (int index = 1; index <= 10; index++) {
       String productCode = "P" + index;
       ProductCategory category = new ProductCategory();
-      category.setCode("C" + index);
+      category.setCode("C_" + index);
       category.setName("Category " + index);
       category.setDisplayOrder(1);
       categoryMapper.insert(category);
       Product product = make(a(ProductBuilder.defaultProduct, with(ProductBuilder.code, productCode),
         with(ProductBuilder.fullSupply, fullSupplyFlag)));
-      product.setCategory(category);
       productMapper.insert(product);
 
       ProgramProduct programProduct = new ProgramProduct(program, product, 30, true, new Money("12.5000"));
+      programProduct.setProductCategory(category);
       programProductMapper.insert(programProduct);
 
       FacilityTypeApprovedProduct facilityTypeApprovedProduct = make(a(defaultFacilityApprovedProduct));

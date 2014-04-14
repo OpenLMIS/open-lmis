@@ -23,7 +23,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 /**
- * This is Repository class for RequisitionGroup related database operations.
+ * RequisitionGroupRepository is Repository class for RequisitionGroup related database operations.
  */
 
 @Repository

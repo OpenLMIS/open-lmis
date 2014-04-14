@@ -216,4 +216,9 @@ public class FacilityController extends BaseController {
   public ResponseEntity<OpenLmisResponse> getSupplyingFacilitiesCompleteList() {
       return OpenLmisResponse.response("facilities",facilityService.getSupplyingFacilitiesCompleteList());
   }
+
+  @RequestMapping(value = "/facility-contacts", method = GET, headers = ACCEPT_JSON)
+  public ResponseEntity<OpenLmisResponse> getContactsForFacility(@RequestParam("type") String type, @RequestParam("facilityId") Long facilityId) {
+    return OpenLmisResponse.response("contacts",facilityService.getContactList(facilityId, type));
+  }
 }

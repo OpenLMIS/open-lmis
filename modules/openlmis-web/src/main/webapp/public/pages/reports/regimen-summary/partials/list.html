@@ -11,7 +11,7 @@
 <div class="row-fluid sortable ui-sortable">
     <div class="box span12" >
         <div class="box-header">
-            <h2><i class="icon-edit"></i><span class="break"></span>National Summary of Patients Report By Regimen</h2>
+            <h2><i class="icon-edit"></i><span class="break"></span>National Summary of patients by regimen</h2>
             <div class="box-icon">
                 <a id="pdf-button" href="#list" ng-click="exportReport('PDF')" class='btn-small btn-info'>PDF</a>
                 <a id="xls-button" href="#list" ng-click="exportReport('XLS')" class='btn-small btn-info'>Excel</a>
@@ -71,34 +71,25 @@
                                 </div>
                                 <br />
 
-                                <div class="form-cell horizontalFilters" >
-                                    <label class="labels">Geographical Levels <span class="label-required">*</span></label>
-
-                                    <div class="form-fields">
-                                        <select ui-select2 style="width:200px;" class="large-input" name="geographicLevel"  ng-model="filterObject.geographicLevelId"   ng-change="ChangeGeographicLevel()">
-                                            <option ng-repeat="option in geographicLevels" value="{{option.id}}">{{option.name}}</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <br />
-
                                 <br/>
                                 <div class="form-cell horizontalFilters">
-                                    <label class="labels">Zone</label>
+                                    <label class="labels">Requisition Group</label>
 
                                     <div class="form-field">
-                                        <select ui-select2 style="width:200px;" ng-required="true"  name="zone" ng-model="filterObject.zoneId" >
-                                            <option  ng-repeat="option in zones" value="{{ option.id}}">{{ option.name }}</option>
+                                        <select ui-select2 style="width:200px;" ng-required="true"  name="rgroup" ng-model="filterObject.rgroupId" >
+                                            <option  ng-repeat="option in requisitionGroups" value="{{ option.id}}">{{ option.name }}</option>
                                         </select>
                                     </div>
                                 </div>
                                 <br />
                                 <br />
-
 
                                 <div class="clearfix"></div>
 
                                 <br />
+
+
+
 
 
 
@@ -185,4 +176,9 @@
 
     </div>
 </div>
+
+
+
+
+
 

@@ -19,6 +19,11 @@ import org.openlmis.order.domain.OrderStatus;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
+/**
+ * OrderPODDTO holds order and POD related attributes like facilityCode, facilityName, supplyingDepot, periodStartDate,
+ * periodEndDate, emergency etc.
+ */
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

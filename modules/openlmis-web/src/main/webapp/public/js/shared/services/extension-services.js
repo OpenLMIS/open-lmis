@@ -279,7 +279,8 @@ services.factory("AllFacilites",function($resource)  {
 });
 
 services.factory("FacilitiesByProgramParams",function($resource)  {
-    return   $resource('/reports/facilities/program/:program/schedule/:schedule/type/:type.json', {}, {});
+  //return   $resource('/reports/facilities/program/:program/schedule/:schedule/type/:type/requisitionGroup/:requisitionGroup.json', {}, {});
+  return   $resource('/reports/facilities.json', {}, {});
 });
 
 services.factory('SupervisoryNodeCompleteList',function($resource){
@@ -402,9 +403,31 @@ services.factory('SaveGeographicInfo', function($resource){
    return $resource('/geographic-zone/save-gis.json',{}, {post:{method:'POST'}});
 });
 
+
+services.factory('ReportingFacilityList', function($resource){
+  return $resource('/gis/reporting-facilities.json',{}, {});
+});
+
+services.factory('NonReportingFacilityList', function($resource){
+  return $resource('/gis/non-reporting-facilities.json',{}, {});
+});
+
+services.factory('ContactList', function($resource){
+   return $resource('/facility-contacts',{},{});
+});
+
 /* Dashboard data factories */
-services.factory("FacilitiesByGeographicZoneAndProgramParams",function($resource)  {
-    return   $resource('/reports/facilities/geographicZone/:geographicZoneId/requisitionGroup/:rgroupId/program/:programId/schedule/:scheduleId.json', {}, {});
+services.factory('UserSupervisoryNodes', function($resource){
+    return $resource('/reports/user/supervisory-nodes.json',{},{});
+});
+/*services.factory('UserDefaultSupervisoryNode', function($resource){
+   return $resource('/reports/user/default-supervisory-node.json',{},{});
+});*/
+services.factory('ProgramListBySupervisoryNodes', function ($resource) {
+    return $resource('/reports/supervisory-nodes/programs.json', {}, {});
+});
+services.factory("FacilitiesByProgramAndRequisitionGroupParams",function($resource)  {
+    return   $resource('/reports/facilities/supervisory-node/:supervisoryNodeId/program/:programId/schedule/:scheduleId.json', {}, {});
 });
 
 services.factory('OrderFillRate', function($resource){
@@ -427,6 +450,30 @@ services.factory('StockEfficiencyDetail', function($resource){
     return $resource('/dashboard/stockEfficiencyDetail.json',{}, {});
 });
 
+services.factory('StockedOutFacilities', function($resource){
+    return $resource('/dashboard/stockedOutFacilities.json',{}, {});
+});
+
+services.factory('ReportProgramsBySupervisoryNode', function ($resource) {
+    return $resource('/reports/supervisory-node/:supervisoryNodeId/programs.json', {}, {});
+});
+
+services.factory('RequisitionGroupsBySupervisoryNodeProgramSchedule', function($resource){
+    return $resource('/reports/reporting_groups_by_supervisory_node_program_schedule.json', {}, {});
+});
+
+services.factory('StockedOutFacilitiesByRequisitionGroup', function($resource){
+    return $resource('/dashboard/requisitionGroup/:rgroupId/program/:programId/period/:periodId/product/:productId/stockedOutFacilities.json',{},{});
+
+});
+services.factory('Alerts', function($resource){
+    return $resource('/dashboard/alerts.json',{},{});
+});
+
+
+
+
+
 /* End Dashboard data factories */
 
 services.factory('SMSCompleteList',function($resource){
@@ -440,4 +487,9 @@ services.factory('GetSMSInfo', function($resource){
 services.factory('GetMessagesForMobile', function($resource){
     return $resource('/sms/MessagesForMobile',{}, {get:{method:'GET'}});
 });
+
+services.factory('GetReplyMessages', function($resource){
+    return $resource('/sms/getSMS',{}, {get:{method:'GET'}});
+});
+
 /*End SMS data Factories*/

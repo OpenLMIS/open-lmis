@@ -42,7 +42,7 @@
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement x="10" y="30" width="342" height="20" isRemoveLineWhenBlank="true" uuid="828612ae-f65b-4fa4-b46d-8317145288cc"/>
 				<textElement textAlignment="Left" markup="none">
-					<font size="8"/>
+					<font size="9"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{REPORT_FILTER_PARAM_VALUES}]]></textFieldExpression>

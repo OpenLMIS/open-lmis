@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * This is Repository class for RoleRights related database operations.
+ * RoleRightsRepository is Repository class for RoleRights related database operations.
  */
 
 @Repository

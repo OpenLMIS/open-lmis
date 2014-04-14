@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+
+<h2><span openlmis-message="label.stocking.efficiency"></span></h2>
+<div class="row-fluid">
+    <div class="span12">
+
+        <ng-include src="'/public/pages/dashboard/shared/dashboard-form.html'"></ng-include>
+        <ng-include src="'/public/pages/dashboard/shared/alerts.html'"></ng-include>
+    </div>
+</div>
+
+<table class="table table-bordered" ng-show="stockByProductAndStock == undefined || stockByProductAndStock.length == 0">
+    <tr>
+        <td>No data to show under selected filters</td>
+    </tr>
+</table>
+<div style="margin-top: 5px;" ng-repeat="productGroup in stockByProductAndStock">
+    <div style="margin-top: 5px;">
+         <h2 style="font-weight: bold"> <span openlmis-message="title.product.stock.efficiency|productGroup.product"></span></h2>
+        <div class="row-fluid sortable ui-sortable" ng-repeat="stock in productGroup.stocks">
+            <div class="span12">
+
+               <span  style="font-size: 1.25em; font-weight: bold" class="{{(stock.name == 'Stocked out')?'red':(stock.name=='Understocked')?'green':(stock.name=='Overstocked')?'blue':'yellow'}}"
+                                                      openlmis-message="title.facility.product.stock|stock.name|productGroup.product"></span>
+               <div class="pull-right legend" ><span openlmis-message="total.facilities"></span> : {{stock.facilities.length}}</span></div>
+               <table class="table-bordered table table-striped pull-right" ng-table="tableParams" >
+                        <thead>
+                            <tr class="gradient-header">
+                                <th>Facility</th>
+                                <th>AMC</th>
+                                <th>SOH</th>
+                                <th>MOS</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                        <tr ng-repeat="row in stock.facilities">
+                            <td sortable="facility" class="{{(stock.name == 'Stocked out')?'red':(stock.name=='Understocked')?'green':(stock.name=='Overstocked')?'blue':'yellow'}}" >{{row.facility}}</td>
+                            <td  class="number {{(stock.name == 'Stocked out')?'red':(stock.name=='Understocked')?'green':(stock.name=='Overstocked')?'blue':'yellow'}}">{{row.amc | number}}</td>
+                            <td class="number {{(stock.name == 'Stocked out')?'red':(stock.name=='Understocked')?'green':(stock.name=='Overstocked')?'blue':'yellow'}}">{{row.soh | number}}</td>
+                            <td class="{{(stock.name == 'Stocked out')?'red':(stock.name=='Understocked')?'green':(stock.name=='Overstocked')?'blue':'yellow'}}">{{row.mos}}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+            </div>
+
+        </div>
+    </div>
+
+</div>

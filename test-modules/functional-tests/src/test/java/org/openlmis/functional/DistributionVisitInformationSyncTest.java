@@ -217,7 +217,7 @@ public class DistributionVisitInformationSyncTest extends TestCaseHelper {
     EPIUsePage epiUsePage = refrigeratorPage.navigateToEpiUse();
     epiUsePage.enterData(10, 20, 30, 40, 50, "10/2011", 1);
 
-    EpiInventoryPage epiInventoryPage = epiUsePage.navigateToEpiInventory();
+    EpiInventoryPage epiInventoryPage = refrigeratorPage.navigateToEpiInventory();
     epiInventoryPage.applyNRToAll();
     epiInventoryPage.fillDeliveredQuantity(1, "2");
     epiInventoryPage.fillDeliveredQuantity(2, "4");
@@ -240,12 +240,16 @@ public class DistributionVisitInformationSyncTest extends TestCaseHelper {
     assertFalse(refrigeratorPage.isAddNewButtonEnabled());
     refrigeratorPage.clickShowForRefrigerator(1);
     refrigeratorPage.verifyAllFieldsDisabled();
-    refrigeratorPage.navigateToEpiInventory();
 
+    refrigeratorPage.navigateToEpiInventory();
     epiInventoryPage.verifyIndicator("GREEN");
     epiInventoryPage.verifyAllFieldsDisabled();
 
-    ChildCoveragePage childCoveragePage = epiInventoryPage.navigateToChildCoverage();
+    epiInventoryPage.navigateToEpiUse();
+    epiUsePage.verifyIndicator("GREEN");
+    epiUsePage.verifyAllFieldsDisabled();
+
+    ChildCoveragePage childCoveragePage = epiUsePage.navigateToChildCoverage();
     childCoveragePage.applyNRToAll();
     childCoveragePage.clickOK();
 
@@ -260,7 +264,7 @@ public class DistributionVisitInformationSyncTest extends TestCaseHelper {
     distributionPage.syncDistribution(1);
     distributionPage.syncDistributionMessageDone();
 
-    verifyEpiUseDataInDatabase(10, 20, 30, 40, 50, "10/2011", "PG1", visitInformationData.get(FIRST_FACILITY_CODE));
+    verifyEpiUseDataInDatabase(null, null, null, null, null, null, "PG1", visitInformationData.get(FIRST_FACILITY_CODE));
     verifyFacilityVisitInformationInDatabase(visitInformationData.get(FIRST_FACILITY_CODE), null, null, null, null, null, null, "t", "f", "ROAD_IMPASSABLE", null);
     verifyFullCoveragesDataInDatabase(23, 66, 77, 45, visitInformationData.get(FIRST_FACILITY_CODE));
     verifyEpiInventoryDataInDatabase(null, null, null, "P10", visitInformationData.get(FIRST_FACILITY_CODE));
@@ -288,7 +292,7 @@ public class DistributionVisitInformationSyncTest extends TestCaseHelper {
     VisitInformationPage visitInformationPage = facilityListPage.selectFacility(visitInformationData.get(FIRST_FACILITY_CODE));
 
     facilityListPage.verifyOverallFacilityIndicatorColor("RED");
-    visitInformationPage.enterDataWhenFacilityVisited("Some observations", "samuel D", "Doe Abc", "Verifier", "Verifier Title");
+    visitInformationPage.enterDataWhenFacilityVisited("samuel D", "Doe Abc", "Verifier", "Verifier Title");
 
     RefrigeratorPage refrigeratorPage = visitInformationPage.navigateToRefrigerators();
     refrigeratorPage.verifyRefrigeratorColor("overall", "RED");
@@ -307,17 +311,24 @@ public class DistributionVisitInformationSyncTest extends TestCaseHelper {
     epiInventoryPage.fillSpoiledQuantity(1, "3");
     epiInventoryPage.verifyIndicator("AMBER");
 
-    visitInformationPage.navigateToVisitInformation();
+    EPIUsePage epiUsePage = epiInventoryPage.navigateToEpiUse();
+    epiUsePage.verifyIndicator("RED");
+    epiUsePage.enterValueInDistributed("5", 1);
+    epiUsePage.verifyIndicator("AMBER");
+
+    epiUsePage.navigateToVisitInformation();
     visitInformationPage.selectFacilityVisitedNo();
     visitInformationPage.selectReasonNoTransport();
 
     refrigeratorPage.verifyRefrigeratorColor("overall", "GREEN");
     epiInventoryPage.verifyIndicator("GREEN");
+    epiInventoryPage.verifyAllFieldsDisabled();
 
-    EPIUsePage epiUsePage = refrigeratorPage.navigateToEpiUse();
-    epiUsePage.enterData(70, 80, 90, 100, 9999999, "10/2011", 1);
+    refrigeratorPage.navigateToEpiUse();
+    epiUsePage.verifyIndicator("GREEN");
+    epiUsePage.verifyAllFieldsDisabled();
 
-    FullCoveragePage fullCoveragePage = epiUsePage.navigateToFullCoverage();
+    FullCoveragePage fullCoveragePage = refrigeratorPage.navigateToFullCoverage();
     fullCoveragePage.clickApplyNRToAll();
 
     ChildCoveragePage childCoveragePage = fullCoveragePage.navigateToChildCoverage();
@@ -336,7 +347,7 @@ public class DistributionVisitInformationSyncTest extends TestCaseHelper {
     distributionPage.syncDistribution(1);
     distributionPage.syncDistributionMessageDone();
 
-    verifyEpiUseDataInDatabase(70, 80, 90, 100, 9999999, "10/2011", "PG1", visitInformationData.get(FIRST_FACILITY_CODE));
+    verifyEpiUseDataInDatabase(null, null, null, null, null, null, "PG1", visitInformationData.get(FIRST_FACILITY_CODE));
     verifyFacilityVisitInformationInDatabase(visitInformationData.get(FIRST_FACILITY_CODE), null, null, null, null, null, null, "t", "f", "TRANSPORT_UNAVAILABLE", null);
     verifyFullCoveragesDataInDatabase(null, null, null, null, visitInformationData.get(FIRST_FACILITY_CODE));
     verifyEpiInventoryDataInDatabase(null, null, null, "P10", visitInformationData.get(FIRST_FACILITY_CODE));
@@ -426,12 +437,12 @@ public class DistributionVisitInformationSyncTest extends TestCaseHelper {
       epiInventoryPage.fillDeliveredQuantity(1, "2");
       epiInventoryPage.fillDeliveredQuantity(2, "4");
       epiInventoryPage.fillDeliveredQuantity(3, "6");
+
+      EPIUsePage epiUsePage = visitInformationPage.navigateToEpiUse();
+      epiUsePage.enterData(10, 20, 30, 40, 50, "10/2011", 1);
     }
 
-    EPIUsePage epiUsePage = visitInformationPage.navigateToEpiUse();
-    epiUsePage.enterData(10, 20, 30, 40, 50, "10/2011", 1);
-
-    ChildCoveragePage childCoveragePage = epiUsePage.navigateToChildCoverage();
+    ChildCoveragePage childCoveragePage = visitInformationPage.navigateToChildCoverage();
     childCoveragePage.applyNRToAll();
     childCoveragePage.clickOK();
 
@@ -495,7 +506,7 @@ public class DistributionVisitInformationSyncTest extends TestCaseHelper {
   public void enterVehicleId(String vehicleId) {
     VisitInformationPage visitInformationPage = PageObjectFactory.getVisitInformationPage(testWebDriver);
     visitInformationPage.enterVehicleId(vehicleId);
-
+    visitInformationPage.removeFocusFromElement();
   }
 
   @When("^I select \"([^\"]*)\" facility visited$")
@@ -506,6 +517,7 @@ public class DistributionVisitInformationSyncTest extends TestCaseHelper {
     } else if (option.toLowerCase().equals("no")) {
       visitInformationPage.selectFacilityVisitedNo();
     }
+    visitInformationPage.removeFocusFromElement();
   }
 
   @And("^I select No Transport reason$")
@@ -524,6 +536,7 @@ public class DistributionVisitInformationSyncTest extends TestCaseHelper {
   public void enterOtherReason(String reason) {
     VisitInformationPage visitInformationPage = PageObjectFactory.getVisitInformationPage(testWebDriver);
     visitInformationPage.enterOtherReasonInTextBox(reason);
+    visitInformationPage.removeFocusFromElement();
   }
 
   @And("^I verify Others reason selected$")

@@ -29,12 +29,29 @@ public class GeoDataController extends BaseController {
   public static final String USER_ID = "USER_ID";
 
   @Autowired
-  private GeographicZoneReportMapper reportLookupService;
+  private GeographicZoneReportMapper geographicZoneReportMapper;
 
   @RequestMapping(value="/reporting-rate", method = GET, headers = BaseController.ACCEPT_JSON)
   public ResponseEntity<OpenLmisResponse> getReportingRateReport(@RequestParam(value = "program", required = true, defaultValue = "0") Long program,
                                                                  @RequestParam(value = "period", required = true, defaultValue = "0") Long period){
-      return OpenLmisResponse.response( "map", this.reportLookupService.getGeoReportingRate(program, period) );
+      return OpenLmisResponse.response("map", this.geographicZoneReportMapper.getGeoReportingRate(program, period));
+  }
+
+  @RequestMapping(value="/reporting-facilities", method = GET, headers = BaseController.ACCEPT_JSON)
+  public ResponseEntity<OpenLmisResponse> getReportingFacilities(@RequestParam(value = "program", required = true, defaultValue = "0") Long program,
+                                                                 @RequestParam(value = "period", required = true, defaultValue = "0") Long period,
+                                                                 @RequestParam(value = "geo_zone", required = true, defaultValue = "0") Long geoZoneId
+                                                                 ){
+
+      return OpenLmisResponse.response("facilities", this.geographicZoneReportMapper.getReportingFacilities(program, geoZoneId , period));
+    }
+
+  @RequestMapping(value="/non-reporting-facilities", method = GET, headers = BaseController.ACCEPT_JSON)
+  public ResponseEntity<OpenLmisResponse> getNonReportingFacilities(@RequestParam(value = "program", required = true, defaultValue = "0") Long program,
+                                                                 @RequestParam(value = "period", required = true, defaultValue = "0") Long period,
+                                                                 @RequestParam(value = "geo_zone", required = true, defaultValue = "0") Long geoZoneId
+  ){
+     return OpenLmisResponse.response("facilities", this.geographicZoneReportMapper.getNonReportingFacilities(program, geoZoneId , period));
   }
 
 }

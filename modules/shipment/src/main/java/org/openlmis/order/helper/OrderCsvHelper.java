@@ -16,12 +16,14 @@ import org.apache.commons.jxpath.JXPathContext;
 import org.openlmis.order.domain.Order;
 import org.openlmis.order.domain.OrderFileColumn;
 import org.openlmis.order.dto.OrderFileTemplateDTO;
+import org.openlmis.rnr.domain.LineItemComparator;
 import org.openlmis.rnr.domain.RnrLineItem;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.io.Writer;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -46,8 +48,11 @@ public class OrderCsvHelper {
     if (orderFileTemplateDTO.getOrderConfiguration().isHeaderInFile()) {
       writeHeader(orderFileColumns, writer);
     }
+    List<RnrLineItem> nonFullSupplyLineItems = order.getRnr().getNonFullSupplyLineItems();
+    Collections.sort(nonFullSupplyLineItems, new LineItemComparator());
+
     writeLineItems(order, order.getRnr().getFullSupplyLineItems(), orderFileColumns, writer);
-    writeLineItems(order, order.getRnr().getNonFullSupplyLineItems(), orderFileColumns, writer);
+    writeLineItems(order, nonFullSupplyLineItems, orderFileColumns, writer);
   }
 
   private void removeExcludedColumns(List<OrderFileColumn> orderFileColumns) {
@@ -96,7 +101,7 @@ public class OrderCsvHelper {
       if (columnValue instanceof Date) {
         columnValue = forPattern(orderFileColumn.getFormat()).print(((Date) columnValue).getTime());
       }
-      writer.write((columnValue).toString());
+      writer.write("\"" + (columnValue).toString() + "\"");
       if (orderFileColumns.indexOf(orderFileColumn) < orderFileColumns.size() - 1)
         writer.write(",");
     }

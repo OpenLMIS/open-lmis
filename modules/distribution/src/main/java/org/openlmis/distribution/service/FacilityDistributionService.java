@@ -138,8 +138,8 @@ public class FacilityDistributionService {
     if (facilityDistribution.getFacilityVisit().getVisited()) {
       epiInventoryService.save(facilityDistribution.getEpiInventory());
       distributionRefrigeratorsService.save(facilityDistribution.getFacilityVisit().getFacilityId(), facilityDistribution.getRefrigerators());
+      epiUseService.save(facilityDistribution.getEpiUse());
     }
-    epiUseService.save(facilityDistribution.getEpiUse());
     vaccinationCoverageService.save(facilityDistribution);
     return facilityDistribution;
   }

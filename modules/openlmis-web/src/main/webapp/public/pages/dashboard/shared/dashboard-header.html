@@ -1,22 +1,12 @@
-<ng-include src="'/public/pages/dashboard/alerts/alerts.html'"></ng-include>
-<br/>
 <div class="clearfix"></div>
-<div class="manage-nav" ng-controller="DashboardMenuController">
-    <ul class="clearfix">
-        <li  ng-class="summarySelected">
-            <a href="/public/pages/dashboard/summary/index.html">
-                <span id="summary-tab">Summary</span>
+<div class="dashboard-nav" ng-controller="DashboardMenuController">
+    <ul id="dashboard-sub-tabs" class="clearfix">
+        <li ng-repeat="tab in dashboardTabs" ng-class="{'selected': currentTab == tab.name}">
+            <a ng-href="{{tab.content}}" style="display: inline-block;">
+                <span openlmis-message="{{tab.header}}"></span>
             </a>
-        </li>
-        <li  ng-class="stockEfficiencySelected">
-            <a id="stock-efficiency-tab" href="/public/pages/dashboard/stock-efficiency/index.html">
-                <span >Stock Efficiency</span>
-            </a>
-        </li>
-        <li  ng-class="orderTurnAroundSelected">
-            <a href="/public/pages/dashboard/order/index.html">
-                <span id="order-turn-around-tab">Order Turn Around</span>
-            </a>
+            <i ng-if="tab.closable" class="icon-remove-sign" ng-click="closeTab(tab.name)"></i>
+
         </li>
     </ul>
 </div>

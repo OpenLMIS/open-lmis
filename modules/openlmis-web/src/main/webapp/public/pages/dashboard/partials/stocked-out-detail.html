@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+
+<h2><span openlmis-message="title.breakdown.facilities.stock.out.district|location|product"></span></h2>
+<div class="row-fluid">
+    <div class="span12">
+        <table class="table table-bordered" ng-show="stockedOutDetails == undefined || stockedOutDetails.length == 0">
+            <tr>
+                <td>No data to show under selected filters</td>
+            </tr>
+        </table>
+        <div ng-show ="stockedOutDetails !== undefined && stockedOutDetails.length > 0">
+            <table ng-show="stockedOutDetails.length > 0" class="table-bordered table table-striped pull-right"
+                   ng-table="tableParams"   style="height: 200px; overflow: auto">
+                <tbody>
+                <tr ng-repeat="row in stockedOutDetails">
+                    <td data-title="'Facility Code'" >{{row.facilityCode}}</td>
+                    <td data-title="'Facility Name'" >{{row.facilityName}}</td>
+                    <td data-title="'Supplied in past 6 months ?'" style="width:25px;"><div class="{{(row.suppliedInPast == true) ? 'green': 'red'}}">{{row.suppliedInPast}}</div></td>
+                    <td data-title="'MOS supplied'" class="number" style="width:25px;">{{row.mosSuppliedInPast | number}}</td>
+                    <td data-title="'Total months stocked out'" class="number" style="width:25px;">{{6-row.mosSuppliedInPast | number}}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+</div>
+
+<div id="flotTip"></div>

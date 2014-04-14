@@ -12,11 +12,15 @@ package org.openlmis.core.service;
 
 import org.openlmis.core.domain.DeliveryZone;
 import org.openlmis.core.domain.DeliveryZoneWarehouse;
-import org.openlmis.core.repository.DeliveryZoneWarehouseRepository;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.exception.DataException;
+import org.openlmis.core.repository.DeliveryZoneWarehouseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+/**
+ * Exposes the services for handling DeliveryZoneWarehouse entity.
+ */
 
 @Service
 public class DeliveryZoneWarehouseService {

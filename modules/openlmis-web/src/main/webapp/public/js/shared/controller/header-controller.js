@@ -8,9 +8,13 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-function HeaderController($scope, localStorageService, loginConfig) {
+function HeaderController($scope, localStorageService, loginConfig, $window) {
   $scope.loginConfig = loginConfig;
   $scope.user = localStorageService.get(localStorageKeys.USERNAME);
+
+  if(!$scope.user) {
+    $window.location = "/public/pages/login.html";
+  }
 
   $scope.logout = function () {
     localStorageService.remove(localStorageKeys.RIGHT);
@@ -19,7 +23,15 @@ function HeaderController($scope, localStorageService, loginConfig) {
 
           localStorageService.remove(idx);
       });
+      $.each(localStorageKeys.PREFERENCE, function(item, idx){
+          localStorageService.remove(idx);
+
+      });
+      $.each(localStorageKeys.DASHBOARD_FILTERS, function(item, idx){
+          localStorageService.remove(idx);
+
+      });
     document.cookie = 'JSESSIONID' + '=;expires=Thu, 01 Jan 1970 00:00:01 GMT; path=/';
-    window.location = "/j_spring_security_logout";
+    $window.location = "/j_spring_security_logout";
   };
 }

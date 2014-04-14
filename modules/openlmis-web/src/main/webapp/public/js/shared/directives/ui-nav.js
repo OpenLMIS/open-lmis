@@ -11,11 +11,11 @@
 //  Description:
 //  Hiding the navigation items based on the rights on the children nodes
 
-app.directive('uiNav',function () {
+app.directive('uiNav', function () {
   return {
-    restrict:'A',
+    restrict: 'A',
 
-    link:function (scope, element, attrs) {
+    link: function (scope, element, attrs) {
       //Identify all the menu lists
       var lists = $(".navigation ul");
 
@@ -45,6 +45,12 @@ app.directive('uiNav',function () {
 
         $(".navigation li > a").on("click", function () {
           $(this).next(".submenu").show();
+        });
+
+        //Removing border-top from first visible list item in submenu
+        $('.navigation .submenu ul').each(function (index, submenu) {
+          var firstVisibleListItem = $(submenu).children('li:not(.ng-hide):not(.beak)').first();
+            firstVisibleListItem.addClass('border-top-none');
         });
       });
     }

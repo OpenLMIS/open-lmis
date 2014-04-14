@@ -16,27 +16,24 @@
                 <span openlmis-message="configure.setting.header"></span>
             </h2>
 
-            <table class="table table-striped table-bordered">
-                <thead>
-                <tr class="gradient-header">
-                    <th class="col-name" openlmis-message="header.name">
-                    </th>
-                    <th class="col-right" openlmis-message="header.value">
-                    </th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr ng-repeat="setting in settings.list">
-                    <td>
-                        {{setting.name}}
-                    </td>
-                    <td>
-                        <setting ng-model="setting"></setting>
-                        <div>{{setting.description}}</div>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
+
+
+            <div class="tab-content">
+                    <div style="padding-left: 30px;" ng-repeat="setting in settings.list">
+                        <h3 style="padding-left: -30px;" ng-show="CreateHeader(setting.groupName)">{{setting.groupName}}</h3>
+                        <div class="control-group">
+                            <div class="row">
+                                <div class="span4">
+                                   <label >{{setting.name}}</label>
+                                </div>
+                                <div class="span8">
+                                    <setting ng-model="setting"></setting>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+            </div>
         </div>
 
         <div form-toolbar id="action_buttons" class="action-buttons">

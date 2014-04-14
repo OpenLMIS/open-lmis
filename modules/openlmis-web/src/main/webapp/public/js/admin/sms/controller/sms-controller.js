@@ -8,12 +8,14 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-function SmsController($scope,Users,$routeParams,GetSMSInfo, GetMessagesForMobile) {
+function SmsController($scope,Users,$routeParams,GetSMSInfo, GetMessagesForMobile,GetReplyMessages) {
 
         $scope.sms = {};
 
         $scope.list = [];
+         $scope.Msg= [];
 
+        GetReplyMessages.get($scope.sms);
 
         Users.get({id: $routeParams.userId},function(data){
 

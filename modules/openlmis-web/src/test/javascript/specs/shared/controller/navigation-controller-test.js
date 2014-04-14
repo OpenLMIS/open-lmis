@@ -21,7 +21,6 @@ describe("NavigationController", function () {
     scope = $rootScope.$new();
     localStorageService = _localStorageService_;
     spyOn(localStorageService, 'get').andReturn('MANAGE_FACILITY,UPLOADS');
-    //localStorageService.add(localStorageKeys.RIGHT,'MANAGE_FACILITY,UPLOADS'); [Code runs in browser but is not supported on jasmine headless mode ]
     ctrl = $controller(NavigationController, {$scope: scope, localStorageService: localStorageService, $window: window});
   }));
 
@@ -44,7 +43,7 @@ describe("NavigationController", function () {
 
       $httpBackend.flush();
       expect(window.location).toEqual("/page/index.html#/manage");
-      expect(scope.isOffline).toBeFalsy();
+      expect(scope.showNetworkError).toBeFalsy();
     });
 
     it("should set offline flag and not change URI if network is disconnected", function () {
@@ -55,7 +54,7 @@ describe("NavigationController", function () {
 
       $httpBackend.flush();
       expect(window.location).toEqual("/pages/test");
-      expect(scope.isOffline).toBeTruthy();
+      expect(scope.showNetworkError).toBeTruthy();
     });
   });
 });

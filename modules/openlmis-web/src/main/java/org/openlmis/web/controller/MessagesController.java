@@ -18,9 +18,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.io.UnsupportedEncodingException;
-import java.util.HashMap;
 import java.util.Map;
-import java.util.ResourceBundle;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
@@ -38,12 +36,7 @@ public class MessagesController extends BaseController {
 
   @RequestMapping(value = "/messages", method = GET, headers = "Accept=application/json")
   public ResponseEntity<OpenLmisResponse> getAllMessages() throws UnsupportedEncodingException {
-    Map<String, String> result = new HashMap<>();
-    ResourceBundle messages = ResourceBundle.getBundle("messages", messageService.getCurrentLocale());
-    for (String key : messages.keySet()) {
-      String value = messages.getString(key);
-      result.put(key, value);
-    }
+    Map<String, String> result = messageService.allMessages();
     return OpenLmisResponse.response(MESSAGES, result);
   }
 }

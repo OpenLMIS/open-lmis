@@ -22,6 +22,10 @@ import org.openlmis.core.repository.SupplyLineRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+/**
+ * Exposes the services for handling SupplyLine entity.
+ */
+
 import java.util.List;
 
 @Service
@@ -81,7 +85,6 @@ public class SupplyLineService {
   private void validateIfSupervisoryNodeIsTopmostNode(SupplyLine supplyLine) {
     Long supervisoryNodeParentId = supervisoryNodeRepository.getSupervisoryNodeParentId(supplyLine.getSupervisoryNode().getId());
     if (supervisoryNodeParentId != null) {
-
       throw new DataException("error.supervisory.node.not.top.node");
     }
   }
@@ -94,6 +97,4 @@ public class SupplyLineService {
   public SupplyLine getById(Long id) {
     return supplyLineRepository.getById(id);
   }
-
-
 }

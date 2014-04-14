@@ -28,12 +28,9 @@ import java.util.List;
 @NoArgsConstructor
 public class PermissionEvaluator {
 
+  @Autowired
   private RoleRightsService roleRightService;
 
-  @Autowired
-  public PermissionEvaluator(RoleRightsService roleRightService) {
-    this.roleRightService = roleRightService;
-  }
 
   public Boolean hasPermission(Long userId, String commaSeparatedRights) {
     return CollectionUtils.containsAny(roleRightService.getRights(userId), getRightList(commaSeparatedRights));
@@ -48,5 +45,7 @@ public class PermissionEvaluator {
 
     return rights;
   }
+
+
 
 }

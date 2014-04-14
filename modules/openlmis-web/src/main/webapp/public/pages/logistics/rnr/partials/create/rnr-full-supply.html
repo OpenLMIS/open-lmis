@@ -123,15 +123,14 @@
           </span>
         </span>
 
-        <span ng-switch-when="expirationDate">
+        <span class="expirationDateContainer" ng-switch-when="expirationDate">
           <input ng-disabled="formDisabled || rnrLineItem.skipped"
                  id="{{getId(column.name, $parent)}}" type="text"
                  error-holder="expirationDate{{rnrLineItem['id']}}"
                  maxlength="7"
                  ng-model="rnrLineItem[column.name]"
-                 showError="showError"
                  date-validator="date"/>
-          <span class="alert alert-warning warning-alert" id="expirationDate{{rnrLineItem['id']}}"
+          <span class="rnr-form-error" id="expirationDate{{rnrLineItem['id']}}"
                 style="display:none;" openlmis-message="error.invalid.date.format"
                 ng-hide="rnrLineItem.expirationDate && rnrLineItem.skipped">
           </span>
@@ -225,15 +224,16 @@
                  maxlength="250"/>
         </span>
 
-        <span ng-switch-when="reasonForRequestedQuantity">
+        <span class="reasonForRequestedQuantityContainer" ng-switch-when="reasonForRequestedQuantity">
           <input ng-disabled="formDisabled || rnrLineItem.skipped"
                  id="{{getId(column.name, $parent)}}" type="text"
                  name="reasonForRequestedQuantity{{rnrLineItem['id']}}"
                  ng-model="rnrLineItem[column.name]"
                  ng-required="rnrLineItem.quantityRequested"
-                 ng-class="highlightWarningBasedOnField(showError, rnrLineItem[column.name],rnrLineItem.quantityRequested,rnrLineItem.skipped)"
+                 ng-class="highlightRequired(submitError && rnrLineItem.quantityRequested, rnrLineItem.reasonForRequestedQuantity, rnrLineItem.skipped) ||
+                 highlightWarningBasedOnField(!submitError && rnrLineItem.quantityRequested, rnrLineItem.reasonForRequestedQuantity, rnrLineItem, rnrLineItem.skipped);"
                  maxlength="250"/>
-          <span id='{{getId(column.name, $parent)}}_warning' class="alert alert-warning warning-alert"
+          <span id='{{getId(column.name, $parent)}}_warning' ng-class="{'rnr-form-error': submitError, 'alert alert-warning warning-alert': !submitError}"
                 ng-show="rnrLineItem.quantityRequested && !rnrLineItem.reasonForRequestedQuantity && !rnrLineItem.skipped"
                 openlmis-message="error.reason.required">
           </span>

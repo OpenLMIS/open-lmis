@@ -172,8 +172,12 @@ public class TestCaseHelper {
     dbWrapper.insertFacilityApprovedProduct(product2, program, facilityTypeCode);
   }
 
-  public void setupProgramProductTestDataWithCategories(String product, String productName, String category, String program) throws SQLException {
-    dbWrapper.insertProductWithCategory(product, productName, category);
+  public void setupProgramProductTestDataWithCategories(String categoryCode,
+                                                        String categoryName, String product,
+                                                        String productName,
+                                                        String program) throws SQLException {
+    dbWrapper.insertProductCategory(categoryCode, categoryName);
+    dbWrapper.insertProduct(product, productName);
     dbWrapper.insertProgramProductsWithCategory(product, program);
   }
 
@@ -576,6 +580,13 @@ public class TestCaseHelper {
     assertEquals(highAlarmEvents, resultSet.getString("highAlarmEvents"));
     assertEquals(problemSinceLastTime, resultSet.getString("problemSinceLastTime"));
     assertEquals(notes, resultSet.getString("notes"));
+  }
+
+  public void verifyRefrigeratorDetailsInReadingsTable(String facilityCode, String refrigeratorSerialNumber, String refrigeratorBrand,
+                                                       String refrigeratorModel) throws SQLException {
+    ResultSet resultSet = dbWrapper.getRefrigeratorReadings(refrigeratorSerialNumber, facilityCode);
+    assertEquals(refrigeratorBrand, resultSet.getString("refrigeratorBrand"));
+    assertEquals(refrigeratorModel, resultSet.getString("refrigeratorModel"));
   }
 
   public void verifyRefrigeratorsDataInDatabase(String facilityCode, String refrigeratorSerialNumber, String brandName,

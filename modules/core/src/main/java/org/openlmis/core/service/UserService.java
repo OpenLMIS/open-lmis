@@ -21,11 +21,17 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * Exposes the services for handling User entity.
+ */
+
 @Service
 public class UserService {
+
   static final String USER_EMAIL_NOT_FOUND = "user.email.not.found";
   static final String USER_EMAIL_INCORRECT = "user.email.incorrect";
   static final String PASSWORD_RESET_TOKEN_INVALID = "user.password.reset.token.invalid";
@@ -33,10 +39,13 @@ public class UserService {
 
   @Autowired
   private UserRepository userRepository;
+
   @Autowired
   private EmailService emailService;
+
   @Autowired
   private RoleAssignmentService roleAssignmentService;
+
   @Autowired
   private MessageService messageService;
 
@@ -56,6 +65,17 @@ public class UserService {
     user.validate();
     userRepository.update(user);
     roleAssignmentService.saveRolesForUser(user);
+  }
+
+  public LinkedHashMap getPreferences(Long userId){
+   List<LinkedHashMap> preferences =  userRepository.getPreferences(userId);
+   LinkedHashMap preference = new LinkedHashMap();
+   // transform the shape of the list
+   for(LinkedHashMap map: preferences){
+     preference.put(map.get("key"), map.get("value"));
+   }
+
+   return preference;
   }
 
   public void sendForgotPasswordEmail(User user, String resetPasswordLink) {
@@ -79,6 +99,7 @@ public class UserService {
     user.setSupervisorRoles(roleAssignmentService.getSupervisorRoles(id));
     user.setAdminRole(roleAssignmentService.getAdminRole(id));
     user.setAllocationRoles(roleAssignmentService.getAllocationRoles(id));
+    user.setReportRoles(roleAssignmentService.getReportRole(id));
     user.setFulfillmentRoles(roleAssignmentService.getFulfilmentRoles(id));
     return user;
   }

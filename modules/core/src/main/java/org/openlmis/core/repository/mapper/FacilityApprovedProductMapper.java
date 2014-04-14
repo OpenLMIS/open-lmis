@@ -36,7 +36,7 @@ public interface FacilityApprovedProductMapper {
     "INNER JOIN facilities f ON f.typeId = fap.facilityTypeId",
     "INNER JOIN program_products pp ON pp.id = fap.programProductId",
     "INNER JOIN products p ON p.id = pp.productId ",
-    "INNER JOIN product_categories pc ON pc.id = p.categoryId ",
+    "INNER JOIN product_categories pc ON pc.id = pp.productCategoryId ",
     "INNER JOIN programs pgm ON pp.programId = pgm.id ",
     "WHERE",
     "pp.programId = #{programId}",
@@ -44,7 +44,7 @@ public interface FacilityApprovedProductMapper {
     "AND p.fullSupply = TRUE",
     "AND p.active = TRUE",
     "AND pp.active = TRUE",
-    "ORDER BY pp.displayOrder NULLS LAST, p.code"})
+    "ORDER BY pc.displayOrder, pc.name, pp.displayOrder NULLS LAST, p.code"})
   @Results(value = {
     @Result(property = "programProduct.id", column = "programProductId"),
     @Result(property = "programProduct.dosesPerMonth", column = "dosesPerMonth"),
@@ -67,16 +67,15 @@ public interface FacilityApprovedProductMapper {
     @Result(property = "programProduct.product.dispensingUnit", column = "dispensingUnit"),
     @Result(property = "programProduct.product.fullSupply", column = "fullSupply"),
     @Result(property = "programProduct.displayOrder", column = "displayOrder"),
-    @Result(property = "programProduct.productCategoryId", column = "productCategoryId"),
     @Result(property = "programProduct.product.form", column = "formId", javaType = ProductForm.class,
       one = @One(select = "org.openlmis.core.repository.mapper.ProductFormMapper.getById")),
-    @Result(property = "programProduct.product.category", column = "categoryId", javaType = ProductCategory.class,
+    @Result(property = "programProduct.productCategory", column = "productCategoryId", javaType = ProductCategory.class,
       one = @One(select = "org.openlmis.core.repository.mapper.ProductCategoryMapper.getProductCategoryById")),
     @Result(property = "programProduct.product.dosageUnit", column = "dosageUnitId", javaType = DosageUnit.class,
       one = @One(select = "org.openlmis.core.repository.mapper.DosageUnitMapper.getById")),
     @Result(property = "facilityType.id", column = "facilityTypeId")})
   List<FacilityTypeApprovedProduct> getFullSupplyProductsByFacilityAndProgram(@Param("facilityId") Long facilityId,
-                                                                              @Param("programId") Long programId);
+                                                                          @Param("programId") Long programId);
 
   @Select({"SELECT fap.*, pp.*, pgm.*, pgm.code as program_code, pgm.name as program_name, pgm.active as program_active, " +
     "p.*, p.code as product_code ",
@@ -84,7 +83,7 @@ public interface FacilityApprovedProductMapper {
     "INNER JOIN facilities f ON f.typeId = fap.facilityTypeId",
     "INNER JOIN program_products pp ON pp.id = fap.programProductId",
     "INNER JOIN products p ON p.id = pp.productId ",
-    "INNER JOIN product_categories pc ON pc.id = p.categoryId ",
+    "INNER JOIN product_categories pc ON pc.id = pp.productCategoryId ",
     "INNER JOIN programs pgm ON pp.programId = pgm.id ",
     "WHERE",
     "pp.programId = #{programId}",
@@ -92,7 +91,7 @@ public interface FacilityApprovedProductMapper {
     "AND p.fullSupply = FALSE",
     "AND p.active = TRUE",
     "AND pp.active = TRUE",
-    "ORDER BY pp.displayOrder NULLS LAST, p.code"})
+    "ORDER BY pc.displayOrder, pc.name, pp.displayOrder NULLS LAST, p.code"})
   @Results(value = {
     @Result(property = "programProduct.id", column = "programProductId"),
     @Result(property = "programProduct.dosesPerMonth", column = "dosesPerMonth"),
@@ -115,26 +114,25 @@ public interface FacilityApprovedProductMapper {
     @Result(property = "programProduct.product.dispensingUnit", column = "dispensingUnit"),
     @Result(property = "programProduct.product.fullSupply", column = "fullSupply"),
     @Result(property = "programProduct.displayOrder", column = "displayOrder"),
-    @Result(property = "programProduct.productCategoryId", column = "productCategoryId"),
     @Result(property = "programProduct.product.form", column = "formId", javaType = ProductForm.class,
       one = @One(select = "org.openlmis.core.repository.mapper.ProductFormMapper.getById")),
-    @Result(property = "programProduct.product.category", column = "categoryId", javaType = ProductCategory.class,
+    @Result(property = "programProduct.productCategory", column = "productCategoryId", javaType = ProductCategory.class,
       one = @One(select = "org.openlmis.core.repository.mapper.ProductCategoryMapper.getProductCategoryById")),
     @Result(property = "programProduct.product.dosageUnit", column = "dosageUnitId", javaType = DosageUnit.class,
       one = @One(select = "org.openlmis.core.repository.mapper.DosageUnitMapper.getById")),
     @Result(property = "facilityType.id", column = "facilityTypeId")})
   List<FacilityTypeApprovedProduct> getNonFullSupplyProductsByFacilityAndProgram(@Param("facilityId") Long facilityId,
-                                                                                 @Param("programId") Long programId);
+                                                                             @Param("programId") Long programId);
 
   @Select({"SELECT fap.id, fap.facilityTypeId, fap.programProductId, fap.maxMonthsOfStock, fap.modifiedDate, fap.modifiedBy",
     "FROM facility_approved_products fap, facility_types ft",
     "where fap.programProductId = #{programProductId} and",
     "ft.code = #{facilityTypeCode} and ft.id = fap.facilityTypeId"})
   FacilityTypeApprovedProduct getFacilityApprovedProductIdByProgramProductAndFacilityTypeCode(@Param("programProductId") Long programProductId,
-                                                                                              @Param("facilityTypeCode") String facilityTypeCode);
+                                                                                          @Param("facilityTypeCode") String facilityTypeCode);
 
   @Update("UPDATE facility_approved_products set " +
-    "facilityTypeId=#{facilityType.id}, programProductId=#{programProduct.id}, maxMonthsOfStock=#{maxMonthsOfStock}, minMonthsOfStock=#{minMonthsOfStock}, modifiedBy=#{modifiedBy}, modifiedDate=#{modifiedDate} " +
+    "facilityTypeId=#{facilityType.id}, programProductId=#{programProduct.id}, maxMonthsOfStock=#{maxMonthsOfStock}, modifiedBy=#{modifiedBy}, modifiedDate=#{modifiedDate} " +
     "where id=#{id}")
   void updateFacilityApprovedProduct(FacilityTypeApprovedProduct facilityTypeApprovedProduct);
 

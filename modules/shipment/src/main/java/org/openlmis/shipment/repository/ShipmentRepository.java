@@ -42,11 +42,7 @@ public class ShipmentRepository {
 
   public void save(ShipmentLineItem shipmentLineItem) {
     try {
-      if (shipmentMapper.getShippedLineItem(shipmentLineItem) == null) {
-        shipmentMapper.insertShippedLineItem(shipmentLineItem);
-        return;
-      }
-      shipmentMapper.updateShippedLineItem(shipmentLineItem);
+      shipmentMapper.insertShippedLineItem(shipmentLineItem);
     } catch (DataIntegrityViolationException exception) {
       throw new DataException("error.incorrect.length");
     }

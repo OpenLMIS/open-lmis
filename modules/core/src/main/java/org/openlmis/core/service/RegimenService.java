@@ -18,6 +18,10 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/**
+ * Exposes the services for handling Regimen entity.
+ */
+
 @Service
 public class RegimenService {
 

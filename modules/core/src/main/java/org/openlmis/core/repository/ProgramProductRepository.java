@@ -11,10 +11,7 @@
 package org.openlmis.core.repository;
 
 import lombok.NoArgsConstructor;
-import org.openlmis.core.domain.Product;
-import org.openlmis.core.domain.Program;
-import org.openlmis.core.domain.ProgramProduct;
-import org.openlmis.core.domain.ProgramProductPrice;
+import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.mapper.ProgramProductMapper;
 import org.openlmis.core.repository.mapper.ProgramProductPriceMapper;
@@ -25,7 +22,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 /**
- * This is Repository class for DeliveryZoneMember related database operations.
+ * ProgramProductRepository is Repository class for DeliveryZoneMember related database operations.
  */
 
 @Component
@@ -52,6 +49,12 @@ public class ProgramProductRepository {
 
     Long productId = productRepository.getIdByCode(programProduct.getProduct().getCode());
     programProduct.getProduct().setId(productId);
+
+    // handle the case where the program products are set from the category,
+    if(programProduct.getProductCategory() == null && programProduct.getProductCategoryId() != null){
+      programProduct.setProductCategory(new ProductCategory());
+      programProduct.getProductCategory().setId(programProduct.getProductCategoryId());
+    }
 
     try {
       if (programProduct.getId() == null) {

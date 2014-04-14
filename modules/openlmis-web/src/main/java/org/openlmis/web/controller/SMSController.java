@@ -11,9 +11,12 @@
 package org.openlmis.web.controller;
 
 import lombok.NoArgsConstructor;
+import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.SMSService;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,6 +24,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
+
+import static org.openlmis.web.response.OpenLmisResponse.error;
+import static org.openlmis.web.response.OpenLmisResponse.success;
 
 
 @Controller
@@ -53,7 +59,7 @@ public class SMSController extends BaseController {
     }
 
     @RequestMapping(value = "/sms/MessageList", method = RequestMethod.GET, headers = ACCEPT_JSON)
-    public ResponseEntity<OpenLmisResponse> getAllSms(HttpServletRequest request) {
+    public ResponseEntity<OpenLmisResponse> getAll(HttpServletRequest request) {
         return OpenLmisResponse.response("sms", smsService.getSmsMessages());
     }
 

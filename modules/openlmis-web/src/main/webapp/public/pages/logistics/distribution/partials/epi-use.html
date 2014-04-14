@@ -15,7 +15,7 @@
             src="'/public/pages/logistics/distribution/partials/record-facility-menu.html'"></ng-include>
 
     <div class="facility-info" ng-init="facilityData = distribution.facilityDistributions[selectedFacilityId]">
-        <div class="refrigerator-container" disable-form="{{facilityData.isDisabled()}}">
+        <div class="refrigerator-container" disable-form="{{facilityData.isDisabled('epi-use')}}">
             <h3>
                 <span id="epiUsePageHeader" openlmis-message="header.epi.use"></span>
                 <input id="epiUseApplyNrAll" type="button" ng-click="applyNRAll()"
@@ -165,15 +165,15 @@
                             </td>
                             <td class="expiration-date">
                                 <div>
-                  <span class="input-error-parent-cell">
+                  <span class="expirationDateContainer input-error-parent-cell">
                     <input id="expirationDateInput{{$index}}" type="text"
                            ng-model="lineItem.expirationDate.value"
                            name="expirationDate{{$index}}"
                            date-validator="date"
-                           showError="inputClass"
+                           showError="lineItem.expirationDate.notRecorded"
                            error-holder="expirationDateError{{$index}}"
                            maxlength="7"/>
-                    <span class="alert alert-warning warning-alert"
+                    <span class="rnr-form-error"
                           id="expirationDateError{{$index}}"
                           style="display:none;"
                           openlmis-message="error.invalid.date.format"></span>
@@ -181,7 +181,7 @@
                                 </div>
                                 <input id="expirationDate{{$index}}" type="checkbox"
                                        ng-model="lineItem.expirationDate.notRecorded"
-                                       not-recorded="clearError"/>
+                                       not-recorded />
                                 <label class="checkbox-label"
                                        for="expirationDate{{$index}}"
                                        openlmis-message="label.not.recorded"></label>

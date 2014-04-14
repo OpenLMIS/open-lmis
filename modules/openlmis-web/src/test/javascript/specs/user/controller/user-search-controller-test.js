@@ -89,8 +89,8 @@ describe("User Search Controller", function () {
     expect(query).toEqual(scope.query);
   });
 
-  it("should open password modal", function() {
-    var user = {id: 1, firstName: "User"};
+  it("should open reset password modal", function () {
+    var user = {id: 1, firstName: "User", active: true};
     scope.changePassword(user);
     expect(scope.password1).toEqual("");
     expect(scope.password2).toEqual("");
@@ -98,6 +98,12 @@ describe("User Search Controller", function () {
     expect(scope.error).toEqual("");
     expect(scope.changePasswordModal).toEqual(true);
     expect(scope.user).toEqual(user);
+  });
+
+  it("should not open reset password modal if user is inactive", function () {
+    var user = {id: 1, firstName: "User", active: false};
+    scope.changePassword(user);
+    expect(scope.changePasswordModal).toBeUndefined();
   });
 
   it("should reset password modal", function () {

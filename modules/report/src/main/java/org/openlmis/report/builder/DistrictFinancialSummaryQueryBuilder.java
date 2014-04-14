@@ -17,13 +17,6 @@ import org.openlmis.report.model.params.DistrictSummaryReportParam;
 
 import java.util.Map;
 
-/**
- * Created with IntelliJ IDEA.
- * User: Hassan
- * Date: 10/28/13
- * Time: 6:12 PM
- * To change this template use File | Settings | File Templates.
- */
 public class DistrictFinancialSummaryQueryBuilder {
 
     public static String getQuery(Map params){
@@ -31,17 +24,20 @@ public class DistrictFinancialSummaryQueryBuilder {
         DistrictSummaryReportParam filter  = (DistrictSummaryReportParam)params.get("filterCriteria");
 
         String sql="";
-        sql = "WITH temp as (\n" +
-                "select facilitycode,facility,facilitytype,region,\n" +
-                " sum(fullsupplyitemssubmittedcost) fullsupplyitemssubmittedcost,sum(nonfullsupplyitemssubmittedcost) nonfullsupplyitemssubmittedcost\n" +
-                "from vw_district_financial_summary\n" +
-                writePredicates(filter)+
-                "Group by region,facilitycode,facility,facilitytype\n" +
-                "order by region)\n" +
-                "select t.facilitycode,t.facility,t.facilitytype,t.region ,(t.fullsupplyitemssubmittedcost+t.nonfullsupplyitemssubmittedcost) totalcost\n" +
-                "from temp t\n" +
-                "INNER JOIN (select region from temp GROUP BY region order by region) temp2 ON t.region= temp2.region";
 
+        sql = "\n" +
+                "\n" +
+                "  WITH temp as (\n" +
+                "                     select facilitycode,facility,facilitytype,rgroup,region,\n" +
+                "                     sum(fullsupplyitemssubmittedcost) fullsupplyitemssubmittedcost,sum(nonfullsupplyitemssubmittedcost) nonfullsupplyitemssubmittedcost\n" +
+                "                     from vw_district_financial_summary\n" +
+                writePredicates(filter)+
+                "        \n" +
+                "                  Group by rgroup,facilitycode,facility,facilitytype,region\n" +
+                "                             order by rgroup)\n" +
+                "                            select t.facilitycode,t.facility,t.facilitytype,t.rgroup ,(t.fullsupplyitemssubmittedcost+t.nonfullsupplyitemssubmittedcost) totalcost,t.region\n" +
+                "                              from temp t\n" +
+                "                               INNER JOIN (select rgroup from temp GROUP BY rgroup order by rgroup) temp2 ON t.rgroup= temp2.rgroup ";
         return sql;
     }
 
@@ -52,9 +48,9 @@ public class DistrictFinancialSummaryQueryBuilder {
         if(filter != null){
 
 
-            if (filter.getZoneId() != 0 ) {
+            if (filter.getRgroupId() != 0 ) {
                 predicate = predicate.isEmpty() ?" where " : predicate + " and ";
-                predicate = predicate + " zoneid = #{filterCriteria.zoneId}";
+                predicate = predicate + " rgroupid = #{filterCriteria.rgroupId}";
             }
 
             if(filter.getPeriodId() != 0 ){

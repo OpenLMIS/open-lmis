@@ -17,7 +17,7 @@ import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.BaseModel;
 
 /**
- * This class represents the type associated with a loss/Adjustment. Type can be additive or negative. This class also
+ * LossesAndAdjustmentsType represents the type associated with a loss/Adjustment. Type can be additive or negative. This class also
  * includes displayOrder, name and description for a lossesAndAdjustmentsType.
  */
 

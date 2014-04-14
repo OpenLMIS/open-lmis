@@ -93,6 +93,9 @@ public class ReportLookupService {
   @Autowired
   private ReportRequisitionMapper requisitionMapper;
 
+  @Autowired
+  private SupervisoryNodeReportMapper supervisoryNodeReportMapper;
+
   public List<Product> getAllProducts() {
     return productMapper.getAll();
   }
@@ -158,6 +161,10 @@ public class ReportLookupService {
 
   public List<RequisitionGroup> getRequisitionGroupsByProgramAndSchedule(int program, int schedule) {
     return this.rgMapper.getByProgramAndSchedule(program, schedule);
+  }
+
+  public List<RequisitionGroup> getBySupervisoryNodesAndProgramAndSchedule(Long userId, Long nodeId, Long programId, Long scheduleId){
+      return rgMapper.getBySupervisoryNodesAndProgramAndSchedule(userId,nodeId,programId,scheduleId);
   }
 
   public List<RequisitionGroup> getRequisitionGroupsByProgram(int program) {
@@ -248,7 +255,7 @@ public class ReportLookupService {
     return facilityReportMapper.getFacilityByCode(code);
   }
 
-  public List<Facility> getFacilities(Long program, Long schedule, Long type) {
+  public List<Facility> getFacilities(Long program, Long schedule, Long type, Long requisitionGroup) {
     // this method does not work if no program is specified
     if (program == 0) {
       return null;
@@ -258,18 +265,24 @@ public class ReportLookupService {
       return facilityReportMapper.getFacilitiesByProgram(program);
     }
 
-    if (type == 0) {
+    if (type == 0 && requisitionGroup == 0) {
       return facilityReportMapper.getFacilitiesByProgramSchedule(program, schedule);
     }
 
-    return facilityReportMapper.getFacilitiesByPrgraomScheduleType(program, schedule, type);
+    if (type == 0 && requisitionGroup != 0) {
+      return facilityReportMapper.getFacilitiesByProgramScheduleAndRG(program, schedule, requisitionGroup);
+    }
+
+    if(requisitionGroup == 0){
+      facilityReportMapper.getFacilitiesByPrgraomScheduleType(program, schedule, type);
+    }
+
+    return facilityReportMapper.getFacilitiesByPrgraomScheduleTypeAndRG(program, schedule, type, requisitionGroup);
   }
 
-  public List<Facility> getFacilitiesBy(Long geographicZone, Long requisitionGroup, Long program, Long schedule) {
-      if (geographicZone == 0)
-          return null;
+  public List<Facility> getFacilitiesBy(Long userId, Long supervisoryNodeId, String requisitionGroup, Long program, Long schedule) {
 
-      return facilityReportMapper.getFacilitiesBy(geographicZone, requisitionGroup, program, schedule);
+      return facilityReportMapper.getFacilitiesBy(userId,supervisoryNodeId, requisitionGroup, program, schedule);
 
   }
 
@@ -306,5 +319,24 @@ public class ReportLookupService {
 
   public String getProgramNameForRnrId(Long rnrId) {
     return requisitionMapper.getProgramNameForRnrId(rnrId);
+  }
+
+  public List<Program> getAllUserSupervisedActivePrograms(Long userId){
+      return programMapper.getUserSupervisedActivePrograms(userId);
+  }
+  public List<Program> getUserSupervisedActiveProgramsBySupervisoryNode(Long userId, Long supervisoryNodeId){
+      return programMapper.getUserSupervisedActiveProgramsBySupervisoryNode(userId, supervisoryNodeId);
+  }
+
+  public List<SupervisoryNode> getAllUserSupervisoryNode(Long userId){
+      return supervisoryNodeReportMapper.getAllSupervisoryNodesInHierarchyByUser(userId);
+  }
+
+  public List<SupervisoryNode> getAllSupervisoryNodesByUserHavingActiveProgram(Long userId){
+      return supervisoryNodeReportMapper.getAllSupervisoryNodesByUserHavingActiveProgram(userId);
+  }
+
+  public List<SupervisoryNode> getAllSupervisoryNodesByParentNodeId(Long supervisoryNodeId){
+      return supervisoryNodeReportMapper.getAllSupervisoryNodesByParentNodeId(supervisoryNodeId);
   }
 }

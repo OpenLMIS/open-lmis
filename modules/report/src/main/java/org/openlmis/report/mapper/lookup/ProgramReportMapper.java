@@ -10,6 +10,7 @@
 
 package org.openlmis.report.mapper.lookup;
 
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.openlmis.report.model.dto.Program;
 import org.springframework.stereotype.Repository;
@@ -33,4 +34,36 @@ public interface ProgramReportMapper {
             "   GROUP BY p.name,p.id,p.description,p.code\n" +
             "        ORDER BY name\n" )
     List<Program>getAllRegimenPrograms();
+
+    @Select("\n" +
+            "SELECT DISTINCT p.* \n" +
+            "FROM programs p \n" +
+            "INNER JOIN role_assignments ra ON p.id = ra.programId \n" +
+            "INNER JOIN role_rights rr ON ra.roleId = rr.roleId \n" +
+            "WHERE ra.userId = #{userId}\n" +
+            "AND ra.supervisoryNodeId IS NOT NULL \n" +
+            "AND p.active = TRUE \n" +
+            "AND p.push = FALSE \n" +
+             " UNION\n" +
+            "SELECT DISTINCT p.* \n" +
+            "FROM programs p\n" +
+            "INNER JOIN programs_supported ps ON p.id = ps.programId\n" +
+            "INNER JOIN role_assignments ra ON ra.programId = p.id\n" +
+            "INNER JOIN role_rights rr ON rr.roleId = ra.roleId\n" +
+            "WHERE ra.supervisoryNodeId IS NULL\n" +
+            "AND p.active = TRUE\n" +
+            "AND p.push = FALSE\n" +
+            "AND ps.active= TRUE\n" +
+            "AND ra.userId = #{userId}\n" +
+            "ORDER BY name")
+    List<Program> getUserSupervisedActivePrograms(@Param("userId") Long userId);
+    @Select("   SELECT DISTINCT p.* \n" +
+            "            FROM programs p\n" +
+            "            INNER JOIN role_assignments ra ON p.id = ra.programId \n" +
+            "            INNER JOIN role_rights rr ON ra.roleId = rr.roleId \n" +
+            "            WHERE ra.userId = #{userId}\n" +
+            "            AND ra.supervisoryNodeId = #{nodeId}\n" +
+            "            AND p.active = TRUE \n" +
+            "            AND p.push = FALSE")
+    List<Program> getUserSupervisedActiveProgramsBySupervisoryNode(@Param("userId") Long userId, @Param("nodeId") Long supervisoryNodeId);
 }

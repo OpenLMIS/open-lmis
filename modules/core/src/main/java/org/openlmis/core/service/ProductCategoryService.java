@@ -16,6 +16,10 @@ import org.openlmis.core.repository.ProductCategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+/**
+ * Exposes the services for handling ProductCategory entity.
+ */
+
 @Service
 @NoArgsConstructor
 public class ProductCategoryService {

@@ -8,133 +8,221 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-function ReportingRateController($scope, leafletData) {
+function ReportingRateController($scope, leafletData, ReportingFacilityList, NonReportingFacilityList, SettingsByKey, ContactList, $dialog, messageService) {
 
-  $scope.indicator_types = [{code: 'ever_over_total',name:'Ever Reported / Total Facilities'},
-                            {code: 'ever_over_expected',name:'Ever Reported / Expected Facilities'},
-                            {code: 'period_over_expected',name:'Reported during period / Expected Facilities'}];
 
-  $scope.indicator_type = 'period_over_expected';
-
-  $scope.geojson = {};
-
-  function interpolate(value, count) {
-    var val = parseFloat(value) / parseFloat(count);
-    var interpolator = chroma.interpolate.bezier(['red', 'yellow', 'green']);
-    return interpolator(val).hex();
-  }
-
-  $scope.style = function (feature) {
-    //var val = parseFloat(feature.period) / parseFloat(feature.total);
-    var color = ($scope.indicator_type == 'ever_over_total')?interpolate(feature.ever, feature.total):($scope.indicator_type == 'ever_over_expected')? interpolate(feature.ever, feature.expected):interpolate(feature.period, feature.expected);
-    return {
-      fillColor: color,
-      weight: 1,
-      opacity: 1,
-      color: 'white',
-      dashArray: '1',
-      fillOpacity: 0.7
-    };
-  };
-
-  $scope.centerJSON = function () {
-    leafletData.getMap().then(function (map) {
-      var latlngs = [];
-      for (var c = 0; c < $scope.features.length; c++) {
-        if ($scope.features[c].geometry === null || angular.isUndefined($scope.features[c].geometry))
-          continue;
-        if ($scope.features[c].geometry.coordinates === null || angular.isUndefined($scope.features[c].geometry.coordinates))
-          continue;
-        for (var i = 0; i < $scope.features[c].geometry.coordinates.length; i++) {
-          var coord = $scope.features[c].geometry.coordinates[i];
-          for (var j in coord) {
-            var points = coord[j];
-            latlngs.push(L.GeoJSON.coordsToLatLng(points));
-          }
-        }
-      }
-      map.fitBounds(latlngs);
+  $scope.showSendEmail = function(facility){
+    $scope.selected_facility = facility;
+    ContactList.get({type:'email', facilityId: facility.id}, function(data){
+      $scope.contacts = data.contacts;
     });
+    $scope.show_email = !$scope.show_email;
   };
 
-  $scope.drawMap = function (json) {
+  $scope.showSendSms = function(facility){
+    $scope.selected_facility = facility;
+    ContactList.get({type:'sms', facilityId: facility.id}, function(data){
+      $scope.contacts = data.contacts;
+    });
+    $scope.show_sms = !$scope.show_sms;
+  };
+
+  SettingsByKey.get({key: 'LATE_RNR_NOTIFICATION_SMS_TEMPLATE'}, function (data){
+    $scope.sms_template           = data.settings.value;
+  });
+
+  SettingsByKey.get({key: 'LATE_RNR_NOTIFICATION_EMAIL_TEMPLATE'}, function (data){
+    $scope.email_template         = data.settings.value;
+  });
+
+  SettingsByKey.get({key: 'SMS_ENABLED'},function (data){
+    $scope.sms_enabled            = data.settings.value;
+  });
+
+
+
+  $scope.ReportingFacilities = function(feature, element) {
+    ReportingFacilityList.get({
+      program: $scope.filter.program,
+      period: $scope.filter.period,
+      geo_zone: feature.id
+    }, function(data) {
+      $scope.facilities = data.facilities;
+      $scope.successModal = true;
+      $scope.show_email = $scope.show_sms = false;
+      $scope.title = 'Properly Reporting Facilities in ' + feature.name;
+    });
+    $scope.zoomToSelectedFeature(feature);
+  };
+
+  $scope.NonReportingFacilities = function(feature, element) {
+    NonReportingFacilityList.get({
+      program: $scope.filter.program,
+      period: $scope.filter.period,
+      geo_zone: feature.id
+    }, function(data) {
+      $scope.facilities = data.facilities;
+      $scope.successModal = true;
+      $scope.show_email = $scope.show_sms = false;
+      $scope.title = 'Non Reporting Facilities in ' + feature.name;
+    });
+
+    $scope.zoomToSelectedFeature(feature);
+  };
+
+    $scope.expectedFilter = function(item) {
+        return item.expected > 0;
+    };
 
     angular.extend($scope, {
-      geojson: {
-        data: json,
-        style: $scope.style,
-        onEachFeature: onEachFeature,
-        resetStyleOnMouseout: true
-      },
-//      layers: {
-//        baselayers: {
-//          googleTerrain: {
-//            name: 'Google Terrain',
-//            layerType: 'TERRAIN',
-//            type: 'google'
-//          },
-//          googleHybrid: {
-//            name: 'Google Hybrid',
-//            layerType: 'HYBRID',
-//            type: 'google'
-//          },
-//          googleRoadmap: {
-//            name: 'Google Streets',
-//            layerType: 'ROADMAP',
-//            type: 'google'
-//          }
-//        }
-//      },
-      defaults: {
-        scrollWheelZoom: false
-      }
+        layers: {
+            baselayers: {
+                googleTerrain: {
+                    name: 'Terrain',
+                    layerType: 'TERRAIN',
+                    type: 'google'
+                },
+                googleHybrid: {
+                    name: 'Hybrid',
+                    layerType: 'HYBRID',
+                    type: 'google'
+                },
+                googleRoadmap: {
+                    name: 'Streets',
+                    layerType: 'ROADMAP',
+                    type: 'google'
+                }
+            }
+        }
     });
-    $scope.$apply();
-  };
-
-  function onEachFeature(feature, layer) {
-
-    layer.on({
-      click: zoomToFeature
-    });
-    layer.bindPopup(popupFormat(feature));
-  }
-
-  function popupFormat(feature){
-    return '<b>' + feature.properties.name + '</b><br />' +
-        '<div>Expected Facilities: ' + feature.expected + '</div>' +
-        '<div>Reported This Period: ' + feature.period + '</div>' +
-        '<div>Ever Reported: ' + feature.ever + '</div>' +
-        '<div>Total Facilities: ' + feature.total + '</div> ';
-  }
-
-  function zoomToFeature(e) {
-
-  }
-
-  $scope.OnFilterChanged = function(){
-    $.getJSON('/gis/reporting-rate.json',{program: $scope.program, period: $scope.period }, function (data) {
-      $scope.features = data.map;
-
-      angular.forEach($scope.features, function (feature) {
-        feature.geometry_text = feature.geometry;
-        feature.geometry = JSON.parse(feature.geometry);
-        feature.type = "Feature";
-        feature.properties = {};
-        feature.properties.name = feature.name;
-        feature.properties.id = feature.id;
-      });
-
-      $scope.drawMap({
-        "type": "FeatureCollection",
-        "features": $scope.features
-      });
-      $scope.centerJSON();
-    });
-  };
 
 
 
+    $scope.indicator_types = [{
+        code: 'ever_over_total',
+        name: 'Ever Reported / Total Facilities'
+    }, {
+        code: 'ever_over_expected',
+        name: 'Ever Reported / Expected Facilities'
+    }, {
+        code: 'period_over_expected',
+        name: 'Reported during period / Expected Facilities'
+    }];
 
+    $scope.indicator_type = 'period_over_expected';
+
+    $scope.geojson = {};
+
+    function interpolate(value, count) {
+        var val = parseFloat(value) / parseFloat(count);
+        var interpolator = chroma.interpolate.bezier(['red', 'yellow', 'green']);
+        return interpolator(val).hex();
+    }
+
+    $scope.style = function(feature) {
+        var color = ($scope.indicator_type == 'ever_over_total') ? interpolate(feature.ever, feature.total) : ($scope.indicator_type == 'ever_over_expected') ? interpolate(feature.ever, feature.expected) : interpolate(feature.period, feature.expected);
+        return {
+            fillColor:  color,
+            weight:     1,
+            opacity:    1,
+            color:      'white',
+            dashArray:  '1',
+            fillOpacity: 0.7
+        };
+    };
+
+    $scope.centerJSON = function() {
+        leafletData.getMap().then(function(map) {
+            var latlngs = [];
+            for (var c = 0; c < $scope.features.length; c++) {
+                if ($scope.features[c].geometry === null || angular.isUndefined($scope.features[c].geometry))
+                    continue;
+                if ($scope.features[c].geometry.coordinates === null || angular.isUndefined($scope.features[c].geometry.coordinates))
+                    continue;
+                for (var i = 0; i < $scope.features[c].geometry.coordinates.length; i++) {
+                    var coord = $scope.features[c].geometry.coordinates[i];
+                    for (var j in coord) {
+                        var points = coord[j];
+                        latlngs.push(L.GeoJSON.coordsToLatLng(points));
+                    }
+                }
+            }
+            map.fitBounds(latlngs);
+        });
+    };
+
+    $scope.zoomToSelectedFeature = function(zoomToFeature) {
+      //TODO: highlight the district instead of zoom
+      return;
+
+      leafletData.getMap().then(function(map) {
+            var latlngs = [];
+
+            for (var i = 0; i < zoomToFeature.geometry.coordinates.length; i++) {
+                var coord = zoomToFeature.geometry.coordinates[i];
+                for (var j in coord) {
+                    var points = coord[j];
+                    latlngs.push(L.GeoJSON.coordsToLatLng(points));
+                }
+            }
+            map.fitBounds(latlngs);
+        });
+    };
+
+    $scope.drawMap = function(json) {
+
+        angular.extend($scope, {
+            geojson: {
+                data: json,
+                style: $scope.style,
+                onEachFeature: onEachFeature,
+                resetStyleOnMouseout: true
+            }
+        });
+
+        $scope.$apply();
+    };
+
+    function onEachFeature(feature, layer) {
+
+        layer.on({
+            click: zoomToFeature
+        });
+        layer.bindPopup(popupFormat(feature));
+    }
+
+    function popupFormat(feature) {
+        return '<table class="table table-bordered" style="width: 250px"><tr><th colspan="2"><b>' + feature.properties.name + '</b></th></tr>' +
+            '<tr><td>Expected Facilities</td><td class="number">' + feature.expected + '</td></tr>' +
+            '<tr><td>Reported This Period</td><td class="number">' + feature.period + '</td></tr>' +
+            '<tr><td>Ever Reported</td><td class="number">' + feature.ever + '</td></tr>' +
+            '<tr><td class="bold">Total Facilities</b></td><td class="number bold">' + feature.total + '</td></tr>';
+    }
+
+    function zoomToFeature(e) {
+
+    }
+
+    $scope.OnFilterChanged = function() {
+        $.getJSON('/gis/reporting-rate.json', $scope.filter, function(data) {
+            $scope.features = data.map;
+
+            angular.forEach($scope.features, function(feature) {
+                feature.geometry_text = feature.geometry;
+                feature.geometry = JSON.parse(feature.geometry);
+                feature.type = "Feature";
+                feature.properties = {};
+                feature.properties.name = feature.name;
+                feature.properties.id = feature.id;
+            });
+
+            $scope.drawMap({
+                "type": "FeatureCollection",
+                "features": $scope.features
+            });
+            $scope.centerJSON();
+        });
+
+    };
 
 }

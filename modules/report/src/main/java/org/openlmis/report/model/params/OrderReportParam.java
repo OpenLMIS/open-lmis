@@ -41,14 +41,14 @@ public class OrderReportParam
   private String period;
   private int scheduleId;
   private String schedule;
+  private String year;
 
   @Override
   public String toString() {
 
     StringBuilder filtersValue = new StringBuilder("");
     filtersValue.append("Program: ").append(this.program).append("\n").
-      append("Period: ").append(this.period).append("\n").
-      append("Product/s: ").append(this.product).append("\n");
+      append("Period: ").append(this.period).append(" - ").append(this.year).append("\n");
 
     return filtersValue.toString();
   }

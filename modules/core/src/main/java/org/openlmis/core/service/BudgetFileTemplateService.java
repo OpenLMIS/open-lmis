@@ -19,8 +19,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+/**
+ * Exposes the services for handling BudgetFileTemplate entity.
+ */
+
 @Service
 public class BudgetFileTemplateService {
+
   @Autowired
   private BudgetFileTemplateRepository budgetFileTemplateRepository;
 

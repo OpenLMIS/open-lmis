@@ -25,6 +25,10 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Exposes the services for handling program supported by facilities.
+ */
+
 @Service
 public class ProgramSupportedService {
 
@@ -39,7 +43,6 @@ public class ProgramSupportedService {
 
   @Autowired
   EventService eventService;
-
 
   @Autowired
   FacilityProgramProductService facilityProgramProductService;

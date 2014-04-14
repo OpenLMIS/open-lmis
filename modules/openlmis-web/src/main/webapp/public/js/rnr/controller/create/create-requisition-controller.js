@@ -8,13 +8,14 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-function CreateRequisitionController($scope, requisition, pageSize, rnrColumns, lossesAndAdjustmentsTypes, facilityApprovedProducts, requisitionRights, regimenTemplate, $location, Requisitions, DeleteRequisition, $routeParams, $dialog, requisitionService, $q) {
+function CreateRequisitionController($scope, requisitionData, pageSize, rnrColumns, lossesAndAdjustmentsTypes, facilityApprovedProducts, requisitionRights, regimenTemplate, $location, DeleteRequisition , Requisitions, $routeParams, $dialog, requisitionService, $q) {
 
   var NON_FULL_SUPPLY = 'nonFullSupply';
   var FULL_SUPPLY = 'fullSupply';
+  var REGIMEN = 'regimen';
 
   $scope.pageSize = pageSize;
-  $scope.rnr = new Rnr(requisition, rnrColumns);
+  $scope.rnr = new Rnr(requisitionData.rnr, rnrColumns, requisitionData.numberOfMonths);
 
   $scope.deleteRnR = function( ){
 
@@ -58,7 +59,7 @@ function CreateRequisitionController($scope, requisition, pageSize, rnrColumns, 
   $scope.regimenColumns = regimenTemplate ? regimenTemplate.columns : [];
   $scope.visibleRegimenColumns = _.where($scope.regimenColumns, {'visible': true});
   $scope.addNonFullSupplyLineItemButtonShown = _.findWhere($scope.programRnrColumnList, {'name': 'quantityRequested'});
-  $scope.errorPages = {fullSupply: [], nonFullSupply: []};
+  $scope.errorPages = {fullSupply: [], nonFullSupply: [], regimen: []};
   $scope.regimenCount = $scope.rnr.regimenLineItems.length;
 
   requisitionService.populateScope($scope, $location, $routeParams);
@@ -98,7 +99,8 @@ function CreateRequisitionController($scope, requisition, pageSize, rnrColumns, 
   $scope.checkErrorOnPage = function (page) {
     return $scope.visibleTab === NON_FULL_SUPPLY ?
         _.contains($scope.errorPages.nonFullSupply, page) :
-        $scope.visibleTab === FULL_SUPPLY ? _.contains($scope.errorPages.fullSupply, page) : [];
+        $scope.visibleTab === FULL_SUPPLY ? _.contains($scope.errorPages.fullSupply, page) :
+        $scope.visibleTab === REGIMEN ? _.contains($scope.errorPages.regimen,page) : [];
   };
 
   $scope.$watch("currentPage", function () {
@@ -175,8 +177,12 @@ function CreateRequisitionController($scope, requisition, pageSize, rnrColumns, 
   function validateRegimenLineItems() {
     var setError = false;
     $.each($scope.rnr.regimenLineItems, function (index, regimenLineItem) {
+      regimenLineItem.hasError = false;
       $.each($scope.visibleRegimenColumns, function (index, regimenColumn) {
-        if (regimenColumn.name !== "remarks" && isUndefined(regimenLineItem[regimenColumn.name])) {
+
+        if ((regimenColumn.name !== "remarks" && isUndefined(regimenLineItem[regimenColumn.name])) ) {
+
+          regimenLineItem.hasError = true;
           setError = true;
           $scope.regimenLineItemInValid = true;
         }
@@ -229,8 +235,8 @@ function CreateRequisitionController($scope, requisition, pageSize, rnrColumns, 
     return null;
   };
 
-  $scope.highlightWarning = function (value) {
-    if ($scope.showError && (isUndefined(value) || value === false)) {
+  $scope.highlightWarning = function (showError, value) {
+    if (showError && (isUndefined(value) || value === false)) {
       return "warning-error";
     }
     return null;
@@ -273,7 +279,7 @@ function CreateRequisitionController($scope, requisition, pageSize, rnrColumns, 
     var rnr = {"id": $scope.rnr.id, "fullSupplyLineItems": [], "nonFullSupplyLineItems": [], "regimenLineItems": []};
     if (!$scope.page[$scope.visibleTab].length) return rnr;
 
-    var nonLineItemFields = ['rnr', 'programRnrColumnList', 'numberOfMonths', 'rnrStatus', 'cost', 'productName'];
+    var nonLineItemFields = ['rnr', 'programRnrColumnList', 'numberOfMonths', 'rnrStatus', 'cost', 'productName', 'hasError'];
 
     function transform(copyFrom) {
       return _.map(copyFrom, function (lineItem) {
@@ -289,17 +295,17 @@ function CreateRequisitionController($scope, requisition, pageSize, rnrColumns, 
 }
 
 CreateRequisitionController.resolve = {
-  requisition: function ($q, $timeout, Requisitions, $route, $rootScope) {
+  requisitionData: function ($q, $timeout, Requisitions, $route, $rootScope) {
     var deferred = $q.defer();
     $timeout(function () {
-      var rnr = $rootScope.rnr;
-      if (rnr) {
-        deferred.resolve(rnr);
-        $rootScope.rnr = undefined;
+      var rnrData = $rootScope.rnrData;
+      if (rnrData) {
+        deferred.resolve(rnrData);
+        $rootScope.rnrData = undefined;
         return;
       }
       Requisitions.get({id: $route.current.params.rnr}, function (data) {
-        deferred.resolve(data.rnr);
+        deferred.resolve(data);
       }, {});
     }, 100);
     return deferred.promise;

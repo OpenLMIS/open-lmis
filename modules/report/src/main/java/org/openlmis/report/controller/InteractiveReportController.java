@@ -281,4 +281,22 @@ public class InteractiveReportController extends BaseController {
       (List<DistrictSummaryReport>) report.getReportDataProvider().getMainReportData(request.getParameterMap(), request.getParameterMap(), page, max);
     return new Pages(page, max, districtSummaryReportList);
   }
+
+
+    @RequestMapping(value = "/reportdata/userSummary", method = GET, headers = BaseController.ACCEPT_JSON)
+    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_USER_SUMMARY_REPORT')")
+    public Pages getUserSummaryData(@RequestParam(value = "page", required = false, defaultValue = "1") int page,
+                                                @RequestParam(value = "max", required = false, defaultValue = "10") int max,
+                                                HttpServletRequest request
+
+    ) {
+        Report report = reportManager.getReportByKey("user_summary");
+        List<UserSummaryReport> userSummmaryReportList =
+                (List<UserSummaryReport>) report.getReportDataProvider().getMainReportData(request.getParameterMap(), request.getParameterMap(), page, max);
+        return new Pages(page, max, userSummmaryReportList);
+    }
+
+
+
+
 }

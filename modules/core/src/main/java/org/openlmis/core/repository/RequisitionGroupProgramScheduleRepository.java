@@ -26,7 +26,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 /**
- * This is Repository class for RequisitionGroupProgramSchedule related database operations.
+ * RequisitionGroupProgramScheduleRepository is Repository class for RequisitionGroupProgramSchedule related database operations.
  */
 
 @Repository

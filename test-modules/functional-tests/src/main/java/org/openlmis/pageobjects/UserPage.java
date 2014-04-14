@@ -12,10 +12,7 @@ package org.openlmis.pageobjects;
 
 
 import org.openlmis.UiUtils.TestWebDriver;
-import org.openqa.selenium.ElementNotVisibleException;
-import org.openqa.selenium.Keys;
-import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.How;
 import org.openqa.selenium.support.PageFactory;
@@ -61,7 +58,7 @@ public class UserPage extends Page {
   @FindBy(how = ID, using = "searchUser")
   private static WebElement searchUserTextField = null;
 
-  @FindBy(how = XPATH, using = "//a[@ng-click='user.active? changePassword(user): javascript(void);'] ")
+  @FindBy(how = XPATH, using = "//a[@ng-click='changePassword(user)']")
   private static WebElement selectFirstResetPassword = null;
 
   @FindBy(how = ID, using = "password1")
@@ -245,6 +242,8 @@ public class UserPage extends Page {
   public void resetPassword(String newPassword, String confirmPassword) {
     testWebDriver.waitForElementToAppear(selectFirstResetPassword);
     testWebDriver.sleep(300);
+    JavascriptExecutor jse = (JavascriptExecutor) testWebDriver.getDriver();
+    jse.executeScript("document.getElementById('resetPassword0').focus();");
     selectFirstResetPassword.click();
 
     testWebDriver.waitForElementToAppear(newPasswordField);

@@ -364,7 +364,9 @@ public class HomePage extends Page {
     testWebDriver.keyPress(requisitionMenuItem);
     testWebDriver.waitForElementToAppear(approveLink);
     testWebDriver.keyPress(approveLink);
-    return PageObjectFactory.getApprovePage(testWebDriver);
+    ApprovePage approvePage = PageObjectFactory.getApprovePage(testWebDriver);
+    approvePage.waitForPageToAppear();
+    return approvePage;
   }
 
   public ConvertOrderPage navigateConvertToOrder() {
@@ -409,6 +411,14 @@ public class HomePage extends Page {
   public HomePage navigateHomePage() {
     testWebDriver.waitForElementToAppear(homeMenuItem);
     testWebDriver.keyPress(homeMenuItem);
+    testWebDriver.sleep(500);
+    return PageObjectFactory.getHomePage(testWebDriver);
+  }
+
+  public HomePage navigateOfflineHomePage() {
+    WebElement homeOfflineMenu = testWebDriver.getElementByXpath("//ng-include[2]/div/ul[1]/li[1]/a");
+    testWebDriver.waitForElementToAppear(homeOfflineMenu);
+    testWebDriver.keyPress(homeOfflineMenu);
     testWebDriver.sleep(500);
     return PageObjectFactory.getHomePage(testWebDriver);
   }
