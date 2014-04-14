@@ -28,7 +28,7 @@
         </tr>
         <tr>
           <td class="cell-input col-{{ column.name }}" ng-repeat="column in visibleColumns.nonFullSupply.fixed">
-            <span ng-bind="rnrLineItem[column.name]" id="{{getId(column.name, $parent)}}"
+            <span ng-bind="rnrLineItem[column.name]" id="{{column.name + '_' + $parent.$index}}"
                   class="cell-text"></span>
           </td>
         </tr>
