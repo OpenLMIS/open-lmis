@@ -91,5 +91,8 @@ public interface DashboardMapper {
 
     List<Alerts> getAlerts(@Param("supervisoryNodeId")  Long supervisoryNodeId);
 
+    @Select("select * from fn_populate_dw_orders(1)")
+    void startDashboardDataBatchUpdate();
+
 }
 
