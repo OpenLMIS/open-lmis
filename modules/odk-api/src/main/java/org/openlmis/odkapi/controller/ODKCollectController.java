@@ -20,6 +20,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -34,13 +35,30 @@ public class ODKCollectController extends BaseController {
     @Autowired
     ServletContext servletContext;
 
-    @RequestMapping(value = "/odk-api/collect-apk")
+    @RequestMapping(value = "/odk-api/collect/{fileName}")
     @ResponseBody
-    public ResponseEntity<byte[]> getODKCollectApkFile(HttpServletResponse response)
+    public ResponseEntity<byte[]> getODKCollectApkFile(@PathVariable String fileName, HttpServletResponse response)
     {
         final HttpHeaders headers = new HttpHeaders();
+        String filePath, requestedFile ;
+        if (fileName.equals(ODK_COLLECT_APP_APK_REQUEST_PARAMETER))
+        {
+            filePath = "/public/apk/" + ODK_COLLECT_APP_APK_FILE_NAME;
+            requestedFile = ODK_COLLECT_APP_APK_FILE_NAME;
 
-        File toServeUp = new File( servletContext.getRealPath("/public/apk/" + ODK_COLLECT_APP_APK_FILE_NAME) );
+        }
+
+        else if (fileName.equals(ODK_COLLECT_APP_ITEMSETS_REQUEST_PARAMETER))
+        {
+            filePath = "/public/apk/" + ODK_COLLECT_APP_ITEMSETS_CSV_FILE_NAME;
+            requestedFile = ODK_COLLECT_APP_ITEMSETS_CSV_FILE_NAME;
+        }
+        else
+        {
+            headers.setContentType(MediaType.TEXT_PLAIN);
+            return new ResponseEntity<byte[]>(CAN_NOT_READ_FILE.getBytes(), headers, HttpStatus.NOT_FOUND);
+        }
+        File toServeUp = new File( servletContext.getRealPath(filePath) );
         InputStream inputStream = null;
 
         try
@@ -55,7 +73,7 @@ public class ODKCollectController extends BaseController {
         }
 
         response.setContentType("application/octet-stream");
-        response.setHeader("Content-Disposition", "attachment; filename=\"" + ODK_COLLECT_APP_APK_FILE_NAME + "\"");
+        response.setHeader("Content-Disposition", "attachment; filename=\"" + requestedFile + "\"");
 
         Long fileSize = toServeUp.length();
         response.setContentLength(fileSize.intValue());

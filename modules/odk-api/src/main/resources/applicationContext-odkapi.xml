@@ -32,15 +32,4 @@
     <bean id="dateUtil" class="org.openlmis.odkapi.util.DateUtil" />
     <bean id="odkAccountService" class="org.openlmis.odkapi.service.ODKAccountService" />
 
-    <bean id="odkAuthenticationManager" class="org.springframework.security.authentication.ProviderManager">
-        <constructor-arg>
-            <list>
-                <ref bean="odkAuthProvider"/>
-            </list>
-        </constructor-arg>
-    </bean>
-
-    <bean id="odkAuthProvider" class="org.openlmis.odkapi.authentication.ODKAuthenticationProvider" />
-
-
-</beans>
+ </beans>
