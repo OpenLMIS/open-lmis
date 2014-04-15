@@ -27,9 +27,11 @@ dependencies {
             'org.ict4h:atomfeed-spring-server:0.9.2',
             project(':modules:db'),
             project(':modules:email'),
+            project(':modules:sms'),
             project(':modules:upload')
 
     testCompile 'org.springframework:spring-test:3.1.1.RELEASE',
+            project(path: ':modules:sms', configuration: 'testFixtures'),
             project(path: ':modules:email', configuration: 'testFixtures')
 
 

@@ -43,17 +43,13 @@
     </int:poller>
   </int-jdbc:inbound-channel-adapter>
 
-  <bean id="sms" class="org.openlmis.sms.domain.SMS">
-
-  </bean>
-
   <bean id="smsDispatcher" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
     <property name="corePoolSize" value="1"/>
     <property name="maxPoolSize" value="1"/>
     <property name="queueCapacity" value="-1"/>
   </bean>
 
-  <int:service-activator input-channel="inputChannel" ref="SMSService" method="ProcessSMS"/>
+  <int:service-activator input-channel="inputChannel" ref="SMSHandlerService" method="ProcessSMS"/>
 
 
 </beans>
