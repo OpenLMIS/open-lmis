@@ -15,7 +15,7 @@ function ListSettingController($scope, $location, Settings, SettingUpdator) {
     showHeader = (setting.toUpperCase() != $scope.current.toUpperCase());
     $scope.current = setting;
     return showHeader;
-  }
+  };
 
   Settings.get(function (data){
      $scope.settings = data.settings;

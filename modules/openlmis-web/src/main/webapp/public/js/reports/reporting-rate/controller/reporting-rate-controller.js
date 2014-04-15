@@ -151,22 +151,8 @@ function ReportingRateController($scope, leafletData, ReportingFacilityList, Non
         });
     };
 
-    $scope.zoomToSelectedFeature = function(zoomToFeature) {
-      //TODO: highlight the district instead of zoom
-      return;
-
-      leafletData.getMap().then(function(map) {
-            var latlngs = [];
-
-            for (var i = 0; i < zoomToFeature.geometry.coordinates.length; i++) {
-                var coord = zoomToFeature.geometry.coordinates[i];
-                for (var j in coord) {
-                    var points = coord[j];
-                    latlngs.push(L.GeoJSON.coordsToLatLng(points));
-                }
-            }
-            map.fitBounds(latlngs);
-        });
+    $scope.zoomToSelectedFeature = function( currentFeature ) {
+      //TODO: highlight the district here
     };
 
     $scope.drawMap = function(json) {
