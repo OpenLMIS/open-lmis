@@ -27,12 +27,12 @@ import java.util.concurrent.Future;
 
 @Service
 @NoArgsConstructor
-public class SMSService {
+public class SMSHandlerService {
 
     private String smsGatewayUrl;
 
     @Autowired
-    public SMSService(@Value("${sms.gateway.url}") String smsGatewayUrl){
+    public SMSHandlerService(@Value("${sms.gateway.url}") String smsGatewayUrl){
         this.smsGatewayUrl = smsGatewayUrl;
     }
 
