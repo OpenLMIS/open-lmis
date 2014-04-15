@@ -469,6 +469,9 @@ services.factory('StockedOutFacilitiesByRequisitionGroup', function($resource){
 services.factory('Alerts', function($resource){
     return $resource('/dashboard/alerts.json',{},{});
 });
+services.factory('DashboardNotificationsDetail', function($resource){
+   return $resource('/dashboard/notifications.json',{},{});
+});
 
 
 

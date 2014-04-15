@@ -59,4 +59,8 @@ public class DashboardLookupService {
         return dashboardMapper.getAlerts(supervisoryNodeId);
 
     }
+
+    public List<NotificationData> getNotificationsByCategory(String category, Long id) {
+        return null;
+    }
 }
