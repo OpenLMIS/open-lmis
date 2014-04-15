@@ -252,6 +252,21 @@
                             </ul>
                         </div>
                     </li>
+                    <li class="has-children">
+                        <a id="manage-equipment-option" href="/public/pages/admin/equipment/index.html"
+                           openlmis-message="link.admin.manage"></a>
+                        <div class="submenu">
+                            <ul>
+                                <li ng-show="hasPermission('MANAGE_EQUIPMENT_SETTINGS')">
+                                    <a href="/public/pages/admin/equipment/index.html">Equipment</a>
+                                </li>
+                                <li ng-show="hasPermission('MANAGE_EQUIPMENT_SETTINGS')">
+                                    <a href="/public/pages/admin/equipment-type/index.html">Equipment</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+
                     <li class="beak"></li>
                 </ul>
                 </div>
