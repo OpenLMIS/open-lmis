@@ -9,91 +9,98 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-function AlertsController($scope, Alerts, ngTableParams) {
+function AlertsController($scope, $filter, Alerts,$location, dashboardMenuService, ngTableParams) {
+
+    var typeAlert = 'ALERT',
+        typeStockOut = 'STOCkOUT';
 
     $scope.$watch('formFilter.supervisoryNodeId', function(){
         Alerts.get({supervisoryNodeId: $scope.formFilter.supervisoryNodeId},function(data){
                 if(!isUndefined(data.alerts)){
-                    $scope.alertData = _.filter(data.alerts,function(alertData){if(alertData.category == 'ALERT'){return alertData;}});
-                    $scope.stockOutData = _.filter(data.alerts,function(alertData){if(alertData.category == 'STOCkOUT'){return alertData;}});
+                    $scope.alertData = _.filter(data.alerts,function(alertData){if(alertData.category == typeAlert){return alertData;}});
+                    $scope.stockOutData = _.filter(data.alerts,function(alertData){if(alertData.category == typeStockOut){return alertData;}});
+
                 }else{
                     resetAlertsData();
                 }
+
 
         });
 
 
     });
+
     var resetAlertsData = function(){
       $scope.alertData = $scope.stockOutData = null;
+
     };
 
-    $scope.alertTableParams = new ngTableParams({
-        page: 1,            // show first page
-        total:0,
-        count: 5,
-        counts:[]
-    });
-    $scope.stockOutsTableParams = new ngTableParams({
-        page: 1,            // show first page
-        total:0,
-        count: 5,
-        counts:[]
-    });
-/*
-    $scope.loadData =  function(params){
-        if(params === undefined || params === null){
-            params = new ngTableParams();
-        }
-        if($scope.alertData === undefined){
-            $scope.datarows = [];
+    var initTableParams = function(){
+        return new ngTableParams({
+            page: 1,            // show first page
+            total:0,
+            count: 5
+        });
+    };
+
+    $scope.showAlertDetails = function(id, category){
+        alert('typeAlert details loading id '+id)
+        var notificationPath = 'notifications/category/'+category+'/'+id;
+        dashboardMenuService.addTab('menu.header.dashboard.notifications.detail','/public/pages/dashboard/index.html#/'+notificationPath,'NOTIFICATIONS-DETAIL',true, 7);
+
+        $location.path(notificationPath);
+    };
+
+
+
+    $scope.alertTableParams = initTableParams();
+    $scope.stockOutsTableParams = initTableParams();
+
+    $scope.dataRows = {};
+
+    $scope.tableParamsChanged = function(params, rawData, category) {
+        if(isUndefined(rawData)){
+            if(category === typeAlert){
+                $scope.dataRows.alert = [];
+            }else if(category === typeStockOut){
+                $scope.dataRows.stock = [];
+            }
             params.total = 0;
-        }else{
-            var data = $scope.alertData;
-            params.total = data.length;
+        }else {
+            var data = rawData;
+            var orderedData = params.filter ? $filter('filter')(data, params.filter) : data;
+            orderedData = params.sorting ?  $filter('orderBy')(orderedData, params.orderBy()) : data;
 
-                $scope.datarows = data.slice((params.page - 1) * params.count, params.page * params.count);
-
+            params.total = orderedData.length;
+            if(category === typeAlert){
+                $scope.dataRows.alert = orderedData.slice( (params.page - 1) * params.count,  params.page * params.count );
+            }else if(category === typeStockOut){
+                $scope.dataRows.stock = orderedData.slice( (params.page - 1) * params.count,  params.page * params.count );
+            }
         }
-    };*/
 
-  /*  $scope.$watch('tableParams', function(selection){
-        $scope.loadData($scope.tableParams);
-    },true);*/
- /*   $scope.tableParam2 = new ngTableParams({
-        page: 1,            // show first page
-        total:0,
-        count: 5
-    });*/
-   /* $scope.tableParams2 = new ngTableParams({
-        page: 1,            // show first page
-        total:0,
-        count: 5 ,
-        counts:[]
-    });*/
+    };
 
-   /* $scope.datarows2 = $scope.alertData.slice(($scope.tableParams2.page- 1) * $scope.tableParams2.count, $scope.tableParams2.page * $scope.tableParams2.count);
+    $scope.$watch('alertData',function(){
 
-    $scope.loadMoreData =  function(params){
-        if(params === undefined || params === null){
-            params = new ngTableParams();
-        }
-        if($scope.alertData === undefined){
-            $scope.datarows2 = [];
-            params.total = 0;
-        }else{
-            var data = $scope.alertData;
-            total = data.length;
-            //params.total = data.length;
-             params.counts = [];
-             if((params.count * (params.page + 1)) < total){
+        $scope.alertTableParams = initTableParams();
+        $scope.tableParamsChanged($scope.alertTableParams, $scope.alertData, typeAlert);
+    });
+    $scope.$watch('alertTableParams',function(newParams){
+        $scope.alertTableParams = newParams;
+        $scope.tableParamsChanged($scope.alertTableParams, $scope.alertData, typeAlert);
+    });
 
-             params.page = params.page ? params.page + 1 : 1;
 
-            $scope.datarows2 = data.slice((1 - 1) * params.count, params.page * params.count);
+    $scope.$watch('stockOutsTableParams',function(newParams){
 
-             }
-        }
-    };*/
+        $scope.stockOutsTableParams = newParams;
+        $scope.tableParamsChanged($scope.stockOutsTableParams, $scope.stockOutData, typeStockOut);
+    });
+
+    $scope.$watch('stockOutData', function(){
+        $scope.stockOutsTableParams = initTableParams();
+        $scope.tableParamsChanged($scope.stockOutsTableParams, $scope.stockOutData, typeStockOut);
+    });
 }
 
