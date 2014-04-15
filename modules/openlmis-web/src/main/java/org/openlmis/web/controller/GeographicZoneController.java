@@ -60,7 +60,7 @@ public class GeographicZoneController extends BaseController {
 
   @RequestMapping(value = "/geographicZone/insert.json", method = POST, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_GEOGRAPHIC_ZONES')")
-  public ResponseEntity<OpenLmisResponse> insert(@RequestBody GeographicZone geographicZone, HttpServletRequest request) throws IOException{
+  public ResponseEntity<OpenLmisResponse> insert(@RequestBody GeographicZone geographicZone, HttpServletRequest request) {
     ResponseEntity<OpenLmisResponse> successResponse;
     geographicZone.setCreatedBy(loggedInUserId(request));
     geographicZone.setModifiedBy(loggedInUserId(request));
@@ -72,11 +72,6 @@ public class GeographicZoneController extends BaseController {
       return error(e, HttpStatus.BAD_REQUEST);
     }
 
-    catch (IOException e){
-        return error(e.getMessage(),HttpStatus.BAD_REQUEST);
-    }
-
-
     successResponse = success("Geographic zone " + geographicZone.getName() + " has been successfully created");
     successResponse.getBody().addData("geographicZone", geographicZone);
     successResponse.getHeaders().setContentType(MediaType.APPLICATION_JSON);
@@ -87,7 +82,7 @@ public class GeographicZoneController extends BaseController {
   @RequestMapping(value = "/geographicZone/setDetails", method = POST, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_GEOGRAPHIC_ZONES')")
   public ResponseEntity<OpenLmisResponse> update(@RequestBody GeographicZone geographicZone,
-                                                 HttpServletRequest request) throws IOException {
+                                                 HttpServletRequest request) {
     ResponseEntity<OpenLmisResponse> successResponse;
     geographicZone.setModifiedBy(loggedInUserId(request));
     try {
@@ -98,9 +93,6 @@ public class GeographicZoneController extends BaseController {
       }
     } catch (DataException e) {
       return error(e, HttpStatus.BAD_REQUEST);
-    }
-    catch (IOException e){
-        return error(e.getMessage(),HttpStatus.BAD_REQUEST);
     }
 
     successResponse = success("Geographic zone '" + geographicZone.getName() + "' has been successfully saved");
