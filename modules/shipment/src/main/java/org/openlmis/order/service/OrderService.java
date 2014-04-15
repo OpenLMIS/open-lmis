@@ -153,6 +153,14 @@ public class OrderService {
     orderRepository.saveOrderFileColumns(orderFileTemplateDTO.getOrderFileColumns(), userId);
   }
 
+  public OrderNumberConfiguration getOrderNumberConfiguration() {
+    return orderConfigurationRepository.getOrderNumberConfiguration();
+  }
+
+  public void updateOrderNumberConfiguration(OrderNumberConfiguration orderNumberConfiguration) {
+    orderConfigurationRepository.updateOrderNumberConfiguration(orderNumberConfiguration);
+  }
+
   public Set<DateFormat> getAllDateFormats() {
     TreeSet<DateFormat> dateFormats = new TreeSet<>();
     dateFormats.addAll(asList(DateFormat.values()));
