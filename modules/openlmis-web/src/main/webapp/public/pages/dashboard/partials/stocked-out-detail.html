@@ -10,7 +10,7 @@
         </table>
         <div ng-show ="stockedOutDetails !== undefined && stockedOutDetails.length > 0">
             <table ng-show="stockedOutDetails.length > 0" class="table-bordered table table-striped pull-right"
-                   ng-table="tableParams"   style="height: 200px; overflow: auto">
+                   ng-table="tableParams">
                 <tbody>
                 <tr ng-repeat="row in stockedOutDetails">
                     <td data-title="'Facility Code'" >{{row.facilityCode}}</td>
