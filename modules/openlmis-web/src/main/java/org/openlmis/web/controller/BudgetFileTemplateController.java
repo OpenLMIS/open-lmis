@@ -38,13 +38,13 @@ public class BudgetFileTemplateController extends BaseController {
   BudgetFileTemplateService service;
 
   @RequestMapping(value = "/budget-file-template", method = GET)
-  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CONFIGURE_EDI')")
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'SYSTEM_SETTINGS')")
   public ResponseEntity<OpenLmisResponse> get() {
     return response("budget_template", service.get());
   }
 
   @RequestMapping(value = "/budget-file-template", method = POST, headers = ACCEPT_JSON)
-  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CONFIGURE_EDI')")
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'SYSTEM_SETTINGS')")
   public ResponseEntity<OpenLmisResponse> update(@RequestBody EDIFileTemplate ediFileTemplate,
                                                  HttpServletRequest request) {
     ediFileTemplate.validateAndSetModifiedBy(loggedInUserId(request), asList("facilityCode", "programCode", "periodStartDate", "allocatedBudget"));

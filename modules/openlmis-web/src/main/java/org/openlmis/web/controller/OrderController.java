@@ -99,13 +99,13 @@ public class OrderController extends BaseController {
   }
 
   @RequestMapping(value = "/order-file-template", method = GET, headers = ACCEPT_JSON)
-  @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'CONFIGURE_EDI')")
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'SYSTEM_SETTINGS')")
   public ResponseEntity<OpenLmisResponse> getOrderFileTemplateDTO() {
     return response(ORDER_FILE_TEMPLATE, orderService.getOrderFileTemplateDTO());
   }
 
   @RequestMapping(value = "/order-file-template", method = POST, headers = ACCEPT_JSON)
-  @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'CONFIGURE_EDI')")
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'SYSTEM_SETTINGS')")
   public ResponseEntity<OpenLmisResponse> saveOrderFileTemplateDTO(@RequestBody OrderFileTemplateDTO orderFileTemplateDTO,
                                                                    HttpServletRequest request) {
     orderService.saveOrderFileTemplate(orderFileTemplateDTO, loggedInUserId(request));
@@ -113,7 +113,7 @@ public class OrderController extends BaseController {
   }
 
   @RequestMapping(value = "/date-formats", method = GET, headers = ACCEPT_JSON)
-  @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'CONFIGURE_EDI')")
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'SYSTEM_SETTINGS')")
   public ResponseEntity<OpenLmisResponse> getAllDateFormats() {
     Set<DateFormat> dateFormats = orderService.getAllDateFormats();
     return response(DATE_FORMATS, dateFormats);
