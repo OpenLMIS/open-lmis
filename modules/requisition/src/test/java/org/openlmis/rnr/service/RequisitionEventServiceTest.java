@@ -74,11 +74,12 @@ public class RequisitionEventServiceTest {
     User user = new User();
     List<User> userList = asList(user);
     SimpleMailMessage emailMessage = new SimpleMailMessage();
-    String actionUrl = baseUrl + "/public/pages/rnr";
+    String actionUrl = baseUrl + "public/pages/logistics/rnr/index.html#/create-rnr/{0}/{2}/{1}?supplyType=fullSupply&page=1";
 
     when(messageService.message("msg.email.notification.subject")).thenReturn("subject");
-    when(messageService.message("msg.email.notification.body", null, requisition.getFacility().getName(),
-      requisition.getPeriod().getName(), null, actionUrl)).thenReturn("body");
+    when(messageService.message(actionUrl, requisition.getId(), requisition.getProgram().getId(), requisition.getFacility().getId())).thenReturn("actionUrl");
+    when(messageService.message("msg.email.notification.body", null, "\n\n", requisition.getFacility().getName(),
+      requisition.getPeriod().getName(), null, "\n\n", "actionUrl", "\n\n")).thenReturn("body");
 
     emailMessage.setTo(user.getEmail());
     emailMessage.setSubject("subject");
@@ -86,6 +87,6 @@ public class RequisitionEventServiceTest {
 
     service.notifyUsers(requisition, userList);
 
-    verify(emailService).send(emailMessage);
+    verify(emailService).processEmailsAsync(asList(emailMessage));
   }
 }

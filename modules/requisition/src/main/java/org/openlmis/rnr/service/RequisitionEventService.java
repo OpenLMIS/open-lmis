@@ -21,10 +21,10 @@ import org.openlmis.rnr.event.RequisitionStatusChangeEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,10 +39,10 @@ public class RequisitionEventService {
   private static Map<RnrStatus, String> actionUrlMap = new HashMap<>();
 
   static {
-    actionUrlMap.put(RnrStatus.SUBMITTED, "/public/pages/rnr");
-    actionUrlMap.put(RnrStatus.AUTHORIZED, "");
-    actionUrlMap.put(RnrStatus.IN_APPROVAL, "");
-    actionUrlMap.put(RnrStatus.APPROVED, "");
+    actionUrlMap.put(RnrStatus.SUBMITTED, "public/pages/logistics/rnr/index.html#/create-rnr/{0}/{2}/{1}?supplyType=fullSupply&page=1");
+    actionUrlMap.put(RnrStatus.AUTHORIZED, "public/pages/logistics/rnr/index.html#/rnr-for-approval/{0}/{1}?supplyType=fullSupply&page=1");
+    actionUrlMap.put(RnrStatus.IN_APPROVAL, "public/pages/logistics/rnr/index.html#/rnr-for-approval/{0}/{1}?supplyType=fullSupply&page=1");
+    actionUrlMap.put(RnrStatus.APPROVED, "public/pages/logistics/rnr/index.html#/requisitions-for-convert-to-order?page=1");
   }
 
   @Autowired
@@ -65,17 +65,20 @@ public class RequisitionEventService {
     }
   }
 
-  @Async
   public void notifyUsers(Rnr requisition, List<User> users) {
-    SimpleMailMessage mailMessage = new SimpleMailMessage();
-    mailMessage.setSubject(messageService.message("msg.email.notification.subject"));
+    String newLine = System.getProperty("line.separator");
+    String paragraphSeparator = newLine.concat(newLine);
+    List<SimpleMailMessage> mailMessages = new ArrayList<>();
     String actionUrl = baseUrl + actionUrlMap.get(requisition.getStatus());
     for (User user : users) {
+      SimpleMailMessage mailMessage = new SimpleMailMessage();
+      mailMessage.setSubject(messageService.message("msg.email.notification.subject"));
       mailMessage.setTo(user.getEmail());
-      mailMessage.setText(messageService.message("msg.email.notification.body", user.getUserName(),
-        requisition.getFacility().getName(), requisition.getPeriod().getName(), user.getUserName(),
-        actionUrl));
-      emailService.send(mailMessage);
+      mailMessage.setText(messageService.message("msg.email.notification.body", user.getUserName(), paragraphSeparator,
+        requisition.getFacility().getName(), requisition.getPeriod().getName(), user.getUserName(), paragraphSeparator,
+        messageService.message(actionUrl, requisition.getId(), requisition.getProgram().getId(), requisition.getFacility().getId()), paragraphSeparator));
+      mailMessages.add(mailMessage);
     }
+    emailService.processEmailsAsync(mailMessages);
   }
 }
