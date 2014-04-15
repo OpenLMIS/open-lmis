@@ -170,7 +170,7 @@ public class RnRPagination extends TestCaseHelper {
     InitiateRnRPage initiateRnRPage = homePage.clickProceed();
 
     verifyCategoryDisplayOrder(10);
-    verifyDisplayOrderFullSupply(11);
+    verifyDisplayOrderFullSupply(10);
 
     initiateRnRPage.addMultipleNonFullSupplyLineItems(11, true);
     verifyCategoryDisplayOrder(10);
