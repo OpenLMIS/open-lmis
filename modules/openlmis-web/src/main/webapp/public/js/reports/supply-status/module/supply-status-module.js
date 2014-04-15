@@ -8,7 +8,7 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-angular.module('supply_status', ['openlmis', 'ngTable', 'ui.bootstrap.modal', 'ui.bootstrap.dropdownToggle'])
+angular.module('supply_status', ['openlmis','angularCombine', 'ngTable', 'ui.bootstrap.modal', 'ui.bootstrap.dropdownToggle'])
     .config(['$routeProvider', function ($routeProvider) {
         $routeProvider.
             when('/list', {controller:SupplyStatusController, templateUrl:'partials/list.html',reloadOnSearch:false}).
@@ -17,4 +17,6 @@ angular.module('supply_status', ['openlmis', 'ngTable', 'ui.bootstrap.modal', 'u
     function ($rootScope, AuthorizationService) {
         AuthorizationService.preAuthorize('VIEW_SUPPLY_STATUS_REPORT');
     }
-);
+).config(function(angularCombineConfigProvider) {
+      angularCombineConfigProvider.addConf(/filter-/, '/public/pages/reports/shared/filters.html');
+    });

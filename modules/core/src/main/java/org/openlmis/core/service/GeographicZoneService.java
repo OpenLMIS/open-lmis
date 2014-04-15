@@ -69,14 +69,8 @@ public class GeographicZoneService {
     return repository.getAllGeographicZones();
   }
 
-  public void saveNew(GeographicZone geographicZone) throws IOException {
+  public void saveNew(GeographicZone geographicZone) {
     repository.insert_Ext(geographicZone);
-    try{
-        smsService.SendSMSMessage(String.format("Geo zone %s just added to the database.",geographicZone.getName()),"17033422762");
-    }
-    catch (IOException e){
-        throw e;
-    }
   }
 
   public void update(GeographicZone geographicZone) {

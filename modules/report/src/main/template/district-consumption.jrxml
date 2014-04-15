@@ -1,14 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-  ~ This program was produced for the U.S. Agency for International Development. It was prepared by the USAID | DELIVER PROJECT, Task Order 4. It is part of a project which utilizes code originally licensed under the terms of the Mozilla Public License (MPL) v2 and therefore is licensed under MPL v2 or later.
-  ~
-  ~ This program is free software: you can redistribute it and/or modify it under the terms of the Mozilla Public License as published by the Mozilla Foundation, either version 2 of the License, or (at your option) any later version.
-  ~
-  ~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the Mozilla Public License for more details.
-  ~
-  ~ You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
-  -->
-
+<!-- Created with Jaspersoft Studio version last-->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="district-consumption" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="ed759f09-4d2c-46c9-b606-42da2355eabd">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="13"/>
@@ -58,14 +49,13 @@
 		<groupHeader>
 			<band height="40">
 				<staticText>
-					<reportElement uuid="e587f413-b748-4b6c-8a34-93bb08817a0b" mode="Opaque" x="0" y="20" width="802" height="20" forecolor="#FFFFFF" backcolor="#3D9297">
+					<reportElement mode="Opaque" x="0" y="20" width="802" height="20" forecolor="#FFFFFF" backcolor="#3D9297" uuid="e587f413-b748-4b6c-8a34-93bb08817a0b">
 						<property name="net.sf.jasperreports.export.xls.ignore.graphics" value="false"/>
 					</reportElement>
-					<textElement/>
 					<text><![CDATA[]]></text>
 				</staticText>
 				<staticText>
-					<reportElement uuid="57f0b09b-7281-4a6e-bc88-36c28580be8b" mode="Transparent" x="0" y="20" width="45" height="20" forecolor="#000000" backcolor="#333333"/>
+					<reportElement mode="Transparent" x="0" y="20" width="45" height="20" forecolor="#000000" backcolor="#333333" uuid="57f0b09b-7281-4a6e-bc88-36c28580be8b"/>
 					<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
 						<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 						<paragraph lineSpacing="Single" leftIndent="2"/>
@@ -73,14 +63,14 @@
 					<text><![CDATA[Line#]]></text>
 				</staticText>
 				<textField isBlankWhenNull="true">
-					<reportElement uuid="987dfd20-2622-443c-9f95-62413810cbef" x="45" y="0" width="307" height="20"/>
+					<reportElement x="45" y="0" width="307" height="20" uuid="987dfd20-2622-443c-9f95-62413810cbef"/>
 					<textElement>
 						<font isBold="true"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{product}]]></textFieldExpression>
 				</textField>
 				<staticText>
-					<reportElement uuid="b6ab5830-0e99-41b6-b051-2f2345d099e6" mode="Transparent" x="45" y="20" width="140" height="20" forecolor="#000000" backcolor="#333333"/>
+					<reportElement mode="Transparent" x="45" y="20" width="140" height="20" forecolor="#000000" backcolor="#333333" uuid="b6ab5830-0e99-41b6-b051-2f2345d099e6"/>
 					<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
 						<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 						<paragraph lineSpacing="Single"/>
@@ -88,7 +78,7 @@
 					<text><![CDATA[District]]></text>
 				</staticText>
 				<staticText>
-					<reportElement uuid="89c58d94-0a3a-4ba6-8aa2-01c9de061ad0" mode="Transparent" x="185" y="20" width="192" height="20" forecolor="#000000" backcolor="#333333"/>
+					<reportElement mode="Transparent" x="185" y="20" width="192" height="20" forecolor="#000000" backcolor="#333333" uuid="89c58d94-0a3a-4ba6-8aa2-01c9de061ad0"/>
 					<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
 						<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 						<paragraph lineSpacing="Single" rightIndent="15"/>
@@ -96,7 +86,7 @@
 					<text><![CDATA[Consumption]]></text>
 				</staticText>
 				<staticText>
-					<reportElement uuid="50f20458-5c27-4385-9fae-60cc7472cdec" mode="Transparent" x="442" y="20" width="136" height="20" forecolor="#000000" backcolor="#333333"/>
+					<reportElement mode="Transparent" x="442" y="20" width="136" height="20" forecolor="#000000" backcolor="#333333" uuid="50f20458-5c27-4385-9fae-60cc7472cdec"/>
 					<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
 						<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 						<paragraph lineSpacing="Single"/>
@@ -108,7 +98,7 @@
 		<groupFooter>
 			<band height="20">
 				<staticText>
-					<reportElement uuid="489fc351-59b1-4f01-8e8d-a874b6d5a2ce" mode="Transparent" x="115" y="0" width="126" height="20" forecolor="#000000" backcolor="#333333"/>
+					<reportElement mode="Transparent" x="115" y="0" width="126" height="20" forecolor="#000000" backcolor="#333333" uuid="489fc351-59b1-4f01-8e8d-a874b6d5a2ce"/>
 					<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
 						<font fontName="SansSerif" size="10" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 						<paragraph lineSpacing="Single" rightIndent="5"/>
@@ -116,7 +106,7 @@
 					<text><![CDATA[Total :]]></text>
 				</staticText>
 				<textField pattern="" isBlankWhenNull="true">
-					<reportElement uuid="a4c069eb-7ead-42ce-8dfb-3239eb46942a" mode="Transparent" x="241" y="0" width="136" height="20" forecolor="#000000" backcolor="#FFFFFF"/>
+					<reportElement mode="Transparent" x="241" y="0" width="136" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="a4c069eb-7ead-42ce-8dfb-3239eb46942a"/>
 					<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
 						<font fontName="SansSerif" size="10" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 						<paragraph lineSpacing="Single"/>
@@ -132,7 +122,7 @@
 	<title>
 		<band height="79" splitType="Stretch">
 			<subreport>
-				<reportElement uuid="c576bd49-9432-4ebb-a897-b64a7ec0183e" x="0" y="0" width="802" height="79" isRemoveLineWhenBlank="true">
+				<reportElement x="0" y="0" width="802" height="79" isRemoveLineWhenBlank="true" uuid="c576bd49-9432-4ebb-a897-b64a7ec0183e">
 					<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() != "XLS"]]></printWhenExpression>
 				</reportElement>
 				<subreportParameter name="PAGE_NO">
@@ -167,7 +157,7 @@
 	<detail>
 		<band height="20" splitType="Stretch">
 			<textField>
-				<reportElement uuid="a9fda8ef-b699-4b67-991c-cfabff61e5da" x="43" y="0" width="759" height="20" forecolor="#006666">
+				<reportElement x="43" y="0" width="759" height="20" forecolor="#006666" uuid="a9fda8ef-b699-4b67-991c-cfabff61e5da">
 					<printWhenExpression><![CDATA[$P{REPORT_MESSAGE_WHEN_NO_DATA} != null]]></printWhenExpression>
 				</reportElement>
 				<textElement textAlignment="Center" verticalAlignment="Top">
@@ -176,21 +166,20 @@
 				<textFieldExpression><![CDATA[$P{REPORT_MESSAGE_WHEN_NO_DATA}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement uuid="9a174af8-d2cb-46c8-b19f-0b17e1be585b" mode="Opaque" x="0" y="0" width="801" height="20" backcolor="#F4F4F4">
+				<reportElement mode="Opaque" x="0" y="0" width="801" height="20" backcolor="#F4F4F4" uuid="9a174af8-d2cb-46c8-b19f-0b17e1be585b">
 					<printWhenExpression><![CDATA[$V{REPORT_COUNT}%2 == 0]]></printWhenExpression>
 				</reportElement>
-				<textElement/>
 				<text><![CDATA[]]></text>
 			</staticText>
 			<textField>
-				<reportElement uuid="29ff9399-7f59-451b-b8df-f1f6240f4a60" x="0" y="0" width="45" height="20"/>
+				<reportElement x="0" y="0" width="45" height="20" uuid="29ff9399-7f59-451b-b8df-f1f6240f4a60"/>
 				<textElement verticalAlignment="Middle">
 					<paragraph leftIndent="5"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$V{REPORT_COUNT}]]></textFieldExpression>
 			</textField>
 			<line>
-				<reportElement uuid="83a87452-92e8-46d4-bcdd-314f90e18dc7" x="0" y="19" width="801" height="1" forecolor="#3D9297">
+				<reportElement x="0" y="19" width="801" height="1" forecolor="#3D9297" uuid="83a87452-92e8-46d4-bcdd-314f90e18dc7">
 					<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() != "XLS"]]></printWhenExpression>
 				</reportElement>
 				<graphicElement>
@@ -198,7 +187,7 @@
 				</graphicElement>
 			</line>
 			<textField pattern="" isBlankWhenNull="true">
-				<reportElement uuid="5342fab3-58d3-42c9-b212-7e577dc21e8c" mode="Transparent" x="45" y="0" width="140" height="20" forecolor="#000000" backcolor="#FFFFFF"/>
+				<reportElement mode="Transparent" x="45" y="0" width="140" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="5342fab3-58d3-42c9-b212-7e577dc21e8c"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
 					<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 					<paragraph lineSpacing="Single"/>
@@ -206,15 +195,15 @@
 				<textFieldExpression><![CDATA[$F{district}]]></textFieldExpression>
 			</textField>
 			<textField pattern="" isBlankWhenNull="false">
-				<reportElement uuid="f3fca3e5-268e-49ab-9dda-1b628d2ca58e" mode="Transparent" x="185" y="0" width="192" height="20" forecolor="#000000" backcolor="#FFFFFF"/>
+				<reportElement mode="Transparent" x="185" y="0" width="192" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="f3fca3e5-268e-49ab-9dda-1b628d2ca58e"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
 					<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 					<paragraph lineSpacing="Single" rightIndent="5"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{consumption} == null? "0" : $F{consumption}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{consumption}.toString().toUpperCase()== "NULL"?" " : new java.text.DecimalFormat("#,##0.##").format($F{consumption}.doubleValue())]]></textFieldExpression>
 			</textField>
 			<textField pattern="" isBlankWhenNull="true">
-				<reportElement uuid="029c088b-bf88-4d50-bbe1-7a98dc98ce36" mode="Transparent" x="442" y="0" width="136" height="20" forecolor="#000000" backcolor="#FFFFFF"/>
+				<reportElement mode="Transparent" x="442" y="0" width="136" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="029c088b-bf88-4d50-bbe1-7a98dc98ce36"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
 					<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 					<paragraph lineSpacing="Single" leftIndent="5"/>

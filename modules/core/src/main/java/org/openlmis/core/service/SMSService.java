@@ -34,7 +34,8 @@ public class SMSService {
 
     @Autowired
     private SMSRepository smsRepository;
-    private String relayWebsite = "http://sms.tz.elmis-dev.org/rapidsms_relay";
+    //private String relayWebsite = "http://sms.tz.elmis-dev.org/rapidsms_relay";
+    private String relayWebsite = "http://127.0.0.1:8000/rapidsms_relay";
 
     public void SaveIncomingSMSMessage(String message, String phoneNumber){
         smsRepository.SaveSMSMessage("I", message,phoneNumber, new Date());
@@ -48,15 +49,11 @@ public class SMSService {
             smsRepository.SaveSMSMessage("O",message,phoneNumber,new Date());
         }
         catch(Exception e) {
-            //Need to queue the message...
+            throw e;
         }
 
     }
 
-
-
-
-    //Hassan Added Service Methods
     //Saving Incoming SMS
     public  void SaveIncomingSMS(String content,String phoneNumber){
         smsRepository.saveSMSMessage("Incoming", 1, content, phoneNumber, new Date());
