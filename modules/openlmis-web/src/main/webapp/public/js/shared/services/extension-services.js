@@ -493,3 +493,9 @@ services.factory('GetReplyMessages', function($resource){
 });
 
 /*End SMS data Factories*/
+services.factory('UserSummaryReport', function($resource){
+    return $resource('/reports/reportdata/userSummary.json', {}, {});
+}) ;
+services.factory('GetAllRoles', function ($resource) {
+    return $resource('/roles/getList.json', {},{});
+});
