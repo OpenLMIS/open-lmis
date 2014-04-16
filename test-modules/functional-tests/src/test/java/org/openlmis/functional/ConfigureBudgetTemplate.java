@@ -39,7 +39,7 @@ public class ConfigureBudgetTemplate extends TestCaseHelper {
 
   final private static String user = "Admin123";
   final private static String password = "Admin123";
-  public static final String CONFIGURE_EDI_INDEX_PAGE = "public/pages/admin/edi/index.html#/configure-edi-file";
+  public static final String CONFIGURE_EDI_INDEX_PAGE = "public/pages/admin/edi/index.html#/configure-system-settings";
 
   @BeforeMethod(groups = "admin")
   public void setUp() throws InterruptedException, SQLException, IOException {

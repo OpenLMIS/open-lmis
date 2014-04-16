@@ -157,7 +157,9 @@ public class OrderService {
     return orderConfigurationRepository.getOrderNumberConfiguration();
   }
 
+  @Transactional
   public void updateOrderNumberConfiguration(OrderNumberConfiguration orderNumberConfiguration) {
+    orderNumberConfiguration.validate();
     orderConfigurationRepository.updateOrderNumberConfiguration(orderNumberConfiguration);
   }
 

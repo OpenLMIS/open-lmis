@@ -177,7 +177,7 @@ public class ConfigureShipmentTemplate extends TestCaseHelper {
     setDefaultPositionValues();
     configureEDIPage.navigateConfigureShipmentPage();
     configureShipmentPage.clickCancelButton();
-    assertTrue("User should be redirected to home page", testWebDriver.getCurrentUrl().contains("public/pages/admin/edi/index.html#/configure-edi-file"));
+    assertTrue("User should be redirected to home page", testWebDriver.getCurrentUrl().contains("public/pages/admin/edi/index.html#/configure-system-settings"));
   }
 
   @Test(groups = {"admin"})

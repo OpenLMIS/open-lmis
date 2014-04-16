@@ -13,6 +13,7 @@ package org.openlmis.core.domain;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.openlmis.core.exception.DataException;
 
 @Data
 @AllArgsConstructor
@@ -25,5 +26,9 @@ public class OrderNumberConfiguration {
   private Boolean includeSequenceCode;
   private Boolean includeRnrTypeSuffix;
 
+  public void validate() {
+    if(includeSequenceCode == null || !includeSequenceCode)
+    throw new DataException("Sequence code is mandatory");
+  }
 }
 
