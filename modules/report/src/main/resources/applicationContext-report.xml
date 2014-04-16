@@ -182,6 +182,16 @@
                     <property name="title" value="District Order Compilation Report"/>
                     <property name="version" value="1.0"/>
                 </bean>
+                <bean class="org.openlmis.report.Report">
+                    <property name="reportKey" value="user_summary"/>
+                    <property name="template" value="user-summary.jasper"/>
+                    <property name="reportDataProvider" ref="userSummaryReportProvider"/>
+                    <property name="id" value="RP-User-Summary-Report"/>
+                    <property name="name" value="User Summary Report"/>
+                    <property name="title" value="User Summary Report"/>
+                    <property name="version" value="1.0"/>
+                </bean>
+
 
             </list>
         </constructor-arg>
