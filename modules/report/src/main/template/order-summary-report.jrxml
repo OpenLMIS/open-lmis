@@ -71,7 +71,7 @@
 						<font fontName="SansSerif" size="9" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 						<paragraph lineSpacing="Single" rightIndent="3"/>
 					</textElement>
-					<text><![CDATA[Reference No:]]></text>
+					<text><![CDATA[Order No:]]></text>
 				</staticText>
 				<line>
 					<reportElement x="420" y="11" width="100" height="1" uuid="a0dbe148-d103-491c-b513-43c083d7ae9e">
