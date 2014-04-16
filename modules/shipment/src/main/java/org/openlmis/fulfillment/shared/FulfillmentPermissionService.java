@@ -39,4 +39,9 @@ public class FulfillmentPermissionService {
     Set<Right> userRights = roleRightsService.getRightsForUserAndWarehouse(userId, order.getSupplyingFacility().getId());
     return userRights.contains(right);
   }
+
+  public Boolean hasPermissionOnWarehouse(Long userId, Long warehouseId, Right right) {
+    Set<Right> userRights = roleRightsService.getRightsForUserAndWarehouse(userId, warehouseId);
+    return userRights.contains(right);
+  }
 }

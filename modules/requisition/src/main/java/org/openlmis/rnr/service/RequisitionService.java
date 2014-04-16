@@ -240,8 +240,6 @@ public class RequisitionService {
   }
 
   public void releaseRequisitionsAsOrder(List<Rnr> requisitions, Long userId) {
-    if (!requisitionPermissionService.hasPermission(userId, CONVERT_TO_ORDER))
-      throw new DataException(RNR_OPERATION_UNAUTHORIZED);
     for (Rnr requisition : requisitions) {
       Rnr loadedRequisition = requisitionRepository.getById(requisition.getId());
       fillSupportingInfo(loadedRequisition);

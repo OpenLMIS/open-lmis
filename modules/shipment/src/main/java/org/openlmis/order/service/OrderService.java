@@ -12,13 +12,11 @@ package org.openlmis.order.service;
 
 import lombok.NoArgsConstructor;
 import org.apache.commons.collections.Transformer;
-import org.openlmis.core.domain.FulfillmentRoleAssignment;
-import org.openlmis.core.domain.OrderConfiguration;
-import org.openlmis.core.domain.Right;
-import org.openlmis.core.domain.SupervisoryNode;
+import org.openlmis.core.domain.*;
 import org.openlmis.core.repository.OrderConfigurationRepository;
 import org.openlmis.core.service.RoleAssignmentService;
 import org.openlmis.core.service.SupplyLineService;
+import org.openlmis.fulfillment.shared.FulfillmentPermissionService;
 import org.openlmis.order.domain.DateFormat;
 import org.openlmis.order.domain.Order;
 import org.openlmis.order.domain.OrderStatus;
@@ -30,6 +28,7 @@ import org.openlmis.rnr.service.RequisitionService;
 import org.openlmis.shipment.domain.ShipmentFileInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -70,6 +69,9 @@ public class OrderService {
   @Autowired
   RoleAssignmentService roleAssignmentService;
 
+  @Autowired
+  FulfillmentPermissionService fulfillmentPermissionService;
+
   public static String SUPPLY_LINE_MISSING_COMMENT = "order.ftpComment.supplyline.missing";
 
   private int pageSize;
@@ -87,7 +89,11 @@ public class OrderService {
       rnr = requisitionService.getLWById(rnr.getId());
       rnr.setModifiedBy(userId);
       order = new Order(rnr);
-      order.setSupplyLine(supplyLineService.getSupplyLineBy(new SupervisoryNode(rnr.getSupervisoryNodeId()), rnr.getProgram()));
+      SupplyLine supplyLine = supplyLineService.getSupplyLineBy(new SupervisoryNode(rnr.getSupervisoryNodeId()), rnr.getProgram());
+      order.setSupplyLine(supplyLine);
+      if (!fulfillmentPermissionService.hasPermission(userId, supplyLine.getSupplyingFacility().getId(), Right.CONVERT_TO_ORDER)) {
+        throw new AccessDeniedException("user.not.authorized");
+      }
       OrderStatus status;
       if (order.getSupplyLine() == null) {
         status = TRANSFER_FAILED;
