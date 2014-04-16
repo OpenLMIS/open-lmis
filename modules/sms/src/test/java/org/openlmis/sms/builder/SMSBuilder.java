@@ -8,25 +8,36 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-package org.openlmis.sms.mapper;
+package org.openlmis.sms.builder;
 
-
+import com.natpryce.makeiteasy.Instantiator;
+import com.natpryce.makeiteasy.Property;
+import com.natpryce.makeiteasy.PropertyLookup;
 import org.openlmis.sms.domain.SMS;
-import org.springframework.jdbc.core.RowMapper;
-import org.springframework.stereotype.Component;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 
-@Component
-public class SMSRowMapper implements RowMapper<SMS> {
+import static com.natpryce.makeiteasy.Property.newProperty;
 
-  @Override
-  public SMS mapRow(ResultSet rs, int rowNum) throws SQLException {
+public class SMSBuilder {
+
+  public static final Property<SMS, String> PhoneNumber = newProperty();
+  public static final Property<SMS, String> Message = newProperty();
+  public static final Property<SMS, String> Direction = newProperty();
+  public static final Property<SMS, Boolean> Sent = newProperty();
+
+
+  public static final Instantiator<SMS> defaultSMS = new Instantiator<SMS>() {
+
+    @Override
+    public SMS instantiate(PropertyLookup<SMS> lookup) {
+
       SMS sms = new SMS();
-      sms.setMessage(rs.getString("Message"));
-      sms.setPhoneNumber(rs.getString("PhoneNumber"));
-      sms.setDirection(rs.getString("Direction"));
+      sms.setPhoneNumber(lookup.valueOf(PhoneNumber, "12345"));
+      sms.setMessage(lookup.valueOf(Message,"Test Text Message"));
+      sms.setSent(lookup.valueOf(Sent,false));
+      sms.setDirection(lookup.valueOf(Direction,"O"));
       return sms;
-  }
+    }
+  };
 }
+

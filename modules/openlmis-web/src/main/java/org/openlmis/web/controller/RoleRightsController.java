@@ -25,6 +25,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -98,4 +99,12 @@ public class RoleRightsController extends BaseController {
   public ResponseEntity<OpenLmisResponse> getRightsForUserAndFacilityProgram(@PathVariable("facilityId") Long facilityId, @PathVariable("programId") Long programId, HttpServletRequest httpServletRequest) {
     return response(RIGHTS, roleRightsService.getRightsForUserAndFacilityProgram(loggedInUserId(httpServletRequest), new Facility(facilityId), new Program(programId)));
   }
+
+
+    @RequestMapping(value="/roles/getList",method= RequestMethod.GET, headers = ACCEPT_JSON)
+    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_ROLE')")
+    public ResponseEntity<OpenLmisResponse> getRoleList(HttpServletRequest request){
+        return OpenLmisResponse.response("roles", roleRightsService.getAllRoles());
+    }
+
 }
