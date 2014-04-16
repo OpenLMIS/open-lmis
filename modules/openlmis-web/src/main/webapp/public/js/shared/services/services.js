@@ -301,5 +301,5 @@ services.factory('OrderPOD', function ($resource) {
 });
 
 services.factory('OrderNumberConfiguration', function ($resource) {
-  return $resource('/order-number-configuration.json', {post: {method: 'POST'}});
+  return $resource('/order-number-configuration.json',{},  {post: {method: 'POST'}});
 });
