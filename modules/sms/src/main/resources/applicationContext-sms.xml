@@ -49,7 +49,7 @@
     <property name="queueCapacity" value="-1"/>
   </bean>
 
-  <int:service-activator input-channel="inputChannel" ref="SMSHandlerService" method="ProcessSMS"/>
+  <int:service-activator input-channel="inputChannel" ref="SMSService" method="ProcessSMS"/>
 
 
 </beans>
