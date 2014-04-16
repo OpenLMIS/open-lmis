@@ -786,4 +786,18 @@
 			</textField>
 		</band>
 	</detail>
+	<pageFooter>
+		<band height="22">
+			<textField>
+				<reportElement x="120" y="0" width="150" height="20" uuid="7aa93371-984a-40d3-a1c1-9f2800acf13e"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA["Page " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="270" y="0" width="140" height="20" uuid="24e59f0e-56a3-49f1-bfc2-063c51f6294e"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[" of " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
 </jasperReport>
