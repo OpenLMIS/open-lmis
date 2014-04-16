@@ -419,7 +419,7 @@
 					<textElement textAlignment="Right" verticalAlignment="Bottom">
 						<font size="9"/>
 					</textElement>
-					<text><![CDATA[Approved By (LMU):]]></text>
+					<text><![CDATA[Reviewed By (LMU):]]></text>
 				</staticText>
 				<line>
 					<reportElement x="456" y="152" width="98" height="1" forecolor="#8C8C8C" uuid="39f7e5e8-4153-45ca-bfd5-115977676194">
@@ -484,9 +484,11 @@
 					<textFieldExpression><![CDATA[$P{APPROVED_BY}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="455" y="90" width="105" height="19" uuid="ffbc4d14-3ae0-4873-b0bc-c98a79439313">
+					<reportElement x="456" y="90" width="105" height="19" uuid="ffbc4d14-3ae0-4873-b0bc-c98a79439313">
 						<property name="local_mesure_unity" value="pixel"/>
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<property name="local_mesure_unitx" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					</reportElement>
 					<textElement verticalAlignment="Bottom">
 						<font size="9"/>
@@ -494,9 +496,10 @@
 					<textFieldExpression><![CDATA[$P{AUTHORIZED_DATE}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="455" y="111" width="105" height="18" uuid="de3e4df7-a12c-4af1-8b4f-11e80df7aff2">
+					<reportElement x="456" y="111" width="105" height="18" uuid="de3e4df7-a12c-4af1-8b4f-11e80df7aff2">
 						<property name="local_mesure_unity" value="pixel"/>
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					</reportElement>
 					<textElement verticalAlignment="Bottom">
 						<font size="9"/>
@@ -507,6 +510,7 @@
 					<reportElement x="456" y="132" width="104" height="19" uuid="adcfd2b5-5e8a-49bd-9455-e1300c50a161">
 						<property name="local_mesure_unity" value="pixel"/>
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					</reportElement>
 					<textElement verticalAlignment="Bottom">
 						<font size="9"/>
@@ -602,6 +606,7 @@
 					<reportElement x="456" y="153" width="104" height="19" uuid="4dceace0-1749-47cc-bef0-36228c773671">
 						<property name="local_mesure_unity" value="pixel"/>
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					</reportElement>
 					<textElement verticalAlignment="Bottom">
 						<font size="9"/>
@@ -637,7 +642,7 @@
 					</graphicElement>
 				</line>
 				<staticText>
-					<reportElement x="245" y="174" width="60" height="20" uuid="87474194-51a0-4d1b-bf2b-7770b5d09559">
+					<reportElement x="246" y="174" width="60" height="20" uuid="87474194-51a0-4d1b-bf2b-7770b5d09559">
 						<property name="local_mesure_unity" value="pixel"/>
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
 						<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() != "XLS"]]></printWhenExpression>
@@ -648,7 +653,7 @@
 					<text><![CDATA[Signature]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="398" y="174" width="54" height="20" uuid="38d47711-fb0e-4f0d-969d-00396081d734">
+					<reportElement x="399" y="174" width="54" height="20" uuid="38d47711-fb0e-4f0d-969d-00396081d734">
 						<property name="local_mesure_unity" value="pixel"/>
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
 						<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() != "XLS"]]></printWhenExpression>
