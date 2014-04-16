@@ -72,7 +72,7 @@ public class RoleRightsService {
   public Role getRole(Long id) {
     return roleRightsRepository.getRole(id);
   }
-
+  public List<Role> getAllRoles(){return roleRightsRepository.getAllRoles();}
   public void updateRole(Role role) {
     roleRightsRepository.updateRole(role);
   }

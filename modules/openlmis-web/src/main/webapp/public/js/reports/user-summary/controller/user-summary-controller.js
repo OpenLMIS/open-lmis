@@ -1,0 +1,42 @@
+/*
+ * This program was produced for the U.S. Agency for International Development. It was prepared by the USAID | DELIVER PROJECT, Task Order 4. It is part of a project which utilizes code originally licensed under the terms of the Mozilla Public License (MPL) v2 and therefore is licensed under MPL v2 or later.
+ *
+ * This program is free software: you can redistribute it and/or modify it under the terms of the Mozilla Public License as published by the Mozilla Foundation, either version 2 of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the Mozilla Public License for more details.
+ *
+ * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
+ */
+
+function UserSummaryReportController($scope,$window, UserSummaryReport,UserSupervisoryNodes,GetAllRoles,$timeout) {
+
+    $scope.OnFilterChanged = function() {
+        // clear old data if there was any
+        $scope.data = $scope.datarows = [];
+        $scope.filter.max = 10000;
+        UserSummaryReport.get($scope.filter, function(data) {
+            if (data.pages !== undefined && data.pages.rows !== undefined) {
+                $scope.data = data.pages.rows;
+                $scope.paramsChanged($scope.tableParams);
+            }
+        });
+    };
+    UserSupervisoryNodes.get(function (data) {
+        $scope.supervisoryNodes = data.supervisoryNodes;
+        $scope.supervisoryNodes.unshift({'name': '-- Select SupervisoryNodes --'});
+    });
+
+    GetAllRoles.get(function (data) {
+        $scope.roles = data.roles;
+        $scope.roles.unshift({'name': '-- Select role --'});
+    });
+
+    $scope.exportReport = function(type) {
+        $scope.filter.pdformat = 1;
+        var params = jQuery.param($scope.filter);
+        var url = '/reports/download/user_summary/' + type + '?' + params;
+        $window.open(url);
+    };
+
+
+}

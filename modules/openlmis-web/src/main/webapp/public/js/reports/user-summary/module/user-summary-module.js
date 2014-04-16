@@ -7,37 +7,24 @@
  *
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
-package org.openlmis.report.model.report;
 
-
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.openlmis.report.model.ReportData;
-
-import javax.persistence.Column;
-
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-
-public class UserSummaryReport implements ReportData {
-
-    @Column( name="firstname")
-    private String firstname;
-    @Column( name = "lastname")
-    private String lastname;
-    @Column( name="cellphone")
-    private String cellPhone;
-    @Column(name = "officephone")
-    private String officephone;
-    @Column(name = "email")
-    private String email;
-    @Column(name = "supervisorynodename")
-    private String supervisorynodename;
-    @Column(name = "programname")
-    private String programname;
-    @Column(name = "rolename")
-    private String rolename;
-
-}
+angular.module('user_summary', ['openlmis', 'angularCombine', 'ngTable', 'ui.bootstrap.modal', 'ui.bootstrap.dropdownToggle'])
+    .config(['$routeProvider',
+        function($routeProvider) {
+            $routeProvider.
+                when('/list', {
+                    controller: UserSummaryReportController,
+                    templateUrl: 'partials/list.html',
+                    reloadOnSearch: false
+                }).
+                otherwise({
+                    redirectTo: '/list'
+                });
+        }
+    ]).run(
+    function($rootScope, AuthorizationService) {
+        AuthorizationService.preAuthorize('VIEW_USER_SUMMARY_REPORT');
+    }
+).config(function(angularCombineConfigProvider) {
+        angularCombineConfigProvider.addConf(/filter-/, '/public/pages/reports/shared/filters.html');
+    });
