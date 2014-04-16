@@ -22,7 +22,8 @@ public class SMSBuilder {
 
   public static final Property<SMS, String> PhoneNumber = newProperty();
   public static final Property<SMS, String> Message = newProperty();
-  public static final Property<SMS,String> Direction = newProperty();
+  public static final Property<SMS, String> Direction = newProperty();
+  public static final Property<SMS, Boolean> Sent = newProperty();
 
 
   public static final Instantiator<SMS> defaultSMS = new Instantiator<SMS>() {
@@ -33,6 +34,7 @@ public class SMSBuilder {
       SMS sms = new SMS();
       sms.setPhoneNumber(lookup.valueOf(PhoneNumber, "12345"));
       sms.setMessage(lookup.valueOf(Message,"Test Text Message"));
+      sms.setSent(lookup.valueOf(Sent,false));
       sms.setDirection(lookup.valueOf(Direction,"O"));
       return sms;
     }
