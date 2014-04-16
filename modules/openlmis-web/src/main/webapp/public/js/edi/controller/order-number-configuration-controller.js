@@ -16,6 +16,7 @@ function OrderNumberConfigurationController($scope, $location, orderNumberConfig
     $location.path('configure-system-settings');
   };
   $scope.error = "";
+  $scope.$parent.message = "";
 
   $scope.saveOrderNumberConfiguration = function () {
     OrderNumberConfiguration.save({}, $scope.orderNumberConfiguration, function (data) {
