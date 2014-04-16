@@ -13,6 +13,7 @@ package org.openlmis.report.service;
 import com.google.common.base.Strings;
 import lombok.NoArgsConstructor;
 import org.apache.ibatis.session.RowBounds;
+import org.openlmis.core.domain.Facility;
 import org.openlmis.core.service.ConfigurationSettingService;
 import org.openlmis.core.service.ProcessingPeriodService;
 import org.openlmis.report.mapper.OrderSummaryReportMapper;
@@ -139,6 +140,15 @@ public class OrderSummaryReportDataProvider extends ReportDataProvider {
       result.put("APPROVED_DATE", new SimpleDateFormat("dd/MM/yy h:m a").format(changes.get(0).getCreatedDate()) );
     }
 
+    // register the facility related parameters here
+    Facility currentFacility = reportLookupService.getFacilityForRnrId(orderReportParam.getOrderId());
+    result.put("FACILITY_ADDRESS", currentFacility.getAddress1());
+    result.put("PHONE", currentFacility.getMainPhone());
+    result.put("FAX", currentFacility.getFax());
+    result.put("DISTRICT", currentFacility.getGeographicZone().getName());
+    if(currentFacility.getGeographicZone() != null) {
+      result.put("REGION", currentFacility.getGeographicZone().getParent().getName());
+    }
     return result;
   }
 }
