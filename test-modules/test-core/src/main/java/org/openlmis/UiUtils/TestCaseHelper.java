@@ -178,7 +178,7 @@ public class TestCaseHelper {
                                                         String program) throws SQLException {
     dbWrapper.insertProductCategory(categoryCode, categoryName);
     dbWrapper.insertProduct(product, productName);
-    dbWrapper.insertProgramProductsWithCategory(product, program);
+    dbWrapper.insertProgramProductsWithCategory(product, program, "C1", 1);
   }
 
   public void setupProgramProductISA(String program, String product, String whoRatio, String dosesPerYear, String wastageFactor,

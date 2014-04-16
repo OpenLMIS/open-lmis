@@ -65,6 +65,9 @@ public class PODPagination extends TestCaseHelper {
   @Test(groups = {"requisition"})
   public void testRnRPaginationAndDefaultDisplayOrder() throws SQLException {
     dbWrapper.setupMultipleProducts(podPaginationData.get(PROGRAM), "Lvl3 Hospital", 11, true);
+    dbWrapper.insertProgramProductsWithCategory("F5", "TB", "C1", null);
+    dbWrapper.insertProgramProductsWithCategory("NF5", "TB", "C1", -5);
+    dbWrapper.insertProgramProduct("F1", "TB", "30", "f");
     dbWrapper.insertRequisitionWithMultipleLineItems(11, podPaginationData.get(PROGRAM), true, "F10", false);
     dbWrapper.convertRequisitionToOrder(dbWrapper.getMaxRnrID(), "READY_TO_PACK", podPaginationData.get(USER));
 
@@ -167,6 +170,9 @@ public class PODPagination extends TestCaseHelper {
   @Test(groups = {"requisition"})
   public void testCategorySpecificDisplayOrder() throws SQLException {
     dbWrapper.setupMultipleCategoryProducts(podPaginationData.get(PROGRAM), "Lvl3 Hospital", 11, false);
+    dbWrapper.insertProgramProductsWithCategory("F5", "TB", "C3", null);
+    dbWrapper.insertProgramProductsWithCategory("NF5", "TB", "C2", -5);
+    dbWrapper.insertProgramProduct("F1", "TB", "30", "f");
     dbWrapper.insertRequisitionWithMultipleLineItems(11, podPaginationData.get(PROGRAM), true, "F10", false);
     dbWrapper.convertRequisitionToOrder(dbWrapper.getMaxRnrID(), "READY_TO_PACK", podPaginationData.get(USER));
 
@@ -194,6 +200,9 @@ public class PODPagination extends TestCaseHelper {
   @Test(groups = {"requisition"})
   public void testRnRPaginationAndDefaultDisplayOrderForPackedOrdersAndSave() throws SQLException {
     dbWrapper.setupMultipleProducts(podPaginationData.get(PROGRAM), "Lvl3 Hospital", 11, true);
+    dbWrapper.insertProgramProductsWithCategory("F5", "TB", "C1", null);
+    dbWrapper.insertProgramProductsWithCategory("NF5", "TB", "C1", -5);
+    dbWrapper.insertProgramProduct("F1", "TB", "30", "f");
     dbWrapper.insertRequisitionWithMultipleLineItems(11, podPaginationData.get(PROGRAM), true, "F10", false);
     dbWrapper.convertRequisitionToOrder(dbWrapper.getMaxRnrID(), "READY_TO_PACK", podPaginationData.get(USER));
     dbWrapper.insertOneProduct("ZX");
@@ -300,6 +309,45 @@ public class PODPagination extends TestCaseHelper {
     updatePodPage.verifyQuantityReceivedAndNotes("11", "openlmis openlmis project", 10);
     verifyPodDataInDatabase("11", "openlmis openlmis project", "NF9", "99999999");
     verifyDeliveryDetailsOfPodScreenInDatabase("Delivered", "Received by facility incharge", "2013-02-25 00:00:00");
+  }
+
+  @Test(groups = {"requisition"})
+  public void testCategorySpecificDisplayOrderForPackedOrder() throws SQLException {
+    dbWrapper.setupMultipleCategoryProducts(podPaginationData.get(PROGRAM), "Lvl3 Hospital", 11, false);
+    dbWrapper.insertProgramProductsWithCategory("F5", "TB", "C3", null);
+    dbWrapper.insertProgramProductsWithCategory("NF5", "TB", "C2", -5);
+    dbWrapper.insertProgramProduct("F1", "TB", "30", "f");
+    dbWrapper.insertRequisitionWithMultipleLineItems(11, podPaginationData.get(PROGRAM), true, "F10", false);
+    dbWrapper.convertRequisitionToOrder(dbWrapper.getMaxRnrID(), "READY_TO_PACK", podPaginationData.get(USER));
+    dbWrapper.insertOneProduct("ZX");
+    dbWrapper.insertOneProduct("ZX1");
+
+    dbWrapper.insertProgramProductsWithoutDeleting("ZX", "ZX1", podPaginationData.get(PROGRAM));
+    dbWrapper.insertFacilityApprovedProduct("ZX", podPaginationData.get(PROGRAM), dbWrapper.getAttributeFromTable("facility_types", "code", "name", "Lvl3 Hospital"));
+    dbWrapper.insertFacilityApprovedProduct("ZX1", podPaginationData.get(PROGRAM), dbWrapper.getAttributeFromTable("facility_types", "code", "name", "Lvl3 Hospital"));
+
+    enterTestDataForShipment(true, true);
+
+    LoginPage loginPage = PageObjectFactory.getLoginPage(testWebDriver, baseUrlGlobal);
+    HomePage homePage = loginPage.loginAs(podPaginationData.get(USER), podPaginationData.get(PASSWORD));
+    ManagePodPage managePodPage = homePage.navigateManagePOD();
+    updatePodPage = managePodPage.selectRequisitionToUpdatePod(1);
+    verifyNumberOFPageLinksDisplayed(25, 10);
+    verifyPageNumberLinksDisplayed();
+    assertEquals(updatePodPage.getReplacedProductCode(1), "NF0");
+    assertEquals(updatePodPage.getReplacedProductCode(9), "NF3");
+    assertEquals(updatePodPage.getReplacedProductCode(10), "");
+
+    verifyProductDisplayOrderOnPage(new String[]{"F0", "NF0", "F1", "NF1", "ZX", "ZX1", "F2", "NF2", "F3", "NF3"});
+    verifyCategoryDisplayOrderOnPage(new String[]{"Antibiotics0", "", "Antibiotics1", "", "", "", "Antibiotics2", "", "Antibiotics3", ""});
+
+    navigateToPage(2);
+    verifyProductDisplayOrderOnPage(new String[]{"F4", "NF4", "F5", "NF5", "F6", "NF6", "F7", "NF7", "F8", "NF8"});
+    verifyCategoryDisplayOrderOnPage(new String[]{"Antibiotics4", "", "Antibiotics5", "", "Antibiotics6", "", "Antibiotics7", "", "Antibiotics8", ""});
+
+    updatePodPage.navigateToNextPage();
+    verifyProductDisplayOrderOnPage(new String[]{"F9", "NF9"});
+    verifyCategoryDisplayOrderOnPage(new String[]{"Antibiotics9", ""});
   }
 
   @Test(groups = {"requisition"})
