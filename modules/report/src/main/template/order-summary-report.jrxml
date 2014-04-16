@@ -152,17 +152,7 @@
 					<text><![CDATA[Province :]]></text>
 				</staticText>
 				<staticText>
-					<reportElement mode="Transparent" x="310" y="112" width="99" height="14" forecolor="#000000" backcolor="#FFFFFF" uuid="b636b287-4c5b-462c-910f-d361ef1ef9d1">
-						<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() != "XLS"]]></printWhenExpression>
-					</reportElement>
-					<textElement textAlignment="Right" verticalAlignment="Top" rotation="None" markup="none">
-						<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
-						<paragraph lineSpacing="Single" rightIndent="3"/>
-					</textElement>
-					<text><![CDATA[Postal Code :]]></text>
-				</staticText>
-				<staticText>
-					<reportElement mode="Transparent" x="310" y="126" width="99" height="14" forecolor="#000000" backcolor="#FFFFFF" uuid="20746afa-fe86-4523-9d48-df3a65e6d4cf">
+					<reportElement mode="Transparent" x="310" y="112" width="99" height="14" forecolor="#000000" backcolor="#FFFFFF" uuid="20746afa-fe86-4523-9d48-df3a65e6d4cf">
 						<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() != "XLS"]]></printWhenExpression>
 					</reportElement>
 					<textElement textAlignment="Right" verticalAlignment="Top" rotation="None" markup="none">
@@ -172,7 +162,7 @@
 					<text><![CDATA[Phone :]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="460" y="126" width="50" height="14" uuid="0836a53f-ca39-499f-b9ae-fa94af765054">
+					<reportElement x="310" y="126" width="99" height="14" uuid="0836a53f-ca39-499f-b9ae-fa94af765054">
 						<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() != "XLS"]]></printWhenExpression>
 					</reportElement>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
