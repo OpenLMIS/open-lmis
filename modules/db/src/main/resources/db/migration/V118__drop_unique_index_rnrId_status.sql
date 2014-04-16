@@ -9,4 +9,3 @@
 --
 
 DROP INDEX u_status_rnr;
-
