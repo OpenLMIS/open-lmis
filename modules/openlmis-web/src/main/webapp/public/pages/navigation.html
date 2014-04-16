@@ -10,8 +10,8 @@
 
 <div class="navigation toggleFullScreen" ng-controller="NavigationController" ui-nav>
     <ul class="clearfix" style="display:none">
-        <li><a id='homeMenu' href="/" openlmis-message="link.home"></a></li>
-
+        <li>
+            <a id='homeMenu' href="/" openlmis-message="link.home"></a></li>
         <li>
             <a id="requisitions-menu" href="javascript: void(0)" openlmis-message="link.requisitions"></a>
 
@@ -59,6 +59,9 @@
 
         </li>
 
+        <li>
+            <a ng-show="hasPermission('MANAGE_EQUIPMENT_INVENTORY')" id="equipment-inventory" href="/public/pages/admin/equipment/inventory/index.html">Equipment Inventory</a>
+        </li>
     <li>
         <a id="reports-menu" href="javascript: void(0)" openlmis-message="link.reports"></a>
 
@@ -152,7 +155,6 @@
 
         <li>
             <a id="distributions-menu" href="javascript: void(0)" openlmis-message="link.distributions"></a>
-
             <div class="submenu">
                 <ul>
                     <li ng-show="hasPermission('MANAGE_DISTRIBUTION')">
@@ -166,7 +168,6 @@
 
         <li>
             <a id="administration-menu" href="javascript: void(0)" openlmis-message="link.administration"></a>
-
             <div class="submenu">
                 <ul>
                     <li ng-show="hasPermission('UPLOADS')">
@@ -254,6 +255,20 @@
                             </ul>
                         </div>
                     </li>
+                    <li class="has-children">
+                        <a id="manage-equipment-option" href="/public/pages/admin/equipment/manage/index.html" >Equipment</a>
+                        <div class="submenu">
+                            <ul>
+                                <li ng-show="hasPermission('MANAGE_EQUIPMENT_SETTINGS')">
+                                    <a href="/public/pages/admin/equipment/type/index.html">Equipment Types</a>
+                                </li>
+                                <li ng-show="hasPermission('MANAGE_EQUIPMENT_SETTINGS')">
+                                    <a href="/public/pages/admin/equipment/manage/index.html">Equipment List</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+
                     <li class="beak"></li>
                 </ul>
                 </div>

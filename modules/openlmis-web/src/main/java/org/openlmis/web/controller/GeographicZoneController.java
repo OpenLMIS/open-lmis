@@ -13,7 +13,6 @@ package org.openlmis.web.controller;
 import org.openlmis.core.domain.GeographicZone;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.GeographicZoneService;
-import org.openlmis.core.service.SMSService;
 import org.openlmis.report.service.lookup.ReportLookupService;
 import org.openlmis.web.model.GeoZoneInfo;
 import org.openlmis.web.response.OpenLmisResponse;
@@ -29,7 +28,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 

@@ -8,12 +8,11 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-package org.openlmis.email.exception;
-
-public class SMSException extends RuntimeException {
-
-  public SMSException(String message){
-    super(message);
-  }
-
-}
+angular.module('equipment-setting', ['openlmis','ui.bootstrap.modal', 'ui.bootstrap.dialog', 'ui.bootstrap.dropdownToggle']).config(['$routeProvider', function ($routeProvider) {
+  $routeProvider.
+      when('/', {controller: ManageEquipmentController, templateUrl: 'partials/list.html'}).
+      otherwise({redirectTo: '/list'});
+}]).run(function ($rootScope, AuthorizationService) {
+  $rootScope.manageEquipmentSelected = "selected";
+  AuthorizationService.preAuthorize('MANAGE_EQUIPMENT_SETTINGS');
+});

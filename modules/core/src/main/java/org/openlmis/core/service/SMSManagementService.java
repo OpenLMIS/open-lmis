@@ -27,7 +27,7 @@ import java.util.List;
 
 @Service
 @NoArgsConstructor
-public class SMSService {
+public class SMSManagementService {
 
     @Autowired
     ConfigurationSettingService configSetting;
