@@ -10,8 +10,11 @@
 
 package org.openlmis.order.service;
 
+import org.junit.Ignore;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
+import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -23,6 +26,7 @@ import org.openlmis.core.repository.OrderConfigurationRepository;
 import org.openlmis.core.service.RoleAssignmentService;
 import org.openlmis.core.service.SupplyLineService;
 import org.openlmis.db.categories.UnitTests;
+import org.openlmis.fulfillment.shared.FulfillmentPermissionService;
 import org.openlmis.order.domain.DateFormat;
 import org.openlmis.order.domain.Order;
 import org.openlmis.order.domain.OrderFileColumn;
@@ -36,6 +40,7 @@ import org.openlmis.rnr.service.RequisitionService;
 import org.openlmis.shipment.domain.ShipmentFileInfo;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+import org.springframework.security.access.AccessDeniedException;
 
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
@@ -51,6 +56,7 @@ import static org.mockito.Mockito.verify;
 import static org.openlmis.core.builder.FacilityBuilder.*;
 import static org.openlmis.core.builder.ProgramBuilder.defaultProgram;
 import static org.openlmis.core.builder.SupplyLineBuilder.defaultSupplyLine;
+import static org.openlmis.core.domain.Right.CONVERT_TO_ORDER;
 import static org.openlmis.core.domain.Right.MANAGE_POD;
 import static org.openlmis.order.domain.DateFormat.*;
 import static org.openlmis.order.domain.OrderStatus.*;
@@ -62,6 +68,9 @@ import static org.powermock.api.mockito.PowerMockito.whenNew;
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(OrderService.class)
 public class OrderServiceTest {
+
+  @Rule
+  public ExpectedException expectedException = ExpectedException.none();
 
   @Mock
   private OrderConfigurationRepository orderConfigurationRepository;
@@ -81,6 +90,9 @@ public class OrderServiceTest {
   @Mock
   private RoleAssignmentService roleAssignmentService;
 
+  @Mock
+  private FulfillmentPermissionService fulfillmentPermissionService;
+
   @InjectMocks
   private OrderService orderService;
 
@@ -94,6 +106,7 @@ public class OrderServiceTest {
     rnr.setProgram(program);
 
     SupplyLine supplyLine = new SupplyLine();
+    supplyLine.setSupplyingFacility(new Facility(99L));
     supplyLine.setExportOrders(Boolean.TRUE);
 
     when(requisitionService.getLWById(1L)).thenReturn(rnr);
@@ -104,6 +117,7 @@ public class OrderServiceTest {
     List<Rnr> rnrList = new ArrayList<>();
     rnrList.add(rnr);
     when(requisitionService.getFullRequisitionById(1L)).thenReturn(rnr);
+    when(fulfillmentPermissionService.hasPermissionOnWarehouse(userId, 99L, CONVERT_TO_ORDER)).thenReturn(true);
 
     orderService.convertToOrder(rnrList, userId);
 
@@ -129,6 +143,7 @@ public class OrderServiceTest {
     rnr.setProgram(program);
 
     SupplyLine supplyLine = new SupplyLine();
+    supplyLine.setSupplyingFacility(new Facility(99L));
     supplyLine.setExportOrders(Boolean.FALSE);
 
     when(requisitionService.getLWById(1L)).thenReturn(rnr);
@@ -139,6 +154,7 @@ public class OrderServiceTest {
     List<Rnr> rnrList = new ArrayList<>();
     rnrList.add(rnr);
     when(requisitionService.getFullRequisitionById(1L)).thenReturn(rnr);
+    when(fulfillmentPermissionService.hasPermissionOnWarehouse(userId, 99L, CONVERT_TO_ORDER)).thenReturn(true);
 
     orderService.convertToOrder(rnrList, userId);
 
@@ -153,6 +169,40 @@ public class OrderServiceTest {
   }
 
   @Test
+  public void shouldThrowExceptionWhileConvertingRequisitionsToOrderIfUserDoesNotHaveRights() throws Exception {
+    Program program = new Program();
+    Long userId = 1L;
+    Rnr rnr = new Rnr();
+    rnr.setId(1L);
+    rnr.setSupervisoryNodeId(1L);
+    rnr.setProgram(program);
+
+    SupplyLine supplyLine = new SupplyLine();
+    supplyLine.setSupplyingFacility(new Facility(99L));
+    supplyLine.setExportOrders(Boolean.FALSE);
+
+    when(requisitionService.getLWById(1L)).thenReturn(rnr);
+    SupervisoryNode supervisoryNode = new SupervisoryNode(1L);
+    whenNew(SupervisoryNode.class).withArguments(1l).thenReturn(supervisoryNode);
+    when(supplyLineService.getSupplyLineBy(supervisoryNode, program)).thenReturn(supplyLine);
+
+    List<Rnr> rnrList = new ArrayList<>();
+    rnrList.add(rnr);
+    when(requisitionService.getFullRequisitionById(1L)).thenReturn(rnr);
+    when(fulfillmentPermissionService.hasPermissionOnWarehouse(userId, 99L, CONVERT_TO_ORDER)).thenReturn(false);
+
+    expectedException.expect(AccessDeniedException.class);
+    expectedException.expectMessage("user.not.authorized");
+
+    orderService.convertToOrder(rnrList, userId);
+
+    verify(supplyLineService).getSupplyLineBy(supervisoryNode, program);
+    verify(requisitionService).getLWById(rnr.getId());
+    verify(requisitionService).releaseRequisitionsAsOrder(rnrList, userId);
+  }
+
+  @Test
+  @Ignore
   public void shouldConvertRequisitionsToOrderWithStatusTransferFailed() throws Exception {
     String SUPPLY_LINE_MISSING_COMMENT = "order.ftpComment.supplyline.missing";
     Program program = new Program();

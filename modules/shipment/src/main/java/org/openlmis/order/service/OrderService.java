@@ -91,7 +91,7 @@ public class OrderService {
       order = new Order(rnr);
       SupplyLine supplyLine = supplyLineService.getSupplyLineBy(new SupervisoryNode(rnr.getSupervisoryNodeId()), rnr.getProgram());
       order.setSupplyLine(supplyLine);
-      if (!fulfillmentPermissionService.hasPermission(userId, supplyLine.getSupplyingFacility().getId(), Right.CONVERT_TO_ORDER)) {
+      if (!fulfillmentPermissionService.hasPermissionOnWarehouse(userId, supplyLine.getSupplyingFacility().getId(), Right.CONVERT_TO_ORDER)) {
         throw new AccessDeniedException("user.not.authorized");
       }
       OrderStatus status;
