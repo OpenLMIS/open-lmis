@@ -141,6 +141,10 @@ public class UserService {
     return userRepository.getUsersWithRightInHierarchyUsingBaseNode(nodeId, program.getId(), right);
   }
 
+  public List<User> getUsersWithRightOnWarehouse(Long id, Right right) {
+    return userRepository.getUsersWithRightOnWarehouse(id, right);
+  }
+
   private void sendUserCreationEmail(User user, String resetPasswordLink) {
     String subject = messageService.message("account.created.email.subject");
     SimpleMailMessage emailMessage = createEmailMessage(user, resetPasswordLink, subject);

@@ -148,4 +148,8 @@ public class UserRepository {
   public User getByUserName(String userName) {
     return userMapper.getByUserName(userName);
   }
+
+  public List<User> getUsersWithRightOnWarehouse(Long id, Right right) {
+    return userMapper.getUsersWithRightOnWarehouse(id, right);
+  }
 }

@@ -107,4 +107,10 @@ public interface UserMapper {
     "SELECT id FROM supervisoryNodesRec) ",
     "AND programId = #{programId} AND role_rights.rightName = #{rightName}"})
   List<User> getUsersWithRightInHierarchyUsingBaseNode(@Param(value = "nodeId") Long nodeId, @Param(value = "programId") Long programId, @Param(value = "rightName") Right right);
+
+  @Select({"SELECT id, userName, u.facilityId, firstName, lastName, employeeId, restrictLogin, jobTitle, primaryNotificationMethod," +
+    "officePhone, cellPhone, email, supervisorId, verified, active FROM users u INNER JOIN fulfillment_role_assignments f ON u.id = f.userid " +
+    "INNER JOIN role_rights rr ON f.roleid = rr.roleid" ,
+    "WHERE f.facilityId = #{facilityId} AND rr.rightName = #{rightName}"})
+  List<User> getUsersWithRightOnWarehouse(@Param("facilityId") Long facilityId, @Param("rightName") Right right);
 }

@@ -45,6 +45,7 @@ import java.util.*;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static java.util.Arrays.asList;
+import static java.util.Collections.EMPTY_LIST;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
@@ -558,6 +559,16 @@ public class RequisitionServiceTest {
     when(supplyLineService.getSupplyLineBy(supervisoryNode, PROGRAM)).thenReturn(supplyLine);
     Facility supplyingDepot = new Facility();
     when(supplyLine.getSupplyingFacility()).thenReturn(supplyingDepot);
+    SupervisoryNode baseSupervisoryNode = new SupervisoryNode();
+    baseSupervisoryNode.setId(1L);
+    when(supervisoryNodeService.getFor(FACILITY, PROGRAM)).thenReturn(baseSupervisoryNode);
+    SupplyLine supplyLine1 = mock(SupplyLine.class);
+    Facility supplyingFacility = new Facility();
+    supplyingFacility.setId(2L);
+    supplyLine1.setSupplyingFacility(supplyingFacility);
+    when(supplyLineService.getSupplyLineBy(baseSupervisoryNode, savedRnr.getProgram())).thenReturn(supplyLine);
+    when(userService.getUsersWithRightOnWarehouse(supplyingFacility.getId(), CONVERT_TO_ORDER)).thenReturn(EMPTY_LIST);
+
     requisitionService.approve(authorizedRnr, null);
 
     verify(requisitionRepository).approve(savedRnr);
@@ -685,6 +696,7 @@ public class RequisitionServiceTest {
     Rnr spyRnr = getFilledSavedRequisitionWithDefaultFacilityProgramPeriod(authorizedRnr, APPROVE_REQUISITION);
 
     doNothing().when(spyRnr).calculateForApproval();
+    when(supervisoryNodeService.getFor(FACILITY, PROGRAM)).thenReturn(null);
 
     requisitionService.approve(spyRnr, null);
 
@@ -953,14 +965,14 @@ public class RequisitionServiceTest {
     when(savedRnr.getFacility()).thenReturn(initiatedRnr.getFacility());
     when(savedRnr.getProgram()).thenReturn(initiatedRnr.getProgram());
     when(supervisoryNodeService.getFor(initiatedRnr.getFacility(), initiatedRnr.getProgram())).thenReturn(new SupervisoryNode(1L));
-    when(userService.getUsersWithRightInHierarchyUsingBaseNode(1L, initiatedRnr.getProgram(), Right.AUTHORIZE_REQUISITION)).thenReturn(Collections.EMPTY_LIST);
-    when(userService.getUsersWithRightInNodeForProgram(eq(initiatedRnr.getProgram()), any(SupervisoryNode.class), eq(Right.AUTHORIZE_REQUISITION))).thenReturn(Collections.EMPTY_LIST);
+    when(userService.getUsersWithRightInHierarchyUsingBaseNode(1L, initiatedRnr.getProgram(), Right.AUTHORIZE_REQUISITION)).thenReturn(EMPTY_LIST);
+    when(userService.getUsersWithRightInNodeForProgram(eq(initiatedRnr.getProgram()), any(SupervisoryNode.class), eq(Right.AUTHORIZE_REQUISITION))).thenReturn(EMPTY_LIST);
     when(rnrTemplateService.fetchAllRnRColumns(PROGRAM.getId())).thenReturn(rnrColumns);
 
     requisitionService.submit(initiatedRnr);
 
     verify(requisitionEventService).notifyForStatusChange(savedRnr);
-    verify(requisitionEventService).notifyUsers(savedRnr, Collections.EMPTY_LIST);
+    verify(requisitionEventService).notifyUsers(savedRnr, EMPTY_LIST);
   }
 
   @Test

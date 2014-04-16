@@ -37,11 +37,14 @@ import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 import static org.junit.matchers.JUnitMatchers.hasItem;
+import static org.openlmis.core.builder.FacilityBuilder.code;
+import static org.openlmis.core.builder.FacilityBuilder.defaultFacility;
 import static org.openlmis.core.builder.ProgramBuilder.defaultProgram;
 import static org.openlmis.core.builder.ProgramBuilder.programCode;
 import static org.openlmis.core.builder.UserBuilder.*;
 import static org.openlmis.core.domain.Right.APPROVE_REQUISITION;
 import static org.openlmis.core.domain.Right.AUTHORIZE_REQUISITION;
+import static org.openlmis.core.domain.Right.CONVERT_TO_ORDER;
 
 @Category(IntegrationTests.class)
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -63,6 +66,8 @@ public class UserMapperIT {
   @Autowired
   private SupervisoryNodeMapper supervisoryNodeMapper;
   @Autowired
+  private FulfillmentRoleAssignmentMapper fulfillmentRoleAssignmentMapper;
+  @Autowired
   QueryExecutor queryExecutor;
 
   private Facility facility;
@@ -72,7 +77,7 @@ public class UserMapperIT {
   public void setUp() throws Exception {
     supervisoryNode = make(a(SupervisoryNodeBuilder.defaultSupervisoryNode));
 
-    facility = make(a(FacilityBuilder.defaultFacility));
+    facility = make(a(defaultFacility));
     facilityMapper.insert(facility);
     supervisoryNode.setFacility(facility);
 
@@ -411,6 +416,30 @@ public class UserMapperIT {
     User savedUser = userMapper.getByEmail(user.getEmail());
     assertThat(savedUser.getActive(), is(false));
     assertThat(savedUser.getModifiedDate().after(user.getModifiedDate()), is(true));
+  }
+
+  @Test
+  public void shouldReturnListOfUsersHavingRightOnWarehouse() throws Exception {
+
+    User user1 = make(a(defaultUser, with(facilityId, facility.getId()), with(active, true)));
+    userMapper.insert(user1);
+
+    User user2 = make(a(defaultUser, with(facilityId, facility.getId()), with(userName, "user2"),
+      with(email, "email"), with(employeeId, "3")));
+    userMapper.insert(user2);
+
+    Role role = insertRole();
+    roleRightsMapper.createRoleRight(role, CONVERT_TO_ORDER);
+
+    Facility supplyingFacility = make(a(defaultFacility, with(code, "F200")));
+    facilityMapper.insert(supplyingFacility);
+    fulfillmentRoleAssignmentMapper.insertFulfillmentRole(user1, supplyingFacility.getId(), role.getId());
+
+    List<User> usersWithRight = userMapper.getUsersWithRightOnWarehouse(supplyingFacility.getId(), CONVERT_TO_ORDER);
+
+    assertThat(usersWithRight.size(), is(1));
+    assertThat(usersWithRight.get(0).getEmployeeId(), is(user1.getEmployeeId()));
+
   }
 
   private Program insertProgram(Program program) {
