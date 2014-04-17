@@ -16,6 +16,7 @@ import org.apache.ibatis.session.RowBounds;
 
 import org.openlmis.core.service.ProgramService;
 
+import org.openlmis.core.service.RoleRightsService;
 import org.openlmis.core.service.SupervisoryNodeService;
 import org.openlmis.report.mapper.UserSummaryReportMapper;
 import org.openlmis.report.model.ReportData;
@@ -39,6 +40,10 @@ public class UserSummaryReportProvider extends ReportDataProvider{
 
     @Autowired
     private SupervisoryNodeService supervisoryNodeService;
+    @Autowired
+    private RoleRightsService roleRightsService;
+
+
 
     @Autowired
     public UserSummaryReportProvider(UserSummaryReportMapper mapper) {
@@ -47,6 +52,7 @@ public class UserSummaryReportProvider extends ReportDataProvider{
     @Override
     protected List<? extends ReportData> getResultSetReportData(Map<String, String[]> filterCriteria) {
         RowBounds rowBounds = new RowBounds(RowBounds.NO_ROW_OFFSET, RowBounds.NO_ROW_LIMIT);
+
         return reportMapper.getReport(getReportFilterData(filterCriteria), null, rowBounds);
     }
 
@@ -59,29 +65,33 @@ public class UserSummaryReportProvider extends ReportDataProvider{
     public UserSummaryParams getReportFilterData(Map<String, String[]> filterCriteria) {
 
         if (filterCriteria != null) {
-            userSummaryParam = new UserSummaryParams();
-            userSummaryParam.setProgramId(StringUtils.isBlank(filterCriteria.get("program")[0]) ? 0L : Long.parseLong(filterCriteria.get("program")[0]));
-            userSummaryParam.setRoleId(StringUtils.isBlank(filterCriteria.get("role")[0]) ? 0L : Long.parseLong(filterCriteria.get("role")[0]));
-            userSummaryParam.setSupervisoryNodeId(StringUtils.isBlank(filterCriteria.get("supervisorynode")[0]) ? 0 : Long.parseLong(filterCriteria.get("supervisorynode")[0]));
+            //  userSummaryParam = new UserSummaryParams();
+            //userSummaryParam.setRoleId(StringUtils.isBlank(filterCriteria.get("role")[0]) ? 0 : Long.parseLong(filterCriteria.get("role")[0])); //defaults to 0
+            //userSummaryParam.setProgramId(StringUtils.isBlank(filterCriteria.get("program")[0]) ? 0 : Long.parseLong(filterCriteria.get("program")[0]));
+            // userSummaryParam.setSupervisoryNodeId(StringUtils.isBlank(filterCriteria.get("supervisoryNode")[0]) ? 0 : Long.parseLong(filterCriteria.get("supervisoryNode")[0]));
 
             // summarize the filters now.
-            String summary = "Program: "
-                    .concat(programService.getById(userSummaryParam.getProgramId()).getName());
+           /* String summary = "Program: "
+                    .concat(programService.getById(userSummaryParam.getProgramId()).getName())
+                    .concat("\nRole:")
+                    .concat(roleRightsService.getRole(userSummaryParam.getRoleId()).getName());
 
             if(userSummaryParam.getSupervisoryNodeId() != 0){
                 summary.concat("\nSupervisoryNodes: ")
                         .concat(supervisoryNodeService.getParent(userSummaryParam.getSupervisoryNodeId()).getName());
             }
-
+             */
 
 
         }
+
         return userSummaryParam;
     }
 
     @Override
     public String getFilterSummary(Map<String, String[]> params) {
         return getReportFilterData(params).toString();
+
     }
 
 

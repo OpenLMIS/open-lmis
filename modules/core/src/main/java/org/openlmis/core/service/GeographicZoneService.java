@@ -22,7 +22,6 @@ import org.springframework.stereotype.Service;
  * Exposes the services for handling GeographicZone entity.
  */
 
-import java.io.IOException;
 import java.util.List;
 
 @Service
@@ -35,8 +34,6 @@ public class GeographicZoneService {
   @Autowired
   GeographicZoneGeoJSONMapper geoJsonMapper;
 
-  @Autowired
-  private SMSService smsService;
 
     public void save(GeographicZone geographicZone) {
     geographicZone.setLevel(repository.getGeographicLevelByCode(geographicZone.getLevel().getCode()));
