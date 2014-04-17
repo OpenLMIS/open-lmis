@@ -420,6 +420,7 @@ public class DistributionSyncTest extends TestCaseHelper {
 
     DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
     distributionPage.syncDistribution(1);
+    testWebDriver.sleep(500);
     assertEquals(distributionPage.getSyncStatusMessage(), "Sync Status");
     assertTrue(distributionPage.getSyncMessage().contains("F10-Village Dispensary"));
     distributionPage.syncDistributionMessageDone();
@@ -643,8 +644,8 @@ public class DistributionSyncTest extends TestCaseHelper {
     EpiInventoryPage epiInventoryPage = epiUsePage.navigateToEpiInventory();
     assertTrue(epiInventoryPage.getProductName(1).equals("antibiotic"));
     assertTrue(epiInventoryPage.getProductName(2).equals("ProductName6"));
-    assertTrue(epiInventoryPage.getProductName(3).equals("Product9"));
-    assertTrue(epiInventoryPage.getProductName(4).equals("antibiotic"));
+    assertTrue(epiInventoryPage.getProductName(3).equals("antibiotic"));
+    assertTrue(epiInventoryPage.getProductName(4).equals("Product9"));
     assertTrue(epiInventoryPage.getProductName(5).equals("antibiotic"));
     assertNull(epiInventoryPage.getNoProductsAddedMessage());
   }
@@ -854,7 +855,7 @@ public class DistributionSyncTest extends TestCaseHelper {
 
   @Test(groups = {"distribution"})
   public void testSyncWhenAllProductDisplayOrderIsNull() throws SQLException {
-    dbWrapper.updateFieldValue("products", "displayOrder", null);
+    dbWrapper.updateFieldValue("Program_products", "displayOrder", null);
     HomePage homePage = loginPage.loginAs(distributionTestData.get(USER), distributionTestData.get(PASSWORD));
 
     initiateDistribution(distributionTestData.get(FIRST_DELIVERY_ZONE_NAME), distributionTestData.get(VACCINES_PROGRAM));
@@ -908,7 +909,7 @@ public class DistributionSyncTest extends TestCaseHelper {
     refrigeratorPage.enterValueInHighAlarmEvents("5", 1);
     refrigeratorPage.clickProblemSinceLastVisitNR(1);
     refrigeratorPage.clickDone();
-    testWebDriver.sleep(500);
+    testWebDriver.sleep(1000);
     refrigeratorPage.verifyRefrigeratorColor("overall", "GREEN");
     refrigeratorPage.verifyRefrigeratorColor("individual", "GREEN");
 

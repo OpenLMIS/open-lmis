@@ -47,7 +47,7 @@ public class EpiInventoryLineItem extends BaseModel {
     this.idealQuantityByPackSize = facilityProgramProduct.calculateIsaByPackSize(population, numberOfMonths);
     this.productName = facilityProgramProduct.getProduct().getPrimaryName();
     this.productCode = facilityProgramProduct.getProduct().getCode();
-    this.productDisplayOrder = facilityProgramProduct.getProduct().getDisplayOrder();
+    this.productDisplayOrder = facilityProgramProduct.getDisplayOrder();
   }
 
   public EpiInventoryLineItem(Long facilityVisitId, Integer existingQuantity, Integer spoiledQuantity, Integer deliveredQuantity) {

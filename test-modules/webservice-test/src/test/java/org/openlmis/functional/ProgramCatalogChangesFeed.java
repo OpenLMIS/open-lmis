@@ -303,10 +303,7 @@ public class ProgramCatalogChangesFeed extends JsonUtility {
     List<String> feedJSONListFinal = XmlUtils.getNodeValues(responseEntityUpdated.getResponse(), "content");
     assertTrue("feed json list : " + feedJSONListFinal.get(0) + ", response : " + responseEntityUpdated.getResponse(), feedJSONListFinal.get(0).contains("\"programCode\":\"" + ProgramSecond + "\",\"programName\":\"" + ProgramSecond + "\""));
     assertEquals(1, feedJSONListFinal.size());
-
-
   }
-
 
   @DataProvider(name = "Data-Provider-Function-Positive")
   public Object[][] parameterIntTestProviderPositive() {

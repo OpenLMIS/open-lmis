@@ -44,6 +44,12 @@ public class ProgramProduct extends BaseModel implements Importable {
   @ImportField(name = "Is Active", type = "boolean", mandatory = true)
   private boolean active;
 
+  @ImportField(mandatory = true, type = "String", name = "Product Category", nested = "code")
+  private ProductCategory productCategory;
+
+  @ImportField(name = "Display Order", type = "int")
+  private Integer displayOrder;
+
   ProgramProductISA programProductIsa;
 
   private Money currentPrice;
@@ -75,5 +81,6 @@ public class ProgramProduct extends BaseModel implements Importable {
     this.active = programProduct.active;
     this.currentPrice = programProduct.currentPrice;
     this.programProductIsa = programProduct.programProductIsa;
+    this.displayOrder = programProduct.displayOrder;
   }
 }

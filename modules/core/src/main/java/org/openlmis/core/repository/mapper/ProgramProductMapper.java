@@ -11,10 +11,7 @@
 package org.openlmis.core.repository.mapper;
 
 import org.apache.ibatis.annotations.*;
-import org.openlmis.core.domain.Product;
-import org.openlmis.core.domain.Program;
-import org.openlmis.core.domain.ProgramProduct;
-import org.openlmis.core.domain.ProgramProductISA;
+import org.openlmis.core.domain.*;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -26,9 +23,9 @@ import java.util.List;
 @Repository
 public interface ProgramProductMapper {
 
-  @Insert({"INSERT INTO program_products(programId, productId, dosesPerMonth, active, createdBy, modifiedBy, modifiedDate)",
+  @Insert({"INSERT INTO program_products(programId, productId, dosesPerMonth, active, productCategoryId, displayOrder, createdBy, modifiedBy, modifiedDate)",
     "VALUES (#{program.id},",
-    "#{product.id}, #{dosesPerMonth}, #{active}, #{createdBy}, #{modifiedBy}, #{modifiedDate})"})
+    "#{product.id}, #{dosesPerMonth}, #{active}, #{productCategory.id}, #{displayOrder}, #{createdBy}, #{modifiedBy}, #{modifiedDate})"})
   @Options(useGeneratedKeys = true)
   Integer insert(ProgramProduct programProduct);
 
@@ -38,14 +35,18 @@ public interface ProgramProductMapper {
   @Update("UPDATE program_products SET currentPrice = #{currentPrice}, modifiedBy = #{modifiedBy}, modifiedDate = #{modifiedDate} WHERE id = #{id}")
   void updateCurrentPrice(ProgramProduct programProduct);
 
-  @Select(("SELECT * FROM program_products WHERE programId = #{programId} AND productId = #{productId}"))
+  @Select({"SELECT * FROM program_products WHERE programId = #{programId} AND productId = #{productId}"})
+  @Results(value = {
+    @Result(property = "productCategory", column = "productCategoryId", javaType = ProductCategory.class,
+      one = @One(select = "org.openlmis.core.repository.mapper.ProductCategoryMapper.getProductCategoryById"))
+  })
   ProgramProduct getByProgramAndProductId(@Param("programId") Long programId, @Param("productId") Long productId);
 
-  @Update("UPDATE program_products SET  dosesPerMonth=#{dosesPerMonth}, active=#{active}, modifiedBy=#{modifiedBy}, modifiedDate=#{modifiedDate} WHERE programId=#{program.id} AND productId=#{product.id}")
+  @Update("UPDATE program_products SET  dosesPerMonth=#{dosesPerMonth}, productCategoryId = #{productCategory.id}, displayOrder = #{displayOrder}, active=#{active}, modifiedBy=#{modifiedBy}, modifiedDate=#{modifiedDate} WHERE programId=#{program.id} AND productId=#{product.id}")
   void update(ProgramProduct programProduct);
 
   @Select({"SELECT * FROM program_products pp INNER JOIN products p ON pp.productId = p.id WHERE pp.programId = #{id} ",
-    "ORDER BY p.displayOrder NULLS LAST, LOWER(p.code)"})
+    "ORDER BY pp.displayOrder NULLS LAST, LOWER(p.code)"})
   @Results(value = {
     @Result(property = "id", column = "id"),
     @Result(property = "program", column = "programId", javaType = Program.class,
@@ -74,11 +75,11 @@ public interface ProgramProductMapper {
   List<ProgramProduct> getByProductCode(String code);
 
   @Select({"SELECT DISTINCT pp.active, pr.code AS programCode, pr.name AS programName, p.code AS productCode,",
-    "p.primaryName AS productName, p.description, p.dosesPerDispensingUnit AS unit, pc.name AS category",
+    "p.primaryName AS productName, p.description, p.dosesPerDispensingUnit AS unit, pc.id AS categoryId",
     "FROM program_products pp",
     "INNER JOIN products p  ON pp.productId=p.id",
     "INNER JOIN programs pr ON pr.id=pp.programId",
-    "LEFT OUTER JOIN product_categories pc ON pc.id = p.categoryId",
+    "LEFT OUTER JOIN product_categories pc ON pc.id = pp.productCategoryId",
     "LEFT OUTER JOIN facility_approved_products fap ON fap.programProductId=pp.id",
     "LEFT OUTER JOIN facility_types ft  ON ft.id=fap.facilityTypeId",
     "WHERE ",
@@ -94,16 +95,18 @@ public interface ProgramProductMapper {
     @Result(property = "program", column = "programCode", javaType = Program.class,
       one = @One(select = "org.openlmis.core.repository.mapper.ProgramMapper.getByCode")),
     @Result(property = "product", column = "productCode", javaType = Product.class,
-      one = @One(select = "org.openlmis.core.repository.mapper.ProductMapper.getByCode"))
-  })
-  List<ProgramProduct> getByProgramIdAndFacilityTypeCode(@Param("programId") Long programId, @Param("facilityTypeCode") String facilityTypeCode);
+      one = @One(select = "org.openlmis.core.repository.mapper.ProductMapper.getByCode")),
+    @Result(property = "productCategory", column = "categoryId", javaType = ProductCategory.class,
+    one = @One(select = "org.openlmis.core.repository.mapper.ProductCategoryMapper.getProductCategoryById"))
+})
+  List<ProgramProduct>getByProgramIdAndFacilityTypeCode(@Param("programId")Long programId,@Param("facilityTypeCode")String facilityTypeCode);
 
-  @Select({"SELECT * FROM program_products pp INNER JOIN products p ON pp.productId = p.id WHERE programId = #{id} AND p.fullsupply = FALSE"})
-  @Results(value = {
-    @Result(property = "id", column = "id"),
-    @Result(property = "product", column = "productId", javaType = Product.class,
-      one = @One(select = "org.openlmis.core.repository.mapper.ProductMapper.getById"))
-  })
-  List<ProgramProduct> getNonFullSupplyProductsForProgram(Program program);
+@Select({"SELECT * FROM program_products pp INNER JOIN products p ON pp.productId = p.id WHERE programId = #{id} AND p.fullsupply = FALSE"})
+@Results(value = {
+  @Result(property = "id", column = "id"),
+  @Result(property = "product", column = "productId", javaType = Product.class,
+    one = @One(select = "org.openlmis.core.repository.mapper.ProductMapper.getById"))
+})
+List<ProgramProduct>getNonFullSupplyProductsForProgram(Program program);
 }
 

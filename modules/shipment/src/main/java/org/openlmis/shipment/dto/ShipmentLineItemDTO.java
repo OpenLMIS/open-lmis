@@ -35,6 +35,7 @@ public class ShipmentLineItemDTO {
   private static Logger logger = Logger.getLogger(ShipmentLineItemDTO.class);
   private String orderId;
   private String productCode;
+  private String replacedProductCode;
   private String quantityShipped;
   private String cost;
   private String packedDate;

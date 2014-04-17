@@ -36,7 +36,7 @@ public interface FacilityApprovedProductMapper {
     "INNER JOIN facilities f ON f.typeId = fap.facilityTypeId",
     "INNER JOIN program_products pp ON pp.id = fap.programProductId",
     "INNER JOIN products p ON p.id = pp.productId ",
-    "INNER JOIN product_categories pc ON pc.id = p.categoryId ",
+    "INNER JOIN product_categories pc ON pc.id = pp.productCategoryId ",
     "INNER JOIN programs pgm ON pp.programId = pgm.id ",
     "WHERE",
     "pp.programId = #{programId}",
@@ -44,7 +44,7 @@ public interface FacilityApprovedProductMapper {
     "AND p.fullSupply = TRUE",
     "AND p.active = TRUE",
     "AND pp.active = TRUE",
-    "ORDER BY pc.displayOrder, pc.name, p.displayOrder NULLS LAST, p.code"})
+    "ORDER BY pc.displayOrder, pc.name, pp.displayOrder NULLS LAST, p.code"})
   @Results(value = {
     @Result(property = "programProduct.id", column = "programProductId"),
     @Result(property = "programProduct.dosesPerMonth", column = "dosesPerMonth"),
@@ -66,10 +66,10 @@ public interface FacilityApprovedProductMapper {
     @Result(property = "programProduct.product.packRoundingThreshold", column = "packRoundingThreshold"),
     @Result(property = "programProduct.product.dispensingUnit", column = "dispensingUnit"),
     @Result(property = "programProduct.product.fullSupply", column = "fullSupply"),
-    @Result(property = "programProduct.product.displayOrder", column = "displayOrder"),
+    @Result(property = "programProduct.displayOrder", column = "displayOrder"),
     @Result(property = "programProduct.product.form", column = "formId", javaType = ProductForm.class,
       one = @One(select = "org.openlmis.core.repository.mapper.ProductFormMapper.getById")),
-    @Result(property = "programProduct.product.category", column = "categoryId", javaType = ProductCategory.class,
+    @Result(property = "programProduct.productCategory", column = "productCategoryId", javaType = ProductCategory.class,
       one = @One(select = "org.openlmis.core.repository.mapper.ProductCategoryMapper.getProductCategoryById")),
     @Result(property = "programProduct.product.dosageUnit", column = "dosageUnitId", javaType = DosageUnit.class,
       one = @One(select = "org.openlmis.core.repository.mapper.DosageUnitMapper.getById")),
@@ -83,7 +83,7 @@ public interface FacilityApprovedProductMapper {
     "INNER JOIN facilities f ON f.typeId = fap.facilityTypeId",
     "INNER JOIN program_products pp ON pp.id = fap.programProductId",
     "INNER JOIN products p ON p.id = pp.productId ",
-    "INNER JOIN product_categories pc ON pc.id = p.categoryId ",
+    "INNER JOIN product_categories pc ON pc.id = pp.productCategoryId ",
     "INNER JOIN programs pgm ON pp.programId = pgm.id ",
     "WHERE",
     "pp.programId = #{programId}",
@@ -91,7 +91,7 @@ public interface FacilityApprovedProductMapper {
     "AND p.fullSupply = FALSE",
     "AND p.active = TRUE",
     "AND pp.active = TRUE",
-    "ORDER BY pc.displayOrder, pc.name, p.displayOrder NULLS LAST, p.code"})
+    "ORDER BY pc.displayOrder, pc.name, pp.displayOrder NULLS LAST, p.code"})
   @Results(value = {
     @Result(property = "programProduct.id", column = "programProductId"),
     @Result(property = "programProduct.dosesPerMonth", column = "dosesPerMonth"),
@@ -113,10 +113,10 @@ public interface FacilityApprovedProductMapper {
     @Result(property = "programProduct.product.packRoundingThreshold", column = "packRoundingThreshold"),
     @Result(property = "programProduct.product.dispensingUnit", column = "dispensingUnit"),
     @Result(property = "programProduct.product.fullSupply", column = "fullSupply"),
-    @Result(property = "programProduct.product.displayOrder", column = "displayOrder"),
+    @Result(property = "programProduct.displayOrder", column = "displayOrder"),
     @Result(property = "programProduct.product.form", column = "formId", javaType = ProductForm.class,
       one = @One(select = "org.openlmis.core.repository.mapper.ProductFormMapper.getById")),
-    @Result(property = "programProduct.product.category", column = "categoryId", javaType = ProductCategory.class,
+    @Result(property = "programProduct.productCategory", column = "productCategoryId", javaType = ProductCategory.class,
       one = @One(select = "org.openlmis.core.repository.mapper.ProductCategoryMapper.getProductCategoryById")),
     @Result(property = "programProduct.product.dosageUnit", column = "dosageUnitId", javaType = DosageUnit.class,
       one = @One(select = "org.openlmis.core.repository.mapper.DosageUnitMapper.getById")),

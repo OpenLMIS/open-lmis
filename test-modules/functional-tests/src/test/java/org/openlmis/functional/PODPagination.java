@@ -173,9 +173,12 @@ public class PODPagination extends TestCaseHelper {
     LoginPage loginPage = PageObjectFactory.getLoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(podPaginationData.get(USER), podPaginationData.get(PASSWORD));
     ManagePodPage managePodPage = homePage.navigateManagePOD();
-    managePodPage.selectRequisitionToUpdatePod(1);
+    updatePodPage = managePodPage.selectRequisitionToUpdatePod(1);
     verifyNumberOFPageLinksDisplayed(25, 10);
     verifyPageNumberLinksDisplayed();
+    for (int rowNumber = 1; rowNumber < 5; rowNumber++) {
+      assertEqualsAndNulls(updatePodPage.getReplacedProductCode(rowNumber), "");
+    }
     verifyProductDisplayOrderOnPage(new String[]{"F0", "NF0", "F1", "NF1", "F2", "NF2", "F3", "NF3", "F4", "NF4"});
     verifyCategoryDisplayOrderOnPage(new String[]{"C0", "", "C1", "", "C2", "", "C3", "", "C4", ""});
 
@@ -196,7 +199,11 @@ public class PODPagination extends TestCaseHelper {
     dbWrapper.insertOneProduct("ZX");
     dbWrapper.insertOneProduct("ZX1");
 
-    enterTestDataForShipment();
+    dbWrapper.insertProgramProductsWithoutDeleting("ZX", "ZX1", podPaginationData.get(PROGRAM));
+    dbWrapper.insertFacilityApprovedProduct("ZX", podPaginationData.get(PROGRAM), dbWrapper.getAttributeFromTable("facility_types", "code", "name", "Lvl3 Hospital"));
+    dbWrapper.insertFacilityApprovedProduct("ZX1", podPaginationData.get(PROGRAM), dbWrapper.getAttributeFromTable("facility_types", "code", "name", "Lvl3 Hospital"));
+
+    enterTestDataForShipment(true, true);
 
     LoginPage loginPage = PageObjectFactory.getLoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(podPaginationData.get(USER), podPaginationData.get(PASSWORD));
@@ -209,7 +216,9 @@ public class PODPagination extends TestCaseHelper {
     verifyFirstAndPreviousPageLinksDisabled();
     verifyNumberOfProductsVisibleOnPage(10);
     verifyProductDisplayOrderOnPage(new String[]{"F0", "F1", "F2", "F3", "F4", "F5", "F6", "F7", "F8", "F9"});
-    verifyCategoryDisplayOrderOnPage(new String[]{"Antibiotic", "", "", "", "", "", "", "", "", ""});
+    assertEquals(updatePodPage.getReplacedProductCode(1), "NF0");
+    assertEquals(updatePodPage.getReplacedProductCode(10), "NF9");
+    verifyCategoryDisplayOrderOnPage(new String[]{"Antibiotics", "", "", "", "", "", "", "", "", ""});
 
     updatePodPage.enterPodData("110", "openlmis openlmis", null, 1);
     updatePodPage.enterDeliveryDetailsInPodScreen("Delivered Person", "Received Person", "27/02/2014");
@@ -237,7 +246,9 @@ public class PODPagination extends TestCaseHelper {
     verifyFirstAndPreviousPageLinksEnabled();
     verifyNumberOfProductsVisibleOnPage(10);
     verifyProductDisplayOrderOnPage(new String[]{"NF0", "NF1", "NF2", "NF3", "NF4", "NF5", "NF6", "NF7", "NF8", "NF9"});
-    verifyCategoryDisplayOrderOnPage(new String[]{"Antibiotic", "", "", "", "", "", "", "", "", ""});
+    assertEquals(updatePodPage.getReplacedProductCode(1), "");
+    assertEquals(updatePodPage.getReplacedProductCode(10), "");
+    verifyCategoryDisplayOrderOnPage(new String[]{"Antibiotics", "", "", "", "", "", "", "", "", ""});
     updatePodPage.verifyDeliveryDetailsOnPodScreenUI("Delivered Person new openLMIS", " ", "25/02/2014");
     verifyDeliveryDetailsOfPodScreenInDatabase("Delivered Person new openLMIS", " ", "2014-02-25 00:00:00");
     updatePodPage.enterPodData("10", "openlmis", "7", 1);
@@ -252,6 +263,10 @@ public class PODPagination extends TestCaseHelper {
     verifyNextAndLastPageLinksDisabled();
     verifyFirstAndPreviousPageLinksEnabled();
     verifyNumberOfProductsVisibleOnPage(2);
+    verifyProductDisplayOrderOnPage(new String[]{"ZX", "ZX1"});
+    assertEquals(updatePodPage.getReplacedProductCode(1), "");
+    assertEquals(updatePodPage.getReplacedProductCode(2), "");
+    verifyCategoryDisplayOrderOnPage(new String[]{"Antibiotics", ""});
     updatePodPage.verifyQuantityReturnedOnUI("", 1);
     updatePodPage.enterPodData("11", "some notes", "99999999", 1);
     updatePodPage.enterPodData("110", "Notes", null, 2);
@@ -364,11 +379,25 @@ public class PODPagination extends TestCaseHelper {
     dbWrapper.setupMultipleProducts(podPaginationData.get(PROGRAM), "Lvl3 Hospital", 11, false);
     dbWrapper.insertRequisitionWithMultipleLineItems(11, podPaginationData.get(PROGRAM), true, "F10", false);
     dbWrapper.convertRequisitionToOrder(dbWrapper.getMaxRnrID(), "READY_TO_PACK", podPaginationData.get(USER));
+    dbWrapper.insertOneProduct("ZX");
+    dbWrapper.insertOneProduct("ZX1");
+
+    dbWrapper.insertProgramProductsWithoutDeleting("ZX", "ZX1", podPaginationData.get(PROGRAM));
+    dbWrapper.insertFacilityApprovedProduct("ZX", podPaginationData.get(PROGRAM), dbWrapper.getAttributeFromTable("facility_types", "code", "name", "Lvl3 Hospital"));
+    dbWrapper.insertFacilityApprovedProduct("ZX1", podPaginationData.get(PROGRAM), dbWrapper.getAttributeFromTable("facility_types", "code", "name", "Lvl3 Hospital"));
+
+    enterTestDataForShipment(true, false);
 
     LoginPage loginPage = PageObjectFactory.getLoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(podPaginationData.get(USER), podPaginationData.get(PASSWORD));
     ManagePodPage managePodPage = homePage.navigateManagePOD();
     managePodPage.selectRequisitionToUpdatePod(1);
+
+    verifyProductDisplayOrderOnPage(new String[]{"F0", "NF0", "F1", "NF1", "ZX", "F2", "NF2", "F3", "NF3", "F4"});
+    assertEquals(updatePodPage.getReplacedProductCode(1), "NF0");
+    assertEquals(updatePodPage.getReplacedProductCode(2), "");
+    assertEquals(updatePodPage.getReplacedProductCode(10), "NF4");
+    verifyCategoryDisplayOrderOnPage(new String[]{"Antibiotics", "", "", "", "", "", "", "", "", ""});
 
     for (int i = 1; i <= 10; i++) {
       updatePodPage.enterPodData("1" + i, "notes", null, i);
@@ -385,7 +414,7 @@ public class PODPagination extends TestCaseHelper {
     assertTrue(updatePodPage.isReceivedDateFieldEnabled());
 
     ViewOrdersPage viewOrdersPage = homePage.navigateViewOrders();
-    assertEquals("Ready to pack", viewOrdersPage.getOrderStatus(1));
+    assertEquals("Packed", viewOrdersPage.getOrderStatus(1));
 
     homePage.navigateManagePOD();
     managePodPage.selectRequisitionToUpdatePod(1);
@@ -393,13 +422,20 @@ public class PODPagination extends TestCaseHelper {
     updatePodPage.clickPageErrorsMessage();
     updatePodPage.clickErrorPage(2);
 
-    verifyProductDisplayOrderOnPage(new String[]{"F5", "NF5", "F6", "NF6", "F7", "NF7", "F8", "NF8", "F9", "NF9"});
+    verifyProductDisplayOrderOnPage(new String[]{"NF4", "F5", "NF5", "ZX1", "F6", "NF6", "F7", "NF7", "F8", "NF8"});
+    assertEquals(updatePodPage.getReplacedProductCode(1), "");
+    assertEquals(updatePodPage.getReplacedProductCode(2), "NF5");
+    verifyCategoryDisplayOrderOnPage(new String[]{"Antibiotics", "", "", "", "", "", "", "", "", ""});
     for (int i = 1; i <= 10; i++) {
       updatePodPage.enterPodData("2" + i, "notes", null, i);
     }
 
     updatePodPage.clickPageErrorsMessage();
     updatePodPage.clickErrorPage(3);
+    verifyProductDisplayOrderOnPage(new String[]{"F9", "NF9"});
+    assertEquals(updatePodPage.getReplacedProductCode(1), "NF9");
+    assertEquals(updatePodPage.getReplacedProductCode(2), "");
+    verifyCategoryDisplayOrderOnPage(new String[]{"Antibiotics", ""});
     updatePodPage.enterPodData("31", "", null, 1);
     updatePodPage.enterPodData("32", "", null, 2);
 
@@ -417,11 +453,13 @@ public class PODPagination extends TestCaseHelper {
     managePodPage.verifyNoOrderMessage();
   }
 
-  private void enterTestDataForShipment() throws SQLException {
+  private void enterTestDataForShipment(Boolean fullSupplyFlag1, Boolean fullSupplyFlag2) throws SQLException {
+    dbWrapper.updateFieldValue("orders", "status", "RELEASED", null, null);
     for (Integer i = 0; i < 10; i++)
-      testDataForShipment(0, true, "F" + i, i);
+      testDataForShipmentWithReplacedProduct(0, fullSupplyFlag1, "F" + i, i, "NF" + i);
     for (Integer i = 0; i < 10; i++)
-      testDataForShipment(0, true, "NF" + i, i);
+      testDataForShipment(0, fullSupplyFlag2, "NF" + i, i);
+
     testDataForShipment(0, false, "ZX", 78);
     testDataForShipment(0, true, "ZX1", 78);
     dbWrapper.updateFieldValue("orders", "status", "PACKED", null, null);

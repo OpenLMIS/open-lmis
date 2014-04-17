@@ -26,7 +26,8 @@ import org.springframework.dao.DataIntegrityViolationException;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static org.junit.rules.ExpectedException.none;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.verify;
 import static org.openlmis.core.matchers.Matchers.dataExceptionMatcher;
 import static org.openlmis.shipment.builder.ShipmentLineItemBuilder.*;
 
@@ -39,6 +40,7 @@ public class ShipmentRepositoryTest {
 
   @Mock
   private ShipmentMapper shipmentMapper;
+
   @InjectMocks
   private ShipmentRepository shipmentRepository;
 
@@ -49,11 +51,8 @@ public class ShipmentRepositoryTest {
       with(orderId, 1L),
       with(quantityShipped, 500)));
 
-    when(shipmentMapper.getShippedLineItem(shipmentLineItem)).thenReturn(null);
-
     shipmentRepository.save(shipmentLineItem);
 
-    verify(shipmentMapper).getShippedLineItem(shipmentLineItem);
     verify(shipmentMapper).insertShippedLineItem(shipmentLineItem);
   }
 
@@ -74,20 +73,4 @@ public class ShipmentRepositoryTest {
 
     shipmentRepository.save(shipmentLineItem);
   }
-
-  @Test
-  public void shouldUpdateShippedLineItem() throws Exception {
-    ShipmentLineItem shipmentLineItem = make(a(defaultShipmentLineItem,
-      with(productCode, "P10"),
-      with(orderId, 1L),
-      with(quantityShipped, 500)));
-
-    when(shipmentMapper.getShippedLineItem(shipmentLineItem)).thenReturn(new ShipmentLineItem());
-
-    shipmentRepository.save(shipmentLineItem);
-
-    verify(shipmentMapper).getShippedLineItem(shipmentLineItem);
-    verify(shipmentMapper).updateShippedLineItem(shipmentLineItem);
-  }
-
 }

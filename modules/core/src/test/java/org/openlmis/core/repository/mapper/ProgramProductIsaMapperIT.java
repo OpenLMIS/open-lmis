@@ -16,26 +16,18 @@ import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.openlmis.core.builder.ProductBuilder;
 import org.openlmis.core.builder.ProgramBuilder;
-import org.openlmis.core.domain.Product;
-import org.openlmis.core.domain.Program;
-import org.openlmis.core.domain.ProgramProduct;
-import org.openlmis.core.repository.mapper.ProductMapper;
-import org.openlmis.core.repository.mapper.ProgramMapper;
-import org.openlmis.core.repository.mapper.ProgramProductIsaMapper;
-import org.openlmis.core.repository.mapper.ProgramProductMapper;
+import org.openlmis.core.domain.*;
 import org.openlmis.db.categories.IntegrationTests;
-import org.openlmis.core.domain.ProgramProductISA;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
-import static com.natpryce.makeiteasy.MakeItEasy.*;
+import static com.natpryce.makeiteasy.MakeItEasy.a;
+import static com.natpryce.makeiteasy.MakeItEasy.make;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
-import static org.openlmis.core.builder.ProductBuilder.displayOrder;
-import static org.openlmis.core.builder.ProgramBuilder.defaultProgram;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = "classpath*:test-applicationContext-core.xml")
@@ -58,9 +50,16 @@ public class ProgramProductIsaMapperIT {
   @Autowired
   private ProgramProductIsaMapper mapper;
 
+  @Autowired
+  private ProductCategoryMapper productCategoryMapper;
+
+  private ProductCategory productCategory;
+
   @Before
   public void setUp() throws Exception {
-    product = make(a(ProductBuilder.defaultProduct, with(displayOrder, 1)));
+    productCategory = new ProductCategory("C1", "Category 1", 1);
+    productCategoryMapper.insert(productCategory);
+    product = make(a(ProductBuilder.defaultProduct));
     productMapper.insert(product);
     program = make(a(ProgramBuilder.defaultProgram));
     programMapper.insert(program);
@@ -69,6 +68,7 @@ public class ProgramProductIsaMapperIT {
   @Test
   public void testUpdate() throws Exception {
     ProgramProduct programProduct = new ProgramProduct(program, product, 10, true);
+    programProduct.setProductCategory(productCategory);
     programProductMapper.insert(programProduct);
 
     ProgramProductISA programProductISA = new ProgramProductISA(programProduct.getId(), 23d, 4, 10d, 25d, 20, 50, 17);
@@ -85,6 +85,7 @@ public class ProgramProductIsaMapperIT {
   @Test
   public void shouldInsertISAForAProgramProduct() {
     ProgramProduct programProduct = new ProgramProduct(program, product, 10, true);
+    programProduct.setProductCategory(productCategory);
     programProductMapper.insert(programProduct);
 
     ProgramProductISA programProductISA = new ProgramProductISA(programProduct.getId(), 23d, 4, 10d, 25d, 20, 50, 17);

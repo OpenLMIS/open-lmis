@@ -45,7 +45,7 @@ public class RnrLineItemBuilder {
   public static final Property<RnrLineItem, Boolean> skipped = newProperty();
 
   public static final Property<RnrLineItem, Integer> quantityRequested = newProperty();
-  private static Property<RnrLineItem, String> productCategory = newProperty();
+  public static Property<RnrLineItem, String> productCategory = newProperty();
 
   public static final int DEFAULT_STOCK_IN_HAND = 4;
   public static final int DEFAULT_BEGINNING_BALANCE = 10;

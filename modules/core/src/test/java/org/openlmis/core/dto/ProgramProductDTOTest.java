@@ -30,7 +30,7 @@ public class ProgramProductDTOTest {
 
     ProgramProduct programProduct = make(a(defaultProgramProduct));
 
-    programProduct.getProduct().setCategory(new ProductCategory("P1", "Product Name", 1));
+    programProduct.setProductCategory(new ProductCategory("C1", "Category 1", 1));
 
     ProgramProductDTO programProductDTO = new ProgramProductDTO(programProduct);
 
@@ -38,7 +38,7 @@ public class ProgramProductDTOTest {
     assertThat(programProductDTO.getProductName(), is(programProduct.getProduct().getPrimaryName()));
     assertThat(programProductDTO.getProgramCode(), is(programProduct.getProgram().getCode()));
     assertThat(programProductDTO.getProgramName(), is(programProduct.getProgram().getName()));
-    assertThat(programProductDTO.getCategory(), is(programProduct.getProduct().getCategory().getName()));
+    assertThat(programProductDTO.getCategory(), is(programProduct.getProductCategory().getName()));
     assertThat(programProductDTO.getDescription(), is(programProduct.getProduct().getDescription()));
     assertThat(programProductDTO.getUnit(), is(programProduct.getProduct().getDosesPerDispensingUnit()));
   }

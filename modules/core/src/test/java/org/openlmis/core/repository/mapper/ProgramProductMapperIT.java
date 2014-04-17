@@ -18,6 +18,7 @@ import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.openlmis.core.builder.ProductBuilder;
 import org.openlmis.core.domain.*;
+import org.openlmis.core.query.QueryExecutor;
 import org.openlmis.db.categories.IntegrationTests;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -25,11 +26,12 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.ResultSet;
 import java.util.Date;
 import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
-import static junit.framework.Assert.*;
+import static junit.framework.Assert.assertTrue;
 import static org.apache.commons.collections.CollectionUtils.exists;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
@@ -55,6 +57,8 @@ public class ProgramProductMapperIT {
   private FacilityApprovedProductMapper facilityApprovedProductMapper;
   @Autowired
   private ProductCategoryMapper productCategoryMapper;
+  @Autowired
+  QueryExecutor executor;
 
   private Product product;
   private Program program;
@@ -62,10 +66,9 @@ public class ProgramProductMapperIT {
 
   @Before
   public void setup() {
-    product = make(a(ProductBuilder.defaultProduct, with(displayOrder, 1)));
+    product = make(a(ProductBuilder.defaultProduct));
     productCategory = new ProductCategory("10", "P1", 1);
     productCategoryMapper.insert(productCategory);
-    product.setCategory(productCategory);
 
     productMapper.insert(product);
     program = make(a(defaultProgram));
@@ -75,13 +78,20 @@ public class ProgramProductMapperIT {
   @Test
   public void shouldInsertProductForAProgram() throws Exception {
     ProgramProduct programProduct = new ProgramProduct(program, product, 10, true);
-    assertEquals(1, programProductMapper.insert(programProduct).intValue());
-    assertNotNull(programProduct.getId());
+    programProduct.setProductCategory(productCategory);
+    programProduct.setDisplayOrder(1);
+    programProductMapper.insert(programProduct);
+    ResultSet resultSet = executor.execute("SELECT * FROM program_products");
+    resultSet.next();
+    assertThat(programProduct.getId(), is(notNullValue()));
+    assertThat(resultSet.getLong("productCategoryId"), is(productCategory.getId()));
+    assertThat(resultSet.getInt("displayOrder"), is(1));
   }
 
   @Test
   public void shouldGetProgramProductIdByProgramIdAndProductId() throws Exception {
     ProgramProduct programProduct = new ProgramProduct(program, product, 10, true);
+    programProduct.setProductCategory(productCategory);
     programProductMapper.insert(programProduct);
 
     Long id = programProductMapper.getIdByProgramAndProductId(program.getId(), product.getId());
@@ -92,6 +102,7 @@ public class ProgramProductMapperIT {
   @Test
   public void shouldGetProgramProductByProgramIdAndProductId() throws Exception {
     ProgramProduct programProduct = new ProgramProduct(program, product, 10, true);
+    programProduct.setProductCategory(productCategory);
     programProductMapper.insert(programProduct);
 
     ProgramProduct result = programProductMapper.getByProgramAndProductId(program.getId(), product.getId());
@@ -104,6 +115,7 @@ public class ProgramProductMapperIT {
     ProgramProduct programProduct = new ProgramProduct(program, product, 10, true, new Money("100.0"));
     programProduct.setModifiedBy(1L);
     programProduct.setModifiedDate(new Date());
+    programProduct.setProductCategory(productCategory);
     programProductMapper.insert(programProduct);
     Money price = new Money("200.01");
     programProduct.setCurrentPrice(price);
@@ -119,10 +131,11 @@ public class ProgramProductMapperIT {
   @Test
   public void shouldUpdateProgramProduct() throws Exception {
     ProgramProduct programProduct = new ProgramProduct(program, product, 10, true);
-
+    programProduct.setProductCategory(productCategory);
     programProductMapper.insert(programProduct);
     programProduct.setDosesPerMonth(10);
     programProduct.setActive(false);
+    programProduct.setProductCategory(productCategory);
 
     programProductMapper.update(programProduct);
 
@@ -130,29 +143,52 @@ public class ProgramProductMapperIT {
 
     assertThat(dbProgramProduct.getDosesPerMonth(), is(10));
     assertThat(dbProgramProduct.isActive(), is(false));
+    assertThat(dbProgramProduct.getProductCategory(), is(productCategory));
   }
 
   @Test
-  public void shouldGetProgramProductsByProgram() {
-    ProgramProduct programProduct = new ProgramProduct(program, product, 10, true);
-    programProductMapper.insert(programProduct);
+  public void shouldGetProgramProductsByProgramInOrderOfDisplayOrderAndProductCode() {
+    ProgramProduct programProduct1 = new ProgramProduct(program, product, 10, true);
+    programProduct1.setProductCategory(productCategory);
+    programProduct1.setDisplayOrder(3);
+    programProductMapper.insert(programProduct1);
 
-    ProgramProductISA programProductISA = new ProgramProductISA(programProduct.getId(), 1d, 2, 3.3, 5.6, 4, 5, 5);
+    Product product1 = make(a(defaultProduct, with(code, "Product 1")));
+    productMapper.insert(product1);
+
+    Product product2 = make(a(defaultProduct, with(code, "Product 2")));
+    productMapper.insert(product2);
+    ProgramProduct programProduct2 = new ProgramProduct(program, product1, 10, true);
+    programProduct2.setProductCategory(productCategory);
+    programProduct2.setDisplayOrder(1);
+    programProductMapper.insert(programProduct2);
+
+    ProgramProduct programProduct3 = new ProgramProduct(program, product2, 10, true);
+    programProduct3.setProductCategory(productCategory);
+    programProduct3.setDisplayOrder(2);
+    programProductMapper.insert(programProduct3);
+
+    ProgramProductISA programProductISA = new ProgramProductISA(programProduct1.getId(), 1d, 2, 3.3, 5.6, 4, 5, 5);
 
     programProductISAMapper.insert(programProductISA);
 
     List<ProgramProduct> programProducts = programProductMapper.getByProgram(program);
 
-    assertThat(programProducts.size(), is(1));
-    assertThat(programProducts.get(0).getId(), is(programProduct.getId()));
-    assertThat(programProducts.get(0).getProgramProductIsa(), is(programProductISA));
+    assertThat(programProducts.size(), is(3));
+    assertThat(programProducts.get(0).getId(), is(programProduct2.getId()));
+    assertThat(programProducts.get(0).getDisplayOrder(), is(programProduct2.getDisplayOrder()));
+    assertThat(programProducts.get(1).getId(), is(programProduct3.getId()));
+    assertThat(programProducts.get(2).getId(), is(programProduct1.getId()));
+    assertThat(programProducts.get(2).getProgramProductIsa(), is(programProductISA));
   }
 
   @Test
   public void shouldGetNonFullSuppProgramProductsByProgram() {
     Product product1 = make(a(ProductBuilder.defaultProduct, with(ProductBuilder.code, "P2"), with(fullSupply, false)));
     productMapper.insert(product1);
+
     ProgramProduct programProduct = new ProgramProduct(program, product1, 10, true);
+    programProduct.setProductCategory(productCategory);
     programProductMapper.insert(programProduct);
 
     List<ProgramProduct> programProducts = programProductMapper.getNonFullSupplyProductsForProgram(program);
@@ -165,7 +201,7 @@ public class ProgramProductMapperIT {
   public void shouldGetById() throws Exception {
 
     ProgramProduct programProduct = new ProgramProduct(program, product, 10, true);
-
+    programProduct.setProductCategory(productCategory);
     programProductMapper.insert(programProduct);
 
     ProgramProduct savedProgramProduct = programProductMapper.getById(programProduct.getId());
@@ -177,11 +213,12 @@ public class ProgramProductMapperIT {
   public void shouldGetByProductCode() throws Exception {
 
     ProgramProduct programProduct = new ProgramProduct(program, product, 10, true);
+    programProduct.setProductCategory(productCategory);
     Program hiv = new Program(1L);
     hiv.setCode("HIV");
 
     ProgramProduct programProduct2 = new ProgramProduct(hiv, product, 10, true);
-
+    programProduct2.setProductCategory(productCategory);
     programProductMapper.insert(programProduct);
     programProductMapper.insert(programProduct2);
 
@@ -196,9 +233,8 @@ public class ProgramProductMapperIT {
   public void shouldGetByProgramProductIdAndFacilityTypeCode() throws Exception {
 
     ProgramProduct programProduct = new ProgramProduct(program, product, 10, true);
-
+    programProduct.setProductCategory(productCategory);
     programProductMapper.insert(programProduct);
-
     String facilityTypeCode = "warehouse";
 
     FacilityTypeApprovedProduct facilityTypeApprovedProduct = new FacilityTypeApprovedProduct();
@@ -215,19 +251,19 @@ public class ProgramProductMapperIT {
 
     assertThat(returnedProducts.size(), is(1));
     assertContainsProgramProduct(returnedProducts, programProduct);
+    assertThat(returnedProducts.get(0).getProductCategory(), is(productCategory));
   }
 
   @Test
   public void shouldGetAllProgramProductsForProgramIdWhenFacilityTypeCodeIsNull() throws Exception {
 
     ProgramProduct programProduct = new ProgramProduct(program, product, 10, true);
-
+    programProduct.setProductCategory(productCategory);
     Product product1 = make(a(ProductBuilder.defaultProduct, with(code, "P1")));
-    product1.setCategory(product.getCategory());
     productMapper.insert(product1);
 
     ProgramProduct programProduct2 = new ProgramProduct(program, product1, 10, true);
-
+    programProduct2.setProductCategory(productCategory);
     programProductMapper.insert(programProduct);
     programProductMapper.insert(programProduct2);
 
