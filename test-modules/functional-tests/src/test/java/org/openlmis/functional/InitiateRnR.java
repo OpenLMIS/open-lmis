@@ -632,7 +632,7 @@ public class InitiateRnR extends TestCaseHelper {
     homePage.logout(baseUrlGlobal);
     homePage = loginPage.loginAs(userName, password);
     ConvertOrderPage convertOrderPage = homePage.navigateConvertToOrder();
-    convertOrderPage.verifyNoRequisitionPendingMessage();
+    assertTrue(convertOrderPage.isNoRequisitionPendingMessageDisplayed());
 
     ViewOrdersPage viewOrdersPage = homePage.navigateViewOrders();
     viewOrdersPage.verifyNoRequisitionReleasedAsOrderMessage();
