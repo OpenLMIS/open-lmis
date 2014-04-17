@@ -109,10 +109,12 @@ public class OrderMapperIT {
     Order order = new Order(rnr);
     order.setStatus(OrderStatus.IN_ROUTE);
     order.setSupplyLine(supplyLine);
+    order.setOrderNumber("OrdHIV00000001R");
     mapper.insert(order);
     ResultSet resultSet = queryExecutor.execute("SELECT * FROM orders WHERE id = ?", order.getId());
     resultSet.next();
     assertThat(resultSet.getLong("id"), is(order.getId()));
+    assertThat(resultSet.getString("orderNumber"), is("OrdHIV00000001R"));
   }
 
   @Test
@@ -138,6 +140,7 @@ public class OrderMapperIT {
     Order order = new Order(rnr);
     order.setStatus(RELEASED);
     order.setSupplyLine(supplyLine);
+    order.setOrderNumber("OrdHIV00000001R");
     mapper.insert(order);
 
     ShipmentFileInfo shipmentFileInfo = new ShipmentFileInfo();
@@ -290,6 +293,7 @@ public class OrderMapperIT {
     Order order = new Order(rnr);
     order.setStatus(status);
     order.setSupplyLine(supplyLine);
+    order.setOrderNumber("OrdHIV00000001R");
     mapper.insert(order);
     return order;
   }
@@ -299,6 +303,7 @@ public class OrderMapperIT {
     Order order = new Order(rnr);
     order.setStatus(IN_ROUTE);
     order.setSupplyLine(supplyLine);
+    order.setOrderNumber("OrdHIV00000001R");
     mapper.insert(order);
     return order;
   }

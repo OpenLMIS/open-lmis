@@ -30,7 +30,8 @@ import java.util.List;
 @Repository
 public interface OrderMapper {
 
-  @Insert("INSERT INTO orders(id, status, ftpcomment, supplyLineId, createdBy, modifiedBy) VALUES (#{rnr.id}, #{status}, #{ftpComment}, #{supplyLine.id}, #{createdBy}, #{createdBy})")
+  @Insert({"INSERT INTO orders(id, orderNumber, status, ftpcomment, supplyLineId, createdBy, modifiedBy) ",
+    "VALUES (#{rnr.id}, #{orderNumber}, #{status}, #{ftpComment}, #{supplyLine.id}, #{createdBy}, #{createdBy})"})
   void insert(Order order);
 
   @Select({"SELECT DISTINCT O.* FROM orders O INNER JOIN supply_lines S ON O.supplyLineId = S.id ",
