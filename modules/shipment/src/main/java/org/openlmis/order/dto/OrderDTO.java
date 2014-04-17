@@ -35,6 +35,7 @@ public class OrderDTO {
 
   private Date createdDate;
   private String stringCreatedDate;
+  private String orderNumber;
   private Long id;
   private RnrDTO rnr;
   private Boolean productsOrdered;
@@ -54,6 +55,7 @@ public class OrderDTO {
   private static OrderDTO getOrderForView(Order order) {
     OrderDTO orderDTO = new OrderDTO();
     orderDTO.setId(order.getId());
+    orderDTO.setOrderNumber(order.getOrderNumber());
     orderDTO.setRnr(RnrDTO.prepareForOrderView(order.getRnr()));
 
     orderDTO.setCreatedDate(order.getCreatedDate());
