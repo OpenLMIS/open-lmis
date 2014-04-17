@@ -102,6 +102,7 @@ public class OrderService {
         status = order.getSupplyLine().getExportOrders() ? IN_ROUTE : READY_TO_PACK;
       }
       order.setStatus(status);
+      order.setOrderNumber(getOrderNumberConfiguration().getOrderNumberFor(rnr.getId(), rnr.getProgram(), rnr.isEmergency()));
       orderRepository.save(order);
       order.setRnr(requisitionService.getFullRequisitionById(order.getRnr().getId()));
       orderEventService.notifyForStatusChange(order);

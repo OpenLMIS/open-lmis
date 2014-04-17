@@ -27,8 +27,29 @@ public class OrderNumberConfiguration {
   private Boolean includeRnrTypeSuffix;
 
   public void validate() {
-    if(includeSequenceCode == null || !includeSequenceCode)
-    throw new DataException("Sequence code is mandatory");
+    if (includeSequenceCode == null || !includeSequenceCode)
+      throw new DataException("Sequence code is mandatory");
+  }
+
+  public String getOrderNumberFor(Long orderId, Program program, Boolean emergeny) {
+    StringBuilder orderNumber = new StringBuilder();
+
+    if (includeOrderNumberPrefix && orderNumberPrefix != null)
+      orderNumber.append(getOrderNumberPrefix());
+    if (includeProgramCode)
+      orderNumber.append(getTruncatedProgramCode(program.getCode()));
+    orderNumber.append(getSequenceAppendedOrderId(orderId));
+    if (includeRnrTypeSuffix)
+      orderNumber.append(emergeny ? "E" : "R");
+    return orderNumber.toString();
+  }
+
+  private String getSequenceAppendedOrderId(Long orderId) {
+    return String.format("%08d", orderId);
+  }
+
+  private String getTruncatedProgramCode(String code) {
+    return code.length() > 35 ? code.substring(0, 35) : code;
   }
 }
 
