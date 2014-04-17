@@ -144,7 +144,9 @@ public class OrderServiceTest {
 
   @Test
   public void shouldConvertRequisitionsToOrderWithStatusReadyToPack() throws Exception {
-    Program program = new Program();
+    Program program = new Program(3L);
+    program.setCode("HIV");
+
     Long userId = 1L;
     Rnr rnr = new Rnr();
     rnr.setId(1L);
@@ -164,12 +166,16 @@ public class OrderServiceTest {
     rnrList.add(rnr);
     when(requisitionService.getFullRequisitionById(1L)).thenReturn(rnr);
     when(fulfillmentPermissionService.hasPermissionOnWarehouse(userId, 99L, CONVERT_TO_ORDER)).thenReturn(true);
+    OrderNumberConfiguration orderNumberConfiguration = new OrderNumberConfiguration("Order", true, true, true, true);
+    when(orderConfigurationRepository.getOrderNumberConfiguration()).thenReturn(orderNumberConfiguration);
+    when(programService.getById(program.getId())).thenReturn(program);
 
     orderService.convertToOrder(rnrList, userId);
 
     Order order = new Order(rnr);
     order.setStatus(OrderStatus.READY_TO_PACK);
     order.setSupplyLine(supplyLine);
+    order.setOrderNumber("OrderHIV00000001R");
     verify(orderRepository).save(order);
     verify(supplyLineService).getSupplyLineBy(supervisoryNode, program);
     verify(requisitionService).getLWById(rnr.getId());
@@ -214,7 +220,8 @@ public class OrderServiceTest {
   @Ignore
   public void shouldConvertRequisitionsToOrderWithStatusTransferFailed() throws Exception {
     String SUPPLY_LINE_MISSING_COMMENT = "order.ftpComment.supplyline.missing";
-    Program program = new Program();
+    Program program = new Program(3L);
+    program.setCode("HIV");
     Long userId = 1L;
     Rnr rnr = new Rnr();
     rnr.setId(1L);
@@ -226,6 +233,9 @@ public class OrderServiceTest {
     whenNew(SupervisoryNode.class).withArguments(1l).thenReturn(supervisoryNode);
     when(supplyLineService.getSupplyLineBy(supervisoryNode, program)).thenReturn(null);
     when(requisitionService.getFullRequisitionById(1L)).thenReturn(rnr);
+    OrderNumberConfiguration orderNumberConfiguration = new OrderNumberConfiguration("Order", true, true, true, true);
+    when(orderConfigurationRepository.getOrderNumberConfiguration()).thenReturn(orderNumberConfiguration);
+    when(programService.getById(program.getId())).thenReturn(program);
 
     List<Rnr> rnrList = new ArrayList<>();
     rnrList.add(rnr);
@@ -236,6 +246,7 @@ public class OrderServiceTest {
     order.setStatus(OrderStatus.TRANSFER_FAILED);
     order.setFtpComment(SUPPLY_LINE_MISSING_COMMENT);
     order.setSupplyLine(null);
+    order.setOrderNumber("OrderHIV00000001R");
     verify(orderRepository).save(order);
     verify(supplyLineService).getSupplyLineBy(supervisoryNode, program);
     verify(requisitionService).getLWById(rnr.getId());
