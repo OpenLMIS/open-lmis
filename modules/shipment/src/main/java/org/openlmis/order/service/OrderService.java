@@ -17,6 +17,7 @@ import org.openlmis.core.repository.OrderConfigurationRepository;
 import org.openlmis.core.service.ProgramService;
 import org.openlmis.core.service.RoleAssignmentService;
 import org.openlmis.core.service.SupplyLineService;
+import org.openlmis.core.service.UserService;
 import org.openlmis.fulfillment.shared.FulfillmentPermissionService;
 import org.openlmis.order.domain.DateFormat;
 import org.openlmis.order.domain.Order;
@@ -42,6 +43,8 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.sort;
 import static org.apache.commons.collections.CollectionUtils.collect;
 import static org.apache.commons.lang.ArrayUtils.contains;
+import static org.openlmis.core.domain.Right.FACILITY_FILL_SHIPMENT;
+import static org.openlmis.core.domain.Right.MANAGE_POD;
 import static org.openlmis.order.domain.OrderStatus.*;
 
 /**
@@ -77,6 +80,8 @@ public class OrderService {
   private ProgramService programService;
 
   public static String SUPPLY_LINE_MISSING_COMMENT = "order.ftpComment.supplyline.missing";
+  @Autowired
+  private UserService userService;
 
   private int pageSize;
 
@@ -109,7 +114,20 @@ public class OrderService {
       order.setOrderNumber(getOrderNumberConfiguration().getOrderNumberFor(rnr.getId(), programService.getById(rnr.getProgram().getId()), rnr.isEmergency()));
       orderRepository.save(order);
       order.setRnr(requisitionService.getFullRequisitionById(order.getRnr().getId()));
+
+      sendOrderStatusChangeMail(order);
       orderEventService.notifyForStatusChange(order);
+    }
+  }
+
+  private void sendOrderStatusChangeMail(Order order) {
+    List<User> usersWithRight = new ArrayList<>();
+    Facility supplyingFacility = order.getSupplyLine().getSupplyingFacility();
+
+    if (order.getStatus().equals(READY_TO_PACK)) {
+      usersWithRight = userService.getUsersWithRightOnWarehouse(supplyingFacility.getId(), FACILITY_FILL_SHIPMENT);
+    } else if (order.getStatus().equals(PACKED)) {
+      usersWithRight = userService.getUsersWithRightOnWarehouse(supplyingFacility.getId(), MANAGE_POD);
     }
   }
 
@@ -142,6 +160,8 @@ public class OrderService {
       orderRepository.updateStatusAndShipmentIdForOrder(orderId, status, shipmentFileInfo.getId());
       Order order = orderRepository.getById(orderId);
       order.setRnr(requisitionService.getFullRequisitionById(order.getRnr().getId()));
+
+      sendOrderStatusChangeMail(order);
       orderEventService.notifyForStatusChange(order);
     }
   }

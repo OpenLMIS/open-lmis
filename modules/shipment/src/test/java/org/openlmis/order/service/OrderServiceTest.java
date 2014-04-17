@@ -26,6 +26,7 @@ import org.openlmis.core.repository.OrderConfigurationRepository;
 import org.openlmis.core.service.ProgramService;
 import org.openlmis.core.service.RoleAssignmentService;
 import org.openlmis.core.service.SupplyLineService;
+import org.openlmis.core.service.UserService;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.fulfillment.shared.FulfillmentPermissionService;
 import org.openlmis.order.domain.DateFormat;
@@ -50,15 +51,14 @@ import java.util.Set;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static java.util.Arrays.asList;
+import static java.util.Collections.EMPTY_LIST;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 import static org.openlmis.core.builder.FacilityBuilder.*;
 import static org.openlmis.core.builder.ProgramBuilder.defaultProgram;
 import static org.openlmis.core.builder.SupplyLineBuilder.defaultSupplyLine;
-import static org.openlmis.core.domain.Right.CONVERT_TO_ORDER;
-import static org.openlmis.core.domain.Right.MANAGE_POD;
+import static org.openlmis.core.domain.Right.*;
 import static org.openlmis.order.domain.DateFormat.*;
 import static org.openlmis.order.domain.OrderStatus.*;
 import static org.openlmis.rnr.builder.RequisitionBuilder.*;
@@ -95,6 +95,9 @@ public class OrderServiceTest {
   private FulfillmentPermissionService fulfillmentPermissionService;
 
   @Mock
+  private UserService userService;
+
+  @Mock
   private ProgramService programService;
 
   @InjectMocks
@@ -109,7 +112,6 @@ public class OrderServiceTest {
     rnr.setId(1L);
     rnr.setSupervisoryNodeId(1L);
     rnr.setProgram(program);
-
 
     SupplyLine supplyLine = new SupplyLine();
     supplyLine.setSupplyingFacility(new Facility(99L));
@@ -144,31 +146,35 @@ public class OrderServiceTest {
 
   @Test
   public void shouldConvertRequisitionsToOrderWithStatusReadyToPack() throws Exception {
+    Long userId = 1L;
+    Long supplyingFacilityId = 99L;
+    
     Program program = new Program(3L);
     program.setCode("HIV");
-
-    Long userId = 1L;
+    SupervisoryNode supervisoryNode = new SupervisoryNode(1L);
     Rnr rnr = new Rnr();
     rnr.setId(1L);
     rnr.setSupervisoryNodeId(1L);
     rnr.setProgram(program);
 
+    Facility supplyingFacility = new Facility(supplyingFacilityId);
+
     SupplyLine supplyLine = new SupplyLine();
-    supplyLine.setSupplyingFacility(new Facility(99L));
+    supplyLine.setSupplyingFacility(supplyingFacility);
     supplyLine.setExportOrders(Boolean.FALSE);
 
     when(requisitionService.getLWById(1L)).thenReturn(rnr);
-    SupervisoryNode supervisoryNode = new SupervisoryNode(1L);
     whenNew(SupervisoryNode.class).withArguments(1l).thenReturn(supervisoryNode);
     when(supplyLineService.getSupplyLineBy(supervisoryNode, program)).thenReturn(supplyLine);
 
     List<Rnr> rnrList = new ArrayList<>();
     rnrList.add(rnr);
     when(requisitionService.getFullRequisitionById(1L)).thenReturn(rnr);
-    when(fulfillmentPermissionService.hasPermissionOnWarehouse(userId, 99L, CONVERT_TO_ORDER)).thenReturn(true);
     OrderNumberConfiguration orderNumberConfiguration = new OrderNumberConfiguration("Order", true, true, true, true);
     when(orderConfigurationRepository.getOrderNumberConfiguration()).thenReturn(orderNumberConfiguration);
     when(programService.getById(program.getId())).thenReturn(program);
+    when(fulfillmentPermissionService.hasPermissionOnWarehouse(userId, supplyingFacilityId, CONVERT_TO_ORDER)).thenReturn(true);
+    when(userService.getUsersWithRightOnWarehouse(supplyingFacilityId, FACILITY_FILL_SHIPMENT)).thenReturn(EMPTY_LIST);
 
     orderService.convertToOrder(rnrList, userId);
 
@@ -180,6 +186,7 @@ public class OrderServiceTest {
     verify(supplyLineService).getSupplyLineBy(supervisoryNode, program);
     verify(requisitionService).getLWById(rnr.getId());
     verify(requisitionService).releaseRequisitionsAsOrder(rnrList, userId);
+    verify(userService).getUsersWithRightOnWarehouse(supplyingFacilityId, FACILITY_FILL_SHIPMENT);
     assertThat(order.getSupplyLine(), is(supplyLine));
   }
 
@@ -286,6 +293,8 @@ public class OrderServiceTest {
   public void shouldSetReleasedForAllOrdersIfErrorInShipment() throws Exception {
     Order order1 = new Order(make(a(defaultRequisition, with(id, 123L))));
     Order order2 = new Order(make(a(defaultRequisition, with(id, 456L), with(RequisitionBuilder.facility, make(a(defaultFacility, with(code, "F3333")))))));
+    order1.setStatus(RELEASED);
+    order2.setStatus(RELEASED);
 
     Set<Long> orderIds = new LinkedHashSet<>();
     orderIds.add(order1.getId());
@@ -293,6 +302,14 @@ public class OrderServiceTest {
     long shipmentId = 678L;
 
     boolean processingError = true;
+
+    Long supplyingFacilityId = 99L;
+    Facility supplyingFacility = new Facility(supplyingFacilityId);
+    SupplyLine supplyLine = new SupplyLine();
+    supplyLine.setSupplyingFacility(supplyingFacility);
+
+    order1.setSupplyLine(supplyLine);
+    order2.setSupplyLine(supplyLine);
 
     ShipmentFileInfo shipmentFileInfo = new ShipmentFileInfo("shipmentFile.csv", processingError);
     shipmentFileInfo.setId(shipmentId);
@@ -311,6 +328,7 @@ public class OrderServiceTest {
     verify(orderRepository).getById(456L);
     verify(orderRepository).updateStatusAndShipmentIdForOrder(order2.getId(), RELEASED, shipmentId);
     verify(orderEventService).notifyForStatusChange(order2);
+    verify(userService, never()).getUsersWithRightOnWarehouse(supplyingFacilityId, MANAGE_POD);
   }
 
   @Test
@@ -325,6 +343,16 @@ public class OrderServiceTest {
 
     boolean processingError = false;
 
+    Long supplyingFacilityId = 99L;
+    Facility supplyingFacility = new Facility(supplyingFacilityId);
+    SupplyLine supplyLine = new SupplyLine();
+    supplyLine.setSupplyingFacility(supplyingFacility);
+
+    order1.setSupplyLine(supplyLine);
+    order2.setSupplyLine(supplyLine);
+    order1.setStatus(PACKED);
+    order2.setStatus(PACKED);
+
     ShipmentFileInfo shipmentFileInfo = new ShipmentFileInfo("shipmentFile.csv", processingError);
     shipmentFileInfo.setId(shipmentId);
 
@@ -332,10 +360,14 @@ public class OrderServiceTest {
     when(orderRepository.getById(order2.getId())).thenReturn(order2);
     when(requisitionService.getFullRequisitionById(order1.getRnr().getId())).thenReturn(order1.getRnr());
     when(requisitionService.getFullRequisitionById(order2.getRnr().getId())).thenReturn(order2.getRnr());
+
+    when(userService.getUsersWithRightOnWarehouse(supplyingFacilityId, MANAGE_POD)).thenReturn(EMPTY_LIST);
+
     orderService.updateStatusAndShipmentIdForOrders(orderIds, shipmentFileInfo);
 
     verify(orderRepository).updateStatusAndShipmentIdForOrder(123L, PACKED, shipmentId);
     verify(orderRepository).updateStatusAndShipmentIdForOrder(456L, PACKED, shipmentId);
+    verify(userService, times(2)).getUsersWithRightOnWarehouse(supplyingFacilityId, MANAGE_POD);
   }
 
   @Test
