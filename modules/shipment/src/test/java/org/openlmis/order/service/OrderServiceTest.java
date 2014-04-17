@@ -23,6 +23,7 @@ import org.openlmis.core.builder.ProgramBuilder;
 import org.openlmis.core.builder.SupplyLineBuilder;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.repository.OrderConfigurationRepository;
+import org.openlmis.core.service.ProgramService;
 import org.openlmis.core.service.RoleAssignmentService;
 import org.openlmis.core.service.SupplyLineService;
 import org.openlmis.db.categories.UnitTests;
@@ -93,17 +94,22 @@ public class OrderServiceTest {
   @Mock
   private FulfillmentPermissionService fulfillmentPermissionService;
 
+  @Mock
+  private ProgramService programService;
+
   @InjectMocks
   private OrderService orderService;
 
   @Test
   public void shouldConvertRequisitionsToOrderWithStatusInRoute() throws Exception {
-    Program program = new Program();
+    Program program = new Program(3L);
+    program.setCode("HIV");
     Long userId = 1L;
     Rnr rnr = new Rnr();
     rnr.setId(1L);
     rnr.setSupervisoryNodeId(1L);
     rnr.setProgram(program);
+
 
     SupplyLine supplyLine = new SupplyLine();
     supplyLine.setSupplyingFacility(new Facility(99L));
@@ -118,13 +124,16 @@ public class OrderServiceTest {
     rnrList.add(rnr);
     when(requisitionService.getFullRequisitionById(1L)).thenReturn(rnr);
     when(fulfillmentPermissionService.hasPermissionOnWarehouse(userId, 99L, CONVERT_TO_ORDER)).thenReturn(true);
-
+    OrderNumberConfiguration orderNumberConfiguration = new OrderNumberConfiguration("Order", true, true, true, true);
+    when(programService.getById(program.getId())).thenReturn(program);
+    when(orderConfigurationRepository.getOrderNumberConfiguration()).thenReturn(orderNumberConfiguration);
     orderService.convertToOrder(rnrList, userId);
 
     Order order = new Order(rnr);
 
     order.setStatus(OrderStatus.IN_ROUTE);
     order.setSupplyLine(supplyLine);
+    order.setOrderNumber("OrderHIV00000001R");
     verify(orderRepository).save(order);
     verify(supplyLineService).getSupplyLineBy(supervisoryNode, program);
     verify(requisitionService).getLWById(rnr.getId());

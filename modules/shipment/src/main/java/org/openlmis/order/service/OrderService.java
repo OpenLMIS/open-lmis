@@ -14,6 +14,7 @@ import lombok.NoArgsConstructor;
 import org.apache.commons.collections.Transformer;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.repository.OrderConfigurationRepository;
+import org.openlmis.core.service.ProgramService;
 import org.openlmis.core.service.RoleAssignmentService;
 import org.openlmis.core.service.SupplyLineService;
 import org.openlmis.fulfillment.shared.FulfillmentPermissionService;
@@ -72,6 +73,9 @@ public class OrderService {
   @Autowired
   FulfillmentPermissionService fulfillmentPermissionService;
 
+  @Autowired
+  private ProgramService programService;
+
   public static String SUPPLY_LINE_MISSING_COMMENT = "order.ftpComment.supplyline.missing";
 
   private int pageSize;
@@ -102,7 +106,7 @@ public class OrderService {
         status = order.getSupplyLine().getExportOrders() ? IN_ROUTE : READY_TO_PACK;
       }
       order.setStatus(status);
-      order.setOrderNumber(getOrderNumberConfiguration().getOrderNumberFor(rnr.getId(), rnr.getProgram(), rnr.isEmergency()));
+      order.setOrderNumber(getOrderNumberConfiguration().getOrderNumberFor(rnr.getId(), programService.getById(rnr.getProgram().getId()), rnr.isEmergency()));
       orderRepository.save(order);
       order.setRnr(requisitionService.getFullRequisitionById(order.getRnr().getId()));
       orderEventService.notifyForStatusChange(order);
