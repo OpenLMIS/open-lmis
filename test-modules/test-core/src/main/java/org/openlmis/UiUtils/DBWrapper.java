@@ -1258,6 +1258,16 @@ public class DBWrapper {
     return returnValue;
   }
 
+  public String getAttributeFromTable(String tableName, String attribute, String queryColumn1, String queryParam1, String queryColumn2, String queryParam2) throws SQLException {
+    String returnValue = null;
+    ResultSet resultSet = query("select * from %s where %s in ('%s') and %s in ('%s');", tableName, queryColumn1, queryParam1, queryColumn2, queryParam2);
+
+    if (resultSet.next()) {
+      returnValue = resultSet.getString(attribute);
+    }
+    return returnValue;
+  }
+
   public String getRowsCountFromDB(String tableName) throws SQLException {
     String rowCount = null;
     ResultSet rs = query("SELECT count(*) as count from " + tableName + "");
