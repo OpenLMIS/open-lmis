@@ -16,23 +16,16 @@ import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.openlmis.core.domain.User;
-import org.openlmis.core.service.MessageService;
 import org.openlmis.db.categories.UnitTests;
-import org.openlmis.email.service.EmailService;
 import org.openlmis.rnr.domain.Rnr;
-import org.openlmis.rnr.domain.RnrStatus;
 import org.openlmis.rnr.event.RequisitionStatusChangeEvent;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import org.springframework.mail.SimpleMailMessage;
-
-import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.a;
 import static com.natpryce.makeiteasy.MakeItEasy.make;
-import static java.util.Arrays.asList;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.openlmis.rnr.builder.RequisitionBuilder.defaultRequisition;
 import static org.powermock.api.mockito.PowerMockito.whenNew;
 
@@ -42,16 +35,7 @@ import static org.powermock.api.mockito.PowerMockito.whenNew;
 public class RequisitionEventServiceTest {
 
   @Mock
-  String baseUrl = "http://localhost:9091";
-
-  @Mock
   private EventService eventService;
-
-  @Mock
-  private EmailService emailService;
-
-  @Mock
-  private MessageService messageService;
 
   @InjectMocks
   private RequisitionEventService service;
@@ -65,28 +49,5 @@ public class RequisitionEventServiceTest {
     service.notifyForStatusChange(requisition);
 
     verify(eventService).notify(event);
-  }
-
-  @Test
-  public void shouldNotifyUserAboutRnrStatusChange() throws Exception {
-    Rnr requisition = make(a(defaultRequisition));
-    requisition.setStatus(RnrStatus.SUBMITTED);
-    User user = new User();
-    List<User> userList = asList(user);
-    SimpleMailMessage emailMessage = new SimpleMailMessage();
-    String actionUrl = baseUrl + "public/pages/logistics/rnr/index.html#/create-rnr/{0}/{2}/{1}?supplyType=fullSupply&page=1";
-
-    when(messageService.message("msg.email.notification.subject")).thenReturn("subject");
-    when(messageService.message(actionUrl, requisition.getId(), requisition.getProgram().getId(), requisition.getFacility().getId())).thenReturn("actionUrl");
-    when(messageService.message("msg.email.notification.body", null, "\n\n", requisition.getFacility().getName(),
-      requisition.getPeriod().getName(), null, "\n\n", "actionUrl", "\n\n")).thenReturn("body");
-
-    emailMessage.setTo(user.getEmail());
-    emailMessage.setSubject("subject");
-    emailMessage.setText("body");
-
-    service.notifyUsers(requisition, userList);
-
-    verify(emailService).processEmailsAsync(asList(emailMessage));
   }
 }

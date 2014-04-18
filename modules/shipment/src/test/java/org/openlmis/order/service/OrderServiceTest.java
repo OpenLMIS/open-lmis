@@ -23,10 +23,7 @@ import org.openlmis.core.builder.ProgramBuilder;
 import org.openlmis.core.builder.SupplyLineBuilder;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.repository.OrderConfigurationRepository;
-import org.openlmis.core.service.ProgramService;
-import org.openlmis.core.service.RoleAssignmentService;
-import org.openlmis.core.service.SupplyLineService;
-import org.openlmis.core.service.UserService;
+import org.openlmis.core.service.*;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.fulfillment.shared.FulfillmentPermissionService;
 import org.openlmis.order.domain.DateFormat;
@@ -99,6 +96,9 @@ public class OrderServiceTest {
 
   @Mock
   private ProgramService programService;
+
+  @Mock
+  private StatusChangeEventService statusChangeEventService;
 
   @InjectMocks
   private OrderService orderService;

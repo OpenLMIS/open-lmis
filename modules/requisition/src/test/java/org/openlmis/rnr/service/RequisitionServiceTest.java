@@ -41,7 +41,10 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static java.util.Arrays.asList;
@@ -128,10 +131,11 @@ public class RequisitionServiceTest {
   private DbMapper dbMapper;
   @Mock
   private BudgetLineItemService budgetLineItemService;
+  @Mock
+  private StatusChangeEventService statusChangeEventService;
 
   @InjectMocks
   private RequisitionSearchStrategyFactory requisitionSearchStrategyFactory;
-
   @InjectMocks
   private RequisitionService requisitionService;
 
@@ -696,8 +700,10 @@ public class RequisitionServiceTest {
     Rnr spyRnr = getFilledSavedRequisitionWithDefaultFacilityProgramPeriod(authorizedRnr, APPROVE_REQUISITION);
 
     doNothing().when(spyRnr).calculateForApproval();
-    when(supervisoryNodeService.getFor(FACILITY, PROGRAM)).thenReturn(null);
-
+    SupervisoryNode supervisoryNode = new SupervisoryNode();
+    supervisoryNode.setId(1l);
+    when(supervisoryNodeService.getFor(FACILITY, PROGRAM)).thenReturn(supervisoryNode);
+    when(supplyLineService.getSupplyLineBy(supervisoryNode, PROGRAM)).thenReturn(null);
     requisitionService.approve(spyRnr, null);
 
     verify(spyRnr).calculateForApproval();
@@ -911,6 +917,7 @@ public class RequisitionServiceTest {
 
   @Test
   public void shouldNotifyStatusChangeOnAuthorizeAndSendEmailToActiveUsers() throws Exception {
+    ArrayList<User> emptyList = new ArrayList<>();
     Rnr savedRnr = getFilledSavedRequisitionWithDefaultFacilityProgramPeriod(submittedRnr, AUTHORIZE_REQUISITION);
     ProgramRnrTemplate template = new ProgramRnrTemplate(rnrColumns);
     when(rnrTemplateService.fetchProgramTemplate(PROGRAM.getId())).thenReturn(template);
@@ -933,7 +940,7 @@ public class RequisitionServiceTest {
     requisitionService.authorize(submittedRnr);
 
     verify(requisitionEventService).notifyForStatusChange(savedRnr);
-    verify(requisitionEventService).notifyUsers(savedRnr, asList(activeUser));
+    verify(statusChangeEventService).notifyUsers(emptyList, savedRnr.getId(), submittedRnr.getFacility(), submittedRnr.getProgram(), submittedRnr.getPeriod(), "AUTHORIZED");
   }
 
   @Test
@@ -955,6 +962,7 @@ public class RequisitionServiceTest {
 
   @Test
   public void shouldNotifyStatusChangeOnSubmit() throws Exception {
+    ArrayList<User> emptyList = new ArrayList<>();
     Rnr savedRnr = getFilledSavedRequisitionWithDefaultFacilityProgramPeriod(initiatedRnr, CREATE_REQUISITION);
     ProgramRnrTemplate template = new ProgramRnrTemplate(rnrColumns);
 
@@ -972,7 +980,7 @@ public class RequisitionServiceTest {
     requisitionService.submit(initiatedRnr);
 
     verify(requisitionEventService).notifyForStatusChange(savedRnr);
-    verify(requisitionEventService).notifyUsers(savedRnr, EMPTY_LIST);
+    verify(statusChangeEventService).notifyUsers(emptyList, savedRnr.getId(), savedRnr.getFacility(), savedRnr.getProgram(), savedRnr.getPeriod(), "SUBMITTED");
   }
 
   @Test
