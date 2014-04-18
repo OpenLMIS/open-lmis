@@ -1030,10 +1030,10 @@ public class DBWrapper {
     ResultSet rs = query("select id from requisitions where programId=(select id from programs where code='" + program + "');");
     while (rs.next()) {
       update("update requisitions set status='RELEASED' where id =" + rs.getString("id"));
-      update("insert into orders(Id, status,supplyLineId, createdBy, modifiedBy) values(" + rs.getString("id") + ", '" + status + "', (select id from supply_lines where supplyingFacilityId = " +
+      update("insert into orders(Id, status,supplyLineId, createdBy, modifiedBy, orderNumber) values(" + rs.getString("id") + ", '" + status + "', (select id from supply_lines where supplyingFacilityId = " +
         "(select facilityId from fulfillment_role_assignments where userId = " +
         "(select id from users where username = '" + username + "')) limit 1) ," +
-        "(select id from users where username = '" + username + "'), (select id from users where username = '" + username + "'));");
+        "(select id from users where username = '" + username + "'), (select id from users where username = '" + username + "'), '" + rs.getString("id") + "');");
     }
   }
 
@@ -1396,8 +1396,8 @@ public class DBWrapper {
     String supervisoryNodeId = getAttributeFromTable("supervisory_nodes", "id", "code", "N1");
     Integer supplyingLineId = Integer.valueOf(getAttributeFromTable("supply_lines", "id", "supervisoryNodeId", supervisoryNodeId));
     Integer userId = Integer.valueOf(getAttributeFromTable("users", "id", "username", userName));
-    update("INSERT INTO orders(id, status, ftpComment, supplyLineId, createdBy, modifiedBy) VALUES (%d, '%s', %s, %d, %d, %d)", maxRnrID,
-      orderStatus, null, supplyingLineId, userId, userId);
+    update("INSERT INTO orders(id, status, ftpComment, supplyLineId, createdBy, modifiedBy, orderNumber) VALUES (%d, '%s', %s, %d, %d, %d, %s)", maxRnrID,
+      orderStatus, null, supplyingLineId, userId, userId, "'" + maxRnrID + "'");
   }
 
   public void deleteTable(String tableName) throws SQLException {
