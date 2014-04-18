@@ -14,16 +14,14 @@ import lombok.NoArgsConstructor;
 import org.apache.commons.collections.Transformer;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.repository.OrderConfigurationRepository;
-import org.openlmis.core.service.ProgramService;
-import org.openlmis.core.service.RoleAssignmentService;
-import org.openlmis.core.service.SupplyLineService;
-import org.openlmis.core.service.UserService;
+import org.openlmis.core.service.*;
 import org.openlmis.fulfillment.shared.FulfillmentPermissionService;
 import org.openlmis.order.domain.DateFormat;
 import org.openlmis.order.domain.Order;
 import org.openlmis.order.domain.OrderStatus;
 import org.openlmis.order.dto.OrderFileTemplateDTO;
 import org.openlmis.order.repository.OrderRepository;
+import org.openlmis.pod.service.PODService;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.domain.RnrLineItem;
 import org.openlmis.rnr.service.RequisitionService;
@@ -79,6 +77,12 @@ public class OrderService {
   @Autowired
   private ProgramService programService;
 
+  @Autowired
+  private StatusChangeEventService statusChangeEventService;
+
+  @Autowired
+  private PODService podService;
+
   public static String SUPPLY_LINE_MISSING_COMMENT = "order.ftpComment.supplyline.missing";
   @Autowired
   private UserService userService;
@@ -121,6 +125,7 @@ public class OrderService {
   }
 
   private void sendOrderStatusChangeMail(Order order) {
+    Rnr requisition = order.getRnr();
     List<User> usersWithRight = new ArrayList<>();
     Facility supplyingFacility = order.getSupplyLine().getSupplyingFacility();
 
@@ -129,6 +134,10 @@ public class OrderService {
     } else if (order.getStatus().equals(PACKED)) {
       usersWithRight = userService.getUsersWithRightOnWarehouse(supplyingFacility.getId(), MANAGE_POD);
     }
+
+    ArrayList<User> activeUsersWithRight = userService.filterForActiveUsers(usersWithRight);
+    statusChangeEventService.notifyUsers(activeUsersWithRight, null, requisition.getFacility(),
+      requisition.getProgram(), requisition.getPeriod(), order.getStatus().toString());
   }
 
   public List<Order> getOrdersForPage(int page, Long userId, Right right) {

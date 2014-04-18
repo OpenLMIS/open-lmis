@@ -1,7 +1,5 @@
 package org.openlmis.rnr.service;
 
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.collections.Predicate;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.message.OpenLmisMessage;
@@ -17,7 +15,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
@@ -89,6 +89,8 @@ public class RequisitionService {
   private DbMapper dbMapper;
   @Autowired
   private BudgetLineItemService budgetLineItemService;
+  @Autowired
+  private StatusChangeEventService statusChangeEventService;
 
   private RequisitionSearchStrategyFactory requisitionSearchStrategyFactory;
 
@@ -402,6 +404,7 @@ public class RequisitionService {
 
   private void sendRequisitionStatusChangeMail(Rnr requisition) {
     List<User> userList = new ArrayList<>();
+
     if (requisition.getStatus().equals(SUBMITTED)) {
       Long supervisoryNodeId = supervisoryNodeService.getFor(requisition.getFacility(), requisition.getProgram()).getId();
       userList = userService.getUsersWithRightInHierarchyUsingBaseNode(supervisoryNodeId, requisition.getProgram(), AUTHORIZE_REQUISITION);
@@ -410,25 +413,15 @@ public class RequisitionService {
       userList = userService.getUsersWithRightInNodeForProgram(requisition.getProgram(), new SupervisoryNode(requisition.getSupervisoryNodeId()), APPROVE_REQUISITION);
     } else if (requisition.getStatus().equals(APPROVED)) {
       SupervisoryNode baseSupervisoryNode = supervisoryNodeService.getFor(requisition.getFacility(), requisition.getProgram());
-      if (baseSupervisoryNode != null) {
-        SupplyLine supplyLine = supplyLineService.getSupplyLineBy(new SupervisoryNode(baseSupervisoryNode.getId()), requisition.getProgram());
-        if (supplyLine != null) {
-          userList = userService.getUsersWithRightOnWarehouse(supplyLine.getSupplyingFacility().getId(), CONVERT_TO_ORDER);
-        }
+      SupplyLine supplyLine = supplyLineService.getSupplyLineBy(new SupervisoryNode(baseSupervisoryNode.getId()), requisition.getProgram());
+      if (supplyLine != null) {
+        userList = userService.getUsersWithRightOnWarehouse(supplyLine.getSupplyingFacility().getId(), CONVERT_TO_ORDER);
       }
     }
-    requisitionEventService.notifyUsers(requisition, filterForActiveUsers(userList));
-  }
 
-  private ArrayList<User> filterForActiveUsers(List<User> userList) {
-    Set<User> users = new HashSet<>(userList);
-    CollectionUtils.filter(users, new Predicate() {
-      @Override
-      public boolean evaluate(Object o) {
-        return ((User) o).getActive();
-      }
-    });
-    return new ArrayList<>(users);
+    ArrayList<User> activeUsersWithRight = userService.filterForActiveUsers(userList);
+    statusChangeEventService.notifyUsers(activeUsersWithRight, requisition.getId(), requisition.getFacility(),
+      requisition.getProgram(), requisition.getPeriod(), requisition.getStatus().toString());
   }
 
   private void insert(Rnr requisition) {

@@ -10,6 +10,8 @@
 
 package org.openlmis.core.service;
 
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.Predicate;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.Right;
 import org.openlmis.core.domain.SupervisoryNode;
@@ -24,8 +26,7 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Exposes the services for handling User entity.
@@ -193,5 +194,16 @@ public class UserService {
 
   private String generateUUID() {
     return Encoder.hash(UUID.randomUUID().toString());
+  }
+
+  public ArrayList<User> filterForActiveUsers(List<User> userList) {
+    Set<User> users = new LinkedHashSet<>(userList);
+    CollectionUtils.filter(users, new Predicate() {
+      @Override
+      public boolean evaluate(Object o) {
+        return ((User) o).getActive();
+      }
+    });
+    return new ArrayList<>(users);
   }
 }
