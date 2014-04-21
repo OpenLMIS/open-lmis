@@ -11,8 +11,12 @@
 package org.openlmis.equipment.repository;
 
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
+import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
+import org.openlmis.db.categories.UnitTests;
 import org.openlmis.equipment.domain.EquipmentType;
 import org.openlmis.equipment.repository.mapper.EquipmentTypeMapper;
 
@@ -23,10 +27,9 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+@Category(UnitTests.class)
+@RunWith(MockitoJUnitRunner.class)
 public class EquipmentTypeRepositoryTest {
-
-
-
   @Mock
   private EquipmentTypeMapper mapper;
 
@@ -34,7 +37,7 @@ public class EquipmentTypeRepositoryTest {
   private EquipmentTypeRepository repository;
 
   @Test
-  public void testGetAll() throws Exception {
+  public void shouldGetAll() throws Exception {
     List<EquipmentType> types = new ArrayList<EquipmentType>();
     types.add(new EquipmentType());
     when(mapper.getAll()).thenReturn(types);
@@ -44,7 +47,7 @@ public class EquipmentTypeRepositoryTest {
   }
 
   @Test
-  public void testInsert() throws Exception {
+  public void shouldInsert() throws Exception {
     EquipmentType type = new EquipmentType();
     type.setCode("Test");
     type.setName("Test");

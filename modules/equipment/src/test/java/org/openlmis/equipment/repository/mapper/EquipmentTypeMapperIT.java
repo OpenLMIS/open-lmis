@@ -45,12 +45,19 @@ public class EquipmentTypeMapperIT {
 
 
   @Test
-  public void testGetEquipmentTypeById() throws Exception {
+  public void shouldGetEquipmentTypeById() throws Exception {
+    EquipmentType type = new EquipmentType();
+    type.setName("Test");
+    type.setCode("Test");
+    mapper.insert(type);
 
+    EquipmentType result = mapper.getEquipmentTypeById(type.getId());
+    assertEquals(result.getCode(), type.getCode());
+    assertEquals(result.getName(), type.getName());
   }
 
   @Test
-  public void testGetAll() throws Exception {
+  public void shouldGetAll() throws Exception {
     EquipmentType type = new EquipmentType();
     type.setName("Test");
     type.setCode("Test");
@@ -61,7 +68,7 @@ public class EquipmentTypeMapperIT {
   }
 
   @Test
-  public void testInsert() throws Exception {
+  public void shouldInsert() throws Exception {
     EquipmentType type = new EquipmentType();
     type.setName("Test");
     type.setCode("Test");
@@ -76,7 +83,7 @@ public class EquipmentTypeMapperIT {
   }
 
   @Test
-  public void testUpdate() throws Exception {
+  public void shouldUpdate() throws Exception {
     EquipmentType type = new EquipmentType();
     type.setName("Test-Update");
     type.setCode("Test-Update");

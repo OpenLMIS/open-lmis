@@ -11,14 +11,20 @@
 package org.openlmis.equipment.service;
 
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
+import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
+import org.openlmis.db.categories.UnitTests;
 import org.openlmis.equipment.domain.EquipmentType;
 import org.openlmis.equipment.repository.EquipmentTypeRepository;
 
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 
+@Category(UnitTests.class)
+@RunWith(MockitoJUnitRunner.class)
 public class EquipmentTypeServiceTest {
 
   @Mock
