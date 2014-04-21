@@ -8,13 +8,40 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-package org.openlmis.equipment.controller;
+package org.openlmis.web.controller;
 
+import org.openlmis.equipment.domain.EquipmentType;
+import org.openlmis.equipment.service.EquipmentTypeService;
+import org.openlmis.web.response.OpenLmisResponse;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
 @Controller
 @RequestMapping(value="/equipment/type/")
 public class EquipmentTypeController {
+
+  @Autowired
+  private EquipmentTypeService service;
+
+  @RequestMapping(method = GET, value = "list")
+  public ResponseEntity<OpenLmisResponse> getAll(){
+    return  OpenLmisResponse.response("equipment-type", service.getAll());
+  }
+
+  @RequestMapping(method = GET, value = "id")
+  public ResponseEntity<OpenLmisResponse> getById( @RequestParam("id") Long id){
+    return  OpenLmisResponse.response("equipment-type", service.getTypeById(id));
+  }
+
+  @RequestMapping(method = GET, value = "save")
+  public ResponseEntity<OpenLmisResponse> save(EquipmentType type){
+    service.save(type);
+    return OpenLmisResponse.response("status","success");
+  }
 
 }
