@@ -10,10 +10,32 @@
 
 package org.openlmis.equipment.service;
 
+import org.openlmis.equipment.domain.Equipment;
+import org.openlmis.equipment.repository.EquipmentRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 @Component
 public class EquipmentService {
 
+  @Autowired
+  private EquipmentRepository repository;
 
+  public List<Equipment> getAll(){
+    return repository.getAll();
+  }
+
+  public Equipment getById(Long id){
+    return repository.getById(id);
+  }
+
+  public void save(Equipment equipment){
+    if(equipment.getId() == null){
+      repository.insert(equipment);
+    }else{
+      repository.update(equipment);
+    }
+  }
 }
