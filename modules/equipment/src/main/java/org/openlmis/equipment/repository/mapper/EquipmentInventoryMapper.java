@@ -10,9 +10,9 @@
 
 package org.openlmis.equipment.repository.mapper;
 
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 import org.openlmis.equipment.domain.EquipmentInventory;
+import org.openlmis.equipment.domain.EquipmentType;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -20,6 +20,26 @@ import java.util.List;
 @Repository
 public interface EquipmentInventoryMapper {
 
-   @Select("SELECT * from facility_program_equipments where facilityId = #{facilityId} and programId = #{programId}")
-   List<EquipmentInventory> getInventoryByFacilityAndProgram(@Param("facilityId") Long facilityId, @Param("programId")Long programId);
+  @Select("SELECT * from facility_program_equipments where facilityId = #{facilityId} and programId = #{programId}")
+  @Results({
+      @Result(
+          property = "equipment", column = "equipmentId", javaType = EquipmentType.class,
+          one = @One(select = "org.openlmis.equipment.repository.mapper.EquipmentMapper.getById"))
+  })
+  List<EquipmentInventory> getInventoryByFacilityAndProgram(@Param("facilityId") Long facilityId, @Param("programId")Long programId);
+
+  @Select("SELECT * from facility_program_equipments where id = #{id}")
+  EquipmentInventory getInventoryById(@Param("id") Long id);
+
+  @Insert("INSERT into facility_program_equipments (facilityId, equipmentId, programId, operationalStatusId, serialNumber, manufacturerName, model, energySource, yearOfInstallation, purchasePrice, sourceOfFund, replacementRecommended, reasonForReplacement, nameOfAssessor, dateLastAssessed, createdBy, createdDate, modifiedBy, modifiedDate) " +
+      "values " +
+      " ( #{facilityId}, #{equipmentId}, #{programId}, #{operationalStatusId}, #{serialNumber}, #{manufacturerName}, #{model}, #{energySource}, #{yearOfInstallation}, #{purchasePrice}, #{sourceOfFund}, #{replacementRecommended}, #{reasonForReplacement}, #{nameOfAssessor}, #{dateLastAssessed}, #{createdBy}, NOW(), #{modifiedBy}, NOW())")
+  void insert(EquipmentInventory inventory);
+
+  @Update("UPDATE facility_program_equipments " +
+      "SET " +
+      " facilityId = #{facilityId}, equipmentId = #{equipmentId}, programId = #{programId}, operationalStatusId = #{operationalStatusId}, serialNumber = #{serialNumber}, manufacturerName = #{manufacturerName}, model = #{model}, energySource = #{energySource}, yearOfInstallation = #{yearOfInstallation}, purchasePrice = #{purchasePrice}, sourceOfFund = #{sourceOfFund},replacementRecommended = #{replacementRecommended},reasonForReplacement = #{reasonForReplacement}, nameOfAssessor = #{nameOfAssessor}, dateLastAssessed = #{dateLastAssessed} " +
+      " , modifiedBy = #{modifiedBy}, modifiedDate = NOW() " +
+      "      WHERE id = #{id}")
+  void update(EquipmentInventory inventory);
 }

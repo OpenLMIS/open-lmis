@@ -10,14 +10,33 @@
 
 package org.openlmis.equipment.repository;
 
+import org.openlmis.equipment.domain.EquipmentInventory;
 import org.openlmis.equipment.repository.mapper.EquipmentInventoryMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 @Repository
 public class EquipmentInventoryRepository {
 
   @Autowired
-  EquipmentInventoryMapper equipmentInventoryMapper;
+  EquipmentInventoryMapper mapper;
+
+  public List<EquipmentInventory> getFacilityInventory(Long facilityId, Long programId){
+    return mapper.getInventoryByFacilityAndProgram(facilityId, programId);
+  }
+
+  public EquipmentInventory getInventoryById(Long id){
+    return mapper.getInventoryById(id);
+  }
+
+  public void insert(EquipmentInventory inventory){
+    mapper.insert(inventory);
+  }
+
+  public void update(EquipmentInventory inventory){
+    mapper.update( inventory );
+  }
 
 }

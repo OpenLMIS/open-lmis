@@ -25,3 +25,18 @@ services.factory('Equipment', function ($resource) {
 services.factory('SaveEquipment', function ($resource) {
   return $resource('/equipment/manage/save.json', {}, {});
 });
+
+
+/* Equipment Inventory */
+services.factory('EquipmentInventories', function ($resource) {
+  return $resource('/equipment/inventory/list.json', {}, {});
+});
+
+services.factory('EquipmentInventory', function ($resource) {
+  return $resource('/equipment/inventory/by-id.json', {}, {});
+});
+
+services.factory('SaveEquipmentInventory', function ($resource) {
+  return $resource('/equipment/inventory/save.json', {}, {});
+});
+

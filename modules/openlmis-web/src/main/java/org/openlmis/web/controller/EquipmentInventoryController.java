@@ -10,11 +10,38 @@
 
 package org.openlmis.web.controller;
 
+import org.openlmis.equipment.domain.EquipmentInventory;
+import org.openlmis.equipment.service.EquipmentInventoryService;
+import org.openlmis.web.response.OpenLmisResponse;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
-@RequestMapping(value="/equipment/inventory")
-public class EquipmentInventoryController {
+@RequestMapping(value="/equipment/inventory/")
+public class EquipmentInventoryController extends BaseController {
+
+  @Autowired
+  private EquipmentInventoryService service;
+
+  @RequestMapping(value="list", method = RequestMethod.GET)
+  public ResponseEntity<OpenLmisResponse> getFacilityInventory(@RequestParam("programId") Long programId, @RequestParam("facilityId") Long facilityId ){
+    return OpenLmisResponse.response("inventory",service.getInventoryForFacility(facilityId, programId));
+  }
+
+  @RequestMapping(value="by-id", method = RequestMethod.GET)
+  public ResponseEntity<OpenLmisResponse> getInventory(@RequestParam("id") Long id){
+    return OpenLmisResponse.response("inventory", service.getInventoryById(id));
+  }
+
+  @RequestMapping(value="save", method = RequestMethod.POST)
+  public ResponseEntity<OpenLmisResponse> save(@RequestBody EquipmentInventory inventory){
+    service.save(inventory);
+    return OpenLmisResponse.response("inventory", inventory);
+  }
 
 }

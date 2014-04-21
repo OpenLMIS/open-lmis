@@ -8,39 +8,34 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-package org.openlmis.equipment.domain;
+package org.openlmis.equipment.service;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import org.openlmis.core.domain.BaseModel;
+import org.openlmis.equipment.domain.EquipmentInventory;
+import org.openlmis.equipment.repository.EquipmentInventoryRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
-import java.util.Date;
+import java.util.List;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@EqualsAndHashCode(callSuper=false)
-public class EquipmentInventory extends BaseModel {
+@Component
+public class EquipmentInventoryService {
 
-  private Long facilityId;
-  private Long programId;
-  private Long equipmentId;
+  @Autowired
+  EquipmentInventoryRepository repository;
 
-  private Equipment equipment;
+  public List<EquipmentInventory> getInventoryForFacility(Long facilityId, Long programId){
+    return repository.getFacilityInventory(facilityId, programId );
+  }
 
-  private Long operationalStatusId;
-  private String serialNumber;
-  private String manufacturerName;
-  private String model;
-  private String energySource;
-  private Integer yearOfInstallation;
-  private Float purchasePrice;
-  private String sourceOfFund;
-  private Boolean replacementRecommended;
-  private String reasonForReplacement;
-  private String nameOfAssessor;
-  private Date dateLastAssessed;
+  public EquipmentInventory getInventoryById(Long id){
+    return repository.getInventoryById(id);
+  }
 
+  public void save(EquipmentInventory inventory){
+    if(inventory.getId() == null){
+      repository.insert(inventory);
+    } else{
+      repository.update(inventory);
+    }
+  }
 }
