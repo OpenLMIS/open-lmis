@@ -42,8 +42,7 @@ public class StatusChangeEventService {
     actionUrlMap.put("PACKED", "public/pages/logistics/fulfillment/index.html#/manage-pod-orders");
   }
 
-  @Autowired
-  private MessageService messageService;
+  private MessageService messageService = MessageService.getRequestInstance();
 
   @Autowired
   private EmailService emailService;
