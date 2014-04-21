@@ -30,7 +30,7 @@ function CreateEquipmentTypeController($scope, $routeParams, $location, Equipmen
     }, function (data) {
       // on error
       $scope.error = data.message;
-    })
+    });
   };
 
   $scope.cancelCreateEquipmentType = function () {
