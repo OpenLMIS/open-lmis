@@ -12,7 +12,7 @@ package org.openlmis.pageobjects;
 
 
 import org.openlmis.UiUtils.TestWebDriver;
-import org.openlmis.pageobjects.edi.ConfigureEDIPage;
+import org.openlmis.pageobjects.edi.ConfigureSystemSettingsPage;
 import org.openlmis.pageobjects.edi.ConvertOrderPage;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -234,14 +234,14 @@ public class HomePage extends Page {
     return PageObjectFactory.getTemplateConfigPage(testWebDriver);
   }
 
-  public ConfigureEDIPage navigateEdiScreen() {
+  public ConfigureSystemSettingsPage navigateSystemSettingsScreen() {
     testWebDriver.waitForElementToAppear(AdministrationMenuItem);
     testWebDriver.keyPress(AdministrationMenuItem);
     testWebDriver.waitForElementToAppear(TemplateConfigTab);
     testWebDriver.keyPress(TemplateConfigTab);
     testWebDriver.waitForElementToAppear(ediFileTab);
     testWebDriver.keyPress(ediFileTab);
-    return PageObjectFactory.getConfigureEdiPage(testWebDriver);
+    return PageObjectFactory.getConfigureSystemSettingsPage(testWebDriver);
   }
 
   public RegimenTemplateConfigPage navigateToRegimenConfigTemplate() {

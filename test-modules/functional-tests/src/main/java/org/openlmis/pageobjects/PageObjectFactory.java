@@ -42,13 +42,14 @@ public class PageObjectFactory {
   private static ViewOrdersPage instanceOfViewOrdersPage;
   private static ConfigureShipmentPage instanceOfConfigureShipmentPage;
   private static ConfigureBudgetPage instanceOfConfigureBudgetPage;
-  private static ConfigureEDIPage instanceOfConfigureEdiPage;
+  private static ConfigureSystemSettingsPage instanceOfConfigureSystemSettingsPage;
   private static ManagePodPage instanceOfManagePodPage;
   private static AdultCoveragePage instanceOfAdultCoveragePage;
   private static ReportPage instanceOfReportPage;
   private static ManageSchedulePage instanceOfManageSchedulePage;
   private static TemplateConfigPage instanceOfTemplateConfigPage;
   private static PeriodsPage instanceOfPeriodsPage;
+  private static ConfigureOrderNumberPage instanceOfConfigureOrderNumberPage;
 
   public static ManageFacilityPage getManageFacilityPage(TestWebDriver testWebDriver) {
     if (instanceOfManageFacilityPage == null) {
@@ -241,11 +242,18 @@ public class PageObjectFactory {
     return instanceOfConfigureBudgetPage;
   }
 
-  public static ConfigureEDIPage getConfigureEdiPage(TestWebDriver testWebDriver) {
-    if (instanceOfConfigureEdiPage == null) {
-      instanceOfConfigureEdiPage = new ConfigureEDIPage(testWebDriver);
+  public static ConfigureOrderNumberPage getConfigureOrderNumberPage(TestWebDriver testWebDriver) {
+    if (instanceOfConfigureOrderNumberPage == null) {
+      instanceOfConfigureOrderNumberPage = new ConfigureOrderNumberPage(testWebDriver);
     }
-    return instanceOfConfigureEdiPage;
+    return instanceOfConfigureOrderNumberPage;
+  }
+
+  public static ConfigureSystemSettingsPage getConfigureSystemSettingsPage(TestWebDriver testWebDriver) {
+    if (instanceOfConfigureSystemSettingsPage == null) {
+      instanceOfConfigureSystemSettingsPage = new ConfigureSystemSettingsPage(testWebDriver);
+    }
+    return instanceOfConfigureSystemSettingsPage;
   }
 
   public static ManagePodPage getManagePodPage(TestWebDriver testWebDriver) {

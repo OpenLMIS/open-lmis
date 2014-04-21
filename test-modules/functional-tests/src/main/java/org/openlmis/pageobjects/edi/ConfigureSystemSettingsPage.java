@@ -21,7 +21,7 @@ import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 import static org.openqa.selenium.support.How.ID;
 
 
-public class ConfigureEDIPage extends Page {
+public class ConfigureSystemSettingsPage extends Page {
 
   @FindBy(how = ID, using = "configureOrder")
   private static WebElement configureOrderButton = null;
@@ -32,7 +32,10 @@ public class ConfigureEDIPage extends Page {
   @FindBy(how = ID, using = "configureBudget")
   private static WebElement configureBudgetButton = null;
 
-  public ConfigureEDIPage(TestWebDriver driver) {
+  @FindBy(how = ID, using = "configureOrderNumber")
+  private static WebElement configureOrderNumberButton = null;
+
+  public ConfigureSystemSettingsPage(TestWebDriver driver) {
     super(driver);
     PageFactory.initElements(new AjaxElementLocatorFactory(TestWebDriver.getDriver(), 10), this);
     testWebDriver.setImplicitWait(10);
@@ -55,5 +58,11 @@ public class ConfigureEDIPage extends Page {
     testWebDriver.waitForElementToAppear(configureBudgetButton);
     configureBudgetButton.click();
     return PageObjectFactory.getConfigureBudgetPage(testWebDriver);
+  }
+
+  public ConfigureOrderNumberPage navigateConfigureOrderNumberPage() {
+    testWebDriver.waitForElementToAppear(configureOrderNumberButton);
+    configureOrderNumberButton.click();
+    return PageObjectFactory.getConfigureOrderNumberPage(testWebDriver);
   }
 }

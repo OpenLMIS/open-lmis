@@ -20,7 +20,7 @@ import org.openlmis.pageobjects.HomePage;
 import org.openlmis.pageobjects.LoginPage;
 import org.openlmis.pageobjects.PageObjectFactory;
 import org.openlmis.pageobjects.edi.ConfigureBudgetPage;
-import org.openlmis.pageobjects.edi.ConfigureEDIPage;
+import org.openlmis.pageobjects.edi.ConfigureSystemSettingsPage;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Listeners;
@@ -49,8 +49,8 @@ public class ConfigureBudgetTemplate extends TestCaseHelper {
   @And("^I access configure budget page$")
   public void accessOrderScreen() {
     HomePage homePage = PageObjectFactory.getHomePage(testWebDriver);
-    ConfigureEDIPage configureEDIPage = homePage.navigateEdiScreen();
-    configureEDIPage.navigateConfigureBudgetPage();
+    ConfigureSystemSettingsPage configureSystemSettingsPage = homePage.navigateSystemSettingsScreen();
+    configureSystemSettingsPage.navigateConfigureBudgetPage();
   }
 
   @And("^I should see include column headers option unchecked$")
@@ -99,8 +99,8 @@ public class ConfigureBudgetTemplate extends TestCaseHelper {
     configureBudgetPage.verifyMessage("Budget file configuration saved successfully!");
 
     testWebDriver.refresh();
-    ConfigureEDIPage configureEDIPage = PageObjectFactory.getConfigureEdiPage(testWebDriver);
-    configureEDIPage.navigateConfigureBudgetPage();
+    ConfigureSystemSettingsPage configureSystemSettingsPage = PageObjectFactory.getConfigureSystemSettingsPage(testWebDriver);
+    configureSystemSettingsPage.navigateConfigureBudgetPage();
 
     assertTrue(configureBudgetPage.isHeaderIncluded());
     assertEquals(configureBudgetPage.getAllocatedBudgetPosition(), "101");
@@ -113,7 +113,7 @@ public class ConfigureBudgetTemplate extends TestCaseHelper {
   }
 
   @Test(groups = {"admin"})
-  public void clickingCancelShouldTakeUserToConfigureEDIPage() {
+  public void clickingCancelShouldTakeUserToConfigureSystemSettingsPage() {
     ConfigureBudgetPage configureBudgetPage = gotToConfigureBudgetPage();
     configureBudgetPage.clickCancelButton();
     assertTrue("User should be redirected to EDI Config page", testWebDriver.getCurrentUrl().contains(CONFIGURE_EDI_INDEX_PAGE));
@@ -131,8 +131,8 @@ public class ConfigureBudgetTemplate extends TestCaseHelper {
   private ConfigureBudgetPage gotToConfigureBudgetPage() {
     LoginPage loginPage = PageObjectFactory.getLoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(user, password);
-    ConfigureEDIPage configureEDIPage = homePage.navigateEdiScreen();
-    return configureEDIPage.navigateConfigureBudgetPage();
+    ConfigureSystemSettingsPage configureSystemSettingsPage = homePage.navigateSystemSettingsScreen();
+    return configureSystemSettingsPage.navigateConfigureBudgetPage();
   }
 
   private void verifyDuplicatePositionError() {
@@ -176,8 +176,8 @@ public class ConfigureBudgetTemplate extends TestCaseHelper {
     assertEquals(configureBudgetPage.getPeriodStartDatePosition(), "523");
 
     configureBudgetPage.clickSaveButton();
-    ConfigureEDIPage configureEDIPage = PageObjectFactory.getConfigureEdiPage(testWebDriver);
-    configureEDIPage.navigateConfigureBudgetPage();
+    ConfigureSystemSettingsPage configureSystemSettingsPage = PageObjectFactory.getConfigureSystemSettingsPage(testWebDriver);
+    configureSystemSettingsPage.navigateConfigureBudgetPage();
     assertEquals(configureBudgetPage.getFacilityCodePosition(), "123");
     assertEquals(configureBudgetPage.getAllocatedBudgetPosition(), "223");
     assertEquals(configureBudgetPage.getNotesPosition(), "323");

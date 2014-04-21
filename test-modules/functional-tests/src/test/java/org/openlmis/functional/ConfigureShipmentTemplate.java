@@ -20,7 +20,7 @@ import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.pageobjects.HomePage;
 import org.openlmis.pageobjects.LoginPage;
 import org.openlmis.pageobjects.PageObjectFactory;
-import org.openlmis.pageobjects.edi.ConfigureEDIPage;
+import org.openlmis.pageobjects.edi.ConfigureSystemSettingsPage;
 import org.openlmis.pageobjects.edi.ConfigureShipmentPage;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
@@ -46,8 +46,8 @@ public class ConfigureShipmentTemplate extends TestCaseHelper {
   @And("^I access configure shipment page$")
   public void accessOrderScreen() {
     HomePage homePage = PageObjectFactory.getHomePage(testWebDriver);
-    ConfigureEDIPage configureEDIPage = homePage.navigateEdiScreen();
-    configureEDIPage.navigateConfigureShipmentPage();
+    ConfigureSystemSettingsPage configureSystemSettingsPage = homePage.navigateSystemSettingsScreen();
+    configureSystemSettingsPage.navigateConfigureShipmentPage();
   }
 
   @And("^I should see include column headers unchecked$")
@@ -94,14 +94,14 @@ public class ConfigureShipmentTemplate extends TestCaseHelper {
   @Test(groups = {"admin"})
   public void testEditPackedAndShippedDateDropDown() {
     HomePage homePage = loginPage.loginAs(user, password);
-    ConfigureEDIPage configureEDIPage = homePage.navigateEdiScreen();
-    ConfigureShipmentPage configureShipmentPage = configureEDIPage.navigateConfigureShipmentPage();
+    ConfigureSystemSettingsPage configureSystemSettingsPage = homePage.navigateSystemSettingsScreen();
+    ConfigureShipmentPage configureShipmentPage = configureSystemSettingsPage.navigateConfigureShipmentPage();
     configureShipmentPage.selectValueFromPackedDateDropDown("MM-dd-yyyy");
     configureShipmentPage.selectValueFromShippedDateDropDown("yyyy-MM-dd");
     configureShipmentPage.clickSaveButton();
     configureShipmentPage.verifyMessage("Shipment file configuration saved successfully!");
     testWebDriver.refresh();
-    configureEDIPage.navigateConfigureShipmentPage();
+    configureSystemSettingsPage.navigateConfigureShipmentPage();
     assertEquals(configureShipmentPage.getSelectedOptionOfPackedDateDropDown(), "MM-dd-yyyy");
     assertEquals(configureShipmentPage.getSelectedOptionOfShippedDateDropDown(), "yyyy-MM-dd");
 
@@ -110,7 +110,7 @@ public class ConfigureShipmentTemplate extends TestCaseHelper {
     configureShipmentPage.clickSaveButton();
     configureShipmentPage.verifyMessage("Shipment file configuration saved successfully!");
     testWebDriver.refresh();
-    configureEDIPage.navigateConfigureShipmentPage();
+    configureSystemSettingsPage.navigateConfigureShipmentPage();
     assertEquals(configureShipmentPage.getSelectedOptionOfPackedDateDropDown(), "yyyy/MM/dd");
     assertEquals(configureShipmentPage.getSelectedOptionOfShippedDateDropDown(), "ddMMyy");
   }
@@ -118,8 +118,8 @@ public class ConfigureShipmentTemplate extends TestCaseHelper {
   @Test(groups = {"admin"})
   public void testVerifyIncludeColumnHeaderONWithAllPositionsAltered() {
     HomePage homePage = loginPage.loginAs(user, password);
-    ConfigureEDIPage configureEDIPage = homePage.navigateEdiScreen();
-    ConfigureShipmentPage configureShipmentPage = configureEDIPage.navigateConfigureShipmentPage();
+    ConfigureSystemSettingsPage configureSystemSettingsPage = homePage.navigateSystemSettingsScreen();
+    ConfigureShipmentPage configureShipmentPage = configureSystemSettingsPage.navigateConfigureShipmentPage();
     configureShipmentPage.checkIncludeHeader();
     configureShipmentPage.setQuantityShipped("101");
     configureShipmentPage.setOrderNumber("1022");
@@ -136,7 +136,7 @@ public class ConfigureShipmentTemplate extends TestCaseHelper {
     configureShipmentPage.verifyMessage("Shipment file configuration saved successfully!");
 
     testWebDriver.refresh();
-    configureEDIPage.navigateConfigureShipmentPage();
+    configureSystemSettingsPage.navigateConfigureShipmentPage();
 
     assertTrue(configureShipmentPage.getIncludeHeader());
     assertEquals("101", configureShipmentPage.getQuantityShipped());
@@ -153,8 +153,8 @@ public class ConfigureShipmentTemplate extends TestCaseHelper {
   @Test(groups = {"admin"})
   public void testVerifyIncludeColumnHeaderOFFWithMandatoryPositionsAltered() {
     HomePage homePage = loginPage.loginAs(user, password);
-    ConfigureEDIPage configureEDIPage = homePage.navigateEdiScreen();
-    ConfigureShipmentPage configureShipmentPage = configureEDIPage.navigateConfigureShipmentPage();
+    ConfigureSystemSettingsPage configureSystemSettingsPage = homePage.navigateSystemSettingsScreen();
+    ConfigureShipmentPage configureShipmentPage = configureSystemSettingsPage.navigateConfigureShipmentPage();
     configureShipmentPage.unCheckIncludeHeader();
     configureShipmentPage.setQuantityShipped("101");
     configureShipmentPage.setOrderNumber("102");
@@ -165,7 +165,7 @@ public class ConfigureShipmentTemplate extends TestCaseHelper {
     configureShipmentPage.clickSaveButton();
     configureShipmentPage.verifyMessage("Shipment file configuration saved successfully!");
     testWebDriver.refresh();
-    configureEDIPage.navigateConfigureShipmentPage();
+    configureSystemSettingsPage.navigateConfigureShipmentPage();
 
     assertFalse(configureShipmentPage.getIncludeHeader());
     assertEquals("101", configureShipmentPage.getQuantityShipped());
@@ -175,7 +175,7 @@ public class ConfigureShipmentTemplate extends TestCaseHelper {
     assertEquals("5", configureShipmentPage.getPackedDate());
     assertEquals("6", configureShipmentPage.getShippedDate());
     setDefaultPositionValues();
-    configureEDIPage.navigateConfigureShipmentPage();
+    configureSystemSettingsPage.navigateConfigureShipmentPage();
     configureShipmentPage.clickCancelButton();
     assertTrue("User should be redirected to home page", testWebDriver.getCurrentUrl().contains("public/pages/admin/edi/index.html#/configure-system-settings"));
   }
@@ -183,8 +183,8 @@ public class ConfigureShipmentTemplate extends TestCaseHelper {
   @Test(groups = {"admin"})
   public void testVerifyInvalidPosition() {
     HomePage homePage = loginPage.loginAs(user, password);
-    ConfigureEDIPage configureEDIPage = homePage.navigateEdiScreen();
-    ConfigureShipmentPage configureShipmentPage = configureEDIPage.navigateConfigureShipmentPage();
+    ConfigureSystemSettingsPage configureSystemSettingsPage = homePage.navigateSystemSettingsScreen();
+    ConfigureShipmentPage configureShipmentPage = configureSystemSettingsPage.navigateConfigureShipmentPage();
     configureShipmentPage.setQuantityShipped("101");
     configureShipmentPage.setShippedDate("6");
     configureShipmentPage.setReplacedProductCode("6");
