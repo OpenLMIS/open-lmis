@@ -8,26 +8,33 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-package org.openlmis.equipment.domain;
+function CreateEquipmentController($scope, $routeParams, $location, Equipment, EquipmentTypes, SaveEquipment) {
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import org.openlmis.core.domain.BaseModel;
+  EquipmentTypes.get(function (data) {
+    $scope.equipmentTypes = data.equipment_type;
+  });
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@EqualsAndHashCode(callSuper=false)
-public class Equipment extends BaseModel{
+  if ($routeParams.id === undefined) {
+    $scope.equipment = {};
+  } else {
+    Equipment.get({
+      id: $routeParams.id
+    }, function (data) {
+      $scope.equipment = data.equipment;
+    });
+  }
 
-  private String name;
+  $scope.saveEquipment = function () {
+    SaveEquipment.save($scope.equipment, function (data) {
+      // success
+      $location.path('');
+    }, function (data) {
+      // error
+      $scope.error = data.messages;
+    });
+  };
 
-  private String code;
-
-  private EquipmentType equipmentType;
-
-  private Long equipmentTypeId;
-
+  $scope.cancelCreateEquipment = function () {
+    $location.path('');
+  };
 }

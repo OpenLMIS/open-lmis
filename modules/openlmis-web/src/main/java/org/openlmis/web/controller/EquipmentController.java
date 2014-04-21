@@ -11,11 +11,13 @@
 package org.openlmis.web.controller;
 
 import org.openlmis.equipment.domain.Equipment;
+import org.openlmis.equipment.domain.EquipmentType;
 import org.openlmis.equipment.service.EquipmentService;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -34,11 +36,13 @@ public class EquipmentController extends BaseController {
 
   @RequestMapping(method = RequestMethod.GET, value = "list")
   public ResponseEntity<OpenLmisResponse> getList(){
-    return OpenLmisResponse.response("equipment", service.getAll());
+    return OpenLmisResponse.response("equipments", service.getAll());
   }
 
-  @RequestMapping(method = RequestMethod.GET, value = "save")
-  public ResponseEntity<OpenLmisResponse> save( Equipment equipment){
+  @RequestMapping(method = RequestMethod.POST, value = "save", headers = ACCEPT_JSON)
+  public ResponseEntity<OpenLmisResponse> save( @RequestBody Equipment equipment){
+    equipment.setEquipmentType(new EquipmentType());
+    equipment.getEquipmentType().setId(equipment.getEquipmentTypeId());
     service.save(equipment);
     return OpenLmisResponse.response("equipment", equipment);
   }

@@ -21,14 +21,14 @@ import java.util.List;
 public interface EquipmentMapper {
 
   @Select("SELECT * from equipments order by name")
-  List<Equipment> getAll();
-
-  @Select("SELECT * from equipments where id = #{id}")
   @Results({
       @Result(
           property = "equipmentType", column = "equipmentTypeId", javaType = EquipmentType.class,
           one = @One(select = "org.openlmis.equipment.repository.mapper.EquipmentTypeMapper.getEquipmentTypeById"))
-        })
+  })
+  List<Equipment> getAll();
+
+  @Select("SELECT * from equipments where id = #{id}")
   Equipment getById(@Param("id") Long id);
 
   @Insert("INSERT into equipments (code, name, equipmentTypeId, createdBy, createdDate, modifiedBy, modifiedDate) " +
