@@ -20,14 +20,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 public class EquipmentTypeRepositoryTest {
 
-  @Test
-  public void testGetEquipmentTypeById() throws Exception {
 
-  }
 
   @Mock
   private EquipmentTypeMapper mapper;
@@ -47,6 +45,34 @@ public class EquipmentTypeRepositoryTest {
 
   @Test
   public void testInsert() throws Exception {
+    EquipmentType type = new EquipmentType();
+    type.setCode("Test");
+    type.setName("Test");
 
+    repository.insert(type);
+    verify(mapper).insert(type);
+  }
+
+  @Test
+  public void shouldGetById() throws Exception{
+    EquipmentType type = new EquipmentType();
+    type.setName("Test");
+    type.setCode("Test");
+
+    when(mapper.getEquipmentTypeById(1L)).thenReturn(type);
+
+    EquipmentType result = repository.getEquipmentTypeById(1L);
+    assertEquals(result.getName(), type.getName());
+    assertEquals(result.getCode(), type.getCode());
+  }
+
+  @Test
+  public void shouldUpdate() throws Exception{
+    EquipmentType type = new EquipmentType();
+    type.setCode("Test");
+    type.setName("Test");
+
+    repository.update(type);
+    verify(mapper).update(type);
   }
 }
