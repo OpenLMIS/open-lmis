@@ -11,6 +11,8 @@
 angular.module('equipment-type', ['openlmis','ui.bootstrap.modal', 'ui.bootstrap.dialog', 'ui.bootstrap.dropdownToggle']).config(['$routeProvider', function ($routeProvider) {
   $routeProvider.
       when('/', {controller: EquipmentTypeController, templateUrl: 'partials/list.html'}).
+      when('/create/:id', {controller: CreateEquipmentTypeController, templateUrl: 'partials/create.html'}).
+      when('/create', {controller: CreateEquipmentTypeController, templateUrl: 'partials/create.html'}).
       otherwise({redirectTo: '/list'});
 }]).run(function ($rootScope, AuthorizationService) {
   $rootScope.equipmentTypeSelected = "selected";

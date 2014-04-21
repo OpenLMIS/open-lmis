@@ -11,7 +11,7 @@
 <div xmlns="http://www.w3.org/1999/html">
     <h2>
         <span>Manage Equipment Types</span>
-        <a id="add-new-equipment-type" href="#/create-type" class="pull-right btn btn-primary" openlmis-message="button.add.new"></a>
+        <a id="add-new-equipment-type" href="#/create" class="pull-right btn btn-primary" openlmis-message="button.add.new"></a>
     </h2>
 
     <div class="content-body">
@@ -24,7 +24,11 @@
                 </tr>
             </thead>
             <tbody>
-
+               <tr ng-repeat="type in equipment_types">
+                   <td>{{$index + 1}}</td>
+                   <td>{{type.code}}</td>
+                   <td><a ng-href="#create/{{type.id}}">{{type.name}}</a></td>
+               </tr>
             </tbody>
         </table>
     </div>

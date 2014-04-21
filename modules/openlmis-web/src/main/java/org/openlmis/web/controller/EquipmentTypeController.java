@@ -16,30 +16,32 @@ import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
+import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 @Controller
 @RequestMapping(value="/equipment/type/")
-public class EquipmentTypeController {
+public class EquipmentTypeController extends BaseController {
 
   @Autowired
   private EquipmentTypeService service;
 
   @RequestMapping(method = GET, value = "list")
   public ResponseEntity<OpenLmisResponse> getAll(){
-    return  OpenLmisResponse.response("equipment-type", service.getAll());
+    return  OpenLmisResponse.response("equipment_type", service.getAll());
   }
 
   @RequestMapping(method = GET, value = "id")
   public ResponseEntity<OpenLmisResponse> getById( @RequestParam("id") Long id){
-    return  OpenLmisResponse.response("equipment-type", service.getTypeById(id));
+    return  OpenLmisResponse.response("equipment_type", service.getTypeById(id));
   }
 
-  @RequestMapping(method = GET, value = "save")
-  public ResponseEntity<OpenLmisResponse> save(EquipmentType type){
+  @RequestMapping(value = "save", method = POST, headers = ACCEPT_JSON)
+  public ResponseEntity<OpenLmisResponse> save(@RequestBody EquipmentType type){
     service.save(type);
     return OpenLmisResponse.response("status","success");
   }

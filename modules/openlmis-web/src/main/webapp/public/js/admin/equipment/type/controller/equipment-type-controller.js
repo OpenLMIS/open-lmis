@@ -9,6 +9,10 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-function EquipmentTypeController($scope, $routeParams, $location) {
+function EquipmentTypeController($scope, EquipmentTypes) {
 
+
+  EquipmentTypes.get(function(data){
+     $scope.equipment_types = data.equipment_type;
+  });
 }
