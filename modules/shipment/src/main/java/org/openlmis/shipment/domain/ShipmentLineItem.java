@@ -35,6 +35,8 @@ public class ShipmentLineItem extends LineItem {
 
   private Long orderId;
 
+  private String orderNumber;
+
   private String productCode;
 
   private String replacedProductCode;

@@ -130,16 +130,16 @@ public class ShipmentLineItemTransformerTest {
     assertNull(lineItem.getCost());
   }
 
-  @Test
+ /* @Test
   public void shouldThrowErrorForWrongRnrIdDataType() {
     ShipmentLineItemDTO dto = dtoWithAllFields();
-    dto.setOrderId("3333.33");
+    dto.setOrderNumber("3333.33");
 
     expectException.expect(DataException.class);
     expectException.expectMessage("wrong.data.type");
 
     transformer.transform(dto, SIMPLE_DATE_FORMAT, SIMPLE_DATE_FORMAT, new Date());
-  }
+  }*/
 
   @Test
   public void shouldThrowErrorForWrongQuantityShippedDataType() {
@@ -196,9 +196,9 @@ public class ShipmentLineItemTransformerTest {
   }
 
   @Test
-  public void shouldThrowErrorIfRnrIdIsMissing() {
+  public void shouldThrowErrorIfOrderNumberIsMissing() {
     ShipmentLineItemDTO dto = dtoWithAllFields();
-    dto.setOrderId(null);
+    dto.setOrderNumber(null);
 
     expectException.expect(DataException.class);
     expectException.expectMessage("error.mandatory.fields.missing");
@@ -241,7 +241,7 @@ public class ShipmentLineItemTransformerTest {
     ShipmentLineItemDTO dto = new ShipmentLineItemDTO();
     dto.setProductCode("P123");
     dto.setQuantityShipped("1234");
-    dto.setOrderId("111");
+    dto.setOrderNumber("111");
 
     return dto;
   }
@@ -251,7 +251,7 @@ public class ShipmentLineItemTransformerTest {
 
     dto.setProductCode("P123");
     dto.setQuantityShipped("1234");
-    dto.setOrderId("111");
+    dto.setOrderNumber("111");
     dto.setCost("11");
     dto.setShippedDate("03/03/2012");
     dto.setPackedDate("03/03/2012");

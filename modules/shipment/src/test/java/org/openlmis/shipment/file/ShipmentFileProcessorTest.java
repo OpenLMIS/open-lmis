@@ -147,14 +147,14 @@ public class ShipmentFileProcessorTest {
 
     verify(shipmentService, times(0)).save(any(ShipmentLineItem.class));
 
-    verify(shipmentFilePostProcessHandler).process(new HashSet<Long>(), shipmentFile, false);
+    verify(shipmentFilePostProcessHandler).process(new HashSet<String>(), shipmentFile, false);
   }
 
   @Test
   public void shouldInsertLineItemsIfAllIncludedFieldsArePresent() throws Exception {
 
     List<EDIFileColumn> shipmentFileColumnList = new ArrayList<EDIFileColumn>() {{
-      add(make(a(mandatoryShipmentFileColumn, with(fieldName, "orderId"), with(columnPosition, 2))));
+      add(make(a(mandatoryShipmentFileColumn, with(fieldName, "orderNumber"), with(columnPosition, 2))));
       add(make(a(defaultShipmentFileColumn, with(columnPosition, 4), with(includeInShipmentFile, false))));
       add(make(a(defaultShipmentFileColumn, with(columnPosition, 6), with(includeInShipmentFile, false))));
     }};
@@ -163,21 +163,21 @@ public class ShipmentFileProcessorTest {
 
     when(shipmentFileTemplateService.get()).thenReturn(shipmentFileTemplate);
 
-    when(mockedCsvListReader.read()).thenReturn(asList("", "232")).thenReturn(null);
+    when(mockedCsvListReader.read()).thenReturn(asList("", "OYELL_FVR00000123R")).thenReturn(null);
     ShipmentLineItem lineItem = new ShipmentLineItem();
-    lineItem.setOrderId(232L);
+    lineItem.setOrderNumber("OYELL_FVR00000123R");
     when(shipmentLineItemTransformer.transform(any(ShipmentLineItemDTO.class), anyString(), anyString(), any(Date.class))).thenReturn(lineItem);
     when(applicationContext.getBean(ShipmentFileProcessor.class)).thenReturn(shipmentFileProcessor);
-    when(orderService.isShippable(232L)).thenReturn(true);
+    when(orderService.isShippable("OYELL_FVR00000123R")).thenReturn(true);
 
     shipmentFileProcessor.process(message);
 
     verify(mockedCsvListReader, times(0)).getHeader(true);
     verify(shipmentService, times(1)).save(any(ShipmentLineItem.class));
 
-    Set<Long> orderIds = new HashSet<>();
-    orderIds.add(232L);
-    verify(shipmentFilePostProcessHandler).process(orderIds, shipmentFile, true);
+    Set<String> orderNumbers = new HashSet<>();
+    orderNumbers.add("OYELL_FVR00000123R");
+    verify(shipmentFilePostProcessHandler).process(orderNumbers, shipmentFile, true);
   }
 
   @Test
@@ -198,7 +198,7 @@ public class ShipmentFileProcessorTest {
     shipmentFileProcessor.process(message);
 
     verify(mockedCsvListReader).getHeader(true);
-    verify(shipmentFilePostProcessHandler).process(new HashSet<Long>(), shipmentFile, false);
+    verify(shipmentFilePostProcessHandler).process(new HashSet<String>(), shipmentFile, false);
   }
 
   @Test
@@ -206,7 +206,7 @@ public class ShipmentFileProcessorTest {
     List<EDIFileColumn> shipmentFileColumnList = new ArrayList<EDIFileColumn>() {{
       add(make(a(mandatoryShipmentFileColumn,
         with(columnPosition, 1),
-        with(fieldName, "orderId")
+        with(fieldName, "orderNumber")
       )));
       add(make(a(mandatoryShipmentFileColumn,
         with(columnPosition, 2),
@@ -224,15 +224,15 @@ public class ShipmentFileProcessorTest {
 
     when(shipmentFileTemplateService.get()).thenReturn(shipmentFileTemplate);
 
-    when(mockedCsvListReader.read()).thenReturn(asList("333", "11/13", "11/11/2011")).thenReturn(null);
+    when(mockedCsvListReader.read()).thenReturn(asList("OYELL_FVR00000123R", "11/13", "11/11/2011")).thenReturn(null);
 
     ShipmentLineItemDTO shipmentLineItemDTO = new ShipmentLineItemDTO();
-    shipmentLineItemDTO.setOrderId("333");
+    shipmentLineItemDTO.setOrderNumber("OYELL_FVR00000123R");
     shipmentLineItemDTO.setPackedDate("11/13");
     shipmentLineItemDTO.setShippedDate("11/11/2011");
     ShipmentLineItem shipmentLineItem = mock(ShipmentLineItem.class);
     when(shipmentLineItem.getOrderId()).thenReturn(333L);
-    when(orderService.isShippable(333L)).thenReturn(true);
+    when(orderService.isShippable("OYELL_FVR00000123R")).thenReturn(true);
 
     when(shipmentLineItemTransformer.transform(shipmentLineItemDTO, "MM/yy", "dd/MM/yyyy", creationDate)).thenReturn(shipmentLineItem);
     when(applicationContext.getBean(ShipmentFileProcessor.class)).thenReturn(shipmentFileProcessor);
@@ -241,8 +241,8 @@ public class ShipmentFileProcessorTest {
 
     verify(shipmentService).save(shipmentLineItem);
 
-    HashSet<Long> orderIds = new HashSet<>();
-    orderIds.add(333L);
-    verify(shipmentFilePostProcessHandler).process(orderIds, shipmentFile, true);
+    HashSet<String> orderNumbers = new HashSet<>();
+    orderNumbers.add("OYELL_FVR00000123R");
+    verify(shipmentFilePostProcessHandler).process(orderNumbers, shipmentFile, true);
   }
 }

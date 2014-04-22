@@ -149,7 +149,7 @@ public class OrderMapperIT {
     shipmentMapper.insertShipmentFileInfo(shipmentFileInfo);
 
 
-    mapper.updateShipmentAndStatus(order.getId(), RELEASED, shipmentFileInfo.getId());
+    mapper.updateShipmentAndStatus(order.getOrderNumber(), RELEASED, shipmentFileInfo.getId());
     Long userId = insertUserAndRoleForOrders();
     List<Order> orders = mapper.getOrders(1, 0, userId, Right.VIEW_ORDER);
     assertThat(orders.get(0).getShipmentFileInfo().getFileName(), is("abc.csv"));
@@ -163,7 +163,7 @@ public class OrderMapperIT {
     ShipmentFileInfo shipmentFileInfo = new ShipmentFileInfo("shipment.csv", true);
     shipmentMapper.insertShipmentFileInfo(shipmentFileInfo);
 
-    mapper.updateShipmentAndStatus(order.getId(), PACKED, shipmentFileInfo.getId());
+    mapper.updateShipmentAndStatus(order.getOrderNumber(), PACKED, shipmentFileInfo.getId());
 
     ResultSet resultSet = queryExecutor.execute("SELECT * FROM orders WHERE id = ?", order.getRnr().getId());
 
@@ -256,7 +256,7 @@ public class OrderMapperIT {
     long programId = 1L;
     Order order = insertOrder(programId);
 
-    OrderStatus status = mapper.getStatus(order.getId());
+    OrderStatus status = mapper.getStatus(order.getOrderNumber());
 
     assertThat(status, is(order.getStatus()));
   }

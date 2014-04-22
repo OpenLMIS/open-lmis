@@ -61,8 +61,8 @@ public interface OrderMapper {
     "shipmentId = #{shipmentId},",
     "status = #{status},",
     "modifiedDate = DEFAULT",
-    "WHERE id = #{orderId}"})
-  void updateShipmentAndStatus(@Param("orderId") Long orderId,
+    "WHERE orderNumber = #{orderNumber}"})
+  void updateShipmentAndStatus(@Param("orderNumber") String orderNumber,
                                @Param("status") OrderStatus status,
                                @Param("shipmentId") Long shipmentId);
 
@@ -80,8 +80,8 @@ public interface OrderMapper {
   @Update("UPDATE orders SET status = #{status}, ftpComment = #{ftpComment}, modifiedDate = DEFAULT WHERE id = #{id}")
   void updateOrderStatus(Order order);
 
-  @Select("SELECT status FROM orders WHERE id = #{id}")
-  OrderStatus getStatus(Long id);
+  @Select("SELECT status FROM orders WHERE orderNumber = #{orderNumber}")
+  OrderStatus getStatus(String orderNumber);
 
   @Select("SELECT ceil(count(*)::float/#{pageSize}) FROM orders")
   Integer getNumberOfPages(int pageSize);
@@ -98,4 +98,13 @@ public interface OrderMapper {
       one = @One(select = "org.openlmis.core.repository.mapper.SupplyLineMapper.getById"))
   })
   List<Order> getByWarehouseIdsAndStatuses(@Param("facilityIds") String facilityIds, @Param("statuses") String statuses);
+
+  @Select("SELECT * FROM orders WHERE orderNumber = #{orderNumber}")
+  @Results({
+    @Result(property = "id", column = "id"),
+    @Result(property = "rnr.id", column = "id"),
+    @Result(property = "supplyLine", javaType = SupplyLine.class, column = "supplyLineId",
+      one = @One(select = "org.openlmis.core.repository.mapper.SupplyLineMapper.getById"))
+  })
+  Order getByOrderNumber(String orderNumber);
 }

@@ -163,11 +163,11 @@ public class OrderService {
     requisition.setNonFullSupplyLineItems(getLineItemsForOrder(nonFullSupplyLineItems));
   }
 
-  public void updateStatusAndShipmentIdForOrders(Set<Long> orderIds, ShipmentFileInfo shipmentFileInfo) {
-    for (Long orderId : orderIds) {
+  public void updateStatusAndShipmentIdForOrders(Set<String> orderNumbers, ShipmentFileInfo shipmentFileInfo) {
+    for (String orderNumber : orderNumbers) {
       OrderStatus status = (shipmentFileInfo.isProcessingError()) ? RELEASED : PACKED;
-      orderRepository.updateStatusAndShipmentIdForOrder(orderId, status, shipmentFileInfo.getId());
-      Order order = orderRepository.getById(orderId);
+      orderRepository.updateStatusAndShipmentIdForOrder(orderNumber, status, shipmentFileInfo.getId());
+      Order order = orderRepository.getByOrderNumber(orderNumber);
       order.setRnr(requisitionService.getFullRequisitionById(order.getRnr().getId()));
 
       sendOrderStatusChangeMail(order);
@@ -209,8 +209,8 @@ public class OrderService {
     orderEventService.notifyForStatusChange(order);
   }
 
-  public boolean isShippable(Long orderId) {
-    return hasStatus(orderId, RELEASED);
+  public boolean isShippable(String orderNumber) {
+    return hasStatus(orderNumber, RELEASED);
   }
 
   public Integer getNumberOfPages() {
@@ -257,7 +257,7 @@ public class OrderService {
     return lineItemsForOrder;
   }
 
-  public boolean hasStatus(Long orderId, OrderStatus... statuses) {
-    return contains(statuses, orderRepository.getStatus(orderId));
+  public boolean hasStatus(String orderNumber, OrderStatus... statuses) {
+    return contains(statuses, orderRepository.getStatus(orderNumber));
   }
 }

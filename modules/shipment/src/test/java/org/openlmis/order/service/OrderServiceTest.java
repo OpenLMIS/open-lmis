@@ -148,7 +148,7 @@ public class OrderServiceTest {
   public void shouldConvertRequisitionsToOrderWithStatusReadyToPack() throws Exception {
     Long userId = 1L;
     Long supplyingFacilityId = 99L;
-    
+
     Program program = new Program(3L);
     program.setCode("HIV");
     SupervisoryNode supervisoryNode = new SupervisoryNode(1L);
@@ -292,13 +292,15 @@ public class OrderServiceTest {
   @Test
   public void shouldSetReleasedForAllOrdersIfErrorInShipment() throws Exception {
     Order order1 = new Order(make(a(defaultRequisition, with(id, 123L))));
+    order1.setOrderNumber("OYELL_FVR00000123R");
     Order order2 = new Order(make(a(defaultRequisition, with(id, 456L), with(RequisitionBuilder.facility, make(a(defaultFacility, with(code, "F3333")))))));
+    order1.setOrderNumber("OYELL_FVR00000456R");
     order1.setStatus(RELEASED);
     order2.setStatus(RELEASED);
 
-    Set<Long> orderIds = new LinkedHashSet<>();
-    orderIds.add(order1.getId());
-    orderIds.add(order2.getId());
+    Set<String> orderNumbers = new LinkedHashSet<>();
+    orderNumbers.add(order1.getOrderNumber());
+    orderNumbers.add(order2.getOrderNumber());
     long shipmentId = 678L;
 
     boolean processingError = true;
@@ -314,19 +316,19 @@ public class OrderServiceTest {
     ShipmentFileInfo shipmentFileInfo = new ShipmentFileInfo("shipmentFile.csv", processingError);
     shipmentFileInfo.setId(shipmentId);
 
-    when(orderRepository.getById(123L)).thenReturn(order1);
-    when(orderRepository.getById(456L)).thenReturn(order2);
+    when(orderRepository.getByOrderNumber(order1.getOrderNumber())).thenReturn(order1);
+    when(orderRepository.getByOrderNumber(order2.getOrderNumber())).thenReturn(order2);
     when(requisitionService.getFullRequisitionById(order1.getRnr().getId())).thenReturn(order1.getRnr());
     when(requisitionService.getFullRequisitionById(order2.getRnr().getId())).thenReturn(order2.getRnr());
 
-    orderService.updateStatusAndShipmentIdForOrders(orderIds, shipmentFileInfo);
+    orderService.updateStatusAndShipmentIdForOrders(orderNumbers, shipmentFileInfo);
 
-    verify(orderRepository).getById(123L);
-    verify(orderRepository).updateStatusAndShipmentIdForOrder(order1.getId(), RELEASED, shipmentId);
+    verify(orderRepository).getByOrderNumber(order1.getOrderNumber());
+    verify(orderRepository).updateStatusAndShipmentIdForOrder(order1.getOrderNumber(), RELEASED, shipmentId);
     verify(orderEventService).notifyForStatusChange(order1);
 
-    verify(orderRepository).getById(456L);
-    verify(orderRepository).updateStatusAndShipmentIdForOrder(order2.getId(), RELEASED, shipmentId);
+    verify(orderRepository).getByOrderNumber(order2.getOrderNumber());
+    verify(orderRepository).updateStatusAndShipmentIdForOrder(order2.getOrderNumber(), RELEASED, shipmentId);
     verify(orderEventService).notifyForStatusChange(order2);
     verify(userService, never()).getUsersWithRightOnWarehouse(supplyingFacilityId, MANAGE_POD);
   }
@@ -334,11 +336,13 @@ public class OrderServiceTest {
   @Test
   public void shouldSetPackedStatusForAllOrdersIfNoErrorInShipment() throws Exception {
     Order order1 = new Order(make(a(defaultRequisition, with(id, 123L))));
+    order1.setOrderNumber("OYELL_FVR00000123R");
     Order order2 = new Order(make(a(defaultRequisition, with(id, 456L), with(RequisitionBuilder.facility, make(a(defaultFacility, with(code, "F3333")))))));
+    order1.setOrderNumber("OYELL_FVR00000456R");
 
-    Set<Long> orderIds = new LinkedHashSet<>();
-    orderIds.add(order1.getId());
-    orderIds.add(order2.getId());
+    Set<String> orderNumbers = new LinkedHashSet<>();
+    orderNumbers.add(order1.getOrderNumber());
+    orderNumbers.add(order2.getOrderNumber());
     long shipmentId = 678L;
 
     boolean processingError = false;
@@ -356,17 +360,17 @@ public class OrderServiceTest {
     ShipmentFileInfo shipmentFileInfo = new ShipmentFileInfo("shipmentFile.csv", processingError);
     shipmentFileInfo.setId(shipmentId);
 
-    when(orderRepository.getById(order1.getId())).thenReturn(order1);
-    when(orderRepository.getById(order2.getId())).thenReturn(order2);
+    when(orderRepository.getByOrderNumber(order1.getOrderNumber())).thenReturn(order1);
+    when(orderRepository.getByOrderNumber(order2.getOrderNumber())).thenReturn(order2);
     when(requisitionService.getFullRequisitionById(order1.getRnr().getId())).thenReturn(order1.getRnr());
     when(requisitionService.getFullRequisitionById(order2.getRnr().getId())).thenReturn(order2.getRnr());
 
     when(userService.getUsersWithRightOnWarehouse(supplyingFacilityId, MANAGE_POD)).thenReturn(EMPTY_LIST);
 
-    orderService.updateStatusAndShipmentIdForOrders(orderIds, shipmentFileInfo);
+    orderService.updateStatusAndShipmentIdForOrders(orderNumbers, shipmentFileInfo);
 
-    verify(orderRepository).updateStatusAndShipmentIdForOrder(123L, PACKED, shipmentId);
-    verify(orderRepository).updateStatusAndShipmentIdForOrder(456L, PACKED, shipmentId);
+    verify(orderRepository).updateStatusAndShipmentIdForOrder(order1.getOrderNumber(), PACKED, shipmentId);
+    verify(orderRepository).updateStatusAndShipmentIdForOrder(order2.getOrderNumber(), PACKED, shipmentId);
     verify(userService, times(2)).getUsersWithRightOnWarehouse(supplyingFacilityId, MANAGE_POD);
   }
 
@@ -445,28 +449,29 @@ public class OrderServiceTest {
 
   @Test
   public void shouldReturnTrueIfOrderIsReleased() throws Exception {
-    long orderId = 123L;
-    when(orderRepository.getStatus(orderId)).thenReturn(RELEASED);
+    String orderNumber = "OYELL_FVR00000123R";
+    when(orderRepository.getStatus(orderNumber)).thenReturn(RELEASED);
 
-    assertThat(orderService.isShippable(orderId), is(true));
+    assertThat(orderService.isShippable(orderNumber), is(true));
 
-    verify(orderRepository).getStatus(123L);
+    verify(orderRepository).getStatus(orderNumber);
   }
 
   @Test
   public void shouldReturnTrueIfOrderInOneOfTheStatuses() throws Exception {
-    long orderId = 123L;
-    when(orderRepository.getStatus(orderId)).thenReturn(RELEASED);
+    String orderNumber = "OYELL_FVR00000123R";
 
-    assertTrue(orderService.hasStatus(orderId, PACKED, RELEASED));
+    when(orderRepository.getStatus(orderNumber)).thenReturn(RELEASED);
+
+    assertTrue(orderService.hasStatus(orderNumber, PACKED, RELEASED));
   }
 
   @Test
   public void shouldReturnFalseIfOrderInOneOfTheStatuses() throws Exception {
-    long orderId = 123L;
-    when(orderRepository.getStatus(orderId)).thenReturn(RELEASED);
+    String orderNumber = "OYELL_FVR00000123R";
+    when(orderRepository.getStatus(orderNumber)).thenReturn(RELEASED);
 
-    assertFalse(orderService.hasStatus(orderId, PACKED, TRANSFER_FAILED));
+    assertFalse(orderService.hasStatus(orderNumber, PACKED, TRANSFER_FAILED));
   }
 
   @Test
@@ -480,19 +485,19 @@ public class OrderServiceTest {
 
   @Test
   public void shouldReturnTrueIfOrderIsNotShippable() throws Exception {
-    long orderId = 123L;
-    when(orderRepository.getStatus(orderId))
+    String orderNumber = "OYELL_FVR00000123R";
+    when(orderRepository.getStatus(orderNumber))
       .thenReturn(IN_ROUTE)
       .thenReturn(PACKED)
       .thenReturn(TRANSFER_FAILED)
       .thenReturn(READY_TO_PACK);
 
-    assertThat(orderService.isShippable(orderId), is(false));
-    assertThat(orderService.isShippable(orderId), is(false));
-    assertThat(orderService.isShippable(orderId), is(false));
-    assertThat(orderService.isShippable(orderId), is(false));
+    assertThat(orderService.isShippable(orderNumber), is(false));
+    assertThat(orderService.isShippable(orderNumber), is(false));
+    assertThat(orderService.isShippable(orderNumber), is(false));
+    assertThat(orderService.isShippable(orderNumber), is(false));
 
-    verify(orderRepository, times(4)).getStatus(123L);
+    verify(orderRepository, times(4)).getStatus(orderNumber);
 
   }
 
