@@ -120,7 +120,7 @@ INNER JOIN product_categories ON product_categories.id = vw_requisition_detail.c
 			NAME INTO v_geographiczonename
 		FROM
 			geographic_zones
-		WHERE                          wh
+		WHERE
 			ID = rec.zone_id ;
 		IF rec.stockinhand = 0 THEN
 			v_stocking = 'S' ;
