@@ -2,35 +2,37 @@
  * Created by issa on 4/15/14.
  */
 
-function NotificationsDetailController($scope,$routeParams, DashboardNotificationsDetail) {
+function NotificationsDetailController($scope,$routeParams, DashboardNotificationsDetail, ngTableParams) {
 
     $scope.$parent.currentTab = 'NOTIFICATIONS-DETAIL';
 
     $scope.$on('$viewContentLoaded', function () {
-        if(!isUndefined($routeParams.category) &&
-            !isUndefined($routeParams.notificationId)){
-            $scope.notificationsDetail = [{facilityCode:'Code 1', facilityName:'Facility 1'},
-                                          {facilityCode:'Code 2', facilityName:'Facility 2'}]
-           /* DashboardNotificationsDetail.get({
-                periodId: $routeParams.periodId,
-                programId: $routeParams.programId,
-                productId: $routeParams.productId,
-                rgroupId: $routeParams.rgroupId
-            },function(stockData){
-                $scope.totalStockOuts = 0;
-                if(!isUndefined(stockData.stockOut)){
-                    $scope.stockedOutDetails = stockData.stockOut;
-                    $scope.product = _.pluck(stockData.stockOut,'product')[0];
-                    $scope.location = _.pluck(stockData.stockOut,'location')[0];
-                }else{
-                    $scope.resetNotificationData();
+        if(!isUndefined($routeParams.detailTable) &&
+            !isUndefined($routeParams.alertId)){
+            DashboardNotificationsDetail.get({alertId:$routeParams.alertId, detailTable:$routeParams.detailTable},function(stockData){
+                $scope.notificationsDetail = stockData.detail;
+                alert('notification detail '+JSON.stringify($scope.notificationsDetail));
+                if(!isUndefined($scope.notificationsDetail)){
+
+                    var cols =  _.keys(_.first($scope.notificationsDetail));
+                    $scope.notificationColumns = [];
+                    $.each(cols, function(idx,item){
+                        $scope.notificationColumns.push({name:item});
+                    });
                 }
-            });*/
-        } else{
-            $scope.resetNotificationData();
+
+            });
+
         }
+
     });
     $scope.resetNotificationData = function(){
         $scope.notificationsDetail = null;
     };
+
+    $scope.tableParams =  new ngTableParams({
+        page: 1,            // show first page
+        total:0,
+        count: 5
+    });
 }

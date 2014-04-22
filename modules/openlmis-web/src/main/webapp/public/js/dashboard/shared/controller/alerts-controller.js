@@ -12,17 +12,20 @@
 function AlertsController($scope, $filter, Alerts,$location, dashboardMenuService, ngTableParams) {
 
     var typeAlert = 'ALERT',
-        typeStockOut = 'STOCkOUT';
+        typeStockOut = 'STOCKOUT',
+        typeSummary = 'SUMMARY';
 
     $scope.$watch('formFilter.supervisoryNodeId', function(){
         Alerts.get({supervisoryNodeId: $scope.formFilter.supervisoryNodeId},function(data){
-                if(!isUndefined(data.alerts)){
-                    $scope.alertData = _.filter(data.alerts,function(alertData){if(alertData.category == typeAlert){return alertData;}});
-                    $scope.stockOutData = _.filter(data.alerts,function(alertData){if(alertData.category == typeStockOut){return alertData;}});
 
-                }else{
-                    resetAlertsData();
-                }
+            if(!isUndefined(data.alerts)){
+                $scope.alertData = _.filter(data.alerts,function(alertData){if(alertData.displaySection == typeAlert){return alertData;}});
+                $scope.stockOutData = _.filter(data.alerts,function(alertData){if(alertData.displaySection == typeStockOut){return alertData;}});
+                $scope.alertSummary = _.filter(data.alerts,function(alertData){if(alertData.displaySection == typeSummary){return alertData;}});
+
+            }else{
+                resetAlertsData();
+            }
 
 
         });
@@ -31,7 +34,7 @@ function AlertsController($scope, $filter, Alerts,$location, dashboardMenuServic
     });
 
     var resetAlertsData = function(){
-      $scope.alertData = $scope.stockOutData = null;
+      $scope.alertData = $scope.stockOutData = $scope.alertSummary = null;
 
     };
 
@@ -43,9 +46,8 @@ function AlertsController($scope, $filter, Alerts,$location, dashboardMenuServic
         });
     };
 
-    $scope.showAlertDetails = function(id, category){
-        alert('typeAlert details loading id '+id)
-        var notificationPath = 'notifications/category/'+category+'/'+id;
+    $scope.showAlertDetails = function(detailTable, alertId){
+        var notificationPath = 'notifications/'+alertId+'/'+detailTable;
         dashboardMenuService.addTab('menu.header.dashboard.notifications.detail','/public/pages/dashboard/index.html#/'+notificationPath,'NOTIFICATIONS-DETAIL',true, 7);
 
         $location.path(notificationPath);

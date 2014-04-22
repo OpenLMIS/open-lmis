@@ -3,23 +3,22 @@
 <!--<h2><span openlmis-message="title.breakdown.facilities.stock.out.district|location|product"></span></h2>-->
 <div class="row-fluid">
     <div class="span12">
-        <table class="table table-bordered" ng-show="notificationsDetail == undefined || notificationsDetail.length == 0">
-            <tr>
-                <td>No data to show under selected filters</td>
+        <table ng-show="notificationsDetail.length > 0" class="table-bordered table table-striped pull-right"
+               ng-table="tableParams">
+            <thead>
+            <tr class="gradient-header">
+                <th ng-repeat="col in notificationColumns" ><div>{{col.name}}</div>
+                </th>
             </tr>
-        </table>
-        <div ng-show ="notificationsDetail !== undefined && notificationsDetail.length > 0">
-            <table ng-show="notificationsDetail.length > 0" class="table-bordered table table-striped pull-right"
-                   ng-table="tableParams">
-                <tbody>
-                <tr ng-repeat="row in notificationsDetail">
-                    <td data-title="'Facility Code'" >{{row.facilityCode}}</td>
-                    <td data-title="'Facility Name'" >{{row.facilityName}}</td>
-
+            </thead>
+            <tbody>
+                <tr  ng-repeat="notification in notificationsDetail">
+                    <td ng-repeat="col in notificationColumns">{{ notification[col.name] }}</td>
                 </tr>
-                </tbody>
-            </table>
-        </div>
+            </tbody>
+
+        </table>
+
 
     </div>
 
