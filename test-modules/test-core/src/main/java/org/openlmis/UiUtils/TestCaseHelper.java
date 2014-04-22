@@ -178,7 +178,7 @@ public class TestCaseHelper {
                                                         String program) throws SQLException {
     dbWrapper.insertProductCategory(categoryCode, categoryName);
     dbWrapper.insertProduct(product, productName);
-    dbWrapper.insertProgramProductsWithCategory(product, program);
+    dbWrapper.insertProgramProductsWithCategory(product, program, "C1", 1);
   }
 
   public void setupProgramProductISA(String program, String product, String whoRatio, String dosesPerYear, String wastageFactor,
@@ -545,7 +545,7 @@ public class TestCaseHelper {
     assertEquals(reasonForNotVisiting, visitInformation.get("reasonForNotVisiting"));
     assertEquals(otherReasonDescription, visitInformation.get("otherReasonDescription"));
     if (visitInformation.get("visited").equals("t")) {
-      assertEquals(new SimpleDateFormat("yyyy-MM").format(new Date()) + "-01 00:00:00", visitInformation.get("visitDate"));
+      assertEquals(new SimpleDateFormat("yyyy-MM-dd").format(new Date()) + " 00:00:00", visitInformation.get("visitDate"));
     }
   }
 
@@ -695,11 +695,14 @@ public class TestCaseHelper {
   }
 
   protected void testDataForShipment(Integer packsToShip, Boolean fullSupplyFlag, String productCode, int quantityShipped) throws SQLException {
-    dbWrapper.updateFieldValue("orders", "status", "RELEASED", null, null);
     int id = dbWrapper.getMaxRnrID();
-    dbWrapper.insertShipmentData(id, productCode, quantityShipped);
-    dbWrapper.updateFieldValue("shipment_line_items", "packsToShip", packsToShip);
-    dbWrapper.updateFieldValue("shipment_line_items", "fullSupply", fullSupplyFlag);
+    dbWrapper.insertShipmentData(id, productCode, quantityShipped, packsToShip, fullSupplyFlag);
+  }
+
+  protected void testDataForShipmentWithReplacedProduct(Integer packsToShip, Boolean fullSupplyFlag, String productCode,
+                                                        int quantityShipped, String replacedProductCode) throws SQLException {
+    int id = dbWrapper.getMaxRnrID();
+    dbWrapper.insertShipmentDataWithReplacedProduct(id, productCode, quantityShipped, replacedProductCode, packsToShip, fullSupplyFlag);
   }
 
   public void assertEqualsAndNulls(Object actual, String expected) {

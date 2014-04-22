@@ -17,7 +17,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.domain.OrderConfiguration;
+import org.openlmis.core.domain.OrderNumberConfiguration;
 import org.openlmis.core.repository.mapper.OrderConfigurationMapper;
+import org.openlmis.core.repository.mapper.OrderNumberConfigurationMapper;
 import org.openlmis.db.categories.UnitTests;
 
 import static org.hamcrest.core.Is.is;
@@ -34,6 +36,9 @@ public class OrderConfigurationRepositoryTest {
   @Mock
   private OrderConfigurationMapper orderConfigurationMapper;
 
+  @Mock
+  private OrderNumberConfigurationMapper orderNumberConfigurationMapper;
+
   @Test
   public void shouldGetConfiguration() {
     OrderConfiguration orderConfiguration = new OrderConfiguration();
@@ -48,5 +53,14 @@ public class OrderConfigurationRepositoryTest {
     OrderConfiguration orderConfiguration = new OrderConfiguration();
     orderConfigurationRepository.update(orderConfiguration);
     verify(orderConfigurationMapper).update(orderConfiguration);
+  }
+
+  @Test
+  public void shouldUpdateOrderNumberConfiguration() {
+    OrderNumberConfiguration orderNumberConfiguration = new OrderNumberConfiguration();
+    orderConfigurationRepository.updateOrderNumberConfiguration(orderNumberConfiguration);
+
+    verify(orderNumberConfigurationMapper).delete();
+    verify(orderNumberConfigurationMapper).insert(orderNumberConfiguration);
   }
 }

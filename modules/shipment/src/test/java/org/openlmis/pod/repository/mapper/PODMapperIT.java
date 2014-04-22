@@ -68,6 +68,7 @@ public class PODMapperIT extends ApplicationTestContext {
     orderPod.setOrderId(order.getId());
     orderPod.setDeliveredBy("deliveredBy");
     orderPod.setReceivedBy("acceptedBy");
+
     Date receivedDate = new Date();
     orderPod.setReceivedDate(receivedDate);
     Rnr rnr = order.getRnr();

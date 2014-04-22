@@ -24,20 +24,20 @@ import javax.persistence.Column;
 public class UserSummaryReport implements ReportData {
 
     @Column( name="firstname")
-    private String firstName;
+    private String firstname;
     @Column( name = "lastname")
-    private String lastName;
+    private String lastname;
     @Column( name="cellphone")
     private String cellPhone;
     @Column(name = "officephone")
-    private String officePhone;
+    private String officephone;
     @Column(name = "email")
     private String email;
     @Column(name = "supervisorynodename")
-    private String supervisoryNode;
+    private String supervisorynodename;
     @Column(name = "programname")
-    private String program;
+    private String programname;
     @Column(name = "rolename")
-    private String role;
+    private String rolename;
 
 }

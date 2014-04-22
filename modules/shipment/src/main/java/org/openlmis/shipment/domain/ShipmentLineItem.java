@@ -41,6 +41,8 @@ public class ShipmentLineItem extends LineItem {
 
   private String programCode;
 
+  private String orderNumber;
+
   private String productCode;
 
   private Integer quantityOrdered;

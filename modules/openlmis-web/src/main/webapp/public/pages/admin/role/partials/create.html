@@ -176,7 +176,7 @@
                                         <div id = "reportRights-{{reportRight.right}}" class = "checkbox-list clearfix"
                                              ng-repeat = "reportRight in reportRights" tab-scroll>
                                             <input id = "{{reportRight.right}}" type = "checkbox" ng-checked = "contains(reportRight.right)"
-                                                   ng-click = "updateRights(checked,reportRight)" ng-model = "checked"
+                                                   ng-change = "updateRights(checked,reportRight)" ng-model = "checked"
                                                    ng-disabled = "areRelatedFieldsSelected(reportRight) || currentRightType != 'REPORT'" />
                                             <label for = "{{reportRight.right}}" ><span openlmis-message="reportRight.rightName"></span></label >
                                         </div >

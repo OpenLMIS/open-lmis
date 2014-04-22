@@ -79,7 +79,7 @@ public class RoleRightsServiceTest {
             CREATE_REQUISITION,
             VIEW_REQUISITION,
             VIEW_ORDER,
-            CONFIGURE_EDI,
+            SYSTEM_SETTINGS,
             FACILITY_FILL_SHIPMENT,
             MANAGE_POD,
             DELETE_REQUISITION,

@@ -12,13 +12,11 @@ package org.openlmis.web.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import org.openlmis.rnr.domain.Column;
-import org.openlmis.rnr.domain.LossesAndAdjustmentsType;
-import org.openlmis.rnr.domain.ProgramRnrTemplate;
-import org.openlmis.rnr.domain.RnrLineItem;
+import org.openlmis.rnr.domain.*;
 
 import java.util.List;
 
+import static java.util.Arrays.asList;
 import static org.openlmis.rnr.domain.ProgramRnrTemplate.QUANTITY_DISPENSED;
 import static org.openlmis.rnr.domain.ProgramRnrTemplate.STOCK_IN_HAND;
 
@@ -30,14 +28,17 @@ import static org.openlmis.rnr.domain.ProgramRnrTemplate.STOCK_IN_HAND;
 @AllArgsConstructor
 public class PrintRnrLineItem {
 
+  private static List<RnrStatus> statusList = asList(RnrStatus.AUTHORIZED, RnrStatus.APPROVED, RnrStatus.IN_APPROVAL, RnrStatus.RELEASED);
   private RnrLineItem rnrLineItem;
 
   public void calculate(List<? extends Column> rnrColumns,
-                        List<LossesAndAdjustmentsType> lossesAndAdjustmentsTypes) {
+                        List<LossesAndAdjustmentsType> lossesAndAdjustmentsTypes, Integer numberOfMonths, RnrStatus status) {
     ProgramRnrTemplate template = new ProgramRnrTemplate(rnrColumns);
-    if (template.columnsCalculated(STOCK_IN_HAND)) calculateStockInHand();
-    if (template.columnsCalculated(QUANTITY_DISPENSED)) rnrLineItem.calculateQuantityDispensed();
-    calculateNormalizedConsumption(template);
+    if (template.columnsCalculated(STOCK_IN_HAND)) calculateStockInHand(status);
+    if (template.columnsCalculated(QUANTITY_DISPENSED) && !statusList.contains(status))
+      rnrLineItem.calculateQuantityDispensed();
+    calculateNormalizedConsumption(template, status);
+    calculatePeriodNormalizedConsumption(numberOfMonths);
     calculateAmc();
     calculateMaxStockQuantity(template);
     calculateLossesAndAdjustments(lossesAndAdjustmentsTypes);
@@ -46,9 +47,20 @@ public class PrintRnrLineItem {
     rnrLineItem.calculatePacksToShip();
   }
 
-  private void calculateStockInHand() {
+  private void calculatePeriodNormalizedConsumption(Integer numberOfMonths) {
     try {
-      rnrLineItem.calculateStockInHand();
+      rnrLineItem.calculatePeriodNormalizedConsumption(numberOfMonths);
+    } catch (NullPointerException e) {
+      rnrLineItem.setPeriodNormalizedConsumption(null);
+    }
+  }
+
+  private void calculateStockInHand(RnrStatus status) {
+
+    try {
+      if (!statusList.contains(status)) {
+        rnrLineItem.calculateStockInHand();
+      }
     } catch (NullPointerException e) {
       rnrLineItem.setStockInHand(null);
     }
@@ -70,9 +82,11 @@ public class PrintRnrLineItem {
     }
   }
 
-  private void calculateNormalizedConsumption(ProgramRnrTemplate template) {
+  private void calculateNormalizedConsumption(ProgramRnrTemplate template, RnrStatus status) {
     try {
-      rnrLineItem.calculateNormalizedConsumption(template);
+      if (!statusList.contains(status)) {
+        rnrLineItem.calculateNormalizedConsumption(template);
+      }
     } catch (NullPointerException e) {
       rnrLineItem.setNormalizedConsumption(null);
     }

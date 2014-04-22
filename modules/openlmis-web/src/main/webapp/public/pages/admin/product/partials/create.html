@@ -61,7 +61,7 @@
 
     <div class="form-field" style="width: 40%;">
         <input ng-model="product.primaryName" name="primaryName" id="primaryName" type="text"
-               maxlength="20"
+               maxlength="150"
                ng-required="true"/>
         <span class="field-error"
               ng-show="createProductForm.primaryName.$error.required && showError"
@@ -126,7 +126,7 @@
 
     <div class="form-field" style="width: 40%;">
 
-        <select style="width:200px;" name="formid" id="formid" ng-model="product.formID"
+        <select style="width:200px;" name="formid" id="formid" ng-model="product.formId"
                 ng-options="option.id as option.code for option in productForms" ng-required="true">
 
         </select>

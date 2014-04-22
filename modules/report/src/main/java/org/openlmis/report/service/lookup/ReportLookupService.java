@@ -313,6 +313,10 @@ public class ReportLookupService {
     return requisitionMapper.getFacilityNameForRnrId(rnrId);
   }
 
+  public org.openlmis.core.domain.Facility getFacilityForRnrId(Long rnrId) {
+    return requisitionMapper.getFacilityForRnrId(rnrId);
+  }
+
   public String getPeriodTextForRnrId(Long rnrId) {
     return requisitionMapper.getPeriodTextForRnrId(rnrId);
   }

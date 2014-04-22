@@ -33,6 +33,7 @@ import static org.apache.commons.lang3.StringUtils.isBlank;
 public class ShipmentLineItemDTO {
 
   private static Logger logger = Logger.getLogger(ShipmentLineItemDTO.class);
+  private String orderNumber;
   private String orderId;
   private String concatenatedOrderId;
   private String facilityCode;
@@ -51,7 +52,7 @@ public class ShipmentLineItemDTO {
 
   public void checkMandatoryFields() {
     if (isBlank(this.productCode) ||
-      isBlank(this.orderId) ||
+      isBlank(this.orderNumber) ||
       isBlank(this.quantityShipped)) {
 
       throw new DataException("error.mandatory.fields.missing");

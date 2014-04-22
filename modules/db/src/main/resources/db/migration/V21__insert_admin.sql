@@ -49,7 +49,7 @@ INSERT INTO role_rights (roleId, rightName) VALUES ((SELECT
 ((SELECT
     id
   FROM roles
-  WHERE name = 'Admin'), 'CONFIGURE_EDI'),
+  WHERE name = 'Admin'), 'SYSTEM_SETTINGS'),
 ((SELECT
     id
   FROM roles

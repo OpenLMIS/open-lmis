@@ -48,6 +48,7 @@ import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static java.util.Arrays.asList;
+import static java.util.Collections.EMPTY_LIST;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
@@ -130,10 +131,11 @@ public class RequisitionServiceTest {
   private DbMapper dbMapper;
   @Mock
   private BudgetLineItemService budgetLineItemService;
+  @Mock
+  private StatusChangeEventService statusChangeEventService;
 
   @InjectMocks
   private RequisitionSearchStrategyFactory requisitionSearchStrategyFactory;
-
   @InjectMocks
   private RequisitionService requisitionService;
 
@@ -169,6 +171,7 @@ public class RequisitionServiceTest {
     regimenLineItems.add(new RegimenLineItem(null, null, 1L, 1L));
     requisition.setRegimenLineItems(regimenLineItems);
 
+    requisition.setStatus(INITIATED);
     Rnr spyRequisition = spy(requisition);
 
     Mockito.doNothing().when(spyRequisition).setFieldsAccordingToTemplateFrom(any(Rnr.class), any(ProgramRnrTemplate.class), any(RegimenTemplate.class));
@@ -187,6 +190,7 @@ public class RequisitionServiceTest {
 
     when(programService.getById(PROGRAM.getId())).thenReturn(PROGRAM);
     when(budgetLineItemService.get(FACILITY.getId(), PROGRAM.getId(), PERIOD.getId())).thenReturn(new BudgetLineItem());
+
     Rnr rnr = spyRequisitionService.initiate(FACILITY, PROGRAM, 1L, false, null);
 
     verify(facilityApprovedProductService).getFullSupplyFacilityApprovedProductByFacilityAndProgram(FACILITY.getId(), PROGRAM.getId());
@@ -233,6 +237,7 @@ public class RequisitionServiceTest {
     requisition.setFacility(FACILITY);
     requisition.setProgram(requisitionProgram);
     requisition.setPeriod(PERIOD);
+    requisition.setStatus(INITIATED);
     whenNew(Rnr.class).withArguments(FACILITY, requisitionProgram, PERIOD, false, facilityApprovedProducts, regimens, USER_ID).thenReturn(requisition);
 
     spyRequisitionService.initiate(FACILITY, requisitionProgram, USER_ID, false, null);
@@ -558,6 +563,16 @@ public class RequisitionServiceTest {
     when(supplyLineService.getSupplyLineBy(supervisoryNode, PROGRAM)).thenReturn(supplyLine);
     Facility supplyingDepot = new Facility();
     when(supplyLine.getSupplyingFacility()).thenReturn(supplyingDepot);
+    SupervisoryNode baseSupervisoryNode = new SupervisoryNode();
+    baseSupervisoryNode.setId(1L);
+    when(supervisoryNodeService.getFor(FACILITY, PROGRAM)).thenReturn(baseSupervisoryNode);
+    SupplyLine supplyLine1 = mock(SupplyLine.class);
+    Facility supplyingFacility = new Facility();
+    supplyingFacility.setId(2L);
+    supplyLine1.setSupplyingFacility(supplyingFacility);
+    when(supplyLineService.getSupplyLineBy(baseSupervisoryNode, savedRnr.getProgram())).thenReturn(supplyLine);
+    when(userService.getUsersWithRightOnWarehouse(supplyingFacility.getId(), CONVERT_TO_ORDER)).thenReturn(EMPTY_LIST);
+
     requisitionService.approve(authorizedRnr, null);
 
     verify(requisitionRepository).approve(savedRnr);
@@ -685,7 +700,10 @@ public class RequisitionServiceTest {
     Rnr spyRnr = getFilledSavedRequisitionWithDefaultFacilityProgramPeriod(authorizedRnr, APPROVE_REQUISITION);
 
     doNothing().when(spyRnr).calculateForApproval();
-
+    SupervisoryNode supervisoryNode = new SupervisoryNode();
+    supervisoryNode.setId(1l);
+    when(supervisoryNodeService.getFor(FACILITY, PROGRAM)).thenReturn(supervisoryNode);
+    when(supplyLineService.getSupplyLineBy(supervisoryNode, PROGRAM)).thenReturn(null);
     requisitionService.approve(spyRnr, null);
 
     verify(spyRnr).calculateForApproval();
@@ -898,7 +916,8 @@ public class RequisitionServiceTest {
   }
 
   @Test
-  public void shouldNotifyStatusChangeOnAuthorize() throws Exception {
+  public void shouldNotifyStatusChangeOnAuthorizeAndSendEmailToActiveUsers() throws Exception {
+    ArrayList<User> emptyList = new ArrayList<>();
     Rnr savedRnr = getFilledSavedRequisitionWithDefaultFacilityProgramPeriod(submittedRnr, AUTHORIZE_REQUISITION);
     ProgramRnrTemplate template = new ProgramRnrTemplate(rnrColumns);
     when(rnrTemplateService.fetchProgramTemplate(PROGRAM.getId())).thenReturn(template);
@@ -908,9 +927,20 @@ public class RequisitionServiceTest {
     SupervisoryNode approverNode = new SupervisoryNode();
     when(supervisoryNodeService.getFor(FACILITY, PROGRAM)).thenReturn(approverNode);
 
+    User activeUser = make(a(UserBuilder.defaultUser, with(UserBuilder.active, true)));
+    User inactiveUser = make(a(UserBuilder.defaultUser, with(UserBuilder.active, false)));
+    List<User> users = asList(activeUser, activeUser, inactiveUser);
+
+    when(savedRnr.getProgram()).thenReturn(submittedRnr.getProgram());
+    when(savedRnr.getFacility()).thenReturn(submittedRnr.getFacility());
+    when(savedRnr.getSupervisoryNodeId()).thenReturn(1L);
+    when(userService.getUsersWithRightInNodeForProgram(submittedRnr.getProgram(), new SupervisoryNode(1L), Right.APPROVE_REQUISITION)).thenReturn(users);
+    when(supervisoryNodeService.getFor(submittedRnr.getFacility(), submittedRnr.getProgram())).thenReturn(new SupervisoryNode(1L));
+
     requisitionService.authorize(submittedRnr);
 
     verify(requisitionEventService).notifyForStatusChange(savedRnr);
+    verify(statusChangeEventService).notifyUsers(emptyList, savedRnr.getId(), submittedRnr.getFacility(), submittedRnr.getProgram(), submittedRnr.getPeriod(), "AUTHORIZED");
   }
 
   @Test
@@ -932,16 +962,25 @@ public class RequisitionServiceTest {
 
   @Test
   public void shouldNotifyStatusChangeOnSubmit() throws Exception {
+    ArrayList<User> emptyList = new ArrayList<>();
     Rnr savedRnr = getFilledSavedRequisitionWithDefaultFacilityProgramPeriod(initiatedRnr, CREATE_REQUISITION);
     ProgramRnrTemplate template = new ProgramRnrTemplate(rnrColumns);
+
     when(rnrTemplateService.fetchProgramTemplate(PROGRAM.getId())).thenReturn(template);
+
     doNothing().when(calculationService).perform(savedRnr, template);
 
+    when(savedRnr.getFacility()).thenReturn(initiatedRnr.getFacility());
+    when(savedRnr.getProgram()).thenReturn(initiatedRnr.getProgram());
+    when(supervisoryNodeService.getFor(initiatedRnr.getFacility(), initiatedRnr.getProgram())).thenReturn(new SupervisoryNode(1L));
+    when(userService.getUsersWithRightInHierarchyUsingBaseNode(1L, initiatedRnr.getProgram(), Right.AUTHORIZE_REQUISITION)).thenReturn(EMPTY_LIST);
+    when(userService.getUsersWithRightInNodeForProgram(eq(initiatedRnr.getProgram()), any(SupervisoryNode.class), eq(Right.AUTHORIZE_REQUISITION))).thenReturn(EMPTY_LIST);
     when(rnrTemplateService.fetchAllRnRColumns(PROGRAM.getId())).thenReturn(rnrColumns);
 
     requisitionService.submit(initiatedRnr);
 
     verify(requisitionEventService).notifyForStatusChange(savedRnr);
+    verify(statusChangeEventService).notifyUsers(emptyList, savedRnr.getId(), savedRnr.getFacility(), savedRnr.getProgram(), savedRnr.getPeriod(), "SUBMITTED");
   }
 
   @Test
@@ -1350,6 +1389,8 @@ public class RequisitionServiceTest {
     when(requisition.getFacility()).thenReturn(FACILITY);
     when(requisition.getProgram()).thenReturn(requisitionProgram);
     when(requisition.getPeriod()).thenReturn(PERIOD);
+    when(requisition.getStatus()).thenReturn(INITIATED);
+
     whenNew(Rnr.class).withArguments(FACILITY, requisitionProgram, PERIOD, false, facilityApprovedProducts, regimens, USER_ID).thenReturn(requisition);
     when(requisitionRepository.getById(1l)).thenReturn(requisition);
     when(budgetLineItemService.get(FACILITY.getId(), requisitionProgram.getId(), PERIOD.getId())).thenReturn(new BudgetLineItem());

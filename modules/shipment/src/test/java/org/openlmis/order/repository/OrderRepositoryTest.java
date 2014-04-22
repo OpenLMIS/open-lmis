@@ -71,13 +71,13 @@ public class OrderRepositoryTest {
 
   @Test
   public void shouldUpdateStatusAndShipmentIdForOrder() throws Exception {
-    Long orderId = 123L;
+    String orderNumber = "OYELL_FVR00000123R";
     Long shipmentId = 456L;
     OrderStatus status = RELEASED;
 
-    orderRepository.updateStatusAndShipmentIdForOrder(orderId, status, shipmentId);
+    orderRepository.updateStatusAndShipmentIdForOrder(orderNumber, status, shipmentId);
 
-    verify(orderMapper).updateShipmentAndStatus(orderId, status, shipmentId);
+    verify(orderMapper).updateShipmentAndStatus(orderNumber, status, shipmentId);
   }
 
   @Test

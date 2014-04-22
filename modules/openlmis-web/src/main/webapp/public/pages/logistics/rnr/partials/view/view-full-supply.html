@@ -9,59 +9,61 @@
   -->
 
 <div ng-controller="ViewFullSupplyController">
-  <div ng-hide="page.fullSupply.length" class="alert alert-info" openlmis-message="label.no.products"></div>
-  <div id="viewRnr" ng-show="page.fullSupply.length" class="rnr-table rnr-approval" adjust-height>
-    <div class="float-left left-table">
-      <table id="fullSupplyFrozenTable" class="table table-bordered" fixed-table-header>
-        <thead>
-        <tr>
-          <th class="col-{{column.name}}" ng-repeat="column in visibleColumns.fullSupply.fixed"
-              ng-bind="column.label"></th>
-        </tr>
-        </thead>
+    <div ng-hide="page.fullSupply.length" class="alert alert-info" openlmis-message="label.no.products"></div>
+    <div id="viewRnr" ng-show="page.fullSupply.length" class="rnr-table rnr-approval" adjust-height>
+        <div class="float-left left-table">
+            <table id="fullSupplyFrozenTable" class="table table-bordered" fixed-table-header>
+                <thead>
+                <tr>
+                    <th class="col-{{column.name}}" ng-repeat="column in visibleColumns.fullSupply.fixed"
+                        ng-bind="column.label"></th>
+                </tr>
+                </thead>
 
-        <tbody ng-repeat="rnrLineItem in page.fullSupply">
-        <tr>
-          <td class="productCategory" colspan="{{visibleColumns.fullSupply.fixed.length}}"
-              ng-show="showCategory($index)"
-              ng-bind="rnrLineItem.productCategory"></td>
-        </tr>
-        <tr>
-          <td class="cell-input col-{{ column.name }}" ng-repeat="column in visibleColumns.fullSupply.fixed">
+                <tbody ng-repeat="rnrLineItem in page.fullSupply">
+                <tr>
+                    <td id="category_{{$index}}" class="productCategory"
+                        colspan="{{visibleColumns.fullSupply.fixed.length}}"
+                        ng-show="showCategory($index)"
+                        ng-bind="rnrLineItem.productCategory"></td>
+                </tr>
+                <tr>
+                    <td class="cell-input col-{{ column.name }}" ng-repeat="column in visibleColumns.fullSupply.fixed">
             <span ng-switch on="column.name">
               <span ng-switch-when="skipped">
                 <input ng-model="rnrLineItem[column.name]" id="skip_{{$parent.$parent.$index}}"
-                       ng-disabled="true" type="checkbox" >
+                       ng-disabled="true" type="checkbox">
               </span>
               <span ng-switch-default ng-bind="rnrLineItem[column.name]" id="{{getId(column.name, $parent)}}"
                     class="cell-text"></span>
             </span>
-          </td>
-        </tr>
-        </tbody>
-      </table>
-    </div>
-    <div class="float-left right-table" custom-horizontal-scroll>
-      <table id="fullSupplyTable" fixed-table-header class="table table-bordered scrollable">
-        <thead>
-        <tr>
-          <th class="col-{{column.name}}" ng-repeat="column in visibleColumns.fullSupply.scrollable"
-              ng-bind="column.label"></th>
-        </tr>
-        </thead>
-        <tbody ng-repeat="rnrLineItem in page.fullSupply">
-        <tr>
-          <td class="productCategory" colspan="{{visibleColumns.fullSupply.scrollable.length}}"
-              ng-show="showCategory($index)"></td>
-        </tr>
-        <tr>
-          <td class="cell-input col-{{ column.name }}" ng-repeat="column in visibleColumns.fullSupply.scrollable">
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="float-left right-table" custom-horizontal-scroll>
+            <table id="fullSupplyTable" fixed-table-header class="table table-bordered scrollable">
+                <thead>
+                <tr>
+                    <th class="col-{{column.name}}" ng-repeat="column in visibleColumns.fullSupply.scrollable"
+                        ng-bind="column.label"></th>
+                </tr>
+                </thead>
+                <tbody ng-repeat="rnrLineItem in page.fullSupply">
+                <tr>
+                    <td class="productCategory" colspan="{{visibleColumns.fullSupply.scrollable.length}}"
+                        ng-show="showCategory($index)"></td>
+                </tr>
+                <tr>
+                    <td class="cell-input col-{{ column.name }}"
+                        ng-repeat="column in visibleColumns.fullSupply.scrollable">
             <span ng-switch on="column.name">
               <span ng-switch-when="lossesAndAdjustments">
                 <div>
-                  <a href="" ng-click="showLossesAndAdjustments(rnrLineItem)" class="rnr-adjustment">
-                    <span ng-bind="rnrLineItem.totalLossesAndAdjustments" class="adjustment-value"></span>
-                  </a>
+                    <a href="" ng-click="showLossesAndAdjustments(rnrLineItem)" class="rnr-adjustment">
+                        <span ng-bind="rnrLineItem.totalLossesAndAdjustments" class="adjustment-value"></span>
+                    </a>
                 </div>
               </span>
 
@@ -79,13 +81,13 @@
               <span ng-switch-default ng-bind="rnrLineItem[column.name]" id="{{getId(column.name, $parent)}}"
                     class="cell-text"></span>
             </span>
-          </td>
-        </tr>
-        </tbody>
-      </table>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="clear-both"></div>
     </div>
-    <div class="clear-both"></div>
-  </div>
 
-  <ng-include src="'/public/pages/logistics/rnr/partials/approve/losses-and-adjustments.html'"></ng-include>
+    <ng-include src="'/public/pages/logistics/rnr/partials/approve/losses-and-adjustments.html'"></ng-include>
 </div>

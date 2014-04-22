@@ -33,6 +33,7 @@ public class ShipmentLineItemTransformerTest {
   private ShipmentLineItemTransformer transformer = new ShipmentLineItemTransformer();
 
   String orderIdWithSpaces = " 11 ";
+  String orderNumber = "ORD-132";
   String productCodeWithSpaces = " P111 ";
   String quantityShippedWithSpaces = " 22 ";
   String costWithSpaces = "21 ";
@@ -51,7 +52,7 @@ public class ShipmentLineItemTransformerTest {
   public void shouldTrimAndParseFieldsWithSpaces() throws Exception {
 
 
-    ShipmentLineItemDTO dto = new ShipmentLineItemDTO( orderIdWithSpaces, concatenatedOrderIdWithSpaces, facilityCodeWithSpaces, programCodeWithSpaces, productCodeWithSpaces, quantityOrderedWithSpaces,substitutedProductCodeWithSpaces, quantityShippedWithSpaces,  costWithSpaces,  substitutedProductCodeWithSpaces, substitutedProductNameWithSpaces, substitutedProductQuantityShippedWithSpaces, packSizeWithSpaces, packedDateWithSpaces, shippedDateWithSpaces);
+    ShipmentLineItemDTO dto = new ShipmentLineItemDTO( orderNumber , orderIdWithSpaces, concatenatedOrderIdWithSpaces, facilityCodeWithSpaces, programCodeWithSpaces, productCodeWithSpaces, quantityOrderedWithSpaces,substitutedProductCodeWithSpaces, quantityShippedWithSpaces,  costWithSpaces,  substitutedProductCodeWithSpaces, substitutedProductNameWithSpaces, substitutedProductQuantityShippedWithSpaces, packSizeWithSpaces, packedDateWithSpaces, shippedDateWithSpaces);
 
     ShipmentLineItem lineItem = new ShipmentLineItemTransformer().transform(dto, "MM/dd/yyyy", "MM/dd/yyyy", new Date());
 
@@ -91,7 +92,7 @@ public class ShipmentLineItemTransformerTest {
 
 
 
-    ShipmentLineItemDTO dto = new ShipmentLineItemDTO( orderIdWithSpaces, concatenatedOrderIdWithSpaces, facilityCodeWithSpaces, programCodeWithSpaces, productCodeWithSpaces, quantityOrderedWithSpaces,substitutedProductCodeWithSpaces, quantityShippedWithSpaces,  costWithSpaces,  substitutedProductCodeWithSpaces, substitutedProductNameWithSpaces, substitutedProductQuantityShippedWithSpaces, packSizeWithSpaces, packedDate, shippedDateWithSpaces);
+    ShipmentLineItemDTO dto = new ShipmentLineItemDTO(orderNumber , orderIdWithSpaces,concatenatedOrderIdWithSpaces, facilityCodeWithSpaces, programCodeWithSpaces, productCodeWithSpaces, quantityOrderedWithSpaces,substitutedProductCodeWithSpaces, quantityShippedWithSpaces,  costWithSpaces,  substitutedProductCodeWithSpaces, substitutedProductNameWithSpaces, substitutedProductQuantityShippedWithSpaces, packSizeWithSpaces, packedDate, shippedDateWithSpaces);
 
 
     expectException.expect(DataException.class);
@@ -103,7 +104,7 @@ public class ShipmentLineItemTransformerTest {
   public void shouldThrowErrorIfShippedDateIsDifferentFromFormat() {
     String shippedDate = "10/10/13 ";
 
-    ShipmentLineItemDTO dto = new ShipmentLineItemDTO( orderIdWithSpaces, concatenatedOrderIdWithSpaces, facilityCodeWithSpaces, programCodeWithSpaces, productCodeWithSpaces, quantityOrderedWithSpaces,substitutedProductCodeWithSpaces, quantityShippedWithSpaces,  costWithSpaces,  substitutedProductCodeWithSpaces, substitutedProductNameWithSpaces, substitutedProductQuantityShippedWithSpaces, packSizeWithSpaces, packedDateWithSpaces, shippedDate);
+    ShipmentLineItemDTO dto = new ShipmentLineItemDTO(orderNumber , orderIdWithSpaces, concatenatedOrderIdWithSpaces, facilityCodeWithSpaces, programCodeWithSpaces, productCodeWithSpaces, quantityOrderedWithSpaces,substitutedProductCodeWithSpaces, quantityShippedWithSpaces,  costWithSpaces,  substitutedProductCodeWithSpaces, substitutedProductNameWithSpaces, substitutedProductQuantityShippedWithSpaces, packSizeWithSpaces, packedDateWithSpaces, shippedDate);
 
 
     expectException.expect(DataException.class);
@@ -140,16 +141,16 @@ public class ShipmentLineItemTransformerTest {
     assertNull(lineItem.getCost());
   }
 
-  @Test
+ /* @Test
   public void shouldThrowErrorForWrongRnrIdDataType() {
     ShipmentLineItemDTO dto = dtoWithAllFields();
-    dto.setOrderId("3333.33");
+    dto.setOrderNumber("3333.33");
 
     expectException.expect(DataException.class);
     expectException.expectMessage("wrong.data.type");
 
     transformer.transform(dto, SIMPLE_DATE_FORMAT, SIMPLE_DATE_FORMAT, new Date());
-  }
+  }*/
 
 
   @Test
@@ -207,9 +208,9 @@ public class ShipmentLineItemTransformerTest {
   }
 
   @Test
-  public void shouldThrowErrorIfRnrIdIsMissing() {
+  public void shouldThrowErrorIfOrderNumberIsMissing() {
     ShipmentLineItemDTO dto = dtoWithAllFields();
-    dto.setOrderId(null);
+    dto.setOrderNumber(null);
 
     expectException.expect(DataException.class);
     expectException.expectMessage("error.mandatory.fields.missing");
@@ -252,7 +253,7 @@ public class ShipmentLineItemTransformerTest {
     ShipmentLineItemDTO dto = new ShipmentLineItemDTO();
     dto.setProductCode("P123");
     dto.setQuantityShipped("1234");
-    dto.setOrderId("111");
+    dto.setOrderNumber("111");
 
     return dto;
   }
@@ -262,7 +263,7 @@ public class ShipmentLineItemTransformerTest {
 
     dto.setProductCode("P123");
     dto.setQuantityShipped("1234");
-    dto.setOrderId("111");
+    dto.setOrderNumber("111");
     dto.setCost("11");
     dto.setShippedDate("03/03/2012");
     dto.setPackedDate("03/03/2012");
