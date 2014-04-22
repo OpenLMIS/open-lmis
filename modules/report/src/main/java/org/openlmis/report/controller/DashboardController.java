@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
@@ -91,13 +92,14 @@ public class DashboardController extends BaseController {
         return OpenLmisResponse.response(STOCKED_OUT_FACILITIES, this.lookupService.getStockOutFacilitiesByRequisitionGroup(periodId, programId, productId,requisitionGroupId));
     }
     @RequestMapping(value = "/alerts", method = GET, headers = ACCEPT_JSON)
-    public ResponseEntity<OpenLmisResponse>  getAlerts(@RequestParam("supervisoryNodeId") Long supervisoryNodeId){
-        return OpenLmisResponse.response(ALERTS, this.lookupService.getAlerts(supervisoryNodeId));
+    public ResponseEntity<OpenLmisResponse>  getAlerts(@RequestParam("supervisoryNodeId") Long supervisoryNodeId,
+                                                       HttpServletRequest request){
+        return OpenLmisResponse.response(ALERTS, this.lookupService.getAlerts(loggedInUserId(request), supervisoryNodeId));
     }
 
-    @RequestMapping(value = "/notifications/{category}/{id}", method = GET, headers = ACCEPT_JSON)
-    public ResponseEntity<OpenLmisResponse> getNotificationsByCategory(@PathVariable("category") String category, @PathVariable("id") Long id){
-        return OpenLmisResponse.response(NOTIFICATIONS_DETAIL, this.lookupService.getNotificationsByCategory(category, id));
+    @RequestMapping(value = "/notifications/{alertId}/{detailTable}", method = GET, headers = ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getNotificationsByCategory(@PathVariable("alertId") Long id, @PathVariable("detailTable") String detailTable){
+        return OpenLmisResponse.response(NOTIFICATIONS_DETAIL, this.lookupService.getNotificationsByCategory(detailTable, id));
     }
 
 }
