@@ -39,13 +39,13 @@ public class ShipmentFileTemplateController extends BaseController {
   private ShipmentFileTemplateService service;
 
   @RequestMapping(value = "/shipment-file-template", method = GET)
-  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CONFIGURE_EDI')")
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'SYSTEM_SETTINGS')")
   public ResponseEntity<OpenLmisResponse> get() {
     return response("shipment_template", service.get());
   }
 
   @RequestMapping(value = "/shipment-file-template", method = POST, headers = ACCEPT_JSON)
-  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CONFIGURE_EDI')")
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'SYSTEM_SETTINGS')")
   public ResponseEntity<OpenLmisResponse> update(@RequestBody EDIFileTemplate shipmentFileTemplate,
                                                  HttpServletRequest request) {
     shipmentFileTemplate.validateAndSetModifiedBy(loggedInUserId(request), asList("productCode", "orderId", "quantityShipped"));

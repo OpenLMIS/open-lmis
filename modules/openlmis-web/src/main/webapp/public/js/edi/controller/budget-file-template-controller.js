@@ -42,7 +42,7 @@ function BudgetFileTemplateController($scope, budgetFileTemplate, BudgetFileTemp
 
   $scope.cancelEdiSave = function () {
     $scope.$parent.message = "";
-    $location.path('configure-edi-file');
+    $location.path('configure-system-settings');
   };
 
   $scope.saveBudgetFileTemplate = function () {
@@ -53,7 +53,7 @@ function BudgetFileTemplateController($scope, budgetFileTemplate, BudgetFileTemp
     BudgetFileTemplate.save({}, $scope.budgetFileTemplate, function (data) {
       $scope.error = "";
       $scope.$parent.message = messageService.get(data.success);
-      $location.path('configure-edi-file');
+      $location.path('configure-system-settings');
     });
   };
 

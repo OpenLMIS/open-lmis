@@ -107,7 +107,7 @@ public class UpdatePodPage extends Page {
   }
 
   public String getProductCode(int rowNumber) {
-    WebElement productCode = testWebDriver.findElement(By.id("productCode" + (rowNumber - 1)));
+    WebElement productCode = testWebDriver.getElementById("productCode" + (rowNumber - 1));
     testWebDriver.waitForElementToAppear(productCode);
     return productCode.getText();
   }
@@ -330,6 +330,12 @@ public class UpdatePodPage extends Page {
     WebElement quantityReturned = testWebDriver.getElementById("quantityReturned" + (rowNumber - 1));
     testWebDriver.scrollToElement(quantityReturned);
     return quantityReturned.getAttribute("value");
+  }
+
+  public String getReplacedProductCode(int rowNumber) {
+    WebElement replacedProductCode = testWebDriver.getElementById("replacedProductCode" + (rowNumber - 1));
+    testWebDriver.scrollToElement(replacedProductCode);
+    return replacedProductCode.getText();
   }
 
   public void clickSubmitButton() {

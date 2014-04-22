@@ -50,8 +50,8 @@ public class OrderRepository {
     return orderMapper.getById(id);
   }
 
-  public void updateStatusAndShipmentIdForOrder(Long orderId, OrderStatus status, Long shipmentId) {
-    orderMapper.updateShipmentAndStatus(orderId, status, shipmentId);
+  public void updateStatusAndShipmentIdForOrder(String orderNumber, OrderStatus status, Long shipmentId) {
+    orderMapper.updateShipmentAndStatus(orderNumber, status, shipmentId);
   }
 
   public List<OrderFileColumn> getOrderFileTemplate() {
@@ -71,8 +71,8 @@ public class OrderRepository {
     orderMapper.updateOrderStatus(order);
   }
 
-  public OrderStatus getStatus(long orderId) {
-    return orderMapper.getStatus(orderId);
+  public OrderStatus getStatus(String orderNumber) {
+    return orderMapper.getStatus(orderNumber);
   }
 
   public Integer getNumberOfPages(int pageSize) {
@@ -85,5 +85,9 @@ public class OrderRepository {
 
   private String format(String listString) {
     return listString.replace('[', '{').replace(']', '}');
+  }
+
+  public Order getByOrderNumber(String orderNumber) {
+    return orderMapper.getByOrderNumber(orderNumber);
   }
 }

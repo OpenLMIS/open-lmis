@@ -10,8 +10,11 @@
 
 package org.openlmis.order.service;
 
+import org.junit.Ignore;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
+import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -20,10 +23,9 @@ import org.openlmis.core.builder.ProgramBuilder;
 import org.openlmis.core.builder.SupplyLineBuilder;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.repository.OrderConfigurationRepository;
-import org.openlmis.core.service.RoleAssignmentService;
-import org.openlmis.core.service.ProgramService;
-import org.openlmis.core.service.SupplyLineService;
+import org.openlmis.core.service.*;
 import org.openlmis.db.categories.UnitTests;
+import org.openlmis.fulfillment.shared.FulfillmentPermissionService;
 import org.openlmis.order.domain.DateFormat;
 import org.openlmis.order.domain.Order;
 import org.openlmis.order.domain.OrderFileColumn;
@@ -37,6 +39,7 @@ import org.openlmis.rnr.service.RequisitionService;
 import org.openlmis.shipment.domain.ShipmentFileInfo;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+import org.springframework.security.access.AccessDeniedException;
 
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
@@ -45,14 +48,14 @@ import java.util.Set;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static java.util.Arrays.asList;
+import static java.util.Collections.EMPTY_LIST;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 import static org.openlmis.core.builder.FacilityBuilder.*;
 import static org.openlmis.core.builder.ProgramBuilder.defaultProgram;
 import static org.openlmis.core.builder.SupplyLineBuilder.defaultSupplyLine;
-import static org.openlmis.core.domain.Right.MANAGE_POD;
+import static org.openlmis.core.domain.Right.*;
 import static org.openlmis.order.domain.DateFormat.*;
 import static org.openlmis.order.domain.OrderStatus.*;
 import static org.openlmis.rnr.builder.RequisitionBuilder.*;
@@ -63,6 +66,9 @@ import static org.powermock.api.mockito.PowerMockito.whenNew;
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(OrderService.class)
 public class OrderServiceTest {
+
+  @Rule
+  public ExpectedException expectedException = ExpectedException.none();
 
   @Mock
   private OrderConfigurationRepository orderConfigurationRepository;
@@ -77,20 +83,30 @@ public class OrderServiceTest {
   private OrderEventService orderEventService;
 
   @Mock
-  private ProgramService programService;
-
-  @Mock
   private SupplyLineService supplyLineService;
 
   @Mock
   private RoleAssignmentService roleAssignmentService;
+
+  @Mock
+  private FulfillmentPermissionService fulfillmentPermissionService;
+
+  @Mock
+  private UserService userService;
+
+  @Mock
+  private ProgramService programService;
+
+  @Mock
+  private StatusChangeEventService statusChangeEventService;
 
   @InjectMocks
   private OrderService orderService;
 
   @Test
   public void shouldConvertRequisitionsToOrderWithStatusInRoute() throws Exception {
-    Program program = new Program();
+    Program program = new Program(3L);
+    program.setCode("HIV");
     Long userId = 1L;
     Rnr rnr = new Rnr();
     rnr.setId(1L);
@@ -98,6 +114,7 @@ public class OrderServiceTest {
     rnr.setProgram(program);
 
     SupplyLine supplyLine = new SupplyLine();
+    supplyLine.setSupplyingFacility(new Facility(99L));
     supplyLine.setExportOrders(Boolean.TRUE);
 
     when(requisitionService.getLWById(1L)).thenReturn(rnr);
@@ -108,13 +125,17 @@ public class OrderServiceTest {
     List<Rnr> rnrList = new ArrayList<>();
     rnrList.add(rnr);
     when(requisitionService.getFullRequisitionById(1L)).thenReturn(rnr);
-
+    when(fulfillmentPermissionService.hasPermissionOnWarehouse(userId, 99L, CONVERT_TO_ORDER)).thenReturn(true);
+    OrderNumberConfiguration orderNumberConfiguration = new OrderNumberConfiguration("Order", true, true, true, true);
+    when(programService.getById(program.getId())).thenReturn(program);
+    when(orderConfigurationRepository.getOrderNumberConfiguration()).thenReturn(orderNumberConfiguration);
     orderService.convertToOrder(rnrList, userId);
 
     Order order = new Order(rnr);
 
     order.setStatus(OrderStatus.IN_ROUTE);
     order.setSupplyLine(supplyLine);
+    order.setOrderNumber("OrderHIV00000001R");
     verify(orderRepository).save(order);
     verify(supplyLineService).getSupplyLineBy(supervisoryNode, program);
     verify(requisitionService).getLWById(rnr.getId());
@@ -125,6 +146,52 @@ public class OrderServiceTest {
 
   @Test
   public void shouldConvertRequisitionsToOrderWithStatusReadyToPack() throws Exception {
+    Long userId = 1L;
+    Long supplyingFacilityId = 99L;
+
+    Program program = new Program(3L);
+    program.setCode("HIV");
+    SupervisoryNode supervisoryNode = new SupervisoryNode(1L);
+    Rnr rnr = new Rnr();
+    rnr.setId(1L);
+    rnr.setSupervisoryNodeId(1L);
+    rnr.setProgram(program);
+
+    Facility supplyingFacility = new Facility(supplyingFacilityId);
+
+    SupplyLine supplyLine = new SupplyLine();
+    supplyLine.setSupplyingFacility(supplyingFacility);
+    supplyLine.setExportOrders(Boolean.FALSE);
+
+    when(requisitionService.getLWById(1L)).thenReturn(rnr);
+    whenNew(SupervisoryNode.class).withArguments(1l).thenReturn(supervisoryNode);
+    when(supplyLineService.getSupplyLineBy(supervisoryNode, program)).thenReturn(supplyLine);
+
+    List<Rnr> rnrList = new ArrayList<>();
+    rnrList.add(rnr);
+    when(requisitionService.getFullRequisitionById(1L)).thenReturn(rnr);
+    OrderNumberConfiguration orderNumberConfiguration = new OrderNumberConfiguration("Order", true, true, true, true);
+    when(orderConfigurationRepository.getOrderNumberConfiguration()).thenReturn(orderNumberConfiguration);
+    when(programService.getById(program.getId())).thenReturn(program);
+    when(fulfillmentPermissionService.hasPermissionOnWarehouse(userId, supplyingFacilityId, CONVERT_TO_ORDER)).thenReturn(true);
+    when(userService.getUsersWithRightOnWarehouse(supplyingFacilityId, FACILITY_FILL_SHIPMENT)).thenReturn(EMPTY_LIST);
+
+    orderService.convertToOrder(rnrList, userId);
+
+    Order order = new Order(rnr);
+    order.setStatus(OrderStatus.READY_TO_PACK);
+    order.setSupplyLine(supplyLine);
+    order.setOrderNumber("OrderHIV00000001R");
+    verify(orderRepository).save(order);
+    verify(supplyLineService).getSupplyLineBy(supervisoryNode, program);
+    verify(requisitionService).getLWById(rnr.getId());
+    verify(requisitionService).releaseRequisitionsAsOrder(rnrList, userId);
+    verify(userService).getUsersWithRightOnWarehouse(supplyingFacilityId, FACILITY_FILL_SHIPMENT);
+    assertThat(order.getSupplyLine(), is(supplyLine));
+  }
+
+  @Test
+  public void shouldThrowExceptionWhileConvertingRequisitionsToOrderIfUserDoesNotHaveRights() throws Exception {
     Program program = new Program();
     Long userId = 1L;
     Rnr rnr = new Rnr();
@@ -133,6 +200,7 @@ public class OrderServiceTest {
     rnr.setProgram(program);
 
     SupplyLine supplyLine = new SupplyLine();
+    supplyLine.setSupplyingFacility(new Facility(99L));
     supplyLine.setExportOrders(Boolean.FALSE);
 
     when(requisitionService.getLWById(1L)).thenReturn(rnr);
@@ -143,23 +211,24 @@ public class OrderServiceTest {
     List<Rnr> rnrList = new ArrayList<>();
     rnrList.add(rnr);
     when(requisitionService.getFullRequisitionById(1L)).thenReturn(rnr);
+    when(fulfillmentPermissionService.hasPermissionOnWarehouse(userId, 99L, CONVERT_TO_ORDER)).thenReturn(false);
+
+    expectedException.expect(AccessDeniedException.class);
+    expectedException.expectMessage("user.not.authorized");
 
     orderService.convertToOrder(rnrList, userId);
 
-    Order order = new Order(rnr);
-    order.setStatus(OrderStatus.READY_TO_PACK);
-    order.setSupplyLine(supplyLine);
-    verify(orderRepository).save(order);
     verify(supplyLineService).getSupplyLineBy(supervisoryNode, program);
     verify(requisitionService).getLWById(rnr.getId());
     verify(requisitionService).releaseRequisitionsAsOrder(rnrList, userId);
-    assertThat(order.getSupplyLine(), is(supplyLine));
   }
 
   @Test
+  @Ignore
   public void shouldConvertRequisitionsToOrderWithStatusTransferFailed() throws Exception {
     String SUPPLY_LINE_MISSING_COMMENT = "order.ftpComment.supplyline.missing";
-    Program program = new Program();
+    Program program = new Program(3L);
+    program.setCode("HIV");
     Long userId = 1L;
     Rnr rnr = new Rnr();
     rnr.setId(1L);
@@ -171,6 +240,9 @@ public class OrderServiceTest {
     whenNew(SupervisoryNode.class).withArguments(1l).thenReturn(supervisoryNode);
     when(supplyLineService.getSupplyLineBy(supervisoryNode, program)).thenReturn(null);
     when(requisitionService.getFullRequisitionById(1L)).thenReturn(rnr);
+    OrderNumberConfiguration orderNumberConfiguration = new OrderNumberConfiguration("Order", true, true, true, true);
+    when(orderConfigurationRepository.getOrderNumberConfiguration()).thenReturn(orderNumberConfiguration);
+    when(programService.getById(program.getId())).thenReturn(program);
 
     List<Rnr> rnrList = new ArrayList<>();
     rnrList.add(rnr);
@@ -181,6 +253,7 @@ public class OrderServiceTest {
     order.setStatus(OrderStatus.TRANSFER_FAILED);
     order.setFtpComment(SUPPLY_LINE_MISSING_COMMENT);
     order.setSupplyLine(null);
+    order.setOrderNumber("OrderHIV00000001R");
     verify(orderRepository).save(order);
     verify(supplyLineService).getSupplyLineBy(supervisoryNode, program);
     verify(requisitionService).getLWById(rnr.getId());
@@ -219,57 +292,86 @@ public class OrderServiceTest {
   @Test
   public void shouldSetReleasedForAllOrdersIfErrorInShipment() throws Exception {
     Order order1 = new Order(make(a(defaultRequisition, with(id, 123L))));
+    order1.setOrderNumber("OYELL_FVR00000123R");
     Order order2 = new Order(make(a(defaultRequisition, with(id, 456L), with(RequisitionBuilder.facility, make(a(defaultFacility, with(code, "F3333")))))));
+    order1.setOrderNumber("OYELL_FVR00000456R");
+    order1.setStatus(RELEASED);
+    order2.setStatus(RELEASED);
 
-    Set<Long> orderIds = new LinkedHashSet<>();
-    orderIds.add(order1.getId());
-    orderIds.add(order2.getId());
+    Set<String> orderNumbers = new LinkedHashSet<>();
+    orderNumbers.add(order1.getOrderNumber());
+    orderNumbers.add(order2.getOrderNumber());
     long shipmentId = 678L;
 
     boolean processingError = true;
 
+    Long supplyingFacilityId = 99L;
+    Facility supplyingFacility = new Facility(supplyingFacilityId);
+    SupplyLine supplyLine = new SupplyLine();
+    supplyLine.setSupplyingFacility(supplyingFacility);
+
+    order1.setSupplyLine(supplyLine);
+    order2.setSupplyLine(supplyLine);
+
     ShipmentFileInfo shipmentFileInfo = new ShipmentFileInfo("shipmentFile.csv", processingError);
     shipmentFileInfo.setId(shipmentId);
 
-    when(orderRepository.getById(123L)).thenReturn(order1);
-    when(orderRepository.getById(456L)).thenReturn(order2);
+    when(orderRepository.getByOrderNumber(order1.getOrderNumber())).thenReturn(order1);
+    when(orderRepository.getByOrderNumber(order2.getOrderNumber())).thenReturn(order2);
     when(requisitionService.getFullRequisitionById(order1.getRnr().getId())).thenReturn(order1.getRnr());
     when(requisitionService.getFullRequisitionById(order2.getRnr().getId())).thenReturn(order2.getRnr());
 
-    orderService.updateStatusAndShipmentIdForOrders(orderIds, shipmentFileInfo);
+    orderService.updateStatusAndShipmentIdForOrders(orderNumbers, shipmentFileInfo);
 
-    verify(orderRepository).getById(123L);
-    verify(orderRepository).updateStatusAndShipmentIdForOrder(order1.getId(), RELEASED, shipmentId);
+    verify(orderRepository).getByOrderNumber(order1.getOrderNumber());
+    verify(orderRepository).updateStatusAndShipmentIdForOrder(order1.getOrderNumber(), RELEASED, shipmentId);
     verify(orderEventService).notifyForStatusChange(order1);
 
-    verify(orderRepository).getById(456L);
-    verify(orderRepository).updateStatusAndShipmentIdForOrder(order2.getId(), RELEASED, shipmentId);
+    verify(orderRepository).getByOrderNumber(order2.getOrderNumber());
+    verify(orderRepository).updateStatusAndShipmentIdForOrder(order2.getOrderNumber(), RELEASED, shipmentId);
     verify(orderEventService).notifyForStatusChange(order2);
+    verify(userService, never()).getUsersWithRightOnWarehouse(supplyingFacilityId, MANAGE_POD);
   }
 
   @Test
   public void shouldSetPackedStatusForAllOrdersIfNoErrorInShipment() throws Exception {
     Order order1 = new Order(make(a(defaultRequisition, with(id, 123L))));
+    order1.setOrderNumber("OYELL_FVR00000123R");
     Order order2 = new Order(make(a(defaultRequisition, with(id, 456L), with(RequisitionBuilder.facility, make(a(defaultFacility, with(code, "F3333")))))));
+    order1.setOrderNumber("OYELL_FVR00000456R");
 
-    Set<Long> orderIds = new LinkedHashSet<>();
-    orderIds.add(order1.getId());
-    orderIds.add(order2.getId());
+    Set<String> orderNumbers = new LinkedHashSet<>();
+    orderNumbers.add(order1.getOrderNumber());
+    orderNumbers.add(order2.getOrderNumber());
     long shipmentId = 678L;
 
     boolean processingError = false;
 
+    Long supplyingFacilityId = 99L;
+    Facility supplyingFacility = new Facility(supplyingFacilityId);
+    SupplyLine supplyLine = new SupplyLine();
+    supplyLine.setSupplyingFacility(supplyingFacility);
+
+    order1.setSupplyLine(supplyLine);
+    order2.setSupplyLine(supplyLine);
+    order1.setStatus(PACKED);
+    order2.setStatus(PACKED);
+
     ShipmentFileInfo shipmentFileInfo = new ShipmentFileInfo("shipmentFile.csv", processingError);
     shipmentFileInfo.setId(shipmentId);
 
-    when(orderRepository.getById(order1.getId())).thenReturn(order1);
-    when(orderRepository.getById(order2.getId())).thenReturn(order2);
+    when(orderRepository.getByOrderNumber(order1.getOrderNumber())).thenReturn(order1);
+    when(orderRepository.getByOrderNumber(order2.getOrderNumber())).thenReturn(order2);
     when(requisitionService.getFullRequisitionById(order1.getRnr().getId())).thenReturn(order1.getRnr());
     when(requisitionService.getFullRequisitionById(order2.getRnr().getId())).thenReturn(order2.getRnr());
-    orderService.updateStatusAndShipmentIdForOrders(orderIds, shipmentFileInfo);
 
-    verify(orderRepository).updateStatusAndShipmentIdForOrder(123L, PACKED, shipmentId);
-    verify(orderRepository).updateStatusAndShipmentIdForOrder(456L, PACKED, shipmentId);
+    when(userService.getUsersWithRightOnWarehouse(supplyingFacilityId, MANAGE_POD)).thenReturn(EMPTY_LIST);
+
+    orderService.updateStatusAndShipmentIdForOrders(orderNumbers, shipmentFileInfo);
+
+    verify(orderRepository).updateStatusAndShipmentIdForOrder(order1.getOrderNumber(), PACKED, shipmentId);
+    verify(orderRepository).updateStatusAndShipmentIdForOrder(order2.getOrderNumber(), PACKED, shipmentId);
+    verify(userService, times(2)).getUsersWithRightOnWarehouse(supplyingFacilityId, MANAGE_POD);
   }
 
   @Test
@@ -286,8 +388,7 @@ public class OrderServiceTest {
     lineItems.add(rnrLineItem);
     rnr.setFullSupplyLineItems(lineItems);
     rnr.setNonFullSupplyLineItems(lineItems);
-    rnr.setProgram(new Program());
-    rnr.getProgram().setId(1L);
+    order.setRnr(rnr);
 
     order.setRnr(rnr);
     when(programService.getById(rnr.getProgram().getId())).thenReturn(rnr.getProgram());
@@ -350,28 +451,29 @@ public class OrderServiceTest {
 
   @Test
   public void shouldReturnTrueIfOrderIsReleased() throws Exception {
-    long orderId = 123L;
-    when(orderRepository.getStatus(orderId)).thenReturn(RELEASED);
+    String orderNumber = "OYELL_FVR00000123R";
+    when(orderRepository.getStatus(orderNumber)).thenReturn(RELEASED);
 
-    assertThat(orderService.isShippable(orderId), is(true));
+    assertThat(orderService.isShippable(orderNumber), is(true));
 
-    verify(orderRepository).getStatus(123L);
+    verify(orderRepository).getStatus(orderNumber);
   }
 
   @Test
   public void shouldReturnTrueIfOrderInOneOfTheStatuses() throws Exception {
-    long orderId = 123L;
-    when(orderRepository.getStatus(orderId)).thenReturn(RELEASED);
+    String orderNumber = "OYELL_FVR00000123R";
 
-    assertTrue(orderService.hasStatus(orderId, PACKED, RELEASED));
+    when(orderRepository.getStatus(orderNumber)).thenReturn(RELEASED);
+
+    assertTrue(orderService.hasStatus(orderNumber, PACKED, RELEASED));
   }
 
   @Test
   public void shouldReturnFalseIfOrderInOneOfTheStatuses() throws Exception {
-    long orderId = 123L;
-    when(orderRepository.getStatus(orderId)).thenReturn(RELEASED);
+    String orderNumber = "OYELL_FVR00000123R";
+    when(orderRepository.getStatus(orderNumber)).thenReturn(RELEASED);
 
-    assertFalse(orderService.hasStatus(orderId, PACKED, TRANSFER_FAILED));
+    assertFalse(orderService.hasStatus(orderNumber, PACKED, TRANSFER_FAILED));
   }
 
   @Test
@@ -385,19 +487,19 @@ public class OrderServiceTest {
 
   @Test
   public void shouldReturnTrueIfOrderIsNotShippable() throws Exception {
-    long orderId = 123L;
-    when(orderRepository.getStatus(orderId))
+    String orderNumber = "OYELL_FVR00000123R";
+    when(orderRepository.getStatus(orderNumber))
       .thenReturn(IN_ROUTE)
       .thenReturn(PACKED)
       .thenReturn(TRANSFER_FAILED)
       .thenReturn(READY_TO_PACK);
 
-    assertThat(orderService.isShippable(orderId), is(false));
-    assertThat(orderService.isShippable(orderId), is(false));
-    assertThat(orderService.isShippable(orderId), is(false));
-    assertThat(orderService.isShippable(orderId), is(false));
+    assertThat(orderService.isShippable(orderNumber), is(false));
+    assertThat(orderService.isShippable(orderNumber), is(false));
+    assertThat(orderService.isShippable(orderNumber), is(false));
+    assertThat(orderService.isShippable(orderNumber), is(false));
 
-    verify(orderRepository, times(4)).getStatus(123L);
+    verify(orderRepository, times(4)).getStatus(orderNumber);
 
   }
 

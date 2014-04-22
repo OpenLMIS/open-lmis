@@ -55,7 +55,7 @@ public interface UserMapper {
   @Select({"SELECT id, userName, facilityId, firstName, lastName, employeeId, restrictLogin, jobTitle, primaryNotificationMethod, ",
     "officePhone, cellPhone, email, supervisorId ,verified, active " +
       "FROM users U INNER JOIN role_assignments RA ON U.id = RA.userId INNER JOIN role_rights RR ON RA.roleId = RR.roleId ",
-    "WHERE RA.programId = #{program.id} AND RA.supervisoryNodeId = #{supervisoryNode.id} AND RR.rightName = #{right}"})
+    "WHERE RA.programId = #{program.id} AND COALESCE(RA.supervisoryNodeId, -1) = COALESCE(#{supervisoryNode.id}, -1) AND RR.rightName = #{right}"})
   @Results(@Result(property = "supervisor.id", column = "supervisorId"))
   List<User> getUsersWithRightInNodeForProgram(@Param("program") Program program, @Param("supervisoryNode") SupervisoryNode supervisoryNode,
                                                @Param("right") Right right);
@@ -104,4 +104,20 @@ public interface UserMapper {
       "   where key not in (select userPreferenceKey from user_preferences where userId = #{userId})")
   List<LinkedHashMap> getPreferences(@Param(value = "userId") Long userId);
 
+  @Select({"SELECT id, userName, facilityId, firstName, lastName, employeeId, restrictLogin, jobTitle, primaryNotificationMethod,",
+    "officePhone, cellPhone, email, supervisorId, verified, active from users inner join role_assignments on users.id = role_assignments.userId ",
+    "INNER JOIN role_rights ON role_rights.roleId = role_assignments.roleId ",
+    "where supervisoryNodeId IN (WITH RECURSIVE supervisoryNodesRec(id, parentId) ",
+    "AS (SELECT sn.id, sn.parentId FROM supervisory_nodes AS sn WHERE sn.id = #{nodeId}",
+    "UNION ALL ",
+    "SELECT c.id, c.parentId  FROM supervisoryNodesRec AS p, supervisory_nodes AS c WHERE p.parentId = c.id)",
+    "SELECT id FROM supervisoryNodesRec) ",
+    "AND programId = #{programId} AND role_rights.rightName = #{rightName}"})
+  List<User> getUsersWithRightInHierarchyUsingBaseNode(@Param(value = "nodeId") Long nodeId, @Param(value = "programId") Long programId, @Param(value = "rightName") Right right);
+
+  @Select({"SELECT id, userName, u.facilityId, firstName, lastName, employeeId, restrictLogin, jobTitle, primaryNotificationMethod," +
+    "officePhone, cellPhone, email, supervisorId, verified, active FROM users u INNER JOIN fulfillment_role_assignments f ON u.id = f.userId " +
+    "INNER JOIN role_rights rr ON f.roleId = rr.roleId",
+    "WHERE f.facilityId = #{facilityId} AND rr.rightName = #{rightName}"})
+  List<User> getUsersWithRightOnWarehouse(@Param("facilityId") Long facilityId, @Param("rightName") Right right);
 }

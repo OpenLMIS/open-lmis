@@ -10,7 +10,9 @@
 package org.openlmis.core.repository;
 
 import org.openlmis.core.domain.OrderConfiguration;
+import org.openlmis.core.domain.OrderNumberConfiguration;
 import org.openlmis.core.repository.mapper.OrderConfigurationMapper;
+import org.openlmis.core.repository.mapper.OrderNumberConfigurationMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -24,11 +26,23 @@ public class OrderConfigurationRepository {
   @Autowired
   private OrderConfigurationMapper orderConfigurationMapper;
 
+  @Autowired
+  private OrderNumberConfigurationMapper orderNumberConfigurationMapper;
+
   public OrderConfiguration getConfiguration() {
     return orderConfigurationMapper.get();
   }
 
   public void update(OrderConfiguration orderConfiguration) {
     orderConfigurationMapper.update(orderConfiguration);
+  }
+
+  public OrderNumberConfiguration getOrderNumberConfiguration() {
+    return orderNumberConfigurationMapper.get();
+  }
+
+  public void updateOrderNumberConfiguration(OrderNumberConfiguration orderNumberConfiguration) {
+    orderNumberConfigurationMapper.delete();
+    orderNumberConfigurationMapper.insert(orderNumberConfiguration);
   }
 }

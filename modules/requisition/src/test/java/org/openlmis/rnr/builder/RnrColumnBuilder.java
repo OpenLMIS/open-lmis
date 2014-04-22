@@ -16,20 +16,22 @@ import com.natpryce.makeiteasy.PropertyLookup;
 import org.openlmis.rnr.domain.LossesAndAdjustments;
 import org.openlmis.rnr.domain.RnRColumnSource;
 import org.openlmis.rnr.domain.RnrColumn;
+import org.openlmis.rnr.domain.RnrColumnOption;
 
 import static com.natpryce.makeiteasy.Property.newProperty;
 import static org.openlmis.rnr.domain.RnRColumnSource.USER_INPUT;
 
 public class RnrColumnBuilder {
 
-
   public static final Property<RnrColumn, String> columnName = newProperty();
   public static final Property<RnrColumn, Boolean> visible = newProperty();
   public static final Property<RnrColumn, RnRColumnSource> source = newProperty();
   public static final Property<RnrColumn, LossesAndAdjustments> lossesAndAdjustments = newProperty();
+  public static final Property<RnrColumn, RnrColumnOption> option = newProperty();
 
   public static final String DEFAULT_NAME = "stockInHand";
   public static final Boolean DEFAULT_VISIBLE = Boolean.TRUE;
+  private static final RnrColumnOption OPTION = null;
   public static final Instantiator<RnrColumn> defaultRnrColumn = new Instantiator<RnrColumn>() {
 
     @Override
@@ -38,6 +40,7 @@ public class RnrColumnBuilder {
       rnrColumn.setName(lookup.valueOf(columnName, DEFAULT_NAME));
       rnrColumn.setVisible(lookup.valueOf(visible, DEFAULT_VISIBLE));
       rnrColumn.setSource(lookup.valueOf(source, USER_INPUT));
+      rnrColumn.setConfiguredOption(lookup.valueOf(option, OPTION));
       return rnrColumn;
     }
   };

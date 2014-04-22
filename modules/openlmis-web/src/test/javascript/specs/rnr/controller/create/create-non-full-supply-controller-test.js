@@ -196,7 +196,10 @@ describe('CreateNonFullSupplyController', function () {
     scope.nonFullSupplyProductCategory = {displayOrder: 5};
 
     scope.facilityApprovedProduct = facilityApprovedProduct1;
-    scope.newNonFullSupply = new RegularRnrLineItem({"quantityRequested": 20, "reasonForRequestedQuantity": "Bad Weather"});
+    scope.programRnrColumnList = [
+      {"name": "newPatientCount", "source": {"name": "USER_INPUT"}, "configuredOption": {"name": "newPatientCount"}}
+    ];
+    scope.newNonFullSupply = new RegularRnrLineItem({"quantityRequested": 20, "reasonForRequestedQuantity": "Bad Weather"}, null, scope.programRnrColumnList);
     scope.addedNonFullSupplyProducts = [];
     spyOn(scope, 'updateNonFullSupplyProductsToDisplay').andReturn(true);
     scope.addNonFullSupplyProductsByCategory();

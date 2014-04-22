@@ -88,7 +88,7 @@ var RegularRnrLineItem = base2.Base.extend({
   },
 
   fillPeriodNormalizedConsumption: function () {
-    if (this.normalizedConsumption === null) {
+    if (isUndefined(this.normalizedConsumption)) {
       this.periodNormalizedConsumption = null;
       return;
     }
@@ -187,6 +187,9 @@ var RegularRnrLineItem = base2.Base.extend({
   },
 
   calculateConsumption: function () {
+    if (this.rnrStatus === 'AUTHORIZED' || this.rnrStatus === 'IN_APPROVAL' || this.rnrStatus === 'APPROVED' || this.rnrStatus === 'RELEASED') {
+      return;
+    }
     if (this.getSource('quantityDispensed') !== 'CALCULATED') return;
 
     if (utils.isNumber(this.beginningBalance) && utils.isNumber(this.quantityReceived) && utils.isNumber(this.totalLossesAndAdjustments) && utils.isNumber(this.stockInHand)) {
@@ -197,6 +200,9 @@ var RegularRnrLineItem = base2.Base.extend({
   },
 
   calculateStockInHand: function () {
+    if (this.rnrStatus === 'AUTHORIZED' || this.rnrStatus === 'IN_APPROVAL' || this.rnrStatus === 'APPROVED' || this.rnrStatus === 'RELEASED') {
+      return;
+    }
     if (this.getSource('stockInHand') !== 'CALCULATED') return;
 
     if (utils.isNumber(this.beginningBalance) && utils.isNumber(this.quantityReceived) && utils.isNumber(this.quantityDispensed)) {
@@ -217,18 +223,17 @@ var RegularRnrLineItem = base2.Base.extend({
   },
 
   calculateNormalizedConsumption: function () {
+    if (this.rnrStatus === 'AUTHORIZED' || this.rnrStatus === 'IN_APPROVAL' || this.rnrStatus === 'APPROVED' || this.rnrStatus === 'RELEASED') {
+      return;
+    }
     this.reportingDays = utils.getValueFor(this.reportingDays);
     this.stockOutDays = utils.getValueFor(this.stockOutDays);
     this.newPatientCount = utils.getValueFor(this.newPatientCount);
     if (this.getSource('newPatientCount') === null) this.newPatientCount = 0;
 
-    if (!utils.isNumber(this.quantityDispensed) || !utils.isNumber(this.stockOutDays) || !utils.isNumber(this.newPatientCount)) {
-      this.normalizedConsumption = null;
-      return;
-    }
+    
     // find the calculation option
     var normalizedConsumptionCalcOption = this.getCalcOption("normalizedConsumption");
-
     if(normalizedConsumptionCalcOption == 'DISPENSED_PLUS_NEW_PATIENTS'){
       this.normalizedConsumption = this.quantityDispensed  + this.newPatientCount;
     } else if(normalizedConsumptionCalcOption == "DISPENSED_X_90") {
@@ -239,18 +244,22 @@ var RegularRnrLineItem = base2.Base.extend({
       }
     } else {
       // this is the default behavior
-      if (!utils.isNumber(this.stockOutDays)) {
+      if (!utils.isNumber(this.quantityDispensed) || !utils.isNumber(this.stockOutDays) || !utils.isNumber(this.newPatientCount)) {
+        this.normalizedConsumption = null;
         return;
       }
-
-
       this.dosesPerMonth = utils.parseIntWithBaseTen(this.dosesPerMonth);
       var dosesPerDispensingUnit = utils.parseIntWithBaseTen(this.dosesPerDispensingUnit);
       dosesPerDispensingUnit = Math.max(dosesPerDispensingUnit, 1);
       var consumptionAdjustedWithStockOutDays = ((this.reportingDays) - this.stockOutDays) <= 0 ?
           this.quantityDispensed :
           ((this.quantityDispensed * 30) / ((this.reportingDays) - this.stockOutDays));
-      var adjustmentForNewPatients = (this.newPatientCount * Math.round(this.dosesPerMonth / dosesPerDispensingUnit) );
+      var adjustmentForNewPatients;
+      if (_.findWhere(this.programRnrColumnList, {name: 'newPatientCount'}).configuredOption.name === "newPatientCount") {
+        adjustmentForNewPatients = (this.newPatientCount * Math.round(this.dosesPerMonth / dosesPerDispensingUnit) );
+      } else {
+        adjustmentForNewPatients = this.newPatientCount;
+      }
       this.normalizedConsumption = Math.round(consumptionAdjustedWithStockOutDays + adjustmentForNewPatients);
     }
   },
@@ -274,24 +283,23 @@ var RegularRnrLineItem = base2.Base.extend({
   },
 
   calculateMaxStockQuantity: function () {
-      if (!utils.isNumber(this.amc)) {
-          this.maxStockQuantity = null;
-          return;
-      }
-      // find the calculation option
-      var maxStockColumnCalculationOption = this.getCalcOption('maxStockQuantity');
+    if (!utils.isNumber(this.amc)) {
+      this.maxStockQuantity = null;
+      return;
+    }
+    // find the calculation option
+    var maxStockColumnCalculationOption = this.getCalcOption('maxStockQuantity');
 
-      // if not default, apply the formula
-      if( maxStockColumnCalculationOption == 'CONSUMPTION_X_2'){
-          this.maxStockQuantity = this.normalizedConsumption * 2;
-      }else if( maxStockColumnCalculationOption == 'DISPENSED_X_2'){
-          this.maxStockQuantity = this.quantityDispensed * 2;
-      }
-      else{
-          // if default, do what you used to do
-          this.maxStockQuantity = this.amc * this.maxMonthsOfStock;
-      }
-
+    // if not default, apply the formula
+    if( maxStockColumnCalculationOption == 'CONSUMPTION_X_2'){
+      this.maxStockQuantity = this.normalizedConsumption * 2;
+    }else if( maxStockColumnCalculationOption == 'DISPENSED_X_2'){
+      this.maxStockQuantity = this.quantityDispensed * 2;
+    }
+    else {
+      // if default, do what you used to do
+      this.maxStockQuantity = this.amc * this.maxMonthsOfStock;
+    }
   },
 
   calculateCalculatedOrderQuantity: function () {

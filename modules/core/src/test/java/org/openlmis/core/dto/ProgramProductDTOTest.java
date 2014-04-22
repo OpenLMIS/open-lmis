@@ -30,7 +30,7 @@ public class ProgramProductDTOTest {
 
     ProgramProduct programProduct = make(a(defaultProgramProduct));
 
-    programProduct.setProductCategory(new ProductCategory("P1", "Product Name", 1));
+    programProduct.setProductCategory(new ProductCategory("C1", "Category 1", 1));
 
     ProgramProductDTO programProductDTO = new ProgramProductDTO(programProduct);
 

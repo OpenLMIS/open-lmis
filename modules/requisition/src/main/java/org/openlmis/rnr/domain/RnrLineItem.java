@@ -49,7 +49,7 @@ public class RnrLineItem extends LineItem {
   public static final BigDecimal NUMBER_OF_DAYS = new BigDecimal(30);
 
   public static final MathContext MATH_CONTEXT = new MathContext(12, HALF_UP);
-
+  private static Logger logger = LoggerFactory.getLogger(RnrLineItem.class);
   //TODO : hack to display it on UI. This is concatenated string of Product properties like name, strength, form and dosage unit
   private String product;
   private Integer productDisplayOrder;
@@ -64,7 +64,6 @@ public class RnrLineItem extends LineItem {
   private String dispensingUnit;
   private Integer maxMonthsOfStock;
   private Boolean fullSupply;
-
   private Integer quantityReceived;
   private Integer quantityDispensed;
   private Integer previousStockInHand;
@@ -76,7 +75,6 @@ public class RnrLineItem extends LineItem {
   private Integer newPatientCount;
   private Integer quantityRequested;
   private String reasonForRequestedQuantity;
-
   private Integer amc;
   private Integer normalizedConsumption;
   private Integer periodNormalizedConsumption;
@@ -84,20 +82,14 @@ public class RnrLineItem extends LineItem {
   private Integer maxStockQuantity;
   private Integer quantityApproved;
   private Integer reportingDays;
-
   private Integer packsToShip;
   private String expirationDate;
   private String remarks;
-
   private List<Integer> previousNormalizedConsumptions = new ArrayList<>();
-
   private Money price;
   private Integer total;
-
   @SuppressWarnings("unused")
   private Boolean skipped = false;
-
-  private static Logger logger = LoggerFactory.getLogger(RnrLineItem.class);
 
   public RnrLineItem(Long rnrId, FacilityTypeApprovedProduct facilityTypeApprovedProduct, Long modifiedBy, Long createdBy) {
     this.rnrId = rnrId;
@@ -270,39 +262,37 @@ public class RnrLineItem extends LineItem {
     }
   }
 
-  public void calculateNormalizedConsumption( ProgramRnrTemplate template) {
+  public void calculateNormalizedConsumption(ProgramRnrTemplate template) {
     RnrColumn column = template.getRnrColumnsMap().get("normalizedConsumption");
     String columnOption = "DEFAULT";
-    if(column != null){
+    if (column != null) {
       columnOption = column.getCalculationOption();
     }
-    if(columnOption.equalsIgnoreCase("DISPENSED_PLUS_NEW_PATIENTS")){
+    if (columnOption.equalsIgnoreCase("DISPENSED_PLUS_NEW_PATIENTS")) {
       // what appears to have happened is the direct translation of the column name
       // on new patient is (number of additional units required)
       // essentially wrong usage of the column.
       normalizedConsumption = quantityDispensed + newPatientCount;
-    }else if(columnOption.equalsIgnoreCase( "DISPENSED_X_90" )){
-        if(stockOutDays < 90){
-          normalizedConsumption = (new BigDecimal(
-                                      (90 * quantityDispensed))
-                                             .divide(
-                                                 new BigDecimal( (90 - stockOutDays))
-                                      , MATH_CONTEXT)
-                                   ).intValue();
-        } else{
-          normalizedConsumption = (90 * quantityDispensed);
-        }
-    }
-    else{
+    } else if (columnOption.equalsIgnoreCase("DISPENSED_X_90")) {
+      if (stockOutDays < 90) {
+        normalizedConsumption = (new BigDecimal(
+            (90 * quantityDispensed))
+            .divide(
+                new BigDecimal((90 - stockOutDays))
+                , MATH_CONTEXT)
+        ).intValue();
+      } else {
+        normalizedConsumption = (90 * quantityDispensed);
+      }
+    } else {
+      BigDecimal dosesPerDispensingUnit = new BigDecimal(Math.max(1, this.dosesPerDispensingUnit));
+
       normalizedConsumption = calculateNormalizedConsumption(
           new BigDecimal(stockOutDays),
           new BigDecimal(quantityDispensed),
           new BigDecimal(newPatientCount),
-          new BigDecimal(dosesPerMonth),
-          new BigDecimal(dosesPerDispensingUnit),
-              reportingDays);
+          new BigDecimal(dosesPerMonth), dosesPerDispensingUnit, reportingDays, template);
     }
-
   }
 
   public void calculateTotalLossesAndAdjustments(List<LossesAndAdjustmentsType> lossesAndAdjustmentsTypes) {
@@ -369,10 +359,16 @@ public class RnrLineItem extends LineItem {
                                                  BigDecimal newPatientCount,
                                                  BigDecimal dosesPerMonth,
                                                  BigDecimal dosesPerDispensingUnit,
-                                                 Integer reportingDays) {
+                                                 Integer reportingDays,
+                                                 ProgramRnrTemplate template) {
 
-    BigDecimal newPatientFactor = newPatientCount.multiply(dosesPerMonth.divide(dosesPerDispensingUnit, MATH_CONTEXT)
-      .setScale(0, HALF_UP));
+    BigDecimal newPatientFactor;
+    if (template.getRnrColumnsMap().get("newPatientCount").getConfiguredOption().getName().equals("newPatientCount")) {
+      newPatientFactor = newPatientCount.multiply(dosesPerMonth.divide(dosesPerDispensingUnit, MATH_CONTEXT)
+        .setScale(0, HALF_UP));
+    } else {
+      newPatientFactor = newPatientCount;
+    }
 
     if (reportingDays == null || stockOutDays.compareTo(new BigDecimal(reportingDays)) >= 0) {
       return quantityDispensed.add(newPatientFactor).setScale(0, HALF_UP).intValue();

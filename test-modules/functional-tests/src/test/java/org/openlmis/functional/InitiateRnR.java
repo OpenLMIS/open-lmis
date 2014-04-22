@@ -241,6 +241,7 @@ public class InitiateRnR extends TestCaseHelper {
 
   @When("^I receive shipment for the order$")
   public void insertShipmentData() throws SQLException {
+    dbWrapper.updateFieldValue("orders", "status", "RELEASED", null, null);
     testDataForShipment(100, true, "P10", 1111);
     dbWrapper.updateFieldValue("orders", "status", "PACKED", null, null);
   }
@@ -631,7 +632,7 @@ public class InitiateRnR extends TestCaseHelper {
     homePage.logout(baseUrlGlobal);
     homePage = loginPage.loginAs(userName, password);
     ConvertOrderPage convertOrderPage = homePage.navigateConvertToOrder();
-    convertOrderPage.verifyNoRequisitionPendingMessage();
+    assertTrue(convertOrderPage.isNoRequisitionPendingMessageDisplayed());
 
     ViewOrdersPage viewOrdersPage = homePage.navigateViewOrders();
     viewOrdersPage.verifyNoRequisitionReleasedAsOrderMessage();

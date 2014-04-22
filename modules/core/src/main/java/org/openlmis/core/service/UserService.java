@@ -10,6 +10,11 @@
 
 package org.openlmis.core.service;
 
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.Predicate;
+import org.openlmis.core.domain.Program;
+import org.openlmis.core.domain.Right;
+import org.openlmis.core.domain.SupervisoryNode;
 import org.openlmis.core.domain.User;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.hash.Encoder;
@@ -21,9 +26,7 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Exposes the services for handling User entity.
@@ -143,6 +146,18 @@ public class UserService {
     userRepository.deletePasswordResetTokenForUser(userId);
   }
 
+  public List<User> getUsersWithRightInNodeForProgram(Program program, SupervisoryNode node, Right right) {
+    return userRepository.getUsersWithRightInNodeForProgram(program, node, right);
+  }
+
+  public List<User> getUsersWithRightInHierarchyUsingBaseNode(Long nodeId, Program program, Right right) {
+    return userRepository.getUsersWithRightInHierarchyUsingBaseNode(nodeId, program.getId(), right);
+  }
+
+  public List<User> getUsersWithRightOnWarehouse(Long id, Right right) {
+    return userRepository.getUsersWithRightOnWarehouse(id, right);
+  }
+
   private void sendUserCreationEmail(User user, String resetPasswordLink) {
     String subject = messageService.message("account.created.email.subject");
     SimpleMailMessage emailMessage = createEmailMessage(user, resetPasswordLink, subject);
@@ -191,5 +206,16 @@ public class UserService {
 
   private String generateUUID() {
     return Encoder.hash(UUID.randomUUID().toString());
+  }
+
+  public ArrayList<User> filterForActiveUsers(List<User> userList) {
+    Set<User> users = new LinkedHashSet<>(userList);
+    CollectionUtils.filter(users, new Predicate() {
+      @Override
+      public boolean evaluate(Object o) {
+        return ((User) o).getActive();
+      }
+    });
+    return new ArrayList<>(users);
   }
 }

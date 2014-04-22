@@ -51,19 +51,20 @@ import static org.openlmis.web.view.pdf.requisition.RequisitionPdfModel.DATE_FOR
 @RunWith(MockitoJUnitRunner.class)
 public class RequisitionPdfModelTest {
 
-  private Map<String, Object> model;
-  private Rnr requisition;
-  private RequisitionPdfModel requisitionPdfModel;
-  private List<LossesAndAdjustmentsType> lossesAndAdjustmentsList;
+  @Mock
+  MessageService messageService;
 
   @Mock
   private ConfigurationSettingService configService;
 
-  @Mock
-  MessageService messageService;
+  private Map<String, Object> model;
+  private Rnr requisition;
+  private RequisitionPdfModel requisitionPdfModel;
+  private List<LossesAndAdjustmentsType> lossesAndAdjustmentsList;
   private Date currentDate;
   private Date authorizedDate;
 
+  
   @Before
   public void setUp() throws Exception {
     Facility f1 = make(a(FacilityBuilder.defaultFacility, with(FacilityBuilder.name, "F1")));
@@ -100,7 +101,6 @@ public class RequisitionPdfModelTest {
     final RequisitionStatusChange initiatedStatusChange = new RequisitionStatusChange(2L, INITIATED, initiatingUser, currentDate);
     final RequisitionStatusChange submittedStatusChange = new RequisitionStatusChange(2L, SUBMITTED, submittingUser, currentDate);
     final RequisitionStatusChange authorizedStatusChange = new RequisitionStatusChange(2L, AUTHORIZED, authorizingUser, authorizedDate);
-
 
     return new ArrayList<RequisitionStatusChange>() {{
       add(initiatedStatusChange);

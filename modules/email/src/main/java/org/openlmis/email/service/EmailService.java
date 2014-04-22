@@ -54,7 +54,14 @@ public class EmailService {
     if (!mailSendingFlag) {
       return;
     }
+    mailSender.send(simpleMailMessage.toArray(new SimpleMailMessage[simpleMailMessage.size()]));
+  }
 
+  @Async
+  public void processEmailsAsync(List<SimpleMailMessage> simpleMailMessage) {
+    if (!mailSendingFlag) {
+      return;
+    }
     mailSender.send(simpleMailMessage.toArray(new SimpleMailMessage[simpleMailMessage.size()]));
   }
 }
