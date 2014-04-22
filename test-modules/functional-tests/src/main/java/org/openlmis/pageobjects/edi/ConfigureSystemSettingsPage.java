@@ -35,6 +35,9 @@ public class ConfigureSystemSettingsPage extends Page {
   @FindBy(how = ID, using = "configureOrderNumber")
   private static WebElement configureOrderNumberButton = null;
 
+  @FindBy(how = ID, using = "orderPrefix")
+  private WebElement OrderNumberPrefix = null;
+
   public ConfigureSystemSettingsPage(TestWebDriver driver) {
     super(driver);
     PageFactory.initElements(new AjaxElementLocatorFactory(TestWebDriver.getDriver(), 10), this);
@@ -64,5 +67,10 @@ public class ConfigureSystemSettingsPage extends Page {
     testWebDriver.waitForElementToAppear(configureOrderNumberButton);
     configureOrderNumberButton.click();
     return PageObjectFactory.getConfigureOrderNumberPage(testWebDriver);
+  }
+
+  public String getOrderNumberPrefix() {
+    testWebDriver.waitForElementToAppear(OrderNumberPrefix);
+    return testWebDriver.getAttribute(OrderNumberPrefix, "value");
   }
 }

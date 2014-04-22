@@ -4,21 +4,20 @@ import org.openlmis.pageobjects.Page;
 
   import org.openlmis.UiUtils.TestWebDriver;
   import org.openlmis.pageobjects.Page;
-  import org.openqa.selenium.WebElement;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
   import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 
   import static com.thoughtworks.selenium.SeleneseTestBase.*;
-  import static org.openqa.selenium.support.How.ID;
+import static com.thoughtworks.selenium.SeleneseTestBase.assertEquals;
+import static org.openqa.selenium.support.How.ID;
   import static org.openqa.selenium.support.How.XPATH;
   import static org.openqa.selenium.support.PageFactory.initElements;
 
 
 public class ConfigureOrderNumberPage extends Page {
-
-  @FindBy(how = ID, using = "includeHeadersCheckbox")
-  private static WebElement includeHeaders = null;
 
   @FindBy(how = ID, using = "saveOrderNumberConfig")
   private WebElement saveButton = null;
@@ -26,17 +25,25 @@ public class ConfigureOrderNumberPage extends Page {
   @FindBy(how = ID, using = "orderPrefix")
   private WebElement setOrderNumberPrefix = null;
 
+  @FindBy(how = ID, using = "orderPrefix")
+  private WebElement orderNumberPrefix = null;
+
+  @FindBy(how = ID, using = "includeProgramCode")
+  private static WebElement includeProgramCode = null;
+
+  @FindBy(how = ID, using = "saveSuccessMsgDiv")
+  private static WebElement successMessageDiv = null;
+
+  @FindBy(how = ID, using = "includeRnrTypeSuffixChecked")
+  private static WebElement includeRnrTypeSuffixChecked = null;
+
+  @FindBy(how = ID, using = "includeOrderNumberPrefix")
+  private static WebElement orderNumberPrefixCheckBox = null;
+
   public ConfigureOrderNumberPage(TestWebDriver driver) {
     super(driver);
     PageFactory.initElements(new AjaxElementLocatorFactory(TestWebDriver.getDriver(), 10), this);
     testWebDriver.setImplicitWait(10);
-    testWebDriver.waitForElementToAppear(includeHeaders);
-  }
-
-  public void checkIncludeHeader() {
-    testWebDriver.waitForElementToAppear(includeHeaders);
-    if (!includeHeaders.isSelected())
-      includeHeaders.click();
   }
 
   public void setOrderNumberPrefix(String value) {
@@ -44,8 +51,48 @@ public class ConfigureOrderNumberPage extends Page {
     sendKeys(setOrderNumberPrefix, value);
   }
 
+  public void deletePreExistingData() {
+    testWebDriver.waitForElementToAppear(setOrderNumberPrefix);
+    testWebDriver.findElement(By.id("orderPrefix")).clear();
+  }
+
   public void clickSaveButton() {
     testWebDriver.waitForElementToAppear(saveButton);
     saveButton.click();
+  }
+
+  public void verifyMessage(String message) {
+    testWebDriver.waitForElementToAppear(successMessageDiv);
+    assertEquals(message, successMessageDiv.getText());
+  }
+
+  public String getOrderNumberPrefix() {
+    testWebDriver.waitForElementToAppear(orderNumberPrefix);
+    return testWebDriver.getAttribute(orderNumberPrefix, "value");
+  }
+
+  public boolean isProgramCodeChecked() {
+    testWebDriver.waitForElementToAppear(includeProgramCode);
+    return includeProgramCode.isSelected();
+  }
+
+  public boolean isOrderNumberPrefixSelected() {
+    testWebDriver.waitForElementToAppear(orderNumberPrefixCheckBox);
+    return orderNumberPrefixCheckBox.isSelected();
+  }
+
+  public void unCheckOrderNumberPrefixCheckbox() {
+    testWebDriver.waitForElementToAppear(orderNumberPrefixCheckBox);
+    orderNumberPrefixCheckBox.click();
+  }
+
+  public boolean unCheckProgramCodeCheckbox() {
+    testWebDriver.waitForElementToAppear(includeProgramCode);
+    return includeProgramCode.isSelected();
+  }
+
+  public boolean isIncludeRnrTypeSuffixChecked() {
+    testWebDriver.waitForElementToAppear(includeRnrTypeSuffixChecked);
+    return includeRnrTypeSuffixChecked.isSelected();
   }
 }
