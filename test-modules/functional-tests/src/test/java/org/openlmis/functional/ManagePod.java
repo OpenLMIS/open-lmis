@@ -65,11 +65,7 @@ public class ManagePod extends TestCaseHelper {
     convertOrderPage.selectRequisitionToBeConvertedToOrder(1);
     convertOrderPage.clickConvertToOrderButton();
     convertOrderPage.clickOk();
-    ManagePodPage managePodPage = homePage.navigateManagePOD();
-    managePodPage.verifyNoOrderMessage();
-    String id = String.valueOf(dbWrapper.getMaxRnrID());
-    assertEquals("TRANSFER_FAILED", dbWrapper.getAttributeFromTable("orders", "status", "id", id));
-    assertTrue(dbWrapper.getAttributeFromTable("orders", "ftpComment", "id", id).contains("supplyline.missing"));
+    assertFalse(convertOrderPage.isNoRequisitionPendingMessageDisplayed());
   }
 
   @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-RnR")
@@ -188,7 +184,7 @@ public class ManagePod extends TestCaseHelper {
     List<String> rightsList = asList(CONVERT_TO_ORDER, VIEW_ORDER, MANAGE_POD);
     setupTestUserRoleRightsData("200", userSIC, rightsList);
     dbWrapper.insertSupervisoryNode("F10", "N1", "Node 1", "null");
-    dbWrapper.insertRoleAssignment("200", "store in-charge");
+    //dbWrapper.insertRoleAssignment("200", "store in-charge");
     dbWrapper.insertSchedule("Q1stM", "QuarterMonthly", "QuarterMonth");
     dbWrapper.insertSchedule("M", "Monthly", "Month");
     dbWrapper.insertProcessingPeriod("Period1", "first period", "2012-12-01", "2013-01-15", 1, "Q1stM");

@@ -1,3 +1,13 @@
+/*
+ * This program is part of the OpenLMIS logistics management information system platform software.
+ * Copyright © 2013 VillageReach
+ *
+ * This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+ *  
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+ * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
+ */
+
 package org.openlmis.functional;
 
 import cucumber.api.java.en.And;
@@ -412,11 +422,10 @@ public class DistributionChildCoverageSyncTest extends TestCaseHelper {
     HomePage homePage = loginPage.loginAs(childCoverageData.get(USER), childCoverageData.get(PASSWORD));
     DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
     distributionPage.initiate(childCoverageData.get(FIRST_DELIVERY_ZONE_NAME), childCoverageData.get(VACCINES_PROGRAM));
-    dbWrapper.updateFieldValue("products", "packSize", "5", "code", "P10");
     FacilityListPage facilityListPage = distributionPage.clickRecordData(1);
+    dbWrapper.updateFieldValue("products", "packSize", "5", "code", "P10");
     VisitInformationPage visitInformationPage = facilityListPage.selectFacility(childCoverageData.get(FIRST_FACILITY_CODE));
     ChildCoveragePage childCoveragePage = visitInformationPage.navigateToChildCoverage();
-
     childCoveragePage.enterHealthCenter11MonthsDataForGivenRow(9, "9");
     assertEquals("9", childCoveragePage.getTotalForGivenColumnAndRow(1, 9));
     assertEquals("0", childCoveragePage.getTotalForGivenColumnAndRow(2, 9));

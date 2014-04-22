@@ -109,10 +109,12 @@ public class OrderMapperIT {
     Order order = new Order(rnr);
     order.setStatus(OrderStatus.IN_ROUTE);
     order.setSupplyLine(supplyLine);
+    order.setOrderNumber("OrdHIV00000001R");
     mapper.insert(order);
     ResultSet resultSet = queryExecutor.execute("SELECT * FROM orders WHERE id = ?", order.getId());
     resultSet.next();
     assertThat(resultSet.getLong("id"), is(order.getId()));
+    assertThat(resultSet.getString("orderNumber"), is("OrdHIV00000001R"));
   }
 
   @Test
@@ -138,6 +140,7 @@ public class OrderMapperIT {
     Order order = new Order(rnr);
     order.setStatus(RELEASED);
     order.setSupplyLine(supplyLine);
+    order.setOrderNumber("OrdHIV00000001R");
     mapper.insert(order);
 
     ShipmentFileInfo shipmentFileInfo = new ShipmentFileInfo();
@@ -146,7 +149,7 @@ public class OrderMapperIT {
     shipmentMapper.insertShipmentFileInfo(shipmentFileInfo);
 
 
-    mapper.updateShipmentAndStatus(order.getId(), RELEASED, shipmentFileInfo.getId());
+    mapper.updateShipmentAndStatus(order.getOrderNumber(), RELEASED, shipmentFileInfo.getId());
     Long userId = insertUserAndRoleForOrders();
     List<Order> orders = mapper.getOrders(1, 0, userId, Right.VIEW_ORDER);
     assertThat(orders.get(0).getShipmentFileInfo().getFileName(), is("abc.csv"));
@@ -160,7 +163,7 @@ public class OrderMapperIT {
     ShipmentFileInfo shipmentFileInfo = new ShipmentFileInfo("shipment.csv", true);
     shipmentMapper.insertShipmentFileInfo(shipmentFileInfo);
 
-    mapper.updateShipmentAndStatus(order.getId(), PACKED, shipmentFileInfo.getId());
+    mapper.updateShipmentAndStatus(order.getOrderNumber(), PACKED, shipmentFileInfo.getId());
 
     ResultSet resultSet = queryExecutor.execute("SELECT * FROM orders WHERE id = ?", order.getRnr().getId());
 
@@ -253,7 +256,7 @@ public class OrderMapperIT {
     long programId = 1L;
     Order order = insertOrder(programId);
 
-    OrderStatus status = mapper.getStatus(order.getId());
+    OrderStatus status = mapper.getStatus(order.getOrderNumber());
 
     assertThat(status, is(order.getStatus()));
   }
@@ -290,6 +293,7 @@ public class OrderMapperIT {
     Order order = new Order(rnr);
     order.setStatus(status);
     order.setSupplyLine(supplyLine);
+    order.setOrderNumber("OrdHIV00000001R");
     mapper.insert(order);
     return order;
   }
@@ -299,6 +303,7 @@ public class OrderMapperIT {
     Order order = new Order(rnr);
     order.setStatus(IN_ROUTE);
     order.setSupplyLine(supplyLine);
+    order.setOrderNumber("OrdHIV00000001R");
     mapper.insert(order);
     return order;
   }

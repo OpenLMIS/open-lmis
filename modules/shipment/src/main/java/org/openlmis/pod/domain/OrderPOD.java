@@ -42,6 +42,7 @@ import static org.joda.time.format.DateTimeFormat.forPattern;
 public class OrderPOD extends BaseModel {
 
   private Long orderId;
+  private String orderNumber;
   private Long facilityId;
   private Long programId;
   private Long periodId;

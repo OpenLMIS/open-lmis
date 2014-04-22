@@ -76,6 +76,9 @@ public class DistributionEpiInventoryTest extends TestCaseHelper {
   @Test(groups = {"distribution"})
   public void shouldDisplayAllActiveFullAndNonFullSupplyProductsWithIdealQuantityOnEpiInventoryPage() throws SQLException {
     dbWrapper.updateFieldValue("products", "fullSupply", "false", "code", "P10");
+    dbWrapper.insertProductCategory("C2", "category2");
+    String categoryId = dbWrapper.getAttributeFromTable("product_categories", "id", "code", "C2");
+    dbWrapper.updateProgramProducts("Product6", "VACCINES", "productCategoryId", categoryId);
 
     HomePage homePage = loginPage.loginAs("Admin123", "Admin123");
     ProgramProductISAPage programProductISAPage = homePage.navigateProgramProductISA();
@@ -95,15 +98,14 @@ public class DistributionEpiInventoryTest extends TestCaseHelper {
     EpiInventoryPage epiInventoryPage = facilityListPage.selectFacility(epiInventoryData.get(FIRST_FACILITY_CODE)).navigateToEpiInventory();
 
     verifyLabels();
-    //TODO after dealing display order for Epi inventory
     assertEquals(epiInventoryPage.getIsaValue(1), expectedISAValue);
     assertEquals(epiInventoryPage.getProductName(1), "antibiotic");
 
     assertEquals(epiInventoryPage.getIsaValue(2), "--");
-    //assertEquals(epiInventoryPage.getProductName(2), "ProductName6");
+    assertEquals(epiInventoryPage.getProductName(2), "ProductName6");
 
     assertEquals(epiInventoryPage.getIsaValue(3), "57");
-    //assertEquals(epiInventoryPage.getProductName(3), "antibiotic");
+    assertEquals(epiInventoryPage.getProductName(3), "antibiotic");
 
     assertFalse(epiInventoryPage.getDataEpiInventory().contains("ProductName5"));
 
@@ -112,7 +114,12 @@ public class DistributionEpiInventoryTest extends TestCaseHelper {
 
   @Test(groups = {"distribution"})
   public void shouldNotDisplayGloballyInactiveProductsOnEpiInventoryPage() throws SQLException {
-    dbWrapper.updateFieldValue("products", "active", "false", "code", "Product6");
+    dbWrapper.updateProgramProducts("Product5", "VACCINES", "active", "true");
+    dbWrapper.updateFieldValue("products", "active", "false", "code", "P11");
+    dbWrapper.updateProgramProducts("P10", "VACCINES", "displayOrder", null);
+
+    String tbProgramId = dbWrapper.getAttributeFromTable("programs", "id", "code", "TB");
+    dbWrapper.updateProgramProducts("Product6", "VACCINES", "programId", tbProgramId);
 
     HomePage homePage = loginPage.loginAs(epiInventoryData.get(USER), epiInventoryData.get(PASSWORD));
     DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
@@ -123,14 +130,15 @@ public class DistributionEpiInventoryTest extends TestCaseHelper {
     verifyLabels();
 
     assertEquals(epiInventoryPage.getIsaValue(1), "--");
-    assertEquals(epiInventoryPage.getProductName(1), "antibiotic");
+    assertEquals(epiInventoryPage.getProductName(1), "ProductName5");
 
     assertEquals(epiInventoryPage.getIsaValue(2), "--");
     assertEquals(epiInventoryPage.getProductName(2), "antibiotic");
 
     assertFalse(epiInventoryPage.getDataEpiInventory().contains("ProductName6"));
 
-    dbWrapper.updateFieldValue("products", "active", "true", "code", "Product6");
+    dbWrapper.updateFieldValue("products", "active", "true", "code", "P11");
+    dbWrapper.updateProgramProducts("P10", "VACCINES", "displayOrder", "1");
   }
 
   @Test(groups = {"distribution"})
@@ -243,8 +251,8 @@ public class DistributionEpiInventoryTest extends TestCaseHelper {
     distributionPage.syncDistributionMessageDone();
 
     verifyEpiInventoryDataInDatabase("1", "2", "3", "P10", epiInventoryData.get(FIRST_FACILITY_CODE));
-//    verifyEpiInventoryDataInDatabase("11", "12", "13", "Product6", epiInventoryData.get(FIRST_FACILITY_CODE));
-//    verifyEpiInventoryDataInDatabase("21", "22", "23", "P11", epiInventoryData.get(FIRST_FACILITY_CODE));
+    verifyEpiInventoryDataInDatabase("11", "12", "13", "Product6", epiInventoryData.get(FIRST_FACILITY_CODE));
+    verifyEpiInventoryDataInDatabase("21", "22", "23", "P11", epiInventoryData.get(FIRST_FACILITY_CODE));
   }
 
   @Test(groups = {"distribution"})
@@ -308,9 +316,9 @@ public class DistributionEpiInventoryTest extends TestCaseHelper {
     assertTrue(distributionPage.getSyncMessage().contains("F10-Village Dispensary"));
     distributionPage.syncDistributionMessageDone();
 
-//    verifyEpiInventoryDataInDatabase(null, "1", null, "P10", epiInventoryData.get(FIRST_FACILITY_CODE));
-//    verifyEpiInventoryDataInDatabase(null, "2", null, "Product6", epiInventoryData.get(FIRST_FACILITY_CODE));
-//    verifyEpiInventoryDataInDatabase(null, "3", null, "P11", epiInventoryData.get(FIRST_FACILITY_CODE));
+    verifyEpiInventoryDataInDatabase(null, "1", null, "P10", epiInventoryData.get(FIRST_FACILITY_CODE));
+    verifyEpiInventoryDataInDatabase(null, "2", null, "Product6", epiInventoryData.get(FIRST_FACILITY_CODE));
+    verifyEpiInventoryDataInDatabase(null, "3", null, "P11", epiInventoryData.get(FIRST_FACILITY_CODE));
   }
 
   @Test(groups = {"distribution"})
@@ -356,9 +364,9 @@ public class DistributionEpiInventoryTest extends TestCaseHelper {
     assertTrue(distributionPage.getSyncMessage().contains("F10-Village Dispensary"));
     distributionPage.syncDistributionMessageDone();
 
-//    verifyEpiInventoryDataInDatabase("77", "1", null, "P10", epiInventoryData.get(FIRST_FACILITY_CODE));
-//    verifyEpiInventoryDataInDatabase(null, "2", null, "Product6", epiInventoryData.get(FIRST_FACILITY_CODE));
-//    verifyEpiInventoryDataInDatabase(null, "3", "99", "P11", epiInventoryData.get(FIRST_FACILITY_CODE));
+    verifyEpiInventoryDataInDatabase("77", "1", null, "P10", epiInventoryData.get(FIRST_FACILITY_CODE));
+    verifyEpiInventoryDataInDatabase(null, "2", null, "Product6", epiInventoryData.get(FIRST_FACILITY_CODE));
+    verifyEpiInventoryDataInDatabase(null, "3", "99", "P11", epiInventoryData.get(FIRST_FACILITY_CODE));
   }
 
   public void initiateDistribution(String deliveryZoneNameFirst, String programFirst) {

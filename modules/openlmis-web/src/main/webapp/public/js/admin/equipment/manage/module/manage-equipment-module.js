@@ -8,10 +8,24 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-angular.module('equipment-setting', ['openlmis','ui.bootstrap.modal', 'ui.bootstrap.dialog', 'ui.bootstrap.dropdownToggle']).config(['$routeProvider', function ($routeProvider) {
-  $routeProvider.
-      when('/', {controller: ManageEquipmentController, templateUrl: 'partials/list.html'}).
-      otherwise({redirectTo: '/list'});
+angular.module('equipment-setting', ['openlmis', 'ui.bootstrap.modal', 'ui.bootstrap.dialog', 'ui.bootstrap.dropdownToggle']).config(['$routeProvider',
+  function ($routeProvider) {
+    $routeProvider.
+    when('/', {
+      controller: ManageEquipmentController,
+      templateUrl: 'partials/list.html'
+    }).
+    when('/create',{
+      controller: CreateEquipmentController,
+      templateUrl: 'partials/create.html'
+    }).
+    when('/edit/:id',{
+      controller: CreateEquipmentController,
+      templateUrl: 'partials/create.html'
+    }).
+    otherwise({
+      redirectTo: '/'
+    });
 }]).run(function ($rootScope, AuthorizationService) {
   $rootScope.manageEquipmentSelected = "selected";
   AuthorizationService.preAuthorize('MANAGE_EQUIPMENT_SETTINGS');

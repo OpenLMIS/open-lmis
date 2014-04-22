@@ -8,24 +8,29 @@
   ~ You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
   -->
 <div xmlns="http://www.w3.org/1999/html">
-<h2>
+  <h2>
     <span>Manage Equipments</span>
-    <a id="add-new-equipment" href="#/create-equipment" class="pull-right btn btn-primary" openlmis-message="button.add.new"></a>
-</h2>
+    <a id="add-new-equipment" href="#/create" class="pull-right btn btn-primary" openlmis-message="button.add.new"></a>
+  </h2>
 
-    <div class="content-body">
-        <table class="table table-bordered table-striped">
-            <thead>
-            <tr>
-                <th style="width: 30px;">#</th>
-                <th>Code</th>
-                <th>Name</th>
-                <th>Type</th>
-            </tr>
-            </thead>
-            <tbody>
-
-            </tbody>
-        </table>
-    </div>
+  <div class="content-body">
+    <table class="table table-bordered table-striped">
+      <thead>
+        <tr>
+          <th style="width: 30px;">#</th>
+          <th>Code</th>
+          <th>Name</th>
+          <th>Type</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="eq in equipments">
+          <td>{{$index + 1}}</td>
+          <td>{{eq.code}}</td>
+          <td><a ng-href="#/edit/{{eq.id}}">{{eq.name}}</a></td>
+          <td>{{eq.equipmentType.code}}</td>
+        </tr>  
+      </tbody>
+    </table>
+  </div>
 </div>

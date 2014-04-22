@@ -11,7 +11,9 @@
 angular.module('equipment-inventory', ['openlmis','ui.bootstrap.modal', 'ui.bootstrap.dialog', 'ui.bootstrap.dropdownToggle']).config(['$routeProvider', function ($routeProvider) {
   $routeProvider.
       when('/', {controller: EquipmentInventoryController, templateUrl: 'partials/list.html'}).
-      otherwise({redirectTo: '/list'});
+      when('/create/:facilityId/:programId', {controller: CreateEquipmentInventoryController, templateUrl: 'partials/create.html'}).
+      when('/edit/:id', {controller: CreateEquipmentInventoryController, templateUrl: 'partials/create.html'}).
+      otherwise({redirectTo: '/'});
 }]).run(function ($rootScope, AuthorizationService) {
   AuthorizationService.preAuthorize('MANAGE_EQUIPMENT_INVENTORY');
 });

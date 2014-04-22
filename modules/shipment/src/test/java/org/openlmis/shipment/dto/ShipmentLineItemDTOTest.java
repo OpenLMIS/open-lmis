@@ -17,6 +17,7 @@ import static org.junit.Assert.assertThat;
 public class ShipmentLineItemDTOTest {
 
   private String orderId = "1l";
+  private String orderNumber = "123";
   private String concatenatedOrderId = "EM000001R";
   private String facilityCode = "F001";
   private String programCode = "EM";
@@ -39,6 +40,7 @@ public class ShipmentLineItemDTOTest {
 
 
     ShipmentLineItemDTO shipmentLineItemDTO = new ShipmentLineItemDTO(
+       orderNumber ,
        orderId,
        concatenatedOrderId,
        facilityCode,
@@ -65,6 +67,7 @@ public class ShipmentLineItemDTOTest {
   @Test
   public void shouldThrowErrorIfOrderIdIsMissing() throws Exception {
     ShipmentLineItemDTO shipmentLineItemDTO = new ShipmentLineItemDTO(
+        orderNumber ,
         null,
         concatenatedOrderId,
         facilityCode,
@@ -91,6 +94,7 @@ public class ShipmentLineItemDTOTest {
   @Test
   public void shouldThrowErrorIfQuantityIsMissing() throws Exception {
     ShipmentLineItemDTO shipmentLineItemDTO = new ShipmentLineItemDTO(
+        orderNumber ,
         orderId,
         concatenatedOrderId,
         null,
@@ -116,7 +120,7 @@ public class ShipmentLineItemDTOTest {
 
   @Test
   public void shouldPopulateShipmentLineItemDTO() throws Exception {
-    List<String> fieldsInOneRow = asList("1l", "P10", "2", "45", "12-10-2013", "14-09-2013");
+    List<String> fieldsInOneRow = asList("OYELL_FVR00000123R", "P10", "2", "45", "12-10-2013", "14-09-2013");
     Collection<EDIFileColumn> shipmentFileColumns = asList(new EDIFileColumn("orderId",
       "label.order.id",
       true,
@@ -126,7 +130,7 @@ public class ShipmentLineItemDTOTest {
 
     ShipmentLineItemDTO shipmentLineItemDTO = ShipmentLineItemDTO.populate(fieldsInOneRow, shipmentFileColumns);
 
-    assertThat(shipmentLineItemDTO.getOrderId(), is("1l"));
+    assertThat(shipmentLineItemDTO.getOrderNumber(), is("OYELL_FVR00000123R"));
     assertThat(shipmentLineItemDTO.getProductCode(), is("P10"));
     assertThat(shipmentLineItemDTO.getCost(), is(nullValue()));
     assertThat(shipmentLineItemDTO.getPackedDate(), is(nullValue()));

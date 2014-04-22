@@ -319,6 +319,8 @@ Feature: Smoke Tests
     And I assign delivery zone "DZ1" to user "storeInCharge" having role "store in-charge"
     And I am logged in as "storeInCharge"
     And I access plan my distribution page
+    And I change language as Portuguese on Distribution Page
+    And I change language as English on Distribution Page
     Then I see no distribution in cache
     When I select delivery zone "Delivery Zone First"
     And I select program "VACCINES"
