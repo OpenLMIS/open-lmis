@@ -836,7 +836,7 @@ public class RnrLineItemTest {
       add(make(a(defaultRnrColumn, with(columnName, QUANTITY_DISPENSED), with(visible, false),
         with(source, CALCULATED))));
       add(make(a(defaultRnrColumn, with(columnName, LOSSES_AND_ADJUSTMENTS), with(visible, true))));
-      add(make(a(defaultRnrColumn, with(columnName, ProgramRnrTemplate.NEW_PATIENT_COUNT), with(visible, false))));
+      add(make(a(defaultRnrColumn, with(columnName, ProgramRnrTemplate.NEW_PATIENT_COUNT), with(visible, false), with(option, new RnrColumnOption(ProgramRnrTemplate.NEW_PATIENT_COUNT, ProgramRnrTemplate.NEW_PATIENT_COUNT) ) )));
       add(make(a(defaultRnrColumn, with(columnName, ProgramRnrTemplate.STOCK_OUT_DAYS), with(visible, false))));
       add(make(a(defaultRnrColumn, with(columnName, STOCK_IN_HAND), with(visible, false),
         with(source, CALCULATED))));
@@ -844,6 +844,7 @@ public class RnrLineItemTest {
       add(make(a(defaultRnrColumn, with(columnName, ProgramRnrTemplate.REMARKS), with(visible, true), with(source, USER_INPUT))));
       add(make(a(defaultRnrColumn, with(columnName, ProgramRnrTemplate.QUANTITY_APPROVED), with(visible, true),
         with(source, USER_INPUT))));
+
     }};
   }
 

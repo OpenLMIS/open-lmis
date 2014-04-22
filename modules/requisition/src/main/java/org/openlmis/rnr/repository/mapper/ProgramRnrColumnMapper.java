@@ -31,7 +31,7 @@ public interface ProgramRnrColumnMapper {
       "createdBy, modifiedBy)",
       "VALUES",
       "(#{programId}, #{rnrColumn.id}, #{rnrColumn.configuredOption.id}, #{rnrColumn.visible}, #{rnrColumn.label},",
-      "#{rnrColumn.position}, #{rnrColumn.source.code}, #{rnrColumn.formulaValidationRequired},#{rnrColumn.calculationOption}" +
+      "#{rnrColumn.position}, #{rnrColumn.source.code}, #{rnrColumn.formulaValidationRequired}, #{rnrColumn.calculationOption}," +
       "#{rnrColumn.createdBy}, #{rnrColumn.modifiedBy})"})
   int insert(@Param("programId") Long programId, @Param("rnrColumn") RnrColumn rnrColumn);
 
@@ -42,18 +42,18 @@ public interface ProgramRnrColumnMapper {
   RnrColumnOption getRnrColumnOptionById(Integer id);
 
   @Select({"SELECT m.id, m.name, m.description, m.formula, m.indicator, m.used, m.mandatory, m.sourceConfigurable,",
-      "p.rnrOptionId, p.position, p.label, p.visible, p.source as sourceString, p.formulaValidationRequired, p.calculationOption, m.calculationOption calculationOptions",
+      "p.rnrOptionId, p.position, p.label, p.visible, p.source as sourceString, p.formulaValidationRequired, m.calculationOption cOptions, p.calculationOption ",
       "FROM program_rnr_columns p INNER JOIN master_rnr_columns m",
       "ON p.masterColumnId = m.id",
       "WHERE p.programId = #{programId}",
       "ORDER BY visible DESC, position"})
   @Results(value = {
-    @Result(property = "id", column = "id"),
-    @Result(property = "configuredOption",  javaType = RnrColumnOption.class, column = "rnrOptionId",
-      many = @Many(select = "org.openlmis.rnr.repository.mapper.ProgramRnrColumnMapper.getRnrColumnOptionById")),
-    @Result(property = "rnrColumnOptions",  javaType = List.class, column = "id",
-      many = @Many(select = "org.openlmis.rnr.repository.mapper.ProgramRnrColumnMapper.getRnrColumnOptionsByMasterRnrColumnId")),
-      @Result(property = "calculationOptions", column = "options")
+      @Result(property = "id", column = "id"),
+      @Result(property = "cOptions", column = "options"),
+      @Result(property = "configuredOption",  javaType = RnrColumnOption.class, column = "rnrOptionId",
+          many = @Many(select = "org.openlmis.rnr.repository.mapper.ProgramRnrColumnMapper.getRnrColumnOptionById")),
+      @Result(property = "rnrColumnOptions",  javaType = List.class, column = "id",
+          many = @Many(select = "org.openlmis.rnr.repository.mapper.ProgramRnrColumnMapper.getRnrColumnOptionsByMasterRnrColumnId"))
   })
   List<RnrColumn> fetchDefinedRnrColumnsForProgram(Long programId);
 

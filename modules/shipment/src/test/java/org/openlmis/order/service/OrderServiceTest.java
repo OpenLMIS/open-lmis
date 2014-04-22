@@ -382,6 +382,7 @@ public class OrderServiceTest {
 
     Rnr rnr = new Rnr();
     rnr.setId(rnrId);
+    rnr.setProgram(make(a(defaultProgram)));
     RnrLineItem rnrLineItem = new RnrLineItem();
     List<RnrLineItem> lineItems = new ArrayList<>();
     rnrLineItem.setPacksToShip(0);
