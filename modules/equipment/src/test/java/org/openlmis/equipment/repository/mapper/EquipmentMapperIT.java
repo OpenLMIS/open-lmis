@@ -42,7 +42,6 @@ public class EquipmentMapperIT {
   @Rule
   public ExpectedException expectedEx = ExpectedException.none();
 
-
   @Autowired
   EquipmentTypeMapper typeMapper;
 
@@ -65,7 +64,7 @@ public class EquipmentMapperIT {
     equipment.setEquipmentType(type);
     mapper.insert(equipment);
 
-    ResultSet rs = queryExecutor.execute("Select * from equipments");
+    ResultSet rs = queryExecutor.execute("Select * from equipments where id = " + equipment.getId());
     assertEquals(rs.next(), true);
 
   }
@@ -102,7 +101,7 @@ public class EquipmentMapperIT {
     mapper.insert(equipment);
     assertThat(equipment.getId(), CoreMatchers.is(notNullValue()));
 
-    ResultSet rs = queryExecutor.execute("Select * from equipments");
+    ResultSet rs = queryExecutor.execute("Select * from equipments where id = " + equipment.getId());
     assertEquals(rs.next(), true);
     assertEquals(rs.getString("code"), "123");
     assertEquals(rs.getString("name"),"Name");
