@@ -29,16 +29,16 @@ public class ConfigureOrderNumberPage extends Page {
   private WebElement orderNumberPrefix = null;
 
   @FindBy(how = ID, using = "includeProgramCode")
-  private static WebElement includeProgramCode = null;
+  private WebElement includeProgramCode = null;
 
   @FindBy(how = ID, using = "saveSuccessMsgDiv")
-  private static WebElement successMessageDiv = null;
+  private WebElement successMessageDiv = null;
 
-  @FindBy(how = ID, using = "includeRnrTypeSuffixChecked")
-  private static WebElement includeRnrTypeSuffixChecked = null;
+  @FindBy(how = ID, using = "includeRnrTypeSuffix")
+  private WebElement includeRnrTypeSuffixCheckbox = null;
 
   @FindBy(how = ID, using = "includeOrderNumberPrefix")
-  private static WebElement orderNumberPrefixCheckBox = null;
+  private WebElement orderNumberPrefixCheckBox = null;
 
   public ConfigureOrderNumberPage(TestWebDriver driver) {
     super(driver);
@@ -86,13 +86,18 @@ public class ConfigureOrderNumberPage extends Page {
     orderNumberPrefixCheckBox.click();
   }
 
-  public boolean unCheckProgramCodeCheckbox() {
+  public void unCheckProgramCodeCheckbox() {
     testWebDriver.waitForElementToAppear(includeProgramCode);
-    return includeProgramCode.isSelected();
+    includeProgramCode.click();
+  }
+
+  public void unCheckIncludeRnrTypeSuffixCheckbox() {
+    testWebDriver.waitForElementToAppear(includeRnrTypeSuffixCheckbox);
+    includeRnrTypeSuffixCheckbox.click();
   }
 
   public boolean isIncludeRnrTypeSuffixChecked() {
-    testWebDriver.waitForElementToAppear(includeRnrTypeSuffixChecked);
-    return includeRnrTypeSuffixChecked.isSelected();
+    testWebDriver.waitForElementToAppear(includeRnrTypeSuffixCheckbox);
+    return includeRnrTypeSuffixCheckbox.isSelected();
   }
 }

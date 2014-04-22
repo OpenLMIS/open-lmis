@@ -38,6 +38,17 @@ public class ConfigureOrderNumberTemplate extends TestCaseHelper {
   }
 
   @Test(groups = {"admin"})
+  public void testByDefaultValues() {
+    HomePage homePage = loginPage.loginAs(user, password);
+    configureSystemSettingsPage = homePage.navigateSystemSettingsScreen();
+    configureOrderNumberPage = configureSystemSettingsPage.navigateConfigureOrderNumberPage();
+
+    assertEquals(configureOrderNumberPage.getOrderNumberPrefix(), "O");
+    assertTrue(configureOrderNumberPage.isProgramCodeChecked());
+    assertTrue(configureOrderNumberPage.isIncludeRnrTypeSuffixChecked());
+  }
+
+  @Test(groups = {"admin"})
   public void testOrderNumber() {
     HomePage homePage = loginPage.loginAs(user, password);
     configureSystemSettingsPage = homePage.navigateSystemSettingsScreen();
@@ -57,21 +68,27 @@ public class ConfigureOrderNumberTemplate extends TestCaseHelper {
     assertTrue(configureOrderNumberPage.isIncludeRnrTypeSuffixChecked());
   }
 
+
   @Test(groups = {"admin"})
   public void verifyAfterUnCheckingAllFields() {
     HomePage homePage = loginPage.loginAs(user, password);
     configureSystemSettingsPage = homePage.navigateSystemSettingsScreen();
     configureOrderNumberPage = configureSystemSettingsPage.navigateConfigureOrderNumberPage();
+
     configureOrderNumberPage.unCheckOrderNumberPrefixCheckbox();
     configureOrderNumberPage.unCheckProgramCodeCheckbox();
+    configureOrderNumberPage.unCheckIncludeRnrTypeSuffixCheckbox();
+    configureOrderNumberPage.clickSaveButton();
+    configureOrderNumberPage.verifyMessage("Order number configuration saved successfully");
+
     testWebDriver.refresh();
 
     configureSystemSettingsPage = homePage.navigateSystemSettingsScreen();
     configureOrderNumberPage = configureSystemSettingsPage.navigateConfigureOrderNumberPage();
 
-    assertTrue(configureOrderNumberPage.isOrderNumberPrefixSelected());
-    assertTrue(configureOrderNumberPage.isProgramCodeChecked());
-    assertTrue(configureOrderNumberPage.isIncludeRnrTypeSuffixChecked());
+    assertFalse(configureOrderNumberPage.isOrderNumberPrefixSelected());
+    assertFalse(configureOrderNumberPage.isProgramCodeChecked());
+    assertFalse(configureOrderNumberPage.isIncludeRnrTypeSuffixChecked());
   }
 
   @AfterMethod(groups = "admin")
