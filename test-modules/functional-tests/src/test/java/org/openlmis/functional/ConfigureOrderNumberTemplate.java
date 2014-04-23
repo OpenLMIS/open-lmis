@@ -45,6 +45,8 @@ public class ConfigureOrderNumberTemplate extends TestCaseHelper {
 
     assertEquals(configureOrderNumberPage.getOrderNumberPrefix(), "O");
     assertTrue(configureOrderNumberPage.isProgramCodeChecked());
+    assertTrue(configureOrderNumberPage.isIncludeSequenceCodeChecked());
+    assertTrue(configureOrderNumberPage.isIncludeSequenceCodeDisabled());
     assertTrue(configureOrderNumberPage.isIncludeRnrTypeSuffixChecked());
   }
 
@@ -65,9 +67,32 @@ public class ConfigureOrderNumberTemplate extends TestCaseHelper {
 
     assertEquals(configureOrderNumberPage.getOrderNumberPrefix(), "P");
     assertTrue(configureOrderNumberPage.isProgramCodeChecked());
+    assertTrue(configureOrderNumberPage.isIncludeSequenceCodeChecked());
+    assertTrue(configureOrderNumberPage.isIncludeSequenceCodeDisabled());
     assertTrue(configureOrderNumberPage.isIncludeRnrTypeSuffixChecked());
   }
 
+  @Test(groups = {"admin"})
+  public void testEnterMixedValueInOrderNumberField() {
+    HomePage homePage = loginPage.loginAs(user, password);
+    configureSystemSettingsPage = homePage.navigateSystemSettingsScreen();
+    configureOrderNumberPage = configureSystemSettingsPage.navigateConfigureOrderNumberPage();
+    configureOrderNumberPage.deletePreExistingData();
+    configureOrderNumberPage.setOrderNumberPrefix("P#67hj89");
+    configureOrderNumberPage.clickSaveButton();
+    configureOrderNumberPage.verifyMessage("Order number configuration saved successfully");
+
+    testWebDriver.refresh();
+
+    configureSystemSettingsPage = homePage.navigateSystemSettingsScreen();
+    configureOrderNumberPage = configureSystemSettingsPage.navigateConfigureOrderNumberPage();
+
+    assertEquals(configureOrderNumberPage.getOrderNumberPrefix(), "P#67hj89");
+    assertTrue(configureOrderNumberPage.isProgramCodeChecked());
+    assertTrue(configureOrderNumberPage.isIncludeSequenceCodeChecked());
+    assertTrue(configureOrderNumberPage.isIncludeSequenceCodeDisabled());
+    assertTrue(configureOrderNumberPage.isIncludeRnrTypeSuffixChecked());
+  }
 
   @Test(groups = {"admin"})
   public void verifyAfterUnCheckingAllFields() {
@@ -88,6 +113,8 @@ public class ConfigureOrderNumberTemplate extends TestCaseHelper {
 
     assertFalse(configureOrderNumberPage.isOrderNumberPrefixSelected());
     assertFalse(configureOrderNumberPage.isProgramCodeChecked());
+    assertTrue(configureOrderNumberPage.isIncludeSequenceCodeChecked());
+    assertTrue(configureOrderNumberPage.isIncludeSequenceCodeDisabled());
     assertFalse(configureOrderNumberPage.isIncludeRnrTypeSuffixChecked());
   }
 

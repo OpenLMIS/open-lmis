@@ -22,6 +22,9 @@ public class ConfigureOrderNumberPage extends Page {
   @FindBy(how = ID, using = "saveOrderNumberConfig")
   private WebElement saveButton = null;
 
+  @FindBy(how = ID, using = "includeSequenceCode")
+  private WebElement includeSequenceCodeCheckbox = null;
+
   @FindBy(how = ID, using = "orderPrefix")
   private WebElement setOrderNumberPrefix = null;
 
@@ -74,6 +77,16 @@ public class ConfigureOrderNumberPage extends Page {
   public boolean isProgramCodeChecked() {
     testWebDriver.waitForElementToAppear(includeProgramCode);
     return includeProgramCode.isSelected();
+  }
+
+  public boolean isIncludeSequenceCodeChecked() {
+    testWebDriver.waitForElementToAppear(includeSequenceCodeCheckbox);
+    return includeSequenceCodeCheckbox.isSelected();
+  }
+
+  public boolean isIncludeSequenceCodeDisabled() {
+    testWebDriver.waitForElementToAppear(includeSequenceCodeCheckbox);
+    return includeSequenceCodeCheckbox.isDisplayed();
   }
 
   public boolean isOrderNumberPrefixSelected() {
