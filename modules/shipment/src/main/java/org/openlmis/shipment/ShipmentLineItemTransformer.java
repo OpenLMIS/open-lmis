@@ -79,7 +79,8 @@ public class ShipmentLineItemTransformer extends LineItemTransformer {
 
   private void setMandatoryFields(ShipmentLineItem lineItem, ShipmentLineItemDTO shipmentLineItemDTO) {
     lineItem.setProductCode(shipmentLineItemDTO.getProductCode().trim());
-    lineItem.setOrderId(Long.valueOf(shipmentLineItemDTO.getOrderNumber().trim()));
+    lineItem.setOrderId(shipmentLineItemDTO.getOrderId());
+    lineItem.setOrderNumber(shipmentLineItemDTO.getOrderNumber());
     String quantityShipped = shipmentLineItemDTO.getQuantityShipped().trim();
     if (quantityShipped.length() > 8) {
       throw new DataException("invalid.quantity.shipped");

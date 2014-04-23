@@ -34,7 +34,7 @@ public class ShipmentLineItemTransformerTest {
 
   @Test
   public void shouldTrimAndParseFieldsWithSpaces() throws Exception {
-    String orderIdWithSpaces = " 11 ";
+    String orderNumberWithSpaces = " 11 ";
     String productCodeWithSpaces = " P111 ";
     String replacedProductCodeWithSpaces = " P151 ";
     String quantityShippedWithSpaces = " 22 ";
@@ -42,7 +42,7 @@ public class ShipmentLineItemTransformerTest {
     String packedDateWithSpaces = " 10/10/2013 ";
     String shippedDateWithSpaces = "10/12/2013";
 
-    ShipmentLineItemDTO dto = new ShipmentLineItemDTO(orderIdWithSpaces, productCodeWithSpaces, replacedProductCodeWithSpaces,
+    ShipmentLineItemDTO dto = new ShipmentLineItemDTO(orderNumberWithSpaces, productCodeWithSpaces, replacedProductCodeWithSpaces,
       quantityShippedWithSpaces, costWithSpaces, packedDateWithSpaces, shippedDateWithSpaces);
 
     ShipmentLineItem lineItem = new ShipmentLineItemTransformer().transform(dto, "MM/dd/yyyy", "MM/dd/yyyy", new Date());

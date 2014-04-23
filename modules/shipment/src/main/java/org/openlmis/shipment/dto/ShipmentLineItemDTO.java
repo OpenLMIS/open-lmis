@@ -33,6 +33,7 @@ import static org.apache.commons.lang3.StringUtils.isBlank;
 public class ShipmentLineItemDTO {
 
   private static Logger logger = Logger.getLogger(ShipmentLineItemDTO.class);
+  private Long orderId;
   private String orderNumber;
   private String productCode;
   private String replacedProductCode;
@@ -40,6 +41,17 @@ public class ShipmentLineItemDTO {
   private String cost;
   private String packedDate;
   private String shippedDate;
+
+  public ShipmentLineItemDTO(String orderNumber, String productCode, String replacedProductCode, String quantityShipped,
+                             String cost, String packedDate, String shippedDate) {
+    this.orderNumber = orderNumber;
+    this.productCode = productCode;
+    this.replacedProductCode = replacedProductCode;
+    this.quantityShipped = quantityShipped;
+    this.cost = cost;
+    this.packedDate = packedDate;
+    this.shippedDate = shippedDate;
+  }
 
   public void checkMandatoryFields() {
     if (isBlank(this.productCode) ||

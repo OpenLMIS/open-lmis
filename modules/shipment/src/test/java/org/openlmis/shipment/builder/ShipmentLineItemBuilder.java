@@ -23,6 +23,8 @@ public class ShipmentLineItemBuilder {
 
   public static Property<? super ShipmentLineItem, Long> orderId = new Property<>();
 
+  public static Property<? super ShipmentLineItem, String> orderNumber = new Property<>();
+
   public static Property<? super ShipmentLineItem, String> productCode = new Property<>();
 
   public static Property<? super ShipmentLineItem, String> replacedProductCode = new Property<>();
@@ -68,6 +70,7 @@ public class ShipmentLineItemBuilder {
       ShipmentLineItem lineItem = new ShipmentLineItem();
 
       lineItem.setOrderId(lookup.valueOf(orderId, 1L));
+      lineItem.setOrderNumber(lookup.valueOf(orderNumber, "OYELL_FVR00000001R"));
       lineItem.setProductCode(lookup.valueOf(productCode, defaultProductCode));
       lineItem.setReplacedProductCode(lookup.valueOf(replacedProductCode, defaultReplacedProductCode));
       lineItem.setQuantityShipped(lookup.valueOf(quantityShipped, 0));

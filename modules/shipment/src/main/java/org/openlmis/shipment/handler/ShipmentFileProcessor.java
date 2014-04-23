@@ -15,6 +15,7 @@ import org.apache.log4j.Logger;
 import org.openlmis.core.domain.EDIFileColumn;
 import org.openlmis.core.domain.EDIFileTemplate;
 import org.openlmis.core.exception.DataException;
+import org.openlmis.order.domain.Order;
 import org.openlmis.order.service.OrderService;
 import org.openlmis.shipment.ShipmentLineItemTransformer;
 import org.openlmis.shipment.domain.ShipmentLineItem;
@@ -158,6 +159,8 @@ public class ShipmentFileProcessor {
                                Date creationDate) {
     boolean savedSuccessfully = true;
     try {
+      Order order = orderService.getByOrderNumber(dto.getOrderNumber());
+      dto.setOrderId(order.getId());
       ShipmentLineItem lineItem = transformer.transform(dto, packedDateFormat, shippedDateFormat, creationDate);
       shipmentService.save(lineItem);
     } catch (DataException e) {

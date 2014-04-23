@@ -260,4 +260,8 @@ public class OrderService {
   public boolean hasStatus(String orderNumber, OrderStatus... statuses) {
     return contains(statuses, orderRepository.getStatus(orderNumber));
   }
+
+  public Order getByOrderNumber(String orderNumber) {
+    return orderRepository.getByOrderNumber(orderNumber);
+  }
 }

@@ -27,9 +27,9 @@ import java.util.List;
 public interface ShipmentMapper {
 
   @Insert({"INSERT INTO shipment_line_items",
-    "(orderId, productCode, replacedProductCode, quantityShipped, cost, packedDate, shippedDate, productName, dispensingUnit, productCategory,",
+    "(orderId, orderNumber, productCode, replacedProductCode, quantityShipped, cost, packedDate, shippedDate, productName, dispensingUnit, productCategory,",
     "packsToShip, productCategoryDisplayOrder, productDisplayOrder, fullSupply) VALUES",
-    "(#{orderId}, #{productCode}, #{replacedProductCode}, #{quantityShipped}, #{cost}, #{packedDate}, #{shippedDate}, #{productName}, #{dispensingUnit}, #{productCategory},",
+    "(#{orderId}, #{orderNumber}, #{productCode}, #{replacedProductCode}, #{quantityShipped}, #{cost}, #{packedDate}, #{shippedDate}, #{productName}, #{dispensingUnit}, #{productCategory},",
     "#{packsToShip}, #{productCategoryDisplayOrder}, #{productDisplayOrder}, #{fullSupply})"})
   @Options(useGeneratedKeys = true)
   public void insertShippedLineItem(ShipmentLineItem shipmentLineItem);
