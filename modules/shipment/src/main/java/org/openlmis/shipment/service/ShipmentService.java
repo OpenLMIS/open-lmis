@@ -60,8 +60,12 @@ public class ShipmentService {
 
       Long programId = requisitionService.getProgramId(shipmentLineItem.getOrderId());
       ProgramProduct programProduct = programProductService.getByProgramAndProductId(programId, product.getId());
-      programProduct.setProduct(product);
-      shipmentLineItem.fillReferenceFields(programProduct);
+      if (programProduct != null) {
+        programProduct.setProduct(product);
+        shipmentLineItem.fillReferenceFields(programProduct);
+      } else {
+        shipmentLineItem.fillReferenceFields(product);
+      }
     }
 
     if (shipmentLineItem.getReplacedProductCode() != null) {

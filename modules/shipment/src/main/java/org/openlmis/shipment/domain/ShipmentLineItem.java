@@ -79,6 +79,11 @@ public class ShipmentLineItem extends LineItem {
     this.fullSupply = fullSupply;
   }
 
+  public void fillReferenceFields(Product product) {
+    this.setReferenceFields(product.getName(), product.getDispensingUnit(), null, null,
+      null, null, product.getFullSupply());
+  }
+
   public void fillReferenceFields(ProgramProduct programProduct) {
     Product product = programProduct.getProduct();
     this.setReferenceFields(product.getName(), product.getDispensingUnit(), programProduct.getProductCategory().getName(), null,

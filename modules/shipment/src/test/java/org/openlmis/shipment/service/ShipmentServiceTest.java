@@ -75,23 +75,26 @@ public class ShipmentServiceTest {
     shipmentLineItem.setReplacedProductCode(null);
     when(requisitionService.getNonSkippedLineItem(1L, "P10")).thenReturn(new RnrLineItem());
     when(productService.getByCode(shipmentLineItem.getProductCode())).thenReturn(new Product());
+
     shipmentService.save(shipmentLineItem);
 
     verify(shipmentRepository).save(shipmentLineItem);
   }
 
   @Test
-  public void shouldNotInsertShipmentIfProductCodeIsNotValid() throws Exception {
+  public void shouldSaveShipmentLineItemWithReferenceFieldsFromProductsOnlyIfProgramProductIsNull() throws Exception {
     ShipmentLineItem shipmentLineItem = make(a(defaultShipmentLineItem,
       with(productCode, "P10"),
       with(orderId, 1L),
       with(quantityShipped, 500)));
 
-    when(productService.getIdForCode("P10")).thenReturn(null);
-    exException.expect(DataException.class);
-    exException.expectMessage("error.unknown.product");
+    shipmentLineItem.setReplacedProductCode(null);
+    when(requisitionService.getNonSkippedLineItem(1L, "P10")).thenReturn(null);
+    when(productService.getByCode(shipmentLineItem.getProductCode())).thenReturn(new Product());
 
     shipmentService.save(shipmentLineItem);
+
+    verify(shipmentRepository).save(shipmentLineItem);
   }
 
   @Test
@@ -145,6 +148,28 @@ public class ShipmentServiceTest {
     shipmentService.save(shipmentLineItem);
 
     verify(shipmentLineItem).fillReferenceFields(programProduct);
+    verify(shipmentRepository).save(shipmentLineItem);
+  }
+
+  @Test
+  public void shouldFillProductInfoFromProductsIfProgramProductDoesNotExist() throws Exception {
+    Long programId = 1L;
+    Long productId = 2L;
+    ShipmentLineItem shipmentLineItem = spy(make(a(defaultShipmentLineItem, with(productCode, "P10"), with(orderId, 1L),
+      with(quantityShipped, 20))));
+
+    when(requisitionService.getNonSkippedLineItem(shipmentLineItem.getOrderId(), "P10")).thenReturn(null);
+    when(requisitionService.getProgramId(shipmentLineItem.getOrderId())).thenReturn(programId);
+
+    Product product = make(a(defaultProduct));
+    product.setId(productId);
+    when(productService.getByCode("P10")).thenReturn(product);
+    when(productService.getByCode("P133")).thenReturn(product);
+    when(programproductService.getByProgramAndProductId(programId, productId)).thenReturn(null);
+
+    shipmentService.save(shipmentLineItem);
+
+    verify(shipmentLineItem).fillReferenceFields(product);
     verify(shipmentRepository).save(shipmentLineItem);
   }
 
