@@ -117,14 +117,14 @@
             </label>
 
             <div class="form-field">
-              <input ng-model="equipment.yearOfInstallation" name="year" id="year" type="number" maxlength="50" ng-required="true" />
+              <input ng-model="equipment.yearOfInstallation"  name="year" id="year" type="number" ng-required="true" />
               <span class="field-error" ng-show="equipmentForm.code.$error.required && showError" openlmis-message="missing.value"></span>
             </div>
           </div>
         </div>
         <div class="form-row clearfix">
           <div class="form-cell">
-            <label for="code">Name of Assesor
+            <label for="nameOfAssessor">Name of Assessor
               <span class="label-required">*</span>
             </label>
 
@@ -134,35 +134,40 @@
             </div>
           </div>
 
-          <div class="form-cell">
-            <label for="replacementRecommended">Replacement Recommended
-              <span class="label-required">*</span>
-            </label>
-            <div class="form-field">
-              <input ng-model="equipment.replacementRecommended" name="replacementRecommended" id="replacementRecommended" type="checkbox" maxlength="50" ng-required="true" />
+            <div class="form-cell">
+                <label for="replacementRecommended">Date last Assessed
+                    <span class="label-required">*</span>
+                </label>
+                <div class="form-field">
+                    <input ng-model="equipment.dateLastAssessed" name="dateLastAssessed" id="dateLastAssessed" type="date" maxlength="50" ng-required="true" />
+                </div>
             </div>
-          </div>
+
+
         </div>
         <div class="form-row clearfix">
+
+        <div class="form-cell">
+            <label for="replacementRecommended">Replacement Recommended
+                <span class="label-required">*</span>
+            </label>
+            <div class="form-field">
+                <input ng-model="equipment.replacementRecommended" name="replacementRecommended" id="replacementRecommended" type="checkbox" ng-required="true" />
+            </div>
+        </div>
+
           <div class="form-cell">
             <label for="reasonForReplacement">Reason For Replacement
 
             </label>
 
             <div class="form-field">
-              <input ng-model="equipment.reasonForReplacement" name="reasonForReplacement" id="reasonForReplacement" type="text" maxlength="50" ng-required="true" />
+              <textarea ng-model="equipment.reasonForReplacement" ng-disabled="!equipment.replacementRecommended" name="reasonForReplacement" id="reasonForReplacement" style="width: 400px" ng-required="true" ></textarea>
               <span class="field-error" ng-show="equipmentForm.reasonForReplacement.$error.required && showError" openlmis-message="missing.value"></span>
             </div>
           </div>
 
-          <div class="form-cell">
-            <label for="replacementRecommended">Date last Assessed
-              <span class="label-required">*</span>
-            </label>
-            <div class="form-field">
-              <input ng-model="equipment.dateLastAssessed" name="dateLastAssessed" id="dateLastAssessed" type="date" maxlength="50" ng-required="true" />
-            </div>
-          </div>
+
         </div>
 
       </div>
@@ -180,6 +185,6 @@
         </div>
         <div class="toolbar-success" id="saveSuccessMsgDiv" openlmis-message="message" ng-show="message"></div>
       </div>
-
+      </div>
   </form>
   </div>

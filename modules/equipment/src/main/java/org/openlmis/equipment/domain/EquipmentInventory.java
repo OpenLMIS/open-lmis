@@ -43,4 +43,15 @@ public class EquipmentInventory extends BaseModel {
   private String nameOfAssessor;
   private Date dateLastAssessed;
 
+//  public String getDateLastAssessedString()  {
+//    try {
+//      SimpleDateFormat simpleDateFormat = new SimpleDateFormat("mm/dd/yyyy");
+//      return this.dateLastAssessed == null ? null : simpleDateFormat.format(this.dateLastAssessed);
+//    }catch(Exception exp){
+//
+//    }
+//    return null;
+//  }
+
+
 }

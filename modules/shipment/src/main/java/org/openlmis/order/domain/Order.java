@@ -31,6 +31,7 @@ import org.openlmis.shipment.domain.ShipmentFileInfo;
 public class Order extends BaseModel implements Comparable {
   private Rnr rnr;
   private OrderStatus status;
+  private String orderNumber;
   private SupplyLine supplyLine;
   private ShipmentFileInfo shipmentFileInfo;
   private String ftpComment;

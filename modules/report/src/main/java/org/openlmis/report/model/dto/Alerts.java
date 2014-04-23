@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Alerts {
+    private Long id;
     private String description;
     private Long supervisoryNodeId;
     private String category;

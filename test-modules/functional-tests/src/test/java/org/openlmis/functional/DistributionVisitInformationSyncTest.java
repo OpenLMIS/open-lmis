@@ -492,7 +492,7 @@ public class DistributionVisitInformationSyncTest extends TestCaseHelper {
   public void verifyVisitDate() {
     VisitInformationPage visitInformationPage = PageObjectFactory.getVisitInformationPage(testWebDriver);
     String actualDate = visitInformationPage.getVisitDate();
-    String expectedDate = "01/" + new SimpleDateFormat("MM/yyyy").format(new Date());
+    String expectedDate = new SimpleDateFormat("dd/MM/yyyy").format(new Date());
     assertEquals(expectedDate, actualDate);
   }
 

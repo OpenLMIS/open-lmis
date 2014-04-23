@@ -10,7 +10,6 @@
 
 package org.openlmis.pageobjects;
 
-import com.thoughtworks.selenium.SeleneseTestNgHelper;
 import org.openlmis.UiUtils.TestWebDriver;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -64,9 +63,9 @@ public class ViewOrdersPage extends RequisitionPage {
     testWebDriver.setImplicitWait(10);
   }
 
-  public void verifyNoRequisitionReleasedAsOrderMessage() {
+  public boolean verifyNoRequisitionReleasedAsOrderMessage() {
     testWebDriver.waitForPageToLoad();
-    noRequisitionReleasedAsOrderYet.isDisplayed();
+    return noRequisitionReleasedAsOrderYet.isDisplayed();
   }
 
   public void isFirstRowPresent() {
@@ -107,7 +106,7 @@ public class ViewOrdersPage extends RequisitionPage {
   public void verifyProgram(int row, String program) {
     testWebDriver.waitForElementToAppear(testWebDriver.getElementByXpath("(//div[@class='ngCellText ng-scope col2 colt2']/span)[" + row + "]"));
     String actualProgram = testWebDriver.getElementByXpath("(//div[@class='ngCellText ng-scope col2 colt2']/span)[" + row + "]").getText();
-    SeleneseTestNgHelper.assertEquals(actualProgram, program);
+    assertEquals(actualProgram, program);
   }
 
   public String getOrderStatus(int rowNumber) {

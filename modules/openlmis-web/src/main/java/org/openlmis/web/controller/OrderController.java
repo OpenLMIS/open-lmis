@@ -10,6 +10,7 @@
 
 package org.openlmis.web.controller;
 
+import org.openlmis.core.domain.OrderNumberConfiguration;
 import org.openlmis.core.domain.Right;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.order.domain.DateFormat;
@@ -38,8 +39,7 @@ import static org.openlmis.order.domain.OrderStatus.*;
 import static org.openlmis.order.dto.OrderDTO.getOrdersForView;
 import static org.openlmis.web.response.OpenLmisResponse.error;
 import static org.openlmis.web.response.OpenLmisResponse.response;
-import static org.springframework.http.HttpStatus.CONFLICT;
-import static org.springframework.http.HttpStatus.CREATED;
+import static org.springframework.http.HttpStatus.*;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
@@ -54,6 +54,7 @@ public class OrderController extends BaseController {
   public static final String ORDERS = "orders";
   public static final String ORDER = "order";
   public static final String ORDER_FILE_TEMPLATE = "orderFileTemplate";
+  public static final String ORDER_NUMBER_CONFIGURATION = "orderNumberConfiguration";
   public static final String DATE_FORMATS = "dateFormats";
   public static final String PAGE_SIZE = "pageSize";
   public static final String NUMBER_OF_PAGES = "numberOfPages";
@@ -63,6 +64,7 @@ public class OrderController extends BaseController {
   private OrderService orderService;
 
   @RequestMapping(value = "/orders", method = POST, headers = ACCEPT_JSON)
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'CONVERT_TO_ORDER')")
   public ResponseEntity<OpenLmisResponse> convertToOrder(@RequestBody RequisitionList rnrList,
                                                          HttpServletRequest request) {
     try {
@@ -98,21 +100,38 @@ public class OrderController extends BaseController {
   }
 
   @RequestMapping(value = "/order-file-template", method = GET, headers = ACCEPT_JSON)
-  @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'CONFIGURE_EDI')")
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'SYSTEM_SETTINGS')")
   public ResponseEntity<OpenLmisResponse> getOrderFileTemplateDTO() {
     return response(ORDER_FILE_TEMPLATE, orderService.getOrderFileTemplateDTO());
   }
 
   @RequestMapping(value = "/order-file-template", method = POST, headers = ACCEPT_JSON)
-  @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'CONFIGURE_EDI')")
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'SYSTEM_SETTINGS')")
   public ResponseEntity<OpenLmisResponse> saveOrderFileTemplateDTO(@RequestBody OrderFileTemplateDTO orderFileTemplateDTO,
                                                                    HttpServletRequest request) {
     orderService.saveOrderFileTemplate(orderFileTemplateDTO, loggedInUserId(request));
     return OpenLmisResponse.success("order.file.template.saved.success");
   }
 
+  @RequestMapping(value = "/order-number-configuration", method = GET, headers = ACCEPT_JSON)
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'SYSTEM_SETTINGS')")
+  public ResponseEntity<OpenLmisResponse> getOrderNumberConfiguration() {
+    return response(ORDER_NUMBER_CONFIGURATION, orderService.getOrderNumberConfiguration());
+  }
+
+  @RequestMapping(value = "/order-number-configuration", method = POST, headers = ACCEPT_JSON)
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'SYSTEM_SETTINGS')")
+  public ResponseEntity<OpenLmisResponse> updateOrderNumberConfiguration(@RequestBody OrderNumberConfiguration orderNumberConfiguration) {
+    try {
+      orderService.updateOrderNumberConfiguration(orderNumberConfiguration);
+      return OpenLmisResponse.success("order.number.configure.success");
+    } catch (Exception de) {
+      return error("error.saving.order.configuration", BAD_REQUEST);
+    }
+  }
+
   @RequestMapping(value = "/date-formats", method = GET, headers = ACCEPT_JSON)
-  @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'CONFIGURE_EDI')")
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'SYSTEM_SETTINGS')")
   public ResponseEntity<OpenLmisResponse> getAllDateFormats() {
     Set<DateFormat> dateFormats = orderService.getAllDateFormats();
     return response(DATE_FORMATS, dateFormats);

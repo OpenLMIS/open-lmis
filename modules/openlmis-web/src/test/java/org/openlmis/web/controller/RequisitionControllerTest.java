@@ -19,7 +19,6 @@ import org.junit.runner.RunWith;
 import org.mockito.ArgumentMatcher;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.openlmis.authentication.web.UserAuthenticationSuccessHandler;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.ProcessingPeriod;
@@ -100,6 +99,17 @@ public class RequisitionControllerTest {
 
   @InjectMocks
   private RequisitionController controller;
+
+  public static Matcher<RequisitionSearchCriteria> criteriaMatcher(final Long facilityId, final Long programId, final Long periodId) {
+    return new ArgumentMatcher<RequisitionSearchCriteria>() {
+      @Override
+      public boolean matches(Object argument) {
+        RequisitionSearchCriteria searchCriteria = (RequisitionSearchCriteria) argument;
+        return searchCriteria.getFacilityId().equals(facilityId) && searchCriteria.getProgramId().equals(programId) && searchCriteria.getPeriodId().equals(
+          periodId);
+      }
+    };
+  }
 
   @Before
   public void setUp() throws Exception {
@@ -481,13 +491,17 @@ public class RequisitionControllerTest {
 
   @Test
   public void shouldSetStatusChangesInModelForPrint() throws Exception {
+    Integer numberOfMonths = 2;
     List<RequisitionStatusChange> statusChanges = new ArrayList<>();
     when(requisitionStatusChangeService.getByRnrId(1L)).thenReturn(statusChanges);
-    when(requisitionService.getFullRequisitionById(1L)).thenReturn(make(a(defaultRequisition)));
+    Rnr rnr = make(a(defaultRequisition));
+    when(requisitionService.getFullRequisitionById(1L)).thenReturn(rnr);
+    when(requisitionService.findM(rnr.getPeriod())).thenReturn(numberOfMonths);
 
     ModelAndView printModel = controller.printRequisition(1L);
 
     assertThat((List<RequisitionStatusChange>) printModel.getModel().get(STATUS_CHANGES), is(statusChanges));
+    assertThat((Integer) printModel.getModel().get(NUMBER_OF_MONTHS), is(numberOfMonths));
   }
 
   private Rnr createRequisition() {
@@ -504,16 +518,5 @@ public class RequisitionControllerTest {
     requisition.setProgram(program);
     requisition.setPeriod(period);
     return requisition;
-  }
-
-  public static Matcher<RequisitionSearchCriteria> criteriaMatcher(final Long facilityId, final Long programId, final Long periodId) {
-    return new ArgumentMatcher<RequisitionSearchCriteria>() {
-      @Override
-      public boolean matches(Object argument) {
-        RequisitionSearchCriteria searchCriteria = (RequisitionSearchCriteria) argument;
-        return searchCriteria.getFacilityId().equals(facilityId) && searchCriteria.getProgramId().equals(programId) && searchCriteria.getPeriodId().equals(
-          periodId);
-      }
-    };
   }
 }

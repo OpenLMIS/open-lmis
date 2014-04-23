@@ -39,7 +39,6 @@ import static org.springframework.web.context.WebApplicationContext.SCOPE_SESSIO
 @Scope(value = SCOPE_SESSION, proxyMode = TARGET_CLASS)
 public class MessageService {
 
-
   private ExposedMessageSource messageSource;
 
   @Setter
@@ -59,7 +58,7 @@ public class MessageService {
   public MessageService(ExposedMessageSource messageSource, @Value("${locales.supported}") String locales) {
     this.messageSource = messageSource;
     this.locales = locales;
-    this.currentLocale = Locale.getDefault();
+    this.currentLocale = new Locale("en");
   }
 
   public String message(String key) {

@@ -130,6 +130,7 @@ public class ApplicationTestContext extends AbstractTransactionalJUnit4SpringCon
     Order order = new Order(rnr);
     order.setStatus(OrderStatus.IN_ROUTE);
     order.setSupplyLine(insertSupplyLine(facility, supervisoryNode));
+    order.setOrderNumber("OrderHIV00000001R");
     orderMapper.insert(order);
     return order;
   }

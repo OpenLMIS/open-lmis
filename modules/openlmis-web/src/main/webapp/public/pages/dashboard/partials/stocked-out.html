@@ -19,7 +19,7 @@
             </table>
             <div ng-show ="datarows !== undefined && datarows.length > 0">
                 <table ng-show="datarows.length > 0" class="table-bordered table table-striped pull-right"
-                       ng-table="tableParams"   style="height: 200px; overflow: auto">
+                       ng-table="tableParams">
                     <tbody>
                     <tr ng-repeat="row in datarows">
                         <td data-title="'District'" sortable="facility"  >{{row.location}}</td>

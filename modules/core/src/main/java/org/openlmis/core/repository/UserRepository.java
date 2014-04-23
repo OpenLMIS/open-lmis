@@ -52,6 +52,10 @@ public class UserRepository {
     return userMapper.getUsersWithRightInNodeForProgram(program, node, right);
   }
 
+  public List<User> getUsersWithRightInHierarchyUsingBaseNode(Long nodeId, Long programId, Right right) {
+    return userMapper.getUsersWithRightInHierarchyUsingBaseNode(nodeId, programId, right);
+  }
+
   public void create(User user) {
     validateAndSetSupervisor(user);
     try {
@@ -144,6 +148,10 @@ public class UserRepository {
 
   public User getByUserName(String userName) {
     return userMapper.getByUserName(userName);
+  }
+
+  public List<User> getUsersWithRightOnWarehouse(Long id, Right right) {
+    return userMapper.getUsersWithRightOnWarehouse(id, right);
   }
 
   public List<LinkedHashMap> getPreferences(Long userId){

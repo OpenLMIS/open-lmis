@@ -19,6 +19,8 @@ import org.testng.annotations.Test;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.assertEquals;
 import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
@@ -48,7 +50,7 @@ public class ApproveRequisitionTest extends JsonUtility {
     dbWrapper.updateFieldValue("facilities", "virtualFacility", "true", "code", "F10");
     client.createContext();
     submitRequisition("commTrack1", "HIV");
-    String id = String.valueOf(dbWrapper.getMaxRnrID());
+    final String id = String.valueOf(dbWrapper.getMaxRnrID());
     dbWrapper.updateRequisitionStatus("AUTHORIZED", "commTrack", "HIV");
 
     Report reportFromJson = JsonUtility.readObjectFromFile(FULL_JSON_APPROVE_TXT_FILE_NAME, Report.class);
@@ -68,13 +70,16 @@ public class ApproveRequisitionTest extends JsonUtility {
     assertEquals(200, responseEntity.getStatus());
     assertTrue(response.contains("success\":\"R&R approved successfully!"));
     assertEquals("APPROVED", dbWrapper.getAttributeFromTable("requisitions", "status", "id", id));
-    assertEquals("some random name", dbWrapper.getAttributeFromTable("requisition_status_changes", "userName", "rnrId", id));
+    Map<String, String> queryMap = new HashMap<String, String>() {{
+      put("rnrId", id);
+      put("status", "APPROVED");
+    }};
+    assertEquals("some random name", dbWrapper.getAttributeFromTable("requisition_status_changes", "userName", queryMap));
     ResponseEntity responseEntity1 = client.SendJSON("", "http://localhost:9091/feeds/requisition-status/recent", "GET", "", "");
 
     assertTrue(responseEntity1.getResponse().contains("{\"requisitionId\":" + id + ",\"requisitionStatus\":\"APPROVED\",\"emergency\":false,\"startDate\":"));
     assertTrue(responseEntity1.getResponse().contains(",\"endDate\":"));
   }
-
 
   @Test(groups = {"webservice"})
   public void testApproveRequisitionUnauthorizedAccess() throws SQLException, IOException {
@@ -163,7 +168,7 @@ public class ApproveRequisitionTest extends JsonUtility {
     dbWrapper.updateFieldValue("facilities", "virtualFacility", "true", "code", "F10");
 
     submitRequisition("commTrack1", "HIV");
-    String id = String.valueOf(dbWrapper.getMaxRnrID());
+    final String id = String.valueOf(dbWrapper.getMaxRnrID());
     dbWrapper.updateRequisitionStatus("AUTHORIZED", "commTrack", "HIV");
     dbWrapper.updateActiveStatusOfProgramProduct("P10", "HIV", "False");
     Report reportFromJson = JsonUtility.readObjectFromFile(FULL_JSON_APPROVE_TXT_FILE_NAME, Report.class);
@@ -182,7 +187,11 @@ public class ApproveRequisitionTest extends JsonUtility {
     assertEquals(200, responseEntity.getStatus());
     assertTrue(response.contains("{\"success\":"));
     assertEquals("APPROVED", dbWrapper.getAttributeFromTable("requisitions", "status", "id", id));
-    String approverName = dbWrapper.getAttributeFromTable("requisition_status_changes", "userName", "rnrId", id);
+    Map<String, String> queryMap = new HashMap<String, String>() {{
+      put("rnrId", id);
+      put("status", "APPROVED");
+    }};
+    String approverName = dbWrapper.getAttributeFromTable("requisition_status_changes", "userName", queryMap);
     assertTrue(reportFromJson.getApproverName(), "some random name".equals(approverName));
     dbWrapper.updateActiveStatusOfProgramProduct("P10", "HIV", "True");
   }
@@ -194,7 +203,7 @@ public class ApproveRequisitionTest extends JsonUtility {
     dbWrapper.updateFieldValue("facilities", "virtualFacility", "true", "code", "F10");
 
     submitRequisition("commTrack1", "HIV");
-    String id = String.valueOf(dbWrapper.getMaxRnrID());
+    final String id = String.valueOf(dbWrapper.getMaxRnrID());
 
     dbWrapper.updateRequisitionStatus("AUTHORIZED", "commTrack", "HIV");
     dbWrapper.updateFieldValue("programs", "active", "false", "code", "HIV");
@@ -214,7 +223,11 @@ public class ApproveRequisitionTest extends JsonUtility {
     assertEquals(200, responseEntity.getStatus());
     assertTrue(response.contains("{\"success\":\"R&R approved successfully!\"}"));
     assertEquals("APPROVED", dbWrapper.getAttributeFromTable("requisitions", "status", "id", id));
-    String approverName = dbWrapper.getAttributeFromTable("requisition_status_changes", "userName", "rnrId", id);
+    Map<String, String> queryMap = new HashMap<String, String>() {{
+      put("rnrId", id);
+      put("status", "APPROVED");
+    }};
+    String approverName = dbWrapper.getAttributeFromTable("requisition_status_changes", "userName", queryMap);
     assertTrue(reportFromJson.getApproverName(), "some random name".equals(approverName));
     dbWrapper.updateFieldValue("programs", "active", "true", "code", "HIV");
   }
@@ -226,7 +239,7 @@ public class ApproveRequisitionTest extends JsonUtility {
     dbWrapper.updateFieldValue("facilities", "virtualFacility", "true", "code", "F10");
 
     submitRequisition("commTrack1", "HIV");
-    String id = String.valueOf(dbWrapper.getMaxRnrID());
+    final String id = String.valueOf(dbWrapper.getMaxRnrID());
     dbWrapper.updateRequisitionStatus("AUTHORIZED", "commTrack", "HIV");
     dbWrapper.updateFieldValue("products", "active", "false", "code", "P");
     Report reportFromJson = JsonUtility.readObjectFromFile(FULL_JSON_APPROVE_TXT_FILE_NAME, Report.class);
@@ -245,7 +258,11 @@ public class ApproveRequisitionTest extends JsonUtility {
     assertEquals(200, responseEntity.getStatus());
     assertTrue(response.contains("{\"success\":"));
     assertEquals("APPROVED", dbWrapper.getAttributeFromTable("requisitions", "status", "id", id));
-    String approverName = dbWrapper.getAttributeFromTable("requisition_status_changes", "userName", "rnrId", id);
+    Map<String, String> queryMap = new HashMap<String, String>() {{
+      put("rnrId", id);
+      put("status", "APPROVED");
+    }};
+    String approverName = dbWrapper.getAttributeFromTable("requisition_status_changes", "userName", queryMap);
     assertTrue(reportFromJson.getApproverName(), "some random name".equals(approverName));
     dbWrapper.updateFieldValue("products", "active", "true", "code", "P10");
   }

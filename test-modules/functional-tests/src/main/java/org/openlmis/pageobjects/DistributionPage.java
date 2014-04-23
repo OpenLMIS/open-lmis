@@ -22,6 +22,7 @@ import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 import java.util.List;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.assertEquals;
+import static org.openqa.selenium.support.How.CSS;
 import static org.openqa.selenium.support.How.ID;
 import static org.openqa.selenium.support.How.XPATH;
 
@@ -90,6 +91,13 @@ public class DistributionPage extends Page {
 
   @FindBy(how = ID, using = "distributionStatus")
   private WebElement distributionStatus = null;
+
+  @FindBy(how = CSS, using = "div.navigation-locale-bar>ng-include.ng-scope>div.ng-scope>div.locale-container>ul>li.ng-scope>a#locale_pt")
+  private static WebElement langPortugueseLink = null;
+
+  @FindBy(how = CSS, using = "div.navigation-locale-bar>ng-include.ng-scope>div.ng-scope>div.locale-container>ul>li.ng-scope>a#locale_en")
+  private static WebElement langEnglishLink = null;
+
 
   public DistributionPage(TestWebDriver driver) {
     super(driver);
@@ -284,6 +292,17 @@ public class DistributionPage extends Page {
     okButton.click();
   }
 
+  public void clickPortugueseLink(){
+    testWebDriver.sleep(1000);
+    testWebDriver.waitForElementToAppear(langPortugueseLink);
+    langPortugueseLink.click();
+  }
+
+  public void clickEnglishLink(){
+    testWebDriver.sleep(1000);
+    testWebDriver.waitForElementToAppear(langEnglishLink);
+    langEnglishLink.click();
+  }
   public void CancelDeleteDistribution() {
     testWebDriver.waitForElementToAppear(cancelButton);
     cancelButton.click();

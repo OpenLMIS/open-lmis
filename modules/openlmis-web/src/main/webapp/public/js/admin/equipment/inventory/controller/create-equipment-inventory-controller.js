@@ -10,7 +10,9 @@ function CreateEquipmentInventoryController($scope, $location, $routeParams, Equ
     $scope.equipment.facilityId = $routeParams.facilityId;
   }else{
     EquipmentInventory.get({id: $routeParams.id}, function(data){
+
       $scope.equipment = data.inventory;
+
     });
   }
   

@@ -89,7 +89,7 @@ describe("Order File Template Controller", function () {
     scope.saveOrderFileTemplate();
     httpBackend.flush();
     expect(scope.message).toEqual("Saved successfully");
-    expect(location.path).toHaveBeenCalledWith("configure-edi-file");
+    expect(location.path).toHaveBeenCalledWith("configure-system-settings");
   });
 
   it('should add new Order file column', function () {
