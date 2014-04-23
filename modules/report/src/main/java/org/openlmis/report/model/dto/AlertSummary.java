@@ -12,11 +12,16 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Alerts {
+public class AlertSummary {
     private Long id;
+    private String staticsValue;
     private String description;
     private Long supervisoryNodeId;
-    private String category;
+    private String alertType;
+    private String displaySection;
     private Boolean email;
     private Boolean sms;
+    private String detailTable;
+    private String smsMessageTemplateKey;
+    private String emailMessageTemplateKey;
 }

@@ -2,9 +2,12 @@ package org.openlmis.report.mapper.lookup;
 
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.SelectProvider;
+import org.openlmis.report.builder.DashboardNotificationQueryBuilder;
 import org.openlmis.report.model.dto.*;
 import org.springframework.stereotype.Repository;
 
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -75,10 +78,9 @@ public interface DashboardMapper {
 
    List<StockOut> getStockOutFacilities(@Param("periodId")  Long periodId, @Param("programId") Long programId , @Param("productId") Long productId, @Param("rgroupId") String requisitionGroupId);
 
-   @Select("select d.facilityId,f.code as facilityCode,d.facilityName,d.requisitionGroupId,d.programId,d.periodId,d.productId,d.productFullName as product, d.suppliedInPast,d.requisitionGroupName as location,d.mosSuppliedInPast \n" +
+   @Select("select d.facilityId,d.facilityCode ,d.facilityName,d.requisitionGroupId,d.programId,d.periodId,d.productId,d.productFullName as product, d.suppliedInPast,d.requisitionGroupName as location,d.mosSuppliedInPast \n" +
            "from dw_orders d \n" +
            "INNER JOIN requisition_group_program_schedules rgs ON rgs.requisitionGroupId = d.requisitionGroupId and rgs.programId = d.programId \n"+
-           "INNER JOIN facilities f ON d.facilityId = f.id \n"+
            "where d.stockedOutInPast=true \n" +
            "and  d.programId = #{programId} \n" +
            "and d.periodId = #{periodId} \n" +
@@ -86,10 +88,18 @@ public interface DashboardMapper {
            "and d.requisitionGroupId = #{rgroupId} ")
 
     List<StockOut> getStockOutFacilitiesForRequisitionGroup(@Param("periodId")  Long periodId, @Param("programId") Long programId , @Param("productId") Long productId, @Param("rgroupId") Long requisitionGroupId);
-    @Select("select supervisoryNodeId,description,alertCategory as category,email,sms from dw_alerts \n" +
-            "where supervisoryNodeId = CASE WHEN COALESCE(#{supervisoryNodeId},0)=0 THEN supervisoryNodeId ELSE #{supervisoryNodeId} END ")
+    @Select("SELECT DISTINCT s.id,statics_value staticsValue,s.description,supervisorynodeid,alerttype,display_section displaySection,email,sms,detail_table detailTable, sms_msg_template_key smsMessageTemplateKey, email_msg_template_key emailMessageTemplateKey\n" +
+            "FROM alert_summary s\n" +
+            "INNER JOIN alerts a on s.alertTypeId= a.alertType\n" +
+            "INNER JOIN vw_user_supervisorynodes sn ON sn.id = s.supervisorynodeid\n" +
+            "WHERE sn.userid = #{userId}" +
+            "AND CASE WHEN COALESCE(#{supervisoryNodeId},0) = 0 THEN sn.id = sn.id ELSE (sn.id = #{supervisoryNodeId} OR sn.parentId = #{supervisoryNodeId}) END\n")
 
-    List<Alerts> getAlerts(@Param("supervisoryNodeId")  Long supervisoryNodeId);
+    List<AlertSummary> getAlerts(@Param("userId") Long userId, @Param("supervisoryNodeId")  Long supervisoryNodeId);
+
+
+    @SelectProvider(type = DashboardNotificationQueryBuilder.class, method = "getNotificationDetails")
+    public List<HashMap> getNotificationDetails(@Param("tableName") String tableName,@Param("alertId") Long id);
 
     @Select("select * from fn_populate_dw_orders(1)")
     void startDashboardDataBatchUpdate();

@@ -1,10 +1,12 @@
 package org.openlmis.report.service.lookup;
 
+import org.openlmis.report.mapper.AverageConsumptionReportMapper;
 import org.openlmis.report.mapper.lookup.DashboardMapper;
 import org.openlmis.report.model.dto.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -17,6 +19,8 @@ public class DashboardLookupService {
 
     @Autowired
     DashboardMapper dashboardMapper;
+    @Autowired
+    AverageConsumptionReportMapper avgMapper;
 
     private String  getCommaSeparatedIds(List<Long> idList){
 
@@ -55,8 +59,13 @@ public class DashboardLookupService {
         return dashboardMapper.getStockOutFacilitiesForRequisitionGroup(periodId, programId, productId, requisitionGroupId);
 
     }
-    public List<Alerts> getAlerts(Long supervisoryNodeId){
-        return dashboardMapper.getAlerts(supervisoryNodeId);
+    public List<AlertSummary> getAlerts(Long userId,Long supervisoryNodeId){
+        return dashboardMapper.getAlerts(userId,supervisoryNodeId);
 
+    }
+
+    public List<HashMap> getNotificationsByCategory(String detailTable, Long alertId) {
+        if (detailTable == null || detailTable.isEmpty()) return null;
+        return dashboardMapper.getNotificationDetails(detailTable, alertId);
     }
 }
