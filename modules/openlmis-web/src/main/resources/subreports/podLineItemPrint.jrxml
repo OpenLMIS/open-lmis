@@ -92,6 +92,22 @@
 					</textElement>
 					<textFieldExpression><![CDATA[$F{productcategory}]]></textFieldExpression>
 				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement mode="Opaque" x="13" y="0" width="815" height="20" backcolor="#CCCCCC" uuid="b0d3e369-aafe-4f2a-bd0c-4b8a96157753">
+						<printWhenExpression><![CDATA[$F{productcategory} == null]]></printWhenExpression>
+					</reportElement>
+					<box topPadding="5" leftPadding="5" bottomPadding="5" rightPadding="5">
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement>
+						<font size="8" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$R{label.default.category}]]></textFieldExpression>
+				</textField>
 			</band>
 		</groupHeader>
 	</group>
