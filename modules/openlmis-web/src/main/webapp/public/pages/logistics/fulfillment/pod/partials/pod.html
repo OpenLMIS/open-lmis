@@ -45,11 +45,17 @@
                 </thead>
 
                 <tbody ng-repeat="podLineItem in pageLineItems">
-                <tr>
-                    <td class="productCategory" id="category{{$index}}" colspan="{{columns.length}}"
+                <tr ng-if="podLineItem.productCategory">
+                <td class="productCategory" id="category{{$index}}" colspan="{{columns.length}}"
                         ng-show="isCategoryDifferentFromPreviousLineItem($index)"
                         ng-bind="podLineItem.productCategory">
                     </td>
+                </tr>
+                <tr ng-if="!podLineItem.productCategory">
+                  <td class="productCategory" id="category{{$index1}}" colspan="{{columns.length}}"
+                      ng-show="isCategoryDifferentFromPreviousLineItem($index)"
+                      openlmis-message="label.default.category">
+                  </td>
                 </tr>
                 <tr>
                     <td class="cell-input">
