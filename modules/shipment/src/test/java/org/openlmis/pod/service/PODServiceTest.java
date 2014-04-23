@@ -95,8 +95,7 @@ public class PODServiceTest {
   @Test
   public void shouldCreatePODFromPackedOrder() throws Exception {
     long orderId = 4L;
-    OrderPOD orderPOD = new OrderPOD(orderId, 8L);
-    orderPOD.setOrderNumber(orderNumber);
+    OrderPOD orderPOD = new OrderPOD(orderId, orderNumber, 8L);
     OrderPOD spyOrderPOD = spy(orderPOD);
 
     doNothing().when(podService).checkPermissions(spyOrderPOD);
@@ -120,8 +119,7 @@ public class PODServiceTest {
   @Test
   public void shouldCreatePODFromReleasedOrder() throws Exception {
     long orderId = 6L;
-    OrderPOD orderPOD = new OrderPOD(orderId, 8L);
-    orderPOD.setOrderNumber(orderNumber);
+    OrderPOD orderPOD = new OrderPOD(orderId, orderNumber, 8L);
     OrderPOD spyOrderPOD = spy(orderPOD);
 
     doNothing().when(podService).checkPermissions(spyOrderPOD);
