@@ -335,6 +335,10 @@ services.factory('SaveRequisitionGroupProgramSchedule',function($resource){
     return $resource('/requisitionGroupProgramSchedule/insert.json',{},{});
 });
 
+services.factory('RemoveRequisitionGroupProgramSchedule',function($resource){
+    return $resource('/requisitionGroupProgramSchedule/remove/:id',{},{});
+});
+
 services.factory('GetProgramsForAFacilityCompleteList',function($resource){
     return $resource('/facilities/:facilityId/programsList.json',{},{});
 });

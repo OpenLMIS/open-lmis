@@ -46,4 +46,8 @@ public class RequisitionGroupProgramScheduleService {
     public RequisitionGroupProgramSchedule getScheduleForRequisitionGroupIdAndProgramId(Long requisitionGroupId, Long programId) {
         return requisitionGroupProgramScheduleRepository.getScheduleForRequisitionGroupAndProgram(requisitionGroupId, programId);
     }
+
+  public void delete(Long requisitionGroupProgramScheduleId) {
+    requisitionGroupProgramScheduleRepository.delete(requisitionGroupProgramScheduleId);
+  }
 }

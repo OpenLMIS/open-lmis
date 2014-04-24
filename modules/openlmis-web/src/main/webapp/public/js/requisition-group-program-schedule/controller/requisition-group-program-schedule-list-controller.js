@@ -8,7 +8,7 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-function RequisitionGroupProgramScheduleListController($scope, $location, navigateBackService, RequisitionGroupCompleteList, ProgramCompleteList,ScheduleCompleteList, LoadSchedulesForRequisitionGroupProgram, SaveRequisitionGroupProgramSchedule) {
+function RequisitionGroupProgramScheduleListController($scope, $location, navigateBackService, RequisitionGroupCompleteList, ProgramCompleteList,ScheduleCompleteList, LoadSchedulesForRequisitionGroupProgram, SaveRequisitionGroupProgramSchedule, RemoveRequisitionGroupProgramSchedule) {
     $scope.$on('$viewContentLoaded', function () {
         $scope.$apply($scope.query = navigateBackService.query);
         $scope.showRequisitionGroupsList('txtFilterRequisitionGroups');
@@ -169,7 +169,12 @@ function RequisitionGroupProgramScheduleListController($scope, $location, naviga
     };
 
     $scope.setSelectedSchedule = function(schedule){
-        $scope.selectedSchedule = schedule;
+        if($scope.selectedSchedule === schedule){
+            $scope.selectedSchedule = null;
+        }
+        else {
+            $scope.selectedSchedule = schedule;
+        }
     };
 
     $scope.saveRequisitionGroupProgramSchedule = function(){
@@ -193,9 +198,12 @@ function RequisitionGroupProgramScheduleListController($scope, $location, naviga
 
         $scope.selectedRequisitionGroupProgramSchedule.requisitionGroup = $scope.selectedRequisitionGroup;
         $scope.selectedRequisitionGroupProgramSchedule.program = $scope.selectedProgram;
-        $scope.selectedRequisitionGroupProgramSchedule.processingSchedule = $scope.selectedSchedule;
-
-        SaveRequisitionGroupProgramSchedule.save($scope.selectedRequisitionGroupProgramSchedule,successHandler,errorHandler);
+        if($scope.selectedSchedule){
+            $scope.selectedRequisitionGroupProgramSchedule.processingSchedule = $scope.selectedSchedule;
+            SaveRequisitionGroupProgramSchedule.save($scope.selectedRequisitionGroupProgramSchedule,successHandler,errorHandler);
+        }
+        else{
+            RemoveRequisitionGroupProgramSchedule.get({id:$scope.selectedRequisitionGroupProgramSchedule.id},successHandler,errorHandler);
+        }
     };
-
 }
