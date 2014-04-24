@@ -48,7 +48,7 @@ public class ConfigureShipmentPage extends Page {
   @FindBy(how = ID, using = "shippedDateIncludeCheckbox")
   private WebElement shippedDateCheckBox = null;
 
-  @FindBy(how = ID, using = "orderIdPosition")
+  @FindBy(how = ID, using = "orderNumberPosition")
   private WebElement orderNumberPositionTextField = null;
 
   @FindBy(how = ID, using = "productCodePosition")
