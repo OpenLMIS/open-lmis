@@ -114,4 +114,10 @@ public class ViewOrdersPage extends RequisitionPage {
     testWebDriver.waitForElementToAppear(orderStatus);
     return orderStatus.getText();
   }
+
+  public String getOrderNumber(int rowNumber) {
+    WebElement orderNumber = testWebDriver.getElementById("order" + (rowNumber - 1));
+    testWebDriver.waitForElementToAppear(orderNumber);
+    return orderNumber.getText();
+  }
 }

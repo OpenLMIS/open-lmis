@@ -24,12 +24,14 @@ import org.testng.annotations.*;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.text.NumberFormat;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
+import static com.thoughtworks.selenium.SeleneseTestCase.assertEquals;
 import static java.util.Arrays.asList;
 
 @Listeners(CaptureScreenshotOnFailureListener.class)
@@ -117,15 +119,21 @@ public class DownloadOrderFile extends TestCaseHelper {
   public void testVerifyOrderFileForDefaultConfiguration(String password) throws InterruptedException, SQLException, IOException {
     dbWrapper.setupOrderFileConfiguration("O", "TRUE");
     setupDownloadOrderFileSetup(password);
+    NumberFormat numberFormat = NumberFormat.getIntegerInstance();
+    numberFormat.setMinimumIntegerDigits(8);
+    numberFormat.setGroupingUsed(false);
+    int id = dbWrapper.getMaxRnrID();
+    String orderNumber = "OHIV" + numberFormat.format(id) + "R";
+    verifyOrderNumberOnViewRequisitionPage(orderNumber, 1);
     getOrderDataFromDownloadedFile("O");
+
     checkOrderFileData(1, "Order number,Facility code,Product code,Product name,Approved quantity,Period,Order date");
-    checkOrderFileData(2, ",\"F10\",\"P10\",\"antibiotic Capsule 300/200/600 mg\",\"10\",\"01/12\",");
+    checkOrderFileData(2, "\"" + orderNumber + "\",\"F10\",\"P10\",\"antibiotic Capsule 300/200/600 mg\",\"10\",\"");
     checkOrderFileOrderDate("dd/MM/yy", 2);
-    checkOrderFileOrderId(2);
   }
 
   @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function")
-  public void testVerifyOrderFileHavingStrengthFormDossageUnitIsNull(String password) throws InterruptedException, SQLException, IOException {
+  public void testVerifyOrderFileHavingStrengthFormDosageUnitIsNull(String password) throws InterruptedException, SQLException, IOException {
     dbWrapper.setupOrderFileConfiguration("O", "TRUE");
 
     List<String> rightsList = asList("CREATE_REQUISITION", "VIEW_REQUISITION", "APPROVE_REQUISITION");
@@ -162,22 +170,114 @@ public class DownloadOrderFile extends TestCaseHelper {
     convertOrderPage.clickConvertToOrderButton();
     convertOrderPage.clickOk();
     homePage.navigateViewOrders();
+
+    NumberFormat numberFormat = NumberFormat.getIntegerInstance();
+    numberFormat.setMinimumIntegerDigits(8);
+    numberFormat.setGroupingUsed(false);
+    int id = dbWrapper.getMaxRnrID();
+    String orderNumber = "OHIV" + numberFormat.format(id) + "R";
+    verifyOrderNumberOnViewRequisitionPage(orderNumber, 1);
+
     downloadOrderFile();
 
     getOrderDataFromDownloadedFile("O");
 
     checkOrderFileData(1, "Order number,Facility code,Product code,Product name,Approved quantity,Period,Order date");
-    checkOrderFileDataForPattern(2, "//d*\",\"F10\",\"P10\",\"antibiotic   \",\"10\",\"01/12\",");
+    checkOrderFileData(2, "\"" + orderNumber + "\",\"F10\",\"P10\",\"antibiotic   \",\"10\",\"");
   }
 
   @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function")
   public void testVerifyOrderFileForDefaultConfigurationWithNoHeaders(String password) throws InterruptedException, SQLException, IOException {
     dbWrapper.setupOrderFileConfiguration("O", "FALSE");
     setupDownloadOrderFileSetup(password);
+    NumberFormat numberFormat = NumberFormat.getIntegerInstance();
+    numberFormat.setMinimumIntegerDigits(8);
+    numberFormat.setGroupingUsed(false);
+    int id = dbWrapper.getMaxRnrID();
+    String orderNumber = "OHIV" + numberFormat.format(id) + "R";
+    verifyOrderNumberOnViewRequisitionPage(orderNumber, 1);
+
     getOrderDataFromDownloadedFile("O");
-    checkOrderFileData(1, ",\"F10\",\"P10\",\"antibiotic Capsule 300/200/600 mg\",\"10\",\"01/12\",");
+    checkOrderFileData(1, "\"" + orderNumber + "\",\"F10\",\"P10\",\"antibiotic Capsule 300/200/600 mg\",\"10\",\"");
     checkOrderFileOrderDate("dd/MM/yy", 1);
-    checkOrderFileOrderId(1);
+  }
+
+  @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function")
+  public void testVerifyOrderFileForOnlySequenceInOrderNumber(String password) throws InterruptedException, SQLException, IOException {
+    dbWrapper.setupOrderFileConfiguration("O", "FALSE");
+    dbWrapper.updateFieldValue("order_number_configuration", "orderNumberPrefix", "#Ord 3", "orderNumberPrefix", "O");
+    dbWrapper.updateFieldValue("order_number_configuration", "includeOrderNumberPrefix", false);
+    dbWrapper.updateFieldValue("order_number_configuration", "includeProgramCode", false);
+    dbWrapper.updateFieldValue("order_number_configuration", "includeRnrTypeSuffix", false);
+
+    setupDownloadOrderFileSetup(password);
+    NumberFormat numberFormat = NumberFormat.getIntegerInstance();
+    numberFormat.setMinimumIntegerDigits(8);
+    numberFormat.setGroupingUsed(false);
+    int id = dbWrapper.getMaxRnrID();
+    String orderNumber = numberFormat.format(id);
+    verifyOrderNumberOnViewRequisitionPage(orderNumber, 1);
+
+    getOrderDataFromDownloadedFile("O");
+    checkOrderFileData(1, "\"" + orderNumber + "\",\"F10\",\"P10\",\"antibiotic Capsule 300/200/600 mg\",\"10\",\"01/12\",");
+    checkOrderFileOrderDate("dd/MM/yy", 1);
+    dbWrapper.updateFieldValue("order_number_configuration", "orderNumberPrefix", "O", "orderNumberPrefix", "#Ord 3");
+    dbWrapper.updateFieldValue("order_number_configuration", "includeOrderNumberPrefix", true);
+    dbWrapper.updateFieldValue("order_number_configuration", "includeProgramCode", true);
+    dbWrapper.updateFieldValue("order_number_configuration", "includeRnrTypeSuffix", true);
+  }
+
+  @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function")
+  public void testVerifyOrderFileForMaxOrderNumber(String password) throws InterruptedException, SQLException, IOException {
+    dbWrapper.setupOrderFileConfiguration("O", "FALSE");
+    dbWrapper.updateFieldValue("order_number_configuration", "orderNumberPrefix", " #O 3 ", "orderNumberPrefix", "O");
+
+    List<String> rightsList = asList("CREATE_REQUISITION", "VIEW_REQUISITION", "APPROVE_REQUISITION");
+    setupTestDataToInitiateRnR(true, program, userSICUserName, "200", rightsList);
+
+    setupTestRoleRightsData("lmu", "CONVERT_TO_ORDER,VIEW_ORDER");
+    dbWrapper.insertUser("212", "lmu", passwordUsers, "F10", "Jake_Doe@openlmis.com");
+    dbWrapper.insertRoleAssignment("212", "lmu");
+    dbWrapper.insertFulfilmentRoleAssignment("lmu", "lmu", "F10");
+    dbWrapper.insertCurrentPeriod("current", "current", 1, "M");
+
+    LoginPage loginPage = PageObjectFactory.getLoginPage(testWebDriver, baseUrlGlobal);
+    HomePage homePage = loginPage.loginAs(userSICUserName, password);
+    homePage.navigateAndInitiateEmergencyRnr(program);
+    homePage.clickProceed();
+    testWebDriver.sleep(2000);
+    dbWrapper.insertValuesInRequisition(false);
+    dbWrapper.insertValuesInRegimenLineItems("100", "200", "300", "Regimens data filled");
+    dbWrapper.updateRequisitionStatus("SUBMITTED", userSICUserName, "HIV");
+    dbWrapper.updateRequisitionStatus("AUTHORIZED", userSICUserName, "HIV");
+    dbWrapper.updateFieldValue("requisition_line_items", "quantityApproved", 10);
+    dbWrapper.updateRequisitionStatus("APPROVED", userSICUserName, "HIV");
+
+    homePage.logout(baseUrlGlobal);
+    dbWrapper.updateFieldValue("programs", "code", "MALARIA123456789MALARIA123456789MALARIA123456789", "code", "HIV");
+    loginPage.loginAs("lmu", password);
+    homePage.navigateConvertToOrder();
+
+    ConvertOrderPage convertOrderPage = PageObjectFactory.getConvertOrderPage(testWebDriver);
+    convertOrderPage.clickConvertToOrderButton();
+    convertOrderPage.clickCheckBoxConvertToOrder();
+    convertOrderPage.clickConvertToOrderButton();
+    convertOrderPage.clickOk();
+    homePage.navigateViewOrders();
+    downloadOrderFile();
+
+    NumberFormat numberFormat = NumberFormat.getIntegerInstance();
+    numberFormat.setMinimumIntegerDigits(8);
+    numberFormat.setGroupingUsed(false);
+    int id = dbWrapper.getMaxRnrID();
+    String orderNumber = " #O 3 MALARIA123456789MALARIA123456789MAL" + numberFormat.format(id) + "E";
+    verifyOrderNumberOnViewRequisitionPage(orderNumber, 1);
+
+    getOrderDataFromDownloadedFile("O");
+    checkOrderFileData(1, "\"" + orderNumber + "\",\"F10\",\"P10\",\"antibiotic Capsule 300/200/600 mg\",\"10\",");
+    checkOrderFileOrderDate("dd/MM/yy", 1);
+    dbWrapper.updateFieldValue("order_number_configuration", "orderNumberPrefix", "O", "orderNumberPrefix", " #O 3 ");
+    dbWrapper.updateFieldValue("programs", "code", "HIV", "code", "MALARIA123456789MALARIA123456789MALARIA123456789");
   }
 
   @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function")
@@ -195,12 +295,18 @@ public class DownloadOrderFile extends TestCaseHelper {
     dbWrapper.setupOrderFileNonOpenLMISColumns("Not Applicable", "TRUE", "", 9);
 
     setupDownloadOrderFileSetup(password);
+    NumberFormat numberFormat = NumberFormat.getIntegerInstance();
+    numberFormat.setMinimumIntegerDigits(8);
+    numberFormat.setGroupingUsed(false);
+    int id = dbWrapper.getMaxRnrID();
+    String orderNumber = "OHIV" + numberFormat.format(id) + "R";
+    verifyOrderNumberOnViewRequisitionPage(orderNumber, 1);
+
     getOrderDataFromDownloadedFile("Zero");
     checkOrderFileData(1, "Extra 1,Approved quantity,Product code,Product name,Order date,Facility code,Period,Order number,");
     checkOrderFileData(2, ",\"10\",\"P10\",\"antibiotic Capsule 300/200/600 mg\"");
     checkOrderFileData(2, ",\"F10\",\"2012-01\",");
     checkOrderFileOrderDate("MM-dd-yyyy", 2);
-    checkOrderFileOrderId(2);
 
     dbWrapper.setupOrderFileOpenLMISColumns("create.facility.code", "TRUE", "Facility code", 2, "");
     dbWrapper.setupOrderFileOpenLMISColumns("header.order.number", "TRUE", "Order number", 1, "");
@@ -244,6 +350,11 @@ public class DownloadOrderFile extends TestCaseHelper {
     convertOrderPage.clickOk();
     homePage.navigateViewOrders();
     downloadOrderFile();
+  }
+
+  public void verifyOrderNumberOnViewRequisitionPage(String orderNumber, int rowNumber) {
+    ViewOrdersPage viewOrdersPage = PageObjectFactory.getViewOrdersPage(testWebDriver);
+    assertEquals(orderNumber, viewOrdersPage.getOrderNumber(rowNumber));
   }
 
   @AfterMethod(groups = "requisition")
