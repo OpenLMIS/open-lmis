@@ -138,7 +138,7 @@ public class PODController extends BaseController {
     ResourceBundle resourceBundle = ResourceBundle.getBundle("messages", currentLocale);
     map.put(JRParameter.REPORT_RESOURCE_BUNDLE, resourceBundle);
 
-    Resource reportResource = new ClassPathResource("subreports");
+    Resource reportResource = new ClassPathResource("reports");
     Resource imgResource = new ClassPathResource("images");
 
     String separator = System.getProperty("file.separator");
