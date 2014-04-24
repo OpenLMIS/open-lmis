@@ -9,52 +9,33 @@
  */
 
 describe("HeaderController", function () {
-
   beforeEach(module('openlmis'));
   beforeEach(module('ui.directives'));
 
   var scope, loginConfig, window, localStorageService;
 
-  describe("User is logged in", function () {
+  beforeEach(inject(function ($rootScope, $controller, _localStorageService_) {
+    loginConfig = {a: {}, b: {}};
+    scope = $rootScope.$new();
+    window = {};
+    localStorageService = _localStorageService_;
+    spyOn(localStorageService, 'get').andReturn("user");
+    spyOn(localStorageService, 'remove');
+    $controller(HeaderController, {$scope: scope, localStorageService: localStorageService, loginConfig: loginConfig, $window: window});
+  }));
 
-    beforeEach(inject(function ($rootScope, $controller, _localStorageService_) {
-      loginConfig = {a: {}, b: {}};
-      scope = $rootScope.$new();
-      window = {};
-      localStorageService = _localStorageService_;
-      spyOn(localStorageService, 'get').andReturn("user");
-      spyOn(localStorageService, 'remove');
-      $controller(HeaderController, {$scope: scope, localStorageService: localStorageService, loginConfig: loginConfig, $window: window});
-    }));
-
-    it('should set login config in scope', function () {
-      expect(scope.loginConfig).toEqual(loginConfig);
-    });
-
-    it('should set user in scope', function () {
-      expect(scope.user).toEqual("user");
-    });
-
-    it('should clear localStorage when user logs out', function() {
-      scope.logout();
-      expect(localStorageService.remove).toHaveBeenCalledWith(localStorageKeys.RIGHT);
-      expect(localStorageService.remove).toHaveBeenCalledWith(localStorageKeys.USERNAME);
-      expect(window.location).toEqual("/j_spring_security_logout");
-    });
+  it('should set login config in scope', function () {
+    expect(scope.loginConfig).toEqual(loginConfig);
   });
 
-  describe("User is logged out", function () {
-    beforeEach(inject(function ($rootScope, $controller, _localStorageService_) {
-      loginConfig = {a: {}, b: {}};
-      scope = $rootScope.$new();
-      window = {};
-      localStorageService = _localStorageService_;
-      spyOn(localStorageService, 'get').andReturn(undefined);
-      $controller(HeaderController, {$scope: scope, localStorageService: localStorageService, loginConfig: loginConfig, $window: window});
-    }));
+  it('should set user in scope', function () {
+    expect(scope.user).toEqual("user");
+  });
 
-    it('should redirect user to login page', function () {
-      expect(window.location).toEqual("/public/pages/login.html");
-    });
+  it('should clear localStorage when user logs out', function () {
+    scope.logout();
+    expect(localStorageService.remove).toHaveBeenCalledWith(localStorageKeys.RIGHT);
+    expect(localStorageService.remove).toHaveBeenCalledWith(localStorageKeys.USERNAME);
+    expect(window.location).toEqual("/j_spring_security_logout");
   });
 });
