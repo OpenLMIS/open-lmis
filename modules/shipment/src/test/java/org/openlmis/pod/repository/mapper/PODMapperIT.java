@@ -66,6 +66,7 @@ public class PODMapperIT extends ApplicationTestContext {
   public void shouldInsertPOD() {
     OrderPOD orderPod = new OrderPOD();
     orderPod.setOrderId(order.getId());
+    orderPod.setOrderNumber("OYELL_FVR00000001R");
     orderPod.setDeliveredBy("deliveredBy");
     orderPod.setReceivedBy("acceptedBy");
 
@@ -84,12 +85,14 @@ public class PODMapperIT extends ApplicationTestContext {
     assertThat(savedOrderPod.getDeliveredBy(), is("deliveredBy"));
     assertThat(savedOrderPod.getReceivedBy(), is("acceptedBy"));
     assertThat(savedOrderPod.getReceivedDate(), is(receivedDate));
+    assertThat(savedOrderPod.getOrderNumber(), is("OYELL_FVR00000001R"));
   }
 
   @Test
   public void shouldInsertPODLineItem() {
     OrderPOD orderPod = new OrderPOD();
     orderPod.setOrderId(order.getId());
+    orderPod.setOrderNumber("OYELL_FVR00000001R");
     orderPod.setFacilityId(order.getRnr().getFacility().getId());
     orderPod.setPeriodId(order.getRnr().getPeriod().getId());
     orderPod.setProgramId(1L);
@@ -120,6 +123,7 @@ public class PODMapperIT extends ApplicationTestContext {
   public void shouldGetPodLineItemsByOrderId() throws SQLException {
     OrderPOD orderPod = new OrderPOD();
     orderPod.setOrderId(order.getId());
+    orderPod.setOrderNumber("OYELL_FVR00000001R");
     orderPod.setFacilityId(order.getRnr().getFacility().getId());
     orderPod.setPeriodId(order.getRnr().getPeriod().getId());
     orderPod.setProgramId(1L);
@@ -166,7 +170,8 @@ public class PODMapperIT extends ApplicationTestContext {
   public void shouldGetPODByOrderId() throws SQLException {
     OrderPOD orderPod = new OrderPOD();
     orderPod.setOrderId(order.getId());
-    queryExecutor.executeUpdate("INSERT INTO pod(orderId, facilityId, programId, periodId) values(?,?,?,?)", order.getId(), order.getRnr().getFacility().getId(),
+    queryExecutor.executeUpdate("INSERT INTO pod(orderId, orderNumber, " +
+      "facilityId, programId, periodId) values(?,?,?,?,?)", order.getId(), "OYELL_FVR00000001R",  order.getRnr().getFacility().getId(),
       1L, order.getRnr().getPeriod().getId());
 
     OrderPOD savedOrderPOD = mapper.getPODByOrderId(order.getId());
@@ -178,6 +183,7 @@ public class PODMapperIT extends ApplicationTestContext {
   public void shouldGetNPreviousPODLineItemsAfterGivenTrackingDateForGivenProgramPeriodAndProduct() {
     OrderPOD orderPod = new OrderPOD();
     orderPod.setOrderId(order.getId());
+    orderPod.setOrderNumber("OYELL_FVR00000001R");
     orderPod.fillPOD(order.getRnr());
     Rnr requisition = order.getRnr();
     mapper.insertPOD(orderPod);
@@ -194,6 +200,7 @@ public class PODMapperIT extends ApplicationTestContext {
   public void shouldGetPODWithLineItemsByPODId() throws Exception {
     OrderPOD expectedOrderPod = new OrderPOD();
     expectedOrderPod.setOrderId(order.getId());
+    expectedOrderPod.setOrderNumber("OYELL_FVR00000001R");
     expectedOrderPod.setFacilityId(order.getRnr().getFacility().getId());
     expectedOrderPod.setPeriodId(order.getRnr().getPeriod().getId());
     expectedOrderPod.setProgramId(1L);
@@ -218,6 +225,7 @@ public class PODMapperIT extends ApplicationTestContext {
     orderPod.setPeriodId(order.getRnr().getPeriod().getId());
     orderPod.setProgramId(1L);
     orderPod.setOrderId(order.getId());
+    orderPod.setOrderNumber("OYELL_FVR00000001R");
     orderPod.setCreatedBy(createdBy);
     orderPod.setModifiedBy(createdBy);
 
@@ -241,6 +249,7 @@ public class PODMapperIT extends ApplicationTestContext {
   public void shouldUpdatePODLineItem() throws Exception {
     OrderPOD orderPod = new OrderPOD();
     orderPod.setOrderId(order.getId());
+    orderPod.setOrderNumber("OYELL_FVR00000001R");
     orderPod.setFacilityId(order.getRnr().getFacility().getId());
     orderPod.setPeriodId(order.getRnr().getPeriod().getId());
     orderPod.setProgramId(1L);
