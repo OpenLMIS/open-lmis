@@ -144,7 +144,7 @@
 					<textFieldExpression><![CDATA[$R{header.order.date}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true">
-					<reportElement x="109" y="2" width="47" height="10" uuid="219fe371-17e1-4ab4-acfb-8e262215827d"/>
+					<reportElement x="109" y="2" width="100" height="10" uuid="219fe371-17e1-4ab4-acfb-8e262215827d"/>
 					<textElement>
 						<font size="8"/>
 					</textElement>
