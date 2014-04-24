@@ -73,11 +73,11 @@ public class ViewOrdersPage extends RequisitionPage {
     assertTrue("First row should show up", programOnViewOrderScreen.isDisplayed());
   }
 
-  public void verifyOrderListElements(String program, long orderId, String facilityCodeName, String periodDetails, String supplyFacilityName, String orderStatus, boolean downloadLinkPresent) {
+  public void verifyOrderListElements(String program, String orderNumber, String facilityCodeName, String periodDetails, String supplyFacilityName, String orderStatus, boolean downloadLinkPresent) {
     testWebDriver.refresh();
     testWebDriver.waitForElementToAppear(programOnViewOrderScreen);
     assertEquals(programOnViewOrderScreen.getText().trim(), program);
-    assertEquals(orderNumberOnViewOrdersScreen.getText().trim(), String.valueOf(orderId));
+    assertTrue(getOrderNumber(1).contains(orderNumber));
     assertEquals(facilityCodeNameOnOrderScreen.getText().trim(), facilityCodeName);
     assertEquals(periodDetailsOnViewOrderScreen.getText().trim(), periodDetails);
     assertEquals(supplyDepotOnViewOrderScreen.getText().trim(), supplyFacilityName);
