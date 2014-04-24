@@ -11,6 +11,7 @@
 package org.openlmis.UiUtils;
 
 import java.sql.*;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -404,7 +405,7 @@ public class DBWrapper {
                                     String supervisoryNodeParentCode) throws SQLException {
     update("delete from supervisory_nodes");
     update("INSERT INTO supervisory_nodes (parentId, facilityId, name, code) " + "VALUES (%s, (SELECT id FROM facilities WHERE " +
-        "code = '%s'), '%s', '%s')",
+      "code = '%s'), '%s', '%s')",
       supervisoryNodeParentCode, facilityCode, supervisoryNodeName, supervisoryNodeCode
     );
   }
@@ -412,8 +413,8 @@ public class DBWrapper {
   public void insertSupervisoryNodeSecond(String facilityCode, String supervisoryNodeCode, String supervisoryNodeName,
                                           String supervisoryNodeParentCode) throws SQLException {
     update("INSERT INTO supervisory_nodes" +
-        "  (parentId, facilityId, name, code) VALUES" +
-        "  ((select id from  supervisory_nodes where code ='%s'), (SELECT id FROM facilities WHERE code = '%s'), '%s', '%s')",
+      "  (parentId, facilityId, name, code) VALUES" +
+      "  ((select id from  supervisory_nodes where code ='%s'), (SELECT id FROM facilities WHERE code = '%s'), '%s', '%s')",
       supervisoryNodeParentCode, facilityCode, supervisoryNodeName, supervisoryNodeCode
     );
   }
@@ -1410,6 +1411,7 @@ public class DBWrapper {
 
   public void insertShipmentData(int orderID, String productCode, Integer quantityShipped, Integer packsToShip, Boolean fullSupplyFlag) throws SQLException {
     String programId = getAttributeFromTable("requisitions", "programId", "id", String.valueOf(orderID));
+    String programCode = getAttributeFromTable("programs", "code", "id", String.valueOf(programId));
     String programProductId = null;
     ResultSet rs = (query("select id from program_products where programId=" + programId + " and productId = (Select id from products where code='" + productCode + "');"));
     if (rs.next())
@@ -1419,7 +1421,11 @@ public class DBWrapper {
     String categoryId = getAttributeFromTable("program_products", "productCategoryId", "id", programProductId);
     String categoryName = getAttributeFromTable("product_categories", "name", "id", categoryId);
     Integer categoryDisplayOrder = Integer.parseInt(getAttributeFromTable("product_categories", "displayOrder", "id", categoryId));
-    update("INSERT INTO shipment_line_items(orderId,productCode,quantityShipped,productName,dispensingUnit,productCategory,productDisplayOrder,productCategoryDisplayOrder,packsToShip,fullSupply) VALUES (%d, '%s', %d, %s, %s, '%s',%d ,%d, %d, %b)", orderID, productCode, quantityShipped, "'antibiotic Capsule 300/200/600 mg'", "'Strip'", categoryName, productDisplayOrder, categoryDisplayOrder, packsToShip, fullSupplyFlag);
+    NumberFormat numberFormat = NumberFormat.getIntegerInstance();
+    numberFormat.setMinimumIntegerDigits(8);
+    numberFormat.setGroupingUsed(false);
+    String orderNumber = "O" + programCode.substring(0, Math.min(productCode.length(), 35)) + numberFormat.format(orderID) + "R";
+    update("INSERT INTO shipment_line_items(orderNumber,productCode,quantityShipped,productName,dispensingUnit,productCategory,productDisplayOrder,productCategoryDisplayOrder,packsToShip,fullSupply,orderId) VALUES ('%s', '%s', %d, %s, %s, '%s',%d ,%d, %d, %b, %d)", orderNumber, productCode, quantityShipped, "'antibiotic Capsule 300/200/600 mg'", "'Strip'", categoryName, productDisplayOrder, categoryDisplayOrder, packsToShip, fullSupplyFlag, orderID);
   }
 
   public void insertShipmentDataWithReplacedProduct(int orderID, String productCode, Integer quantityShipped,

@@ -515,7 +515,7 @@ public class E2EInitiateRnR extends TestCaseHelper {
     numberFormat.setMinimumIntegerDigits(8);
     numberFormat.setGroupingUsed(false);
     int id = dbWrapper.getMaxRnrID();
-    String orderNumber = "OHIV" + numberFormat.format(id);
+    String orderNumber = "O" + program.substring(0, Math.min(program.length(), 35)) + numberFormat.format(id);
     viewOrdersPage.verifyOrderListElements(program, orderNumber, facility_code + " - " + facility_name, "Period1" + " (" + periods[0].trim() + " - " + periods[1].trim() + ")", supplyFacilityName, "Transfer failed", downloadFlag);
   }
 
