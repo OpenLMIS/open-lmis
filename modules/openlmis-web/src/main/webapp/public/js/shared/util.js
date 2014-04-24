@@ -65,3 +65,10 @@ String.prototype.format = function () {
   }
   return formatted;
 };
+
+String.prototype.endsWith = function (searchString) {
+  var position = this.length - searchString.length;
+  if (position >= 0 && position < length)
+    return false;
+  return this.indexOf(searchString, position) !== -1;
+};

@@ -34,6 +34,18 @@ describe("NavigationController", function () {
   });
 
   describe("go online", function () {
+    it("should take user to root if currently on offline home page and network is connected", function () {
+      $httpBackend.expectGET("/locales.json").respond(200, {locales: ['en', 'pt']});
+      spyOn($location, 'absUrl').andReturn("/public/pages/offline.html");
+      spyOn($location, 'path');
+
+      scope.goOnline();
+
+      $httpBackend.flush();
+      expect(window.location).toEqual("/");
+      expect(scope.showNetworkError).toBeFalsy();
+    });
+
     it("should take user to online version of app if network is connected", function () {
       $httpBackend.expectGET("/locales.json").respond(200, {locales: ['en', 'pt']});
       spyOn($location, 'absUrl').andReturn("/page/offline.html#/list");

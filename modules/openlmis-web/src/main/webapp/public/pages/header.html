@@ -27,14 +27,8 @@
         </div>
       </div>
       <div id="loader" class="loader-icon"></div>
-      <div class="span3">
-        <div ng-switch on="user">
-          <div ng-switch-when="true">
-          </div>
-          <div ng-switch-default>
-            <ng-include src="'/public/pages/user.html'"></ng-include>
-          </div>
-        </div>
+      <div class="span3" ng-show="!!user">
+        <ng-include src="'/public/pages/user.html'"></ng-include>
       </div>
     </div>
   </div>

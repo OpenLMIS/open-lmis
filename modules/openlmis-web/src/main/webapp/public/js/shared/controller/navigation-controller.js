@@ -9,7 +9,6 @@
  */
 
 function NavigationController($scope, localStorageService, Locales, $location, $window) {
-  //Deleting browser cookie explicitly in case logout was done when user was offline # 1391
   $scope.loadRights = function () {
     $scope.rights = localStorageService.get(localStorageKeys.RIGHT);
 
@@ -26,12 +25,16 @@ function NavigationController($scope, localStorageService, Locales, $location, $
     return ($scope.rights && ($scope.rights.indexOf(permission) > -1));
   };
 
-
   $scope.goOnline = function () {
     Locales.get({}, function (data) {
       if (data.locales) {
         var currentURI = $location.absUrl();
-        $window.location = currentURI.replace('offline.html', 'index.html').replace('#/list', '#/manage');
+        if (currentURI.endsWith('offline.html')) {
+          $window.location = currentURI.replace('public/pages/offline.html', '');
+        }
+        else {
+          $window.location = currentURI.replace('offline.html', 'index.html').replace('#/list', '#/manage');
+        }
         $scope.showNetworkError = false;
         return;
       }
