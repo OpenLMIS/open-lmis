@@ -46,7 +46,7 @@ public class OrderPOD extends BaseModel {
   private Long facilityId;
   private Long programId;
   private Long periodId;
-  private List<OrderPODLineItem> podLineItems;
+  private List<OrderPODLineItem> podLineItems = new ArrayList<>();
   private String deliveredBy;
   private String receivedBy;
   private Date receivedDate;
@@ -63,7 +63,7 @@ public class OrderPOD extends BaseModel {
   }
 
   public void validate() {
-    if (orderId == null || podLineItems == null || podLineItems.size() == 0) {
+    if (orderId == null) {
       throw new DataException("error.mandatory.fields.missing");
     }
     for (OrderPODLineItem lineItem : podLineItems) {

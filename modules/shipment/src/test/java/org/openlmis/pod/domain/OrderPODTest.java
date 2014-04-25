@@ -29,7 +29,6 @@ import org.openlmis.shipment.domain.ShipmentLineItem;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
@@ -98,31 +97,6 @@ public class OrderPODTest {
     OrderPOD orderPod = new OrderPOD();
 
     assertThat(orderPod.getStringReceivedDate(), nullValue());
-  }
-
-  @Test
-  public void shouldThrowErrorIfLineItemsNotPresent() {
-    OrderPOD orderPod = new OrderPOD(1l);
-    orderPod.setOrderId(2l);
-    orderPod.setPodLineItems(null);
-
-    expectedException.expect(DataException.class);
-    expectedException.expectMessage("error.mandatory.fields.missing");
-
-    orderPod.validate();
-  }
-
-  @Test
-  public void shouldThrowErrorIfLineItemsSizeIsZero() {
-    OrderPOD orderPod = new OrderPOD(1l);
-    orderPod.setOrderId(2l);
-    List<OrderPODLineItem> orderPodLineItems = new ArrayList<>();
-    orderPod.setPodLineItems(orderPodLineItems);
-
-    expectedException.expect(DataException.class);
-    expectedException.expectMessage("error.mandatory.fields.missing");
-
-    orderPod.validate();
   }
 
   @Test

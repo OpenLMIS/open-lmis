@@ -2,6 +2,7 @@ package org.openlmis.restapi.service;
 
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.ProductService;
+import org.openlmis.order.domain.Order;
 import org.openlmis.order.service.OrderService;
 import org.openlmis.pod.domain.OrderPOD;
 import org.openlmis.pod.domain.OrderPODLineItem;
@@ -11,7 +12,6 @@ import org.openlmis.rnr.service.RequisitionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.openlmis.order.domain.Order;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -69,9 +69,6 @@ public class RestPODService {
   }
 
   private void validatePODLineItems(List<OrderPODLineItem> orderPodLineItems) {
-    if (orderPodLineItems == null) {
-      return;
-    }
     List<String> invalidProductCodes = getInvalidProductCodes(orderPodLineItems);
     if (invalidProductCodes.size() > 0) {
       throw new DataException("error.invalid.product.code", invalidProductCodes.toString());
