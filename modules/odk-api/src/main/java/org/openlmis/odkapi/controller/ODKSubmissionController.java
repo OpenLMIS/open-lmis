@@ -70,7 +70,6 @@ public class ODKSubmissionController extends BaseController {
     @RequestMapping(value="/odk-api/submission", method=RequestMethod.HEAD)
     public ResponseEntity<String> handleHeadRequest(HttpServletRequest httpServletRequest)
     {    // do the authentication here
-        System.out.println("when getting a form "+"================"+httpServletRequest.getParameter("deviceID"));
         this.headers = new HttpHeaders();
         this.dateFormat = "yyyy-MM-dd HH:mm:ss";
         this.headers.set(OPEN_ROSA_VERSION_HEADER, OPEN_ROSA_VERSION);
@@ -85,7 +84,6 @@ public class ODKSubmissionController extends BaseController {
     public ResponseEntity<String> processSubmission(
             @RequestParam("xml_submission_file") MultipartFile XMLSubmissionFile, HttpServletRequest request)
     {
-        System.out.println("when getting a form "+"================"+request.getParameter("deviceID"));
         this.headers = new HttpHeaders();
         this.dateFormat ="yyyy-MM-dd HH:mm:ss";
         this.headers.set(OPEN_ROSA_VERSION_HEADER, OPEN_ROSA_VERSION);

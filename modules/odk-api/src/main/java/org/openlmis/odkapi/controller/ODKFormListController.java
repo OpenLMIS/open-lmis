@@ -41,6 +41,10 @@ public class ODKFormListController extends  BaseController
     @ResponseBody
     public ResponseEntity<ODKXFormList> getAvailableForms(HttpServletRequest httpServletRequest)
     {
+<<<<<<< HEAD
+=======
+
+>>>>>>> ODK-API-TEST-CODE
         ODKXFormList odkxFormListXML = odkxFormService.getAvailableXFormDefinitions();
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.set(OPEN_ROSA_VERSION_HEADER, OPEN_ROSA_VERSION);
