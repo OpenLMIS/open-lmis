@@ -3,6 +3,11 @@
 <h2><span>{{ detailTable }}</span> </h2>
 <div class="row-fluid">
     <div class="span12">
+        <table class="table table-bordered" ng-show="notificationsDetail == undefined || notificationsDetail.length == 0">
+            <tr>
+                <td>No data to show for selected alert type</td>
+            </tr>
+        </table>
         <table ng-show="notificationsDetail.length > 0" class="table-bordered table table-striped pull-right"
                ng-table="tableParams">
             <thead>
