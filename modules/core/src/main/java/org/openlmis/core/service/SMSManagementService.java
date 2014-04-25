@@ -54,12 +54,6 @@ public class SMSManagementService {
 
     }
 
-    //Saving Incoming SMS
-    public  void SaveIncomingSMS(String content,String phoneNumber){
-        smsRepository.saveSMSMessage("Incoming", 1, content, phoneNumber, new Date());
-
-    }
-
     // sending sms
     public void sendSms(String content,String phoneNumber) throws IOException{
 
@@ -79,7 +73,7 @@ public class SMSManagementService {
             while ((line = reader.readLine()) != null) {
                 buffer = buffer.append(line).append("\n");
             }
-            smsRepository.saveSMSMessage("Outgoing", 0, content, phoneNumber, new Date());
+            smsRepository.SaveSMSMessage("Outgoing", content, phoneNumber, new Date());
             System.out.println("Submit request= " + urlString.toString());
             System.out.println("response : "+buffer.toString());
             System.out.println("INFO : all sent disconnect.");
