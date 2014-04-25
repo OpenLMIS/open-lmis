@@ -76,6 +76,7 @@ public class PODService {
 
   public void updateOrderStatus(OrderPOD orderPod) {
     Order order = new Order(orderPod.getOrderId());
+    order.setOrderNumber(orderPod.getOrderNumber());
     order.setStatus(OrderStatus.RECEIVED);
     orderService.updateOrderStatus(order);
   }

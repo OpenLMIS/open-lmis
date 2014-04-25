@@ -291,7 +291,7 @@ public class GetRequisitionDetailsAPI extends JsonUtility {
     OrderPODFromJson.getPodLineItems().get(0).setProductCode("P10");
 
     client.SendJSON(getJsonStringFor(OrderPODFromJson),
-      format(POD_URL, id),
+      format(POD_URL, generateOrderNumberForIdAndDefaultConfiguration(id, "HIV")),
       "POST",
       "commTrack",
       "Admin123");
@@ -299,6 +299,10 @@ public class GetRequisitionDetailsAPI extends JsonUtility {
     responseEntity = client.SendJSON("", URL + id, "GET", "commTrack", "Admin123");
     checkRequisitionStatus("RELEASED", responseEntity);
     checkOrderStatus(65, "RECEIVED", responseEntity);
+  }
+
+  private String generateOrderNumberForIdAndDefaultConfiguration(Long id, String programCode) {
+    return "O" + programCode + String.format("%08d", id) + "R";
   }
 
   private void checkRequisitionStatus(String requisitionStatus, ResponseEntity responseEntity) {
