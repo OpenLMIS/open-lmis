@@ -202,7 +202,7 @@ public class RequisitionStatusFeed extends JsonUtility {
     assertTrue("Response entity : " + feedString, feedString.contains("\"stringStartDate\":\"30-01-2013\""));
     assertTrue("Response entity : " + feedString, feedString.contains("\"stringEndDate\":\"30-01-2016\""));
     assertTrue("Response entity : " + feedString, feedString.contains("\"orderStatus\":\"" + orderStatus + "\""));
-    assertTrue("Response entity : " + feedString, feedString.contains("\"orderId\":" + orderNumber));
+    assertTrue("Response entity : " + feedString, feedString.contains("\"orderId\":\"" + orderNumber + "\""));
   }
 
   private ResponseEntity waitForOrderStatusUpdatedOrTimeOut(int index) throws ParserConfigurationException, SAXException, InterruptedException {
