@@ -181,7 +181,7 @@ public class UpdatePod extends TestCaseHelper {
     initiateRnrAndConvertToOrder(false, 1111);
     dbWrapper.updateFieldValue("orders", "status", "RELEASED", null, null);
     testDataForShipment(999, true, "P10", 99898998);
-    //dbWrapper.insertShipmentData(dbWrapper.getMaxRnrID(), "P11", 0, null, false);
+    dbWrapper.insertShipmentData(dbWrapper.getMaxRnrID(), "P11", 0, null, false);
     dbWrapper.updateFieldValue("orders", "status", "PACKED", null, null);
 
 
@@ -197,7 +197,8 @@ public class UpdatePod extends TestCaseHelper {
     assertEquals("", updatePodPage.getNotes(1));
     assertTrue(updatePodPage.isFullSupplyTickIconDisplayed(1));
     verifyRequisitionTypeAndColor("regular");
-    //verifyValuesOfPodTableOnUpdatePODScreen(2, "P11", "antibiotic Capsule 300/200/600 mg", "", "Strip", "0");
+    assertEquals("Other", testWebDriver.getElementById("category").getText());
+    verifyValuesOfPodTableOnUpdatePODScreen(2, "P11", "antibiotic Capsule 300/200/600 mg", "", "Strip", "0");
   }
 
   @Test(groups = {"requisition"})

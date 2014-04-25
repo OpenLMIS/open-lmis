@@ -17,6 +17,7 @@ import org.testng.annotations.Test;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.text.NumberFormat;
 import java.util.List;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.assertFalse;
@@ -52,7 +53,7 @@ public class ManagePod extends TestCaseHelper {
     convertOrderPage.clickOk();
     ManagePodPage managePodPage = homePage.navigateManagePOD();
     verifyHeadersOnManagePODScreen(managePodPage);
-    verifyValuesOnManagePODScreen(managePodPage);
+    verifyValuesOnManagePODScreen(getOrderNumber("MALARIA", "R"));
   }
 
   @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-RnR")
@@ -81,7 +82,7 @@ public class ManagePod extends TestCaseHelper {
     ManagePodPage managePodPage = homePage.navigateManagePOD();
     verifyHeadersOnManagePODScreen(managePodPage);
     assertTrue(testWebDriver.findElement(By.xpath("//i[@class='icon-ok']")).isDisplayed());
-    verifyValuesOnManagePODScreen(managePodPage);
+    verifyValuesOnManagePODScreen(getOrderNumber("MALARIA", "E"));
   }
 
   @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-RnR")
@@ -158,13 +159,23 @@ public class ManagePod extends TestCaseHelper {
     managePodPage.verifyNoOrderMessage();
   }
 
-  private void verifyValuesOnManagePODScreen(ManagePodPage managePodPage) {
+  private void verifyValuesOnManagePODScreen(String orderNumber) throws SQLException {
+    ManagePodPage managePodPage = PageObjectFactory.getManagePodPage(testWebDriver);
+    assertEquals(orderNumber, managePodPage.getOrderNumber(1));
     assertEquals("F10 - Village Dispensary", managePodPage.getFacilityCodeName());
     assertEquals("Village Dispensary", managePodPage.getSupplyingDepotName());
-    assertEquals("MALARIA", managePodPage.getProgramCodeName());
+    assertEquals("MALARIA", managePodPage.getProgramCodeName(1));
     assertEquals("Transfer failed", managePodPage.getOrderStatusDetails());
     assertEquals("PeriodName1 (01/12/2012 - 01/12/2015)", managePodPage.getPeriodDetails());
     assertEquals("Update POD", managePodPage.getUpdatePodLink());
+  }
+
+  private String getOrderNumber(String program, String type) throws SQLException {
+    NumberFormat numberFormat = NumberFormat.getIntegerInstance();
+    numberFormat.setMinimumIntegerDigits(8);
+    numberFormat.setGroupingUsed(false);
+    int id = dbWrapper.getMaxRnrID();
+    return "O" + program.substring(0, Math.min(program.length(), 35)) + numberFormat.format(id) + type.substring(0, 1);
   }
 
   private void verifyHeadersOnManagePODScreen(ManagePodPage managePodPage) {

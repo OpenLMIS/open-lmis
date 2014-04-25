@@ -20,9 +20,6 @@ public class ManagePodPage extends Page {
   @FindBy(how = XPATH, using = "//div/span[contains(text(),'Village Dispensary')]")
   private static WebElement supplyingDepotNameOnManagePodScreen = null;
 
-  @FindBy(how = XPATH, using = "//div/span[contains(text(),'MALARIA')]")
-  private static WebElement programCodeNameOnManagePodScreen = null;
-
   @FindBy(how = XPATH, using = "//div/span[contains(text(),'PeriodName1 (01/12/2012 - 01/12/2015)')]")
   private static WebElement periodDetailsOnManagePodScreen = null;
 
@@ -111,8 +108,8 @@ public class ManagePodPage extends Page {
     return testWebDriver.getText(supplyingDepotNameOnManagePodScreen);
   }
 
-  public String getProgramCodeName() {
-    return testWebDriver.getText(programCodeNameOnManagePodScreen);
+  public String getProgramCodeName(int rowNumber) {
+    return testWebDriver.getElementById("program" + (rowNumber - 1)).getText();
   }
 
   public String getPeriodDetails() {
@@ -129,6 +126,10 @@ public class ManagePodPage extends Page {
 
   public String getUpdatePodLink() {
     return testWebDriver.getText(updatePodLinkOnManagePodScreen);
+  }
+
+  public String getOrderNumber(int orderNumber) {
+    return testWebDriver.getElementById("order" + (orderNumber - 1)).getText();
   }
 
   public void verifyNoOrderMessage() {
