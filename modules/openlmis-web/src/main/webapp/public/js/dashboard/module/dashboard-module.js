@@ -19,5 +19,6 @@ angular.module('dashboard',['openlmis', 'ui.calendar', 'ui.bootstrap','easypiech
         when('/requisition-group-stock-out/:programId/:periodId/:rgroupId/:productId', {controller: RequisitionGroupStockedOutController, templateUrl: 'partials/requisition-group-stocked-out.html', resolve : ResolveDashboardFormData }).
         when('/stock-out-detail/:programId/:periodId/:rgroupId/:productId', {controller: StockedOutDetailController, templateUrl: 'partials/stocked-out-detail.html', resolve : ResolveDashboardFormData }).
         when('/notifications/:alertId/:detailTable', {controller: NotificationsDetailController, templateUrl: 'partials/notifications-detail.html', resolve : ResolveDashboardFormData }).
+        when('/notifications', {controller: SendNotificationController, templateUrl: 'partials/send-notifications.html', resolve : ResolveDashboardFormData }).
         otherwise({redirectTo: '/dashboard'});
 }]);

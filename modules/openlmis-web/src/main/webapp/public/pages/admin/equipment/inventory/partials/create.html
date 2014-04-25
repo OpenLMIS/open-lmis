@@ -7,13 +7,11 @@
   ~
   ~ You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
   -->
-
-
 <div xmlns="http://www.w3.org/1999/html">
   <h2>
     <span>{{(equipment.id == undefined)?'New': 'Edit'}} Equipment</span>
   </h2>
-  <form ng-submit="saveEquipment()" id="create-equipment-form" name="equipmentForm" novalidate>
+  <form ng-submit="saveEquipment()" name="equipmentForm" novalidate>
     <div class="form-group">
 
       <div class="form-row">
@@ -23,7 +21,7 @@
           </label>
 
           <div class="form-field">
-            <select ng-model="equipment.equipmentId" id="type" type="text" maxlength="200">
+            <select style="width: 250px;" ui-select2  ng-model="equipment.equipmentId" id="type">
               <option ng-repeat="type in equipments" value="{{type.id}}">{{type.name}}</option>
             </select>
             <span class="field-error" ng-show="equipmentForm.type.$error.required && showError" openlmis-message="missing.value"></span>
@@ -46,7 +44,7 @@
             </label>
 
             <div class="form-field">
-              <select ng-model="equipment.operationalStatusId" id="operationalStatus" >
+              <select style="width: 250px;" ui-select2  ng-model="equipment.operationalStatusId" id="operationalStatus" >
                   <option value="1">Operational</option>
                   <option value="2">Non-Operational</option>
               </select>
@@ -71,7 +69,7 @@
             </label>
 
             <div class="form-field">
-              <input ng-model="equipment.manufacturerName" name="manuf" id="manuf" type="text" maxlength="50" ng-required="true" />
+              <input  ng-model="equipment.manufacturerName" name="manuf" id="manuf" type="text" maxlength="50" ng-required="true" />
               <span class="field-error" ng-show="equipmentForm.code.$error.required && showError" openlmis-message="missing.value"></span>
             </div>
           </div>
@@ -139,7 +137,13 @@
                     <span class="label-required">*</span>
                 </label>
                 <div class="form-field">
-                    <input ng-model="equipment.dateLastAssessed" name="dateLastAssessed" id="dateLastAssessed" type="date" maxlength="50" ng-required="true" />
+                    <input 
+                           ng-model="equipment.dateLastAssessed" 
+                           name="dateLastAssessed" 
+                           id="dateLastAssessed"  
+                           ui-date="{dateFormat: 'dd/mm/yy', changeYear: true}"
+                           ui-date-format="yy-mm-dd" 
+                           ng-required="true" />
                 </div>
             </div>
 
@@ -152,7 +156,12 @@
                 <span class="label-required">*</span>
             </label>
             <div class="form-field">
-                <input ng-model="equipment.replacementRecommended" name="replacementRecommended" id="replacementRecommended" type="checkbox" ng-required="true" />
+                <input 
+                       ng-model="equipment.replacementRecommended" 
+                       name="replacementRecommended" 
+                       id="replacementRecommended" 
+                       type="checkbox" 
+                       ng-required="true" />
             </div>
         </div>
 
@@ -162,12 +171,10 @@
             </label>
 
             <div class="form-field">
-              <textarea ng-model="equipment.reasonForReplacement" ng-disabled="!equipment.replacementRecommended" name="reasonForReplacement" id="reasonForReplacement" style="width: 400px" ng-required="true" ></textarea>
+              <textarea ng-model="equipment.reasonForReplacement" ng-disabled="!equipment.replacementRecommended" name="reasonForReplacement" id="reasonForReplacement" style="width: 400px" ></textarea>
               <span class="field-error" ng-show="equipmentForm.reasonForReplacement.$error.required && showError" openlmis-message="missing.value"></span>
             </div>
           </div>
-
-
         </div>
 
       </div>

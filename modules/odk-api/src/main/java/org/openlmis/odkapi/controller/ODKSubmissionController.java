@@ -19,6 +19,7 @@ import org.openlmis.web.logger.ApplicationLogger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 */
+import org.openlmis.odkapi.exception.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -67,7 +68,7 @@ public class ODKSubmissionController extends BaseController {
     DateUtil dateUtil;
 
     @RequestMapping(value="/odk-api/submission", method=RequestMethod.HEAD)
-    public ResponseEntity<String> handleHeadRequest()
+    public ResponseEntity<String> handleHeadRequest(HttpServletRequest httpServletRequest)
     {    // do the authentication here
         this.headers = new HttpHeaders();
         this.dateFormat = "yyyy-MM-dd HH:mm:ss";
@@ -75,7 +76,7 @@ public class ODKSubmissionController extends BaseController {
         this.headers.set(OPEN_ROSA_ACCEPT_CONTENT_LENGTH_HEADER, OPEN_ROSA_ACCEPT_CONTENT_LENGTH);
         this.milliseconds = dateUtil.getCurrentDateByFormat(this.dateFormat).getTime();
         this.headers.setDate(this.milliseconds);
-        return new ResponseEntity<String>(this.successResponseMessage, this.headers, HttpStatus.NO_CONTENT);
+        return new ResponseEntity<String>(this.ODK_COLLECT_HEAD_REQUEST_SUCCESSFUL, this.headers, HttpStatus.NO_CONTENT);
 
     }
 
@@ -94,11 +95,40 @@ public class ODKSubmissionController extends BaseController {
 
         Set submissionsFilesSet = multipartRequest.getFileMap().entrySet();
 
-        if (! odkSubmissionService.getODKSubmissionFiles(submissionsFilesSet))
+        try
         {
-            return new ResponseEntity<String>(this.errorResponseMessage, this.headers, HttpStatus.INTERNAL_SERVER_ERROR);
+            odkSubmissionService.saveODKSubmissionData(submissionsFilesSet);
         }
 
-        return new ResponseEntity<String>(this.successResponseMessage, this.headers, HttpStatus.CREATED);
+        catch (ODKAccountNotFoundException e)
+        {
+            return new ResponseEntity<String>(this.ODK_ACCOUNT_NOT_VALID, this.headers, HttpStatus.FORBIDDEN);
+        }
+
+        catch (FacilityNotFoundException e)
+        {
+            return new ResponseEntity<String>(this.FACILITY_NOT_FOUND, this.headers, HttpStatus.FORBIDDEN);
+        }
+
+        catch (FacilityPictureNotFoundException e)
+        {
+            return new ResponseEntity<String>(this.FACILITY_PICTURE_MISSING, this.headers, HttpStatus.NOT_ACCEPTABLE);
+        }
+
+        catch(ODKCollectXMLSubmissionFileNotFoundException e)
+        {
+            return new ResponseEntity<String>(this.ODK_COLLECT_XML_SUBMISSION_FILE_MISSING, this.headers, HttpStatus.NOT_ACCEPTABLE);
+        }
+        catch(ODKCollectXMLSubmissionSAXException e)
+        {
+            return new ResponseEntity<String>(this.ODK_COLLECT_XML_SUBMISSION_FILE_PARSE_ERROR, this.headers, HttpStatus.NOT_ACCEPTABLE);
+        }
+        catch(ODKCollectXMLSubmissionParserConfigurationException e)
+        {
+            return new ResponseEntity<String>(this.ODK_COLLECT_XML_SUBMISSION_FILE_PARSE_ERROR, this.headers, HttpStatus.NOT_ACCEPTABLE);
+        }
+
+
+      return new ResponseEntity<String>(this.ODK_COLLECT_SUBMISSION_SUCCESSFUL, this.headers, HttpStatus.CREATED);
     }
 }

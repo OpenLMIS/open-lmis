@@ -14,6 +14,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
+import org.codehaus.jackson.map.ser.std.DateSerializer;
 import org.openlmis.core.domain.BaseModel;
 
 import java.util.Date;
@@ -41,6 +43,8 @@ public class EquipmentInventory extends BaseModel {
   private Boolean replacementRecommended;
   private String reasonForReplacement;
   private String nameOfAssessor;
+
+  @JsonSerialize(using = DateSerializer.class)
   private Date dateLastAssessed;
 
 //  public String getDateLastAssessedString()  {

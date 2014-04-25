@@ -18,27 +18,21 @@ import lombok.NoArgsConstructor;
 import org.openlmis.odkapi.domain.ODKAccount;
 import org.openlmis.odkapi.domain.ODKSubmission;
 import org.openlmis.odkapi.domain.ODKSubmissionData;
-import org.openlmis.odkapi.repository.ODKAccountRepository;
+import org.openlmis.odkapi.exception.*;
 import org.openlmis.odkapi.repository.ODKSubmissionDataRepository;
 import org.openlmis.odkapi.repository.ODKSubmissionRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.openlmis.core.service.FacilityService;
 import org.openlmis.core.domain.Facility;
 import org.springframework.web.multipart.MultipartFile;
 import org.xml.sax.SAXException;
 
-import javax.imageio.ImageIO;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
-import java.awt.*;
-import java.io.BufferedInputStream;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
@@ -53,7 +47,7 @@ import org.openlmis.odkapi.parser.ODKSubmissionSAXHandler;
 public class ODKSubmissionService {
 
     @Autowired
-    private ODKAccountRepository odkAccountRepository;
+    private ODKAccountService odkAccountService;
     @Autowired
     private ODKSubmissionRepository odkSubmissionRepository;
 
@@ -78,20 +72,11 @@ public class ODKSubmissionService {
     private static Logger logger = LoggerFactory.getLogger(ODKSubmissionService.class);
 
 
-
-    private void insertODKSubmission(ODKSubmission odkSubmission)
+    public void saveODKSubmissionData(Set submissionsFilesSet) throws ODKAccountNotFoundException,
+            FacilityPictureNotFoundException, ODKCollectXMLSubmissionFileNotFoundException,
+            ODKCollectXMLSubmissionParserConfigurationException, ODKCollectXMLSubmissionSAXException, FacilityNotFoundException
     {
-        odkSubmissionRepository.insert(odkSubmission);
-    }
-
-    private void insertODKSubmissionData(ODKSubmissionData odkSubmissionData)
-    {
-        odkSubmissionDataRepository.insert(odkSubmissionData);
-    }
-
-
-    public boolean getODKSubmissionFiles(Set submissionsFilesSet)
-    {
+        // first get the XML submission file
         facilityPictures = new HashMap<String, MultipartFile>();
         Iterator iterator = submissionsFilesSet.iterator();
         MultipartFile XMLSubmissionFile = null;
@@ -110,13 +95,8 @@ public class ODKSubmissionService {
             }
         }
 
-        return getODKSubmissionData(XMLSubmissionFile);
 
-    }
-
-    public boolean getODKSubmissionData(MultipartFile xmlSubmissionFile)
-    {
-
+        // parse the xml file
         SAXParserFactory saxParserFactory = SAXParserFactory.newInstance();
         ODKSubmissionSAXHandler handler;
         handler = new ODKSubmissionSAXHandler();
@@ -124,33 +104,44 @@ public class ODKSubmissionService {
         try
         {
             SAXParser saxParser = saxParserFactory.newSAXParser();
-            saxParser.parse(xmlSubmissionFile.getInputStream(), handler);
+            saxParser.parse(XMLSubmissionFile.getInputStream(), handler);
 
         }
-        catch(IOException | ParserConfigurationException | SAXException exception )
+        catch(SAXException exception )
         {
-            // exception.printStackTrace();
+           throw new ODKCollectXMLSubmissionSAXException();
 
+        }
+        catch(IOException e)
+        {
+            throw new ODKCollectXMLSubmissionFileNotFoundException();
+        }
+        catch(ParserConfigurationException e)
+        {
+            throw new ODKCollectXMLSubmissionParserConfigurationException();
         }
 
         odkSubmission = handler.getOdkSubmission();
         odkAccount = handler.getOdkAccount();
-        ODKAccount tempAccount = odkAccountRepository.getODKAccountByDeviceId(odkAccount.getDeviceId());
+
+        ODKAccount tempAccount;
+
+        tempAccount =  odkAccountService.authenticate(odkAccount);
+
         odkSubmission.setOdkAccountId(tempAccount.getId());
         odkSubmission.setActive(true);
         this.insertODKSubmission(odkSubmission);
 
         listOfODKSubmissionData = handler.getListOfODKSubmissionData();
         associatedFacilityPictures = handler.getFacilityPictures();
-        boolean  picturesAssigned = assignFacilityPictures();
-        boolean  facilityDataSaved = saveFacilityData();
+        assignFacilityPictures();
+        saveFacilityData();
         saveODKSubmissionData();
 
-        return ( picturesAssigned && facilityDataSaved );
     }
 
 
-    public boolean assignFacilityPictures()
+    public void assignFacilityPictures() throws FacilityPictureNotFoundException
     {
 
         Iterator iterator = associatedFacilityPictures.entrySet().iterator();
@@ -176,7 +167,9 @@ public class ODKSubmissionService {
                        }
                        catch(IOException e)
                        {
-                           logger.error("Facility picture not found.");
+                           e.printStackTrace();
+                           throw new FacilityPictureNotFoundException("Facility picture not found.");
+
                        }
 
 
@@ -186,8 +179,6 @@ public class ODKSubmissionService {
 
         }
 
-
-     return true;
     }
 
     public void saveODKSubmissionData()
@@ -205,7 +196,7 @@ public class ODKSubmissionService {
     }
 
 
-    public boolean saveFacilityData()
+    public void saveFacilityData() throws FacilityNotFoundException
     {
         this.currentDateTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
         this.format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -214,7 +205,12 @@ public class ODKSubmissionService {
         {
             // To Do Add Exception handling if facility is not found
             this.facility = facilityService.getById(ODKfacilitySubmissionData.getFacilityId());
-            // To Do Add GPS Accuracy attribute to the facility model so that before updating the
+            if (this.facility == null)
+            {
+                throw new FacilityNotFoundException("Facility with Id :" + ODKfacilitySubmissionData.getFacilityId() + " was not found");
+            }
+            // To Do Add GPS Accuracy attribute to the facility model so that before updating the,
+                // as an exception if the accuracy is lower
             // existing GPS information the accuracy of the existing GPS info is checked.
             this.facility.setLatitude(ODKfacilitySubmissionData.getGPSLatitude());
             this.facility.setLongitude(ODKfacilitySubmissionData.getGPSLongitude());
@@ -225,7 +221,16 @@ public class ODKSubmissionService {
 
         }
 
-        return true;
+    }
+
+    private void insertODKSubmission(ODKSubmission odkSubmission)
+    {
+        odkSubmissionRepository.insert(odkSubmission);
+    }
+
+    private void insertODKSubmissionData(ODKSubmissionData odkSubmissionData)
+    {
+        odkSubmissionDataRepository.insert(odkSubmissionData);
     }
 
 

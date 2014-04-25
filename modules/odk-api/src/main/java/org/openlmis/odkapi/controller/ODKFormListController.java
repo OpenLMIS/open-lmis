@@ -27,6 +27,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServletRequest;
+
 @Controller
 public class ODKFormListController extends  BaseController
 {
@@ -37,7 +39,7 @@ public class ODKFormListController extends  BaseController
 
     @RequestMapping(value="/odk-api/formList")
     @ResponseBody
-    public ResponseEntity<ODKXFormList> getAvailableForms()
+    public ResponseEntity<ODKXFormList> getAvailableForms(HttpServletRequest httpServletRequest)
     {
         ODKXFormList odkxFormListXML = odkxFormService.getAvailableXFormDefinitions();
         HttpHeaders responseHeaders = new HttpHeaders();
@@ -48,7 +50,7 @@ public class ODKFormListController extends  BaseController
 
     @RequestMapping(value = "/odk-api/getForm/{formId}")
     @ResponseBody
-    public ResponseEntity<String> getForm(@PathVariable String formId)
+    public ResponseEntity<String> getForm(@PathVariable String formId, HttpServletRequest httpServletRequest)
     {
         odkxForm = odkxFormService.getXFormByFormId(formId);
         HttpHeaders responseHeaders = new HttpHeaders();

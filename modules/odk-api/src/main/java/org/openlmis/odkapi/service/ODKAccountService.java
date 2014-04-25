@@ -15,6 +15,7 @@
 package org.openlmis.odkapi.service;
 
 import org.openlmis.odkapi.domain.ODKAccount;
+import org.openlmis.odkapi.exception.ODKAccountNotFoundException;
 import org.openlmis.odkapi.repository.ODKAccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -27,4 +28,28 @@ public class ODKAccountService  {
     {
         return odkAccountRepository.getODKAccountByDeviceId(token);
     }
+
+    public ODKAccount getODKAccountByDeviceId(String deviceId)
+    {
+        return odkAccountRepository.getODKAccountByDeviceId(deviceId);
+    }
+
+    public ODKAccount authenticate(ODKAccount odkAccount) throws ODKAccountNotFoundException
+    {
+        // currently authenticating using only the device id of the android based device accessing the
+        // system
+        ODKAccount result = odkAccountRepository.getODKAccountByDeviceId(odkAccount.getDeviceId());
+        if (result == null)
+        {
+            throw new ODKAccountNotFoundException();
+        }
+
+        else
+        {
+            return result;
+        }
+
+    }
+
+
 }

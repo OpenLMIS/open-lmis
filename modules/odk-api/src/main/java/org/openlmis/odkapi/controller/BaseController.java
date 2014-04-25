@@ -20,12 +20,32 @@ public class BaseController {
     public static final String OPEN_ROSA_VERSION = "1.0";
     public static final String OPEN_ROSA_ACCEPT_CONTENT_LENGTH_HEADER = "X-OpenRosa-Accept-Content-Length";
     public static final String OPEN_ROSA_ACCEPT_CONTENT_LENGTH = "2000000";
-    public static final String successResponseMessage =  "<OpenRosaResponse xmlns=\"http://openrosa.org/http/response\">\n" +
+    public static final String ODK_COLLECT_SUBMISSION_SUCCESSFUL =  "<OpenRosaResponse xmlns=\"http://openrosa.org/http/response\">\n" +
             "    <message nature=\"submit_success\"> Form submitted. </message>\n" +
             "</OpenRosaResponse>";
+    public static final String ODK_COLLECT_HEAD_REQUEST_SUCCESSFUL =  "<OpenRosaResponse xmlns=\"http://openrosa.org/http/response\">\n" +
+            "    <message nature=\"submit_success\"> Head request accepted. </message>\n" +
+            "</OpenRosaResponse>";
+
     public static final String errorResponseMessage =  "<OpenRosaResponse xmlns=\"http://openrosa.org/http/response\">\n" +
             "    <message nature=\"submit_failure\"> Error during form submission. </message>\n" +
             "</OpenRosaResponse>";
+    public static final String ODK_ACCOUNT_NOT_VALID =  "<OpenRosaResponse xmlns=\"http://openrosa.org/http/response\">\n" +
+            "    <message nature=\"submit_failure\"> Device not allowed to access the system. </message>\n" +
+            "</OpenRosaResponse>";
+    public static final String FACILITY_PICTURE_MISSING =  "<OpenRosaResponse xmlns=\"http://openrosa.org/http/response\">\n" +
+            "    <message nature=\"submit_failure\"> Facility picture is missing. </message>\n" +
+            "</OpenRosaResponse>";
+    public static final String ODK_COLLECT_XML_SUBMISSION_FILE_MISSING =  "<OpenRosaResponse xmlns=\"http://openrosa.org/http/response\">\n" +
+            "    <message nature=\"submit_failure\"> Submission XML file is missing. </message>\n" +
+            "</OpenRosaResponse>";
+    public static final String ODK_COLLECT_XML_SUBMISSION_FILE_PARSE_ERROR =  "<OpenRosaResponse xmlns=\"http://openrosa.org/http/response\">\n" +
+            "    <message nature=\"submit_failure\"> Submission XML file parse error. </message>\n" +
+            "</OpenRosaResponse>";
+    public static final String     FACILITY_NOT_FOUND =  "<OpenRosaResponse xmlns=\"http://openrosa.org/http/response\">\n" +
+            "    <message nature=\"submit_failure\"> Facility not found. </message>\n" +
+            "</OpenRosaResponse>";
+
     public static final String ODK_COLLECT_APP_APK_FILE_NAME = "ODK Collect v1.4 rev 1038.apk";
     public static final String ODK_COLLECT_APP_APK_REQUEST_PARAMETER = "apk";
     public static final String ODK_COLLECT_APP_ITEMSETS_CSV_FILE_NAME = "itemsets.csv";
