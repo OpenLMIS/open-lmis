@@ -27,7 +27,7 @@ public class ConfigureShipmentPage extends Page {
   @FindBy(how = ID, using = "includeHeadersCheckbox")
   private WebElement includeHeaders = null;
 
-  @FindBy(how = ID, using = "orderIdIncludeCheckbox")
+  @FindBy(how = ID, using = "orderNumberIncludeCheckbox")
   private WebElement orderNumberCheckBox = null;
 
   @FindBy(how = ID, using = "productCodeIncludeCheckbox")
