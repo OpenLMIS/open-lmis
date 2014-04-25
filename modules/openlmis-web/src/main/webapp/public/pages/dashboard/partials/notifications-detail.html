@@ -1,13 +1,18 @@
 <!DOCTYPE html>
 
-<!--<h2><span openlmis-message="title.breakdown.facilities.stock.out.district|location|product"></span></h2>-->
+<h2><span>{{ detailTable }}</span> </h2>
 <div class="row-fluid">
     <div class="span12">
+        <table class="table table-bordered" ng-show="notificationsDetail == undefined || notificationsDetail.length == 0">
+            <tr>
+                <td>No data to show for selected alert type</td>
+            </tr>
+        </table>
         <table ng-show="notificationsDetail.length > 0" class="table-bordered table table-striped pull-right"
                ng-table="tableParams">
             <thead>
             <tr class="gradient-header">
-                <th ng-repeat="col in notificationColumns" ><div>{{col.name}}</div>
+                <th ng-repeat="col in notificationColumns" ><div>{{ col.title }}</div>
                 </th>
             </tr>
             </thead>
