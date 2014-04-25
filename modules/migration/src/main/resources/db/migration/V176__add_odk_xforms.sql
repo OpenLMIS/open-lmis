@@ -7,12 +7,12 @@ INSERT INTO odkxform
  downloadurl,
  xmlstring,
  active)
-  VALUES ('build_OpenLMISFacilitiesV10_1095893783',
+  VALUES ('build_OpenLMISFacilitiesV1_1095863780',
           'OpenLMISFacilities',
           '1',
           'hash',
           'XForm used to collect Facility location and pictures.',
-          'http://192.168.43.192:9091/odk-api/getForm/build_OpenLMISFacilitiesV10_1095893783',
+          'http://uat.tz.elmis-dev.org/odk-api/getForm/build_OpenLMISFacilitiesV1_1095863780',
           '<h:html xmlns="http://www.w3.org/2002/xforms" xmlns:h="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:jr="http://openrosa.org/javarosa">
   <h:head>
     <h:title>OpenLMISFacilitiesV1</h:title>

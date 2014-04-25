@@ -1,3 +1,13 @@
+/*
+ * This program is part of the OpenLMIS logistics management information system platform software.
+ * Copyright © 2013 VillageReach
+ *
+ * This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+ *  
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+ * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
+ */
+
 package org.openlmis.web.controller;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -21,13 +31,6 @@ import static org.openlmis.web.response.OpenLmisResponse.error;
 import static org.openlmis.web.response.OpenLmisResponse.success;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
-
-/**
- * Created with IntelliJ IDEA.
- * User: Henok
- * Date: 08/26/13
- * Time: 12:07 AM
- */
 
 @Controller
 @NoArgsConstructor
@@ -71,4 +74,18 @@ public class RequisitionGroupProgramScheduleController extends BaseController {
             return error(e, HttpStatus.BAD_REQUEST);
         }
     }
+
+  @RequestMapping(value="/requisitionGroupProgramSchedule/remove/{id}",method=GET,headers = ACCEPT_JSON)
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_REQ_GRP_PROG_SCHEDULE')")
+  public ResponseEntity<OpenLmisResponse> remove(@PathVariable(value="id") Long requisitionGroupProgramScheduleId, HttpServletRequest request){
+    ResponseEntity<OpenLmisResponse> successResponse;
+    try {
+      requisitionGroupProgramScheduleService.delete(requisitionGroupProgramScheduleId);
+    } catch (DataException e) {
+      return error(e, HttpStatus.BAD_REQUEST);
+    }
+    successResponse = success(String.format("Requisition group program association with schedule has been successfully removed"));
+    successResponse.getBody().addData("requisitionGroupProgramScheduleId", requisitionGroupProgramScheduleId);
+    return successResponse;
+  }
 }

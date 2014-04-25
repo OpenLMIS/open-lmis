@@ -40,5 +40,30 @@ public class ODKAccountRepository {
     {
         return odkAccountMapper.getODKAccountByDeviceId(deviceId);
     }
+
+    public ODKAccount getODKAccountBySIMSerial(String SIMSerial)
+    {
+        return odkAccountMapper.getODKAccountBySIMSerial(SIMSerial);
+    }
+
+    public ODKAccount getODKAccountByPhoneNumber(String phoneNumber)
+    {
+        return odkAccountMapper.getODKAccountByPhoneNumber(phoneNumber);
+    }
+
+    public ODKAccount getODKAccountBySubscriberId(String subscriberId)
+    {
+        return odkAccountMapper.getODKAccountBySubscriberId(subscriberId);
+    }
+
+    public ODKAccount getODKAccountByODKUserName(String odkUserName)
+    {
+        return odkAccountMapper.getODKAccountByODKUserName(odkUserName);
+    }
+
+    public ODKAccount getODKAccountByODKEmail(String odkEMail)
+    {
+        return odkAccountMapper.getODKAccountByODKEmail(odkEMail);
+    }
 }
 

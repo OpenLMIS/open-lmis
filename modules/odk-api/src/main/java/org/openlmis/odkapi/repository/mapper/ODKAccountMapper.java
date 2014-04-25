@@ -27,5 +27,19 @@ public interface ODKAccountMapper
     @Select("SELECT * FROM odkaccount where deviceId = #{deviceId}")
     public ODKAccount getODKAccountByDeviceId(String deviceId);
 
+    @Select("SELECT * FROM odkaccount where SIMSerial = #{simSerial}")
+    public ODKAccount getODKAccountBySIMSerial(String simSerial);
+
+    @Select("SELECT * FROM odkaccount where phoneNumber = #{phoneNumber}")
+    public ODKAccount getODKAccountByPhoneNumber(String phoneNumber);
+
+    @Select("SELECT * FROM odkaccount where subscriberId = #{subscriberId}")
+    public ODKAccount getODKAccountBySubscriberId(String subscriberId);
+
+    @Select("SELECT * FROM odkaccount where ODKUserName = #{odkUserName}")
+    public ODKAccount getODKAccountByODKUserName(String odkUserName);
+
+    @Select("SELECT * FROM odkaccount where ODKEmail = #{odkEMail}")
+    public ODKAccount getODKAccountByODKEmail(String odkEMail);
 
 }
