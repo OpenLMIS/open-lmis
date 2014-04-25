@@ -11,6 +11,7 @@ import org.openlmis.rnr.service.RequisitionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.openlmis.order.domain.Order;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,6 +39,10 @@ public class RestPODService {
   public void updatePOD(OrderPOD orderPod, Long userId) {
     orderPod.setCreatedBy(userId);
     orderPod.setModifiedBy(userId);
+    Order order = orderService.getByOrderNumber(orderPod.getOrderNumber());
+    if(order == null )
+      throw new DataException("error.restapi.invalid.order");
+    orderPod.setOrderId(order.getId());
     orderPod.validate();
     validateOrderForPOD(orderPod);
     podService.checkPermissions(orderPod);
@@ -74,9 +79,6 @@ public class RestPODService {
   }
 
   private void validateOrderForPOD(OrderPOD orderPod) {
-    if (orderService.getOrder(orderPod.getOrderId()) == null) {
-      throw new DataException("error.restapi.invalid.order");
-    }
     if (podService.getPODByOrderId(orderPod.getOrderId()) != null) {
       throw new DataException("error.restapi.delivery.already.confirmed");
     }

@@ -29,10 +29,10 @@ public class RestPODController extends BaseController {
   @Autowired
   private RestPODService restPODService;
 
-  @RequestMapping(value = "/rest-api/orders/{orderId}/pod", method = POST, headers = ACCEPT_JSON)
-  public ResponseEntity<RestResponse> savePOD(@RequestBody OrderPOD orderPod, @PathVariable Long orderId, Principal principal) {
+  @RequestMapping(value = "/rest-api/orders/{orderNumber}/pod", method = POST, headers = ACCEPT_JSON)
+  public ResponseEntity<RestResponse> savePOD(@RequestBody OrderPOD orderPod, @PathVariable String orderNumber, Principal principal) {
     try {
-      orderPod.setOrderId(orderId);
+      orderPod.setOrderNumber(orderNumber);
       restPODService.updatePOD(orderPod, loggedInUserId(principal));
       return RestResponse.success("message.success.pod.updated");
     } catch (DataException e) {
