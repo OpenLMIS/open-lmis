@@ -53,7 +53,7 @@ public class ManagePod extends TestCaseHelper {
     convertOrderPage.clickOk();
     ManagePodPage managePodPage = homePage.navigateManagePOD();
     verifyHeadersOnManagePODScreen(managePodPage);
-    verifyValuesOnManagePODScreen(getOrderNumber("MALARIA", "R"));
+    verifyValuesOnManagePODScreen(getOrderNumber("O", "MALARIA", "R"));
   }
 
   @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-RnR")
@@ -73,6 +73,7 @@ public class ManagePod extends TestCaseHelper {
   public void testVerifyManagePODValidFlowForEmergencyRnR(String program, String userSIC, String password) throws SQLException {
     setUpData(program, userSIC);
     dbWrapper.updateFieldValue("requisitions", "Emergency", true);
+    dbWrapper.updateFieldValue("order_number_configuration", "orderNumberPrefix", "#Ord 3", "orderNumberPrefix", "O");
 
     HomePage homePage = loginPage.loginAs(userSIC, password);
     ConvertOrderPage convertOrderPage = homePage.navigateConvertToOrder();
@@ -82,7 +83,8 @@ public class ManagePod extends TestCaseHelper {
     ManagePodPage managePodPage = homePage.navigateManagePOD();
     verifyHeadersOnManagePODScreen(managePodPage);
     assertTrue(testWebDriver.findElement(By.xpath("//i[@class='icon-ok']")).isDisplayed());
-    verifyValuesOnManagePODScreen(getOrderNumber("MALARIA", "E"));
+    verifyValuesOnManagePODScreen(getOrderNumber("#Ord 3", "MALARIA", "E"));
+    dbWrapper.updateFieldValue("order_number_configuration", "orderNumberPrefix", "O", "orderNumberPrefix", "#Ord 3");
   }
 
   @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-RnR")
@@ -170,12 +172,12 @@ public class ManagePod extends TestCaseHelper {
     assertEquals("Update POD", managePodPage.getUpdatePodLink());
   }
 
-  private String getOrderNumber(String program, String type) throws SQLException {
+  private String getOrderNumber(String prefix, String program, String type) throws SQLException {
     NumberFormat numberFormat = NumberFormat.getIntegerInstance();
     numberFormat.setMinimumIntegerDigits(8);
     numberFormat.setGroupingUsed(false);
     int id = dbWrapper.getMaxRnrID();
-    return "O" + program.substring(0, Math.min(program.length(), 35)) + numberFormat.format(id) + type.substring(0, 1);
+    return prefix + program.substring(0, Math.min(program.length(), 35)) + numberFormat.format(id) + type.substring(0, 1);
   }
 
   private void verifyHeadersOnManagePODScreen(ManagePodPage managePodPage) {
