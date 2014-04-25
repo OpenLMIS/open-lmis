@@ -19,7 +19,7 @@ import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.pageobjects.HomePage;
 import org.openlmis.pageobjects.LoginPage;
 import org.openlmis.pageobjects.PageObjectFactory;
-import org.openlmis.pageobjects.edi.ConfigureEDIPage;
+import org.openlmis.pageobjects.edi.ConfigureSystemSettingsPage;
 import org.openlmis.pageobjects.edi.ConfigureOrderPage;
 import org.testng.annotations.*;
 
@@ -46,8 +46,8 @@ public class ConfigureOrderTemplate extends TestCaseHelper {
   @And("^I access configure order page$")
   public void accessOrderScreen() {
     HomePage homePage = PageObjectFactory.getHomePage(testWebDriver);
-    ConfigureEDIPage configureEDIPage = homePage.navigateEdiScreen();
-    configureEDIPage.navigateConfigureOrderPage();
+    ConfigureSystemSettingsPage configureSystemSettingsPage = homePage.navigateSystemSettingsScreen();
+    configureSystemSettingsPage.navigateConfigureOrderPage();
   }
 
   @Then("^I should see order file prefix \"([^\"]*)\"$")
@@ -89,15 +89,15 @@ public class ConfigureOrderTemplate extends TestCaseHelper {
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function")
   public void testEditPeriodAndOrderDateDropDown(String user, String password) {
     HomePage homePage = loginPage.loginAs(user, password);
-    ConfigureEDIPage configureEDIPage = homePage.navigateEdiScreen();
-    ConfigureOrderPage configureOrderPage = configureEDIPage.navigateConfigureOrderPage();
+    ConfigureSystemSettingsPage configureSystemSettingsPage = homePage.navigateSystemSettingsScreen();
+    ConfigureOrderPage configureOrderPage = configureSystemSettingsPage.navigateConfigureOrderPage();
     configureOrderPage.selectValueFromPeriodDropDown("MM-dd-yyyy");
     configureOrderPage.selectValueFromOrderDateDropDown("yyyy-MM-dd");
     configureOrderPage.clickSaveButton();
     configureOrderPage.verifySuccessMessage("Order file configuration saved successfully!");
 
     testWebDriver.refresh();
-    configureOrderPage = configureEDIPage.navigateConfigureOrderPage();
+    configureOrderPage = configureSystemSettingsPage.navigateConfigureOrderPage();
 
     assertEquals(configureOrderPage.getSelectedOptionOfPeriodDropDown(), "MM-dd-yyyy");
     assertEquals(configureOrderPage.getSelectedOptionOfOrderDateDropDown(), "yyyy-MM-dd");
@@ -118,8 +118,8 @@ public class ConfigureOrderTemplate extends TestCaseHelper {
     String orderPrefix = "OP";
 
     HomePage homePage = loginPage.loginAs(user, password);
-    ConfigureEDIPage configureEDIPage = homePage.navigateEdiScreen();
-    ConfigureOrderPage configureOrderPage = configureEDIPage.navigateConfigureOrderPage();
+    ConfigureSystemSettingsPage configureSystemSettingsPage = homePage.navigateSystemSettingsScreen();
+    ConfigureOrderPage configureOrderPage = configureSystemSettingsPage.navigateConfigureOrderPage();
     configureOrderPage.setOrderPrefix(orderPrefix);
     configureOrderPage.checkIncludeOrderHeader();
     configureOrderPage.verifyColumnHeadersEnabled();
@@ -134,7 +134,7 @@ public class ConfigureOrderTemplate extends TestCaseHelper {
     configureOrderPage.verifySuccessMessage("Order file configuration saved successfully!");
 
     testWebDriver.refresh();
-    configureOrderPage = configureEDIPage.navigateConfigureOrderPage();
+    configureOrderPage = configureSystemSettingsPage.navigateConfigureOrderPage();
 
     assertEquals(facilityCode, configureOrderPage.getFacilityCode());
     assertEquals(orderNumber, configureOrderPage.getOrderNumber());
@@ -156,8 +156,8 @@ public class ConfigureOrderTemplate extends TestCaseHelper {
     String orderPrefix = "";
 
     HomePage homePage = loginPage.loginAs(user, password);
-    ConfigureEDIPage configureEDIPage = homePage.navigateEdiScreen();
-    ConfigureOrderPage configureOrderPage = configureEDIPage.navigateConfigureOrderPage();
+    ConfigureSystemSettingsPage configureSystemSettingsPage = homePage.navigateSystemSettingsScreen();
+    ConfigureOrderPage configureOrderPage = configureSystemSettingsPage.navigateConfigureOrderPage();
     configureOrderPage.setOrderPrefix(orderPrefix);
     configureOrderPage.checkIncludeOrderHeader();
     configureOrderPage.verifyColumnHeadersEnabled();
@@ -172,7 +172,7 @@ public class ConfigureOrderTemplate extends TestCaseHelper {
     configureOrderPage.verifySuccessMessage("Order file configuration saved successfully!");
 
     testWebDriver.refresh();
-    configureOrderPage = configureEDIPage.navigateConfigureOrderPage();
+    configureOrderPage = configureSystemSettingsPage.navigateConfigureOrderPage();
 
     assertEquals(facilityCode, configureOrderPage.getFacilityCode());
     assertEquals(orderNumber, configureOrderPage.getOrderNumber());
@@ -185,8 +185,8 @@ public class ConfigureOrderTemplate extends TestCaseHelper {
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function")
   public void testVerifyAllIncludeCheckBoxesUnchecked(String user, String password) {
     HomePage homePage = loginPage.loginAs(user, password);
-    ConfigureEDIPage configureEDIPage = homePage.navigateEdiScreen();
-    ConfigureOrderPage configureOrderPage = configureEDIPage.navigateConfigureOrderPage();
+    ConfigureSystemSettingsPage configureSystemSettingsPage = homePage.navigateSystemSettingsScreen();
+    ConfigureOrderPage configureOrderPage = configureSystemSettingsPage.navigateConfigureOrderPage();
     configureOrderPage.unCheckFacilityCodeCheckBox();
     configureOrderPage.unCheckApprovedQuantityCheckBox();
     configureOrderPage.unCheckIncludeOrderHeader();
@@ -198,25 +198,25 @@ public class ConfigureOrderTemplate extends TestCaseHelper {
     configureOrderPage.verifySuccessMessage("Order file configuration saved successfully!");
 
     testWebDriver.refresh();
-    configureOrderPage = configureEDIPage.navigateConfigureOrderPage();
+    configureOrderPage = configureSystemSettingsPage.navigateConfigureOrderPage();
 
     configureOrderPage.clickCancelButton();
-    assertTrue("User should be redirected to home page", testWebDriver.getCurrentUrl().contains("public/pages/admin/edi/index.html#/configure-edi-file"));
+    assertTrue("User should be redirected to home page", testWebDriver.getCurrentUrl().contains("public/pages/admin/edi/index.html#/configure-system-settings"));
   }
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function")
   public void testVerifyAddNewButtonFunctionality(String user, String password) {
     String successMessage = "Order file configuration saved successfully!";
     HomePage homePage = loginPage.loginAs(user, password);
-    ConfigureEDIPage configureEDIPage = homePage.navigateEdiScreen();
-    ConfigureOrderPage configureOrderPage = configureEDIPage.navigateConfigureOrderPage();
+    ConfigureSystemSettingsPage configureSystemSettingsPage = homePage.navigateSystemSettingsScreen();
+    ConfigureOrderPage configureOrderPage = configureSystemSettingsPage.navigateConfigureOrderPage();
     configureOrderPage.clickAddNewButton();
     configureOrderPage.verifyElementsOnAddNewButtonClick(7, "true", "Not applicable", "");
     configureOrderPage.clickSaveButton();
     configureOrderPage.verifySuccessMessage(successMessage);
 
     testWebDriver.refresh();
-    configureOrderPage = configureEDIPage.navigateConfigureOrderPage();
+    configureOrderPage = configureSystemSettingsPage.navigateConfigureOrderPage();
 
     configureOrderPage.clickRemoveIcon(7);
     configureOrderPage.clickSaveButton();

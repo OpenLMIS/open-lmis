@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+
+<!--<h2><span openlmis-message="title.breakdown.facilities.stock.out.district|location|product"></span></h2>-->
+<div class="row-fluid">
+    <div class="span12">
+        <table ng-show="notificationsDetail.length > 0" class="table-bordered table table-striped pull-right"
+               ng-table="tableParams">
+            <thead>
+            <tr class="gradient-header">
+                <th ng-repeat="col in notificationColumns" ><div>{{col.name}}</div>
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+                <tr  ng-repeat="notification in notificationsDetail">
+                    <td ng-repeat="col in notificationColumns">{{ notification[col.name] }}</td>
+                </tr>
+            </tbody>
+
+        </table>
+
+
+    </div>
+
+</div>

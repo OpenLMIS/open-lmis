@@ -32,6 +32,8 @@ import java.util.Map;
 
 public class CommonSteps extends TestCaseHelper {
 
+  LoginPage loginPage;
+
   @And("^I logout$")
   public void logout() {
     HomePage homePage = PageObjectFactory.getHomePage(testWebDriver);

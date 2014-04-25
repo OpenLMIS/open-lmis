@@ -66,4 +66,7 @@ public interface RequisitionGroupProgramScheduleMapper {
     "modifiedBy=#{requisitionGroupProgramSchedule.modifiedBy} , modifiedDate=#{requisitionGroupProgramSchedule.modifiedDate} " +
     "where id=#{requisitionGroupProgramSchedule.id}")
   void update(@Param(value = "requisitionGroupProgramSchedule") RequisitionGroupProgramSchedule requisitionGroupProgramSchedule);
+
+  @Delete("Delete FROM Requisition_Group_Program_Schedules where id=#{requisitionGroupProgramScheduleId}")
+  void delete(@Param(value="requisitionGroupProgramScheduleId") Long requisitionGroupProgramScheduleId);
 }

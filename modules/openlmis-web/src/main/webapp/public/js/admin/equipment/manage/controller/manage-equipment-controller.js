@@ -9,6 +9,9 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-function ManageEquipmentController($scope, $routeParams, $location) {
-
+function ManageEquipmentController($scope, $routeParams, $location, Equipments) {
+  
+  Equipments.get(function(data){
+    $scope.equipments = data.equipments;  
+  });
 }

@@ -131,7 +131,7 @@
 						<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() != "XLS"]]></printWhenExpression>
 					</reportElement>
 					<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
-						<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<font fontName="SansSerif" size="9" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 						<paragraph lineSpacing="Single" rightIndent="3"/>
 					</textElement>
 					<text><![CDATA[Address :]]></text>
@@ -141,7 +141,7 @@
 						<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() != "XLS"]]></printWhenExpression>
 					</reportElement>
 					<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
-						<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<font fontName="SansSerif" size="9" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 						<paragraph lineSpacing="Single" rightIndent="3"/>
 					</textElement>
 					<text><![CDATA[District :]]></text>
@@ -151,7 +151,7 @@
 						<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() != "XLS"]]></printWhenExpression>
 					</reportElement>
 					<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
-						<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<font fontName="SansSerif" size="9" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 						<paragraph lineSpacing="Single" rightIndent="3"/>
 					</textElement>
 					<text><![CDATA[Region :]]></text>
@@ -161,7 +161,7 @@
 						<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() != "XLS"]]></printWhenExpression>
 					</reportElement>
 					<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
-						<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<font fontName="SansSerif" size="9" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 						<paragraph lineSpacing="Single" rightIndent="3"/>
 					</textElement>
 					<text><![CDATA[Phone :]]></text>
@@ -171,7 +171,7 @@
 						<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() != "XLS"]]></printWhenExpression>
 					</reportElement>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
-						<font size="10"/>
+						<font size="9"/>
 						<paragraph rightIndent="3"/>
 					</textElement>
 					<text><![CDATA[Fax :]]></text>
@@ -302,6 +302,15 @@
 					</textElement>
 					<textFieldExpression><![CDATA[($P{FAX}.isEmpty() || $P{FAX}.equalsIgnoreCase("null"))?" ":$P{FAX}]]></textFieldExpression>
 				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="410" y="0" width="131" height="14" uuid="d9d9f94f-3d67-4425-98a4-a735b74108b6">
+						<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() != "XLS"]]></printWhenExpression>
+					</reportElement>
+					<textElement verticalAlignment="Middle">
+						<font size="9"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$P{ORDER_NO}]]></textFieldExpression>
+				</textField>
 			</band>
 		</groupHeader>
 		<groupFooter>
@@ -314,7 +323,7 @@
 					<text><![CDATA[Explain any discrepancies or Damages]]></text>
 				</staticText>
 				<rectangle>
-					<reportElement stretchType="RelativeToBandHeight" x="0" y="22" width="555" height="65" uuid="e6c64017-5880-40ea-b9b7-6e6a2b84acc9">
+					<reportElement stretchType="RelativeToBandHeight" x="82" y="26" width="555" height="65" uuid="e6c64017-5880-40ea-b9b7-6e6a2b84acc9">
 						<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() != "XLS" && $P{SHOW_DISCREPANCY_SECTION}.toUpperCase().equals("TRUE")]]></printWhenExpression>
 					</reportElement>
 				</rectangle>

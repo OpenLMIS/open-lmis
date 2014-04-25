@@ -335,6 +335,10 @@ services.factory('SaveRequisitionGroupProgramSchedule',function($resource){
     return $resource('/requisitionGroupProgramSchedule/insert.json',{},{});
 });
 
+services.factory('RemoveRequisitionGroupProgramSchedule',function($resource){
+    return $resource('/requisitionGroupProgramSchedule/remove/:id',{},{});
+});
+
 services.factory('GetProgramsForAFacilityCompleteList',function($resource){
     return $resource('/facilities/:facilityId/programsList.json',{},{});
 });
@@ -468,6 +472,9 @@ services.factory('StockedOutFacilitiesByRequisitionGroup', function($resource){
 });
 services.factory('Alerts', function($resource){
     return $resource('/dashboard/alerts.json',{},{});
+});
+services.factory('DashboardNotificationsDetail', function($resource){
+   return $resource('/dashboard/notifications/:alertId/:detailTable.json',{},{});
 });
 
 

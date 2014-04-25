@@ -52,7 +52,8 @@ public class TestCalculationsForRnR extends TestCaseHelper {
   }
 
   @Test(groups = "requisition")
-  public void testEffectOfChangingPackSize() throws SQLException {
+  public void testPatientOptionAndEffectOfChangingPackSize() throws SQLException {
+    dbWrapper.updateFieldValue("program_rnr_columns", "rnrOptionId", "2", "label", "New Patients");
     dbWrapper.updateFieldValue("products", "fullSupply", "false", "code", "P11");
     dbWrapper.updateFieldValue("products", "packSize", "5", "code", "P10");
     dbWrapper.updateFieldValue("products", "packSize", "15", "code", "P11");
@@ -62,7 +63,8 @@ public class TestCalculationsForRnR extends TestCaseHelper {
     InitiateRnRPage initiateRnRPage = homePage.clickProceed();
 
     enterDetailsForFirstProduct(10, 5, null, 14, 0, 5);
-    assertEquals("18", initiateRnRPage.getPacksToShip());
+    assertEquals("19", initiateRnRPage.getPeriodicNormalisedConsumption());
+    assertEquals("12", initiateRnRPage.getPacksToShip());
     initiateRnRPage.verifyPacksToShip(5);
 
     initiateRnRPage.addNonFullSupplyLineItems("95", "reason", "antibiotic", "P11", "Antibiotics");
@@ -79,16 +81,71 @@ public class TestCalculationsForRnR extends TestCaseHelper {
 
     ApprovePage approvePage = homePage.navigateToApprove();
     approvePage.clickRequisitionPresentForApproval();
-    approvePage.editFullSupplyApproveQuantity("100");
-    assertEquals("20", approvePage.getPacksToShip());
+    assertEquals("12", approvePage.getPacksToShip());
+    approvePage.editFullSupplyApproveQuantity("6");
+    assertEquals("2", approvePage.getPacksToShip());
+    approvePage.accessNonFullSupplyTab();
+    assertEquals("7", approvePage.getPacksToShip());
     approvePage.editNonFullSupplyApproveQuantity("75");
     assertEquals("5", approvePage.getPacksToShip());
     approvePage.clickApproveButton();
     approvePage.clickOk();
 
     Long rnrId = (long) dbWrapper.getMaxRnrID();
-    assertEquals("20", dbWrapper.getRequisitionLineItemFieldValue(rnrId, "packsToShip", "P10"));
+    assertEquals("2", dbWrapper.getRequisitionLineItemFieldValue(rnrId, "packsToShip", "P10"));
     assertEquals("5", dbWrapper.getRequisitionLineItemFieldValue(rnrId, "packsToShip", "P11"));
+    dbWrapper.updateFieldValue("program_rnr_columns", "rnrOptionId", "1", "label", "New Patients");
+  }
+
+  @Test(groups = "requisition")
+  public void testEffectOfChangingPatientOption() throws SQLException {
+    dbWrapper.updateFieldValue("program_rnr_columns", "rnrOptionId", "2", "label", "New Patients");
+    dbWrapper.updateFieldValue("products", "fullSupply", "false", "code", "P11");
+    dbWrapper.updateFieldValue("products", "packSize", "5", "code", "P10");
+    dbWrapper.updateFieldValue("products", "packSize", "15", "code", "P11");
+
+    HomePage homePage = loginPage.loginAs(userSIC, password);
+    homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Regular");
+    InitiateRnRPage initiateRnRPage = homePage.clickProceed();
+
+    enterDetailsForFirstProduct(10, 5, null, 14, 0, 5);
+    assertEquals("19", initiateRnRPage.getPeriodicNormalisedConsumption());
+    assertEquals("12", initiateRnRPage.getPacksToShip());
+    initiateRnRPage.verifyPacksToShip(5);
+
+    initiateRnRPage.addNonFullSupplyLineItems("95", "reason", "antibiotic", "P11", "Antibiotics");
+    assertEquals("7", initiateRnRPage.getPacksToShip());
+
+    initiateRnRPage.submitRnR();
+    initiateRnRPage.clickOk();
+
+    dbWrapper.updateFieldValue("program_rnr_columns", "rnrOptionId", "1", "label", "New Patients");
+    testWebDriver.refresh();
+    initiateRnRPage.clickFullSupplyTab();
+    assertEquals("29", initiateRnRPage.getPeriodicNormalisedConsumption());
+    assertEquals("18", initiateRnRPage.getPacksToShip());
+
+    initiateRnRPage.authorizeRnR();
+    initiateRnRPage.clickOk();
+
+    dbWrapper.updateFieldValue("program_rnr_columns", "rnrOptionId", "2", "label", "New Patients");
+    testWebDriver.refresh();
+    ApprovePage approvePage = homePage.navigateToApprove();
+    approvePage.clickRequisitionPresentForApproval();
+    assertEquals("18", approvePage.getPacksToShip());
+    approvePage.editFullSupplyApproveQuantity("50");
+    assertEquals("10", approvePage.getPacksToShip());
+    approvePage.accessNonFullSupplyTab();
+    assertEquals("7", approvePage.getPacksToShip());
+    approvePage.editNonFullSupplyApproveQuantity("75");
+    assertEquals("5", approvePage.getPacksToShip());
+    approvePage.clickApproveButton();
+    approvePage.clickOk();
+
+    Long rnrId = (long) dbWrapper.getMaxRnrID();
+    assertEquals("10", dbWrapper.getRequisitionLineItemFieldValue(rnrId, "packsToShip", "P10"));
+    assertEquals("5", dbWrapper.getRequisitionLineItemFieldValue(rnrId, "packsToShip", "P11"));
+    dbWrapper.updateFieldValue("program_rnr_columns", "rnrOptionId", "1", "label", "New Patients");
   }
 
   @Test(groups = "requisition")
@@ -110,6 +167,7 @@ public class TestCalculationsForRnR extends TestCaseHelper {
 
     initiateRnRPage.authorizeRnR();
     initiateRnRPage.clickOk();
+    dbWrapper.updateFieldValue("products", "packSize", "100", "code", "P10");
 
     ApprovePage approvePage = homePage.navigateToApprove();
     approvePage.clickRequisitionPresentForApproval();
@@ -131,7 +189,7 @@ public class TestCalculationsForRnR extends TestCaseHelper {
     homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Regular");
     InitiateRnRPage initiateRnRPage = homePage.clickProceed();
 
-    enterDetailsForFirstProduct(0, 0, null, 0, 0, 0);
+    enterDetailsForFirstProduct(0, 0, null, 0, 0, null);
     assertEquals("0", initiateRnRPage.getPacksToShip());
     initiateRnRPage.verifyPacksToShip(10);
 

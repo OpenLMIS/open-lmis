@@ -8,7 +8,7 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-function EquipmentInventoryController($scope, UserFacilityList, CreateRequisitionProgramList, UserSupervisedFacilitiesForProgram,navigateBackService, $routeParams, $location) {
+function EquipmentInventoryController($scope, UserFacilityList, EquipmentInventories, CreateRequisitionProgramList, UserSupervisedFacilitiesForProgram,navigateBackService, $routeParams, $location) {
 
   $scope.$on('$viewContentLoaded', function () {
     $scope.selectedType = navigateBackService.selectedType || "0";
@@ -20,7 +20,6 @@ function EquipmentInventoryController($scope, UserFacilityList, CreateRequisitio
       if (!isNavigatedBack) $scope.selectedProgram = undefined;
       if ($scope.programs && !isUndefined($scope.selectedProgram)) {
         $scope.selectedProgram = _.where($scope.programs, {id: $scope.selectedProgram.id})[0];
-        $scope.loadPeriods();
       }
     });
     $scope.loadFacilityData($scope.selectedType);
@@ -45,7 +44,6 @@ function EquipmentInventoryController($scope, UserFacilityList, CreateRequisitio
         if ($scope.myFacility) {
           $scope.facilityDisplayName = $scope.myFacility.code + '-' + $scope.myFacility.name;
           $scope.selectedFacilityId = $scope.myFacility.id;
-
           CreateRequisitionProgramList.get({facilityId: $scope.selectedFacilityId}, function (data) {
             $scope.programs = data.programList;
           }, {});
@@ -77,7 +75,9 @@ function EquipmentInventoryController($scope, UserFacilityList, CreateRequisitio
   };
 
   $scope.loadEquipments = function(){
-
+    EquipmentInventories.get({programId: $scope.selectedProgram.id, facilityId: $scope.selectedFacilityId}, function(data){
+        $scope.inventory = data.inventory;
+      });
   };
 
 }

@@ -199,5 +199,14 @@ function ProductAllowedForFacilityListController($scope, $location, navigateBack
         $scope.isDataChanged = true;
     };
 
+    $scope.selectAll = function(setTo){
+        angular.forEach($scope.products,function(programProduct){
+            if(programProduct.isSelected !== setTo){
+                programProduct.isSelected = setTo;
+                $scope.setDataChanged(programProduct);
+            }
+        });
+    };
+
     
 }

@@ -122,6 +122,41 @@
   }
 }
 
+.alert-summary{
+  font-size: 0.9em;
+  margin: 5px 0 10px;
+  font-weight: bold;
+  ul {
+    margin: 0;
+    list-style: none;
+  }
+  li {
+    float: left;
+    margin: 2px 3px;
+    min-width: 22%;
+    max-width: 22%;
+    padding: 15px;
+    border: 1px solid #d6d6d6;
+    border-radius: 3px;
+    &:first-child {
+      margin-left: 5px;
+    }
+    &.LATE_RESUPPLIED_FACILITY{
+      background: #FFFF6D;
+    }
+    &.FACILITY_WITH_EMPTY_POD{
+      background: #FFCEE7;
+    }
+    &.EMERGENCY_REQUISITION{
+      background: #AFD7FF;
+    }
+    &.UNSCHEDULED_ORDER{
+      background: #EEDEFF;
+    }
+  }
+
+ }
+
 /***
 Accordions
 ***/

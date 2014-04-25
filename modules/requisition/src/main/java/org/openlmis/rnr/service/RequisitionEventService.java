@@ -27,7 +27,7 @@ import java.net.URISyntaxException;
 public class RequisitionEventService {
 
   @Autowired
-  EventService eventService;
+  private EventService eventService;
 
   @Autowired
   NotificationServices notificationServices;

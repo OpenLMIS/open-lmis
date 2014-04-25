@@ -128,4 +128,8 @@ public class RequisitionGroupProgramScheduleRepository {
   public RequisitionGroupProgramSchedule getScheduleForRequisitionGroupCodeAndProgramCode(String requisitionGroupCode, String programCode) {
     return mapper.getScheduleForRequisitionGroupCodeAndProgramCode(requisitionGroupCode, programCode);
   }
+
+  public void delete(Long requisitionGroupProgramScheduleId) {
+    mapper.delete(requisitionGroupProgramScheduleId);
+  }
 }

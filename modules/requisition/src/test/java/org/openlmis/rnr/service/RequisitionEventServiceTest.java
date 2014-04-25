@@ -35,10 +35,10 @@ import static org.powermock.api.mockito.PowerMockito.whenNew;
 public class RequisitionEventServiceTest {
 
   @Mock
-  EventService eventService;
+  private EventService eventService;
 
   @InjectMocks
-  RequisitionEventService service;
+  private RequisitionEventService service;
 
   @Mock
   NotificationServices notificationServices;

@@ -125,19 +125,19 @@ public class OrderSummaryReportDataProvider extends ReportDataProvider {
     if(changes.size() > 0){
 
       result.put("AUTHORIZED_BY", changes.get(0).getCreatedBy().getFirstName() + " " + changes.get(0).getCreatedBy().getLastName() );
-      result.put("AUTHORIZED_DATE", new SimpleDateFormat("dd/MM/yy h:m a").format(changes.get(0).getCreatedDate()) );
+      result.put("AUTHORIZED_DATE", new SimpleDateFormat("dd/MM/yy hh:mm a").format(changes.get(0).getCreatedDate()) );
     }
 
     changes = reportMapper.getLastUsersWhoActedOnRnr(orderReportParam.getOrderId(), RnrStatus.IN_APPROVAL.name());
     if(changes.size() > 0){
       result.put("IN_APPROVAL_BY", changes.get(0).getCreatedBy().getFirstName() + " " + changes.get(0).getCreatedBy().getLastName()  );
-      result.put("IN_APPROVAL_DATE", new SimpleDateFormat("dd/MM/yy h:m a").format(changes.get(0).getCreatedDate()) );
+      result.put("IN_APPROVAL_DATE", new SimpleDateFormat("dd/MM/yy hh:mm a").format(changes.get(0).getCreatedDate()) );
     }
 
     changes = reportMapper.getLastUsersWhoActedOnRnr(orderReportParam.getOrderId(), RnrStatus.APPROVED.name());
     if(changes.size() > 0){
       result.put("APPROVED_BY", changes.get(0).getCreatedBy().getFirstName() + " " + changes.get(0).getCreatedBy().getLastName()  );
-      result.put("APPROVED_DATE", new SimpleDateFormat("dd/MM/yy h:m a").format(changes.get(0).getCreatedDate()) );
+      result.put("APPROVED_DATE", new SimpleDateFormat("dd/MM/yy hh:mm a").format(changes.get(0).getCreatedDate()) );
     }
 
     // register the facility related parameters here

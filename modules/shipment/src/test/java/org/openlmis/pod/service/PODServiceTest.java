@@ -77,6 +77,7 @@ public class PODServiceTest {
   private Long podId;
   private Long orderId;
   private Long userId;
+  private String orderNumber;
   private OrderPOD orderPod;
 
   @Before
@@ -88,50 +89,55 @@ public class PODServiceTest {
     orderPod = new OrderPOD(podId);
     orderPod.setOrderId(orderId);
     orderPod.setCreatedBy(userId);
+    orderNumber = "OYELL_FVR00000123R";
   }
 
   @Test
   public void shouldCreatePODFromPackedOrder() throws Exception {
     long orderId = 4L;
-    OrderPOD orderPOD = spy(new OrderPOD(orderId, 8L));
+    OrderPOD orderPOD = new OrderPOD(orderId, 8L);
+    orderPOD.setOrderNumber(orderNumber);
+    OrderPOD spyOrderPOD = spy(orderPOD);
 
-    doNothing().when(podService).checkPermissions(orderPOD);
-    when(orderService.hasStatus(orderId, PACKED)).thenReturn(true);
+    doNothing().when(podService).checkPermissions(spyOrderPOD);
+    when(orderService.hasStatus(orderNumber, PACKED)).thenReturn(true);
     List<ShipmentLineItem> shipmentLineItems = asList(mock(ShipmentLineItem.class));
     when(shipmentService.getLineItems(orderId)).thenReturn(shipmentLineItems);
     Rnr requisition = make(a(RequisitionBuilder.defaultRequisition));
     when(requisitionService.getFullRequisitionById(orderId)).thenReturn(requisition);
-    doNothing().when(orderPOD).fillPOD(requisition);
-    doNothing().when(orderPOD).fillPODLineItems(shipmentLineItems);
-    when(repository.insert(orderPOD)).thenReturn(orderPOD);
+    doNothing().when(spyOrderPOD).fillPOD(requisition);
+    doNothing().when(spyOrderPOD).fillPODLineItems(shipmentLineItems);
+    when(repository.insert(spyOrderPOD)).thenReturn(spyOrderPOD);
 
-    OrderPOD pod = podService.createPOD(orderPOD);
+    OrderPOD pod = podService.createPOD(spyOrderPOD);
 
-    verify(podService).checkPermissions(orderPOD);
-    verify(orderPOD).fillPOD(requisition);
-    verify(orderPOD).fillPODLineItems(shipmentLineItems);
-    assertThat(pod, is(orderPOD));
+    verify(podService).checkPermissions(spyOrderPOD);
+    verify(spyOrderPOD).fillPOD(requisition);
+    verify(spyOrderPOD).fillPODLineItems(shipmentLineItems);
+    assertThat(pod, is(spyOrderPOD));
   }
 
   @Test
   public void shouldCreatePODFromReleasedOrder() throws Exception {
     long orderId = 6L;
-    OrderPOD orderPOD = spy(new OrderPOD(orderId, 8L));
+    OrderPOD orderPOD = new OrderPOD(orderId, 8L);
+    orderPOD.setOrderNumber(orderNumber);
+    OrderPOD spyOrderPOD = spy(orderPOD);
 
-    doNothing().when(podService).checkPermissions(orderPOD);
-    when(orderService.hasStatus(orderId, RELEASED, READY_TO_PACK, TRANSFER_FAILED)).thenReturn(true);
+    doNothing().when(podService).checkPermissions(spyOrderPOD);
+    when(orderService.hasStatus(orderNumber, RELEASED, READY_TO_PACK, TRANSFER_FAILED)).thenReturn(true);
     Rnr requisition = make(a(RequisitionBuilder.defaultRequisition));
     when(requisitionService.getFullRequisitionById(orderId)).thenReturn(requisition);
-    doNothing().when(orderPOD).fillPOD(requisition);
-    when(repository.insert(orderPOD)).thenReturn(orderPOD);
+    doNothing().when(spyOrderPOD).fillPOD(requisition);
+    when(repository.insert(spyOrderPOD)).thenReturn(spyOrderPOD);
 
-    OrderPOD pod = podService.createPOD(orderPOD);
+    OrderPOD pod = podService.createPOD(spyOrderPOD);
 
-    verify(orderPOD).fillPOD(requisition);
-    verify(orderPOD).fillPODLineItems(requisition.getAllLineItems());
-    verify(podService).checkPermissions(orderPOD);
-    verify(repository).insert(orderPOD);
-    assertThat(pod, is(orderPOD));
+    verify(spyOrderPOD).fillPOD(requisition);
+    verify(spyOrderPOD).fillPODLineItems(requisition.getAllLineItems());
+    verify(podService).checkPermissions(spyOrderPOD);
+    verify(repository).insert(spyOrderPOD);
+    assertThat(pod, is(spyOrderPOD));
   }
 
   @Test
@@ -206,8 +212,9 @@ public class PODServiceTest {
     when(repository.getPOD(podId)).thenReturn(existingPOD);
     when(existingPOD.getModifiedBy()).thenReturn(userId);
     when(existingPOD.getOrderId()).thenReturn(orderId);
+    when(existingPOD.getOrderNumber()).thenReturn(orderNumber);
     doNothing().when(podService).checkPermissions(existingPOD);
-    when(orderService.hasStatus(orderId, RECEIVED)).thenReturn(true);
+    when(orderService.hasStatus(orderNumber, RECEIVED)).thenReturn(true);
 
     expectedException.expect(DataException.class);
     expectedException.expectMessage("error.pod.already.submitted");
@@ -234,9 +241,8 @@ public class PODServiceTest {
   public void shouldValidatePODLineItems() throws Exception {
     long podId = 1234L;
     OrderPOD orderPOD = mock(OrderPOD.class);
-    long orderId = 2345L;
-    when(orderPOD.getOrderId()).thenReturn(orderId);
-    when(orderService.hasStatus(orderId, OrderStatus.RECEIVED)).thenReturn(false);
+    when(orderPOD.getOrderNumber()).thenReturn(orderNumber);
+    when(orderService.hasStatus(orderNumber, OrderStatus.RECEIVED)).thenReturn(false);
     when(repository.getPOD(podId)).thenReturn(orderPOD);
     doNothing().when(podService).checkPermissions(orderPOD);
     doThrow(new DataException("error.invalid.received.quantity")).when(orderPOD).validate();
@@ -251,9 +257,8 @@ public class PODServiceTest {
   public void shouldChangeOrderStatusWhenPODIsSubmittedSuccessfully() throws Exception {
     long podId = 1234L;
     OrderPOD orderPOD = mock(OrderPOD.class);
-    long orderId = 2345L;
-    when(orderPOD.getOrderId()).thenReturn(orderId);
-    when(orderService.hasStatus(orderId, OrderStatus.RECEIVED)).thenReturn(false);
+    when(orderPOD.getOrderNumber()).thenReturn(orderNumber);
+    when(orderService.hasStatus(orderNumber, OrderStatus.RECEIVED)).thenReturn(false);
     when(repository.getPOD(podId)).thenReturn(orderPOD);
     doNothing().when(podService).checkPermissions(orderPOD);
     doNothing().when(orderPOD).validate();
@@ -266,11 +271,10 @@ public class PODServiceTest {
   @Test
   public void shouldReturnSubmittedPOD() throws Exception {
     long podId = 1234L;
-    long orderId = 2345L;
 
     OrderPOD orderPOD = mock(OrderPOD.class);
-    when(orderPOD.getOrderId()).thenReturn(orderId);
-    when(orderService.hasStatus(orderId, OrderStatus.RECEIVED)).thenReturn(false);
+    when(orderPOD.getOrderNumber()).thenReturn(orderNumber);
+    when(orderService.hasStatus(orderNumber, OrderStatus.RECEIVED)).thenReturn(false);
 
     when(repository.getPOD(podId)).thenReturn(orderPOD);
     doNothing().when(podService).checkPermissions(orderPOD);
@@ -286,11 +290,13 @@ public class PODServiceTest {
   public void shouldNotSubmitAlreadySubmittedPOD() throws Exception {
     long podId = 1234L;
     long orderId = 2345L;
+    String orderNumber = "OYELL_FVR00000123R";
     OrderPOD orderPOD = new OrderPOD();
     orderPOD.setOrderId(orderId);
+    orderPOD.setOrderNumber(orderNumber);
     when(repository.getPOD(podId)).thenReturn(orderPOD);
     doNothing().when(podService).checkPermissions(orderPOD);
-    when(orderService.hasStatus(orderId, OrderStatus.RECEIVED)).thenReturn(true);
+    when(orderService.hasStatus(orderNumber, OrderStatus.RECEIVED)).thenReturn(true);
 
     expectedException.expect(DataException.class);
     expectedException.expectMessage("error.pod.already.submitted");

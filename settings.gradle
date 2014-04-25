@@ -16,5 +16,4 @@ include "modules:core", "modules:authentication",
         "test-modules:test-core","modules:report", "modules:migration", "modules:distribution",
         "modules:requisition","modules:email","modules:rest-api","test-modules:webservice-test",
         "modules:shipment","test-modules:functional-tests","test-modules:test-core","modules:migration",
-        "modules:reporting","modules:odk-api"
-
+        "modules:reporting","modules:odk-api", "modules:equipment"

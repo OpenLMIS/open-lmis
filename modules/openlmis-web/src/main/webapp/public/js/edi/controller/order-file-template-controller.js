@@ -20,13 +20,13 @@ function OrderFileTemplateController($scope, orderFileTemplate, OrderFileTemplat
     updatePosition();
     OrderFileTemplate.save({}, $scope.orderFileTemplate, function (data) {
       $scope.$parent.message = messageService.get(data.success);
-      $location.path('configure-edi-file');
+      $location.path('configure-system-settings');
     });
   };
 
   $scope.cancelEdiSave = function () {
     $scope.$parent.message = "";
-    $location.path('configure-edi-file');
+    $location.path('configure-system-settings');
   };
 
   $scope.addNewOrderFileColumn = function () {
