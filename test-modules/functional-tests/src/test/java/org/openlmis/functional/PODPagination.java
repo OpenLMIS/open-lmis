@@ -351,6 +351,41 @@ public class PODPagination extends TestCaseHelper {
   }
 
   @Test(groups = {"requisition"})
+  public void testDisplayOrderAndCategoryForProductsNotSupportedByProgram() throws SQLException {
+    dbWrapper.setupMultipleCategoryProducts(podPaginationData.get(PROGRAM), "Lvl3 Hospital", 11, true);
+    dbWrapper.insertRequisitionWithMultipleLineItems(9, podPaginationData.get(PROGRAM), true, "F10", false);
+    dbWrapper.convertRequisitionToOrder(dbWrapper.getMaxRnrID(), "READY_TO_PACK", podPaginationData.get(USER));
+    dbWrapper.insertProduct("R1", "R1");
+    dbWrapper.insertProduct("A1", "A1");
+    dbWrapper.insertProduct("O1", "O1");
+
+    dbWrapper.insertProgramProductsWithCategory("R1", "MALARIA", "C1", 5);
+    dbWrapper.insertProgramProductsWithCategory("O1", "MALARIA", "C5", 10);
+
+    dbWrapper.updateFieldValue("orders", "status", "RELEASED", null, null);
+    testDataForShipment(3, true, "F1", 78);
+    testDataForShipment(4, true, "F2", 785);
+    testDataForShipment(6, false, "NF1", 378);
+    testDataForShipment(8, false, "NF2", 678);
+    testDataForShipment(6, true, "R1", 278);
+    testDataForShipment(6, false, "O1", 1378);
+    testDataForShipment(4, true, "F10", 478);
+    testDataForShipment(4, true, "F9", 378);
+    testDataForShipment(56, false, "NF10", 478);
+    dbWrapper.updateFieldValue("orders", "status", "PACKED", null, null);
+
+    LoginPage loginPage = PageObjectFactory.getLoginPage(testWebDriver, baseUrlGlobal);
+    HomePage homePage = loginPage.loginAs(podPaginationData.get(USER), podPaginationData.get(PASSWORD));
+    ManagePodPage managePodPage = homePage.navigateManagePOD();
+    managePodPage.selectRequisitionToUpdatePod(1);
+    verifyNumberOFPageLinksDisplayed(9, 10);
+    verifyPageNumberLinksDisplayed();
+    verifyProductDisplayOrderOnPage(new String[]{"F1", "NF1", "F10", "NF10", "F2", "NF2", "F9", "O1", "R1"});
+    verifyCategoryDisplayOrderOnPage(new String[]{"Antibiotics1", "", "Antibiotics10", "", "Antibiotics2", "", "Antibiotics9"});
+    assertEquals("Other", testWebDriver.getElementById("category").getText());
+  }
+
+  @Test(groups = {"requisition"})
   public void testSubmitPod() throws SQLException {
     dbWrapper.setupMultipleProducts(podPaginationData.get(PROGRAM), "Lvl3 Hospital", 11, false);
     dbWrapper.insertRequisitionWithMultipleLineItems(11, podPaginationData.get(PROGRAM), true, "F10", false);

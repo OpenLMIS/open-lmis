@@ -1413,19 +1413,38 @@ public class DBWrapper {
     String programId = getAttributeFromTable("requisitions", "programId", "id", String.valueOf(orderID));
     String programCode = getAttributeFromTable("programs", "code", "id", String.valueOf(programId));
     String programProductId = null;
-    ResultSet rs = (query("select id from program_products where programId=" + programId + " and productId = (Select id from products where code='" + productCode + "');"));
-    if (rs.next())
-      programProductId = rs.getString("id");
-
-    Integer productDisplayOrder = Integer.parseInt(getAttributeFromTable("program_products", "displayOrder", "id", programProductId));
-    String categoryId = getAttributeFromTable("program_products", "productCategoryId", "id", programProductId);
-    String categoryName = getAttributeFromTable("product_categories", "name", "id", categoryId);
-    Integer categoryDisplayOrder = Integer.parseInt(getAttributeFromTable("product_categories", "displayOrder", "id", categoryId));
     NumberFormat numberFormat = NumberFormat.getIntegerInstance();
     numberFormat.setMinimumIntegerDigits(8);
     numberFormat.setGroupingUsed(false);
-    String orderNumber = "O" + programCode.substring(0, Math.min(productCode.length(), 35)) + numberFormat.format(orderID) + "R";
-    update("INSERT INTO shipment_line_items(orderNumber,productCode,quantityShipped,productName,dispensingUnit,productCategory,productDisplayOrder,productCategoryDisplayOrder,packsToShip,fullSupply,orderId) VALUES ('%s', '%s', %d, %s, %s, '%s',%d ,%d, %d, %b, %d)", orderNumber, productCode, quantityShipped, "'antibiotic Capsule 300/200/600 mg'", "'Strip'", categoryName, productDisplayOrder, categoryDisplayOrder, packsToShip, fullSupplyFlag, orderID);
+    Integer categoryDisplayOrder = null;
+    Integer productDisplayOrder = null;
+    String categoryName = null;
+    String orderNumber = "O" + programCode.substring(0, Math.min(programCode.length(), 35)) + numberFormat.format(orderID) + "R";
+    ResultSet rs = (query("select id from program_products where programId=" + programId + " and productId = (Select id from products where code='" + productCode + "');"));
+    if (rs.next()) {
+      programProductId = rs.getString("id");
+
+
+      if (getAttributeFromTable("program_products", "displayOrder", "id", programProductId) != null) {
+        productDisplayOrder = Integer.parseInt(getAttributeFromTable("program_products", "displayOrder", "id", programProductId));
+      }
+
+      String categoryId = getAttributeFromTable("program_products", "productCategoryId", "id", programProductId);
+      categoryName = getAttributeFromTable("product_categories", "name", "id", categoryId);
+
+      if (getAttributeFromTable("product_categories", "displayOrder", "id", categoryId) != null) {
+        categoryDisplayOrder = Integer.parseInt(getAttributeFromTable("product_categories", "displayOrder", "id", categoryId));
+      }
+
+      update("INSERT INTO shipment_line_items(orderNumber,productCode,quantityShipped,productName,dispensingUnit,productCategory," +
+        "productDisplayOrder,productCategoryDisplayOrder,packsToShip,fullSupply,orderId) VALUES ('%s', '%s', %d, %s, %s, '%s',%d ," +
+        "%d, %d, %b, %d)", orderNumber, productCode, quantityShipped, "'antibiotic Capsule 300/200/600 mg'", "'Strip'", categoryName,
+        productDisplayOrder, categoryDisplayOrder, packsToShip, fullSupplyFlag, orderID);
+    } else {
+      update("INSERT INTO shipment_line_items(orderNumber,productCode,quantityShipped,productName,dispensingUnit,packsToShip,fullSupply," +
+        "orderId) VALUES ('%s', '%s', %d, %s, %s, %d, %b, %d)", orderNumber, productCode, quantityShipped, "'antibiotic Capsule 300/200/600 mg'",
+        "'Strip'", packsToShip, fullSupplyFlag, orderID);
+    }
   }
 
   public void insertShipmentDataWithReplacedProduct(int orderID, String productCode, Integer quantityShipped,
