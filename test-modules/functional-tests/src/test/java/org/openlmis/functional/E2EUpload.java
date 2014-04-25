@@ -227,7 +227,7 @@ public class E2EUpload extends TestCaseHelper {
 
     uploadPage.uploadRequisitionGroupMembers("QA_Requisition_Group_Members_FacilityCodeAssignedToRGWithOneProgramInCommon.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
-    uploadPage.validateErrorMessageOnUploadScreen("Facility F10 is already assigned to Requisition Group rg1 running same program HIV in Record No");
+    uploadPage.validateErrorMessageOnUploadScreen("Facility F10 is already assigned to Requisition Group rg1 running same program ess_meds in Record No");
 
     uploadPage.uploadRequisitionGroupMembers("QA_Requisition_Group_Members_Subsequent_Duplicate.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
