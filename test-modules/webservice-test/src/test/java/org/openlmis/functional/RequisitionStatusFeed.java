@@ -83,7 +83,7 @@ public class RequisitionStatusFeed extends JsonUtility {
     responseEntity = client.SendJSON("", URL + "recent", "GET", "", "");
     assertEquals(200, responseEntity.getStatus());
     feedJSONList = XmlUtils.getNodeValues(responseEntity.getResponse(), "content");
-    checkOrderStatusOnFeed("READY_TO_PACK", feedJSONList.get(0), id);
+    checkOrderStatusOnFeed("READY_TO_PACK", feedJSONList.get(0), "OHIV0000000" + id.toString() + "R");
 
     dbWrapper.assignRight("store in-charge", "MANAGE_POD");
 
@@ -100,7 +100,7 @@ public class RequisitionStatusFeed extends JsonUtility {
     responseEntity = client.SendJSON("", URL + "recent", "GET", "", "");
     assertEquals(200, responseEntity.getStatus());
     feedJSONList = XmlUtils.getNodeValues(responseEntity.getResponse(), "content");
-    checkOrderStatusOnFeed("RECEIVED", feedJSONList.get(1), id);
+    checkOrderStatusOnFeed("RECEIVED", feedJSONList.get(1), "OHIV0000000" + id.toString() + "R");
   }
 
   @Test(groups = {"webservice"})
@@ -131,13 +131,12 @@ public class RequisitionStatusFeed extends JsonUtility {
     responseEntity = waitForOrderStatusUpdatedOrTimeOut(0);
     assertEquals(200, responseEntity.getStatus());
     feedJSONList = XmlUtils.getNodeValues(responseEntity.getResponse(), "content");
-    checkOrderStatusOnFeed("IN_ROUTE", feedJSONList.get(0), id);
+    checkOrderStatusOnFeed("IN_ROUTE", feedJSONList.get(0), "OHIV0000000" + id.toString() + "R");
 
     responseEntity = waitForOrderStatusUpdatedOrTimeOut(1);
     assertEquals(200, responseEntity.getStatus());
     feedJSONList = XmlUtils.getNodeValues(responseEntity.getResponse(), "content");
-    checkOrderStatusOnFeed("TRANSFER_FAILED", feedJSONList.get(1), id);
-
+    checkOrderStatusOnFeed("TRANSFER_FAILED", feedJSONList.get(1), "OHIV0000000" + id.toString() + "R");
   }
 
   @Test(groups = {"webservice"})
@@ -169,14 +168,13 @@ public class RequisitionStatusFeed extends JsonUtility {
     responseEntity = client.SendJSON("", URL + "recent", "GET", "", "");
     assertEquals(200, responseEntity.getStatus());
     feedJSONList = XmlUtils.getNodeValues(responseEntity.getResponse(), "content");
-    checkOrderStatusOnFeed("IN_ROUTE", feedJSONList.get(0), id);
+    checkOrderStatusOnFeed("IN_ROUTE", feedJSONList.get(0), "OHIV0000000" + id.toString() + "R");
 
     responseEntity = waitForOrderStatusUpdatedOrTimeOut(1);
     assertEquals(200, responseEntity.getStatus());
     feedJSONList = XmlUtils.getNodeValues(responseEntity.getResponse(), "content");
-    checkOrderStatusOnFeed("RELEASED", feedJSONList.get(1), id);
+    checkOrderStatusOnFeed("RELEASED", feedJSONList.get(1), "OHIV0000000" + id.toString() + "R");
   }
-
 
   private void checkRequisitionStatusOnFeed(String requisitionStatus, String feedString, Long id) {
     assertTrue("feed json list : " + feedString, feedString.contains("\"requisitionId\":" + id));
@@ -191,8 +189,8 @@ public class RequisitionStatusFeed extends JsonUtility {
     assertFalse("Response entity : " + feedString, feedString.contains("\"orderID\""));
   }
 
-  private void checkOrderStatusOnFeed(String orderStatus, String feedString, Long id) {
-    assertTrue("feed json list : " + feedString, feedString.contains("\"requisitionId\":" + id));
+  private void checkOrderStatusOnFeed(String orderStatus, String feedString, String orderNumber) {
+    assertTrue("feed json list : " + feedString, feedString.contains("\"requisitionId\":" + orderNumber));
     assertTrue("feed json list : " + feedString, feedString.contains("\"requisitionStatus\":\"RELEASED\""));
     assertTrue("Response entity : " + feedString, feedString.contains("\"emergency\":false"));
     assertTrue("Response entity : " + feedString, feedString.contains("\"startDate\":1359484200000"));
@@ -200,7 +198,7 @@ public class RequisitionStatusFeed extends JsonUtility {
     assertTrue("Response entity : " + feedString, feedString.contains("\"stringStartDate\":\"30-01-2013\""));
     assertTrue("Response entity : " + feedString, feedString.contains("\"stringEndDate\":\"30-01-2016\""));
     assertTrue("Response entity : " + feedString, feedString.contains("\"orderStatus\":\"" + orderStatus + "\""));
-    assertTrue("Response entity : " + feedString, feedString.contains("\"orderId\":" + id));
+    assertTrue("Response entity : " + feedString, feedString.contains("\"orderId\":" + orderNumber));
   }
 
   private ResponseEntity waitForOrderStatusUpdatedOrTimeOut(int index) throws ParserConfigurationException, SAXException, InterruptedException {
