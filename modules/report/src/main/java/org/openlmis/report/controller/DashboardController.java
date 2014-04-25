@@ -92,9 +92,9 @@ public class DashboardController extends BaseController {
         return OpenLmisResponse.response(STOCKED_OUT_FACILITIES, this.lookupService.getStockOutFacilitiesByRequisitionGroup(periodId, programId, productId,requisitionGroupId));
     }
     @RequestMapping(value = "/alerts", method = GET, headers = ACCEPT_JSON)
-    public ResponseEntity<OpenLmisResponse>  getAlerts(@RequestParam("supervisoryNodeId") Long supervisoryNodeId,
+    public ResponseEntity<OpenLmisResponse>  getAlerts(@RequestParam("supervisoryNodeId") Long supervisoryNodeId, @RequestParam("programId") Long programId,
                                                        HttpServletRequest request){
-        return OpenLmisResponse.response(ALERTS, this.lookupService.getAlerts(loggedInUserId(request), supervisoryNodeId));
+        return OpenLmisResponse.response(ALERTS, this.lookupService.getAlerts(loggedInUserId(request), supervisoryNodeId, programId ));
     }
 
     @RequestMapping(value = "/notifications/{alertId}/{detailTable}", method = GET, headers = ACCEPT_JSON)
