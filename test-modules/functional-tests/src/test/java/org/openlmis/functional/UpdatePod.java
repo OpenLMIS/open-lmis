@@ -10,6 +10,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.sql.SQLException;
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -62,7 +63,7 @@ public class UpdatePod extends TestCaseHelper {
     updatePodPage = managePodPage.selectRequisitionToUpdatePod(1);
 
     assertEquals("Proof of Delivery", updatePodPage.getTitle());
-    verifyHeadersWithValuesOnUpdatePODScreen();
+    verifyHeadersWithValuesOnUpdatePODScreen(getOrderNumber("O", "MALARIA", "R"));
     verifyHeadersOfPodTableOnUpdatePODScreen();
     verifyValuesOfPodTableOnUpdatePODScreen(1, "P10", "antibiotic Capsule 300/200/600 mg", "100", "Strip", "");
     assertEquals("", updatePodPage.getQuantityReceived(1));
@@ -165,7 +166,7 @@ public class UpdatePod extends TestCaseHelper {
     updatePodPage = managePodPage.selectRequisitionToUpdatePod(1);
 
     assertEquals("Proof of Delivery", updatePodPage.getTitle());
-    verifyHeadersWithValuesOnUpdatePODScreen();
+    verifyHeadersWithValuesOnUpdatePODScreen(getOrderNumber("O", "MALARIA", "R"));
     verifyHeadersOfPodTableOnUpdatePODScreen();
     verifyValuesOfPodTableOnUpdatePODScreen(1, "P10", "antibiotic Capsule 300/200/600 mg", "999", "Strip", "99898998");
     assertEquals("", updatePodPage.getQuantityReceived(1));
@@ -190,7 +191,7 @@ public class UpdatePod extends TestCaseHelper {
     updatePodPage = managePodPage.selectRequisitionToUpdatePod(1);
 
     assertEquals("Proof of Delivery", updatePodPage.getTitle());
-    verifyHeadersWithValuesOnUpdatePODScreen();
+    verifyHeadersWithValuesOnUpdatePODScreen(getOrderNumber("O", "MALARIA", "R"));
     verifyHeadersOfPodTableOnUpdatePODScreen();
     verifyValuesOfPodTableOnUpdatePODScreen(1, "P10", "antibiotic Capsule 300/200/600 mg", "999", "Strip", "99898998");
     assertEquals("", updatePodPage.getQuantityReceived(1));
@@ -307,9 +308,8 @@ public class UpdatePod extends TestCaseHelper {
     assertEquals("Notes", testWebDriver.getElementByXpath("//table[@id='podTable']/thead/tr/th[10]/span").getText());
   }
 
-  private void verifyHeadersWithValuesOnUpdatePODScreen() throws SQLException {
-    Integer id = dbWrapper.getMaxRnrID();
-    assertEquals("Order No.: " + id, updatePodPage.getOrderNumberLabel() + ": " + updatePodPage.getOrderId());
+  private void verifyHeadersWithValuesOnUpdatePODScreen(String orderNumber) throws SQLException {
+    assertEquals("Order No.: " + orderNumber, updatePodPage.getOrderNumberLabel() + ": " + updatePodPage.getOrderId());
     assertEquals("Facility: F10 - Village Dispensary", updatePodPage.getFacilityLabel() + ": " + updatePodPage.getFacilityCode());
     assertTrue((updatePodPage.getOrderDateTimeLabel() + ": " + updatePodPage.getOrderCreatedDate()).contains("Order Date/Time: " + new SimpleDateFormat("dd/MM/yyyy").format(new Date())));
     assertEquals("Supplying Depot: Village Dispensary", updatePodPage.getSupplyingDepotLabel() + ": " + updatePodPage.getSupplyingDepot());
@@ -324,6 +324,14 @@ public class UpdatePod extends TestCaseHelper {
       assertEquals("Emergency", updatePodPage.getRequisitionType());
       assertEquals("rgba(210, 95, 91, 1)", updatePodPage.getRequisitionTypeColor());
     }
+  }
+
+  private String getOrderNumber(String prefix, String program, String type) throws SQLException {
+    NumberFormat numberFormat = NumberFormat.getIntegerInstance();
+    numberFormat.setMinimumIntegerDigits(8);
+    numberFormat.setGroupingUsed(false);
+    int id = dbWrapper.getMaxRnrID();
+    return prefix + program.substring(0, Math.min(program.length(), 35)) + numberFormat.format(id) + type.substring(0, 1);
   }
 
   private void setUpData(String program, String userSIC) throws SQLException {

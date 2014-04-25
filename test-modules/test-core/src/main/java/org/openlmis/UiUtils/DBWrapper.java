@@ -1398,7 +1398,15 @@ public class DBWrapper {
     Integer supplyingLineId = Integer.valueOf(getAttributeFromTable("supply_lines", "id", "supervisoryNodeId", supervisoryNodeId));
     Integer userId = Integer.valueOf(getAttributeFromTable("users", "id", "username", userName));
     update("INSERT INTO orders(id, status, ftpComment, supplyLineId, createdBy, modifiedBy, orderNumber) VALUES (%d, '%s', %s, %d, %d, %d, %s)", maxRnrID,
-      orderStatus, null, supplyingLineId, userId, userId, "'" + maxRnrID + "'");
+      orderStatus, null, supplyingLineId, userId, userId, "'" + getOrderNumber("O", "MALARIA", "R") + "'");
+  }
+
+  private String getOrderNumber(String prefix, String program, String type) throws SQLException {
+    NumberFormat numberFormat = NumberFormat.getIntegerInstance();
+    numberFormat.setMinimumIntegerDigits(8);
+    numberFormat.setGroupingUsed(false);
+    int id = getMaxRnrID();
+    return prefix + program.substring(0, Math.min(program.length(), 35)) + numberFormat.format(id) + type.substring(0, 1);
   }
 
   public void deleteTable(String tableName) throws SQLException {
