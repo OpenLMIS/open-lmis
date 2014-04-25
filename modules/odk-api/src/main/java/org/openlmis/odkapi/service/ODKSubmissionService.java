@@ -122,6 +122,7 @@ public class ODKSubmissionService {
         }
 
         odkSubmission = handler.getOdkSubmission();
+        odkAccount = handler.getOdkAccount();
 
         ODKAccount tempAccount;
 
