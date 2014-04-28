@@ -33,7 +33,7 @@ public class ConfigureOrderNumberTemplate extends TestCaseHelper {
   @BeforeMethod(groups = "admin")
   public void setUp() throws InterruptedException, SQLException, IOException {
     super.setup();
-    dbWrapper.setupShipmentFileConfiguration("false");
+    dbWrapper.setupOrderNumberConfiguration("O",true,true,true,true);
     loginPage = PageObjectFactory.getLoginPage(testWebDriver, baseUrlGlobal);
   }
 

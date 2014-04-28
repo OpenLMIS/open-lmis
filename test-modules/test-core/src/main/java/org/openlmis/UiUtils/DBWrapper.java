@@ -1001,6 +1001,13 @@ public class DBWrapper {
       "  ('" + filePrefix + "', '" + headerInFile + "');");
   }
 
+  public void setupOrderNumberConfiguration(String orderNumberPrefix, Boolean includeOrderNumberPrefix, Boolean includeProgramCode, Boolean includeSequenceCode, Boolean includeRnrTypeSuffix) throws SQLException {
+    update("DELETE FROM order_number_configuration;");
+    update("INSERT INTO order_number_configuration \n" +
+      "  (orderNumberPrefix, includeOrderNumberPrefix, includeProgramCode, includeSequenceCode, includeRnrTypeSuffix) VALUES\n" +
+      "  ('" + orderNumberPrefix + "', '" + includeOrderNumberPrefix + "', '" + includeProgramCode + "', '" + includeSequenceCode + "', '" + includeRnrTypeSuffix + "');");
+  }
+
   public void setupShipmentFileConfiguration(String headerInFile) throws SQLException {
     update("DELETE FROM shipment_configuration;");
     update("INSERT INTO shipment_configuration(headerInFile) VALUES('" + headerInFile + "')");
