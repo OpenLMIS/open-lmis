@@ -70,7 +70,6 @@ public class RoleRightsServiceTest {
       MANAGE_ROLE,
       MANAGE_SCHEDULE,
       MANAGE_USER,
-      UPLOADS,
       MANAGE_DISTRIBUTION,
       MANAGE_REPORT,
       VIEW_REPORT,
@@ -82,7 +81,8 @@ public class RoleRightsServiceTest {
       VIEW_ORDER,
       SYSTEM_SETTINGS,
       FACILITY_FILL_SHIPMENT,
-      MANAGE_POD);
+      MANAGE_POD,
+      UPLOADS);
 
     assertThat(allRights, is(alphabeticalRights));
   }

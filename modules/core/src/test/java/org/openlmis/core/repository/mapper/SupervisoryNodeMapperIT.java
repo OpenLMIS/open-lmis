@@ -35,8 +35,7 @@ import static org.junit.Assert.assertTrue;
 import static org.openlmis.core.builder.ProgramBuilder.defaultProgram;
 import static org.openlmis.core.builder.ProgramBuilder.programCode;
 import static org.openlmis.core.builder.RequisitionGroupBuilder.defaultRequisitionGroup;
-import static org.openlmis.core.builder.SupervisoryNodeBuilder.SUPERVISORY_NODE_CODE;
-import static org.openlmis.core.builder.SupervisoryNodeBuilder.code;
+import static org.openlmis.core.builder.SupervisoryNodeBuilder.*;
 import static org.openlmis.core.builder.UserBuilder.defaultUser;
 import static org.openlmis.core.builder.UserBuilder.facilityId;
 import static org.openlmis.core.domain.Right.CONFIGURE_RNR;
@@ -264,6 +263,47 @@ public class SupervisoryNodeMapperIT {
     assertThat(result.get(0).getId(), is(supervisoryNode3.getId()));
     assertThat(result.get(1).getId(), is(supervisoryNode2.getId()));
     assertThat(result.get(2).getId(), is(supervisoryNode1.getId()));
+  }
+
+  @Test
+  public void shouldGetSupervisoryNodesByNameSearch() {
+    insertSupervisoryNode(supervisoryNode);
+
+    SupervisoryNode supervisoryNode1 = make(a(SupervisoryNodeBuilder.defaultSupervisoryNode, with(code, "SN1"), with(name, "Approval Point 2")));
+    supervisoryNode1.setFacility(facility);
+    insertSupervisoryNode(supervisoryNode1);
+
+    SupervisoryNode supervisoryNode2 = make(a(SupervisoryNodeBuilder.defaultSupervisoryNode, with(code, "CN1"), with(name, "Not Matching Search")));
+    supervisoryNode2.setFacility(facility);
+    insertSupervisoryNode(supervisoryNode2);
+
+    List<SupervisoryNode> searchResults = supervisoryNodeMapper.getSupervisoryNodesBy("Approval");
+
+    assertThat(searchResults.size(), is(2));
+  }
+
+  @Test
+  public void shouldGetSupervisoryNodesByParentNameSearch(){
+    SupervisoryNode supervisoryNode1 = make(a(SupervisoryNodeBuilder.defaultSupervisoryNode, with(code, "SN1"), with(name, "Parent")));
+    supervisoryNode1.setFacility(facility);
+    insertSupervisoryNode(supervisoryNode1);
+
+    supervisoryNode.setParent(supervisoryNode1);
+    insertSupervisoryNode(supervisoryNode);
+
+    SupervisoryNode supervisoryNode2 = make(a(SupervisoryNodeBuilder.defaultSupervisoryNode, with(code, "CN1"), with(name, "Another")));
+    supervisoryNode2.setFacility(facility);
+    insertSupervisoryNode(supervisoryNode2);
+
+    SupervisoryNode supervisoryNode3 = make(a(SupervisoryNodeBuilder.defaultSupervisoryNode, with(code, "CN2"), with(name, "Child with not matching")));
+    supervisoryNode3.setFacility(facility);
+    supervisoryNode3.setParent(supervisoryNode2);
+    insertSupervisoryNode(supervisoryNode3);
+
+    List<SupervisoryNode> searchResults = supervisoryNodeMapper.getSupervisoryNodesBy("Parent");
+
+    assertThat(searchResults.size(), is(1));
+
   }
 
   private SupervisoryNode insertSupervisoryNode(SupervisoryNode supervisoryNode) {

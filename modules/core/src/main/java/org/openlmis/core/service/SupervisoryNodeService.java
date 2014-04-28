@@ -31,16 +31,15 @@ import static org.openlmis.core.domain.Right.APPROVE_REQUISITION;
 @NoArgsConstructor
 public class SupervisoryNodeService {
 
+  @Autowired
   private SupervisoryNodeRepository supervisoryNodeRepository;
-  private UserRepository userRepository;
-  private FacilityRepository facilityRepository;
 
   @Autowired
-  public SupervisoryNodeService(SupervisoryNodeRepository supervisoryNodeRepository, UserRepository userRepository, FacilityRepository facilityRepository) {
-    this.supervisoryNodeRepository = supervisoryNodeRepository;
-    this.userRepository = userRepository;
-    this.facilityRepository = facilityRepository;
-  }
+  private UserRepository userRepository;
+
+  @Autowired
+  private FacilityRepository facilityRepository;
+
 
   public void save(SupervisoryNode supervisoryNode) {
     supervisoryNode.getFacility().setId(facilityRepository.getIdForCode(supervisoryNode.getFacility().getCode()));
@@ -49,6 +48,13 @@ public class SupervisoryNodeService {
       supervisoryNodeRepository.insert(supervisoryNode);
     else
       supervisoryNodeRepository.update(supervisoryNode);
+  }
+
+  public List<SupervisoryNode> getSupervisoryNodesBy(String nameSearchCriteria, Boolean parent) {
+    if (parent) {
+      return supervisoryNodeRepository.getSupervisoryNodesByParent(nameSearchCriteria);
+    }
+    return supervisoryNodeRepository.getSupervisoryNodesBy(nameSearchCriteria);
   }
 
   private void validateParentNode(SupervisoryNode supervisoryNode) {

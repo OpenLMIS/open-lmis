@@ -15,7 +15,10 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.builder.SupervisoryNodeBuilder;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.Program;
@@ -29,6 +32,7 @@ import org.openlmis.db.categories.UnitTests;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.a;
@@ -44,6 +48,7 @@ import static org.openlmis.core.domain.Right.CREATE_REQUISITION;
 import static org.openlmis.core.matchers.Matchers.dataExceptionMatcher;
 
 @Category(UnitTests.class)
+@RunWith(MockitoJUnitRunner.class)
 public class SupervisoryNodeServiceTest {
 
   @Mock
@@ -51,11 +56,12 @@ public class SupervisoryNodeServiceTest {
   @Mock
   private FacilityRepository facilityRepository;
 
-  SupervisoryNodeService supervisoryNodeService;
   @Mock
   private UserRepository userRepository;
   @Rule
   public ExpectedException expectedEx = ExpectedException.none();
+  @InjectMocks
+  SupervisoryNodeService supervisoryNodeService;
   SupervisoryNode supervisoryNodeWithParent;
 
 
@@ -70,7 +76,6 @@ public class SupervisoryNodeServiceTest {
     parent.setId(20L);
     supervisoryNodeWithParent.setParent(parent);
 
-    supervisoryNodeService = new SupervisoryNodeService(supervisoryNodeRepository, userRepository, facilityRepository);
   }
 
   @Test
@@ -267,5 +272,22 @@ public class SupervisoryNodeServiceTest {
     verify(supervisoryNodeRepository).getIdForCode(supervisoryNodeWithParent.getParent().getCode());
   }
 
+  @Test
+  public void shouldGetSupervisoryNodesForParentSearchCriteria() {
+    String searchCriteria = "parentName";
+    when(supervisoryNodeRepository.getSupervisoryNodesByParent(searchCriteria)).thenReturn(Collections.EMPTY_LIST);
+    List<SupervisoryNode> searchResult = supervisoryNodeService.getSupervisoryNodesBy(searchCriteria, true);
+    verify(supervisoryNodeRepository).getSupervisoryNodesByParent(searchCriteria);
+    assertThat(searchResult, is(Collections.EMPTY_LIST));
+  }
+
+  @Test
+  public void shouldGetSupervisoryNodesSearchCriteria() {
+    String searchCriteria = "nodeName";
+    when(supervisoryNodeRepository.getSupervisoryNodesBy(searchCriteria)).thenReturn(Collections.EMPTY_LIST);
+    List<SupervisoryNode> searchResult = supervisoryNodeService.getSupervisoryNodesBy(searchCriteria, true);
+    verify(supervisoryNodeRepository).getSupervisoryNodesByParent(searchCriteria);
+    assertThat(searchResult, is(Collections.EMPTY_LIST));
+  }
 
 }

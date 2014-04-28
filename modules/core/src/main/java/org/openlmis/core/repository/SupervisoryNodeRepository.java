@@ -89,4 +89,12 @@ public class SupervisoryNodeRepository {
   public void update(SupervisoryNode supervisoryNode) {
     supervisoryNodeMapper.update(supervisoryNode);
   }
+
+  public List<SupervisoryNode> getSupervisoryNodesByParent(String nameSearchCriteria) {
+      return supervisoryNodeMapper.getSupervisoryNodesByParent(nameSearchCriteria);
+  }
+
+  public List<SupervisoryNode> getSupervisoryNodesBy(String nameSearchCriteria) {
+    return supervisoryNodeMapper.getSupervisoryNodesBy(nameSearchCriteria);
+  }
 }
