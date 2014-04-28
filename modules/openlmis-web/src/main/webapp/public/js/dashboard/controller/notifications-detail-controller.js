@@ -2,7 +2,7 @@
  * Created by issa on 4/15/14.
  */
 
-function NotificationsDetailController($scope,$routeParams,messageService, DashboardNotificationsDetail, ngTableParams) {
+function NotificationsDetailController($scope,$routeParams,messageService,SettingsByKey, DashboardNotificationsDetail, ngTableParams) {
 
     $scope.$parent.currentTab = 'NOTIFICATIONS-DETAIL';
 
@@ -15,18 +15,30 @@ function NotificationsDetailController($scope,$routeParams,messageService, Dashb
 
         if(!isUndefined($routeParams.detailTable) &&
             !isUndefined($routeParams.alertId)){
+            var columnsToHide =  $routeParams.detailTable+'_HIDDEN_COLUMNS';
+             SettingsByKey.get({key: columnsToHide.toUpperCase()},function (data){
+                 $scope.colsToHide = data.settings.value.split(",");
+             });
+
             DashboardNotificationsDetail.get({alertId:$routeParams.alertId, detailTable:$routeParams.detailTable},function(stockData){
                 $scope.notificationsDetail = stockData.detail;
                 if(!isUndefined($scope.notificationsDetail)){
+
 
                     var cols =  _.keys(_.first($scope.notificationsDetail));
                     $scope.notificationColumns = [];
                     $.each(cols, function(idx,item){
                         var colTitleKey = 'label.notification.column.'+item;
                         var colTitle = messageService.get(colTitleKey);
+                        var hideColumn = false;
+                        if(_.indexOf($scope.colsToHide,item) !== -1){
+                            hideColumn = true;
+                        }
 
-                        $scope.notificationColumns.push({name:item, title:colTitle === colTitleKey ? item : colTitle});
+                        $scope.notificationColumns.push({name:item, title:colTitle === colTitleKey ? item : colTitle, hide: hideColumn});
                     });
+
+
                 }
 
             });
