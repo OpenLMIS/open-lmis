@@ -16,6 +16,7 @@ import org.openlmis.core.domain.GeographicZone;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+
 /**
  * GeographicZoneMapper maps the GeographicZone entity to corresponding representation in database.
  */
@@ -53,7 +54,6 @@ public interface GeographicZoneMapper {
   })
   GeographicZone getGeographicZoneByCode(String code);
 
-
   @Select({"SELECT GZ.id AS id, GZ.code AS code, GZ.name AS name, GZ.catchmentPopulation, GZ.longitude, GZ.latitude,",
     " GL.id as levelId,GL. levelNumber as levelNumber, GL.code AS levelCode, GL.name AS level, GZP.code AS parentCode, GZP.name AS parentZone,",
     " GLP.code AS parentLevelCode, GLP.name AS parentLevel",
@@ -65,7 +65,7 @@ public interface GeographicZoneMapper {
     @Result(property = "level.id", column = "levelId"),
     @Result(property = "level.code", column = "levelCode"),
     @Result(property = "level.name", column = "level"),
-    @Result(property = "level.levelNumber", column = "levelNumber" ),
+    @Result(property = "level.levelNumber", column = "levelNumber"),
     @Result(property = "parent.name", column = "parentZone"),
     @Result(property = "parent.code", column = "parentCode"),
     @Result(property = "parent.level.code", column = "parentLevelCode"),

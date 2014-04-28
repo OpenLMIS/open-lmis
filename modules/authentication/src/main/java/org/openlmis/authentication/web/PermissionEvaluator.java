@@ -31,7 +31,6 @@ public class PermissionEvaluator {
   @Autowired
   private RoleRightsService roleRightService;
 
-
   public Boolean hasPermission(Long userId, String commaSeparatedRights) {
     return CollectionUtils.containsAny(roleRightService.getRights(userId), getRightList(commaSeparatedRights));
   }
@@ -45,7 +44,4 @@ public class PermissionEvaluator {
 
     return rights;
   }
-
-
-
 }

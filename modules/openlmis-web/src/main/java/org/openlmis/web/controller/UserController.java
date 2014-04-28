@@ -99,7 +99,7 @@ public class UserController extends BaseController {
     }
   }
 
-  @RequestMapping(value = "/users", method = POST, headers = "Accept=application/json")
+  @RequestMapping(value = "/users", method = POST, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_USER')")
   public ResponseEntity<OpenLmisResponse> create(@RequestBody User user, HttpServletRequest request) {
     user.setCreatedBy(loggedInUserId(request));

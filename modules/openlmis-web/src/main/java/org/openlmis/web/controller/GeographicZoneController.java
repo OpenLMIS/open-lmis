@@ -10,6 +10,8 @@
 
 package org.openlmis.web.controller;
 
+import org.openlmis.core.domain.GeographicZone;
+import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.GeographicZoneService;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,9 +19,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import static org.springframework.web.bind.annotation.RequestMethod.GET;
+import javax.servlet.http.HttpServletRequest;
+
+import static org.openlmis.web.response.OpenLmisResponse.success;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 /**
  * This controller handles endpoint related to get geographicZones details for given id.
@@ -37,4 +44,36 @@ public class GeographicZoneController extends BaseController {
     return OpenLmisResponse.response("geoZone", service.getById(id));
   }
 
+  @RequestMapping(value = "/geographicZones", method = POST, headers = ACCEPT_JSON)
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_GEO_ZONE')")
+  public ResponseEntity<OpenLmisResponse> insert(@RequestBody GeographicZone geographicZone, HttpServletRequest request) {
+    Long userId = loggedInUserId(request);
+    geographicZone.setCreatedBy(userId);
+    geographicZone.setModifiedBy(userId);
+    try {
+      service.save(geographicZone);
+    } catch (DataException e) {
+      return OpenLmisResponse.error(e, BAD_REQUEST);
+    }
+    ResponseEntity<OpenLmisResponse> success = success(messageService.message("message.geo.zone.created.success", geographicZone.getName()));
+    success.getBody().addData("geoZone", geographicZone);
+    return success;
+  }
+
+  @RequestMapping(value = "/geographicZones/{id}", method = PUT, headers = ACCEPT_JSON)
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_GEO_ZONE')")
+  public ResponseEntity<OpenLmisResponse> update(@RequestBody GeographicZone geographicZone, @PathVariable("id") Long id,
+                                                 HttpServletRequest request) {
+    Long userId = loggedInUserId(request);
+    geographicZone.setId(id);
+    geographicZone.setModifiedBy(userId);
+    try {
+      service.save(geographicZone);
+    } catch (DataException e) {
+      return OpenLmisResponse.error(e, BAD_REQUEST);
+    }
+    ResponseEntity<OpenLmisResponse> success = success(messageService.message("message.geo.zone.updated.success", geographicZone.getName()));
+    success.getBody().addData("geoZone", geographicZone);
+    return success;
+  }
 }
