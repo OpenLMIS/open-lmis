@@ -1467,7 +1467,7 @@ public class DBWrapper {
     String categoryId = getAttributeFromTable("program_products", "productCategoryId", "id", programProductId);
     String categoryName = getAttributeFromTable("product_categories", "name", "id", categoryId);
     Integer categoryDisplayOrder = Integer.parseInt(getAttributeFromTable("product_categories", "displayOrder", "id", categoryId));
-    update("INSERT INTO shipment_line_items(orderId,productCode,quantityShipped,productName,dispensingUnit,productCategory,productDisplayOrder,productCategoryDisplayOrder,replacedProductCode,packsToShip,fullSupply) VALUES (%d, '%s', %d, %s, %s, '%s',%d ,%d, '%s', %d, %b)", orderID, productCode, quantityShipped, "'antibiotic Capsule 300/200/600 mg'", "'Strip'", categoryName, productDisplayOrder, categoryDisplayOrder, replacedProductCode, packsToShip, fullSupplyFlag);
+    update("INSERT INTO shipment_line_items(orderId,productCode,quantityShipped,productName,dispensingUnit,productCategory,productDisplayOrder,productCategoryDisplayOrder,replacedProductCode,packsToShip,fullSupply,orderNumber) VALUES (%d, '%s', %d, %s, %s, '%s',%d ,%d, '%s', %d, %b, %s)", orderID, productCode, quantityShipped, "'antibiotic Capsule 300/200/600 mg'", "'Strip'", categoryName, productDisplayOrder, categoryDisplayOrder, replacedProductCode, packsToShip, fullSupplyFlag, "'ORD'");
   }
 
   public Integer getProductId(String productCode) throws SQLException {
