@@ -83,6 +83,17 @@ public class GeographicZoneMapperIT {
   }
 
   @Test
+  public void shouldGetAllGeographicZonesSortedAndSearchedByParentName() throws Exception {
+    List<GeographicZone> allGeographicZones = mapper.getAllBySearchCriteria("Mozam");
+    assertThat(allGeographicZones.size(), is(3));
+    GeographicZone geographicZone = allGeographicZones.get(0);
+
+    assertThat(geographicZone.getCode(), is("Cabo Delgado Province"));
+    assertThat(geographicZone.getName(), is("Cabo Delgado Province"));
+    assertThat(geographicZone.getLevel().getName(), is("State"));
+  }
+
+  @Test
   public void shouldGetGeographicZoneWithParent() throws Exception {
     GeographicZone parent = new GeographicZone(null, "Dodoma", "Dodoma", new GeographicLevel(null, "province", "Province", null), null);
     GeographicZone expectedZone = new GeographicZone(5L, "Ngorongoro", "Ngorongoro", new GeographicLevel(null, "district", "District", 4), parent);

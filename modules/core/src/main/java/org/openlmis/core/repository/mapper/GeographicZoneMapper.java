@@ -54,6 +54,12 @@ public interface GeographicZoneMapper {
   })
   GeographicZone getGeographicZoneByCode(String code);
 
+  @Update({"UPDATE geographic_zones set code = #{code}, name = #{name}, levelId = #{level.id}, parentId = #{parent.id}, " +
+    "catchmentPopulation = #{catchmentPopulation}, longitude = #{longitude}, latitude = #{latitude}, " +
+    "modifiedBy = #{modifiedBy}, modifiedDate = #{modifiedDate}",
+    "WHERE id = #{id}"})
+  void update(GeographicZone geographicZone);
+
   @Select({"SELECT GZ.id AS id, GZ.code AS code, GZ.name AS name, GZ.catchmentPopulation, GZ.longitude, GZ.latitude,",
     " GL.id as levelId,GL. levelNumber as levelNumber, GL.code AS levelCode, GL.name AS level, GZP.code AS parentCode, GZP.name AS parentZone,",
     " GLP.code AS parentLevelCode, GLP.name AS parentLevel",
@@ -73,9 +79,14 @@ public interface GeographicZoneMapper {
   })
   GeographicZone getWithParentById(Long geographicZoneId);
 
-  @Update({"UPDATE geographic_zones set code = #{code}, name = #{name}, levelId = #{level.id}, parentId = #{parent.id}, " +
-    "catchmentPopulation = #{catchmentPopulation}, longitude = #{longitude}, latitude = #{latitude}, " +
-    "modifiedBy = #{modifiedBy}, modifiedDate = #{modifiedDate}",
-    "WHERE id = #{id}"})
-  void update(GeographicZone geographicZone);
+  @Select({"SELECT GZ.id, GZ.name, GZ.code, GL.name AS levelName, GZP.name AS parentName",
+    "FROM geographic_zones GZ INNER JOIN geographic_zones GZP ON GZ.parentId = GZP.id",
+    "INNER JOIN geographic_levels GL ON GZ.levelId = GL.id",
+    "WHERE LOWER(GZP.name) LIKE '%' || LOWER(#{searchParam} || '%')",
+    "ORDER BY levelName, LOWER(GZP.name), name"})
+  @Results(value = {
+    @Result(property = "level.name", column = "levelName"),
+    @Result(property = "parent.name", column = "parentName"),
+  })
+  List<GeographicZone> getAllBySearchCriteria(String searchParam);
 }

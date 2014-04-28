@@ -32,7 +32,6 @@ public class GeographicZoneService {
     geographicZone.validateLevel();
 
     if (!geographicZone.isRootLevel()) {
-      geographicZone.validateParentExists();
       geographicZone.setParent(repository.getByCode(geographicZone.getParent().getCode()));
       geographicZone.validateParentExists();
       geographicZone.validateParentIsHigherInHierarchy();
