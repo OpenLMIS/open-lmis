@@ -73,7 +73,7 @@ public class ConfigureOrderNumberTemplate extends TestCaseHelper {
   }
 
   @Test(groups = {"admin"})
-  public void testEnterMixedValueInOrderNumberField() {
+  public void testMixedValueInOrderNumberField() {
     HomePage homePage = loginPage.loginAs(user, password);
     configureSystemSettingsPage = homePage.navigateSystemSettingsScreen();
     configureOrderNumberPage = configureSystemSettingsPage.navigateConfigureOrderNumberPage();

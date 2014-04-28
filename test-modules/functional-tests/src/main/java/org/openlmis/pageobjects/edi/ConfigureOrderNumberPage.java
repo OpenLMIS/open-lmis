@@ -57,6 +57,7 @@ public class ConfigureOrderNumberPage extends Page {
   public void deletePreExistingData() {
     testWebDriver.waitForElementToAppear(setOrderNumberPrefix);
     testWebDriver.findElement(By.id("orderPrefix")).clear();
+    testWebDriver.setImplicitWait(10);
   }
 
   public void clickSaveButton() {
