@@ -37,7 +37,6 @@ public class RightTest {
     }
   }
 
-
   @Test
   public void shouldReturnEmptyListWhenNoDfaultRightIsAvailable() throws Exception {
     Right[] rights = {CONFIGURE_RNR, MANAGE_FACILITY, MANAGE_ROLE, MANAGE_SCHEDULE, MANAGE_USER, UPLOADS, VIEW_REQUISITION};
@@ -48,20 +47,18 @@ public class RightTest {
   }
 
   @Test
-  public void shouldCompareTwoRights(){
+  public void shouldCompareTwoRights() {
     Right nullRight = null;
     Right nonNullRight = Right.CONFIGURE_RNR;
     Right approveRight = Right.APPROVE_REQUISITION;
     Right createRight = Right.CREATE_REQUISITION;
     RightComparator rightComparator = new RightComparator();
-    assertThat(rightComparator.compare(nullRight, nonNullRight),is(greaterThan(0)));
-    assertThat(rightComparator.compare(nonNullRight, nullRight),is(lessThan(0)));
+    assertThat(rightComparator.compare(nullRight, nonNullRight), is(greaterThan(0)));
+    assertThat(rightComparator.compare(nonNullRight, nullRight), is(lessThan(0)));
     assertThat(rightComparator.compare(nonNullRight, nonNullRight), is(0));
     assertThat(rightComparator.compare(nullRight, nullRight), is(0));
     assertThat(rightComparator.compare(nullRight, nullRight), is(0));
     assertThat(rightComparator.compare(createRight, approveRight), is(greaterThan(0)));
     assertThat(rightComparator.compare(approveRight, createRight), is(lessThan(0)));
-
-
   }
 }

@@ -48,8 +48,10 @@ public class RoleRightsServiceTest {
 
   @Mock
   RoleAssignmentRepository roleAssignmentRepository;
+
   @Mock
   private SupervisoryNodeService supervisoryNodeService;
+
   @Mock
   private FacilityService facilityService;
 
@@ -58,7 +60,6 @@ public class RoleRightsServiceTest {
     role = new Role("role name", "role description");
     roleRightsService = new RoleRightsService(roleRightsRepository, supervisoryNodeService, facilityService);
   }
-
 
   @Test
   public void shouldGetAllRightsByDisplayOrder() throws Exception {
@@ -70,6 +71,7 @@ public class RoleRightsServiceTest {
       MANAGE_ROLE,
       MANAGE_SCHEDULE,
       MANAGE_USER,
+      MANAGE_SUPERVISORY_NODE,
       MANAGE_DISTRIBUTION,
       MANAGE_REPORT,
       VIEW_REPORT,
@@ -82,7 +84,9 @@ public class RoleRightsServiceTest {
       SYSTEM_SETTINGS,
       FACILITY_FILL_SHIPMENT,
       MANAGE_POD,
-      UPLOADS);
+      UPLOADS,
+      UPLOAD_REPORT,
+      MANAGE_GEOGRAPHIC_ZONE);
 
     assertThat(allRights, is(alphabeticalRights));
   }
@@ -124,7 +128,6 @@ public class RoleRightsServiceTest {
     roleRightsService.saveRole(role);
     verify(roleRightsRepository, never()).createRole(role);
   }
-
 
   @Test
   public void shouldGetRoleById() throws Exception {
@@ -212,7 +215,6 @@ public class RoleRightsServiceTest {
     assertThat(allRolesMap.get(RightType.ALLOCATION.name()).size(), is(2));
   }
 
-
   @Test
   public void shouldGetRightsForUserAndWarehouse() {
     Set<Right> expectedRights = new HashSet<>();
@@ -224,6 +226,5 @@ public class RoleRightsServiceTest {
 
     assertThat(rights, is(expectedRights));
     verify(roleRightsRepository).getRightsForUserAndWarehouse(userId, warehouseId);
-
   }
 }
