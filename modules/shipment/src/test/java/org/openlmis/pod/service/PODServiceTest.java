@@ -263,7 +263,9 @@ public class PODServiceTest {
 
     podService.submit(podId, userId);
 
-    verify(orderService).updateOrderStatus(new Order(3L, RECEIVED));
+    Order order = new Order(3L, RECEIVED);
+    order.setOrderNumber(orderNumber);
+    verify(orderService).updateOrderStatus(order);
   }
 
   @Test

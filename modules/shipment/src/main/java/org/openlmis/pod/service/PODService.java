@@ -130,7 +130,9 @@ public class PODService {
     checkPermissions(orderPOD);
     orderPOD.validate();
 
-    orderService.updateOrderStatus(new Order(orderPOD.getOrderId(), RECEIVED));
+    Order order = new Order(orderPOD.getOrderId(), RECEIVED);
+    order.setOrderNumber(orderPOD.getOrderNumber());
+    orderService.updateOrderStatus(order);
 
     return repository.update(orderPOD);
   }
