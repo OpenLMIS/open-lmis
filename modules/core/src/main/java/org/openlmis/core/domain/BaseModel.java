@@ -11,7 +11,6 @@
 package org.openlmis.core.domain;
 
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
@@ -25,7 +24,7 @@ import java.util.Date;
 
 @Data
 @JsonSerialize()
-@EqualsAndHashCode(callSuper = false)
+//@EqualsAndHashCode(callSuper = false)
 public abstract class BaseModel {
 
   protected Long id;

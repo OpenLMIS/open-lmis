@@ -283,7 +283,7 @@ public class SupervisoryNodeMapperIT {
   }
 
   @Test
-  public void shouldGetSupervisoryNodesByParentNameSearch(){
+  public void shouldGetSupervisoryNodesByParentNameSearch() {
     SupervisoryNode supervisoryNode1 = make(a(SupervisoryNodeBuilder.defaultSupervisoryNode, with(code, "SN1"), with(name, "Parent")));
     supervisoryNode1.setFacility(facility);
     insertSupervisoryNode(supervisoryNode1);
@@ -304,6 +304,20 @@ public class SupervisoryNodeMapperIT {
 
     assertThat(searchResults.size(), is(1));
 
+  }
+
+  @Test
+  public void shouldGetSupervisoryNodeWithParentAndAssociatedFacility() {
+    SupervisoryNode supervisoryNode1 = make(a(SupervisoryNodeBuilder.defaultSupervisoryNode, with(code, "SN1"), with(name, "Parent")));
+    supervisoryNode1.setFacility(facility);
+    insertSupervisoryNode(supervisoryNode1);
+
+    supervisoryNode.setParent(supervisoryNode1);
+    insertSupervisoryNode(supervisoryNode);
+
+    SupervisoryNode savedNode = supervisoryNodeMapper.getSupervisoryNode(supervisoryNode.getId());
+
+    assertThat(savedNode.getParent(), is(supervisoryNode1));
   }
 
   private SupervisoryNode insertSupervisoryNode(SupervisoryNode supervisoryNode) {
