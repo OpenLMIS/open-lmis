@@ -144,9 +144,10 @@
                     <input 
                            ng-model="equipment.dateLastAssessed" 
                            name="dateLastAssessed" 
-                           id="dateLastAssessed"  
+                           id="dateLastAssessed"
+                           ng-change="blurDateFields();"
                            ui-date="{dateFormat: 'dd/mm/yy', changeYear: true}"
-                           ui-date-format="yy-mm-dd" 
+                           ui-date-format="dd/mm/yy"
                            ng-required="true" />
                 </div>
             </div>
