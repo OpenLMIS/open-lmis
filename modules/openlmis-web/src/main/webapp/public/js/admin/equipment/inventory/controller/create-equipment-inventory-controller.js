@@ -32,15 +32,13 @@ function CreateEquipmentInventoryController($scope, $location, $routeParams, Equ
       id: $routeParams.id
     }, function (data) {
       $scope.equipment = data.inventory;
+      $scope.equipment.dateLastAssessed = $scope.equipment.dateLastAssessedString ;
 
-
-      Facility.get({id: $scope.equipment.facilityId}, function(data){
+      Facility.get({ id: $scope.equipment.facilityId }, function(data){
         $scope.facility = data.facility;
       });
-
     });
   }
-
 
   $scope.saveEquipment = function () {
     $scope.error = '';
@@ -59,7 +57,7 @@ function CreateEquipmentInventoryController($scope, $location, $routeParams, Equ
       });
     }else{
       $scope.submitted = true;
-      $scope.error = 'Please correct errors on form';
+      $scope.error = 'Your submissions are not valid. Please correct errors before you Save.';
     }
   };
 
