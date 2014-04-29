@@ -70,4 +70,11 @@ public class GeographicZoneRepository {
   public GeographicZone getById(Long id) {
     return mapper.getWithParentById(id);
   }
+
+  public List<GeographicZone> searchBy(String searchParam, String searchColumn) {
+    if (searchColumn.equals("parentName")) {
+      return mapper.searchByParentName(searchParam);
+    }
+    return mapper.searchByName(searchParam);
+  }
 }

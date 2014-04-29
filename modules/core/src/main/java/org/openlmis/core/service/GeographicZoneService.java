@@ -16,6 +16,8 @@ import org.openlmis.core.repository.GeographicZoneRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * Exposes the services for handling GeographicZone entity.
  */
@@ -46,5 +48,9 @@ public class GeographicZoneService {
 
   public GeographicZone getById(long id) {
     return repository.getById(id);
+  }
+
+  public List<GeographicZone> searchBy(String searchParam, String columnName) {
+    return repository.searchBy(searchParam, columnName);
   }
 }

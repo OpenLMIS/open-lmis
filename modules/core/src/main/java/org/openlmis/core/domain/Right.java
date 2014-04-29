@@ -35,7 +35,7 @@ public enum Right {
   MANAGE_ROLE("right.manage.role", ADMIN, "Permission to create and edit roles in the system", 5),
   MANAGE_SCHEDULE("right.manage.schedule", ADMIN, "Permission to create and edit schedules in the system", 6),
   MANAGE_USER("right.manage.user", ADMIN, "Permission to manage users(crud)", 7),
-  MANAGE_SUPERVISORY_NODE("right.manage.supervisory.node", ADMIN, "Permission to manage supervisory nodes", 7),
+  MANAGE_SUPERVISORY_NODE("right.manage.supervisory.node", ADMIN, "Permission to manage supervisory nodes", 22),
   UPLOADS("right.upload", ADMIN, "Permission to upload", 21),
   VIEW_REPORT("right.view.report", ADMIN, "Permission to view reports", 11),
   MANAGE_REPORT("right.manage.report", ADMIN, "Permission to manage reports", 10, VIEW_REPORT),
@@ -50,8 +50,8 @@ public enum Right {
   SYSTEM_SETTINGS("right.system.settings", ADMIN, "Permission to configure Electronic Data Interchange (EDI)", 18),
   MANAGE_REGIMEN_TEMPLATE("right.manage.regimen.template", ADMIN, "Permission to manage System Settings", 4),
   FACILITY_FILL_SHIPMENT("right.fulfillment.fill.shipment", FULFILLMENT, "Permission to fill shipment data for facility", 19),
-  MANAGE_POD("right.fulfillment.manage.pod", FULFILLMENT, "Permission to manage proof of delivery", 20);
-
+  MANAGE_POD("right.fulfillment.manage.pod", FULFILLMENT, "Permission to manage proof of delivery", 20),
+  MANAGE_GEOGRAPHIC_ZONE("right.manage.geo.zone", ADMIN, "Permission to manage geographic zones", 23);
 
   @Getter
   private final String rightName;

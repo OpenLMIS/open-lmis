@@ -21,8 +21,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 import static org.openlmis.web.response.OpenLmisResponse.success;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
@@ -75,5 +77,11 @@ public class GeographicZoneController extends BaseController {
     ResponseEntity<OpenLmisResponse> success = success(messageService.message("message.geo.zone.updated.success", geographicZone.getName()));
     success.getBody().addData("geoZone", geographicZone);
     return success;
+  }
+
+  @RequestMapping(value = "/geographicZones", method = GET, headers = ACCEPT_JSON)
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_GEO_ZONE')")
+  public List<GeographicZone> search(@RequestParam(value = "searchParam") String searchParam, @RequestParam(value = "columnName") String columnName) {
+    return service.searchBy(searchParam, columnName);
   }
 }

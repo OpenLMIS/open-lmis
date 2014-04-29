@@ -10,7 +10,7 @@
 
 function FacilitySearchController($scope, Facility, $location, navigateBackService) {
 
-  $scope.$on('$viewContentLoaded', function() {
+  $scope.$on('$viewContentLoaded', function () {
     $scope.query = navigateBackService.query;
     $scope.updateFilteredQueryList();
   });
@@ -21,7 +21,6 @@ function FacilitySearchController($scope, Facility, $location, navigateBackServi
     navigateBackService.setData(data);
     $location.path('edit/' + id);
   };
-
 
   $scope.filterFacilitiesByNameOrCode = function (query) {
     var filteredFacilities = [];
@@ -50,7 +49,7 @@ function FacilitySearchController($scope, Facility, $location, navigateBackServi
     var queryLength = $scope.query.length;
     if (queryLength >= 3) {
       if (compareQuery()) {
-        Facility.get({"searchParam":$scope.query.substring(0, 3)}, function (data) {
+        Facility.get({"searchParam": $scope.query.substring(0, 3)}, function (data) {
           $scope.filteredFacilities = data.facilityList;
           $scope.facilityList = $scope.filteredFacilities;
           $scope.previousQuery = $scope.query;
@@ -60,20 +59,20 @@ function FacilitySearchController($scope, Facility, $location, navigateBackServi
           $scope.resultCount = $scope.facilityList.length;
         }, {});
       }
-      else{
-          filterFacilities();
-          $scope.resultCount = $scope.facilityList.length;
+      else {
+        filterFacilities();
+        $scope.resultCount = $scope.facilityList.length;
       }
     }
   };
 
-  var compareQuery = function() {
+  var compareQuery = function () {
     if ($scope.previousQuery.substring(0, 3) != $scope.query.substring(0, 3)) {
       return true;
     }
   };
 
-  var filterFacilities = function() {
+  var filterFacilities = function () {
     $scope.facilityList = [];
     angular.forEach($scope.filteredFacilities, function (facility) {
       var searchString = $scope.query.toLowerCase();
