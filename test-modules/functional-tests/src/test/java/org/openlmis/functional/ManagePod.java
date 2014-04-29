@@ -145,7 +145,7 @@ public class ManagePod extends TestCaseHelper {
   public void verifyListOfOrdersOnPodScreen(String rnrType) {
     testWebDriver.sleep(1000);
     assertEquals("Central Hospital", testWebDriver.findElement(By.xpath("//div/span[contains(text(),'Central Hospital')]")).getText());
-    assertEquals("HIV", testWebDriver.findElement(By.xpath("//div/span[contains(text(),'HIV')]")).getText());
+    assertEquals("OHIV00000001R", testWebDriver.findElement(By.xpath("//div/span[contains(text(),'HIV')]")).getText());
     assertEquals("Transfer failed", testWebDriver.findElement(By.xpath("//div/span[contains(text(),'Transfer failed')]")).getText());
     assertTrue(testWebDriver.findElement(By.xpath("//div/span[contains(text(),'Period1')]")).getText().contains("Period1"));
     assertEquals("Update POD", testWebDriver.findElement(By.xpath("//div/a[contains(text(),'Update POD')]")).getText());
