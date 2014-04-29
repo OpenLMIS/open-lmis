@@ -40,7 +40,6 @@ public class SupervisoryNodeService {
   @Autowired
   private FacilityRepository facilityRepository;
 
-
   public void save(SupervisoryNode supervisoryNode) {
     supervisoryNode.getFacility().setId(facilityRepository.getIdForCode(supervisoryNode.getFacility().getCode()));
     validateParentNode(supervisoryNode);

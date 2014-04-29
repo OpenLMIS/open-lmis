@@ -83,10 +83,21 @@ public interface GeographicZoneMapper {
     "FROM geographic_zones GZ INNER JOIN geographic_zones GZP ON GZ.parentId = GZP.id",
     "INNER JOIN geographic_levels GL ON GZ.levelId = GL.id",
     "WHERE LOWER(GZP.name) LIKE '%' || LOWER(#{searchParam} || '%')",
-    "ORDER BY levelName, LOWER(GZP.name), name"})
+    "ORDER BY levelName, LOWER(GZP.name), GZ.name"})
   @Results(value = {
     @Result(property = "level.name", column = "levelName"),
     @Result(property = "parent.name", column = "parentName"),
   })
-  List<GeographicZone> getAllBySearchCriteria(String searchParam);
+  List<GeographicZone> searchByParentName(String searchParam);
+
+  @Select({"SELECT GZ.id, GZ.name, GZ.code, GL.name AS levelName, GZP.name AS parentName",
+    "FROM geographic_zones GZ LEFT JOIN geographic_zones GZP ON GZ.parentId = GZP.id",
+    "INNER JOIN geographic_levels GL ON GZ.levelId = GL.id",
+    "WHERE LOWER(GZ.name) LIKE '%' || LOWER(#{searchParam} || '%')",
+    "ORDER BY levelName, LOWER(GZP.name), GZ.name"})
+  @Results(value = {
+    @Result(property = "level.name", column = "levelName"),
+    @Result(property = "parent.name", column = "parentName"),
+  })
+  List<GeographicZone> searchByName(String searchParam);
 }

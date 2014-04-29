@@ -84,13 +84,24 @@ public class GeographicZoneMapperIT {
 
   @Test
   public void shouldGetAllGeographicZonesSortedAndSearchedByParentName() throws Exception {
-    List<GeographicZone> allGeographicZones = mapper.getAllBySearchCriteria("Mozam");
+    List<GeographicZone> allGeographicZones = mapper.searchByParentName("Mozam");
     assertThat(allGeographicZones.size(), is(3));
     GeographicZone geographicZone = allGeographicZones.get(0);
 
     assertThat(geographicZone.getCode(), is("Cabo Delgado Province"));
     assertThat(geographicZone.getName(), is("Cabo Delgado Province"));
     assertThat(geographicZone.getLevel().getName(), is("State"));
+  }
+
+  @Test
+  public void shouldGetAllGeographicZonesSortedAndSearchedByGeoZoneName() throws Exception {
+    List<GeographicZone> allGeographicZones = mapper.searchByName("Dis");
+    assertThat(allGeographicZones.size(), is(9));
+    GeographicZone geographicZone1 = allGeographicZones.get(0);
+    GeographicZone geographicZone2 = allGeographicZones.get(1);
+
+    assertThat(geographicZone1.getCode(), is("District4"));
+    assertThat(geographicZone2.getCode(), is("District5"));
   }
 
   @Test
