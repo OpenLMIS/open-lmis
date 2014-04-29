@@ -59,8 +59,8 @@ public class DashboardLookupService {
         return dashboardMapper.getStockOutFacilitiesForRequisitionGroup(periodId, programId, productId, requisitionGroupId);
 
     }
-    public List<AlertSummary> getAlerts(Long userId,Long supervisoryNodeId){
-        return dashboardMapper.getAlerts(userId,supervisoryNodeId);
+    public List<AlertSummary> getAlerts(Long userId, Long supervisoryNodeId, Long programId){
+        return dashboardMapper.getAlerts(userId,supervisoryNodeId, programId );
 
     }
 

@@ -92,10 +92,11 @@ public interface DashboardMapper {
             "FROM alert_summary s\n" +
             "INNER JOIN alerts a on s.alertTypeId= a.alertType\n" +
             "INNER JOIN vw_user_supervisorynodes sn ON sn.id = s.supervisorynodeid\n" +
-            "WHERE sn.userid = #{userId}" +
+            "WHERE sn.userid = #{userId}\n" +
+            "AND s.programid = #{programId}\n"+
             "AND CASE WHEN COALESCE(#{supervisoryNodeId},0) = 0 THEN sn.id = sn.id ELSE (sn.id = #{supervisoryNodeId} OR sn.parentId = #{supervisoryNodeId}) END\n")
 
-    List<AlertSummary> getAlerts(@Param("userId") Long userId, @Param("supervisoryNodeId")  Long supervisoryNodeId);
+    List<AlertSummary> getAlerts(@Param("userId") Long userId, @Param("supervisoryNodeId") Long supervisoryNodeId, @Param("programId")Long programId);
 
 
     @SelectProvider(type = DashboardNotificationQueryBuilder.class, method = "getNotificationDetails")
