@@ -26,10 +26,10 @@ function CreateEquipmentInventoryController($scope, $location, $routeParams, Equ
     EquipmentInventory.get({
       id: $routeParams.id
     }, function (data) {
-
       $scope.equipment = data.inventory;
     });
   }
+
 
   $scope.saveEquipment = function () {
     $scope.error = '';
@@ -37,7 +37,11 @@ function CreateEquipmentInventoryController($scope, $location, $routeParams, Equ
     if($scope.equipmentForm.$valid ){
       SaveEquipmentInventory.save($scope.equipment, function (data) {
         // success
-        $location.path('');
+        if($routeParams.from !== undefined){
+          $location.path('/' + $routeParams.from + '/' + $routeParams.facilityId + '/' + $routeParams.programId);
+        }else{
+          $location.path('/0/' + $scope.equipment.facilityId + '/' + $scope.equipment.programId);
+        }
       }, function (data) {
         // error
         $scope.error = data.messages;

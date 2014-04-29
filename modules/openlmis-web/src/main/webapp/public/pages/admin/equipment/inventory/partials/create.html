@@ -11,9 +11,13 @@
   <h2>
     <span>{{(equipment.id == undefined)?'New': 'Edit'}} Equipment</span>
   </h2>
+  <div>
+        <span class="pull-left">Facility : <b>{{facility.name}}</b></span> <span class="pull-right">Program: <b>{{program.name}}</b></span>
+  </div>
+  <div class="clearfix"></div>
   <form ng-submit="saveEquipment()" name="equipmentForm" novalidate>
     <div class="form-group">
-
+      
       <div class="form-row">
         <div class="form-cell">
           <label for="type">Equipment
@@ -21,7 +25,7 @@
           </label>
 
           <div class="form-field">
-            <select style="width: 250px;" ui-select2  ng-model="equipment.equipmentId" id="type">
+            <select style="width: 250px;" ui-select2  ng-model="equipment.equipmentId" id="type" ng-required="true" name="type">
               <option ng-repeat="type in equipments" value="{{type.id}}">{{type.name}}</option>
             </select>
             <span class="field-error" ng-show="equipmentForm.type.$error.required && showError" openlmis-message="missing.value"></span>
@@ -33,7 +37,7 @@
           </label>
 
           <div class="form-field">
-            <input ng-model="equipment.model" id="model" type="text" maxlength="200" ng-required="true" />
+            <input ng-model="equipment.model" id="model" name="model" type="text" maxlength="200" ng-required="true" />
             <span class="field-error" ng-show="equipmentForm.model.$error.required && showError" openlmis-message="missing.value"></span>
           </div>
         </div>
@@ -44,11 +48,11 @@
             </label>
 
             <div class="form-field">
-              <select style="width: 250px;" ui-select2  ng-model="equipment.operationalStatusId" id="operationalStatus" >
+              <select style="width: 250px;" ui-select2  ng-model="equipment.operationalStatusId" id="operationalStatus" name="operationalStatus" ng-required="true" >
                   <option value="1">Operational</option>
                   <option value="2">Non-Operational</option>
               </select>
-              <span class="field-error" ng-show="equipmentForm.code.$error.required && showError" openlmis-message="missing.value"></span>
+              <span class="field-error" ng-show="equipmentForm.operationalStatus.$error.required && showError" openlmis-message="missing.value"></span>
             </div>
           </div>
           
@@ -59,7 +63,7 @@
 
             <div class="form-field">
               <input ng-model="equipment.serialNumber" name="serialNumber" id="serialNumber" type="text" maxlength="50" ng-required="true" />
-              <span class="field-error" ng-show="equipmentForm.code.$error.required && showError" openlmis-message="missing.value"></span>
+              <span class="field-error" ng-show="equipmentForm.serialNumber.$error.required && showError" openlmis-message="missing.value"></span>
             </div>
           </div>
 
@@ -70,7 +74,7 @@
 
             <div class="form-field">
               <input  ng-model="equipment.manufacturerName" name="manuf" id="manuf" type="text" maxlength="50" ng-required="true" />
-              <span class="field-error" ng-show="equipmentForm.code.$error.required && showError" openlmis-message="missing.value"></span>
+              <span class="field-error" ng-show="equipmentForm.manuf.$error.required && showError" openlmis-message="missing.value"></span>
             </div>
           </div>
         </div>
@@ -93,7 +97,7 @@
 
             <div class="form-field">
               <input ng-model="equipment.sourceOfFund" name="sourceOfFund" id="sourceOfFund" type="text" maxlength="50" ng-required="true" />
-              <span class="field-error" ng-show="equipmentForm.code.$error.required && showError" openlmis-message="missing.value"></span>
+              <span class="field-error" ng-show="equipmentForm.sourceOfFund.$error.required && showError" openlmis-message="missing.value"></span>
             </div>
           </div>
         </div>
@@ -105,7 +109,7 @@
 
             <div class="form-field">
               <input ng-model="equipment.energySource" name="source" id="source" type="text" maxlength="50" ng-required="true" />
-              <span class="field-error" ng-show="equipmentForm.code.$error.required && showError" openlmis-message="missing.value"></span>
+              <span class="field-error" ng-show="equipmentForm.source.$error.required && showError" openlmis-message="missing.value"></span>
             </div>
           </div>
 
@@ -116,7 +120,7 @@
 
             <div class="form-field">
               <input ng-model="equipment.yearOfInstallation"  name="year" id="year" type="number" ng-required="true" />
-              <span class="field-error" ng-show="equipmentForm.code.$error.required && showError" openlmis-message="missing.value"></span>
+              <span class="field-error" ng-show="equipmentForm.year.$error.required && showError" openlmis-message="missing.value"></span>
             </div>
           </div>
         </div>

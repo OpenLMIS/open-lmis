@@ -92,7 +92,7 @@
   </div>
 
   <div ng-show="selectedFacilityId != undefined && selectedProgram != undefined">
-    <a id="add-new-equipment-type" ng-href="#/create/{{selectedFacilityId}}/{{selectedProgram.id}}" class="pull-right btn btn-primary" openlmis-message="button.add.new"></a>
+    <a id="add-new-equipment-type" ng-href="#/create/{{selectedType}}/{{selectedFacilityId}}/{{selectedProgram.id}}" class="pull-right btn btn-primary" openlmis-message="button.add.new"></a>
     <div ng-show="inventory.length == 0">
       There are no equipments registered for this facility.
     </div>
