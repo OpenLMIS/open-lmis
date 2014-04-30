@@ -8,17 +8,23 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-function CreateEquipmentLineItemController($scope, EquipmentOperationalStatus) {
-  $scope.showCategory = function (index) {
-    var absIndex = ($scope.pageSize * ($scope.currentPage - 1)) +  index;
-    return  !((index > 0 ) && ($scope.rnr.equipmentLineItems.length > absIndex) &&  ($scope.rnr.equipmentLineItems[absIndex].equipmentCategory == $scope.rnr.equipmentLineItems[absIndex - 1].equipmentCategory));
-  };
+package org.openlmis.equipment.domain;
 
-  $scope.getId = function (prefix, parent) {
-    return prefix + "_" + parent.$parent.$index;
-  };
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+import org.openlmis.core.domain.BaseModel;
 
-  EquipmentOperationalStatus.get(function(data){
-    $scope.operationalStatus  = data.status
-  })
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(callSuper=false)
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class EquipmentOperationalStatus extends BaseModel {
+
+  private String name;
+  private Integer displayOrder;
+
 }

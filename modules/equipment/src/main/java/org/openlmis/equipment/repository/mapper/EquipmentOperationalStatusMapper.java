@@ -8,17 +8,17 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-function CreateEquipmentLineItemController($scope, EquipmentOperationalStatus) {
-  $scope.showCategory = function (index) {
-    var absIndex = ($scope.pageSize * ($scope.currentPage - 1)) +  index;
-    return  !((index > 0 ) && ($scope.rnr.equipmentLineItems.length > absIndex) &&  ($scope.rnr.equipmentLineItems[absIndex].equipmentCategory == $scope.rnr.equipmentLineItems[absIndex - 1].equipmentCategory));
-  };
+package org.openlmis.equipment.repository.mapper;
 
-  $scope.getId = function (prefix, parent) {
-    return prefix + "_" + parent.$parent.$index;
-  };
+import org.apache.ibatis.annotations.Select;
+import org.openlmis.equipment.domain.EquipmentOperationalStatus;
+import org.springframework.stereotype.Repository;
 
-  EquipmentOperationalStatus.get(function(data){
-    $scope.operationalStatus  = data.status
-  })
+import java.util.List;
+
+@Repository
+public interface EquipmentOperationalStatusMapper {
+
+  @Select("select * from equipment_operational_status order by displayOrder, name")
+  List<EquipmentOperationalStatus> getAll();
 }
