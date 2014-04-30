@@ -12,7 +12,8 @@
     <span>{{(equipment.id == undefined)?'New': 'Edit'}} Equipment</span>
   </h2>
   <div>
-        <span class="pull-left">Facility : <b>{{facility.name}}</b></span> <span class="pull-right">Program: <b>{{program.name}}</b></span>
+        <span class="pull-left">Facility : <b>{{facility.name}}</b></span>
+        <!--<span class="pull-right">Program: <b>{{program.name}}</b></span>-->
   </div>
   <div class="clearfix"></div>
   <form ng-submit="saveEquipment()" name="equipmentForm" novalidate>
@@ -26,7 +27,7 @@
 
           <div class="form-field">
             <select style="width: 250px;" ui-select2  ng-model="equipment.equipmentId" id="type" ng-required="true" name="type">
-              <option ng-repeat="type in equipments" value="{{type.id}}">{{type.name}}</option>
+              <option ng-repeat="type in equipments" ng-selected="type.id == equipment.equipmentId" value="{{type.id}}">{{type.name}}</option>
             </select>
             <span class="field-error" ng-show="equipmentForm.type.$error.required && showError" openlmis-message="missing.value"></span>
           </div>
@@ -49,8 +50,7 @@
 
             <div class="form-field">
               <select style="width: 250px;" ui-select2  ng-model="equipment.operationalStatusId" id="operationalStatus" name="operationalStatus" ng-required="true" >
-                  <option value="1">Operational</option>
-                  <option value="2">Non-Operational</option>
+                  <option value="{{status.id}}" ng-repeat="status in operationalStatusList" ng-selected="status.id == equipment.operationalStatusId">{{status.name}}</option>
               </select>
               <span class="field-error" ng-show="equipmentForm.operationalStatus.$error.required && showError" openlmis-message="missing.value"></span>
             </div>
