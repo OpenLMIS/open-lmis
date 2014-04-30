@@ -14,16 +14,19 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.codehaus.jackson.map.ser.std.DateSerializer;
 import org.openlmis.core.domain.BaseModel;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper=false)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class EquipmentInventory extends BaseModel {
 
   private Long facilityId;
@@ -47,15 +50,15 @@ public class EquipmentInventory extends BaseModel {
   @JsonSerialize(using = DateSerializer.class)
   private Date dateLastAssessed;
 
-//  public String getDateLastAssessedString()  {
-//    try {
-//      SimpleDateFormat simpleDateFormat = new SimpleDateFormat("mm/dd/yyyy");
-//      return this.dateLastAssessed == null ? null : simpleDateFormat.format(this.dateLastAssessed);
-//    }catch(Exception exp){
-//
-//    }
-//    return null;
-//  }
+  public String getDateLastAssessedString()  {
+    try {
+      SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-dd-MM");
+      return this.dateLastAssessed == null ? null : simpleDateFormat.format(this.dateLastAssessed);
+    }catch(Exception exp){
+
+    }
+    return null;
+  }
 
 
 }

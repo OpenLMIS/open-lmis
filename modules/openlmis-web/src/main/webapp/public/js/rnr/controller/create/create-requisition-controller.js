@@ -8,11 +8,12 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-function CreateRequisitionController($scope, requisitionData, pageSize, rnrColumns, lossesAndAdjustmentsTypes, facilityApprovedProducts, requisitionRights, regimenTemplate, $location, DeleteRequisition , Requisitions, $routeParams, $dialog, requisitionService, $q) {
+function CreateRequisitionController($scope, requisitionData, pageSize, rnrColumns, lossesAndAdjustmentsTypes, facilityApprovedProducts, requisitionRights, equipmentOperationalStatus , regimenTemplate, $location, DeleteRequisition , Requisitions, $routeParams, $dialog, requisitionService, $q) {
 
   var NON_FULL_SUPPLY = 'nonFullSupply';
   var FULL_SUPPLY = 'fullSupply';
   var REGIMEN = 'regimen';
+  var EQUIPMENT = 'equipment';
 
   $scope.pageSize = pageSize;
   $scope.rnr = new Rnr(requisitionData.rnr, rnrColumns, requisitionData.numberOfMonths);
@@ -32,7 +33,6 @@ function CreateRequisitionController($scope, requisitionData, pageSize, rnrColum
           }, $dialog);
         });
         // redirect to the main page
-
       }
     };
 
@@ -50,6 +50,7 @@ function CreateRequisitionController($scope, requisitionData, pageSize, rnrColum
 
   $scope.lossesAndAdjustmentTypes = lossesAndAdjustmentsTypes;
   $scope.facilityApprovedProducts = facilityApprovedProducts;
+  $scope.equipmentOperationalStatus = equipmentOperationalStatus;
 
   $scope.visibleColumns = requisitionService.getMappedVisibleColumns(rnrColumns, RegularRnrLineItem.frozenColumns,
       ['quantityApproved']);
@@ -59,8 +60,9 @@ function CreateRequisitionController($scope, requisitionData, pageSize, rnrColum
   $scope.regimenColumns = regimenTemplate ? regimenTemplate.columns : [];
   $scope.visibleRegimenColumns = _.where($scope.regimenColumns, {'visible': true});
   $scope.addNonFullSupplyLineItemButtonShown = _.findWhere($scope.programRnrColumnList, {'name': 'quantityRequested'});
-  $scope.errorPages = {fullSupply: [], nonFullSupply: [], regimen: []};
+  $scope.errorPages = {fullSupply: [], nonFullSupply: [], regimen: [], equipment: []};
   $scope.regimenCount = $scope.rnr.regimenLineItems.length;
+  $scope.equipmentCount = $scope.rnr.equipmentLineItems.length;
 
   requisitionService.populateScope($scope, $location, $routeParams);
   resetFlags();
@@ -100,7 +102,8 @@ function CreateRequisitionController($scope, requisitionData, pageSize, rnrColum
     return $scope.visibleTab === NON_FULL_SUPPLY ?
         _.contains($scope.errorPages.nonFullSupply, page) :
         $scope.visibleTab === FULL_SUPPLY ? _.contains($scope.errorPages.fullSupply, page) :
-        $scope.visibleTab === REGIMEN ? _.contains($scope.errorPages.regimen,page) : [];
+        $scope.visibleTab === REGIMEN ? _.contains($scope.errorPages.regimen, page) :
+        $scope.visibleTab === EQUIPMENT ? _.contains($scope.errorPages.equipment, page) : [];
   };
 
   $scope.$watch("currentPage", function () {
@@ -337,6 +340,16 @@ CreateRequisitionController.resolve = {
     $timeout(function () {
       LossesAndAdjustmentsReferenceData.get({}, function (data) {
         deferred.resolve(data.lossAdjustmentTypes);
+      }, {});
+    }, 100);
+    return deferred.promise;
+  },
+
+  equipmentOperationalStatus: function ($q, $timeout, EquipmentOperationalStatus) {
+    var deferred = $q.defer();
+    $timeout(function () {
+      EquipmentOperationalStatus.get({}, function (data) {
+        deferred.resolve(data.status);
       }, {});
     }, 100);
     return deferred.promise;

@@ -35,6 +35,7 @@ public class Program extends BaseModel {
   private Boolean budgetingApplies;
   private boolean templateConfigured;
   private boolean regimenTemplateConfigured;
+  private boolean isEquipmentConfigured;
   private boolean push;
 
   public Program(Long id) {

@@ -8,13 +8,17 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-angular.module('equipment-inventory', ['openlmis','ui.bootstrap.modal', 'ui.bootstrap.dialog', 'ui.bootstrap.dropdownToggle']).config(['$routeProvider', function ($routeProvider) {
-  $routeProvider.
-      when('/', {controller: EquipmentInventoryController, templateUrl: 'partials/list.html'}).
-      when('/:from/:facilityId/:programId', {controller: EquipmentInventoryController, templateUrl: 'partials/list.html'}).
-      when('/create/:from/:facilityId/:programId', {controller: CreateEquipmentInventoryController, templateUrl: 'partials/create.html'}).
-      when('/edit/:id', {controller: CreateEquipmentInventoryController, templateUrl: 'partials/create.html'}).
-      otherwise({redirectTo: '/'});
-}]).run(function ($rootScope, AuthorizationService) {
-  AuthorizationService.preAuthorize('MANAGE_EQUIPMENT_INVENTORY');
-});
+package org.openlmis.equipment.repository.mapper;
+
+import org.apache.ibatis.annotations.Select;
+import org.openlmis.equipment.domain.EquipmentOperationalStatus;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
+
+@Repository
+public interface EquipmentOperationalStatusMapper {
+
+  @Select("select * from equipment_operational_status order by displayOrder, name")
+  List<EquipmentOperationalStatus> getAll();
+}

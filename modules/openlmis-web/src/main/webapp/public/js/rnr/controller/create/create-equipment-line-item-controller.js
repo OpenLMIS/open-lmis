@@ -8,13 +8,14 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-angular.module('equipment-inventory', ['openlmis','ui.bootstrap.modal', 'ui.bootstrap.dialog', 'ui.bootstrap.dropdownToggle']).config(['$routeProvider', function ($routeProvider) {
-  $routeProvider.
-      when('/', {controller: EquipmentInventoryController, templateUrl: 'partials/list.html'}).
-      when('/:from/:facilityId/:programId', {controller: EquipmentInventoryController, templateUrl: 'partials/list.html'}).
-      when('/create/:from/:facilityId/:programId', {controller: CreateEquipmentInventoryController, templateUrl: 'partials/create.html'}).
-      when('/edit/:id', {controller: CreateEquipmentInventoryController, templateUrl: 'partials/create.html'}).
-      otherwise({redirectTo: '/'});
-}]).run(function ($rootScope, AuthorizationService) {
-  AuthorizationService.preAuthorize('MANAGE_EQUIPMENT_INVENTORY');
-});
+function CreateEquipmentLineItemController($scope) {
+  $scope.showCategory = function (index) {
+    var absIndex = ($scope.pageSize * ($scope.currentPage - 1)) +  index;
+    return  !((index > 0 ) && ($scope.rnr.equipmentLineItems.length > absIndex) &&  ($scope.rnr.equipmentLineItems[absIndex].equipmentCategory == $scope.rnr.equipmentLineItems[absIndex - 1].equipmentCategory));
+  };
+
+  $scope.getId = function (prefix, parent) {
+    return prefix + "_" + parent.$parent.$index;
+  };
+
+}

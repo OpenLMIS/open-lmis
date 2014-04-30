@@ -1,0 +1,102 @@
+<!--
+  ~ This program is part of the OpenLMIS logistics management information system platform software.
+  ~ Copyright © 2013 VillageReach
+  ~
+  ~ This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+  ~  
+  ~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+  ~ You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
+  -->
+
+<div ng-controller="CreateEquipmentLineItemController">
+    <div class="rnr-table regimen-table" tab-scroll bottom-offset="180">
+        <table id="regimenTable" fixed-table-header class="table table-bordered scrollable">
+            <thead>
+            <tr>
+                <th class="col-1" >
+                    <div class="regimen-heading">
+                        <span>Code</span>
+                    </div>
+                </th>
+                <th class="col-3" >
+                    <div class="regimen-heading">
+                        <span>Equipment Name</span>
+                    </div>
+                </th>
+                <th class="col-1" >
+                    <div class="regimen-heading">
+                        <span>Model</span>
+                    </div>
+                </th>
+                <th class="col-1" >
+                    <div class="regimen-heading">
+                        <span>Serial</span>
+                    </div>
+                </th>
+                <th class="col-1" >
+                    <div class="regimen-heading">
+                        <span>Status</span>
+                    </div>
+                </th>
+                <th class="col-1" >
+                    <div class="regimen-heading">
+                        <span>Test Count</span>
+                    </div>
+                </th>
+                <th class="col-1" >
+                    <div class="regimen-heading">
+                        <span>Total Count</span>
+                    </div>
+                </th>
+                <th class="col-1" >
+                    <div class="regimen-heading">
+                        <span>Days out of use</span>
+                    </div>
+                </th>
+                <th class="col-3" >
+                    <div class="regimen-heading">
+                        <span>Remarks</span>
+                    </div>
+                </th>
+            </tr>
+            </thead>
+            <tbody ng-repeat="equipmentLineItem in page.equipment">
+            <tr ng-show="showCategory($index)">
+                <td class="productCategory" colspan="9" ng-show="showCategory($index)"
+                    ng-bind="equipmentLineItem.equipmentCategory"></td>
+            </tr>
+            <tr>
+                <td class="cell-input">
+                    <span ng-bind="equipmentLineItem.equipmentName" class="cell-text"></span>
+                </td>
+                <td class="cell-input">
+                    <span ng-bind="equipmentLineItem.equipmentName" class="cell-text"></span>
+                </td>
+                <td class="cell-input">
+                    <span ng-bind="equipmentLineItem.equipmentModel" class="cell-text"></span>
+                </td>
+                <td class="cell-input">
+                    <span ng-bind="equipmentLineItem.equipmentSerial" class="cell-text"></span>
+                </td>
+                <td class="cell-input">
+                     <select class="cell-text" ng-model="equipmentLineItem.operationalStatusId">
+                         <option  ng-repeat="status in equipmentOperationalStatus" value="{{status.id}}" ng-selected="equipmentLineItem.operationalStatusId == status.id">{{status.name}}</option>
+                     </select>
+                </td>
+                <td class="cell-input">
+                    <input class="cell-text" type="text" ng-model="equipmentLineItem.testCount">
+                </td>
+                <td class="cell-input">
+                    <input class="cell-text" type="text" ng-model="equipmentLineItem.totalCount">
+                </td>
+                <td class="cell-input">
+                    <input class="cell-text" type="text" ng-model="equipmentLineItem.daysOutOfUse">
+                </td>
+                <td class="cell-input">
+                    <input class="cell-text" type="text" ng-model="equipmentLineItem.remarks">
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

@@ -307,3 +307,7 @@ services.factory('OrderPOD', function ($resource) {
 services.factory('OrderNumberConfiguration', function ($resource) {
   return $resource('/order-number-configuration.json',{},  {post: {method: 'POST'}});
 });
+
+services.factory('EquipmentOperationalStatus', function ($resource) {
+  return $resource('/equipment/type/operational-status.json',{},  {});
+});
