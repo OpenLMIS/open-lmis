@@ -13,6 +13,7 @@ services.factory('requisitionService', function (messageService) {
   var NON_FULL_SUPPLY = 'nonFullSupply';
   var FULL_SUPPLY = 'fullSupply';
   var REGIMEN = 'regimen';
+  var EQUIPMENT = 'equipment';
 
   var populateScope = function ($scope, $location, $routeParams) {
     $scope.visibleTab = $routeParams.supplyType;
@@ -66,21 +67,17 @@ services.factory('requisitionService', function (messageService) {
     var lineItemMap = {
       'nonFullSupply': $scope.rnr.nonFullSupplyLineItems,
       'fullSupply': $scope.rnr.fullSupplyLineItems,
-      'regimen': $scope.rnr.regimenLineItems
+      'regimen': $scope.rnr.regimenLineItems,
+      'equipment': $scope.rnr.equipmentLineItems
     };
     if (save) $scope.saveRnr();
 
     $scope.page = {fullSupply: [], nonFullSupply: [], regimen: []};
-    $scope.visibleTab = ($routeParams.supplyType === NON_FULL_SUPPLY) ? NON_FULL_SUPPLY : ($routeParams.supplyType === REGIMEN && $scope.regimenCount) ? REGIMEN : FULL_SUPPLY;
+    $scope.visibleTab = ($routeParams.supplyType === NON_FULL_SUPPLY) ? NON_FULL_SUPPLY : ($routeParams.supplyType === REGIMEN && $scope.regimenCount) ? REGIMEN : ($routeParams.supplyType === EQUIPMENT && $scope.equipmentCount)?EQUIPMENT : FULL_SUPPLY;
 
     $location.search('supplyType', $scope.visibleTab);
 
-    if ($scope.visibleTab != REGIMEN) {
-      $scope.numberOfPages = Math.ceil(lineItemMap[$scope.visibleTab].length / $scope.pageSize) || 1;
-    } else {
-        // I see no reason why we should not page through the regimens
-        $scope.numberOfPages = Math.ceil(lineItemMap[$scope.visibleTab].length / $scope.pageSize) || 1;
-    }
+    $scope.numberOfPages = Math.ceil(lineItemMap[$scope.visibleTab].length / $scope.pageSize) || 1;
 
     $scope.currentPage = (utils.isValidPage($routeParams.page, $scope.numberOfPages)) ? parseInt($routeParams.page,
       10) : 1;

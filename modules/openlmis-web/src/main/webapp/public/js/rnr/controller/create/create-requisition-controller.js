@@ -13,6 +13,7 @@ function CreateRequisitionController($scope, requisitionData, pageSize, rnrColum
   var NON_FULL_SUPPLY = 'nonFullSupply';
   var FULL_SUPPLY = 'fullSupply';
   var REGIMEN = 'regimen';
+  var EQUIPMENT = 'equipment';
 
   $scope.pageSize = pageSize;
   $scope.rnr = new Rnr(requisitionData.rnr, rnrColumns, requisitionData.numberOfMonths);
@@ -59,8 +60,9 @@ function CreateRequisitionController($scope, requisitionData, pageSize, rnrColum
   $scope.regimenColumns = regimenTemplate ? regimenTemplate.columns : [];
   $scope.visibleRegimenColumns = _.where($scope.regimenColumns, {'visible': true});
   $scope.addNonFullSupplyLineItemButtonShown = _.findWhere($scope.programRnrColumnList, {'name': 'quantityRequested'});
-  $scope.errorPages = {fullSupply: [], nonFullSupply: [], regimen: []};
+  $scope.errorPages = {fullSupply: [], nonFullSupply: [], regimen: [], equipment: []};
   $scope.regimenCount = $scope.rnr.regimenLineItems.length;
+  $scope.equipmentCount = $scope.rnr.equipmentLineItems.length;
 
   requisitionService.populateScope($scope, $location, $routeParams);
   resetFlags();
@@ -100,7 +102,8 @@ function CreateRequisitionController($scope, requisitionData, pageSize, rnrColum
     return $scope.visibleTab === NON_FULL_SUPPLY ?
         _.contains($scope.errorPages.nonFullSupply, page) :
         $scope.visibleTab === FULL_SUPPLY ? _.contains($scope.errorPages.fullSupply, page) :
-        $scope.visibleTab === REGIMEN ? _.contains($scope.errorPages.regimen,page) : [];
+        $scope.visibleTab === REGIMEN ? _.contains($scope.errorPages.regimen, page) :
+        $scope.visibleTab === EQUIPMENT ? _.contains($scope.errorPages.equipment, page) : [];
   };
 
   $scope.$watch("currentPage", function () {
