@@ -1,7 +1,7 @@
 /**
  * Created by issa on 4/24/14.
  */
-function SendNotificationController($scope, programsList,dashboardFiltersHistoryService, formInputValue,RequisitionGroupsBySupervisoryNodeProgramSchedule,userPreferredFilterValues,ReportProgramsBySupervisoryNode, UserSupervisoryNodes,ReportSchedules, ReportPeriods, RequisitionGroupsByProgram,RequisitionGroupsByProgramSchedule,FacilitiesByProgramAndRequisitionGroupParams, OperationYears, ReportPeriodsByScheduleAndYear, ngTableParams) {
+function SendNotificationController($scope, programsList,dashboardFiltersHistoryService, NotificationAlerts, formInputValue,RequisitionGroupsBySupervisoryNodeProgramSchedule,userPreferredFilterValues,ReportProgramsBySupervisoryNode, UserSupervisoryNodes,ReportSchedules, ReportPeriods, RequisitionGroupsByProgram,RequisitionGroupsByProgramSchedule,FacilitiesByProgramAndRequisitionGroupParams, OperationYears, ReportPeriodsByScheduleAndYear, ngTableParams) {
     $scope.filterObject = {};
 
     $scope.formFilter = {};
@@ -40,6 +40,13 @@ function SendNotificationController($scope, programsList,dashboardFiltersHistory
 
     });
 
+    NotificationAlerts.get({},function(data){
+        $scope.notifications = data.notifications;
+
+
+
+    });
+
     $scope.processSupervisoryNodeChange = function(){
 
         $scope.filterObject.supervisoryNodeId = $scope.formFilter.supervisoryNodeId;
@@ -60,7 +67,7 @@ function SendNotificationController($scope, programsList,dashboardFiltersHistory
 
     $scope.filterProductsByProgram = function (){
         if(isUndefined($scope.formFilter.programId)){
-            $scope.resetShipmentLeadTimeData();
+            //$scope.resetShipmentLeadTimeData();
             return;
         }
         $scope.filterObject.programId = $scope.formFilter.programId;
