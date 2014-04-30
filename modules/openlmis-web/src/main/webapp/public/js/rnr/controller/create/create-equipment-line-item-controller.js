@@ -11,7 +11,7 @@
 function CreateEquipmentLineItemController($scope) {
   $scope.showCategory = function (index) {
     var absIndex = ($scope.pageSize * ($scope.currentPage - 1)) +  index;
-    return  !((index > 0 ) && ($scope.rnr.regimenLineItems.length > absIndex) &&  ($scope.rnr.regimenLineItems[absIndex].category.name == $scope.rnr.regimenLineItems[absIndex - 1].category.name));
+    return  !((index > 0 ) && ($scope.rnr.equipmentLineItems.length > absIndex) &&  ($scope.rnr.equipmentLineItems[absIndex].equipmentCategory == $scope.rnr.equipmentLineItems[absIndex - 1].equipmentCategory));
   };
 
   $scope.getId = function (prefix, parent) {

@@ -33,7 +33,6 @@ function CreateRequisitionController($scope, requisitionData, pageSize, rnrColum
           }, $dialog);
         });
         // redirect to the main page
-
       }
     };
 

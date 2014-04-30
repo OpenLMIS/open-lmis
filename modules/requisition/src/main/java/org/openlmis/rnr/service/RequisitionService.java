@@ -189,9 +189,12 @@ public class RequisitionService {
 
     if (savedRnr.getStatus() == AUTHORIZED || savedRnr.getStatus() == IN_APPROVAL) {
       savedRnr.copyApproverEditableFields(rnr, rnrTemplate);
+
     } else {
       List<ProgramProduct> programProducts = programProductService.getNonFullSupplyProductsForProgram(savedRnr.getProgram());
       savedRnr.copyCreatorEditableFields(rnr, rnrTemplate, regimenTemplate, programProducts);
+      //TODO: copy only the editable fields.
+      savedRnr.setEquipmentLineItems(rnr.getEquipmentLineItems());
     }
 
     requisitionRepository.update(savedRnr);

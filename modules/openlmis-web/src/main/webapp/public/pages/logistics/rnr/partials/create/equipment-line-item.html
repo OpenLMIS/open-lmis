@@ -8,7 +8,7 @@
   ~ You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
   -->
 
-<div ng-controller="CreateRegimenLineItemController">
+<div ng-controller="CreateEquipmentLineItemController">
     <div class="rnr-table regimen-table" tab-scroll bottom-offset="180">
         <table id="regimenTable" fixed-table-header class="table table-bordered scrollable">
             <thead>
@@ -79,21 +79,21 @@
                     <span ng-bind="equipmentLineItem.equipmentSerial" class="cell-text"></span>
                 </td>
                 <td class="cell-input">
-                     <select class="cell-text" ng-bind="equipmentLineItem.operationalStatusId">
+                     <select class="cell-text" ng-model="equipmentLineItem.operationalStatusId">
                          <option value="{{status.id}}" ng-repeat="status in operationalStatuses">{{status.name}}</option>
                      </select>
                 </td>
                 <td class="cell-input">
-                    <input class="cell-text" type="text" ng-bind="equipmentLineItem.testCount">
+                    <input class="cell-text" type="text" ng-model="equipmentLineItem.testCount">
                 </td>
                 <td class="cell-input">
-                    <input class="cell-text" type="text" ng-bind="equipmentLineItem.totalCount">
+                    <input class="cell-text" type="text" ng-model="equipmentLineItem.totalCount">
                 </td>
                 <td class="cell-input">
-                    <input class="cell-text" type="text" ng-bind="equipmentLineItem.daysOutOfUse">
+                    <input class="cell-text" type="text" ng-model="equipmentLineItem.daysOutOfUse">
                 </td>
                 <td class="cell-input">
-                    <input class="cell-text" type="text" ng-bind="equipmentLineItem.remarks">
+                    <input class="cell-text" type="text" ng-model="equipmentLineItem.remarks">
                 </td>
             </tr>
             </tbody>

@@ -94,6 +94,13 @@ public class RequisitionRepository {
     updateNonFullSupplyLineItems(rnr);
     if (!(rnr.getStatus() == AUTHORIZED || rnr.getStatus() == IN_APPROVAL)) {
       updateRegimenLineItems(rnr);
+      updateEquipmentLineItems(rnr);
+    }
+  }
+
+  private void updateEquipmentLineItems(Rnr rnr) {
+    for(EquipmentLineItem item : rnr.getEquipmentLineItems()){
+      equipmentLineItemMapper.update(item);
     }
   }
 

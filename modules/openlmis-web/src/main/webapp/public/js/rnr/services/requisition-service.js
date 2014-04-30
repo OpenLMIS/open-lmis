@@ -72,7 +72,7 @@ services.factory('requisitionService', function (messageService) {
     };
     if (save) $scope.saveRnr();
 
-    $scope.page = {fullSupply: [], nonFullSupply: [], regimen: []};
+    $scope.page = {fullSupply: [], nonFullSupply: [], regimen: [], equipment:[]};
     $scope.visibleTab = ($routeParams.supplyType === NON_FULL_SUPPLY) ? NON_FULL_SUPPLY : ($routeParams.supplyType === REGIMEN && $scope.regimenCount) ? REGIMEN : ($routeParams.supplyType === EQUIPMENT && $scope.equipmentCount)?EQUIPMENT : FULL_SUPPLY;
 
     $location.search('supplyType', $scope.visibleTab);
