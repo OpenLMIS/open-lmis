@@ -15,6 +15,7 @@ import org.apache.ibatis.annotations.Select;
 import org.openlmis.report.model.dto.Facility;
 import org.springframework.stereotype.Repository;
 
+import java.util.HashMap;
 import java.util.List;
 
 @Repository
@@ -131,4 +132,26 @@ public interface FacilityLookupReportMapper {
           "WHERE U.facilityId = F.id AND U.id = #{userId} AND f.active = TRUE AND f.virtualFacility = FALSE\n" +
           "order by name")
     List<Facility>  getFacilitiesBy(@Param("userId") Long userId, @Param("supervisoryNodeId") Long supervisoryNodeId, @Param("rgroupId") String requisitionGroupId, @Param("programId") Long programId, @Param("scheduleId") Long scheduleId);
+
+    @Select("SELECT DISTINCT  f.id, f.code, f.name, \n" +
+            "CASE WHEN U.officePhone IS NULL THEN '' ELSE U.officePhone || ' ,' END || CASE WHEN U.cellPhone IS NULL THEN '' ELSE U.cellPhone || ' ,' END || F.mainPhone as phoneNumber,U.email email\n" +
+            "FROM facilities f\n" +
+            "INNER JOIN programs_supported ps on f.id = ps.facilityId\n" +
+            "INNER JOIN requisition_group_members rgm ON f.id = rgm.facilityId\n" +
+            "INNER JOIN requisition_group_program_schedules rgps ON (rgps.requisitionGroupId = rgm.requisitionGroupId and ps.programid = rgps.programid)\n" +
+            "INNER JOIN requisition_groups rg ON rg.id = rgm.requisitionGroupId\n" +
+            "INNER JOIN vw_user_supervisorynodes sn ON sn.id = rg.supervisoryNodeId and ps.programId = sn.programId \n" +
+            "INNER JOIN programs p ON p.id = ps.programId\n" +
+            "INNER JOIN processing_schedules psc ON psc.id = rgps.scheduleId\n" +
+            "LEFT OUTER JOIN Users U ON U.facilityId =  f.id\n" +
+            "WHERE ps.programId = CASE WHEN COALESCE(#{programId},0) = 0 THEN ps.programId ELSE #{programId} END\n" +
+            "    AND rgps.scheduleId = CASE WHEN COALESCE(#{scheduleId},0) = 0 THEN rgps.scheduleId ELSE #{scheduleId} END\n" +
+            "    AND CASE WHEN COALESCE(#{supervisoryNodeId},0) = 0 THEN sn.id = sn.id ELSE (sn.id = #{supervisoryNodeId} OR sn.parentId = #{supervisoryNodeId}) END\n" +
+            "    AND CASE WHEN #{rgroupId} ='{}' THEN rg.id = rg.id ELSE rg.id =  ANY( #{rgroupId}::int[]) END\n" +
+            "    AND sn.userId = #{userId}\n" +
+            "    AND f.active = TRUE \n" +
+            "    AND ps.active = TRUE\n" +
+            "    AND f.virtualFacility = FALSE\n" +
+            "order by name")
+    List<HashMap>  getFacilitiesForNotifications(@Param("userId") Long userId, @Param("supervisoryNodeId") Long supervisoryNodeId, @Param("rgroupId") String requisitionGroupId, @Param("programId") Long programId, @Param("scheduleId") Long scheduleId);
 }

@@ -274,6 +274,17 @@ public ResponseEntity<OpenLmisResponse> getSupervisedFacilities(
         return OpenLmisResponse.response("facilities", reportLookupService.getFacilitiesBy(loggedInUserId(request),supervisoryNodeId, getCommaSeparatedIds(requisitionGroupId),programId,scheduleId));
     }
 
+    @RequestMapping(value = "notifications/facilities/supervisory-node/{supervisoryNodeId}/program/{programId}/schedule/{scheduleId}", method = GET, headers = BaseController.ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getFacilitiesForNotifications(
+            @PathVariable("supervisoryNodeId") Long supervisoryNodeId,
+            @PathVariable("programId") Long programId,
+            @PathVariable("scheduleId") Long scheduleId,
+            @RequestParam("rgroupId") List<Long> requisitionGroupId,
+            HttpServletRequest request
+    ) {
+        return OpenLmisResponse.response("facilities", reportLookupService.getFacilitiesForNotifications(loggedInUserId(request),supervisoryNodeId, getCommaSeparatedIds(requisitionGroupId),programId,scheduleId));
+    }
+
   @RequestMapping(value = "/schedules/{scheduleId}/periods", method = GET, headers = ACCEPT_JSON)
   public ResponseEntity<OpenLmisResponse> getAll(@PathVariable("scheduleId") Long scheduleId) {
     List<ProcessingPeriod> periodList = processingScheduleService.getAllPeriods(scheduleId);

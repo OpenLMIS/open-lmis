@@ -1,10 +1,11 @@
 /**
  * Created by issa on 4/24/14.
  */
-function SendNotificationController($scope, programsList,dashboardFiltersHistoryService, NotificationAlerts, formInputValue,RequisitionGroupsBySupervisoryNodeProgramSchedule,userPreferredFilterValues,ReportProgramsBySupervisoryNode, UserSupervisoryNodes,ReportSchedules, ReportPeriods, RequisitionGroupsByProgram,RequisitionGroupsByProgramSchedule,FacilitiesByProgramAndRequisitionGroupParams, OperationYears, ReportPeriodsByScheduleAndYear, ngTableParams) {
+function SendNotificationController($scope, programsList,dashboardFiltersHistoryService, NotificationAlerts, formInputValue,RequisitionGroupsBySupervisoryNodeProgramSchedule,userPreferredFilterValues,ReportProgramsBySupervisoryNode, UserSupervisoryNodes,ReportSchedules, ReportPeriods, RequisitionGroupsByProgram,RequisitionGroupsByProgramSchedule,FacilitiesForNotifications, OperationYears, ReportPeriodsByScheduleAndYear, ngTableParams) {
     $scope.filterObject = {};
 
     $scope.formFilter = {};
+    $scope.selectedNotification = null;
 
     initialize();
 
@@ -14,6 +15,14 @@ function SendNotificationController($scope, programsList,dashboardFiltersHistory
         $scope.showProductsFilter = false;
         $scope.showStockStatusFilter = false;
         $scope.showFacilitiesFilter = true;
+    }
+
+
+
+    $scope.notificationMethodsChange = function(notification){
+       if(!isUndefined(notification) && !isUndefined(notification.type)){
+           $scope.selectedNotification = notification;
+       }
     }
 
     UserSupervisoryNodes.get(function (data){
@@ -42,9 +51,6 @@ function SendNotificationController($scope, programsList,dashboardFiltersHistory
 
     NotificationAlerts.get({},function(data){
         $scope.notifications = data.notifications;
-
-
-
     });
 
     $scope.processSupervisoryNodeChange = function(){
@@ -122,6 +128,8 @@ function SendNotificationController($scope, programsList,dashboardFiltersHistory
         $scope.loadFacilities();
     };
 
+
+
     $scope.changeSchedule = function(){
 
         if (!isUndefined($scope.formFilter.scheduleId)) {
@@ -179,17 +187,13 @@ function SendNotificationController($scope, programsList,dashboardFiltersHistory
 
     };
     $scope.loadFacilities = function(){
-        FacilitiesByProgramAndRequisitionGroupParams.get({
+        FacilitiesForNotifications.get({
             supervisoryNodeId: isUndefined($scope.filterObject.supervisoryNodeId) ? 0 : $scope.filterObject.supervisoryNodeId,
             programId: isUndefined($scope.filterObject.programId)? 0 : $scope.filterObject.programId ,
             scheduleId: isUndefined($scope.filterObject.scheduleId) ? 0 : $scope.filterObject.scheduleId,
             rgroupId: $scope.filterObject.rgroupId
         }, function(data){
-            $scope.allFacilities = data.facilities;
-            if(!isUndefined($scope.allFacilities)){
-                $scope.allFacilities.unshift({code:formInputValue.facilityOptionSelect});
-            }
-
+            $scope.facilities = data.facilities;
         });
 
     };
@@ -234,5 +238,11 @@ function SendNotificationController($scope, programsList,dashboardFiltersHistory
 
     };
 
+    // the grid options
+    $scope.tableParams = new ngTableParams({
+        page: 1,            // show first page
+        total: 0,           // length of data
+        count: 25           // count per page
+    });
 
 }
