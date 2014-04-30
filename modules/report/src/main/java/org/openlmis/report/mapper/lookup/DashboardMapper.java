@@ -102,7 +102,7 @@ public interface DashboardMapper {
     @SelectProvider(type = DashboardNotificationQueryBuilder.class, method = "getNotificationDetails")
     public List<HashMap> getNotificationDetails(@Param("tableName") String tableName,@Param("alertId") Long id);
 
-    @Select("select * from alerts where display_section = 'NOTIFICATION'")
+    @Select("select distinct * from alerts")
     public List<AlertSummary> getNotificationAlerts();
 
     @Select("select * from fn_populate_dw_orders(1)")
