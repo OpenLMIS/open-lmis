@@ -21,7 +21,8 @@ dependencies {
             'org.ict4h:atomfeed-server:0.9.2',
             'org.ict4h:atomfeed-spring-server:0.9.2',
             project(':modules:db'),
-            project(':modules:core')
+            project(':modules:core'),
+            project(':modules:equipment')
 
     testCompile 'org.springframework:spring-test:3.1.1.RELEASE',
             project(path : ':modules:core', configuration: 'testFixtures')

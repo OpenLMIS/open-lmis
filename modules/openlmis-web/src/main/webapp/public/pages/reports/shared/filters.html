@@ -24,7 +24,7 @@
         <label class="labels">Year <span ng-show="requiredFilters.year" class="label-required">*</span></label>
         <div>
             <select class="input-medium" ui-select2 ng-model="filter.year">
-                <option ng-repeat="year in years" value="{{ year }}">{{year}}</option>
+                <option ng-repeat="year in years" ng-selected="filter.year == year" value="{{ year }}">{{year}}</option>
             </select>
         </div>
     </div>

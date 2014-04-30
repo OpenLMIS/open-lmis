@@ -10,6 +10,11 @@
 
 function EquipmentInventoryController($scope, UserFacilityList, EquipmentInventories, CreateRequisitionProgramList, UserSupervisedFacilitiesForProgram,navigateBackService, $routeParams, $location) {
 
+  if($routeParams.selectedType !== undefined){
+    $scope.selectedType = $routeParams.selectedType;
+    $scope.selectedFacilityId = $routeParams.facilityId;
+  }
+  
   $scope.$on('$viewContentLoaded', function () {
     $scope.selectedType = navigateBackService.selectedType || "0";
     $scope.selectedProgram = navigateBackService.selectedProgram;
@@ -22,6 +27,11 @@ function EquipmentInventoryController($scope, UserFacilityList, EquipmentInvento
         $scope.selectedProgram = _.where($scope.programs, {id: $scope.selectedProgram.id})[0];
       }
     });
+    
+    if($scope.programs && $routeParams.programId !== undefined){
+      $scope.selectedProgram = _.where($scope.programs, {id: $routeParams.programId})[0];
+    }
+    
     $scope.loadFacilityData($scope.selectedType);
     if (isNavigatedBack) {
       $scope.loadFacilitiesForProgram();
@@ -46,6 +56,10 @@ function EquipmentInventoryController($scope, UserFacilityList, EquipmentInvento
           $scope.selectedFacilityId = $scope.myFacility.id;
           CreateRequisitionProgramList.get({facilityId: $scope.selectedFacilityId}, function (data) {
             $scope.programs = data.programList;
+            if($scope.programs && $routeParams.programId !== undefined){
+              $scope.selectedProgram = _.where($scope.programs, {id: $routeParams.programId})[0];
+            }
+            
           }, {});
         } else {
           $scope.facilityDisplayName = messageService.get("label.none.assigned");
@@ -54,9 +68,12 @@ function EquipmentInventoryController($scope, UserFacilityList, EquipmentInvento
         }
       }, {});
     } else if (selectedType === "1") { // Supervised facility
-      resetRnrData();
       CreateRequisitionProgramList.get({}, function (data) {
         $scope.programs = data.programList;
+        
+        if($scope.programs && $routeParams.programId !== undefined){
+          $scope.selectedProgram = _.where($scope.programs, {id: $routeParams.programId})[0];
+        }
       }, {});
     }
   };
@@ -75,9 +92,11 @@ function EquipmentInventoryController($scope, UserFacilityList, EquipmentInvento
   };
 
   $scope.loadEquipments = function(){
-    EquipmentInventories.get({programId: $scope.selectedProgram.id, facilityId: $scope.selectedFacilityId}, function(data){
-        $scope.inventory = data.inventory;
-      });
+    if($scope.selectedProgram !== undefined){
+      EquipmentInventories.get({programId: $scope.selectedProgram.id, facilityId: $scope.selectedFacilityId}, function(data){
+          $scope.inventory = data.inventory;
+        });
+    }
   };
 
 }

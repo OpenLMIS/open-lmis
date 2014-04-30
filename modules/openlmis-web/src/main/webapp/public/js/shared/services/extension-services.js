@@ -434,6 +434,10 @@ services.factory("FacilitiesByProgramAndRequisitionGroupParams",function($resour
     return   $resource('/reports/facilities/supervisory-node/:supervisoryNodeId/program/:programId/schedule/:scheduleId.json', {}, {});
 });
 
+services.factory("FacilitiesForNotifications",function($resource)  {
+    return   $resource('/reports/notifications/facilities/supervisory-node/:supervisoryNodeId/program/:programId/schedule/:scheduleId.json', {}, {});
+});
+
 services.factory('OrderFillRate', function($resource){
     return $resource('/dashboard/orderFillRate.json',{}, {});
 });
@@ -472,6 +476,9 @@ services.factory('StockedOutFacilitiesByRequisitionGroup', function($resource){
 });
 services.factory('Alerts', function($resource){
     return $resource('/dashboard/alerts.json',{},{});
+});
+services.factory('NotificationAlerts', function($resource) {
+    return $resource('/dashboard/notification/alerts.json', {}, {});
 });
 services.factory('DashboardNotificationsDetail', function($resource){
    return $resource('/dashboard/notifications/:alertId/:detailTable.json',{},{});

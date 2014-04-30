@@ -286,6 +286,12 @@ public class ReportLookupService {
 
   }
 
+  public List<HashMap> getFacilitiesForNotifications(Long userId, Long supervisoryNodeId, String requisitionGroup, Long program, Long schedule) {
+
+      return facilityReportMapper.getFacilitiesForNotifications(userId,supervisoryNodeId, requisitionGroup, program, schedule);
+
+  }
+
   public List<ProcessingPeriod> getAllProcessingPeriods() {
     return processingPeriodMapper.getAll();
   }

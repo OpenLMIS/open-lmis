@@ -11,6 +11,7 @@
 package org.openlmis.web.controller;
 
 import org.openlmis.equipment.domain.EquipmentType;
+import org.openlmis.equipment.repository.EquipmentOperationalStatusRepository;
 import org.openlmis.equipment.service.EquipmentTypeService;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +31,9 @@ public class EquipmentTypeController extends BaseController {
   @Autowired
   private EquipmentTypeService service;
 
+  @Autowired
+  private EquipmentOperationalStatusRepository statusRepository;
+
   @RequestMapping(method = GET, value = "list")
   public ResponseEntity<OpenLmisResponse> getAll(){
     return  OpenLmisResponse.response("equipment_type", service.getAll());
@@ -40,10 +44,17 @@ public class EquipmentTypeController extends BaseController {
     return  OpenLmisResponse.response("equipment_type", service.getTypeById(id));
   }
 
+  @RequestMapping(method = GET, value = "operational-status")
+  public ResponseEntity<OpenLmisResponse> getAllStatuses( ){
+    return  OpenLmisResponse.response("status", statusRepository.getAll());
+  }
+
   @RequestMapping(value = "save", method = POST, headers = ACCEPT_JSON)
   public ResponseEntity<OpenLmisResponse> save(@RequestBody EquipmentType type){
     service.save(type);
     return OpenLmisResponse.response("status","success");
   }
+
+
 
 }

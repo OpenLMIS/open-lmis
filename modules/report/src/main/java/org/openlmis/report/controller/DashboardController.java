@@ -32,6 +32,7 @@ public class DashboardController extends BaseController {
     public static final String STOCKING_EFFICIENCY_DETAIL = "stocking";
     public static final String STOCKED_OUT_FACILITIES = "stockOut";
     public static final String ALERTS = "alerts";
+    public static final String NOTIFICATIONS = "notifications";
     public static final String NOTIFICATIONS_DETAIL = "detail";
 
 
@@ -95,6 +96,11 @@ public class DashboardController extends BaseController {
     public ResponseEntity<OpenLmisResponse>  getAlerts(@RequestParam("supervisoryNodeId") Long supervisoryNodeId, @RequestParam("programId") Long programId,
                                                        HttpServletRequest request){
         return OpenLmisResponse.response(ALERTS, this.lookupService.getAlerts(loggedInUserId(request), supervisoryNodeId, programId ));
+    }
+
+    @RequestMapping(value = "/notification/alerts", method = GET, headers = ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse>  getNotificationTypeAlerts(HttpServletRequest request){
+        return OpenLmisResponse.response(NOTIFICATIONS, this.lookupService.getNotificationAlerts());
     }
 
     @RequestMapping(value = "/notifications/{alertId}/{detailTable}", method = GET, headers = ACCEPT_JSON)
