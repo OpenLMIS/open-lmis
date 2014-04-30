@@ -22,7 +22,7 @@ import java.util.List;
 @Repository
 public interface EquipmentLineItemMapper {
 
-  @Insert("INSERT INTO equipment_status_line_items (code, equipmentName, equipmentCategory, equipmentModel, equipmentSerial, equipmentInventoryId, operationalStatusId, testCount, totalCount, daysOutOfUse, remarks, createdBy, createdDate, modifiedBy, modifiedDate) values (#{code}, #{equipmentName}, #{equipmentCategory}, #{equipmentModel}, #{equipmentSerial}, #{equipmentInventoryId}, #{operationalStatusId}, #{testCount}, #{totalCount}, #{daysOutOfUse}, #{remarks}, #{createdBy}, #{createdDate}, #{modifiedBy}, #{modifiedDate})")
+  @Insert("INSERT INTO equipment_status_line_items (rnrId, code, equipmentName, equipmentCategory, equipmentModel, equipmentSerial, equipmentInventoryId, operationalStatusId, testCount, totalCount, daysOutOfUse, remarks, createdBy, createdDate, modifiedBy, modifiedDate) values (#{rnrId}, #{code}, #{equipmentName}, #{equipmentCategory}, #{equipmentModel}, #{equipmentSerial}, #{equipmentInventoryId}, #{operationalStatusId}, #{testCount}, #{totalCount}, #{daysOutOfUse}, #{remarks}, #{createdBy}, #{createdDate}, #{modifiedBy}, #{modifiedDate})")
   public void insert(EquipmentLineItem item);
 
   @Update("UPDATE equipment_status_line_items " +

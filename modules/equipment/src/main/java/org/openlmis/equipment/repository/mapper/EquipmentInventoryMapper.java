@@ -11,8 +11,8 @@
 package org.openlmis.equipment.repository.mapper;
 
 import org.apache.ibatis.annotations.*;
+import org.openlmis.equipment.domain.Equipment;
 import org.openlmis.equipment.domain.EquipmentInventory;
-import org.openlmis.equipment.domain.EquipmentType;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -23,7 +23,7 @@ public interface EquipmentInventoryMapper {
   @Select("SELECT * from facility_program_equipments where facilityId = #{facilityId} and programId = #{programId}")
   @Results({
       @Result(
-          property = "equipment", column = "equipmentId", javaType = EquipmentType.class,
+          property = "equipment", column = "equipmentId", javaType = Equipment.class,
           one = @One(select = "org.openlmis.equipment.repository.mapper.EquipmentMapper.getById"))
   })
   List<EquipmentInventory> getInventoryByFacilityAndProgram(@Param("facilityId") Long facilityId, @Param("programId")Long programId);
