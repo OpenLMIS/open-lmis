@@ -181,6 +181,31 @@ public class ODKSubmissionSAXHandler extends DefaultHandler
             tempFacilityId = null;
             tempPictures = null;
         }
+
+        if(qName.equals("firstPicture"))
+        {
+            bfirstPicture = false;
+        }
+
+        if(qName.equals("secondPicture"))
+        {
+            bsecondPicture = false;
+        }
+
+        if(qName.equals("thirdPicture"))
+        {
+            bthirdPicture = false;
+        }
+
+        if(qName.equals("fourthPicture"))
+        {
+            bfourthPicture = false;
+        }
+
+        if(qName.equals("fifthPicture"))
+        {
+            bfifthPicture = false;
+        }
     }
 
     @Override

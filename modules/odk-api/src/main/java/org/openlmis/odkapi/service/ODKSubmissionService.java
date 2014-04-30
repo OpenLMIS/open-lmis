@@ -35,6 +35,8 @@ import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.List;
@@ -68,6 +70,7 @@ public class ODKSubmissionService {
     ArrayList<String> tempPictures = new ArrayList<String>();
 
     private Map<String, MultipartFile> facilityPictures;
+    private String[] pictureSetMethods = {"setFirstPicture", "setSecondPicture", "setThirdPicture", "setFourthPicture", "setFifthPicture"};
 
     private static Logger logger = LoggerFactory.getLogger(ODKSubmissionService.class);
 
@@ -171,6 +174,10 @@ public class ODKSubmissionService {
                            throw new FacilityPictureNotFoundException("Facility picture not found.");
 
                        }
+                       catch(NullPointerException e)
+                       {
+                           System.out.println("Picture for:" + fileName + "not found");
+                       }
 
 
                    }
@@ -183,13 +190,44 @@ public class ODKSubmissionService {
 
     public void saveODKSubmissionData()
     {
-       for(ODKSubmissionData tempData : this.listOfODKSubmissionData)
+        int picturesCount = 0;
+        String tempPictureSetMethod;
+        for(ODKSubmissionData tempData : this.listOfODKSubmissionData)
         {
-            tempData.setFirstPicture(tempData.getFacilityPictures().get(0));
-            tempData.setSecondPicture(tempData.getFacilityPictures().get(1));
-            tempData.setThirdPicture(tempData.getFacilityPictures().get(2));
-            tempData.setFourthPicture(tempData.getFacilityPictures().get(3));
-            tempData.setFifthPicture(tempData.getFacilityPictures().get(4));
+            picturesCount = tempData.getFacilityPictures().size();
+            for (int i = 0; i < picturesCount; i++)
+            {
+                tempPictureSetMethod = pictureSetMethods[i];
+                try
+                {
+                    Method picMethod = tempData.getClass().getMethod(tempPictureSetMethod, new Class[] {byte[].class});
+                    picMethod.invoke(tempData, tempData.getFacilityPictures().get(i));
+                }
+                catch (IllegalAccessException ex)
+                {
+                        // TO DO handle
+                }
+
+                catch (NoSuchMethodException ex)
+                {
+                    // TO DO handle
+
+                }
+                catch (SecurityException ex)
+                {
+                    // TO DO handle
+                }
+                catch (IllegalArgumentException ex)
+                {
+                    // TO DO handle
+
+                }
+                catch (InvocationTargetException ex)
+                {
+                    // TO DO handle
+                }
+            }
+
             tempData.setODKSubmissionId(odkSubmissionRepository.getLastSubmissionId());
             insertODKSubmissionData(tempData);
         }
