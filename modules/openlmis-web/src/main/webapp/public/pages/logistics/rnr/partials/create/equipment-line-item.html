@@ -80,7 +80,7 @@
                 </td>
                 <td class="cell-input">
                      <select class="cell-text" ng-model="equipmentLineItem.operationalStatusId">
-                         <option value="{{status.id}}" ng-repeat="status in operationalStatus">{{status.name}}</option>
+                         <option  ng-repeat="status in equipmentOperationalStatus" value="{{status.id}}" ng-selected="equipmentLineItem.operationalStatusId == status.id">{{status.name}}</option>
                      </select>
                 </td>
                 <td class="cell-input">

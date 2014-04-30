@@ -8,7 +8,7 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-function CreateRequisitionController($scope, requisitionData, pageSize, rnrColumns, lossesAndAdjustmentsTypes, facilityApprovedProducts, requisitionRights, regimenTemplate, $location, DeleteRequisition , Requisitions, $routeParams, $dialog, requisitionService, $q) {
+function CreateRequisitionController($scope, requisitionData, pageSize, rnrColumns, lossesAndAdjustmentsTypes, facilityApprovedProducts, requisitionRights, equipmentOperationalStatus , regimenTemplate, $location, DeleteRequisition , Requisitions, $routeParams, $dialog, requisitionService, $q) {
 
   var NON_FULL_SUPPLY = 'nonFullSupply';
   var FULL_SUPPLY = 'fullSupply';
@@ -50,6 +50,7 @@ function CreateRequisitionController($scope, requisitionData, pageSize, rnrColum
 
   $scope.lossesAndAdjustmentTypes = lossesAndAdjustmentsTypes;
   $scope.facilityApprovedProducts = facilityApprovedProducts;
+  $scope.equipmentOperationalStatus = equipmentOperationalStatus;
 
   $scope.visibleColumns = requisitionService.getMappedVisibleColumns(rnrColumns, RegularRnrLineItem.frozenColumns,
       ['quantityApproved']);
@@ -339,6 +340,16 @@ CreateRequisitionController.resolve = {
     $timeout(function () {
       LossesAndAdjustmentsReferenceData.get({}, function (data) {
         deferred.resolve(data.lossAdjustmentTypes);
+      }, {});
+    }, 100);
+    return deferred.promise;
+  },
+
+  equipmentOperationalStatus: function ($q, $timeout, EquipmentOperationalStatus) {
+    var deferred = $q.defer();
+    $timeout(function () {
+      EquipmentOperationalStatus.get({}, function (data) {
+        deferred.resolve(data.status);
       }, {});
     }, 100);
     return deferred.promise;

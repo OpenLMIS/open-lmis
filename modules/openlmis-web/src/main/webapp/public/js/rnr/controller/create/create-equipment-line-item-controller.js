@@ -8,7 +8,7 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-function CreateEquipmentLineItemController($scope, EquipmentOperationalStatus) {
+function CreateEquipmentLineItemController($scope) {
   $scope.showCategory = function (index) {
     var absIndex = ($scope.pageSize * ($scope.currentPage - 1)) +  index;
     return  !((index > 0 ) && ($scope.rnr.equipmentLineItems.length > absIndex) &&  ($scope.rnr.equipmentLineItems[absIndex].equipmentCategory == $scope.rnr.equipmentLineItems[absIndex - 1].equipmentCategory));
@@ -18,7 +18,4 @@ function CreateEquipmentLineItemController($scope, EquipmentOperationalStatus) {
     return prefix + "_" + parent.$parent.$index;
   };
 
-  EquipmentOperationalStatus.get(function(data){
-    $scope.operationalStatus  = data.status
-  })
 }
