@@ -134,6 +134,11 @@ public class RequisitionService {
     calculationService.fillFieldsForInitiatedRequisition(requisition, rnrTemplate, regimenTemplate);
     calculationService.fillReportingDays(requisition);
 
+    // if program supports equipments, initialize it here.
+//    if(program.isEquipmentConfigured()){
+//
+//    }
+
     insert(requisition);
     requisition = requisitionRepository.getById(requisition.getId());
 

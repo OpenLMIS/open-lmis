@@ -55,6 +55,7 @@ public class Rnr extends BaseModel {
   private List<RnrLineItem> fullSupplyLineItems = new ArrayList<>();
   private List<RnrLineItem> nonFullSupplyLineItems = new ArrayList<>();
   private List<RegimenLineItem> regimenLineItems = new ArrayList<>();
+  private List<EquipmentLineItem> equipmentLineItems = new ArrayList<>();
 
   private BigDecimal allocatedBudget;
 
