@@ -19,6 +19,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  * This controller handles request to get list of supervisory nodes.
@@ -37,5 +38,11 @@ public class SupervisoryNodeController extends BaseController {
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_USER')")
   public ResponseEntity<OpenLmisResponse> getAll() {
     return OpenLmisResponse.response(SUPERVISORY_NODES, supervisoryNodeService.getAll());
+  }
+
+  @RequestMapping(value = "/search-supervisory-nodes", method = RequestMethod.GET)
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_SUPERVISORY_NODE')")
+  public ResponseEntity<OpenLmisResponse> searchSupervisoryNode(@RequestParam(required = true) String param, @RequestParam(required = true) Boolean parent) {
+    return OpenLmisResponse.response(SUPERVISORY_NODES, supervisoryNodeService.getSupervisoryNodesBy(param, parent));
   }
 }

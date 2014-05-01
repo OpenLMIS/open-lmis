@@ -1,0 +1,72 @@
+<!--
+  ~ This program is part of the OpenLMIS logistics management information system platform software.
+  ~ Copyright © 2013 VillageReach
+  ~
+  ~ This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+  ~  
+  ~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+  ~ You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
+  -->
+
+<div xmlns="http://www.w3.org/1999/html">
+  <h2><span openlmis-message="label.search.supervisory.node"></span>
+    <a href="#/create-supervisory-node" class="pull-right btn btn-primary"><span id="supervisoryNodeAddNew"
+                                                                                 openlmis-message="button.add.new"></span></a>
+  </h2>
+
+
+  <div class="row-fluid">
+    <div class="span5 offset7 search-in-category">
+      <div class="input-append input-prepend">
+        <div class="btn-group">
+          <button id='searchOptionButton' class="btn dropdown-toggle">
+            <span openlmis-message="selectedSearchOption.name"></span>
+            <span class="caret"></span>
+          </button>
+          <ul class="dropdown-menu">
+            <li ng-repeat="searchOption in searchOptions">
+              <a href="" openlmis-message="searchOption.name" ng-click="selectSearchType(searchOption)"></a>
+            </li>
+          </ul>
+        </div>
+        <input id='searchSupervisroyNode' type="text" class="span5"
+               ui-event="{ keyup: 'inputKeypressHandler($event)' }"
+               ng-model="query" maxlength="50"/>
+      </div>
+    </div>
+  </div>
+
+  <input id="searchSupervisoryNode" class="search-query input-xxlarge" type="text" ng-model="query"
+         on-keyup="showSupervisoryNodeSearchResults()" openlmis-message="placeholder.superviosry.node.search"/>
+
+  <div class="form-tip" openlmis-message="search.threeCharacters"></div>
+  <div class="facility-list" ng-show="query.length > 2">
+    <div ng-switch on="resultCount">
+      <h3 ng-switch-when="0" openlmis-message="msg.no.matches|query"></h3>
+
+      <h3 ng-switch-when="1" openlmis-message="msg.one.match|query"></h3>
+
+      <h3 ng-switch-default openlmis-message="msg.many.matches|resultCount|query"></h3>
+    </div>
+    <a class="close-btn" href="" ng-click="clearSearch()" tabindex="-1"></a>
+    <ul id="userList" class="user-list" ng-model="filteredUsers">
+      <li ng-repeat="user in filteredUsers" ng-class="{'user-disabled': !user.active}">
+        <a id="user{{$index}}" href="" ng-click="editUser(user.id)">
+          <span class="user-name">{{user.firstName}} {{user.lastName}}</span>
+          <span class="user-username">({{user.userName}})</span> -
+          {{user.email}}
+        </a>
+
+        <div class="user-actions">
+          <a id="editUser{{$index}}" href="" class="btn btn-primary btn-small" openlmis-message="button.edit"
+             ng-click="editUser(user.id)"></a>
+          <a id="resetPassword{{$index}}" href="" class="btn btn-primary btn-small"
+             ng-class="{'disabled': !user.active}" openlmis-message="button.reset.password"
+             ng-click="changePassword(user)"></a>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+
+</div>

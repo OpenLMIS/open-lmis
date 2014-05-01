@@ -165,6 +165,11 @@ services.factory('SupervisoryNodes', function ($resource) {
   return $resource('/supervisory-nodes.json', {}, {});
 });
 
+
+services.factory('SupervisoryNodesSearch', function ($resource) {
+  return $resource('/search-supervisory-nodes.json', {}, {});
+});
+
 services.factory('FacilityProgramRights', function ($resource) {
   return $resource('/facility/:facilityId/program/:programId/rights.json');
 });
