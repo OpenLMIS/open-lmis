@@ -20,6 +20,7 @@ import org.joda.time.DateTime;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.dto.FacilityContact;
 import org.openlmis.core.dto.FacilityFeedDTO;
+import org.openlmis.core.dto.FacilityImages;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.FacilityRepository;
 import org.openlmis.core.repository.GeographicZoneRepository;
@@ -267,6 +268,10 @@ public class FacilityService {
       return facilityRepository.getEmailContacts(facilityId);
     }
     return null;
+  }
+
+  public List<FacilityImages> getFacilityImages(Long facilityId){
+    return facilityRepository.getFacilityImages(facilityId);
   }
 
 }

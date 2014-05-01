@@ -311,3 +311,7 @@ services.factory('OrderNumberConfiguration', function ($resource) {
 services.factory('EquipmentOperationalStatus', function ($resource) {
   return $resource('/equipment/type/operational-status.json',{},  {});
 });
+
+services.factory('FacilityImages', function($resource){
+  return $resource('/facility-images.json', {},{});
+});
