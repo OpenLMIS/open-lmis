@@ -10,7 +10,7 @@ function NotificationsDetailController($scope,$routeParams,messageService,Settin
         if(!isUndefined($routeParams.detailTable)){
             var pageTitleKey =  'title.notification.type.'+ $routeParams.detailTable+'.detail';
             var pageTitle = messageService.get(pageTitleKey);
-            $scope.detailTable = pageTitleKey === pageTitle ? '' :pageTitle;
+            $scope.detailTable = pageTitleKey === pageTitle ? $routeParams.detailTable :pageTitle;
         }
 
         if(!isUndefined($routeParams.detailTable) &&
