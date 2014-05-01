@@ -10,6 +10,9 @@
 
 function SupervisoryNodeSearchController($scope, SupervisoryNodesSearch) {
 
+  $scope.previousQuery = '';
+  $scope.previosSearchOption = undefined;
+
   $scope.searchOptions = [
     {value: "parent", name: "option.value.supervisory.node.parent"},
     {value: "node", name: "option.value.supervisory.node"}
@@ -22,10 +25,7 @@ function SupervisoryNodeSearchController($scope, SupervisoryNodesSearch) {
   };
 
   $scope.inputKeypressHandler = function ($event) {
-    if ($event.keyCode == 13) {
-      $event.preventDefault();
-      $scope.showSupervisoryNodeSearchResults();
-    }
+    $scope.showSupervisoryNodeSearchResults();
   };
 
   $scope.showSupervisoryNodeSearchResults = function () {
@@ -33,15 +33,17 @@ function SupervisoryNodeSearchController($scope, SupervisoryNodesSearch) {
 
     var len = (query === undefined) ? 0 : query.length;
 
+    var searchOption = $scope.selectedSearchOption.value === 'parent' ? true : false;
+
     if (len >= 3) {
-      if ($scope.previousQuery.substr(0, 3) === query.substr(0, 3)) {
+      if ($scope.previousQuery.substr(0, 3) === query.substr(0, 3) &&  $scope.previosSearchOption === searchOption) {
         $scope.previousQuery = query;
         filterSupervisoryNode(query);
         return true;
       }
       $scope.previousQuery = query;
-      var parent = $scope.selectedSearchOption == 'parent' ? true : false;
-      SupervisoryNodesSearch.get({param: $scope.query.substr(0, 3), parent: parent}, function (data) {
+      $scope.previosSearchOption = searchOption;
+        SupervisoryNodesSearch.get({param: $scope.query.substr(0, 3), parent: searchOption}, function (data) {
         $scope.supervisoryNodeList = data.supervisoryNodes;
         filterSupervisoryNode(query);
       }, {});
