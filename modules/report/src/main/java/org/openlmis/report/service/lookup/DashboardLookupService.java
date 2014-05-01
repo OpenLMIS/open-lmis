@@ -64,6 +64,11 @@ public class DashboardLookupService {
 
     }
 
+    public List<AlertSummary> getNotificationAlerts(){
+        return dashboardMapper.getNotificationAlerts();
+
+    }
+
     public List<HashMap> getNotificationsByCategory(String detailTable, Long alertId) {
         if (detailTable == null || detailTable.isEmpty()) return null;
         return dashboardMapper.getNotificationDetails(detailTable, alertId);
