@@ -28,7 +28,7 @@ public class RegimenSummaryQueryBuilder {
                "   SUM(patientsontreatment) patientsontreatment,\n" +
                "   SUM(patientstoinitiatetreatment) patientstoinitiatetreatment,\n" +
                "   SUM(patientsstoppedtreatment) patientsstoppedtreatment\n" +
-               "   from vw_regimen_summary_t\n" +
+               "   from vw_regimen_summary\n" +
               writePredicates(filter)+
                "   group by district, regimen,rgroup\n" +
                "   order by district,regimen,rgroup ) \n" +
