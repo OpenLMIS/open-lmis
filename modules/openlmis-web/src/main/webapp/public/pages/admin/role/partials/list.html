@@ -20,25 +20,18 @@
     <table class="table table-striped table-bordered">
         <thead>
         <tr class="gradient-header">
-            <th class="col-name" openlmis-message="header.name">
-            </th>
-            <th class="col-desc" openlmis-message="label.description">
-            </th>
-            <th class="col-right" openlmis-message="header.rights">
-            </th>
+          <th openlmis-message="header.name"></th>
+          <th openlmis-message="label.description"></th>
+          <th openlmis-message="header.rights"></th>
         </tr>
         </thead>
         <tbody>
         <tr ng-repeat="role in roles">
-            <td class="col-role-name">
-                <a ng-href="#/edit/{{role.id}}">{{role.name}}</a>
-            </td>
-            <td class="col-role-description">
-                <div>{{role.description}}</div>
-            </td>
-            <td class="col-role-rights">
-                <div ng-repeat="right in role.rights"><span openlmis-message="right.rightName"></span></div>
-            </td>
+          <td><a ng-href="#/edit/{{role.id}}">{{role.name}}</a></td>
+          <td ng-bind="role.description"></td>
+          <td>
+            <div ng-repeat="right in role.rights"><span openlmis-message="right.rightName"></span></div>
+          </td>
         </tr>
         </tbody>
     </table>
