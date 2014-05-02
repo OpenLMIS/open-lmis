@@ -11,6 +11,7 @@
 package org.openlmis.web.controller;
 
 import lombok.NoArgsConstructor;
+import org.openlmis.core.domain.Pagination;
 import org.openlmis.core.service.SupervisoryNodeService;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,7 +47,9 @@ public class SupervisoryNodeController extends BaseController {
     required = true,
     defaultValue = "1") Integer page, @RequestParam(required = true) String param, @RequestParam(required = true) Boolean parent) {
     ResponseEntity<OpenLmisResponse> response = OpenLmisResponse.response(SUPERVISORY_NODES, supervisoryNodeService.getSupervisoryNodesBy(page, param, parent));
-    response.getBody().addData("pagination", supervisoryNodeService.getPagination(page));
+    Pagination pagination = supervisoryNodeService.getPagination(page);
+    pagination.setNumberOfPages(supervisoryNodeService.getTotalSearchResultCount(param, parent));
+    response.getBody().addData("pagination", pagination);
     return response;
   }
 }

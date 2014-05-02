@@ -11,9 +11,13 @@
 package org.openlmis.core.domain;
 
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+@NoArgsConstructor
+@AllArgsConstructor
 public class Pagination {
 
   @Getter
@@ -24,6 +28,8 @@ public class Pagination {
   @Setter
   public Integer pageSize;
 
+  public Integer numberOfPages;
+
   public Integer offset;
 
   public Pagination(Integer page, Integer pageSize) {
@@ -33,5 +39,11 @@ public class Pagination {
 
   public Integer getOffset() {
     return (page - 1) * pageSize;
+  }
+
+  public void setNumberOfPages(Integer totalRecords) {
+    numberOfPages = totalRecords / pageSize;
+    if (totalRecords % pageSize > 0)
+      numberOfPages++;
   }
 }

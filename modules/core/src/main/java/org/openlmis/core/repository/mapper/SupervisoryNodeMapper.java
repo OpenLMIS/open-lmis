@@ -137,7 +137,7 @@ public interface SupervisoryNodeMapper {
     @Result(property = "facility", column = "facilityId", javaType = Facility.class,
       one = @One(select = "org.openlmis.core.repository.mapper.FacilityMapper.getById"))
   })
-  List<SupervisoryNode> getSupervisoryNodesByParent(@Param(value = "pagination")Pagination pagination, @Param(value = "nameSearchCriteria")String nameSearchCriteria);
+  List<SupervisoryNode> getSupervisoryNodesByParent(@Param(value = "pagination") Pagination pagination, @Param(value = "nameSearchCriteria") String nameSearchCriteria);
 
   @Select({"SELECT * FROM supervisory_nodes SN LEFT OUTER JOIN supervisory_nodes SNP ON SN.parentId = SNP.id WHERE LOWER(SN.name)" +
     " LIKE '%'|| LOWER(#{nameSearchCriteria}) ||'%' ORDER BY SNP.name, SN.name NULLS LAST LIMIT #{pagination.pageSize} OFFSET #{pagination.offset}"})
@@ -147,5 +147,13 @@ public interface SupervisoryNodeMapper {
     @Result(property = "facility", column = "facilityId", javaType = Facility.class,
       one = @One(select = "org.openlmis.core.repository.mapper.FacilityMapper.getById"))
   })
-  List<SupervisoryNode> getSupervisoryNodesBy(@Param(value = "pagination")Pagination pagination, @Param(value = "nameSearchCriteria")String nameSearchCriteria);
+  List<SupervisoryNode> getSupervisoryNodesBy(@Param(value = "pagination") Pagination pagination, @Param(value = "nameSearchCriteria") String nameSearchCriteria);
+
+  @Select({"SELECT COUNT(*) FROM supervisory_nodes SN LEFT OUTER JOIN supervisory_nodes SNP ON SN.parentId = SNP.id WHERE LOWER(SN.name)" +
+    " LIKE '%'|| LOWER(#{nameSearchCriteria}) ||'%'"})
+  Integer getTotalSearchResultCount(String param);
+
+  @Select({"SELECT COUNT(*) FROM supervisory_nodes SN INNER JOIN supervisory_nodes SNP ON SN.parentId = SNP.id WHERE LOWER(SNP.name)" +
+    " LIKE '%'|| LOWER(#{nameSearchCriteria}) ||'%'"})
+  Integer getTotalParentSearchResultCount(String param);
 }

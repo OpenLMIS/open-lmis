@@ -129,4 +129,11 @@ public class SupervisoryNodeService {
   public Pagination getPagination(Integer page) {
     return new Pagination(page, pageSize);
   }
+
+  public Integer getTotalSearchResultCount(String param, Boolean parent) {
+    if(parent) {
+      return supervisoryNodeRepository.getTotalParentSearchResultCount(param);
+    }
+    return supervisoryNodeRepository.getTotalSearchResultCount(param);
+  }
 }

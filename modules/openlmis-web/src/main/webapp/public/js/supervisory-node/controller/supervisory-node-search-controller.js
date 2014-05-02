@@ -27,6 +27,7 @@ function SupervisoryNodeSearchController($scope, SupervisoryNodesSearch) {
 
 
   $scope.showSupervisoryNodeSearchResults = function () {
+    $scope.page = 1;
     var query = $scope.query;
 
     var len = (query === undefined) ? 0 : query.length;
@@ -34,15 +35,16 @@ function SupervisoryNodeSearchController($scope, SupervisoryNodesSearch) {
     var searchOption = $scope.selectedSearchOption.value === 'parent' ? true : false;
 
     if (len >= 3) {
-      if ($scope.previousQuery.substr(0, 3) === query.substr(0, 3) &&  $scope.previosSearchOption === searchOption) {
+      if ($scope.previousQuery.substr(0, 3) === query.substr(0, 3) && $scope.previosSearchOption === searchOption) {
         $scope.previousQuery = query;
         filterSupervisoryNode(query);
         return true;
       }
       $scope.previousQuery = query;
       $scope.previosSearchOption = searchOption;
-        SupervisoryNodesSearch.get({param: $scope.query.substr(0, 3), parent: searchOption}, function (data) {
+      SupervisoryNodesSearch.get({page: $scope.page, param: $scope.query.substr(0, 3), parent: searchOption}, function (data) {
         $scope.supervisoryNodeList = data.supervisoryNodes;
+        $scope.pagination = data.pagination;
         filterSupervisoryNode(query);
       }, {});
 

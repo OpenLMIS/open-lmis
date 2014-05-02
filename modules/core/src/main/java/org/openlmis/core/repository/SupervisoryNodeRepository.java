@@ -97,4 +97,12 @@ public class SupervisoryNodeRepository {
   public List<SupervisoryNode> getSupervisoryNodesBy(Pagination pagination, String nameSearchCriteria) {
     return supervisoryNodeMapper.getSupervisoryNodesBy(pagination, nameSearchCriteria);
   }
+
+  public Integer getTotalSearchResultCount(String param) {
+    return supervisoryNodeMapper.getTotalSearchResultCount(param);
+  }
+
+  public Integer getTotalParentSearchResultCount(String param) {
+    return supervisoryNodeMapper.getTotalParentSearchResultCount(param);
+  }
 }

@@ -266,7 +266,7 @@ public class SupervisoryNodeMapperIT {
   }
 
   @Test
-  public void shouldGetSupervisoryNodesByNameSearch() {
+  public void shouldGetPaginatedSupervisoryNodesByNameSearch() {
     insertSupervisoryNode(supervisoryNode);
 
     SupervisoryNode supervisoryNode1 = make(a(SupervisoryNodeBuilder.defaultSupervisoryNode, with(code, "SN1"), with(name, "Approval Point 2")));
@@ -277,13 +277,20 @@ public class SupervisoryNodeMapperIT {
     supervisoryNode2.setFacility(facility);
     insertSupervisoryNode(supervisoryNode2);
 
+    Pagination pagination = new Pagination(1, 10);
     List<SupervisoryNode> searchResults = supervisoryNodeMapper.getSupervisoryNodesBy(pagination, "Approval");
 
     assertThat(searchResults.size(), is(2));
+
+    pagination.setPageSize(1);
+    searchResults = supervisoryNodeMapper.getSupervisoryNodesBy(pagination, "Approval");
+
+    assertThat(searchResults.size(), is(1));
+
   }
 
   @Test
-  public void shouldGetSupervisoryNodesByParentNameSearch() {
+  public void shouldGetPaginatedSupervisoryNodesByParentNameSearch() {
     SupervisoryNode supervisoryNode1 = make(a(SupervisoryNodeBuilder.defaultSupervisoryNode, with(code, "SN1"), with(name, "Parent")));
     supervisoryNode1.setFacility(facility);
     insertSupervisoryNode(supervisoryNode1);
@@ -300,9 +307,56 @@ public class SupervisoryNodeMapperIT {
     supervisoryNode3.setParent(supervisoryNode2);
     insertSupervisoryNode(supervisoryNode3);
 
+    Pagination pagination = new Pagination(1, 10);
     List<SupervisoryNode> searchResults = supervisoryNodeMapper.getSupervisoryNodesBy(pagination, "Parent");
 
     assertThat(searchResults.size(), is(1));
+
+    pagination.setPageSize(0);
+    searchResults = supervisoryNodeMapper.getSupervisoryNodesBy(pagination, "Parent");
+
+    assertThat(searchResults.size(), is(0));
+
+  }
+
+  @Test
+  public void shouldGetSupervisoryNodesCountByNameSearch() {
+    insertSupervisoryNode(supervisoryNode);
+
+    SupervisoryNode supervisoryNode1 = make(a(SupervisoryNodeBuilder.defaultSupervisoryNode, with(code, "SN1"), with(name, "Approval Point 2")));
+    supervisoryNode1.setFacility(facility);
+    insertSupervisoryNode(supervisoryNode1);
+
+    SupervisoryNode supervisoryNode2 = make(a(SupervisoryNodeBuilder.defaultSupervisoryNode, with(code, "CN1"), with(name, "Not Matching Search")));
+    supervisoryNode2.setFacility(facility);
+    insertSupervisoryNode(supervisoryNode2);
+
+    Integer resultCount = supervisoryNodeMapper.getTotalSearchResultCount("Approval");
+
+    assertThat(resultCount, is(2));
+  }
+
+  @Test
+  public void shouldGetSupervisoryNodesCountByParentNameSearch() {
+    SupervisoryNode supervisoryNode1 = make(a(SupervisoryNodeBuilder.defaultSupervisoryNode, with(code, "SN1"), with(name, "Parent")));
+    supervisoryNode1.setFacility(facility);
+    insertSupervisoryNode(supervisoryNode1);
+
+    supervisoryNode.setParent(supervisoryNode1);
+    insertSupervisoryNode(supervisoryNode);
+
+    SupervisoryNode supervisoryNode2 = make(a(SupervisoryNodeBuilder.defaultSupervisoryNode, with(code, "CN1"), with(name, "Another")));
+    supervisoryNode2.setFacility(facility);
+    insertSupervisoryNode(supervisoryNode2);
+
+    SupervisoryNode supervisoryNode3 = make(a(SupervisoryNodeBuilder.defaultSupervisoryNode, with(code, "CN2"), with(name, "Child with not matching")));
+    supervisoryNode3.setFacility(facility);
+    supervisoryNode3.setParent(supervisoryNode2);
+    insertSupervisoryNode(supervisoryNode3);
+
+    Integer resultCount = supervisoryNodeMapper.getTotalParentSearchResultCount("Parent");
+
+    assertThat(resultCount, is(1));
 
   }
 

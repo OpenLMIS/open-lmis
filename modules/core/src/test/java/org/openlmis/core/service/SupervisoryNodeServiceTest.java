@@ -18,17 +18,15 @@ import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.builder.SupervisoryNodeBuilder;
-import org.openlmis.core.domain.Facility;
-import org.openlmis.core.domain.Program;
-import org.openlmis.core.domain.SupervisoryNode;
-import org.openlmis.core.domain.User;
+import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.FacilityRepository;
 import org.openlmis.core.repository.SupervisoryNodeRepository;
 import org.openlmis.core.repository.UserRepository;
 import org.openlmis.db.categories.UnitTests;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -46,9 +44,11 @@ import static org.mockito.MockitoAnnotations.initMocks;
 import static org.openlmis.core.domain.Right.APPROVE_REQUISITION;
 import static org.openlmis.core.domain.Right.CREATE_REQUISITION;
 import static org.openlmis.core.matchers.Matchers.dataExceptionMatcher;
+import static org.powermock.api.mockito.PowerMockito.whenNew;
 
 @Category(UnitTests.class)
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(PowerMockRunner.class)
+@PrepareForTest(SupervisoryNodeService.class)
 public class SupervisoryNodeServiceTest {
 
   @Mock
@@ -64,10 +64,12 @@ public class SupervisoryNodeServiceTest {
   SupervisoryNodeService supervisoryNodeService;
   SupervisoryNode supervisoryNodeWithParent;
 
+  private Integer pageSize = 100;
 
   @Before
   public void setUp() throws Exception {
     initMocks(this);
+    supervisoryNodeService.setPageSize(pageSize.toString());
     supervisoryNodeWithParent = new SupervisoryNode();
     supervisoryNodeWithParent.setId(10L);
     supervisoryNodeWithParent.setFacility(new Facility());
@@ -273,20 +275,27 @@ public class SupervisoryNodeServiceTest {
   }
 
   @Test
-  public void shouldGetSupervisoryNodesForParentSearchCriteria() {
+  public void shouldGetSupervisoryNodesForParentSearchCriteria() throws Exception {
     String searchCriteria = "parentName";
-    when(supervisoryNodeRepository.getSupervisoryNodesByParent(, searchCriteria)).thenReturn(Collections.EMPTY_LIST);
-    List<SupervisoryNode> searchResult = supervisoryNodeService.getSupervisoryNodesBy(searchCriteria, true);
-    verify(supervisoryNodeRepository).getSupervisoryNodesByParent(, searchCriteria);
+    int page = 10;
+    Pagination pagination = new Pagination();
+    whenNew(Pagination.class).withArguments(page, pageSize).thenReturn(pagination);
+    when(supervisoryNodeRepository.getSupervisoryNodesByParent(pagination, searchCriteria)).thenReturn(Collections.EMPTY_LIST);
+    List<SupervisoryNode> searchResult = supervisoryNodeService.getSupervisoryNodesBy(page, searchCriteria, true);
+    verify(supervisoryNodeRepository).getSupervisoryNodesByParent(pagination, searchCriteria);
     assertThat(searchResult, is(Collections.EMPTY_LIST));
   }
 
   @Test
-  public void shouldGetSupervisoryNodesSearchCriteria() {
+  public void shouldGetSupervisoryNodesSearchCriteria() throws Exception {
     String searchCriteria = "nodeName";
+    int page = 10;
+    Pagination pagination = new Pagination();
+    whenNew(Pagination.class).withArguments(page, pageSize).thenReturn(pagination);
+
     when(supervisoryNodeRepository.getSupervisoryNodesBy(pagination, searchCriteria)).thenReturn(Collections.EMPTY_LIST);
-    List<SupervisoryNode> searchResult = supervisoryNodeService.getSupervisoryNodesBy(searchCriteria, true);
-    verify(supervisoryNodeRepository).getSupervisoryNodesByParent(, searchCriteria);
+    List<SupervisoryNode> searchResult = supervisoryNodeService.getSupervisoryNodesBy(page, searchCriteria, true);
+    verify(supervisoryNodeRepository).getSupervisoryNodesByParent(pagination, searchCriteria);
     assertThat(searchResult, is(Collections.EMPTY_LIST));
   }
 
