@@ -54,7 +54,7 @@ function SupervisoryNodeSearchController($scope, SupervisoryNodesSearch) {
   $scope.clearSearch = function () {
     $scope.query = "";
     $scope.resultCount = 0;
-    angular.element("#searchSupervisroyNode").focus();
+    angular.element("#searchSupervisoryNode").focus();
   };
 
 

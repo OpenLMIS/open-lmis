@@ -15,8 +15,8 @@
   </h2>
 
 
-  <div class="row-fluid">
-    <div class="span5  search-in-category">
+  <div id="supervisoryNodeSearchControl" class="row-fluid">
+    <div class="span5 search-in-category">
       <div class="input-append input-prepend">
         <div class="btn-group">
           <button id='searchOptionButton' class="btn dropdown-toggle">
@@ -29,7 +29,7 @@
             </li>
           </ul>
         </div>
-        <input id='searchSupervisroyNode' type="text" class="span5"
+        <input id='searchSupervisoryNode' type="text" class="span5"
                ui-event="{ keyup: 'showSupervisoryNodeSearchResults()' }"
                ng-model="query" maxlength="50"/>
       </div>
