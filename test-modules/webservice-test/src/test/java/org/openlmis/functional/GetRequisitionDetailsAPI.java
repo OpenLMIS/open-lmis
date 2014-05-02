@@ -28,6 +28,7 @@ public class GetRequisitionDetailsAPI extends JsonUtility {
 
   public static final String FULL_JSON_POD_TXT_FILE_NAME = "ReportJsonPOD.txt";
   public static final String URL = "http://localhost:9091/rest-api/requisitions/";
+  ConfigureOrderNumberTemplate configureOrderNumberTemplate;
 
   @BeforeMethod(groups = {"webservice", "webserviceSmoke"})
   public void setUp() throws InterruptedException, SQLException, IOException {
@@ -37,6 +38,7 @@ public class GetRequisitionDetailsAPI extends JsonUtility {
     createVirtualFacilityThroughApi("V10", "F10");
     dbWrapper.insertProcessingPeriod("current", "current period", "2013-01-30", "2016-01-30", 1, "M");
     dbWrapper.insertRoleAssignmentForSupervisoryNodeForProgramId1("700", "store in-charge", "N1");
+    dbWrapper.setupOrderNumberConfiguration("O",true,true,true,true);
     dbWrapper.updateRestrictLogin("commTrack", true);
   }
 
@@ -262,6 +264,41 @@ public class GetRequisitionDetailsAPI extends JsonUtility {
   }
 
   @Test(groups = {"webservice"})
+  public void testRequisitionDetailsAfterOrderIsCreated() throws SQLException, IOException {
+
+    HttpClient client = new HttpClient();
+    client.createContext();
+    submitRequisition("commTrack1", "HIV");
+    dbWrapper.updateRequisitionStatus("AUTHORIZED", "commTrack", "HIV");
+    Long id = (long) dbWrapper.getMaxRnrID();
+    ResponseEntity responseEntity = client.SendJSON("", URL + id, "GET", "commTrack", "Admin123");
+    checkRequisitionStatus("AUTHORIZED", responseEntity);
+    checkOrderDetailsNotPresent(responseEntity);
+
+    dbWrapper.updateFieldValue("facilities", "virtualFacility", "true", "code", "F10");
+    dbWrapper.setupUserForFulfillmentRole("commTrack", "store in-charge", "F10");
+
+    approveRequisition(id, 65);
+    dbWrapper.updateRestrictLogin("commTrack", false);
+    convertToOrder("commTrack", "Admin123");
+    dbWrapper.updateRestrictLogin("commTrack", true);
+    responseEntity = client.SendJSON("", URL + id, "GET", "commTrack", "Admin123");
+    checkRequisitionStatus("RELEASED", responseEntity);
+    checkOrderStatus(65, "READY_TO_PACK", responseEntity);
+
+    dbWrapper.assignRight("store in-charge", "MANAGE_POD");
+
+    OrderPOD OrderPODFromJson = JsonUtility.readObjectFromFile(FULL_JSON_POD_TXT_FILE_NAME, OrderPOD.class);
+    OrderPODFromJson.getPodLineItems().get(0).setQuantityReceived(65);
+    OrderPODFromJson.getPodLineItems().get(0).setProductCode("P10");
+
+    String orderId = generateOrderNumberForIdAndDefaultConfiguration(id, "HIV");
+
+    dbWrapper.setupOrderNumberConfiguration("P",true,true,true,true);
+    checkOrderNumber(orderId, responseEntity);
+  }
+
+  @Test(groups = {"webservice"})
   public void testRequisitionDetailsAfterPOD() throws SQLException, IOException {
 
     HttpClient client = new HttpClient();
@@ -290,8 +327,10 @@ public class GetRequisitionDetailsAPI extends JsonUtility {
     OrderPODFromJson.getPodLineItems().get(0).setQuantityReceived(65);
     OrderPODFromJson.getPodLineItems().get(0).setProductCode("P10");
 
+    String orderId = generateOrderNumberForIdAndDefaultConfiguration(id, "HIV");
+
     client.SendJSON(getJsonStringFor(OrderPODFromJson),
-      format(POD_URL, generateOrderNumberForIdAndDefaultConfiguration(id, "HIV")),
+      format(POD_URL, orderId),
       "POST",
       "commTrack",
       "Admin123");
@@ -299,6 +338,8 @@ public class GetRequisitionDetailsAPI extends JsonUtility {
     responseEntity = client.SendJSON("", URL + id, "GET", "commTrack", "Admin123");
     checkRequisitionStatus("RELEASED", responseEntity);
     checkOrderStatus(65, "RECEIVED", responseEntity);
+    dbWrapper.setupOrderNumberConfiguration("P",true,true,true,true);
+    checkOrderNumber(orderId, responseEntity);
   }
 
   private String generateOrderNumberForIdAndDefaultConfiguration(Long id, String programCode) {
@@ -349,6 +390,10 @@ public class GetRequisitionDetailsAPI extends JsonUtility {
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"quantityApproved\":" + quantityApproved));
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"supplyingFacilityCode\":\"F10\""));
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"orderStatus\":\"" + orderStatus + "\""));
+  }
+
+  private void checkOrderNumber(String orderId, ResponseEntity responseEntity) {
+    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"orderId\":\"" + orderId + "\""));
   }
 
   private ResponseEntity waitUntilOrderStatusUpdatedOrTimeOut(long id, String expected) throws InterruptedException {
