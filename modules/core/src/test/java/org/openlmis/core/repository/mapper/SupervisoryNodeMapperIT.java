@@ -277,7 +277,7 @@ public class SupervisoryNodeMapperIT {
     supervisoryNode2.setFacility(facility);
     insertSupervisoryNode(supervisoryNode2);
 
-    List<SupervisoryNode> searchResults = supervisoryNodeMapper.getSupervisoryNodesBy("Approval");
+    List<SupervisoryNode> searchResults = supervisoryNodeMapper.getSupervisoryNodesBy(pagination, "Approval");
 
     assertThat(searchResults.size(), is(2));
   }
@@ -300,7 +300,7 @@ public class SupervisoryNodeMapperIT {
     supervisoryNode3.setParent(supervisoryNode2);
     insertSupervisoryNode(supervisoryNode3);
 
-    List<SupervisoryNode> searchResults = supervisoryNodeMapper.getSupervisoryNodesBy("Parent");
+    List<SupervisoryNode> searchResults = supervisoryNodeMapper.getSupervisoryNodesBy(pagination, "Parent");
 
     assertThat(searchResults.size(), is(1));
 

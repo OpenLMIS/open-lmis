@@ -12,6 +12,7 @@ package org.openlmis.core.repository.mapper;
 
 import org.apache.ibatis.annotations.*;
 import org.openlmis.core.domain.Facility;
+import org.openlmis.core.domain.Pagination;
 import org.openlmis.core.domain.SupervisoryNode;
 import org.springframework.stereotype.Repository;
 
@@ -136,15 +137,15 @@ public interface SupervisoryNodeMapper {
     @Result(property = "facility", column = "facilityId", javaType = Facility.class,
       one = @One(select = "org.openlmis.core.repository.mapper.FacilityMapper.getById"))
   })
-  List<SupervisoryNode> getSupervisoryNodesByParent(String nameSearchCriteria);
+  List<SupervisoryNode> getSupervisoryNodesByParent(@Param(value = "pagination")Pagination pagination, @Param(value = "nameSearchCriteria")String nameSearchCriteria);
 
   @Select({"SELECT * FROM supervisory_nodes SN LEFT OUTER JOIN supervisory_nodes SNP ON SN.parentId = SNP.id WHERE LOWER(SN.name)" +
-    " LIKE '%'|| LOWER(#{nameSearchCriteria}) ||'%' ORDER BY SNP.name, SN.name NULLS LAST"})
+    " LIKE '%'|| LOWER(#{nameSearchCriteria}) ||'%' ORDER BY SNP.name, SN.name NULLS LAST LIMIT #{pagination.pageSize} OFFSET #{pagination.offset}"})
   @Results(value = {
     @Result(property = "parent", column = "parentId", javaType = SupervisoryNode.class,
       one = @One(select = "getById")),
     @Result(property = "facility", column = "facilityId", javaType = Facility.class,
       one = @One(select = "org.openlmis.core.repository.mapper.FacilityMapper.getById"))
   })
-  List<SupervisoryNode> getSupervisoryNodesBy(String nameSearchCriteria);
+  List<SupervisoryNode> getSupervisoryNodesBy(@Param(value = "pagination")Pagination pagination, @Param(value = "nameSearchCriteria")String nameSearchCriteria);
 }

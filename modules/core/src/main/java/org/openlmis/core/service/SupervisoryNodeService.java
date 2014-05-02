@@ -17,6 +17,7 @@ import org.openlmis.core.repository.FacilityRepository;
 import org.openlmis.core.repository.SupervisoryNodeRepository;
 import org.openlmis.core.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -40,6 +41,15 @@ public class SupervisoryNodeService {
   @Autowired
   private FacilityRepository facilityRepository;
 
+  private Integer pageSize;
+
+
+
+  @Autowired
+  public void setPageSize(@Value("${supervisory.nodes.page.size}") String pageSize) {
+    this.pageSize = Integer.parseInt(pageSize);
+  }
+
   public void save(SupervisoryNode supervisoryNode) {
     supervisoryNode.getFacility().setId(facilityRepository.getIdForCode(supervisoryNode.getFacility().getCode()));
     validateParentNode(supervisoryNode);
@@ -49,11 +59,11 @@ public class SupervisoryNodeService {
       supervisoryNodeRepository.update(supervisoryNode);
   }
 
-  public List<SupervisoryNode> getSupervisoryNodesBy(String nameSearchCriteria, Boolean parent) {
+  public List<SupervisoryNode> getSupervisoryNodesBy(Integer page, String nameSearchCriteria, Boolean parent) {
     if (parent) {
-      return supervisoryNodeRepository.getSupervisoryNodesByParent(nameSearchCriteria);
+      return supervisoryNodeRepository.getSupervisoryNodesByParent(getPagination(page), nameSearchCriteria);
     }
-    return supervisoryNodeRepository.getSupervisoryNodesBy(nameSearchCriteria);
+    return supervisoryNodeRepository.getSupervisoryNodesBy(getPagination(page), nameSearchCriteria);
   }
 
   private void validateParentNode(SupervisoryNode supervisoryNode) {
@@ -114,5 +124,9 @@ public class SupervisoryNodeService {
 
   public SupervisoryNode getByCode(SupervisoryNode supervisoryNode) {
     return supervisoryNodeRepository.getByCode(supervisoryNode);
+  }
+
+  public Pagination getPagination(Integer page) {
+    return new Pagination(page, pageSize);
   }
 }

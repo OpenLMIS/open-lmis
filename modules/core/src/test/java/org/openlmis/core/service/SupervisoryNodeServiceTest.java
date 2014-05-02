@@ -275,18 +275,18 @@ public class SupervisoryNodeServiceTest {
   @Test
   public void shouldGetSupervisoryNodesForParentSearchCriteria() {
     String searchCriteria = "parentName";
-    when(supervisoryNodeRepository.getSupervisoryNodesByParent(searchCriteria)).thenReturn(Collections.EMPTY_LIST);
+    when(supervisoryNodeRepository.getSupervisoryNodesByParent(, searchCriteria)).thenReturn(Collections.EMPTY_LIST);
     List<SupervisoryNode> searchResult = supervisoryNodeService.getSupervisoryNodesBy(searchCriteria, true);
-    verify(supervisoryNodeRepository).getSupervisoryNodesByParent(searchCriteria);
+    verify(supervisoryNodeRepository).getSupervisoryNodesByParent(, searchCriteria);
     assertThat(searchResult, is(Collections.EMPTY_LIST));
   }
 
   @Test
   public void shouldGetSupervisoryNodesSearchCriteria() {
     String searchCriteria = "nodeName";
-    when(supervisoryNodeRepository.getSupervisoryNodesBy(searchCriteria)).thenReturn(Collections.EMPTY_LIST);
+    when(supervisoryNodeRepository.getSupervisoryNodesBy(pagination, searchCriteria)).thenReturn(Collections.EMPTY_LIST);
     List<SupervisoryNode> searchResult = supervisoryNodeService.getSupervisoryNodesBy(searchCriteria, true);
-    verify(supervisoryNodeRepository).getSupervisoryNodesByParent(searchCriteria);
+    verify(supervisoryNodeRepository).getSupervisoryNodesByParent(, searchCriteria);
     assertThat(searchResult, is(Collections.EMPTY_LIST));
   }
 

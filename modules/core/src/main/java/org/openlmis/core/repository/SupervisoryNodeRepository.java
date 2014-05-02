@@ -90,11 +90,11 @@ public class SupervisoryNodeRepository {
     supervisoryNodeMapper.update(supervisoryNode);
   }
 
-  public List<SupervisoryNode> getSupervisoryNodesByParent(String nameSearchCriteria) {
-      return supervisoryNodeMapper.getSupervisoryNodesByParent(nameSearchCriteria);
+  public List<SupervisoryNode> getSupervisoryNodesByParent(Pagination pagination, String nameSearchCriteria) {
+      return supervisoryNodeMapper.getSupervisoryNodesByParent(pagination, nameSearchCriteria);
   }
 
-  public List<SupervisoryNode> getSupervisoryNodesBy(String nameSearchCriteria) {
-    return supervisoryNodeMapper.getSupervisoryNodesBy(nameSearchCriteria);
+  public List<SupervisoryNode> getSupervisoryNodesBy(Pagination pagination, String nameSearchCriteria) {
+    return supervisoryNodeMapper.getSupervisoryNodesBy(pagination, nameSearchCriteria);
   }
 }
