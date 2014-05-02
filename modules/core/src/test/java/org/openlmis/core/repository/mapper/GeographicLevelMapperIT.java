@@ -13,12 +13,15 @@ package org.openlmis.core.repository.mapper;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
+import org.openlmis.core.domain.GeographicLevel;
 import org.openlmis.db.categories.IntegrationTests;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -38,4 +41,9 @@ public class GeographicLevelMapperIT {
     assertThat(mapper.getLowestGeographicLevel(), is(4));
   }
 
+  @Test
+  public void shouldReturnAllTheGeoLevels() {
+    List<GeographicLevel> levels = mapper.getAll();
+    assertThat(levels.size(), is(4));
+  }
 }

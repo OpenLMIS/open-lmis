@@ -11,6 +11,7 @@
 package org.openlmis.core.service;
 
 import lombok.NoArgsConstructor;
+import org.openlmis.core.domain.GeographicLevel;
 import org.openlmis.core.domain.GeographicZone;
 import org.openlmis.core.repository.GeographicZoneRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,5 +53,13 @@ public class GeographicZoneService {
 
   public List<GeographicZone> searchBy(String searchParam, String columnName) {
     return repository.searchBy(searchParam, columnName);
+  }
+
+  public List<GeographicLevel> getAllGeographicLevels() {
+    return repository.getAllGeographicLevels();
+  }
+
+  public List<GeographicZone> getAllGeographicZonesAbove(GeographicLevel level) {
+    return repository.getAllGeographicZonesAbove(level);
   }
 }

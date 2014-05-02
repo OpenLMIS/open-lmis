@@ -10,6 +10,7 @@
 
 package org.openlmis.web.controller;
 
+import org.openlmis.core.domain.GeographicLevel;
 import org.openlmis.core.domain.GeographicZone;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.GeographicZoneService;
@@ -83,5 +84,19 @@ public class GeographicZoneController extends BaseController {
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_GEOGRAPHIC_ZONE')")
   public List<GeographicZone> search(@RequestParam(value = "searchParam") String searchParam, @RequestParam(value = "columnName") String columnName) {
     return service.searchBy(searchParam, columnName);
+  }
+
+  @RequestMapping(value = "/geographicLevels", method = GET, headers = ACCEPT_JSON)
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_GEOGRAPHIC_ZONE')")
+  public List<GeographicLevel> getAllGeographicLevels() {
+    return service.getAllGeographicLevels();
+  }
+
+  @RequestMapping(value = "/geographicZones/{level}", method = GET, headers = ACCEPT_JSON)
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_GEOGRAPHIC_ZONE')")
+  public List<GeographicZone> getAllGeographicZonesAbove(@PathVariable("level") Integer level) {
+    GeographicLevel geographicLevel = new GeographicLevel();
+    geographicLevel.setLevelNumber(level);
+    return service.getAllGeographicZonesAbove(geographicLevel);
   }
 }

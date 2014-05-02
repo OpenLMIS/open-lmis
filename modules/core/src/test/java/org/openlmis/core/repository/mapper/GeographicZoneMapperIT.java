@@ -132,4 +132,11 @@ public class GeographicZoneMapperIT {
 
     assertThat(returnedZone, is(geographicZone));
   }
+
+  @Test
+  public void shouldReturnGeographicZonesAboveGivenLevel() throws Exception {
+    GeographicLevel level = new GeographicLevel(4L, "GL3", "level3", 3);
+    List<GeographicZone> geographicZones = mapper.getAllGeographicZonesAbove(level);
+    assertThat(geographicZones.size(), is(6));
+  }
 }

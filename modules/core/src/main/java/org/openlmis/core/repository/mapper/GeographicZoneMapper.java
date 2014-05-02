@@ -100,4 +100,8 @@ public interface GeographicZoneMapper {
     @Result(property = "parent.name", column = "parentName"),
   })
   List<GeographicZone> searchByName(String searchParam);
+
+  @Select({"SELECT * FROM geographic_zones gz INNER JOIN geographic_levels gl ON gz.levelId = gl.id",
+    "WHERE gl.levelNumber < #{levelNumber}"})
+  List<GeographicZone> getAllGeographicZonesAbove(GeographicLevel level);
 }

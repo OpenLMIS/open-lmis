@@ -77,4 +77,12 @@ public class GeographicZoneRepository {
     }
     return mapper.searchByName(searchParam);
   }
+
+  public List<GeographicLevel> getAllGeographicLevels() {
+    return geographicLevelMapper.getAll();
+  }
+
+  public List<GeographicZone> getAllGeographicZonesAbove(GeographicLevel level) {
+    return mapper.getAllGeographicZonesAbove(level);
+  }
 }
