@@ -11,7 +11,8 @@
 <div xmlns="http://www.w3.org/1999/html">
   <h2>
     <span openlmis-message="search.facility.header"></span>
-    <a id="add-new-facility" href="#/create-facility" class="pull-right btn btn-primary" openlmis-message="button.add.new"></a>
+    <a id="add-new-facility" href="#/create-facility" class="pull-right btn btn-primary"
+       openlmis-message="button.add.new"></a>
   </h2>
 
   <div class="alert alert-success" id="saveSuccessMsgDiv" ng-show="facilityId">
@@ -24,10 +25,12 @@
 
   <div class="form-tip" openlmis-message="search.threeCharacters"></div>
 
-  <div class="facility-list" ng-show="query.length > 2">
+  <div class="search-list" ng-show="query.length > 2">
     <div ng-switch on="resultCount">
       <h3 ng-switch-when="0" openlmis-message="msg.no.matches|query"></h3>
+
       <h3 ng-switch-when="1" openlmis-message="msg.one.match|query"></h3>
+
       <h3 ng-switch-default openlmis-message="msg.many.matches|resultCount|query"></h3>
     </div>
     <a class="close-btn" href="" ng-click="clearSearch()"></a>
