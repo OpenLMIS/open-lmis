@@ -11,7 +11,11 @@
 var userModule = angular.module('supervisoryNode', ['openlmis', 'ui.bootstrap.dropdownToggle']);
 
 userModule.config(['$routeProvider', function ($routeProvider) {
-    $routeProvider.
+  $routeProvider.
       when('/search', {controller: SupervisoryNodeSearchController, templateUrl: 'partials/search.html'}).
       otherwise({redirectTo: '/search'});
-  }]);
+}]).run(function ($rootScope, AuthorizationService) {
+  $rootScope.supervisoryNodeSelected = "selected";
+  AuthorizationService.preAuthorize('MANAGE_SUPERVISORY_NODE');
+});
+;

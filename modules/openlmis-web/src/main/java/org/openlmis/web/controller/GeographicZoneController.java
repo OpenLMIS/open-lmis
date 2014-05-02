@@ -41,13 +41,13 @@ public class GeographicZoneController extends BaseController {
   private GeographicZoneService service;
 
   @RequestMapping(value = "/geographicZones/{id}", method = GET, headers = ACCEPT_JSON)
-  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_DISTRIBUTION')")
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_DISTRIBUTION', 'MANAGE_GEOGRAPHIC_ZONE')")
   public ResponseEntity<OpenLmisResponse> get(@PathVariable Long id) {
     return OpenLmisResponse.response("geoZone", service.getById(id));
   }
 
   @RequestMapping(value = "/geographicZones", method = POST, headers = ACCEPT_JSON)
-  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_GEO_ZONE')")
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_GEOGRAPHIC_ZONE')")
   public ResponseEntity<OpenLmisResponse> insert(@RequestBody GeographicZone geographicZone, HttpServletRequest request) {
     Long userId = loggedInUserId(request);
     geographicZone.setCreatedBy(userId);
@@ -63,7 +63,7 @@ public class GeographicZoneController extends BaseController {
   }
 
   @RequestMapping(value = "/geographicZones/{id}", method = PUT, headers = ACCEPT_JSON)
-  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_GEO_ZONE')")
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_GEOGRAPHIC_ZONE')")
   public ResponseEntity<OpenLmisResponse> update(@RequestBody GeographicZone geographicZone, @PathVariable("id") Long id,
                                                  HttpServletRequest request) {
     Long userId = loggedInUserId(request);
@@ -80,7 +80,7 @@ public class GeographicZoneController extends BaseController {
   }
 
   @RequestMapping(value = "/geographicZones", method = GET, headers = ACCEPT_JSON)
-  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_GEO_ZONE')")
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_GEOGRAPHIC_ZONE')")
   public List<GeographicZone> search(@RequestParam(value = "searchParam") String searchParam, @RequestParam(value = "columnName") String columnName) {
     return service.searchBy(searchParam, columnName);
   }

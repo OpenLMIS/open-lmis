@@ -1,0 +1,81 @@
+<!--
+  ~ This program is part of the OpenLMIS logistics management information system platform software.
+  ~ Copyright © 2013 VillageReach
+  ~
+  ~  This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+  ~
+  ~  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+  ~  You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
+  -->
+
+<div xmlns="http://www.w3.org/1999/html">
+  <h2>
+    <span openlmis-message="search.geo.zone.header"></span>
+    <a id="add-new-geo-zone" href="#/create-geo-zone" class="pull-right btn btn-primary"
+       openlmis-message="button.add.new"></a>
+  </h2>
+
+  <div class="alert alert-success" id="saveSuccessMsgDiv" ng-show="geoZoneId">
+    <span ng-bind="message"></span>.&nbsp;&nbsp;<a ng-href="#/edit/{{geoZoneId}}"
+                                                   openlmis-message="search.viewHere"></a>
+  </div>
+
+  <div id="searchControl" class="row-fluid">
+    <div class="span5 search-in-category">
+      <div class="input-append input-prepend">
+        <div class="btn-group">
+          <button id='searchOptionButton' class="btn dropdown-toggle">
+            <span openlmis-message="selectedSearchOption.name"></span>
+            <span class="caret"></span>
+          </button>
+          <ul class="dropdown-menu">
+            <li ng-repeat="searchOption in searchOptions">
+              <a href="" openlmis-message="searchOption.name" ng-click="selectSearchType(searchOption)"></a>
+            </li>
+          </ul>
+        </div>
+        <input id='searchGeoZone' type="text" class="span5"
+               ui-event="{ keyup: 'updateFilteredQueryList()' }"
+               ng-model="query" maxlength="50"/>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-tip" openlmis-message="search.threeCharacters"></div>
+
+  <table class="table table-striped table-bordered search-list" ng-show="query.length > 2">
+    <thead>
+    <tr class="gradient-header resultCountHeader">
+      <th colspan="5">
+          <span ng-switch on="resultCount">
+          <h3 ng-switch-when="0" openlmis-message="msg.no.matches|query"></h3>
+
+          <h3 ng-switch-when="1" openlmis-message="msg.one.match|query"></h3>
+
+          <h3 ng-switch-default openlmis-message="msg.many.matches|resultCount|query"></h3>
+            </span>
+        <a class="close-btn" href="" ng-click="clearSearch()" tabindex="-1"></a>
+
+      </th>
+    </tr>
+    <tr class="gradient-header" ng-hide="resultCount === 0">
+      <th openlmis-message="header.name"></th>
+      <th openlmis-message="header.code"></th>
+      <th openlmis-message="header.level"></th>
+      <th openlmis-message="header.parent"></th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr ng-repeat="geoZone in geoZoneList">
+      <td>
+        <a ng-href="" ng-bind="geoZone.name"></a>
+      </td>
+      <td ng-bind="geoZone.code"></td>
+      <td ng-bind="geoZone.level.name"></td>
+      <td ng-bind="geoZone.parent.name"></td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+
+</div>

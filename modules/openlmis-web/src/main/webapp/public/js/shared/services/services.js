@@ -257,7 +257,13 @@ services.factory('ProgramRegimenTemplate', function ($resource) {
 });
 
 services.factory('GeographicZones', function ($resource) {
-  return $resource('/geographicZones/:id.json', {}, {});
+  var resource = $resource('/geographicZones/:id.json', {id: '@id'}, update);
+
+  resource.restore = function (pathParams, success, error) {
+    $resource('/geographicZones/:id.json', {}, update).update(pathParams, {}, success, error);
+  };
+
+  return resource;
 });
 
 services.factory('Distributions', function ($resource) {
@@ -306,5 +312,5 @@ services.factory('OrderPOD', function ($resource) {
 });
 
 services.factory('OrderNumberConfiguration', function ($resource) {
-  return $resource('/order-number-configuration.json',{},  {post: {method: 'POST'}});
+  return $resource('/order-number-configuration.json', {}, {post: {method: 'POST'}});
 });

@@ -138,6 +138,10 @@
                   <a id='usersMenu' href="/public/pages/admin/user/index.html"
                      openlmis-message="menu.header.users"></a>
                 </li>
+                <li ng-show="hasPermission('MANAGE_GEOGRAPHIC_ZONE')">
+                  <a id='geographicZonesMenu' href="/public/pages/admin/geo-zone/index.html"
+                     openlmis-message="menu.header.geographic.zones"></a>
+                </li>
                 <li ng-show="hasPermission('MANAGE_SUPERVISORY_NODE')">
                   <a id='supervisoryNodes' href="/public/pages/admin/supervisory-node/index.html"
                      openlmis-message="menu.header.supervisory.nodes"></a>
