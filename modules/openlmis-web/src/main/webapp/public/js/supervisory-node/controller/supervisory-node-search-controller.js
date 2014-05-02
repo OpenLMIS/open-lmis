@@ -22,11 +22,9 @@ function SupervisoryNodeSearchController($scope, SupervisoryNodesSearch) {
 
   $scope.selectSearchType = function (searchOption) {
     $scope.selectedSearchOption = searchOption;
-  };
-
-  $scope.inputKeypressHandler = function ($event) {
     $scope.showSupervisoryNodeSearchResults();
   };
+
 
   $scope.showSupervisoryNodeSearchResults = function () {
     var query = $scope.query;
@@ -53,6 +51,12 @@ function SupervisoryNodeSearchController($scope, SupervisoryNodesSearch) {
       return false;
     }
   };
+  $scope.clearSearch = function () {
+    $scope.query = "";
+    $scope.resultCount = 0;
+    angular.element("#searchSupervisroyNode").focus();
+  };
+
 
   var filterSupervisoryNode = function (query) {
     $scope.filteredNodes = [];
