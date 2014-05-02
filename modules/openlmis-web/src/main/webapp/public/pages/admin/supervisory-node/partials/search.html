@@ -10,10 +10,10 @@
 
 <div xmlns="http://www.w3.org/1999/html">
   <h2><span openlmis-message="label.search.supervisory.node"></span>
-    <a href="#/create-supervisory-node" class="pull-right btn btn-primary"><span id="supervisoryNodeAddNew"
-                                                                                 openlmis-message="button.add.new"></span></a>
+    <a href="#/create-supervisory-node" class="pull-right btn btn-primary">
+      <span id="supervisoryNodeAddNew" openlmis-message="button.add.new"></span>
+    </a>
   </h2>
-
 
   <div id="supervisoryNodeSearchControl" class="row-fluid">
     <div class="span5 search-in-category">
@@ -36,52 +36,50 @@
     </div>
   </div>
 
-
   <div class="form-tip" openlmis-message="search.threeCharacters"></div>
-  <div class="facility-list" ng-show="query.length > 2">
-    <div ng-switch on="resultCount">
-      <h3 ng-switch-when="0" openlmis-message="msg.no.matches|query"></h3>
 
-      <h3 ng-switch-when="1" openlmis-message="msg.one.match|query"></h3>
+  <table class="table table-striped table-bordered facility-list"  ng-show="query.length > 2">
+    <thead>
+    <tr class="gradient-header resultCountHeader">
+      <th colspan="5">
+          <span ng-switch on="resultCount">
+          <h3 ng-switch-when="0" openlmis-message="msg.no.matches|query"></h3>
 
-      <h3 ng-switch-default openlmis-message="msg.many.matches|resultCount|query"></h3>
-    </div>
-    <a class="close-btn" href="" ng-click="clearSearch()" tabindex="-1"></a>
+          <h3 ng-switch-when="1" openlmis-message="msg.one.match|query"></h3>
 
-    <table class="table table-striped table-bordered">
-      <thead>
-      <tr class="gradient-header">
-        <th class="col-name">Code
-        </th>
-        <th class="col-desc">Supervisory Node Name
-        </th>
-        <th class="col-right">Facility
-        </th>
-        <th class="col-right">Parent
-        </th>
-        <th class="col-right">Supervisors Count
-        </th>
-      </tr>
-      </thead>
-      <tbody>
-      <tr ng-repeat="supervisoryNode in filteredNodes">
-        <td class="col-role-name" ng-bind="supervisoryNode.code">
-        </td>
-        <td class="col-role-description">
-          <a ng-href="" ng-bind="supervisoryNode.name"></a>
-        </td>
-        <td class="col-role-rights" ng-bind="supervisoryNode.facility.name">
-        </td>
-        <td class="col-role-rights" ng-bind="supervisoryNode.parent.name">
-        </td>
-        <td class="col-role-rights">
-        </td>
-      </tr>
-      </tbody>
-    </table>
+          <h3 ng-switch-default openlmis-message="msg.many.matches|resultCount|query"></h3>
+            </span>
+        <a class="close-btn" href="" ng-click="clearSearch()" tabindex="-1"></a>
 
-
-  </div>
-
-
+      </th>
+    </tr>
+    <tr class="gradient-header">
+      <th class="col-name">Code
+      </th>
+      <th class="col-desc">Supervisory Node Name
+      </th>
+      <th class="col-right">Facility
+      </th>
+      <th class="col-right">Parent
+      </th>
+      <th class="col-right">Supervisors Count
+      </th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr ng-repeat="supervisoryNode in filteredNodes">
+      <td class="col-role-name" ng-bind="supervisoryNode.code">
+      </td>
+      <td class="col-role-description">
+        <a ng-href="" ng-bind="supervisoryNode.name"></a>
+      </td>
+      <td class="col-role-rights" ng-bind="supervisoryNode.facility.name">
+      </td>
+      <td class="col-role-rights" ng-bind="supervisoryNode.parent.name">
+      </td>
+      <td class="col-role-rights">
+      </td>
+    </tr>
+    </tbody>
+  </table>
 </div>
