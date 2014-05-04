@@ -8,7 +8,7 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-var facilityModule = angular.module('facility', ['openlmis', 'ui.bootstrap.modal', 'ui.bootstrap.dialog']).
+var facilityModule = angular.module('facility', ['openlmis','google-maps' ,'ui.bootstrap.modal', 'ui.bootstrap.dialog']).
     config(['$routeProvider', function ($routeProvider) {
       $routeProvider.
           when('/search', {controller: FacilitySearchController, templateUrl: 'partials/search.html'}).

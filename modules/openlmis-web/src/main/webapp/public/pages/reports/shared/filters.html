@@ -12,8 +12,8 @@
     <div>
         <label class="labels">Program <span ng-show="requiredFilters.program" class="label-required">*</span></label>
         <div>
-            <select class="input-large" ui-select2 ng-model="filter.program" ng-change="OnFilterChanged()">
-                <option ng-repeat="program in programs" value="{{ program.id }}">{{program.name}}</option>
+            <select class="input-large" ui-select2 ng-model="filter.program" ng-change="filterChanged()">
+                <option ng-repeat="program in programs" value="{{ program.id }}" ng-selected="program.id == filter.program">{{program.name}}</option>
             </select>
         </div>
     </div>
@@ -24,7 +24,7 @@
         <label class="labels">Year <span ng-show="requiredFilters.year" class="label-required">*</span></label>
         <div>
             <select class="input-medium" ui-select2 ng-model="filter.year">
-                <option ng-repeat="year in years" value="{{ year }}">{{year}}</option>
+                <option ng-repeat="year in years" ng-selected="filter.year == year" value="{{ year }}">{{year}}</option>
             </select>
         </div>
     </div>
@@ -34,7 +34,7 @@
     <div>
         <label class="labels">Facility Type <span ng-show="requiredFilters.facilityType" class="label-required">*</span></label>
          <div>
-         <select class="input-large" ui-select2 ng-model="filter.facilityType" ng-change="OnFilterChanged()">
+         <select class="input-large" ui-select2 ng-model="filter.facilityType" ng-change="filterChanged()">
                 <option ng-repeat="type in facilityTypes" value="{{ type.id }}">{{type.name}}</option>
          </select>
         </div>
@@ -45,7 +45,7 @@
     <div>
         <label class="labels">Facility <span ng-show="requiredFilters.facility" class="label-required">*</span></label>
         <div>
-        <select class="input-large" ui-select2 ng-model="filter.facility" ng-change="OnFilterChanged();">
+        <select class="input-large" ui-select2 ng-model="filter.facility" ng-change="filterChanged();">
                <option  ng-repeat="option in facilities" value="{{ option.id }}">{{ option.name }}</option>
             </select>
         </div>
@@ -57,7 +57,7 @@
         <label class="labels">Schedule <span ng-show="requiredFilters.schedule" class="label-required">*</span></label>
         <div>
         <select class="input-medium" ui-select2 ng-model="filter.schedule">
-            <option ng-repeat="schedule in schedules" value="{{ schedule.id }}">{{schedule.name}}</option>
+            <option ng-repeat="schedule in schedules" value="{{ schedule.id }}" ng-selected="filter.schedule == schedule.id">{{schedule.name}}</option>
             </select>
         </div>
     </div>
@@ -66,8 +66,8 @@
 <script type="text/ng-template" id="filter-period-template">
     <div>
         <label class="labels">Period <span ng-show="requiredFilters.period" class="label-required">*</span></label><div>
-        <select class="input-medium" ui-select2 ng-model="filter.period" ng-change="OnFilterChanged();">
-            <option ng-repeat="period in periods" value="{{ period.id }}">{{period.name}}</option>
+        <select class="input-medium" ui-select2 ng-model="filter.period" ng-change="filterChanged();">
+            <option ng-repeat="period in periods" value="{{ period.id }}" ng-selected="period.id == filter.period">{{period.name}}</option>
          </select>
         </div>
     </div>
@@ -77,8 +77,8 @@
     <div>
         <label class="labels">Product Category <span ng-show="requiredFilters.productCategory" class="label-required">*</span></label>
         <div>
-        <select class="input-large" ui-select2 ng-model="filter.productCategory" ng-change="OnFilterChanged();">
-               <option  ng-repeat="option in productCategories" value="{{ option.id }}">{{ option.name }}</option>
+        <select class="input-large" ui-select2 ng-model="filter.productCategory" ng-change="filterChanged();">
+               <option  ng-repeat="option in productCategories" value="{{ option.id }}" ng-selected="option.id == filter.productCategory">{{ option.name }}</option>
             </select>
         </div>
     </div>
@@ -87,8 +87,8 @@
 <script type="text/ng-template" id="filter-product-template">
     <div>
         <label class="labels">Product <span ng-show="requiredFilters.product" class="label-required">*</span></label><div>
-        <select class="input-large" ui-select2 ng-model="filter.product" ng-change="OnFilterChanged();">
-               <option  ng-repeat="option in products | filter:productCFilter" value="{{ option.id }}">{{ option.name }}</option>
+        <select class="input-large" ui-select2 ng-model="filter.product" ng-change="filterChanged();">
+               <option  ng-repeat="option in products | filter:productCFilter" value="{{ option.id }}" ng-selected="filter.product == option.id">{{ option.name }}</option>
             </select>
         </div>
     </div>
@@ -97,8 +97,8 @@
 <script type="text/ng-template" id="filter-requisition-group-template">
     <div>
         <label class="labels">Requisition Groups <span ng-show="requiredFilters.requisitionGroup" class="label-required">*</span></label><div>
-        <select class="input-large" ui-select2 ng-model="filter.requisitionGroup" ng-change="OnFilterChanged();">
-                 <option ng-repeat="requisitionGroup in requisitionGroups" value="{{ requisitionGroup.id }}">{{requisitionGroup.name}}</option>
+        <select class="input-large" ui-select2 ng-model="filter.requisitionGroup" ng-change="filterChanged();">
+                 <option ng-repeat="requisitionGroup in requisitionGroups" value="{{ requisitionGroup.id }}" ng-selected="requisitionGroup.id == filter.requisitionGroup">{{requisitionGroup.name}}</option>
             </select>
         </div>
     </div>

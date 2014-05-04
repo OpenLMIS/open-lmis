@@ -1,0 +1,5 @@
+CREATE TABLE donors(
+  id SERIAL PRIMARY KEY,
+  shortName VARCHAR (200) NOT NULL,
+  longName VARCHAR (200) NOT NULL
+);

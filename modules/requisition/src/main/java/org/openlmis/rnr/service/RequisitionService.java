@@ -5,6 +5,8 @@ import org.openlmis.core.exception.DataException;
 import org.openlmis.core.message.OpenLmisMessage;
 import org.openlmis.core.service.*;
 import org.openlmis.db.repository.mapper.DbMapper;
+import org.openlmis.equipment.domain.EquipmentInventory;
+import org.openlmis.equipment.service.EquipmentInventoryService;
 import org.openlmis.rnr.domain.*;
 import org.openlmis.rnr.repository.RequisitionRepository;
 import org.openlmis.rnr.search.criteria.RequisitionSearchCriteria;
@@ -91,6 +93,8 @@ public class RequisitionService {
   private BudgetLineItemService budgetLineItemService;
   @Autowired
   private StatusChangeEventService statusChangeEventService;
+  @Autowired
+  private EquipmentInventoryService equipmentInventoryService;
 
   private RequisitionSearchStrategyFactory requisitionSearchStrategyFactory;
 
@@ -134,10 +138,34 @@ public class RequisitionService {
     calculationService.fillFieldsForInitiatedRequisition(requisition, rnrTemplate, regimenTemplate);
     calculationService.fillReportingDays(requisition);
 
+    // if program supports equipments, initialize it here.
+    if(program.isEquipmentConfigured()){
+       populateEquipments(requisition);
+    }
+
     insert(requisition);
     requisition = requisitionRepository.getById(requisition.getId());
 
     return fillSupportingInfo(requisition);
+  }
+
+  private void populateEquipments(Rnr requisition) {
+    List<EquipmentInventory> inventories = equipmentInventoryService.getInventoryForFacility(requisition.getFacility().getId(), requisition.getProgram().getId());
+    requisition.setEquipmentLineItems(new ArrayList<EquipmentLineItem>());
+    for(EquipmentInventory inv : inventories){
+      EquipmentLineItem lineItem = new EquipmentLineItem();
+      lineItem.setRnrId(requisition.getId());
+      lineItem.setCode(inv.getEquipment().getCode());
+      lineItem.setEquipmentSerial(inv.getSerialNumber());
+      lineItem.setEquipmentInventoryId(inv.getId());
+      lineItem.setEquipmentCategory(inv.getEquipment().getEquipmentType().getName());
+      lineItem.setOperationalStatusId(inv.getOperationalStatusId());
+      lineItem.setEquipmentName(inv.getEquipment().getName());
+      lineItem.setEquipmentModel(inv.getModel());
+      lineItem.setDaysOutOfUse(0L);
+
+      requisition.getEquipmentLineItems().add(lineItem);
+    }
   }
 
   private void populateAllocatedBudget(Rnr requisition) {
@@ -161,9 +189,12 @@ public class RequisitionService {
 
     if (savedRnr.getStatus() == AUTHORIZED || savedRnr.getStatus() == IN_APPROVAL) {
       savedRnr.copyApproverEditableFields(rnr, rnrTemplate);
+
     } else {
       List<ProgramProduct> programProducts = programProductService.getNonFullSupplyProductsForProgram(savedRnr.getProgram());
       savedRnr.copyCreatorEditableFields(rnr, rnrTemplate, regimenTemplate, programProducts);
+      //TODO: copy only the editable fields.
+      savedRnr.setEquipmentLineItems(rnr.getEquipmentLineItems());
     }
 
     requisitionRepository.update(savedRnr);

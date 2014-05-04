@@ -1,0 +1,1 @@
+DROP INDEX odksubmission_instance_id;

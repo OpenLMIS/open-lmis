@@ -15,6 +15,7 @@ import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.FacilityOperator;
 import org.openlmis.core.domain.FacilityType;
 import org.openlmis.core.dto.FacilityContact;
+import org.openlmis.core.dto.FacilityImages;
 import org.springframework.stereotype.Repository;
 
 import java.util.Date;
@@ -278,4 +279,7 @@ public interface FacilityMapper {
       "WHERE ",
       " active = true and facilityId = #{facilityId}"})
   List<FacilityContact> getEmailContacts(Long facilityId);
+
+  @Select("SELECT * from odksubmissiondata where facilityId = #{facilityId}")
+  List<FacilityImages> getFacilityImages(Long facilityId);
 }

@@ -16,7 +16,16 @@ function AlertsController($scope, $filter, Alerts,$location, dashboardMenuServic
         typeSummary = 'SUMMARY';
 
     $scope.$watch('formFilter.supervisoryNodeId', function(){
-        Alerts.get({supervisoryNodeId: $scope.formFilter.supervisoryNodeId},function(data){
+        $scope.getAlerts();
+    });
+
+    $scope.$watch('formFilter.programId', function(){
+        $scope.getAlerts();
+    });
+
+    $scope.getAlerts = function(){
+
+        Alerts.get({supervisoryNodeId: $scope.formFilter.supervisoryNodeId, programId: $scope.formFilter.programId},function(data){
 
             if(!isUndefined(data.alerts)){
                 $scope.alertData = _.filter(data.alerts,function(alertData){if(alertData.displaySection == typeAlert){return alertData;}});
@@ -30,8 +39,7 @@ function AlertsController($scope, $filter, Alerts,$location, dashboardMenuServic
 
         });
 
-
-    });
+    };
 
     var resetAlertsData = function(){
       $scope.alertData = $scope.stockOutData = $scope.alertSummary = null;

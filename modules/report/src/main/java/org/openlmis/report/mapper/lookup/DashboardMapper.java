@@ -1,5 +1,6 @@
 package org.openlmis.report.mapper.lookup;
 
+import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.SelectProvider;
@@ -92,17 +93,31 @@ public interface DashboardMapper {
             "FROM alert_summary s\n" +
             "INNER JOIN alerts a on s.alertTypeId= a.alertType\n" +
             "INNER JOIN vw_user_supervisorynodes sn ON sn.id = s.supervisorynodeid\n" +
-            "WHERE sn.userid = #{userId}" +
+            "WHERE sn.userid = #{userId}\n" +
+            "AND s.programid = #{programId}\n"+
             "AND CASE WHEN COALESCE(#{supervisoryNodeId},0) = 0 THEN sn.id = sn.id ELSE (sn.id = #{supervisoryNodeId} OR sn.parentId = #{supervisoryNodeId}) END\n")
 
-    List<AlertSummary> getAlerts(@Param("userId") Long userId, @Param("supervisoryNodeId")  Long supervisoryNodeId);
+    List<AlertSummary> getAlerts(@Param("userId") Long userId, @Param("supervisoryNodeId") Long supervisoryNodeId, @Param("programId")Long programId);
 
 
     @SelectProvider(type = DashboardNotificationQueryBuilder.class, method = "getNotificationDetails")
     public List<HashMap> getNotificationDetails(@Param("tableName") String tableName,@Param("alertId") Long id);
 
+    @Select("select a.*, ecs.value emailMessageTemplate,scs.value smsMessageTemplate\n" +
+            "from alerts a\n" +
+            "left outer join configuration_settings ecs on ecs.key = a.email_msg_template_key\n" +
+            "left outer join configuration_settings scs on scs.key = a.sms_msg_template_key ")
+    public List<AlertSummary> getNotificationAlerts();
+
     @Select("select * from fn_populate_dw_orders(1)")
     void startDashboardDataBatchUpdate();
+
+    @Insert("insert into email_notifications(receiver,content,subject,sent) values(#{receiver},#{content},NULL,false);")
+    void saveEmailNotification(@Param("receiver")String receiver, @Param("content") String content);
+
+
+    @Insert("insert into sms(message,phonenumber,direction,sent) values(#{message},#{phonenumber},#{direction},false);")
+    void saveSmsNotification(@Param("message")String message, @Param("phonenumber") String phonenumber, @Param("direction")String direction);
 
 }
 

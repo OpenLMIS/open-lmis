@@ -59,13 +59,38 @@ public class DashboardLookupService {
         return dashboardMapper.getStockOutFacilitiesForRequisitionGroup(periodId, programId, productId, requisitionGroupId);
 
     }
-    public List<AlertSummary> getAlerts(Long userId,Long supervisoryNodeId){
-        return dashboardMapper.getAlerts(userId,supervisoryNodeId);
+    public List<AlertSummary> getAlerts(Long userId, Long supervisoryNodeId, Long programId){
+        return dashboardMapper.getAlerts(userId,supervisoryNodeId, programId );
+
+    }
+
+    public List<AlertSummary> getNotificationAlerts(){
+        return dashboardMapper.getNotificationAlerts();
 
     }
 
     public List<HashMap> getNotificationsByCategory(String detailTable, Long alertId) {
         if (detailTable == null || detailTable.isEmpty()) return null;
         return dashboardMapper.getNotificationDetails(detailTable, alertId);
+    }
+
+    public void sendNotification(Notification notification){
+        if(notification == null) return;
+
+        if(notification.getEmails()!= null && !notification.getEmails().isEmpty()){
+            for (String email : notification.getEmails()){
+                if(email != null && !email.isEmpty()){
+                    dashboardMapper.saveEmailNotification(email,notification.getEmailMessage());
+                }
+            }
+        }
+
+        if (notification.getPhoneNumbers() != null && !notification.getPhoneNumbers().isEmpty()){
+            for (String phoneNumber : notification.getPhoneNumbers()){
+                if(phoneNumber !=null && !phoneNumber.isEmpty()){
+                    dashboardMapper.saveSmsNotification(notification.getSmsMessage(),phoneNumber,"O");
+                }
+            }
+        }
     }
 }

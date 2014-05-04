@@ -1,12 +1,14 @@
 package org.openlmis.report.controller;
 
 import lombok.NoArgsConstructor;
+import org.openlmis.report.model.dto.Notification;
 import org.openlmis.report.response.OpenLmisResponse;
 import org.openlmis.report.service.lookup.DashboardLookupService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -14,6 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
+import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 /**
  * User: Issa
@@ -32,6 +35,7 @@ public class DashboardController extends BaseController {
     public static final String STOCKING_EFFICIENCY_DETAIL = "stocking";
     public static final String STOCKED_OUT_FACILITIES = "stockOut";
     public static final String ALERTS = "alerts";
+    public static final String NOTIFICATIONS = "notifications";
     public static final String NOTIFICATIONS_DETAIL = "detail";
 
 
@@ -92,14 +96,31 @@ public class DashboardController extends BaseController {
         return OpenLmisResponse.response(STOCKED_OUT_FACILITIES, this.lookupService.getStockOutFacilitiesByRequisitionGroup(periodId, programId, productId,requisitionGroupId));
     }
     @RequestMapping(value = "/alerts", method = GET, headers = ACCEPT_JSON)
-    public ResponseEntity<OpenLmisResponse>  getAlerts(@RequestParam("supervisoryNodeId") Long supervisoryNodeId,
+    public ResponseEntity<OpenLmisResponse>  getAlerts(@RequestParam("supervisoryNodeId") Long supervisoryNodeId, @RequestParam("programId") Long programId,
                                                        HttpServletRequest request){
-        return OpenLmisResponse.response(ALERTS, this.lookupService.getAlerts(loggedInUserId(request), supervisoryNodeId));
+        return OpenLmisResponse.response(ALERTS, this.lookupService.getAlerts(loggedInUserId(request), supervisoryNodeId, programId ));
+    }
+
+    @RequestMapping(value = "/notification/alerts", method = GET, headers = ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse>  getNotificationTypeAlerts(HttpServletRequest request){
+        return OpenLmisResponse.response(NOTIFICATIONS, this.lookupService.getNotificationAlerts());
     }
 
     @RequestMapping(value = "/notifications/{alertId}/{detailTable}", method = GET, headers = ACCEPT_JSON)
     public ResponseEntity<OpenLmisResponse> getNotificationsByCategory(@PathVariable("alertId") Long id, @PathVariable("detailTable") String detailTable){
         return OpenLmisResponse.response(NOTIFICATIONS_DETAIL, this.lookupService.getNotificationsByCategory(detailTable, id));
     }
+    @RequestMapping(value = "/notification/send", method = POST, headers = BaseController.ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> sendNotification(@RequestBody Notification notification, HttpServletRequest request){
+        try{
+            this.lookupService.sendNotification(notification);
+
+            return OpenLmisResponse.success("send.notification.success");
+
+        }catch (Exception e){
+            return OpenLmisResponse.success("send.notification.error");
+        }
+    }
+
 
 }
