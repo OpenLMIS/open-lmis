@@ -36,32 +36,40 @@ public class SMSService {
         this.smsGatewayUrl = smsGatewayUrl;
     }
 
-    @Async
-    public Future<Boolean> send(SMS sms) throws IOException{
+    public Future<Boolean> send(SMS sms) {
         if (sms.getSent()) {
             return new AsyncResult<>(true);
         }
 
-        SendSMSMessage(sms);
-        return new AsyncResult<>(true);
+        return new AsyncResult<>(SendSMSMessage(sms));
     }
 
-    public void ProcessSMS(@Payload List<SMS> smsList) throws IOException{
+    @Async
+    public Future<Boolean> sendAsync(SMS sms) {
+      if (sms.getSent()) {
+        return new AsyncResult<>(true);
+      }
+
+      return new AsyncResult<>(SendSMSMessage(sms));
+    }
+
+    public void ProcessSMS(@Payload List<SMS> smsList) {
         for(SMS sms : smsList){
             if(!sms.getSent()){
-               this.send(sms);
+               SendSMSMessage(sms);
             }
         }
     }
 
-    public void SendSMSMessage (SMS sms) throws IOException {
+    public Boolean SendSMSMessage (SMS sms) {
         String relayUrl = String.format("%s?message=%s&phone_number=%s",this.smsGatewayUrl, sms.getMessage().replaceAll(" ","%20"), sms.getPhoneNumber());
         try{
             URL url = new URL(relayUrl);
             url.getContent();
+            return true;
         }
-        catch(Exception e) {
-            throw e;
+        catch(IOException e) {
+            return false;
         }
     }
 }

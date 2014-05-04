@@ -24,9 +24,9 @@ public class SMSRowMapper implements RowMapper<SMS> {
   @Override
   public SMS mapRow(ResultSet rs, int rowNum) throws SQLException {
       SMS sms = new SMS();
-      sms.setMessage(rs.getString("Message"));
-      sms.setPhoneNumber(rs.getString("PhoneNumber"));
-      sms.setDirection(rs.getString("Direction"));
+      sms.setMessage(rs.getString("message"));
+      sms.setPhoneNumber(rs.getString("phonenumber"));
+      sms.setDirection(rs.getString("direction"));
       return sms;
   }
 }
