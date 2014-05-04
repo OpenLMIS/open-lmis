@@ -483,7 +483,9 @@ services.factory('NotificationAlerts', function($resource) {
 services.factory('DashboardNotificationsDetail', function($resource){
    return $resource('/dashboard/notifications/:alertId/:detailTable.json',{},{});
 });
-
+services.factory('SendNotification', function($resource){
+   return $resource('/dashboard/notification/send.json',{},{});
+});
 
 
 

@@ -1,12 +1,14 @@
 package org.openlmis.report.controller;
 
 import lombok.NoArgsConstructor;
+import org.openlmis.report.model.dto.Notification;
 import org.openlmis.report.response.OpenLmisResponse;
 import org.openlmis.report.service.lookup.DashboardLookupService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -14,6 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
+import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 /**
  * User: Issa
@@ -107,5 +110,17 @@ public class DashboardController extends BaseController {
     public ResponseEntity<OpenLmisResponse> getNotificationsByCategory(@PathVariable("alertId") Long id, @PathVariable("detailTable") String detailTable){
         return OpenLmisResponse.response(NOTIFICATIONS_DETAIL, this.lookupService.getNotificationsByCategory(detailTable, id));
     }
+    @RequestMapping(value = "/notification/send", method = POST, headers = BaseController.ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> sendNotification(@RequestBody Notification notification, HttpServletRequest request){
+        try{
+            this.lookupService.sendNotification(notification);
+
+            return OpenLmisResponse.success("send.notification.success");
+
+        }catch (Exception e){
+            return OpenLmisResponse.success("send.notification.error");
+        }
+    }
+
 
 }

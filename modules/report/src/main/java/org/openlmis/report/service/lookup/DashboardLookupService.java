@@ -73,4 +73,24 @@ public class DashboardLookupService {
         if (detailTable == null || detailTable.isEmpty()) return null;
         return dashboardMapper.getNotificationDetails(detailTable, alertId);
     }
+
+    public void sendNotification(Notification notification){
+        if(notification == null) return;
+
+        if(notification.getEmails()!= null && !notification.getEmails().isEmpty()){
+            for (String email : notification.getEmails()){
+                if(email != null && !email.isEmpty()){
+                    dashboardMapper.saveEmailNotification(email,notification.getEmailMessage());
+                }
+            }
+        }
+
+        if (notification.getPhoneNumbers() != null && !notification.getPhoneNumbers().isEmpty()){
+            for (String phoneNumber : notification.getPhoneNumbers()){
+                if(phoneNumber !=null && !phoneNumber.isEmpty()){
+                    dashboardMapper.saveSmsNotification(notification.getSmsMessage(),phoneNumber,"O");
+                }
+            }
+        }
+    }
 }

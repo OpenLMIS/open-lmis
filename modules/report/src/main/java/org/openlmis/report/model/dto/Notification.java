@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
+import java.util.List;
 
 /**
  * User: Issa
@@ -14,7 +14,9 @@ import java.util.Date;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class NotificationData {
-    private String facility;
-    private Date rnrSubmittedDate;
+public class Notification {
+    private String emailMessage;
+    private String smsMessage;
+    private List<String> phoneNumbers;
+    private List<String> emails;
 }

@@ -1,36 +1,30 @@
 /**
  * Created by issa on 4/24/14.
  */
-function SendNotificationController($scope, programsList,dashboardFiltersHistoryService, NotificationAlerts, formInputValue,RequisitionGroupsBySupervisoryNodeProgramSchedule,userPreferredFilterValues,ReportProgramsBySupervisoryNode, UserSupervisoryNodes,ReportSchedules, ReportPeriods, RequisitionGroupsByProgram,RequisitionGroupsByProgramSchedule,FacilitiesForNotifications, OperationYears, ReportPeriodsByScheduleAndYear, ngTableParams) {
+function SendNotificationController($scope,$timeout,programsList,SendNotification,dashboardFiltersHistoryService,messageService, NotificationAlerts, formInputValue,RequisitionGroupsBySupervisoryNodeProgramSchedule,userPreferredFilterValues,ReportProgramsBySupervisoryNode, UserSupervisoryNodes,ReportSchedules, ReportPeriods, RequisitionGroupsByProgram,RequisitionGroupsByProgramSchedule,FacilitiesForNotifications, OperationYears, ReportPeriodsByScheduleAndYear, ngTableParams) {
     $scope.filterObject = {};
 
     $scope.formFilter = {};
-    $scope.selectedNotification = null;
+    $scope.selectedNotification = { selectAllFacilities: true};
 
     initialize();
 
     function initialize() {
         $scope.$parent.currentTab = 'NOTIFICATION';
-
         $scope.showProductsFilter = false;
         $scope.showStockStatusFilter = false;
-        $scope.showFacilitiesFilter = true;
+        $scope.showFacilitiesFilter = false;
     }
-
-
 
     $scope.notificationMethodsChange = function(notification){
-       if(!isUndefined(notification) && !isUndefined(notification.type)){
-           $scope.selectedNotification = notification;
-       }
-    }
+        $scope.selectedNotification = notification;
+    };
 
     UserSupervisoryNodes.get(function (data){
         $scope.supervisoryNodes = data.supervisoryNodes;
         if(!isUndefined( $scope.supervisoryNodes)){
             $scope.supervisoryNodes.unshift({'name': formInputValue.supervisoryNodeOptionAll});
         }
-
     });
 
     OperationYears.get(function (data) {
@@ -40,13 +34,93 @@ function SendNotificationController($scope, programsList,dashboardFiltersHistory
 
     ReportSchedules.get(function(data){
         $scope.schedules = data.schedules;
-        $scope.schedules.unshift({'name': formInputValue.scheduleOptionSelect}) ;
-
+        $scope.schedules.unshift({'name': formInputValue.scheduleOptionSelect});
     });
+
+    $scope.sendNotifications = function () {
+        $scope.errorMessage = '';
+        if($scope.validateSendNotification()){
+            var phoneNumbers = _.map($scope.facilityForNotifications, function(facility){
+                if(!isUndefined(facility.phonenumber))
+                {return facility.phonenumber;}
+            });
+            var emails = _.map($scope.facilityForNotifications, function(facility){
+                if(!isUndefined(facility.email))
+                {return facility.email;}
+            });
+            var notification = {
+                emailMessage:  $scope.selectedNotification.emailMessageTemplate,
+                smsMessage : $scope.selectedNotification.smsMessageTemplate,
+                phoneNumbers : phoneNumbers,
+                emails : emails
+            }
+            alert(JSON.stringify($scope.selectedNotification));
+            SendNotification.save({},notification, function(data){
+                $scope.error = "";
+                $scope.$parent.message = messageService.get(data.success);
+            });
+            return;
+        }
+    };
+
+    $scope.$watch("errorMessage", function (errorMsg) {
+        $timeout(function () {
+            if (errorMsg) {
+                document.getElementById('sendSuccessMsgDiv').scrollIntoView();
+            }
+        });
+    });
+
+    $scope.facilitySelectChange = function(selected){
+        if(!selected && $scope.selectedNotification.selectAllFacilities){
+            $scope.selectedNotification.selectAllFacilities = false;
+        }
+    };
+
+    $scope.validateSendNotification = function () {
+
+        if(isUndefined($scope.selectedNotification) || isUndefined($scope.selectedNotification.type)){
+            $scope.errorMessage = messageService.get('errorMessage.send.notification.select.notification.type');
+            return false;
+        }
+        if(isUndefined($scope.selectedNotification.emailMethod) && isUndefined($scope.selectedNotification.smsMethod)){
+            $scope.errorMessage = messageService.get('errorMessage.send.notification.select.notification.method');
+            return false;
+        }
+        $scope.facilityForNotifications = [];
+        angular.forEach($scope.facilities, function(itm,idx){
+            if(itm.selected){
+                $scope.facilityForNotifications.push(itm);
+            }
+        })
+        /*$scope.facilityForNotifications = _.map($scope.facilities, function(facility){
+            if(!isUndefined(facility.selected) && facility.selected == true){
+                return facility;
+            }
+        });*/
+
+        alert('selected facilities '+JSON.stringify($scope.facilityForNotifications));
+
+
+        if(isUndefined($scope.facilityForNotifications) || $scope.facilityForNotifications.length === 0){
+            $scope.errorMessage = messageService.get('errorMessage.send.notification.select.facilities');
+            return false;
+        }
+
+        if($scope.selectedNotification.emailMethod && isUndefined($scope.selectedNotification.emailMessageTemplate)){
+            $scope.errorMessage = messageService.get('errorMessage.send.notification.empty.email.message');
+            return false;
+        }
+        if($scope.selectedNotification.smsMethod && isUndefined($scope.selectedNotification.smsMessageTemplate)){
+            $scope.errorMessage = messageService.get('errorMessage.send.notification.empty.sms.message');
+            return false;
+        }
+
+        return true;
+    };
 
     $scope.$watch('formFilter.facilityId', function (selection) {
         $scope.filterObject.facilityId = $scope.formFilter.facilityId;
-
     });
 
     NotificationAlerts.get({},function(data){
@@ -67,13 +141,11 @@ function SendNotificationController($scope, programsList,dashboardFiltersHistory
                 $scope.programs.unshift({'name': formInputValue.programOptionSelect});
             });
         }
-
         $scope.filterProductsByProgram();
     };
 
     $scope.filterProductsByProgram = function (){
         if(isUndefined($scope.formFilter.programId)){
-            //$scope.resetShipmentLeadTimeData();
             return;
         }
         $scope.filterObject.programId = $scope.formFilter.programId;
@@ -99,7 +171,6 @@ function SendNotificationController($scope, programsList,dashboardFiltersHistory
         }
     };
 
-
     $scope.processPeriodFilter = function (){
         if ( $scope.formFilter.periodId == "All") {
             $scope.filterObject.periodId = -1;
@@ -110,25 +181,18 @@ function SendNotificationController($scope, programsList,dashboardFiltersHistory
                     $scope.filterObject.period = idx.name;
                 }
             });
-
         } else {
             $scope.filterObject.periodId = 0;
         }
-        $scope.getShipmentLeadTimeData();
     };
 
     $scope.processRequisitionFilter = function(){
-
         if($scope.formFilter.rgroupId && $scope.formFilter.rgroupId.length > 1) {
             $scope.formFilter.rgroupId = _.reject($scope.formFilter.rgroupId, function(rgroup){return rgroup === ""; });
         }
-
         $scope.filterObject.rgroupId = $scope.formFilter.rgroupId;
-
         $scope.loadFacilities();
     };
-
-
 
     $scope.changeSchedule = function(){
 
@@ -193,9 +257,34 @@ function SendNotificationController($scope, programsList,dashboardFiltersHistory
             scheduleId: isUndefined($scope.filterObject.scheduleId) ? 0 : $scope.filterObject.scheduleId,
             rgroupId: $scope.filterObject.rgroupId
         }, function(data){
+
             $scope.facilities = data.facilities;
+            if($scope.selectedNotification.selectAllFacilities){
+                $scope.selectAllFacilities();
+            }
+
         });
 
+    };
+
+    $scope.selectAllFacilities = function(){
+        if($scope.selectedNotification.selectAllFacilities === true){
+            if(!isUndefined($scope.facilities)){
+                var markAllFacilities = _.map($scope.facilities,function(facility){
+                    facility.selected = true;
+                    return facility;
+                });
+                $scope.facilities = markAllFacilities;
+            }
+        }else{
+            if(!isUndefined($scope.facilities)){
+                var unmarkAllFacilities = _.map($scope.facilities,function(facility){
+                    facility.selected = false;
+                    return facility;
+                });
+                $scope.facilities = unmarkAllFacilities;
+            }
+        }
     };
 
 

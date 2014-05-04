@@ -22,6 +22,6 @@ public class AlertSummary {
     private Boolean email;
     private Boolean sms;
     private String detailTable;
-    private String smsMessageTemplateKey;
-    private String emailMessageTemplateKey;
+    private String smsMessageTemplate;
+    private String emailMessageTemplate;
 }
