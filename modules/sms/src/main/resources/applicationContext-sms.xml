@@ -27,18 +27,18 @@
   <context:component-scan base-package="org.openlmis.sms"/>
   <import resource="classpath*:applicationContext-db.xml"/>
 
-  <int:channel id="inputChannel">
+  <int:channel id="smsInputChannel">
     <int:dispatcher task-executor="smsDispatcher"></int:dispatcher>
   </int:channel>
 
-  <int-jdbc:inbound-channel-adapter channel="inputChannel"
+  <int-jdbc:inbound-channel-adapter channel="smsInputChannel"
                                     data-source="dataSource"
                                     query="SELECT * FROM sms WHERE direction='O' and sent = false"
                                     row-mapper="SMSRowMapper"
-                                    max-rows-per-poll="1"
+                                    max-rows-per-poll="${sms.notification.rows.per.poll}"
                                     update="UPDATE sms SET sent = true WHERE id IN (:id)"
                                     update-per-row="true">
-  <int:poller fixed-rate="${sms.notification.polling.rate}">
+    <int:poller fixed-rate="${sms.notification.polling.rate}">
       <int:transactional/>
     </int:poller>
   </int-jdbc:inbound-channel-adapter>
@@ -49,7 +49,7 @@
     <property name="queueCapacity" value="-1"/>
   </bean>
 
-  <int:service-activator input-channel="inputChannel" ref="SMSService" method="ProcessSMS"/>
+  <int:service-activator input-channel="smsInputChannel" ref="SMSService" method="ProcessSMS"/>
 
 
 </beans>
