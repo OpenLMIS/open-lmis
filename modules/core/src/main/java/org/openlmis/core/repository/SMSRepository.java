@@ -31,12 +31,13 @@ public class SMSRepository {
     }
 
 
-    public void SaveSMSMessage(String direction, String message, String phoneNumber, Date date){
+    public void SaveSMSMessage(String direction, String message, String phoneNumber, Date date, Boolean sent){
         SMS sms = new SMS();
         sms.setDirection(direction);
         sms.setMessage(message);
         sms.setPhoneNumber(phoneNumber);
         sms.setDateSaved(date);
+        sms.setSent(sent);
 
         smsMapper.insert(sms);
     }
