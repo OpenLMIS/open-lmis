@@ -1,11 +1,22 @@
-app.directive('filterContainer', function () {
+app.directive('filterContainer', ['$routeParams', '$location',function ($location) {
   return {
     restrict: 'EA',
+    controller: function($scope, $routeParams, $location){
+      $scope.filter = $routeParams;
+      $scope.filterChanged = function(){
+        // update the url so users could take it, book mark it etc...
+        var url = $location.url();
+        url = url.substring(0, url.indexOf('?'));
+        url = url + '?' + jQuery.param($scope.filter);
+        $location.url(url);
+
+        $scope.OnFilterChanged();
+      };
+
+    },
     link: function (scope, elm, attrs) {
-
-
       angular.extend(scope, {
-        filter: {},
+        //filter: {},
         requiredFilters: {},
         showMoreFilters: false,
         toggleMoreFilters: function () {
@@ -14,7 +25,7 @@ app.directive('filterContainer', function () {
       });
     }
   };
-});
+}]);
 
 // now comes the program filter
 app.directive('programFilter', ['ReportPrograms',
@@ -26,11 +37,12 @@ app.directive('programFilter', ['ReportPrograms',
         if (attr.required) {
           scope.requiredFilters.program = true;
         }
-
-        ReportPrograms.get(function (data) {
-          scope.programs = data.programs;
-          scope.programs.unshift({
-            'name': '-- Select Programs --'
+        scope.$evalAsync(function(){
+          ReportPrograms.get(function (data) {
+            scope.programs = data.programs;
+            scope.programs.unshift({
+              'name': '-- Select Programs --'
+            });
           });
         });
       },
@@ -42,15 +54,20 @@ app.directive('yearFilter', ['OperationYears',
   function (OperationYears) {
     return {
       restrict: 'E',
+      controller: function($scope){
+
+      },
+      require: '^filterContainer',
       link: function (scope, elm, attr) {
 
         if (attr.required) {
           scope.requiredFilters.year = true;
         }
-
-        OperationYears.get(function (data) {
-          scope.years = data.years;
-          scope.filter.year = data.years[0];
+        scope.$evalAsync(function() {
+          OperationYears.get(function (data) {
+            scope.years = data.years;
+            scope.filter.year = data.years[0];
+          });
         });
       },
       templateUrl: 'filter-year-template'
