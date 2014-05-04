@@ -54,7 +54,7 @@ function SendNotificationController($scope,$timeout,programsList,SendNotificatio
                 phoneNumbers : phoneNumbers,
                 emails : emails
             }
-            alert(JSON.stringify($scope.selectedNotification));
+
             SendNotification.save({},notification, function(data){
                 $scope.error = "";
                 $scope.$parent.message = messageService.get(data.success);
@@ -93,14 +93,6 @@ function SendNotificationController($scope,$timeout,programsList,SendNotificatio
                 $scope.facilityForNotifications.push(itm);
             }
         })
-        /*$scope.facilityForNotifications = _.map($scope.facilities, function(facility){
-            if(!isUndefined(facility.selected) && facility.selected == true){
-                return facility;
-            }
-        });*/
-
-        alert('selected facilities '+JSON.stringify($scope.facilityForNotifications));
-
 
         if(isUndefined($scope.facilityForNotifications) || $scope.facilityForNotifications.length === 0){
             $scope.errorMessage = messageService.get('errorMessage.send.notification.select.facilities');
