@@ -3,4 +3,4 @@ ALTER TABLE facility_program_equipments
   ADD dateDecommissioned DATE NULL,
   ADD hasServiceContract BOOLEAN NOT NULL default(false),
   ADD serviceContractEndDate DATE NULL,
-  ADD primaryDonnerId INT NULL REFERENCES donors(id)
+  ADD primaryDonorId INT NULL REFERENCES donors(id)

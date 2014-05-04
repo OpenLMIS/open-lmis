@@ -15,9 +15,11 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+import org.codehaus.jackson.map.annotate.JsonDeserialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.codehaus.jackson.map.ser.std.DateSerializer;
 import org.openlmis.core.domain.BaseModel;
+import org.openlmis.core.serializer.DateDeserializer;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -46,15 +48,11 @@ public class EquipmentInventory extends BaseModel {
   private Boolean replacementRecommended;
   private String reasonForReplacement;
   private String nameOfAssessor;
-
   private Long primaryDonorId;
   private Boolean hasServiceContract;
   private Date serviceContractEndDate;
   private Boolean isActive;
   private Date dateDecommissioned;
-
-
-  @JsonSerialize(using = DateSerializer.class)
   private Date dateLastAssessed;
 
   private String formatDate(Date date){
@@ -75,7 +73,7 @@ public class EquipmentInventory extends BaseModel {
     return formatDate(this.dateDecommissioned);
   }
 
-  public String getServiceContractEndDate(){
+  public String getServiceContractEndDateString(){
     return formatDate(this.serviceContractEndDate);
   }
 

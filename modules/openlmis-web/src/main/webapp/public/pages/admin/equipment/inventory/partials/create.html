@@ -142,21 +142,20 @@
         </div>
 
           <div class="form-cell">
-            <label for="reasonForReplacement">End Date of Service Contract
+            <label for="serviceContractEndDate">End Date of Service Contract
 
             </label>
 
             <div class="form-field">
               <input
                   ng-model="equipment.serviceContractEndDate"
-                  ng-disabled="equipment.serviceContractEndDate"
-                  name="dateDecommissioned"
+                  name="serviceContractEndDate"
+                  id="serviceContractEndDate"
+                  ng-change="blurDateFields();"
                   ui-date="{dateFormat: 'dd/mm/yy', changeYear: true}"
                   ui-date-format="yy-dd-mm"
-                  id="serviceContractEndDate"  ></textarea>
-              <span class="field-error"
-                    ng-show="equipmentForm.serviceContractEndDate.$error.required && showError"
-                    openlmis-message="missing.value"></span>
+                  />
+
             </div>
           </div>
 
