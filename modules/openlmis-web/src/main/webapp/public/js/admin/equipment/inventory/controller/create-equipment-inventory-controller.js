@@ -8,7 +8,7 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-function CreateEquipmentInventoryController($scope, $location, $routeParams, EquipmentInventory, Equipments, SaveEquipmentInventory, Facility, EquipmentOperationalStatus) {
+function CreateEquipmentInventoryController($scope, $location, $routeParams, EquipmentInventory, Equipments, SaveEquipmentInventory, Facility, EquipmentOperationalStatus, messageService) {
 
   $scope.submitted = false;
   $scope.showError = false;
@@ -27,13 +27,15 @@ function CreateEquipmentInventoryController($scope, $location, $routeParams, Equ
 
     $scope.equipment.replacementRecommended = false;
     $scope.equipment.dateLastAssessed = Date.now();
+    $scope.equipment.isActive = true;
   } else {
     EquipmentInventory.get({
       id: $routeParams.id
     }, function (data) {
       $scope.equipment = data.inventory;
       $scope.equipment.dateLastAssessed = $scope.equipment.dateLastAssessedString ;
-
+      $scope.equipment.dateDecommissioned = $scope.equipment.dateDecommissionedString;
+      $scope.equipment.serviceContractEndDate = $scope.equipment.serviceContractEndDateString;
       Facility.get({ id: $scope.equipment.facilityId }, function(data){
         $scope.facility = data.facility;
       });

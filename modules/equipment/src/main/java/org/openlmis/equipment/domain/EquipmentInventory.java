@@ -57,15 +57,26 @@ public class EquipmentInventory extends BaseModel {
   @JsonSerialize(using = DateSerializer.class)
   private Date dateLastAssessed;
 
-  public String getDateLastAssessedString()  {
+  private String formatDate(Date date){
     try {
       SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-dd-MM");
-      return this.dateLastAssessed == null ? null : simpleDateFormat.format(this.dateLastAssessed);
+      return date == null ? null : simpleDateFormat.format(date);
     }catch(Exception exp){
 
     }
     return null;
   }
 
+  public String getDateLastAssessedString()  {
+    return formatDate(this.dateLastAssessed);
+  }
+
+  public String getDateDecommissionedString(){
+    return formatDate(this.dateDecommissioned);
+  }
+
+  public String getServiceContractEndDate(){
+    return formatDate(this.serviceContractEndDate);
+  }
 
 }

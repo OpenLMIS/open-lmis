@@ -31,15 +31,16 @@ public interface EquipmentInventoryMapper {
   @Select("SELECT * from facility_program_equipments where id = #{id}")
   EquipmentInventory getInventoryById(@Param("id") Long id);
 
-  @Insert("INSERT into facility_program_equipments (facilityId, equipmentId, programId, operationalStatusId, serialNumber, manufacturerName, model, energySource, yearOfInstallation, purchasePrice, sourceOfFund, replacementRecommended, reasonForReplacement, nameOfAssessor, dateLastAssessed, createdBy, createdDate, modifiedBy, modifiedDate) " +
+  @Insert("INSERT into facility_program_equipments (facilityId, equipmentId, programId, operationalStatusId, serialNumber, manufacturerName, model, energySource, yearOfInstallation, purchasePrice, sourceOfFund, replacementRecommended, reasonForReplacement, nameOfAssessor, dateLastAssessed, isActive, dateDecommissioned, hasServiceContract, serviceContractEndDate,primaryDonorId, createdBy, createdDate, modifiedBy, modifiedDate) " +
       "values " +
-      " ( #{facilityId}, #{equipmentId}, #{programId}, #{operationalStatusId}, #{serialNumber}, #{manufacturerName}, #{model}, #{energySource}, #{yearOfInstallation}, #{purchasePrice}, #{sourceOfFund}, #{replacementRecommended}, #{reasonForReplacement}, #{nameOfAssessor}, #{dateLastAssessed}, #{createdBy}, NOW(), #{modifiedBy}, NOW())")
+      " ( #{facilityId}, #{equipmentId}, #{programId}, #{operationalStatusId}, #{serialNumber}, #{manufacturerName}, #{model}, #{energySource}, #{yearOfInstallation}, #{purchasePrice}, #{sourceOfFund}, #{replacementRecommended}, #{reasonForReplacement}, #{nameOfAssessor}, #{dateLastAssessed}, #{isActive}, #{dateDecommissioned}, #{hasServiceContract}, #{serviceContractEndDate}, #{primaryDonorId}, #{createdBy}, NOW(), #{modifiedBy}, NOW())")
   void insert(EquipmentInventory inventory);
 
   @Update("UPDATE facility_program_equipments " +
       "SET " +
       " facilityId = #{facilityId}, equipmentId = #{equipmentId}, programId = #{programId}, operationalStatusId = #{operationalStatusId}, serialNumber = #{serialNumber}, manufacturerName = #{manufacturerName}, model = #{model}, energySource = #{energySource}, yearOfInstallation = #{yearOfInstallation}, purchasePrice = #{purchasePrice}, sourceOfFund = #{sourceOfFund},replacementRecommended = #{replacementRecommended},reasonForReplacement = #{reasonForReplacement}, nameOfAssessor = #{nameOfAssessor}, dateLastAssessed = #{dateLastAssessed} " +
+      " , isActive = #{isActive}, dateDecommissioned = #{dateDecommissioned}, hasServiceContract = #{hasServiceContract}, serviceContractEndDate = #{serviceContractEndDate}, primaryDonorId = #{primaryDonorId}" +
       " , modifiedBy = #{modifiedBy}, modifiedDate = NOW() " +
-      "      WHERE id = #{id}")
+      " WHERE id = #{id}")
   void update(EquipmentInventory inventory);
 }
