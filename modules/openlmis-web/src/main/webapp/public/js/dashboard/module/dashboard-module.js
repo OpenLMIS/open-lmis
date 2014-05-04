@@ -8,7 +8,7 @@
  *
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
-var dashbord = angular.module('dashboard',['openlmis', 'ui.calendar', 'ui.bootstrap','easypiechart','ui.chart','ngTable']).config(['$routeProvider', function ($routeProvider) {
+var dashboard = angular.module('dashboard',['openlmis', 'ui.calendar', 'ui.bootstrap','easypiechart','ui.chart','ngTable']).config(['$routeProvider', function ($routeProvider) {
 
     $routeProvider.
         when('/dashboard', {controller: AdminDashboardController, templateUrl: 'partials/dashboard.html', resolve : ResolveDashboardFormData}).
@@ -23,37 +23,28 @@ var dashbord = angular.module('dashboard',['openlmis', 'ui.calendar', 'ui.bootst
         otherwise({redirectTo: '/dashboard'});
 }]);
 
-dashbord.directive('setting', function ($compile, $http, $templateCache) {
-
-    var noteTemplate = '<div class="entry-note">' +
-        '<div class="entry-text">' +
-        '<div class="entry-title">{{name}}</div>' +
-        '<div class="entry-copy">{{content.data}}</div>' +
-        '</div>' +
-        '</div>';
+dashboard.directive('notificationDetail', function ($compile, $http, $templateCache) {
 
     var getTemplate = function(contentType) {
         var templateLoader,
-            baseUrl = '/public/pages/admin/setting/templates/',
-            templateMap = {
-                TEXT: 'text.html',
-                TEXT_AREA: 'text-area.html',
-                NUBMER: 'number.html',
-                OPTIONS: 'options.html',
-                BOOLEAN: 'boolean.html',
-                EMAIL: 'email.html'
-            };
-
-        var templateUrl = baseUrl + templateMap[contentType];
+            baseUrl = '/public/pages/dashboard/templates/';
+        var templateUrl = baseUrl + contentType.toLowerCase()+'.html';
         templateLoader = $http.get(templateUrl, {cache: $templateCache});
 
         return templateLoader;
     };
 
     var linker = function(scope, element, attrs) {
-        var loader = getTemplate(scope.content.valueType);
+        var loader = getTemplate(scope.content.tableName);
         var promise = loader.success(function(html) {
             element.html(html);
+        }).error(function(){
+            var defaultLoader = getTemplate('default_template');
+            defaultLoader.success(function(html){
+                element.html(html);
+            }).then(function(response){
+                element.replaceWith($compile(element.html())(scope));
+            });
         }).then(function (response) {
             element.replaceWith($compile(element.html())(scope));
         });
