@@ -47,6 +47,13 @@ public class EquipmentInventory extends BaseModel {
   private String reasonForReplacement;
   private String nameOfAssessor;
 
+  private Long primaryDonorId;
+  private Boolean hasServiceContract;
+  private Date serviceContractEndDate;
+  private Boolean isActive;
+  private Date dateDecommissioned;
+
+
   @JsonSerialize(using = DateSerializer.class)
   private Date dateLastAssessed;
 
