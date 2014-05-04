@@ -15,6 +15,7 @@ import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.SMS;
 import org.openlmis.core.repository.SMSRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -34,22 +35,21 @@ public class SMSManagementService {
 
     @Autowired
     private SMSRepository smsRepository;
-    //private String relayWebsite = "http://sms.tz.elmis-dev.org/rapidsms_relay";
-    private String relayWebsite = "http://127.0.0.1:8000/rapidsms_relay";
+    private @Value("${sms.gateway.url}") String relayWebsite;
 
     public void SaveIncomingSMSMessage(String message, String phoneNumber){
-        smsRepository.SaveSMSMessage("I", message,phoneNumber, new Date());
+        smsRepository.SaveSMSMessage("I", message,phoneNumber, new Date(),true);
     }
 
-    public void SendSMSMessage (String message, String phoneNumber) throws IOException{
-        String relayUrl = String.format("%s/?message=%s&phone_number=%s",relayWebsite, message.replaceAll(" ","%20"), phoneNumber);
+    public void SendSMSMessage (String message, String phoneNumber) {
+        String relayUrl = String.format("%s?message=%s&phone_number=%s",relayWebsite, message.replaceAll(" ","%20"), phoneNumber);
         try{
             URL url = new URL(relayUrl);
             url.getContent();
-            smsRepository.SaveSMSMessage("O",message,phoneNumber,new Date());
+            smsRepository.SaveSMSMessage("O",message,phoneNumber,new Date(),true);
         }
-        catch(Exception e) {
-            throw e;
+        catch(IOException e) {
+            //TODO: handle this.
         }
 
     }
@@ -73,7 +73,7 @@ public class SMSManagementService {
             while ((line = reader.readLine()) != null) {
                 buffer = buffer.append(line).append("\n");
             }
-            smsRepository.SaveSMSMessage("Outgoing", content, phoneNumber, new Date());
+            smsRepository.SaveSMSMessage("Outgoing", content, phoneNumber, new Date(),true);
             System.out.println("Submit request= " + urlString.toString());
             System.out.println("response : "+buffer.toString());
             System.out.println("INFO : all sent disconnect.");

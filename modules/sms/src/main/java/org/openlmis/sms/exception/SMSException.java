@@ -8,7 +8,7 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-package org.openlmis.email.exception;
+package org.openlmis.sms.exception;
 
 public class SMSException extends RuntimeException {
 
