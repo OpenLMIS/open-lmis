@@ -18,6 +18,7 @@
 
     <context:annotation-config/>
     <context:spring-configured/>
+
     <import resource="classpath*:applicationContext-report.xml"/>
 
     <context:component-scan base-package="org.openlmis.report"/>

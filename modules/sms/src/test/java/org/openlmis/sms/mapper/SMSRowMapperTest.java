@@ -35,16 +35,16 @@ public class SMSRowMapperTest {
   @InjectMocks
   SMSRowMapper smsRowMapper;
 
-  @Test
-  public void shouldCreateSMSFromResultSet() throws Exception {
-    when(resultSet.getString("PhoneNumber")).thenReturn("PhoneNumber");
-    when(resultSet.getString("Message")).thenReturn("Message");
-    when(resultSet.getString("Direction")).thenReturn("Direction");
-
-    SMS sms = smsRowMapper.mapRow(resultSet, 1);
-
-    assertThat(sms.getPhoneNumber(), is("PhoneNumber"));
-    assertThat(sms.getMessage(), is("Message"));
-    assertThat(sms.getDirection(), is("Direction"));
-  }
+//  @Test
+//  public void shouldCreateSMSFromResultSet() throws Exception {
+//    when(resultSet.getString("PhoneNumber")).thenReturn("PhoneNumber");
+//    when(resultSet.getString("Message")).thenReturn("Message");
+//    when(resultSet.getString("Direction")).thenReturn("Direction");
+//
+//    SMS sms = smsRowMapper.mapRow(resultSet, 1);
+//
+//    assertThat(sms.getPhoneNumber(), is("PhoneNumber"));
+//    assertThat(sms.getMessage(), is("Message"));
+//    assertThat(sms.getDirection(), is("Direction"));
+//  }
 }

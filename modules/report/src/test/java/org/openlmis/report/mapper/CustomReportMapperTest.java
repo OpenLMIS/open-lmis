@@ -25,31 +25,31 @@ import java.util.LinkedHashMap;
 @ContextConfiguration(locations = "classpath*:test-applicationContext-report.xml")
 public class CustomReportMapperTest {
 
-  @Autowired
-  private CustomReportMapper mapper;
-
-  @Test
-  public void shouldGetListOfAllReports() throws Exception {
-     LinkedHashMap list = mapper.getListOfReports();
-  }
-
-  @Test
-  public void shouldGetReportData() throws Exception {
-
-  }
-
-  @Test
-  public void shouldGetCustomReportByKey() throws Exception {
-
-  }
-
-  @Test
-  public void shouldInsert() throws Exception {
-
-  }
-
-  @Test
-  public void shouldUpdate() throws Exception {
-
-  }
+//  @Autowired
+//  private CustomReportMapper mapper;
+//
+//  @Test
+//  public void shouldGetListOfAllReports() throws Exception {
+//     LinkedHashMap list = mapper.getListOfReports();
+//  }
+//
+//  @Test
+//  public void shouldGetReportData() throws Exception {
+//
+//  }
+//
+//  @Test
+//  public void shouldGetCustomReportByKey() throws Exception {
+//
+//  }
+//
+//  @Test
+//  public void shouldInsert() throws Exception {
+//
+//  }
+//
+//  @Test
+//  public void shouldUpdate() throws Exception {
+//
+//  }
 }
