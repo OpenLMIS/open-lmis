@@ -53,7 +53,7 @@ function SendNotificationController($scope,$timeout,programsList,SendNotificatio
                 smsMessage : $scope.selectedNotification.smsMessageTemplate,
                 phoneNumbers : phoneNumbers,
                 emails : emails
-            }
+            };
 
             SendNotification.save({},notification, function(data){
                 $scope.error = "";
@@ -92,7 +92,7 @@ function SendNotificationController($scope,$timeout,programsList,SendNotificatio
             if(itm.selected){
                 $scope.facilityForNotifications.push(itm);
             }
-        })
+        });
 
         if(isUndefined($scope.facilityForNotifications) || $scope.facilityForNotifications.length === 0){
             $scope.errorMessage = messageService.get('errorMessage.send.notification.select.facilities');
