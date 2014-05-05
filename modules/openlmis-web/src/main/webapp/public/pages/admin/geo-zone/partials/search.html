@@ -68,7 +68,7 @@
     <tbody>
     <tr ng-repeat="geoZone in geoZoneList">
       <td>
-        <a ng-href="" ng-bind="geoZone.name"></a>
+        <a href="" ng-click="editGeoZone(geoZone.id)" ng-bind="geoZone.name"></a>
       </td>
       <td ng-bind="geoZone.code"></td>
       <td ng-bind="geoZone.level.name"></td>
