@@ -102,6 +102,7 @@ public interface GeographicZoneMapper {
   List<GeographicZone> searchByName(String searchParam);
 
   @Select({"SELECT * FROM geographic_zones gz INNER JOIN geographic_levels gl ON gz.levelId = gl.id",
-    "WHERE gl.levelNumber < #{levelNumber}"})
-  List<GeographicZone> getAllGeographicZonesAbove(GeographicLevel level);
+    "WHERE gl.levelNumber < (Select levelNumber FROM geographic_levels where code = #{code})"})
+  List<GeographicZone> getAllGeographicZonesAbove(GeographicLevel geographicLevel);
+
 }

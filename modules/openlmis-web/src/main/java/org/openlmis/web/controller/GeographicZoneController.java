@@ -42,7 +42,7 @@ public class GeographicZoneController extends BaseController {
   private GeographicZoneService service;
 
   @RequestMapping(value = "/geographicZones/{id}", method = GET, headers = ACCEPT_JSON)
-  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_DISTRIBUTION', 'MANAGE_GEOGRAPHIC_ZONE')")
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_DISTRIBUTION, MANAGE_GEOGRAPHIC_ZONE')")
   public ResponseEntity<OpenLmisResponse> get(@PathVariable Long id) {
     return OpenLmisResponse.response("geoZone", service.getById(id));
   }
@@ -92,11 +92,10 @@ public class GeographicZoneController extends BaseController {
     return service.getAllGeographicLevels();
   }
 
-  @RequestMapping(value = "/geographicZones/{level}", method = GET, headers = ACCEPT_JSON)
+  @RequestMapping(value = "/parentGeographicZones/{geoLevelCode}", method = GET, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_GEOGRAPHIC_ZONE')")
-  public List<GeographicZone> getAllGeographicZonesAbove(@PathVariable("level") Integer level) {
-    GeographicLevel geographicLevel = new GeographicLevel();
-    geographicLevel.setLevelNumber(level);
+  public List<GeographicZone> getAllGeographicZonesAbove(@PathVariable("geoLevelCode") String geographicLevelCode) {
+    GeographicLevel geographicLevel = new GeographicLevel(geographicLevelCode, null, null);
     return service.getAllGeographicZonesAbove(geographicLevel);
   }
 }
