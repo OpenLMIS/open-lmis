@@ -28,5 +28,5 @@ angular.module('equipment-type', ['openlmis', 'ui.bootstrap.modal', 'ui.bootstra
     });
 }]).run(function ($rootScope, AuthorizationService) {
   $rootScope.equipmentTypeSelected = "selected";
-  AuthorizationService.preAuthorize('MANAGE_EQUIPMENT_INVENTORY');
+  AuthorizationService.preAuthorize('MANAGE_EQUIPMENT_SETTINGS');
 });
