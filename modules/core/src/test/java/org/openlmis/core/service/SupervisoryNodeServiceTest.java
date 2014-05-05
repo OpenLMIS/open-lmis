@@ -40,7 +40,6 @@ import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.mockito.MockitoAnnotations.initMocks;
 import static org.openlmis.core.domain.Right.APPROVE_REQUISITION;
 import static org.openlmis.core.domain.Right.CREATE_REQUISITION;
 import static org.openlmis.core.matchers.Matchers.dataExceptionMatcher;
@@ -58,18 +57,21 @@ public class SupervisoryNodeServiceTest {
 
   @Mock
   private UserRepository userRepository;
+
   @Rule
   public ExpectedException expectedEx = ExpectedException.none();
+
   @InjectMocks
   SupervisoryNodeService supervisoryNodeService;
+
   SupervisoryNode supervisoryNodeWithParent;
+
 
   private Integer pageSize = 100;
 
   @Before
   public void setUp() throws Exception {
-    initMocks(this);
-    supervisoryNodeService.setPageSize(pageSize.toString());
+    supervisoryNodeService.setPageSize(String.valueOf(pageSize));
     supervisoryNodeWithParent = new SupervisoryNode();
     supervisoryNodeWithParent.setId(10L);
     supervisoryNodeWithParent.setFacility(new Facility());

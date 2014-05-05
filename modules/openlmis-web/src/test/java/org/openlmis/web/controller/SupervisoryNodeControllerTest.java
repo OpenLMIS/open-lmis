@@ -40,6 +40,7 @@ public class SupervisoryNodeControllerTest {
   @InjectMocks
   private SupervisoryNodeController controller;
 
+
   @Test
   public void shouldGetAllSupervisoryNodes() throws Exception {
     List<SupervisoryNode> expectedSupervisoryNodes = new ArrayList<>();
