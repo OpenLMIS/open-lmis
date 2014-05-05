@@ -314,3 +314,11 @@ services.factory('OrderPOD', function ($resource) {
 services.factory('OrderNumberConfiguration', function ($resource) {
   return $resource('/order-number-configuration.json', {}, {post: {method: 'POST'}});
 });
+
+services.factory('GeoLevels', function ($resource) {
+  return $resource('/geographicLevels.json', {}, {});
+});
+
+services.factory('GeographicZonesAboveLevel', function ($resource) {
+  return $resource('/parentGeographicZones/:geoLevelCode.json', {}, {});
+});

@@ -12,6 +12,8 @@ var geoZoneModule = angular.module('geo-zone', ['openlmis', 'ui.bootstrap.modal'
     config(['$routeProvider', function ($routeProvider) {
       $routeProvider.
           when('/search', {controller: GeoZoneSearchController, templateUrl: 'partials/search.html'}).
+          when('/create-geo-zone', {controller: GeoZoneController, templateUrl: 'partials/create.html', resolve: GeoZoneController.resolve}).
+          when('/edit/:id', {controller: GeoZoneController, templateUrl: 'partials/create.html', resolve: GeoZoneController.resolve}).
           otherwise({redirectTo: '/search'});
     }]).run(function ($rootScope, AuthorizationService) {
       $rootScope.geoZoneSelected = "selected";

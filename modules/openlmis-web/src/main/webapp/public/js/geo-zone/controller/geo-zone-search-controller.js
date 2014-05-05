@@ -28,7 +28,6 @@ function GeoZoneSearchController($scope, GeographicZones, $location, navigateBac
     $scope.updateFilteredQueryList();
   };
 
-
   $scope.editGeoZone = function (id) {
     var data = {query: $scope.query};
     navigateBackService.setData(data);
@@ -53,6 +52,7 @@ function GeoZoneSearchController($scope, GeographicZones, $location, navigateBac
     $scope.resultCount = 0;
     angular.element("#searchGeoZone").focus();
   };
+
 
   $scope.updateFilteredQueryList = function () {
 

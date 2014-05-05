@@ -18,4 +18,3 @@ userModule.config(['$routeProvider', function ($routeProvider) {
   $rootScope.supervisoryNodeSelected = "selected";
   AuthorizationService.preAuthorize('MANAGE_SUPERVISORY_NODE');
 });
-;
