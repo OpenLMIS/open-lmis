@@ -8,10 +8,9 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-function SupervisoryNodeSearchController($scope, SupervisoryNodesSearch) {
+function SupervisoryNodeSearchController($scope, $location, SupervisoryNodesSearch) {
 
   $scope.previousQuery = '';
-  $scope.previousSearchOption = undefined;
 
   $scope.searchOptions = [
     {value: "parent", name: "option.value.supervisory.node.parent"},
@@ -27,7 +26,8 @@ function SupervisoryNodeSearchController($scope, SupervisoryNodesSearch) {
 
 
   $scope.showSupervisoryNodeSearchResults = function () {
-    $scope.page = 1;
+    if (!$scope.currentPage)
+      $scope.currentPage = 1;
     var query = $scope.query;
 
     var len = (query === undefined) ? 0 : query.length;
@@ -41,8 +41,7 @@ function SupervisoryNodeSearchController($scope, SupervisoryNodesSearch) {
         return true;
       }
       $scope.previousQuery = query;
-      $scope.previousSearchOption = searchOption;
-        SupervisoryNodesSearch.get({param: $scope.query.substr(0, 3), parent: searchOption}, function (data) {
+      SupervisoryNodesSearch.get({page: $scope.currentPage, param: $scope.query.substr(0, 3), parent: searchOption}, function (data) {
         $scope.supervisoryNodeList = data.supervisoryNodes;
         $scope.pagination = data.pagination;
         filterSupervisoryNode(query);
@@ -53,6 +52,13 @@ function SupervisoryNodeSearchController($scope, SupervisoryNodesSearch) {
       return false;
     }
   };
+  $scope.$on('$routeUpdate', function () {
+    $scope.showSupervisoryNodeSearchResults();
+  });
+
+  $scope.$watch('currentPage', function () {
+    $location.search('page', $scope.currentPage);
+  });
 
   $scope.clearSearch = function () {
     $scope.query = "";
