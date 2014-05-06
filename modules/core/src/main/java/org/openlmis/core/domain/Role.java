@@ -40,7 +40,7 @@ public class Role extends BaseModel {
   public void validate() {
     if (isBlank(name)) throw new DataException("error.role.without.name");
     if (rights == null || rights.isEmpty())
-      throw new DataException("error.role.without.rights", rights.size());
+      throw new DataException("error.role.without.rights");
     validateForRelatedRights();
   }
 
