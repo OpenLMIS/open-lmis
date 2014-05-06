@@ -18,6 +18,7 @@ import org.openlmis.core.repository.mapper.GeographicLevelMapper;
 import org.openlmis.core.repository.mapper.GeographicZoneMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -58,6 +59,8 @@ public class GeographicZoneRepository {
         return;
       }
       mapper.update(zone);
+    } catch (DuplicateKeyException e) {
+      throw new DataException("error.duplicate.geographic.zone.code");
     } catch (DataIntegrityViolationException e) {
       throw new DataException("error.incorrect.length");
     }
