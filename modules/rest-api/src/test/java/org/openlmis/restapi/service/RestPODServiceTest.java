@@ -32,6 +32,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 
 import static java.util.Arrays.asList;
 import static org.mockito.Mockito.*;
+import static org.openlmis.core.matchers.Matchers.dataExceptionMatcher;
 import static org.powermock.api.mockito.PowerMockito.spy;
 import static org.powermock.api.mockito.PowerMockito.when;
 
@@ -141,8 +142,7 @@ public class RestPODServiceTest {
     when(productService.getByCode("ABC")).thenReturn(null);
     when(spyOrderPod.getPodLineItems()).thenReturn(asList(orderPODLineItem));
 
-    expectedException.expect(DataException.class);
-    expectedException.expectMessage("code: error.invalid.product.code, params: { [ABC] }");
+    expectedException.expect(dataExceptionMatcher("error.invalid.product.code"));
 
     restPODService.updatePOD(spyOrderPod, 1L);
   }
