@@ -374,7 +374,7 @@
             <div class="form-field">
                 <select id="geographic-zone" name="geographicZone" ng-model="facility.geographicZone.code"
                         ng-options="i.code as i.name for i in geographicZones" ng-required="true">
-                    <option value="" openlmis-message="create.facility.select.geographicZone"></option>
+                  <option value="" openlmis-message="label.select.geographic.zone"></option>
                 </select>
         <span class="field-error" ng-show="facilityForm.geographicZone.$error.required && showError"
               openlmis-message="select.value">

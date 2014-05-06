@@ -21,6 +21,7 @@ function GeoZoneController($scope, geoLevels, geoZone, GeographicZonesAboveLevel
 
   if ($scope.geoZone) {
     $scope.loadParents($scope.geoZone.level.code);
+    $scope.editMode = true;
   }
 
   $scope.cancel = function () {
@@ -30,13 +31,15 @@ function GeoZoneController($scope, geoLevels, geoZone, GeographicZonesAboveLevel
   var success = function (data) {
     $scope.error = "";
     $scope.$parent.message = data.success;
-    $location.path('');
     $scope.$parent.geoZoneId = data.geoZone.id;
+    $scope.showError = false;
+    $location.path('');
   };
 
   var error = function (data) {
     $scope.$parent.success = "";
     $scope.error = data.data.error;
+    $scope.showError = true;
   };
 
   $scope.save = function () {
