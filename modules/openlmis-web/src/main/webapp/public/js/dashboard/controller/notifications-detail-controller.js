@@ -18,7 +18,9 @@ function NotificationsDetailController($scope,$routeParams,messageService,Settin
         !isUndefined($routeParams.alertId)){
         var columnsToHide =  $routeParams.detailTable+'_HIDDEN_COLUMNS';
         SettingsByKey.get({key: columnsToHide.toUpperCase()},function (data){
-            $scope.colsToHide = data.settings.value.split(",");
+            if(!isUndefined(data.settings)){
+                $scope.colsToHide = data.settings.value.split(",");
+            }
         });
 
         DashboardNotificationsDetail.get({alertId:$routeParams.alertId, detailTable:$routeParams.detailTable},function(stockData){
