@@ -31,6 +31,7 @@ public class GeographicZoneService {
   GeographicZoneRepository repository;
 
   public void save(GeographicZone geographicZone) {
+    geographicZone.validateMandatoryFields();
     geographicZone.setLevel(repository.getGeographicLevelByCode(geographicZone.getLevel().getCode()));
     geographicZone.validateLevel();
 
@@ -47,7 +48,7 @@ public class GeographicZoneService {
     return repository.getByCode(geographicZone.getCode());
   }
 
-  public GeographicZone getById(long id) {
+  public GeographicZone getById(Long id) {
     return repository.getById(id);
   }
 

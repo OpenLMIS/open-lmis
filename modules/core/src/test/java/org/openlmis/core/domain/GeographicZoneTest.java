@@ -90,6 +90,25 @@ public class GeographicZoneTest {
   }
 
   @Test
+  public void shouldThrowExceptionIfGeoZoneCodeEmpty() throws Exception {
+    GeographicZone geographicZone = new GeographicZone();
+
+    expectedEx.expect(dataExceptionMatcher("missing.mandatory"));
+
+    geographicZone.validateMandatoryFields();
+  }
+
+  @Test
+  public void shouldThrowExceptionIfGeoZoneNameEmpty() throws Exception {
+    GeographicZone geographicZone = new GeographicZone();
+    geographicZone.setCode("code");
+
+    expectedEx.expect(dataExceptionMatcher("missing.mandatory"));
+
+    geographicZone.validateMandatoryFields();
+  }
+
+  @Test
   public void shouldNotThrowExceptionIfParentNotGivenToRootLevelGeoZone() throws Exception {
     GeographicLevel rootLevel = new GeographicLevel(1234L, "non root level", "non root level", 1);
     GeographicZone geographicZone = new GeographicZone(1234L, "some level", "some level", rootLevel, null);

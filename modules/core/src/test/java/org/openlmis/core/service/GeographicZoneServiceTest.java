@@ -92,6 +92,21 @@ public class GeographicZoneServiceTest {
   }
 
   @Test
+  public void shouldThrowAnExceptionIfGeographicZoneCodeIsMissing() throws Exception {
+    GeographicZone geoZone = new GeographicZone();
+    expectedEx.expect(dataExceptionMatcher("missing.mandatory"));
+    service.save(geoZone);
+  }
+
+  @Test
+  public void shouldThrowAnExceptionIfGeographicZoneNameIsMissing() throws Exception {
+    GeographicZone geoZone = new GeographicZone();
+    geoZone.setCode("code");
+    expectedEx.expect(dataExceptionMatcher("missing.mandatory"));
+    service.save(geoZone);
+  }
+
+  @Test
   public void shouldThrowExceptionIfLevelIsNotRootAndStillParentIsNull() throws Exception {
     GeographicLevel level = new GeographicLevel(1L, "abc", "abc", 2);
     GeographicZone zone = new GeographicZone(1L, "xyz", "xyz", level, null);

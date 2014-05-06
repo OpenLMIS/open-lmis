@@ -21,6 +21,7 @@ import org.openlmis.core.exception.DataException;
 import org.openlmis.upload.Importable;
 import org.openlmis.upload.annotation.ImportField;
 
+import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 
 /**
@@ -106,4 +107,9 @@ public class GeographicZone extends BaseModel implements Importable {
     }
   }
 
+  public void validateMandatoryFields() {
+    if (isBlank(this.code) || isBlank(this.name)) {
+      throw new DataException("missing.mandatory");
+    }
+  }
 }
