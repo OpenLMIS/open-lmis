@@ -93,7 +93,7 @@ public class GeographicZoneTest {
   public void shouldThrowExceptionIfGeoZoneCodeEmpty() throws Exception {
     GeographicZone geographicZone = new GeographicZone();
 
-    expectedEx.expect(dataExceptionMatcher("missing.mandatory"));
+    expectedEx.expect(dataExceptionMatcher("error.mandatory.fields.missing"));
 
     geographicZone.validateMandatoryFields();
   }
@@ -103,7 +103,7 @@ public class GeographicZoneTest {
     GeographicZone geographicZone = new GeographicZone();
     geographicZone.setCode("code");
 
-    expectedEx.expect(dataExceptionMatcher("missing.mandatory"));
+    expectedEx.expect(dataExceptionMatcher("error.mandatory.fields.missing"));
 
     geographicZone.validateMandatoryFields();
   }

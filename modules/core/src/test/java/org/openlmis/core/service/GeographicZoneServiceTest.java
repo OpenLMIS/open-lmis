@@ -94,7 +94,7 @@ public class GeographicZoneServiceTest {
   @Test
   public void shouldThrowAnExceptionIfGeographicZoneCodeIsMissing() throws Exception {
     GeographicZone geoZone = new GeographicZone();
-    expectedEx.expect(dataExceptionMatcher("missing.mandatory"));
+    expectedEx.expect(dataExceptionMatcher("error.mandatory.fields.missing"));
     service.save(geoZone);
   }
 
@@ -102,7 +102,7 @@ public class GeographicZoneServiceTest {
   public void shouldThrowAnExceptionIfGeographicZoneNameIsMissing() throws Exception {
     GeographicZone geoZone = new GeographicZone();
     geoZone.setCode("code");
-    expectedEx.expect(dataExceptionMatcher("missing.mandatory"));
+    expectedEx.expect(dataExceptionMatcher("error.mandatory.fields.missing"));
     service.save(geoZone);
   }
 

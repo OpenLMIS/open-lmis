@@ -109,7 +109,7 @@ public class GeographicZone extends BaseModel implements Importable {
 
   public void validateMandatoryFields() {
     if (isBlank(this.code) || isBlank(this.name)) {
-      throw new DataException("missing.mandatory");
+      throw new DataException("error.mandatory.fields.missing");
     }
   }
 }
