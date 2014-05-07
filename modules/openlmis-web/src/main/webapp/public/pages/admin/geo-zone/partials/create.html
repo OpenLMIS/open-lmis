@@ -102,9 +102,9 @@
                       openlmis-message="label.select.geographic.zone">
                 <option value=""></option>
                 <optgroup ng-repeat="geoZoneLevel in parentLevels" label="{{ geoZoneLevel }}">
-                  <option ng-repeat="geoZone in levelGeoZoneMap[geoZoneLevel] | orderBy: 'name'"
-                          value="{{ geoZone.code }}">
-                    {{ geoZone.name }}
+                  <option ng-repeat="parentGeoZone in parentGeoZones" ng-if="parentGeoZone.level.name === geoZoneLevel"
+                          value="{{ parentGeoZone.code }}">
+                    {{ parentGeoZone.name }}
                   </option>
                 </optgroup>
               </select>
