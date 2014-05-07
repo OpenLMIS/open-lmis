@@ -48,16 +48,6 @@ public class RegimenSummaryQueryBuilder {
         String predicate="";
        predicate = " WHERE status in ('APPROVED','RELEASED') ";
      if(filter != null){
-         /*
-            if (filter.getGeographicLevelId() != 0 ) {
-                predicate = predicate.isEmpty() ?" where " : predicate + " and ";
-                predicate = predicate + " geographiclevelid = #{filterCriteria.geographicLevelId}";
-            }
-
-            if (filter.getZoneId() != 0 ) {
-                predicate = predicate.isEmpty() ?" where " : predicate + " and ";
-                predicate = predicate + " zoneid = #{filterCriteria.zoneId}";
-            }*/
             if(filter.getRegimenCategoryId() != 0  ){
                 predicate = predicate.isEmpty() ?" where " : predicate + " and ";
                 predicate = predicate + " categoryid = #{filterCriteria.regimenCategoryId}";
