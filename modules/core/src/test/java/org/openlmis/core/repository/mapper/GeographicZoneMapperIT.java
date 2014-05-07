@@ -106,8 +106,8 @@ public class GeographicZoneMapperIT {
 
   @Test
   public void shouldGetGeographicZoneWithParent() throws Exception {
-    GeographicZone parent = new GeographicZone(null, "Dodoma", "Dodoma", new GeographicLevel(null, "province", "Province", null), null);
-    GeographicZone expectedZone = new GeographicZone(5L, "Ngorongoro", "Ngorongoro", new GeographicLevel(null, "district", "District", 4), parent);
+    GeographicZone parent = new GeographicZone(null, "Dodoma", "Dodoma", null, null);
+    GeographicZone expectedZone = new GeographicZone(5L, "Ngorongoro", "Ngorongoro", new GeographicLevel(null, "district", "District", null), parent);
 
     GeographicZone zone = mapper.getWithParentById(5L);
 

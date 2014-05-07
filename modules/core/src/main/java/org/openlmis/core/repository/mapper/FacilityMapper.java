@@ -18,11 +18,13 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Date;
 import java.util.List;
+
 /**
  * FacilityMapper maps the Facility entity to corresponding representation in database. Apart from basic CRUD operations
  * provides methods like getting all facilities in a requisition group/delivery zone, searching facility by name, code
  * or type (virtual, non-virtual), getting child facilities for a facility etc.
  */
+
 @Repository
 public interface FacilityMapper {
 
@@ -80,16 +82,15 @@ public interface FacilityMapper {
   Facility getById(Long id);
 
   @Select("SELECT * FROM facilities WHERE LOWER(code)=LOWER(#{code})")
-  @Results(value =
-    {
-      @Result(property = "id", column = "id"),
-      @Result(property = "geographicZone", column = "geographicZoneId", javaType = Long.class,
-        one = @One(select = "org.openlmis.core.repository.mapper.GeographicZoneMapper.getWithParentById")),
-      @Result(property = "facilityType", column = "typeId", javaType = Long.class, one = @One(select = "getFacilityTypeById")),
-      @Result(property = "operatedBy", column = "operatedById", javaType = Long.class, one = @One(select = "getFacilityOperatorById")),
-      @Result(property = "supportedPrograms", column = "id", javaType = List.class,
-        many = @Many(select = "org.openlmis.core.repository.mapper.ProgramSupportedMapper.getAllByFacilityId"))
-    })
+  @Results(value = {
+    @Result(property = "id", column = "id"),
+    @Result(property = "geographicZone", column = "geographicZoneId", javaType = Long.class,
+      one = @One(select = "org.openlmis.core.repository.mapper.GeographicZoneMapper.getWithParentById")),
+    @Result(property = "facilityType", column = "typeId", javaType = Long.class, one = @One(select = "getFacilityTypeById")),
+    @Result(property = "operatedBy", column = "operatedById", javaType = Long.class, one = @One(select = "getFacilityOperatorById")),
+    @Result(property = "supportedPrograms", column = "id", javaType = List.class,
+      many = @Many(select = "org.openlmis.core.repository.mapper.ProgramSupportedMapper.getAllByFacilityId"))
+  })
   Facility getByCode(String code);
 
   @Update("UPDATE facilities SET code = #{code}, name = #{name}, description = #{description}, gln = #{gln}," +
@@ -119,7 +120,7 @@ public interface FacilityMapper {
   @Select("SELECT DISTINCT f.* FROM facilities f " +
     "INNER JOIN programs_supported ps ON f.id=ps.facilityId " +
     "INNER JOIN requisition_group_members rgm ON f.id= rgm.facilityId " +
-    "INNER JOIN requisition_group_program_schedules rgps ON (rgps.programid = ps.programid AND rgps.requisitiongroupid=rgm.requisitiongroupid)" +
+    "INNER JOIN requisition_group_program_schedules rgps ON (rgps.programId = ps.programId AND rgps.requisitionGroupId=rgm.requisitionGroupId)" +
     "WHERE ps.programId = #{programId} " +
     "AND rgm.requisitionGroupId = ANY(#{requisitionGroupIds}::INTEGER[]) " +
     "AND rgps.requisitionGroupId = ANY(#{requisitionGroupIds}::INTEGER[]) " +
@@ -189,7 +190,6 @@ public interface FacilityMapper {
       many = @Many(select = "org.openlmis.core.repository.mapper.ProgramSupportedMapper.getAllByFacilityId"))})
   List<Facility> getAllByProgramSupportedModifiedDate(Date modifiedDate);
 
-
   @Select({"SELECT * FROM facilities WHERE id IN (SELECT supplyingFacilityId FROM supply_lines) AND enabled = TRUE"})
   List<Facility> getEnabledWarehouses();
 
@@ -200,17 +200,14 @@ public interface FacilityMapper {
   })
   List<Facility> getChildFacilities(Facility facility);
 
-
   @Update({"UPDATE facilities SET typeId = Parent.typeId, geographicZoneId = Parent.geographicZoneId",
     "FROM (SELECT typeId, geographicZoneId FROM facilities WHERE id = #{id}) AS Parent",
     "WHERE parentFacilityId = #{id}"})
   void updateVirtualFacilities(Facility parentFacility);
 
-
   @Select({"SELECT F.id AS id, F.code AS code FROM facilities F INNER JOIN requisition_group_members RGM ON",
     "F.id = RGM.facilityId WHERE RGM.modifiedDate = #{modifiedDate}"})
   List<Facility> getAllByRequisitionGroupMemberModifiedDate(Date modifiedDate);
-
 
   @Select({"SELECT id, code FROM facilities WHERE modifiedDate = #{modifiedDate} AND",
     "id IN(SELECT DISTINCT(parentFacilityId) FROM facilities)"})

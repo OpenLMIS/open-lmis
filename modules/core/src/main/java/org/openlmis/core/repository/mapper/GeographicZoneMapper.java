@@ -60,22 +60,15 @@ public interface GeographicZoneMapper {
     "WHERE id = #{id}"})
   void update(GeographicZone geographicZone);
 
-  @Select({"SELECT GZ.id AS id, GZ.code AS code, GZ.name AS name, GZ.catchmentPopulation, GZ.longitude, GZ.latitude,",
-    " GL.id as levelId,GL. levelNumber as levelNumber, GL.code AS levelCode, GL.name AS level, GZP.code AS parentCode, GZP.name AS parentZone,",
-    " GLP.code AS parentLevelCode, GLP.name AS parentLevel",
-    "FROM geographic_zones GZ INNER JOIN geographic_zones GZP ON GZ.parentId = GZP.id",
+  @Select({"SELECT GZ.*, GL.name AS levelName, GL.code AS levelCode, GZP.name AS parentName, GZP.code AS parentCode",
+    "FROM geographic_zones GZ LEFT JOIN geographic_zones GZP ON GZ.parentId = GZP.id",
     "INNER JOIN geographic_levels GL ON GZ.levelId = GL.id",
-    "INNER JOIN geographic_levels GLP ON GZP.levelId = GLP.id",
     "WHERE GZ.id = #{geographicZoneId}"})
   @Results(value = {
-    @Result(property = "level.id", column = "levelId"),
     @Result(property = "level.code", column = "levelCode"),
-    @Result(property = "level.name", column = "level"),
-    @Result(property = "level.levelNumber", column = "levelNumber"),
-    @Result(property = "parent.name", column = "parentZone"),
-    @Result(property = "parent.code", column = "parentCode"),
-    @Result(property = "parent.level.code", column = "parentLevelCode"),
-    @Result(property = "parent.level.name", column = "parentLevel")
+    @Result(property = "level.name", column = "levelName"),
+    @Result(property = "parent.name", column = "parentName"),
+    @Result(property = "parent.code", column = "parentCode")
   })
   GeographicZone getWithParentById(Long geographicZoneId);
 
