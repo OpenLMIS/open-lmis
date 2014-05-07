@@ -54,16 +54,16 @@
       </th>
     </tr>
     <tr class="gradient-header" ng-hide="resultCount === 0">
-      <th openlmis-message="header.code"></th>
       <th openlmis-message="header.supervisory.node.name"></th>
+      <th openlmis-message="header.code"></th>
       <th openlmis-message="label.facility"></th>
       <th openlmis-message="header.parent"></th>
     </tr>
     </thead>
     <tbody>
     <tr ng-repeat="supervisoryNode in filteredNodes">
-      <td ng-bind="supervisoryNode.code"></td>
       <td><a ng-href="" ng-bind="supervisoryNode.name"></a></td>
+      <td ng-bind="supervisoryNode.code"></td>
       <td ng-bind="supervisoryNode.facility.name"></td>
       <td ng-bind="supervisoryNode.parent.name"></td>
     </tr>
