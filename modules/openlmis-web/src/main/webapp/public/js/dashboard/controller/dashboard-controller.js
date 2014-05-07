@@ -14,10 +14,10 @@ function AdminDashboardController($scope,$timeout,$filter,$location,dashboardFil
     $scope.filterObject = {};
 
     $scope.formFilter = {
-        openPanel:false
     };
+    $scope.formPanel = {openPanel:true};
 
-    $scope.alertsPanel = {openPanel:false};
+    $scope.alertsPanel = {openPanel:true};
 
     initialize();
 

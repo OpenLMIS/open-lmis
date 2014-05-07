@@ -5,6 +5,11 @@ function SendNotificationController($scope,$timeout,programsList,SendNotificatio
     $scope.filterObject = {};
 
     $scope.formFilter = {};
+
+    $scope.formPanel = {openPanel:true};
+
+    $scope.alertsPanel = {openPanel:true};
+
     $scope.selectedNotification = { selectAllFacilities: true};
 
     initialize();

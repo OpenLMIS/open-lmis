@@ -14,6 +14,9 @@ function StockController($scope, $routeParams,dashboardFiltersHistoryService, pr
     $scope.filterObject = {};
 
     $scope.formFilter = {};
+    $scope.formPanel = {openPanel:true};
+
+    $scope.alertsPanel = {openPanel:true};
 
     initialize();
 
