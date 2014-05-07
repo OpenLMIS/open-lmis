@@ -22,7 +22,7 @@ function SupervisoryNodeSearchController($scope, $location, SupervisoryNodesSear
 
   $scope.selectSearchType = function (searchOption) {
     $scope.selectedSearchOption = searchOption;
-    var searchOption = $scope.selectedSearchOption.value === 'parent' ? true : false;
+    searchOption = $scope.selectedSearchOption.value === 'parent' ? true : false;
     $scope.currentPage = undefined;
     if ($scope.previousSearchOption !== searchOption) $scope.previousQuery = '';
     $scope.showSupervisoryNodeSearchResults();
