@@ -26,6 +26,6 @@ public interface GeographicLevelMapper {
   @Select("SELECT MAX(levelNumber) FROM geographic_levels")
   Integer getLowestGeographicLevel();
 
-  @Select("SELECT * FROM geographic_levels")
+  @Select("SELECT * FROM geographic_levels ORDER BY levelNumber")
   List<GeographicLevel> getAll();
 }

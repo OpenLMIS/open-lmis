@@ -45,5 +45,9 @@ public class GeographicLevelMapperIT {
   public void shouldReturnAllTheGeoLevels() {
     List<GeographicLevel> levels = mapper.getAll();
     assertThat(levels.size(), is(4));
+    assertThat(levels.get(0).getLevelNumber(), is(1));
+    assertThat(levels.get(1).getLevelNumber(), is(2));
+    assertThat(levels.get(2).getLevelNumber(), is(3));
+    assertThat(levels.get(3).getLevelNumber(), is(4));
   }
 }

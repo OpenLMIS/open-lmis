@@ -24,7 +24,7 @@ import java.util.List;
 public interface GeographicZoneMapper {
 
   @Insert("INSERT INTO geographic_zones (code, name, levelId, parentId, catchmentPopulation, longitude, latitude, createdBy, modifiedBy, modifiedDate) " +
-    "VALUES (#{code}, #{name}, #{level.id}, #{parent.id}, #{catchmentPopulation}, #{longitude}, #{latitude}, #{createdBy}, #{modifiedBy}, #{modifiedDate})")
+    "VALUES (#{code}, #{name}, #{level.id}, #{parent.id}, #{catchmentPopulation}, #{longitude}, #{latitude}, #{createdBy}, #{modifiedBy}, COALESCE(#{modifiedDate}, CURRENT_TIMESTAMP))")
   @Options(useGeneratedKeys = true)
   Integer insert(GeographicZone geographicZone);
 
@@ -56,7 +56,7 @@ public interface GeographicZoneMapper {
 
   @Update({"UPDATE geographic_zones set code = #{code}, name = #{name}, levelId = #{level.id}, parentId = #{parent.id}, " +
     "catchmentPopulation = #{catchmentPopulation}, longitude = #{longitude}, latitude = #{latitude}, " +
-    "modifiedBy = #{modifiedBy}, modifiedDate = #{modifiedDate}",
+    "modifiedBy = #{modifiedBy}, modifiedDate = COALESCE(#{modifiedDate}, CURRENT_TIMESTAMP)",
     "WHERE id = #{id}"})
   void update(GeographicZone geographicZone);
 
@@ -76,7 +76,7 @@ public interface GeographicZoneMapper {
     "FROM geographic_zones GZ INNER JOIN geographic_zones GZP ON GZ.parentId = GZP.id",
     "INNER JOIN geographic_levels GL ON GZ.levelId = GL.id",
     "WHERE LOWER(GZP.name) LIKE '%' || LOWER(#{searchParam} || '%')",
-    "ORDER BY levelName, LOWER(GZP.name), GZ.name"})
+    "ORDER BY GL.levelNumber, LOWER(GZP.name), GZ.name"})
   @Results(value = {
     @Result(property = "level.name", column = "levelName"),
     @Result(property = "parent.name", column = "parentName"),
@@ -87,15 +87,21 @@ public interface GeographicZoneMapper {
     "FROM geographic_zones GZ LEFT JOIN geographic_zones GZP ON GZ.parentId = GZP.id",
     "INNER JOIN geographic_levels GL ON GZ.levelId = GL.id",
     "WHERE LOWER(GZ.name) LIKE '%' || LOWER(#{searchParam} || '%')",
-    "ORDER BY levelName, LOWER(GZP.name), GZ.name"})
+    "ORDER BY GL.levelNumber, LOWER(GZP.name), GZ.name"})
   @Results(value = {
     @Result(property = "level.name", column = "levelName"),
     @Result(property = "parent.name", column = "parentName"),
   })
   List<GeographicZone> searchByName(String searchParam);
 
-  @Select({"SELECT * FROM geographic_zones gz INNER JOIN geographic_levels gl ON gz.levelId = gl.id",
-    "WHERE gl.levelNumber < (Select levelNumber FROM geographic_levels where code = #{code})"})
+  @Select({"SELECT GZ.*, GL.levelNumber AS levelNumber, GL.name AS levelName FROM geographic_zones GZ",
+    "INNER JOIN geographic_levels GL ON GZ.levelId = GL.id",
+    "WHERE GL.levelNumber < (Select levelNumber FROM geographic_levels where code = #{code})",
+    "ORDER BY GL.levelNumber, GZ.name"})
+  @Results({
+    @Result(column = "levelNumber", property = "level.levelNumber"),
+    @Result(column = "levelName", property = "level.name")
+  })
   List<GeographicZone> getAllGeographicZonesAbove(GeographicLevel geographicLevel);
 
 }
