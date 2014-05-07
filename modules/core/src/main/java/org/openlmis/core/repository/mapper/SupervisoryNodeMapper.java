@@ -130,7 +130,7 @@ public interface SupervisoryNodeMapper {
 
 
   @Select({"SELECT * FROM supervisory_nodes SN INNER JOIN supervisory_nodes SNP ON SN.parentId = SNP.id WHERE LOWER(SNP.name)" +
-    " LIKE '%'|| LOWER(#{nameSearchCriteria}) ||'%' order by SNP.name, SN.name NULLS LAST LIMIT #{pagination.pageSize} OFFSET #{pagination.offset}\""})
+    " LIKE '%'|| LOWER(#{nameSearchCriteria}) ||'%' order by SNP.name, SN.name NULLS LAST LIMIT #{pagination.pageSize} OFFSET #{pagination.offset}"})
   @Results(value = {
     @Result(property = "parent", column = "parentId", javaType = SupervisoryNode.class,
       one = @One(select = "getById")),

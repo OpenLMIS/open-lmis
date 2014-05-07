@@ -11,17 +11,22 @@
 function SupervisoryNodeSearchController($scope, $location, SupervisoryNodesSearch) {
 
   $scope.previousQuery = '';
+  $scope.previousSearchOption = undefined;
 
   $scope.searchOptions = [
-    {value: "parent", name: "option.value.supervisory.node.parent"},
-    {value: "node", name: "option.value.supervisory.node"}
+    {value: "node", name: "option.value.supervisory.node"},
+    {value: "parent", name: "option.value.supervisory.node.parent"}
   ];
 
   $scope.selectedSearchOption = $scope.searchOptions[0];
 
   $scope.selectSearchType = function (searchOption) {
     $scope.selectedSearchOption = searchOption;
+    $scope.currentPage = undefined;
+    var searchOption = $scope.selectedSearchOption.value === 'parent' ? true : false;
+    if($scope.previousSearchOption !== searchOption) $scope.previousQuery = '';
     $scope.showSupervisoryNodeSearchResults();
+
   };
 
 
@@ -34,13 +39,15 @@ function SupervisoryNodeSearchController($scope, $location, SupervisoryNodesSear
 
     var searchOption = $scope.selectedSearchOption.value === 'parent' ? true : false;
 
+    var page = $scope.pagination ? $scope.pagination.page : undefined;
     if (len >= 3) {
-      if ($scope.previousQuery.substr(0, 3) === query.substr(0, 3) && $scope.previousSearchOption === searchOption) {
+      if ($scope.previousQuery.substr(0, 3) === query.substr(0, 3) && $scope.currentPage === page) {
         $scope.previousQuery = query;
         filterSupervisoryNode(query);
         return true;
       }
       $scope.previousQuery = query;
+      $scope.previousSearchOption = searchOption;
       SupervisoryNodesSearch.get({page: $scope.currentPage, param: $scope.query.substr(0, 3), parent: searchOption}, function (data) {
         $scope.supervisoryNodeList = data.supervisoryNodes;
         $scope.pagination = data.pagination;
@@ -53,7 +60,7 @@ function SupervisoryNodeSearchController($scope, $location, SupervisoryNodesSear
     }
   };
   $scope.$on('$routeUpdate', function () {
-    $scope.showSupervisoryNodeSearchResults();
+      $scope.showSupervisoryNodeSearchResults();
   });
 
   $scope.$watch('currentPage', function () {
