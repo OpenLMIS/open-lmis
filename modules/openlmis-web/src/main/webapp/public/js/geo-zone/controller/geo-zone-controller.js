@@ -16,6 +16,10 @@ function GeoZoneController($scope, geoLevels, geoZone, GeographicZonesAboveLevel
   $scope.loadParents = function (levelCode) {
     GeographicZonesAboveLevel.get({geoLevelCode: levelCode}, function (data) {
       $scope.parentGeoZones = data.geographicZoneList;
+      $scope.levelGeoZoneMap = _.groupBy($scope.parentGeoZones, function (geoZone) {
+        return geoZone.level.name;
+      });
+      $scope.parentLevels = Object.keys($scope.levelGeoZoneMap);
     }, {});
   };
 

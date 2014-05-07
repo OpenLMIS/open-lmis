@@ -97,10 +97,16 @@
           <div class="form-cell">
             <label openlmis-message="header.parent"></label>
 
-            <div class="form-field">
-              <select ng-model="geoZone.parent.code"
-                      ng-options="parent.code as parent.name for parent in parentGeoZones">
-                <option value="" openlmis-message="label.select.geographic.zone"></option>
+            <div class="form-field row-fluid">
+              <select ui-select2="{width: '90%'}" class="span11" id="selectParentGeoZone" ng-model="geoZone.parent.code"
+                      openlmis-message="label.select.geographic.zone">
+                <option value=""></option>
+                <optgroup ng-repeat="geoZoneLevel in parentLevels" label="{{ geoZoneLevel }}">
+                  <option ng-repeat="geoZone in levelGeoZoneMap[geoZoneLevel] | orderBy: 'name'"
+                          value="{{ geoZone.code }}">
+                    {{ geoZone.name }}
+                  </option>
+                </optgroup>
               </select>
               <span class="field-error" ng-show="geoZoneForm.parent.code.$error.required && showError"
                     openlmis-message="missing.value"></span>
