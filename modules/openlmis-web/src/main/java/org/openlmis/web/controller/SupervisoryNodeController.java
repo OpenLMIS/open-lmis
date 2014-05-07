@@ -48,7 +48,7 @@ public class SupervisoryNodeController extends BaseController {
     defaultValue = "1") Integer page, @RequestParam(required = true) String param, @RequestParam(required = true) Boolean parent) {
     ResponseEntity<OpenLmisResponse> response = OpenLmisResponse.response(SUPERVISORY_NODES, supervisoryNodeService.getSupervisoryNodesBy(page, param, parent));
     Pagination pagination = supervisoryNodeService.getPagination(page);
-    pagination.setNumberOfPages(supervisoryNodeService.getTotalSearchResultCount(param, parent));
+    pagination.setTotalRecords(supervisoryNodeService.getTotalSearchResultCount(param, parent));
     response.getBody().addData("pagination", pagination);
     return response;
   }

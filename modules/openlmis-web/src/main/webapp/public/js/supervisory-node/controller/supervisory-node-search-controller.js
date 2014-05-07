@@ -22,9 +22,9 @@ function SupervisoryNodeSearchController($scope, $location, SupervisoryNodesSear
 
   $scope.selectSearchType = function (searchOption) {
     $scope.selectedSearchOption = searchOption;
-    $scope.currentPage = undefined;
     var searchOption = $scope.selectedSearchOption.value === 'parent' ? true : false;
-    if($scope.previousSearchOption !== searchOption) $scope.previousQuery = '';
+    $scope.currentPage = undefined;
+    if ($scope.previousSearchOption !== searchOption) $scope.previousQuery = '';
     $scope.showSupervisoryNodeSearchResults();
 
   };
@@ -53,14 +53,14 @@ function SupervisoryNodeSearchController($scope, $location, SupervisoryNodesSear
         $scope.pagination = data.pagination;
         filterSupervisoryNode(query);
       }, {});
-
       return true;
     } else {
       return false;
     }
   };
+
   $scope.$on('$routeUpdate', function () {
-      $scope.showSupervisoryNodeSearchResults();
+    $scope.showSupervisoryNodeSearchResults();
   });
 
   $scope.$watch('currentPage', function () {
@@ -85,6 +85,6 @@ function SupervisoryNodeSearchController($scope, $location, SupervisoryNodesSear
         $scope.filteredNodes.push(supervisoryNode);
       }
     });
-    $scope.resultCount = $scope.filteredNodes.length;
+    $scope.resultCount = $scope.pagination.totalRecords;
   };
 }

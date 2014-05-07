@@ -27,7 +27,8 @@ describe("Supervisory Node Search Controller", function () {
 
   it('should get all supervisory nodes in a page depending on search criteria when three characters are entered in search', function () {
     var supervisoryNode = {"code": "N1", "name": "Node 1", "parent": 2};
-    var response = {"supervisoryNodes": [supervisoryNode]};
+    var pagination = {"page" : 1, "pageSize" : 10, "numberOfPages" : 10, "totalRecords" : 100};
+    var response = {"supervisoryNodes": [supervisoryNode], "pagination" : pagination};
     scope.query = "Nod";
     scope.selectedSearchOption.value = 'parent';
     scope.currentPage = 2;
@@ -36,6 +37,7 @@ describe("Supervisory Node Search Controller", function () {
     $httpBackend.flush();
 
     expect(scope.supervisoryNodeList).toEqual([supervisoryNode]);
+    expect(scope.pagination).toEqual(pagination);
   });
 
 /*  it('should filter supervisory nodes when more than 3 characters are entered for search with first 3 characters matching previous search', function () {

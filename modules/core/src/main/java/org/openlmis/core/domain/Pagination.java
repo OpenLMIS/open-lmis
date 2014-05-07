@@ -28,9 +28,14 @@ public class Pagination {
   @Setter
   public Integer pageSize;
 
+  @Getter
   public Integer numberOfPages;
 
+  @Setter
   public Integer offset;
+
+  @Getter
+  public Integer totalRecords;
 
   public Pagination(Integer page, Integer pageSize) {
     this.page = page;
@@ -41,9 +46,14 @@ public class Pagination {
     return (page - 1) * pageSize;
   }
 
-  public void setNumberOfPages(Integer totalRecords) {
+  private void setNumberOfPages() {
     numberOfPages = totalRecords / pageSize;
     if (totalRecords % pageSize > 0)
       numberOfPages++;
+  }
+
+  public void setTotalRecords(Integer totalRecords) {
+    this.totalRecords = totalRecords;
+    setNumberOfPages();
   }
 }
