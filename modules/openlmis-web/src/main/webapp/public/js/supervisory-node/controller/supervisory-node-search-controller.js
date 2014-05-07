@@ -8,10 +8,11 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-function SupervisoryNodeSearchController($scope, $location, SupervisoryNodesSearch) {
+function SupervisoryNodeSearchController($scope, $location, $routeParams, SupervisoryNodesSearch) {
 
   $scope.previousQuery = '';
   $scope.previousSearchOption = undefined;
+  $scope.pagination = undefined;
 
   $scope.searchOptions = [
     {value: "node", name: "option.value.supervisory.node"},
@@ -22,17 +23,32 @@ function SupervisoryNodeSearchController($scope, $location, SupervisoryNodesSear
 
   $scope.selectSearchType = function (searchOption) {
     $scope.selectedSearchOption = searchOption;
+    $scope.pagination = undefined;
     searchOption = $scope.selectedSearchOption.value === 'parent' ? true : false;
-    $scope.currentPage = undefined;
     if ($scope.previousSearchOption !== searchOption) $scope.previousQuery = '';
+    $scope.currentPage = undefined;
     $scope.showSupervisoryNodeSearchResults();
 
   };
 
 
+  function getQueryForSearch(query) {
+    var indexOfFirstNonSpaceCharacter = 0;
+    if (query.substr(0, 3).length < 3) {
+      for (i = 0; i < query.length; i++) {
+        if (query.charAt(i) !== " ") {
+          indexOfFirstNonSpaceCharacter = i;
+          break;
+        }
+      }
+    }
+    return query.substr(0, indexOfFirstNonSpaceCharacter);
+  }
+
   $scope.showSupervisoryNodeSearchResults = function () {
-    if (!$scope.currentPage)
-      $scope.currentPage = 1;
+    if ($scope.query.trim().length === 0) return false;
+    $scope.currentPage = $routeParams.page ? utils.parseIntWithBaseTen($routeParams.page) : 1;
+
     var query = $scope.query;
 
     var len = (query === undefined) ? 0 : query.length;
@@ -41,14 +57,15 @@ function SupervisoryNodeSearchController($scope, $location, SupervisoryNodesSear
 
     var page = $scope.pagination ? $scope.pagination.page : undefined;
     if (len >= 3) {
-      if ($scope.previousQuery.substr(0, 3) === query.substr(0, 3) && $scope.currentPage === page) {
+      if (getQueryForSearch($scope.previousQuery) === getQueryForSearch(query) && $scope.currentPage === page) {
         $scope.previousQuery = query;
         filterSupervisoryNode(query);
         return true;
       }
       $scope.previousQuery = query;
       $scope.previousSearchOption = searchOption;
-      SupervisoryNodesSearch.get({page: $scope.currentPage, param: $scope.query.substr(0, 3), parent: searchOption}, function (data) {
+      var queryForSearch = getQueryForSearch($scope.query);
+      SupervisoryNodesSearch.get({page: $scope.currentPage, param: queryForSearch, parent: searchOption}, function (data) {
         $scope.supervisoryNodeList = data.supervisoryNodes;
         $scope.pagination = data.pagination;
         filterSupervisoryNode(query);
@@ -85,6 +102,9 @@ function SupervisoryNodeSearchController($scope, $location, SupervisoryNodesSear
         $scope.filteredNodes.push(supervisoryNode);
       }
     });
+    /*if (!dataFromServer) {
+     $scope.pagination.totalRecords = $scope.filteredNodes.length;
+     }*/
     $scope.resultCount = $scope.pagination.totalRecords;
   };
 }
