@@ -29,11 +29,14 @@
           </div>
 
           <div class="form-cell">
-            <label for="catchmentPopulation" openlmis-message="label.catchment.population"></label>
+            <label for="catchment-population" openlmis-message="label.catchment.population"></label>
 
             <div class="form-field">
-              <input ng-model="geoZone.catchmentPopulation" name="catchmentPopulation" id="catchmentPopulation"
-                     type="text" maxlength="50" ng-required="true"/>
+              <input ng-model="geoZone.catchmentPopulation" id="catchment-population" ng-pattern="/^\d{1,9}$/"
+                     name="catchmentPopulation" type="text" maxlength="9"/>
+        <span class="field-error" ng-show="geoZoneForm.catchmentPopulation.$error.pattern"
+              openlmis-message="integer.value">
+        </span>
             </div>
           </div>
         </div>
@@ -54,7 +57,7 @@
 
             <div class="form-field">
               <input ng-model="geoZone.latitude" ng-pattern="/^[+-]?0*\d{0,3}(\.\d{1,5}0*)?$/" id="latitude" type="text"
-                     name="latitude"/>
+                     name="latitude" maxlength="10"/>
               <span class="field-error" ng-show="geoZoneForm.latitude.$error.pattern"
                     openlmis-message="label.latitude.value"></span>
             </div>
@@ -66,13 +69,15 @@
             <label openlmis-message="header.level"><span class="label-required"> *</span></label>
 
             <div class="form-field">
-              <select ng-model="geoZone.level.code" ng-options="level.code as level.name for level in levels"
+              <select id="levelCode" name="levelCode" ng-model="geoZone.level.code"
+                      ng-options="level.code as level.name for level in levels"
                       ng-change="loadParents(geoZone.level.code)"
+                      ng-required="true"
                       ng-disabled="editMode">
                 <option value="" openlmis-message="label.select.geographic.level"></option>
               </select>
-              <span class="field-error" ng-show="geoZoneForm.level.code.$error.required && showError"
-                    openlmis-message="missing.value"></span>
+              <span class="field-error" ng-show="geoZoneForm.levelCode.$error.required && showError"
+                    openlmis-message="select.value"></span>
             </div>
           </div>
 
@@ -81,7 +86,7 @@
 
             <div class="form-field">
               <input ng-model="geoZone.longitude" ng-pattern="/^[+-]?0*\d{0,3}(\.\d{1,5}0*)?$/" name="longitude"
-                     id="longitude" type="text"/>
+                     id="longitude" type="text" maxlength="10"/>
               <span class="field-error" ng-show="geoZoneForm.longitude.$error.pattern"
                     openlmis-message="label.longitude.value"></span>
             </div>

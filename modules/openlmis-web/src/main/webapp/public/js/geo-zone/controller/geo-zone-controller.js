@@ -43,6 +43,13 @@ function GeoZoneController($scope, geoLevels, geoZone, GeographicZonesAboveLevel
   };
 
   $scope.save = function () {
+    if ($scope.geoZoneForm.$error.pattern || $scope.geoZoneForm.$error.required) {
+      $scope.showError = "true";
+      $scope.error = 'form.error';
+      $scope.message = "";
+      return;
+    }
+
     if ($scope.geoZone.id) {
       GeographicZones.update({id: $scope.geoZone.id}, $scope.geoZone, success, error);
     }
