@@ -1,18 +1,59 @@
+//services.factory('reportService', function($q,ReportPrograms){
+//
+//  var programs = function(ReportPrograms){
+//    var deferred = $q.defer();
+//
+//    $timeout(function(){
+//      ReportPrograms.get(function (data) {
+//        var ps = data.programs;
+//
+//        ps.unshift({
+//          'name': '-- Select Programs --'
+//        });
+//
+//        deferred.resolve(ps);
+//      });
+//      return deferred.promise();
+//    },100);
+//  };
+//
+//  return {
+//    programs: programs
+//  }
+//
+//});
+
+
+
 app.directive('filterContainer', ['$routeParams', '$location',function ($location) {
   return {
     restrict: 'EA',
+    scope: true,
     controller: function($scope, $routeParams, $location){
-      $scope.filter = $routeParams;
+      $scope.filter = angular.copy($routeParams);
+      //$scope.OnFilterChanged();
+
       $scope.filterChanged = function(){
         // update the url so users could take it, book mark it etc...
-        var url = $location.url();
-        url = url.substring(0, url.indexOf('?'));
-        url = url + '?' + jQuery.param($scope.filter);
-        $location.url(url);
+        angular.forEach($scope.requiredFilters, function(value){
 
-        $scope.OnFilterChanged();
+          if(isUndefined($scope.filter[value]) || $scope.filter[value] === '' || $scope.filter[value] === 0 ){
+
+            return;
+          }
+        });
+
+        if(JSON.stringify($scope.filter) !== JSON.stringify($routeParams)){
+          var url = $location.url();
+          url = url.substring(0, url.indexOf('?'));
+          url = url + '?' + jQuery.param($scope.filter);
+          $location.url(url);
+        }
+        $scope.$parent.filter = $scope.filter;
+        $scope.$parent.OnFilterChanged();
       };
 
+      $scope.filterChanged();
     },
     link: function (scope, elm, attrs) {
       angular.extend(scope, {
@@ -32,10 +73,11 @@ app.directive('programFilter', ['ReportPrograms',
   function (ReportPrograms) {
     return {
       restrict: 'E',
+      require: '^filterContainer',
       link: function (scope, elm, attr) {
 
         if (attr.required) {
-          scope.requiredFilters.program = true;
+          scope.requiredFilters.program = 'program';
         }
         scope.$evalAsync(function(){
           ReportPrograms.get(function (data) {
@@ -61,7 +103,7 @@ app.directive('yearFilter', ['OperationYears',
       link: function (scope, elm, attr) {
 
         if (attr.required) {
-          scope.requiredFilters.year = true;
+          scope.requiredFilters.year = 'year';
         }
         scope.$evalAsync(function() {
           OperationYears.get(function (data) {
@@ -86,7 +128,7 @@ app.directive('facilityTypeFilter', ['ReportFacilityTypes',
         });
 
         if (attr.required) {
-          scope.requiredFilters.facilityType = true;
+          scope.requiredFilters.facilityType = 'facilityType';
         }
 
         ReportFacilityTypes.get(function (data) {
@@ -100,25 +142,28 @@ app.directive('facilityTypeFilter', ['ReportFacilityTypes',
     };
 }]);
 
-app.directive('scheduleFilter', ['ReportSchedules',
-  function (ReportSchedules) {
+app.directive('scheduleFilter', ['ReportSchedules','$routeParams',
+  function (ReportSchedules, $routeParams) {
     return {
       restrict: 'E',
+      require: '^filterContainer',
       link: function (scope, elm, attr) {
 
         scope.schedules = [];
         scope.schedules.unshift({
           name: '-- Select Group --'
         });
+        scope.filter.schedule = $routeParams.schedule;
 
         if (attr.required) {
-          scope.requiredFilters.schedule = true;
+          scope.requiredFilters.schedule = 'schedule';
         }
-
-        ReportSchedules.get(function (data) {
-          scope.schedules = data.schedules;
-          scope.schedules.unshift({
-            name: '-- Select Group --'
+        scope.$evalAsync(function() {
+          ReportSchedules.get(function (data) {
+            scope.schedules = data.schedules;
+            scope.schedules.unshift({
+              name: '-- Select Group --'
+            });
           });
         });
       },
@@ -127,8 +172,8 @@ app.directive('scheduleFilter', ['ReportSchedules',
 }]);
 
 
-app.directive('periodFilter', ['ReportPeriods', 'ReportPeriodsByScheduleAndYear',
-  function (ReportPeriods, ReportPeriodsByScheduleAndYear) {
+app.directive('periodFilter', ['ReportPeriods', 'ReportPeriodsByScheduleAndYear','$routeParams',
+  function (ReportPeriods, ReportPeriodsByScheduleAndYear, $routeParams) {
 
     var onCascadedVarsChanged = function ($scope, newValue) {
       // don't call the server if you don't have all that it takes.
@@ -146,19 +191,22 @@ app.directive('periodFilter', ['ReportPeriods', 'ReportPeriodsByScheduleAndYear'
               'name': '-- Select a Period --',
               'id': '0'
             });
+          $scope.filter.period = $routeParams.period;
         });
 
       } else {
         if (angular.isDefined($scope.filter) && angular.isDefined($scope.filter.schedule)) {
-          ReportPeriods.get({
-            scheduleId: $scope.filter.schedule
-          }, function (data) {
-            $scope.periods = data.periods;
-            if (data.periods !== undefined && data.periods.length > 0)
-              $scope.periods.unshift({
-                'name': '-- Select a Period --',
-                'id': '0'
-              });
+          scope.$evalAsync(function() {
+            ReportPeriods.get({
+              scheduleId: $scope.filter.schedule
+            }, function (data) {
+              $scope.periods = data.periods;
+              if (data.periods !== undefined && data.periods.length > 0)
+                $scope.periods.unshift({
+                  'name': '-- Select a Period --',
+                  'id': '0'
+                });
+            });
           });
         }
 
@@ -168,6 +216,7 @@ app.directive('periodFilter', ['ReportPeriods', 'ReportPeriodsByScheduleAndYear'
 
     return {
       restrict: 'E',
+      require: '^filterContainer',
       link: function (scope, elm, attr) {
 
         scope.periods = [];
@@ -176,7 +225,7 @@ app.directive('periodFilter', ['ReportPeriods', 'ReportPeriodsByScheduleAndYear'
         });
 
         if (attr.required) {
-          scope.requiredFilters.period = true;
+          scope.requiredFilters.period = 'period';
         }
 
         scope.$watch('filter.year', function (value) {
@@ -215,13 +264,11 @@ app.directive('requisitionGroupFilter', ['RequisitionGroupsByProgram',
           });
         }
       });
-
-
-
     };
 
     return {
       restrict: 'E',
+      require: '^filterContainer',
       link: function (scope, elm, attr) {
 
         scope.requisitionGroups = [];
@@ -232,13 +279,12 @@ app.directive('requisitionGroupFilter', ['RequisitionGroupsByProgram',
         scope.filter.requisitionGroup = 0;
 
         if (attr.required) {
-          scope.requiredFilters.requisitionGroup = true;
+          scope.requiredFilters.requisitionGroup = 'requisitionGroup';
         }
 
         scope.$watch('filter.program', function (value) {
           onRgCascadedVarsChanged(scope, value);
         });
-
       },
       templateUrl: 'filter-requisition-group-template'
     };
@@ -262,12 +308,11 @@ app.directive('productCategoryFilter', ['ProductCategoriesByProgram',
           'name': '-- All Product Categories --'
         });
       });
-
-
     };
 
     return {
       restrict: 'E',
+      require: '^filterContainer',
       link: function (scope, elm, attr) {
 
         scope.productCategories = [];
@@ -276,7 +321,7 @@ app.directive('productCategoryFilter', ['ProductCategoriesByProgram',
         });
 
         if (attr.required) {
-          scope.requiredFilters.productCategory = true;
+          scope.requiredFilters.productCategory = 'productCategory';
         }
 
         scope.$watch('filter.program', function (value) {
@@ -318,6 +363,7 @@ app.directive('facilityFilter', ['FacilitiesByProgramParams',
 
     return {
       restrict: 'E',
+      require: '^filterContainer',
       link: function (scope, elm, attr) {
 
         scope.facilities = [];
@@ -326,7 +372,7 @@ app.directive('facilityFilter', ['FacilitiesByProgramParams',
         });
 
         if (attr.required) {
-          scope.requiredFilters.facility = true;
+          scope.requiredFilters.facility = 'facility';
         }
 
         scope.$watch('filter.requisitionGroup', function (value) {
@@ -387,7 +433,7 @@ app.directive('productFilter', ['ReportProductsByProgram',
         scope.filter.product = -1;
 
         if (attr.required) {
-          scope.requiredFilters.product = true;
+          scope.requiredFilters.product = 'product';
         }
 
         scope.productCFilter = function (option) {

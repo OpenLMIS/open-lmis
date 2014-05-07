@@ -45,8 +45,8 @@
           </label>
 
           <div class="form-field">
-            <select ng-model="equipment.equipmentTypeId" id="type">
-              <option ng-repeat="type in equipmentTypes" value="{{type.id}}">{{type.name}}</option>
+            <select ui-select2  ng-model="equipment.equipmentTypeId" id="type">
+              <option ng-repeat="type in equipmentTypes" ng-selected="type.id == equipment.equipmentTypeId" value="{{type.id}}">{{type.name}}</option>
             </select>
             <span class="field-error" ng-show="equipmentForm.type.$error.required && showError" openlmis-message="missing.value"></span>
           </div>

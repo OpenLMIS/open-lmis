@@ -1,0 +1,103 @@
+<!--
+  ~ This program was produced for the U.S. Agency for International Development. It was prepared by the USAID | DELIVER PROJECT, Task Order 4. It is part of a project which utilizes code originally licensed under the terms of the Mozilla Public License (MPL) v2 and therefore is licensed under MPL v2 or later.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify it under the terms of the Mozilla Public License as published by the Mozilla Foundation, either version 2 of the License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the Mozilla Public License for more details.
+  ~
+  ~ You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
+  -->
+
+<div ng-controller="ApproveEquipmentLineItemController">
+  <div class="rnr-table regimen-table" tab-scroll bottom-offset="180">
+    <table id="regimenTable" fixed-table-header class="table table-bordered">
+      <thead>
+      <tr>
+        <th class="col-1" >
+          <div class="regimen-heading">
+            <span>Code</span>
+          </div>
+        </th>
+        <th class="col-3" >
+          <div class="regimen-heading">
+            <span>Equipment Name</span>
+          </div>
+        </th>
+        <th class="col-1" >
+          <div class="regimen-heading">
+            <span>Model</span>
+          </div>
+        </th>
+        <th class="col-1" >
+          <div class="regimen-heading">
+            <span>Serial</span>
+          </div>
+        </th>
+        <th class="col-1" >
+          <div class="regimen-heading">
+            <span>Status</span>
+          </div>
+        </th>
+        <th class="col-1" >
+          <div class="regimen-heading">
+            <span>Test Count</span>
+          </div>
+        </th>
+        <th class="col-1" >
+          <div class="regimen-heading">
+            <span>Total Count</span>
+          </div>
+        </th>
+        <th class="col-1" >
+          <div class="regimen-heading">
+            <span>Days out of use</span>
+          </div>
+        </th>
+        <th class="col-3" >
+          <div class="regimen-heading">
+            <span>Remarks</span>
+          </div>
+        </th>
+      </tr>
+      </thead>
+      <tbody ng-repeat="equipmentLineItem in page.equipment">
+      <tr ng-show="showCategory($index)">
+        <td class="productCategory" colspan="9" ng-show="showCategory($index)"
+            ng-bind="equipmentLineItem.equipmentCategory"></td>
+      </tr>
+      <tr>
+        <td class="cell-input">
+          <span ng-bind="equipmentLineItem.equipmentName" class="cell-text"></span>
+        </td>
+        <td class="cell-input">
+          <span ng-bind="equipmentLineItem.equipmentName" class="cell-text"></span>
+        </td>
+        <td class="cell-input">
+          <span ng-bind="equipmentLineItem.equipmentModel" class="cell-text"></span>
+        </td>
+        <td class="cell-input">
+          <span ng-bind="equipmentLineItem.equipmentSerial" class="cell-text"></span>
+        </td>
+        <td class="cell-input">
+          <select ng-disabled="true" class="cell-text" ng-model="equipmentLineItem.operationalStatusId">
+            <option  ng-repeat="status in equipmentOperationalStatus" value="{{status.id}}" ng-selected="equipmentLineItem.operationalStatusId === status.id">{{status.name}}</option>
+          </select>
+        </td>
+        <td class="cell-input">
+          <span class="cell-text number text-right" type="text" ng-bind="equipmentLineItem.testCount"></span>
+        </td>
+        <td class="cell-input">
+          <span class="cell-text number text-right"  type="text" ng-bind="equipmentLineItem.totalCount"></span>
+        </td>
+        <td class="cell-input">
+          <span class="cell-text number text-right" type="text" ng-bind="equipmentLineItem.daysOutOfUse"></span>
+        </td>
+        <td class="cell-input">
+          <input class="cell-text" type="text" ng-model="equipmentLineItem.remarks" >
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+
+</div>

@@ -8,25 +8,14 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-angular.module('equipment-type', ['openlmis', 'ui.bootstrap.modal', 'ui.bootstrap.dialog', 'ui.bootstrap.dropdownToggle']).config(['$routeProvider',
-  function ($routeProvider) {
-    $routeProvider.
-    when('/', {
-      controller: EquipmentTypeController,
-      templateUrl: 'partials/list.html'
-    }).
-    when('/edit/:id', {
-      controller: CreateEquipmentTypeController,
-      templateUrl: 'partials/create.html'
-    }).
-    when('/create', {
-      controller: CreateEquipmentTypeController,
-      templateUrl: 'partials/create.html'
-    }).
-    otherwise({
-      redirectTo: '/list'
-    });
-}]).run(function ($rootScope, AuthorizationService) {
-  $rootScope.equipmentTypeSelected = "selected";
-  AuthorizationService.preAuthorize('MANAGE_EQUIPMENT_SETTINGS');
-});
+function ApproveEquipmentLineItemController($scope) {
+
+  $scope.showCategory = function (index) {
+    var absIndex = ($scope.pageSize * ($scope.currentPage - 1)) +  index;
+    return  !((index > 0 ) && ($scope.rnr.equipmentLineItems.length > absIndex) &&  ($scope.rnr.equipmentLineItems[absIndex].equipmentCategory == $scope.rnr.equipmentLineItems[absIndex - 1].equipmentCategory));
+  };
+
+  $scope.getId = function (prefix, parent) {
+    return prefix + "_" + parent.$parent.$index;
+  };
+}

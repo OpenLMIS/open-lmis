@@ -28,7 +28,7 @@ public class RegimenSummaryQueryBuilder {
                "   SUM(patientsontreatment) patientsontreatment,\n" +
                "   SUM(patientstoinitiatetreatment) patientstoinitiatetreatment,\n" +
                "   SUM(patientsstoppedtreatment) patientsstoppedtreatment\n" +
-               "   from vw_regimen_summary_t\n" +
+               "   from vw_regimen_summary\n" +
               writePredicates(filter)+
                "   group by district, regimen,rgroup\n" +
                "   order by district,regimen,rgroup ) \n" +
@@ -48,16 +48,6 @@ public class RegimenSummaryQueryBuilder {
         String predicate="";
        predicate = " WHERE status in ('APPROVED','RELEASED') ";
      if(filter != null){
-         /*
-            if (filter.getGeographicLevelId() != 0 ) {
-                predicate = predicate.isEmpty() ?" where " : predicate + " and ";
-                predicate = predicate + " geographiclevelid = #{filterCriteria.geographicLevelId}";
-            }
-
-            if (filter.getZoneId() != 0 ) {
-                predicate = predicate.isEmpty() ?" where " : predicate + " and ";
-                predicate = predicate + " zoneid = #{filterCriteria.zoneId}";
-            }*/
             if(filter.getRegimenCategoryId() != 0  ){
                 predicate = predicate.isEmpty() ?" where " : predicate + " and ";
                 predicate = predicate + " categoryid = #{filterCriteria.regimenCategoryId}";
