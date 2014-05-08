@@ -120,7 +120,7 @@ public class GeographicZoneMapperIT {
     GeographicZone geographicZone2 = new GeographicZone(null, "code5", "NameB", new GeographicLevel(1L), null);
     mapper.insert(geographicZone2);
 
-    GeographicZone geographicZone3 = new GeographicZone(null, "code6", "name-c", new GeographicLevel(1L), null);
+    GeographicZone geographicZone3 = new GeographicZone(null, "code6", "namec", new GeographicLevel(1L), null);
     mapper.insert(geographicZone3);
 
     GeographicZone geographicZone4 = new GeographicZone(null, "code1", "NameD", new GeographicLevel(3L), geographicZone1);
@@ -135,9 +135,9 @@ public class GeographicZoneMapperIT {
     List<GeographicZone> allGeographicZones = mapper.searchByName("ame");
     assertThat(allGeographicZones.size(), is(6));
 
-    assertThat(allGeographicZones.get(0).getCode(), is("code6"));
-    assertThat(allGeographicZones.get(1).getCode(), is("code4"));
-    assertThat(allGeographicZones.get(2).getCode(), is("code5"));
+    assertThat(allGeographicZones.get(0).getCode(), is("code4"));
+    assertThat(allGeographicZones.get(1).getCode(), is("code5"));
+    assertThat(allGeographicZones.get(2).getCode(), is("code6"));
     assertThat(allGeographicZones.get(3).getCode(), is("code2"));
     assertThat(allGeographicZones.get(4).getCode(), is("code1"));
     assertThat(allGeographicZones.get(5).getCode(), is("code3"));
