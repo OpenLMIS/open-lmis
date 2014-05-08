@@ -44,7 +44,7 @@ function GeoZoneController($scope, geoLevels, geoZone, GeographicZonesAboveLevel
   };
 
   $scope.save = function () {
-    if ($scope.geoZoneForm.$error.pattern || $scope.geoZoneForm.$error.required) {
+    if ($scope.geoZoneForm.$error.pattern || $scope.geoZoneForm.$error.required || !$scope.geoZone.level.code) {
       $scope.showError = "true";
       $scope.error = 'form.error';
       $scope.message = "";
