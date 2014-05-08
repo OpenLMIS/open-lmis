@@ -51,6 +51,7 @@ public class PageObjectFactory {
   private static ManageGeographicZonesPage instanceOfManageGeographicZonesPage;
   private static ConfigureOrderNumberPage instanceOfConfigureOrderNumberPage;
   private static PeriodsPage instanceOfPeriodsPage;
+  private static SupervisoryNodesPage instanceOfSupervisoryNodesPage;
 
   public static ManageFacilityPage getManageFacilityPage(TestWebDriver testWebDriver) {
     if (instanceOfManageFacilityPage == null) {
@@ -304,5 +305,12 @@ public class PageObjectFactory {
       instanceOfPeriodsPage = new PeriodsPage(testWebDriver);
     }
     return instanceOfPeriodsPage;
+  }
+
+  public static SupervisoryNodesPage getSupervisoryNodesPage(TestWebDriver testWebDriver) {
+    if (instanceOfSupervisoryNodesPage == null) {
+      instanceOfSupervisoryNodesPage = new SupervisoryNodesPage(testWebDriver);
+    }
+    return instanceOfSupervisoryNodesPage;
   }
 }

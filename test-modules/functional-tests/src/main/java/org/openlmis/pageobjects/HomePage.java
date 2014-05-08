@@ -91,9 +91,6 @@ public class HomePage extends Page {
   @FindBy(how = ID, using = "viewOrderHeader")
   private static WebElement viewOrdersHeader = null;
 
-  @FindBy(how = ID, using = "supervisoryNodeAddNew")
-  private static WebElement createSupervisoryNode = null;
-
   @FindBy(how = ID, using = "add-new-facility")
   private static WebElement createFacility = null;
 
@@ -181,6 +178,9 @@ public class HomePage extends Page {
   @FindBy(how = ID, using = "managePodHeader")
   private static WebElement viewManagePODHeader = null;
 
+  @FindBy(how = ID, using = "supervisoryNodes")
+  private WebElement supervisoryNodesTab = null;
+
   @FindBy(how = ID, using = "geoZoneTab")
   private static WebElement geoZoneTab = null;
 
@@ -222,12 +222,6 @@ public class HomePage extends Page {
     testWebDriver.waitForElementToAppear(createFacility);
     testWebDriver.sleep(1000);
     createFacility.click();
-  }
-
-  public void clickCreateSupervisoryNodeButton() {
-    testWebDriver.waitForElementToAppear(createSupervisoryNode);
-    testWebDriver.sleep(1000);
-    createSupervisoryNode.click();
   }
 
   public void verifyHeader(String headingToVerify) {
@@ -529,6 +523,16 @@ public class HomePage extends Page {
     testWebDriver.keyPress(viewManagePODMenuItem);
     testWebDriver.waitForElementToAppear(viewManagePODHeader);
     return PageObjectFactory.getManagePodPage(testWebDriver);
+  }
+
+  public SupervisoryNodesPage navigateToSupervisoryNodes() {
+    testWebDriver.waitForElementToAppear(AdministrationMenuItem);
+    testWebDriver.keyPress(AdministrationMenuItem);
+    testWebDriver.waitForElementToAppear(manageLink);
+    testWebDriver.keyPress(manageLink);
+    testWebDriver.waitForElementToAppear(supervisoryNodesTab);
+    usersTab.click();
+    return PageObjectFactory.getSupervisoryNodesPage(testWebDriver);
   }
 }
 
