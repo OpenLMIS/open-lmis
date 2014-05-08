@@ -406,6 +406,7 @@ public class ManageRolesAndUsers extends TestCaseHelper {
     userPage.ExpandAll();
     userPage.verifyExpandAll();
     userPage.collapseAll();
+    testWebDriver.sleep(500);
     userPage.verifyCollapseAll();
 
     userPage.enterMyFacilityAndMySupervisedFacilityData(facility, program, supervisoryNode, role, roleType);
