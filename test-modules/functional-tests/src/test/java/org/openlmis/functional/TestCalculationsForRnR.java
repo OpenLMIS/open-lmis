@@ -437,7 +437,7 @@ public class TestCalculationsForRnR extends TestCaseHelper {
     initiateRnRPage.verifyAmcForFirstProduct(54);
     verifyNormalizedConsumptionAndAmcInDatabase(54, 54, "P10");
 
-    dbWrapper.insertSupervisoryNodeSecond("F11", "N2", "Node2", "N1");
+    dbWrapper.insertSupervisoryNodeWithoutDelete("F11", "N2", "Node2", "N1");
     dbWrapper.updateSupervisoryNodeForRequisitionGroup("RG2", "N2");
     dbWrapper.insertRoleAssignmentForSupervisoryNode(dbWrapper.getAttributeFromTable("users", "id", "userName", userSIC), "store in-charge", "N2", "HIV");
 

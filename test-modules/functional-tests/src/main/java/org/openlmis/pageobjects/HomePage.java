@@ -15,10 +15,13 @@ import org.openlmis.UiUtils.TestWebDriver;
 import org.openlmis.pageobjects.edi.ConfigureSystemSettingsPage;
 import org.openlmis.pageobjects.edi.ConvertOrderPage;
 import org.openqa.selenium.By;
+import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
+
+import java.util.NoSuchElementException;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
 import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
@@ -178,8 +181,8 @@ public class HomePage extends Page {
   @FindBy(how = ID, using = "managePodHeader")
   private static WebElement viewManagePODHeader = null;
 
-  @FindBy(how = ID, using = "supervisoryNodes")
-  private WebElement supervisoryNodesTab = null;
+  @FindBy(how = ID, using = "supervisoryNodeTab")
+  private static WebElement supervisoryNodesTab = null;
 
   @FindBy(how = ID, using = "geoZoneTab")
   private static WebElement geoZoneTab = null;
@@ -236,6 +239,17 @@ public class HomePage extends Page {
     assertTrue(rolesTab.isDisplayed());
     assertTrue(schedulesTab.isDisplayed());
     assertTrue(usersTab.isDisplayed());
+  }
+
+  public boolean isSupervisoryNodeTabDisplayed() {
+    try {
+      testWebDriver.waitForElementToAppear(supervisoryNodesTab);
+    } catch (TimeoutException e) {
+      return false;
+    } catch (NoSuchElementException e) {
+      return false;
+    }
+    return supervisoryNodesTab.isDisplayed();
   }
 
   public TemplateConfigPage selectProgramToConfigTemplate(String programme) {
@@ -531,7 +545,7 @@ public class HomePage extends Page {
     testWebDriver.waitForElementToAppear(manageLink);
     testWebDriver.keyPress(manageLink);
     testWebDriver.waitForElementToAppear(supervisoryNodesTab);
-    usersTab.click();
+    supervisoryNodesTab.click();
     return PageObjectFactory.getSupervisoryNodesPage(testWebDriver);
   }
 }

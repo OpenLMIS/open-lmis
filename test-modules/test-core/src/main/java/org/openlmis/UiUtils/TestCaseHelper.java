@@ -160,7 +160,7 @@ public class TestCaseHelper {
       dbWrapper.assignRight("store in-charge", rights);
     String passwordUsers = "TQskzK3iiLfbRVHeM1muvBCiiKriibfl6lh8ipo91hb74G3OvsybvkzpPI4S3KIeWTXAiiwlUU0iiSxWii4wSuS8mokSAieie";
     dbWrapper.insertUser(userId, user, passwordUsers, "F10", "");
-    dbWrapper.insertSupervisoryNodeSecond("F10", "N2", "Node 2", "N1");
+    dbWrapper.insertSupervisoryNodeWithoutDelete("F10", "N2", "Node 2", "N1");
     dbWrapper.insertRoleAssignmentForSupervisoryNodeForProgramId1(userId, "store in-charge", "N1");
   }
 

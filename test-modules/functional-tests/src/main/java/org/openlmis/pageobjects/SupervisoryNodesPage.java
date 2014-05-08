@@ -11,10 +11,13 @@
 package org.openlmis.pageobjects;
 
 import org.openlmis.UiUtils.TestWebDriver;
+import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
+
+import java.util.NoSuchElementException;
 
 import static org.openqa.selenium.support.How.ID;
 
@@ -32,10 +35,10 @@ public class SupervisoryNodesPage extends Page {
   @FindBy(how = ID, using = "supervisoryNodeAddNew")
   private static WebElement supervisoryNodeAddNew = null;
 
-  @FindBy(how = ID, using = "searchOption1")
+  @FindBy(how = ID, using = "searchOption0")
   private static WebElement searchOption1 = null;
 
-  @FindBy(how = ID, using = "searchOption2")
+  @FindBy(how = ID, using = "searchOption1")
   private static WebElement searchOption2 = null;
 
   @FindBy(how = ID, using = "searchSupervisoryNodeLabel")
@@ -86,6 +89,18 @@ public class SupervisoryNodesPage extends Page {
     supervisoryNodeTab.click();
   }
 
+  public boolean isAddNewButtonDisplayed() {
+    try {
+      testWebDriver.waitForElementToAppear(supervisoryNodeAddNew);
+    } catch (TimeoutException e) {
+      return false;
+    } catch (NoSuchElementException e) {
+      return false;
+    }
+    testWebDriver.waitForElementToAppear(supervisoryNodeAddNew);
+    return supervisoryNodeAddNew.isDisplayed();
+  }
+
   public void clickAddNewButton() {
     testWebDriver.waitForElementToAppear(supervisoryNodeAddNew);
     supervisoryNodeAddNew.click();
@@ -94,6 +109,11 @@ public class SupervisoryNodesPage extends Page {
   public void clickSearchOptionButton() {
     testWebDriver.waitForElementToAppear(searchOptionButton);
     searchOptionButton.click();
+  }
+
+  public String getSelectedSearchOption() {
+    testWebDriver.waitForElementToAppear(searchOptionButton);
+    return searchOptionButton.getText();
   }
 
   public void selectSupervisoryNodeAsSearchOption() {
@@ -112,14 +132,35 @@ public class SupervisoryNodesPage extends Page {
   }
 
   public boolean isNoResultMessageDisplayed() {
+    try {
+      testWebDriver.waitForElementToAppear(noResultMessage);
+    } catch (TimeoutException e) {
+      return false;
+    } catch (NoSuchElementException e) {
+      return false;
+    }
     return noResultMessage.isDisplayed();
   }
 
   public boolean isOneResultMessageDisplayed() {
+    try {
+      testWebDriver.waitForElementToAppear(oneResultMessage);
+    } catch (TimeoutException e) {
+      return false;
+    } catch (NoSuchElementException e) {
+      return false;
+    }
     return oneResultMessage.isDisplayed();
   }
 
   public boolean isNResultsMessageDisplayed() {
+    try {
+      testWebDriver.waitForElementToAppear(nResultsMessage);
+    } catch (TimeoutException e) {
+      return false;
+    } catch (NoSuchElementException e) {
+      return false;
+    }
     return nResultsMessage.isDisplayed();
   }
 
@@ -134,6 +175,13 @@ public class SupervisoryNodesPage extends Page {
   }
 
   public boolean isSupervisoryNodeHeaderPresent() {
+    try {
+      testWebDriver.waitForElementToAppear(supervisoryNodeHeader);
+    } catch (TimeoutException e) {
+      return false;
+    } catch (NoSuchElementException e) {
+      return false;
+    }
     return supervisoryNodeHeader.isDisplayed();
   }
 

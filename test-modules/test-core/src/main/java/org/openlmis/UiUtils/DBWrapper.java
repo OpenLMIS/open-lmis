@@ -420,8 +420,8 @@ public class DBWrapper {
     );
   }
 
-  public void insertSupervisoryNodeSecond(String facilityCode, String supervisoryNodeCode, String supervisoryNodeName,
-                                          String supervisoryNodeParentCode) throws SQLException {
+  public void insertSupervisoryNodeWithoutDelete(String facilityCode, String supervisoryNodeCode, String supervisoryNodeName,
+                                                 String supervisoryNodeParentCode) throws SQLException {
     update("INSERT INTO supervisory_nodes" +
       "  (parentId, facilityId, name, code) VALUES" +
       "  ((select id from  supervisory_nodes where code ='%s'), (SELECT id FROM facilities WHERE code = '%s'), '%s', '%s')",

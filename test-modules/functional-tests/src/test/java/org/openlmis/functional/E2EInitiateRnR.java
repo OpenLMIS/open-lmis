@@ -97,7 +97,7 @@ public class E2EInitiateRnR extends TestCaseHelper {
   public void supervisoryNodeDataSetup() throws SQLException {
     dbWrapper.insertFacilities("F10", "F11");
     dbWrapper.insertSupervisoryNode("F10", "N1", "Node 1", "null");
-    dbWrapper.insertSupervisoryNodeSecond("F11", "N2", "Node 2", "N1");
+    dbWrapper.insertSupervisoryNodeWithoutDelete("F11", "N2", "Node 2", "N1");
   }
 
   @And("^I setup warehouse data$")
