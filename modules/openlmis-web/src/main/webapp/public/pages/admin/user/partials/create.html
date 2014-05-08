@@ -35,7 +35,10 @@
 
   <div class="form-row clearfix">
     <div class="form-cell">
-      <label for="userName" openlmis-message="create.user.userName"><span class="label-required"> *</span></label>
+      <label for="userName">
+        <span openlmis-message="create.user.userName"></span>
+        <span class="label-required"> *</span>
+      </label>
 
       <div class="form-field">
         <input ng-model="user.userName" name="userName" id="userName" type="text" maxlength="50"
@@ -50,7 +53,10 @@
     </div>
 
     <div class="form-cell">
-      <label for="email" openlmis-message="create.user.email"><span class="label-required"> *</span></label>
+      <label for="email">
+        <span openlmis-message="create.user.email"></span>
+        <span class="label-required"> *</span>
+      </label>
 
       <div class="form-field">
         <input ng-model="user.email" name="email" id="email" type="text" maxlength="50" ng-required="true"/>
@@ -63,8 +69,10 @@
 
   <div class="form-row clearfix">
     <div class="form-cell">
-      <label for="firstName" openlmis-message="create.user.firstName"><span class="label-required">
-        *</span></label>
+      <label for="firstName">
+        <span openlmis-message="create.user.firstName"></span>
+        <span class="label-required"> *</span>
+      </label>
 
       <div class="form-field">
         <input ng-model="user.firstName" name="firstName" id="firstName" type="text" maxlength="50"
@@ -77,7 +85,10 @@
 
 
     <div class="form-cell">
-      <label for="lastName" openlmis-message="create.user.lastName"><span class="label-required"> *</span></label>
+      <label for="lastName">
+        <span openlmis-message="create.user.lastName"></span>
+        <span class="label-required"> *</span>
+      </label>
 
       <div class="form-field">
         <input ng-model="user.lastName" name="lastName" id="lastName" type="text" maxlength="50"
@@ -139,7 +150,10 @@
     </div>
 
     <div class="form-cell">
-      <label openlmis-message="create.user.restrictLogin"><span class="label-required"> *</span></label>
+      <label>
+        <span openlmis-message="create.user.restrictLogin"></span>
+        <span class="label-required"> *</span>
+      </label>
 
       <div class="form-field radio-group">
         <input id="restrictLoginYes" ng-model="user.restrictLogin" type="radio" name="restrictLogin"
