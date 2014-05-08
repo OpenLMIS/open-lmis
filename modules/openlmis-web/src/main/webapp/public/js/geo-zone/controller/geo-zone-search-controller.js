@@ -53,7 +53,6 @@ function GeoZoneSearchController($scope, GeographicZones, $location, navigateBac
     angular.element("#searchGeoZone").focus();
   };
 
-
   $scope.updateFilteredQueryList = function () {
 
     if (!$scope.query) return;
@@ -61,26 +60,38 @@ function GeoZoneSearchController($scope, GeographicZones, $location, navigateBac
     $scope.query = $scope.query.trim();
     var queryLength = $scope.query.length;
     if (queryLength >= 3) {
-      GeographicZones.get({"searchParam": $scope.query.substring(0, 3), "columnName": $scope.selectedSearchOption.value}, function (data) {
-        $scope.filteredGeoZones = data.geographicZoneList;
-        $scope.geoZoneList = $scope.filteredGeoZones;
-        $scope.previousQuery = $scope.query;
-        if (queryLength > 3) {
-          filterGeoZones();
-        }
+      if (compareQuery()) {
+        GeographicZones.get({"searchParam": $scope.query.substring(0, 3), "columnName": $scope.selectedSearchOption.value}, function (data) {
+          $scope.filteredGeoZones = data.geographicZoneList;
+          $scope.geoZoneList = $scope.filteredGeoZones;
+          $scope.previousQuery = $scope.query;
+          if (queryLength > 3) {
+            filterGeoZones();
+          }
+          $scope.resultCount = $scope.geoZoneList.length;
+        }, {});
+      }
+      else {
+        filterGeoZones();
         $scope.resultCount = $scope.geoZoneList.length;
-      }, {});
+      }
+    }
+  };
+
+  var compareQuery = function () {
+    if ($scope.previousQuery.substring(0, 3) != $scope.query.substring(0, 3)) {
+      return true;
     }
   };
 
   var filterGeoZones = function () {
     $scope.geoZoneList = [];
+    var searchString = $scope.query.toLowerCase();
     angular.forEach($scope.filteredGeoZones, function (geoZone) {
-      var searchString = $scope.query.toLowerCase();
-      if ($scope.selectedSearchOption === $scope.searchOptions[0] && geoZone.name.toLowerCase().indexOf(searchString) >= 0) {
+      if ($scope.selectedSearchOption.value === $scope.searchOptions[0].value && geoZone.name.toLowerCase().indexOf(searchString) >= 0) {
         $scope.geoZoneList.push(geoZone);
       }
-      if ($scope.selectedSearchOption === $scope.searchOptions[1] && geoZone.parent.name.toLowerCase().indexOf(searchString) >= 0) {
+      if ($scope.selectedSearchOption.value === $scope.searchOptions[1].value && geoZone.parent.name.toLowerCase().indexOf(searchString) >= 0) {
         $scope.geoZoneList.push(geoZone);
       }
     });
