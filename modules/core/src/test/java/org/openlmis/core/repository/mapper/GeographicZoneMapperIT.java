@@ -84,24 +84,63 @@ public class GeographicZoneMapperIT {
 
   @Test
   public void shouldGetAllGeographicZonesSortedAndSearchedByParentName() throws Exception {
-    List<GeographicZone> allGeographicZones = mapper.searchByParentName("Mozam");
-    assertThat(allGeographicZones.size(), is(3));
-    GeographicZone geographicZone = allGeographicZones.get(0);
+    GeographicZone geographicZone1 = new GeographicZone(null, "code4", "nameA", new GeographicLevel(1L), null);
+    mapper.insert(geographicZone1);
 
-    assertThat(geographicZone.getCode(), is("Cabo Delgado Province"));
-    assertThat(geographicZone.getName(), is("Cabo Delgado Province"));
-    assertThat(geographicZone.getLevel().getName(), is("State"));
+    GeographicZone geographicZone2 = new GeographicZone(null, "code5", "NameB", new GeographicLevel(1L), geographicZone1);
+    mapper.insert(geographicZone2);
+
+    GeographicZone geographicZone3 = new GeographicZone(null, "code6", "name-c", new GeographicLevel(1L), geographicZone2);
+    mapper.insert(geographicZone3);
+
+    GeographicZone geographicZone4 = new GeographicZone(null, "code1", "NameD", new GeographicLevel(3L), geographicZone1);
+    mapper.insert(geographicZone4);
+
+    GeographicZone geographicZone5 = new GeographicZone(null, "code2", "naameD", new GeographicLevel(3L), geographicZone1);
+    mapper.insert(geographicZone5);
+
+    GeographicZone geographicZone6 = new GeographicZone(null, "code3", "nameE", new GeographicLevel(4L), geographicZone3);
+    mapper.insert(geographicZone6);
+
+    List<GeographicZone> allGeographicZones = mapper.searchByParentName("ame");
+    assertThat(allGeographicZones.size(), is(5));
+
+    assertThat(allGeographicZones.get(0).getCode(), is("code5"));
+    assertThat(allGeographicZones.get(1).getCode(), is("code6"));
+    assertThat(allGeographicZones.get(2).getCode(), is("code2"));
+    assertThat(allGeographicZones.get(3).getCode(), is("code1"));
+    assertThat(allGeographicZones.get(4).getCode(), is("code3"));
   }
 
   @Test
   public void shouldGetAllGeographicZonesSortedAndSearchedByGeoZoneName() throws Exception {
-    List<GeographicZone> allGeographicZones = mapper.searchByName("Dis");
-    assertThat(allGeographicZones.size(), is(9));
-    GeographicZone geographicZone1 = allGeographicZones.get(0);
-    GeographicZone geographicZone2 = allGeographicZones.get(1);
+    GeographicZone geographicZone1 = new GeographicZone(null, "code4", "nameA", new GeographicLevel(1L), null);
+    mapper.insert(geographicZone1);
 
-    assertThat(geographicZone1.getCode(), is("District4"));
-    assertThat(geographicZone2.getCode(), is("District5"));
+    GeographicZone geographicZone2 = new GeographicZone(null, "code5", "NameB", new GeographicLevel(1L), null);
+    mapper.insert(geographicZone2);
+
+    GeographicZone geographicZone3 = new GeographicZone(null, "code6", "name-c", new GeographicLevel(1L), null);
+    mapper.insert(geographicZone3);
+
+    GeographicZone geographicZone4 = new GeographicZone(null, "code1", "NameD", new GeographicLevel(3L), geographicZone1);
+    mapper.insert(geographicZone4);
+
+    GeographicZone geographicZone5 = new GeographicZone(null, "code2", "naameD", new GeographicLevel(3L), geographicZone1);
+    mapper.insert(geographicZone5);
+
+    GeographicZone geographicZone6 = new GeographicZone(null, "code3", "nameE", new GeographicLevel(4L), geographicZone3);
+    mapper.insert(geographicZone6);
+
+    List<GeographicZone> allGeographicZones = mapper.searchByName("ame");
+    assertThat(allGeographicZones.size(), is(6));
+
+    assertThat(allGeographicZones.get(0).getCode(), is("code6"));
+    assertThat(allGeographicZones.get(1).getCode(), is("code4"));
+    assertThat(allGeographicZones.get(2).getCode(), is("code5"));
+    assertThat(allGeographicZones.get(3).getCode(), is("code2"));
+    assertThat(allGeographicZones.get(4).getCode(), is("code1"));
+    assertThat(allGeographicZones.get(5).getCode(), is("code3"));
   }
 
   @Test
