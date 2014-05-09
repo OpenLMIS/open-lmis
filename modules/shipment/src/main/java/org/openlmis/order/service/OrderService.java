@@ -21,7 +21,6 @@ import org.openlmis.order.domain.Order;
 import org.openlmis.order.domain.OrderStatus;
 import org.openlmis.order.dto.OrderFileTemplateDTO;
 import org.openlmis.order.repository.OrderRepository;
-import org.openlmis.pod.service.PODService;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.domain.RnrLineItem;
 import org.openlmis.rnr.service.RequisitionService;
@@ -81,13 +80,11 @@ public class OrderService {
   private StatusChangeEventService statusChangeEventService;
 
   @Autowired
-  private PODService podService;
-
-  public static String SUPPLY_LINE_MISSING_COMMENT = "order.ftpComment.supplyline.missing";
-  @Autowired
   private UserService userService;
 
-  private int pageSize;
+  public static String SUPPLY_LINE_MISSING_COMMENT = "order.ftpComment.supplyline.missing";
+
+  private Integer pageSize;
 
   @Autowired
   public void setPageSize(@Value("${order.page.size}") String pageSize) {
