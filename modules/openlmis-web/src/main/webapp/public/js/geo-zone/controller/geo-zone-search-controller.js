@@ -12,7 +12,7 @@ function GeoZoneSearchController($scope, GeographicZones, $location, navigateBac
 
   $scope.$on('$viewContentLoaded', function () {
     $scope.query = navigateBackService.query;
-    $scope.updateFilteredQueryList();
+    $scope.search();
   });
 
   $scope.searchOptions = [
@@ -20,12 +20,10 @@ function GeoZoneSearchController($scope, GeographicZones, $location, navigateBac
     {value: "parentName", name: "option.value.geo.zone.parent"}
   ];
 
-  $scope.previousQuery = '';
   $scope.selectedSearchOption = navigateBackService.selectedSearchOption || $scope.searchOptions[0];
 
   $scope.selectSearchType = function (searchOption) {
     $scope.selectedSearchOption = searchOption;
-    $scope.updateFilteredQueryList();
   };
 
   $scope.editGeoZone = function (id) {
@@ -34,66 +32,19 @@ function GeoZoneSearchController($scope, GeographicZones, $location, navigateBac
     $location.path('edit/' + id);
   };
 
-  $scope.filterGeoZonesByNameOrCode = function (query) {
-    var filteredGeoZones = [];
-    query = query || "";
-
-    angular.forEach($scope.geoZoneList, function (geoZone) {
-      if (geoZone.name.toLowerCase().indexOf(query.toLowerCase()) >= 0 || geoZone.code.toLowerCase().indexOf(query.toLowerCase()) >= 0) {
-        filteredGeoZones.push(geoZone);
-      }
-    });
-    $scope.resultCount = filteredGeoZones.length;
-    return filteredGeoZones;
-  };
-
   $scope.clearSearch = function () {
     $scope.query = "";
     $scope.resultCount = 0;
     angular.element("#searchGeoZone").focus();
   };
 
-  $scope.updateFilteredQueryList = function () {
-
+  $scope.search = function () {
     if (!$scope.query) return;
 
     $scope.query = $scope.query.trim();
-    var queryLength = $scope.query.length;
-    if (queryLength >= 3) {
-      if (compareQuery()) {
-        GeographicZones.get({"searchParam": $scope.query.substring(0, 3), "columnName": $scope.selectedSearchOption.value}, function (data) {
-          $scope.filteredGeoZones = data.geographicZoneList;
-          $scope.geoZoneList = $scope.filteredGeoZones;
-          $scope.previousQuery = $scope.query;
-          if (queryLength > 3) {
-            filterGeoZones();
-          }
-          $scope.resultCount = $scope.geoZoneList.length;
-        }, {});
-      }
-      else {
-        filterGeoZones();
-        $scope.resultCount = $scope.geoZoneList.length;
-      }
-    }
-  };
-
-  var compareQuery = function () {
-    if ($scope.previousQuery.substring(0, 3) != $scope.query.substring(0, 3)) {
-      return true;
-    }
-  };
-
-  var filterGeoZones = function () {
-    $scope.geoZoneList = [];
-    var searchString = $scope.query.toLowerCase();
-    angular.forEach($scope.filteredGeoZones, function (geoZone) {
-      if ($scope.selectedSearchOption.value === $scope.searchOptions[0].value && geoZone.name.toLowerCase().indexOf(searchString) >= 0) {
-        $scope.geoZoneList.push(geoZone);
-      }
-      if ($scope.selectedSearchOption.value === $scope.searchOptions[1].value && geoZone.parent.name.toLowerCase().indexOf(searchString) >= 0) {
-        $scope.geoZoneList.push(geoZone);
-      }
-    });
-  };
+    GeographicZones.get({"searchParam": $scope.query, "columnName": $scope.selectedSearchOption.value}, function (data) {
+      $scope.geoZoneList = data.geographicZoneList;
+      $scope.resultCount = $scope.geoZoneList.length;
+    }, {});
+  }
 }
