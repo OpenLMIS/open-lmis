@@ -13,6 +13,7 @@ package org.openlmis.core.repository.mapper;
 import org.apache.ibatis.annotations.*;
 import org.openlmis.core.domain.GeographicLevel;
 import org.openlmis.core.domain.GeographicZone;
+import org.openlmis.core.domain.Pagination;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -76,23 +77,25 @@ public interface GeographicZoneMapper {
     "FROM geographic_zones GZ INNER JOIN geographic_zones GZP ON GZ.parentId = GZP.id",
     "INNER JOIN geographic_levels GL ON GZ.levelId = GL.id",
     "WHERE LOWER(GZP.name) LIKE '%' || LOWER(#{searchParam} || '%')",
-    "ORDER BY GL.levelNumber, LOWER(GZP.name), LOWER(GZ.name)"})
+    "ORDER BY GL.levelNumber, LOWER(GZP.name), LOWER(GZ.name)",
+    "LIMIT #{pagination.pageSize} OFFSET #{pagination.offset}"})
   @Results(value = {
     @Result(property = "level.name", column = "levelName"),
-    @Result(property = "parent.name", column = "parentName"),
+    @Result(property = "parent.name", column = "parentName")
   })
-  List<GeographicZone> searchByParentName(String searchParam);
+  List<GeographicZone> searchByParentName(@Param(value = "searchParam") String searchParam, @Param(value = "pagination") Pagination pagination);
 
   @Select({"SELECT GZ.id, GZ.name, GZ.code, GL.name AS levelName, GZP.name AS parentName",
     "FROM geographic_zones GZ LEFT JOIN geographic_zones GZP ON GZ.parentId = GZP.id",
     "INNER JOIN geographic_levels GL ON GZ.levelId = GL.id",
     "WHERE LOWER(GZ.name) LIKE '%' || LOWER(#{searchParam} || '%')",
-    "ORDER BY GL.levelNumber, LOWER(GZP.name), LOWER(GZ.name)"})
+    "ORDER BY GL.levelNumber, LOWER(GZP.name), LOWER(GZ.name)",
+    "LIMIT #{pagination.pageSize} OFFSET #{pagination.offset}"})
   @Results(value = {
     @Result(property = "level.name", column = "levelName"),
-    @Result(property = "parent.name", column = "parentName"),
+    @Result(property = "parent.name", column = "parentName")
   })
-  List<GeographicZone> searchByName(String searchParam);
+  List<GeographicZone> searchByName(@Param(value = "searchParam") String searchParam, @Param(value = "pagination") Pagination pagination);
 
   @Select({"SELECT GZ.*, GL.levelNumber AS levelNumber, GL.name AS levelName FROM geographic_zones GZ",
     "INNER JOIN geographic_levels GL ON GZ.levelId = GL.id",
@@ -104,4 +107,13 @@ public interface GeographicZoneMapper {
   })
   List<GeographicZone> getAllGeographicZonesAbove(GeographicLevel geographicLevel);
 
+  @Select({"SELECT COUNT(*) FROM geographic_zones GZ INNER JOIN geographic_zones GZP ON GZ.parentId = GZP.id",
+    "INNER JOIN geographic_levels GL ON GZ.levelId = GL.id",
+    "WHERE LOWER(GZP.name) LIKE '%' || LOWER(#{searchParam} || '%')"})
+  Integer getTotalParentSearchResultCount(String param);
+
+  @Select({"SELECT COUNT(*) FROM geographic_zones GZ LEFT JOIN geographic_zones GZP ON GZ.parentId = GZP.id",
+    "INNER JOIN geographic_levels GL ON GZ.levelId = GL.id",
+    "WHERE LOWER(GZ.name) LIKE '%' || LOWER(#{searchParam} || '%')"})
+  Integer getTotalSearchResultCount(String param);
 }

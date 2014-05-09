@@ -13,6 +13,7 @@ package org.openlmis.core.repository;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.GeographicLevel;
 import org.openlmis.core.domain.GeographicZone;
+import org.openlmis.core.domain.Pagination;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.mapper.GeographicLevelMapper;
 import org.openlmis.core.repository.mapper.GeographicZoneMapper;
@@ -74,11 +75,12 @@ public class GeographicZoneRepository {
     return mapper.getWithParentById(id);
   }
 
-  public List<GeographicZone> searchBy(String searchParam, String searchColumn) {
-    if (searchColumn.equals("parentName")) {
-      return mapper.searchByParentName(searchParam);
-    }
-    return mapper.searchByName(searchParam);
+  public List<GeographicZone> searchByParentName(String searchParam, Pagination pagination) {
+    return mapper.searchByParentName(searchParam, pagination);
+  }
+
+  public List<GeographicZone> searchByName(String searchParam, Pagination pagination) {
+    return mapper.searchByName(searchParam, pagination);
   }
 
   public List<GeographicLevel> getAllGeographicLevels() {
@@ -87,5 +89,13 @@ public class GeographicZoneRepository {
 
   public List<GeographicZone> getAllGeographicZonesAbove(GeographicLevel geographicLevel) {
     return mapper.getAllGeographicZonesAbove(geographicLevel);
+  }
+
+  public Integer getTotalParentSearchResultCount(String param) {
+    return mapper.getTotalParentSearchResultCount(param);
+  }
+
+  public Integer getTotalSearchResultCount(String param) {
+    return mapper.getTotalSearchResultCount(param);
   }
 }

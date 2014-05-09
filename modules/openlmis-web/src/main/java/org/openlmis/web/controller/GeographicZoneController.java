@@ -12,6 +12,7 @@ package org.openlmis.web.controller;
 
 import org.openlmis.core.domain.GeographicLevel;
 import org.openlmis.core.domain.GeographicZone;
+import org.openlmis.core.domain.Pagination;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.GeographicZoneService;
 import org.openlmis.web.response.OpenLmisResponse;
@@ -38,6 +39,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.*;
 @Controller
 public class GeographicZoneController extends BaseController {
 
+  public static final String GEO_ZONES = "geoZones";
   @Autowired
   private GeographicZoneService service;
 
@@ -82,8 +84,15 @@ public class GeographicZoneController extends BaseController {
 
   @RequestMapping(value = "/geographicZones", method = GET, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_GEOGRAPHIC_ZONE')")
-  public List<GeographicZone> search(@RequestParam(value = "searchParam") String searchParam, @RequestParam(value = "columnName") String columnName) {
-    return service.searchBy(searchParam, columnName);
+  public List<GeographicZone> search(@RequestParam(value = "searchParam") String searchParam,
+                                     @RequestParam(value = "columnName") String columnName,
+                                     @RequestParam(value = "page", defaultValue = "1") Integer page) {
+    Pagination pagination = service.getPagination(page);
+    pagination.setTotalRecords(service.getTotalSearchResultCount(searchParam, columnName));
+    List<GeographicZone> geographicZones = service.searchBy(searchParam, columnName, page);
+    ResponseEntity<OpenLmisResponse> response = OpenLmisResponse.response(GEO_ZONES, geographicZones);
+    response.getBody().addData("pagination", pagination);
+    return geographicZones;
   }
 
   @RequestMapping(value = "/geographicLevels", method = GET, headers = ACCEPT_JSON)

@@ -13,11 +13,15 @@ package org.openlmis.core.service;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.GeographicLevel;
 import org.openlmis.core.domain.GeographicZone;
+import org.openlmis.core.domain.Pagination;
 import org.openlmis.core.repository.GeographicZoneRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+
+import static java.util.Collections.emptyList;
 
 /**
  * Exposes the services for handling GeographicZone entity.
@@ -27,8 +31,15 @@ import java.util.List;
 @NoArgsConstructor
 public class GeographicZoneService {
 
+  private Integer pageSize;
+
   @Autowired
   GeographicZoneRepository repository;
+
+  @Autowired
+  public void setPageSize(@Value("${supervisory.nodes.page.size}") String pageSize) {
+    this.pageSize = Integer.parseInt(pageSize);
+  }
 
   public void save(GeographicZone geographicZone) {
     geographicZone.validateMandatoryFields();
@@ -52,8 +63,14 @@ public class GeographicZoneService {
     return repository.getById(id);
   }
 
-  public List<GeographicZone> searchBy(String searchParam, String columnName) {
-    return repository.searchBy(searchParam, columnName);
+  public List<GeographicZone> searchBy(String searchParam, String columnName, Integer page) {
+    if (columnName.equals("parentName")) {
+      return repository.searchByParentName(searchParam, getPagination(page));
+    }
+    if (columnName.equals("name")) {
+      return repository.searchByName(searchParam, getPagination(page));
+    }
+    return emptyList();
   }
 
   public List<GeographicLevel> getAllGeographicLevels() {
@@ -62,5 +79,19 @@ public class GeographicZoneService {
 
   public List<GeographicZone> getAllGeographicZonesAbove(GeographicLevel level) {
     return repository.getAllGeographicZonesAbove(level);
+  }
+
+  public Pagination getPagination(Integer page) {
+    return new Pagination(page, pageSize);
+  }
+
+  public Integer getTotalSearchResultCount(String param, String columnName) {
+    if (columnName.equals("parentName")) {
+      return repository.getTotalParentSearchResultCount(param);
+    }
+    if (columnName.equals("name")) {
+      return repository.getTotalSearchResultCount(param);
+    }
+    return 0;
   }
 }

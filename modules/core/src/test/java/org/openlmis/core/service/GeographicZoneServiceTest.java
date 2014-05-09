@@ -17,20 +17,26 @@ import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.domain.GeographicLevel;
 import org.openlmis.core.domain.GeographicZone;
+import org.openlmis.core.domain.Pagination;
 import org.openlmis.core.repository.GeographicZoneRepository;
 import org.openlmis.db.categories.UnitTests;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 
+import java.util.List;
+
+import static java.util.Collections.EMPTY_LIST;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.openlmis.core.matchers.Matchers.dataExceptionMatcher;
+import static org.powermock.api.mockito.PowerMockito.whenNew;
 
 @Category(UnitTests.class)
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(PowerMockRunner.class)
+@PrepareForTest(GeographicZoneService.class)
 public class GeographicZoneServiceTest {
 
   @Rule
@@ -44,6 +50,8 @@ public class GeographicZoneServiceTest {
 
   public static final String ROOT_GEOGRAPHIC_ZONE_CODE = "Root";
   public static final String ROOT_GEOGRAPHIC_ZONE_NAME = "Root";
+
+  private Integer pageSize = 11;
 
   @Test
   public void shouldSaveGeographicZone() throws Exception {
@@ -185,5 +193,63 @@ public class GeographicZoneServiceTest {
 
     expectedEx.expect(dataExceptionMatcher("error.invalid.hierarchy"));
     service.save(country2);
+  }
+
+  @Test
+  public void shouldSearchByParentNameIfSearchCriteriaIsParentName() throws Exception {
+    service.setPageSize(String.valueOf(pageSize));
+    Pagination pagination = new Pagination();
+    whenNew(Pagination.class).withArguments(7, pageSize).thenReturn(pagination);
+
+    service.searchBy("name", "parentName", 7);
+
+    verify(repository).searchByParentName("name", pagination);
+  }
+
+  @Test
+  public void shouldSearchByGeoZoneNameIfSearchCriteriaIsName() throws Exception {
+    service.setPageSize(String.valueOf(pageSize));
+    Pagination pagination = new Pagination();
+    whenNew(Pagination.class).withArguments(7, pageSize).thenReturn(pagination);
+
+    service.searchBy("name", "name", 7);
+
+    verify(repository).searchByName("name", pagination);
+  }
+
+  @Test
+  public void shouldReturnEmptyListIfSearchCriteriaIsInvalid() throws Exception {
+    service.setPageSize(String.valueOf(pageSize));
+    Pagination pagination = new Pagination();
+    whenNew(Pagination.class).withArguments(7, pageSize).thenReturn(pagination);
+
+    List<GeographicZone> geographicZones = service.searchBy("name", "invalidName", 7);
+
+    assertThat(geographicZones, is(EMPTY_LIST));
+    verify(repository, never()).searchByName("name", pagination);
+    verify(repository, never()).searchByParentName("name", pagination);
+  }
+
+  @Test
+  public void shouldReturnTotalParentSearchResultCountIfSearchCriteriaIsParentName() throws Exception {
+    service.getTotalSearchResultCount("name", "parentName");
+
+    verify(repository).getTotalParentSearchResultCount("name");
+  }
+
+  @Test
+  public void shouldReturnTotalGeoZoneNameSearchResultCountIfSearchCriteriaIsName() throws Exception {
+    service.getTotalSearchResultCount("name", "name");
+
+    verify(repository).getTotalSearchResultCount("name");
+  }
+
+  @Test
+  public void shouldReturnTotalCountAsZeroIfSearchCriteriaIsInvalid() throws Exception {
+    Integer count = service.getTotalSearchResultCount("name", "invalidName");
+
+    assertThat(count, is(0));
+    verify(repository, never()).getTotalSearchResultCount("name");
+    verify(repository, never()).getTotalParentSearchResultCount("name");
   }
 }
