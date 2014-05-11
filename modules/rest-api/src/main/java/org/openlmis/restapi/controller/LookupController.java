@@ -81,6 +81,17 @@ public class LookupController {
         return RestResponse.response("programs", lookupService.getAllPrograms());
     }
 
+    @RequestMapping(value = "/rest-api/lookup/program-products", method = RequestMethod.POST, headers = ACCEPT_JSON)
+    public ResponseEntity getProgramProducts( Principal principal) {
+        return RestResponse.response("program-products", lookupService.getAllProgramProducts());
+    }
+
+
+    @RequestMapping(value = "/rest-api/lookup/facility-approved-products", method = RequestMethod.POST, headers = ACCEPT_JSON)
+    public ResponseEntity getFacilityApprovedProducts( Principal principal) {
+        return RestResponse.response("facility-approved-products", lookupService.getAllFacilityTypeApprovedProducts());
+    }
+
     @RequestMapping(value = "/rest-api/lookup/program-by-code", method = RequestMethod.POST, headers = ACCEPT_JSON)
     public ResponseEntity getProgramByCode( Principal principal ,@RequestBody String code) {
         return RestResponse.response("program", lookupService.getProgramByCode(code));

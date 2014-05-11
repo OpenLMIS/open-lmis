@@ -135,5 +135,13 @@ public interface ProgramProductMapper {
       one = @One(select = "org.openlmis.core.repository.mapper.ProductMapper.getById"))
   })
   List<ProgramProduct> getNonFullSupplyProductsForProgram(Program program);
+
+  @Select({"SELECT * FROM program_products pp INNER JOIN products p ON pp.productId = p.id"})
+  @Results(value = {
+          @Result(property = "id", column = "id"),
+          @Result(property = "program.id", column = "programid"),
+          @Result(property = "product.id", column = "productid")
+  })
+  List<ProgramProduct> getAllProgramProducts();
 }
 

@@ -22,4 +22,5 @@ public class ProductCategory {
     private Integer id;
     private String name;
     private String code;
+    private Integer displayOrder;
 }
