@@ -10,6 +10,8 @@
 
 package org.openlmis.report.mapper.lookup;
 
+import org.apache.ibatis.annotations.Result;
+import org.apache.ibatis.annotations.Results;
 import org.apache.ibatis.annotations.Select;
 import org.openlmis.report.model.dto.FacilityType;
 import org.springframework.stereotype.Repository;
@@ -19,9 +21,19 @@ import java.util.List;
 @Repository
 public interface FacilityTypeReportMapper {
 
-  @Select("SELECT id, name " +
+  @Select("SELECT * " +
           "   FROM " +
           "       facility_types order by name")
+  @Results(value = {
+          @Result(property = "id", column = "id"),
+          @Result(property = "name", column = "name"),
+          @Result(property = "code", column = "code"),
+          @Result(property = "nominalMaxmonth", column = "nominalmaxmonth"),
+          @Result(property = "nominalEOP", column = "nominaleop"),
+          @Result(property = "active", column = "active"),
+          @Result(property = "displayOrder", column = "displayorder"),
+
+  })
   List<FacilityType> getAll();
 
   @Select("SELECT id, name " +

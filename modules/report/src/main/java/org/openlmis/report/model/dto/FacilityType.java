@@ -20,4 +20,9 @@ import lombok.NoArgsConstructor;
 public class FacilityType {
     private Integer id;
     private String name;
+    private String code;
+    private Integer nominalMaxmonth;
+    private Integer nominalEOP;
+    private boolean active;
+    private Integer displayOrder;
 }
