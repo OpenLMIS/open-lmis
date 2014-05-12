@@ -48,8 +48,13 @@ public class Pagination {
 
   private void setNumberOfPages() {
     numberOfPages = totalRecords / pageSize;
-    if (totalRecords % pageSize > 0)
+    if (totalRecords % pageSize > 0) {
       numberOfPages++;
+    }
+
+    if (numberOfPages == 0) {
+      numberOfPages++;
+    }
   }
 
   public void setTotalRecords(Integer totalRecords) {

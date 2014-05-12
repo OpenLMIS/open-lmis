@@ -84,7 +84,7 @@ public class GeographicZoneController extends BaseController {
 
   @RequestMapping(value = "/geographicZones", method = GET, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_GEOGRAPHIC_ZONE')")
-  public List<GeographicZone> search(@RequestParam(value = "searchParam") String searchParam,
+  public ResponseEntity<OpenLmisResponse> search(@RequestParam(value = "searchParam") String searchParam,
                                      @RequestParam(value = "columnName") String columnName,
                                      @RequestParam(value = "page", defaultValue = "1") Integer page) {
     Pagination pagination = service.getPagination(page);
@@ -92,7 +92,7 @@ public class GeographicZoneController extends BaseController {
     List<GeographicZone> geographicZones = service.searchBy(searchParam, columnName, page);
     ResponseEntity<OpenLmisResponse> response = OpenLmisResponse.response(GEO_ZONES, geographicZones);
     response.getBody().addData("pagination", pagination);
-    return geographicZones;
+    return response;
   }
 
   @RequestMapping(value = "/geographicLevels", method = GET, headers = ACCEPT_JSON)
