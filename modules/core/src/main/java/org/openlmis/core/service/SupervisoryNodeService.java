@@ -46,7 +46,7 @@ public class SupervisoryNodeService {
 
 
   @Autowired
-  public void setPageSize(@Value("${supervisory.nodes.page.size}") String pageSize) {
+  public void setPageSize(@Value("${search.page.size}") String pageSize) {
     this.pageSize = Integer.parseInt(pageSize);
   }
 
