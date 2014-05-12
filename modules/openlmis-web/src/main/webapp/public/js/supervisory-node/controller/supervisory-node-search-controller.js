@@ -8,46 +8,62 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-function SupervisoryNodeSearchController($scope, $location, $routeParams, SupervisoryNodesSearch) {
+function SupervisoryNodeSearchController($scope, $location, navigateBackService, SupervisoryNodesSearch) {
 
   $scope.searchOptions = [
     {value: "node", name: "option.value.supervisory.node"},
     {value: "parent", name: "option.value.supervisory.node.parent"}
   ];
 
-  $scope.selectedSearchOption = $scope.searchOptions[0];
+  $scope.error = false;
+  $scope.currentPage = 1;
+  $scope.selectedSearchOption = navigateBackService.selectedSearchOption || $scope.searchOptions[0];
 
   $scope.selectSearchType = function (searchOption) {
     $scope.selectedSearchOption = searchOption;
-    $scope.pagination = undefined;
-    $scope.currentPage = undefined;
   };
 
-  $scope.showSupervisoryNodeSearchResults = function (resetPage) {
-    $scope.searchParam = $scope.query;
-    $scope.currentPage = $routeParams.page ? utils.parseIntWithBaseTen($routeParams.page) : 1;
-    if (resetPage) $scope.currentPage = undefined;
-    var searchOption = $scope.selectedSearchOption.value === 'parent' ? true : false;
+  $scope.$on('$viewContentLoaded', function () {
+    $scope.query = navigateBackService.query;
+  });
 
-    SupervisoryNodesSearch.get({page: $scope.currentPage, param: $scope.searchParam, parent: searchOption}, function (data) {
+  $scope.search = function () {
+    if (!$scope.query) return;
+    $scope.query = $scope.query.trim();
+
+    var searchOption = $scope.selectedSearchOption.value === 'parent';
+
+    SupervisoryNodesSearch.get({page: $scope.currentPage, param: $scope.query, parent: searchOption}, function (data) {
       $scope.supervisoryNodeList = data.supervisoryNodes;
       $scope.pagination = data.pagination;
       $scope.resultCount = $scope.pagination.totalRecords;
+      $scope.currentPage = $scope.pagination.page;
+      $scope.error = true;
     }, {});
-    return true;
   };
 
-  $scope.$on('$routeUpdate', function () {
-    $scope.showSupervisoryNodeSearchResults(false);
+  $scope.$watch('currentPage', function () {
+    if ($scope.currentPage !== 0)
+      $scope.search();
   });
 
-  $scope.$watch('currentPage', function () {
-    $location.search('page', $scope.currentPage);
+  $scope.$watch('query', function () {
+    if ($scope.query.length === 0)
+      $scope.clearSearch();
   });
 
   $scope.clearSearch = function () {
     $scope.query = "";
     $scope.resultCount = 0;
+    $scope.supervisoryNodeList = [];
+    $scope.error = false;
     angular.element("#searchSupervisoryNode").focus();
   };
+
+  $scope.triggerSearch = function (event) {
+    if (event.keyCode === 13) {
+      $scope.search();
+    }
+  };
+
 }
