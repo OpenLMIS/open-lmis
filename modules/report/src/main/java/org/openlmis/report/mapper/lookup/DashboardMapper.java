@@ -119,5 +119,7 @@ public interface DashboardMapper {
     @Insert("insert into sms(message,phonenumber,direction,sent) values(#{message},#{phonenumber},#{direction},false);")
     void saveSmsNotification(@Param("message")String message, @Param("phonenumber") String phonenumber, @Param("direction")String direction);
 
+    @Select("select date_Part('year',startdate) from processing_periods where id = #{id}")
+    public String getPeriod(@Param("id")Long id);
 }
 

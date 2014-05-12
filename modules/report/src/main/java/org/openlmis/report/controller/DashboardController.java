@@ -122,5 +122,10 @@ public class DashboardController extends BaseController {
         }
     }
 
+    @RequestMapping(value = "/period/{id}", method = GET, headers = BaseController.ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getPeriod(@PathVariable("id") Long id){
+        return OpenLmisResponse.response("year", this.lookupService.getPeriod(id));
+    }
+
 
 }
