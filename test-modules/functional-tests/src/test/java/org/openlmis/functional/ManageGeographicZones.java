@@ -23,14 +23,13 @@ public class ManageGeographicZones extends TestCaseHelper {
   @BeforeMethod(groups = {"admin"})
   public void setUp() throws InterruptedException, SQLException, IOException {
     super.setup();
-    dbWrapper.deleteGeographicZones();
+    dbWrapper.setupDataForGeoZones();
     loginPage = PageObjectFactory.getLoginPage(testWebDriver, baseUrlGlobal);
   }
 
   @Test(groups = {"admin"})
   public void testE2EManageGeographicZones() throws SQLException {
     dbWrapper.assignRight("Admin", "MANAGE_GEOGRAPHIC_ZONE");
-    dbWrapper.setupDataForGeoZones();
     HomePage homePage = loginPage.loginAs("Admin123", "Admin123");
     ManageGeographicZonesPage manageGeographicZonesPage = homePage.navigateManageGeographicZonesPage();
     homePage.verifyAdminTabs();
@@ -46,7 +45,6 @@ public class ManageGeographicZones extends TestCaseHelper {
   @Test(groups = {"admin"})
   public void testAddingNewGeoZone() throws SQLException {
     dbWrapper.assignRight("Admin", "MANAGE_GEOGRAPHIC_ZONE");
-    dbWrapper.setupDataForGeoZones();
     HomePage homePage = loginPage.loginAs("Admin123", "Admin123");
     ManageGeographicZonesPage manageGeographicZonesPage = homePage.navigateManageGeographicZonesPage();
     homePage.verifyAdminTabs();
@@ -55,12 +53,25 @@ public class ManageGeographicZones extends TestCaseHelper {
     manageGeographicZonesPage.clickOnSaveButton();
   }
 
+  @Test(groups = {"admin"})
+  public void testSearchByGeographicZoneParent() throws SQLException
+  {
+    dbWrapper.assignRight("Admin", "MANAGE_GEOGRAPHIC_ZONE");
+    HomePage homePage = loginPage.loginAs("Admin123", "Admin123");
+    ManageGeographicZonesPage manageGeographicZonesPage = homePage.navigateManageGeographicZonesPage();
+    homePage.verifyAdminTabs();
+    manageGeographicZonesPage.goToGeoZoneTab();
+    manageGeographicZonesPage.changeSearchOption();
+    manageGeographicZonesPage.searchGeoZoneUsingGeoZoneParentName("Dis");
+
+  }
+
   @AfterMethod(groups = {"admin"})
   public void tearDown() throws SQLException {
     HomePage homePage = PageObjectFactory.getHomePage(testWebDriver);
     homePage.logout(baseUrlGlobal);
     dbWrapper.deleteData();
-    dbWrapper.deleteGeographicZones();
     dbWrapper.closeConnection();
   }
+
 }

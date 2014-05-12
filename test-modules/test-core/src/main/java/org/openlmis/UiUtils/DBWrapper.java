@@ -312,6 +312,11 @@ public class DBWrapper {
       "(select id from geographic_zones where code='%s'))", code, name, parentName);
   }
 
+  public void insertGeographicZoneWithLevel(String code, String name, String parentName, int levelId) throws SQLException {
+    update("insert into geographic_zones (code, name, levelId, parentId) " +
+      "values ('%s','%s',%d, (select id from geographic_zones where code='%s'))", code, name, levelId, parentName);
+  }
+
   public void allocateFacilityToUser(String userId, String facilityCode) throws SQLException {
     update("update users set facilityId = (Select id from facilities where code = '%s') where id = '%s'", facilityCode, userId);
   }
@@ -713,20 +718,20 @@ public class DBWrapper {
   }
 
   public void setupDataForGeoZones() throws SQLException {
-    update("insert into geographic_zones (id, code, name, levelid, parentid, catchmentpopulation, latitude, longitude, createdby)\n" +
-      "values(1,'District1','District1',2,1,900,9.90,9.90,8),\n" +
-      "(2,'District2','District2',1,null,900,9.90,9.90,8),\n" +
-      "(3,'District3','District3',3,1,900,9.90,9.90,8),\n" +
-      "(4,'District4','District4',4,1,900,9.90,9.90,8),\n" +
-      "(5,'District5','District5',1,null,900,9.90,9.90,8),\n" +
-      "(6,'District6','District6',2,1,900,9.90,9.90,8),\n" +
-      "(7,'District7','District7',3,1,900,9.90,9.90,8),\n" +
-      "(8,'District8','District8',4,1,900,9.90,9.90,8),\n" +
-      "(9,'District9','District9',2,1,900,9.90,9.90,8),\n" +
-      "(10,'District10','District10',2,1,900,9.90,9.90,8),\n" +
-      "(11,'District11','District11',3,1,900,9.90,9.90,8),\n" +
-      "(12,'District12','District12',4,1,900,9.90,9.90,8),\n" +
-      "(13,'District13','District13',1,null,900,9.90,9.90,8);");
+    update("insert into geographic_zones (code, name, levelId, parentId, catchmentPopulation, latitude, longitude)\n" +
+      "values('District1','District1',2,1,900,9.90,9.90),\n" +
+      "('District2','District2',1,null,900,9.90,9.90),\n" +
+      "('District3','District3',3,1,900,9.90,9.90),\n" +
+      "('District4','District4',4,1,900,9.90,9.90),\n" +
+      "('District5','District5',1,null,900,9.90,9.90),\n" +
+      "('District6','District6',2,1,900,9.90,9.90),\n" +
+      "('District7','District7',3,1,900,9.90,9.90),\n" +
+      "('District8','District8',4,1,900,9.90,9.90),\n" +
+      "('District9','District9',2,1,900,9.90,9.90),\n" +
+      "('District10','District10',2,1,900,9.90,9.90),\n" +
+      "('District11','District11',3,1,900,9.90,9.90),\n" +
+      "('District12','District12',4,1,900,9.90,9.90),\n" +
+      "('District13','District13',1,null,900,9.90,9.90);");
   }
 
   public void insertValuesInRequisition(boolean emergencyRequisitionRequired) throws SQLException {

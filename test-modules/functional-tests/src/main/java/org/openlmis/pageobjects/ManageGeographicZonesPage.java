@@ -95,6 +95,11 @@ public class ManageGeographicZonesPage extends Page {
     testWebDriver.click(geoZoneTab);
   }
 
+  public void changeSearchOption() {
+    testWebDriver.waitForElementToAppear(searchOptionButton);
+    testWebDriver.selectByVisibleText(searchOptionButton,"Geographic zone parent");
+  }
+
   public void addNewGeoZone(String name, String code, String catchment_population, String latitude, String longitude, String level, String parent) {
     testWebDriver.click(addNewButton);
     nameTextField.sendKeys(name);
