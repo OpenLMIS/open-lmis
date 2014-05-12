@@ -20,6 +20,7 @@ import org.openlmis.report.mapper.StockedOutReportMapper;
 import org.openlmis.report.mapper.lookup.FacilityTypeReportMapper;
 import org.openlmis.report.model.ReportData;
 import org.openlmis.report.model.params.StockedOutReportParam;
+import org.openlmis.report.util.StringHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -66,17 +67,17 @@ public class StockedOutReportDataProvider extends ReportDataProvider {
     if (filterCriteria != null) {
       stockedOutReportParam = new StockedOutReportParam();
 
-      stockedOutReportParam.setFacilityTypeId(StringUtils.isBlank(filterCriteria.get("facilityType")[0]) ? 0L : Long.parseLong(filterCriteria.get("facilityType")[0]));
-      if(filterCriteria.containsKey("facility") && !StringUtils.isBlank(filterCriteria.get("facility")[0])){
+      stockedOutReportParam.setFacilityTypeId(StringHelper.isBlank(filterCriteria,"facilityType") ? 0L : Long.parseLong(filterCriteria.get("facilityType")[0]));
+      if(filterCriteria.containsKey("facility") && !StringHelper.isBlank(filterCriteria,"facility")){
         stockedOutReportParam.setFacilityId(Integer.parseInt(filterCriteria.get("facility")[0])); //defaults to 0
       }else{
         stockedOutReportParam.setFacilityId(0);
       }
-      stockedOutReportParam.setRgroupId(StringUtils.isBlank(filterCriteria.get("requisitionGroup")[0]) ? 0 : Integer.parseInt(filterCriteria.get("requisitionGroup")[0]));
-      stockedOutReportParam.setProductCategoryId(StringUtils.isBlank(filterCriteria.get("productCategory")[0]) ? 0 : Integer.parseInt(filterCriteria.get("productCategory")[0]));
-      stockedOutReportParam.setProductId(StringUtils.isBlank(filterCriteria.get("product")[0]) ? 0 : Integer.parseInt(filterCriteria.get("product")[0]));
-      stockedOutReportParam.setProgramId(StringUtils.isBlank(filterCriteria.get("program")[0]) ? 0L : Long.parseLong(filterCriteria.get("program")[0]));
-      stockedOutReportParam.setPeriodId(StringUtils.isBlank(filterCriteria.get("period")[0]) ? 0L : Long.parseLong(filterCriteria.get("period")[0]));
+      stockedOutReportParam.setRgroupId(StringHelper.isBlank(filterCriteria,"requisitionGroup") ? 0 : Integer.parseInt(filterCriteria.get("requisitionGroup")[0]));
+      stockedOutReportParam.setProductCategoryId(StringHelper.isBlank(filterCriteria,"productCategory") ? 0 : Integer.parseInt(filterCriteria.get("productCategory")[0]));
+      stockedOutReportParam.setProductId(StringHelper.isBlank(filterCriteria,"product") ? 0 : Integer.parseInt(filterCriteria.get("product")[0]));
+      stockedOutReportParam.setProgramId(StringHelper.isBlank(filterCriteria,"program") ? 0L : Long.parseLong(filterCriteria.get("program")[0]));
+      stockedOutReportParam.setPeriodId(StringHelper.isBlank(filterCriteria,"period") ? 0L : Long.parseLong(filterCriteria.get("period")[0]));
 
       ProcessingPeriod pPeriod = periodService.getById( stockedOutReportParam.getPeriodId());
       // summarize the filters now. 
