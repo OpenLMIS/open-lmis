@@ -12,6 +12,7 @@ package org.openlmis.report.mapper;
 
 import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.SelectProvider;
 import org.apache.ibatis.mapping.ResultSetType;
 import org.apache.ibatis.session.RowBounds;
@@ -20,6 +21,7 @@ import org.openlmis.report.model.ReportParameter;
 import org.openlmis.report.model.report.UserSummaryReport;
 import org.springframework.stereotype.Repository;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 @Repository
@@ -30,4 +32,7 @@ public interface UserSummaryReportMapper {
     public List<UserSummaryReport> getReport( @Param("filterCriteria") ReportParameter filterCriteria,
                                              @Param("SortCriteria") Map<String, String[]> SortCriteria ,
                                              @Param("RowBounds")RowBounds rowBounds);
+
+    @Select("select rolename, count(*) count from vw_user_role_assignments group by rolename")
+    public List<HashMap> getUserRoleAssignments();
 }

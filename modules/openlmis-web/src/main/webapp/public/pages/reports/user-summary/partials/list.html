@@ -1,13 +1,13 @@
 
 <!--
-  ~ This program was produced for the U.S. Agency for International Development. It was prepared by the USAID | DELIVER PROJECT, Task Order 4. It is part of a project which utilizes code originally licensed under the terms of the Mozilla Public License (MPL) v2 and therefore is licensed under MPL v2 or later.
-  ~
-  ~ This program is free software: you can redistribute it and/or modify it under the terms of the Mozilla Public License as published by the Mozilla Foundation, either version 2 of the License, or (at your option) any later version.
-  ~
-  ~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the Mozilla Public License for more details.
-  ~
-  ~ You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
-  -->
+~ This program was produced for the U.S. Agency for International Development. It was prepared by the USAID | DELIVER PROJECT, Task Order 4. It is part of a project which utilizes code originally licensed under the terms of the Mozilla Public License (MPL) v2 and therefore is licensed under MPL v2 or later.
+~
+~ This program is free software: you can redistribute it and/or modify it under the terms of the Mozilla Public License as published by the Mozilla Foundation, either version 2 of the License, or (at your option) any later version.
+~
+~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the Mozilla Public License for more details.
+~
+~ You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
+-->
 
 <div class="alert alert-success" id="saveSuccessMsgDiv" ng-bind="message" ng-show="message"/>
 <div class="container-fluid">
@@ -25,20 +25,19 @@
                     <div class="app-form" style="padding: 5px;">
                         <form ng-submit="filterGrid()"  name="filterForm" novalidate>
                             <div filter-container class="clearfix">
-                                <program-filter class="form-cell horizontalFilters" required="true"></program-filter>
 
                                 <div class="clearfix ">
                                     <div class="form-cell horizontalFilters" >
                                         <label class="labels">supervisory Node <span class="label-required">*</span></label>
 
                                         <div class="form-fields">
-                                            <select ui-select2 style="width:200px;" class="large-input" name="supervisoryNode"  ng-model="filterObject.supervisoryNodeId">
+                                            <select ui-select2 style="width:200px;" class="large-input" name="supervisoryNode"  ng-model="filterObject.supervisoryNodeId" ng-change ="processSupervisoryNodeChange()">
                                                 <option ng-repeat="option in supervisoryNodes" value="{{option.id}}">{{option.name}}</option>
                                             </select>
                                         </div>
                                     </div>
 
-                            </div>
+                                </div>
                                 <div class="clearfix ">
                                     <div class="form-cell horizontalFilters" >
                                         <label class="labels">Role <span class="label-required">*</span></label>
@@ -51,44 +50,46 @@
                                     </div>
 
                                 </div>
+                                <div class="clearfix ">
+                                    <div class="form-cell horizontalFilters" >
+                                        <label class="labels">Program <span class="label-required">*</span></label>
+
+                                        <div class="form-fields">
+                                            <select ui-select2 style="width:200px;" class="large-input" name="program"  ng-model="filterObject.programId" >
+                                                <option ng-repeat="option in programs" value="{{option.id}}">{{option.name}}</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                </div>
 
 
                             </div>
-
-
-
-
 
                         </form>
                     </div>
                 </div>
                 <div class="content-body">
+                    <div class="span6">
+                        <div ng-show="UserRolePieChartData == undefined">
+                            <label class="chart-note">
+                                No data to render chart
 
-                    <table client-side-sort-pagination class="table table-bordered" ng-show="data == undefined || data.length == 0">
-                        <tr>
-                            <td>No data to show under selected filters</td>
-                        </tr>
-                    </table>
+                            </label>
+                        </div>
+                        <div ng-show ="UserRolePieChartData != undefined">
+                            <label class="labels" style="text-align: center;font-family: bold"># Of Users </span></label>
+                            <div id="userSummaryReportLegend" class="chartLegend"></div>
+                          <dv></dv>  <a-float id="stocked-out-reporting" style="align-items: center" af-option="userSummaryPieChartOption" af-data="UserRolePieChartData" class="chart"></a-float>
+                            </div>
 
-                    <div ng-show="datarows.length > 0">
-                        <div class="pull-right legend" >Page: {{tableParams.page}}, Showing records {{ ((tableParams.page - 1) * tableParams.count) + 1 }} to {{ (tableParams.page ) * tableParams.count }} of {{tableParams.total}} </div>
-                        <table ng-show="datarows.length > 0" class="table-bordered table table-striped pull-right" ng-table="tableParams">
-                            <tbody>
-                            <tr ng-repeat="row in datarows">
-                                <td data-title="'#'" class="number" style="width:20px" >{{ row.no }}</td>
-                                <td data-title="'First Name'" style="width:100px" sortable="firstname" >{{ row.firstname }}</td>
-                                <td data-title="'Last Name'" style="width:100px" sortable="lastname" >{{ row.lastname }}</td>
-                                <td data-title="'Email'" style="width:150px" sortable="email" >{{ row.email}}</td>
-                                <td data-title="'Supervisory Node'" style="width:100px" sortable="supervisorynodename" >{{ row.supervisorynodename }}</td>
-                                <td data-title="'Role Name'" style="width:150px" sortable="rolename" >{{ row.rolename }}</td>
-                                <td data-title="'Program Name'" style="width:150px" sortable="programname" >{{ row.programname }}</td>
+                            <div style="margin-left: 10px; padding-left: 15px;font-weight: bold;">
 
-                            </tr>
-                            </tbody>
-                        </table>
+                            </div>
+                        </div>
                     </div>
+               </div>
 
-                </div>
             </div>
 
         </div>
@@ -96,5 +97,3 @@
     </div>
 
 </div>
-
-

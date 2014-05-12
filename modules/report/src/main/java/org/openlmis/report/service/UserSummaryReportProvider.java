@@ -25,6 +25,7 @@ import org.openlmis.report.model.params.UserSummaryParams;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -92,6 +93,10 @@ public class UserSummaryReportProvider extends ReportDataProvider{
     public String getFilterSummary(Map<String, String[]> params) {
         return getReportFilterData(params).toString();
 
+    }
+
+    public List<HashMap> getUserAssignments(){
+        return reportMapper.getUserRoleAssignments();
     }
 
 

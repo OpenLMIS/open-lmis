@@ -38,7 +38,8 @@ import java.util.*;
 @Service
 @NoArgsConstructor
 public class ReportLookupService {
-
+  @Autowired
+  private UserSummaryExReportMapper userSummaryExReportMapper;
   @Autowired
   private RegimenReportMapper regimenReportMapper;
 
@@ -348,5 +349,12 @@ public class ReportLookupService {
 
   public List<SupervisoryNode> getAllSupervisoryNodesByParentNodeId(Long supervisoryNodeId){
       return supervisoryNodeReportMapper.getAllSupervisoryNodesByParentNodeId(supervisoryNodeId);
+  }
+
+    public List<UserRoleAssignmentsReport> getAllRolesBySupervisoryNodeHavingProgram(Long roleId,Long programId,Long supervisoryNodeId){
+    return userSummaryExReportMapper.getUserRoleAssignments(roleId,programId,supervisoryNodeId);
+    }
+  public List<UserRoleAssignmentsReport>getUserRoleAssignments(){
+      return userSummaryExReportMapper.getUserRoleAssignment();
   }
 }

@@ -7,24 +7,23 @@
  *
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
+package org.openlmis.report.mapper.lookup;
 
-angular.module('user_summary', ['openlmis', 'ngTable','angularCombine','ui.bootstrap.modal','ui.chart','ui.bootstrap.dropdownToggle'])
-    .config(['$routeProvider',
-        function($routeProvider) {
-            $routeProvider.
-                when('/list', {
-                    controller: UserSummaryReportController,
-                    templateUrl: 'partials/list.html',
-                    reloadOnSearch: false
-                }).
-                otherwise({
-                    redirectTo: '/list'
-                });
-        }
-    ]).run(
-    function($rootScope, AuthorizationService) {
-        AuthorizationService.preAuthorize('VIEW_USER_SUMMARY_REPORT');
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
+import org.openlmis.report.model.dto.*;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
+
+@Repository
+public interface UserSummaryExReportMapper {
+
+   @Select ("select supervisorynodename as supervisoryNodeName,rolename as roleName from vw_user_role_assignments " +
+           "where roleid=#{roleId} and programid=#{programId} and supervisorynodeid=#{supervisoryNodeId}" )
+    List<UserRoleAssignmentsReport>getUserRoleAssignments(@Param("roleId") Long roleId,@Param("programId") Long programId,@Param("supervisoryNodeId") Long supervisoryNodeId);
+
+@Select("select rolename,roleid, count(*) totalRoles from vw_user_role_assignments\n" +
+        " group by rolename,roleid\n")
+    List<UserRoleAssignmentsReport>getUserRoleAssignment();
     }
-).config(function(angularCombineConfigProvider) {
-    angularCombineConfigProvider.addConf(/filter-/, '/public/pages/reports/shared/filters.html');
-});

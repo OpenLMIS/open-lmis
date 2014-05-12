@@ -340,4 +340,20 @@ public ResponseEntity<OpenLmisResponse> getSupervisedFacilities(
       List<SupervisoryNode> supervisoryNodes = reportLookupService.getAllSupervisoryNodesByUserHavingActiveProgram(loggedInUserId(request));
       return OpenLmisResponse.response("supervisoryNodes",supervisoryNodes);
   }
+
+    @RequestMapping(value = "/roles/{roleId}/program/{programId}/supevisoryNode/{supervisoryNodeId}", method = GET, headers = ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse>  getUserRoleAssignments(@PathVariable("roleId") Long roleId,
+                                                              @PathVariable("programId") Long programId,
+                                                              @PathVariable("supervisoryNodeId") Long supervisoryNodeId){
+        List<UserRoleAssignmentsReport> userRoleAssignments = reportLookupService.getAllRolesBySupervisoryNodeHavingProgram(roleId,programId,supervisoryNodeId);
+
+        return OpenLmisResponse.response("userRoleAssignments", userRoleAssignments);
+    }
+
+    @RequestMapping(value = "UserRoleAssignments/getUserRoleAssignments", method = GET, headers = BaseController.ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getUserRoleAssignments(HttpServletRequest request){
+        List<UserRoleAssignmentsReport> userSummaryList = reportLookupService.getUserRoleAssignments();
+        return OpenLmisResponse.response("userRoleAssignmentSummary",userSummaryList);
+    }
+
 }
