@@ -7,24 +7,20 @@
  *
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
+package org.openlmis.report.model.dto;
 
-angular.module('user_summary', ['openlmis', 'ngTable','angularCombine','ui.bootstrap.modal','ui.chart','ui.bootstrap.dropdownToggle'])
-    .config(['$routeProvider',
-        function($routeProvider) {
-            $routeProvider.
-                when('/list', {
-                    controller: UserSummaryReportController,
-                    templateUrl: 'partials/list.html',
-                    reloadOnSearch: false
-                }).
-                otherwise({
-                    redirectTo: '/list'
-                });
-        }
-    ]).run(
-    function($rootScope, AuthorizationService) {
-        AuthorizationService.preAuthorize('VIEW_USER_SUMMARY_REPORT');
-    }
-).config(function(angularCombineConfigProvider) {
-    angularCombineConfigProvider.addConf(/filter-/, '/public/pages/reports/shared/filters.html');
-});
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class UserRoleAssignmentsReport {
+    private String roleName;
+    private String supervisoryNodeName;
+    private Integer totalRoles;
+    private Long roleid;
+
+}
