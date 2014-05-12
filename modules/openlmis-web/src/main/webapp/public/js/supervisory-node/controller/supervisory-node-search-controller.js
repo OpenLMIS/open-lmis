@@ -10,7 +10,6 @@
 
 function SupervisoryNodeSearchController($scope, $location, $routeParams, SupervisoryNodesSearch) {
 
-
   $scope.searchOptions = [
     {value: "node", name: "option.value.supervisory.node"},
     {value: "parent", name: "option.value.supervisory.node.parent"}
@@ -24,11 +23,10 @@ function SupervisoryNodeSearchController($scope, $location, $routeParams, Superv
     $scope.currentPage = undefined;
   };
 
-
   $scope.showSupervisoryNodeSearchResults = function (resetPage) {
     $scope.searchParam = $scope.query;
     $scope.currentPage = $routeParams.page ? utils.parseIntWithBaseTen($routeParams.page) : 1;
-    if(resetPage) $scope.currentPage = undefined;
+    if (resetPage) $scope.currentPage = undefined;
     var searchOption = $scope.selectedSearchOption.value === 'parent' ? true : false;
 
     SupervisoryNodesSearch.get({page: $scope.currentPage, param: $scope.searchParam, parent: searchOption}, function (data) {
@@ -52,6 +50,4 @@ function SupervisoryNodeSearchController($scope, $location, $routeParams, Superv
     $scope.resultCount = 0;
     angular.element("#searchSupervisoryNode").focus();
   };
-
-
 }

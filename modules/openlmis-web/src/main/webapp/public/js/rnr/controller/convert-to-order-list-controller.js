@@ -30,22 +30,21 @@ function ConvertToOrderListController($scope, Orders, RequisitionForConvertToOrd
     $scope.selectedItems.length = 0;
     $scope.currentPage = $routeParams.page ? utils.parseIntWithBaseTen($routeParams.page) : 1;
     $scope.selectedSearchOption = _.findWhere($scope.searchOptions,
-      {value: $routeParams.searchType}) || $scope.searchOptions[0];
+        {value: $routeParams.searchType}) || $scope.searchOptions[0];
     $scope.query = $routeParams.searchVal;
 
     RequisitionForConvertToOrder.get({page: $scope.currentPage, searchType: $scope.selectedSearchOption.value,
-        searchVal: $scope.query, sortBy: $scope.sortOptions.fields[0], sortDirection: $scope.sortOptions.directions[0]},
-      function (data) {
-        $scope.filteredRequisitions = data.rnr_list;
+          searchVal: $scope.query, sortBy: $scope.sortOptions.fields[0], sortDirection: $scope.sortOptions.directions[0]},
+        function (data) {
+          $scope.filteredRequisitions = data.rnr_list;
 
-        $scope.numberOfPages = data.number_of_pages || 1;
-        $scope.resultCount = $scope.filteredRequisitions.length;
-        if (!$scope.resultCount) $scope.noRequisitions = true;
-      }, function () {
-        $location.search('page', 1);
-      });
+          $scope.numberOfPages = data.number_of_pages || 1;
+          $scope.resultCount = $scope.filteredRequisitions.length;
+          if (!$scope.resultCount) $scope.noRequisitions = true;
+        }, function () {
+          $location.search('page', 1);
+        });
   };
-
 
   $scope.$watch('sortOptions', function (newValue, oldValue) {
     if (newValue.fields[0] != oldValue.fields[0] || newValue.directions[0] != oldValue.directions[0])
