@@ -10,21 +10,22 @@
 
 function GeoZoneSearchController($scope, GeographicZones, $location, navigateBackService) {
 
-  $scope.$on('$viewContentLoaded', function () {
-    $scope.query = navigateBackService.query;
-    $scope.search();
-  });
-
   $scope.searchOptions = [
     {value: "name", name: "option.value.geo.zone"},
     {value: "parentName", name: "option.value.geo.zone.parent"}
   ];
 
+  $scope.error = false;
+  $scope.currentPage = 1;
   $scope.selectedSearchOption = navigateBackService.selectedSearchOption || $scope.searchOptions[0];
 
   $scope.selectSearchType = function (searchOption) {
     $scope.selectedSearchOption = searchOption;
   };
+
+  $scope.$on('$viewContentLoaded', function () {
+    $scope.query = navigateBackService.query;
+  });
 
   $scope.editGeoZone = function (id) {
     var data = {query: $scope.query, selectedSearchOption: $scope.selectedSearchOption};
@@ -32,19 +33,39 @@ function GeoZoneSearchController($scope, GeographicZones, $location, navigateBac
     $location.path('edit/' + id);
   };
 
-  $scope.clearSearch = function () {
-    $scope.query = "";
-    $scope.resultCount = 0;
-    angular.element("#searchGeoZone").focus();
-  };
+  $scope.$watch('currentPage', function () {
+    if ($scope.currentPage != 0)
+      $scope.search();
+  });
+
+  $scope.$watch('query', function () {
+    if ($scope.query.length == 0)
+      $scope.clearSearch();
+  });
 
   $scope.search = function () {
     if (!$scope.query) return;
-
     $scope.query = $scope.query.trim();
-    GeographicZones.get({"searchParam": $scope.query, "columnName": $scope.selectedSearchOption.value}, function (data) {
-      $scope.geoZoneList = data.geographicZoneList;
-      $scope.resultCount = $scope.geoZoneList.length;
+    GeographicZones.get({"searchParam": $scope.query, "columnName": $scope.selectedSearchOption.value, "page": $scope.currentPage}, function (data) {
+      $scope.geoZoneList = data.geoZones;
+      $scope.pagination = data.pagination;
+      $scope.resultCount = $scope.pagination.totalRecords;
+      $scope.currentPage = $scope.pagination.page;
+      $scope.error = true;
     }, {});
-  }
+  };
+
+  $scope.clearSearch = function () {
+    $scope.query = "";
+    $scope.resultCount = 0;
+    $scope.geoZoneList = [];
+    $scope.error = false;
+    angular.element("#searchGeoZone").focus();
+  };
+
+  $scope.triggerSearch = function (event) {
+    if (event.keyCode == 13) {
+      $scope.search();
+    }
+  };
 }

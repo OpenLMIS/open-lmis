@@ -34,7 +34,8 @@
             </li>
           </ul>
         </div>
-        <input id='searchGeoZone' type="text" class="span5" ng-model="query" maxlength="50"/>
+        <input id='searchGeoZone' type="text" class="span5" ng-model="query" maxlength="50"
+               ng-keydown="triggerSearch($event)"/>
         <button class="btn" ng-click="search()">
           <i id='searchIcon' class="icon-search"></i>
         </button>
@@ -42,36 +43,39 @@
     </div>
   </div>
 
-  <table class="table table-striped table-bordered search-list" ng-show="geoZoneList.length">
-  <thead>
-    <tr class="gradient-header resultCountHeader">
-      <th colspan="5">
-          <span ng-switch on="resultCount">
-          <h3 ng-switch-when="0" openlmis-message="msg.no.matches|query"></h3>
-          <h3 ng-switch-when="1" openlmis-message="msg.one.match|query"></h3>
-          <h3 ng-switch-default openlmis-message="msg.many.matches|resultCount|query"></h3>
-            </span>
-        <a id="closeButton" class="close-btn" href="" ng-click="clearSearch()" tabindex="-1"></a>
-      </th>
-    </tr>
-    <tr id="nullResultCounter" class="gradient-header" ng-hide="resultCount === 0">
-      <th openlmis-message="header.name"></th>
-      <th openlmis-message="header.code"></th>
-      <th openlmis-message="header.level"></th>
-      <th openlmis-message="header.parent"></th>
-    </tr>
-    </thead>
-    <tbody id="geoZoneList">
-    <tr id="searchResult" ng-repeat="geoZone in geoZoneList">
-      <td id="name">
-        <a href="" ng-click="editGeoZone(geoZone.id)" ng-bind="geoZone.name"></a>
-      </td>
-      <td id="code" ng-bind="geoZone.code"></td>
-      <td id="levelName" ng-bind="geoZone.level.name"></td>
-      <td id="parentName" ng-bind="geoZone.parent.name"></td>
-    </tr>
-    </tbody>
-  </table>
-</div>
+  <div>
+    <table class="table table-striped table-bordered search-list" ng-show="error && query.length">
+      <thead>
+      <tr class="gradient-header resultCountHeader">
+        <th colspan="5">
+            <span ng-switch on="resultCount">
+            <h3 ng-switch-when="0" openlmis-message="msg.no.matches|query"></h3>
+            <h3 ng-switch-when="1" openlmis-message="msg.one.match|query"></h3>
+            <h3 ng-switch-default openlmis-message="msg.many.matches|resultCount|query"></h3>
+              </span>
+          <a id="closeButton" class="close-btn" href="" ng-click="clearSearch()" tabindex="-1"></a>
+        </th>
+      </tr>
+      <tr id="nullResultCounter" class="gradient-header" ng-show="geoZoneList.length">
+        <th openlmis-message="header.name"></th>
+        <th openlmis-message="header.code"></th>
+        <th openlmis-message="header.level"></th>
+        <th openlmis-message="header.parent"></th>
+      </tr>
+      </thead>
+      <tbody id="geoZoneList">
+      <tr id="searchResult" ng-repeat="geoZone in geoZoneList">
+        <td id="name">
+          <a href="" ng-click="editGeoZone(geoZone.id)" ng-bind="geoZone.name"></a>
+        </td>
+        <td id="code" ng-bind="geoZone.code"></td>
+        <td id="levelName" ng-bind="geoZone.level.name"></td>
+        <td id="parentName" ng-bind="geoZone.parent.name"></td>
+      </tr>
+      </tbody>
+    </table>
 
+    <openlmis-pagination num-pages="pagination.numberOfPages" current-page="currentPage" ng-show="geoZoneList.length"
+                         max-size="10"></openlmis-pagination>
+  </div>
 </div>

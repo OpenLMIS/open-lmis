@@ -11,7 +11,7 @@
 var geoZoneModule = angular.module('geo-zone', ['openlmis', 'ui.bootstrap.modal', 'ui.bootstrap.dialog', 'ui.bootstrap.dropdownToggle']).
     config(['$routeProvider', function ($routeProvider) {
       $routeProvider.
-          when('/search', {controller: GeoZoneSearchController, templateUrl: 'partials/search.html'}).
+          when('/search', {controller: GeoZoneSearchController, templateUrl: 'partials/search.html', reloadOnSearch: false}).
           when('/create-geo-zone', {controller: GeoZoneController, templateUrl: 'partials/create.html', resolve: GeoZoneController.resolve}).
           when('/edit/:id', {controller: GeoZoneController, templateUrl: 'partials/create.html', resolve: GeoZoneController.resolve}).
           otherwise({redirectTo: '/search'});
