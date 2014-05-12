@@ -98,7 +98,7 @@
     <div>
         <label class="labels">Requisition Groups <span ng-show="requiredFilters.requisitionGroup" class="label-required">*</span></label><div>
         <select class="input-large" ng-model="filter.requisitionGroup" ng-change="filterChanged();">
-                 <option ng-repeat="requisitionGroup in requisitionGroups" value="{{ requisitionGroup.id }}" ng-selected="requisitionGroup.id == filter.requisitionGroup">{{requisitionGroup.name}}</option>
+                 <option ng-repeat="requisitionGroup in requisitionGroups" value="{{ requisitionGroup.id }}" ng-selected="filter.requisitionGroup == requisitionGroup.id">{{requisitionGroup.name}}</option>
             </select>
         </div>
     </div>
