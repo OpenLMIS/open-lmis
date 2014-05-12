@@ -379,6 +379,7 @@ public class DBWrapper {
     update("delete from facility_ftp_details");
     update("delete from facilities");
     update("delete from geographic_zones where code not in ('Root','Arusha','Dodoma', 'Ngorongoro')");
+    update("delete from role_rights where rightname = 'MANAGE_GEOGRAPHIC_ZONE'");
     update("delete from processing_periods");
     update("delete from processing_schedules");
     update("delete from atomfeed.event_records");
@@ -391,6 +392,10 @@ public class DBWrapper {
     update("delete from requisition_line_items");
     update("delete from regimen_line_items");
     update("delete from requisitions");
+  }
+
+  public void deleteGeographicZones() throws SQLException{
+    update("delete from geographic_zones");
   }
 
   public void insertRole(String role, String description) throws SQLException {
@@ -705,6 +710,23 @@ public class DBWrapper {
   public void updateSupplyLines(String previousFacilityCode, String newFacilityCode) throws SQLException {
     update("update supply_lines SET supplyingFacilityId=(select id from facilities where code = '" + newFacilityCode + "') " +
       "where supplyingFacilityId=(select id from facilities where code = '" + previousFacilityCode + "');");
+  }
+
+  public void setupDataForGeoZones() throws SQLException {
+    update("insert into geographic_zones (id, code, name, levelid, parentid, catchmentpopulation, latitude, longitude, createdby)\n" +
+      "values(1,'District1','District1',2,1,900,9.90,9.90,8),\n" +
+      "(2,'District2','District2',1,null,900,9.90,9.90,8),\n" +
+      "(3,'District3','District3',3,1,900,9.90,9.90,8),\n" +
+      "(4,'District4','District4',4,1,900,9.90,9.90,8),\n" +
+      "(5,'District5','District5',1,null,900,9.90,9.90,8),\n" +
+      "(6,'District6','District6',2,1,900,9.90,9.90,8),\n" +
+      "(7,'District7','District7',3,1,900,9.90,9.90,8),\n" +
+      "(8,'District8','District8',4,1,900,9.90,9.90,8),\n" +
+      "(9,'District9','District9',2,1,900,9.90,9.90,8),\n" +
+      "(10,'District10','District10',2,1,900,9.90,9.90,8),\n" +
+      "(11,'District11','District11',3,1,900,9.90,9.90,8),\n" +
+      "(12,'District12','District12',4,1,900,9.90,9.90,8),\n" +
+      "(13,'District13','District13',1,null,900,9.90,9.90,8);");
   }
 
   public void insertValuesInRequisition(boolean emergencyRequisitionRequired) throws SQLException {

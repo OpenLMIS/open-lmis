@@ -91,6 +91,9 @@ public class HomePage extends Page {
   @FindBy(how = ID, using = "viewOrderHeader")
   private static WebElement viewOrdersHeader = null;
 
+  @FindBy(how = ID, using = "supervisoryNodeAddNew")
+  private static WebElement createSupervisoryNode = null;
+
   @FindBy(how = ID, using = "add-new-facility")
   private static WebElement createFacility = null;
 
@@ -178,6 +181,9 @@ public class HomePage extends Page {
   @FindBy(how = ID, using = "managePodHeader")
   private static WebElement viewManagePODHeader = null;
 
+  @FindBy(how = ID, using = "geoZoneTab")
+  private static WebElement geoZoneTab = null;
+
   public HomePage(TestWebDriver driver) {
     super(driver);
     PageFactory.initElements(new AjaxElementLocatorFactory(TestWebDriver.getDriver(), 10), this);
@@ -202,10 +208,26 @@ public class HomePage extends Page {
     return ManageFacilityPage.getInstance(testWebDriver);
   }
 
+  public ManageGeographicZonesPage navigateManageGeographicZonesPage() {
+    testWebDriver.waitForElementToAppear(AdministrationMenuItem);
+    AdministrationMenuItem.click();
+    testWebDriver.waitForElementToAppear(manageLink);
+    manageLink.click();
+    testWebDriver.waitForElementToAppear(geoZoneTab);
+    testWebDriver.keyPress(geoZoneTab);
+    return ManageGeographicZonesPage.getInstance(testWebDriver);
+  }
+
   public void clickCreateFacilityButton() {
     testWebDriver.waitForElementToAppear(createFacility);
     testWebDriver.sleep(1000);
     createFacility.click();
+  }
+
+  public void clickCreateSupervisoryNodeButton() {
+    testWebDriver.waitForElementToAppear(createSupervisoryNode);
+    testWebDriver.sleep(1000);
+    createSupervisoryNode.click();
   }
 
   public void verifyHeader(String headingToVerify) {

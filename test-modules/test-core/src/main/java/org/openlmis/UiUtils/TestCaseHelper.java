@@ -172,6 +172,7 @@ public class TestCaseHelper {
     dbWrapper.insertFacilityApprovedProduct(product2, program, facilityTypeCode);
   }
 
+
   public void setupProgramProductTestDataWithCategories(String categoryCode,
                                                         String categoryName, String product,
                                                         String productName,

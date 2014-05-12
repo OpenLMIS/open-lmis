@@ -48,14 +48,22 @@ public class PageObjectFactory {
   private static ReportPage instanceOfReportPage;
   private static ManageSchedulePage instanceOfManageSchedulePage;
   private static TemplateConfigPage instanceOfTemplateConfigPage;
-  private static PeriodsPage instanceOfPeriodsPage;
+  private static ManageGeographicZonesPage instanceOfManageGeographicZonesPage;
   private static ConfigureOrderNumberPage instanceOfConfigureOrderNumberPage;
+  private static PeriodsPage instanceOfPeriodsPage;
 
   public static ManageFacilityPage getManageFacilityPage(TestWebDriver testWebDriver) {
     if (instanceOfManageFacilityPage == null) {
       instanceOfManageFacilityPage = new ManageFacilityPage(testWebDriver);
     }
     return instanceOfManageFacilityPage;
+  }
+
+  public static ManageGeographicZonesPage getManageGeographicZonesPage(TestWebDriver testWebDriver) {
+    if (instanceOfManageGeographicZonesPage == null) {
+      instanceOfManageGeographicZonesPage = new ManageGeographicZonesPage(testWebDriver);
+    }
+    return instanceOfManageGeographicZonesPage;
   }
 
   public static DistributionPage getDistributionPage(TestWebDriver testWebDriver) {
