@@ -94,15 +94,15 @@ public class TestCaseHelper {
     testWebDriver = new TestWebDriver(driverFactory.loadDriver(browser));
   }
 
-  public void setupTestDataToInitiateRnR(boolean configureTemplate, String program, String user, String userId, List<String> rightsList) throws SQLException {
+  public void setupTestDataToInitiateRnR(boolean configureTemplate, String program, String user, List<String> rightsList) throws SQLException {
     setupProductTestData("P10", "P11", program, "lvl3_hospital");
     dbWrapper.insertFacilities("F10", "F11");
     if (configureTemplate)
       dbWrapper.configureTemplate(program);
 
-    setupTestUserRoleRightsData(userId, user, rightsList);
+    setupTestUserRoleRightsData(user, rightsList);
     dbWrapper.insertSupervisoryNode("F10", "N1", "Node 1", "null");
-    dbWrapper.insertRoleAssignment(userId, "store in-charge");
+    dbWrapper.insertRoleAssignment(user, "store in-charge");
     dbWrapper.insertSchedule("Q1stM", "QuarterMonthly", "QuarterMonth");
     dbWrapper.insertSchedule("M", "Monthly", "Month");
     dbWrapper.insertProcessingPeriod("Period1", "first period", "2012-12-01", "2013-01-15", 1, "Q1stM");
@@ -111,34 +111,34 @@ public class TestCaseHelper {
     dbWrapper.insertSupplyLines("N1", program, "F10", true);
   }
 
-  public void setupTestUserRoleRightsData(String userId, String userSIC, List<String> rightsList) throws SQLException {
+  public void setupTestUserRoleRightsData(String userSIC, List<String> rightsList) throws SQLException {
     dbWrapper.insertRole("store in-charge", "");
     dbWrapper.insertRole("district pharmacist", "");
     for (String rights : rightsList) {
       dbWrapper.assignRight("store in-charge", rights);
     }
     String passwordUsers = "TQskzK3iiLfbRVHeM1muvBCiiKriibfl6lh8ipo91hb74G3OvsybvkzpPI4S3KIeWTXAiiwlUU0iiSxWii4wSuS8mokSAieie";
-    dbWrapper.insertUser(userId, userSIC, passwordUsers, "F10", "Fatima_Doe@openlmis.com");
+    dbWrapper.insertUser(userSIC, passwordUsers, "F10", "Fatima_Doe@openlmis.com");
   }
 
-  protected void createUserAndAssignRoleRights(String userId, String user, String email, String homeFacility, String role, List<String> rightsList) throws SQLException {
+  protected void createUserAndAssignRoleRights(String user, String email, String homeFacility, String role, List<String> rightsList) throws SQLException {
     dbWrapper.insertRole(role, "");
     for (String rights : rightsList) {
       dbWrapper.assignRight(role, rights);
     }
     String passwordUsers = "TQskzK3iiLfbRVHeM1muvBCiiKriibfl6lh8ipo91hb74G3OvsybvkzpPI4S3KIeWTXAiiwlUU0iiSxWii4wSuS8mokSAieie";
-    dbWrapper.insertUser(userId, user, passwordUsers, homeFacility, email);
-    dbWrapper.insertRoleAssignment(userId, role);
+    dbWrapper.insertUser(user, passwordUsers, homeFacility, email);
+    dbWrapper.insertRoleAssignment(user, role);
   }
 
   public void setupRnRTestDataRnRForCommTrack(boolean configureGenericTemplate, String program, String user,
-                                              String userId, List<String> rightsList) throws SQLException {
+                                              List<String> rightsList) throws SQLException {
     setupProductTestData("P10", "P11", program, "lvl3_hospital");
     dbWrapper.insertFacilities("F10", "F11");
 
-    setupTestUserRoleRightsData(userId, user, rightsList);
+    setupTestUserRoleRightsData(user, rightsList);
     dbWrapper.insertSupervisoryNode("F10", "N1", "Node 1", "null");
-    dbWrapper.insertRoleAssignment(userId, "store in-charge");
+    dbWrapper.insertRoleAssignment(user, "store in-charge");
     dbWrapper.insertSchedule("Q1stM", "QuarterMonthly", "QuarterMonth");
     dbWrapper.insertSchedule("M", "Monthly", "Month");
     setupRequisitionGroupData("RG1", "RG2", "N1", "N2", "F10", "F11");
@@ -155,13 +155,13 @@ public class TestCaseHelper {
     }
   }
 
-  public void setupTestDataToApproveRnR(String user, String userId, List<String> rightsList) throws SQLException {
+  public void setupTestDataToApproveRnR(String user, List<String> rightsList) throws SQLException {
     for (String rights : rightsList)
       dbWrapper.assignRight("store in-charge", rights);
     String passwordUsers = "TQskzK3iiLfbRVHeM1muvBCiiKriibfl6lh8ipo91hb74G3OvsybvkzpPI4S3KIeWTXAiiwlUU0iiSxWii4wSuS8mokSAieie";
-    dbWrapper.insertUser(userId, user, passwordUsers, "F10", "");
+    dbWrapper.insertUser(user, passwordUsers, "F10", "");
     dbWrapper.insertSupervisoryNodeWithoutDelete("F10", "N2", "Node 2", "N1");
-    dbWrapper.insertRoleAssignmentForSupervisoryNodeForProgramId1(userId, "store in-charge", "N1");
+    dbWrapper.insertRoleAssignmentForSupervisoryNodeForProgramId(user, "store in-charge", "N1");
   }
 
   public void setupProductTestData(String product1, String product2, String program, String facilityTypeCode) throws SQLException {
@@ -205,14 +205,14 @@ public class TestCaseHelper {
   public void setupTestData(boolean isPreviousPeriodRnRRequired) throws SQLException {
     List<String> rightsList = asList("CREATE_REQUISITION", "VIEW_REQUISITION", "AUTHORIZE_REQUISITION");
     if (isPreviousPeriodRnRRequired)
-      setupRnRTestDataRnRForCommTrack(false, "HIV", "commTrack", "700", rightsList);
+      setupRnRTestDataRnRForCommTrack(false, "HIV", "commTrack", rightsList);
     else
-      setupRnRTestDataRnRForCommTrack(true, "HIV", "commTrack", "700", rightsList);
+      setupRnRTestDataRnRForCommTrack(true, "HIV", "commTrack", rightsList);
   }
 
   public void setupDataRequisitionApprove() throws SQLException {
     List<String> rightsList = asList("APPROVE_REQUISITION", "CONVERT_TO_ORDER");
-    setupTestDataToApproveRnR("commTrack1", "701", rightsList);
+    setupTestDataToApproveRnR("commTrack1", rightsList);
   }
 
   public void setupDataForDeliveryZone(boolean multipleFacilityInstances, String deliveryZoneCodeFirst, String deliveryZoneCodeSecond,
@@ -246,7 +246,7 @@ public class TestCaseHelper {
     dbWrapper.insertDeliveryZoneMembers(deliveryZoneCodeFirst, facilityCodeFourth);
   }
 
-  public void setupTestDataToInitiateRnRAndDistribution(String facilityCode1, String facilityCode2, boolean configureTemplate, String program, String user, String userId,
+  public void setupTestDataToInitiateRnRAndDistribution(String facilityCode1, String facilityCode2, boolean configureTemplate, String program, String user,
                                                         List<String> rightsList, String programCode, String geoLevel1, String geoLevel2,
                                                         String parentGeoLevel) throws SQLException {
     setupProductTestData("P10", "P11", program, "lvl3_hospital");
@@ -255,9 +255,9 @@ public class TestCaseHelper {
     if (configureTemplate)
       dbWrapper.configureTemplate(program);
 
-    setupTestUserRoleRightsData(userId, user, rightsList);
+    setupTestUserRoleRightsData(user, rightsList);
     dbWrapper.insertSupervisoryNode(facilityCode1, "N1", "Node 1", "null");
-    dbWrapper.insertRoleAssignment(userId, "store in-charge");
+    dbWrapper.insertRoleAssignment(user, "store in-charge");
     dbWrapper.insertSchedule("Q1stM", "QuarterMonthly", "QuarterMonth");
     dbWrapper.insertSchedule("M", "Monthly", "Month");
     setupRequisitionGroupData("RG1", "RG2", "N1", "N2", facilityCode1, facilityCode2);
@@ -522,7 +522,7 @@ public class TestCaseHelper {
     String userSIC = dataMap.get("user");
 
     List<String> rightsList = asList("MANAGE_DISTRIBUTION");
-    setupTestDataToInitiateRnRAndDistribution(facilityCodeFirst, facilityCodeSecond, true, programFirst, userSIC, "200", rightsList,
+    setupTestDataToInitiateRnRAndDistribution(facilityCodeFirst, facilityCodeSecond, true, programFirst, userSIC, rightsList,
       programSecond, "District1", "Ngorongoro", "Ngorongoro");
 
     setupDataForDeliveryZone(true, deliveryZoneCodeFirst, deliveryZoneCodeSecond, dataMap.get("firstDeliveryZoneName"),

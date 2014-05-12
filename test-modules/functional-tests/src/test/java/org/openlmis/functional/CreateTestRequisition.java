@@ -50,7 +50,7 @@ public class CreateTestRequisition extends TestCaseHelper {
   public void testCreateRequisitionWithEmergencyStatus(String program, String userSIC, String categoryCode, String password,
                                                        String regimenCode, String regimenName, String regimenCode2, String regimenName2) throws SQLException {
     List<String> rightsList = asList("CREATE_REQUISITION", "VIEW_REQUISITION");
-    setupTestDataToInitiateRnR(true, program, userSIC, "200", rightsList);
+    setupTestDataToInitiateRnR(true, program, userSIC, rightsList);
     dbWrapper.insertRegimenTemplateConfiguredForProgram(program, categoryCode, regimenCode, regimenName, true);
     dbWrapper.insertRegimenTemplateConfiguredForProgram(program, categoryCode, regimenCode2, regimenName2, false);
     dbWrapper.insertRegimenTemplateColumnsForProgram(program);

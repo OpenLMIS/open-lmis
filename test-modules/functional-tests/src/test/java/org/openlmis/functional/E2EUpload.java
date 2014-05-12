@@ -60,7 +60,7 @@ public class E2EUpload extends TestCaseHelper {
     String userName = "User123";
     String userId = "200";
     dbWrapper.alterUserID(userName, userId);
-    dbWrapper.insertRoleAssignment(userId, "User");
+    dbWrapper.insertRoleAssignment(userName, "User");
 
     verifyInValidProductGroupUpload();
     verifyValidProductGroupUpload();
@@ -88,7 +88,7 @@ public class E2EUpload extends TestCaseHelper {
 
     verifyInvalidFacilityTypeToProductMappingUpload();
     verifyValidFacilityTypeToProductMappingUpload();
-    dbWrapper.allocateFacilityToUser(userId, "F10");
+    dbWrapper.allocateFacilityToUser(userName, "F10");
 
     verifyInvalidProgramSupportedByFacilitiesUpload();
     verifyValidProgramSupportedByFacilitiesUpload();

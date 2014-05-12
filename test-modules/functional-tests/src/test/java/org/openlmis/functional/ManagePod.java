@@ -115,9 +115,9 @@ public class ManagePod extends TestCaseHelper {
     dbWrapper.insertFacilities("F10", "F11");
     dbWrapper.configureTemplate(program);
     List<String> rightsList = asList(VIEW_REQUISITION);
-    setupTestUserRoleRightsData("200", userSIC, rightsList);
+    setupTestUserRoleRightsData(userSIC, rightsList);
     dbWrapper.insertSupervisoryNode("F10", "N1", "Node 1", "null");
-    dbWrapper.insertRoleAssignment("200", "store in-charge");
+    dbWrapper.insertRoleAssignment(userSIC, "store in-charge");
     dbWrapper.insertSchedule("Q1stM", "QuarterMonthly", "QuarterMonth");
     dbWrapper.insertSchedule("M", "Monthly", "Month");
     dbWrapper.insertProcessingPeriod("Period1", "first period", "2012-12-01", "2013-01-15", 1, "Q1stM");
@@ -142,10 +142,18 @@ public class ManagePod extends TestCaseHelper {
   }
 
   @Then("^I should see list of orders to manage POD for \"([^\"]*)\" Rnr$")
-  public void verifyListOfOrdersOnPodScreen(String rnrType) {
+  public void verifyListOfOrdersOnPodScreen(String rnrType) throws SQLException {
+    NumberFormat numberFormat = NumberFormat.getIntegerInstance();
+    numberFormat.setMinimumIntegerDigits(8);
+    numberFormat.setGroupingUsed(false);
+    int id = dbWrapper.getMaxRnrID();
+    String orderNumber = "OHIV" + numberFormat.format(id) + "R";
+    if (rnrType.equals("Emergency")) {
+      orderNumber = "OHIV" + numberFormat.format(id) + "E";
+    }
     testWebDriver.sleep(1000);
     assertEquals("Central Hospital", testWebDriver.findElement(By.xpath("//div/span[contains(text(),'Central Hospital')]")).getText());
-    assertEquals("OHIV00000001R", testWebDriver.findElement(By.xpath("//div/span[contains(text(),'HIV')]")).getText());
+    assertEquals(orderNumber, testWebDriver.findElement(By.xpath("//div/span[contains(text(),'" + orderNumber + "')]")).getText());
     assertEquals("Transfer failed", testWebDriver.findElement(By.xpath("//div/span[contains(text(),'Transfer failed')]")).getText());
     assertTrue(testWebDriver.findElement(By.xpath("//div/span[contains(text(),'Period1')]")).getText().contains("Period1"));
     assertEquals("Update POD", testWebDriver.findElement(By.xpath("//div/a[contains(text(),'Update POD')]")).getText());
@@ -195,9 +203,8 @@ public class ManagePod extends TestCaseHelper {
     dbWrapper.insertFacilities("F10", "F11");
     dbWrapper.configureTemplate(program);
     List<String> rightsList = asList(CONVERT_TO_ORDER, VIEW_ORDER, MANAGE_POD);
-    setupTestUserRoleRightsData("200", userSIC, rightsList);
+    setupTestUserRoleRightsData(userSIC, rightsList);
     dbWrapper.insertSupervisoryNode("F10", "N1", "Node 1", "null");
-    //dbWrapper.insertRoleAssignment("200", "store in-charge");
     dbWrapper.insertSchedule("Q1stM", "QuarterMonthly", "QuarterMonth");
     dbWrapper.insertSchedule("M", "Monthly", "Month");
     dbWrapper.insertProcessingPeriod("Period1", "first period", "2012-12-01", "2013-01-15", 1, "Q1stM");

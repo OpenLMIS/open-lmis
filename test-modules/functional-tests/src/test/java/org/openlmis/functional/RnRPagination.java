@@ -125,8 +125,8 @@ public class RnRPagination extends TestCaseHelper {
     dbWrapper.insertFacilities("F10", "F11");
     dbWrapper.configureTemplate(program);
     List<String> rightsList = asList("CREATE_REQUISITION", "VIEW_REQUISITION");
-    setupTestUserRoleRightsData("200", userSIC, rightsList);
-    dbWrapper.insertSupervisoryNode("F10", "N1", "Node 1", "null");
+    setupTestUserRoleRightsData(userSIC, rightsList);
+    dbWrapper.insertSupervisoryNode(userSIC, "N1", "Node 1", "null");
     dbWrapper.insertRoleAssignment("200", "store in-charge");
     dbWrapper.insertSchedule("Q1stM", "QuarterMonthly", "QuarterMonth");
     dbWrapper.insertSchedule("M", "Monthly", "Month");

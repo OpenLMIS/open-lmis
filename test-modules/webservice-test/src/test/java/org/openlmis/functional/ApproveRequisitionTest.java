@@ -439,7 +439,7 @@ public class ApproveRequisitionTest extends JsonUtility {
     client.createContext();
     createVirtualFacilityThroughApi("V100", "F10");
     dbWrapper.insertProcessingPeriod("Current", "current", "2013-05-01", "2016-01-01", 1, "M");
-    dbWrapper.insertRoleAssignmentForSupervisoryNodeForProgramId1("700", "store in-charge", "N1");
+    dbWrapper.insertRoleAssignmentForSupervisoryNodeForProgramId("commTrack", "store in-charge", "N1");
     submitRnRThroughApi("V100", "HIV", "P10", 1, 10, 1, 4, 0, 2);
     String id = String.valueOf(dbWrapper.getMaxRnrID());
 

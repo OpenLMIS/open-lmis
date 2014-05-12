@@ -128,11 +128,11 @@ public class DownloadOrderFile extends TestCaseHelper {
     dbWrapper.setupOrderFileConfiguration("O", "TRUE");
 
     List<String> rightsList = asList("CREATE_REQUISITION", "VIEW_REQUISITION", "APPROVE_REQUISITION");
-    setupTestDataToInitiateRnR(true, program, userSICUserName, "200", rightsList);
+    setupTestDataToInitiateRnR(true, program, userSICUserName, rightsList);
 
     setupTestRoleRightsData("lmu", "CONVERT_TO_ORDER,VIEW_ORDER");
-    dbWrapper.insertUser("212", "lmu", passwordUsers, "F10", "Jake_Doe@openlmis.com");
-    dbWrapper.insertRoleAssignment("212", "lmu");
+    dbWrapper.insertUser("lmu", passwordUsers, "F10", "Jake_Doe@openlmis.com");
+    dbWrapper.insertRoleAssignment("lmu", "lmu");
     dbWrapper.insertFulfilmentRoleAssignment("lmu", "lmu", "F10");
 
     dbWrapper.updateFieldValueToNull("products", "strength", "code", "P10");
@@ -224,11 +224,11 @@ public class DownloadOrderFile extends TestCaseHelper {
     dbWrapper.updateFieldValue("order_number_configuration", "orderNumberPrefix", " #O 3 ", "orderNumberPrefix", "O");
 
     List<String> rightsList = asList("CREATE_REQUISITION", "VIEW_REQUISITION", "APPROVE_REQUISITION");
-    setupTestDataToInitiateRnR(true, program, userSICUserName, "200", rightsList);
+    setupTestDataToInitiateRnR(true, program, userSICUserName, rightsList);
 
     setupTestRoleRightsData("lmu", "CONVERT_TO_ORDER,VIEW_ORDER");
-    dbWrapper.insertUser("212", "lmu", passwordUsers, "F10", "Jake_Doe@openlmis.com");
-    dbWrapper.insertRoleAssignment("212", "lmu");
+    dbWrapper.insertUser("lmu", passwordUsers, "F10", "Jake_Doe@openlmis.com");
+    dbWrapper.insertRoleAssignment("lmu", "lmu");
     dbWrapper.insertFulfilmentRoleAssignment("lmu", "lmu", "F10");
     dbWrapper.insertCurrentPeriod("current", "current", 1, "M");
 
@@ -311,11 +311,11 @@ public class DownloadOrderFile extends TestCaseHelper {
 
   public void setupDownloadOrderFileSetup(String password) throws SQLException, InterruptedException {
     List<String> rightsList = asList("CREATE_REQUISITION", "VIEW_REQUISITION", "APPROVE_REQUISITION");
-    setupTestDataToInitiateRnR(true, program, userSICUserName, "200", rightsList);
+    setupTestDataToInitiateRnR(true, program, userSICUserName, rightsList);
 
     setupTestRoleRightsData("lmu", "CONVERT_TO_ORDER,VIEW_ORDER");
-    dbWrapper.insertUser("212", "lmu", passwordUsers, "F10", "Jake_Doe@openlmis.com");
-    dbWrapper.insertRoleAssignment("212", "lmu");
+    dbWrapper.insertUser("lmu", passwordUsers, "F10", "Jake_Doe@openlmis.com");
+    dbWrapper.insertRoleAssignment("lmu", "lmu");
     dbWrapper.insertFulfilmentRoleAssignment("lmu", "lmu", "F10");
 
     LoginPage loginPage = PageObjectFactory.getLoginPage(testWebDriver, baseUrlGlobal);

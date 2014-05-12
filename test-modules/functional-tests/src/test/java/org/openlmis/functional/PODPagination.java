@@ -50,16 +50,16 @@ public class PODPagination extends TestCaseHelper {
     dbWrapper.configureTemplate(podPaginationData.get(PROGRAM));
     List<String> rightsList = asList("VIEW_ORDER", "MANAGE_POD");
 
-    setupTestUserRoleRightsData("200", podPaginationData.get(USER), rightsList);
+    setupTestUserRoleRightsData(podPaginationData.get(USER), rightsList);
     dbWrapper.insertSupervisoryNode("F10", "N1", "Node 1", "null");
-    dbWrapper.insertRoleAssignment("200", "store in-charge");
+    dbWrapper.insertRoleAssignment(podPaginationData.get(USER), "store in-charge");
     dbWrapper.insertSchedule("Q1stM", "QuarterMonthly", "QuarterMonth");
     dbWrapper.insertSchedule("M", "Monthly", "Month");
     dbWrapper.insertProcessingPeriod("Period1", "first period", "2012-12-01", "2013-01-15", 1, "Q1stM");
     dbWrapper.insertProcessingPeriod("Period2", "second period", "2013-01-16", "2013-01-30", 1, "M");
     setupRequisitionGroupData("RG1", "RG2", "N1", "N2", "F10", "F11");
     dbWrapper.insertSupplyLines("N1", podPaginationData.get(PROGRAM), "F10", true);
-    dbWrapper.insertFulfilmentRoleAssignment("storeInCharge", "store in-charge", "F10");
+    dbWrapper.insertFulfilmentRoleAssignment(podPaginationData.get(USER), "store in-charge", "F10");
   }
 
   @Test(groups = {"requisition"})

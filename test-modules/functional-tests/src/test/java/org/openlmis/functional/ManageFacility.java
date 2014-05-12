@@ -38,7 +38,7 @@ public class ManageFacility extends TestCaseHelper {
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function-Positive")
   public void testE2EManageFacility(String user, String program, String[] credentials) throws SQLException {
-    dbWrapper.insertUser("200", user, "Ag/myf1Whs0fxr1FFfK8cs3q/VJ1qMs3yuMLDTeEcZEGzstj/waaUsQNQTIKk1U5JRzrDbPLCzCO1/vB5YGaEQ==", "F10", "Jane_Doe@openlmis.com");
+    dbWrapper.insertUser(user, "Ag/myf1Whs0fxr1FFfK8cs3q/VJ1qMs3yuMLDTeEcZEGzstj/waaUsQNQTIKk1U5JRzrDbPLCzCO1/vB5YGaEQ==", "F10", "Jane_Doe@openlmis.com");
 
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
 

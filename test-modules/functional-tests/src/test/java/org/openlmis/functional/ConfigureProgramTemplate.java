@@ -38,7 +38,7 @@ public class ConfigureProgramTemplate extends TestCaseHelper {
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Program-Not-Configured")
   public void testVerifyProgramNotConfigured(String program, String userSIC, String password) throws SQLException {
     List<String> rightsList = asList("CREATE_REQUISITION", "VIEW_REQUISITION");
-    setupTestDataToInitiateRnR(false, program, userSIC, "200", rightsList);
+    setupTestDataToInitiateRnR(false, program, userSIC, rightsList);
 
     HomePage homePage = loginPage.loginAs(userSIC, password);
     homePage.navigateAndInitiateRnr(program);
@@ -49,7 +49,7 @@ public class ConfigureProgramTemplate extends TestCaseHelper {
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Verify-On-Rnr-Screen")
   public void testVerifyImpactOfChangesInConfigScreenOnRnRScreen(String program, String userSIC, String password, String[] credentials) throws SQLException {
     List<String> rightsList = asList("CREATE_REQUISITION", "VIEW_REQUISITION");
-    setupTestDataToInitiateRnR(true, program, userSIC, "200", rightsList);
+    setupTestDataToInitiateRnR(true, program, userSIC, rightsList);
 
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
     TemplateConfigPage templateConfigPage = homePage.selectProgramToConfigTemplate(program);

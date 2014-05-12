@@ -155,7 +155,7 @@ public class E2EInitiateRnR extends TestCaseHelper {
 
   @And("^I update \"([^\"]*)\" home facility$")
   public void updateHomeFacility(String user) throws SQLException {
-    dbWrapper.allocateFacilityToUser(dbWrapper.getAttributeFromTable("users", "id", "userName", user), facility_code);
+    dbWrapper.allocateFacilityToUser(user, facility_code);
   }
 
   @And("^I configure \"([^\"]*)\" template$")

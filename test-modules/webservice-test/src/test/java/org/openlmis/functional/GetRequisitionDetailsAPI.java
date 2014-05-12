@@ -36,7 +36,7 @@ public class GetRequisitionDetailsAPI extends JsonUtility {
     super.setupDataRequisitionApprove();
     createVirtualFacilityThroughApi("V10", "F10");
     dbWrapper.insertProcessingPeriod("current", "current period", "2013-01-30", "2016-01-30", 1, "M");
-    dbWrapper.insertRoleAssignmentForSupervisoryNodeForProgramId1("700", "store in-charge", "N1");
+    dbWrapper.insertRoleAssignmentForSupervisoryNodeForProgramId("commTrack", "store in-charge", "N1");
     dbWrapper.setupOrderNumberConfiguration("O",true,true,true,true);
     dbWrapper.updateRestrictLogin("commTrack", true);
   }

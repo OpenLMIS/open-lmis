@@ -36,7 +36,7 @@ public class ManageRights extends TestCaseHelper {
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function-Positive")
   public void testOnlyCreateRight(String program, String userSIC, String password) throws SQLException {
     List<String> rightsList = asList("CREATE_REQUISITION", "VIEW_REQUISITION");
-    setupTestDataToInitiateRnR(true, program, userSIC, "200", rightsList);
+    setupTestDataToInitiateRnR(true, program, userSIC, rightsList);
 
     String[] expectedMenuItem = {"Create / Authorize", "View"};
     HomePage homePage = PageObjectFactory.getLoginPage(testWebDriver, baseUrlGlobal).loginAs(userSIC, password);

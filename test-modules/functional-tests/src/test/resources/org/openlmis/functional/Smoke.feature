@@ -216,8 +216,8 @@ Feature: Smoke Tests
     And I have "storeInCharge" user with "CREATE_REQUISITION,VIEW_REQUISITION,APPROVE_REQUISITION" rights and data to initiate requisition
     And I have "lmu" role having "ADMIN" based "CONVERT_TO_ORDER,VIEW_ORDER" rights
     And I have users:
-      | UserId | Email                 | FirstName | LastName | UserName | Role | FacilityCode |
-      | 111    | Jake_Doe@openlmis.com | Jake      | Doe      | lmu      | lmu  | F10          |
+      | Email                 | FirstName | LastName | UserName | Role | FacilityCode |
+      | Jake_Doe@openlmis.com | Jake      | Doe      | lmu      | lmu  | F10          |
     And I have fulfillment data for user "lmu" role "lmu" and facility "F10"
     And I have regimen template configured
     And I am logged in as "storeInCharge"
@@ -778,8 +778,8 @@ Feature: Smoke Tests
     When I select "yes" facility visited
     And I select visit date as current date
     And I Enter "visit information" values:
-     | observations | confirmedByName | confirmedByTitle | verifiedByName | verifiedByTitle |
-     |              | samuel          | fc               | Verifier       | XYZ             |
+      | observations | confirmedByName | confirmedByTitle | verifiedByName | verifiedByTitle |
+      |              | samuel          | fc               | Verifier       | XYZ             |
     And I navigate to "epi use" tab
     And I Enter "epi use" values:
       | distributed | expirationDate | loss | received | firstOfMonth | endOfMonth |

@@ -37,7 +37,7 @@ public class TestCalculationsOnRnRThroughAPI extends JsonUtility {
     super.setupTestData(true);
     createVirtualFacilityThroughApi("V10", "F10");
     dbWrapper.insertProcessingPeriod("current", "current period", "2013-01-30", "2016-01-30", 1, "M");
-    dbWrapper.insertRoleAssignmentForSupervisoryNodeForProgramId1("700", "store in-charge", "N1");
+    dbWrapper.insertRoleAssignmentForSupervisoryNodeForProgramId("commTrack", "store in-charge", "N1");
     dbWrapper.updateRestrictLogin("commTrack", true);
     dbWrapper.updateFieldValue("products", "fullSupply", "true", "code", "P11");
   }
@@ -109,7 +109,7 @@ public class TestCalculationsOnRnRThroughAPI extends JsonUtility {
     dbWrapper.insertProgramProduct("P10", "ESS_MEDS", "10", "true");
     dbWrapper.insertProgramProduct("P11", "ESS_MEDS", "10", "true");
     dbWrapper.insertFacilityApprovedProduct("P10", "ESS_MEDS", "lvl3_hospital");
-    dbWrapper.insertRoleAssignmentForSupervisoryNode("700", "store in-charge", "N1", "ESS_MEDS");
+    dbWrapper.insertRoleAssignmentForSupervisoryNode("commTrack", "store in-charge", "N1", "ESS_MEDS");
     dbWrapper.configureTemplateForCommTrack("ESS_MEDS");
     dbWrapper.insertRequisitionGroupProgramScheduleForProgram("RG1", "ESS_MEDS", "M");
     submitRnRThroughApi("V10", "ESS_MEDS", "P10", 5, 3, null, null, null, null);

@@ -113,7 +113,7 @@ public class InitiateRnR extends TestCaseHelper {
   @Given("I have \"([^\"]*)\" user with \"([^\"]*)\" rights and data to initiate requisition$")
   public void setupUserWithRightsAndInitiateRequisitionData(String user, String rights) throws SQLException {
     String[] rightList = rights.split(",");
-    setupTestDataToInitiateRnR(true, program, user, "200", asList(rightList));
+    setupTestDataToInitiateRnR(true, program, user, asList(rightList));
   }
 
   @When("^I click proceed$")
@@ -270,7 +270,7 @@ public class InitiateRnR extends TestCaseHelper {
   public void testSubmitAndAuthorizeRegimen(String program, String userSIC, String categoryCode, String password,
                                             String regimenCode, String regimenName, String regimenCode2, String regimenName2) throws SQLException {
     List<String> rightsList = asList(CREATE_REQUISITION, VIEW_REQUISITION, AUTHORIZE_REQUISITION);
-    setupTestDataToInitiateRnR(true, program, userSIC, "200", rightsList);
+    setupTestDataToInitiateRnR(true, program, userSIC, rightsList);
     dbWrapper.insertRegimenTemplateConfiguredForProgram(program, categoryCode, regimenCode, regimenName, true);
     dbWrapper.insertRegimenTemplateConfiguredForProgram(program, categoryCode, regimenCode2, regimenName2, false);
     dbWrapper.insertRegimenTemplateColumnsForProgram(program);
@@ -309,7 +309,7 @@ public class InitiateRnR extends TestCaseHelper {
   public void testApproveRegimen(String program, String userSIC, String categoryCode, String password,
                                  String regimenCode, String regimenName, String regimenCode2, String regimenName2) throws SQLException {
     List<String> rightsList = asList(CREATE_REQUISITION, VIEW_REQUISITION, AUTHORIZE_REQUISITION, APPROVE_REQUISITION);
-    setupTestDataToInitiateRnR(true, program, userSIC, "200", rightsList);
+    setupTestDataToInitiateRnR(true, program, userSIC, rightsList);
     dbWrapper.insertRegimenTemplateConfiguredForProgram(program, categoryCode, regimenCode, regimenName, true);
     dbWrapper.insertRegimenTemplateConfiguredForProgram(program, categoryCode, regimenCode2, regimenName2, false);
     dbWrapper.insertRegimenTemplateColumnsForProgram(program);
@@ -338,7 +338,7 @@ public class InitiateRnR extends TestCaseHelper {
   public void testApproveRegimenWithoutSave(String program, String userSIC, String categoryCode, String password,
                                             String regimenCode, String regimenName, String regimenCode2, String regimenName2) throws SQLException {
     List<String> rightsList = asList(CREATE_REQUISITION, VIEW_REQUISITION, AUTHORIZE_REQUISITION, APPROVE_REQUISITION);
-    setupTestDataToInitiateRnR(true, program, userSIC, "200", rightsList);
+    setupTestDataToInitiateRnR(true, program, userSIC, rightsList);
     dbWrapper.insertRegimenTemplateConfiguredForProgram(program, categoryCode, regimenCode, regimenName, true);
     dbWrapper.insertRegimenTemplateConfiguredForProgram(program, categoryCode, regimenCode2, regimenName2, false);
     dbWrapper.insertRegimenTemplateColumnsForProgram(program);
@@ -368,7 +368,7 @@ public class InitiateRnR extends TestCaseHelper {
                                                        String password, String regimenCode, String regimenName,
                                                        String regimenCode2, String regimenName2) throws SQLException {
     List<String> rightsList = asList(CREATE_REQUISITION, VIEW_REQUISITION);
-    setupTestDataToInitiateRnR(true, program, userSIC, "200", rightsList);
+    setupTestDataToInitiateRnR(true, program, userSIC, rightsList);
     dbWrapper.insertRegimenTemplateConfiguredForProgram(program, categoryCode, regimenCode, regimenName, true);
     dbWrapper.insertRegimenTemplateConfiguredForProgram(program, categoryCode, regimenCode2, regimenName2, false);
     dbWrapper.insertRegimenTemplateColumnsForProgram(program);
@@ -388,7 +388,7 @@ public class InitiateRnR extends TestCaseHelper {
                                          String regimenCode, String regimenName, String regimenCode2,
                                          String regimenName2) throws SQLException {
     List<String> rightsList = asList(CREATE_REQUISITION, VIEW_REQUISITION);
-    setupTestDataToInitiateRnR(true, program, userSIC, "200", rightsList);
+    setupTestDataToInitiateRnR(true, program, userSIC, rightsList);
     dbWrapper.insertRegimenTemplateConfiguredForProgram(program, categoryCode, regimenCode, regimenName, false);
     dbWrapper.insertRegimenTemplateConfiguredForProgram(program, categoryCode, regimenCode2, regimenName2, false);
     dbWrapper.insertRegimenTemplateColumnsForProgram(program);
@@ -405,7 +405,7 @@ public class InitiateRnR extends TestCaseHelper {
   public void testRnRErrorMessageIfPeriodNotDefinedForRegularType(String program, String userSIC,
                                                                   String password) throws SQLException {
     List<String> rightsList = asList(CREATE_REQUISITION, VIEW_REQUISITION);
-    setupTestDataToInitiateRnR(true, program, userSIC, "200", rightsList);
+    setupTestDataToInitiateRnR(true, program, userSIC, rightsList);
     dbWrapper.deleteRowFromTable("processing_periods", "name", "Period2");
 
     homePage = loginPage.loginAs(userSIC, password);
@@ -417,7 +417,7 @@ public class InitiateRnR extends TestCaseHelper {
   public void testRnRErrorMessageWhileAuthorizingForRegularType(String program, String userSIC,
                                                                 String password) throws SQLException {
     List<String> rightsList = asList(AUTHORIZE_REQUISITION, VIEW_REQUISITION);
-    setupTestDataToInitiateRnR(true, program, userSIC, "200", rightsList);
+    setupTestDataToInitiateRnR(true, program, userSIC, rightsList);
     dbWrapper.deleteRowFromTable("processing_periods", "name", "Period2");
 
     homePage = loginPage.loginAs(userSIC, password);
@@ -429,7 +429,7 @@ public class InitiateRnR extends TestCaseHelper {
   public void testRnRErrorMessageWhileAuthorizingForEmergencyType(String program, String userSIC,
                                                                   String password) throws SQLException {
     List<String> rightsList = asList(AUTHORIZE_REQUISITION, VIEW_REQUISITION);
-    setupTestDataToInitiateRnR(true, program, userSIC, "200", rightsList);
+    setupTestDataToInitiateRnR(true, program, userSIC, rightsList);
 
     homePage = loginPage.loginAs(userSIC, password);
     homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Emergency");
@@ -439,7 +439,7 @@ public class InitiateRnR extends TestCaseHelper {
   @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-RnR")
   public void testRnRErrorMessageIfPeriodNotDefinedForEmergencyType(String program, String userSIC, String password) throws SQLException {
     List<String> rightsList = asList(CREATE_REQUISITION, VIEW_REQUISITION);
-    setupTestDataToInitiateRnR(true, program, userSIC, "200", rightsList);
+    setupTestDataToInitiateRnR(true, program, userSIC, rightsList);
 
     homePage = loginPage.loginAs(userSIC, password);
     homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Emergency");
@@ -452,7 +452,7 @@ public class InitiateRnR extends TestCaseHelper {
   @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-RnR")
   public void shouldVerifyRequisitionAlreadySubmittedMessage(String program, String userSIC, String password) throws SQLException {
     List<String> rightsList = asList(CREATE_REQUISITION, AUTHORIZE_REQUISITION, VIEW_REQUISITION);
-    setupTestDataToInitiateRnR(true, program, userSIC, "200", rightsList);
+    setupTestDataToInitiateRnR(true, program, userSIC, rightsList);
     dbWrapper.deleteRowFromTable("processing_periods", "name", "Period1");
     dbWrapper.deleteRowFromTable("processing_periods", "name", "Period2");
     dbWrapper.insertCurrentPeriod("current Period", "current Period", 1, "M");
@@ -481,10 +481,10 @@ public class InitiateRnR extends TestCaseHelper {
   @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-RnR")
   public void testValidRnRSubmittedAuthorizedViewAndVerifyStateOfFields(String program, String userSIC, String password) throws SQLException {
     List<String> rightsList = asList(CREATE_REQUISITION, VIEW_REQUISITION);
-    setupTestDataToInitiateRnR(true, program, userSIC, "200", rightsList);
+    setupTestDataToInitiateRnR(true, program, userSIC, rightsList);
 
     List<String> rightsList1 = asList(AUTHORIZE_REQUISITION, VIEW_REQUISITION);
-    createUserAndAssignRoleRights("201", "mo", "Maar_Doe@openlmis.com", "F10", "district pharmacist", rightsList1);
+    createUserAndAssignRoleRights("mo", "Maar_Doe@openlmis.com", "F10", "district pharmacist", rightsList1);
     dbWrapper.deleteRowFromTable("processing_periods", "name", "Period1");
     dbWrapper.deleteRowFromTable("processing_periods", "name", "Period2");
     dbWrapper.insertCurrentPeriod("current Period", "current Period", 1, "M");
@@ -557,16 +557,16 @@ public class InitiateRnR extends TestCaseHelper {
     String roleName = "lmuInCharge";
 
     List<String> rightsList = asList(CREATE_REQUISITION, VIEW_REQUISITION);
-    setupTestDataToInitiateRnR(true, program, userSIC, "200", rightsList);
+    setupTestDataToInitiateRnR(true, program, userSIC, rightsList);
 
     List<String> rightsList1 = asList(AUTHORIZE_REQUISITION, VIEW_REQUISITION);
-    createUserAndAssignRoleRights("201", "mo", "Maar_Doe@openlmis.com", "F10", "district pharmacist", rightsList1);
+    createUserAndAssignRoleRights("mo", "Maar_Doe@openlmis.com", "F10", "district pharmacist", rightsList1);
 
     List<String> rightsList2 = asList(APPROVE_REQUISITION, VIEW_REQUISITION);
-    createUserAndAssignRoleRights("301", "lmu", "Maafi_De_Doe@openlmis.com", "F10", "lmu", rightsList2);
+    createUserAndAssignRoleRights("lmu", "Maafi_De_Doe@openlmis.com", "F10", "lmu", rightsList2);
 
     List<String> rightsList3 = asList(CONVERT_TO_ORDER, VIEW_ORDER);
-    createUserAndAssignRoleRights("401", userName, "Jaan_V_Doe@openlmis.com", "F10", roleName, rightsList3);
+    createUserAndAssignRoleRights(userName, "Jaan_V_Doe@openlmis.com", "F10", roleName, rightsList3);
 
     dbWrapper.deleteRowFromTable("processing_periods", "name", "Period1");
     dbWrapper.deleteRowFromTable("processing_periods", "name", "Period2");
@@ -651,7 +651,7 @@ public class InitiateRnR extends TestCaseHelper {
   @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-RnR")
   public void testValidationsOnStockOnHandRnRField(String program, String userSIC, String password) throws SQLException {
     List<String> rightsList = asList(CREATE_REQUISITION, VIEW_REQUISITION);
-    setupTestDataToInitiateRnR(true, program, userSIC, "200", rightsList);
+    setupTestDataToInitiateRnR(true, program, userSIC, rightsList);
     dbWrapper.deleteRowFromTable("processing_periods", "name", "Period1");
     dbWrapper.deleteRowFromTable("processing_periods", "name", "Period2");
     dbWrapper.insertCurrentPeriod("current Period", "current Period", 1, "M");
@@ -669,7 +669,7 @@ public class InitiateRnR extends TestCaseHelper {
   @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-RnR")
   public void testValidationsOnTotalConsumedQuantityRnRField(String program, String userSIC, String password) throws SQLException {
     List<String> rightsList = asList(CREATE_REQUISITION, VIEW_REQUISITION);
-    setupTestDataToInitiateRnR(true, program, userSIC, "200", rightsList);
+    setupTestDataToInitiateRnR(true, program, userSIC, rightsList);
     dbWrapper.deleteRowFromTable("processing_periods", "name", "Period1");
     dbWrapper.deleteRowFromTable("processing_periods", "name", "Period2");
     dbWrapper.insertCurrentPeriod("current Period", "current Period", 1, "M");
@@ -690,7 +690,7 @@ public class InitiateRnR extends TestCaseHelper {
   @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-RnR")
   public void testVerifyAllStatusOfRequisitions(String program, String userSIC, String password) throws SQLException {
     List<String> rightsList = asList(CREATE_REQUISITION, VIEW_REQUISITION);
-    setupTestDataToInitiateRnR(true, program, userSIC, "200", rightsList);
+    setupTestDataToInitiateRnR(true, program, userSIC, rightsList);
     dbWrapper.deleteRowFromTable("processing_periods", "name", "Period1");
     dbWrapper.deleteRowFromTable("processing_periods", "name", "Period2");
     dbWrapper.insertCurrentPeriod("current Period", "current Period", 1, "M");
@@ -711,9 +711,9 @@ public class InitiateRnR extends TestCaseHelper {
 
   @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-RnR")
   public void testRnRErrorMessageForSubmitterWithRequisitionAlreadyAuthorized(String program, String userSIC, String password) throws SQLException {
-    setupTestDataToInitiateRnR(true, program, userSIC, "200", asList(CREATE_REQUISITION, VIEW_REQUISITION));
+    setupTestDataToInitiateRnR(true, program, userSIC, asList(CREATE_REQUISITION, VIEW_REQUISITION));
 
-    createUserAndAssignRoleRights("201", "mo", "Maar_Doe@openlmis.com", "F10", "district pharmacist",
+    createUserAndAssignRoleRights("mo", "Maar_Doe@openlmis.com", "F10", "district pharmacist",
       asList(AUTHORIZE_REQUISITION, VIEW_REQUISITION));
     dbWrapper.deleteRowFromTable("processing_periods", "name", "Period1");
     dbWrapper.deleteRowFromTable("processing_periods", "name", "Period2");
@@ -753,7 +753,7 @@ public class InitiateRnR extends TestCaseHelper {
   @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-RnR")
   public void shouldVerifyNoCurrentPeriodDefinedMessage(String program, String userSIC, String password) throws SQLException {
     List<String> rightsList = asList(AUTHORIZE_REQUISITION, VIEW_REQUISITION);
-    setupTestDataToInitiateRnR(true, program, userSIC, "200", rightsList);
+    setupTestDataToInitiateRnR(true, program, userSIC, rightsList);
     dbWrapper.deleteRowFromTable("processing_periods", "name", "Period1");
     dbWrapper.deleteRowFromTable("processing_periods", "name", "Period2");
 
@@ -769,7 +769,7 @@ public class InitiateRnR extends TestCaseHelper {
   @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-RnR")
   public void testRnRBeginningBalance(String program, String userSIC, String password) throws SQLException {
     List<String> rightsList = asList(CREATE_REQUISITION, VIEW_REQUISITION);
-    setupTestDataToInitiateRnR(true, program, userSIC, "200", rightsList);
+    setupTestDataToInitiateRnR(true, program, userSIC, rightsList);
     dbWrapper.deleteTable("processing_periods");
     dbWrapper.insertProcessingPeriod("Period1", "first period", "2012-12-01", "2013-01-15", 1, "M");
 
@@ -801,9 +801,9 @@ public class InitiateRnR extends TestCaseHelper {
   @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-RnR")
   public void testRestrictVirtualFacilityFromRnRScreen(String program, String userSIC, String password) throws SQLException {
     List<String> rightsList = asList(CREATE_REQUISITION, VIEW_REQUISITION);
-    setupTestDataToInitiateRnR(true, program, userSIC, "200", rightsList);
+    setupTestDataToInitiateRnR(true, program, userSIC, rightsList);
     dbWrapper.updateFieldValue("facilities", "virtualFacility", "true", "code", "F10");
-    dbWrapper.insertRoleAssignmentForSupervisoryNodeForProgramId1("200", "store in-charge", "N1");
+    dbWrapper.insertRoleAssignmentForSupervisoryNodeForProgramId(userSIC, "store in-charge", "N1");
 
     homePage = loginPage.loginAs(userSIC, password);
     homePage.navigateAndInitiateRnrForSupervisedFacility(program);
@@ -814,7 +814,7 @@ public class InitiateRnR extends TestCaseHelper {
   @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-RnR")
   public void testSkipProductRnRField(String program, String userSIC, String password) throws SQLException {
     List<String> rightsList = asList(CREATE_REQUISITION, VIEW_REQUISITION);
-    setupTestDataToInitiateRnR(true, program, userSIC, "200", rightsList);
+    setupTestDataToInitiateRnR(true, program, userSIC, rightsList);
     dbWrapper.deleteRowFromTable("processing_periods", "name", "Period1");
     dbWrapper.deleteRowFromTable("processing_periods", "name", "Period2");
     dbWrapper.insertProcessingPeriod("current Period", "current Period", "2013-10-03", "2016-01-30", 1, "M");
@@ -864,7 +864,7 @@ public class InitiateRnR extends TestCaseHelper {
   @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-RnR")
   public void testSkipProductRnRAuthorizeApproveForRegularRnR(String program, String userSIC, String password) throws SQLException {
     List<String> rightsList = asList(CREATE_REQUISITION, VIEW_REQUISITION, AUTHORIZE_REQUISITION, APPROVE_REQUISITION);
-    setupTestDataToInitiateRnR(true, program, userSIC, "200", rightsList);
+    setupTestDataToInitiateRnR(true, program, userSIC, rightsList);
     dbWrapper.deleteRowFromTable("processing_periods", "name", "Period1");
     dbWrapper.deleteRowFromTable("processing_periods", "name", "Period2");
     dbWrapper.insertProcessingPeriod("current Period", "current Period", "2013-10-03", "2016-01-30", 1, "M");
@@ -911,7 +911,7 @@ public class InitiateRnR extends TestCaseHelper {
   @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-RnR")
   public void testSkipProductRnRAuthorizeApproveUpdatePodForEmergencyRnR(String program, String userSIC, String password) throws SQLException {
     List<String> rightsList = asList(CREATE_REQUISITION, VIEW_REQUISITION, AUTHORIZE_REQUISITION, APPROVE_REQUISITION, CONVERT_TO_ORDER, MANAGE_POD);
-    setupTestDataToInitiateRnR(true, program, userSIC, "200", rightsList);
+    setupTestDataToInitiateRnR(true, program, userSIC, rightsList);
     dbWrapper.deleteRowFromTable("processing_periods", "name", "Period1");
     dbWrapper.deleteRowFromTable("processing_periods", "name", "Period2");
     dbWrapper.insertProcessingPeriod("current Period", "current Period", "2013-10-03", "2016-01-30", 1, "M");
@@ -985,10 +985,11 @@ public class InitiateRnR extends TestCaseHelper {
   private void verifyErrorMessages(String message) {
     testWebDriver.sleep(500);
     assertTrue("Message : " + message + " should show up. Showing : " + testWebDriver.getElementByXpath(
-      "//div[@id='saveSuccessMsgDiv' and @class='alert alert-error']").getText(),
+        "//div[@id='saveSuccessMsgDiv' and @class='alert alert-error']").getText(),
       testWebDriver.getElementByXpath(
         "//div[@id='saveSuccessMsgDiv' and @class='alert alert-error']").getText().equalsIgnoreCase(
-        message));
+        message)
+    );
   }
 
   private void verifyValuesOnRegimenScreen(String patientsOnTreatment, String patientsToInitiateTreatment,

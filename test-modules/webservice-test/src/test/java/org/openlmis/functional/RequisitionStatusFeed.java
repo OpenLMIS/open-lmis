@@ -41,7 +41,7 @@ public class RequisitionStatusFeed extends JsonUtility {
     super.setupDataRequisitionApprove();
     createVirtualFacilityThroughApi("V10", "F10");
     dbWrapper.insertProcessingPeriod("current", "current period", "2013-01-30", "2016-01-30", 1, "M");
-    dbWrapper.insertRoleAssignmentForSupervisoryNodeForProgramId1("700", "store in-charge", "N1");
+    dbWrapper.insertRoleAssignmentForSupervisoryNodeForProgramId("commTrack", "store in-charge", "N1");
     dbWrapper.insertFulfilmentRoleAssignment("commTrack", "store in-charge", "F10");
     dbWrapper.updateRestrictLogin("commTrack", true);
   }

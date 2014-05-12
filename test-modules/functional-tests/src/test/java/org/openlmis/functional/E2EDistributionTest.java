@@ -48,7 +48,7 @@ public class E2EDistributionTest extends TestCaseHelper {
                                                            String facilityCodeFirst, String facilityCodeSecond,
                                                            String programFirst, String programSecond, String schedule) throws SQLException, IOException {
     List<String> rightsList = asList("MANAGE_DISTRIBUTION");
-    setupTestDataToInitiateRnRAndDistribution(facilityCodeFirst, facilityCodeSecond, true, programFirst, userSIC, "200", rightsList,
+    setupTestDataToInitiateRnRAndDistribution(facilityCodeFirst, facilityCodeSecond, true, programFirst, userSIC, rightsList,
       programSecond, "District1", "Ngorongoro", "Ngorongoro");
     setupDataForDeliveryZone(true, deliveryZoneCodeFirst, deliveryZoneCodeSecond, deliveryZoneNameFirst, deliveryZoneNameSecond,
       facilityCodeFirst, facilityCodeSecond, programFirst, programSecond, schedule);
@@ -338,7 +338,7 @@ public class E2EDistributionTest extends TestCaseHelper {
                                                               String facilityCodeFirst, String facilityCodeSecond,
                                                               String programFirst, String programSecond, String schedule) throws SQLException, IOException {
     List<String> rightsList = asList("MANAGE_DISTRIBUTION");
-    setupTestDataToInitiateRnRAndDistribution(facilityCodeFirst, facilityCodeSecond, true, programFirst, userSIC, "200", rightsList,
+    setupTestDataToInitiateRnRAndDistribution(facilityCodeFirst, facilityCodeSecond, true, programFirst, userSIC, rightsList,
       programSecond, "District1", "Ngorongoro", "Ngorongoro");
     setupDataForDeliveryZone(true, deliveryZoneCodeFirst, deliveryZoneCodeSecond, deliveryZoneNameFirst, deliveryZoneNameSecond,
       facilityCodeFirst, facilityCodeSecond, programFirst, programSecond, schedule);

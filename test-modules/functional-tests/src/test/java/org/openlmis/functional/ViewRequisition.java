@@ -157,7 +157,7 @@ public class ViewRequisition extends TestCaseHelper {
                                                            String regimenName2) throws SQLException {
     List<String> rightsList = asList("CREATE_REQUISITION", "VIEW_REQUISITION");
 
-    setupTestDataToInitiateRnR(true, program, userSIC, "200", rightsList);
+    setupTestDataToInitiateRnR(true, program, userSIC, rightsList);
     dbWrapper.insertRegimenTemplateConfiguredForProgram(program, categoryCode, regimenCode, regimenName, true);
     dbWrapper.insertRegimenTemplateConfiguredForProgram(program, categoryCode, regimenCode2, regimenName2, false);
     dbWrapper.insertRegimenTemplateColumnsForProgram(program);
@@ -269,9 +269,9 @@ public class ViewRequisition extends TestCaseHelper {
     List<String> rightsList = new ArrayList<>();
     rightsList.add("CREATE_REQUISITION");
     rightsList.add("VIEW_REQUISITION");
-    setupTestDataToInitiateRnR(true, program, userSIC, "200", rightsList);
+    setupTestDataToInitiateRnR(true, program, userSIC, rightsList);
     dbWrapper.updateFieldValue("facilities", "virtualFacility", "true", "code", "F10");
-    dbWrapper.insertRoleAssignmentForSupervisoryNodeForProgramId1("200", "store in-charge", "N1");
+    dbWrapper.insertRoleAssignmentForSupervisoryNodeForProgramId(userSIC, "store in-charge", "N1");
 
     HomePage homePage = loginPage.loginAs(userSIC, password);
     homePage.navigateViewRequisition();
@@ -287,7 +287,7 @@ public class ViewRequisition extends TestCaseHelper {
     rightsList.add("AUTHORIZE_REQUISITION");
     rightsList.add("APPROVE_REQUISITION");
     rightsList.add("VIEW_REQUISITION");
-    setupTestDataToInitiateRnR(true, program, userSIC, "200", rightsList);
+    setupTestDataToInitiateRnR(true, program, userSIC, rightsList);
     dbWrapper.deleteRowFromTable("processing_periods", "name", "Period1");
     dbWrapper.deleteRowFromTable("processing_periods", "name", "Period2");
     dbWrapper.insertCurrentPeriod("current Period", "current Period", 1, "M");
@@ -335,7 +335,7 @@ public class ViewRequisition extends TestCaseHelper {
                                                           String regimenCode, String regimenName, String regimenCode2, String regimenName2) throws SQLException {
     List<String> rightsList = asList("CREATE_REQUISITION", "VIEW_REQUISITION");
 
-    setupTestDataToInitiateRnR(true, program, userSIC, "200", rightsList);
+    setupTestDataToInitiateRnR(true, program, userSIC, rightsList);
     dbWrapper.insertRegimenTemplateConfiguredForProgram(program, categoryCode, regimenCode, regimenName, true);
     dbWrapper.insertRegimenTemplateConfiguredForProgram(program, categoryCode, regimenCode2, regimenName2, false);
     dbWrapper.insertRegimenTemplateColumnsForProgram(program);

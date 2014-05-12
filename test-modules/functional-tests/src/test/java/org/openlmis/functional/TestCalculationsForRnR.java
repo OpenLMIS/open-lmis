@@ -44,7 +44,7 @@ public class TestCalculationsForRnR extends TestCaseHelper {
   public void setUp() throws InterruptedException, SQLException, IOException {
     super.setup();
     List<String> rightsList = asList("CREATE_REQUISITION", "VIEW_REQUISITION", "AUTHORIZE_REQUISITION", "APPROVE_REQUISITION");
-    setupTestDataToInitiateRnR(true, program, userSIC, "200", rightsList);
+    setupTestDataToInitiateRnR(true, program, userSIC, rightsList);
     dbWrapper.updateFieldValue("products", "fullSupply", "true", "code", "P11");
     loginPage = PageObjectFactory.getLoginPage(testWebDriver, baseUrlGlobal);
     homePage = PageObjectFactory.getHomePage(testWebDriver);
@@ -362,7 +362,7 @@ public class TestCalculationsForRnR extends TestCaseHelper {
     dbWrapper.updateConfigureTemplate("ESS_MEDS", "source", "C", "false", "normalizedConsumption");
     dbWrapper.updateConfigureTemplate("ESS_MEDS", "source", "C", "false", "amc");
     dbWrapper.insertRequisitionGroupProgramScheduleForProgram("RG1", "ESS_MEDS", "M");
-    dbWrapper.insertRoleAssignmentForSupervisoryNode(dbWrapper.getAttributeFromTable("users", "id", "userName", userSIC), "store in-charge", null, "ESS_MEDS");
+    dbWrapper.insertRoleAssignmentForSupervisoryNode(userSIC, "store in-charge", null, "ESS_MEDS");
     dbWrapper.updateFieldValue("products", "fullSupply", "false", "code", "P11");
 
     HomePage homePage = loginPage.loginAs(userSIC, password);
@@ -439,7 +439,7 @@ public class TestCalculationsForRnR extends TestCaseHelper {
 
     dbWrapper.insertSupervisoryNodeWithoutDelete("F11", "N2", "Node2", "N1");
     dbWrapper.updateSupervisoryNodeForRequisitionGroup("RG2", "N2");
-    dbWrapper.insertRoleAssignmentForSupervisoryNode(dbWrapper.getAttributeFromTable("users", "id", "userName", userSIC), "store in-charge", "N2", "HIV");
+    dbWrapper.insertRoleAssignmentForSupervisoryNode(userSIC, "store in-charge", "N2", "HIV");
 
     homePage.navigateAndInitiateRnrForSupervisedFacility("HIV");
     homePage.selectFacilityForSupervisoryNodeRnR("F11 - Central Hospital");
@@ -767,7 +767,7 @@ public class TestCalculationsForRnR extends TestCaseHelper {
     dbWrapper.insertProcessingPeriod("feb13", "feb13", "2013-01-31", "2013-02-28", 2, "M");
     dbWrapper.insertRole("fulfilment", "convert to order");
     dbWrapper.assignRight("fulfilment", "CONVERT_TO_ORDER");
-    dbWrapper.insertRoleAssignment(dbWrapper.getAttributeFromTable("users", "id", "userName", userSIC), "store in-charge");
+    dbWrapper.insertRoleAssignment(userSIC, "store in-charge");
     dbWrapper.insertFulfilmentRoleAssignment(userSIC, "fulfilment", "F10");
 
     HomePage homePage = loginPage.loginAs(userSIC, password);
