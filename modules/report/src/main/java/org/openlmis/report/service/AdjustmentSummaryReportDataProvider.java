@@ -18,6 +18,7 @@ import org.openlmis.report.mapper.AdjustmentSummaryReportMapper;
 import org.openlmis.report.model.ReportData;
 import org.openlmis.report.model.params.AdjustmentSummaryReportParam;
 import org.openlmis.report.util.Constants;
+import org.openlmis.report.util.StringHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -57,17 +58,14 @@ public class AdjustmentSummaryReportDataProvider extends ReportDataProvider {
       Date originalStart = new Date();
       Date originalEnd = new Date();
 
-      adjustmentSummaryReportParam.setZoneId(StringUtils.isBlank(filterCriteria.get("zoneId")[0]) ? 0 : Integer.parseInt(filterCriteria.get("zoneId")[0]));  //defaults to 0
-      adjustmentSummaryReportParam.setFacilityTypeId(StringUtils.isBlank(filterCriteria.get("facilityType")[0]) ? 0 : Integer.parseInt(filterCriteria.get("facilityTypeId")[0])); //defaults to 0
-
-
-      adjustmentSummaryReportParam.setProductCategoryId(StringUtils.isBlank(filterCriteria.get("productCategory")[0]) ? 0 : Integer.parseInt(filterCriteria.get("productCategory")[0])); //defaults to 0
-      adjustmentSummaryReportParam.setProductId(StringUtils.isBlank(filterCriteria.get("product")[0]) ? 0 : Integer.parseInt(filterCriteria.get("product")[0])); //defaults to 0
-      adjustmentSummaryReportParam.setRgroupId(StringUtils.isBlank(filterCriteria.get("requisitionGroup")[0]) ? 0 : Integer.parseInt(filterCriteria.get("requisitionGroup")[0])); //defaults to 0
-      adjustmentSummaryReportParam.setProgramId(StringUtils.isBlank(filterCriteria.get("program")[0]) ? 0 : Integer.parseInt(filterCriteria.get("program")[0])); //defaults to 0
-      adjustmentSummaryReportParam.setAdjustmentTypeId(StringUtils.isBlank(filterCriteria.get("adjustmentType")[0]) ? "" : filterCriteria.get("adjustmentType")[0]);
-      adjustmentSummaryReportParam.setAdjustmentType(StringUtils.isBlank(filterCriteria.get("adjustmentType")[0]) ? "All Adjustment Types" : filterCriteria.get("adjustmentType")[0]);
-      adjustmentSummaryReportParam.setPeriod(StringUtils.isBlank(filterCriteria.get("period")[0]) ? 0 : Long.parseLong(filterCriteria.get("period")[0].toString()));
+      adjustmentSummaryReportParam.setFacilityTypeId(StringHelper.isBlank(filterCriteria,"facilityType") ? 0 : Integer.parseInt(filterCriteria.get("facilityTypeId")[0])); //defaults to 0
+      adjustmentSummaryReportParam.setProductCategoryId(StringHelper.isBlank(filterCriteria,("productCategory")) ? 0 : Integer.parseInt(filterCriteria.get("productCategory")[0])); //defaults to 0
+      adjustmentSummaryReportParam.setProductId(StringHelper.isBlank(filterCriteria,"product") ? 0 : Integer.parseInt(filterCriteria.get("product")[0])); //defaults to 0
+      adjustmentSummaryReportParam.setRgroupId(StringHelper.isBlank(filterCriteria,"requisitionGroup") ? 0 : Integer.parseInt(filterCriteria.get("requisitionGroup")[0])); //defaults to 0
+      adjustmentSummaryReportParam.setProgramId(StringHelper.isBlank(filterCriteria,"program") ? 0 : Integer.parseInt(filterCriteria.get("program")[0])); //defaults to 0
+      adjustmentSummaryReportParam.setAdjustmentTypeId(StringHelper.isBlank(filterCriteria,"adjustmentType") ? "" : filterCriteria.get("adjustmentType")[0]);
+      adjustmentSummaryReportParam.setAdjustmentType(StringHelper.isBlank(filterCriteria,"adjustmentType") ? "All Adjustment Types" : filterCriteria.get("adjustmentType")[0]);
+      adjustmentSummaryReportParam.setPeriod(StringHelper.isBlank(filterCriteria,"period") ? 0 : Long.parseLong(filterCriteria.get("period")[0].toString()));
       adjustmentSummaryReportParam.setPeriodObject(processingPeriodService.getById(adjustmentSummaryReportParam.getPeriod()));
 
     }
