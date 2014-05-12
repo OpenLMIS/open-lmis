@@ -6,6 +6,8 @@ import org.openlmis.pageobjects.HomePage;
 import org.openlmis.pageobjects.LoginPage;
 import org.openlmis.pageobjects.ManageGeographicZonesPage;
 import org.openlmis.pageobjects.PageObjectFactory;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Listeners;
@@ -62,8 +64,39 @@ public class ManageGeographicZones extends TestCaseHelper {
     homePage.verifyAdminTabs();
     manageGeographicZonesPage.goToGeoZoneTab();
     manageGeographicZonesPage.changeSearchOption();
-    manageGeographicZonesPage.searchGeoZoneUsingGeoZoneParentName("Dis");
+    manageGeographicZonesPage.searchGeoZoneUsingGeoZoneParentName("Arusha");
+    manageGeographicZonesPage.verifySearchResultTable();
+    manageGeographicZonesPage.verifySearchResultBody();
+    manageGeographicZonesPage.verifySearchResult("Arusha");
+    manageGeographicZonesPage.verifySearchResult("9 matches found for 'dis'");
+  }
 
+  @Test(groups = {"admin"})
+  public  void testWithNoSearchResult() throws SQLException
+  {
+    dbWrapper.assignRight("Admin", "MANAGE_GEOGRAPHIC_ZONE");
+    HomePage homePage = loginPage.loginAs("Admin123", "Admin123");
+    ManageGeographicZonesPage manageGeographicZonesPage = homePage.navigateManageGeographicZonesPage();
+    homePage.verifyAdminTabs();
+    manageGeographicZonesPage.goToGeoZoneTab();
+    manageGeographicZonesPage.changeSearchOption();
+    manageGeographicZonesPage.searchGeoZoneUsingGeoZoneParentName("XYZ");
+    manageGeographicZonesPage.verifySearchResultTable();
+    manageGeographicZonesPage.verifySearchResultCounter("No matches found for 'XYZ'");
+  }
+
+  @Test(groups = {"admin"})
+  public  void testCrossButtonOnSearchTable() throws SQLException
+  {
+    dbWrapper.assignRight("Admin", "MANAGE_GEOGRAPHIC_ZONE");
+    HomePage homePage = loginPage.loginAs("Admin123", "Admin123");
+    ManageGeographicZonesPage manageGeographicZonesPage = homePage.navigateManageGeographicZonesPage();
+    homePage.verifyAdminTabs();
+    manageGeographicZonesPage.goToGeoZoneTab();
+    manageGeographicZonesPage.changeSearchOption();
+    manageGeographicZonesPage.searchGeoZoneUsingGeoZoneParentName("XYZ");
+    manageGeographicZonesPage.verifySearchResultTable();
+    manageGeographicZonesPage.clickOnCrossButton();
   }
 
   @AfterMethod(groups = {"admin"})

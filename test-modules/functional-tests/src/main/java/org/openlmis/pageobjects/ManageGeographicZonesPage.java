@@ -2,10 +2,12 @@ package org.openlmis.pageobjects;
 
 
 import org.openlmis.UiUtils.TestWebDriver;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
+import java.util.List;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
 import static org.openqa.selenium.support.How.*;
@@ -70,6 +72,13 @@ public class ManageGeographicZonesPage extends Page {
   @FindBy(how = ID, using = "selectParentGeoZone")
   private static WebElement parentDropDown = null;
 
+  @FindBy(how = ID, using = "closeButton")
+  private static WebElement closeButton = null;
+
+  private String searchResultTable = "searchResultTable";
+
+  private String geoZoneList = "geoZoneList";
+
   private static ManageGeographicZonesPage instance;
 
   public static ManageGeographicZonesPage getInstance(TestWebDriver testWebDriver) {
@@ -97,7 +106,8 @@ public class ManageGeographicZonesPage extends Page {
 
   public void changeSearchOption() {
     testWebDriver.waitForElementToAppear(searchOptionButton);
-    testWebDriver.selectByVisibleText(searchOptionButton,"Geographic zone parent");
+    testWebDriver.click(searchOptionButton);
+    testWebDriver.findElement(By.linkText("Geographic zone parent")).click();
   }
 
   public void addNewGeoZone(String name, String code, String catchment_population, String latitude, String longitude, String level, String parent) {
@@ -130,6 +140,27 @@ public class ManageGeographicZonesPage extends Page {
   public void clickOnCancelButton() {
     testWebDriver.waitForElementToAppear(cancelButton);
     cancelButton.click();
+  }
+
+  public void verifySearchResultTable(){
+    testWebDriver.getElementByName(searchResultTable);
+  }
+
+  public void verifySearchResultCounter(String message){
+    testWebDriver.getElementByName(searchResultTable).getText().equalsIgnoreCase(message);
+  }
+
+  public void clickOnCrossButton(){
+  testWebDriver.click(closeButton);
+  }
+
+  public void verifySearchResultBody(){
+    testWebDriver.getElementById(geoZoneList);
+  }
+
+  public void verifySearchResult(String result){
+    testWebDriver.getElementById("searchResult");
+    testWebDriver.getElementById("name").click();
   }
 
   public void clickOnElement() {
