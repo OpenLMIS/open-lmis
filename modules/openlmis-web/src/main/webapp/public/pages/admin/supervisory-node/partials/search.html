@@ -67,10 +67,10 @@
     </thead>
     <tbody>
     <tr ng-repeat="supervisoryNode in supervisoryNodeList">
-      <td><a ng-href="" ng-bind="supervisoryNode.name"></a></td>
-      <td ng-bind="supervisoryNode.code"></td>
-      <td ng-bind="supervisoryNode.facility.name"></td>
-      <td ng-bind="supervisoryNode.parent.name"></td>
+      <td><a id="name{{$index}}" ng-href="" ng-bind="supervisoryNode.name"></a></td>
+      <td id="code{{$index}}" ng-bind="supervisoryNode.code"></td>
+      <td id="facility{{$index}}" ng-bind="supervisoryNode.facility.name"></td>
+      <td id="parent{{$index}}" ng-bind="supervisoryNode.parent.name"></td>
     </tr>
     </tbody>
   </table>
