@@ -15,6 +15,9 @@ function AdminDashboardController($scope,$timeout,$filter,$location,dashboardFil
 
     $scope.formFilter = {
     };
+    $scope.formPanel = {openPanel:true};
+
+    $scope.alertsPanel = {openPanel:true};
 
     initialize();
 
@@ -51,13 +54,12 @@ function AdminDashboardController($scope,$timeout,$filter,$location,dashboardFil
 
     });
 
-    $scope.$watch('formFilter.facilityId', function (selection) {
+    $scope.processFacilityFilter = function(){
         $scope.filterObject.facilityId = $scope.formFilter.facilityId;
+        $scope.loadFillRates();
 
-       $scope.loadFillRates();
 
-    });
-
+    };
 
     $scope.filterProductsByProgram = function (){
         if(isUndefined($scope.formFilter.programId)){
@@ -703,11 +705,16 @@ function AdminDashboardController($scope,$timeout,$filter,$location,dashboardFil
                 $scope.processSupervisoryNodeChange();
 
                 $scope.filterObject.programId = userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_PROGRAM];
-                $scope.filterObject.periodId = userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_PERIOD];
                 $scope.filterObject.scheduleId = userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_SCHEDULE];
+
+                $scope.formFilter = $scope.filterObject;
+                $scope.changeSchedule();
                 $scope.filterObject.year = date.getFullYear() - 1;
+                $scope.filterObject.periodId = userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_PERIOD];
+
                 $scope.filterObject.rgroupId = userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_REQUISITION_GROUP];
                 $scope.filterObject.productIdList = userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_PRODUCTS].split(',');
+                $scope.filterObject.facilityId = $scope.formFilter.facilityId = userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_FACILITY];
 
                 $scope.registerWatches();
 

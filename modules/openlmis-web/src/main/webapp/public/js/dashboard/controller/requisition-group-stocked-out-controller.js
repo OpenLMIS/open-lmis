@@ -11,6 +11,10 @@ function RequisitionGroupStockedOutController($scope,$location,$routeParams,dash
 
     $scope.formFilter = {};
 
+    $scope.formPanel = {openPanel:true};
+
+    $scope.alertsPanel = {openPanel:true};
+
     $scope.startYears = [];
     $scope.showProductsFilter = true;
     $scope.$parent.currentTab = 'DISTRICT-STOCK-OUT';

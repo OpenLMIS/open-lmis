@@ -11,6 +11,10 @@ function StockedOutController($scope, $location, programsList, dashboardMenuServ
 
     $scope.formFilter = {};
 
+    $scope.formPanel = {openPanel:true};
+
+    $scope.alertsPanel = {openPanel:true};
+
     initialize();
 
     function initialize() {

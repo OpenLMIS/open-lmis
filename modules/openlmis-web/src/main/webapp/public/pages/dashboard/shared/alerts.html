@@ -1,74 +1,92 @@
 
-<div ng-controller="AlertsController">
-    <div class="row-fluid"   style="margin-top: 5px">
-        <div class="span6">
-           <table class="table-bordered table table-striped" ng-show="dataRows.alert == undefined || dataRows.alert.length == 0">
-                <thead>
-                <tr class="gradient-header">
-                    <th openlmis-message="title.alerts" style="text-align: center"></th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td>No data to show under selected filters</td>
-                </tr>
-                </tbody>
-
-            </table>
-            <div ng-show="dataRows.alert.length > 0">
-                <table ng-show="dataRows.alert.length > 0" class="table-bordered table table-striped pull-right"
-                       ng-table="alertTableParams"  >
-                    <tbody >
-                    <tr ng-repeat="alert in dataRows.alert" >
-                        <td data-title="Alerts">
-                            <a href="" ng-click="showAlertDetails(alert.detailTable,alert.id)">{{ alert.staticsValue }}</a>
-                            {{ alert.description}}
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
+<accordion>
+    <accordion-group is-open="alertsPanel.openPanel">
+        <accordion-heading>
+            <div class="accordion-title">
+                <div class="caption">
+                    <i class="flaticon-google8"></i> <span openlmis-message="title.alert"></span>
+                </div>
+                <div class="tools">
+                    <i  ng-class="{'icon-minus-sign': alertsPanel.openPanel, 'icon-plus-sign': !alertsPanel.openPanel}"></i>
+                </div>
             </div>
+        </accordion-heading>
+        <div ng-controller="AlertsController">
+            <div class="row-fluid"   style="margin-top: 5px">
+                <div class="span6">
+                    <table class="table-bordered table table-striped" ng-show="dataRows.alert == undefined || dataRows.alert.length == 0">
+                        <thead>
+                        <tr class="gradient-header">
+                            <th openlmis-message="title.alerts" style="text-align: center"></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>No data to show under selected filters</td>
+                        </tr>
+                        </tbody>
 
-        </div>
-        <div class="span6">
-            <table class="table table-bordered" ng-show="dataRows.stock == undefined || dataRows.stock.length == 0">
-                <thead>
-                <tr class="gradient-header" >
-                    <th openlmis-message="title.stock.outs" style="text-align: center"></th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td>No data to show under selected filters</td>
-                </tr>
-                </tbody>
+                    </table>
+                    <div ng-show="dataRows.alert.length > 0">
+                        <table ng-show="dataRows.alert.length > 0" class="table-bordered table table-striped pull-right"
+                               ng-table="alertTableParams"  >
+                            <tbody >
+                            <tr ng-repeat="alert in dataRows.alert" >
+                                <td data-title="Alerts">
+                                    <a href="" ng-click="showAlertDetails(alert.detailTable,alert.id)">{{ alert.staticsValue }}</a>
+                                    {{ alert.description}}
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
 
-            </table>
+                </div>
+                <div class="span6">
+                    <table class="table table-bordered" ng-show="dataRows.stock == undefined || dataRows.stock.length == 0">
+                        <thead>
+                        <tr class="gradient-header" >
+                            <th openlmis-message="title.stock.outs" style="text-align: center"></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>No data to show under selected filters</td>
+                        </tr>
+                        </tbody>
 
-            <div ng-show="dataRows.stock.length > 0">
-                <table ng-show="dataRows.stock.length > 0" class="table-bordered table table-striped pull-right"
-                       ng-table="stockOutsTableParams"  >
-                    <tbody >
-                    <tr ng-repeat="stock in dataRows.stock" >
-                        <td data-title="'Stock outs'">
-                            {{stock.description}}
-                        </td>
-                        <td><a href="" ng-click="showAlertDetails(stock.detailTable,stock.id)">View details</a></td>
-                    </tr>
-                    </tbody>
-                </table>
+                    </table>
+
+                    <div ng-show="dataRows.stock.length > 0">
+                        <table ng-show="dataRows.stock.length > 0" class="table-bordered table table-striped pull-right"
+                               ng-table="stockOutsTableParams"  >
+                            <tbody >
+                            <tr ng-repeat="stock in dataRows.stock" >
+                                <td data-title="'Stock outs'">
+                                    {{stock.description}}
+                                </td>
+                                <td><a href="" ng-click="showAlertDetails(stock.detailTable,stock.id)">View details</a></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="alert-summary">
+                <ul>
+                    <li ng-repeat="summary in alertSummary" ng-class="summary.alertType">
+                        {{ summary.staticsValue }} {{ summary.description }}
+                        <div><a href="" ng-click="showAlertDetails(summary.detailTable,summary.id)" openlmis-message="button.view.detail"></a></div>
+                    </li>
+                </ul>
             </div>
         </div>
-    </div>
-    <div class="alert-summary">
-        <ul>
-            <li ng-repeat="summary in alertSummary" ng-class="summary.alertType">
-                {{ summary.staticsValue }} {{ summary.description }}
-                <div><a href="" ng-click="showAlertDetails(summary.detailTable,summary.id)" openlmis-message="button.view.detail"></a></div>
-            </li>
-        </ul>
-    </div>
-</div>
+
+    </accordion-group>
+</accordion>
+
+
+
 
 
 
