@@ -14,7 +14,7 @@ function ShipmentLeadTimeController($scope,$filter, programsList,dashboardFilter
 
     $scope.formPanel = {openPanel:true};
 
-    $scope.alertsPanel = {openPanel:true};
+    $scope.alertsPanel = {openPanel:false};
 
     initialize();
 

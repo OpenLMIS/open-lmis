@@ -281,6 +281,7 @@ function StockController($scope, $routeParams,dashboardFiltersHistoryService, pr
             return;
 
         }else if(!_.isEmpty($routeParams)){
+            $scope.alertsPanel.openPanel = false;
 
             $scope.formFilter.supervisoryNodeId = $routeParams.supervisoryNodeId;
             $scope.processSupervisoryNodeChange();
