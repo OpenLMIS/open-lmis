@@ -10,9 +10,6 @@
 
 function SupervisoryNodeSearchController($scope, $location, $routeParams, SupervisoryNodesSearch) {
 
-  $scope.previousQuery = '';
-  $scope.previousSearchOption = undefined;
-  $scope.pagination = undefined;
 
   $scope.searchOptions = [
     {value: "node", name: "option.value.supervisory.node"},
@@ -24,45 +21,26 @@ function SupervisoryNodeSearchController($scope, $location, $routeParams, Superv
   $scope.selectSearchType = function (searchOption) {
     $scope.selectedSearchOption = searchOption;
     $scope.pagination = undefined;
-    searchOption = $scope.selectedSearchOption.value === 'parent' ? true : false;
-    if ($scope.previousSearchOption !== searchOption) $scope.previousQuery = '';
     $scope.currentPage = undefined;
-    $scope.showSupervisoryNodeSearchResults();
-
   };
 
 
-  $scope.showSupervisoryNodeSearchResults = function () {
+  $scope.showSupervisoryNodeSearchResults = function (resetPage) {
+    $scope.searchParam = $scope.query;
     $scope.currentPage = $routeParams.page ? utils.parseIntWithBaseTen($routeParams.page) : 1;
-
-    var query = $scope.query;
-
-    var len = (query === undefined) ? 0 : query.length;
-
+    if(resetPage) $scope.currentPage = undefined;
     var searchOption = $scope.selectedSearchOption.value === 'parent' ? true : false;
 
-    var page = $scope.pagination ? $scope.pagination.page : undefined;
-    if (len >= 3) {
-      if ($scope.previousQuery.substr(0, 3) === query.substr(0, 3) && $scope.currentPage === page) {
-        $scope.previousQuery = query;
-        filterSupervisoryNode(query);
-        return true;
-      }
-      $scope.previousQuery = query;
-      $scope.previousSearchOption = searchOption;
-      SupervisoryNodesSearch.get({page: $scope.currentPage, param: $scope.query.substr(0, 3), parent: searchOption}, function (data) {
-        $scope.supervisoryNodeList = data.supervisoryNodes;
-        $scope.pagination = data.pagination;
-        filterSupervisoryNode(query);
-      }, {});
-      return true;
-    } else {
-      return false;
-    }
+    SupervisoryNodesSearch.get({page: $scope.currentPage, param: $scope.searchParam, parent: searchOption}, function (data) {
+      $scope.supervisoryNodeList = data.supervisoryNodes;
+      $scope.pagination = data.pagination;
+      $scope.resultCount = $scope.pagination.totalRecords;
+    }, {});
+    return true;
   };
 
   $scope.$on('$routeUpdate', function () {
-    $scope.showSupervisoryNodeSearchResults();
+    $scope.showSupervisoryNodeSearchResults(false);
   });
 
   $scope.$watch('currentPage', function () {
@@ -76,18 +54,4 @@ function SupervisoryNodeSearchController($scope, $location, $routeParams, Superv
   };
 
 
-  var filterSupervisoryNode = function (query) {
-    $scope.filteredNodes = [];
-    query = query || "";
-
-    angular.forEach($scope.supervisoryNodeList, function (supervisoryNode) {
-      var name = $scope.parent ? supervisoryNode.parent.name : supervisoryNode.name;
-
-      if (name.toLowerCase().indexOf(query.trim().toLowerCase()) >= 0) {
-        $scope.filteredNodes.push(supervisoryNode);
-      }
-    });
-
-    $scope.resultCount = $scope.pagination.totalRecords;
-  };
 }
