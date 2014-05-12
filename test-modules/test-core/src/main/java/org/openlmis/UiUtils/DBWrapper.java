@@ -1454,13 +1454,13 @@ public class DBWrapper {
   public void insertShipmentData(int orderID, String productCode, Integer quantityShipped, Integer packsToShip, Boolean fullSupplyFlag) throws SQLException {
     String programId = getAttributeFromTable("requisitions", "programId", "id", String.valueOf(orderID));
     String programCode = getAttributeFromTable("programs", "code", "id", String.valueOf(programId));
-    String programProductId = null;
+    String programProductId;
     NumberFormat numberFormat = NumberFormat.getIntegerInstance();
     numberFormat.setMinimumIntegerDigits(8);
     numberFormat.setGroupingUsed(false);
     Integer categoryDisplayOrder = null;
     Integer productDisplayOrder = null;
-    String categoryName = null;
+    String categoryName;
     String orderNumber = "O" + programCode.substring(0, Math.min(programCode.length(), 35)) + numberFormat.format(orderID) + "R";
     ResultSet rs = (query("select id from program_products where programId=" + programId + " and productId = (Select id from products where code='" + productCode + "');"));
     if (rs.next()) {
@@ -1512,7 +1512,7 @@ public class DBWrapper {
 
   public Map<String, String> getPodLineItemFor(Integer orderId, String productCode) throws SQLException {
 
-    return select("select * from pod_line_items where productCode = '%s' AND podid =(Select id from pod where orderId= %d )", productCode, orderId).get(0);
+    return select("select * from pod_line_items where productCode = '%s' AND podId =(Select id from pod where orderId= %d )", productCode, orderId).get(0);
   }
 
   public void insertTargetGroupEntityAndProductsInMappingTable(String targetGroupEntity, String productCode, boolean isChildCoverageMapping) throws SQLException {
@@ -1520,7 +1520,7 @@ public class DBWrapper {
   }
 
   public Map<String, String> getDistributionDetails(String deliveryZoneName, String programName, String periodName) throws SQLException {
-    return select("select * from distributions where deliveryZoneId =(Select id from delivery_zones where name= '%s')AND programid = (Select id from programs where name = '%s') AND periodid=(Select id from processing_periods where name= '%s' )", deliveryZoneName, programName, periodName).get(0);
+    return select("select * from distributions where deliveryZoneId =(Select id from delivery_zones where name= '%s')AND programId = (Select id from programs where name = '%s') AND periodId=(Select id from processing_periods where name= '%s' )", deliveryZoneName, programName, periodName).get(0);
   }
 
   public void updateOrderStatus(String orderStatus) throws SQLException {
@@ -1547,7 +1547,7 @@ public class DBWrapper {
   }
 
   public ResultSet getAdultCoverageDetails(String demographicGroup, String facilityVisitId) throws SQLException {
-    ResultSet resultSet = query("SELECT * FROM vaccination_adult_coverage_line_items WHERE demographicgroup = '%s' " +
+    ResultSet resultSet = query("SELECT * FROM vaccination_adult_coverage_line_items WHERE demographicGroup = '%s' " +
       "AND facilityVisitId = %s;", demographicGroup, facilityVisitId);
     resultSet.next();
     return resultSet;

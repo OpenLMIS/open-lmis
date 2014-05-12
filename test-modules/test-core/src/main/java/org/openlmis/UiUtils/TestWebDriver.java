@@ -258,8 +258,7 @@ public class TestWebDriver {
   }
 
   public byte[] getScreenshot() {
-    byte[] screenshotFile = ((TakesScreenshot) driver).getScreenshotAs(BYTES);
-    return screenshotFile;
+    return ((TakesScreenshot) driver).getScreenshotAs(BYTES);
   }
 
   public void scrollToElement(WebElement elementToClick) {
