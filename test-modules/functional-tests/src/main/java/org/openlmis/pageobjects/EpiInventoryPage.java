@@ -132,10 +132,6 @@ public class EpiInventoryPage extends DistributionTab {
     removeFocusFromElement();
   }
 
-  public boolean errorMessageDisplayed(int rowNumber) {
-    return testWebDriver.findElement(By.id("spoiledQuantityError" + (rowNumber - 1))).isDisplayed();
-  }
-
   public String getDeliveredQuantity(int rowNumber) {
     return testWebDriver.findElement(By.id("deliveredQuantity" + (rowNumber - 1))).getAttribute("value");
   }

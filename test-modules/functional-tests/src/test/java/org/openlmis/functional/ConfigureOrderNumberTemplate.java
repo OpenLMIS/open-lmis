@@ -6,7 +6,6 @@ import org.openlmis.pageobjects.HomePage;
 import org.openlmis.pageobjects.LoginPage;
 import org.openlmis.pageobjects.PageObjectFactory;
 import org.openlmis.pageobjects.edi.ConfigureOrderNumberPage;
-import org.openlmis.pageobjects.edi.ConfigureShipmentPage;
 import org.openlmis.pageobjects.edi.ConfigureSystemSettingsPage;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
@@ -33,7 +32,7 @@ public class ConfigureOrderNumberTemplate extends TestCaseHelper {
   @BeforeMethod(groups = "admin")
   public void setUp() throws InterruptedException, SQLException, IOException {
     super.setup();
-    dbWrapper.setupOrderNumberConfiguration("O",true,true,true,true);
+    dbWrapper.setupOrderNumberConfiguration("O", true, true, true, true);
     loginPage = PageObjectFactory.getLoginPage(testWebDriver, baseUrlGlobal);
   }
 

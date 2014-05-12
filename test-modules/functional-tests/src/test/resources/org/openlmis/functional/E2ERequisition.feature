@@ -115,10 +115,10 @@ Feature: End to end requisition flow
     Then I should see all products to update pod
     And I enter "10" as quantity received, "78" as quantity returned and "notes" as notes in row "1"
     And I enter "35" as quantity received, "" as quantity returned and "Other" as notes in row "2"
-    And I enter "openLMIS" as deliveredBy,"Facility Incharge" as receivedBy and "27/02/2014" as receivedDate
+    And I enter "openLMIS" as deliveredBy,"Facility In charge" as receivedBy and "27/02/2014" as receivedDate
     Then I submit POD
     Then I verify quantity received, quantity returned,notes,deliveredBy,receivedBy,receivedDate disabled
-    And I verify in database deliveredBy as "openLMIS",receivedBy as "Facility Incharge" and receivedDate as "2014-02-27 00:00:00"
+    And I verify in database deliveredBy as "openLMIS",receivedBy as "Facility In charge" and receivedDate as "2014-02-27 00:00:00"
     Then I access view orders page
     And I verify order status as "Received" in row "1"
     Then I logout

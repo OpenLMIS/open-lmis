@@ -1,20 +1,15 @@
 package org.openlmis.pageobjects.edi;
 
+import org.openlmis.UiUtils.TestWebDriver;
 import org.openlmis.pageobjects.Page;
-
-  import org.openlmis.UiUtils.TestWebDriver;
-  import org.openlmis.pageobjects.Page;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
-  import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 
-  import static com.thoughtworks.selenium.SeleneseTestBase.*;
 import static com.thoughtworks.selenium.SeleneseTestBase.assertEquals;
 import static org.openqa.selenium.support.How.ID;
-  import static org.openqa.selenium.support.How.XPATH;
-  import static org.openqa.selenium.support.PageFactory.initElements;
 
 
 public class ConfigureOrderNumberPage extends Page {

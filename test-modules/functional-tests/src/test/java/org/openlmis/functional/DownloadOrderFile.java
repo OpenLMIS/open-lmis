@@ -27,8 +27,6 @@ import java.sql.SQLException;
 import java.text.NumberFormat;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
 import static com.thoughtworks.selenium.SeleneseTestCase.assertEquals;
@@ -96,13 +94,6 @@ public class DownloadOrderFile extends TestCaseHelper {
     assertTrue("Order data incorrect in line number " + lineNumber, csvRows[lineNumber - 1].contains(data));
   }
 
-  public void checkOrderFileDataForPattern(int lineNumber, String data) {
-    Pattern orderDataPattern = Pattern.compile(data);
-    testWebDriver.sleep(1000);
-    Matcher matcher = orderDataPattern.matcher(csvRows[lineNumber - 1]);
-    assertTrue("Order data incorrect in line number " + lineNumber, !matcher.find());
-  }
-
   @And("^I verify order date format \"([^\"]*)\" in line \"([^\"]*)\"$")
   public void checkOrderFileOrderDate(String dateFormat, int lineNumber) throws SQLException {
     String createdDate = dbWrapper.getCreatedDate("orders", dateFormat);
@@ -145,8 +136,8 @@ public class DownloadOrderFile extends TestCaseHelper {
     dbWrapper.insertFulfilmentRoleAssignment("lmu", "lmu", "F10");
 
     dbWrapper.updateFieldValueToNull("products", "strength", "code", "P10");
-    dbWrapper.updateFieldValueToNull("products", "formid", "code", "P10");
-    dbWrapper.updateFieldValueToNull("products", "dosageunitid", "code", "P10");
+    dbWrapper.updateFieldValueToNull("products", "formId", "code", "P10");
+    dbWrapper.updateFieldValueToNull("products", "dosageUnitId", "code", "P10");
 
     LoginPage loginPage = PageObjectFactory.getLoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(userSICUserName, password);

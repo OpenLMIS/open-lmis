@@ -24,9 +24,6 @@ import static org.openqa.selenium.support.How.XPATH;
 
 public class ViewOrdersPage extends RequisitionPage {
 
-  @FindBy(how = XPATH, using = "//div[@class='ngCellText ng-scope col0 colt0']/span")
-  private static WebElement orderNumberOnViewOrdersScreen = null;
-
   @FindBy(how = XPATH, using = "//div[@class='ngCellText ng-scope col2 colt2']/span")
   private static WebElement programOnViewOrderScreen = null;
 

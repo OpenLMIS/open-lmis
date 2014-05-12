@@ -145,8 +145,7 @@ public class E2EUpload extends TestCaseHelper {
       dbWrapper.getAttributeFromTable("facility_types", "id", "code", "warehouse"));
     verifyGeographicZoneAndFacilityTypeForVirtualFacility(virtualFacilityCode, parentFacilityCode);
 
-    dbWrapper.updateFieldValue("facilities", "typeid", "5", "code", virtualFacilityCode);
-    // dbWrapper.changeVirtualFacilityTypeId(virtualFacilityCode, 5);
+    dbWrapper.updateFieldValue("facilities", "typeId", "5", "code", virtualFacilityCode);
     uploadPage.uploadFacilities("QA_Parent_Facility_New_Name.csv");
     assertEquals("Dispensary", dbWrapper.getAttributeFromTable("facilities", "name", "code", parentFacilityCode));
     assertNotEquals(dbWrapper.getAttributeFromTable("facilities", "name", "code", virtualFacilityCode),

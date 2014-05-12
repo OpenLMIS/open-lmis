@@ -22,9 +22,7 @@ import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 import java.util.List;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.assertEquals;
-import static org.openqa.selenium.support.How.CSS;
-import static org.openqa.selenium.support.How.ID;
-import static org.openqa.selenium.support.How.XPATH;
+import static org.openqa.selenium.support.How.*;
 
 
 public class DistributionPage extends Page {
@@ -71,14 +69,8 @@ public class DistributionPage extends Page {
   @FindBy(how = XPATH, using = "//div[2][@class='alert alert-info']/span")
   private WebElement syncAlertMessage = null;
 
-  @FindBy(how = ID, using = "duplicateFacilities")
-  private WebElement facilityAlreadySyncMessage = null;
-
   @FindBy(how = ID, using = "failedFacilityHeader")
   private WebElement facilitySyncFailedMessage = null;
-
-  @FindBy(how = ID, using = "distributionInitiated")
-  private WebElement distributionAlreadyInitiatedMessage = null;
 
   @FindBy(how = ID, using = "retryButton")
   private WebElement retryButton = null;
@@ -187,11 +179,6 @@ public class DistributionPage extends Page {
     assertEquals(message, saveSuccessMessageDiv.getText());
   }
 
-  public String getFacilityAlreadySyncMessage() {
-    testWebDriver.waitForElementToAppear(facilityAlreadySyncMessage);
-    return facilityAlreadySyncMessage.getText();
-  }
-
 
   public void verifyFacilityNotSupportedMessage(String programFirst, String deliveryZoneNameFirst) {
     testWebDriver.sleep(500);
@@ -292,17 +279,18 @@ public class DistributionPage extends Page {
     okButton.click();
   }
 
-  public void clickPortugueseLink(){
+  public void clickPortugueseLink() {
     testWebDriver.sleep(1000);
     testWebDriver.waitForElementToAppear(langPortugueseLink);
     langPortugueseLink.click();
   }
 
-  public void clickEnglishLink(){
+  public void clickEnglishLink() {
     testWebDriver.sleep(1000);
     testWebDriver.waitForElementToAppear(langEnglishLink);
     langEnglishLink.click();
   }
+
   public void CancelDeleteDistribution() {
     testWebDriver.waitForElementToAppear(cancelButton);
     cancelButton.click();

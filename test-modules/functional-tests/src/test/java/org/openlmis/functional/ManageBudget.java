@@ -444,6 +444,5 @@ public class ManageBudget extends TestCaseHelper {
       dbWrapper.deleteData();
       dbWrapper.closeConnection();
     }
-
   }
 }

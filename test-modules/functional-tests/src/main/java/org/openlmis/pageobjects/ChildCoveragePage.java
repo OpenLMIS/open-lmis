@@ -127,15 +127,6 @@ public class ChildCoveragePage extends DistributionTab {
   @FindBy(how = ID, using = "coverageOpenedVial11")
   private static WebElement openedVialsPolioNR = null;
 
-  @FindBy(how = ID, using = "coverageOpenedVial51")
-  private static WebElement openedVialsPentaNR = null;
-
-  @FindBy(how = ID, using = "coverageOpenedVial80")
-  private static WebElement openedVialsPcvNR = null;
-
-  @FindBy(how = ID, using = "coverageOpenedVial110")
-  private static WebElement openedVialsMeaslesNR = null;
-
   @FindBy(how = ID, using = "childCoverageTable")
   private static WebElement childCoverageTable = null;
 
@@ -511,24 +502,6 @@ public class ChildCoveragePage extends DistributionTab {
   public void applyNrToPolioOpenedVials() {
     testWebDriver.waitForElementToAppear(openedVialsPolioNR);
     openedVialsPolioNR.click();
-    removeFocusFromElement();
-  }
-
-  public void applyNrToPentaOpenedVials() {
-    testWebDriver.waitForElementToAppear(openedVialsPentaNR);
-    openedVialsPentaNR.click();
-    removeFocusFromElement();
-  }
-
-  public void applyNrToPcvOpenedVials() {
-    testWebDriver.waitForElementToAppear(openedVialsPcvNR);
-    openedVialsPcvNR.click();
-    removeFocusFromElement();
-  }
-
-  public void applyNrToMeaslesOpenedVials() {
-    testWebDriver.waitForElementToAppear(openedVialsMeaslesNR);
-    openedVialsMeaslesNR.click();
     removeFocusFromElement();
   }
 

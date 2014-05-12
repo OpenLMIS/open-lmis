@@ -23,9 +23,6 @@ public class ManagePodPage extends Page {
   @FindBy(how = XPATH, using = "//div/span[contains(text(),'PeriodName1 (01/12/2012 - 01/12/2015)')]")
   private static WebElement periodDetailsOnManagePodScreen = null;
 
-  @FindBy(how = XPATH, using = "//div/span/[contains(text(),'16/12/2013 03:06:04')]")
-  private static WebElement orderDateTimeDetailsOnManagePodScreen = null;
-
   @FindBy(how = XPATH, using = "//div/span[contains(text(),'Transfer failed')]")
   private static WebElement orderStatusDetailsOnManagePodScreen = null;
 
@@ -37,9 +34,6 @@ public class ManagePodPage extends Page {
 
   @FindBy(how = XPATH, using = "//div[@class='ngHeaderText ng-binding colt1']")
   private static WebElement headerSupplyingDepotOnManagePodScreen = null;
-
-  @FindBy(how = XPATH, using = "//div[@class='ngHeaderText ng-binding colt2']")
-  private static WebElement headerFacilityCodeNameOnManagePodScreen = null;
 
   @FindBy(how = XPATH, using = "//div[@class='ngHeaderText ng-binding colt3']")
   private static WebElement headerProgramOnManagePodScreen = null;
@@ -59,9 +53,6 @@ public class ManagePodPage extends Page {
   @FindBy(how = ID, using = "noOrdersPresent")
   private static WebElement noOrderPresentMessageOnPodScreen = null;
 
-  @FindBy(how = XPATH, using = " //i[@class='icon-ok']")
-  private static WebElement emergencyIconOnPodScreen = null;
-
   public ManagePodPage(TestWebDriver testWebDriver) {
     super(testWebDriver);
     PageFactory.initElements(new AjaxElementLocatorFactory(TestWebDriver.getDriver(), 10), this);
@@ -69,11 +60,8 @@ public class ManagePodPage extends Page {
   }
 
   public String getHeaderOrderNo() {
-    return testWebDriver.getText(headerOrderNoOnManagePodScreen);
-  }
 
-  public String getHeaderFacilityCodeName() {
-    return testWebDriver.getText(headerFacilityCodeNameOnManagePodScreen);
+    return testWebDriver.getText(headerOrderNoOnManagePodScreen);
   }
 
   public String getHeaderSupplyingDepotName() {
@@ -114,10 +102,6 @@ public class ManagePodPage extends Page {
 
   public String getPeriodDetails() {
     return testWebDriver.getText(periodDetailsOnManagePodScreen);
-  }
-
-  public String getOrderDateTimeDetails() {
-    return testWebDriver.getText(orderDateTimeDetailsOnManagePodScreen);
   }
 
   public String getOrderStatusDetails() {

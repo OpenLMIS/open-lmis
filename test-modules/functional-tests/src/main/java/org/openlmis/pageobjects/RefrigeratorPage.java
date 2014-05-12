@@ -122,9 +122,6 @@ public class RefrigeratorPage extends DistributionTab {
   @FindBy(how = ID, using = "duplicateSerialNumberError")
   public static WebElement duplicateRefrigeratorMessage = null;
 
-  @FindBy(how = ID, using = "noRefrigerators")
-  private static WebElement noRefrigeratorAddedMessage = null;
-
   public RefrigeratorPage(TestWebDriver driver) {
     super(driver);
     PageFactory.initElements(new AjaxElementLocatorFactory(TestWebDriver.getDriver(), 10), this);
@@ -459,10 +456,6 @@ public class RefrigeratorPage extends DistributionTab {
     assertFalse("problemSinceLastVisitYesRadio enabled.", problemSinceLastVisitYesRadio.isEnabled());
 
     assertTrue("notesTextArea enabled.", notesTextArea.isEnabled());
-  }
-
-  public Boolean isNoRefrigeratorAddedMessagePresent() {
-    return noRefrigeratorAddedMessage.isDisplayed();
   }
 
   public boolean isAddNewButtonEnabled() {

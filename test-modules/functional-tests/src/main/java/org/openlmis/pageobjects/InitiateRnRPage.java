@@ -99,9 +99,6 @@ public class InitiateRnRPage extends RequisitionPage {
   @FindBy(how = ID, using = "cost_0")
   private static WebElement totalCost = null;
 
-  @FindBy(how = ID, using = "price_0")
-  private static WebElement pricePerPackForFirstProduct = null;
-
   @FindBy(how = ID, using = "packsToShip_0")
   private static WebElement packsToShipForFirstProduct = null;
 
@@ -554,7 +551,8 @@ public class InitiateRnRPage extends RequisitionPage {
     actualTotalCostFullSupply = getCostForAllItems(numberOfProducts);
     assertEquals(totalCostFooter.getText().trim().substring(1),
       new BigDecimal(actualTotalCostFullSupply + actualTotalCostNonFullSupply).setScale(2,
-        BigDecimal.ROUND_HALF_UP).toString());
+        BigDecimal.ROUND_HALF_UP).toString()
+    );
     showRnrCostDetailsIcon.click();
     testWebDriver.sleep(500);
   }
