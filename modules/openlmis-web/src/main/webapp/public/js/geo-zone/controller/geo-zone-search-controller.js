@@ -34,12 +34,12 @@ function GeoZoneSearchController($scope, GeographicZones, $location, navigateBac
   };
 
   $scope.$watch('currentPage', function () {
-    if ($scope.currentPage != 0)
+    if ($scope.currentPage !== 0)
       $scope.search();
   });
 
   $scope.$watch('query', function () {
-    if ($scope.query.length == 0)
+    if ($scope.query.length === 0)
       $scope.clearSearch();
   });
 
@@ -64,7 +64,7 @@ function GeoZoneSearchController($scope, GeographicZones, $location, navigateBac
   };
 
   $scope.triggerSearch = function (event) {
-    if (event.keyCode == 13) {
+    if (event.keyCode === 13) {
       $scope.search();
     }
   };
