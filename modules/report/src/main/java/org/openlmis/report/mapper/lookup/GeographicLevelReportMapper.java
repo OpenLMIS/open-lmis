@@ -25,7 +25,7 @@ import java.util.List;
 @Repository
 public interface GeographicLevelReportMapper {
 
-    @Select("SELECT id,code,name " +
+    @Select("SELECT * " +
             "   FROM " +
             "       geographic_levels order by id")
     List<GeographicLevel> getAll();

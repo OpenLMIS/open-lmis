@@ -107,6 +107,23 @@ public class LookupController {
         return RestResponse.response("processing-periods", lookupService.getAllProcessingPeriods());
     }
 
+    @RequestMapping(value = "/rest-api/lookup/processing-schedules", method = RequestMethod.POST, headers = ACCEPT_JSON)
+    public ResponseEntity getProcessingSchedules( Principal principal) {
+        return RestResponse.response("processing-schedules", lookupService.getAllProcessingSchedules());
+    }
+
+
+
+    @RequestMapping(value = "/rest-api/lookup/geographic-zones", method = RequestMethod.POST, headers = ACCEPT_JSON)
+    public ResponseEntity getGeographicZones( Principal principal) {
+        return RestResponse.response("geographic-zones", lookupService.getAllZones());
+    }
+
+    @RequestMapping(value = "/rest-api/lookup/geographic-levels", method = RequestMethod.POST, headers = ACCEPT_JSON)
+    public ResponseEntity getGeographicLevels( Principal principal) {
+        return RestResponse.response("geographic-levels", lookupService.getAllGeographicLevels());
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<RestResponse> handleException(Exception ex) {
         if (ex instanceof AccessDeniedException) {

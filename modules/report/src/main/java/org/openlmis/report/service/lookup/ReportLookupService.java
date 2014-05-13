@@ -14,6 +14,7 @@ import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.domain.GeographicLevel;
 import org.openlmis.core.repository.mapper.FacilityApprovedProductMapper;
+import org.openlmis.core.repository.mapper.ProcessingScheduleMapper;
 import org.openlmis.core.repository.mapper.ProgramProductMapper;
 import org.openlmis.core.service.ConfigurationSettingService;
 import org.openlmis.report.mapper.ReportRequisitionMapper;
@@ -82,6 +83,9 @@ public class ReportLookupService {
 
   @Autowired
   private ProcessingPeriodReportMapper processingPeriodMapper;
+
+  @Autowired
+  private ProcessingScheduleMapper processingScheduleMapper;
 
   @Autowired
   private ProductGroupReportMapper productGroupReportMapper;
@@ -297,6 +301,11 @@ public class ReportLookupService {
   public List<ProcessingPeriod> getAllProcessingPeriods() {
     return processingPeriodMapper.getAll();
   }
+
+    public List<ProcessingSchedule> getAllProcessingSchedules() {
+        return processingScheduleMapper.getAll();
+    }
+
 
   public List<ProcessingPeriod> getFilteredPeriods(Date startDate, Date endDate) {
     if (startDate == null && endDate == null) {

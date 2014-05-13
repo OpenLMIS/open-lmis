@@ -22,6 +22,10 @@ public class GeographicZone {
     private Integer id;
     private String name;
     private String parent;
+    private Integer parentId;
     private String code;
+    private Long catchmentPopulation;
+    private Double latitude;
+    private Double longitude;
 
 }
