@@ -312,8 +312,6 @@ public class DBWrapper {
       "values ('%s','%s',%d, (select id from geographic_zones where code='%s'))", code, name, levelId, parentName);
   }
 
-  public void allocateFacilityToUser(String userId, String facilityCode) throws SQLException {
-    update("update users set facilityId = (Select id from facilities where code = '%s') where id = '%s'", facilityCode, userId);
   public void allocateFacilityToUser(String userName, String facilityCode) throws SQLException {
     update("update users set facilityId = (Select id from facilities where code = '%s') where username = '%s'", facilityCode, userName);
   }
@@ -397,7 +395,7 @@ public class DBWrapper {
     update("delete from requisitions");
   }
 
-  public void deleteGeographicZones() throws SQLException{
+  public void deleteGeographicZones() throws SQLException {
     update("delete from geographic_zones");
   }
 
@@ -416,8 +414,8 @@ public class DBWrapper {
   public void insertSupervisoryNode(String facilityCode, String supervisoryNodeCode, String supervisoryNodeName,
                                     String supervisoryNodeParentCode) throws SQLException {
     update("INSERT INTO supervisory_nodes" +
-      "  (parentId, facilityId, name, code) VALUES" +
-      "  ((select id from  supervisory_nodes where code ='%s'), (SELECT id FROM facilities WHERE code = '%s'), '%s', '%s')",
+        "  (parentId, facilityId, name, code) VALUES" +
+        "  ((select id from  supervisory_nodes where code ='%s'), (SELECT id FROM facilities WHERE code = '%s'), '%s', '%s')",
       supervisoryNodeParentCode, facilityCode, supervisoryNodeName, supervisoryNodeCode
     );
   }
@@ -1477,13 +1475,15 @@ public class DBWrapper {
       }
 
       update("INSERT INTO shipment_line_items(orderNumber,productCode,quantityShipped,productName,dispensingUnit,productCategory," +
-        "productDisplayOrder,productCategoryDisplayOrder,packsToShip,fullSupply,orderId) VALUES ('%s', '%s', %d, %s, %s, '%s',%d ," +
-        "%d, %d, %b, %d)", orderNumber, productCode, quantityShipped, "'antibiotic Capsule 300/200/600 mg'", "'Strip'", categoryName,
-        productDisplayOrder, categoryDisplayOrder, packsToShip, fullSupplyFlag, orderID);
+          "productDisplayOrder,productCategoryDisplayOrder,packsToShip,fullSupply,orderId) VALUES ('%s', '%s', %d, %s, %s, '%s',%d ," +
+          "%d, %d, %b, %d)", orderNumber, productCode, quantityShipped, "'antibiotic Capsule 300/200/600 mg'", "'Strip'", categoryName,
+        productDisplayOrder, categoryDisplayOrder, packsToShip, fullSupplyFlag, orderID
+      );
     } else {
       update("INSERT INTO shipment_line_items(orderNumber,productCode,quantityShipped,productName,dispensingUnit,packsToShip,fullSupply," +
-        "orderId) VALUES ('%s', '%s', %d, %s, %s, %d, %b, %d)", orderNumber, productCode, quantityShipped, "'antibiotic Capsule 300/200/600 mg'",
-        "'Strip'", packsToShip, fullSupplyFlag, orderID);
+          "orderId) VALUES ('%s', '%s', %d, %s, %s, %d, %b, %d)", orderNumber, productCode, quantityShipped, "'antibiotic Capsule 300/200/600 mg'",
+        "'Strip'", packsToShip, fullSupplyFlag, orderID
+      );
     }
   }
 
