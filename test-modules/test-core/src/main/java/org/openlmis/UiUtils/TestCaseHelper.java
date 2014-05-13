@@ -101,6 +101,7 @@ public class TestCaseHelper {
       dbWrapper.configureTemplate(program);
 
     setupTestUserRoleRightsData(user, rightsList);
+    dbWrapper.deleteSupervisoryNodes();
     dbWrapper.insertSupervisoryNode("F10", "N1", "Node 1", "null");
     dbWrapper.insertRoleAssignment(user, "store in-charge");
     dbWrapper.insertSchedule("Q1stM", "QuarterMonthly", "QuarterMonth");
@@ -160,7 +161,7 @@ public class TestCaseHelper {
       dbWrapper.assignRight("store in-charge", rights);
     String passwordUsers = "TQskzK3iiLfbRVHeM1muvBCiiKriibfl6lh8ipo91hb74G3OvsybvkzpPI4S3KIeWTXAiiwlUU0iiSxWii4wSuS8mokSAieie";
     dbWrapper.insertUser(user, passwordUsers, "F10", "");
-    dbWrapper.insertSupervisoryNodeWithoutDelete("F10", "N2", "Node 2", "N1");
+    dbWrapper.insertSupervisoryNode("F10", "N2", "Node 2", "N1");
     dbWrapper.insertRoleAssignmentForSupervisoryNodeForProgramId(user, "store in-charge", "N1");
   }
 
@@ -256,6 +257,7 @@ public class TestCaseHelper {
       dbWrapper.configureTemplate(program);
 
     setupTestUserRoleRightsData(user, rightsList);
+    dbWrapper.deleteSupervisoryNodes();
     dbWrapper.insertSupervisoryNode(facilityCode1, "N1", "Node 1", "null");
     dbWrapper.insertRoleAssignment(user, "store in-charge");
     dbWrapper.insertSchedule("Q1stM", "QuarterMonthly", "QuarterMonth");

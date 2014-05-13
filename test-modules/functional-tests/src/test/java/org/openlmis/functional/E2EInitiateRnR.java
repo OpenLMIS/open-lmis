@@ -96,8 +96,9 @@ public class E2EInitiateRnR extends TestCaseHelper {
   @And("^I setup supervisory node data$")
   public void supervisoryNodeDataSetup() throws SQLException {
     dbWrapper.insertFacilities("F10", "F11");
+    dbWrapper.deleteSupervisoryNodes();
     dbWrapper.insertSupervisoryNode("F10", "N1", "Node 1", "null");
-    dbWrapper.insertSupervisoryNodeWithoutDelete("F11", "N2", "Node 2", "N1");
+    dbWrapper.insertSupervisoryNode("F11", "N2", "Node 2", "N1");
   }
 
   @And("^I setup warehouse data$")
@@ -150,7 +151,7 @@ public class E2EInitiateRnR extends TestCaseHelper {
 
   @And("^I have period \"([^\"]*)\" associated with schedule \"([^\"]*)\"$")
   public void insertPeriodAndAssociateItWithSchedule(String period, String schedule) throws SQLException {
-    dbWrapper.insertPeriodAndAssociateItWithSchedule(period, schedule);
+    dbWrapper.insertProcessingPeriod(period, period, "2013-09-29", "2020-09-30", 66, schedule);
   }
 
   @And("^I update \"([^\"]*)\" home facility$")

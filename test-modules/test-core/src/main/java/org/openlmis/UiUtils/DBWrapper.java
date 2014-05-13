@@ -93,10 +93,6 @@ public class DBWrapper {
     );
   }
 
-  public void insertPeriodAndAssociateItWithSchedule(String period, String schedule) throws SQLException {
-    insertProcessingPeriod(period, period, "2013-09-29", "2020-09-30", 66, schedule);
-  }
-
   public List<String> getProductDetailsForProgram(String programCode) throws SQLException {
     List<String> prodDetails = new ArrayList<>();
 
@@ -143,8 +139,7 @@ public class DBWrapper {
   }
 
   public void updateActiveStatusOfProgramProduct(String productCode, String programCode, String active) throws SQLException {
-    update("update program_products set active='%s' WHERE" +
-      " programId = (select id from programs where code='%s')  AND" +
+    update("update program_products set active='%s' WHERE programId = (select id from programs where code='%s')  AND" +
       " productId = (select id from products where code='%s')", active, programCode, productCode);
   }
 
@@ -152,14 +147,8 @@ public class DBWrapper {
     List<String> codeName = new ArrayList<>();
     ResultSet rs = query(
       "select f.code, f.name from facilities f, programs p, programs_supported ps, delivery_zone_members dzm, delivery_zones dz where " +
-        "dzm.DeliveryZoneId=dz.id and " +
-        "f.active='" + active + "' and " +
-        "p.id= ps.programId and " +
-        "p.code='" + program + "' and " +
-        "dz.id = dzm.DeliveryZoneId and " +
-        "dz.name='" + deliveryZoneName + "' and " +
-        "dzm.facilityId = f.id and " +
-        "ps.facilityId = f.id;"
+        "dzm.DeliveryZoneId=dz.id and f.active='" + active + "' and p.id= ps.programId and p.code='" + program + "' and " +
+        "dz.id = dzm.DeliveryZoneId and dz.name='" + deliveryZoneName + "' and dzm.facilityId = f.id and ps.facilityId = f.id;"
     );
 
     while (rs.next()) {
@@ -171,8 +160,7 @@ public class DBWrapper {
   }
 
   public void deleteDeliveryZoneMembers(String facilityCode) throws SQLException {
-    update("delete from delivery_zone_members where facilityId in (select id from facilities where code ='%s')",
-      facilityCode);
+    update("delete from delivery_zone_members where facilityId in (select id from facilities where code ='%s')", facilityCode);
   }
 
   public void updateUser(String password, String email) throws SQLException {
@@ -421,17 +409,12 @@ public class DBWrapper {
     }
   }
 
-  public void insertSupervisoryNode(String facilityCode, String supervisoryNodeCode, String supervisoryNodeName,
-                                    String supervisoryNodeParentCode) throws SQLException {
+  public void deleteSupervisoryNodes() throws SQLException {
     update("delete from supervisory_nodes");
-    update("INSERT INTO supervisory_nodes (parentId, facilityId, name, code) " + "VALUES (%s, (SELECT id FROM facilities WHERE " +
-      "code = '%s'), '%s', '%s')",
-      supervisoryNodeParentCode, facilityCode, supervisoryNodeName, supervisoryNodeCode
-    );
   }
 
-  public void insertSupervisoryNodeWithoutDelete(String facilityCode, String supervisoryNodeCode, String supervisoryNodeName,
-                                                 String supervisoryNodeParentCode) throws SQLException {
+  public void insertSupervisoryNode(String facilityCode, String supervisoryNodeCode, String supervisoryNodeName,
+                                    String supervisoryNodeParentCode) throws SQLException {
     update("INSERT INTO supervisory_nodes" +
       "  (parentId, facilityId, name, code) VALUES" +
       "  ((select id from  supervisory_nodes where code ='%s'), (SELECT id FROM facilities WHERE code = '%s'), '%s', '%s')",
@@ -600,7 +583,8 @@ public class DBWrapper {
       "INSERT INTO program_product_isa(programProductId, whoRatio, dosesPerYear, wastageFactor, bufferPercentage, minimumValue, maximumValue, adjustmentValue) VALUES\n" +
         "((SELECT ID from program_products where programId = " +
         "(SELECT ID from programs where code='" + program + "') and productId = " +
-        "(SELECT id from products WHERE code = '" + product + "'))," + whoRatio + "," + dosesPerYear + "," + wastageFactor + "," + bufferPercentage + "," + minimumValue + "," + maximumValue + "," + adjustmentValue + ");"
+        "(SELECT id from products WHERE code = '" + product + "'))," + whoRatio + "," + dosesPerYear + "," + wastageFactor + ","
+        + bufferPercentage + "," + minimumValue + "," + maximumValue + "," + adjustmentValue + ");"
     );
   }
 
@@ -635,15 +619,16 @@ public class DBWrapper {
 
   public void insertProcessingPeriod(String periodName, String periodDesc, String periodStartDate,
                                      String periodEndDate, Integer numberOfMonths, String scheduleCode) throws SQLException {
-    update("INSERT INTO processing_periods\n" +
-      "(name, description, startDate, endDate, numberOfMonths, scheduleId, modifiedBy) VALUES\n" +
-      "('" + periodName + "', '" + periodDesc + "', '" + periodStartDate + " 00:00:00', '" + periodEndDate + " 23:59:59', " + numberOfMonths + ", (SELECT id FROM processing_schedules WHERE code = '" + scheduleCode + "'), (SELECT id FROM users LIMIT 1));");
+    update("INSERT INTO processing_periods (name, description, startDate, endDate, numberOfMonths, scheduleId, modifiedBy) VALUES\n" +
+      "('" + periodName + "', '" + periodDesc + "', '" + periodStartDate + " 00:00:00', '" + periodEndDate + " 23:59:59', "
+      + numberOfMonths + ", (SELECT id FROM processing_schedules WHERE code = '" + scheduleCode + "'), (SELECT id FROM users LIMIT 1));");
   }
 
   public void insertCurrentPeriod(String periodName, String periodDesc, Integer numberOfMonths, String scheduleCode) throws SQLException {
     update("INSERT INTO processing_periods\n" +
       "(name, description, startDate, endDate, numberOfMonths, scheduleId, modifiedBy) VALUES\n" +
-      "('" + periodName + "', '" + periodDesc + "', NOW() - interval '5' day, NOW() + interval '5' day, " + numberOfMonths + ", (SELECT id FROM processing_schedules WHERE code = '" + scheduleCode + "'), (SELECT id FROM users LIMIT 1));");
+      "('" + periodName + "', '" + periodDesc + "', NOW() - interval '5' day, NOW() + interval '5' day, " + numberOfMonths + ", " +
+      "(SELECT id FROM processing_schedules WHERE code = '" + scheduleCode + "'), (SELECT id FROM users LIMIT 1));");
   }
 
   public void configureTemplate(String program) throws SQLException {

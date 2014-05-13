@@ -421,6 +421,7 @@ public class ConfigureRegimenProgramTemplate extends TestCaseHelper {
     dbWrapper.configureTemplate(program);
     List<String> rightsList = asList("CREATE_REQUISITION", "VIEW_REQUISITION");
     setupTestUserRoleRightsData(userSIC, rightsList);
+    dbWrapper.deleteSupervisoryNodes();
     dbWrapper.insertSupervisoryNode("F10", "N1", "Node 1", "null");
     dbWrapper.insertRoleAssignment(userSIC, "store in-charge");
     dbWrapper.insertSchedule("Q1stM", "QuarterMonthly", "QuarterMonth");
