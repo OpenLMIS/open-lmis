@@ -27,13 +27,13 @@ function SupervisoryNodeSearchController($scope, $location, navigateBackService,
     $scope.query = navigateBackService.query;
   });
 
-  $scope.search = function () {
+  $scope.search = function (page) {
     if (!$scope.query) return;
     $scope.query = $scope.query.trim();
-
+    $scope.searchedQuery = $scope.query;
     var searchOption = $scope.selectedSearchOption.value === 'parent';
 
-    SupervisoryNodesSearch.get({page: $scope.currentPage, param: $scope.query, parent: searchOption}, function (data) {
+    SupervisoryNodesSearch.get({page: page, param: $scope.searchedQuery, parent: searchOption}, function (data) {
       $scope.supervisoryNodeList = data.supervisoryNodes;
       $scope.pagination = data.pagination;
       $scope.resultCount = $scope.pagination.totalRecords;
@@ -44,12 +44,7 @@ function SupervisoryNodeSearchController($scope, $location, navigateBackService,
 
   $scope.$watch('currentPage', function () {
     if ($scope.currentPage !== 0)
-      $scope.search();
-  });
-
-  $scope.$watch('query', function () {
-    if ($scope.query.length === 0)
-      $scope.clearSearch();
+      $scope.search($scope.currentPage);
   });
 
   $scope.clearSearch = function () {
@@ -62,8 +57,7 @@ function SupervisoryNodeSearchController($scope, $location, navigateBackService,
 
   $scope.triggerSearch = function (event) {
     if (event.keyCode === 13) {
-      $scope.search();
+      $scope.search(1);
     }
   };
-
 }

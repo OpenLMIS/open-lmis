@@ -33,7 +33,7 @@ describe("Supervisory Node Search Controller", function () {
     scope.selectedSearchOption.value = 'parent';
     scope.currentPage = 1;
     $httpBackend.when('GET', '/search-supervisory-nodes.json?page=1&param=' + scope.query + '&parent=true' ).respond(response);
-    scope.search();
+    scope.search(1);
     $httpBackend.flush();
 
     expect(scope.supervisoryNodeList).toEqual([supervisoryNode]);

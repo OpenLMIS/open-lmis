@@ -35,18 +35,14 @@ function GeoZoneSearchController($scope, GeographicZones, $location, navigateBac
 
   $scope.$watch('currentPage', function () {
     if ($scope.currentPage !== 0)
-      $scope.search();
+      $scope.search($scope.currentPage);
   });
 
-  $scope.$watch('query', function () {
-    if ($scope.query.length === 0)
-      $scope.clearSearch();
-  });
-
-  $scope.search = function () {
+  $scope.search = function (page) {
     if (!$scope.query) return;
     $scope.query = $scope.query.trim();
-    GeographicZones.get({"searchParam": $scope.query, "columnName": $scope.selectedSearchOption.value, "page": $scope.currentPage}, function (data) {
+    $scope.searchedQuery = $scope.query;
+    GeographicZones.get({"searchParam": $scope.searchedQuery, "columnName": $scope.selectedSearchOption.value, "page": page}, function (data) {
       $scope.geoZoneList = data.geoZones;
       $scope.pagination = data.pagination;
       $scope.resultCount = $scope.pagination.totalRecords;
@@ -65,7 +61,7 @@ function GeoZoneSearchController($scope, GeographicZones, $location, navigateBac
 
   $scope.triggerSearch = function (event) {
     if (event.keyCode === 13) {
-      $scope.search();
+      $scope.search(1);
     }
   };
 }

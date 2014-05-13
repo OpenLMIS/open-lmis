@@ -16,8 +16,8 @@
   </h2>
 
   <div class="alert alert-success" id="saveSuccessMsgDiv" ng-show="supervisoryNodeId">
-    <span ng-bind="message"></span>.&nbsp;&nbsp;<a ng-href="#/edit/{{supervisoryNodeId}}"
-                                                   openlmis-message="search.viewHere"></a>
+    <span ng-bind="message"></span>.&nbsp;&nbsp;
+    <a a ng-href="" openlmis-message="search.viewHere"></a>
   </div>
 
   <div id="searchControl" class="row-fluid">
@@ -37,22 +37,22 @@
         </div>
         <input id='searchSupervisoryNode' type="text" class="span5" ng-model="query" maxlength="50"
                ng-keydown="triggerSearch($event)"/>
-        <button class="btn" ng-click="search()">
-        <i id='searchIcon' class="icon-search"></i>
+        <button class="btn" ng-click="search(1)">
+          <i id='searchIcon' class="icon-search"></i>
         </button>
       </div>
     </div>
   </div>
 
 
-  <table class="table table-striped table-bordered search-list" ng-show="error && query.length">
+  <table class="table table-striped table-bordered search-list" ng-show="error">
     <thead>
     <tr class="gradient-header resultCountHeader">
       <th colspan="5">
         <span ng-switch on="resultCount">
-          <h3 id="noResultMessage" ng-switch-when="0" openlmis-message="msg.no.matches|query"></h3>
-          <h3 id="oneResultMessage" ng-switch-when="1" openlmis-message="msg.one.match|query"></h3>
-          <h3 id="nResultsMessage" ng-switch-default openlmis-message="msg.many.matches|resultCount|query"></h3>
+          <h3 id="noResultMessage" ng-switch-when="0" openlmis-message="msg.no.matches|searchedQuery"></h3>
+          <h3 id="oneResultMessage" ng-switch-when="1" openlmis-message="msg.one.match|searchedQuery"></h3>
+          <h3 id="nResultsMessage" ng-switch-default openlmis-message="msg.many.matches|resultCount|searchedQuery"></h3>
         </span>
         <a id="closeButton" class="close-btn" href="" ng-click="clearSearch()" tabindex="-1"></a>
 
