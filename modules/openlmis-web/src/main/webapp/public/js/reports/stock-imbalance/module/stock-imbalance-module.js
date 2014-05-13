@@ -8,13 +8,15 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-angular.module('stock_imbalance', ['openlmis', 'ngTable', 'ui.bootstrap.modal', 'ui.bootstrap.dropdownToggle'])
+angular.module('stock_imbalance', ['openlmis','angularCombine', 'ngTable',  'ui.bootstrap.modal', 'ui.bootstrap.dropdownToggle'])
     .config(['$routeProvider', function ($routeProvider) {
         $routeProvider.
             when('/list', {controller:StockImbalanceController, templateUrl:'partials/list.html',reloadOnSearch:false}).
             otherwise({redirectTo:'/list'});
     }]).run(
-    function ($rootScope, AuthorizationService) {
-        AuthorizationService.preAuthorize('VIEW_STOCK_IMBALANCE_REPORT');
-    }
-);
+              function ($rootScope, AuthorizationService) {
+                  AuthorizationService.preAuthorize('VIEW_STOCK_IMBALANCE_REPORT');
+              }
+          ).config(function(angularCombineConfigProvider) {
+              angularCombineConfigProvider.addConf(/filter-/, '/public/pages/reports/shared/filters.html');
+            });
