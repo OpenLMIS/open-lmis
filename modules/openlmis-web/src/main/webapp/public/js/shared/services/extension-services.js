@@ -515,3 +515,12 @@ services.factory('UserSummaryReport', function($resource){
 services.factory('GetAllRoles', function ($resource) {
     return $resource('/roles/getList.json', {},{});
 });
+
+services.factory('UserRoleAssignmentsSummary', function($resource){
+    return $resource('/reports/UserRoleAssignments/getUserRoleAssignments',{},{});
+});
+
+services.factory("UserRoleAssignmentsSummary1", function($resource){
+    return $resource('reports/reportdata/userRoleAssignmentSummary');
+
+});
