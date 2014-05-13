@@ -34,15 +34,14 @@ app.directive('filterContainer', ['$routeParams', '$location',function ($locatio
       //$scope.OnFilterChanged();
 
       $scope.filterChanged = function(){
-        // update the url so users could take it, book mark it etc...
+        // check if all of the required parameters have been specified
         angular.forEach($scope.requiredFilters, function(value){
-
           if(isUndefined($scope.filter[value]) || $scope.filter[value] === '' || $scope.filter[value] === 0 ){
-
             return;
           }
         });
 
+        // update the url so users could take it, book mark it etc...
         if(JSON.stringify($scope.filter) !== JSON.stringify($routeParams)){
           var url = $location.url();
           url = url.substring(0, url.indexOf('?'));
@@ -275,7 +274,7 @@ app.directive('requisitionGroupFilter', ['RequisitionGroupsByProgram','$routePar
         scope.requisitionGroups = [];
         scope.requisitionGroups.unshift({ 'name': '-- All Requisition Groups --', id: 0 });
 
-          scope.filter.requisitionGroup = (isUndefined($routeParams.requisitionGroup) || $routeParams.requisitionGroup === '')? 0: $routeParams.requisitionGroup;
+        scope.filter.requisitionGroup = (isUndefined($routeParams.requisitionGroup) || $routeParams.requisitionGroup === '')? 0: $routeParams.requisitionGroup;
 
         if (attr.required) {
           scope.requiredFilters.requisitionGroup = 'requisitionGroup';
@@ -290,7 +289,7 @@ app.directive('requisitionGroupFilter', ['RequisitionGroupsByProgram','$routePar
 }]);
 
 
-app.directive('adjustmentTypeFilter',['AdjustmentTypes', function(AdjustmentTypes){
+app.directive('adjustmentTypeFilter',['AdjustmentTypes','$routeParams', function(AdjustmentTypes, $routeParams){
 
   return {
     restrict: 'E',
@@ -301,6 +300,8 @@ app.directive('adjustmentTypeFilter',['AdjustmentTypes', function(AdjustmentType
         scope.adjustmentTypes = data.adjustmentTypeList;
         scope.adjustmentTypes.unshift({'description': '--All Adjustment Types --',id:0});
       });
+
+      scope.filter.adjustmentType = (isUndefined($routeParams.adjustmentType) || $routeParams.adjustmentType === '')? 0: $routeParams.adjustmentType;
 
       if (attr.required) {
         scope.requiredFilters.adjustmentType = 'adjustmentType';
