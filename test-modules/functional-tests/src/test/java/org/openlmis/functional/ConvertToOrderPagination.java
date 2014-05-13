@@ -110,20 +110,20 @@ public class ConvertToOrderPagination extends TestCaseHelper {
     LoginPage loginPage = PageObjectFactory.getLoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(userSIC, password);
     ConvertOrderPage convertOrderPage = homePage.navigateConvertToOrder();
-    verifyNumberOfPageLinks(51, 50);
-    verifyNextAndLastLinksEnabled();
-    verifyPreviousAndFirstLinksDisabled();
+    verifyNumberOFPageLinksDisplayed(51, 50);
+    verifyNextAndLastPageLinksEnabled();
+    verifyPreviousAndFirstPageLinksDisabled();
 
     clickPageNumberLink(2);
     verifyPageLinksFromLastPage();
-    verifyPreviousAndFirstLinksEnabled();
-    verifyNextAndLastLinksDisabled();
+    verifyPreviousAndFirstPageLinksEnabled();
+    verifyNextAndLastPageLinksDisabled();
 
     convertOrderPage.selectRequisitionToBeConvertedToOrder(1);
     clickPageNumberLink(1);
     convertOrderPage.selectRequisitionToBeConvertedToOrder(1);
     convertToOrder();
-    verifyNumberOfPageLinks(49, 50);
+    verifyNumberOFPageLinksDisplayed(49, 50);
 
     ViewOrdersPage viewOrdersPage = homePage.navigateViewOrders();
     int numberOfLineItems = viewOrdersPage.getNumberOfLineItems();
@@ -147,14 +147,14 @@ public class ConvertToOrderPagination extends TestCaseHelper {
     LoginPage loginPage = PageObjectFactory.getLoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(userSIC, password);
     homePage.navigateConvertToOrder();
-    verifyNumberOfPageLinks(49, 50);
+    verifyNumberOFPageLinksDisplayed(49, 50);
 
     dbWrapper.insertRequisitions(2, "HIV", true, "2012-12-01", "2015-12-01", "F10", false);
     dbWrapper.updateRequisitionStatus("SUBMITTED", userSIC, "HIV");
     dbWrapper.updateRequisitionStatus("APPROVED", userSIC, "HIV");
     homePage.navigateHomePage();
     homePage.navigateConvertToOrder();
-    verifyNumberOfPageLinks(51, 50);
+    verifyNumberOFPageLinksDisplayed(51, 50);
   }
 
   @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-Positive")
@@ -168,7 +168,7 @@ public class ConvertToOrderPagination extends TestCaseHelper {
     LoginPage loginPage = PageObjectFactory.getLoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(userSIC, password);
     homePage.navigateConvertToOrder();
-    verifyNumberOfPageLinks(50, 50);
+    verifyNumberOFPageLinksDisplayed(50, 50);
     verifyPageLinkNotPresent(2);
 
     dbWrapper.insertRequisitions(1, "HIV", true, "2012-12-01", "2015-12-01", "F10", false);
@@ -176,7 +176,7 @@ public class ConvertToOrderPagination extends TestCaseHelper {
     dbWrapper.updateRequisitionStatus("APPROVED", userSIC, "HIV");
     homePage.navigateHomePage();
     homePage.navigateConvertToOrder();
-    verifyNumberOfPageLinks(51, 50);
+    verifyNumberOFPageLinksDisplayed(51, 50);
   }
 
   @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-Positive")
@@ -193,13 +193,13 @@ public class ConvertToOrderPagination extends TestCaseHelper {
     LoginPage loginPage = PageObjectFactory.getLoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(userSIC, password);
     ConvertOrderPage convertOrderPage = homePage.navigateConvertToOrder();
-    verifyNumberOfPageLinks(80, 50);
+    verifyNumberOFPageLinksDisplayed(80, 50);
     convertOrderPage.searchWithOption("All", "TB");
-    verifyNumberOfPageLinks(40, 50);
+    verifyNumberOFPageLinksDisplayed(40, 50);
     verifyProgramInGrid(40, 50, "TB");
     verifyPageLinkNotPresent(2);
     convertOrderPage.searchWithOption("All", "MALARIA");
-    verifyNumberOfPageLinks(55, 50);
+    verifyNumberOFPageLinksDisplayed(55, 50);
     verifyProgramInGrid(55, 50, "MALARIA");
   }
 
@@ -218,7 +218,7 @@ public class ConvertToOrderPagination extends TestCaseHelper {
     HomePage homePage = loginPage.loginAs(userSIC, password);
     ConvertOrderPage convertOrderPage = homePage.navigateConvertToOrder();
     convertOrderPage.searchWithIndex(5, "Village Dispensary");
-    verifyNumberOfPageLinks(55, 50);
+    verifyNumberOFPageLinksDisplayed(55, 50);
     verifySupplyingDepotInGrid(55, 50, "Village Dispensary");
   }
 

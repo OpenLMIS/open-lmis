@@ -51,14 +51,14 @@ public class ViewOrderPagination extends TestCaseHelper {
     LoginPage loginPage = PageObjectFactory.getLoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(userSIC, password);
     homePage.navigateViewOrders();
-    verifyNumberOfPageLinks(51, 50);
-    verifyNextAndLastLinksEnabled();
-    verifyPreviousAndFirstLinksDisabled();
+    verifyNumberOFPageLinksDisplayed(51, 50);
+    verifyNextAndLastPageLinksEnabled();
+    verifyPreviousAndFirstPageLinksDisabled();
 
     testWebDriver.getElementByXpath("//a[contains(text(), '2') and @class='ng-binding']").click();
     verifyPageLinksFromLastPage();
-    verifyPreviousAndFirstLinksEnabled();
-    verifyNextAndLastLinksDisabled();
+    verifyPreviousAndFirstPageLinksEnabled();
+    verifyNextAndLastPageLinksDisabled();
   }
 
   private void setUpData(String program, String userSIC) throws SQLException {

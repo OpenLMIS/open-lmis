@@ -162,12 +162,12 @@ public class ManageSupervisoryNodes extends TestCaseHelper {
 
     supervisoryNodesPage.clickSearchOptionButton();
     supervisoryNodesPage.selectSupervisoryNodeAsSearchOption();
-    //assertTrue(supervisoryNodesPage.isNoResultMessageDisplayed());
+    assertTrue(supervisoryNodesPage.isNoResultMessageDisplayed());
 
     dbWrapper.insertSupervisoryNode("F10", "N2", "Node2", null);
     testWebDriver.refresh();
     searchNode("nod");
-    //assertTrue(supervisoryNodesPage.isOneResultMessageDisplayed());
+    assertTrue(supervisoryNodesPage.isOneResultMessageDisplayed());
     assertEquals("Node2", supervisoryNodesPage.getSupervisoryNodeName(1));
     assertEquals("N2", supervisoryNodesPage.getSupervisoryNodeCode(1));
     assertEquals("Village Dispensary", supervisoryNodesPage.getFacility(1));

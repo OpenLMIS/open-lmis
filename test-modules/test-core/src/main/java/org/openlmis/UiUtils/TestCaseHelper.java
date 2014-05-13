@@ -13,6 +13,7 @@ package org.openlmis.UiUtils;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.UnreachableBrowserException;
+import org.testng.AssertJUnit;
 
 import java.io.*;
 import java.math.BigDecimal;
@@ -173,10 +174,7 @@ public class TestCaseHelper {
     dbWrapper.insertFacilityApprovedProduct(product2, program, facilityTypeCode);
   }
 
-
-  public void setupProgramProductTestDataWithCategories(String categoryCode,
-                                                        String categoryName, String product,
-                                                        String productName,
+  public void setupProgramProductTestDataWithCategories(String categoryCode, String categoryName, String product, String productName,
                                                         String program) throws SQLException {
     dbWrapper.insertProductCategory(categoryCode, categoryName);
     dbWrapper.insertProduct(product, productName);
@@ -452,27 +450,27 @@ public class TestCaseHelper {
   }
 
   public void verifyPageLinksFromLastPage() {
-    verifyNextAndLastLinksDisabled();
-    verifyPreviousAndFirstLinksEnabled();
+    verifyNextAndLastPageLinksDisabled();
+    verifyPreviousAndFirstPageLinksEnabled();
 
     testWebDriver.getElementById("firstPageLink").click();
-    verifyNextAndLastLinksEnabled();
-    verifyPreviousAndFirstLinksDisabled();
+    verifyNextAndLastPageLinksEnabled();
+    verifyPreviousAndFirstPageLinksDisabled();
 
     testWebDriver.getElementById("nextPageLink").click();
-    verifyNextAndLastLinksDisabled();
-    verifyPreviousAndFirstLinksEnabled();
+    verifyNextAndLastPageLinksDisabled();
+    verifyPreviousAndFirstPageLinksEnabled();
 
     testWebDriver.getElementById("previousPageLink").click();
-    verifyNextAndLastLinksEnabled();
-    verifyPreviousAndFirstLinksDisabled();
+    verifyNextAndLastPageLinksEnabled();
+    verifyPreviousAndFirstPageLinksDisabled();
 
     testWebDriver.getElementById("lastPageLink").click();
-    verifyNextAndLastLinksDisabled();
-    verifyPreviousAndFirstLinksEnabled();
+    verifyNextAndLastPageLinksDisabled();
+    verifyPreviousAndFirstPageLinksEnabled();
   }
 
-  public void verifyNumberOfPageLinks(int numberOfProducts, int numberOfLineItemsPerPage) {
+  public void verifyNumberOFPageLinksDisplayed(int numberOfProducts, int numberOfLineItemsPerPage) {
     testWebDriver.waitForAjax();
     int numberOfPages = numberOfProducts / numberOfLineItemsPerPage;
     if (numberOfProducts % numberOfLineItemsPerPage != 0) {
@@ -484,7 +482,13 @@ public class TestCaseHelper {
     }
   }
 
-  public void verifyNextAndLastLinksEnabled() {
+  public void verifyPageNumberSelected(int pageNumber) {
+    WebElement page = testWebDriver.getElementById(String.valueOf(pageNumber));
+    testWebDriver.waitForElementToAppear(page);
+    AssertJUnit.assertEquals("rgba(96, 172, 175, 1)", page.getCssValue("background-color"));
+  }
+
+  public void verifyNextAndLastPageLinksEnabled() {
     testWebDriver.waitForAjax();
     WebElement nextPageLink = testWebDriver.getElementById("nextPageLink");
 
@@ -492,26 +496,36 @@ public class TestCaseHelper {
     assertEquals(testWebDriver.getElementById("lastPageLink").getCssValue("color"), "rgba(119, 119, 119, 1)");
   }
 
-  public void verifyPreviousAndFirstLinksEnabled() {
+  public void verifyPreviousAndFirstPageLinksEnabled() {
     testWebDriver.waitForPageToLoad();
     testWebDriver.waitForElementToAppear(testWebDriver.getElementById("previousPageLink"));
     assertEquals(testWebDriver.getElementById("previousPageLink").getCssValue("color"), "rgba(119, 119, 119, 1)");
     assertEquals(testWebDriver.getElementById("firstPageLink").getCssValue("color"), "rgba(119, 119, 119, 1)");
   }
 
-  public void verifyNextAndLastLinksDisabled() {
+  public void verifyNextAndLastPageLinksDisabled() {
     testWebDriver.waitForPageToLoad();
     testWebDriver.waitForElementToAppear(testWebDriver.getElementById("nextPageLink"));
     assertEquals(testWebDriver.getElementById("nextPageLink").getCssValue("color"), "rgba(204, 204, 204, 1)");
     assertEquals(testWebDriver.getElementById("lastPageLink").getCssValue("color"), "rgba(204, 204, 204, 1)");
   }
 
-  public void verifyPreviousAndFirstLinksDisabled() {
+  public void verifyPreviousAndFirstPageLinksDisabled() {
     testWebDriver.waitForAjax();
     WebElement firstPageLink = testWebDriver.getElementById("firstPageLink");
 
     assertEquals(firstPageLink.getCssValue("color"), "rgba(204, 204, 204, 1)");
     assertEquals(testWebDriver.getElementById("previousPageLink").getCssValue("color"), "rgba(204, 204, 204, 1)");
+  }
+
+  public void navigateToPage(int pageNumber) {
+    WebElement page = testWebDriver.getElementById(String.valueOf(pageNumber));
+    testWebDriver.waitForElementToAppear(page);
+    page.click();
+  }
+
+  public void verifyNumberOfLineItemsVisibleOnPage(int numberOfProducts, String tableName) {
+    AssertJUnit.assertEquals(numberOfProducts, testWebDriver.getElementsSizeByXpath("//table[@id='" + tableName + "']/tbody"));
   }
 
   public void setupDataForDistributionTest(Map<String, String> dataMap) throws SQLException {
@@ -744,5 +758,3 @@ public class TestCaseHelper {
     assertEquals(adultOpenedVialLineItem.getString("openedVials"), (String) null);
   }
 }
-
-

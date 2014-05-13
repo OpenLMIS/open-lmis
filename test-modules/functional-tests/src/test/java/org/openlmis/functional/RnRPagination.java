@@ -52,9 +52,9 @@ public class RnRPagination extends TestCaseHelper {
     InitiateRnRPage initiateRnRPage = homePage.clickProceed();
 
     testWebDriver.sleep(2000);
-    verifyNumberOfPageLinks(11, 10);
-    verifyNextAndLastLinksEnabled();
-    verifyPreviousAndFirstLinksDisabled();
+    verifyNumberOFPageLinksDisplayed(11, 10);
+    verifyNextAndLastPageLinksEnabled();
+    verifyPreviousAndFirstPageLinksDisabled();
     verifyDisplayOrderFullSupply(10);
     testWebDriver.getElementById("nextPageLink").click();
     assertEquals(testWebDriver.getElementById("productCode_0").getText(), "F10");
@@ -74,9 +74,9 @@ public class RnRPagination extends TestCaseHelper {
     testWebDriver.getElementById("nextPageLink").click();
     assertEquals(testWebDriver.getElementById("productCode_0").getText(), "NF10");
     testWebDriver.getElementById("firstPageLink").click();
-    verifyNumberOfPageLinks(11, 10);
-    verifyPreviousAndFirstLinksDisabled();
-    verifyNextAndLastLinksEnabled();
+    verifyNumberOFPageLinksDisplayed(11, 10);
+    verifyPreviousAndFirstPageLinksDisabled();
+    verifyNextAndLastPageLinksEnabled();
 
     assertEquals(testWebDriver.getElementById("category_0").getText(), "Antibiotics");
     assertEquals(testWebDriver.getElementById("category_1").getText(), "");
@@ -92,9 +92,9 @@ public class RnRPagination extends TestCaseHelper {
     viewRequisitionPage.clickSearch();
     viewRequisitionPage.clickRnRList();
 
-    verifyNumberOfPageLinks(11, 10);
-    verifyNextAndLastLinksEnabled();
-    verifyPreviousAndFirstLinksDisabled();
+    verifyNumberOFPageLinksDisplayed(11, 10);
+    verifyNextAndLastPageLinksEnabled();
+    verifyPreviousAndFirstPageLinksDisabled();
     verifyDisplayOrderFullSupplyOnViewRequisition(10);
     testWebDriver.getElementById("nextPageLink").click();
     assertEquals(testWebDriver.getElementById("productCode_0").getText(), "F10");
@@ -111,9 +111,9 @@ public class RnRPagination extends TestCaseHelper {
     assertEquals(testWebDriver.getElementById("productCode_0").getText(), "NF10");
     testWebDriver.getElementById("firstPageLink").click();
 
-    verifyNumberOfPageLinks(11, 10);
-    verifyPreviousAndFirstLinksDisabled();
-    verifyNextAndLastLinksEnabled();
+    verifyNumberOFPageLinksDisplayed(11, 10);
+    verifyPreviousAndFirstPageLinksDisabled();
+    verifyNextAndLastPageLinksEnabled();
 
     testWebDriver.getElementByXpath("//a[contains(text(), '2') and @class='ng-binding']").click();
     assertEquals(testWebDriver.getElementById("category_0").getText(), "Antibiotics");

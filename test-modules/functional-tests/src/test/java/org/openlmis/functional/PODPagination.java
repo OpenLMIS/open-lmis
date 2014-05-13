@@ -12,7 +12,6 @@ package org.openlmis.functional;
 
 import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.pageobjects.*;
-import org.openqa.selenium.WebElement;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -79,44 +78,44 @@ public class PODPagination extends TestCaseHelper {
     verifyPageNumberLinksDisplayed();
     verifyPageNumberSelected(1);
     verifyNextAndLastPageLinksEnabled();
-    verifyFirstAndPreviousPageLinksDisabled();
-    verifyNumberOfProductsVisibleOnPage(10);
+    verifyPreviousAndFirstPageLinksDisabled();
+    verifyNumberOfLineItemsVisibleOnPage(10, "podTable");
     verifyProductDisplayOrderOnPage(new String[]{"F0", "F1", "F10", "F2", "F3", "F4", "F5", "F6", "F7", "F8"});
     verifyCategoryDisplayOrderOnPage(new String[]{"C1", "", "", "", "", "", "", "", "", ""});
 
     navigateToPage(2);
     verifyPageNumberSelected(2);
     verifyNextAndLastPageLinksEnabled();
-    verifyFirstAndPreviousPageLinksEnabled();
-    verifyNumberOfProductsVisibleOnPage(10);
+    verifyPreviousAndFirstPageLinksEnabled();
+    verifyNumberOfLineItemsVisibleOnPage(10, "podTable");
     verifyProductDisplayOrderOnPage(new String[]{"F9", "NF0", "NF1", "NF10", "NF2", "NF3", "NF4", "NF5", "NF6", "NF7"});
     verifyCategoryDisplayOrderOnPage(new String[]{"C1", "", "", "", "", "", "", "", "", ""});
 
     updatePodPage.navigateToNextPage();
     verifyPageNumberSelected(3);
     verifyNextAndLastPageLinksDisabled();
-    verifyFirstAndPreviousPageLinksEnabled();
-    verifyNumberOfProductsVisibleOnPage(2);
+    verifyPreviousAndFirstPageLinksDisabled();
+    verifyNumberOfLineItemsVisibleOnPage(2, "podTable");
     verifyProductDisplayOrderOnPage(new String[]{"NF8", "NF9"});
     verifyCategoryDisplayOrderOnPage(new String[]{"C1", ""});
 
     updatePodPage.navigateToFirstPage();
     verifyPageNumberSelected(1);
     verifyNextAndLastPageLinksEnabled();
-    verifyFirstAndPreviousPageLinksDisabled();
-    verifyNumberOfProductsVisibleOnPage(10);
+    verifyPreviousAndFirstPageLinksDisabled();
+    verifyNumberOfLineItemsVisibleOnPage(10, "podTable");
 
     updatePodPage.navigateToLastPage();
     verifyPageNumberSelected(3);
     verifyNextAndLastPageLinksDisabled();
-    verifyFirstAndPreviousPageLinksEnabled();
-    verifyNumberOfProductsVisibleOnPage(2);
+    verifyPreviousAndFirstPageLinksDisabled();
+    verifyNumberOfLineItemsVisibleOnPage(2, "podTable");
 
     updatePodPage.navigateToPreviousPage();
     verifyPageNumberSelected(2);
     verifyNextAndLastPageLinksEnabled();
-    verifyFirstAndPreviousPageLinksEnabled();
-    verifyNumberOfProductsVisibleOnPage(10);
+    verifyPreviousAndFirstPageLinksDisabled();
+    verifyNumberOfLineItemsVisibleOnPage(10, "podTable");
   }
 
   @Test(groups = {"requisition"})
@@ -222,8 +221,8 @@ public class PODPagination extends TestCaseHelper {
     verifyPageNumberLinksDisplayed();
     verifyPageNumberSelected(1);
     verifyNextAndLastPageLinksEnabled();
-    verifyFirstAndPreviousPageLinksDisabled();
-    verifyNumberOfProductsVisibleOnPage(10);
+    verifyPreviousAndFirstPageLinksDisabled();
+    verifyNumberOfLineItemsVisibleOnPage(10, "podTable");
     verifyProductDisplayOrderOnPage(new String[]{"F0", "F1", "F2", "F3", "F4", "F5", "F6", "F7", "F8", "F9"});
     assertEquals(updatePodPage.getReplacedProductCode(1), "NF0");
     assertEquals(updatePodPage.getReplacedProductCode(10), "NF9");
@@ -252,8 +251,8 @@ public class PODPagination extends TestCaseHelper {
     updatePodPage.enterDeliveryDetailsInPodScreen("Delivered Person new openLMIS", " ", "25/02/2014");
     navigateToPage(2);
     verifyPageNumberSelected(2);
-    verifyFirstAndPreviousPageLinksEnabled();
-    verifyNumberOfProductsVisibleOnPage(10);
+    verifyPreviousAndFirstPageLinksEnabled();
+    verifyNumberOfLineItemsVisibleOnPage(10, "podTable");
     verifyProductDisplayOrderOnPage(new String[]{"NF0", "NF1", "NF2", "NF3", "NF4", "NF5", "NF6", "NF7", "NF8", "NF9"});
     assertEquals(updatePodPage.getReplacedProductCode(1), "");
     assertEquals(updatePodPage.getReplacedProductCode(10), "");
@@ -270,8 +269,8 @@ public class PODPagination extends TestCaseHelper {
     updatePodPage.navigateToLastPage();
     verifyPageNumberSelected(3);
     verifyNextAndLastPageLinksDisabled();
-    verifyFirstAndPreviousPageLinksEnabled();
-    verifyNumberOfProductsVisibleOnPage(2);
+    verifyPreviousAndFirstPageLinksDisabled();
+    verifyNumberOfLineItemsVisibleOnPage(2, "podTable");
     verifyProductDisplayOrderOnPage(new String[]{"ZX", "ZX1"});
     assertEquals(updatePodPage.getReplacedProductCode(1), "");
     assertEquals(updatePodPage.getReplacedProductCode(2), "");
@@ -284,8 +283,8 @@ public class PODPagination extends TestCaseHelper {
     updatePodPage.navigateToFirstPage();
     verifyPageNumberSelected(1);
     verifyNextAndLastPageLinksEnabled();
-    verifyFirstAndPreviousPageLinksDisabled();
-    verifyNumberOfProductsVisibleOnPage(10);
+    verifyPreviousAndFirstPageLinksDisabled();
+    verifyNumberOfLineItemsVisibleOnPage(10, "podTable");
     updatePodPage.verifyQuantityReturnedOnUI("", 10);
     updatePodPage.verifyDeliveryDetailsOnPodScreenUI("Delivered", "Received by facility incharge", "25/02/2013");
 
@@ -548,60 +547,11 @@ public class PODPagination extends TestCaseHelper {
     dbWrapper.updateFieldValue("orders", "status", "PACKED", null, null);
   }
 
-  private void verifyNextAndLastPageLinksDisabled() {
-    assertFalse(updatePodPage.isNextPageLinkEnabled());
-    assertFalse(updatePodPage.isLastPageLinkEnabled());
-  }
-
-  private void verifyFirstAndPreviousPageLinksEnabled() {
-    assertTrue(updatePodPage.isFirstPageLinkEnabled());
-    assertTrue(updatePodPage.isPreviousPageLinkEnabled());
-  }
-
-  private void navigateToPage(int pageNumber) {
-    WebElement page = testWebDriver.getElementById(String.valueOf(pageNumber));
-    testWebDriver.waitForElementToAppear(page);
-    page.click();
-  }
-
-  private void verifyNumberOfProductsVisibleOnPage(int numberOfProducts) {
-    assertEquals(numberOfProducts, testWebDriver.getElementsSizeByXpath("//table[@id='podTable']/tbody"));
-  }
-
-  private void verifyFirstAndPreviousPageLinksDisabled() {
-    assertFalse(updatePodPage.isFirstPageLinkEnabled());
-    assertFalse(updatePodPage.isPreviousPageLinkEnabled());
-  }
-
-  private void verifyNextAndLastPageLinksEnabled() {
-    assertTrue(updatePodPage.isNextPageLinkEnabled());
-    assertTrue(updatePodPage.isLastPageLinkEnabled());
-  }
-
-  private void verifyPageNumberSelected(int pageNumber) {
-    WebElement page = testWebDriver.getElementById(String.valueOf(pageNumber));
-    testWebDriver.waitForElementToAppear(page);
-    assertEquals("rgba(96, 172, 175, 1)", page.getCssValue("background-color"));
-  }
-
   private void verifyPageNumberLinksDisplayed() {
     assertTrue(updatePodPage.isFirstPageLinkDisplayed());
     assertTrue(updatePodPage.isPreviousPageLinkDisplayed());
     assertTrue(updatePodPage.isNextPageLinkDisplayed());
     assertTrue(updatePodPage.isLastPageLinkDisplayed());
-  }
-
-  private void verifyNumberOFPageLinksDisplayed(int numberOfProducts, int numberOfLineItemsPerPage) {
-    testWebDriver.waitForAjax();
-    int numberOfPages = numberOfProducts / numberOfLineItemsPerPage;
-    if (numberOfProducts % numberOfLineItemsPerPage != 0) {
-      numberOfPages = numberOfPages + 1;
-    }
-    for (int i = 1; i <= numberOfPages; i++) {
-      WebElement page = testWebDriver.getElementById(String.valueOf(i));
-      testWebDriver.waitForElementToAppear(page);
-      assertTrue(page.isDisplayed());
-    }
   }
 
   private void verifyProductDisplayOrderOnPage(String[] productCodes) {
