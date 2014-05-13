@@ -105,4 +105,12 @@ public class SupervisoryNodeRepository {
   public Integer getTotalParentSearchResultCount(String param) {
     return supervisoryNodeMapper.getTotalParentSearchResultCount(param);
   }
+
+  public SupervisoryNode getById(Long id) {
+    return supervisoryNodeMapper.getById(id);
+  }
+
+  public List<SupervisoryNode> getFilteredSupervisoryNodesByName(String param) {
+    return supervisoryNodeMapper.getFilteredSupervisoryNodesByName(param);
+  }
 }

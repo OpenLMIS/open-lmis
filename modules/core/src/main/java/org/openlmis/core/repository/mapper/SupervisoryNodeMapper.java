@@ -156,4 +156,7 @@ public interface SupervisoryNodeMapper {
   @Select({"SELECT COUNT(*) FROM supervisory_nodes SN INNER JOIN supervisory_nodes SNP ON SN.parentId = SNP.id WHERE LOWER(SNP.name)" +
     " LIKE '%'|| LOWER(#{nameSearchCriteria}) ||'%'"})
   Integer getTotalParentSearchResultCount(String param);
+
+  @Select("SELECT * from supervisory_nodes where name LIKE '%' || LOWER(#{param}) || '%' ORDER BY LOWER(name)")
+  List<SupervisoryNode> getFilteredSupervisoryNodesByName(String param);
 }

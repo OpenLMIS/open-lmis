@@ -136,4 +136,12 @@ public class SupervisoryNodeService {
     }
     return supervisoryNodeRepository.getTotalSearchResultCount(param);
   }
+
+  public SupervisoryNode getById(Long id) {
+    return supervisoryNodeRepository.getById(id);
+  }
+
+  public List<SupervisoryNode> getFilteredSupervisoryNodesByName(String param) {
+    return supervisoryNodeRepository.getFilteredSupervisoryNodesByName(param);
+  }
 }

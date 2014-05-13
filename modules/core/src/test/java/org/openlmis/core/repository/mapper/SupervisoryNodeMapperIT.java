@@ -374,6 +374,38 @@ public class SupervisoryNodeMapperIT {
     assertThat(savedNode.getParent(), is(supervisoryNode1));
   }
 
+  @Test
+  public void shouldFilterSupervisoryNodesByName() {
+    SupervisoryNode supervisoryNode1 = make(a(SupervisoryNodeBuilder.defaultSupervisoryNode, with(code, "SN1"), with(name, "village Dispensary")));
+    supervisoryNode1.setFacility(facility);
+    insertSupervisoryNode(supervisoryNode1);
+
+    SupervisoryNode supervisoryNode2 = make(a(SupervisoryNodeBuilder.defaultSupervisoryNode, with(code, "SN2"), with(name, "Village2 Dispensary")));
+    supervisoryNode2.setFacility(facility);
+    insertSupervisoryNode(supervisoryNode2);
+
+    SupervisoryNode supervisoryNode3 = make(a(SupervisoryNodeBuilder.defaultSupervisoryNode, with(code, "SN3"), with(name, "City Dispensary")));
+    supervisoryNode3.setFacility(facility);
+    insertSupervisoryNode(supervisoryNode3);
+
+    SupervisoryNode supervisoryNode4 = make(a(SupervisoryNodeBuilder.defaultSupervisoryNode, with(code, "SN4"), with(name, "Village Dispensary")));
+    supervisoryNode4.setFacility(facility);
+    insertSupervisoryNode(supervisoryNode4);
+
+    SupervisoryNode supervisoryNode5 = make(a(SupervisoryNodeBuilder.defaultSupervisoryNode, with(code, "SN5"), with(name, "Central Hospital")));
+    supervisoryNode5.setFacility(facility);
+    insertSupervisoryNode(supervisoryNode5);
+
+    String param = "age";
+
+    List<SupervisoryNode> supervisoryNodeList = supervisoryNodeMapper.getFilteredSupervisoryNodesByName(param);
+
+    assertThat(supervisoryNodeList.size(), is(3));
+    assertThat(supervisoryNodeList.get(0),is(supervisoryNode1));
+    assertThat(supervisoryNodeList.get(1),is(supervisoryNode4));
+    assertThat(supervisoryNodeList.get(2),is(supervisoryNode2));
+  }
+
   private SupervisoryNode insertSupervisoryNode(SupervisoryNode supervisoryNode) {
     supervisoryNodeMapper.insert(supervisoryNode);
     return supervisoryNode;

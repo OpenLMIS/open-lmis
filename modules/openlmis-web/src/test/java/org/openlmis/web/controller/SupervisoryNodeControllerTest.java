@@ -29,6 +29,8 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.openlmis.web.controller.SupervisoryNodeController.SUPERVISORY_NODE;
+import static org.openlmis.web.controller.SupervisoryNodeController.SUPERVISORY_NODES;
 
 @Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
@@ -42,14 +44,41 @@ public class SupervisoryNodeControllerTest {
 
 
   @Test
-  public void shouldGetAllSupervisoryNodes() throws Exception {
+  public void shouldGetAllSupervisoryNodes(){
     List<SupervisoryNode> expectedSupervisoryNodes = new ArrayList<>();
     when(supervisoryNodeService.getAll()).thenReturn(expectedSupervisoryNodes);
 
     ResponseEntity<OpenLmisResponse> response = controller.getAll();
 
     verify(supervisoryNodeService).getAll();
-    List<SupervisoryNode> actual = (List<SupervisoryNode>) response.getBody().getData().get(SupervisoryNodeController.SUPERVISORY_NODES);
+    List<SupervisoryNode> actual = (List<SupervisoryNode>) response.getBody().getData().get(SUPERVISORY_NODES);
     assertThat(actual, is(expectedSupervisoryNodes));
+  }
+
+  @Test
+  public void shouldGetSupervisoryNodeById(){
+    Long id = 1L;
+    SupervisoryNode node = new SupervisoryNode();
+    when(supervisoryNodeService.getById(id)).thenReturn(node);
+
+
+    ResponseEntity<OpenLmisResponse> supervisoryNode = controller.getById(id);
+
+    verify(supervisoryNodeService).getById(id);
+    assertThat((SupervisoryNode)supervisoryNode.getBody().getData().get(SUPERVISORY_NODE), is(node));
+  }
+
+  @Test
+  public void shouldGetFilteredNodesForRequestedQuery(){
+
+    String query = "Node1";
+    List<SupervisoryNode> supervisoryNodes = new ArrayList<>();
+    when(supervisoryNodeService.getFilteredSupervisoryNodesByName(query)).thenReturn(supervisoryNodes);
+
+    ResponseEntity<OpenLmisResponse> response = controller.getFilteredNodes(query);
+
+    verify(supervisoryNodeService).getFilteredSupervisoryNodesByName(query);
+    assertThat((List<SupervisoryNode>) response.getBody().getData().get(SUPERVISORY_NODES), is(supervisoryNodes));
+
   }
 }
