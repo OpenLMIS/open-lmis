@@ -27,9 +27,6 @@ public class ManageGeographicZonesPage extends Page {
   @FindBy(how = ID, using = "searchOptionButton")
   private static WebElement searchOptionButton = null;
 
-  @FindBy(how = ID, using = "//*[@id=\"searchOptionButton\"]/span[1]")
-  private static WebElement selectGeographicZoneParentOption = null;
-
   @FindBy(how = ID, using = "add-new-geo-zone")
   private static WebElement addNewButton = null;
 
@@ -62,9 +59,6 @@ public class ManageGeographicZonesPage extends Page {
 
   @FindBy(how = ID, using = "saveSuccessMsgDiv")
   private static WebElement successMsgDiv = null;
-
-  @FindBy(how = LINK_TEXT, using = "District9")
-  private static WebElement District9 = null;
 
   @FindBy(how = XPATH, using = "//*[@id='wrap']/div/div/div/table/tbody/tr[1]/td[1]/a")
   private static WebElement firstElement = null;
