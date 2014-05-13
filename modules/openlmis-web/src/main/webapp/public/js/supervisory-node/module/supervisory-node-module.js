@@ -13,6 +13,8 @@ var userModule = angular.module('supervisoryNode', ['openlmis', 'ui.bootstrap.dr
 userModule.config(['$routeProvider', function ($routeProvider) {
     $routeProvider.
       when('/search', {controller: SupervisoryNodeSearchController, templateUrl: 'partials/search.html', reloadOnSearch: false}).
+      when('/create-supervisory-node', {controller: SupervisoryNodeController, templateUrl: 'partials/create.html', resolve: SupervisoryNodeController.resolve}).
+      when('/edit/:id', {controller: SupervisoryNodeController, templateUrl: 'partials/create.html', resolve: SupervisoryNodeController.resolve}).
       otherwise({redirectTo: '/search'});
   }]).run(function ($rootScope, AuthorizationService) {
     $rootScope.supervisoryNodeSelected = "selected";

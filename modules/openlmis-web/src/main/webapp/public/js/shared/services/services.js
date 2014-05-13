@@ -322,3 +322,7 @@ services.factory('GeoLevels', function ($resource) {
 services.factory('GeographicZonesAboveLevel', function ($resource) {
   return $resource('/parentGeographicZones/:geoLevelCode.json', {}, {});
 });
+
+services.factory('SupervisoryNodes', function ($resource) {
+  return $resource('/supervisory-nodes/:id.json', {}, {});
+});
