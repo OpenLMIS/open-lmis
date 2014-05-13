@@ -38,7 +38,7 @@ function GeoZoneController($scope, geoLevels, geoZone, GeographicZonesAboveLevel
   };
 
   var error = function (data) {
-    $scope.$parent.success = "";
+    $scope.$parent.message = "";
     $scope.error = data.data.error;
     $scope.showError = true;
   };

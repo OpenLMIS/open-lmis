@@ -10,18 +10,17 @@
 
 describe("Geographic Zone Search Controller", function () {
 
-  var scope, $httpBackend, ctrl, navigateBackService, messageService;
+  var scope, $httpBackend, ctrl, navigateBackService;
   beforeEach(module('openlmis'));
 
-  beforeEach(inject(function ($rootScope, _$httpBackend_, $controller, _navigateBackService_, _messageService_) {
+  beforeEach(inject(function ($rootScope, _$httpBackend_, $controller, _navigateBackService_) {
     scope = $rootScope.$new();
     $httpBackend = _$httpBackend_;
     scope.query = "Nod";
     navigateBackService = _navigateBackService_;
     navigateBackService.query = '';
     ctrl = $controller;
-    messageService = _messageService_;
-    ctrl('GeoZoneSearchController', {$scope: scope, messageService: messageService});
+    ctrl('GeoZoneSearchController', {$scope: scope});
   }));
 
   it('should get all geo zones in a page depending on search criteria', function () {

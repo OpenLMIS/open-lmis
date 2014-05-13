@@ -10,10 +10,10 @@
 
 describe("Supervisory Node Search Controller", function () {
 
-  var scope, $httpBackend, ctrl, navigateBackService, location, messageService;
+  var scope, $httpBackend, ctrl, navigateBackService, location;
   beforeEach(module('openlmis'));
 
-  beforeEach(inject(function ($rootScope, _$httpBackend_, $controller, _navigateBackService_, $location, _messageService_) {
+  beforeEach(inject(function ($rootScope, _$httpBackend_, $controller, _navigateBackService_, $location) {
     scope = $rootScope.$new();
     $httpBackend = _$httpBackend_;
     scope.query = "Nod";
@@ -21,8 +21,7 @@ describe("Supervisory Node Search Controller", function () {
     navigateBackService.query = '';
     location = $location;
     ctrl = $controller;
-    messageService = _messageService_;
-    ctrl('SupervisoryNodeSearchController', {$scope: scope, messageService: messageService});
+    ctrl('SupervisoryNodeSearchController', {$scope: scope});
   }));
 
   it('should get all supervisory nodes in a page depending on search criteria', function () {
