@@ -15,7 +15,7 @@ function GeoZoneSearchController($scope, GeographicZones, $location, navigateBac
     {value: "parentName", name: "option.value.geo.zone.parent"}
   ];
 
-  $scope.error = false;
+  $scope.showResults = false;
   $scope.currentPage = 1;
   $scope.selectedSearchOption = navigateBackService.selectedSearchOption || $scope.searchOptions[0];
 
@@ -47,7 +47,7 @@ function GeoZoneSearchController($scope, GeographicZones, $location, navigateBac
       $scope.pagination = data.pagination;
       $scope.resultCount = $scope.pagination.totalRecords;
       $scope.currentPage = $scope.pagination.page;
-      $scope.error = true;
+      $scope.showResults = true;
     }, {});
   };
 
@@ -55,7 +55,7 @@ function GeoZoneSearchController($scope, GeographicZones, $location, navigateBac
     $scope.query = "";
     $scope.resultCount = 0;
     $scope.geoZoneList = [];
-    $scope.error = false;
+    $scope.showResults = false;
     angular.element("#searchGeoZone").focus();
   };
 
