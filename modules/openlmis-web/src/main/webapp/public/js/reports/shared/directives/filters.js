@@ -332,7 +332,7 @@ app.directive('productCategoryFilter', ['ProductCategoriesByProgram','$routePara
         $scope.productCategories.unshift({
           'name': '-- All Product Categories --', id: 0
         });
-        scope.filter.productCategory = (isUndefined($routeParams.productCategory) || $routeParams.productCategory === '')? 0: $routeParams.productCategory;
+        $scope.filter.productCategory = (isUndefined($routeParams.productCategory) || $routeParams.productCategory === '')? 0: $routeParams.productCategory;
       });
     };
 

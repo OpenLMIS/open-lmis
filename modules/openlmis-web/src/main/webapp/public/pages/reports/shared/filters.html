@@ -66,7 +66,7 @@
 <script type="text/ng-template" id="filter-adjustment-type-template">
   <div>
     <label class="labels">Adjustment Type<span ng-show="requiredFilters.adjustmentType" class="label-required">*</span></label><div>
-    <select class="input-medium" ng-model="filter.adjustmentType" ng-change="filterChanged();">
+    <select class="input-large" ng-model="filter.adjustmentType" ng-change="filterChanged();">
       <option ng-repeat="adjustmentType in adjustmentTypes" value="{{ adjustmentType.id }}" ng-selected="adjustmentType.id == filter.adjustmentType">{{adjustmentType.description}}</option>
     </select>
   </div>
