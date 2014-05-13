@@ -12,8 +12,8 @@ function SupplyStatusController($scope, $window , SupplyStatusReport) {
     //to minimize and maximize the filter section
 
   $scope.exportReport   = function (type){
-      $scope.filterObject.pdformat = 1;
-      var params = jQuery.param($scope.filterObject);
+      $scope.filter.pdformat = 1;
+      var params = jQuery.param($scope.filter);
       var url = '/reports/download/supply_status/' + type +'?' + params;
       $window.open(url);
   };

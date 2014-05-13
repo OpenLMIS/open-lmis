@@ -156,6 +156,11 @@ public class ReportLookupService {
     return facilityTypeMapper.getAll();
   }
 
+  public List<FacilityType> getFacilityTypesForProgram(Long programId) {
+    return facilityTypeMapper.getForProgram(programId);
+  }
+
+
   public List<RequisitionGroup> getAllRequisitionGroups() {
     return this.rgMapper.getAll();
   }
@@ -351,10 +356,12 @@ public class ReportLookupService {
       return supervisoryNodeReportMapper.getAllSupervisoryNodesByParentNodeId(supervisoryNodeId);
   }
 
-    public List<UserRoleAssignmentsReport> getAllRolesBySupervisoryNodeHavingProgram(Long roleId,Long programId,Long supervisoryNodeId){
-    return userSummaryExReportMapper.getUserRoleAssignments(roleId,programId,supervisoryNodeId);
-    }
+  public List<UserRoleAssignmentsReport> getAllRolesBySupervisoryNodeHavingProgram(Long roleId,Long programId,Long supervisoryNodeId){
+      return userSummaryExReportMapper.getUserRoleAssignments(roleId,programId,supervisoryNodeId);
+  }
+
   public List<UserRoleAssignmentsReport>getUserRoleAssignments(){
       return userSummaryExReportMapper.getUserRoleAssignment();
   }
+
 }

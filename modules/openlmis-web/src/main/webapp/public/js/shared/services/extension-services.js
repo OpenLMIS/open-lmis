@@ -101,6 +101,11 @@ services.factory('ReportSchedules', function ($resource) {
 services.factory('ReportFacilityTypes', function ($resource) {
     return $resource('/reports/facilityTypes.json', {}, {});
 });
+
+services.factory('ReportFacilityTypesByProgram', function ($resource) {
+  return $resource('/reports/facilityTypesForProgram.json', {}, {});
+});
+
 services.factory('ReportRegimenCategories', function ($resource) {
     return $resource('/reports/regimenCategories.json', {}, {});
 });

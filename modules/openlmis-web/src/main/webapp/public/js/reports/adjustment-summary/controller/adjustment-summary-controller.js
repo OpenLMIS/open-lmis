@@ -12,8 +12,8 @@ function AdjustmentSummaryReportController($scope, $filter, ngTableParams, Adjus
 
   $scope.exportReport = function (type) {
 
-    $scope.filterObject.pdformat = 1;
-    var params = jQuery.param($scope.filterObject);
+    $scope.filter.pdformat = 1;
+    var params = jQuery.param($scope.filter);
     var url = '/reports/download/adjustment_summary/' + type + '?' + params;
     window.location.href = url;
   };
