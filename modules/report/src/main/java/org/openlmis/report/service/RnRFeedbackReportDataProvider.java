@@ -18,6 +18,7 @@ import org.openlmis.report.mapper.RnRFeedbackReportMapper;
 import org.openlmis.report.model.ReportData;
 import org.openlmis.report.model.params.RnRFeedbackReportParam;
 import org.openlmis.report.util.Constants;
+import org.openlmis.report.util.StringHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -55,10 +56,10 @@ public class RnRFeedbackReportDataProvider extends ReportDataProvider {
       Calendar originalStart = Calendar.getInstance();
       Calendar originalEnd = Calendar.getInstance();
 
-      feedbackReportFilter.setFacilityTypeId(filterCriteria.get("facilityTypeId") == null ? 0 : Integer.parseInt(filterCriteria.get("facilityTypeId")[0])); //defaults to 0
-      feedbackReportFilter.setFacilityId(filterCriteria.get("facilityId") == null ? 0 : Integer.parseInt(filterCriteria.get("facilityId")[0])); //defaults to 0
+      feedbackReportFilter.setFacilityTypeId(StringHelper.isBlank(filterCriteria,"facilityType")? 0 : Integer.parseInt(filterCriteria.get("facilityType")[0])); //defaults to 0
+      feedbackReportFilter.setFacilityId(StringHelper.isBlank(filterCriteria,"facility") ? 0 : Integer.parseInt(filterCriteria.get("facility")[0])); //defaults to 0
       feedbackReportFilter.setFacilityType((filterCriteria.get("facilityType") == null || filterCriteria.get("facilityType")[0].equals("")) ? "All Facilities" : filterCriteria.get("facilityType")[0]);
-      feedbackReportFilter.setProductId(filterCriteria.get("productId") == null ? 0 : Integer.parseInt(filterCriteria.get("productId")[0])); //defaults to 0
+      feedbackReportFilter.setProductId(StringHelper.isBlank(filterCriteria,"product") ? -1 : Integer.parseInt(filterCriteria.get("product")[0])); //defaults to 0
       if (feedbackReportFilter.getProductId() == 0) {
         feedbackReportFilter.setProduct("All Products");
       } else if (feedbackReportFilter.getProductId() == -1) {
@@ -68,14 +69,14 @@ public class RnRFeedbackReportDataProvider extends ReportDataProvider {
         feedbackReportFilter.setProduct(filterCriteria.get("product")[0]);
       }
 
-      feedbackReportFilter.setOrderType(filterCriteria.get("orderType") == null ? "" : filterCriteria.get("orderType")[0]);
-      feedbackReportFilter.setPeriodId(filterCriteria.get("periodId") == null ? 0 : Integer.parseInt(filterCriteria.get("periodId")[0])); //defaults to 0
-      feedbackReportFilter.setScheduleId(filterCriteria.get("scheduleId") == null ? 0 : Integer.parseInt(filterCriteria.get("scheduleId")[0])); //defaults to 0
+      feedbackReportFilter.setOrderType(StringHelper.isBlank(filterCriteria,"orderType") ? "" : filterCriteria.get("orderType")[0]);
+      feedbackReportFilter.setPeriodId(StringHelper.isBlank(filterCriteria,"period") ? 0 : Integer.parseInt(filterCriteria.get("period")[0])); //defaults to 0
+      feedbackReportFilter.setScheduleId(StringHelper.isBlank(filterCriteria,"schedule")  ? 0 : Integer.parseInt(filterCriteria.get("schedule")[0])); //defaults to 0
       feedbackReportFilter.setSchedule(filterCriteria.get("schedule")[0]);
-      feedbackReportFilter.setRgroupId(filterCriteria.get("rgroupId") == null ? 0 : Integer.parseInt(filterCriteria.get("rgroupId")[0])); //defaults to 0
-      feedbackReportFilter.setRgroup(StringUtils.isBlank(filterCriteria.get("rgroup")[0]) ? "All Reporting Groups" : filterCriteria.get("rgroup")[0]);
+      feedbackReportFilter.setRgroupId(StringHelper.isBlank(filterCriteria,"requisitionGroup")? 0 : Integer.parseInt(filterCriteria.get("requisitionGroup")[0])); //defaults to 0
+      feedbackReportFilter.setRgroup(StringHelper.isBlank(filterCriteria,"requisitionGroup") ? "All Reporting Groups" : filterCriteria.get("requisitionGroup")[0]);
       feedbackReportFilter.setPeriod(filterCriteria.get("period")[0]);
-      feedbackReportFilter.setProgramId(filterCriteria.get("programId") == null ? 0 : Integer.parseInt(filterCriteria.get("programId")[0])); //defaults to 0
+      feedbackReportFilter.setProgramId(StringHelper.isBlank(filterCriteria,"program")? 0 : Integer.parseInt(filterCriteria.get("program")[0])); //defaults to 0
       feedbackReportFilter.setProgram(filterCriteria.get("program")[0]);
 
     }
