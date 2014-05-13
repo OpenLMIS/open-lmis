@@ -35,16 +35,13 @@ public class AdjustmentSummaryQueryBuilder {
   private static void writePredicates(AdjustmentSummaryReportParam filter) {
     WHERE("req_status in ('APPROVED','RELEASED')");
     if (filter != null) {
+
+      WHERE("processing_periods_id  = #{filterCriteria.period}");
+
       if (filter.getFacilityTypeId() != 0) {
         WHERE("facility_type_id = #{filterCriteria.facilityTypeId}");
       }
 
-      if (filter.getStartDate() != null) {
-        WHERE("processing_periods_start_date >= #{filterCriteria.startDate, jdbcType=DATE, javaType=java.util.Date, mode=IN}");
-      }
-      if (filter.getEndDate() != null) {
-        WHERE("processing_periods_end_date <= #{filterCriteria.endDate, jdbcType=DATE, javaType=java.util.Date, mode=IN}");
-      }
       if (filter.getProductCategoryId() != 0) {
         WHERE("product_category_id = #{filterCriteria.productCategoryId}");
       }

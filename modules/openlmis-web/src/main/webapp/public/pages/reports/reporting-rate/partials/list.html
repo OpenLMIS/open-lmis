@@ -82,9 +82,12 @@
                  <p>
                      Please use the form below to customize and send sms notifications for <b>{{selected_facility.name}}</b>
                  </p>
-                 <div>
-                     <div style="float:right; width: 190px; text-align: right;">
-                         Who recieves this notificaiton?
+                 <div style="padding: 10px;">
+                    <div class="row">
+                      <textarea class="field span6" rows="4" ng-model="sms_template"></textarea>
+                    </div>
+                     <div class="row">
+                         Who receives this notification?
                          <div>
                              <table class="table table-bordered">
                                  <tr ng-repeat="contact in contacts">
@@ -95,7 +98,7 @@
                          </div>
                      </div>
 
-                     <textarea  rows="4" style="width:300px" ng-model="sms_template"></textarea>
+
                  </div>
 
              </div>
@@ -105,9 +108,12 @@
                 <p>
                     Use this form to customize and send email notifications for <b>{{selected_facility.name}}</b>
                 </p>
-                <div>
-                    <div style="float:right; width:190px ; text-align: right;">
-                        Who recieves this notificaiton?
+                <div style="padding: 10px;">
+                    <div class="row">
+                      <textarea class="field span6" rows="5" ng-model="email_template"></textarea>
+                    </div>
+                    <div class="row">
+                        Who receives this notification?
                         <div>
                             <table class="table table-bordered">
                                 <tr ng-repeat="contact in contacts">
@@ -117,7 +123,7 @@
                             </table>
                         </div>
                     </div>
-                    <textarea rows="4" style="width:300px" ng-model="email_template"></textarea>
+
                 </div>
             </div>
         </div>

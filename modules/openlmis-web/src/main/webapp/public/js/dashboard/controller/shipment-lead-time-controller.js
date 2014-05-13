@@ -6,7 +6,7 @@
  * To change this template use File | Settings | File Templates.
  */
 
-function ShipmentLeadTimeController($scope,$filter, programsList,dashboardFiltersHistoryService, formInputValue,RequisitionGroupsBySupervisoryNodeProgramSchedule,userPreferredFilterValues,ReportProgramsBySupervisoryNode, UserSupervisoryNodes,ReportSchedules, ReportPeriods, RequisitionGroupsByProgram,RequisitionGroupsByProgramSchedule, ReportProductsByProgram, OperationYears, ReportPeriodsByScheduleAndYear,ShipmentLeadTime, ngTableParams) {
+function ShipmentLeadTimeController($scope,$filter, programsList,dashboardFiltersHistoryService, formInputValue,GetPeriod,RequisitionGroupsBySupervisoryNodeProgramSchedule,userPreferredFilterValues,ReportProgramsBySupervisoryNode, UserSupervisoryNodes,ReportSchedules, ReportPeriods, RequisitionGroupsByProgram,RequisitionGroupsByProgramSchedule, ReportProductsByProgram, OperationYears, ReportPeriodsByScheduleAndYear,ShipmentLeadTime, ngTableParams) {
 
     $scope.filterObject = {};
 
@@ -14,7 +14,7 @@ function ShipmentLeadTimeController($scope,$filter, programsList,dashboardFilter
 
     $scope.formPanel = {openPanel:true};
 
-    $scope.alertsPanel = {openPanel:true};
+    $scope.alertsPanel = {openPanel:false};
 
     initialize();
 
@@ -238,7 +238,17 @@ function ShipmentLeadTimeController($scope,$filter, programsList,dashboardFilter
                 $scope.filterObject.programId = userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_PROGRAM];
                 $scope.filterObject.periodId = userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_PERIOD];
                 $scope.filterObject.scheduleId = userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_SCHEDULE];
-                $scope.filterObject.year = date.getFullYear() - 1;
+
+                if(!isUndefined($scope.filterObject.periodId)){
+
+                    GetPeriod.get({id:$scope.filterObject.periodId}, function(period){
+                        if(!isUndefined(period.year)){
+                            $scope.filterObject.year = period.year;
+                        }else{
+                            $scope.filterObject.year = date.getFullYear() - 1;
+                        }
+                    });
+                }
                 $scope.filterObject.rgroupId = userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_REQUISITION_GROUP];
 
                 $scope.registerWatches();

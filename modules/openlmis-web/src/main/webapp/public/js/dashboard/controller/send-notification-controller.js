@@ -1,7 +1,7 @@
 /**
  * Created by issa on 4/24/14.
  */
-function SendNotificationController($scope,$timeout,programsList,SendNotification,dashboardFiltersHistoryService,messageService, NotificationAlerts, formInputValue,RequisitionGroupsBySupervisoryNodeProgramSchedule,userPreferredFilterValues,ReportProgramsBySupervisoryNode, UserSupervisoryNodes,ReportSchedules, ReportPeriods, RequisitionGroupsByProgram,RequisitionGroupsByProgramSchedule,FacilitiesForNotifications, OperationYears, ReportPeriodsByScheduleAndYear, ngTableParams) {
+function SendNotificationController($scope,$timeout,programsList,SendNotification,dashboardFiltersHistoryService,messageService, NotificationAlerts, GetPeriod, formInputValue,RequisitionGroupsBySupervisoryNodeProgramSchedule,userPreferredFilterValues,ReportProgramsBySupervisoryNode, UserSupervisoryNodes,ReportSchedules, ReportPeriods, RequisitionGroupsByProgram,RequisitionGroupsByProgramSchedule,FacilitiesForNotifications, OperationYears, ReportPeriodsByScheduleAndYear, ngTableParams) {
     $scope.filterObject = {};
 
     $scope.formFilter = {};
@@ -297,7 +297,16 @@ function SendNotificationController($scope,$timeout,programsList,SendNotificatio
                 $scope.filterObject.programId = userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_PROGRAM];
                 $scope.filterObject.periodId = userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_PERIOD];
                 $scope.filterObject.scheduleId = userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_SCHEDULE];
-                $scope.filterObject.year = date.getFullYear() - 1;
+                if(!isUndefined($scope.filterObject.periodId)){
+
+                    GetPeriod.get({id:$scope.filterObject.periodId}, function(period){
+                        if(!isUndefined(period.year)){
+                            $scope.filterObject.year = period.year;
+                        }else{
+                            $scope.filterObject.year = date.getFullYear() - 1;
+                        }
+                    });
+                }
                 $scope.filterObject.rgroupId = userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_REQUISITION_GROUP];
 
                 $scope.registerWatches();

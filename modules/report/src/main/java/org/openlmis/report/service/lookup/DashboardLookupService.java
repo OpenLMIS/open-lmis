@@ -93,4 +93,8 @@ public class DashboardLookupService {
             }
         }
     }
+
+    public String getPeriod(Long id){
+        return dashboardMapper.getPeriod(id);
+    }
 }

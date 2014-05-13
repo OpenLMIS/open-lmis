@@ -249,21 +249,21 @@ app.directive('requisitionGroupFilter', ['RequisitionGroupsByProgram',
       if (isUndefined($scope.filter) || isUndefined($scope.filter.program) || $scope.filter.program === 0)
         return;
 
-      RequisitionGroupsByProgram.get({
-        program: $scope.filter.program
-      }, function (data) {
-        $scope.requisitionGroups = data.requisitionGroupList;
-        if ($scope.requisitionGroups === undefined || $scope.requisitionGroups.length === 0) {
-          $scope.requisitionGroups = [];
-          $scope.requisitionGroups.push({
-            'name': '-- All Requisition Groups --'
-          });
-        } else {
-          $scope.requisitionGroups.unshift({
-            'name': '-- All Requisition Groups --'
-          });
-        }
-      });
+        RequisitionGroupsByProgram.get({
+          program: $scope.filter.program
+        }, function (data) {
+          $scope.requisitionGroups = data.requisitionGroupList;
+          if ($scope.requisitionGroups === undefined || $scope.requisitionGroups.length === 0) {
+            $scope.requisitionGroups = [];
+            $scope.requisitionGroups.push({
+              'name': '-- All Requisition Groups --'
+            });
+          } else {
+            $scope.requisitionGroups.unshift({
+              'name': '-- All Requisition Groups --'
+            });
+          }
+        });
     };
 
     return {
@@ -288,6 +288,28 @@ app.directive('requisitionGroupFilter', ['RequisitionGroupsByProgram',
       },
       templateUrl: 'filter-requisition-group-template'
     };
+}]);
+
+
+app.directive('adjustmentTypeFilter',['AdjustmentTypes', function(AdjustmentTypes){
+
+  return {
+    restrict: 'E',
+    require: '^filterContainer',
+    link: function (scope, elm, attr) {
+
+      AdjustmentTypes.get(function (data) {
+        scope.adjustmentTypes = data.adjustmentTypeList;
+        scope.adjustmentTypes.unshift({'description': '--All Adjustment Types --'});
+      });
+
+      if (attr.required) {
+        scope.requiredFilters.adjustmentType = 'adjustmentType';
+      }
+    },
+    templateUrl: 'filter-adjustment-type-template'
+  };
+
 }]);
 
 

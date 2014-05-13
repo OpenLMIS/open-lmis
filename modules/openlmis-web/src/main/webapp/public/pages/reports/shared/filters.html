@@ -63,6 +63,16 @@
     </div>
 </script>
 
+<script type="text/ng-template" id="filter-adjustment-type-template">
+  <div>
+    <label class="labels">Adjustment Type<span ng-show="requiredFilters.adjustmentType" class="label-required">*</span></label><div>
+    <select class="input-medium" ng-model="filter.adjustmentType" ng-change="filterChanged();">
+      <option ng-repeat="adjustmentType in adjustmentTypes" value="{{ adjustmentType.id }}" ng-selected="adjustmentType.id == filter.adjustmentType">{{adjustmentType.description}}</option>
+    </select>
+  </div>
+  </div>
+</script>
+
 <script type="text/ng-template" id="filter-period-template">
     <div>
         <label class="labels">Period <span ng-show="requiredFilters.period" class="label-required">*</span></label><div>
@@ -98,7 +108,7 @@
     <div>
         <label class="labels">Requisition Groups <span ng-show="requiredFilters.requisitionGroup" class="label-required">*</span></label><div>
         <select class="input-large" ng-model="filter.requisitionGroup" ng-change="filterChanged();">
-                 <option ng-repeat="requisitionGroup in requisitionGroups" value="{{ requisitionGroup.id }}" ng-selected="requisitionGroup.id == filter.requisitionGroup">{{requisitionGroup.name}}</option>
+                 <option ng-repeat="requisitionGroup in requisitionGroups" value="{{ requisitionGroup.id }}" ng-selected="filter.requisitionGroup == requisitionGroup.id">{{requisitionGroup.name}}</option>
             </select>
         </div>
     </div>

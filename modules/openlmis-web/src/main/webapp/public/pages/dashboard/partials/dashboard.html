@@ -29,67 +29,65 @@
     </div>
 </div>
 
-<div style="margin-top: 5px">
+<accordion>
+    <accordion-group is-open="fillRates.openPanel">
+        <accordion-heading>
+            <div class="accordion-title">
+                <div class="caption">
+                    <i class="flaticon-speedometer1"></i><span openlmis-message="label.fill.rates"></span>
+                </div>
+                <div class="tools">
+                    <i  ng-class="{'icon-minus-sign': fillRates.openPanel, 'icon-plus-sign': !fillRates.openPanel}"></i>
+                </div>
+            </div>
+        </accordion-heading>
+        <div class="fill-rate-header">
+            <div class="row-fluid">
+                <div class="span3">
+                    <div class="form-field">
+                        <span openlmis-message="label.facility"><span class="label-required">*</span></span>
+                        <select ui-select2 style="width:200px;" id="facility-name"  name="facility" ng-model="formFilter.facilityId" ng-change="processFacilityFilter()"  required="true">
+                            <option  ng-repeat="option in allFacilities" value="{{ option.id }}">{{ option.code }} - {{ option.name }}</option>
+                        </select>
+                    </div>
+                </div>
 
-    <accordion>
-        <accordion-group is-open="fillRates.openPanel">
-            <accordion-heading>
-                <div class="accordion-title">
-                    <div class="caption">
-                        <i class="flaticon-speedometer1"></i><span openlmis-message="label.fill.rates"></span>
-                    </div>
-                    <div class="tools">
-                        <i  ng-class="{'icon-minus-sign': fillRates.openPanel, 'icon-plus-sign': !fillRates.openPanel}"></i>
-                    </div>
-                </div>
-            </accordion-heading>
-    <div class="fill-rate-header">
-        <div class="row-fluid">
-            <div class="span3">
-                <div class="form-field">
-                    <span openlmis-message="label.facility"><span class="label-required">*</span></span>
-                    <select ui-select2 style="width:200px;" id="facility-name"  name="facility" ng-model="formFilter.facilityId" ng-change="processFacilityFilter()"  required="true">
-                        <option  ng-repeat="option in allFacilities" value="{{ option.id }}">{{ option.code }} - {{ option.name }}</option>
-                    </select>
-                </div>
             </div>
 
         </div>
-
-    </div>
-              <div class="row-fluid">
-                <div class="app-form span6">
-                    <h2 openlmis-message="label.order.fill.rate"></h2>
-                    <div ng-show="orderFillChart.data == undefined">
-                        <label class="chart-note">
-                            No data to render chart
-                        </label>
-                    </div>
-                    <div ui-chart="orderFillChart.data" chart-options="orderFillChart.option" style="width:360px;height:300px;" ng-show="showOrderFill"></div>
-                 </div>
-                <div class="app-form span6">
-                    <h2 openlmis-message="label.item.fill.rate"></h2>
-                    <div ng-show="productItemFillRates == undefined || productItemFillRates.length == 0">
-                        <label class="chart-note">No data to render chart</label>
-                    </div>
-                    <table ng-show="showItemFill">
-                        <tr>
-                            <td ng-repeat="itemFillRate in productItemFillRates">
+        <div class="row-fluid">
+            <div class="app-form span6">
+                <h2 openlmis-message="label.order.fill.rate"></h2>
+                <div ng-show="orderFillChart.data == undefined">
+                    <label class="chart-note">
+                        No data to render chart
+                    </label>
+                </div>
+                <div ui-chart="orderFillChart.data" chart-options="orderFillChart.option" style="width:360px;height:300px;" ng-show="showOrderFill"></div>
+            </div>
+            <div class="app-form span6">
+                <h2 openlmis-message="label.item.fill.rate"></h2>
+                <div ng-show="productItemFillRates == undefined || productItemFillRates.length == 0">
+                    <label class="chart-note">No data to render chart</label>
+                </div>
+                <table ng-show="showItemFill">
+                    <tr>
+                        <td ng-repeat="itemFillRate in productItemFillRates">
                                 <span class="easychart" style="height: 75px" easypiechart options="itemFillRate.option"  percent="itemFillRate.percent">
                                 <span class="easychart-percent" ng-bind="itemFillRate.percent"></span>
                                 </span>
-                                <div style="text-align: center">{{itemFillRate.name}}</div>
-                            </td>
-                        </tr>
-                    </table>
-                </div>
+                            <div style="text-align: center">{{itemFillRate.name}}</div>
+                        </td>
+                    </tr>
+                </table>
             </div>
+        </div>
 
-  </accordion-group>
-  </accordion>
-</div>
+    </accordion-group>
+</accordion>
 
-    <div class="row-fluid" style="margin-top: 5px;">
+
+    <div class="row-fluid">
         <div class="span6"> <!-- District Reporting Performance -->
             <accordion>
                 <accordion-group is-open="districtReporting.openPanel">
@@ -139,7 +137,7 @@
     </div>
 
 <!-- BEGIN TAB PORTLET-->
-<div class="portlet box light-grey tabbable" style="margin-top: 5px;">
+<div class="portlet box light-grey tabbable">
     <div class="portlet-title">
             <div class="caption">
                         <i class="fa fa-reorder"></i>Sample Tabs
