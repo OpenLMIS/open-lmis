@@ -380,7 +380,7 @@ public class SupervisoryNodeMapperIT {
     supervisoryNode1.setFacility(facility);
     insertSupervisoryNode(supervisoryNode1);
 
-    SupervisoryNode supervisoryNode2 = make(a(SupervisoryNodeBuilder.defaultSupervisoryNode, with(code, "SN2"), with(name, "Village2 Dispensary")));
+    SupervisoryNode supervisoryNode2 = make(a(SupervisoryNodeBuilder.defaultSupervisoryNode, with(code, "SN2"), with(name, "Village 2 Dispensary")));
     supervisoryNode2.setFacility(facility);
     insertSupervisoryNode(supervisoryNode2);
 
@@ -388,7 +388,7 @@ public class SupervisoryNodeMapperIT {
     supervisoryNode3.setFacility(facility);
     insertSupervisoryNode(supervisoryNode3);
 
-    SupervisoryNode supervisoryNode4 = make(a(SupervisoryNodeBuilder.defaultSupervisoryNode, with(code, "SN4"), with(name, "Village Dispensary")));
+    SupervisoryNode supervisoryNode4 = make(a(SupervisoryNodeBuilder.defaultSupervisoryNode, with(code, "SN4"), with(name, "Village 1 Dispensary")));
     supervisoryNode4.setFacility(facility);
     insertSupervisoryNode(supervisoryNode4);
 
