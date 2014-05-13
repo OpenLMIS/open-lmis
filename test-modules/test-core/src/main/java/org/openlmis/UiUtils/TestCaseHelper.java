@@ -510,6 +510,13 @@ public class TestCaseHelper {
     assertEquals(testWebDriver.getElementById("lastPageLink").getCssValue("color"), "rgba(204, 204, 204, 1)");
   }
 
+  public void verifyPageNumberLinksDisplayed() {
+    assertTrue(testWebDriver.getElementById("firstPageLink").isDisplayed());
+    assertTrue(testWebDriver.getElementById("previousPageLink").isDisplayed());
+    assertTrue(testWebDriver.getElementById("nextPageLink").isDisplayed());
+    assertTrue(testWebDriver.getElementById("lastPageLink").isDisplayed());
+  }
+
   public void verifyPreviousAndFirstPageLinksDisabled() {
     testWebDriver.waitForAjax();
     WebElement firstPageLink = testWebDriver.getElementById("firstPageLink");
@@ -524,8 +531,28 @@ public class TestCaseHelper {
     page.click();
   }
 
-  public void verifyNumberOfLineItemsVisibleOnPage(int numberOfProducts, String tableName) {
-    AssertJUnit.assertEquals(numberOfProducts, testWebDriver.getElementsSizeByXpath("//table[@id='" + tableName + "']/tbody"));
+  public void navigateToNextPage() {
+    WebElement nextPageLink = testWebDriver.getElementById("nextPageLink");
+    testWebDriver.waitForElementToAppear(nextPageLink);
+    nextPageLink.click();
+  }
+
+  public void navigateToFirstPage() {
+    WebElement firstPageLink = testWebDriver.getElementById("firstPageLink");
+    testWebDriver.waitForElementToAppear(firstPageLink);
+    firstPageLink.click();
+  }
+
+  public void navigateToLastPage() {
+    WebElement lastPageLink = testWebDriver.getElementById("lastPageLink");
+    testWebDriver.waitForElementToAppear(lastPageLink);
+    lastPageLink.click();
+  }
+
+  public void navigateToPreviousPage() {
+    WebElement previousPageLink = testWebDriver.getElementById("previousPageLink");
+    testWebDriver.waitForElementToAppear(previousPageLink);
+    previousPageLink.click();
   }
 
   public void setupDataForDistributionTest(Map<String, String> dataMap) throws SQLException {

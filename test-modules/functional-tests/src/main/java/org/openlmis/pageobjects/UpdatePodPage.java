@@ -175,66 +175,6 @@ public class UpdatePodPage extends Page {
     return tickIcon.isDisplayed();
   }
 
-  public boolean isFirstPageLinkEnabled() {
-    testWebDriver.waitForElementToAppear(firstPageLink);
-    return firstPageLink.getCssValue("color").contains("rgba(119, 119, 119, 1)");
-  }
-
-  public boolean isFirstPageLinkDisplayed() {
-    testWebDriver.waitForElementToAppear(firstPageLink);
-    return firstPageLink.isDisplayed();
-  }
-
-  public boolean isPreviousPageLinkEnabled() {
-    testWebDriver.waitForElementToAppear(previousPageLink);
-    return previousPageLink.getCssValue("color").contains("rgba(119, 119, 119, 1)");
-  }
-
-  public boolean isPreviousPageLinkDisplayed() {
-    testWebDriver.waitForElementToAppear(previousPageLink);
-    return previousPageLink.isDisplayed();
-  }
-
-  public boolean isNextPageLinkEnabled() {
-    testWebDriver.waitForElementToAppear(nextPageLink);
-    return nextPageLink.getCssValue("color").contains("rgba(119, 119, 119, 1)");
-  }
-
-  public boolean isNextPageLinkDisplayed() {
-    testWebDriver.waitForElementToAppear(nextPageLink);
-    return nextPageLink.isDisplayed();
-  }
-
-  public boolean isLastPageLinkEnabled() {
-    testWebDriver.waitForElementToAppear(lastPageLink);
-    return lastPageLink.getCssValue("color").contains("rgba(119, 119, 119, 1)");
-  }
-
-  public boolean isLastPageLinkDisplayed() {
-    testWebDriver.waitForElementToAppear(lastPageLink);
-    return lastPageLink.isDisplayed();
-  }
-
-  public void navigateToNextPage() {
-    testWebDriver.waitForElementToAppear(nextPageLink);
-    nextPageLink.click();
-  }
-
-  public void navigateToFirstPage() {
-    testWebDriver.waitForElementToAppear(firstPageLink);
-    firstPageLink.click();
-  }
-
-  public void navigateToLastPage() {
-    testWebDriver.waitForElementToAppear(lastPageLink);
-    lastPageLink.click();
-  }
-
-  public void navigateToPreviousPage() {
-    testWebDriver.waitForElementToAppear(previousPageLink);
-    previousPageLink.click();
-  }
-
   public String getRequisitionTypeColor() {
     testWebDriver.waitForElementToAppear(requisitionTypeClass);
     return requisitionTypeClass.getCssValue("background-color");
