@@ -15,7 +15,7 @@ function SupervisoryNodeController($scope, supervisoryNode, ParentSupervisoryNod
     $scope.query.trim();
     if ($scope.query === undefined || $scope.query.length < 3) return;
     ParentSupervisoryNodes.get({"searchParam": $scope.query}, function (data) {
-      $scope.filteredNodes = _.reject(data.supervisoryNodes, function (node) {
+      $scope.filteredNodes = _.reject(data.supervisoryNodeList, function (node) {
         return $scope.supervisoryNode === undefined ? false : node.code == $scope.supervisoryNode.code;
       });
       $scope.resultCount = $scope.filteredNodes.length;
@@ -29,7 +29,7 @@ function SupervisoryNodeController($scope, supervisoryNode, ParentSupervisoryNod
 
   $scope.confirmParentNodeDelete = function(){
     $scope.parentNodeSelected = undefined;
-  }
+  };
 }
 
 SupervisoryNodeController.resolve = {

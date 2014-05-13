@@ -29,7 +29,6 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.openlmis.web.controller.SupervisoryNodeController.SUPERVISORY_NODE;
 import static org.openlmis.web.controller.SupervisoryNodeController.SUPERVISORY_NODES;
 
 @Category(UnitTests.class)
@@ -58,14 +57,14 @@ public class SupervisoryNodeControllerTest {
   @Test
   public void shouldGetSupervisoryNodeById(){
     Long id = 1L;
-    SupervisoryNode node = new SupervisoryNode();
-    when(supervisoryNodeService.getById(id)).thenReturn(node);
+    SupervisoryNode expectedNode = new SupervisoryNode();
+    when(supervisoryNodeService.getById(id)).thenReturn(expectedNode);
 
 
-    ResponseEntity<OpenLmisResponse> supervisoryNode = controller.getById(id);
+    SupervisoryNode actualNode = controller.getById(id);
 
     verify(supervisoryNodeService).getById(id);
-    assertThat((SupervisoryNode)supervisoryNode.getBody().getData().get(SUPERVISORY_NODE), is(node));
+    assertThat(actualNode, is(expectedNode));
   }
 
   @Test
@@ -75,10 +74,10 @@ public class SupervisoryNodeControllerTest {
     List<SupervisoryNode> supervisoryNodes = new ArrayList<>();
     when(supervisoryNodeService.getFilteredSupervisoryNodesByName(query)).thenReturn(supervisoryNodes);
 
-    ResponseEntity<OpenLmisResponse> response = controller.getFilteredNodes(query);
+    List<SupervisoryNode> filteredNodes = controller.getFilteredNodes(query);
 
     verify(supervisoryNodeService).getFilteredSupervisoryNodesByName(query);
-    assertThat((List<SupervisoryNode>) response.getBody().getData().get(SUPERVISORY_NODES), is(supervisoryNodes));
+    assertThat(filteredNodes, is(supervisoryNodes));
 
   }
 }

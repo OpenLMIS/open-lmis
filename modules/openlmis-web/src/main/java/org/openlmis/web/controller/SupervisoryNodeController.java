@@ -21,10 +21,11 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
+
+import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
 /**
  * This controller handles request to get list of supervisory nodes.
@@ -35,18 +36,17 @@ import java.util.List;
 public class SupervisoryNodeController extends BaseController {
 
   public static final String SUPERVISORY_NODES = "supervisoryNodes";
-  public static final String SUPERVISORY_NODE = "supervisoryNode";
 
   @Autowired
   private SupervisoryNodeService supervisoryNodeService;
 
-  @RequestMapping(value = "/supervisory-nodes", method = RequestMethod.GET)
+  @RequestMapping(value = "/supervisory-nodes", method = GET)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_USER')")
   public ResponseEntity<OpenLmisResponse> getAll() {
     return OpenLmisResponse.response(SUPERVISORY_NODES, supervisoryNodeService.getAll());
   }
 
-  @RequestMapping(value = "/search-supervisory-nodes", method = RequestMethod.GET)
+  @RequestMapping(value = "/search-supervisory-nodes", method = GET)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_SUPERVISORY_NODE')")
   public ResponseEntity<OpenLmisResponse> searchSupervisoryNode(@RequestParam(value = "page",
     required = true,
@@ -58,17 +58,15 @@ public class SupervisoryNodeController extends BaseController {
     return response;
   }
 
-  @RequestMapping(value = "/supervisory-nodes/{id}", method = RequestMethod.GET)
+  @RequestMapping(value = "/supervisory-nodes/{id}", method = GET)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_SUPERVISORY_NODE')")
-  public ResponseEntity<OpenLmisResponse> getById(@PathVariable(value = "id") Long id) {
-    SupervisoryNode supervisoryNode = supervisoryNodeService.getById(id);
-    return OpenLmisResponse.response(SUPERVISORY_NODE, supervisoryNode);
+  public SupervisoryNode getById(@PathVariable(value = "id") Long id) {
+    return supervisoryNodeService.getById(id);
   }
 
-  @RequestMapping(value = "/parent-supervisory-nodes", method = RequestMethod.GET)
+  @RequestMapping(value = "/parent-supervisory-nodes", method = GET, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_SUPERVISORY_NODE')")
-  public ResponseEntity<OpenLmisResponse> getFilteredNodes(@RequestParam(value = "searchParam") String param) {
-    List<SupervisoryNode> filteredSupervisoryNodes = supervisoryNodeService.getFilteredSupervisoryNodesByName(param);
-    return OpenLmisResponse.response(SUPERVISORY_NODES, filteredSupervisoryNodes);
+  public List<SupervisoryNode> getFilteredNodes(@RequestParam(value = "searchParam") String param) {
+    return supervisoryNodeService.getFilteredSupervisoryNodesByName(param);
   }
 }
