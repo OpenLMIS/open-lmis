@@ -22,6 +22,7 @@ import java.util.List;
  * SupervisoryNodeMapper maps the SupervisoryNode entity to corresponding representation in database. Also provides
  * methods like getting supervisory node hierarchy.
  */
+
 @Repository
 public interface SupervisoryNodeMapper {
 
@@ -128,9 +129,8 @@ public interface SupervisoryNodeMapper {
     "WHERE id = #{id}")
   void update(SupervisoryNode supervisoryNode);
 
-
   @Select({"SELECT * FROM supervisory_nodes SN INNER JOIN supervisory_nodes SNP ON SN.parentId = SNP.id WHERE LOWER(SNP.name)" +
-    " LIKE '%'|| LOWER(#{nameSearchCriteria}) ||'%' order by SNP.name, SN.name NULLS LAST LIMIT #{pagination.pageSize} OFFSET #{pagination.offset}"})
+    " LIKE '%'|| LOWER(#{nameSearchCriteria}) ||'%' order by LOWER(SNP.name), LOWER(SN.name) NULLS LAST LIMIT #{pagination.pageSize} OFFSET #{pagination.offset}"})
   @Results(value = {
     @Result(property = "parent", column = "parentId", javaType = SupervisoryNode.class,
       one = @One(select = "getById")),
@@ -140,7 +140,7 @@ public interface SupervisoryNodeMapper {
   List<SupervisoryNode> getSupervisoryNodesByParent(@Param(value = "pagination") Pagination pagination, @Param(value = "nameSearchCriteria") String nameSearchCriteria);
 
   @Select({"SELECT * FROM supervisory_nodes SN LEFT OUTER JOIN supervisory_nodes SNP ON SN.parentId = SNP.id WHERE LOWER(SN.name)" +
-    " LIKE '%'|| LOWER(#{nameSearchCriteria}) ||'%' ORDER BY SNP.name, SN.name NULLS LAST LIMIT #{pagination.pageSize} OFFSET #{pagination.offset}"})
+    " LIKE '%'|| LOWER(#{nameSearchCriteria}) ||'%' ORDER BY LOWER(SNP.name), LOWER(SN.name) NULLS LAST LIMIT #{pagination.pageSize} OFFSET #{pagination.offset}"})
   @Results(value = {
     @Result(property = "parent", column = "parentId", javaType = SupervisoryNode.class,
       one = @One(select = "getById")),
