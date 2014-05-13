@@ -20,3 +20,4 @@
 \i ../../test-data/sql/budget.sql
 \i ../../test-data/sql/coverage_target_group_products.sql
 \i ../../test-data/sql/coverage_product_vials.sql
+

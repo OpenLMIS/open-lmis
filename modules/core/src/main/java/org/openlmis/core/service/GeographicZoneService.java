@@ -16,13 +16,13 @@ import org.openlmis.core.dto.GeographicZoneGeometry;
 import org.openlmis.core.repository.GeographicZoneRepository;
 import org.openlmis.core.repository.mapper.GeographicZoneGeoJSONMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 /**
  * Exposes the services for handling GeographicZone entity.
  */
 
-import java.io.IOException;
 import java.util.List;
 
 @Service
@@ -36,7 +36,9 @@ public class GeographicZoneService {
   GeographicZoneGeoJSONMapper geoJsonMapper;
 
   @Autowired
-  private SMSService smsService;
+  SMSManagementService smsManagementService;
+
+  private @Value("${sms.test.notification.number}") String smsTestNotificationNumber;
 
     public void save(GeographicZone geographicZone) {
     geographicZone.setLevel(repository.getGeographicLevelByCode(geographicZone.getLevel().getCode()));
@@ -69,14 +71,11 @@ public class GeographicZoneService {
     return repository.getAllGeographicZones();
   }
 
-  public void saveNew(GeographicZone geographicZone) throws IOException {
+  public void saveNew(GeographicZone geographicZone) {
     repository.insert_Ext(geographicZone);
-    try{
-        smsService.SendSMSMessage(String.format("Geo zone %s just added to the database.",geographicZone.getName()),"17033422762");
-    }
-    catch (IOException e){
-        throw e;
-    }
+    String message = String.format("Geographic zone %s added to the database.",geographicZone.getName());
+    String phoneNumber = smsTestNotificationNumber;
+    smsManagementService.SendSMSMessage(message,phoneNumber);
   }
 
   public void update(GeographicZone geographicZone) {

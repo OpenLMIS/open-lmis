@@ -14,6 +14,8 @@ import org.apache.ibatis.annotations.*;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.FacilityOperator;
 import org.openlmis.core.domain.FacilityType;
+import org.openlmis.core.dto.FacilityContact;
+import org.openlmis.core.dto.FacilityImages;
 import org.springframework.stereotype.Repository;
 
 import java.util.Date;
@@ -265,4 +267,19 @@ public interface FacilityMapper {
   @Select({"SELECT id, code FROM facilities WHERE modifiedDate = #{modifiedDate} AND",
     "id IN(SELECT DISTINCT(parentFacilityId) FROM facilities)"})
   List<Facility> getAllParentsByModifiedDate(Date modifiedDate);
+
+  @Select({"SELECT id as userId, username as name, cellphone as contact ",
+      "FROM users ",
+      "WHERE ",
+      " active = true and facilityId = #{facilityId}"})
+  List<FacilityContact> getSmsContacts(Long facilityId);
+
+  @Select({"SELECT id as userId, username as name, email as contact ",
+      "FROM users ",
+      "WHERE ",
+      " active = true and facilityId = #{facilityId}"})
+  List<FacilityContact> getEmailContacts(Long facilityId);
+
+  @Select("SELECT * from odksubmissiondata where facilityId = #{facilityId}")
+  List<FacilityImages> getFacilityImages(Long facilityId);
 }

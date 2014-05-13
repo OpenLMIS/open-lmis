@@ -51,12 +51,25 @@ public class RequisitionRepository {
   @Autowired
   private RegimenLineItemMapper regimenLineItemMapper;
 
+  @Autowired
+  private EquipmentLineItemMapper equipmentLineItemMapper;
+
+
   public void insert(Rnr requisition) {
     requisition.setStatus(INITIATED);
     requisitionMapper.insert(requisition);
     insertLineItems(requisition, requisition.getFullSupplyLineItems());
     insertLineItems(requisition, requisition.getNonFullSupplyLineItems());
     insertRegimenLineItems(requisition, requisition.getRegimenLineItems());
+    insertEquipmentStatus(requisition, requisition.getEquipmentLineItems());
+  }
+
+  private void insertEquipmentStatus(Rnr requisition, List<EquipmentLineItem> equipmentLineItems) {
+    for (EquipmentLineItem equipmentLineItem : equipmentLineItems) {
+      equipmentLineItem.setRnrId(requisition.getId());
+      equipmentLineItem.setModifiedBy(requisition.getModifiedBy());
+      equipmentLineItemMapper.insert(equipmentLineItem);
+    }
   }
 
   private void insertRegimenLineItems(Rnr requisition, List<RegimenLineItem> regimenLineItems) {
@@ -81,6 +94,13 @@ public class RequisitionRepository {
     updateNonFullSupplyLineItems(rnr);
     if (!(rnr.getStatus() == AUTHORIZED || rnr.getStatus() == IN_APPROVAL)) {
       updateRegimenLineItems(rnr);
+      updateEquipmentLineItems(rnr);
+    }
+  }
+
+  private void updateEquipmentLineItems(Rnr rnr) {
+    for(EquipmentLineItem item : rnr.getEquipmentLineItems()){
+      equipmentLineItemMapper.update(item);
     }
   }
 

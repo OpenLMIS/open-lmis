@@ -168,6 +168,7 @@ public class ShipmentMapperIT {
     Order order = new Order(requisition);
     order.setSupplyLine(createSupplyLine(facility, program));
     order.setStatus(OrderStatus.IN_ROUTE);
+    order.setOrderNumber("OrderHIV00000001R");
     orderMapper.insert(order);
 
     productMapper.insert(product);

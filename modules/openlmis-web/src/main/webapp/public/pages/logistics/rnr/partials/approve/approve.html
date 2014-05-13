@@ -20,6 +20,9 @@
         <li ng-class="{'selected': visibleTab == 'regimen'}" ng-show="regimenCount">
             <a href="" ng-click="switchSupplyType('regimen')" id="regimenTab" openlmis-message="label.regimens"></a>
         </li>
+        <li ng-class="{'selected': visibleTab == 'equipment'}" ng-show="equipmentCount">
+          <a href="" ng-click="switchSupplyType('equipment')" id="equipmentTab">Equipment(s)</a>
+        </li>
     </ul>
   <span class="pull-right">
     <a full-screen href="" class="btn">
@@ -44,8 +47,10 @@
   <span ng-show="visibleTab === 'fullSupply'">
     <ng-include src="'/public/pages/logistics/rnr/partials/approve/approve-full-supply.html'"></ng-include>
   </span>
-
-    <div ng-hide="visibleTab === 'regimen'">
+  <span ng-show="visibleTab === 'equipment'">
+    <ng-include src="'/public/pages/logistics/rnr/partials/approve/approve-equipment-line-item.html'"></ng-include>
+  </span>
+  <div ng-hide="visibleTab === 'regimen'">
         <openlmis-pagination num-pages="numberOfPages" current-page="currentPage" max-size="10"
                              check-error-on-page="checkErrorOnPage(page)"></openlmis-pagination>
     </div>

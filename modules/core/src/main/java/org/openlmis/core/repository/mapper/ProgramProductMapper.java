@@ -104,7 +104,7 @@ public interface ProgramProductMapper {
   List<ProgramProduct> getByProductCode(String code);
 
   @Select({"SELECT DISTINCT pp.active, pr.code AS programCode, pr.name AS programName, p.code AS productCode,",
-    "p.primaryName AS productName, p.description, p.dosesPerDispensingUnit AS unit, pc.name AS category",
+    "p.primaryName AS productName, p.description, p.dosesPerDispensingUnit AS unit, pc.id AS categoryId",
     "FROM program_products pp",
     "INNER JOIN products p  ON pp.productId=p.id",
     "INNER JOIN programs pr ON pr.id=pp.programId",

@@ -34,6 +34,7 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.springframework.mail.SimpleMailMessage;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
@@ -326,5 +327,28 @@ public class UserServiceTest {
     userService.disable(userId, 1L);
     verify(userRepository).disable(userId, 1L);
     verify(userRepository).deletePasswordResetTokenForUser(userId);
+  }
+
+  @Test
+  public void shouldFilterActiveUsers() {
+    User user1 = new User(1L, "user1");
+    user1.setActive(true);
+
+    User user2 = new User(2L, "user2");
+    user2.setActive(false);
+
+    User user3 = new User(3L, "user3");
+    user3.setActive(true);
+
+    ArrayList<User> users = new ArrayList<>();
+    users.add(user1);
+    users.add(user2);
+    users.add(user3);
+
+    ArrayList<User> activeUsers = userService.filterForActiveUsers(users);
+
+    assertThat(activeUsers.size(), is(2));
+    assertThat(activeUsers.get(0), is(user1));
+    assertThat(activeUsers.get(1), is(user3));
   }
 }

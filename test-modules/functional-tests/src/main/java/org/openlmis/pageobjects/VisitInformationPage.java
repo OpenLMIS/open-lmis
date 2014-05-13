@@ -76,7 +76,7 @@ public class VisitInformationPage extends DistributionTab {
   @FindBy(how = ID, using = "vehicleId")
   public static WebElement vehicleIdField = null;
 
-  @FindBy(how = How.XPATH, using = "//a[@class='ui-state-default' and contains(text(),'1')]")
+  @FindBy(how = How.XPATH, using = "//a[contains(@class,'ui-state-highlight')]")
   private static WebElement calender = null;
 
   @FindBy(how = ID, using = "badWeather")
@@ -193,7 +193,6 @@ public class VisitInformationPage extends DistributionTab {
     visitDateField.click();
     testWebDriver.waitForElementToAppear(calender);
     calender.click();
-    visitDateField.sendKeys(Keys.TAB);
     visitDateField.sendKeys(Keys.TAB);
   }
 

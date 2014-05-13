@@ -8,7 +8,7 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-angular.module('adjustmentsummary', ['openlmis', 'ngTable', 'ui.bootstrap.modal', 'ui.bootstrap.dropdownToggle'])
+angular.module('adjustmentsummary', ['openlmis', 'ngTable', 'angularCombine', 'ui.bootstrap.modal', 'ui.bootstrap.dropdownToggle'])
     .config(['$routeProvider', function ($routeProvider) {
       $routeProvider.
         when('/list', {controller:AdjustmentSummaryReportController, templateUrl:'partials/list.html',reloadOnSearch:false}).
@@ -17,5 +17,7 @@ angular.module('adjustmentsummary', ['openlmis', 'ngTable', 'ui.bootstrap.modal'
         function ($rootScope, AuthorizationService) {
             AuthorizationService.preAuthorize('VIEW_ADJUSTMENT_SUMMARY_REPORT');
         }
-    );
+    ).config(function(angularCombineConfigProvider) {
+    angularCombineConfigProvider.addConf(/filter-/, '/public/pages/reports/shared/filters.html');
+  });
 

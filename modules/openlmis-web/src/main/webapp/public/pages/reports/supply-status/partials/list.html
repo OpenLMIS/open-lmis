@@ -8,7 +8,7 @@
 ~ You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
 -->
 
-<div class="row-fluid sortable ui-sortable">
+<div class="row-fluid">
   <div class="box span12">
     <div class="box-header">
       <h2><i class="icon-edit"></i><span class="break"></span>Supply Status by Facility</h2>
@@ -21,101 +21,38 @@
       </div>
     </div>
 
-    <div>
-      <div class="app-form" style="padding: 5px;">
-        <form ng-submit="filterGrid()" name="filterForm">
-          <div class="clearfix ">
+    <div class=row-fluid>
+      <div class="sidebar">
+          <div class="app-form" style="padding: 5px;">
 
-            <div class="form-cell horizontalFilters">
-              <label class="labels">Program<span class="label-required"> *</span></label>
-
-              <div class="form-fields">
-                <select ui-select2 style="width:200px;" class="large-input" name="program"
-                        ng-model=" filterObject.program" ng-change="ProgramChanged()" required="true">
-                  <option ng-repeat="option in programs" value="{{ option.id }}">{{ option.name }}</option>
-                </select>
-              </div>
-            </div>
-
-            <div class="form-cell horizontalFilters">
-              <label class="labels">Schedule<span class="label-required"> *</span></label>
-
-              <div class="form-fields">
-                <select ui-select2 style="width:200px;" class="large-input" name="schedule" ng-change="ChangeSchedule()"
-                        ng-model="filterObject.schedule" required="true">
-                  <option ng-repeat="option in schedules" value="{{ option.id }}">{{ option.name }}</option>
-                </select>
-              </div>
-            </div>
-
-            <div class="form-cell horizontalFilters">
-              <label class="labels">Period<span class="label-required"> *</span></label>
-
-              <div class="form-field">
-                <select ui-select2 style="width:200px;" class="input-large" ng-required="true" ng-change="filterGrid();"
-                        name="period" ng-model="filterObject.period" required="true">
-
-                  <option ng-repeat="option in periods" value="{{ option.id }}">{{ option.name }}</option>
-                </select>
-              </div>
-            </div>
-
-
-            <div class="form-cell horizontalFilters">
-              <label class="labels">Facility Type</label>
-
-              <div class="form-field">
-                <select ui-select2 style="width:200px;" id="facility-type" name="facilityType"
-                        ng-change="loadFacilities();filterGrid();" ng-model="filterObject.facilityType">
-
-                  <option ng-repeat="option in facilityTypes" value="{{ option.id }}">{{ option.name }}</option>
-                </select>
-              </div>
-            </div>
-            <div class="form-cell horizontalFilters">
-              <label class="labels">Facility Name<span class="label-required"> *</span></label>
-
-              <div class="form-field">
-                <select ui-select2 style="width:200px;" id="facility-name" name="facility"
-                        ng-model="filterObject.facility" ng-change="filterGrid();" required="true">
-                  <option ng-repeat="option in allFacilities" value="{{ option.id }}">{{ option.code }} - {{ option.name
-                    }}
-                  </option>
-                </select>
-              </div>
-
-            </div>
-
-            <div class="form-cell horizontalFilters">
-              <label class="labels">Product</label>
-
-              <div class="form-field">
-                <select ui-select2 style="width:200px;" name="product" ng-change="filterGrid();"
-                        ng-model="filterObject.product">
-                  <option ng-repeat="option in products" value="{{ option.id }}">{{ option.name }}</option>
-                </select>
-              </div>
-            </div>
+              <form ng-submit="filterGrid()"  name="filterForm" novalidate>
+                  <div filter-container class="clearfix">
+                      <program-filter class="form-cell horizontalFilters" required="true"></program-filter>
+                      <schedule-filter class="form-cell horizontalFilters" required="true"></schedule-filter>
+                      <year-filter class="form-cell horizontalFilters" required="true"></year-filter>
+                      <period-filter class="form-cell horizontalFilters" required="true"></period-filter>
+                      <requisition-group-filter class="form-cell horizontalFilters"></requisition-group-filter>
+                      <facility-type-filter class="form-cell horizontalFilters" ></facility-type-filter>
+                      <facility-filter class="form-cell horizontalFilters" required="true"></facility-filter>
+                      <product-category-filter class="form-cell horizontalFilters" ></product-category-filter>
+                      <product-filter class="form-cell horizontalFilters"></product-filter>
+                  </div>
+              </form>
           </div>
-        </form>
-
-        <span class="label-required">*</span> <span id="requiredMsgDiv" ng-bind="message" ng-show="showMessage"/>
       </div>
-    </div>
-
-    <table class="table table-bordered" ng-show="data == undefined || data.length == 0">
-      <tr>
-        <td>No data to show under selected filters</td>
-      </tr>
-    </table>
-
-    <div ng-show="datarows.length > 0">
-      <div class="pull-right legend">Page: {{tableParams.page}}, Showing records {{ ((tableParams.page - 1) *
+      <div class="content-body">
+            <table class="table table-bordered" ng-show="data == undefined || data.length == 0">
+              <tr>
+                <td>No data to show under selected filters</td>
+              </tr>
+            </table>
+            <div ng-show="datarows.length > 0">
+      <div client-side-sort-pagination class="pull-right legend">Page: {{tableParams.page}}, Showing records {{ ((tableParams.page - 1) *
         tableParams.count) + 1 }} to {{ (tableParams.page ) * tableParams.count }} of {{tableParams.total}}
       </div>
-      <div class="report-container pull-right">
-        <div class="clearfix">
-          <table ng-show="datarows.length > 0" class="table-bordered table table-striped" ng-table="tableParams">
+      <div class="report-container">
+        <div>
+          <table  ng-show="datarows.length > 0" class="table-bordered table table-striped" ng-table="tableParams">
             <tbody>
             <tr ng-repeat="row in datarows">
               <td data-title="'#'" class="number" style="width:20px">{{ row.no }}</td>
@@ -124,10 +61,10 @@
               <td data-title="'B. Balance'" class="number" style="width:80px" sortable="openingBalance">{{
                 row.openingBalance | number }}
               </td>
-              <td data-title="'Reciepts'" class="number" style="width:80px" sortable="recipts">{{ row.receipts | number
+              <td data-title="'Receipts'" class="number" style="width:80px" sortable="recipts">{{ row.receipts | number
                 }}
               </td>
-              <td data-title="'Issues'" class="number" style="width:80px" sortable="issues">{{ row.issues | number }}
+              <td data-title="'Qty Consumed'" class="number" style="width:80px" sortable="issues">{{ row.issues | number }}
               </td>
               <td data-title="'Adjustments'" class="number" style="width:80px" sortable="adjustment">{{ row.adjustments
                 | number }}
@@ -153,6 +90,8 @@
         </div>
       </div>
     </div>
+      </div>
   </div>
 </div>
 
+</div>

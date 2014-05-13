@@ -30,7 +30,7 @@
                                 <period-filter class="form-cell horizontalFilters" required="true"></period-filter>
                                 <div ng-hide="showMoreFilters"  class="clearfix form-cell horizontalFilters" >
                                     <br />
-                                    <a class="button" ng-click="toggleMoreFilters()">Show More Filters</a>
+                                    <a class="button" href="javascript:void()" ng-click="toggleMoreFilters()">Show More Filters</a>
                                 </div>
                                 <div ng-hide="!showMoreFilters">
                                     <requisition-group-filter class="form-cell horizontalFilters"></requisition-group-filter>
@@ -40,7 +40,7 @@
                                     <product-filter class="form-cell horizontalFilters"></product-filter>
                                     <div  class="clearfix form-cell horizontalFilters" >
                                         <br />
-                                        <a class="button" ng-click="toggleMoreFilters()">Less Filters</a>
+                                        <a class="button" href="javascript:void()" ng-click="toggleMoreFilters()">Less Filters</a>
                                     </div>
                                 </div>
 
@@ -72,6 +72,9 @@
                             </tr>
                             </tbody>
                         </table>
+                    </div>
+                    <div class="pull-right">
+                      <a ng-href="/public/pages/reports/reporting-rate/index.html#/list?schedule={{filter.schedule}}&year={{filter.schedule}}&program={{filter.program}}&period={{filter.period}}">View Reporting Rate</a>
                     </div>
 
                  </div>

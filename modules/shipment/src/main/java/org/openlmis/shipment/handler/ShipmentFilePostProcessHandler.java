@@ -52,12 +52,12 @@ public class ShipmentFilePostProcessHandler {
 
 
   @Transactional
-  public void process(Set<Long> orderIds, File shipmentFile, boolean success) {
+  public void process(Set<String> orderNumbers, File shipmentFile, boolean success) {
     ShipmentFileInfo shipmentFileInfo = new ShipmentFileInfo(shipmentFile.getName(), !success);
 
     shipmentService.insertShipmentFileInfo(shipmentFileInfo);
 
-    orderService.updateStatusAndShipmentIdForOrders(orderIds, shipmentFileInfo);
+    orderService.updateStatusAndShipmentIdForOrders(orderNumbers, shipmentFileInfo);
 
     Message<File> message = withPayload(shipmentFile).build();
 

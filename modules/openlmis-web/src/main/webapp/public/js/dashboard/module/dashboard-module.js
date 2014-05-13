@@ -8,7 +8,7 @@
  *
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
-angular.module('dashboard',['openlmis', 'ui.calendar', 'ui.bootstrap','easypiechart','ui.chart','ngTable']).config(['$routeProvider', function ($routeProvider) {
+var dashboard = angular.module('dashboard',['openlmis', 'ui.calendar', 'ui.bootstrap','easypiechart','ui.chart','ngTable']).config(['$routeProvider', function ($routeProvider) {
 
     $routeProvider.
         when('/dashboard', {controller: AdminDashboardController, templateUrl: 'partials/dashboard.html', resolve : ResolveDashboardFormData}).
@@ -18,5 +18,44 @@ angular.module('dashboard',['openlmis', 'ui.calendar', 'ui.bootstrap','easypiech
         when('/stock-out', {controller: StockedOutController, templateUrl: 'partials/stocked-out.html', resolve : ResolveDashboardFormData }).
         when('/requisition-group-stock-out/:programId/:periodId/:rgroupId/:productId', {controller: RequisitionGroupStockedOutController, templateUrl: 'partials/requisition-group-stocked-out.html', resolve : ResolveDashboardFormData }).
         when('/stock-out-detail/:programId/:periodId/:rgroupId/:productId', {controller: StockedOutDetailController, templateUrl: 'partials/stocked-out-detail.html', resolve : ResolveDashboardFormData }).
+        when('/notifications/:alertId/:detailTable', {controller: NotificationsDetailController, templateUrl: 'partials/notifications-detail.html', resolve : ResolveDashboardFormData }).
+        when('/notifications', {controller: SendNotificationController, templateUrl: 'partials/send-notifications.html', resolve : ResolveDashboardFormData }).
         otherwise({redirectTo: '/dashboard'});
 }]);
+
+dashboard.directive('notificationDetail', function ($compile, $http, $templateCache) {
+
+    var getTemplate = function(contentType) {
+        var templateLoader,
+            baseUrl = '/public/pages/dashboard/templates/';
+        var templateUrl = baseUrl + contentType.toLowerCase()+'.html';
+        templateLoader = $http.get(templateUrl, {cache: $templateCache});
+
+        return templateLoader;
+    };
+
+    var linker = function(scope, element, attrs) {
+        var loader = getTemplate(scope.content.tableName);
+        var promise = loader.success(function(html) {
+            element.html(html);
+        }).error(function(){
+            var defaultLoader = getTemplate('default_template');
+            defaultLoader.success(function(html){
+                element.html(html);
+            }).then(function(response){
+                element.replaceWith($compile(element.html())(scope));
+            });
+        }).then(function (response) {
+            element.replaceWith($compile(element.html())(scope));
+        });
+    };
+
+    return {
+        restrict: "E",
+        rep1ace: true,
+        link: linker,
+        scope: {
+            content:'=ngModel'
+        }
+    };
+});

@@ -10,7 +10,6 @@
 
 package org.openlmis.pageobjects.edi;
 
-import com.thoughtworks.selenium.SeleneseTestNgHelper;
 import org.openlmis.UiUtils.TestWebDriver;
 import org.openlmis.pageobjects.RequisitionPage;
 import org.openqa.selenium.WebElement;
@@ -90,9 +89,9 @@ public class ConvertOrderPage extends RequisitionPage {
     convertToOrderButton.click();
   }
 
-  public void verifyNoRequisitionPendingMessage() {
+  public boolean isNoRequisitionPendingMessageDisplayed() {
     testWebDriver.waitForPageToLoad();
-    noRequisitionPending.isDisplayed();
+    return noRequisitionPending.isDisplayed();
   }
 
   public void clickCheckBoxConvertToOrder() {
@@ -102,7 +101,7 @@ public class ConvertOrderPage extends RequisitionPage {
 
   public void verifyMessageOnOrderScreen(String message) {
     testWebDriver.sleep(500);
-    SeleneseTestNgHelper.assertTrue(message, noRequisitionSelectedDiv.isDisplayed());
+    assertTrue(message, noRequisitionSelectedDiv.isDisplayed());
   }
 
   public void convertToOrder() {

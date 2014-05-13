@@ -15,13 +15,17 @@ import org.openlmis.report.Report;
 import org.openlmis.report.ReportManager;
 import org.openlmis.report.model.Pages;
 import org.openlmis.report.model.report.*;
+import org.openlmis.report.response.OpenLmisResponse;
+import org.openlmis.report.service.UserSummaryReportProvider;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.xml.ws.Response;
 import java.util.List;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
@@ -281,4 +285,37 @@ public class InteractiveReportController extends BaseController {
       (List<DistrictSummaryReport>) report.getReportDataProvider().getMainReportData(request.getParameterMap(), request.getParameterMap(), page, max);
     return new Pages(page, max, districtSummaryReportList);
   }
+
+
+    @RequestMapping(value = "/reportdata/userSummary", method = GET, headers = BaseController.ACCEPT_JSON)
+    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_USER_SUMMARY_REPORT')")
+    public Pages getUserSummaryData(@RequestParam(value = "page", required = false, defaultValue = "1") int page,
+                                                @RequestParam(value = "max", required = false, defaultValue = "10") int max,
+                                                HttpServletRequest request
+
+    ) {
+        Report report = reportManager.getReportByKey("user_summary");
+        List<UserSummaryReport> userSummmaryReportList =
+                (List<UserSummaryReport>) report.getReportDataProvider().getMainReportData(request.getParameterMap(), request.getParameterMap(), page, max);
+        return new Pages(page, max, userSummmaryReportList);
+    }
+
+
+    @RequestMapping(value = "/reportdata/userRoleAssignmentSummary", method = GET, headers = BaseController.ACCEPT_JSON)
+    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_USER_SUMMARY_REPORT')")
+    public ResponseEntity<OpenLmisResponse> getUseRoleAssignmentSummary( HttpServletRequest request
+
+    ) {
+        Report report = reportManager.getReportByKey("user_summary");
+
+        UserSummaryReportProvider provider = (UserSummaryReportProvider) report.getReportDataProvider();
+        return OpenLmisResponse.response("userAssignment",provider.getUserAssignments());
+    }
+
+
+
+
+
+
+
 }

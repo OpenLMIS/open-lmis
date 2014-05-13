@@ -1,0 +1,63 @@
+<!--
+  ~ This program is part of the OpenLMIS logistics management information system platform software.
+  ~ Copyright © 2013 VillageReach
+  ~
+  ~ This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+  ~  
+  ~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+  ~ You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
+  -->
+
+<div>
+  <h2 openlmis-message="label.admin.configure.system.settings"></h2>
+
+  <div id="saveSuccessMsgDiv" class="alert alert-success" ng-bind="message" ng-show="message"></div>
+  <div>
+    <table id="configureEditFileTemplate" class="configure-program-table table table-striped table-bordered">
+      <thead>
+      <tr>
+        <th openlmis-message="header.template.type"></th>
+        <th></th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr>
+        <td openlmis-message="label.order.file.format"></td>
+        <td>
+          <a id="configureOrder" class="btn btn-primary" href="/public/pages/admin/edi/index.html#/configure-order-file">
+            <i class="icon-cog"></i> &nbsp;
+            <span openlmis-message="template.configure"></span>
+          </a>
+        </td>
+      </tr>
+      <tr>
+        <td openlmis-message="label.shipment.file.format"></td>
+        <td>
+          <a id="configureShipment" class="btn btn-primary" href="/public/pages/admin/edi/index.html#/configure-shipment-file">
+            <i class="icon-cog"></i> &nbsp;
+            <span openlmis-message="template.configure"></span>
+          </a>
+        </td>
+      </tr>
+      <tr>
+        <td openlmis-message="label.budget.file.format"></td>
+        <td>
+          <a id="configureBudget" class="btn btn-primary" href="/public/pages/admin/edi/index.html#/configure-budget-file">
+            <i class="icon-cog"></i> &nbsp;
+            <span openlmis-message="template.configure"></span>
+          </a>
+        </td>
+      </tr>
+      <tr>
+        <td openlmis-message="label.configure.order.number"></td>
+        <td>
+          <a id="configureOrderNumber" class="btn btn-primary" href="/public/pages/admin/edi/index.html#/configure-order-number">
+            <i class="icon-cog"></i> &nbsp;
+            <span openlmis-message="template.configure"></span>
+          </a>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

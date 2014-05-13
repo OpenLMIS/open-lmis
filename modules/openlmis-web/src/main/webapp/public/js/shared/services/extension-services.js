@@ -101,6 +101,11 @@ services.factory('ReportSchedules', function ($resource) {
 services.factory('ReportFacilityTypes', function ($resource) {
     return $resource('/reports/facilityTypes.json', {}, {});
 });
+
+services.factory('ReportFacilityTypesByProgram', function ($resource) {
+  return $resource('/reports/facilityTypesForProgram.json', {}, {});
+});
+
 services.factory('ReportRegimenCategories', function ($resource) {
     return $resource('/reports/regimenCategories.json', {}, {});
 });
@@ -335,6 +340,10 @@ services.factory('SaveRequisitionGroupProgramSchedule',function($resource){
     return $resource('/requisitionGroupProgramSchedule/insert.json',{},{});
 });
 
+services.factory('RemoveRequisitionGroupProgramSchedule',function($resource){
+    return $resource('/requisitionGroupProgramSchedule/remove/:id',{},{});
+});
+
 services.factory('GetProgramsForAFacilityCompleteList',function($resource){
     return $resource('/facilities/:facilityId/programsList.json',{},{});
 });
@@ -403,6 +412,19 @@ services.factory('SaveGeographicInfo', function($resource){
    return $resource('/geographic-zone/save-gis.json',{}, {post:{method:'POST'}});
 });
 
+
+services.factory('ReportingFacilityList', function($resource){
+  return $resource('/gis/reporting-facilities.json',{}, {});
+});
+
+services.factory('NonReportingFacilityList', function($resource){
+  return $resource('/gis/non-reporting-facilities.json',{}, {});
+});
+
+services.factory('ContactList', function($resource){
+   return $resource('/facility-contacts',{},{});
+});
+
 /* Dashboard data factories */
 services.factory('UserSupervisoryNodes', function($resource){
     return $resource('/reports/user/supervisory-nodes.json',{},{});
@@ -414,7 +436,11 @@ services.factory('ProgramListBySupervisoryNodes', function ($resource) {
     return $resource('/reports/supervisory-nodes/programs.json', {}, {});
 });
 services.factory("FacilitiesByProgramAndRequisitionGroupParams",function($resource)  {
-    return   $resource('/reports/facilities/program/:programId/schedule/:scheduleId.json', {}, {});
+    return   $resource('/reports/facilities/supervisory-node/:supervisoryNodeId/program/:programId/schedule/:scheduleId.json', {}, {});
+});
+
+services.factory("FacilitiesForNotifications",function($resource)  {
+    return   $resource('/reports/notifications/facilities/supervisory-node/:supervisoryNodeId/program/:programId/schedule/:scheduleId.json', {}, {});
 });
 
 services.factory('OrderFillRate', function($resource){
@@ -455,10 +481,19 @@ services.factory('StockedOutFacilitiesByRequisitionGroup', function($resource){
 });
 services.factory('Alerts', function($resource){
     return $resource('/dashboard/alerts.json',{},{});
-
 });
-
-
+services.factory('NotificationAlerts', function($resource) {
+    return $resource('/dashboard/notification/alerts.json', {}, {});
+});
+services.factory('DashboardNotificationsDetail', function($resource){
+   return $resource('/dashboard/notifications/:alertId/:detailTable.json',{},{});
+});
+services.factory('SendNotification', function($resource){
+   return $resource('/dashboard/notification/send.json',{},{});
+});
+services.factory('GetPeriod', function($resource){
+   return $resource('/dashboard/period/:id.json',{},{});
+});
 
 
 
@@ -481,3 +516,18 @@ services.factory('GetReplyMessages', function($resource){
 });
 
 /*End SMS data Factories*/
+services.factory('UserSummaryReport', function($resource){
+    return $resource('/reports/reportdata/userSummary.json', {}, {});
+}) ;
+services.factory('GetAllRoles', function ($resource) {
+    return $resource('/roles/getList.json', {},{});
+});
+
+services.factory('UserRoleAssignmentsSummary', function($resource){
+    return $resource('/reports/UserRoleAssignments/getUserRoleAssignments',{},{});
+});
+
+services.factory("UserRoleAssignmentsSummary1", function($resource){
+    return $resource('reports/reportdata/userRoleAssignmentSummary');
+
+});

@@ -30,7 +30,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -79,6 +78,11 @@ public class ReportLookupController extends BaseController {
   @RequestMapping(value="/facilityTypes", method = GET, headers = BaseController.ACCEPT_JSON)
   public ResponseEntity<OpenLmisResponse> getFacilityTypes(){
       return OpenLmisResponse.response( "facilityTypes", this.reportLookupService.getFacilityTypes() ) ;
+  }
+
+  @RequestMapping(value="/facilityTypesForProgram", method = GET, headers = BaseController.ACCEPT_JSON)
+  public ResponseEntity<OpenLmisResponse> getFacilityTypesForProgram(@RequestParam("program") Long programId){
+    return OpenLmisResponse.response( "facilityTypes", this.reportLookupService.getFacilityTypesForProgram(programId)) ;
   }
 
   @RequestMapping(value="/regimenCategories", method = GET, headers = BaseController.ACCEPT_JSON)
@@ -157,9 +161,10 @@ public class ReportLookupController extends BaseController {
   public List<RequisitionGroup> getBySupervisoryNodesAndProgramAndSchedule(
          @RequestParam(value = "programId") Long programId,
          @RequestParam(value = "scheduleId") Long scheduleId,
-         @RequestParam(value = "supervisoryNodeId") Long supervisoryNodeId
+         @RequestParam(value = "supervisoryNodeId") Long supervisoryNodeId,
+         HttpServletRequest request
   ){
-      List<SupervisoryNode> supervisoryNodeList = reportLookupService.getAllSupervisoryNodesByParentNodeId(supervisoryNodeId);
+      /*List<SupervisoryNode> supervisoryNodeList = reportLookupService.getAllSupervisoryNodesByParentNodeId(supervisoryNodeId);
 
       List<Long> supervisoryNodeIds = null;
 
@@ -168,8 +173,8 @@ public class ReportLookupController extends BaseController {
           for(SupervisoryNode node : supervisoryNodeList){
               supervisoryNodeIds.add(node.getId());
           }
-      }
-      return this.reportLookupService.getBySupervisoryNodesAndProgramAndSchedule(getCommaSeparatedIds(supervisoryNodeIds),programId,scheduleId);
+      }*/
+      return this.reportLookupService.getBySupervisoryNodesAndProgramAndSchedule(loggedInUserId(request), supervisoryNodeId ,programId,scheduleId);
   }
 
 
@@ -263,13 +268,26 @@ public ResponseEntity<OpenLmisResponse> getSupervisedFacilities(
 
 
 
-    @RequestMapping(value = "/facilities/program/{programId}/schedule/{scheduleId}", method = GET, headers = BaseController.ACCEPT_JSON)
+    @RequestMapping(value = "/facilities/supervisory-node/{supervisoryNodeId}/program/{programId}/schedule/{scheduleId}", method = GET, headers = BaseController.ACCEPT_JSON)
     public ResponseEntity<OpenLmisResponse> getFacilities(
+            @PathVariable("supervisoryNodeId") Long supervisoryNodeId,
             @PathVariable("programId") Long programId,
             @PathVariable("scheduleId") Long scheduleId,
-            @RequestParam("rgroupId") List<Long> requisitionGroupId
+            @RequestParam("rgroupId") List<Long> requisitionGroupId,
+            HttpServletRequest request
     ) {
-        return OpenLmisResponse.response("facilities", reportLookupService.getFacilitiesBy(getCommaSeparatedIds(requisitionGroupId),programId,scheduleId));
+        return OpenLmisResponse.response("facilities", reportLookupService.getFacilitiesBy(loggedInUserId(request),supervisoryNodeId, getCommaSeparatedIds(requisitionGroupId),programId,scheduleId));
+    }
+
+    @RequestMapping(value = "notifications/facilities/supervisory-node/{supervisoryNodeId}/program/{programId}/schedule/{scheduleId}", method = GET, headers = BaseController.ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getFacilitiesForNotifications(
+            @PathVariable("supervisoryNodeId") Long supervisoryNodeId,
+            @PathVariable("programId") Long programId,
+            @PathVariable("scheduleId") Long scheduleId,
+            @RequestParam("rgroupId") List<Long> requisitionGroupId,
+            HttpServletRequest request
+    ) {
+        return OpenLmisResponse.response("facilities", reportLookupService.getFacilitiesForNotifications(loggedInUserId(request),supervisoryNodeId, getCommaSeparatedIds(requisitionGroupId),programId,scheduleId));
     }
 
   @RequestMapping(value = "/schedules/{scheduleId}/periods", method = GET, headers = ACCEPT_JSON)
@@ -327,4 +345,20 @@ public ResponseEntity<OpenLmisResponse> getSupervisedFacilities(
       List<SupervisoryNode> supervisoryNodes = reportLookupService.getAllSupervisoryNodesByUserHavingActiveProgram(loggedInUserId(request));
       return OpenLmisResponse.response("supervisoryNodes",supervisoryNodes);
   }
+
+    @RequestMapping(value = "/roles/{roleId}/program/{programId}/supevisoryNode/{supervisoryNodeId}", method = GET, headers = ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse>  getUserRoleAssignments(@PathVariable("roleId") Long roleId,
+                                                              @PathVariable("programId") Long programId,
+                                                              @PathVariable("supervisoryNodeId") Long supervisoryNodeId){
+        List<UserRoleAssignmentsReport> userRoleAssignments = reportLookupService.getAllRolesBySupervisoryNodeHavingProgram(roleId,programId,supervisoryNodeId);
+
+        return OpenLmisResponse.response("userRoleAssignments", userRoleAssignments);
+    }
+
+    @RequestMapping(value = "UserRoleAssignments/getUserRoleAssignments", method = GET, headers = BaseController.ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getUserRoleAssignments(HttpServletRequest request){
+        List<UserRoleAssignmentsReport> userSummaryList = reportLookupService.getUserRoleAssignments();
+        return OpenLmisResponse.response("userRoleAssignmentSummary",userSummaryList);
+    }
+
 }

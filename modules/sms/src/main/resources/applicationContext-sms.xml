@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ This program was produced for the U.S. Agency for International Development. It was prepared by the USAID | DELIVER PROJECT, Task Order 4. It is part of a project which utilizes code originally licensed under the terms of the Mozilla Public License (MPL) v2 and therefore is licensed under MPL v2 or later.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify it under the terms of the Mozilla Public License as published by the Mozilla Foundation, either version 2 of the License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the Mozilla Public License for more details.
+  ~
+  ~ You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
+  -->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:int-jdbc="http://www.springframework.org/schema/integration/jdbc"
+       xmlns:int="http://www.springframework.org/schema/integration"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+                           http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd
+                           http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.1.xsd
+                           http://www.springframework.org/schema/integration http://www.springframework.org/schema/integration/spring-integration.xsd
+                           http://www.springframework.org/schema/integration/jdbc http://www.springframework.org/schema/integration/jdbc/spring-integration-jdbc.xsd">
+
+  <context:annotation-config/>
+  <context:spring-configured/>
+
+  <context:component-scan base-package="org.openlmis.sms"/>
+  <import resource="classpath*:applicationContext-db.xml"/>
+
+  <int:channel id="smsInputChannel">
+    <int:dispatcher task-executor="smsDispatcher"></int:dispatcher>
+  </int:channel>
+
+  <int-jdbc:inbound-channel-adapter channel="smsInputChannel"
+                                    data-source="dataSource"
+                                    query="SELECT * FROM sms WHERE direction='O' and sent = false"
+                                    row-mapper="SMSRowMapper"
+                                    max-rows-per-poll="${sms.notification.rows.per.poll}"
+                                    update="UPDATE sms SET sent = true WHERE id IN (:id)"
+                                    update-per-row="true">
+    <int:poller fixed-rate="${sms.notification.polling.rate}">
+      <int:transactional/>
+    </int:poller>
+  </int-jdbc:inbound-channel-adapter>
+
+  <bean id="smsDispatcher" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
+    <property name="corePoolSize" value="1"/>
+    <property name="maxPoolSize" value="1"/>
+    <property name="queueCapacity" value="-1"/>
+  </bean>
+
+  <int:service-activator input-channel="smsInputChannel" ref="SMSService" method="ProcessSMS"/>
+
+
+</beans>

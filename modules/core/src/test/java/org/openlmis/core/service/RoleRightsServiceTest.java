@@ -79,7 +79,7 @@ public class RoleRightsServiceTest {
             CREATE_REQUISITION,
             VIEW_REQUISITION,
             VIEW_ORDER,
-            CONFIGURE_EDI,
+            SYSTEM_SETTINGS,
             FACILITY_FILL_SHIPMENT,
             MANAGE_POD,
             DELETE_REQUISITION,
@@ -109,8 +109,11 @@ public class RoleRightsServiceTest {
             VIEW_ORDER_FILL_RATE_REPORT,
             VIEW_REGIMEN_SUMMARY_REPORT,
             VIEW_DISTRICT_FINANCIAL_SUMMARY_REPORT,
-            VIEW_DASHBOARD_POC
-      );
+            VIEW_DASHBOARD_POC,
+            VIEW_USER_SUMMARY_REPORT,
+            MANAGE_EQUIPMENT_SETTINGS,
+            MANAGE_EQUIPMENT_INVENTORY
+        );
 
     assertThat(allRights, is(alphabeticalRights));
   }

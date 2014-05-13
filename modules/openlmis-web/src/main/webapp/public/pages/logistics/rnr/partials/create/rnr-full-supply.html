@@ -42,7 +42,7 @@
         <tbody ng-show="visibleColumns.fullSupply && (rnr.fullSupplyLineItems.length > 0)"
                ng-repeat="rnrLineItem in page.fullSupply">
         <tr>
-            <td class="productCategory" id="category_{{ $index }}" colspan="{{visibleColumns.fullSupply.fixed.length}}"
+            <td id="category_{{$index}}" class="productCategory" colspan="{{visibleColumns.fullSupply.fixed.length}}"
                 ng-show="showCategory($index)"
                 ng-bind="rnrLineItem.productCategory"></td>
         </tr>
@@ -233,7 +233,8 @@
                  ng-class="highlightRequired(submitError && rnrLineItem.quantityRequested, rnrLineItem.reasonForRequestedQuantity, rnrLineItem.skipped) ||
                  highlightWarningBasedOnField(!submitError && rnrLineItem.quantityRequested, rnrLineItem.reasonForRequestedQuantity, rnrLineItem, rnrLineItem.skipped);"
                  maxlength="250"/>
-          <span id='{{getId(column.name, $parent)}}_warning' ng-class="{'rnr-form-error': submitError, 'alert alert-warning warning-alert': !submitError}"
+          <span id='{{getId(column.name, $parent)}}_warning'
+                ng-class="{'rnr-form-error': submitError, 'alert alert-warning warning-alert': !submitError}"
                 ng-show="rnrLineItem.quantityRequested && !rnrLineItem.reasonForRequestedQuantity && !rnrLineItem.skipped"
                 openlmis-message="error.reason.required">
           </span>

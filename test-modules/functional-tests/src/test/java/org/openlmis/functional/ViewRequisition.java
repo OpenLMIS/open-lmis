@@ -331,14 +331,8 @@ public class ViewRequisition extends TestCaseHelper {
   }
 
   @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-Including-Regimen")
-  public void testRetainSearchResultOnViewRequisitionPage(String program,
-                                                          String userSIC,
-                                                          String categoryCode,
-                                                          String password,
-                                                          String regimenCode,
-                                                          String regimenName,
-                                                          String regimenCode2,
-                                                          String regimenName2) throws SQLException {
+  public void testRetainSearchResultOnViewRequisitionPage(String program, String userSIC, String categoryCode, String password,
+                                                          String regimenCode, String regimenName, String regimenCode2, String regimenName2) throws SQLException {
     List<String> rightsList = asList("CREATE_REQUISITION", "VIEW_REQUISITION");
 
     setupTestDataToInitiateRnR(true, program, userSIC, "200", rightsList);
@@ -365,14 +359,19 @@ public class ViewRequisition extends TestCaseHelper {
     ViewRequisitionPage viewRequisitionPage = homePage1.navigateViewRequisition();
     viewRequisitionPage.enterViewSearchCriteria();
     viewRequisitionPage.clickSearch();
+    testWebDriver.waitForAjax();
     String url = testWebDriver.getCurrentUrl();
     viewRequisitionPage.clickRnRList();
+    testWebDriver.waitForAjax();
 
     testWebDriver.sleep(200);
     testWebDriver.getUrl(url);
-    testWebDriver.setImplicitWait(500);
-    viewRequisitionPage.isViewRnRListPresent();
-    viewRequisitionPage.isRnRListReq1Present();
+    testWebDriver.waitForAjax();
+    testWebDriver.setImplicitWait(1000);
+    assertTrue(viewRequisitionPage.isViewRnRListPresent());
+    testWebDriver.sleep(200);
+    testWebDriver.waitForAjax();
+    assertTrue(viewRequisitionPage.isRnRListReq1Present());
   }
 
   @AfterMethod(groups = "requisition")

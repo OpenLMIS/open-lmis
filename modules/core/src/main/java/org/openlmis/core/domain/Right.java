@@ -20,8 +20,6 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
-import static java.lang.Boolean.FALSE;
-import static java.lang.Boolean.TRUE;
 import static java.util.Arrays.asList;
 import static org.openlmis.core.domain.RightType.*;
 
@@ -48,8 +46,8 @@ public enum Right {
   VIEW_ORDER("right.view.order", FULFILLMENT, "Permission to view orders", 17),
   MANAGE_PROGRAM_PRODUCT("right.manage.program.product", ADMIN, "Permission to manage program products", 3),
   MANAGE_DISTRIBUTION("right.manage.distribution", ALLOCATION, "Permission to manage an distribution", 9),
-  CONFIGURE_EDI("right.configure.edi", ADMIN, "Permission to configure Electronic Data Interchange (EDI)", 18),
-  MANAGE_REGIMEN_TEMPLATE("right.manage.regimen.template", ADMIN, "Permission to manage a regimen template", 4),
+  SYSTEM_SETTINGS("right.system.settings", ADMIN, "Permission to configure Electronic Data Interchange (EDI)", 18),
+  MANAGE_REGIMEN_TEMPLATE("right.manage.regimen.template", ADMIN, "Permission to manage System Settings", 4),
   FACILITY_FILL_SHIPMENT("right.fulfillment.fill.shipment", FULFILLMENT, "Permission to fill shipment data for facility", 19),
   MANAGE_POD("right.fulfillment.manage.pod", FULFILLMENT, "Permission to manage proof of delivery", 20),
 
@@ -64,6 +62,9 @@ public enum Right {
   MANAGE_PRODUCT("Admin - Manage Products", ADMIN, "Permission to manage products",29),
   MANAGE_SUPPLYLINE("Admin - Manage Supply Line", ADMIN, "Permission to manage supply line",30),
   MANAGE_GEOGRAPHIC_ZONES ("Admin - Manage Geographic Zones", ADMIN, "Permission to manage geographic zones.",31),
+
+  MANAGE_EQUIPMENT_SETTINGS ("Admin - Manage Equipment Settings", ADMIN, "Permission to manage equipment settings.",60),
+  MANAGE_EQUIPMENT_INVENTORY ("Admin - Manage Equipment Inventory", ADMIN, "Permission to manage equipment inventory.",61),
 
 
   VIEW_FACILITY_REPORT("Report - Facility Listing (V1)", REPORT, "Permission to view Facility List Report",32),
@@ -83,7 +84,8 @@ public enum Right {
   VIEW_ORDER_FILL_RATE_REPORT("Report - Order Fill Rate Report", REPORT, "Permission to view Order Fill Rate Report",48),
   VIEW_REGIMEN_SUMMARY_REPORT("Report - Regimen Summary Report", REPORT, "Permission to view Regimen Summary Report",49),
   VIEW_DISTRICT_FINANCIAL_SUMMARY_REPORT("Report - District Financial Summary Report", REPORT, "Permission to view District Financial Summary Report",50),
-  VIEW_DASHBOARD_POC("Report - View Dashboard POC", REPORT, "View Dashboard POC",51);
+  VIEW_DASHBOARD_POC("Report - View Dashboard POC", REPORT, "View Dashboard POC",51),
+  VIEW_USER_SUMMARY_REPORT("Report - View User Summary Report", REPORT, "Permission to view user summary Report",52);
 
 
 

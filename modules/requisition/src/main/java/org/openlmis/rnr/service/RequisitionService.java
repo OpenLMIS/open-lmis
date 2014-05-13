@@ -5,6 +5,8 @@ import org.openlmis.core.exception.DataException;
 import org.openlmis.core.message.OpenLmisMessage;
 import org.openlmis.core.service.*;
 import org.openlmis.db.repository.mapper.DbMapper;
+import org.openlmis.equipment.domain.EquipmentInventory;
+import org.openlmis.equipment.service.EquipmentInventoryService;
 import org.openlmis.rnr.domain.*;
 import org.openlmis.rnr.repository.RequisitionRepository;
 import org.openlmis.rnr.search.criteria.RequisitionSearchCriteria;
@@ -89,6 +91,10 @@ public class RequisitionService {
   private DbMapper dbMapper;
   @Autowired
   private BudgetLineItemService budgetLineItemService;
+  @Autowired
+  private StatusChangeEventService statusChangeEventService;
+  @Autowired
+  private EquipmentInventoryService equipmentInventoryService;
 
   private RequisitionSearchStrategyFactory requisitionSearchStrategyFactory;
 
@@ -132,10 +138,34 @@ public class RequisitionService {
     calculationService.fillFieldsForInitiatedRequisition(requisition, rnrTemplate, regimenTemplate);
     calculationService.fillReportingDays(requisition);
 
+    // if program supports equipments, initialize it here.
+    if(program.isEquipmentConfigured()){
+       populateEquipments(requisition);
+    }
+
     insert(requisition);
     requisition = requisitionRepository.getById(requisition.getId());
 
     return fillSupportingInfo(requisition);
+  }
+
+  private void populateEquipments(Rnr requisition) {
+    List<EquipmentInventory> inventories = equipmentInventoryService.getInventoryForFacility(requisition.getFacility().getId(), requisition.getProgram().getId());
+    requisition.setEquipmentLineItems(new ArrayList<EquipmentLineItem>());
+    for(EquipmentInventory inv : inventories){
+      EquipmentLineItem lineItem = new EquipmentLineItem();
+      lineItem.setRnrId(requisition.getId());
+      lineItem.setCode(inv.getEquipment().getCode());
+      lineItem.setEquipmentSerial(inv.getSerialNumber());
+      lineItem.setEquipmentInventoryId(inv.getId());
+      lineItem.setEquipmentCategory(inv.getEquipment().getEquipmentType().getName());
+      lineItem.setOperationalStatusId(inv.getOperationalStatusId());
+      lineItem.setEquipmentName(inv.getEquipment().getName());
+      lineItem.setEquipmentModel(inv.getModel());
+      lineItem.setDaysOutOfUse(0L);
+
+      requisition.getEquipmentLineItems().add(lineItem);
+    }
   }
 
   private void populateAllocatedBudget(Rnr requisition) {
@@ -159,9 +189,12 @@ public class RequisitionService {
 
     if (savedRnr.getStatus() == AUTHORIZED || savedRnr.getStatus() == IN_APPROVAL) {
       savedRnr.copyApproverEditableFields(rnr, rnrTemplate);
+
     } else {
       List<ProgramProduct> programProducts = programProductService.getNonFullSupplyProductsForProgram(savedRnr.getProgram());
       savedRnr.copyCreatorEditableFields(rnr, rnrTemplate, regimenTemplate, programProducts);
+      //TODO: copy only the editable fields.
+      savedRnr.setEquipmentLineItems(rnr.getEquipmentLineItems());
     }
 
     requisitionRepository.update(savedRnr);
@@ -248,8 +281,6 @@ public class RequisitionService {
   }
 
   public void releaseRequisitionsAsOrder(List<Rnr> requisitions, Long userId) {
-    if (!requisitionPermissionService.hasPermission(userId, CONVERT_TO_ORDER))
-      throw new DataException(RNR_OPERATION_UNAUTHORIZED);
     for (Rnr requisition : requisitions) {
       Rnr loadedRequisition = requisitionRepository.getById(requisition.getId());
       fillSupportingInfo(loadedRequisition);
@@ -403,10 +434,33 @@ public class RequisitionService {
 
   private void logStatusChangeAndNotify(Rnr requisition, boolean notifyStatusChange, String name) {
     requisitionRepository.logStatusChange(requisition, name);
-
     if (notifyStatusChange) {
       requisitionEventService.notifyForStatusChange(requisition);
     }
+
+    sendRequisitionStatusChangeMail(requisition);
+  }
+
+  private void sendRequisitionStatusChangeMail(Rnr requisition) {
+    List<User> userList = new ArrayList<>();
+
+    if (requisition.getStatus().equals(SUBMITTED)) {
+      Long supervisoryNodeId = supervisoryNodeService.getFor(requisition.getFacility(), requisition.getProgram()).getId();
+      userList = userService.getUsersWithRightInHierarchyUsingBaseNode(supervisoryNodeId, requisition.getProgram(), AUTHORIZE_REQUISITION);
+      userList.addAll(userService.getUsersWithRightInNodeForProgram(requisition.getProgram(), new SupervisoryNode(), AUTHORIZE_REQUISITION));
+    } else if (requisition.getStatus().equals(AUTHORIZED) || requisition.getStatus().equals(IN_APPROVAL)) {
+      userList = userService.getUsersWithRightInNodeForProgram(requisition.getProgram(), new SupervisoryNode(requisition.getSupervisoryNodeId()), APPROVE_REQUISITION);
+    } else if (requisition.getStatus().equals(APPROVED)) {
+      SupervisoryNode baseSupervisoryNode = supervisoryNodeService.getFor(requisition.getFacility(), requisition.getProgram());
+      SupplyLine supplyLine = supplyLineService.getSupplyLineBy(new SupervisoryNode(baseSupervisoryNode.getId()), requisition.getProgram());
+      if (supplyLine != null) {
+        userList = userService.getUsersWithRightOnWarehouse(supplyLine.getSupplyingFacility().getId(), CONVERT_TO_ORDER);
+      }
+    }
+
+    ArrayList<User> activeUsersWithRight = userService.filterForActiveUsers(userList);
+    statusChangeEventService.notifyUsers(activeUsersWithRight, requisition.getId(), requisition.getFacility(),
+      requisition.getProgram(), requisition.getPeriod(), requisition.getStatus().toString());
   }
 
   private void insert(Rnr requisition) {

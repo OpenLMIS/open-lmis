@@ -8,7 +8,7 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-function FacilityController($scope, facilityReferenceData, $routeParams, facility, Facility, $location, FacilityProgramProducts, $q, $dialog, messageService) {
+function FacilityController($scope, facilityReferenceData, $routeParams, facility, Facility, $location, FacilityProgramProducts, FacilityImages, facilityImages, $q, $dialog, messageService) {
   $scope.$parent.facilityId = null;
   $scope.message = "";
   initialize();
@@ -17,6 +17,7 @@ function FacilityController($scope, facilityReferenceData, $routeParams, facilit
     $scope.facilityTypes = facilityReferenceData.facilityTypes;
     $scope.geographicZones = facilityReferenceData.geographicZones;
     $scope.facilityOperators = facilityReferenceData.facilityOperators;
+    $scope.images = facilityImages.images;
     $scope.programs = facilityReferenceData.programs;
     if ($routeParams.facilityId) {
       $scope.facility = getFacilityWithDateObjects(facility);
@@ -242,6 +243,20 @@ FacilityController.resolve = {
       FacilityReferenceData.get({}, function (data) {
         deferred.resolve(data);
       }, {});
+    }, 100);
+    return deferred.promise;
+  },
+  facilityImages: function ($q,$route, $timeout, FacilityImages){
+    var deferred = $q.defer();
+    var facilityId = $route.current.params.facilityId;
+    $timeout(function(){
+        if(!isUndefined(facilityId)){
+            FacilityImages.get({facilityId: facilityId }, function (data){
+                deferred.resolve(data);
+            });
+        }else{
+            deferred.resolve([]);
+        }
     }, 100);
     return deferred.promise;
   },

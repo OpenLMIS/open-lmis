@@ -14,10 +14,12 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.report.model.ReportData;
 import org.openlmis.report.model.ReportParameter;
 
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @Data
@@ -27,17 +29,9 @@ import java.util.Date;
 public class AdjustmentSummaryReportParam
         extends BaseParam implements ReportParameter {
 
-    private String periodType;
-    private int yearFrom;
-    private int yearTo;
-    private int monthFrom;
-    private int monthTo;
-    private Date startDate;
-    private Date endDate;
-    private int quarterFrom;
-    private int quarterTo;
-    private int semiAnnualFrom;
-    private int semiAnnualTo;
+    private long period;
+    private ProcessingPeriod periodObject;
+
 
     private int facilityTypeId;
     private String facilityType;
@@ -50,13 +44,14 @@ public class AdjustmentSummaryReportParam
     private String  adjustmentTypeId;
     private String adjustmentType;
 
+    SimpleDateFormat dateFormatter = new SimpleDateFormat();
 
     @Override
     public String toString(){
-         if(this.getStartDate() != null && this.getEndDate() != null){
-            DateFormat dateFormatter = DateFormat.getDateInstance(DateFormat.DEFAULT);
+         if(periodObject != null){
+
             StringBuilder filtersValue = new StringBuilder("");
-            filtersValue.append("Period : ").append(dateFormatter.format(this.getStartDate())).append("-").append(dateFormatter.format(this.getEndDate())).append("\n").
+            filtersValue.append("Period : ").append(dateFormatter.format(this.periodObject.getNextStartDate())).append("-").append(dateFormatter.format(this.periodObject.getEndDate())).append("\n").
                     append("Facility Types : ").append(this.getFacilityType()).append("\n").
                     append("Adjustment Types : ").append(this.getAdjustmentType()).append("\n").
                     append("Reporting Groups : ").append(this.getRgroup());

@@ -1,12 +1,12 @@
 package org.openlmis.report.service.lookup;
 
-import org.openlmis.core.service.ConfigurationSettingService;
+import org.openlmis.report.mapper.AverageConsumptionReportMapper;
 import org.openlmis.report.mapper.lookup.DashboardMapper;
 import org.openlmis.report.model.dto.*;
-import org.openlmis.report.util.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -19,6 +19,8 @@ public class DashboardLookupService {
 
     @Autowired
     DashboardMapper dashboardMapper;
+    @Autowired
+    AverageConsumptionReportMapper avgMapper;
 
     private String  getCommaSeparatedIds(List<Long> idList){
 
@@ -57,8 +59,42 @@ public class DashboardLookupService {
         return dashboardMapper.getStockOutFacilitiesForRequisitionGroup(periodId, programId, productId, requisitionGroupId);
 
     }
-    public List<Alerts> getAlerts(Long supervisoryNodeId){
-        return dashboardMapper.getAlerts(supervisoryNodeId);
+    public List<AlertSummary> getAlerts(Long userId, Long supervisoryNodeId, Long programId){
+        return dashboardMapper.getAlerts(userId,supervisoryNodeId, programId );
 
+    }
+
+    public List<AlertSummary> getNotificationAlerts(){
+        return dashboardMapper.getNotificationAlerts();
+
+    }
+
+    public List<HashMap> getNotificationsByCategory(String detailTable, Long alertId) {
+        if (detailTable == null || detailTable.isEmpty()) return null;
+        return dashboardMapper.getNotificationDetails(detailTable, alertId);
+    }
+
+    public void sendNotification(Notification notification){
+        if(notification == null) return;
+
+        if(notification.getEmails()!= null && !notification.getEmails().isEmpty()){
+            for (String email : notification.getEmails()){
+                if(email != null && !email.isEmpty()){
+                    dashboardMapper.saveEmailNotification(email,notification.getEmailMessage());
+                }
+            }
+        }
+
+        if (notification.getPhoneNumbers() != null && !notification.getPhoneNumbers().isEmpty()){
+            for (String phoneNumber : notification.getPhoneNumbers()){
+                if(phoneNumber !=null && !phoneNumber.isEmpty()){
+                    dashboardMapper.saveSmsNotification(notification.getSmsMessage(),phoneNumber,"O");
+                }
+            }
+        }
+    }
+
+    public String getPeriod(Long id){
+        return dashboardMapper.getPeriod(id);
     }
 }

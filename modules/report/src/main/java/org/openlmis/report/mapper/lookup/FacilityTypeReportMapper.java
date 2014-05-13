@@ -10,8 +10,10 @@
 
 package org.openlmis.report.mapper.lookup;
 
+
 import org.apache.ibatis.annotations.Result;
 import org.apache.ibatis.annotations.Results;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.openlmis.report.model.dto.FacilityType;
 import org.springframework.stereotype.Repository;
@@ -35,6 +37,17 @@ public interface FacilityTypeReportMapper {
 
   })
   List<FacilityType> getAll();
+
+
+  // show only facility types that are likely to report rnr
+  @Select("SELECT id, name " +
+          "   FROM " +
+          "       facility_types where id in " +
+          " (select typeid from facilities where facilities.id in " +
+          "     (select facilityid from programs_supported where programid = #{programId})" +
+          " ) " +
+          " order by name")
+  List<FacilityType> getForProgram(@Param("programId") Long programId);
 
   @Select("SELECT id, name " +
       "   FROM " +

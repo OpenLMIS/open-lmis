@@ -19,7 +19,7 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.report.mapper.lookup.GeographicZoneReportMapper;
-import org.openlmis.report.model.GeoReportData;
+import org.openlmis.report.model.GeoZoneReportingRate;
 import org.openlmis.report.response.OpenLmisResponse;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.springframework.http.HttpStatus;
@@ -52,8 +52,8 @@ public class GeoDataControllerTest {
 
   @Test
   public void shouldGetReportingRateReport() throws Exception {
-    List<GeoReportData> reportData = new ArrayList<GeoReportData>();
-    reportData.add(new GeoReportData());
+    List<GeoZoneReportingRate> reportData = new ArrayList<GeoZoneReportingRate>();
+    reportData.add(new GeoZoneReportingRate());
     when(mapper.getGeoReportingRate(1L, 1L)).thenReturn(reportData);
 
     OpenLmisResponse response = new OpenLmisResponse();

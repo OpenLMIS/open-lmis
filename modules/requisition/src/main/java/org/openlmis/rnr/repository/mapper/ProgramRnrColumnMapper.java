@@ -13,6 +13,7 @@ package org.openlmis.rnr.repository.mapper;
 import org.apache.ibatis.annotations.*;
 import org.openlmis.core.domain.Program;
 import org.openlmis.rnr.domain.RnrColumn;
+import org.openlmis.rnr.domain.RnrColumnOption;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -25,29 +26,40 @@ import java.util.List;
 public interface ProgramRnrColumnMapper {
 
   @Insert({"INSERT INTO program_rnr_columns",
-      "(programId, masterColumnId, visible, label,",
+      "(programId, masterColumnId, rnrOptionId, visible, label,",
       "position, source, formulaValidationRequired, calculationOption, " +
       "createdBy, modifiedBy)",
       "VALUES",
-      "(#{programId}, #{rnrColumn.id},  #{rnrColumn.visible}, #{rnrColumn.label},",
-      "#{rnrColumn.position}, #{rnrColumn.source.code}, #{rnrColumn.formulaValidationRequired}, #{rnrColumn.calculationOption}, " +
+      "(#{programId}, #{rnrColumn.id}, #{rnrColumn.configuredOption.id}, #{rnrColumn.visible}, #{rnrColumn.label},",
+      "#{rnrColumn.position}, #{rnrColumn.source.code}, #{rnrColumn.formulaValidationRequired}, #{rnrColumn.calculationOption}," +
       "#{rnrColumn.createdBy}, #{rnrColumn.modifiedBy})"})
   int insert(@Param("programId") Long programId, @Param("rnrColumn") RnrColumn rnrColumn);
 
   @Select("select 0<(select count(id) as count from program_rnr_columns where programId = #{programId})")
   boolean isRnrTemplateDefined(@Param("programId") Long programId);
 
+  @Select({"SELECT * FROM configurable_rnr_options WHERE id = #{id}"})
+  RnrColumnOption getRnrColumnOptionById(Integer id);
+
   @Select({"SELECT m.id, m.name, m.description, m.formula, m.indicator, m.used, m.mandatory, m.sourceConfigurable,",
-      "p.position, p.label, p.visible, p.source as sourceString, p.formulaValidationRequired, p.calculationOption, m.calculationOption calculationOptions",
+      "p.rnrOptionId, p.position, p.label, p.visible, p.source as sourceString, p.formulaValidationRequired, m.calculationOption cOptions, p.calculationOption ",
       "FROM program_rnr_columns p INNER JOIN master_rnr_columns m",
       "ON p.masterColumnId = m.id",
       "WHERE p.programId = #{programId}",
       "ORDER BY visible DESC, position"})
-  @Results(value = {@Result(property = "calculationOptions", column = "options")})
+  @Results(value = {
+      @Result(property = "id", column = "id"),
+      @Result(property = "cOptions", column = "options"),
+      @Result(property = "configuredOption",  javaType = RnrColumnOption.class, column = "rnrOptionId",
+          many = @Many(select = "org.openlmis.rnr.repository.mapper.ProgramRnrColumnMapper.getRnrColumnOptionById")),
+      @Result(property = "rnrColumnOptions",  javaType = List.class, column = "id",
+          many = @Many(select = "org.openlmis.rnr.repository.mapper.ProgramRnrColumnMapper.getRnrColumnOptionsByMasterRnrColumnId"))
+  })
   List<RnrColumn> fetchDefinedRnrColumnsForProgram(Long programId);
 
   @Update("UPDATE program_rnr_columns SET " +
       "visible = #{rnrColumn.visible}, " +
+      "rnrOptionId = #{rnrColumn.configuredOption.id}, " +
       "label = #{rnrColumn.label}, " +
       "position = #{rnrColumn.position}, " +
       "source = #{rnrColumn.source.code}, " +
@@ -66,8 +78,17 @@ public interface ProgramRnrColumnMapper {
       "ORDER BY visible DESC, position"})
   List<RnrColumn> getVisibleProgramRnrColumns(Long programId);
 
+  @Select({"SELECT co.id, co.name, co.label FROM master_rnr_column_options mo INNER JOIN configurable_rnr_options co " ,
+    "ON mo.rnrOptionId = co.id WHERE masterrnrcolumnid = #{masterRnrColumnId}"})
+  List<RnrColumnOption> getRnrColumnOptionsByMasterRnrColumnId(Integer masterRnrColumnId);
+
   @Select("SELECT * FROM master_rnr_columns")
-  @Results(value = {@Result(property = "sourceString", column = "source")})
+  @Results(value = {
+    @Result(property = "id", column = "id"),
+    @Result(property = "sourceString", column = "source"),
+    @Result(property = "rnrColumnOptions",  javaType = List.class, column = "id",
+      many = @Many(select = "org.openlmis.rnr.repository.mapper.ProgramRnrColumnMapper.getRnrColumnOptionsByMasterRnrColumnId"))
+  })
   List<RnrColumn> fetchAllMasterRnRColumns();
 
   @Select({"SELECT COUNT(DISTINCT(true)) = 1 FROM program_rnr_columns",

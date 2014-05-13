@@ -11,17 +11,15 @@
 package org.openlmis.web.controller;
 
 import lombok.NoArgsConstructor;
-import org.openlmis.core.exception.DataException;
-import org.openlmis.core.service.SMSService;
+import org.openlmis.core.service.SMSManagementService;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -34,15 +32,13 @@ import static org.openlmis.web.response.OpenLmisResponse.success;
 public class SMSController extends BaseController {
 
     @Autowired
-    private SMSService smsService;
+    private SMSManagementService smsService;
 
     @RequestMapping(value = "/public/sms", method = RequestMethod.GET)
     public void IncomingSMS(@RequestParam(value = "message") String message, @RequestParam(value="phone_no") String phoneNumber){
         smsService.SaveIncomingSMSMessage(message,phoneNumber);
     }
 
-
-    //Hassan Added methods
     @RequestMapping(value = "/sms/setDetails",method = RequestMethod.GET,headers = ACCEPT_JSON)
     public void getParameterForSendingSms(@RequestParam( "content") String message,@RequestParam("mobile") String phoneNumber){
         try {
@@ -55,7 +51,7 @@ public class SMSController extends BaseController {
 
     @RequestMapping(value = "/getSMS",method = RequestMethod.GET)
     public void IncomingMessage(@RequestParam( "content") String message,@RequestParam("mobile") String phoneNumber){
-        smsService.SaveIncomingSMS(message,phoneNumber);
+        smsService.SaveIncomingSMSMessage(message,phoneNumber);
     }
 
     @RequestMapping(value = "/sms/MessageList", method = RequestMethod.GET, headers = ACCEPT_JSON)

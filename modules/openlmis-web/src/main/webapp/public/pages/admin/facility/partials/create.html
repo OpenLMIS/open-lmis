@@ -365,7 +365,12 @@
 
 <div class="form-group">
     <h3 openlmis-message="create.facility.geographicalInformation"></h3>
-
+     <div class="pull-right form-cell" ng-show="facility.latitude !== ''">
+         <google-map center="{longitude: facility.longitude, latitude: facility.latitude}" zoom="16">
+             <marker coords='facility'>
+             </marker>
+         </google-map>
+     </div>
     <div class="form-row clearfix">
         <div class="form-cell">
             <label for="geographic-zone" openlmis-message="create.facility.geographicZone"><span class="label-required">
@@ -393,9 +398,9 @@
         </span>
             </div>
         </div>
-    </div>
 
-    <div class="form-row clearfix">
+
+
         <div class="form-cell">
             <label for="latitude" openlmis-message="create.facility.latitude"></label>
 
@@ -421,9 +426,7 @@
         </span>
             </div>
         </div>
-    </div>
 
-    <div class="form-row clearfix">
         <div class="form-cell">
             <label for="altitude" openlmis-message="create.facility.altitude"></label>
 
@@ -436,7 +439,6 @@
         </span>
             </div>
         </div>
-    </div>
 </div>
 <!-- /form-group -->
 
@@ -561,6 +563,19 @@
             </div>
         </div>
     </div>
+  <div class="form-group">
+    <h3>Pictures</h3>
+    <div class="form-row clearfix" ng-show="images.length > 0">
+      <div ng-repeat="image in images">
+        <img class="form-cell" ng-show="image.firstPicture" ng-src="data:image/png;base64,{{ image.firstPicture }}" />
+        <img class="form-cell" ng-show="image.secondPicture" ng-src="data:image/png;base64,{{ image.secondPicture }}" />
+        <img class="form-cell" ng-show="image.thirdPicture" ng-src="data:image/png;base64,{{ image.thirdPicture }}" />
+        <img class="form-cell" ng-show="image.fourthPicture" ng-src="data:image/png;base64,{{ image.fourthPicture }}" />
+        <img class="form-cell" ng-show="image.fifthPicture" ng-src="data:image/png;base64,{{ image.fifthPicture }}" />
+      </div>
+    </div>
+   </div>
+</div>
 </div>
 <!-- /form-group -->
 

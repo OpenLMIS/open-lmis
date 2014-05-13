@@ -41,7 +41,8 @@ import java.util.*;
 @Service
 @NoArgsConstructor
 public class ReportLookupService {
-
+  @Autowired
+  private UserSummaryExReportMapper userSummaryExReportMapper;
   @Autowired
   private RegimenReportMapper regimenReportMapper;
 
@@ -167,6 +168,11 @@ public class ReportLookupService {
     return facilityTypeMapper.getAll();
   }
 
+  public List<FacilityType> getFacilityTypesForProgram(Long programId) {
+    return facilityTypeMapper.getForProgram(programId);
+  }
+
+
   public List<RequisitionGroup> getAllRequisitionGroups() {
     return this.rgMapper.getAll();
   }
@@ -175,8 +181,8 @@ public class ReportLookupService {
     return this.rgMapper.getByProgramAndSchedule(program, schedule);
   }
 
-  public List<RequisitionGroup> getBySupervisoryNodesAndProgramAndSchedule(String nodeIdList, Long programId, Long scheduleId){
-      return rgMapper.getBySupervisoryNodesAndProgramAndSchedule(nodeIdList,programId,scheduleId);
+  public List<RequisitionGroup> getBySupervisoryNodesAndProgramAndSchedule(Long userId, Long nodeId, Long programId, Long scheduleId){
+      return rgMapper.getBySupervisoryNodesAndProgramAndSchedule(userId,nodeId,programId,scheduleId);
   }
 
   public List<RequisitionGroup> getRequisitionGroupsByProgram(int program) {
@@ -292,9 +298,15 @@ public class ReportLookupService {
     return facilityReportMapper.getFacilitiesByPrgraomScheduleTypeAndRG(program, schedule, type, requisitionGroup);
   }
 
-  public List<Facility> getFacilitiesBy(String requisitionGroup, Long program, Long schedule) {
+  public List<Facility> getFacilitiesBy(Long userId, Long supervisoryNodeId, String requisitionGroup, Long program, Long schedule) {
 
-      return facilityReportMapper.getFacilitiesBy(requisitionGroup, program, schedule);
+      return facilityReportMapper.getFacilitiesBy(userId,supervisoryNodeId, requisitionGroup, program, schedule);
+
+  }
+
+  public List<HashMap> getFacilitiesForNotifications(Long userId, Long supervisoryNodeId, String requisitionGroup, Long program, Long schedule) {
+
+      return facilityReportMapper.getFacilitiesForNotifications(userId,supervisoryNodeId, requisitionGroup, program, schedule);
 
   }
 
@@ -328,6 +340,10 @@ public class ReportLookupService {
 
   public String getFacilityNameForRnrId(Long rnrId) {
     return requisitionMapper.getFacilityNameForRnrId(rnrId);
+  }
+
+  public org.openlmis.core.domain.Facility getFacilityForRnrId(Long rnrId) {
+    return requisitionMapper.getFacilityForRnrId(rnrId);
   }
 
   public String getPeriodTextForRnrId(Long rnrId) {
@@ -364,4 +380,13 @@ public class ReportLookupService {
     public List<FacilityTypeApprovedProduct> getAllFacilityTypeApprovedProducts(){
         return facilityApprovedProductMapper.getAllFacilityApprovedProducts();
     }
+
+  public List<UserRoleAssignmentsReport> getAllRolesBySupervisoryNodeHavingProgram(Long roleId,Long programId,Long supervisoryNodeId){
+      return userSummaryExReportMapper.getUserRoleAssignments(roleId,programId,supervisoryNodeId);
+  }
+
+  public List<UserRoleAssignmentsReport>getUserRoleAssignments(){
+      return userSummaryExReportMapper.getUserRoleAssignment();
+  }
+
 }

@@ -21,15 +21,9 @@ import java.util.List;
 @Repository
 public interface SMSMapper {
 
-    @Insert("INSERT INTO sms(message,direction, phoneNumber, dateSaved) VALUES (#{message},#{direction}, #{phoneNumber}, #{dateSaved})")
+    @Insert("INSERT INTO sms(message,direction, phoneNumber, dateSaved, sent) VALUES (#{message},#{direction}, #{phoneNumber}, #{dateSaved}, #{sent})")
     @Options(useGeneratedKeys = true)
     void insert(SMS sms);
-
-    //Adding Insert Query
-
-    @Insert("INSERT INTO sms(message,direction,sent, phoneNumber, dateSaved) VALUES (#{message},#{direction},#{sent}, #{phoneNumber}, #{dateSaved})")
-    @Options(useGeneratedKeys = true)
-    void Insert(SMS sms);
 
     @Select("SELECT * FROM sms")
     public List<SMS> getAllSMSMessage();

@@ -6,10 +6,14 @@
  * To change this template use File | Settings | File Templates.
  */
 
-function StockedOutController($scope, $location, programsList, dashboardMenuService, formInputValue,ReportProgramsBySupervisoryNode,dashboardFiltersHistoryService,userPreferredFilterValues,RequisitionGroupsBySupervisoryNodeProgramSchedule, UserSupervisoryNodes,ReportSchedules, ReportPeriods, RequisitionGroupsByProgram,RequisitionGroupsByProgramSchedule, ReportProductsByProgram, OperationYears, ReportPeriodsByScheduleAndYear,StockedOutFacilities, ngTableParams) {
+function StockedOutController($scope, $location, programsList, dashboardMenuService, formInputValue,GetPeriod,ReportProgramsBySupervisoryNode,dashboardFiltersHistoryService,userPreferredFilterValues,RequisitionGroupsBySupervisoryNodeProgramSchedule, UserSupervisoryNodes,ReportSchedules, ReportPeriods, RequisitionGroupsByProgram,RequisitionGroupsByProgramSchedule, ReportProductsByProgram, OperationYears, ReportPeriodsByScheduleAndYear,StockedOutFacilities, ngTableParams) {
     $scope.filterObject = {};
 
     $scope.formFilter = {};
+
+    $scope.formPanel = {openPanel:true};
+
+    $scope.alertsPanel = {openPanel:false};
 
     initialize();
 
@@ -63,12 +67,16 @@ function StockedOutController($scope, $location, programsList, dashboardMenuServ
                     supervisoryNodeId : $scope.filterObject.supervisoryNodeId
                 },function(data){
                     $scope.requisitionGroups = data.requisitionGroupList;
-                    $scope.requisitionGroups.unshift({'name':formInputValue.requisitionOptionAll});
+                    if(!isUndefined($scope.requisitionGroups)){
+                        $scope.requisitionGroups.unshift({'name':formInputValue.requisitionOptionAll});
+                    }
                 });
         }else{
             RequisitionGroupsByProgram.get({program: $scope.filterObject.programId }, function(data){
                 $scope.requisitionGroups = data.requisitionGroupList;
-                $scope.requisitionGroups.unshift({'name':formInputValue.requisitionOptionAll});
+                if(!isUndefined($scope.requisitionGroups)){
+                    $scope.requisitionGroups.unshift({'name':formInputValue.requisitionOptionAll});
+                }
             });
         }
     };
@@ -104,6 +112,8 @@ function StockedOutController($scope, $location, programsList, dashboardMenuServ
                 });
         }
 
+        $scope.filterProductsByProgram();
+
     };
 
 
@@ -133,13 +143,17 @@ function StockedOutController($scope, $location, programsList, dashboardMenuServ
                             scheduleId: $scope.filterObject.scheduleId,
                             supervisoryNodeId: $scope.filterObject.supervisoryNodeId}, function(data){
                             $scope.requisitionGroups = data.requisitionGroupList;
-                            $scope.requisitionGroups.unshift({'name':formInputValue.requisitionOptionAll});
+                            if(!isUndefined($scope.requisitionGroups)){
+                                $scope.requisitionGroups.unshift({'name':formInputValue.requisitionOptionAll});
+                            }
 
                         });
                 }else{
                     RequisitionGroupsByProgramSchedule.get({program: $scope.filterObject.programId, schedule:$scope.filterObject.scheduleId}, function(data){
                         $scope.requisitionGroups = data.requisitionGroupList;
-                        $scope.requisitionGroups.unshift({'name':formInputValue.requisitionOptionAll});
+                        if(!isUndefined($scope.requisitionGroups)){
+                            $scope.requisitionGroups.unshift({'name':formInputValue.requisitionOptionAll});
+                        }
                     });
                 }
 
@@ -311,7 +325,18 @@ function StockedOutController($scope, $location, programsList, dashboardMenuServ
                 $scope.filterObject.programId = userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_PROGRAM];
                 $scope.filterObject.periodId = userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_PERIOD];
                 $scope.filterObject.scheduleId = userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_SCHEDULE];
-                $scope.filterObject.year = date.getFullYear() - 1;
+
+                if(!isUndefined($scope.filterObject.periodId)){
+
+                    GetPeriod.get({id:$scope.filterObject.periodId}, function(period){
+                        if(!isUndefined(period.year)){
+                            $scope.filterObject.year = period.year;
+                        }else{
+                            $scope.filterObject.year = date.getFullYear() - 1;
+                        }
+                    });
+                }
+
                 $scope.filterObject.rgroupId = userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_REQUISITION_GROUP];
                 $scope.filterObject.productIdList = [userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_PRODUCT]];
 

@@ -9,11 +9,14 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-function StockController($scope, $routeParams,dashboardFiltersHistoryService, programsList,formInputValue,UserSupervisoryNodes,userPreferredFilterValues,RequisitionGroupsBySupervisoryNodeProgramSchedule,ReportProgramsBySupervisoryNode, ReportSchedules, ReportPeriods, RequisitionGroupsByProgram,RequisitionGroupsByProgramSchedule, ReportProductsByProgram, OperationYears, ReportPeriodsByScheduleAndYear, StockEfficiencyDetail, ngTableParams) {
+function StockController($scope, $routeParams,dashboardFiltersHistoryService, programsList,formInputValue,GetPeriod,UserSupervisoryNodes,userPreferredFilterValues,RequisitionGroupsBySupervisoryNodeProgramSchedule,ReportProgramsBySupervisoryNode, ReportSchedules, ReportPeriods, RequisitionGroupsByProgram,RequisitionGroupsByProgramSchedule, ReportProductsByProgram, OperationYears, ReportPeriodsByScheduleAndYear, StockEfficiencyDetail, ngTableParams) {
 
     $scope.filterObject = {};
 
     $scope.formFilter = {};
+    $scope.formPanel = {openPanel:true};
+
+    $scope.alertsPanel = {openPanel:true};
 
     initialize();
 
@@ -69,12 +72,16 @@ function StockController($scope, $routeParams,dashboardFiltersHistoryService, pr
                     supervisoryNodeId : $scope.filterObject.supervisoryNodeId
                 },function(data){
                     $scope.requisitionGroups = data.requisitionGroupList;
-                    $scope.requisitionGroups.unshift({'name':formInputValue.requisitionOptionAll});
+                    if(!isUndefined($scope.requisitionGroups)){
+                        $scope.requisitionGroups.unshift({'name':formInputValue.requisitionOptionAll});
+                    }
                 });
         }else{
             RequisitionGroupsByProgram.get({program: $scope.filterObject.programId }, function(data){
                 $scope.requisitionGroups = data.requisitionGroupList;
-                $scope.requisitionGroups.unshift({'name':formInputValue.requisitionOptionAll});
+                if(!isUndefined($scope.requisitionGroups)){
+                    $scope.requisitionGroups.unshift({'name':formInputValue.requisitionOptionAll});
+                }
             });
         }
 
@@ -113,13 +120,17 @@ function StockController($scope, $routeParams,dashboardFiltersHistoryService, pr
                             scheduleId: $scope.filterObject.scheduleId,
                             supervisoryNodeId: $scope.filterObject.supervisoryNodeId}, function(data){
                             $scope.requisitionGroups = data.requisitionGroupList;
-                            $scope.requisitionGroups.unshift({'name':formInputValue.requisitionOptionAll});
+                            if(!isUndefined($scope.requisitionGroups)){
+                                $scope.requisitionGroups.unshift({'name':formInputValue.requisitionOptionAll});
+                            }
 
                         });
                 }else{
                     RequisitionGroupsByProgramSchedule.get({program: $scope.filterObject.programId, schedule:$scope.filterObject.scheduleId}, function(data){
                         $scope.requisitionGroups = data.requisitionGroupList;
-                        $scope.requisitionGroups.unshift({'name':formInputValue.requisitionOptionAll});
+                        if(!isUndefined($scope.requisitionGroups)){
+                            $scope.requisitionGroups.unshift({'name':formInputValue.requisitionOptionAll});
+                        }
                     });
                 }
 
@@ -181,6 +192,8 @@ function StockController($scope, $routeParams,dashboardFiltersHistoryService, pr
                 }
                 $scope.stockByProductAndStock = groupStockingByProductAndStock($scope.stockingList);
 
+                //alert('stocking '+JSON.stringify($scope.stockByProductAndStock))
+
             });
         }else{
             $scope.stockByProductAndStock = undefined;
@@ -230,6 +243,8 @@ function StockController($scope, $routeParams,dashboardFiltersHistoryService, pr
                 });
         }
 
+        $scope.filterProductsByProgram();
+
     };
 
     $scope.processRequisitionFilter = function(){
@@ -255,7 +270,18 @@ function StockController($scope, $routeParams,dashboardFiltersHistoryService, pr
                 $scope.filterObject.programId = userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_PROGRAM];
                 $scope.filterObject.periodId = userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_PERIOD];
                 $scope.filterObject.scheduleId = userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_SCHEDULE];
-                $scope.filterObject.year = date.getFullYear() - 1;
+
+                if(!isUndefined($scope.filterObject.periodId)){
+
+                    GetPeriod.get({id:$scope.filterObject.periodId}, function(period){
+                        if(!isUndefined(period.year)){
+                            $scope.filterObject.year = period.year;
+                        }else{
+                            $scope.filterObject.year = date.getFullYear() - 1;
+                        }
+                    });
+                }
+
                 $scope.filterObject.rgroupId = userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_REQUISITION_GROUP];
                 $scope.filterObject.productIdList = userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_PRODUCTS].split(',');
 
@@ -266,6 +292,7 @@ function StockController($scope, $routeParams,dashboardFiltersHistoryService, pr
             return;
 
         }else if(!_.isEmpty($routeParams)){
+            $scope.alertsPanel.openPanel = false;
 
             $scope.formFilter.supervisoryNodeId = $routeParams.supervisoryNodeId;
             $scope.processSupervisoryNodeChange();
@@ -306,12 +333,12 @@ function StockController($scope, $routeParams,dashboardFiltersHistoryService, pr
     });
 
 
-    $scope.paramsChanged = function(params) {
+    /*$scope.paramsChanged = function(params) {
 
 
-    };
+    };*/
 
     // watch for changes of parameters
-    $scope.$watch('tableParams', $scope.paramsChanged , true);
+    /*$scope.$watch('tableParams', $scope.paramsChanged , true);*/
 
 }

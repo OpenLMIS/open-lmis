@@ -1,0 +1,29 @@
+<div class="row-fluid">
+    <div class="span12">
+        <table class="table table-bordered" ng-show="content.datarows == undefined || content.datarows.length == 0">
+            <tr>
+                <td>No data to show for selected alert type</td>
+            </tr>
+        </table>
+        <table ng-show="content.datarows.length > 0" class="table-bordered table table-striped pull-right"
+               ng-table="tableParams">
+            <!--<thead>
+            <tr class="gradient-header">
+                <th ng-repeat="col in notificationColumns" ng-hide="{{ col.hide }}"><div>{{ col.title }}</div>
+                </th>
+            </tr>
+            </thead>-->
+            <tbody>
+                <tr  ng-repeat="row in content.datarows">
+                    <td data-title="'Facility Name'">{{ row.facilityname }}</td>
+                    <td data-title="'Product'">{{ row.productname }}</td>
+                    <!--<td ng-repeat="col in notificationColumns" ng-hide="{{ col.hide }}">{{ notification[col.name] }}</td>-->
+                </tr>
+            </tbody>
+
+        </table>
+
+
+    </div>
+
+</div>

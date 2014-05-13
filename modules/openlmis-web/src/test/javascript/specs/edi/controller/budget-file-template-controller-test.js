@@ -104,7 +104,7 @@ describe("Budget File Template Controller", function () {
     httpBackend.flush();
     expect(scope.message).toEqual("saved successfully");
     expect(scope.error).toEqual("");
-    expect(location.path).toHaveBeenCalledWith("configure-edi-file");
+    expect(location.path).toHaveBeenCalledWith("configure-system-settings");
   });
 
   it('should not save budget file template if position is invalid', function () {

@@ -43,7 +43,7 @@ public class OrderPODDTO {
     OrderPODDTO orderPODDTO = new OrderPODDTO();
     orderPODDTO.setId(order.getId());
 
-    String createdDate = order.getCreatedDate() == null ? null : new SimpleDateFormat("dd/MM/yyyy hh:mm:ss").format(order.getCreatedDate());
+    String createdDate = order.getCreatedDate() == null ? null : new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(order.getCreatedDate());
     orderPODDTO.setStringCreatedDate(createdDate);
     orderPODDTO.setSupplyingDepot(order.getSupplyLine().getSupplyingFacility().getName());
 

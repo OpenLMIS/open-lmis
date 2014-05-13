@@ -8,16 +8,23 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-function ListSettingController($scope, $routeParams, $location, $dialog, Settings, SettingUpdator, messageService) {
+function ListSettingController($scope, $location, Settings, SettingUpdator) {
 
-       Settings.get(function (data){
-           $scope.settings = data.settings;
-       });
+  $scope.current = '';
+  $scope.CreateHeader = function(setting) {
+    showHeader = (setting.toUpperCase() != $scope.current.toUpperCase());
+    $scope.current = setting;
+    return showHeader;
+  };
 
-    $scope.saveSettings = function(){
-        SettingUpdator.post({}, $scope.settings, function (data){
-            $location.path('');
-            $scope.$parent.message = "The configuration changes were successfully updated.";
-        });
-    };
+  Settings.get(function (data){
+     $scope.settings = data.settings;
+  });
+
+  $scope.saveSettings = function(){
+      SettingUpdator.post({}, $scope.settings, function (data){
+          $location.path('');
+          $scope.$parent.message = "The configuration changes were successfully updated.";
+      });
+  };
 }

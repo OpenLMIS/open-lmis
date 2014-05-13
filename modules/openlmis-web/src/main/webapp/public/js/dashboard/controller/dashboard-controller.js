@@ -9,12 +9,15 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-function AdminDashboardController($scope,$timeout,$filter,$location,dashboardFiltersHistoryService, programsList,userPreferredFilterValues,formInputValue,UserSupervisoryNodes,ReportProgramsBySupervisoryNode,RequisitionGroupsBySupervisoryNodeProgramSchedule, ReportSchedules, ReportPeriods, RequisitionGroupsByProgram,RequisitionGroupsByProgramSchedule, ReportProductsByProgram, OperationYears, ReportPeriodsByScheduleAndYear, FacilitiesByProgramAndRequisitionGroupParams, OrderFillRate, ItemFillRate, StockEfficiency) {
+function AdminDashboardController($scope,$timeout,$filter,$location,dashboardFiltersHistoryService,GetPeriod, programsList,userPreferredFilterValues,formInputValue,UserSupervisoryNodes,ReportProgramsBySupervisoryNode,RequisitionGroupsBySupervisoryNodeProgramSchedule, ReportSchedules, ReportPeriods, RequisitionGroupsByProgram,RequisitionGroupsByProgramSchedule, ReportProductsByProgram, OperationYears, ReportPeriodsByScheduleAndYear, FacilitiesByProgramAndRequisitionGroupParams, OrderFillRate, ItemFillRate, StockEfficiency) {
 
     $scope.filterObject = {};
 
     $scope.formFilter = {
     };
+    $scope.formPanel = {openPanel:true};
+
+    $scope.alertsPanel = {openPanel:true};
 
     initialize();
 
@@ -51,13 +54,12 @@ function AdminDashboardController($scope,$timeout,$filter,$location,dashboardFil
 
     });
 
-    $scope.$watch('formFilter.facilityId', function (selection) {
+    $scope.processFacilityFilter = function(){
         $scope.filterObject.facilityId = $scope.formFilter.facilityId;
+        $scope.loadFillRates();
 
-       $scope.loadFillRates();
 
-    });
-
+    };
 
     $scope.filterProductsByProgram = function (){
         if(isUndefined($scope.formFilter.programId)){
@@ -80,12 +82,16 @@ function AdminDashboardController($scope,$timeout,$filter,$location,dashboardFil
                  supervisoryNodeId : $scope.filterObject.supervisoryNodeId
             },function(data){
                 $scope.requisitionGroups = data.requisitionGroupList;
-                $scope.requisitionGroups.unshift({'name':formInputValue.requisitionOptionAll});
+                if(!isUndefined($scope.requisitionGroups)){
+                    $scope.requisitionGroups.unshift({'name':formInputValue.requisitionOptionAll});
+                }
             });
         }else{
             RequisitionGroupsByProgram.get({program: $scope.filterObject.programId }, function(data){
                 $scope.requisitionGroups = data.requisitionGroupList;
-                $scope.requisitionGroups.unshift({'name':formInputValue.requisitionOptionAll});
+                if(!isUndefined($scope.requisitionGroups)){
+                    $scope.requisitionGroups.unshift({'name':formInputValue.requisitionOptionAll});
+                }
             });
         }
 
@@ -199,6 +205,7 @@ function AdminDashboardController($scope,$timeout,$filter,$location,dashboardFil
 
     $scope.loadFacilities = function(){
         FacilitiesByProgramAndRequisitionGroupParams.get({
+            supervisoryNodeId: isUndefined($scope.filterObject.supervisoryNodeId) ? 0 : $scope.filterObject.supervisoryNodeId,
             programId: isUndefined($scope.filterObject.programId)? 0 : $scope.filterObject.programId ,
             scheduleId: isUndefined($scope.filterObject.scheduleId) ? 0 : $scope.filterObject.scheduleId,
             rgroupId: $scope.filterObject.rgroupId
@@ -228,6 +235,8 @@ function AdminDashboardController($scope,$timeout,$filter,$location,dashboardFil
                 });
         }
 
+        $scope.filterProductsByProgram();
+
     };
 
     $scope.changeSchedule = function(){
@@ -256,13 +265,17 @@ function AdminDashboardController($scope,$timeout,$filter,$location,dashboardFil
                          scheduleId: $scope.filterObject.scheduleId,
                          supervisoryNodeId: $scope.filterObject.supervisoryNodeId},function(data){
                             $scope.requisitionGroups = data.requisitionGroupList;
-                            $scope.requisitionGroups.unshift({'name':formInputValue.requisitionOptionAll});
+                            if(!isUndefined($scope.requisitionGroups)){
+                                $scope.requisitionGroups.unshift({'name':formInputValue.requisitionOptionAll});
+                            }
 
                     });
                 }else{
                     RequisitionGroupsByProgramSchedule.get({program: $scope.filterObject.programId, schedule:$scope.filterObject.scheduleId}, function(data){
                         $scope.requisitionGroups = data.requisitionGroupList;
-                        $scope.requisitionGroups.unshift({'name':formInputValue.requisitionOptionAll});
+                        if(!isUndefined($scope.requisitionGroups)){
+                            $scope.requisitionGroups.unshift({'name':formInputValue.requisitionOptionAll});
+                        }
                     });
                 }
 
@@ -437,7 +450,7 @@ function AdminDashboardController($scope,$timeout,$filter,$location,dashboardFil
                         show: true,
                         radius: 2 / 3,
                         formatter: function (label, series) {
-                            return '<div style="font-size:8pt;text-align:center;padding:2px;color:black;">' + Math.round(series.percent) + '%</div>';
+                            return '<div class="pieLabel">' + Math.round(series.percent) + '%</div>';
                         },
                         threshold: 0.1
                     }
@@ -599,7 +612,7 @@ function AdminDashboardController($scope,$timeout,$filter,$location,dashboardFil
             products : _.pairs(_.object(_.range(stockingData.length), _.pluck(stockingData,'productId'))),
             filterParams : _.pick(stockingData[0],'rgroupId','programId', 'periodId')
         };
-        var multiBarsColors = ["#4F81BD","#C0504D","#9BBB59","#8064A2"];
+        var multiBarsColors = ["#F83103","#37AC02","#02A8FA","#FAA702"];
         var adequatelyStockedSeries =  _.pairs(_.object(_.range(stockingData.length), _.map(_.pluck(stockingData,'adequatelyStocked'),function(stat){ return stat;})));
         var stockedOutSeries =  _.pairs(_.object(_.range(stockingData.length), _.map(_.pluck(stockingData,'stockedOut'),function(stat){ return  stat;})));
         var overstockedSeries =  _.pairs(_.object(_.range(stockingData.length), _.map(_.pluck(stockingData,'overStocked'),function(stat){ return  stat;})));
@@ -645,22 +658,17 @@ function AdminDashboardController($scope,$timeout,$filter,$location,dashboardFil
 
             } ,
             yaxis: {
-               // min:0,
-              //  tickSize:1,
                 axisLabel: '# of Facilities',
-                axisLabelUseCanvas: false//,
-                /*tickFormatter: function (v, axis) {
-                    return v ;
-                }*/
+                axisLabelUseCanvas: false
             },
             grid: {
                 hoverable: true,
                 clickable: true,
                 borderWidth: 1,
-                borderColor: "#d6d6d6",
-                backgroundColor: {
+                borderColor: "#d6d6d6"//,
+               /* backgroundColor: {
                     colors: ["#FFF", "#CCC"]
-                }
+                }*/
             },
             legend: {
                 container:$("#multiBarsLegend"),
@@ -697,11 +705,23 @@ function AdminDashboardController($scope,$timeout,$filter,$location,dashboardFil
                 $scope.processSupervisoryNodeChange();
 
                 $scope.filterObject.programId = userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_PROGRAM];
-                $scope.filterObject.periodId = userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_PERIOD];
                 $scope.filterObject.scheduleId = userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_SCHEDULE];
-                $scope.filterObject.year = date.getFullYear() - 1;
+
+                $scope.filterObject.periodId = userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_PERIOD];
+
+                if(!isUndefined($scope.filterObject.periodId)){
+
+                    GetPeriod.get({id:$scope.filterObject.periodId}, function(period){
+                        if(!isUndefined(period.year)){
+                            $scope.filterObject.year = period.year;
+                        }else{
+                            $scope.filterObject.year = date.getFullYear() - 1;
+                        }
+                    });
+                }
                 $scope.filterObject.rgroupId = userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_REQUISITION_GROUP];
                 $scope.filterObject.productIdList = userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_PRODUCTS].split(',');
+                $scope.filterObject.facilityId = $scope.formFilter.facilityId = userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_FACILITY];
 
                 $scope.registerWatches();
 
