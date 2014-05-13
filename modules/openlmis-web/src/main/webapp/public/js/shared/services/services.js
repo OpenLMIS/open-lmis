@@ -161,11 +161,6 @@ services.factory('Messages', function ($resource) {
   return $resource('/messages.json', {}, {});
 });
 
-services.factory('SupervisoryNodes', function ($resource) {
-  return $resource('/supervisory-nodes.json', {}, {});
-});
-
-
 services.factory('SupervisoryNodesSearch', function ($resource) {
   return $resource('/search-supervisory-nodes.json', {}, {});
 });
@@ -325,4 +320,8 @@ services.factory('GeographicZonesAboveLevel', function ($resource) {
 
 services.factory('SupervisoryNodes', function ($resource) {
   return $resource('/supervisory-nodes/:id.json', {}, {});
+});
+
+services.factory('ParentSupervisoryNodes', function ($resource) {
+  return $resource('/parent-supervisory-nodes', {}, {});
 });

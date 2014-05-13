@@ -65,7 +65,7 @@ public class SupervisoryNodeController extends BaseController {
     return OpenLmisResponse.response(SUPERVISORY_NODE, supervisoryNode);
   }
 
-  @RequestMapping(value = "/supervisory-nodes", method = RequestMethod.GET)
+  @RequestMapping(value = "/parent-supervisory-nodes", method = RequestMethod.GET)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_SUPERVISORY_NODE')")
   public ResponseEntity<OpenLmisResponse> getFilteredNodes(@RequestParam(value = "searchParam") String param) {
     List<SupervisoryNode> filteredSupervisoryNodes = supervisoryNodeService.getFilteredSupervisoryNodesByName(param);

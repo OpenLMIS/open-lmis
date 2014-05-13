@@ -376,7 +376,7 @@ public class SupervisoryNodeMapperIT {
 
   @Test
   public void shouldFilterSupervisoryNodesByName() {
-    SupervisoryNode supervisoryNode1 = make(a(SupervisoryNodeBuilder.defaultSupervisoryNode, with(code, "SN1"), with(name, "village Dispensary")));
+    SupervisoryNode supervisoryNode1 = make(a(SupervisoryNodeBuilder.defaultSupervisoryNode, with(code, "SN1"), with(name, "villAge Dispensary")));
     supervisoryNode1.setFacility(facility);
     insertSupervisoryNode(supervisoryNode1);
 
