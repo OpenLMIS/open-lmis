@@ -17,6 +17,7 @@ import org.openlmis.pageobjects.PageObjectFactory;
 import org.openlmis.pageobjects.SupervisoryNodesPage;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -46,7 +47,7 @@ public class ManageSupervisoryNodes extends TestCaseHelper {
     loginPage = PageObjectFactory.getLoginPage(testWebDriver, baseUrlGlobal);
   }
 
-  //@Test(groups = {"admin"})
+  @Test(groups = {"admin"})
   public void testRightsNotPresent() throws SQLException {
     dbWrapper.insertSupervisoryNode("F10", "N1", "Node1", null);
     dbWrapper.insertSupervisoryNode("F11", "N2", "Node2", null);
@@ -60,15 +61,17 @@ public class ManageSupervisoryNodes extends TestCaseHelper {
     homePage.logout();
     dbWrapper.assignRight("Admin", "MANAGE_SUPERVISORY_NODE");
     loginPage.loginAs(testData.get(ADMIN), testData.get(PASSWORD));
+    homePage.navigateToUser();
     assertTrue(homePage.isSupervisoryNodeTabDisplayed());
     SupervisoryNodesPage supervisoryNodesPage = homePage.navigateToSupervisoryNodes();
 
     assertEquals("Search supervisory node", supervisoryNodesPage.getSearchSupervisoryNodeLabel());
     assertTrue(supervisoryNodesPage.isAddNewButtonDisplayed());
     assertEquals("Supervisory node", supervisoryNodesPage.getSelectedSearchOption());
+    assertTrue(supervisoryNodesPage.isSearchIconDisplayed());
   }
 
-  //@Test(groups = {"admin"})
+  @Test(groups = {"admin"})
   public void testSupervisoryNodeSearchSortAndPagination() throws SQLException {
     dbWrapper.assignRight("Admin", "MANAGE_SUPERVISORY_NODE");
     dbWrapper.insertSupervisoryNode("F10", "N1", "Node1", null);
@@ -88,7 +91,7 @@ public class ManageSupervisoryNodes extends TestCaseHelper {
     assertFalse(supervisoryNodesPage.isOneResultMessageDisplayed());
     assertFalse(supervisoryNodesPage.isSupervisoryNodeHeaderPresent());
 
-    supervisoryNodesPage.enterSearchParameter("nod");
+    searchNode("nod");
     assertEquals("3 matches found for 'nod'", supervisoryNodesPage.getNResultsMessage());
     assertEquals("Supervisory Node Name", supervisoryNodesPage.getSupervisoryNodeHeader());
     assertEquals("Code", supervisoryNodesPage.getCodeHeader());
@@ -106,7 +109,7 @@ public class ManageSupervisoryNodes extends TestCaseHelper {
     assertFalse(supervisoryNodesPage.isSupervisoryNodeHeaderPresent());
   }
 
-  //@Test(groups = {"admin"})
+  @Test(groups = {"admin"})
   public void testSupervisoryNodeParentSearchSortAndPagination() throws SQLException {
     dbWrapper.assignRight("Admin", "MANAGE_SUPERVISORY_NODE");
     dbWrapper.insertSupervisoryNode("F10", "N1", "Node1", null);
@@ -125,7 +128,7 @@ public class ManageSupervisoryNodes extends TestCaseHelper {
     assertFalse(supervisoryNodesPage.isOneResultMessageDisplayed());
     assertFalse(supervisoryNodesPage.isSupervisoryNodeHeaderPresent());
 
-    supervisoryNodesPage.enterSearchParameter("nod");
+    searchNode("nod");
     assertTrue(supervisoryNodesPage.isOneResultMessageDisplayed());
     assertEquals("Supervisory Node Name", supervisoryNodesPage.getSupervisoryNodeHeader());
     assertEquals("Code", supervisoryNodesPage.getCodeHeader());
@@ -143,7 +146,7 @@ public class ManageSupervisoryNodes extends TestCaseHelper {
     assertFalse(supervisoryNodesPage.isSupervisoryNodeHeaderPresent());
   }
 
-  //@Test(groups = {"admin"})
+  @Test(groups = {"admin"})
   public void testSupervisoryNodeParentSearchWhenNoResults() throws SQLException {
     dbWrapper.assignRight("Admin", "MANAGE_SUPERVISORY_NODE");
     dbWrapper.insertSupervisoryNode("F10", "N1", "Super1", null);
@@ -154,7 +157,7 @@ public class ManageSupervisoryNodes extends TestCaseHelper {
     supervisoryNodesPage.clickSearchOptionButton();
     supervisoryNodesPage.selectSupervisoryNodeParentAsSearchOption();
     assertEquals("Supervisory node parent", supervisoryNodesPage.getSelectedSearchOption());
-    supervisoryNodesPage.enterSearchParameter("nod");
+    searchNode("nod");
     assertTrue(supervisoryNodesPage.isNoResultMessageDisplayed());
 
     supervisoryNodesPage.clickSearchOptionButton();
@@ -163,7 +166,7 @@ public class ManageSupervisoryNodes extends TestCaseHelper {
 
     dbWrapper.insertSupervisoryNode("F10", "N2", "Node2", null);
     testWebDriver.refresh();
-    supervisoryNodesPage.enterSearchParameter("nod");
+    searchNode("nod");
     //assertTrue(supervisoryNodesPage.isOneResultMessageDisplayed());
     assertEquals("Node2", supervisoryNodesPage.getSupervisoryNodeName(1));
     assertEquals("N2", supervisoryNodesPage.getSupervisoryNodeCode(1));
@@ -172,6 +175,7 @@ public class ManageSupervisoryNodes extends TestCaseHelper {
 
     supervisoryNodesPage.clickSearchOptionButton();
     supervisoryNodesPage.selectSupervisoryNodeParentAsSearchOption();
+    supervisoryNodesPage.clickSearchIcon();
     assertTrue(supervisoryNodesPage.isNoResultMessageDisplayed());
   }
 
@@ -185,7 +189,7 @@ public class ManageSupervisoryNodes extends TestCaseHelper {
     //add a valid supervisoryNode
     //click save
 
-    supervisoryNodesPage.enterSearchParameter(""); //enter the one added
+    searchNode(""); //enter the one added
     //verify it
 
     supervisoryNodesPage.clickAddNewButton();
@@ -194,11 +198,11 @@ public class ManageSupervisoryNodes extends TestCaseHelper {
     //add new with parent as previous one
     //click save
 
-    supervisoryNodesPage.enterSearchParameter(""); //new added
+    searchNode(""); //new added
     //verify
     supervisoryNodesPage.clickSearchOptionButton();
     supervisoryNodesPage.selectSupervisoryNodeParentAsSearchOption();
-    supervisoryNodesPage.enterSearchParameter(""); //previously added
+    searchNode(""); //previously added
     //verify
 
     supervisoryNodesPage.clickAddNewButton();
@@ -209,7 +213,7 @@ public class ManageSupervisoryNodes extends TestCaseHelper {
 
     supervisoryNodesPage.clickSearchOptionButton();
     supervisoryNodesPage.selectSupervisoryNodeAsSearchOption();
-    supervisoryNodesPage.enterSearchParameter(""); //new added
+    searchNode(""); //new added
     //verify no result
   }
 
@@ -220,19 +224,19 @@ public class ManageSupervisoryNodes extends TestCaseHelper {
     dbWrapper.insertSupervisoryNode("F11", "N2", "Super2", null);
     HomePage homePage = loginPage.loginAs(testData.get(ADMIN), testData.get(PASSWORD));
     SupervisoryNodesPage supervisoryNodesPage = homePage.navigateToSupervisoryNodes();
-    supervisoryNodesPage.enterSearchParameter("sup");
+    searchNode("sup");
     //click the resultant Super1
     //update the code and parent
     //click save
 
-    supervisoryNodesPage.enterSearchParameter("sup");
+    searchNode("sup");
     assertFalse(supervisoryNodesPage.isOneResultMessageDisplayed());
     assertTrue(supervisoryNodesPage.isNoResultMessageDisplayed());
 
-    supervisoryNodesPage.enterSearchParameter(""); //new code
+    searchNode(""); //new code
     assertTrue(supervisoryNodesPage.isOneResultMessageDisplayed());
 
-    supervisoryNodesPage.enterSearchParameter("sup");
+    searchNode("sup");
     //click the resultant
     //update the code as the last updated code and parent
     //click save
@@ -244,13 +248,19 @@ public class ManageSupervisoryNodes extends TestCaseHelper {
     //verify error msg
     //enter valid parent
     //click save
-    supervisoryNodesPage.enterSearchParameter(""); //new code
+    searchNode(""); //new code
     assertTrue(supervisoryNodesPage.isOneResultMessageDisplayed());
     //click the resultant
     //update code
     //click cancel
-    supervisoryNodesPage.enterSearchParameter(""); //new code
+    searchNode(""); //new code
     assertTrue(supervisoryNodesPage.isNoResultMessageDisplayed());
+  }
+
+  public void searchNode(String searchParameter) {
+    SupervisoryNodesPage supervisoryNodesPage = PageObjectFactory.getSupervisoryNodesPage(testWebDriver);
+    supervisoryNodesPage.enterSearchParameter(searchParameter);
+    supervisoryNodesPage.clickSearchIcon();
   }
 
   @AfterMethod(groups = {"admin"})

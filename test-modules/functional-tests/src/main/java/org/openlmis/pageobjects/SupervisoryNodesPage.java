@@ -68,6 +68,9 @@ public class SupervisoryNodesPage extends Page {
   @FindBy(how = ID, using = "closeButton")
   private static WebElement closeSearchResultsButton = null;
 
+  @FindBy(how = ID, using = "searchIcon")
+  private static WebElement searchIcon = null;
+
   public SupervisoryNodesPage(TestWebDriver driver) {
     super(driver);
     PageFactory.initElements(new AjaxElementLocatorFactory(TestWebDriver.getDriver(), 1), this);
@@ -128,7 +131,7 @@ public class SupervisoryNodesPage extends Page {
 
   public void enterSearchParameter(String searchParameter) {
     testWebDriver.waitForElementToAppear(searchSupervisoryNodeParameter);
-    searchSupervisoryNodeParameter.sendKeys(searchParameter);
+    sendKeys(searchSupervisoryNodeParameter, searchParameter);
   }
 
   public boolean isNoResultMessageDisplayed() {
@@ -227,5 +230,15 @@ public class SupervisoryNodesPage extends Page {
     WebElement parent = testWebDriver.getElementById("parent" + (rowNumber - 1));
     testWebDriver.waitForElementToAppear(parent);
     return parent.getText();
+  }
+
+  public void clickSearchIcon() {
+    testWebDriver.waitForElementToAppear(searchIcon);
+    searchIcon.click();
+  }
+
+  public boolean isSearchIconDisplayed() {
+    testWebDriver.waitForElementToAppear(searchIcon);
+    return searchIcon.isDisplayed();
   }
 }

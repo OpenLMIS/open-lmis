@@ -380,7 +380,8 @@ public class DBWrapper {
     update("delete from facility_ftp_details");
     update("delete from facilities");
     update("delete from geographic_zones where code not in ('Root','Arusha','Dodoma', 'Ngorongoro')");
-    update("delete from role_rights where rightname = 'MANAGE_GEOGRAPHIC_ZONE'");
+    update("delete from role_rights where rightName = 'MANAGE_GEOGRAPHIC_ZONE'");
+    update("delete from role_rights where rightName = 'MANAGE_SUPERVISORY_NODE'");
     update("delete from processing_periods");
     update("delete from processing_schedules");
     update("delete from atomfeed.event_records");

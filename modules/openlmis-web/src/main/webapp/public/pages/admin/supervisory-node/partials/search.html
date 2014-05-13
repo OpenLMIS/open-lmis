@@ -50,19 +50,19 @@
     <tr class="gradient-header resultCountHeader">
       <th colspan="5">
         <span ng-switch on="resultCount">
-          <h3 ng-switch-when="0" openlmis-message="msg.no.matches|query"></h3>
-          <h3 ng-switch-when="1" openlmis-message="msg.one.match|query"></h3>
-          <h3 ng-switch-default openlmis-message="msg.many.matches|resultCount|query"></h3>
+          <h3 id="noResultMessage" ng-switch-when="0" openlmis-message="msg.no.matches|query"></h3>
+          <h3 id="oneResultMessage" ng-switch-when="1" openlmis-message="msg.one.match|query"></h3>
+          <h3 id="nResultsMessage" ng-switch-default openlmis-message="msg.many.matches|resultCount|query"></h3>
         </span>
         <a id="closeButton" class="close-btn" href="" ng-click="clearSearch()" tabindex="-1"></a>
 
       </th>
     </tr>
     <tr class="gradient-header" ng-show="supervisoryNodeList.length">
-    <th openlmis-message="header.supervisory.node.name"></th>
-      <th openlmis-message="header.code"></th>
-      <th openlmis-message="label.facility"></th>
-      <th openlmis-message="header.parent"></th>
+      <th id="supervisoryNodeHeader" openlmis-message="header.supervisory.node.name"></th>
+      <th id="codeHeader" openlmis-message="header.code"></th>
+      <th id="facilityHeader" openlmis-message="label.facility"></th>
+      <th id="parentHeader" openlmis-message="header.parent"></th>
     </tr>
     </thead>
     <tbody>
