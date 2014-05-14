@@ -19,4 +19,4 @@ angular.module('rnr_feedback', ['openlmis', 'angularCombine', 'ngTable', 'ui.boo
     }
 ).config(function(angularCombineConfigProvider) {
     angularCombineConfigProvider.addConf(/filter-/, '/public/pages/reports/shared/filters.html');
-  });;
+  });
