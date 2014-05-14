@@ -113,3 +113,36 @@
         </div>
     </div>
 </script>
+
+<script type="text/ng-template" id="filter-program-by-regimen-template">
+    <div>
+        <label class="labels">Program <span ng-show="requiredFilters.program" class="label-required">*</span></label><div>
+        <select class="input-large" ng-model="filter.program" ng-change="filterChanged();">
+            <option ng-repeat="programByRegimen in programs" value="{{ programByRegimen.id }}" ng-selected="filter.program == programByRegimen.id">{{programByRegimen.name}}</option>
+        </select>
+    </div>
+    </div>
+</script>
+
+<script type="text/ng-template" id="filter-regimen-category-template">
+    <div>
+        <label class="labels">Regimen Category <span ng-show="requiredFilters.regimenCategory" class="label-required">*</span></label><div>
+        <select class="input-large" ng-model="filter.regimenCategory" ng-change="filterChanged();">
+            <option  ng-repeat="option in regimenCategories" value="{{ option.id }}" ng-selected="option.id == filter.regimenCategory">{{ option.name }}</option>
+
+        </select>
+    </div>
+    </div>
+</script>
+
+<script type="text/ng-template" id="filter-regimen-template">
+    <div>
+        <label class="labels">Regimen <span ng-show="requiredFilters.regimen" class="label-required">*</span></label><div>
+        <select class="input-large" ng-model="filter.regimen" ng-change="filterChanged();">
+            <option ng-repeat="regimen in regimens" value="{{ regimen.id }}" ng-selected="filter.regimen == regimen.id">{{regimen.name}}</option>
+        </select>
+    </div>
+    </div>
+</script>
+
+

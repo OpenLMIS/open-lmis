@@ -442,7 +442,6 @@ app.directive('productFilter', ['ReportProductsByProgram','$routeParams',
 
     };
 
-
     return {
       restrict: 'E',
       link: function (scope, elm, attr) {
@@ -472,6 +471,96 @@ app.directive('productFilter', ['ReportProductsByProgram','$routeParams',
     };
 
 }]);
+
+
+app.directive('programByRegimenFilter',['ReportRegimenPrograms', function(ReportRegimenPrograms){
+
+    return {
+        restrict: 'E',
+        require: '^filterContainer',
+        link: function (scope, elm, attr) {
+
+            ReportRegimenPrograms.get(function (data) {
+                scope.programs = data.regimenPrograms;
+                scope.programs.unshift({'name': '--Select a Program --',id:-1});
+            });
+
+            if (attr.required) {
+                scope.requiredFilters.program = 'program';
+            }
+        },
+        templateUrl: 'filter-program-by-regimen-template'
+    };
+
+}]);
+
+app.directive('regimenCategoryFilter',['ReportRegimenCategories', function(ReportRegimenCategories){
+
+    return {
+        restrict: 'E',
+        require: '^filterContainer',
+        link: function (scope, elm, attr) {
+
+            ReportRegimenCategories.get(function (data) {
+                scope.regimenCategories = data.regimenCategories;
+                scope.regimenCategories.unshift({'name': '--All Regimen Categories --'});
+            });
+
+            if (attr.required) {
+                scope.requiredFilters.regimenCategory = 'regimenCategory';
+            }
+        },
+        templateUrl: 'filter-regimen-category-template'
+    };
+}]);
+
+app.directive('regimenFilter', ['ReportRegimensByCategory','$routeParams',
+    function (ReportRegimensByCategory, $routeParams) {
+
+        var onPgCascadedVarsChanged = function ($scope, newValue) {
+
+            if (isUndefined($scope.filter) || isUndefined($scope.filter.regimenCategory) || $scope.filter.regimenCategory === 0)
+                return;
+
+            var regimenCategory = (angular.isDefined($scope.filter) && angular.isDefined($scope.filter.regimenCategory)) ? $scope.filter.regimenCategory : 0;
+            ReportRegimensByCategory.get({
+                regimenCategoryId: regimenCategory
+            }, function (data) {
+                $scope.regimens = data.regimens;
+                $scope.regimens.unshift({
+                    'name': '-- All Regimens --'
+
+                });
+            });
+
+        };
+
+
+        return {
+            restrict: 'E',
+            link: function (scope, elm, attr) {
+
+                scope.regimens = [];
+                scope.regimens.push({
+                    'name': '-- All Regimens --'
+
+                });
+                scope.filter.regimen = (isUndefined($routeParams.regimen) || $routeParams.regimen === '')? -1: $routeParams.regimen;
+
+                if (attr.required) {
+                    scope.requiredFilters.regimen = 'regimen';
+                }
+                scope.$watch('filter.regimenCategory', function (value) {
+                    onPgCascadedVarsChanged(scope, value);
+                });
+            },
+            templateUrl: 'filter-regimen-template'
+        };
+
+    }]);
+
+
+
 
 
 app.directive('clientSideSortPagination', ['$filter', 'ngTableParams',
