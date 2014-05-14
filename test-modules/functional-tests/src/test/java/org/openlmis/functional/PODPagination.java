@@ -94,7 +94,7 @@ public class PODPagination extends TestCaseHelper {
     navigateToNextPage();
     verifyPageNumberSelected(3);
     verifyNextAndLastPageLinksDisabled();
-    verifyPreviousAndFirstPageLinksDisabled();
+    verifyPreviousAndFirstPageLinksEnabled();
     verifyNumberOfLineItemsVisibleOnPage(2);
     verifyProductDisplayOrderOnPage(new String[]{"NF8", "NF9"});
     verifyCategoryDisplayOrderOnPage(new String[]{"C1", ""});
@@ -108,13 +108,13 @@ public class PODPagination extends TestCaseHelper {
     navigateToLastPage();
     verifyPageNumberSelected(3);
     verifyNextAndLastPageLinksDisabled();
-    verifyPreviousAndFirstPageLinksDisabled();
+    verifyPreviousAndFirstPageLinksEnabled();
     verifyNumberOfLineItemsVisibleOnPage(2);
 
     navigateToPreviousPage();
     verifyPageNumberSelected(2);
     verifyNextAndLastPageLinksEnabled();
-    verifyPreviousAndFirstPageLinksDisabled();
+    verifyPreviousAndFirstPageLinksEnabled();
     verifyNumberOfLineItemsVisibleOnPage(10);
   }
 
@@ -269,7 +269,7 @@ public class PODPagination extends TestCaseHelper {
     navigateToLastPage();
     verifyPageNumberSelected(3);
     verifyNextAndLastPageLinksDisabled();
-    verifyPreviousAndFirstPageLinksDisabled();
+    verifyPreviousAndFirstPageLinksEnabled();
     verifyNumberOfLineItemsVisibleOnPage(2);
     verifyProductDisplayOrderOnPage(new String[]{"ZX", "ZX1"});
     assertEquals(updatePodPage.getReplacedProductCode(1), "");
@@ -524,6 +524,7 @@ public class PODPagination extends TestCaseHelper {
     updatePodPage.clickSubmitButton();
     updatePodPage.clickOkButton();
     assertTrue(updatePodPage.isPodSuccessMessageDisplayed());
+    testWebDriver.sleep(500);
 
     assertFalse(updatePodPage.isQuantityReceivedEnabled(1));
     assertFalse(updatePodPage.isNotesEnabled(1));
