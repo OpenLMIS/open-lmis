@@ -7,25 +7,20 @@
  *
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
+package org.openlmis.report.mapper.lookup;
 
-package org.openlmis.report.model.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
+import org.openlmis.report.model.dto.RnRStatusSummaryReport;
+import org.springframework.stereotype.Repository;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-public class GeographicZone {
+import java.util.List;
 
-    private Integer id;
-    private String name;
-    private String parent;
-    private Integer parentId;
-    private String code;
-    private Long catchmentPopulation;
-    private Double latitude;
-    private Double longitude;
+@Repository
+public interface RnRStatusSummaryReportMapper {
+    @Select("select totalStatus,status from vw_rnr_status_by_facility where requisitiongroupid = #{requisitionGroupId}")
+    public List<RnRStatusSummaryReport> getRnRStatusSummaryData(@Param("requisitionGroupId") Long requisitionGroupId);
+
 
 }

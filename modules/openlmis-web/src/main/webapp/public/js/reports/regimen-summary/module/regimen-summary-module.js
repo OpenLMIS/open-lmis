@@ -8,11 +8,13 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-angular.module('regimen_summary', ['openlmis', 'ngTable', 'ui.bootstrap.modal', 'ui.bootstrap.dropdownToggle'])
+angular.module('regimen_summary', ['openlmis', 'ngTable', 'angularCombine','ui.bootstrap.modal', 'ui.bootstrap.dropdownToggle'])
     .config(['$routeProvider', function ($routeProvider) {
         $routeProvider.
             when('/list', {controller:RegimenSummaryControllers, templateUrl:'partials/list.html',reloadOnSearch:false}).
             otherwise({redirectTo:'/list'});
     }]).run(function ($rootScope, AuthorizationService) {
         AuthorizationService.preAuthorize('VIEW_REGIMEN_SUMMARY_REPORT');
+    }).config(function (angularCombineConfigProvider) {
+        angularCombineConfigProvider.addConf(/filter-/, '/public/pages/reports/shared/filters.html');
     });

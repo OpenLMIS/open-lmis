@@ -250,10 +250,13 @@ FacilityController.resolve = {
     var deferred = $q.defer();
     var facilityId = $route.current.params.facilityId;
     $timeout(function(){
-
-       FacilityImages.get({facilityId: facilityId }, function (data){
-           deferred.resolve(data);
-       });
+        if(!isUndefined(facilityId)){
+            FacilityImages.get({facilityId: facilityId }, function (data){
+                deferred.resolve(data);
+            });
+        }else{
+            deferred.resolve([]);
+        }
     }, 100);
     return deferred.promise;
   },

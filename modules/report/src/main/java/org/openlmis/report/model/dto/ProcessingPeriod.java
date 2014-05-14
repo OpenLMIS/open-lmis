@@ -25,4 +25,5 @@ public class ProcessingPeriod {
     private String description;
     private Date startdate;
     private Date enddate;
+    private Integer scheduleId;
 }

@@ -18,142 +18,63 @@
                         </div>
                     </div>
 
-            <div class="box-content"  >
-                <div class="app-form" style="padding: 5px;">
+            <div>
+              <div class="row-fluid">
+                <div class="sidebar">
+                  <div class="app-form" style="padding: 5px;">
                         <form ng-submit="filterGrid()"  name="filterForm" novalidate>
-                            <div >
-                                <div class="form-cell horizontalFilters" >
-                                    <label class="labels">Program <span class="label-required">*</span></label>
+                            <div filter-container >
+                              <program-filter class="form-cell horizontalFilters" required="true"></program-filter>
+                              <schedule-filter class="form-cell horizontalFilters" required="true"></schedule-filter>
+                              <year-filter class="form-cell horizontalFilters" required="true"></year-filter>
+                              <period-filter class="form-cell horizontalFilters" required="true"></period-filter>
 
-                                    <div class="form-fields">
-                                        <select ui-select2 style="width:200px;" class="large-input" name="program"  ng-model="stockImbalance.programId">
-                                            <option ng-repeat="option in programs" value="{{option.id}}">{{option.name}}</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="form-cell horizontalFilters" >
-                                    <label class="labels">Schedule <span class="label-required">*</span></label>
-
-                                    <div class="form-fields">
-                                        <select ui-select2 style="width:200px;" class="large-input" name="schedule"  ng-change="ChangeSchedule()" ng-model="stockImbalance.scheduleId">
-                                            <option  ng-repeat="option in schedules" value="{{ option.id }}">{{ option.name }}</option>
-                                        </select>
-                                    </div>
-                                </div>
-
-                                <div class="form-cell horizontalFilters">
-                                    <label class="labels">Year <span class="label-required"></span></label>
-
-                                    <div class="form-field">
-                                        <select ui-select2 style="width:200px;" class="input-small" ng-required="true"  name="year" id="startYear" ng-model="stockImbalance.year">
-                                              <option ng-repeat="year in startYears" value="{{year}}">{{year}}</option>
-                                        </select>
-
-                                    </div>
-                                </div>
-
-                                <div class="form-cell horizontalFilters">
-                                    <label class="labels">Period <span class="label-required">*</span></label>
-
-                                    <div class="form-field">
-                                        <select ui-select2 style="width:200px;" class="input-large" ng-required="true"  name="period" ng-model="stockImbalance.periodId">
-                                              <option ng-repeat="option in periods" value="{{option.id}}">{{option.name}}</option>
-                                        </select>
-                                    </div>
-                                </div>
-
-                                <div class="clearfix"></div>
-                                <br />
-                                <div class="form-cell horizontalFilters" >
-                                    <label class="labels">Product Categories</label>
-
-                                    <div class="form-field">
-                                        <select ui-select2 style="width:200px;" name="productCategoryElement"   ng-model="stockImbalance.productCategoryId">
-                                            <option ng-repeat="option in productCategories" value="{{option.id}}">{{option.name}}</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="form-cell horizontalFilters" >
-                                    <label class="labels">Product</label>
-
-                                    <div class="form-field">
-                                        <select ui-select2 style="width:200px;" name="product"  ng-model="stockImbalance.productId" >
-                                            <option  ng-repeat="option in products" value="{{ option.id }}">{{ option.name }}</option>
-                                         </select>
-                                    </div>
-                                </div>
-
-                                <div class="form-cell horizontalFilters" >
-                                    <label class="labels">Facility Type</label>
-
-                                    <div class="form-field">
-                                        <select ui-select2 style="width:200px;" name="facilityTypeElement"   ng-model="stockImbalance.facilityTypeId">
-                                            <option ng-repeat="option in facilityTypes" value="{{option.id}}">{{option.name}}</option>
-                                        </select>
-                                    </div>
-                                </div>
-
-                                <div class="form-cell horizontalFilters" >
-                                    <label class="labels">Requisition Groups</label>
-
-                                    <div class="form-fields">
-                                        <select ui-select2 style="width:200px;" name="requisitionGroup"  ng-model="stockImbalance.rgroupId">
-                                            <option ng-repeat="option in requisitionGroups" value="{{option.id}}">{{option.name}}</option>
-                                        </select>
-                                    </div>
-                                </div>
-
-                                <div class="form-cell horizontalFilters">
-
-                                    <label class="labels">Facility Name</label>
-
-                                    <div class="form-field">
-                                        <select ui-select2 style="width:200px;" id="facility-name"  name="facility" ng-model="stockImbalance.facilityId" ng-change="filterGrid();" required="true">
-                                            <option  ng-repeat="option in allFacilities" value="{{ option.id }}">{{ option.code }} - {{ option.name }}</option>
-                                        </select>
-                                    </div>
-
-                                </div>
-                                <div class="clearfix"></div>
-
+                              <requisition-group-filter class="form-cell horizontalFilters"></requisition-group-filter>
+                              <facility-type-filter class="form-cell horizontalFilters" ></facility-type-filter>
+                              <facility-filter class="form-cell horizontalFilters"></facility-filter>
+                              <product-category-filter class="form-cell horizontalFilters" ></product-category-filter>
+                              <product-filter class="form-cell horizontalFilters"></product-filter>
                             </div>
                          </form>
+                    <div class="clearfix"></div>
                 </div>
-
             </div>
-
-                <table class="table table-bordered" ng-show="data == undefined || data.length == 0">
-                    <tr>
-                        <td>No data to show under selected filters</td>
-                    </tr>
-                </table>
-
-                <div ng-show="datarows.length > 0">
-                    <div class="pull-right legend" >Page: {{tableParams.page}}, Showing records {{ ((tableParams.page - 1) * tableParams.count) + 1 }} to {{ (tableParams.page ) * tableParams.count }} of {{tableParams.total}}
-                        <br />
+            <div class="content-body">
+              <table client-side-sort-pagination class="table table-bordered" ng-show="data == undefined || data.length == 0">
+                <tr>
+                  <td>No data to show under selected filters</td>
+                </tr>
+              </table>
+              <div ng-show="datarows.length > 0">
+                <div class="pull-right legend" >Page: {{tableParams.page}}, Showing records {{ ((tableParams.page - 1) * tableParams.count) + 1 }} to {{ (tableParams.page ) * tableParams.count }} of {{tableParams.total}}
+                  <br />
                         <span ng-repeat="summary in summaries">
                              <span class="report-label">{{summary.name}}</span> : <span class="report-data">{{summary.count}}</span>
                          </span>
-                    </div>
-                    <table ng-show="datarows.length > 0" class="table-bordered table table-striped" ng-table="tableParams">
-
-                        <tbody>
-                        <tr ng-repeat="row in datarows">
-                            <td data-title="'#'" class="number" style="width:20px" >{{ row.no }}</td>
-                            <td data-title="'Facility Name'" style="width:150px" sortable="facility" >{{ row.facility }}</td>
-                            <td data-title="'Product'" style="width:30%" sortable="product"  >{{ row.product }}</td>
-                            <td data-title="'AMC'" class="number" style="width:80px" sortable="amc"  >{{ row.amc | number }}</td>
-                            <td data-title="'Closing Balance'" class="number" style="width:80px" sortable="physicalCount"  >{{ row.physicalCount | number }}</td>
-                            <td data-title="'MOS'" class="number" style="width:80px" sortable="months"  >{{ row.months | number }}</td>
-                            <td data-title="'Order Quantity'" class="number" style="width:80px" sortable="orderQuantity"  >{{ row.orderQuantity | number }}</td>
-                            <td data-title="'Status'" ng-class="{ red:'Stocked Out'}"  style="width:120px" sortable="status"> <div class="{{(row.status == 'Stocked Out')?'red':(row.status=='Below Minimum')?'green':(row.status=='Over Stocked')?'blue':'yellow'}}">
-                                <span ng-show="row.amc == 0" class="icon-warning-sign" tooltip="AMC is 0, which indicates that there may not be enough data to interprate this status."></span>
-                                {{ row.status }}
-                            </div></td>
-                        </tr>
-                        </tbody>
-                    </table>
                 </div>
-   </div>
+                <table ng-show="datarows.length > 0" class="table-bordered table table-striped" ng-table="tableParams">
 
-  </div>
+                  <tbody>
+                  <tr ng-repeat="row in datarows">
+                    <td data-title="'#'" class="number" style="width:20px" >{{ row.no }}</td>
+                    <td data-title="'Facility Name'" style="width:150px" sortable="facility" >{{ row.facility }}</td>
+                    <td data-title="'Product'" style="width:30%" sortable="product"  >{{ row.product }}</td>
+                    <td data-title="'AMC'" class="number" style="width:80px" sortable="amc"  >{{ row.amc | number }}</td>
+                    <td data-title="'Closing Balance'" class="number" style="width:80px" sortable="physicalCount"  >{{ row.physicalCount | number }}</td>
+                    <td data-title="'MOS'" class="number" style="width:80px" sortable="months"  >{{ row.months | number }}</td>
+                    <td data-title="'Order Quantity'" class="number" style="width:80px" sortable="orderQuantity"  >{{ row.orderQuantity | number }}</td>
+                    <td data-title="'Status'" ng-class="{ red:'Stocked Out'}"  style="width:120px" sortable="status"> <div class="{{(row.status == 'Stocked Out')?'red':(row.status=='Below Minimum')?'green':(row.status=='Over Stocked')?'blue':'yellow'}}">
+                      <span ng-show="row.amc == 0" class="icon-warning-sign" tooltip="AMC is 0, which indicates that there may not be enough data to interprate this status."></span>
+                      {{ row.status }}
+                    </div></td>
+                  </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+
+   </div>
+</div>
+</div>
+</div>

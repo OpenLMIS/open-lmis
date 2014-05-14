@@ -8,7 +8,7 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-angular.module('rnr_feedback', ['openlmis', 'ngTable', 'ui.bootstrap.modal', 'ui.bootstrap.dropdownToggle'])
+angular.module('rnr_feedback', ['openlmis', 'angularCombine', 'ngTable', 'ui.bootstrap.modal', 'ui.bootstrap.dropdownToggle'])
     .config(['$routeProvider', function ($routeProvider) {
         $routeProvider.
             when('/list', {controller:RnRFeedbackController, templateUrl:'partials/list.html',reloadOnSearch:false}).
@@ -17,4 +17,6 @@ angular.module('rnr_feedback', ['openlmis', 'ngTable', 'ui.bootstrap.modal', 'ui
     function ($rootScope, AuthorizationService) {
         AuthorizationService.preAuthorize('VIEW_RNR_FEEDBACK_REPORT');
     }
-);
+).config(function(angularCombineConfigProvider) {
+    angularCombineConfigProvider.addConf(/filter-/, '/public/pages/reports/shared/filters.html');
+  });

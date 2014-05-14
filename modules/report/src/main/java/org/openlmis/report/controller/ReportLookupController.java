@@ -80,6 +80,11 @@ public class ReportLookupController extends BaseController {
       return OpenLmisResponse.response( "facilityTypes", this.reportLookupService.getFacilityTypes() ) ;
   }
 
+  @RequestMapping(value="/facilityTypesForProgram", method = GET, headers = BaseController.ACCEPT_JSON)
+  public ResponseEntity<OpenLmisResponse> getFacilityTypesForProgram(@RequestParam("program") Long programId){
+    return OpenLmisResponse.response( "facilityTypes", this.reportLookupService.getFacilityTypesForProgram(programId)) ;
+  }
+
   @RequestMapping(value="/regimenCategories", method = GET, headers = BaseController.ACCEPT_JSON)
   public ResponseEntity<OpenLmisResponse> getAllRegimenCategory(){
       return OpenLmisResponse.response( "regimenCategories", this.reportLookupService.getAllRegimenCategory() ) ;
