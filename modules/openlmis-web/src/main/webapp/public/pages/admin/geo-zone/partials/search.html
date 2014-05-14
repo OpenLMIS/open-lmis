@@ -44,7 +44,7 @@
   </div>
 
   <div>
-    <table class="table table-striped table-bordered search-list" ng-show="showResults">
+    <table name="searchResultTable" class="table table-striped table-bordered search-list" ng-show="showResults">
       <thead>
       <tr class="gradient-header resultCountHeader">
         <th colspan="5">
@@ -68,9 +68,9 @@
         <td id="name">
           <a href="" ng-click="editGeoZone(geoZone.id)" ng-bind="geoZone.name"></a>
         </td>
-        <td id="code" ng-bind="geoZone.code"></td>
-        <td id="levelName" ng-bind="geoZone.level.name"></td>
-        <td id="parentName" ng-bind="geoZone.parent.name"></td>
+        <td id="code{{$index}}" ng-bind="geoZone.code"></td>
+        <td id="levelName{{$index}}" ng-bind="geoZone.level.name"></td>
+        <td id="parentName{{$index}}" ng-bind="geoZone.parent.name"></td>
       </tr>
       </tbody>
     </table>

@@ -2,11 +2,7 @@ package org.openlmis.functional;
 
 import org.openlmis.UiUtils.CaptureScreenshotOnFailureListener;
 import org.openlmis.UiUtils.TestCaseHelper;
-import org.openlmis.pageobjects.HomePage;
-import org.openlmis.pageobjects.LoginPage;
-import org.openlmis.pageobjects.ManageGeographicZonesPage;
-import org.openlmis.pageobjects.PageObjectFactory;
-import org.openqa.selenium.By;
+import org.openlmis.pageobjects.*;
 import org.openqa.selenium.WebElement;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
@@ -16,11 +12,14 @@ import org.testng.annotations.Test;
 import java.io.IOException;
 import java.sql.SQLException;
 
+import static org.testng.AssertJUnit.assertEquals;
+
 @Listeners(CaptureScreenshotOnFailureListener.class)
 
 public class ManageGeographicZones extends TestCaseHelper {
 
   LoginPage loginPage;
+  WebElement secondPageLink;
 
   @BeforeMethod(groups = {"admin"})
   public void setUp() throws InterruptedException, SQLException, IOException {
@@ -37,8 +36,18 @@ public class ManageGeographicZones extends TestCaseHelper {
     homePage.verifyAdminTabs();
     manageGeographicZonesPage.goToGeoZoneTab();
     manageGeographicZonesPage.searchGeoZoneUsingGeoZoneName("Dis");
-    manageGeographicZonesPage.clickOnElement();
-    manageGeographicZonesPage.editFirstElement();
+    verifyLevelOrderOnPage(new String[] {"Country","Country","Country","State","State","State","State","Province","Province","Province"});
+    navigateToPage(2);
+    verifyPageNumberSelected(2);
+    verifyNextAndLastPageLinksDisabled();
+    manageGeographicZonesPage.verifyNumberOfItemsPerPage(3);
+    navigateToPage(1);
+    verifyPageNumberSelected(1);
+    verifyPreviousAndFirstPageLinksDisabled();
+    manageGeographicZonesPage.verifyNumberOfItemsPerPage(10);
+    manageGeographicZonesPage.clickOnFirstElement();
+    testWebDriver.waitForPageToLoad();
+    manageGeographicZonesPage.editAlreadyExistingGeoZone("Mozambique", "Mozambique", "20000", "99.99999", "99.99999");
     //manageGeographicZonesPage.clickOnSaveButton();
     manageGeographicZonesPage.clickOnCancelButton();
     //manageGeographicZonesPage.searchGeoZoneUsingGeoZoneName("Moz");
@@ -98,6 +107,14 @@ public class ManageGeographicZones extends TestCaseHelper {
     manageGeographicZonesPage.verifySearchResultTable();
     manageGeographicZonesPage.clickOnCrossButton();
   }
+
+  private void verifyLevelOrderOnPage(String[] levelName) {
+    ManageGeographicZonesPage manageGeographicZonesPage = PageObjectFactory.getManageGeographicZonesPage(testWebDriver);
+    for (int i = 1; i < levelName.length; i++) {
+      assertEquals(levelName[i - 1], manageGeographicZonesPage.getLevelName(i));
+    }
+  }
+
 
   @AfterMethod(groups = {"admin"})
   public void tearDown() throws SQLException {

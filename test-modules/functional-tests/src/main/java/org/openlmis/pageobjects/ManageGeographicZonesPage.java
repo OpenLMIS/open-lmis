@@ -7,10 +7,10 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
-import java.util.List;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
 import static org.openqa.selenium.support.How.*;
+import static org.testng.AssertJUnit.assertEquals;
 
 
 public class ManageGeographicZonesPage extends Page {
@@ -60,7 +60,7 @@ public class ManageGeographicZonesPage extends Page {
   @FindBy(how = ID, using = "saveSuccessMsgDiv")
   private static WebElement successMsgDiv = null;
 
-  @FindBy(how = XPATH, using = "//*[@id='wrap']/div/div/div/table/tbody/tr[1]/td[1]/a")
+  @FindBy(how = XPATH, using = "//*[@id='name']/a")
   private static WebElement firstElement = null;
 
   @FindBy(how = ID, using = "selectParentGeoZone")
@@ -68,6 +68,9 @@ public class ManageGeographicZonesPage extends Page {
 
   @FindBy(how = ID, using = "closeButton")
   private static WebElement closeButton = null;
+
+  @FindBy(how = ID, using = "searchIcon")
+  private static WebElement searchIcon = null;
 
   private String searchResultTable = "searchResultTable";
 
@@ -91,6 +94,7 @@ public class ManageGeographicZonesPage extends Page {
   public void searchGeoZoneUsingGeoZoneName(String geoZoneName) {
     testWebDriver.waitForElementToAppear(searchGeoZoneTextField);
     sendKeys(searchGeoZoneTextField, geoZoneName);
+    testWebDriver.click(searchIcon);
   }
 
   public void goToGeoZoneTab() {
@@ -119,6 +123,11 @@ public class ManageGeographicZonesPage extends Page {
   public void searchGeoZoneUsingGeoZoneParentName(String geoZoneParentName) {
     testWebDriver.waitForElementToAppear((searchGeoZoneTextField));
     sendKeys(searchGeoZoneTextField, geoZoneParentName);
+    testWebDriver.click(searchIcon);
+  }
+
+  public void verifyNumberOfItemsPerPage(int numberOfItemsPerPage){
+    assertEquals(numberOfItemsPerPage, testWebDriver.getElementsSizeByXpath("//*[@id='searchResult']"));
   }
 
   public void verifySuccessMessage() {
@@ -157,17 +166,22 @@ public class ManageGeographicZonesPage extends Page {
     testWebDriver.getElementById("name").click();
   }
 
-  public void clickOnElement() {
+  public void clickOnFirstElement() {
     testWebDriver.waitForElementToAppear(firstElement);
     firstElement.click();
   }
 
-  public void editFirstElement() {
-    testWebDriver.waitForElementToAppear(nameTextField);
-    sendKeys(nameTextField, "Mozambique");
-    sendKeys(codeTextField, "Mozambique");
-    sendKeys(catchmentPopulationTextField, "300");
-    sendKeys(latitudeTextField, "99.99999");
-    sendKeys(longitudeTextField, "8.99999");
+  public String getLevelName(int rowNumber) {
+    WebElement levelName = testWebDriver.getElementById("levelName" + (rowNumber - 1));
+    testWebDriver.waitForElementToAppear(levelName);
+    return levelName.getText();
+  }
+
+  public void editAlreadyExistingGeoZone(String name, String code, String catchmentPopulation, String latitude, String longitude) {
+    sendKeys(nameTextField, name);
+    sendKeys(codeTextField, code);
+    sendKeys(catchmentPopulationTextField, catchmentPopulation);
+    sendKeys(latitudeTextField, latitude);
+    sendKeys(longitudeTextField, longitude);
   }
 }
