@@ -120,8 +120,8 @@ public class ManageSupervisoryNodes extends TestCaseHelper {
     verifyNextAndLastPageLinksEnabled();
     verifyPreviousAndFirstPageLinksDisabled();
     verifyNumberOfLineItemsVisibleOnPage(10);
-    verifyParentNameOrderOnPage(new String[]{"Approval Point 10", "Approval Point 3", "Approval Point 3", "Approval Point 4", "Approval Point 4",
-      "Approval Point 5", "Approval Point 5", "Approval Point 5", "Approval Point 6", "Approval Point 7"});
+    verifyParentNameOrderOnPage(new String[]{"Approval Point 10", "Approval Point 3", "Approval Point 3", "approval Point 4", "approval Point 4",
+      "Approval Point 5", "Approval Point 5", "Approval Point 5", "Approval Point 6", "approval Point 7"});
     verifySupervisoryNodeNameOrderOnPage(new String[]{"Approval Point 13", "Approval Point 12", "Approval Point 21", "Approval Point 13",
       "Approval Point 5", "Approval Point 15", "Approval Point 20", "Approval Point 6", "Approval Point 8", "Approval Point 9"});
 
@@ -133,7 +133,7 @@ public class ManageSupervisoryNodes extends TestCaseHelper {
     verifyParentNameOrderOnPage(new String[]{"Approval Point 8", "Approval Point 8", "Approval Point 9", "Node1", "Node1", "Node1",
       "Node1", "Node1", "Node1", "Node3"});
     verifySupervisoryNodeNameOrderOnPage(new String[]{"Approval Point 11", "Approval Point 13", "Approval Point 13", "Approval Point 10",
-      "Approval Point 13", "Approval Point 3", "Approval Point 7", "Aproval Point 3", "Aproval Point 4", "Approval Point 13"});
+      "Approval Point 13", "Approval Point 3", "approval Point 7", "Aproval Point 3", "Aproval Point 4", "Approval Point 13"});
 
     navigateToNextPage();
     verifyPageNumberSelected(3);
@@ -148,8 +148,8 @@ public class ManageSupervisoryNodes extends TestCaseHelper {
     verifyNextAndLastPageLinksEnabled();
     verifyPreviousAndFirstPageLinksDisabled();
     verifyNumberOfLineItemsVisibleOnPage(10);
-    verifyParentNameOrderOnPage(new String[]{"Approval Point 10", "Approval Point 3", "Approval Point 3", "Approval Point 4", "Approval Point 4",
-      "Approval Point 5", "Approval Point 5", "Approval Point 5", "Approval Point 6", "Approval Point 7"});
+    verifyParentNameOrderOnPage(new String[]{"Approval Point 10", "Approval Point 3", "Approval Point 3", "approval Point 4", "approval Point 4",
+      "Approval Point 5", "Approval Point 5", "Approval Point 5", "Approval Point 6", "approval Point 7"});
     verifySupervisoryNodeNameOrderOnPage(new String[]{"Approval Point 13", "Approval Point 12", "Approval Point 21", "Approval Point 13",
       "Approval Point 5", "Approval Point 15", "Approval Point 20", "Approval Point 6", "Approval Point 8", "Approval Point 9"});
 
@@ -198,8 +198,8 @@ public class ManageSupervisoryNodes extends TestCaseHelper {
     verifyNextAndLastPageLinksEnabled();
     verifyPreviousAndFirstPageLinksDisabled();
     verifyNumberOfLineItemsVisibleOnPage(10);
-    verifyParentNameOrderOnPage(new String[]{"Approval Point 10", "Approval Point 3", "Approval Point 3", "Approval Point 3", "Approval Point 4",
-      "Approval Point 4", "Approval Point 5", "Approval Point 5", "Approval Point 5", "Approval Point 6"});
+    verifyParentNameOrderOnPage(new String[]{"Approval Point 10", "Approval Point 3", "Approval Point 3", "Approval Point 3", "approval Point 4",
+      "approval Point 4", "Approval Point 5", "Approval Point 5", "Approval Point 5", "Approval Point 6"});
     verifySupervisoryNodeNameOrderOnPage(new String[]{"Approval Point 13", "Approval Point 12", "Approval Point 21", "Node3", "Approval Point 13",
       "Approval Point 5", "Approval Point 15", "Approval Point 20", "Approval Point 6", "Approval Point 8"});
 
@@ -208,7 +208,7 @@ public class ManageSupervisoryNodes extends TestCaseHelper {
     verifyNextAndLastPageLinksDisabled();
     verifyPreviousAndFirstPageLinksEnabled();
     verifyNumberOfLineItemsVisibleOnPage(4);
-    verifyParentNameOrderOnPage(new String[]{"Approval Point 7", "Approval Point 8", "Approval Point 8", "Approval Point 9"});
+    verifyParentNameOrderOnPage(new String[]{"approval Point 7", "Approval Point 8", "Approval Point 8", "Approval Point 9"});
     verifySupervisoryNodeNameOrderOnPage(new String[]{"Approval Point 9", "Approval Point 11", "Approval Point 13", "Approval Point 13"});
 
     navigateToFirstPage();
@@ -216,8 +216,8 @@ public class ManageSupervisoryNodes extends TestCaseHelper {
     verifyNextAndLastPageLinksEnabled();
     verifyPreviousAndFirstPageLinksDisabled();
     verifyNumberOfLineItemsVisibleOnPage(10);
-    verifyParentNameOrderOnPage(new String[]{"Approval Point 10", "Approval Point 3", "Approval Point 3", "Approval Point 3", "Approval Point 4",
-      "Approval Point 4", "Approval Point 5", "Approval Point 5", "Approval Point 5", "Approval Point 6"});
+    verifyParentNameOrderOnPage(new String[]{"Approval Point 10", "Approval Point 3", "Approval Point 3", "Approval Point 3", "approval Point 4",
+      "approval Point 4", "Approval Point 5", "Approval Point 5", "Approval Point 5", "Approval Point 6"});
     verifySupervisoryNodeNameOrderOnPage(new String[]{"Approval Point 13", "Approval Point 12", "Approval Point 21", "Node3", "Approval Point 13",
       "Approval Point 5", "Approval Point 15", "Approval Point 20", "Approval Point 6", "Approval Point 8"});
 
@@ -353,17 +353,17 @@ public class ManageSupervisoryNodes extends TestCaseHelper {
     testWebDriver.waitForAjax();
   }
 
-  private void verifySupervisoryNodeNameOrderOnPage(String[] productCodes) {
+  private void verifySupervisoryNodeNameOrderOnPage(String[] nodeNames) {
     SupervisoryNodesPage supervisoryNodesPage = PageObjectFactory.getSupervisoryNodesPage(testWebDriver);
-    for (int i = 1; i < productCodes.length; i++) {
-      assertEquals(productCodes[i - 1], supervisoryNodesPage.getSupervisoryNodeName(i));
+    for (int i = 1; i < nodeNames.length; i++) {
+      assertEquals(nodeNames[i - 1], supervisoryNodesPage.getSupervisoryNodeName(i));
     }
   }
 
-  private void verifyParentNameOrderOnPage(String[] categoryCodes) {
+  private void verifyParentNameOrderOnPage(String[] parentNames) {
     SupervisoryNodesPage supervisoryNodesPage = PageObjectFactory.getSupervisoryNodesPage(testWebDriver);
-    for (int i = 1; i < categoryCodes.length; i++) {
-      assertEquals(categoryCodes[i - 1], supervisoryNodesPage.getParent(i));
+    for (int i = 1; i < parentNames.length; i++) {
+      assertEquals(parentNames[i - 1], supervisoryNodesPage.getParent(i));
     }
   }
 

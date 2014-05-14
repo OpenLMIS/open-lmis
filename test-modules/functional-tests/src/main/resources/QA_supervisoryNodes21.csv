@@ -1,9 +1,9 @@
 Supervisory Node Code,Name of Node,Description,Parent Node,Facility Code
 N2,Approval Point 3,Approval Point 3,N1,F10
-N4,Approval Point 4,Approval Point 3,N3,F10
+N4,approval Point 4,Approval Point 3,N3,F10
 N5,Approval Point 5,Approval Point 3,N4,F10
 N6,Approval Point 6,Approval Point 3,N5,F10
-N7,Approval Point 7,Approval Point 3,N1,F10
+N7,approval Point 7,Approval Point 3,N1,F10
 N8,Approval Point 8,Approval Point 3,N6,F10
 N9,Approval Point 9,Approval Point 3,N7,F10
 N10,Approval Point 10,Approval Point 3,N1,F10
