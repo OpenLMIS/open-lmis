@@ -25,7 +25,7 @@ public interface FacilityTypeReportMapper {
           "   FROM " +
           "       facility_types where id in " +
           " (select typeid from facilities where facilities.id in " +
-          "     (select facilityid from programs_supported and active = true)" +
+          "     (select facilityid from programs_supported)" +
           " ) " +
           " order by name")
   List<FacilityType> getAll();

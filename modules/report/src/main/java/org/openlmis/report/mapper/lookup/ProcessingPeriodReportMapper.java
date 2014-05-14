@@ -21,7 +21,7 @@ import java.util.List;
 @Repository
 public interface ProcessingPeriodReportMapper {
 
-    @Select("SELECT id, name, startdate, enddate, description  " +
+    @Select("SELECT id, name, startdate, enddate, description , scheduleid  " +
             "   FROM " +
             "       processing_periods")
     List<ProcessingPeriod> getAll();

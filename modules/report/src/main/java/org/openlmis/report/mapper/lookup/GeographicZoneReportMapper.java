@@ -23,7 +23,7 @@ import java.util.List;
 @Repository
 public interface GeographicZoneReportMapper {
 
-  @Select("SELECT g.id, g.code , g.name, p.name as parent" +
+  @Select("SELECT g.* , p.id as parentId" +
     "   FROM " +
     "       geographic_zones g left join geographic_zones p on g.parentId = p.id order by p.name, g.name")
   List<GeographicZone> getAll();

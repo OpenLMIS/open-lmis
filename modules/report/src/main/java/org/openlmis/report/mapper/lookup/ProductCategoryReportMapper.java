@@ -20,7 +20,7 @@ import java.util.List;
 @Repository
 public interface ProductCategoryReportMapper {
 
-  @Select("SELECT id, name, code " +
+  @Select("SELECT id, name, code , displayorder" +
           "   FROM " +
           "       product_categories order by name")
 

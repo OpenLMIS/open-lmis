@@ -2,6 +2,7 @@ package org.openlmis.report.service.lookup;
 
 import org.openlmis.report.mapper.AverageConsumptionReportMapper;
 import org.openlmis.report.mapper.lookup.DashboardMapper;
+import org.openlmis.report.mapper.lookup.RnRStatusSummaryReportMapper;
 import org.openlmis.report.model.dto.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,9 @@ public class DashboardLookupService {
     DashboardMapper dashboardMapper;
     @Autowired
     AverageConsumptionReportMapper avgMapper;
+
+    @Autowired
+    RnRStatusSummaryReportMapper rnRStatusSummaryReportMapper;
 
     private String  getCommaSeparatedIds(List<Long> idList){
 
@@ -96,5 +100,9 @@ public class DashboardLookupService {
 
     public String getPeriod(Long id){
         return dashboardMapper.getPeriod(id);
+    }
+
+    public List<RnRStatusSummaryReport>getRnRStatusSummary(Long requisionGroupId){
+        return rnRStatusSummaryReportMapper.getRnRStatusSummaryData(requisionGroupId);
     }
 }

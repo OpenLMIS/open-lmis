@@ -13,6 +13,9 @@ package org.openlmis.report.service.lookup;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.domain.GeographicLevel;
+import org.openlmis.core.repository.mapper.FacilityApprovedProductMapper;
+import org.openlmis.core.repository.mapper.ProcessingScheduleMapper;
+import org.openlmis.core.repository.mapper.ProgramProductMapper;
 import org.openlmis.core.service.ConfigurationSettingService;
 import org.openlmis.report.mapper.ReportRequisitionMapper;
 import org.openlmis.report.mapper.lookup.AdjustmentTypeReportMapper;
@@ -83,6 +86,9 @@ public class ReportLookupService {
   private ProcessingPeriodReportMapper processingPeriodMapper;
 
   @Autowired
+  private ProcessingScheduleMapper processingScheduleMapper;
+
+  @Autowired
   private ProductGroupReportMapper productGroupReportMapper;
 
   @Autowired
@@ -96,6 +102,12 @@ public class ReportLookupService {
 
   @Autowired
   private SupervisoryNodeReportMapper supervisoryNodeReportMapper;
+
+  @Autowired
+  private ProgramProductMapper programProductMapper;
+
+    @Autowired
+    private FacilityApprovedProductMapper facilityApprovedProductMapper;
 
   public List<Product> getAllProducts() {
     return productMapper.getAll();
@@ -302,6 +314,11 @@ public class ReportLookupService {
     return processingPeriodMapper.getAll();
   }
 
+    public List<ProcessingSchedule> getAllProcessingSchedules() {
+        return processingScheduleMapper.getAll();
+    }
+
+
   public List<ProcessingPeriod> getFilteredPeriods(Date startDate, Date endDate) {
     if (startDate == null && endDate == null) {
       return processingPeriodMapper.getAll();
@@ -355,6 +372,14 @@ public class ReportLookupService {
   public List<SupervisoryNode> getAllSupervisoryNodesByParentNodeId(Long supervisoryNodeId){
       return supervisoryNodeReportMapper.getAllSupervisoryNodesByParentNodeId(supervisoryNodeId);
   }
+
+    public List<ProgramProduct> getAllProgramProducts(){
+        return programProductMapper.getAllProgramProducts();
+    }
+
+    public List<FacilityTypeApprovedProduct> getAllFacilityTypeApprovedProducts(){
+        return facilityApprovedProductMapper.getAllFacilityApprovedProducts();
+    }
 
   public List<UserRoleAssignmentsReport> getAllRolesBySupervisoryNodeHavingProgram(Long roleId,Long programId,Long supervisoryNodeId){
       return userSummaryExReportMapper.getUserRoleAssignments(roleId,programId,supervisoryNodeId);

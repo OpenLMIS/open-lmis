@@ -17,15 +17,11 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class GeographicZone {
+public class RnRStatusSummaryReport {
 
-    private Integer id;
-    private String name;
-    private String parent;
-    private Integer parentId;
-    private String code;
-    private Long catchmentPopulation;
-    private Double latitude;
-    private Double longitude;
-
+    private String status;
+    private Long requisitionGroupId;
+    private Integer totalStatus;
+    private Integer programId;
+    private String program;
 }
