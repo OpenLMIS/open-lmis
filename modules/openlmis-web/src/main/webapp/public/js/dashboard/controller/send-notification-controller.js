@@ -28,7 +28,7 @@ function SendNotificationController($scope,$timeout,programsList,SendNotificatio
     UserSupervisoryNodes.get(function (data){
         $scope.supervisoryNodes = data.supervisoryNodes;
         if(!isUndefined( $scope.supervisoryNodes)){
-            $scope.supervisoryNodes.unshift({'name': formInputValue.supervisoryNodeOptionAll});
+            $scope.supervisoryNodes.unshift({'name': formInputValue.supervisoryNodeOptionSelect});
         }
     });
 

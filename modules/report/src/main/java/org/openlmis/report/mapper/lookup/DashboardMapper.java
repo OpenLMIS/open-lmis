@@ -95,7 +95,7 @@ public interface DashboardMapper {
             "INNER JOIN vw_user_supervisorynodes sn ON sn.id = s.supervisorynodeid\n" +
             "WHERE sn.userid = #{userId}\n" +
             "AND s.programid = #{programId}\n"+
-            "AND CASE WHEN COALESCE(#{supervisoryNodeId},0) = 0 THEN sn.id = sn.id ELSE (sn.id = #{supervisoryNodeId} OR sn.parentId = #{supervisoryNodeId}) END\n")
+            "AND (sn.id = #{supervisoryNodeId} OR sn.parentId = #{supervisoryNodeId}) \n")
 
     List<AlertSummary> getAlerts(@Param("userId") Long userId, @Param("supervisoryNodeId") Long supervisoryNodeId, @Param("programId")Long programId);
 

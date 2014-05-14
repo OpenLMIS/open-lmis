@@ -35,7 +35,7 @@ function StockController($scope, $routeParams,dashboardFiltersHistoryService, pr
     UserSupervisoryNodes.get(function (data){
         $scope.supervisoryNodes = data.supervisoryNodes;
         if(!isUndefined( $scope.supervisoryNodes)){
-            $scope.supervisoryNodes.unshift({'name': formInputValue.supervisoryNodeOptionAll});
+            $scope.supervisoryNodes.unshift({'name': formInputValue.supervisoryNodeOptionSelect});
         }
 
     });
