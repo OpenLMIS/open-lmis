@@ -173,9 +173,17 @@ public class ForgotPassword extends TestCaseHelper {
   @AfterMethod(groups = "admin")
   public void tearDown() throws SQLException {
     testWebDriver.sleep(500);
-    if (!testWebDriver.getElementById("username").isDisplayed()) {
-      HomePage homePage = PageObjectFactory.getHomePage(testWebDriver);
-      homePage.logout(baseUrlGlobal);
+    try {
+      if (testWebDriver.getElementById("username").isDisplayed()) {
+        HomePage homePage = PageObjectFactory.getHomePage(testWebDriver);
+        homePage.logout(baseUrlGlobal);
+        dbWrapper.deleteData();
+        dbWrapper.closeConnection();
+      } else {
+        dbWrapper.deleteData();
+        dbWrapper.closeConnection();
+      }
+    } catch (Exception e) {
       dbWrapper.deleteData();
       dbWrapper.closeConnection();
     }
