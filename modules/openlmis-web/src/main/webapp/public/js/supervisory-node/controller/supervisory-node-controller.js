@@ -11,24 +11,50 @@
 function SupervisoryNodeController($scope, supervisoryNode, ParentSupervisoryNodes) {
   $scope.supervisoryNode = supervisoryNode;
 
+  var reset = function () {
+    $scope.query = undefined;
+    $scope.resultCount = undefined;
+    $scope.filteredFacilities = undefined;
+    $scope.previousQuery = undefined;
+  };
+
+  var compareQuery = function () {
+    if (!isUndefined($scope.previousQuery)) {
+      return $scope.query.substr(0, 3) !== $scope.previousQuery.substr(0, 3);
+    }
+    return true;
+  };
+
   $scope.showParentNodeSearchResults = function () {
-    $scope.query.trim();
     if ($scope.query === undefined || $scope.query.length < 3) return;
-    ParentSupervisoryNodes.get({"searchParam": $scope.query}, function (data) {
-      $scope.filteredNodes = _.reject(data.supervisoryNodeList, function (node) {
-        return $scope.supervisoryNode === undefined ? false : node.code == $scope.supervisoryNode.code;
+
+    $scope.query = $scope.query.trim();
+    if (compareQuery()) {
+      ParentSupervisoryNodes.get({"searchParam": $scope.query}, function (data) {
+        $scope.parentNodes = _.reject(data.supervisoryNodeList, function (node) {
+          return $scope.supervisoryNode === undefined ? false : node.code == $scope.supervisoryNode.code;
+        });
+        $scope.filteredNodes = $scope.parentNodes;
+        $scope.previousQuery = $scope.query;
+        $scope.resultCount = $scope.filteredNodes.length;
+      });
+    }
+    else {
+      $scope.filteredNodes = _.filter($scope.parentNodes, function (node) {
+        return node.name.toLowerCase().indexOf($scope.query.toLowerCase()) !== -1;
       });
       $scope.resultCount = $scope.filteredNodes.length;
-    });
+    }
   };
 
-  $scope.setSelectedParentNode = function(node) {
+  $scope.setSelectedParentNode = function (node) {
     $scope.parentNodeSelected = node;
-    $scope.query = undefined;
+    reset();
   };
 
-  $scope.confirmParentNodeDelete = function(){
+  $scope.deleteParentNode = function () {
     $scope.parentNodeSelected = undefined;
+    angular.element("#searchParentNode").focus();
   };
 }
 

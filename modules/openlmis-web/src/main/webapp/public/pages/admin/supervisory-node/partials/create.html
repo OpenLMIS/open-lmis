@@ -80,7 +80,7 @@
                 </div>
                 <div ng-show="parentNodeSelected">
                   <span ng-bind="parentNodeSelected.name"></span>
-                  <a href="" class="clear-search" ng-click="confirmParentNodeDelete()"></a>
+                  <a href="" class="clear-search" ng-click="deleteParentNode()"></a>
                 </div>
               </div>
               <div class="form-tip" openlmis-message="search.threeCharacters"></div>
@@ -103,8 +103,6 @@
           </div>
 
         </div>
-
-        <!-- /form-group -->
 
       </div>
       <div form-toolbar id="action_buttons" class="action-buttons">
