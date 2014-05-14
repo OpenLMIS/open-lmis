@@ -104,7 +104,7 @@ public class ManageSupervisoryNodes extends TestCaseHelper {
     assertEquals("Node2", supervisoryNodesPage.getParent(1));
 
     UploadPage uploadPage = homePage.navigateUploads();
-    uploadPage.uploadSupervisoryNodes("QA_SupervisoryNodes21.csv");
+    uploadPage.uploadSupervisoryNodes("QA_supervisoryNodes21.csv");
     uploadPage.verifySuccessMessageOnUploadScreen();
 
     homePage.navigateToSupervisoryNodes();
@@ -178,7 +178,7 @@ public class ManageSupervisoryNodes extends TestCaseHelper {
 
     HomePage homePage = loginPage.loginAs(testData.get(ADMIN), testData.get(PASSWORD));
     UploadPage uploadPage = homePage.navigateUploads();
-    uploadPage.uploadSupervisoryNodes("QA_SupervisoryNodes21.csv");
+    uploadPage.uploadSupervisoryNodes("QA_supervisoryNodes21.csv");
     uploadPage.verifySuccessMessageOnUploadScreen();
 
     SupervisoryNodesPage supervisoryNodesPage = homePage.navigateToSupervisoryNodes();
