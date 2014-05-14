@@ -20,6 +20,7 @@ var dashboard = angular.module('dashboard',['openlmis', 'ui.calendar', 'ui.boots
         when('/stock-out-detail/:programId/:periodId/:rgroupId/:productId', {controller: StockedOutDetailController, templateUrl: 'partials/stocked-out-detail.html', resolve : ResolveDashboardFormData }).
         when('/notifications/:alertId/:detailTable', {controller: NotificationsDetailController, templateUrl: 'partials/notifications-detail.html', resolve : ResolveDashboardFormData }).
         when('/notifications', {controller: SendNotificationController, templateUrl: 'partials/send-notifications.html', resolve : ResolveDashboardFormData }).
+        when('/rnr-status-summary', {controller: RequisitionStatusSummaryController, templateUrl: 'partials/rnr-status-summary.html', resolve : ResolveDashboardFormData }).
         otherwise({redirectTo: '/dashboard'});
 }]);
 
