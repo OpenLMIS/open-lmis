@@ -16,7 +16,6 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -72,7 +71,7 @@ public class ManageSupervisoryNodes extends TestCaseHelper {
   }
 
   @Test(groups = {"admin"})
-  public void testSupervisoryNodeSearchSortAndPagination() throws SQLException, FileNotFoundException {
+  public void testSupervisoryNodeSearchSortAndPagination() throws SQLException {
     dbWrapper.assignRight("Admin", "MANAGE_SUPERVISORY_NODE");
     dbWrapper.insertSupervisoryNode("F10", "N1", "Node1", null);
     dbWrapper.insertSupervisoryNode("F11", "N2", "Node2", null);
@@ -170,7 +169,7 @@ public class ManageSupervisoryNodes extends TestCaseHelper {
   }
 
   @Test(groups = {"admin"})
-  public void testSupervisoryNodeParentSearchSortAndPagination() throws SQLException, FileNotFoundException {
+  public void testSupervisoryNodeParentSearchSortAndPagination() throws SQLException {
     dbWrapper.assignRight("Admin", "MANAGE_SUPERVISORY_NODE");
     dbWrapper.insertSupervisoryNode("F10", "N1", "Node1", null);
     dbWrapper.insertSupervisoryNode("F11", "N2", "Node2", null);
