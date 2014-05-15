@@ -19,53 +19,54 @@ import java.util.Map;
 
 public class RegimenSummaryQueryBuilder {
 
-    public static String getQuery(Map params){
+    public static String getData(Map params){
 
     RegimenSummaryReportParam filter  = (RegimenSummaryReportParam)params.get("filterCriteria");
 
-       String sql ="\n" +
-               "   WITH temp as ( select rgroup, district,regimen,\n" +
-               "   SUM(patientsontreatment) patientsontreatment,\n" +
-               "   SUM(patientstoinitiatetreatment) patientstoinitiatetreatment,\n" +
-               "   SUM(patientsstoppedtreatment) patientsstoppedtreatment\n" +
-               "   from vw_regimen_summary\n" +
-              writePredicates(filter)+
-               "   group by district, regimen,rgroup\n" +
-               "   order by district,regimen,rgroup ) \n" +
-               "   select  t.district district,t.rgroup rgroup, t.regimen,\n" +
-               "   t.patientsontreatment patientsontreatment,\n" +
-               "   t.patientstoinitiatetreatment patientsToInitiateTreatment,\n" +
-               "   t.patientsstoppedtreatment patientsstoppedtreatment,\n" +
-               "   COALESCE( case when temp2.total2 > 0 THEN round(((t.patientstoinitiatetreatment*100)/temp2.total2),1) ELSE temp2.total2 END ) totalpatientsToInitiateTreatmentPercentage,\n" +
-               "   COALESCE( case when temp2.total3 > 0 THEN round(((t.patientsstoppedtreatment*100)/temp2.total3),1) ELSE temp2.total3 END ) stoppedTreatmentPercentage \n" +
-               "   from temp t\n" +
-               "   INNER JOIN (select  rgroup,SUM(patientsontreatment) total,SUM(patientstoinitiatetreatment) total2,SUM(patientsstoppedtreatment) total3 from \n" +
-               "   temp GROUP BY rgroup) temp2 ON t.rgroup= temp2.rgroup\n ";
+       String sql ="WITH temp as ( select regimen,rgroupid,\n" +
+               "                SUM(patientsontreatment) patientsontreatment,\n" +
+               "                  SUM(patientstoinitiatetreatment) patientstoinitiatetreatment,\n" +
+               "                 SUM(patientsstoppedtreatment) patientsstoppedtreatment\n" +
+               "                  from vw_regimen_summary_t\n" +
+                               // writePredicates(filter)+
+               "                  group by regimen,rgroupid\n" +
+               "                 order by regimen,rgroupid ) \n" +
+               "                 select t.rgroupid, t.regimen,\n" +
+               "                t.patientsontreatment patientsontreatment,\n" +
+               "                t.patientstoinitiatetreatment patientsToInitiateTreatment,\n" +
+               "                 t.patientsstoppedtreatment patientsstoppedtreatment,\n" +
+               "                 COALESCE( case when temp2.total2 > 0 THEN round(((t.patientstoinitiatetreatment*100)/temp2.total2),1) ELSE temp2.total2 END ) totalpatientsToInitiateTreatmentPercentage,\n" +
+               "               COALESCE( case when temp2.total3 > 0 THEN round(((t.patientsstoppedtreatment*100)/temp2.total3),1) ELSE temp2.total3 END ) stoppedTreatmentPercentage \n" +
+               "               from temp t\n" +
+               "               INNER JOIN (select  rgroupid,SUM(patientsontreatment) total,SUM(patientstoinitiatetreatment) total2,SUM(patientsstoppedtreatment) total3 from \n" +
+               "                temp GROUP BY rgroupid) temp2 ON t.rgroupid= temp2.rgroupid\n" +
+               "  ";
         return sql;
     }
+
 
    private static String writePredicates(RegimenSummaryReportParam filter){
         String predicate="";
        predicate = " WHERE status in ('APPROVED','RELEASED') ";
      if(filter != null){
-            if(filter.getRegimenCategoryId() != 0  ){
+       if(filter.getRegimenCategoryId() != 0){
                 predicate = predicate.isEmpty() ?" where " : predicate + " and ";
                 predicate = predicate + " categoryid = #{filterCriteria.regimenCategoryId}";
             }
-            if(filter.getRgroupId() != 0){
+       /*if(filter.getRgroupId() != 0){
                 predicate = predicate.isEmpty() ?" where " : predicate + " and ";
                 predicate = predicate + " rgroupid = #{filterCriteria.rgroupId}";
             }
-            if(filter.getPeriodId() != 0 ){
+            if(filter.getPeriodId() != 0){
                 predicate = predicate.isEmpty() ?" where " : predicate + " and ";
                 predicate = predicate + " periodid= #{filterCriteria.periodId}";
             }
-            if(filter.getScheduleId() != 0 ){
+            if(filter.getScheduleId() != 0){
                 predicate = predicate.isEmpty() ?" where " : predicate + " and ";
                 predicate = predicate + " scheduleid= #{filterCriteria.scheduleId}";
             }
 
-            if(filter.getProgramId() != 0 ){
+            if(filter.getProgramId() != 0){
                 predicate = predicate.isEmpty() ?" where " : predicate +  " and ";
                 predicate = predicate + " programid = #{filterCriteria.programId}";
             }
@@ -73,6 +74,27 @@ public class RegimenSummaryQueryBuilder {
                  predicate = predicate.isEmpty() ?" where " : predicate + " and ";
                  predicate = predicate + " regimenid = #{filterCriteria.regimenId}";
              }
+
+
+
+         if (filter.getRgroupId() != 0 ) {
+             predicate = predicate.isEmpty() ?" where " : predicate + " and ";
+             predicate = predicate + " rgroupid = #{filterCriteria.rgroupId}";
+         }
+
+         if(filter.getPeriodId() != 0 ){
+             predicate = predicate.isEmpty() ?" where " : predicate + " and ";
+             predicate = predicate + " periodid= #{filterCriteria.periodId}";
+         }
+       if(filter.getScheduleId() != 0 ){
+             predicate = predicate.isEmpty() ?" where " : predicate + " and ";
+             predicate = predicate + " scheduleid= #{filterCriteria.scheduleId}";
+         } */
+
+         /*if(filter.getRegimenId() != 0 ){
+             predicate = predicate.isEmpty() ?" where " : predicate +  " and ";
+             predicate = predicate + " regimenid = #{filterCriteria.regimenId}";
+         }*/
 
      }
 

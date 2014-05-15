@@ -14,6 +14,7 @@ import org.apache.ibatis.session.RowBounds;
 import org.openlmis.report.builder.RegimenSummaryQueryBuilder;
 import org.openlmis.report.model.ReportData;
 import org.openlmis.report.model.ReportParameter;
+import org.openlmis.report.model.params.RegimenSummaryReportParam;
 import org.openlmis.report.model.report.RegimenSummaryReport;
 import org.springframework.stereotype.Repository;
 
@@ -23,6 +24,13 @@ import java.util.Map;
 @Repository
 public interface RegimenSummaryReportMapper {
 
+    @SelectProvider(type=RegimenSummaryQueryBuilder.class, method="getData")
+    @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize=10,timeout=0,useCache=true,flushCache=true)
+    public List<RegimenSummaryReport> getReport(@Param("filterCriteria") ReportParameter filterCriteria,
+                                                 @Param("SortCriteria") Map<String, String[]> SortCriteria,
+                                                 @Param("RowBounds") RowBounds rowBounds);
+
+/*
     @SelectProvider(type=RegimenSummaryQueryBuilder.class, method="getQuery")
     @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize=10,timeout=0,useCache=true,flushCache=true)
     public List<RegimenSummaryReport> getReport(@Param("filterCriteria") ReportParameter filterCriteria,
@@ -32,5 +40,13 @@ public interface RegimenSummaryReportMapper {
     @SelectProvider(type=RegimenSummaryQueryBuilder.class, method="getQuery")
     @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize=10,timeout=0,useCache=true,flushCache=true)
     public List<RegimenSummaryReport> getReport(Map params);
+
+    @SelectProvider(type=RegimenSummaryQueryBuilder.class, method="getData")
+    @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize=10,timeout=0,useCache=true,flushCache=true)
+    public List<RegimenSummaryReport> getFilteredSortedPagedRegimenSummaryReport(
+            @Param("filterCriteria") RegimenSummaryReportParam filterCriteria,
+            @Param("SortCriteria") Map<String, String[]> SortCriteria ,
+            @Param("RowBounds")RowBounds rowBounds
+    );*/
 
 }

@@ -25,7 +25,7 @@ function RegimenSummaryControllers($scope,$window,RegimenSummaryReport) {
             if (data.pages !== undefined && data.pages.rows !== undefined) {
                 $scope.data = data.pages.rows;
                // alert(JSON.stringify($scope.data));
-               $scope.paramsChanged($scope.tableParams);
+              $scope.paramsChanged($scope.tableParams);
             }
         });
     };
