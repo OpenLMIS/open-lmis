@@ -19,7 +19,6 @@ import static org.testng.AssertJUnit.assertEquals;
 public class ManageGeographicZones extends TestCaseHelper {
 
   LoginPage loginPage;
-  WebElement secondPageLink;
 
   @BeforeMethod(groups = {"admin"})
   public void setUp() throws InterruptedException, SQLException, IOException {
@@ -48,13 +47,14 @@ public class ManageGeographicZones extends TestCaseHelper {
     manageGeographicZonesPage.clickOnFirstElement();
     testWebDriver.waitForPageToLoad();
     manageGeographicZonesPage.editAlreadyExistingGeoZone("Mozambique", "Mozambique", "20000", "99.99999", "99.99999");
-    //manageGeographicZonesPage.clickOnSaveButton();
-    manageGeographicZonesPage.clickOnCancelButton();
-    //manageGeographicZonesPage.searchGeoZoneUsingGeoZoneName("Moz");
+    manageGeographicZonesPage.clickOnSaveButton();
+    manageGeographicZonesPage.searchGeoZoneUsingGeoZoneName("Moz");
+    assertEquals("Mozambique",manageGeographicZonesPage.getGeoZoneName());
+    verifyPageNumberSelected(1);
   }
 
   @Test(groups = {"admin"})
-  public void testAddingNewGeoZone() throws SQLException {
+  public void testSearchAfterAddingNewGeoZone() throws SQLException {
     dbWrapper.assignRight("Admin", "MANAGE_GEOGRAPHIC_ZONE");
     HomePage homePage = loginPage.loginAs("Admin123", "Admin123");
     ManageGeographicZonesPage manageGeographicZonesPage = homePage.navigateManageGeographicZonesPage();
@@ -62,6 +62,15 @@ public class ManageGeographicZones extends TestCaseHelper {
     manageGeographicZonesPage.goToGeoZoneTab();
     manageGeographicZonesPage.addNewGeoZone("Dummy", "Dummy", "900", "99.99999", "99.99999", "Province", "District13");
     manageGeographicZonesPage.clickOnSaveButton();
+    manageGeographicZonesPage.verifySuccessMessage();
+    manageGeographicZonesPage.clickOnViewHereLink();
+    manageGeographicZonesPage.clickOnCancelButton();
+    manageGeographicZonesPage.searchGeoZoneUsingGeoZoneName("Dummy");
+    manageGeographicZonesPage.verifySearchResultTable();
+    manageGeographicZonesPage.verifySearchResultBody();
+    assertEquals("Dummy", manageGeographicZonesPage.getGeoZoneName());
+    manageGeographicZonesPage.verifyNumberOfItemsPerPage(1);
+    verifyPageNumberSelected(1);
   }
 
   @Test(groups = {"admin"})
@@ -76,8 +85,7 @@ public class ManageGeographicZones extends TestCaseHelper {
     manageGeographicZonesPage.searchGeoZoneUsingGeoZoneParentName("Arusha");
     manageGeographicZonesPage.verifySearchResultTable();
     manageGeographicZonesPage.verifySearchResultBody();
-    manageGeographicZonesPage.verifySearchResult("Arusha");
-    manageGeographicZonesPage.verifySearchResult("9 matches found for 'dis'");
+    assertEquals("Arusha", manageGeographicZonesPage.getGeoZoneParentName());
   }
 
   @Test(groups = {"admin"})

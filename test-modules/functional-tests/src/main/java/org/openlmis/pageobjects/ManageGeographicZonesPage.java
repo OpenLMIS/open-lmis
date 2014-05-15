@@ -132,7 +132,7 @@ public class ManageGeographicZonesPage extends Page {
 
   public void verifySuccessMessage() {
     testWebDriver.waitForElementToAppear(successMsgDiv);
-    assertTrue("Save success message should show up", successMsgDiv.isDisplayed());
+    assertTrue(successMsgDiv.isDisplayed());
   }
 
   public void clickOnSaveButton() {
@@ -161,14 +161,22 @@ public class ManageGeographicZonesPage extends Page {
     testWebDriver.getElementById(geoZoneList);
   }
 
-  public void verifySearchResult(String result){
-    testWebDriver.getElementById("searchResult");
-    testWebDriver.getElementById("name").click();
-  }
 
   public void clickOnFirstElement() {
     testWebDriver.waitForElementToAppear(firstElement);
     firstElement.click();
+  }
+
+  public String getGeoZoneName(){
+    WebElement geoZoneName =  testWebDriver.getElementById("name");
+    testWebDriver.waitForElementToAppear(geoZoneName);
+    return geoZoneName.getText();
+  }
+
+  public String getGeoZoneParentName(){
+    WebElement parentName =  testWebDriver.getElementById("parentName");
+    testWebDriver.waitForElementToAppear(parentName);
+    return parentName.getText();
   }
 
   public String getLevelName(int rowNumber) {
@@ -183,5 +191,10 @@ public class ManageGeographicZonesPage extends Page {
     sendKeys(catchmentPopulationTextField, catchmentPopulation);
     sendKeys(latitudeTextField, latitude);
     sendKeys(longitudeTextField, longitude);
+  }
+
+  public void clickOnViewHereLink()
+  {
+    testWebDriver.getElementById("viewHere").click();
   }
 }
