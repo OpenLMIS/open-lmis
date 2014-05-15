@@ -168,7 +168,7 @@ public class ManageGeographicZonesPage extends Page {
   }
 
   public String getGeoZoneName(){
-    WebElement geoZoneName =  testWebDriver.getElementById("name");
+    WebElement geoZoneName =  testWebDriver.getElementById("geoZoneName");
     testWebDriver.waitForElementToAppear(geoZoneName);
     return geoZoneName.getText();
   }
