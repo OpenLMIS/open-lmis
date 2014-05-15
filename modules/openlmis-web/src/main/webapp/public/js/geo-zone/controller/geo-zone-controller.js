@@ -51,6 +51,9 @@ function GeoZoneController($scope, geoLevels, geoZone, GeographicZonesAboveLevel
       return;
     }
 
+    if (!$scope.parentLevels || $scope.parentLevels.length === 0) {
+      $scope.geoZone.parent = undefined;
+    }
     if ($scope.geoZone.id) {
       GeographicZones.update({id: $scope.geoZone.id}, $scope.geoZone, success, error);
     }

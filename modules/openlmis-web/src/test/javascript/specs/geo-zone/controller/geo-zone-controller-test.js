@@ -44,6 +44,13 @@ describe("Geographic Zone Controller", function () {
     expect(scope.geoZone).toEqual(geoZone);
   });
 
+  it('should set geoZone parent as null if geo zone is at highest level', function () {
+    scope.parentLevels = [];
+    scope.geoZoneForm = {"$error": {"pattern": false, "required": false}};
+    scope.save()
+    expect(scope.geoZone.parent).toEqual(undefined);
+  });
+
   it('should load parent if geo zone is present', function () {
     expect(scope.editMode).toBeTruthy();
     expect(scope.parentGeoZones).toEqual(response.geographicZoneList);
