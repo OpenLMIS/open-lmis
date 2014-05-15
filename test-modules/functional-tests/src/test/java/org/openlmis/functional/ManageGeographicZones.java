@@ -50,7 +50,6 @@ public class ManageGeographicZones extends TestCaseHelper {
     manageGeographicZonesPage.clickOnSaveButton();
     manageGeographicZonesPage.searchGeoZoneUsingGeoZoneName("Moz");
     assertEquals("Mozambique",manageGeographicZonesPage.getGeoZoneName());
-    verifyPageNumberSelected(1);
   }
 
   @Test(groups = {"admin"})
@@ -85,7 +84,7 @@ public class ManageGeographicZones extends TestCaseHelper {
     manageGeographicZonesPage.searchGeoZoneUsingGeoZoneParentName("Arusha");
     manageGeographicZonesPage.verifySearchResultTable();
     manageGeographicZonesPage.verifySearchResultBody();
-    assertEquals("Arusha", manageGeographicZonesPage.getGeoZoneParentName());
+    verifyParentName(new String[] {"Arusha"});
   }
 
   @Test(groups = {"admin"})
@@ -120,6 +119,13 @@ public class ManageGeographicZones extends TestCaseHelper {
     ManageGeographicZonesPage manageGeographicZonesPage = PageObjectFactory.getManageGeographicZonesPage(testWebDriver);
     for (int i = 1; i < levelName.length; i++) {
       assertEquals(levelName[i - 1], manageGeographicZonesPage.getLevelName(i));
+    }
+  }
+
+  private void verifyParentName(String[] parentName) {
+    ManageGeographicZonesPage manageGeographicZonesPage = PageObjectFactory.getManageGeographicZonesPage(testWebDriver);
+    for (int i = 1; i < parentName.length; i++) {
+      assertEquals(parentName[i - 1], manageGeographicZonesPage.getParentName(i));
     }
   }
 

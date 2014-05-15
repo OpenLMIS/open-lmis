@@ -173,16 +173,16 @@ public class ManageGeographicZonesPage extends Page {
     return geoZoneName.getText();
   }
 
-  public String getGeoZoneParentName(){
-    WebElement parentName =  testWebDriver.getElementById("parentName");
-    testWebDriver.waitForElementToAppear(parentName);
-    return parentName.getText();
-  }
-
   public String getLevelName(int rowNumber) {
     WebElement levelName = testWebDriver.getElementById("levelName" + (rowNumber - 1));
     testWebDriver.waitForElementToAppear(levelName);
     return levelName.getText();
+  }
+
+  public String getParentName(int rowNumber) {
+    WebElement parentName = testWebDriver.getElementById("parentName" + (rowNumber - 1));
+    testWebDriver.waitForElementToAppear(parentName);
+    return parentName.getText();
   }
 
   public void editAlreadyExistingGeoZone(String name, String code, String catchmentPopulation, String latitude, String longitude) {
