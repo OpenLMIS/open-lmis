@@ -29,7 +29,7 @@ public interface RequisitionGroupMapper {
 
   @Insert("INSERT INTO requisition_groups" +
     "(code, name, description, supervisoryNodeId, createdBy, modifiedBy, modifiedDate) " +
-    "values (#{code}, #{name}, #{description}, #{supervisoryNode.id}, #{createdBy}, #{modifiedBy}, #{modifiedDate}) ")
+    "VALUES (#{code}, #{name}, #{description}, #{supervisoryNode.id}, #{createdBy}, #{modifiedBy}, #{modifiedDate}) ")
   @Options(useGeneratedKeys = true)
   Integer insert(RequisitionGroup requisitionGroup);
 
@@ -65,7 +65,7 @@ public interface RequisitionGroupMapper {
     "WHERE id = #{id}")
   void update(RequisitionGroup requisitionGroup);
 
-  @Select({"SELECT RG.code AS requisitionGroupCode, RG.name AS requisitionGroupName, SN.name AS supervisoryNodeName,",
+  @Select({"SELECT RG.id AS requisitionGroupId, RG.code AS requisitionGroupCode, RG.name AS requisitionGroupName, SN.name AS supervisoryNodeName,",
     "(SELECT COUNT(*) FROM requisition_group_members RGM INNER JOIN facilities F ON F.id = RGM.facilityId",
     "WHERE RG.id = RGM.requisitionGroupId AND F.enabled = true GROUP BY requisitionGroupId) AS memberCount",
     "FROM requisition_groups RG LEFT JOIN supervisory_nodes SN ON SN.id = RG.supervisoryNodeId",
@@ -73,13 +73,14 @@ public interface RequisitionGroupMapper {
     "ORDER BY LOWER(SN.name), LOWER(RG.Name) NULLS LAST LIMIT #{pagination.pageSize} OFFSET #{pagination.offset}"})
   @Results(value = {
     @Result(property = "supervisoryNode.name", column = "supervisoryNodeName"),
+    @Result(property = "id", column = "requisitionGroupId"),
     @Result(property = "name", column = "requisitionGroupName"),
     @Result(property = "code", column = "requisitionGroupCode"),
     @Result(property = "memberCount", column = "memberCount")
   })
   List<RequisitionGroup> searchByGroupName(@Param(value = "searchParam") String searchParam, @Param(value = "pagination") Pagination pagination);
 
-  @Select({"SELECT RG.code AS requisitionGroupCode, RG.name AS requisitionGroupName, SN.name AS supervisoryNodeName,",
+  @Select({"SELECT RG.id AS requisitionGroupId, RG.code AS requisitionGroupCode, RG.name AS requisitionGroupName, SN.name AS supervisoryNodeName,",
     "(SELECT COUNT(*) FROM requisition_group_members RGM INNER JOIN facilities F ON F.id = RGM.facilityId",
     "WHERE RG.id = RGM.requisitionGroupId AND F.enabled = true GROUP BY requisitionGroupId) AS memberCount",
     "FROM requisition_groups RG INNER JOIN supervisory_nodes SN ON SN.id = RG.supervisoryNodeId",
@@ -87,6 +88,7 @@ public interface RequisitionGroupMapper {
     "ORDER BY LOWER(SN.name), LOWER(RG.Name) LIMIT #{pagination.pageSize} OFFSET #{pagination.offset}"})
   @Results(value = {
     @Result(property = "supervisoryNode.name", column = "supervisoryNodeName"),
+    @Result(property = "id", column = "requisitionGroupId"),
     @Result(property = "name", column = "requisitionGroupName"),
     @Result(property = "code", column = "requisitionGroupCode"),
     @Result(property = "memberCount", column = "memberCount")

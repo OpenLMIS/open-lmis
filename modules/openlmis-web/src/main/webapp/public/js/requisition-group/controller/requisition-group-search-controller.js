@@ -27,7 +27,7 @@ function RequisitionGroupSearchController($scope, RequisitionGroups, $location, 
     $scope.query = navigateBackService.query;
   });
 
-  $scope.editRequisitionGroup = function (id) {
+  $scope.edit = function (id) {
     var data = {query: $scope.query, selectedSearchOption: $scope.selectedSearchOption};
     navigateBackService.setData(data);
     $location.path('edit/' + id);

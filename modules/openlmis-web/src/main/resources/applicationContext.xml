@@ -127,7 +127,7 @@
                 </entry>
                 <entry key="supervisoryNode">
                     <bean class="org.openlmis.web.model.UploadBean">
-                        <property name="displayName" value="label.supervisory.node"/>
+                        <property name="displayName" value="label.supervisory.nodes"/>
                         <property name="importableClass">
                             <value type="java.lang.Class">org.openlmis.core.domain.SupervisoryNode</value>
                         </property>

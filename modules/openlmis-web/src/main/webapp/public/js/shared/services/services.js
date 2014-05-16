@@ -331,5 +331,5 @@ services.factory('ParentSupervisoryNodes', function ($resource) {
 });
 
 services.factory('RequisitionGroups', function ($resource) {
-  return $resource('/requisitionGroups.json', {}, {});
+  return $resource('/requisitionGroups/:id.json', {id: '@id'}, update);
 });
