@@ -36,4 +36,8 @@ public class CustomReportFilter {
   private Long geographicZoneId;
 
   private Long requisitionGroupId;
+
+  private Long regimenId;
+
+  private Long regimenCategoryId;
 }
