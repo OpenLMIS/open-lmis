@@ -49,6 +49,8 @@ public class ManageGeographicZones extends TestCaseHelper {
     manageGeographicZonesPage.editAlreadyExistingGeoZone("Mozambique", "Mozambique", "20000", "99.99999", "99.99999");
     manageGeographicZonesPage.clickOnSaveButton();
     manageGeographicZonesPage.searchGeoZoneUsingGeoZoneName("Moz");
+    manageGeographicZonesPage.verifySearchResultTable();
+    manageGeographicZonesPage.verifySearchResultBody();
     assertEquals("Mozambique",manageGeographicZonesPage.getGeoZoneName());
   }
 
