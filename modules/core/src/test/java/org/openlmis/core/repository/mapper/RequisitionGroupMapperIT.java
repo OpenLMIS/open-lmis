@@ -25,10 +25,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static com.natpryce.makeiteasy.MakeItEasy.a;
-import static com.natpryce.makeiteasy.MakeItEasy.make;
+import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 import static org.openlmis.core.builder.FacilityBuilder.defaultFacility;
 import static org.openlmis.core.builder.ProgramBuilder.defaultProgram;
@@ -41,6 +41,7 @@ import static org.openlmis.core.builder.SupervisoryNodeBuilder.defaultSupervisor
 @Transactional
 @TransactionConfiguration(defaultRollback = true, transactionManager = "openLmisTransactionManager")
 public class RequisitionGroupMapperIT {
+
   @Autowired
   RequisitionGroupMapper requisitionGroupMapper;
 
@@ -58,12 +59,12 @@ public class RequisitionGroupMapperIT {
 
   @Autowired
   RequisitionGroupMemberMapper requisitionGroupMemberMapper;
+
   @Autowired
   private ProcessingScheduleMapper processingScheduleMapper;
 
   private RequisitionGroup requisitionGroup;
   private SupervisoryNode supervisoryNode;
-
   private Facility facility;
 
   @Before
@@ -149,6 +150,130 @@ public class RequisitionGroupMapperIT {
     requisitionGroup.setSupervisoryNode(supervisoryNode);
     requisitionGroupMapper.insert(requisitionGroup);
     assertThat(requisitionGroupMapper.getByCode(requisitionGroup.getCode()), is(requisitionGroup));
+  }
+
+  @Test
+  public void shouldGetRequisitionGroupsBasedOnNameSearchWithMemberCountSortedByGroupName() {
+    requisitionGroup.setSupervisoryNode(supervisoryNode);
+    requisitionGroupMapper.insert(requisitionGroup);
+
+    RequisitionGroup requisitionGroup1 = make(a(defaultRequisitionGroup, with(code, "RG2"), with(name, "RG Second")));
+    requisitionGroup1.setSupervisoryNode(supervisoryNode);
+    requisitionGroupMapper.insert(requisitionGroup1);
+
+    RequisitionGroupMember requisitionGroupMember = new RequisitionGroupMember();
+    requisitionGroupMember.setFacility(facility);
+    requisitionGroupMember.setRequisitionGroup(requisitionGroup);
+    requisitionGroupMemberMapper.insert(requisitionGroupMember);
+
+    List<RequisitionGroup> requisitionGroups = requisitionGroupMapper.searchByGroupName("Rg", new Pagination(1, 10));
+
+    assertThat(requisitionGroups.size(), is(2));
+    assertThat(requisitionGroups.get(0).getMemberCount(), is(1));
+    assertThat(requisitionGroups.get(0).getCode(), is("RG1"));
+    assertThat(requisitionGroups.get(1).getCode(), is("RG2"));
+    assertNull(requisitionGroups.get(1).getMemberCount());
+  }
+
+  @Test
+  public void shouldGetRequisitionGroupsBasedOnNameSearchWithMemberCountSortedByNodeName() {
+    requisitionGroupMapper.insert(requisitionGroup);
+
+    RequisitionGroup requisitionGroup1 = make(a(defaultRequisitionGroup, with(code, "RG2"), with(name, "RG NAME")));
+    requisitionGroup1.setSupervisoryNode(supervisoryNode);
+    requisitionGroupMapper.insert(requisitionGroup1);
+
+    RequisitionGroupMember requisitionGroupMember = new RequisitionGroupMember();
+    requisitionGroupMember.setFacility(facility);
+    requisitionGroupMember.setRequisitionGroup(requisitionGroup);
+    requisitionGroupMemberMapper.insert(requisitionGroupMember);
+
+    List<RequisitionGroup> requisitionGroups = requisitionGroupMapper.searchByGroupName("Rg", new Pagination(1, 10));
+
+    assertThat(requisitionGroups.size(), is(2));
+    assertThat(requisitionGroups.get(1).getCode(), is("RG1"));
+    assertThat(requisitionGroups.get(1).getMemberCount(), is(1));
+    assertThat(requisitionGroups.get(0).getCode(), is("RG2"));
+    assertNull(requisitionGroups.get(0).getMemberCount());
+  }
+
+  @Test
+  public void shouldGetRequisitionGroupsBasedOnNodeNameSearchWithMemberCountSortedByGroupName() {
+    requisitionGroup.setSupervisoryNode(supervisoryNode);
+    requisitionGroupMapper.insert(requisitionGroup);
+
+    RequisitionGroup requisitionGroup1 = make(a(defaultRequisitionGroup, with(code, "RG2"), with(name, "RG Second")));
+    requisitionGroup1.setSupervisoryNode(supervisoryNode);
+    requisitionGroupMapper.insert(requisitionGroup1);
+
+    RequisitionGroupMember requisitionGroupMember = new RequisitionGroupMember();
+    requisitionGroupMember.setFacility(facility);
+    requisitionGroupMember.setRequisitionGroup(requisitionGroup);
+    requisitionGroupMemberMapper.insert(requisitionGroupMember);
+
+    List<RequisitionGroup> requisitionGroups = requisitionGroupMapper.searchByNodeName("Ap", new Pagination(1, 10));
+
+    assertThat(requisitionGroups.size(), is(2));
+    assertThat(requisitionGroups.get(0).getMemberCount(), is(1));
+    assertThat(requisitionGroups.get(0).getCode(), is("RG1"));
+    assertThat(requisitionGroups.get(1).getCode(), is("RG2"));
+    assertNull(requisitionGroups.get(1).getMemberCount());
+  }
+
+  @Test
+  public void shouldGetRequisitionGroupsBasedOnNodeNameSearchWithMemberCountSortedByNodeName() {
+    requisitionGroupMapper.insert(requisitionGroup);
+
+    RequisitionGroup requisitionGroup1 = make(a(defaultRequisitionGroup, with(code, "RG2"), with(name, "RG NAME")));
+    requisitionGroup1.setSupervisoryNode(supervisoryNode);
+    requisitionGroupMapper.insert(requisitionGroup1);
+
+    RequisitionGroupMember requisitionGroupMember = new RequisitionGroupMember();
+    requisitionGroupMember.setFacility(facility);
+    requisitionGroupMember.setRequisitionGroup(requisitionGroup);
+    requisitionGroupMemberMapper.insert(requisitionGroupMember);
+
+    List<RequisitionGroup> requisitionGroups = requisitionGroupMapper.searchByNodeName("ap", new Pagination(1, 10));
+
+    assertThat(requisitionGroups.size(), is(1));
+    assertThat(requisitionGroups.get(0).getCode(), is("RG2"));
+    assertNull(requisitionGroups.get(0).getMemberCount());
+  }
+
+  @Test
+  public void shouldGetResultCountBasedOnNodeNameSearch() {
+    requisitionGroupMapper.insert(requisitionGroup);
+
+    RequisitionGroup requisitionGroup1 = make(a(defaultRequisitionGroup, with(code, "RG2"), with(name, "RG NAME")));
+    requisitionGroup1.setSupervisoryNode(supervisoryNode);
+    requisitionGroupMapper.insert(requisitionGroup1);
+
+    RequisitionGroupMember requisitionGroupMember = new RequisitionGroupMember();
+    requisitionGroupMember.setFacility(facility);
+    requisitionGroupMember.setRequisitionGroup(requisitionGroup);
+    requisitionGroupMemberMapper.insert(requisitionGroupMember);
+
+    Integer count = requisitionGroupMapper.getTotalRecordsForSearchOnNodeName("ap");
+
+    assertThat(count, is(1));
+  }
+
+  @Test
+  public void shouldGetResultCountBasedOnGroupNameSearch() {
+    requisitionGroupMapper.insert(requisitionGroup);
+
+    RequisitionGroup requisitionGroup1 = make(a(defaultRequisitionGroup, with(code, "RG2"), with(name, "RG NAME")));
+    requisitionGroup1.setSupervisoryNode(supervisoryNode);
+    requisitionGroupMapper.insert(requisitionGroup1);
+
+    RequisitionGroupMember requisitionGroupMember = new RequisitionGroupMember();
+    requisitionGroupMember.setFacility(facility);
+    requisitionGroupMember.setRequisitionGroup(requisitionGroup);
+    requisitionGroupMemberMapper.insert(requisitionGroupMember);
+
+    Integer count = requisitionGroupMapper.getTotalRecordsForSearchOnGroupName("rg");
+
+    assertThat(count, is(2));
   }
 
 }

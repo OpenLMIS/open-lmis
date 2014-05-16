@@ -10,26 +10,36 @@
 
 package org.openlmis.core.service;
 
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
+import org.openlmis.core.domain.Pagination;
 import org.openlmis.core.domain.RequisitionGroup;
 import org.openlmis.core.domain.SupervisoryNode;
 import org.openlmis.core.repository.RequisitionGroupRepository;
 import org.openlmis.core.repository.SupervisoryNodeRepository;
 import org.openlmis.db.categories.UnitTests;
 
+import java.util.List;
+
 import static com.natpryce.makeiteasy.MakeItEasy.a;
 import static com.natpryce.makeiteasy.MakeItEasy.make;
+import static java.util.Arrays.asList;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.verify;
-import static org.mockito.MockitoAnnotations.initMocks;
+import static org.mockito.Mockito.when;
 import static org.openlmis.core.builder.RequisitionGroupBuilder.defaultRequisitionGroup;
 import static org.openlmis.core.builder.SupervisoryNodeBuilder.defaultSupervisoryNode;
 
 @Category(UnitTests.class)
+@RunWith(MockitoJUnitRunner.class)
 public class RequisitionGroupServiceTest {
 
+  @InjectMocks
   private RequisitionGroupService requisitionGroupService;
 
   @Mock
@@ -37,12 +47,6 @@ public class RequisitionGroupServiceTest {
 
   @Mock
   private SupervisoryNodeRepository supervisoryNodeRepository;
-
-  @Before
-  public void setUp() throws Exception {
-    initMocks(this);
-    requisitionGroupService = new RequisitionGroupService(requisitionGroupRepository, supervisoryNodeRepository);
-  }
 
   @Test
   public void shouldSaveANewRequisitionGroup() {
@@ -67,5 +71,59 @@ public class RequisitionGroupServiceTest {
 
     verify(supervisoryNodeRepository).getIdForCode(supervisoryNode.getCode());
     verify(requisitionGroupRepository).update(requisitionGroup);
+  }
+
+  @Test
+  public void shouldSearchRequisitionGroupByGroupName() throws Exception {
+    String searchParam = "searchParam";
+    Pagination pagination = new Pagination();
+
+    List<RequisitionGroup> requisitionGroups = asList(new RequisitionGroup());
+    when(requisitionGroupRepository.searchByGroupName(searchParam, pagination)).thenReturn(requisitionGroups);
+
+    List<RequisitionGroup> requisitionGroupList = requisitionGroupService.search(searchParam, "requisitionGroup", pagination);
+
+    verify(requisitionGroupRepository).searchByGroupName(searchParam, pagination);
+    assertThat(requisitionGroupList, is(requisitionGroups));
+  }
+
+  @Test
+  public void shouldSearchRequisitionGroupByNodeName() throws Exception {
+    String searchParam = "searchParam";
+    Pagination pagination = new Pagination();
+
+    List<RequisitionGroup> requisitionGroups = asList(new RequisitionGroup());
+    when(requisitionGroupRepository.searchByNodeName(searchParam, pagination)).thenReturn(requisitionGroups);
+
+    List<RequisitionGroup> requisitionGroupList = requisitionGroupService.search(searchParam, "supervisoryNode", pagination);
+
+    verify(requisitionGroupRepository).searchByNodeName(searchParam, pagination);
+    assertThat(requisitionGroupList, is(requisitionGroups));
+  }
+
+  @Test
+  public void shouldGetResultCountSearchByGroupName() throws Exception {
+    String searchParam = "searchParam";
+    int resultCount = 5;
+
+    when(requisitionGroupRepository.getTotalRecordsForSearchOnGroupName(searchParam)).thenReturn(resultCount);
+
+    Integer count = requisitionGroupService.getTotalRecords(searchParam, "requisitionGroup");
+
+    verify(requisitionGroupRepository).getTotalRecordsForSearchOnGroupName(searchParam);
+    assertThat(count, is(resultCount));
+  }
+
+  @Test
+  public void shouldGetResultCountSearchByNodeName() throws Exception {
+    String searchParam = "searchParam";
+    int resultCount = 4;
+
+    when(requisitionGroupRepository.getTotalRecordsForSearchOnNodeName(searchParam)).thenReturn(resultCount);
+
+    Integer count = requisitionGroupService.getTotalRecords(searchParam, "supervisoryNode");
+
+    verify(requisitionGroupRepository).getTotalRecordsForSearchOnNodeName(searchParam);
+    assertThat(count, is(resultCount));
   }
 }

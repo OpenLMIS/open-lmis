@@ -12,6 +12,7 @@ package org.openlmis.core.repository.mapper;
 
 import org.apache.ibatis.annotations.*;
 import org.openlmis.core.domain.Facility;
+import org.openlmis.core.domain.Pagination;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.RequisitionGroup;
 import org.springframework.stereotype.Repository;
@@ -22,34 +23,35 @@ import java.util.List;
  * RequisitionGroupMapper maps the RequisitionGroup entity to corresponding representation in database. Also provides
  * methods like getting all requisition groups for a supervisory node, getting requisition group for a program and facility.
  */
+
 @Repository
 public interface RequisitionGroupMapper {
 
-    @Insert("INSERT INTO requisition_groups" +
-            "(code, name, description, supervisoryNodeId, createdBy, modifiedBy, modifiedDate) " +
-            "values (#{code}, #{name}, #{description}, #{supervisoryNode.id}, #{createdBy}, #{modifiedBy}, #{modifiedDate}) ")
-    @Options(useGeneratedKeys = true)
-    Integer insert(RequisitionGroup requisitionGroup);
+  @Insert("INSERT INTO requisition_groups" +
+    "(code, name, description, supervisoryNodeId, createdBy, modifiedBy, modifiedDate) " +
+    "values (#{code}, #{name}, #{description}, #{supervisoryNode.id}, #{createdBy}, #{modifiedBy}, #{modifiedDate}) ")
+  @Options(useGeneratedKeys = true)
+  Integer insert(RequisitionGroup requisitionGroup);
 
-    @Select("SELECT id, code, name, description, supervisoryNodeId, modifiedBy, modifiedDate " +
-            "FROM requisition_groups WHERE id = #{id}")
-    @Results(value = {
-            @Result(property = "supervisoryNode.id", column = "supervisoryNodeId")
-    })
-    RequisitionGroup getRequisitionGroupById(Long id);
+  @Select("SELECT id, code, name, description, supervisoryNodeId, modifiedBy, modifiedDate " +
+    "FROM requisition_groups WHERE id = #{id}")
+  @Results(value = {
+    @Result(property = "supervisoryNode.id", column = "supervisoryNodeId")
+  })
+  RequisitionGroup getRequisitionGroupById(Long id);
 
-    @Select("SELECT id FROM requisition_groups where LOWER(code) = LOWER(#{code})")
-    Long getIdForCode(String code);
+  @Select("SELECT id FROM requisition_groups where LOWER(code) = LOWER(#{code})")
+  Long getIdForCode(String code);
 
-    @Select("SELECT id FROM requisition_groups where supervisoryNodeId = ANY(#{supervisoryNodeIdsAsString}::INTEGER[])")
-    List<RequisitionGroup> getRequisitionGroupBySupervisoryNodes(String supervisoryNodeIdsAsString);
+  @Select("SELECT id FROM requisition_groups where supervisoryNodeId = ANY(#{supervisoryNodeIdsAsString}::INTEGER[])")
+  List<RequisitionGroup> getRequisitionGroupBySupervisoryNodes(String supervisoryNodeIdsAsString);
 
   @Select("SELECT * " +
-      "FROM requisition_groups rg " +
-      "INNER JOIN requisition_group_program_schedules rgps ON rg.id = rgps.requisitionGroupId " +
-      "INNER JOIN requisition_group_members rgm ON rgps.requisitionGroupId = rgm.requisitionGroupId " +
-      "WHERE rgps.programId = #{program.id} " +
-      "AND RGM.facilityId = #{facility.id}")
+    "FROM requisition_groups rg " +
+    "INNER JOIN requisition_group_program_schedules rgps ON rg.id = rgps.requisitionGroupId " +
+    "INNER JOIN requisition_group_members rgm ON rgps.requisitionGroupId = rgm.requisitionGroupId " +
+    "WHERE rgps.programId = #{program.id} " +
+    "AND RGM.facilityId = #{facility.id}")
   RequisitionGroup getRequisitionGroupForProgramAndFacility(@Param(value = "program") Program program, @Param(value = "facility") Facility facility);
 
   @Select("SELECT * FROM requisition_groups where LOWER(code) = LOWER(#{code})")
@@ -62,4 +64,39 @@ public interface RequisitionGroupMapper {
     "SET name = #{name}, description =  #{description}, supervisoryNodeId = #{supervisoryNode.id}, modifiedBy = #{modifiedBy}, modifiedDate = #{modifiedDate} " +
     "WHERE id = #{id}")
   void update(RequisitionGroup requisitionGroup);
+
+  @Select({"SELECT RG.code AS requisitionGroupCode, RG.name AS requisitionGroupName, SN.name AS supervisoryNodeName,",
+    "(SELECT COUNT(*) FROM requisition_group_members RGM INNER JOIN facilities F ON F.id = RGM.facilityId",
+    "WHERE RG.id = RGM.requisitionGroupId AND F.enabled = true GROUP BY requisitionGroupId) AS memberCount",
+    "FROM requisition_groups RG LEFT JOIN supervisory_nodes SN ON SN.id = RG.supervisoryNodeId",
+    "WHERE LOWER(RG.name) LIKE '%'|| LOWER(#{searchParam}) ||'%'",
+    "ORDER BY LOWER(SN.name), LOWER(RG.Name) NULLS LAST LIMIT #{pagination.pageSize} OFFSET #{pagination.offset}"})
+  @Results(value = {
+    @Result(property = "supervisoryNode.name", column = "supervisoryNodeName"),
+    @Result(property = "name", column = "requisitionGroupName"),
+    @Result(property = "code", column = "requisitionGroupCode"),
+    @Result(property = "memberCount", column = "memberCount")
+  })
+  List<RequisitionGroup> searchByGroupName(@Param(value = "searchParam") String searchParam, @Param(value = "pagination") Pagination pagination);
+
+  @Select({"SELECT RG.code AS requisitionGroupCode, RG.name AS requisitionGroupName, SN.name AS supervisoryNodeName,",
+    "(SELECT COUNT(*) FROM requisition_group_members RGM INNER JOIN facilities F ON F.id = RGM.facilityId",
+    "WHERE RG.id = RGM.requisitionGroupId AND F.enabled = true GROUP BY requisitionGroupId) AS memberCount",
+    "FROM requisition_groups RG INNER JOIN supervisory_nodes SN ON SN.id = RG.supervisoryNodeId",
+    "WHERE LOWER(SN.name) LIKE '%'|| LOWER(#{searchParam}) ||'%'",
+    "ORDER BY LOWER(SN.name), LOWER(RG.Name) LIMIT #{pagination.pageSize} OFFSET #{pagination.offset}"})
+  @Results(value = {
+    @Result(property = "supervisoryNode.name", column = "supervisoryNodeName"),
+    @Result(property = "name", column = "requisitionGroupName"),
+    @Result(property = "code", column = "requisitionGroupCode"),
+    @Result(property = "memberCount", column = "memberCount")
+  })
+  List<RequisitionGroup> searchByNodeName(@Param(value = "searchParam") String searchParam, @Param(value = "pagination") Pagination pagination);
+
+  @Select({"SELECT COUNT(*) FROM requisition_groups RG WHERE LOWER(RG.name) LIKE '%'|| LOWER(#{searchParam}) ||'%'"})
+  Integer getTotalRecordsForSearchOnGroupName(String searchParam);
+
+  @Select({"SELECT COUNT(*) FROM requisition_groups RG INNER JOIN supervisory_nodes SN ON SN.id = RG.supervisoryNodeId",
+    "WHERE LOWER(SN.name) LIKE '%'|| LOWER(#{searchParam}) ||'%'"})
+  Integer getTotalRecordsForSearchOnNodeName(String searchParam);
 }

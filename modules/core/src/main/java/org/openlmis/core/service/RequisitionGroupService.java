@@ -11,6 +11,7 @@
 package org.openlmis.core.service;
 
 import lombok.NoArgsConstructor;
+import org.openlmis.core.domain.Pagination;
 import org.openlmis.core.domain.RequisitionGroup;
 import org.openlmis.core.domain.SupervisoryNode;
 import org.openlmis.core.repository.RequisitionGroupRepository;
@@ -28,14 +29,13 @@ import java.util.List;
 @NoArgsConstructor
 public class RequisitionGroupService {
 
-  private RequisitionGroupRepository requisitionGroupRepository;
-  private SupervisoryNodeRepository supervisoryNodeRepository;
+  public static final String REQUISITION_GROUP = "requisitionGroup";
 
   @Autowired
-  public RequisitionGroupService(RequisitionGroupRepository requisitionGroupRepository, SupervisoryNodeRepository supervisoryNodeRepository) {
-    this.requisitionGroupRepository = requisitionGroupRepository;
-    this.supervisoryNodeRepository = supervisoryNodeRepository;
-  }
+  private RequisitionGroupRepository requisitionGroupRepository;
+
+  @Autowired
+  private SupervisoryNodeRepository supervisoryNodeRepository;
 
   public void save(RequisitionGroup requisitionGroup) {
     Long supervisoryNodeId = supervisoryNodeRepository.getIdForCode(requisitionGroup.getSupervisoryNode().getCode());
@@ -53,5 +53,19 @@ public class RequisitionGroupService {
 
   public RequisitionGroup getByCode(RequisitionGroup requisitionGroup) {
     return requisitionGroupRepository.getByCode(requisitionGroup);
+  }
+
+  public List<RequisitionGroup> search(String searchParam, String columnName, Pagination pagination) {
+    if (columnName.equals(REQUISITION_GROUP)) {
+      return requisitionGroupRepository.searchByGroupName(searchParam, pagination);
+    }
+    return requisitionGroupRepository.searchByNodeName(searchParam, pagination);
+  }
+
+  public Integer getTotalRecords(String searchParam, String columnName) {
+    if (columnName.equals(REQUISITION_GROUP)) {
+      return requisitionGroupRepository.getTotalRecordsForSearchOnGroupName(searchParam);
+    }
+    return requisitionGroupRepository.getTotalRecordsForSearchOnNodeName(searchParam);
   }
 }
