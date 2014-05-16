@@ -51,7 +51,7 @@ describe("User", function () {
 
       var availablePrograms = scope.availableSupportedProgramsWithStatus();
 
-      expect(availablePrograms).toEqual([
+      expect(scope.programsToDisplay).toEqual([
         {"program": {id: 1, name: 'p1', status: "Active", active: true}},
         {"program": {id: 4, name: 'p4', status: "Inactive", active: false}}
       ]);
