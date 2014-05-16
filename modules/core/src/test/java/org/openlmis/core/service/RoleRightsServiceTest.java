@@ -86,7 +86,8 @@ public class RoleRightsServiceTest {
       MANAGE_POD,
       UPLOADS,
       UPLOAD_REPORT,
-      MANAGE_GEOGRAPHIC_ZONE);
+      MANAGE_GEOGRAPHIC_ZONE,
+      MANAGE_REQUISITION_GROUP);
 
     assertThat(allRights, is(alphabeticalRights));
   }

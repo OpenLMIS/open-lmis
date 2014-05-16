@@ -146,6 +146,10 @@
                   <a id='supervisoryNodes' href="/public/pages/admin/supervisory-node/index.html"
                      openlmis-message="menu.header.supervisory.nodes"></a>
                 </li>
+                <li ng-show="hasPermission('MANAGE_REQUISITION_GROUP')" ng-class="geoZoneSelected">
+                  <a id='requisitionGroups' href="/public/pages/admin/requisition-group/index.html"
+                     openlmis-message="menu.header.requisition.groups"></a>
+                </li>
                 <li class="beak"></li>
               </ul>
             </div>
