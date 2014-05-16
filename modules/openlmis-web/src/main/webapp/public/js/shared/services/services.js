@@ -323,5 +323,9 @@ services.factory('SupervisoryNodes', function ($resource) {
 });
 
 services.factory('ParentSupervisoryNodes', function ($resource) {
-  return $resource('/parent-supervisory-nodes.json',{}, {});
+  return $resource('/parent-supervisory-nodes.json', {}, {});
+});
+
+services.factory('RequisitionGroups', function ($resource) {
+  return $resource('/requisitionGroups.json', {}, {});
 });
