@@ -38,7 +38,8 @@ public class GeographicZoneService {
   @Autowired
   SMSManagementService smsManagementService;
 
-  private @Value("${sms.test.notification.number}") String smsTestNotificationNumber;
+  @Autowired
+  ConfigurationSettingService configurationSettingService;
 
     public void save(GeographicZone geographicZone) {
     geographicZone.setLevel(repository.getGeographicLevelByCode(geographicZone.getLevel().getCode()));
@@ -72,6 +73,7 @@ public class GeographicZoneService {
   }
 
   public void saveNew(GeographicZone geographicZone) {
+    String smsTestNotificationNumber = configurationSettingService.getConfigurationStringValue("");
     repository.insert_Ext(geographicZone);
     String message = String.format("Geographic zone %s added to the database.",geographicZone.getName());
     String phoneNumber = smsTestNotificationNumber;
