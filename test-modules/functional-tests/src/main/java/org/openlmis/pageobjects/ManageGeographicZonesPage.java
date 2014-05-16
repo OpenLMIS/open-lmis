@@ -164,6 +164,7 @@ public class ManageGeographicZonesPage extends Page {
 
   public void clickOnFirstElement() {
     testWebDriver.waitForElementToAppear(firstElement);
+    testWebDriver.waitForPageToLoad();
     firstElement.click();
   }
 
