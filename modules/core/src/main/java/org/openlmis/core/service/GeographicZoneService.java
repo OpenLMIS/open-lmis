@@ -73,11 +73,10 @@ public class GeographicZoneService {
   }
 
   public void saveNew(GeographicZone geographicZone) {
-    String smsTestNotificationNumber = configurationSettingService.getConfigurationStringValue("");
+    String smsTestNotificationNumber = configurationSettingService.getConfigurationStringValue("SMS_TEST_PHONE_NO");
     repository.insert_Ext(geographicZone);
     String message = String.format("Geographic zone %s added to the database.",geographicZone.getName());
-    String phoneNumber = smsTestNotificationNumber;
-    smsManagementService.SendSMSMessage(message,phoneNumber);
+    smsManagementService.SendSMSMessage(message,smsTestNotificationNumber);
   }
 
   public void update(GeographicZone geographicZone) {
