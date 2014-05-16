@@ -137,8 +137,8 @@ public class SupervisoryNodeService {
     return supervisoryNodeRepository.getTotalSearchResultCount(param);
   }
 
-  public SupervisoryNode getById(Long id) {
-    return supervisoryNodeRepository.getById(id);
+  public SupervisoryNode getSupervisoryNode(Long id) {
+    return supervisoryNodeRepository.getSupervisoryNode(id);
   }
 
   public List<SupervisoryNode> getFilteredSupervisoryNodesByName(String param) {

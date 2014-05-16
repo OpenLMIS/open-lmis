@@ -22,8 +22,10 @@ import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.RequisitionGroup;
 import org.openlmis.core.domain.SupervisoryNode;
+import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.mapper.SupervisoryNodeMapper;
 import org.openlmis.db.categories.UnitTests;
+import org.springframework.dao.DuplicateKeyException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,8 +34,7 @@ import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.openlmis.core.builder.RequisitionGroupBuilder.code;
 import static org.openlmis.core.builder.RequisitionGroupBuilder.defaultRequisitionGroup;
 import static org.openlmis.core.domain.Right.AUTHORIZE_REQUISITION;
@@ -184,5 +185,27 @@ public class SupervisoryNodeRepositoryTest {
 
     verify(supervisoryNodeMapper).getAllParentSupervisoryNodesInHierarchy(supervisoryNode);
     assertThat(actual, is(expected));
+  }
+
+  @Test
+  public void shouldThrowIfDuplicateCodeInserted(){
+
+    SupervisoryNode supervisoryNode = new SupervisoryNode();
+    doThrow(new DuplicateKeyException("error_message")).when(supervisoryNodeMapper).insert(supervisoryNode);
+    expectedEx.expect(DataException.class);
+    expectedEx.expectMessage("error.duplicate.code.supervisory.node");
+
+    repository.insert(supervisoryNode);
+  }
+
+  @Test
+  public void shouldThrowIfDuplicateCodeUpdated(){
+
+    SupervisoryNode supervisoryNode = new SupervisoryNode();
+    doThrow(new DuplicateKeyException("error_message")).when(supervisoryNodeMapper).update(supervisoryNode);
+    expectedEx.expect(DataException.class);
+    expectedEx.expectMessage("error.duplicate.code.supervisory.node");
+
+    repository.update(supervisoryNode);
   }
 }
