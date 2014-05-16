@@ -60,7 +60,7 @@ public class ManageGeographicZonesPage extends Page {
   @FindBy(how = ID, using = "saveSuccessMsgDiv")
   private static WebElement successMsgDiv = null;
 
-  @FindBy(how = XPATH, using = "//*[@id='name']/a")
+  @FindBy(how = XPATH, using = "//*[@id='geoZoneName']/a")
   private static WebElement firstElement = null;
 
   @FindBy(how = ID, using = "selectParentGeoZone")
