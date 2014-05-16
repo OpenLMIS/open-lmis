@@ -95,15 +95,16 @@ public class SupervisoryNodeMapperIT {
     supervisoryNodeParent.setFacility(facility);
     supervisoryNodeMapper.insert(supervisoryNodeParent);
 
+    supervisoryNode.setCode("updated code");
     supervisoryNode.setName("updated name");
     supervisoryNode.setDescription("updated description");
-
     supervisoryNode.setParent(supervisoryNodeParent);
+
     supervisoryNodeMapper.update(supervisoryNode);
 
     SupervisoryNode resultSupervisoryNode = supervisoryNodeMapper.getSupervisoryNode(supervisoryNode.getId());
-
     assertThat(resultSupervisoryNode, is(notNullValue()));
+    assertThat(resultSupervisoryNode.getCode(), is("updated code"));
     assertThat(resultSupervisoryNode.getName(), is("updated name"));
     assertThat(resultSupervisoryNode.getDescription(), is("updated description"));
     assertThat(resultSupervisoryNode.getParent().getId(), is(supervisoryNodeParent.getId()));

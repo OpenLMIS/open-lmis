@@ -124,7 +124,7 @@ public interface SupervisoryNodeMapper {
   SupervisoryNode getByCode(SupervisoryNode supervisoryNode);
 
   @Update("UPDATE supervisory_nodes " +
-    "SET name = #{name}, parentId = #{parent.id}, facilityId = #{facility.id}, " +
+    "SET code = #{code}, name = #{name}, parentId = #{parent.id}, facilityId = #{facility.id}, " +
     "description = #{description}, modifiedBy = #{modifiedBy}, modifiedDate = #{modifiedDate} " +
     "WHERE id = #{id}")
   void update(SupervisoryNode supervisoryNode);
