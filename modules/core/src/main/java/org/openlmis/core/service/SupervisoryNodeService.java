@@ -74,9 +74,9 @@ public class SupervisoryNodeService {
       } catch (DataException e) {
         throw new DataException("error.supervisory.node.parent.not.exist");
       }
+      supervisoryNode.validateParent();
     }
   }
-
   public List<SupervisoryNode> getAllSupervisoryNodesInHierarchyBy(Long userId, Long programId, Right... rights) {
     return supervisoryNodeRepository.getAllSupervisoryNodesInHierarchyBy(userId, programId, rights);
   }

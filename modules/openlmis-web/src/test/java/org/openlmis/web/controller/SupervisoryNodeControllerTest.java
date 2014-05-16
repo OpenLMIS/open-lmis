@@ -10,6 +10,7 @@
 
 package org.openlmis.web.controller;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
@@ -17,18 +18,20 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.domain.SupervisoryNode;
+import org.openlmis.core.exception.DataException;
+import org.openlmis.core.service.MessageService;
 import org.openlmis.core.service.SupervisoryNodeService;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mock.web.MockHttpServletRequest;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.openlmis.web.controller.SupervisoryNodeController.SUPERVISORY_NODES;
 
 @Category(UnitTests.class)
@@ -38,12 +41,22 @@ public class SupervisoryNodeControllerTest {
   @Mock
   private SupervisoryNodeService supervisoryNodeService;
 
+  @Mock
+  MessageService messageService;
+
   @InjectMocks
   private SupervisoryNodeController controller;
 
+  public static final String USER_ID = "USER_ID";
+  private MockHttpServletRequest request = new MockHttpServletRequest();
+
+  @Before
+  public void setUp() {
+    setLoggedInUserId();
+  }
 
   @Test
-  public void shouldGetAllSupervisoryNodes(){
+  public void shouldGetAllSupervisoryNodes() {
     List<SupervisoryNode> expectedSupervisoryNodes = new ArrayList<>();
     when(supervisoryNodeService.getAll()).thenReturn(expectedSupervisoryNodes);
 
@@ -55,7 +68,7 @@ public class SupervisoryNodeControllerTest {
   }
 
   @Test
-  public void shouldGetSupervisoryNodeById(){
+  public void shouldGetSupervisoryNodeById() {
     Long id = 1L;
     SupervisoryNode expectedNode = new SupervisoryNode();
     when(supervisoryNodeService.getById(id)).thenReturn(expectedNode);
@@ -68,7 +81,7 @@ public class SupervisoryNodeControllerTest {
   }
 
   @Test
-  public void shouldGetFilteredNodesForRequestedQuery(){
+  public void shouldGetFilteredNodesForRequestedQuery() {
 
     String query = "Node1";
     List<SupervisoryNode> supervisoryNodes = new ArrayList<>();
@@ -79,5 +92,68 @@ public class SupervisoryNodeControllerTest {
     verify(supervisoryNodeService).getFilteredSupervisoryNodesByName(query);
     assertThat(filteredNodes, is(supervisoryNodes));
 
+  }
+
+  @Test
+  public void shouldInsertSupervisoryNodeSuccessfully() {
+    SupervisoryNode supervisoryNode = new SupervisoryNode(1L);
+    supervisoryNode.setName("Node 1");
+    when(messageService.message("message.supervisory.node.created.success", supervisoryNode.getName())).thenReturn(
+      "success");
+
+    ResponseEntity<OpenLmisResponse> responseEntity = controller.insert(supervisoryNode, request);
+
+    verify(supervisoryNodeService).save(supervisoryNode);
+    assertThat((Long) responseEntity.getBody().getData().get("supervisoryNodeId"), is(supervisoryNode.getId()));
+    assertThat(responseEntity.getBody().getSuccessMsg(), is("success"));
+    assertThat(supervisoryNode.getCreatedBy(), is(1L));
+    assertThat(supervisoryNode.getModifiedBy(), is(1L));
+  }
+
+  @Test
+  public void shouldReturnErrorMessageWhenExceptionOccursOnSupervisoryNodeInsert() {
+    SupervisoryNode supervisoryNode = new SupervisoryNode();
+    doThrow(new DataException("error")).when(supervisoryNodeService).save(supervisoryNode);
+
+    ResponseEntity<OpenLmisResponse> responseEntity = controller.insert(supervisoryNode, request);
+
+    verify(supervisoryNodeService).save(supervisoryNode);
+    verify(messageService, never()).message(anyString(), anyString());
+    assertThat(responseEntity.getBody().getErrorMsg(), is("error"));
+    assertThat(supervisoryNode.getCreatedBy(), is(1L));
+    assertThat(supervisoryNode.getModifiedBy(), is(1L));
+  }
+
+  @Test
+  public void shouldUpdateSupervisoryNodeSuccessfully() {
+    SupervisoryNode supervisoryNode = new SupervisoryNode(1L);
+    supervisoryNode.setName("Node 1");
+    when(messageService.message("message.supervisory.node.updated.success", supervisoryNode.getName())).thenReturn(
+      "success");
+
+    ResponseEntity<OpenLmisResponse> responseEntity = controller.update(supervisoryNode, supervisoryNode.getId(),
+      request);
+
+    verify(supervisoryNodeService).save(supervisoryNode);
+    assertThat((Long) responseEntity.getBody().getData().get("supervisoryNodeId"), is(supervisoryNode.getId()));
+    assertThat(responseEntity.getBody().getSuccessMsg(), is("success"));
+    assertThat(supervisoryNode.getModifiedBy(), is(1L));
+  }
+
+  @Test
+  public void shouldReturnErrorMessageWhenExceptionOccursOnSupervisoryNodeUpdate() {
+    SupervisoryNode supervisoryNode = new SupervisoryNode(1L);
+    doThrow(new DataException("error")).when(supervisoryNodeService).save(supervisoryNode);
+
+    ResponseEntity<OpenLmisResponse> responseEntity = controller.update(supervisoryNode, 1L, request);
+
+    verify(supervisoryNodeService).save(supervisoryNode);
+    verify(messageService, never()).message(anyString(), anyString());
+    assertThat(responseEntity.getBody().getErrorMsg(), is("error"));
+    assertThat(supervisoryNode.getModifiedBy(), is(1L));
+  }
+
+  private void setLoggedInUserId() {
+    request.getSession().setAttribute(USER_ID, 1L);
   }
 }

@@ -52,6 +52,7 @@ public class SupervisoryNodeServiceTest {
 
   @Mock
   SupervisoryNodeRepository supervisoryNodeRepository;
+
   @Mock
   private FacilityRepository facilityRepository;
 
@@ -64,8 +65,7 @@ public class SupervisoryNodeServiceTest {
   @InjectMocks
   SupervisoryNodeService supervisoryNodeService;
 
-  SupervisoryNode supervisoryNodeWithParent;
-
+  private SupervisoryNode supervisoryNodeWithParent;
 
   private Integer pageSize = 100;
 

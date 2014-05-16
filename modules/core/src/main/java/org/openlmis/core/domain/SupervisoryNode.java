@@ -14,6 +14,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
+import org.openlmis.core.exception.DataException;
 import org.openlmis.upload.Importable;
 import org.openlmis.upload.annotation.ImportField;
 
@@ -60,5 +61,10 @@ public class SupervisoryNode extends BaseModel implements Importable {
   @Override
   public int hashCode() {
     return id.hashCode();
+  }
+
+  public void validateParent() {
+    if (this.code.equals(this.parent.code))
+      throw new DataException("error.supervisory.node.parent.invalid");
   }
 }
