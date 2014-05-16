@@ -363,7 +363,7 @@ public class RnrLineItem extends LineItem {
                                                  ProgramRnrTemplate template) {
 
     BigDecimal newPatientFactor;
-    if (template.getRnrColumnsMap().get("newPatientCount").getConfiguredOption().getName().equals("newPatientCount")) {
+    if (template.getRnrColumnsMap().get("newPatientCount").getConfiguredOption() != null && template.getRnrColumnsMap().get("newPatientCount").getConfiguredOption().getName().equals("newPatientCount")) {
       newPatientFactor = newPatientCount.multiply(dosesPerMonth.divide(dosesPerDispensingUnit, MATH_CONTEXT)
         .setScale(0, HALF_UP));
     } else {
