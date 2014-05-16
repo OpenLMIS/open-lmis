@@ -17,6 +17,8 @@
                 <tr  ng-repeat="row in content.datarows">
                     <td data-title="'Facility Name'">{{ row.facilityname }}</td>
                     <td data-title="'Product'">{{ row.productname }}</td>
+                    <td data-title="'AMC'" style="text-align: right;">{{ row.amc }}</td>
+                    <td data-title="'Days Stocked Out'" style="text-align: right;">{{ row.stockoutdays }}</td>
                     <!--<td ng-repeat="col in notificationColumns" ng-hide="{{ col.hide }}">{{ notification[col.name] }}</td>-->
                 </tr>
             </tbody>
