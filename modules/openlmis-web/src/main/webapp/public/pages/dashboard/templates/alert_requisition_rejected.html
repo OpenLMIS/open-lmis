@@ -11,7 +11,7 @@
                 <tr  ng-repeat="row in content.datarows">
                     <td data-title="'Facility Name'">{{ row.facilityname }}</td>
                     <td data-title="'Product'">{{ row.rnrType }}</td>
-                    <td><a href="/public/pages/logistics/rnr/index.html#/requisition/{{ row.rnrid }}/1?page=1&supplyType=fullSupply" ng-click="popUp(this.href,'fixed',400,600)" target="newWin">{{ row.rnrid }}</a></td>
+                    <td><a href="/public/pages/logistics/rnr/indexpop.html#/requisition/{{ row.rnrid }}/1?page=1&supplyType=fullSupply" ng-click="popUp(this.href)" target="newWin">{{ row.rnrid }}</a></td>
                 </tr>
             </tbody>
 
