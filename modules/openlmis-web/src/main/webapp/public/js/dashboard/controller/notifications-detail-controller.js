@@ -6,6 +6,7 @@ function NotificationsDetailController($scope,$routeParams,messageService,Settin
 
     $scope.$parent.currentTab = 'NOTIFICATIONS-DETAIL';
     $scope.notificationDetail = {};
+    $scope.programId =2;
     $scope.notificationDetail.tableName = $routeParams.detailTable;
 
     if(!isUndefined($routeParams.detailTable)){
@@ -25,6 +26,7 @@ function NotificationsDetailController($scope,$routeParams,messageService,Settin
 
         DashboardNotificationsDetail.get({alertId:$routeParams.alertId, detailTable:$routeParams.detailTable},function(stockData){
             $scope.notificationDetail.datarows = stockData.detail;
+
             if(!isUndefined($scope.notificationDetail.datarows)){
 
                 var cols =  _.keys(_.first($scope.notificationDetail.datarows));
