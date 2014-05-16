@@ -8,7 +8,7 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
  */
 
-function SupervisoryNodeController($scope, supervisoryNode, ParentSupervisoryNodes, SupervisoryNodes) {
+function SupervisoryNodeController($scope, $location, supervisoryNode, ParentSupervisoryNodes, SupervisoryNodes) {
   $scope.supervisoryNode = supervisoryNode;
 
   $scope.toggleSlider = function () {
@@ -42,7 +42,7 @@ function SupervisoryNodeController($scope, supervisoryNode, ParentSupervisoryNod
     if (compareQuery()) {
       ParentSupervisoryNodes.get({"searchParam": $scope.query}, function (data) {
         $scope.parentNodes = _.reject(data.supervisoryNodeList, function (node) {
-          return $scope.supervisoryNode === undefined ? false : node.code == $scope.supervisoryNode.code;
+          return $scope.supervisoryNode === undefined ? false : ($scope.supervisoryNode.id && node.code == $scope.supervisoryNode.code);
         });
         $scope.filteredNodes = $scope.parentNodes;
         $scope.previousQuery = $scope.query;
@@ -65,6 +65,38 @@ function SupervisoryNodeController($scope, supervisoryNode, ParentSupervisoryNod
   $scope.deleteParentNode = function () {
     $scope.supervisoryNode.parent = undefined;
     angular.element("#searchParentNode").focus();
+  };
+
+  $scope.cancel = function () {
+    $location.path('');
+  };
+
+  var success = function (data) {
+    $scope.error = "";
+    $scope.$parent.message = data.success;
+    $scope.$parent.supervisoryNodeId = data.supervisoryNodeId;
+    $scope.showError = false;
+    $location.path('');
+  };
+
+  var error = function (data) {
+    $scope.$parent.message = "";
+    $scope.error = data.data.error;
+    $scope.showError = true;
+  };
+
+  $scope.save = function () {
+    if($scope.supervisoryNodeForm.$error.required || !$scope.supervisoryNode.facility) {
+      $scope.showError = true;
+      $scope.error = "form.error";
+      return;
+    }
+    if ($scope.supervisoryNode.id) {
+      SupervisoryNodes.update({id: $scope.supervisoryNode.id}, $scope.supervisoryNode,  success, error);
+    }
+    else{
+      SupervisoryNodes.save({}, $scope.supervisoryNode, success, error);
+    }
   };
 }
 

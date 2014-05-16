@@ -319,7 +319,7 @@ services.factory('GeographicZonesAboveLevel', function ($resource) {
 });
 
 services.factory('SupervisoryNodes', function ($resource) {
-  return $resource('/supervisory-nodes/:id.json', {}, {});
+  return $resource('/supervisory-nodes/:id.json', {}, update);
 });
 
 services.factory('ParentSupervisoryNodes', function ($resource) {

@@ -68,7 +68,7 @@ public class SupervisoryNodeController extends BaseController {
   @RequestMapping(value = "/supervisory-nodes/{id}", method = GET)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_SUPERVISORY_NODE')")
   public SupervisoryNode getById(@PathVariable(value = "id") Long id) {
-    return supervisoryNodeService.getById(id);
+    return supervisoryNodeService.getSupervisoryNode(id);
   }
 
   @RequestMapping(value = "/parent-supervisory-nodes", method = GET, headers = ACCEPT_JSON)
@@ -97,7 +97,7 @@ public class SupervisoryNodeController extends BaseController {
     return response;
   }
 
-  @RequestMapping(value = "/supervisory-nodes/{id}", method = PUT)
+  @RequestMapping(value = "/supervisory-nodes/{id}", method = PUT, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_SUPERVISORY_NODE')")
   public ResponseEntity<OpenLmisResponse> update(@RequestBody SupervisoryNode supervisoryNode,
                                                  @PathVariable(value = "id") Long supervisoryNodeId,

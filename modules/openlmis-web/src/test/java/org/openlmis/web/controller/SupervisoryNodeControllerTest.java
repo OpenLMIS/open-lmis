@@ -71,12 +71,12 @@ public class SupervisoryNodeControllerTest {
   public void shouldGetSupervisoryNodeById() {
     Long id = 1L;
     SupervisoryNode expectedNode = new SupervisoryNode();
-    when(supervisoryNodeService.getById(id)).thenReturn(expectedNode);
+    when(supervisoryNodeService.getSupervisoryNode(id)).thenReturn(expectedNode);
 
 
     SupervisoryNode actualNode = controller.getById(id);
 
-    verify(supervisoryNodeService).getById(id);
+    verify(supervisoryNodeService).getSupervisoryNode(id);
     assertThat(actualNode, is(expectedNode));
   }
 
