@@ -25,8 +25,26 @@ describe("Supervisory Node Controller", function () {
     expect(scope.supervisoryNode).toBe(supervisoryNode);
   });
 
-  it('should get all parent nodes in scope if query length is greater than 3', function () {
+  it('should get all parent nodes in scope if query length is greater than 3 in case of add', function () {
     scope.query = "Nod";
+    var node1 = {"id": 1, "code": "N1", "name": "Node 1"};
+    var node2 = {"id": 2, "code": "N2", "name": "Node 2"};
+    var node3 = {"id": 3, "code": "N3", "name": "Node 3"};
+    var response = {"supervisoryNodeList":[node1, node2, node3]};
+
+    $httpBackend.when('GET', '/parent-supervisory-nodes.json?searchParam=' + scope.query).respond(response);
+    scope.showParentNodeSearchResults();
+    $httpBackend.flush();
+
+    expect(scope.parentNodes).toEqual([node1, node2, node3]);
+    expect(scope.filteredNodes).toEqual([node1, node2, node3]);
+    expect(scope.previousQuery).toEqual("Nod");
+    expect(scope.resultCount).toEqual(3);
+  });
+
+  it('should get filtered parent nodes in scope if query length is greater than 3 in case of edit', function () {
+    scope.query = "Nod";
+    scope.supervisoryNode.id = 1;
     var node1 = {"id": 1, "code": "N1", "name": "Node 1"};
     var node2 = {"id": 2, "code": "N2", "name": "Node 2"};
     var node3 = {"id": 3, "code": "N3", "name": "Node 3"};
