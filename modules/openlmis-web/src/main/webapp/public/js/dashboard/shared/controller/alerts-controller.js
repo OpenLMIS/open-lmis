@@ -58,7 +58,7 @@ function AlertsController($scope, $filter, Alerts,$location, dashboardMenuServic
         var notificationPath = 'notifications/'+alertId+'/'+detailTable;
         dashboardMenuService.addTab('menu.header.dashboard.notifications.detail','/public/pages/dashboard/index.html#/'+notificationPath,'NOTIFICATIONS-DETAIL',true, 7);
 
-        $location.path(notificationPath);
+        $location.path(notificationPath).search("programId="+$scope.formFilter.programId);
     };
 
 

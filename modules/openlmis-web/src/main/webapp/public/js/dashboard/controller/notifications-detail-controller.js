@@ -6,6 +6,7 @@ function NotificationsDetailController($scope,$routeParams,messageService,Settin
 
     $scope.$parent.currentTab = 'NOTIFICATIONS-DETAIL';
     $scope.notificationDetail = {};
+    $scope.programId =2;
     $scope.notificationDetail.tableName = $routeParams.detailTable;
 
     if(!isUndefined($routeParams.detailTable)){
@@ -25,6 +26,7 @@ function NotificationsDetailController($scope,$routeParams,messageService,Settin
 
         DashboardNotificationsDetail.get({alertId:$routeParams.alertId, detailTable:$routeParams.detailTable},function(stockData){
             $scope.notificationDetail.datarows = stockData.detail;
+
             if(!isUndefined($scope.notificationDetail.datarows)){
 
                 var cols =  _.keys(_.first($scope.notificationDetail.datarows));
@@ -46,6 +48,26 @@ function NotificationsDetailController($scope,$routeParams,messageService,Settin
         });
 
     }
+
+   /* var newWin = null;
+    $scope.popUp = function popUp(strURL, strType, strHeight, strWidth) {
+        if (newWin != null && !newWin.closed) {
+            newWin.close();
+        }
+        var strOptions="";
+        if (strType=="console") {
+            strOptions="resizable,height="+strHeight+",width="+strWidth;
+        }
+        if (strType=="fixed") {
+            strOptions="status,height="+strHeight+",width="+strWidth;
+        }
+        if (strType=="elastic") {
+            strOptions="toolbar,menubar,scrollbars,"+"resizable,location,height="+strHeight+",width="+strWidth;
+        }
+        newWin = window.open(strURL, 'newWin', strOptions);
+        newWin.focus();
+
+    }*/
 
     $scope.resetNotificationData = function(){
         $scope.notificationDetail.datarows = null;
