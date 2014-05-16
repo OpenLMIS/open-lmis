@@ -90,7 +90,7 @@ describe("Supervisory Node Controller", function () {
   it('should select parent node and clear scope fields', function() {
     var node = {code: "SN2", name: "Node 2"};
     scope.setSelectedParentNode(node);
-    expect(scope.parentNodeSelected).toBe(node);
+    expect(scope.parent).toBe(node);
     expect(scope.query).toBeUndefined();
     expect(scope.resultCount).toBeUndefined();
     expect(scope.filteredFacilities).toBeUndefined();
@@ -98,10 +98,10 @@ describe("Supervisory Node Controller", function () {
   });
 
   it('should delete parent node', function() {
-    scope.parentNodeSelected = {"Code":"N1", "Name": "Node 1"};
+    scope.parent = {"Code":"N1", "Name": "Node 1"};
 
     scope.deleteParentNode();
 
-    expect(scope.parentNodeSelected).toBeUndefined();
+    expect(scope.parent).toBeUndefined();
   });
 });

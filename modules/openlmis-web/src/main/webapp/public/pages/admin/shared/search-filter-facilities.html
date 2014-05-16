@@ -1,0 +1,43 @@
+<!--
+  ~ This program is part of the OpenLMIS logistics management information system platform software.
+  ~ Copyright © 2013 VillageReach
+  ~
+  ~ This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+  ~ You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
+  -->
+
+<div class="searchAndFilter" ng-controller="FacilitySearchFilterController">
+  <div class="form-group">
+    <h3 class="heading">Search Facility</h3>
+
+    <div id="searchControl" class="row-fluid">
+      <div class="span5">
+        <div class="input-append input-prepend">
+          <input id="searchFacility" type="text" ng-model="query" maxlength="50"
+                 openlmis-message="placeholder.facility.search"/>
+          <button class="btn" ng-click="facilitySearchResults()">
+            <i id='searchIcon' class="icon-search"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="search-list" ng-show="resultCount >= 0">
+      <div ng-switch on="resultCount">
+        <h3 ng-switch-when="0" openlmis-message="msg.no.matches|query"></h3>
+
+        <h3 ng-switch-when="1" openlmis-message="msg.one.match|query"></h3>
+
+        <h3 ng-switch-default openlmis-message="msg.many.matches|resultCount|query"></h3>
+      </div>
+      <a class="close-btn" href="" ng-click="clearSearch()"></a>
+      <ul>
+        <li ng-repeat="facility in facilityList" ng-click="associateFacility(facility)">{{facility.code}} -
+          {{facility.name}}
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>

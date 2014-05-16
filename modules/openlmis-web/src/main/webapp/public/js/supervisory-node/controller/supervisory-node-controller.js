@@ -8,8 +8,18 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
  */
 
-function SupervisoryNodeController($scope, supervisoryNode, ParentSupervisoryNodes) {
+function SupervisoryNodeController($scope, supervisoryNode, ParentSupervisoryNodes, SupervisoryNodes) {
   $scope.supervisoryNode = supervisoryNode;
+
+  $scope.toggleSlider = function () {
+    $scope.sliderState = !$scope.sliderState;
+    if ($scope.sliderState) {
+      angular.element(".searchAndFilter").slideDown("slow");
+    }
+    else {
+      angular.element(".searchAndFilter").slideUp("slow");
+    }
+  };
 
   var reset = function () {
     $scope.query = undefined;
@@ -48,12 +58,12 @@ function SupervisoryNodeController($scope, supervisoryNode, ParentSupervisoryNod
   };
 
   $scope.setSelectedParentNode = function (node) {
-    $scope.parentNodeSelected = node;
+    $scope.supervisoryNode.parent = node;
     reset();
   };
 
   $scope.deleteParentNode = function () {
-    $scope.parentNodeSelected = undefined;
+    $scope.supervisoryNode.parent = undefined;
     angular.element("#searchParentNode").focus();
   };
 }

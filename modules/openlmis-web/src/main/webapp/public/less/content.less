@@ -2623,3 +2623,67 @@ table.search-list {
   margin-top: 0;
   padding-top: 0;
 }
+
+.searchAndFilter {
+  height: 400px;
+  width: 95%;
+  margin: 0 11px;
+  background: white;
+  border: 1px solid #bbb;
+  display: none;
+  padding: 4px 20px 20px;
+//  box-shadow: 0 0 1px rgba(0,0,0,0.5);
+//  box-shadow: inset 1px 1px 0 #f9f9f9;
+
+  &:after {
+    .square(0px);
+    position: absolute;
+    border-bottom: 16px solid white;
+    border-left: 12px solid transparent;
+    border-right: 12px solid transparent;
+    content: "";
+    top: -15px;
+    left: 166px;
+    z-index: 10;
+  }
+
+  &:before {
+    .square(0px);
+    position: absolute;
+    border-bottom: 17px solid #bbb;
+    border-left: 13px solid transparent;
+    border-right: 13px solid transparent;
+    content: "";
+    top: -16px;
+    left: 165px;
+  }
+
+  .search-list ul {
+    height: 282px;
+    overflow-y: scroll;
+    li {
+      padding: 10px;
+      &:hover {
+        color: #fff;
+        background: #61acaf;
+        cursor: pointer;
+      }
+      &:last-child {
+        border-bottom: 1px solid #CCC;
+      }
+    }
+  }
+  h3.heading {
+    background: white;
+  }
+  h4 {
+    margin-top: 0;
+    color: #666;
+    border-bottom: 1px solid #bbb;
+    padding-bottom: 5px;
+    margin-bottom: 18px;
+  }
+  #searchFacility {
+    width: 45%;
+  }
+}
