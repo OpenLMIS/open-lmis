@@ -60,8 +60,9 @@ public class GeographicZoneControllerTest {
   @Test
   public void shouldInsertGeoZone() throws Exception {
     GeographicZone geographicZone = new GeographicZone();
+    geographicZone.setName("GZ 1");
     doNothing().when(service).save(geographicZone);
-    when(messageService.message("message.geo.zone.created.success", null)).thenReturn("created");
+    when(messageService.message("message.geo.zone.created.success", geographicZone.getName())).thenReturn("created");
 
     ResponseEntity<OpenLmisResponse> response = controller.insert(geographicZone, request);
 
@@ -95,8 +96,9 @@ public class GeographicZoneControllerTest {
   @Test
   public void shouldUpdateGeoZone() throws Exception {
     GeographicZone geographicZone = new GeographicZone();
+    geographicZone.setName("GZ 1");
     doNothing().when(service).save(geographicZone);
-    when(messageService.message("message.geo.zone.updated.success", null)).thenReturn("updated");
+    when(messageService.message("message.geo.zone.updated.success", geographicZone.getName())).thenReturn("updated");
 
     ResponseEntity<OpenLmisResponse> response = controller.update(geographicZone, 1L, request);
 
