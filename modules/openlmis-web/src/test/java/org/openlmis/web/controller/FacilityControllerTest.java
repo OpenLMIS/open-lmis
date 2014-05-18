@@ -121,7 +121,8 @@ public class FacilityControllerTest {
   shouldUpdateFacilityAndTagWithModifiedByAndModifiedDate() throws Exception {
     Facility facility = new Facility(1234L);
     facility.setName("test facility");
-    when(messageService.message("message.facility.updated.success", facility.getName())).thenReturn("Facility 'test facility' updated successfully");
+    when(messageService.message("message.facility.updated.success", facility.getName())).thenReturn(
+      "Facility 'test facility' updated successfully");
     ResponseEntity responseEntity = facilityController.update(1234L, facility, httpServletRequest);
     assertThat(responseEntity.getStatusCode(), is(HttpStatus.OK));
     OpenLmisResponse response = (OpenLmisResponse) responseEntity.getBody();
@@ -180,8 +181,10 @@ public class FacilityControllerTest {
   public void shouldReturnUserSupervisedFacilitiesForAProgram() {
     Long programId = 1L;
     List<Facility> facilities = new ArrayList<>();
-    when(facilityService.getUserSupervisedFacilities(userId, programId, CREATE_REQUISITION, AUTHORIZE_REQUISITION)).thenReturn(facilities);
-    ResponseEntity<ModelMap> responseEntity = facilityController.getUserSupervisedFacilitiesSupportingProgram(programId, httpServletRequest);
+    when(facilityService.getUserSupervisedFacilities(userId, programId, CREATE_REQUISITION,
+      AUTHORIZE_REQUISITION)).thenReturn(facilities);
+    ResponseEntity<ModelMap> responseEntity = facilityController.getUserSupervisedFacilitiesSupportingProgram(programId,
+      httpServletRequest);
     verify(facilityService).getUserSupervisedFacilities(userId, programId, CREATE_REQUISITION, AUTHORIZE_REQUISITION);
     ModelMap map = responseEntity.getBody();
     assertThat((List<Facility>) map.get("facilities"), is(facilities));
@@ -206,7 +209,8 @@ public class FacilityControllerTest {
     Integer count = 1;
     List<Facility> facilities = asList(new Facility());
     when(facilityService.getTotalSearchedFacilitiesByCodeOrName(searchParam)).thenReturn(count);
-    when(facilityService.searchFacilitiesByCodeOrNameAndVirtualFacilityFlag(searchParam, virtualFacility)).thenReturn(facilities);
+    when(facilityService.searchFacilitiesByCodeOrNameAndVirtualFacilityFlag(searchParam, virtualFacility)).thenReturn(
+      facilities);
 
     ResponseEntity<OpenLmisResponse> responseEntity = facilityController.get(searchParam, virtualFacility, "2");
 
@@ -253,7 +257,8 @@ public class FacilityControllerTest {
     when(Facility.createFacilityToBeDeleted(1L, 1L)).thenReturn(facility);
 
     when(facilityService.getById(facility.getId())).thenReturn(facility);
-    when(messageService.message("disable.facility.success", facility.getName(), facility.getCode())).thenReturn("\"Test Facility\" / \"Test Code\" deleted successfully");
+    when(messageService.message("disable.facility.success", facility.getName(), facility.getCode())).thenReturn(
+      "\"Test Facility\" / \"Test Code\" deleted successfully");
 
     ResponseEntity<OpenLmisResponse> responseEntity = facilityController.softDelete(httpServletRequest, 1L);
 
@@ -271,7 +276,8 @@ public class FacilityControllerTest {
     mockStatic(Facility.class);
     when(Facility.createFacilityToBeRestored(1L, 1L)).thenReturn(facility);
     when(facilityService.getById(facility.getId())).thenReturn(facility);
-    when(messageService.message("enable.facility.success", facility.getName(), facility.getCode())).thenReturn("\"Test Facility\" / \"Test Code\" restored successfully");
+    when(messageService.message("enable.facility.success", facility.getName(), facility.getCode())).thenReturn(
+      "\"Test Facility\" / \"Test Code\" restored successfully");
 
     ResponseEntity<OpenLmisResponse> responseEntity = facilityController.restore(httpServletRequest, 1L);
 
@@ -316,6 +322,4 @@ public class FacilityControllerTest {
     mockHttpSession.setAttribute(USER, USER);
     return httpServletRequest;
   }
-
-
 }

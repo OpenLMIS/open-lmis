@@ -66,16 +66,15 @@ public class FacilityController extends BaseController {
     List<Facility> facilities;
     if (searchParam != null) {
       Integer count = facilityService.getTotalSearchedFacilitiesByCodeOrName(searchParam);
-      if(count <= Integer.parseInt(facilitySearchLimit)){
-        facilities = facilityService.searchFacilitiesByCodeOrNameAndVirtualFacilityFlag(searchParam,virtualFacility);
-      }
-      else {
-          return OpenLmisResponse.response("message","too.many.results.found");
+      if (count <= Integer.parseInt(facilitySearchLimit)) {
+        facilities = facilityService.searchFacilitiesByCodeOrNameAndVirtualFacilityFlag(searchParam, virtualFacility);
+      } else {
+        return OpenLmisResponse.response("message", "too.many.results.found");
       }
     } else {
       facilities = facilityService.getAll();
     }
-    return OpenLmisResponse.response("facilityList",facilities);
+    return OpenLmisResponse.response("facilityList", facilities);
   }
 
   @RequestMapping(value = "/user/facilities", method = GET)
@@ -153,12 +152,14 @@ public class FacilityController extends BaseController {
 
   @RequestMapping(value = "/facilities/{facilityId}", method = DELETE, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_FACILITY')")
-  public ResponseEntity<OpenLmisResponse> softDelete(HttpServletRequest httpServletRequest, @PathVariable Long facilityId) {
+  public ResponseEntity<OpenLmisResponse> softDelete(HttpServletRequest httpServletRequest,
+                                                     @PathVariable Long facilityId) {
     Facility facilityToBeDeleted = createFacilityToBeDeleted(facilityId, loggedInUserId(httpServletRequest));
     facilityService.updateEnabledAndActiveFor(facilityToBeDeleted);
     Facility deletedFacility = facilityService.getById(facilityId);
 
-    String successMessage = messageService.message("disable.facility.success", deletedFacility.getName(), deletedFacility.getCode());
+    String successMessage = messageService.message("disable.facility.success", deletedFacility.getName(),
+      deletedFacility.getCode());
     OpenLmisResponse response = new OpenLmisResponse("facility", deletedFacility);
     return response.successEntity(successMessage);
   }
@@ -172,16 +173,20 @@ public class FacilityController extends BaseController {
 
     Facility restoredFacility = facilityService.getById(facilityId);
 
-    String successMessage = messageService.message("enable.facility.success", restoredFacility.getName(), restoredFacility.getCode());
+    String successMessage = messageService.message("enable.facility.success", restoredFacility.getName(),
+      restoredFacility.getCode());
 
     OpenLmisResponse response = new OpenLmisResponse("facility", restoredFacility);
     return response.successEntity(successMessage);
   }
 
-  @RequestMapping(value = "/deliveryZones/{deliveryZoneId}/programs/{programId}/facilities", method = GET, headers = ACCEPT_JSON)
+  @RequestMapping(value = "/deliveryZones/{deliveryZoneId}/programs/{programId}/facilities", method = GET,
+    headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_DISTRIBUTION')")
-  public ResponseEntity<OpenLmisResponse> getFacilitiesForDeliveryZoneAndProgram(@PathVariable("deliveryZoneId") Long deliveryZoneId,
-                                                                                 @PathVariable("programId") Long programId) {
+  public ResponseEntity<OpenLmisResponse> getFacilitiesForDeliveryZoneAndProgram(@PathVariable(
+    "deliveryZoneId") Long deliveryZoneId,
+                                                                                 @PathVariable(
+                                                                                   "programId") Long programId) {
     List<Facility> facilities = facilityService.getAllForDeliveryZoneAndProgram(deliveryZoneId, programId);
     return response("facilities", Facility.filterForActiveProducts(facilities));
   }

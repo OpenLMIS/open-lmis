@@ -239,8 +239,8 @@ public class FacilityService {
 
     return facility;
   }
+
   public Integer getTotalSearchedFacilitiesByCodeOrName(String searchParam){
     return facilityRepository.getTotalSearchedFacilitiesByCodeOrName(searchParam);
   }
-
 }

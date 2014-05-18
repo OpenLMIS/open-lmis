@@ -77,15 +77,15 @@ function SupervisoryNodeController($scope, $location, supervisoryNode, ParentSup
   };
 
   $scope.save = function () {
-    if($scope.supervisoryNodeForm.$error.required || !$scope.supervisoryNode.facility) {
+    if ($scope.supervisoryNodeForm.$error.required || !$scope.supervisoryNode.facility) {
       $scope.showError = true;
       $scope.error = "form.error";
       return;
     }
     if ($scope.supervisoryNode.id) {
-      SupervisoryNodes.update({id: $scope.supervisoryNode.id}, $scope.supervisoryNode,  success, error);
+      SupervisoryNodes.update({id: $scope.supervisoryNode.id}, $scope.supervisoryNode, success, error);
     }
-    else{
+    else {
       SupervisoryNodes.save({}, $scope.supervisoryNode, success, error);
     }
   };

@@ -8,9 +8,9 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
  */
 
-function FacilitySearchFilterController($scope, Facility){
+function FacilitySearchFilterController($scope, Facility) {
 
-  $scope.progressFunc = function() {
+  $scope.progressFunc = function () {
     var bufferHeight = 200;
     var searchFilterBoxHeight = $(this).height();
 
@@ -18,13 +18,13 @@ function FacilitySearchFilterController($scope, Facility){
     var searchFilterTopOffset = $(this).offset().top - $(window).scrollTop();
     var searchFilterViewPort = (screenViewPort - searchFilterTopOffset);
 
-    if(searchFilterViewPort < searchFilterBoxHeight) {
+    if (searchFilterViewPort < searchFilterBoxHeight) {
       var scrollableAmount = searchFilterBoxHeight - searchFilterViewPort;
       $(window).scrollTop($(window).scrollTop() + scrollableAmount);
     }
   };
 
-  $scope.$parent.$parent.$watch("sliderState", function(value) {
+  $scope.$parent.$parent.$watch("sliderState", function (value) {
     if (value) {
       angular.element(".searchAndFilter").slideDown({duration: "slow", progress: $scope.progressFunc});
     }
@@ -33,7 +33,7 @@ function FacilitySearchFilterController($scope, Facility){
     }
   });
 
-  $scope.facilitySearchResults = function(){
+  $scope.facilitySearchResults = function () {
     if (!$scope.query) return;
     $scope.query = $scope.query.trim();
     Facility.get({"searchParam": $scope.query}, function (data) {
@@ -50,8 +50,8 @@ function FacilitySearchFilterController($scope, Facility){
     }
   };
 
-  $scope.clearSearch = function() {
-    angular.element(".searchAndFilter .search-list").slideUp("slow", function() {
+  $scope.clearSearch = function () {
+    angular.element(".searchAndFilter .search-list").slideUp("slow", function () {
       $scope.query = undefined;
       $scope.facilityList = undefined;
       $scope.resultCount = undefined;
@@ -60,8 +60,8 @@ function FacilitySearchFilterController($scope, Facility){
     });
   };
 
-  $scope.associateFacility = function(facility) {
-    if(isUndefined($scope.$parent.$parent.supervisoryNode)) {
+  $scope.associateFacility = function (facility) {
+    if (isUndefined($scope.$parent.$parent.supervisoryNode)) {
       $scope.$parent.$parent.supervisoryNode = {facility: facility};
     }
     else {

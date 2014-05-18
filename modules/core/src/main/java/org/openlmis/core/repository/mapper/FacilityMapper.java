@@ -213,8 +213,7 @@ public interface FacilityMapper {
     "id IN(SELECT DISTINCT(parentFacilityId) FROM facilities)"})
   List<Facility> getAllParentsByModifiedDate(Date modifiedDate);
 
-  @Select({"SELECT COUNT(*) FROM facilities WHERE",
-    "(LOWER(code) LIKE '%' || LOWER(#{searchParam}) || '%'",
+  @Select({"SELECT COUNT(*) FROM facilities WHERE (LOWER(code) LIKE '%' || LOWER(#{searchParam}) || '%'",
     "OR LOWER(name) LIKE '%' || LOWER(#{searchParam}) || '%')"})
   Integer getTotalSearchedFacilitiesByCodeOrName(String searchParam);
 }

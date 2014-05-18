@@ -101,7 +101,8 @@
             <div class="form-field">
               <div class="input-div associate-facility clearfix">
                 <div class="facility-associated">
-                  <span class="placeholder" ng-show="!supervisoryNode.facility" openlmis-message="label.no.facility.selected"></span>
+                  <span class="placeholder" ng-show="!supervisoryNode.facility"
+                        openlmis-message="label.no.facility.associated"></span>
                   <span ng-show="supervisoryNode.facility">{{supervisoryNode.facility.code}} - {{supervisoryNode.facility.name}}</span>
                 </div>
                 <button class="btn" ng-click="sliderState = !sliderState;">
