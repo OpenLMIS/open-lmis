@@ -93,4 +93,12 @@ describe("Supervisory Node Search Controller", function () {
     expect(searchSpy).toHaveBeenCalledWith(6);
   });
 
+  it("should take to edit page of the supervisory node", function() {
+    spyOn(location, "path");
+    spyOn(navigateBackService, "setData");
+    scope.editSupervisoryNode(1);
+    expect(location.path).toHaveBeenCalledWith('edit/1');
+    expect(navigateBackService.setData).toHaveBeenCalledWith({query: scope.query, selectedSearchOption: scope.selectedSearchOption});
+  });
+
 });
