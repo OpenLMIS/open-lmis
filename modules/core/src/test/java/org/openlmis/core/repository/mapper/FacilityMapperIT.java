@@ -731,6 +731,22 @@ public class FacilityMapperIT {
 
   }
 
+  @Test
+  public void shouldSendCountOfFacilities(){
+    Facility facility1 = make(a(FacilityBuilder.defaultFacility, with(code, "Facility 1")));
+    mapper.insert(facility1);
+
+    Facility facility2 = make(a(FacilityBuilder.defaultFacility, with(code, "Facility 2")));
+    mapper.insert(facility2);
+
+    Facility facility3 = make(a(FacilityBuilder.defaultFacility,with(code, "Facility 3")));
+    mapper.insert(facility3);
+
+    Integer totalFacilities = mapper.getTotalSearchedFacilitiesByCodeOrName("Fac");
+
+    assertThat(totalFacilities,is(3));
+  }
+
   private ProgramSupported insertProgramSupported(Program program, Facility supportedFacility, Date modifiedDate) {
     ProgramSupported programSupported = make(a(defaultProgramSupported,
       with(supportedProgram, program),

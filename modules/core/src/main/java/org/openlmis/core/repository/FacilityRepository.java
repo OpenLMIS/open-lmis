@@ -204,4 +204,8 @@ public class FacilityRepository {
   public List<Facility> getAllParentsByModifiedDate(Date modifiedDate) {
     return mapper.getAllParentsByModifiedDate(modifiedDate);
   }
+
+  public Integer getTotalSearchedFacilitiesByCodeOrName(String searchParam){
+    return mapper.getTotalSearchedFacilitiesByCodeOrName(searchParam);
+  }
 }
