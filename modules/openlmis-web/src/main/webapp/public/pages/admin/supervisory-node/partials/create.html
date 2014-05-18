@@ -99,16 +99,22 @@
             </label>
 
             <div class="form-field">
-              <span ng-show="!supervisoryNode.facility" openlmis-message="label.no.facility.selected"></span>
-              <span ng-show="supervisoryNode.facility">{{supervisoryNode.facility.code}} - {{supervisoryNode.facility.name}}</span>
-              <a href="" ng-click="toggleSlider()" openlmis-message="link.select.facility"></a>
+              <div class="input-div associate-facility clearfix">
+                <div class="facility-associated">
+                  <span class="placeholder" ng-show="!supervisoryNode.facility" openlmis-message="label.no.facility.selected"></span>
+                  <span ng-show="supervisoryNode.facility">{{supervisoryNode.facility.code}} - {{supervisoryNode.facility.name}}</span>
+                </div>
+                <button class="btn" ng-click="sliderState = !sliderState;">
+                  <i class="icon icon-ellipsis-horizontal"></i>
+                </button>
+              </div>
             </div>
             <span class="field-error" ng-show="!supervisoryNode.facility && showError"
                   openlmis-message="select.value"></span>
           </div>
         </div>
 
-        <div class="row-fluid clearfix" style="position: relative;">
+        <div class="position-relative">
           <ng-include src="'/public/pages/admin/shared/search-filter-facilities.html'"></ng-include>
         </div>
 

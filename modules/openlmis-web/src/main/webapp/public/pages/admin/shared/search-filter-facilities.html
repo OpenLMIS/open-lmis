@@ -9,11 +9,11 @@
   -->
 
 <div class="searchAndFilter" ng-controller="FacilitySearchFilterController">
-  <div class="form-group">
-    <h3 class="heading">Search Facility</h3>
+  <div class="form-group clear-bottom">
+    <h3 class="main-heading">Search Facility</h3>
 
     <div id="searchControl" class="row-fluid">
-      <div class="span5">
+      <div class="span3">
         <div class="input-append input-prepend">
           <input id="searchFacility" type="text" ng-model="query" maxlength="50"
                  openlmis-message="placeholder.facility.search"/>
@@ -24,9 +24,12 @@
       </div>
     </div>
 
-    <div class="search-list" ng-show="resultCount >= 0">
+    <div class="search-list">
       <div ng-switch on="resultCount">
-        <h3 ng-switch-when="0" openlmis-message="msg.no.matches|query"></h3>
+        <h3 ng-switch-when="0">
+          <span ng-show="!message" openlmis-message="msg.no.matches|query"></span>
+          <span ng-show="message" openlmis-message="message"></span>
+        </h3>
 
         <h3 ng-switch-when="1" openlmis-message="msg.one.match|query"></h3>
 
@@ -34,8 +37,8 @@
       </div>
       <a class="close-btn" href="" ng-click="clearSearch()"></a>
       <ul>
-        <li ng-repeat="facility in facilityList" ng-click="associateFacility(facility)">{{facility.code}} -
-          {{facility.name}}
+        <li ng-repeat="facility in facilityList">
+          <a href="" ng-click="associateFacility(facility)">{{facility.code}} - {{facility.name}}</a>
         </li>
       </ul>
     </div>

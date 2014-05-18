@@ -10,16 +10,7 @@
 
 function SupervisoryNodeController($scope, $location, supervisoryNode, ParentSupervisoryNodes, SupervisoryNodes) {
   $scope.supervisoryNode = supervisoryNode;
-
-  $scope.toggleSlider = function () {
-    $scope.sliderState = !$scope.sliderState;
-    if ($scope.sliderState) {
-      angular.element(".searchAndFilter").slideDown("slow");
-    }
-    else {
-      angular.element(".searchAndFilter").slideUp("slow");
-    }
-  };
+  $scope.query = "";
 
   var reset = function () {
     $scope.query = undefined;

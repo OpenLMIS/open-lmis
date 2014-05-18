@@ -297,7 +297,8 @@ span[class^="tpl-"] {
       position: relative;
       border: 1px solid #DDD;
       border-top: 0;
-      border-color: transparent #BBB #DDD;
+      border-color: transparent #BBB #DDD
+    ;
       background: #FCFCFC;
       font-size: 0.9em;
 
@@ -2585,7 +2586,7 @@ input[rnr-validator="positiveInteger"] {
   }
 }
 
-#podPageContent {
+.position-relative {
   position: relative;
 }
 
@@ -2624,16 +2625,54 @@ table.search-list {
   padding-top: 0;
 }
 
+.clear-bottom {
+  padding-bottom: 0;
+  margin-bottom: 0;
+}
+
+.input-div {
+  height: 20px;
+  padding: 4px 6px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  background: #fff;
+  .box-shadow(inset 0 1px 1px rgba(0,0,0,0.075));
+  font-size: 14px;
+  line-height: 20px;
+  color: #555;
+  cursor: default;
+}
+
+.associate-facility.input-div {
+  .size(28px, 89%);
+  padding: 0;
+  .facility-associated {
+    padding: 4px 6px;
+    float: left;
+    .placeholder {
+      color: #999;
+    }
+  }
+  .btn {
+    padding: 4px 11px;
+    float: right;
+    border: 0;
+    border-left: 1px solid #bbb;
+    .border-left-radius(0);
+  }
+  .icon-ellipsis-horizontal {
+    color: #777;
+  }
+}
+
 .searchAndFilter {
-  height: 400px;
   width: 95%;
   margin: 0 11px;
   background: white;
-  border: 1px solid #bbb;
+  border: 1px solid #ccc;
   display: none;
-  padding: 4px 20px 20px;
-//  box-shadow: 0 0 1px rgba(0,0,0,0.5);
-//  box-shadow: inset 1px 1px 0 #f9f9f9;
+  padding: 4px 22px 22px;
+  .box-shadow(0 0 7px rgba(0,0,0,0.25));
 
   &:after {
     .square(0px);
@@ -2643,7 +2682,7 @@ table.search-list {
     border-right: 12px solid transparent;
     content: "";
     top: -15px;
-    left: 166px;
+    left: 267px;
     z-index: 10;
   }
 
@@ -2655,35 +2694,25 @@ table.search-list {
     border-right: 13px solid transparent;
     content: "";
     top: -16px;
-    left: 165px;
+    left: 266px;
   }
-
-  .search-list ul {
-    height: 282px;
-    overflow-y: scroll;
-    li {
-      padding: 10px;
-      &:hover {
-        color: #fff;
-        background: #61acaf;
-        cursor: pointer;
-      }
-      &:last-child {
-        border-bottom: 1px solid #CCC;
+  .search-list {
+    display: none;
+    margin-bottom: 0;
+    ul {
+      height: 282px;
+      overflow-y: scroll;
+      li {
+        &:last-child {
+          border-bottom: 1px solid #CCC;
+        }
       }
     }
   }
-  h3.heading {
+  .main-heading {
     background: white;
   }
-  h4 {
-    margin-top: 0;
-    color: #666;
-    border-bottom: 1px solid #bbb;
-    padding-bottom: 5px;
-    margin-bottom: 18px;
-  }
   #searchFacility {
-    width: 45%;
+    width: 100%;
   }
 }
