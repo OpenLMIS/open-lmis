@@ -18,6 +18,7 @@ import org.openlmis.core.service.ProgramService;
 import org.openlmis.web.model.FacilityReferenceData;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -58,13 +59,23 @@ public class FacilityController extends BaseController {
 
   @RequestMapping(value = "/facilities", method = GET, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_FACILITY')")
-  public List<Facility> get(@RequestParam(value = "searchParam", required = false) String searchParam,
-                            @RequestParam(value = "virtualFacility", required = false) Boolean virtualFacility) {
+  public ResponseEntity<OpenLmisResponse> get(@RequestParam(value = "searchParam", required = false) String searchParam,
+                                              @RequestParam(value = "virtualFacility",
+                                                required = false) Boolean virtualFacility,
+                                              @Value("${facility.search.limit}") String facilitySearchLimit) {
+    List<Facility> facilities;
     if (searchParam != null) {
-      return facilityService.searchFacilitiesByCodeOrNameAndVirtualFacilityFlag(searchParam, virtualFacility);
+      Integer count = facilityService.getTotalSearchedFacilitiesByCodeOrName(searchParam);
+      if(count <= Integer.parseInt(facilitySearchLimit)){
+        facilities = facilityService.searchFacilitiesByCodeOrNameAndVirtualFacilityFlag(searchParam,virtualFacility);
+      }
+      else {
+          return OpenLmisResponse.response("message","too.many.results.found");
+      }
     } else {
-      return facilityService.getAll();
+      facilities = facilityService.getAll();
     }
+    return OpenLmisResponse.response("facilityList",facilities);
   }
 
   @RequestMapping(value = "/user/facilities", method = GET)

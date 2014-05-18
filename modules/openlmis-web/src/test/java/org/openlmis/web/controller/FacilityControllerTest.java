@@ -189,14 +189,47 @@ public class FacilityControllerTest {
   }
 
   @Test
-  public void shouldSearchFacilitiesByCodeOrName() throws Exception {
+  public void shouldGetAllFacilitiesIfSearchParamMissing() throws Exception {
     List<Facility> facilities = asList(new Facility());
+    when(facilityService.getAll()).thenReturn(facilities);
+
+    ResponseEntity<OpenLmisResponse> responseEntity = facilityController.get(null, false, "0");
+
+    verify(facilityService).getAll();
+    assertThat((List<Facility>) responseEntity.getBody().getData().get("facilityList"), is(facilities));
+  }
+
+  @Test
+  public void shouldReturnSearchedFacilitiesIfLessThanLimit() throws Exception {
     Boolean virtualFacility = false;
-    when(facilityService.searchFacilitiesByCodeOrNameAndVirtualFacilityFlag("searchParam", virtualFacility)).thenReturn(facilities);
+    String searchParam = "searchParam";
+    Integer count = 1;
+    List<Facility> facilities = asList(new Facility());
+    when(facilityService.getTotalSearchedFacilitiesByCodeOrName(searchParam)).thenReturn(count);
+    when(facilityService.searchFacilitiesByCodeOrNameAndVirtualFacilityFlag(searchParam, virtualFacility)).thenReturn(facilities);
 
-    List<Facility> returnedFacilities = facilityController.get("searchParam", virtualFacility);
+    ResponseEntity<OpenLmisResponse> responseEntity = facilityController.get(searchParam, virtualFacility, "2");
 
-    assertThat(returnedFacilities, is(facilities));
+    assertThat((List<Facility>) responseEntity.getBody().getData().get("facilityList"), is(facilities));
+    verify(facilityService).getTotalSearchedFacilitiesByCodeOrName(searchParam);
+    verify(facilityService).searchFacilitiesByCodeOrNameAndVirtualFacilityFlag(searchParam, virtualFacility);
+    verify(facilityService, never()).getAll();
+  }
+
+  @Test
+  public void shouldNotReturnSearchedFacilitiesIfMoreThanLimit() throws Exception {
+    Boolean virtualFacility = false;
+    String searchParam = "searchParam";
+    Integer count = 3;
+    List<Facility> facilities = asList(new Facility());
+    when(facilityService.getTotalSearchedFacilitiesByCodeOrName(searchParam)).thenReturn(count);
+
+    ResponseEntity<OpenLmisResponse> responseEntity = facilityController.get(searchParam, virtualFacility, "2");
+
+    assertThat((String) responseEntity.getBody().getData().get("message"), is("too.many.results.found"));
+    verify(facilityService).getTotalSearchedFacilitiesByCodeOrName(searchParam);
+    verify(facilityService, never()).searchFacilitiesByCodeOrNameAndVirtualFacilityFlag(searchParam, virtualFacility);
+    verify(facilityService, never()).getAll();
   }
 
   @Test
