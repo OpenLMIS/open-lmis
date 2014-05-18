@@ -38,7 +38,7 @@ function FacilitySearchFilterController($scope, Facility) {
     $scope.query = $scope.query.trim();
     Facility.get({"searchParam": $scope.query}, function (data) {
       $scope.facilityList = data.facilityList;
-      $scope.resultCount = $scope.facilityList == undefined ? 0 : $scope.facilityList.length;
+      $scope.resultCount = isUndefined($scope.facilityList) ? 0 : $scope.facilityList.length;
       $scope.message = data.message;
       $scope.openSearchResultsBox();
     }, {});
