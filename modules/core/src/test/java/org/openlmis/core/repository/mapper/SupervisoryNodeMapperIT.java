@@ -83,7 +83,6 @@ public class SupervisoryNodeMapperIT {
     assertThat(resultSupervisoryNode, is(notNullValue()));
     assertThat(resultSupervisoryNode.getCode(), CoreMatchers.is(SUPERVISORY_NODE_CODE));
     assertThat(resultSupervisoryNode.getName(), CoreMatchers.is(SupervisoryNodeBuilder.SUPERVISORY_NODE_NAME));
-    assertThat(resultSupervisoryNode.getModifiedDate(), CoreMatchers.is(SupervisoryNodeBuilder.SUPERVISORY_NODE_DATE));
     assertThat(resultSupervisoryNode.getFacility().getId(), is(facility.getId()));
   }
 
