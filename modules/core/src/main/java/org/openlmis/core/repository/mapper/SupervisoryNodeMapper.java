@@ -39,8 +39,8 @@ public interface SupervisoryNodeMapper {
   SupervisoryNode getById(Long id);
 
   @Insert("INSERT INTO supervisory_nodes " +
-    "(code, name, parentId, facilityId, description, createdBy, modifiedBy, modifiedDate)" +
-    " VALUES (#{code}, #{name}, #{parent.id}, #{facility.id}, #{description}, #{createdBy}, #{modifiedBy}, #{modifiedDate})")
+    "(code, name, parentId, facilityId, description, createdBy, modifiedBy)" +
+    " VALUES (#{code}, #{name}, #{parent.id}, #{facility.id}, #{description}, #{createdBy}, #{modifiedBy})")
   @Options(useGeneratedKeys = true)
   Integer insert(SupervisoryNode supervisoryNode);
 
@@ -125,7 +125,7 @@ public interface SupervisoryNodeMapper {
 
   @Update("UPDATE supervisory_nodes " +
     "SET code = #{code}, name = #{name}, parentId = #{parent.id}, facilityId = #{facility.id}, " +
-    "description = #{description}, modifiedBy = #{modifiedBy}, modifiedDate = #{modifiedDate} " +
+    "description = #{description}, modifiedBy = #{modifiedBy}, modifiedDate = COALESCE(#{modifiedDate}, CURRENT_TIMESTAMP) " +
     "WHERE id = #{id}")
   void update(SupervisoryNode supervisoryNode);
 
