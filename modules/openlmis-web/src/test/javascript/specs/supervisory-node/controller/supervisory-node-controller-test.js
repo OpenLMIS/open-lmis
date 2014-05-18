@@ -10,18 +10,19 @@
 
 describe("Supervisory Node Controller", function () {
 
-  var scope, ctrl, supervisoryNode, element, $httpBackend;
+  var scope, ctrl, supervisoryNode, element, $httpBackend, location;
   beforeEach(module('openlmis'));
 
-  beforeEach(inject(function ($rootScope, _$httpBackend_, $controller) {
+  beforeEach(inject(function ($rootScope, _$httpBackend_, $controller, $location) {
     scope = $rootScope.$new();
     $httpBackend = _$httpBackend_;
+    location = $location;
     scope.query = "Nod";
     supervisoryNode = {code: "N1", name: "Node 1"};
     ctrl = $controller('SupervisoryNodeController', {$scope: scope, supervisoryNode: supervisoryNode});
   }));
 
-  it('should set supervisory nodes in scope', function() {
+  it('should set supervisory node in scope', function() {
     expect(scope.supervisoryNode).toBe(supervisoryNode);
   });
 
@@ -121,5 +122,58 @@ describe("Supervisory Node Controller", function () {
     scope.deleteParentNode();
 
     expect(scope.supervisoryNode.parent).toBeUndefined();
+  });
+
+  it('should take to search page on cancel', function () {
+    scope.cancel();
+    expect(location.path()).toEqual('/#/search');
+  });
+
+  it('should not save supervisory node if invalid', function () {
+    scope.supervisoryNodeForm = {"$error": {"required": true}};
+
+    scope.save();
+
+    expect(scope.error).toEqual("form.error");
+    expect(scope.showError).toBeTruthy();
+  });
+
+  it('should not save supervisory node if associated facility missing', function () {
+    scope.supervisoryNodeForm = {"$error": {"required": false}};
+    scope.supervisoryNode = {facility: undefined};
+
+    scope.save();
+
+    expect(scope.error).toEqual("form.error");
+    expect(scope.showError).toBeTruthy();
+  });
+
+  it('should insert supervisory node', function () {
+    scope.supervisoryNode = {"code": "N100", "name": "node 100", "facility": {"code": "F10", "name": "village dispensary"}};;
+    scope.supervisoryNodeForm = {"$error": {"required": false}};
+
+    $httpBackend.expectPOST('/supervisory-nodes.json', scope.supervisoryNode).respond(200, {"success": "Saved successfully", "supervisoryNode": scope.supervisoryNode});
+    scope.save();
+    $httpBackend.flush();
+
+    expect(scope.error).toEqual("");
+    expect(scope.showError).toBeFalsy();
+    expect(scope.$parent.message).toEqual("Saved successfully");
+    expect(scope.$parent.supervisoryNodeId).toEqual(supervisoryNode.id);
+  });
+
+  it('should update supervisory node', function () {
+    scope.supervisoryNodeForm = {"$error": {"required": false}};
+    supervisoryNode.id = 4;
+    supervisoryNode.facility = {"code": "F10", "name": "village dispensary"};
+
+    $httpBackend.expectPUT('/supervisory-nodes/' + supervisoryNode.id + '.json', supervisoryNode).respond(200, {"success": "Saved successfully", "supervisoryNodeId": supervisoryNode.id});
+    scope.save();
+    $httpBackend.flush();
+
+    expect(scope.error).toEqual("");
+    expect(scope.showError).toBeFalsy();
+    expect(scope.$parent.message).toEqual("Saved successfully");
+    expect(scope.$parent.supervisoryNodeId).toEqual(supervisoryNode.id);
   });
 });

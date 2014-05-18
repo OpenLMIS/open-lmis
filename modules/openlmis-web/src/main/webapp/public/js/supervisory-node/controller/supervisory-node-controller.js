@@ -10,7 +10,6 @@
 
 function SupervisoryNodeController($scope, $location, supervisoryNode, ParentSupervisoryNodes, SupervisoryNodes) {
   $scope.supervisoryNode = supervisoryNode;
-  $scope.query = "";
 
   var reset = function () {
     $scope.query = undefined;
@@ -59,7 +58,7 @@ function SupervisoryNodeController($scope, $location, supervisoryNode, ParentSup
   };
 
   $scope.cancel = function () {
-    $location.path('');
+    $location.path('#/search');
   };
 
   var success = function (data) {
