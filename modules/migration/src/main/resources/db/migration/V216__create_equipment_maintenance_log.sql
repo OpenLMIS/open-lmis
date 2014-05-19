@@ -6,7 +6,7 @@ CREATE TABLE equipment_maintenance_logs(
   servicePerformed          VARCHAR (2000),
   finding                   VARCHAR (2000),
   recommendation            VARCHAR (2000),
-  requestId                 INTEGER REFERENCES equipment_maintenance_requests(id),
+  requestId                 INTEGER NULL REFERENCES equipment_maintenance_requests(id),
   nextVisitDate             DATE,
 
   createdBy                 INTEGER,
