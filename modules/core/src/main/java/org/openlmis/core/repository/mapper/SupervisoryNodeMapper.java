@@ -39,8 +39,8 @@ public interface SupervisoryNodeMapper {
   SupervisoryNode getById(Long id);
 
   @Insert("INSERT INTO supervisory_nodes " +
-    "(code, name, parentId, facilityId, description, createdBy, modifiedBy)" +
-    " VALUES (#{code}, #{name}, #{parent.id}, #{facility.id}, #{description}, #{createdBy}, #{modifiedBy})")
+    "(code, name, parentId, facilityId, description, createdBy, modifiedBy, modifiedDate)" +
+    " VALUES (#{code}, #{name}, #{parent.id}, #{facility.id}, #{description}, #{createdBy}, #{modifiedBy}, #{modifiedDate})")
   @Options(useGeneratedKeys = true)
   Integer insert(SupervisoryNode supervisoryNode);
 
