@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
-@RequestMapping(value="/equipment/maintenance-log/")
+@RequestMapping(value="/equipment/maintenance-request/")
 public class MaintenanceRequestController extends BaseController {
   @Autowired
   private MaintenanceRequestService service;
