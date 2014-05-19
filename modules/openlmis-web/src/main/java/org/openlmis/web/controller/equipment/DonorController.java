@@ -1,6 +1,7 @@
-package org.openlmis.web.controller;
+package org.openlmis.web.controller.equipment;
 
 import org.openlmis.equipment.repository.DonorRepository;
+import org.openlmis.web.controller.BaseController;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

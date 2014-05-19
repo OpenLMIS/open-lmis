@@ -8,11 +8,12 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-package org.openlmis.web.controller;
+package org.openlmis.web.controller.equipment;
 
 import org.openlmis.equipment.domain.EquipmentType;
 import org.openlmis.equipment.repository.EquipmentOperationalStatusRepository;
 import org.openlmis.equipment.service.EquipmentTypeService;
+import org.openlmis.web.controller.BaseController;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
