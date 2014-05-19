@@ -10,43 +10,41 @@
 
 package org.openlmis.equipment.service;
 
-import org.openlmis.equipment.domain.ServiceContract;
-import org.openlmis.equipment.domain.ServiceType;
-import org.openlmis.equipment.repository.ServiceContractRepository;
-import org.openlmis.equipment.repository.ServiceTypeRepository;
+import org.openlmis.equipment.domain.MaintenanceRequest;
+import org.openlmis.equipment.repository.MaintenanceRequestRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 
 @Component
-public class ServiceContractService {
+public class MaintenanceRequestServcie {
 
   @Autowired
-  private ServiceContractRepository repository;
+  private MaintenanceRequestRepository repository;
 
-  public List<ServiceContract> getAll(){
+
+  public List<MaintenanceRequest> getAll(){
     return repository.getAll();
   }
 
-  public List<ServiceContract> getAllForFacility(Long facilityId){
+  public List<MaintenanceRequest> getAllForFacility(Long facilityId){
     return repository.getAllForFacility(facilityId);
   }
 
-  public List<ServiceContract> getAllForVendor(Long vendorId){
-    return repository.getAllForVendor(vendorId);
+  public List<MaintenanceRequest> getOutstandingForVendor(Long vendorId){
+    return repository.getOutstandingForVendor(vendorId);
   }
 
-  public ServiceContract getById(Long id){
+  public MaintenanceRequest getById(Long id){
     return repository.getById(id);
   }
 
-  public void save(ServiceContract contract){
+  public void save(MaintenanceRequest contract){
     if(contract.getId() == null){
       repository.insert(contract);
     }else{
       repository.update(contract);
     }
   }
-
 }

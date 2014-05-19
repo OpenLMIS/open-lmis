@@ -8,45 +8,46 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-package org.openlmis.equipment.service;
+package org.openlmis.equipment.repository;
 
-import org.openlmis.equipment.domain.ServiceContract;
-import org.openlmis.equipment.domain.ServiceType;
-import org.openlmis.equipment.repository.ServiceContractRepository;
-import org.openlmis.equipment.repository.ServiceTypeRepository;
+import org.openlmis.equipment.domain.MaintenanceRequest;
+import org.openlmis.equipment.repository.mapper.MaintenanceRequestMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-@Component
-public class ServiceContractService {
+@Repository
+public class MaintenanceRequestRepository {
 
   @Autowired
-  private ServiceContractRepository repository;
+  private MaintenanceRequestMapper mapper;
 
-  public List<ServiceContract> getAll(){
-    return repository.getAll();
+  public MaintenanceRequest getById(Long id){
+    return mapper.getById(id);
   }
 
-  public List<ServiceContract> getAllForFacility(Long facilityId){
-    return repository.getAllForFacility(facilityId);
+  public List<MaintenanceRequest> getAllForFacility(Long facilityId){
+    return mapper.getAllForFacility(facilityId);
   }
 
-  public List<ServiceContract> getAllForVendor(Long vendorId){
-    return repository.getAllForVendor(vendorId);
+  public List<MaintenanceRequest> getAllForVendor(Long vendorId){
+    return mapper.getAllForVendor(vendorId);
   }
 
-  public ServiceContract getById(Long id){
-    return repository.getById(id);
+  public List<MaintenanceRequest> getOutstandingForVendor(Long vendorId){
+    return mapper.getOutstandingRequestsForVendor(vendorId);
   }
 
-  public void save(ServiceContract contract){
-    if(contract.getId() == null){
-      repository.insert(contract);
-    }else{
-      repository.update(contract);
-    }
+  public List<MaintenanceRequest> getAll(){
+    return mapper.getAll();
   }
 
+  public void insert(MaintenanceRequest value){
+    mapper.insert(value);
+  }
+
+  public void update(MaintenanceRequest value){
+    mapper.update(value);
+  }
 }

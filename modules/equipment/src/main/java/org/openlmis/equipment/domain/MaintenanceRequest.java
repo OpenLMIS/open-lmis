@@ -25,10 +25,16 @@ import java.util.Date;
 public class MaintenanceRequest extends BaseModel {
 
   private Long userId;
+  private Long facilityId;
+  private Long inventoryId;
   private Long vendorId;
+
   private Date requestedDate;
   private String reason;
   private Date recommendedDate;
   private String comment;
+
+  private Boolean resolved;
+  private String vendorComment;
 
 }
