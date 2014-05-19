@@ -10,11 +10,11 @@
 
 package org.openlmis.web.controller.equipment;
 
-import org.openlmis.equipment.domain.EquipmentType;
+
 import org.openlmis.equipment.domain.ServiceType;
-import org.openlmis.equipment.repository.EquipmentOperationalStatusRepository;
-import org.openlmis.equipment.service.EquipmentTypeService;
+import org.openlmis.equipment.domain.Vendor;
 import org.openlmis.equipment.service.ServiceTypeService;
+import org.openlmis.equipment.service.VendorService;
 import org.openlmis.web.controller.BaseController;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,27 +28,26 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 @Controller
-@RequestMapping(value="/equipment/service-type/")
-public class ServiceTypeController extends BaseController {
-
+@RequestMapping(value="/equipment/vendor/")
+public class VendorController extends BaseController {
 
   @Autowired
-  private ServiceTypeService service;
+  private VendorService service;
 
   @RequestMapping(method = GET, value = "list")
   public ResponseEntity<OpenLmisResponse> getAll(){
-    return  OpenLmisResponse.response("service_type", service.getAll());
+    return  OpenLmisResponse.response("vendors", service.getAll());
   }
 
   @RequestMapping(method = GET, value = "id")
   public ResponseEntity<OpenLmisResponse> getById( @RequestParam("id") Long id){
-    return  OpenLmisResponse.response("service_type", service.getById(id));
+    return  OpenLmisResponse.response("vendor", service.getById(id));
   }
 
 
   @RequestMapping(value = "save", method = POST, headers = ACCEPT_JSON)
-  public ResponseEntity<OpenLmisResponse> save(@RequestBody ServiceType type){
-    service.save(type);
+  public ResponseEntity<OpenLmisResponse> save(@RequestBody Vendor vendor){
+    service.save(vendor);
     return OpenLmisResponse.response("status","success");
   }
 }
