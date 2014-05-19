@@ -34,7 +34,7 @@ public interface RequisitionGroupMapper {
   Integer insert(RequisitionGroup requisitionGroup);
 
   @Select({"SELECT RG.id, RG.code, RG.name, RG.description, RG.supervisoryNodeId, SN.name AS supervisoryNodeName",
-    "FROM requisition_groups RG INNER JOIN supervisory_nodes SN ON RG.supervisoryNodeId = SN.id WHERE RG.id = #{id}"})
+    "FROM requisition_groups RG LEFT JOIN supervisory_nodes SN ON RG.supervisoryNodeId = SN.id WHERE RG.id = #{id}"})
   @Results(value = {
     @Result(property = "supervisoryNode.id", column = "supervisoryNodeId"),
     @Result(property = "supervisoryNode.name", column = "supervisoryNodeName")
