@@ -30,7 +30,7 @@ describe("Supervisory Node Search Controller", function () {
     var response = {"supervisoryNodes": [supervisoryNode], "pagination": pagination};
     scope.query = "Nod";
     scope.selectedSearchOption.value = 'parent';
-    $httpBackend.when('GET', '/search-supervisory-nodes.json?page=1&param=' + scope.query + '&parent=true').respond(response);
+    $httpBackend.when('GET', '/paged-search-supervisory-nodes.json?page=1&param=' + scope.query + '&parent=true').respond(response);
     scope.search(1);
     $httpBackend.flush();
 

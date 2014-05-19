@@ -33,7 +33,7 @@ describe("Supervisory Node Controller", function () {
     var node3 = {"id": 3, "code": "N3", "name": "Node 3"};
     var response = {"supervisoryNodeList":[node1, node2, node3]};
 
-    $httpBackend.when('GET', '/parent-supervisory-nodes.json?searchParam=' + scope.query).respond(response);
+    $httpBackend.when('GET', '/search-supervisory-nodes.json?searchParam=' + scope.query).respond(response);
     scope.showParentNodeSearchResults();
     $httpBackend.flush();
 
@@ -51,7 +51,7 @@ describe("Supervisory Node Controller", function () {
     var node3 = {"id": 3, "code": "N3", "name": "Node 3"};
     var response = {"supervisoryNodeList":[node1, node2, node3]};
 
-    $httpBackend.when('GET', '/parent-supervisory-nodes.json?searchParam=' + scope.query).respond(response);
+    $httpBackend.when('GET', '/search-supervisory-nodes.json?searchParam=' + scope.query).respond(response);
     scope.showParentNodeSearchResults();
     $httpBackend.flush();
 
@@ -72,7 +72,7 @@ describe("Supervisory Node Controller", function () {
 
     scope.showParentNodeSearchResults();
 
-    expect($httpBackend.expectGET).not.toHaveBeenCalledWith('/parent-supervisory-nodes.json?searchParam=' + scope.query);
+    expect($httpBackend.expectGET).not.toHaveBeenCalledWith('/search-supervisory-nodes.json?searchParam=' + scope.query);
     expect(scope.filteredNodes).toEqual([node2, node3]);
     expect(scope.previousQuery).toEqual("Nod");
     expect(scope.resultCount).toEqual(2);
@@ -84,7 +84,7 @@ describe("Supervisory Node Controller", function () {
 
     scope.showParentNodeSearchResults();
 
-    expect($httpBackend.expectGET).not.toHaveBeenCalledWith('/parent-supervisory-nodes.json?searchParam=' + scope.query);
+    expect($httpBackend.expectGET).not.toHaveBeenCalledWith('/search-supervisory-nodes.json?searchParam=' + scope.query);
   });
 
   it('should not search results if query length is less than 3', function () {
@@ -93,12 +93,12 @@ describe("Supervisory Node Controller", function () {
 
     scope.showParentNodeSearchResults();
 
-    expect($httpBackend.expectGET).not.toHaveBeenCalledWith('/parent-supervisory-nodes.json?searchParam=' + scope.query);
+    expect($httpBackend.expectGET).not.toHaveBeenCalledWith('/search-supervisory-nodes.json?searchParam=' + scope.query);
   });
 
   it('should trim left and right whitespaces in query if length greater than 3', function () {
     scope.query = "  Node  ";
-    $httpBackend.expectGET('/parent-supervisory-nodes.json?searchParam=' + "Node").respond(null);
+    $httpBackend.expectGET('/search-supervisory-nodes.json?searchParam=' + "Node").respond(null);
 
     scope.showParentNodeSearchResults();
 
