@@ -58,3 +58,17 @@ services.factory('ServiceType', function ($resource) {
 services.factory('SaveServiceType', function ($resource) {
     return $resource('/equipment/service-type/save.json', {}, {});
 });
+
+/* Vendor management  */
+services.factory('Vendors', function ($resource) {
+    return $resource('/equipment/vendor/list.json', {}, {});
+});
+
+services.factory('Vendor', function ($resource) {
+    return $resource('/equipment/vendor/id.json', {}, {});
+});
+
+services.factory('SaveVendor', function ($resource) {
+    return $resource('/equipment/vendor/save.json', {}, {});
+});
+

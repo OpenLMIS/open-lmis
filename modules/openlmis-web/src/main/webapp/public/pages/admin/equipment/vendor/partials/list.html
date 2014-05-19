@@ -1,0 +1,48 @@
+<!--
+  ~ This program was produced for the U.S. Agency for International Development. It was prepared by the USAID | DELIVER PROJECT, Task Order 4. It is part of a project which utilizes code originally licensed under the terms of the Mozilla Public License (MPL) v2 and therefore is licensed under MPL v2 or later.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify it under the terms of the Mozilla Public License as published by the Mozilla Foundation, either version 2 of the License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the Mozilla Public License for more details.
+  ~
+  ~ You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
+  -->
+<!--
+  ~ This program was produced for the U.S. Agency for International Development. It was prepared by the USAID | DELIVER PROJECT, Task Order 4. It is part of a project which utilizes code originally licensed under the terms of the Mozilla Public License (MPL) v2 and therefore is licensed under MPL v2 or later.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify it under the terms of the Mozilla Public License as published by the Mozilla Foundation, either version 2 of the License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the Mozilla Public License for more details.
+  ~
+  ~ You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
+  -->
+
+<div xmlns="http://www.w3.org/1999/html">
+  <h2>
+    <span>Manage Equipment Service Vendors</span>
+    <a id="add-new-vendor" href="#/create" class="pull-right btn btn-primary" openlmis-message="button.add.new"></a>
+  </h2>
+
+  <div class="content-body">
+    <table class="table table-bordered table-striped">
+      <thead>
+        <tr>
+          <th style="width: 30px;">#</th>
+          <th>Name</th>
+          <th>Primary Phone</th>
+          <th>Email</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="row in list">
+          <td>{{$index + 1}}</td>
+          <td>
+            <a ng-href="#/edit/{{row.id}}">{{row.name}}</a>
+          </td>
+          <td>{{row.primaryPhone}}</td>
+          <td>{{row.email}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
