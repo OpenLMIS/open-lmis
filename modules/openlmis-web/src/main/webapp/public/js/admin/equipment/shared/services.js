@@ -44,3 +44,17 @@ services.factory('SaveEquipmentInventory', function ($resource) {
 services.factory('Donors', function ($resource) {
   return $resource('/donor/list.json', {}, {});
 });
+
+
+/* Service Types */
+services.factory('ServiceTypes', function ($resource) {
+    return $resource('/equipment/service-type/list.json', {}, {});
+});
+
+services.factory('ServiceType', function ($resource) {
+    return $resource('/equipment/service-type/id.json', {}, {});
+});
+
+services.factory('SaveServiceType', function ($resource) {
+    return $resource('/equipment/service-type/save.json', {}, {});
+});
