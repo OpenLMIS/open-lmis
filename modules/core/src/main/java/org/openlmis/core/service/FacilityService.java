@@ -240,7 +240,11 @@ public class FacilityService {
     return facility;
   }
 
-  public Integer getTotalSearchedFacilitiesByCodeOrName(String searchParam){
-    return facilityRepository.getTotalSearchedFacilitiesByCodeOrName(searchParam);
+  public Integer getCountOfEnabledFacilities(String searchParam){
+    return facilityRepository.getCountOfEnabledFacilities(searchParam);
+  }
+
+  public List<Facility> getEnabledFacilities(String searchParam) {
+    return facilityRepository.getEnabledFacilities(searchParam);
   }
 }

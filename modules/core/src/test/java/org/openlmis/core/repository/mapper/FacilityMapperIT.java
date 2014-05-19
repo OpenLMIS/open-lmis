@@ -564,6 +564,27 @@ public class FacilityMapperIT {
   }
 
   @Test
+  public void shouldGetEnabledFacilities(){
+    String searchParam = "fac";
+    Facility fac1 = make(a(FacilityBuilder.defaultFacility, with(name, "FAC1"), with(enabled, true), with(code,"FAC2")));
+    Facility fac2 = make(a(FacilityBuilder.defaultFacility, with(name,"FAC2"), with(enabled,false), with(code,"FAC3")));
+    Facility fac3 = make(a(FacilityBuilder.defaultFacility, with(name,"FAC2"), with(enabled,true), with(code,"FAC1")));
+    Facility fac4 = make(a(FacilityBuilder.defaultFacility, with(name,"Dispensary1"), with(enabled,true), with(code,"DIS3")));
+    mapper.insert(fac1);
+    mapper.insert(fac2);
+    mapper.insert(fac3);
+    mapper.insert(fac4);
+
+    List<Facility> enabledFacilities = mapper.getEnabledFacilities(searchParam);
+
+    assertThat(enabledFacilities.size(), is(2));
+    assertThat(enabledFacilities.get(0).getName(), is(fac3.getName()));
+    assertThat(enabledFacilities.get(0).getCode(), is(fac3.getCode()));
+    assertThat(enabledFacilities.get(1).getName(), is(fac1.getName()));
+    assertThat(enabledFacilities.get(1).getCode(), is(fac1.getCode()));
+  }
+
+  @Test
   public void shouldGetAllInDeliveryZoneAndOrderByGeographicZoneParentAndFacilityName() {
     ProcessingSchedule processingSchedule = make(a(ProcessingScheduleBuilder.defaultProcessingSchedule));
     processingScheduleMapper.insert(processingSchedule);
@@ -742,7 +763,7 @@ public class FacilityMapperIT {
     Facility facility3 = make(a(FacilityBuilder.defaultFacility,with(code, "Facility 3")));
     mapper.insert(facility3);
 
-    Integer totalFacilities = mapper.getTotalSearchedFacilitiesByCodeOrName("Fac");
+    Integer totalFacilities = mapper.getCountOfEnabledFacilities("Fac");
 
     assertThat(totalFacilities,is(3));
   }

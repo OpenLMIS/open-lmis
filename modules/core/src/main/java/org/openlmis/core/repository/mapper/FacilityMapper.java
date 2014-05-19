@@ -215,5 +215,9 @@ public interface FacilityMapper {
 
   @Select({"SELECT COUNT(*) FROM facilities WHERE (LOWER(code) LIKE '%' || LOWER(#{searchParam}) || '%'",
     "OR LOWER(name) LIKE '%' || LOWER(#{searchParam}) || '%')"})
-  Integer getTotalSearchedFacilitiesByCodeOrName(String searchParam);
+  Integer getCountOfEnabledFacilities(String searchParam);
+
+  @Select({"SELECT * FROM facilities WHERE (LOWER(code) LIKE '%' || LOWER(#{searchParam}) || '%'",
+    "OR LOWER(name) LIKE '%' || LOWER(#{searchParam}) || '%') AND enabled = true ORDER BY LOWER(code)"})
+  List<Facility> getEnabledFacilities(String searchParam);
 }

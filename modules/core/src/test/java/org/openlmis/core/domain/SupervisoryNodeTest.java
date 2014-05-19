@@ -18,8 +18,7 @@ import org.openlmis.core.builder.SupervisoryNodeBuilder;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.db.categories.UnitTests;
 
-import static com.natpryce.makeiteasy.MakeItEasy.a;
-import static com.natpryce.makeiteasy.MakeItEasy.make;
+import static com.natpryce.makeiteasy.MakeItEasy.*;
 
 @Category(UnitTests.class)
 public class SupervisoryNodeTest {
@@ -31,6 +30,18 @@ public class SupervisoryNodeTest {
   public void shouldThrowIfParentNodeIsInvalid() throws Exception{
     SupervisoryNode parent = make(a(SupervisoryNodeBuilder.defaultSupervisoryNode));
     SupervisoryNode supervisoryNode = make(a(SupervisoryNodeBuilder.defaultSupervisoryNode));
+    supervisoryNode.setParent(parent);
+
+    expectedEx.expect(DataException.class);
+    expectedEx.expectMessage("error.supervisory.node.parent.invalid");
+
+    supervisoryNode.validateParent();
+  }
+
+  @Test
+  public void shouldThrowIfParentNodeIsSame(){
+    SupervisoryNode parent = make(a(SupervisoryNodeBuilder.defaultSupervisoryNode,with(SupervisoryNodeBuilder.id,1L),with(SupervisoryNodeBuilder.code,"N1")));
+    SupervisoryNode supervisoryNode = make(a(SupervisoryNodeBuilder.defaultSupervisoryNode,with(SupervisoryNodeBuilder.id,1L),with(SupervisoryNodeBuilder.code,"N2")));
     supervisoryNode.setParent(parent);
 
     expectedEx.expect(DataException.class);

@@ -64,7 +64,7 @@ public class SupervisoryNode extends BaseModel implements Importable {
   }
 
   public void validateParent() {
-    if (this.code.equals(this.parent.code))
+    if (this.code.equals(this.parent.code) || this.id == this.parent.id)
       throw new DataException("error.supervisory.node.parent.invalid");
   }
 }

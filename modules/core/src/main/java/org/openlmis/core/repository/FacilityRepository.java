@@ -205,7 +205,11 @@ public class FacilityRepository {
     return mapper.getAllParentsByModifiedDate(modifiedDate);
   }
 
-  public Integer getTotalSearchedFacilitiesByCodeOrName(String searchParam){
-    return mapper.getTotalSearchedFacilitiesByCodeOrName(searchParam);
+  public Integer getCountOfEnabledFacilities(String searchParam){
+    return mapper.getCountOfEnabledFacilities(searchParam);
+  }
+
+  public List<Facility> getEnabledFacilities(String searchParam) {
+    return mapper.getEnabledFacilities(searchParam);
   }
 }
