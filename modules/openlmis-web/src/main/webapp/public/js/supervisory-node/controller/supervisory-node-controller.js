@@ -9,7 +9,7 @@
  */
 
 function SupervisoryNodeController($scope, $location, supervisoryNode, ParentSupervisoryNodes, SupervisoryNodes) {
-  $scope.supervisoryNode = supervisoryNode;
+  $scope.supervisoryNode = supervisoryNode || {};
 
   var reset = function () {
     $scope.query = undefined;

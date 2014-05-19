@@ -8,7 +8,8 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
  */
 
-function FacilitySearchFilterController($scope, Facility) {
+function FacilitySearchFilterController($scope, Facilities) {
+  $scope.query = undefined;
 
   $scope.progressFunc = function () {
     var bufferHeight = 200;
@@ -36,7 +37,7 @@ function FacilitySearchFilterController($scope, Facility) {
   $scope.facilitySearchResults = function () {
     if (!$scope.query) return;
     $scope.query = $scope.query.trim();
-    Facility.get({"searchParam": $scope.query}, function (data) {
+    Facilities.get({"searchParam": $scope.query}, function (data) {
       $scope.facilityList = data.facilityList;
       $scope.resultCount = isUndefined($scope.facilityList) ? 0 : $scope.facilityList.length;
       $scope.message = data.message;
@@ -61,12 +62,7 @@ function FacilitySearchFilterController($scope, Facility) {
   };
 
   $scope.associateFacility = function (facility) {
-    if (isUndefined($scope.$parent.$parent.supervisoryNode)) {
-      $scope.$parent.$parent.supervisoryNode = {facility: facility};
-    }
-    else {
-      $scope.$parent.$parent.supervisoryNode.facility = facility;
-    }
+    $scope.$parent.$parent.supervisoryNode.facility = facility;
     $scope.$parent.$parent.sliderState = !$scope.$parent.$parent.sliderState;
   };
 }

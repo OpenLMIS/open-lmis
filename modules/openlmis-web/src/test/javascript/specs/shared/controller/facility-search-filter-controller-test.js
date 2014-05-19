@@ -22,7 +22,7 @@ describe("Facility Search Filter Controller", function () {
   }));
 
   it("should associate a facility", function() {
-    scope.supervisoryNode = undefined;
+    scope.supervisoryNode = {};
     scope.sliderState = undefined;
     var facility = {code: "F10", name: "Village Dispensary"};
 
@@ -38,7 +38,7 @@ describe("Facility Search Filter Controller", function () {
 
     scope.facilitySearchResults();
 
-    expect($httpBackend.expectGET).not.toHaveBeenCalledWith('/facilities.json?searchParam=' + scope.query);
+    expect($httpBackend.expectGET).not.toHaveBeenCalledWith('/filter-facilities.json?searchParam=' + scope.query);
   });
 
 
@@ -49,7 +49,7 @@ describe("Facility Search Filter Controller", function () {
     var facility3 = {"id": 3, "code": "F3", "name": "Facility 3"};
     var response = {"facilityList":[facility2, facility3], "message": ""};
 
-    $httpBackend.when('GET', '/facilities.json?searchParam=' + scope.query).respond(response);
+    $httpBackend.when('GET', '/filter-facilities.json?searchParam=' + scope.query).respond(response);
     scope.facilitySearchResults();
     $httpBackend.flush();
 
@@ -62,7 +62,7 @@ describe("Facility Search Filter Controller", function () {
     scope.query = "Fac";
     var response = {"facilityList":[], "message": "Too may results found"};
 
-    $httpBackend.when('GET', '/facilities.json?searchParam=' + scope.query).respond(response);
+    $httpBackend.when('GET', '/filter-facilities.json?searchParam=' + scope.query).respond(response);
     scope.facilitySearchResults();
     $httpBackend.flush();
 

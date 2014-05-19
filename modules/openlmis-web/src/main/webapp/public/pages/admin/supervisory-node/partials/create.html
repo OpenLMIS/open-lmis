@@ -99,15 +99,15 @@
             </label>
 
             <div class="form-field">
-              <div class="input-div associate-facility clearfix">
+              <div class="input-div associate-facility clearfix" ng-click="sliderState = !sliderState;">
                 <div class="facility-associated">
                   <span class="placeholder" ng-show="!supervisoryNode.facility"
                         openlmis-message="label.no.facility.associated"></span>
                   <span ng-show="supervisoryNode.facility">{{supervisoryNode.facility.code}} - {{supervisoryNode.facility.name}}</span>
                 </div>
-                <button class="btn" ng-click="sliderState = !sliderState;">
+                <a href="" class="btn">
                   <i class="icon icon-ellipsis-horizontal"></i>
-                </button>
+                </a>
               </div>
             </div>
             <span class="field-error" ng-show="!supervisoryNode.facility && showError"

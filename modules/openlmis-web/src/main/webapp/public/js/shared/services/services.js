@@ -35,6 +35,10 @@ services.factory('Facility', function ($resource) {
   return resource;
 });
 
+services.factory("Facilities", function ($resource) {
+  return $resource('/filter-facilities.json', {}, {});
+});
+
 services.factory('UserContext', function ($resource) {
   return $resource('/user-context.json', {}, {});
 });
