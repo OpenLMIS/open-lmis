@@ -18,7 +18,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Component
-public class MaintenanceRequestServcie {
+public class MaintenanceRequestService  {
 
   @Autowired
   private MaintenanceRequestRepository repository;
@@ -30,6 +30,11 @@ public class MaintenanceRequestServcie {
 
   public List<MaintenanceRequest> getAllForFacility(Long facilityId){
     return repository.getAllForFacility(facilityId);
+  }
+
+
+  public List<MaintenanceRequest> getAllForVendor(Long vendorId){
+    return repository.getAllForVendor(vendorId);
   }
 
   public List<MaintenanceRequest> getOutstandingForVendor(Long vendorId){
