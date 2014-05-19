@@ -10,17 +10,14 @@
 
 package org.openlmis.equipment.domain;
 
-import lombok.AllArgsConstructor;
+
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.BaseModel;
 
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
-public class Donor extends BaseModel {
+public class ServiceType extends BaseModel{
 
-  private String shortName;
-  private String longName;
+  private String name;
+  private String description;
 
 }

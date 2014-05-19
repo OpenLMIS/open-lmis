@@ -10,17 +10,17 @@
 
 package org.openlmis.equipment.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.BaseModel;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-public class Donor extends BaseModel {
+import java.util.Date;
 
-  private String shortName;
-  private String longName;
+public class EquipmentMaintenanceRequest extends BaseModel {
+
+  private Long userId;
+  private Long vendorId;
+  private Date requestedDate;
+  private String reason;
+  private Date recommendedDate;
+  private String comment;
 
 }
