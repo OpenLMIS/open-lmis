@@ -13,6 +13,7 @@ package org.openlmis.core.service;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.Pagination;
 import org.openlmis.core.domain.RequisitionGroup;
+import org.openlmis.core.domain.RequisitionGroupMember;
 import org.openlmis.core.domain.SupervisoryNode;
 import org.openlmis.core.repository.RequisitionGroupRepository;
 import org.openlmis.core.repository.SupervisoryNodeRepository;
@@ -36,6 +37,9 @@ public class RequisitionGroupService {
 
   @Autowired
   private SupervisoryNodeRepository supervisoryNodeRepository;
+
+  @Autowired
+  private RequisitionGroupMemberService requisitionGroupMemberService;
 
   public void save(RequisitionGroup requisitionGroup) {
     Long supervisoryNodeId = supervisoryNodeRepository.getIdForCode(requisitionGroup.getSupervisoryNode().getCode());
@@ -67,5 +71,13 @@ public class RequisitionGroupService {
       return requisitionGroupRepository.getTotalRecordsForSearchOnGroupName(searchParam);
     }
     return requisitionGroupRepository.getTotalRecordsForSearchOnNodeName(searchParam);
+  }
+
+  public RequisitionGroup getBy(Long id) {
+    return requisitionGroupRepository.getBy(id);
+  }
+
+  public List<RequisitionGroupMember> getMembersBy(Long requisitionGroupId) {
+    return requisitionGroupMemberService.getMembersBy(requisitionGroupId);
   }
 }

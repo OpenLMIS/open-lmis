@@ -70,4 +70,8 @@ public class RequisitionGroupMemberRepository {
   public void deleteMembersFor(Facility facility) {
     mapper.deleteMembersFor(facility);
   }
+
+  public List<RequisitionGroupMember> getMembersBy(Long requisitionGroupId) {
+    return mapper.getMembersBy(requisitionGroupId);
+  }
 }

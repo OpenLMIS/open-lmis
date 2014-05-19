@@ -71,4 +71,9 @@ public class RequisitionGroupRepository {
   public Integer getTotalRecordsForSearchOnNodeName(String searchParam) {
     return mapper.getTotalRecordsForSearchOnNodeName(searchParam);
   }
+
+  public RequisitionGroup getBy(Long id) {
+    return mapper.getRequisitionGroupById(id);
+  }
+
 }

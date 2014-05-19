@@ -17,6 +17,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.openlmis.core.domain.Pagination;
 import org.openlmis.core.domain.RequisitionGroup;
+import org.openlmis.core.domain.RequisitionGroupMember;
 import org.openlmis.core.service.RequisitionGroupService;
 import org.openlmis.core.service.StaticReferenceDataService;
 import org.openlmis.db.categories.UnitTests;
@@ -72,5 +73,23 @@ public class RequisitionGroupControllerTest {
     assertThat((List<RequisitionGroup>) response.getBody().getData().get("requisitionGroupList"), is(requisitionGroups));
     pagination.setTotalRecords(5);
     assertThat((Pagination) response.getBody().getData().get("pagination"), is(pagination));
+  }
+
+  @Test
+  public void shouldGetRequisitionGroupWithMemberById() throws Exception {
+
+    RequisitionGroup requisitionGroup = new RequisitionGroup();
+    Long requisitionGroupId = 1L;
+    List<RequisitionGroupMember> requisitionGroupMembers = asList(new RequisitionGroupMember());
+
+    when(requisitionGroupService.getBy(requisitionGroupId)).thenReturn(requisitionGroup);
+    when(requisitionGroupService.getMembersBy(requisitionGroupId)).thenReturn(requisitionGroupMembers);
+
+    ResponseEntity<OpenLmisResponse> response = requisitionGroupController.getById(requisitionGroupId);
+
+    verify(requisitionGroupService).getBy(requisitionGroupId);
+    verify(requisitionGroupService).getMembersBy(requisitionGroupId);
+    assertThat((RequisitionGroup) response.getBody().getData().get("requisitionGroup"), is(requisitionGroup));
+    assertThat((List<RequisitionGroupMember>) response.getBody().getData().get("requisitionGroupMembers"), is(requisitionGroupMembers));
   }
 }

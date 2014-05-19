@@ -69,4 +69,15 @@ public interface RequisitionGroupMemberMapper {
 
   @Delete({"DELETE FROM requisition_group_members where facilityId = #{id}"})
   void deleteMembersFor(Facility facility);
+
+  @Select({"SELECT RGM.*, F.name AS facilityName, F.id AS facilityId, F.enabled AS enabled, FT.name AS facilityType FROM requisition_group_members RGM",
+    "INNER JOIN facilities F ON RGM.facilityId = F.id INNER JOIN facility_types FT ON FT.id = F.typeId",
+    "WHERE requisitionGroupId = #{requisitionGroupId}"})
+  @Results(value = {
+    @Result(property = "facility.id", column = "facilityId"),
+    @Result(property = "facility.name", column = "facilityName"),
+    @Result(property = "facility.enabled", column = "enabled"),
+    @Result(property = "facility.facilityType.name", column = "facilityType"),
+  })
+  List<RequisitionGroupMember> getMembersBy(Long requisitionGroupId);
 }

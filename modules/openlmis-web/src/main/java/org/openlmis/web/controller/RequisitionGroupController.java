@@ -13,12 +13,14 @@ package org.openlmis.web.controller;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.Pagination;
 import org.openlmis.core.domain.RequisitionGroup;
+import org.openlmis.core.domain.RequisitionGroupMember;
 import org.openlmis.core.service.RequisitionGroupService;
 import org.openlmis.core.service.StaticReferenceDataService;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -50,6 +52,16 @@ public class RequisitionGroupController {
 
     ResponseEntity<OpenLmisResponse> response = OpenLmisResponse.response("requisitionGroupList", requisitionGroupList);
     response.getBody().addData("pagination", pagination);
+    return response;
+  }
+
+  @RequestMapping(value = "/requisitionGroups/{id}", method = GET)
+  public ResponseEntity<OpenLmisResponse> getById(@PathVariable(value = "id") Long id) {
+    RequisitionGroup requisitionGroup = requisitionGroupService.getBy(id);
+    List<RequisitionGroupMember> requisitionGroupMembers = requisitionGroupService.getMembersBy(id);
+
+    ResponseEntity<OpenLmisResponse> response = OpenLmisResponse.response("requisitionGroup", requisitionGroup);
+    response.getBody().addData("requisitionGroupMembers", requisitionGroupMembers);
     return response;
   }
 }
