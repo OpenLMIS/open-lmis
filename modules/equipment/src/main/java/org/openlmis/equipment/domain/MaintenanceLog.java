@@ -25,7 +25,13 @@ import java.util.Date;
 public class MaintenanceLog extends BaseModel{
 
   private Long userId;
+  private Long facilityId;
+  private Long equipmentId;
   private Long vendorId;
+  private Long contractId;
+
+
+
   private Date maintenanceDate;
   private String servicePerformed;
   private String finding;
