@@ -8,24 +8,36 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-package org.openlmis.equipment.domain;
+package org.openlmis.equipment.service;
 
-import lombok.Data;
-import org.openlmis.core.domain.BaseModel;
+import org.openlmis.equipment.domain.Equipment;
+import org.openlmis.equipment.domain.Vendor;
+import org.openlmis.equipment.repository.EquipmentRepository;
+import org.openlmis.equipment.repository.VendorRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
-import java.util.Date;
+import java.util.List;
 
-@Data
-public class Vendor extends BaseModel {
+@Component
+public class VendorService {
 
-  private String name;
-  private String website;
-  private String contactPerson;
-  private String primaryPhone;
-  private String email;
-  private String description;
-  private String specialization;
-  private String geographicCoverage;
-  private Date registrationDate;
+  @Autowired
+  private VendorRepository repository;
 
+  public List<Vendor> getAll(){
+    return repository.getAll();
+  }
+
+  public Vendor getById(Long id){
+    return repository.getById(id);
+  }
+
+  public void save(Vendor vendor){
+    if(vendor.getId() == null){
+      repository.insert(vendor);
+    }else{
+      repository.update(vendor);
+    }
+  }
 }
