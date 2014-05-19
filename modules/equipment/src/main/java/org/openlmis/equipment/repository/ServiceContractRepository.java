@@ -8,35 +8,43 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-package org.openlmis.equipment.repository.mapper;
+package org.openlmis.equipment.repository;
 
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Options;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Update;
+import org.openlmis.equipment.domain.ServiceContract;
 import org.openlmis.equipment.domain.ServiceType;
-import org.openlmis.equipment.domain.Vendor;
+import org.openlmis.equipment.repository.mapper.ServiceContractMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 @Repository
-public interface ServiceTypeMapper {
+public class ServiceContractRepository {
+  @Autowired
+  private ServiceContractMapper mapper;
 
-  @Select("select * from equipment_service_types where id = #{id}")
-  ServiceType getById(Long id);
+  public ServiceContract getById(Long id){
+    return mapper.getById(id);
+  }
 
-  @Select("select * from equipment_service_types")
-  List<ServiceType> getAll();
+  public List<ServiceContract> getAllForFacility(Long facilityId){
+    return mapper.getAllForFacility(facilityId);
+  }
 
-  @Insert("insert into equipment_service_types (name, description, createdBy, createdDate, modifiedBy, modifiedDate) " +
-      " values " +
-      " (#{name}, #{description}, #{createdBy},COALESCE(#{createdDate}, NOW()), #{modifiedBy}, NOW() )")
-  @Options(useGeneratedKeys = true)
-  void insert(ServiceType value);
+  public List<ServiceContract> getAllForVendor(Long vendorId){
+    return mapper.getAllForVendor(vendorId);
+  }
 
-  @Update("UPDATE equipment_service_types SET " +
-      "name = #{name}, description = #{description}, modifiedBy = #{modifiedBy}, modifiedDate = NOW()" +
-      " WHERE id = #{id}")
-  void update(ServiceType value);
+  public List<ServiceContract> getAll(){
+    return mapper.getAll();
+  }
+
+  public void insert(ServiceContract value){
+    mapper.insert(value);
+  }
+
+  public void update(ServiceContract value){
+    mapper.update(value);
+  }
+
 }
