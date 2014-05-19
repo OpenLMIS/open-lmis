@@ -181,6 +181,9 @@ public class HomePage extends Page {
   @FindBy(how = ID, using = "managePodHeader")
   private static WebElement viewManagePODHeader = null;
 
+  @FindBy(how = ID, using = "requisitionGroupTab")
+  private static WebElement requisitionGroupTab = null;
+
   @FindBy(how = ID, using = "supervisoryNodeTab")
   private static WebElement supervisoryNodesTab = null;
 
@@ -250,6 +253,17 @@ public class HomePage extends Page {
       return false;
     }
     return supervisoryNodesTab.isDisplayed();
+  }
+
+  public boolean isRequisitionGroupTabDisplayed() {
+    try {
+      testWebDriver.waitForElementToAppear(requisitionGroupTab);
+    } catch (TimeoutException e) {
+      return false;
+    } catch (NoSuchElementException e) {
+      return false;
+    }
+    return requisitionGroupTab.isDisplayed();
   }
 
   public TemplateConfigPage selectProgramToConfigTemplate(String programme) {
@@ -547,6 +561,16 @@ public class HomePage extends Page {
     testWebDriver.waitForElementToAppear(supervisoryNodesTab);
     supervisoryNodesTab.click();
     return PageObjectFactory.getSupervisoryNodesPage(testWebDriver);
+  }
+
+  public RequisitionGroupPage navigateToRequisitionGroupPage() {
+    testWebDriver.waitForElementToAppear(AdministrationMenuItem);
+    testWebDriver.keyPress(AdministrationMenuItem);
+    testWebDriver.waitForElementToAppear(manageLink);
+    testWebDriver.keyPress(manageLink);
+    testWebDriver.waitForElementToAppear(requisitionGroupTab);
+    requisitionGroupTab.click();
+    return PageObjectFactory.getRequisitionGroupPage(testWebDriver);
   }
 }
 

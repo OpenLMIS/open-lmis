@@ -52,6 +52,7 @@ public class PageObjectFactory {
   private static ConfigureOrderNumberPage instanceOfConfigureOrderNumberPage;
   private static PeriodsPage instanceOfPeriodsPage;
   private static SupervisoryNodesPage instanceOfSupervisoryNodesPage;
+  private static RequisitionGroupPage instanceOfRequisitionGroupPage;
 
   public static ManageFacilityPage getManageFacilityPage(TestWebDriver testWebDriver) {
     if (instanceOfManageFacilityPage == null) {
@@ -312,5 +313,12 @@ public class PageObjectFactory {
       instanceOfSupervisoryNodesPage = new SupervisoryNodesPage(testWebDriver);
     }
     return instanceOfSupervisoryNodesPage;
+  }
+
+  public static RequisitionGroupPage getRequisitionGroupPage(TestWebDriver testWebDriver) {
+    if (instanceOfRequisitionGroupPage == null) {
+      instanceOfRequisitionGroupPage = new RequisitionGroupPage(testWebDriver);
+    }
+    return instanceOfRequisitionGroupPage;
   }
 }

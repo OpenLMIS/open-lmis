@@ -382,6 +382,7 @@ public class DBWrapper {
     update("delete from geographic_zones where code not in ('Root','Arusha','Dodoma', 'Ngorongoro')");
     update("delete from role_rights where rightName = 'MANAGE_GEOGRAPHIC_ZONE'");
     update("delete from role_rights where rightName = 'MANAGE_SUPERVISORY_NODE'");
+    update("delete from role_rights where rightName = 'MANAGE_REQUISITION_GROUP'");
     update("delete from processing_periods");
     update("delete from processing_schedules");
     update("delete from atomfeed.event_records");
@@ -434,6 +435,17 @@ public class DBWrapper {
       + supervisoryNodeCode1 + "'))");
   }
 
+  public void insertRequisitionGroup(String requisitionGroupCode, String requisitionGroupName, String supervisoryNodeCode) throws SQLException {
+    ResultSet rs = query("Select id from requisition_groups;");
+
+    if (rs.next()) {
+      update("delete from requisition_groups;");
+    }
+    update("INSERT INTO requisition_groups ( code ,name,description,supervisoryNodeId )values\n" +
+      "('" + requisitionGroupCode + "','" + requisitionGroupName + "','Supports EM(Q1M)',(select id from  supervisory_nodes where code ='"
+      + supervisoryNodeCode + "'));");
+  }
+
   public void insertRequisitionGroupMembers(String RG1facility, String RG2facility) throws SQLException {
     ResultSet rs = query("Select requisitionGroupId from requisition_group_members;");
 
@@ -443,6 +455,11 @@ public class DBWrapper {
     update("INSERT INTO requisition_group_members ( requisitionGroupId ,facilityId )values\n" +
       "((select id from  requisition_groups where code ='RG1'),(select id from  facilities where code ='" + RG1facility + "')),\n" +
       "((select id from  requisition_groups where code ='RG2'),(select id from  facilities where code ='" + RG2facility + "'));");
+  }
+
+  public void insertRequisitionGroupMember(String RGCode, String RGFacility) throws SQLException {
+    update("INSERT INTO requisition_group_members ( requisitionGroupId ,facilityId )values\n" +
+      "((select id from  requisition_groups where code ='" + RGCode + "'),(select id from  facilities where code ='" + RGFacility + "'));");
   }
 
   public void insertRequisitionGroupProgramSchedule() throws SQLException {
@@ -1562,5 +1579,34 @@ public class DBWrapper {
     String productId = getAttributeFromTable("products", "id", "code", productCode);
     String programId = getAttributeFromTable("programs", "id", "code", programCode);
     update("UPDATE program_products SET %s = %s WHERE programId = %s and productId = %s;", field, value, programId, productId);
+  }
+
+  public void insertRequisitionGroupMembersTestData() throws SQLException {
+    insertRequisitionGroupMember("RG1", "F10");
+    insertRequisitionGroupMember("RG1", "F11");
+    insertRequisitionGroupMember("RG2", "F10");
+    insertRequisitionGroupMember("RG2", "F11");
+    insertRequisitionGroupMember("RG3", "F10");
+    insertRequisitionGroupMember("RG4", "F10");
+    insertRequisitionGroupMember("RG5", "F11");
+    insertRequisitionGroupMember("RG6", "F11");
+    insertRequisitionGroupMember("RG7", "F10");
+    insertRequisitionGroupMember("RG7", "F11");
+    insertRequisitionGroupMember("RG8", "F10");
+    insertRequisitionGroupMember("RG9", "F10");
+    insertRequisitionGroupMember("RG10", "F10");
+    insertRequisitionGroupMember("RG11", "F10");
+    insertRequisitionGroupMember("RG11", "F11");
+    insertRequisitionGroupMember("RG12", "F10");
+    insertRequisitionGroupMember("RG12", "F11");
+    insertRequisitionGroupMember("RG13", "F10");
+    insertRequisitionGroupMember("RG14", "F10");
+    insertRequisitionGroupMember("RG15", "F10");
+    insertRequisitionGroupMember("RG16", "F10");
+    insertRequisitionGroupMember("RG17", "F11");
+    insertRequisitionGroupMember("RG18", "F10");
+    insertRequisitionGroupMember("RG18", "F11");
+    insertRequisitionGroupMember("RG19", "F10");
+    insertRequisitionGroupMember("RG20", "F10");
   }
 }

@@ -44,7 +44,8 @@
     </div>
   </div>
 
-  <table class="table table-striped table-bordered search-list" ng-show="showResults">
+  <table id="requisitionGroupSearchResults" class="table table-striped table-bordered search-list"
+         ng-show="showResults">
     <thead>
     <tr class="gradient-header resultCountHeader">
       <th colspan="5">
@@ -69,7 +70,7 @@
       <td><a id="name{{$index}}" ng-href="#/edit/{{requisitionGroup.id}}" ng-bind="requisitionGroup.name"></a></td>
       <td id="code{{$index}}" ng-bind="requisitionGroup.code"></td>
       <td id="supervisoryName{{$index}}" ng-bind="requisitionGroup.supervisoryNode.name"></td>
-      <td id="facilityCount{{index}}" ng-bind="requisitionGroup.memberCount"></td>
+      <td id="facilityCount{{$index}}" ng-bind="requisitionGroup.memberCount"></td>
     </tr>
     </tbody>
   </table>
