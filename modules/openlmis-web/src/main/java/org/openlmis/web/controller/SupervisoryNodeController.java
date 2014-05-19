@@ -50,7 +50,7 @@ public class SupervisoryNodeController extends BaseController {
     return OpenLmisResponse.response(SUPERVISORY_NODES, supervisoryNodeService.getAll());
   }
 
-  @RequestMapping(value = "/search-supervisory-nodes", method = GET)
+  @RequestMapping(value = "/paged-search-supervisory-nodes", method = GET)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_SUPERVISORY_NODE')")
   public ResponseEntity<OpenLmisResponse> searchSupervisoryNode(@RequestParam(value = "page",
     required = true,
@@ -71,7 +71,7 @@ public class SupervisoryNodeController extends BaseController {
     return supervisoryNodeService.getSupervisoryNode(id);
   }
 
-  @RequestMapping(value = "/parent-supervisory-nodes", method = GET, headers = ACCEPT_JSON)
+  @RequestMapping(value = "/search-supervisory-nodes", method = GET, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_SUPERVISORY_NODE')")
   public List<SupervisoryNode> getFilteredNodes(@RequestParam(value = "searchParam") String param) {
     return supervisoryNodeService.getFilteredSupervisoryNodesByName(param);

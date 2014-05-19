@@ -21,6 +21,7 @@ import org.openlmis.core.domain.RequisitionGroupMember;
 import org.openlmis.core.service.RequisitionGroupService;
 import org.openlmis.core.service.StaticReferenceDataService;
 import org.openlmis.db.categories.UnitTests;
+import org.openlmis.web.form.RequisitionGroupFormDTO;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
@@ -89,7 +90,7 @@ public class RequisitionGroupControllerTest {
 
     verify(requisitionGroupService).getBy(requisitionGroupId);
     verify(requisitionGroupService).getMembersBy(requisitionGroupId);
-    assertThat((RequisitionGroup) response.getBody().getData().get("requisitionGroup"), is(requisitionGroup));
-    assertThat((List<RequisitionGroupMember>) response.getBody().getData().get("requisitionGroupMembers"), is(requisitionGroupMembers));
+    assertThat(((RequisitionGroupFormDTO) response.getBody().getData().get("requisitionGroupData")).getRequisitionGroup(), is(requisitionGroup));
+    assertThat(((RequisitionGroupFormDTO) response.getBody().getData().get("requisitionGroupData")).getRequisitionGroupMemberList(), is(requisitionGroupMembers));
   }
 }

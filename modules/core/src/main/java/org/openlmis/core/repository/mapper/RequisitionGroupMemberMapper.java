@@ -55,7 +55,6 @@ public interface RequisitionGroupMemberMapper {
   })
   List<RequisitionGroupMember> getAllRequisitionGroupMembersByFacility(Long facilityId);
 
-
   @Delete({"DELETE FROM requisition_group_members RGM USING facilities F",
     "WHERE RGM.facilityId = F.id AND F.parentFacilityId = #{id}"})
   int deleteMembersForVirtualFacility(Facility parentFacility);

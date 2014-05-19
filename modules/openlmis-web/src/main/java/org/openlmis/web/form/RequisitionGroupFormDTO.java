@@ -1,0 +1,19 @@
+package org.openlmis.web.form;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import org.openlmis.core.domain.RequisitionGroup;
+import org.openlmis.core.domain.RequisitionGroupMember;
+
+import java.util.List;
+
+@Data
+@NoArgsConstructor
+@EqualsAndHashCode(callSuper = false)
+@AllArgsConstructor
+public class RequisitionGroupFormDTO {
+  private RequisitionGroup requisitionGroup;
+  private List<RequisitionGroupMember> requisitionGroupMemberList;
+}

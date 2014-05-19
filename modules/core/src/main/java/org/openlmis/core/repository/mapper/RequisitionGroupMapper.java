@@ -33,10 +33,11 @@ public interface RequisitionGroupMapper {
   @Options(useGeneratedKeys = true)
   Integer insert(RequisitionGroup requisitionGroup);
 
-  @Select("SELECT id, code, name, description, supervisoryNodeId, modifiedBy, modifiedDate " +
-    "FROM requisition_groups WHERE id = #{id}")
+  @Select({"SELECT RG.id, RG.code, RG.name, RG.description, RG.supervisoryNodeId, SN.name AS supervisoryNodeName",
+    "FROM requisition_groups RG INNER JOIN supervisory_nodes SN ON RG.supervisoryNodeId = SN.id WHERE RG.id = #{id}"})
   @Results(value = {
-    @Result(property = "supervisoryNode.id", column = "supervisoryNodeId")
+    @Result(property = "supervisoryNode.id", column = "supervisoryNodeId"),
+    @Result(property = "supervisoryNode.name", column = "supervisoryNodeName")
   })
   RequisitionGroup getRequisitionGroupById(Long id);
 
