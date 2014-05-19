@@ -66,43 +66,51 @@
 
         <div class="form-row clearfix">
           <div class="form-cell">
-            <label for="searchParentNode">
-              <span openlmis-message="label.supervisory.node"></span>
+            <label for="searchSupervisoryNode" openlmis-message="label.supervisory.node">
               <span class="label-required"> *</span>
             </label>
 
             <div class="form-field autosuggest-input">
               <div class="suggest-field">
-                <input id="searchParentNode" type="text" ng-change="showSupervisoryNodeSearchResults()" ng-model="query"
-                       openlmis-message="placeholder.supervisory.node.search"/>
+                <input id="searchSupervisoryNode" type="text" ng-change="showSupervisoryNodeSearchResults()"
+                       ng-model="query"
+                       openlmis-message="placeholder.supervisory.node.search" ng-hide="nodeSelected"/>
 
                 <div class="search-list" ng-show="query.length > 2">
                   <ul>
-                    <li ng-repeat="node in filteredNodes">
-                      <a href="" id="result{{$index}}" ng-click="setSelectedSupervisoryNode(node)">{{node.name}}</a>
+                    <li ng-repeat="node in filteredNodeList">
+                      <a href="" id="result{{$index}}" ng-click="setSelectedSupervisoryNode(node)">
+                        {{node.name}}
+                      </a>
                     </li>
                     <li ng-show="resultCount == 0">
                       <a href="" openlmis-message="msg.no.matches|query"></a>
                     </li>
                   </ul>
                 </div>
+                <div ng-show="nodeSelected">
+                  <span ng-bind="nodeSelected.name"></span>
+                  <a href="" class="clear-search" ng-click="clearSelectedNode()"></a>
+                </div>
               </div>
               <div class="form-tip" openlmis-message="search.threeCharacters"></div>
             </div>
+
           </div>
         </div>
 
         <div class="form-row clearfix">
           <div class="form-cell">
             <label>
-              <span openlmis-message="label.associated.facility"></span>
+              <span openlmis-message="label.associated.facilities"></span>
               <span class="label-required"> *</span>
             </label>
 
             <div class="form-field">
-              <span ng-show="!requisitionGroup.facility" openlmis-message="label.no.facility.selected"></span>
-              <span ng-show="requisitionGroup.facility">{{requisitionGroup.facility.code}} - {{requisitionGroup.facility.name}}</span>
-              <a href="" ng-click="toggleSlider()" openlmis-message="link.select.facility"></a>
+              <a href="" ng-click="toggleSlider()">
+                <span>+</span>
+                <span openlmis-message="link.associate.facility"></span>
+              </a>
             </div>
           </div>
         </div>
@@ -111,7 +119,29 @@
           <ng-include src="'/public/pages/admin/shared/search-filter-facilities.html'"></ng-include>
         </div>
 
+        <table id="membersTable" class="table table-striped table-bordered search-list">
+          <thead>
+          </tr>
+          <tr class="gradient-header" ng-show="requisitionGroupMembers.length">
+            <th id="codeHeader" openlmis-message="label.facility.name"></th>
+            <th id="facilityHeader" openlmis-message="label.facility.type"></th>
+            <th></th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr ng-repeat="member in requisitionGroupMembers">
+            <td id="name{{$index}}" ng-bind="member.facility.name"></td>
+            <td id="code{{$index}}" ng-bind="member.facility.facilityType.name"></td>
+            <td id="delete{{$index}}">
+              <input id="removeMemberButton" type="button" class="btn btn-danger cancel-button"
+                     openlmis-message="button.remove"
+                     ng-click="removeMember(member.id)"/>
+            </td>
+          </tr>
+          </tbody>
+        </table>
       </div>
+
       <div form-toolbar id="action_buttons" class="action-buttons">
         <div class="form-cell button-row">
           <input id="saveButton" type="submit" id="save-button" class="btn btn-primary save-button"

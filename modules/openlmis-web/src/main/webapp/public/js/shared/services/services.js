@@ -165,8 +165,8 @@ services.factory('Messages', function ($resource) {
   return $resource('/messages.json', {}, {});
 });
 
-services.factory('SupervisoryNodesSearch', function ($resource) {
-  return $resource('/search-supervisory-nodes.json', {}, {});
+services.factory('SupervisoryNodesPagedSearch', function ($resource) {
+  return $resource('/paged-search-supervisory-nodes.json', {}, {});
 });
 
 services.factory('FacilityProgramRights', function ($resource) {
@@ -327,9 +327,13 @@ services.factory('SupervisoryNodes', function ($resource) {
 });
 
 services.factory('ParentSupervisoryNodes', function ($resource) {
-  return $resource('/parent-supervisory-nodes.json', {}, {});
+  return $resource('/search-supervisory-nodes.json', {}, {});
 });
 
 services.factory('RequisitionGroups', function ($resource) {
   return $resource('/requisitionGroups/:id.json', {id: '@id'}, update);
+});
+
+services.factory('SupervisoryNodesSearch', function ($resource) {
+  return $resource('/search-supervisory-nodes.json', {}, {});
 });

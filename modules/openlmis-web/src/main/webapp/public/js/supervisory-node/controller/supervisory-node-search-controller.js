@@ -8,7 +8,7 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-function SupervisoryNodeSearchController($scope, navigateBackService, SupervisoryNodesSearch, $location) {
+function SupervisoryNodeSearchController($scope, navigateBackService, SupervisoryNodesPagedSearch) {
 
   $scope.searchOptions = [
     {value: "node", name: "option.value.supervisory.node"},
@@ -39,7 +39,7 @@ function SupervisoryNodeSearchController($scope, navigateBackService, Supervisor
     $scope.searchedQuery = $scope.query;
     var searchOption = $scope.selectedSearchOption.value === 'parent';
 
-    SupervisoryNodesSearch.get({page: page, param: $scope.searchedQuery, parent: searchOption}, function (data) {
+    SupervisoryNodesPagedSearch.get({page: page, param: $scope.searchedQuery, parent: searchOption}, function (data) {
       $scope.supervisoryNodeList = data.supervisoryNodes;
       $scope.pagination = data.pagination;
       $scope.resultCount = $scope.pagination.totalRecords;
