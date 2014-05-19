@@ -36,10 +36,6 @@ public class MaintenanceLogRepository {
     return mapper.getAllForVendor(vendorId);
   }
 
-  public List<MaintenanceLog> getOutstandingForVendor(Long vendorId){
-    return mapper.getOutstandingRequestsForVendor(vendorId);
-  }
-
   public List<MaintenanceLog> getAll(){
     return mapper.getAll();
   }

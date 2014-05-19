@@ -35,8 +35,8 @@ public class MaintenanceLogService {
     return repository.getAllForFacility(facilityId);
   }
 
-  public List<MaintenanceLog> getOutstandingForVendor(Long vendorId){
-    return repository.getOutstandingForVendor(vendorId);
+  public List<MaintenanceLog> getAllForVendor(Long vendorId){
+    return repository.getAllForFacility(vendorId);
   }
 
   public MaintenanceLog getById(Long id){

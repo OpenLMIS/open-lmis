@@ -33,9 +33,6 @@ public interface MaintenanceLogMapper {
   @Select("select * from equipment_maintenance_logs where vendorId = #{vendorId}")
   List<MaintenanceLog> getAllForVendor(@Param("vendorId") Long vendorId);
 
-  @Select("select * from equipment_maintenance_logs where vendorId = #{vendorId} and resolved = false")
-  List<MaintenanceLog> getOutstandingRequestsForVendor(@Param("vendorId") Long vendorId);
-
   @Insert("insert into equipment_maintenance_logs (userId, facilityId, equipmentId, vendorId, contractId, maintenanceDate, servicePerformed, finding, recommendation, requestId, nextVisitDate, createdBy, createdDate, modifiedBy, modifiedDate) " +
       " values " +
       " (#{userId}, #{facilityId}, #{equipmentId}, #{vendorId}, #{contractId}, #{maintenanceDate}, #{servicePerformed}, #{finding}, #{recommendation}, #{requestId}, #{nextVisitDate} , #{createdBy},COALESCE(#{createdDate}, NOW()), #{modifiedBy}, NOW() )")
