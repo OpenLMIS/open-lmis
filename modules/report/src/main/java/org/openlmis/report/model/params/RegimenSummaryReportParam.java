@@ -17,42 +17,51 @@ import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.report.model.ReportParameter;
 
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
 
 @Data
 @NoArgsConstructor
-@EqualsAndHashCode(callSuper=false)
+@EqualsAndHashCode(callSuper = false)
 @AllArgsConstructor
 public class RegimenSummaryReportParam
-  extends BaseParam implements ReportParameter {
+        extends BaseParam implements ReportParameter {
 
-  private long period;
-  private ProcessingPeriod periodObject;
-  private int rgroupId;
-  private int regimenCategoryId;
-  private String regimenCategory;
-  private String rgroup;
-  private String regimen;
-  private Integer regimenId;
-  private int programId;
-  private String program;
-  private int scheduleId;
-  private String schedule;
-  private int periodId;
-  private Integer year;
+    private long period;
+    private ProcessingPeriod periodObject;
 
+    private int rgroupId;
+    private int regimenCategoryId;
+    private String regimenCategory;
+    private String rgroup;
+    private String regimen;
+    private Integer regimenId;
+    private int programId;
+    private String program;
+    private int scheduleId;
+    private String schedule;
+    private int periodId;
+    private Integer year;
+
+    SimpleDateFormat dateFormatter = new SimpleDateFormat();
 
     @Override
     public String toString() {
-        DateFormat dateFormatter = DateFormat.getDateInstance(DateFormat.DEFAULT);
-        StringBuilder filtersValue = new StringBuilder("");
-        //filtersValue.append("Period : ").append(this.period).append("\n").
-        //append("Schedule : ").append(this.schedule).append("\n").
-        //append("Program : ").append(this.program).append("\n").
-        //append("Requisition Group : ").append(this.rgroup).append("\n");
-        return filtersValue.toString();
+        if (periodObject != null) {
+
+            StringBuilder filtersValue = new StringBuilder("");
+            filtersValue.append("Period : ").append(dateFormatter.format(this.periodObject.getNextStartDate())).append("-").append(dateFormatter.format(this.periodObject.getEndDate())).append("\n").
+                    append("Regimen Category : ").append(this.getRegimenCategory()).append("\n").
+                    append("Regimen : ").append(this.getRegimen()).append("\n").
+                    append("Schedule : ").append(this.getSchedule()).append("\n").
+                    append("Program : ").append(this.getProgram()).append("\n").
+                    append("Reporting Groups : ").append(this.getRgroup());
+
+            return filtersValue.toString();
+        } else {
+            return "No filters selected";
+        }
     }
+
 
 }

@@ -121,5 +121,24 @@ public interface DashboardMapper {
 
     @Select("select date_Part('year',startdate) from processing_periods where id = #{id}")
     public String getPeriod(@Param("id")Long id);
+
+    @Select("select  'NonReporting' as status,count(*) total\n" +
+            " from facilities f\n" +
+            " join requisition_group_members m on f.id = m.facilityId\n" +
+            " join requisition_group_program_schedules s on s.requisitionGroupId = m.requisitionGroupId and s.programId = #{programId}\n" +
+            " join processing_periods pp on pp.scheduleId = s.scheduleId and pp.id = #{periodId}\n" +
+            " where f.id not in (select facilityId from requisitions r where r.programId = #{programId} and r.periodId = #{periodId}) \n" +
+            " and f.enabled = true\n" +
+            " UNION\n" +
+            " select 'Reporting' as status ,count(*) total \n" +
+            " from facilities f\n" +
+            " join requisition_group_members m on f.id = m.facilityId\n" +
+            " join requisition_group_program_schedules s on s.requisitionGroupId = m.requisitionGroupId and s.programId = #{programId}\n" +
+            " join processing_periods pp on pp.scheduleId = s.scheduleId and pp.id = #{periodId}\n" +
+            " where f.id in (select facilityId from requisitions r where r.programId = #{programId} and r.periodId = #{periodId}) \n" +
+            " and f.enabled = true\n" +
+            " ")
+    List<HashMap> getReportingPerformance(@Param("periodId")  Long periodId, @Param("programId") Long programId);
+
 }
 

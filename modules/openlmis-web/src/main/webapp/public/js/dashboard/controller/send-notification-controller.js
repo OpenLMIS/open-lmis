@@ -296,7 +296,6 @@ function SendNotificationController($scope,$timeout,programsList,SendNotificatio
 
                 $scope.filterObject.programId = userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_PROGRAM];
                 $scope.filterObject.periodId = userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_PERIOD];
-                $scope.filterObject.scheduleId = userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_SCHEDULE];
                 if(!isUndefined($scope.filterObject.periodId)){
 
                     GetPeriod.get({id:$scope.filterObject.periodId}, function(period){
@@ -307,6 +306,8 @@ function SendNotificationController($scope,$timeout,programsList,SendNotificatio
                         }
                     });
                 }
+                $scope.filterObject.scheduleId = userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_SCHEDULE];
+
                 $scope.filterObject.rgroupId = userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_REQUISITION_GROUP];
 
                 $scope.registerWatches();

@@ -9,7 +9,6 @@
  */
 
 
-
 package org.openlmis.report.builder;
 
 import org.openlmis.report.model.params.RegimenSummaryReportParam;
@@ -19,84 +18,64 @@ import java.util.Map;
 
 public class RegimenSummaryQueryBuilder {
 
-    public static String getData(Map params){
+    public static String getData(Map params) {
 
-    RegimenSummaryReportParam filter  = (RegimenSummaryReportParam)params.get("filterCriteria");
-
-       String sql ="WITH temp as ( select regimen,rgroupid,\n" +
-               "                SUM(patientsontreatment) patientsontreatment,\n" +
-               "                  SUM(patientstoinitiatetreatment) patientstoinitiatetreatment,\n" +
-               "                 SUM(patientsstoppedtreatment) patientsstoppedtreatment\n" +
-               "                  from vw_regimen_summary_t\n" +
-                               // writePredicates(filter)+
-               "                  group by regimen,rgroupid\n" +
-               "                 order by regimen,rgroupid ) \n" +
-               "                 select t.rgroupid, t.regimen,\n" +
-               "                t.patientsontreatment patientsontreatment,\n" +
-               "                t.patientstoinitiatetreatment patientsToInitiateTreatment,\n" +
-               "                 t.patientsstoppedtreatment patientsstoppedtreatment,\n" +
-               "                 COALESCE( case when temp2.total2 > 0 THEN round(((t.patientstoinitiatetreatment*100)/temp2.total2),1) ELSE temp2.total2 END ) totalpatientsToInitiateTreatmentPercentage,\n" +
-               "               COALESCE( case when temp2.total3 > 0 THEN round(((t.patientsstoppedtreatment*100)/temp2.total3),1) ELSE temp2.total3 END ) stoppedTreatmentPercentage \n" +
-               "               from temp t\n" +
-               "               INNER JOIN (select  rgroupid,SUM(patientsontreatment) total,SUM(patientstoinitiatetreatment) total2,SUM(patientsstoppedtreatment) total3 from \n" +
-               "                temp GROUP BY rgroupid) temp2 ON t.rgroupid= temp2.rgroupid\n" +
-               "  ";
+        RegimenSummaryReportParam filter = (RegimenSummaryReportParam) params.get("filterCriteria");
+        String sql="";
+         sql = "WITH temp as ( select regimen,rgroupid,rgroup,\n" +
+                "                SUM(patientsontreatment) patientsontreatment,\n" +
+                "                  SUM(patientstoinitiatetreatment) patientstoinitiatetreatment,\n" +
+                "                 SUM(patientsstoppedtreatment) patientsstoppedtreatment\n" +
+                "                  from vw_regimen_summary_t\n" +
+                writePredicates(filter) +
+                "                  group by regimen,rgroupid,rgroup\n" +
+                "                 order by regimen,rgroupid ) \n" +
+                "                 select t.rgroupid, t.regimen,t.rgroup,\n" +
+                "                t.patientsontreatment patientsontreatment,\n" +
+                "                t.patientstoinitiatetreatment patientsToInitiateTreatment,\n" +
+                "                 t.patientsstoppedtreatment patientsstoppedtreatment,\n" +
+                "                 COALESCE( case when temp2.total2 > 0 THEN round(((t.patientstoinitiatetreatment*100)/temp2.total2),1) ELSE temp2.total2 END ) totalpatientsToInitiateTreatmentPercentage,\n" +
+                "               COALESCE( case when temp2.total3 > 0 THEN round(((t.patientsstoppedtreatment*100)/temp2.total3),1) ELSE temp2.total3 END ) stoppedTreatmentPercentage \n" +
+                "               from temp t\n" +
+                "               INNER JOIN (select  rgroupid,SUM(patientsontreatment) total,SUM(patientstoinitiatetreatment) total2,SUM(patientsstoppedtreatment) total3 from \n" +
+                "                temp GROUP BY rgroupid) temp2 ON t.rgroupid= temp2.rgroupid\n" +
+                "  ";
         return sql;
     }
 
 
-   private static String writePredicates(RegimenSummaryReportParam filter){
-        String predicate="";
-       predicate = " WHERE status in ('APPROVED','RELEASED') ";
-     if(filter != null){
-       if(filter.getRegimenCategoryId() != 0){
-                predicate = predicate.isEmpty() ?" where " : predicate + " and ";
-                predicate = predicate + " categoryid = #{filterCriteria.regimenCategoryId}";
-            }
-       /*if(filter.getRgroupId() != 0){
-                predicate = predicate.isEmpty() ?" where " : predicate + " and ";
+    private static String writePredicates(RegimenSummaryReportParam filter) {
+        String predicate = "";
+        predicate = " WHERE status in ('APPROVED','RELEASED') ";
+        if (filter != null) {
+            if (filter.getRgroupId() != 0) {
+                predicate = predicate.isEmpty() ? " where " : predicate + " and ";
                 predicate = predicate + " rgroupid = #{filterCriteria.rgroupId}";
             }
-            if(filter.getPeriodId() != 0){
-                predicate = predicate.isEmpty() ?" where " : predicate + " and ";
-                predicate = predicate + " periodid= #{filterCriteria.periodId}";
-            }
-            if(filter.getScheduleId() != 0){
-                predicate = predicate.isEmpty() ?" where " : predicate + " and ";
+
+            if (filter.getScheduleId() != 0) {
+                predicate = predicate.isEmpty() ? " where " : predicate + " and ";
                 predicate = predicate + " scheduleid= #{filterCriteria.scheduleId}";
             }
 
-            if(filter.getProgramId() != 0){
-                predicate = predicate.isEmpty() ?" where " : predicate +  " and ";
+            if (filter.getProgramId() != 0) {
+                predicate = predicate.isEmpty() ? " where " : predicate + " and ";
                 predicate = predicate + " programid = #{filterCriteria.programId}";
             }
-             if (filter.getRegimenId()!=0) {
-                 predicate = predicate.isEmpty() ?" where " : predicate + " and ";
-                 predicate = predicate + " regimenid = #{filterCriteria.regimenId}";
-             }
+            if (filter.getPeriodId() != 0) {
+                predicate = predicate.isEmpty() ? " where " : predicate + " and ";
+                predicate = predicate + " periodid= #{filterCriteria.periodId}";
+            }
+            if (filter.getRegimenId() != -1) {
+                predicate = predicate.isEmpty() ? " where " : predicate + " and ";
+                predicate = predicate + " regimenid = #{filterCriteria.regimenId}";
+            }
+            if (filter.getRegimenCategoryId() != 0) {
+                predicate = predicate.isEmpty() ? " where " : predicate + " and ";
+                predicate = predicate + " categoryid = #{filterCriteria.regimenCategoryId}";
+            }
 
-
-
-         if (filter.getRgroupId() != 0 ) {
-             predicate = predicate.isEmpty() ?" where " : predicate + " and ";
-             predicate = predicate + " rgroupid = #{filterCriteria.rgroupId}";
-         }
-
-         if(filter.getPeriodId() != 0 ){
-             predicate = predicate.isEmpty() ?" where " : predicate + " and ";
-             predicate = predicate + " periodid= #{filterCriteria.periodId}";
-         }
-       if(filter.getScheduleId() != 0 ){
-             predicate = predicate.isEmpty() ?" where " : predicate + " and ";
-             predicate = predicate + " scheduleid= #{filterCriteria.scheduleId}";
-         } */
-
-         /*if(filter.getRegimenId() != 0 ){
-             predicate = predicate.isEmpty() ?" where " : predicate +  " and ";
-             predicate = predicate + " regimenid = #{filterCriteria.regimenId}";
-         }*/
-
-     }
+        }
 
         return predicate;
     }

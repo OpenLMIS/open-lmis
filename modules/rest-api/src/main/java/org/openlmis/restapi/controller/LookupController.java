@@ -63,7 +63,7 @@ public class LookupController {
 
     @RequestMapping(value = "/rest-api/lookup/facility-types", method = RequestMethod.POST, headers = ACCEPT_JSON)
     public ResponseEntity getFacilityTypes( Principal principal) {
-        return RestResponse.response("facility-types", lookupService.getFacilityTypes());
+        return RestResponse.response("facility-types", lookupService.getAllFacilityTypes());
     }
 
     @RequestMapping(value = "/rest-api/lookup/facilities", method = RequestMethod.POST, headers = ACCEPT_JSON)

@@ -38,6 +38,7 @@ public class DashboardController extends BaseController {
     public static final String NOTIFICATIONS = "notifications";
     public static final String NOTIFICATIONS_DETAIL = "detail";
     public static final String RNR_STATUS_SUMMARY = "rnrStatusSummary";
+    public static final String REPORTING_PERFORMANCE = "reportingPerformance";
 
 
     @Autowired
@@ -131,6 +132,12 @@ public class DashboardController extends BaseController {
     public ResponseEntity<OpenLmisResponse>getRnRStatusSummary(@PathVariable("requisitionGroupId") Long requisitionGroupId){
         return  OpenLmisResponse.response(RNR_STATUS_SUMMARY,this.lookupService.getRnRStatusSummary(requisitionGroupId));
 
+    }
+
+    @RequestMapping(value = "/reportingPerformance", method = GET, headers = ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse>  getReportingPerformance(@RequestParam("periodId") Long periodId,
+                                                                 @RequestParam("programId") Long programId){
+        return OpenLmisResponse.response(REPORTING_PERFORMANCE, this.lookupService.getReportingPerformance(periodId,programId));
     }
 
 }
