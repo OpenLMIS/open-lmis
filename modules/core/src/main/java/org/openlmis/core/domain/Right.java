@@ -65,6 +65,7 @@ public enum Right {
 
   MANAGE_EQUIPMENT_SETTINGS ("Admin - Manage Equipment Settings", ADMIN, "Permission to manage equipment settings.",60),
   MANAGE_EQUIPMENT_INVENTORY ("Admin - Manage Equipment Inventory", ADMIN, "Permission to manage equipment inventory.",61),
+  SERVICE_VENDOR_RIGHT("Admin - Service Vendor Rights", ADMIN, "Permission to use system as equipment Service Vendor", 62),
 
 
   VIEW_FACILITY_REPORT("Report - Facility Listing (V1)", REPORT, "Permission to view Facility List Report",32),
@@ -86,6 +87,7 @@ public enum Right {
   VIEW_DISTRICT_FINANCIAL_SUMMARY_REPORT("Report - District Financial Summary Report", REPORT, "Permission to view District Financial Summary Report",50),
   VIEW_DASHBOARD_POC("Report - View Dashboard POC", REPORT, "View Dashboard POC",51),
   VIEW_USER_SUMMARY_REPORT("Report - View User Summary Report", REPORT, "Permission to view user summary Report",52);
+
 
 
 
