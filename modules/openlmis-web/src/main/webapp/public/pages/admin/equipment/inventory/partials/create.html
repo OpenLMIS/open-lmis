@@ -144,16 +144,17 @@
         <div class="form-row clearfix">
 
         <div class="form-cell">
-          <label for="hasServiceContract">Has Service Contract
-            <span class="label-required">*</span>
+          <label for="hasServiceContract">
+            <input
+              ng-model="equipment.hasServiceContract"
+              name="hasServiceContract"
+              id="hasServiceContract"
+              type="checkbox"
+              /> Has Service Contract
+
           </label>
           <div class="form-field">
-            <input
-                ng-model="equipment.hasServiceContract"
-                name="hasServiceContract"
-                id="hasServiceContract"
-                type="checkbox"
-                />
+
           </div>
         </div>
 
@@ -210,16 +211,16 @@
         <div class="form-row clearfix">
 
         <div class="form-cell">
-            <label for="isActive">Is Active (Not De-commissioned)
+            <label for="isActive"><input
+                ng-model="equipment.isActive"
+                name="isActive"
+                id="isActive"
+                type="checkbox"
+                /> Is Active (Not De-commissioned)
                 <span class="label-required">*</span>
             </label>
             <div class="form-field">
-                <input 
-                       ng-model="equipment.isActive"
-                       name="isActive"
-                       id="isActive"
-                       type="checkbox" 
-                       />
+
             </div>
         </div>
 
@@ -246,16 +247,16 @@
         <div class="form-row clearfix">
 
           <div class="form-cell">
-            <label for="replacementRecommended">Replacement Recommended
+            <label for="replacementRecommended"> <input
+                ng-model="equipment.replacementRecommended"
+                name="replacementRecommended"
+                id="replacementRecommended"
+                type="checkbox"
+                /> Replacement Recommended
 
             </label>
             <div class="form-field">
-              <input
-                  ng-model="equipment.replacementRecommended"
-                  name="replacementRecommended"
-                  id="replacementRecommended"
-                  type="checkbox"
-                  />
+
             </div>
           </div>
 
