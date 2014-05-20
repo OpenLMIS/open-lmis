@@ -335,6 +335,7 @@ public class UserPage extends Page {
       testWebDriver.scrollAndClick(selectFacility);
       testWebDriver.waitForAjax();
       testWebDriver.scrollAndClick(homeFacilityRolesAccordion);
+      testWebDriver.sleep(500);
       testWebDriver.scrollToElement(homeFacilityPrograms);
       testWebDriver.selectByVisibleText(homeFacilityPrograms, program1);
       testWebDriver.waitForElementToAppear(roleInputFieldHomeFacility);
@@ -346,6 +347,7 @@ public class UserPage extends Page {
       testWebDriver.scrollAndClick(addHomeFacilityRolesButton);
       testWebDriver.waitForElementToAppear(supervisoryRolesAccordion);
       testWebDriver.scrollAndClick(supervisoryRolesAccordion);
+      testWebDriver.sleep(500);
       testWebDriver.waitForElementToAppear(programsToSupervise);
       testWebDriver.selectByVisibleText(programsToSupervise, program1);
       testWebDriver.waitForElementToAppear(supervisoryNodeToSupervise);
@@ -368,6 +370,7 @@ public class UserPage extends Page {
       testWebDriver.handleScroll();
       testWebDriver.waitForElementToAppear(adminAndGeneralOperationsRolesAccordion);
       testWebDriver.scrollAndClick(adminAndGeneralOperationsRolesAccordion);
+      testWebDriver.sleep(500);
       testWebDriver.waitForElementToAppear(adminRolesInputField);
       testWebDriver.scrollAndClick(adminRolesInputField);
       adminRolesInputField.clear();
@@ -386,6 +389,7 @@ public class UserPage extends Page {
   public void assignWarehouse(String warehouse, String role) {
     testWebDriver.waitForElementToAppear(orderFulfillmentRolesAccordion);
     orderFulfillmentRolesAccordion.click();
+    testWebDriver.sleep(500);
     testWebDriver.waitForElementToAppear(warehouseToSelect);
     testWebDriver.selectByVisibleText(warehouseToSelect, warehouse);
     testWebDriver.waitForElementToAppear(rolesInputFieldWarehouse);
@@ -401,6 +405,7 @@ public class UserPage extends Page {
     verifyWarehouseSelectedNotAvailable(warehouse);
     testWebDriver.waitForElementToAppear(orderFulfillmentRolesAccordion);
     orderFulfillmentRolesAccordion.click();
+    testWebDriver.sleep(500);
   }
 
   public void verifyMessage(String message) {
@@ -426,6 +431,7 @@ public class UserPage extends Page {
   public void enterDeliveryZoneDataWithoutHomeAndSupervisoryRolesAssigned(String deliveryZoneCode, String program, String role) {
     testWebDriver.handleScroll();
     deliveryZonesAccordion.click();
+    testWebDriver.sleep(500);
     testWebDriver.waitForElementToAppear(zoneToDelivery);
     testWebDriver.selectByVisibleText(zoneToDelivery, deliveryZoneCode);
     testWebDriver.waitForElementToAppear(programToDeliver);
@@ -554,21 +560,25 @@ public class UserPage extends Page {
   public void clickWarehouseRolesAccordion() {
     testWebDriver.waitForElementToAppear(orderFulfillmentRolesAccordion);
     orderFulfillmentRolesAccordion.click();
+    testWebDriver.sleep(500);
   }
 
   public void clickHomeFacilityRolesAccordion() {
     testWebDriver.waitForElementToAppear(homeFacilityRolesAccordion);
     homeFacilityRolesAccordion.click();
+    testWebDriver.sleep(500);
   }
 
   public void clickSupervisoryRolesAccordion() {
     testWebDriver.waitForElementToAppear(supervisoryRolesAccordion);
     supervisoryRolesAccordion.click();
+    testWebDriver.sleep(500);
   }
 
   public void clickDeliveryZonesAccordion() {
     testWebDriver.waitForElementToAppear(deliveryZonesAccordion);
     deliveryZonesAccordion.click();
+    testWebDriver.sleep(500);
   }
 
   private void verifyWarehouseSelectedNotAvailable(String warehouse1) {
