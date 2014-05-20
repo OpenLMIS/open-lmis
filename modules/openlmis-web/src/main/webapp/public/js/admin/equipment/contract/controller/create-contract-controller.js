@@ -8,7 +8,7 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-function CreateServiceContractController($scope, $routeParams, $location, Contract, SaveContract) {
+function CreateServiceContractController($scope, $routeParams, $location, Contract, SaveContract, Equipments, ServiceTypes, Programs) {
 
 
     if ($routeParams.id === undefined) {
@@ -18,12 +18,31 @@ function CreateServiceContractController($scope, $routeParams, $location, Contra
             id: $routeParams.id
         }, function (data) {
             $scope.current = data.contract;
+            $scope.current.startDate = data.contract.startDateString;
+            $scope.current.endDate = data.contract.endDateString;
+            $scope.current.contractDate = data.contract.contractDateString;
+
         });
     }
 
+    // get the lookups that will be checked
+    Equipments.get(function(data){
+       $scope.equipments = data.equipments;
+    });
+
+    ServiceTypes.get(function(data){
+       $scope.service_types = data.service_type;
+    });
+
+    Programs.get(function(data){
+       $scope.programs = data.programs;
+    });
+    // facilities could be complicated, may have to depend on the program selection.
+
+
     $scope.save = function () {
         $scope.showError = true;
-        if($scope.vendorForm.$valid){
+        if($scope.contractForm.$valid){
             SaveContract.save($scope.current, function (data) {
                 // success
                 $location.path('');
