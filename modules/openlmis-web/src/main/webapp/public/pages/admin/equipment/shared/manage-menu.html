@@ -30,5 +30,10 @@
             <span id="service-vendor">Service Vendors</span>
           </a>
         </li>
+        <li ng-show="hasPermission('MANAGE_EQUIPMENT_SETTINGS')" ng-class="manageServiceContactsSelected">
+          <a href="/public/pages/admin/equipment/service-contract/index.html">
+            <span id="service-contract">Service Contracts</span>
+          </a>
+        </li>
     </ul>
 </div>

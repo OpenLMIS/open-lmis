@@ -9,7 +9,7 @@ CREATE TABLE equipment_status_line_items(
   equipmentCategory         VARCHAR(200) NOT NULL,
   equipmentModel            VARCHAR(200) NULL,
   equipmentSerial           VARCHAR(200) NULL,
-  equipmentInventoryId      INT NOT NULL,
+  equipmentInventoryId      INT NOT NULL REFERENCES facility_program_equipments(id),
 
   operationalStatusId       INT NOT NULL REFERENCES equipment_operational_status(id),
   testCount                 INT NULL,
