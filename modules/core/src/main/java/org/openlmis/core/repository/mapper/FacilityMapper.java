@@ -53,7 +53,7 @@ public interface FacilityMapper {
   @Results(value = {@Result(property = "id", column = "facilityId")})
   Facility getHomeFacility(Long userId);
 
-  @Select("SELECT * FROM facility_types ORDER BY displayOrder")
+  @Select("SELECT * FROM facility_types ORDER BY displayOrder NULLS LAST, LOWER(name)")
   List<FacilityType> getAllTypes();
 
   @Select("SELECT * FROM facility_types WHERE id = #{id}")
