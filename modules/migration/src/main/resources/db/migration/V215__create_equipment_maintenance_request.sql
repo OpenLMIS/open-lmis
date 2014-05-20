@@ -10,7 +10,7 @@ CREATE TABLE equipment_maintenance_requests(
   recommendedDate           DATE,
   comment                   VARCHAR(2000),
 
-  resolved                  BIT NOT NULL DEFAULT (false),
+  resolved                  BOOLEAN NOT NULL DEFAULT (false),
   vendorComment             VARCHAR(2000),
 
   createdBy                 INTEGER,
