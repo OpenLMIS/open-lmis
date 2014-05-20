@@ -17,6 +17,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.BaseModel;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @Data
@@ -33,5 +34,29 @@ public class ServiceContract extends BaseModel{
   private String terms;
   private String coverage;
   private Date contractDate;
+
+  private String formatDate(Date date){
+    try {
+      SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-dd-MM");
+      return date == null ? null : simpleDateFormat.format(date);
+    }catch(Exception exp){
+
+    }
+    return null;
+  }
+
+  public String getStartDateString()  {
+    return formatDate(this.startDate);
+  }
+
+  public String getEndDateString()  {
+    return formatDate(this.endDate);
+  }
+
+  public String getContractDateString()  {
+    return formatDate(this.contractDate);
+  }
+
+
 
 }

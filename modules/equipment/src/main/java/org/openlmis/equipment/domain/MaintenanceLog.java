@@ -16,6 +16,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.BaseModel;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @Data
@@ -39,4 +40,21 @@ public class MaintenanceLog extends BaseModel{
   private Long requestId;
   private Date nextVisitDate;
 
+  private String formatDate(Date date){
+    try {
+      SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-dd-MM");
+      return date == null ? null : simpleDateFormat.format(date);
+    }catch(Exception exp){
+
+    }
+    return null;
+  }
+
+  public String getMaintenanceDateString()  {
+    return formatDate(this.maintenanceDate);
+  }
+
+  public String getNextVisitDateString()  {
+    return formatDate(this.nextVisitDate);
+  }
 }

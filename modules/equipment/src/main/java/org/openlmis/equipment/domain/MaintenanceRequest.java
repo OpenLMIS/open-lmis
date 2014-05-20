@@ -16,6 +16,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.BaseModel;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @Data
@@ -36,5 +37,24 @@ public class MaintenanceRequest extends BaseModel {
 
   private Boolean resolved;
   private String vendorComment;
+
+  private String formatDate(Date date){
+    try {
+      SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-dd-MM");
+      return date == null ? null : simpleDateFormat.format(date);
+    }catch(Exception exp){
+
+    }
+    return null;
+  }
+
+  public String getRequestedDateString()  {
+    return formatDate(this.requestedDate);
+  }
+
+  public String getRecommendedDateString()  {
+    return formatDate(this.recommendedDate);
+  }
+
 
 }
