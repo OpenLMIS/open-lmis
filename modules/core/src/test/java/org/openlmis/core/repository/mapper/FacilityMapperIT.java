@@ -575,13 +575,18 @@ public class FacilityMapperIT {
     mapper.insert(fac3);
     mapper.insert(fac4);
 
+
     List<Facility> enabledFacilities = mapper.getEnabledFacilities(searchParam);
 
     assertThat(enabledFacilities.size(), is(2));
     assertThat(enabledFacilities.get(0).getName(), is(fac3.getName()));
     assertThat(enabledFacilities.get(0).getCode(), is(fac3.getCode()));
+    assertThat(enabledFacilities.get(0).getFacilityType().getId(), is(fac3.getFacilityType().getId()));
+    assertThat(enabledFacilities.get(0).getFacilityType().getName(), is(fac3.getFacilityType().getName()));
     assertThat(enabledFacilities.get(1).getName(), is(fac1.getName()));
     assertThat(enabledFacilities.get(1).getCode(), is(fac1.getCode()));
+    assertThat(enabledFacilities.get(1).getFacilityType().getId(), is(fac1.getFacilityType().getId()));
+    assertThat(enabledFacilities.get(1).getFacilityType().getName(), is(fac1.getFacilityType().getName()));
   }
 
   @Test

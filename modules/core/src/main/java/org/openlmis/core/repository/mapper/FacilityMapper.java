@@ -217,7 +217,11 @@ public interface FacilityMapper {
     "OR LOWER(name) LIKE '%' || LOWER(#{searchParam}) || '%') AND enabled = true"})
   Integer getCountOfEnabledFacilities(String searchParam);
 
-  @Select({"SELECT * FROM facilities WHERE (LOWER(code) LIKE '%' || LOWER(#{searchParam}) || '%'",
-    "OR LOWER(name) LIKE '%' || LOWER(#{searchParam}) || '%') AND enabled = true ORDER BY LOWER(code)"})
+  @Select({"SELECT F.*,FT.id AS facilityTypeId, FT.name AS facilityTypeName FROM facilities F INNER JOIN facility_types FT ON F.typeId = FT.id WHERE (LOWER(F.code) LIKE '%' || LOWER(#{searchParam}) || '%'",
+    "OR LOWER(F.name) LIKE '%' || LOWER(#{searchParam}) || '%') AND F.enabled = true ORDER BY LOWER(F.code)"})
+    @Results(value = {
+      @Result(property = "facilityType.id", column = "facilityTypeId"),
+      @Result(property = "facilityType.name", column = "facilityTypeName"),
+    })
   List<Facility> getEnabledFacilities(String searchParam);
 }

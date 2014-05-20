@@ -8,8 +8,8 @@
  *  You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
  */
 
-function RequisitionGroupController($scope, requisitionGroupData, $location, RequisitionGroups,
-                                    SupervisoryNodesSearch) {
+function RequisitionGroupController($scope, requisitionGroupData, $location, RequisitionGroups, SupervisoryNodesSearch,
+                                    Facilities) {
 
   if (requisitionGroupData) {
     $scope.requisitionGroup = requisitionGroupData.requisitionGroup;
@@ -17,12 +17,12 @@ function RequisitionGroupController($scope, requisitionGroupData, $location, Req
   }
   else {
     $scope.requisitionGroup = {};
+    $scope.requisitionGroupMembers = [];
   }
 
   $scope.cancel = function () {
     $location.path('#/search');
   };
-
   loadSupervisoryNode();
 
   $scope.save = function () {
@@ -32,13 +32,34 @@ function RequisitionGroupController($scope, requisitionGroupData, $location, Req
       $scope.message = "";
       return;
     }
-
     if ($scope.requisitionGroup.id) {
       RequisitionGroups.update({id: $scope.requisitionGroup.id}, $scope.requisitionGroup, success, error);
     }
     else {
       RequisitionGroups.save({}, $scope.requisitionGroup, success, error);
     }
+  };
+
+  $scope.getSearchResults = function (query, successCallBack) {
+    Facilities.get({"searchParam": query}, successCallBack, {});
+  };
+
+  $scope.associate = function (facility) {
+    var isDuplicate = _.find($scope.requisitionGroupMembers, function (member) {
+      return member.facility.id == facility.id;
+    });
+    if (isDuplicate) {
+      $scope.showDuplicateFacilityMessage = true;
+      $scope.duplicateFacilityName = facility.name;
+      return;
+    }
+    $scope.requisitionGroupMembers.push({"facility": facility});
+  };
+
+  $scope.removeMember = function (memberId) {
+    $scope.requisitionGroupMembers = _.filter($scope.requisitionGroupMembers, function (member) {
+      return member.id != memberId;
+    });
   };
 
   var success = function (data) {
@@ -80,15 +101,6 @@ function RequisitionGroupController($scope, requisitionGroupData, $location, Req
     $scope.query = null;
   };
 
-  $scope.toggleSlider = function () {
-    $scope.sliderState = !$scope.sliderState;
-    if ($scope.sliderState) {
-      angular.element(".searchAndFilter").slideDown("slow");
-    }
-    else {
-      angular.element(".searchAndFilter").slideUp("slow");
-    }
-  };
 
   $scope.clearSelectedNode = function () {
     $scope.nodeSelected = null;

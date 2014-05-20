@@ -8,7 +8,7 @@
   ~ You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
   -->
 
-<div id="searchAndFilter" class="searchAndFilter" ng-controller="FacilitySearchFilterController">
+<div id="searchAndFilter" class="searchAndFilter" slider>
   <div class="form-group clear-bottom">
     <h3 class="main-heading" openlmis-message="search.facility.header"></h3>
 
@@ -17,7 +17,7 @@
         <div class="input-append input-prepend">
           <input id="searchFacility" type="text" ng-model="query" maxlength="50"
                  openlmis-message="placeholder.facility.search"/>
-          <button class="btn" ng-click="facilitySearchResults()">
+          <button id="searchButton" class="btn">
             <i id='searchIcon' class="icon-search"></i>
           </button>
         </div>
@@ -35,10 +35,10 @@
 
         <h3 ng-switch-default openlmis-message="msg.many.matches|resultCount|query"></h3>
       </div>
-      <a id="close_button" class="close-btn" href="" ng-click="clearSearch()"></a>
+      <a class="close-btn" id="close_button" href=""></a>
       <ul>
         <li ng-repeat="facility in facilityList">
-          <a href="" id="facilityResult{{$index}}" ng-click="associateFacility(facility)">{{facility.code}} - {{facility.name}} </a>
+          <a id="facilityResult{{$index}}" href="" ng-click="associate(facility)">{{facility.code}} - {{facility.name}}</a>
         </li>
       </ul>
     </div>

@@ -14,7 +14,7 @@
   <div ng-show="requisitionGroup.id"><h2 id="editRequisitionGroupHeader"
                                          openlmis-message="header.supervisory.node.edit"></h2></div>
 
-  <form ng-submit="save()" name="requisitionGroupForm" novalidate>
+  <form name="requisitionGroupForm" novalidate>
     <div class="app-form">
 
       <div id="requisitionGroupFormGroup" class="form-group clear-top">
@@ -107,7 +107,7 @@
             </label>
 
             <div class="form-field">
-              <a href="" ng-click="toggleSlider()">
+              <a href="" ng-click="showSlider = !showSlider">
                 <span>+</span>
                 <span openlmis-message="link.associate.facility"></span>
               </a>
@@ -118,6 +118,8 @@
         <div class="form-row clearfix" style="position: relative;">
           <ng-include src="'/public/pages/admin/shared/search-filter-facilities.html'"></ng-include>
         </div>
+
+        <div class="toolbar-error" id="duplicateFacilityMessage" openlmis-message="error.duplicate.facility|duplicateFacilityName" ng-show="showDuplicateFacilityMessage"></div>
 
         <table id="membersTable" class="table table-striped table-bordered search-list">
           <thead>
@@ -144,7 +146,7 @@
 
       <div form-toolbar id="action_buttons" class="action-buttons">
         <div class="form-cell button-row">
-          <input id="saveButton" type="submit" id="save-button" class="btn btn-primary save-button"
+          <input id="saveButton" type="submit" class="btn btn-primary save-button"
                  openlmis-message="button.save" ng-click="save()"/>
           <input id="cancelButton" type="button" class="btn btn-cancel cancel-button" openlmis-message="button.cancel"
                  ng-click="cancel()"/>

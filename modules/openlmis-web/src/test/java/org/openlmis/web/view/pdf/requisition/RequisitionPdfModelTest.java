@@ -109,7 +109,7 @@ public class RequisitionPdfModelTest {
     when(messageService.message("requisition.type.emergency")).thenReturn("Emergency");
 
     PdfPTable header = requisitionPdfModel.getRequisitionHeader();
-    assertRowValues(header.getRow(0), "Report and Requisition for: Yellow Fever (Central Warehouse)");
+    assertRowValues(header.getRow(0), "Report and Requisition for: Yellow Fever (Warehouse)");
     assertRowValues(header.getRow(1), "Facility: F1", "Operated By: MOH", "Maximum Stock level: 100", "Emergency Order Point: 50.5");
     assertRowValues(header.getRow(2), "levelName: Lusaka", "parentLevelName: Zambia", "Reporting Period: 01/01/2012 - 01/02/2012", "Requisition Type: Emergency");
     assertThat(header.getSpacingAfter(), is(RequisitionPdfModel.PARAGRAPH_SPACING));
@@ -123,7 +123,7 @@ public class RequisitionPdfModelTest {
     requisition.setEmergency(false);
 
     PdfPTable header = requisitionPdfModel.getRequisitionHeader();
-    assertRowValues(header.getRow(0), "Report and Requisition for: Yellow Fever (Central Warehouse)");
+    assertRowValues(header.getRow(0), "Report and Requisition for: Yellow Fever (Warehouse)");
     assertRowValues(header.getRow(1), "Facility: F1", "Operated By: MOH", "Maximum Stock level: 100", "Emergency Order Point: 50.5");
     assertRowValues(header.getRow(2), "levelName: Lusaka", "parentLevelName: Zambia", "Reporting Period: 01/01/2012 - 01/02/2012", "Requisition Type: Regular");
     assertThat(header.getSpacingAfter(), is(RequisitionPdfModel.PARAGRAPH_SPACING));
