@@ -564,12 +564,12 @@ public class FacilityMapperIT {
   }
 
   @Test
-  public void shouldGetEnabledFacilities(){
+  public void shouldGetEnabledFacilities() {
     String searchParam = "fac";
-    Facility fac1 = make(a(FacilityBuilder.defaultFacility, with(name, "FAC1"), with(enabled, true), with(code,"FAC2")));
-    Facility fac2 = make(a(FacilityBuilder.defaultFacility, with(name,"FAC2"), with(enabled,false), with(code,"FAC3")));
-    Facility fac3 = make(a(FacilityBuilder.defaultFacility, with(name,"FAC2"), with(enabled,true), with(code,"FAC1")));
-    Facility fac4 = make(a(FacilityBuilder.defaultFacility, with(name,"Dispensary1"), with(enabled,true), with(code,"DIS3")));
+    Facility fac1 = make(a(FacilityBuilder.defaultFacility, with(name, "FAC1"), with(enabled, true), with(code, "FAC2")));
+    Facility fac2 = make(a(FacilityBuilder.defaultFacility, with(name, "FAC2"), with(enabled, false), with(code, "FAC3")));
+    Facility fac3 = make(a(FacilityBuilder.defaultFacility, with(name, "FAC2"), with(enabled, true), with(code, "FAC1")));
+    Facility fac4 = make(a(FacilityBuilder.defaultFacility, with(name, "Dispensary1"), with(enabled, true), with(code, "DIS3")));
     mapper.insert(fac1);
     mapper.insert(fac2);
     mapper.insert(fac3);
@@ -753,19 +753,19 @@ public class FacilityMapperIT {
   }
 
   @Test
-  public void shouldSendCountOfFacilities(){
+  public void shouldSendCountOfFacilities() {
     Facility facility1 = make(a(FacilityBuilder.defaultFacility, with(code, "Facility 1")));
     mapper.insert(facility1);
 
-    Facility facility2 = make(a(FacilityBuilder.defaultFacility, with(code, "Facility 2")));
+    Facility facility2 = make(a(FacilityBuilder.defaultFacility, with(code, "Facility 2"), with(enabled, false)));
     mapper.insert(facility2);
 
-    Facility facility3 = make(a(FacilityBuilder.defaultFacility,with(code, "Facility 3")));
+    Facility facility3 = make(a(FacilityBuilder.defaultFacility, with(code, "Facility 3")));
     mapper.insert(facility3);
 
     Integer totalFacilities = mapper.getCountOfEnabledFacilities("Fac");
 
-    assertThat(totalFacilities,is(3));
+    assertThat(totalFacilities, is(2));
   }
 
   private ProgramSupported insertProgramSupported(Program program, Facility supportedFacility, Date modifiedDate) {

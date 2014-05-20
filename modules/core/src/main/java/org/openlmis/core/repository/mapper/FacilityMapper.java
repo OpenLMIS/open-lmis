@@ -214,7 +214,7 @@ public interface FacilityMapper {
   List<Facility> getAllParentsByModifiedDate(Date modifiedDate);
 
   @Select({"SELECT COUNT(*) FROM facilities WHERE (LOWER(code) LIKE '%' || LOWER(#{searchParam}) || '%'",
-    "OR LOWER(name) LIKE '%' || LOWER(#{searchParam}) || '%')"})
+    "OR LOWER(name) LIKE '%' || LOWER(#{searchParam}) || '%') AND enabled = true"})
   Integer getCountOfEnabledFacilities(String searchParam);
 
   @Select({"SELECT * FROM facilities WHERE (LOWER(code) LIKE '%' || LOWER(#{searchParam}) || '%'",
