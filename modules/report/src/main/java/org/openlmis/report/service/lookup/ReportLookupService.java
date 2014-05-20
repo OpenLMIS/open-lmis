@@ -168,6 +168,10 @@ public class ReportLookupService {
     return facilityTypeMapper.getAll();
   }
 
+    public List<FacilityType> getAllFacilityTypes(){
+        return facilityTypeMapper.getAllFacilityTypes();
+    }
+
   public List<FacilityType> getFacilityTypesForProgram(Long programId) {
     return facilityTypeMapper.getForProgram(programId);
   }

@@ -27,5 +27,6 @@ public class GeographicZone {
     private Long catchmentPopulation;
     private Double latitude;
     private Double longitude;
+    private Integer levelId;
 
 }

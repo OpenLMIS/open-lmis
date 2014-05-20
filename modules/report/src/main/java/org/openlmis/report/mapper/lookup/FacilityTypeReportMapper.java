@@ -21,7 +21,8 @@ import java.util.List;
 public interface FacilityTypeReportMapper {
 
     // show only facility types that are likely to report rnr
-  @Select("SELECT id, name " +
+  @Select("SELECT id, name ," +
+          " code , nominalMaxmonth , nominalEOP , active , displayOrder"+
           "   FROM " +
           "       facility_types where id in " +
           " (select typeid from facilities where facilities.id in " +
@@ -29,6 +30,9 @@ public interface FacilityTypeReportMapper {
           " ) " +
           " order by name")
   List<FacilityType> getAll();
+
+    @Select("select * from facility_types")
+  List<FacilityType> getAllFacilityTypes();
 
 
   // show only facility types that are likely to report rnr

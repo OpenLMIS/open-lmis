@@ -123,6 +123,9 @@
     var newWin = null;
     function popUp(strURL,strType, strHeight, strWidth) {
 
+        if(typeof(strHeight)==='undefined') strType = "maximized";
+        if(typeof(strWidth)==='undefined')  strType = "maximized";
+
         if (newWin != null && !newWin.closed) {
             newWin.close();
         }
@@ -136,6 +139,13 @@
         if (strType=="elastic") {
             strOptions="toolbar,menubar,scrollbars,"+"resizable,location,height="+strHeight+",width="+strWidth;
         }
+        if (strType=="maximized") {
+            strWidth = (screen.availWidth - 10).toString();
+            strHeight = (screen.availHeight - 122).toString();
+
+            strOptions="toolbar,menubar,scrollbars,"+"location,height="+strHeight+",width="+strWidth;
+        }
+
         newWin = window.open(strURL, 'newWin', strOptions);
         newWin.focus();
     }
