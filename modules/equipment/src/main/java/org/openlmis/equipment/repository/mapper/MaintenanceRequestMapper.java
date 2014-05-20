@@ -35,14 +35,14 @@ public interface MaintenanceRequestMapper {
   @Select("select * from equipment_maintenance_requests where vendorId = #{vendorId} and resolved = false")
   List<MaintenanceRequest> getOutstandingRequestsForVendor(@Param("vendorId") Long vendorId);
 
-  @Insert("insert into equipment_maintenance_requests (userId, facilityId, inventoryId, vendorId, requestedDate, reason, recommendedDate, comment, resolved, vendorComment, createdBy, createdDate, modifiedBy, modifiedDate) " +
+  @Insert("insert into equipment_maintenance_requests (userId, facilityId, inventoryId, vendorId, requestDate, reason, recommendedDate, comment, resolved, vendorComment, createdBy, createdDate, modifiedBy, modifiedDate) " +
       " values " +
-      " (#{userId}, #{facilityId}, #{inventoryId}, #{vendorId}, #{requestedDate}, #{reason}, #{recommendedDate}, #{comment}, #{resolved}, #{vendorComment} , #{createdBy},COALESCE(#{createdDate}, NOW()), #{modifiedBy}, NOW() )")
+      " (#{userId}, #{facilityId}, #{inventoryId}, #{vendorId}, #{requestDate}, #{reason}, #{recommendedDate}, #{comment}, #{resolved}, #{vendorComment} , #{createdBy},COALESCE(#{createdDate}, NOW()), #{modifiedBy}, NOW() )")
   @Options(useGeneratedKeys = true)
   void insert(MaintenanceRequest value);
 
   @Update("UPDATE equipment_maintenance_requests SET " +
-      "userId = #{userId}, facilityId = #{facilityId}, inventoryId = #{inventoryId}, vendorId = #{vendorId}, requestedDate = #{requestedDate}, reason = #{reason}, recommendedDate = #{recommendedDate}, comment = #{comment}, resolved = #{resolved}, vendorComment = #{vendorComment}, modifiedBy = #{modifiedBy}, modifiedDate = NOW()" +
+      "userId = #{userId}, facilityId = #{facilityId}, inventoryId = #{inventoryId}, vendorId = #{vendorId}, requestDate = #{requestDate}, reason = #{reason}, recommendedDate = #{recommendedDate}, comment = #{comment}, resolved = #{resolved}, vendorComment = #{vendorComment}, modifiedBy = #{modifiedBy}, modifiedDate = NOW()" +
       " WHERE id = #{id}")
   void update(MaintenanceRequest value);
 }

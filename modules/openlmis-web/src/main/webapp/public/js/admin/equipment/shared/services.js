@@ -85,3 +85,9 @@ services.factory('SaveContract', function ($resource) {
     return $resource('/equipment/service-contracts/save.json', {}, {});
 });
 
+/** Maintenance Requests */
+services.factory('SaveMaintenanceRequest', function($resource){
+    return $resource('/equipment/maintenance-request/save.json', {}, {});
+});
+
+

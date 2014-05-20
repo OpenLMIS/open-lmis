@@ -22,6 +22,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.servlet.http.HttpServletRequest;
+import java.util.Date;
+
 @Controller
 @RequestMapping(value="/equipment/maintenance-request/")
 public class MaintenanceRequestController extends BaseController {
@@ -54,8 +57,12 @@ public class MaintenanceRequestController extends BaseController {
   }
 
   @RequestMapping(value = "save", method = RequestMethod.POST, headers = ACCEPT_JSON)
-  public ResponseEntity<OpenLmisResponse> save(@RequestBody MaintenanceRequest type){
-    service.save(type);
+  public ResponseEntity<OpenLmisResponse> save(@RequestBody MaintenanceRequest maintenanceRequest, HttpServletRequest request){
+    maintenanceRequest.setCreatedBy(loggedInUserId(request));
+    maintenanceRequest.setUserId(loggedInUserId(request));
+    maintenanceRequest.setResolved(false);
+    maintenanceRequest.setRequestDate(new Date());
+    service.save(maintenanceRequest);
     return OpenLmisResponse.response("status","success");
   }
 }

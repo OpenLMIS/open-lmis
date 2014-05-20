@@ -32,7 +32,7 @@ public class MaintenanceRequest extends BaseModel {
   private Long inventoryId;
   private Long vendorId;
 
-  private Date requestedDate;
+  private Date requestDate;
   private String reason;
   private Date recommendedDate;
   private String comment;
@@ -51,7 +51,7 @@ public class MaintenanceRequest extends BaseModel {
   }
 
   public String getRequestedDateString()  {
-    return formatDate(this.requestedDate);
+    return formatDate(this.requestDate);
   }
 
   public String getRecommendedDateString()  {
