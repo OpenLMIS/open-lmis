@@ -56,6 +56,11 @@ public class MaintenanceRequestController extends BaseController {
     return  OpenLmisResponse.response("logs", service.getOutstandingForVendor(id));
   }
 
+  @RequestMapping(method = RequestMethod.GET, value = "full-history")
+  public ResponseEntity<OpenLmisResponse> getFullHistoryId( @RequestParam("id") Long inventoryId){
+    return  OpenLmisResponse.response("logs", service.getFullHistory(inventoryId));
+  }
+
   @RequestMapping(value = "save", method = RequestMethod.POST, headers = ACCEPT_JSON)
   public ResponseEntity<OpenLmisResponse> save(@RequestBody MaintenanceRequest maintenanceRequest, HttpServletRequest request){
     maintenanceRequest.setCreatedBy(loggedInUserId(request));
@@ -65,4 +70,6 @@ public class MaintenanceRequestController extends BaseController {
     service.save(maintenanceRequest);
     return OpenLmisResponse.response("status","success");
   }
+
+
 }

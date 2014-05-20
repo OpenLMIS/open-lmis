@@ -91,3 +91,7 @@ services.factory('SaveMaintenanceRequest', function($resource){
 });
 
 
+services.factory('EquipmentLogs', function($resource){
+   return $resource('/equipment/maintenance-request/full-history.json',{},{});
+});
+
