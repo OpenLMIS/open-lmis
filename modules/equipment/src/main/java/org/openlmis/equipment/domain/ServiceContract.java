@@ -10,17 +10,28 @@
 
 package org.openlmis.equipment.domain;
 
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.BaseModel;
+
+import java.util.Date;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Donor extends BaseModel {
+@EqualsAndHashCode(callSuper=false)
+public class ServiceContract extends BaseModel{
 
-  private String shortName;
-  private String longName;
+  private Long vendorId;
+  private String identifier;
+  private Date startDate;
+  private Date endDate;
+  private String description;
+  private String terms;
+  private String coverage;
+  private Date contractDate;
 
 }

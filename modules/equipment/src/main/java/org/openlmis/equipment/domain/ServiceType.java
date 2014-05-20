@@ -10,17 +10,20 @@
 
 package org.openlmis.equipment.domain;
 
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.BaseModel;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Donor extends BaseModel {
+@EqualsAndHashCode(callSuper=false)
+public class ServiceType extends BaseModel{
 
-  private String shortName;
-  private String longName;
+  private String name;
+  private String description;
 
 }

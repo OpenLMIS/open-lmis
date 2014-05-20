@@ -8,19 +8,37 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-package org.openlmis.equipment.domain;
+package org.openlmis.equipment.service;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.openlmis.core.domain.BaseModel;
+import org.openlmis.equipment.domain.ServiceType;
+import org.openlmis.equipment.domain.Vendor;
+import org.openlmis.equipment.repository.ServiceTypeRepository;
+import org.openlmis.equipment.repository.VendorRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-public class Donor extends BaseModel {
+import java.util.List;
 
-  private String shortName;
-  private String longName;
+@Component
+public class ServiceTypeService {
 
+
+  @Autowired
+  private ServiceTypeRepository repository;
+
+  public List<ServiceType> getAll(){
+    return repository.getAll();
+  }
+
+  public ServiceType getById(Long id){
+    return repository.getById(id);
+  }
+
+  public void save(ServiceType serviceType){
+    if(serviceType.getId() == null){
+      repository.insert(serviceType);
+    }else{
+      repository.update(serviceType);
+    }
+  }
 }

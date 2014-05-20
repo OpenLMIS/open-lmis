@@ -8,19 +8,10 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-package org.openlmis.equipment.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.openlmis.core.domain.BaseModel;
+function ManageServiceContractsController($scope, $routeParams, $location, Contracts) {
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-public class Donor extends BaseModel {
-
-  private String shortName;
-  private String longName;
-
+    Contracts.get(function(data){
+        $scope.list = data.contract;
+    });
 }

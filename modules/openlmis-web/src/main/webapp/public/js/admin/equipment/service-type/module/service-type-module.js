@@ -8,19 +8,25 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-package org.openlmis.equipment.domain;
-
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.openlmis.core.domain.BaseModel;
-
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-public class Donor extends BaseModel {
-
-  private String shortName;
-  private String longName;
-
-}
+angular.module('service-type', ['openlmis', 'ui.bootstrap.modal', 'ui.bootstrap.dialog', 'ui.bootstrap.dropdownToggle']).config(['$routeProvider',
+    function ($routeProvider) {
+        $routeProvider.
+            when('/', {
+                controller: ManageServiceTypeController,
+                templateUrl: 'partials/list.html'
+            }).
+            when('/create',{
+                controller: CreateServiceTypeController,
+                templateUrl: 'partials/create.html'
+            }).
+            when('/edit/:id',{
+                controller: CreateServiceTypeController,
+                templateUrl: 'partials/create.html'
+            }).
+            otherwise({
+                redirectTo: '/'
+            });
+    }]).run(function ($rootScope, AuthorizationService) {
+    $rootScope.manageServiceTypeSelected = "selected";
+    AuthorizationService.preAuthorize('MANAGE_EQUIPMENT_SETTINGS');
+});

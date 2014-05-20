@@ -8,19 +8,30 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-package org.openlmis.equipment.domain;
+function CreateServiceTypeController($scope, $routeParams, $location, ServiceType, SaveServiceType) {
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.openlmis.core.domain.BaseModel;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-public class Donor extends BaseModel {
+    if ($routeParams.id === undefined) {
+        $scope.current = {};
+    } else {
+        ServiceType.get({
+            id: $routeParams.id
+        }, function (data) {
+            $scope.current = data.service_type;
+        });
+    }
 
-  private String shortName;
-  private String longName;
+    $scope.save = function () {
+        SaveServiceType.save($scope.current, function (data) {
+            // success
+            $location.path('');
+        }, function (data) {
+            // error
+            $scope.error = data.messages;
+        });
+    };
 
+    $scope.cancel = function () {
+        $location.path('');
+    };
 }
