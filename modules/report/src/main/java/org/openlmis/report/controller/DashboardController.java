@@ -136,8 +136,9 @@ public class DashboardController extends BaseController {
 
     @RequestMapping(value = "/reportingPerformance", method = GET, headers = ACCEPT_JSON)
     public ResponseEntity<OpenLmisResponse>  getReportingPerformance(@RequestParam("periodId") Long periodId,
-                                                                 @RequestParam("programId") Long programId){
-        return OpenLmisResponse.response(REPORTING_PERFORMANCE, this.lookupService.getReportingPerformance(periodId,programId));
+                                                                 @RequestParam("programId") Long programId,
+                                                                 @RequestParam("rgroupId") List<Long> requisitionGroupId){
+        return OpenLmisResponse.response(REPORTING_PERFORMANCE, this.lookupService.getReportingPerformance(periodId,programId, requisitionGroupId));
     }
 
 }

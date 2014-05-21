@@ -106,8 +106,8 @@ public class DashboardLookupService {
         return rnRStatusSummaryReportMapper.getRnRStatusSummaryData(requisionGroupId);
     }
 
-    public List<HashMap> getReportingPerformance(Long periodId, Long programId){
-        return dashboardMapper.getReportingPerformance(periodId,programId);
+    public List<HashMap> getReportingPerformance(Long periodId, Long programId,  List<Long> rgroupId){
+        return dashboardMapper.getReportingPerformance(periodId,programId, getCommaSeparatedIds(rgroupId));
 
     }
 }

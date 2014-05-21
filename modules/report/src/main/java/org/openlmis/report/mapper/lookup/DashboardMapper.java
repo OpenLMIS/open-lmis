@@ -128,6 +128,8 @@ public interface DashboardMapper {
             " join requisition_group_program_schedules s on s.requisitionGroupId = m.requisitionGroupId and s.programId = #{programId}\n" +
             " join processing_periods pp on pp.scheduleId = s.scheduleId and pp.id = #{periodId}\n" +
             " where f.id not in (select facilityId from requisitions r where r.programId = #{programId} and r.periodId = #{periodId}) \n" +
+            "AND CASE WHEN #{rgroupId} ='{}' THEN s.requisitionGroupId = s.requisitionGroupId ELSE s.requisitionGroupId =  ANY(#{rgroupId}::int[]) END\n" +
+
             " and f.enabled = true\n" +
             " UNION\n" +
             " select 'Reporting' as status ,count(*) total \n" +
@@ -136,9 +138,10 @@ public interface DashboardMapper {
             " join requisition_group_program_schedules s on s.requisitionGroupId = m.requisitionGroupId and s.programId = #{programId}\n" +
             " join processing_periods pp on pp.scheduleId = s.scheduleId and pp.id = #{periodId}\n" +
             " where f.id in (select facilityId from requisitions r where r.programId = #{programId} and r.periodId = #{periodId}) \n" +
+            "AND CASE WHEN #{rgroupId} ='{}' THEN s.requisitionGroupId = s.requisitionGroupId ELSE s.requisitionGroupId =  ANY(#{rgroupId}::int[]) END\n" +
             " and f.enabled = true\n" +
             " ")
-    List<HashMap> getReportingPerformance(@Param("periodId")  Long periodId, @Param("programId") Long programId);
+    List<HashMap> getReportingPerformance(@Param("periodId")  Long periodId, @Param("programId") Long programId, @Param("rgroupId") String requisitionGroupId);
 
 }
 
