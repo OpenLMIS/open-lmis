@@ -38,13 +38,13 @@ public interface ServiceContractMapper {
 
   @Select("select id, name, true as isActive from equipment_service_types where id in (select serviceTypeId from equipment_contract_service_types where contractId = #{id}) " +
       " UNION " +
-      " select id, name, true as isActive from equipment_service_types where id not in (select serviceTypeId from equipment_contract_service_types where contractId = #{id}) " +
+      " select id, name, false as isActive from equipment_service_types where id not in (select serviceTypeId from equipment_contract_service_types where contractId = #{id}) " +
       " ORDER BY name")
   List<ContractDetail> getServiceTypes(Long id);
 
   @Select("select id, name, true as isActive from equipments where id in (select equipmentId from equipment_service_contract_equipments where contractId = #{id}) " +
       " UNION " +
-      " select id, name, true as isActive from equipments where id not in (select equipmentId from equipment_service_contract_equipments where contractId = #{id}) " +
+      " select id, name, false as isActive from equipments where id not in (select equipmentId from equipment_service_contract_equipments where contractId = #{id}) " +
       " order by name")
   List<ContractDetail> getEquipments(@Param("id") Long id);
 
@@ -71,7 +71,7 @@ public interface ServiceContractMapper {
   @Delete("DELETE from equipment_service_contract_equipments where contractId = #{contractId}")
   void deleteEquipments(Long contractId);
 
-  @Delete("DELETE from equipment_service_types where contractId = #{contractId}")
+  @Delete("DELETE from equipment_contract_service_types where contractId = #{contractId}")
   void deleteServiceTypes(Long contractId);
 
   @Delete("DELETE from equipment_service_contract_facilities where contractId = #{contractId}")
@@ -80,7 +80,7 @@ public interface ServiceContractMapper {
   @Insert("INSERT INTO equipment_service_contract_equipments ( contractId, equipmentId ) values (#{contractId}, #{equipmentId}) ")
   void insertEquipment(@Param("contractId") Long contractId, @Param("equipmentId") Long equipmentId);
 
-  @Insert("INSERT INTO equipment_service_types ( contractId, serviceTypeId ) values (#{contractId}, #{serviceTypeId}) ")
+  @Insert("INSERT INTO equipment_contract_service_types ( contractId, serviceTypeId ) values (#{contractId}, #{serviceTypeId}) ")
   void insertServiceTypes(@Param("contractId") Long contractId,@Param("serviceTypeId") Long serviceTypeId);
 
   @Insert("INSERT INTO equipment_service_contract_facilities ( contractId, facilityId ) values (#{contractId}, #{facilityId}) ")
