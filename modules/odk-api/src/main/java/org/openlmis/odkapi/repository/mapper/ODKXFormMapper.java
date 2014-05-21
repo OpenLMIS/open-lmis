@@ -23,10 +23,10 @@ import java.util.List;
 @Repository
 public interface ODKXFormMapper {
 
-    @Select("SELECT * FROM odkxform")
+    @Select("SELECT * FROM odk_xform")
     public List<ODKXForm> getAvailableXFormDefinitions();
 
-    @Select("SELECT * FROM odkxform WHERE formId = #{formId}")
+    @Select("SELECT * FROM odk_xform WHERE formId = #{formId}")
     public ODKXForm getXFormByFormId(String formId);
 
 }

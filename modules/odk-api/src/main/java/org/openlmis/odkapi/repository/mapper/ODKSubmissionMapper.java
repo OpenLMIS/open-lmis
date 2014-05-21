@@ -20,7 +20,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ODKSubmissionMapper {
 
-    @Insert("INSERT INTO odksubmission(" +
+    @Insert("INSERT INTO odk_submission(" +
             "odkAccountId," +
             "formBuildId, " +
             "instanceId, " +
@@ -35,6 +35,6 @@ public interface ODKSubmissionMapper {
     @Options(useGeneratedKeys = true)
     void insert(ODKSubmission odkSubmission);
 
-    @Select("SELECT MAX(id) FROM odksubmission")
+    @Select("SELECT MAX(id) FROM odk_submission")
     public Long getLastSubmissionId();
 }

@@ -11,6 +11,7 @@
 package org.openlmis.equipment.repository;
 
 import org.openlmis.equipment.domain.MaintenanceRequest;
+import org.openlmis.equipment.dto.Log;
 import org.openlmis.equipment.repository.mapper.MaintenanceRequestMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -49,5 +50,9 @@ public class MaintenanceRequestRepository {
 
   public void update(MaintenanceRequest value){
     mapper.update(value);
+  }
+
+  public List<Log> getFullHistory(Long inventoryId){
+    return mapper.getFullHistory(inventoryId);
   }
 }

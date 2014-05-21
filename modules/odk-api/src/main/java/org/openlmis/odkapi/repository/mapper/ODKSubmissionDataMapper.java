@@ -23,7 +23,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ODKSubmissionDataMapper {
 
-    @Insert("INSERT INTO odksubmissiondata(" +
+    @Insert("INSERT INTO odk_submission_data(" +
             "ODKSubmissionId, " +
             "facilityId, " +
             "GPSLatitude,GPSLongitude, GPSAltitude, GPSAccuracy, firstPicture, secondPicture, thirdPicture, fourthPicture, fifthPicture, comment) " +
