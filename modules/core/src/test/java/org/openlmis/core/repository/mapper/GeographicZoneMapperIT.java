@@ -233,4 +233,48 @@ public class GeographicZoneMapperIT {
     List<GeographicZone> geographicZones = mapper.getAllGeographicZonesAbove(level);
     assertThat(geographicZones.size(), is(10));
   }
+
+  @Test
+  public void shouldGetGeographicZonesByCodeOrName() {
+    GeographicZone geographicZone1 = new GeographicZone(null, "code1GZ", "nameA", new GeographicLevel(1L), null);
+    GeographicZone geographicZone2 = new GeographicZone(null, "GZcode2", "nameB", new GeographicLevel(2L), null);
+    GeographicZone geographicZone3 = new GeographicZone(null, "code3", "GZnameC", new GeographicLevel(3L), null);
+    GeographicZone geographicZone4 = new GeographicZone(null, "coGZde4", "nameD", new GeographicLevel(4L), null);
+    GeographicZone geographicZone5 = new GeographicZone(null, "code4", "nameE", new GeographicLevel(1L), null);
+    mapper.insert(geographicZone1);
+    mapper.insert(geographicZone2);
+    mapper.insert(geographicZone3);
+    mapper.insert(geographicZone4);
+    mapper.insert(geographicZone5);
+
+    String searchParam = "GZ";
+
+    List<GeographicZone> geographicZones = mapper.getGeographicZoneByCodeOrName(searchParam);
+
+    assertThat(geographicZones.size(),is(4));
+    assertThat(geographicZones.get(0).getCode(),is(geographicZone1.getCode()));
+    assertThat(geographicZones.get(1).getCode(),is(geographicZone2.getCode()));
+    assertThat(geographicZones.get(2).getCode(),is(geographicZone3.getCode()));
+    assertThat(geographicZones.get(3).getCode(),is(geographicZone4.getCode()));
+  }
+
+  @Test
+  public void getGeographicZoneCountBySearchParam(){
+    GeographicZone geographicZone1 = new GeographicZone(null, "code1GZ", "nameA", new GeographicLevel(1L), null);
+    GeographicZone geographicZone2 = new GeographicZone(null, "GZcode2", "nameB", new GeographicLevel(2L), null);
+    GeographicZone geographicZone3 = new GeographicZone(null, "code3", "GZnameC", new GeographicLevel(3L), null);
+    GeographicZone geographicZone4 = new GeographicZone(null, "coGZde4", "nameD", new GeographicLevel(4L), null);
+    GeographicZone geographicZone5 = new GeographicZone(null, "code4", "nameE", new GeographicLevel(1L), null);
+    GeographicZone geographicZone6 = new GeographicZone(null, "code4GZ", "nameEGZ", new GeographicLevel(1L), null);
+    mapper.insert(geographicZone1);
+    mapper.insert(geographicZone2);
+    mapper.insert(geographicZone3);
+    mapper.insert(geographicZone4);
+    mapper.insert(geographicZone5);
+    mapper.insert(geographicZone6);
+
+    Integer count = mapper.getGeographicZoneCountBy("GZ");
+
+    assertThat(count,is(5));
+  }
 }

@@ -12,6 +12,7 @@ package org.openlmis.web.controller;
 
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.Facility;
+import org.openlmis.core.domain.FacilityType;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.FacilityService;
 import org.openlmis.core.service.ProgramService;
@@ -205,6 +206,12 @@ public class FacilityController extends BaseController {
     List<Facility> enabledWarehouses = facilityService.getEnabledWarehouses();
 
     return response("enabledWarehouses", enabledWarehouses);
+  }
+
+  @RequestMapping(value = "/facility-types", method = GET, headers = ACCEPT_JSON)
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_FACILITY')")
+  public List<FacilityType> getFacilityTypes() {
+    return facilityService.getAllTypes();
   }
 
   private ResponseEntity<OpenLmisResponse> createErrorResponse(Facility facility, DataException exception) {

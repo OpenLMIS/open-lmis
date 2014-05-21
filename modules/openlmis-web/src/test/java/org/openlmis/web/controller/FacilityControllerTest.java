@@ -318,7 +318,17 @@ public class FacilityControllerTest {
 
     verify(facilityService).getEnabledWarehouses();
     assertThat((List<Facility>) warehouses.getBody().getData().get("enabledWarehouses"), is(facilities));
+  }
 
+  @Test
+  public void shouldGetAllFacilityTypes(){
+    List<FacilityType> types = new ArrayList<>();
+    when(facilityService.getAllTypes()).thenReturn(types);
+
+    List<FacilityType> facilityTypes = facilityController.getFacilityTypes();
+
+    verify(facilityService).getAllTypes();
+    assertThat(facilityTypes,is(types));
   }
 
   private MockHttpServletRequest httpRequest() {

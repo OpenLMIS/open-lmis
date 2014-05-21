@@ -94,4 +94,12 @@ public class GeographicZoneService {
     }
     return 0;
   }
+
+  public List<GeographicZone> getGeographicZoneByCodeOrName(String searchParam) {
+    return repository.getGeographicZoneByCodeOrName(searchParam);
+  }
+
+  public Integer getGeographicZoneCountBy(String searchParam) {
+    return repository.getGeographicZoneCountBy(searchParam);
+  }
 }

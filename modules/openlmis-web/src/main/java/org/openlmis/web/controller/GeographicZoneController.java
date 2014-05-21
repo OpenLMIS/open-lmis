@@ -17,6 +17,7 @@ import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.GeographicZoneService;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -26,6 +27,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.openlmis.web.response.OpenLmisResponse.success;
@@ -106,5 +108,24 @@ public class GeographicZoneController extends BaseController {
   public List<GeographicZone> getAllGeographicZonesAbove(@PathVariable("geoLevelCode") String geographicLevelCode) {
     GeographicLevel geographicLevel = new GeographicLevel(geographicLevelCode, null, null);
     return service.getAllGeographicZonesAbove(geographicLevel);
+  }
+
+  @RequestMapping(value = "/filtered-geographicZones", method = GET, headers = ACCEPT_JSON)
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_GEOGRAPHIC_ZONE')")
+  public ResponseEntity<OpenLmisResponse> getGeographicZoneByCodeOrName(@RequestParam(value = "searchParam") String searchParam,
+                                                                        @Value("${geo.zone.search.limit}")String searchLimit) {
+    ResponseEntity<OpenLmisResponse> response;
+    List<GeographicZone> geographicZones = new ArrayList<>();
+    response = OpenLmisResponse.response(GEO_ZONES,geographicZones);
+    if(searchParam != null) {
+      Integer count = service.getGeographicZoneCountBy(searchParam);
+      if (count < Integer.parseInt(searchLimit)) {
+        geographicZones = service.getGeographicZoneByCodeOrName(searchParam);
+        response = OpenLmisResponse.response(GEO_ZONES, geographicZones);
+      } else {
+        response = OpenLmisResponse.response("message", messageService.message("too.many.results.found"));
+      }
+    }
+    return response;
   }
 }
