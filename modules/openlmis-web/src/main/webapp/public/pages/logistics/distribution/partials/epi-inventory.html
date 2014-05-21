@@ -61,7 +61,7 @@
                            name="existingQuantityNR{{$index}}" ng-trim=false
                            numeric-validator="positiveInteger" maxlength="7"
                            error-holder="existingQuantityError{{$index}}"
-                           ng-class="{'required-error': !(lineItem.existingQuantity.value || lineItem.existingQuantity.notRecorded)}"/>
+                           ng-class="{'required-error': !facilityData.isDisabled('epi-inventory') && !(lineItem.existingQuantity.value || lineItem.existingQuantity.notRecorded)}"/>
                     <span id="existingQuantityError{{$index}}"
                           class="rnr-form-error"
                           openlmis-message="error.number.only"
@@ -81,7 +81,7 @@
                            name="deliveredQuantityNR{{ $index }}" ng-trim=false
                            numeric-validator="positiveInteger" maxlength="7"
                            error-holder="deliveredQuantityError{{$index}}"
-                           ng-class="{'required-error': !lineItem.deliveredQuantity}"/>
+                           ng-class="{'required-error': !facilityData.isDisabled('epi-inventory') && !lineItem.deliveredQuantity}"/>
                     <span id="deliveredQuantityError{{$index}}"
                           class="rnr-form-error"
                           openlmis-message="error.number.only"
@@ -97,7 +97,7 @@
                            name="spoiledQuantityNR{{ $index }}" ng-trim=false
                            numeric-validator="positiveInteger" maxlength="7"
                            error-holder="spoiledQuantityError{{$index}}"
-                           ng-class="{'required-error': !(lineItem.spoiledQuantity.value || lineItem.spoiledQuantity.notRecorded)}"/>
+                           ng-class="{'required-error': !facilityData.isDisabled('epi-inventory') && !(lineItem.spoiledQuantity.value || lineItem.spoiledQuantity.notRecorded)}"/>
                     <span id="spoiledQuantityError{{$index}}" class="rnr-form-error"
                           openlmis-message="error.number.only"
                           style="display: none"></span>
