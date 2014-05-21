@@ -41,6 +41,10 @@ public class MaintenanceRequestService  {
     return repository.getOutstandingForVendor(vendorId);
   }
 
+  public List<MaintenanceRequest> getOutstandingForUser(Long userId){
+    return repository.getOutstandingForUser(userId);
+  }
+
   public MaintenanceRequest getById(Long id){
     return repository.getById(id);
   }

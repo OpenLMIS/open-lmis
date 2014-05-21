@@ -1,0 +1,96 @@
+<!--
+  ~ This program was produced for the U.S. Agency for International Development. It was prepared by the USAID | DELIVER PROJECT, Task Order 4. It is part of a project which utilizes code originally licensed under the terms of the Mozilla Public License (MPL) v2 and therefore is licensed under MPL v2 or later.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify it under the terms of the Mozilla Public License as published by the Mozilla Foundation, either version 2 of the License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the Mozilla Public License for more details.
+  ~
+  ~ You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
+  -->
+
+<div>
+  <h2>Maintenance Request Form</h2>
+  <p>
+    This form can be used to request maintenance for the equipment you selected. The requests will be automatically forwarded to the service contract holder (if any)
+  </p>
+
+  <form ng-submit="save()" name="requestForm" novalidate>
+    <table class="table table-full-width">
+      <tr>
+        <td width="50%">
+          <div>
+            <div class="form-row clearfix">
+              <label>Equipment: <b>{{equipment.name}}</b></label>
+            </div>
+
+            <div class="form-row clearfix">
+              <label>Model : <b>{{equipment.model}}</b></label>
+            </div>
+
+            <div class="form-row clearfix">
+              <label>Serial Number: <b>{{equipment.serialNumber}}</b></label>
+            </div>
+          </div>
+
+
+          <div>
+            <div class="form-row clearfix">
+              <label>Maintenance Service Vendor</label>
+              <div class="form-field">
+                <select name="vendor" ng-model="current.vendorId" ng-required="true">
+                  <option value="{{vendor.id}}" ng-repeat="vendor in vendors">{{vendor.name}}</option>
+                </select>
+                <span class="field-error" ng-show="requestForm.vendor.$error.required && showError" openlmis-message="missing.value"></span>
+              </div>
+            </div>
+            <div class="form-row clearfix">
+              <label>Reason for requesting maintenance</label>
+              <div class="form-field">
+                <textarea style="width:100%" name="reason" ng-model="current.reason" ng-required="true"></textarea>
+                <span class="field-error" ng-show="requestForm.reason.$error.required && showError" openlmis-message="missing.value"></span>
+              </div>
+            </div>
+
+            <div class="form-row clearfix">
+              <label >Recommended Maintenance Visit Date</label>
+
+              <div class="form-field">
+                <input ng-required="true"
+                    ng-model="current.recommendedDate"
+                    name="recommendedDate"
+                    id="recommendedDate"
+                    ng-change="blurDateFields();"
+                    ui-date="{dateFormat: 'dd/mm/yy', changeYear: true}"
+                    ui-date-format="yy-dd-mm"
+                    />
+                <span class="field-error" ng-show="requestForm.recommendedDate.$error.required && showError" openlmis-message="missing.value"></span>
+              </div>
+            </div>
+
+            <div class="form-row clearfix">
+              <label>Other Comments</label>
+              <div class="form-field">
+                <textarea style="width:100%" ng-model="current.comment"></textarea>
+              </div>
+            </div>
+          </div>
+        </td>
+        <td></td>
+      </tr>
+    </table>
+
+    <div form-toolbar id="action_buttons" class="action-buttons">
+    <div class="form-cell button-row">
+      <input id="saveButton" type="submit" id="save-button" class="btn btn-primary save-button" openlmis-message="button.save" />
+      <input id="cancelButton" type="button" class="btn btn-cancel cancel-button" openlmis-message="button.cancel" ng-click="cancel()" />
+    </div>
+
+
+    <div class="toolbar-error" id="saveErrorMsgDiv">
+      <span openlmis-message="error" ng-show="error"></span>&nbsp;
+      <span ng-show="errorMessage" ng-bind="errorMessage"></span>
+    </div>
+    <div class="toolbar-success" id="saveSuccessMsgDiv" openlmis-message="message" ng-show="message"></div>
+  </div>
+  </form>
+</div>

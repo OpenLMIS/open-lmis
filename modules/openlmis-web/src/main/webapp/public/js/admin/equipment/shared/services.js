@@ -95,3 +95,7 @@ services.factory('EquipmentLogs', function($resource){
    return $resource('/equipment/maintenance-request/full-history.json',{},{});
 });
 
+services.factory('PendingRequests', function($resource){
+    return $resource('/equipment/maintenance-request/outstanding-for-user.json',{},{});
+});
+
