@@ -279,7 +279,7 @@ public class ManageSupervisoryNodes extends TestCaseHelper {
     HomePage homePage = loginPage.loginAs(testData.get(ADMIN), testData.get(PASSWORD));
     SupervisoryNodesPage supervisoryNodesPage = homePage.navigateToSupervisoryNodes();
     supervisoryNodesPage.clickAddNewButton();
-    supervisoryNodesPage.addNewSupervisoryNode("N4", "Node 4", "This is Node 4", "Nod", "F10");
+    addNewSupervisoryNode("N4", "Node 4", "This is Node 4", "Nod", "F10");
     supervisoryNodesPage.clickSaveButton();
     searchNode("Node 4"); //enter the one added
     assertEquals("Node 4", supervisoryNodesPage.getSupervisoryNodeName(1));
@@ -289,7 +289,7 @@ public class ManageSupervisoryNodes extends TestCaseHelper {
     supervisoryNodesPage.selectSupervisoryNodeParentAsSearchOption();
     searchNode("Node 4"); //previously added
     supervisoryNodesPage.clickAddNewButton();
-    supervisoryNodesPage.addNewSupervisoryNode("N5", "Node 5", "This is Node 5", "Nod", "F10");
+    addNewSupervisoryNode("N5", "Node 5", "This is Node 5", "Nod", "F10");
     supervisoryNodesPage.clickSaveButton();
     searchNode("Node 5"); //enter the one added
     assertEquals("Node 5", supervisoryNodesPage.getSupervisoryNodeName(1));
@@ -353,7 +353,7 @@ public class ManageSupervisoryNodes extends TestCaseHelper {
     searchNode("sup");
     assertFalse(supervisoryNodesPage.isOneResultMessageDisplayed());
 
-    supervisoryNodesPage.clickOnFirstLink();
+    supervisoryNodesPage.clickOnFirstElement();
     supervisoryNodesPage.editSelectedSupervisoryNode("sup", "F11");
 
     supervisoryNodesPage.clickSaveButton();
@@ -375,6 +375,29 @@ public class ManageSupervisoryNodes extends TestCaseHelper {
     supervisoryNodesPage.enterSearchParameter(searchParameter);
     supervisoryNodesPage.clickSearchIcon();
     testWebDriver.waitForAjax();
+  }
+
+  public void addNewSupervisoryNode(String code, String name, String description, String parentNode,String facilityName)
+  {
+    SupervisoryNodesPage supervisoryNodesPage = PageObjectFactory.getSupervisoryNodesPage(testWebDriver);
+
+    supervisoryNodesPage.enterSupervisoryNodeCodeValue(code);
+    supervisoryNodesPage.enterSupervisoryNodeNameValues(name);
+    supervisoryNodesPage.enterSupervisoryNodeDescriptionValue(description);
+    supervisoryNodesPage.enterSearchParentNodeParameter(parentNode);
+    supervisoryNodesPage.verifySearchParentNodeResult();
+
+    supervisoryNodesPage.clickOnFirstSearchResult();
+    assertTrue(supervisoryNodesPage.isClearSearchButtonIsVisible());
+
+    supervisoryNodesPage.clickOnClearSearchResultButton();
+
+    supervisoryNodesPage.enterSearchParentNodeParameter(parentNode);
+
+    supervisoryNodesPage.clickOnFirstSearchResult();
+    
+    supervisoryNodesPage.searchAssociatedFacility(facilityName);
+    supervisoryNodesPage.selectFirstFacilityToBeAssociated();
   }
 
   private void verifySupervisoryNodeNameOrderOnPage(String[] nodeNames) {

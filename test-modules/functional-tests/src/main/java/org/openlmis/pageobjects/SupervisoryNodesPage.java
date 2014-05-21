@@ -134,6 +134,9 @@ public class SupervisoryNodesPage extends Page {
   @FindBy(how = ID, using = "name0")
   private static WebElement firstLink = null;
 
+  @FindBy(how = ID, using = "result0")
+  private static WebElement firstSearchResultLink = null;
+
   @FindBy(how = ID, using = "searchSupervisoryNode")
   private static WebElement searchSupervisoryNode = null;
 
@@ -317,25 +320,7 @@ public class SupervisoryNodesPage extends Page {
     return searchIcon.isDisplayed();
   }
 
-  public void addNewSupervisoryNode(String code, String name, String description, String parentNode,String facilityName)
-  {
-    supervisoryNodeCode.sendKeys(code);
-    supervisoryNodeName.sendKeys(name);
-    supervisoryNodeDescription.sendKeys(description);
-    searchParentNode.sendKeys(parentNode);
-    verifySearchParentNodeResult();
-    testWebDriver.waitForElementToAppear(search_list);
-    result0.click();
-    assertTrue(clearSearch.isDisplayed());
-    clearSearch.click();
-    searchParentNode.sendKeys(parentNode);
-    testWebDriver.waitForElementToAppear(search_list);
-    assertTrue(search_list.isDisplayed());
-    assertTrue(result0.isDisplayed());
-    result0.click();
-    searchAssociatedFacility(facilityName);
-    selectFirstFacilityToBeAssociated();
-  }
+
 
   public void editSelectedSupervisoryNode(String parentNode, String facilityName){
     searchParentNode.sendKeys(parentNode);
@@ -346,15 +331,52 @@ public class SupervisoryNodesPage extends Page {
     selectFirstFacilityToBeAssociated();
   }
 
-  public void clickOnFirstLink(){
+  public void clickOnFirstSearchResult(){
 
-    firstLink.click();
+    firstSearchResultLink.click();
     testWebDriver.waitForElementToAppear(supervisoryNodeName);
 
   }
 
+  public void clickOnClearSearchResultButton(){
+    clearSearch.click();
+  }
+
+  public boolean isClearSearchButtonIsVisible(){
+    return clearSearch.isDisplayed();
+  }
+
+
+
+  public void clickOnFirstElement(){
+
+      firstLink.click();
+      testWebDriver.waitForElementToAppear(supervisoryNodeName);
+
+    }
+
   public void verifySearchParentNodeResult()
   {
+    assertTrue(search_list.isDisplayed());
+    assertTrue(result0.isDisplayed());
+    testWebDriver.waitForElementToAppear(search_list);
+  }
+
+  public void enterSupervisoryNodeCodeValue(String code){
+    supervisoryNodeCode.sendKeys(code);
+  }
+
+  public void enterSupervisoryNodeNameValues(String name){
+    supervisoryNodeName.sendKeys(name);
+  }
+
+  public void enterSupervisoryNodeDescriptionValue(String description){
+    supervisoryNodeDescription.sendKeys(description);
+  }
+
+  public void enterSearchParentNodeParameter(String parentCode){
+    searchParentNode.sendKeys(parentCode);
+    testWebDriver.waitForElementToAppear(search_list);
     assertTrue(search_list.isDisplayed());
     assertTrue(result0.isDisplayed());
   }
