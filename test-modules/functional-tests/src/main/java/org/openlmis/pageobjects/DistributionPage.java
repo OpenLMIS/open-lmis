@@ -67,7 +67,7 @@ public class DistributionPage extends Page {
   @FindBy(how = ID, using = "syncedFacilities")
   private WebElement syncMessage = null;
 
-  @FindBy(how = XPATH, using = "//div[2][@class='alert alert-info']/span")
+  @FindBy(how = ID, using = "syncMessage")
   private WebElement syncAlertMessage = null;
 
   @FindBy(how = ID, using = "duplicateFacilities")
