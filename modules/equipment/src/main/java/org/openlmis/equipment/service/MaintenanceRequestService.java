@@ -11,6 +11,7 @@
 package org.openlmis.equipment.service;
 
 import org.openlmis.equipment.domain.MaintenanceRequest;
+import org.openlmis.equipment.dto.Log;
 import org.openlmis.equipment.repository.MaintenanceRequestRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -32,7 +33,6 @@ public class MaintenanceRequestService  {
     return repository.getAllForFacility(facilityId);
   }
 
-
   public List<MaintenanceRequest> getAllForVendor(Long vendorId){
     return repository.getAllForVendor(vendorId);
   }
@@ -51,5 +51,9 @@ public class MaintenanceRequestService  {
     }else{
       repository.update(contract);
     }
+  }
+
+  public List<Log> getFullHistory(Long inventoryId){
+    return repository.getFullHistory(inventoryId);
   }
 }

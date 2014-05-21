@@ -14,6 +14,8 @@ angular.module('equipment-inventory', ['openlmis','ui.bootstrap.modal', 'ui.boot
       when('/:from/:facilityId/:programId', {controller: EquipmentInventoryController, templateUrl: 'partials/list.html'}).
       when('/create/:from/:facilityId/:programId', {controller: CreateEquipmentInventoryController, templateUrl: 'partials/create.html'}).
       when('/edit/:id', {controller: CreateEquipmentInventoryController, templateUrl: 'partials/create.html'}).
+      when('/log/:id', {controller: LogController, templateUrl: 'partials/log.html'}).
+      when('/request/:id', {controller: CreateServiceRequestController, templateUrl: 'partials/request.html'}).
       otherwise({redirectTo: '/'});
 }]).run(function ($rootScope, AuthorizationService) {
   AuthorizationService.preAuthorize('MANAGE_EQUIPMENT_INVENTORY');

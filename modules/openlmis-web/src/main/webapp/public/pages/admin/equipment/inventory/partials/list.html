@@ -104,6 +104,7 @@
           <th>Manufacturer</th>
           <th>Model</th>
           <th>Source of Fund</th>
+          <th>Action</th>
         </tr>
       </thead>
       <tbody>
@@ -113,6 +114,12 @@
           <td>{{item.manufacturerName}}</td>
           <td>{{item.model}}</td>
           <td>{{item.sourceOfFund}}</td>
+          <td>
+            <span class="btn-mini" ng-show="!item.isActive">de-commissioned</span>
+            <a ng-show="item.isActive" class="btn-mini btn-primary" ng-href="#/request/{{item.id}}?facilityId={{item.facilityId}}">Request Service</a>
+            <a class="btn-mini btn-cont" ng-href="#/log/{{item.id}}">Log</a>
+          </td>
+
         </tr>
       </tbody>
     </table>

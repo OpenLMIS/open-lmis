@@ -14,14 +14,17 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.openlmis.core.domain.BaseModel;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper=false)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class MaintenanceRequest extends BaseModel {
 
   private Long userId;
@@ -29,12 +32,31 @@ public class MaintenanceRequest extends BaseModel {
   private Long inventoryId;
   private Long vendorId;
 
-  private Date requestedDate;
+  private Date requestDate;
   private String reason;
   private Date recommendedDate;
   private String comment;
 
   private Boolean resolved;
   private String vendorComment;
+
+  private String formatDate(Date date){
+    try {
+      SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-dd-MM");
+      return date == null ? null : simpleDateFormat.format(date);
+    }catch(Exception exp){
+
+    }
+    return null;
+  }
+
+  public String getRequestedDateString()  {
+    return formatDate(this.requestDate);
+  }
+
+  public String getRecommendedDateString()  {
+    return formatDate(this.recommendedDate);
+  }
+
 
 }

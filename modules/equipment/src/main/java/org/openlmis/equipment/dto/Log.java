@@ -8,14 +8,11 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-package org.openlmis.equipment.domain;
+package org.openlmis.equipment.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import org.codehaus.jackson.annotate.JsonIgnoreProperties;
-import org.openlmis.core.domain.BaseModel;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -23,24 +20,14 @@ import java.util.Date;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper=false)
-@JsonIgnoreProperties(ignoreUnknown = true)
-public class MaintenanceLog extends BaseModel{
+public class Log {
 
-  private Long userId;
-  private Long facilityId;
-  private Long equipmentId;
-  private Long vendorId;
-  private Long contractId;
-
-
-
-  private Date maintenanceDate;
-  private String servicePerformed;
-  private String finding;
-  private String recommendation;
-  private Long requestId;
-  private Date nextVisitDate;
+  private String who;
+  private String type;
+  private String reason;
+  private String status;
+  private String comment;
+  private Date date;
 
   private String formatDate(Date date){
     try {
@@ -52,11 +39,8 @@ public class MaintenanceLog extends BaseModel{
     return null;
   }
 
-  public String getMaintenanceDateString()  {
-    return formatDate(this.maintenanceDate);
+  public String getDateString()  {
+    return formatDate(this.date);
   }
 
-  public String getNextVisitDateString()  {
-    return formatDate(this.nextVisitDate);
-  }
 }
