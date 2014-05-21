@@ -128,34 +128,38 @@
           </div>
         </td>
         <td  width="50%" style="vertical-align: top;padding:10px">
-          <div class="form-row clearfix">
-            <div class="form-cell">
-              <label>Service Types</label>
+          <div ng-show="!isNew">
+            <div class="form-row clearfix">
+              <div class="form-cell">
+                <label>Service Types</label>
+              </div>
+              <div class="form-field">
+                <label ng-repeat="type in current.serviceTypes"><input ng-disabled="true" type="checkbox" ng-model="type.isActive"  /> {{type.name}}</label>
+              </div>
             </div>
-            <div class="form-field">
-             <label ng-repeat="type in service_types"><input ng-disabled="true" type="checkbox" value="{{type.id}}"  /> {{type.name}}</label>
+            <div class="form-row clearfix">
+              <div class="form-cell">
+                <label>Equipments Covered</label>
+              </div>
+              <div class="form-field">
+                <label  ng-repeat="type in current.equipments"><input ng-disabled="true" type="checkbox" ng-model="type.isActive"  /> {{type.name}}</label>
+              </div>
             </div>
-          </div>
-          <div class="form-row clearfix">
-            <div class="form-cell">
-              <label>Equipments Covered</label>
-            </div>
-            <div class="form-field">
-              <label  ng-repeat="type in equipments"><input ng-disabled="true" type="checkbox" value="{{type.id}}"  /> {{type.name}}</label>
-            </div>
-          </div>
-          <div class="panel">
-            <div class="header-nav">
-              Facilities Covered
-            </div>
-            <div class="content-body">
-              <div class="form-row clearfix">
-                <label>Facilities</label>
-                <div class="form-field">
-                  <label ng-repeat="facility in facilities">
-                    <input ng-disabled="true" type="checkbox" value="{{facility.id}}" ng-model="selected" >
-                    {{facility.name}}
-                  </label>
+            <div class="panel">
+              <div class="header-nav">
+                Facilities Covered
+              </div>
+              <div class="content-body">
+
+                <div class="form-row clearfix">
+                  <div class="form-field">
+                    <div style="height: 200px; max-height: 200px; overflow-y: scroll">
+                      <label ng-repeat="facility in current.facilities">
+                        <input ng-disabled="true" type="checkbox" ng-model="facility.isActive" >
+                        {{facility.name}}
+                      </label>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
