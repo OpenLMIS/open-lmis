@@ -17,7 +17,8 @@
     <span openlmis-message="message.no.distribution.initiated"></span>
   </div>
 
-  <div class="alert alert-info" ng-show="syncMessage"><span openlmis-message="syncMessage"></span></div>
+  <div class="alert alert-danger" ng-show="syncMessage"><span id="syncMessage" openlmis-message="syncMessage"></span>
+  </div>
 
   <div ng-show="sharedDistributions.distributionList.length">
     <div id="cachedDistributions" class="distribution-grid">
