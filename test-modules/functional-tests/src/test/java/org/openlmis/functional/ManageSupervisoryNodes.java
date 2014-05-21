@@ -10,6 +10,7 @@
 
 package org.openlmis.functional;
 
+import com.thoughtworks.selenium.SeleneseTestBase;
 import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.pageobjects.*;
 import org.testng.annotations.AfterMethod;
@@ -236,7 +237,7 @@ public class ManageSupervisoryNodes extends TestCaseHelper {
   @Test(groups = {"admin"})
   public void testSupervisoryNodeParentSearchWhenNoResults() throws SQLException {
     dbWrapper.assignRight("Admin", "MANAGE_SUPERVISORY_NODE");
-    dbWrapper.insertSupervisoryNode("F10", "N1", "Super1", null);
+
     HomePage homePage = loginPage.loginAs(testData.get(ADMIN), testData.get(PASSWORD));
 
     SupervisoryNodesPage supervisoryNodesPage = homePage.navigateToSupervisoryNodes();
@@ -268,44 +269,78 @@ public class ManageSupervisoryNodes extends TestCaseHelper {
   }
 
 
-  //@Test(groups = {"admin"})
+  @Test(groups = {"admin"})
   public void testAddNewSupervisoryNode() throws SQLException {
     dbWrapper.assignRight("Admin", "MANAGE_SUPERVISORY_NODE");
+    dbWrapper.insertSupervisoryNode("F10", "N1", "Node1", null);
+    dbWrapper.insertSupervisoryNode("F11", "N2", "Node2", null);
+    dbWrapper.insertSupervisoryNode("F10", "N3", "Node3", "N2");
+
     HomePage homePage = loginPage.loginAs(testData.get(ADMIN), testData.get(PASSWORD));
     SupervisoryNodesPage supervisoryNodesPage = homePage.navigateToSupervisoryNodes();
     supervisoryNodesPage.clickAddNewButton();
-    //add a valid supervisoryNode
-    //click save
-
-    searchNode(""); //enter the one added
-    //verify it
-
-    supervisoryNodesPage.clickAddNewButton();
-    //add same node
-    //verify error message
-    //add new with parent as previous one
-    //click save
-
-    searchNode(""); //new added
-    //verify
-    supervisoryNodesPage.clickSearchOptionButton();
+    supervisoryNodesPage.addNewSupervisoryNode("N4", "Node 4", "This is Node 4", "Nod", "F10");
+    supervisoryNodesPage.clickSaveButton();
+    searchNode("Node 4"); //enter the one added
+    assertEquals("Node 4", supervisoryNodesPage.getSupervisoryNodeName(1));
+    assertEquals("N4", supervisoryNodesPage.getSupervisoryNodeCode(1));
+    assertEquals("Village Dispensary", supervisoryNodesPage.getFacility(1));
+    supervisoryNodesPage.clickOnSearchOptionButton();
     supervisoryNodesPage.selectSupervisoryNodeParentAsSearchOption();
-    searchNode(""); //previously added
-    //verify
-
+    searchNode("Node 4"); //previously added
     supervisoryNodesPage.clickAddNewButton();
-    //add same node
-    //verify error message
-    //add new with parent as previous one
-    //click cancel
-
-    supervisoryNodesPage.clickSearchOptionButton();
-    supervisoryNodesPage.selectSupervisoryNodeAsSearchOption();
-    searchNode(""); //new added
-    //verify no result
+    supervisoryNodesPage.addNewSupervisoryNode("N5", "Node 5", "This is Node 5", "Nod", "F10");
+    supervisoryNodesPage.clickSaveButton();
+    searchNode("Node 5"); //enter the one added
+    assertEquals("Node 5", supervisoryNodesPage.getSupervisoryNodeName(1));
+    assertEquals("N5", supervisoryNodesPage.getSupervisoryNodeCode(1));
+    assertEquals("Village Dispensary", supervisoryNodesPage.getFacility(1));
   }
 
-  //@Test(groups = {"admin"})
+  @Test(groups = {"admin"})
+  public void testFieldValidations() throws SQLException{
+    dbWrapper.assignRight("Admin", "MANAGE_SUPERVISORY_NODE");
+    dbWrapper.insertSupervisoryNode("F10", "N1", "Node1", null);
+    dbWrapper.insertSupervisoryNode("F11", "N2", "Node2", null);
+    dbWrapper.insertSupervisoryNode("F10", "N3", "Node3", "N2");
+
+    HomePage homePage = loginPage.loginAs(testData.get(ADMIN), testData.get(PASSWORD));
+    SupervisoryNodesPage supervisoryNodesPage = homePage.navigateToSupervisoryNodes();
+    supervisoryNodesPage.clickAddNewButton();
+    supervisoryNodesPage.clickSaveButton();
+    supervisoryNodesPage.verifyErrorMessages();
+  }
+
+  @Test(groups = {"admin"})
+  public void testWhetherDisabledFacilityIsVisible() throws SQLException{
+    dbWrapper.assignRight("Admin", "MANAGE_SUPERVISORY_NODE");
+    dbWrapper.insertSupervisoryNode("F10", "N1", "Node1", null);
+    dbWrapper.insertSupervisoryNode("F11", "N2", "Node2", null);
+    dbWrapper.insertSupervisoryNode("F10", "N3", "Node3", "N2");
+
+    HomePage homePage = loginPage.loginAs(testData.get(ADMIN), testData.get(PASSWORD));
+
+    ManageFacilityPage facilityPage = homePage.navigateManageFacility();
+
+    facilityPage.searchFacility("F10");
+    facilityPage.clickFacilityList("F10");
+    facilityPage.disableFacility("F10","Village Dispensary");
+
+    SupervisoryNodesPage supervisoryNodesPage = homePage.navigateToSupervisoryNodes();
+
+    supervisoryNodesPage.clickAddNewButton();
+
+    supervisoryNodesPage.searchAssociatedFacility("F10");
+
+    supervisoryNodesPage.verifyAbsenceOfDisabledFacility();
+
+    supervisoryNodesPage.clickCrossButton();
+
+    SeleneseTestBase.assertEquals("",supervisoryNodesPage.getSearchFacilityText());
+
+  }
+
+  @Test(groups = {"admin"})
   public void testUpdateSupervisoryNode() throws SQLException {
     dbWrapper.assignRight("Admin", "MANAGE_SUPERVISORY_NODE");
     dbWrapper.insertSupervisoryNode("F10", "N1", "Super1", null);
@@ -313,36 +348,26 @@ public class ManageSupervisoryNodes extends TestCaseHelper {
     HomePage homePage = loginPage.loginAs(testData.get(ADMIN), testData.get(PASSWORD));
     SupervisoryNodesPage supervisoryNodesPage = homePage.navigateToSupervisoryNodes();
     searchNode("sup");
-    //click the resultant Super1
-    //update the code and parent
-    //click save
+    assertTrue(supervisoryNodesPage.isSupervisoryNodeHeaderPresent());
 
     searchNode("sup");
     assertFalse(supervisoryNodesPage.isOneResultMessageDisplayed());
-    assertTrue(supervisoryNodesPage.isNoResultMessageDisplayed());
 
-    searchNode(""); //new code
+    supervisoryNodesPage.clickOnFirstLink();
+    supervisoryNodesPage.editSelectedSupervisoryNode("sup", "F11");
+
+    supervisoryNodesPage.clickSaveButton();
+
+    searchNode("super1"); //new code
     assertTrue(supervisoryNodesPage.isOneResultMessageDisplayed());
 
-    searchNode("sup");
-    //click the resultant
-    //update the code as the last updated code and parent
-    //click save
-    //verify error msg
-    //update code
-    //enter invalid parent
-    //verify error message
-    //enter parent as the new code above
-    //verify error msg
-    //enter valid parent
-    //click save
-    searchNode(""); //new code
-    assertTrue(supervisoryNodesPage.isOneResultMessageDisplayed());
-    //click the resultant
-    //update code
-    //click cancel
-    searchNode(""); //new code
-    assertTrue(supervisoryNodesPage.isNoResultMessageDisplayed());
+    assertEquals("Super2", supervisoryNodesPage.getParent(1));
+    assertEquals("Central Hospital",supervisoryNodesPage.getFacility(1));
+
+    supervisoryNodesPage.clickCrossButton();
+
+    SeleneseTestBase.assertEquals("",supervisoryNodesPage.getSearchSupervisoryNodeText());
+
   }
 
   public void searchNode(String searchParameter) {
