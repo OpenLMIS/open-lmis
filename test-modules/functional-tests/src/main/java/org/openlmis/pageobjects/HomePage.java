@@ -408,7 +408,9 @@ public class HomePage extends Page {
     testWebDriver.keyPress(requisitionMenuItem);
     testWebDriver.waitForElementToAppear(approveLink);
     testWebDriver.keyPress(approveLink);
+    testWebDriver.sleep(500);
     ApprovePage approvePage = PageObjectFactory.getApprovePage(testWebDriver);
+    testWebDriver.waitForAjax();
     approvePage.waitForPageToAppear();
     return approvePage;
   }

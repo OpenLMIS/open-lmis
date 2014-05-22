@@ -251,8 +251,7 @@ public class RequisitionPage extends Page {
 
     WebElement element = testWebDriver.getElementById(tableIdColumnMapper.get(columnNumber) + "_" + (row - 1));
     testWebDriver.waitForElementToAppear(element);
-    element.clear();
-    element.sendKeys(value);
+    sendKeys(element, value);
     element.sendKeys(Keys.TAB);
   }
 
