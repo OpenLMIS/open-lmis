@@ -567,6 +567,16 @@ public class RequisitionService {
     return requisitionRepository.deleteRnR(rnrId);
   }
 
+  public void skipRnR(Long rnrId) {
+    Rnr rnr = this.getFullRequisitionById(rnrId);
+    for(RnrLineItem li : rnr.getFullSupplyLineItems()){
+      li.setSkipped(true);
+    }
+    rnr.setStatus(RnrStatus.SKIPPED);
+    this.save(rnr);
+    requisitionRepository.update(rnr);
+  }
+
   public Integer findM(ProcessingPeriod period) {
     return processingScheduleService.findM(period);
   }

@@ -284,4 +284,11 @@ public class RequisitionController extends BaseController {
     return OpenLmisResponse.response("delete", result);
   }
 
+  @RequestMapping(value = "/requisitions/skip/{id}", method = POST, headers = ACCEPT_JSON)
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'DELETE_REQUISITION')")
+  public ResponseEntity<OpenLmisResponse> skipRnR(@PathVariable("id") Long rnrId,
+                                                    HttpServletRequest request) {
+    requisitionService.skipRnR(rnrId);
+    return OpenLmisResponse.response("status", "skipped");
+  }
 }
