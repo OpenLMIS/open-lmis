@@ -113,15 +113,6 @@ public class SupervisoryNodesPage extends Page {
   @FindBy(how = ID, using = "saveButton")
   private static WebElement saveButton = null;
 
-  @FindBy(how = ID, using = "codeFieldError")
-  private static WebElement codeFieldError = null;
-
-  @FindBy(how = ID, using = "nameFieldError")
-  private static WebElement nameFieldError = null;
-
-  @FindBy(how = ID, using = "facilityFieldError")
-  private static WebElement facilityFieldError = null;
-
   @FindBy(how = ID, using = "saveErrorMsgDiv")
   private static WebElement saveErrorMsgDiv = null;
 
@@ -136,6 +127,9 @@ public class SupervisoryNodesPage extends Page {
 
   @FindBy(how = ID, using = "searchSupervisoryNode")
   private static WebElement searchSupervisoryNode = null;
+
+  @FindBy(how = ID, using  = "cancelButton")
+  private static WebElement cancelButton = null;
 
   public SupervisoryNodesPage(TestWebDriver driver) {
     super(driver);
@@ -318,21 +312,21 @@ public class SupervisoryNodesPage extends Page {
   }
 
 
-
-  public void editSelectedSupervisoryNode(String parentNode, String facilityName){
-    searchParentNode.sendKeys(parentNode);
-    verifySearchParentNodeResult();
-    testWebDriver.waitForElementToAppear(search_list);
-    result0.click();
-    searchAssociatedFacility(facilityName);
-    selectFirstFacilityToBeAssociated();
-  }
-
   public void clickOnFirstSearchResult(){
 
     firstSearchResultLink.click();
     testWebDriver.waitForElementToAppear(supervisoryNodeName);
+    assertTrue(searchAndFilter.isDisplayed());
 
+  }
+
+  public void clickAssociatedFacilityField(){
+    associatedFacilityField.click();
+    testWebDriver.waitForElementToAppear(searchAndFilter);
+  }
+
+  public void searchFacilityToBeAssociated(String facilityName){
+    searchFacility.sendKeys(facilityName);
   }
 
   public void clickOnClearSearchResultButton(){
@@ -345,8 +339,8 @@ public class SupervisoryNodesPage extends Page {
 
 
 
-  public void clickOnFirstElement(){
-
+  public void clickOnFirstSearchResultLink(){
+      testWebDriver.waitForElementToAppear(firstLink);
       firstLink.click();
       testWebDriver.waitForElementToAppear(supervisoryNodeName);
 
@@ -357,6 +351,7 @@ public class SupervisoryNodesPage extends Page {
     assertTrue(search_list.isDisplayed());
     assertTrue(result0.isDisplayed());
     testWebDriver.waitForElementToAppear(search_list);
+
   }
 
   public void enterSupervisoryNodeCodeValue(String code){
@@ -378,18 +373,7 @@ public class SupervisoryNodesPage extends Page {
     assertTrue(result0.isDisplayed());
   }
 
-  public void searchAssociatedFacility(String facilityCode){
-    associatedFacilityField.click();
 
-    testWebDriver.waitForElementToAppear(searchAndFilter);
-
-    assertTrue(searchAndFilter.isDisplayed());
-
-    searchFacility.sendKeys(facilityCode);
-
-    searchIcon.click();
-
-  }
 
   public void verifyAbsenceOfDisabledFacility(){
 
@@ -409,18 +393,18 @@ public class SupervisoryNodesPage extends Page {
   public void selectFirstFacilityToBeAssociated(){
 
     testWebDriver.click(facilityResult0);
-
-
 }
 
-  public void verifyErrorMessages(){
-    assertEquals("Please fill this value", codeFieldError.getText());
-    assertEquals("Please fill this value", nameFieldError.getText());
-    assertEquals("Please select a value", facilityFieldError.getText());
+  public void verifyErrorMessage(){
+
     assertEquals("There are some errors in the form. Please resolve them.", saveErrorMsgDiv.getText());
   }
 
   public void clickSaveButton(){
     saveButton.click();
+  }
+
+  public void clickCancelButton(){
+    cancelButton.click();
   }
 }

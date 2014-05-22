@@ -298,7 +298,7 @@ public class ManageSupervisoryNodes extends TestCaseHelper {
   }
 
   @Test(groups = {"admin"})
-  public void testFieldValidations() throws SQLException{
+  public void testSaveWithoutEnteringValuesInSupervisoryNode() throws SQLException{
     dbWrapper.assignRight("Admin", "MANAGE_SUPERVISORY_NODE");
     dbWrapper.insertSupervisoryNode("F10", "N1", "Node1", null);
     dbWrapper.insertSupervisoryNode("F11", "N2", "Node2", null);
@@ -306,9 +306,14 @@ public class ManageSupervisoryNodes extends TestCaseHelper {
 
     HomePage homePage = loginPage.loginAs(testData.get(ADMIN), testData.get(PASSWORD));
     SupervisoryNodesPage supervisoryNodesPage = homePage.navigateToSupervisoryNodes();
+
     supervisoryNodesPage.clickAddNewButton();
     supervisoryNodesPage.clickSaveButton();
-    supervisoryNodesPage.verifyErrorMessages();
+    supervisoryNodesPage.verifyErrorMessage();
+    supervisoryNodesPage.clickCancelButton();
+
+    supervisoryNodesPage.isAddNewButtonDisplayed();
+    supervisoryNodesPage.isSearchIconDisplayed();
   }
 
   @Test(groups = {"admin"})
@@ -330,7 +335,7 @@ public class ManageSupervisoryNodes extends TestCaseHelper {
 
     supervisoryNodesPage.clickAddNewButton();
 
-    supervisoryNodesPage.searchAssociatedFacility("F10");
+    searchAssociatedFacility("F10");
 
     supervisoryNodesPage.verifyAbsenceOfDisabledFacility();
 
@@ -353,8 +358,8 @@ public class ManageSupervisoryNodes extends TestCaseHelper {
     searchNode("sup");
     assertFalse(supervisoryNodesPage.isOneResultMessageDisplayed());
 
-    supervisoryNodesPage.clickOnFirstElement();
-    supervisoryNodesPage.editSelectedSupervisoryNode("sup", "F11");
+    supervisoryNodesPage.clickOnFirstSearchResultLink();
+    editSelectedSupervisoryNode("sup");
 
     supervisoryNodesPage.clickSaveButton();
 
@@ -369,6 +374,8 @@ public class ManageSupervisoryNodes extends TestCaseHelper {
     SeleneseTestBase.assertEquals("",supervisoryNodesPage.getSearchSupervisoryNodeText());
 
   }
+
+
 
   public void searchNode(String searchParameter) {
     SupervisoryNodesPage supervisoryNodesPage = PageObjectFactory.getSupervisoryNodesPage(testWebDriver);
@@ -396,8 +403,26 @@ public class ManageSupervisoryNodes extends TestCaseHelper {
 
     supervisoryNodesPage.clickOnFirstSearchResult();
     
-    supervisoryNodesPage.searchAssociatedFacility(facilityName);
+    searchAssociatedFacility(facilityName);
     supervisoryNodesPage.selectFirstFacilityToBeAssociated();
+  }
+
+  public void editSelectedSupervisoryNode(String parentNode){
+    SupervisoryNodesPage supervisoryNodesPage = PageObjectFactory.getSupervisoryNodesPage(testWebDriver);
+    supervisoryNodesPage.enterSearchParentNodeParameter(parentNode);
+    supervisoryNodesPage.verifySearchParentNodeResult();
+    supervisoryNodesPage.clickOnFirstSearchResult();
+    searchAssociatedFacility("Village Dispensary");
+    supervisoryNodesPage.selectFirstFacilityToBeAssociated();
+  }
+
+
+
+  public void searchAssociatedFacility(String facilityName){
+    SupervisoryNodesPage supervisoryNodesPage = PageObjectFactory.getSupervisoryNodesPage(testWebDriver);
+    supervisoryNodesPage.clickAssociatedFacilityField();
+    supervisoryNodesPage.searchFacilityToBeAssociated(facilityName);
+    supervisoryNodesPage.clickSearchIcon();
   }
 
   private void verifySupervisoryNodeNameOrderOnPage(String[] nodeNames) {
