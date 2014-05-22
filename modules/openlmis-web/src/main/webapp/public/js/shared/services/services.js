@@ -117,6 +117,10 @@ services.factory('DeleteRequisition', function ($resource) {
   return $resource('/requisitions/delete/:id.json', {id: '@id'}, {post: {method: 'POST', isArray: false}});
 });
 
+services.factory('SkipRequisition', function ($resource) {
+  return $resource('/requisitions/skip/:id.json', {id: '@id'}, {post: {method: 'POST', isArray: false}});
+});
+
 services.factory('Schedule', function ($resource) {
   return $resource('/schedules/:id.json', {id: '@id'}, update);
 });
