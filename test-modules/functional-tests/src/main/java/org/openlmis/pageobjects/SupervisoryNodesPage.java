@@ -11,18 +11,15 @@
 package org.openlmis.pageobjects;
 
 import org.openlmis.UiUtils.TestWebDriver;
-import org.openqa.selenium.By;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 
-import java.util.List;
 import java.util.NoSuchElementException;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.assertEquals;
-import static com.thoughtworks.selenium.SeleneseTestBase.assertFalse;
 import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
 import static org.openqa.selenium.support.How.CLASS_NAME;
 import static org.openqa.selenium.support.How.ID;
@@ -128,8 +125,8 @@ public class SupervisoryNodesPage extends Page {
   @FindBy(how = ID, using = "saveErrorMsgDiv")
   private static WebElement saveErrorMsgDiv = null;
 
-  @FindBy(how = ID, using = "close_button")
-  private static WebElement close_button = null;
+  @FindBy(how = ID, using = "closeButton")
+  private static WebElement closeButton = null;
 
   @FindBy(how = ID, using = "name0")
   private static WebElement firstLink = null;
@@ -401,8 +398,8 @@ public class SupervisoryNodesPage extends Page {
   }
 
   public void clickCrossButton(){
-    testWebDriver.waitForElementToAppear(close_button);
-    close_button.click();
+    testWebDriver.waitForElementToAppear(closeButton);
+    closeButton.click();
   }
 
   public String getSearchFacilityText(){
