@@ -42,6 +42,7 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
   public static final String TB_PROGRAM = "secondProgram";
   public static final String SCHEDULE = "schedule";
   public static final String PRODUCT_GROUP_CODE = "productGroupName";
+
   LoginPage loginPage;
   FacilityListPage facilityListPage;
 
@@ -84,6 +85,7 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
     EPIUsePage epiUsePage = visitInformationPage.navigateToEpiUse();
     epiUsePage.verifyIndicator("RED");
     epiUsePage.verifyProductGroup("PG1-Name", 1);
+   // epiUsePage.verifyProductGroupSorting("","","")
     epiUsePage.enterData(10, 20, 30, 40, 50, "10/2011", 1);
     epiUsePage.verifyIndicator("GREEN");
 
@@ -292,6 +294,11 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
     dbWrapper.insertProductGroup("PG2");
     dbWrapper.insertProductWithGroup("Product7", "ProductName7", "PG2", true);
     dbWrapper.insertProgramProduct("Product7", epiUseData.get(VACCINES_PROGRAM), "10", "true");
+    dbWrapper.updateFieldValue("product_groups", "name", "AG1", "name", "PG2-Name");
+    dbWrapper.updateFieldValue("product_groups", "name", "XY1", "name", "PG1-Name");
+    dbWrapper.updateFieldValue("product_groups", "code", "Z1", "code", "PG2");
+    dbWrapper.updateFieldValue("product_groups", "code", "A1", "code", "PG1");
+
 
     HomePage homePage = loginPage.loginAs(epiUseData.get(USER), epiUseData.get(PASSWORD));
     initiateDistribution(epiUseData.get(FIRST_DELIVERY_ZONE_NAME), epiUseData.get(VACCINES_PROGRAM));
@@ -300,7 +307,8 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
 
     EPIUsePage epiUsePage = visitInformationPage.navigateToEpiUse();
     epiUsePage.verifyIndicator("RED");
-    epiUsePage.verifyProductGroup("PG1-Name", 1);
+    epiUsePage.verifyProductGroup("XY1", 1);
+    epiUsePage.verifyProductGroup("AG1", 2);
     epiUsePage.checkApplyNRToStockAtFirstOfMonth0();
     epiUsePage.verifyIndicator("AMBER");
     epiUsePage.checkApplyNRToReceived0();
@@ -331,8 +339,12 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
     assertTrue(distributionPage.getSyncMessage().contains("F10-Village Dispensary"));
     distributionPage.syncDistributionMessageDone();
 
-    verifyEpiUseDataInDatabase(null, null, null, null, 4, "12/2031", epiUseData.get(PRODUCT_GROUP_CODE), epiUseData.get(FIRST_FACILITY_CODE));
-    verifyEpiUseDataInDatabase(10, 20, 30, 40, 50, "10/2011", "PG2", epiUseData.get(FIRST_FACILITY_CODE));
+    testWebDriver.waitForPageToLoad();
+
+    verifyEpiUseDataInDatabase(null, null, null, null, 4, "12/2031", "A1", epiUseData.get(FIRST_FACILITY_CODE));
+    verifyEpiUseDataInDatabase(10, 20, 30, 40, 50, "10/2011", "Z1", epiUseData.get(FIRST_FACILITY_CODE));
+
+
   }
 
   @Test(groups = {"distribution"})
