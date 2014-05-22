@@ -120,10 +120,10 @@ public class SupervisoryNodesPage extends Page {
   private static WebElement closeButton = null;
 
   @FindBy(how = ID, using = "name0")
-  private static WebElement firstLink = null;
+  private static WebElement firstSearchResultLink = null;
 
   @FindBy(how = ID, using = "result0")
-  private static WebElement firstSearchResultLink = null;
+  private static WebElement firstParentSearchResultLink = null;
 
   @FindBy(how = ID, using = "searchSupervisoryNode")
   private static WebElement searchSupervisoryNode = null;
@@ -312,11 +312,10 @@ public class SupervisoryNodesPage extends Page {
   }
 
 
-  public void clickOnFirstSearchResult(){
+  public void clickOnFirstParentSearchResult(){
 
-    firstSearchResultLink.click();
+    firstParentSearchResultLink.click();
     testWebDriver.waitForElementToAppear(supervisoryNodeName);
-    assertTrue(searchAndFilter.isDisplayed());
 
   }
 
@@ -339,9 +338,9 @@ public class SupervisoryNodesPage extends Page {
 
 
 
-  public void clickOnFirstSearchResultLink(){
-      testWebDriver.waitForElementToAppear(firstLink);
-      firstLink.click();
+  public void clickOnFirstFacilitySearchResultLink(){
+      testWebDriver.waitForElementToAppear(firstParentSearchResultLink);
+      firstParentSearchResultLink.click();
       testWebDriver.waitForElementToAppear(supervisoryNodeName);
 
     }
