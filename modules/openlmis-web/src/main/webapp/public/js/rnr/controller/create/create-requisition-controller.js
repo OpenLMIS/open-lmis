@@ -39,7 +39,7 @@ function CreateRequisitionController($scope, requisitionData, pageSize, rnrColum
     var options = {
       id: "confirmDialog",
       header: "label.confirm.action",
-      body: "Are you sure you would like to delete this R&R? You will not be able to undo this."
+      body: "label.rnr.confirm.delete"
     };
 
     OpenLmisDialog.newDialog(options, callBack, $dialog);
@@ -55,7 +55,7 @@ function CreateRequisitionController($scope, requisitionData, pageSize, rnrColum
           OpenLmisDialog.newDialog({
             id: "confirmDialog",
             header: "label.confirm.action",
-            body: data.delete
+            body: 'msg.rnr.skipped'
           }, function(){
             $location.url('/public/pages/logistics/rnr/index.html#/init-rnr');
           }, $dialog);
@@ -67,7 +67,7 @@ function CreateRequisitionController($scope, requisitionData, pageSize, rnrColum
     var options = {
       id: "confirmDialog",
       header: "label.confirm.action",
-      body: "Are you sure you would like to skip this R&R Period?"
+      body: "label.rnr.confirm.skip"
     };
 
     OpenLmisDialog.newDialog(options, callBack, $dialog);
