@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+
+<h2><span openlmis-message="title.reporting.performance"></span></h2>
+<div class="row-fluid">
+    <div class="span12">
+        <table class="table table-bordered" ng-show="reportingDetails == undefined || reportingDetails.length == 0">
+            <tr>
+                <td>No data to show under selected filters</td>
+            </tr>
+        </table>
+        <div ng-show ="reportingData !== undefined && reportingData.length > 0">
+            <table ng-show="reportingData.length > 0" class="table-bordered table table-striped pull-right"
+                   ng-table="tableParams">
+                <tbody>
+                <tr ng-repeat="row in reportingData">
+                    <td data-title="'Facility Name'" >{{row.name}}</td>
+                    <td data-title="'District'" >{{row.district}}</td>
+                    <td data-title="'Main Phone'" >{{row.mainPhone}}</td>
+                    <td data-title="'Status'" >{{row.status}}</td>
+                    <td data-title="'Has Contact'" >{{row.hasContact}}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+</div>

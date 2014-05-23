@@ -498,6 +498,9 @@ services.factory('GetPeriod', function($resource){
 services.factory('ReportingPerformance',function($resource){
     return $resource('/dashboard/reportingPerformance.json',{},{});
 });
+services.factory('ReportingPerformanceDetail',function($resource){
+    return $resource('/dashboard/reportingPerformance-detail.json',{},{});
+});
 
 
 

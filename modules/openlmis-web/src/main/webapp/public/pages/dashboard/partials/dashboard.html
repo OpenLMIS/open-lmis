@@ -103,8 +103,9 @@
                     </accordion-heading>
 
             <!--<h2>District Reporting Performance</h2>-->
-                    <div>
-                        <a-float id="district-reporting" af-option="reportingChartOption" af-data="reportingChartData" class="chart"></a-float>
+                    <div ng-hide="reportingChartData"><label class="chart-note">No data to render chart</label></div>
+                    <div  ng-show="reportingChartData">
+                        <a-float id="district-reporting" af-option="reportingPieChartOption" af-data="reportingChartData" class="chart"></a-float>
                         <div id="districtReportLegend" class="chartLegend"></div>
                     </div>
 
