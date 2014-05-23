@@ -11,6 +11,7 @@
 package org.openlmis.core.repository;
 
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
@@ -44,12 +45,15 @@ public class RequisitionGroupRepositoryTest {
 
   @Mock
   private RequisitionGroupMapper mapper;
+
   @Mock
   private CommaSeparator commaSeparator;
-  private ExpectedException expectedEx = ExpectedException.none();
+
+  @Rule
+  public ExpectedException expectedEx = ExpectedException.none();
 
   @Before
-  public void setUp() throws Exception {
+  public void setUp() {
     initMocks(this);
     repository = new RequisitionGroupRepository(mapper, commaSeparator);
     requisitionGroup = make(a(RequisitionGroupBuilder.defaultRequisitionGroup));
@@ -57,28 +61,28 @@ public class RequisitionGroupRepositoryTest {
   }
 
   @Test
-  public void shouldSaveRequisitionGroup() throws Exception {
+  public void shouldSaveRequisitionGroup() {
     repository.insert(requisitionGroup);
     verify(mapper).insert(requisitionGroup);
   }
 
   @Test
-  public void shouldThrowExceptionIfDuplicateCodeBeingInserted() throws Exception {
+  public void shouldThrowExceptionIfDuplicateCodeBeingInserted() {
     doThrow(new DuplicateKeyException("duplicate code")).when(mapper).insert(requisitionGroup);
     expectedEx.expect(DataException.class);
-    expectedEx.expectMessage("");
+    expectedEx.expectMessage("error.duplicate.code.requisition.group");
 
     repository.insert(requisitionGroup);
   }
 
   @Test
-  public void shouldUpdateRequisitionGroup() throws Exception {
+  public void shouldUpdateRequisitionGroup() {
     repository.update(requisitionGroup);
     verify(mapper).update(requisitionGroup);
   }
 
   @Test
-  public void shouldGetRequisitionGroupForSupervisoryNodes() throws Exception {
+  public void shouldGetRequisitionGroupForSupervisoryNodes() {
     List<SupervisoryNode> supervisoryNodes = new ArrayList<>();
     when(commaSeparator.commaSeparateIds(supervisoryNodes)).thenReturn("{1, 2}");
     List<RequisitionGroup> requisitionGroups = new ArrayList<>();
@@ -89,7 +93,7 @@ public class RequisitionGroupRepositoryTest {
   }
 
   @Test
-  public void shouldGetRequisitionGroupForFacilityAndProgram() throws Exception {
+  public void shouldGetRequisitionGroupForFacilityAndProgram() {
     Facility facility = new Facility(1L);
     Program program = new Program(1L);
     repository.getRequisitionGroupForProgramAndFacility(program, facility);
