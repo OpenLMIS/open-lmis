@@ -121,6 +121,14 @@ services.factory('SkipRequisition', function ($resource) {
   return $resource('/requisitions/skip/:id.json', {id: '@id'}, {post: {method: 'POST', isArray: false}});
 });
 
+services.factory('ReOpenRequisition', function ($resource) {
+  return $resource('/requisitions/reopen/:id.json', {id: '@id'}, {post: {method: 'POST', isArray: false}});
+});
+
+services.factory('RejectRequisition', function ($resource) {
+  return $resource('/requisitions/reject/:id.json', {id: '@id'}, {post: {method: 'POST', isArray: false}});
+});
+
 services.factory('Schedule', function ($resource) {
   return $resource('/schedules/:id.json', {id: '@id'}, update);
 });

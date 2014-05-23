@@ -63,6 +63,10 @@
         <div form-toolbar id="action_buttons" class="action-buttons">
             <ng-include src="'/public/pages/logistics/rnr/partials/total-cost.html'"></ng-include>
             <div class="form-cell button-row">
+
+                <input ng-show="hasPermission('DELETE_REQUISITION')" type="button" class="btn btn-primary submit-button" ng-click="deleteRnR();" openlmis-message="button.delete" />
+                <input ng-show="rnr.status == 'INITIATED'" type="button" class="btn btn-primary submit-button" ng-click="skipRnR();" openlmis-message="button.skip.period" />
+
                 <input id="saveRnrButton" ng-disabled="formDisabled" type="button" ng-click="saveRnr(null)"
                        class="btn btn-primary save-button"
                        openlmis-message="button.save"/>
