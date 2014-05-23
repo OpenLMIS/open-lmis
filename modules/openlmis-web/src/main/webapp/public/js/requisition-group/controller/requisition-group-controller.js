@@ -8,12 +8,11 @@
  *  You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
  */
 
-function RequisitionGroupController($scope, requisitionGroupData, $location, RequisitionGroups, SupervisoryNodesSearch,
-                                    Facilities) {
+function RequisitionGroupController($scope, requisitionGroupData, $location, RequisitionGroups, SupervisoryNodesSearch, Facilities) {
 
   if (requisitionGroupData) {
     $scope.requisitionGroup = requisitionGroupData.requisitionGroup;
-    $scope.requisitionGroupMembers = requisitionGroupData.requisitionGroupMemberList;
+    $scope.requisitionGroupMembers = requisitionGroupData.requisitionGroupMembers;
   }
   else {
     $scope.requisitionGroup = {};
@@ -23,20 +22,23 @@ function RequisitionGroupController($scope, requisitionGroupData, $location, Req
   $scope.cancel = function () {
     $location.path('#/search');
   };
+
   loadSupervisoryNode();
 
   $scope.save = function () {
-    if ($scope.requisitionGroupForm.$error.pattern || $scope.requisitionGroupForm.$error.required) {
+    if ($scope.requisitionGroupForm.$error.required || !$scope.requisitionGroup.supervisoryNode) {
       $scope.showError = "true";
       $scope.error = 'form.error';
       $scope.message = "";
       return;
     }
     if ($scope.requisitionGroup.id) {
-      RequisitionGroups.update({id: $scope.requisitionGroup.id}, $scope.requisitionGroup, success, error);
+      RequisitionGroups.update({id: $scope.requisitionGroup.id}, {"requisitionGroup": $scope.requisitionGroup, "requisitionGroupMembers": $scope.requisitionGroupMembers},
+          success, error);
     }
     else {
-      RequisitionGroups.save({}, $scope.requisitionGroup, success, error);
+      RequisitionGroups.save({}, {"requisitionGroup": $scope.requisitionGroup, "requisitionGroupMembers": $scope.requisitionGroupMembers},
+          success, error);
     }
   };
 
@@ -49,25 +51,35 @@ function RequisitionGroupController($scope, requisitionGroupData, $location, Req
       return member.facility.id == facility.id;
     });
     if (isDuplicate) {
-      $scope.showDuplicateFacilityMessage = true;
       $scope.duplicateFacilityName = facility.name;
       return;
     }
-    $scope.requisitionGroupMembers.push({"facility": facility});
+    $scope.duplicateFacilityName = undefined;
+
+    var newMember = {"facility": facility, "requisitionGroup": $scope.requisitionGroup};
+    $scope.requisitionGroupMembers.push(newMember);
+
+    $scope.requisitionGroupMembers.sort(function (member1, member2) {
+      if (member1.facility.code > member2.facility.code)
+        return 1;
+      if (member1.facility.code < member2.facility.code)
+        return -1;
+      return 0;
+    });
   };
 
   $scope.removeMember = function (memberId) {
     $scope.requisitionGroupMembers = _.filter($scope.requisitionGroupMembers, function (member) {
-      return member.id != memberId;
+      return member.facility.id != memberId;
     });
   };
 
   var success = function (data) {
     $scope.error = "";
     $scope.$parent.message = data.success;
-    $scope.$parent.requisitionGroupId = data.requisitionGroup.id;
+    $scope.$parent.requisitionGroupId = data.requisitionGroupId;
     $scope.showError = false;
-    $location.path('');
+    $location.path('#/search');
   };
 
   var error = function (data) {
