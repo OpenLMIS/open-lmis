@@ -217,11 +217,17 @@ public interface FacilityMapper {
     "OR LOWER(name) LIKE '%' || LOWER(#{searchParam}) || '%') AND enabled = true"})
   Integer getCountOfEnabledFacilities(String searchParam);
 
-  @Select({"SELECT F.*,FT.id AS facilityTypeId, FT.name AS facilityTypeName FROM facilities F INNER JOIN facility_types FT ON F.typeId = FT.id WHERE (LOWER(F.code) LIKE '%' || LOWER(#{searchParam}) || '%'",
+  @Select({"SELECT F.id AS facilityId, F.name AS facilityName, F.code AS facilityCode, F.enabled as facilityEnabled,",
+    "FT.id AS facilityTypeId, FT.name AS facilityTypeName FROM facilities F INNER JOIN facility_types FT ON F.typeId = FT.id",
+    "WHERE (LOWER(F.code) LIKE '%' || LOWER(#{searchParam}) || '%'",
     "OR LOWER(F.name) LIKE '%' || LOWER(#{searchParam}) || '%') AND F.enabled = true ORDER BY LOWER(F.code)"})
-    @Results(value = {
-      @Result(property = "facilityType.id", column = "facilityTypeId"),
-      @Result(property = "facilityType.name", column = "facilityTypeName"),
-    })
+  @Results(value = {
+    @Result(property = "id", column = "facilityId"),
+    @Result(property = "name", column = "facilityName"),
+    @Result(property = "code", column = "facilityCode"),
+    @Result(property = "enabled", column = "facilityEnabled"),
+    @Result(property = "facilityType.id", column = "facilityTypeId"),
+    @Result(property = "facilityType.name", column = "facilityTypeName"),
+  })
   List<Facility> getEnabledFacilities(String searchParam);
 }

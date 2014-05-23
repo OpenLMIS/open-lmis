@@ -53,6 +53,7 @@ import static org.openlmis.core.domain.Right.CREATE_REQUISITION;
 public class FacilityMapperIT {
 
   public static final String OPERATED_BY_MOH = "MoH";
+
   @Autowired
   private UserMapper userMapper;
 
@@ -85,7 +86,6 @@ public class FacilityMapperIT {
 
   @Autowired
   DeliveryZoneMemberMapper deliveryZoneMemberMapper;
-
 
   @Autowired
   DeliveryZoneProgramScheduleMapper deliveryZoneProgramScheduleMapper;
@@ -197,7 +197,6 @@ public class FacilityMapperIT {
     Facility userFacility = mapper.getHomeFacility(user.getId());
     assertThat(userFacility, is(nullValue()));
   }
-
 
   @Test
   public void shouldGetFacilityById() throws Exception {
@@ -349,14 +348,12 @@ public class FacilityMapperIT {
     mapper.insert(facilityNotSupportingProgramInRG2);
     mapper.insert(facilitySupportingProgramNotInAnyRG);
 
-
     requisitionGroupMemberMapper.insert(new RequisitionGroupMember(rg1, facilitySupportingProgramInRG1));
     requisitionGroupMemberMapper.insert(new RequisitionGroupMember(rg1, virtualFacilitySupportingProgramInRG1));
     requisitionGroupMemberMapper.insert(new RequisitionGroupMember(rg2, facilitySupportingProgramInRG1));
     requisitionGroupMemberMapper.insert(new RequisitionGroupMember(rg2, facilityNotSupportingProgramInRG2));
 
     programMapper.insert(make(a(defaultProgram, with(programCode, "Random"))));
-
 
     programSupportedMapper.insert(make(a(defaultProgramSupported,
       with(supportedFacilityId, facilitySupportingProgramInRG1.getId()),
@@ -438,7 +435,6 @@ public class FacilityMapperIT {
 
     assertThat(returnedFacilityList.size(), is(1));
     assertThat(returnedFacilityList.get(0).getCode(), is("FF1101"));
-
   }
 
   @Test
@@ -464,12 +460,10 @@ public class FacilityMapperIT {
         || facility.getCode().equals(facility2.getCode())
         || facility.getCode().equals(facility3.getCode()), is(true));
     }
-
   }
 
   @Test
   public void shouldGetHomeFacilityIfUserHasRight() throws Exception {
-    //Arrange
     Facility homeFacility = make(a(defaultFacility));
     mapper.insert(homeFacility);
 
@@ -484,16 +478,13 @@ public class FacilityMapperIT {
     userMapper.insert(user);
     roleAssignmentMapper.insertRoleAssignment(user.getId(), 1L, null, r1.getId());
 
-    //Act
     Facility returnedFacility = mapper.getHomeFacilityWithRights(user.getId(), "{CONFIGURE_RNR}");
 
-    //Assert
     assertThat(returnedFacility.getId(), is(homeFacility.getId()));
   }
 
   @Test
   public void shouldGetDistinctFacilitiesInARequisitionGroup() throws Exception {
-    //Arrange
     final RequisitionGroup rg1 = make(a(defaultRequisitionGroup, with(RequisitionGroupBuilder.code, "RG1")));
     final RequisitionGroup rg2 = make(a(defaultRequisitionGroup, with(RequisitionGroupBuilder.code, "RG2")));
     requisitionGroupMapper.insert(rg1);
@@ -510,10 +501,8 @@ public class FacilityMapperIT {
     requisitionGroupMemberMapper.insert(new RequisitionGroupMember(rg2, facilityInBothRG1AndRG2));
     requisitionGroupMemberMapper.insert(new RequisitionGroupMember(rg2, facilityInRG2));
 
-    //Act
     List<Facility> facilities = mapper.getAllInRequisitionGroups("{" + rg1.getId() + "," + rg2.getId() + " }");
 
-    //Assert
     assertThat(facilities.size(), is(2));
     assertTrue(CollectionUtils.exists(facilities, new Predicate() {
       @Override
@@ -575,16 +564,19 @@ public class FacilityMapperIT {
     mapper.insert(fac3);
     mapper.insert(fac4);
 
-
     List<Facility> enabledFacilities = mapper.getEnabledFacilities(searchParam);
 
     assertThat(enabledFacilities.size(), is(2));
-    assertThat(enabledFacilities.get(0).getName(), is(fac3.getName()));
+    assertThat(enabledFacilities.get(0).getId(), is(fac3.getId()));
+    assertThat(enabledFacilities.get(0).getEnabled(), is(fac3.getEnabled()));
     assertThat(enabledFacilities.get(0).getCode(), is(fac3.getCode()));
+    assertThat(enabledFacilities.get(0).getName(), is(fac3.getName()));
     assertThat(enabledFacilities.get(0).getFacilityType().getId(), is(fac3.getFacilityType().getId()));
     assertThat(enabledFacilities.get(0).getFacilityType().getName(), is(fac3.getFacilityType().getName()));
-    assertThat(enabledFacilities.get(1).getName(), is(fac1.getName()));
+    assertThat(enabledFacilities.get(1).getId(), is(fac1.getId()));
+    assertThat(enabledFacilities.get(1).getEnabled(), is(fac1.getEnabled()));
     assertThat(enabledFacilities.get(1).getCode(), is(fac1.getCode()));
+    assertThat(enabledFacilities.get(1).getName(), is(fac1.getName()));
     assertThat(enabledFacilities.get(1).getFacilityType().getId(), is(fac1.getFacilityType().getId()));
     assertThat(enabledFacilities.get(1).getFacilityType().getName(), is(fac1.getFacilityType().getName()));
   }
@@ -626,7 +618,6 @@ public class FacilityMapperIT {
 
   @Test
   public void shouldReturnAllFacilitiesMatchingModifiedDate() throws Exception {
-
     String facilityCode1 = "fc1";
     String facilityCode2 = "fc2";
     Date date1 = new Date();
@@ -674,7 +665,6 @@ public class FacilityMapperIT {
 
   @Test
   public void shouldGetEnabledWarehouses() throws Exception {
-
     Facility enabledFacility = make(a(defaultFacility));
     mapper.insert(enabledFacility);
 
@@ -697,7 +687,6 @@ public class FacilityMapperIT {
     assertThat(warehouses.get(0).getId(), is(not(disabledFacility.getId())));
     assertThat(warehouses.get(0).getId(), is(enabledFacility.getId()));
     assertThat(warehouses.get(0).getCode(), is(enabledFacility.getCode()));
-
   }
 
   @Test
@@ -721,7 +710,6 @@ public class FacilityMapperIT {
 
   @Test
   public void shouldUpdateOnlyTypeAndGeoZoneInVirtualFacilities() throws Exception {
-
     GeographicLevel level = new GeographicLevel(1L);
     GeographicZone zone0 = new GeographicZone(3000L, "Z0", "Z0", level, null);
     geographicZoneMapper.insert(zone0);
@@ -730,21 +718,18 @@ public class FacilityMapperIT {
     GeographicZone zone2 = new GeographicZone(2000L, "Z2", "Z2", level, zone1);
     geographicZoneMapper.insert(zone2);
 
-
     List<FacilityType> allTypes = mapper.getAllTypes();
     FacilityType facilityType1 = allTypes.get(1);
     FacilityType facilityType2 = allTypes.get(2);
 
     Facility parentFacility = insertFacility("FF110", facilityType1, zone1, null);
-
     Facility facility = insertFacility("F2222", facilityType1, zone1, null);
-
     Facility virtualFacility = insertFacility("F3333", facilityType1, zone1, parentFacility.getId());
 
     parentFacility.setFacilityType(facilityType2);
     parentFacility.setGeographicZone(zone2);
-    mapper.update(parentFacility);
 
+    mapper.update(parentFacility);
     mapper.updateVirtualFacilities(parentFacility);
 
     Facility fetchedVirtualFacility = mapper.getById(virtualFacility.getId());
@@ -754,7 +739,6 @@ public class FacilityMapperIT {
     Facility fetchedFacility = mapper.getById(facility.getId());
     assertThat(fetchedFacility.getFacilityType().getCode(), is(facilityType1.getCode()));
     assertThat(fetchedFacility.getGeographicZone().getCode(), is(zone1.getCode()));
-
   }
 
   @Test
@@ -814,6 +798,4 @@ public class FacilityMapperIT {
 
     return facility;
   }
-
-
 }
