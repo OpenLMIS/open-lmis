@@ -8,7 +8,7 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-function ViewRnrController($scope, requisitionData, rnrColumns, regimenTemplate, equipmentOperationalStatus, ReOpenRequisition, $dialog , $location, pageSize, $routeParams, requisitionService) {
+function ViewRnrController($scope, requisitionData, rnrColumns, regimenTemplate, equipmentOperationalStatus, ReOpenRequisition, RejectRequisition , $dialog , $location, pageSize, $routeParams, requisitionService) {
 
   $scope.rnrColumns = rnrColumns;
   $scope.pageSize = pageSize;
@@ -50,6 +50,33 @@ function ViewRnrController($scope, requisitionData, rnrColumns, regimenTemplate,
     OpenLmisDialog.newDialog(options, callBack, $dialog);
   };
 
+  $scope.rejectRnR = function( ){
+    var callBack = function (result) {
+
+      if (result) {
+
+        // reject
+        RejectRequisition.post({id: $scope.rnr.id}, function(data){
+          OpenLmisDialog.newDialog({
+            id: "confirmDialog",
+            header: "label.confirm.action",
+            body: 'msg.rnr.returned'
+          }, function(){
+            $location.url('/public/pages/logistics/rnr/index.html#/init-rnr');
+          }, $dialog);
+        });
+        // redirect to the main page
+      }
+    };
+
+    var options = {
+      id: "confirmDialog",
+      header: "label.confirm.action",
+      body: "label.rnr.confirm.return"
+    };
+
+    OpenLmisDialog.newDialog(options, callBack, $dialog);
+  };
 
   $scope.visibleColumns = requisitionService.getMappedVisibleColumns(rnrColumns, RegularRnrLineItem.frozenColumns, []);
   $scope.regimenCount = $scope.rnr.regimenLineItems.length;
