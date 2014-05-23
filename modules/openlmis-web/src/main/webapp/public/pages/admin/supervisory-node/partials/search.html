@@ -16,8 +16,8 @@
   </h2>
 
   <div class="alert alert-success" id="saveSuccessMsgDiv" ng-show="supervisoryNodeId">
-    <span ng-bind="message"></span>.&nbsp;&nbsp;
-    <a a ng-href="#/edit/{{supervisoryNodeId}}" openlmis-message="search.viewHere"></a>
+    <span id="successMessage" ng-bind="message"></span>.&nbsp;&nbsp;
+    <a id="viewHereLink" a ng-href="#/edit/{{supervisoryNodeId}}" openlmis-message="search.viewHere"></a>
   </div>
 
   <div id="searchControl" class="row-fluid">

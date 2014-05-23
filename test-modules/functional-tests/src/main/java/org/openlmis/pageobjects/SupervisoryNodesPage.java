@@ -19,15 +19,10 @@ import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 
 import java.util.NoSuchElementException;
 
-import static com.thoughtworks.selenium.SeleneseTestBase.assertEquals;
-import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
 import static org.openqa.selenium.support.How.CLASS_NAME;
 import static org.openqa.selenium.support.How.ID;
 
 public class SupervisoryNodesPage extends Page {
-
-  @FindBy(how = ID, using = "supervisoryNodeTab")
-  private static WebElement supervisoryNodeTab = null;
 
   @FindBy(how = ID, using = "searchOptionButton")
   private static WebElement searchOptionButton = null;
@@ -50,7 +45,7 @@ public class SupervisoryNodesPage extends Page {
   @FindBy(how = ID, using = "noResultMessage")
   private static WebElement noResultMessage = null;
 
-  @FindBy(how = ID, using  = "noFacilityResultMessage")
+  @FindBy(how = ID, using = "noFacilityResultMessage")
   private static WebElement noFacilityResultMessage = null;
 
   @FindBy(how = ID, using = "oneResultMessage")
@@ -89,11 +84,8 @@ public class SupervisoryNodesPage extends Page {
   @FindBy(how = ID, using = "searchParentNode")
   private static WebElement searchParentNode = null;
 
-  @FindBy(how = CLASS_NAME, using = "search-list" )
+  @FindBy(how = CLASS_NAME, using = "search-list")
   private static WebElement search_list = null;
-
-  @FindBy(how = ID, using = "result0")
-  private static WebElement result0 = null;
 
   @FindBy(how = ID, using = "clearSearch")
   private static WebElement clearSearch = null;
@@ -116,20 +108,23 @@ public class SupervisoryNodesPage extends Page {
   @FindBy(how = ID, using = "saveErrorMsgDiv")
   private static WebElement saveErrorMsgDiv = null;
 
-  @FindBy(how = ID, using = "closeButton")
-  private static WebElement closeButton = null;
-
-  @FindBy(how = ID, using = "name0")
-  private static WebElement firstSearchResultLink = null;
-
   @FindBy(how = ID, using = "result0")
   private static WebElement firstParentSearchResultLink = null;
 
   @FindBy(how = ID, using = "searchSupervisoryNode")
   private static WebElement searchSupervisoryNode = null;
 
-  @FindBy(how = ID, using  = "cancelButton")
+  @FindBy(how = ID, using = "cancelButton")
   private static WebElement cancelButton = null;
+
+  @FindBy(how = ID, using = "successMessage")
+  private static WebElement successMessage = null;
+
+  @FindBy(how = ID, using = "viewHereLink")
+  private static WebElement viewHereLink = null;
+
+  @FindBy(how = ID, using = "editSupervisoryNodeHeader")
+  private static WebElement editSupervisoryNodeHeader = null;
 
   public SupervisoryNodesPage(TestWebDriver driver) {
     super(driver);
@@ -142,16 +137,6 @@ public class SupervisoryNodesPage extends Page {
     return searchSupervisoryNodeLabel.getText();
   }
 
-  public String getSupervisoryNodeTabLabel() {
-    testWebDriver.waitForElementToAppear(supervisoryNodeTab);
-    return supervisoryNodeTab.getText();
-  }
-
-  public void clickSupervisoryNodeTab() {
-    testWebDriver.waitForElementToAppear(supervisoryNodeTab);
-    supervisoryNodeTab.click();
-  }
-
   public boolean isAddNewButtonDisplayed() {
     try {
       testWebDriver.waitForElementToAppear(supervisoryNodeAddNew);
@@ -160,7 +145,6 @@ public class SupervisoryNodesPage extends Page {
     } catch (NoSuchElementException e) {
       return false;
     }
-    testWebDriver.waitForElementToAppear(supervisoryNodeAddNew);
     return supervisoryNodeAddNew.isDisplayed();
   }
 
@@ -187,10 +171,6 @@ public class SupervisoryNodesPage extends Page {
   public void selectSupervisoryNodeParentAsSearchOption() {
     testWebDriver.waitForElementToAppear(searchOption2);
     searchOption2.click();
-  }
-
-  public void clickOnSearchOptionButton(){
-    testWebDriver.click(searchOptionButton);
   }
 
   public void enterSearchParameter(String searchParameter) {
@@ -290,7 +270,7 @@ public class SupervisoryNodesPage extends Page {
     return facility.getText();
   }
 
-  public String getSearchSupervisoryNodeText(){
+  public String getSearchSupervisoryNodeText() {
     testWebDriver.waitForElementToAppear(searchSupervisoryNode);
     return searchSupervisoryNode.getText();
   }
@@ -311,98 +291,123 @@ public class SupervisoryNodesPage extends Page {
     return searchIcon.isDisplayed();
   }
 
-
-  public void clickOnFirstParentSearchResult(){
-
+  public void clickOnFirstParentSearchResult() {
+    testWebDriver.sleep(500);
+    testWebDriver.waitForElementToAppear(firstParentSearchResultLink);
     firstParentSearchResultLink.click();
-    testWebDriver.waitForElementToAppear(supervisoryNodeName);
-
   }
 
-  public void clickAssociatedFacilityField(){
+  public void clickAssociatedFacilityField() {
+    testWebDriver.waitForElementToAppear(associatedFacilityField);
     associatedFacilityField.click();
     testWebDriver.waitForElementToAppear(searchAndFilter);
   }
 
-  public void searchFacilityToBeAssociated(String facilityName){
+  public void searchFacilityToBeAssociated(String facilityName) {
+    testWebDriver.waitForElementToAppear(searchFacility);
     searchFacility.sendKeys(facilityName);
   }
 
-  public void clickOnClearSearchResultButton(){
+  public void clickOnClearSearchResultButton() {
+    testWebDriver.waitForElementToAppear(clearSearch);
     clearSearch.click();
   }
 
-  public boolean isClearSearchButtonIsVisible(){
+  public boolean isClearSearchButtonIsVisible() {
+    testWebDriver.waitForElementToAppear(clearSearch);
     return clearSearch.isDisplayed();
   }
 
+  public void clickOnFirstFacilitySearchResultLink() {
+    testWebDriver.waitForElementToAppear(firstParentSearchResultLink);
+    firstParentSearchResultLink.click();
+    testWebDriver.waitForElementToAppear(supervisoryNodeName);
+  }
 
-
-  public void clickOnFirstFacilitySearchResultLink(){
-      testWebDriver.waitForElementToAppear(firstParentSearchResultLink);
-      firstParentSearchResultLink.click();
-      testWebDriver.waitForElementToAppear(supervisoryNodeName);
-
-    }
-
-  public void verifySearchParentNodeResult()
-  {
-    assertTrue(search_list.isDisplayed());
-    assertTrue(result0.isDisplayed());
+  public boolean isSearchListDisplayed() {
     testWebDriver.waitForElementToAppear(search_list);
-
+    return search_list.isDisplayed();
   }
 
-  public void enterSupervisoryNodeCodeValue(String code){
-    supervisoryNodeCode.sendKeys(code);
+  public String getParentNodeResult(int rowNumber) {
+    WebElement result = testWebDriver.getElementById("result" + (rowNumber - 1));
+    testWebDriver.waitForElementToAppear(result);
+    return result.getText();
   }
 
-  public void enterSupervisoryNodeNameValues(String name){
-    supervisoryNodeName.sendKeys(name);
+  public void enterSupervisoryNodeCodeValue(String code) {
+    testWebDriver.waitForElementToAppear(supervisoryNodeCode);
+    sendKeys(supervisoryNodeCode, code);
   }
 
-  public void enterSupervisoryNodeDescriptionValue(String description){
-    supervisoryNodeDescription.sendKeys(description);
+  public void enterSupervisoryNodeNameValues(String name) {
+    testWebDriver.waitForElementToAppear(supervisoryNodeName);
+    sendKeys(supervisoryNodeName, name);
   }
 
-  public void enterSearchParentNodeParameter(String parentCode){
-    searchParentNode.sendKeys(parentCode);
-    testWebDriver.waitForElementToAppear(search_list);
-    assertTrue(search_list.isDisplayed());
-    assertTrue(result0.isDisplayed());
+  public void enterSupervisoryNodeDescriptionValue(String description) {
+    testWebDriver.waitForElementToAppear(supervisoryNodeDescription);
+    sendKeys(supervisoryNodeDescription, description);
   }
 
-
-
-  public void verifyAbsenceOfDisabledFacility(){
-
-    assertEquals("No matches found for 'F10'", noFacilityResultMessage.getText());
-
+  public void enterSearchParentNodeParameter(String parentCode) {
+    testWebDriver.waitForElementToAppear(searchParentNode);
+    sendKeys(searchParentNode, parentCode);
   }
 
-  public void clickCrossButton(){
-    testWebDriver.waitForElementToAppear(closeButton);
-    closeButton.click();
+  public String getNoFacilityResultMessage() {
+    testWebDriver.waitForElementToAppear(noFacilityResultMessage);
+    return noFacilityResultMessage.getText();
   }
 
-  public String getSearchFacilityText(){
+  public String getSearchFacilityText() {
+    testWebDriver.waitForElementToAppear(searchFacility);
     return searchFacility.getText();
   }
 
-  public void selectFirstFacilityToBeAssociated(){
-
-    testWebDriver.click(facilityResult0);
-}
+  public void selectFirstFacilityToBeAssociated() {
+    testWebDriver.waitForElementToAppear(facilityResult0);
+    facilityResult0.click();
+  }
 
   public String getSaveMessage() {
+    testWebDriver.waitForElementToAppear(saveErrorMsgDiv);
     return saveErrorMsgDiv.getText();
   }
 
-  public void clickSaveButton(){
+  public void clickSaveButton() {
+    testWebDriver.waitForElementToAppear(saveButton);
     saveButton.click();
   }
 
-  public void clickCancelButton(){
+  public void clickCancelButton() {
+    testWebDriver.waitForElementToAppear(cancelButton);
     cancelButton.click();
+  }
+
+  public void clickOnNode(int rowNumber) {
+    WebElement name = testWebDriver.getElementById("name" + (rowNumber - 1));
+    testWebDriver.waitForElementToAppear(name);
+    name.click();
+  }
+
+  public String getSuccessMessage() {
+    testWebDriver.waitForElementToAppear(successMessage);
+    return successMessage.getText();
+  }
+
+  public void clickViewHereLink() {
+    testWebDriver.waitForElementToAppear(viewHereLink);
+    viewHereLink.click();
+  }
+
+  public boolean isEditPageHeaderDisplayed() {
+    testWebDriver.waitForElementToAppear(editSupervisoryNodeHeader);
+    return editSupervisoryNodeHeader.isDisplayed();
+  }
+
+  public String getParentNode() {
+    testWebDriver.waitForElementToAppear(searchParentNode);
+    return searchParentNode.getText();
   }
 }
