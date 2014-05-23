@@ -15,16 +15,15 @@ import static com.thoughtworks.selenium.SeleneseTestBase.assertFalse;
 import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
 import static org.testng.AssertJUnit.assertEquals;
 
-public class ManageRequisitionGroup extends TestCaseHelper {
+public class ManageRequisitionGroups extends TestCaseHelper {
 
   LoginPage loginPage;
+  RequisitionGroupPage requisitionGroupPage;
 
-  public static final String USER = "user";
   public static final String ADMIN = "admin";
   public static final String PASSWORD = "password";
 
   public Map<String, String> testData = new HashMap<String, String>() {{
-    put(USER, "fieldCoordinator");
     put(PASSWORD, "Admin123");
     put(ADMIN, "Admin123");
   }};
@@ -34,21 +33,22 @@ public class ManageRequisitionGroup extends TestCaseHelper {
     super.setup();
     dbWrapper.insertFacilities("F10", "F11");
     loginPage = PageObjectFactory.getLoginPage(testWebDriver, baseUrlGlobal);
+    requisitionGroupPage = PageObjectFactory.getRequisitionGroupPage(testWebDriver);
   }
 
   @Test(groups = {"admin"})
   public void testRightsNotPresent() throws SQLException {
     HomePage homePage = loginPage.loginAs(testData.get(ADMIN), testData.get(PASSWORD));
-
     homePage.navigateToUser();
-    homePage.verifyAdminTabs();
+
     assertFalse(homePage.isRequisitionGroupTabDisplayed());
     homePage.logout();
+
     dbWrapper.assignRight("Admin", "MANAGE_REQUISITION_GROUP");
     loginPage.loginAs(testData.get(ADMIN), testData.get(PASSWORD));
     homePage.navigateToUser();
     assertTrue(homePage.isRequisitionGroupTabDisplayed());
-    RequisitionGroupPage requisitionGroupPage = homePage.navigateToRequisitionGroupPage();
+    requisitionGroupPage = homePage.navigateToRequisitionGroupPage();
 
     assertEquals("Search Requisition Group", requisitionGroupPage.getSearchRequisitionGroupLabel());
     assertTrue(requisitionGroupPage.isAddNewButtonDisplayed());
@@ -57,23 +57,19 @@ public class ManageRequisitionGroup extends TestCaseHelper {
   }
 
   @Test(groups = {"admin"})
-  public void testRequisitionGroupSearchSortAndPagination() throws SQLException {
+  public void testRequisitionGroupSearch() throws SQLException {
     dbWrapper.assignRight("Admin", "MANAGE_REQUISITION_GROUP");
     dbWrapper.insertSupervisoryNode("F10", "N1", "Super1", null);
     dbWrapper.insertSupervisoryNode("F11", "N2", "Super2", null);
     dbWrapper.insertRequisitionGroups("RG1", "RG2", "N2", "N1");
     HomePage homePage = loginPage.loginAs(testData.get(ADMIN), testData.get(PASSWORD));
+    requisitionGroupPage = homePage.navigateToRequisitionGroupPage();
 
-    RequisitionGroupPage requisitionGroupPage = homePage.navigateToRequisitionGroupPage();
-    homePage.verifyAdminTabs();
     assertTrue(homePage.isRequisitionGroupTabDisplayed());
     assertEquals("Search Requisition Group", requisitionGroupPage.getSearchRequisitionGroupLabel());
     assertTrue(requisitionGroupPage.isAddNewButtonDisplayed());
     assertEquals("Requisition group", requisitionGroupPage.getSelectedSearchOption());
-    assertFalse(requisitionGroupPage.isNoResultMessageDisplayed());
-    assertFalse(requisitionGroupPage.isNResultsMessageDisplayed());
-    assertFalse(requisitionGroupPage.isOneResultMessageDisplayed());
-    assertFalse(requisitionGroupPage.isRequisitionGroupHeaderPresent());
+    assertFalse(requisitionGroupPage.isResultDisplayed());
 
     search("re");
     assertEquals("2 matches found for 're'", requisitionGroupPage.getNResultsMessage());
@@ -87,10 +83,26 @@ public class ManageRequisitionGroup extends TestCaseHelper {
     assertEquals("Super1", requisitionGroupPage.getSupervisoryNodeName(1));
     assertEquals("", requisitionGroupPage.getFacilityCount(1));
 
+    dbWrapper.updateFieldValue("requisition_groups", "name", "rg", "code", "RG2");
+    requisitionGroupPage.clickSearchIcon();
+    assertEquals("1 matches found for 're'", requisitionGroupPage.getNResultsMessage());
+    assertEquals("Requisition Group 1", requisitionGroupPage.getRequisitionGroupName(1));
+    assertEquals("RG1", requisitionGroupPage.getRequisitionGroupCode(1));
+  }
+
+  @Test(groups = {"admin"})
+  public void testRequisitionGroupSearchSortAndPagination() throws SQLException {
+    dbWrapper.assignRight("Admin", "MANAGE_REQUISITION_GROUP");
+    dbWrapper.insertSupervisoryNode("F10", "N1", "Super1", null);
+    dbWrapper.insertSupervisoryNode("F11", "N2", "Super2", null);
+    dbWrapper.insertRequisitionGroups("RG1", "RG2", "N2", "N1");
+
+    HomePage homePage = loginPage.loginAs(testData.get(ADMIN), testData.get(PASSWORD));
+    requisitionGroupPage = homePage.navigateToRequisitionGroupPage();
+
     UploadPage uploadPage = homePage.navigateUploads();
     uploadPage.uploadRequisitionGroup("QA_RequisitionGroups21.csv");
     uploadPage.verifySuccessMessageOnUploadScreen();
-
     dbWrapper.insertRequisitionGroupMembersTestData();
 
     homePage.navigateToRequisitionGroupPage();
@@ -156,7 +168,7 @@ public class ManageRequisitionGroup extends TestCaseHelper {
     verifyNumberOfLineItemsVisibleOnPage(10);
 
     requisitionGroupPage.closeSearchResults();
-    assertFalse(requisitionGroupPage.isRequisitionGroupHeaderPresent());
+    assertFalse(requisitionGroupPage.isRequisitionGroupHeaderDisplayed());
   }
 
   @Test(groups = {"admin"})
@@ -170,10 +182,9 @@ public class ManageRequisitionGroup extends TestCaseHelper {
     UploadPage uploadPage = homePage.navigateUploads();
     uploadPage.uploadRequisitionGroup("QA_RequisitionGroups21.csv");
     uploadPage.verifySuccessMessageOnUploadScreen();
-
     dbWrapper.insertRequisitionGroupMembersTestData();
 
-    RequisitionGroupPage requisitionGroupPage = homePage.navigateToRequisitionGroupPage();
+    requisitionGroupPage = homePage.navigateToRequisitionGroupPage();
     assertEquals("Search Requisition Group", requisitionGroupPage.getSearchRequisitionGroupLabel());
     assertEquals("Requisition group", requisitionGroupPage.getSelectedSearchOption());
     requisitionGroupPage.clickSearchOptionButton();
@@ -232,8 +243,8 @@ public class ManageRequisitionGroup extends TestCaseHelper {
     dbWrapper.insertSupervisoryNode("F10", "N1", "Super1", null);
 
     HomePage homePage = loginPage.loginAs(testData.get(ADMIN), testData.get(PASSWORD));
+    requisitionGroupPage = homePage.navigateToRequisitionGroupPage();
 
-    RequisitionGroupPage requisitionGroupPage = homePage.navigateToRequisitionGroupPage();
     assertEquals("Requisition group", requisitionGroupPage.getSelectedSearchOption());
     requisitionGroupPage.clickSearchOptionButton();
     requisitionGroupPage.selectSupervisoryNodeAsSearchOption();
@@ -261,105 +272,25 @@ public class ManageRequisitionGroup extends TestCaseHelper {
     assertTrue(requisitionGroupPage.isNoResultMessageDisplayed());
   }
 
-
-  //@Test(groups = {"admin"})
-  public void testAddNewRequisitionGroup() throws SQLException {
-    dbWrapper.assignRight("Admin", "MANAGE_REQUISITION_GROUP");
-    HomePage homePage = loginPage.loginAs(testData.get(ADMIN), testData.get(PASSWORD));
-    RequisitionGroupPage requisitionGroupPage = homePage.navigateToRequisitionGroupPage();
-    requisitionGroupPage.clickAddNewButton();
-    //add a valid supervisoryNode
-    //click save
-
-    search(""); //enter the one added
-    //verify it
-
-    requisitionGroupPage.clickAddNewButton();
-    //add same node
-    //verify error message
-    //add new with parent as previous one
-    //click save
-
-    search(""); //new added
-    //verify
-    requisitionGroupPage.clickSearchOptionButton();
-    requisitionGroupPage.selectSupervisoryNodeAsSearchOption();
-    search(""); //previously added
-    //verify
-
-    requisitionGroupPage.clickAddNewButton();
-    //add same node
-    //verify error message
-    //add new with parent as previous one
-    //click cancel
-
-    requisitionGroupPage.clickSearchOptionButton();
-    requisitionGroupPage.selectRequisitionGroupAsSearchOption();
-    search(""); //new added
-    //verify no result
-  }
-
-  //@Test(groups = {"admin"})
-  public void testUpdateRequisitionGroup() throws SQLException {
-    dbWrapper.assignRight("Admin", "MANAGE_REQUISITION_GROUP");
-    HomePage homePage = loginPage.loginAs(testData.get(ADMIN), testData.get(PASSWORD));
-    RequisitionGroupPage requisitionGroupPage = homePage.navigateToRequisitionGroupPage();
-    search("sup");
-    //click the resultant Super1
-    //update the code and parent
-    //click save
-
-    search("sup");
-    assertFalse(requisitionGroupPage.isOneResultMessageDisplayed());
-    assertTrue(requisitionGroupPage.isNoResultMessageDisplayed());
-
-    search(""); //new code
-    assertTrue(requisitionGroupPage.isOneResultMessageDisplayed());
-
-    search("sup");
-    //click the resultant
-    //update the code as the last updated code and parent
-    //click save
-    //verify error msg
-    //update code
-    //enter invalid parent
-    //verify error message
-    //enter parent as the new code above
-    //verify error msg
-    //enter valid parent
-    //click save
-    search(""); //new code
-    assertTrue(requisitionGroupPage.isOneResultMessageDisplayed());
-    //click the resultant
-    //update code
-    //click cancel
-    search(""); //new code
-    assertTrue(requisitionGroupPage.isNoResultMessageDisplayed());
-  }
-
   public void search(String searchParameter) {
-    RequisitionGroupPage requisitionGroupPage = PageObjectFactory.getRequisitionGroupPage(testWebDriver);
     requisitionGroupPage.enterSearchParameter(searchParameter);
     requisitionGroupPage.clickSearchIcon();
     testWebDriver.waitForAjax();
   }
 
   private void verifyRequisitionGroupNameOrderOnPage(String[] requisitionGroupNames) {
-    RequisitionGroupPage requisitionGroupPage = PageObjectFactory.getRequisitionGroupPage(testWebDriver);
     for (int i = 1; i < requisitionGroupNames.length; i++) {
       assertEquals(requisitionGroupNames[i - 1], requisitionGroupPage.getRequisitionGroupName(i));
     }
   }
 
   private void verifyFacilityCountOnPage(String[] counts) {
-    RequisitionGroupPage requisitionGroupPage = PageObjectFactory.getRequisitionGroupPage(testWebDriver);
     for (int i = 1; i < counts.length; i++) {
       assertEquals(counts[i - 1], requisitionGroupPage.getFacilityCount(i));
     }
   }
 
   private void verifySupervisoryNodeNameOrderOnPage(String[] supervisoryNodeNames) {
-    RequisitionGroupPage requisitionGroupPage = PageObjectFactory.getRequisitionGroupPage(testWebDriver);
     for (int i = 1; i < supervisoryNodeNames.length; i++) {
       assertEquals(supervisoryNodeNames[i - 1], requisitionGroupPage.getSupervisoryNodeName(i));
     }
@@ -376,5 +307,4 @@ public class ManageRequisitionGroup extends TestCaseHelper {
     dbWrapper.deleteData();
     dbWrapper.closeConnection();
   }
-
 }

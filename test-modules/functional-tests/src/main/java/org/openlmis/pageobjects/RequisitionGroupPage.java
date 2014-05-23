@@ -13,9 +13,6 @@ import static org.openqa.selenium.support.How.ID;
 
 public class RequisitionGroupPage extends Page {
 
-  @FindBy(how = ID, using = "requisitionGroupTab")
-  private static WebElement requisitionGroupTab = null;
-
   @FindBy(how = ID, using = "searchOptionButton")
   private static WebElement searchOptionButton = null;
 
@@ -61,6 +58,11 @@ public class RequisitionGroupPage extends Page {
   @FindBy(how = ID, using = "searchIcon")
   private static WebElement searchIcon = null;
 
+  @FindBy(how = ID, using = "requisitionGroupSearchResults")
+  private static WebElement requisitionGroupSearchResult = null;
+
+
+
   public RequisitionGroupPage(TestWebDriver driver) {
     super(driver);
     PageFactory.initElements(new AjaxElementLocatorFactory(TestWebDriver.getDriver(), 1), this);
@@ -70,16 +72,6 @@ public class RequisitionGroupPage extends Page {
   public String getSearchRequisitionGroupLabel() {
     testWebDriver.waitForElementToAppear(searchRequisitionGroupLabel);
     return searchRequisitionGroupLabel.getText();
-  }
-
-  public String getRequisitionGroupTabLabel() {
-    testWebDriver.waitForElementToAppear(requisitionGroupTab);
-    return requisitionGroupTab.getText();
-  }
-
-  public void clickRequisitionGroupTab() {
-    testWebDriver.waitForElementToAppear(requisitionGroupTab);
-    requisitionGroupTab.click();
   }
 
   public boolean isAddNewButtonDisplayed() {
@@ -146,15 +138,15 @@ public class RequisitionGroupPage extends Page {
     return oneResultMessage.isDisplayed();
   }
 
-  public boolean isNResultsMessageDisplayed() {
+  public boolean isResultDisplayed() {
     try {
-      testWebDriver.waitForElementToAppear(nResultsMessage);
+      testWebDriver.waitForElementToAppear(requisitionGroupSearchResult);
     } catch (TimeoutException e) {
       return false;
     } catch (NoSuchElementException e) {
       return false;
     }
-    return nResultsMessage.isDisplayed();
+    return requisitionGroupSearchResult.isDisplayed();
   }
 
   public String getNResultsMessage() {
@@ -167,7 +159,7 @@ public class RequisitionGroupPage extends Page {
     closeSearchResultsButton.click();
   }
 
-  public boolean isRequisitionGroupHeaderPresent() {
+  public boolean isRequisitionGroupHeaderDisplayed() {
     try {
       testWebDriver.waitForElementToAppear(requisitionGroupHeader);
     } catch (TimeoutException e) {
