@@ -85,7 +85,7 @@ public class ManageRequisitionGroups extends TestCaseHelper {
 
     dbWrapper.updateFieldValue("requisition_groups", "name", "rg", "code", "RG2");
     requisitionGroupPage.clickSearchIcon();
-    assertEquals("1 matches found for 're'", requisitionGroupPage.getNResultsMessage());
+    assertEquals("1 match found for 're'", requisitionGroupPage.getOneResultsMessage());
     assertEquals("Requisition Group 1", requisitionGroupPage.getRequisitionGroupName(1));
     assertEquals("RG1", requisitionGroupPage.getRequisitionGroupCode(1));
   }

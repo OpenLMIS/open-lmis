@@ -154,6 +154,11 @@ public class RequisitionGroupPage extends Page {
     return nResultsMessage.getText();
   }
 
+  public String getOneResultsMessage() {
+    testWebDriver.waitForElementToAppear(oneResultMessage);
+    return oneResultMessage.getText();
+  }
+
   public void closeSearchResults() {
     testWebDriver.waitForElementToAppear(closeSearchResultsButton);
     closeSearchResultsButton.click();
