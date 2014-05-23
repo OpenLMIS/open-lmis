@@ -11,156 +11,156 @@
 <div>
 
   <span class="pull-right print-button">
-    <a class="btn btn-primary" ng-href="/pods/{{pod.id}}/print" openlmis-message="button.print"
+    <a id="printButton" class="btn btn-primary" ng-href="/pods/{{pod.id}}/print" openlmis-message="button.print"
        target="_blank"></a>
   </span>
 
-    <h2 id="podPageTitle" openlmis-message="header.proof.of.delivery"></h2>
-    <ng-include src="'/public/pages/logistics/fulfillment/pod/partials/header.html'"></ng-include>
+  <h2 id="podPageTitle" openlmis-message="header.proof.of.delivery"></h2>
+  <ng-include src="'/public/pages/logistics/fulfillment/pod/partials/header.html'"></ng-include>
 
-    <div id="pageErrors" class="page-errors" ng-show="errorPages">
-        <div ng-switch on="errorPages.length" class="dropdown">
-            <a href="" ng-switch-when="1" class="dropdown-toggle" openlmis-message="error.one.page"></a>
-            <a href="" ng-switch-default class="dropdown-toggle"
-               openlmis-message="error.multiple.pages|errorPages.length"></a>
-            <ul class="dropdown-menu">
-                <li ng-repeat="page in errorPages">
-                    <a href="#/pods/{{pod.id}}?page={{page}}" id="errorPageLink{{page}}" ng-bind="page"></a>
-                </li>
-            </ul>
-        </div>
-
+  <div id="pageErrors" class="page-errors" ng-show="errorPages">
+    <div ng-switch on="errorPages.length" class="dropdown">
+      <a href="" ng-switch-when="1" class="dropdown-toggle" openlmis-message="error.one.page"></a>
+      <a href="" ng-switch-default class="dropdown-toggle"
+         openlmis-message="error.multiple.pages|errorPages.length"></a>
+      <ul class="dropdown-menu">
+        <li ng-repeat="page in errorPages">
+          <a href="#/pods/{{pod.id}}?page={{page}}" id="errorPageLink{{page}}" ng-bind="page"></a>
+        </li>
+      </ul>
     </div>
-    <form id="podForm" name="podForm">
-        <div ng-hide="pageLineItems.length" class="alert alert-info" id="noProductsLabel"
-             openlmis-message="label.no.products"></div>
-        <div id="pod" ng-show="pageLineItems.length" class="rnr-table">
-            <table id="podTable" class="table table-bordered" fixed-table-header>
-                <thead>
-                <tr>
-                    <th class="col-{{column.name}}" ng-repeat="column in columns">
-                        <span openlmis-message="column.label"></span>
-                    </th>
-                </tr>
-                </thead>
 
-                <tbody ng-repeat="podLineItem in pageLineItems">
-                <tr ng-if="podLineItem.productCategory">
-                <td class="productCategory" id="category{{$index}}" colspan="{{columns.length}}"
-                        ng-show="isCategoryDifferentFromPreviousLineItem($index)"
-                        ng-bind="podLineItem.productCategory">
-                    </td>
-                </tr>
-                <tr ng-if="!podLineItem.productCategory">
-                  <td class="productCategory" id="category{{$index1}}" colspan="{{columns.length}}"
-                      ng-show="isCategoryDifferentFromPreviousLineItem($index)"
-                      openlmis-message="label.default.category">
-                  </td>
-                </tr>
-                <tr>
-                    <td class="cell-input">
-                        <div class="checked ngCellText">
-                            <i id="tickIcon{{$index}}" ng-class="{'icon-ok': podLineItem.fullSupply}"></i>
-                        </div>
-                    </td>
-                    <td class="cell-input col-productCode">
-                        <span ng-bind="podLineItem.productCode" id="productCode{{$index}}" class="cell-text"></span>
-                    </td>
-                    <td class="cell-input col-product">
-                        <span ng-bind="podLineItem.productName" id="productName{{$index}}" class="cell-text"></span>
-                    </td>
-                    <td class="cell-input">
+  </div>
+  <form id="podForm" name="podForm">
+    <div ng-hide="pageLineItems.length" class="alert alert-info" id="noProductsLabel"
+         openlmis-message="label.no.products"></div>
+    <div id="pod" ng-show="pageLineItems.length" class="rnr-table">
+      <table id="podTable" class="table table-bordered" fixed-table-header>
+        <thead>
+        <tr>
+          <th class="col-{{column.name}}" ng-repeat="column in columns">
+            <span openlmis-message="column.label"></span>
+          </th>
+        </tr>
+        </thead>
+
+        <tbody ng-repeat="podLineItem in pageLineItems">
+        <tr ng-if="podLineItem.productCategory">
+          <td class="productCategory" id="category{{$index}}" colspan="{{columns.length}}"
+              ng-show="isCategoryDifferentFromPreviousLineItem($index)"
+              ng-bind="podLineItem.productCategory">
+          </td>
+        </tr>
+        <tr ng-if="!podLineItem.productCategory">
+          <td class="productCategory" id="category{{$index1}}" colspan="{{columns.length}}"
+              ng-show="isCategoryDifferentFromPreviousLineItem($index)"
+              openlmis-message="label.default.category">
+          </td>
+        </tr>
+        <tr>
+          <td class="cell-input">
+            <div class="checked ngCellText">
+              <i id="tickIcon{{$index}}" ng-class="{'icon-ok': podLineItem.fullSupply}"></i>
+            </div>
+          </td>
+          <td class="cell-input col-productCode">
+            <span ng-bind="podLineItem.productCode" id="productCode{{$index}}" class="cell-text"></span>
+          </td>
+          <td class="cell-input col-product">
+            <span ng-bind="podLineItem.productName" id="productName{{$index}}" class="cell-text"></span>
+          </td>
+          <td class="cell-input">
                         <span ng-bind="podLineItem.dispensingUnit" id="dispensingUnit{{$index}}"
                               class="cell-text"></span>
-                    </td>
-                    <td class="cell-input col-packsToShip">
-                        <span ng-bind="podLineItem.packsToShip" id="packsToShip{{$index}}" class="cell-text"></span>
-                    </td>
-                    <td class="cell-input col-quantityShipped">
+          </td>
+          <td class="cell-input col-packsToShip">
+            <span ng-bind="podLineItem.packsToShip" id="packsToShip{{$index}}" class="cell-text"></span>
+          </td>
+          <td class="cell-input col-quantityShipped">
                         <span ng-bind="podLineItem.quantityShipped" id="quantityShipped{{$index}}"
                               class="cell-text"></span>
-                    </td>
-                    <td class="cell-input col-quantityReceived">
-                        <input id="quantityReceived{{$index}}" type="text"
-                               ng-class="cssClassForQuantityReceived(podLineItem.quantityReceived)"
-                               ng-model="podLineItem.quantityReceived" ng-trim=false
-                               numeric-validator="positiveInteger" maxlength="8"
-                               error-holder="receivedQuantityError{{$index}}"
-                               ng-disabled="podAlreadySubmitted"/>
+          </td>
+          <td class="cell-input col-quantityReceived">
+            <input id="quantityReceived{{$index}}" type="text"
+                   ng-class="cssClassForQuantityReceived(podLineItem.quantityReceived)"
+                   ng-model="podLineItem.quantityReceived" ng-trim=false
+                   numeric-validator="positiveInteger" maxlength="8"
+                   error-holder="receivedQuantityError{{$index}}"
+                   ng-disabled="podAlreadySubmitted"/>
 
-                        <div class="input-error-parent-cell">
+            <div class="input-error-parent-cell">
             <span id="receivedQuantityError{{$index}}"
                   class="rnr-form-error"
                   openlmis-message="error.number.only"
                   style="display: none"></span>
-                        </div>
-                    </td>
-                    <td class="cell-input col-quantityReturned">
-                        <input id="quantityReturned{{$index}}" type="text"
-                               ng-model="podLineItem.quantityReturned" ng-trim=false
-                               numeric-validator="positiveInteger" maxlength="8"
-                               error-holder="returnedQuantityError{{$index}}"
-                               ng-disabled="podAlreadySubmitted"/>
+            </div>
+          </td>
+          <td class="cell-input col-quantityReturned">
+            <input id="quantityReturned{{$index}}" type="text"
+                   ng-model="podLineItem.quantityReturned" ng-trim=false
+                   numeric-validator="positiveInteger" maxlength="8"
+                   error-holder="returnedQuantityError{{$index}}"
+                   ng-disabled="podAlreadySubmitted"/>
 
-                        <div class="input-error-parent-cell">
+            <div class="input-error-parent-cell">
             <span id="returnedQuantityError{{$index}}"
                   class="rnr-form-error"
                   openlmis-message="error.number.only"
                   style="display: none"></span>
-                        </div>
-                    </td>
-                    <td class="cell-input col-productCode">
+            </div>
+          </td>
+          <td class="cell-input col-productCode">
                         <span ng-bind="podLineItem.replacedProductCode" id="replacedProductCode{{$index}}"
                               class="cell-text"></span>
-                    </td>
-                    <td class="cell-input">
-                        <input class="col-remarks" type="text" maxlength="250" ng-model="podLineItem.notes"
-                               id="notes{{$index}}" ng-disabled="podAlreadySubmitted"></span>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
+          </td>
+          <td class="cell-input">
+            <input class="col-remarks" type="text" maxlength="250" ng-model="podLineItem.notes"
+                   id="notes{{$index}}" ng-disabled="podAlreadySubmitted"></span>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+    <openlmis-pagination num-pages="numberOfPages" current-page="currentPage" max-size="10"
+                         error-pages="errorPages"></openlmis-pagination>
+    <div id="podFooter">
+      <div class="info-box clearfix">
+        <div class="row-fluid">
+          <div class="span3 cell-input">
+            <strong openlmis-message="label.deliveredBy"></strong>
+            <input id="deliveredBy" type="text" ng-model="pod.deliveredBy" ng-trim=false
+                   maxlength="100" ng-disabled="podAlreadySubmitted"/>
+          </div>
+
+          <div class="span3 cell-input">
+            <strong openlmis-message="label.receivedBy"></strong>
+            <input id="receivedBy" type="text" ng-model="pod.receivedBy" ng-trim=false
+                   maxlength="100" ng-disabled="podAlreadySubmitted"/>
+          </div>
+
+          <div class="span3 cell-input">
+            <strong openlmis-message="label.receivedDate"></strong>
+            <input name="receivedDate" id="receivedDate" type="text"
+                   ui-date="{dateFormat: 'dd/mm/yy', changeYear: true}"
+                   ui-date-format="yy-mm-dd" ng-model="pod.receivedDate"
+                   ng-disabled="podAlreadySubmitted"/>
+          </div>
         </div>
-        <openlmis-pagination num-pages="numberOfPages" current-page="currentPage" max-size="10"
-                             error-pages="errorPages"></openlmis-pagination>
-        <div id="podFooter">
-            <div class="info-box clearfix">
-                <div class="row-fluid">
-                    <div class="span3 cell-input">
-                        <strong openlmis-message="label.deliveredBy"></strong>
-                        <input id="deliveredBy" type="text" ng-model="pod.deliveredBy" ng-trim=false
-                               maxlength="100" ng-disabled="podAlreadySubmitted"/>
-                    </div>
-
-                    <div class="span3 cell-input">
-                        <strong openlmis-message="label.receivedBy"></strong>
-                        <input id="receivedBy" type="text" ng-model="pod.receivedBy" ng-trim=false
-                               maxlength="100" ng-disabled="podAlreadySubmitted"/>
-                    </div>
-
-                    <div class="span3 cell-input">
-                        <strong openlmis-message="label.receivedDate"></strong>
-                        <input name="receivedDate" id="receivedDate" type="text"
-                               ui-date="{dateFormat: 'dd/mm/yy', changeYear: true}"
-                               ui-date-format="yy-mm-dd" ng-model="pod.receivedDate"
-                               ng-disabled="podAlreadySubmitted"/>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div form-toolbar id="action_buttons" class="action-buttons">
-            <div class="form-cell button-row">
-                <input id="saveButton" type="button" class="btn btn-primary save-button" ng-click="save()"
-                       openlmis-message="button.save" ng-disabled="podAlreadySubmitted"/>
-                <input id="submitButton" type="button" class="btn btn-primary submit-button" ng-click="submit()"
-                       openlmis-message="button.submit" ng-disabled="podAlreadySubmitted"/>
-            </div>
-            <div class="toolbar-error" id="saveFailMessage" fade-out="3000" openlmis-message="error"
-                 ng-show="error"></div>
-            <div class="toolbar-success" id="saveSuccessMsgDiv" fade-out="3000" openlmis-message="message"
-                 ng-show="message"></div>
+      </div>
+    </div>
+    <div form-toolbar id="action_buttons" class="action-buttons">
+      <div class="form-cell button-row">
+        <input id="saveButton" type="button" class="btn btn-primary save-button" ng-click="save()"
+               openlmis-message="button.save" ng-disabled="podAlreadySubmitted"/>
+        <input id="submitButton" type="button" class="btn btn-primary submit-button" ng-click="submit()"
+               openlmis-message="button.submit" ng-disabled="podAlreadySubmitted"/>
+      </div>
+      <div class="toolbar-error" id="saveFailMessage" fade-out="3000" openlmis-message="error"
+           ng-show="error"></div>
+      <div class="toolbar-success" id="saveSuccessMsgDiv" fade-out="3000" openlmis-message="message"
+           ng-show="message"></div>
 
 
-        </div>
-    </form>
+    </div>
+  </form>
 </div>

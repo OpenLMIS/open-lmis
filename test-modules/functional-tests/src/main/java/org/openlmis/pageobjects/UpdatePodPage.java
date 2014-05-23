@@ -100,6 +100,9 @@ public class UpdatePodPage extends Page {
   @FindBy(how = ID, using = "receivedDate")
   private WebElement receivedDate = null;
 
+  @FindBy(how = ID, using = "printButton")
+  private WebElement printButton = null;
+
   public UpdatePodPage(TestWebDriver testWebDriver) {
     super(testWebDriver);
     PageFactory.initElements(new AjaxElementLocatorFactory(TestWebDriver.getDriver(), 10), this);
@@ -394,5 +397,10 @@ public class UpdatePodPage extends Page {
     testWebDriver.waitForElementToAppear(receivedDate);
     testWebDriver.scrollToElement(receivedDate);
     return receivedDate.isEnabled();
+  }
+
+  public void clickPrintButton() {
+    testWebDriver.waitForElementToAppear(printButton);
+    printButton.click();
   }
 }

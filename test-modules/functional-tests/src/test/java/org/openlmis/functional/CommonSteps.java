@@ -15,12 +15,14 @@ import cucumber.api.Scenario;
 import cucumber.api.java.After;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
+import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.UiUtils.TestWebDriver;
 import org.openlmis.pageobjects.HomePage;
 import org.openlmis.pageobjects.LoginPage;
 import org.openlmis.pageobjects.PageObjectFactory;
+import org.openlmis.pageobjects.RequisitionPage;
 import org.openqa.selenium.JavascriptExecutor;
 
 import java.sql.SQLException;
@@ -82,6 +84,31 @@ public class CommonSteps extends TestCaseHelper {
   @And("^I reload the page$")
   public void reloadPage() {
     testWebDriver.refresh();
+  }
+
+  @When("^I click print$")
+  public void clickOnPrintButton() {
+    RequisitionPage requisitionPage = PageObjectFactory.getRequisitionPage(testWebDriver);
+    requisitionPage.clickPrintButton();
+    testWebDriver.sleep(500);
+  }
+
+  @And("^I click full view print button$")
+  public void clickOnPrintButtonOnFullViewScreen() {
+    RequisitionPage requisitionPage = PageObjectFactory.getRequisitionPage(testWebDriver);
+    requisitionPage.clickFullViewPrintButton();
+    testWebDriver.sleep(500);
+  }
+
+  @When("^I click resize button$")
+  public void clickOnResizeViewButton() {
+    RequisitionPage requisitionPage = PageObjectFactory.getRequisitionPage(testWebDriver);
+    requisitionPage.clickResizeViewButton();
+  }
+
+  @Then("^I close new window$")
+  public void closeTab() {
+    testWebDriver.closeBrowser();
   }
 
   @After

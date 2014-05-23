@@ -443,6 +443,7 @@ public class E2EInitiateRnR extends TestCaseHelper {
   @And("^I verify order status as \"([^\"]*)\" in row \"([^\"]*)\"$")
   public void verifyOrderStatus(String orderStatus, String rowNumber) {
     ViewOrdersPage viewOrdersPage = PageObjectFactory.getViewOrdersPage(testWebDriver);
+    testWebDriver.sleep(500);
     assertEquals(orderStatus, viewOrdersPage.getOrderStatus(Integer.parseInt(rowNumber)));
   }
 

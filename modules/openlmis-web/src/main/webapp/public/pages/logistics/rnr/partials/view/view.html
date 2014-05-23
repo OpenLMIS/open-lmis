@@ -21,12 +21,13 @@
       <a href="" ng-click="switchSupplyType('regimen')" id="regimenTab" openlmis-message="label.regimens"></a></li>
   </ul>
   <span class="pull-right">
-    <a full-screen href="" class="btn">
+    <a id="resizeViewButton" full-screen href="" class="btn">
       <i class="icon-resize-full"></i>
     </a>
   </span>
   <span class="pull-right print-button">
-    <a class="btn btn-primary" ng-href="/requisitions/{{rnr.id}}/print.pdf" openlmis-message="button.print"
+    <a id="printButton" class="btn btn-primary" ng-href="/requisitions/{{rnr.id}}/print.pdf"
+       openlmis-message="button.print"
        target="_blank"></a>
   </span>
 </div>

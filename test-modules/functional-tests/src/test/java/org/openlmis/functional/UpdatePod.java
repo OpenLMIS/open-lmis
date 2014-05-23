@@ -54,6 +54,12 @@ public class UpdatePod extends TestCaseHelper {
     loginPage = PageObjectFactory.getLoginPage(testWebDriver, baseUrlGlobal);
   }
 
+  @When("^I click POD print$")
+  public void clickOnPrintButton() {
+    updatePodPage.clickPrintButton();
+    testWebDriver.sleep(500);
+  }
+
   @Test(groups = {"requisition"})
   public void testVerifyUpdatePODForReleasedOrdersValidFlowForRegularRnR() throws SQLException {
     initiateRnrAndConvertToOrder(false, 100);

@@ -18,6 +18,7 @@ import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import static org.openqa.selenium.OutputType.BYTES;
@@ -264,5 +265,19 @@ public class TestWebDriver {
   public void scrollToElement(WebElement elementToClick) {
     // Scroll the browser to the element's Y position
     ((org.openqa.selenium.JavascriptExecutor) driver).executeScript(String.format("window.scrollTo(0, %s);", elementToClick.getLocation().getY()));
+  }
+
+  public void closeBrowser() {
+    String base = driver.getWindowHandle();
+
+    Set<String> set = driver.getWindowHandles();
+
+    set.remove(base);
+    assert set.size() == 1;
+
+    driver.switchTo().window((String) set.toArray()[0]);
+
+    driver.close();
+    driver.switchTo().window(base);
   }
 }

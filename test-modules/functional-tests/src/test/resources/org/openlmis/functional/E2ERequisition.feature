@@ -26,6 +26,8 @@ Feature: End to end requisition flow
     And I enter beginning balance as "10", quantityDispensed as "10", quantityReceived as "10" and totalAdjustmentAndLoses as "1"
     And I verify normalized consumption as "5" and amc as "5"
     And I submit RnR
+    When I click print
+    Then I close new window
     When I add comments
     And I update & verify ordered quantities
     And I update & verify requested quantities
@@ -33,6 +35,8 @@ Feature: End to end requisition flow
     And I authorize RnR
     And I verify normalized consumption as "36" and amc as "36" for product "P10" in Database
     Then I verify cost & authorize message
+    When I click print
+    Then I close new window
     And I should not see requisition to approve
     When I logout
     When I am logged in as "medicalOfficer"
@@ -46,6 +50,8 @@ Feature: End to end requisition flow
     Then I should see blank comment section
     When I add "This is urgent" comment
     Then I should see "medicalOfficer" comments as "This is urgent"
+    When I click print
+    Then I close new window
     And I should see correct total after authorize
     When I approve requisition
     Then I should see no requisition pending message
@@ -59,6 +65,8 @@ Feature: End to end requisition flow
     When I update non full supply approve quantity as "100"
     Then I verify non full supply cost for approved quantity "100"
     Then I should see correct total after authorize
+    When I click print
+    Then I close new window
     When I approve requisition
     Then I should see no requisition pending message
     When I logout
@@ -74,6 +82,8 @@ Feature: End to end requisition flow
     When I click on update Pod link for Row "1"
     Then I should see all products to update pod
     When I do not have anything to pack to ship
+    When I click POD print
+    Then I close new window
     And I access view orders page
     Then I should see ordered list without download link
     When I logout
@@ -84,6 +94,10 @@ Feature: End to end requisition flow
     And I update & verify requested quantities
     And I add non full supply items & verify total cost
     And I authorize RnR
+    When I click resize button
+    And I click full view print button
+    Then I close new window
+    Then I click resize button
     When I am logged in as "medicalOfficer"
     And I access requisition on approval page
     When I update full supply approve quantity as "290"
@@ -98,6 +112,8 @@ Feature: End to end requisition flow
     Then I verify full supply cost for approved quantity "100"
     When I update non full supply approve quantity as "100"
     Then I verify non full supply cost for approved quantity "100"
+    When I click print
+    Then I close new window
     When I approve requisition
     When I logout
     And I am logged in as "lmu"
@@ -117,6 +133,8 @@ Feature: End to end requisition flow
     And I enter "35" as quantity received, "" as quantity returned and "Other" as notes in row "2"
     And I enter "openLMIS" as deliveredBy,"Facility In charge" as receivedBy and "27/02/2014" as receivedDate
     Then I submit POD
+    When I click POD print
+    Then I close new window
     Then I verify quantity received, quantity returned,notes,deliveredBy,receivedBy,receivedDate disabled
     And I verify in database deliveredBy as "openLMIS",receivedBy as "Facility In charge" and receivedDate as "2014-02-27 00:00:00"
     Then I access view orders page
