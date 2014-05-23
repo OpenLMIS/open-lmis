@@ -60,9 +60,9 @@ function RequisitionGroupController($scope, requisitionGroupData, $location, Req
     $scope.requisitionGroupMembers.push(newMember);
 
     $scope.requisitionGroupMembers.sort(function (member1, member2) {
-      if (member1.facility.code > member2.facility.code)
+      if (member1.facility.code.toLowerCase() > member2.facility.code.toLowerCase())
         return 1;
-      if (member1.facility.code < member2.facility.code)
+      if (member1.facility.code.toLowerCase() < member2.facility.code.toLowerCase())
         return -1;
       return 0;
     });
