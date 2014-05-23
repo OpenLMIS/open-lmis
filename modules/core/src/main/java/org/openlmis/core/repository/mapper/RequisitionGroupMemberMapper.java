@@ -43,7 +43,7 @@ public interface RequisitionGroupMemberMapper {
     @Param(value = "facility") Facility facility);
 
   @Update("UPDATE requisition_group_members " +
-    "SET modifiedBy=#{modifiedBy}, modifiedDate=#{modifiedDate} WHERE " +
+    "SET modifiedBy=#{modifiedBy}, modifiedDate=COALESCE(#{modifiedDate}, NOW()) WHERE " +
     "requisitionGroupId = #{requisitionGroup.id} AND facilityId = #{facility.id}")
   void update(RequisitionGroupMember requisitionGroupMember);
 
@@ -69,12 +69,15 @@ public interface RequisitionGroupMemberMapper {
   @Delete({"DELETE FROM requisition_group_members where facilityId = #{id}"})
   void deleteMembersFor(Facility facility);
 
-  @Select({"SELECT RGM.*, F.name AS facilityName, F.id AS facilityId, F.enabled AS enabled, FT.name AS facilityType FROM requisition_group_members RGM",
+  @Select({"SELECT RGM.*, F.name AS facilityName, F.code AS facilityCode, F.id AS facilityId, F.enabled AS enabled, FT.name AS facilityType FROM requisition_group_members RGM",
     "INNER JOIN facilities F ON RGM.facilityId = F.id INNER JOIN facility_types FT ON FT.id = F.typeId",
-    "WHERE requisitionGroupId = #{requisitionGroupId}"})
+    "INNER JOIN requisition_groups RG ON RG.id = requisitionGroupId",
+    "WHERE requisitionGroupId = #{requisitionGroupId} ORDER BY LOWER(F.code)"})
   @Results(value = {
+    @Result(property = "requisitionGroup.id", column = "requisitionGroupId"),
     @Result(property = "facility.id", column = "facilityId"),
     @Result(property = "facility.name", column = "facilityName"),
+    @Result(property = "facility.code", column = "facilityCode"),
     @Result(property = "facility.enabled", column = "enabled"),
     @Result(property = "facility.facilityType.name", column = "facilityType"),
   })

@@ -161,7 +161,6 @@ public class RequisitionGroupMemberMapperIT {
     requisitionGroupMember.setFacility(rootFacility);
 
     requisitionGroupMemberMapper.insert(requisitionGroupMember);
-
     requisitionGroupMemberMapper.copyToVirtualFacilities(facility);
 
     List<RequisitionGroupMember> member1 = requisitionGroupMemberMapper.getAllRequisitionGroupMembersByFacility(virtualFacility1.getId());
@@ -181,6 +180,7 @@ public class RequisitionGroupMemberMapperIT {
     assertThat(actualMembers.get(0).getFacility().getId(), is(requisitionGroupMember.getFacility().getId()));
     assertThat(actualMembers.get(0).getFacility().getFacilityType().getName(), is("Warehouse"));
     assertThat(actualMembers.get(0).getFacility().getName(), is("Apollo Hospital"));
+    assertThat(actualMembers.get(0).getFacility().getCode(), is("F10010"));
     assertThat(actualMembers.get(0).getFacility().getEnabled(), is(true));
   }
 }

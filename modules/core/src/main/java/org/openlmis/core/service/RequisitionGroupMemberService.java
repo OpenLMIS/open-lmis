@@ -50,10 +50,6 @@ public class RequisitionGroupMemberService {
   }
 
   public void save(RequisitionGroupMember requisitionGroupMember) {
-    insertIfDoesNotExist(requisitionGroupMember);
-  }
-
-  private void insertIfDoesNotExist(RequisitionGroupMember requisitionGroupMember) {
     setIdsForRequisitionGroupMemberEntitiesAndValidate(requisitionGroupMember);
 
     if (requisitionGroupMember.getId() == null) {
