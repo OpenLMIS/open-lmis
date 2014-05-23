@@ -10,6 +10,7 @@
 
 package org.openlmis.web.controller;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
@@ -18,6 +19,7 @@ import org.mockito.Mock;
 import org.openlmis.core.domain.Pagination;
 import org.openlmis.core.domain.RequisitionGroup;
 import org.openlmis.core.domain.RequisitionGroupMember;
+import org.openlmis.core.service.MessageService;
 import org.openlmis.core.service.RequisitionGroupService;
 import org.openlmis.core.service.StaticReferenceDataService;
 import org.openlmis.db.categories.UnitTests;
@@ -27,6 +29,7 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mock.web.MockHttpServletRequest;
 
 import java.util.List;
 
@@ -35,6 +38,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.mockito.MockitoAnnotations.initMocks;
 import static org.openlmis.web.controller.RequisitionGroupController.SEARCH_PAGE_SIZE;
 import static org.powermock.api.mockito.PowerMockito.whenNew;
 
@@ -43,14 +47,29 @@ import static org.powermock.api.mockito.PowerMockito.whenNew;
 @PrepareForTest(RequisitionGroupController.class)
 public class RequisitionGroupControllerTest {
 
-  @InjectMocks
-  private RequisitionGroupController requisitionGroupController;
+  private static final String USER = "user";
+  private static final Long USER_ID = 1L;
 
   @Mock
   private RequisitionGroupService requisitionGroupService;
 
   @Mock
   private StaticReferenceDataService staticReferenceDataService;
+
+  @Mock
+  private MessageService messageService;
+
+  @InjectMocks
+  private RequisitionGroupController requisitionGroupController;
+
+  private MockHttpServletRequest request;
+
+  @Before
+  public void setUp() throws Exception {
+    initMocks(this);
+    request = new MockHttpServletRequest();
+    request.getSession().setAttribute("USER_ID", 1L);
+  }
 
   @Test
   public void shouldSearchRequisitionGroup() throws Exception {
@@ -91,6 +110,34 @@ public class RequisitionGroupControllerTest {
     verify(requisitionGroupService).getBy(requisitionGroupId);
     verify(requisitionGroupService).getMembersBy(requisitionGroupId);
     assertThat(((RequisitionGroupFormDTO) response.getBody().getData().get("requisitionGroupData")).getRequisitionGroup(), is(requisitionGroup));
-    assertThat(((RequisitionGroupFormDTO) response.getBody().getData().get("requisitionGroupData")).getRequisitionGroupMemberList(), is(requisitionGroupMembers));
+    assertThat(((RequisitionGroupFormDTO) response.getBody().getData().get("requisitionGroupData")).getRequisitionGroupMembers(), is(requisitionGroupMembers));
+  }
+
+  @Test
+  public void shouldInsertRequisitionGroup() {
+    RequisitionGroupFormDTO requisitionGroupFormDTO = new RequisitionGroupFormDTO(new RequisitionGroup(), asList(new RequisitionGroupMember()));
+
+    when(messageService.message("message.requisition.group.created.success", null)).thenReturn("save success");
+
+    ResponseEntity<OpenLmisResponse> response = requisitionGroupController.insert(requisitionGroupFormDTO, request);
+
+    verify(requisitionGroupService).saveWithMembers(requisitionGroupFormDTO.getRequisitionGroup(), requisitionGroupFormDTO.getRequisitionGroupMembers());
+    assertThat(response.getBody().getSuccessMsg(), is("save success"));
+    assertThat((Long) response.getBody().getData().get("requisitionGroupId"), is(requisitionGroupFormDTO.getRequisitionGroup().getId()));
+  }
+
+  @Test
+  public void shouldUpdateRequisitionGroup() {
+    List<RequisitionGroupMember> requisitionGroupMemberList = asList(new RequisitionGroupMember());
+    RequisitionGroup requisitionGroup = new RequisitionGroup();
+    RequisitionGroupFormDTO requisitionGroupFormDTO = new RequisitionGroupFormDTO(requisitionGroup, requisitionGroupMemberList);
+
+    when(messageService.message("message.requisition.group.updated.success", null)).thenReturn("updated success");
+
+    ResponseEntity<OpenLmisResponse> response = requisitionGroupController.update(1L, requisitionGroupFormDTO, request);
+
+    verify(requisitionGroupService).saveWithMembers(requisitionGroupFormDTO.getRequisitionGroup(), requisitionGroupFormDTO.getRequisitionGroupMembers());
+    assertThat(response.getBody().getSuccessMsg(), is("updated success"));
+    assertThat((Long) response.getBody().getData().get("requisitionGroupId"), is(1L));
   }
 }

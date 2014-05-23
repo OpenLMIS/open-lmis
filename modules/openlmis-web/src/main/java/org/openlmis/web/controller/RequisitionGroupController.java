@@ -14,24 +14,31 @@ import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.Pagination;
 import org.openlmis.core.domain.RequisitionGroup;
 import org.openlmis.core.domain.RequisitionGroupMember;
+import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.RequisitionGroupService;
 import org.openlmis.core.service.StaticReferenceDataService;
 import org.openlmis.web.form.RequisitionGroupFormDTO;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
-import static org.springframework.web.bind.annotation.RequestMethod.GET;
+import static org.openlmis.web.response.OpenLmisResponse.error;
+import static org.openlmis.web.response.OpenLmisResponse.success;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 @Controller
 @NoArgsConstructor
-public class RequisitionGroupController {
+public class RequisitionGroupController extends BaseController {
 
   public static final String SEARCH_PAGE_SIZE = "search.page.size";
 
@@ -42,6 +49,7 @@ public class RequisitionGroupController {
   private StaticReferenceDataService staticReferenceDataService;
 
   @RequestMapping(value = "/requisitionGroups", method = GET)
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_REQUISITION_GROUP')")
   public ResponseEntity<OpenLmisResponse> search(@RequestParam(value = "searchParam") String searchParam,
                                                  @RequestParam(value = "columnName") String columnName,
                                                  @RequestParam(value = "page", defaultValue = "1") Integer page) {
@@ -57,6 +65,7 @@ public class RequisitionGroupController {
   }
 
   @RequestMapping(value = "/requisitionGroups/{id}", method = GET)
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_REQUISITION_GROUP')")
   public ResponseEntity<OpenLmisResponse> getById(@PathVariable(value = "id") Long id) {
     RequisitionGroup requisitionGroup = requisitionGroupService.getBy(id);
     List<RequisitionGroupMember> requisitionGroupMembers = requisitionGroupService.getMembersBy(id);
@@ -64,4 +73,41 @@ public class RequisitionGroupController {
     ResponseEntity<OpenLmisResponse> response = OpenLmisResponse.response("requisitionGroupData", requisitionGroupFormDTO);
     return response;
   }
+
+  @RequestMapping(value = "/requisitionGroups", method = POST, headers = ACCEPT_JSON)
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_REQUISITION_GROUP')")
+  public ResponseEntity<OpenLmisResponse> insert(@RequestBody RequisitionGroupFormDTO requisitionGroupFormDTO,
+                                                 HttpServletRequest request) {
+    try {
+      Long userId = loggedInUserId(request);
+      requisitionGroupFormDTO.getRequisitionGroup().setModifiedBy(userId);
+      requisitionGroupService.saveWithMembers(requisitionGroupFormDTO.getRequisitionGroup(), requisitionGroupFormDTO.getRequisitionGroupMembers());
+    } catch (DataException e) {
+      return error(e, BAD_REQUEST);
+    }
+
+    ResponseEntity<OpenLmisResponse> responseEntity = success(messageService.message("message.requisition.group.created.success", requisitionGroupFormDTO.getRequisitionGroup().getName()));
+    responseEntity.getBody().addData("requisitionGroupId", requisitionGroupFormDTO.getRequisitionGroup().getId());
+    return responseEntity;
+  }
+
+  @RequestMapping(value = "/requisitionGroups/{id}", method = PUT, headers = ACCEPT_JSON)
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_REQUISITION_GROUP')")
+  public ResponseEntity<OpenLmisResponse> update(@PathVariable(value = "id") Long id,
+                                                 @RequestBody RequisitionGroupFormDTO requisitionGroupFormDTO,
+                                                 HttpServletRequest request) {
+    try {
+      Long userId = loggedInUserId(request);
+      requisitionGroupFormDTO.getRequisitionGroup().setId(id);
+      requisitionGroupFormDTO.getRequisitionGroup().setModifiedBy(userId);
+
+      requisitionGroupService.saveWithMembers(requisitionGroupFormDTO.getRequisitionGroup(), requisitionGroupFormDTO.getRequisitionGroupMembers());
+    } catch (DataException e) {
+      return error(e, BAD_REQUEST);
+    }
+    ResponseEntity<OpenLmisResponse> responseEntity = success(messageService.message("message.requisition.group.updated.success", requisitionGroupFormDTO.getRequisitionGroup().getName()));
+    responseEntity.getBody().addData("requisitionGroupId", requisitionGroupFormDTO.getRequisitionGroup().getId());
+    return responseEntity;
+  }
+
 }

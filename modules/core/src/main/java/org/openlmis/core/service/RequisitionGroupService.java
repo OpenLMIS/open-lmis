@@ -19,6 +19,7 @@ import org.openlmis.core.repository.RequisitionGroupRepository;
 import org.openlmis.core.repository.SupervisoryNodeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -41,6 +42,12 @@ public class RequisitionGroupService {
   @Autowired
   private RequisitionGroupMemberService requisitionGroupMemberService;
 
+  @Transactional
+  public void saveWithMembers(RequisitionGroup requisitionGroup, List<RequisitionGroupMember> requisitionGroupMembers) {
+    save(requisitionGroup);
+    saveRequisitionGroupMembers(requisitionGroupMembers, requisitionGroup);
+  }
+
   public void save(RequisitionGroup requisitionGroup) {
     Long supervisoryNodeId = supervisoryNodeRepository.getIdForCode(requisitionGroup.getSupervisoryNode().getCode());
     requisitionGroup.getSupervisoryNode().setId(supervisoryNodeId);
@@ -49,6 +56,14 @@ public class RequisitionGroupService {
       requisitionGroupRepository.insert(requisitionGroup);
     else
       requisitionGroupRepository.update(requisitionGroup);
+  }
+
+  public void saveRequisitionGroupMembers(List<RequisitionGroupMember> requisitionGroupMembers, RequisitionGroup requisitionGroup) {
+    for (RequisitionGroupMember requisitionGroupMember : requisitionGroupMembers) {
+      requisitionGroupMember.setRequisitionGroup(requisitionGroup);
+      requisitionGroupMember.setModifiedBy(requisitionGroup.getModifiedBy());
+      requisitionGroupMemberService.save(requisitionGroupMember);
+    }
   }
 
   public List<RequisitionGroup> getRequisitionGroupsBy(List<SupervisoryNode> supervisoryNodes) {

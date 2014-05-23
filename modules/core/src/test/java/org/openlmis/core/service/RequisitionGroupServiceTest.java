@@ -18,6 +18,7 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.domain.Pagination;
 import org.openlmis.core.domain.RequisitionGroup;
+import org.openlmis.core.domain.RequisitionGroupMember;
 import org.openlmis.core.domain.SupervisoryNode;
 import org.openlmis.core.repository.RequisitionGroupRepository;
 import org.openlmis.core.repository.SupervisoryNodeRepository;
@@ -47,6 +48,9 @@ public class RequisitionGroupServiceTest {
 
   @Mock
   private SupervisoryNodeRepository supervisoryNodeRepository;
+
+  @Mock
+  private RequisitionGroupMemberService requisitionGroupMemberService;
 
   @Test
   public void shouldSaveANewRequisitionGroup() {
@@ -125,5 +129,14 @@ public class RequisitionGroupServiceTest {
 
     verify(requisitionGroupRepository).getTotalRecordsForSearchOnNodeName(searchParam);
     assertThat(count, is(resultCount));
+  }
+
+  @Test
+  public void shouldSaveRequisitionGroupMembers() throws Exception {
+    List<RequisitionGroupMember> requisitionGroupMembers = asList(new RequisitionGroupMember());
+
+    requisitionGroupService.saveRequisitionGroupMembers(requisitionGroupMembers, new RequisitionGroup());
+
+    verify(requisitionGroupMemberService).save(requisitionGroupMembers.get(0));
   }
 }
