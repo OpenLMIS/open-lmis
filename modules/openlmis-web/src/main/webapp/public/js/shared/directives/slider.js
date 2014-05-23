@@ -44,9 +44,9 @@ app.directive('slider', function ($timeout) {
       });
 
       angular.element('#searchButton').click(function () {
-        if (!scope.query) return;
-        scope.query = scope.query.trim();
-        scope.$parent.getSearchResults(scope.query, function (data) {
+        if (!scope.facilityQuery) return;
+        scope.facilityQuery = scope.facilityQuery.trim();
+        scope.$parent.getSearchResults(scope.facilityQuery, function (data) {
           scope.facilityList = data.facilityList;
           scope.resultCount = isUndefined(scope.facilityList) ? 0 : scope.facilityList.length;
           scope.message = data.message;
@@ -54,9 +54,9 @@ app.directive('slider', function ($timeout) {
         });
       });
 
-      angular.element('#clearSearch').click(function () {
+      angular.element('#closeButton').click(function () {
         angular.element(".searchAndFilter .search-list").slideUp("slow", function () {
-          scope.query = undefined;
+          scope.facilityQuery = undefined;
           scope.facilityList = undefined;
           scope.resultCount = undefined;
           scope.$apply();
@@ -64,7 +64,7 @@ app.directive('slider', function ($timeout) {
         });
       });
 
-      scope.associate = function(listItem){
+      scope.associate = function (listItem) {
         scope.$parent.associate(listItem);
         scope.$parent.showSlider = false;
       };
