@@ -56,6 +56,12 @@ public class MaintenanceRequestController extends BaseController {
     return  OpenLmisResponse.response("logs", service.getOutstandingForVendor(id));
   }
 
+  @RequestMapping(method = RequestMethod.GET, value = "outstanding-for-user")
+  public ResponseEntity<OpenLmisResponse> getOutstandingByVendorId( HttpServletRequest request){
+
+    return  OpenLmisResponse.response("logs", service.getOutstandingForUser(loggedInUserId(request)));
+  }
+
   @RequestMapping(method = RequestMethod.GET, value = "full-history")
   public ResponseEntity<OpenLmisResponse> getFullHistoryId( @RequestParam("id") Long inventoryId){
     return  OpenLmisResponse.response("logs", service.getFullHistory(inventoryId));

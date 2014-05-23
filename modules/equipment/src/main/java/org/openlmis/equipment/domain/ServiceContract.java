@@ -17,9 +17,11 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.openlmis.core.domain.BaseModel;
+import org.openlmis.equipment.dto.ContractDetail;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -36,6 +38,10 @@ public class ServiceContract extends BaseModel{
   private String terms;
   private String coverage;
   private Date contractDate;
+
+  private List<ContractDetail> facilities;
+  private List<ContractDetail> serviceTypes;
+  private List<ContractDetail> equipments;
 
   private String formatDate(Date date){
     try {

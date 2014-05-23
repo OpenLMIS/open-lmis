@@ -40,6 +40,10 @@ public class MaintenanceRequestRepository {
     return mapper.getOutstandingRequestsForVendor(vendorId);
   }
 
+  public List<MaintenanceRequest> getOutstandingForUser(Long userId){
+    return mapper.getOutstandingRequestsForUser(userId);
+  }
+
   public List<MaintenanceRequest> getAll(){
     return mapper.getAll();
   }

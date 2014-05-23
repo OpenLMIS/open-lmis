@@ -36,6 +36,10 @@ public interface MaintenanceRequestMapper {
   @Select("select * from equipment_maintenance_requests where vendorId = #{vendorId} and resolved = false")
   List<MaintenanceRequest> getOutstandingRequestsForVendor(@Param("vendorId") Long vendorId);
 
+  @Select("select r.*, e.name as equipmentName, f.name as facilityName from equipment_maintenance_requests r join facility_program_equipments i on i.id = r.inventoryId join equipments e on e.id = i.equipmentId join facilities f on f.id = r.facilityId where r.vendorId in ( select vendorId from equipment_service_vendor_users where userId = #{userId}) and resolved = false order by requestDate desc")
+  List<MaintenanceRequest> getOutstandingRequestsForUser(@Param("userId") Long userId);
+
+
   @Insert("insert into equipment_maintenance_requests (userId, facilityId, inventoryId, vendorId, requestDate, reason, recommendedDate, comment, resolved, vendorComment, createdBy, createdDate, modifiedBy, modifiedDate) " +
       " values " +
       " (#{userId}, #{facilityId}, #{inventoryId}, #{vendorId}, #{requestDate}, #{reason}, #{recommendedDate}, #{comment}, #{resolved}, #{vendorComment} , #{createdBy},COALESCE(#{createdDate}, NOW()), #{modifiedBy}, NOW() )")
