@@ -33,10 +33,11 @@ public interface RequisitionGroupMapper {
   @Options(useGeneratedKeys = true)
   Integer insert(RequisitionGroup requisitionGroup);
 
-  @Select({"SELECT RG.id, RG.code, RG.name, RG.description, RG.supervisoryNodeId, SN.name AS supervisoryNodeName",
+  @Select({"SELECT RG.id, RG.code, RG.name, RG.description, RG.supervisoryNodeId, SN.name AS supervisoryNodeName, SN.code AS supervisoryNodeCode",
     "FROM requisition_groups RG LEFT JOIN supervisory_nodes SN ON RG.supervisoryNodeId = SN.id WHERE RG.id = #{id}"})
   @Results(value = {
     @Result(property = "supervisoryNode.id", column = "supervisoryNodeId"),
+    @Result(property = "supervisoryNode.code", column = "supervisoryNodeCode"),
     @Result(property = "supervisoryNode.name", column = "supervisoryNodeName")
   })
   RequisitionGroup getRequisitionGroupById(Long id);
@@ -62,7 +63,7 @@ public interface RequisitionGroupMapper {
   RequisitionGroup getByCode(String code);
 
   @Update("UPDATE requisition_groups " +
-    "SET name = #{name}, description =  #{description}, supervisoryNodeId = #{supervisoryNode.id}, modifiedBy = #{modifiedBy}, modifiedDate = #{modifiedDate} " +
+    "SET code = #{code}, name = #{name}, description =  #{description}, supervisoryNodeId = #{supervisoryNode.id}, modifiedBy = #{modifiedBy}, modifiedDate = #{modifiedDate} " +
     "WHERE id = #{id}")
   void update(RequisitionGroup requisitionGroup);
 

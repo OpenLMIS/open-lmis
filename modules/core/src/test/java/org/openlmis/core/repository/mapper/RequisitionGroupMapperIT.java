@@ -90,6 +90,7 @@ public class RequisitionGroupMapperIT {
     assertThat(resultRequisitionGroup.getName(), is(REQUISITION_GROUP_NAME));
     assertThat(resultRequisitionGroup.getSupervisoryNode().getId(), is(supervisoryNode.getId()));
     assertThat(resultRequisitionGroup.getSupervisoryNode().getName(), is(supervisoryNode.getName()));
+    assertThat(resultRequisitionGroup.getSupervisoryNode().getCode(), is(supervisoryNode.getCode()));
   }
 
   @Test
@@ -97,6 +98,7 @@ public class RequisitionGroupMapperIT {
     requisitionGroup.setSupervisoryNode(supervisoryNode);
     requisitionGroupMapper.insert(requisitionGroup);
 
+    requisitionGroup.setCode("updated code");
     requisitionGroup.setName("updated name");
     requisitionGroup.setDescription("updated description");
 
@@ -104,7 +106,7 @@ public class RequisitionGroupMapperIT {
 
     RequisitionGroup resultRequisitionGroup = requisitionGroupMapper.getRequisitionGroupById(requisitionGroup.getId());
 
-    assertThat(resultRequisitionGroup.getCode(), is(REQUISITION_GROUP_CODE));
+    assertThat(resultRequisitionGroup.getCode(), is("updated code"));
     assertThat(resultRequisitionGroup.getName(), is("updated name"));
     assertThat(resultRequisitionGroup.getDescription(), is("updated description"));
   }
