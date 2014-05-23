@@ -474,6 +474,7 @@ function AdminDashboardController($scope,$timeout,$filter,$location,dashboardMen
 
          ReportingPerformance.get({periodId :$scope.filterObject.periodId, rgroupId: $scope.filterObject.rgroupId,programId: $scope.filterObject.programId}, function(data){
                  $scope.reportingChartData = [];
+
                  if(!isUndefined(data.reportingPerformance)){
                      var reporting = data.reportingPerformance;
 
@@ -481,6 +482,10 @@ function AdminDashboardController($scope,$timeout,$filter,$location,dashboardMen
                          $scope.reportingChartData[i] = {label: reporting[i].status,
                              data: reporting[i].total};
                      }
+                     $scope.reportingRenderedData = {
+                         status : _.pairs(_.object(_.range(reporting.length), _.pluck(reporting,'status')))
+
+                     };
 
                      bindChartEvent("#district-reporting","plothover",flotChartHoverCursorHandler);
                      bindChartEvent("#district-reporting","plotclick",$scope.reportingPerformanceClickHandler);
@@ -493,9 +498,13 @@ function AdminDashboardController($scope,$timeout,$filter,$location,dashboardMen
 
     $scope.reportingPerformanceClickHandler = function (event, pos, item){
         if(item){
+            var status;
+            if(!isUndefined($scope.reportingRenderedData.status)){
+                 status = $scope.reportingRenderedData.status[item.seriesIndex][1];
+            }
             var reportingPerformanceDetailPath = '/reporting-performance/program/'+$scope.filterObject.programId+'/period/'+$scope.filterObject.periodId;//+'/rgroup/'+$scope.filterObject.rgroupId;
             dashboardMenuService.addTab('menu.header.dashboard.reporting.performance.detail','/public/pages/dashboard/index.html#'+reportingPerformanceDetailPath,'REPORTING-PERFORMANCE-DETAIL',true, 7);
-            $location.path(reportingPerformanceDetailPath).search("status="+"non_reporting"+"&rgroupId="+$scope.filterObject.rgroupId);
+            $location.path(reportingPerformanceDetailPath).search("status="+status+"&rgroupId="+$scope.filterObject.rgroupId);
 
             $scope.$apply();
         }
