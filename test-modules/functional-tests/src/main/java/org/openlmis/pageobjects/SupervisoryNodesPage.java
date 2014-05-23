@@ -394,9 +394,8 @@ public class SupervisoryNodesPage extends Page {
     testWebDriver.click(facilityResult0);
 }
 
-  public void verifyErrorMessage(){
-
-    assertEquals("There are some errors in the form. Please resolve them.", saveErrorMsgDiv.getText());
+  public String getSaveMessage() {
+    return saveErrorMsgDiv.getText();
   }
 
   public void clickSaveButton(){

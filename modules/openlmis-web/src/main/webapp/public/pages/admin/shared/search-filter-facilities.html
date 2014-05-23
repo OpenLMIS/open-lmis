@@ -35,7 +35,7 @@
 
         <h3 ng-switch-default openlmis-message="msg.many.matches|resultCount|query"></h3>
       </div>
-      <a class="close-btn" id="close_button" href=""></a>
+      <a class="close-btn" id="closeButton" href=""></a>
       <ul>
         <li ng-repeat="facility in facilityList">
           <a id="facilityResult{{$index}}" href="" ng-click="associate(facility)">{{facility.code}} - {{facility.name}}</a>
