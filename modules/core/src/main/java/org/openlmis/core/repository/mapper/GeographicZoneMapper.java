@@ -117,11 +117,13 @@ public interface GeographicZoneMapper {
     "WHERE LOWER(GZ.name) LIKE '%' || LOWER(#{searchParam} || '%')"})
   Integer getTotalSearchResultCount(String param);
 
-  @Select({"SELECT * FROM geographic_zones where (LOWER(name) LIKE '%' || LOWER(#{searchParam}) || '%'",
-    "OR LOWER(code) LIKE '%' || LOWER(#{searchParam}) || '%') ORDER BY levelid"})
-  List<GeographicZone> getGeographicZoneByCodeOrName(String searchParam);
+  @Select({"SELECT GZ.* FROM geographic_zones GZ INNER JOIN geographic_levels GL ON GZ.levelId = GL.id " ,
+    "where (LOWER(GZ.name) LIKE '%' || LOWER(#{searchParam}) || '%'",
+    "OR LOWER(GZ.code) LIKE '%' || LOWER(#{searchParam}) || '%') " ,
+    "ORDER BY GL.levelNumber, GZ.code"})
+  List<GeographicZone> getGeographicZonesByCodeOrName(String searchParam);
 
   @Select({"SELECT COUNT(*) FROM geographic_zones where (LOWER(name) LIKE '%' || LOWER(#{searchParam}) || '%'",
     "OR LOWER(code) LIKE '%' || LOWER(#{searchParam}) || '%')"})
-  Integer getGeographicZoneCountBy(String searchParam);
+  Integer getGeographicZonesCountBy(String searchParam);
 }

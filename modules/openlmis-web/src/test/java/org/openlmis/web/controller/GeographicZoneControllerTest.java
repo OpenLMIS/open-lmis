@@ -21,7 +21,6 @@ import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.GeographicZoneService;
 import org.openlmis.core.service.MessageService;
 import org.openlmis.db.categories.UnitTests;
-import org.openlmis.rnr.repository.mapper.StringToList;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -119,13 +118,13 @@ public class GeographicZoneControllerTest {
     GeographicZone zone = new GeographicZone();
     List<GeographicZone> geographicZones = new ArrayList<>();
     geographicZones.add(zone);
-    when(service.getGeographicZoneCountBy(searchParam)).thenReturn(4);
-    when(service.getGeographicZoneByCodeOrName(searchParam)).thenReturn(geographicZones);
+    when(service.getGeographicZonesCountBy(searchParam)).thenReturn(4);
+    when(service.getGeographicZonesByCodeOrName(searchParam)).thenReturn(geographicZones);
 
     ResponseEntity<OpenLmisResponse> responseEntity = controller.getGeographicZoneByCodeOrName(searchParam, searchLimit);
 
-    verify(service).getGeographicZoneByCodeOrName(searchParam);
-    verify(service).getGeographicZoneCountBy(searchParam);
+    verify(service).getGeographicZonesByCodeOrName(searchParam);
+    verify(service).getGeographicZonesCountBy(searchParam);
     verify(messageService, never()).message("too.many.results.found");
     assertThat((List<GeographicZone>) responseEntity.getBody().getData().get(controller.GEO_ZONES), is(geographicZones));
   }
@@ -134,28 +133,14 @@ public class GeographicZoneControllerTest {
   public void shouldReturnMessageIfGeographicZoneCountIsMoreThanLimit(){
     String searchParam = "GZ1";
     String searchLimit = "5";
-    when(service.getGeographicZoneCountBy(searchParam)).thenReturn(10);
+    when(service.getGeographicZonesCountBy(searchParam)).thenReturn(10);
     when(messageService.message("too.many.results.found")).thenReturn("More results");
 
     ResponseEntity<OpenLmisResponse> response = controller.getGeographicZoneByCodeOrName(searchParam,searchLimit);
 
-    assertThat((String) response.getBody().getData().get("message"),is("More results"));
-    verify(service).getGeographicZoneCountBy(searchParam);
+    assertThat((String) response.getBody().getData().get("message"), is("More results"));
+    verify(service).getGeographicZonesCountBy(searchParam);
     verify(messageService).message("too.many.results.found");
-    verify(service, never()).getGeographicZoneByCodeOrName(searchParam);
-
-  }
-
-  @Test
-  public void shouldReturnEmptyListIfSearchParamIsNull(){
-    String searchParam = null;
-    List<GeographicZone> geographicZones = new ArrayList<>();
-
-    ResponseEntity<OpenLmisResponse> response = controller.getGeographicZoneByCodeOrName(searchParam, "3");
-
-    verify(service,never()).getGeographicZoneCountBy(searchParam);
-    verify(service,never()).getGeographicZoneByCodeOrName(searchParam);
-    verify(messageService,never()).message("too.many.results.found");
-    assertThat((List<GeographicZone>) response.getBody().getData().get(GeographicZoneController.GEO_ZONES),is(geographicZones));
+    verify(service, never()).getGeographicZonesByCodeOrName(searchParam);
   }
 }

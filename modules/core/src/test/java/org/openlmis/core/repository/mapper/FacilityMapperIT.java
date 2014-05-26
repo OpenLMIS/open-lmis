@@ -135,8 +135,11 @@ public class FacilityMapperIT {
     assertThat(facilityType.getLevelId(), is(nullValue()));
     assertThat(facilityType.getNominalMaxMonth(), is(3));
     assertThat(facilityType.getNominalEop(), is(0.5));
-    assertThat(facilityType.getDisplayOrder(), is(1));
     assertThat(facilityType.isActive(), is(true));
+
+    for (int index = 0; index < facilityTypes.size(); index++) {
+      assertThat(facilityTypes.get(index).getDisplayOrder(), is(index + 1));
+    }
   }
 
   @Test
@@ -677,7 +680,8 @@ public class FacilityMapperIT {
     SupervisoryNode supervisoryNode = make(a(SupervisoryNodeBuilder.defaultSupervisoryNode, with(SupervisoryNodeBuilder.facility, enabledFacility)));
     supervisoryNodeMapper.insert(supervisoryNode);
 
-    SupplyLine supplyLine = make(a(SupplyLineBuilder.defaultSupplyLine, with(SupplyLineBuilder.defaultProgram, program), with(SupplyLineBuilder.facility, enabledFacility),
+    SupplyLine supplyLine = make(a(SupplyLineBuilder.defaultSupplyLine, with(SupplyLineBuilder.defaultProgram, program),
+      with(SupplyLineBuilder.facility, enabledFacility),
       with(SupplyLineBuilder.supervisoryNode, supervisoryNode)));
     supplyLineMapper.insert(supplyLine);
 
@@ -752,7 +756,7 @@ public class FacilityMapperIT {
     Facility facility3 = make(a(FacilityBuilder.defaultFacility, with(code, "Facility 3")));
     mapper.insert(facility3);
 
-    Integer totalFacilities = mapper.getCountOfEnabledFacilities("Fac");
+    Integer totalFacilities = mapper.getCountOfEnabledFacilities(null);
 
     assertThat(totalFacilities, is(2));
   }
