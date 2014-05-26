@@ -294,6 +294,7 @@ public class ManageSupervisoryNodes extends TestCaseHelper {
     supervisoryNodesPage.clickAddNewButton();
     enterSupervisoryNodeDetails("N5", "Node 5", "This is Node 5", "Node 4", "F10");
     supervisoryNodesPage.clickSaveButton();
+    testWebDriver.refresh();
 
     supervisoryNodesPage.clickSearchOptionButton();
     supervisoryNodesPage.selectSupervisoryNodeParentAsSearchOption();
