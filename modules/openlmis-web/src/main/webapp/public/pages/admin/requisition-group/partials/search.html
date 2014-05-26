@@ -17,7 +17,7 @@
 
   <div class="alert alert-success" id="saveSuccessMsgDiv" ng-show="requisitionGroupId">
     <span ng-bind="message"></span>.&nbsp;&nbsp;
-    <a a ng-href="#/edit/{{requisitionGroupId}}" openlmis-message="search.viewHere"></a>
+    <a href="" ng-click="edit(requisitionGroupId)" openlmis-message="search.viewHere"></a>
   </div>
 
   <div id="searchControl" class="row-fluid">
@@ -67,7 +67,7 @@
     </thead>
     <tbody>
     <tr ng-repeat="requisitionGroup in requisitionGroupList">
-      <td><a id="name{{$index}}" ng-href="#/edit/{{requisitionGroup.id}}" ng-bind="requisitionGroup.name"></a></td>
+      <td><a id="name{{$index}}" href="" ng-click="edit(requisitionGroup.id)" ng-bind="requisitionGroup.name"></a></td>
       <td id="code{{$index}}" ng-bind="requisitionGroup.code"></td>
       <td id="supervisoryName{{$index}}" ng-bind="requisitionGroup.supervisoryNode.name"></td>
       <td id="facilityCount{{$index}}" ng-bind="requisitionGroup.memberCount"></td>

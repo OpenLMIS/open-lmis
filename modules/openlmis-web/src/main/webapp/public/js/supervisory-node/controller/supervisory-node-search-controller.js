@@ -27,7 +27,7 @@ function SupervisoryNodeSearchController($scope, navigateBackService, Supervisor
     $scope.query = navigateBackService.query;
   });
 
-  $scope.editSupervisoryNode = function (id) {
+  $scope.edit = function (id) {
     var data = {query: $scope.query, selectedSearchOption: $scope.selectedSearchOption};
     navigateBackService.setData(data);
     $location.path('edit/' + id);

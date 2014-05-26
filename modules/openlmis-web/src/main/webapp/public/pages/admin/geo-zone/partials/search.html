@@ -17,7 +17,7 @@
 
   <div class="alert alert-success" id="saveSuccessMsgDiv" ng-show="geoZoneId">
     <span ng-bind="message"></span>.&nbsp;&nbsp;
-    <a id="viewHere" href="" ng-click="editGeoZone(geoZoneId)" openlmis-message="search.viewHere"></a>
+    <a id="viewHere" href="" ng-click="edit(geoZoneId)" openlmis-message="search.viewHere"></a>
   </div>
 
   <div id="searchControl" class="row-fluid">
@@ -66,7 +66,7 @@
       <tbody id="geoZoneList">
       <tr id="searchResult" ng-repeat="geoZone in geoZoneList">
         <td id="geoZoneName">
-          <a href="" ng-click="editGeoZone(geoZone.id)" ng-bind="geoZone.name"></a>
+          <a href="" ng-click="edit(geoZone.id)" ng-bind="geoZone.name"></a>
         </td>
         <td id="code{{$index}}" ng-bind="geoZone.code"></td>
         <td id="levelName{{$index}}" ng-bind="geoZone.level.name"></td>

@@ -17,7 +17,7 @@
 
   <div class="alert alert-success" id="saveSuccessMsgDiv" ng-show="supervisoryNodeId">
     <span id="successMessage" ng-bind="message"></span>.&nbsp;&nbsp;
-    <a id="viewHereLink" a ng-href="#/edit/{{supervisoryNodeId}}" openlmis-message="search.viewHere"></a>
+    <a id="viewHereLink" href="" ng-click="edit(supervisoryNodeId)" openlmis-message="search.viewHere"></a>
   </div>
 
   <div id="searchControl" class="row-fluid">
@@ -66,7 +66,7 @@
     </thead>
     <tbody>
     <tr ng-repeat="supervisoryNode in supervisoryNodeList">
-      <td><a id="name{{$index}}" href="" ng-click="editSupervisoryNode(supervisoryNode.id)" ng-bind="supervisoryNode.name"></a></td>
+      <td><a id="name{{$index}}" href="" ng-click="edit(supervisoryNode.id)" ng-bind="supervisoryNode.name"></a></td>
       <td id="code{{$index}}" ng-bind="supervisoryNode.code"></td>
       <td id="facility{{$index}}" ng-bind="supervisoryNode.facility.name"></td>
       <td id="parent{{$index}}" ng-bind="supervisoryNode.parent.name"></td>

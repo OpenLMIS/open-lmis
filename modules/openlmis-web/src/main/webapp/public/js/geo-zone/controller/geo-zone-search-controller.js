@@ -27,7 +27,7 @@ function GeoZoneSearchController($scope, GeographicZones, $location, navigateBac
     $scope.query = navigateBackService.query;
   });
 
-  $scope.editGeoZone = function (id) {
+  $scope.edit = function (id) {
     var data = {query: $scope.query, selectedSearchOption: $scope.selectedSearchOption};
     navigateBackService.setData(data);
     $location.path('edit/' + id);
