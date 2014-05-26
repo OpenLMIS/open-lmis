@@ -22,7 +22,7 @@ describe("Supervisory Node Controller", function () {
     ctrl = $controller('SupervisoryNodeController', {$scope: scope, supervisoryNode: supervisoryNode});
   }));
 
-  it('should set supervisory node in scope', function() {
+  it('should set supervisory node in scope', function () {
     expect(scope.supervisoryNode).toBe(supervisoryNode);
   });
 
@@ -31,7 +31,7 @@ describe("Supervisory Node Controller", function () {
     var node1 = {"id": 1, "code": "N1", "name": "Node 1"};
     var node2 = {"id": 2, "code": "N2", "name": "Node 2"};
     var node3 = {"id": 3, "code": "N3", "name": "Node 3"};
-    var response = {"supervisoryNodeList":[node1, node2, node3]};
+    var response = {"supervisoryNodeList": [node1, node2, node3]};
 
     $httpBackend.when('GET', '/search-supervisory-nodes.json?searchParam=' + scope.query).respond(response);
     scope.showParentNodeSearchResults();
@@ -49,7 +49,7 @@ describe("Supervisory Node Controller", function () {
     var node1 = {"id": 1, "code": "N1", "name": "Node 1"};
     var node2 = {"id": 2, "code": "N2", "name": "Node 2"};
     var node3 = {"id": 3, "code": "N3", "name": "Node 3"};
-    var response = {"supervisoryNodeList":[node1, node2, node3]};
+    var response = {"supervisoryNodeList": [node1, node2, node3]};
 
     $httpBackend.when('GET', '/search-supervisory-nodes.json?searchParam=' + scope.query).respond(response);
     scope.showParentNodeSearchResults();
@@ -62,7 +62,7 @@ describe("Supervisory Node Controller", function () {
   });
 
   it('should do client side filtering when previous query and current query are same', function () {
-    spyOn($httpBackend,"expectGET");
+    spyOn($httpBackend, "expectGET");
     scope.query = "Node";
     scope.previousQuery = "Nod";
     var node2 = {"id": 2, "code": "N2", "name": "Node 2"};
@@ -79,7 +79,7 @@ describe("Supervisory Node Controller", function () {
   });
 
   it('should not search results if query is undefined', function () {
-    spyOn($httpBackend,"expectGET");
+    spyOn($httpBackend, "expectGET");
     scope.query = undefined;
 
     scope.showParentNodeSearchResults();
@@ -88,7 +88,7 @@ describe("Supervisory Node Controller", function () {
   });
 
   it('should not search results if query length is less than 3', function () {
-    spyOn($httpBackend,"expectGET");
+    spyOn($httpBackend, "expectGET");
     scope.query = "No";
 
     scope.showParentNodeSearchResults();
@@ -96,17 +96,7 @@ describe("Supervisory Node Controller", function () {
     expect($httpBackend.expectGET).not.toHaveBeenCalledWith('/search-supervisory-nodes.json?searchParam=' + scope.query);
   });
 
-  it('should trim left and right whitespaces in query if length greater than 3', function () {
-    scope.query = "  Node  ";
-    $httpBackend.expectGET('/search-supervisory-nodes.json?searchParam=' + "Node").respond(null);
-
-    scope.showParentNodeSearchResults();
-
-    $httpBackend.flush();
-    expect(scope.query).toBe("Node");
-  });
-
-  it('should select parent node and clear scope fields', function() {
+  it('should select parent node and clear scope fields', function () {
     var node = {code: "SN2", name: "Node 2"};
     scope.setSelectedParentNode(node);
     expect(scope.supervisoryNode.parent).toBe(node);
@@ -116,8 +106,8 @@ describe("Supervisory Node Controller", function () {
     expect(scope.previousQuery).toBeUndefined();
   });
 
-  it('should delete parent node', function() {
-    scope.supervisoryNode.parent = {"Code":"N1", "Name": "Node 1"};
+  it('should delete parent node', function () {
+    scope.supervisoryNode.parent = {"Code": "N1", "Name": "Node 1"};
 
     scope.deleteParentNode();
 
@@ -149,7 +139,7 @@ describe("Supervisory Node Controller", function () {
   });
 
   it('should insert supervisory node', function () {
-    scope.supervisoryNode = {"code": "N100", "name": "node 100", "facility": {"code": "F10", "name": "village dispensary"}};;
+    scope.supervisoryNode = {"code": "N100", "name": "node 100", "facility": {"code": "F10", "name": "village dispensary"}};
     scope.supervisoryNodeForm = {"$error": {"required": false}};
 
     $httpBackend.expectPOST('/supervisory-nodes.json', scope.supervisoryNode).respond(200, {"success": "Saved successfully", "supervisoryNode": scope.supervisoryNode});
@@ -176,4 +166,5 @@ describe("Supervisory Node Controller", function () {
     expect(scope.$parent.message).toEqual("Saved successfully");
     expect(scope.$parent.supervisoryNodeId).toEqual(supervisoryNode.id);
   });
+
 });

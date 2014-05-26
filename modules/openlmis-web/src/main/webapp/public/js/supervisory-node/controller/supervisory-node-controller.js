@@ -36,7 +36,6 @@ function SupervisoryNodeController($scope, $location, supervisoryNode, ParentSup
   $scope.showParentNodeSearchResults = function () {
     if ($scope.query === undefined || $scope.query.length < 3) return;
 
-    $scope.query = $scope.query.trim();
     if (compareQuery()) {
       ParentSupervisoryNodes.get({"searchParam": $scope.query}, function (data) {
         $scope.parentNodes = _.reject(data.supervisoryNodeList, function (node) {

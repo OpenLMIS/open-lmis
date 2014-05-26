@@ -68,9 +68,9 @@ function RequisitionGroupController($scope, requisitionGroupData, $location, Req
     });
   };
 
-  $scope.removeMember = function (memberId) {
+  $scope.removeMember = function (memberFacilityId) {
     $scope.requisitionGroupMembers = _.filter($scope.requisitionGroupMembers, function (member) {
-      return member.facility.id != memberId;
+      return member.facility.id != memberFacilityId;
     });
   };
 
@@ -88,21 +88,29 @@ function RequisitionGroupController($scope, requisitionGroupData, $location, Req
     $scope.showError = true;
   };
 
-  $scope.showSupervisoryNodeSearchResults = function () {
-    var query = $scope.query;
-    var len = (query === undefined) ? 0 : query.length;
+  var compareQuery = function () {
+    if (!isUndefined($scope.previousQuery)) {
+      return $scope.query.substr(0, 3) !== $scope.previousQuery.substr(0, 3);
+    }
+    return true;
+  };
 
-    if (len >= 3) {
-      if (len == 3) {
-        SupervisoryNodesSearch.get({searchParam: query}, function (data) {
-          $scope.supervisoryNodes = data.supervisoryNodeList;
-          $scope.filteredNodeList = $scope.supervisoryNodes;
-          $scope.resultCount = $scope.filteredNodeList.length;
-        }, {});
-      }
-      else {
-        filterNodesByName();
-      }
+  $scope.showSupervisoryNodeSearchResults = function () {
+    if ($scope.query === undefined || $scope.query.length < 3) return;
+
+    if (compareQuery()) {
+      SupervisoryNodesSearch.get({searchParam: $scope.query}, function (data) {
+        $scope.supervisoryNodes = data.supervisoryNodeList;
+        $scope.filteredNodeList = $scope.supervisoryNodes;
+        $scope.previousQuery = $scope.query;
+        $scope.resultCount = $scope.filteredNodeList.length;
+      }, {});
+    }
+    else {
+      $scope.filteredNodeList = _.filter($scope.supervisoryNodes, function (node) {
+        return node.name.toLowerCase().indexOf($scope.query.toLowerCase()) !== -1;
+      });
+      $scope.resultCount = $scope.filteredNodeList.length;
     }
   };
 
@@ -110,13 +118,12 @@ function RequisitionGroupController($scope, requisitionGroupData, $location, Req
     $scope.requisitionGroup.supervisoryNode = node;
     $scope.nodeSelected = node;
     loadSupervisoryNode();
-    $scope.query = null;
+    $scope.query = undefined;
   };
 
-
   $scope.clearSelectedNode = function () {
-    $scope.nodeSelected = null;
-    $scope.requisitionGroup.supervisoryNode = null;
+    $scope.nodeSelected = undefined;
+    $scope.requisitionGroup.supervisoryNode = undefined;
   };
 
   function loadSupervisoryNode() {
@@ -124,17 +131,6 @@ function RequisitionGroupController($scope, requisitionGroupData, $location, Req
 
     $scope.nodeSelected = $scope.requisitionGroup.supervisoryNode;
   }
-
-  var filterNodesByName = function () {
-    $scope.filteredNodeList = [];
-
-    angular.forEach($scope.supervisoryNodes, function (node) {
-      if (node.name.toLowerCase().indexOf($scope.query.toLowerCase()) >= 0) {
-        $scope.filteredNodeList.push(node);
-      }
-      $scope.resultCount = $scope.filteredNodeList.length;
-    });
-  };
 }
 
 RequisitionGroupController.resolve = {
