@@ -466,6 +466,7 @@ public class TestCalculationsForRnR extends TestCaseHelper {
     HomePage homePage = loginPage.loginAs(userSIC, password);
     homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Regular");
     InitiateRnRPage initiateRnRPage = homePage.clickProceed();
+    testWebDriver.waitForAjax();
 
     enterDetailsForFirstProduct(10, 5, null, 8, 20, 0);
     submitAndAuthorizeRnR();
@@ -478,6 +479,7 @@ public class TestCalculationsForRnR extends TestCaseHelper {
 
     homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Regular");
     initiateRnRPage = homePage.clickProceed();
+    testWebDriver.waitForAjax();
 
     assertEquals("7", dbWrapper.getAttributeFromTable("requisition_line_items", "previousStockInHand", "rnrId", String.valueOf(dbWrapper.getMaxRnrID())));
     assertEquals("7", dbWrapper.getAttributeFromTable("requisition_line_items", "beginningBalance", "rnrId", String.valueOf(dbWrapper.getMaxRnrID())));
@@ -496,6 +498,7 @@ public class TestCalculationsForRnR extends TestCaseHelper {
 
     homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Regular");
     initiateRnRPage = homePage.clickProceed();
+    testWebDriver.waitForAjax();
 
     enterDetailsForFirstProduct(10, 5, null, 5, 20, 0);
     submitAndAuthorizeRnR();
@@ -508,6 +511,7 @@ public class TestCalculationsForRnR extends TestCaseHelper {
 
     homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Regular");
     initiateRnRPage = homePage.clickProceed();
+    testWebDriver.waitForAjax();
 
     enterDetailsForFirstProduct(5, 5, null, 0, 20, 0);
     submitAndAuthorizeRnR();
