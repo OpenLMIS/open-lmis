@@ -66,7 +66,7 @@ function SupervisoryNodeController($scope, $location, supervisoryNode, ParentSup
 
   $scope.cancel = function () {
     $scope.$parent.message = "";
-    $scope.$parent.supervisoryNodeId = "";
+    $scope.$parent.supervisoryNodeId = undefined;
     $location.path('#/search');
   };
 

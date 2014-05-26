@@ -116,6 +116,8 @@ describe("Supervisory Node Controller", function () {
 
   it('should take to search page on cancel', function () {
     scope.cancel();
+    expect(scope.$parent.message).toEqual("");
+    expect(scope.$parent.supervisoryNodeId).toBeUndefined();
     expect(location.path()).toEqual('/#/search');
   });
 
