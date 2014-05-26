@@ -125,17 +125,15 @@
           <thead>
           </tr>
           <tr class="gradient-header" ng-show="requisitionGroupMembers.length">
-            <th id="codeHeader" openlmis-message="label.facility.code"></th>
-            <th id="nameHeader" openlmis-message="label.facility.name"></th>
-            <th id="facilityHeader" openlmis-message="label.facility.type"></th>
+            <th id="facilityHeader" openlmis-message="label.associated.facility"></th>
+            <th id="facilityTypeHeader" openlmis-message="label.facility.type"></th>
             <th id="enabledHeader" openlmis-message="label.facility.enabled"></th>
             <th></th>
           </tr>
           </thead>
           <tbody>
           <tr ng-repeat="member in requisitionGroupMembers">
-            <td id="code{{$index}}" ng-bind="member.facility.code"></td>
-            <td id="name{{$index}}" ng-bind="member.facility.name"></td>
+            <td id="code{{$index}}">{{member.facility.code}} - {{member.facility.name}}</td>
             <td id="facilityTypeName{{$index}}" ng-bind="member.facility.facilityType.name"></td>
             <td id="enabled{{$index}}">
               <i ng-show="member.facility.enabled" class="icon icon-ok"></i>
