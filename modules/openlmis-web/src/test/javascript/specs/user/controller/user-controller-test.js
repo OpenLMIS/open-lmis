@@ -116,6 +116,16 @@ describe("User", function () {
       expect(location.path()).toBe('/');
     });
 
+    it('should take to search page on cancel', function () {
+      scope.user = {"id": 123, "userName": "User420"};
+      httpBackend.expectPUT('/users/123.json', scope.user).respond(200);
+      scope.cancelUserSave();
+
+      expect(scope.$parent.message).toEqual("");
+      expect(scope.$parent.userId).toBeUndefined();
+      expect(location.path()).toEqual('/#/search');
+    });
+
     it('should give error message if save not successful and not redirect the user', function () {
       scope.user = {"userName": "User420"};
       httpBackend.expectPOST('/users.json').respond(400, {"error": "errorMsg"});

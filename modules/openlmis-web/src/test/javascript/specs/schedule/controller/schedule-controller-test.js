@@ -101,5 +101,21 @@ describe("Schedule", function () {
       expect(location.path()).toEqual("/manage-period/1");
     });
 
+//    it('should do nothing on canceling schedule edit', function () {
+//      var updatedSchedule = {"id":1, "code":"newCode", "name":"newName", "description":"newDescription", "modifiedBy":"", "modifiedDate":"12345"};
+//      var expectedScheduleBackupMap = [];
+//      expectedScheduleBackupMap[1] = {"id":1, "name":"name", "code":"code", "description":"description"};
+//      $httpBackend.expectPUT('/schedules/1.json').respond(200, {"schedule":updatedSchedule, "success":"success message"});
+//      scope.cancelScheduleEdit(existingSchedule);
+//      $httpBackend.flush();
+//
+//      existingSchedule.code = expectedScheduleBackupMap.code;
+//      existingSchedule.name = expectedScheduleBackupMap.name;
+//      existingSchedule.description = expectedScheduleBackupMap.description;
+//      expect(scope.schedulesBackupMap[1].error).toEqual("");
+//      expect(scope.schedulesBackupMap[1].editFormActive).toEqual('');
+//      expect(scope.message).toEqual("");
+//    });
+
   });
 });

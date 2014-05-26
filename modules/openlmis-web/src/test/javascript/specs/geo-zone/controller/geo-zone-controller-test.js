@@ -59,6 +59,8 @@ describe("Geographic Zone Controller", function () {
 
   it('should take to search page on cancel', function () {
     scope.cancel();
+    expect(scope.$parent.geoZoneId).toBeUndefined();
+    expect(scope.$parent.message).toEqual("");
     expect(location.path()).toEqual('/#/search');
   });
 

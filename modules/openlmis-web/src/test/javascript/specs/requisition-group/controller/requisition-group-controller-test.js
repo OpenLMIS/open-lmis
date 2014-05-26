@@ -106,6 +106,8 @@ describe("Requisition Group Controller", function () {
 
   it('should take to search page on cancel', function () {
     scope.cancel();
+    expect(scope.$parent.message).toEqual("");
+    expect(scope.$parent.requisitionGroupId).toBeUndefined();
     expect(location.path()).toEqual('/#/search');
   });
 

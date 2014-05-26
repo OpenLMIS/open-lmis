@@ -135,6 +135,7 @@ function ScheduleController($scope, Schedule, $location, messageService) {
     scheduleUnderEdit.description = backupScheduleRow.description;
     $scope.schedulesBackupMap[scheduleUnderEdit.id].error = '';
     $scope.schedulesBackupMap[scheduleUnderEdit.id].editFormActive = '';
+    $scope.message = "";
   };
 
   $scope.navigateToPeriodFor = function (scheduleForPeriod) {

@@ -20,6 +20,8 @@ function RequisitionGroupController($scope, requisitionGroupData, $location, Req
   }
 
   $scope.cancel = function () {
+    $scope.$parent.message = "";
+    $scope.$parent.requisitionGroupId = undefined;
     $location.path('#/search');
   };
 
