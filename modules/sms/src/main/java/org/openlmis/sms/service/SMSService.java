@@ -29,47 +29,51 @@ import java.util.concurrent.Future;
 @NoArgsConstructor
 public class SMSService {
 
-    private String smsGatewayUrl;
+  private String smsGatewayUrl;
+  /* If this is false, we're disallowing the system from sending sms messages */
+  private Boolean smsSendingFlag;
 
-    @Autowired
-    public SMSService(@Value("${sms.gateway.url}") String smsGatewayUrl){
-        this.smsGatewayUrl = smsGatewayUrl;
+  @Autowired
+  public SMSService(@Value("${sms.gateway.url}") String smsGatewayUrl, @Value("${sms.sending.flag}") Boolean smsSendingFlag) {
+    this.smsGatewayUrl = smsGatewayUrl;
+    this.smsSendingFlag = smsSendingFlag;
+  }
+
+  public Future<Boolean> send(SMS sms) {
+    if (!smsSendingFlag || sms.getSent()) {
+      return new AsyncResult<>(true);
     }
 
-    public Future<Boolean> send(SMS sms) {
-        if (sms.getSent()) {
-            return new AsyncResult<>(true);
-        }
+    return new AsyncResult<>(SendSMSMessage(sms));
+  }
 
-        return new AsyncResult<>(SendSMSMessage(sms));
+  @Async
+  public Future<Boolean> sendAsync(SMS sms) {
+    if (!smsSendingFlag || sms.getSent()) {
+      return new AsyncResult<>(true);
     }
 
-    @Async
-    public Future<Boolean> sendAsync(SMS sms) {
-      if (sms.getSent()) {
-        return new AsyncResult<>(true);
-      }
+    return new AsyncResult<>(SendSMSMessage(sms));
+  }
 
-      return new AsyncResult<>(SendSMSMessage(sms));
+  public void ProcessSMS(@Payload List<SMS> smsList) {
+    if(!smsSendingFlag){
+      return;
     }
 
-    public void ProcessSMS(@Payload List<SMS> smsList) {
-        for(SMS sms : smsList){
-            if(!sms.getSent()){
-               SendSMSMessage(sms);
-            }
-        }
+    for (SMS sms : smsList) {
+        SendSMSMessage(sms);
     }
+  }
 
-    public Boolean SendSMSMessage (SMS sms) {
-        String relayUrl = String.format("%s?message=%s&phone_number=%s",this.smsGatewayUrl, sms.getMessage().replaceAll(" ","%20"), sms.getPhoneNumber());
-        try{
-            URL url = new URL(relayUrl);
-            url.getContent();
-            return true;
-        }
-        catch(IOException e) {
-            return false;
-        }
+  public Boolean SendSMSMessage(SMS sms) {
+    String relayUrl = String.format("%s?message=%s&phone_number=%s", this.smsGatewayUrl, sms.getMessage().replaceAll(" ", "%20"), sms.getPhoneNumber());
+    try {
+      URL url = new URL(relayUrl);
+      url.getContent();
+      return true;
+    } catch (IOException e) {
+      return false;
     }
+  }
 }

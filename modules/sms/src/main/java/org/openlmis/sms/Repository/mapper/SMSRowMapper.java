@@ -8,7 +8,7 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-package org.openlmis.sms.mapper;
+package org.openlmis.sms.Repository.mapper;
 
 
 import org.openlmis.sms.domain.SMS;
@@ -24,9 +24,11 @@ public class SMSRowMapper implements RowMapper<SMS> {
   @Override
   public SMS mapRow(ResultSet rs, int rowNum) throws SQLException {
       SMS sms = new SMS();
+      sms.setId(rs.getInt("id"));
       sms.setMessage(rs.getString("message"));
       sms.setPhoneNumber(rs.getString("phonenumber"));
       sms.setDirection(rs.getString("direction"));
+      sms.setSent(rs.getBoolean("sent"));
       return sms;
   }
 }
