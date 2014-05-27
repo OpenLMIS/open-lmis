@@ -44,6 +44,7 @@ app.directive('slider', function ($timeout) {
       });
 
       angular.element('#searchButton').click(function () {
+        scope.facilityQuery = scope.searchParam;
         if (!scope.facilityQuery) return;
         scope.facilityQuery = scope.facilityQuery.trim();
         scope.$parent.getSearchResults(scope.facilityQuery, function (data) {
