@@ -57,7 +57,7 @@ function FacilityController($scope, facilityReferenceData, $routeParams, facilit
     $scope.$broadcast('showISAEditModal');
   };
 
-  $scope.cancelUserSave = function () {
+  $scope.cancel = function () {
     $location.path('#/search');
   };
 

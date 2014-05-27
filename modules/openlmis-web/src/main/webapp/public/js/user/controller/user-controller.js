@@ -207,9 +207,7 @@ function UserController($scope, $location, $dialog, Users, Facility, messageServ
     });
   };
 
-  $scope.cancelUserSave = function () {
-    $scope.showError = false;
-    $scope.error = "";
+  $scope.cancel = function () {
     $scope.$parent.message = "";
     $scope.$parent.userId = undefined;
     $location.path('#/search');

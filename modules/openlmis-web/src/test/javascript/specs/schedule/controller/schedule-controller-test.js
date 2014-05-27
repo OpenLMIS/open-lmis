@@ -14,20 +14,18 @@ describe("Schedule", function () {
   describe("Schedule Controller", function () {
 
     var scope, $httpBackend, ctrl, routeParams, facility, location;
-    var existingSchedule = {"id":1, "name":"name", "code":"code", "description":"description"};
-    var editScheduleForm = {$invalid:false};
+    var existingSchedule = {"id": 1, "name": "name", "code": "code", "description": "description"};
+    var editScheduleForm = {$invalid: false};
 
-    beforeEach(
-        inject(function ($rootScope, _$httpBackend_, $controller, $location, $routeParams) {
-          scope = $rootScope.$new();
-          routeParams = $routeParams;
-          $httpBackend = _$httpBackend_;
-          location = $location;
+    beforeEach(inject(function ($rootScope, _$httpBackend_, $controller, $location, $routeParams) {
+      scope = $rootScope.$new();
+      routeParams = $routeParams;
+      $httpBackend = _$httpBackend_;
+      location = $location;
 
-          $httpBackend.expectGET('/schedules.json').respond(200, {"schedules":[existingSchedule]});
-          ctrl = $controller(ScheduleController, {$scope:scope, $routeParams:routeParams});
-        })
-    );
+      $httpBackend.expectGET('/schedules.json').respond(200, {"schedules": [existingSchedule]});
+      ctrl = $controller(ScheduleController, {$scope: scope, $routeParams: routeParams});
+    }));
 
     it('should fetch all schedules', function () {
       $httpBackend.flush();
@@ -35,16 +33,16 @@ describe("Schedule", function () {
     });
 
     it('should create a new schedule', function () {
-      scope.newSchedule = {"code":"newCode", "name":"newName", "description":"newDescription"};
-      var newScheduleWithId = {"id":2, "code":"newCode", "name":"newName", "description":"newDescription"};
+      scope.newSchedule = {"code": "newCode", "name": "newName", "description": "newDescription"};
+      var newScheduleWithId = {"id": 2, "code": "newCode", "name": "newName", "description": "newDescription"};
       var expectedScheduleBackupMap = [];
-      scope.schedulesBackupMap[0]="";
+      scope.schedulesBackupMap[0] = "";
       expectedScheduleBackupMap[0] = "";
-      expectedScheduleBackupMap[1] = {code:existingSchedule.code, name:existingSchedule.name, description:existingSchedule.description};
-      expectedScheduleBackupMap[2] = {"code":"newCode", "name":"newName", "description":"newDescription"};
+      expectedScheduleBackupMap[1] = {code: existingSchedule.code, name: existingSchedule.name, description: existingSchedule.description};
+      expectedScheduleBackupMap[2] = {"code": "newCode", "name": "newName", "description": "newDescription"};
 
-      $httpBackend.expectPOST('/schedules.json').respond(200, {"schedule":newScheduleWithId, "success":"success message"});
-      scope.createScheduleForm = {$invalid:false};
+      $httpBackend.expectPOST('/schedules.json').respond(200, {"schedule": newScheduleWithId, "success": "success message"});
+      scope.createScheduleForm = {$invalid: false};
       scope.createSchedule();
       $httpBackend.flush();
       expect(scope.schedules.length).toEqual(2);
@@ -57,9 +55,9 @@ describe("Schedule", function () {
     });
 
     it('should show error on failure of creation of a new schedule', function () {
-      scope.newSchedule = {"code":"newCode", "name":"newName", "description":"newDescription"};
-      scope.createScheduleForm = {$invalid:false};
-      $httpBackend.expectPOST('/schedules.json').respond(400, {"error":"errorMsg"});
+      scope.newSchedule = {"code": "newCode", "name": "newName", "description": "newDescription"};
+      scope.createScheduleForm = {$invalid: false};
+      $httpBackend.expectPOST('/schedules.json').respond(400, {"error": "errorMsg"});
 
       scope.createSchedule();
       $httpBackend.flush();
@@ -68,27 +66,27 @@ describe("Schedule", function () {
     });
 
     xit('should update an existing schedule', function () {
-      var updatedSchedule = {"id":1, "code":"newCode", "name":"newName", "description":"newDescription", "modifiedBy":"", "modifiedDate":"12345"};
+      var updatedSchedule = {"id": 1, "code": "newCode", "name": "newName", "description": "newDescription", "modifiedBy": "", "modifiedDate": "12345"};
       var expectedScheduleBackupMap = [];
-      expectedScheduleBackupMap[1] = {"code":"newCode", "name":"newName", "description":"newDescription"};
-      $httpBackend.expectPUT('/schedules/1.json').respond(200, {"schedule":updatedSchedule, "success":"success message"});
+      expectedScheduleBackupMap[1] = {"code": "newCode", "name": "newName", "description": "newDescription"};
+      $httpBackend.expectPUT('/schedules/1.json').respond(200, {"schedule": updatedSchedule, "success": "success message"});
 
       scope.updateSchedule(existingSchedule, editScheduleForm);
       $httpBackend.flush();
 
       expect(scope.schedules.length).toEqual(1);
       expect(scope.schedules).toEqual([
-        {"id":1, "code":"newCode", "name":"newName", "description":"newDescription", "modifiedBy":"", "modifiedDate":"12345"}
+        {"id": 1, "code": "newCode", "name": "newName", "description": "newDescription", "modifiedBy": "", "modifiedDate": "12345"}
       ]);
       expect(scope.schedulesBackupMap).toEqual(expectedScheduleBackupMap);
       expect(scope.message).toEqual("success message");
     });
 
     it('should show failure error on updating an existing schedule', function () {
-      var updatedSchedule = {"id":1, "code":"newCode", "name":"newName", "description":"newDescription"};
-      $httpBackend.expectPUT('/schedules/1.json').respond(400, {"error":"errorMsg"});
-      scope.schedulesBackupMap[1]=updatedSchedule;
-      var editScheduleForm = {$invalid:false};
+      var updatedSchedule = {"id": 1, "code": "newCode", "name": "newName", "description": "newDescription"};
+      $httpBackend.expectPUT('/schedules/1.json').respond(400, {"error": "errorMsg"});
+      scope.schedulesBackupMap[1] = updatedSchedule;
+      var editScheduleForm = {$invalid: false};
       scope.updateSchedule(updatedSchedule, editScheduleForm);
       $httpBackend.flush();
       expect(scope.message).toEqual("");
@@ -96,26 +94,26 @@ describe("Schedule", function () {
     });
 
     it('should set correct schedule in the scope and navigate to period', function () {
-      var selectedSchedule = {"id":1, "code":"newCode", "name":"newName", "description":"newDescription"};
+      var selectedSchedule = {"id": 1, "code": "newCode", "name": "newName", "description": "newDescription"};
       scope.navigateToPeriodFor(selectedSchedule);
       expect(location.path()).toEqual("/manage-period/1");
     });
 
-//    it('should do nothing on canceling schedule edit', function () {
-//      var updatedSchedule = {"id":1, "code":"newCode", "name":"newName", "description":"newDescription", "modifiedBy":"", "modifiedDate":"12345"};
-//      var expectedScheduleBackupMap = [];
-//      expectedScheduleBackupMap[1] = {"id":1, "name":"name", "code":"code", "description":"description"};
-//      $httpBackend.expectPUT('/schedules/1.json').respond(200, {"schedule":updatedSchedule, "success":"success message"});
-//      scope.cancelScheduleEdit(existingSchedule);
-//      $httpBackend.flush();
-//
-//      existingSchedule.code = expectedScheduleBackupMap.code;
-//      existingSchedule.name = expectedScheduleBackupMap.name;
-//      existingSchedule.description = expectedScheduleBackupMap.description;
-//      expect(scope.schedulesBackupMap[1].error).toEqual("");
-//      expect(scope.schedulesBackupMap[1].editFormActive).toEqual('');
-//      expect(scope.message).toEqual("");
-//    });
+    it('should do nothing on canceling schedule edit', function () {
+      var scheduleUnderEdit = {"id": 1, "code": "editedCode", "name": "editedName", "description": "editedDescription"};
+      scope.schedulesBackupMap = [
+        {},
+        {"id": 1, "name": "name", "code": "code", "description": "description"}
+      ];
 
+      scope.cancelScheduleEdit(scheduleUnderEdit);
+
+      expect(scheduleUnderEdit.code).toEqual("code");
+      expect(scheduleUnderEdit.name).toEqual("name");
+      expect(scheduleUnderEdit.description).toEqual("description");
+      expect(scope.schedulesBackupMap[1].error).toEqual("");
+      expect(scope.schedulesBackupMap[1].editFormActive).toEqual('');
+      expect(scope.message).toEqual("");
+    });
   });
 });

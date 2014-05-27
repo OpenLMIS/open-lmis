@@ -28,7 +28,6 @@ function GeoZoneController($scope, geoLevels, geoZone, GeographicZonesAboveLevel
   $scope.cancel = function () {
     $scope.$parent.geoZoneId = undefined;
     $scope.$parent.message = "";
-    $scope.showError = false;
     $location.path('#/search');
   };
 
