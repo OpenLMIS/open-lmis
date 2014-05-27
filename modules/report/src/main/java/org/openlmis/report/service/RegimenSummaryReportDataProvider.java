@@ -11,12 +11,11 @@
 package org.openlmis.report.service;
 
 import lombok.NoArgsConstructor;
-
-
 import org.apache.ibatis.session.RowBounds;
 
 import org.openlmis.core.service.ConfigurationSettingService;
 
+import org.openlmis.core.service.ProcessingPeriodService;
 import org.openlmis.report.mapper.RegimenSummaryReportMapper;
 import org.openlmis.report.model.ReportData;
 
@@ -24,6 +23,7 @@ import org.openlmis.report.model.ReportParameter;
 
 import org.openlmis.report.model.params.RegimenSummaryReportParam;
 
+import org.openlmis.report.util.StringHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -33,9 +33,12 @@ import java.util.*;
 @Service
 @NoArgsConstructor
 public class RegimenSummaryReportDataProvider extends ReportDataProvider {
-
+    @Autowired
     private RegimenSummaryReportMapper reportMapper;
+    @Autowired
     private ConfigurationSettingService configurationService;
+    @Autowired
+    private ProcessingPeriodService processingPeriodService;
 
     @Autowired
     public RegimenSummaryReportDataProvider(RegimenSummaryReportMapper mapper, ConfigurationSettingService configurationService) {
@@ -60,10 +63,15 @@ public class RegimenSummaryReportDataProvider extends ReportDataProvider {
 
         if (filterCriteria != null) {
 
-            //regimenSummaryReportParam = new RegimenSummaryReportParam();
-            //regimenSummaryReportParam.setRgroupId(StringUtils.isBlank(filterCriteria.get("requisitionGroup")[0]) ? 0 : Integer.parseInt(filterCriteria.get("requisitionGroup")[0])); //defaults to 0
-            //regimenSummaryReportParam.setRegimenId(StringUtils.isBlank(filterCriteria.get("regimen")[0]) ? 0 : Integer.parseInt(filterCriteria.get("regimen")[0]));
-            //regimenSummaryReportParam.setRegimenCategoryId(StringUtils.isBlank(filterCriteria.get("regimenCategory")[0]) ? 0 : Integer.parseInt(filterCriteria.get("regimenCategory")[0]));
+            regimenSummaryReportParam = new RegimenSummaryReportParam();
+            regimenSummaryReportParam.setRegimenId(StringHelper.isBlank(filterCriteria, "regimen") ? 0 : Integer.parseInt(filterCriteria.get("regimen")[0])); //defaults to 0
+            regimenSummaryReportParam.setRegimenCategoryId(StringHelper.isBlank(filterCriteria, ("regimenCategory")) ? 0 : Integer.parseInt(filterCriteria.get("regimenCategory")[0])); //defaults to 0
+            regimenSummaryReportParam.setPeriodId(StringHelper.isBlank(filterCriteria, "period") ? 0 : Integer.parseInt(filterCriteria.get("period")[0])); //defaults to 0
+            regimenSummaryReportParam.setRgroupId(StringHelper.isBlank(filterCriteria, "requisitionGroup") ? 0 : Integer.parseInt(filterCriteria.get("requisitionGroup")[0])); //defaults to 0
+            regimenSummaryReportParam.setProgramId(StringHelper.isBlank(filterCriteria, "program") ? 0 : Integer.parseInt(filterCriteria.get("program")[0])); //defaults to 0
+            regimenSummaryReportParam.setPeriodObject(processingPeriodService.getById(regimenSummaryReportParam.getPeriod()));
+
+
         }
         return regimenSummaryReportParam;
     }

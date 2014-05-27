@@ -44,3 +44,58 @@ services.factory('SaveEquipmentInventory', function ($resource) {
 services.factory('Donors', function ($resource) {
   return $resource('/donor/list.json', {}, {});
 });
+
+
+/* Service Types */
+services.factory('ServiceTypes', function ($resource) {
+    return $resource('/equipment/service-type/list.json', {}, {});
+});
+
+services.factory('ServiceType', function ($resource) {
+    return $resource('/equipment/service-type/id.json', {}, {});
+});
+
+services.factory('SaveServiceType', function ($resource) {
+    return $resource('/equipment/service-type/save.json', {}, {});
+});
+
+/* Vendor management  */
+services.factory('Vendors', function ($resource) {
+    return $resource('/equipment/vendor/list.json', {}, {});
+});
+
+services.factory('Vendor', function ($resource) {
+    return $resource('/equipment/vendor/id.json', {}, {});
+});
+
+services.factory('SaveVendor', function ($resource) {
+    return $resource('/equipment/vendor/save.json', {}, {});
+});
+
+/* Contract management  */
+services.factory('Contracts', function ($resource) {
+    return $resource('/equipment/service-contracts/list.json', {}, {});
+});
+
+services.factory('Contract', function ($resource) {
+    return $resource('/equipment/service-contracts/id.json', {}, {});
+});
+
+services.factory('SaveContract', function ($resource) {
+    return $resource('/equipment/service-contracts/save.json', {}, {});
+});
+
+/** Maintenance Requests */
+services.factory('SaveMaintenanceRequest', function($resource){
+    return $resource('/equipment/maintenance-request/save.json', {}, {});
+});
+
+
+services.factory('EquipmentLogs', function($resource){
+   return $resource('/equipment/maintenance-request/full-history.json',{},{});
+});
+
+services.factory('PendingRequests', function($resource){
+    return $resource('/equipment/maintenance-request/outstanding-for-user.json',{},{});
+});
+

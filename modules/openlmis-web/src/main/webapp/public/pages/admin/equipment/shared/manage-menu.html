@@ -20,5 +20,20 @@
                 <span id="equipment-list">Equipment List</span>
             </a>
         </li>
+        <li ng-show="hasPermission('MANAGE_EQUIPMENT_SETTINGS')" ng-class="manageServiceTypeSelected">
+          <a href="/public/pages/admin/equipment/service-type/index.html">
+            <span id="equipment-service-type">Service Types</span>
+          </a>
+        </li>
+        <li ng-show="hasPermission('MANAGE_EQUIPMENT_SETTINGS')" ng-class="manageVendorSelected">
+          <a href="/public/pages/admin/equipment/vendor/index.html">
+            <span id="service-vendor">Service Vendors</span>
+          </a>
+        </li>
+        <li ng-show="hasPermission('MANAGE_EQUIPMENT_SETTINGS')" ng-class="manageServiceContactsSelected">
+          <a href="/public/pages/admin/equipment/service-contract/index.html">
+            <span id="service-contract">Service Contracts</span>
+          </a>
+        </li>
     </ul>
 </div>

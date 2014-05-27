@@ -8,42 +8,46 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-package org.openlmis.web.controller;
+package org.openlmis.web.controller.equipment;
 
-import org.openlmis.equipment.domain.Equipment;
-import org.openlmis.equipment.domain.EquipmentType;
-import org.openlmis.equipment.service.EquipmentService;
+
+import org.openlmis.equipment.domain.ServiceType;
+import org.openlmis.equipment.domain.Vendor;
+import org.openlmis.equipment.service.ServiceTypeService;
+import org.openlmis.equipment.service.VendorService;
+import org.openlmis.web.controller.BaseController;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import static org.springframework.web.bind.annotation.RequestMethod.GET;
+import static org.springframework.web.bind.annotation.RequestMethod.POST;
+
 @Controller
-@RequestMapping(value="/equipment/manage/")
-public class EquipmentController extends BaseController {
+@RequestMapping(value="/equipment/vendor/")
+public class VendorController extends BaseController {
 
   @Autowired
-  private EquipmentService service;
+  private VendorService service;
 
-  @RequestMapping(method = RequestMethod.GET, value = "id")
-  public ResponseEntity<OpenLmisResponse> getEquipmentById(@RequestParam("id") Long Id){
-    return OpenLmisResponse.response("equipment", service.getById(Id));
+  @RequestMapping(method = GET, value = "list")
+  public ResponseEntity<OpenLmisResponse> getAll(){
+    return  OpenLmisResponse.response("vendors", service.getAll());
   }
 
-  @RequestMapping(method = RequestMethod.GET, value = "list")
-  public ResponseEntity<OpenLmisResponse> getList(){
-    return OpenLmisResponse.response("equipments", service.getAll());
+  @RequestMapping(method = GET, value = "id")
+  public ResponseEntity<OpenLmisResponse> getById( @RequestParam("id") Long id){
+    return  OpenLmisResponse.response("vendor", service.getById(id));
   }
 
-  @RequestMapping(method = RequestMethod.POST, value = "save", headers = ACCEPT_JSON)
-  public ResponseEntity<OpenLmisResponse> save( @RequestBody Equipment equipment){
-    equipment.setEquipmentType(new EquipmentType());
-    equipment.getEquipmentType().setId(equipment.getEquipmentTypeId());
-    service.save(equipment);
-    return OpenLmisResponse.response("equipment", equipment);
+
+  @RequestMapping(value = "save", method = POST, headers = ACCEPT_JSON)
+  public ResponseEntity<OpenLmisResponse> save(@RequestBody Vendor vendor){
+    service.save(vendor);
+    return OpenLmisResponse.response("status","success");
   }
 }

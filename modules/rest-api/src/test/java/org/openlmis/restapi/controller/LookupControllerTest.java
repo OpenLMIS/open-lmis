@@ -99,11 +99,11 @@ public class LookupControllerTest {
   public void shouldGetFacilityTypes() throws Exception {
     ResponseEntity<RestResponse> expectResponse = new ResponseEntity<>(new RestResponse(), HttpStatus.OK);
     when(RestResponse.response("facility-types", new ArrayList<FacilityType>())).thenReturn(expectResponse);
-    when(lookupService.getFacilityTypes()).thenReturn(new ArrayList<FacilityType>());
+    when(lookupService.getAllFacilityTypes()).thenReturn(new ArrayList<FacilityType>());
 
     ResponseEntity<RestResponse> response = controller.getFacilityTypes(principal);
 
-    verify(lookupService).getFacilityTypes();
+    verify(lookupService).getAllFacilityTypes();
     assertThat(response, is(expectResponse));
   }
 

@@ -567,6 +567,34 @@ public class RequisitionService {
     return requisitionRepository.deleteRnR(rnrId);
   }
 
+  public void skipRnR(Long rnrId) {
+    Rnr rnr = this.getFullRequisitionById(rnrId);
+    for(RnrLineItem li : rnr.getFullSupplyLineItems()){
+      li.setSkipped(true);
+    }
+    rnr.setStatus(RnrStatus.SKIPPED);
+    this.save(rnr);
+    requisitionRepository.update(rnr);
+  }
+
+
+  public void reOpenRnR(Long rnrId) {
+    Rnr rnr = this.getFullRequisitionById(rnrId);
+    for(RnrLineItem li : rnr.getFullSupplyLineItems()){
+      li.setSkipped(false);
+    }
+    rnr.setStatus(RnrStatus.INITIATED);
+
+    requisitionRepository.update(rnr);
+    this.save(rnr);
+  }
+
+  public void rejectRnR(Long rnrId) {
+    Rnr rnr = this.getFullRequisitionById(rnrId);
+    rnr.setStatus(RnrStatus.INITIATED);
+    requisitionRepository.update(rnr);
+  }
+
   public Integer findM(ProcessingPeriod period) {
     return processingScheduleService.findM(period);
   }

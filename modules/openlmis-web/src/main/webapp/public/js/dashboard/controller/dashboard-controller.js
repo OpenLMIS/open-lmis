@@ -9,7 +9,7 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-function AdminDashboardController($scope,$timeout,$filter,$location,dashboardFiltersHistoryService,GetPeriod, programsList,userPreferredFilterValues,formInputValue,UserSupervisoryNodes,ReportProgramsBySupervisoryNode,RequisitionGroupsBySupervisoryNodeProgramSchedule, ReportSchedules, ReportPeriods, RequisitionGroupsByProgram,RequisitionGroupsByProgramSchedule, ReportProductsByProgram, OperationYears, ReportPeriodsByScheduleAndYear, FacilitiesByProgramAndRequisitionGroupParams, OrderFillRate, ItemFillRate, StockEfficiency) {
+function AdminDashboardController($scope,$timeout,$filter,$location,dashboardMenuService,dashboardFiltersHistoryService,ReportingPerformance,GetPeriod, programsList,userPreferredFilterValues,formInputValue,UserSupervisoryNodes,ReportProgramsBySupervisoryNode,RequisitionGroupsBySupervisoryNodeProgramSchedule, ReportSchedules, ReportPeriods, RequisitionGroupsByProgram,RequisitionGroupsByProgramSchedule, ReportProductsByProgram, OperationYears, ReportPeriodsByScheduleAndYear, FacilitiesByProgramAndRequisitionGroupParams, OrderFillRate, ItemFillRate, StockEfficiency) {
 
     $scope.filterObject = {};
 
@@ -67,6 +67,7 @@ function AdminDashboardController($scope,$timeout,$filter,$location,dashboardFil
             $scope.requisitionGroups  = null;
             $scope.resetFillRates();
             $scope.resetStockingChartData();
+            $scope.resetReportingPerformanceData();
            return;
         }
         $scope.filterObject.programId = $scope.formFilter.programId;
@@ -97,7 +98,7 @@ function AdminDashboardController($scope,$timeout,$filter,$location,dashboardFil
 
         $scope.loadFacilities();
         $scope.loadStockingData();
-
+        $scope.loadReportingPerformance();
     };
 
     $scope.processProductsFilter = function (){
@@ -295,6 +296,7 @@ function AdminDashboardController($scope,$timeout,$filter,$location,dashboardFil
         $scope.filterObject.rgroupId = $scope.formFilter.rgroupId;
         $scope.loadFacilities();
         $scope.loadStockingData();
+        $scope.loadReportingPerformance();
     };
 
     $scope.processPeriodFilter = function (){
@@ -306,6 +308,7 @@ function AdminDashboardController($scope,$timeout,$filter,$location,dashboardFil
 
         $scope.loadFillRates();
         $scope.loadStockingData();
+        $scope.loadReportingPerformance();
     };
 
     $scope.changeScheduleByYear = function (){
@@ -420,37 +423,17 @@ function AdminDashboardController($scope,$timeout,$filter,$location,dashboardFil
     /* End Bar Chart */
 
     /* Pie Chart */
-    $scope.districtReporting = {};
-    $scope.districtReporting.openPanel = true;
-
-    var pieChartSeries = 3;
-    var pieChartColors = ["#05BC57","#CC0505", "#FFFF05"];
-    var pieChartLabels = ["Reported on time","Did not report","Reported late"];
-    $timeout(function(){
-
-        $scope.pieChartData = [];
-        var series = 3;
-        var colors = ["#05BC57","#CC0505", "#FFFF05"];
-        var labels = ["Reported on time","Did not report","Reported late"];
-
-        for (var i = 0; i < series; i++) {
-            $scope.pieChartData[i] = {
-                label: labels[i],
-                data: Math.floor(Math.random() * 100) + 1,
-                color: colors[i]
-            };
-        }
-        $scope.pieChartOption = {
+    function setupReportingChartOption(){
+        $scope.reportingPieChartOption = {
             series: {
                 pie: {
                     show: true,
                     radius: 1,
-
                     label: {
                         show: true,
                         radius: 2 / 3,
                         formatter: function (label, series) {
-                            return '<div class="pieLabel">' + Math.round(series.percent) + '%</div>';
+                            return '<div style="font-size:8pt;text-align:center;padding:2px;color:black;">' + Math.round(series.percent) + '%</div>';
                         },
                         threshold: 0.1
                     }
@@ -463,10 +446,9 @@ function AdminDashboardController($scope,$timeout,$filter,$location,dashboardFil
             },
             grid:{
                 hoverable: true,
+                clickable: true,
                 borderWidth: 1,
                 borderColor: "#d6d6d6",
-                //minBorderMargin: 20,
-                //labelMargin: 10,
                 backgroundColor: {
                     colors: ["#FFF", "#CCC"]
                 }
@@ -482,8 +464,65 @@ function AdminDashboardController($scope,$timeout,$filter,$location,dashboardFil
             }
         };
 
-    },100);
+    }
 
+    $scope.loadReportingPerformance = function(){
+        if(isUndefined($scope.filterObject.programId) || isUndefined($scope.filterObject.periodId)){
+            $scope.resetReportingPerformanceData();
+            return;
+        }
+
+         ReportingPerformance.get({periodId :$scope.filterObject.periodId, rgroupId: $scope.filterObject.rgroupId,programId: $scope.filterObject.programId}, function(data){
+                 $scope.reportingChartData = [];
+
+                 if(!isUndefined(data.reportingPerformance)){
+                     var reporting = data.reportingPerformance;
+
+                     for(var i=0; i < reporting.length; i++){
+                         $scope.reportingChartData[i] = {label: reporting[i].status,
+                             data: reporting[i].total};
+                     }
+                     $scope.reportingRenderedData = {
+                         status : _.pairs(_.object(_.range(reporting.length), _.pluck(reporting,'status')))
+
+                     };
+
+                     bindChartEvent("#district-reporting","plothover",flotChartHoverCursorHandler);
+                     bindChartEvent("#district-reporting","plotclick",$scope.reportingPerformanceClickHandler);
+
+                     setupReportingChartOption();
+
+                 }
+        });
+    };
+
+    $scope.reportingPerformanceClickHandler = function (event, pos, item){
+        if(item){
+            var status;
+            if(!isUndefined($scope.reportingRenderedData.status)){
+                 status = $scope.reportingRenderedData.status[item.seriesIndex][1];
+            }
+            var reportingPerformanceDetailPath = '/reporting-performance/program/'+$scope.filterObject.programId+'/period/'+$scope.filterObject.periodId;//+'/rgroup/'+$scope.filterObject.rgroupId;
+            dashboardMenuService.addTab('menu.header.dashboard.reporting.performance.detail','/public/pages/dashboard/index.html#'+reportingPerformanceDetailPath,'REPORTING-PERFORMANCE-DETAIL',true, 7);
+            $location.path(reportingPerformanceDetailPath).search("status="+status+"&rgroupId="+$scope.filterObject.rgroupId);
+
+            $scope.$apply();
+        }
+
+    };
+
+  //  function setupReportingChartOption(){
+
+
+   // }
+
+    $scope.resetReportingPerformanceData = function(){
+        $scope.reportingChartData = null;
+        $scope.reportingChartOption = null;
+    };
+
+    $scope.districtReporting = {};
+    $scope.districtReporting.openPanel = true;
 
     /* End Pie Chart */
 
@@ -705,7 +744,6 @@ function AdminDashboardController($scope,$timeout,$filter,$location,dashboardFil
                 $scope.processSupervisoryNodeChange();
 
                 $scope.filterObject.programId = userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_PROGRAM];
-                $scope.filterObject.scheduleId = userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_SCHEDULE];
 
                 $scope.filterObject.periodId = userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_PERIOD];
 
@@ -719,6 +757,8 @@ function AdminDashboardController($scope,$timeout,$filter,$location,dashboardFil
                         }
                     });
                 }
+                $scope.filterObject.scheduleId = userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_SCHEDULE];
+
                 $scope.filterObject.rgroupId = userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_REQUISITION_GROUP];
                 $scope.filterObject.productIdList = userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_PRODUCTS].split(',');
                 $scope.filterObject.facilityId = $scope.formFilter.facilityId = userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_FACILITY];
@@ -749,6 +789,7 @@ function AdminDashboardController($scope,$timeout,$filter,$location,dashboardFil
         });
 
     };
+
 
     $scope.stockBarClickHandler = function (event, pos, item){
 

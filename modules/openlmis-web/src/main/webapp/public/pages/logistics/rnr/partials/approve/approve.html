@@ -61,6 +61,8 @@
         <ng-include src="'/public/pages/logistics/rnr/partials/total-cost.html'"></ng-include>
 
         <div class="form-cell button-row">
+          <input ng-show="rnr.status != 'SKIPPED'" type="button" class="btn btn-primary submit-button" ng-click="rejectRnR();" openlmis-message="button.rnr.reject" />
+
             <input id="saveButton" type="button" openlmis-message="button.save" ng-click="saveRnr()"
                    class="btn btn-primary save-button"
                    ng-disabled="!canApproveRnr"/>

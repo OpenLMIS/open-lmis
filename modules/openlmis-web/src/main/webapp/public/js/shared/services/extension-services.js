@@ -495,6 +495,13 @@ services.factory('GetPeriod', function($resource){
    return $resource('/dashboard/period/:id.json',{},{});
 });
 
+services.factory('ReportingPerformance',function($resource){
+    return $resource('/dashboard/reportingPerformance.json',{},{});
+});
+services.factory('ReportingPerformanceDetail',function($resource){
+    return $resource('/dashboard/reportingPerformance-detail.json',{},{});
+});
+
 
 
 /* End Dashboard data factories */
@@ -535,3 +542,5 @@ services.factory("UserRoleAssignmentsSummary1", function($resource){
 services.factory("RnRStatusSummary",function($resource){
     return $resource('/dashboard/rnrstatusSummary/requisitionGroup/:requisitionGroupId.json',{},{});
 });
+
+

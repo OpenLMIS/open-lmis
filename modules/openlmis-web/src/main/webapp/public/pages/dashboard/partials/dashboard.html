@@ -103,8 +103,9 @@
                     </accordion-heading>
 
             <!--<h2>District Reporting Performance</h2>-->
-                    <div>
-                        <a-float id="district-reporting" af-option="pieChartOption" af-data="pieChartData" class="chart"></a-float>
+                    <div ng-hide="reportingChartData"><label class="chart-note">No data to render chart</label></div>
+                    <div  ng-show="reportingChartData">
+                        <a-float id="district-reporting" af-option="reportingPieChartOption" af-data="reportingChartData" class="chart"></a-float>
                         <div id="districtReportLegend" class="chartLegend"></div>
                     </div>
 
@@ -137,7 +138,7 @@
     </div>
 
 <!-- BEGIN TAB PORTLET-->
-<div class="portlet box light-grey tabbable">
+<!--<div class="portlet box light-grey tabbable">
     <div class="portlet-title">
             <div class="caption">
                         <i class="fa fa-reorder"></i>Sample Tabs
@@ -159,9 +160,9 @@
                 </div>
                 <div class="tab-pane" id="dashboard-tab-3-3">
 
-                   <!-- <div   ng-model="eventSources" calendar="myCalendar"  ui-calendar="uiConfig.calendar"></div>-->
+                   &lt;!&ndash; <div   ng-model="eventSources" calendar="myCalendar"  ui-calendar="uiConfig.calendar"></div>&ndash;&gt;
                     <a-float id="multipleBars" af-option="multipleBarsOption" af-data="multiBarsData" class="chart"> </a-float>
-                    <!--<div id="multiBarsLegend" class="chartLegend"></div>-->
+                    &lt;!&ndash;<div id="multiBarsLegend" class="chartLegend"></div>&ndash;&gt;
                 </div>
                 <div class="tab-pane" id="dashboard-tab-4-4">
                         <span class="easychart" easypiechart options="option1" percent="percent1">
@@ -177,14 +178,14 @@
                             <span class="easychart-percent" ng-bind="percent4"></span>
                         </span>
                         <input type="range" min="-100" max="100" step="1" ng-model="percent4" />
-                        <!--span class="easychart" easypiechart percent="anotherPercent" options="anotherOptions">
+                        &lt;!&ndash;span class="easychart" easypiechart percent="anotherPercent" options="anotherOptions">
                             <span class="easychart-percent" ng-bind="anotherPercent"></span>
-                        </span>-->
+                        </span>&ndash;&gt;
                 </div>
             </div>
         </div>
     </div>
-</div>
+</div>-->
 <!-- END TAB PORTLET-->
 <div class="well">
     <table  class="table-bordered table table-striped pull-right"

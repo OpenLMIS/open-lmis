@@ -19,6 +19,7 @@ import org.mockito.Mock;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.equipment.domain.EquipmentType;
 import org.openlmis.equipment.service.EquipmentTypeService;
+import org.openlmis.web.controller.equipment.EquipmentTypeController;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpSession;
