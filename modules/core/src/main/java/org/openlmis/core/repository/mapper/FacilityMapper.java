@@ -280,6 +280,6 @@ public interface FacilityMapper {
       " active = true and facilityId = #{facilityId}"})
   List<FacilityContact> getEmailContacts(Long facilityId);
 
-  @Select("SELECT * from odksubmissiondata where facilityId = #{facilityId}")
+  @Select("SELECT * from odk_submission_data where facilityId = #{facilityId}")
   List<FacilityImages> getFacilityImages(Long facilityId);
 }

@@ -498,6 +498,9 @@ services.factory('GetPeriod', function($resource){
 services.factory('ReportingPerformance',function($resource){
     return $resource('/dashboard/reportingPerformance.json',{},{});
 });
+services.factory('ReportingPerformanceDetail',function($resource){
+    return $resource('/dashboard/reportingPerformance-detail.json',{},{});
+});
 
 
 
@@ -540,4 +543,13 @@ services.factory("RnRStatusSummary",function($resource){
     return $resource('/dashboard/rnrstatusSummary/requisitionGroup/:requisitionGroupId.json',{},{});
 });
 
+services.factory("totalRnRCreatedByRequisitionGroup",function($resource){
+    return $resource('/dashboard//RnRCreateForRequisitionGroup',{},{});
+});
+services.factory('RnRStatusByRequisitionGroupAndPeriod',function($resource){
+    return $resource('/dashboard/RnRStatus/:requisitionGroupId/:periodId.json',{},{});
+});
 
+services.factory("RnRStatusByRequisitionGroupAndPeriodDetails ",function($resource){
+    $resource('/dashboard/RnRStatusByRequisitionGroupDetails.json',{},{});
+});

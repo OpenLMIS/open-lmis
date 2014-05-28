@@ -9,21 +9,24 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.db.categories.UnitTests;
-import org.openlmis.report.model.dto.ItemFillRate;
-import org.openlmis.report.model.dto.OrderFillRate;
-import org.openlmis.report.model.dto.StockingInfo;
+import org.openlmis.report.model.dto.*;
 import org.openlmis.report.response.OpenLmisResponse;
 import org.openlmis.report.service.lookup.DashboardLookupService;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.mock.web.MockHttpSession;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.openlmis.authentication.web.UserAuthenticationSuccessHandler.USER;
+import static org.openlmis.authentication.web.UserAuthenticationSuccessHandler.USER_ID;
 import static org.openlmis.report.controller.DashboardController.*;
 
 /**
@@ -35,20 +38,29 @@ import static org.openlmis.report.controller.DashboardController.*;
 @Category(UnitTests.class)
 @PrepareForTest(OpenLmisResponse.class)
 public class DashboardControllerTest {
+
+    public static final Long userId = 1L;
+
     @Mock
     DashboardLookupService lookupService;
 
     @InjectMocks
     DashboardController dashboardController;
 
+    private MockHttpServletRequest httpServletRequest = new MockHttpServletRequest();
+
     @Before
     public void setup(){
+        MockHttpSession mockHttpSession = new MockHttpSession();
+        httpServletRequest.setSession(mockHttpSession);
+        mockHttpSession.setAttribute(USER, USER);
+        mockHttpSession.setAttribute(USER_ID, userId);
         MockitoAnnotations.initMocks(this);
     }
 
     @Test
     public void shouldReturnItemFillRateForSelectedFacilityAndProducts(){
-        Long geoId = 1L, programId = 1L, periodId = 1L,facilityId = 1L;
+        Long programId = 1L, periodId = 1L,facilityId = 1L;
         List<Long> productsId = new ArrayList<>(2);
         productsId.add(1L);
         productsId.add(2L);
@@ -68,7 +80,7 @@ public class DashboardControllerTest {
 
     @Test
     public void shouldReturnOrderFillRateForSelectedFacility(){
-        Long geoId = 1L, programId = 1L, periodId = 1L,facilityId = 1L;
+        Long programId = 1L, periodId = 1L,facilityId = 1L;
         OrderFillRate expectedOrderFillRate = new OrderFillRate(45.5f);
         when(lookupService.getOrderFillRate(periodId, facilityId, programId)).thenReturn(expectedOrderFillRate);
         ResponseEntity<OpenLmisResponse> fetchedOrderFillRate = dashboardController.getOrderFillRate(periodId, facilityId, programId);
@@ -85,11 +97,11 @@ public class DashboardControllerTest {
         List<StockingInfo> expectedStockingInfo = new ArrayList<>(1);
         expectedStockingInfo.add(new StockingInfo());
 
-        when(lookupService.getStockEfficiencyData(1L, 1L,rgIdList, productIdList)).thenReturn(expectedStockingInfo);
+        when(lookupService.getStockEfficiencyData(1L, 1L, rgIdList, productIdList)).thenReturn(expectedStockingInfo);
 
-        ResponseEntity<OpenLmisResponse> fetchedStockingInfoStat = dashboardController.getStockEfficiencyData(1L,1L,rgIdList,productIdList);
+        ResponseEntity<OpenLmisResponse> fetchedStockingInfoStat = dashboardController.getStockEfficiencyData(1L, 1L, rgIdList, productIdList);
 
-        verify(lookupService).getStockEfficiencyData(1L,1L,rgIdList,productIdList);
+        verify(lookupService).getStockEfficiencyData(1L, 1L, rgIdList, productIdList);
 
         assertThat((List<StockingInfo>) fetchedStockingInfoStat.getBody().getData().get(STOCKING_EFFICIENCY_STATICS), is(expectedStockingInfo));
     }
@@ -109,5 +121,53 @@ public class DashboardControllerTest {
 
         assertThat((List<StockingInfo>) fetchedStockingInfoStat.getBody().getData().get(STOCKING_EFFICIENCY_DETAIL), is(expectedStockingDetail));
     }
+    @Test
+    public void shouldReturnStockOutFacilities(){
+        List<Long> rgIdList = new ArrayList<>();
+        Long programId = 1L, periodId = 1L, productId = 1L;
+        List<StockOut> expectedStockedOutFacilityList = new ArrayList<>(1);
 
+        when(lookupService.getStockOutFacilities(periodId,programId,productId,rgIdList)).thenReturn(expectedStockedOutFacilityList);
+
+        ResponseEntity<OpenLmisResponse> fetchedStockedOutFacilityList = dashboardController.getStockedOutFacilities(periodId,programId,productId,rgIdList);
+
+        verify(lookupService).getStockOutFacilities(periodId,programId,productId,rgIdList);
+
+        assertThat((List<StockOut>) fetchedStockedOutFacilityList.getBody().getData().get(STOCKED_OUT_FACILITIES), is(expectedStockedOutFacilityList));
+    }
+
+    @Test
+    public  void shouldReturnAlerts(){
+        List<AlertSummary> expectedAlertList = new ArrayList<>(1);
+        when(lookupService.getAlerts(userId,1L,1L)).thenReturn(expectedAlertList);
+
+        ResponseEntity<OpenLmisResponse> fetchedAlertList = dashboardController.getAlerts(1L,1L,httpServletRequest);
+        verify(lookupService).getAlerts(userId,1L,1L);
+        assertThat((List<AlertSummary>) fetchedAlertList.getBody().getData().get(ALERTS),is(expectedAlertList));
+
+    }
+
+    @Test
+    public void shouldReturnNotificationTypeAlerts(){
+        List<AlertSummary> expectedNotificationAlerts = new ArrayList<>(2);
+        expectedNotificationAlerts.add(new AlertSummary(1L,"10",null,1L,"NOTIFICATION","SUMMARY",false,true,null,null,null));
+        expectedNotificationAlerts.add(new AlertSummary(2L,"20",null,1L,"NOTIFICATION","SUMMARY",false,true,null,null,null));
+
+        when(lookupService.getNotificationAlerts()).thenReturn(expectedNotificationAlerts);
+
+        ResponseEntity<OpenLmisResponse> fetchedNotificationAlertList = dashboardController.getNotificationTypeAlerts(httpServletRequest);
+        verify(lookupService).getNotificationAlerts();
+        assertThat((List<AlertSummary>) fetchedNotificationAlertList.getBody().getData().get(NOTIFICATIONS), is(expectedNotificationAlerts));
+    }
+
+    @Test
+    public void shouldReturnNotificationsByCategory(){
+        String alertFacilityStockOut = "alert_facility_stockout";
+        List<HashMap> alertFacilityStockOutList = new ArrayList<>(1);
+        when(lookupService.getNotificationsByCategory(alertFacilityStockOut,1L)).thenReturn(alertFacilityStockOutList);
+
+        ResponseEntity<OpenLmisResponse> fetchedNotificationsByCategory = dashboardController.getNotificationsByCategory(1L,alertFacilityStockOut);
+        verify(lookupService).getNotificationsByCategory(alertFacilityStockOut,1L);
+        assertThat((List<HashMap>) fetchedNotificationsByCategory.getBody().getData().get(NOTIFICATIONS_DETAIL), is(alertFacilityStockOutList));
+    }
 }

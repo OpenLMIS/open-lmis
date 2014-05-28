@@ -284,4 +284,27 @@ public class RequisitionController extends BaseController {
     return OpenLmisResponse.response("delete", result);
   }
 
+  @RequestMapping(value = "/requisitions/skip/{id}", method = POST, headers = ACCEPT_JSON)
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'CREATE_REQUISITION')")
+  public ResponseEntity<OpenLmisResponse> skipRnR(@PathVariable("id") Long rnrId,
+                                                    HttpServletRequest request) {
+    requisitionService.skipRnR(rnrId);
+    return OpenLmisResponse.response("status", "skipped");
+  }
+
+  @RequestMapping(value = "/requisitions/reject/{id}", method = POST, headers = ACCEPT_JSON)
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'CREATE_REQUISITION')")
+  public ResponseEntity<OpenLmisResponse> rejectRnR(@PathVariable("id") Long rnrId,
+                                                  HttpServletRequest request) {
+    requisitionService.rejectRnR(rnrId);
+    return OpenLmisResponse.response("status", "rejected");
+  }
+
+  @RequestMapping(value = "/requisitions/reopen/{id}", method = POST, headers = ACCEPT_JSON)
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'CREATE_REQUISITION')")
+  public ResponseEntity<OpenLmisResponse> reopenRnR(@PathVariable("id") Long rnrId,
+                                                  HttpServletRequest request) {
+    requisitionService.reOpenRnR(rnrId);
+    return OpenLmisResponse.response("status", "reopened");
+  }
 }

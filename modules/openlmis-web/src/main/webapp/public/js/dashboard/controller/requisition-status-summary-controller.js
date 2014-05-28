@@ -8,25 +8,26 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-function RequisitionStatusSummaryController($scope,$filter, programsList,RnRStatusSummary,dashboardFiltersHistoryService, formInputValue,GetPeriod,RequisitionGroupsBySupervisoryNodeProgramSchedule,userPreferredFilterValues,ReportProgramsBySupervisoryNode, UserSupervisoryNodes,ReportSchedules, ReportPeriods, RequisitionGroupsByProgram,RequisitionGroupsByProgramSchedule, ReportProductsByProgram, OperationYears, ReportPeriodsByScheduleAndYear,ShipmentLeadTime, ngTableParams) {
+function RequisitionStatusSummaryController($scope, $filter, totalRnRCreatedByRequisitionGroup,RnRStatusByRequisitionGroupAndPeriod ,programsList, RnRStatusSummary, dashboardFiltersHistoryService, formInputValue, GetPeriod, RequisitionGroupsBySupervisoryNodeProgramSchedule, userPreferredFilterValues, ReportProgramsBySupervisoryNode, UserSupervisoryNodes, ReportSchedules, ReportPeriods, RequisitionGroupsByProgram, RequisitionGroupsByProgramSchedule, ReportProductsByProgram, OperationYears, ReportPeriodsByScheduleAndYear, ShipmentLeadTime, ngTableParams) {
 
     $scope.filterObject = {};
 
     $scope.formFilter = {};
 
-    $scope.formPanel = {openPanel:true};
+    $scope.formPanel = {openPanel: true};
 
-    $scope.alertsPanel = {openPanel:false};
+    $scope.alertsPanel = {openPanel: false};
 
     initialize();
 
     function initialize() {
         $scope.showProductsFilter = false;
-        $scope.$parent.currentTab = 'RNR-STATUS-SUMMARY';
+        $scope.$parent.currentTab = "label.rnr.status.current.tab";
     }
-    UserSupervisoryNodes.get(function (data){
+
+    UserSupervisoryNodes.get(function (data) {
         $scope.supervisoryNodes = data.supervisoryNodes;
-        if(!isUndefined( $scope.supervisoryNodes)){
+        if (!isUndefined($scope.supervisoryNodes)) {
             $scope.supervisoryNodes.unshift({'name': formInputValue.supervisoryNodeOptionAll});
         }
 
@@ -37,130 +38,148 @@ function RequisitionStatusSummaryController($scope,$filter, programsList,RnRStat
         $scope.startYears.unshift(formInputValue.yearOptionAll);
     });
 
-    ReportSchedules.get(function(data){
+    ReportSchedules.get(function (data) {
         $scope.schedules = data.schedules;
-        $scope.schedules.unshift({'name': formInputValue.scheduleOptionSelect}) ;
+        $scope.schedules.unshift({'name': formInputValue.scheduleOptionSelect});
 
     });
 
-    $scope.filterProductsByProgram = function (){
-        if(isUndefined($scope.formFilter.programId)){
+    $scope.filterProductsByProgram = function () {
+        if (isUndefined($scope.formFilter.programId)) {
             $scope.resetShipmentLeadTimeData();
             return;
         }
         $scope.filterObject.programId = $scope.formFilter.programId;
 
-        ReportProductsByProgram.get({programId:  $scope.filterObject.programId}, function(data){
+        ReportProductsByProgram.get({programId: $scope.filterObject.programId}, function (data) {
             $scope.products = data.productList;
         });
 
-        if(!isUndefined($scope.formFilter.supervisoryNodeId)){
+        if (!isUndefined($scope.formFilter.supervisoryNodeId)) {
             RequisitionGroupsBySupervisoryNodeProgramSchedule.get(
-                {programId : $scope.filterObject.programId,
-                    scheduleId : isUndefined($scope.filterObject.scheduleId) ? 0 : $scope.filterObject.scheduleId ,
-                    supervisoryNodeId : $scope.filterObject.supervisoryNodeId
-                },function(data){
+                {programId: $scope.filterObject.programId,
+                    scheduleId: isUndefined($scope.filterObject.scheduleId) ? 0 : $scope.filterObject.scheduleId,
+                    supervisoryNodeId: $scope.filterObject.supervisoryNodeId
+                }, function (data) {
                     $scope.requisitionGroups = data.requisitionGroupList;
-                    if(!isUndefined($scope.requisitionGroups)){
-                        $scope.requisitionGroups.unshift({'name':formInputValue.requisitionOptionAll});
+                    if (!isUndefined($scope.requisitionGroups)) {
+                        $scope.requisitionGroups.unshift({'name': formInputValue.requisitionOptionAll});
                     }
                 });
-        }else{
-            RequisitionGroupsByProgram.get({program: $scope.filterObject.programId }, function(data){
+        } else {
+            RequisitionGroupsByProgram.get({program: $scope.filterObject.programId }, function (data) {
                 $scope.requisitionGroups = data.requisitionGroupList;
-                if(!isUndefined($scope.requisitionGroups)){
-                    $scope.requisitionGroups.unshift({'name':formInputValue.requisitionOptionAll});
+                if (!isUndefined($scope.requisitionGroups)) {
+                    $scope.requisitionGroups.unshift({'name': formInputValue.requisitionOptionAll});
                 }
             });
         }
-        $scope.getShipmentLeadTimeData();
+
+        $scope.loadRnRStatus();
 
     };
 
-  $scope.loadRnRStatusByRequisitionGroup = function(){
-
-      if($scope.filterObject.rgroupId!==undefined || $scope.formFilter.rgroupId === ""){
-          $scope.filterObject.requisitionGroupId= $scope.formFilter.rgroupId;
-
-          RnRStatusSummary.get({
-
-           requisitionGroupId:$scope.filterObject.requisitionGroupId},
-              function(data){
-
-                  $scope.total = 0;
-                  $scope.RnRStatusPieChartData = [];
-                  $scope.dataRows=[];
-
-                  if(!isUndefined(data.rnrStatusSummary)){
-                    $scope.dataRows = data.rnrStatusSummary;
-                      //alert("Data is equal to:"+JSON.stringify($scope.dataRows.length));
-                   for(var i=0;i<$scope.dataRows.length;i++){
-                      $scope.RnRStatusPieChartData[i]={
-                          label:$scope.datarows[i].status,
-                           data:$scope.datarows[i].totalStatus
-                      };
-
-                   }
-                  //alert("Data is equal to:"+JSON.stringify(data.rnrStatusSummary));
-              }else{
-                      $scope.resetUserSummaryReportData();
-                  }
-          });
-
-          }
-
-
-      };
-    $scope.userSummaryPieChartOption = {
-        series: {
-            pie: {
-                show: true,
-                radius: 1,
-                label: {
-                    show: true,
-                    radius: 2 / 3,
-                    formatter: function (label, series) {
-                        return '<div style="font-size:8pt;text-align:center;padding:2px;color:black;">' + Math.round(series.percent) + '%</div>';
-                    },
-                    threshold: 0.1
-                }
-            }
-        },
-        legend: {
-            container:$("#userSummaryReportLegend"),
-            noColumns: 0,
-            labelBoxBorderColor: "none",
-            sorted:"descending",
-            position:"w",
-            backgroundOpacity:1
-        },
-        grid:{
-            hoverable: true,
-            clickable: true,
-            borderWidth: 1,
-            borderColor: "#d6d6d6",
-            backgroundColor: {
-                colors: ["#FFF", "#CCC"]
-            }
-        },
-        tooltip: true,
-        tooltipOpts: {
-            content: "%p.0%, %s",
-            shifts: {
-                x: 20,
-                y: 0
-            },
-            defaultTheme: false
+    $scope.loadRnRStatus= function(){
+        if (isUndefined($scope.filterObject.periodId) || isUndefined($scope.filterObject.programId || isUndefined($scope.filterObject.rgroupId))) {
+            return;
         }
+         $scope.filterObject.requisitionGroupId= $scope.formFilter.rgroupId;
+
+            RnRStatusByRequisitionGroupAndPeriod.get({requisitionGroupId:$scope.filterObject.requisitionGroupId,
+                periodId:$scope.filterObject.periodId
+            },
+            function (data) {
+
+                $scope.total = 0;
+                $scope.RnRStatusPieChartData = [];
+                $scope.dataRows = [];
+
+                if (!isUndefined(data.rnrStatus)) {
+
+                    $scope.dataRows = data.rnrStatus;
+                    for (var i = 0; i < $scope.dataRows.length; i++) {
+                        $scope.total += $scope.dataRows[i].totalStatus;
+                        $scope.RnRStatusPieChartData[i] = {
+
+                            label: $scope.dataRows[i].status,
+                            data: $scope.dataRows[i].totalStatus
+
+                        };
+
+                    }
+                    $scope.rnrStatusPieChartOptionFunction();
+
+                } else {
+                    $scope.resetRnRStatusReportData();
+                }
+                $scope.paramsChanged($scope.tableParams);
+            });
+       // }
+
     };
-    $scope.resetUserSummaryReportData = function(){
+
+    $scope.rnrStatusPieChartOptionFunction =function(){
+
+        $scope.rnRStatusPieChartOption = {
+            series: {
+                pie: {
+                    show: true,
+                    radius: 1,
+                    label: {
+                        show: true,
+                        radius: 3 / 4,
+                        formatter: function (label, series) {
+                            return '<div style="font-size:8pt;text-align:center;padding:2px;color:black;">' + Math.round(series.percent) + '%</div>';
+                        },
+                        threshold: 0.1
+                    }
+                }
+            },
+            legend: {
+                show: true,
+                container: $("#rnrStatusReportLegend"),
+                noColumns: 0,
+                labelBoxBorderColor: "none",
+                width:20
+
+            },
+            grid: {
+                hoverable: true,
+                clickable: true,
+                borderWidth: 1,
+                borderColor: "#d6d6d6",
+                backgroundColor: {
+                    colors: ["#FFF", "#CCC"]
+                }
+            },
+            tooltip: true,
+            tooltipOpts: {
+                content: "%p.0%, %s",
+                shifts: {
+                    x: 20,
+                    y: 0
+                },
+                defaultTheme: false
+            }
+        };
+
+
+
+    };
+
+    $scope.resetRnRStatusReportData = function () {
         $scope.RnRStatusPieChartData = null;
-        $scope.datarows = null;
+        $scope.dataRows = null;
     };
 
 
+   $scope.$on("$viewContentLoaded",function(){
 
-    $scope.loadFacilitiesByRequisition = function(){
+
+   });
+
+
+    $scope.loadFacilitiesByRequisition = function () {
         if ($scope.formFilter.rgroupId == "All") {
             $scope.filterObject.rgroupId = -1;
         } else if ($scope.formFilter.rgroupId !== undefined || $scope.formFilter.rgroupId === "") {
@@ -175,16 +194,18 @@ function RequisitionStatusSummaryController($scope,$filter, programsList,RnRStat
         }
 
     };
-    $scope.processSupervisoryNodeChange = function(){
+    $scope.processSupervisoryNodeChange = function () {
 
         $scope.filterObject.supervisoryNodeId = $scope.formFilter.supervisoryNodeId;
 
-        if(isUndefined($scope.formFilter.supervisoryNodeId)){
-            $scope.programs = _.filter(programsList, function(program){ return program.name !== formInputValue.programOptionSelect;});
+        if (isUndefined($scope.formFilter.supervisoryNodeId)) {
+            $scope.programs = _.filter(programsList, function (program) {
+                return program.name !== formInputValue.programOptionSelect;
+            });
 
             $scope.programs.unshift({'name': formInputValue.programOptionSelect});
-        }else if(!isUndefined($scope.formFilter.supervisoryNodeId)){
-            ReportProgramsBySupervisoryNode.get({supervisoryNodeId : $scope.filterObject.supervisoryNodeId},function(data){
+        } else if (!isUndefined($scope.formFilter.supervisoryNodeId)) {
+            ReportProgramsBySupervisoryNode.get({supervisoryNodeId: $scope.filterObject.supervisoryNodeId}, function (data) {
                 $scope.programs = data.programs;
                 $scope.programs.unshift({'name': formInputValue.programOptionSelect});
             });
@@ -195,8 +216,8 @@ function RequisitionStatusSummaryController($scope,$filter, programsList,RnRStat
     };
 
 
-    $scope.processPeriodFilter = function (){
-        if ( $scope.formFilter.periodId == "All") {
+    $scope.processPeriodFilter = function () {
+        if ($scope.formFilter.periodId == "All") {
             $scope.filterObject.periodId = -1;
         } else if ($scope.formFilter.periodId !== undefined || $scope.formFilter.periodId === "") {
             $scope.filterObject.periodId = $scope.formFilter.periodId;
@@ -209,56 +230,58 @@ function RequisitionStatusSummaryController($scope,$filter, programsList,RnRStat
         } else {
             $scope.filterObject.periodId = 0;
         }
-        $scope.getShipmentLeadTimeData();
+        $scope.loadRnRStatus();
     };
 
-    $scope.processRequisitionFilter = function(){
+    $scope.processRequisitionFilter = function () {
 
-        if($scope.formFilter.rgroupId && $scope.formFilter.rgroupId.length > 1) {
-            $scope.formFilter.rgroupId = _.reject($scope.formFilter.rgroupId, function(rgroup){return rgroup === ""; });
+        if ($scope.formFilter.rgroupId && $scope.formFilter.rgroupId.length > 1) {
+            $scope.formFilter.rgroupId = _.reject($scope.formFilter.rgroupId, function (rgroup) {
+                return rgroup === "";
+            });
         }
 
         $scope.filterObject.rgroupId = $scope.formFilter.rgroupId;
 
-        $scope.getShipmentLeadTimeData();
+        $scope.loadRnRStatus();
     };
 
-    $scope.changeSchedule = function(){
+    $scope.changeSchedule = function () {
 
         if (!isUndefined($scope.formFilter.scheduleId)) {
             $scope.filterObject.scheduleId = $scope.formFilter.scheduleId;
         }
 
-        if(!isUndefined($scope.filterObject.scheduleId) ){
-            if(!isUndefined($scope.filterObject.year) ){
-                ReportPeriodsByScheduleAndYear.get({scheduleId: $scope.filterObject.scheduleId, year: $scope.filterObject.year}, function(data){
+        if (!isUndefined($scope.filterObject.scheduleId)) {
+            if (!isUndefined($scope.filterObject.year)) {
+                ReportPeriodsByScheduleAndYear.get({scheduleId: $scope.filterObject.scheduleId, year: $scope.filterObject.year}, function (data) {
                     $scope.periods = data.periods;
-                    $scope.periods.unshift({'name':formInputValue.periodOptionSelect});
+                    $scope.periods.unshift({'name': formInputValue.periodOptionSelect});
                 });
-            }else{
-                ReportPeriods.get({ scheduleId : $scope.filterObject.scheduleId },function(data) {
+            } else {
+                ReportPeriods.get({ scheduleId: $scope.filterObject.scheduleId }, function (data) {
                     $scope.periods = data.periods;
                     $scope.periods.unshift({'name': formInputValue.periodOptionSelect});
 
                 });
             }
-            if(!isUndefined($scope.filterObject.programId)){
-                if(!isUndefined($scope.filterObject.supervisoryNodeId)){
+            if (!isUndefined($scope.filterObject.programId)) {
+                if (!isUndefined($scope.filterObject.supervisoryNodeId)) {
                     RequisitionGroupsBySupervisoryNodeProgramSchedule.get(
                         {programId: $scope.filterObject.programId,
                             scheduleId: $scope.filterObject.scheduleId,
-                            supervisoryNodeId: $scope.filterObject.supervisoryNodeId}, function(data){
+                            supervisoryNodeId: $scope.filterObject.supervisoryNodeId}, function (data) {
                             $scope.requisitionGroups = data.requisitionGroupList;
-                            if(!isUndefined($scope.requisitionGroups)){
-                                $scope.requisitionGroups.unshift({'name':formInputValue.requisitionOptionAll});
+                            if (!isUndefined($scope.requisitionGroups)) {
+                                $scope.requisitionGroups.unshift({'name': formInputValue.requisitionOptionAll});
                             }
 
                         });
-                }else{
-                    RequisitionGroupsByProgramSchedule.get({program: $scope.filterObject.programId, schedule:$scope.filterObject.scheduleId}, function(data){
+                } else {
+                    RequisitionGroupsByProgramSchedule.get({program: $scope.filterObject.programId, schedule: $scope.filterObject.scheduleId}, function (data) {
                         $scope.requisitionGroups = data.requisitionGroupList;
-                        if(!isUndefined($scope.requisitionGroups)){
-                            $scope.requisitionGroups.unshift({'name':formInputValue.requisitionOptionAll});
+                        if (!isUndefined($scope.requisitionGroups)) {
+                            $scope.requisitionGroups.unshift({'name': formInputValue.requisitionOptionAll});
                         }
                     });
                 }
@@ -267,10 +290,10 @@ function RequisitionStatusSummaryController($scope,$filter, programsList,RnRStat
         }
 
 
-        $scope.getShipmentLeadTimeData();
+        $scope.loadRnRStatus();
     };
 
-    $scope.changeScheduleByYear = function (){
+    $scope.changeScheduleByYear = function () {
 
         if (!isUndefined($scope.formFilter.year)) {
             $scope.filterObject.year = $scope.formFilter.year;
@@ -280,10 +303,10 @@ function RequisitionStatusSummaryController($scope,$filter, programsList,RnRStat
 
     };
 
-    $scope.$on('$routeChangeStart', function(){
+    $scope.$on('$routeChangeStart', function () {
         var data = {};
-        angular.extend(data,$scope.filterObject);
-        dashboardFiltersHistoryService.add($scope.$parent.currentTab,data);
+        angular.extend(data, $scope.filterObject);
+        dashboardFiltersHistoryService.add($scope.$parent.currentTab, data);
     });
 
     // the grid options
@@ -293,29 +316,12 @@ function RequisitionStatusSummaryController($scope,$filter, programsList,RnRStat
         count: 25           // count per page
     });
 
-    $scope.getShipmentLeadTimeData = function () {
-        if(isUndefined($scope.filterObject.periodId) || isUndefined($scope.filterObject.programId)){
-            return;
-        }
-
-        ShipmentLeadTime.get($scope.filterObject, function (data) {
-            $scope.loadRnRStatusByRequisitionGroup();
-            $scope.data = data.leadTime;
-            $scope.paramsChanged($scope.tableParams);
-        });
-
-    };
-
-    $scope.resetShipmentLeadTimeData = function(){
-        $scope.data = undefined;
-    };
-
     $scope.$on('$viewContentLoaded', function () {
 
         var filterHistory = dashboardFiltersHistoryService.get($scope.$parent.currentTab);
 
-        if(isUndefined(filterHistory)){
-            if(!_.isEmpty(userPreferredFilterValues)){
+        if (isUndefined(filterHistory)) {
+            if (!_.isEmpty(userPreferredFilterValues)) {
                 var date = new Date();
                 $scope.filterObject.supervisoryNodeId = $scope.formFilter.supervisoryNodeId = userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_SUPERVISORY_NODE];
                 $scope.processSupervisoryNodeChange();
@@ -323,12 +329,12 @@ function RequisitionStatusSummaryController($scope,$filter, programsList,RnRStat
                 $scope.filterObject.programId = userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_PROGRAM];
                 $scope.filterObject.periodId = userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_PERIOD];
 
-                if(!isUndefined($scope.filterObject.periodId)){
+                if (!isUndefined($scope.filterObject.periodId)) {
 
-                    GetPeriod.get({id:$scope.filterObject.periodId}, function(period){
-                        if(!isUndefined(period.year)){
+                    GetPeriod.get({id: $scope.filterObject.periodId}, function (period) {
+                        if (!isUndefined(period.year)) {
                             $scope.filterObject.year = period.year;
-                        }else{
+                        } else {
                             $scope.filterObject.year = date.getFullYear() - 1;
                         }
                     });
@@ -343,7 +349,7 @@ function RequisitionStatusSummaryController($scope,$filter, programsList,RnRStat
 
             }
 
-        }else{
+        } else {
             $scope.formFilter.supervisoryNodeId = filterHistory.supervisoryNodeId;
             $scope.processSupervisoryNodeChange();
 
@@ -354,35 +360,35 @@ function RequisitionStatusSummaryController($scope,$filter, programsList,RnRStat
 
     });
 
-    $scope.registerWatches = function(){
+    $scope.registerWatches = function () {
 
-        $scope.$watch('formFilter.programId',function(){
+        $scope.$watch('formFilter.programId', function () {
             $scope.filterProductsByProgram();
 
         });
-        $scope.$watch('formFilter.scheduleId', function(){
+        $scope.$watch('formFilter.scheduleId', function () {
             $scope.changeSchedule();
 
         });
 
     };
 
-    $scope.paramsChanged = function(params) {
+    $scope.paramsChanged = function (params) {
 
         // slice array data on pages
-        if($scope.data === undefined ){
+        if ($scope.data === undefined) {
             $scope.datarows = [];
             params.total = 0;
-        }else{
+        } else {
             var data = $scope.data;
             var orderedData = params.filter ? $filter('filter')(data, params.filter) : data;
-            orderedData = params.sorting ?  $filter('orderBy')(orderedData, params.orderBy()) : data;
+            orderedData = params.sorting ? $filter('orderBy')(orderedData, params.orderBy()) : data;
 
             params.total = orderedData.length;
-            $scope.datarows = orderedData.slice( (params.page - 1) * params.count,  params.page * params.count );
+            $scope.datarows = orderedData.slice((params.page - 1) * params.count, params.page * params.count);
             var i = 0;
             var baseIndex = params.count * (params.page - 1) + 1;
-            while(i < $scope.datarows.length){
+            while (i < $scope.datarows.length) {
                 $scope.datarows[i].no = baseIndex + i;
                 i++;
             }
@@ -390,6 +396,6 @@ function RequisitionStatusSummaryController($scope,$filter, programsList,RnRStat
     };
 
     // watch for changes of parameters
-    $scope.$watch('tableParams', $scope.paramsChanged , true);
+    $scope.$watch('tableParams', $scope.paramsChanged, true);
 
 }

@@ -12,8 +12,10 @@ package org.openlmis.equipment.service;
 
 import org.openlmis.equipment.domain.ServiceContract;
 import org.openlmis.equipment.domain.ServiceType;
+import org.openlmis.equipment.dto.ContractDetail;
 import org.openlmis.equipment.repository.ServiceContractRepository;
 import org.openlmis.equipment.repository.ServiceTypeRepository;
+import org.openlmis.equipment.repository.mapper.ServiceContractMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -24,6 +26,9 @@ public class ServiceContractService {
 
   @Autowired
   private ServiceContractRepository repository;
+
+  @Autowired
+  private ServiceContractMapper mapper;
 
   public List<ServiceContract> getAll(){
     return repository.getAll();
@@ -46,6 +51,28 @@ public class ServiceContractService {
       repository.insert(contract);
     }else{
       repository.update(contract);
+
+      // save the mappings
+      mapper.deleteFacilities(contract.getId());
+      for(ContractDetail detail: contract.getFacilities()){
+        if(detail.getIsActive()){
+          mapper.insertFacilities(contract.getId(), detail.getId());
+        }
+      }
+
+      mapper.deleteEquipments(contract.getId());
+      for(ContractDetail detail: contract.getEquipments()){
+        if(detail.getIsActive()){
+          mapper.insertEquipment(contract.getId(), detail.getId());
+        }
+      }
+
+      mapper.deleteServiceTypes(contract.getId());
+      for(ContractDetail detail: contract.getServiceTypes()){
+        if(detail.getIsActive()){
+          mapper.insertServiceTypes(contract.getId(), detail.getId());
+        }
+      }
     }
   }
 

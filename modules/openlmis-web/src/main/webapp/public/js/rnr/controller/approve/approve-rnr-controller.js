@@ -8,7 +8,7 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-function ApproveRnrController($scope, requisitionData, Requisitions, rnrColumns, regimenTemplate, equipmentOperationalStatus , $location, pageSize, $routeParams, $dialog, requisitionService, $q) {
+function ApproveRnrController($scope, requisitionData, Requisitions,RejectRequisition, rnrColumns, regimenTemplate, equipmentOperationalStatus , $location, pageSize, $routeParams, $dialog, requisitionService, $q) {
   $scope.canApproveRnr = requisitionData.canApproveRnr;
   $scope.rnr = new Rnr(requisitionData.rnr, rnrColumns, requisitionData.numberOfMonths);
   $scope.rnrColumns = rnrColumns;
@@ -27,6 +27,35 @@ function ApproveRnrController($scope, requisitionData, Requisitions, rnrColumns,
   var NON_FULL_SUPPLY = 'nonFullSupply';
 
   requisitionService.populateScope($scope, $location, $routeParams);
+
+
+  $scope.rejectRnR = function( ){
+    var callBack = function (result) {
+
+      if (result) {
+
+        // reject
+        RejectRequisition.post({id: $scope.rnr.id}, function(data){
+          OpenLmisDialog.newDialog({
+            id: "confirmDialog",
+            header: "label.confirm.action",
+            body: 'msg.rnr.returned'
+          }, function(){
+            $location.url('/public/pages/logistics/rnr/index.html#/init-rnr');
+          }, $dialog);
+        });
+        // redirect to the main page
+      }
+    };
+
+    var options = {
+      id: "confirmDialog",
+      header: "label.confirm.action",
+      body: "label.rnr.confirm.return"
+    };
+
+    OpenLmisDialog.newDialog(options, callBack, $dialog);
+  };
 
   $scope.saveRnr = function (preventMessage) {
     var deferred = $q.defer();

@@ -19,8 +19,22 @@ import java.util.List;
 
 @Repository
 public interface RnRStatusSummaryReportMapper {
+
     @Select("select totalStatus,status from vw_rnr_status_by_facility where requisitiongroupid = #{requisitionGroupId}")
-    public List<RnRStatusSummaryReport> getRnRStatusSummaryData(@Param("requisitionGroupId") Long requisitionGroupId);
+    public List<RnRStatusSummaryReport> getRnRStatusSummaryData1(@Param("requisitionGroupId") Long requisitionGroupId);
 
+    @Select("select count(rnrid) totalStatus,status from vw_number_rnr_created where requisitiongroupid = #{requisitionGroupId}")
+    public  List<RnRStatusSummaryReport>getRnRStatusSummaryData(@Param("requisitionGroupId") Long requisitionGroupId);
 
+    @Select("select status, count(rnrid) totalStatus from vw_rnr_status\n" +
+            " group by  status;")
+    public List<RnRStatusSummaryReport>getAllRnRStatus();
+
+    @Select("select status, count(rnrid) totalStatus from vw_rnr_status\n" +
+            "where requisitiongroupid = #{requisitionGroupId} and periodid = #{periodId} group by status")
+    public List<RnRStatusSummaryReport>getRnRStatusByRequisitionGroupAndPeriod(@Param("requisitionGroupId") Long requisitionGroupId,@Param("periodId") Long periodId);
+
+    @Select("select programname, status, count(rnrid) totalStatus from vw_rnr_status" +
+            "where  requisitiongroupid = #{requisitiongroupId} and periodid = #{periodId} group by programname, status")
+    public List<RnRStatusSummaryReport>getRnRStatusByRequisitionGroupAndPeriodData(@Param("requisitionGroupId") Long requisitionGroupId,@Param("periodId") Long periodId);
 }

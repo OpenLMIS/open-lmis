@@ -30,7 +30,7 @@ public interface RequisitionStatusChangeMapper {
   @Options(useGeneratedKeys = true)
   void insert(RequisitionStatusChange statusChange);
 
-  @Select("SELECT createdDate FROM requisition_status_changes WHERE rnrId = #{rnrId} AND status = #{status}")
+  @Select("SELECT max(createdDate) FROM requisition_status_changes WHERE rnrId = #{rnrId} AND status = #{status}")
   Date getOperationDateFor(@Param("rnrId") Long rnrId, @Param("status") String status);
 
   @Select({"SELECT rsc.*, u.firstName, u.lastName, u.id as userId from requisition_status_changes rsc",

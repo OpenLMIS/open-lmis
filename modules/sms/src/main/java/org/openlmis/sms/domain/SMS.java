@@ -22,6 +22,7 @@ import java.util.Date;
 @NoArgsConstructor
 public class SMS {
 
+    private int id;
     private String message;
     private String phoneNumber;
     private String direction;
