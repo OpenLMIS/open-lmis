@@ -24,7 +24,8 @@ import java.util.List;
  */
 @Repository
 public interface AdjustmentTypeReportMapper {
-    @Select("SELECT name, description " +
+    @Select("SELECT name, description" +
+            " , additive , displayorder " +
             "   FROM " +
             "       losses_adjustments_types order by name")
     List<AdjustmentType> getAll();

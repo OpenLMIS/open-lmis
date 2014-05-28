@@ -41,8 +41,9 @@ public class DashboardController extends BaseController {
     public static final String RNR_STATUS_SUMMARY = "rnrStatusSummary";
     public static final String REPORTING_PERFORMANCE = "reportingPerformance";
     public static final String REPORTING_DETAILS = "reporting";
-
-
+    public static final String TOTAL_RNR_CREATED_BY_REQUISITION_GROUP ="numberOfrnrCreated";
+    private static final String RNR_STATUS_BY_REQUISITION_GROUP="rnrStatus";
+    private static final String RNR_STATUS_BY_REQUISITION_GROUP_DETAILS="rnrStatusDetails";
     @Autowired
     DashboardLookupService lookupService;
 
@@ -152,5 +153,23 @@ public class DashboardController extends BaseController {
                    @RequestParam("status") String status){
         return OpenLmisResponse.response(REPORTING_DETAILS, this.lookupService.getReportingPerformanceDetail(periodId,programId, requisitionGroupId,status));
     }
+    @RequestMapping(value="/RnRCreateForRequisitionGroup",method = GET,headers = ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse>getRnRStatusData(){
+        return OpenLmisResponse.response(TOTAL_RNR_CREATED_BY_REQUISITION_GROUP,this.lookupService.getAllRnRStatus());
+    }
+    @RequestMapping(value="/RnRStatus/{requisitionGroupId}/{periodId}",method = GET,headers = ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse>getRnRStatusByRequisitionGroupAndPeriod(@PathVariable("requisitionGroupId") Long requisitionGroupId,
+                                                                                   @PathVariable("periodId") Long periodId){
+        return OpenLmisResponse.response(RNR_STATUS_BY_REQUISITION_GROUP,this.lookupService.getRnRStatusByRequisitionGroupAndPeriod(requisitionGroupId,periodId));
+    }
+
+    @RequestMapping(value="/RnRStatusByRequisitionGroupDetails",method = GET,headers = ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse>getRnRStatusDetails(
+            @RequestParam("requisitionGroupId") Long requisitionGroupId,
+            @RequestParam("periodId") Long periodId
+    ){
+        return OpenLmisResponse.response(RNR_STATUS_BY_REQUISITION_GROUP_DETAILS,this.lookupService.getRnRStatusByRequisitionGroupAndPeriodData(requisitionGroupId,periodId));
+    }
+
 
 }
