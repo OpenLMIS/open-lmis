@@ -20,8 +20,8 @@ import lombok.NoArgsConstructor;
 public class RnRStatusSummaryReport {
 
     private String status;
-    private Long requisitionGroupId;
     private Integer totalStatus;
-    private Integer programId;
-    private String program;
+    private Long programId;
+    private Long periodId;
+    private String programname;
 }
