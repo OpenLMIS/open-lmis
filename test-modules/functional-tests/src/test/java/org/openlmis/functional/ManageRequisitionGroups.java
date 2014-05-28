@@ -398,6 +398,8 @@ public class ManageRequisitionGroups extends TestCaseHelper {
     assertEquals("Too many results found. Please refine your search.", requisitionGroupPage.getTooManyFacilitySearchResultMessage());
 
     requisitionGroupPage.clickCloseButton();
+
+    testWebDriver.waitForAjax();
     assertFalse(requisitionGroupPage.isFacilitySearchListDisplayed());
 
     searchAssociatedFacility("F990");

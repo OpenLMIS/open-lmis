@@ -299,6 +299,9 @@ public class ManageSupervisoryNodes extends TestCaseHelper {
     supervisoryNodesPage.clickSearchOptionButton();
     supervisoryNodesPage.selectSupervisoryNodeParentAsSearchOption();
     searchNode("Node 4");
+
+    testWebDriver.waitForAjax();
+
     assertEquals("Node 5", supervisoryNodesPage.getSupervisoryNodeName(1));
     assertEquals("N5", supervisoryNodesPage.getSupervisoryNodeCode(1));
     assertEquals("Village Dispensary", supervisoryNodesPage.getFacility(1));
