@@ -18,6 +18,7 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpSession;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import static org.hamcrest.Matchers.is;
@@ -157,5 +158,16 @@ public class DashboardControllerTest {
         ResponseEntity<OpenLmisResponse> fetchedNotificationAlertList = dashboardController.getNotificationTypeAlerts(httpServletRequest);
         verify(lookupService).getNotificationAlerts();
         assertThat((List<AlertSummary>) fetchedNotificationAlertList.getBody().getData().get(NOTIFICATIONS), is(expectedNotificationAlerts));
+    }
+
+    @Test
+    public void shouldReturnNotificationsByCategory(){
+        String alertFacilityStockOut = "alert_facility_stockout";
+        List<HashMap> alertFacilityStockOutList = new ArrayList<>(1);
+        when(lookupService.getNotificationsByCategory(alertFacilityStockOut,1L)).thenReturn(alertFacilityStockOutList);
+
+        ResponseEntity<OpenLmisResponse> fetchedNotificationsByCategory = dashboardController.getNotificationsByCategory(1L,alertFacilityStockOut);
+        verify(lookupService).getNotificationsByCategory(alertFacilityStockOut,1L);
+        assertThat((List<HashMap>) fetchedNotificationsByCategory.getBody().getData().get(NOTIFICATIONS_DETAIL), is(alertFacilityStockOutList));
     }
 }
