@@ -240,11 +240,11 @@ public class FacilityService {
     return facility;
   }
 
-  public Integer getCountOfEnabledFacilities(String searchParam){
-    return facilityRepository.getCountOfEnabledFacilities(searchParam);
+  public Integer getCountOfEnabledFacilities(String searchParam, Long facilityTypeId, Long geoZoneId){
+    return facilityRepository.getCountOfEnabledFacilities(searchParam, facilityTypeId, geoZoneId);
   }
 
-  public List<Facility> getEnabledFacilities(String searchParam) {
-    return facilityRepository.getEnabledFacilities(searchParam);
+  public List<Facility> getEnabledFacilities(String searchParam, Long facilityTypeId, Long geoZoneId) {
+    return facilityRepository.getEnabledFacilities(searchParam, facilityTypeId, geoZoneId);
   }
 }

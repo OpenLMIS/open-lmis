@@ -233,7 +233,7 @@ public class FacilityMapperIT {
   }
 
   @Test
-  public void shouldInsertFacilityWithDbDefalutDateIfSuppliedDateIsNull() throws Exception {
+  public void shouldInsertFacilityWithDBDefaultDateIfSuppliedDateIsNull() throws Exception {
     Facility facility = make(a(defaultFacility));
     facility.setLatitude(123.45678);
     facility.setLongitude(-321.87654);
@@ -556,18 +556,21 @@ public class FacilityMapperIT {
   }
 
   @Test
-  public void shouldGetEnabledFacilities() {
+  public void shouldGetEnabledFacilitiesBySearchParamOnly() {
     String searchParam = "fac";
     Facility fac1 = make(a(FacilityBuilder.defaultFacility, with(name, "FAC1"), with(enabled, true), with(code, "FAC2")));
-    Facility fac2 = make(a(FacilityBuilder.defaultFacility, with(name, "FAC2"), with(enabled, false), with(code, "FAC3")));
-    Facility fac3 = make(a(FacilityBuilder.defaultFacility, with(name, "FAC2"), with(enabled, true), with(code, "FAC1")));
-    Facility fac4 = make(a(FacilityBuilder.defaultFacility, with(name, "Dispensary1"), with(enabled, true), with(code, "DIS3")));
     mapper.insert(fac1);
+
+    Facility fac2 = make(a(FacilityBuilder.defaultFacility, with(name, "FAC2"), with(enabled, false), with(code, "FAC3")));
     mapper.insert(fac2);
+
+    Facility fac3 = make(a(FacilityBuilder.defaultFacility, with(name, "FAC2"), with(enabled, true), with(code, "FAC1")));
     mapper.insert(fac3);
+
+    Facility fac4 = make(a(FacilityBuilder.defaultFacility, with(name, "Dispensary1"), with(enabled, true), with(code, "DIS3")));
     mapper.insert(fac4);
 
-    List<Facility> enabledFacilities = mapper.getEnabledFacilities(searchParam);
+    List<Facility> enabledFacilities = mapper.getEnabledFacilities(searchParam, null, null);
 
     assertThat(enabledFacilities.size(), is(2));
     assertThat(enabledFacilities.get(0).getId(), is(fac3.getId()));
@@ -582,6 +585,164 @@ public class FacilityMapperIT {
     assertThat(enabledFacilities.get(1).getName(), is(fac1.getName()));
     assertThat(enabledFacilities.get(1).getFacilityType().getId(), is(fac1.getFacilityType().getId()));
     assertThat(enabledFacilities.get(1).getFacilityType().getName(), is(fac1.getFacilityType().getName()));
+  }
+
+  @Test
+  public void shouldGetEnabledFacilitiesBySearchParamAndFacilityTypeFilter() {
+    String searchParam = "fac";
+    Long facilityTypeId = 1L;
+
+    Facility fac1 = make(a(FacilityBuilder.defaultFacility, with(name, "FAC1"), with(enabled, true), with(code, "FAC2"), with(typeId, 1L)));
+    mapper.insert(fac1);
+
+    Facility fac2 = make(a(FacilityBuilder.defaultFacility, with(name, "FAC2"), with(enabled, false), with(code, "FAC3")));
+    mapper.insert(fac2);
+
+    Facility fac3 = make(a(FacilityBuilder.defaultFacility, with(name, "FAC2"), with(enabled, true), with(code, "FAC1"), with(typeId, 2L)));
+    mapper.insert(fac3);
+
+    Facility fac4 = make(a(FacilityBuilder.defaultFacility, with(name, "Dispensary1"), with(enabled, true), with(code, "DIS3")));
+    mapper.insert(fac4);
+
+    List<Facility> enabledFacilities = mapper.getEnabledFacilities(searchParam, facilityTypeId, null);
+
+    assertThat(enabledFacilities.size(), is(1));
+    assertThat(enabledFacilities.get(0).getId(), is(fac1.getId()));
+    assertThat(enabledFacilities.get(0).getEnabled(), is(fac1.getEnabled()));
+    assertThat(enabledFacilities.get(0).getCode(), is(fac1.getCode()));
+    assertThat(enabledFacilities.get(0).getName(), is(fac1.getName()));
+    assertThat(enabledFacilities.get(0).getFacilityType().getId(), is(fac1.getFacilityType().getId()));
+    assertThat(enabledFacilities.get(0).getFacilityType().getName(), is(fac1.getFacilityType().getName()));
+  }
+
+  @Test
+  public void shouldGetEnabledFacilitiesBySearchParamAndGeoZoneFilter() {
+    String searchParam = "fac";
+    Long geoZoneId = 1L;
+
+    Facility fac1 = make(a(FacilityBuilder.defaultFacility, with(name, "FAC1"), with(enabled, true), with(code, "FAC2"), with(geographicZoneId, 1L)));
+    mapper.insert(fac1);
+
+    Facility fac2 = make(a(FacilityBuilder.defaultFacility, with(name, "FAC2"), with(enabled, false), with(code, "FAC3")));
+    mapper.insert(fac2);
+
+    Facility fac3 = make(a(FacilityBuilder.defaultFacility, with(name, "FAC2"), with(enabled, true), with(code, "FAC1"), with(geographicZoneId, 2L)));
+    mapper.insert(fac3);
+
+    Facility fac4 = make(a(FacilityBuilder.defaultFacility, with(name, "Dispensary1"), with(enabled, true), with(code, "DIS3")));
+    mapper.insert(fac4);
+
+    List<Facility> enabledFacilities = mapper.getEnabledFacilities(searchParam, null, geoZoneId);
+
+    assertThat(enabledFacilities.size(), is(1));
+    assertThat(enabledFacilities.get(0).getId(), is(fac1.getId()));
+    assertThat(enabledFacilities.get(0).getEnabled(), is(fac1.getEnabled()));
+    assertThat(enabledFacilities.get(0).getCode(), is(fac1.getCode()));
+    assertThat(enabledFacilities.get(0).getName(), is(fac1.getName()));
+    assertThat(enabledFacilities.get(0).getFacilityType().getId(), is(fac1.getFacilityType().getId()));
+    assertThat(enabledFacilities.get(0).getFacilityType().getName(), is(fac1.getFacilityType().getName()));
+  }
+
+  @Test
+  public void shouldGetEnabledFacilitiesBySearchParamAndFilters() {
+    String searchParam = "fac";
+    Long facilityTypeId = 1L;
+    Long geoZoneId = 1L;
+    Facility fac1 = make(a(FacilityBuilder.defaultFacility, with(name, "FAC1"), with(enabled, true), with(code, "FAC1"), with(geographicZoneId, 1L)));
+    mapper.insert(fac1);
+
+    Facility fac2 = make(a(FacilityBuilder.defaultFacility, with(name, "FAC2"), with(enabled, false), with(code, "FAC2"), with(geographicZoneId, 1L)));
+    mapper.insert(fac2);
+
+    Facility fac3 = make(a(FacilityBuilder.defaultFacility, with(name, "Dispensary1"), with(enabled, true), with(code, "DIS3"), with(geographicZoneId, 2L)));
+    mapper.insert(fac3);
+
+    Facility fac4 = make(a(FacilityBuilder.defaultFacility, with(name, "FAC3"), with(enabled, true), with(code, "FAC3"), with(geographicZoneId, 1L)));
+    mapper.insert(fac4);
+
+    List<Facility> enabledFacilities = mapper.getEnabledFacilities(searchParam, facilityTypeId, geoZoneId);
+
+    assertThat(enabledFacilities.size(), is(2));
+    assertThat(enabledFacilities.get(0).getName(), is(fac1.getName()));
+    assertThat(enabledFacilities.get(0).getCode(), is(fac1.getCode()));
+    assertThat(enabledFacilities.get(0).getFacilityType().getId(), is(fac1.getFacilityType().getId()));
+    assertThat(enabledFacilities.get(0).getFacilityType().getName(), is(fac1.getFacilityType().getName()));
+    assertThat(enabledFacilities.get(1).getName(), is(fac4.getName()));
+    assertThat(enabledFacilities.get(1).getCode(), is(fac4.getCode()));
+    assertThat(enabledFacilities.get(1).getFacilityType().getId(), is(fac4.getFacilityType().getId()));
+    assertThat(enabledFacilities.get(1).getFacilityType().getName(), is(fac4.getFacilityType().getName()));
+  }
+
+  @Test
+  public void shouldGetCountOfFacilitiesBySearchParamOnly() {
+    Facility facility1 = make(a(FacilityBuilder.defaultFacility, with(code, "Facility 1")));
+    mapper.insert(facility1);
+
+    Facility facility2 = make(a(FacilityBuilder.defaultFacility, with(code, "Facility 2"), with(enabled, false)));
+    mapper.insert(facility2);
+
+    Facility facility3 = make(a(FacilityBuilder.defaultFacility, with(code, "Facility 3")));
+    mapper.insert(facility3);
+
+    Integer totalFacilities = mapper.getEnabledFacilitiesCount("fac", null, null);
+
+    assertThat(totalFacilities, is(2));
+  }
+
+  @Test
+  public void shouldGetCountOfFacilitiesBySearchParamAndFacilityTypeFilter() {
+    Long facilityTypeId = 1L;
+
+    Facility facility1 = make(a(FacilityBuilder.defaultFacility, with(code, "Facility 1"), with(typeId, facilityTypeId)));
+    mapper.insert(facility1);
+
+    Facility facility2 = make(a(FacilityBuilder.defaultFacility, with(code, "Facility 2"), with(enabled, false)));
+    mapper.insert(facility2);
+
+    Facility facility3 = make(a(FacilityBuilder.defaultFacility, with(code, "Facility 3"), with(typeId, 5L)));
+    mapper.insert(facility3);
+
+    Integer totalFacilities = mapper.getEnabledFacilitiesCount("fac", facilityTypeId, null);
+
+    assertThat(totalFacilities, is(1));
+  }
+
+  @Test
+  public void shouldGetCountOfFacilitiesBySearchParamAndGeoZoneId() {
+    Long geoZoneId = 1L;
+
+    Facility facility1 = make(a(FacilityBuilder.defaultFacility, with(code, "Facility 1"), with(geographicZoneId, geoZoneId)));
+    mapper.insert(facility1);
+
+    Facility facility2 = make(a(FacilityBuilder.defaultFacility, with(code, "Facility 2"), with(enabled, false)));
+    mapper.insert(facility2);
+
+    Facility facility3 = make(a(FacilityBuilder.defaultFacility, with(code, "Facility 3")));
+    mapper.insert(facility3);
+
+    Integer totalFacilities = mapper.getEnabledFacilitiesCount("fac", null, geoZoneId);
+
+    assertThat(totalFacilities, is(1));
+  }
+
+  @Test
+  public void shouldGetCountOfEnabledFacilitiesBySearchParamAndFilters() {
+    String searchParam = "fac";
+    Long facilityTypeId = 1L;
+    Long geoZoneId = 1L;
+
+    Facility fac1 = make(a(FacilityBuilder.defaultFacility,with(name, "FAC1"), with(enabled, true), with(code, "FAC2")));
+    mapper.insert(fac1);
+
+    Facility fac2 = make(a(FacilityBuilder.defaultFacility,with(name, "FAC2"), with(enabled, false), with(code, "FAC3")));
+    mapper.insert(fac2);
+
+    Facility fac3 = make(a(FacilityBuilder.defaultFacility,with(name, "Dispensary1"), with(enabled, true), with(code, "DIS3")));
+    mapper.insert(fac3);
+
+    Integer count = mapper.getEnabledFacilitiesCount(searchParam, facilityTypeId, geoZoneId);
+
+    assertThat(count, is(0));
   }
 
   @Test
@@ -743,22 +904,6 @@ public class FacilityMapperIT {
     Facility fetchedFacility = mapper.getById(facility.getId());
     assertThat(fetchedFacility.getFacilityType().getCode(), is(facilityType1.getCode()));
     assertThat(fetchedFacility.getGeographicZone().getCode(), is(zone1.getCode()));
-  }
-
-  @Test
-  public void shouldSendCountOfFacilities() {
-    Facility facility1 = make(a(FacilityBuilder.defaultFacility, with(code, "Facility 1")));
-    mapper.insert(facility1);
-
-    Facility facility2 = make(a(FacilityBuilder.defaultFacility, with(code, "Facility 2"), with(enabled, false)));
-    mapper.insert(facility2);
-
-    Facility facility3 = make(a(FacilityBuilder.defaultFacility, with(code, "Facility 3")));
-    mapper.insert(facility3);
-
-    Integer totalFacilities = mapper.getCountOfEnabledFacilities(null);
-
-    assertThat(totalFacilities, is(2));
   }
 
   private ProgramSupported insertProgramSupported(Program program, Facility supportedFacility, Date modifiedDate) {

@@ -36,8 +36,8 @@ public class FacilityBuilder {
   public static final Property<Facility, Date> goLiveDate = newProperty();
   public static final Property<Facility, String> operatedByCode = newProperty();
   public static final Property<Facility, GeographicZone> geographicZone = newProperty();
-  public static Property<Facility, Long> typeId = newProperty();
-  private static Property<Facility, Long> operatedById = newProperty();
+  public static final Property<Facility, Long> typeId = newProperty();
+  public static final Property<Facility, Long> operatedById = newProperty();
   public static final Property<Facility, Long> parentFacilityId = newProperty();
   public static final Property<Facility, Boolean> enabled = newProperty();
   public static final Property<Facility, List<ProgramSupported>> programSupportedList = newProperty();

@@ -205,29 +205,33 @@ public class FacilityControllerTest {
   @Test
   public void shouldReturnSearchedFacilitiesIfLessThanLimit() {
     String searchParam = "searchParam";
+    Long facilityTypeId = 1L;
+    Long geoZoneId = 2L;
     Integer count = 1;
     List<Facility> facilities = asList(new Facility());
-    when(facilityService.getCountOfEnabledFacilities(searchParam)).thenReturn(count);
-    when(facilityService.getEnabledFacilities(searchParam)).thenReturn(facilities);
+    when(facilityService.getCountOfEnabledFacilities(searchParam, facilityTypeId, geoZoneId)).thenReturn(count);
+    when(facilityService.getEnabledFacilities(searchParam, facilityTypeId, geoZoneId)).thenReturn(facilities);
 
-    ResponseEntity<OpenLmisResponse> responseEntity = facilityController.getFilteredFacilities(searchParam, "2");
+    ResponseEntity<OpenLmisResponse> responseEntity = facilityController.getFilteredFacilities(searchParam, facilityTypeId, geoZoneId, "2");
 
     assertThat((List<Facility>) responseEntity.getBody().getData().get("facilityList"), is(facilities));
-    verify(facilityService).getCountOfEnabledFacilities(searchParam);
-    verify(facilityService).getEnabledFacilities(searchParam);
+    verify(facilityService).getCountOfEnabledFacilities(searchParam, facilityTypeId, geoZoneId);
+    verify(facilityService).getEnabledFacilities(searchParam, facilityTypeId, geoZoneId);
   }
 
   @Test
   public void shouldNotReturnSearchedFacilitiesIfMoreThanLimit() {
     String searchParam = "searchParam";
+    Long facilityTypeId = 1L;
+    Long geoZoneId = 2L;
     Integer count = 3;
-    when(facilityService.getCountOfEnabledFacilities(searchParam)).thenReturn(count);
+    when(facilityService.getCountOfEnabledFacilities(searchParam, facilityTypeId, geoZoneId)).thenReturn(count);
 
-    ResponseEntity<OpenLmisResponse> responseEntity = facilityController.getFilteredFacilities(searchParam, "2");
+    ResponseEntity<OpenLmisResponse> responseEntity = facilityController.getFilteredFacilities(searchParam, facilityTypeId, geoZoneId, "2");
 
     assertThat((String) responseEntity.getBody().getData().get("message"), is("too.many.results.found"));
-    verify(facilityService).getCountOfEnabledFacilities(searchParam);
-    verify(facilityService, never()).getEnabledFacilities(searchParam);
+    verify(facilityService).getCountOfEnabledFacilities(searchParam, facilityTypeId, geoZoneId);
+    verify(facilityService, never()).getEnabledFacilities(searchParam, facilityTypeId, geoZoneId);
   }
 
   @Test

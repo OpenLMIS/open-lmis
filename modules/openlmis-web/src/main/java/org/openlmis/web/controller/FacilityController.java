@@ -70,12 +70,14 @@ public class FacilityController extends BaseController {
   }
 
   @RequestMapping(value = "/filter-facilities", method = GET, headers = ACCEPT_JSON)
-  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_FACILITY')")
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_FACILITY, MANAGE_SUPERVISORY_NODE, MANAGE_REQUISITION_GROUP')")
   public ResponseEntity<OpenLmisResponse> getFilteredFacilities(@RequestParam(value = "searchParam", required = false) String searchParam,
+                                                                @RequestParam(value = "facilityTypeId", required = false) Long facilityTypeId,
+                                                                @RequestParam(value = "geoZoneId", required = false) Long geoZoneId,
                                                                 @Value("${search.results.limit}") String facilitySearchLimit) {
-    Integer count = facilityService.getCountOfEnabledFacilities(searchParam);
+    Integer count = facilityService.getCountOfEnabledFacilities(searchParam, facilityTypeId, geoZoneId);
     if (count <= Integer.parseInt(facilitySearchLimit)) {
-      List<Facility> facilities = facilityService.getEnabledFacilities(searchParam);
+      List<Facility> facilities = facilityService.getEnabledFacilities(searchParam, facilityTypeId, geoZoneId);
       return OpenLmisResponse.response("facilityList", facilities);
     } else {
       return OpenLmisResponse.response("message", "too.many.results.found");

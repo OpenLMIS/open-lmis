@@ -205,11 +205,11 @@ public class FacilityRepository {
     return mapper.getAllParentsByModifiedDate(modifiedDate);
   }
 
-  public Integer getCountOfEnabledFacilities(String searchParam){
-    return mapper.getCountOfEnabledFacilities(searchParam);
+  public Integer getCountOfEnabledFacilities(String searchParam, Long facilityTypeId, Long geoZoneId){
+    return mapper.getEnabledFacilitiesCount(searchParam, facilityTypeId, geoZoneId);
   }
 
-  public List<Facility> getEnabledFacilities(String searchParam) {
-    return mapper.getEnabledFacilities(searchParam);
+  public List<Facility> getEnabledFacilities(String searchParam, Long facilityTypeId, Long geoZoneId) {
+    return mapper.getEnabledFacilities(searchParam, facilityTypeId, geoZoneId);
   }
 }
