@@ -8,11 +8,13 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.openlmis.core.service.MessageService;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.report.model.dto.*;
 import org.openlmis.report.response.OpenLmisResponse;
 import org.openlmis.report.service.lookup.DashboardLookupService;
 import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpSession;
@@ -44,6 +46,9 @@ public class DashboardControllerTest {
     @Mock
     DashboardLookupService lookupService;
 
+    @Mock
+    MessageService messageService;
+
     @InjectMocks
     DashboardController dashboardController;
 
@@ -59,7 +64,7 @@ public class DashboardControllerTest {
     }
 
     @Test
-    public void shouldReturnItemFillRateForSelectedFacilityAndProducts(){
+    public void shouldReturnItemFillRateForSelectedFacilityAndProducts() throws Exception{
         Long programId = 1L, periodId = 1L,facilityId = 1L;
         List<Long> productsId = new ArrayList<>(2);
         productsId.add(1L);
@@ -79,7 +84,7 @@ public class DashboardControllerTest {
     }
 
     @Test
-    public void shouldReturnOrderFillRateForSelectedFacility(){
+    public void shouldReturnOrderFillRateForSelectedFacility() throws Exception{
         Long programId = 1L, periodId = 1L,facilityId = 1L;
         OrderFillRate expectedOrderFillRate = new OrderFillRate(45.5f);
         when(lookupService.getOrderFillRate(periodId, facilityId, programId)).thenReturn(expectedOrderFillRate);
@@ -91,7 +96,7 @@ public class DashboardControllerTest {
     }
 
     @Test
-    public void shouldReturnStockEfficiencyStatics(){
+    public void shouldReturnStockEfficiencyStatics() throws Exception{
         List<Long> productIdList = new ArrayList<>();
         List<Long> rgIdList = new ArrayList<>();
         List<StockingInfo> expectedStockingInfo = new ArrayList<>(1);
@@ -107,7 +112,7 @@ public class DashboardControllerTest {
     }
 
     @Test
-    public void shouldReturnStockEfficiencyDetail(){
+    public void shouldReturnStockEfficiencyDetail() throws Exception{
         List<Long> productIdList = new ArrayList<>();
         List<Long> rgIdList = new ArrayList<>();
         List<StockingInfo> expectedStockingDetail = new ArrayList<>(1);
@@ -122,7 +127,7 @@ public class DashboardControllerTest {
         assertThat((List<StockingInfo>) fetchedStockingInfoStat.getBody().getData().get(STOCKING_EFFICIENCY_DETAIL), is(expectedStockingDetail));
     }
     @Test
-    public void shouldReturnStockOutFacilities(){
+    public void shouldReturnStockOutFacilities() throws Exception{
         List<Long> rgIdList = new ArrayList<>();
         Long programId = 1L, periodId = 1L, productId = 1L;
         List<StockOut> expectedStockedOutFacilityList = new ArrayList<>(1);
@@ -137,7 +142,7 @@ public class DashboardControllerTest {
     }
 
     @Test
-    public  void shouldReturnAlerts(){
+    public  void shouldReturnAlerts() throws Exception{
         List<AlertSummary> expectedAlertList = new ArrayList<>(1);
         when(lookupService.getAlerts(userId,1L,1L)).thenReturn(expectedAlertList);
 
@@ -148,7 +153,7 @@ public class DashboardControllerTest {
     }
 
     @Test
-    public void shouldReturnNotificationTypeAlerts(){
+    public void shouldReturnNotificationTypeAlerts() throws Exception{
         List<AlertSummary> expectedNotificationAlerts = new ArrayList<>(2);
         expectedNotificationAlerts.add(new AlertSummary(1L,"10",null,1L,"NOTIFICATION","SUMMARY",false,true,null,null,null));
         expectedNotificationAlerts.add(new AlertSummary(2L,"20",null,1L,"NOTIFICATION","SUMMARY",false,true,null,null,null));
@@ -156,12 +161,14 @@ public class DashboardControllerTest {
         when(lookupService.getNotificationAlerts()).thenReturn(expectedNotificationAlerts);
 
         ResponseEntity<OpenLmisResponse> fetchedNotificationAlertList = dashboardController.getNotificationTypeAlerts(httpServletRequest);
+
         verify(lookupService).getNotificationAlerts();
+
         assertThat((List<AlertSummary>) fetchedNotificationAlertList.getBody().getData().get(NOTIFICATIONS), is(expectedNotificationAlerts));
     }
 
     @Test
-    public void shouldReturnNotificationsByCategory(){
+    public void shouldReturnNotificationsByCategory() throws Exception{
         String alertFacilityStockOut = "alert_facility_stockout";
         List<HashMap> alertFacilityStockOutList = new ArrayList<>(1);
         when(lookupService.getNotificationsByCategory(alertFacilityStockOut,1L)).thenReturn(alertFacilityStockOutList);
@@ -169,5 +176,17 @@ public class DashboardControllerTest {
         ResponseEntity<OpenLmisResponse> fetchedNotificationsByCategory = dashboardController.getNotificationsByCategory(1L,alertFacilityStockOut);
         verify(lookupService).getNotificationsByCategory(alertFacilityStockOut,1L);
         assertThat((List<HashMap>) fetchedNotificationsByCategory.getBody().getData().get(NOTIFICATIONS_DETAIL), is(alertFacilityStockOutList));
+    }
+
+    @Test
+    public void shouldSendNotification() throws Exception {
+        when(messageService.message("send.notification.success")).thenReturn("Notification is successfully queued for delivery");
+
+        Notification notification = new Notification();
+
+        ResponseEntity<OpenLmisResponse> sendNotificationResponse = dashboardController.sendNotification(notification, httpServletRequest);
+        assertThat(sendNotificationResponse.getStatusCode(),is(HttpStatus.OK));
+        assertThat(sendNotificationResponse.getBody().getSuccessMsg(),is("Notification is successfully queued for delivery"));
+        verify(lookupService).sendNotification(notification);
     }
 }
