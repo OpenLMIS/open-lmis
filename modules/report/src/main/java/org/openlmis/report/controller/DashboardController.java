@@ -1,6 +1,7 @@
 package org.openlmis.report.controller;
 
 import lombok.NoArgsConstructor;
+import org.openlmis.core.service.MessageService;
 import org.openlmis.report.model.dto.Notification;
 import org.openlmis.report.response.OpenLmisResponse;
 import org.openlmis.report.service.lookup.DashboardLookupService;
@@ -44,6 +45,9 @@ public class DashboardController extends BaseController {
 
     @Autowired
     DashboardLookupService lookupService;
+
+    @Autowired
+    MessageService messageService;
 
     @RequestMapping(value = "/itemFillRate", method = GET, headers = ACCEPT_JSON)
     public ResponseEntity<OpenLmisResponse>  getItemFillRate(@RequestParam("periodId") Long periodId,
@@ -118,10 +122,10 @@ public class DashboardController extends BaseController {
         try{
             this.lookupService.sendNotification(notification);
 
-            return OpenLmisResponse.success("send.notification.success");
+            return OpenLmisResponse.success(messageService.message("send.notification.success"));
 
         }catch (Exception e){
-            return OpenLmisResponse.success("send.notification.error");
+            return OpenLmisResponse.success(messageService.message("send.notification.error"));
         }
     }
 
