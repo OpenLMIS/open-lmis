@@ -100,7 +100,7 @@ public class SupervisoryNodesPage extends Page {
   private static WebElement searchFacility = null;
 
   @FindBy(how = ID, using = "facilityResult0")
-  private static WebElement facilityResult0 = null;
+  private static WebElement firstFacilitySearchResult = null;
 
   @FindBy(how = ID, using = "saveButton")
   private static WebElement saveButton = null;
@@ -109,7 +109,7 @@ public class SupervisoryNodesPage extends Page {
   private static WebElement saveErrorMsgDiv = null;
 
   @FindBy(how = ID, using = "result0")
-  private static WebElement firstParentSearchResultLink = null;
+  private static WebElement firstSupervisoryNodeSearchResult = null;
 
   @FindBy(how = ID, using = "searchSupervisoryNode")
   private static WebElement searchSupervisoryNode = null;
@@ -291,10 +291,10 @@ public class SupervisoryNodesPage extends Page {
     return searchIcon.isDisplayed();
   }
 
-  public void clickOnFirstParentSearchResult() {
+  public void selectFirstSupervisoryNodeSearchResult() {
     testWebDriver.sleep(500);
-    testWebDriver.waitForElementToAppear(firstParentSearchResultLink);
-    firstParentSearchResultLink.click();
+    testWebDriver.waitForElementToAppear(firstSupervisoryNodeSearchResult);
+    firstSupervisoryNodeSearchResult.click();
   }
 
   public void clickAssociatedFacilityField() {
@@ -319,8 +319,8 @@ public class SupervisoryNodesPage extends Page {
   }
 
   public void clickOnFirstFacilitySearchResultLink() {
-    testWebDriver.waitForElementToAppear(firstParentSearchResultLink);
-    firstParentSearchResultLink.click();
+    testWebDriver.waitForElementToAppear(firstFacilitySearchResult);
+    firstFacilitySearchResult.click();
     testWebDriver.waitForElementToAppear(supervisoryNodeName);
   }
 
@@ -335,17 +335,17 @@ public class SupervisoryNodesPage extends Page {
     return result.getText();
   }
 
-  public void enterSupervisoryNodeCodeValue(String code) {
+  public void enterSupervisoryNodeCode(String code) {
     testWebDriver.waitForElementToAppear(supervisoryNodeCode);
     sendKeys(supervisoryNodeCode, code);
   }
 
-  public void enterSupervisoryNodeNameValues(String name) {
+  public void enterSupervisoryNodeName(String name) {
     testWebDriver.waitForElementToAppear(supervisoryNodeName);
     sendKeys(supervisoryNodeName, name);
   }
 
-  public void enterSupervisoryNodeDescriptionValue(String description) {
+  public void enterSupervisoryNodeDescription(String description) {
     testWebDriver.waitForElementToAppear(supervisoryNodeDescription);
     sendKeys(supervisoryNodeDescription, description);
   }
@@ -366,8 +366,8 @@ public class SupervisoryNodesPage extends Page {
   }
 
   public void selectFirstFacilityToBeAssociated() {
-    testWebDriver.waitForElementToAppear(facilityResult0);
-    facilityResult0.click();
+    testWebDriver.waitForElementToAppear(firstFacilitySearchResult);
+    firstFacilitySearchResult.click();
   }
 
   public String getSaveMessage() {

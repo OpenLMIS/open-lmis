@@ -255,21 +255,21 @@ public class ManageSupervisoryNodes extends TestCaseHelper {
     supervisoryNodesPage = homePage.navigateToSupervisoryNodes();
 
     supervisoryNodesPage.clickAddNewButton();
-    supervisoryNodesPage.enterSupervisoryNodeCodeValue("N4");
-    supervisoryNodesPage.enterSupervisoryNodeNameValues("Node 4");
-    supervisoryNodesPage.enterSupervisoryNodeDescriptionValue("This is Node 4");
+    supervisoryNodesPage.enterSupervisoryNodeCode("N4");
+    supervisoryNodesPage.enterSupervisoryNodeName("Node 4");
+    supervisoryNodesPage.enterSupervisoryNodeDescription("This is Node 4");
     supervisoryNodesPage.enterSearchParentNodeParameter("Nod");
 
     supervisoryNodesPage.isSearchListDisplayed();
     assertEquals("Node1", supervisoryNodesPage.getParentNodeResult(1));
     assertEquals("Node2", supervisoryNodesPage.getParentNodeResult(2));
     assertEquals("Node3", supervisoryNodesPage.getParentNodeResult(3));
-    supervisoryNodesPage.clickOnFirstFacilitySearchResultLink();
+    supervisoryNodesPage.selectFirstSupervisoryNodeSearchResult();
 
     assertTrue(supervisoryNodesPage.isClearSearchButtonIsVisible());
     supervisoryNodesPage.clickOnClearSearchResultButton();
     supervisoryNodesPage.enterSearchParentNodeParameter("Nod");
-    supervisoryNodesPage.clickOnFirstParentSearchResult();
+    supervisoryNodesPage.selectFirstSupervisoryNodeSearchResult();
 
     searchAssociatedFacility("F10");
     supervisoryNodesPage.selectFirstFacilityToBeAssociated();
@@ -321,7 +321,7 @@ public class ManageSupervisoryNodes extends TestCaseHelper {
     supervisoryNodesPage.clickSaveButton();
     assertEquals("Duplicate Supervisory Node Code", supervisoryNodesPage.getSaveMessage());
 
-    supervisoryNodesPage.enterSupervisoryNodeCodeValue("N4");
+    supervisoryNodesPage.enterSupervisoryNodeCode("N4");
     supervisoryNodesPage.enterSearchParentNodeParameter("parent");
     supervisoryNodesPage.clickSaveButton();
     supervisoryNodesPage.clickViewHereLink();
@@ -395,11 +395,11 @@ public class ManageSupervisoryNodes extends TestCaseHelper {
   }
 
   public void enterSupervisoryNodeDetails(String code, String name, String description, String parentNode, String facilityCodeOrName) {
-    supervisoryNodesPage.enterSupervisoryNodeCodeValue(code);
-    supervisoryNodesPage.enterSupervisoryNodeNameValues(name);
-    supervisoryNodesPage.enterSupervisoryNodeDescriptionValue(description);
+    supervisoryNodesPage.enterSupervisoryNodeCode(code);
+    supervisoryNodesPage.enterSupervisoryNodeName(name);
+    supervisoryNodesPage.enterSupervisoryNodeDescription(description);
     supervisoryNodesPage.enterSearchParentNodeParameter(parentNode);
-    supervisoryNodesPage.clickOnFirstFacilitySearchResultLink();
+    supervisoryNodesPage.selectFirstSupervisoryNodeSearchResult();
     searchAssociatedFacility(facilityCodeOrName);
     supervisoryNodesPage.selectFirstFacilityToBeAssociated();
   }
