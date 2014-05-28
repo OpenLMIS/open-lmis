@@ -108,9 +108,6 @@ public class SupervisoryNodesPage extends Page {
   @FindBy(how = ID, using = "saveErrorMsgDiv")
   private static WebElement saveErrorMsgDiv = null;
 
-  @FindBy(how = ID, using = "result0")
-  private static WebElement firstSupervisoryNodeSearchResult = null;
-
   @FindBy(how = ID, using = "searchSupervisoryNode")
   private static WebElement searchSupervisoryNode = null;
 
@@ -291,10 +288,10 @@ public class SupervisoryNodesPage extends Page {
     return searchIcon.isDisplayed();
   }
 
-  public void selectFirstSupervisoryNodeSearchResult() {
-    testWebDriver.sleep(500);
-    testWebDriver.waitForElementToAppear(firstSupervisoryNodeSearchResult);
-    firstSupervisoryNodeSearchResult.click();
+  public void selectSupervisoryNodeSearchResult(int rowNumber) {
+    WebElement result = testWebDriver.getElementById("result" + (rowNumber - 1));
+    testWebDriver.waitForElementToAppear(result);
+    result.click();
   }
 
   public void clickAssociatedFacilityField() {
