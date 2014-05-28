@@ -228,7 +228,7 @@ public class ManageSupervisoryNodes extends TestCaseHelper {
     supervisoryNodesPage.clickSearchIcon();
     assertTrue(supervisoryNodesPage.isOneResultMessageDisplayed());
 
-    assertEquals("Supervisory Node Name", supervisoryNodesPage.getSupervisoryNodeHeader());
+    assertEquals("Supervisory node name", supervisoryNodesPage.getSupervisoryNodeHeader());
     assertEquals("Code", supervisoryNodesPage.getCodeHeader());
     assertEquals("Facility", supervisoryNodesPage.getFacilityHeader());
     assertEquals("Parent", supervisoryNodesPage.getParentHeader());

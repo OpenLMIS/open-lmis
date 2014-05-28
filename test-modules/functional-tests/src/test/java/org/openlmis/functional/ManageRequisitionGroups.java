@@ -52,7 +52,6 @@ public class ManageRequisitionGroups extends TestCaseHelper {
     assertTrue(homePage.isRequisitionGroupTabDisplayed());
     requisitionGroupPage = homePage.navigateToRequisitionGroupPage();
 
-    assertEquals("Search Requisition Group", requisitionGroupPage.getSearchRequisitionGroupLabel());
     assertTrue(requisitionGroupPage.isAddNewButtonDisplayed());
     assertEquals("Requisition group", requisitionGroupPage.getSelectedSearchOption());
     assertTrue(requisitionGroupPage.isSearchIconDisplayed());
@@ -68,7 +67,7 @@ public class ManageRequisitionGroups extends TestCaseHelper {
     requisitionGroupPage = homePage.navigateToRequisitionGroupPage();
 
     assertTrue(homePage.isRequisitionGroupTabDisplayed());
-    assertEquals("Search Requisition Group", requisitionGroupPage.getSearchRequisitionGroupLabel());
+    assertEquals("Search requisition group", requisitionGroupPage.getSearchRequisitionGroupLabel());
     assertTrue(requisitionGroupPage.isAddNewButtonDisplayed());
     assertEquals("Requisition group", requisitionGroupPage.getSelectedSearchOption());
     assertFalse(requisitionGroupPage.isResultDisplayed());
@@ -108,7 +107,6 @@ public class ManageRequisitionGroups extends TestCaseHelper {
     dbWrapper.insertRequisitionGroupMembersTestData();
 
     homePage.navigateToRequisitionGroupPage();
-    assertEquals("Search Requisition Group", requisitionGroupPage.getSearchRequisitionGroupLabel());
     search("Requisition Group 1");
     assertEquals("11 matches found for 'Requisition Group 1'", requisitionGroupPage.getNResultsMessage());
     search("Requisition Group ");
@@ -190,7 +188,6 @@ public class ManageRequisitionGroups extends TestCaseHelper {
     dbWrapper.insertRequisitionGroupMembersTestData();
 
     requisitionGroupPage = homePage.navigateToRequisitionGroupPage();
-    assertEquals("Search Requisition Group", requisitionGroupPage.getSearchRequisitionGroupLabel());
     assertEquals("Requisition group", requisitionGroupPage.getSelectedSearchOption());
     requisitionGroupPage.clickSearchOptionButton();
     requisitionGroupPage.selectSupervisoryNodeAsSearchOption();
