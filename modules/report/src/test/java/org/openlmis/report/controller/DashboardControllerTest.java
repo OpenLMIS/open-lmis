@@ -11,6 +11,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.report.model.dto.ItemFillRate;
 import org.openlmis.report.model.dto.OrderFillRate;
+import org.openlmis.report.model.dto.StockOut;
 import org.openlmis.report.model.dto.StockingInfo;
 import org.openlmis.report.response.OpenLmisResponse;
 import org.openlmis.report.service.lookup.DashboardLookupService;
@@ -48,7 +49,7 @@ public class DashboardControllerTest {
 
     @Test
     public void shouldReturnItemFillRateForSelectedFacilityAndProducts(){
-        Long geoId = 1L, programId = 1L, periodId = 1L,facilityId = 1L;
+        Long programId = 1L, periodId = 1L,facilityId = 1L;
         List<Long> productsId = new ArrayList<>(2);
         productsId.add(1L);
         productsId.add(2L);
@@ -68,7 +69,7 @@ public class DashboardControllerTest {
 
     @Test
     public void shouldReturnOrderFillRateForSelectedFacility(){
-        Long geoId = 1L, programId = 1L, periodId = 1L,facilityId = 1L;
+        Long programId = 1L, periodId = 1L,facilityId = 1L;
         OrderFillRate expectedOrderFillRate = new OrderFillRate(45.5f);
         when(lookupService.getOrderFillRate(periodId, facilityId, programId)).thenReturn(expectedOrderFillRate);
         ResponseEntity<OpenLmisResponse> fetchedOrderFillRate = dashboardController.getOrderFillRate(periodId, facilityId, programId);
@@ -85,11 +86,11 @@ public class DashboardControllerTest {
         List<StockingInfo> expectedStockingInfo = new ArrayList<>(1);
         expectedStockingInfo.add(new StockingInfo());
 
-        when(lookupService.getStockEfficiencyData(1L, 1L,rgIdList, productIdList)).thenReturn(expectedStockingInfo);
+        when(lookupService.getStockEfficiencyData(1L, 1L, rgIdList, productIdList)).thenReturn(expectedStockingInfo);
 
-        ResponseEntity<OpenLmisResponse> fetchedStockingInfoStat = dashboardController.getStockEfficiencyData(1L,1L,rgIdList,productIdList);
+        ResponseEntity<OpenLmisResponse> fetchedStockingInfoStat = dashboardController.getStockEfficiencyData(1L, 1L, rgIdList, productIdList);
 
-        verify(lookupService).getStockEfficiencyData(1L,1L,rgIdList,productIdList);
+        verify(lookupService).getStockEfficiencyData(1L, 1L, rgIdList, productIdList);
 
         assertThat((List<StockingInfo>) fetchedStockingInfoStat.getBody().getData().get(STOCKING_EFFICIENCY_STATICS), is(expectedStockingInfo));
     }
@@ -109,5 +110,20 @@ public class DashboardControllerTest {
 
         assertThat((List<StockingInfo>) fetchedStockingInfoStat.getBody().getData().get(STOCKING_EFFICIENCY_DETAIL), is(expectedStockingDetail));
     }
+    @Test
+    public void shouldReturnStockOutFacilities(){
+        List<Long> rgIdList = new ArrayList<>();
+        Long programId = 1L, periodId = 1L, productId = 1L;
+        List<StockOut> expectedStockedOutFacilityList = new ArrayList<>(1);
+
+        when(lookupService.getStockOutFacilities(periodId,programId,productId,rgIdList)).thenReturn(expectedStockedOutFacilityList);
+
+        ResponseEntity<OpenLmisResponse> fetchedStockedOutFacilityList = dashboardController.getStockedOutFacilities(periodId,programId,productId,rgIdList);
+
+        verify(lookupService).getStockOutFacilities(periodId,programId,productId,rgIdList);
+
+        assertThat((List<StockOut>) fetchedStockedOutFacilityList.getBody().getData().get(STOCKED_OUT_FACILITIES), is(expectedStockedOutFacilityList));
+    }
+
 
 }
