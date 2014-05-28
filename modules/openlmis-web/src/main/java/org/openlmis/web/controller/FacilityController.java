@@ -59,7 +59,7 @@ public class FacilityController extends BaseController {
   private ProgramService programService;
 
   @RequestMapping(value = "/facilities", method = GET, headers = ACCEPT_JSON)
-  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_FACILITY')")
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_FACILITY, MANAGE_USER')")
   public List<Facility> get(@RequestParam(value = "searchParam", required = false) String searchParam,
                             @RequestParam(value = "virtualFacility", required = false) Boolean virtualFacility) {
     if (searchParam != null) {
@@ -165,8 +165,7 @@ public class FacilityController extends BaseController {
     facilityService.updateEnabledAndActiveFor(facilityToBeDeleted);
     Facility deletedFacility = facilityService.getById(facilityId);
 
-    String successMessage = messageService.message("disable.facility.success", deletedFacility.getName(),
-      deletedFacility.getCode());
+    String successMessage = messageService.message("disable.facility.success", deletedFacility.getName(), deletedFacility.getCode());
     OpenLmisResponse response = new OpenLmisResponse("facility", deletedFacility);
     return response.successEntity(successMessage);
   }
@@ -188,8 +187,7 @@ public class FacilityController extends BaseController {
     return response.successEntity(successMessage);
   }
 
-  @RequestMapping(value = "/deliveryZones/{deliveryZoneId}/programs/{programId}/facilities", method = GET,
-    headers = ACCEPT_JSON)
+  @RequestMapping(value = "/deliveryZones/{deliveryZoneId}/programs/{programId}/facilities", method = GET, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_DISTRIBUTION')")
   public ResponseEntity<OpenLmisResponse> getFacilitiesForDeliveryZoneAndProgram(@PathVariable("deliveryZoneId") Long deliveryZoneId,
                                                                                  @PathVariable("programId") Long programId) {
@@ -205,7 +203,7 @@ public class FacilityController extends BaseController {
   }
 
   @RequestMapping(value = "/facility-types", method = GET, headers = ACCEPT_JSON)
-  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_FACILITY')")
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_FACILITY, MANAGE_SUPERVISORY_NODE, MANAGE_REQUISITION_GROUP')")
   public List<FacilityType> getFacilityTypes() {
     return facilityService.getAllTypes();
   }

@@ -54,16 +54,16 @@ public class ProgramController extends BaseController {
   @RequestMapping(value = "/facility/{facilityId}/view/requisition/programs", method = GET, headers = ACCEPT_JSON)
   public List<Program> getProgramsToViewRequisitions(@PathVariable(value = "facilityId") Long facilityId,
                                                      HttpServletRequest request) {
-    List<Program> programs =  programService.getProgramsForUserByFacilityAndRights(facilityId, loggedInUserId(request), VIEW_REQUISITION);
+    List<Program> programs = programService.getProgramsForUserByFacilityAndRights(facilityId, loggedInUserId(request), VIEW_REQUISITION);
     List<Program> pullPrograms = new ArrayList<>();
-    for(Program program : programs) {
-      if(!program.isPush())
+    for (Program program : programs) {
+      if (!program.isPush())
         pullPrograms.add(program);
     }
     return pullPrograms;
   }
 
-  @RequestMapping(value = "/create/requisition/programs",  method = GET, headers = ACCEPT_JSON)
+  @RequestMapping(value = "/create/requisition/programs", method = GET, headers = ACCEPT_JSON)
   public List<Program> getProgramsForCreateOrAuthorizeRequisition(@RequestParam(value = "facilityId", required = false) Long facilityId,
                                                                   HttpServletRequest request) {
     Right[] rights = {CREATE_REQUISITION, AUTHORIZE_REQUISITION};
@@ -87,7 +87,7 @@ public class ProgramController extends BaseController {
   }
 
   @RequestMapping(value = "/programs/{id}", method = GET, headers = ACCEPT_JSON)
-  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CONFIGURE_RNR') OR @permissionEvaluator.hasPermission(principal,'MANAGE_REGIMEN_TEMPLATE')")
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CONFIGURE_RNR, MANAGE_REGIMEN_TEMPLATE')")
   public ResponseEntity<OpenLmisResponse> get(@PathVariable Long id) {
     return OpenLmisResponse.response(PROGRAM, programService.getById(id));
   }
