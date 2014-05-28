@@ -9,14 +9,13 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.db.categories.UnitTests;
-import org.openlmis.report.model.dto.ItemFillRate;
-import org.openlmis.report.model.dto.OrderFillRate;
-import org.openlmis.report.model.dto.StockOut;
-import org.openlmis.report.model.dto.StockingInfo;
+import org.openlmis.report.model.dto.*;
 import org.openlmis.report.response.OpenLmisResponse;
 import org.openlmis.report.service.lookup.DashboardLookupService;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.mock.web.MockHttpSession;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +24,8 @@ import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.openlmis.authentication.web.UserAuthenticationSuccessHandler.USER;
+import static org.openlmis.authentication.web.UserAuthenticationSuccessHandler.USER_ID;
 import static org.openlmis.report.controller.DashboardController.*;
 
 /**
@@ -36,14 +37,23 @@ import static org.openlmis.report.controller.DashboardController.*;
 @Category(UnitTests.class)
 @PrepareForTest(OpenLmisResponse.class)
 public class DashboardControllerTest {
+
+    public static final Long userId = 1L;
+
     @Mock
     DashboardLookupService lookupService;
 
     @InjectMocks
     DashboardController dashboardController;
 
+    private MockHttpServletRequest httpServletRequest = new MockHttpServletRequest();
+
     @Before
     public void setup(){
+        MockHttpSession mockHttpSession = new MockHttpSession();
+        httpServletRequest.setSession(mockHttpSession);
+        mockHttpSession.setAttribute(USER, USER);
+        mockHttpSession.setAttribute(USER_ID, userId);
         MockitoAnnotations.initMocks(this);
     }
 
@@ -125,5 +135,14 @@ public class DashboardControllerTest {
         assertThat((List<StockOut>) fetchedStockedOutFacilityList.getBody().getData().get(STOCKED_OUT_FACILITIES), is(expectedStockedOutFacilityList));
     }
 
+    @Test
+    public  void shouldReturnAlerts(){
+        List<AlertSummary> expectedAlertList = new ArrayList<>(1);
+        when(lookupService.getAlerts(userId,1L,1L)).thenReturn(expectedAlertList);
 
+        ResponseEntity<OpenLmisResponse> fetchedAlertList = dashboardController.getAlerts(1L,1L,httpServletRequest);
+        verify(lookupService).getAlerts(userId,1L,1L);
+        assertThat((List<AlertSummary>) fetchedAlertList.getBody().getData().get(ALERTS),is(expectedAlertList));
+
+    }
 }
