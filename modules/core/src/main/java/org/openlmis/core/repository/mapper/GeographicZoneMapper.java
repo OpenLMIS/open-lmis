@@ -61,15 +61,22 @@ public interface GeographicZoneMapper {
     "WHERE id = #{id}"})
   void update(GeographicZone geographicZone);
 
-  @Select({"SELECT GZ.*, GL.name AS levelName, GL.code AS levelCode, GZP.name AS parentName, GZP.code AS parentCode",
+  @Select({"SELECT GZ.*, GL.id as levelId, GL.levelNumber as levelNumber, GL.code AS levelCode, GL.name AS levelName,",
+    "GZP.code AS parentCode, GZP.name AS parentName,",
+    "GLP.code AS parentLevelCode, GLP.name AS parentLevel",
     "FROM geographic_zones GZ LEFT JOIN geographic_zones GZP ON GZ.parentId = GZP.id",
     "INNER JOIN geographic_levels GL ON GZ.levelId = GL.id",
+    "LEFT JOIN geographic_levels GLP ON GZP.levelId = GLP.id",
     "WHERE GZ.id = #{geographicZoneId}"})
   @Results(value = {
+    @Result(property = "level.id", column = "levelId"),
     @Result(property = "level.code", column = "levelCode"),
     @Result(property = "level.name", column = "levelName"),
+    @Result(property = "level.levelNumber", column = "levelNumber"),
     @Result(property = "parent.name", column = "parentName"),
-    @Result(property = "parent.code", column = "parentCode")
+    @Result(property = "parent.code", column = "parentCode"),
+    @Result(property = "parent.level.code", column = "parentLevelCode"),
+    @Result(property = "parent.level.name", column = "parentLevel")
   })
   GeographicZone getWithParentById(Long geographicZoneId);
 
@@ -117,9 +124,9 @@ public interface GeographicZoneMapper {
     "WHERE LOWER(GZ.name) LIKE '%' || LOWER(#{searchParam} || '%')"})
   Integer getTotalSearchResultCount(String param);
 
-  @Select({"SELECT GZ.* FROM geographic_zones GZ INNER JOIN geographic_levels GL ON GZ.levelId = GL.id " ,
+  @Select({"SELECT GZ.* FROM geographic_zones GZ INNER JOIN geographic_levels GL ON GZ.levelId = GL.id ",
     "where (LOWER(GZ.name) LIKE '%' || LOWER(#{searchParam}) || '%'",
-    "OR LOWER(GZ.code) LIKE '%' || LOWER(#{searchParam}) || '%') " ,
+    "OR LOWER(GZ.code) LIKE '%' || LOWER(#{searchParam}) || '%') ",
     "ORDER BY GL.levelNumber, GZ.code"})
   List<GeographicZone> getGeographicZonesByCodeOrName(String searchParam);
 

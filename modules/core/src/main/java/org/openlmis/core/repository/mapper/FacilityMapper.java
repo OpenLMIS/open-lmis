@@ -155,7 +155,6 @@ public interface FacilityMapper {
     "ORDER BY code"})
   List<Facility> searchFacilitiesByCodeOrName(String searchParam);
 
-
   @Select({"SELECT DISTINCT F.* FROM facilities F INNER JOIN users U ON U.facilityId = F.id",
     "INNER JOIN role_assignments RA ON RA.userId = U.id INNER JOIN role_rights RR ON RR.roleId = RA.roleId",
     "WHERE U.id = #{userId} AND RR.rightName = ANY(#{commaSeparatedRights}::VARCHAR[]) AND RA.supervisoryNodeId IS NULL"})
