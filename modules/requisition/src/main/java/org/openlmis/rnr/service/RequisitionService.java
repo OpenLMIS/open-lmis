@@ -379,9 +379,9 @@ public class RequisitionService {
 
     if (periodIdOfLastRequisitionToEnterPostSubmitFlow != null) {
       ProcessingPeriod currentPeriod = processingScheduleService.getCurrentPeriod(facilityId, programId, programStartDate);
-      if (currentPeriod != null && periodIdOfLastRequisitionToEnterPostSubmitFlow.equals(currentPeriod.getId())) {
-        throw new DataException("error.current.rnr.already.post.submit");
-      }
+//      if (currentPeriod != null && periodIdOfLastRequisitionToEnterPostSubmitFlow.equals(currentPeriod.getId())) {
+//        throw new DataException("error.current.rnr.already.post.submit");
+//      }
     }
 
     return processingScheduleService.getAllPeriodsAfterDateAndPeriod(facilityId, programId, programStartDate, periodIdOfLastRequisitionToEnterPostSubmitFlow);
