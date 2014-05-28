@@ -145,4 +145,17 @@ public class DashboardControllerTest {
         assertThat((List<AlertSummary>) fetchedAlertList.getBody().getData().get(ALERTS),is(expectedAlertList));
 
     }
+
+    @Test
+    public void shouldReturnNotificationTypeAlerts(){
+        List<AlertSummary> expectedNotificationAlerts = new ArrayList<>(2);
+        expectedNotificationAlerts.add(new AlertSummary(1L,"10",null,1L,"NOTIFICATION","SUMMARY",false,true,null,null,null));
+        expectedNotificationAlerts.add(new AlertSummary(2L,"20",null,1L,"NOTIFICATION","SUMMARY",false,true,null,null,null));
+
+        when(lookupService.getNotificationAlerts()).thenReturn(expectedNotificationAlerts);
+
+        ResponseEntity<OpenLmisResponse> fetchedNotificationAlertList = dashboardController.getNotificationTypeAlerts(httpServletRequest);
+        verify(lookupService).getNotificationAlerts();
+        assertThat((List<AlertSummary>) fetchedNotificationAlertList.getBody().getData().get(NOTIFICATIONS), is(expectedNotificationAlerts));
+    }
 }
