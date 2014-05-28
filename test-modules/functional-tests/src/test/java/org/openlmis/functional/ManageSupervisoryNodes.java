@@ -401,6 +401,7 @@ public class ManageSupervisoryNodes extends TestCaseHelper {
     supervisoryNodesPage.selectFirstFacilityToBeAssociated();
   }
 
+
   public void searchAssociatedFacility(String facilityName) {
     supervisoryNodesPage.clickAssociatedFacilityField();
     supervisoryNodesPage.searchFacilityToBeAssociated(facilityName);

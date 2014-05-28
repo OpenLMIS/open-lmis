@@ -24,11 +24,11 @@
       </div>
     </div>
 
-    <div id="search_list" class="search-list">
+    <div id="searchFacilityList" class="search-list">
       <div ng-switch on="resultCount">
         <h3 ng-switch-when="0">
           <span id="noFacilityResultMessage" ng-show="!message" openlmis-message="msg.no.matches|facilityQuery"></span>
-          <span ng-show="message" openlmis-message="message"></span>
+          <span id="tooManyResultsMessage" ng-show="message" openlmis-message="message"></span>
         </h3>
 
         <h3 ng-switch-when="1" openlmis-message="msg.one.match|facilityQuery"></h3>

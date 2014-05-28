@@ -88,7 +88,7 @@ public class DBWrapper {
     update("delete from users where userName like('%s')", userName);
 
     update("INSERT INTO users(userName, password, facilityId, firstName, lastName, email, active, verified) " +
-        "VALUES ('%s', '%s', (SELECT id FROM facilities WHERE code = '%s'), 'Fatima', 'Doe', '%s','true','true')",
+      "VALUES ('%s', '%s', (SELECT id FROM facilities WHERE code = '%s'), 'Fatima', 'Doe', '%s','true','true')",
       userName, password, facilityCode, email
     );
   }
@@ -416,8 +416,8 @@ public class DBWrapper {
   public void insertSupervisoryNode(String facilityCode, String supervisoryNodeCode, String supervisoryNodeName,
                                     String supervisoryNodeParentCode) throws SQLException {
     update("INSERT INTO supervisory_nodes" +
-        "  (parentId, facilityId, name, code) VALUES" +
-        "  ((select id from  supervisory_nodes where code ='%s'), (SELECT id FROM facilities WHERE code = '%s'), '%s', '%s')",
+      "  (parentId, facilityId, name, code) VALUES" +
+      "  ((select id from  supervisory_nodes where code ='%s'), (SELECT id FROM facilities WHERE code = '%s'), '%s', '%s')",
       supervisoryNodeParentCode, facilityCode, supervisoryNodeName, supervisoryNodeCode
     );
   }
@@ -441,6 +441,12 @@ public class DBWrapper {
     if (rs.next()) {
       update("delete from requisition_groups;");
     }
+    update("INSERT INTO requisition_groups ( code ,name,description,supervisoryNodeId )values\n" +
+      "('" + requisitionGroupCode + "','" + requisitionGroupName + "','Supports EM(Q1M)',(select id from  supervisory_nodes where code ='"
+      + supervisoryNodeCode + "'));");
+  }
+
+  public void insertRequisitionGroupWithoutDelete(String requisitionGroupCode, String requisitionGroupName, String supervisoryNodeCode) throws SQLException {
     update("INSERT INTO requisition_groups ( code ,name,description,supervisoryNodeId )values\n" +
       "('" + requisitionGroupCode + "','" + requisitionGroupName + "','Supports EM(Q1M)',(select id from  supervisory_nodes where code ='"
       + supervisoryNodeCode + "'));");
@@ -1223,8 +1229,16 @@ public class DBWrapper {
       " (SELECT id from programs WHERE code='" + programCode + "'), (SELECT id from supervisory_nodes WHERE code = '" + supervisoryNode + "'));");
   }
 
-  public void insertRequisitionGroupProgramScheduleForProgram(String requisitionGroupCode, String programCode, String scheduleCode) throws SQLException {
+  public void insertRequisitionGroupProgramScheduleForProgramAfterDelete(String requisitionGroupCode, String programCode, String scheduleCode) throws SQLException {
     update("delete from requisition_group_program_schedules where programId=(select id from programs where code='" + programCode + "');");
+    update(
+      "insert into requisition_group_program_schedules ( requisitionGroupId , programId , scheduleId , directDelivery ) values\n" +
+        "((select id from requisition_groups where code='" + requisitionGroupCode + "'),(select id from programs where code='" + programCode + "')," +
+        "(select id from processing_schedules where code='" + scheduleCode + "'),TRUE);"
+    );
+  }
+
+  public void insertRequisitionGroupProgramScheduleForProgramWithoutDelete(String requisitionGroupCode, String programCode, String scheduleCode) throws SQLException {
     update(
       "insert into requisition_group_program_schedules ( requisitionGroupId , programId , scheduleId , directDelivery ) values\n" +
         "((select id from requisition_groups where code='" + requisitionGroupCode + "'),(select id from programs where code='" + programCode + "')," +
@@ -1493,13 +1507,13 @@ public class DBWrapper {
       }
 
       update("INSERT INTO shipment_line_items(orderNumber,productCode,quantityShipped,productName,dispensingUnit,productCategory," +
-          "productDisplayOrder,productCategoryDisplayOrder,packsToShip,fullSupply,orderId) VALUES ('%s', '%s', %d, %s, %s, '%s',%d ," +
-          "%d, %d, %b, %d)", orderNumber, productCode, quantityShipped, "'antibiotic Capsule 300/200/600 mg'", "'Strip'", categoryName,
+        "productDisplayOrder,productCategoryDisplayOrder,packsToShip,fullSupply,orderId) VALUES ('%s', '%s', %d, %s, %s, '%s',%d ," +
+        "%d, %d, %b, %d)", orderNumber, productCode, quantityShipped, "'antibiotic Capsule 300/200/600 mg'", "'Strip'", categoryName,
         productDisplayOrder, categoryDisplayOrder, packsToShip, fullSupplyFlag, orderID
       );
     } else {
       update("INSERT INTO shipment_line_items(orderNumber,productCode,quantityShipped,productName,dispensingUnit,packsToShip,fullSupply," +
-          "orderId) VALUES ('%s', '%s', %d, %s, %s, %d, %b, %d)", orderNumber, productCode, quantityShipped, "'antibiotic Capsule 300/200/600 mg'",
+        "orderId) VALUES ('%s', '%s', %d, %s, %s, %d, %b, %d)", orderNumber, productCode, quantityShipped, "'antibiotic Capsule 300/200/600 mg'",
         "'Strip'", packsToShip, fullSupplyFlag, orderID
       );
     }

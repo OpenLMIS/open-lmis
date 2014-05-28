@@ -61,12 +61,59 @@ public class RequisitionGroupPage extends Page {
   @FindBy(how = ID, using = "requisitionGroupSearchResults")
   private static WebElement requisitionGroupSearchResult = null;
 
+  @FindBy(how = ID, using = "requisitionGroupCode")
+  private static WebElement requisitionGroupCode = null;
 
+  @FindBy(how = ID, using = "requisitionGroupName")
+  private static WebElement requisitionGroupName = null;
+
+  @FindBy(how = ID, using = "searchSupervisoryNode")
+  private static WebElement searchSupervisoryNodeField = null;
+
+  @FindBy(how = ID, using = "associateFacility")
+  private static WebElement associateFacilityLink = null;
+
+  @FindBy(how = ID, using = "searchFacility")
+  private static WebElement searchFacility = null;
+
+  @FindBy(how = ID, using = "saveButton")
+  private static WebElement saveButton = null;
+
+  @FindBy(how = ID, using = "searchFacilityList")
+  private static WebElement searchFacilityList = null;
+
+  @FindBy(how = ID, using = "saveSuccessMsgDiv")
+  private static WebElement saveSuccessMsgDiv = null;
+
+  @FindBy(how = ID, using = "clearNodeSearch")
+  private static WebElement clearNodeSearch = null;
+
+  @FindBy(how = ID, using = "cancelButton")
+  private static WebElement cancelButton = null;
+
+  @FindBy(how = ID, using = "closeButton")
+  private static WebElement closeButton = null;
+
+  @FindBy(how = ID, using = "noFacilityResultMessage")
+  private static WebElement noFacilityResultMessage = null;
+
+  @FindBy(how = ID, using = "tooManyResultsMessage")
+  private static WebElement tooManyResultsMessage = null;
+
+  @FindBy(how = ID, using = "duplicateFacilityMessage")
+  private static WebElement duplicateFacilityMessage = null;
+
+  @FindBy(how = ID, using = "saveErrorMsgDiv")
+  private static WebElement saveErrorMsg = null;
 
   public RequisitionGroupPage(TestWebDriver driver) {
     super(driver);
     PageFactory.initElements(new AjaxElementLocatorFactory(TestWebDriver.getDriver(), 1), this);
     testWebDriver.setImplicitWait(1);
+  }
+
+  public int getRequisitionGroupSearchResultsTableSize() {
+    return testWebDriver.getElementsSizeByXpath("//table[@id='requisitionGroupSearchResults']/tbody/tr");
   }
 
   public String getSearchRequisitionGroupLabel() {
@@ -214,9 +261,9 @@ public class RequisitionGroupPage extends Page {
   }
 
   public String getFacilityCount(int rowNumber) {
-    WebElement parent = testWebDriver.getElementById("facilityCount" + (rowNumber - 1));
-    testWebDriver.waitForElementToAppear(parent);
-    return parent.getText();
+    WebElement facilityCount = testWebDriver.getElementById("facilityCount" + (rowNumber - 1));
+    testWebDriver.waitForElementToAppear(facilityCount);
+    return facilityCount.getText();
   }
 
   public void clickSearchIcon() {
@@ -224,8 +271,150 @@ public class RequisitionGroupPage extends Page {
     searchIcon.click();
   }
 
+  public void enterRequisitionGroupCode(String code) {
+    testWebDriver.waitForElementToAppear(requisitionGroupCode);
+    sendKeys(requisitionGroupCode, code);
+  }
+
+  public void enterRequisitionGroupName(String name) {
+    testWebDriver.waitForElementToAppear(requisitionGroupName);
+    sendKeys(requisitionGroupName, name);
+  }
+
+  public void enterParameterToSearchSupervisoryNode(String supervisoryNode) {
+    testWebDriver.waitForElementToAppear(searchSupervisoryNodeField);
+    sendKeys(searchSupervisoryNodeField, supervisoryNode);
+  }
+
+  public void clickAssociatedFacilityLink() {
+    testWebDriver.waitForElementToAppear(associateFacilityLink);
+    associateFacilityLink.click();
+  }
+
+  public void clickAssociatedFacilityField() {
+    testWebDriver.waitForElementToAppear(searchFacility);
+    searchFacility.click();
+  }
+
+  public void searchFacilityToBeAssociated(String facilityCode) {
+    testWebDriver.waitForElementToAppear(searchFacility);
+    sendKeys(searchFacility, facilityCode);
+  }
+
   public boolean isSearchIconDisplayed() {
     testWebDriver.waitForElementToAppear(searchIcon);
     return searchIcon.isDisplayed();
+  }
+
+  public void selectFacilityToBeAssociated(int rowNumber) {
+    WebElement facilityResult = testWebDriver.getElementById("facilityResult" + (rowNumber - 1));
+    testWebDriver.waitForElementToAppear(facilityResult);
+    facilityResult.click();
+  }
+
+  public void clickSaveButton() {
+    testWebDriver.waitForElementToAppear(saveButton);
+    saveButton.click();
+  }
+
+  public void selectRequisitionGroupSearchResult(int rowNumber) {
+    WebElement name = testWebDriver.getElementById("name" + (rowNumber - 1));
+    testWebDriver.waitForElementToAppear(name);
+    name.click();
+  }
+
+  public void selectSupervisoryNodeSearchResult(int rowNumber) {
+    WebElement nodeResult = testWebDriver.getElementById("result" + (rowNumber - 1));
+    testWebDriver.waitForElementToAppear(nodeResult);
+    nodeResult.click();
+  }
+
+  public String getSupervisoryNodeSearchResult(int rowNumber) {
+    WebElement nodeResult = testWebDriver.getElementById("result" + (rowNumber - 1));
+    testWebDriver.waitForElementToAppear(nodeResult);
+    return nodeResult.getText();
+  }
+
+  public String getSuccessMessage() {
+    testWebDriver.waitForElementToAppear(saveSuccessMsgDiv);
+    return saveSuccessMsgDiv.getText();
+  }
+
+  public String getMemberFacilityCode(int rowNumber) {
+    WebElement code = testWebDriver.getElementById("code" + (rowNumber - 1));
+    testWebDriver.waitForElementToAppear(code);
+    return code.getText();
+  }
+
+  public String getMemberFacilityType(int rowNumber) {
+    WebElement type = testWebDriver.getElementById("facilityTypeName" + (rowNumber - 1));
+    testWebDriver.waitForElementToAppear(type);
+    return type.getText();
+  }
+
+  public boolean isMemberFacilityEnableFlagDisplayed(int rowNumber) {
+    WebElement enableFlag = testWebDriver.getElementById("enabledIcon" + (rowNumber - 1));
+    try {
+      testWebDriver.waitForElementToAppear(enableFlag);
+      return enableFlag.isDisplayed();
+    } catch (TimeoutException e) {
+      return false;
+    }
+  }
+
+  public void removeRequisitionMember(int rowNumber) {
+    WebElement removeButton = testWebDriver.getElementById("removeMemberButton" + (rowNumber - 1));
+    testWebDriver.waitForElementToAppear(removeButton);
+    removeButton.click();
+  }
+
+  public void clickClearNodeSearchButton() {
+    testWebDriver.waitForElementToAppear(clearNodeSearch);
+    clearNodeSearch.click();
+  }
+
+  public void clickCancelButton() {
+    testWebDriver.waitForElementToAppear(cancelButton);
+    cancelButton.click();
+  }
+
+  public boolean isFacilitySearchListDisplayed() {
+    try {
+      testWebDriver.waitForElementToAppear(searchFacilityList);
+      return searchFacilityList.isDisplayed();
+    } catch (TimeoutException e) {
+      return false;
+    }
+  }
+
+  public void clickCloseButton() {
+    testWebDriver.waitForElementToAppear(closeButton);
+    closeButton.click();
+  }
+
+  public String getNoFacilitySearchResultMessage() {
+    testWebDriver.waitForElementToAppear(noFacilityResultMessage);
+    return noFacilityResultMessage.getText();
+  }
+
+  public String getTooManyFacilitySearchResultMessage() {
+    testWebDriver.waitForElementToAppear(tooManyResultsMessage);
+    return tooManyResultsMessage.getText();
+  }
+
+  public String getFacilityResult(int rowNumber) {
+    WebElement facilityResult = testWebDriver.getElementById("facilityResult" + (rowNumber - 1));
+    testWebDriver.waitForElementToAppear(facilityResult);
+    return facilityResult.getText();
+  }
+
+  public String getDuplicateFacilityMessage() {
+    testWebDriver.waitForElementToAppear(duplicateFacilityMessage);
+    return duplicateFacilityMessage.getText();
+  }
+
+  public String getErrorMessage() {
+    testWebDriver.waitForElementToAppear(saveErrorMsg);
+    return saveErrorMsg.getText();
   }
 }
