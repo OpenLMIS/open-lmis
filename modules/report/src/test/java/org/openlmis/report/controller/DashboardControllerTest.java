@@ -189,4 +189,16 @@ public class DashboardControllerTest {
         assertThat(sendNotificationResponse.getBody().getSuccessMsg(),is("Notification is successfully queued for delivery"));
         verify(lookupService).sendNotification(notification);
     }
+
+    @Test
+    public void shouldReturnReportingPerformance() throws Exception {
+        List<Long> rgIdList = new ArrayList<>();
+        List<HashMap> expectedReportingPerformance = new ArrayList<>(1);
+
+        when(lookupService.getReportingPerformance(1L,1L, rgIdList)).thenReturn(expectedReportingPerformance);
+        ResponseEntity<OpenLmisResponse> fetchedReportingPerformance = dashboardController.getReportingPerformance(1L,1L,rgIdList);
+        assertThat((List<HashMap>) fetchedReportingPerformance.getBody().getData().get(REPORTING_PERFORMANCE), is(expectedReportingPerformance));
+        verify(lookupService).getReportingPerformance(1L,1L,rgIdList);
+
+    }
 }
