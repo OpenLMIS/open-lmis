@@ -39,6 +39,10 @@ services.factory("Facilities", function ($resource) {
   return $resource('/filter-facilities.json', {}, {});
 });
 
+services.factory("FacilityTypes", function ($resource) {
+  return $resource('/facility-types.json', {}, {});
+});
+
 services.factory('UserContext', function ($resource) {
   return $resource('/user-context.json', {}, {});
 });
@@ -263,6 +267,10 @@ services.factory('GeographicZones', function ($resource) {
   };
 
   return resource;
+});
+
+services.factory("GeographicZoneSearch", function ($resource) {
+  return $resource('/filtered-geographicZones.json', {}, {});
 });
 
 services.factory('Distributions', function ($resource) {
