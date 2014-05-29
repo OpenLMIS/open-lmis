@@ -269,7 +269,7 @@ public class ManageSupervisoryNodes extends TestCaseHelper {
     assertTrue(supervisoryNodesPage.isClearSearchButtonIsVisible());
     supervisoryNodesPage.clickOnClearSearchResultButton();
     supervisoryNodesPage.enterSearchParentNodeParameter("Nod");
-    testWebDriver.sleep(500);
+    testWebDriver.waitForAjax();
     supervisoryNodesPage.selectSupervisoryNodeSearchResult(1);
 
     searchAssociatedFacility("F10");
@@ -289,21 +289,12 @@ public class ManageSupervisoryNodes extends TestCaseHelper {
 
     supervisoryNodesPage.clickSearchOptionButton();
     supervisoryNodesPage.selectSupervisoryNodeParentAsSearchOption();
-    supervisoryNodesPage.clickSearchIcon();
-    assertTrue(supervisoryNodesPage.isNoResultMessageDisplayed());
 
-    supervisoryNodesPage.clickAddNewButton();
-    enterSupervisoryNodeDetails("N5", "Node 5", "This is Node 5", "Nod", 1, "F10");
-    supervisoryNodesPage.clickSaveButton();
-    testWebDriver.refresh();
-
-    supervisoryNodesPage.clickSearchOptionButton();
-    supervisoryNodesPage.selectSupervisoryNodeParentAsSearchOption();
-    searchNode("Node 4");
+    searchNode("Node1");
     testWebDriver.waitForAjax();
 
-    assertEquals("Node 5", supervisoryNodesPage.getSupervisoryNodeName(1));
-    assertEquals("N5", supervisoryNodesPage.getSupervisoryNodeCode(1));
+    assertEquals("Node 4", supervisoryNodesPage.getSupervisoryNodeName(1));
+    assertEquals("N4", supervisoryNodesPage.getSupervisoryNodeCode(1));
     assertEquals("Village Dispensary", supervisoryNodesPage.getFacility(1));
   }
 
