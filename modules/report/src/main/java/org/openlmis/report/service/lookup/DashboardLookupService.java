@@ -112,8 +112,8 @@ public class DashboardLookupService {
     public List<ReportingPerformance> getReportingPerformanceDetail(Long periodId, Long programId,  List<Long> rgroupId, String status){
         return dashboardMapper.getReportingPerformanceDetail(periodId,programId, getCommaSeparatedIds(rgroupId), status);
     }
-    public List<RnRStatusSummaryReport>getAllRnRStatus(){
-        return rnRStatusSummaryReportMapper.getAllRnRStatus();
+    public List<RnRStatusSummaryReport>getRnRStatusDetails(Long requisitionGroupId,Long programId,Long periodId){
+        return rnRStatusSummaryReportMapper.getRnRStatusDetails(requisitionGroupId,programId,periodId);
     }
 
     public List<RnRStatusSummaryReport>getRnRStatusByRequisitionGroupAndPeriod(Long requisitionGroupId,Long periodId){
@@ -122,4 +122,9 @@ public class DashboardLookupService {
     public List<RnRStatusSummaryReport>getRnRStatusByRequisitionGroupAndPeriodData(Long requisitionGroupId,Long periodId){
         return rnRStatusSummaryReportMapper.getRnRStatusByRequisitionGroupAndPeriodData(requisitionGroupId,periodId);
     }
+
+    public List<RnRStatusSummaryReport> getRnRStatusDetail(Long periodId, Long programId,  Long requisitionGroupId, String status){
+        return rnRStatusSummaryReportMapper.getRnRStatusDetail(periodId,programId, requisitionGroupId, status);
+    }
+
 }

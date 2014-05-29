@@ -8,7 +8,7 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-function RequisitionStatusSummaryController($scope, $filter, totalRnRCreatedByRequisitionGroup,RnRStatusByRequisitionGroupAndPeriod ,programsList, RnRStatusSummary, dashboardFiltersHistoryService, formInputValue, GetPeriod, RequisitionGroupsBySupervisoryNodeProgramSchedule, userPreferredFilterValues, ReportProgramsBySupervisoryNode, UserSupervisoryNodes, ReportSchedules, ReportPeriods, RequisitionGroupsByProgram, RequisitionGroupsByProgramSchedule, ReportProductsByProgram, OperationYears, ReportPeriodsByScheduleAndYear, ShipmentLeadTime, ngTableParams) {
+function RequisitionStatusSummaryController($scope, $filter, totalRnRCreatedByRequisitionGroup,RnRStatusByRequisitionGroupAndPeriod,dashboardMenuService,$location ,programsList, RnRStatusSummary, dashboardFiltersHistoryService, formInputValue, GetPeriod, RequisitionGroupsBySupervisoryNodeProgramSchedule, userPreferredFilterValues, ReportProgramsBySupervisoryNode, UserSupervisoryNodes, ReportSchedules, ReportPeriods, RequisitionGroupsByProgram, RequisitionGroupsByProgramSchedule, ReportProductsByProgram, OperationYears, ReportPeriodsByScheduleAndYear, ShipmentLeadTime, ngTableParams) {
 
     $scope.filterObject = {};
 
@@ -46,7 +46,7 @@ function RequisitionStatusSummaryController($scope, $filter, totalRnRCreatedByRe
 
     $scope.filterProductsByProgram = function () {
         if (isUndefined($scope.formFilter.programId)) {
-            $scope.resetShipmentLeadTimeData();
+
             return;
         }
         $scope.filterObject.programId = $scope.formFilter.programId;
@@ -97,6 +97,7 @@ function RequisitionStatusSummaryController($scope, $filter, totalRnRCreatedByRe
                 if (!isUndefined(data.rnrStatus)) {
 
                     $scope.dataRows = data.rnrStatus;
+                    var rnrStatus=data.rnrStatus;
                     for (var i = 0; i < $scope.dataRows.length; i++) {
                         $scope.total += $scope.dataRows[i].totalStatus;
                         $scope.RnRStatusPieChartData[i] = {
@@ -108,6 +109,13 @@ function RequisitionStatusSummaryController($scope, $filter, totalRnRCreatedByRe
 
                     }
                     $scope.rnrStatusPieChartOptionFunction();
+                    $scope.rnrStatusRenderedData = {
+                        status : _.pairs(_.object(_.range(rnrStatus.length), _.pluck(rnrStatus,'status')))
+
+                    };
+
+                    bindChartEvent("#stocked-out-reporting","plotclick",$scope.stockedOutChartClickHandler);
+                    bindChartEvent("#stocked-out-reporting","plothover",flotChartHoverCursorHandler);
 
                 } else {
                     $scope.resetRnRStatusReportData();
@@ -172,11 +180,46 @@ function RequisitionStatusSummaryController($scope, $filter, totalRnRCreatedByRe
         $scope.dataRows = null;
     };
 
+    function flotChartHoverCursorHandler(event,pos,item){
+
+        if (item && !isUndefined(item.dataIndex)) {
+            $(event.target).css('cursor','pointer');
+        } else {
+            $(event.target).css('cursor','auto');
+        }
+    }
+
+    function bindChartEvent(elementSelector, eventType, callback){
+        $(elementSelector).bind(eventType, callback);
+    }
+
+    $scope.stockedOutChartClickHandler = function (event, pos, item){
+        if(item){
+            var status;
+            if(!isUndefined($scope.rnrStatusRenderedData.status)){
+                status = $scope.rnrStatusRenderedData.status[item.seriesIndex][1];
+            }
+            var rnrDetailPath = '/rnr-status-report/program/'+$scope.filterObject.programId+'/period/'+$scope.filterObject.periodId;//+'/rgroup/'+$scope.filterObject.rgroupId;
+            dashboardMenuService.addTab('menu.header.dashboard.rnr.status.detail','/public/pages/dashboard/index.html#'+rnrDetailPath,'RNR-STATUS-DETAIL',true, 8);
+            $location.path(rnrDetailPath).search("status="+status+"&rgroupId="+$scope.filterObject.rgroupId);
+
+            $scope.$apply();
+        }
+
+    };
+
+
+
+
 
    $scope.$on("$viewContentLoaded",function(){
 
 
    });
+
+
+
+
 
 
     $scope.loadFacilitiesByRequisition = function () {
@@ -368,6 +411,11 @@ function RequisitionStatusSummaryController($scope, $filter, totalRnRCreatedByRe
         });
         $scope.$watch('formFilter.scheduleId', function () {
             $scope.changeSchedule();
+
+        });
+
+        $scope.$watch('formFilter.rgroupId',function(){
+            $scope.loadRnRStatus();
 
         });
 

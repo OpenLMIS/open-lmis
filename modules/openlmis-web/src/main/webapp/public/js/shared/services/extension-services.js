@@ -553,3 +553,7 @@ services.factory('RnRStatusByRequisitionGroupAndPeriod',function($resource){
 services.factory("RnRStatusByRequisitionGroupAndPeriodDetails ",function($resource){
     $resource('/dashboard/RnRStatusByRequisitionGroupDetails.json',{},{});
 });
+
+services.factory('RnRStatusDetailsByRequisitionGroup', function($resource){
+    return $resource('/dashboard/rnrStatus-detail.json',{},{});
+});

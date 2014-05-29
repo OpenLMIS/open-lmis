@@ -20,15 +20,24 @@ import java.util.List;
 @Repository
 public interface RnRStatusSummaryReportMapper {
 
-    @Select("select totalStatus,status from vw_rnr_status_by_facility where requisitiongroupid = #{requisitionGroupId}")
-    public List<RnRStatusSummaryReport> getRnRStatusSummaryData1(@Param("requisitionGroupId") Long requisitionGroupId);
 
     @Select("select count(rnrid) totalStatus,status from vw_number_rnr_created where requisitiongroupid = #{requisitionGroupId}")
     public  List<RnRStatusSummaryReport>getRnRStatusSummaryData(@Param("requisitionGroupId") Long requisitionGroupId);
 
-    @Select("select status, count(rnrid) totalStatus from vw_rnr_status\n" +
-            " group by  status;")
-    public List<RnRStatusSummaryReport>getAllRnRStatus();
+    @Select("select facilitycode,facilityname,createddate,status  from vw_rnr_status_details \n" +
+            " where requisitiongroupid = #{requisitiongroupid} and programid=#{programId} and periodid=#{periodId}\n" +
+            "            group by facilitycode,facilityname,createddate,status order by facilityname ")
+    public List<RnRStatusSummaryReport>getRnRStatusDetails(@Param("requisitionGroupId") Long requisitionGroupId,@Param("programId") Long programId,@Param("periodId") Long periodId);
+
+    @Select("select facilitycode,facilityname,createddate,status  from vw_rnr_status_details \n" +
+            "\n" +
+            "             where requisitiongroupid = #{requisitionGroupId} and programid=#{programId} and periodid=#{periodId} and status= #{status}\n" +
+            "                        group by facilitycode,facilityname,createddate,status order by status\n" +
+            "             ")
+    List<RnRStatusSummaryReport> getRnRStatusDetail(@Param("periodId") Long periodId, @Param("programId") Long programId, @Param("requisitionGroupId") Long requisitionGroupId, @Param("status") String status);
+
+
+
 
     @Select("select status, count(rnrid) totalStatus from vw_rnr_status\n" +
             "where requisitiongroupid = #{requisitionGroupId} and periodid = #{periodId} group by status")
