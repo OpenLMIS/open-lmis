@@ -56,7 +56,8 @@
             <label for="requisitionGroupDescription" openlmis-message="label.description"></label>
 
             <div class="form-field">
-              <input ng-model="requisitionGroup.description" name="description" id="requisitionGroupDescription" type="text"
+              <input ng-model="requisitionGroup.description" name="description" id="requisitionGroupDescription"
+                     type="text"
                      maxlength="250"/>
             </div>
           </div>
@@ -114,7 +115,7 @@
           </div>
         </div>
 
-        <div class="form-row clearfix" style="position: relative;">
+        <div class="position-relative">
           <ng-include src="'/public/pages/admin/shared/search-filter-facilities.html'"></ng-include>
         </div>
 

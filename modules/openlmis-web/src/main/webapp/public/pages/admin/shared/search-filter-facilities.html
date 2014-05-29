@@ -8,40 +8,135 @@
   ~ You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
   -->
 
-<div id="searchAndFilter" class="searchAndFilter" slider>
-  <div class="form-group clear-bottom">
-    <h3 class="main-heading" openlmis-message="search.facility.header"></h3>
+<div id="searchAndFilter" class="searchAndFilter" slider ng-controller="facilitySearchFilterController">
+  <div>
+    <div id="search" class="form-group clear-bottom">
+      <h3 class="main-heading" openlmis-message="search.facility.header"></h3>
 
-    <div id="searchControl" class="row-fluid">
-      <div class="span3">
-        <div class="input-append input-prepend">
-          <input id="searchFacility" type="text" ng-model="searchParam" maxlength="50"
-                 openlmis-message="placeholder.facility.search"/>
-          <button id="searchButton" class="btn">
-            <i id='searchIcon' class="icon-search"></i>
-          </button>
+      <div id="searchControl" class="row-fluid">
+        <div class="span3">
+          <div class="input-append input-prepend">
+            <input id="searchFacility" type="text" ng-model="facilitySearchParam" maxlength="50"
+                   openlmis-message="placeholder.facility.search"/>
+            <button id="searchButton" class="btn" ng-click="showFacilitySearchResults()">
+              <i id='searchIcon' class="icon-search"></i>
+            </button>
+          </div>
         </div>
       </div>
-    </div>
 
-    <div id="searchFacilityList" class="search-list">
-      <div ng-switch on="resultCount">
-        <h3 ng-switch-when="0">
-          <span id="noFacilityResultMessage" ng-show="!message" openlmis-message="msg.no.matches|facilityQuery"></span>
-          <span id="tooManyResultsMessage" ng-show="message" openlmis-message="message"></span>
-        </h3>
+      <div id="searchFacilityList" class="search-list">
+        <div ng-switch on="resultCount">
+          <h3 ng-switch-when="0">
+            <span id="noFacilityResultMessage" ng-show="!message"
+                  openlmis-message="msg.no.matches|facilityQuery"></span>
+            <span id="tooManyResultsMessage" ng-show="message" openlmis-message="message"></span>
+          </h3>
 
-        <h3 ng-switch-when="1" openlmis-message="msg.one.match|facilityQuery"></h3>
+          <h3 ng-switch-when="1" openlmis-message="msg.one.match|facilityQuery"></h3>
 
-        <h3 ng-switch-default openlmis-message="msg.many.matches|resultCount|facilityQuery"></h3>
+          <h3 ng-switch-default openlmis-message="msg.many.matches|resultCount|facilityQuery"></h3>
+        </div>
+        <a class="close-btn" id="closeButton" href="" ng-click="clearFacilitySearch()"></a>
+        <ul>
+          <li ng-repeat="facility in facilityList">
+            <a id="facilityResult{{$index}}" href="" ng-click="associate(facility)">{{facility.code}} -
+              {{facility.name}}</a>
+          </li>
+        </ul>
       </div>
-      <a class="close-btn" id="closeButton" href=""></a>
-      <ul>
-        <li ng-repeat="facility in facilityList">
-          <a id="facilityResult{{$index}}" href="" ng-click="associate(facility)">{{facility.code}} -
-            {{facility.name}}</a>
-        </li>
-      </ul>
+    </div>
+  </div>
+
+  <div>
+    <div id="filter" class="form-group clear-bottom">
+      <h3 class="main-heading" openlmis-message="filter.header"></h3>
+
+      <div>
+        <span openlmis-message="label.facility.type"></span>
+        <span>:</span>
+        <strong><span ng-bind="type.name"></span></strong>
+      </div>
+
+      <div>
+        <span openlmis-message="label.geographic.zone"></span>
+        <span>:</span>
+        <strong><span ng-bind="zone.name"></span></strong>
+      </div>
+
+      <input type="button" class="btn btn-primary btn-small" ng-click="setFiltersModal = true"
+             openlmis-message="button.set.filters"/>
+
+      <div id="setFiltersModal" modal="setFiltersModal" options="{ backdrop: 'static', escape: false}">
+        <div class="modal-header">
+          <h3 openlmis-message="button.set.filters"></h3></div>
+
+        <div class="modal-body">
+          <div class="row-fluid">
+            <label for="facility-type">
+              <span openlmis-message="label.facility.type"></span>
+              <span>:</span>
+              <strong><span ng-bind="selectedFacilityType.name"></span></strong>
+              <a href="" class="clear-search" ng-click=""></a>
+
+            </label>
+
+            <div class="row-fluid">
+              <select ui-select2 class="select2-container bottom-spacer span8" name="facilityType" id="facility-type"
+                      ng-model="facilityType" ng-change="setFacilityType()"
+                      ng-options="i as i.name for i in facilityTypes">
+                <option value="" openlmis-message="create.facility.select.facilityType"></option>
+              </select>
+            </div>
+          </div>
+
+          <div class="row-fluid">
+            <label for="facility-type">
+              <span openlmis-message="label.geographic.zone"></span>
+              <span>:</span>
+              <strong><span ng-bind="selectedGeoZone.name"></span></strong>
+            </label>
+
+            <div class="row-fluid">
+              <div class="input-append input-prepend">
+                <input id='searchGeoZone' type="text" class="span7" ng-model="geoZoneSearchParam" maxlength="50"
+                       ng-keydown="triggerSearch($event)"/>
+                <button class="btn" ng-click="searchGeoZone()">
+                  <i id='geoZoneSearchIcon' class="icon-search"></i>
+                </button>
+              </div>
+            </div>
+
+            <div id="geoZoneSearchList" class="search-list" ng-show="showResults">
+              <div ng-switch on="geoZonesResultCount">
+                <h3 ng-switch-when="0">
+                  <span ng-show="!manyGeoZoneMessage" openlmis-message="msg.no.matches|geoZoneQuery"></span>
+                  <span ng-show="manyGeoZoneMessage" openlmis-message="manyGeoZoneMessage"></span>
+                </h3>
+
+                <h3 ng-switch-when="1" openlmis-message="msg.one.match|geoZoneQuery"></h3>
+
+                <h3 ng-switch-default openlmis-message="msg.many.matches|geoZonesResultCount|geoZoneQuery"></h3>
+              </div>
+              <a class="close-btn" id="geoZoneSearchCloseButton" ng-click="clearGeoZoneSearch()"></a>
+              <ul>
+                <li ng-repeat="geoZone in geoZoneList">
+                  <a id="geoZoneResult{{$index}}" href="" ng-click="setGeoZone(geoZone)">{{geoZone.code}} -
+                    {{geoZone.name}}</a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <input type="button" id="doneFilters" class="btn btn-primary" ng-click="setFilters()"
+                 openlmis-message="button.done"/>
+
+          <input type="button" id="cancelFilters" class="btn btn-cancel" ng-click="cancelFilters()"
+                 openlmis-message="button.cancel"/>
+        </div>
+      </div>
     </div>
   </div>
 </div>
