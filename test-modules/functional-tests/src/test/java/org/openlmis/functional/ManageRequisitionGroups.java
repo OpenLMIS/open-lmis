@@ -76,8 +76,8 @@ public class ManageRequisitionGroups extends TestCaseHelper {
     assertEquals("2 matches found for 're'", requisitionGroupPage.getNResultsMessage());
     assertEquals("Requisition group name", requisitionGroupPage.getRequisitionGroupHeader());
     assertEquals("Code", requisitionGroupPage.getCodeHeader());
-    assertEquals("Supervisory Node Name", requisitionGroupPage.getSupervisoryNodeHeader());
-    assertEquals("Facilities Count", requisitionGroupPage.getFacilityCountHeader());
+    assertEquals("Supervisory node name", requisitionGroupPage.getSupervisoryNodeHeader());
+    assertEquals("Facilities count", requisitionGroupPage.getFacilityCountHeader());
 
     assertEquals("Requisition Group 2", requisitionGroupPage.getRequisitionGroupName(1));
     assertEquals("RG2", requisitionGroupPage.getRequisitionGroupCode(1));
