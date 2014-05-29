@@ -8,16 +8,16 @@
  *  You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
  */
 
-var requisitionGroupModule = angular.module('requisitionGroup', ['openlmis', 'ui.bootstrap.dropdownToggle']);
+var requisitionGroupModule = angular.module('requisitionGroup', ['openlmis', 'ui.bootstrap.dropdownToggle', 'ui.bootstrap.modal']);
 
 requisitionGroupModule.config(['$routeProvider', function ($routeProvider) {
-    $routeProvider.
+  $routeProvider.
       when('/search',
       {controller: RequisitionGroupSearchController, templateUrl: 'partials/search.html', reloadOnSearch: false}).
       when('/edit/:id', {controller: RequisitionGroupController, templateUrl: 'partials/create.html', resolve: RequisitionGroupController.resolve}).
       when('/create', {controller: RequisitionGroupController, templateUrl: 'partials/create.html', resolve: RequisitionGroupController.resolve}).
       otherwise({redirectTo: '/search'});
-  }]).run(function ($rootScope, AuthorizationService) {
-    $rootScope.requisitionGroupSelected = "selected";
-    AuthorizationService.preAuthorize('MANAGE_REQUISITION_GROUP');
-  });
+}]).run(function ($rootScope, AuthorizationService) {
+  $rootScope.requisitionGroupSelected = "selected";
+  AuthorizationService.preAuthorize('MANAGE_REQUISITION_GROUP');
+});

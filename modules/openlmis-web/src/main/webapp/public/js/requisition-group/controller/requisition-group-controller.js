@@ -44,8 +44,8 @@ function RequisitionGroupController($scope, requisitionGroupData, $location, Req
     }
   };
 
-  $scope.getSearchResults = function (query, successCallBack) {
-    Facilities.get({"searchParam": query}, successCallBack, {});
+  $scope.getSearchResults = function (query, facilityTypeId, geoZoneId, successCallBack) {
+    Facilities.get({"searchParam": query, "facilityTypeId": facilityTypeId, "geoZoneId": geoZoneId}, successCallBack, {});
   };
 
   $scope.associate = function (facility) {
