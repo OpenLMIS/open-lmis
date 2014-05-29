@@ -201,4 +201,17 @@ public class DashboardControllerTest {
         verify(lookupService).getReportingPerformance(1L,1L,rgIdList);
 
     }
+
+    @Test
+    public void shouldReturnReportingPerformanceDetail() throws Exception {
+        List<Long> rgIdList = new ArrayList<>();
+        List<ReportingPerformance> expectedReportingPerformanceDetail = new ArrayList<>(1);
+        when(lookupService.getReportingPerformanceDetail(1L,1L,rgIdList,"non-reporting")).thenReturn(expectedReportingPerformanceDetail);
+
+        ResponseEntity<OpenLmisResponse> fetchedReportingPerformanceDetailList = dashboardController.getReportingPerformanceDetail(1L,1L,rgIdList,"non-reporting");
+
+        assertThat((List<ReportingPerformance>) fetchedReportingPerformanceDetailList.getBody().getData().get(REPORTING_DETAILS), is(expectedReportingPerformanceDetail));
+        verify(lookupService.getReportingPerformanceDetail(1L,1L,rgIdList,"non-reporting"));
+
+    }
 }
