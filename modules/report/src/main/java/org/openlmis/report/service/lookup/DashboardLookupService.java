@@ -98,8 +98,8 @@ public class DashboardLookupService {
         }
     }
 
-    public String getPeriod(Long id){
-        return dashboardMapper.getPeriod(id);
+    public String getYearOfPeriodById(Long id){
+        return dashboardMapper.getYearOfPeriodById(id);
     }
 
     public List<RnRStatusSummaryReport>getRnRStatusSummary(Long requisionGroupId){
