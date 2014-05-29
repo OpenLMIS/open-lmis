@@ -197,17 +197,6 @@ public class SupervisoryNodesPage extends Page {
     return oneResultMessage.isDisplayed();
   }
 
-  public boolean isNResultsMessageDisplayed() {
-    try {
-      testWebDriver.waitForElementToAppear(nResultsMessage);
-    } catch (TimeoutException e) {
-      return false;
-    } catch (NoSuchElementException e) {
-      return false;
-    }
-    return nResultsMessage.isDisplayed();
-  }
-
   public String getNResultsMessage() {
     testWebDriver.waitForElementToAppear(nResultsMessage);
     return nResultsMessage.getText();
@@ -315,12 +304,6 @@ public class SupervisoryNodesPage extends Page {
     return clearSearch.isDisplayed();
   }
 
-  public void clickOnFirstFacilitySearchResultLink() {
-    testWebDriver.waitForElementToAppear(firstFacilitySearchResult);
-    firstFacilitySearchResult.click();
-    testWebDriver.waitForElementToAppear(supervisoryNodeName);
-  }
-
   public boolean isSearchListDisplayed() {
     testWebDriver.waitForElementToAppear(search_list);
     return search_list.isDisplayed();
@@ -401,10 +384,5 @@ public class SupervisoryNodesPage extends Page {
   public boolean isEditPageHeaderDisplayed() {
     testWebDriver.waitForElementToAppear(editSupervisoryNodeHeader);
     return editSupervisoryNodeHeader.isDisplayed();
-  }
-
-  public String getParentNode() {
-    testWebDriver.waitForElementToAppear(searchParentNode);
-    return searchParentNode.getText();
   }
 }

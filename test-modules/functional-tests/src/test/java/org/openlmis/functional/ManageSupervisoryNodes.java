@@ -269,6 +269,7 @@ public class ManageSupervisoryNodes extends TestCaseHelper {
     assertTrue(supervisoryNodesPage.isClearSearchButtonIsVisible());
     supervisoryNodesPage.clickOnClearSearchResultButton();
     supervisoryNodesPage.enterSearchParentNodeParameter("Nod");
+    testWebDriver.sleep(500);
     supervisoryNodesPage.selectSupervisoryNodeSearchResult(1);
 
     searchAssociatedFacility("F10");
@@ -331,9 +332,9 @@ public class ManageSupervisoryNodes extends TestCaseHelper {
     supervisoryNodesPage.clickOnClearSearchResultButton();
     supervisoryNodesPage.enterSearchParentNodeParameter("parent");
     supervisoryNodesPage.clickSaveButton();
-    supervisoryNodesPage.clickViewHereLink();
     testWebDriver.waitForAjax();
-    assertEquals("", supervisoryNodesPage.getParentNode());
+    searchNode("Node4");
+    assertEquals("", supervisoryNodesPage.getParent(1));
   }
 
   @Test(groups = {"admin"})
