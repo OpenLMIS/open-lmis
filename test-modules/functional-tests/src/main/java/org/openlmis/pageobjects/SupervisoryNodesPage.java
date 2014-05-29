@@ -299,7 +299,7 @@ public class SupervisoryNodesPage extends Page {
     clearSearch.click();
   }
 
-  public boolean isClearSearchButtonIsVisible() {
+  public boolean isClearSearchButtonVisible() {
     testWebDriver.waitForElementToAppear(clearSearch);
     return clearSearch.isDisplayed();
   }

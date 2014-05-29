@@ -266,7 +266,7 @@ public class ManageSupervisoryNodes extends TestCaseHelper {
     assertEquals("Node3", supervisoryNodesPage.getParentNodeResult(3));
     supervisoryNodesPage.selectSupervisoryNodeSearchResult(1);
 
-    assertTrue(supervisoryNodesPage.isClearSearchButtonIsVisible());
+    assertTrue(supervisoryNodesPage.isClearSearchButtonVisible());
     supervisoryNodesPage.clickOnClearSearchResultButton();
     supervisoryNodesPage.enterSearchParentNodeParameter("Nod");
     testWebDriver.waitForAjax();
@@ -295,6 +295,38 @@ public class ManageSupervisoryNodes extends TestCaseHelper {
 
     assertEquals("Node 4", supervisoryNodesPage.getSupervisoryNodeName(1));
     assertEquals("N4", supervisoryNodesPage.getSupervisoryNodeCode(1));
+    assertEquals("Village Dispensary", supervisoryNodesPage.getFacility(1));
+  }
+
+  @Test(groups = {"admin"})
+  public void testAddNewSupervisoryNodeAndSearchByParent() throws SQLException {
+    dbWrapper.assignRight("Admin", "MANAGE_SUPERVISORY_NODE");
+    dbWrapper.insertSupervisoryNode("F10", "N1", "Node1", null);
+    dbWrapper.insertSupervisoryNode("F11", "N2", "Node2", null);
+    dbWrapper.insertSupervisoryNode("F10", "N3", "Node3", "N2");
+    HomePage homePage = loginPage.loginAs(testData.get(ADMIN), testData.get(PASSWORD));
+    supervisoryNodesPage = homePage.navigateToSupervisoryNodes();
+
+    supervisoryNodesPage.clickAddNewButton();
+    supervisoryNodesPage.enterSupervisoryNodeCode("N4");
+    supervisoryNodesPage.enterSupervisoryNodeName("Node 4");
+    supervisoryNodesPage.enterSupervisoryNodeDescription("This is Node 4");
+    searchAssociatedFacility("F10");
+    supervisoryNodesPage.selectFirstFacilityToBeAssociated();
+    supervisoryNodesPage.clickSaveButton();
+
+    supervisoryNodesPage.clickAddNewButton();
+    enterSupervisoryNodeDetails("N5", "Node 5", "", "nod", 1, "F10");
+    supervisoryNodesPage.clickSaveButton();
+    assertEquals("Supervisory Node \"Node 5\" created successfully", supervisoryNodesPage.getSuccessMessage());
+
+    supervisoryNodesPage.clickSearchOptionButton();
+    supervisoryNodesPage.selectSupervisoryNodeParentAsSearchOption();
+    searchNode("Node 4");
+
+    assertEquals("Node 5", supervisoryNodesPage.getSupervisoryNodeName(1));
+    assertEquals("N5", supervisoryNodesPage.getSupervisoryNodeCode(1));
+    assertEquals("Node 4", supervisoryNodesPage.getParent(1));
     assertEquals("Village Dispensary", supervisoryNodesPage.getFacility(1));
   }
 
