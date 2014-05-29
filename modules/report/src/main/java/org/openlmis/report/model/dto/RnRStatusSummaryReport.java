@@ -14,6 +14,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -24,4 +26,8 @@ public class RnRStatusSummaryReport {
     private Long programId;
     private Long periodId;
     private String programname;
+    private String facilitycode;
+    private String facilityname;
+    private Date createddate;
+    private String periodname;
 }
