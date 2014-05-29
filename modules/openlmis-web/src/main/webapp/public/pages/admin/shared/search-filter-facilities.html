@@ -78,7 +78,6 @@
               <span>:</span>
               <strong><span ng-bind="selectedFacilityType.name"></span></strong>
               <a href="" class="clear-search" ng-click=""></a>
-
             </label>
 
             <div class="row-fluid">
@@ -100,7 +99,8 @@
             <div class="row-fluid">
               <div class="input-append input-prepend">
                 <input id='searchGeoZone' type="text" class="span7" ng-model="geoZoneSearchParam" maxlength="50"
-                       ng-keydown="triggerSearch($event)"/>
+                       ng-keydown="triggerSearch($event)"
+                       openlmis-message="placeholder.geographic.zone.search"/>
                 <button class="btn" ng-click="searchGeoZone()">
                   <i id='geoZoneSearchIcon' class="icon-search"></i>
                 </button>
@@ -121,6 +121,7 @@
               <a class="close-btn" id="geoZoneSearchCloseButton" ng-click="clearGeoZoneSearch()"></a>
               <ul>
                 <li ng-repeat="geoZone in geoZoneList">
+                  <strong><span ng-show="showLevel($index)" ng-bind="geoZone.level.name"></span></strong>
                   <a id="geoZoneResult{{$index}}" href="" ng-click="setGeoZone(geoZone)">{{geoZone.code}} -
                     {{geoZone.name}}</a>
                 </li>
@@ -131,7 +132,7 @@
 
         <div class="modal-footer">
           <input type="button" id="doneFilters" class="btn btn-primary" ng-click="setFilters()"
-                 openlmis-message="button.done"/>
+                 openlmis-message="button.apply.filters"/>
 
           <input type="button" id="cancelFilters" class="btn btn-cancel" ng-click="cancelFilters()"
                  openlmis-message="button.cancel"/>

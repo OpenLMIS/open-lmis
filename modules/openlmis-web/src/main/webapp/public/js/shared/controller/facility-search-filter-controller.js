@@ -11,8 +11,8 @@
 function facilitySearchFilterController($scope, FacilityTypes, GeographicZoneSearch) {
 
   $scope.showResults = false;
-  $scope.selectedFacilityType = {};
-  $scope.selectedGeoZone = {};
+  $scope.type = {};
+  $scope.zone = {};
 
   FacilityTypes.get({}, function (data) {
     $scope.facilityTypes = data.facilityTypeList;
@@ -22,7 +22,7 @@ function facilitySearchFilterController($scope, FacilityTypes, GeographicZoneSea
     if (!$scope.facilitySearchParam) return;
 
     $scope.facilityQuery = $scope.facilitySearchParam.trim();
-    $scope.$parent.$parent.getSearchResults($scope.facilityQuery, $scope.selectedFacilityType.id, $scope.selectedGeoZone.id, function (data) {
+    $scope.$parent.$parent.getSearchResults($scope.facilityQuery, $scope.type.id, $scope.zone.id, function (data) {
       $scope.facilityList = data.facilityList;
       $scope.resultCount = isUndefined($scope.facilityList) ? 0 : $scope.facilityList.length;
       $scope.message = data.message;
@@ -47,6 +47,7 @@ function facilitySearchFilterController($scope, FacilityTypes, GeographicZoneSea
       $scope.geoZoneList = data.geoZones;
       $scope.geoZonesResultCount = isUndefined($scope.geoZoneList) ? 0 : $scope.geoZoneList.length;
       $scope.manyGeoZoneMessage = data.message;
+      $scope.levels = _.uniq(_.pluck(_.pluck($scope.geoZoneList, 'level'), 'name'));
       $scope.showResults = true;
       angular.element("#filter .search-list").show();
     });
@@ -69,8 +70,8 @@ function facilitySearchFilterController($scope, FacilityTypes, GeographicZoneSea
   };
 
   $scope.setFilters = function () {
-    $scope.zone = $scope.selectedGeoZone;
-    $scope.type = $scope.selectedFacilityType;
+    $scope.zone = $scope.selectedGeoZone || {};
+    $scope.type = $scope.selectedFacilityType || {};
     $scope.setFiltersModal = false;
     $scope.showFacilitySearchResults();
   };
@@ -91,5 +92,9 @@ function facilitySearchFilterController($scope, FacilityTypes, GeographicZoneSea
     $scope.selectedFacilityType = undefined;
     $scope.selectedGeoZone = undefined;
     $scope.setFiltersModal = false;
-  }
+  };
+
+  $scope.showLevel = function (index) {
+    return !((index > 0 ) && ($scope.geoZoneList[index].level.name === $scope.geoZoneList[index - 1].level.name));
+  };
 }
