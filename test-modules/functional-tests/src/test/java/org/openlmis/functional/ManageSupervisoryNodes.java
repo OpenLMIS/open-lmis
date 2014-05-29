@@ -293,7 +293,7 @@ public class ManageSupervisoryNodes extends TestCaseHelper {
     assertTrue(supervisoryNodesPage.isNoResultMessageDisplayed());
 
     supervisoryNodesPage.clickAddNewButton();
-    enterSupervisoryNodeDetails("N5", "Node 5", "This is Node 5", "Node 4", "F10");
+    enterSupervisoryNodeDetails("N5", "Node 5", "This is Node 5", "Nod", 1, "F10");
     supervisoryNodesPage.clickSaveButton();
     testWebDriver.refresh();
 
@@ -317,7 +317,7 @@ public class ManageSupervisoryNodes extends TestCaseHelper {
     supervisoryNodesPage = homePage.navigateToSupervisoryNodes();
 
     supervisoryNodesPage.clickAddNewButton();
-    enterSupervisoryNodeDetails("N1", "Node4", "This is Node 4", "Node1", "F10");
+    enterSupervisoryNodeDetails("N1", "Node4", "This is Node 4", "Node1", 1, "F10");
     supervisoryNodesPage.clickSaveButton();
     assertEquals("Invalid Parent Node Code", supervisoryNodesPage.getSaveMessage());
 
@@ -377,7 +377,7 @@ public class ManageSupervisoryNodes extends TestCaseHelper {
 
     searchNode("sup");
     supervisoryNodesPage.clickOnNode(1);
-    enterSupervisoryNodeDetails("N1", "Node1", "node 1", "sup", "Village Dispensary");
+    enterSupervisoryNodeDetails("N1", "Node1", "nod", "sup", 1, "Village Dispensary");
     supervisoryNodesPage.clickSaveButton();
     assertEquals("Supervisory Node \"Node1\" updated successfully", supervisoryNodesPage.getSuccessMessage());
     supervisoryNodesPage.clickViewHereLink();
@@ -403,13 +403,13 @@ public class ManageSupervisoryNodes extends TestCaseHelper {
     testWebDriver.waitForAjax();
   }
 
-  public void enterSupervisoryNodeDetails(String code, String name, String description, String parentNode, String facilityCodeOrName) {
+  public void enterSupervisoryNodeDetails(String code, String name, String description, String parentNode, int nodeResultNumber, String facilityCodeOrName) {
     supervisoryNodesPage.enterSupervisoryNodeCode(code);
     supervisoryNodesPage.enterSupervisoryNodeName(name);
     supervisoryNodesPage.enterSupervisoryNodeDescription(description);
     supervisoryNodesPage.enterSearchParentNodeParameter(parentNode);
     testWebDriver.sleep(500);
-    supervisoryNodesPage.selectSupervisoryNodeSearchResult(1);
+    supervisoryNodesPage.selectSupervisoryNodeSearchResult(nodeResultNumber);
     searchAssociatedFacility(facilityCodeOrName);
     supervisoryNodesPage.selectFirstFacilityToBeAssociated();
   }
