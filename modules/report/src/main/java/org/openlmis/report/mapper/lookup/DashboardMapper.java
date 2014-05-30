@@ -120,7 +120,7 @@ public interface DashboardMapper {
     void saveSmsNotification(@Param("message")String message, @Param("phonenumber") String phonenumber, @Param("direction")String direction);
 
     @Select("select date_Part('year',startdate) from processing_periods where id = #{id}")
-    public String getPeriod(@Param("id")Long id);
+    public String getYearOfPeriodById(@Param("id")Long id);
 
     @Select("WITH reporting as (select fn_get_reporting_status_by_facilityid_programid_and_periodid(f.id,s.programid,pp.id) status, f.*\n" +
             "             from facilities f\n" +

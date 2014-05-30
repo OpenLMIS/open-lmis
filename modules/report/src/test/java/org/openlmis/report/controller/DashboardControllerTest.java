@@ -189,4 +189,39 @@ public class DashboardControllerTest {
         assertThat(sendNotificationResponse.getBody().getSuccessMsg(),is("Notification is successfully queued for delivery"));
         verify(lookupService).sendNotification(notification);
     }
+
+    @Test
+    public void shouldReturnReportingPerformance() throws Exception {
+        List<Long> rgIdList = new ArrayList<>();
+        List<HashMap> expectedReportingPerformance = new ArrayList<>(1);
+
+        when(lookupService.getReportingPerformance(1L,1L, rgIdList)).thenReturn(expectedReportingPerformance);
+        ResponseEntity<OpenLmisResponse> fetchedReportingPerformance = dashboardController.getReportingPerformance(1L,1L,rgIdList);
+        assertThat((List<HashMap>) fetchedReportingPerformance.getBody().getData().get(REPORTING_PERFORMANCE), is(expectedReportingPerformance));
+        verify(lookupService).getReportingPerformance(1L,1L,rgIdList);
+
+    }
+
+    @Test
+    public void shouldReturnReportingPerformanceDetail() throws Exception {
+        List<Long> rgIdList = new ArrayList<>();
+        List<ReportingPerformance> expectedReportingPerformanceDetail = new ArrayList<>(1);
+        when(lookupService.getReportingPerformanceDetail(1L,1L,rgIdList,"non-reporting")).thenReturn(expectedReportingPerformanceDetail);
+
+        ResponseEntity<OpenLmisResponse> fetchedReportingPerformanceDetailList = dashboardController.getReportingPerformanceDetail(1L,1L,rgIdList,"non-reporting");
+
+        assertThat((List<ReportingPerformance>) fetchedReportingPerformanceDetailList.getBody().getData().get(REPORTING_DETAILS), is(expectedReportingPerformanceDetail));
+        verify(lookupService).getReportingPerformanceDetail(1L,1L,rgIdList,"non-reporting");
+
+    }
+
+    @Test
+    public void shouldReturnYearOfPeriodById() throws Exception {
+        when(lookupService.getYearOfPeriodById(1L)).thenReturn("2013");
+        ResponseEntity<OpenLmisResponse> fetchedYearOfPeriod = dashboardController.getYearOfPeriodById(1L);
+
+        assertThat((String) fetchedYearOfPeriod.getBody().getData().get("year"), is("2013"));
+        verify(lookupService).getYearOfPeriodById(1L);
+
+    }
 }
