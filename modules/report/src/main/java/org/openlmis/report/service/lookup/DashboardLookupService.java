@@ -1,6 +1,5 @@
 package org.openlmis.report.service.lookup;
 
-import org.openlmis.report.mapper.AverageConsumptionReportMapper;
 import org.openlmis.report.mapper.lookup.DashboardMapper;
 import org.openlmis.report.mapper.lookup.RnRStatusSummaryReportMapper;
 import org.openlmis.report.model.dto.*;
@@ -20,13 +19,13 @@ public class DashboardLookupService {
 
     @Autowired
     DashboardMapper dashboardMapper;
-    @Autowired
-    AverageConsumptionReportMapper avgMapper;
+   // @Autowired
+    //AverageConsumptionReportMapper avgMapper;
 
     @Autowired
     RnRStatusSummaryReportMapper rnRStatusSummaryReportMapper;
 
-    private String  getCommaSeparatedIds(List<Long> idList){
+    public static String  getCommaSeparatedIds(List<Long> idList){
 
         return idList == null ? "{}" : idList.toString().replace("[", "{").replace("]", "}");
     }
