@@ -18,13 +18,22 @@ import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.openlmis.core.domain.*;
+import org.openlmis.core.domain.Facility;
+import org.openlmis.core.domain.Program;
+import org.openlmis.core.domain.Right;
+import org.openlmis.core.domain.RightType;
+import org.openlmis.core.domain.Role;
+import org.openlmis.core.domain.SupervisoryNode;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.RoleAssignmentRepository;
 import org.openlmis.core.repository.RoleRightsRepository;
 import org.openlmis.db.categories.UnitTests;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
@@ -87,7 +96,8 @@ public class RoleRightsServiceTest {
       UPLOADS,
       UPLOAD_REPORT,
       MANAGE_GEOGRAPHIC_ZONE,
-      MANAGE_REQUISITION_GROUP);
+      MANAGE_REQUISITION_GROUP,
+      MANAGE_SUPPLY_LINE);
 
     assertThat(allRights, is(alphabeticalRights));
   }

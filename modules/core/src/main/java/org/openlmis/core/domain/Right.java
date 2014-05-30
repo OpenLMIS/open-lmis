@@ -53,7 +53,8 @@ public enum Right {
   FACILITY_FILL_SHIPMENT("right.fulfillment.fill.shipment", FULFILLMENT, "Permission to fill shipment data for facility", 19),
   MANAGE_POD("right.fulfillment.manage.pod", FULFILLMENT, "Permission to manage proof of delivery", 20),
   MANAGE_GEOGRAPHIC_ZONE("right.manage.geo.zone", ADMIN, "Permission to manage geographic zones", 23),
-  MANAGE_REQUISITION_GROUP("right.manage.requisition.group", ADMIN, "Permission to manage requisition groups", 24);
+  MANAGE_REQUISITION_GROUP("right.manage.requisition.group", ADMIN, "Permission to manage requisition groups", 24),
+  MANAGE_SUPPLY_LINE("right.manage.supply.line", ADMIN, "Permission to manage supply lines", 25);
 
   @Getter
   private final String rightName;
