@@ -15,8 +15,31 @@ import org.apache.commons.collections.Predicate;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
-import org.openlmis.core.builder.*;
-import org.openlmis.core.domain.*;
+import org.openlmis.core.builder.DeliveryZoneBuilder;
+import org.openlmis.core.builder.FacilityBuilder;
+import org.openlmis.core.builder.ProcessingScheduleBuilder;
+import org.openlmis.core.builder.ProgramBuilder;
+import org.openlmis.core.builder.RequisitionGroupBuilder;
+import org.openlmis.core.builder.SupervisoryNodeBuilder;
+import org.openlmis.core.builder.SupplyLineBuilder;
+import org.openlmis.core.domain.DeliveryZone;
+import org.openlmis.core.domain.DeliveryZoneMember;
+import org.openlmis.core.domain.DeliveryZoneProgramSchedule;
+import org.openlmis.core.domain.Facility;
+import org.openlmis.core.domain.FacilityOperator;
+import org.openlmis.core.domain.FacilityType;
+import org.openlmis.core.domain.GeographicLevel;
+import org.openlmis.core.domain.GeographicZone;
+import org.openlmis.core.domain.ProcessingSchedule;
+import org.openlmis.core.domain.Program;
+import org.openlmis.core.domain.ProgramSupported;
+import org.openlmis.core.domain.RequisitionGroup;
+import org.openlmis.core.domain.RequisitionGroupMember;
+import org.openlmis.core.domain.RequisitionGroupProgramSchedule;
+import org.openlmis.core.domain.Role;
+import org.openlmis.core.domain.SupervisoryNode;
+import org.openlmis.core.domain.SupplyLine;
+import org.openlmis.core.domain.User;
 import org.openlmis.db.categories.IntegrationTests;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -731,13 +754,13 @@ public class FacilityMapperIT {
     Long facilityTypeId = 1L;
     Long geoZoneId = 1L;
 
-    Facility fac1 = make(a(FacilityBuilder.defaultFacility,with(name, "FAC1"), with(enabled, true), with(code, "FAC2")));
+    Facility fac1 = make(a(FacilityBuilder.defaultFacility, with(name, "FAC1"), with(enabled, true), with(code, "FAC2")));
     mapper.insert(fac1);
 
-    Facility fac2 = make(a(FacilityBuilder.defaultFacility,with(name, "FAC2"), with(enabled, false), with(code, "FAC3")));
+    Facility fac2 = make(a(FacilityBuilder.defaultFacility, with(name, "FAC2"), with(enabled, false), with(code, "FAC3")));
     mapper.insert(fac2);
 
-    Facility fac3 = make(a(FacilityBuilder.defaultFacility,with(name, "Dispensary1"), with(enabled, true), with(code, "DIS3")));
+    Facility fac3 = make(a(FacilityBuilder.defaultFacility, with(name, "Dispensary1"), with(enabled, true), with(code, "DIS3")));
     mapper.insert(fac3);
 
     Integer count = mapper.getEnabledFacilitiesCount(searchParam, facilityTypeId, geoZoneId);
@@ -841,7 +864,7 @@ public class FacilityMapperIT {
     SupervisoryNode supervisoryNode = make(a(SupervisoryNodeBuilder.defaultSupervisoryNode, with(SupervisoryNodeBuilder.facility, enabledFacility)));
     supervisoryNodeMapper.insert(supervisoryNode);
 
-    SupplyLine supplyLine = make(a(SupplyLineBuilder.defaultSupplyLine, with(SupplyLineBuilder.defaultProgram, program),
+    SupplyLine supplyLine = make(a(SupplyLineBuilder.defaultSupplyLine, with(SupplyLineBuilder.program, program),
       with(SupplyLineBuilder.facility, enabledFacility),
       with(SupplyLineBuilder.supervisoryNode, supervisoryNode)));
     supplyLineMapper.insert(supplyLine);

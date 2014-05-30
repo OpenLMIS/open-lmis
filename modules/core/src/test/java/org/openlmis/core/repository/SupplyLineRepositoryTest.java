@@ -18,6 +18,7 @@ import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.openlmis.core.builder.SupplyLineBuilder;
+import org.openlmis.core.domain.Pagination;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.SupervisoryNode;
 import org.openlmis.core.domain.SupplyLine;
@@ -25,8 +26,11 @@ import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.mapper.SupplyLineMapper;
 import org.openlmis.db.categories.UnitTests;
 
+import java.util.List;
+
 import static com.natpryce.makeiteasy.MakeItEasy.a;
 import static com.natpryce.makeiteasy.MakeItEasy.make;
+import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
@@ -35,7 +39,7 @@ import static org.mockito.Mockito.*;
 @RunWith(org.mockito.runners.MockitoJUnitRunner.class)
 public class SupplyLineRepositoryTest {
   @Mock
-  private SupplyLineMapper supplyLineMapper;
+  private SupplyLineMapper mapper;
   @Mock
   private SupervisoryNodeRepository supervisoryNodeRepository;
   @Mock
@@ -43,7 +47,7 @@ public class SupplyLineRepositoryTest {
   @Mock
   private FacilityRepository facilityRepository;
 
-  private SupplyLineRepository supplyLineRepository;
+  private SupplyLineRepository repository;
   private SupplyLine supplyLine;
 
   @Rule
@@ -51,7 +55,7 @@ public class SupplyLineRepositoryTest {
 
   @Before
   public void setUp() {
-    supplyLineRepository = new SupplyLineRepository(supplyLineMapper);
+    repository = new SupplyLineRepository(mapper);
     supplyLine = make(a(SupplyLineBuilder.defaultSupplyLine));
   }
 
@@ -62,8 +66,8 @@ public class SupplyLineRepositoryTest {
     when(supervisoryNodeRepository.getIdForCode(supplyLine.getSupervisoryNode().getCode())).thenReturn(1L);
     when(supervisoryNodeRepository.getSupervisoryNodeParentId(1L)).thenReturn(null);
 
-    supplyLineRepository.insert(supplyLine);
-    verify(supplyLineMapper).insert(supplyLine);
+    repository.insert(supplyLine);
+    verify(mapper).insert(supplyLine);
   }
 
   @Test
@@ -72,34 +76,59 @@ public class SupplyLineRepositoryTest {
     when(programRepository.getIdByCode(supplyLine.getProgram().getCode())).thenReturn(1L);
     when(supervisoryNodeRepository.getIdForCode(supplyLine.getSupervisoryNode().getCode())).thenReturn(1L);
     when(supervisoryNodeRepository.getSupervisoryNodeParentId(1L)).thenReturn(null);
-    doThrow(new DataException("Duplicate entry for Supply Line found")).when(supplyLineMapper).insert(supplyLine);
+    doThrow(new DataException("Duplicate entry for Supply Line found")).when(mapper).insert(supplyLine);
 
     expectedEx.expect(DataException.class);
     expectedEx.expectMessage("Duplicate entry for Supply Line found");
 
-    supplyLineRepository.insert(supplyLine);
+    repository.insert(supplyLine);
   }
 
   @Test
   public void shouldReturnSupplyLineBySupervisoryNodeAndProgram() {
     Program program = new Program();
     SupervisoryNode supervisoryNode = new SupervisoryNode();
-    when(supplyLineMapper.getSupplyLineBy(supervisoryNode, program)).thenReturn(supplyLine);
+    when(mapper.getSupplyLineBy(supervisoryNode, program)).thenReturn(supplyLine);
 
-    SupplyLine returnedSupplyLine = supplyLineRepository.getSupplyLineBy(supervisoryNode, program);
+    SupplyLine returnedSupplyLine = repository.getSupplyLineBy(supervisoryNode, program);
 
-    verify(supplyLineMapper).getSupplyLineBy(supervisoryNode, program);
+    verify(mapper).getSupplyLineBy(supervisoryNode, program);
     assertThat(returnedSupplyLine, is(supplyLine));
   }
 
   @Test
   public void shouldGetSupplyLineById() {
-    when(supplyLineMapper.getById(3L)).thenReturn(supplyLine);
+    when(mapper.getById(3L)).thenReturn(supplyLine);
 
-    SupplyLine returnedSupplyLine = supplyLineRepository.getById(3L);
+    SupplyLine returnedSupplyLine = repository.getById(3L);
 
-    verify(supplyLineMapper).getById(3L);
+    verify(mapper).getById(3L);
     assertThat(returnedSupplyLine, is(supplyLine));
   }
 
+  @Test
+  public void shouldSearchByFacilityName() throws Exception {
+    String searchParam = "fac";
+    String columnName = "facility";
+    List<SupplyLine> supplyLines = asList(new SupplyLine());
+
+    Pagination pagination = new Pagination(2, 10);
+    when(mapper.findByFacilityName(searchParam, pagination)).thenReturn(supplyLines);
+
+    List<SupplyLine> result = repository.search(searchParam, columnName, pagination);
+    assertThat(result, is(supplyLines));
+    verify(mapper).findByFacilityName(searchParam, pagination);
+  }
+
+  @Test
+  public void shouldGetCountOfSearchResultsByFacilityName() throws Exception {
+    String searchParam = "fac";
+    String columnName = "facility";
+
+    when(mapper.getTotalSearchResultsByFacilityName(searchParam)).thenReturn(1);
+
+    Integer result = repository.getTotalSearchResultCount(searchParam, columnName);
+    assertThat(result, is(1));
+    verify(mapper).getTotalSearchResultsByFacilityName(searchParam);
+  }
 }

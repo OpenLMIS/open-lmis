@@ -11,12 +11,15 @@
 package org.openlmis.core.repository;
 
 import lombok.NoArgsConstructor;
+import org.openlmis.core.domain.Pagination;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.SupervisoryNode;
 import org.openlmis.core.domain.SupplyLine;
 import org.openlmis.core.repository.mapper.SupplyLineMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 /**
  * SupplyLineRepository is Repository class for SupplyLine related database operations.
@@ -26,26 +29,41 @@ import org.springframework.stereotype.Repository;
 @NoArgsConstructor
 public class SupplyLineRepository {
 
-  private SupplyLineMapper supplyLineMapper;
+  private SupplyLineMapper mapper;
 
   @Autowired
-  public SupplyLineRepository(SupplyLineMapper supplyLineMapper) {
-    this.supplyLineMapper = supplyLineMapper;
+  public SupplyLineRepository(SupplyLineMapper mapper) {
+    this.mapper = mapper;
   }
 
   public void insert(SupplyLine supplyLine) {
-    supplyLineMapper.insert(supplyLine);
+    mapper.insert(supplyLine);
   }
 
   public SupplyLine getSupplyLineBy(SupervisoryNode supervisoryNode, Program program) {
-    return supplyLineMapper.getSupplyLineBy(supervisoryNode, program);
+    return mapper.getSupplyLineBy(supervisoryNode, program);
   }
 
   public void update(SupplyLine supplyLine) {
-    supplyLineMapper.update(supplyLine);
+    mapper.update(supplyLine);
   }
 
   public SupplyLine getById(Long id) {
-    return supplyLineMapper.getById(id);
+    return mapper.getById(id);
+  }
+
+  public List<SupplyLine> search(String searchParam, String columnName, Pagination pagination) {
+    if (columnName.equals("facility")) {
+      return mapper.findByFacilityName(searchParam, pagination);
+    }
+    return null;
+  }
+
+
+  public Integer getTotalSearchResultCount(String searchParam, String columnName) {
+    if (columnName.equals("facility")) {
+      return mapper.getTotalSearchResultsByFacilityName(searchParam);
+    }
+    return null;
   }
 }

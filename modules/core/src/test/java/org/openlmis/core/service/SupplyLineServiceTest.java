@@ -10,6 +10,7 @@
 
 package org.openlmis.core.service;
 
+import org.hamcrest.core.Is;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -20,6 +21,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.builder.SupplyLineBuilder;
+import org.openlmis.core.domain.Pagination;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.SupervisoryNode;
 import org.openlmis.core.domain.SupplyLine;
@@ -30,8 +32,11 @@ import org.openlmis.core.repository.SupervisoryNodeRepository;
 import org.openlmis.core.repository.SupplyLineRepository;
 import org.openlmis.db.categories.UnitTests;
 
+import java.util.List;
+
 import static com.natpryce.makeiteasy.MakeItEasy.a;
 import static com.natpryce.makeiteasy.MakeItEasy.make;
+import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.verify;
@@ -42,7 +47,7 @@ import static org.mockito.Mockito.when;
 public class SupplyLineServiceTest {
 
   @Mock
-  private SupplyLineRepository supplyLineRepository;
+  private SupplyLineRepository repository;
 
   @Mock
   private ProgramRepository programRepository;
@@ -54,7 +59,7 @@ public class SupplyLineServiceTest {
   private SupervisoryNodeRepository supervisoryNodeRepository;
 
   @InjectMocks
-  private SupplyLineService supplyLineService;
+  private SupplyLineService service;
 
   @Rule
   public ExpectedException expectedEx = ExpectedException.none();
@@ -64,7 +69,7 @@ public class SupplyLineServiceTest {
   @Before
   public void setUp() throws Exception {
     supplyLine = make(a(SupplyLineBuilder.defaultSupplyLine));
-    supplyLineService = new SupplyLineService(supplyLineRepository, programRepository, facilityRepository, supervisoryNodeRepository);
+    service = new SupplyLineService(repository, programRepository, facilityRepository, supervisoryNodeRepository);
   }
 
   @Test
@@ -72,11 +77,11 @@ public class SupplyLineServiceTest {
     Program program = new Program();
     SupervisoryNode supervisoryNode = new SupervisoryNode();
     SupplyLine supplyLine = new SupplyLine();
-    when(supplyLineRepository.getSupplyLineBy(supervisoryNode, program)).thenReturn(supplyLine);
+    when(repository.getSupplyLineBy(supervisoryNode, program)).thenReturn(supplyLine);
 
-    SupplyLine returnedSupplyLine = supplyLineService.getSupplyLineBy(supervisoryNode, program);
+    SupplyLine returnedSupplyLine = service.getSupplyLineBy(supervisoryNode, program);
 
-    verify(supplyLineRepository).getSupplyLineBy(supervisoryNode, program);
+    verify(repository).getSupplyLineBy(supervisoryNode, program);
     assertThat(returnedSupplyLine, is(supplyLine));
   }
 
@@ -85,7 +90,7 @@ public class SupplyLineServiceTest {
     when(supervisoryNodeRepository.getSupervisoryNodeParentId(supplyLine.getSupervisoryNode().getId())).thenThrow(new DataException("Supervising Node is not the Top node"));
     expectedEx.expect(DataException.class);
     expectedEx.expectMessage("Supervising Node is not the Top node");
-    supplyLineService.save(supplyLine);
+    service.save(supplyLine);
   }
 
   @Test
@@ -98,9 +103,9 @@ public class SupplyLineServiceTest {
 
     supplyLine.setId(null);
 
-    supplyLineService.save(supplyLine);
+    service.save(supplyLine);
 
-    verify(supplyLineRepository).insert(supplyLine);
+    verify(repository).insert(supplyLine);
   }
 
   @Test
@@ -113,10 +118,9 @@ public class SupplyLineServiceTest {
 
     supplyLine.setId(1L);
 
-    supplyLineService.save(supplyLine);
+    service.save(supplyLine);
 
-    verify(supplyLineRepository).update(supplyLine);
-
+    verify(repository).update(supplyLine);
   }
 
   @Test
@@ -126,10 +130,10 @@ public class SupplyLineServiceTest {
     when(supervisoryNodeRepository.getIdForCode(supplyLine.getSupervisoryNode().getCode())).thenReturn(1L);
     supplyLine.getSupervisoryNode().setId(1L);
     when(supervisoryNodeRepository.getSupervisoryNodeParentId(1L)).thenReturn(null);
-    when(supplyLineRepository.getSupplyLineBy(supplyLine.getSupervisoryNode(), supplyLine.getProgram())).thenReturn(supplyLine);
-    supplyLineService.save(supplyLine);
+    when(repository.getSupplyLineBy(supplyLine.getSupervisoryNode(), supplyLine.getProgram())).thenReturn(supplyLine);
+    service.save(supplyLine);
 
-    SupplyLine result = supplyLineService.getExisting(supplyLine);
+    SupplyLine result = service.getExisting(supplyLine);
 
     assertThat(result, is(supplyLine));
   }
@@ -137,11 +141,36 @@ public class SupplyLineServiceTest {
   @Test
   public void shouldGetSupplyLinebyId() throws Exception {
     SupplyLine expectedSupplyLine = new SupplyLine();
-    when(supplyLineRepository.getById(3L)).thenReturn(expectedSupplyLine);
+    when(repository.getById(3L)).thenReturn(expectedSupplyLine);
 
-    SupplyLine returnedSupplyLine = supplyLineService.getById(3L);
+    SupplyLine returnedSupplyLine = service.getById(3L);
 
     assertThat(returnedSupplyLine, is(expectedSupplyLine));
-    verify(supplyLineRepository).getById(3L);
+    verify(repository).getById(3L);
+  }
+
+  @Test
+  public void shouldSearch() {
+    String searchParam = "supply";
+    String columnName = "name";
+    List<SupplyLine> supplyLines = asList(new SupplyLine());
+
+    Pagination pagination = new Pagination(2, 10);
+    when(repository.search(searchParam, columnName, pagination)).thenReturn(supplyLines);
+
+    List<SupplyLine> result = service.search(searchParam, columnName, pagination);
+    assertThat(result, Is.is(supplyLines));
+  }
+
+  @Test
+  public void shouldGetTotalSearchResultCount() throws Exception {
+    String searchParam = "fac";
+    String columnName = "facility";
+
+    when(repository.getTotalSearchResultCount(searchParam, columnName)).thenReturn(1);
+
+    Integer result = service.getTotalSearchResultCount(searchParam, columnName);
+    assertThat(result, is(1));
+    verify(repository).getTotalSearchResultCount(searchParam, columnName);
   }
 }

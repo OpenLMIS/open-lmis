@@ -17,13 +17,50 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
-import org.openlmis.core.builder.*;
-import org.openlmis.core.domain.*;
+import org.openlmis.core.builder.FacilityApprovedProductBuilder;
+import org.openlmis.core.builder.FacilityBuilder;
+import org.openlmis.core.builder.ProcessingPeriodBuilder;
+import org.openlmis.core.builder.ProcessingScheduleBuilder;
+import org.openlmis.core.builder.ProductBuilder;
+import org.openlmis.core.builder.ProgramBuilder;
+import org.openlmis.core.builder.SupervisoryNodeBuilder;
+import org.openlmis.core.builder.SupplyLineBuilder;
+import org.openlmis.core.builder.UserBuilder;
+import org.openlmis.core.domain.Facility;
+import org.openlmis.core.domain.FacilityTypeApprovedProduct;
+import org.openlmis.core.domain.Money;
+import org.openlmis.core.domain.ProcessingPeriod;
+import org.openlmis.core.domain.ProcessingSchedule;
+import org.openlmis.core.domain.Product;
+import org.openlmis.core.domain.ProductCategory;
+import org.openlmis.core.domain.Program;
+import org.openlmis.core.domain.ProgramProduct;
+import org.openlmis.core.domain.Right;
+import org.openlmis.core.domain.Role;
+import org.openlmis.core.domain.RoleAssignment;
+import org.openlmis.core.domain.SupervisoryNode;
+import org.openlmis.core.domain.SupplyLine;
+import org.openlmis.core.domain.User;
 import org.openlmis.core.query.QueryExecutor;
-import org.openlmis.core.repository.mapper.*;
+import org.openlmis.core.repository.mapper.FacilityApprovedProductMapper;
+import org.openlmis.core.repository.mapper.FacilityMapper;
+import org.openlmis.core.repository.mapper.ProcessingPeriodMapper;
+import org.openlmis.core.repository.mapper.ProcessingScheduleMapper;
+import org.openlmis.core.repository.mapper.ProductCategoryMapper;
+import org.openlmis.core.repository.mapper.ProductMapper;
+import org.openlmis.core.repository.mapper.ProgramMapper;
+import org.openlmis.core.repository.mapper.ProgramProductMapper;
+import org.openlmis.core.repository.mapper.RoleRightsMapper;
+import org.openlmis.core.repository.mapper.SupervisoryNodeMapper;
+import org.openlmis.core.repository.mapper.SupplyLineMapper;
+import org.openlmis.core.repository.mapper.UserMapper;
 import org.openlmis.db.categories.IntegrationTests;
 import org.openlmis.rnr.builder.RnrLineItemBuilder;
-import org.openlmis.rnr.domain.*;
+import org.openlmis.rnr.domain.Comment;
+import org.openlmis.rnr.domain.RequisitionStatusChange;
+import org.openlmis.rnr.domain.Rnr;
+import org.openlmis.rnr.domain.RnrLineItem;
+import org.openlmis.rnr.domain.RnrStatus;
 import org.openlmis.rnr.service.RequisitionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -34,7 +71,11 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static java.util.Arrays.asList;
@@ -48,7 +89,6 @@ import static org.openlmis.core.builder.ProcessingPeriodBuilder.*;
 import static org.openlmis.core.builder.ProcessingScheduleBuilder.defaultProcessingSchedule;
 import static org.openlmis.core.builder.ProgramBuilder.programCode;
 import static org.openlmis.core.builder.ProgramBuilder.programName;
-import static org.openlmis.core.builder.SupplyLineBuilder.defaultProgram;
 import static org.openlmis.core.builder.SupplyLineBuilder.defaultSupplyLine;
 import static org.openlmis.core.builder.UserBuilder.active;
 import static org.openlmis.core.builder.UserBuilder.defaultUser;
@@ -82,7 +122,7 @@ public class RequisitionMapperIT {
   @Autowired
   private RequisitionMapper mapper;
   @Autowired
-  RnrLineItemMapper lineItemMapper;
+  private RnrLineItemMapper lineItemMapper;
   @Autowired
   LossesAndAdjustmentsMapper lossesAndAdjustmentsMapper;
   @Autowired
@@ -877,7 +917,7 @@ public class RequisitionMapperIT {
 
   private void insertSupplyLine(Facility facility, SupervisoryNode supervisoryNode) {
     SupplyLine supplyLine = make(a(defaultSupplyLine, with(SupplyLineBuilder.facility, facility),
-      with(SupplyLineBuilder.supervisoryNode, supervisoryNode), with(defaultProgram, program)));
+      with(SupplyLineBuilder.supervisoryNode, supervisoryNode), with(SupplyLineBuilder.program, program)));
     supplyLineMapper.insert(supplyLine);
   }
 

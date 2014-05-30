@@ -17,7 +17,9 @@ import org.junit.runner.RunWith;
 import org.openlmis.core.builder.FacilityBuilder;
 import org.openlmis.core.builder.ProgramBuilder;
 import org.openlmis.core.builder.SupervisoryNodeBuilder;
+import org.openlmis.core.builder.SupplyLineBuilder;
 import org.openlmis.core.domain.Facility;
+import org.openlmis.core.domain.Pagination;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.SupervisoryNode;
 import org.openlmis.core.domain.SupplyLine;
@@ -28,11 +30,13 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
-import static com.natpryce.makeiteasy.MakeItEasy.a;
-import static com.natpryce.makeiteasy.MakeItEasy.make;
+import java.util.List;
+
+import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static junit.framework.Assert.assertNotNull;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
+import static org.openlmis.core.builder.SupplyLineBuilder.defaultSupplyLine;
 
 @Category(IntegrationTests.class)
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -135,5 +139,68 @@ public class SupplyLineMapperIT {
     assertThat(supplyLineReturned.getSupplyingFacility().getCode(), is(facility.getCode()));
   }
 
+  @Test
+  public void shouldGetPaginatedSupplyLinesSearchedBySupplyingFacilityName() throws Exception {
+    String searchParam = "Apollo";
 
+    Facility f100 = make(a(FacilityBuilder.defaultFacility, with(FacilityBuilder.code, "F100"), with(FacilityBuilder.name, "Facility100")));
+    facilityMapper.insert(f100);
+
+    Program hivProgram = programMapper.getByCode("HIV");
+    Program malariaProgram = programMapper.getByCode("MALARIA");
+    Program tbProgram = programMapper.getByCode("TB");
+
+    SupplyLine supplyLine1 = createSupplyLine(program);
+    mapper.insert(supplyLine1);
+
+    SupplyLine supplyLine2 = createSupplyLine(hivProgram);
+    mapper.insert(supplyLine2);
+
+    SupplyLine supplyLine3 = createSupplyLine(malariaProgram);
+    mapper.insert(supplyLine3);
+
+    SupplyLine supplyLine4 = createSupplyLine(tbProgram);
+    supplyLine4.setSupplyingFacility(f100);
+    mapper.insert(supplyLine4);
+
+    Pagination pagination = new Pagination(2, 2);
+    List<SupplyLine> supplyLines = mapper.findByFacilityName(searchParam, pagination);
+
+    assertThat(supplyLines.size(), is(1));
+    assertThat(supplyLines.get(0).getId(), is(supplyLine3.getId()));
+  }
+
+  @Test
+  public void shouldGetCountOfRecordsWhenSearchedByFacilityName() throws Exception {
+    String searchParam = "Apollo";
+
+    Facility f100 = make(a(FacilityBuilder.defaultFacility, with(FacilityBuilder.code, "F100"), with(FacilityBuilder.name, "Facility100")));
+    facilityMapper.insert(f100);
+
+    Program hivProgram = programMapper.getByCode("HIV");
+    Program malariaProgram = programMapper.getByCode("MALARIA");
+    Program tbProgram = programMapper.getByCode("TB");
+
+    SupplyLine supplyLine1 = createSupplyLine(program);
+    mapper.insert(supplyLine1);
+
+    SupplyLine supplyLine2 = createSupplyLine(hivProgram);
+    mapper.insert(supplyLine2);
+
+    SupplyLine supplyLine3 = createSupplyLine(malariaProgram);
+    mapper.insert(supplyLine3);
+
+    SupplyLine supplyLine4 = createSupplyLine(tbProgram);
+    supplyLine4.setSupplyingFacility(f100);
+    mapper.insert(supplyLine4);
+
+    Integer count = mapper.getTotalSearchResultsByFacilityName(searchParam);
+
+    assertThat(count, is(3));
+  }
+
+  private SupplyLine createSupplyLine(Program program) {
+    return make(a(defaultSupplyLine, with(SupplyLineBuilder.supervisoryNode, supervisoryNode),
+      with(SupplyLineBuilder.facility, facility), with(SupplyLineBuilder.program, program)));
+  }
 }

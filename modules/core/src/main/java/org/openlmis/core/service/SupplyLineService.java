@@ -11,6 +11,7 @@
 package org.openlmis.core.service;
 
 import lombok.NoArgsConstructor;
+import org.openlmis.core.domain.Pagination;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.SupervisoryNode;
 import org.openlmis.core.domain.SupplyLine;
@@ -22,6 +23,8 @@ import org.openlmis.core.repository.SupplyLineRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * Exposes the services for handling SupplyLine entity.
  */
@@ -30,32 +33,32 @@ import org.springframework.stereotype.Service;
 @NoArgsConstructor
 public class SupplyLineService {
 
-  private SupplyLineRepository supplyLineRepository;
+  private SupplyLineRepository repository;
   private ProgramRepository programRepository;
   private FacilityRepository facilityRepository;
   private SupervisoryNodeRepository supervisoryNodeRepository;
 
   @Autowired
-  public SupplyLineService(SupplyLineRepository supplyLineRepository, ProgramRepository programRepository, FacilityRepository facilityRepository, SupervisoryNodeRepository supervisoryNodeRepository) {
-    this.supplyLineRepository = supplyLineRepository;
+  public SupplyLineService(SupplyLineRepository repository, ProgramRepository programRepository, FacilityRepository facilityRepository, SupervisoryNodeRepository supervisoryNodeRepository) {
+    this.repository = repository;
     this.programRepository = programRepository;
     this.facilityRepository = facilityRepository;
     this.supervisoryNodeRepository = supervisoryNodeRepository;
   }
 
   public SupplyLine getSupplyLineBy(SupervisoryNode supervisoryNode, Program program) {
-    return supplyLineRepository.getSupplyLineBy(supervisoryNode, program);
+    return repository.getSupplyLineBy(supervisoryNode, program);
   }
 
   public void save(SupplyLine supplyLine) {
     validateIfSupervisoryNodeIsTopmostNode(supplyLine);
 
     if (supplyLine.getId() == null) {
-      this.supplyLineRepository.insert(supplyLine);
+      this.repository.insert(supplyLine);
       return;
     }
 
-    this.supplyLineRepository.update(supplyLine);
+    this.repository.update(supplyLine);
   }
 
   private void populateIdsForSupplyLine(SupplyLine supplyLine) {
@@ -73,10 +76,18 @@ public class SupplyLineService {
 
   public SupplyLine getExisting(SupplyLine supplyLine) {
     populateIdsForSupplyLine(supplyLine);
-    return supplyLineRepository.getSupplyLineBy(supplyLine.getSupervisoryNode(), supplyLine.getProgram());
+    return repository.getSupplyLineBy(supplyLine.getSupervisoryNode(), supplyLine.getProgram());
   }
 
   public SupplyLine getById(Long id) {
-    return supplyLineRepository.getById(id);
+    return repository.getById(id);
+  }
+
+  public List<SupplyLine> search(String searchParam, String columnName, Pagination pagination) {
+    return repository.search(searchParam, columnName, pagination);
+  }
+
+  public Integer getTotalSearchResultCount(String searchParam, String columnName) {
+    return repository.getTotalSearchResultCount(searchParam, columnName);
   }
 }
