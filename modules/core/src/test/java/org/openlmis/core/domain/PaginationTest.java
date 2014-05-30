@@ -30,7 +30,7 @@ public class PaginationTest {
   }
 
   @Test
-  public void shouldSetTotalRecords() {
+  public void shouldSetTotalRecordsAndNumberOfPagesWhenDistributionIsEven() {
     Pagination pagination = new Pagination(2, 10);
 
     pagination.setTotalRecords(50);
@@ -39,4 +39,33 @@ public class PaginationTest {
     assertThat(pagination.getNumberOfPages(), is(5));
   }
 
+ @Test
+  public void shouldSetTotalRecordsAndNumberOfPagesWhenDistributionIsOdd() {
+    Pagination pagination = new Pagination(2, 10);
+
+    pagination.setTotalRecords(51);
+
+    assertThat(pagination.getTotalRecords(), is(51));
+    assertThat(pagination.getNumberOfPages(), is(6));
+  }
+
+  @Test
+  public void shouldSetTotalRecordsAndNumberOfPagesWhenNoRecordsFound() {
+    Pagination pagination = new Pagination(2, 10);
+
+    pagination.setTotalRecords(0);
+
+    assertThat(pagination.getTotalRecords(), is(0));
+    assertThat(pagination.getNumberOfPages(), is(1));
+  }
+
+  @Test
+  public void shouldSetTotalRecordsAndNumberOfPagesWhenLimitZero() {
+    Pagination pagination = new Pagination(2, 0);
+
+    pagination.setTotalRecords(50);
+
+    assertThat(pagination.getTotalRecords(), is(50));
+    assertThat(pagination.getNumberOfPages(), is(1));
+  }
 }

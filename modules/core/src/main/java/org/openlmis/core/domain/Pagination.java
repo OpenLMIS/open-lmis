@@ -19,13 +19,13 @@ public class Pagination extends RowBounds {
 
   @Getter
   @Setter
-  private Integer page;
+  private int page;
 
   @Getter
-  private Integer numberOfPages;
+  private int numberOfPages;
 
   @Getter
-  private Integer totalRecords;
+  private int totalRecords;
 
   public Pagination(Integer page, int limit) {
     super((page - 1) * limit, limit);
@@ -38,11 +38,13 @@ public class Pagination extends RowBounds {
   }
 
   private void setNumberOfPages() {
-    numberOfPages = totalRecords / getLimit();
-    if (totalRecords % getLimit() > 0) {
-      numberOfPages++;
+    if (getLimit() > 0) {
+      if (totalRecords % getLimit() == 0) {
+        numberOfPages = totalRecords / getLimit();
+      } else {
+        numberOfPages = (totalRecords / getLimit()) + 1;
+      }
     }
-
     if (numberOfPages == 0) {
       numberOfPages++;
     }
