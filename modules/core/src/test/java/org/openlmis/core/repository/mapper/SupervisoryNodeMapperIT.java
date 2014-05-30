@@ -278,15 +278,9 @@ public class SupervisoryNodeMapperIT {
     insertSupervisoryNode(supervisoryNode2);
 
     Pagination pagination = new Pagination(1, 10);
-    List<SupervisoryNode> searchResults = supervisoryNodeMapper.getSupervisoryNodesBy(pagination, "Approval");
+    List<SupervisoryNode> searchResults = supervisoryNodeMapper.getSupervisoryNodesBy("Approval", pagination);
 
     assertThat(searchResults.size(), is(2));
-
-    pagination.setPageSize(1);
-    searchResults = supervisoryNodeMapper.getSupervisoryNodesBy(pagination, "Approval");
-
-    assertThat(searchResults.size(), is(1));
-
   }
 
   @Test
@@ -308,15 +302,9 @@ public class SupervisoryNodeMapperIT {
     insertSupervisoryNode(supervisoryNode3);
 
     Pagination pagination = new Pagination(1, 10);
-    List<SupervisoryNode> searchResults = supervisoryNodeMapper.getSupervisoryNodesBy(pagination, "Parent");
+    List<SupervisoryNode> searchResults = supervisoryNodeMapper.getSupervisoryNodesBy("Parent", pagination);
 
     assertThat(searchResults.size(), is(1));
-
-    pagination.setPageSize(0);
-    searchResults = supervisoryNodeMapper.getSupervisoryNodesBy(pagination, "Parent");
-
-    assertThat(searchResults.size(), is(0));
-
   }
 
   @Test
@@ -401,9 +389,9 @@ public class SupervisoryNodeMapperIT {
     List<SupervisoryNode> supervisoryNodeList = supervisoryNodeMapper.getFilteredSupervisoryNodesByName(param);
 
     assertThat(supervisoryNodeList.size(), is(3));
-    assertThat(supervisoryNodeList.get(0),is(supervisoryNode1));
-    assertThat(supervisoryNodeList.get(1),is(supervisoryNode4));
-    assertThat(supervisoryNodeList.get(2),is(supervisoryNode2));
+    assertThat(supervisoryNodeList.get(0), is(supervisoryNode1));
+    assertThat(supervisoryNodeList.get(1), is(supervisoryNode4));
+    assertThat(supervisoryNodeList.get(2), is(supervisoryNode2));
   }
 
   private SupervisoryNode insertSupervisoryNode(SupervisoryNode supervisoryNode) {

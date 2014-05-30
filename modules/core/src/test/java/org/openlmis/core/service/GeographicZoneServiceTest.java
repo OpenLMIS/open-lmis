@@ -198,7 +198,7 @@ public class GeographicZoneServiceTest {
   @Test
   public void shouldSearchByParentNameIfSearchCriteriaIsParentName() throws Exception {
     service.setPageSize(String.valueOf(pageSize));
-    Pagination pagination = new Pagination();
+    Pagination pagination = new Pagination(0, 0);
     whenNew(Pagination.class).withArguments(7, pageSize).thenReturn(pagination);
 
     service.searchBy("name", "parentName", 7);
@@ -209,7 +209,7 @@ public class GeographicZoneServiceTest {
   @Test
   public void shouldSearchByGeoZoneNameIfSearchCriteriaIsName() throws Exception {
     service.setPageSize(String.valueOf(pageSize));
-    Pagination pagination = new Pagination();
+    Pagination pagination = new Pagination(0, 0);
     whenNew(Pagination.class).withArguments(7, pageSize).thenReturn(pagination);
 
     service.searchBy("name", "name", 7);
@@ -220,7 +220,7 @@ public class GeographicZoneServiceTest {
   @Test
   public void shouldReturnEmptyListIfSearchCriteriaIsInvalid() throws Exception {
     service.setPageSize(String.valueOf(pageSize));
-    Pagination pagination = new Pagination();
+    Pagination pagination = new Pagination(0, 0);
     whenNew(Pagination.class).withArguments(7, pageSize).thenReturn(pagination);
 
     List<GeographicZone> geographicZones = service.searchBy("name", "invalidName", 7);

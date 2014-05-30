@@ -10,41 +10,33 @@
 
 package org.openlmis.core.domain;
 
+import org.junit.experimental.categories.Category;
+import org.openlmis.db.categories.UnitTests;
+import org.testng.annotations.Test;
 
-import lombok.Getter;
-import lombok.Setter;
-import org.apache.ibatis.session.RowBounds;
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertThat;
 
-public class Pagination extends RowBounds {
+@Category(UnitTests.class)
+public class PaginationTest {
 
-  @Getter
-  @Setter
-  private Integer page;
+  @Test
+  public void shouldSetValues() {
+    Pagination pagination = new Pagination(2, 10);
 
-  @Getter
-  private Integer numberOfPages;
-
-  @Getter
-  private Integer totalRecords;
-
-  public Pagination(Integer page, int limit) {
-    super((page - 1) * limit, limit);
-    this.page = page;
+    assertThat(pagination.getOffset(), is(10));
+    assertThat(pagination.getLimit(), is(10));
+    assertThat(pagination.getPage(), is(2));
   }
 
-  public void setTotalRecords(Integer totalRecords) {
-    this.totalRecords = totalRecords;
-    setNumberOfPages();
+  @Test
+  public void shouldSetTotalRecords() {
+    Pagination pagination = new Pagination(2, 10);
+
+    pagination.setTotalRecords(50);
+
+    assertThat(pagination.getTotalRecords(), is(50));
+    assertThat(pagination.getNumberOfPages(), is(5));
   }
 
-  private void setNumberOfPages() {
-    numberOfPages = totalRecords / getLimit();
-    if (totalRecords % getLimit() > 0) {
-      numberOfPages++;
-    }
-
-    if (numberOfPages == 0) {
-      numberOfPages++;
-    }
-  }
 }

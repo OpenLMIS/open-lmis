@@ -10,9 +10,16 @@
 
 package org.openlmis.core.repository.mapper;
 
-import org.apache.ibatis.annotations.*;
+import org.apache.ibatis.annotations.Insert;
+import org.apache.ibatis.annotations.One;
+import org.apache.ibatis.annotations.Options;
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Result;
+import org.apache.ibatis.annotations.Results;
+import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
+import org.apache.ibatis.session.RowBounds;
 import org.openlmis.core.domain.Facility;
-import org.openlmis.core.domain.Pagination;
 import org.openlmis.core.domain.SupervisoryNode;
 import org.springframework.stereotype.Repository;
 
@@ -130,24 +137,24 @@ public interface SupervisoryNodeMapper {
   void update(SupervisoryNode supervisoryNode);
 
   @Select({"SELECT * FROM supervisory_nodes SN INNER JOIN supervisory_nodes SNP ON SN.parentId = SNP.id WHERE LOWER(SNP.name)" +
-    " LIKE '%'|| LOWER(#{nameSearchCriteria}) ||'%' order by LOWER(SNP.name), LOWER(SN.name) NULLS LAST LIMIT #{pagination.pageSize} OFFSET #{pagination.offset}"})
+    " LIKE '%'|| LOWER(#{nameSearchCriteria}) ||'%' order by LOWER(SNP.name), LOWER(SN.name) NULLS LAST"})
   @Results(value = {
     @Result(property = "parent", column = "parentId", javaType = SupervisoryNode.class,
       one = @One(select = "getById")),
     @Result(property = "facility", column = "facilityId", javaType = Facility.class,
       one = @One(select = "org.openlmis.core.repository.mapper.FacilityMapper.getById"))
   })
-  List<SupervisoryNode> getSupervisoryNodesByParent(@Param(value = "pagination") Pagination pagination, @Param(value = "nameSearchCriteria") String nameSearchCriteria);
+  List<SupervisoryNode> getSupervisoryNodesByParent(@Param(value = "nameSearchCriteria") String nameSearchCriteria, RowBounds rowBounds);
 
   @Select({"SELECT * FROM supervisory_nodes SN LEFT OUTER JOIN supervisory_nodes SNP ON SN.parentId = SNP.id WHERE LOWER(SN.name)" +
-    " LIKE '%'|| LOWER(#{nameSearchCriteria}) ||'%' ORDER BY LOWER(SNP.name), LOWER(SN.name) NULLS LAST LIMIT #{pagination.pageSize} OFFSET #{pagination.offset}"})
+    " LIKE '%'|| LOWER(#{nameSearchCriteria}) ||'%' ORDER BY LOWER(SNP.name), LOWER(SN.name) NULLS LAST"})
   @Results(value = {
     @Result(property = "parent", column = "parentId", javaType = SupervisoryNode.class,
       one = @One(select = "getById")),
     @Result(property = "facility", column = "facilityId", javaType = Facility.class,
       one = @One(select = "org.openlmis.core.repository.mapper.FacilityMapper.getById"))
   })
-  List<SupervisoryNode> getSupervisoryNodesBy(@Param(value = "pagination") Pagination pagination, @Param(value = "nameSearchCriteria") String nameSearchCriteria);
+  List<SupervisoryNode> getSupervisoryNodesBy(@Param(value = "nameSearchCriteria") String nameSearchCriteria, RowBounds rowBounds);
 
   @Select({"SELECT COUNT(*) FROM supervisory_nodes SN LEFT OUTER JOIN supervisory_nodes SNP ON SN.parentId = SNP.id WHERE LOWER(SN.name)" +
     " LIKE '%'|| LOWER(#{nameSearchCriteria}) ||'%'"})

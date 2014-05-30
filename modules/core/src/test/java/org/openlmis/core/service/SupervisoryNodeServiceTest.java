@@ -280,7 +280,7 @@ public class SupervisoryNodeServiceTest {
   public void shouldGetSupervisoryNodesForParentSearchCriteria() throws Exception {
     String searchCriteria = "parentName";
     int page = 10;
-    Pagination pagination = new Pagination();
+    Pagination pagination = new Pagination(0, 0);
     whenNew(Pagination.class).withArguments(page, pageSize).thenReturn(pagination);
     when(supervisoryNodeRepository.getSupervisoryNodesByParent(pagination, searchCriteria)).thenReturn(Collections.EMPTY_LIST);
     List<SupervisoryNode> searchResult = supervisoryNodeService.getSupervisoryNodesBy(page, searchCriteria, true);
@@ -292,7 +292,7 @@ public class SupervisoryNodeServiceTest {
   public void shouldGetSupervisoryNodesSearchCriteria() throws Exception {
     String searchCriteria = "nodeName";
     int page = 10;
-    Pagination pagination = new Pagination();
+    Pagination pagination = new Pagination(0, 0);
     whenNew(Pagination.class).withArguments(page, pageSize).thenReturn(pagination);
 
     when(supervisoryNodeRepository.getSupervisoryNodesBy(pagination, searchCriteria)).thenReturn(Collections.EMPTY_LIST);
