@@ -23,8 +23,6 @@ public class RnRStatusSummaryReport {
 
     private String status;
     private Integer totalStatus;
-    private Long programId;
-    private Long periodId;
     private String programname;
     private String facilitycode;
     private String facilityname;

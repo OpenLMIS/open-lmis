@@ -27,64 +27,38 @@
         </div>
     </div>
     <accordion>
-        <accordion-group is-open="barCharts.openPanel">
+        <accordion-group is-open="rnrStatus.openPanel">
+
             <accordion-heading>
                 <div class="accordion-title">
                     <div class="caption">
-                        <i class="flaticon-speedometer1"></i><span
+                        <i class="flaticon-pie2"></i> <span
                             openlmis-message="label.rnr.status.summary.report"></span>
                     </div>
                     <div class="tools">
-                        <i ng-class="{'icon-minus-sign': barCharts.openPanel, 'icon-plus-sign': !barCharts.openPanel}"></i>
+                        <i  ng-class="{'icon-minus-sign': rnrStatus.openPanel, 'icon-plus-sign': !rnrStatus.openPanel}"></i>
                     </div>
                 </div>
             </accordion-heading>
-            <!--<div class="fill-rate-header">
-                <div class="row-fluid">
-                    <div class="span3">
-                        <div class="form-field">
-                            <span openlmis-message="label.facility"><span class="label-required">*</span></span>
-                            <select ui-select2 style="width:200px;" id="facility-name" name="facility"
-                                    ng-model="formFilter.facilityId" ng-change="processFacilityFilter()"
-                                    required="true">
-                                <option ng-repeat="option in allFacilities" value="{{ option.id }}">{{ option.code }} -
-                                    {{ option.name }}
-                                </option>
-                            </select>
-                        </div>
-                    </div>
 
-                </div>
 
-            </div>-->
             <div class="row-fluid">
                 <div class="app-form span6">
 
 
                     <div class="span6">
-                        <div ng-show="RnRStatusPieChartData == undefined">
-                            <label class="chart-note">
-                                No data to render chart
 
-                            </label>
-                        </div>
-
-                        <div ng-show ="RnRStatusPieChartData != undefined">
-                            <a-float id="stocked-out-reporting" af-option="rnRStatusPieChartOption" af-data="RnRStatusPieChartData" class="chart"></a-float>
-                            <div id="rnrStatusReportLegend" style="width: 500px;text-align: center;border-spacing: 20;" class="chartLegend"></div>
-
+                        <div ng-hide="RnRStatusPieChartData"><label class="chart-note">No data to render chart</label></div>
+                        <div  ng-show="RnRStatusPieChartData">
+                            <a-float id="rnr-status-report" af-option="rnRStatusPieChartOption" af-data="RnRStatusPieChartData" class="chart"></a-float>
+                            <div id="rnrStatusReportLegend" class="chartLegend"></div>
                         </div>
 
                     </div>
                 </div>
                 <div class="app-form span6">
 
-
-                    <table class="table table-bordered" ng-show="RnRStatusPieChartData == undefined || RnRStatusPieChartData.length == 0">
-                        <tr>
-                            <td>No data to show under selected filters</td>
-                        </tr>
-                    </table>
+                    <div ng-hide="RnRStatusPieChartData"><label class="chart-note">No data to show under selected filter</label></div>
                     <div ng-show ="RnRStatusPieChartData !== undefined && RnRStatusPieChartData.length > 0">
                         <table ng-show="RnRStatusPieChartData.length > 0" class="table-bordered table table-striped pull-right"
                                ng-table="tableParams">

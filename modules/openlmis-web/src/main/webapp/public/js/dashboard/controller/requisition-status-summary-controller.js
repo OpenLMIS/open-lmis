@@ -16,13 +16,18 @@ function RequisitionStatusSummaryController($scope, $filter, totalRnRCreatedByRe
 
     $scope.formPanel = {openPanel: true};
 
-    $scope.alertsPanel = {openPanel: false};
-
     initialize();
 
     function initialize() {
         $scope.showProductsFilter = false;
         $scope.$parent.currentTab = "label.rnr.status.current.tab";
+
+        RequisitionGroupsByProgram.get({program: $scope.filterObject.programId }, function (data) {
+            $scope.requisitionGroups = data.requisitionGroupList;
+            if (!isUndefined($scope.requisitionGroups)) {
+
+            }
+        });
     }
 
     UserSupervisoryNodes.get(function (data) {
@@ -50,10 +55,6 @@ function RequisitionStatusSummaryController($scope, $filter, totalRnRCreatedByRe
             return;
         }
         $scope.filterObject.programId = $scope.formFilter.programId;
-
-        ReportProductsByProgram.get({programId: $scope.filterObject.programId}, function (data) {
-            $scope.products = data.productList;
-        });
 
         if (!isUndefined($scope.formFilter.supervisoryNodeId)) {
             RequisitionGroupsBySupervisoryNodeProgramSchedule.get(
@@ -86,7 +87,8 @@ function RequisitionStatusSummaryController($scope, $filter, totalRnRCreatedByRe
          $scope.filterObject.requisitionGroupId= $scope.formFilter.rgroupId;
 
             RnRStatusByRequisitionGroupAndPeriod.get({requisitionGroupId:$scope.filterObject.requisitionGroupId,
-                periodId:$scope.filterObject.periodId
+                periodId:$scope.filterObject.periodId,
+                programId:$scope.filterObject.programId
             },
             function (data) {
 
@@ -114,8 +116,8 @@ function RequisitionStatusSummaryController($scope, $filter, totalRnRCreatedByRe
 
                     };
 
-                    bindChartEvent("#stocked-out-reporting","plotclick",$scope.stockedOutChartClickHandler);
-                    bindChartEvent("#stocked-out-reporting","plothover",flotChartHoverCursorHandler);
+                    bindChartEvent("#rnr-status-report","plotclick",rnrStatusChartClickHandler);
+                    bindChartEvent("#rnr-status-report",flotChartHoverCursorHandler);
 
                 } else {
                     $scope.resetRnRStatusReportData();
@@ -175,15 +177,11 @@ function RequisitionStatusSummaryController($scope, $filter, totalRnRCreatedByRe
 
     };
 
-    $scope.resetRnRStatusReportData = function () {
-        $scope.RnRStatusPieChartData = null;
-        $scope.dataRows = null;
-    };
 
     function flotChartHoverCursorHandler(event,pos,item){
 
         if (item && !isUndefined(item.dataIndex)) {
-            $(event.target).css('cursor','pointer');
+           $(event.target).css('cursor','pointer');
         } else {
             $(event.target).css('cursor','auto');
         }
@@ -193,7 +191,7 @@ function RequisitionStatusSummaryController($scope, $filter, totalRnRCreatedByRe
         $(elementSelector).bind(eventType, callback);
     }
 
-    $scope.stockedOutChartClickHandler = function (event, pos, item){
+    function rnrStatusChartClickHandler(event, pos, item){
         if(item){
             var status;
             if(!isUndefined($scope.rnrStatusRenderedData.status)){
@@ -206,17 +204,13 @@ function RequisitionStatusSummaryController($scope, $filter, totalRnRCreatedByRe
             $scope.$apply();
         }
 
+    }
+
+    $scope.resetRnRStatusReportData = function () {
+        $scope.RnRStatusPieChartData = null;
+        $scope.rnRStatusPieChartOption =null;
+        $scope.dataRows = null;
     };
-
-
-
-
-
-   $scope.$on("$viewContentLoaded",function(){
-
-
-   });
-
 
 
 
@@ -234,6 +228,7 @@ function RequisitionStatusSummaryController($scope, $filter, totalRnRCreatedByRe
             });
         } else {
             $scope.filterObject.rgroupId = 0;
+
         }
 
     };

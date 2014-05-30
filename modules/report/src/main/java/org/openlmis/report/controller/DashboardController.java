@@ -161,10 +161,12 @@ public class DashboardController extends BaseController {
     ){
         return OpenLmisResponse.response(RNR_STATUS_DETAILS,this.lookupService.getRnRStatusDetails(requisitionGroupId,programId,periodId));
     }
-    @RequestMapping(value="/RnRStatus/{requisitionGroupId}/{periodId}",method = GET,headers = ACCEPT_JSON)
+    @RequestMapping(value="/RnRStatus/{requisitionGroupId}/{periodId}/{programId}/rnrStatus",method = GET,headers = ACCEPT_JSON)
     public ResponseEntity<OpenLmisResponse>getRnRStatusByRequisitionGroupAndPeriod(@PathVariable("requisitionGroupId") Long requisitionGroupId,
-                                                                                   @PathVariable("periodId") Long periodId){
-        return OpenLmisResponse.response(RNR_STATUS_BY_REQUISITION_GROUP,this.lookupService.getRnRStatusByRequisitionGroupAndPeriod(requisitionGroupId,periodId));
+                                                                                   @PathVariable("periodId") Long periodId,
+                                                                                   @PathVariable("programId") Long programId ){
+
+        return OpenLmisResponse.response(RNR_STATUS_BY_REQUISITION_GROUP,this.lookupService.getRnRStatusByRequisitionGroupAndPeriod(requisitionGroupId,periodId,programId));
     }
 
     @RequestMapping(value="/RnRStatusByRequisitionGroupDetails",method = GET,headers = ACCEPT_JSON)
