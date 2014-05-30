@@ -41,7 +41,8 @@ public interface RnRStatusSummaryReportMapper {
 
     @Select("select status, count(rnrid) totalStatus from vw_rnr_status\n" +
             "where requisitiongroupid = #{requisitionGroupId} and periodid = #{periodId} group by status")
-    public List<RnRStatusSummaryReport>getRnRStatusByRequisitionGroupAndPeriod(@Param("requisitionGroupId") Long requisitionGroupId,@Param("periodId") Long periodId);
+    public List<RnRStatusSummaryReport>getRnRStatusByRequisitionGroupAndPeriod(@Param("requisitionGroupId") Long requisitionGroupId,@Param("periodId") Long periodId,
+                                                                               @Param("programId") Long programId);
 
     @Select("select programname, status, count(rnrid) totalStatus from vw_rnr_status" +
             "where  requisitiongroupid = #{requisitiongroupId} and periodid = #{periodId} group by programname, status")

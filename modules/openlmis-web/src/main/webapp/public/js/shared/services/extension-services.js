@@ -547,8 +547,8 @@ services.factory("totalRnRCreatedByRequisitionGroup",function($resource){
     return $resource('/dashboard//RnRCreateForRequisitionGroup',{},{});
 });
 services.factory('RnRStatusByRequisitionGroupAndPeriod',function($resource){
-    return $resource('/dashboard/RnRStatus/:requisitionGroupId/:periodId.json',{},{});
-});
+    return $resource('/dashboard/RnRStatus/:requisitionGroupId/:periodId/:programId/rnrStatus.json',{},{});
+  });
 
 services.factory("RnRStatusByRequisitionGroupAndPeriodDetails ",function($resource){
     $resource('/dashboard/RnRStatusByRequisitionGroupDetails.json',{},{});
