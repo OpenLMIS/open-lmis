@@ -439,7 +439,7 @@ public class ManageSupervisoryNodes extends TestCaseHelper {
 
 
   public void searchAssociatedFacility(String facilityName) {
-    supervisoryNodesPage.clickAssociatedFacilityField();
+    //supervisoryNodesPage.clickAssociatedFacilityField();
     supervisoryNodesPage.searchFacilityToBeAssociated(facilityName);
     supervisoryNodesPage.clickSearchIcon();
   }
