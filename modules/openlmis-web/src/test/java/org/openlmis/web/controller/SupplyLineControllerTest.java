@@ -10,17 +10,19 @@
 
 package org.openlmis.web.controller;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.domain.Pagination;
 import org.openlmis.core.domain.SupplyLine;
 import org.openlmis.core.service.SupplyLineService;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.web.response.OpenLmisResponse;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;
@@ -28,13 +30,15 @@ import java.util.List;
 import static java.util.Arrays.asList;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
+import static org.mockito.MockitoAnnotations.initMocks;
+import static org.openlmis.web.controller.SupplyLineController.PAGINATION;
 import static org.openlmis.web.controller.SupplyLineController.SUPPLY_LINES;
 import static org.powermock.api.mockito.PowerMockito.when;
+import static org.powermock.api.mockito.PowerMockito.whenNew;
 
 @Category(UnitTests.class)
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(PowerMockRunner.class)
+@PrepareForTest(SupplyLineController.class)
 public class SupplyLineControllerTest {
 
   @Mock
@@ -42,6 +46,11 @@ public class SupplyLineControllerTest {
 
   @InjectMocks
   SupplyLineController controller;
+
+  @Before
+  public void setUp() {
+    initMocks(this);
+  }
 
   @Test
   public void shouldSearchSupplyLines() throws Exception {
@@ -51,11 +60,15 @@ public class SupplyLineControllerTest {
     String limit = "10";
     List<SupplyLine> supplyLines = asList(new SupplyLine());
 
-    when(service.search(eq(searchParam), eq(columnName), any(Pagination.class))).thenReturn(supplyLines);
+    Pagination pagination = new Pagination(2, 3);
+    whenNew(Pagination.class).withArguments(page, Integer.parseInt(limit)).thenReturn(pagination);
+    when(service.search(searchParam, columnName, pagination)).thenReturn(supplyLines);
     when(service.getTotalSearchResultCount(searchParam, columnName)).thenReturn(3);
 
     ResponseEntity<OpenLmisResponse> response = controller.search(searchParam, columnName, page, limit);
 
     assertThat((List<SupplyLine>) response.getBody().getData().get(SUPPLY_LINES), is(supplyLines));
+    assertThat((Pagination) response.getBody().getData().get(PAGINATION), is(pagination));
+
   }
 }
