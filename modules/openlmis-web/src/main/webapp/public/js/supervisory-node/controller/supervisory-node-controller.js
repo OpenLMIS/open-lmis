@@ -8,7 +8,7 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
  */
 
-function SupervisoryNodeController($scope, $location, supervisoryNode, ParentSupervisoryNodes, SupervisoryNodes, Facilities) {
+function SupervisoryNodeController($scope, $location, supervisoryNode, ParentSupervisoryNodes, SupervisoryNodes) {
   $scope.supervisoryNode = supervisoryNode || {};
 
   var reset = function () {
@@ -23,10 +23,6 @@ function SupervisoryNodeController($scope, $location, supervisoryNode, ParentSup
       return $scope.query.substr(0, 3) !== $scope.previousQuery.substr(0, 3);
     }
     return true;
-  };
-
-  $scope.getSearchResults = function (query, facilityTypeId, geoZoneId, successCallBack) {
-    Facilities.get({"searchParam": query, "facilityTypeId": facilityTypeId, "geoZoneId": geoZoneId}, successCallBack, {});
   };
 
   $scope.associate = function (facility) {

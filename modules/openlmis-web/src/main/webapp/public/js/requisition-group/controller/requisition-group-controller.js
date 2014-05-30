@@ -8,7 +8,7 @@
  *  You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
  */
 
-function RequisitionGroupController($scope, requisitionGroupData, $location, RequisitionGroups, SupervisoryNodesSearch, Facilities) {
+function RequisitionGroupController($scope, requisitionGroupData, $location, RequisitionGroups, SupervisoryNodesSearch) {
 
   if (requisitionGroupData) {
     $scope.requisitionGroup = requisitionGroupData.requisitionGroup;
@@ -42,10 +42,6 @@ function RequisitionGroupController($scope, requisitionGroupData, $location, Req
       RequisitionGroups.save({}, {"requisitionGroup": $scope.requisitionGroup, "requisitionGroupMembers": $scope.requisitionGroupMembers},
           success, error);
     }
-  };
-
-  $scope.getSearchResults = function (query, facilityTypeId, geoZoneId, successCallBack) {
-    Facilities.get({"searchParam": query, "facilityTypeId": facilityTypeId, "geoZoneId": geoZoneId}, successCallBack, {});
   };
 
   $scope.associate = function (facility) {

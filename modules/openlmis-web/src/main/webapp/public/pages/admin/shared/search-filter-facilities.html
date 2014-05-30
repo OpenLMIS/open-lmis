@@ -64,11 +64,11 @@
         <strong><span ng-bind="zone.name"></span></strong>
       </div>
 
-      <input type="button" class="btn btn-primary btn-small" ng-click="setFiltersModal = true"
+      <input type="button" class="btn btn-primary btn-small" ng-click="showFilterModal()"
              openlmis-message="button.set.filters"/>
 
-      <div id="setFiltersModal" modal="setFiltersModal" options="{ backdrop: 'static', escape: false}">
-        <div class="modal-header">
+      <div id="setFiltersModal" modal="filterModal" options="{ backdrop: 'static', escape: false}">
+      <div class="modal-header">
           <h3 openlmis-message="button.set.filters"></h3></div>
 
         <div class="modal-body">

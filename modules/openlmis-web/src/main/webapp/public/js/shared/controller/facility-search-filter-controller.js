@@ -8,21 +8,24 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
  */
 
-function FacilitySearchFilterController($scope, FacilityTypes, GeographicZoneSearch) {
+function FacilitySearchFilterController($scope, FacilityTypes, GeographicZoneSearch, Facilities) {
 
   $scope.showResults = false;
   $scope.type = {};
   $scope.zone = {};
 
-  FacilityTypes.get({}, function (data) {
-    $scope.facilityTypes = data.facilityTypeList;
-  }, {});
+  $scope.showFilterModal = function () {
+    $scope.filterModal = true;
+    FacilityTypes.get({}, function (data) {
+      $scope.facilityTypes = data.facilityTypeList;
+    }, {});
+  };
 
   $scope.showFacilitySearchResults = function () {
     if (!$scope.facilitySearchParam) return;
 
     $scope.facilityQuery = $scope.facilitySearchParam.trim();
-    $scope.$parent.$parent.getSearchResults($scope.facilityQuery, $scope.type.id, $scope.zone.id, function (data) {
+    Facilities.get({"searchParam": $scope.facilityQuery, "facilityTypeId": $scope.type.id, "geoZoneId": $scope.zone.id}, function (data) {
       $scope.facilityList = data.facilityList;
       $scope.resultCount = isUndefined($scope.facilityList) ? 0 : $scope.facilityList.length;
       $scope.message = data.message;
@@ -72,7 +75,7 @@ function FacilitySearchFilterController($scope, FacilityTypes, GeographicZoneSea
   $scope.setFilters = function () {
     $scope.zone = $scope.selectedGeoZone || {};
     $scope.type = $scope.selectedFacilityType || {};
-    $scope.setFiltersModal = false;
+    $scope.filterModal = false;
     $scope.showFacilitySearchResults();
   };
 
@@ -91,7 +94,7 @@ function FacilitySearchFilterController($scope, FacilityTypes, GeographicZoneSea
   $scope.cancelFilters = function () {
     $scope.selectedFacilityType = undefined;
     $scope.selectedGeoZone = undefined;
-    $scope.setFiltersModal = false;
+    $scope.filterModal = false;
   };
 
   $scope.showLevel = function (index) {
