@@ -5,6 +5,7 @@ import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.report.mapper.lookup.DashboardMapper;
 import org.openlmis.report.mapper.lookup.RnRStatusSummaryReportMapper;
@@ -16,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.powermock.api.mockito.PowerMockito.*;
+//import static org.mockito.Mockito.*;
 import static org.junit.Assert.assertThat;
 import static org.hamcrest.CoreMatchers.*;
 
@@ -51,6 +53,15 @@ public class DashboardLookupServiceTest {
 
         when(mapper.getItemFillRate(1L,1L,1L, DashboardLookupService.getCommaSeparatedIds(productsId))).thenReturn(expectedItemFillRate);
         assertThat(lookupService.getItemFillRate(1L,1L,1L,productsId),is(expectedItemFillRate));
+        Mockito.verify(mapper).getItemFillRate(1L,1L,1L,DashboardLookupService.getCommaSeparatedIds(productsId));
+
+    }
+    @Test
+    public void shouldReturnOrderFillRate() throws Exception {
+
+        when(mapper.getOrderFillRate(1L,1L,1L)).thenReturn(null);
+        assertThat(lookupService.getOrderFillRate(1L, 1L, 1L), is(nullValue()));
+        Mockito.verify(mapper).getOrderFillRate(1L,1L,1L);
 
     }
 
