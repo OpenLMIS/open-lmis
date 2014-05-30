@@ -71,7 +71,7 @@ public class DashboardLookupServiceTest {
         List<ShipmentLeadTime> expectedShipmentLeadTimeList = new ArrayList<>(1);
         when(mapper.getShipmentLeadTime(1L,1L,getCommaSeparatedIds(null))).thenReturn(expectedShipmentLeadTimeList);
         assertThat(lookupService.getShipmentLeadTime(1L,1L, null), is(expectedShipmentLeadTimeList));
-        Mockito.verify(mapper.getShipmentLeadTime(1L,1L,getCommaSeparatedIds(null)));
+        Mockito.verify(mapper).getShipmentLeadTime(1L,1L,getCommaSeparatedIds(null));
     }
 
 }
