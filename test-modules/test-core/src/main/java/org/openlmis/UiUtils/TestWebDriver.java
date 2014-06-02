@@ -17,6 +17,7 @@ import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
@@ -194,8 +195,23 @@ public class TestWebDriver {
   }
 
   public List<WebElement> getOptions(WebElement element) {
-
     return new Select(element).getOptions();
+  }
+
+  public List<String> getListOfOptions(WebElement element) {
+    List<String> listOfOptions = new ArrayList<>();
+    for (WebElement option : new Select(element).getOptions()) {
+      listOfOptions.add(option.getText());
+    }
+    return listOfOptions;
+  }
+
+  public List<String> getListOfOptionGroupsWithOptions(WebElement element) {
+    List<String> listOfOptionGroupsWithOptions = new ArrayList<>();
+    for (WebElement option : element.findElements(By.tagName("optgroup"))) {
+      listOfOptionGroupsWithOptions.add(option.getAttribute("label") + "\n" + option.getText());
+    }
+    return listOfOptionGroupsWithOptions;
   }
 
   public String getText(WebElement element) {

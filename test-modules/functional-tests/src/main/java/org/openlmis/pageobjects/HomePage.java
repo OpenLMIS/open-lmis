@@ -214,14 +214,14 @@ public class HomePage extends Page {
     return ManageFacilityPage.getInstance(testWebDriver);
   }
 
-  public ManageGeographicZonesPage navigateManageGeographicZonesPage() {
+  public GeographicZonePage navigateManageGeographicZonesPage() {
     testWebDriver.waitForElementToAppear(AdministrationMenuItem);
     AdministrationMenuItem.click();
     testWebDriver.waitForElementToAppear(manageLink);
-    manageLink.click();
+    testWebDriver.keyPress(manageLink);
     testWebDriver.waitForElementToAppear(geoZoneTab);
-    testWebDriver.keyPress(geoZoneTab);
-    return ManageGeographicZonesPage.getInstance(testWebDriver);
+    geoZoneTab.click();
+    return PageObjectFactory.getGeographicZonePage(testWebDriver);
   }
 
   public void clickCreateFacilityButton() {

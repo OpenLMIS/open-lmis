@@ -739,20 +739,32 @@ public class DBWrapper {
   }
 
   public void setupDataForGeoZones() throws SQLException {
-    update("insert into geographic_zones (code, name, levelId, parentId, catchmentPopulation, latitude, longitude)\n" +
-      "values('District1','District1',2,1,900,9.90,9.90),\n" +
-      "('District2','District2',1,null,900,9.90,9.90),\n" +
-      "('District3','District3',3,1,900,9.90,9.90),\n" +
-      "('District4','District4',4,1,900,9.90,9.90),\n" +
-      "('District5','District5',1,null,900,9.90,9.90),\n" +
-      "('District6','District6',2,1,900,9.90,9.90),\n" +
-      "('District7','District7',3,1,900,9.90,9.90),\n" +
-      "('District8','District8',4,1,900,9.90,9.90),\n" +
-      "('District9','District9',2,1,900,9.90,9.90),\n" +
-      "('District10','District10',2,1,900,9.90,9.90),\n" +
-      "('District11','District11',3,1,900,9.90,9.90),\n" +
-      "('District12','District12',4,1,900,9.90,9.90),\n" +
-      "('District13','District13',1,null,900,9.90,9.90);");
+    update("insert into geographic_zones (code, name, levelId, parentId, catchmentPopulation, latitude, longitude) values" +
+      "('District1','district1',2,null,900,9.90,9.90);");
+    update("insert into geographic_zones (code, name, levelId, parentId, catchmentPopulation, latitude, longitude) values" +
+      "('District2','District2',1,null,900,9.90,9.90);");
+    update("insert into geographic_zones (code, name, levelId, parentId, catchmentPopulation, latitude, longitude) values" +
+      "('District3','District3',3,(select id from geographic_zones where code = 'District2'),900,9.90,9.90);");
+    update("insert into geographic_zones (code, name, levelId, parentId, catchmentPopulation, latitude, longitude) values" +
+      "('District4','district4',4,(select id from geographic_zones where code = 'District3'),900,9.90,9.90);");
+    update("insert into geographic_zones (code, name, levelId, parentId, catchmentPopulation, latitude, longitude) values" +
+      "('district5','district5',4,(select id from geographic_zones where code = 'District3'),900,9.90,9.90);");
+    update("insert into geographic_zones (code, name, levelId, parentId, catchmentPopulation, latitude, longitude) values" +
+      "('Area6','district6',2,(select id from geographic_zones where code = 'District2'),900,9.90,9.90);");
+    update("insert into geographic_zones (code, name, levelId, parentId, catchmentPopulation, latitude, longitude) values" +
+      "('District7','District7',3,(select id from geographic_zones where code = 'District1'),900,9.90,9.90);");
+    update("insert into geographic_zones (code, name, levelId, parentId, catchmentPopulation, latitude, longitude) values" +
+      "('District8','district8',4,(select id from geographic_zones where code = 'District2'),900,9.90,9.90);");
+    update("insert into geographic_zones (code, name, levelId, parentId, catchmentPopulation, latitude, longitude) values" +
+      "('District9','District9',2,(select id from geographic_zones where code = 'District2'),900,9.90,9.90);");
+    update("insert into geographic_zones (code, name, levelId, parentId, catchmentPopulation, latitude, longitude) values" +
+      "('District10','District10',2,(select id from geographic_zones where code = 'District1'),900,9.90,9.90);");
+    update("insert into geographic_zones (code, name, levelId, parentId, catchmentPopulation, latitude, longitude) values" +
+      "('District11','District11',3,(select id from geographic_zones where code = 'District9'),900,9.90,9.90);");
+    update("insert into geographic_zones (code, name, levelId, parentId, catchmentPopulation, latitude, longitude) values" +
+      "('District12','District12',4,(select id from geographic_zones where code = 'District7'),900,9.90,9.90);");
+    update("insert into geographic_zones (code, name, levelId, parentId, catchmentPopulation, latitude, longitude) values" +
+      "('District13','District13',2,null,900,9.90,9.90);");
   }
 
   public void insertValuesInRequisition(boolean emergencyRequisitionRequired) throws SQLException {
@@ -944,6 +956,10 @@ public class DBWrapper {
   public void assignRight(String roleName, String roleRight) throws SQLException {
     update("INSERT INTO role_rights (roleId, rightName) VALUES" +
       " ((select id from roles where name='" + roleName + "'), '" + roleRight + "');");
+  }
+
+  public void removeAllExistingRights(String roleName) throws SQLException {
+    update("delete from role_rights where roleId = ((select id from roles where name='" + roleName + "'));");
   }
 
   public void updatePacksToShip(String packsToShip) throws SQLException {

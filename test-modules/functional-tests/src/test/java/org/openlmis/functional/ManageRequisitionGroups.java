@@ -482,7 +482,6 @@ public class ManageRequisitionGroups extends TestCaseHelper {
   }
 
   public void searchAssociatedFacility(String facilityCodeOrName) {
-    //requisitionGroupPage.clickAssociatedFacilityField();
     requisitionGroupPage.searchFacilityToBeAssociated(facilityCodeOrName);
     requisitionGroupPage.clickSearchIcon();
     testWebDriver.waitForAjax();

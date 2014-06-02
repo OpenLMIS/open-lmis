@@ -48,7 +48,7 @@ public class PageObjectFactory {
   private static ReportPage instanceOfReportPage;
   private static ManageSchedulePage instanceOfManageSchedulePage;
   private static TemplateConfigPage instanceOfTemplateConfigPage;
-  private static ManageGeographicZonesPage instanceOfManageGeographicZonesPage;
+  private static GeographicZonePage instanceOfGeographicZonePage;
   private static ConfigureOrderNumberPage instanceOfConfigureOrderNumberPage;
   private static PeriodsPage instanceOfPeriodsPage;
   private static SupervisoryNodesPage instanceOfSupervisoryNodesPage;
@@ -62,11 +62,11 @@ public class PageObjectFactory {
     return instanceOfManageFacilityPage;
   }
 
-  public static ManageGeographicZonesPage getManageGeographicZonesPage(TestWebDriver testWebDriver) {
-    if (instanceOfManageGeographicZonesPage == null) {
-      instanceOfManageGeographicZonesPage = new ManageGeographicZonesPage(testWebDriver);
+  public static GeographicZonePage getGeographicZonePage(TestWebDriver testWebDriver) {
+    if (instanceOfGeographicZonePage == null) {
+      instanceOfGeographicZonePage = new GeographicZonePage(testWebDriver);
     }
-    return instanceOfManageGeographicZonesPage;
+    return instanceOfGeographicZonePage;
   }
 
   public static DistributionPage getDistributionPage(TestWebDriver testWebDriver) {

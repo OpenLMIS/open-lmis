@@ -470,10 +470,10 @@ public class TestCaseHelper {
     verifyPreviousAndFirstPageLinksEnabled();
   }
 
-  public void verifyNumberOFPageLinksDisplayed(int numberOfProducts, int numberOfLineItemsPerPage) {
+  public void verifyNumberOFPageLinksDisplayed(int numberOfItems, int numberOfLineItemsPerPage) {
     testWebDriver.waitForAjax();
-    int numberOfPages = numberOfProducts / numberOfLineItemsPerPage;
-    if (numberOfProducts % numberOfLineItemsPerPage != 0) {
+    int numberOfPages = numberOfItems / numberOfLineItemsPerPage;
+    if (numberOfItems % numberOfLineItemsPerPage != 0) {
       numberOfPages = numberOfPages + 1;
     }
     for (int i = 1; i <= numberOfPages; i++) {
