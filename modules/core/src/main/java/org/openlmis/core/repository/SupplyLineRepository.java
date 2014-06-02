@@ -54,7 +54,10 @@ public class SupplyLineRepository {
 
   public List<SupplyLine> search(String searchParam, String columnName, Pagination pagination) {
     if (columnName.equals("facility")) {
-      return mapper.findByFacilityName(searchParam, pagination);
+      return mapper.searchByFacilityName(searchParam, pagination);
+    }
+    if (columnName.equals("supervisoryNode")) {
+      return mapper.searchBySupervisoryNodeName(searchParam, pagination);
     }
     return null;
   }
@@ -63,6 +66,9 @@ public class SupplyLineRepository {
   public Integer getTotalSearchResultCount(String searchParam, String columnName) {
     if (columnName.equals("facility")) {
       return mapper.getTotalSearchResultsByFacilityName(searchParam);
+    }
+    if (columnName.equals("supervisoryNode")) {
+      return mapper.getTotalSearchResultsBySupervisoryNodeName(searchParam);
     }
     return null;
   }

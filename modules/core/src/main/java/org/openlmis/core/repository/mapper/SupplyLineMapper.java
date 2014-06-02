@@ -10,14 +10,7 @@
 
 package org.openlmis.core.repository.mapper;
 
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.One;
-import org.apache.ibatis.annotations.Options;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Result;
-import org.apache.ibatis.annotations.Results;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Update;
+import org.apache.ibatis.annotations.*;
 import org.apache.ibatis.session.RowBounds;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.Program;
@@ -83,10 +76,24 @@ public interface SupplyLineMapper {
     @Result(property = "program", javaType = Program.class, column = "programId",
       one = @One(select = "org.openlmis.core.repository.mapper.ProgramMapper.getById"))
   })
-  List<SupplyLine> findByFacilityName(@Param(value = "facilityName") String facilityName, RowBounds rowBounds);
+  List<SupplyLine> searchByFacilityName(@Param(value = "facilityName") String facilityName, RowBounds rowBounds);
 
   @Select({"SELECT COUNT(*) FROM supply_lines SL INNER JOIN facilities FAC ON SL.supplyingFacilityId = FAC.id ",
     "WHERE LOWER(FAC.name) LIKE '%' || LOWER(#{facilityName} || '%')"})
   Integer getTotalSearchResultsByFacilityName(String facilityName);
 
+  @Select({"SELECT SL.*, SN.name AS supervisoryNodeName FROM supply_lines SL INNER JOIN supervisory_nodes SN ON SL.supervisoryNodeId = SN.id" ,
+    "WHERE LOWER(SN.name) LIKE '%' || LOWER(#{supervisoryNodeName} || '%')"})
+  @Results(value = {
+    @Result(property = "supervisoryNode.name", column = "supervisoryNodeName"),
+    @Result(property = "supplyingFacility", javaType = Facility.class, column = "supplyingFacilityId",
+      one = @One(select = "org.openlmis.core.repository.mapper.FacilityMapper.getLWById")),
+    @Result(property = "program", javaType = Program.class, column = "programId",
+      one = @One(select = "org.openlmis.core.repository.mapper.ProgramMapper.getById"))
+  })
+  List<SupplyLine> searchBySupervisoryNodeName(@Param(value = "supervisoryNodeName") String supervisoryNodeName, RowBounds rowBounds);
+
+  @Select({"SELECT count(*) AS supervisoryNodeName FROM supply_lines SL INNER JOIN supervisory_nodes SN ON SL.supervisoryNodeId = SN.id" ,
+    "WHERE LOWER(SN.name) LIKE '%' || LOWER(#{supervisoryNodeName} || '%')"})
+  Integer getTotalSearchResultsBySupervisoryNodeName(String supervisoryNodeName);
 }

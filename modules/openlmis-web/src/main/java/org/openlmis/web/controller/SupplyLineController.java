@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
+import static java.lang.Integer.parseInt;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
 /**
@@ -46,7 +47,7 @@ public class SupplyLineController extends BaseController {
                                                  @RequestParam(value = "page", defaultValue = "1") Integer page,
                                                  @Value("${search.page.size}") String limit) {
 
-    Pagination pagination = new Pagination(page, Integer.parseInt(limit));
+    Pagination pagination = new Pagination(page, parseInt(limit));
     pagination.setTotalRecords(service.getTotalSearchResultCount(searchParam, columnName));
     List<SupplyLine> supplyLines = service.search(searchParam, columnName, pagination);
     ResponseEntity<OpenLmisResponse> response = OpenLmisResponse.response(SUPPLY_LINES, supplyLines);

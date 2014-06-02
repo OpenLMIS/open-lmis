@@ -113,11 +113,11 @@ public class SupplyLineRepositoryTest {
     List<SupplyLine> supplyLines = asList(new SupplyLine());
 
     Pagination pagination = new Pagination(2, 10);
-    when(mapper.findByFacilityName(searchParam, pagination)).thenReturn(supplyLines);
+    when(mapper.searchByFacilityName(searchParam, pagination)).thenReturn(supplyLines);
 
     List<SupplyLine> result = repository.search(searchParam, columnName, pagination);
     assertThat(result, is(supplyLines));
-    verify(mapper).findByFacilityName(searchParam, pagination);
+    verify(mapper).searchByFacilityName(searchParam, pagination);
   }
 
   @Test
@@ -130,5 +130,31 @@ public class SupplyLineRepositoryTest {
     Integer result = repository.getTotalSearchResultCount(searchParam, columnName);
     assertThat(result, is(1));
     verify(mapper).getTotalSearchResultsByFacilityName(searchParam);
+  }
+
+  @Test
+  public void shouldSearchBySupervisoryNodeName() throws Exception {
+    String searchParam = "nod";
+    String columnName = "supervisoryNode";
+    List<SupplyLine> supplyLines = asList(new SupplyLine());
+
+    Pagination pagination = new Pagination(2, 10);
+    when(mapper.searchBySupervisoryNodeName(searchParam, pagination)).thenReturn(supplyLines);
+
+    List<SupplyLine> result = repository.search(searchParam, columnName, pagination);
+    assertThat(result, is(supplyLines));
+    verify(mapper).searchBySupervisoryNodeName(searchParam, pagination);
+  }
+
+  @Test
+  public void shouldGetCountOfSearchResultsBySupervisoryNodeName() throws Exception {
+    String searchParam = "nod";
+    String columnName = "supervisoryNode";
+
+    when(mapper.getTotalSearchResultsBySupervisoryNodeName(searchParam)).thenReturn(1);
+
+    Integer result = repository.getTotalSearchResultCount(searchParam, columnName);
+    assertThat(result, is(1));
+    verify(mapper).getTotalSearchResultsBySupervisoryNodeName(searchParam);
   }
 }
