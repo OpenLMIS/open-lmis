@@ -84,6 +84,9 @@ public interface FacilityMapper {
   })
   Facility getById(Long id);
 
+  @Select("SELECT * FROM facilities WHERE id = #{id}")
+  Facility getLWById(Long id);
+
   @Select("SELECT * FROM facilities WHERE LOWER(code)=LOWER(#{code})")
   @Results(value = {
     @Result(property = "id", column = "id"),

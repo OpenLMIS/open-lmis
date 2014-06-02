@@ -15,31 +15,8 @@ import org.apache.commons.collections.Predicate;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
-import org.openlmis.core.builder.DeliveryZoneBuilder;
-import org.openlmis.core.builder.FacilityBuilder;
-import org.openlmis.core.builder.ProcessingScheduleBuilder;
-import org.openlmis.core.builder.ProgramBuilder;
-import org.openlmis.core.builder.RequisitionGroupBuilder;
-import org.openlmis.core.builder.SupervisoryNodeBuilder;
-import org.openlmis.core.builder.SupplyLineBuilder;
-import org.openlmis.core.domain.DeliveryZone;
-import org.openlmis.core.domain.DeliveryZoneMember;
-import org.openlmis.core.domain.DeliveryZoneProgramSchedule;
-import org.openlmis.core.domain.Facility;
-import org.openlmis.core.domain.FacilityOperator;
-import org.openlmis.core.domain.FacilityType;
-import org.openlmis.core.domain.GeographicLevel;
-import org.openlmis.core.domain.GeographicZone;
-import org.openlmis.core.domain.ProcessingSchedule;
-import org.openlmis.core.domain.Program;
-import org.openlmis.core.domain.ProgramSupported;
-import org.openlmis.core.domain.RequisitionGroup;
-import org.openlmis.core.domain.RequisitionGroupMember;
-import org.openlmis.core.domain.RequisitionGroupProgramSchedule;
-import org.openlmis.core.domain.Role;
-import org.openlmis.core.domain.SupervisoryNode;
-import org.openlmis.core.domain.SupplyLine;
-import org.openlmis.core.domain.User;
+import org.openlmis.core.builder.*;
+import org.openlmis.core.domain.*;
 import org.openlmis.db.categories.IntegrationTests;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -236,6 +213,23 @@ public class FacilityMapperIT {
     assertThat(resultFacility.getName(), is("Apollo Hospital"));
     assertThat(resultFacility.getGeographicZone().getName(), is("Arusha"));
     assertThat(resultFacility.getGeographicZone().getParent().getName(), is("Root"));
+    assertThat(resultFacility.getLatitude(), is(123.45678));
+    assertThat(resultFacility.getLongitude(), is(-321.87654));
+  }
+
+  @Test
+  public void shouldGetLWFacilityById() throws Exception {
+    Facility facility = make(a(defaultFacility));
+    facility.setLatitude(123.45678);
+    facility.setLongitude(-321.87654);
+    mapper.insert(facility);
+    Facility resultFacility = mapper.getLWById(facility.getId());
+    assertThat(resultFacility.getCode(), is("F10010"));
+    assertThat(resultFacility.getId(), is(facility.getId()));
+    assertThat(resultFacility.getName(), is("Apollo Hospital"));
+    assertThat(resultFacility.getGeographicZone(), is(nullValue()));
+    assertThat(resultFacility.getFacilityType(), is(nullValue()));
+    assertThat(resultFacility.getOperatedBy(), is(nullValue()));
     assertThat(resultFacility.getLatitude(), is(123.45678));
     assertThat(resultFacility.getLongitude(), is(-321.87654));
   }
