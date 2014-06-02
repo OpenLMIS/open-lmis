@@ -385,4 +385,10 @@ public class SupervisoryNodesPage extends Page {
     testWebDriver.waitForElementToAppear(editSupervisoryNodeHeader);
     return editSupervisoryNodeHeader.isDisplayed();
   }
+
+  public String getParentOnEditPage() {
+    WebElement parent = testWebDriver.getElementByXpath("//*[@id='supervisoryNodeFormGroup']/div[4]/div/div/div[1]/div[2]/span");
+    testWebDriver.waitForElementToAppear(parent);
+    return parent.getText();
+  }
 }

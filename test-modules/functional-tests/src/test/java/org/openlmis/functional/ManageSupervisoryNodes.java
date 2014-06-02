@@ -320,9 +320,21 @@ public class ManageSupervisoryNodes extends TestCaseHelper {
     supervisoryNodesPage.clickSaveButton();
     assertEquals("Supervisory Node \"Node 5\" created successfully", supervisoryNodesPage.getSuccessMessage());
 
+    supervisoryNodesPage.clickViewHereLink();
+    System.out.println("Node 4 id = " + dbWrapper.getAttributeFromTable("supervisory_nodes", "id", "code", "N4"));
+    System.out.println("Node 5 id = " + dbWrapper.getAttributeFromTable("supervisory_nodes", "id", "code", "N5"));
+    System.out.println("Node 5 parentId = " + dbWrapper.getAttributeFromTable("supervisory_nodes", "parentId", "code", "N5"));
+    assertEquals("Node 4", supervisoryNodesPage.getParentOnEditPage());
+
+    supervisoryNodesPage.clickCancelButton();
+
     supervisoryNodesPage.clickSearchOptionButton();
     supervisoryNodesPage.selectSupervisoryNodeParentAsSearchOption();
     searchNode("Node 4");
+
+    System.out.println("Node 4 id = " + dbWrapper.getAttributeFromTable("supervisory_nodes", "id", "code", "N4"));
+    System.out.println("Node 5 id = " + dbWrapper.getAttributeFromTable("supervisory_nodes", "id", "code", "N5"));
+    System.out.println("Node 5 parentId = " + dbWrapper.getAttributeFromTable("supervisory_nodes", "parentId", "code", "N5"));
 
     assertEquals("Node 5", supervisoryNodesPage.getSupervisoryNodeName(1));
     assertEquals("N5", supervisoryNodesPage.getSupervisoryNodeCode(1));
