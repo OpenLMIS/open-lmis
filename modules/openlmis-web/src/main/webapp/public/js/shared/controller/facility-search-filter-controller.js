@@ -8,11 +8,14 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
  */
 
-function FacilitySearchFilterController($scope, FacilityTypes, GeographicZoneSearch, Facilities) {
+function FacilitySearchFilterController($scope, FacilityTypes, GeographicZoneSearch, Facilities, messageService) {
 
   $scope.showResults = false;
   $scope.type = {};
   $scope.zone = {};
+
+  $scope.label = !$scope.facilityType ? messageService.get("create.facility.select.facilityType") :
+    messageService.get("label.change.facility.type");
 
   $scope.showFilterModal = function () {
     $scope.filterModal = true;
@@ -69,6 +72,8 @@ function FacilitySearchFilterController($scope, FacilityTypes, GeographicZoneSea
 
   $scope.setFacilityType = function () {
     $scope.selectedFacilityType = $scope.facilityType;
+    $scope.label = $scope.facilityType ? messageService.get("label.change.facility.type") :
+      messageService.get("create.facility.select.facilityType");
     $scope.facilityType = undefined;
   };
 

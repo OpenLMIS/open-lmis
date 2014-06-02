@@ -2669,12 +2669,11 @@ table.search-list {
 }
 
 .searchAndFilter {
-  width: 95%;
+  width: 98%;
   margin: 0 11px;
   background: white;
   border: 1px solid #ccc;
   display: none;
-  padding: 4px 22px 22px;
   .box-shadow(0 0 7px rgba(0,0,0,0.25));
 
   &:after {
@@ -2716,6 +2715,57 @@ table.search-list {
     background: white;
   }
   #searchFacility {
-    width: 100%;
+    width: 150%;
+  }
+  #searchGeoZone {
+    width: 57%;
+  }
+  #search {
+    width: 65%;
+    padding: 4px 22px 22px;
+  }
+  .separator {
+    position: absolute;
+    height: 100%;
+    border-left: 1px solid #ccc;
+    margin-left: 68.2%;
+  }
+  #filter {
+    width: 28%;
+    padding: 4px 22px 22px;
+    label {
+      font-size: 0.9em;
+    }
+    #setFiltersModal {
+      width: 640px;
+      margin: -280px 0 0 -320px;
+      overflow-x: hidden;
+      .section-divider {
+        margin-bottom: 15px;
+        border-bottom: 1px solid #ddd;
+        padding-bottom: 6px;
+      }
+    }
+  }
+}
+
+.select-result-container {
+  vertical-align: super;
+  padding: 3px 5px 3px 6px;
+  line-height: 10px;
+  border-radius: 3px;
+  -webkit-box-shadow: 0 0 2px #fff inset, 0 1px 0 rgba(0, 0, 0, 0.05);
+  box-shadow: 0 0 2px #fff inset, 0 1px 0 rgba(0, 0, 0, 0.05);
+
+  .select-result-close {
+    .icon-remove {
+      color: #858585;
+    }
+    &:hover {
+      text-decoration: none;
+      .icon-remove {
+        color: #444;
+      }
+    }
   }
 }
