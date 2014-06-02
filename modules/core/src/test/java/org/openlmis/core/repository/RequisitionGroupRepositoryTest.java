@@ -82,6 +82,15 @@ public class RequisitionGroupRepositoryTest {
   }
 
   @Test
+  public void shouldThrowExceptionIfDuplicateCodeBeingUpdated() {
+    doThrow(new DuplicateKeyException("duplicate code")).when(mapper).update(requisitionGroup);
+    expectedEx.expect(DataException.class);
+    expectedEx.expectMessage("error.duplicate.code.requisition.group");
+
+    repository.update(requisitionGroup);
+  }
+
+  @Test
   public void shouldGetRequisitionGroupForSupervisoryNodes() {
     List<SupervisoryNode> supervisoryNodes = new ArrayList<>();
     when(commaSeparator.commaSeparateIds(supervisoryNodes)).thenReturn("{1, 2}");
