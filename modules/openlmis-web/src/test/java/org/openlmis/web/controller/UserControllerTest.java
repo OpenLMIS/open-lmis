@@ -196,7 +196,7 @@ public class UserControllerTest {
   @Test
   public void shouldReturnUserIfIdExists() throws Exception {
     User user = new User();
-    when(userService.getById(1L)).thenReturn(user);
+    when(userService.getUserWithRolesById(1L)).thenReturn(user);
 
     User returnedUser = userController.get(1L);
 

@@ -85,7 +85,7 @@ public class UserService {
     return userRepository.searchUser(userSearchParam);
   }
 
-  public User getById(Long id) {
+  public User getUserWithRolesById(Long id) {
     User user = userRepository.getById(id);
     user.setHomeFacilityRoles(roleAssignmentService.getHomeFacilityRoles(id));
     user.setSupervisorRoles(roleAssignmentService.getSupervisorRoles(id));
@@ -93,6 +93,10 @@ public class UserService {
     user.setAllocationRoles(roleAssignmentService.getAllocationRoles(id));
     user.setFulfillmentRoles(roleAssignmentService.getFulfilmentRoles(id));
     return user;
+  }
+
+  public User getById(Long id) {
+    return userRepository.getById(id);
   }
 
   public Long getUserIdByPasswordResetToken(String token) {

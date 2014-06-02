@@ -139,7 +139,7 @@ public class UserController extends BaseController {
   @RequestMapping(value = "/users/{id}", method = GET)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_USER')")
   public User get(@PathVariable(value = "id") Long id) {
-    return userService.getById(id);
+    return userService.getUserWithRolesById(id);
   }
 
   @RequestMapping(value = "/users/{id}", method = DELETE, headers = ACCEPT_JSON)
