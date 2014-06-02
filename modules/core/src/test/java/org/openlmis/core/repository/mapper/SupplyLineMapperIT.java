@@ -139,6 +139,7 @@ public class SupplyLineMapperIT extends CoreTestContext {
   @Test
   public void shouldGetPaginatedSupplyLinesSearchedBySupplyingFacilityName() throws Exception {
     String searchParam = "Apollo";
+    String column = "facility";
 
     Facility f100 = make(a(defaultFacility, with(FacilityBuilder.code, "F100"), with(name, "Facility100")));
     facilityMapper.insert(f100);
@@ -153,7 +154,7 @@ public class SupplyLineMapperIT extends CoreTestContext {
     insertSupplyLine(f100, supervisoryNode, tbProgram);
 
     Pagination pagination = new Pagination(2, 2);
-    List<SupplyLine> supplyLines = mapper.searchByFacilityName(searchParam, pagination);
+    List<SupplyLine> supplyLines = mapper.search(searchParam, column, pagination);
 
     assertThat(supplyLines.size(), is(1));
     assertThat(supplyLines.get(0).getId(), is(supplyLine1.getId()));
@@ -166,6 +167,7 @@ public class SupplyLineMapperIT extends CoreTestContext {
   @Test
   public void shouldGetCountOfRecordsWhenSearchedByFacilityName() throws Exception {
     String searchParam = "Apollo";
+    String column = "facility";
 
     Facility f100 = make(a(defaultFacility, with(FacilityBuilder.code, "F100"), with(name, "Facility100")));
     facilityMapper.insert(f100);
@@ -179,7 +181,7 @@ public class SupplyLineMapperIT extends CoreTestContext {
     insertSupplyLine(facility, supervisoryNode, malariaProgram);
     insertSupplyLine(f100, supervisoryNode, tbProgram);
 
-    Integer count = mapper.getTotalSearchResultsByFacilityName(searchParam);
+    Integer count = mapper.getSearchedSupplyLinesCount(searchParam, column);
 
     assertThat(count, is(3));
   }
@@ -187,6 +189,7 @@ public class SupplyLineMapperIT extends CoreTestContext {
   @Test
   public void shouldGetPaginatedSupplyLinesSearchedBySupervisoryNodeName() throws Exception {
     String searchParam = "nod";
+    String column = "supervisoryNode";
 
     SupervisoryNode supervisoryNode2 = insertSupervisoryNode("N2", "Node2", facility);
     SupervisoryNode supervisoryNode3 = insertSupervisoryNode("N3", "Node3", facility);
@@ -202,7 +205,7 @@ public class SupplyLineMapperIT extends CoreTestContext {
     insertSupplyLine(facility, supervisoryNode2, tbProgram);
 
     Pagination pagination = new Pagination(2, 2);
-    List<SupplyLine> supplyLines = mapper.searchBySupervisoryNodeName(searchParam, pagination);
+    List<SupplyLine> supplyLines = mapper.search(searchParam, column, pagination);
 
     assertThat(supplyLines.size(), is(1));
     assertThat(supplyLines.get(0).getId(), is(supplyLine.getId()));
@@ -215,6 +218,7 @@ public class SupplyLineMapperIT extends CoreTestContext {
   @Test
   public void shouldGetCountOfRecordsWhenSearchedBySupervisoryNodeName() throws Exception {
     String searchParam = "nod";
+    String column = "supervisoryNode";
 
     SupervisoryNode supervisoryNode2 = insertSupervisoryNode("N2", "Node2", facility);
     SupervisoryNode supervisoryNode3 = insertSupervisoryNode("N3", "Node3", facility);
@@ -229,7 +233,7 @@ public class SupplyLineMapperIT extends CoreTestContext {
     insertSupplyLine(facility, supervisoryNode3, malariaProgram);
     insertSupplyLine(facility, supervisoryNode4, tbProgram);
 
-    Integer count = mapper.getTotalSearchResultsBySupervisoryNodeName(searchParam);
+    Integer count = mapper.getSearchedSupplyLinesCount(searchParam, column);
 
     assertThat(count, is(3));
   }
@@ -237,6 +241,7 @@ public class SupplyLineMapperIT extends CoreTestContext {
   @Test
   public void shouldGetPaginatedSupplyLinesSearchedByProgramName() throws Exception {
     String searchParam = "mal";
+    String column = "program";
 
     SupervisoryNode supervisoryNode2 = insertSupervisoryNode("N2", "Node2", facility);
 
@@ -248,7 +253,7 @@ public class SupplyLineMapperIT extends CoreTestContext {
     insertSupplyLine(facility, supervisoryNode2, program);
 
     Pagination pagination = new Pagination(1, 2);
-    List<SupplyLine> supplyLines = mapper.searchByProgramName(searchParam, pagination);
+    List<SupplyLine> supplyLines = mapper.search(searchParam, column, pagination);
 
     assertThat(supplyLines.size(), is(2));
 
@@ -268,6 +273,7 @@ public class SupplyLineMapperIT extends CoreTestContext {
   @Test
   public void shouldGetCountOfRecordsWhenSearchedByProgramName() throws Exception {
     String searchParam = "mal";
+    String column = "program";
 
     SupervisoryNode supervisoryNode2 = insertSupervisoryNode("N2", "Node2", facility);
     SupervisoryNode supervisoryNode3 = insertSupervisoryNode("N3", "Node3", facility);
@@ -280,7 +286,7 @@ public class SupplyLineMapperIT extends CoreTestContext {
     insertSupplyLine(facility, supervisoryNode2, program);
     insertSupplyLine(facility, supervisoryNode3, malaria);
 
-    Integer count = mapper.getTotalSearchResultsByProgramName(searchParam);
+    Integer count = mapper.getSearchedSupplyLinesCount(searchParam, column);
 
     assertThat(count, is(3));
   }

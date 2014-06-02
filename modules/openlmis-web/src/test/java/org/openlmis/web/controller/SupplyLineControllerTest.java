@@ -55,17 +55,17 @@ public class SupplyLineControllerTest {
   @Test
   public void shouldSearchSupplyLines() throws Exception {
     String searchParam = "supply";
-    String columnName = "name";
+    String column = "name";
     Integer page = 2;
     String limit = "10";
     List<SupplyLine> supplyLines = asList(new SupplyLine());
 
     Pagination pagination = new Pagination(2, 3);
     whenNew(Pagination.class).withArguments(page, Integer.parseInt(limit)).thenReturn(pagination);
-    when(service.search(searchParam, columnName, pagination)).thenReturn(supplyLines);
-    when(service.getTotalSearchResultCount(searchParam, columnName)).thenReturn(3);
+    when(service.search(searchParam, column, pagination)).thenReturn(supplyLines);
+    when(service.getTotalSearchResultCount(searchParam, column)).thenReturn(3);
 
-    ResponseEntity<OpenLmisResponse> response = controller.search(searchParam, columnName, page, limit);
+    ResponseEntity<OpenLmisResponse> response = controller.search(searchParam, column, page, limit);
 
     assertThat((List<SupplyLine>) response.getBody().getData().get(SUPPLY_LINES), is(supplyLines));
     assertThat((Pagination) response.getBody().getData().get(PAGINATION), is(pagination));

@@ -19,6 +19,7 @@ import org.openlmis.core.domain.SupplyLine;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -67,54 +68,54 @@ public interface SupplyLineMapper {
   })
   SupplyLine getById(Long id);
 
-  @Select({"SELECT SL.*, FAC.name AS facilityName, SN.name AS supervisoryNodeName, PGM.name AS programName " ,
-    "FROM supply_lines SL INNER JOIN facilities FAC ON SL.supplyingFacilityId = FAC.id " ,
-    "INNER JOIN supervisory_nodes SN ON SL.supervisoryNodeId = SN.id " ,
-    "INNER JOIN programs PGM ON SL.programId = PGM.id ",
-    "WHERE LOWER(FAC.name) LIKE '%' || LOWER(#{facilityName} || '%') " ,
-    "ORDER BY LOWER(FAC.name), LOWER(SN.name), LOWER(PGM.name)"})
+  @SelectProvider(type = SupplyLineSearchProvider.class, method = "searchSupplyLines")
   @Results(value = {
     @Result(property = "supplyingFacility.name", column = "facilityName"),
     @Result(property = "supervisoryNode.name", column = "supervisoryNodeName"),
     @Result(property = "program.name", column = "programName")
   })
-  List<SupplyLine> searchByFacilityName(@Param(value = "facilityName") String facilityName, RowBounds rowBounds);
+  List<SupplyLine> search(@Param(value = "searchParam") String searchParam,
+                          @Param(value = "column") String column,
+                          RowBounds rowBounds);
 
-  @Select({"SELECT SL.*, FAC.name AS facilityName, SN.name AS supervisoryNodeName, PGM.name AS programName " ,
-    "FROM supply_lines SL INNER JOIN facilities FAC ON SL.supplyingFacilityId = FAC.id " ,
-    "INNER JOIN supervisory_nodes SN ON SL.supervisoryNodeId = SN.id " ,
-    "INNER JOIN programs PGM ON SL.programId = PGM.id " ,
-    "WHERE LOWER(SN.name) LIKE '%' || LOWER(#{supervisoryNodeName} || '%') " ,
-    "ORDER BY LOWER(FAC.name), LOWER(SN.name), LOWER(PGM.name)"})
-  @Results(value = {
-    @Result(property = "supplyingFacility.name", column = "facilityName"),
-    @Result(property = "supervisoryNode.name", column = "supervisoryNodeName"),
-    @Result(property = "program.name", column = "programName")
-  })
-  List<SupplyLine> searchBySupervisoryNodeName(@Param(value = "supervisoryNodeName") String supervisoryNodeName, RowBounds rowBounds);
+  @SelectProvider(type = SupplyLineSearchProvider.class, method = "getSearchedSupplyLinesCount")
+  Integer getSearchedSupplyLinesCount(@Param(value = "searchParam") String searchParam,
+                                      @Param(value = "column") String column);
 
-  @Select({"SELECT SL.*, FAC.name AS facilityName, SN.name AS supervisoryNodeName, PGM.name AS programName " ,
-    "FROM supply_lines SL INNER JOIN facilities FAC ON SL.supplyingFacilityId = FAC.id " ,
-    "INNER JOIN supervisory_nodes SN ON SL.supervisoryNodeId = SN.id " ,
-    "INNER JOIN programs PGM ON SL.programId = PGM.id " ,
-    "WHERE LOWER(PGM.name) LIKE '%' || LOWER(#{programName} || '%') " ,
-    "ORDER BY LOWER(FAC.name), LOWER(SN.name), LOWER(PGM.name)"})
-  @Results(value = {
-    @Result(property = "supplyingFacility.name", column = "facilityName"),
-    @Result(property = "supervisoryNode.name", column = "supervisoryNodeName"),
-    @Result(property = "program.name", column = "programName")
-  })
-  List<SupplyLine> searchByProgramName(String programName, RowBounds rowBounds);
+  public class SupplyLineSearchProvider {
+    @SuppressWarnings(value = "unused")
+    public static String getSearchedSupplyLinesCount(Map<String, Object> params) {
+      StringBuilder sql = new StringBuilder();
+      sql.append("SELECT COUNT(*) ");
+      return createQuery(sql, params).toString();
+    }
 
-  @Select({"SELECT COUNT(*) FROM supply_lines SL INNER JOIN facilities FAC ON SL.supplyingFacilityId = FAC.id ",
-    "WHERE LOWER(FAC.name) LIKE '%' || LOWER(#{facilityName} || '%')"})
-  Integer getTotalSearchResultsByFacilityName(String facilityName);
+    @SuppressWarnings(value = "unused")
+    public static String searchSupplyLines(Map<String, Object> params) {
+      StringBuilder sql = new StringBuilder();
+      sql.append("SELECT SL.*, FAC.name AS facilityName, SN.name AS supervisoryNodeName, PGM.name AS programName ");
+      sql = createQuery(sql, params);
+      sql.append("ORDER BY LOWER(FAC.name), LOWER(SN.name), LOWER(PGM.name)");
+      return sql.toString();
+    }
 
-  @Select({"SELECT count(*) FROM supply_lines SL INNER JOIN supervisory_nodes SN ON SL.supervisoryNodeId = SN.id" ,
-    "WHERE LOWER(SN.name) LIKE '%' || LOWER(#{supervisoryNodeName} || '%')"})
-  Integer getTotalSearchResultsBySupervisoryNodeName(String supervisoryNodeName);
+    private static StringBuilder createQuery(StringBuilder sql, Map<String, Object> params) {
+      String column = (String) params.get("column");
+      sql.append(
+        "FROM supply_lines SL INNER JOIN facilities FAC ON SL.supplyingFacilityId = FAC.id " +
+        "INNER JOIN supervisory_nodes SN ON SL.supervisoryNodeId = SN.id " +
+        "INNER JOIN programs PGM ON SL.programId = PGM.id ");
 
-  @Select({"SELECT count(*) FROM supply_lines SL INNER JOIN programs P ON SL.programId = P.id" ,
-    "WHERE LOWER(P.name) LIKE '%' || LOWER(#{programName} || '%')"})
-  Integer getTotalSearchResultsByProgramName(String programName);
+      if (column.equals("facility")) {
+        sql.append("WHERE LOWER(FAC.name) LIKE '%' || LOWER(#{searchParam} || '%') ");
+      }
+      if (column.equals("supervisoryNode")) {
+        sql.append("WHERE LOWER(SN.name) LIKE '%' || LOWER(#{searchParam} || '%') ");
+      }
+      if (column.equals("program")) {
+        sql.append("WHERE LOWER(PGM.name) LIKE '%' || LOWER(#{searchParam} || '%') ");
+      }
+      return sql;
+    }
+  }
 }

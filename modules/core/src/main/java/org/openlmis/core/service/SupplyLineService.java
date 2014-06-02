@@ -83,11 +83,11 @@ public class SupplyLineService {
     return repository.getById(id);
   }
 
-  public List<SupplyLine> search(String searchParam, String columnName, Pagination pagination) {
-    return repository.search(searchParam, columnName, pagination);
+  public List<SupplyLine> search(String searchParam, String column, Pagination pagination) {
+    return repository.search(searchParam, column, pagination);
   }
 
-  public Integer getTotalSearchResultCount(String searchParam, String columnName) {
-    return repository.getTotalSearchResultCount(searchParam, columnName);
+  public Integer getTotalSearchResultCount(String searchParam, String column) {
+    return repository.getTotalSearchResultCount(searchParam, column);
   }
 }

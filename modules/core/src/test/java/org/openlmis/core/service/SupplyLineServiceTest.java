@@ -152,25 +152,25 @@ public class SupplyLineServiceTest {
   @Test
   public void shouldSearch() {
     String searchParam = "supply";
-    String columnName = "name";
+    String column = "name";
     List<SupplyLine> supplyLines = asList(new SupplyLine());
 
     Pagination pagination = new Pagination(2, 10);
-    when(repository.search(searchParam, columnName, pagination)).thenReturn(supplyLines);
+    when(repository.search(searchParam, column, pagination)).thenReturn(supplyLines);
 
-    List<SupplyLine> result = service.search(searchParam, columnName, pagination);
+    List<SupplyLine> result = service.search(searchParam, column, pagination);
     assertThat(result, Is.is(supplyLines));
   }
 
   @Test
   public void shouldGetTotalSearchResultCount() throws Exception {
     String searchParam = "fac";
-    String columnName = "facility";
+    String column = "facility";
 
-    when(repository.getTotalSearchResultCount(searchParam, columnName)).thenReturn(1);
+    when(repository.getTotalSearchResultCount(searchParam, column)).thenReturn(1);
 
-    Integer result = service.getTotalSearchResultCount(searchParam, columnName);
+    Integer result = service.getTotalSearchResultCount(searchParam, column);
     assertThat(result, is(1));
-    verify(repository).getTotalSearchResultCount(searchParam, columnName);
+    verify(repository).getTotalSearchResultCount(searchParam, column);
   }
 }

@@ -26,7 +26,6 @@ import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.mapper.SupplyLineMapper;
 import org.openlmis.db.categories.UnitTests;
 
-import java.util.Collections;
 import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.a;
@@ -108,107 +107,29 @@ public class SupplyLineRepositoryTest {
   }
 
   @Test
-  public void shouldSearchByFacilityName() throws Exception {
+  public void shouldSearchSupplyLines() throws Exception {
     String searchParam = "fac";
-    String columnName = "facility";
+    String column = "facility";
     List<SupplyLine> supplyLines = asList(new SupplyLine());
 
     Pagination pagination = new Pagination(2, 10);
-    when(mapper.searchByFacilityName(searchParam, pagination)).thenReturn(supplyLines);
+    when(mapper.search(searchParam, column, pagination)).thenReturn(supplyLines);
 
-    List<SupplyLine> result = repository.search(searchParam, columnName, pagination);
+    List<SupplyLine> result = repository.search(searchParam, column, pagination);
+
     assertThat(result, is(supplyLines));
-    verify(mapper).searchByFacilityName(searchParam, pagination);
+    verify(mapper).search(searchParam, column, pagination);
   }
 
   @Test
-  public void shouldGetCountOfSearchResultsByFacilityName() throws Exception {
+  public void shouldGetCountOfSearchResults() throws Exception {
     String searchParam = "fac";
-    String columnName = "facility";
+    String column = "facility";
 
-    when(mapper.getTotalSearchResultsByFacilityName(searchParam)).thenReturn(1);
+    when(mapper.getSearchedSupplyLinesCount(searchParam, column)).thenReturn(1);
 
-    Integer result = repository.getTotalSearchResultCount(searchParam, columnName);
+    Integer result = repository.getTotalSearchResultCount(searchParam, column);
     assertThat(result, is(1));
-    verify(mapper).getTotalSearchResultsByFacilityName(searchParam);
-  }
-
-  @Test
-  public void shouldSearchBySupervisoryNodeName() throws Exception {
-    String searchParam = "nod";
-    String columnName = "supervisoryNode";
-    List<SupplyLine> supplyLines = asList(new SupplyLine());
-
-    Pagination pagination = new Pagination(2, 10);
-    when(mapper.searchBySupervisoryNodeName(searchParam, pagination)).thenReturn(supplyLines);
-
-    List<SupplyLine> result = repository.search(searchParam, columnName, pagination);
-    assertThat(result, is(supplyLines));
-    verify(mapper).searchBySupervisoryNodeName(searchParam, pagination);
-  }
-
-  @Test
-  public void shouldGetCountOfSearchResultsBySupervisoryNodeName() throws Exception {
-    String searchParam = "nod";
-    String columnName = "supervisoryNode";
-
-    when(mapper.getTotalSearchResultsBySupervisoryNodeName(searchParam)).thenReturn(1);
-
-    Integer result = repository.getTotalSearchResultCount(searchParam, columnName);
-    assertThat(result, is(1));
-    verify(mapper).getTotalSearchResultsBySupervisoryNodeName(searchParam);
-  }
-
-  @Test
-  public void shouldSearchByProgramName() throws Exception {
-    String searchParam = "tb";
-    String columnName = "program";
-    List<SupplyLine> supplyLines = asList(new SupplyLine());
-
-    Pagination pagination = new Pagination(2, 10);
-    when(mapper.searchByProgramName(searchParam, pagination)).thenReturn(supplyLines);
-
-    List<SupplyLine> result = repository.search(searchParam, columnName, pagination);
-    assertThat(result, is(supplyLines));
-    verify(mapper).searchByProgramName(searchParam, pagination);
-  }
-
-  @Test
-  public void shouldGetCountOfSearchResultsByProgramName() throws Exception {
-    String searchParam = "tb";
-    String columnName = "program";
-
-    when(mapper.getTotalSearchResultsByProgramName(searchParam)).thenReturn(1);
-
-    Integer result = repository.getTotalSearchResultCount(searchParam, columnName);
-    assertThat(result, is(1));
-    verify(mapper).getTotalSearchResultsByProgramName(searchParam);
-  }
-
-  @Test
-  public void shouldReturnEmptyListIfSearchInvalid() throws Exception {
-    String searchParam = "param";
-    String columnName = "invalid column";
-    Pagination pagination = new Pagination(2, 10);
-
-    List<SupplyLine> result = repository.search(searchParam, columnName, pagination);
-
-    assertThat(result, is(Collections.EMPTY_LIST));
-    verify(mapper, never()).searchByFacilityName(searchParam, pagination);
-    verify(mapper, never()).searchBySupervisoryNodeName(searchParam, pagination);
-    verify(mapper, never()).searchByProgramName(searchParam, pagination);
-  }
-
-  @Test
-  public void shouldGetCountAsZeroIfSearchInvalid() throws Exception {
-    String searchParam = "param";
-    String columnName = "invalid column";
-
-    Integer result = repository.getTotalSearchResultCount(searchParam, columnName);
-
-    assertThat(result, is(0));
-    verify(mapper, never()).getTotalSearchResultsByFacilityName(searchParam);
-    verify(mapper, never()).getTotalSearchResultsBySupervisoryNodeName(searchParam);
-    verify(mapper, never()).getTotalSearchResultsByProgramName(searchParam);
+    verify(mapper).getSearchedSupplyLinesCount(searchParam, column);
   }
 }

@@ -43,13 +43,13 @@ public class SupplyLineController extends BaseController {
   @RequestMapping(value = "/search", method = GET, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_SUPPLY_LINE')")
   public ResponseEntity<OpenLmisResponse> search(@RequestParam(value = "searchParam") String searchParam,
-                                                 @RequestParam(value = "columnName") String columnName,
+                                                 @RequestParam(value = "column") String column,
                                                  @RequestParam(value = "page", defaultValue = "1") Integer page,
                                                  @Value("${search.page.size}") String limit) {
 
     Pagination pagination = new Pagination(page, parseInt(limit));
-    pagination.setTotalRecords(service.getTotalSearchResultCount(searchParam, columnName));
-    List<SupplyLine> supplyLines = service.search(searchParam, columnName, pagination);
+    pagination.setTotalRecords(service.getTotalSearchResultCount(searchParam, column));
+    List<SupplyLine> supplyLines = service.search(searchParam, column, pagination);
     ResponseEntity<OpenLmisResponse> response = OpenLmisResponse.response(SUPPLY_LINES, supplyLines);
     response.getBody().addData(PAGINATION, pagination);
     return response;
