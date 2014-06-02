@@ -10,11 +10,14 @@
 
 package org.openlmis.core.domain;
 
-
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.ibatis.session.RowBounds;
 
+/**
+ * Pagination represents an entity that keeps track of the current page number of any record, size of a page,
+ * number of pages and total records.
+ */
 public class Pagination extends RowBounds {
 
   @Getter

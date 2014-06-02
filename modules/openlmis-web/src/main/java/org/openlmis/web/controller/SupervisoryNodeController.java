@@ -32,7 +32,7 @@ import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 /**
- * This controller handles request to get list of supervisory nodes.
+ * This controller handle endpoints to list, search, create, update supervisory nodes.
  */
 
 @Controller
