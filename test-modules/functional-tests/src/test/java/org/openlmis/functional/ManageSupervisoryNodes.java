@@ -309,36 +309,28 @@ public class ManageSupervisoryNodes extends TestCaseHelper {
 
     supervisoryNodesPage.clickAddNewButton();
     supervisoryNodesPage.enterSupervisoryNodeCode("N4");
-    supervisoryNodesPage.enterSupervisoryNodeName("Node 4");
+    supervisoryNodesPage.enterSupervisoryNodeName("Node4");
     supervisoryNodesPage.enterSupervisoryNodeDescription("This is Node 4");
     searchAssociatedFacility("F10");
     supervisoryNodesPage.selectFirstFacilityToBeAssociated();
     supervisoryNodesPage.clickSaveButton();
 
     supervisoryNodesPage.clickAddNewButton();
-    enterSupervisoryNodeDetails("N5", "Node 5", "", "nod", 1, "F10");
+    enterSupervisoryNodeDetails("N5", "Node 5", "", "nod", 4, "F10");
     supervisoryNodesPage.clickSaveButton();
     assertEquals("Supervisory Node \"Node 5\" created successfully", supervisoryNodesPage.getSuccessMessage());
 
     supervisoryNodesPage.clickViewHereLink();
-    System.out.println("Node 4 id = " + dbWrapper.getAttributeFromTable("supervisory_nodes", "id", "code", "N4"));
-    System.out.println("Node 5 id = " + dbWrapper.getAttributeFromTable("supervisory_nodes", "id", "code", "N5"));
-    System.out.println("Node 5 parentId = " + dbWrapper.getAttributeFromTable("supervisory_nodes", "parentId", "code", "N5"));
-    assertEquals("Node 4", supervisoryNodesPage.getParentOnEditPage());
-
+    assertEquals("Node4", supervisoryNodesPage.getParentOnEditPage());
     supervisoryNodesPage.clickCancelButton();
 
     supervisoryNodesPage.clickSearchOptionButton();
     supervisoryNodesPage.selectSupervisoryNodeParentAsSearchOption();
-    searchNode("Node 4");
-
-    System.out.println("Node 4 id = " + dbWrapper.getAttributeFromTable("supervisory_nodes", "id", "code", "N4"));
-    System.out.println("Node 5 id = " + dbWrapper.getAttributeFromTable("supervisory_nodes", "id", "code", "N5"));
-    System.out.println("Node 5 parentId = " + dbWrapper.getAttributeFromTable("supervisory_nodes", "parentId", "code", "N5"));
+    searchNode("Node4");
 
     assertEquals("Node 5", supervisoryNodesPage.getSupervisoryNodeName(1));
     assertEquals("N5", supervisoryNodesPage.getSupervisoryNodeCode(1));
-    assertEquals("Node 4", supervisoryNodesPage.getParent(1));
+    assertEquals("Node4", supervisoryNodesPage.getParent(1));
     assertEquals("Village Dispensary", supervisoryNodesPage.getFacility(1));
   }
 
@@ -366,6 +358,7 @@ public class ManageSupervisoryNodes extends TestCaseHelper {
     supervisoryNodesPage.enterSupervisoryNodeCode("N4");
     supervisoryNodesPage.clickOnClearSearchResultButton();
     supervisoryNodesPage.enterSearchParentNodeParameter("parent");
+    testWebDriver.sleep(500);
     supervisoryNodesPage.clickSaveButton();
     testWebDriver.waitForAjax();
     searchNode("Node4");
