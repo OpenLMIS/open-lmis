@@ -53,45 +53,52 @@ public class CoreTestContext extends AbstractTransactionalJUnit4SpringContextTes
     return program;
   }
 
-  protected ProcessingPeriod insertPeriod(String name, ProcessingSchedule processingSchedule, Date periodStartDate, Date periodEndDate) {
-    ProcessingPeriod processingPeriod = make(MakeItEasy.a(defaultProcessingPeriod,
-        MakeItEasy.with(scheduleId, processingSchedule.getId()), MakeItEasy.with(startDate, periodStartDate), MakeItEasy.with(endDate, periodEndDate),
-        MakeItEasy.with(ProcessingPeriodBuilder.name, name)));
+  protected ProcessingPeriod insertPeriod(String name,
+                                          ProcessingSchedule processingSchedule,
+                                          Date periodStartDate,
+                                          Date periodEndDate) {
+    ProcessingPeriod processingPeriod = make(a(defaultProcessingPeriod,
+      with(scheduleId, processingSchedule.getId()), with(startDate, periodStartDate),
+      with(endDate, periodEndDate),
+      with(ProcessingPeriodBuilder.name, name)));
 
     processingPeriodMapper.insert(processingPeriod);
-
     return processingPeriod;
   }
 
   protected void insertProduct(String productCode) {
-    Product product = make(MakeItEasy.a(ProductBuilder.defaultProduct, MakeItEasy.with(ProductBuilder.code, productCode)));
+    Product product = make(a(ProductBuilder.defaultProduct, with(ProductBuilder.code, productCode)));
     productMapper.insert(product);
   }
 
   protected ProcessingSchedule insertProcessingSchedule() {
-    ProcessingSchedule processingSchedule = make(MakeItEasy.a(ProcessingScheduleBuilder.defaultProcessingSchedule));
+    ProcessingSchedule processingSchedule = make(a(ProcessingScheduleBuilder.defaultProcessingSchedule));
     processingScheduleMapper.insert(processingSchedule);
     return processingSchedule;
   }
 
   protected Facility insertFacility() {
-    Facility facility = make(MakeItEasy.a(FacilityBuilder.defaultFacility));
+    Facility facility = make(a(FacilityBuilder.defaultFacility));
     facilityMapper.insert(facility);
     return facility;
   }
 
   protected SupervisoryNode insertSupervisoryNode(String code, String name, Facility facility) {
-    SupervisoryNode supervisoryNode = make(
-      a(SupervisoryNodeBuilder.defaultSupervisoryNode, with(SupervisoryNodeBuilder.code, code),
-        with(SupervisoryNodeBuilder.name, name), with(SupervisoryNodeBuilder.facility, facility)));
+    SupervisoryNode supervisoryNode = make(a(SupervisoryNodeBuilder.defaultSupervisoryNode,
+      with(SupervisoryNodeBuilder.code, code),
+      with(SupervisoryNodeBuilder.name, name),
+      with(SupervisoryNodeBuilder.facility, facility)));
 
     supervisoryNodeMapper.insert(supervisoryNode);
     return supervisoryNode;
   }
 
-  protected SupplyLine insertSupplyLine(Facility facility, SupervisoryNode supervisoryNode) {
-    SupplyLine supplyLine = make(a(defaultSupplyLine, with(SupplyLineBuilder.facility, facility),
-        with(SupplyLineBuilder.supervisoryNode, supervisoryNode)));
+  protected SupplyLine insertSupplyLine(Facility facility, SupervisoryNode supervisoryNode, Program program) {
+    SupplyLine supplyLine = make(a(defaultSupplyLine,
+      with(SupplyLineBuilder.facility, facility),
+      with(SupplyLineBuilder.supervisoryNode, supervisoryNode),
+      with(SupplyLineBuilder.program, program)));
+
     supplyLineMapper.insert(supplyLine);
     return supplyLine;
   }

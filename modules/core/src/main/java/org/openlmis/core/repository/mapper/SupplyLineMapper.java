@@ -67,33 +67,54 @@ public interface SupplyLineMapper {
   })
   SupplyLine getById(Long id);
 
-  @Select({"SELECT SL.*, FAC.name as facilityName FROM supply_lines SL INNER JOIN facilities FAC ON SL.supplyingFacilityId = FAC.id ",
-    "WHERE LOWER(FAC.name) LIKE '%' || LOWER(#{facilityName} || '%')"})
+  @Select({"SELECT SL.*, FAC.name AS facilityName, SN.name AS supervisoryNodeName, PGM.name AS programName " ,
+    "FROM supply_lines SL INNER JOIN facilities FAC ON SL.supplyingFacilityId = FAC.id " ,
+    "INNER JOIN supervisory_nodes SN ON SL.supervisoryNodeId = SN.id " ,
+    "INNER JOIN programs PGM ON SL.programId = PGM.id ",
+    "WHERE LOWER(FAC.name) LIKE '%' || LOWER(#{facilityName} || '%') " ,
+    "ORDER BY LOWER(FAC.name), LOWER(SN.name), LOWER(PGM.name)"})
   @Results(value = {
     @Result(property = "supplyingFacility.name", column = "facilityName"),
-    @Result(property = "supervisoryNode", javaType = SupervisoryNode.class, column = "supervisoryNodeId",
-      one = @One(select = "org.openlmis.core.repository.mapper.SupervisoryNodeMapper.getById")),
-    @Result(property = "program", javaType = Program.class, column = "programId",
-      one = @One(select = "org.openlmis.core.repository.mapper.ProgramMapper.getById"))
+    @Result(property = "supervisoryNode.name", column = "supervisoryNodeName"),
+    @Result(property = "program.name", column = "programName")
   })
   List<SupplyLine> searchByFacilityName(@Param(value = "facilityName") String facilityName, RowBounds rowBounds);
+
+  @Select({"SELECT SL.*, FAC.name AS facilityName, SN.name AS supervisoryNodeName, PGM.name AS programName " ,
+    "FROM supply_lines SL INNER JOIN facilities FAC ON SL.supplyingFacilityId = FAC.id " ,
+    "INNER JOIN supervisory_nodes SN ON SL.supervisoryNodeId = SN.id " ,
+    "INNER JOIN programs PGM ON SL.programId = PGM.id " ,
+    "WHERE LOWER(SN.name) LIKE '%' || LOWER(#{supervisoryNodeName} || '%') " ,
+    "ORDER BY LOWER(FAC.name), LOWER(SN.name), LOWER(PGM.name)"})
+  @Results(value = {
+    @Result(property = "supplyingFacility.name", column = "facilityName"),
+    @Result(property = "supervisoryNode.name", column = "supervisoryNodeName"),
+    @Result(property = "program.name", column = "programName")
+  })
+  List<SupplyLine> searchBySupervisoryNodeName(@Param(value = "supervisoryNodeName") String supervisoryNodeName, RowBounds rowBounds);
+
+  @Select({"SELECT SL.*, FAC.name AS facilityName, SN.name AS supervisoryNodeName, PGM.name AS programName " ,
+    "FROM supply_lines SL INNER JOIN facilities FAC ON SL.supplyingFacilityId = FAC.id " ,
+    "INNER JOIN supervisory_nodes SN ON SL.supervisoryNodeId = SN.id " ,
+    "INNER JOIN programs PGM ON SL.programId = PGM.id " ,
+    "WHERE LOWER(PGM.name) LIKE '%' || LOWER(#{programName} || '%') " ,
+    "ORDER BY LOWER(FAC.name), LOWER(SN.name), LOWER(PGM.name)"})
+  @Results(value = {
+    @Result(property = "supplyingFacility.name", column = "facilityName"),
+    @Result(property = "supervisoryNode.name", column = "supervisoryNodeName"),
+    @Result(property = "program.name", column = "programName")
+  })
+  List<SupplyLine> searchByProgramName(String programName, RowBounds rowBounds);
 
   @Select({"SELECT COUNT(*) FROM supply_lines SL INNER JOIN facilities FAC ON SL.supplyingFacilityId = FAC.id ",
     "WHERE LOWER(FAC.name) LIKE '%' || LOWER(#{facilityName} || '%')"})
   Integer getTotalSearchResultsByFacilityName(String facilityName);
 
-  @Select({"SELECT SL.*, SN.name AS supervisoryNodeName FROM supply_lines SL INNER JOIN supervisory_nodes SN ON SL.supervisoryNodeId = SN.id" ,
-    "WHERE LOWER(SN.name) LIKE '%' || LOWER(#{supervisoryNodeName} || '%')"})
-  @Results(value = {
-    @Result(property = "supervisoryNode.name", column = "supervisoryNodeName"),
-    @Result(property = "supplyingFacility", javaType = Facility.class, column = "supplyingFacilityId",
-      one = @One(select = "org.openlmis.core.repository.mapper.FacilityMapper.getLWById")),
-    @Result(property = "program", javaType = Program.class, column = "programId",
-      one = @One(select = "org.openlmis.core.repository.mapper.ProgramMapper.getById"))
-  })
-  List<SupplyLine> searchBySupervisoryNodeName(@Param(value = "supervisoryNodeName") String supervisoryNodeName, RowBounds rowBounds);
-
-  @Select({"SELECT count(*) AS supervisoryNodeName FROM supply_lines SL INNER JOIN supervisory_nodes SN ON SL.supervisoryNodeId = SN.id" ,
+  @Select({"SELECT count(*) FROM supply_lines SL INNER JOIN supervisory_nodes SN ON SL.supervisoryNodeId = SN.id" ,
     "WHERE LOWER(SN.name) LIKE '%' || LOWER(#{supervisoryNodeName} || '%')"})
   Integer getTotalSearchResultsBySupervisoryNodeName(String supervisoryNodeName);
+
+  @Select({"SELECT count(*) FROM supply_lines SL INNER JOIN programs P ON SL.programId = P.id" ,
+    "WHERE LOWER(P.name) LIKE '%' || LOWER(#{programName} || '%')"})
+  Integer getTotalSearchResultsByProgramName(String programName);
 }

@@ -17,7 +17,6 @@ import org.junit.runner.RunWith;
 import org.openlmis.core.builder.FacilityBuilder;
 import org.openlmis.core.builder.ProgramBuilder;
 import org.openlmis.core.builder.SupervisoryNodeBuilder;
-import org.openlmis.core.builder.SupplyLineBuilder;
 import org.openlmis.core.context.CoreTestContext;
 import org.openlmis.core.domain.*;
 import org.openlmis.db.categories.IntegrationTests;
@@ -35,7 +34,6 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.openlmis.core.builder.FacilityBuilder.defaultFacility;
 import static org.openlmis.core.builder.FacilityBuilder.name;
-import static org.openlmis.core.builder.SupplyLineBuilder.defaultSupplyLine;
 
 @Category(IntegrationTests.class)
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -149,24 +147,20 @@ public class SupplyLineMapperIT extends CoreTestContext {
     Program malariaProgram = programMapper.getByCode("MALARIA");
     Program tbProgram = programMapper.getByCode("TB");
 
-    SupplyLine supplyLine1 = createSupplyLine(supervisoryNode, program);
-    mapper.insert(supplyLine1);
-
-    SupplyLine supplyLine2 = createSupplyLine(supervisoryNode, hivProgram);
-    mapper.insert(supplyLine2);
-
-    SupplyLine supplyLine3 = createSupplyLine(supervisoryNode, malariaProgram);
-    mapper.insert(supplyLine3);
-
-    SupplyLine supplyLine4 = createSupplyLine(supervisoryNode, tbProgram);
-    supplyLine4.setSupplyingFacility(f100);
-    mapper.insert(supplyLine4);
+    SupplyLine supplyLine1 = insertSupplyLine(facility, supervisoryNode, program);
+    insertSupplyLine(facility, supervisoryNode, hivProgram);
+    insertSupplyLine(facility, supervisoryNode, malariaProgram);
+    insertSupplyLine(f100, supervisoryNode, tbProgram);
 
     Pagination pagination = new Pagination(2, 2);
     List<SupplyLine> supplyLines = mapper.searchByFacilityName(searchParam, pagination);
 
     assertThat(supplyLines.size(), is(1));
-    assertThat(supplyLines.get(0).getId(), is(supplyLine3.getId()));
+    assertThat(supplyLines.get(0).getId(), is(supplyLine1.getId()));
+    assertThat(supplyLines.get(0).getDescription(), is(supplyLine1.getDescription()));
+    assertThat(supplyLines.get(0).getProgram().getName(), is(program.getName()));
+    assertThat(supplyLines.get(0).getSupplyingFacility().getName(), is(facility.getName()));
+    assertThat(supplyLines.get(0).getSupervisoryNode().getName(), is(supervisoryNode.getName()));
   }
 
   @Test
@@ -180,18 +174,10 @@ public class SupplyLineMapperIT extends CoreTestContext {
     Program malariaProgram = programMapper.getByCode("MALARIA");
     Program tbProgram = programMapper.getByCode("TB");
 
-    SupplyLine supplyLine1 = createSupplyLine(supervisoryNode, program);
-    mapper.insert(supplyLine1);
-
-    SupplyLine supplyLine2 = createSupplyLine(supervisoryNode, hivProgram);
-    mapper.insert(supplyLine2);
-
-    SupplyLine supplyLine3 = createSupplyLine(supervisoryNode, malariaProgram);
-    mapper.insert(supplyLine3);
-
-    SupplyLine supplyLine4 = createSupplyLine(supervisoryNode, tbProgram);
-    supplyLine4.setSupplyingFacility(f100);
-    mapper.insert(supplyLine4);
+    insertSupplyLine(facility, supervisoryNode, program);
+    insertSupplyLine(facility, supervisoryNode, hivProgram);
+    insertSupplyLine(facility, supervisoryNode, malariaProgram);
+    insertSupplyLine(f100, supervisoryNode, tbProgram);
 
     Integer count = mapper.getTotalSearchResultsByFacilityName(searchParam);
 
@@ -210,25 +196,18 @@ public class SupplyLineMapperIT extends CoreTestContext {
     Program malariaProgram = programMapper.getByCode("MALARIA");
     Program tbProgram = programMapper.getByCode("TB");
 
-    SupplyLine supplyLine1 = createSupplyLine(supervisoryNode, program);
-    mapper.insert(supplyLine1);
-
-    SupplyLine supplyLine2 = createSupplyLine(supervisoryNode2, hivProgram);
-    mapper.insert(supplyLine2);
-
-    SupplyLine supplyLine3 = createSupplyLine(supervisoryNode3, malariaProgram);
-    mapper.insert(supplyLine3);
-
-    SupplyLine supplyLine4 = createSupplyLine(supervisoryNode4, tbProgram);
-    mapper.insert(supplyLine4);
+    insertSupplyLine(facility, supervisoryNode, program);
+    insertSupplyLine(facility, supervisoryNode3, hivProgram);
+    SupplyLine supplyLine = insertSupplyLine(facility, supervisoryNode4, malariaProgram);
+    insertSupplyLine(facility, supervisoryNode2, tbProgram);
 
     Pagination pagination = new Pagination(2, 2);
     List<SupplyLine> supplyLines = mapper.searchBySupervisoryNodeName(searchParam, pagination);
 
     assertThat(supplyLines.size(), is(1));
-    assertThat(supplyLines.get(0).getId(), is(supplyLine4.getId()));
-    assertThat(supplyLines.get(0).getDescription(), is(supplyLine4.getDescription()));
-    assertThat(supplyLines.get(0).getProgram().getName(), is(tbProgram.getName()));
+    assertThat(supplyLines.get(0).getId(), is(supplyLine.getId()));
+    assertThat(supplyLines.get(0).getDescription(), is(supplyLine.getDescription()));
+    assertThat(supplyLines.get(0).getProgram().getName(), is(malariaProgram.getName()));
     assertThat(supplyLines.get(0).getSupplyingFacility().getName(), is(facility.getName()));
     assertThat(supplyLines.get(0).getSupervisoryNode().getName(), is(supervisoryNode4.getName()));
   }
@@ -245,25 +224,64 @@ public class SupplyLineMapperIT extends CoreTestContext {
     Program malariaProgram = programMapper.getByCode("MALARIA");
     Program tbProgram = programMapper.getByCode("TB");
 
-    SupplyLine supplyLine1 = createSupplyLine(supervisoryNode, program);
-    mapper.insert(supplyLine1);
-
-    SupplyLine supplyLine2 = createSupplyLine(supervisoryNode2, hivProgram);
-    mapper.insert(supplyLine2);
-
-    SupplyLine supplyLine3 = createSupplyLine(supervisoryNode3, malariaProgram);
-    mapper.insert(supplyLine3);
-
-    SupplyLine supplyLine4 = createSupplyLine(supervisoryNode4, tbProgram);
-    mapper.insert(supplyLine4);
+    insertSupplyLine(facility, supervisoryNode, program);
+    insertSupplyLine(facility, supervisoryNode2, hivProgram);
+    insertSupplyLine(facility, supervisoryNode3, malariaProgram);
+    insertSupplyLine(facility, supervisoryNode4, tbProgram);
 
     Integer count = mapper.getTotalSearchResultsBySupervisoryNodeName(searchParam);
 
     assertThat(count, is(3));
   }
 
-  private SupplyLine createSupplyLine(SupervisoryNode supervisoryNode, Program program) {
-    return make(a(defaultSupplyLine, with(SupplyLineBuilder.supervisoryNode, supervisoryNode),
-      with(SupplyLineBuilder.facility, facility), with(SupplyLineBuilder.program, program)));
+  @Test
+  public void shouldGetPaginatedSupplyLinesSearchedByProgramName() throws Exception {
+    String searchParam = "mal";
+
+    SupervisoryNode supervisoryNode2 = insertSupervisoryNode("N2", "Node2", facility);
+
+    Program malaria = programMapper.getByCode("MALARIA");
+
+    insertSupplyLine(facility, supervisoryNode, program);
+    SupplyLine supplyLine2 = insertSupplyLine(facility, supervisoryNode2, malaria);
+    SupplyLine supplyLine3 = insertSupplyLine(facility, supervisoryNode, malaria);
+    insertSupplyLine(facility, supervisoryNode2, program);
+
+    Pagination pagination = new Pagination(1, 2);
+    List<SupplyLine> supplyLines = mapper.searchByProgramName(searchParam, pagination);
+
+    assertThat(supplyLines.size(), is(2));
+
+    assertThat(supplyLines.get(0).getId(), is(supplyLine3.getId()));
+    assertThat(supplyLines.get(0).getDescription(), is(supplyLine3.getDescription()));
+    assertThat(supplyLines.get(0).getProgram().getName(), is(malaria.getName()));
+    assertThat(supplyLines.get(0).getSupplyingFacility().getName(), is(facility.getName()));
+    assertThat(supplyLines.get(0).getSupervisoryNode().getName(), is(supervisoryNode.getName()));
+
+    assertThat(supplyLines.get(1).getId(), is(supplyLine2.getId()));
+    assertThat(supplyLines.get(1).getDescription(), is(supplyLine2.getDescription()));
+    assertThat(supplyLines.get(1).getProgram().getName(), is(malaria.getName()));
+    assertThat(supplyLines.get(1).getSupplyingFacility().getName(), is(facility.getName()));
+    assertThat(supplyLines.get(1).getSupervisoryNode().getName(), is(supervisoryNode2.getName()));
+  }
+
+  @Test
+  public void shouldGetCountOfRecordsWhenSearchedByProgramName() throws Exception {
+    String searchParam = "mal";
+
+    SupervisoryNode supervisoryNode2 = insertSupervisoryNode("N2", "Node2", facility);
+    SupervisoryNode supervisoryNode3 = insertSupervisoryNode("N3", "Node3", facility);
+
+    Program malaria = programMapper.getByCode("MALARIA");
+
+    insertSupplyLine(facility, supervisoryNode, program);
+    insertSupplyLine(facility, supervisoryNode2, malaria);
+    insertSupplyLine(facility, supervisoryNode, malaria);
+    insertSupplyLine(facility, supervisoryNode2, program);
+    insertSupplyLine(facility, supervisoryNode3, malaria);
+
+    Integer count = mapper.getTotalSearchResultsByProgramName(searchParam);
+
+    assertThat(count, is(3));
   }
 }

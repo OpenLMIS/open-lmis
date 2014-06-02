@@ -21,6 +21,8 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+import static java.util.Collections.emptyList;
+
 /**
  * SupplyLineRepository is Repository class for SupplyLine related database operations.
  */
@@ -59,9 +61,11 @@ public class SupplyLineRepository {
     if (columnName.equals("supervisoryNode")) {
       return mapper.searchBySupervisoryNodeName(searchParam, pagination);
     }
-    return null;
+    if (columnName.equals("program")) {
+      return mapper.searchByProgramName(searchParam, pagination);
+    }
+    return emptyList();
   }
-
 
   public Integer getTotalSearchResultCount(String searchParam, String columnName) {
     if (columnName.equals("facility")) {
@@ -70,6 +74,9 @@ public class SupplyLineRepository {
     if (columnName.equals("supervisoryNode")) {
       return mapper.getTotalSearchResultsBySupervisoryNodeName(searchParam);
     }
-    return null;
+    if (columnName.equals("program")) {
+      return mapper.getTotalSearchResultsByProgramName(searchParam);
+    }
+    return 0;
   }
 }

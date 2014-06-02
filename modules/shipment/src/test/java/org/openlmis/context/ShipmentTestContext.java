@@ -34,7 +34,7 @@ public class ShipmentTestContext extends RequisitionTestContext {
 
     Order order = new Order(rnr);
     order.setStatus(OrderStatus.IN_ROUTE);
-    order.setSupplyLine(insertSupplyLine(facility, supervisoryNode));
+    order.setSupplyLine(insertSupplyLine(facility, supervisoryNode, program));
     order.setOrderNumber("OrderHIV00000001R");
     orderMapper.insert(order);
     return order;
