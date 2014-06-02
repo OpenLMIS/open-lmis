@@ -18,6 +18,7 @@ import org.openlmis.core.builder.FacilityBuilder;
 import org.openlmis.core.builder.ProgramBuilder;
 import org.openlmis.core.builder.SupervisoryNodeBuilder;
 import org.openlmis.core.builder.SupplyLineBuilder;
+import org.openlmis.core.context.CoreTestContext;
 import org.openlmis.core.domain.*;
 import org.openlmis.db.categories.IntegrationTests;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,7 +42,7 @@ import static org.openlmis.core.builder.SupplyLineBuilder.defaultSupplyLine;
 @ContextConfiguration(locations = "classpath:test-applicationContext-core.xml")
 @Transactional
 @TransactionConfiguration(defaultRollback = true, transactionManager = "openLmisTransactionManager")
-public class SupplyLineMapperIT {
+public class SupplyLineMapperIT extends CoreTestContext {
 
   @Autowired
   SupplyLineMapper mapper;
@@ -201,9 +202,9 @@ public class SupplyLineMapperIT {
   public void shouldGetPaginatedSupplyLinesSearchedBySupervisoryNodeName() throws Exception {
     String searchParam = "nod";
 
-    SupervisoryNode supervisoryNode2 = createSupervisoryNode("N2", "Node2", facility);
-    SupervisoryNode supervisoryNode3 = createSupervisoryNode("N3", "Node3", facility);
-    SupervisoryNode supervisoryNode4 = createSupervisoryNode("N4", "Node4", facility);
+    SupervisoryNode supervisoryNode2 = insertSupervisoryNode("N2", "Node2", facility);
+    SupervisoryNode supervisoryNode3 = insertSupervisoryNode("N3", "Node3", facility);
+    SupervisoryNode supervisoryNode4 = insertSupervisoryNode("N4", "Node4", facility);
 
     Program hivProgram = programMapper.getByCode("HIV");
     Program malariaProgram = programMapper.getByCode("MALARIA");
@@ -236,9 +237,9 @@ public class SupplyLineMapperIT {
   public void shouldGetCountOfRecordsWhenSearchedBySupervisoryNodeName() throws Exception {
     String searchParam = "nod";
 
-    SupervisoryNode supervisoryNode2 = createSupervisoryNode("N2", "Node2", facility);
-    SupervisoryNode supervisoryNode3 = createSupervisoryNode("N3", "Node3", facility);
-    SupervisoryNode supervisoryNode4 = createSupervisoryNode("N4", "Node4", facility);
+    SupervisoryNode supervisoryNode2 = insertSupervisoryNode("N2", "Node2", facility);
+    SupervisoryNode supervisoryNode3 = insertSupervisoryNode("N3", "Node3", facility);
+    SupervisoryNode supervisoryNode4 = insertSupervisoryNode("N4", "Node4", facility);
 
     Program hivProgram = programMapper.getByCode("HIV");
     Program malariaProgram = programMapper.getByCode("MALARIA");
@@ -264,13 +265,5 @@ public class SupplyLineMapperIT {
   private SupplyLine createSupplyLine(SupervisoryNode supervisoryNode, Program program) {
     return make(a(defaultSupplyLine, with(SupplyLineBuilder.supervisoryNode, supervisoryNode),
       with(SupplyLineBuilder.facility, facility), with(SupplyLineBuilder.program, program)));
-  }
-
-  private SupervisoryNode createSupervisoryNode(String code, String name, Facility facility) {
-    SupervisoryNode supervisoryNode = make(
-      a(SupervisoryNodeBuilder.defaultSupervisoryNode, with(SupervisoryNodeBuilder.code, code),
-        with(SupervisoryNodeBuilder.name, name), with(SupervisoryNodeBuilder.facility, facility)));
-    supervisoryNodeMapper.insert(supervisoryNode);
-    return supervisoryNode;
   }
 }

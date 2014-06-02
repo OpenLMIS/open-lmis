@@ -1,4 +1,14 @@
-package org.openlmis.context;
+/*
+ * This program is part of the OpenLMIS logistics management information system platform software.
+ * Copyright © 2013 VillageReach
+ *
+ * This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+ * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
+ */
+
+package org.openlmis.core.context;
 
 
 import com.natpryce.makeiteasy.MakeItEasy;
@@ -6,14 +16,6 @@ import org.junit.Ignore;
 import org.openlmis.core.builder.*;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.repository.mapper.*;
-import org.openlmis.order.domain.Order;
-import org.openlmis.order.domain.OrderStatus;
-import org.openlmis.order.repository.mapper.OrderMapper;
-import org.openlmis.rnr.domain.RequisitionStatusChange;
-import org.openlmis.rnr.domain.Rnr;
-import org.openlmis.rnr.domain.RnrStatus;
-import org.openlmis.rnr.repository.mapper.RequisitionMapper;
-import org.openlmis.rnr.repository.mapper.RequisitionStatusChangeMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.AbstractTransactionalJUnit4SpringContextTests;
@@ -26,10 +28,10 @@ import static org.openlmis.core.builder.ProcessingPeriodBuilder.*;
 import static org.openlmis.core.builder.SupplyLineBuilder.defaultSupplyLine;
 
 
-@ContextConfiguration(locations = "classpath:test-applicationContext-shipment.xml")
+@ContextConfiguration(locations = "classpath:test-applicationContext-core.xml")
 @TransactionConfiguration(defaultRollback = true, transactionManager = "openLmisTransactionManager")
 @Ignore
-public class ApplicationTestContext extends AbstractTransactionalJUnit4SpringContextTests {
+public class CoreTestContext extends AbstractTransactionalJUnit4SpringContextTests {
   @Autowired
   protected ProcessingScheduleMapper processingScheduleMapper;
   @Autowired
@@ -41,16 +43,9 @@ public class ApplicationTestContext extends AbstractTransactionalJUnit4SpringCon
   @Autowired
   private ProcessingPeriodMapper processingPeriodMapper;
   @Autowired
-  private RequisitionMapper requisitionMapper;
-  @Autowired
-  private RequisitionStatusChangeMapper requisitionStatusChangeMapper;
-  @Autowired
   private SupervisoryNodeMapper supervisoryNodeMapper;
   @Autowired
   private SupplyLineMapper supplyLineMapper;
-
-  @Autowired
-  private OrderMapper orderMapper;
 
   protected Program insertProgram() {
     Program program = make(MakeItEasy.a(ProgramBuilder.defaultProgram));
@@ -66,23 +61,6 @@ public class ApplicationTestContext extends AbstractTransactionalJUnit4SpringCon
     processingPeriodMapper.insert(processingPeriod);
 
     return processingPeriod;
-  }
-
-  protected Rnr insertRequisition(ProcessingPeriod period, Program program, RnrStatus status, Boolean emergency, Facility facility, SupervisoryNode supervisoryNode, Date modifiedDate) {
-    Rnr rnr = new Rnr(facility, program, period, emergency, MODIFIED_BY, 1L);
-    rnr.setStatus(status);
-    rnr.setEmergency(emergency);
-    rnr.setModifiedDate(modifiedDate);
-    rnr.setSubmittedDate(new Date(111111L));
-    rnr.setProgram(program);
-    rnr.setSupplyingDepot(facility);
-    requisitionMapper.insert(rnr);
-    requisitionStatusChangeMapper.insert(new RequisitionStatusChange(rnr));
-
-    rnr.setSupervisoryNodeId(supervisoryNode.getId());
-    requisitionMapper.update(rnr);
-
-    return rnr;
   }
 
   protected void insertProduct(String productCode) {
@@ -102,9 +80,10 @@ public class ApplicationTestContext extends AbstractTransactionalJUnit4SpringCon
     return facility;
   }
 
-  protected SupervisoryNode insertSupervisoryNode(String code, Facility facility) {
-    SupervisoryNode supervisoryNode = make(a(SupervisoryNodeBuilder.defaultSupervisoryNode, with(SupervisoryNodeBuilder.code, code)));
-    supervisoryNode.setFacility(facility);
+  protected SupervisoryNode insertSupervisoryNode(String code, String name, Facility facility) {
+    SupervisoryNode supervisoryNode = make(
+      a(SupervisoryNodeBuilder.defaultSupervisoryNode, with(SupervisoryNodeBuilder.code, code),
+        with(SupervisoryNodeBuilder.name, name), with(SupervisoryNodeBuilder.facility, facility)));
 
     supervisoryNodeMapper.insert(supervisoryNode);
     return supervisoryNode;
@@ -116,23 +95,4 @@ public class ApplicationTestContext extends AbstractTransactionalJUnit4SpringCon
     supplyLineMapper.insert(supplyLine);
     return supplyLine;
   }
-
-
-  protected Order insertOrder(String productCode) {
-    insertProduct(productCode);
-    Facility facility = insertFacility();
-    Program program = insertProgram();
-    ProcessingSchedule processingSchedule = insertProcessingSchedule();
-    ProcessingPeriod processingPeriod = insertPeriod("Period1", processingSchedule, new Date(), new Date());
-    SupervisoryNode supervisoryNode = insertSupervisoryNode("N1", facility);
-    Rnr rnr = insertRequisition(processingPeriod, program, RnrStatus.INITIATED, false, facility, supervisoryNode, new Date());
-
-    Order order = new Order(rnr);
-    order.setStatus(OrderStatus.IN_ROUTE);
-    order.setSupplyLine(insertSupplyLine(facility, supervisoryNode));
-    order.setOrderNumber("OrderHIV00000001R");
-    orderMapper.insert(order);
-    return order;
-  }
-
 }
