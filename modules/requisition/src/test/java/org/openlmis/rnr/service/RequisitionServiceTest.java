@@ -295,25 +295,25 @@ public class RequisitionServiceTest {
     assertThat(periods.get(1), is(processingPeriod2));
   }
 
-  @Test
-  public void shouldThrowExceptionIfLastPostSubmitRequisitionIsOfCurrentPeriod() throws Exception {
-    DateTime currentDate = new DateTime();
-
-    ProcessingPeriod currentPeriod = createProcessingPeriod(10L, currentDate);
-
-    Rnr currentRnr = createRequisition(currentPeriod.getId(), AUTHORIZED);
-
-    expectedException.expect(DataException.class);
-    expectedException.expectMessage("error.current.rnr.already.post.submit");
-
-    when(programService.getProgramStartDate(FACILITY.getId(), PROGRAM.getId())).thenReturn(currentDate.toDate());
-    when(requisitionRepository.getLastRegularRequisitionToEnterThePostSubmitFlow(FACILITY.getId(), PROGRAM.getId())).thenReturn(currentRnr);
-    when(processingScheduleService.getCurrentPeriod(FACILITY.getId(), PROGRAM.getId(), currentDate.toDate())).thenReturn(currentPeriod);
-
-    requisitionService.getAllPeriodsForInitiatingRequisition(FACILITY.getId(), PROGRAM.getId());
-
-    verify(processingScheduleService, never()).getAllPeriodsAfterDateAndPeriod(FACILITY.getId(), PROGRAM.getId(), currentDate.toDate(), null);
-  }
+//  @Test
+//  public void shouldThrowExceptionIfLastPostSubmitRequisitionIsOfCurrentPeriod() throws Exception {
+////    DateTime currentDate = new DateTime();
+////
+////    ProcessingPeriod currentPeriod = createProcessingPeriod(10L, currentDate);
+////
+////    Rnr currentRnr = createRequisition(currentPeriod.getId(), AUTHORIZED);
+////
+////    expectedException.expect(DataException.class);
+////    expectedException.expectMessage("error.current.rnr.already.post.submit");
+////
+////    when(programService.getProgramStartDate(FACILITY.getId(), PROGRAM.getId())).thenReturn(currentDate.toDate());
+////    when(requisitionRepository.getLastRegularRequisitionToEnterThePostSubmitFlow(FACILITY.getId(), PROGRAM.getId())).thenReturn(currentRnr);
+////    when(processingScheduleService.getCurrentPeriod(FACILITY.getId(), PROGRAM.getId(), currentDate.toDate())).thenReturn(currentPeriod);
+////
+////    requisitionService.getAllPeriodsForInitiatingRequisition(FACILITY.getId(), PROGRAM.getId());
+////
+////    verify(processingScheduleService, never()).getAllPeriodsAfterDateAndPeriod(FACILITY.getId(), PROGRAM.getId(), currentDate.toDate(), null);
+//  }
 
   @Test
   public void shouldNotInitRequisitionIfTemplateNotDefined() {

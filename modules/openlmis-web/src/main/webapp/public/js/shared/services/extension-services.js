@@ -543,4 +543,17 @@ services.factory("RnRStatusSummary",function($resource){
     return $resource('/dashboard/rnrstatusSummary/requisitionGroup/:requisitionGroupId.json',{},{});
 });
 
+services.factory("totalRnRCreatedByRequisitionGroup",function($resource){
+    return $resource('/dashboard//RnRCreateForRequisitionGroup',{},{});
+});
+services.factory('RnRStatusByRequisitionGroupAndPeriod',function($resource){
+    return $resource('/dashboard/RnRStatus/:requisitionGroupId/:periodId/:programId/rnrStatus.json',{},{});
+  });
 
+services.factory("RnRStatusByRequisitionGroupAndPeriodDetails ",function($resource){
+    $resource('/dashboard/RnRStatusByRequisitionGroupDetails.json',{},{});
+});
+
+services.factory('RnRStatusDetailsByRequisitionGroup', function($resource){
+    return $resource('/dashboard/rnrStatus-detail.json',{},{});
+});

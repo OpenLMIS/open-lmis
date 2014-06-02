@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+
+<h2 style="text-align: center"><span openlmis-message="title.rnr.status.details"></span></h2>
+<div class="row-fluid">
+    <div class="span12">
+        <table class="table table-bordered" ng-show="rnrStatusDetails == undefined || rnrStatusDetails.length == 0">
+            <tr>
+                <td>No data to show under selected filters</td>
+            </tr>
+        </table>
+        <div ng-show="rnrStatusData !== undefined && rnrStatusData.length > 0">
+            <table ng-show="rnrStatusData.length > 0" class="table-bordered table table-striped pull-right"
+                   ng-table="tableParams">
+                <tbody>
+                <tr ng-repeat="row in rnrStatusData">
+                    <td data-title="'Facility Code'"  sortable="facilitycode">{{row.facilitycode}}</td>
+                    <td data-title="'Facility Name'"  sortable="facilityname">{{row.facilityname}}</td>
+
+                    <td data-title="'Status'" sortable="status">{{row.status}}</td>
+                    <td data-title="'Date'"  sortable="createddate">{{row.createddate | date}}</td>
+
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+</div>

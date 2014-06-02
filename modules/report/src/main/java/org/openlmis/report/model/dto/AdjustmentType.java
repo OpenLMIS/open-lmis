@@ -20,4 +20,6 @@ import lombok.NoArgsConstructor;
 public class AdjustmentType {
     private String name;
     private String description;
+    private Boolean additive;
+    private Integer displayOrder;
 }

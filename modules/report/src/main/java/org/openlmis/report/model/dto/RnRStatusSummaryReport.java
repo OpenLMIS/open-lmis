@@ -14,14 +14,18 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class RnRStatusSummaryReport {
 
     private String status;
-    private Long requisitionGroupId;
     private Integer totalStatus;
-    private Integer programId;
-    private String program;
+    private String programname;
+    private String facilitycode;
+    private String facilityname;
+    private Date createddate;
+    private String periodname;
 }
