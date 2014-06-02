@@ -258,6 +258,8 @@ public class ManageGeographicZone extends TestCaseHelper {
   public void tearDown() throws SQLException {
     HomePage homePage = PageObjectFactory.getHomePage(testWebDriver);
     homePage.logout(baseUrlGlobal);
+    dbWrapper.removeAllExistingRights("Admin");
+    dbWrapper.insertAllAdminRightsAsSeedData();
     dbWrapper.deleteData();
     dbWrapper.closeConnection();
   }

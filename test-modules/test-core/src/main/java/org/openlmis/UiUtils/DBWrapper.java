@@ -1639,4 +1639,19 @@ public class DBWrapper {
     insertRequisitionGroupMember("RG19", "F10");
     insertRequisitionGroupMember("RG20", "F10");
   }
+
+  public void insertAllAdminRightsAsSeedData() throws SQLException {
+    update("INSERT INTO role_rights (roleId, rightName) VALUES" +
+      " ((select id from roles where name='Admin'), 'UPLOADS')," +
+      " ((select id from roles where name='Admin'), 'MANAGE_FACILITY')," +
+      " ((select id from roles where name='Admin'), 'MANAGE_ROLE')," +
+      " ((select id from roles where name='Admin'), 'MANAGE_PROGRAM_PRODUCT')," +
+      " ((select id from roles where name='Admin'), 'MANAGE_SCHEDULE')," +
+      " ((select id from roles where name='Admin'), 'CONFIGURE_RNR')," +
+      " ((select id from roles where name='Admin'), 'MANAGE_USER')," +
+      " ((select id from roles where name='Admin'), 'VIEW_REPORT')," +
+      " ((select id from roles where name='Admin'), 'MANAGE_REPORT')," +
+      " ((select id from roles where name='Admin'), 'SYSTEM_SETTINGS')," +
+      " ((select id from roles where name='Admin'), 'MANAGE_REGIMEN_TEMPLATE');");
+  }
 }
