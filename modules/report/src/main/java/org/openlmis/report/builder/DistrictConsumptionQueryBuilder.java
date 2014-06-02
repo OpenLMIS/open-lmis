@@ -40,18 +40,12 @@ public class DistrictConsumptionQueryBuilder {
     private static String writePredicates(DistrictConsumptionReportParam filter){
         String predicate = "";
         if(filter != null){
+          predicate = "where processing_periods_id = " + filter.getPeriod() + " ";
             if (filter.getZoneId() != 0) {
                 predicate = predicate.isEmpty() ?" where " : predicate + " and ";
                 predicate = predicate + " zone_id = #{filterCriteria.zoneId}";
             }
-            if (filter.getStartDate() != null) {
-                predicate = predicate.isEmpty() ?" where " : predicate + " and ";
-                predicate = predicate + " processing_periods_start_date >= #{filterCriteria.startDate, jdbcType=DATE, javaType=java.util.Date, mode=IN}";
-             }
-            if (filter.getEndDate() != null) {
-                predicate = predicate.isEmpty() ?" where " : predicate + " and ";
-                predicate = predicate + " processing_periods_end_date <= #{filterCriteria.endDate, jdbcType=DATE, javaType=java.util.Date, mode=IN}";
-            }
+
             if(filter.getProductCategoryId() != 0 ){
                 predicate = predicate.isEmpty() ?" where " : predicate + " and ";
                 predicate = predicate + " product_category_id = #{filterCriteria.productCategoryId}";
@@ -68,6 +62,7 @@ public class DistrictConsumptionQueryBuilder {
                 predicate = predicate.isEmpty() ?" where " : predicate +  " and ";
                 predicate = predicate + " program_id = #{filterCriteria.programId}";
             }
+
 
         }
 

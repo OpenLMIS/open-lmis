@@ -17,6 +17,7 @@ import org.openlmis.report.mapper.DistrictConsumptionReportMapper;
 import org.openlmis.report.model.ReportData;
 import org.openlmis.report.model.params.DistrictConsumptionReportParam;
 import org.openlmis.report.util.Constants;
+import org.openlmis.report.util.StringHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -49,62 +50,21 @@ public class DistrictConsumptionReportDataProvider extends ReportDataProvider {
 
     if (filterCriteria != null) {
       districtConsumptionReportParam = new DistrictConsumptionReportParam();
-      Date originalStart = new Date();
-      Date originalEnd = new Date();
 
-      districtConsumptionReportParam.setZoneId(StringUtils.isBlank(filterCriteria.get("zoneId")[0]) ? 0 : Integer.parseInt(filterCriteria.get("zoneId")[0]));  //defaults to 0
-      districtConsumptionReportParam.setRgroup(StringUtils.isBlank(filterCriteria.get("rgroup")[0]) ? "All Requisition Groups" : filterCriteria.get("rgroup")[0]);
 
-      districtConsumptionReportParam.setProduct(StringUtils.isBlank(filterCriteria.get("product")[0]) ? "All Products" : filterCriteria.get("product")[0]);
-      districtConsumptionReportParam.setZone(StringUtils.isBlank(filterCriteria.get("zone")[0]) ? "All Geographic Zones" : filterCriteria.get("zone")[0]);
-      districtConsumptionReportParam.setProductCategory(StringUtils.isBlank(filterCriteria.get("productCategory")[0]) ? "All Product Categories" : filterCriteria.get("productCategory")[0]);
+      //districtConsumptionReportParam.setZoneId(StringUtils.isBlank(filterCriteria.get("zoneId")[0]) ? 0 : Integer.parseInt(filterCriteria.get("zoneId")[0]));  //defaults to 0
+//      districtConsumptionReportParam.setRgroup(StringUtils.isBlank(filterCriteria.get("requisitionGroup")[0]) ? "All Requisition Groups" : filterCriteria.get("requisitionGroup")[0]);
+//
+//      districtConsumptionReportParam.setProduct(StringUtils.isBlank(filterCriteria.get("product")[0]) ? "All Products" : filterCriteria.get("product")[0]);
+//      districtConsumptionReportParam.setZone(StringUtils.isBlank(filterCriteria.get("zone")[0]) ? "All Geographic Zones" : filterCriteria.get("zone")[0]);
+//      districtConsumptionReportParam.setProductCategory(StringUtils.isBlank(filterCriteria.get("productCategory")[0]) ? "All Product Categories" : filterCriteria.get("productCategory")[0]);
 
-      districtConsumptionReportParam.setProductCategoryId(StringUtils.isBlank(filterCriteria.get("productCategoryId")[0]) ? 0 : Integer.parseInt(filterCriteria.get("productCategoryId")[0])); //defaults to 0
-      districtConsumptionReportParam.setProductId(StringUtils.isBlank(filterCriteria.get("productId")[0]) ? 0 : Integer.parseInt(filterCriteria.get("productId")[0])); //defaults to 0
-      districtConsumptionReportParam.setRgroupId(StringUtils.isBlank(filterCriteria.get("rgroupId")[0]) ? 0 : Integer.parseInt(filterCriteria.get("rgroupId")[0])); //defaults to 0
-      districtConsumptionReportParam.setProgramId(StringUtils.isBlank(filterCriteria.get("programId")[0]) ? 0 : Integer.parseInt(filterCriteria.get("programId")[0])); //defaults to 0
-
-      districtConsumptionReportParam.setYearFrom(StringUtils.isBlank(filterCriteria.get("fromYear")[0]) ? originalStart.getYear() : Integer.parseInt(filterCriteria.get("fromYear")[0])); //defaults to 0
-      districtConsumptionReportParam.setYearTo(StringUtils.isBlank(filterCriteria.get("toYear")[0]) ? originalEnd.getYear() : Integer.parseInt(filterCriteria.get("toYear")[0])); //defaults to 0
-      districtConsumptionReportParam.setMonthFrom(StringUtils.isBlank(filterCriteria.get("fromMonth")[0]) ? originalStart.getMonth() : Integer.parseInt(filterCriteria.get("fromMonth")[0])); //defaults to 0
-      districtConsumptionReportParam.setMonthTo(StringUtils.isBlank(filterCriteria.get("toMonth")[0]) ? originalEnd.getMonth() : Integer.parseInt(filterCriteria.get("toMonth")[0])); //defaults to 0
-      districtConsumptionReportParam.setPeriodType(StringUtils.isBlank(filterCriteria.get("periodType")[0]) ? "" : filterCriteria.get("periodType")[0].toString());
-      districtConsumptionReportParam.setQuarterFrom(StringUtils.isBlank(filterCriteria.get("fromQuarter")[0]) ? 1 : Integer.parseInt(filterCriteria.get("fromQuarter")[0]));
-      districtConsumptionReportParam.setQuarterTo(StringUtils.isBlank(filterCriteria.get("toQuarter")[0]) ? 1 : Integer.parseInt(filterCriteria.get("toQuarter")[0]));
-      districtConsumptionReportParam.setSemiAnnualFrom(StringUtils.isBlank(filterCriteria.get("fromSemiAnnual")[0]) ? 1 : Integer.parseInt(filterCriteria.get("fromSemiAnnual")[0]));
-      districtConsumptionReportParam.setSemiAnnualTo(StringUtils.isBlank(filterCriteria.get("toSemiAnnual")[0]) ? 1 : Integer.parseInt(filterCriteria.get("toSemiAnnual")[0]));
-
-      int monthFrom = 0;
-      int monthTo = 0;
-
-      String periodType = districtConsumptionReportParam.getPeriodType();
-
-      if (periodType.equals(Constants.PERIOD_TYPE_QUARTERLY)) {
-        monthFrom = 3 * (districtConsumptionReportParam.getQuarterFrom() - 1);
-        monthTo = 3 * districtConsumptionReportParam.getQuarterTo() - 1;
-
-      } else if (periodType.equals(Constants.PERIOD_TYPE_MONTHLY)) {
-        monthFrom = districtConsumptionReportParam.getMonthFrom();
-        monthTo = districtConsumptionReportParam.getMonthTo();
-
-      } else if (periodType.equals(Constants.PERIOD_TYPE_SEMI_ANNUAL)) {
-        monthFrom = 6 * (districtConsumptionReportParam.getSemiAnnualFrom() - 1);
-        monthTo = 6 * districtConsumptionReportParam.getSemiAnnualTo() - 1;
-      } else if (periodType.equals(Constants.PERIOD_TYPE_ANNUAL)) {
-        monthFrom = 0;
-        monthTo = 11;
-      }
-
-      Calendar calendar = Calendar.getInstance();
-      calendar.set(Calendar.YEAR, districtConsumptionReportParam.getYearFrom());
-      calendar.set(Calendar.MONTH, monthFrom);
-      calendar.set(Calendar.DAY_OF_MONTH, 1);
-      districtConsumptionReportParam.setStartDate(calendar.getTime());
-
-      calendar.set(Calendar.YEAR, districtConsumptionReportParam.getYearTo());
-      calendar.set(Calendar.MONTH, monthTo);
-      calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMaximum(Calendar.DAY_OF_MONTH));
-      districtConsumptionReportParam.setEndDate(calendar.getTime());
+      districtConsumptionReportParam.setProductCategoryId(StringHelper.isBlank(filterCriteria,("productCategory")) ? 0 : Integer.parseInt(filterCriteria.get("productCategory")[0])); //defaults to 0
+      districtConsumptionReportParam.setProductId(StringHelper.isBlank(filterCriteria,("product")) ? 0 : Integer.parseInt(filterCriteria.get("product")[0])); //defaults to 0
+      districtConsumptionReportParam.setRgroupId(StringHelper.isBlank(filterCriteria,("requisitionGroup")) ? 0 : Integer.parseInt(filterCriteria.get("requisitionGroup")[0])); //defaults to 0
+      districtConsumptionReportParam.setProgramId(StringHelper.isBlank(filterCriteria,("program")) ? 0 : Integer.parseInt(filterCriteria.get("program")[0])); //defaults to 0
+      // a required field
+      districtConsumptionReportParam.setPeriod(Long.parseLong(filterCriteria.get("period")[0]));
     }
 
     return districtConsumptionReportParam;
