@@ -10,7 +10,6 @@
 
 package org.openlmis.core.repository;
 
-import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.Pagination;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.SupervisoryNode;
@@ -26,15 +25,10 @@ import java.util.List;
  */
 
 @Repository
-@NoArgsConstructor
 public class SupplyLineRepository {
 
-  private SupplyLineMapper mapper;
-
   @Autowired
-  public SupplyLineRepository(SupplyLineMapper mapper) {
-    this.mapper = mapper;
-  }
+  private SupplyLineMapper mapper;
 
   public void insert(SupplyLine supplyLine) {
     mapper.insert(supplyLine);

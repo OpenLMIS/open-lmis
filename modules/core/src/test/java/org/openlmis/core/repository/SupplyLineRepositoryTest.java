@@ -16,6 +16,7 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.openlmis.core.builder.SupplyLineBuilder;
 import org.openlmis.core.domain.Pagination;
@@ -38,16 +39,22 @@ import static org.mockito.Mockito.*;
 @Category(UnitTests.class)
 @RunWith(org.mockito.runners.MockitoJUnitRunner.class)
 public class SupplyLineRepositoryTest {
+
   @Mock
   private SupplyLineMapper mapper;
+
   @Mock
   private SupervisoryNodeRepository supervisoryNodeRepository;
+
   @Mock
   private ProgramRepository programRepository;
+
   @Mock
   private FacilityRepository facilityRepository;
 
+  @InjectMocks
   private SupplyLineRepository repository;
+
   private SupplyLine supplyLine;
 
   @Rule
@@ -55,7 +62,6 @@ public class SupplyLineRepositoryTest {
 
   @Before
   public void setUp() {
-    repository = new SupplyLineRepository(mapper);
     supplyLine = make(a(SupplyLineBuilder.defaultSupplyLine));
   }
 

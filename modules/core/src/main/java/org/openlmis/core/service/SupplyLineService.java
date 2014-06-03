@@ -10,7 +10,6 @@
 
 package org.openlmis.core.service;
 
-import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.Pagination;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.SupervisoryNode;
@@ -30,21 +29,19 @@ import java.util.List;
  */
 
 @Service
-@NoArgsConstructor
 public class SupplyLineService {
 
+  @Autowired
   private SupplyLineRepository repository;
-  private ProgramRepository programRepository;
-  private FacilityRepository facilityRepository;
-  private SupervisoryNodeRepository supervisoryNodeRepository;
 
   @Autowired
-  public SupplyLineService(SupplyLineRepository repository, ProgramRepository programRepository, FacilityRepository facilityRepository, SupervisoryNodeRepository supervisoryNodeRepository) {
-    this.repository = repository;
-    this.programRepository = programRepository;
-    this.facilityRepository = facilityRepository;
-    this.supervisoryNodeRepository = supervisoryNodeRepository;
-  }
+  private ProgramRepository programRepository;
+
+  @Autowired
+  private FacilityRepository facilityRepository;
+
+  @Autowired
+  private SupervisoryNodeRepository supervisoryNodeRepository;
 
   public SupplyLine getSupplyLineBy(SupervisoryNode supervisoryNode, Program program) {
     return repository.getSupplyLineBy(supervisoryNode, program);

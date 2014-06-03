@@ -69,7 +69,6 @@ public class SupplyLineServiceTest {
   @Before
   public void setUp() throws Exception {
     supplyLine = make(a(SupplyLineBuilder.defaultSupplyLine));
-    service = new SupplyLineService(repository, programRepository, facilityRepository, supervisoryNodeRepository);
   }
 
   @Test
@@ -98,6 +97,7 @@ public class SupplyLineServiceTest {
     when(programRepository.getIdByCode(supplyLine.getProgram().getCode())).thenReturn(1L);
     when(facilityRepository.getIdForCode(supplyLine.getSupplyingFacility().getCode())).thenReturn(1L);
     when(supervisoryNodeRepository.getIdForCode(supplyLine.getSupervisoryNode().getCode())).thenReturn(1L);
+
     supplyLine.getSupervisoryNode().setId(1L);
     when(supervisoryNodeRepository.getSupervisoryNodeParentId(1L)).thenReturn(null);
 
@@ -139,7 +139,7 @@ public class SupplyLineServiceTest {
   }
 
   @Test
-  public void shouldGetSupplyLinebyId() throws Exception {
+  public void shouldGetSupplyLineById() throws Exception {
     SupplyLine expectedSupplyLine = new SupplyLine();
     when(repository.getById(3L)).thenReturn(expectedSupplyLine);
 
