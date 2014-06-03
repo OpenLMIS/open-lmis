@@ -63,7 +63,7 @@ subprojects {
   }
 
   test {
-    jvmArgs '-XX:-UseSplitVerifier'
+    jvmArgs '-XX:-UseSplitVerifier', '-XX:MaxPermSize=256m'
     System.properties.get('environmentName', 'local')
     systemProperties System.properties
     useJUnit {

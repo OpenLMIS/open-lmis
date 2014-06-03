@@ -65,9 +65,9 @@ IntelliJ IDEA Setup
 Running App on embedded Jetty server
 --------------------------------------------------
 1. Clone the project repository using git.
-3. Setup _postgres_ user with password as configured in _gradle.properties_ file.
-
-3. You can use ```gradle clean setupdb seed build testseed run``` to start the app.
+2. Setup _postgres_ user with password as configured in _gradle.properties_ file.
+3. Ensure your Java PermGen size to 256m or more by setting the GRADLE_OPTS environment variable. e.g. ```export GRADLE_OPTS='-XX:MaxPermSize=256m'```
+4. You can use ```gradle clean setupdb seed build testseed run``` to start the app.
  
  There are bunch of gradle tasks that you can see by running ```gradle tasks```
 
