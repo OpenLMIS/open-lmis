@@ -55,13 +55,9 @@ public class SupplyLineMapperIT extends CoreTestContext {
   FacilityMapper facilityMapper;
 
   SupplyLine supplyLine;
-
   Facility facility;
-
   SupervisoryNode supervisoryNode;
-
   Program program;
-
 
   @Before
   public void setUp() throws Exception {
@@ -130,8 +126,10 @@ public class SupplyLineMapperIT extends CoreTestContext {
     SupplyLine supplyLineReturned = mapper.getById(supplyLine.getId());
 
     assertThat(supplyLineReturned.getProgram().getId(), is(program.getId()));
+    assertThat(supplyLineReturned.getProgram().getName(), is(program.getName()));
     assertThat(supplyLineReturned.getSupplyingFacility().getId(), is(facility.getId()));
     assertThat(supplyLineReturned.getSupervisoryNode().getId(), is(supervisoryNode.getId()));
+    assertThat(supplyLineReturned.getSupervisoryNode().getName(), is(supervisoryNode.getName()));
     assertThat(supplyLineReturned.getSupplyingFacility().getName(), is(facility.getName()));
     assertThat(supplyLineReturned.getSupplyingFacility().getCode(), is(facility.getCode()));
   }

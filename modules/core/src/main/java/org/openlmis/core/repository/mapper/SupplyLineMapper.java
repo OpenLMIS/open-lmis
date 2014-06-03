@@ -56,12 +56,17 @@ public interface SupplyLineMapper {
   })
   SupplyLine getSupplyLineBySupervisoryNodeProgramAndFacility(SupplyLine supplyLine);
 
-  @Select({"SELECT SL.*, F.name AS facilityName, F.id AS facilityId, F.code as facilityCode",
-    " FROM supply_lines SL INNER JOIN facilities F ON SL.supplyingFacilityId = F.id ",
+  @Select({"SELECT SL.*, F.name AS facilityName, F.id AS facilityId, F.code as facilityCode,",
+    "P.name AS programName, SN.name AS supervisoryNodeName",
+    "FROM supply_lines SL INNER JOIN facilities F ON SL.supplyingFacilityId = F.id ",
+    "INNER JOIN programs P ON SL.programId = P.id",
+    "INNER JOIN supervisory_nodes SN ON SL.supervisoryNodeId = SN.id",
     "WHERE SL.id = #{id}"})
   @Results(value = {
     @Result(property = "supervisoryNode.id", column = "supervisoryNodeId"),
+    @Result(property = "supervisoryNode.name", column = "supervisoryNodeName"),
     @Result(property = "program.id", column = "programId"),
+    @Result(property = "program.name", column = "programName"),
     @Result(property = "supplyingFacility.id", column = "facilityId"),
     @Result(property = "supplyingFacility.name", column = "facilityName"),
     @Result(property = "supplyingFacility.code", column = "facilityCode")

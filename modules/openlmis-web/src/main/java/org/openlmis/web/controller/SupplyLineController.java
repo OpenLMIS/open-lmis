@@ -99,4 +99,9 @@ public class SupplyLineController extends BaseController {
     return response;
   }
 
+  @RequestMapping(value = "/{id}", method = GET)
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_SUPPLY_LINE')")
+  public SupplyLine getById(@PathVariable(value = "id") Long id) {
+    return service.getById(id);
+  }
 }
