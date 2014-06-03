@@ -917,3 +917,8 @@ INSERT INTO role_rights (roleId, rightName) VALUES ((SELECT
                                                        id
                                                      FROM roles
                                                      WHERE name = 'Admin'), 'MANAGE_REQUISITION_GROUP');
+
+INSERT INTO role_rights (roleId, rightName) VALUES ((SELECT
+                                                       id
+                                                     FROM roles
+                                                     WHERE name = 'Admin'), 'MANAGE_SUPPLY_LINE');
