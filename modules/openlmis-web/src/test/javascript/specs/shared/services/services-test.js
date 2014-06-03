@@ -21,12 +21,33 @@ describe("Services", function () {
     }));
 
     it('should GET R&Rs pending for approval', function () {
-      var requisitions = {"rnr_list":[]};
+      var requisitions = {"rnr_list": []};
       httpBackend.expect('GET', "/requisitions-for-approval.json").respond(requisitions);
       requisitionForApprovalService.get({}, function (data) {
         expect(data.rnr_list).toEqual(requisitions.rnr_list);
       }, function () {
       });
     });
+  });
+
+  describe("SupplyLineSearchService", function () {
+
+    var httpBackend, supplyLineSearchService;
+
+    beforeEach(inject(function (_$httpBackend_, SupplyLinesSearch) {
+      httpBackend = _$httpBackend_;
+      supplyLineSearchService = SupplyLinesSearch;
+    }));
+
+    it('should GET searched supplyLines', function () {
+      var supplyLinesResponse = {"supplyLines": [], "pagination": {}};
+      httpBackend.expect('GET', "/supplyLines/search.json").respond(supplyLinesResponse);
+      supplyLineSearchService.get({}, function (data) {
+        expect(data.supplyLines).toEqual(supplyLinesResponse.supplyLines);
+        expect(data.pagination).toEqual(supplyLinesResponse.pagination);
+      }, function () {
+      });
+    });
   })
+
 });

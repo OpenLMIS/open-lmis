@@ -150,6 +150,10 @@
                   <a id='requisitionGroups' href="/public/pages/admin/requisition-group/index.html"
                      openlmis-message="menu.header.requisition.groups"></a>
                 </li>
+                <li ng-show="hasPermission('MANAGE_SUPPLY_LINE')" ng-class="supplyLineSelected">
+                  <a id='supplyLines' href="/public/pages/admin/supply-line/index.html"
+                     openlmis-message="menu.header.supply.lines"></a>
+                </li>
                 <li class="beak"></li>
               </ul>
             </div>

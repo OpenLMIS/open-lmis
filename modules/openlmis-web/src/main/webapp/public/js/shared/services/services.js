@@ -345,3 +345,7 @@ services.factory('RequisitionGroups', function ($resource) {
 services.factory('SupervisoryNodesSearch', function ($resource) {
   return $resource('/search-supervisory-nodes.json', {}, {});
 });
+
+services.factory('SupplyLinesSearch', function ($resource) {
+  return $resource('/supplyLines/search.json', {}, {});
+});
