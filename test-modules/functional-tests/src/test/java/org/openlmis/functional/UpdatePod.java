@@ -45,7 +45,7 @@ public class UpdatePod extends TestCaseHelper {
     put(PROGRAM, "HIV");
   }};
 
-  @BeforeMethod(groups = "requisition")
+  @BeforeMethod(groups = "orderAndPod")
   public void setUp() throws Exception {
     super.setup();
     dbWrapper.deleteData();
@@ -60,7 +60,7 @@ public class UpdatePod extends TestCaseHelper {
     testWebDriver.sleep(500);
   }
 
-  @Test(groups = {"requisition"})
+  @Test(groups = {"orderAndPod"})
   public void testVerifyUpdatePODForReleasedOrdersValidFlowForRegularRnR() throws SQLException {
     initiateRnrAndConvertToOrder(false, 100);
 
@@ -99,7 +99,7 @@ public class UpdatePod extends TestCaseHelper {
     verifyDeliveryDetailsOfPodScreenInDatabase("Delivered", "Received Person", "2014-02-27 00:00:00");
   }
 
-  @Test(groups = {"requisition"})
+  @Test(groups = {"orderAndPod"})
   public void testVerifyUpdatePODForReleasedOrdersValidFlowForEmergencyRnR() throws SQLException {
     initiateRnrAndConvertToOrder(true, 100);
 
@@ -110,7 +110,7 @@ public class UpdatePod extends TestCaseHelper {
     verifyRequisitionTypeAndColor("emergency");
   }
 
-  @Test(groups = {"requisition"})
+  @Test(groups = {"orderAndPod"})
   public void testVerifyUpdatePODForReleasedOrdersWhenPacksToShipIsZero() throws SQLException {
     initiateRnrAndConvertToOrder(false, 0);
 
@@ -126,7 +126,7 @@ public class UpdatePod extends TestCaseHelper {
     verifyRequisitionTypeAndColor("regular");
   }
 
-  @Test(groups = {"requisition"})
+  @Test(groups = {"orderAndPod"})
   public void testVerifyUpdatePODForReleasedOrdersWhenMultipleProducts() throws SQLException {
     dbWrapper.setupMultipleProducts(updatePODData.get(PROGRAM), "Lvl3 Hospital", 1, true);
     dbWrapper.insertRequisitionWithMultipleLineItems(1, updatePODData.get(PROGRAM), true, "F10", false);
@@ -141,7 +141,7 @@ public class UpdatePod extends TestCaseHelper {
     verifyRequisitionTypeAndColor("regular");
   }
 
-  @Test(groups = {"requisition"})
+  @Test(groups = {"orderAndPod"})
   public void testVerifyUpdatePODForPackedOrdersWhenMultipleProducts() throws SQLException {
     dbWrapper.setupMultipleProducts(updatePODData.get(PROGRAM), "Lvl3 Hospital", 1, true);
     dbWrapper.insertRequisitionWithMultipleLineItems(1, updatePODData.get(PROGRAM), true, "F10", true);
@@ -160,7 +160,7 @@ public class UpdatePod extends TestCaseHelper {
     assertNotEquals(updatePodPage.getPodTableData(), "F0");
   }
 
-  @Test(groups = {"requisition"})
+  @Test(groups = {"orderAndPod"})
   public void testVerifyUpdatePODForPackedOrdersValidFlowForRegularRnR() throws SQLException {
     initiateRnrAndConvertToOrder(false, 1111);
     dbWrapper.updateFieldValue("orders", "status", "RELEASED", null, null);
@@ -181,7 +181,7 @@ public class UpdatePod extends TestCaseHelper {
     verifyRequisitionTypeAndColor("regular");
   }
 
-  @Test(groups = {"requisition"})
+  @Test(groups = {"orderAndPod"})
   public void testVerifyUpdatePODForPackedOrdersAdditionalProduct() throws SQLException {
     Integer id = dbWrapper.getProductId("P11");
     dbWrapper.updateFieldValue("program_products", "programId", "4", "productId", id.toString());
@@ -208,7 +208,7 @@ public class UpdatePod extends TestCaseHelper {
     verifyValuesOfPodTableOnUpdatePODScreen(2, "P11", "antibiotic Capsule 300/200/600 mg", "", "Strip", "0");
   }
 
-  @Test(groups = {"requisition"})
+  @Test(groups = {"orderAndPod"})
   public void testUpdatePODForPackedOrdersWhenPacksToShipAndQuantityShippedIsZeroAndSubmitPod() throws SQLException {
     initiateRnrAndConvertToOrder(false, 0);
     dbWrapper.updateFieldValue("orders", "status", "RELEASED", null, null);
@@ -357,7 +357,7 @@ public class UpdatePod extends TestCaseHelper {
     dbWrapper.insertFulfilmentRoleAssignment("storeInCharge", "store in-charge", "F10");
   }
 
-  @AfterMethod(groups = "requisition")
+  @AfterMethod(groups = "orderAndPod")
   public void tearDown() throws SQLException {
     testWebDriver.sleep(500);
     if (!testWebDriver.getElementById("username").isDisplayed()) {

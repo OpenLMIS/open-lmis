@@ -40,7 +40,7 @@ public class PODPagination extends TestCaseHelper {
 
   UpdatePodPage updatePodPage;
 
-  @BeforeMethod(groups = {"requisition"})
+  @BeforeMethod(groups = {"orderAndPod"})
   public void setUp() throws Exception {
     super.setup();
     updatePodPage = PageObjectFactory.getUpdatePodPage(testWebDriver);
@@ -61,7 +61,7 @@ public class PODPagination extends TestCaseHelper {
     dbWrapper.insertFulfilmentRoleAssignment(podPaginationData.get(USER), "store in-charge", "F10");
   }
 
-  @Test(groups = {"requisition"})
+  @Test(groups = {"orderAndPod"})
   public void testRnRPaginationAndDefaultDisplayOrder() throws SQLException {
     dbWrapper.setupMultipleProducts(podPaginationData.get(PROGRAM), "Lvl3 Hospital", 11, true);
     dbWrapper.insertProgramProductsWithCategory("F5", "TB", "C1", null);
@@ -118,7 +118,7 @@ public class PODPagination extends TestCaseHelper {
     verifyNumberOfLineItemsVisibleOnPage(10);
   }
 
-  @Test(groups = {"requisition"})
+  @Test(groups = {"orderAndPod"})
   public void testRnRPaginationAndSpecificDisplayOrder() throws SQLException {
     dbWrapper.setupMultipleProducts(podPaginationData.get(PROGRAM), "Lvl3 Hospital", 11, false);
     dbWrapper.insertRequisitionWithMultipleLineItems(11, podPaginationData.get(PROGRAM), true, "F10", false);
@@ -142,7 +142,7 @@ public class PODPagination extends TestCaseHelper {
     verifyCategoryDisplayOrderOnPage(new String[]{"C1", ""});
   }
 
-  @Test(groups = {"requisition"})
+  @Test(groups = {"orderAndPod"})
   public void testCategoryDefaultDisplayOrder() throws SQLException {
     dbWrapper.setupMultipleCategoryProducts(podPaginationData.get(PROGRAM), "Lvl3 Hospital", 11, true);
     dbWrapper.insertRequisitionWithMultipleLineItems(11, podPaginationData.get(PROGRAM), true, "F10", false);
@@ -166,7 +166,7 @@ public class PODPagination extends TestCaseHelper {
     verifyCategoryDisplayOrderOnPage(new String[]{"C9", ""});
   }
 
-  @Test(groups = {"requisition"})
+  @Test(groups = {"orderAndPod"})
   public void testCategorySpecificDisplayOrder() throws SQLException {
     dbWrapper.setupMultipleCategoryProducts(podPaginationData.get(PROGRAM), "Lvl3 Hospital", 11, false);
     dbWrapper.insertProgramProductsWithCategory("F5", "TB", "C3", null);
@@ -196,7 +196,7 @@ public class PODPagination extends TestCaseHelper {
     verifyCategoryDisplayOrderOnPage(new String[]{"C10", ""});
   }
 
-  @Test(groups = {"requisition"})
+  @Test(groups = {"orderAndPod"})
   public void testRnRPaginationAndDefaultDisplayOrderForPackedOrdersAndSave() throws SQLException {
     dbWrapper.setupMultipleProducts(podPaginationData.get(PROGRAM), "Lvl3 Hospital", 11, true);
     dbWrapper.insertProgramProductsWithCategory("F5", "TB", "C1", null);
@@ -310,7 +310,7 @@ public class PODPagination extends TestCaseHelper {
     verifyDeliveryDetailsOfPodScreenInDatabase("Delivered", "Received by facility incharge", "2013-02-25 00:00:00");
   }
 
-  @Test(groups = {"requisition"})
+  @Test(groups = {"orderAndPod"})
   public void testCategorySpecificDisplayOrderForPackedOrder() throws SQLException {
     dbWrapper.setupMultipleCategoryProducts(podPaginationData.get(PROGRAM), "Lvl3 Hospital", 11, false);
     dbWrapper.insertProgramProductsWithCategory("F5", "TB", "C3", null);
@@ -349,7 +349,7 @@ public class PODPagination extends TestCaseHelper {
     verifyCategoryDisplayOrderOnPage(new String[]{"Antibiotics9", ""});
   }
 
-  @Test(groups = {"requisition"})
+  @Test(groups = {"orderAndPod"})
   public void testDisplayOrderAndCategoryForProductsNotSupportedByProgram() throws SQLException {
     dbWrapper.setupMultipleCategoryProducts(podPaginationData.get(PROGRAM), "Lvl3 Hospital", 11, true);
     dbWrapper.insertRequisitionWithMultipleLineItems(9, podPaginationData.get(PROGRAM), true, "F10", false);
@@ -384,7 +384,7 @@ public class PODPagination extends TestCaseHelper {
     assertEquals("Other", testWebDriver.getElementById("category").getText());
   }
 
-  @Test(groups = {"requisition"})
+  @Test(groups = {"orderAndPod"})
   public void testSubmitPod() throws SQLException {
     dbWrapper.setupMultipleProducts(podPaginationData.get(PROGRAM), "Lvl3 Hospital", 11, false);
     dbWrapper.insertRequisitionWithMultipleLineItems(11, podPaginationData.get(PROGRAM), true, "F10", false);
@@ -456,7 +456,7 @@ public class PODPagination extends TestCaseHelper {
 
   }
 
-  @Test(groups = {"requisition"})
+  @Test(groups = {"orderAndPod"})
   public void testSubmitPodFail() throws SQLException {
     dbWrapper.setupMultipleProducts(podPaginationData.get(PROGRAM), "Lvl3 Hospital", 11, false);
     dbWrapper.insertRequisitionWithMultipleLineItems(11, podPaginationData.get(PROGRAM), true, "F10", false);
@@ -564,7 +564,7 @@ public class PODPagination extends TestCaseHelper {
     assertEquals(numberOfLineItems, testWebDriver.getElementsSizeByXpath("//table[@id='podTable']/tbody"));
   }
 
-  @AfterMethod(groups = {"requisition"})
+  @AfterMethod(groups = {"orderAndPod"})
   public void tearDown() throws SQLException {
     HomePage homePage = PageObjectFactory.getHomePage(testWebDriver);
     homePage.logout(baseUrlGlobal);

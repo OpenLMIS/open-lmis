@@ -38,7 +38,7 @@ import static java.util.Arrays.asList;
 
 public class ConvertToOrderPagination extends TestCaseHelper {
 
-  @BeforeMethod(groups = "requisition")
+  @BeforeMethod(groups = "orderAndPod")
   public void setUp() throws InterruptedException, SQLException, IOException {
     super.setup();
   }
@@ -94,7 +94,7 @@ public class ConvertToOrderPagination extends TestCaseHelper {
     assertTrue("Number of line items on view order screen should be equal to " + Integer.parseInt(requisitions), numberOfLineItems == Integer.parseInt(requisitions));
   }
 
-  @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-Positive")
+  @Test(groups = {"orderAndPod"}, dataProvider = "Data-Provider-Function-Positive")
   public void shouldConvertOnlyCurrentPageRequisitions(String program, String userSIC, String password) throws SQLException {
     setUpData(program, userSIC);
     dbWrapper.insertRequisitions(50, "MALARIA", true, "2012-12-01", "2015-12-01", "F10", false);
@@ -136,7 +136,7 @@ public class ConvertToOrderPagination extends TestCaseHelper {
     testWebDriver.sleep(2000);
   }
 
-  @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-Positive")
+  @Test(groups = {"orderAndPod"}, dataProvider = "Data-Provider-Function-Positive")
   public void shouldVerifyIntroductionOfPagination(String program, String userSIC, String password) throws SQLException {
     setUpData(program, userSIC);
     dbWrapper.insertRequisitions(49, "MALARIA", true, "2012-12-01", "2015-12-01", "F10", false);
@@ -157,7 +157,7 @@ public class ConvertToOrderPagination extends TestCaseHelper {
     verifyNumberOFPageLinksDisplayed(51, 50);
   }
 
-  @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-Positive")
+  @Test(groups = {"orderAndPod"}, dataProvider = "Data-Provider-Function-Positive")
   public void shouldVerifyIntroductionOfPaginationForBoundaryValue(String program, String userSIC, String password) throws SQLException {
     setUpData(program, userSIC);
     dbWrapper.insertRequisitions(50, "MALARIA", true, "2012-12-01", "2015-12-01", "F10", false);
@@ -179,7 +179,7 @@ public class ConvertToOrderPagination extends TestCaseHelper {
     verifyNumberOFPageLinksDisplayed(51, 50);
   }
 
-  @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-Positive")
+  @Test(groups = {"orderAndPod"}, dataProvider = "Data-Provider-Function-Positive")
   public void shouldVerifySearch(String program, String userSIC, String password) throws SQLException {
     setUpData(program, userSIC);
     dbWrapper.insertRequisitions(55, "MALARIA", true, "2012-12-01", "2015-12-01", "F10", false);
@@ -203,7 +203,7 @@ public class ConvertToOrderPagination extends TestCaseHelper {
     verifyProgramInGrid(55, 50, "MALARIA");
   }
 
-  @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-Positive")
+  @Test(groups = {"orderAndPod"}, dataProvider = "Data-Provider-Function-Positive")
   public void shouldVerifySearchWithDifferentOptions(String program, String userSIC, String password) throws SQLException {
     setUpData(program, userSIC);
     dbWrapper.insertRequisitions(55, "MALARIA", true, "2012-12-01", "2015-12-01", "F10", false);
@@ -287,7 +287,7 @@ public class ConvertToOrderPagination extends TestCaseHelper {
     assertTrue("Link number" + i + " should not appear", flag);
   }
 
-  @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-Positive")
+  @Test(groups = {"orderAndPod"}, dataProvider = "Data-Provider-Function-Positive")
   public void VerifyConvertToOrderAccessOnRequisition(String program, String userSIC, String password) throws SQLException {
     setUpData(program, userSIC);
     dbWrapper.insertRequisitions(50, "MALARIA", true, "2012-12-01", "2015-12-01", "F10", false);
@@ -304,7 +304,7 @@ public class ConvertToOrderPagination extends TestCaseHelper {
     assertEquals("No requisitions to be converted to orders", convertOrderPage.getNoRequisitionPendingMessage());
   }
 
-  @AfterMethod(groups = "requisition")
+  @AfterMethod(groups = "orderAndPod")
   public void tearDown() throws SQLException {
     testWebDriver.sleep(500);
     if (!testWebDriver.getElementById("username").isDisplayed()) {

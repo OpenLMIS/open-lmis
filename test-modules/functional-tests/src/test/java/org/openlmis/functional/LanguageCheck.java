@@ -56,7 +56,7 @@ public class LanguageCheck extends TestCaseHelper {
     loginPage.setLangAsPortuguese();
     loginPage.clickForgotPasswordLink();
     verifyColorOfTextAsGray(loginPage.getPortugueseColor());
-    testWebDriver.setImplicitWait(10);
+    testWebDriver.sleep(500);
     verifyPageIdentifierLabelOnForgotPasswordPage("Submeter");
     loginPage.setLangAsEnglish();
   }
