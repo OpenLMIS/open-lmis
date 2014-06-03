@@ -344,10 +344,11 @@ public class ManageRequisitionGroups extends TestCaseHelper {
   }
 
   @Test(groups = {"admin"})
-  public void testCancelUpdateRequisitionGroup() throws SQLException {
+  public void testCancelAndDuplicateRGCodeValidationOnUpdatingRequisitionGroup() throws SQLException {
     dbWrapper.assignRight("Admin", "MANAGE_REQUISITION_GROUP");
     dbWrapper.insertSupervisoryNode("F10", "N1", "Node1", null);
     dbWrapper.insertRequisitionGroup("RG1", "Requisition Group 1", "N1");
+    dbWrapper.insertRequisitionGroupWithoutDelete("RG2", "Requisition Group 2", "N1");
     dbWrapper.insertRequisitionGroupMember("RG1", "F10");
     dbWrapper.insertRequisitionGroupMember("RG1", "F11");
     dbWrapper.updateFieldValue("facilities", "enabled", "f", "code", "F11");
@@ -359,6 +360,11 @@ public class ManageRequisitionGroups extends TestCaseHelper {
     assertEquals("1", requisitionGroupPage.getFacilityCount(1));
     requisitionGroupPage.selectRequisitionGroupSearchResult(1);
 
+    requisitionGroupPage.enterRequisitionGroupCode("RG2");
+    requisitionGroupPage.clickSaveButton();
+    assertEquals("Duplicate Requisition Group Code", requisitionGroupPage.getErrorMessage());
+
+    requisitionGroupPage.enterRequisitionGroupCode("RG1");
     requisitionGroupPage.enterRequisitionGroupName("ReqGrp");
 
     assertEquals("F10 - Village Dispensary", requisitionGroupPage.getMemberFacilityCode(1));
@@ -371,7 +377,6 @@ public class ManageRequisitionGroups extends TestCaseHelper {
 
     requisitionGroupPage.clickCancelButton();
     testWebDriver.waitForAjax();
-
     assertEquals("Requisition Group 1", requisitionGroupPage.getRequisitionGroupName(1));
   }
 
