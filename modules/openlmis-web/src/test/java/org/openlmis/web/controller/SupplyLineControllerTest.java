@@ -141,4 +141,16 @@ public class SupplyLineControllerTest {
     assertThat(supplyLine.getModifiedBy(), CoreMatchers.is(1L));
   }
 
+  @Test
+  public void shouldGetSupervisoryNodeById() {
+    Long id = 1L;
+    SupplyLine expectedSupplyLine = new SupplyLine();
+    Mockito.when(service.getById(id)).thenReturn(expectedSupplyLine);
+
+    SupplyLine supplyLine = controller.getById(id);
+
+    verify(service).getById(id);
+    assertThat(supplyLine, CoreMatchers.is(expectedSupplyLine));
+  }
+
 }
