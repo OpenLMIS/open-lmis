@@ -12,6 +12,7 @@ package org.openlmis.web.controller;
 
 import org.openlmis.core.domain.Pagination;
 import org.openlmis.core.domain.SupplyLine;
+import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.SupplyLineService;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,13 +20,17 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 import static java.lang.Integer.parseInt;
-import static org.springframework.web.bind.annotation.RequestMethod.GET;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 /**
  * This controller handles endpoint to search supervisory nodes.
@@ -54,4 +59,44 @@ public class SupplyLineController extends BaseController {
     response.getBody().addData(PAGINATION, pagination);
     return response;
   }
+
+  @RequestMapping(value = "/", method = POST)
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_SUPPLY_LINE')")
+  public ResponseEntity<OpenLmisResponse> insert(@RequestBody SupplyLine supplyLine,
+                                                 HttpServletRequest request) {
+    ResponseEntity<OpenLmisResponse> response;
+    Long userId = loggedInUserId(request);
+    supplyLine.setCreatedBy(userId);
+    supplyLine.setModifiedBy(userId);
+    try {
+      service.save(supplyLine);
+    } catch (DataException de) {
+      response = OpenLmisResponse.error(de, BAD_REQUEST);
+      return response;
+    }
+    response = OpenLmisResponse.success(messageService.message("message.supply.line.created.success"));
+    response.getBody().addData("supplyLineId", supplyLine.getId());
+    return response;
+  }
+
+  @RequestMapping(value = "/{id}", method = PUT, headers = ACCEPT_JSON)
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_SUPPLY_LINE')")
+  public ResponseEntity<OpenLmisResponse> update(@RequestBody SupplyLine supplyLine,
+                                                 @PathVariable(value = "id") Long supervisoryNodeId,
+                                                 HttpServletRequest request) {
+    ResponseEntity<OpenLmisResponse> response;
+    Long userId = loggedInUserId(request);
+    supplyLine.setModifiedBy(userId);
+    supplyLine.setId(supervisoryNodeId);
+    try {
+      service.save(supplyLine);
+    } catch (DataException de) {
+      response = OpenLmisResponse.error(de, BAD_REQUEST);
+      return response;
+    }
+    response = OpenLmisResponse.success(messageService.message("message.supply.line.updated.success"));
+    response.getBody().addData("supplyLineId", supplyLine.getId());
+    return response;
+  }
+
 }

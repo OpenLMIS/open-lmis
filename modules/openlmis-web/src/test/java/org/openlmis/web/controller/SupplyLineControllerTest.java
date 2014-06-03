@@ -10,26 +10,33 @@
 
 package org.openlmis.web.controller;
 
+import org.hamcrest.CoreMatchers;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.openlmis.core.domain.Pagination;
 import org.openlmis.core.domain.SupplyLine;
+import org.openlmis.core.exception.DataException;
+import org.openlmis.core.service.MessageService;
 import org.openlmis.core.service.SupplyLineService;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mock.web.MockHttpServletRequest;
 
 import java.util.List;
 
 import static java.util.Arrays.asList;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
 import static org.openlmis.web.controller.SupplyLineController.PAGINATION;
 import static org.openlmis.web.controller.SupplyLineController.SUPPLY_LINES;
@@ -44,12 +51,21 @@ public class SupplyLineControllerTest {
   @Mock
   SupplyLineService service;
 
+  @Mock
+  MessageService messageService;
+
   @InjectMocks
   SupplyLineController controller;
+
+  public static final String USER_ID = "USER_ID";
+
+  private MockHttpServletRequest request = new MockHttpServletRequest();
 
   @Before
   public void setUp() {
     initMocks(this);
+    request = new MockHttpServletRequest();
+    request.getSession().setAttribute("USER_ID", 1L);
   }
 
   @Test
@@ -69,6 +85,60 @@ public class SupplyLineControllerTest {
 
     assertThat((List<SupplyLine>) response.getBody().getData().get(SUPPLY_LINES), is(supplyLines));
     assertThat((Pagination) response.getBody().getData().get(PAGINATION), is(pagination));
-
   }
+
+  @Test
+  public void shouldInsertSupplyLineSuccessfully() {
+    SupplyLine supplyLine = new SupplyLine(1L);
+    Mockito.when(messageService.message("message.supply.line.created.success")).thenReturn("success");
+
+    ResponseEntity<OpenLmisResponse> responseEntity = controller.insert(supplyLine, request);
+
+    verify(service).save(supplyLine);
+    assertThat((Long) responseEntity.getBody().getData().get("supplyLineId"), CoreMatchers.is(supplyLine.getId()));
+    assertThat(responseEntity.getBody().getSuccessMsg(), CoreMatchers.is("success"));
+    assertThat(supplyLine.getCreatedBy(), CoreMatchers.is(1L));
+    assertThat(supplyLine.getModifiedBy(), CoreMatchers.is(1L));
+  }
+
+  @Test
+  public void shouldReturnErrorMessageWhenExceptionOccursOnSupplyLineInsert() {
+    SupplyLine supplyLine = new SupplyLine();
+    doThrow(new DataException("error")).when(service).save(supplyLine);
+
+    ResponseEntity<OpenLmisResponse> responseEntity = controller.insert(supplyLine, request);
+
+    verify(service).save(supplyLine);
+    verify(messageService, never()).message(anyString(), anyString());
+    assertThat(responseEntity.getBody().getErrorMsg(), CoreMatchers.is("error"));
+    assertThat(supplyLine.getCreatedBy(), CoreMatchers.is(1L));
+    assertThat(supplyLine.getModifiedBy(), CoreMatchers.is(1L));
+  }
+
+  @Test
+  public void shouldUpdateSupplyLineSuccessfully() {
+    SupplyLine supplyLine = new SupplyLine(1L);
+    Mockito.when(messageService.message("message.supply.line.updated.success")).thenReturn("success");
+
+    ResponseEntity<OpenLmisResponse> responseEntity = controller.update(supplyLine, supplyLine.getId(), request);
+
+    verify(service).save(supplyLine);
+    assertThat((Long) responseEntity.getBody().getData().get("supplyLineId"), CoreMatchers.is(supplyLine.getId()));
+    assertThat(responseEntity.getBody().getSuccessMsg(), CoreMatchers.is("success"));
+    assertThat(supplyLine.getModifiedBy(), CoreMatchers.is(1L));
+  }
+
+  @Test
+  public void shouldReturnErrorMessageWhenExceptionOccursOnSupplyLineUpdate() {
+    SupplyLine supplyLine = new SupplyLine(1L);
+    doThrow(new DataException("error")).when(service).save(supplyLine);
+
+    ResponseEntity<OpenLmisResponse> responseEntity = controller.update(supplyLine, 1L, request);
+
+    verify(service).save(supplyLine);
+    verify(messageService, never()).message(anyString(), anyString());
+    assertThat(responseEntity.getBody().getErrorMsg(), CoreMatchers.is("error"));
+    assertThat(supplyLine.getModifiedBy(), CoreMatchers.is(1L));
+  }
+
 }
