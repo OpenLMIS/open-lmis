@@ -127,4 +127,8 @@ public class SupervisoryNodeRepository {
   public List<SupervisoryNode> getFilteredSupervisoryNodesByName(String param) {
     return supervisoryNodeMapper.getFilteredSupervisoryNodesByName(param);
   }
+
+  public List<SupervisoryNode> searchTopLevelSupervisoryNodesByName(String param) {
+    return supervisoryNodeMapper.searchTopLevelSupervisoryNodesByName(param);
+  }
 }

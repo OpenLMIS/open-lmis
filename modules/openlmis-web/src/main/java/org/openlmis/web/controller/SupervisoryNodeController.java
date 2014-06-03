@@ -115,4 +115,10 @@ public class SupervisoryNodeController extends BaseController {
     response.getBody().addData("supervisoryNodeId", supervisoryNode.getId());
     return response;
   }
+
+  @RequestMapping(value = "/topLevelSupervisoryNodes", method = GET, headers = ACCEPT_JSON)
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_SUPPLY_LINE')")
+  public List<SupervisoryNode> searchTopLevelSupervisoryNodesByName(@RequestParam(value = "searchParam") String param) {
+    return supervisoryNodeService.searchTopLevelSupervisoryNodesByName(param);
+  }
 }

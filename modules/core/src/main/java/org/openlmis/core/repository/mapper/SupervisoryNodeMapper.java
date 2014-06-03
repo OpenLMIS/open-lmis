@@ -10,14 +10,7 @@
 
 package org.openlmis.core.repository.mapper;
 
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.One;
-import org.apache.ibatis.annotations.Options;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Result;
-import org.apache.ibatis.annotations.Results;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Update;
+import org.apache.ibatis.annotations.*;
 import org.apache.ibatis.session.RowBounds;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.SupervisoryNode;
@@ -164,6 +157,9 @@ public interface SupervisoryNodeMapper {
     " LIKE '%'|| LOWER(#{nameSearchCriteria}) ||'%'"})
   Integer getTotalParentSearchResultCount(String param);
 
-  @Select("SELECT * from supervisory_nodes where LOWER(name) LIKE '%' || LOWER(#{param}) || '%' ORDER BY LOWER(name)")
+  @Select("SELECT * FROM supervisory_nodes WHERE LOWER(name) LIKE '%' || LOWER(#{param}) || '%' ORDER BY LOWER(name)")
   List<SupervisoryNode> getFilteredSupervisoryNodesByName(String param);
+
+  @Select({"SELECT * FROM supervisory_nodes WHERE parentId IS NULL AND LOWER(name) LIKE '%' || LOWER(#{param}) || '%' ORDER BY LOWER(name)"})
+  List<SupervisoryNode> searchTopLevelSupervisoryNodesByName(String param);
 }

@@ -43,8 +43,6 @@ public class SupervisoryNodeService {
 
   private Integer pageSize;
 
-
-
   @Autowired
   public void setPageSize(@Value("${search.page.size}") String pageSize) {
     this.pageSize = Integer.parseInt(pageSize);
@@ -143,5 +141,9 @@ public class SupervisoryNodeService {
 
   public List<SupervisoryNode> getFilteredSupervisoryNodesByName(String param) {
     return supervisoryNodeRepository.getFilteredSupervisoryNodesByName(param);
+  }
+
+  public List<SupervisoryNode> searchTopLevelSupervisoryNodesByName(String param) {
+    return supervisoryNodeRepository.searchTopLevelSupervisoryNodesByName(param);
   }
 }

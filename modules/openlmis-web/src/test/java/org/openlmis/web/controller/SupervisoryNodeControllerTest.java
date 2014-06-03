@@ -73,7 +73,6 @@ public class SupervisoryNodeControllerTest {
     SupervisoryNode expectedNode = new SupervisoryNode();
     when(supervisoryNodeService.getSupervisoryNode(id)).thenReturn(expectedNode);
 
-
     SupervisoryNode actualNode = controller.getById(id);
 
     verify(supervisoryNodeService).getSupervisoryNode(id);
@@ -82,7 +81,6 @@ public class SupervisoryNodeControllerTest {
 
   @Test
   public void shouldGetFilteredNodesForRequestedQuery() {
-
     String query = "Node1";
     List<SupervisoryNode> supervisoryNodes = new ArrayList<>();
     when(supervisoryNodeService.getFilteredSupervisoryNodesByName(query)).thenReturn(supervisoryNodes);
@@ -91,15 +89,13 @@ public class SupervisoryNodeControllerTest {
 
     verify(supervisoryNodeService).getFilteredSupervisoryNodesByName(query);
     assertThat(filteredNodes, is(supervisoryNodes));
-
   }
 
   @Test
   public void shouldInsertSupervisoryNodeSuccessfully() {
     SupervisoryNode supervisoryNode = new SupervisoryNode(1L);
     supervisoryNode.setName("Node 1");
-    when(messageService.message("message.supervisory.node.created.success", supervisoryNode.getName())).thenReturn(
-      "success");
+    when(messageService.message("message.supervisory.node.created.success", supervisoryNode.getName())).thenReturn("success");
 
     ResponseEntity<OpenLmisResponse> responseEntity = controller.insert(supervisoryNode, request);
 
@@ -151,6 +147,18 @@ public class SupervisoryNodeControllerTest {
     verify(messageService, never()).message(anyString(), anyString());
     assertThat(responseEntity.getBody().getErrorMsg(), is("error"));
     assertThat(supervisoryNode.getModifiedBy(), is(1L));
+  }
+
+  @Test
+  public void shouldGetTopLevelNodesForRequestedQuery() {
+    String query = "Node1";
+    List<SupervisoryNode> supervisoryNodes = new ArrayList<>();
+    when(supervisoryNodeService.searchTopLevelSupervisoryNodesByName(query)).thenReturn(supervisoryNodes);
+
+    List<SupervisoryNode> filteredNodes = controller.searchTopLevelSupervisoryNodesByName(query);
+
+    verify(supervisoryNodeService).searchTopLevelSupervisoryNodesByName(query);
+    assertThat(filteredNodes, is(supervisoryNodes));
   }
 
   private void setLoggedInUserId() {
