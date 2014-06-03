@@ -105,8 +105,9 @@ public class DashboardController extends BaseController {
     }
     @RequestMapping(value = "/alerts", method = GET, headers = ACCEPT_JSON)
     public ResponseEntity<OpenLmisResponse>  getAlerts(@RequestParam("supervisoryNodeId") Long supervisoryNodeId, @RequestParam("programId") Long programId,
+                                                       @RequestParam("periodId") Long periodId,
                                                        HttpServletRequest request){
-        return OpenLmisResponse.response(ALERTS, this.lookupService.getAlerts(loggedInUserId(request), supervisoryNodeId, programId ));
+        return OpenLmisResponse.response(ALERTS, this.lookupService.getAlerts(loggedInUserId(request), supervisoryNodeId, programId, periodId ));
     }
 
     @RequestMapping(value = "/notification/alerts", method = GET, headers = ACCEPT_JSON)
