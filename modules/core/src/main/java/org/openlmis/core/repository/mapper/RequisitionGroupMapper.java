@@ -10,13 +10,7 @@
 
 package org.openlmis.core.repository.mapper;
 
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Options;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Result;
-import org.apache.ibatis.annotations.Results;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Update;
+import org.apache.ibatis.annotations.*;
 import org.apache.ibatis.session.RowBounds;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.Program;
@@ -35,7 +29,7 @@ public interface RequisitionGroupMapper {
 
   @Insert("INSERT INTO requisition_groups" +
     "(code, name, description, supervisoryNodeId, createdBy, modifiedBy, modifiedDate) " +
-    "VALUES (#{code}, #{name}, #{description}, #{supervisoryNode.id}, #{createdBy}, #{modifiedBy}, #{modifiedDate}) ")
+    "VALUES (#{code}, #{name}, #{description}, #{supervisoryNode.id}, #{createdBy}, #{modifiedBy}, COALESCE(#{modifiedDate}, CURRENT_TIMESTAMP))")
   @Options(useGeneratedKeys = true)
   Integer insert(RequisitionGroup requisitionGroup);
 

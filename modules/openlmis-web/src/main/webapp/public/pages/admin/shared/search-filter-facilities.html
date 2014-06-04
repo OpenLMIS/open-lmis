@@ -79,7 +79,7 @@
             <label>
               <span openlmis-message="label.facility.type"></span>:&nbsp;
 
-              <span class="select-result-container rnr-template-head" ng-show="!!selectedFacilityType">
+              <span class="select-result-container rnr-template-head" ng-show="selectedFacilityType.id">
                 <span id="selectedFacilityType" ng-bind="selectedFacilityType.name"></span>
                 <a href="" ng-click="selectedFacilityType = undefined" class="select-result-close" tabindex="-1">
                   <i class="icon icon-remove"></i>
@@ -100,7 +100,7 @@
             <label>
               <span openlmis-message="label.geographic.zone"></span>:&nbsp;
 
-              <span class="select-result-container rnr-template-head" ng-show="!!selectedGeoZone">
+              <span class="select-result-container rnr-template-head" ng-show="selectedGeoZone.id">
                 <span id="selectedGeoZone" ng-bind="selectedGeoZone.name"></span>
                 <a href="" ng-click="selectedGeoZone = undefined" class="select-result-close" tabindex="-1">
                   <i class="icon icon-remove"></i>

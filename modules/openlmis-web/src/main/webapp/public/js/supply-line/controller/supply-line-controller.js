@@ -81,7 +81,7 @@ function SupplyLineController($scope, $location, supplyLine, TopLevelSupervisory
   };
 
   $scope.save = function () {
-    if ($scope.supplyLineForm.$error.required || !$scope.supplyLine.supplyingFacility) {
+    if ($scope.supplyLineForm.$error.required || !$scope.supplyLine.supplyingFacility || !$scope.supplyLine.supervisoryNode) {
       $scope.showError = true;
       $scope.error = "form.error";
       return;

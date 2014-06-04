@@ -40,7 +40,7 @@ public interface SupervisoryNodeMapper {
 
   @Insert("INSERT INTO supervisory_nodes " +
     "(code, name, parentId, facilityId, description, createdBy, modifiedBy, modifiedDate)" +
-    " VALUES (#{code}, #{name}, #{parent.id}, #{facility.id}, #{description}, #{createdBy}, #{modifiedBy}, #{modifiedDate})")
+    " VALUES (#{code}, #{name}, #{parent.id}, #{facility.id}, #{description}, #{createdBy}, #{modifiedBy}, COALESCE(#{modifiedDate}, CURRENT_TIMESTAMP))")
   @Options(useGeneratedKeys = true)
   Integer insert(SupervisoryNode supervisoryNode);
 

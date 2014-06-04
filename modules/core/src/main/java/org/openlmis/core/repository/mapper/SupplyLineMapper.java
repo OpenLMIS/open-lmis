@@ -30,7 +30,7 @@ public interface SupplyLineMapper {
 
   @Insert({"INSERT INTO supply_lines " +
     "(description, supervisoryNodeId, programId, supplyingFacilityId, exportOrders, createdBy, modifiedBy, modifiedDate)",
-    "VALUES (#{description}, #{supervisoryNode.id}, #{program.id}, #{supplyingFacility.id}, #{exportOrders}, #{createdBy}, #{modifiedBy}, #{modifiedDate})"})
+    "VALUES (#{description}, #{supervisoryNode.id}, #{program.id}, #{supplyingFacility.id}, #{exportOrders}, #{createdBy}, #{modifiedBy}, COALESCE(#{modifiedDate}, CURRENT_TIMESTAMP))"})
   @Options(useGeneratedKeys = true)
   Integer insert(SupplyLine supplyLine);
 
