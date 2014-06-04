@@ -48,10 +48,10 @@
   <thead>
     <tr class="gradient-header resultCountHeader">
       <th colspan="5">
-        <span ng-switch on="resultCount">
+        <span ng-switch on="totalItems">
           <h3 id="noResultMessage" ng-switch-when="0" openlmis-message="msg.no.matches|searchedQuery"></h3>
           <h3 id="oneResultMessage" ng-switch-when="1" openlmis-message="msg.one.match|searchedQuery"></h3>
-          <h3 id="nResultsMessage" ng-switch-default openlmis-message="msg.many.matches|resultCount|searchedQuery"></h3>
+          <h3 id="nResultsMessage" ng-switch-default openlmis-message="msg.many.matches|totalItems|searchedQuery"></h3>
         </span>
         <a id="closeButton" class="close-btn" href="" ng-click="clearSearch()" tabindex="-1"></a>
 
@@ -74,8 +74,10 @@
     </tbody>
   </table>
 
-  <openlmis-pagination num-pages="pagination.numberOfPages" current-page="currentPage"
-                       ng-show="supervisoryNodeList.length"
-                       max-size="10"></openlmis-pagination>
+  <div class="pagination">
+    <pagination total-items="totalItems" ng-model="currentPage" max-size="5" boundary-links="true"
+                ng-show="supervisoryNodeList.length" items-per-page="pagination.limit" class="pagination-sm"
+                previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></pagination>
+  </div>
 
 </div>

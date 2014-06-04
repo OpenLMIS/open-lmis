@@ -29,7 +29,7 @@ describe("Supply Line Search Controller", function () {
     var response = {"supplyLines": [supplyLine], "pagination": pagination};
     scope.query = "Nod";
     scope.selectedSearchOption.value = 'supervisoryNode';
-    $httpBackend.when('GET', '/supplyLines/search.json?column=supervisoryNode&page=1&searchParam=Nod').respond(response);
+    $httpBackend.when('GET', '/supplyLines/search.json?column=supervisoryNode&page=1&searchParam=' + scope.query).respond(response);
     scope.search(1);
     $httpBackend.flush();
 
@@ -37,7 +37,7 @@ describe("Supply Line Search Controller", function () {
     expect(scope.pagination).toEqual(pagination);
     expect(scope.currentPage).toEqual(1);
     expect(scope.showResults).toEqual(true);
-    expect(scope.resultCount).toEqual(100);
+    expect(scope.totalItems).toEqual(100);
   });
 
   it('should not get supply Lines if query is undefined ', function () {
@@ -52,7 +52,7 @@ describe("Supply Line Search Controller", function () {
   it('should clear search param and result list', function () {
     var supplyLine = {program: {name: "P1"}, supplyingFacility: {name: "Fac 1"}, supervisoryNode: {name: "Node 1"}, description: "desc"};
     scope.query = "query";
-    scope.resultCount = 100;
+    scope.totalItems = 100;
     scope.supplyLines = [supplyLine];
     scope.showResults = true;
 
@@ -60,7 +60,7 @@ describe("Supply Line Search Controller", function () {
 
     expect(scope.showResults).toEqual(false);
     expect(scope.query).toEqual("");
-    expect(scope.resultCount).toEqual(0);
+    expect(scope.totalItems).toEqual(0);
     expect(scope.supplyLines).toEqual([]);
   });
 

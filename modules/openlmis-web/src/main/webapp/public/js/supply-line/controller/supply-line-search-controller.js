@@ -34,7 +34,7 @@ function SupplyLineSearchController($scope, navigateBackService, SupplyLinesSear
     SupplyLinesSearch.get({page: page, searchParam: $scope.searchedQuery, column: $scope.selectedSearchOption.value}, function (data) {
       $scope.supplyLines = data.supplyLines;
       $scope.pagination = data.pagination;
-      $scope.resultCount = $scope.pagination.totalRecords;
+      $scope.totalItems = $scope.pagination.totalRecords;
       $scope.currentPage = $scope.pagination.page;
       $scope.showResults = true;
     }, {});
@@ -47,7 +47,7 @@ function SupplyLineSearchController($scope, navigateBackService, SupplyLinesSear
 
   $scope.clearSearch = function () {
     $scope.query = "";
-    $scope.resultCount = 0;
+    $scope.totalItems = 0;
     $scope.supplyLines = [];
     $scope.showResults = false;
     angular.element("#searchSupplyLine").focus();

@@ -38,13 +38,13 @@ describe("Supervisory Node Search Controller", function () {
     expect(scope.pagination).toEqual(pagination);
     expect(scope.currentPage).toEqual(1);
     expect(scope.showResults).toEqual(true);
-    expect(scope.resultCount).toEqual(100);
+    expect(scope.totalItems).toEqual(100);
   });
 
   it('should clear search param and result list', function () {
     var supervisoryNode = {"code": "N1", "name": "Node 1", "parent": 2};
     scope.query = "query";
-    scope.resultCount = 100;
+    scope.totalItems = 100;
     scope.supervisoryNodeList = [supervisoryNode];
     scope.showResults = true;
 
@@ -52,7 +52,7 @@ describe("Supervisory Node Search Controller", function () {
 
     expect(scope.showResults).toEqual(false);
     expect(scope.query).toEqual("");
-    expect(scope.resultCount).toEqual(0);
+    expect(scope.totalItems).toEqual(0);
     expect(scope.supervisoryNodeList).toEqual([]);
   });
 
@@ -93,7 +93,7 @@ describe("Supervisory Node Search Controller", function () {
     expect(searchSpy).toHaveBeenCalledWith(6);
   });
 
-  it("should take to edit page of the supervisory node", function() {
+  it("should take to edit page of the supervisory node", function () {
     spyOn(location, "path");
     spyOn(navigateBackService, "setData");
     scope.edit(1);

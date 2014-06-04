@@ -8,7 +8,7 @@
  *  You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
  */
 
-var geoZoneModule = angular.module('geo-zone', ['openlmis', 'ui.bootstrap.modal', 'ui.bootstrap.dialog', 'ui.bootstrap.dropdownToggle']).
+var geoZoneModule = angular.module('geo-zone', ['openlmis', 'ui.bootstrap.modal', 'ui.bootstrap.dialog', 'ui.bootstrap.dropdownToggle', 'ui.bootstrap']).
     config(['$routeProvider', function ($routeProvider) {
       $routeProvider.
           when('/search', {controller: GeoZoneSearchController, templateUrl: 'partials/search.html', reloadOnSearch: false}).

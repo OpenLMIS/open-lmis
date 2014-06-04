@@ -8,7 +8,7 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-var supervisoryNodeModule = angular.module('supervisoryNode', ['openlmis', 'ui.bootstrap.dropdownToggle', 'ui.bootstrap.modal']);
+var supervisoryNodeModule = angular.module('supervisoryNode', ['openlmis', 'ui.bootstrap.dropdownToggle', 'ui.bootstrap.modal', 'ui.bootstrap']);
 
 supervisoryNodeModule.config(['$routeProvider', function ($routeProvider) {
   $routeProvider.

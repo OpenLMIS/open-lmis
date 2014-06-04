@@ -42,7 +42,7 @@ function SupervisoryNodeSearchController($scope, navigateBackService, Supervisor
     SupervisoryNodesPagedSearch.get({page: page, param: $scope.searchedQuery, parent: searchOption}, function (data) {
       $scope.supervisoryNodeList = data.supervisoryNodes;
       $scope.pagination = data.pagination;
-      $scope.resultCount = $scope.pagination.totalRecords;
+      $scope.totalItems = $scope.pagination.totalRecords;
       $scope.currentPage = $scope.pagination.page;
       $scope.showResults = true;
     }, {});
@@ -55,7 +55,7 @@ function SupervisoryNodeSearchController($scope, navigateBackService, Supervisor
 
   $scope.clearSearch = function () {
     $scope.query = "";
-    $scope.resultCount = 0;
+    $scope.totalItems = 0;
     $scope.supervisoryNodeList = [];
     $scope.showResults = false;
     angular.element("#searchSupervisoryNode").focus();
