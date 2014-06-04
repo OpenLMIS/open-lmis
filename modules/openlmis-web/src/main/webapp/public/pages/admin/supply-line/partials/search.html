@@ -10,14 +10,14 @@
 
 <div xmlns="http://www.w3.org/1999/html">
   <h2><span id="searchSupplyLineLabel" openlmis-message="label.search.supply.line"></span>
-    <a href="" class="pull-right btn btn-primary">
+    <a href="#/create" class="pull-right btn btn-primary">
       <span id="supplyLineAddNew" openlmis-message="button.add.new"></span>
     </a>
   </h2>
 
   <div class="alert alert-success" id="saveSuccessMsgDiv" ng-show="supplyLineId">
     <span id="successMessage" ng-bind="message"></span>.&nbsp;&nbsp;
-    <a id="viewHereLink" href="" openlmis-message="search.viewHere"></a>
+    <a id="viewHereLink" href="" ng-click="edit(supplyLineId)" openlmis-message="search.viewHere"></a>
   </div>
 
   <div id="searchControl" class="row-fluid">
@@ -67,7 +67,8 @@
     <tbody>
     <tr ng-repeat="supplyLine in supplyLines">
       <td id="program{{$index}}" ng-bind="supplyLine.program.name"></td>
-      <td><a id="facility{{$index}}" href="" ng-bind="supplyLine.supplyingFacility.name"></a></td>
+      <td><a id="facility{{$index}}" href="" ng-click="edit(supplyLine.id)"
+             ng-bind="supplyLine.supplyingFacility.name"></a></td>
       <td id="supervisoryNode{{$index}}" ng-bind="supplyLine.supervisoryNode.name"></td>
       <td id="description{{$index}}" ng-bind="supplyLine.description"></td>
     </tr>
