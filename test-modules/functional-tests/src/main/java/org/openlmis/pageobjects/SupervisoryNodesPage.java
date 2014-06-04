@@ -355,9 +355,10 @@ public class SupervisoryNodesPage extends Page {
     return searchFacility.getText();
   }
 
-  public void selectFirstFacilityToBeAssociated() {
-    testWebDriver.waitForElementToAppear(firstFacilitySearchResult);
-    firstFacilitySearchResult.click();
+  public void selectFacilityToBeAssociated(int rowNumber) {
+    WebElement facilityResult = testWebDriver.getElementById("facilityResult" + (rowNumber-1));
+    testWebDriver.waitForElementToAppear(facilityResult);
+    facilityResult.click();
   }
 
   public String getSaveMessage() {

@@ -41,9 +41,8 @@ public class ManageFilterSearch extends TestCaseHelper {
   }
 
   @Test(groups = {"admin"})
-  public void testFilterAfterFacilitySearchOnGeographicZonesPage() throws SQLException {
+  public void testFilterAfterFacilitySearchOnRequisitionGroupPage() throws SQLException {
     dbWrapper.assignRight("Admin", "MANAGE_REQUISITION_GROUP");
-    dbWrapper.assignRight("Admin", "MANAGE_GEOGRAPHIC_ZONE");
     dbWrapper.insertSupervisoryNode("F10", "N1", "Super1", null);
     dbWrapper.insertSupervisoryNode("F100A", "N2", "Super2", null);
     dbWrapper.insertRequisitionGroups("RG1", "RG2", "N2", "N1");
@@ -79,9 +78,8 @@ public class ManageFilterSearch extends TestCaseHelper {
   }
 
   @Test(groups = {"admin"})
-  public void testFilterBeforeFacilitySearchOnGeographicZonesPage() throws SQLException {
+  public void testFilterBeforeFacilitySearchOnRequisitionGroupPage() throws SQLException {
     dbWrapper.assignRight("Admin", "MANAGE_REQUISITION_GROUP");
-    dbWrapper.assignRight("Admin", "MANAGE_GEOGRAPHIC_ZONE");
     dbWrapper.insertSupervisoryNode("F10", "N1", "Super1", null);
     dbWrapper.insertSupervisoryNode("F100A", "N2", "Super2", null);
     dbWrapper.insertRequisitionGroups("RG1", "RG2", "N2", "N1");
@@ -120,9 +118,8 @@ public class ManageFilterSearch extends TestCaseHelper {
   }
 
   @Test(groups = {"admin"})
-  public void testFilterAfterTooManyFacilitySearchResultsOnGeographicZonesPage() throws SQLException {
+  public void testFilterAfterTooManyFacilitySearchResultsOnRequisitionGroupPage() throws SQLException {
     dbWrapper.assignRight("Admin", "MANAGE_REQUISITION_GROUP");
-    dbWrapper.assignRight("Admin", "MANAGE_GEOGRAPHIC_ZONE");
     dbWrapper.insertSupervisoryNode("F10", "N1", "Super1", null);
     dbWrapper.insertSupervisoryNode("F100A", "N2", "Super2", null);
     dbWrapper.insertRequisitionGroups("RG1", "RG2", "N2", "N1");
@@ -170,7 +167,6 @@ public class ManageFilterSearch extends TestCaseHelper {
   @Test(groups = {"admin"})
   public void testFilterAfterFacilitySearchOnSupervisoryNodesPage() throws SQLException {
     dbWrapper.assignRight("Admin", "MANAGE_SUPERVISORY_NODE");
-    dbWrapper.assignRight("Admin", "MANAGE_GEOGRAPHIC_ZONE");
     dbWrapper.insertSupervisoryNode("F10", "N1", "Super1", null);
     dbWrapper.insertSupervisoryNode("F100A", "N2", "Super2", null);
     dbWrapper.insertRequisitionGroups("RG1", "RG2", "N2", "N1");
@@ -210,7 +206,6 @@ public class ManageFilterSearch extends TestCaseHelper {
   @Test(groups = {"admin"})
   public void testFilterBeforeFacilitySearchOnSupervisoryNodesPage() throws SQLException {
     dbWrapper.assignRight("Admin", "MANAGE_SUPERVISORY_NODE");
-    dbWrapper.assignRight("Admin", "MANAGE_GEOGRAPHIC_ZONE");
     dbWrapper.insertSupervisoryNode("F10", "N1", "Super1", null);
     dbWrapper.insertSupervisoryNode("F100A", "N2", "Super2", null);
     dbWrapper.insertRequisitionGroups("RG1", "RG2", "N2", "N1");
@@ -252,7 +247,6 @@ public class ManageFilterSearch extends TestCaseHelper {
   @Test(groups = {"admin"})
   public void testFilterAfterTooManyFacilitySearchResultsOnSupervisoryNodesPage() throws SQLException {
     dbWrapper.assignRight("Admin", "MANAGE_SUPERVISORY_NODE");
-    dbWrapper.assignRight("Admin", "MANAGE_GEOGRAPHIC_ZONE");
     dbWrapper.insertSupervisoryNode("F10", "N1", "Super1", null);
     dbWrapper.insertSupervisoryNode("F100A", "N2", "Super2", null);
     dbWrapper.insertRequisitionGroups("RG1", "RG2", "N2", "N1");
