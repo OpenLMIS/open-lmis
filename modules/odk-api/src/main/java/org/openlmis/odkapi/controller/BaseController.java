@@ -46,7 +46,7 @@ public class BaseController {
             "    <message nature=\"submit_failure\"> Facility not found. </message>\n" +
             "</OpenRosaResponse>";
 
-    public static final String ODK_COLLECT_APP_APK_FILE_NAME = "ODK Collect v1.4 rev 1038.apk";
+    public static final String ODK_COLLECT_APP_APK_FILE_NAME = "OpenLMIS ODK Collect.apk";
     public static final String ODK_COLLECT_APP_APK_REQUEST_PARAMETER = "apk";
     public static final String ODK_COLLECT_APP_ITEMSETS_CSV_FILE_NAME = "itemsets.csv";
     public static final String ODK_COLLECT_APP_ITEMSETS_REQUEST_PARAMETER = "itemsets";

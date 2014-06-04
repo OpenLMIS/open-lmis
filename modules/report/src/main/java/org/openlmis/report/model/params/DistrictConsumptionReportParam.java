@@ -28,27 +28,12 @@ public class DistrictConsumptionReportParam
   extends BaseParam implements ReportParameter {
 
 
-  private String periodType;
-  private int yearFrom;
-  private int yearTo;
-  private int monthFrom;
-  private int monthTo;
-  private Date startDate;
-  private Date endDate;
-  private int quarterFrom;
-  private int quarterTo;
-  private int semiAnnualFrom;
-  private int semiAnnualTo;
+  private Long period;
 
   private int zoneId;
   private int productId;
   private int productCategoryId;
   private int rgroupId;
-  private String rgroup;
-
-  private String zone;
-  private String product;
-  private String productCategory;
 
   private int programId;
 
@@ -64,12 +49,13 @@ public class DistrictConsumptionReportParam
     String rggroupFilterLabel = "Requisition Group : ";
 
 
+    //TODO: fix the summary text.
     StringBuilder filtersValue = new StringBuilder("");
-    filtersValue.append(String.format("%" + 42 + "s", periodFilterLabel)).append(dateFormatter.format(this.getStartDate())).append("-").append(dateFormatter.format(this.getEndDate())).append("\n").
-      append(String.format("%" + 35 + "s", zoneFilterLabel)).append(this.getZone()).append("\n").
-      append(String.format("%" + 29 + "s", productCategoryFilterLabel)).append(this.getProductCategory()).append("\n").
-      append(String.format("%" + 19 + "s", productFilterLabel)).append(this.getProduct()).append("\n").
-      append(String.format("%" + 29 + "s", rggroupFilterLabel)).append(this.getRgroup());
+//    filtersValue.append(String.format("%" + 42 + "s", periodFilterLabel)).append(dateFormatter.format(this.getStartDate())).append("-").append(dateFormatter.format(this.getEndDate())).append("\n").
+//      append(String.format("%" + 35 + "s", zoneFilterLabel)).append(this.getZone()).append("\n").
+//      append(String.format("%" + 29 + "s", productCategoryFilterLabel)).append(this.getProductCategory()).append("\n").
+//      append(String.format("%" + 19 + "s", productFilterLabel)).append(this.getProduct()).append("\n").
+//      append(String.format("%" + 29 + "s", rggroupFilterLabel)).append(this.getRgroup());
 
     return filtersValue.toString();
   }

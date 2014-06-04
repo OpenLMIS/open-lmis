@@ -51,7 +51,10 @@ public class AdjustmentSummaryReportParam
          if(periodObject != null){
 
             StringBuilder filtersValue = new StringBuilder("");
-            filtersValue.append("Period : ").append(dateFormatter.format(this.periodObject.getNextStartDate())).append("-").append(dateFormatter.format(this.periodObject.getEndDate())).append("\n").
+            filtersValue.append("Period : ").
+                append(dateFormatter.format(this.periodObject.getStartDate())).
+                append("-").append(dateFormatter.format(this.periodObject.getEndDate())).
+                append("\n").
                     append("Facility Types : ").append(this.getFacilityType()).append("\n").
                     append("Adjustment Types : ").append(this.getAdjustmentType()).append("\n").
                     append("Reporting Groups : ").append(this.getRgroup());

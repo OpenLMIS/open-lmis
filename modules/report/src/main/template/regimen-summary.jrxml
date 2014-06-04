@@ -26,7 +26,6 @@
 	<field name="totalpatientsToInitiateTreatmentPercentage" class="java.math.BigDecimal"/>
 	<field name="patientstoinitiatetreatment" class="java.lang.Integer"/>
 	<field name="totalOnTreatmentPercentage" class="java.math.BigDecimal"/>
-	<field name="district" class="java.lang.String"/>
 	<field name="patientsstoppedtreatment" class="java.lang.Integer"/>
 	<field name="stoppedTreatmentPercentage" class="java.math.BigDecimal"/>
 	<field name="rgroup" class="java.lang.String"/>
