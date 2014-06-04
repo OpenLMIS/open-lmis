@@ -43,7 +43,8 @@ public interface SupplyLineMapper {
 
   @Update({"UPDATE supply_lines ",
     "SET description = #{description}, supervisoryNodeId = #{supervisoryNode.id}, programId = #{program.id}, ",
-    "supplyingFacilityId = #{supplyingFacility.id}, exportOrders =#{exportOrders},modifiedBy = #{modifiedBy}, modifiedDate = #{modifiedDate} ",
+    "supplyingFacilityId = #{supplyingFacility.id}, exportOrders = #{exportOrders}, modifiedBy = #{modifiedBy},",
+    "modifiedDate = COALESCE(#{modifiedDate}, CURRENT_TIMESTAMP) ",
     "WHERE id = #{id}"})
   void update(SupplyLine supplyLine);
 
@@ -108,8 +109,8 @@ public interface SupplyLineMapper {
       String column = (String) params.get("column");
       sql.append(
         "FROM supply_lines SL INNER JOIN facilities FAC ON SL.supplyingFacilityId = FAC.id " +
-        "INNER JOIN supervisory_nodes SN ON SL.supervisoryNodeId = SN.id " +
-        "INNER JOIN programs PGM ON SL.programId = PGM.id ");
+          "INNER JOIN supervisory_nodes SN ON SL.supervisoryNodeId = SN.id " +
+          "INNER JOIN programs PGM ON SL.programId = PGM.id ");
 
       if (column.equals("facility")) {
         sql.append("WHERE LOWER(FAC.name) LIKE '%' || LOWER(#{searchParam} || '%') ");
