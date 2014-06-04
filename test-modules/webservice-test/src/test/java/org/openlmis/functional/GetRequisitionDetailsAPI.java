@@ -37,7 +37,7 @@ public class GetRequisitionDetailsAPI extends JsonUtility {
     createVirtualFacilityThroughApi("V10", "F10");
     dbWrapper.insertProcessingPeriod("current", "current period", "2013-01-30", "2016-01-30", 1, "M");
     dbWrapper.insertRoleAssignmentForSupervisoryNodeForProgramId("commTrack", "store in-charge", "N1");
-    dbWrapper.setupOrderNumberConfiguration("O",true,true,true,true);
+    dbWrapper.setupOrderNumberConfiguration("O", true, true, true, true);
     dbWrapper.updateRestrictLogin("commTrack", true);
   }
 
@@ -188,7 +188,6 @@ public class GetRequisitionDetailsAPI extends JsonUtility {
     assertEquals(200, responseEntity.getStatus());
   }
 
-
   @Test(groups = {"webservice"})
   public void testRequisitionDetailsAfterApprovalForExportOrdersFlagSetFalse() throws SQLException, IOException {
     HttpClient client = new HttpClient();
@@ -293,7 +292,7 @@ public class GetRequisitionDetailsAPI extends JsonUtility {
 
     String orderId = generateOrderNumberForIdAndDefaultConfiguration(id, "HIV");
 
-    dbWrapper.setupOrderNumberConfiguration("P",true,true,true,true);
+    dbWrapper.setupOrderNumberConfiguration("P", true, true, true, true);
     checkOrderNumber(orderId, responseEntity);
   }
 
@@ -337,7 +336,7 @@ public class GetRequisitionDetailsAPI extends JsonUtility {
     responseEntity = client.SendJSON("", URL + id, "GET", "commTrack", "Admin123");
     checkRequisitionStatus("RELEASED", responseEntity);
     checkOrderStatus(65, "RECEIVED", responseEntity);
-    dbWrapper.setupOrderNumberConfiguration("P",true,true,true,true);
+    dbWrapper.setupOrderNumberConfiguration("P", true, true, true, true);
     checkOrderNumber(orderId, responseEntity);
   }
 
