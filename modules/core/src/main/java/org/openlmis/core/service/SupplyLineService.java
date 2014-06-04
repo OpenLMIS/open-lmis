@@ -51,11 +51,11 @@ public class SupplyLineService {
     validateIfSupervisoryNodeIsTopmostNode(supplyLine);
 
     if (supplyLine.getId() == null) {
-      this.repository.insert(supplyLine);
+      repository.insert(supplyLine);
       return;
     }
 
-    this.repository.update(supplyLine);
+    repository.update(supplyLine);
   }
 
   private void populateIdsForSupplyLine(SupplyLine supplyLine) {

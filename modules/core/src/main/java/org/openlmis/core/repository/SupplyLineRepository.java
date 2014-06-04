@@ -14,8 +14,10 @@ import org.openlmis.core.domain.Pagination;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.SupervisoryNode;
 import org.openlmis.core.domain.SupplyLine;
+import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.mapper.SupplyLineMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -31,7 +33,11 @@ public class SupplyLineRepository {
   private SupplyLineMapper mapper;
 
   public void insert(SupplyLine supplyLine) {
-    mapper.insert(supplyLine);
+    try {
+      mapper.insert(supplyLine);
+    } catch (DuplicateKeyException ex) {
+      throw new DataException("error.supplying.facility.already.assigned");
+    }
   }
 
   public SupplyLine getSupplyLineBy(SupervisoryNode supervisoryNode, Program program) {
@@ -39,7 +45,11 @@ public class SupplyLineRepository {
   }
 
   public void update(SupplyLine supplyLine) {
-    mapper.update(supplyLine);
+    try {
+      mapper.update(supplyLine);
+    } catch (DuplicateKeyException ex) {
+      throw new DataException("error.supplying.facility.already.assigned");
+    }
   }
 
   public SupplyLine getById(Long id) {

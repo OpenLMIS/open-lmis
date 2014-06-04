@@ -55,10 +55,10 @@ public class SupplyLineRepositoryTest {
   @InjectMocks
   private SupplyLineRepository repository;
 
-  private SupplyLine supplyLine;
-
   @Rule
   public ExpectedException expectedEx = ExpectedException.none();
+
+  private SupplyLine supplyLine;
 
   @Before
   public void setUp() {
@@ -67,27 +67,28 @@ public class SupplyLineRepositoryTest {
 
   @Test
   public void shouldInsertSupplyLine() {
-    when(facilityRepository.getIdForCode(supplyLine.getSupplyingFacility().getCode())).thenReturn(1L);
-    when(programRepository.getIdByCode(supplyLine.getProgram().getCode())).thenReturn(1L);
-    when(supervisoryNodeRepository.getIdForCode(supplyLine.getSupervisoryNode().getCode())).thenReturn(1L);
-    when(supervisoryNodeRepository.getSupervisoryNodeParentId(1L)).thenReturn(null);
-
     repository.insert(supplyLine);
     verify(mapper).insert(supplyLine);
   }
 
   @Test
-  public void shouldThrowExceptionForDuplicateSupplyLines() {
-    when(facilityRepository.getIdForCode(supplyLine.getSupplyingFacility().getCode())).thenReturn(1L);
-    when(programRepository.getIdByCode(supplyLine.getProgram().getCode())).thenReturn(1L);
-    when(supervisoryNodeRepository.getIdForCode(supplyLine.getSupervisoryNode().getCode())).thenReturn(1L);
-    when(supervisoryNodeRepository.getSupervisoryNodeParentId(1L)).thenReturn(null);
+  public void shouldThrowExceptionForDuplicateSupplyLinesWhileInsert() {
     doThrow(new DataException("Duplicate entry for Supply Line found")).when(mapper).insert(supplyLine);
 
     expectedEx.expect(DataException.class);
     expectedEx.expectMessage("Duplicate entry for Supply Line found");
 
     repository.insert(supplyLine);
+  }
+
+  @Test
+  public void shouldThrowExceptionForDuplicateSupplyLinesWhileUpdate() {
+    doThrow(new DataException("Duplicate entry for Supply Line found")).when(mapper).update(supplyLine);
+
+    expectedEx.expect(DataException.class);
+    expectedEx.expectMessage("Duplicate entry for Supply Line found");
+
+    repository.update(supplyLine);
   }
 
   @Test
