@@ -30,8 +30,8 @@ function SupplyLineSearchController($scope, navigateBackService, SupplyLinesSear
   $scope.search = function (page) {
     if (!$scope.query) return;
     $scope.query = $scope.query.trim();
-
-    SupplyLinesSearch.get({page: page, searchParam: $scope.query, column: $scope.selectedSearchOption.value}, function (data) {
+    $scope.searchedQuery = $scope.query;
+    SupplyLinesSearch.get({page: page, searchParam: $scope.searchedQuery, column: $scope.selectedSearchOption.value}, function (data) {
       $scope.supplyLines = data.supplyLines;
       $scope.pagination = data.pagination;
       $scope.resultCount = $scope.pagination.totalRecords;
