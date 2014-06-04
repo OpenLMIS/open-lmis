@@ -23,6 +23,10 @@ function AlertsController($scope, $filter, Alerts,$location, dashboardMenuServic
         $scope.getAlerts();
     });
 
+    $scope.$watch('formFilter.periodId', function(){
+        $scope.getAlerts();
+    });
+
     $scope.getAlerts = function(){
 
         Alerts.get({supervisoryNodeId: $scope.formFilter.supervisoryNodeId, programId: $scope.formFilter.programId, periodId: $scope.formFilter.periodId},function(data){
