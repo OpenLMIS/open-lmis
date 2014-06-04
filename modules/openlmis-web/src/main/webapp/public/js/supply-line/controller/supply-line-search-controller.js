@@ -8,7 +8,7 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
  */
 
-function SupplyLineSearchController($scope, navigateBackService, SupplyLinesSearch) {
+function SupplyLineSearchController($scope, $location, navigateBackService, SupplyLinesSearch) {
   $scope.searchOptions = [
     {value: "facility", name: "label.supplying.facility"},
     {value: "supervisoryNode", name: "label.supervisory.node"},
@@ -26,6 +26,12 @@ function SupplyLineSearchController($scope, navigateBackService, SupplyLinesSear
   $scope.$on('$viewContentLoaded', function () {
     $scope.query = navigateBackService.query;
   });
+
+  $scope.edit = function (id) {
+    var data = {query: $scope.query, selectedSearchOption: $scope.selectedSearchOption};
+    navigateBackService.setData(data);
+    $location.path('edit/' + id);
+  };
 
   $scope.search = function (page) {
     if (!$scope.query) return;

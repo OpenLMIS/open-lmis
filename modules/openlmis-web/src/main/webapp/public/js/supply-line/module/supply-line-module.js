@@ -11,10 +11,12 @@
 var supplyLineModule = angular.module('supplyLine', ['openlmis', 'ui.bootstrap.dropdownToggle', 'ui.bootstrap.modal', 'ui.bootstrap']);
 
 supplyLineModule.config(['$routeProvider', function ($routeProvider) {
-      $routeProvider.
-          when('/search', {controller: SupplyLineSearchController, templateUrl: 'partials/search.html'}).
-          otherwise({redirectTo: '/search'});
-    }]).run(function ($rootScope, AuthorizationService) {
-      $rootScope.supplyLineSelected = "selected";
-      AuthorizationService.preAuthorize('MANAGE_SUPPLY_LINE');
-    });
+  $routeProvider.
+      when('/search', {controller: SupplyLineSearchController, templateUrl: 'partials/search.html'}).
+      when('/create', {controller: SupplyLineController, templateUrl: 'partials/create.html', resolve: SupplyLineController.resolve}).
+      when('/edit/:id', {controller: SupplyLineController, templateUrl: 'partials/create.html', resolve: SupplyLineController.resolve}).
+      otherwise({redirectTo: '/search'});
+}]).run(function ($rootScope, AuthorizationService) {
+  $rootScope.supplyLineSelected = "selected";
+  AuthorizationService.preAuthorize('MANAGE_SUPPLY_LINE');
+});

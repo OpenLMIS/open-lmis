@@ -60,7 +60,7 @@ public class SupplyLineController extends BaseController {
     return response;
   }
 
-  @RequestMapping(value = "/", method = POST)
+  @RequestMapping(method = POST, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_SUPPLY_LINE')")
   public ResponseEntity<OpenLmisResponse> insert(@RequestBody SupplyLine supplyLine,
                                                  HttpServletRequest request) {
