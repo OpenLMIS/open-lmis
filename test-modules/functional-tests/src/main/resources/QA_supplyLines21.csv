@@ -1,0 +1,22 @@
+Supervising Node,Description,Program,Facility,Export Orders
+N1,Supplies HIV,HIV,F10,true
+N2,Supplies HIV,HIV,F11,true
+N3,Supplies HIV,HIV,F10,true
+N4,Supplies HIV,HIV,F11,true
+N5,Supplies HIV,HIV,F10,true
+N6,Supplies HIV,HIV,F11,true
+N1,Supplies essential medicines,ESS_MEDS,F11,true
+N2,Supplies essential medicines,ESS_MEDS,F10,true
+N3,Supplies essential medicines,ESS_MEDS,F11,true
+N4,Supplies essential medicines,ESS_MEDS,F10,true
+N5,Supplies essential medicines,ESS_MEDS,F11,true
+N6,Supplies essential medicines,ESS_MEDS,F10,true
+N1,Supplies malaria,MALARIA,F10,true
+N2,Supplies malaria,MALARIA,F11,true
+N3,Supplies malaria,MALARIA,F10,true
+N4,Supplies malaria,MALARIA,F11,true
+N5,Supplies malaria,MALARIA,F10,true
+N6,Supplies malaria,MALARIA,F11,true
+N1,Supplies TB,TB,F10,true
+N2,Supplies TB,TB,F11,true
+N3,Supplies TB,TB,F10,true
