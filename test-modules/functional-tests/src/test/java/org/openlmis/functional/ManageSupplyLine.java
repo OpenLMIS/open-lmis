@@ -197,6 +197,9 @@ public class ManageSupplyLine extends TestCaseHelper {
   public void testSupervisoryNodeSearchSortAndPagination() throws SQLException {
     dbWrapper.assignRight("Admin", "MANAGE_SUPPLY_LINE");
     dbWrapper.assignRight("Admin", "UPLOADS");
+    dbWrapper.updateFieldValue("facilities", "enabled", "false", "code", "F10");
+    dbWrapper.updateFieldValue("facilities", "active", "false", "code", "F11");
+    dbWrapper.updateFieldValue("programs", "active", "false", "code", "HIV");
     HomePage homePage = loginPage.loginAs(testData.get(ADMIN), testData.get(PASSWORD));
     UploadPage uploadPage = homePage.navigateUploads();
     uploadPage.uploadSupplyLines("QA_supplyLines21.csv");
@@ -225,6 +228,7 @@ public class ManageSupplyLine extends TestCaseHelper {
     supplyLinePage.selectSupplyLineAsSearchOption();
     supplyLinePage.clickSearchIcon();
     assertTrue(supplyLinePage.isNoResultMessageDisplayed());
+    dbWrapper.updateFieldValue("programs", "active", "true", "code", "HIV");
   }
 
   public void searchSupplyLine(String searchParameter) {
