@@ -192,11 +192,12 @@ describe("Facility Search Filter Controller", function () {
   it('should cancel filters', function () {
     scope.selectedFacilityType = {"name": "warehouse"};
     scope.selectedGeoZone = {"name": "moz"};
+    scope.zone = {"name": "geo zone"};
 
     scope.cancelFilters();
 
-    expect(scope.selectedGeoZone).toBeUndefined();
-    expect(scope.selectedFacilityType).toBeUndefined();
+    expect(scope.selectedGeoZone).toEqual({"name": "geo zone"});
+    expect(scope.selectedFacilityType).toEqual({});
     expect(scope.filterModal).toBeFalsy();
   });
 

@@ -97,8 +97,8 @@ function FacilitySearchFilterController($scope, FacilityTypes, GeographicZoneSea
   };
 
   $scope.cancelFilters = function () {
-    $scope.selectedFacilityType = undefined;
-    $scope.selectedGeoZone = undefined;
+    $scope.selectedFacilityType = $scope.type;
+    $scope.selectedGeoZone = $scope.zone;
     $scope.filterModal = false;
   };
 
