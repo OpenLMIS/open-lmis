@@ -443,7 +443,7 @@ public class ManageSupervisoryNodes extends TestCaseHelper {
   }
 
   public void searchAssociatedFacility(String facilityName) {
-    supervisoryNodesPage.clickAssociatedFacilityField();
+    supervisoryNodesPage.clickAssociatedFacilityMemberField();
     supervisoryNodesPage.searchFacilityToBeAssociated(facilityName);
     supervisoryNodesPage.clickSearchIcon();
   }

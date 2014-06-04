@@ -52,9 +52,10 @@ public class PageObjectFactory {
   private static ConfigureOrderNumberPage instanceOfConfigureOrderNumberPage;
   private static PeriodsPage instanceOfPeriodsPage;
   private static SupervisoryNodesPage instanceOfSupervisoryNodesPage;
-  private static RequisitionGroupPage instanceOfRequisitionGroupPage;
+  private static RequisitionGroupSearchPage instanceOfRequisitionGroupPage;
   private static RequisitionPage instanceOfRequisitionPage;
   private static SupplyLinePage instanceOfSupplyLinePage;
+  private static FilterSearchPage instanceOfFilterSearchPage;
 
   public static ManageFacilityPage getManageFacilityPage(TestWebDriver testWebDriver) {
     if (instanceOfManageFacilityPage == null) {
@@ -317,9 +318,9 @@ public class PageObjectFactory {
     return instanceOfSupervisoryNodesPage;
   }
 
-  public static RequisitionGroupPage getRequisitionGroupPage(TestWebDriver testWebDriver) {
+  public static RequisitionGroupSearchPage getRequisitionGroupPage(TestWebDriver testWebDriver) {
     if (instanceOfRequisitionGroupPage == null) {
-      instanceOfRequisitionGroupPage = new RequisitionGroupPage(testWebDriver);
+      instanceOfRequisitionGroupPage = new RequisitionGroupSearchPage(testWebDriver);
     }
     return instanceOfRequisitionGroupPage;
   }
@@ -336,5 +337,11 @@ public class PageObjectFactory {
       instanceOfSupplyLinePage = new SupplyLinePage(testWebDriver);
     }
     return instanceOfSupplyLinePage;
+
+  public static FilterSearchPage getFilterSearchPage(TestWebDriver testWebDriver) {
+    if (instanceOfFilterSearchPage == null) {
+      instanceOfFilterSearchPage = new FilterSearchPage((testWebDriver));
+    }
+    return instanceOfFilterSearchPage;
   }
 }

@@ -1,5 +1,6 @@
 package org.openlmis.functional;
 
+import com.thoughtworks.selenium.SeleneseTestBase;
 import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.pageobjects.*;
 import org.testng.annotations.AfterMethod;
@@ -18,7 +19,8 @@ import static org.testng.AssertJUnit.assertEquals;
 public class ManageRequisitionGroups extends TestCaseHelper {
 
   LoginPage loginPage;
-  RequisitionGroupPage requisitionGroupPage;
+  RequisitionGroupSearchPage requisitionGroupPage;
+  FilterSearchPage filterSearchpage;
 
   public static final String ADMIN = "admin";
   public static final String PASSWORD = "password";
@@ -36,6 +38,7 @@ public class ManageRequisitionGroups extends TestCaseHelper {
 
     loginPage = PageObjectFactory.getLoginPage(testWebDriver, baseUrlGlobal);
     requisitionGroupPage = PageObjectFactory.getRequisitionGroupPage(testWebDriver);
+    filterSearchpage = PageObjectFactory.getFilterSearchPage(testWebDriver);
   }
 
   @Test(groups = {"admin"})
@@ -280,7 +283,11 @@ public class ManageRequisitionGroups extends TestCaseHelper {
     dbWrapper.insertSupervisoryNode("F10", "N1", "Node1", null);
     dbWrapper.insertSupervisoryNode("F11", "N2", "Node2", null);
     dbWrapper.insertSchedule("M", "monthly", "monthly");
-
+    dbWrapper.insertFacilitiesWithFacilityTypeIDAndGeoZoneId("F11A", "F11B", 1, 3);
+    dbWrapper.insertFacilitiesWithFacilityTypeIDAndGeoZoneId("F11C", "F11D", 1, 3);
+    dbWrapper.insertFacilitiesWithFacilityTypeIDAndGeoZoneId("F11E", "F11F", 2, 3);
+    dbWrapper.insertFacilitiesWithFacilityTypeIDAndGeoZoneId("F11G", "F11H",2, 3);
+    
     HomePage homePage = loginPage.loginAs(testData.get(ADMIN), testData.get(PASSWORD));
     requisitionGroupPage = homePage.navigateToRequisitionGroupPage();
 
@@ -299,14 +306,25 @@ public class ManageRequisitionGroups extends TestCaseHelper {
     search("Requisition Group 5");
     requisitionGroupPage.selectRequisitionGroupSearchResult(1);
     requisitionGroupPage.clickAssociatedFacilityLink();
-    searchAssociatedFacility("F10");
+    searchAssociatedFacility("F11");
+    assertEquals("9 matches found for 'F11'", requisitionGroupPage.getNResultsMessage());
+    filterSearchpage.clickFilterButton();
+    testWebDriver.waitForAjax();
+    filterSearchpage.selectFacilityType("Warehouse");
+    //filterSearchpage.searchGeographicZone("Root");
+    filterSearchpage.clickApplyFilterButton();
+    assertEquals("4 matches found for 'F11'",requisitionGroupPage.getNResultsMessage());
     requisitionGroupPage.selectFacilityToBeAssociated(1);
     requisitionGroupPage.clickAssociatedFacilityLink();
     requisitionGroupPage.selectFacilityToBeAssociated(2);
+    requisitionGroupPage.clickAssociatedFacilityLink();
+    requisitionGroupPage.selectFacilityToBeAssociated(3);
+    requisitionGroupPage.clickAssociatedFacilityLink();
+    requisitionGroupPage.selectFacilityToBeAssociated(4);
 
     requisitionGroupPage.clickSaveButton();
     assertEquals("Requisition Group \"Requisition Group 5\" updated successfully.   View Here", requisitionGroupPage.getSuccessMessage());
-    assertEquals("2", requisitionGroupPage.getFacilityCount(1));
+    assertEquals("4", requisitionGroupPage.getFacilityCount(1));
   }
 
   @Test(groups = {"admin"})
@@ -344,11 +362,10 @@ public class ManageRequisitionGroups extends TestCaseHelper {
   }
 
   @Test(groups = {"admin"})
-  public void testCancelAndDuplicateRGCodeValidationOnUpdatingRequisitionGroup() throws SQLException {
+  public void testCancelUpdateRequisitionGroup() throws SQLException {
     dbWrapper.assignRight("Admin", "MANAGE_REQUISITION_GROUP");
     dbWrapper.insertSupervisoryNode("F10", "N1", "Node1", null);
     dbWrapper.insertRequisitionGroup("RG1", "Requisition Group 1", "N1");
-    dbWrapper.insertRequisitionGroupWithoutDelete("RG2", "Requisition Group 2", "N1");
     dbWrapper.insertRequisitionGroupMember("RG1", "F10");
     dbWrapper.insertRequisitionGroupMember("RG1", "F11");
     dbWrapper.updateFieldValue("facilities", "enabled", "f", "code", "F11");
@@ -360,11 +377,6 @@ public class ManageRequisitionGroups extends TestCaseHelper {
     assertEquals("1", requisitionGroupPage.getFacilityCount(1));
     requisitionGroupPage.selectRequisitionGroupSearchResult(1);
 
-    requisitionGroupPage.enterRequisitionGroupCode("RG2");
-    requisitionGroupPage.clickSaveButton();
-    assertEquals("Duplicate Requisition Group Code", requisitionGroupPage.getErrorMessage());
-
-    requisitionGroupPage.enterRequisitionGroupCode("RG1");
     requisitionGroupPage.enterRequisitionGroupName("ReqGrp");
 
     assertEquals("F10 - Village Dispensary", requisitionGroupPage.getMemberFacilityCode(1));
@@ -377,6 +389,7 @@ public class ManageRequisitionGroups extends TestCaseHelper {
 
     requisitionGroupPage.clickCancelButton();
     testWebDriver.waitForAjax();
+
     assertEquals("Requisition Group 1", requisitionGroupPage.getRequisitionGroupName(1));
   }
 
@@ -487,6 +500,7 @@ public class ManageRequisitionGroups extends TestCaseHelper {
   }
 
   public void searchAssociatedFacility(String facilityCodeOrName) {
+    //requisitionGroupPage.clickAssociatedFacilityField();
     requisitionGroupPage.searchFacilityToBeAssociated(facilityCodeOrName);
     requisitionGroupPage.clickSearchIcon();
     testWebDriver.waitForAjax();

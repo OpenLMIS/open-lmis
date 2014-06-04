@@ -579,7 +579,7 @@ public class HomePage extends Page {
     return PageObjectFactory.getSupervisoryNodesPage(testWebDriver);
   }
 
-  public RequisitionGroupPage navigateToRequisitionGroupPage() {
+  public RequisitionGroupSearchPage navigateToRequisitionGroupPage() {
     testWebDriver.waitForElementToAppear(AdministrationMenuItem);
     testWebDriver.keyPress(AdministrationMenuItem);
     testWebDriver.waitForElementToAppear(manageLink);

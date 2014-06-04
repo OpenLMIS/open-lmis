@@ -91,7 +91,7 @@ public class SupervisoryNodesPage extends Page {
   private static WebElement clearSearch = null;
 
   @FindBy(how = ID, using = "associatedFacilityField")
-  private static WebElement associatedFacilityField = null;
+  private static WebElement associatedFacilityMemberField = null;
 
   @FindBy(how = ID, using = "searchAndFilter")
   private static WebElement searchAndFilter = null;
@@ -120,8 +120,13 @@ public class SupervisoryNodesPage extends Page {
   @FindBy(how = ID, using = "viewHereLink")
   private static WebElement viewHereLink = null;
 
+  @FindBy(how = ID, using = "tooManyResultsMessage")
+  private static WebElement tooManyResultsMessage = null;
+ 
   @FindBy(how = ID, using = "editSupervisoryNodeHeader")
   private static WebElement editSupervisoryNodeHeader = null;
+
+
 
   public SupervisoryNodesPage(TestWebDriver driver) {
     super(driver);
@@ -184,6 +189,11 @@ public class SupervisoryNodesPage extends Page {
       return false;
     }
     return noResultMessage.isDisplayed();
+  }
+
+  public String getNoFacilitySearchResultMessage(){
+    testWebDriver.waitForElementToAppear(noFacilityResultMessage);
+    return noFacilityResultMessage.getText();
   }
 
   public boolean isOneResultMessageDisplayed() {
@@ -283,9 +293,9 @@ public class SupervisoryNodesPage extends Page {
     result.click();
   }
 
-  public void clickAssociatedFacilityField() {
-    testWebDriver.waitForElementToAppear(associatedFacilityField);
-    associatedFacilityField.click();
+  public void clickAssociatedFacilityMemberField() {
+    testWebDriver.waitForElementToAppear(associatedFacilityMemberField);
+    associatedFacilityMemberField.click();
     testWebDriver.waitForElementToAppear(searchAndFilter);
   }
 
@@ -390,5 +400,9 @@ public class SupervisoryNodesPage extends Page {
     WebElement parent = testWebDriver.getElementByXpath("//*[@id='supervisoryNodeFormGroup']/div[4]/div/div/div[1]/div[2]/span");
     testWebDriver.waitForElementToAppear(parent);
     return parent.getText();
+  }
+
+  public String getTooManyResultsMessage() {
+    return tooManyResultsMessage.getText();
   }
 }

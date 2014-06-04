@@ -11,7 +11,7 @@ import java.util.NoSuchElementException;
 
 import static org.openqa.selenium.support.How.ID;
 
-public class RequisitionGroupPage extends Page {
+public class RequisitionGroupSearchPage extends FilterSearchPage {
 
   @FindBy(how = ID, using = "searchOptionButton")
   private static WebElement searchOptionButton = null;
@@ -106,7 +106,7 @@ public class RequisitionGroupPage extends Page {
   @FindBy(how = ID, using = "saveErrorMsgDiv")
   private static WebElement saveErrorMsg = null;
 
-  public RequisitionGroupPage(TestWebDriver driver) {
+  public RequisitionGroupSearchPage(TestWebDriver driver) {
     super(driver);
     PageFactory.initElements(new AjaxElementLocatorFactory(TestWebDriver.getDriver(), 1), this);
     testWebDriver.setImplicitWait(1);
