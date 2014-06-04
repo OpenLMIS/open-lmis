@@ -8,13 +8,13 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
  */
 
-var supplyLineModule = angular.module('supplyLine', ['openlmis', 'ui.bootstrap.dropdownToggle', 'ui.bootstrap']);
+var supplyLineModule = angular.module('supplyLine', ['openlmis', 'ui.bootstrap.dropdownToggle', 'ui.bootstrap.modal', 'ui.bootstrap']);
 
 supplyLineModule.config(['$routeProvider', function ($routeProvider) {
-  $routeProvider.
-      when('/search', {controller: SupplyLineSearchController, templateUrl: 'partials/search.html'}).
-      otherwise({redirectTo: '/search'});
-}]).run(function ($rootScope, AuthorizationService) {
-  $rootScope.supplyLineSelected = "selected";
-  AuthorizationService.preAuthorize('MANAGE_SUPPLY_LINE');
-});
+      $routeProvider.
+          when('/search', {controller: SupplyLineSearchController, templateUrl: 'partials/search.html'}).
+          otherwise({redirectTo: '/search'});
+    }]).run(function ($rootScope, AuthorizationService) {
+      $rootScope.supplyLineSelected = "selected";
+      AuthorizationService.preAuthorize('MANAGE_SUPPLY_LINE');
+    });
