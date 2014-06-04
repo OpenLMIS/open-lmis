@@ -337,6 +337,7 @@ public class PageObjectFactory {
       instanceOfSupplyLinePage = new SupplyLinePage(testWebDriver);
     }
     return instanceOfSupplyLinePage;
+  }
 
   public static FilterSearchPage getFilterSearchPage(TestWebDriver testWebDriver) {
     if (instanceOfFilterSearchPage == null) {
