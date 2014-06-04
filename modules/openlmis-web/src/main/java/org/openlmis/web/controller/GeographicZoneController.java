@@ -115,7 +115,7 @@ public class GeographicZoneController extends BaseController {
   }
 
   @RequestMapping(value = "/filtered-geographicZones", method = GET, headers = ACCEPT_JSON)
-  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_GEOGRAPHIC_ZONE')")
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_GEOGRAPHIC_ZONE, MANAGE_SUPERVISORY_NODE, MANAGE_REQUISITION_GROUP, MANAGE_SUPPLY_LINE')")
   public ResponseEntity<OpenLmisResponse> getGeographicZoneByCodeOrName(@RequestParam(value = "searchParam") String searchParam,
                                                                         @Value("${search.results.limit}") String searchLimit) {
     Integer count = service.getGeographicZonesCountBy(searchParam);
