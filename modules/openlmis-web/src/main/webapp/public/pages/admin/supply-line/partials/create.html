@@ -11,11 +11,11 @@
 <div xmlns="http://www.w3.org/1999/html" tab-scroll>
 
   <div ng-hide="supplyLine.id">
-    <h2 id="addNewSupplyLineHeader" openlmis-message="header.supervisory.node.add.new"></h2>
+    <h2 id="addNewSupplyLineHeader" openlmis-message="header.supply.line.add.new"></h2>
   </div>
 
   <div ng-show="supplyLine.id">
-    <h2 id="editSupplyLineHeader" openlmis-message="header.supervisory.node.edit"></h2>
+    <h2 id="editSupplyLineHeader" openlmis-message="header.supply.line.edit"></h2>
   </div>
 
   <form name="supplyLineForm" novalidate>
@@ -75,7 +75,8 @@
             <div class="form-field autosuggest-input">
               <div class="suggest-field">
                 <input id="searchNode" type="text" ng-change="showTopLevelNodeResults()" ng-model="query"
-                       openlmis-message="placeholder.parent.node.search" ng-hide="supplyLine.supervisoryNode"/>
+                       openlmis-message="placeholder.parent.node.search" ng-hide="supplyLine.supervisoryNode"
+                       maxlength="50"/>
 
                 <div id="search_list" class="search-list" ng-show="query.length > 2">
                   <ul>
@@ -94,6 +95,8 @@
               </div>
               <div class="form-tip" openlmis-message="search.threeCharacters"></div>
             </div>
+            <span id="nodeError" class="field-error" ng-show="!supplyLine.supervisoryNode && showError"
+                  openlmis-message="select.value"></span>
           </div>
 
           <div class="form-cell">

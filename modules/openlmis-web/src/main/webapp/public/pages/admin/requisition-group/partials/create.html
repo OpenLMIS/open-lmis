@@ -72,7 +72,7 @@
             <div class="form-field autosuggest-input">
               <div class="suggest-field">
                 <input id="searchSupervisoryNode" type="text" ng-change="showSupervisoryNodeSearchResults()"
-                       ng-model="query"
+                       ng-model="query" maxlength="50"
                        openlmis-message="placeholder.supervisory.node.search" ng-hide="nodeSelected"/>
 
                 <div id="searchList" class="search-list" ng-show="query.length > 2">
