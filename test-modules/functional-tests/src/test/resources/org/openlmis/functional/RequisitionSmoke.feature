@@ -22,8 +22,8 @@ Feature: Smoke Requisition Tests
     And I enter quantity received "100"
     And I click submit
     And I click ok
-#    When I click print
-#    Then I close new window
+    When I click print
+    Then I close new window
     Then I validate beginning balance "100"
     And I validate quantity dispensed "100"
     And I validate quantity received "100"
@@ -56,10 +56,10 @@ Feature: Smoke Requisition Tests
     When I click submit
     And I click ok
     Then I should see submit successfully
-#    When I click resize button
-#    And I click full view print button
-#    Then I close new window
-#    Then I click resize button
+    When I click resize button
+    And I click full view print button
+    Then I close new window
+    Then I click resize button
 
   @smokeRequisition
   Scenario: User should view requisition and regimen after authorization

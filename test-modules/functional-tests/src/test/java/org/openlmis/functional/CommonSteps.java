@@ -97,14 +97,12 @@ public class CommonSteps extends TestCaseHelper {
   public void clickOnPrintButtonOnFullViewScreen() {
     RequisitionPage requisitionPage = PageObjectFactory.getRequisitionPage(testWebDriver);
     requisitionPage.clickFullViewPrintButton();
-    testWebDriver.sleep(1000);
   }
 
   @When("^I click resize button$")
   public void clickOnResizeViewButton() {
     RequisitionPage requisitionPage = PageObjectFactory.getRequisitionPage(testWebDriver);
     requisitionPage.clickResizeViewButton();
-    testWebDriver.sleep(1000);
   }
 
   @Then("^I close new window$")
