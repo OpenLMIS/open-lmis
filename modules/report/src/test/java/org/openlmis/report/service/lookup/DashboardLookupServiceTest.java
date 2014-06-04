@@ -111,9 +111,9 @@ public class DashboardLookupServiceTest {
     }
     @Test
     public void shouldReturnAlerts() throws Exception {
-        when(mapper.getAlerts(1L,1L,1L)).thenReturn(null);
-        assertThat(lookupService.getAlerts(1L,1L,1L), is(nullValue()));
-        verify(mapper).getAlerts(1L,1L,1L);
+        when(mapper.getAlerts(1L,1L,1L,1L)).thenReturn(null);
+        assertThat(lookupService.getAlerts(1L,1L,1L,1L), is(nullValue()));
+        verify(mapper).getAlerts(1L,1L,1L,1L);
     }
 
     @Test
