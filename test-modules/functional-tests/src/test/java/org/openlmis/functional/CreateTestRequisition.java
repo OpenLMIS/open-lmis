@@ -73,15 +73,16 @@ public class CreateTestRequisition extends TestCaseHelper {
     dbWrapper.updateFieldValue("requisition_line_items", "quantityApproved", 10);
     dbWrapper.updateRequisitionStatusByRnrId(AUTHORIZED, userSIC, dbWrapper.getMaxRnrID());
     dbWrapper.updateRequisitionStatusByRnrId(IN_APPROVAL, userSIC, dbWrapper.getMaxRnrID());
-    testWebDriver.sleep(1000);
 
     ApprovePage approvePage = homePage.navigateToApprove();
-    approvePage.clickRequisitionPresentForApproval();
     approvePage.verifyNoRequisitionMessage();
+    approvePage.clickRequisitionPresentForApproval();
+    testWebDriver.waitForAjax();
     approvePage.editFullSupplyApproveQuantity("20");
     approvePage.clickRegimenTab();
     approvePage.approveRequisition();
     approvePage.clickOk();
+    testWebDriver.refresh();
 
     ConvertOrderPage convertOrderPage = homePage.navigateConvertToOrder();
     convertOrderPage.convertToOrder();
