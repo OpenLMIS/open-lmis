@@ -179,6 +179,37 @@ app.directive('scheduleFilter', ['ReportSchedules','$routeParams',
 }]);
 
 
+app.directive('zoneFilter', ['GeographicZones','$routeParams',
+  function (GeographicZones, $routeParams) {
+
+    return {
+      restrict: 'E',
+      require: '^filterContainer',
+      link: function (scope, elm, attr) {
+
+        scope.schedules = [];
+        scope.schedules.unshift({
+          name: '-- Select Geo Zone --'
+        });
+        scope.filter.zone = $routeParams.zone;
+
+        if (attr.required) {
+          scope.requiredFilters.zone = 'zone';
+        }
+        scope.$evalAsync(function() {
+          GeographicZones.get(function (data) {
+            scope.zones = data.zones;
+            scope.zones.unshift({
+              name: '-- Select Geo Zone --'
+            });
+          });
+        });
+      },
+      templateUrl: 'filter-zone-template'
+    };
+  }]);
+
+
 app.directive('periodFilter', ['ReportPeriods', 'ReportPeriodsByScheduleAndYear','$routeParams',
   function (ReportPeriods, ReportPeriodsByScheduleAndYear, $routeParams) {
 

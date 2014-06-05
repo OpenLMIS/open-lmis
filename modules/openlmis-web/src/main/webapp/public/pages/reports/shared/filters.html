@@ -52,6 +52,17 @@
     </div>
 </script>
 
+<script type="text/ng-template" id="filter-zone-template">
+  <div>
+    <label class="labels">Geographic Zone<span ng-show="requiredFilters.zone" class="label-required">*</span></label>
+    <div>
+      <select class="input-large" ng-model="filter.zone">
+        <option ng-repeat="zone in zones" value="{{ zone.id }}" ng-selected="filter.zone == zone.id">{{zone.name}}</option>
+      </select>
+    </div>
+  </div>
+</script>
+
 <script type="text/ng-template" id="filter-schedule-template">
     <div>
         <label class="labels">Schedule <span ng-show="requiredFilters.schedule" class="label-required">*</span></label>
