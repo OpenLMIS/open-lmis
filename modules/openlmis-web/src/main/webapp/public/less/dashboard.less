@@ -171,12 +171,35 @@ Accordions
   text-decoration: none;
   bottom: 0;
 }
+
+.accordion .accordion-heading a.collapsed{
+  color: #ffffff;
+  background: none repeat scroll 0% 0% rgb(13, 113, 121) !important;
+  span{
+    background: none repeat scroll 0% 0% rgb(13, 113, 121) !important;
+  }
+}
 .accordion .accordion-heading span {
-  padding: 0;
+  padding: 0 !important;
 }
-.accordion-heading a:hover {
+
+.accordion-heading a.open:hover {
   text-decoration: none;
+  color: #ffffff;
+  background: none repeat scroll 0% 0% rgb(13, 113, 121) !important;
+  span{
+    background: none repeat scroll 0% 0% rgb(13, 113, 121) !important;
+  }
 }
+.accordion-heading a.collapsed:hover {
+  text-decoration: none;
+  color: #078f97;
+  background: none repeat scroll 0% 0% rgb(248, 248, 248) !important;
+  span{
+    background: none repeat scroll 0% 0% rgb(248, 248, 248) !important;
+  }
+}
+
 
 /*<!-- -- */
 
@@ -198,8 +221,8 @@ Accordions
   font-size: 18px;
   line-height: 18px;
   font-weight: 400;
-
 }
+
 .accordion-heading  .accordion-title  .caption > i {
   margin-right: 8px;
 }
