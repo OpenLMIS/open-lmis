@@ -160,6 +160,21 @@ public class InteractiveReportController extends BaseController {
     return new Pages(page, max, districtConsumptionReportList);
   }
 
+  @RequestMapping(value = "/reportdata/aggregateConsumption", method = GET, headers = BaseController.ACCEPT_JSON)
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_DISTRICT_CONSUMPTION_REPORT')")
+  public Pages getAggregateConsumptionData(@RequestParam(value = "page", required = false, defaultValue = "1") int page,
+                                          @RequestParam(value = "max", required = false, defaultValue = "10") int max,
+                                          HttpServletRequest request
+
+  ) {
+
+    Report report = reportManager.getReportByKey("aggregate_consumption");
+    List<DistrictConsumptionReport> districtConsumptionReportList =
+        (List<DistrictConsumptionReport>) report.getReportDataProvider().getMainReportData(request.getParameterMap(), request.getParameterMap(), page, max);
+
+    return new Pages(page, max, districtConsumptionReportList);
+  }
+
   @RequestMapping(value = "/reportdata/viewOrders", method = GET, headers = BaseController.ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_ORDER_REPORT')")
   public Pages getOrderSummaryData(

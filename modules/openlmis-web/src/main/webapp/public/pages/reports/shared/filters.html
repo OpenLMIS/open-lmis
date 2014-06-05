@@ -56,8 +56,8 @@
   <div>
     <label class="labels">Geographic Zone<span ng-show="requiredFilters.zone" class="label-required">*</span></label>
     <div>
-      <select class="input-large" ng-model="filter.zone">
-        <option ng-repeat="zone in zones" value="{{ zone.id }}" ng-selected="filter.zone == zone.id">{{zone.name}}</option>
+      <select class="input-large" ng-change="filterChanged();" ng-model="filter.zone">
+        <option ng-repeat="(key, value) in zones track by $index" value="{{ value.id }}" ng-selected="filter.zone == value.id">{{value.name}}</option>
       </select>
     </div>
   </div>
@@ -67,7 +67,7 @@
     <div>
         <label class="labels">Schedule <span ng-show="requiredFilters.schedule" class="label-required">*</span></label>
         <div>
-        <select class="input-medium" ng-model="filter.schedule">
+        <select class="input-medium" ng-change="filterChanged();" ng-model="filter.schedule">
             <option ng-repeat="schedule in schedules" value="{{ schedule.id }}" ng-selected="filter.schedule == schedule.id">{{schedule.name}}</option>
             </select>
         </div>

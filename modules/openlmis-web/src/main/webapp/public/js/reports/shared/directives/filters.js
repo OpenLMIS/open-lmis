@@ -187,23 +187,25 @@ app.directive('zoneFilter', ['GeographicZones','$routeParams',
       require: '^filterContainer',
       link: function (scope, elm, attr) {
 
-        scope.schedules = [];
-        scope.schedules.unshift({
-          name: '-- Select Geo Zone --'
-        });
+//        scope.zones = [];
+//        scope.zones.unshift({
+//          name: '-- Select Geo Zone --'
+//        });
         scope.filter.zone = $routeParams.zone;
 
         if (attr.required) {
           scope.requiredFilters.zone = 'zone';
         }
-        scope.$evalAsync(function() {
-          GeographicZones.get(function (data) {
-            scope.zones = data.zones;
-            scope.zones.unshift({
-              name: '-- Select Geo Zone --'
-            });
+
+        GeographicZones.get(function (data) {
+          // now recreate the zone data to a tree structure in java script objects.
+
+          scope.zones = data.zones;
+          scope.zones.unshift({
+            name: '-- Select Geo Zone --'
           });
         });
+
       },
       templateUrl: 'filter-zone-template'
     };

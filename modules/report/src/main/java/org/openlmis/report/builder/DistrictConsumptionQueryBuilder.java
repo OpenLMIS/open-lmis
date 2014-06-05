@@ -16,7 +16,7 @@ import java.util.Map;
 
 public class DistrictConsumptionQueryBuilder {
 
-    public static String SelectFilteredSortedPagedRecords(Map params){
+  public static String SelectFilteredSortedPagedRecords(Map params){
 
      DistrictConsumptionReportParam filter  = (DistrictConsumptionReportParam)params.get("filterCriteria");
 
@@ -37,7 +37,8 @@ public class DistrictConsumptionQueryBuilder {
 
     return query;
 }
-    private static String writePredicates(DistrictConsumptionReportParam filter){
+
+  private static String writePredicates(DistrictConsumptionReportParam filter){
         String predicate = "";
         if(filter != null){
           predicate = "where processing_periods_id = " + filter.getPeriod() + " ";
@@ -69,4 +70,43 @@ public class DistrictConsumptionQueryBuilder {
         return predicate;
     }
 
+  public static String GetAggregateConsumptionReport(Map params){
+    DistrictConsumptionReportParam filter  = (DistrictConsumptionReportParam)params.get("filterCriteria");
+
+    String predicates = "";
+
+    if(filter.getRgroupId() != 0){
+      predicates = " and rgps.requisitionGroupID = " + filter.getRgroupId();
+    }
+    if(filter.getProductId() > 0 ){
+        predicates = predicates + " and p.id = " + filter.getProductId();
+    }
+
+    if(filter.getProductCategoryId() > 0){
+      predicates = predicates + " and ppc.productCategoryId = " + filter.getProductCategoryId();
+    }
+
+    if(filter.getZoneId() != 0){
+      predicates = predicates + " and ( f.geographicZoneId = " + filter.getZoneId() +" or gz.parentId = " +filter.getZoneId() + " or zone.parentId = " + filter.getZoneId() + " ) " ;
+    }
+
+    String query = "SELECT li.productCode code, li.product, sum(li.quantityDispensed) dispensed, sum(li.normalizedConsumption) consumption FROM requisition_line_items li \n" +
+              " JOIN requisitions r on r.id = li.rnrid " +
+
+              " JOIN facilities f on r.facilityid = f.id " +
+              " JOIN geographic_zones gz on gz.id = f.geographicZoneId " +
+              " JOIN geographic_zones zone on gz.parentId = zone.id " +
+
+              " JOIN requisition_group_members rgm on rgm.facilityId = r.facilityId\n" +
+              " JOIN programs_supported ps  on ps.programId = r.programId and r.facilityId = ps.facilityId\n" +
+              " JOIN processing_periods pp on pp.id = r.periodid " +
+              " JOIN products p on p.code::text = li.productCode::text " +
+              " JOIN program_products ppc on ppc.programId = r.programId and ppc.productId = p.id " +
+              " JOIN requisition_group_program_schedules rgps on rgps.requisitionGroupID = rgm.requisitionGroupId and pp.scheduleId = rgps.scheduleId\n" +
+              " WHERE r.periodid = " + filter.getPeriod() + " and r.programId =  " + filter.getProgramId() + predicates +
+              " GROUP BY li.productCode, li.product" +
+              " ORDER BY li.product ";
+
+    return query;
+  }
 }

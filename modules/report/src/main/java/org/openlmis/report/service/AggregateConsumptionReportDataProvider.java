@@ -24,7 +24,7 @@ import java.util.Map;
 
 @Component
 @NoArgsConstructor
-public class DistrictConsumptionReportDataProvider extends ReportDataProvider {
+public class AggregateConsumptionReportDataProvider extends ReportDataProvider {
 
   @Autowired
   private ConsumptionReportMapper reportMapper;
@@ -39,7 +39,7 @@ public class DistrictConsumptionReportDataProvider extends ReportDataProvider {
   @Override
   public List<? extends ReportData> getMainReportData(Map<String, String[]> filterCriteria, Map<String, String[]> SortCriteria, int page, int pageSize) {
     RowBounds rowBounds = new RowBounds((page - 1) * pageSize, pageSize);
-    return reportMapper.getFilteredSortedPagedAdjustmentSummaryReport(getReportFilterData(filterCriteria), SortCriteria, rowBounds);
+    return reportMapper.getAggregateConsumptionReport(getReportFilterData(filterCriteria), SortCriteria, rowBounds);
   }
 
   public DistrictConsumptionReportParam getReportFilterData(Map<String, String[]> filterCriteria) {
@@ -50,6 +50,7 @@ public class DistrictConsumptionReportDataProvider extends ReportDataProvider {
       districtConsumptionReportParam.setProductId(StringHelper.isBlank(filterCriteria,("product")) ? 0 : Integer.parseInt(filterCriteria.get("product")[0])); //defaults to 0
       districtConsumptionReportParam.setRgroupId(StringHelper.isBlank(filterCriteria,("requisitionGroup")) ? 0 : Integer.parseInt(filterCriteria.get("requisitionGroup")[0])); //defaults to 0
       districtConsumptionReportParam.setProgramId(StringHelper.isBlank(filterCriteria,("program")) ? 0 : Integer.parseInt(filterCriteria.get("program")[0])); //defaults to 0
+      districtConsumptionReportParam.setZoneId(StringHelper.isBlank(filterCriteria, "zone")? 0 : Integer.parseInt(filterCriteria.get("zone")[0]));
       // a required field
       districtConsumptionReportParam.setPeriod(Long.parseLong(filterCriteria.get("period")[0]));
     }
