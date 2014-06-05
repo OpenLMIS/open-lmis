@@ -37,9 +37,11 @@ import static java.util.Arrays.asList;
 import static junit.framework.Assert.assertNull;
 import static org.apache.commons.lang.time.DateUtils.addDays;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
+import static org.junit.matchers.JUnitMatchers.hasItems;
 import static org.openlmis.core.builder.ProcessingPeriodBuilder.*;
 import static org.openlmis.core.builder.ProcessingScheduleBuilder.code;
 import static org.openlmis.core.builder.ProcessingScheduleBuilder.defaultProcessingSchedule;
@@ -227,7 +229,8 @@ public class ProcessingPeriodMapperIT {
     for (ProcessingPeriod period : searchResults) {
       period.setModifiedDate(null);
     }
-    assertThat(searchResults, is(asList(period1, period2, period4, period5)));
+    assertThat(searchResults, is(hasItems(period1, period2, period4, period5)));
+    assertThat(searchResults, is(not(hasItems(period3))));
   }
 
   @Test
