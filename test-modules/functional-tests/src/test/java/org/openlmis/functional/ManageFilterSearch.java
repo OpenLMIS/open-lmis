@@ -1,5 +1,6 @@
 package org.openlmis.functional;
 
+import com.thoughtworks.selenium.SeleneseTestBase;
 import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.pageobjects.*;
 import org.testng.annotations.BeforeMethod;
@@ -107,6 +108,7 @@ public class ManageFilterSearch extends TestCaseHelper {
     filterSearchPage.clickFilterButton();
     filterSearchPage.searchGeographicZone("Root");
     filterSearchPage.selectGeographicZoneResult(1);
+    filterSearchPage.clickRemoveIconButton();
     filterSearchPage.clickCancelFilterButton();
     testWebDriver.waitForAjax();
 
@@ -114,7 +116,11 @@ public class ManageFilterSearch extends TestCaseHelper {
     assertEquals("Warehouse", filterSearchPage.getSelectedFacilityTypeLabelOnAddFilterPage());
     assertEquals("Arusha", filterSearchPage.getSelectedGeoZoneLabelOnAddFilterPage());
     assertTrue(filterSearchPage.isSetFilterButtonPresent());
+    filterSearchPage.clickFilterButton();
+    testWebDriver.waitForAjax();
 
+    assertEquals("Arusha", filterSearchPage.getSelectedGeoZoneOnFilterPopUp());
+    filterSearchPage.clickCancelFilterButton();
   }
 
   @Test(groups = {"admin"})

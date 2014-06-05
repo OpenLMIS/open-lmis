@@ -54,6 +54,9 @@ public class FilterSearchPage extends Page{
   @FindBy(how = ID, using = "selectedGeoZone")
   private static WebElement selectedGeoZone = null;
 
+  @FindBy(how = ID, using = "removeIcon")
+  private static WebElement removeIcon = null;
+
   public FilterSearchPage(TestWebDriver driver) {
     super(driver);
     PageFactory.initElements(new AjaxElementLocatorFactory(TestWebDriver.getDriver(), 1), this);
@@ -117,5 +120,10 @@ public class FilterSearchPage extends Page{
   public void clickCancelFilterButton() {
     testWebDriver.waitForElementToAppear(cancelFiltersButton);
     cancelFiltersButton.click();
+  }
+
+  public void clickRemoveIconButton() {
+    testWebDriver.waitForElementToAppear(removeIcon);
+    removeIcon.click();
   }
 }
