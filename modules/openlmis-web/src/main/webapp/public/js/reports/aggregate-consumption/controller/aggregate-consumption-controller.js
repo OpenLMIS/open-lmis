@@ -8,23 +8,29 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-package org.openlmis.report.model.report;
+function DistrictConsumptionReportController($scope,  AggregateConsumptionReport) {
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.openlmis.report.model.ReportData;
+    //filter form data section
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-public class DistrictConsumptionReport implements ReportData {
+    $scope.OnFilterChanged = function(){
+      $scope.data = $scope.datarows = [];
 
-  private String product;
-  private String code;
-  private String level;
-  private String district;
-  private Double consumption;
-  private Double dispensed;
-  private Double totalPercentage;
+      $scope.filter.max = 10000;
+      AggregateConsumptionReport.get($scope.filter, function(data) {
+        if(data.pages !== undefined){
+          $scope.data = data.pages.rows;
+          $scope.paramsChanged($scope.tableParams);
+        }
+      });
+    };
+
+   $scope.exportReport   = function (type){
+
+        $scope.filter.pdformat = 1;
+        var params = jQuery.param($scope.filter);
+        var url = '/reports/download/aggregate_consumption/' + type +'?' + params;
+        window.open(url);
+    };
+
+
 }

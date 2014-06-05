@@ -8,23 +8,13 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-package org.openlmis.report.model.report;
-
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.openlmis.report.model.ReportData;
-
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-public class DistrictConsumptionReport implements ReportData {
-
-  private String product;
-  private String code;
-  private String level;
-  private String district;
-  private Double consumption;
-  private Double dispensed;
-  private Double totalPercentage;
-}
+angular.module('aggregate_consumption', ['openlmis', 'ngTable', 'angularCombine' ,'ui.bootstrap.modal', 'ui.bootstrap.dropdownToggle'])
+    .config(['$routeProvider', function ($routeProvider) {
+      $routeProvider.
+        when('/list', {controller:DistrictConsumptionReportController, templateUrl:'partials/list.html',reloadOnSearch:false}).
+        otherwise({redirectTo:'/list'});
+    }]).run(function ($rootScope, AuthorizationService) {
+        AuthorizationService.preAuthorize('VIEW_DISTRICT_CONSUMPTION_REPORT');
+    }).config(function(angularCombineConfigProvider) {
+        angularCombineConfigProvider.addConf(/filter-/, '/public/pages/reports/shared/filters.html');
+      });
