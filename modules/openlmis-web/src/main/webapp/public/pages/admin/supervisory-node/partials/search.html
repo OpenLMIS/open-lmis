@@ -74,10 +74,6 @@
     </tbody>
   </table>
 
-  <div class="pagination">
-    <pagination total-items="totalItems" ng-model="currentPage" max-size="5" boundary-links="true"
-                ng-show="supervisoryNodeList.length" items-per-page="pagination.limit" class="pagination-sm"
-                previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></pagination>
-  </div>
-
+  <pagination total-items="totalItems" page="currentPage" max-size="5"  items-per-page="pagination.limit"
+              direction-links="false" ng-show="supervisoryNodeList.length" class="pagination-sm"></pagination>
 </div>

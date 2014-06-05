@@ -8,7 +8,7 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
  */
 
-var supplyLineModule = angular.module('supplyLine', ['openlmis', 'ui.bootstrap.dropdownToggle', 'ui.bootstrap.modal', 'ui.bootstrap']);
+var supplyLineModule = angular.module('supplyLine', ['openlmis', 'ui.bootstrap.dropdownToggle', 'ui.bootstrap.modal', 'ui.bootstrap.pagination']);
 
 supplyLineModule.config(['$routeProvider', function ($routeProvider) {
   $routeProvider.

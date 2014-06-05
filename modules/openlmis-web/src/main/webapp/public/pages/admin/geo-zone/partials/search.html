@@ -44,42 +44,38 @@
     </div>
   </div>
 
-  <div>
-    <table name="searchResultTable" class="table table-striped table-bordered search-list" ng-show="showResults">
-      <thead>
-      <tr class="gradient-header resultCountHeader">
-        <th colspan="5">
-            <span ng-switch on="totalItems">
-            <h3 id="noResultMessage" ng-switch-when="0" openlmis-message="msg.no.matches|searchedQuery"></h3>
-            <h3 id="oneResultMessage" ng-switch-when="1" openlmis-message="msg.one.match|searchedQuery"></h3>
-            <h3 id="nResultsMessage" ng-switch-default
-                openlmis-message="msg.many.matches|totalItems|searchedQuery"></h3>
-              </span>
-          <a id="closeButton" class="close-btn" href="" ng-click="clearSearch()" tabindex="-1"></a>
-        </th>
-      </tr>
-      <tr id="nullResultCounter" class="gradient-header" ng-show="geoZoneList.length">
-        <th id="nameHeader" openlmis-message="header.name"></th>
-        <th id="codeHeader" openlmis-message="header.code"></th>
-        <th id="levelHeader" openlmis-message="header.level"></th>
-        <th id="parentHeader" openlmis-message="header.parent"></th>
-      </tr>
-      </thead>
-      <tbody id="geoZoneList">
-      <tr id="searchResult" ng-repeat="geoZone in geoZoneList">
-        <td>
-          <a id="geoZoneName{{$index}}" href="" ng-click="edit(geoZone.id)" ng-bind="geoZone.name"></a>
-        </td>
-        <td id="code{{$index}}" ng-bind="geoZone.code"></td>
-        <td id="levelName{{$index}}" ng-bind="geoZone.level.name"></td>
-        <td id="parentName{{$index}}" ng-bind="geoZone.parent.name"></td>
-      </tr>
-      </tbody>
-    </table>
-    <div class="pagination">
-      <pagination total-items="totalItems" ng-model="currentPage" max-size="5" boundary-links="true"
-                  ng-show="geoZoneList.length" items-per-page="pagination.limit" class="pagination-sm"
-                  previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></pagination>
-    </div>
-  </div>
+  <table name="searchResultTable" class="table table-striped table-bordered search-list" ng-show="showResults">
+    <thead>
+    <tr class="gradient-header resultCountHeader">
+      <th colspan="5">
+          <span ng-switch on="totalItems">
+          <h3 id="noResultMessage" ng-switch-when="0" openlmis-message="msg.no.matches|searchedQuery"></h3>
+          <h3 id="oneResultMessage" ng-switch-when="1" openlmis-message="msg.one.match|searchedQuery"></h3>
+          <h3 id="nResultsMessage" ng-switch-default
+              openlmis-message="msg.many.matches|totalItems|searchedQuery"></h3>
+            </span>
+        <a id="closeButton" class="close-btn" href="" ng-click="clearSearch()" tabindex="-1"></a>
+      </th>
+    </tr>
+    <tr id="nullResultCounter" class="gradient-header" ng-show="geoZoneList.length">
+      <th id="nameHeader" openlmis-message="header.name"></th>
+      <th id="codeHeader" openlmis-message="header.code"></th>
+      <th id="levelHeader" openlmis-message="header.level"></th>
+      <th id="parentHeader" openlmis-message="header.parent"></th>
+    </tr>
+    </thead>
+    <tbody id="geoZoneList">
+    <tr id="searchResult" ng-repeat="geoZone in geoZoneList">
+      <td>
+        <a id="geoZoneName{{$index}}" href="" ng-click="edit(geoZone.id)" ng-bind="geoZone.name"></a>
+      </td>
+      <td id="code{{$index}}" ng-bind="geoZone.code"></td>
+      <td id="levelName{{$index}}" ng-bind="geoZone.level.name"></td>
+      <td id="parentName{{$index}}" ng-bind="geoZone.parent.name"></td>
+    </tr>
+    </tbody>
+  </table>
+
+  <pagination total-items="totalItems" page="currentPage" max-size="5"  items-per-page="pagination.limit"
+              direction-links="false" ng-show="geoZoneList.length" class="pagination-sm"></pagination>
 </div>
