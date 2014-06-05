@@ -44,7 +44,7 @@ describe("Supply Line Controller", function () {
     expect(scope.topLevelNodes).toEqual([node1, node2, node3]);
     expect(scope.filteredNodes).toEqual([node1, node2, node3]);
     expect(scope.previousQuery).toEqual("Nod");
-    expect(scope.resultCount).toEqual(3);
+    expect(scope.nodeResultCount).toEqual(3);
   });
 
   it('should do client side filtering when previous query and current query are same', function () {
@@ -61,7 +61,7 @@ describe("Supply Line Controller", function () {
     expect($httpBackend.expectGET).not.toHaveBeenCalledWith('/topLevelSupervisoryNodes.json?searchParam=' + scope.query);
     expect(scope.filteredNodes).toEqual([node2, node3]);
     expect(scope.previousQuery).toEqual("Nod");
-    expect(scope.resultCount).toEqual(2);
+    expect(scope.nodeResultCount).toEqual(2);
   });
 
   it('should not search results if query is undefined', function () {
@@ -87,7 +87,7 @@ describe("Supply Line Controller", function () {
     scope.setSupervisoryNode(node);
     expect(scope.supplyLine.supervisoryNode).toBe(node);
     expect(scope.query).toBeUndefined();
-    expect(scope.resultCount).toBeUndefined();
+    expect(scope.nodeResultCount).toBeUndefined();
     expect(scope.filteredFacilities).toBeUndefined();
     expect(scope.previousQuery).toBeUndefined();
   });

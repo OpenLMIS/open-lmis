@@ -59,7 +59,7 @@ describe("Facility Search Filter Controller", function () {
 
     expect(scope.facilityList).toEqual([facility1, facility2]);
     expect(scope.message).toEqual(undefined);
-    expect(scope.resultCount).toEqual(2);
+    expect(scope.facilityResultCount).toEqual(2);
   });
 
   it('should set search and filtered result facilities in scope', function () {
@@ -77,7 +77,7 @@ describe("Facility Search Filter Controller", function () {
 
     expect(scope.facilityList).toEqual([facility1, facility2]);
     expect(scope.message).toEqual(undefined);
-    expect(scope.resultCount).toEqual(2);
+    expect(scope.facilityResultCount).toEqual(2);
   });
 
   it('should set message if too many searched facilities found', function () {
@@ -90,7 +90,7 @@ describe("Facility Search Filter Controller", function () {
 
     expect(scope.facilityList).toEqual([]);
     expect(scope.message).toEqual("Too may results found");
-    expect(scope.resultCount).toEqual(0);
+    expect(scope.facilityResultCount).toEqual(0);
   });
 
   it('should show filter modal with facilityTypes', function () {

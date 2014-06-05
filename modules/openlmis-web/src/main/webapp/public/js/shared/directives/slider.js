@@ -29,8 +29,8 @@ app.directive('slider', function ($timeout) {
         }
       };
 
-      scope.$watch("resultCount", function () {
-        if (scope.resultCount >= 0) {
+      scope.$watch("facilityResultCount", function () {
+        if (scope.facilityResultCount >= 0) {
           angular.element("#search .search-list").slideDown({duration: "slow", progress: progressFunc});
         }
       });

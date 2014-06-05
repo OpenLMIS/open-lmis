@@ -14,7 +14,7 @@ function SupplyLineController($scope, $location, supplyLine, TopLevelSupervisory
 
   var reset = function () {
     $scope.query = undefined;
-    $scope.resultCount = undefined;
+    $scope.nodeResultCount = undefined;
     $scope.filteredFacilities = undefined;
     $scope.previousQuery = undefined;
   };
@@ -39,14 +39,14 @@ function SupplyLineController($scope, $location, supplyLine, TopLevelSupervisory
         $scope.topLevelNodes = data.supervisoryNodeList;
         $scope.filteredNodes = $scope.topLevelNodes;
         $scope.previousQuery = $scope.query;
-        $scope.resultCount = $scope.filteredNodes.length;
+        $scope.nodeResultCount = $scope.filteredNodes.length;
       });
     }
     else {
       $scope.filteredNodes = _.filter($scope.topLevelNodes, function (node) {
         return node.name.toLowerCase().indexOf($scope.query.toLowerCase()) !== -1;
       });
-      $scope.resultCount = $scope.filteredNodes.length;
+      $scope.nodeResultCount = $scope.filteredNodes.length;
     }
   };
 

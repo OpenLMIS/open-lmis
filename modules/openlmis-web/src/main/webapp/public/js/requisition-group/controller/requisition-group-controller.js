@@ -101,14 +101,14 @@ function RequisitionGroupController($scope, requisitionGroupData, $location, Req
         $scope.supervisoryNodes = data.supervisoryNodeList;
         $scope.filteredNodeList = $scope.supervisoryNodes;
         $scope.previousQuery = $scope.query;
-        $scope.resultCount = $scope.filteredNodeList.length;
+        $scope.nodeResultCount = $scope.filteredNodeList.length;
       }, {});
     }
     else {
       $scope.filteredNodeList = _.filter($scope.supervisoryNodes, function (node) {
         return node.name.toLowerCase().indexOf($scope.query.toLowerCase()) !== -1;
       });
-      $scope.resultCount = $scope.filteredNodeList.length;
+      $scope.nodeResultCount = $scope.filteredNodeList.length;
     }
   };
 

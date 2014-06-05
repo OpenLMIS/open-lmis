@@ -30,7 +30,7 @@ function FacilitySearchFilterController($scope, FacilityTypes, GeographicZoneSea
     $scope.facilityQuery = $scope.facilitySearchParam.trim();
     Facilities.get({"searchParam": $scope.facilityQuery, "facilityTypeId": $scope.type.id, "geoZoneId": $scope.zone.id}, function (data) {
       $scope.facilityList = data.facilityList;
-      $scope.resultCount = isUndefined($scope.facilityList) ? 0 : $scope.facilityList.length;
+      $scope.facilityResultCount = isUndefined($scope.facilityList) ? 0 : $scope.facilityList.length;
       $scope.message = data.message;
     });
   };
@@ -39,7 +39,7 @@ function FacilitySearchFilterController($scope, FacilityTypes, GeographicZoneSea
     angular.element("#search .search-list").slideUp("slow", function () {
       $scope.facilitySearchParam = undefined;
       $scope.facilityList = undefined;
-      $scope.resultCount = undefined;
+      $scope.facilityResultCount = undefined;
       $scope.$apply();
       angular.element('#searchFacility').focus();
     });
