@@ -49,15 +49,19 @@ public class FacilityApprovedProductMapperIT {
 
   @Autowired
   ProductMapper productMapper;
+
   @Autowired
   ProgramProductMapper programProductMapper;
+
   @Autowired
   FacilityMapper facilityMapper;
 
   @Autowired
   FacilityApprovedProductMapper facilityApprovedProductMapper;
+
   @Autowired
   private ProgramMapper programMapper;
+
   @Autowired
   private ProductCategoryMapper productCategoryMapper;
 
@@ -103,9 +107,7 @@ public class FacilityApprovedProductMapperIT {
     ProductCategory category4 = category("C4", "Category 4", 5);
     ProductCategory category6 = category("C6", "Category 6", 1);
 
-
     Product pro01 = product("PRO01", true);
-    Product pro02 = product("PRO02", true);
     Product pro03 = product("PRO03", false);
     Product pro04 = product("PRO04", true);
     Product pro05 = product("PRO05", true);
@@ -113,7 +115,6 @@ public class FacilityApprovedProductMapperIT {
     Product pro07 = product("PRO07", true);
 
     ProgramProduct programProduct1 = addToProgramProduct(yellowFeverProgram, pro01, true, category1, 6);
-    ProgramProduct programProduct2 = addToProgramProduct(yellowFeverProgram, pro02, true, category2, 4);
     ProgramProduct programProduct3 = addToProgramProduct(yellowFeverProgram, pro03, true, category3, 1);
     ProgramProduct programProduct4 = addToProgramProduct(yellowFeverProgram, pro04, false, category4, 2);
     ProgramProduct programProduct5 = addToProgramProduct(yellowFeverProgram, pro05, true, category1, 5);
@@ -127,16 +128,16 @@ public class FacilityApprovedProductMapperIT {
     insertFacilityApprovedProduct(FACILITY_TYPE_ID, programProduct6);
     insertFacilityApprovedProduct(FACILITY_TYPE_ID, programProduct7);
 
-    // Get full supply products
     List<FacilityTypeApprovedProduct> facilityTypeApprovedProducts = facilityApprovedProductMapper.getFullSupplyProductsByFacilityAndProgram(
       facility.getId(), yellowFeverProgram.getId());
+
     assertEquals(3, facilityTypeApprovedProducts.size());
 
     FacilityTypeApprovedProduct facilityTypeApprovedProduct = facilityTypeApprovedProducts.get(0);
+    Product product = facilityTypeApprovedProduct.getProgramProduct().getProduct();
 
     assertEquals(programProduct6.getId(), facilityTypeApprovedProduct.getProgramProduct().getId());
     assertEquals(30, facilityTypeApprovedProduct.getProgramProduct().getDosesPerMonth().intValue());
-    Product product = facilityTypeApprovedProduct.getProgramProduct().getProduct();
     assertEquals("PRO06", product.getCode());
     assertEquals("Primary Name", product.getPrimaryName());
     assertEquals("strength", product.getStrength());
@@ -153,14 +154,81 @@ public class FacilityApprovedProductMapperIT {
     assertEquals("PRO05", facilityTypeApprovedProducts.get(1).getProgramProduct().getProduct().getCode());
     assertEquals("PRO01", facilityTypeApprovedProducts.get(2).getProgramProduct().getProduct().getCode());
 
-    // Non-full supply products
-    List<FacilityTypeApprovedProduct> nonFullSupplyfacilityTypeApprovedProducts = facilityApprovedProductMapper.getNonFullSupplyProductsByFacilityAndProgram(
+    List<FacilityTypeApprovedProduct> nonFullSupplyFacilityTypeApprovedProducts = facilityApprovedProductMapper.getNonFullSupplyProductsByFacilityAndProgram(
       facility.getId(), yellowFeverProgram.getId());
 
-    assertThat(nonFullSupplyfacilityTypeApprovedProducts.size(), is(1));
-    assertThat(nonFullSupplyfacilityTypeApprovedProducts.get(0).getProgramProduct().getProduct().getCode(), is("PRO03"));
-    assertThat(nonFullSupplyfacilityTypeApprovedProducts.get(0).getProgramProduct().getProduct().getManufacturer(), is(nullValue()));
-    assertThat(nonFullSupplyfacilityTypeApprovedProducts.get(0).getProgramProduct().getProduct().getFlammable(), is(nullValue()));
+    assertThat(nonFullSupplyFacilityTypeApprovedProducts.size(), is(1));
+    assertThat(nonFullSupplyFacilityTypeApprovedProducts.get(0).getProgramProduct().getProduct().getCode(), is("PRO03"));
+    assertThat(nonFullSupplyFacilityTypeApprovedProducts.get(0).getProgramProduct().getProduct().getManufacturer(), is(nullValue()));
+    assertThat(nonFullSupplyFacilityTypeApprovedProducts.get(0).getProgramProduct().getProduct().getFlammable(), is(nullValue()));
+  }
+
+  @Test
+  public void shouldGetFacilityApprovedProductId() {
+    Program program = make(a(defaultProgram));
+    Product product = make(a(defaultProduct));
+    productMapper.insert(product);
+
+    ProgramProduct programProduct = addToProgramProduct(program, product, true, category1, null);
+
+    insertFacilityApprovedProduct(FACILITY_TYPE_ID, programProduct);
+
+    FacilityTypeApprovedProduct facilityTypeApprovedProductsFromDB = facilityApprovedProductMapper.getFacilityApprovedProductIdByProgramProductAndFacilityTypeCode(programProduct.getId(), "warehouse");
+
+    assertNotNull(facilityTypeApprovedProductsFromDB);
+    assertEquals(facilityTypeApprovedProductsFromDB.getMaxMonthsOfStock(), MAX_MONTHS_OF_STOCK);
+  }
+
+  @Test
+  public void shouldGetPaginatedFacilityApprovedProductsByProgramIdAndFacilityTypeId() throws Exception {
+    Program yellowFeverProgram = make(a(defaultProgram));
+    Program bpProgram = make(a(defaultProgram, with(programCode, "BP")));
+
+    programMapper.insert(bpProgram);
+    programMapper.insert(yellowFeverProgram);
+
+    ProductCategory category2 = category("C2", "Category 2", 7);
+    ProductCategory category3 = category("C3", "Category 3", 4);
+    ProductCategory category4 = category("C4", "Category 4", 5);
+
+    Product pro01 = product("PRO01", true);
+    Product pro03 = product("PRO03", false);
+    Product pro04 = product("PRO04", true);
+    Product pro05 = product("PRO05", true);
+    Product pro06 = product("aPRO06", true);
+    Product pro07 = product("PRO07", true);
+
+    ProgramProduct programProduct1 = addToProgramProduct(yellowFeverProgram, pro01, true, category1, 6);
+    ProgramProduct programProduct3 = addToProgramProduct(yellowFeverProgram, pro03, true, category3, 1);
+    ProgramProduct programProduct4 = addToProgramProduct(yellowFeverProgram, pro04, false, category4, 2);
+    ProgramProduct programProduct5 = addToProgramProduct(yellowFeverProgram, pro05, true, category1, 5);
+    ProgramProduct programProduct6 = addToProgramProduct(yellowFeverProgram, pro06, true, category1, 5);
+    ProgramProduct programProduct7 = addToProgramProduct(bpProgram, pro07, true, category2, null);
+
+    insertFacilityApprovedProduct(FACILITY_TYPE_ID, programProduct1);
+    insertFacilityApprovedProduct(FACILITY_TYPE_ID, programProduct3);
+    insertFacilityApprovedProduct(FACILITY_TYPE_ID, programProduct4);
+    insertFacilityApprovedProduct(FACILITY_TYPE_ID, programProduct5);
+    insertFacilityApprovedProduct(FACILITY_TYPE_ID, programProduct6);
+    insertFacilityApprovedProduct(FACILITY_TYPE_ID, programProduct7);
+
+    Pagination pagination = new Pagination(1, 4);
+    List<FacilityTypeApprovedProduct> facilityTypeApprovedProducts = facilityApprovedProductMapper.getAllBy(FACILITY_TYPE_ID, yellowFeverProgram.getId(), pagination);
+
+    assertThat(facilityTypeApprovedProducts.size(), is(4));
+    assertThat(facilityTypeApprovedProducts.get(0).getProgramProduct().getProduct().getCode(), is("aPRO06"));
+    assertThat(facilityTypeApprovedProducts.get(1).getProgramProduct().getProduct().getCode(), is("PRO01"));
+    assertThat(facilityTypeApprovedProducts.get(2).getProgramProduct().getProduct().getCode(), is("PRO05"));
+    assertThat(facilityTypeApprovedProducts.get(3).getProgramProduct().getProduct().getCode(), is("PRO03"));
+
+    assertThat(facilityTypeApprovedProducts.get(0).getProgramProduct().getId(), is(programProduct6.getId()));
+    assertThat(facilityTypeApprovedProducts.get(0).getProgramProduct().isActive(), is(programProduct6.isActive()));
+    assertThat(facilityTypeApprovedProducts.get(0).getProgramProduct().getProduct().getId(), is(pro06.getId()));
+    assertThat(facilityTypeApprovedProducts.get(0).getProgramProduct().getProduct().getPrimaryName(), is(pro06.getPrimaryName()));
+    assertThat(facilityTypeApprovedProducts.get(0).getProgramProduct().getProduct().getFullSupply(), is(pro06.getFullSupply()));
+    assertThat(facilityTypeApprovedProducts.get(0).getProgramProduct().getProduct().getActive(), is(pro06.getActive()));
+    assertThat(facilityTypeApprovedProducts.get(0).getProgramProduct().getProductCategory().getId(), is(category1.getId()));
+    assertThat(facilityTypeApprovedProducts.get(0).getProgramProduct().getProductCategory().getName(), is(category1.getName()));
   }
 
   private ProductCategory category(String categoryCode, String categoryName, int categoryDisplayOrder) {
@@ -168,7 +236,6 @@ public class FacilityApprovedProductMapperIT {
     productCategoryMapper.insert(productCategory);
     return productCategory;
   }
-
 
   private FacilityTypeApprovedProduct insertFacilityApprovedProduct(Long facilityTypeId, ProgramProduct programProduct) {
     FacilityType facilityType = new FacilityType();
@@ -191,23 +258,5 @@ public class FacilityApprovedProductMapperIT {
     programProduct.setDisplayOrder(displayOrder);
     programProductMapper.insert(programProduct);
     return programProduct;
-  }
-
-  @Test
-  public void shouldGetFacilityApprovedProductId() {
-    Program program = make(a(defaultProgram));
-
-    Product product = make(a(defaultProduct));
-    productMapper.insert(product);
-
-    ProgramProduct programProduct = addToProgramProduct(program, product, true, category1, null);
-
-
-    insertFacilityApprovedProduct(FACILITY_TYPE_ID, programProduct);
-
-    FacilityTypeApprovedProduct facilityTypeApprovedProductsFromDB = facilityApprovedProductMapper.getFacilityApprovedProductIdByProgramProductAndFacilityTypeCode(programProduct.getId(), "warehouse");
-
-    assertNotNull(facilityTypeApprovedProductsFromDB);
-    assertEquals(facilityTypeApprovedProductsFromDB.getMaxMonthsOfStock(), MAX_MONTHS_OF_STOCK);
   }
 }

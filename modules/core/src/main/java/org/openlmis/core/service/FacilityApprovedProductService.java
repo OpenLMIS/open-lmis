@@ -13,6 +13,7 @@ package org.openlmis.core.service;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.FacilityType;
 import org.openlmis.core.domain.FacilityTypeApprovedProduct;
+import org.openlmis.core.domain.Pagination;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.FacilityApprovedProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,6 +73,10 @@ public class FacilityApprovedProductService {
   public FacilityTypeApprovedProduct getFacilityApprovedProductByProgramProductAndFacilityTypeCode(FacilityTypeApprovedProduct facilityTypeApprovedProduct) {
     fillProgramProductIds(facilityTypeApprovedProduct);
     return repository.getFacilityApprovedProductByProgramProductAndFacilityTypeCode(facilityTypeApprovedProduct);
+  }
+
+  public List<FacilityTypeApprovedProduct> getAllBy(Long facilityTypeId, Long programId, Pagination pagination) {
+    return repository.getAllBy(facilityTypeId, programId, pagination);
   }
 
   private void fillProgramProductIds(FacilityTypeApprovedProduct facilityTypeApprovedProduct) {
