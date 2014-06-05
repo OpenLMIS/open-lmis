@@ -23,9 +23,13 @@ function AlertsController($scope, $filter, Alerts,$location, dashboardMenuServic
         $scope.getAlerts();
     });
 
+    $scope.$watch('formFilter.periodId', function(){
+        $scope.getAlerts();
+    });
+
     $scope.getAlerts = function(){
 
-        Alerts.get({supervisoryNodeId: $scope.formFilter.supervisoryNodeId, programId: $scope.formFilter.programId},function(data){
+        Alerts.get({supervisoryNodeId: $scope.formFilter.supervisoryNodeId, programId: $scope.formFilter.programId, periodId: $scope.formFilter.periodId},function(data){
 
             if(!isUndefined(data.alerts)){
                 $scope.alertData = _.filter(data.alerts,function(alertData){if(alertData.displaySection == typeAlert){return alertData;}});
