@@ -103,6 +103,7 @@ public class CommonSteps extends TestCaseHelper {
   public void clickOnResizeViewButton() {
     RequisitionPage requisitionPage = PageObjectFactory.getRequisitionPage(testWebDriver);
     requisitionPage.clickResizeViewButton();
+    testWebDriver.sleep(1000);
   }
 
   @Then("^I close new window$")
