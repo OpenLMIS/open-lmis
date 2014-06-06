@@ -14,6 +14,7 @@ import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.openlmis.report.model.GeoZoneReportingRate;
 import org.openlmis.report.model.dto.FlatGeographicZone;
+import org.openlmis.report.model.dto.GeoZoneTree;
 import org.openlmis.report.model.dto.GeographicZone;
 import org.openlmis.report.model.geo.GeoFacilityIndicator;
 import org.springframework.stereotype.Repository;
@@ -106,5 +107,9 @@ public interface GeographicZoneReportMapper {
     " order by f.name")
   List<GeoFacilityIndicator> getReportingFacilities(@Param("programId") Long programId, @Param("geographicZoneId") Long geographicZoneId, @Param("periodId") Long processingPeriodId);
 
+  @Select("select * from geographic_zones where parentId is null")
+  GeoZoneTree getParentZoneTree();
 
+  @Select("select * from geographic_zones where parentId = #{parentId} order by name")
+  List<GeoZoneTree> getChildrenZoneTree(int parentId);
 }

@@ -87,7 +87,7 @@ public class DistrictConsumptionQueryBuilder {
     }
 
     if(filter.getZoneId() != 0){
-      predicates = predicates + " and ( f.geographicZoneId = " + filter.getZoneId() +" or gz.parentId = " +filter.getZoneId() + " or zone.parentId = " + filter.getZoneId() + " ) " ;
+      predicates = predicates + " and ( f.geographicZoneId = " + filter.getZoneId() +" or gz.parentId = " +filter.getZoneId() + " or zone.parentId = " + filter.getZoneId() + " or c.parentId = " + filter.getZoneId() + ") " ;
     }
 
     String query = "SELECT li.productCode code, li.product, sum(li.quantityDispensed) dispensed, sum(li.normalizedConsumption) consumption FROM requisition_line_items li \n" +
@@ -96,6 +96,7 @@ public class DistrictConsumptionQueryBuilder {
               " JOIN facilities f on r.facilityid = f.id " +
               " JOIN geographic_zones gz on gz.id = f.geographicZoneId " +
               " JOIN geographic_zones zone on gz.parentId = zone.id " +
+              " JOIN geographic_zones c on zone.parentId = c.id " +
 
               " JOIN requisition_group_members rgm on rgm.facilityId = r.facilityId\n" +
               " JOIN programs_supported ps  on ps.programId = r.programId and r.facilityId = ps.facilityId\n" +
