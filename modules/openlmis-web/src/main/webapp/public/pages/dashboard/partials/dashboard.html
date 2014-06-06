@@ -7,7 +7,7 @@
 <script id="template/accordion/accordion-group.html" type="text/ng-template">
     <div class="accordion-group">
         <div class="accordion-heading" style="margin-bottom:0; border-bottom:0">
-           <a style="bottom:0" class="accordion-toggle" ng-click="isOpen = !isOpen" accordion-transclude="heading">{{heading}}</a>
+           <a style="bottom:0" class="accordion-toggle" ng-class="{'collapsed':!isOpen,'open':isOpen}" ng-click="isOpen = !isOpen" accordion-transclude="heading">{{heading}}</a>
         </div>
         <div class="accordion-body" style="display:block; margin-bottom:0" collapse="!isOpen">
 

@@ -25,13 +25,22 @@ import java.util.List;
 import java.util.Map;
 
 @Repository
-public interface DistrictConsumptionReportMapper {
+public interface ConsumptionReportMapper {
+
   @SelectProvider(type = DistrictConsumptionQueryBuilder.class, method = "SelectFilteredSortedPagedRecords")
   @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize = 10, timeout = 0, useCache = true, flushCache = true)
   public List<DistrictConsumptionReport> getFilteredSortedPagedAdjustmentSummaryReport(
     @Param("filterCriteria") ReportParameter filterCriteria,
     @Param("SortCriteria") Map<String, String[]> SortCriteria,
     @Param("RowBounds") RowBounds rowBounds
+  );
+
+  @SelectProvider(type = DistrictConsumptionQueryBuilder.class, method = "GetAggregateConsumptionReport")
+  @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize = 10, timeout = 0, useCache = true, flushCache = true)
+  public List<DistrictConsumptionReport> getAggregateConsumptionReport(
+      @Param("filterCriteria") ReportParameter filterCriteria,
+      @Param("SortCriteria") Map<String, String[]> SortCriteria,
+      @Param("RowBounds") RowBounds rowBounds
   );
 
 }
