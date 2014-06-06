@@ -73,8 +73,12 @@ public class FacilityApprovedProductService {
     return repository.getFacilityApprovedProductByProgramProductAndFacilityTypeCode(facilityTypeApprovedProduct);
   }
 
-  public List<FacilityTypeApprovedProduct> getAllBy(Long facilityTypeId, Long programId, Pagination pagination) {
-    return repository.getAllBy(facilityTypeId, programId, pagination);
+  public List<FacilityTypeApprovedProduct> getAllBy(Long facilityTypeId, Long programId, String searchParam, Pagination pagination) {
+    return repository.getAllBy(facilityTypeId, programId, searchParam, pagination);
+  }
+
+  public Integer getTotalSearchResultCount(Long facilityTypeId, Long programId, String searchParam) {
+    return repository.getTotalSearchResultCount(facilityTypeId, programId, searchParam);
   }
 
   private void fillProgramProductIds(FacilityTypeApprovedProduct facilityTypeApprovedProduct) {
@@ -84,9 +88,5 @@ public class FacilityApprovedProductService {
     facilityTypeApprovedProduct.getProgramProduct().getProgram().setId(programId);
     facilityTypeApprovedProduct.getProgramProduct().getProduct().setId(productId);
     facilityTypeApprovedProduct.getProgramProduct().setId(programProductId);
-  }
-
-  public Integer getTotalSearchResultCount(Long facilityTypeId, Long programId) {
-    return repository.getTotalSearchResultCount(facilityTypeId, programId);
   }
 }

@@ -55,11 +55,12 @@ public class FacilityApprovedProductController extends BaseController {
   @RequestMapping(value = "/facilityApprovedProducts", method = GET, headers = ACCEPT_JSON)
   public ResponseEntity<OpenLmisResponse> getAllBy(@RequestParam("facilityTypeId") Long facilityTypeId,
                                                    @RequestParam("programId") Long programId,
+                                                   @RequestParam("searchParam") String searchParam,
                                                    @RequestParam(value = "page", defaultValue = "1") Integer page,
                                                    @Value("${search.page.size}") String limit) {
     Pagination pagination = new Pagination(page, parseInt(limit));
-    pagination.setTotalRecords(service.getTotalSearchResultCount(facilityTypeId, programId));
-    List<FacilityTypeApprovedProduct> facilityTypeApprovedProducts = service.getAllBy(facilityTypeId, programId, pagination);
+    pagination.setTotalRecords(service.getTotalSearchResultCount(facilityTypeId, programId, searchParam));
+    List<FacilityTypeApprovedProduct> facilityTypeApprovedProducts = service.getAllBy(facilityTypeId, programId, searchParam, pagination);
     ResponseEntity<OpenLmisResponse> response = OpenLmisResponse.response(FACILITY_APPROVED_PRODUCTS, facilityTypeApprovedProducts);
     response.getBody().addData(PAGINATION, pagination);
     return response;

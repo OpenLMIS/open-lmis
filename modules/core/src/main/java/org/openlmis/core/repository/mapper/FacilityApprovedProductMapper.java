@@ -143,7 +143,8 @@ public interface FacilityApprovedProductMapper {
     "INNER JOIN program_products pp ON pp.id = fap.programProductId",
     "INNER JOIN products prod ON prod.id = pp.productId",
     "INNER JOIN product_categories pc ON pc.id = pp.productCategoryId",
-    "WHERE fap.facilityTypeId = #{facilityTypeId} AND pp.programId = #{programId}",
+    "WHERE fap.facilityTypeId = #{facilityTypeId} AND pp.programId = #{programId} AND",
+    "(LOWER(prod.code) LIKE '%' || LOWER(#{searchParam}) || '%' OR LOWER(prod.primaryName) LIKE '%' || LOWER(#{searchParam}) || '%')",
     "ORDER BY LOWER(pc.name), LOWER(prod.code), LOWER(prod.primaryName)"})
   @Results(value = {
     @Result(property = "programProduct.id", column = "programProductId"),
@@ -161,13 +162,15 @@ public interface FacilityApprovedProductMapper {
   })
   List<FacilityTypeApprovedProduct> getAllBy(@Param(value = "facilityTypeId") Long facilityTypeId,
                                              @Param(value = "programId") Long programId,
-                                             RowBounds rowBounds);
+                                             @Param(value = "searchParam") String searchParam, RowBounds rowBounds);
 
   @Select({"SELECT COUNT(*) FROM facility_approved_products fap",
     "INNER JOIN program_products pp ON pp.id = fap.programProductId",
     "INNER JOIN products prod ON prod.id = pp.productId",
     "INNER JOIN product_categories pc ON pc.id = pp.productCategoryId",
-    "WHERE fap.facilityTypeId = #{facilityTypeId} AND pp.programId = #{programId}"})
+    "WHERE fap.facilityTypeId = #{facilityTypeId} AND pp.programId = #{programId} AND",
+    "(LOWER(prod.code) LIKE '%' || LOWER(#{searchParam}) || '%' OR LOWER(prod.primaryName) LIKE '%' || LOWER(#{searchParam}) || '%')"})
   Integer getTotalSearchResultCount(@Param(value = "facilityTypeId") Long facilityTypeId,
-                                    @Param(value = "programId") Long programId);
+                                    @Param(value = "programId") Long programId,
+                                    @Param(value = "searchParam") String searchParam);
 }

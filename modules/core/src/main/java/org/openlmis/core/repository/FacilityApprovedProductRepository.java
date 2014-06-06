@@ -49,11 +49,11 @@ public class FacilityApprovedProductRepository {
       facilityTypeApprovedProduct.getProgramProduct().getId(), facilityTypeApprovedProduct.getFacilityType().getCode());
   }
 
-  public List<FacilityTypeApprovedProduct> getAllBy(Long facilityTypeId, Long programId, Pagination pagination) {
-    return mapper.getAllBy(facilityTypeId, programId, pagination);
+  public List<FacilityTypeApprovedProduct> getAllBy(Long facilityTypeId, Long programId, String searchParam, Pagination pagination) {
+    return mapper.getAllBy(facilityTypeId, programId, searchParam, pagination);
   }
 
-  public Integer getTotalSearchResultCount(Long facilityTypeId, Long programId) {
-    return mapper.getTotalSearchResultCount(facilityTypeId, programId);
+  public Integer getTotalSearchResultCount(Long facilityTypeId, Long programId, String searchParam) {
+    return mapper.getTotalSearchResultCount(facilityTypeId, programId, searchParam);
   }
 }

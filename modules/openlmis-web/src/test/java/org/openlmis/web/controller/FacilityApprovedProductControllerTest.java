@@ -70,20 +70,21 @@ public class FacilityApprovedProductControllerTest {
   public void shouldGetAllByFacilityTypeIdAndProgramId() throws Exception {
     Long facilityTypeId = 1L;
     Long programId = 2L;
+    String searchParam = "search";
     Integer page = 2;
     String limit = "5";
     Integer count = 10;
     Pagination pagination = new Pagination(0, 0);
     whenNew(Pagination.class).withArguments(page, parseInt(limit)).thenReturn(pagination);
-    when(service.getTotalSearchResultCount(facilityTypeId, programId)).thenReturn(count);
-    when(service.getAllBy(facilityTypeId, programId, pagination)).thenReturn(EMPTY_LIST);
+    when(service.getTotalSearchResultCount(facilityTypeId, programId, searchParam)).thenReturn(count);
+    when(service.getAllBy(facilityTypeId, programId, searchParam, pagination)).thenReturn(EMPTY_LIST);
 
-    ResponseEntity<OpenLmisResponse> response = controller.getAllBy(facilityTypeId, programId, page, limit);
+    ResponseEntity<OpenLmisResponse> response = controller.getAllBy(facilityTypeId, programId, searchParam, page, limit);
 
     assertThat((java.util.List) response.getBody().getData().get(FACILITY_APPROVED_PRODUCTS), is(EMPTY_LIST));
     assertThat((Pagination) response.getBody().getData().get(PAGINATION), is(pagination));
     assertThat(pagination.getTotalRecords(), is(count));
-    verify(service).getAllBy(facilityTypeId, programId, pagination);
-    verify(service).getTotalSearchResultCount(facilityTypeId, programId);
+    verify(service).getAllBy(facilityTypeId, programId, searchParam, pagination);
+    verify(service).getTotalSearchResultCount(facilityTypeId, programId, searchParam);
   }
 }
