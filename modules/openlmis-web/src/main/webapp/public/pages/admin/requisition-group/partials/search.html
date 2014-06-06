@@ -70,7 +70,7 @@
       <td><a id="name{{$index}}" href="" ng-click="edit(requisitionGroup.id)" ng-bind="requisitionGroup.name"></a></td>
       <td id="code{{$index}}" ng-bind="requisitionGroup.code"></td>
       <td id="supervisoryName{{$index}}" ng-bind="requisitionGroup.supervisoryNode.name"></td>
-      <td id="facilityCount{{$index}}" ng-bind="requisitionGroup.memberCount"></td>
+      <td id="facilityCount{{$index}}" class="right-justified" ng-bind="requisitionGroup.memberCount"></td>
     </tr>
     </tbody>
   </table>
