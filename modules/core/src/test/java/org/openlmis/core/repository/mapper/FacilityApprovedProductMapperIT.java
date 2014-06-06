@@ -227,8 +227,48 @@ public class FacilityApprovedProductMapperIT {
     assertThat(facilityTypeApprovedProducts.get(0).getProgramProduct().getProduct().getPrimaryName(), is(pro06.getPrimaryName()));
     assertThat(facilityTypeApprovedProducts.get(0).getProgramProduct().getProduct().getFullSupply(), is(pro06.getFullSupply()));
     assertThat(facilityTypeApprovedProducts.get(0).getProgramProduct().getProduct().getActive(), is(pro06.getActive()));
+    assertThat(facilityTypeApprovedProducts.get(0).getProgramProduct().getProduct().getStrength(), is(pro06.getStrength()));
+    assertThat(facilityTypeApprovedProducts.get(0).getProgramProduct().getProduct().getDosageUnit(), is(pro06.getDosageUnit()));
     assertThat(facilityTypeApprovedProducts.get(0).getProgramProduct().getProductCategory().getId(), is(category1.getId()));
     assertThat(facilityTypeApprovedProducts.get(0).getProgramProduct().getProductCategory().getName(), is(category1.getName()));
+  }
+
+  @Test
+  public void shouldGetTotalCountOfResultsSearchedByProgramIdAndFacilityTypeId() throws Exception {
+    Program yellowFeverProgram = make(a(defaultProgram));
+    Program bpProgram = make(a(defaultProgram, with(programCode, "BP")));
+
+    programMapper.insert(bpProgram);
+    programMapper.insert(yellowFeverProgram);
+
+    ProductCategory category2 = category("C2", "Category 2", 7);
+    ProductCategory category3 = category("C3", "Category 3", 4);
+    ProductCategory category4 = category("C4", "Category 4", 5);
+
+    Product pro01 = product("PRO01", true);
+    Product pro03 = product("PRO03", false);
+    Product pro04 = product("PRO04", true);
+    Product pro05 = product("PRO05", true);
+    Product pro06 = product("aPRO06", true);
+    Product pro07 = product("PRO07", true);
+
+    ProgramProduct programProduct1 = addToProgramProduct(yellowFeverProgram, pro01, true, category1, 6);
+    ProgramProduct programProduct3 = addToProgramProduct(yellowFeverProgram, pro03, true, category3, 1);
+    ProgramProduct programProduct4 = addToProgramProduct(yellowFeverProgram, pro04, false, category4, 2);
+    ProgramProduct programProduct5 = addToProgramProduct(yellowFeverProgram, pro05, true, category1, 5);
+    ProgramProduct programProduct6 = addToProgramProduct(yellowFeverProgram, pro06, true, category1, 5);
+    ProgramProduct programProduct7 = addToProgramProduct(bpProgram, pro07, true, category2, null);
+
+    insertFacilityApprovedProduct(FACILITY_TYPE_ID, programProduct1);
+    insertFacilityApprovedProduct(FACILITY_TYPE_ID, programProduct3);
+    insertFacilityApprovedProduct(FACILITY_TYPE_ID, programProduct4);
+    insertFacilityApprovedProduct(FACILITY_TYPE_ID, programProduct5);
+    insertFacilityApprovedProduct(FACILITY_TYPE_ID, programProduct6);
+    insertFacilityApprovedProduct(FACILITY_TYPE_ID, programProduct7);
+
+    Integer count = facilityApprovedProductMapper.getTotalSearchResultCount(FACILITY_TYPE_ID, yellowFeverProgram.getId());
+
+    assertThat(count, is(5));
   }
 
   private ProductCategory category(String categoryCode, String categoryName, int categoryDisplayOrder) {

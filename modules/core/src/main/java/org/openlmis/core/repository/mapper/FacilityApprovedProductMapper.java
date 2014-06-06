@@ -139,11 +139,11 @@ public interface FacilityApprovedProductMapper {
   void updateFacilityApprovedProduct(FacilityTypeApprovedProduct facilityTypeApprovedProduct);
 
   @Select({"SELECT fap.*, pp.active AS active, prod.active AS globalActive, prod.id AS productId, prod.code AS productCode, prod.primaryName AS productName,",
-    "prod.fullSupply AS fullSupply, pc.id AS categoryId, pc.name AS categoryName FROM facility_approved_products fap",
+    "prod.fullSupply AS fullSupply, prod.strength as strength, prod.dosageUnitId as dosageUnitId, pc.id AS categoryId, pc.name AS categoryName FROM facility_approved_products fap",
     "INNER JOIN program_products pp ON pp.id = fap.programProductId",
     "INNER JOIN products prod ON prod.id = pp.productId",
     "INNER JOIN product_categories pc ON pc.id = pp.productCategoryId",
-    "WHERE facilityTypeId = #{facilityTypeId} AND pp.programId = #{programId}",
+    "WHERE fap.facilityTypeId = #{facilityTypeId} AND pp.programId = #{programId}",
     "ORDER BY LOWER(pc.name), LOWER(prod.code), LOWER(prod.primaryName)"})
   @Results(value = {
     @Result(property = "programProduct.id", column = "programProductId"),
@@ -153,10 +153,21 @@ public interface FacilityApprovedProductMapper {
     @Result(property = "programProduct.product.primaryName", column = "productName"),
     @Result(property = "programProduct.product.fullSupply", column = "fullSupply"),
     @Result(property = "programProduct.product.active", column = "globalActive"),
+    @Result(property = "programProduct.product.strength", column = "strength"),
+    @Result(property = "programProduct.product.dosageUnit", column = "dosageUnitId", javaType = DosageUnit.class,
+      one = @One(select = "org.openlmis.core.repository.mapper.DosageUnitMapper.getById")),
     @Result(property = "programProduct.productCategory.id", column = "categoryId"),
     @Result(property = "programProduct.productCategory.name", column = "categoryName")
   })
   List<FacilityTypeApprovedProduct> getAllBy(@Param(value = "facilityTypeId") Long facilityTypeId,
                                              @Param(value = "programId") Long programId,
                                              RowBounds rowBounds);
+
+  @Select({"SELECT COUNT(*) FROM facility_approved_products fap",
+    "INNER JOIN program_products pp ON pp.id = fap.programProductId",
+    "INNER JOIN products prod ON prod.id = pp.productId",
+    "INNER JOIN product_categories pc ON pc.id = pp.productCategoryId",
+    "WHERE fap.facilityTypeId = #{facilityTypeId} AND pp.programId = #{programId}"})
+  Integer getTotalSearchResultCount(@Param(value = "facilityTypeId") Long facilityTypeId,
+                                    @Param(value = "programId") Long programId);
 }

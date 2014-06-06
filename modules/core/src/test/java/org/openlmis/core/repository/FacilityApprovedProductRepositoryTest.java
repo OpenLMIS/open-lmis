@@ -10,19 +10,18 @@
 
 package org.openlmis.core.repository;
 
-import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.openlmis.core.domain.FacilityTypeApprovedProduct;
 import org.openlmis.core.domain.FacilityType;
+import org.openlmis.core.domain.FacilityTypeApprovedProduct;
 import org.openlmis.core.domain.ProgramProduct;
 import org.openlmis.core.repository.mapper.FacilityApprovedProductMapper;
-import org.openlmis.core.repository.mapper.FacilityMapper;
 import org.openlmis.db.categories.UnitTests;
 
 import static org.junit.rules.ExpectedException.none;
@@ -37,18 +36,10 @@ public class FacilityApprovedProductRepositoryTest {
   public ExpectedException expectedException = none();
 
   @Mock
-  private FacilityApprovedProductMapper facilityApprovedProductMapper;
+  private FacilityApprovedProductMapper mapper;
 
-  private FacilityApprovedProductRepository facilityApprovedProductRepository;
-
-  @Mock
-  private FacilityMapper facilityMapper;
-
-  @Before
-  public void setUp() {
-    facilityApprovedProductRepository = new FacilityApprovedProductRepository(facilityApprovedProductMapper,
-      facilityMapper, null);
-  }
+  @InjectMocks
+  private FacilityApprovedProductRepository repository;
 
   @Test
   public void shouldInsertAFacilitySupportedProduct() {
@@ -58,29 +49,29 @@ public class FacilityApprovedProductRepositoryTest {
     facilityTypeApprovedProduct.setProgramProduct(programProduct);
     facilityTypeApprovedProduct.setFacilityType(new FacilityType("warehouse"));
 
-    when(facilityApprovedProductMapper.getFacilityApprovedProductIdByProgramProductAndFacilityTypeCode(1L,
+    when(mapper.getFacilityApprovedProductIdByProgramProductAndFacilityTypeCode(1L,
       "warehouse")).thenReturn(null);
 
-    facilityApprovedProductRepository.insert(facilityTypeApprovedProduct);
-    verify(facilityApprovedProductMapper).insert(facilityTypeApprovedProduct);
+    repository.insert(facilityTypeApprovedProduct);
+    verify(mapper).insert(facilityTypeApprovedProduct);
   }
 
   @Test
   public void shouldGetFullSupplyFacilityApprovedProducts() {
-    facilityApprovedProductRepository.getFullSupplyProductsByFacilityAndProgram(5L, 8L);
-    verify(facilityApprovedProductMapper).getFullSupplyProductsByFacilityAndProgram(5L, 8L);
+    repository.getFullSupplyProductsByFacilityAndProgram(5L, 8L);
+    verify(mapper).getFullSupplyProductsByFacilityAndProgram(5L, 8L);
   }
 
   @Test
   public void shouldGetNonFullSupplyFacilityApprovedProducts() {
-    facilityApprovedProductRepository.getNonFullSupplyProductsByFacilityAndProgram(5L, 8L);
-    verify(facilityApprovedProductMapper).getNonFullSupplyProductsByFacilityAndProgram(5L, 8L);
+    repository.getNonFullSupplyProductsByFacilityAndProgram(5L, 8L);
+    verify(mapper).getNonFullSupplyProductsByFacilityAndProgram(5L, 8L);
   }
 
   @Test
   public void shouldUpdateFacilityApprovedProductIfExists() throws Exception {
     FacilityTypeApprovedProduct facilityTypeApprovedProduct = new FacilityTypeApprovedProduct();
-    facilityApprovedProductRepository.update(facilityTypeApprovedProduct);
-    verify(facilityApprovedProductMapper).updateFacilityApprovedProduct(facilityTypeApprovedProduct);
+    repository.update(facilityTypeApprovedProduct);
+    verify(mapper).updateFacilityApprovedProduct(facilityTypeApprovedProduct);
   }
 }

@@ -49,8 +49,7 @@ public class ProductBuilder {
       product.setAlternateName("Alt - TDF/FTC/EFV");
       product.setDescription("is a med");
       product.setStrength("strength");
-      DosageUnit dosageUnit = new DosageUnit();
-      dosageUnit.setCode("mg");
+      DosageUnit dosageUnit = new DosageUnit("mg", 1);
       dosageUnit.setId(1L);
       product.setDosageUnit(dosageUnit);
       product.setDispensingUnit("Strip");

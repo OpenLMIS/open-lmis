@@ -31,22 +31,20 @@ public class FacilityApprovedProductService {
 
   public static final String FACILITY_TYPE_DOES_NOT_EXIST = "facilityType.invalid";
 
+  @Autowired
   private FacilityApprovedProductRepository repository;
-  private ProgramService programService;
-  private ProductService productService;
-  private ProgramProductService programProductService;
-  private FacilityService facilityService;
 
   @Autowired
-  public FacilityApprovedProductService(FacilityApprovedProductRepository repository,
-                                        ProgramService programService, ProductService productService,
-                                        ProgramProductService programProductService, FacilityService facilityService) {
-    this.repository = repository;
-    this.programService = programService;
-    this.productService = productService;
-    this.programProductService = programProductService;
-    this.facilityService = facilityService;
-  }
+  private ProgramService programService;
+
+  @Autowired
+  private ProductService productService;
+
+  @Autowired
+  private ProgramProductService programProductService;
+
+  @Autowired
+  private FacilityService facilityService;
 
   public List<FacilityTypeApprovedProduct> getFullSupplyFacilityApprovedProductByFacilityAndProgram(Long facilityId, Long programId) {
     return repository.getFullSupplyProductsByFacilityAndProgram(facilityId, programId);
@@ -86,5 +84,9 @@ public class FacilityApprovedProductService {
     facilityTypeApprovedProduct.getProgramProduct().getProgram().setId(programId);
     facilityTypeApprovedProduct.getProgramProduct().getProduct().setId(productId);
     facilityTypeApprovedProduct.getProgramProduct().setId(programProductId);
+  }
+
+  public Integer getTotalSearchResultCount(Long facilityTypeId, Long programId) {
+    return repository.getTotalSearchResultCount(facilityTypeId, programId);
   }
 }

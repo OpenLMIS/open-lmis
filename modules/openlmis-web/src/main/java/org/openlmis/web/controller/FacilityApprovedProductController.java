@@ -43,13 +43,13 @@ public class FacilityApprovedProductController extends BaseController {
   public static final String PAGINATION = "pagination";
 
   @Autowired
-  private FacilityApprovedProductService facilityApprovedProductService;
+  private FacilityApprovedProductService service;
 
   @RequestMapping(value = "/facilityApprovedProducts/facility/{facilityId}/program/{programId}/nonFullSupply", method = GET, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CREATE_REQUISITION, AUTHORIZE_REQUISITION')")
   public ResponseEntity<OpenLmisResponse> getAllNonFullSupplyProductsByFacilityAndProgram(@PathVariable("facilityId") Long facilityId,
                                                                                           @PathVariable("programId") Long programId) {
-    return response(NON_FULL_SUPPLY_PRODUCTS, facilityApprovedProductService.getNonFullSupplyFacilityApprovedProductByFacilityAndProgram(facilityId, programId));
+    return response(NON_FULL_SUPPLY_PRODUCTS, service.getNonFullSupplyFacilityApprovedProductByFacilityAndProgram(facilityId, programId));
   }
 
   @RequestMapping(value = "/facilityApprovedProducts", method = GET, headers = ACCEPT_JSON)
@@ -58,7 +58,8 @@ public class FacilityApprovedProductController extends BaseController {
                                                    @RequestParam(value = "page", defaultValue = "1") Integer page,
                                                    @Value("${search.page.size}") String limit) {
     Pagination pagination = new Pagination(page, parseInt(limit));
-    List<FacilityTypeApprovedProduct> facilityTypeApprovedProducts = facilityApprovedProductService.getAllBy(facilityTypeId, programId, pagination);
+    pagination.setTotalRecords(service.getTotalSearchResultCount(facilityTypeId, programId));
+    List<FacilityTypeApprovedProduct> facilityTypeApprovedProducts = service.getAllBy(facilityTypeId, programId, pagination);
     ResponseEntity<OpenLmisResponse> response = OpenLmisResponse.response(FACILITY_APPROVED_PRODUCTS, facilityTypeApprovedProducts);
     response.getBody().addData(PAGINATION, pagination);
     return response;
