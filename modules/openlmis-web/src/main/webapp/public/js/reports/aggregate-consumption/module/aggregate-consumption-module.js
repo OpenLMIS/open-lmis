@@ -8,26 +8,13 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-function RegimenSummaryControllers($scope, $window, RegimenSummaryReport) {
-
-    $scope.exportReport = function (type) {
-        $scope.filter.pdformat = 1;
-        var params = jQuery.param($scope.filter);
-        var url = '/reports/download/regimen_summary/' + type + '?' + params;
-        $window.open(url);
-    };
-
-    $scope.OnFilterChanged = function () {
-
-        $scope.data = $scope.datarows = [];
-        $scope.filter.max = 10000;
-        $scope.filter.page = 1;
-
-        RegimenSummaryReport.get($scope.filter, function (data) {
-            if (data.pages !== undefined && data.pages.rows !== undefined) {
-                $scope.data = data.pages.rows;
-                $scope.paramsChanged($scope.tableParams);
-            }
-        });
-    };
-}
+angular.module('aggregate_consumption', ['openlmis', 'ngTable', 'angularCombine' ,'ui.bootstrap.modal', 'ui.bootstrap.dropdownToggle'])
+    .config(['$routeProvider', function ($routeProvider) {
+      $routeProvider.
+        when('/list', {controller:DistrictConsumptionReportController, templateUrl:'partials/list.html',reloadOnSearch:false}).
+        otherwise({redirectTo:'/list'});
+    }]).run(function ($rootScope, AuthorizationService) {
+        AuthorizationService.preAuthorize('VIEW_DISTRICT_CONSUMPTION_REPORT');
+    }).config(function(angularCombineConfigProvider) {
+        angularCombineConfigProvider.addConf(/filter-/, '/public/pages/reports/shared/filters.html');
+      });

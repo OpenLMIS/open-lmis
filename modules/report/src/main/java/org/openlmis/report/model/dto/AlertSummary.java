@@ -17,6 +17,7 @@ public class AlertSummary {
     private String staticsValue;
     private String description;
     private Long supervisoryNodeId;
+    private Long periodId;
     private String alertType;
     private String displaySection;
     private Boolean email;

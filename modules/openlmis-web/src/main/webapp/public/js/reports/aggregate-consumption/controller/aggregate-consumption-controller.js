@@ -8,26 +8,29 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-function RegimenSummaryControllers($scope, $window, RegimenSummaryReport) {
+function DistrictConsumptionReportController($scope,  AggregateConsumptionReport) {
 
-    $scope.exportReport = function (type) {
+    //filter form data section
+
+    $scope.OnFilterChanged = function(){
+      $scope.data = $scope.datarows = [];
+
+      $scope.filter.max = 10000;
+      AggregateConsumptionReport.get($scope.filter, function(data) {
+        if(data.pages !== undefined){
+          $scope.data = data.pages.rows;
+          $scope.paramsChanged($scope.tableParams);
+        }
+      });
+    };
+
+   $scope.exportReport   = function (type){
+
         $scope.filter.pdformat = 1;
         var params = jQuery.param($scope.filter);
-        var url = '/reports/download/regimen_summary/' + type + '?' + params;
-        $window.open(url);
+        var url = '/reports/download/aggregate_consumption/' + type +'?' + params;
+        window.open(url);
     };
 
-    $scope.OnFilterChanged = function () {
 
-        $scope.data = $scope.datarows = [];
-        $scope.filter.max = 10000;
-        $scope.filter.page = 1;
-
-        RegimenSummaryReport.get($scope.filter, function (data) {
-            if (data.pages !== undefined && data.pages.rows !== undefined) {
-                $scope.data = data.pages.rows;
-                $scope.paramsChanged($scope.tableParams);
-            }
-        });
-    };
 }

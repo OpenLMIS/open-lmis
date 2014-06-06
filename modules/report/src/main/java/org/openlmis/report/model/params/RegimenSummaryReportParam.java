@@ -15,8 +15,10 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.ProcessingPeriod;
+import org.openlmis.report.filter.CustomReportFilter;
 import org.openlmis.report.model.ReportParameter;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
 
@@ -27,41 +29,41 @@ import java.text.SimpleDateFormat;
 public class RegimenSummaryReportParam
         extends BaseParam implements ReportParameter {
 
-    private long period;
+
     private ProcessingPeriod periodObject;
 
-    private int rgroupId;
-    private int regimenCategoryId;
-    private String regimenCategory;
-    private String rgroup;
-    private String regimen;
-    private Integer regimenId;
-    private int programId;
+    private Long programId;
     private String program;
-    private int scheduleId;
     private String schedule;
-    private int periodId;
+    private int rgroupId;
+    private String rgroup;
+    private Long regimenId;
+    private String regimen;
+    private int scheduleId;
+    private Long regimenCategoryId;
+    private String regimenCategory;
+    private Long periodId;
+    private String period;
     private Integer year;
+
 
     SimpleDateFormat dateFormatter = new SimpleDateFormat();
 
+
     @Override
     public String toString() {
-        if (periodObject != null) {
+
 
             StringBuilder filtersValue = new StringBuilder("");
-            filtersValue.append("Period : ").append(dateFormatter.format(this.periodObject.getNextStartDate())).append("-").append(dateFormatter.format(this.periodObject.getEndDate())).append("\n").
-                    append("Regimen Category : ").append(this.getRegimenCategory()).append("\n").
-                    append("Regimen : ").append(this.getRegimen()).append("\n").
-                    append("Schedule : ").append(this.getSchedule()).append("\n").
-                    append("Program : ").append(this.getProgram()).append("\n").
-                    append("Reporting Groups : ").append(this.getRgroup());
+
+                  //  filtersValue.append("Schedule : ").append(this.getSchedule()).append("\n").
+                   // append("Program : ").append(this.getProgram()).append("\n").
+                   // append("Regimen : ").append(this.getRegimen()).append("\n").
+                   // append("Regimen Category : ").append(this.getRegimenCategory()).append("\n").
+                    //append("Reporting Groups : ").append(this.getRgroup());
 
             return filtersValue.toString();
-        } else {
-            return "No filters selected";
-        }
-    }
 
+    }
 
 }

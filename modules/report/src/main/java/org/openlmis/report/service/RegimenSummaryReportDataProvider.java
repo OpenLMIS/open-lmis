@@ -13,9 +13,12 @@ package org.openlmis.report.service;
 import lombok.NoArgsConstructor;
 import org.apache.ibatis.session.RowBounds;
 
+import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.core.service.ConfigurationSettingService;
 
 import org.openlmis.core.service.ProcessingPeriodService;
+import org.openlmis.core.service.ProgramService;
+import org.openlmis.core.service.RegimenService;
 import org.openlmis.report.mapper.RegimenSummaryReportMapper;
 import org.openlmis.report.model.ReportData;
 
@@ -38,7 +41,11 @@ public class RegimenSummaryReportDataProvider extends ReportDataProvider {
     @Autowired
     private ConfigurationSettingService configurationService;
     @Autowired
-    private ProcessingPeriodService processingPeriodService;
+    private ProcessingPeriodService periodService;
+    @Autowired
+    private ProgramService programService;
+    @Autowired
+    private RegimenService regimenService;
 
     @Autowired
     public RegimenSummaryReportDataProvider(RegimenSummaryReportMapper mapper, ConfigurationSettingService configurationService) {
@@ -64,13 +71,28 @@ public class RegimenSummaryReportDataProvider extends ReportDataProvider {
         if (filterCriteria != null) {
 
             regimenSummaryReportParam = new RegimenSummaryReportParam();
-            regimenSummaryReportParam.setRegimenId(StringHelper.isBlank(filterCriteria, "regimen") ? 0 : Integer.parseInt(filterCriteria.get("regimen")[0])); //defaults to 0
-            regimenSummaryReportParam.setRegimenCategoryId(StringHelper.isBlank(filterCriteria, ("regimenCategory")) ? 0 : Integer.parseInt(filterCriteria.get("regimenCategory")[0])); //defaults to 0
-            regimenSummaryReportParam.setPeriodId(StringHelper.isBlank(filterCriteria, "period") ? 0 : Integer.parseInt(filterCriteria.get("period")[0])); //defaults to 0
-            regimenSummaryReportParam.setRgroupId(StringHelper.isBlank(filterCriteria, "requisitionGroup") ? 0 : Integer.parseInt(filterCriteria.get("requisitionGroup")[0])); //defaults to 0
-            regimenSummaryReportParam.setProgramId(StringHelper.isBlank(filterCriteria, "program") ? 0 : Integer.parseInt(filterCriteria.get("program")[0])); //defaults to 0
-            regimenSummaryReportParam.setPeriodObject(processingPeriodService.getById(regimenSummaryReportParam.getPeriod()));
+            regimenSummaryReportParam.setRegimenCategoryId(StringHelper.isBlank(filterCriteria, "regimenCategory") ? 0L : Long.parseLong(filterCriteria.get("regimenCategory")[0]));
+            if(filterCriteria.containsKey("regimen") && !StringHelper.isBlank(filterCriteria,"regimen")){
+                regimenSummaryReportParam.setRegimenId(Long.parseLong(filterCriteria.get("regimen")[0])); //defaults to 0
+            }else{
+                regimenSummaryReportParam.setRegimenId(0L);
+            }
+            regimenSummaryReportParam.setScheduleId(StringHelper.isBlank(filterCriteria, "schedule") ? 0 : Integer.parseInt(filterCriteria.get("schedule")[0]));
+            regimenSummaryReportParam.setRgroupId(StringHelper.isBlank(filterCriteria, "requisitionGroup") ? 0 : Integer.parseInt(filterCriteria.get("requisitionGroup")[0]));
+            regimenSummaryReportParam.setProgramId(StringHelper.isBlank(filterCriteria,"program") ? 0L : Long.parseLong(filterCriteria.get("program")[0]));
+            regimenSummaryReportParam.setPeriodId(StringHelper.isBlank(filterCriteria,"period") ? 0L : Long.parseLong(filterCriteria.get("period")[0]));
 
+            ProcessingPeriod pPeriod = periodService.getById( regimenSummaryReportParam.getPeriodId());
+            // summarize the filters now.
+            String summary = "Period: " + pPeriod.getName()
+                    .concat(" - ")
+                    .concat(pPeriod.getStringYear())
+                    .concat("\nProgram: ")
+                    .concat(programService.getById(regimenSummaryReportParam.getProgramId()).getName());
+            if(regimenSummaryReportParam.getRegimenId() != 0){
+                summary.concat("\nRegimen: ")
+                        .concat(regimenService.getById(regimenSummaryReportParam.getRegimenId()).getName());
+            }
 
         }
         return regimenSummaryReportParam;

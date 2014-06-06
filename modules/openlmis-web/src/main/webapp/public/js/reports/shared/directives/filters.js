@@ -179,6 +179,39 @@ app.directive('scheduleFilter', ['ReportSchedules','$routeParams',
 }]);
 
 
+app.directive('zoneFilter', ['GeographicZones','$routeParams',
+  function (GeographicZones, $routeParams) {
+
+    return {
+      restrict: 'E',
+      require: '^filterContainer',
+      link: function (scope, elm, attr) {
+
+//        scope.zones = [];
+//        scope.zones.unshift({
+//          name: '-- Select Geo Zone --'
+//        });
+        scope.filter.zone = $routeParams.zone;
+
+        if (attr.required) {
+          scope.requiredFilters.zone = 'zone';
+        }
+
+        GeographicZones.get(function (data) {
+          // now recreate the zone data to a tree structure in java script objects.
+
+          scope.zones = data.zones;
+          scope.zones.unshift({
+            name: '-- Select Geo Zone --'
+          });
+        });
+
+      },
+      templateUrl: 'filter-zone-template'
+    };
+  }]);
+
+
 app.directive('periodFilter', ['ReportPeriods', 'ReportPeriodsByScheduleAndYear','$routeParams',
   function (ReportPeriods, ReportPeriodsByScheduleAndYear, $routeParams) {
 
@@ -482,7 +515,7 @@ app.directive('programByRegimenFilter',['ReportRegimenPrograms', function(Report
 
             ReportRegimenPrograms.get(function (data) {
                 scope.programs = data.regimenPrograms;
-                scope.programs.unshift({'name': '--Select a Program --',id:-1});
+                scope.programs.unshift({'name': '--Select a Program --'});
             });
 
             if (attr.required) {

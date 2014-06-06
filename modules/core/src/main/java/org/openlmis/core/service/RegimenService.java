@@ -43,4 +43,5 @@ public class RegimenService {
     return repository.getAllRegimenCategories();
   }
 
+  public Regimen getById(Long id){return repository.getById(id);}
 }

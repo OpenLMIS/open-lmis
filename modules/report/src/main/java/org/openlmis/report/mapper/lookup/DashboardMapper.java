@@ -95,9 +95,11 @@ public interface DashboardMapper {
             "INNER JOIN vw_user_supervisorynodes sn ON sn.id = s.supervisorynodeid\n" +
             "WHERE sn.userid = #{userId}\n" +
             "AND s.programid = #{programId}\n"+
+            "AND s.periodId = #{periodId}\n"+
             "AND (sn.id = #{supervisoryNodeId} OR sn.parentId = #{supervisoryNodeId}) \n")
 
-    List<AlertSummary> getAlerts(@Param("userId") Long userId, @Param("supervisoryNodeId") Long supervisoryNodeId, @Param("programId")Long programId);
+    List<AlertSummary> getAlerts(@Param("userId") Long userId, @Param("supervisoryNodeId") Long supervisoryNodeId, @Param("programId")Long programId,
+                                 @Param("periodId") Long periodId);
 
 
     @SelectProvider(type = DashboardNotificationQueryBuilder.class, method = "getNotificationDetails")

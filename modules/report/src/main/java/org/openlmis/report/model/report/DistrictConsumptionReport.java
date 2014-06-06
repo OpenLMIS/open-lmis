@@ -20,9 +20,11 @@ import org.openlmis.report.model.ReportData;
 @AllArgsConstructor
 public class DistrictConsumptionReport implements ReportData {
 
-    private String product;
-    private String level;
-    private String district;
-    private Double consumption;
-    private Double totalPercentage;
+  private String product;
+  private String code;
+  private String level;
+  private String district;
+  private Double consumption;
+  private Double dispensed;
+  private Double totalPercentage;
 }

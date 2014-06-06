@@ -144,10 +144,10 @@ public class DashboardControllerTest {
     @Test
     public  void shouldReturnAlerts() throws Exception{
         List<AlertSummary> expectedAlertList = new ArrayList<>(1);
-        when(lookupService.getAlerts(userId,1L,1L)).thenReturn(expectedAlertList);
+        when(lookupService.getAlerts(userId,1L,1L,1L)).thenReturn(expectedAlertList);
 
-        ResponseEntity<OpenLmisResponse> fetchedAlertList = dashboardController.getAlerts(1L,1L,httpServletRequest);
-        verify(lookupService).getAlerts(userId,1L,1L);
+        ResponseEntity<OpenLmisResponse> fetchedAlertList = dashboardController.getAlerts(1L,1L,1L,httpServletRequest);
+        verify(lookupService).getAlerts(userId,1L,1L,1L);
         assertThat((List<AlertSummary>) fetchedAlertList.getBody().getData().get(ALERTS),is(expectedAlertList));
 
     }
@@ -155,8 +155,8 @@ public class DashboardControllerTest {
     @Test
     public void shouldReturnNotificationTypeAlerts() throws Exception{
         List<AlertSummary> expectedNotificationAlerts = new ArrayList<>(2);
-        expectedNotificationAlerts.add(new AlertSummary(1L,"10",null,1L,"NOTIFICATION","SUMMARY",false,true,null,null,null));
-        expectedNotificationAlerts.add(new AlertSummary(2L,"20",null,1L,"NOTIFICATION","SUMMARY",false,true,null,null,null));
+        expectedNotificationAlerts.add(new AlertSummary(1L,"10",null,1L,1L,"NOTIFICATION","SUMMARY",false,true,null,null,null));
+        expectedNotificationAlerts.add(new AlertSummary(2L,"20",null,1L,1L,"NOTIFICATION","SUMMARY",false,true,null,null,null));
 
         when(lookupService.getNotificationAlerts()).thenReturn(expectedNotificationAlerts);
 
