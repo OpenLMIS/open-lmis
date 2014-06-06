@@ -311,8 +311,8 @@ public class ManageRequisitionGroups extends TestCaseHelper {
     filterSearchpage.clickFilterButton();
     testWebDriver.waitForAjax();
     filterSearchpage.selectFacilityType("Warehouse");
-    //filterSearchpage.searchGeographicZone("Root");
     filterSearchpage.clickApplyFilterButton();
+    testWebDriver.waitForAjax();
     assertEquals("4 matches found for 'F11'",requisitionGroupPage.getNResultsMessage());
     requisitionGroupPage.selectFacilityToBeAssociated(1);
     requisitionGroupPage.clickAssociatedFacilityLink();

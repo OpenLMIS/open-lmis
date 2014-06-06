@@ -361,6 +361,7 @@ public class ManageSupervisoryNodes extends TestCaseHelper {
     enterSupervisoryNodeDetails("N1", "Node4", "This is Node 4", "Node1", 1, "F10");
     supervisoryNodesPage.clickSaveButton();
     assertEquals("Invalid Parent Node Code", supervisoryNodesPage.getSaveMessage());
+    testWebDriver.sleep(500);
 
     supervisoryNodesPage.clickOnClearSearchResultButton();
     supervisoryNodesPage.enterSearchParentNodeParameter("Node");
