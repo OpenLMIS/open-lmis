@@ -10,7 +10,6 @@
 
 package org.openlmis.functional;
 
-import com.thoughtworks.selenium.SeleneseTestBase;
 import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.pageobjects.*;
 import org.testng.annotations.AfterMethod;
@@ -72,7 +71,7 @@ public class ManageSupervisoryNodes extends TestCaseHelper {
     assertTrue(supervisoryNodesPage.isSearchIconDisplayed());
   }
 
-//  @Test(groups = {"admin"})
+  @Test(groups = {"admin"})
   public void testSupervisoryNodeSearchSortAndPagination() throws SQLException {
     dbWrapper.assignRight("Admin", "MANAGE_SUPERVISORY_NODE");
     dbWrapper.insertSupervisoryNode("F10", "N1", "Node1", null);
@@ -148,69 +147,69 @@ public class ManageSupervisoryNodes extends TestCaseHelper {
     assertFalse(supervisoryNodesPage.isSupervisoryNodeHeaderPresent());
   }
 
-//  @Test(groups = {"admin"})
-//  public void testSupervisoryNodeParentSearchSortAndPagination() throws SQLException {
-//    dbWrapper.assignRight("Admin", "MANAGE_SUPERVISORY_NODE");
-//    dbWrapper.insertSupervisoryNode("F10", "N1", "Node1", null);
-//    dbWrapper.insertSupervisoryNode("F11", "N2", "Node2", null);
-//    dbWrapper.insertSupervisoryNode("F10", "N3", "Node3", "N2");
-//    HomePage homePage = loginPage.loginAs(testData.get(ADMIN), testData.get(PASSWORD));
-//    UploadPage uploadPage = homePage.navigateUploads();
-//    uploadPage.uploadSupervisoryNodes("QA_supervisoryNodes21.csv");
-//    uploadPage.verifySuccessMessageOnUploadScreen();
-//
-//    supervisoryNodesPage = homePage.navigateToSupervisoryNodes();
-//    assertEquals("Supervisory node", supervisoryNodesPage.getSelectedSearchOption());
-//    supervisoryNodesPage.clickSearchOptionButton();
-//    supervisoryNodesPage.selectSupervisoryNodeParentAsSearchOption();
-//    assertEquals("Supervisory node parent", supervisoryNodesPage.getSelectedSearchOption());
-//
-//    searchNode("Approval Point");
-//    assertEquals("14 matches found for 'Approval Point'", supervisoryNodesPage.getNResultsMessage());
-//    searchNode("Ap");
-//    assertEquals("14 matches found for 'Ap'", supervisoryNodesPage.getNResultsMessage());
-//
-//    verifyNumberOFPageLinksDisplayed(16, 10);
-//    verifyPageNumberLinksDisplayed();
-//    verifyPageNumberSelected(1);
-//    verifyNextAndLastPageLinksEnabled();
-//    verifyPreviousAndFirstPageLinksDisabled();
-//    verifyNumberOfLineItemsVisibleOnPage(10);
-//    verifyParentNameOrderOnPage(new String[]{"Approval Point 10", "Approval Point 3", "Approval Point 3", "Approval Point 3", "approval Point 4",
-//      "approval Point 4", "Approval Point 5", "Approval Point 5", "Approval Point 5", "Approval Point 6"});
-//    verifySupervisoryNodeNameOrderOnPage(new String[]{"Approval Point 13", "Approval Point 12", "Approval Point 21", "Node3", "Approval Point 13",
-//      "Approval Point 5", "Approval Point 15", "Approval Point 20", "Approval Point 6", "Approval Point 8"});
-//
-//    navigateToPage(2);
-//    verifyPageNumberSelected(2);
-//    verifyNextAndLastPageLinksDisabled();
-//    verifyPreviousAndFirstPageLinksEnabled();
-//    verifyNumberOfLineItemsVisibleOnPage(4);
-//    verifyParentNameOrderOnPage(new String[]{"approval Point 7", "Approval Point 8", "Approval Point 8", "Approval Point 9"});
-//    verifySupervisoryNodeNameOrderOnPage(new String[]{"Approval Point 9", "Approval Point 11", "Approval Point 13", "Approval Point 13"});
-//
-//    navigateToFirstPage();
-//    verifyPageNumberSelected(1);
-//    verifyNextAndLastPageLinksEnabled();
-//    verifyPreviousAndFirstPageLinksDisabled();
-//    verifyNumberOfLineItemsVisibleOnPage(10);
-//    verifyParentNameOrderOnPage(new String[]{"Approval Point 10", "Approval Point 3", "Approval Point 3", "Approval Point 3", "approval Point 4",
-//      "approval Point 4", "Approval Point 5", "Approval Point 5", "Approval Point 5", "Approval Point 6"});
-//    verifySupervisoryNodeNameOrderOnPage(new String[]{"Approval Point 13", "Approval Point 12", "Approval Point 21", "Node3", "Approval Point 13",
-//      "Approval Point 5", "Approval Point 15", "Approval Point 20", "Approval Point 6", "Approval Point 8"});
-//
-//    navigateToLastPage();
-//    verifyPageNumberSelected(2);
-//    verifyNextAndLastPageLinksDisabled();
-//    verifyPreviousAndFirstPageLinksEnabled();
-//    verifyNumberOfLineItemsVisibleOnPage(4);
-//
-//    navigateToPreviousPage();
-//    verifyPageNumberSelected(1);
-//    verifyNextAndLastPageLinksEnabled();
-//    verifyPreviousAndFirstPageLinksDisabled();
-//    verifyNumberOfLineItemsVisibleOnPage(10);
-//  }
+  @Test(groups = {"admin"})
+  public void testSupervisoryNodeParentSearchSortAndPagination() throws SQLException {
+    dbWrapper.assignRight("Admin", "MANAGE_SUPERVISORY_NODE");
+    dbWrapper.insertSupervisoryNode("F10", "N1", "Node1", null);
+    dbWrapper.insertSupervisoryNode("F11", "N2", "Node2", null);
+    dbWrapper.insertSupervisoryNode("F10", "N3", "Node3", "N2");
+    HomePage homePage = loginPage.loginAs(testData.get(ADMIN), testData.get(PASSWORD));
+    UploadPage uploadPage = homePage.navigateUploads();
+    uploadPage.uploadSupervisoryNodes("QA_supervisoryNodes21.csv");
+    uploadPage.verifySuccessMessageOnUploadScreen();
+
+    supervisoryNodesPage = homePage.navigateToSupervisoryNodes();
+    assertEquals("Supervisory node", supervisoryNodesPage.getSelectedSearchOption());
+    supervisoryNodesPage.clickSearchOptionButton();
+    supervisoryNodesPage.selectSupervisoryNodeParentAsSearchOption();
+    assertEquals("Supervisory node parent", supervisoryNodesPage.getSelectedSearchOption());
+
+    searchNode("Approval Point");
+    assertEquals("14 matches found for 'Approval Point'", supervisoryNodesPage.getNResultsMessage());
+    searchNode("Ap");
+    assertEquals("14 matches found for 'Ap'", supervisoryNodesPage.getNResultsMessage());
+
+    verifyNumberOFPageLinksDisplayed(16, 10);
+    verifyPageNumberLinksDisplayed();
+    verifyPageNumberSelected(1);
+    verifyNextAndLastPageLinksEnabled();
+    verifyPreviousAndFirstPageLinksDisabled();
+    verifyNumberOfLineItemsVisibleOnPage(10);
+    verifyParentNameOrderOnPage(new String[]{"Approval Point 10", "Approval Point 3", "Approval Point 3", "Approval Point 3", "approval Point 4",
+      "approval Point 4", "Approval Point 5", "Approval Point 5", "Approval Point 5", "Approval Point 6"});
+    verifySupervisoryNodeNameOrderOnPage(new String[]{"Approval Point 13", "Approval Point 12", "Approval Point 21", "Node3", "Approval Point 13",
+      "Approval Point 5", "Approval Point 15", "Approval Point 20", "Approval Point 6", "Approval Point 8"});
+
+    navigateToPage(2);
+    verifyPageNumberSelected(2);
+    verifyNextAndLastPageLinksDisabled();
+    verifyPreviousAndFirstPageLinksEnabled();
+    verifyNumberOfLineItemsVisibleOnPage(4);
+    verifyParentNameOrderOnPage(new String[]{"approval Point 7", "Approval Point 8", "Approval Point 8", "Approval Point 9"});
+    verifySupervisoryNodeNameOrderOnPage(new String[]{"Approval Point 9", "Approval Point 11", "Approval Point 13", "Approval Point 13"});
+
+    navigateToFirstPage();
+    verifyPageNumberSelected(1);
+    verifyNextAndLastPageLinksEnabled();
+    verifyPreviousAndFirstPageLinksDisabled();
+    verifyNumberOfLineItemsVisibleOnPage(10);
+    verifyParentNameOrderOnPage(new String[]{"Approval Point 10", "Approval Point 3", "Approval Point 3", "Approval Point 3", "approval Point 4",
+      "approval Point 4", "Approval Point 5", "Approval Point 5", "Approval Point 5", "Approval Point 6"});
+    verifySupervisoryNodeNameOrderOnPage(new String[]{"Approval Point 13", "Approval Point 12", "Approval Point 21", "Node3", "Approval Point 13",
+      "Approval Point 5", "Approval Point 15", "Approval Point 20", "Approval Point 6", "Approval Point 8"});
+
+    navigateToLastPage();
+    verifyPageNumberSelected(2);
+    verifyNextAndLastPageLinksDisabled();
+    verifyPreviousAndFirstPageLinksEnabled();
+    verifyNumberOfLineItemsVisibleOnPage(4);
+
+    navigateToPreviousPage();
+    verifyPageNumberSelected(1);
+    verifyNextAndLastPageLinksEnabled();
+    verifyPreviousAndFirstPageLinksDisabled();
+    verifyNumberOfLineItemsVisibleOnPage(10);
+  }
 
   @Test(groups = {"admin"})
   public void testSupervisoryNodeParentSearchWhenNoResults() throws SQLException {
