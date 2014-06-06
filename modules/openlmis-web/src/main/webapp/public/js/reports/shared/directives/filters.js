@@ -482,7 +482,7 @@ app.directive('programByRegimenFilter',['ReportRegimenPrograms', function(Report
 
             ReportRegimenPrograms.get(function (data) {
                 scope.programs = data.regimenPrograms;
-                scope.programs.unshift({'name': '--Select a Program --',id:-1});
+                scope.programs.unshift({'name': '--Select a Program --'});
             });
 
             if (attr.required) {
