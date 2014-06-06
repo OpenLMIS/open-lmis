@@ -50,7 +50,7 @@
     </span>
 
     <div ng-hide="visibleTab === 'regimen'" set-focus>
-      <openlmis-pagination num-pages="numberOfPages" current-page="currentPage" max-size="10"
+      <openlmis-pagination ng-show="page.nonFullSupply.length" num-pages="numberOfPages" current-page="currentPage" max-size="10"
                            check-error-on-page="checkErrorOnPage(page)"></openlmis-pagination>
     </div>
 
