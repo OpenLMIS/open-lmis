@@ -86,6 +86,33 @@ public class SupplyLinePage extends Page {
   @FindBy(how = ID, using = "viewHereLink")
   private static WebElement viewHereLink = null;
 
+  @FindBy(how = ID, using = "program")
+  private static WebElement programDropDown = null;
+
+  @FindBy(how = ID, using = "searchNode")
+  private static WebElement supervisoryNodeField = null;
+
+  @FindBy(how = ID, using = "associatedFacilityField")
+  private static WebElement associatedFacilityField = null;
+
+  @FindBy(how = ID, using = "searchFacility")
+  private static WebElement searchFacility = null;
+
+  @FindBy(how = ID, using = "searchButton")
+  private static WebElement searchButton = null;
+
+  @FindBy(how = ID, using = "exportOrdersFalse")
+  private static WebElement exportOrdersFalse = null;
+
+  @FindBy(how = ID, using = "exportOrdersTrue")
+  private static WebElement exportOrdersTrue = null;
+
+  @FindBy(how = ID, using = "description")
+  private static WebElement description = null;
+
+  @FindBy(how = ID, using = "clearSearch")
+  private static WebElement clearSearch = null;
+
   public SupplyLinePage(TestWebDriver driver) {
     super(driver);
     PageFactory.initElements(new AjaxElementLocatorFactory(TestWebDriver.getDriver(), 1), this);
@@ -207,9 +234,9 @@ public class SupplyLinePage extends Page {
   }
 
   public String getProgram(int rowNumber) {
-    WebElement facility = testWebDriver.getElementById("program" + (rowNumber - 1));
-    testWebDriver.waitForElementToAppear(facility);
-    return facility.getText();
+    WebElement program = testWebDriver.getElementById("program" + (rowNumber - 1));
+    testWebDriver.waitForElementToAppear(program);
+    return program.getText();
   }
 
   public String getSupplyingFacility(int rowNumber) {
@@ -219,15 +246,15 @@ public class SupplyLinePage extends Page {
   }
 
   public String getSupervisoryNode(int rowNumber) {
-    WebElement name = testWebDriver.getElementById("supervisoryNode" + (rowNumber - 1));
-    testWebDriver.waitForElementToAppear(name);
-    return name.getText();
+    WebElement node = testWebDriver.getElementById("supervisoryNode" + (rowNumber - 1));
+    testWebDriver.waitForElementToAppear(node);
+    return node.getText();
   }
 
   public String getDescription(int rowNumber) {
-    WebElement code = testWebDriver.getElementById("description" + (rowNumber - 1));
-    testWebDriver.waitForElementToAppear(code);
-    return code.getText();
+    WebElement description = testWebDriver.getElementById("description" + (rowNumber - 1));
+    testWebDriver.waitForElementToAppear(description);
+    return description.getText();
   }
 
   public void clickSearchIcon() {
@@ -274,4 +301,69 @@ public class SupplyLinePage extends Page {
     testWebDriver.waitForElementToAppear(viewHereLink);
     viewHereLink.click();
   }
+
+  public void selectProgram(String program) {
+    testWebDriver.waitForElementToAppear(programDropDown);
+    sendKeys(programDropDown, program);
+  }
+
+  public void searchSupervisoryNode(String node) {
+    testWebDriver.waitForElementToAppear(supervisoryNodeField);
+    supervisoryNodeField.click();
+    sendKeys(supervisoryNodeField, node);
+    testWebDriver.waitForAjax();
+  }
+
+  public void selectSupervisoryNodeResult(int rowNumber) {
+    WebElement supervisoryNodeResult = testWebDriver.getElementById("result" + (rowNumber - 1));
+    testWebDriver.waitForElementToAppear(supervisoryNodeResult);
+    supervisoryNodeResult.click();
+  }
+
+  public void clickSupplyingFacilityField() {
+    testWebDriver.waitForElementToAppear(associatedFacilityField);
+    associatedFacilityField.click();
+  }
+
+  public void searchAssociatedFacility(String facilityCodeOrName) {
+    testWebDriver.waitForElementToAppear(searchFacility);
+    sendKeys(searchFacility, facilityCodeOrName);
+    searchButton.click();
+  }
+
+  public void chooseFacilityExportOptionButton(boolean exportOrdersOption) {
+    if (exportOrdersOption == true)
+      exportOrdersTrue.click();
+    else
+      exportOrdersFalse.click();
+  }
+
+  public void enterValuesInSupplyLineFields(String program, String node, boolean exportOrdersOption) {
+    selectProgram(program);
+    searchSupervisoryNode(node);
+    selectSupervisoryNodeResult(1);
+    chooseFacilityExportOptionButton(exportOrdersOption);
+  }
+
+  public void enterDescription(String desc) {
+    testWebDriver.waitForElementToAppear(description);
+    description.sendKeys(desc);
+  }
+
+  public void selectAssociatedFacilityResult(int rowNumber) {
+    WebElement facilityResult = testWebDriver.getElementById("facilityResult" + (rowNumber - 1));
+    testWebDriver.waitForElementToAppear(facilityResult);
+    facilityResult.click();
+  }
+
+  public String getSaveErrorMessageDiv() {
+    testWebDriver.waitForElementToAppear(saveErrorMsgDiv);
+    return saveErrorMsgDiv.getText();
+  }
+
+  public void clickClearSearchButton() {
+    testWebDriver.waitForElementToAppear(clearSearch);
+    clearSearch.click();
+  }
 }
+

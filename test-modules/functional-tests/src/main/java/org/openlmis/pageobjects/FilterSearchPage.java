@@ -19,7 +19,7 @@ import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 
 import static org.openqa.selenium.support.How.ID;
 
-public class FilterSearchPage extends Page{
+public class FilterSearchPage extends Page {
 
   @FindBy(how = ID, using = "filterButton")
   private static WebElement setFilterButton = null;
@@ -82,15 +82,15 @@ public class FilterSearchPage extends Page{
 
   public String getSelectedFacilityTypeOnFilterPopUp() {
     testWebDriver.waitForElementToAppear(selectedFacilityType);
-    return selectedFacilityType.getText() ;
+    return selectedFacilityType.getText();
   }
 
-  public String getSelectedFacilityTypeLabelOnAddFilterPage(){
+  public String getSelectedFacilityTypeLabelOnAddFilterPage() {
     testWebDriver.waitForElementToAppear(facilityTypeLabel);
     return facilityTypeLabel.getText();
   }
 
-  public String getSelectedGeoZoneLabelOnAddFilterPage(){
+  public String getSelectedGeoZoneLabelOnAddFilterPage() {
     testWebDriver.waitForElementToAppear(geoZoneLabel);
     return geoZoneLabel.getText();
   }
@@ -107,14 +107,14 @@ public class FilterSearchPage extends Page{
   }
 
   public void selectGeographicZoneResult(int rowNumber) {
-    WebElement geoZoneResult = testWebDriver.getElementById("geoZoneResult" + (rowNumber-1));
+    WebElement geoZoneResult = testWebDriver.getElementById("geoZoneResult" + (rowNumber - 1));
     testWebDriver.waitForElementToAppear(geoZoneResult);
     geoZoneResult.click();
   }
 
   public String getSelectedGeoZoneOnFilterPopUp() {
     testWebDriver.waitForElementToAppear(selectedGeoZone);
-    return selectedGeoZone.getText() ;
+    return selectedGeoZone.getText();
   }
 
   public void clickCancelFilterButton() {

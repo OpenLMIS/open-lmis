@@ -182,6 +182,10 @@ public class TestWebDriver {
     return driver.findElements(By.xpath(Xpath));
   }
 
+  public List<WebElement> getElementsByLinkText(String linkText) {
+    return driver.findElements(By.linkText(linkText));
+  }
+
   public int getElementsSizeByXpath(String Xpath) {
     return driver.findElements(By.xpath(Xpath)).size();
   }

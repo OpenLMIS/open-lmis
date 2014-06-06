@@ -49,7 +49,7 @@
             </label>
 
             <div class="form-field radio-group">
-              <input ng-model="supplyLine.exportOrders" type="radio" name="exportOrders" ng-value="true"
+              <input id="exportOrdersTrue" ng-model="supplyLine.exportOrders" type="radio" name="exportOrders" ng-value="true"
                      ng-required="true"/>
               <strong openlmis-message="button.yes"></strong> &nbsp; &nbsp; &nbsp;
               <input id="exportOrdersFalse" ng-model="supplyLine.exportOrders" type="radio" name="exportOrders"
@@ -88,7 +88,7 @@
                     </li>
                   </ul>
                 </div>
-                <div ng-show="supplyLine.supervisoryNode">
+                <div id="supervisoryNode" ng-show="supplyLine.supervisoryNode">
                   <span ng-bind="supplyLine.supervisoryNode.name"></span>
                   <a id="clearSearch" href="" class="clear-search" ng-click="deleteSupervisoryNode()"></a>
                 </div>
