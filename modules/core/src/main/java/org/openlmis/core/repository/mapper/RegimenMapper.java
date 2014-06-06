@@ -40,4 +40,8 @@ public interface RegimenMapper {
   @Update({"UPDATE regimens SET code = #{code}, name = #{name}, active = #{active}, displayOrder = #{displayOrder},",
     "modifiedBy = #{modifiedBy} WHERE id = #{id}"})
   void update(Regimen regimen);
+
+    @Select("SELECT * FROM regimens WHERE id = #{id}")
+    Regimen getById(Long id);
+
 }
