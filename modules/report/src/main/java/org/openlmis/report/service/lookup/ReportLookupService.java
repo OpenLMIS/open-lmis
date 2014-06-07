@@ -250,7 +250,9 @@ public class ReportLookupService {
   public List<Program> getAllRegimenPrograms() {
     return programMapper.getAllRegimenPrograms();
   }
-
+public List<Program>getAllProgramsWithBudgeting(){
+    return programMapper.getAllProgramsWithBudgeting();
+}
 
   public List<Schedule> getAllSchedules() {
     return scheduleMapper.getAll();
@@ -392,5 +394,8 @@ public class ReportLookupService {
   public List<UserRoleAssignmentsReport>getUserRoleAssignments(){
       return userSummaryExReportMapper.getUserRoleAssignment();
   }
+    public List<GeographicZone>getAllMSDZones(){
+        return geographicZoneMapper.getAllMSDZones();
+    }
 
 }

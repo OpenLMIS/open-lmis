@@ -639,3 +639,4 @@ app.directive('clientSideSortPagination', ['$filter', 'ngTableParams',
     };
 
 }]);
+

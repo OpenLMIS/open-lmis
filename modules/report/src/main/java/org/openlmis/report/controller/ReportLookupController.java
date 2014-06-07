@@ -15,6 +15,7 @@ import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.core.domain.Right;
 import org.openlmis.core.domain.SupervisoryNode;
 import org.openlmis.core.service.FacilityService;
+import org.openlmis.core.service.GeographicZoneService;
 import org.openlmis.core.service.ProcessingScheduleService;
 import org.openlmis.report.model.dto.*;
 import org.openlmis.report.response.OpenLmisResponse;
@@ -68,8 +69,10 @@ public class ReportLookupController extends BaseController {
   public ResponseEntity<OpenLmisResponse> getRegimenPrograms(){
       return OpenLmisResponse.response( "regimenPrograms", this.reportLookupService.getAllRegimenPrograms());
   }
-
-
+  @RequestMapping(value = "/programsWithBudgetApplies", method = GET,headers = BaseController.ACCEPT_JSON)
+  public ResponseEntity<OpenLmisResponse>getProgramsWithBudgetingApplies(){
+      return OpenLmisResponse.response("programWithBudgetingApplies",this.reportLookupService.getAllProgramsWithBudgeting());
+  }
   @RequestMapping(value="/schedules", method = GET, headers = BaseController.ACCEPT_JSON)
   public ResponseEntity<OpenLmisResponse> getSchedules(){
       return OpenLmisResponse.response( "schedules", this.reportLookupService.getAllSchedules() ) ;
@@ -361,4 +364,10 @@ public ResponseEntity<OpenLmisResponse> getSupervisedFacilities(
         return OpenLmisResponse.response("userRoleAssignmentSummary",userSummaryList);
     }
 
+
+    @RequestMapping(value = "/getAllMSDZones",method = GET,headers = BaseController.ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse>getAllMSDZones(HttpServletRequest request){
+        List<GeographicZone>msdZonesList= reportLookupService.getAllMSDZones();
+        return OpenLmisResponse.response("msdZones",msdZonesList);
+    }
 }

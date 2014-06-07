@@ -561,3 +561,7 @@ services.factory("RnRStatusByRequisitionGroupAndPeriodDetails ",function($resour
 services.factory('RnRStatusDetailsByRequisitionGroup', function($resource){
     return $resource('/dashboard/rnrStatus-detail.json',{},{});
 });
+
+services.factory('GetAllMsdZones',function($resource){
+   return $resource('/reports/getAllMSDZones.json',{},{});
+});

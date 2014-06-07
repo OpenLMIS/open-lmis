@@ -159,7 +159,7 @@ function RequisitionStatusSummaryController($scope, $filter, totalRnRCreatedByRe
                 borderWidth: 1,
                 borderColor: "#d6d6d6",
                 backgroundColor: {
-                    colors: ["#FFF", "#CCC"]
+                    colors: ["#FFF", "#CCC","#FFF","#CCC"]
                 }
             },
             tooltip: true,
@@ -346,14 +346,7 @@ function RequisitionStatusSummaryController($scope, $filter, totalRnRCreatedByRe
         angular.extend(data, $scope.filterObject);
         dashboardFiltersHistoryService.add($scope.$parent.currentTab, data);
     });
-
-    // the grid options
-    $scope.tableParams = new ngTableParams({
-        page: 1,            // show first page
-        total: 0,           // length of data
-        count: 25           // count per page
-    });
-
+    
     $scope.$on('$viewContentLoaded', function () {
 
         var filterHistory = dashboardFiltersHistoryService.get($scope.$parent.currentTab);
