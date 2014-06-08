@@ -62,6 +62,7 @@ public enum Right {
   MANAGE_PRODUCT("Admin - Manage Products", ADMIN, "Permission to manage products",29),
   MANAGE_SUPPLYLINE("Admin - Manage Supply Line", ADMIN, "Permission to manage supply line",30),
   MANAGE_GEOGRAPHIC_ZONES ("Admin - Manage Geographic Zones", ADMIN, "Permission to manage geographic zones.",31),
+  MANAGE_DONOR("Admin - Manage Donors",ADMIN,"Permission to manage donors", 53),
 
   MANAGE_EQUIPMENT_SETTINGS ("Admin - Manage Equipment Settings", ADMIN, "Permission to manage equipment settings.",60),
   MANAGE_EQUIPMENT_INVENTORY ("Admin - Manage Equipment Inventory", ADMIN, "Permission to manage equipment inventory.",61),
