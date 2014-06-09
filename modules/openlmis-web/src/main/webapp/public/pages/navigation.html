@@ -146,13 +146,17 @@
                   <a id='supervisoryNodes' href="/public/pages/admin/supervisory-node/index.html"
                      openlmis-message="menu.header.supervisory.nodes"></a>
                 </li>
-                <li ng-show="hasPermission('MANAGE_REQUISITION_GROUP')" ng-class="geoZoneSelected">
-                  <a id='requisitionGroups' href="/public/pages/admin/requisition-group/index.html"
+                <li ng-show="hasPermission('MANAGE_REQUISITION_GROUP')">
+                <a id='requisitionGroups' href="/public/pages/admin/requisition-group/index.html"
                      openlmis-message="menu.header.requisition.groups"></a>
                 </li>
-                <li ng-show="hasPermission('MANAGE_SUPPLY_LINE')" ng-class="supplyLineSelected">
-                  <a id='supplyLines' href="/public/pages/admin/supply-line/index.html"
+                <li ng-show="hasPermission('MANAGE_SUPPLY_LINE')">
+                <a id='supplyLines' href="/public/pages/admin/supply-line/index.html"
                      openlmis-message="menu.header.supply.lines"></a>
+                </li>
+                <li ng-show="hasPermission('MANAGE_FACILITY_APPROVED_PRODUCT')">
+                  <a id="facilityApprovedProducts" href="/public/pages/admin/facility-approved-product/index.html"
+                     openlmis-message="header.facility.approved.products"></a>
                 </li>
                 <li class="beak"></li>
               </ul>

@@ -50,5 +50,9 @@
         <span id="supplyLineTab" openlmis-message="menu.header.supply.lines"></span>
       </a>
     </li>
+    <li ng-show="hasPermission('MANAGE_FACILITY_APPROVED_PRODUCT')" ng-class="facilityApprovedProductSelected">
+      <a id="facilityApprovedProducts" href="/public/pages/admin/facility-approved-product/index.html"
+         openlmis-message="header.facility.approved.products"></a>
+    </li>
   </ul>
 </div>
