@@ -271,17 +271,6 @@ public class SupplyLinePage extends FilterSearchPage {
     return testWebDriver.getElementsSizeByXpath("//*[@id='supplyLineTable']/tbody/tr");
   }
 
-  public void selectSupplyLineSearchResult(int rowNumber) {
-    WebElement result = testWebDriver.getElementById("result" + (rowNumber - 1));
-    testWebDriver.waitForElementToAppear(result);
-    result.click();
-  }
-
-  public String getSaveMessage() {
-    testWebDriver.waitForElementToAppear(saveErrorMsgDiv);
-    return saveErrorMsgDiv.getText();
-  }
-
   public void clickSaveButton() {
     testWebDriver.waitForElementToAppear(saveButton);
     saveButton.click();
@@ -361,7 +350,7 @@ public class SupplyLinePage extends FilterSearchPage {
     return saveErrorMsgDiv.getText();
   }
 
-  public void clickClearSearchButton() {
+  public void clickClearNodeSearchResult() {
     testWebDriver.waitForElementToAppear(clearSearch);
     clearSearch.click();
   }

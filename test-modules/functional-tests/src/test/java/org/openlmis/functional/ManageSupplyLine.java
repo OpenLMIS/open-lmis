@@ -22,8 +22,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.thoughtworks.selenium.SeleneseTestBase.assertFalse;
-import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
+import static com.thoughtworks.selenium.SeleneseTestBase.*;
 import static java.util.Arrays.asList;
 import static org.testng.AssertJUnit.assertEquals;
 
@@ -253,6 +252,7 @@ public class ManageSupplyLine extends TestCaseHelper {
     supplyLinePage.searchGeographicZone("Root");
     supplyLinePage.selectGeographicZoneResult(1);
     supplyLinePage.clickApplyFilterButton();
+    testWebDriver.sleep(500);
     supplyLinePage.selectAssociatedFacilityResult(1);
 
     supplyLinePage.clickSaveButton();
@@ -297,7 +297,7 @@ public class ManageSupplyLine extends TestCaseHelper {
     assertEquals("Supply line updated successfully", supplyLinePage.getSuccessMessage());
     supplyLinePage.clickViewHereLink();
 
-    supplyLinePage.clickClearSearchButton();
+    supplyLinePage.clickClearNodeSearchResult();
     supplyLinePage.searchSupervisoryNode("node");
     supplyLinePage.selectSupervisoryNodeResult(1);
 
@@ -327,6 +327,7 @@ public class ManageSupplyLine extends TestCaseHelper {
     assertEquals("There are some errors in the form. Please resolve them.", supplyLinePage.getSaveErrorMessage());
 
     supplyLinePage.selectProgram("HIV");
+    supplyLinePage.enterDescription("new");
     supplyLinePage.clickSaveButton();
     testWebDriver.sleep(500);
     assertEquals("There are some errors in the form. Please resolve them.", supplyLinePage.getSaveErrorMessage());
@@ -349,12 +350,19 @@ public class ManageSupplyLine extends TestCaseHelper {
     testWebDriver.sleep(1000);
     assertEquals("Supervisory node and Program already has a supplying facility assigned to it.", supplyLinePage.getSaveErrorMessage());
 
-    supplyLinePage.clickClearSearchButton();
+    supplyLinePage.clickClearNodeSearchResult();
     supplyLinePage.clickSaveButton();
     assertEquals("There are some errors in the form. Please resolve them.", supplyLinePage.getSaveErrorMessage());
     supplyLinePage.clickCancelButton();
+
     assertTrue(supplyLinePage.isAddNewButtonDisplayed());
     assertTrue(supplyLinePage.isSearchIconDisplayed());
+    supplyLinePage.clickSearchOptionButton();
+    supplyLinePage.selectProgramAsSearchOption();
+    supplyLinePage.enterSearchParameter("Hiv");
+    supplyLinePage.clickSearchIcon();
+    assertTrue(supplyLinePage.isOneResultMessageDisplayed());
+    assertNotEquals("new", supplyLinePage.getDescription(1));
   }
 
   public void searchSupplyLine(String searchParameter) {
