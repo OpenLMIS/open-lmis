@@ -53,9 +53,10 @@ public class FacilityApprovedProductController extends BaseController {
   }
 
   @RequestMapping(value = "/facilityApprovedProducts", method = GET, headers = ACCEPT_JSON)
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_FACILITY_APPROVED_PRODUCT')")
   public ResponseEntity<OpenLmisResponse> getAllBy(@RequestParam("facilityTypeId") Long facilityTypeId,
                                                    @RequestParam("programId") Long programId,
-                                                   @RequestParam("searchParam") String searchParam,
+                                                   @RequestParam(value = "searchParam", defaultValue = "", required = false) String searchParam,
                                                    @RequestParam(value = "page", defaultValue = "1") Integer page,
                                                    @Value("${search.page.size}") String limit) {
     Pagination pagination = new Pagination(page, parseInt(limit));
