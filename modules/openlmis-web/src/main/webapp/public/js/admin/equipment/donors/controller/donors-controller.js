@@ -11,14 +11,18 @@
 function DonorController($scope, sharedSpace, $routeParams, $location, SaveDonor, GetDonor, $dialog, messageService, RemoveDonor) {
     $scope.donor = {};
     $scope.message={};
-    $scope.$parent.message={};
-    $scope.$parent.donorId=null;
 
     if ($routeParams.donorId) {
         GetDonor.get({id: $routeParams.donorId}, function (data) {
             $scope.donor = data.donor;
         }, {});
     }
+
+    $scope.cancelAddEdit = function(){
+        $scope.$parent.message={};
+        $scope.$parent.donorId=null;
+        $location.path('#/list');
+    };
 
     $scope.saveDonor = function () {
         var successHandler = function (response) {

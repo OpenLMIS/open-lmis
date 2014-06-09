@@ -67,8 +67,8 @@
                         <div form-toolbar id="action_buttons" class="action-buttons">
                             <div class="form-cell button-row">
                                 <input type="submit" class="btn btn-primary save-button" value="Save"/>
-                                <a ng-href="#/list" class="btn btn-cancel cancel-button"><span
-                                        openlmis-message="button.cancel"></span></a>
+                                <input type="button" class="btn btn-cancel cancel-button" value="Cancel"
+                                        ng-click="cancelAddEdit()"/>
                                 <input type="button" class="btn btn-danger delete-button" value="Delete"
                                        ng-click="showRemoveDonorConfirmDialog()"/>
                             </div>
