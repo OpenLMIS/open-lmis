@@ -134,10 +134,9 @@ public class RequisitionPdfModelTest {
     when(messageService.message("label.facility")).thenReturn("Facility");
     when(messageService.message("create.facility.operatedBy")).thenReturn("Operated By");
     when(messageService.message("label.facility.maximumStock")).thenReturn("Maximum Stock level");
-    when(messageService.message("label.facility.emergencyOrder")).thenReturn("Emergency Order Point");
+    when(messageService.message("label.emergency.order.point")).thenReturn("Emergency Order Point");
     when(messageService.message("label.facility.reportingPeriod")).thenReturn("Reporting Period");
     when(messageService.message("label.requisition.type")).thenReturn("Requisition Type");
-
   }
 
   @Test

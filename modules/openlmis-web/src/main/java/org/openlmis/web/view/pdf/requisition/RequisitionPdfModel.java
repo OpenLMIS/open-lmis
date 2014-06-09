@@ -193,7 +193,7 @@ public class RequisitionPdfModel {
     text = String.format(messageService.message("label.facility.maximumStock") + ": %s",
       facility.getFacilityType().getNominalMaxMonth());
     insertCell(table, text, 1);
-    text = String.format(messageService.message("label.facility.emergencyOrder") + ": %s",
+    text = String.format(messageService.message("label.emergency.order.point") + ": %s",
       facility.getFacilityType().getNominalEop());
     insertCell(table, text, 1);
   }
