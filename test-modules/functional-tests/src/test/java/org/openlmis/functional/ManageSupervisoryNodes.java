@@ -366,6 +366,7 @@ public class ManageSupervisoryNodes extends TestCaseHelper {
     testWebDriver.sleep(500);
     supervisoryNodesPage.selectSupervisoryNodeSearchResult(2);
     supervisoryNodesPage.clickSaveButton();
+    testWebDriver.sleep(500);
     assertEquals("Duplicate Supervisory Node Code", supervisoryNodesPage.getSaveMessage());
 
     supervisoryNodesPage.enterSupervisoryNodeCode("N4");
