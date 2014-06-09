@@ -244,14 +244,21 @@ public class ManageSupplyLine extends TestCaseHelper {
     supplyLinePage.clickAddNewButton();
 
     supplyLinePage.enterValuesInSupplyLineFields("Malaria", "node", false);
-
-    facilityAndFilterSearch("F11");
+    supplyLinePage.clickSupplyingFacilityField();
+    supplyLinePage.searchAssociatedFacility("F11");
+    testWebDriver.waitForAjax();
+    supplyLinePage.clickFilterButton();
+    testWebDriver.waitForAjax();
+    supplyLinePage.selectFacilityType("Warehouse");
+    supplyLinePage.searchGeographicZone("Root");
+    supplyLinePage.selectGeographicZoneResult(1);
+    supplyLinePage.clickApplyFilterButton();
+    supplyLinePage.selectAssociatedFacilityResult(1);
 
     supplyLinePage.clickSaveButton();
     assertEquals("Supply line created successfully", supplyLinePage.getSuccessMessage());
 
     searchSupplyLine("central");
-
     assertEquals("malaria", supplyLinePage.getProgram(1));
     assertEquals("central Hospital", supplyLinePage.getSupplyingFacility(1));
     assertEquals("Node1", supplyLinePage.getSupervisoryNode(1));
@@ -261,17 +268,13 @@ public class ManageSupplyLine extends TestCaseHelper {
   @Test(groups = {"admin"})
   public void testEditAndSearchSupplyLine() throws SQLException {
     dbWrapper.assignRight("Admin", "MANAGE_SUPPLY_LINE");
-    dbWrapper.updateFieldValue("facilities", "enabled", "false", "code", "F10");
-    dbWrapper.updateFieldValue("facilities", "active", "false", "code", "F11");
-    dbWrapper.updateFieldValue("programs", "active", "false", "code", "HIV");
     HomePage homePage = loginPage.loginAs(testData.get(ADMIN), testData.get(PASSWORD));
     supplyLinePage = homePage.navigateToSupplyLine();
-
     searchSupplyLine("village");
+    assertTrue(supplyLinePage.isNoResultMessageDisplayed());
     supplyLinePage.clickAddNewButton();
 
     supplyLinePage.enterValuesInSupplyLineFields("HIV", "node", false);
-
     supplyLinePage.clickSupplyingFacilityField();
     supplyLinePage.searchAssociatedFacility("F11");
     testWebDriver.waitForAjax();
@@ -282,12 +285,15 @@ public class ManageSupplyLine extends TestCaseHelper {
     supplyLinePage.clickViewHereLink();
 
     supplyLinePage.selectProgram("HIV");
-    supplyLinePage.chooseFacilityExportOptionButton(true);
+    supplyLinePage.selectExportOrderFlag(true);
     supplyLinePage.enterDescription("Description");
 
-    facilityAndFilterSearch("F11A");
-
+    supplyLinePage.clickSupplyingFacilityField();
+    supplyLinePage.searchAssociatedFacility("F11A");
+    testWebDriver.waitForAjax();
+    supplyLinePage.selectAssociatedFacilityResult(1);
     supplyLinePage.clickSaveButton();
+
     assertEquals("Supply line updated successfully", supplyLinePage.getSuccessMessage());
     supplyLinePage.clickViewHereLink();
 
@@ -296,10 +302,11 @@ public class ManageSupplyLine extends TestCaseHelper {
     supplyLinePage.selectSupervisoryNodeResult(1);
 
     supplyLinePage.selectProgram("Malaria");
-    supplyLinePage.chooseFacilityExportOptionButton(false);
+    supplyLinePage.selectExportOrderFlag(false);
     supplyLinePage.clickCancelButton();
 
     searchSupplyLine("Village");
+    assertTrue(supplyLinePage.isOneResultMessageDisplayed());
 
     assertEquals("HIV", supplyLinePage.getProgram(1));
     assertEquals("Village Dispensary", supplyLinePage.getSupplyingFacility(1));
@@ -310,42 +317,44 @@ public class ManageSupplyLine extends TestCaseHelper {
   @Test(groups = {"admin"})
   public void testValidationsOnSupplyLine() throws SQLException {
     dbWrapper.assignRight("Admin", "MANAGE_SUPPLY_LINE");
-    dbWrapper.updateFieldValue("facilities", "enabled", "false", "code", "F10");
-    dbWrapper.updateFieldValue("facilities", "active", "false", "code", "F11");
-    dbWrapper.updateFieldValue("programs", "active", "false", "code", "HIV");
     dbWrapper.insertSupplyLines("N1", "HIV", "F11", true);
     HomePage homePage = loginPage.loginAs(testData.get(ADMIN), testData.get(PASSWORD));
     supplyLinePage = homePage.navigateToSupplyLine();
     supplyLinePage.clickAddNewButton();
 
-    supplyLinePage.enterValuesInSupplyLineFields("HIV", "node", true);
+    supplyLinePage.clickSaveButton();
+    testWebDriver.sleep(500);
+    assertEquals("There are some errors in the form. Please resolve them.", supplyLinePage.getSaveErrorMessage());
+
+    supplyLinePage.selectProgram("HIV");
+    supplyLinePage.clickSaveButton();
+    testWebDriver.sleep(500);
+    assertEquals("There are some errors in the form. Please resolve them.", supplyLinePage.getSaveErrorMessage());
+
+    supplyLinePage.searchSupervisoryNode("node");
+    supplyLinePage.selectSupervisoryNodeResult(1);
+    supplyLinePage.clickSaveButton();
+    testWebDriver.sleep(500);
+    assertEquals("There are some errors in the form. Please resolve them.", supplyLinePage.getSaveErrorMessage());
+
+    supplyLinePage.selectExportOrderFlag(true);
+    supplyLinePage.clickSaveButton();
+    testWebDriver.sleep(500);
+    assertEquals("There are some errors in the form. Please resolve them.", supplyLinePage.getSaveErrorMessage());
 
     supplyLinePage.clickSupplyingFacilityField();
     supplyLinePage.searchAssociatedFacility("F11");
     supplyLinePage.selectAssociatedFacilityResult(1);
-
     supplyLinePage.clickSaveButton();
-    assertEquals("Supervisory node and Program already has a supplying facility assigned to it.", supplyLinePage.getSaveErrorMessageDiv());
+    testWebDriver.sleep(1000);
+    assertEquals("Supervisory node and Program already has a supplying facility assigned to it.", supplyLinePage.getSaveErrorMessage());
 
     supplyLinePage.clickClearSearchButton();
     supplyLinePage.clickSaveButton();
-    assertEquals("There are some errors in the form. Please resolve them.", supplyLinePage.getSaveErrorMessageDiv());
+    assertEquals("There are some errors in the form. Please resolve them.", supplyLinePage.getSaveErrorMessage());
     supplyLinePage.clickCancelButton();
-    supplyLinePage.isAddNewButtonDisplayed();
-    supplyLinePage.isSearchIconDisplayed();
-  }
-
-  public void facilityAndFilterSearch(String facilityCodeOrName) {
-    supplyLinePage.clickSupplyingFacilityField();
-    supplyLinePage.searchAssociatedFacility(facilityCodeOrName);
-    testWebDriver.waitForAjax();
-    supplyLinePage.clickFilterButton();
-    testWebDriver.waitForAjax();
-    supplyLinePage.selectFacilityType("Warehouse");
-    supplyLinePage.searchGeographicZone("Root");
-    supplyLinePage.selectGeographicZoneResult(1);
-    supplyLinePage.clickApplyFilterButton();
-    supplyLinePage.selectAssociatedFacilityResult(1);
+    assertTrue(supplyLinePage.isAddNewButtonDisplayed());
+    assertTrue(supplyLinePage.isSearchIconDisplayed());
   }
 
   public void searchSupplyLine(String searchParameter) {

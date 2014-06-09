@@ -331,7 +331,7 @@ public class SupplyLinePage extends FilterSearchPage {
     searchButton.click();
   }
 
-  public void chooseFacilityExportOptionButton(boolean exportOrdersOption) {
+  public void selectExportOrderFlag(boolean exportOrdersOption) {
     if (exportOrdersOption)
       exportOrdersTrue.click();
     else
@@ -342,7 +342,7 @@ public class SupplyLinePage extends FilterSearchPage {
     selectProgram(program);
     searchSupervisoryNode(node);
     selectSupervisoryNodeResult(1);
-    chooseFacilityExportOptionButton(exportOrdersOption);
+    selectExportOrderFlag(exportOrdersOption);
   }
 
   public void enterDescription(String desc) {
@@ -356,7 +356,7 @@ public class SupplyLinePage extends FilterSearchPage {
     facilityResult.click();
   }
 
-  public String getSaveErrorMessageDiv() {
+  public String getSaveErrorMessage() {
     testWebDriver.waitForElementToAppear(saveErrorMsgDiv);
     return saveErrorMsgDiv.getText();
   }
