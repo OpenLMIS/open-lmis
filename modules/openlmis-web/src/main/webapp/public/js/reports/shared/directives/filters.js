@@ -179,31 +179,22 @@ app.directive('scheduleFilter', ['ReportSchedules','$routeParams',
 }]);
 
 
-app.directive('zoneFilter', ['GeographicZones','$routeParams',
-  function (GeographicZones, $routeParams) {
+app.directive('zoneFilter', ['TreeGeographicZoneList','$routeParams',
+  function (TreeGeographicZoneList, $routeParams) {
 
     return {
       restrict: 'E',
       require: '^filterContainer',
       link: function (scope, elm, attr) {
-
-//        scope.zones = [];
-//        scope.zones.unshift({
-//          name: '-- Select Geo Zone --'
-//        });
         scope.filter.zone = $routeParams.zone;
 
         if (attr.required) {
           scope.requiredFilters.zone = 'zone';
         }
 
-        GeographicZones.get(function (data) {
+        TreeGeographicZoneList.get(function (data) {
           // now recreate the zone data to a tree structure in java script objects.
-
-          scope.zones = data.zones;
-          scope.zones.unshift({
-            name: '-- Select Geo Zone --'
-          });
+          scope.zones = data.zone;
         });
 
       },

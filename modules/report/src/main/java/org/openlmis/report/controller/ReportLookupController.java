@@ -127,6 +127,13 @@ public class ReportLookupController extends BaseController {
     return OpenLmisResponse.response("zones", geographicZoneList);
   }
 
+  @RequestMapping(value = "/geographic-zones/tree", method = GET, headers = ACCEPT_JSON)
+  public ResponseEntity<OpenLmisResponse> getGeographicZoneTree() {
+    GeoZoneTree geoZoneTree =  reportLookupService.getGeoZoneTree();
+
+    return OpenLmisResponse.response("zone", geoZoneTree);
+  }
+
   @RequestMapping(value="/program-products/{programId}.json", method = GET, headers = BaseController.ACCEPT_JSON)
   public List<Product> getProgramProducts( @PathVariable("programId") Long programId){
     return this.reportLookupService.getProductsActiveUnderProgram(programId);
@@ -346,19 +353,21 @@ public ResponseEntity<OpenLmisResponse> getSupervisedFacilities(
       return OpenLmisResponse.response("supervisoryNodes",supervisoryNodes);
   }
 
-    @RequestMapping(value = "/roles/{roleId}/program/{programId}/supevisoryNode/{supervisoryNodeId}", method = GET, headers = ACCEPT_JSON)
-    public ResponseEntity<OpenLmisResponse>  getUserRoleAssignments(@PathVariable("roleId") Long roleId,
-                                                              @PathVariable("programId") Long programId,
-                                                              @PathVariable("supervisoryNodeId") Long supervisoryNodeId){
-        List<UserRoleAssignmentsReport> userRoleAssignments = reportLookupService.getAllRolesBySupervisoryNodeHavingProgram(roleId,programId,supervisoryNodeId);
+  @RequestMapping(value = "/roles/{roleId}/program/{programId}/supevisoryNode/{supervisoryNodeId}", method = GET, headers = ACCEPT_JSON)
+  public ResponseEntity<OpenLmisResponse>  getUserRoleAssignments(@PathVariable("roleId") Long roleId,
+                                                            @PathVariable("programId") Long programId,
+                                                            @PathVariable("supervisoryNodeId") Long supervisoryNodeId){
+      List<UserRoleAssignmentsReport> userRoleAssignments = reportLookupService.getAllRolesBySupervisoryNodeHavingProgram(roleId,programId,supervisoryNodeId);
 
-        return OpenLmisResponse.response("userRoleAssignments", userRoleAssignments);
-    }
+      return OpenLmisResponse.response("userRoleAssignments", userRoleAssignments);
+  }
 
-    @RequestMapping(value = "UserRoleAssignments/getUserRoleAssignments", method = GET, headers = BaseController.ACCEPT_JSON)
-    public ResponseEntity<OpenLmisResponse> getUserRoleAssignments(HttpServletRequest request){
-        List<UserRoleAssignmentsReport> userSummaryList = reportLookupService.getUserRoleAssignments();
-        return OpenLmisResponse.response("userRoleAssignmentSummary",userSummaryList);
-    }
+  @RequestMapping(value = "UserRoleAssignments/getUserRoleAssignments", method = GET, headers = BaseController.ACCEPT_JSON)
+  public ResponseEntity<OpenLmisResponse> getUserRoleAssignments(HttpServletRequest request){
+      List<UserRoleAssignmentsReport> userSummaryList = reportLookupService.getUserRoleAssignments();
+      return OpenLmisResponse.response("userRoleAssignmentSummary",userSummaryList);
+  }
+
+
 
 }
