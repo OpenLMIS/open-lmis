@@ -566,19 +566,3 @@ services.factory("RnRStatusByRequisitionGroupAndPeriodDetails ",function($resour
 services.factory('RnRStatusDetailsByRequisitionGroup', function($resource){
     return $resource('/dashboard/rnrStatus-detail.json',{},{});
 });
-
-services.factory('DonorCompleteList',function($resource){
-    return $resource('/donor/getList.json',{},{});
-});
-
-services.factory('SaveDonor',function($resource){
-    return $resource('/donor/insert.json',{},{});
-});
-
-services.factory('GetDonor',function($resource){
-    return $resource('/donor/getDetails/:id.json',{},{});
-});
-
-services.factory('RemoveDonor',function($resource){
-    return $resource('/donor/remove/:id.json',{},{});
-});
