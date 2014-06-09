@@ -14,7 +14,6 @@ import org.openlmis.UiUtils.TestWebDriver;
 import org.openlmis.pageobjects.edi.*;
 
 public class PageObjectFactory {
-
   private static ManageFacilityPage instanceOfManageFacilityPage;
   private static DistributionPage instanceOfDistributionPage;
   private static FacilityListPage instanceOfFacilityListPage;
@@ -52,10 +51,9 @@ public class PageObjectFactory {
   private static ConfigureOrderNumberPage instanceOfConfigureOrderNumberPage;
   private static PeriodsPage instanceOfPeriodsPage;
   private static SupervisoryNodesPage instanceOfSupervisoryNodesPage;
-  private static RequisitionGroupSearchPage instanceOfRequisitionGroupPage;
+  private static RequisitionGroupPage instanceOfRequisitionGroupPage;
   private static RequisitionPage instanceOfRequisitionPage;
   private static SupplyLinePage instanceOfSupplyLinePage;
-  private static FilterSearchPage instanceOfFilterSearchPage;
 
   public static ManageFacilityPage getManageFacilityPage(TestWebDriver testWebDriver) {
     if (instanceOfManageFacilityPage == null) {
@@ -318,9 +316,9 @@ public class PageObjectFactory {
     return instanceOfSupervisoryNodesPage;
   }
 
-  public static RequisitionGroupSearchPage getRequisitionGroupPage(TestWebDriver testWebDriver) {
+  public static RequisitionGroupPage getRequisitionGroupPage(TestWebDriver testWebDriver) {
     if (instanceOfRequisitionGroupPage == null) {
-      instanceOfRequisitionGroupPage = new RequisitionGroupSearchPage(testWebDriver);
+      instanceOfRequisitionGroupPage = new RequisitionGroupPage(testWebDriver);
     }
     return instanceOfRequisitionGroupPage;
   }
@@ -337,12 +335,5 @@ public class PageObjectFactory {
       instanceOfSupplyLinePage = new SupplyLinePage(testWebDriver);
     }
     return instanceOfSupplyLinePage;
-  }
-
-  public static FilterSearchPage getFilterSearchPage(TestWebDriver testWebDriver) {
-    if (instanceOfFilterSearchPage == null) {
-      instanceOfFilterSearchPage = new FilterSearchPage((testWebDriver));
-    }
-    return instanceOfFilterSearchPage;
   }
 }

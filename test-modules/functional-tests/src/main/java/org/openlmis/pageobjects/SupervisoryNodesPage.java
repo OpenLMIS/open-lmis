@@ -22,7 +22,7 @@ import java.util.NoSuchElementException;
 import static org.openqa.selenium.support.How.CLASS_NAME;
 import static org.openqa.selenium.support.How.ID;
 
-public class SupervisoryNodesPage extends Page {
+public class SupervisoryNodesPage extends FilterSearchPage {
 
   @FindBy(how = ID, using = "searchOptionButton")
   private static WebElement searchOptionButton = null;
@@ -99,9 +99,6 @@ public class SupervisoryNodesPage extends Page {
   @FindBy(how = ID, using = "searchFacility")
   private static WebElement searchFacility = null;
 
-  @FindBy(how = ID, using = "facilityResult0")
-  private static WebElement firstFacilitySearchResult = null;
-
   @FindBy(how = ID, using = "saveButton")
   private static WebElement saveButton = null;
 
@@ -122,10 +119,9 @@ public class SupervisoryNodesPage extends Page {
 
   @FindBy(how = ID, using = "tooManyResultsMessage")
   private static WebElement tooManyResultsMessage = null;
- 
+
   @FindBy(how = ID, using = "editSupervisoryNodeHeader")
   private static WebElement editSupervisoryNodeHeader = null;
-
 
 
   public SupervisoryNodesPage(TestWebDriver driver) {
@@ -191,7 +187,7 @@ public class SupervisoryNodesPage extends Page {
     return noResultMessage.isDisplayed();
   }
 
-  public String getNoFacilitySearchResultMessage(){
+  public String getNoFacilitySearchResultMessage() {
     testWebDriver.waitForElementToAppear(noFacilityResultMessage);
     return noFacilityResultMessage.getText();
   }
@@ -356,7 +352,7 @@ public class SupervisoryNodesPage extends Page {
   }
 
   public void selectFacilityToBeAssociated(int rowNumber) {
-    WebElement facilityResult = testWebDriver.getElementById("facilityResult" + (rowNumber-1));
+    WebElement facilityResult = testWebDriver.getElementById("facilityResult" + (rowNumber - 1));
     testWebDriver.waitForElementToAppear(facilityResult);
     facilityResult.click();
   }

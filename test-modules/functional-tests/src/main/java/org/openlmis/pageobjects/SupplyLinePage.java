@@ -21,7 +21,7 @@ import java.util.NoSuchElementException;
 
 import static org.openqa.selenium.support.How.ID;
 
-public class SupplyLinePage extends Page {
+public class SupplyLinePage extends FilterSearchPage {
 
   @FindBy(how = ID, using = "searchOptionButton")
   private static WebElement searchOptionButton = null;
@@ -332,7 +332,7 @@ public class SupplyLinePage extends Page {
   }
 
   public void chooseFacilityExportOptionButton(boolean exportOrdersOption) {
-    if (exportOrdersOption == true)
+    if (exportOrdersOption)
       exportOrdersTrue.click();
     else
       exportOrdersFalse.click();

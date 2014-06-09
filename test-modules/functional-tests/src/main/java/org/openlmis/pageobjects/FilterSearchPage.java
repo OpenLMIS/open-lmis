@@ -11,11 +11,13 @@
 package org.openlmis.pageobjects;
 
 import org.openlmis.UiUtils.TestWebDriver;
-import org.openqa.selenium.By;
+import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
+
+import java.util.NoSuchElementException;
 
 import static org.openqa.selenium.support.How.ID;
 
@@ -54,8 +56,11 @@ public class FilterSearchPage extends Page {
   @FindBy(how = ID, using = "selectedGeoZone")
   private static WebElement selectedGeoZone = null;
 
-  @FindBy(how = ID, using = "removeIcon")
-  private static WebElement removeIcon = null;
+  @FindBy(how = ID, using = "removeFacilityTypeIcon")
+  private static WebElement removeFacilityTypeIcon = null;
+
+  @FindBy(how = ID, using = "removeGeoZoneIcon")
+  private static WebElement removeGeoZoneIcon = null;
 
   public FilterSearchPage(TestWebDriver driver) {
     super(driver);
@@ -68,7 +73,6 @@ public class FilterSearchPage extends Page {
     setFilterButton.click();
     testWebDriver.waitForElementToAppear(setFiltersModal);
   }
-
 
   public void selectFacilityType(String facilityType) {
     testWebDriver.waitForElementToAppear(selectFacilityTypeField);
@@ -83,6 +87,17 @@ public class FilterSearchPage extends Page {
   public String getSelectedFacilityTypeOnFilterPopUp() {
     testWebDriver.waitForElementToAppear(selectedFacilityType);
     return selectedFacilityType.getText();
+  }
+
+  public boolean isSelectedFacilityTypeOnFilterPopUpDisplayed() {
+    try {
+      testWebDriver.waitForElementToAppear(selectedFacilityType);
+    } catch (TimeoutException e) {
+      return false;
+    } catch (NoSuchElementException e) {
+      return false;
+    }
+    return selectedFacilityType.isDisplayed();
   }
 
   public String getSelectedFacilityTypeLabelOnAddFilterPage() {
@@ -102,7 +117,13 @@ public class FilterSearchPage extends Page {
   }
 
   public boolean isSetFilterButtonPresent() {
-    testWebDriver.waitForElementToAppear(setFilterButton);
+    try {
+      testWebDriver.waitForElementToAppear(setFilterButton);
+    } catch (TimeoutException e) {
+      return false;
+    } catch (NoSuchElementException e) {
+      return false;
+    }
     return setFilterButton.isDisplayed();
   }
 
@@ -117,13 +138,51 @@ public class FilterSearchPage extends Page {
     return selectedGeoZone.getText();
   }
 
+  public boolean isSelectedGeoZoneOnFilterPopUpDisplayed() {
+    try {
+      testWebDriver.waitForElementToAppear(selectedGeoZone);
+    } catch (TimeoutException e) {
+      return false;
+    } catch (NoSuchElementException e) {
+      return false;
+    }
+    return selectedGeoZone.isDisplayed();
+  }
+
   public void clickCancelFilterButton() {
     testWebDriver.waitForElementToAppear(cancelFiltersButton);
     cancelFiltersButton.click();
   }
 
-  public void clickRemoveIconButton() {
-    testWebDriver.waitForElementToAppear(removeIcon);
-    removeIcon.click();
+  public void clickRemoveFacilityTypeFilter() {
+    testWebDriver.waitForElementToAppear(removeFacilityTypeIcon);
+    removeFacilityTypeIcon.click();
+  }
+
+  public boolean isRemoveFacilityTypeFilterDisplayed() {
+    try {
+      testWebDriver.waitForElementToAppear(removeFacilityTypeIcon);
+    } catch (TimeoutException e) {
+      return false;
+    } catch (NoSuchElementException e) {
+      return false;
+    }
+    return removeFacilityTypeIcon.isDisplayed();
+  }
+
+  public void clickRemoveGeoZoneFilter() {
+    testWebDriver.waitForElementToAppear(removeGeoZoneIcon);
+    removeGeoZoneIcon.click();
+  }
+
+  public boolean isRemoveGeoZoneFilterDisplayed() {
+    try {
+      testWebDriver.waitForElementToAppear(removeGeoZoneIcon);
+    } catch (TimeoutException e) {
+      return false;
+    } catch (NoSuchElementException e) {
+      return false;
+    }
+    return removeGeoZoneIcon.isDisplayed();
   }
 }

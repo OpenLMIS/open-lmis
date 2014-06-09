@@ -1,6 +1,5 @@
 package org.openlmis.functional;
 
-import com.thoughtworks.selenium.SeleneseTestBase;
 import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.pageobjects.*;
 import org.testng.annotations.BeforeMethod;
@@ -13,13 +12,13 @@ import java.util.Map;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
 import static org.testng.AssertJUnit.assertEquals;
+import static org.testng.AssertJUnit.assertFalse;
 
 public class ManageFilterSearch extends TestCaseHelper {
 
   LoginPage loginPage;
-  RequisitionGroupSearchPage requisitionGroupPage;
+  RequisitionGroupPage requisitionGroupPage;
   SupervisoryNodesPage supervisoryNodesPage;
-  FilterSearchPage filterSearchPage;
 
   public static final String ADMIN = "admin";
   public static final String PASSWORD = "password";
@@ -35,10 +34,8 @@ public class ManageFilterSearch extends TestCaseHelper {
     dbWrapper.insertFacilitiesWithFacilityTypeIDAndGeoZoneId("F10", "F100", 1, 3);
     dbWrapper.insertFacilitiesWithFacilityTypeIDAndGeoZoneId("F100A", "F10A", 2, 3);
     dbWrapper.insertFacilitiesWithFacilityTypeIDAndGeoZoneId("F10B", "F10C", 3, 5);
-
     loginPage = PageObjectFactory.getLoginPage(testWebDriver, baseUrlGlobal);
     requisitionGroupPage = PageObjectFactory.getRequisitionGroupPage(testWebDriver);
-    filterSearchPage = PageObjectFactory.getFilterSearchPage(testWebDriver);
   }
 
   @Test(groups = {"admin"})
@@ -56,71 +53,33 @@ public class ManageFilterSearch extends TestCaseHelper {
     requisitionGroupPage.clickSearchIcon();
     testWebDriver.waitForAjax();
     assertEquals("6 matches found for 'F10'", requisitionGroupPage.getNResultsMessage());
-    filterSearchPage.clickFilterButton();
+    requisitionGroupPage.clickFilterButton();
 
-    filterSearchPage.selectFacilityType("Lvl3 Hospital");
-    filterSearchPage.clickApplyFilterButton();
+    requisitionGroupPage.selectFacilityType("Lvl3 Hospital");
+    requisitionGroupPage.clickApplyFilterButton();
     testWebDriver.waitForAjax();
 
     assertEquals("2 matches found for 'F10'", requisitionGroupPage.getNResultsMessage());
 
-    filterSearchPage.clickFilterButton();
-    assertEquals("Lvl3 Hospital", filterSearchPage.getSelectedFacilityTypeOnFilterPopUp());
-    filterSearchPage.searchGeographicZone("Root");
-    filterSearchPage.selectGeographicZoneResult(1);
-    assertEquals("Root", filterSearchPage.getSelectedGeoZoneOnFilterPopUp());
-    filterSearchPage.clickApplyFilterButton();
+    requisitionGroupPage.clickFilterButton();
+    assertEquals("Lvl3 Hospital", requisitionGroupPage.getSelectedFacilityTypeOnFilterPopUp());
+    requisitionGroupPage.searchGeographicZone("Root");
+    requisitionGroupPage.selectGeographicZoneResult(1);
+    assertEquals("Root", requisitionGroupPage.getSelectedGeoZoneOnFilterPopUp());
+    requisitionGroupPage.clickApplyFilterButton();
     testWebDriver.waitForAjax();
 
     assertEquals("No matches found for 'F10'", requisitionGroupPage.getNoFacilitySearchResultMessage());
-    assertEquals("Lvl3 Hospital", filterSearchPage.getSelectedFacilityTypeLabelOnAddFilterPage());
-    assertEquals("Root", filterSearchPage.getSelectedGeoZoneLabelOnAddFilterPage());
-    assertTrue(filterSearchPage.isSetFilterButtonPresent());
-  }
-
-  @Test(groups = {"admin"})
-  public void testFilterBeforeFacilitySearchOnRequisitionGroupPage() throws SQLException {
-    dbWrapper.assignRight("Admin", "MANAGE_REQUISITION_GROUP");
-    dbWrapper.insertSupervisoryNode("F10", "N1", "Super1", null);
-    dbWrapper.insertSupervisoryNode("F100A", "N2", "Super2", null);
-    dbWrapper.insertRequisitionGroups("RG1", "RG2", "N2", "N1");
-    HomePage homePage = loginPage.loginAs(testData.get(ADMIN), testData.get(PASSWORD));
-    requisitionGroupPage = homePage.navigateToRequisitionGroupPage();
-    requisitionGroupPage.clickAddNewButton();
+    assertEquals("Lvl3 Hospital", requisitionGroupPage.getSelectedFacilityTypeLabelOnAddFilterPage());
+    assertEquals("Root", requisitionGroupPage.getSelectedGeoZoneLabelOnAddFilterPage());
+    assertTrue(requisitionGroupPage.isSetFilterButtonPresent());
 
     requisitionGroupPage.clickAssociatedFacilityLink();
-    filterSearchPage.clickFilterButton();
-    testWebDriver.waitForAjax();
-
-    filterSearchPage.selectFacilityType("Warehouse");
-    assertEquals("Warehouse", filterSearchPage.getSelectedFacilityTypeOnFilterPopUp());
-    filterSearchPage.searchGeographicZone("Arusha");
-    filterSearchPage.selectGeographicZoneResult(1);
-    assertEquals("Arusha", filterSearchPage.getSelectedGeoZoneOnFilterPopUp());
-    filterSearchPage.clickApplyFilterButton();
-    testWebDriver.waitForAjax();
-
-    requisitionGroupPage.searchFacilityToBeAssociated("F10");
-    requisitionGroupPage.clickSearchIcon();
-    testWebDriver.waitForAjax();
-    assertEquals("2 matches found for 'F10'", requisitionGroupPage.getNResultsMessage());
-
-    filterSearchPage.clickFilterButton();
-    filterSearchPage.searchGeographicZone("Root");
-    filterSearchPage.selectGeographicZoneResult(1);
-    filterSearchPage.clickRemoveIconButton();
-    filterSearchPage.clickCancelFilterButton();
-    testWebDriver.waitForAjax();
-
-    assertEquals("2 matches found for 'F10'", requisitionGroupPage.getNResultsMessage());
-    assertEquals("Warehouse", filterSearchPage.getSelectedFacilityTypeLabelOnAddFilterPage());
-    assertEquals("Arusha", filterSearchPage.getSelectedGeoZoneLabelOnAddFilterPage());
-    assertTrue(filterSearchPage.isSetFilterButtonPresent());
-    filterSearchPage.clickFilterButton();
-    testWebDriver.waitForAjax();
-
-    assertEquals("Arusha", filterSearchPage.getSelectedGeoZoneOnFilterPopUp());
-    filterSearchPage.clickCancelFilterButton();
+    requisitionGroupPage.clickAssociatedFacilityLink();
+    assertEquals("No matches found for 'F10'", requisitionGroupPage.getNoFacilitySearchResultMessage());
+    assertEquals("Lvl3 Hospital", requisitionGroupPage.getSelectedFacilityTypeLabelOnAddFilterPage());
+    assertEquals("Root", requisitionGroupPage.getSelectedGeoZoneLabelOnAddFilterPage());
+    assertTrue(requisitionGroupPage.isSetFilterButtonPresent());
   }
 
   @Test(groups = {"admin"})
@@ -144,34 +103,40 @@ public class ManageFilterSearch extends TestCaseHelper {
     requisitionGroupPage.clickSearchIcon();
     testWebDriver.waitForAjax();
     assertEquals("Too many results found. Please refine your search.", requisitionGroupPage.getTooManyFacilitySearchResultMessage());
-    filterSearchPage.clickFilterButton();
+    requisitionGroupPage.clickFilterButton();
     testWebDriver.waitForAjax();
 
-    filterSearchPage.selectFacilityType("Warehouse");
-    assertEquals("Warehouse", filterSearchPage.getSelectedFacilityTypeOnFilterPopUp());
-    filterSearchPage.searchGeographicZone("Arusha");
-    filterSearchPage.selectGeographicZoneResult(1);
-    assertEquals("Arusha", filterSearchPage.getSelectedGeoZoneOnFilterPopUp());
-    filterSearchPage.clickApplyFilterButton();
+    requisitionGroupPage.selectFacilityType("Warehouse");
+    assertEquals("Warehouse", requisitionGroupPage.getSelectedFacilityTypeOnFilterPopUp());
+    requisitionGroupPage.searchGeographicZone("Arusha");
+    requisitionGroupPage.selectGeographicZoneResult(1);
+    assertEquals("Arusha", requisitionGroupPage.getSelectedGeoZoneOnFilterPopUp());
+    requisitionGroupPage.clickApplyFilterButton();
     testWebDriver.waitForAjax();
     assertEquals("2 matches found for 'F11'", requisitionGroupPage.getNResultsMessage());
 
-    filterSearchPage.clickFilterButton();
+    requisitionGroupPage.clickFilterButton();
     testWebDriver.waitForAjax();
-    filterSearchPage.searchGeographicZone("Root");
-    filterSearchPage.selectGeographicZoneResult(1);
-    filterSearchPage.clickCancelFilterButton();
+    requisitionGroupPage.searchGeographicZone("Root");
+    requisitionGroupPage.selectGeographicZoneResult(1);
+    requisitionGroupPage.clickCancelFilterButton();
     testWebDriver.waitForAjax();
 
     assertEquals("2 matches found for 'F11'", requisitionGroupPage.getNResultsMessage());
-    assertEquals("Warehouse", filterSearchPage.getSelectedFacilityTypeLabelOnAddFilterPage());
-    assertEquals("Arusha", filterSearchPage.getSelectedGeoZoneLabelOnAddFilterPage());
-    assertTrue(filterSearchPage.isSetFilterButtonPresent());
+    assertEquals("Warehouse", requisitionGroupPage.getSelectedFacilityTypeLabelOnAddFilterPage());
+    assertEquals("Arusha", requisitionGroupPage.getSelectedGeoZoneLabelOnAddFilterPage());
+    assertTrue(requisitionGroupPage.isSetFilterButtonPresent());
 
+    testWebDriver.refresh();
+    requisitionGroupPage.clickAssociatedFacilityLink();
+    assertFalse(requisitionGroupPage.isNoResultMessageDisplayed());
+    assertEquals("", requisitionGroupPage.getSelectedFacilityTypeLabelOnAddFilterPage());
+    assertEquals("", requisitionGroupPage.getSelectedGeoZoneLabelOnAddFilterPage());
+    assertTrue(requisitionGroupPage.isSetFilterButtonPresent());
   }
 
   @Test(groups = {"admin"})
-  public void testFilterAfterFacilitySearchOnSupervisoryNodesPage() throws SQLException {
+  public void testClearFilterAfterFacilitySearchOnSupervisoryNodesPage() throws SQLException {
     dbWrapper.assignRight("Admin", "MANAGE_SUPERVISORY_NODE");
     dbWrapper.insertSupervisoryNode("F10", "N1", "Super1", null);
     dbWrapper.insertSupervisoryNode("F100A", "N2", "Super2", null);
@@ -186,118 +151,41 @@ public class ManageFilterSearch extends TestCaseHelper {
     supervisoryNodesPage.clickSearchIcon();
     testWebDriver.waitForAjax();
     assertEquals("6 matches found for 'F10'", supervisoryNodesPage.getNResultsMessage());
-    filterSearchPage.clickFilterButton();
+    supervisoryNodesPage.clickFilterButton();
+    supervisoryNodesPage.clickApplyFilterButton();
+    assertEquals("6 matches found for 'F10'", supervisoryNodesPage.getNResultsMessage());
 
-    filterSearchPage.selectFacilityType("Lvl3 Hospital");
-    assertEquals("Lvl3 Hospital", filterSearchPage.getSelectedFacilityTypeOnFilterPopUp());
-    filterSearchPage.clickApplyFilterButton();
+    supervisoryNodesPage.clickFilterButton();
+    supervisoryNodesPage.selectFacilityType("Lvl3 Hospital");
+    assertEquals("Lvl3 Hospital", supervisoryNodesPage.getSelectedFacilityTypeOnFilterPopUp());
+    supervisoryNodesPage.searchGeographicZone("Root");
+    supervisoryNodesPage.selectGeographicZoneResult(1);
+    assertEquals("Root", supervisoryNodesPage.getSelectedGeoZoneOnFilterPopUp());
+    supervisoryNodesPage.clickApplyFilterButton();
     testWebDriver.waitForAjax();
-
-    assertEquals("2 matches found for 'F10'", supervisoryNodesPage.getNResultsMessage());
-
-    filterSearchPage.clickFilterButton();
-    assertEquals("Lvl3 Hospital", filterSearchPage.getSelectedFacilityTypeOnFilterPopUp());
-    filterSearchPage.searchGeographicZone("Root");
-    filterSearchPage.selectGeographicZoneResult(1);
-    assertEquals("Root", filterSearchPage.getSelectedGeoZoneOnFilterPopUp());
-    filterSearchPage.clickApplyFilterButton();
-    testWebDriver.waitForAjax();
-
     assertEquals("No matches found for 'F10'", supervisoryNodesPage.getNoFacilitySearchResultMessage());
-    assertEquals("Lvl3 Hospital", filterSearchPage.getSelectedFacilityTypeLabelOnAddFilterPage());
-    assertEquals("Root", filterSearchPage.getSelectedGeoZoneLabelOnAddFilterPage());
-    assertTrue(filterSearchPage.isSetFilterButtonPresent());
-  }
 
-  @Test(groups = {"admin"})
-  public void testFilterBeforeFacilitySearchOnSupervisoryNodesPage() throws SQLException {
-    dbWrapper.assignRight("Admin", "MANAGE_SUPERVISORY_NODE");
-    dbWrapper.insertSupervisoryNode("F10", "N1", "Super1", null);
-    dbWrapper.insertSupervisoryNode("F100A", "N2", "Super2", null);
-    dbWrapper.insertRequisitionGroups("RG1", "RG2", "N2", "N1");
-    HomePage homePage = loginPage.loginAs(testData.get(ADMIN), testData.get(PASSWORD));
-    supervisoryNodesPage = homePage.navigateToSupervisoryNodes();
-    supervisoryNodesPage.clickAddNewButton();
-
-    supervisoryNodesPage.clickAssociatedFacilityMemberField();
-    filterSearchPage.clickFilterButton();
+    supervisoryNodesPage.clickFilterButton();
+    supervisoryNodesPage.clickCancelFilterButton();
     testWebDriver.waitForAjax();
+    assertEquals("No matches found for 'F10'", supervisoryNodesPage.getNoFacilitySearchResultMessage());
+    assertEquals("Lvl3 Hospital", supervisoryNodesPage.getSelectedFacilityTypeLabelOnAddFilterPage());
+    assertEquals("Root", supervisoryNodesPage.getSelectedGeoZoneLabelOnAddFilterPage());
 
-    filterSearchPage.selectFacilityType("Warehouse");
-    assertEquals("Warehouse", filterSearchPage.getSelectedFacilityTypeOnFilterPopUp());
-    filterSearchPage.searchGeographicZone("Arusha");
-    filterSearchPage.selectGeographicZoneResult(1);
-    assertEquals("Arusha", filterSearchPage.getSelectedGeoZoneOnFilterPopUp());
-    filterSearchPage.clickApplyFilterButton();
-    testWebDriver.waitForAjax();
+    supervisoryNodesPage.clickFilterButton();
+    assertEquals("Lvl3 Hospital", supervisoryNodesPage.getSelectedFacilityTypeLabelOnAddFilterPage());
+    assertEquals("Root", supervisoryNodesPage.getSelectedGeoZoneLabelOnAddFilterPage());
+    supervisoryNodesPage.clickRemoveFacilityTypeFilter();
+    assertFalse(supervisoryNodesPage.isSelectedFacilityTypeOnFilterPopUpDisplayed());
+    assertFalse(supervisoryNodesPage.isRemoveFacilityTypeFilterDisplayed());
+    supervisoryNodesPage.clickRemoveGeoZoneFilter();
+    assertFalse(supervisoryNodesPage.isSelectedGeoZoneOnFilterPopUpDisplayed());
+    assertFalse(supervisoryNodesPage.isRemoveGeoZoneFilterDisplayed());
 
-    supervisoryNodesPage.searchFacilityToBeAssociated("F10");
-    supervisoryNodesPage.clickSearchIcon();
-    testWebDriver.waitForAjax();
-    assertEquals("2 matches found for 'F10'", supervisoryNodesPage.getNResultsMessage());
+    supervisoryNodesPage.clickApplyFilterButton();
 
-
-    filterSearchPage.clickFilterButton();
-    filterSearchPage.searchGeographicZone("Root");
-    filterSearchPage.selectGeographicZoneResult(1);
-    filterSearchPage.clickCancelFilterButton();
-    testWebDriver.waitForAjax();
-
-    assertEquals("2 matches found for 'F10'", supervisoryNodesPage.getNResultsMessage());
-    assertEquals("Warehouse", filterSearchPage.getSelectedFacilityTypeLabelOnAddFilterPage());
-    assertEquals("Arusha", filterSearchPage.getSelectedGeoZoneLabelOnAddFilterPage());
-    assertTrue(filterSearchPage.isSetFilterButtonPresent());
-
-  }
-
-  @Test(groups = {"admin"})
-  public void testFilterAfterTooManyFacilitySearchResultsOnSupervisoryNodesPage() throws SQLException {
-    dbWrapper.assignRight("Admin", "MANAGE_SUPERVISORY_NODE");
-    dbWrapper.insertSupervisoryNode("F10", "N1", "Super1", null);
-    dbWrapper.insertSupervisoryNode("F100A", "N2", "Super2", null);
-    dbWrapper.insertRequisitionGroups("RG1", "RG2", "N2", "N1");
-    dbWrapper.insertFacilitiesWithFacilityTypeIDAndGeoZoneId("F11", "F11A", 1, 3);
-    dbWrapper.insertFacilitiesWithFacilityTypeIDAndGeoZoneId("F11B", "F11C", 1, 3);
-    dbWrapper.insertFacilitiesWithFacilityTypeIDAndGeoZoneId("F11D", "F11E", 1, 3);
-    dbWrapper.insertFacilitiesWithFacilityTypeIDAndGeoZoneId("F11F", "F11G", 1, 3);
-    dbWrapper.insertFacilitiesWithFacilityTypeIDAndGeoZoneId("F11H", "F11I", 1, 3);
-    dbWrapper.insertFacilitiesWithFacilityTypeIDAndGeoZoneId("F110", "F111", 3, 5);
-    HomePage homePage = loginPage.loginAs(testData.get(ADMIN), testData.get(PASSWORD));
-    supervisoryNodesPage = homePage.navigateToSupervisoryNodes();
-    supervisoryNodesPage.clickAddNewButton();
-
-    supervisoryNodesPage.clickAssociatedFacilityMemberField();
-    supervisoryNodesPage.searchFacilityToBeAssociated("F11");
-    supervisoryNodesPage.clickSearchIcon();
-    testWebDriver.waitForAjax();
-    assertEquals("Too many results found. Please refine your search.", supervisoryNodesPage.getTooManyResultsMessage());
-
-    filterSearchPage.clickFilterButton();
-    testWebDriver.waitForAjax();
-    filterSearchPage.selectFacilityType("Warehouse");
-    assertEquals("Warehouse", filterSearchPage.getSelectedFacilityTypeOnFilterPopUp());
-    filterSearchPage.searchGeographicZone("Arusha");
-    filterSearchPage.selectGeographicZoneResult(1);
-    assertEquals("Arusha", filterSearchPage.getSelectedGeoZoneOnFilterPopUp());
-    filterSearchPage.clickApplyFilterButton();
-    testWebDriver.waitForAjax();
-
-    assertEquals("Warehouse", filterSearchPage.getSelectedFacilityTypeLabelOnAddFilterPage());
-    assertEquals("Arusha", filterSearchPage.getSelectedGeoZoneLabelOnAddFilterPage());
-
-
-    assertEquals("10 matches found for 'F11'", supervisoryNodesPage.getNResultsMessage());
-
-
-    filterSearchPage.clickFilterButton();
-    filterSearchPage.searchGeographicZone("Root");
-    filterSearchPage.selectGeographicZoneResult(1);
-    filterSearchPage.clickCancelFilterButton();
-    testWebDriver.waitForAjax();
-
-    assertEquals("10 matches found for 'F11'", supervisoryNodesPage.getNResultsMessage());
-    assertEquals("Warehouse", filterSearchPage.getSelectedFacilityTypeLabelOnAddFilterPage());
-    assertTrue(filterSearchPage.isSetFilterButtonPresent());
-
+    assertTrue(supervisoryNodesPage.isSetFilterButtonPresent());
+    assertEquals("", supervisoryNodesPage.getSelectedFacilityTypeLabelOnAddFilterPage());
+    assertEquals("", supervisoryNodesPage.getSelectedGeoZoneLabelOnAddFilterPage());
   }
 }

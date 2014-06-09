@@ -29,7 +29,6 @@ public class ManageSupervisoryNodes extends TestCaseHelper {
 
   LoginPage loginPage;
   SupervisoryNodesPage supervisoryNodesPage;
-  FilterSearchPage filterSearchPage;
 
   public static final String ADMIN = "admin";
   public static final String PASSWORD = "password";
@@ -45,7 +44,6 @@ public class ManageSupervisoryNodes extends TestCaseHelper {
     dbWrapper.insertFacilities("F10", "F11");
     loginPage = PageObjectFactory.getLoginPage(testWebDriver, baseUrlGlobal);
     supervisoryNodesPage = PageObjectFactory.getSupervisoryNodesPage(testWebDriver);
-    filterSearchPage = PageObjectFactory.getFilterSearchPage(testWebDriver);
   }
 
   @Test(groups = {"admin"})
@@ -279,10 +277,10 @@ public class ManageSupervisoryNodes extends TestCaseHelper {
     supervisoryNodesPage.selectSupervisoryNodeSearchResult(1);
 
     supervisoryNodesPage.clickAssociatedFacilityMemberField();
-    filterSearchPage.clickFilterButton();
+    supervisoryNodesPage.clickFilterButton();
     testWebDriver.waitForAjax();
-    filterSearchPage.selectFacilityType("Warehouse");
-    filterSearchPage.clickApplyFilterButton();
+    supervisoryNodesPage.selectFacilityType("Warehouse");
+    supervisoryNodesPage.clickApplyFilterButton();
     testWebDriver.waitForAjax();
     searchAssociatedFacility("F11");
     testWebDriver.waitForAjax();

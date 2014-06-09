@@ -31,7 +31,6 @@ public class ManageSupplyLine extends TestCaseHelper {
 
   LoginPage loginPage;
   SupplyLinePage supplyLinePage;
-  FilterSearchPage filterSearchPage;
 
   public static final String ADMIN = "admin";
   public static final String PASSWORD = "password";
@@ -59,7 +58,6 @@ public class ManageSupplyLine extends TestCaseHelper {
     dbWrapper.insertFacilitiesWithFacilityTypeIDAndGeoZoneId("F11C", "F11D", 1, 1);
     loginPage = PageObjectFactory.getLoginPage(testWebDriver, baseUrlGlobal);
     supplyLinePage = PageObjectFactory.getSupplyLinePage(testWebDriver);
-    filterSearchPage = PageObjectFactory.getFilterSearchPage(testWebDriver);
   }
 
   @Test(groups = {"admin"})
@@ -341,14 +339,12 @@ public class ManageSupplyLine extends TestCaseHelper {
     supplyLinePage.clickSupplyingFacilityField();
     supplyLinePage.searchAssociatedFacility(facilityCodeOrName);
     testWebDriver.waitForAjax();
-    filterSearchPage.clickFilterButton();
+    supplyLinePage.clickFilterButton();
     testWebDriver.waitForAjax();
-    filterSearchPage.selectFacilityType("Warehouse");
-    filterSearchPage.searchGeographicZone("Root");
-    filterSearchPage.selectGeographicZoneResult(1);
-    filterSearchPage.clickApplyFilterButton();
-    assertEquals("Warehouse", filterSearchPage.getSelectedFacilityTypeLabelOnAddFilterPage());
-    assertEquals("Root", filterSearchPage.getSelectedGeoZoneLabelOnAddFilterPage());
+    supplyLinePage.selectFacilityType("Warehouse");
+    supplyLinePage.searchGeographicZone("Root");
+    supplyLinePage.selectGeographicZoneResult(1);
+    supplyLinePage.clickApplyFilterButton();
     supplyLinePage.selectAssociatedFacilityResult(1);
   }
 
