@@ -17,6 +17,10 @@ public class DonorRepository {
     return mapper.getAll();
   }
 
+  public List<Donor> getAllWithDetails(){
+    return mapper.getAllWithDetails();
+  }
+
   public void insert(Donor donor){
     mapper.insert(donor);
   }
@@ -24,4 +28,13 @@ public class DonorRepository {
   public void update(Donor donor){
     mapper.update(donor);
   }
+
+  public Donor getDonorById(Long id){
+    return mapper.getById(id);
+  }
+
+  public void removeDonor(Long id){
+    mapper.remove(id);
+  }
+
 }
