@@ -8,31 +8,23 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-package org.openlmis.core.repository.mapper;
+package org.openlmis.core.service;
 
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Options;
-import org.apache.ibatis.annotations.Select;
+import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.DosageUnit;
-import org.springframework.stereotype.Repository;
+import org.openlmis.core.repository.DosageUnitRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-/**
- * DosageUnitMapper maps the DosageUnit entity to corresponding representation in database.
- */
-@Repository
-public interface DosageUnitMapper {
 
-  @Insert({"INSERT INTO dosage_units",
-    "(code, displayOrder, createdDate)",
-    "VALUES",
-    "(#{code}, #{displayOrder}, NOW())"})
-  @Options(useGeneratedKeys = true)
-  public void insert(DosageUnit dosageUnit);
+@Service
+@NoArgsConstructor
+public class DosageUnitService {
 
-  // Used by mapper
-  @Select("SELECT * FROM dosage_units WHERE id = #{id}")
-  DosageUnit getById(Long id);
+  private DosageUnitRepository duRep;
 
-  @Select("SELECT * FROM dosage_units WHERE LOWER(code) = LOWER(#{code})")
-  DosageUnit getByCode(String code);
+  @Autowired
+  public DosageUnitService(DosageUnitRepository dosageUnitRepository) {
+    this.duRep = dosageUnitRepository;
+  }
 }

@@ -14,6 +14,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.openlmis.upload.Importable;
+import org.openlmis.upload.annotation.ImportField;
 
 /**
  * DosageUnit represents the Dosage Unit for any product.
@@ -22,7 +24,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-public class DosageUnit extends BaseModel {
+public class DosageUnit extends BaseModel implements Importable {
+  @ImportField(mandatory = true, name="Dosage Unit Code")
   private String code;
+
+  @ImportField(mandatory = true, name="Display Order")
   private int displayOrder;
 }
