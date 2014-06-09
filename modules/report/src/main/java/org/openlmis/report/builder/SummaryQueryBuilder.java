@@ -97,7 +97,7 @@ public class SummaryQueryBuilder {
 
             predicate += " and facilities.name = '"+ facilityName +"'";
         }
-        if(facilityId != null && !facilityId.equals("") && !facilityId.equals( "undefined")){
+        if(facilityId != null && !facilityId.equals("") && !facilityId.equals( "undefined") && !facilityId.equals("0")){
             predicate += " and facilities.id = "+ facilityId +"";
         }
         return predicate;
