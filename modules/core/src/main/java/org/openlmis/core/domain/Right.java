@@ -62,11 +62,11 @@ public enum Right {
   MANAGE_PRODUCT("Admin - Manage Products", ADMIN, "Permission to manage products",29),
   MANAGE_SUPPLYLINE("Admin - Manage Supply Line", ADMIN, "Permission to manage supply line",30),
   MANAGE_GEOGRAPHIC_ZONES ("Admin - Manage Geographic Zones", ADMIN, "Permission to manage geographic zones.",31),
-  MANAGE_DONOR("Admin - Manage Donors",ADMIN,"Permission to manage donors", 53),
 
   MANAGE_EQUIPMENT_SETTINGS ("Admin - Manage Equipment Settings", ADMIN, "Permission to manage equipment settings.",60),
   MANAGE_EQUIPMENT_INVENTORY ("Admin - Manage Equipment Inventory", ADMIN, "Permission to manage equipment inventory.",61),
   SERVICE_VENDOR_RIGHT("Admin - Service Vendor Rights", ADMIN, "Permission to use system as equipment Service Vendor", 62),
+  MANAGE_DONOR("Admin - Manage Donors", ADMIN, "Permission to manage donors", 63),
 
 
   VIEW_FACILITY_REPORT("Report - Facility Listing (V1)", REPORT, "Permission to view Facility List Report",32),
