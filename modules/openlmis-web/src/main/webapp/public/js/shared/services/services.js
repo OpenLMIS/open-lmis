@@ -351,3 +351,7 @@ services.factory('TopLevelSupervisoryNodes', function ($resource) {
 services.factory('SupplyLinesSearch', function ($resource) {
   return $resource('/supplyLines/search.json', {}, {});
 });
+
+services.factory('FacilityApprovedProductsSearch', function ($resource) {
+  return $resource('/facilityApprovedProducts.json', {}, {});
+});
