@@ -61,14 +61,14 @@
                           <tr ng-repeat="row in datarows">
                               <td data-title="'Code'" sortable="code" >{{ row.code }}</td>
                               <td data-title="'Product'" sortable="product" >{{ row.product }}</td>
-                              <td class="number" sortable="openingBalance" data-title="'Opening Balance'" >{{ row.openingBalance | number}}</td>
+                              <td class="number" sortable="openingBalance" data-title="'O. Balance'" >{{ row.openingBalance | number}}</td>
                               <td class="number" sortable="receipts" data-title="'Receipt'">{{ row.receipts | number}}</td>
                               <td class="number" sortable="issues" data-title="'Issues'">{{ row.issues | number}}</td>
                               <td class="number" sortable="adjustements" data-title="'Adjustments'">{{ row.adjustments | number}}</td>
-                              <td class="number" sortable="closingBalance" data-title="'Closing Balance'">{{ row.closingBalance | number}}</td>
-                              <td class="number" sortable="monthsOfStock" data-title="'MOS'">{{ row.monthsOfStock | number}}</td>
+                              <td class="number" sortable="closingBalance" data-title="'C Balance'">{{ row.closingBalance | number}}</td>
                               <td class="number" sortable="averageMonthlyConsumption" data-title="'AMC'">{{ row.averageMonthlyConsumption | number}}</td>
-                              <td class="number" sortable="minimumStock" data-title="'Minimum Stock'">{{ row.minimumStock | number}}</td>
+                              <td class="number" sortable="monthsOfStock" data-title="'MOS'">{{ row.monthsOfStock | number}}</td>
+                              <td class="number" sortable="minimumStock" data-title="'Min Stock'">{{ row.minimumStock | number}}</td>
                               <td class="number" sortable="reorderAmount" data-title="'Reorder Amount'">{{ row.reorderAmount | number}}</td>
                           </tr>
 
