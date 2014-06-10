@@ -541,3 +541,14 @@ services.factory("RnRStatusSummary",function($resource){
 });
 
 
+services.factory('GetLabEquipmentList', function ($resource) {
+    return $resource('/dashboard/notification/alerts.json',{}, {}); // just for mock
+});
+
+services.factory('ReportEquipmentTypes', function ($resource) {
+    return $resource('/reports/equipmentTypes.json',{}, {}); // just for mock
+});
+
+services.factory('LabEquipmentListReport', function ($resource) {
+    return $resource('/reports/reportdata/labEquipmentList.json', {}, {});
+});

@@ -361,4 +361,11 @@ public ResponseEntity<OpenLmisResponse> getSupervisedFacilities(
         return OpenLmisResponse.response("userRoleAssignmentSummary",userSummaryList);
     }
 
+    @RequestMapping(value="/equipmentTypes", method = GET, headers = BaseController.ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getEquipmentType() {
+        List<EquipmentType> equipmentTypeList =  reportLookupService.getEquipmentTypes();
+
+        return OpenLmisResponse.response("equipmentTypes", equipmentTypeList);
+    }
+
 }

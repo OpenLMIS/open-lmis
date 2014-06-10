@@ -191,7 +191,15 @@
                     <property name="title" value="User Summary Report"/>
                     <property name="version" value="1.0"/>
                 </bean>
-
+                <bean class="org.openlmis.report.Report">
+                    <property name="reportKey" value="lab_equipment_list"/>
+                    <property name="template" value="lab-equipment-list.jasper"/>
+                    <property name="reportDataProvider" ref="labEquipmentStatusReportDataProvider"/>
+                    <property name="id" value="RP-Lab-equipment-list-Report"/>
+                    <property name="name" value="List of Lab Equipment by Operational Status"/>
+                    <property name="title" value="List of Lab Equipment by Operational Status"/>
+                    <property name="version" value="1.0"/>
+                </bean>
 
             </list>
         </constructor-arg>

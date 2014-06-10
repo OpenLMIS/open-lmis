@@ -75,9 +75,7 @@ app.directive('programFilter', ['ReportPrograms',
       require: '^filterContainer',
       link: function (scope, elm, attr) {
 
-        if (attr.required) {
-          scope.requiredFilters.program = 'program';
-        }
+
         scope.$evalAsync(function(){
           ReportPrograms.get(function (data) {
             scope.programs = data.programs;
@@ -157,10 +155,11 @@ app.directive('scheduleFilter', ['ReportSchedules','$routeParams',
       link: function (scope, elm, attr) {
 
         scope.schedules = [];
-        scope.schedules.unshift({
+       /* scope.schedules.unshift({
+
           name: '-- Select Group --'
-        });
-        scope.filter.schedule = $routeParams.schedule;
+        });*/
+        scope.filter.schedule = (isUndefined($routeParams.schedule) || $routeParams.schedule === '')? 0: $routeParams.schedule;//$routeParams.schedule;
 
         if (attr.required) {
           scope.requiredFilters.schedule = 'schedule';
@@ -169,7 +168,8 @@ app.directive('scheduleFilter', ['ReportSchedules','$routeParams',
           ReportSchedules.get(function (data) {
             scope.schedules = data.schedules;
             scope.schedules.unshift({
-              name: '-- Select Group --'
+                'id':0,
+              'name': '-- Select Group --'
             });
           });
         });
@@ -559,10 +559,6 @@ app.directive('regimenFilter', ['ReportRegimensByCategory','$routeParams',
 
     }]);
 
-
-
-
-
 app.directive('clientSideSortPagination', ['$filter', 'ngTableParams',
   function ($filter, ngTableParams) {
 
@@ -605,4 +601,25 @@ app.directive('clientSideSortPagination', ['$filter', 'ngTableParams',
       }
     };
 
+}]);
+
+app.directive('equipmentTypeFilter',['ReportEquipmentTypes','$routeParams', function(ReportEquipmentTypes, $routeParams){
+
+    return {
+        restrict: 'E',
+        require: '^filterContainer',
+        link: function (scope, elm, attr) {
+
+            scope.$evalAsync(function() {
+                ReportEquipmentTypes.get(function (data) {
+                    scope.equipmentTypes = data.equipmentTypes;
+                    scope.equipmentTypes.unshift({'id':0, 'name': '--All Equipment types --'});
+                });
+
+            });
+
+            scope.filter.equipmentTypes = (isUndefined($routeParams.equipmentTypes) || $routeParams.equipmentTypes === '')? 0: $routeParams.equipmentTypes;
+        },
+        templateUrl: 'filter-equipment-type'
+    };
 }]);

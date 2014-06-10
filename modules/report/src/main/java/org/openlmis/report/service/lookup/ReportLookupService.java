@@ -106,8 +106,11 @@ public class ReportLookupService {
   @Autowired
   private ProgramProductMapper programProductMapper;
 
-    @Autowired
-    private FacilityApprovedProductMapper facilityApprovedProductMapper;
+  @Autowired
+  private FacilityApprovedProductMapper facilityApprovedProductMapper;
+
+  @Autowired
+  private EquipmentTypeReportMapper equipmentTypeReportMapper;
 
   public List<Product> getAllProducts() {
     return productMapper.getAll();
@@ -393,4 +396,7 @@ public class ReportLookupService {
       return userSummaryExReportMapper.getUserRoleAssignment();
   }
 
+    public List<EquipmentType> getEquipmentTypes(){
+        return equipmentTypeReportMapper.getEquipmentTypeList();
+    }
 }
