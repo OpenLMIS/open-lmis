@@ -22,7 +22,7 @@ function NavigationController($scope, localStorageService, Locales, $location, $
   }();
 
   $scope.hasPermission = function (permission) {
-    return ($scope.rights && ($scope.rights.indexOf(permission) > -1));
+    return ($scope.rights && ($scope.rights.split(",").indexOf(permission) > -1));
   };
 
   $scope.goOnline = function () {

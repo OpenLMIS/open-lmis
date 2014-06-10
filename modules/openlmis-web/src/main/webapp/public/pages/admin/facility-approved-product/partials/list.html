@@ -39,9 +39,7 @@
     </div>
   </div>
 
-  <span openlmis-message="msg.please.select.program.facility.type" ng-hide="showResults"></span>
-
-  <!--<hr>-->
+  <em openlmis-message="msg.please.select.program.facility.type" ng-hide="showResults"></em>
 
   <h2 ng-show="showResults">
     <span id="searchSupplyLineLabel" openlmis-message="label.search.products"></span>
@@ -61,15 +59,19 @@
         <div class="btn-group">
         </div>
         <input id='searchFacilityApprovedProduct' type="text" class="span5" ng-model="query" maxlength="50"
+               placeholder="msg.enter.product.code.name"
                ng-keydown="triggerSearch($event)"/>
         <button class="btn" ng-click="loadProducts(1)">
           <i id='searchIcon' class="icon-search"></i>
         </button>
+
+        <button id="clearProductSearch" class="btn" ng-click="clearSearch()" ng-disabled="!query"
+                openlmis-message="label.clear.search"></button>
       </div>
     </div>
   </div>
 
-  <table id="facilityApprovedProductTable" class="table table-striped table-bordered search-list" ng-show="showResults">
+  <table id="facilityApprovedProductTable" class="table table-bordered search-list" ng-show="showResults">
     <thead>
     <tr class="gradient-header resultCountHeader">
       <th colspan="10">
@@ -79,9 +81,7 @@
           <h3 id="nResultsMessage" ng-switch-default openlmis-message="msg.many.matches|totalItems|searchedQuery"></h3>
         </span>
 
-        <h3 id="totalResultsMessage" ng-show="!searchedQuery">{{totalItems}} record(s) found</h3>
-        <a id="closeButton" class="close-btn" href="" ng-click="clearSearch()" tabindex="-1"></a>
-
+        <h3 id="totalResultsMessage" ng-show="!searchedQuery" openlmis-message="msg.records.found|totalItems"></h3>
       </th>
     </tr>
     <tr class="gradient-header" ng-show="facilityApprovedProducts.length">
@@ -97,9 +97,14 @@
       <th id="activeAtProgram" openlmis-message="header.active.at.program"></th>
     </tr>
     </thead>
-    <tbody>
-    <tr ng-repeat="facilityApprovedProduct in facilityApprovedProducts">
-      <td class="center-justified">
+    <tbody ng-repeat="facilityApprovedProduct in facilityApprovedProducts">
+    <tr>
+      <td class="productCategory" colspan="10"
+          ng-show="showCategory($index)"
+          ng-bind="facilityApprovedProduct.programProduct.productCategory.name"></td>
+    </tr>
+    <tr>
+    <td class="center-justified">
         <i id="fullSupply{{$index}}"
            ng-class="{'icon-ok': facilityApprovedProduct.programProduct.product.fullSupply}"></i>
       </td>

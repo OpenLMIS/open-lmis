@@ -18,7 +18,7 @@ services.factory('AuthorizationService', function (localStorageService, $window)
     var permissions = Array.prototype.slice.call(arguments);
     var permitted = false;
     $(permissions).each(function (i, permission) {
-      if (rights.indexOf(permission) > -1) {
+      if (rights.split(',').indexOf(permission) > -1) {
         permitted = true;
         return false;
       }
@@ -37,7 +37,7 @@ services.factory('AuthorizationService', function (localStorageService, $window)
     var permitted = false;
 
     $(permissions).each(function (i, permission) {
-      if (rights.indexOf(permission) > -1) {
+      if (rights.split(',').indexOf(permission) > -1) {
         permitted = true;
         return false;
       }
