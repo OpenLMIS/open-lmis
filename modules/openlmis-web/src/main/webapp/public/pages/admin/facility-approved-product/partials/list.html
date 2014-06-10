@@ -59,7 +59,7 @@
         <div class="btn-group">
         </div>
         <input id='searchFacilityApprovedProduct' type="text" class="span5" ng-model="query" maxlength="50"
-               placeholder="msg.enter.product.code.name"
+               openlmis-message="msg.enter.product.code.name"
                ng-keydown="triggerSearch($event)"/>
         <button class="btn" ng-click="loadProducts(1)">
           <i id='searchIcon' class="icon-search"></i>
@@ -81,7 +81,11 @@
           <h3 id="nResultsMessage" ng-switch-default openlmis-message="msg.many.matches|totalItems|searchedQuery"></h3>
         </span>
 
-        <h3 id="totalResultsMessage" ng-show="!searchedQuery" openlmis-message="msg.records.found|totalItems"></h3>
+        <h3 id="noRecordsMessage" ng-show="!searchedQuery && totalItems === 0"
+            openlmis-message="msg.no.records.found"></h3>
+
+        <h3 id="nRecordsMessage" ng-show="!searchedQuery && totalItems"
+            openlmis-message="msg.records.found|totalItems"></h3>
       </th>
     </tr>
     <tr class="gradient-header" ng-show="facilityApprovedProducts.length">
