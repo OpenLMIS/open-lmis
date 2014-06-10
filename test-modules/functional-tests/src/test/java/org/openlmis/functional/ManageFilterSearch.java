@@ -48,7 +48,7 @@ public class ManageFilterSearch extends TestCaseHelper {
     requisitionGroupPage = homePage.navigateToRequisitionGroupPage();
     requisitionGroupPage.clickAddNewButton();
 
-    requisitionGroupPage.clickAssociatedFacilityLink();
+    requisitionGroupPage.clickMembersAccordianLink();
     requisitionGroupPage.searchFacilityToBeAssociated("F10");
     requisitionGroupPage.clickSearchIcon();
     testWebDriver.waitForAjax();
@@ -74,8 +74,8 @@ public class ManageFilterSearch extends TestCaseHelper {
     assertEquals("Root", requisitionGroupPage.getSelectedGeoZoneLabelOnAddFilterPage());
     assertTrue(requisitionGroupPage.isSetFilterButtonPresent());
 
-    requisitionGroupPage.clickAssociatedFacilityLink();
-    requisitionGroupPage.clickAssociatedFacilityLink();
+    requisitionGroupPage.clickMembersAccordianLink();
+    requisitionGroupPage.clickMembersAccordianLink();
     assertEquals("No matches found for 'F10'", requisitionGroupPage.getNoFacilitySearchResultMessage());
     assertEquals("Lvl3 Hospital", requisitionGroupPage.getSelectedFacilityTypeLabelOnAddFilterPage());
     assertEquals("Root", requisitionGroupPage.getSelectedGeoZoneLabelOnAddFilterPage());
@@ -98,7 +98,7 @@ public class ManageFilterSearch extends TestCaseHelper {
     requisitionGroupPage = homePage.navigateToRequisitionGroupPage();
     requisitionGroupPage.clickAddNewButton();
 
-    requisitionGroupPage.clickAssociatedFacilityLink();
+    requisitionGroupPage.clickMembersAccordianLink();
     requisitionGroupPage.searchFacilityToBeAssociated("F11");
     requisitionGroupPage.clickSearchIcon();
     testWebDriver.waitForAjax();
@@ -128,7 +128,7 @@ public class ManageFilterSearch extends TestCaseHelper {
     assertTrue(requisitionGroupPage.isSetFilterButtonPresent());
 
     testWebDriver.refresh();
-    requisitionGroupPage.clickAssociatedFacilityLink();
+    requisitionGroupPage.clickMembersAccordianLink();
     assertFalse(requisitionGroupPage.isNoResultMessageDisplayed());
     assertEquals("", requisitionGroupPage.getSelectedFacilityTypeLabelOnAddFilterPage());
     assertEquals("", requisitionGroupPage.getSelectedGeoZoneLabelOnAddFilterPage());

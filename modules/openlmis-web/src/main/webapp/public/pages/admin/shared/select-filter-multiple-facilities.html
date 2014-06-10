@@ -24,7 +24,7 @@
             <i id='searchIcon' class="icon-search"></i>
           </button>
         </div>
-        <input type="button" ng-disabled="disableAddFacility" id="addMembers" class="btn btn-primary pull-right" openlmis-message="add.selected.facilities" ng-click="addMembers()">
+        <input type="button" ng-disabled="disableAddFacility" id="addSelectedFacilities" class="btn btn-primary pull-right" openlmis-message="add.selected.facilities" ng-click="addMembers()">
       </div>
 
       <div id="searchFacilityList" class="search-list">
@@ -45,7 +45,7 @@
           <li ng-repeat="facility in facilityList">
 
             <span id="facilityResult{{$index}}">
-              <input type="checkbox" class="facilityCheckbox" ng-click="associate(facility)" ng-model="facility.selected"
+              <input id="facilityCheckBox{{$index}}" type="checkbox" class="facilityCheckbox" ng-click="associate(facility)" ng-model="facility.selected"
                   ng-checked="false">
               <span class="vertical-middle-aligned">{{facility.code}} - {{facility.name}}</span>
             </span>

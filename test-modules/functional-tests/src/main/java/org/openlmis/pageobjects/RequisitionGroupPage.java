@@ -70,8 +70,8 @@ public class RequisitionGroupPage extends FilterSearchPage {
   @FindBy(how = ID, using = "searchSupervisoryNode")
   private static WebElement searchSupervisoryNodeField = null;
 
-  @FindBy(how = ID, using = "associateFacility")
-  private static WebElement associateFacilityLink = null;
+  @FindBy(how = ID, using = "Members")
+  private static WebElement membersLink = null;
 
   @FindBy(how = ID, using = "searchFacility")
   private static WebElement searchFacility = null;
@@ -105,6 +105,12 @@ public class RequisitionGroupPage extends FilterSearchPage {
 
   @FindBy(how = ID, using = "saveErrorMsgDiv")
   private static WebElement saveErrorMsg = null;
+
+  @FindBy(how = ID, using = "addMembers")
+  private static WebElement addMembersButton = null;
+
+  @FindBy(how = ID, using = "addSelectedFacilities")
+  private static WebElement addSelectedFacilities = null;
 
   public RequisitionGroupPage(TestWebDriver driver) {
     super(driver);
@@ -286,9 +292,9 @@ public class RequisitionGroupPage extends FilterSearchPage {
     sendKeys(searchSupervisoryNodeField, supervisoryNode);
   }
 
-  public void clickAssociatedFacilityLink() {
-    testWebDriver.waitForElementToAppear(associateFacilityLink);
-    associateFacilityLink.click();
+  public void clickMembersAccordianLink() {
+    testWebDriver.waitForElementToAppear(membersLink);
+    membersLink.click();
   }
 
   public void searchFacilityToBeAssociated(String facilityCode) {
@@ -301,10 +307,10 @@ public class RequisitionGroupPage extends FilterSearchPage {
     return searchIcon.isDisplayed();
   }
 
-  public void selectFacilityToBeAssociated(int rowNumber) {
-    WebElement facilityResult = testWebDriver.getElementById("facilityResult" + (rowNumber - 1));
-    testWebDriver.waitForElementToAppear(facilityResult);
-    facilityResult.click();
+  public void checkFacilityToBeAssociated(int rowNumber) {
+    WebElement facilityCheckBox = testWebDriver.getElementById("facilityCheckBox" + (rowNumber - 1));
+    testWebDriver.waitForElementToAppear(facilityCheckBox);
+    facilityCheckBox.click();
   }
 
   public void clickSaveButton() {
@@ -411,5 +417,15 @@ public class RequisitionGroupPage extends FilterSearchPage {
   public String getErrorMessage() {
     testWebDriver.waitForElementToAppear(saveErrorMsg);
     return saveErrorMsg.getText();
+  }
+
+  public void clickAddMembersButton() {
+    testWebDriver.waitForElementToAppear(addMembersButton);
+    addMembersButton.click();
+  }
+
+  public void clickOnAddSelectedFacilityButton() {
+    testWebDriver.waitForElementToAppear(addSelectedFacilities);
+    addSelectedFacilities.click();
   }
 }
