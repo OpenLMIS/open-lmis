@@ -30,4 +30,12 @@ public class DosageUnit extends BaseModel implements Importable {
 
   @ImportField(mandatory = true, name="Display Order")
   private int displayOrder;
+
+  /**
+   * Validation method for an instantiated DosageUnit.  A valid dosage unit has a code and a display order.
+   * @return true if this dosage unit is a defined well (valid), false otherwise.
+   */
+  public boolean isValid() {
+    return code != null && code.length() > 0 && displayOrder > 0;
+  }
 }

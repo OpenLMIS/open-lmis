@@ -33,4 +33,23 @@ public class DosageUnitRepository {
   public DosageUnit getByCode(String code) {
     return duMapper.getByCode(code);
   }
+
+  public DosageUnit getExisting(DosageUnit du) {
+    return duMapper.getByCode(du.getCode());
+  }
+
+  public void insert(DosageUnit du) {
+    if(du.isValid() == false) throw new DataException("error.reference.data.missing");
+    if(getByCode(du.getCode()) != null) throw new DataException("error.duplicate.dosage.unit.code");
+
+    try {
+      duMapper.insert(du);
+    } catch(DataIntegrityViolationException dive) {
+      throw new DataException("error.incorrect.length", dive);
+    }
+  }
+
+  public void update(DosageUnit du) {
+    duMapper.update(du);
+  }
 }

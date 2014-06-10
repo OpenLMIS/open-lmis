@@ -13,6 +13,7 @@ package org.openlmis.core.repository.mapper;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 import org.openlmis.core.domain.DosageUnit;
 import org.springframework.stereotype.Repository;
 
@@ -23,13 +24,19 @@ import org.springframework.stereotype.Repository;
 public interface DosageUnitMapper {
 
   @Insert({"INSERT INTO dosage_units",
-    "(code, displayOrder, createdDate)",
+    "(code, displayOrder, createdBy, createdDate, modifiedBy, modifiedDate)",
     "VALUES",
-    "(#{code}, #{displayOrder}, NOW())"})
+    "(#{code}, #{displayOrder}, #{createdBy}, NOW(), #{modifiedBy}, NOW())"})
   @Options(useGeneratedKeys = true)
-  public void insert(DosageUnit dosageUnit);
+  void insert(DosageUnit dosageUnit);
 
-  // Used by mapper
+  @Update({"UPDATE dosage_units SET code = #{code},",
+    "displayOrder = #{displayOrder},",
+    "modifiedBy=#{modifiedBy},",
+    "modifiedDate=NOW()",
+    "WHERE id = #{id}"})
+  void update(DosageUnit dosageUnit);
+
   @Select("SELECT * FROM dosage_units WHERE id = #{id}")
   DosageUnit getById(Long id);
 

@@ -279,6 +279,15 @@
                         <property name="recordHandler" ref="facilityFtpDetailsPersistenceHandler"/>
                     </bean>
                 </entry>
+                <entry key="dosageUnit">
+                    <bean class="org.openlmis.web.model.UploadBean">
+                        <property name="displayName" value="label.dosage.units"/>
+                        <property name="importableClass">
+                            <value type="java.lang.Class">org.openlmis.core.domain.DosageUnit</value>
+                        </property>
+                        <property name="recordHandler" ref="dosageUnitPersistenceHandler"/>
+                    </bean>
+                </entry>
             </map>
         </constructor-arg>
     </bean>

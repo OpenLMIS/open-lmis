@@ -46,4 +46,20 @@ public class DosageUnitMapperIT {
     assertThat(returnedDu.getCode(), is(du.getCode()));
     assertThat(returnedDu.getDisplayOrder(), is(du.getDisplayOrder()));
   }
+
+  @Test
+  public void shouldUpdateDosageUnit() {
+    DosageUnit du = new DosageUnit();
+    du.setCode("someCode");
+    du.setDisplayOrder(1);
+    duMapper.insert(du);
+
+    DosageUnit returnedDu = duMapper.getByCode("someCode");
+    returnedDu.setCode("someOtherCode");
+    duMapper.update(returnedDu);
+
+    DosageUnit updatedDu = duMapper.getByCode("someOtherCode");
+    assertThat(updatedDu.getCode(), is(returnedDu.getCode()));
+    assertThat(updatedDu.getDisplayOrder(), is(returnedDu.getDisplayOrder()));
+  }
 }

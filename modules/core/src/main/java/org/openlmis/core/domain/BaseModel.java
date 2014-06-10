@@ -39,4 +39,11 @@ public abstract class BaseModel {
   @JsonIgnore
   protected Date modifiedDate;
 
+  /**
+   * Determines if this BaseModel has an id set or not.
+   * @return true if it has an id set, false otherwise
+   */
+  public boolean hasId() {
+    return id != null ? true : false;
+  }
 }

@@ -27,4 +27,13 @@ public class DosageUnitService {
   public DosageUnitService(DosageUnitRepository dosageUnitRepository) {
     this.duRep = dosageUnitRepository;
   }
+
+  public DosageUnit getExisting(DosageUnit du) {
+    return duRep.getExisting(du);
+  }
+
+  public void save(DosageUnit du) {
+    if( du.hasId() ) duRep.update(du);
+    else duRep.insert(du);
+  }
 }

@@ -28,21 +28,16 @@ public class DosageUnitPersistenceHandler extends AbstractModelPersistenceHandle
 
   @Override
   protected BaseModel getExisting(BaseModel record) {
-    // use dosage unit service to find an existing dosage unit
-    //return productCategoryService.getExisting((ProductCategory) record);
-    return null;
+    return dosageUnitService.getExisting((DosageUnit) record);
   }
 
   @Override
   protected void save(BaseModel modelClass) {
-    // use dosage unit service to save the dosage unit
-    //dosageUnitService.save((DosageUnit) modelClass);
-    //productCategoryService.save((ProductCategory) modelClass);
+    dosageUnitService.save((DosageUnit) modelClass);
   }
 
   @Override
   public String getMessageKey() {
-    //TODO: create a dosage unit duplicate error message code
-    return "error.duplicate.product.category";
+    return "error.duplicate.dosage.unit.code";
   }
 }
