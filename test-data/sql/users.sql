@@ -909,10 +909,12 @@ INSERT INTO role_rights (roleId, rightName) VALUES ((SELECT
                                                        id
                                                      FROM roles
                                                      WHERE name = 'Admin'), 'MANAGE_GEOGRAPHIC_ZONE');
+
 INSERT INTO role_rights (roleId, rightName) VALUES ((SELECT
                                                        id
                                                      FROM roles
                                                      WHERE name = 'Admin'), 'MANAGE_SUPERVISORY_NODE');
+
 INSERT INTO role_rights (roleId, rightName) VALUES ((SELECT
                                                        id
                                                      FROM roles
@@ -922,3 +924,8 @@ INSERT INTO role_rights (roleId, rightName) VALUES ((SELECT
                                                        id
                                                      FROM roles
                                                      WHERE name = 'Admin'), 'MANAGE_SUPPLY_LINE');
+
+INSERT INTO role_rights (roleId, rightName) VALUES ((SELECT
+                                                       id
+                                                     FROM roles
+                                                     WHERE name = 'Admin'), 'MANAGE_FACILITY_APPROVED_PRODUCT');
