@@ -18,7 +18,7 @@
   </div>
   <div class="row-fluid section-divider">
     <select ui-select2 class="select2-container bottom-spacer span3" name="programs" id="programs"
-            ng-model="program" ng-change="loadProducts(1)"
+            ng-model="program" ng-change="clearSearch()"
             ng-options="pgm as pgm.name for pgm in programs">
       <option value="" openlmis-message="label.select.program"></option>
     </select>
@@ -32,7 +32,7 @@
   <div class="row-fluid">
     <div class="span12">
       <select ui-select2 class="select2-container bottom-spacer span3" name="facilityType" id="facilityType"
-              ng-model="facilityType" ng-change="loadProducts(1)"
+              ng-model="facilityType" ng-change="clearSearch()"
               ng-options="ft as ft.name for ft in facilityTypes">
         <option value="" openlmis-message="create.facility.select.facilityType"></option>
       </select>

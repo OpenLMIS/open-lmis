@@ -145,7 +145,7 @@ public interface FacilityApprovedProductMapper {
     "INNER JOIN product_categories pc ON pc.id = pp.productCategoryId",
     "WHERE fap.facilityTypeId = #{facilityTypeId} AND pp.programId = #{programId} AND",
     "(LOWER(prod.code) LIKE '%' || LOWER(#{searchParam}) || '%' OR LOWER(prod.primaryName) LIKE '%' || LOWER(#{searchParam}) || '%')",
-    "ORDER BY LOWER(pc.name), LOWER(prod.code), LOWER(prod.primaryName)"})
+    "ORDER BY LOWER(pc.name), LOWER(prod.primaryName), LOWER(prod.code)"})
   @Results(value = {
     @Result(property = "programProduct.id", column = "programProductId"),
     @Result(property = "programProduct.active", column = "active"),
