@@ -1,6 +1,5 @@
 package org.openlmis.report.service.lookup;
 
-import org.openlmis.report.mapper.AverageConsumptionReportMapper;
 import org.openlmis.report.mapper.lookup.DashboardMapper;
 import org.openlmis.report.mapper.lookup.RnRStatusSummaryReportMapper;
 import org.openlmis.report.model.dto.*;
@@ -20,13 +19,13 @@ public class DashboardLookupService {
 
     @Autowired
     DashboardMapper dashboardMapper;
-    @Autowired
-    AverageConsumptionReportMapper avgMapper;
+   // @Autowired
+    //AverageConsumptionReportMapper avgMapper;
 
     @Autowired
     RnRStatusSummaryReportMapper rnRStatusSummaryReportMapper;
 
-    private String  getCommaSeparatedIds(List<Long> idList){
+    public static String  getCommaSeparatedIds(List<Long> idList){
 
         return idList == null ? "{}" : idList.toString().replace("[", "{").replace("]", "}");
     }
@@ -63,8 +62,8 @@ public class DashboardLookupService {
         return dashboardMapper.getStockOutFacilitiesForRequisitionGroup(periodId, programId, productId, requisitionGroupId);
 
     }
-    public List<AlertSummary> getAlerts(Long userId, Long supervisoryNodeId, Long programId){
-        return dashboardMapper.getAlerts(userId,supervisoryNodeId, programId );
+    public List<AlertSummary> getAlerts(Long userId, Long supervisoryNodeId, Long programId, Long periodId){
+        return dashboardMapper.getAlerts(userId,supervisoryNodeId, programId, periodId );
 
     }
 
@@ -98,16 +97,33 @@ public class DashboardLookupService {
         }
     }
 
-    public String getPeriod(Long id){
-        return dashboardMapper.getPeriod(id);
+    public String getYearOfPeriodById(Long id){
+        return dashboardMapper.getYearOfPeriodById(id);
     }
 
     public List<RnRStatusSummaryReport>getRnRStatusSummary(Long requisionGroupId){
         return rnRStatusSummaryReportMapper.getRnRStatusSummaryData(requisionGroupId);
     }
 
-    public List<HashMap> getReportingPerformance(Long periodId, Long programId){
-        return dashboardMapper.getReportingPerformance(periodId,programId);
-
+    public List<HashMap> getReportingPerformance(Long periodId, Long programId,  List<Long> rgroupId){
+        return dashboardMapper.getReportingPerformance(periodId,programId, getCommaSeparatedIds(rgroupId));
     }
+    public List<ReportingPerformance> getReportingPerformanceDetail(Long periodId, Long programId,  List<Long> rgroupId, String status){
+        return dashboardMapper.getReportingPerformanceDetail(periodId,programId, getCommaSeparatedIds(rgroupId), status);
+    }
+    public List<RnRStatusSummaryReport>getRnRStatusDetails(Long requisitionGroupId,Long programId,Long periodId){
+        return rnRStatusSummaryReportMapper.getRnRStatusDetails(requisitionGroupId,programId,periodId);
+    }
+
+    public List<RnRStatusSummaryReport>getRnRStatusByRequisitionGroupAndPeriod(Long requisitionGroupId,Long periodId,Long programId){
+        return  rnRStatusSummaryReportMapper.getRnRStatusByRequisitionGroupAndPeriod(requisitionGroupId,periodId,programId);
+    }
+    public List<RnRStatusSummaryReport>getRnRStatusByRequisitionGroupAndPeriodData(Long requisitionGroupId,Long periodId){
+        return rnRStatusSummaryReportMapper.getRnRStatusByRequisitionGroupAndPeriodData(requisitionGroupId,periodId);
+    }
+
+    public List<RnRStatusSummaryReport> getRnRStatusDetail(Long periodId, Long programId,  Long requisitionGroupId, String status){
+        return rnRStatusSummaryReportMapper.getRnRStatusDetail(periodId,programId, requisitionGroupId, status);
+    }
+
 }

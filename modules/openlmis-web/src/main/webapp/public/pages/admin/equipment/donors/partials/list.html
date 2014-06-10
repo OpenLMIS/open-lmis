@@ -1,0 +1,73 @@
+<!--
+  ~ This program was produced for the U.S. Agency for International Development. It was prepared by the USAID | DELIVER PROJECT, Task Order 4. It is part of a project which utilizes code originally licensed under the terms of the Mozilla Public License (MPL) v2 and therefore is licensed under MPL v2 or later.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify it under the terms of the Mozilla Public License as published by the Mozilla Foundation, either version 2 of the License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the Mozilla Public License for more details.
+  ~
+  ~ You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
+  -->
+
+<div xmlns="http://www.w3.org/1999/html">
+    <h2><span>Donors List</span>
+        <a href="#/create-donor" class="pull-right btn btn-primary"><span id="donor-add-new">Add New</span></a>
+    </h2>
+
+    <div class="alert alert-success" id="saveSuccessMsgDiv" ng-show="donorId">
+        <span ng-bind="message"></span>
+    </div>
+
+    <input id="txtFilterDonors" class="search-query input-xlarge" type="text" ng-model="query"
+           ng-init="showDonorsList('txtFilterDonors')"
+           on-keyup="filterDonors('txtFilterDonors')" placeholder="Enter donor name"/>
+
+
+    <div>
+        <h3 ng-show="query.length>0">
+            <ng-pluralize count="resultCount"
+                          when="{ 0: 'No matches found for \'{{query}}\'',
+                            1: '1 match found for \'{{query}}\'',
+                            other: '{} matches found for \'{{query}}\''}">
+
+            </ng-pluralize>
+        </h3>
+        <br/>
+        <table class="table table-striped table-bordered">
+            <thead>
+            <tr class="gradient-header">
+                <th style="width: 30px;">#
+                </th>
+                <th>Code
+                </th>
+                <th>Short Name
+                </th>
+                <th>Long Name
+                </th>
+                <th>Donation Count
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="donor in filteredDonors">
+                <td>
+                    {{$index + 1}}
+                </td>
+                <td>
+                    <div>{{donor.code}}</div>
+                </td>
+                <td>
+                    <a href="" ng-click="editDonor(donor.id, donor.countOfDonations)">{{donor.shortName}}</a>
+                </td>
+                <td>
+                    <div>{{donor.longName}}</div>
+                </td>
+                <td>
+                    <div>{{donor.countOfDonations}}</div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+    </div>
+
+</div>

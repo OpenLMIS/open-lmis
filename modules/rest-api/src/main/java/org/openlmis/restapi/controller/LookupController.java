@@ -112,8 +112,6 @@ public class LookupController {
         return RestResponse.response("processing-schedules", lookupService.getAllProcessingSchedules());
     }
 
-
-
     @RequestMapping(value = "/rest-api/lookup/geographic-zones", method = RequestMethod.POST, headers = ACCEPT_JSON)
     public ResponseEntity getGeographicZones( Principal principal) {
         return RestResponse.response("geographic-zones", lookupService.getAllZones());

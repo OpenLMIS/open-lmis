@@ -82,6 +82,9 @@
                           <li ng-show="hasPermission('VIEW_NON_REPORTING_FACILITIES')">
                               <a href="/public/pages/reports/non-reporting/index.html">Non Reporting Facilities</a>
                           </li>
+                          <li ng-show="hasPermission('VIEW_USER_SUMMARY_REPORT')">
+                              <a href="/public/pages/reports/user-summary/index.html">User Summary Report</a>
+                          </li>
 
                           <li class="beak"></li>
                       </ul>
@@ -96,6 +99,9 @@
                           <li ng-show="hasPermission('VIEW_ADJUSTMENT_SUMMARY_REPORT')">
                               <a href="/public/pages/reports/adjustment-summary/index.html">Adjustment Summary</a>
                           </li>
+                          <li ng-show="hasPermission('VIEW_DISTRICT_CONSUMPTION_REPORT')">
+                            <a href="/public/pages/reports/aggregate-consumption/index.html">Aggregate Consumption</a>
+                          </li>
                           <li ng-show="hasPermission('VIEW_AVERAGE_CONSUMPTION_REPORT')">
                               <a href="/public/pages/reports/average-consumption/index.html">Consumption Average by Product</a>
                           </li>
@@ -108,14 +114,12 @@
                           <li ng-show="hasPermission('VIEW_DISTRICT_FINANCIAL_SUMMARY_REPORT')">
                               <a href="/public/pages/reports/district-financial-summary/index.html">District Order Compilation</a>
                           </li>
-
                           <li ng-show="hasPermission('VIEW_ORDER_FILL_RATE_REPORT')">
                               <a href="/public/pages/reports/order-fill-rate/index.html">Order Fill Rate Report by Facility</a>
                           </li>
                           <li ng-show="hasPermission('VIEW_ORDER_REPORT')">
                               <a href="/public/pages/reports/order/index.html">Order Report</a>
                           </li>
-
                           <li ng-show="hasPermission('VIEW_REGIMEN_SUMMARY_REPORT')">
                               <a href="/public/pages/reports/regimen-summary/index.html">Regimen Summary</a>
                           </li>
@@ -138,9 +142,7 @@
                           <li ng-show="hasPermission('VIEW_SUMMARY_REPORT')">
                               <a href="/public/pages/reports/summary/index.html">Summary Report</a>
                           </li>
-                          <li ng-show="hasPermission('VIEW_USER_SUMMARY_REPORT')">
-                              <a href="/public/pages/reports/user-summary/index.html">User Summary Report</a>
-                          </li>
+
                           <li class="beak"></li>
                       </ul>
                   </div>
@@ -211,7 +213,7 @@
                         </div>
                     </li>
 
-                    <li>
+                    <li ng-show="hasPermission('MANAGE_SETTING')">
                         <a href="/public/pages/admin/sms/index.html">Messages</a>
                     </li>
 
@@ -268,6 +270,26 @@
                                 <li ng-show="hasPermission('MANAGE_EQUIPMENT_SETTINGS')">
                                     <a href="/public/pages/admin/equipment/manage/index.html">Equipment List</a>
                                 </li>
+                              <li ng-show="hasPermission('MANAGE_EQUIPMENT_SETTINGS')">
+                                <a href="/public/pages/admin/equipment/service-type/index.html">
+                                  <span id="equipment-service-type">Service Types</span>
+                                </a>
+                              </li>
+                              <li ng-show="hasPermission('MANAGE_EQUIPMENT_SETTINGS')">
+                                <a href="/public/pages/admin/equipment/vendor/index.html">
+                                  <span id="service-vendor">Service Vendors</span>
+                                </a>
+                              </li>
+                              <li ng-show="hasPermission('MANAGE_EQUIPMENT_SETTINGS')">
+                                <a href="/public/pages/admin/equipment/service-contract/index.html">
+                                  <span id="service-contract">Service Contracts</span>
+                                </a>
+                              </li>
+                              <li ng-show="hasPermission('MANAGE_DONOR')">
+                                <a href="/public/pages/admin/equipment/donors/index.html">
+                                  <span id="manage-donor">Donors</span>
+                                </a>
+                              </li>
                             </ul>
                         </div>
                     </li>
@@ -276,6 +298,12 @@
                 </ul>
                 </div>
             </li>
+    </li>
+    <li ng-show="hasPermission('SERVICE_VENDOR_RIGHT')">
+      <a href="/public/pages/admin/equipment/my-requests/index.html">Maintenance Requests</a>
+    </li>
+    <li ng-show="hasPermission('SERVICE_VENDOR_RIGHT')">
+      <a href="/public/pages/admin/equipment/my-contracts/index.html">Service Contracts</a>
     </li>
     <li ng-show="hasPermission('ACCESS_ILS_GATEWAY')">
         <a href="/public/pages/ils-gateway/index.html#/dashboard">ILS Gateway</a>

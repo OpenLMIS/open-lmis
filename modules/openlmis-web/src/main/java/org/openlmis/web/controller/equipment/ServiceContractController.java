@@ -40,7 +40,9 @@ public class ServiceContractController extends BaseController {
 
   @RequestMapping(method = GET, value = "id")
   public ResponseEntity<OpenLmisResponse> getById( @RequestParam("id") Long id){
-    return  OpenLmisResponse.response("contract", service.getById(id));
+    ServiceContract contract = service.getById(id);
+    contract.setId(id);
+    return  OpenLmisResponse.response("contract", contract);
   }
 
   @RequestMapping(method = GET, value = "for-facility")

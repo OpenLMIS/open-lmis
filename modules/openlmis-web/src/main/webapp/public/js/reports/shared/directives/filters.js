@@ -179,6 +179,30 @@ app.directive('scheduleFilter', ['ReportSchedules','$routeParams',
 }]);
 
 
+app.directive('zoneFilter', ['TreeGeographicZoneList','$routeParams',
+  function (TreeGeographicZoneList, $routeParams) {
+
+    return {
+      restrict: 'E',
+      require: '^filterContainer',
+      link: function (scope, elm, attr) {
+        scope.filter.zone = $routeParams.zone;
+
+        if (attr.required) {
+          scope.requiredFilters.zone = 'zone';
+        }
+
+        TreeGeographicZoneList.get(function (data) {
+          // now recreate the zone data to a tree structure in java script objects.
+          scope.zones = data.zone;
+        });
+
+      },
+      templateUrl: 'filter-zone-template'
+    };
+  }]);
+
+
 app.directive('periodFilter', ['ReportPeriods', 'ReportPeriodsByScheduleAndYear','$routeParams',
   function (ReportPeriods, ReportPeriodsByScheduleAndYear, $routeParams) {
 
@@ -416,6 +440,30 @@ app.directive('facilityFilter', ['FacilitiesByProgramParams', '$routeParams',
     };
 }]);
 
+app.directive('programBudgetFilter', ['GetProgramWithBudgetingApplies', function (GetProgramWithBudgetingApplies) {
+
+    return {
+        restrict: 'E',
+        require: '^filterContainer',
+        link: function (scope, elm, attr) {
+
+            GetProgramWithBudgetingApplies.get(function (data) {
+                scope.programs = data.programWithBudgetingApplies;
+                scope.programs.unshift({'name': '--Select a Program --'});
+            });
+
+            if (attr.required) {
+                scope.requiredFilters.program = 'program';
+            }
+        },
+        templateUrl: 'filter-program-with-budget-template'
+    };
+}]);
+
+
+
+
+
 app.directive('productFilter', ['ReportProductsByProgram','$routeParams',
   function (ReportProductsByProgram, $routeParams) {
 
@@ -482,7 +530,7 @@ app.directive('programByRegimenFilter',['ReportRegimenPrograms', function(Report
 
             ReportRegimenPrograms.get(function (data) {
                 scope.programs = data.regimenPrograms;
-                scope.programs.unshift({'name': '--Select a Program --',id:-1});
+                scope.programs.unshift({'name': '--Select a Program --'});
             });
 
             if (attr.required) {
@@ -559,6 +607,7 @@ app.directive('regimenFilter', ['ReportRegimensByCategory','$routeParams',
 
     }]);
 
+
 app.directive('clientSideSortPagination', ['$filter', 'ngTableParams',
   function ($filter, ngTableParams) {
 
@@ -603,6 +652,7 @@ app.directive('clientSideSortPagination', ['$filter', 'ngTableParams',
 
 }]);
 
+
 app.directive('equipmentTypeFilter',['ReportEquipmentTypes','$routeParams', function(ReportEquipmentTypes, $routeParams){
 
     return {
@@ -623,3 +673,4 @@ app.directive('equipmentTypeFilter',['ReportEquipmentTypes','$routeParams', func
         templateUrl: 'filter-equipment-type'
     };
 }]);
+

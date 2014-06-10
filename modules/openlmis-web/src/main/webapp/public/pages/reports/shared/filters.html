@@ -52,11 +52,30 @@
     </div>
 </script>
 
+<script type="text/ng-template" id="filter-zone-template">
+  <div>
+    <label class="labels">Geographic Zone<span ng-show="requiredFilters.zone" class="label-required">*</span></label>
+    <div>
+      <select class="input-large" ng-change="filterChanged();" ng-model="filter.zone">
+        <option selected="selected" value="">-- National --</option>
+        <!--<option value="{{zones.id}}">{{zones.name}}</option>-->
+        <optgroup ng-repeat="value in zones.children" value="{{ value.id }}" ng-selected="filter.zone == value.id" label="{{value.name}}">
+          <option value="{{value.id}}"><b class="green">All of {{value.name}}</b></option>
+
+          <option ng-repeat-start="v in value.children" value="{{v.id}}">{{v.name}}</option>
+          <option ng-repeat-end ng-repeat="d in v.children" value="{{d.id}}"> &nbsp; &nbsp; {{d.name}}</option>
+
+        </optgroup>
+      </select>
+    </div>
+  </div>
+</script>
+
 <script type="text/ng-template" id="filter-schedule-template">
     <div>
         <label class="labels">Schedule <span ng-show="requiredFilters.schedule" class="label-required">*</span></label>
         <div>
-        <select class="input-medium" ng-model="filter.schedule">
+        <select class="input-medium" ng-change="filterChanged();" ng-model="filter.schedule">
             <option ng-repeat="schedule in schedules" value="{{ schedule.id }}" ng-selected="filter.schedule == schedule.id">{{schedule.name}}</option>
             </select>
         </div>
@@ -145,11 +164,22 @@
     </div>
 </script>
 
+
 <script type="text/ng-template" id="filter-equipment-type">
     <div>
         <label class="labels">Equipment <span ng-show="requiredFilters.equipmentType" class="label-required">*</span></label><div>
         <select class="input-large" ng-model="filter.equipmentType" ng-change="filterChanged();">
             <option ng-repeat="equipment in equipmentTypes" value="{{ equipment.id }}" ng-selected="filter.equipmentTypes == equipment.id">{{equipment.name}} -- {{filter.equipmentTypes}}</option>
+        </select>
+    </div>
+    </div>
+</script>
+
+<script type="text/ng-template" id="filter-program-with-budget-template">
+    <div>
+        <label class="labels">Program <span ng-show="requiredFilters.program" class="label-required">*</span></label><div>
+        <select class="input-large" ng-model="filter.program" ng-change="filterChanged();">
+            <option ng-repeat="programWithBudget in programs" value="{{ programWithBudget.id }}" ng-selected="filter.program == programWithBudget.id">{{programWithBudget.name}}</option>
         </select>
 
     </div>

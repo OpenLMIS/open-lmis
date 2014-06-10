@@ -8,25 +8,20 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-package org.openlmis.sms.mapper;
+package org.openlmis.equipment.dto;
 
 
-import org.openlmis.sms.domain.SMS;
-import org.springframework.jdbc.core.RowMapper;
-import org.springframework.stereotype.Component;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class ContractDetail {
 
-@Component
-public class SMSRowMapper implements RowMapper<SMS> {
+  private Long id;
+  private String name;
+  private Boolean isActive;
 
-  @Override
-  public SMS mapRow(ResultSet rs, int rowNum) throws SQLException {
-      SMS sms = new SMS();
-      sms.setMessage(rs.getString("message"));
-      sms.setPhoneNumber(rs.getString("phonenumber"));
-      sms.setDirection(rs.getString("direction"));
-      return sms;
-  }
 }

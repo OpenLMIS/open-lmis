@@ -60,6 +60,9 @@
   <div class="form-cell button-row">
     <input id="comments" type="button" ng-click="showCommentBox=!showCommentBox" class="btn comments-button"
            openlmis-message="comments.header"/>
+
+    <input ng-show="rnr.status == 'SKIPPED'" type="button" class="btn btn-primary submit-button" ng-click="reOpenRnR();" openlmis-message="button.reopen.period" />
+    <input ng-show="rnr.status != 'SKIPPED'" type="button" class="btn btn-primary submit-button" ng-click="rejectRnR();" openlmis-message="button.rnr.undo.approvals" />
     <comment-box updatable="false" show="showCommentBox"></comment-box>
   </div>
 </div>

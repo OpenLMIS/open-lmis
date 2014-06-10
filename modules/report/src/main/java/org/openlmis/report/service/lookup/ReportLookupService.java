@@ -20,6 +20,7 @@ import org.openlmis.core.service.ConfigurationSettingService;
 import org.openlmis.report.mapper.ReportRequisitionMapper;
 import org.openlmis.report.mapper.lookup.AdjustmentTypeReportMapper;
 import org.openlmis.report.mapper.lookup.*;
+import org.openlmis.report.model.GeoZoneReportingRate;
 import org.openlmis.report.model.dto.DosageUnit;
 import org.openlmis.report.model.dto.Facility;
 import org.openlmis.report.model.dto.FacilityType;
@@ -41,8 +42,10 @@ import java.util.*;
 @Service
 @NoArgsConstructor
 public class ReportLookupService {
+
   @Autowired
   private UserSummaryExReportMapper userSummaryExReportMapper;
+
   @Autowired
   private RegimenReportMapper regimenReportMapper;
 
@@ -253,7 +256,9 @@ public class ReportLookupService {
   public List<Program> getAllRegimenPrograms() {
     return programMapper.getAllRegimenPrograms();
   }
-
+public List<Program>getAllProgramsWithBudgeting(){
+    return programMapper.getAllProgramsWithBudgeting();
+}
 
   public List<Schedule> getAllSchedules() {
     return scheduleMapper.getAll();
@@ -396,7 +401,24 @@ public class ReportLookupService {
       return userSummaryExReportMapper.getUserRoleAssignment();
   }
 
+
     public List<EquipmentType> getEquipmentTypes(){
         return equipmentTypeReportMapper.getEquipmentTypeList();
     }
+
+
+  public GeoZoneTree getGeoZoneTree(){
+    GeoZoneTree tree = geographicZoneMapper.getParentZoneTree();
+    populateChildren(tree);
+    return tree;
+  }
+
+  private void populateChildren(GeoZoneTree tree){
+    tree.setChildren(geographicZoneMapper.getChildrenZoneTree(tree.getId()));
+
+    for(GeoZoneTree zone : tree.getChildren()){
+      populateChildren(zone);
+    }
+  }
+
 }

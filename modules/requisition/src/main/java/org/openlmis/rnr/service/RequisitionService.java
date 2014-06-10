@@ -379,9 +379,9 @@ public class RequisitionService {
 
     if (periodIdOfLastRequisitionToEnterPostSubmitFlow != null) {
       ProcessingPeriod currentPeriod = processingScheduleService.getCurrentPeriod(facilityId, programId, programStartDate);
-      if (currentPeriod != null && periodIdOfLastRequisitionToEnterPostSubmitFlow.equals(currentPeriod.getId())) {
-        throw new DataException("error.current.rnr.already.post.submit");
-      }
+//      if (currentPeriod != null && periodIdOfLastRequisitionToEnterPostSubmitFlow.equals(currentPeriod.getId())) {
+//        throw new DataException("error.current.rnr.already.post.submit");
+//      }
     }
 
     return processingScheduleService.getAllPeriodsAfterDateAndPeriod(facilityId, programId, programStartDate, periodIdOfLastRequisitionToEnterPostSubmitFlow);
@@ -565,6 +565,34 @@ public class RequisitionService {
 
   public String deleteRnR(Long rnrId) {
     return requisitionRepository.deleteRnR(rnrId);
+  }
+
+  public void skipRnR(Long rnrId) {
+    Rnr rnr = this.getFullRequisitionById(rnrId);
+    for(RnrLineItem li : rnr.getFullSupplyLineItems()){
+      li.setSkipped(true);
+    }
+    rnr.setStatus(RnrStatus.SKIPPED);
+    this.save(rnr);
+    requisitionRepository.update(rnr);
+  }
+
+
+  public void reOpenRnR(Long rnrId) {
+    Rnr rnr = this.getFullRequisitionById(rnrId);
+    for(RnrLineItem li : rnr.getFullSupplyLineItems()){
+      li.setSkipped(false);
+    }
+    rnr.setStatus(RnrStatus.INITIATED);
+
+    requisitionRepository.update(rnr);
+    this.save(rnr);
+  }
+
+  public void rejectRnR(Long rnrId) {
+    Rnr rnr = this.getFullRequisitionById(rnrId);
+    rnr.setStatus(RnrStatus.INITIATED);
+    requisitionRepository.update(rnr);
   }
 
   public Integer findM(ProcessingPeriod period) {

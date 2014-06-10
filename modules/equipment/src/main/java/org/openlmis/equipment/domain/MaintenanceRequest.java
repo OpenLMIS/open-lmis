@@ -40,6 +40,11 @@ public class MaintenanceRequest extends BaseModel {
   private Boolean resolved;
   private String vendorComment;
 
+  // these variables are for display purposes only
+  private String equipmentName;
+  private String facilityName;
+  // end of hack
+
   private String formatDate(Date date){
     try {
       SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-dd-MM");

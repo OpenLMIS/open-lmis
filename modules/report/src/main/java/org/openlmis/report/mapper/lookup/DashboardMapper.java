@@ -95,9 +95,11 @@ public interface DashboardMapper {
             "INNER JOIN vw_user_supervisorynodes sn ON sn.id = s.supervisorynodeid\n" +
             "WHERE sn.userid = #{userId}\n" +
             "AND s.programid = #{programId}\n"+
+            "AND s.periodId = #{periodId}\n"+
             "AND (sn.id = #{supervisoryNodeId} OR sn.parentId = #{supervisoryNodeId}) \n")
 
-    List<AlertSummary> getAlerts(@Param("userId") Long userId, @Param("supervisoryNodeId") Long supervisoryNodeId, @Param("programId")Long programId);
+    List<AlertSummary> getAlerts(@Param("userId") Long userId, @Param("supervisoryNodeId") Long supervisoryNodeId, @Param("programId")Long programId,
+                                 @Param("periodId") Long periodId);
 
 
     @SelectProvider(type = DashboardNotificationQueryBuilder.class, method = "getNotificationDetails")
@@ -120,25 +122,36 @@ public interface DashboardMapper {
     void saveSmsNotification(@Param("message")String message, @Param("phonenumber") String phonenumber, @Param("direction")String direction);
 
     @Select("select date_Part('year',startdate) from processing_periods where id = #{id}")
-    public String getPeriod(@Param("id")Long id);
+    public String getYearOfPeriodById(@Param("id")Long id);
 
-    @Select("select  'NonReporting' as status,count(*) total\n" +
-            " from facilities f\n" +
-            " join requisition_group_members m on f.id = m.facilityId\n" +
-            " join requisition_group_program_schedules s on s.requisitionGroupId = m.requisitionGroupId and s.programId = #{programId}\n" +
-            " join processing_periods pp on pp.scheduleId = s.scheduleId and pp.id = #{periodId}\n" +
-            " where f.id not in (select facilityId from requisitions r where r.programId = #{programId} and r.periodId = #{periodId}) \n" +
-            " and f.enabled = true\n" +
-            " UNION\n" +
-            " select 'Reporting' as status ,count(*) total \n" +
-            " from facilities f\n" +
-            " join requisition_group_members m on f.id = m.facilityId\n" +
-            " join requisition_group_program_schedules s on s.requisitionGroupId = m.requisitionGroupId and s.programId = #{programId}\n" +
-            " join processing_periods pp on pp.scheduleId = s.scheduleId and pp.id = #{periodId}\n" +
-            " where f.id in (select facilityId from requisitions r where r.programId = #{programId} and r.periodId = #{periodId}) \n" +
-            " and f.enabled = true\n" +
-            " ")
-    List<HashMap> getReportingPerformance(@Param("periodId")  Long periodId, @Param("programId") Long programId);
+    @Select("WITH reporting as (select fn_get_reporting_status_by_facilityid_programid_and_periodid(f.id,s.programid,pp.id) status, f.*\n" +
+            "             from facilities f\n" +
+            "             join requisition_group_members m on f.id = m.facilityId\n" +
+            "             join requisition_group_program_schedules s on s.requisitionGroupId = m.requisitionGroupId and s.programId = #{programId}\n" +
+            "             join processing_periods pp on pp.scheduleId = s.scheduleId and pp.id = #{periodId}\n" +
+            "             where \n" +
+            "              CASE WHEN #{rgroupId} ='{}' THEN s.requisitionGroupId = s.requisitionGroupId ELSE s.requisitionGroupId =  ANY(#{rgroupId}::int[]) END\n" +
+            "               AND f.enabled = true\n" +
+            "              order by status)\n" +
+            "              select status, count(*) total\n" +
+            "              from reporting\n" +
+            "              group by status")
+    List<HashMap> getReportingPerformance(@Param("periodId")  Long periodId, @Param("programId") Long programId, @Param("rgroupId") String requisitionGroupId);
+
+    @Select("with t as (select fn_get_reporting_status_by_facilityid_programid_and_periodid(f.id,s.programid,pp.id) as status, gz.name as district, (select count(*) > 0 from users where users.active = true and users.facilityId = f.id) as hasContacts, f.*\n" +
+            "                         from facilities f\n" +
+            "                         join geographic_zones gz on gz.id = f.geographicZoneId\n" +
+            "                         join requisition_group_members m on f.id = m.facilityId\n" +
+            "                         join requisition_group_program_schedules s on s.requisitionGroupId = m.requisitionGroupId and s.programId = #{programId}\n" +
+            "                         join processing_periods pp on pp.scheduleId = s.scheduleId and pp.id = #{periodId}\n" +
+            "                         where \n" +
+            "                          CASE WHEN #{rgroupId} ='{}' THEN s.requisitionGroupId = s.requisitionGroupId ELSE s.requisitionGroupId =  ANY(#{rgroupId}::int[]) END\n" +
+            "                           AND f.enabled = true\n" +
+            "                          order by status)\n" +
+            "                          select * \n" +
+            "                          from t\n" +
+            "                          where status = #{status}")
+    List<ReportingPerformance> getReportingPerformanceDetail(@Param("periodId") Long periodId, @Param("programId") Long programId, @Param("rgroupId") String requisitionGroupId, @Param("status") String status);
 
 }
 

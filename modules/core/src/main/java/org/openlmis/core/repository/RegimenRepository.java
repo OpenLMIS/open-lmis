@@ -35,6 +35,7 @@ public class RegimenRepository {
   public List<Regimen> getByProgram(Long programId) {
     return mapper.getByProgram(programId);
   }
+   public Regimen getById(Long id){return mapper.getById(id);}
 
   public List<RegimenCategory> getAllRegimenCategories() {
     return regimenCategoryMapper.getAll();

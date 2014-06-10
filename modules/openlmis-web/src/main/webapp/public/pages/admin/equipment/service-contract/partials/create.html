@@ -18,7 +18,26 @@
       <tr>
         <td width="50%" style="vertical-align: top;padding: 10px">
           <div>
-
+            <div ng-show="isNew" class="form-row clearfix">
+              <div class="form-cell">
+                <label>Program</label>
+                <div class="form-field">
+                  <select ng-model="current.programId">
+                    <option value="{{program.id}}" ng-repeat="program in programs">{{program.name}}</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div class="form-row clearfix">
+              <div class="form-cell">
+                <label>Vendor</label>
+                <div class="form-field">
+                  <select ng-model="current.vendorId">
+                    <option value="{{vendor.id}}" ng-repeat="vendor in vendors">{{vendor.name}}</option>
+                  </select>
+                </div>
+              </div>
+            </div>
             <div class="form-row clearfix">
               <div class="form-cell">
                 <label for="name">Identifier
@@ -127,48 +146,43 @@
             </div>
           </div>
         </td>
-        <td  width="50%" style="vertical-align: top;padding:10px">
-          <div class="form-row clearfix">
-            <div class="form-cell">
-              <label>Service Types</label>
+
+        <td width="50%" style="vertical-align: top;padding:10px">
+          <div ng-show="!isNew">
+            <div class="form-row clearfix">
+              <div class="form-cell">
+                <label>Service Types</label>
+              </div>
+              <div class="form-field">
+               <label ng-repeat="type in current.serviceTypes"><input type="checkbox" ng-model="type.isActive"  /> {{type.name}}</label>
+              </div>
             </div>
-            <div class="form-field">
-             <label ng-repeat="type in service_types"><input type="checkbox" value="{{type.id}}"  /> {{type.name}}</label>
+            <div class="form-row clearfix">
+              <div class="form-cell">
+                <label>Equipments Covered</label>
+              </div>
+              <div class="form-field">
+                <label  ng-repeat="type in current.equipments"><input type="checkbox" ng-model="type.isActive"  /> {{type.name}}</label>
+              </div>
             </div>
-          </div>
-          <div class="form-row clearfix">
-            <div class="form-cell">
-              <label>Equipments Covered</label>
-            </div>
-            <div class="form-field">
-              <label  ng-repeat="type in equipments"><input type="checkbox" value="{{type.id}}"  /> {{type.name}}</label>
-            </div>
-          </div>
-          <div class="panel">
+            <div class="panel">
             <div class="header-nav">
               Facilities Covered
             </div>
             <div class="content-body">
+
               <div class="form-row clearfix">
-                <div class="form-cell">
-                  <label>Program</label>
-                  <div class="form-field">
-                    <select ng-model="current.program">
-                      <option value="{{program.id}}" ng-repeat="program in programs">{{program.name}}</option>
-                    </select>
+                <div class="form-field">
+                  <div style="height: 200px; max-height: 200px; overflow-y: scroll">
+                      <label ng-repeat="facility in current.facilities">
+                        <input type="checkbox" ng-model="facility.isActive" >
+                        {{facility.name}}
+                      </label>
                   </div>
                 </div>
               </div>
-              <div class="form-row clearfix">
-                <label>Facilities</label>
-                <div class="form-field">
-                  <label ng-repeat="facility in facilities">
-                    <input type="checkbox" value="{{facility.id}}" ng-model="selected" >
-                    {{facility.name}}
-                  </label>
-                </div>
-              </div>
             </div>
+          </div>
           </div>
         </td>
       </tr>

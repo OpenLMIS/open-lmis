@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="district-order-compilation" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="ed759f09-4d2c-46c9-b606-42da2355eabd">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="39"/>
+	<property name="ireport.y" value="5"/>
 	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA["./"]]></defaultValueExpression>
 	</parameter>
@@ -112,7 +112,7 @@
 				<textField pattern="#,##0.00" isBlankWhenNull="true">
 					<reportElement mode="Transparent" x="450" y="0" width="151" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="2d43cc36-793b-4233-aa7b-7748179ccf78"/>
 					<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
-						<font fontName="SansSerif" size="10" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<font fontName="SansSerif" size="11" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 						<paragraph lineSpacing="Single"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$V{totalapprovedcost_1}]]></textFieldExpression>
@@ -123,7 +123,7 @@
 						<font fontName="SansSerif" size="10" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 						<paragraph lineSpacing="Single" rightIndent="15"/>
 					</textElement>
-					<text><![CDATA[Total]]></text>
+					<text><![CDATA[Total (Tsh):]]></text>
 				</staticText>
 			</band>
 		</groupFooter>
@@ -227,10 +227,10 @@
 		</band>
 	</detail>
 	<summary>
-		<band height="126">
+		<band height="180">
 			<staticText>
-				<reportElement mode="Transparent" x="158" y="0" width="644" height="20" isPrintInFirstWholeBand="true" forecolor="#000000" backcolor="#333333" uuid="2d33a97b-e7bf-437b-b173-eb155d4b5154"/>
-				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
+				<reportElement mode="Transparent" x="158" y="30" width="443" height="20" isPrintInFirstWholeBand="true" forecolor="#000000" backcolor="#333333" uuid="2d33a97b-e7bf-437b-b173-eb155d4b5154"/>
+				<textElement textAlignment="Center" verticalAlignment="Bottom" rotation="None" markup="none">
 					<font fontName="SansSerif" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
@@ -238,45 +238,115 @@
   ]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Transparent" x="300" y="20" width="150" height="20" forecolor="#000000" backcolor="#333333" uuid="f748563f-1d15-4cf7-af61-947b6bc4c3b2"/>
-				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
-					<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
-					<paragraph lineSpacing="Single"/>
-				</textElement>
-				<text><![CDATA[Check #:]]></text>
-			</staticText>
-			<staticText>
-				<reportElement mode="Transparent" x="300" y="40" width="150" height="20" forecolor="#000000" backcolor="#333333" uuid="80da9f36-5f2d-4cb3-a2a9-0def1cfbc39f"/>
-				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
-					<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
-					<paragraph lineSpacing="Single"/>
-				</textElement>
-				<text><![CDATA[Dated:]]></text>
-			</staticText>
-			<staticText>
-				<reportElement mode="Transparent" x="300" y="60" width="150" height="20" forecolor="#000000" backcolor="#333333" uuid="5f911855-346f-401e-9e68-c029684a40ec"/>
-				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
+				<reportElement mode="Transparent" x="43" y="95" width="83" height="20" forecolor="#000000" backcolor="#333333" uuid="5f911855-346f-401e-9e68-c029684a40ec"/>
+				<textElement textAlignment="Left" verticalAlignment="Bottom" rotation="None" markup="none">
 					<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
 				<text><![CDATA[In the amount of:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Transparent" x="300" y="80" width="150" height="20" forecolor="#000000" backcolor="#333333" uuid="44eb44b1-9736-4528-b85d-9f28e56ed39b"/>
-				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
+				<reportElement x="493" y="96" width="108" height="20" uuid="e0c89863-ca1e-484e-b901-e5d101cc6365">
+					<property name="local_mesure_unity" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Bottom">
+					<font size="9" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Submitted to MSD On:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="493" y="61" width="37" height="19" uuid="15277fdd-42a2-4062-9914-241d5f203401">
+					<property name="local_mesure_unity" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Bottom">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[Dated:]]></text>
+			</staticText>
+			<line>
+				<reportElement x="99" y="81" width="251" height="1" forecolor="#8C8C8C" uuid="00de1972-2372-40c9-bfa8-b8d69e7322de">
+					<property name="local_mesure_unitx" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() != "XLS"]]></printWhenExpression>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement mode="Transparent" x="43" y="62" width="56" height="20" forecolor="#000000" backcolor="#333333" uuid="5d824620-20d1-42b2-b365-23488ddc482f"/>
+				<textElement textAlignment="Left" verticalAlignment="Bottom" rotation="None" markup="none">
 					<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
-				<text><![CDATA[Submitted to MSD on:]]></text>
+				<text><![CDATA[Check #:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Transparent" x="300" y="100" width="150" height="20" forecolor="#000000" backcolor="#333333" uuid="de62b3f7-aa37-4c23-b2ed-374f25a600ef"/>
-				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
-					<font fontName="SansSerif" size="10" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+				<reportElement mode="Transparent" x="43" y="134" width="83" height="20" forecolor="#000000" backcolor="#333333" uuid="69f46dbc-78b7-4e6d-b095-db8a4ff5a044"/>
+				<textElement textAlignment="Left" verticalAlignment="Bottom" rotation="None" markup="none">
+					<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
-				<text><![CDATA[DMO Signature]]></text>
+				<text><![CDATA[DMO Signature:]]></text>
 			</staticText>
+			<line>
+				<reportElement x="601" y="117" width="190" height="1" forecolor="#8C8C8C" uuid="f80bed9a-e44b-4126-a9b3-e14a9ced0941">
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="local_mesure_unitx" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="local_mesure_unity" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() != "XLS"]]></printWhenExpression>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="126" y="153" width="251" height="1" forecolor="#8C8C8C" uuid="f80460b5-2d8c-472d-ae58-d52adb3d2fd6">
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="local_mesure_unitx" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="local_mesure_unity" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() != "XLS"]]></printWhenExpression>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="126" y="118" width="251" height="1" forecolor="#8C8C8C" uuid="5e6c07ab-9aa5-47d3-b1ab-66adee4551fa">
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="local_mesure_unitx" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="local_mesure_unity" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() != "XLS"]]></printWhenExpression>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="530" y="79" width="251" height="1" forecolor="#8C8C8C" uuid="56250e4c-2047-444a-8c27-e4c556ae27ad">
+					<property name="local_mesure_unitx" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() != "XLS"]]></printWhenExpression>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
 		</band>
 	</summary>
 </jasperReport>

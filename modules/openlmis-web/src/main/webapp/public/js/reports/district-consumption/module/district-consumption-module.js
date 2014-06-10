@@ -8,11 +8,13 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-angular.module('district_consumption', ['openlmis', 'ngTable', 'ui.bootstrap.modal', 'ui.bootstrap.dropdownToggle'])
+angular.module('district_consumption', ['openlmis', 'ngTable', 'angularCombine' ,'ui.bootstrap.modal', 'ui.bootstrap.dropdownToggle'])
     .config(['$routeProvider', function ($routeProvider) {
       $routeProvider.
         when('/list', {controller:DistrictConsumptionReportController, templateUrl:'partials/list.html',reloadOnSearch:false}).
         otherwise({redirectTo:'/list'});
     }]).run(function ($rootScope, AuthorizationService) {
         AuthorizationService.preAuthorize('VIEW_DISTRICT_CONSUMPTION_REPORT');
-    });
+    }).config(function(angularCombineConfigProvider) {
+        angularCombineConfigProvider.addConf(/filter-/, '/public/pages/reports/shared/filters.html');
+      });

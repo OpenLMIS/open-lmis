@@ -66,4 +66,8 @@ public interface ProgramReportMapper {
             "            AND p.active = TRUE \n" +
             "            AND p.push = FALSE")
     List<Program> getUserSupervisedActiveProgramsBySupervisoryNode(@Param("userId") Long userId, @Param("nodeId") Long supervisoryNodeId);
+
+    @Select("select * from programs where budgetingapplies = true")
+    List<Program>getAllProgramsWithBudgeting();
+
 }

@@ -79,6 +79,10 @@ services.factory('DistrictConsumptionReport', function ($resource) {
     return $resource('/reports/reportdata/districtConsumption.json', {}, {});
 });
 
+services.factory('AggregateConsumptionReport', function ($resource) {
+  return $resource('/reports/reportdata/aggregateConsumption.json', {}, {});
+});
+
 services.factory('RnRFeedbackReport', function($resource){
     return $resource('/reports/reportdata/rnr_feedback.json', {}, {});
 }) ;
@@ -113,13 +117,18 @@ services.factory('ReportRegimenCategories', function ($resource) {
 services.factory('ReportRegimensByCategory',function ($resource){
     return $resource('/reports/regimenCategories/:regimenCategoryId/regimens.json', {}, {});
 });
+
 services.factory('ReportGeographicZonesByLevel',function ($resource){
     return $resource('/reports/geographicLevels/:geographicLevelId/zones.json', {}, {});
 });
+
 services.factory('FlatGeographicZoneList',function ($resource){
   return $resource('/reports//geographic-zones/flat.json', {}, {});
 });
 
+services.factory('TreeGeographicZoneList',function ($resource){
+  return $resource('/reports//geographic-zones/tree.json', {}, {});
+});
 services.factory('ReportRegimens',function ($resource){
     return $resource('/reports/regiments.json', {}, {}) ;
 });
@@ -498,6 +507,9 @@ services.factory('GetPeriod', function($resource){
 services.factory('ReportingPerformance',function($resource){
     return $resource('/dashboard/reportingPerformance.json',{},{});
 });
+services.factory('ReportingPerformanceDetail',function($resource){
+    return $resource('/dashboard/reportingPerformance-detail.json',{},{});
+});
 
 
 
@@ -540,6 +552,21 @@ services.factory("RnRStatusSummary",function($resource){
     return $resource('/dashboard/rnrstatusSummary/requisitionGroup/:requisitionGroupId.json',{},{});
 });
 
+services.factory("totalRnRCreatedByRequisitionGroup",function($resource){
+    return $resource('/dashboard//RnRCreateForRequisitionGroup',{},{});
+});
+services.factory('RnRStatusByRequisitionGroupAndPeriod',function($resource){
+    return $resource('/dashboard/RnRStatus/:requisitionGroupId/:periodId/:programId/rnrStatus.json',{},{});
+  });
+
+services.factory("RnRStatusByRequisitionGroupAndPeriodDetails ",function($resource){
+    $resource('/dashboard/RnRStatusByRequisitionGroupDetails.json',{},{});
+});
+
+services.factory('RnRStatusDetailsByRequisitionGroup', function($resource){
+    return $resource('/dashboard/rnrStatus-detail.json',{},{});
+});
+
 
 services.factory('GetLabEquipmentList', function ($resource) {
     return $resource('/dashboard/notification/alerts.json',{}, {}); // just for mock
@@ -551,4 +578,9 @@ services.factory('ReportEquipmentTypes', function ($resource) {
 
 services.factory('LabEquipmentListReport', function ($resource) {
     return $resource('/reports/reportdata/labEquipmentList.json', {}, {});
+});
+
+services.factory('GetProgramWithBudgetingApplies',function($resource){
+    return $resource('/reports/programsWithBudgetApplies.json',{},{});
+
 });
