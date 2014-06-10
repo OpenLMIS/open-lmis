@@ -1,0 +1,27 @@
+<div>
+  <table id="membersTable" class="table table-striped table-bordered search-list">
+    <thead>
+    </tr>
+    <tr class="gradient-header" ng-show="requisitionGroupMembers.length">
+      <th id="facilityHeader" openlmis-message="label.associated.facility"></th>
+      <th id="facilityTypeHeader" openlmis-message="label.facility.type"></th>
+      <th id="enabledHeader" openlmis-message="label.facility.enabled"></th>
+      <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr ng-repeat="member in requisitionGroupMembers">
+      <td id="code{{$index}}">{{member.facility.code}} - {{member.facility.name}}</td>
+      <td id="facilityTypeName{{$index}}" ng-bind="member.facility.facilityType.name"></td>
+      <td id="enabled{{$index}}">
+        <i id="enabledIcon{{$index}}" ng-show="member.facility.enabled" class="icon icon-ok"></i>
+      </td>
+      <td id="delete{{$index}}">
+        <input id="removeMemberButton{{$index}}" type="button" class="btn btn-danger cancel-button"
+               openlmis-message="button.remove"
+               ng-click="removeMember(member.facility.id)"/>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</div>
