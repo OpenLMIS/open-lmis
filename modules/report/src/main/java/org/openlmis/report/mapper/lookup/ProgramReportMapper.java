@@ -69,4 +69,5 @@ public interface ProgramReportMapper {
 
     @Select("select * from programs where budgetingapplies = true")
     List<Program>getAllProgramsWithBudgeting();
+
 }

@@ -117,13 +117,18 @@ services.factory('ReportRegimenCategories', function ($resource) {
 services.factory('ReportRegimensByCategory',function ($resource){
     return $resource('/reports/regimenCategories/:regimenCategoryId/regimens.json', {}, {});
 });
+
 services.factory('ReportGeographicZonesByLevel',function ($resource){
     return $resource('/reports/geographicLevels/:geographicLevelId/zones.json', {}, {});
 });
+
 services.factory('FlatGeographicZoneList',function ($resource){
   return $resource('/reports//geographic-zones/flat.json', {}, {});
 });
 
+services.factory('TreeGeographicZoneList',function ($resource){
+  return $resource('/reports//geographic-zones/tree.json', {}, {});
+});
 services.factory('ReportRegimens',function ($resource){
     return $resource('/reports/regiments.json', {}, {}) ;
 });
@@ -561,7 +566,6 @@ services.factory("RnRStatusByRequisitionGroupAndPeriodDetails ",function($resour
 services.factory('RnRStatusDetailsByRequisitionGroup', function($resource){
     return $resource('/dashboard/rnrStatus-detail.json',{},{});
 });
-
-services.factory('GetAllMsdZones',function($resource){
-   return $resource('/reports/getAllMSDZones.json',{},{});
+services.factory('GetProgramWithBudgetingApplies',function($resource){
+  return $resource('/reports/programsWithBudgetApplies.json',{},{});
 });

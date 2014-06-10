@@ -179,31 +179,22 @@ app.directive('scheduleFilter', ['ReportSchedules','$routeParams',
 }]);
 
 
-app.directive('zoneFilter', ['GeographicZones','$routeParams',
-  function (GeographicZones, $routeParams) {
+app.directive('zoneFilter', ['TreeGeographicZoneList','$routeParams',
+  function (TreeGeographicZoneList, $routeParams) {
 
     return {
       restrict: 'E',
       require: '^filterContainer',
       link: function (scope, elm, attr) {
-
-//        scope.zones = [];
-//        scope.zones.unshift({
-//          name: '-- Select Geo Zone --'
-//        });
         scope.filter.zone = $routeParams.zone;
 
         if (attr.required) {
           scope.requiredFilters.zone = 'zone';
         }
 
-        GeographicZones.get(function (data) {
+        TreeGeographicZoneList.get(function (data) {
           // now recreate the zone data to a tree structure in java script objects.
-
-          scope.zones = data.zones;
-          scope.zones.unshift({
-            name: '-- Select Geo Zone --'
-          });
+          scope.zones = data.zone;
         });
 
       },
@@ -449,6 +440,30 @@ app.directive('facilityFilter', ['FacilitiesByProgramParams', '$routeParams',
     };
 }]);
 
+app.directive('programBudgetFilter', ['GetProgramWithBudgetingApplies', function (GetProgramWithBudgetingApplies) {
+
+    return {
+        restrict: 'E',
+        require: '^filterContainer',
+        link: function (scope, elm, attr) {
+
+            GetProgramWithBudgetingApplies.get(function (data) {
+                scope.programs = data.programWithBudgetingApplies;
+                scope.programs.unshift({'name': '--Select a Program --'});
+            });
+
+            if (attr.required) {
+                scope.requiredFilters.program = 'program';
+            }
+        },
+        templateUrl: 'filter-program-with-budget-template'
+    };
+}]);
+
+
+
+
+
 app.directive('productFilter', ['ReportProductsByProgram','$routeParams',
   function (ReportProductsByProgram, $routeParams) {
 
@@ -591,7 +606,6 @@ app.directive('regimenFilter', ['ReportRegimensByCategory','$routeParams',
         };
 
     }]);
-
 
 
 

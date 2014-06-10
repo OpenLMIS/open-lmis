@@ -31,8 +31,6 @@ function RnRStatusDetailsController($scope,$routeParams,RnRStatusDetailsByRequis
                     $scope.rnrStatusDetails= data.rnrDetails;
 
                     setupTableOption();
-                    // $scope.product = _.pluck(stockData.stockOut,'product')[0];
-                    // $scope.location = _.pluck(stockData.stockOut,'location')[0];
                 }else{
                     $scope.resetRnRStatusData();
                 }

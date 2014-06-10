@@ -28,4 +28,5 @@ public class RnRStatusSummaryReport {
     private String facilityname;
     private Date createddate;
     private String periodname;
+    private String facilitytypename;
 }

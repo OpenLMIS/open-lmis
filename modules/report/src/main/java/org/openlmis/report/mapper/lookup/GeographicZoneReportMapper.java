@@ -14,6 +14,7 @@ import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.openlmis.report.model.GeoZoneReportingRate;
 import org.openlmis.report.model.dto.FlatGeographicZone;
+import org.openlmis.report.model.dto.GeoZoneTree;
 import org.openlmis.report.model.dto.GeographicZone;
 import org.openlmis.report.model.geo.GeoFacilityIndicator;
 import org.springframework.stereotype.Repository;
@@ -106,15 +107,9 @@ public interface GeographicZoneReportMapper {
     " order by f.name")
   List<GeoFacilityIndicator> getReportingFacilities(@Param("programId") Long programId, @Param("geographicZoneId") Long geographicZoneId, @Param("periodId") Long processingPeriodId);
 
-    @Select("select gz2.id,  gz2.name msdZoneName\n" +
-            "from geographic_zones gz\n" +
-            "        left join geographic_zones gz1  \n" +
-            "          on gz.parentId = gz1.id \n" +
-            "         left join geographic_zones gz2 \n" +
-            "           on gz1.parentId = gz2.id\n" +
-            "         join facilities f on f.geographiczoneid =gz.id\n" +
-            "           where gz1.parentId  is NOT NULL and gz2.parentId is NOT NULL\n" +
-            "               group by gz2.name,gz2.id  order by msdZoneName ")
-    List<GeographicZone>getAllMSDZones();
+  @Select("select * from geographic_zones where parentId is null")
+  GeoZoneTree getParentZoneTree();
 
+  @Select("select * from geographic_zones where parentId = #{parentId} order by name")
+  List<GeoZoneTree> getChildrenZoneTree(int parentId);
 }
