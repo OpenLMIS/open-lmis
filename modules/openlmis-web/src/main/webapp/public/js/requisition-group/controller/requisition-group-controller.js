@@ -187,3 +187,22 @@ function expandCollapseToggle(element) {
     scrollTop: utils.parseIntWithBaseTen(offsetTop) + 'px'
   });
 }
+
+function expandCollapse(trigger) {
+  var accordion = $('.accordion');
+  if (trigger == 'expand') {
+    accordion.find('.accordion-section').each(function () {
+      $(this).find('.accordion-body').slideDown();
+      $(this).find('b').text('-');
+    });
+    var offsetTop = accordion.offset().top;
+    $('body, html').animate({
+      scrollTop: utils.parseIntWithBaseTen(offsetTop) + 'px'
+    });
+  } else {
+    accordion.find('.accordion-section').each(function () {
+      $(this).find('.accordion-body').slideUp();
+      $(this).find('b').text('+');
+    });
+  }
+}
