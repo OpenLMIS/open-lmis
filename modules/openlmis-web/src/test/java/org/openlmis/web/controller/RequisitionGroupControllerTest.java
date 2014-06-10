@@ -133,7 +133,7 @@ public class RequisitionGroupControllerTest {
 
     ResponseEntity<OpenLmisResponse> response = requisitionGroupController.update(1L, requisitionGroupFormDTO, request);
 
-    verify(requisitionGroupService).saveWithMembers(requisitionGroupFormDTO.getRequisitionGroup(), requisitionGroupFormDTO.getRequisitionGroupMembers());
+    verify(requisitionGroupService).updateWithMembers(requisitionGroupFormDTO.getRequisitionGroup(), requisitionGroupFormDTO.getRequisitionGroupMembers());
     assertThat(response.getBody().getSuccessMsg(), is("updated success"));
     assertThat((Long) response.getBody().getData().get("requisitionGroupId"), is(1L));
   }

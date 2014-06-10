@@ -101,7 +101,7 @@ public class RequisitionGroupController extends BaseController {
       requisitionGroupFormDTO.getRequisitionGroup().setId(id);
       requisitionGroupFormDTO.getRequisitionGroup().setModifiedBy(userId);
 
-      requisitionGroupService.saveWithMembers(requisitionGroupFormDTO.getRequisitionGroup(), requisitionGroupFormDTO.getRequisitionGroupMembers());
+      requisitionGroupService.updateWithMembers(requisitionGroupFormDTO.getRequisitionGroup(), requisitionGroupFormDTO.getRequisitionGroupMembers());
     } catch (DataException e) {
       return error(e, BAD_REQUEST);
     }

@@ -183,4 +183,18 @@ public class RequisitionGroupMemberMapperIT {
     assertThat(actualMembers.get(0).getFacility().getCode(), is("F10010"));
     assertThat(actualMembers.get(0).getFacility().getEnabled(), is(true));
   }
+
+  @Test
+  public void shouldDeleteRequisitionGroupMemberByRequisitionGroup(){
+
+    Long requisitionGroupId = requisitionGroup.getId();
+    requisitionGroupMemberMapper.insert(requisitionGroupMember);
+    List<RequisitionGroupMember> members = requisitionGroupMemberMapper.getMembersBy(requisitionGroupId);
+    assertThat(members.size(),is(1));
+
+    requisitionGroupMemberMapper.deleteMemberForGroup(requisitionGroupId);
+
+    members = requisitionGroupMemberMapper.getMembersBy(requisitionGroupId);
+    assertThat(members.size(),is(0));
+  }
 }

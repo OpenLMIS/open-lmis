@@ -82,4 +82,7 @@ public interface RequisitionGroupMemberMapper {
     @Result(property = "facility.facilityType.name", column = "facilityType"),
   })
   List<RequisitionGroupMember> getMembersBy(Long requisitionGroupId);
+
+  @Delete({"DELETE FROM requisition_group_members where requisitionGroupId = #{requisitionGroupId}"})
+  void deleteMemberForGroup(Long requisitionGroupId);
 }
