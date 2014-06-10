@@ -35,5 +35,10 @@
             <span id="service-contract">Service Contracts</span>
           </a>
         </li>
+        <li ng-show="hasPermission('MANAGE_DONOR')" ng-class="donorSelected">
+          <a href="/public/pages/admin/equipment/donors/index.html#/list">
+            <span id="donor-tab">Donors</span>
+          </a>
+        </li>
     </ul>
 </div>

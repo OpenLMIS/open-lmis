@@ -30,7 +30,7 @@ public class StockedOutReportQueryBuilder {
         WHERE("status = 'SO'" );
         WHERE("reported_figures > 0");
         writePredicates(filter);
-        ORDER_BY(QueryHelpers.getSortOrder(sortCriteria, StockedOutReport.class,"supplyingfacility asc, facility asc, product asc, processing_period_name asc"));
+        ORDER_BY("supplyingfacility asc, facility asc, product asc");
         // copy the sql over to a variable, this makes the debugging much more possible.
         String sql = SQL();
         return sql;

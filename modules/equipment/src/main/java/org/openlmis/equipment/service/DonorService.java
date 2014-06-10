@@ -8,22 +8,49 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-package org.openlmis.equipment.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+package org.openlmis.equipment.service;
+
 import lombok.NoArgsConstructor;
-import org.openlmis.core.domain.BaseModel;
+import org.openlmis.equipment.domain.Donor;
+import org.openlmis.equipment.repository.DonorRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-@Data
+import java.util.List;
+
+@Service
 @NoArgsConstructor
-@AllArgsConstructor
-@EqualsAndHashCode(callSuper = false)
-public class Donor extends BaseModel {
-  private String code;
-  private String shortName;
-  private String longName;
+public class DonorService {
 
-  private Integer countOfDonations;
+  private DonorRepository donorRepository;
+
+  @Autowired
+  public DonorService(DonorRepository donorRepository) {
+    this.donorRepository = donorRepository;
+  }
+
+  public void save(Donor donor) {
+    if (donor.getId() == null)
+      donorRepository.insert(donor);
+    else
+      donorRepository.update(donor);
+  }
+
+  public List<Donor> getAll(){
+    return donorRepository.getAll();
+  }
+
+  public List<Donor> getAllWithDetails(){
+    return donorRepository.getAllWithDetails();
+  }
+
+  public void removeDonor(Long id){
+      donorRepository.removeDonor(id);
+  }
+
+  public Donor getById(Long donorId){
+    return donorRepository.getDonorById(donorId);
+  }
+
 }

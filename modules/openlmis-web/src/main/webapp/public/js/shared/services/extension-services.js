@@ -566,6 +566,3 @@ services.factory("RnRStatusByRequisitionGroupAndPeriodDetails ",function($resour
 services.factory('RnRStatusDetailsByRequisitionGroup', function($resource){
     return $resource('/dashboard/rnrStatus-detail.json',{},{});
 });
-services.factory('GetProgramWithBudgetingApplies',function($resource){
-  return $resource('/reports/programsWithBudgetApplies.json',{},{});
-});

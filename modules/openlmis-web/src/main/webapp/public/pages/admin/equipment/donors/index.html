@@ -1,4 +1,5 @@
 <!doctype html>
+
 <!--
   ~ This program was produced for the U.S. Agency for International Development. It was prepared by the USAID | DELIVER PROJECT, Task Order 4. It is part of a project which utilizes code originally licensed under the terms of the Mozilla Public License (MPL) v2 and therefore is licensed under MPL v2 or later.
   ~
@@ -9,8 +10,7 @@
   ~ You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
   -->
 
-<html lang="en" ng-app="summary">
-
+<html lang="en" ng-app="donor">
 <head>
   <meta charset="utf-8">
   <title openlmis-message="app.title"></title>
@@ -25,15 +25,16 @@
   <script src="/public/lib/angular/angular-route.min.js"></script>
   <script src="/public/lib/angular/angular-cookies.js"></script>
   <script src="/public/lib/angular/angular-resource.min.js"></script>
+  <script src="/public/lib/underscore/underscore-min.js"></script>
   <script src="/public/lib/bootstrap/js/bootstrap.min.js"></script>
   <script src="/public/lib/angular-ui/angular-ui.min.js"></script>
   <script src="/public/lib/angular-ui/bootstrap/ui-bootstrap-0.1.0.min.js"></script>
   <script src="/public/lib/jquery/jquery.form.js"></script>
-  <script src="/public/lib/angular-ui/ng-table/ng-table.js"></script>
+  <script src="/public/lib/angular-ui/ng-grid/ng-grid-2.0.5.min.js"></script>
+  <script src="/public/lib/angular-ui/ng-grid-flexible-height.js"></script>
   <script src="/public/lib/select2/select2.js"></script>
 
   <!-- Style sheet files-->
-  <link rel="stylesheet" href="/public/lib/angular-ui/ng-table/ng-table.css">
   <link rel="stylesheet" href="/public/lib/bootstrap/css/bootstrap.min.css">
   <link rel="stylesheet" href="/public/lib/angular-ui/angular-ui.min.css">
   <link rel="stylesheet" href="/public/lib/select2/select2.css">
@@ -41,13 +42,14 @@
   <!-- Services -->
   <script src="/public/js/shared/services/services.js"></script>
   <script src="/public/js/shared/services/extension-services.js"></script>
+  <script src="/public/js/admin/equipment/shared/services.js"></script>
   <script type="text/javascript" src="/public/js/shared/services/message-service.js"></script>
   <script type="text/javascript" src="/public/js/shared/services/authorization-service.js"></script>
+  <script src="/public/js/shared/services/navigate-back-service.js"></script>
 
   <script src="/public/js/shared/app.js"></script>
 
   <!-- App directives and shared utilites -->
-  <script src="/public/lib/angular/angular-combine.js"></script>
   <script src="/public/js/shared/directives/form-toolbar.js"></script>
   <script src="/public/js/shared/directives/openlmis-message.js"></script>
   <script src="/public/js/shared/directives/openlmis-pagination.js"></script>
@@ -58,22 +60,22 @@
   <script src="/public/js/shared/open-lmis-dialog.js"></script>
   <script src="/public/js/shared/localStorageKeys.js"></script>
 
+
   <link rel="stylesheet" href="/public/css/app.css">
   <link rel="stylesheet" href="/public/css/ng-grid.css">
   <link rel="stylesheet" href="/public/css/report.css">
-  <link rel="stylesheet" href="/public/css/style.css">
 
   <!-- Shared controller files -->
   <script src="/public/js/shared/controller/login-controller.js"></script>
   <script src="/public/js/shared/controller/locale-controller.js"></script>
   <script src="/public/js/shared/controller/header-controller.js"></script>
   <script src="/public/js/shared/controller/navigation-controller.js"></script>
+  <script src="/public/js/shared/controller/manage-menu-controller.js"></script>
 
   <!-- Page specific files -->
-  <script src="/public/js/reports/shared/directives/filters.js"></script>
-  <script src="/public/js/reports/summary/module/summary-module.js"></script>
-  <script src="/public/js/reports/summary/controller/summary-controller.js"></script>
-
+  <script src="/public/js/admin/equipment/donors/module/donors-module.js"></script>
+  <script src="/public/js/admin/equipment/donors/controller/donors-controller.js"></script>
+  <script src="/public/js/admin/equipment/donors/controller/donors-list-controller.js"></script>
 
   <link type="text/css" rel="stylesheet" charset="UTF-8" href="/public/css/app.css">
   <!--[if IE 9]>
@@ -86,9 +88,9 @@
   <ng-include src="'/public/pages/header.html'"></ng-include>
   <ng-include src="'/public/pages/navigation.html'"></ng-include>
   <div class="content">
+    <ng-include src="'/public/pages/admin/equipment/shared/manage-menu.html'"></ng-include>
     <div ng-view></div>
   </div>
 </div>
-
 </body>
 </html>

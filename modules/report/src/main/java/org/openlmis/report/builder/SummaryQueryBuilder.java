@@ -10,6 +10,8 @@
 
 package org.openlmis.report.builder;
 
+import org.openlmis.report.util.StringHelper;
+
 import java.util.Map;
 
 public class SummaryQueryBuilder {
@@ -57,27 +59,24 @@ public class SummaryQueryBuilder {
         if(params.containsKey("param1")){
           params = (Map) params.get("param1");
         }
-        String facilityTypeId = (!params.containsKey("facilityTypeId") || params.get("facilityTypeId") == null) ? null :((String[])params.get("facilityTypeId"))[0];
-        String facilityName = (!params.containsKey("facilityName") || params.get("facilityName") == null) ? null : ((String[])params.get("facilityName"))[0];
-        String period =    (!params.containsKey("periodId") || params.get("periodId") == null) ? null : ((String[])params.get("periodId"))[0];
-        String program =   (!params.containsKey("programId") || params.get("programId") == null) ? null : ((String[])params.get("programId"))[0];
-        String product =   (!params.containsKey("productId") || params.get("productId") == null) ? null : ((String[])params.get("productId"))[0];
-        String zone =     (!params.containsKey("zoneId") || params.get("zoneId") == null) ? null : ((String[])params.get("zoneId"))[0];
-        String rgroup =     (!params.containsKey("rgroupId") || params.get("rgroupId") == null) ? null : ((String[])params.get("rgroupId"))[0];
-        String schedule = (!params.containsKey("facilityTypeId") || params.get("scheduleId") == null) ? null : ((String[])params.get("scheduleId"))[0];
-        String facilityId = (!params.containsKey("facilityId") || params.get("facilityId") == null) ? null : ((String[])params.get("facilityId"))[0];
+        String facilityTypeId =  StringHelper.isBlank( params,"facilityType")? null :((String[])params.get("facilityType"))[0];
+        String facilityName = StringHelper.isBlank( params, "facilityName") ? null : ((String[])params.get("facilityName"))[0];
+        String period =    StringHelper.isBlank( params, "period") ? null : ((String[])params.get("period"))[0];
+        String program =   StringHelper.isBlank( params,"program") ? null : ((String[])params.get("program"))[0];
+        String product =   StringHelper.isBlank( params,"product") ? null : ((String[])params.get("product"))[0];
+        String zone =     StringHelper.isBlank( params,"zone") ? null : ((String[])params.get("zone"))[0];
+        String rgroup =     StringHelper.isBlank( params,"requisitionGroup") ? null : ((String[])params.get("requisitionGroup"))[0];
+        String schedule = StringHelper.isBlank( params,"schedule")  ? null : ((String[])params.get("schedule"))[0];
+        String facilityId = StringHelper.isBlank( params, "facility")  ? null : ((String[])params.get("facility"))[0];
 
-      if (period != null &&  !period.equals("undefined") && !period.isEmpty() && !period.equals("0")  && !period.equals("-1")){
-            predicate += " and r.periodid = "+ period;
-        }
-        if (program != null &&  !program.equals("undefined") && !program.isEmpty() && !program.equals("0")  && !program.equals("-1")) {
 
-            predicate += " and r.programid = "+ program;
-        }
+        predicate += " and r.periodid = " + period;
+        predicate += " and r.programid = " + program;
+
         if (zone != null &&  !zone.equals("undefined") && !zone.isEmpty() && !zone.equals("0")  && !zone.equals("-1")) {
-
             predicate += " and facilities.geographiczoneid = "+ zone;
         }
+
         if (product != null &&  !product.equals("undefined") && !product.isEmpty() && !product.equals("0") &&  !product.equals("-1")) {
 
             predicate += " and products.id = "+ product;
@@ -98,7 +97,7 @@ public class SummaryQueryBuilder {
 
             predicate += " and facilities.name = '"+ facilityName +"'";
         }
-        if(facilityId != null && !facilityId.equals("") && !facilityId.equals( "undefined")){
+        if(facilityId != null && !facilityId.equals("") && !facilityId.equals( "undefined") && !facilityId.equals("0")){
             predicate += " and facilities.id = "+ facilityId +"";
         }
         return predicate;
