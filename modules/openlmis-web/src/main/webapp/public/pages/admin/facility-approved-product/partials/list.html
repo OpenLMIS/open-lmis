@@ -9,11 +9,11 @@
   -->
 
 <div xmlns="http://www.w3.org/1999/html">
-  <h2 id="facilityApprovedProducts" openlmis-message="header.facility.approved.products"></h2>
+  <h2 id="facilityApprovedProductsHeader" openlmis-message="header.facility.approved.products"></h2>
 
   <div class="row-fluid">
     <div class="span12">
-      <label openlmis-message="label.program"></label>
+      <label id="programLabel" openlmis-message="label.program"></label>
     </div>
   </div>
   <div class="row-fluid section-divider">
@@ -26,7 +26,7 @@
 
   <div class="row-fluid">
     <div class="span12">
-      <label openlmis-message="label.facility.type"></label>
+      <label id="facilityTypeLabel" openlmis-message="label.facility.type"></label>
     </div>
   </div>
   <div class="row-fluid">
@@ -39,12 +39,13 @@
     </div>
   </div>
 
-  <em openlmis-message="msg.please.select.program.facility.type" ng-hide="showResults"></em>
+  <em id="selectionMandatoryMessage" openlmis-message="msg.please.select.program.facility.type"
+      ng-hide="showResults"></em>
 
   <h2 ng-show="showResults">
-    <span id="searchSupplyLineLabel" openlmis-message="label.search.products"></span>
+    <span id="searchFacilityApprovedProductLabel" openlmis-message="label.search.products"></span>
     <a href="#/create" class="pull-right btn btn-primary">
-      <span id="supplyLineAddNew" openlmis-message="button.add.new"></span>
+      <span id="facilityApprovedProductAddNew" openlmis-message="button.add.new"></span>
     </a>
   </h2>
 
@@ -103,7 +104,7 @@
     </thead>
     <tbody ng-repeat="facilityApprovedProduct in facilityApprovedProducts">
     <tr>
-      <td class="productCategory" colspan="10"
+      <td id="category{{$index}}" class="productCategory" colspan="10"
           ng-show="showCategory($index)"
           ng-bind="facilityApprovedProduct.programProduct.productCategory.name"></td>
     </tr>
@@ -112,13 +113,15 @@
         <i id="fullSupply{{$index}}"
            ng-class="{'icon-ok': facilityApprovedProduct.programProduct.product.fullSupply}"></i>
       </td>
-      <td ng-bind="facilityApprovedProduct.programProduct.product.code"></td>
-      <td ng-bind="facilityApprovedProduct.programProduct.product.primaryName"></td>
-      <td ng-bind="facilityApprovedProduct.programProduct.product.strength"></td>
-      <td ng-bind="facilityApprovedProduct.programProduct.product.dosageUnit.code"></td>
-      <td class="right-justified" ng-bind="facilityApprovedProduct.maxMonthsOfStock"></td>
-      <td class="right-justified" ng-bind="facilityApprovedProduct.minMonthsOfStock"></td>
-      <td class="right-justified" ng-bind="facilityApprovedProduct.eop"></td>
+      <td id="code{{$index}}" ng-bind="facilityApprovedProduct.programProduct.product.code"></td>
+      <td id="name{{$index}}" ng-bind="facilityApprovedProduct.programProduct.product.primaryName"></td>
+      <td id="strength{{$index}}" ng-bind="facilityApprovedProduct.programProduct.product.strength"></td>
+      <td id="unit{{$index}}" ng-bind="facilityApprovedProduct.programProduct.product.dosageUnit.code"></td>
+      <td id="maxMonthsOfStock{{$index}}" class="right-justified"
+          ng-bind="facilityApprovedProduct.maxMonthsOfStock"></td>
+      <td id="minMonthsOfStock{{$index}}" class="right-justified"
+          ng-bind="facilityApprovedProduct.minMonthsOfStock"></td>
+      <td id="eop{{$index}}" class="right-justified" ng-bind="facilityApprovedProduct.eop"></td>
       <td class="center-justified">
         <i id="GlobalActive{{$index}}"
            ng-class="{'icon-ok': facilityApprovedProduct.programProduct.product.active}"></i>

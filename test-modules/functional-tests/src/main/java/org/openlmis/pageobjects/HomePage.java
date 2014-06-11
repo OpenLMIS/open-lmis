@@ -193,6 +193,9 @@ public class HomePage extends Page {
   @FindBy(how = ID, using = "supplyLineTab")
   private static WebElement supplyLineTab = null;
 
+  @FindBy(how = ID, using = "facilityApprovedProductTab")
+  private static WebElement facilityApprovedProductTab;
+
   public HomePage(TestWebDriver driver) {
     super(driver);
     PageFactory.initElements(new AjaxElementLocatorFactory(TestWebDriver.getDriver(), 10), this);
@@ -278,6 +281,17 @@ public class HomePage extends Page {
       return false;
     }
     return requisitionGroupTab.isDisplayed();
+  }
+
+  public boolean isFacilityApprovedProductTabDisplayed() {
+    try {
+      testWebDriver.waitForElementToAppear(facilityApprovedProductTab);
+    } catch (TimeoutException e) {
+      return false;
+    } catch (NoSuchElementException e) {
+      return false;
+    }
+    return facilityApprovedProductTab.isDisplayed();
   }
 
   public TemplateConfigPage selectProgramToConfigTemplate(String programme) {
@@ -597,6 +611,16 @@ public class HomePage extends Page {
     testWebDriver.waitForElementToAppear(supplyLineTab);
     supplyLineTab.click();
     return PageObjectFactory.getSupplyLinePage(testWebDriver);
+  }
+
+  public FacilityApprovedProductPage navigateToFacilityApprovedProductPage() {
+    testWebDriver.waitForElementToAppear(AdministrationMenuItem);
+    testWebDriver.keyPress(AdministrationMenuItem);
+    testWebDriver.waitForElementToAppear(manageLink);
+    testWebDriver.keyPress(manageLink);
+    testWebDriver.waitForElementToAppear(facilityApprovedProductTab);
+    facilityApprovedProductTab.click();
+    return PageObjectFactory.getFacilityApprovedProductPage(testWebDriver);
   }
 }
 
