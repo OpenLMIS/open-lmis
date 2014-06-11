@@ -54,6 +54,9 @@ function MultipleFacilitySearchFilterController($scope, Facilities) {
     if($scope.tempFacilities.length > 0){
       $scope.disableAddFacility = false;
     }
+    else{
+      $scope.disableAddFacility = true;
+    }
   };
 
   $scope.addMembers = function(){
