@@ -106,12 +106,6 @@ public class RequisitionGroupPage extends FilterSearchPage {
   @FindBy(how = ID, using = "saveErrorMsgDiv")
   private static WebElement saveErrorMsg = null;
 
-  @FindBy(how = ID, using = "addMembers")
-  private static WebElement addMembersButton = null;
-
-  @FindBy(how = ID, using = "addSelectedFacilities")
-  private static WebElement addSelectedFacilities = null;
-
   public RequisitionGroupPage(TestWebDriver driver) {
     super(driver);
     PageFactory.initElements(new AjaxElementLocatorFactory(TestWebDriver.getDriver(), 1), this);
@@ -292,7 +286,7 @@ public class RequisitionGroupPage extends FilterSearchPage {
     sendKeys(searchSupervisoryNodeField, supervisoryNode);
   }
 
-  public void clickMembersAccordianLink() {
+  public void clickMembersAccordionLink() {
     testWebDriver.waitForElementToAppear(membersLink);
     membersLink.click();
   }
@@ -417,15 +411,5 @@ public class RequisitionGroupPage extends FilterSearchPage {
   public String getErrorMessage() {
     testWebDriver.waitForElementToAppear(saveErrorMsg);
     return saveErrorMsg.getText();
-  }
-
-  public void clickAddMembersButton() {
-    testWebDriver.waitForElementToAppear(addMembersButton);
-    addMembersButton.click();
-  }
-
-  public void clickOnAddSelectedFacilityButton() {
-    testWebDriver.waitForElementToAppear(addSelectedFacilities);
-    addSelectedFacilities.click();
   }
 }

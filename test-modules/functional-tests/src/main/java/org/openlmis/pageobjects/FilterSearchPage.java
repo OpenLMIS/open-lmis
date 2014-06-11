@@ -62,6 +62,12 @@ public class FilterSearchPage extends Page {
   @FindBy(how = ID, using = "removeGeoZoneIcon")
   private static WebElement removeGeoZoneIcon = null;
 
+  @FindBy(how = ID, using = "addMembers")
+  private static WebElement addMembers = null;
+
+  @FindBy(how = ID, using = "addSelectedFacilities")
+  private static WebElement addSelectedFacilities = null;
+
   public FilterSearchPage(TestWebDriver driver) {
     super(driver);
     PageFactory.initElements(new AjaxElementLocatorFactory(TestWebDriver.getDriver(), 1), this);
@@ -184,5 +190,15 @@ public class FilterSearchPage extends Page {
       return false;
     }
     return removeGeoZoneIcon.isDisplayed();
+  }
+
+  public void clickAddMembersButton() {
+    testWebDriver.waitForElementToAppear(addMembers);
+    addMembers.click();
+  }
+
+  public void clickOnAddSelectedFacilityButton() {
+    testWebDriver.waitForElementToAppear(addSelectedFacilities);
+    addSelectedFacilities.click();
   }
 }

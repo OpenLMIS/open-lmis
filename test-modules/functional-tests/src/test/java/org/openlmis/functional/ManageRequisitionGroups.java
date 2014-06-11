@@ -301,7 +301,7 @@ public class ManageRequisitionGroups extends TestCaseHelper {
 
     search("Requisition Group 5");
     requisitionGroupPage.selectRequisitionGroupSearchResult(1);
-    requisitionGroupPage.clickMembersAccordianLink();
+    requisitionGroupPage.clickMembersAccordionLink();
     requisitionGroupPage.clickAddMembersButton();
     searchAssociatedFacility("F11");
     assertEquals("9 matches found for 'F11'", requisitionGroupPage.getNResultsMessage());
@@ -345,7 +345,7 @@ public class ManageRequisitionGroups extends TestCaseHelper {
     testWebDriver.waitForAjax();
     requisitionGroupPage.selectSupervisoryNodeSearchResult(2);
 
-    requisitionGroupPage.clickMembersAccordianLink();
+    requisitionGroupPage.clickMembersAccordionLink();
     requisitionGroupPage.clickAddMembersButton();
     searchAssociatedFacility("F100");
     requisitionGroupPage.checkFacilityToBeAssociated(1);
@@ -380,7 +380,7 @@ public class ManageRequisitionGroups extends TestCaseHelper {
 
     requisitionGroupPage.enterRequisitionGroupName("ReqGrp");
 
-    requisitionGroupPage.clickMembersAccordianLink();
+    requisitionGroupPage.clickMembersAccordionLink();
 
     assertEquals("F10 - Village Dispensary", requisitionGroupPage.getMemberFacilityCode(1));
     assertEquals("Lvl3 Hospital", requisitionGroupPage.getMemberFacilityType(1));
@@ -410,7 +410,7 @@ public class ManageRequisitionGroups extends TestCaseHelper {
     requisitionGroupPage = homePage.navigateToRequisitionGroupPage();
     requisitionGroupPage.clickAddNewButton();
 
-    requisitionGroupPage.clickMembersAccordianLink();
+    requisitionGroupPage.clickMembersAccordionLink();
     requisitionGroupPage.clickAddMembersButton();
     searchAssociatedFacility("F1");
     assertTrue(requisitionGroupPage.isFacilitySearchListDisplayed());
@@ -464,10 +464,11 @@ public class ManageRequisitionGroups extends TestCaseHelper {
     assertEquals("Duplicate Requisition Group Code", requisitionGroupPage.getErrorMessage());
 
     requisitionGroupPage.enterRequisitionGroupCode("RG2");
-    requisitionGroupPage.clickMembersAccordianLink();
+    requisitionGroupPage.clickMembersAccordionLink();
     requisitionGroupPage.clickAddMembersButton();
     searchAssociatedFacility("F10");
     requisitionGroupPage.checkFacilityToBeAssociated(1);
+    requisitionGroupPage.clickOnAddSelectedFacilityButton();
     requisitionGroupPage.clickSaveButton();
     assertEquals("No Program(s) mapped for Requisition Group", requisitionGroupPage.getErrorMessage());
   }
@@ -491,17 +492,19 @@ public class ManageRequisitionGroups extends TestCaseHelper {
     search("Re");
     requisitionGroupPage.selectRequisitionGroupSearchResult(3);
 
-    requisitionGroupPage.clickMembersAccordianLink();
+    requisitionGroupPage.clickMembersAccordionLink();
     requisitionGroupPage.clickAddMembersButton();
     searchAssociatedFacility("F10");
     requisitionGroupPage.checkFacilityToBeAssociated(1);
+    requisitionGroupPage.clickOnAddSelectedFacilityButton();
     requisitionGroupPage.clickSaveButton();
     assertEquals("Facility F10 is already assigned to Requisition Group RG1 running same program HIV", requisitionGroupPage.getErrorMessage());
     requisitionGroupPage.removeRequisitionMember(1);
 
-    requisitionGroupPage.clickMembersAccordianLink();
+    requisitionGroupPage.clickAddMembersButton();
     searchAssociatedFacility("F11");
     requisitionGroupPage.checkFacilityToBeAssociated(1);
+    requisitionGroupPage.clickOnAddSelectedFacilityButton();
     requisitionGroupPage.clickSaveButton();
     testWebDriver.sleep(500);
     assertEquals("Requisition Group \"Requisition Group 3\" updated successfully.   View Here", requisitionGroupPage.getSuccessMessage());
