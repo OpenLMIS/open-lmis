@@ -72,7 +72,8 @@ public class ProductCategoryRepositoryTest {
   @Test
   public void shouldThrowExceptionIfMissingCategoryNameWhileInsertingProductCategory() {
     ProductCategory productCategory = new ProductCategory();
-    doThrow(new DataIntegrityViolationException("violates not-null constraint")).when(productCategoryMapper).insert(productCategory);
+    doThrow(new DataIntegrityViolationException("violates not-null constraint")).when(productCategoryMapper).insert(
+      productCategory);
 
     expectedException.expect(dataExceptionMatcher("error.reference.data.missing"));
 
@@ -82,7 +83,7 @@ public class ProductCategoryRepositoryTest {
   @Test
   public void shouldInsertProductCategoryIfDoesNotExist() {
     ProductCategory productCategory = new ProductCategory();
-    when(productCategoryMapper.getProductCategoryByCode(productCategory.getCode())).thenReturn(null);
+    when(productCategoryMapper.getByCode(productCategory.getCode())).thenReturn(null);
     productCategoryRepository.insert(productCategory);
     verify(productCategoryMapper).insert(productCategory);
   }
@@ -91,10 +92,10 @@ public class ProductCategoryRepositoryTest {
   public void shouldGetCategoryIdByCode() {
     String categoryCode = "category code";
     Long categoryId = 1L;
-    when(productCategoryMapper.getProductCategoryIdByCode(categoryCode)).thenReturn(categoryId);
-    Long returnedCategoryId = productCategoryRepository.getProductCategoryIdByCode(categoryCode);
+    when(productCategoryMapper.getIdByCode(categoryCode)).thenReturn(categoryId);
+    Long returnedCategoryId = productCategoryRepository.getIdByCode(categoryCode);
 
-    verify(productCategoryMapper).getProductCategoryIdByCode(categoryCode);
+    verify(productCategoryMapper).getIdByCode(categoryCode);
     assertThat(returnedCategoryId, is(categoryId));
   }
 }

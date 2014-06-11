@@ -55,14 +55,14 @@ public class ProductCategoryRepository {
   }
 
   public ProductCategory getExisting(ProductCategory productCategory) {
-    return categoryMapper.getProductCategoryByCode(productCategory.getCode());
+    return categoryMapper.getByCode(productCategory.getCode());
   }
 
-  public Long getProductCategoryIdByCode(String categoryCode) {
-    return categoryMapper.getProductCategoryIdByCode(categoryCode);
+  public Long getIdByCode(String categoryCode) {
+    return categoryMapper.getIdByCode(categoryCode);
   }
 
   public ProductCategory getByCode(String code) {
-    return categoryMapper.getProductCategoryByCode(code);
+    return categoryMapper.getByCode(code);
   }
 }

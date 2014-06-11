@@ -23,7 +23,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Matchers.isNotNull;
 import static org.mockito.Mockito.*;
 
 @Category(UnitTests.class)
@@ -42,13 +41,13 @@ public class ProductCategoryServiceTest {
   }
 
   @Test
-  public void shouldGetProductCategoryIdByCode(){
+  public void shouldGetProductCategoryIdByCode() {
     String categoryCode = "category code";
     Long categoryId = 1L;
-    when(productCategoryRepository.getProductCategoryIdByCode(categoryCode)).thenReturn(categoryId);
+    when(productCategoryRepository.getIdByCode(categoryCode)).thenReturn(categoryId);
     Long productCategoryIdByCode = productCategoryService.getProductCategoryIdByCode(categoryCode);
 
-    verify(productCategoryRepository).getProductCategoryIdByCode(categoryCode);
+    verify(productCategoryRepository).getIdByCode(categoryCode);
     assertThat(productCategoryIdByCode, is(categoryId));
   }
 
