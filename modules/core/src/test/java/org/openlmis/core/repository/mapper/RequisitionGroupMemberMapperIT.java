@@ -182,19 +182,20 @@ public class RequisitionGroupMemberMapperIT {
     assertThat(actualMembers.get(0).getFacility().getName(), is("Apollo Hospital"));
     assertThat(actualMembers.get(0).getFacility().getCode(), is("F10010"));
     assertThat(actualMembers.get(0).getFacility().getEnabled(), is(true));
+    assertThat(actualMembers.get(0).getFacility().getGeographicZone().getName(), is(requisitionGroupMember.getFacility().getGeographicZone().getName()));
   }
 
   @Test
-  public void shouldDeleteRequisitionGroupMemberByRequisitionGroup(){
+  public void shouldDeleteRequisitionGroupMemberByRequisitionGroup() {
 
     Long requisitionGroupId = requisitionGroup.getId();
     requisitionGroupMemberMapper.insert(requisitionGroupMember);
     List<RequisitionGroupMember> members = requisitionGroupMemberMapper.getMembersBy(requisitionGroupId);
-    assertThat(members.size(),is(1));
+    assertThat(members.size(), is(1));
 
     requisitionGroupMemberMapper.deleteMemberForGroup(requisitionGroupId);
 
     members = requisitionGroupMemberMapper.getMembersBy(requisitionGroupId);
-    assertThat(members.size(),is(0));
+    assertThat(members.size(), is(0));
   }
 }
