@@ -64,11 +64,13 @@ public class StatusChangeEventServiceTest {
     userList.add(user);
     SimpleMailMessage emailMessage = new SimpleMailMessage();
     String actionUrl = baseUrl + "public/pages/logistics/rnr/index.html#/create-rnr/{0}/{2}/{1}?supplyType=fullSupply&page=1";
+    String newLine = System.getProperty("line.separator");
+    String paragraphSeparator = newLine.concat(newLine);
 
     when(messageService.message("msg.email.notification.subject")).thenReturn("subject");
     when(messageService.message(actionUrl, rnrId, program.getId(), facility.getId())).thenReturn("actionUrl");
-    when(messageService.message("msg.email.notification.body", null, "\n\n", facility.getName(),
-      period.getName(), null, "\n\n", "actionUrl", "\n\n")).thenReturn("body");
+    when(messageService.message("msg.email.notification.body", null, paragraphSeparator, facility.getName(),
+      period.getName(), null, paragraphSeparator, "actionUrl", paragraphSeparator)).thenReturn("body");
 
     emailMessage.setTo(user.getEmail());
     emailMessage.setSubject("subject");

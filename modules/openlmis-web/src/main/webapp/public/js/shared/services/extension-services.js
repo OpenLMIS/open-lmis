@@ -572,6 +572,20 @@ services.factory('RnRStatusDetailsByRequisitionGroup', function($resource){
     return $resource('/dashboard/rnrStatus-detail.json',{},{});
 });
 
+
+services.factory('GetLabEquipmentList', function ($resource) {
+    return $resource('/dashboard/notification/alerts.json',{}, {}); // just for mock
+});
+
+services.factory('ReportEquipmentTypes', function ($resource) {
+    return $resource('/reports/equipmentTypes.json',{}, {}); // just for mock
+});
+
+services.factory('LabEquipmentListReport', function ($resource) {
+    return $resource('/reports/reportdata/labEquipmentList.json', {}, {});
+});
+
 services.factory('GetProgramWithBudgetingApplies',function($resource){
     return $resource('/reports/programsWithBudgetApplies.json',{},{});
+
 });

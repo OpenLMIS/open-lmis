@@ -109,8 +109,11 @@ public class ReportLookupService {
   @Autowired
   private ProgramProductMapper programProductMapper;
 
-    @Autowired
-    private FacilityApprovedProductMapper facilityApprovedProductMapper;
+  @Autowired
+  private FacilityApprovedProductMapper facilityApprovedProductMapper;
+
+  @Autowired
+  private EquipmentTypeReportMapper equipmentTypeReportMapper;
 
   public List<Product> getAllProducts() {
     return productMapper.getAll();
@@ -399,6 +402,11 @@ public List<Program>getAllProgramsWithBudgeting(){
   }
 
 
+    public List<EquipmentType> getEquipmentTypes(){
+        return equipmentTypeReportMapper.getEquipmentTypeList();
+    }
+
+
   public GeoZoneTree getGeoZoneTree(){
     GeoZoneTree tree = geographicZoneMapper.getParentZoneTree();
     populateChildren(tree);
@@ -412,4 +420,5 @@ public List<Program>getAllProgramsWithBudgeting(){
       populateChildren(zone);
     }
   }
+
 }
