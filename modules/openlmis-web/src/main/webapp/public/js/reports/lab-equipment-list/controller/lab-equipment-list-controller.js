@@ -35,9 +35,8 @@ function LabEquipmentListReportController($scope, $filter, LabEquipmentListRepor
             if (data.pages !== undefined && data.pages.rows !== undefined) {
                 $scope.data = data.pages.rows;
                 $scope.paramsChanged($scope.tableParams);
-              //  $scope.groups = _.groupBy($scope.data, "district");
 
-            };
+            }
         });
 
 
