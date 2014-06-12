@@ -21,7 +21,7 @@ describe("Multiple Facility Search Filter Controller", function () {
 
   it('should associate facilities', function () {
 
-    facility = {"selected": false, "name": "fac1"};
+    var facility = {"selected": false, "name": "fac1"};
 
     scope.associate(facility);
 
@@ -32,7 +32,7 @@ describe("Multiple Facility Search Filter Controller", function () {
 
   it('should filter duplicate facilities on associate', function () {
 
-    facility = {"selected": true, "name": "fac1", "id": 1};
+    var facility = {"selected": true, "name": "fac1", "id": 1};
     scope.tempFacilities = [facility];
     scope.disableAddFacility = true;
 
@@ -48,7 +48,8 @@ describe("Multiple Facility Search Filter Controller", function () {
     scope.$parent = {"$parent": {"addMembers": function () {
       return true;
     }}};
-    facility = {"selected": true, "name": "fac1", "id": 1};
+
+    var facility = {"selected": true, "name": "fac1", "id": 1};
     scope.tempFacilities = [facility];
 
     var spyAddMembers = spyOn(scope.$parent.$parent, "addMembers").andReturn(true);
@@ -74,12 +75,11 @@ describe("Multiple Facility Search Filter Controller", function () {
     scope.facilitySearchParam = "searchParam";
     scope.facilityList = [];
     scope.facilityResultCount = 3;
-    element = angular.element('<div id="search" class="search-list"></div>');
+    var element = angular.element('<div id="search" class="search-list"></div>');
     var spy = spyOn(angular, "element").andReturn(element);
 
     scope.clearFacilitySearch();
     element.trigger('slideUp');
-
 
     expect(scope.facilityResultCount).toBeUndefined();
     expect(scope.facilityList).toBeUndefined();
