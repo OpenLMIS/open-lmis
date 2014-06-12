@@ -327,7 +327,20 @@ public class InteractiveReportController extends BaseController {
         return OpenLmisResponse.response("userAssignment",provider.getUserAssignments());
     }
 
+    @RequestMapping(value = "/reportdata/aggregateRegimenSummary", method = GET, headers = BaseController.ACCEPT_JSON)
+    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_REGIMEN_SUMMARY_REPORT')")
+    public Pages getAggregateRegimenSummaryData(@RequestParam(value = "page", required = false, defaultValue = "1") int page,
+                                       @RequestParam(value = "max", required = false, defaultValue = "10") int max,
+                                       HttpServletRequest request
 
+    ) {
+
+
+        Report report = reportManager.getReportByKey("aggregate_regimen_summary");
+        List<RegimenSummaryReport> regimenSummaryReportList =
+                (List<RegimenSummaryReport>) report.getReportDataProvider().getMainReportData(request.getParameterMap(), request.getParameterMap(), page, max);
+        return new Pages(page, max, regimenSummaryReportList);
+    }
 
 
 

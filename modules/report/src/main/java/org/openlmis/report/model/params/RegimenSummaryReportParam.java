@@ -38,14 +38,24 @@ public class RegimenSummaryReportParam
     private int rgroupId;
     private String rgroup;
     private Long regimenId;
+
     private String regimen;
     private int scheduleId;
+
     private Long regimenCategoryId;
     private String regimenCategory;
+
     private Long periodId;
     private String period;
     private Integer year;
 
+    private Long facilityId;
+    private String facility;
+
+    private int facilityTypeId;
+    private String facilityType;
+    private int zoneId;
+    private String zone;
 
     SimpleDateFormat dateFormatter = new SimpleDateFormat();
 

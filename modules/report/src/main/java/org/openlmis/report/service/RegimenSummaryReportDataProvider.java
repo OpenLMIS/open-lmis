@@ -81,6 +81,9 @@ public class RegimenSummaryReportDataProvider extends ReportDataProvider {
             regimenSummaryReportParam.setRgroupId(StringHelper.isBlank(filterCriteria, "requisitionGroup") ? 0 : Integer.parseInt(filterCriteria.get("requisitionGroup")[0]));
             regimenSummaryReportParam.setProgramId(StringHelper.isBlank(filterCriteria,"program") ? 0L : Long.parseLong(filterCriteria.get("program")[0]));
             regimenSummaryReportParam.setPeriodId(StringHelper.isBlank(filterCriteria,"period") ? 0L : Long.parseLong(filterCriteria.get("period")[0]));
+            regimenSummaryReportParam.setFacilityId(StringHelper.isBlank(filterCriteria,"facility") ? 0L : Long.parseLong(filterCriteria.get("facility")[0]));
+            regimenSummaryReportParam.setFacilityTypeId(StringHelper.isBlank(filterCriteria,"facilityType") ? 0 : Integer.parseInt(filterCriteria.get("facilityType")[0])); //defaults to 0
+            regimenSummaryReportParam.setZoneId(StringHelper.isBlank(filterCriteria, "zone")? 0 : Integer.parseInt(filterCriteria.get("zone")[0]));
 
             ProcessingPeriod pPeriod = periodService.getById( regimenSummaryReportParam.getPeriodId());
             // summarize the filters now.
