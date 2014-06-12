@@ -41,7 +41,7 @@ public class DownloadOrderFile extends TestCaseHelper {
   public String userSICUserName = "storeInCharge";
   public String[] csvRows = null;
 
-  @BeforeMethod(groups = "requisition")
+  @BeforeMethod(groups = "orderAndPod")
   public void setUp() throws InterruptedException, SQLException, IOException {
     super.setup();
   }
@@ -106,7 +106,7 @@ public class DownloadOrderFile extends TestCaseHelper {
     assertTrue("Order date incorrect.", csvRows[lineNumber - 1].contains(orderId));
   }
 
-  @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function")
+  @Test(groups = {"orderAndPod"}, dataProvider = "Data-Provider-Function")
   public void testVerifyOrderFileForDefaultConfiguration(String password) throws InterruptedException, SQLException, IOException {
     dbWrapper.setupOrderFileConfiguration("O", "TRUE");
     setupDownloadOrderFileSetup(password);
@@ -123,7 +123,7 @@ public class DownloadOrderFile extends TestCaseHelper {
     checkOrderFileOrderDate("dd/MM/yy", 2);
   }
 
-  @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function")
+  @Test(groups = {"orderAndPod"}, dataProvider = "Data-Provider-Function")
   public void testVerifyOrderFileHavingStrengthFormDosageUnitIsNull(String password) throws InterruptedException, SQLException, IOException {
     dbWrapper.setupOrderFileConfiguration("O", "TRUE");
 
@@ -177,7 +177,7 @@ public class DownloadOrderFile extends TestCaseHelper {
     checkOrderFileData(2, "\"" + orderNumber + "\",\"F10\",\"P10\",\"antibiotic   \",\"10\",\"");
   }
 
-  @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function")
+  @Test(groups = {"orderAndPod"}, dataProvider = "Data-Provider-Function")
   public void testVerifyOrderFileForDefaultConfigurationWithNoHeaders(String password) throws InterruptedException, SQLException, IOException {
     dbWrapper.setupOrderFileConfiguration("O", "FALSE");
     setupDownloadOrderFileSetup(password);
@@ -193,7 +193,7 @@ public class DownloadOrderFile extends TestCaseHelper {
     checkOrderFileOrderDate("dd/MM/yy", 1);
   }
 
-  @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function")
+  @Test(groups = {"orderAndPod"}, dataProvider = "Data-Provider-Function")
   public void testVerifyOrderFileForOnlySequenceInOrderNumber(String password) throws InterruptedException, SQLException, IOException {
     dbWrapper.setupOrderFileConfiguration("O", "FALSE");
     dbWrapper.updateFieldValue("order_number_configuration", "orderNumberPrefix", "#Ord 3", "orderNumberPrefix", "O");
@@ -218,7 +218,7 @@ public class DownloadOrderFile extends TestCaseHelper {
     dbWrapper.updateFieldValue("order_number_configuration", "includeRnrTypeSuffix", true);
   }
 
-  @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function")
+  @Test(groups = {"orderAndPod"}, dataProvider = "Data-Provider-Function")
   public void testVerifyOrderFileForMaxOrderNumber(String password) throws InterruptedException, SQLException, IOException {
     dbWrapper.setupOrderFileConfiguration("O", "FALSE");
     dbWrapper.updateFieldValue("order_number_configuration", "orderNumberPrefix", " #O 3 ", "orderNumberPrefix", "O");
@@ -271,7 +271,7 @@ public class DownloadOrderFile extends TestCaseHelper {
     dbWrapper.updateFieldValue("programs", "code", "HIV", "code", "MALARIA123456789MALARIA123456789MALARIA123456789");
   }
 
-  @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function")
+  @Test(groups = {"orderAndPod"}, dataProvider = "Data-Provider-Function")
   public void testVerifyOrderFileForSpecificConfiguration(String password) throws SQLException, IOException, InterruptedException {
     dbWrapper.setupOrderFileConfiguration("Zero", "TRUE");
     dbWrapper.setupOrderFileOpenLMISColumns("create.facility.code", "TRUE", "Facility code", 6, "");
@@ -348,7 +348,7 @@ public class DownloadOrderFile extends TestCaseHelper {
     assertEquals(orderNumber, viewOrdersPage.getOrderNumber(rowNumber));
   }
 
-  @AfterMethod(groups = "requisition")
+  @AfterMethod(groups = "orderAndPod")
   public void tearDown() throws SQLException {
     testWebDriver.sleep(500);
     if (!testWebDriver.getElementById("username").isDisplayed()) {

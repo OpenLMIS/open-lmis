@@ -14,7 +14,7 @@
   <div class="rnr-tabs clearfix">
     <ul class="clearfix" set-focus>
       <li
-          ng-class="{'selected': (visibleTab != 'nonFullSupply' && visibleTab != 'regimen'), 'has-error': fullSupplyTabError}">
+        ng-class="{'selected': (visibleTab != 'nonFullSupply' && visibleTab != 'regimen'), 'has-error': fullSupplyTabError}">
         <a href="" ng-click="switchSupplyType('fullSupply')" id="fullSupplyTab"
            openlmis-message="label.full.supply.products"></a></li>
       <li ng-class="{'selected': visibleTab == 'nonFullSupply', 'has-error': nonFullSupplyTabError}">
@@ -50,7 +50,8 @@
     </span>
 
     <div ng-hide="visibleTab === 'regimen'" set-focus>
-      <openlmis-pagination num-pages="numberOfPages" current-page="currentPage" max-size="10"
+      <openlmis-pagination ng-show="page[visibleTab].length" num-pages="numberOfPages" current-page="currentPage"
+                           max-size="10"
                            check-error-on-page="checkErrorOnPage(page)"></openlmis-pagination>
     </div>
 

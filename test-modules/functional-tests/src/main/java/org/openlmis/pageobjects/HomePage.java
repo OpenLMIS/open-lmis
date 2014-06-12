@@ -190,6 +190,9 @@ public class HomePage extends Page {
   @FindBy(how = ID, using = "geoZoneTab")
   private static WebElement geoZoneTab = null;
 
+  @FindBy(how = ID, using = "supplyLineTab")
+  private static WebElement supplyLineTab = null;
+
   public HomePage(TestWebDriver driver) {
     super(driver);
     PageFactory.initElements(new AjaxElementLocatorFactory(TestWebDriver.getDriver(), 10), this);
@@ -214,14 +217,14 @@ public class HomePage extends Page {
     return ManageFacilityPage.getInstance(testWebDriver);
   }
 
-  public ManageGeographicZonesPage navigateManageGeographicZonesPage() {
+  public GeographicZonePage navigateManageGeographicZonesPage() {
     testWebDriver.waitForElementToAppear(AdministrationMenuItem);
     AdministrationMenuItem.click();
     testWebDriver.waitForElementToAppear(manageLink);
-    manageLink.click();
+    testWebDriver.keyPress(manageLink);
     testWebDriver.waitForElementToAppear(geoZoneTab);
-    testWebDriver.keyPress(geoZoneTab);
-    return ManageGeographicZonesPage.getInstance(testWebDriver);
+    geoZoneTab.click();
+    return PageObjectFactory.getGeographicZonePage(testWebDriver);
   }
 
   public void clickCreateFacilityButton() {
@@ -253,6 +256,17 @@ public class HomePage extends Page {
       return false;
     }
     return supervisoryNodesTab.isDisplayed();
+  }
+
+  public boolean isSupplyLineTabDisplayed() {
+    try {
+      testWebDriver.waitForElementToAppear(supplyLineTab);
+    } catch (TimeoutException e) {
+      return false;
+    } catch (NoSuchElementException e) {
+      return false;
+    }
+    return supplyLineTab.isDisplayed();
   }
 
   public boolean isRequisitionGroupTabDisplayed() {
@@ -573,6 +587,16 @@ public class HomePage extends Page {
     testWebDriver.waitForElementToAppear(requisitionGroupTab);
     requisitionGroupTab.click();
     return PageObjectFactory.getRequisitionGroupPage(testWebDriver);
+  }
+
+  public SupplyLinePage navigateToSupplyLine() {
+    testWebDriver.waitForElementToAppear(AdministrationMenuItem);
+    testWebDriver.keyPress(AdministrationMenuItem);
+    testWebDriver.waitForElementToAppear(manageLink);
+    testWebDriver.keyPress(manageLink);
+    testWebDriver.waitForElementToAppear(supplyLineTab);
+    supplyLineTab.click();
+    return PageObjectFactory.getSupplyLinePage(testWebDriver);
   }
 }
 

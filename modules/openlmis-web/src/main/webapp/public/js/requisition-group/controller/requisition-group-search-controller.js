@@ -45,7 +45,7 @@ function RequisitionGroupSearchController($scope, RequisitionGroups, $location, 
     RequisitionGroups.get({"searchParam": $scope.searchedQuery, "columnName": $scope.selectedSearchOption.value, "page": page}, function (data) {
       $scope.requisitionGroupList = data.requisitionGroupList;
       $scope.pagination = data.pagination;
-      $scope.resultCount = $scope.pagination.totalRecords;
+      $scope.totalItems = $scope.pagination.totalRecords;
       $scope.currentPage = $scope.pagination.page;
       $scope.showResults = true;
     }, {});
@@ -53,7 +53,7 @@ function RequisitionGroupSearchController($scope, RequisitionGroups, $location, 
 
   $scope.clearSearch = function () {
     $scope.query = "";
-    $scope.resultCount = 0;
+    $scope.totalItems = 0;
     $scope.requisitionGroupList = [];
     $scope.showResults = false;
     angular.element("#searchRequisitionGroup").focus();

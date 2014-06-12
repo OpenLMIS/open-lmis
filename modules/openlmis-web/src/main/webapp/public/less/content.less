@@ -297,8 +297,7 @@ span[class^="tpl-"] {
       position: relative;
       border: 1px solid #DDD;
       border-top: 0;
-      border-color: transparent #BBB #DDD
-    ;
+      border-color: transparent #BBB #DDD;
       background: #FCFCFC;
       font-size: 0.9em;
 
@@ -1908,6 +1907,7 @@ input[placeholder].placeholder {
 .content .pagination {
   margin-bottom: 30px;
   ul {
+    float: right;
     .box-shadow(none);
   }
   li {
@@ -1921,7 +1921,7 @@ input[placeholder].placeholder {
       line-height: 20px;
       color: #777;
     }
-    &.errorpage {
+    &.errorPage {
       a {
         border-color: rgb(221, 42, 42);
         background-color: red;
@@ -2636,7 +2636,7 @@ table.search-list {
   border: 1px solid #ccc;
   border-radius: 3px;
   background: #fff;
-  .box-shadow(inset 0 1px 1px rgba(0,0,0,0.075));
+  .box-shadow(inset 0 1px 1px rgba(0, 0, 0, 0.075));
   font-size: 14px;
   line-height: 20px;
   color: #555;
@@ -2669,13 +2669,12 @@ table.search-list {
 }
 
 .searchAndFilter {
-  width: 95%;
+  width: 98%;
   margin: 0 11px;
   background: white;
   border: 1px solid #ccc;
   display: none;
-  padding: 4px 22px 22px;
-  .box-shadow(0 0 7px rgba(0,0,0,0.25));
+  .box-shadow(0 0 7px rgba(0, 0, 0, 0.25));
 
   &:after {
     .square(0px);
@@ -2716,6 +2715,57 @@ table.search-list {
     background: white;
   }
   #searchFacility {
-    width: 100%;
+    width: 150%;
+  }
+  #searchGeoZone {
+    width: 57%;
+  }
+  #search {
+    width: 65%;
+    padding: 4px 22px 22px;
+  }
+  .separator {
+    position: absolute;
+    height: 100%;
+    border-left: 1px solid #ccc;
+    margin-left: 68.2%;
+  }
+  #filter {
+    width: 28%;
+    padding: 4px 22px 22px;
+    label {
+      font-size: 0.9em;
+    }
+    #setFiltersModal {
+      width: 640px;
+      margin: -280px 0 0 -320px;
+      overflow-x: hidden;
+      .section-divider {
+        margin-bottom: 15px;
+        border-bottom: 1px solid #ddd;
+        padding-bottom: 6px;
+      }
+    }
+  }
+}
+
+.select-result-container {
+  vertical-align: super;
+  padding: 3px 5px 3px 6px;
+  line-height: 10px;
+  border-radius: 3px;
+  -webkit-box-shadow: 0 0 2px #fff inset, 0 1px 0 rgba(0, 0, 0, 0.05);
+  box-shadow: 0 0 2px #fff inset, 0 1px 0 rgba(0, 0, 0, 0.05);
+
+  .select-result-close {
+    .icon-remove {
+      color: #858585;
+    }
+    &:hover {
+      text-decoration: none;
+      .icon-remove {
+        color: #444;
+      }
+    }
   }
 }

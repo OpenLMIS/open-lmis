@@ -10,55 +10,46 @@
 
 package org.openlmis.core.domain;
 
-
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.apache.ibatis.session.RowBounds;
 
-@NoArgsConstructor
-@AllArgsConstructor
-public class Pagination {
+/**
+ * Pagination represents an entity that keeps track of the current page number of any record, size of a page,
+ * number of pages and total records.
+ */
+public class Pagination extends RowBounds {
 
   @Getter
   @Setter
-  public Integer page;
+  private int page;
 
   @Getter
-  @Setter
-  public Integer pageSize;
+  private int numberOfPages;
 
   @Getter
-  public Integer numberOfPages;
+  private int totalRecords;
 
-  @Setter
-  public Integer offset;
-
-  @Getter
-  public Integer totalRecords;
-
-  public Pagination(Integer page, Integer pageSize) {
+  public Pagination(Integer page, int limit) {
+    super((page - 1) * limit, limit);
     this.page = page;
-    this.pageSize = pageSize;
-  }
-
-  public Integer getOffset() {
-    return (page - 1) * pageSize;
-  }
-
-  private void setNumberOfPages() {
-    numberOfPages = totalRecords / pageSize;
-    if (totalRecords % pageSize > 0) {
-      numberOfPages++;
-    }
-
-    if (numberOfPages == 0) {
-      numberOfPages++;
-    }
   }
 
   public void setTotalRecords(Integer totalRecords) {
     this.totalRecords = totalRecords;
     setNumberOfPages();
+  }
+
+  private void setNumberOfPages() {
+    if (getLimit() > 0) {
+      if (totalRecords % getLimit() == 0) {
+        numberOfPages = totalRecords / getLimit();
+      } else {
+        numberOfPages = (totalRecords / getLimit()) + 1;
+      }
+    }
+    if (numberOfPages == 0) {
+      numberOfPages++;
+    }
   }
 }

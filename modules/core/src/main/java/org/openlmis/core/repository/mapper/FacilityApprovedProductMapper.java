@@ -11,6 +11,7 @@
 package org.openlmis.core.repository.mapper;
 
 import org.apache.ibatis.annotations.*;
+import org.apache.ibatis.session.RowBounds;
 import org.openlmis.core.domain.DosageUnit;
 import org.openlmis.core.domain.FacilityTypeApprovedProduct;
 import org.openlmis.core.domain.ProductCategory;
@@ -18,6 +19,7 @@ import org.openlmis.core.domain.ProductForm;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+
 /**
  * FacilityApprovedProductMapper maps the FacilityTypeApprovedProduct mapping entity to corresponding representation in database.
  */
@@ -75,7 +77,7 @@ public interface FacilityApprovedProductMapper {
       one = @One(select = "org.openlmis.core.repository.mapper.DosageUnitMapper.getById")),
     @Result(property = "facilityType.id", column = "facilityTypeId")})
   List<FacilityTypeApprovedProduct> getFullSupplyProductsByFacilityAndProgram(@Param("facilityId") Long facilityId,
-                                                                          @Param("programId") Long programId);
+                                                                              @Param("programId") Long programId);
 
   @Select({"SELECT fap.*, pp.*, pgm.*, pgm.code as program_code, pgm.name as program_name, pgm.active as program_active, " +
     "p.*, p.code as product_code ",
@@ -122,18 +124,53 @@ public interface FacilityApprovedProductMapper {
       one = @One(select = "org.openlmis.core.repository.mapper.DosageUnitMapper.getById")),
     @Result(property = "facilityType.id", column = "facilityTypeId")})
   List<FacilityTypeApprovedProduct> getNonFullSupplyProductsByFacilityAndProgram(@Param("facilityId") Long facilityId,
-                                                                             @Param("programId") Long programId);
+                                                                                 @Param("programId") Long programId);
 
   @Select({"SELECT fap.id, fap.facilityTypeId, fap.programProductId, fap.maxMonthsOfStock, fap.modifiedDate, fap.modifiedBy",
     "FROM facility_approved_products fap, facility_types ft",
     "where fap.programProductId = #{programProductId} and",
     "ft.code = #{facilityTypeCode} and ft.id = fap.facilityTypeId"})
   FacilityTypeApprovedProduct getFacilityApprovedProductIdByProgramProductAndFacilityTypeCode(@Param("programProductId") Long programProductId,
-                                                                                          @Param("facilityTypeCode") String facilityTypeCode);
+                                                                                              @Param("facilityTypeCode") String facilityTypeCode);
 
   @Update("UPDATE facility_approved_products set " +
     "facilityTypeId=#{facilityType.id}, programProductId=#{programProduct.id}, maxMonthsOfStock=#{maxMonthsOfStock}, modifiedBy=#{modifiedBy}, modifiedDate=#{modifiedDate} " +
     "where id=#{id}")
   void updateFacilityApprovedProduct(FacilityTypeApprovedProduct facilityTypeApprovedProduct);
 
+  @Select({"SELECT fap.*, pp.active AS active, prod.active AS globalActive, prod.id AS productId, prod.code AS productCode, prod.primaryName AS productName,",
+    "prod.fullSupply AS fullSupply, prod.strength as strength, prod.dosageUnitId as dosageUnitId, pc.id AS categoryId, pc.name AS categoryName FROM facility_approved_products fap",
+    "INNER JOIN program_products pp ON pp.id = fap.programProductId",
+    "INNER JOIN products prod ON prod.id = pp.productId",
+    "INNER JOIN product_categories pc ON pc.id = pp.productCategoryId",
+    "WHERE fap.facilityTypeId = #{facilityTypeId} AND pp.programId = #{programId} AND",
+    "(LOWER(prod.code) LIKE '%' || LOWER(#{searchParam}) || '%' OR LOWER(prod.primaryName) LIKE '%' || LOWER(#{searchParam}) || '%')",
+    "ORDER BY LOWER(pc.name), LOWER(prod.code), LOWER(prod.primaryName)"})
+  @Results(value = {
+    @Result(property = "programProduct.id", column = "programProductId"),
+    @Result(property = "programProduct.active", column = "active"),
+    @Result(property = "programProduct.product.id", column = "productId"),
+    @Result(property = "programProduct.product.code", column = "productCode"),
+    @Result(property = "programProduct.product.primaryName", column = "productName"),
+    @Result(property = "programProduct.product.fullSupply", column = "fullSupply"),
+    @Result(property = "programProduct.product.active", column = "globalActive"),
+    @Result(property = "programProduct.product.strength", column = "strength"),
+    @Result(property = "programProduct.product.dosageUnit", column = "dosageUnitId", javaType = DosageUnit.class,
+      one = @One(select = "org.openlmis.core.repository.mapper.DosageUnitMapper.getById")),
+    @Result(property = "programProduct.productCategory.id", column = "categoryId"),
+    @Result(property = "programProduct.productCategory.name", column = "categoryName")
+  })
+  List<FacilityTypeApprovedProduct> getAllBy(@Param(value = "facilityTypeId") Long facilityTypeId,
+                                             @Param(value = "programId") Long programId,
+                                             @Param(value = "searchParam") String searchParam, RowBounds rowBounds);
+
+  @Select({"SELECT COUNT(*) FROM facility_approved_products fap",
+    "INNER JOIN program_products pp ON pp.id = fap.programProductId",
+    "INNER JOIN products prod ON prod.id = pp.productId",
+    "INNER JOIN product_categories pc ON pc.id = pp.productCategoryId",
+    "WHERE fap.facilityTypeId = #{facilityTypeId} AND pp.programId = #{programId} AND",
+    "(LOWER(prod.code) LIKE '%' || LOWER(#{searchParam}) || '%' OR LOWER(prod.primaryName) LIKE '%' || LOWER(#{searchParam}) || '%')"})
+  Integer getTotalSearchResultCount(@Param(value = "facilityTypeId") Long facilityTypeId,
+                                    @Param(value = "programId") Long programId,
+                                    @Param(value = "searchParam") String searchParam);
 }

@@ -111,7 +111,7 @@ public class TestCalculationsOnRnRThroughAPI extends JsonUtility {
     dbWrapper.insertFacilityApprovedProduct("P10", "ESS_MEDS", "lvl3_hospital");
     dbWrapper.insertRoleAssignmentForSupervisoryNode("commTrack", "store in-charge", "N1", "ESS_MEDS");
     dbWrapper.configureTemplateForCommTrack("ESS_MEDS");
-    dbWrapper.insertRequisitionGroupProgramScheduleForProgram("RG1", "ESS_MEDS", "M");
+    dbWrapper.insertRequisitionGroupProgramScheduleForProgramAfterDelete("RG1", "ESS_MEDS", "M");
     submitRnRThroughApi("V10", "ESS_MEDS", "P10", 5, 3, null, null, null, null);
     Long id = submitRnRThroughApi("V10", "HIV", "P10", 10, 5, null, null, null, null);
     assertEquals(null, dbWrapper.getRequisitionLineItemFieldValue(id, "reportingDays", "P10"));

@@ -51,7 +51,7 @@ describe("Requisition Group Controller", function () {
 
     expect(scope.supervisoryNodes).toEqual([node1, node2, node3]);
     expect(scope.filteredNodeList).toEqual([node1, node2, node3]);
-    expect(scope.resultCount).toEqual(3);
+    expect(scope.nodeResultCount).toEqual(3);
   });
 
   it('should do client side filtering when previous query and current query are same', function () {
@@ -68,7 +68,7 @@ describe("Requisition Group Controller", function () {
     expect($httpBackend.expectGET).not.toHaveBeenCalledWith('/search-supervisory-nodes.json?searchParam=' + scope.query);
     expect(scope.filteredNodeList).toEqual([node1, node2, node3]);
     expect(scope.previousQuery).toEqual("Nod");
-    expect(scope.resultCount).toEqual(3);
+    expect(scope.nodeResultCount).toEqual(3);
   });
 
   it('should not search results if query is undefined', function () {

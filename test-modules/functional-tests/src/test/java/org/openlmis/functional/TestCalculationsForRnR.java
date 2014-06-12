@@ -361,7 +361,7 @@ public class TestCalculationsForRnR extends TestCaseHelper {
     dbWrapper.updateConfigureTemplate("ESS_MEDS", "source", "U", "true", "stockInHand");
     dbWrapper.updateConfigureTemplate("ESS_MEDS", "source", "C", "false", "normalizedConsumption");
     dbWrapper.updateConfigureTemplate("ESS_MEDS", "source", "C", "false", "amc");
-    dbWrapper.insertRequisitionGroupProgramScheduleForProgram("RG1", "ESS_MEDS", "M");
+    dbWrapper.insertRequisitionGroupProgramScheduleForProgramAfterDelete("RG1", "ESS_MEDS", "M");
     dbWrapper.insertRoleAssignmentForSupervisoryNode(userSIC, "store in-charge", null, "ESS_MEDS");
     dbWrapper.updateFieldValue("products", "fullSupply", "false", "code", "P11");
 

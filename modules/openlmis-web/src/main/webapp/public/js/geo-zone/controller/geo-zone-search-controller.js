@@ -45,7 +45,7 @@ function GeoZoneSearchController($scope, GeographicZones, $location, navigateBac
     GeographicZones.get({"searchParam": $scope.searchedQuery, "columnName": $scope.selectedSearchOption.value, "page": page}, function (data) {
       $scope.geoZoneList = data.geoZones;
       $scope.pagination = data.pagination;
-      $scope.resultCount = $scope.pagination.totalRecords;
+      $scope.totalItems = $scope.pagination.totalRecords;
       $scope.currentPage = $scope.pagination.page;
       $scope.showResults = true;
     }, {});
@@ -53,7 +53,7 @@ function GeoZoneSearchController($scope, GeographicZones, $location, navigateBac
 
   $scope.clearSearch = function () {
     $scope.query = "";
-    $scope.resultCount = 0;
+    $scope.totalItems = 0;
     $scope.geoZoneList = [];
     $scope.showResults = false;
     angular.element("#searchGeoZone").focus();

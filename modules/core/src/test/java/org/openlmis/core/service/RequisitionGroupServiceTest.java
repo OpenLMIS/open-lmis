@@ -80,7 +80,7 @@ public class RequisitionGroupServiceTest {
   @Test
   public void shouldSearchRequisitionGroupByGroupName() throws Exception {
     String searchParam = "searchParam";
-    Pagination pagination = new Pagination();
+    Pagination pagination = new Pagination(0, 0);
 
     List<RequisitionGroup> requisitionGroups = asList(new RequisitionGroup());
     when(requisitionGroupRepository.searchByGroupName(searchParam, pagination)).thenReturn(requisitionGroups);
@@ -94,7 +94,7 @@ public class RequisitionGroupServiceTest {
   @Test
   public void shouldSearchRequisitionGroupByNodeName() throws Exception {
     String searchParam = "searchParam";
-    Pagination pagination = new Pagination();
+    Pagination pagination = new Pagination(0, 0);
 
     List<RequisitionGroup> requisitionGroups = asList(new RequisitionGroup());
     when(requisitionGroupRepository.searchByNodeName(searchParam, pagination)).thenReturn(requisitionGroups);

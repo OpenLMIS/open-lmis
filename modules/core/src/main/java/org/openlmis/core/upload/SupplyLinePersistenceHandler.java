@@ -49,6 +49,4 @@ public class SupplyLinePersistenceHandler extends AbstractModelPersistenceHandle
   protected void save(BaseModel record) {
     supplyLineService.save((SupplyLine) record);
   }
-
-
 }

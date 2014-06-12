@@ -59,7 +59,11 @@ public class RequisitionGroupRepository {
   }
 
   public void update(RequisitionGroup requisitionGroup) {
-    mapper.update(requisitionGroup);
+    try {
+      mapper.update(requisitionGroup);
+    } catch (DuplicateKeyException ex) {
+      throw new DataException("error.duplicate.code.requisition.group");
+    }
   }
 
   public List<RequisitionGroup> searchByGroupName(String searchParam, Pagination pagination) {

@@ -95,11 +95,11 @@ public class GeographicZoneService {
     return 0;
   }
 
-  public List<GeographicZone> getGeographicZoneByCodeOrName(String searchParam) {
-    return repository.getGeographicZoneByCodeOrName(searchParam);
+  public List<GeographicZone> getGeographicZonesByCodeOrName(String searchParam) {
+    return repository.getGeographicZonesByCodeOrName(searchParam);
   }
 
-  public Integer getGeographicZoneCountBy(String searchParam) {
-    return repository.getGeographicZoneCountBy(searchParam);
+  public Integer getGeographicZonesCountBy(String searchParam) {
+    return repository.getGeographicZonesCountBy(searchParam);
   }
 }

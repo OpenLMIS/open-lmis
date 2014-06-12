@@ -31,7 +31,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -60,7 +59,7 @@ public class FacilityController extends BaseController {
   private ProgramService programService;
 
   @RequestMapping(value = "/facilities", method = GET, headers = ACCEPT_JSON)
-  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_FACILITY')")
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_FACILITY, MANAGE_USER')")
   public List<Facility> get(@RequestParam(value = "searchParam", required = false) String searchParam,
                             @RequestParam(value = "virtualFacility", required = false) Boolean virtualFacility) {
     if (searchParam != null) {
@@ -71,19 +70,18 @@ public class FacilityController extends BaseController {
   }
 
   @RequestMapping(value = "/filter-facilities", method = GET, headers = ACCEPT_JSON)
-  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_FACILITY')")
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_FACILITY, MANAGE_SUPERVISORY_NODE, MANAGE_REQUISITION_GROUP, MANAGE_SUPPLY_LINE')")
   public ResponseEntity<OpenLmisResponse> getFilteredFacilities(@RequestParam(value = "searchParam", required = false) String searchParam,
-                                              @Value("${facility.search.limit}") String facilitySearchLimit) {
-    List<Facility> facilities = new ArrayList<>();
-    if (searchParam != null) {
-      Integer count = facilityService.getCountOfEnabledFacilities(searchParam);
-      if (count <= Integer.parseInt(facilitySearchLimit)) {
-        facilities = facilityService.getEnabledFacilities(searchParam);
-      } else {
-        return OpenLmisResponse.response("message", "too.many.results.found");
-      }
+                                                                @RequestParam(value = "facilityTypeId", required = false) Long facilityTypeId,
+                                                                @RequestParam(value = "geoZoneId", required = false) Long geoZoneId,
+                                                                @Value("${search.results.limit}") String facilitySearchLimit) {
+    Integer count = facilityService.getCountOfEnabledFacilities(searchParam, facilityTypeId, geoZoneId);
+    if (count <= Integer.parseInt(facilitySearchLimit)) {
+      List<Facility> facilities = facilityService.getEnabledFacilities(searchParam, facilityTypeId, geoZoneId);
+      return OpenLmisResponse.response("facilityList", facilities);
+    } else {
+      return OpenLmisResponse.response("message", "too.many.results.found");
     }
-    return OpenLmisResponse.response("facilityList", facilities);
   }
 
   @RequestMapping(value = "/user/facilities", method = GET)
@@ -102,14 +100,14 @@ public class FacilityController extends BaseController {
   }
 
   @RequestMapping(value = "/facilities/{id}", method = GET, headers = ACCEPT_JSON)
-  @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'MANAGE_FACILITY')")
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'MANAGE_FACILITY, MANAGE_USER')")
   public ResponseEntity<OpenLmisResponse> getFacility(@PathVariable(value = "id") Long id) {
     return response("facility", facilityService.getById(id));
   }
 
   @RequestMapping(value = "/create/requisition/supervised/{programId}/facilities.json", method = GET)
-  public ResponseEntity<ModelMap> getUserSupervisedFacilitiesSupportingProgram(@PathVariable(
-    value = "programId") Long programId, HttpServletRequest request) {
+  public ResponseEntity<ModelMap> getUserSupervisedFacilitiesSupportingProgram(@PathVariable(value = "programId") Long programId,
+                                                                               HttpServletRequest request) {
     ModelMap modelMap = new ModelMap();
     Long userId = loggedInUserId(request);
     List<Facility> facilities = facilityService.getUserSupervisedFacilities(userId, programId, CREATE_REQUISITION,
@@ -136,7 +134,7 @@ public class FacilityController extends BaseController {
 
   @RequestMapping(value = "/facilities/{id}", method = PUT, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_FACILITY')")
-  public ResponseEntity<OpenLmisResponse> update(@PathVariable("id") long id,
+  public ResponseEntity<OpenLmisResponse> update(@PathVariable("id") Long id,
                                                  @RequestBody Facility facility,
                                                  HttpServletRequest request) {
     facility.setId(id);
@@ -167,15 +165,15 @@ public class FacilityController extends BaseController {
     facilityService.updateEnabledAndActiveFor(facilityToBeDeleted);
     Facility deletedFacility = facilityService.getById(facilityId);
 
-    String successMessage = messageService.message("disable.facility.success", deletedFacility.getName(),
-      deletedFacility.getCode());
+    String successMessage = messageService.message("disable.facility.success", deletedFacility.getName(), deletedFacility.getCode());
     OpenLmisResponse response = new OpenLmisResponse("facility", deletedFacility);
     return response.successEntity(successMessage);
   }
 
   @RequestMapping(value = "/facilities/{id}/restore", method = PUT, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_FACILITY')")
-  public ResponseEntity<OpenLmisResponse> restore(HttpServletRequest request, @PathVariable("id") long facilityId) {
+  public ResponseEntity<OpenLmisResponse> restore(HttpServletRequest request,
+                                                  @PathVariable("id") Long facilityId) {
     Facility facilityToBeDeleted = createFacilityToBeRestored(facilityId, loggedInUserId(request));
 
     facilityService.updateEnabledAndActiveFor(facilityToBeDeleted);
@@ -189,13 +187,10 @@ public class FacilityController extends BaseController {
     return response.successEntity(successMessage);
   }
 
-  @RequestMapping(value = "/deliveryZones/{deliveryZoneId}/programs/{programId}/facilities", method = GET,
-    headers = ACCEPT_JSON)
+  @RequestMapping(value = "/deliveryZones/{deliveryZoneId}/programs/{programId}/facilities", method = GET, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_DISTRIBUTION')")
-  public ResponseEntity<OpenLmisResponse> getFacilitiesForDeliveryZoneAndProgram(@PathVariable(
-    "deliveryZoneId") Long deliveryZoneId,
-                                                                                 @PathVariable(
-                                                                                   "programId") Long programId) {
+  public ResponseEntity<OpenLmisResponse> getFacilitiesForDeliveryZoneAndProgram(@PathVariable("deliveryZoneId") Long deliveryZoneId,
+                                                                                 @PathVariable("programId") Long programId) {
     List<Facility> facilities = facilityService.getAllForDeliveryZoneAndProgram(deliveryZoneId, programId);
     return response("facilities", Facility.filterForActiveProducts(facilities));
   }
@@ -204,12 +199,11 @@ public class FacilityController extends BaseController {
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_USER')")
   public ResponseEntity<OpenLmisResponse> getEnabledWarehouses() {
     List<Facility> enabledWarehouses = facilityService.getEnabledWarehouses();
-
     return response("enabledWarehouses", enabledWarehouses);
   }
 
   @RequestMapping(value = "/facility-types", method = GET, headers = ACCEPT_JSON)
-  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_FACILITY')")
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_FACILITY, MANAGE_SUPERVISORY_NODE, MANAGE_REQUISITION_GROUP, MANAGE_SUPPLY_LINE, MANAGE_FACILITY_APPROVED_PRODUCT')")
   public List<FacilityType> getFacilityTypes() {
     return facilityService.getAllTypes();
   }

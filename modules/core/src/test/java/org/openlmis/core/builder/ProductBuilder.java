@@ -23,8 +23,10 @@ import static com.natpryce.makeiteasy.Property.newProperty;
 public class ProductBuilder {
 
   public static final String PRODUCT_CODE = "P999";
+  public static final String PRIMARY_NAME = "Primary Name";
 
   public static final Property<Product, String> code = newProperty();
+  public static final Property<Product, String> primaryName = newProperty();
   public static final Property<Product, Boolean> fullSupply = newProperty();
   public static final Property<Product, Boolean> active = newProperty();
 
@@ -36,6 +38,7 @@ public class ProductBuilder {
       product.setCode(lookup.valueOf(code, PRODUCT_CODE));
       product.setFullSupply(lookup.valueOf(fullSupply, true));
       product.setActive(lookup.valueOf(active, true));
+      product.setPrimaryName(lookup.valueOf(primaryName, PRIMARY_NAME));
       product.setAlternateItemCode("alternateItemCode");
       product.setManufacturer("Glaxo and Smith");
       product.setManufacturerCode("manufacturerCode");
@@ -43,14 +46,12 @@ public class ProductBuilder {
       product.setMohBarCode("mohBarCode");
       product.setGtin("gtin");
       product.setType("antibiotic");
-      product.setPrimaryName("Primary Name");
       product.setFullName("TDF/FTC/EFV");
       product.setGenericName("Generic - TDF/FTC/EFV");
       product.setAlternateName("Alt - TDF/FTC/EFV");
       product.setDescription("is a med");
       product.setStrength("strength");
-      DosageUnit dosageUnit = new DosageUnit();
-      dosageUnit.setCode("mg");
+      DosageUnit dosageUnit = new DosageUnit("mg", 1);
       dosageUnit.setId(1L);
       product.setDosageUnit(dosageUnit);
       product.setDispensingUnit("Strip");

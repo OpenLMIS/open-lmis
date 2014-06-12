@@ -38,13 +38,13 @@ describe("Requisition Group Search Controller", function () {
     expect(scope.pagination).toEqual(pagination);
     expect(scope.currentPage).toEqual(1);
     expect(scope.showResults).toEqual(true);
-    expect(scope.resultCount).toEqual(100);
+    expect(scope.totalItems).toEqual(100);
   });
 
   it('should clear search param and result list', function () {
     var requisitionGroup = {"code": "N1", "name": "Node 1"};
     scope.query = "query";
-    scope.resultCount = 100;
+    scope.totalItems = 100;
     scope.requisitionGroupList = [requisitionGroup];
     scope.showResults = true;
 
@@ -52,7 +52,7 @@ describe("Requisition Group Search Controller", function () {
 
     expect(scope.showResults).toEqual(false);
     expect(scope.query).toEqual("");
-    expect(scope.resultCount).toEqual(0);
+    expect(scope.totalItems).toEqual(0);
     expect(scope.requisitionGroupList).toEqual([]);
   });
 

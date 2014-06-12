@@ -99,11 +99,11 @@ public class GeographicZoneRepository {
     return mapper.getTotalSearchResultCount(param);
   }
 
-  public List<GeographicZone> getGeographicZoneByCodeOrName(String searchParam) {
-    return mapper.getGeographicZoneByCodeOrName(searchParam);
+  public List<GeographicZone> getGeographicZonesByCodeOrName(String searchParam) {
+    return mapper.getGeographicZonesByCodeOrName(searchParam);
   }
 
-  public Integer getGeographicZoneCountBy(String searchParam) {
-    return mapper.getGeographicZoneCountBy(searchParam);
+  public Integer getGeographicZonesCountBy(String searchParam) {
+    return mapper.getGeographicZonesCountBy(searchParam);
   }
 }

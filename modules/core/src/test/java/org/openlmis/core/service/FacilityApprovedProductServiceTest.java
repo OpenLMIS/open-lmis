@@ -10,16 +10,16 @@
 
 package org.openlmis.core.service;
 
-import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.openlmis.core.domain.FacilityTypeApprovedProduct;
 import org.openlmis.core.domain.FacilityType;
+import org.openlmis.core.domain.FacilityTypeApprovedProduct;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.FacilityApprovedProductRepository;
 import org.openlmis.db.categories.UnitTests;
@@ -54,23 +54,15 @@ public class FacilityApprovedProductServiceTest {
   @Rule
   public ExpectedException expectedException = none();
 
+  @InjectMocks
   FacilityApprovedProductService facilityApprovedProductService;
-
-  @Before
-  public void setup() {
-    facilityApprovedProductService = new FacilityApprovedProductService(facilityApprovedProductRepository, programService, productService, programProductService, facilityService);
-  }
-
 
   @Test
   public void shouldSaveFacilityApprovedProduct() throws Exception {
-
     FacilityTypeApprovedProduct facilityTypeApprovedProduct = make(a(defaultFacilityApprovedProduct));
-
     Long programId = 45L;
     Long productId = 10L;
     Long programProductId = 100L;
-
     when(programService.getIdForCode(defaultProgramCode)).thenReturn(programId);
     when(productService.getIdForCode(defaultProductCode)).thenReturn(productId);
     when(programProductService.getIdByProgramIdAndProductId(programId, productId)).thenReturn(100L);

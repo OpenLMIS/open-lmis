@@ -14,7 +14,6 @@ import org.openlmis.UiUtils.TestWebDriver;
 import org.openlmis.pageobjects.edi.*;
 
 public class PageObjectFactory {
-
   private static ManageFacilityPage instanceOfManageFacilityPage;
   private static DistributionPage instanceOfDistributionPage;
   private static FacilityListPage instanceOfFacilityListPage;
@@ -48,12 +47,13 @@ public class PageObjectFactory {
   private static ReportPage instanceOfReportPage;
   private static ManageSchedulePage instanceOfManageSchedulePage;
   private static TemplateConfigPage instanceOfTemplateConfigPage;
-  private static ManageGeographicZonesPage instanceOfManageGeographicZonesPage;
+  private static GeographicZonePage instanceOfGeographicZonePage;
   private static ConfigureOrderNumberPage instanceOfConfigureOrderNumberPage;
   private static PeriodsPage instanceOfPeriodsPage;
   private static SupervisoryNodesPage instanceOfSupervisoryNodesPage;
   private static RequisitionGroupPage instanceOfRequisitionGroupPage;
   private static RequisitionPage instanceOfRequisitionPage;
+  private static SupplyLinePage instanceOfSupplyLinePage;
 
   public static ManageFacilityPage getManageFacilityPage(TestWebDriver testWebDriver) {
     if (instanceOfManageFacilityPage == null) {
@@ -62,11 +62,11 @@ public class PageObjectFactory {
     return instanceOfManageFacilityPage;
   }
 
-  public static ManageGeographicZonesPage getManageGeographicZonesPage(TestWebDriver testWebDriver) {
-    if (instanceOfManageGeographicZonesPage == null) {
-      instanceOfManageGeographicZonesPage = new ManageGeographicZonesPage(testWebDriver);
+  public static GeographicZonePage getGeographicZonePage(TestWebDriver testWebDriver) {
+    if (instanceOfGeographicZonePage == null) {
+      instanceOfGeographicZonePage = new GeographicZonePage(testWebDriver);
     }
-    return instanceOfManageGeographicZonesPage;
+    return instanceOfGeographicZonePage;
   }
 
   public static DistributionPage getDistributionPage(TestWebDriver testWebDriver) {
@@ -328,5 +328,12 @@ public class PageObjectFactory {
       instanceOfRequisitionPage = new RequisitionPage(testWebDriver);
     }
     return instanceOfRequisitionPage;
+  }
+
+  public static SupplyLinePage getSupplyLinePage(TestWebDriver testWebDriver) {
+    if (instanceOfSupplyLinePage == null) {
+      instanceOfSupplyLinePage = new SupplyLinePage(testWebDriver);
+    }
+    return instanceOfSupplyLinePage;
   }
 }

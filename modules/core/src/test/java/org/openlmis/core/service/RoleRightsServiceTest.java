@@ -56,13 +56,13 @@ public class RoleRightsServiceTest {
   private FacilityService facilityService;
 
   @Before
-  public void setUp() throws Exception {
+  public void setUp() {
     role = new Role("role name", "role description");
     roleRightsService = new RoleRightsService(roleRightsRepository, supervisoryNodeService, facilityService);
   }
 
   @Test
-  public void shouldGetAllRightsByDisplayOrder() throws Exception {
+  public void shouldGetAllRightsByDisplayOrder() {
     List<Right> allRights = new ArrayList<>(new RoleRightsService().getAllRights());
     List<Right> alphabeticalRights = asList(CONFIGURE_RNR,
       MANAGE_FACILITY,
@@ -87,13 +87,15 @@ public class RoleRightsServiceTest {
       UPLOADS,
       UPLOAD_REPORT,
       MANAGE_GEOGRAPHIC_ZONE,
-      MANAGE_REQUISITION_GROUP);
+      MANAGE_REQUISITION_GROUP,
+      MANAGE_SUPPLY_LINE,
+      MANAGE_FACILITY_APPROVED_PRODUCT);
 
     assertThat(allRights, is(alphabeticalRights));
   }
 
   @Test
-  public void shouldCheckAdminRightHasIsAdminTrue() throws Exception {
+  public void shouldCheckAdminRightHasIsAdminTrue() {
     assertEquals(RightType.ADMIN, UPLOADS.getType());
     assertEquals(RightType.ADMIN, MANAGE_FACILITY.getType());
     assertEquals(RightType.ADMIN, MANAGE_PROGRAM_PRODUCT.getType());
@@ -105,7 +107,7 @@ public class RoleRightsServiceTest {
   }
 
   @Test
-  public void shouldCheckTransactionalRightIsNotAdminRight() throws Exception {
+  public void shouldCheckTransactionalRightIsNotAdminRight() {
     assertEquals(RightType.REQUISITION, CREATE_REQUISITION.getType());
     assertEquals(RightType.REQUISITION, AUTHORIZE_REQUISITION.getType());
     assertEquals(RightType.REQUISITION, APPROVE_REQUISITION.getType());
@@ -114,14 +116,14 @@ public class RoleRightsServiceTest {
   }
 
   @Test
-  public void shouldSaveRole() throws Exception {
+  public void shouldSaveRole() {
     role.setRights(new HashSet<>(asList(CREATE_REQUISITION, VIEW_REQUISITION)));
     roleRightsService.saveRole(role);
     verify(roleRightsRepository).createRole(role);
   }
 
   @Test
-  public void shouldNotSaveRoleWithoutAnyRights() throws Exception {
+  public void shouldNotSaveRoleWithoutAnyRights() {
     Role role = mock(Role.class);
     doThrow(new DataException("error-message")).when(role).validate();
     expectedEx.expect(DataException.class);
@@ -131,7 +133,7 @@ public class RoleRightsServiceTest {
   }
 
   @Test
-  public void shouldGetRoleById() throws Exception {
+  public void shouldGetRoleById() {
     Role role = new Role();
     Long roleId = 1L;
     when(roleRightsRepository.getRole(roleId)).thenReturn(role);
@@ -149,7 +151,7 @@ public class RoleRightsServiceTest {
   }
 
   @Test
-  public void shouldGetRightsForAUserOnSupervisedFacilityAndProgram() throws Exception {
+  public void shouldGetRightsForAUserOnSupervisedFacilityAndProgram() {
     Long userId = 1L;
     Facility facility = new Facility(2L);
     Program program = new Program(3L);
@@ -159,8 +161,7 @@ public class RoleRightsServiceTest {
 
     when(supervisoryNodeService.getFor(facility, program)).thenReturn(supervisoryNode);
     when(supervisoryNodeService.getAllParentSupervisoryNodesInHierarchy(supervisoryNode)).thenReturn(supervisoryNodes);
-    when(
-      roleRightsRepository.getRightsForUserOnSupervisoryNodeAndProgram(userId, supervisoryNodes, program)).thenReturn(
+    when(roleRightsRepository.getRightsForUserOnSupervisoryNodeAndProgram(userId, supervisoryNodes, program)).thenReturn(
       expected);
 
     Set<Right> result = roleRightsService.getRightsForUserAndFacilityProgram(userId, facility, program);
@@ -170,7 +171,7 @@ public class RoleRightsServiceTest {
   }
 
   @Test
-  public void shouldGetRightsForAUserOnHomeFacilityAndProgram() throws Exception {
+  public void shouldGetRightsForAUserOnHomeFacilityAndProgram() {
     Long userId = 1L;
     Facility facility = new Facility(2L);
     Program program = new Program(3L);
@@ -186,7 +187,7 @@ public class RoleRightsServiceTest {
   }
 
   @Test
-  public void shouldGetAllRolesMapByRightType() throws Exception {
+  public void shouldGetAllRolesMapByRightType() {
     List<Role> allRoles = new ArrayList<>();
     Role role1 = new Role();
     role1.setId(1L);

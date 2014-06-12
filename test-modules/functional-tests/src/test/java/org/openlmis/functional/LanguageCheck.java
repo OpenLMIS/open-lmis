@@ -39,6 +39,7 @@ public class LanguageCheck extends TestCaseHelper {
   @Test(groups = {"admin"})
   public void changeLanguageAsEnglishOnLoginPage() {
     loginPage.setLangAsEnglish();
+    testWebDriver.sleep(1000);
     verifyColorOfTextAsGray(loginPage.getEnglishColor());
     verifyPageIdentifierLabelOnLoginPage("Sign In");
   }
@@ -46,6 +47,7 @@ public class LanguageCheck extends TestCaseHelper {
   @Test(groups = {"admin"})
   public void changeLanguageAsPortugueseOnLoginPage() {
     loginPage.setLangAsPortuguese();
+    testWebDriver.sleep(1000);
     verifyColorOfTextAsGray(loginPage.getPortugueseColor());
     verifyPageIdentifierLabelOnLoginPage("Entrar");
     loginPage.setLangAsEnglish();
@@ -54,9 +56,10 @@ public class LanguageCheck extends TestCaseHelper {
   @Test(groups = {"admin"})
   public void changeLanguageAsPortugueseBeforeForgotPasswordPage() {
     loginPage.setLangAsPortuguese();
+    testWebDriver.sleep(1000);
     loginPage.clickForgotPasswordLink();
+    testWebDriver.sleep(1000);
     verifyColorOfTextAsGray(loginPage.getPortugueseColor());
-    testWebDriver.setImplicitWait(10);
     verifyPageIdentifierLabelOnForgotPasswordPage("Submeter");
     loginPage.setLangAsEnglish();
   }
@@ -64,7 +67,9 @@ public class LanguageCheck extends TestCaseHelper {
   @Test(groups = {"admin"})
   public void changeLanguageAsEnglishBeforeForgotPasswordPage() {
     loginPage.setLangAsEnglish();
+    testWebDriver.sleep(1000);
     loginPage.clickForgotPasswordLink();
+    testWebDriver.sleep(1000);
     verifyColorOfTextAsGray(loginPage.getEnglishColor());
     verifyPageIdentifierLabelOnForgotPasswordPage("Submit");
   }
@@ -72,7 +77,9 @@ public class LanguageCheck extends TestCaseHelper {
   @Test(groups = {"admin"})
   public void changeLanguageAsPortugueseOnForgotPasswordPage() {
     loginPage.clickForgotPasswordLink();
+    testWebDriver.sleep(1000);
     loginPage.setLangAsPortuguese();
+    testWebDriver.sleep(1000);
     verifyColorOfTextAsGray(loginPage.getPortugueseColor());
     verifyPageIdentifierLabelOnForgotPasswordPage("Submeter");
     loginPage.setLangAsEnglish();
@@ -94,8 +101,10 @@ public class LanguageCheck extends TestCaseHelper {
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function")
   public void signInAsAdmin123AndEnglish(String user) {
     loginPage.setLangAsEnglish();
+    testWebDriver.sleep(1000);
     verifyColorOfTextAsGray(loginPage.getEnglishColor());
     HomePage homePage = loginPage.loginAs(user, user);
+    testWebDriver.sleep(1000);
     verifyColorOfTextAsGray(loginPage.getEnglishColor());
     assertTrue(homePage.getLogoutLink().isDisplayed());
   }

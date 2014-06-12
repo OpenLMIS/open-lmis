@@ -199,7 +199,7 @@ public class UserServiceTest {
     RoleAssignment adminRole = new RoleAssignment();
     when(roleAssignmentService.getAdminRole(userId)).thenReturn(adminRole);
 
-    User returnedUser = userService.getById(userId);
+    User returnedUser = userService.getUserWithRolesById(userId);
 
     assertThat(returnedUser, is(user));
     assertThat(returnedUser.getHomeFacilityRoles(), is(homeFacilityRoles));

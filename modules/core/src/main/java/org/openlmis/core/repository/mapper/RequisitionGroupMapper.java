@@ -11,8 +11,8 @@
 package org.openlmis.core.repository.mapper;
 
 import org.apache.ibatis.annotations.*;
+import org.apache.ibatis.session.RowBounds;
 import org.openlmis.core.domain.Facility;
-import org.openlmis.core.domain.Pagination;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.RequisitionGroup;
 import org.springframework.stereotype.Repository;
@@ -29,7 +29,7 @@ public interface RequisitionGroupMapper {
 
   @Insert("INSERT INTO requisition_groups" +
     "(code, name, description, supervisoryNodeId, createdBy, modifiedBy, modifiedDate) " +
-    "VALUES (#{code}, #{name}, #{description}, #{supervisoryNode.id}, #{createdBy}, #{modifiedBy}, #{modifiedDate}) ")
+    "VALUES (#{code}, #{name}, #{description}, #{supervisoryNode.id}, #{createdBy}, #{modifiedBy}, COALESCE(#{modifiedDate}, CURRENT_TIMESTAMP))")
   @Options(useGeneratedKeys = true)
   Integer insert(RequisitionGroup requisitionGroup);
 
@@ -72,7 +72,7 @@ public interface RequisitionGroupMapper {
     "WHERE RG.id = RGM.requisitionGroupId AND F.enabled = true GROUP BY requisitionGroupId) AS memberCount",
     "FROM requisition_groups RG LEFT JOIN supervisory_nodes SN ON SN.id = RG.supervisoryNodeId",
     "WHERE LOWER(RG.name) LIKE '%'|| LOWER(#{searchParam}) ||'%'",
-    "ORDER BY LOWER(SN.name), LOWER(RG.Name) NULLS LAST LIMIT #{pagination.pageSize} OFFSET #{pagination.offset}"})
+    "ORDER BY LOWER(SN.name), LOWER(RG.Name) NULLS LAST"})
   @Results(value = {
     @Result(property = "supervisoryNode.name", column = "supervisoryNodeName"),
     @Result(property = "id", column = "requisitionGroupId"),
@@ -80,14 +80,14 @@ public interface RequisitionGroupMapper {
     @Result(property = "code", column = "requisitionGroupCode"),
     @Result(property = "memberCount", column = "memberCount")
   })
-  List<RequisitionGroup> searchByGroupName(@Param(value = "searchParam") String searchParam, @Param(value = "pagination") Pagination pagination);
+  List<RequisitionGroup> searchByGroupName(@Param(value = "searchParam") String searchParam, RowBounds rowBounds);
 
   @Select({"SELECT RG.id AS requisitionGroupId, RG.code AS requisitionGroupCode, RG.name AS requisitionGroupName, SN.name AS supervisoryNodeName,",
     "(SELECT COUNT(*) FROM requisition_group_members RGM INNER JOIN facilities F ON F.id = RGM.facilityId",
     "WHERE RG.id = RGM.requisitionGroupId AND F.enabled = true GROUP BY requisitionGroupId) AS memberCount",
     "FROM requisition_groups RG INNER JOIN supervisory_nodes SN ON SN.id = RG.supervisoryNodeId",
     "WHERE LOWER(SN.name) LIKE '%'|| LOWER(#{searchParam}) ||'%'",
-    "ORDER BY LOWER(SN.name), LOWER(RG.Name) LIMIT #{pagination.pageSize} OFFSET #{pagination.offset}"})
+    "ORDER BY LOWER(SN.name), LOWER(RG.Name)"})
   @Results(value = {
     @Result(property = "supervisoryNode.name", column = "supervisoryNodeName"),
     @Result(property = "id", column = "requisitionGroupId"),
@@ -95,7 +95,7 @@ public interface RequisitionGroupMapper {
     @Result(property = "code", column = "requisitionGroupCode"),
     @Result(property = "memberCount", column = "memberCount")
   })
-  List<RequisitionGroup> searchByNodeName(@Param(value = "searchParam") String searchParam, @Param(value = "pagination") Pagination pagination);
+  List<RequisitionGroup> searchByNodeName(@Param(value = "searchParam") String searchParam, RowBounds rowBounds);
 
   @Select({"SELECT COUNT(*) FROM requisition_groups RG WHERE LOWER(RG.name) LIKE '%'|| LOWER(#{searchParam}) ||'%'"})
   Integer getTotalRecordsForSearchOnGroupName(String searchParam);

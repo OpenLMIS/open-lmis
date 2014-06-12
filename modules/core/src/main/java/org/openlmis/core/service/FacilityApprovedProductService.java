@@ -13,6 +13,7 @@ package org.openlmis.core.service;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.FacilityType;
 import org.openlmis.core.domain.FacilityTypeApprovedProduct;
+import org.openlmis.core.domain.Pagination;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.FacilityApprovedProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,22 +31,20 @@ public class FacilityApprovedProductService {
 
   public static final String FACILITY_TYPE_DOES_NOT_EXIST = "facilityType.invalid";
 
+  @Autowired
   private FacilityApprovedProductRepository repository;
-  private ProgramService programService;
-  private ProductService productService;
-  private ProgramProductService programProductService;
-  private FacilityService facilityService;
 
   @Autowired
-  public FacilityApprovedProductService(FacilityApprovedProductRepository repository,
-                                        ProgramService programService, ProductService productService,
-                                        ProgramProductService programProductService, FacilityService facilityService) {
-    this.repository = repository;
-    this.programService = programService;
-    this.productService = productService;
-    this.programProductService = programProductService;
-    this.facilityService = facilityService;
-  }
+  private ProgramService programService;
+
+  @Autowired
+  private ProductService productService;
+
+  @Autowired
+  private ProgramProductService programProductService;
+
+  @Autowired
+  private FacilityService facilityService;
 
   public List<FacilityTypeApprovedProduct> getFullSupplyFacilityApprovedProductByFacilityAndProgram(Long facilityId, Long programId) {
     return repository.getFullSupplyProductsByFacilityAndProgram(facilityId, programId);
@@ -72,6 +71,14 @@ public class FacilityApprovedProductService {
   public FacilityTypeApprovedProduct getFacilityApprovedProductByProgramProductAndFacilityTypeCode(FacilityTypeApprovedProduct facilityTypeApprovedProduct) {
     fillProgramProductIds(facilityTypeApprovedProduct);
     return repository.getFacilityApprovedProductByProgramProductAndFacilityTypeCode(facilityTypeApprovedProduct);
+  }
+
+  public List<FacilityTypeApprovedProduct> getAllBy(Long facilityTypeId, Long programId, String searchParam, Pagination pagination) {
+    return repository.getAllBy(facilityTypeId, programId, searchParam, pagination);
+  }
+
+  public Integer getTotalSearchResultCount(Long facilityTypeId, Long programId, String searchParam) {
+    return repository.getTotalSearchResultCount(facilityTypeId, programId, searchParam);
   }
 
   private void fillProgramProductIds(FacilityTypeApprovedProduct facilityTypeApprovedProduct) {

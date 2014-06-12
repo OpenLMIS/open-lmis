@@ -357,11 +357,13 @@ public class RequisitionPage extends Page {
   public void clickPrintButton() {
     testWebDriver.waitForElementToAppear(printButtonOnHeader);
     printButtonOnHeader.click();
+    testWebDriver.sleep(1000);
   }
 
   public void clickFullViewPrintButton() {
     testWebDriver.waitForElementToAppear(printButtonFullView);
     printButtonFullView.click();
+    testWebDriver.sleep(1000);
   }
 
   public void clickResizeViewButton() {

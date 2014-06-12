@@ -8,12 +8,12 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
  */
 
-function SupervisoryNodeController($scope, $location, supervisoryNode, ParentSupervisoryNodes, SupervisoryNodes,Facilities) {
+function SupervisoryNodeController($scope, $location, supervisoryNode, ParentSupervisoryNodes, SupervisoryNodes) {
   $scope.supervisoryNode = supervisoryNode || {};
 
   var reset = function () {
     $scope.query = undefined;
-    $scope.resultCount = undefined;
+    $scope.nodeResultCount = undefined;
     $scope.filteredFacilities = undefined;
     $scope.previousQuery = undefined;
   };
@@ -23,10 +23,6 @@ function SupervisoryNodeController($scope, $location, supervisoryNode, ParentSup
       return $scope.query.substr(0, 3) !== $scope.previousQuery.substr(0, 3);
     }
     return true;
-  };
-
-  $scope.getSearchResults = function (query, successCallBack) {
-    Facilities.get({"searchParam": query}, successCallBack, {});
   };
 
   $scope.associate = function (facility) {
@@ -43,14 +39,14 @@ function SupervisoryNodeController($scope, $location, supervisoryNode, ParentSup
         });
         $scope.filteredNodes = $scope.parentNodes;
         $scope.previousQuery = $scope.query;
-        $scope.resultCount = $scope.filteredNodes.length;
+        $scope.nodeResultCount = $scope.filteredNodes.length;
       });
     }
     else {
       $scope.filteredNodes = _.filter($scope.parentNodes, function (node) {
         return node.name.toLowerCase().indexOf($scope.query.toLowerCase()) !== -1;
       });
-      $scope.resultCount = $scope.filteredNodes.length;
+      $scope.nodeResultCount = $scope.filteredNodes.length;
     }
   };
 

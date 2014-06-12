@@ -39,6 +39,10 @@ services.factory("Facilities", function ($resource) {
   return $resource('/filter-facilities.json', {}, {});
 });
 
+services.factory("FacilityTypes", function ($resource) {
+  return $resource('/facility-types.json', {}, {});
+});
+
 services.factory('UserContext', function ($resource) {
   return $resource('/user-context.json', {}, {});
 });
@@ -256,13 +260,11 @@ services.factory('ProgramRegimenTemplate', function ($resource) {
 });
 
 services.factory('GeographicZones', function ($resource) {
-  var resource = $resource('/geographicZones/:id.json', {id: '@id'}, update);
+  return $resource('/geographicZones/:id.json', {id: '@id'}, update);
+});
 
-  resource.restore = function (pathParams, success, error) {
-    $resource('/geographicZones/:id.json', {}, update).update(pathParams, {}, success, error);
-  };
-
-  return resource;
+services.factory("GeographicZoneSearch", function ($resource) {
+  return $resource('/filtered-geographicZones.json', {}, {});
 });
 
 services.factory('Distributions', function ($resource) {
@@ -326,6 +328,10 @@ services.factory('SupervisoryNodes', function ($resource) {
   return $resource('/supervisory-nodes/:id.json', {}, update);
 });
 
+services.factory('SupplyLines', function ($resource) {
+  return $resource('/supplyLines/:id.json', {}, update);
+});
+
 services.factory('ParentSupervisoryNodes', function ($resource) {
   return $resource('/search-supervisory-nodes.json', {}, {});
 });
@@ -336,4 +342,16 @@ services.factory('RequisitionGroups', function ($resource) {
 
 services.factory('SupervisoryNodesSearch', function ($resource) {
   return $resource('/search-supervisory-nodes.json', {}, {});
+});
+
+services.factory('TopLevelSupervisoryNodes', function ($resource) {
+  return $resource('/topLevelSupervisoryNodes.json', {}, {});
+});
+
+services.factory('SupplyLinesSearch', function ($resource) {
+  return $resource('/supplyLines/search.json', {}, {});
+});
+
+services.factory('FacilityApprovedProductsSearch', function ($resource) {
+  return $resource('/facilityApprovedProducts.json', {}, {});
 });

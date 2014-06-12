@@ -18,6 +18,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * FacilityMapper maps the Facility entity to corresponding representation in database. Apart from basic CRUD operations
@@ -76,18 +77,25 @@ public interface FacilityMapper {
   @Results(value = {
     @Result(property = "geographicZone", column = "geographicZoneId", javaType = Long.class,
       one = @One(select = "org.openlmis.core.repository.mapper.GeographicZoneMapper.getWithParentById")),
-    @Result(property = "facilityType", column = "typeId", javaType = Long.class, one = @One(select = "getFacilityTypeById")),
-    @Result(property = "operatedBy", column = "operatedById", javaType = Long.class, one = @One(select = "getFacilityOperatorById"))
+    @Result(property = "facilityType", column = "typeId", javaType = Long.class,
+      one = @One(select = "getFacilityTypeById")),
+    @Result(property = "operatedBy", column = "operatedById", javaType = Long.class,
+      one = @One(select = "getFacilityOperatorById"))
   })
   Facility getById(Long id);
+
+  @Select("SELECT * FROM facilities WHERE id = #{id}")
+  Facility getLWById(Long id);
 
   @Select("SELECT * FROM facilities WHERE LOWER(code)=LOWER(#{code})")
   @Results(value = {
     @Result(property = "id", column = "id"),
     @Result(property = "geographicZone", column = "geographicZoneId", javaType = Long.class,
       one = @One(select = "org.openlmis.core.repository.mapper.GeographicZoneMapper.getWithParentById")),
-    @Result(property = "facilityType", column = "typeId", javaType = Long.class, one = @One(select = "getFacilityTypeById")),
-    @Result(property = "operatedBy", column = "operatedById", javaType = Long.class, one = @One(select = "getFacilityOperatorById")),
+    @Result(property = "facilityType", column = "typeId", javaType = Long.class,
+      one = @One(select = "getFacilityTypeById")),
+    @Result(property = "operatedBy", column = "operatedById", javaType = Long.class,
+      one = @One(select = "getFacilityOperatorById")),
     @Result(property = "supportedPrograms", column = "id", javaType = List.class,
       many = @Many(select = "org.openlmis.core.repository.mapper.ProgramSupportedMapper.getAllByFacilityId"))
   })
@@ -129,10 +137,13 @@ public interface FacilityMapper {
     "AND f.virtualFacility = FALSE ")
   @Results(value = {
     @Result(property = "geographicZone.id", column = "geographicZoneId"),
-    @Result(property = "facilityType", column = "typeId", javaType = Long.class, one = @One(select = "getFacilityTypeById")),
-    @Result(property = "operatedBy", column = "operatedById", javaType = Long.class, one = @One(select = "getFacilityOperatorById"))
+    @Result(property = "facilityType", column = "typeId", javaType = Long.class,
+      one = @One(select = "getFacilityTypeById")),
+    @Result(property = "operatedBy", column = "operatedById", javaType = Long.class,
+      one = @One(select = "getFacilityOperatorById"))
   })
-  List<Facility> getFacilitiesBy(@Param(value = "programId") Long programId, @Param(value = "requisitionGroupIds") String requisitionGroupIds);
+  List<Facility> getFacilitiesBy(@Param(value = "programId") Long programId,
+                                 @Param(value = "requisitionGroupIds") String requisitionGroupIds);
 
   @Select({"SELECT id, code, name FROM facilities WHERE virtualFacility = #{virtualFacility} AND",
     "(LOWER(code) LIKE '%' || LOWER(#{searchParam}) || '%'",
@@ -147,7 +158,6 @@ public interface FacilityMapper {
     "ORDER BY code"})
   List<Facility> searchFacilitiesByCodeOrName(String searchParam);
 
-
   @Select({"SELECT DISTINCT F.* FROM facilities F INNER JOIN users U ON U.facilityId = F.id",
     "INNER JOIN role_assignments RA ON RA.userId = U.id INNER JOIN role_rights RR ON RR.roleId = RA.roleId",
     "WHERE U.id = #{userId} AND RR.rightName = ANY(#{commaSeparatedRights}::VARCHAR[]) AND RA.supervisoryNodeId IS NULL"})
@@ -156,30 +166,35 @@ public interface FacilityMapper {
     @Result(property = "facilityType", column = "typeId", javaType = Long.class, one = @One(select = "getFacilityTypeById")),
     @Result(property = "operatedBy", column = "operatedById", javaType = Long.class, one = @One(select = "getFacilityOperatorById"))
   })
-  Facility getHomeFacilityWithRights(@Param("userId") Long userId, @Param("commaSeparatedRights") String commaSeparatedRights);
+  Facility getHomeFacilityWithRights(@Param("userId") Long userId,
+                                     @Param("commaSeparatedRights") String commaSeparatedRights);
 
   @Select({"SELECT DISTINCT f.* FROM facilities f",
     "INNER JOIN requisition_group_members rgm ON f.id= rgm.facilityId",
     "WHERE rgm.requisitionGroupId = ANY(#{requisitionGroupIds}::INTEGER[])"})
   @Results(value = {
     @Result(property = "geographicZone.id", column = "geographicZoneId"),
-    @Result(property = "facilityType", column = "typeId", javaType = Long.class, one = @One(select = "getFacilityTypeById")),
-    @Result(property = "operatedBy", column = "operatedById", javaType = Long.class, one = @One(select = "getFacilityOperatorById"))
+    @Result(property = "facilityType", column = "typeId", javaType = Long.class,
+      one = @One(select = "getFacilityTypeById")),
+    @Result(property = "operatedBy", column = "operatedById", javaType = Long.class,
+      one = @One(select = "getFacilityOperatorById"))
   })
   List<Facility> getAllInRequisitionGroups(@Param("requisitionGroupIds") String requisitionGroupIds);
 
-  @Select({"SELECT DISTINCT F.geographicZoneId, F.name, F.code, F.id, F.catchmentPopulation FROM facilities F INNER JOIN delivery_zone_members DZM ON F.id = DZM.facilityId",
-    "INNER JOIN programs_supported PS ON PS.facilityId = F.id",
-    "INNER JOIN delivery_zones DZ ON DZ.id = DZM.deliveryZoneId",
-    "INNER JOIN delivery_zone_program_schedules DZPS ON DZPS.deliveryZoneId = DZM.deliveryZoneId",
-    "WHERE DZPS.programId = #{programId} AND F.active = true",
-    "AND PS.programId = #{programId}  AND DZM.deliveryZoneId = #{deliveryZoneId} order by F.name"})
+  @Select(
+    {"SELECT DISTINCT F.geographicZoneId, F.name, F.code, F.id, F.catchmentPopulation FROM facilities F INNER JOIN delivery_zone_members DZM ON F.id = DZM.facilityId",
+      "INNER JOIN programs_supported PS ON PS.facilityId = F.id",
+      "INNER JOIN delivery_zones DZ ON DZ.id = DZM.deliveryZoneId",
+      "INNER JOIN delivery_zone_program_schedules DZPS ON DZPS.deliveryZoneId = DZM.deliveryZoneId",
+      "WHERE DZPS.programId = #{programId} AND F.active = true",
+      "AND PS.programId = #{programId}  AND DZM.deliveryZoneId = #{deliveryZoneId} order by F.name"})
   @Results(value = {
     @Result(property = "id", column = "id"),
     @Result(property = "geographicZone", column = "geographicZoneId", javaType = Long.class,
       one = @One(select = "org.openlmis.core.repository.mapper.GeographicZoneMapper.getWithParentById"))
   })
-  List<Facility> getAllInDeliveryZoneFor(@Param("deliveryZoneId") Long deliveryZoneId, @Param("programId") Long programId);
+  List<Facility> getAllInDeliveryZoneFor(@Param("deliveryZoneId") Long deliveryZoneId,
+                                         @Param("programId") Long programId);
 
   @Select({"SELECT F.id AS id, F.code AS code",
     "FROM facilities F INNER JOIN programs_supported PS ON F.id = PS.facilityId",
@@ -196,7 +211,8 @@ public interface FacilityMapper {
   @Select({"SELECT * FROM facilities WHERE parentFacilityId = #{id}"})
   @Results(value = {
     @Result(property = "geographicZone.id", column = "geographicZoneId"),
-    @Result(property = "facilityType", column = "typeId", javaType = Long.class, one = @One(select = "getFacilityTypeById"))
+    @Result(property = "facilityType", column = "typeId", javaType = Long.class,
+      one = @One(select = "getFacilityTypeById"))
   })
   List<Facility> getChildFacilities(Facility facility);
 
@@ -213,21 +229,54 @@ public interface FacilityMapper {
     "id IN(SELECT DISTINCT(parentFacilityId) FROM facilities)"})
   List<Facility> getAllParentsByModifiedDate(Date modifiedDate);
 
-  @Select({"SELECT COUNT(*) FROM facilities WHERE (LOWER(code) LIKE '%' || LOWER(#{searchParam}) || '%'",
-    "OR LOWER(name) LIKE '%' || LOWER(#{searchParam}) || '%') AND enabled = true"})
-  Integer getCountOfEnabledFacilities(String searchParam);
-
-  @Select({"SELECT F.id AS facilityId, F.name AS facilityName, F.code AS facilityCode, F.enabled as facilityEnabled,",
-    "FT.id AS facilityTypeId, FT.name AS facilityTypeName FROM facilities F INNER JOIN facility_types FT ON F.typeId = FT.id",
-    "WHERE (LOWER(F.code) LIKE '%' || LOWER(#{searchParam}) || '%'",
-    "OR LOWER(F.name) LIKE '%' || LOWER(#{searchParam}) || '%') AND F.enabled = true ORDER BY LOWER(F.code)"})
+  @SelectProvider(type = SelectFacilities.class, method = "getEnabledFacilities")
   @Results(value = {
-    @Result(property = "id", column = "facilityId"),
-    @Result(property = "name", column = "facilityName"),
-    @Result(property = "code", column = "facilityCode"),
-    @Result(property = "enabled", column = "facilityEnabled"),
     @Result(property = "facilityType.id", column = "facilityTypeId"),
     @Result(property = "facilityType.name", column = "facilityTypeName"),
   })
-  List<Facility> getEnabledFacilities(String searchParam);
+  List<Facility> getEnabledFacilities(@Param(value = "searchParam") String searchParam,
+                                      @Param(value = "facilityTypeId") Long facilityTypeId,
+                                      @Param(value = "geoZoneId") Long geoZoneId);
+
+  @SelectProvider(type = SelectFacilities.class, method = "getEnabledFacilitiesCount")
+  Integer getEnabledFacilitiesCount(@Param(value = "searchParam") String searchParam,
+                                    @Param(value = "facilityTypeId") Long facilityTypeId,
+                                    @Param(value = "geoZoneId") Long geoZoneId);
+
+  public class SelectFacilities {
+    @SuppressWarnings(value = "unused")
+    public static String getEnabledFacilitiesCount(Map<String, Object> params) {
+      StringBuilder sql = new StringBuilder();
+      sql.append("SELECT COUNT(*) FROM facilities F WHERE ");
+      return createQuery(sql, params).toString();
+    }
+
+    @SuppressWarnings(value = "unused")
+    public static String getEnabledFacilities(Map<String, Object> params) {
+      StringBuilder sql = new StringBuilder();
+      sql.append(
+        "SELECT F.*, FT.id AS facilityTypeId, FT.name AS facilityTypeName FROM facilities F INNER JOIN facility_types FT ON F.typeId = FT.id WHERE ");
+      sql = createQuery(sql, params);
+      sql.append(" ORDER BY LOWER(F.code)");
+      return sql.toString();
+    }
+
+    private static StringBuilder createQuery(StringBuilder sql, Map<String, Object> params) {
+      String facilityCodeName = (String) params.get("searchParam");
+      Long facilityTypeId = (Long) params.get("facilityTypeId");
+      Long geographicZoneId = (Long) params.get("geoZoneId");
+
+      if (facilityTypeId != null) {
+        sql.append("F.typeId = " + facilityTypeId + " AND ");
+      }
+      if (geographicZoneId != null) {
+        sql.append("F.geographicZoneId =" + geographicZoneId + " AND ");
+      }
+      sql.append(
+        "(LOWER(F.code) LIKE LOWER('%" + facilityCodeName + "%') OR LOWER(F.name) LIKE LOWER('%" + facilityCodeName + "%'))");
+      sql.append(" AND F.enabled = true");
+
+      return sql;
+    }
+  }
 }

@@ -27,7 +27,6 @@ public class RightTest {
 
   @Test
   public void shouldReturnViewRequisitionAsDependentRight() throws Exception {
-
     Right[] rights = {CREATE_REQUISITION, AUTHORIZE_REQUISITION, APPROVE_REQUISITION};
 
     for (Right right : rights) {
@@ -38,7 +37,7 @@ public class RightTest {
   }
 
   @Test
-  public void shouldReturnEmptyListWhenNoDfaultRightIsAvailable() throws Exception {
+  public void shouldReturnEmptyListWhenNoDefaultRightIsAvailable() throws Exception {
     Right[] rights = {CONFIGURE_RNR, MANAGE_FACILITY, MANAGE_ROLE, MANAGE_SCHEDULE, MANAGE_USER, UPLOADS, VIEW_REQUISITION};
 
     for (Right right : rights) {

@@ -12,7 +12,8 @@ app.directive('slider', function ($timeout) {
   return {
     restrict: 'A',
     link: function (scope, element, attrs) {
-      scope.$parent.showSlider = false;
+
+      scope.$parent.$parent.showSlider = false;
 
       var progressFunc = function () {
         var bufferHeight = 200;
@@ -28,13 +29,13 @@ app.directive('slider', function ($timeout) {
         }
       };
 
-      var openSearchResultsBox = function () {
-        if (scope.resultCount >= 0) {
-          angular.element(".searchAndFilter .search-list").slideDown({duration: "slow", progress: progressFunc});
+      scope.$watch("facilityResultCount", function () {
+        if (scope.facilityResultCount >= 0) {
+          angular.element("#search .search-list").slideDown({duration: "slow", progress: progressFunc});
         }
-      };
+      });
 
-      scope.$parent.$watch('showSlider', function () {
+      scope.$parent.$parent.$watch('showSlider', function () {
         if (scope.showSlider) {
           angular.element(".searchAndFilter").slideDown({duration: "slow", progress: progressFunc});
         }
@@ -42,33 +43,6 @@ app.directive('slider', function ($timeout) {
           angular.element(".searchAndFilter").slideUp("slow");
         }
       });
-
-      angular.element('#searchButton').click(function () {
-        scope.facilityQuery = scope.searchParam;
-        if (!scope.facilityQuery) return;
-        scope.facilityQuery = scope.facilityQuery.trim();
-        scope.$parent.getSearchResults(scope.facilityQuery, function (data) {
-          scope.facilityList = data.facilityList;
-          scope.resultCount = isUndefined(scope.facilityList) ? 0 : scope.facilityList.length;
-          scope.message = data.message;
-          openSearchResultsBox();
-        });
-      });
-
-      angular.element('#closeButton').click(function () {
-        angular.element(".searchAndFilter .search-list").slideUp("slow", function () {
-          scope.facilityQuery = undefined;
-          scope.facilityList = undefined;
-          scope.resultCount = undefined;
-          scope.$apply();
-          angular.element('#searchFacility').focus();
-        });
-      });
-
-      scope.associate = function (listItem) {
-        scope.$parent.associate(listItem);
-        scope.$parent.showSlider = false;
-      };
     }
   };
 });

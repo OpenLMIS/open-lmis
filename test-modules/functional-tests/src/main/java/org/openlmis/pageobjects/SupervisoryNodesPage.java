@@ -22,7 +22,7 @@ import java.util.NoSuchElementException;
 import static org.openqa.selenium.support.How.CLASS_NAME;
 import static org.openqa.selenium.support.How.ID;
 
-public class SupervisoryNodesPage extends Page {
+public class SupervisoryNodesPage extends FilterSearchPage {
 
   @FindBy(how = ID, using = "searchOptionButton")
   private static WebElement searchOptionButton = null;
@@ -91,7 +91,7 @@ public class SupervisoryNodesPage extends Page {
   private static WebElement clearSearch = null;
 
   @FindBy(how = ID, using = "associatedFacilityField")
-  private static WebElement associatedFacilityField = null;
+  private static WebElement associatedFacilityMemberField = null;
 
   @FindBy(how = ID, using = "searchAndFilter")
   private static WebElement searchAndFilter = null;
@@ -99,17 +99,11 @@ public class SupervisoryNodesPage extends Page {
   @FindBy(how = ID, using = "searchFacility")
   private static WebElement searchFacility = null;
 
-  @FindBy(how = ID, using = "facilityResult0")
-  private static WebElement facilityResult0 = null;
-
   @FindBy(how = ID, using = "saveButton")
   private static WebElement saveButton = null;
 
   @FindBy(how = ID, using = "saveErrorMsgDiv")
   private static WebElement saveErrorMsgDiv = null;
-
-  @FindBy(how = ID, using = "result0")
-  private static WebElement firstParentSearchResultLink = null;
 
   @FindBy(how = ID, using = "searchSupervisoryNode")
   private static WebElement searchSupervisoryNode = null;
@@ -123,8 +117,12 @@ public class SupervisoryNodesPage extends Page {
   @FindBy(how = ID, using = "viewHereLink")
   private static WebElement viewHereLink = null;
 
+  @FindBy(how = ID, using = "tooManyResultsMessage")
+  private static WebElement tooManyResultsMessage = null;
+
   @FindBy(how = ID, using = "editSupervisoryNodeHeader")
   private static WebElement editSupervisoryNodeHeader = null;
+
 
   public SupervisoryNodesPage(TestWebDriver driver) {
     super(driver);
@@ -189,6 +187,11 @@ public class SupervisoryNodesPage extends Page {
     return noResultMessage.isDisplayed();
   }
 
+  public String getNoFacilitySearchResultMessage() {
+    testWebDriver.waitForElementToAppear(noFacilityResultMessage);
+    return noFacilityResultMessage.getText();
+  }
+
   public boolean isOneResultMessageDisplayed() {
     try {
       testWebDriver.waitForElementToAppear(oneResultMessage);
@@ -198,17 +201,6 @@ public class SupervisoryNodesPage extends Page {
       return false;
     }
     return oneResultMessage.isDisplayed();
-  }
-
-  public boolean isNResultsMessageDisplayed() {
-    try {
-      testWebDriver.waitForElementToAppear(nResultsMessage);
-    } catch (TimeoutException e) {
-      return false;
-    } catch (NoSuchElementException e) {
-      return false;
-    }
-    return nResultsMessage.isDisplayed();
   }
 
   public String getNResultsMessage() {
@@ -291,15 +283,15 @@ public class SupervisoryNodesPage extends Page {
     return searchIcon.isDisplayed();
   }
 
-  public void clickOnFirstParentSearchResult() {
-    testWebDriver.sleep(500);
-    testWebDriver.waitForElementToAppear(firstParentSearchResultLink);
-    firstParentSearchResultLink.click();
+  public void selectSupervisoryNodeSearchResult(int rowNumber) {
+    WebElement result = testWebDriver.getElementById("result" + (rowNumber - 1));
+    testWebDriver.waitForElementToAppear(result);
+    result.click();
   }
 
-  public void clickAssociatedFacilityField() {
-    testWebDriver.waitForElementToAppear(associatedFacilityField);
-    associatedFacilityField.click();
+  public void clickAssociatedFacilityMemberField() {
+    testWebDriver.waitForElementToAppear(associatedFacilityMemberField);
+    associatedFacilityMemberField.click();
     testWebDriver.waitForElementToAppear(searchAndFilter);
   }
 
@@ -313,15 +305,9 @@ public class SupervisoryNodesPage extends Page {
     clearSearch.click();
   }
 
-  public boolean isClearSearchButtonIsVisible() {
+  public boolean isClearSearchButtonVisible() {
     testWebDriver.waitForElementToAppear(clearSearch);
     return clearSearch.isDisplayed();
-  }
-
-  public void clickOnFirstFacilitySearchResultLink() {
-    testWebDriver.waitForElementToAppear(firstParentSearchResultLink);
-    firstParentSearchResultLink.click();
-    testWebDriver.waitForElementToAppear(supervisoryNodeName);
   }
 
   public boolean isSearchListDisplayed() {
@@ -335,17 +321,17 @@ public class SupervisoryNodesPage extends Page {
     return result.getText();
   }
 
-  public void enterSupervisoryNodeCodeValue(String code) {
+  public void enterSupervisoryNodeCode(String code) {
     testWebDriver.waitForElementToAppear(supervisoryNodeCode);
     sendKeys(supervisoryNodeCode, code);
   }
 
-  public void enterSupervisoryNodeNameValues(String name) {
+  public void enterSupervisoryNodeName(String name) {
     testWebDriver.waitForElementToAppear(supervisoryNodeName);
     sendKeys(supervisoryNodeName, name);
   }
 
-  public void enterSupervisoryNodeDescriptionValue(String description) {
+  public void enterSupervisoryNodeDescription(String description) {
     testWebDriver.waitForElementToAppear(supervisoryNodeDescription);
     sendKeys(supervisoryNodeDescription, description);
   }
@@ -365,9 +351,10 @@ public class SupervisoryNodesPage extends Page {
     return searchFacility.getText();
   }
 
-  public void selectFirstFacilityToBeAssociated() {
-    testWebDriver.waitForElementToAppear(facilityResult0);
-    facilityResult0.click();
+  public void selectFacilityToBeAssociated(int rowNumber) {
+    WebElement facilityResult = testWebDriver.getElementById("facilityResult" + (rowNumber - 1));
+    testWebDriver.waitForElementToAppear(facilityResult);
+    facilityResult.click();
   }
 
   public String getSaveMessage() {
@@ -406,8 +393,13 @@ public class SupervisoryNodesPage extends Page {
     return editSupervisoryNodeHeader.isDisplayed();
   }
 
-  public String getParentNode() {
-    testWebDriver.waitForElementToAppear(searchParentNode);
-    return searchParentNode.getText();
+  public String getParentOnEditPage() {
+    WebElement parent = testWebDriver.getElementByXpath("//*[@id='supervisoryNodeFormGroup']/div[4]/div/div/div[1]/div[2]/span");
+    testWebDriver.waitForElementToAppear(parent);
+    return parent.getText();
+  }
+
+  public String getTooManyResultsMessage() {
+    return tooManyResultsMessage.getText();
   }
 }

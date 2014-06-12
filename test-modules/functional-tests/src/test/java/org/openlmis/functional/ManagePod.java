@@ -35,14 +35,14 @@ public class ManagePod extends TestCaseHelper {
   public static final String MANAGE_POD = "MANAGE_POD";
   public LoginPage loginPage;
 
-  @BeforeMethod(groups = "requisition")
+  @BeforeMethod(groups = "orderAndPod")
   public void setUp() throws InterruptedException, SQLException, IOException {
     super.setup();
     dbWrapper.deleteData();
     loginPage = PageObjectFactory.getLoginPage(testWebDriver, baseUrlGlobal);
   }
 
-  @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-RnR")
+  @Test(groups = {"orderAndPod"}, dataProvider = "Data-Provider-Function-RnR")
   public void testVerifyManagePODValidFlowForRegularRnR(String program, String userSIC, String password) throws SQLException {
     setUpData(program, userSIC);
 
@@ -56,7 +56,7 @@ public class ManagePod extends TestCaseHelper {
     verifyValuesOnManagePODScreen(getOrderNumber("O", "MALARIA", "R"));
   }
 
-  @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-RnR")
+  @Test(groups = {"orderAndPod"}, dataProvider = "Data-Provider-Function-RnR")
   public void testVerifyManagePODWhenSupplyLineMissing(String program, String userSIC, String password) throws SQLException {
     setUpData(program, userSIC);
     dbWrapper.deleteSupplyLine();
@@ -69,7 +69,7 @@ public class ManagePod extends TestCaseHelper {
     assertFalse(convertOrderPage.isNoRequisitionPendingMessageDisplayed());
   }
 
-  @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-RnR")
+  @Test(groups = {"orderAndPod"}, dataProvider = "Data-Provider-Function-RnR")
   public void testVerifyManagePODValidFlowForEmergencyRnR(String program, String userSIC, String password) throws SQLException {
     setUpData(program, userSIC);
     dbWrapper.updateFieldValue("requisitions", "Emergency", true);
@@ -87,7 +87,7 @@ public class ManagePod extends TestCaseHelper {
     dbWrapper.updateFieldValue("order_number_configuration", "orderNumberPrefix", "O", "orderNumberPrefix", "#Ord 3");
   }
 
-  @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-RnR")
+  @Test(groups = {"orderAndPod"}, dataProvider = "Data-Provider-Function-RnR")
   public void testManagePODWhenRequisitionNotConvertedToOrder(String program, String userSIC, String password) throws SQLException {
     setUpData(program, userSIC);
 
@@ -96,7 +96,7 @@ public class ManagePod extends TestCaseHelper {
     managePodPage.verifyNoOrderMessage();
   }
 
-  @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-RnR")
+  @Test(groups = {"orderAndPod"}, dataProvider = "Data-Provider-Function-RnR")
   public void testManagePODWhenPodAlreadySubmitted(String program, String userSIC, String password) throws SQLException {
     setUpData(program, userSIC);
 
@@ -109,7 +109,7 @@ public class ManagePod extends TestCaseHelper {
     managePodPage.verifyNoOrderMessage();
   }
 
-  @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-RnR")
+  @Test(groups = {"orderAndPod"}, dataProvider = "Data-Provider-Function-RnR")
   public void testManagePODWhenManagePodRightsNotAssigned(String program, String userSIC, String password) throws SQLException {
     setupProductTestData("P10", "P11", program, "lvl3_hospital");
     dbWrapper.insertFacilities("F10", "F11");
@@ -218,7 +218,7 @@ public class ManagePod extends TestCaseHelper {
     dbWrapper.insertFulfilmentRoleAssignment("storeInCharge", "store in-charge", "F10");
   }
 
-  @AfterMethod(groups = "requisition")
+  @AfterMethod(groups = "orderAndPod")
   public void tearDown() throws SQLException {
     testWebDriver.sleep(500);
     if (!testWebDriver.getElementById("username").isDisplayed()) {

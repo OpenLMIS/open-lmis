@@ -64,7 +64,7 @@
 
     <div class="form-cell">
       <label for="facility-type">
-        <span openlmis-message="create.facility.facilityType"></span>
+        <span openlmis-message="label.facility.type"></span>
         <span class="label-required"> *</span>
       </label>
 
@@ -331,8 +331,8 @@
 
           <div class="list-container ">
             <div
-              ng-class="{'has-overridden-isa': programProduct.overriddenIsa != null || programProduct.overriddenIsa != undefined}"
-              ng-repeat="programProduct in filteredProducts">
+                ng-class="{'has-overridden-isa': programProduct.overriddenIsa != null || programProduct.overriddenIsa != undefined}"
+                ng-repeat="programProduct in filteredProducts">
               <div class="row-fluid list-row">
                 <div class="span4">
                   <span class="first-column" id="product-name{{$index}}"
@@ -384,7 +384,7 @@
   <div class="form-row clearfix">
     <div class="form-cell">
       <label for="geographic-zone">
-        <span openlmis-message="create.facility.geographicZone"></span>
+        <span openlmis-message="label.geographic.zone"></span>
         <span class="label-required"> *</span>
       </label>
 
@@ -525,10 +525,10 @@
       <div class="form-field radio-group">
         <input ng-model="facility.hasElectronicSCC" type="radio" name="has-electronic-scc"
                ng-value="true"/><strong
-        openlmis-message="button.yes"></strong> &nbsp; &nbsp; &nbsp;
+          openlmis-message="button.yes"></strong> &nbsp; &nbsp; &nbsp;
         <input ng-model="facility.hasElectronicSCC" type="radio" name="has-electronic-scc"
                ng-value="false"/><strong
-        openlmis-message="button.no"></strong>
+          openlmis-message="button.no"></strong>
       </div>
     </div>
 
@@ -538,10 +538,10 @@
       <div class="form-field radio-group">
         <input ng-model="facility.hasElectronicDAR" type="radio" name="has-electronic-dar"
                ng-value="true"/><strong
-        openlmis-message="button.yes"></strong> &nbsp; &nbsp; &nbsp;
+          openlmis-message="button.yes"></strong> &nbsp; &nbsp; &nbsp;
         <input ng-model="facility.hasElectronicDAR" type="radio" name="has-electronic-dar"
                ng-value="false"/><strong
-        openlmis-message="button.no"></strong>
+          openlmis-message="button.no"></strong>
       </div>
     </div>
   </div>
@@ -586,7 +586,7 @@
     <input id="saveButton" type="submit" id="save-button" class="btn btn-primary save-button"
            openlmis-message="button.save"/>
     <input id="cancelButton" type="button" class="btn btn-cancel cancel-button" openlmis-message="button.cancel"
-           ng-click="cancelUserSave()"/>
+           ng-click="cancel()"/>
     <input id="enableButton" type="button" class="btn btn-primary enable-button"
            ng-show="facility.id!=null && !facility.enabled"
            ng-click="showConfirmFacilityEnable()"

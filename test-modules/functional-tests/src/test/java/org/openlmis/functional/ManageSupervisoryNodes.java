@@ -228,7 +228,7 @@ public class ManageSupervisoryNodes extends TestCaseHelper {
     supervisoryNodesPage.clickSearchIcon();
     assertTrue(supervisoryNodesPage.isOneResultMessageDisplayed());
 
-    assertEquals("Supervisory Node Name", supervisoryNodesPage.getSupervisoryNodeHeader());
+    assertEquals("Supervisory node name", supervisoryNodesPage.getSupervisoryNodeHeader());
     assertEquals("Code", supervisoryNodesPage.getCodeHeader());
     assertEquals("Facility", supervisoryNodesPage.getFacilityHeader());
     assertEquals("Parent", supervisoryNodesPage.getParentHeader());
@@ -251,28 +251,40 @@ public class ManageSupervisoryNodes extends TestCaseHelper {
     dbWrapper.insertSupervisoryNode("F10", "N1", "Node1", null);
     dbWrapper.insertSupervisoryNode("F11", "N2", "Node2", null);
     dbWrapper.insertSupervisoryNode("F10", "N3", "Node3", "N2");
+    dbWrapper.insertFacilitiesWithFacilityTypeIDAndGeoZoneId("F11A", "F11B", 1, 1);
+    dbWrapper.insertFacilitiesWithFacilityTypeIDAndGeoZoneId("F11C", "F11D", 1, 1);
+    dbWrapper.insertFacilitiesWithFacilityTypeIDAndGeoZoneId("F11E","F11F",1,5);
+
     HomePage homePage = loginPage.loginAs(testData.get(ADMIN), testData.get(PASSWORD));
     supervisoryNodesPage = homePage.navigateToSupervisoryNodes();
 
     supervisoryNodesPage.clickAddNewButton();
-    supervisoryNodesPage.enterSupervisoryNodeCodeValue("N4");
-    supervisoryNodesPage.enterSupervisoryNodeNameValues("Node 4");
-    supervisoryNodesPage.enterSupervisoryNodeDescriptionValue("This is Node 4");
+    supervisoryNodesPage.enterSupervisoryNodeCode("N4");
+    supervisoryNodesPage.enterSupervisoryNodeName("Node 4");
+    supervisoryNodesPage.enterSupervisoryNodeDescription("This is Node 4");
     supervisoryNodesPage.enterSearchParentNodeParameter("Nod");
 
     supervisoryNodesPage.isSearchListDisplayed();
     assertEquals("Node1", supervisoryNodesPage.getParentNodeResult(1));
     assertEquals("Node2", supervisoryNodesPage.getParentNodeResult(2));
     assertEquals("Node3", supervisoryNodesPage.getParentNodeResult(3));
-    supervisoryNodesPage.clickOnFirstFacilitySearchResultLink();
+    supervisoryNodesPage.selectSupervisoryNodeSearchResult(1);
 
-    assertTrue(supervisoryNodesPage.isClearSearchButtonIsVisible());
+    assertTrue(supervisoryNodesPage.isClearSearchButtonVisible());
     supervisoryNodesPage.clickOnClearSearchResultButton();
     supervisoryNodesPage.enterSearchParentNodeParameter("Nod");
-    supervisoryNodesPage.clickOnFirstParentSearchResult();
+    testWebDriver.waitForAjax();
+    supervisoryNodesPage.selectSupervisoryNodeSearchResult(1);
 
-    searchAssociatedFacility("F10");
-    supervisoryNodesPage.selectFirstFacilityToBeAssociated();
+    supervisoryNodesPage.clickAssociatedFacilityMemberField();
+    supervisoryNodesPage.clickFilterButton();
+    testWebDriver.waitForAjax();
+    supervisoryNodesPage.selectFacilityType("Warehouse");
+    supervisoryNodesPage.clickApplyFilterButton();
+    testWebDriver.waitForAjax();
+    searchAssociatedFacility("F11");
+    testWebDriver.waitForAjax();
+    supervisoryNodesPage.selectFacilityToBeAssociated(1);
 
     supervisoryNodesPage.clickSaveButton();
     assertEquals("Supervisory Node \"Node 4\" created successfully", supervisoryNodesPage.getSuccessMessage());
@@ -288,23 +300,53 @@ public class ManageSupervisoryNodes extends TestCaseHelper {
 
     supervisoryNodesPage.clickSearchOptionButton();
     supervisoryNodesPage.selectSupervisoryNodeParentAsSearchOption();
-    supervisoryNodesPage.clickSearchIcon();
-    assertTrue(supervisoryNodesPage.isNoResultMessageDisplayed());
 
-    supervisoryNodesPage.clickAddNewButton();
-    enterSupervisoryNodeDetails("N5", "Node 5", "This is Node 5", "Node 4", "F10");
-    supervisoryNodesPage.clickSaveButton();
-    testWebDriver.refresh();
+    searchNode("Node1");
+    testWebDriver.waitForAjax();
 
-    supervisoryNodesPage.clickSearchOptionButton();
-    supervisoryNodesPage.selectSupervisoryNodeParentAsSearchOption();
-    searchNode("Node 4");
-    assertEquals("Node 5", supervisoryNodesPage.getSupervisoryNodeName(1));
-    assertEquals("N5", supervisoryNodesPage.getSupervisoryNodeCode(1));
+    assertEquals("Node 4", supervisoryNodesPage.getSupervisoryNodeName(1));
+    assertEquals("N4", supervisoryNodesPage.getSupervisoryNodeCode(1));
     assertEquals("Village Dispensary", supervisoryNodesPage.getFacility(1));
   }
 
-  //@Test(groups = {"admin"})
+  @Test(groups = {"admin"})
+  public void testAddNewSupervisoryNodeAndSearchByParent() throws SQLException {
+    dbWrapper.assignRight("Admin", "MANAGE_SUPERVISORY_NODE");
+    dbWrapper.insertSupervisoryNode("F10", "N1", "Node1", null);
+    dbWrapper.insertSupervisoryNode("F11", "N2", "Node2", null);
+    dbWrapper.insertSupervisoryNode("F10", "N3", "Node3", "N2");
+    HomePage homePage = loginPage.loginAs(testData.get(ADMIN), testData.get(PASSWORD));
+    supervisoryNodesPage = homePage.navigateToSupervisoryNodes();
+
+    supervisoryNodesPage.clickAddNewButton();
+    supervisoryNodesPage.enterSupervisoryNodeCode("N4");
+    supervisoryNodesPage.enterSupervisoryNodeName("Node4");
+    supervisoryNodesPage.enterSupervisoryNodeDescription("This is Node 4");
+    supervisoryNodesPage.clickAssociatedFacilityMemberField();
+    searchAssociatedFacility("F10");
+    supervisoryNodesPage.selectFacilityToBeAssociated(1);
+    supervisoryNodesPage.clickSaveButton();
+
+    supervisoryNodesPage.clickAddNewButton();
+    enterSupervisoryNodeDetails("N5", "Node 5", "", "nod", 4, "F10");
+    supervisoryNodesPage.clickSaveButton();
+    assertEquals("Supervisory Node \"Node 5\" created successfully", supervisoryNodesPage.getSuccessMessage());
+
+    supervisoryNodesPage.clickViewHereLink();
+    assertEquals("Node4", supervisoryNodesPage.getParentOnEditPage());
+    supervisoryNodesPage.clickCancelButton();
+
+    supervisoryNodesPage.clickSearchOptionButton();
+    supervisoryNodesPage.selectSupervisoryNodeParentAsSearchOption();
+    searchNode("Node4");
+
+    assertEquals("Node 5", supervisoryNodesPage.getSupervisoryNodeName(1));
+    assertEquals("N5", supervisoryNodesPage.getSupervisoryNodeCode(1));
+    assertEquals("Node4", supervisoryNodesPage.getParent(1));
+    assertEquals("Village Dispensary", supervisoryNodesPage.getFacility(1));
+  }
+
+  @Test(groups = {"admin"})
   public void testValidationsOnAddNewSupervisoryNode() throws SQLException {
     dbWrapper.assignRight("Admin", "MANAGE_SUPERVISORY_NODE");
     dbWrapper.insertSupervisoryNode("F10", "N1", "Node1", null);
@@ -314,15 +356,27 @@ public class ManageSupervisoryNodes extends TestCaseHelper {
     supervisoryNodesPage = homePage.navigateToSupervisoryNodes();
 
     supervisoryNodesPage.clickAddNewButton();
-    enterSupervisoryNodeDetails("N1", "Node4", "This is Node 4", "Node2", "F10");
+    enterSupervisoryNodeDetails("N1", "Node4", "This is Node 4", "Node1", 1, "F10");
     supervisoryNodesPage.clickSaveButton();
+    assertEquals("Invalid Parent Node Code", supervisoryNodesPage.getSaveMessage());
+    testWebDriver.sleep(500);
+
+    supervisoryNodesPage.clickOnClearSearchResultButton();
+    supervisoryNodesPage.enterSearchParentNodeParameter("Node");
+    testWebDriver.sleep(500);
+    supervisoryNodesPage.selectSupervisoryNodeSearchResult(2);
+    supervisoryNodesPage.clickSaveButton();
+    testWebDriver.sleep(500);
     assertEquals("Duplicate Supervisory Node Code", supervisoryNodesPage.getSaveMessage());
 
-    supervisoryNodesPage.enterSupervisoryNodeCodeValue("N4");
+    supervisoryNodesPage.enterSupervisoryNodeCode("N4");
+    supervisoryNodesPage.clickOnClearSearchResultButton();
     supervisoryNodesPage.enterSearchParentNodeParameter("parent");
+    testWebDriver.sleep(500);
     supervisoryNodesPage.clickSaveButton();
-    supervisoryNodesPage.clickViewHereLink();
-    assertEquals("", supervisoryNodesPage.getParentNode());
+    testWebDriver.waitForAjax();
+    searchNode("Node4");
+    assertEquals("", supervisoryNodesPage.getParent(1));
   }
 
   @Test(groups = {"admin"})
@@ -349,6 +403,7 @@ public class ManageSupervisoryNodes extends TestCaseHelper {
     supervisoryNodesPage.clickAddNewButton();
     dbWrapper.updateFieldValue("facilities", "enabled", "false", "code", "F10");
 
+    supervisoryNodesPage.clickAssociatedFacilityMemberField();
     searchAssociatedFacility("F10");
     assertEquals("No matches found for 'F10'", supervisoryNodesPage.getNoFacilityResultMessage());
     supervisoryNodesPage.closeSearchResults();
@@ -365,7 +420,7 @@ public class ManageSupervisoryNodes extends TestCaseHelper {
 
     searchNode("sup");
     supervisoryNodesPage.clickOnNode(1);
-    enterSupervisoryNodeDetails("N1", "Node1", "node 1", "sup", "Village Dispensary");
+    enterSupervisoryNodeDetails("N1", "Node1", "nod", "sup", 1, "Village Dispensary");
     supervisoryNodesPage.clickSaveButton();
     assertEquals("Supervisory Node \"Node1\" updated successfully", supervisoryNodesPage.getSuccessMessage());
     supervisoryNodesPage.clickViewHereLink();
@@ -391,18 +446,20 @@ public class ManageSupervisoryNodes extends TestCaseHelper {
     testWebDriver.waitForAjax();
   }
 
-  public void enterSupervisoryNodeDetails(String code, String name, String description, String parentNode, String facilityCodeOrName) {
-    supervisoryNodesPage.enterSupervisoryNodeCodeValue(code);
-    supervisoryNodesPage.enterSupervisoryNodeNameValues(name);
-    supervisoryNodesPage.enterSupervisoryNodeDescriptionValue(description);
+  public void enterSupervisoryNodeDetails(String code, String name, String description, String parentNode, int nodeResultNumber, String facilityCodeOrName) {
+    supervisoryNodesPage.enterSupervisoryNodeCode(code);
+    supervisoryNodesPage.enterSupervisoryNodeName(name);
+    supervisoryNodesPage.enterSupervisoryNodeDescription(description);
     supervisoryNodesPage.enterSearchParentNodeParameter(parentNode);
-    supervisoryNodesPage.clickOnFirstFacilitySearchResultLink();
+    testWebDriver.sleep(500);
+    supervisoryNodesPage.selectSupervisoryNodeSearchResult(nodeResultNumber);
+    supervisoryNodesPage.clickAssociatedFacilityMemberField();
+    testWebDriver.waitForAjax();
     searchAssociatedFacility(facilityCodeOrName);
-    supervisoryNodesPage.selectFirstFacilityToBeAssociated();
+    supervisoryNodesPage.selectFacilityToBeAssociated(1);
   }
 
   public void searchAssociatedFacility(String facilityName) {
-    supervisoryNodesPage.clickAssociatedFacilityField();
     supervisoryNodesPage.searchFacilityToBeAssociated(facilityName);
     supervisoryNodesPage.clickSearchIcon();
   }

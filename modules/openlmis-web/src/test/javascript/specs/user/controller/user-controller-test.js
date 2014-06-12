@@ -117,9 +117,7 @@ describe("User", function () {
     });
 
     it('should take to search page on cancel', function () {
-      scope.user = {"id": 123, "userName": "User420"};
-      httpBackend.expectPUT('/users/123.json', scope.user).respond(200);
-      scope.cancelUserSave();
+      scope.cancel();
 
       expect(scope.$parent.message).toEqual("");
       expect(scope.$parent.userId).toBeUndefined();

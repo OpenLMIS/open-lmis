@@ -28,12 +28,12 @@ import static java.util.Arrays.asList;
 
 public class ViewOrderPagination extends TestCaseHelper {
 
-  @BeforeMethod(groups = "requisition")
+  @BeforeMethod(groups = "orderAndPod")
   public void setUp() throws InterruptedException, SQLException, IOException {
     super.setup();
   }
 
-  @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-Positive")
+  @Test(groups = {"orderAndPod"}, dataProvider = "Data-Provider-Function-Positive")
   public void verifyPagination(String program, String userSIC, String password) throws SQLException {
     setUpData(program, userSIC);
     dbWrapper.insertRequisitions(50, "MALARIA", true, "2012-12-01", "2015-12-01", "F10", false);
@@ -78,7 +78,7 @@ public class ViewOrderPagination extends TestCaseHelper {
     dbWrapper.insertSupplyLines("N1", program, "F10", true);
   }
 
-  @AfterMethod(groups = "requisition")
+  @AfterMethod(groups = "orderAndPod")
   public void tearDown() throws SQLException {
     testWebDriver.sleep(500);
     if (!testWebDriver.getElementById("username").isDisplayed()) {

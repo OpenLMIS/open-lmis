@@ -12,7 +12,6 @@ package org.openlmis.core.domain;
 
 import lombok.Data;
 import org.codehaus.jackson.annotate.JsonIgnore;
-import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 
 import java.util.Date;
@@ -24,7 +23,6 @@ import java.util.Date;
 
 @Data
 @JsonSerialize()
-//@EqualsAndHashCode(callSuper = false)
 public abstract class BaseModel {
 
   protected Long id;
@@ -41,43 +39,11 @@ public abstract class BaseModel {
   @JsonIgnore
   protected Date modifiedDate;
 
-  @JsonProperty("modifiedDate")
-  public Date getModifiedDate() {
-    return modifiedDate;
-  }
-
-  @JsonIgnore
-  public void setModifiedDate(Date modifiedDate) {
-    this.modifiedDate = modifiedDate;
-  }
-
-  @JsonProperty("modifiedBy")
-  public Long getModifiedBy() {
-    return modifiedBy;
-  }
-
-  @JsonIgnore
-  public void setModifiedBy(Long modifiedBy) {
-    this.modifiedBy = modifiedBy;
-  }
-
-  @JsonProperty("createdDate")
-  public Date getCreatedDate() {
-    return createdDate;
-  }
-
-  @JsonIgnore
-  public void setCreatedDate(Date createdDate) {
-    this.createdDate = createdDate;
-  }
-
-  @JsonProperty("createdBy")
-  public Long getCreatedBy() {
-    return createdBy;
-  }
-
-  @JsonIgnore
-  public void setCreatedBy(Long createdBy) {
-    this.createdBy = createdBy;
+  /**
+   * Determines if this BaseModel has an id set or not.
+   * @return true if it has an id set, false otherwise
+   */
+  public boolean hasId() {
+    return id != null ? true : false;
   }
 }

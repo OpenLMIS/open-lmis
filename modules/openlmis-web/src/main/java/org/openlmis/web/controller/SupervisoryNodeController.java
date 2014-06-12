@@ -32,7 +32,7 @@ import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 /**
- * This controller handles request to get list of supervisory nodes.
+ * This controller handle endpoints to list, search, create, update supervisory nodes.
  */
 
 @Controller
@@ -114,5 +114,11 @@ public class SupervisoryNodeController extends BaseController {
       messageService.message("message.supervisory.node.updated.success", supervisoryNode.getName()));
     response.getBody().addData("supervisoryNodeId", supervisoryNode.getId());
     return response;
+  }
+
+  @RequestMapping(value = "/topLevelSupervisoryNodes", method = GET, headers = ACCEPT_JSON)
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_SUPPLY_LINE')")
+  public List<SupervisoryNode> searchTopLevelSupervisoryNodesByName(@RequestParam(value = "searchParam") String param) {
+    return supervisoryNodeService.searchTopLevelSupervisoryNodesByName(param);
   }
 }

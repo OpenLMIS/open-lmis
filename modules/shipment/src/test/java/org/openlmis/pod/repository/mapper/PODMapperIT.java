@@ -14,7 +14,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
-import org.openlmis.context.ApplicationTestContext;
+import org.openlmis.context.ShipmentTestContext;
 import org.openlmis.core.query.QueryExecutor;
 import org.openlmis.db.categories.IntegrationTests;
 import org.openlmis.order.domain.Order;
@@ -35,7 +35,7 @@ import static org.junit.matchers.JUnitMatchers.hasItems;
 
 @Category(IntegrationTests.class)
 @RunWith(SpringJUnit4ClassRunner.class)
-public class PODMapperIT extends ApplicationTestContext {
+public class PODMapperIT extends ShipmentTestContext {
 
   @Autowired
   PODMapper mapper;

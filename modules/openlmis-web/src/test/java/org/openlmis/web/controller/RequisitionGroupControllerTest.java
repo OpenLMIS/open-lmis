@@ -47,9 +47,6 @@ import static org.powermock.api.mockito.PowerMockito.whenNew;
 @PrepareForTest(RequisitionGroupController.class)
 public class RequisitionGroupControllerTest {
 
-  private static final String USER = "user";
-  private static final Long USER_ID = 1L;
-
   @Mock
   private RequisitionGroupService requisitionGroupService;
 
