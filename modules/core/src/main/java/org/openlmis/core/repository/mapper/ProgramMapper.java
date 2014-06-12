@@ -36,10 +36,10 @@ public interface ProgramMapper {
     "P.active = true"})
   List<Program> getActiveByFacility(Long facilityId);
 
-  @Select("SELECT * FROM programs WHERE push = FALSE ORDER BY templateConfigured DESC, name ")
+  @Select("SELECT * FROM programs WHERE push = FALSE ORDER BY name ")
   List<Program> getAllPullPrograms();
 
-  @Select("SELECT * FROM programs WHERE push = TRUE ORDER BY templateConfigured DESC, name ")
+  @Select("SELECT * FROM programs WHERE push = TRUE ORDER BY name ")
   List<Program> getAllPushPrograms();
 
   @Select({"SELECT",

@@ -31,7 +31,6 @@ import java.sql.SQLException;
 import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
-import static java.util.Arrays.asList;
 import static junit.framework.Assert.assertEquals;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
@@ -92,6 +91,9 @@ public class ProgramMapperIT {
     List<Program> programs = programMapper.getAllPullPrograms();
     assertEquals(4, programs.size());
     assertThat(programs.get(0).getCode(), is("ESS_MEDS"));
+    assertThat(programs.get(1).getCode(), is("HIV"));
+    assertThat(programs.get(2).getCode(), is("MALARIA"));
+    assertThat(programs.get(3).getCode(), is("TB"));
   }
 
   @Test
@@ -215,9 +217,7 @@ public class ProgramMapperIT {
     assertTrue(programs.contains(activeProgram));
     assertTrue(programs.contains(anotherActiveProgram));
     assertFalse(programs.contains(activePushProgram));
-
   }
-
 
   @Test
   public void shouldGetActiveProgramsForUserWithGivenRights() throws Exception {
