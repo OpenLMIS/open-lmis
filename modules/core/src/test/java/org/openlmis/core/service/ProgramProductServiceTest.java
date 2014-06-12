@@ -30,6 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
+import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
@@ -59,6 +60,9 @@ public class ProgramProductServiceTest {
 
   @Mock
   private ProductCategoryService categoryService;
+
+  @Mock
+  private FacilityApprovedProductService facilityApprovedProductService;
 
   @Rule
   public ExpectedException expectedException = ExpectedException.none();
@@ -122,8 +126,9 @@ public class ProgramProductServiceTest {
   @Test
   public void shouldNotifyIfNewActiveProductAddedToAProgramAndProgramProductIsActive() throws Exception {
     String product = "product";
-    ProgramProduct programProduct = make(a(defaultProgramProduct, with(productCode, product), with(ProgramProductBuilder.programCode, "program"),
-      with(active, true)));
+    ProgramProduct programProduct = make(
+      a(defaultProgramProduct, with(productCode, product), with(ProgramProductBuilder.programCode, "program"),
+        with(active, true)));
     programProduct.setId(null);
     when(productService.isActive(product)).thenReturn(true);
 
@@ -135,8 +140,9 @@ public class ProgramProductServiceTest {
   @Test
   public void shouldNotNotifyIfNewProductAddedWhichIsGloballyInactive() throws Exception {
     String product = "product";
-    ProgramProduct programProduct = make(a(defaultProgramProduct, with(productCode, product), with(ProgramProductBuilder.programCode, "program"),
-      with(active, true)));
+    ProgramProduct programProduct = make(
+      a(defaultProgramProduct, with(productCode, product), with(ProgramProductBuilder.programCode, "program"),
+        with(active, true)));
     when(productService.isActive(product)).thenReturn(false);
 
     programProductService.save(programProduct);
@@ -147,8 +153,9 @@ public class ProgramProductServiceTest {
   @Test
   public void shouldNotNotifyIfNewInactiveProductAddedEvenIfItIsGloballyActive() throws Exception {
     String product = "product";
-    ProgramProduct programProduct = make(a(defaultProgramProduct, with(productCode, product), with(ProgramProductBuilder.programCode, "program"),
-      with(active, false)));
+    ProgramProduct programProduct = make(
+      a(defaultProgramProduct, with(productCode, product), with(ProgramProductBuilder.programCode, "program"),
+        with(active, false)));
     when(productService.isActive(product)).thenReturn(true);
 
     programProductService.save(programProduct);
@@ -159,8 +166,9 @@ public class ProgramProductServiceTest {
   @Test
   public void shouldNotNotifyIfNewInactiveProductAddedAlsoInactiveGlobally() throws Exception {
     String product = "product";
-    ProgramProduct programProduct = make(a(defaultProgramProduct, with(productCode, product), with(ProgramProductBuilder.programCode, "program"),
-      with(active, false)));
+    ProgramProduct programProduct = make(
+      a(defaultProgramProduct, with(productCode, product), with(ProgramProductBuilder.programCode, "program"),
+        with(active, false)));
     when(productService.isActive(product)).thenReturn(false);
 
     programProductService.save(programProduct);
@@ -172,11 +180,13 @@ public class ProgramProductServiceTest {
   public void shouldNotifyOnUpdateIfActiveFlagsChangeFromTTAndBecomeFT() throws Exception {
     String product = "product";
     Long existingProgramProductId = 2L;
-    ProgramProduct programProductForUpdate = make(a(defaultProgramProduct, with(productCode, product), with(ProgramProductBuilder.programCode, "program"),
-      with(active, false)));
+    ProgramProduct programProductForUpdate = make(
+      a(defaultProgramProduct, with(productCode, product), with(ProgramProductBuilder.programCode, "program"),
+        with(active, false)));
     programProductForUpdate.setId(existingProgramProductId);
 
-    ProgramProduct existingProgramProduct = make(a(defaultProgramProduct, with(active, true), with(productActive, true)));
+    ProgramProduct existingProgramProduct = make(
+      a(defaultProgramProduct, with(active, true), with(productActive, true)));
     when(programProductRepository.getById(existingProgramProductId)).thenReturn(existingProgramProduct);
 
     programProductService.save(programProductForUpdate);
@@ -188,11 +198,13 @@ public class ProgramProductServiceTest {
   public void shouldNotifyOnUpdateIfActiveFlagsChangeFromFTAndBecomeTT() throws Exception {
     String product = "product";
     Long existingProgramProductId = 2L;
-    ProgramProduct programProductForUpdate = make(a(defaultProgramProduct, with(productCode, product), with(ProgramProductBuilder.programCode, "program"),
-      with(active, true)));
+    ProgramProduct programProductForUpdate = make(
+      a(defaultProgramProduct, with(productCode, product), with(ProgramProductBuilder.programCode, "program"),
+        with(active, true)));
     programProductForUpdate.setId(existingProgramProductId);
 
-    ProgramProduct existingProgramProduct = make(a(defaultProgramProduct, with(active, false), with(productActive, true)));
+    ProgramProduct existingProgramProduct = make(
+      a(defaultProgramProduct, with(active, false), with(productActive, true)));
     when(programProductRepository.getById(existingProgramProductId)).thenReturn(existingProgramProduct);
 
     programProductService.save(programProductForUpdate);
@@ -204,11 +216,13 @@ public class ProgramProductServiceTest {
   public void shouldNotNotifyOnUpdateIfActiveFlagsChangeFromFFAndBecomeFF() throws Exception {
     String product = "product";
     Long existingProgramProductId = 2L;
-    ProgramProduct programProductForUpdate = make(a(defaultProgramProduct, with(productCode, product), with(ProgramProductBuilder.programCode, "program"),
-      with(active, false)));
+    ProgramProduct programProductForUpdate = make(
+      a(defaultProgramProduct, with(productCode, product), with(ProgramProductBuilder.programCode, "program"),
+        with(active, false)));
     programProductForUpdate.setId(existingProgramProductId);
 
-    ProgramProduct existingProgramProduct = make(a(defaultProgramProduct, with(active, false), with(productActive, false)));
+    ProgramProduct existingProgramProduct = make(
+      a(defaultProgramProduct, with(active, false), with(productActive, false)));
     when(programProductRepository.getById(existingProgramProductId)).thenReturn(existingProgramProduct);
 
     programProductService.save(programProductForUpdate);
@@ -220,11 +234,13 @@ public class ProgramProductServiceTest {
   public void shouldNotNotifyOnUpdateIfActiveFlagsChangeFromTFAndBecomeTF() throws Exception {
     String product = "product";
     Long existingProgramProductId = 2L;
-    ProgramProduct programProductForUpdate = make(a(defaultProgramProduct, with(productCode, product), with(ProgramProductBuilder.programCode, "program"),
-      with(active, true)));
+    ProgramProduct programProductForUpdate = make(
+      a(defaultProgramProduct, with(productCode, product), with(ProgramProductBuilder.programCode, "program"),
+        with(active, true)));
     programProductForUpdate.setId(existingProgramProductId);
 
-    ProgramProduct existingProgramProduct = make(a(defaultProgramProduct, with(active, true), with(productActive, false)));
+    ProgramProduct existingProgramProduct = make(
+      a(defaultProgramProduct, with(active, true), with(productActive, false)));
     when(programProductRepository.getById(existingProgramProductId)).thenReturn(existingProgramProduct);
 
     programProductService.save(programProductForUpdate);
@@ -236,11 +252,13 @@ public class ProgramProductServiceTest {
   public void shouldNotNotifyOnUpdateIfActiveFlagsChangeFromTFAndBecomeFF() throws Exception {
     String product = "product";
     Long existingProgramProductId = 2L;
-    ProgramProduct programProductForUpdate = make(a(defaultProgramProduct, with(productCode, product), with(ProgramProductBuilder.programCode, "program"),
-      with(active, false)));
+    ProgramProduct programProductForUpdate = make(
+      a(defaultProgramProduct, with(productCode, product), with(ProgramProductBuilder.programCode, "program"),
+        with(active, false)));
     programProductForUpdate.setId(existingProgramProductId);
 
-    ProgramProduct existingProgramProduct = make(a(defaultProgramProduct, with(active, true), with(productActive, false)));
+    ProgramProduct existingProgramProduct = make(
+      a(defaultProgramProduct, with(active, true), with(productActive, false)));
     when(programProductRepository.getById(existingProgramProductId)).thenReturn(existingProgramProduct);
 
     programProductService.save(programProductForUpdate);
@@ -330,4 +348,39 @@ public class ProgramProductServiceTest {
     assertThat(category.getId(), is(categoryId));
   }
 
+  @Test
+  public void shouldReturnFacilityTypeUnapprovedProgramProducts() throws Exception {
+    Long facilityTypeId = 56L;
+    Long programId = 67L;
+
+    ProgramProduct programProduct1 = new ProgramProduct(1L);
+    ProgramProduct programProduct2 = new ProgramProduct(2L);
+    ProgramProduct programProduct3 = new ProgramProduct(3L);
+    ProgramProduct programProduct4 = new ProgramProduct(4L);
+    ProgramProduct programProduct5 = new ProgramProduct(5L);
+
+    List<ProgramProduct> allProgramProducts = asList(programProduct1, programProduct2, programProduct3,
+      programProduct4, programProduct5);
+
+    when(programProductRepository.getByProgram(any(Program.class))).thenReturn(allProgramProducts);
+
+    FacilityTypeApprovedProduct facilityTypeApprovedProduct1 = new FacilityTypeApprovedProduct("code1", programProduct1,
+      3);
+    FacilityTypeApprovedProduct facilityTypeApprovedProduct2 = new FacilityTypeApprovedProduct("code1", programProduct4,
+      3);
+    FacilityTypeApprovedProduct facilityTypeApprovedProduct3 = new FacilityTypeApprovedProduct("code1", programProduct3,
+      3);
+
+    List<FacilityTypeApprovedProduct> approvedProducts = asList(facilityTypeApprovedProduct1,
+      facilityTypeApprovedProduct2, facilityTypeApprovedProduct3);
+
+    when(facilityApprovedProductService.getAllBy(facilityTypeId, programId, null, null)).thenReturn(approvedProducts);
+
+    List<ProgramProduct> unapprovedProgramProducts = programProductService.getUnapprovedProgramProducts(
+      facilityTypeId, programId);
+
+    assertThat(unapprovedProgramProducts.size(), is(2));
+    assertThat(unapprovedProgramProducts.get(0).getId(), is(programProduct2.getId()));
+    assertThat(unapprovedProgramProducts.get(1).getId(), is(programProduct5.getId()));
+  }
 }

@@ -54,6 +54,10 @@ public class ProgramProduct extends BaseModel implements Importable {
 
   private Money currentPrice;
 
+  public ProgramProduct(Long id) {
+    super(id);
+  }
+
   public ProgramProduct(Program program, Product product, Integer dosesPerMonth, Boolean active) {
     this.program = program;
     this.product = product;

@@ -11,6 +11,7 @@
 package org.openlmis.core.domain;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 
@@ -22,6 +23,7 @@ import java.util.Date;
  */
 
 @Data
+@NoArgsConstructor
 @JsonSerialize()
 public abstract class BaseModel {
 
@@ -39,4 +41,7 @@ public abstract class BaseModel {
   @JsonIgnore
   protected Date modifiedDate;
 
+  public BaseModel(Long id) {
+    this.id = id;
+  }
 }

@@ -10,6 +10,7 @@
 
 package org.openlmis.core.service;
 
+import com.google.common.base.Predicate;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
@@ -21,6 +22,9 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+import static com.google.common.collect.Iterables.all;
+import static com.google.common.collect.Iterables.filter;
+import static com.google.common.collect.Lists.newArrayList;
 import static org.apache.commons.lang3.StringUtils.trimToEmpty;
 import static org.apache.commons.lang3.StringUtils.trimToNull;
 
@@ -49,6 +53,9 @@ public class ProgramProductService {
 
   @Autowired
   private ProductCategoryService categoryService;
+
+  @Autowired
+  private FacilityApprovedProductService facilityApprovedProductService;
 
   public Long getIdByProgramIdAndProductId(Long programId, Long productId) {
     return programProductRepository.getIdByProgramIdAndProductId(programId, productId);
@@ -113,7 +120,8 @@ public class ProgramProductService {
     if ((facilityTypeCode = trimToNull(facilityTypeCode)) != null) {
       facilityType = facilityRepository.getFacilityTypeByCode(new FacilityType(facilityTypeCode));
     }
-    return programProductRepository.getProgramProductsBy(programRepository.getIdByCode(trimToEmpty(programCode)), facilityType.getCode());
+    return programProductRepository.getProgramProductsBy(programRepository.getIdByCode(trimToEmpty(programCode)),
+      facilityType.getCode());
   }
 
   public List<ProgramProduct> getNonFullSupplyProductsForProgram(Program program) {
@@ -134,5 +142,29 @@ public class ProgramProductService {
 
   public ProgramProduct getByProgramAndProductId(Long programId, Long productId) {
     return programProductRepository.getByProgramAndProductId(programId, productId);
+  }
+
+  public List<ProgramProduct> getUnapprovedProgramProducts(Long facilityTypeId, Long programId) {
+    final List<ProgramProduct> allProgramProducts = getByProgram(new Program(programId));
+    final List<FacilityTypeApprovedProduct> approvedProducts = facilityApprovedProductService.getAllBy(facilityTypeId,
+      programId, null, null);
+
+    Iterable<ProgramProduct> programProducts = filter(allProgramProducts, new Predicate<ProgramProduct>() {
+      @Override
+      public boolean apply(ProgramProduct programProduct) {
+        return isApproved(programProduct, approvedProducts);
+      }
+    });
+    return newArrayList(programProducts);
+  }
+
+  private boolean isApproved(final ProgramProduct programProduct, List<FacilityTypeApprovedProduct> approvedProducts) {
+    return all(approvedProducts, new Predicate<FacilityTypeApprovedProduct>() {
+      @Override
+      public boolean apply(final FacilityTypeApprovedProduct approvedProduct) {
+        return !programProduct.getId().equals(
+          approvedProduct.getProgramProduct().getId());
+      }
+    });
   }
 }

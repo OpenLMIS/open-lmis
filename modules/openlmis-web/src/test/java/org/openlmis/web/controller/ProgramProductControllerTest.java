@@ -39,16 +39,30 @@ public class ProgramProductControllerTest {
   @InjectMocks
   ProgramProductController controller;
 
+  private List<ProgramProduct> expectedProgramProductList = new ArrayList<>();
+
   @Test
   public void shouldGetProgramProductsByProgram() throws Exception {
-    List<ProgramProduct> expectedProgramProductList = new ArrayList<>();
     Program program = new Program(1l);
     when(service.getByProgram(program)).thenReturn(expectedProgramProductList);
 
     ResponseEntity<OpenLmisResponse> responseEntity = controller.getProgramProductsByProgram(1l);
 
-    assertThat((List<ProgramProduct>) responseEntity.getBody().getData().get(PROGRAM_PRODUCT_LIST), is(expectedProgramProductList));
+    assertThat((List<ProgramProduct>) responseEntity.getBody().getData().get(PROGRAM_PRODUCT_LIST),
+      is(expectedProgramProductList));
     verify(service).getByProgram(program);
+  }
+
+  @Test
+  public void shouldGetUnapprovedProgramProducts() {
+    Long facilityTypeId = 1L;
+    Long programId = 2L;
+    when(service.getUnapprovedProgramProducts(facilityTypeId, programId)).thenReturn(expectedProgramProductList);
+
+    List<ProgramProduct> unapprovedProgramProducts = controller.getUnapprovedProgramProducts(facilityTypeId, programId);
+
+    assertThat(unapprovedProgramProducts, is(expectedProgramProductList));
+    verify(service).getUnapprovedProgramProducts(facilityTypeId, programId);
   }
 
 }
