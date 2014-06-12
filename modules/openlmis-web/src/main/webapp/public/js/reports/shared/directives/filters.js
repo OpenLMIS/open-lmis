@@ -576,7 +576,7 @@ app.directive('regimenFilter', ['ReportRegimensByCategory','$routeParams',
             }, function (data) {
                 $scope.regimens = data.regimens;
                 $scope.regimens.unshift({
-                    'name': '-- All Regimens --'
+                    'name': '-- All Regimens --', id:0
 
                 });
             });
@@ -590,10 +590,9 @@ app.directive('regimenFilter', ['ReportRegimensByCategory','$routeParams',
 
                 scope.regimens = [];
                 scope.regimens.push({
-                    'name': '-- All Regimens --'
-
+                    name: '-- All Regimens --', id: 0
                 });
-                scope.filter.regimen = (isUndefined($routeParams.regimen) || $routeParams.regimen === '')? -1: $routeParams.regimen;
+                scope.filter.regimen = (isUndefined($routeParams.regimen) || $routeParams.regimen === '')? 0: $routeParams.regimen;
 
                 if (attr.required) {
                     scope.requiredFilters.regimen = 'regimen';

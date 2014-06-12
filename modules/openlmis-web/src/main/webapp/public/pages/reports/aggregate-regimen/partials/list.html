@@ -12,7 +12,7 @@
 <div class="container-fluid">
     <div class="box row-fluid">
         <div class="box-header">
-            <h2><i class="icon-edit"></i><span class="break"></span>Regimen Distribution by District</h2>
+            <h2><i class="icon-edit"></i><span class="break"></span>Aggregate Patients by Regimen</h2>
 
             <div class="box-icon">
                 <a id="pdf-button" href="#list" ng-click="exportReport('PDF')" class='btn-small btn-info'>PDF</a>
@@ -30,10 +30,7 @@
                                 <schedule-filter class="form-cell horizontalFilters" required="true"></schedule-filter>
                                 <year-filter class="form-cell horizontalFilters" required="true"></year-filter>
                                 <period-filter class="form-cell horizontalFilters" required="true"></period-filter>
-                                <requisition-group-filter
-                                        class="form-cell horizontalFilters"></requisition-group-filter>
-                                <facility-type-filter class="form-cell horizontalFilters" ></facility-type-filter>
-                                <facility-filter class="form-cell horizontalFilters"></facility-filter>
+                                <zone-filter class="form-cell horizontalFilters"></zone-filter>
                                 <regimen-category-filter class="form-cell horizontalFilters"></regimen-category-filter>
                                 <regimen-filter class="form-cell horizontalFilters"></regimen-filter>
                             </div>
@@ -59,23 +56,22 @@
                             <thead>
                             <tr>
                                 <th style="font-size:12px; ">#</th>
-                                <th style="font-size:12px; text-align:left">Facility Name</th>
+
                                 <th style="font-size:12px; text-align:left">Regimen</th>
                                 <th style="font-size:12px">No. of Patients <br>On Treatment</th>
                                 <th style="font-size:12px">% of Total</th>
-                                <th style="font-size:12px">No. of Patients To <br> Initiate treatment</th>
+                                <th style="font-size:12px">No. of Patients To <br> Initiate Treatment</th>
                                 <th style="font-size:12px">% of Total</th>
 
                                 <th style="font-size:12px">No. of Patients <br>Stopped Treatment</th>
+
                                 <th style="font-size:12px">% of Total</th>
-
-
                             </tr>
                             </thead>
                             <tbody>
                             <tr ng-repeat="row in datarows">
                                 <td data-title="'#'" class="number" style="width:20px">{{ row.no }}</td>
-                                <td style="width:40px">{{ row.facilityname }}</td>
+
 
                                 <td style="width:40px">{{ row.regimen }}</td>
                                 <td style="width:20px;text-align:center" class="number" sortable="patientsontreatment">
@@ -100,6 +96,7 @@
                                     sortable="stoppedTreatmentPercentage ">{{ row.stoppedTreatmentPercentage | number
                                     }}%
                                 </td>
+
 
                             </tr>
                             </tbody>
