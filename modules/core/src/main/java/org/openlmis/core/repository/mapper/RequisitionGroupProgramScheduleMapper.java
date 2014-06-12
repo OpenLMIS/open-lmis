@@ -66,4 +66,16 @@ public interface RequisitionGroupProgramScheduleMapper {
     "modifiedBy=#{requisitionGroupProgramSchedule.modifiedBy} , modifiedDate=#{requisitionGroupProgramSchedule.modifiedDate} " +
     "where id=#{requisitionGroupProgramSchedule.id}")
   void update(@Param(value = "requisitionGroupProgramSchedule") RequisitionGroupProgramSchedule requisitionGroupProgramSchedule);
+
+  @Select({"SELECT * FROM requisition_group_program_schedules WHERE requisitionGroupId = #{requisitionGroupId}"})
+  @Results(value = {
+    @Result(property = "requisitionGroup.id", column = "requisitionGroupId"),
+    @Result(property = "program", column = "programId", javaType = Long.class,
+      one = @One(select = "org.openlmis.core.repository.mapper.ProgramMapper.getById")),
+    @Result(property = "processingSchedule", column = "scheduleId", javaType = Long.class,
+      one = @One(select = "org.openlmis.core.repository.mapper.ProcessingScheduleMapper.get")),
+    @Result(property = "dropOffFacility", column = "dropOffFacilityId", javaType = Long.class,
+      one = @One(select = "org.openlmis.core.repository.mapper.FacilityMapper.getLWById"))
+  })
+  List<RequisitionGroupProgramSchedule> getByRequisitionGroupId(Long requisitionGroupId);
 }

@@ -15,6 +15,7 @@ import org.openlmis.core.domain.Program;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+
 /**
  * ProgramMapper maps the Program entity to corresponding representation in database. Apart from basic CRUD operations
  * provides methods like getting user supervised/home facility active programs, getting programs for a user and facility
@@ -52,7 +53,6 @@ public interface ProgramMapper {
     "p.id = ps.programId AND",
     "ps.facilityId = #{facilityId}"})
   List<Program> getByFacilityId(Long facilityId);
-
 
   @Select("SELECT id FROM programs WHERE LOWER(code) = LOWER(#{code})")
   Long getIdForCode(String code);
@@ -116,7 +116,6 @@ public interface ProgramMapper {
 
   @Select("SELECT * FROM programs ORDER BY templateConfigured DESC, name")
   List<Program> getAll();
-
 
 
   @Select("SELECT * FROM programs WHERE LOWER(code) = LOWER(#{code})")

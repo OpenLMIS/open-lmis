@@ -128,4 +128,8 @@ public class RequisitionGroupProgramScheduleRepository {
   public RequisitionGroupProgramSchedule getScheduleForRequisitionGroupCodeAndProgramCode(String requisitionGroupCode, String programCode) {
     return mapper.getScheduleForRequisitionGroupCodeAndProgramCode(requisitionGroupCode, programCode);
   }
+
+  public List<RequisitionGroupProgramSchedule> getByRequisitionGroupId(Long requisitionGroupId) {
+    return mapper.getByRequisitionGroupId(requisitionGroupId);
+  }
 }

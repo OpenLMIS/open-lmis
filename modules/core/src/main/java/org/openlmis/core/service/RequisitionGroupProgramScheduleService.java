@@ -16,6 +16,8 @@ import org.openlmis.core.repository.RequisitionGroupProgramScheduleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * Exposes the services for handling RequisitionGroupProgramSchedule entity.
  */
@@ -41,5 +43,9 @@ public class RequisitionGroupProgramScheduleService {
   public RequisitionGroupProgramSchedule getScheduleForRequisitionGroupCodeAndProgramCode(RequisitionGroupProgramSchedule requisitionGroupProgramSchedule) {
     return requisitionGroupProgramScheduleRepository.getScheduleForRequisitionGroupCodeAndProgramCode(
       requisitionGroupProgramSchedule.getRequisitionGroup().getCode(), requisitionGroupProgramSchedule.getProgram().getCode());
+  }
+
+  public List<RequisitionGroupProgramSchedule> getByRequisitionGroupId(Long requisitionGroupId) {
+    return requisitionGroupProgramScheduleRepository.getByRequisitionGroupId(requisitionGroupId);
   }
 }

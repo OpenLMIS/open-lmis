@@ -19,7 +19,9 @@ import org.mockito.Mock;
 import org.openlmis.core.domain.Pagination;
 import org.openlmis.core.domain.RequisitionGroup;
 import org.openlmis.core.domain.RequisitionGroupMember;
+import org.openlmis.core.domain.RequisitionGroupProgramSchedule;
 import org.openlmis.core.service.MessageService;
+import org.openlmis.core.service.RequisitionGroupProgramScheduleService;
 import org.openlmis.core.service.RequisitionGroupService;
 import org.openlmis.core.service.StaticReferenceDataService;
 import org.openlmis.db.categories.UnitTests;
@@ -58,6 +60,9 @@ public class RequisitionGroupControllerTest {
 
   @InjectMocks
   private RequisitionGroupController requisitionGroupController;
+
+  @Mock
+  private RequisitionGroupProgramScheduleService requisitionGroupProgramScheduleService;
 
   private MockHttpServletRequest request;
 
@@ -98,21 +103,24 @@ public class RequisitionGroupControllerTest {
     RequisitionGroup requisitionGroup = new RequisitionGroup();
     Long requisitionGroupId = 1L;
     List<RequisitionGroupMember> requisitionGroupMembers = asList(new RequisitionGroupMember());
+    List<RequisitionGroupProgramSchedule> requisitionGroupProgramSchedules = asList(new RequisitionGroupProgramSchedule());
 
     when(requisitionGroupService.getBy(requisitionGroupId)).thenReturn(requisitionGroup);
     when(requisitionGroupService.getMembersBy(requisitionGroupId)).thenReturn(requisitionGroupMembers);
+    when(requisitionGroupProgramScheduleService.getByRequisitionGroupId(requisitionGroupId)).thenReturn(requisitionGroupProgramSchedules);
 
     ResponseEntity<OpenLmisResponse> response = requisitionGroupController.getById(requisitionGroupId);
 
     verify(requisitionGroupService).getBy(requisitionGroupId);
     verify(requisitionGroupService).getMembersBy(requisitionGroupId);
+    verify(requisitionGroupProgramScheduleService).getByRequisitionGroupId(requisitionGroupId);
     assertThat(((RequisitionGroupFormDTO) response.getBody().getData().get("requisitionGroupData")).getRequisitionGroup(), is(requisitionGroup));
     assertThat(((RequisitionGroupFormDTO) response.getBody().getData().get("requisitionGroupData")).getRequisitionGroupMembers(), is(requisitionGroupMembers));
   }
 
   @Test
   public void shouldInsertRequisitionGroup() {
-    RequisitionGroupFormDTO requisitionGroupFormDTO = new RequisitionGroupFormDTO(new RequisitionGroup(), asList(new RequisitionGroupMember()));
+    RequisitionGroupFormDTO requisitionGroupFormDTO = new RequisitionGroupFormDTO(new RequisitionGroup(), asList(new RequisitionGroupMember()), asList(new RequisitionGroupProgramSchedule()));
 
     when(messageService.message("message.requisition.group.created.success", null)).thenReturn("save success");
 
@@ -127,7 +135,7 @@ public class RequisitionGroupControllerTest {
   public void shouldUpdateRequisitionGroup() {
     List<RequisitionGroupMember> requisitionGroupMemberList = asList(new RequisitionGroupMember());
     RequisitionGroup requisitionGroup = new RequisitionGroup();
-    RequisitionGroupFormDTO requisitionGroupFormDTO = new RequisitionGroupFormDTO(requisitionGroup, requisitionGroupMemberList);
+    RequisitionGroupFormDTO requisitionGroupFormDTO = new RequisitionGroupFormDTO(requisitionGroup, requisitionGroupMemberList, asList(new RequisitionGroupProgramSchedule()));
 
     when(messageService.message("message.requisition.group.updated.success", null)).thenReturn("updated success");
 

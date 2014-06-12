@@ -14,7 +14,9 @@ import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.Pagination;
 import org.openlmis.core.domain.RequisitionGroup;
 import org.openlmis.core.domain.RequisitionGroupMember;
+import org.openlmis.core.domain.RequisitionGroupProgramSchedule;
 import org.openlmis.core.exception.DataException;
+import org.openlmis.core.service.RequisitionGroupProgramScheduleService;
 import org.openlmis.core.service.RequisitionGroupService;
 import org.openlmis.core.service.StaticReferenceDataService;
 import org.openlmis.web.form.RequisitionGroupFormDTO;
@@ -48,6 +50,9 @@ public class RequisitionGroupController extends BaseController {
   @Autowired
   private StaticReferenceDataService staticReferenceDataService;
 
+  @Autowired
+  private RequisitionGroupProgramScheduleService requisitionGroupProgramScheduleService;
+
   @RequestMapping(value = "/requisitionGroups", method = GET)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_REQUISITION_GROUP')")
   public ResponseEntity<OpenLmisResponse> search(@RequestParam(value = "searchParam") String searchParam,
@@ -69,7 +74,8 @@ public class RequisitionGroupController extends BaseController {
   public ResponseEntity<OpenLmisResponse> getById(@PathVariable(value = "id") Long id) {
     RequisitionGroup requisitionGroup = requisitionGroupService.getBy(id);
     List<RequisitionGroupMember> requisitionGroupMembers = requisitionGroupService.getMembersBy(id);
-    RequisitionGroupFormDTO requisitionGroupFormDTO = new RequisitionGroupFormDTO(requisitionGroup, requisitionGroupMembers);
+    List<RequisitionGroupProgramSchedule> requisitionGroupProgramSchedules = requisitionGroupProgramScheduleService.getByRequisitionGroupId(id);
+    RequisitionGroupFormDTO requisitionGroupFormDTO = new RequisitionGroupFormDTO(requisitionGroup, requisitionGroupMembers, requisitionGroupProgramSchedules);
     ResponseEntity<OpenLmisResponse> response = OpenLmisResponse.response("requisitionGroupData", requisitionGroupFormDTO);
     return response;
   }

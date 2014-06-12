@@ -6,6 +6,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.RequisitionGroup;
 import org.openlmis.core.domain.RequisitionGroupMember;
+import org.openlmis.core.domain.RequisitionGroupProgramSchedule;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,5 +19,6 @@ public class RequisitionGroupFormDTO {
 
   private RequisitionGroup requisitionGroup;
   private List<RequisitionGroupMember> requisitionGroupMembers = new ArrayList<>();
+  private List<RequisitionGroupProgramSchedule> requisitionGroupProgramSchedules = new ArrayList<>();
 
 }
