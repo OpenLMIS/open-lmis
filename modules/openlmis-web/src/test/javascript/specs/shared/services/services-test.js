@@ -9,45 +9,125 @@
  */
 
 describe("Services", function () {
+  var httpMock, successStub, failureStub;
+
 
   beforeEach(module('openlmis.services'));
+
+  beforeEach(inject(function ($httpBackend) {
+    httpMock = $httpBackend;
+    successStub = jasmine.createSpy();
+    failureStub = jasmine.createSpy();
+
+  }));
+
+  afterEach(function () {
+    httpMock.verifyNoOutstandingExpectation();
+    httpMock.verifyNoOutstandingRequest();
+  });
+
   describe("ApproveRnrService", function () {
 
-    var httpBackend, requisitionForApprovalService;
+    var requisitionForApprovalService;
 
-    beforeEach(inject(function (_$httpBackend_, RequisitionForApproval) {
-      httpBackend = _$httpBackend_;
+    beforeEach(inject(function (RequisitionForApproval) {
       requisitionForApprovalService = RequisitionForApproval;
     }));
 
     it('should GET R&Rs pending for approval', function () {
       var requisitions = {"rnr_list": []};
-      httpBackend.expect('GET', "/requisitions-for-approval.json").respond(requisitions);
+      httpMock.expect('GET', "/requisitions-for-approval.json").respond(requisitions);
       requisitionForApprovalService.get({}, function (data) {
         expect(data.rnr_list).toEqual(requisitions.rnr_list);
       }, function () {
       });
+      httpMock.flush();
     });
   });
 
   describe("SupplyLineSearchService", function () {
 
-    var httpBackend, supplyLineSearchService;
+    var supplyLineSearchService;
 
-    beforeEach(inject(function (_$httpBackend_, SupplyLinesSearch) {
-      httpBackend = _$httpBackend_;
+    beforeEach(inject(function (SupplyLinesSearch) {
       supplyLineSearchService = SupplyLinesSearch;
     }));
 
     it('should GET searched supplyLines', function () {
       var supplyLinesResponse = {"supplyLines": [], "pagination": {}};
-      httpBackend.expect('GET', "/supplyLines/search.json").respond(supplyLinesResponse);
+      httpMock.expect('GET', "/supplyLines/search.json").respond(supplyLinesResponse);
       supplyLineSearchService.get({}, function (data) {
         expect(data.supplyLines).toEqual(supplyLinesResponse.supplyLines);
         expect(data.pagination).toEqual(supplyLinesResponse.pagination);
       }, function () {
       });
+      httpMock.flush();
     });
-  })
+  });
 
+  describe("FacilityApprovedProductsSearch", function () {
+
+    var facilityApprovedProductsSearch;
+
+    beforeEach(inject(function (FacilityApprovedProductsSearch) {
+      facilityApprovedProductsSearch = FacilityApprovedProductsSearch;
+    }));
+
+    it('should GET searched FacilityTypeApprovedProducts', function () {
+      var FacilityApprovedProductsResponse = {"facilityApprovedProducts": [], "pagination": {}};
+      httpMock.expect('GET', "/facilityApprovedProducts.json").respond(FacilityApprovedProductsResponse);
+      facilityApprovedProductsSearch.get({}, function (data) {
+        expect(data.facilityApprovedProducts).toEqual(FacilityApprovedProductsResponse.facilityApprovedProducts);
+        expect(data.pagination).toEqual(FacilityApprovedProductsResponse.pagination);
+      }, function () {
+      });
+      httpMock.flush();
+    });
+  });
+
+  describe("programProductsFilter", function () {
+
+    var programProductsFilter;
+
+    beforeEach(inject(function (ProgramProductsFilter) {
+      programProductsFilter = ProgramProductsFilter;
+    }));
+
+    it('should filter program products', function () {
+      var programProductsFilterResponse = {"programProducts": []};
+      var programId = 1, facilityTypeId = 2;
+      httpMock.expectGET('/programProducts/filter/programId/' + programId + '/facilityTypeId/' + facilityTypeId + '.json')
+          .respond(200, {programProductList: programProductsFilterResponse});
+
+      programProductsFilter.get({'programId': programId, 'facilityTypeId': facilityTypeId},
+          function (data) {
+            successStub();
+            expect(data.programProductList).toEqual(programProductsFilterResponse);
+          },
+          function () {
+            failureStub();
+          });
+      httpMock.flush();
+      expect(successStub).toHaveBeenCalled();
+      expect(failureStub).not.toHaveBeenCalled();
+    });
+
+    it('should raise error if server does not respond with OK status', function () {
+      var programId = 1, facilityTypeId = 2;
+
+      httpMock.expectGET('/programProducts/filter/programId/' + programId + '/facilityTypeId/' + facilityTypeId + '.json')
+          .respond(404);
+
+      programProductsFilter.get({'programId': programId, 'facilityTypeId': facilityTypeId},
+          function () {
+            successStub();
+          },
+          function () {
+            failureStub();
+          });
+      httpMock.flush();
+      expect(successStub).not.toHaveBeenCalled();
+      expect(failureStub).toHaveBeenCalled();
+    });
+  });
 });
