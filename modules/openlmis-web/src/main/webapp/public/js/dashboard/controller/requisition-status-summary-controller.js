@@ -8,7 +8,7 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-function RequisitionStatusSummaryController($scope, $filter, totalRnRCreatedByRequisitionGroup,RnRStatusByRequisitionGroupAndPeriod,dashboardMenuService,$location ,programsList, RnRStatusSummary, dashboardFiltersHistoryService, formInputValue, GetPeriod, RequisitionGroupsBySupervisoryNodeProgramSchedule, userPreferredFilterValues, ReportProgramsBySupervisoryNode, UserSupervisoryNodes, ReportSchedules, ReportPeriods, RequisitionGroupsByProgram, RequisitionGroupsByProgramSchedule, ReportProductsByProgram, OperationYears, ReportPeriodsByScheduleAndYear, ShipmentLeadTime, ngTableParams) {
+function RequisitionStatusSummaryController($scope, $filter,RnRStatusByRequisitionGroupAndPeriod,dashboardMenuService,$location ,programsList, GetProgramWithBudgetingApplies,dashboardFiltersHistoryService, formInputValue, GetPeriod, RequisitionGroupsBySupervisoryNodeProgramSchedule, userPreferredFilterValues, ReportProgramsBySupervisoryNode, UserSupervisoryNodes, ReportSchedules, ReportPeriods, RequisitionGroupsByProgram, RequisitionGroupsByProgramSchedule, ReportProductsByProgram, OperationYears, ReportPeriodsByScheduleAndYear) {
 
     $scope.filterObject = {};
 
@@ -16,18 +16,13 @@ function RequisitionStatusSummaryController($scope, $filter, totalRnRCreatedByRe
 
     $scope.formPanel = {openPanel: true};
 
+
     initialize();
 
     function initialize() {
         $scope.showProductsFilter = false;
         $scope.$parent.currentTab = "label.rnr.status.current.tab";
 
-        RequisitionGroupsByProgram.get({program: $scope.filterObject.programId }, function (data) {
-            $scope.requisitionGroups = data.requisitionGroupList;
-            if (!isUndefined($scope.requisitionGroups)) {
-
-            }
-        });
     }
 
     UserSupervisoryNodes.get(function (data) {
@@ -95,24 +90,29 @@ function RequisitionStatusSummaryController($scope, $filter, totalRnRCreatedByRe
                 $scope.total = 0;
                 $scope.RnRStatusPieChartData = [];
                 $scope.dataRows = [];
+                $scope.datarows = [];
 
                 if (!isUndefined(data.rnrStatus)) {
 
                     $scope.dataRows = data.rnrStatus;
-                    var rnrStatus=data.rnrStatus;
+                    var statusData = _.pluck($scope.dataRows,'status');
+                    var totalData = _.pluck($scope.dataRows,'totalStatus');
+
+                    var color=["#F83103","#37AC02","#02A8FA","#FAA702"];
                     for (var i = 0; i < $scope.dataRows.length; i++) {
                         $scope.total += $scope.dataRows[i].totalStatus;
                         $scope.RnRStatusPieChartData[i] = {
 
-                            label: $scope.dataRows[i].status,
-                            data: $scope.dataRows[i].totalStatus
+                            label: statusData[i],
+                            data: totalData[i],
+                            color:color[i]
 
                         };
 
                     }
                     $scope.rnrStatusPieChartOptionFunction();
                     $scope.rnrStatusRenderedData = {
-                        status : _.pairs(_.object(_.range(rnrStatus.length), _.pluck(rnrStatus,'status')))
+                        status : _.pairs(_.object(_.range(data.rnrStatus.length), _.pluck(data.rnrStatus,'status')))
 
                     };
 
@@ -139,10 +139,11 @@ function RequisitionStatusSummaryController($scope, $filter, totalRnRCreatedByRe
                         show: true,
                         radius: 3 / 4,
                         formatter: function (label, series) {
-                            return '<div style="font-size:8pt;text-align:center;padding:2px;color:black;">' + Math.round(series.percent) + '%</div>';
+                            return '<div style="font-size:8pt;text-align:center;padding:2px;color:#000000;">' + Math.round(series.percent) + '%</div>';
                         },
                         threshold: 0.1
                     }
+
                 }
             },
             legend: {
@@ -159,7 +160,7 @@ function RequisitionStatusSummaryController($scope, $filter, totalRnRCreatedByRe
                 borderWidth: 1,
                 borderColor: "#d6d6d6",
                 backgroundColor: {
-                    colors: ["#FFF", "#CCC"]
+                    colors: ["#FFF", "#CCC","#FFF","#CCC"]
                 }
             },
             tooltip: true,
@@ -346,14 +347,7 @@ function RequisitionStatusSummaryController($scope, $filter, totalRnRCreatedByRe
         angular.extend(data, $scope.filterObject);
         dashboardFiltersHistoryService.add($scope.$parent.currentTab, data);
     });
-
-    // the grid options
-    $scope.tableParams = new ngTableParams({
-        page: 1,            // show first page
-        total: 0,           // length of data
-        count: 25           // count per page
-    });
-
+    
     $scope.$on('$viewContentLoaded', function () {
 
         var filterHistory = dashboardFiltersHistoryService.get($scope.$parent.currentTab);
@@ -421,7 +415,6 @@ function RequisitionStatusSummaryController($scope, $filter, totalRnRCreatedByRe
         // slice array data on pages
         if ($scope.data === undefined) {
             $scope.datarows = [];
-            params.total = 0;
         } else {
             var data = $scope.data;
             var orderedData = params.filter ? $filter('filter')(data, params.filter) : data;

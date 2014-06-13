@@ -408,6 +408,11 @@ services.factory('OrderFillRateReport', function ($resource) {
 services.factory('RegimenSummaryReport', function ($resource) {
     return $resource('/reports/reportdata/regimenSummary.json', {}, {});
 });
+
+services.factory('AggregateRegimenSummaryReport', function($resource){
+   return $resource('/reports/reportdata/aggregateRegimenSummary.json',{},{});
+});
+
 //It populate all programs with regimens
 services.factory('ReportRegimenPrograms', function ($resource) {
     return $resource('/reports/regimenPrograms.json', {}, {});
@@ -565,4 +570,22 @@ services.factory("RnRStatusByRequisitionGroupAndPeriodDetails ",function($resour
 
 services.factory('RnRStatusDetailsByRequisitionGroup', function($resource){
     return $resource('/dashboard/rnrStatus-detail.json',{},{});
+});
+
+
+services.factory('GetLabEquipmentList', function ($resource) {
+    return $resource('/dashboard/notification/alerts.json',{}, {}); // just for mock
+});
+
+services.factory('ReportEquipmentTypes', function ($resource) {
+    return $resource('/reports/equipmentTypes.json',{}, {}); // just for mock
+});
+
+services.factory('LabEquipmentListReport', function ($resource) {
+    return $resource('/reports/reportdata/labEquipmentList.json', {}, {});
+});
+
+services.factory('GetProgramWithBudgetingApplies',function($resource){
+    return $resource('/reports/programsWithBudgetApplies.json',{},{});
+
 });

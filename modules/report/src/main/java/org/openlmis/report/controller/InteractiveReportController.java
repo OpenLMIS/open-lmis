@@ -16,6 +16,7 @@ import org.openlmis.report.ReportManager;
 import org.openlmis.report.model.Pages;
 import org.openlmis.report.model.report.*;
 import org.openlmis.report.response.OpenLmisResponse;
+import org.openlmis.report.service.LabEquipmentStatusReportDataProvider;
 import org.openlmis.report.service.UserSummaryReportProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -27,6 +28,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import javax.servlet.http.HttpServletRequest;
 import javax.xml.ws.Response;
 import java.util.List;
+import java.util.Map;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
@@ -287,6 +289,21 @@ public class InteractiveReportController extends BaseController {
       (List<RegimenSummaryReport>) report.getReportDataProvider().getMainReportData(request.getParameterMap(), request.getParameterMap(), page, max);
     return new Pages(page, max, regimenSummaryReportList);
   }
+    @RequestMapping(value = "/reportdata/aggregateRegimenSummary", method = GET, headers = BaseController.ACCEPT_JSON)
+    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_REGIMEN_SUMMARY_REPORT')")
+    public Pages getAggregateRegimenSummaryData(@RequestParam(value = "page", required = false, defaultValue = "1") int page,
+                                       @RequestParam(value = "max", required = false, defaultValue = "10") int max,
+                                       HttpServletRequest request
+
+    ) {
+
+
+        Report report = reportManager.getReportByKey("aggregate_regimen_summary");
+        List<RegimenSummaryReport> regimenSummaryReportList =
+                (List<RegimenSummaryReport>) report.getReportDataProvider().getMainReportData(request.getParameterMap(), request.getParameterMap(), page, max);
+        return new Pages(page, max, regimenSummaryReportList);
+    }
+
 
   @RequestMapping(value = "/reportdata/districtFinancialSummary", method = GET, headers = BaseController.ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_DISTRICT_FINANCIAL_SUMMARY_REPORT')")
@@ -315,7 +332,6 @@ public class InteractiveReportController extends BaseController {
         return new Pages(page, max, userSummmaryReportList);
     }
 
-
     @RequestMapping(value = "/reportdata/userRoleAssignmentSummary", method = GET, headers = BaseController.ACCEPT_JSON)
     @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_USER_SUMMARY_REPORT')")
     public ResponseEntity<OpenLmisResponse> getUseRoleAssignmentSummary( HttpServletRequest request
@@ -327,10 +343,18 @@ public class InteractiveReportController extends BaseController {
         return OpenLmisResponse.response("userAssignment",provider.getUserAssignments());
     }
 
+    @RequestMapping(value = "/reportdata/labEquipmentList", method = GET, headers = BaseController.ACCEPT_JSON)
+    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_LAB_EQUIPMENT_LIST_REPORT')")
+    public Pages getLabEquipmentStatus(  @RequestParam(value = "page", required = false, defaultValue = "1") int page,
+                                         @RequestParam(value = "max", required = false, defaultValue = "10") int max,
+                                         HttpServletRequest request) {
 
+        Report report = reportManager.getReportByKey("lab_equipment_list");
 
+        LabEquipmentStatusReportDataProvider provider = (LabEquipmentStatusReportDataProvider) report.getReportDataProvider();
+        List<LabEquipmentStatusReport> labEquipmentStatusList = (List<LabEquipmentStatusReport>)
+                provider.getMainReportData(request.getParameterMap(), request.getParameterMap(),page, max);
 
-
-
-
+        return new Pages(page, max, labEquipmentStatusList);
+    }
 }

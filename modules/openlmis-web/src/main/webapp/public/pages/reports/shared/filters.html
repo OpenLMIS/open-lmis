@@ -165,3 +165,23 @@
 </script>
 
 
+<script type="text/ng-template" id="filter-equipment-type">
+    <div>
+        <label class="labels">Equipment <span ng-show="requiredFilters.equipmentType" class="label-required">*</span></label><div>
+        <select class="input-large" ng-model="filter.equipmentType" ng-change="filterChanged();">
+            <option ng-repeat="equipment in equipmentTypes" value="{{ equipment.id }}" ng-selected="filter.equipmentTypes == equipment.id">{{equipment.name}} -- {{filter.equipmentTypes}}</option>
+        </select>
+    </div>
+    </div>
+</script>
+
+<script type="text/ng-template" id="filter-program-with-budget-template">
+    <div>
+        <label class="labels">Program <span ng-show="requiredFilters.program" class="label-required">*</span></label><div>
+        <select class="input-large" ng-model="filter.program" ng-change="filterChanged();">
+            <option ng-repeat="programWithBudget in programs" value="{{ programWithBudget.id }}" ng-selected="filter.program == programWithBudget.id">{{programWithBudget.name}}</option>
+        </select>
+
+    </div>
+    </div>
+</script>

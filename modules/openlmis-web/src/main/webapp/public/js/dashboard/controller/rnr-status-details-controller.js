@@ -18,7 +18,7 @@ function RnRStatusDetailsController($scope,$routeParams,RnRStatusDetailsByRequis
         if(!isUndefined($routeParams.rgroupId) &&
             !isUndefined($routeParams.programId) &&
             !isUndefined($routeParams.periodId)
-         ){
+            ){
             RnRStatusDetailsByRequisitionGroup.get({
                 requisitionGroupId: $routeParams.rgroupId,
                 programId: $routeParams.programId,
@@ -28,11 +28,9 @@ function RnRStatusDetailsController($scope,$routeParams,RnRStatusDetailsByRequis
                 $scope.totalRnRStaus = 0;
 
                 if(!isUndefined(data.rnrDetails)){
-                   $scope.rnrStatusDetails= data.rnrDetails;
+                    $scope.rnrStatusDetails= data.rnrDetails;
 
                     setupTableOption();
-                   // $scope.product = _.pluck(stockData.stockOut,'product')[0];
-                   // $scope.location = _.pluck(stockData.stockOut,'location')[0];
                 }else{
                     $scope.resetRnRStatusData();
                 }
