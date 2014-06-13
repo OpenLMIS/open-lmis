@@ -108,11 +108,11 @@ public class RegimenSummaryQueryBuilder {
             predicates = predicates + " and regimens.categoryId = " + filter.getRegimenCategoryId();
         }
 
-       /* if(filter.getZoneId() != 0){
+        if(filter.getZoneId() != 0){
             predicates = predicates + " and ( f.geographicZoneId = " + filter.getZoneId() +" or gz.parentId = " +filter.getZoneId() + " or zone.parentId = " + filter.getZoneId() + " or c.parentId = " + filter.getZoneId() + ") " ;
-        }*/
+        }
         String query="";
-       /*  query="SELECT \n" +
+        query="SELECT \n" +
                 " regimens.name regimen,sum(li.patientsontreatment) patientsontreatment, SUM(li.patientstoinitiatetreatment)\n" +
                 "patientstoinitiatetreatment, \n" +
                 "SUM(li.patientsstoppedtreatment) patientsstoppedtreatment\n" +
@@ -129,48 +129,7 @@ public class RegimenSummaryQueryBuilder {
                 "   JOIN regimens ON r.programid = regimens.programid\n" +
                 " WHERE r.periodid = " + filter.getPeriodId() + " and r.programId =  " + filter.getProgramId() + "and r.status in ('APPROVED','RELEASED') "+predicates +
                 "   GROUP BY regimens.name\n" +
-                "   ORDER BY regimens.name ";*/
-
-
-        //Test Query
-        query="\n" +
-                "WITH temp AS (select distinct\n" +
-                " regimens.name regimen,gz.parentId gzParentId,c.parentId cParentId,f.geographicZoneId,zone.parentId zoneParentId,sum(li.patientsontreatment) patientsontreatment,SUM(li.patientstoinitiatetreatment)\n" +
-                "patientstoinitiatetreatment, \n" +
-                "SUM(li.patientsstoppedtreatment) patientsstoppedtreatment\n" +
-                "  FROM regimen_line_items li\n" +
-                "   JOIN requisitions r ON r.id = li.rnrid\n" +
-                "   JOIN facilities f ON r.facilityid = f.id\n" +
-                "   JOIN geographic_zones gz ON gz.id = f.geographiczoneid\n" +
-                "   JOIN geographic_zones zone ON gz.parentid = zone.id\n" +
-                "   JOIN geographic_zones c ON zone.parentid = c.id\n" +
-                "   JOIN requisition_group_members rgm ON rgm.facilityid = r.facilityid\n" +
-                "   JOIN programs_supported ps ON ps.programid = r.programid AND r.facilityid = ps.facilityid\n" +
-                "   JOIN processing_periods pp ON r.periodid = pp.id\n" +
-                "   JOIN requisition_group_program_schedules rgps ON rgps.requisitiongroupid = rgm.requisitiongroupid AND pp.scheduleid = rgps.scheduleid\n" +
-                "   JOIN regimens ON r.programid = regimens.programid\n" +
-                " WHERE r.periodid = " + filter.getPeriodId() + " and r.programId =  " + filter.getProgramId() + "and r.status in ('APPROVED','RELEASED') "+predicates +
-                "   GROUP BY regimens.name,f.geographicZoneId,gz.ParentId,c.ParentId,zone.ParentId\n" +
-                "   ORDER BY regimens.name)\n" +
-                "   select  t.regimen,\n" +
-                "      t.patientsontreatment patientsontreatment,\n" +
-                "     t.patientstoinitiatetreatment patientsToInitiateTreatment,\n" +
-                "     t.patientsstoppedtreatment patientsstoppedtreatment,\n" +
-                "    COALESCE( case when temp2.total > 0 THEN round(((t.patientsontreatment*100)/temp2.total),1) ELSE temp2.total END ) \n" +
-                "    totalOnTreatmentPercentage,\n" +
-                "    COALESCE( case when temp2.total2 > 0 THEN round(((t.patientstoinitiatetreatment*100)/temp2.total2),1) ELSE temp2.total2 END )\n" +
-                "    totalpatientsToInitiateTreatmentPercentage,t.regimen,\n" +
-                "                                                             \n" +
-                "    COALESCE( case when temp2.total3 > 0 THEN round(((t.patientsstoppedtreatment*100)/temp2.total3),1) \n" +
-                "     ELSE temp2.total3 END ) stoppedTreatmentPercentage  from temp t\n" +
-                "     INNER JOIN (select geographicZoneId,gzParentId,cParentId,zoneParentId,\n" +
-                "     SUM(patientsontreatment) total,SUM(patientstoinitiatetreatment) total2,\n" +
-                "     SUM(patientsstoppedtreatment) total3 from  temp GROUP BY geographicZoneId,gzParentId,cParentId,zoneParentId) temp2\n" +
-                "      ON\n" +
-                "\ttemp2.geographicZoneId="+ filter.getZoneId()+"or temp2.gzParentId="+ filter.getZoneId()+"" +
-                "or temp2.cParentId="+filter.getZoneId()+"or temp2.zoneParentId= "+filter.getZoneId();
-
-
+                "   ORDER BY regimens.name ";
 
         return query;
 
