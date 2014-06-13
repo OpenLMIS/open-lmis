@@ -69,13 +69,17 @@ public class MaintenanceRequestController extends BaseController {
 
   @RequestMapping(value = "save", method = RequestMethod.POST, headers = ACCEPT_JSON)
   public ResponseEntity<OpenLmisResponse> save(@RequestBody MaintenanceRequest maintenanceRequest, HttpServletRequest request){
-    maintenanceRequest.setCreatedBy(loggedInUserId(request));
-    maintenanceRequest.setUserId(loggedInUserId(request));
-    maintenanceRequest.setResolved(false);
-    maintenanceRequest.setRequestDate(new Date());
+    if(maintenanceRequest.getId() == null) {
+      maintenanceRequest.setCreatedBy(loggedInUserId(request));
+      maintenanceRequest.setUserId(loggedInUserId(request));
+      maintenanceRequest.setResolved(false);
+      maintenanceRequest.setRequestDate(new Date());
+    }
+
+    maintenanceRequest.setModifiedBy(loggedInUserId(request));
+    maintenanceRequest.setModifiedDate(new Date());
     service.save(maintenanceRequest);
     return OpenLmisResponse.response("status","success");
   }
-
 
 }
