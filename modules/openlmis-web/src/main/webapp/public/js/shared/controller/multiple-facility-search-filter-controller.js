@@ -21,6 +21,7 @@ function MultipleFacilitySearchFilterController($scope, Facilities) {
     if (!$scope.facilitySearchParam) return;
     $scope.tempFacilities = [];
     $scope.$parent.$parent.duplicateFacilityName = undefined;
+    $scope.disableAddFacility = true;
     $scope.facilityQuery = $scope.facilitySearchParam.trim();
     Facilities.get({"searchParam": $scope.facilityQuery, "facilityTypeId": $scope.type.id, "geoZoneId": $scope.zone.id}, function (data) {
       $scope.facilityList = data.facilityList;
