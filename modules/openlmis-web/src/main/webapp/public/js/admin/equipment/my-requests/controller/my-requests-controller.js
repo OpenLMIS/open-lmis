@@ -9,10 +9,33 @@
  */
 
 
-function MyRequestsController($scope, PendingRequests, $routeParams, $location) {
+function MyRequestsController($scope, PendingRequests, SaveMaintenanceRequest, messageService, $routeParams, $location) {
 
     PendingRequests.get(function(data){
        $scope.list  = data.logs;
     });
+
+    $scope.respondToRequest = function (maintenanceRequest){
+        $scope.currentRequest = maintenanceRequest;
+        $scope.maintenanceRequestResponseModal = true;
+    };
+
+    $scope.closeModal = function(){
+        $scope.maintenanceRequestResponseModal = false;
+        $scope.currentRequest = null;
+    };
+
+    $scope.saveResponse = function(){
+        var successHandler = function (response) {
+            $scope.error = "";
+            $location.path('#/');
+            $scope.closeModal();
+        };
+
+        var errorHandler = function (response) {
+            $scope.error = messageService.get(response.data.error);
+        };
+        SaveMaintenanceRequest.save($scope.currentRequest,successHandler,errorHandler);
+    };
 
 }
