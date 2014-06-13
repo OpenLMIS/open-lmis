@@ -12,7 +12,13 @@ package org.openlmis.core.service;
 
 import com.google.common.base.Predicate;
 import lombok.NoArgsConstructor;
-import org.openlmis.core.domain.*;
+import org.openlmis.core.domain.FacilityType;
+import org.openlmis.core.domain.FacilityTypeApprovedProduct;
+import org.openlmis.core.domain.Pagination;
+import org.openlmis.core.domain.ProductCategory;
+import org.openlmis.core.domain.Program;
+import org.openlmis.core.domain.ProgramProduct;
+import org.openlmis.core.domain.ProgramProductPrice;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.FacilityRepository;
 import org.openlmis.core.repository.ProgramProductRepository;
@@ -147,7 +153,7 @@ public class ProgramProductService {
   public List<ProgramProduct> getUnapprovedProgramProducts(Long facilityTypeId, Long programId) {
     final List<ProgramProduct> allProgramProducts = getByProgram(new Program(programId));
     final List<FacilityTypeApprovedProduct> approvedProducts = facilityApprovedProductService.getAllBy(facilityTypeId,
-      programId, null, null);
+      programId, "", new Pagination());
 
     Iterable<ProgramProduct> programProducts = filter(allProgramProducts, new Predicate<ProgramProduct>() {
       @Override

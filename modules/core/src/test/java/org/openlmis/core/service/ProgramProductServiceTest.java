@@ -19,7 +19,14 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.builder.ProgramProductBuilder;
-import org.openlmis.core.domain.*;
+import org.openlmis.core.domain.FacilityType;
+import org.openlmis.core.domain.FacilityTypeApprovedProduct;
+import org.openlmis.core.domain.Money;
+import org.openlmis.core.domain.Pagination;
+import org.openlmis.core.domain.ProductCategory;
+import org.openlmis.core.domain.Program;
+import org.openlmis.core.domain.ProgramProduct;
+import org.openlmis.core.domain.ProgramProductPrice;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.FacilityRepository;
 import org.openlmis.core.repository.ProgramProductRepository;
@@ -374,7 +381,7 @@ public class ProgramProductServiceTest {
     List<FacilityTypeApprovedProduct> approvedProducts = asList(facilityTypeApprovedProduct1,
       facilityTypeApprovedProduct2, facilityTypeApprovedProduct3);
 
-    when(facilityApprovedProductService.getAllBy(facilityTypeId, programId, null, null)).thenReturn(approvedProducts);
+    when(facilityApprovedProductService.getAllBy(facilityTypeId, programId, "", new Pagination())).thenReturn(approvedProducts);
 
     List<ProgramProduct> unapprovedProgramProducts = programProductService.getUnapprovedProgramProducts(
       facilityTypeId, programId);

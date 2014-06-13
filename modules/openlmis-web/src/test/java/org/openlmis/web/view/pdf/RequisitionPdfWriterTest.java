@@ -14,9 +14,12 @@ import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.pdf.PdfDocument;
 import com.itextpdf.text.pdf.PdfPTable;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.openlmis.core.service.MessageService;
+import org.openlmis.db.categories.UnitTests;
 import org.openlmis.web.view.pdf.requisition.RequisitionPdfModel;
 import org.openlmis.web.view.pdf.requisition.RequisitionPdfWriter;
 import org.powermock.api.mockito.PowerMockito;
@@ -31,12 +34,16 @@ import static org.mockito.Mockito.verify;
 import static org.powermock.api.mockito.PowerMockito.when;
 import static org.powermock.api.mockito.PowerMockito.whenNew;
 
-@PrepareForTest(RequisitionPdfWriter.class)
+@Category(UnitTests.class)
 @RunWith(PowerMockRunner.class)
+@PrepareForTest(RequisitionPdfWriter.class)
 public class RequisitionPdfWriterTest {
 
   @Mock
   PdfDocument document;
+
+  @Mock
+  MessageService messageService;
 
   @Mock
   OutputStream outputStream;
@@ -59,7 +66,7 @@ public class RequisitionPdfWriterTest {
     PdfPTable regimenTable = new PdfPTable(3);
     PdfPTable summary = new PdfPTable(4);
 
-    whenNew(RequisitionPdfModel.class).withArguments(model).thenReturn(requisitionPdfModel);
+    whenNew(RequisitionPdfModel.class).withArguments(model, messageService).thenReturn(requisitionPdfModel);
 
     when(requisitionPdfModel.getRequisitionHeader()).thenReturn(requisitionHeader);
     when(requisitionPdfModel.getFullSupplyHeader()).thenReturn(fullSupplyHeader);

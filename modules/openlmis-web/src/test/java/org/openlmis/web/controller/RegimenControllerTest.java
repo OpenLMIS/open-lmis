@@ -12,6 +12,7 @@ package org.openlmis.web.controller;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -20,6 +21,7 @@ import org.openlmis.core.domain.Regimen;
 import org.openlmis.core.domain.RegimenCategory;
 import org.openlmis.core.service.ProgramService;
 import org.openlmis.core.service.RegimenService;
+import org.openlmis.db.categories.UnitTests;
 import org.openlmis.rnr.domain.RegimenColumn;
 import org.openlmis.rnr.domain.RegimenTemplate;
 import org.openlmis.rnr.service.RegimenColumnService;
@@ -41,6 +43,7 @@ import static org.openlmis.authentication.web.UserAuthenticationSuccessHandler.U
 import static org.openlmis.web.controller.RegimenController.REGIMENS;
 import static org.openlmis.web.controller.RegimenController.REGIMEN_CATEGORIES;
 
+@Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
 public class RegimenControllerTest {
 
