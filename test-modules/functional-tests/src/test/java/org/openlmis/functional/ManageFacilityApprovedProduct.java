@@ -280,6 +280,11 @@ public class ManageFacilityApprovedProduct extends TestCaseHelper {
 
   @AfterMethod(groups = {"admin"})
   public void tearDown() throws SQLException {
+    dbWrapper.updateFieldValue("programs", "push", "f", "code", "MALARIA");
+    dbWrapper.updateFieldValue("programs", "name", "HIV", "code", "HIV");
+    dbWrapper.updateFieldValue("facility_types", "name", "Lvl3 Hospital", "name", "lvl3 Hospital");
+    dbWrapper.updateFieldValue("facility_types", "displayOrder", "11", "name", "Warehouse");
+
     HomePage homePage = PageObjectFactory.getHomePage(testWebDriver);
     homePage.logout(baseUrlGlobal);
     dbWrapper.removeAllExistingRights("Admin");
