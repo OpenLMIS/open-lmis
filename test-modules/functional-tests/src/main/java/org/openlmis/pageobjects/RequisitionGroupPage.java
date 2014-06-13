@@ -146,6 +146,18 @@ public class RequisitionGroupPage extends FilterSearchPage {
   @FindBy(how = ID, using = "facilityAddedMessage")
   private static WebElement facilityAddedMessage = null;
 
+  @FindBy(how = ID, using = "facilityHeader")
+  private static WebElement facilityHeader = null;
+
+  @FindBy(how = ID, using = "geoZoneHeader")
+  private static WebElement geoZoneHeader = null;
+
+  @FindBy(how = ID, using = "facilityTypeHeader")
+  private static WebElement facilityTypeHeader = null;
+
+  @FindBy(how = ID, using = "enabledHeader")
+  private static WebElement enabledHeader = null;
+
   public RequisitionGroupPage(TestWebDriver driver) {
     super(driver);
     PageFactory.initElements(new AjaxElementLocatorFactory(TestWebDriver.getDriver(), 1), this);
@@ -373,10 +385,36 @@ public class RequisitionGroupPage extends FilterSearchPage {
     return saveSuccessMsgDiv.getText();
   }
 
+  public String getFacilityHeader() {
+    testWebDriver.waitForElementToAppear(facilityHeader);
+    return facilityHeader.getText();
+  }
+
+  public String getGeoZoneHeader() {
+    testWebDriver.waitForElementToAppear(geoZoneHeader);
+    return geoZoneHeader.getText();
+  }
+
+  public String getFacilityTypeHeader() {
+    testWebDriver.waitForElementToAppear(facilityTypeHeader);
+    return facilityTypeHeader.getText();
+  }
+
+  public String getFacilityEnabledHeader() {
+    testWebDriver.waitForElementToAppear(enabledHeader);
+    return enabledHeader.getText();
+  }
+
   public String getMemberFacilityCode(int rowNumber) {
     WebElement code = testWebDriver.getElementById("code" + (rowNumber - 1));
     testWebDriver.waitForElementToAppear(code);
     return code.getText();
+  }
+
+  public String getMemberGeoZone(int rowNumber) {
+    WebElement type = testWebDriver.getElementById("geoZoneName" + (rowNumber - 1));
+    testWebDriver.waitForElementToAppear(type);
+    return type.getText();
   }
 
   public String getMemberFacilityType(int rowNumber) {
