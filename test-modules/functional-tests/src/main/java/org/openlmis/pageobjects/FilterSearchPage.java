@@ -62,9 +62,6 @@ public class FilterSearchPage extends Page {
   @FindBy(how = ID, using = "removeGeoZoneIcon")
   private static WebElement removeGeoZoneIcon = null;
 
-  @FindBy(how = ID, using = "addMembers")
-  private static WebElement addMembers = null;
-
   @FindBy(how = ID, using = "addSelectedFacilities")
   private static WebElement addSelectedFacilities = null;
 
@@ -192,13 +189,25 @@ public class FilterSearchPage extends Page {
     return removeGeoZoneIcon.isDisplayed();
   }
 
-  public void clickAddMembersButton() {
-    testWebDriver.waitForElementToAppear(addMembers);
-    addMembers.click();
-  }
-
   public void clickOnAddSelectedFacilityButton() {
     testWebDriver.waitForElementToAppear(addSelectedFacilities);
     addSelectedFacilities.click();
+  }
+
+  public boolean isAddSelectedFacilityButtonEnabled() {
+    try {
+      testWebDriver.waitForElementToAppear(addSelectedFacilities);
+    } catch (TimeoutException e) {
+      return false;
+    } catch (NoSuchElementException e) {
+      return false;
+    }
+    return addSelectedFacilities.isEnabled();
+  }
+
+  public void checkFacilityToBeAssociated(int rowNumber) {
+    WebElement facilityCheckBox = testWebDriver.getElementById("facilityCheckBox" + (rowNumber - 1));
+    testWebDriver.waitForElementToAppear(facilityCheckBox);
+    facilityCheckBox.click();
   }
 }

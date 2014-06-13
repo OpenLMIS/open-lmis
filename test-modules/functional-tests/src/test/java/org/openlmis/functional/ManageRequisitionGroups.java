@@ -1,3 +1,13 @@
+/*
+ * This program is part of the OpenLMIS logistics management information system platform software.
+ * Copyright © 2013 VillageReach
+ *
+ * This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+ *  
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+ * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
+ */
+
 package org.openlmis.functional;
 
 import org.openlmis.UiUtils.TestCaseHelper;
@@ -11,8 +21,7 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.thoughtworks.selenium.SeleneseTestBase.assertFalse;
-import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
+import static com.thoughtworks.selenium.SeleneseTestBase.*;
 import static org.testng.AssertJUnit.assertEquals;
 
 public class ManageRequisitionGroups extends TestCaseHelper {
@@ -31,6 +40,8 @@ public class ManageRequisitionGroups extends TestCaseHelper {
   @BeforeMethod(groups = {"admin"})
   public void setUp() throws InterruptedException, SQLException, IOException {
     super.setup();
+    dbWrapper.removeAllExistingRights("Admin");
+    dbWrapper.assignRight("Admin", "MANAGE_FACILITY");
     dbWrapper.insertFacilities("F10", "F100");
     dbWrapper.insertFacilities("F11", "F10A");
 
@@ -41,20 +52,23 @@ public class ManageRequisitionGroups extends TestCaseHelper {
   @Test(groups = {"admin"})
   public void testRightsNotPresent() throws SQLException {
     HomePage homePage = loginPage.loginAs(testData.get(ADMIN), testData.get(PASSWORD));
-    homePage.navigateToUser();
+    homePage.navigateManageFacility();
 
     assertFalse(homePage.isRequisitionGroupTabDisplayed());
     homePage.logout();
 
     dbWrapper.assignRight("Admin", "MANAGE_REQUISITION_GROUP");
     loginPage.loginAs(testData.get(ADMIN), testData.get(PASSWORD));
-    homePage.navigateToUser();
+    homePage.navigateManageFacility();
     assertTrue(homePage.isRequisitionGroupTabDisplayed());
     requisitionGroupPage = homePage.navigateToRequisitionGroupPage();
 
     assertTrue(requisitionGroupPage.isAddNewButtonDisplayed());
     assertEquals("Requisition group", requisitionGroupPage.getSelectedSearchOption());
     assertTrue(requisitionGroupPage.isSearchIconDisplayed());
+    assertTrue(homePage.isRequisitionGroupTabDisplayed());
+    assertEquals("Search requisition group", requisitionGroupPage.getSearchRequisitionGroupLabel());
+    assertFalse(requisitionGroupPage.isResultDisplayed());
   }
 
   @Test(groups = {"admin"})
@@ -65,12 +79,6 @@ public class ManageRequisitionGroups extends TestCaseHelper {
     dbWrapper.insertRequisitionGroups("RG1", "RG2", "N2", "N1");
     HomePage homePage = loginPage.loginAs(testData.get(ADMIN), testData.get(PASSWORD));
     requisitionGroupPage = homePage.navigateToRequisitionGroupPage();
-
-    assertTrue(homePage.isRequisitionGroupTabDisplayed());
-    assertEquals("Search requisition group", requisitionGroupPage.getSearchRequisitionGroupLabel());
-    assertTrue(requisitionGroupPage.isAddNewButtonDisplayed());
-    assertEquals("Requisition group", requisitionGroupPage.getSelectedSearchOption());
-    assertFalse(requisitionGroupPage.isResultDisplayed());
 
     search("re");
     assertEquals("2 matches found for 're'", requisitionGroupPage.getNResultsMessage());
@@ -94,6 +102,7 @@ public class ManageRequisitionGroups extends TestCaseHelper {
   @Test(groups = {"admin"})
   public void testRequisitionGroupSearchSortAndPagination() throws SQLException {
     dbWrapper.assignRight("Admin", "MANAGE_REQUISITION_GROUP");
+    dbWrapper.assignRight("Admin", "UPLOADS");
     dbWrapper.insertSupervisoryNode("F10", "N1", "Super1", null);
     dbWrapper.insertSupervisoryNode("F11", "N2", "Super2", null);
     dbWrapper.insertRequisitionGroups("RG1", "RG2", "N2", "N1");
@@ -124,9 +133,9 @@ public class ManageRequisitionGroups extends TestCaseHelper {
       "Requisition Group 15", "Requisition Group 16", "Requisition Group 18", "Requisition Group 20", "Requisition Group 4",
       "Requisition Group 5", "Requisition Group 7"});
     String[] counts = new String[]{"2", "2", "1", "1", "1", "2", "", "1", "1", "2"};
-//    for (int i = 1; i < counts.length; i++) {
-//      assertEquals(counts[i - 1], requisitionGroupPage.getFacilityCount(i));
-//    }
+    for (int i = 1; i < counts.length; i++) {
+      assertEquals(counts[i - 1], requisitionGroupPage.getFacilityCount(i));
+    }
 
     navigateToPage(2);
     verifyPageNumberSelected(2);
@@ -177,6 +186,7 @@ public class ManageRequisitionGroups extends TestCaseHelper {
   @Test(groups = {"admin"})
   public void testRequisitionGroupSupervisoryNodeSearchSortAndPagination() throws SQLException {
     dbWrapper.assignRight("Admin", "MANAGE_REQUISITION_GROUP");
+    dbWrapper.assignRight("Admin", "UPLOADS");
     dbWrapper.insertSupervisoryNode("F10", "N1", "Super1", null);
     dbWrapper.insertSupervisoryNode("F11", "N2", "Super2", null);
     dbWrapper.insertRequisitionGroups("RG1", "RG2", "N2", "N1");
@@ -264,7 +274,7 @@ public class ManageRequisitionGroups extends TestCaseHelper {
     assertEquals("Req Group", requisitionGroupPage.getRequisitionGroupName(1));
     assertEquals("RG1", requisitionGroupPage.getRequisitionGroupCode(1));
     assertEquals("Super1", requisitionGroupPage.getSupervisoryNodeName(1));
-    //assertEquals("", requisitionGroupPage.getFacilityCount(1));
+    assertEquals("", requisitionGroupPage.getFacilityCount(1));
 
     requisitionGroupPage.clickSearchOptionButton();
     requisitionGroupPage.selectSupervisoryNodeAsSearchOption();
@@ -274,7 +284,7 @@ public class ManageRequisitionGroups extends TestCaseHelper {
   }
 
   @Test(groups = {"admin"})
-  public void testAddNewRequisitionGroup() throws SQLException {
+  public void testAddNewRequisitionGroupWithoutMembers() throws SQLException {
     dbWrapper.assignRight("Admin", "MANAGE_REQUISITION_GROUP");
     dbWrapper.insertSupervisoryNode("F10", "N1", "Node1", null);
     dbWrapper.insertSupervisoryNode("F11", "N2", "Node2", null);
@@ -291,6 +301,7 @@ public class ManageRequisitionGroups extends TestCaseHelper {
     requisitionGroupPage.enterRequisitionGroupCode("RG5");
     requisitionGroupPage.enterRequisitionGroupName("Requisition Group 5");
     requisitionGroupPage.enterParameterToSearchSupervisoryNode("node");
+    testWebDriver.waitForAjax();
     assertEquals("Node1", requisitionGroupPage.getSupervisoryNodeSearchResult(1));
     assertEquals("Node2", requisitionGroupPage.getSupervisoryNodeSearchResult(2));
     requisitionGroupPage.selectSupervisoryNodeSearchResult(1);
@@ -300,7 +311,7 @@ public class ManageRequisitionGroups extends TestCaseHelper {
     dbWrapper.insertRequisitionGroupProgramScheduleForProgramAfterDelete("RG5", "HIV", "M");
 
     search("Requisition Group 5");
-    requisitionGroupPage.selectRequisitionGroupSearchResult(1);
+    requisitionGroupPage.clickManageRequisitionGroupSearchResult(1);
     requisitionGroupPage.clickMembersAccordionLink();
     requisitionGroupPage.clickAddMembersButton();
     searchAssociatedFacility("F11");
@@ -318,27 +329,31 @@ public class ManageRequisitionGroups extends TestCaseHelper {
     requisitionGroupPage.clickAddMembersButton();
 
     requisitionGroupPage.checkFacilityToBeAssociated(4);
+    requisitionGroupPage.clickOnAddSelectedFacilityButton();
+    assertEquals("Facilities added successfully", requisitionGroupPage.getFacilityAddedMessage());
 
     requisitionGroupPage.clickSaveButton();
     assertEquals("Requisition Group \"Requisition Group 5\" updated successfully.   View Here", requisitionGroupPage.getSuccessMessage());
-    //assertEquals("4", requisitionGroupPage.getFacilityCount(1));
+    assertEquals("4", requisitionGroupPage.getFacilityCount(1));
   }
 
   @Test(groups = {"admin"})
   public void testUpdateRequisitionGroup() throws SQLException {
     dbWrapper.assignRight("Admin", "MANAGE_REQUISITION_GROUP");
+    dbWrapper.insertFacilitiesWithFacilityTypeIDAndGeoZoneId("F11A", "F11B", 1, 3);
     dbWrapper.insertSupervisoryNode("F10", "N1", "Node1", null);
     dbWrapper.insertSupervisoryNode("F11", "N2", "Node2", null);
     dbWrapper.insertRequisitionGroup("RG1", "Requisition Group 1", "N1");
     dbWrapper.insertRequisitionGroupMember("RG1", "F10");
     dbWrapper.insertSchedule("M", "monthly", "monthly");
     dbWrapper.insertRequisitionGroupProgramScheduleForProgramAfterDelete("RG1", "HIV", "M");
+    dbWrapper.insertFacilitiesWithFacilityTypeIDAndGeoZoneId("F12A", "F12B", 1, 3);
 
     HomePage homePage = loginPage.loginAs(testData.get(ADMIN), testData.get(PASSWORD));
     requisitionGroupPage = homePage.navigateToRequisitionGroupPage();
 
     search("Requisition Group 1");
-    requisitionGroupPage.selectRequisitionGroupSearchResult(1);
+    requisitionGroupPage.clickManageRequisitionGroupSearchResult(1);
 
     requisitionGroupPage.clickClearNodeSearchButton();
     requisitionGroupPage.enterParameterToSearchSupervisoryNode("Node");
@@ -347,17 +362,36 @@ public class ManageRequisitionGroups extends TestCaseHelper {
 
     requisitionGroupPage.clickMembersAccordionLink();
     requisitionGroupPage.clickAddMembersButton();
-    searchAssociatedFacility("F100");
+    searchAssociatedFacility("F10");
     requisitionGroupPage.checkFacilityToBeAssociated(1);
+    requisitionGroupPage.clickOnAddSelectedFacilityButton();
+    assertEquals("Facility \"Village Dispensary\" is already added", requisitionGroupPage.getDuplicateFacilityMessage());
+
+    searchAssociatedFacility("F12A");
+    requisitionGroupPage.checkFacilityToBeAssociated(1);
+
+    searchAssociatedFacility("F12B");
+//    assertFalse(requisitionGroupPage.isAddSelectedFacilityButtonEnabled());
+    requisitionGroupPage.checkFacilityToBeAssociated(1);
+    assertTrue(requisitionGroupPage.isAddSelectedFacilityButtonEnabled());
+    requisitionGroupPage.checkFacilityToBeAssociated(1);
+    assertFalse(requisitionGroupPage.isAddSelectedFacilityButtonEnabled());
+    requisitionGroupPage.checkFacilityToBeAssociated(1);
+    assertTrue(requisitionGroupPage.isAddSelectedFacilityButtonEnabled());
+
     requisitionGroupPage.clickOnAddSelectedFacilityButton();
     requisitionGroupPage.clickAddMembersButton();
     searchAssociatedFacility("Village Dispensary");
     requisitionGroupPage.checkFacilityToBeAssociated(2);
     requisitionGroupPage.clickOnAddSelectedFacilityButton();
+    assertFalse(requisitionGroupPage.isSearchIconDisplayed());
+    assertNotEquals("F12A", requisitionGroupPage.getMemberFacilityCode(1));
+    assertNotEquals("F12A", requisitionGroupPage.getMemberFacilityCode(2));
+    assertNotEquals("F12A", requisitionGroupPage.getMemberFacilityCode(3));
 
     requisitionGroupPage.clickSaveButton();
     assertEquals("Requisition Group \"Requisition Group 1\" updated successfully.   View Here", requisitionGroupPage.getSuccessMessage());
-    //assertEquals("3", requisitionGroupPage.getFacilityCount(1));
+    assertEquals("3", requisitionGroupPage.getFacilityCount(1));
     assertEquals("Node2", requisitionGroupPage.getSupervisoryNodeName(1));
   }
 
@@ -376,10 +410,9 @@ public class ManageRequisitionGroups extends TestCaseHelper {
     search("Requisition Group 1");
     testWebDriver.waitForAjax();
     assertEquals("1", requisitionGroupPage.getFacilityCount(1));
-    requisitionGroupPage.selectRequisitionGroupSearchResult(1);
+    requisitionGroupPage.clickManageRequisitionGroupSearchResult(1);
 
     requisitionGroupPage.enterRequisitionGroupName("ReqGrp");
-
     requisitionGroupPage.clickMembersAccordionLink();
 
     assertEquals("F10 - Village Dispensary", requisitionGroupPage.getMemberFacilityCode(1));
@@ -389,6 +422,13 @@ public class ManageRequisitionGroups extends TestCaseHelper {
     assertEquals("F11 - Village Dispensary", requisitionGroupPage.getMemberFacilityCode(2));
     assertEquals("Lvl3 Hospital", requisitionGroupPage.getMemberFacilityType(2));
     assertFalse(requisitionGroupPage.isMemberFacilityEnableFlagDisplayed(2));
+
+    requisitionGroupPage.clickAddMembersButton();
+    searchAssociatedFacility("F10");
+    requisitionGroupPage.checkFacilityToBeAssociated(1);
+    requisitionGroupPage.clickCloseButton();
+    assertTrue(requisitionGroupPage.isSearchIconDisplayed());
+    assertFalse(requisitionGroupPage.isAddSelectedFacilityButtonEnabled());
 
     requisitionGroupPage.clickCancelButton();
     testWebDriver.waitForAjax();
@@ -410,8 +450,32 @@ public class ManageRequisitionGroups extends TestCaseHelper {
     requisitionGroupPage = homePage.navigateToRequisitionGroupPage();
     requisitionGroupPage.clickAddNewButton();
 
+    assertEquals("Add requisition group", requisitionGroupPage.getAddRequisitionGroupHeader());
+    assertEquals("Code", requisitionGroupPage.getCodeLabel());
+    assertEquals("Name", requisitionGroupPage.getNameLabel());
+//    assertEquals("Supervisory node", requisitionGroupPage.getSupervisoryNodeLabel());
+    assertEquals("Description", requisitionGroupPage.getDescriptionLabel());
+    assertEquals("Program and Schedules", requisitionGroupPage.getProgramsAndScheduleLabel());
+    assertEquals("Members", requisitionGroupPage.getMembersLabel());
+
+    requisitionGroupPage.clickMembersAccordionLink();
+    assertTrue(requisitionGroupPage.isAddMembersButtonDisplayed());
+    assertFalse(requisitionGroupPage.isSearchIconDisplayed());
+
+    requisitionGroupPage.clickCollapseAll();
+    assertFalse(requisitionGroupPage.isAddMembersButtonDisplayed());
+    assertFalse(requisitionGroupPage.isSearchIconDisplayed());
+
+    requisitionGroupPage.clickExpandAll();
+    assertTrue(requisitionGroupPage.isAddMembersButtonDisplayed());
+    assertFalse(requisitionGroupPage.isSearchIconDisplayed());
+
+    requisitionGroupPage.clickMembersAccordionLink();
+    assertFalse(requisitionGroupPage.isAddMembersButtonDisplayed());
+
     requisitionGroupPage.clickMembersAccordionLink();
     requisitionGroupPage.clickAddMembersButton();
+    assertFalse(requisitionGroupPage.isAddSelectedFacilityButtonEnabled());
     searchAssociatedFacility("F1");
     assertTrue(requisitionGroupPage.isFacilitySearchListDisplayed());
     assertEquals("Too many results found. Please refine your search.", requisitionGroupPage.getTooManyFacilitySearchResultMessage());
@@ -438,8 +502,8 @@ public class ManageRequisitionGroups extends TestCaseHelper {
     searchAssociatedFacility("F111B");
     requisitionGroupPage.checkFacilityToBeAssociated(1);
     requisitionGroupPage.clickOnAddSelectedFacilityButton();
-
     assertEquals("Facility \"Village Dispensary\" is already added", requisitionGroupPage.getDuplicateFacilityMessage());
+    assertTrue(requisitionGroupPage.isSearchIconDisplayed());
   }
 
   @Test(groups = {"admin"})
@@ -470,6 +534,7 @@ public class ManageRequisitionGroups extends TestCaseHelper {
     requisitionGroupPage.checkFacilityToBeAssociated(1);
     requisitionGroupPage.clickOnAddSelectedFacilityButton();
     requisitionGroupPage.clickSaveButton();
+    testWebDriver.sleep(500);
     assertEquals("No Program(s) mapped for Requisition Group", requisitionGroupPage.getErrorMessage());
   }
 
@@ -490,7 +555,7 @@ public class ManageRequisitionGroups extends TestCaseHelper {
     HomePage homePage = loginPage.loginAs(testData.get(ADMIN), testData.get(PASSWORD));
     requisitionGroupPage = homePage.navigateToRequisitionGroupPage();
     search("Re");
-    requisitionGroupPage.selectRequisitionGroupSearchResult(3);
+    requisitionGroupPage.clickManageRequisitionGroupSearchResult(3);
 
     requisitionGroupPage.clickMembersAccordionLink();
     requisitionGroupPage.clickAddMembersButton();
@@ -542,6 +607,8 @@ public class ManageRequisitionGroups extends TestCaseHelper {
   public void tearDown() throws SQLException {
     HomePage homePage = PageObjectFactory.getHomePage(testWebDriver);
     homePage.logout(baseUrlGlobal);
+    dbWrapper.removeAllExistingRights("Admin");
+    dbWrapper.insertAllAdminRightsAsSeedData();
     dbWrapper.deleteData();
     dbWrapper.closeConnection();
   }

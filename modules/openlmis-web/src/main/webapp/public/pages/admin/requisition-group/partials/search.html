@@ -72,7 +72,8 @@
       <td id="code{{$index}}" ng-bind="requisitionGroup.code"></td>
       <td id="supervisoryName{{$index}}" ng-bind="requisitionGroup.supervisoryNode.name"></td>
       <td id="facilityCount{{$index}}" class="right-justified" ng-bind="requisitionGroup.memberCount"></td>
-      <td class="center-justified"> <input type="button" class="btn btn-primary " openlmis-message="link.manage" ng-click="edit(requisitionGroup.id)"></td>
+      <td class="center-justified"><input id="manageButton{{$index}}" type="button" class="btn btn-primary "
+                                          openlmis-message="link.manage" ng-click="edit(requisitionGroup.id)"></td>
     </tr>
     </tbody>
   </table>

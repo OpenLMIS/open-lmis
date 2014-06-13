@@ -115,7 +115,7 @@ public class FacilityApprovedProductPage extends Page {
   private static WebElement viewHereLink = null;
 
   @FindBy(how = ID, using = "clearProductSearch")
-  private static WebElement clearProductSearchButton;
+  private static WebElement clearProductSearchButton = null;
 
   public FacilityApprovedProductPage(TestWebDriver driver) {
     super(driver);

@@ -322,11 +322,6 @@ public class DBWrapper {
       "(select id from geographic_zones where code='%s'))", code, name, parentName);
   }
 
-  public void insertGeographicZoneWithLevel(String code, String name, String parentName, int levelId) throws SQLException {
-    update("insert into geographic_zones (code, name, levelId, parentId) " +
-      "values ('%s','%s',%d, (select id from geographic_zones where code='%s'))", code, name, levelId, parentName);
-  }
-
   public void allocateFacilityToUser(String userName, String facilityCode) throws SQLException {
     update("update users set facilityId = (Select id from facilities where code = '%s') where username = '%s'", facilityCode, userName);
   }
@@ -395,9 +390,6 @@ public class DBWrapper {
     update("delete from facility_ftp_details");
     update("delete from facilities");
     update("delete from geographic_zones where code not in ('Root','Arusha','Dodoma', 'Ngorongoro')");
-    update("delete from role_rights where rightName = 'MANAGE_GEOGRAPHIC_ZONE'");
-    update("delete from role_rights where rightName = 'MANAGE_SUPERVISORY_NODE'");
-    update("delete from role_rights where rightName = 'MANAGE_REQUISITION_GROUP'");
     update("delete from processing_periods");
     update("delete from processing_schedules");
     update("delete from atomfeed.event_records");
@@ -410,10 +402,6 @@ public class DBWrapper {
     update("delete from requisition_line_items");
     update("delete from regimen_line_items");
     update("delete from requisitions");
-  }
-
-  public void deleteGeographicZones() throws SQLException {
-    update("delete from geographic_zones");
   }
 
   public void insertRole(String role, String description) throws SQLException {
