@@ -8,30 +8,30 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-package org.openlmis.core.domain;
+package org.openlmis.core.service;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import org.openlmis.upload.Importable;
-import org.openlmis.upload.annotation.ImportField;
+import org.openlmis.core.domain.ProductForm;
+import org.openlmis.core.repository.ProductFormRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 /**
- * ProductForm represents real world entity for product form.
+ * Service responsible for managing {@link org.openlmis.core.domain.ProductForm} entities.
  */
-@Data
+@Service
 @NoArgsConstructor
-@EqualsAndHashCode(callSuper = false)
-public class ProductForm extends BaseModel implements Importable {
-  @ImportField(name="Product Form Code", mandatory=true)
-  private String code;
+public class ProductFormService {
 
-  @ImportField(name="Display Order", mandatory=true)
-  private Integer displayOrder;
+  private ProductFormRepository pfRep;
 
-  public boolean isValid() {
-    return code != null
-      && code.length() > 0
-      && displayOrder != null;
+  @Autowired
+  public ProductFormService(ProductFormRepository productFormRepository) {pfRep = productFormRepository;}
+
+  public ProductForm getExisting(ProductForm pf) {return pfRep.getByCode(pf.getCode());}
+
+  public void save(ProductForm pf) {
+    if(pf.hasId()) pfRep.update(pf);
+    else pfRep.insert(pf);
   }
 }

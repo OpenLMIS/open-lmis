@@ -25,8 +25,8 @@ public interface ProductFormMapper {
 
     // Used by ProductMapper
   @SuppressWarnings("unused")
-    @Select("SELECT * FROM product_forms WHERE id = #{id}")
-    ProductForm getById(Integer id);
+  @Select("SELECT * FROM product_forms WHERE id = #{id}")
+  ProductForm getById(Integer id);
 
   @Select("SELECT * FROM product_forms WHERE LOWER(code) = LOWER(#{code})")
   ProductForm getByCode(String code);
