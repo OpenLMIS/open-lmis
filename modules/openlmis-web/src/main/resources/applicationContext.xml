@@ -288,6 +288,15 @@
                         <property name="recordHandler" ref="dosageUnitPersistenceHandler"/>
                     </bean>
                 </entry>
+                <entry key="productForm">
+                    <bean class="org.openlmis.web.model.UploadBean">
+                        <property name="displayName" value="label.product.forms"/>
+                        <property name="importableClass">
+                            <value type="java.lang.Class">org.openlmis.core.domain.ProductForm</value>
+                        </property>
+                        <property name="recordHandler" ref="productFormPersistenceHandler"/>
+                    </bean>
+                </entry>
             </map>
         </constructor-arg>
     </bean>
