@@ -222,7 +222,7 @@ describe('CreateRequisitionController', function () {
 
     httpBackend.expect('PUT', '/requisitions/rnrId/save.json').respond(200);
 
-    httpBackend.expectGET('/public/pages/partials/dialogbox.html').respond(200);
+    httpBackend.expectGET('/public/pages/template/dialog/dialogbox.html').respond(200);
     scope.submitRnr();
     httpBackend.flush();
 
@@ -318,7 +318,7 @@ describe('CreateRequisitionController', function () {
   it('should display confirm modal if submit button is clicked and rnr valid', function () {
     spyOn(scope.rnr, 'validateFullSupply').andReturn('');
     spyOn(scope.rnr, 'validateNonFullSupply').andReturn('');
-    httpBackend.expect('GET', '/public/pages/partials/dialogbox.html').respond(200);
+    httpBackend.expect('GET', '/public/pages/template/dialog/dialogbox.html').respond(200);
 
     scope.submitRnr();
 
@@ -505,7 +505,7 @@ describe('CreateRequisitionController', function () {
     spyOn(scope.rnr, 'validateFullSupply').andReturn('');
     spyOn(scope.rnr, 'validateNonFullSupply').andReturn('');
 
-    httpBackend.expectGET('/public/pages/partials/dialogbox.html').respond(200);
+    httpBackend.expectGET('/public/pages/template/dialog/dialogbox.html').respond(200);
     scope.authorizeRnr();
     httpBackend.flush();
 
@@ -524,7 +524,7 @@ describe('CreateRequisitionController', function () {
 
     httpBackend.expect('PUT', '/requisitions/rnrId/save.json').respond(200);
 
-    httpBackend.expectGET('/public/pages/partials/dialogbox.html').respond(200);
+    httpBackend.expectGET('/public/pages/template/dialog/dialogbox.html').respond(200);
     scope.authorizeRnr();
     httpBackend.flush();
 
@@ -589,7 +589,7 @@ describe('CreateRequisitionController', function () {
   it('should display confirm modal if authorize button is clicked and rnr valid', function () {
     spyOn(scope.rnr, 'validateFullSupply').andReturn('');
     spyOn(scope.rnr, 'validateNonFullSupply').andReturn('');
-    httpBackend.expectGET('/public/pages/partials/dialogbox.html').respond(200);
+    httpBackend.expectGET('/public/pages/template/dialog/dialogbox.html').respond(200);
 
     scope.authorizeRnr();
 

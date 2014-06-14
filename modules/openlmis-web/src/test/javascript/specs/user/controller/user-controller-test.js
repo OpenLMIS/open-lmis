@@ -308,7 +308,7 @@ describe("User", function () {
     it('should show confirm modal when Admin clicks Disable', function () {
       spyOn(OpenLmisDialog, 'newDialog');
       spyOn(messageService, 'get');
-      httpBackend.expectGET('/public/pages/partials/dialogbox.html').respond(200);
+      httpBackend.expectGET('/public/pages/template/dialog/dialogbox.html').respond(200);
 
       scope.showConfirmUserDisableModal();
 
@@ -334,7 +334,7 @@ describe("User", function () {
     it('should show confirm modal when Admin clicks Restore', function () {
       spyOn(OpenLmisDialog, 'newDialog');
       spyOn(messageService, 'get');
-      httpBackend.expectGET('/public/pages/partials/dialogbox.html').respond(200);
+      httpBackend.expectGET('/public/pages/template/dialog/dialogbox.html').respond(200);
 
       scope.showConfirmUserRestoreModal();
 

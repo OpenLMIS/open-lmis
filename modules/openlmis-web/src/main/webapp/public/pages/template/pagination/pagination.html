@@ -11,9 +11,14 @@
 
   <ul>
     <li ng-class="{disabled: page === 1}"><a id="firstPageLink" href ng-click="selectPage(1)">&laquo;</a></li>
-    <li ng-class="{disabled: page === 1}"><a id="previousPageLink" href ng-click="selectPage(page - 1)">&lsaquo;</a></li>
-    <li ng-repeat="page in pages track by $index" ng-class="{active: page.active}"><a id="{{ page.text }}" href ng-click="selectPage(page.number)">{{page.text}}</a></li>
-    <li ng-class="{disabled: page === totalPages}"><a id="nextPageLink" href ng-click="selectPage(page + 1)">&rsaquo;</a></li>
-    <li ng-class="{disabled: page === totalPages}"><a id="lastPageLink" href ng-click="selectPage(totalPages)">&raquo;</a></li>
+    <li ng-class="{disabled: page === 1}"><a id="previousPageLink" href ng-click="selectPage(page - 1)">&lsaquo;</a>
+    </li>
+    <li ng-repeat="page in pages track by $index" ng-class="{active: page.active}"><a id="{{ page.text }}" href
+                                                                                      ng-click="selectPage(page.number)">{{page.text}}</a>
+    </li>
+    <li ng-class="{disabled: page === totalPages}"><a id="nextPageLink" href
+                                                      ng-click="selectPage(page + 1)">&rsaquo;</a></li>
+    <li ng-class="{disabled: page === totalPages}"><a id="lastPageLink" href
+                                                      ng-click="selectPage(totalPages)">&raquo;</a></li>
   </ul>
 </div>

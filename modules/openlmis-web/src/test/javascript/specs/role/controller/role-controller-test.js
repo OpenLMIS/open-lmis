@@ -15,8 +15,7 @@ describe("Role", function () {
 
   describe("Create Role", function () {
     var ctrl, scope, $httpBackend, rights, dialog, messageService;
-    beforeEach(inject(function ($rootScope, _$httpBackend_, $controller,
-                                _$dialog_, _messageService_) {
+    beforeEach(inject(function ($rootScope, _$httpBackend_, $controller, _$dialog_, _messageService_) {
       scope = $rootScope.$new();
       dialog = _$dialog_;
       $httpBackend = _$httpBackend_;
@@ -83,7 +82,7 @@ describe("Role", function () {
 
     it("should display role type modal when radio button is clicked", function () {
       scope.roleTypeModal = false;
-      $httpBackend.expectGET('/public/pages/partials/dialogbox.html').respond(200);
+      $httpBackend.expectGET('/public/pages/template/dialog/dialogbox.html').respond(200);
       scope.showRoleTypeModal('true');
       expect(window.selected).toBeTruthy();
     });
@@ -93,8 +92,7 @@ describe("Role", function () {
 
     var ctrl, scope, httpBackend, location;
     it('should update a role', function () {
-      inject(function ($rootScope, _$httpBackend_, $controller, $location,
-                       _$dialog_) {
+      inject(function ($rootScope, _$httpBackend_, $controller, $location, _$dialog_) {
         scope = $rootScope.$new();
         httpBackend = _$httpBackend_;
         location = $location;

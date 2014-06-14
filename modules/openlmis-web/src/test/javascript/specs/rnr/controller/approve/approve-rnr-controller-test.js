@@ -158,7 +158,7 @@ describe('Approve Requisition controller', function () {
 
     spyOn(scope.rnr, 'validateFullSupplyForApproval').andReturn('');
     spyOn(scope.rnr, 'validateNonFullSupplyForApproval').andReturn('');
-    httpBackend.expectGET('/public/pages/partials/dialogbox.html').respond(200);
+    httpBackend.expectGET('/public/pages/template/dialog/dialogbox.html').respond(200);
 
     scope.approveRnr();
     httpBackend.flush();
