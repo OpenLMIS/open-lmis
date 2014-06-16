@@ -120,6 +120,20 @@
                      openlmis-message="label.facility.closed"></label>
             </div>
             <div class="form-row clearfix">
+              <input id="refrigeratorsNotWorking{{ $index }}" type="radio"
+                     ng-model="facilityData.facilityVisit.reasonForNotVisiting"
+                     value="{{reasons.refrigeratorsNotWorking}}"/>
+              <label class="radio-label" for="refrigeratorsNotWorking{{ $index }}"
+                     openlmis-message="label.refrigerators.not.working"></label>
+            </div>
+            <div class="form-row clearfix">
+              <input id="noRefrigerators{{ $index }}" type="radio"
+                     ng-model="facilityData.facilityVisit.reasonForNotVisiting"
+                     value="{{reasons.noRefrigerators}}"/>
+              <label class="radio-label" for="noRefrigerators{{ $index }}"
+                     openlmis-message="label.no.refrigerators"></label>
+           </div>
+            <div class="form-row clearfix">
               <input id="unavailableFunds{{ $index }}" type="radio"
                      ng-model="facilityData.facilityVisit.reasonForNotVisiting"
                      value="{{reasons.unavailableFunds}}"/>
