@@ -13,7 +13,7 @@ function RegimenSummaryControllers($scope, $window, AggregateRegimenSummaryRepor
     $scope.exportReport = function (type) {
         $scope.filter.pdformat = 1;
         var params = jQuery.param($scope.filter);
-        var url = '/reports/download/regimen_summary/' + type + '?' + params;
+        var url = '/reports/download/aggregate_regimen_summary/' + type + '?' + params;
         $window.open(url);
     };
 
