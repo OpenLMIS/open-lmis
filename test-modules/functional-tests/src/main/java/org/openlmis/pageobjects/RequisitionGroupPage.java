@@ -80,9 +80,6 @@ public class RequisitionGroupPage extends FilterSearchPage {
   @FindBy(how = ID, using = "searchSupervisoryNode")
   private static WebElement searchSupervisoryNodeField = null;
 
-  @FindBy(how = ID, using = "searchFacility")
-  private static WebElement searchFacility = null;
-
   @FindBy(how = ID, using = "saveButton")
   private static WebElement saveButton = null;
 
@@ -100,9 +97,6 @@ public class RequisitionGroupPage extends FilterSearchPage {
 
   @FindBy(how = ID, using = "closeButton")
   private static WebElement closeButton = null;
-
-  @FindBy(how = ID, using = "noFacilityResultMessage")
-  private static WebElement noFacilityResultMessage = null;
 
   @FindBy(how = ID, using = "duplicateFacilityMessage")
   private static WebElement duplicateFacilityMessage = null;
@@ -304,20 +298,15 @@ public class RequisitionGroupPage extends FilterSearchPage {
   }
 
   public String getSupervisoryNodeName(int rowNumber) {
-    WebElement facility = testWebDriver.getElementById("supervisoryName" + (rowNumber - 1));
-    testWebDriver.waitForElementToAppear(facility);
-    return facility.getText();
+    WebElement supervisoryNode = testWebDriver.getElementById("supervisoryName" + (rowNumber - 1));
+    testWebDriver.waitForElementToAppear(supervisoryNode);
+    return supervisoryNode.getText();
   }
 
   public String getFacilityCount(int rowNumber) {
     WebElement facilityCount = testWebDriver.getElementById("facilityCount" + (rowNumber - 1));
     testWebDriver.waitForElementToAppear(facilityCount);
     return facilityCount.getText();
-  }
-
-  public void clickSearchIcon() {
-    testWebDriver.waitForElementToAppear(searchIcon);
-    searchIcon.click();
   }
 
   public void enterRequisitionGroupCode(String code) {
@@ -338,11 +327,6 @@ public class RequisitionGroupPage extends FilterSearchPage {
   public void clickMembersAccordionLink() {
     testWebDriver.waitForElementToAppear(membersLabel);
     membersLabel.click();
-  }
-
-  public void searchFacilityToBeAssociated(String facilityCode) {
-    testWebDriver.waitForElementToAppear(searchFacility);
-    sendKeys(searchFacility, facilityCode);
   }
 
   public boolean isSearchIconDisplayed() {
@@ -460,11 +444,6 @@ public class RequisitionGroupPage extends FilterSearchPage {
     closeButton.click();
   }
 
-  public String getNoFacilitySearchResultMessage() {
-    testWebDriver.waitForElementToAppear(noFacilityResultMessage);
-    return noFacilityResultMessage.getText();
-  }
-
   public String getFacilityResult(int rowNumber) {
     WebElement facilityResult = testWebDriver.getElementById("facilityResult" + (rowNumber - 1));
     testWebDriver.waitForElementToAppear(facilityResult);
@@ -543,5 +522,10 @@ public class RequisitionGroupPage extends FilterSearchPage {
   public String getFacilityAddedMessage() {
     testWebDriver.waitForElementToAppear(facilityAddedMessage);
     return facilityAddedMessage.getText();
+  }
+
+  public void clickSearchIcon() {
+    testWebDriver.waitForElementToAppear(searchIcon);
+    searchIcon.click();
   }
 }

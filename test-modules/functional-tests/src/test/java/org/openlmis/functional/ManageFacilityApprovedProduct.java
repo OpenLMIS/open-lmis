@@ -103,6 +103,7 @@ public class ManageFacilityApprovedProduct extends TestCaseHelper {
     facilityApprovedProductPage.selectProgram("HIV");
     facilityApprovedProductPage.selectFacilityType("Warehouse");
     testWebDriver.waitForAjax();
+    assertTrue(facilityApprovedProductPage.isSearchFacilityApprovedProductLabelDisplayed());
     assertEquals("Search products", facilityApprovedProductPage.getSearchFacilityApprovedProductLabel());
     assertFalse(facilityApprovedProductPage.isClearSearchButtonEnabled());
     assertFalse(facilityApprovedProductPage.isSelectionMandatoryMessageDisplayed());

@@ -95,12 +95,6 @@ public class SupplyLinePage extends FilterSearchPage {
   @FindBy(how = ID, using = "associatedFacilityField")
   private static WebElement associatedFacilityField = null;
 
-  @FindBy(how = ID, using = "searchFacility")
-  private static WebElement searchFacility = null;
-
-  @FindBy(how = ID, using = "searchButton")
-  private static WebElement searchButton = null;
-
   @FindBy(how = ID, using = "exportOrdersFalse")
   private static WebElement exportOrdersFalse = null;
 
@@ -314,12 +308,6 @@ public class SupplyLinePage extends FilterSearchPage {
     associatedFacilityField.click();
   }
 
-  public void searchAssociatedFacility(String facilityCodeOrName) {
-    testWebDriver.waitForElementToAppear(searchFacility);
-    sendKeys(searchFacility, facilityCodeOrName);
-    searchButton.click();
-  }
-
   public void selectExportOrderFlag(boolean exportOrdersOption) {
     if (exportOrdersOption)
       exportOrdersTrue.click();
@@ -337,12 +325,6 @@ public class SupplyLinePage extends FilterSearchPage {
   public void enterDescription(String desc) {
     testWebDriver.waitForElementToAppear(description);
     description.sendKeys(desc);
-  }
-
-  public void selectAssociatedFacilityResult(int rowNumber) {
-    WebElement facilityResult = testWebDriver.getElementById("facilityResult" + (rowNumber - 1));
-    testWebDriver.waitForElementToAppear(facilityResult);
-    facilityResult.click();
   }
 
   public String getSaveErrorMessage() {

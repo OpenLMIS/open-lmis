@@ -309,7 +309,7 @@ public class ManageRequisitionGroups extends TestCaseHelper {
     requisitionGroupPage.enterRequisitionGroupCode("RG2");
     requisitionGroupPage.clickMembersAccordionLink();
     requisitionGroupPage.clickAddMembersButton();
-    searchAssociatedFacility("F10");
+    requisitionGroupPage.searchFacility("F10");
     requisitionGroupPage.checkFacilityToBeAssociated(1);
     requisitionGroupPage.clickOnAddSelectedFacilityButton();
     requisitionGroupPage.clickSaveButton();
@@ -348,7 +348,7 @@ public class ManageRequisitionGroups extends TestCaseHelper {
     requisitionGroupPage.clickManageRequisitionGroupSearchResult(1);
     requisitionGroupPage.clickMembersAccordionLink();
     requisitionGroupPage.clickAddMembersButton();
-    searchAssociatedFacility("F11");
+    requisitionGroupPage.searchFacility("F11");
     assertEquals("9 matches found for 'F11'", requisitionGroupPage.getNFacilityResultsMessage());
     requisitionGroupPage.clickFilterButton();
     testWebDriver.waitForAjax();
@@ -396,16 +396,16 @@ public class ManageRequisitionGroups extends TestCaseHelper {
 
     requisitionGroupPage.clickMembersAccordionLink();
     requisitionGroupPage.clickAddMembersButton();
-    searchAssociatedFacility("F10");
+    requisitionGroupPage.searchFacility("F10");
     requisitionGroupPage.checkFacilityToBeAssociated(1);
     requisitionGroupPage.clickOnAddSelectedFacilityButton();
     assertEquals("Facility \"Village Dispensary\" is already added", requisitionGroupPage.getDuplicateFacilityMessage());
 
-    searchAssociatedFacility("F12A");
+    requisitionGroupPage.searchFacility("F12A");
     requisitionGroupPage.checkFacilityToBeAssociated(1);
 
-    searchAssociatedFacility("F12B");
-//    assertFalse(requisitionGroupPage.isAddSelectedFacilityButtonEnabled());
+    requisitionGroupPage.searchFacility("F12B");
+    assertFalse(requisitionGroupPage.isAddSelectedFacilityButtonEnabled());
     requisitionGroupPage.checkFacilityToBeAssociated(1);
     assertTrue(requisitionGroupPage.isAddSelectedFacilityButtonEnabled());
     requisitionGroupPage.checkFacilityToBeAssociated(1);
@@ -415,10 +415,10 @@ public class ManageRequisitionGroups extends TestCaseHelper {
 
     requisitionGroupPage.clickOnAddSelectedFacilityButton();
     requisitionGroupPage.clickAddMembersButton();
-    searchAssociatedFacility("Village Dispensary");
+    requisitionGroupPage.searchFacility("Village Dispensary");
     requisitionGroupPage.checkFacilityToBeAssociated(2);
     requisitionGroupPage.clickOnAddSelectedFacilityButton();
-    assertFalse(requisitionGroupPage.isSearchIconDisplayed());
+    assertFalse(requisitionGroupPage.isSearchFacilityIconDisplayed());
     assertNotEquals("F12A", requisitionGroupPage.getMemberFacilityCode(1));
     assertNotEquals("F12A", requisitionGroupPage.getMemberFacilityCode(2));
     assertNotEquals("F12A", requisitionGroupPage.getMemberFacilityCode(3));
@@ -458,10 +458,10 @@ public class ManageRequisitionGroups extends TestCaseHelper {
     assertFalse(requisitionGroupPage.isMemberFacilityEnableFlagDisplayed(2));
 
     requisitionGroupPage.clickAddMembersButton();
-    searchAssociatedFacility("F10");
+    requisitionGroupPage.searchFacility("F10");
     requisitionGroupPage.checkFacilityToBeAssociated(1);
     requisitionGroupPage.clickCloseButton();
-    assertTrue(requisitionGroupPage.isSearchIconDisplayed());
+    assertTrue(requisitionGroupPage.isSearchFacilityIconDisplayed());
     assertFalse(requisitionGroupPage.isAddSelectedFacilityButtonEnabled());
 
     requisitionGroupPage.clickCancelButton();
@@ -493,15 +493,15 @@ public class ManageRequisitionGroups extends TestCaseHelper {
 
     requisitionGroupPage.clickMembersAccordionLink();
     assertTrue(requisitionGroupPage.isAddMembersButtonDisplayed());
-    assertFalse(requisitionGroupPage.isSearchIconDisplayed());
+    assertFalse(requisitionGroupPage.isSearchFacilityIconDisplayed());
 
     requisitionGroupPage.clickCollapseAll();
     assertFalse(requisitionGroupPage.isAddMembersButtonDisplayed());
-    assertFalse(requisitionGroupPage.isSearchIconDisplayed());
+    assertFalse(requisitionGroupPage.isSearchFacilityIconDisplayed());
 
     requisitionGroupPage.clickExpandAll();
     assertTrue(requisitionGroupPage.isAddMembersButtonDisplayed());
-    assertFalse(requisitionGroupPage.isSearchIconDisplayed());
+    assertFalse(requisitionGroupPage.isSearchFacilityIconDisplayed());
 
     requisitionGroupPage.clickMembersAccordionLink();
     assertFalse(requisitionGroupPage.isAddMembersButtonDisplayed());
@@ -509,34 +509,34 @@ public class ManageRequisitionGroups extends TestCaseHelper {
     requisitionGroupPage.clickMembersAccordionLink();
     requisitionGroupPage.clickAddMembersButton();
     assertFalse(requisitionGroupPage.isAddSelectedFacilityButtonEnabled());
-    searchAssociatedFacility("F1");
+    requisitionGroupPage.searchFacility("F1");
     assertTrue(requisitionGroupPage.isFacilitySearchListDisplayed());
     assertEquals("Too many results found. Please refine your search.", requisitionGroupPage.getTooManyFacilitySearchResultMessage());
 
-    searchAssociatedFacility("F990");
+    requisitionGroupPage.searchFacility("F990");
 
-    assertEquals("No matches found for 'F990'", requisitionGroupPage.getNoFacilitySearchResultMessage());
+    assertEquals("No matches found for 'F990'", requisitionGroupPage.getNoFacilityResultMessage());
 
-    searchAssociatedFacility("F111");
+    requisitionGroupPage.searchFacility("F111");
     assertEquals("F111B - Village Dispensary", requisitionGroupPage.getFacilityResult(1));
     assertEquals("f111D - Village Dispensary", requisitionGroupPage.getFacilityResult(2));
     assertEquals("F111F - Village Dispensary", requisitionGroupPage.getFacilityResult(3));
     assertEquals("f111H - Village Dispensary", requisitionGroupPage.getFacilityResult(4));
     assertEquals("F111J - Village Dispensary", requisitionGroupPage.getFacilityResult(5));
 
-    searchAssociatedFacility("F1K");
-    assertEquals("No matches found for 'F1K'", requisitionGroupPage.getNoFacilitySearchResultMessage());
+    requisitionGroupPage.searchFacility("F1K");
+    assertEquals("No matches found for 'F1K'", requisitionGroupPage.getNoFacilityResultMessage());
 
-    searchAssociatedFacility("F111B");
+    requisitionGroupPage.searchFacility("F111B");
     requisitionGroupPage.checkFacilityToBeAssociated(1);
     requisitionGroupPage.clickOnAddSelectedFacilityButton();
 
     requisitionGroupPage.clickAddMembersButton();
-    searchAssociatedFacility("F111B");
+    requisitionGroupPage.searchFacility("F111B");
     requisitionGroupPage.checkFacilityToBeAssociated(1);
     requisitionGroupPage.clickOnAddSelectedFacilityButton();
     assertEquals("Facility \"Village Dispensary\" is already added", requisitionGroupPage.getDuplicateFacilityMessage());
-    assertTrue(requisitionGroupPage.isSearchIconDisplayed());
+    assertTrue(requisitionGroupPage.isSearchFacilityIconDisplayed());
   }
 
   @Test(groups = {"admin"})
@@ -560,7 +560,7 @@ public class ManageRequisitionGroups extends TestCaseHelper {
 
     requisitionGroupPage.clickMembersAccordionLink();
     requisitionGroupPage.clickAddMembersButton();
-    searchAssociatedFacility("F10");
+    requisitionGroupPage.searchFacility("F10");
     requisitionGroupPage.checkFacilityToBeAssociated(1);
     requisitionGroupPage.clickOnAddSelectedFacilityButton();
     requisitionGroupPage.clickSaveButton();
@@ -568,7 +568,7 @@ public class ManageRequisitionGroups extends TestCaseHelper {
     requisitionGroupPage.removeRequisitionMember(1);
 
     requisitionGroupPage.clickAddMembersButton();
-    searchAssociatedFacility("F11");
+    requisitionGroupPage.searchFacility("F11");
     requisitionGroupPage.checkFacilityToBeAssociated(1);
     requisitionGroupPage.clickOnAddSelectedFacilityButton();
     requisitionGroupPage.clickSaveButton();
@@ -629,15 +629,15 @@ public class ManageRequisitionGroups extends TestCaseHelper {
     requisitionGroupPage.removeRequisitionMember(2);
     requisitionGroupPage.removeRequisitionMember(2);
 
-    searchAssociatedFacility("F11");
+    requisitionGroupPage.searchFacility("F11");
     assertTrue(requisitionGroupPage.isNoFacilityResultMessageDisplayed());
 
-    searchAssociatedFacility("F10A");
+    requisitionGroupPage.searchFacility("F10A");
     requisitionGroupPage.checkFacilityToBeAssociated(1);
     requisitionGroupPage.clickOnAddSelectedFacilityButton();
 
     requisitionGroupPage.clickAddMembersButton();
-    searchAssociatedFacility("F1B");
+    requisitionGroupPage.searchFacility("F1B");
     requisitionGroupPage.checkFacilityToBeAssociated(1);
     requisitionGroupPage.clickOnAddSelectedFacilityButton();
 
@@ -660,12 +660,6 @@ public class ManageRequisitionGroups extends TestCaseHelper {
     testWebDriver.waitForAjax();
     assertEquals("Requisition Group 1", requisitionGroupPage.getRequisitionGroupName(1));
     assertEquals("3", requisitionGroupPage.getFacilityCount(1));
-  }
-
-  public void searchAssociatedFacility(String facilityCodeOrName) {
-    requisitionGroupPage.searchFacilityToBeAssociated(facilityCodeOrName);
-    requisitionGroupPage.clickSearchIcon();
-    testWebDriver.waitForAjax();
   }
 
   public void search(String searchParameter) {

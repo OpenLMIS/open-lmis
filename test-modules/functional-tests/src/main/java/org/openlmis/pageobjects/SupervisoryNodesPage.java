@@ -45,9 +45,6 @@ public class SupervisoryNodesPage extends FilterSearchPage {
   @FindBy(how = ID, using = "noResultMessage")
   private static WebElement noResultMessage = null;
 
-  @FindBy(how = ID, using = "noFacilityResultMessage")
-  private static WebElement noFacilityResultMessage = null;
-
   @FindBy(how = ID, using = "oneResultMessage")
   private static WebElement oneResultMessage = null;
 
@@ -95,9 +92,6 @@ public class SupervisoryNodesPage extends FilterSearchPage {
 
   @FindBy(how = ID, using = "searchAndFilter")
   private static WebElement searchAndFilter = null;
-
-  @FindBy(how = ID, using = "searchFacility")
-  private static WebElement searchFacility = null;
 
   @FindBy(how = ID, using = "saveButton")
   private static WebElement saveButton = null;
@@ -182,11 +176,6 @@ public class SupervisoryNodesPage extends FilterSearchPage {
       return false;
     }
     return noResultMessage.isDisplayed();
-  }
-
-  public String getNoFacilitySearchResultMessage() {
-    testWebDriver.waitForElementToAppear(noFacilityResultMessage);
-    return noFacilityResultMessage.getText();
   }
 
   public boolean isOneResultMessageDisplayed() {
@@ -298,11 +287,6 @@ public class SupervisoryNodesPage extends FilterSearchPage {
     testWebDriver.waitForElementToAppear(searchAndFilter);
   }
 
-  public void searchFacilityToBeAssociated(String facilityName) {
-    testWebDriver.waitForElementToAppear(searchFacility);
-    searchFacility.sendKeys(facilityName);
-  }
-
   public void clickOnClearSearchResultButton() {
     testWebDriver.waitForElementToAppear(clearSearch);
     clearSearch.click();
@@ -342,22 +326,6 @@ public class SupervisoryNodesPage extends FilterSearchPage {
   public void enterSearchParentNodeParameter(String parentCode) {
     testWebDriver.waitForElementToAppear(searchParentNode);
     sendKeys(searchParentNode, parentCode);
-  }
-
-  public String getNoFacilityResultMessage() {
-    testWebDriver.waitForElementToAppear(noFacilityResultMessage);
-    return noFacilityResultMessage.getText();
-  }
-
-  public String getSearchFacilityText() {
-    testWebDriver.waitForElementToAppear(searchFacility);
-    return searchFacility.getText();
-  }
-
-  public void selectFacilityToBeAssociated(int rowNumber) {
-    WebElement facilityResult = testWebDriver.getElementById("facilityResult" + (rowNumber - 1));
-    testWebDriver.waitForElementToAppear(facilityResult);
-    facilityResult.click();
   }
 
   public String getSaveMessage() {

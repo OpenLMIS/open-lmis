@@ -20,7 +20,7 @@
           <input id="searchFacility" type="text" ng-model="facilitySearchParam" maxlength="50"
                  openlmis-message="placeholder.facility.search"/>
           <button id="searchButton" class="btn" ng-click="showFacilitySearchResults()">
-            <i id='searchIcon' class="icon-search"></i>
+            <i id="searchFacilityIcon" class="icon-search"></i>
           </button>
         </div>
       </div>
@@ -33,7 +33,7 @@
             <span id="tooManyFacilityResultsMessage" ng-show="message" openlmis-message="message"></span>
           </h3>
 
-          <h3 id="oneFacilityResultsMessage" ng-switch-when="1" openlmis-message="msg.one.match|facilityQuery"></h3>
+          <h3 id="oneFacilityResultMessage" ng-switch-when="1" openlmis-message="msg.one.match|facilityQuery"></h3>
 
           <h3 id="nFacilityResultsMessage" ng-switch-default
               openlmis-message="msg.many.matches|facilityResultCount|facilityQuery"></h3>

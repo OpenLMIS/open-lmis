@@ -89,6 +89,12 @@ public class FilterSearchPage extends Page {
   @FindBy(how = ID, using = "tooManyGeoZoneResults")
   private static WebElement tooManyGeoZoneResultsMessage = null;
 
+  @FindBy(how = ID, using = "searchFacility")
+  private static WebElement searchFacility = null;
+
+  @FindBy(how = ID, using = "searchFacilityIcon")
+  private static WebElement searchFacilityIcon = null;
+
   public FilterSearchPage(TestWebDriver driver) {
     super(driver);
     PageFactory.initElements(new AjaxElementLocatorFactory(TestWebDriver.getDriver(), 1), this);
@@ -246,17 +252,6 @@ public class FilterSearchPage extends Page {
     return noFacilityResultMessage.isDisplayed();
   }
 
-  public boolean isOneFacilityResultMessageDisplayed() {
-    try {
-      testWebDriver.waitForElementToAppear(oneFacilityResultMessage);
-    } catch (TimeoutException e) {
-      return false;
-    } catch (NoSuchElementException e) {
-      return false;
-    }
-    return oneFacilityResultMessage.isDisplayed();
-  }
-
   public String getNFacilityResultsMessage() {
     testWebDriver.waitForElementToAppear(nFacilityResultsMessage);
     return nFacilityResultsMessage.getText();
@@ -295,5 +290,43 @@ public class FilterSearchPage extends Page {
   public String getTooManyGeoZoneSearchResultMessage() {
     testWebDriver.waitForElementToAppear(tooManyGeoZoneResultsMessage);
     return tooManyGeoZoneResultsMessage.getText();
+  }
+
+  public String getSearchFacilityText() {
+    testWebDriver.waitForElementToAppear(searchFacility);
+    return searchFacility.getText();
+  }
+
+  public void selectFacility(int rowNumber) {
+    WebElement facilityResult = testWebDriver.getElementById("facilityResult" + (rowNumber - 1));
+    testWebDriver.waitForElementToAppear(facilityResult);
+    facilityResult.click();
+  }
+
+  public void searchFacility(String facilityCodeOrName) {
+    testWebDriver.waitForElementToAppear(searchFacility);
+    sendKeys(searchFacility, facilityCodeOrName);
+    searchFacilityIcon.click();
+  }
+
+  public boolean isSearchFacilityIconDisplayed() {
+    try {
+      testWebDriver.waitForElementToAppear(searchFacilityIcon);
+    } catch (TimeoutException e) {
+      return false;
+    } catch (NoSuchElementException e) {
+      return false;
+    }
+    return searchFacilityIcon.isDisplayed();
+  }
+
+  public void enterSearchFacilityParameter(String facilityCode) {
+    testWebDriver.waitForElementToAppear(searchFacility);
+    sendKeys(searchFacility, facilityCode);
+  }
+
+  public void clickSearchFacilityIcon() {
+    testWebDriver.waitForElementToAppear(searchFacilityIcon);
+    searchFacilityIcon.click();
   }
 }
