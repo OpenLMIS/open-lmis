@@ -12,7 +12,7 @@
 <div class="container-fluid">
     <div class="box row-fluid">
         <div class="box-header">
-            <h2><i class="icon-edit"></i><span class="break"></span>Regimen Distribution by District</h2>
+            <h2><i class="icon-edit"></i><span class="break"></span>District Regimen Distribution Summary</h2>
 
             <div class="box-icon">
                 <a id="pdf-button" href="#list" ng-click="exportReport('PDF')" class='btn-small btn-info'>PDF</a>
@@ -30,12 +30,22 @@
                                 <schedule-filter class="form-cell horizontalFilters" required="true"></schedule-filter>
                                 <year-filter class="form-cell horizontalFilters" required="true"></year-filter>
                                 <period-filter class="form-cell horizontalFilters" required="true"></period-filter>
+                                <div ng-hide="showMoreFilters"  class="clearfix form-cell horizontalFilters" >
+                                    <br />
+                                    <a ng-click="toggleMoreFilters()" class="button" >Show More Filters</a>
+                                </div>
+                                <div ng-hide="!showMoreFilters">
                                 <requisition-group-filter
                                         class="form-cell horizontalFilters"></requisition-group-filter>
                                 <facility-type-filter class="form-cell horizontalFilters" ></facility-type-filter>
                                 <facility-filter class="form-cell horizontalFilters"></facility-filter>
                                 <regimen-category-filter class="form-cell horizontalFilters"></regimen-category-filter>
                                 <regimen-filter class="form-cell horizontalFilters"></regimen-filter>
+                                <div  class="clearfix form-cell horizontalFilters" >
+                                    <br />
+                                    <a class="button" ng-click="toggleMoreFilters()">Less Filters</a>
+                                </div>
+                            </div>
                             </div>
                         </form>
                     </div>
