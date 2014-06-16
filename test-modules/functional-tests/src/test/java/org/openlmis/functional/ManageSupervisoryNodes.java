@@ -290,6 +290,7 @@ public class ManageSupervisoryNodes extends TestCaseHelper {
     supervisoryNodesPage.searchFacility("F11");
     testWebDriver.waitForAjax();
     supervisoryNodesPage.selectFacility(1);
+    testWebDriver.sleep(500);
     assertFalse(supervisoryNodesPage.isSearchFacilityIconDisplayed());
 
     supervisoryNodesPage.clickSaveButton();
@@ -331,6 +332,7 @@ public class ManageSupervisoryNodes extends TestCaseHelper {
     supervisoryNodesPage.clickAssociatedFacilityMemberField();
     supervisoryNodesPage.searchFacility("F10");
     supervisoryNodesPage.selectFacility(1);
+    testWebDriver.sleep(500);
     assertFalse(supervisoryNodesPage.isSearchFacilityIconDisplayed());
     supervisoryNodesPage.clickSaveButton();
 

@@ -402,6 +402,7 @@ public class ManageRequisitionGroups extends TestCaseHelper {
     assertEquals("Facility \"Village Dispensary\" is already added", requisitionGroupPage.getDuplicateFacilityMessage());
 
     requisitionGroupPage.searchFacility("F12A");
+    testWebDriver.waitForAjax();
     requisitionGroupPage.checkFacilityToBeAssociated(1);
 
     requisitionGroupPage.searchFacility("F12B");
@@ -492,22 +493,29 @@ public class ManageRequisitionGroups extends TestCaseHelper {
     assertEquals("Members", requisitionGroupPage.getMembersLabel());
 
     requisitionGroupPage.clickMembersAccordionLink();
+    testWebDriver.sleep(100);
     assertTrue(requisitionGroupPage.isAddMembersButtonDisplayed());
     assertFalse(requisitionGroupPage.isSearchFacilityIconDisplayed());
 
     requisitionGroupPage.clickCollapseAll();
+    testWebDriver.sleep(100);
     assertFalse(requisitionGroupPage.isAddMembersButtonDisplayed());
     assertFalse(requisitionGroupPage.isSearchFacilityIconDisplayed());
 
     requisitionGroupPage.clickExpandAll();
+    testWebDriver.sleep(100);
     assertTrue(requisitionGroupPage.isAddMembersButtonDisplayed());
     assertFalse(requisitionGroupPage.isSearchFacilityIconDisplayed());
 
     requisitionGroupPage.clickMembersAccordionLink();
+    testWebDriver.sleep(100);
     assertFalse(requisitionGroupPage.isAddMembersButtonDisplayed());
 
     requisitionGroupPage.clickMembersAccordionLink();
+    testWebDriver.sleep(100);
     requisitionGroupPage.clickAddMembersButton();
+    testWebDriver.sleep(100);
+    assertTrue(requisitionGroupPage.isSearchFacilityIconDisplayed());
     assertFalse(requisitionGroupPage.isAddSelectedFacilityButtonEnabled());
     requisitionGroupPage.searchFacility("F1");
     assertTrue(requisitionGroupPage.isFacilitySearchListDisplayed());

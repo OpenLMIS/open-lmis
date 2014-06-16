@@ -337,6 +337,8 @@ public class RequisitionGroupPage extends FilterSearchPage {
       testWebDriver.waitForElementToAppear(searchIcon);
     } catch (TimeoutException e) {
       return false;
+    } catch (NoSuchElementException e) {
+      return false;
     }
     return searchIcon.isDisplayed();
   }
@@ -413,6 +415,8 @@ public class RequisitionGroupPage extends FilterSearchPage {
       testWebDriver.waitForElementToAppear(enableFlag);
     } catch (TimeoutException e) {
       return false;
+    } catch (NoSuchElementException e) {
+      return false;
     }
     return enableFlag.isDisplayed();
   }
@@ -438,6 +442,8 @@ public class RequisitionGroupPage extends FilterSearchPage {
       testWebDriver.waitForElementToAppear(searchFacilityList);
       return searchFacilityList.isDisplayed();
     } catch (TimeoutException e) {
+      return false;
+    } catch (NoSuchElementException e) {
       return false;
     }
   }
@@ -517,6 +523,8 @@ public class RequisitionGroupPage extends FilterSearchPage {
     try {
       testWebDriver.waitForElementToAppear(addMembers);
     } catch (TimeoutException e) {
+      return false;
+    } catch (NoSuchElementException e) {
       return false;
     }
     return addMembers.isDisplayed();
