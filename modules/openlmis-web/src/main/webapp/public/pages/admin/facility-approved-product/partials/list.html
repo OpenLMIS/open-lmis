@@ -39,7 +39,7 @@
     </div>
   </div>
 
-  <em id="selectionMandatoryMessage" openlmis-message="msg.please.select.program.facility.type"
+  <em id="selectionMandatoryMessage" openlmis-message="msg.please.select.program.facility.type" class="note"
       ng-hide="showResults"></em>
 
   <h2 ng-show="showResults">
@@ -109,7 +109,7 @@
           ng-bind="facilityApprovedProduct.programProduct.productCategory.name"></td>
     </tr>
     <tr>
-    <td class="center-justified">
+      <td class="center-justified">
         <i id="fullSupply{{$index}}"
            ng-class="{'icon-ok': facilityApprovedProduct.programProduct.product.fullSupply}"></i>
       </td>

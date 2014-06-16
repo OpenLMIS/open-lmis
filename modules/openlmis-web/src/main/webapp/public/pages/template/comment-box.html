@@ -1,42 +1,44 @@
 <div ng-hide="!show" class="comments-popup" ng-class="{'view': !updatable}">
 
-<!--
-  ~ This program is part of the OpenLMIS logistics management information system platform software.
-  ~ Copyright © 2013 VillageReach
-  ~
-  ~ This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
-  ~  
-  ~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
-  ~ You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
- -->
+  <!--
+    ~ This program is part of the OpenLMIS logistics management information system platform software.
+    ~ Copyright © 2013 VillageReach
+    ~
+    ~ This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+    ~  
+    ~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+    ~ You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
+   -->
 
 
   <h4>
-    <span openlmis-message = "comments.header"></span>
+    <span openlmis-message="comments.header"></span>
     <a href="" ng-click="show=false; comment=''" class="link-minimize">
       <i id="commentClose" class="icon-remove"></i>
     </a>
   </h4>
 
-   <div ng-hide="rnrComments.length" class="no-comments" openlmis-message="messages.commentBox.noComment">
-   </div>
+  <div ng-hide="rnrComments.length" class="note" openlmis-message="messages.commentBox.noComment">
+  </div>
   <ul class="comments-list" id="comments-list">
     <li class="comment" ng-repeat="comment in rnrComments">
       <span ng-bind="comment.commentText"></span>
 
-      <div class="comment-info"><span openlmis-message="label.by" ></span> <span ng-bind="comment.author.userName"></span> | <span class="comment-date"
-                                                                                             ng-bind="comment.createdDate | date:'HH:mm:ss  dd/MM/yyyy'"></span>
+      <div class="comment-info"><span openlmis-message="label.by"></span> <span
+        ng-bind="comment.author.userName"></span> | <span class="comment-date"
+                                                          ng-bind="comment.createdDate | date:'HH:mm:ss  dd/MM/yyyy'"></span>
       </div>
     </li>
   </ul>
   <div ng-show="updatable">
-    <textarea  ng-trim="false" ng-change="validateMaxLength(comment)" rows="5" id="addComment"
+    <textarea ng-trim="false" ng-change="validateMaxLength(comment)" rows="5" id="addComment"
               ng-model="comment" openlmis-message="placeholder.type.comment"></textarea>
 
     <div>
       <span ng-bind="250-comment.length" class="comment-length"></span>
       <span ng-show="error" openlmis-message="error"></span>
-      <input id="addButton" type="button" openlmis-message="button.add" ng-click="addComments()" ng-disabled="!comment.length"
+      <input id="addButton" type="button" openlmis-message="button.add" ng-click="addComments()"
+             ng-disabled="!comment.length"
              class="btn btn-primary pull-right"/>
     </div>
 
