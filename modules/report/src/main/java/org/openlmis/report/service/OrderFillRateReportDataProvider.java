@@ -18,6 +18,7 @@ import org.openlmis.report.model.ReportData;
 import org.openlmis.report.model.ReportParameter;
 import org.openlmis.report.model.params.OrderFillRateReportParam;
 import org.openlmis.report.util.Constants;
+import org.openlmis.report.util.StringHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -57,7 +58,23 @@ public class OrderFillRateReportDataProvider extends ReportDataProvider {
 
       orderFillRateReportParam = new OrderFillRateReportParam();
 
-      orderFillRateReportParam.setFacilityTypeId(filterCriteria.get("facilityTypeId") == null ? 0 : Integer.parseInt(filterCriteria.get("facilityTypeId")[0])); //defaults to 0
+        orderFillRateReportParam.setProductCategoryId(StringHelper.isBlank(filterCriteria, "productCategory") ? 0L : Long.parseLong(filterCriteria.get("productCategory")[0]));
+        if(filterCriteria.containsKey("product") && !StringHelper.isBlank(filterCriteria,"product")){
+            orderFillRateReportParam.setProductId(Long.parseLong(filterCriteria.get("product")[0])); //defaults to 0
+        }else{
+            orderFillRateReportParam.setProductId(0L);
+        }
+        orderFillRateReportParam.setScheduleId(StringHelper.isBlank(filterCriteria, "schedule") ? 0 : Integer.parseInt(filterCriteria.get("schedule")[0]));
+        orderFillRateReportParam.setRgroupId(StringHelper.isBlank(filterCriteria, "requisitionGroup") ? 0 : Integer.parseInt(filterCriteria.get("requisitionGroup")[0]));
+        orderFillRateReportParam.setProgramId(StringHelper.isBlank(filterCriteria,"program") ? 0L : Long.parseLong(filterCriteria.get("program")[0]));
+        orderFillRateReportParam.setPeriodId(StringHelper.isBlank(filterCriteria,"period") ? 0L : Long.parseLong(filterCriteria.get("period")[0]));
+        orderFillRateReportParam.setFacilityId(StringHelper.isBlank(filterCriteria,"facility") ? 0L : Long.parseLong(filterCriteria.get("facility")[0]));
+        orderFillRateReportParam.setFacilityTypeId(StringHelper.isBlank(filterCriteria,"facilityType") ? 0 : Integer.parseInt(filterCriteria.get("facilityType")[0])); //defaults to 0
+        //orderFillRateReportParam.setZoneId(StringHelper.isBlank(filterCriteria, "zone")? 0 : Integer.parseInt(filterCriteria.get("zone")[0]));
+
+
+/*
+        orderFillRateReportParam.setFacilityTypeId(filterCriteria.get("facilityTypeId") == null ? 0 : Integer.parseInt(filterCriteria.get("facilityTypeId")[0])); //defaults to 0
       orderFillRateReportParam.setFacilityType((filterCriteria.get("facilityType") == null || filterCriteria.get("facilityType")[0].equals("")) ? "All Facility Types" : filterCriteria.get("facilityType")[0]);
       orderFillRateReportParam.setFacility(filterCriteria.get("facility") == null ? "" : filterCriteria.get("facility")[0]);
 
@@ -89,6 +106,7 @@ public class OrderFillRateReportDataProvider extends ReportDataProvider {
       orderFillRateReportParam.setPeriod(filterCriteria.get("period") == null ? "" : filterCriteria.get("period")[0]);
       orderFillRateReportParam.setPeriodId(filterCriteria.get("periodId") == null ? 0 : Integer.parseInt(filterCriteria.get("periodId")[0]));
       orderFillRateReportParam.setYear(filterCriteria.get("year") == null ? 0 : Integer.parseInt(filterCriteria.get("year")[0]));
+    */
     }
     return orderFillRateReportParam;
   }
