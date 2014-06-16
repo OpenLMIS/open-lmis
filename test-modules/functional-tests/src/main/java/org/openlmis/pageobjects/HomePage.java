@@ -536,7 +536,6 @@ public class HomePage extends Page {
     testWebDriver.waitForElementToBeEnabled(requisitionsLink);
     testWebDriver.keyPress(requisitionsLink);
     testWebDriver.waitForElementToBeEnabled(createLink);
-    testWebDriver.sleep(1000);
     testWebDriver.keyPress(createLink);
     testWebDriver.sleep(1000);
     testWebDriver.waitForElementToAppear(myFacilityRadioButton);
