@@ -33,7 +33,7 @@ public interface ProcessingScheduleMapper {
   @Options(useGeneratedKeys = true)
   Integer insert(ProcessingSchedule schedule);
 
-  @Select("SELECT * FROM processing_schedules")
+  @Select("SELECT * FROM processing_schedules ORDER BY LOWER(code)")
   List<ProcessingSchedule> getAll();
 
   @Update({"UPDATE processing_schedules SET code = #{code}, name = #{name}, description = #{description},",

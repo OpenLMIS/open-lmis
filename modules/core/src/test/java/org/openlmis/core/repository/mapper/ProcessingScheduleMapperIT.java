@@ -39,33 +39,34 @@ import static org.openlmis.core.builder.ProcessingScheduleBuilder.*;
 @Transactional
 @TransactionConfiguration(defaultRollback = true, transactionManager = "openLmisTransactionManager")
 public class ProcessingScheduleMapperIT {
-  @Rule
-  public ExpectedException expectedEx = org.junit.rules.ExpectedException.none();
 
+  @Rule
+  public ExpectedException expectedEx = ExpectedException.none();
 
   @Autowired
   ProcessingScheduleMapper processingScheduleMapper;
+
   private ProcessingSchedule processingSchedule;
 
   @Before
-  public void setUp() throws Exception {
+  public void setUp() {
     processingSchedule = make(a(defaultProcessingSchedule));
   }
 
   @Test
-  public void shouldGetIdByCode() throws Exception {
+  public void shouldGetIdByCode() {
     processingScheduleMapper.insert(processingSchedule);
     assertThat(processingScheduleMapper.getIdForCode("Q1stM"), is(processingSchedule.getId()));
   }
 
   @Test
-  public void shouldGetByCode() throws Exception {
+  public void shouldGetByCode() {
     processingScheduleMapper.insert(processingSchedule);
     assertThat(processingScheduleMapper.getByCode("Q1stM"), is(processingSchedule));
   }
 
   @Test
-  public void shouldInsertASchedule() throws Exception {
+  public void shouldInsertASchedule() {
     processingSchedule = make(a(defaultProcessingSchedule,
       with(code, "test code"),
       with(name, "test name"),
@@ -87,7 +88,7 @@ public class ProcessingScheduleMapperIT {
   }
 
   @Test
-  public void shouldGetAllSchedules() throws Exception {
+  public void shouldGetAllSchedules() {
     ProcessingSchedule processingSchedule2 = make(a(defaultProcessingSchedule,
       with(code, "test code"),
       with(name, "test name"),
@@ -103,7 +104,7 @@ public class ProcessingScheduleMapperIT {
   }
 
   @Test
-  public void shouldGetScheduleById() throws Exception {
+  public void shouldGetScheduleById() {
     processingScheduleMapper.insert(processingSchedule);
     processingSchedule = processingScheduleMapper.get(processingSchedule.getId());
 
@@ -113,7 +114,7 @@ public class ProcessingScheduleMapperIT {
   }
 
   @Test
-  public void shouldUpdateAnExistingSchedule() throws Exception {
+  public void shouldUpdateAnExistingSchedule() {
     processingScheduleMapper.insert(processingSchedule);
 
     processingSchedule.setCode("Q1stM_updated");
@@ -134,7 +135,7 @@ public class ProcessingScheduleMapperIT {
   }
 
   @Test
-  public void shouldNotUpdateAnExistingScheduleWithDuplicateCode() throws Exception {
+  public void shouldNotUpdateAnExistingScheduleWithDuplicateCode() {
     processingScheduleMapper.insert(processingSchedule);
     ProcessingSchedule processingSchedule2 = make(a(defaultProcessingSchedule, with(code, "Code2")));
     processingScheduleMapper.insert(processingSchedule2);
@@ -146,7 +147,7 @@ public class ProcessingScheduleMapperIT {
   }
 
   @Test
-  public void shouldNotInsertAScheduleWithExistingCode() throws Exception {
+  public void shouldNotInsertAScheduleWithExistingCode() {
     processingScheduleMapper.insert(processingSchedule);
     ProcessingSchedule processingSchedule2 = make(a(defaultProcessingSchedule, with(code, "Code2")));
     processingScheduleMapper.insert(processingSchedule2);
