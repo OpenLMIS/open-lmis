@@ -393,6 +393,13 @@ public class ManageSupervisoryNodes extends TestCaseHelper {
     supervisoryNodesPage = homePage.navigateToSupervisoryNodes();
 
     supervisoryNodesPage.clickAddNewButton();
+    assertEquals("Add supervisory node", supervisoryNodesPage.getAddSupervisoryNodeHeader());
+    assertEquals("Code *", supervisoryNodesPage.getCodeLabel());
+    assertEquals("Name *", supervisoryNodesPage.getNameLabel());
+    assertEquals("Description", supervisoryNodesPage.getDescriptionLabel());
+    assertEquals("Parent node", supervisoryNodesPage.getParentNodeLabel());
+    assertEquals("Associated facility *", supervisoryNodesPage.getAssociateFacilityLabel());
+
     supervisoryNodesPage.clickSaveButton();
     assertEquals("There are some errors in the form. Please resolve them.", supervisoryNodesPage.getSaveMessage());
     supervisoryNodesPage.clickCancelButton();
@@ -427,6 +434,8 @@ public class ManageSupervisoryNodes extends TestCaseHelper {
 
     searchNode("sup");
     supervisoryNodesPage.clickOnNode(1);
+    assertEquals("Edit supervisory node", supervisoryNodesPage.getEditSupervisoryNodeHeader());
+
     enterSupervisoryNodeDetails("N1", "Node1", "nod", "sup", 1, "Village Dispensary");
     supervisoryNodesPage.clickSaveButton();
     assertEquals("Supervisory Node \"Node1\" updated successfully", supervisoryNodesPage.getSuccessMessage());

@@ -484,9 +484,9 @@ public class ManageRequisitionGroups extends TestCaseHelper {
     requisitionGroupPage.clickAddNewButton();
 
     assertEquals("Add requisition group", requisitionGroupPage.getAddRequisitionGroupHeader());
-    assertEquals("Code", requisitionGroupPage.getCodeLabel());
-    assertEquals("Name", requisitionGroupPage.getNameLabel());
-//    assertEquals("Supervisory node", requisitionGroupPage.getSupervisoryNodeLabel());
+    assertEquals("Code *", requisitionGroupPage.getCodeLabel());
+    assertEquals("Name *", requisitionGroupPage.getNameLabel());
+    assertEquals("Supervisory node *", requisitionGroupPage.getSupervisoryNodeLabel());
     assertEquals("Description", requisitionGroupPage.getDescriptionLabel());
     assertEquals("Program and Schedules", requisitionGroupPage.getProgramsAndScheduleLabel());
     assertEquals("Members", requisitionGroupPage.getMembersLabel());
@@ -596,6 +596,7 @@ public class ManageRequisitionGroups extends TestCaseHelper {
     testWebDriver.waitForAjax();
     assertEquals("3", requisitionGroupPage.getFacilityCount(1));
     requisitionGroupPage.clickManageRequisitionGroupSearchResult(1);
+    assertEquals("Edit requisition group", requisitionGroupPage.getEditRequisitionGroupHeader());
 
     requisitionGroupPage.clickMembersAccordionLink();
 

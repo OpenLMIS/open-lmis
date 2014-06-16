@@ -114,6 +114,23 @@ public class SupervisoryNodesPage extends FilterSearchPage {
   @FindBy(how = ID, using = "editSupervisoryNodeHeader")
   private static WebElement editSupervisoryNodeHeader = null;
 
+  @FindBy(how = ID, using = "addNewSupervisoryNodeHeader")
+  private static WebElement addNewSupervisoryNodeHeader = null;
+
+  @FindBy(how = ID, using = "nameLabel")
+  private static WebElement nameLabel = null;
+
+  @FindBy(how = ID, using = "codeLabel")
+  private static WebElement codeLabel = null;
+
+  @FindBy(how = ID, using = "descriptionLabel")
+  private static WebElement descriptionLabel = null;
+
+  @FindBy(how = ID, using = "parentNodeLabel")
+  private static WebElement parentNodeLabel = null;
+
+  @FindBy(how = ID, using = "associatedFacilityLabel")
+  private static WebElement associatedFacilityLabel = null;
 
   public SupervisoryNodesPage(TestWebDriver driver) {
     super(driver);
@@ -368,5 +385,40 @@ public class SupervisoryNodesPage extends FilterSearchPage {
     WebElement parent = testWebDriver.getElementByXpath("//*[@id='supervisoryNodeFormGroup']/div[4]/div/div/div[1]/div[2]/span");
     testWebDriver.waitForElementToAppear(parent);
     return parent.getText();
+  }
+
+  public String getCodeLabel() {
+    testWebDriver.waitForElementToAppear(codeLabel);
+    return codeLabel.getText();
+  }
+
+  public String getNameLabel() {
+    testWebDriver.waitForElementToAppear(nameLabel);
+    return nameLabel.getText();
+  }
+
+  public String getAssociateFacilityLabel() {
+    testWebDriver.waitForElementToAppear(associatedFacilityLabel);
+    return associatedFacilityLabel.getText();
+  }
+
+  public String getDescriptionLabel() {
+    testWebDriver.waitForElementToAppear(descriptionLabel);
+    return descriptionLabel.getText();
+  }
+
+  public String getParentNodeLabel() {
+    testWebDriver.waitForElementToAppear(parentNodeLabel);
+    return parentNodeLabel.getText();
+  }
+
+  public String getAddSupervisoryNodeHeader() {
+    testWebDriver.waitForElementToAppear(addNewSupervisoryNodeHeader);
+    return addNewSupervisoryNodeHeader.getText();
+  }
+
+  public String getEditSupervisoryNodeHeader() {
+    testWebDriver.waitForElementToAppear(editSupervisoryNodeHeader);
+    return editSupervisoryNodeHeader.getText();
   }
 }

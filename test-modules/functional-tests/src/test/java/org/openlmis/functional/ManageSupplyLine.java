@@ -242,6 +242,13 @@ public class ManageSupplyLine extends TestCaseHelper {
     supplyLinePage = homePage.navigateToSupplyLine();
     supplyLinePage.clickAddNewButton();
 
+    assertEquals("Add supply line", supplyLinePage.getAddSupplyLineHeader());
+    assertEquals("Program *", supplyLinePage.getProgramLabel());
+    assertEquals("Facility exports orders? *", supplyLinePage.getFacilityExportOrdersLabel());
+    assertEquals("Supplying facility *", supplyLinePage.getSupplyingFacilityLabel());
+    assertEquals("Supervisory node *", supplyLinePage.getSupervisoryNodeLabel());
+    assertEquals("Description", supplyLinePage.getDescriptionLabel());
+
     supplyLinePage.enterValuesInSupplyLineFields("Malaria", "node", false);
     supplyLinePage.clickSupplyingFacilityField();
     supplyLinePage.searchFacility("F11");
@@ -297,6 +304,7 @@ public class ManageSupplyLine extends TestCaseHelper {
     assertEquals("Supply line updated successfully", supplyLinePage.getSuccessMessage());
     supplyLinePage.clickViewHereLink();
 
+    assertEquals("Edit supply line", supplyLinePage.getEditSupplyLineHeader());
     supplyLinePage.clickClearNodeSearchResult();
     supplyLinePage.searchSupervisoryNode("node");
     supplyLinePage.selectSupervisoryNodeResult(1);

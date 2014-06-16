@@ -116,6 +116,16 @@ public class ManageGeographicZone extends TestCaseHelper {
     assertEquals("No matches found for 'Maputo'", geographicZonePage.getNoResultMessage());
 
     geographicZonePage.clickAddNewButton();
+    assertEquals("Add new geographic zone", geographicZonePage.getAddNewGeoZoneHeader());
+
+    assertEquals("Name *", geographicZonePage.getNameLabel());
+    assertEquals("Code *", geographicZonePage.getCodeLabel());
+    assertEquals("Latitude", geographicZonePage.getLatitudeLabel());
+    assertEquals("Longitude", geographicZonePage.getLongitudeLabel());
+    assertEquals("Parent", geographicZonePage.getParentLabel());
+    assertEquals("Catchment population", geographicZonePage.getPopulationLabel());
+    assertEquals("Level *", geographicZonePage.getLevelLabel());
+
     geographicZonePage.enterGeoZoneName("Maputo");
     geographicZonePage.enterGeoZoneCode("map");
     geographicZonePage.enterCatchmentPopulation("9000");
@@ -197,6 +207,7 @@ public class ManageGeographicZone extends TestCaseHelper {
     geographicZonePage.clickOnSearchResultLink(3);
     testWebDriver.waitForAjax();
 
+    assertEquals("Edit geographic zone", geographicZonePage.getEditGeoZoneHeader());
     geographicZonePage.editAlreadyExistingGeoZone("Mozambique", "Mozambique", "20000", "99.99999", "19.99999", "Root");
     assertFalse(geographicZonePage.isLevelCodeDropDownEnabled());
     geographicZonePage.clickOnSaveButton();

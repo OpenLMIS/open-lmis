@@ -107,6 +107,27 @@ public class SupplyLinePage extends FilterSearchPage {
   @FindBy(how = ID, using = "clearSearch")
   private static WebElement clearSearch = null;
 
+  @FindBy(how = ID, using = "addNewSupplyLineHeader")
+  private static WebElement addSupplyLineHeader = null;
+
+  @FindBy(how = ID, using = "editSupplyLineHeader")
+  private static WebElement editSupplyLineHeader = null;
+
+  @FindBy(how = ID, using = "programLabel")
+  private static WebElement programLabel = null;
+
+  @FindBy(how = ID, using = "facilityExportOrdersLabel")
+  private static WebElement facilityExportOrdersLabel = null;
+
+  @FindBy(how = ID, using = "supervisoryNodeLabel")
+  private static WebElement supervisoryNodeLabel = null;
+
+  @FindBy(how = ID, using = "descriptionLabel")
+  private static WebElement descriptionLabel = null;
+
+  @FindBy(how = ID, using = "supplyingFacilityLabel")
+  private static WebElement supplyingFacilityLabel = null;
+
   public SupplyLinePage(TestWebDriver driver) {
     super(driver);
     PageFactory.initElements(new AjaxElementLocatorFactory(TestWebDriver.getDriver(), 1), this);
@@ -335,6 +356,41 @@ public class SupplyLinePage extends FilterSearchPage {
   public void clickClearNodeSearchResult() {
     testWebDriver.waitForElementToAppear(clearSearch);
     clearSearch.click();
+  }
+
+  public String getAddSupplyLineHeader() {
+    testWebDriver.waitForElementToAppear(addSupplyLineHeader);
+    return addSupplyLineHeader.getText();
+  }
+
+  public String getEditSupplyLineHeader() {
+    testWebDriver.waitForElementToAppear(editSupplyLineHeader);
+    return editSupplyLineHeader.getText();
+  }
+
+  public String getProgramLabel() {
+    testWebDriver.waitForElementToAppear(programLabel);
+    return programLabel.getText();
+  }
+
+  public String getFacilityExportOrdersLabel() {
+    testWebDriver.waitForElementToAppear(facilityExportOrdersLabel);
+    return facilityExportOrdersLabel.getText();
+  }
+
+  public String getSupervisoryNodeLabel() {
+    testWebDriver.waitForElementToAppear(supervisoryNodeLabel);
+    return supervisoryNodeLabel.getText();
+  }
+
+  public String getDescriptionLabel() {
+    testWebDriver.waitForElementToAppear(descriptionLabel);
+    return descriptionLabel.getText();
+  }
+
+  public String getSupplyingFacilityLabel() {
+    testWebDriver.waitForElementToAppear(supplyingFacilityLabel);
+    return supplyingFacilityLabel.getText();
   }
 }
 

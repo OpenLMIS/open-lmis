@@ -21,8 +21,8 @@
 
         <div class="form-row clearfix bottom-padding">
           <div class="form-cell">
-            <label for="requisitionGroupCode">
-              <span id="codeLabel" openlmis-message="header.code"></span>
+            <label id="codeLabel" for="requisitionGroupCode">
+              <span openlmis-message="header.code"></span>
               <span class="label-required"> *</span>
             </label>
 
@@ -34,8 +34,8 @@
             </div>
           </div>
           <div class="form-cell">
-            <label for="requisitionGroupName">
-              <span id="nameLabel" openlmis-message="header.name"></span>
+            <label id="nameLabel" for="requisitionGroupName">
+              <span openlmis-message="header.name"></span>
               <span class="label-required"> *</span>
             </label>
 
@@ -50,8 +50,9 @@
 
         <div class="form-row clearfix">
           <div class="form-cell">
-            <label id="supervisoryNodeLabel" for="searchSupervisoryNode" openlmis-message="label.supervisory.node">
-            <span class="label-required"> *</span>
+            <label id="supervisoryNodeLabel" for="searchSupervisoryNode">
+              <span openlmis-message="label.supervisory.node"></span>
+              <span class="label-required"> *</span>
             </label>
 
             <div class="form-field autosuggest-input">
@@ -100,17 +101,17 @@
             <div class="accordion">
               <div class="pull-right control-accordion">
                 <a id="expandAll" href="javascript:void(0);" onClick="expandCollapse('expand')">Expand All</a> / <a
-                id="collapseAll"
-                href="javascript:void(0);"
-                onClick="expandCollapse('collapse')">Collapse
+                  id="collapseAll"
+                  href="javascript:void(0);"
+                  onClick="expandCollapse('collapse')">Collapse
                 All</a>
               </div>
               <div class="clearfix"></div>
               <div class="accordion-section">
                 <div class="accordion-heading" onClick="expandCollapseToggle(this)">
                     <span><b>+</b><a
-                      id="programSchedules"
-                      href="javascript:void(0);">{{getMessage('label.program.and.schedules')}}</a></span>
+                        id="programSchedules"
+                        href="javascript:void(0);">{{getMessage('label.program.and.schedules')}}</a></span>
                 </div>
                 <div class="accordion-body">
                   <ng-include src="''"></ng-include>
@@ -119,8 +120,8 @@
               <div class="accordion-section">
                 <div class="accordion-heading" onClick="expandCollapseToggle(this)">
                     <span><b>+</b><a
-                      id="Members"
-                      href="javascript:void(0);">{{getMessage('label.members')}}</a></span>
+                        id="Members"
+                        href="javascript:void(0);">{{getMessage('label.members')}}</a></span>
                 </div>
                 <div class="accordion-body">
                   <input type="button" class="btn btn-primary" id="addMembers" ng-click="showSlider = !showSlider"

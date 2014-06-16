@@ -19,7 +19,7 @@
 
         <div class="form-row clearfix">
           <div class="form-cell">
-            <label for="code">
+            <label id="codeLabel" for="code">
               <span openlmis-message="header.code"></span>
               <span class="label-required"> *</span>
             </label>
@@ -32,7 +32,7 @@
           </div>
 
           <div class="form-cell">
-            <label>
+            <label id="levelLabel">
               <span openlmis-message="header.level"></span>
               <span class="label-required"> *</span>
             </label>
@@ -52,7 +52,7 @@
 
         <div class="form-row clearfix">
           <div class="form-cell">
-            <label for="name">
+            <label id="nameLabel" for="name">
               <span openlmis-message="header.name"></span>
               <span class="label-required"> *</span>
             </label>
@@ -65,7 +65,7 @@
           </div>
 
           <div class="form-cell">
-            <label openlmis-message="header.parent"></label>
+            <label id="parentLabel" openlmis-message="header.parent"></label>
 
             <div class="form-field row-fluid">
               <select ui-select2="{width: '90%'}" class="span11" id="selectParentGeoZone" ng-model="geoZone.parent.code"
@@ -86,7 +86,8 @@
 
         <div class="form-row clearfix">
           <div class="form-cell">
-            <label for="catchment-population" openlmis-message="label.catchment.population"></label>
+            <label id="populationLabel" for="catchment-population"
+                   openlmis-message="label.catchment.population"></label>
 
             <div class="form-field">
               <input ng-model="geoZone.catchmentPopulation" id="catchment-population" ng-pattern="/^\d{1,9}$/"
@@ -101,7 +102,7 @@
 
         <div class="form-row clearfix">
           <div class="form-cell">
-            <label for="latitude" openlmis-message="label.latitude"></label>
+            <label id="latitudeLabel" for="latitude" openlmis-message="label.latitude"></label>
 
             <div class="form-field">
               <input ng-model="geoZone.latitude" ng-pattern="/^[+-]?0*\d{0,3}(\.\d{1,5}0*)?$/" id="latitude" type="text"
@@ -115,7 +116,7 @@
 
         <div class="form-row clearfix">
           <div class="form-cell">
-            <label for="longitude" openlmis-message="label.longitude"></label>
+            <label id="longitudeLabel" for="longitude" openlmis-message="label.longitude"></label>
 
             <div class="form-field">
               <input ng-model="geoZone.longitude" ng-pattern="/^[+-]?0*\d{0,3}(\.\d{1,5}0*)?$/" name="longitude"

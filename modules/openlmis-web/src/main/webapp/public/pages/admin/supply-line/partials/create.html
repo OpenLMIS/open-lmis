@@ -27,8 +27,8 @@
         <div class="form-row clearfix">
 
           <div class="form-cell">
-            <label>
-              <span openlmis-message="program.header"></span>
+            <label id="programLabel">
+            <span openlmis-message="program.header"></span>
               <span class="label-required"> *</span>
             </label>
 
@@ -43,8 +43,8 @@
           </div>
 
           <div class="form-cell">
-            <label>
-              <span openlmis-message="label.facility.export.orders"></span>
+            <label id="facilityExportOrdersLabel">
+            <span openlmis-message="label.facility.export.orders"></span>
               <span class="label-required"> *</span>
             </label>
 
@@ -67,8 +67,8 @@
         <div class="form-row clearfix">
 
           <div class="form-cell">
-            <label>
-              <span openlmis-message="label.supervisory.node"></span>
+            <label id="supervisoryNodeLabel">
+            <span openlmis-message="label.supervisory.node"></span>
               <span class="label-required"> *</span>
             </label>
 
@@ -100,7 +100,7 @@
           </div>
 
           <div class="form-cell">
-            <label for="description" openlmis-message="label.description"></label>
+            <label id="descriptionLabel" for="description" openlmis-message="label.description"></label>
 
             <div class="form-field">
               <input ng-model="supplyLine.description" name="description" id="description" type="text"
@@ -113,8 +113,8 @@
         <div class="form-row clearfix">
 
           <div class="form-cell">
-            <label>
-              <span openlmis-message="label.supplying.facility"></span>
+            <label id="supplyingFacilityLabel">
+            <span openlmis-message="label.supplying.facility"></span>
               <span class="label-required"> *</span>
             </label>
 

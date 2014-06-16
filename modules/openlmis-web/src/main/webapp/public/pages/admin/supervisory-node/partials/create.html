@@ -21,7 +21,7 @@
 
         <div class="form-row clearfix">
           <div class="form-cell">
-            <label for="code">
+            <label id="codeLabel" for="code">
               <span openlmis-message="header.code"></span>
               <span class="label-required"> *</span>
             </label>
@@ -38,7 +38,7 @@
 
         <div class="form-row clearfix">
           <div class="form-cell">
-            <label for="name">
+            <label id="nameLabel" for="name">
               <span openlmis-message="header.name"></span>
               <span class="label-required"> *</span>
             </label>
@@ -55,7 +55,7 @@
 
         <div class="form-row clearfix">
           <div class="form-cell">
-            <label for="description" openlmis-message="label.description"></label>
+            <label id="descriptionLabel" for="description" openlmis-message="label.description"></label>
 
             <div class="form-field">
               <input ng-model="supervisoryNode.description" name="description" id="description" type="text"
@@ -66,7 +66,7 @@
 
         <div class="form-row clearfix">
           <div class="form-cell">
-            <label openlmis-message="header.parent.node"></label>
+            <label id="parentNodeLabel" openlmis-message="header.parent.node"></label>
 
             <div class="form-field autosuggest-input">
               <div class="suggest-field">
@@ -96,7 +96,7 @@
 
         <div class="form-row clearfix">
           <div class="form-cell">
-            <label>
+            <label id="associatedFacilityLabel">
               <span openlmis-message="label.associated.facility"></span>
               <span class="label-required"> *</span>
             </label>
@@ -104,7 +104,7 @@
             <div class="form-field">
               <div id="associatedFacilityField" class="input-div associate-facility clearfix"
                    ng-click="showSlider = !showSlider;">
-              <div class="facility-associated">
+                <div class="facility-associated">
                   <span class="placeholder" ng-show="!supervisoryNode.facility"
                         openlmis-message="label.no.facility.selected"></span>
                   <span ng-show="supervisoryNode.facility">{{supervisoryNode.facility.code}} - {{supervisoryNode.facility.name}}</span>

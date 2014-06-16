@@ -110,6 +110,9 @@ public class RequisitionGroupPage extends FilterSearchPage {
   @FindBy(how = ID, using = "addNewRequisitionGroupHeader")
   private static WebElement addNewRequisitionGroupHeader = null;
 
+  @FindBy(how = ID, using = "editRequisitionGroupHeader")
+  private static WebElement editRequisitionGroupHeader = null;
+
   @FindBy(how = ID, using = "programSchedules")
   private static WebElement programSchedulesLabel = null;
 
@@ -527,5 +530,10 @@ public class RequisitionGroupPage extends FilterSearchPage {
   public void clickSearchIcon() {
     testWebDriver.waitForElementToAppear(searchIcon);
     searchIcon.click();
+  }
+
+  public String getEditRequisitionGroupHeader() {
+    testWebDriver.waitForElementToAppear(editRequisitionGroupHeader);
+    return editRequisitionGroupHeader.getText();
   }
 }
