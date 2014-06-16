@@ -589,3 +589,6 @@ services.factory('GetProgramWithBudgetingApplies',function($resource){
     return $resource('/reports/programsWithBudgetApplies.json',{},{});
 
 });
+services.factory('RegimenDistributionReport',function($resource){
+    return $resource('/reports/reportdata/getRegimenDistribution.json',{},{});
+});

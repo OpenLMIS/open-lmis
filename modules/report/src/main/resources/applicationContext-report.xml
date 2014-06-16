@@ -193,6 +193,17 @@
                     <property name="version" value="1.0"/>
                 </bean>
 
+
+                <bean class="org.openlmis.report.Report">
+                    <property name="reportKey" value="regimen_distribution"/>
+                    <property name="template" value="regimen-distribution.jasper"/>
+                    <property name="reportDataProvider" ref="regimenDistributionReportDataProvider"/>
+                    <property name="id" value="RP-Regimen-Distribution-report"/>
+                    <property name="name" value="Regimen Distribution by District"/>
+                    <property name="title" value="Regimen Distribution by District"/>
+                    <property name="version" value="1.0"/>
+                </bean>
+
                 <bean class="org.openlmis.report.Report">
                     <property name="reportKey" value="district_financial_summary"/>
                     <property name="template" value="district-financial-summary.jasper"/>
