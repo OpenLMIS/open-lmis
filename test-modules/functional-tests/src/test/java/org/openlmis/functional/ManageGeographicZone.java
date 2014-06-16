@@ -233,6 +233,7 @@ public class ManageGeographicZone extends TestCaseHelper {
     geographicZonePage.enterGeoZoneCode("Arusha");
     geographicZonePage.selectGeoZoneLevel("Country");
     geographicZonePage.clickOnSaveButton();
+    testWebDriver.sleep(500);
     assertEquals("Duplicate Geographic Zone Code", geographicZonePage.getSaveErrorMessage());
   }
 

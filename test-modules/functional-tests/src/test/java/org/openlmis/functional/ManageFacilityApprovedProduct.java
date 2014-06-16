@@ -80,7 +80,7 @@ public class ManageFacilityApprovedProduct extends TestCaseHelper {
 
     List<String> expectedListOfPrograms = asList("--Select Program--", "ESSENTIAL MEDICINES", "TB", "hiv");
     List<String> actualListOfPrograms = facilityApprovedProductPage.getListOfPrograms();
-    assertTrue(actualListOfPrograms.equals(expectedListOfPrograms));
+    assertTrue("the lists are, expected :" + expectedListOfPrograms + ",and actual=" + actualListOfPrograms, actualListOfPrograms.equals(expectedListOfPrograms));
 
     List<String> expectedListOfFacilityTypes = asList("--Select facility type--", "lvl3 Hospital", "Warehouse", "Lvl2 Hospital", "Lvl1 Hospital",
       "Health Center", "Health Post", "Satellite Facility", "CHW", "DHMT", "State Office", "District Office");

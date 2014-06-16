@@ -24,7 +24,8 @@
             <i id='searchIcon' class="icon-search"></i>
           </button>
         </div>
-        <input type="button" ng-disabled="disableAddFacility" id="addSelectedFacilities" class="btn btn-primary pull-right" openlmis-message="add.selected.facilities" ng-click="addMembers()">
+        <input type="button" ng-disabled="disableAddFacility" id="addSelectedFacilities"
+               class="btn btn-primary pull-right" openlmis-message="add.selected.facilities" ng-click="addMembers()">
       </div>
 
       <div id="searchFacilityList" class="search-list">
@@ -32,12 +33,12 @@
           <h3 ng-switch-when="0">
             <span id="noFacilityResultMessage" ng-show="!message"
                   openlmis-message="msg.no.matches|facilityQuery"></span>
-            <span id="tooManyResultsMessage" ng-show="message" openlmis-message="message"></span>
+            <span id="tooManyFacilityResultsMessage" ng-show="message" openlmis-message="message"></span>
           </h3>
 
-          <h3 ng-switch-when="1" openlmis-message="msg.one.match|facilityQuery"></h3>
+          <h3 id="oneFacilityResultsMessage" ng-switch-when="1" openlmis-message="msg.one.match|facilityQuery"></h3>
 
-          <h3 id="nResultsMessage" ng-switch-default
+          <h3 id="nFacilityResultsMessage" ng-switch-default
               openlmis-message="msg.many.matches|facilityResultCount|facilityQuery"></h3>
         </div>
         <a class="close-btn" id="closeButton" href="" ng-click="clearFacilitySearch()"></a>
@@ -45,8 +46,9 @@
           <li ng-repeat="facility in facilityList">
 
             <span id="facilityResult{{$index}}">
-              <input id="facilityCheckBox{{$index}}" type="checkbox" class="facilityCheckbox" ng-click="associate(facility)" ng-model="facility.selected"
-                  ng-checked="false">
+              <input id="facilityCheckBox{{$index}}" type="checkbox" class="facilityCheckbox"
+                     ng-click="associate(facility)" ng-model="facility.selected"
+                     ng-checked="false">
               <span class="vertical-middle-aligned">{{facility.code}} - {{facility.name}}</span>
             </span>
           </li>

@@ -30,12 +30,12 @@
           <h3 ng-switch-when="0">
             <span id="noFacilityResultMessage" ng-show="!message"
                   openlmis-message="msg.no.matches|facilityQuery"></span>
-            <span id="tooManyResultsMessage" ng-show="message" openlmis-message="message"></span>
+            <span id="tooManyFacilityResultsMessage" ng-show="message" openlmis-message="message"></span>
           </h3>
 
-          <h3 ng-switch-when="1" openlmis-message="msg.one.match|facilityQuery"></h3>
+          <h3 id="oneFacilityResultsMessage" ng-switch-when="1" openlmis-message="msg.one.match|facilityQuery"></h3>
 
-          <h3 id="nResultsMessage" ng-switch-default
+          <h3 id="nFacilityResultsMessage" ng-switch-default
               openlmis-message="msg.many.matches|facilityResultCount|facilityQuery"></h3>
         </div>
         <a class="close-btn" id="closeButton" href="" ng-click="clearFacilitySearch()"></a>

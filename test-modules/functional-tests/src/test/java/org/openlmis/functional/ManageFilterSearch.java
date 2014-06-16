@@ -56,14 +56,14 @@ public class ManageFilterSearch extends TestCaseHelper {
     requisitionGroupPage.searchFacilityToBeAssociated("F10");
     requisitionGroupPage.clickSearchIcon();
     testWebDriver.waitForAjax();
-    assertEquals("6 matches found for 'F10'", requisitionGroupPage.getNResultsMessage());
+    assertEquals("6 matches found for 'F10'", requisitionGroupPage.getNFacilityResultsMessage());
     requisitionGroupPage.clickFilterButton();
 
     requisitionGroupPage.selectFacilityType("Lvl3 Hospital");
     requisitionGroupPage.clickApplyFilterButton();
     testWebDriver.waitForAjax();
 
-    assertEquals("2 matches found for 'F10'", requisitionGroupPage.getNResultsMessage());
+    assertEquals("2 matches found for 'F10'", requisitionGroupPage.getNFacilityResultsMessage());
 
     requisitionGroupPage.clickFilterButton();
     assertEquals("Lvl3 Hospital", requisitionGroupPage.getSelectedFacilityTypeOnFilterPopUp());
@@ -118,7 +118,7 @@ public class ManageFilterSearch extends TestCaseHelper {
     assertEquals("Arusha", requisitionGroupPage.getSelectedGeoZoneOnFilterPopUp());
     requisitionGroupPage.clickApplyFilterButton();
     testWebDriver.waitForAjax();
-    assertEquals("2 matches found for 'F11'", requisitionGroupPage.getNResultsMessage());
+    assertEquals("2 matches found for 'F11'", requisitionGroupPage.getNFacilityResultsMessage());
 
     requisitionGroupPage.clickFilterButton();
     testWebDriver.waitForAjax();
@@ -127,7 +127,7 @@ public class ManageFilterSearch extends TestCaseHelper {
     requisitionGroupPage.clickCancelFilterButton();
     testWebDriver.waitForAjax();
 
-    assertEquals("2 matches found for 'F11'", requisitionGroupPage.getNResultsMessage());
+    assertEquals("2 matches found for 'F11'", requisitionGroupPage.getNFacilityResultsMessage());
     assertEquals("Warehouse", requisitionGroupPage.getSelectedFacilityTypeLabelOnAddFilterPage());
     assertEquals("Arusha", requisitionGroupPage.getSelectedGeoZoneLabelOnAddFilterPage());
     assertTrue(requisitionGroupPage.isSetFilterButtonPresent());
@@ -135,7 +135,7 @@ public class ManageFilterSearch extends TestCaseHelper {
     testWebDriver.refresh();
     requisitionGroupPage.clickMembersAccordionLink();
     requisitionGroupPage.clickAddMembersButton();
-    assertFalse(requisitionGroupPage.isNoResultMessageDisplayed());
+    assertFalse(requisitionGroupPage.isNoFacilityResultMessageDisplayed());
     assertEquals("", requisitionGroupPage.getSelectedFacilityTypeLabelOnAddFilterPage());
     assertEquals("", requisitionGroupPage.getSelectedGeoZoneLabelOnAddFilterPage());
     assertTrue(requisitionGroupPage.isSetFilterButtonPresent());
@@ -156,10 +156,10 @@ public class ManageFilterSearch extends TestCaseHelper {
     supervisoryNodesPage.searchFacilityToBeAssociated("F10");
     supervisoryNodesPage.clickSearchIcon();
     testWebDriver.waitForAjax();
-    assertEquals("6 matches found for 'F10'", supervisoryNodesPage.getNResultsMessage());
+    assertEquals("6 matches found for 'F10'", supervisoryNodesPage.getNFacilityResultsMessage());
     supervisoryNodesPage.clickFilterButton();
     supervisoryNodesPage.clickApplyFilterButton();
-    assertEquals("6 matches found for 'F10'", supervisoryNodesPage.getNResultsMessage());
+    assertEquals("6 matches found for 'F10'", supervisoryNodesPage.getNFacilityResultsMessage());
 
     supervisoryNodesPage.clickFilterButton();
     supervisoryNodesPage.selectFacilityType("Lvl3 Hospital");

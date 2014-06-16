@@ -55,13 +55,13 @@ public class ManageSupervisoryNodes extends TestCaseHelper {
     dbWrapper.insertSupervisoryNode("F10", "N3", "Node3", "N2");
 
     HomePage homePage = loginPage.loginAs(testData.get(ADMIN), testData.get(PASSWORD));
-    homePage.navigateToUser();
+    homePage.navigateManageFacility();
     assertFalse(homePage.isSupervisoryNodeTabDisplayed());
     homePage.logout();
 
     dbWrapper.assignRight("Admin", "MANAGE_SUPERVISORY_NODE");
     loginPage.loginAs(testData.get(ADMIN), testData.get(PASSWORD));
-    homePage.navigateToUser();
+    homePage.navigateManageFacility();
     assertTrue(homePage.isSupervisoryNodeTabDisplayed());
     supervisoryNodesPage = homePage.navigateToSupervisoryNodes();
 
@@ -74,6 +74,7 @@ public class ManageSupervisoryNodes extends TestCaseHelper {
   @Test(groups = {"admin"})
   public void testSupervisoryNodeSearchSortAndPagination() throws SQLException {
     dbWrapper.assignRight("Admin", "MANAGE_SUPERVISORY_NODE");
+    dbWrapper.assignRight("Admin", "UPLOADS");
     dbWrapper.insertSupervisoryNode("F10", "N1", "Node1", null);
     dbWrapper.insertSupervisoryNode("F11", "N2", "Node2", null);
     dbWrapper.insertSupervisoryNode("F10", "N3", "Node3", "N2");
@@ -150,6 +151,7 @@ public class ManageSupervisoryNodes extends TestCaseHelper {
   @Test(groups = {"admin"})
   public void testSupervisoryNodeParentSearchSortAndPagination() throws SQLException {
     dbWrapper.assignRight("Admin", "MANAGE_SUPERVISORY_NODE");
+    dbWrapper.assignRight("Admin", "UPLOADS");
     dbWrapper.insertSupervisoryNode("F10", "N1", "Node1", null);
     dbWrapper.insertSupervisoryNode("F11", "N2", "Node2", null);
     dbWrapper.insertSupervisoryNode("F10", "N3", "Node3", "N2");

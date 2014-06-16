@@ -349,13 +349,13 @@ public class ManageRequisitionGroups extends TestCaseHelper {
     requisitionGroupPage.clickMembersAccordionLink();
     requisitionGroupPage.clickAddMembersButton();
     searchAssociatedFacility("F11");
-    assertEquals("9 matches found for 'F11'", requisitionGroupPage.getNResultsMessage());
+    assertEquals("9 matches found for 'F11'", requisitionGroupPage.getNFacilityResultsMessage());
     requisitionGroupPage.clickFilterButton();
     testWebDriver.waitForAjax();
     requisitionGroupPage.selectFacilityType("Warehouse");
     requisitionGroupPage.clickApplyFilterButton();
     testWebDriver.waitForAjax();
-    assertEquals("4 matches found for 'F11'", requisitionGroupPage.getNResultsMessage());
+    assertEquals("4 matches found for 'F11'", requisitionGroupPage.getNFacilityResultsMessage());
     requisitionGroupPage.checkFacilityToBeAssociated(1);
     requisitionGroupPage.checkFacilityToBeAssociated(2);
     requisitionGroupPage.checkFacilityToBeAssociated(3);
@@ -630,7 +630,7 @@ public class ManageRequisitionGroups extends TestCaseHelper {
     requisitionGroupPage.removeRequisitionMember(2);
 
     searchAssociatedFacility("F11");
-//    assertTrue(requisitionGroupPage.isNoResultMessageDisplayed());
+    assertTrue(requisitionGroupPage.isNoFacilityResultMessageDisplayed());
 
     searchAssociatedFacility("F10A");
     requisitionGroupPage.checkFacilityToBeAssociated(1);

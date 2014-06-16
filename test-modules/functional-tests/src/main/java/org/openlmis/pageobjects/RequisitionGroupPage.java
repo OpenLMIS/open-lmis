@@ -104,9 +104,6 @@ public class RequisitionGroupPage extends FilterSearchPage {
   @FindBy(how = ID, using = "noFacilityResultMessage")
   private static WebElement noFacilityResultMessage = null;
 
-  @FindBy(how = ID, using = "tooManyResultsMessage")
-  private static WebElement tooManyResultsMessage = null;
-
   @FindBy(how = ID, using = "duplicateFacilityMessage")
   private static WebElement duplicateFacilityMessage = null;
 
@@ -466,11 +463,6 @@ public class RequisitionGroupPage extends FilterSearchPage {
   public String getNoFacilitySearchResultMessage() {
     testWebDriver.waitForElementToAppear(noFacilityResultMessage);
     return noFacilityResultMessage.getText();
-  }
-
-  public String getTooManyFacilitySearchResultMessage() {
-    testWebDriver.waitForElementToAppear(tooManyResultsMessage);
-    return tooManyResultsMessage.getText();
   }
 
   public String getFacilityResult(int rowNumber) {

@@ -65,6 +65,30 @@ public class FilterSearchPage extends Page {
   @FindBy(how = ID, using = "addSelectedFacilities")
   private static WebElement addSelectedFacilities = null;
 
+  @FindBy(how = ID, using = "noFacilityResultMessage")
+  private static WebElement noFacilityResultMessage = null;
+
+  @FindBy(how = ID, using = "oneFacilityResultMessage")
+  private static WebElement oneFacilityResultMessage = null;
+
+  @FindBy(how = ID, using = "nFacilityResultsMessage")
+  private static WebElement nFacilityResultsMessage = null;
+
+  @FindBy(how = ID, using = "tooManyFacilityResultsMessage")
+  private static WebElement tooManyFacilityResultsMessage = null;
+
+  @FindBy(how = ID, using = "noGeoZoneResult")
+  private static WebElement noGeoZoneResultMessage = null;
+
+  @FindBy(how = ID, using = "oneGeoZoneResult")
+  private static WebElement oneGeoZoneResultMessage = null;
+
+  @FindBy(how = ID, using = "nGeoZoneResults")
+  private static WebElement nGeoZoneResultsMessage = null;
+
+  @FindBy(how = ID, using = "tooManyGeoZoneResults")
+  private static WebElement tooManyGeoZoneResultsMessage = null;
+
   public FilterSearchPage(TestWebDriver driver) {
     super(driver);
     PageFactory.initElements(new AjaxElementLocatorFactory(TestWebDriver.getDriver(), 1), this);
@@ -209,5 +233,67 @@ public class FilterSearchPage extends Page {
     WebElement facilityCheckBox = testWebDriver.getElementById("facilityCheckBox" + (rowNumber - 1));
     testWebDriver.waitForElementToAppear(facilityCheckBox);
     facilityCheckBox.click();
+  }
+
+  public boolean isNoFacilityResultMessageDisplayed() {
+    try {
+      testWebDriver.waitForElementToAppear(noFacilityResultMessage);
+    } catch (TimeoutException e) {
+      return false;
+    } catch (NoSuchElementException e) {
+      return false;
+    }
+    return noFacilityResultMessage.isDisplayed();
+  }
+
+  public boolean isOneFacilityResultMessageDisplayed() {
+    try {
+      testWebDriver.waitForElementToAppear(oneFacilityResultMessage);
+    } catch (TimeoutException e) {
+      return false;
+    } catch (NoSuchElementException e) {
+      return false;
+    }
+    return oneFacilityResultMessage.isDisplayed();
+  }
+
+  public String getNFacilityResultsMessage() {
+    testWebDriver.waitForElementToAppear(nFacilityResultsMessage);
+    return nFacilityResultsMessage.getText();
+  }
+
+  public String getOneFacilityResultMessage() {
+    testWebDriver.waitForElementToAppear(oneFacilityResultMessage);
+    return oneFacilityResultMessage.getText();
+  }
+
+  public String getNoFacilityResultMessage() {
+    testWebDriver.waitForElementToAppear(noFacilityResultMessage);
+    return noFacilityResultMessage.getText();
+  }
+
+  public String getTooManyFacilitySearchResultMessage() {
+    testWebDriver.waitForElementToAppear(tooManyFacilityResultsMessage);
+    return tooManyFacilityResultsMessage.getText();
+  }
+
+  public String getNGeoZoneResultsMessage() {
+    testWebDriver.waitForElementToAppear(nGeoZoneResultsMessage);
+    return nGeoZoneResultsMessage.getText();
+  }
+
+  public String getOneGeoZoneResultMessage() {
+    testWebDriver.waitForElementToAppear(oneGeoZoneResultMessage);
+    return oneGeoZoneResultMessage.getText();
+  }
+
+  public String getNoGeoZoneResultMessage() {
+    testWebDriver.waitForElementToAppear(noGeoZoneResultMessage);
+    return noGeoZoneResultMessage.getText();
+  }
+
+  public String getTooManyGeoZoneSearchResultMessage() {
+    testWebDriver.waitForElementToAppear(tooManyGeoZoneResultsMessage);
+    return tooManyGeoZoneResultsMessage.getText();
   }
 }
