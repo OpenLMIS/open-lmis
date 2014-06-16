@@ -76,8 +76,7 @@ public class RequisitionGroupController extends BaseController {
     List<RequisitionGroupMember> requisitionGroupMembers = requisitionGroupService.getMembersBy(id);
     List<RequisitionGroupProgramSchedule> requisitionGroupProgramSchedules = requisitionGroupProgramScheduleService.getByRequisitionGroupId(id);
     RequisitionGroupFormDTO requisitionGroupFormDTO = new RequisitionGroupFormDTO(requisitionGroup, requisitionGroupMembers, requisitionGroupProgramSchedules);
-    ResponseEntity<OpenLmisResponse> response = OpenLmisResponse.response("requisitionGroupData", requisitionGroupFormDTO);
-    return response;
+    return OpenLmisResponse.response("requisitionGroupData", requisitionGroupFormDTO);
   }
 
   @RequestMapping(value = "/requisitionGroups", method = POST, headers = ACCEPT_JSON)
@@ -87,7 +86,10 @@ public class RequisitionGroupController extends BaseController {
     try {
       Long userId = loggedInUserId(request);
       requisitionGroupFormDTO.getRequisitionGroup().setModifiedBy(userId);
-      requisitionGroupService.saveWithMembers(requisitionGroupFormDTO.getRequisitionGroup(), requisitionGroupFormDTO.getRequisitionGroupMembers());
+      requisitionGroupService.saveWithMembersAndSchedules(requisitionGroupFormDTO.getRequisitionGroup(),
+        requisitionGroupFormDTO.getRequisitionGroupMembers(),
+        requisitionGroupFormDTO.getRequisitionGroupProgramSchedules());
+
     } catch (DataException e) {
       return error(e, BAD_REQUEST);
     }
@@ -106,8 +108,10 @@ public class RequisitionGroupController extends BaseController {
       Long userId = loggedInUserId(request);
       requisitionGroupFormDTO.getRequisitionGroup().setId(id);
       requisitionGroupFormDTO.getRequisitionGroup().setModifiedBy(userId);
+      requisitionGroupService.updateWithMembersAndSchedules(requisitionGroupFormDTO.getRequisitionGroup(),
+        requisitionGroupFormDTO.getRequisitionGroupMembers(),
+        requisitionGroupFormDTO.getRequisitionGroupProgramSchedules());
 
-      requisitionGroupService.updateWithMembers(requisitionGroupFormDTO.getRequisitionGroup(), requisitionGroupFormDTO.getRequisitionGroupMembers());
     } catch (DataException e) {
       return error(e, BAD_REQUEST);
     }

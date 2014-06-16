@@ -11,10 +11,7 @@
 package org.openlmis.core.service;
 
 import lombok.NoArgsConstructor;
-import org.openlmis.core.domain.Pagination;
-import org.openlmis.core.domain.RequisitionGroup;
-import org.openlmis.core.domain.RequisitionGroupMember;
-import org.openlmis.core.domain.SupervisoryNode;
+import org.openlmis.core.domain.*;
 import org.openlmis.core.repository.RequisitionGroupRepository;
 import org.openlmis.core.repository.SupervisoryNodeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,10 +39,16 @@ public class RequisitionGroupService {
   @Autowired
   private RequisitionGroupMemberService requisitionGroupMemberService;
 
+  @Autowired
+  private RequisitionGroupProgramScheduleService requisitionGroupProgramScheduleService;
+
   @Transactional
-  public void saveWithMembers(RequisitionGroup requisitionGroup, List<RequisitionGroupMember> requisitionGroupMembers) {
+  public void saveWithMembersAndSchedules(RequisitionGroup requisitionGroup,
+                                          List<RequisitionGroupMember> requisitionGroupMembers,
+                                          List<RequisitionGroupProgramSchedule> requisitionGroupProgramSchedules) {
     save(requisitionGroup);
     saveRequisitionGroupMembers(requisitionGroupMembers, requisitionGroup);
+    saveRequisitionGroupProgramSchedules(requisitionGroupProgramSchedules, requisitionGroup);
   }
 
   public void save(RequisitionGroup requisitionGroup) {
@@ -96,9 +99,12 @@ public class RequisitionGroupService {
     return requisitionGroupMemberService.getMembersBy(requisitionGroupId);
   }
 
-  public void updateWithMembers(RequisitionGroup requisitionGroup, List<RequisitionGroupMember> requisitionGroupMembers) {
+  public void updateWithMembersAndSchedules(RequisitionGroup requisitionGroup,
+                                            List<RequisitionGroupMember> requisitionGroupMembers,
+                                            List<RequisitionGroupProgramSchedule> requisitionGroupProgramSchedules) {
     save(requisitionGroup);
-    deleteAndInsertRequisitionGroupMembers(requisitionGroup,requisitionGroupMembers);
+    deleteAndInsertRequisitionGroupMembers(requisitionGroup, requisitionGroupMembers);
+    deleteAndInsertRequisitionGroupProgramSchedules(requisitionGroup, requisitionGroupProgramSchedules);
   }
 
   private void deleteAndInsertRequisitionGroupMembers(RequisitionGroup requisitionGroup, List<RequisitionGroupMember> requisitionGroupMembers) {
@@ -107,6 +113,20 @@ public class RequisitionGroupService {
       requisitionGroupMember.setRequisitionGroup(requisitionGroup);
       requisitionGroupMember.setModifiedBy(requisitionGroup.getModifiedBy());
       requisitionGroupMemberService.insert(requisitionGroupMember);
+    }
+  }
+
+  private void deleteAndInsertRequisitionGroupProgramSchedules(RequisitionGroup requisitionGroup, List<RequisitionGroupProgramSchedule> requisitionGroupProgramSchedules) {
+    requisitionGroupProgramScheduleService.deleteRequisitionGroupProgramSchedulesFor(requisitionGroup.getId());
+    saveRequisitionGroupProgramSchedules(requisitionGroupProgramSchedules, requisitionGroup);
+  }
+
+  public void saveRequisitionGroupProgramSchedules(List<RequisitionGroupProgramSchedule> requisitionGroupProgramSchedules, RequisitionGroup requisitionGroup) {
+    for (RequisitionGroupProgramSchedule requisitionGroupProgramSchedule : requisitionGroupProgramSchedules) {
+      requisitionGroupProgramSchedule.setId(null);
+      requisitionGroupProgramSchedule.setRequisitionGroup(requisitionGroup);
+      requisitionGroupProgramSchedule.setModifiedBy(requisitionGroup.getModifiedBy());
+      requisitionGroupProgramScheduleService.save(requisitionGroupProgramSchedule);
     }
   }
 }

@@ -16,10 +16,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Matchers;
 import org.mockito.Mock;
-import org.openlmis.core.domain.Pagination;
-import org.openlmis.core.domain.RequisitionGroup;
-import org.openlmis.core.domain.RequisitionGroupMember;
-import org.openlmis.core.domain.SupervisoryNode;
+import org.openlmis.core.domain.*;
 import org.openlmis.core.repository.RequisitionGroupRepository;
 import org.openlmis.core.repository.SupervisoryNodeRepository;
 import org.openlmis.db.categories.UnitTests;
@@ -34,6 +31,7 @@ import static com.natpryce.makeiteasy.MakeItEasy.a;
 import static com.natpryce.makeiteasy.MakeItEasy.make;
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
 import static org.openlmis.core.builder.RequisitionGroupBuilder.defaultRequisitionGroup;
@@ -55,6 +53,9 @@ public class RequisitionGroupServiceTest {
 
   @Mock
   private RequisitionGroupMemberService requisitionGroupMemberService;
+
+  @Mock
+  private RequisitionGroupProgramScheduleService requisitionGroupProgramScheduleService;
 
   @Test
   public void shouldSaveANewRequisitionGroup() {
@@ -145,8 +146,16 @@ public class RequisitionGroupServiceTest {
   }
 
   @Test
-  public void shouldUpdateWithRequisitionGroupMembers() {
+  public void shouldSaveRequisitionGroupProgramSchedules() {
+    List<RequisitionGroupProgramSchedule> requisitionGroupProgramSchedules = asList(new RequisitionGroupProgramSchedule());
 
+    requisitionGroupService.saveRequisitionGroupProgramSchedules(requisitionGroupProgramSchedules, new RequisitionGroup());
+
+    verify(requisitionGroupProgramScheduleService).save(requisitionGroupProgramSchedules.get(0));
+  }
+
+  @Test
+  public void shouldUpdateWithRequisitionGroupMembers() {
     RequisitionGroup requisitionGroup = new RequisitionGroup();
     requisitionGroup.setId(1L);
     requisitionGroup.setCode("RG1");
@@ -159,16 +168,30 @@ public class RequisitionGroupServiceTest {
     requisitionGroupMembers.add(member1);
     requisitionGroupMembers.add(member2);
 
+    RequisitionGroupProgramSchedule requisitionGroupProgramSchedule1 = new RequisitionGroupProgramSchedule();
+    requisitionGroupProgramSchedule1.setId(2L);
+    RequisitionGroupProgramSchedule requisitionGroupProgramSchedule2 = new RequisitionGroupProgramSchedule();
+    List<RequisitionGroupProgramSchedule> requisitionGroupProgramSchedules = new ArrayList<>();
+    requisitionGroupProgramSchedules.add(requisitionGroupProgramSchedule1);
+    requisitionGroupProgramSchedules.add(requisitionGroupProgramSchedule2);
+
     RequisitionGroupService spyRequisitionGroup = PowerMockito.spy(requisitionGroupService);
     doNothing().when(spyRequisitionGroup).save(requisitionGroup);
 
-
-    spyRequisitionGroup.updateWithMembers(requisitionGroup, requisitionGroupMembers);
-
+    spyRequisitionGroup.updateWithMembersAndSchedules(requisitionGroup, requisitionGroupMembers, requisitionGroupProgramSchedules);
 
     verify(spyRequisitionGroup).save(requisitionGroup);
     verify(requisitionGroupMemberService).deleteMembersForGroup(requisitionGroup.getId());
-    verify(requisitionGroupMemberService,times(2)).insert(Matchers.any(RequisitionGroupMember.class));
+    verify(requisitionGroupMemberService, times(2)).insert(Matchers.any(RequisitionGroupMember.class));
+    verify(requisitionGroupProgramScheduleService).deleteRequisitionGroupProgramSchedulesFor(requisitionGroup.getId());
+    verify(requisitionGroupProgramScheduleService, times(2)).save(Matchers.any(RequisitionGroupProgramSchedule.class));
+
+    assertThat(requisitionGroupProgramSchedule1.getRequisitionGroup(), is(requisitionGroup));
+    assertThat(requisitionGroupProgramSchedule1.getModifiedBy(), is(requisitionGroup.getModifiedBy()));
+    assertNull(requisitionGroupProgramSchedule1.getId());
+    assertThat(requisitionGroupProgramSchedule2.getRequisitionGroup(), is(requisitionGroup));
+    assertThat(requisitionGroupProgramSchedule2.getModifiedBy(), is(requisitionGroup.getModifiedBy()));
+
     assertThat(member1.getRequisitionGroup(), is(requisitionGroup));
     assertThat(member1.getModifiedBy(), is(requisitionGroup.getModifiedBy()));
     assertThat(member2.getRequisitionGroup(), is(requisitionGroup));

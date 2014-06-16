@@ -45,8 +45,10 @@ public class RequisitionGroupProgramScheduleMapperIT {
 
   @Autowired
   ProgramMapper programMapper;
+
   @Autowired
   ProcessingScheduleMapper processingScheduleMapper;
+
   @Autowired
   FacilityMapper facilityMapper;
 
@@ -175,5 +177,19 @@ public class RequisitionGroupProgramScheduleMapperIT {
     assertThat(result.get(0).getDropOffFacility().getId(), is(requisitionGroupProgramSchedule.getDropOffFacility().getId()));
     assertThat(result.get(0).getDropOffFacility().getName(), is(requisitionGroupProgramSchedule.getDropOffFacility().getName()));
     assertThat(result.get(0).getRequisitionGroup().getId(), is(requisitionGroupProgramSchedule.getRequisitionGroup().getId()));
+  }
+
+  @Test
+  public void shouldDeleteRequisitionGroupProgramScheduleByRequisitionGroup() throws Exception {
+    programMapper.insert(requisitionGroupProgramSchedule.getProgram());
+    requisitionGroupMapper.insert(requisitionGroupProgramSchedule.getRequisitionGroup());
+
+    requisitionGroupProgramScheduleMapper.insert(requisitionGroupProgramSchedule);
+    requisitionGroupProgramScheduleMapper.deleteRequisitionGroupProgramSchedulesFor(requisitionGroupProgramSchedule.getRequisitionGroup().getId());
+
+    List<RequisitionGroupProgramSchedule> result = requisitionGroupProgramScheduleMapper.
+      getByRequisitionGroupId(requisitionGroupProgramSchedule.getRequisitionGroup().getId());
+
+    assertThat(result.size(), is(0));
   }
 }

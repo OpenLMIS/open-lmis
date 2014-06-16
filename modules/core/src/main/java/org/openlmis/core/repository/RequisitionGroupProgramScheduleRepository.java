@@ -132,4 +132,8 @@ public class RequisitionGroupProgramScheduleRepository {
   public List<RequisitionGroupProgramSchedule> getByRequisitionGroupId(Long requisitionGroupId) {
     return mapper.getByRequisitionGroupId(requisitionGroupId);
   }
+
+  public void deleteRequisitionGroupProgramSchedulesFor(Long requisitionGroupId) {
+    mapper.deleteRequisitionGroupProgramSchedulesFor(requisitionGroupId);
+  }
 }

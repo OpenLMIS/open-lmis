@@ -78,4 +78,7 @@ public interface RequisitionGroupProgramScheduleMapper {
       one = @One(select = "org.openlmis.core.repository.mapper.FacilityMapper.getLWById"))
   })
   List<RequisitionGroupProgramSchedule> getByRequisitionGroupId(Long requisitionGroupId);
+
+  @Delete({"DELETE FROM requisition_group_program_schedules WHERE requisitionGroupId = #{requisitionGroupId}"})
+  void deleteRequisitionGroupProgramSchedulesFor(Long requisitionGroupId);
 }
