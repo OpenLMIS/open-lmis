@@ -49,7 +49,9 @@
               <input id="facilityCheckBox{{$index}}" type="checkbox" class="facilityCheckbox"
                      ng-click="associate(facility)" ng-model="facility.selected"
                      ng-checked="false">
-              <span class="vertical-middle-aligned">{{facility.code}} - {{facility.name}}</span>
+              <label for="facilityCheckBox{{$index}}" class="short">
+                <span class="vertical-middle-aligned">{{facility.code}} - {{facility.name}}</span>
+              </label>
             </span>
           </li>
         </ul>
