@@ -18,6 +18,8 @@ function VisitInfoController($scope, distributionService, $routeParams) {
     facilityClosed: "HEALTH_CENTER_CLOSED",
     unavailableFuelFunds: "FUEL_FUNDS_UNAVAILABLE",
     unavailablePerDiemFunds: "PERDIEM_FUNDS_UNAVAILABLE",
+    refrigeratorsNotWorking: "REFRIGERATORS_NOT_WORKING",
+    noRefrigerators: "NO_REFRIGERATORS",
     notPartOfProgram: "HEALTH_CENTER_NOT_IN_DLS",
     other: "OTHER"
   };
