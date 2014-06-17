@@ -37,9 +37,8 @@
                   ng-model="productSelected" name="product"
                   openlmis-message="placeholder.select.product">
             <option></option>
-            <option value="header" class="option-header" disabled="disabled" ng-show="products.length"> Product Code |
-              Product Name | Strength | Units of Measure | Type
-            </option>
+            <option value="header" class="option-header" disabled="disabled" ng-show="products.length"
+                    ng-bind="getHeader()"></option>
             <option value={{product}} ng-repeat="product in products | orderBy: ['primaryName','code']">
               {{product.code}} | {{product.primaryName}} | {{product.strength}} | {{product.dosageUnit.code}} |
               {{product.fullSupply}}

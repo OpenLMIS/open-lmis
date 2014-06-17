@@ -1,6 +1,14 @@
-function CreateFacilityApprovedProductController($scope, ProgramProductsFilter) {
+function CreateFacilityApprovedProductController($scope, ProgramProductsFilter, messageService) {
   $scope.addedFacilityTypeApprovedProducts = [];
   $scope.facilityApprovedProducts = [];
+
+  $scope.getHeader = function () {
+    return messageService.get('header.code') + " | " +
+        messageService.get('header.name') + " | " +
+        messageService.get('header.strength') + " | " +
+        messageService.get('header.unit.of.measure') + " | " +
+        messageService.get('header.template.type');
+  };
 
   var loadProductsWithCategory = function () {
     ProgramProductsFilter.get({programId: $scope.$parent.program.id, facilityTypeId: $scope.$parent.facilityType.id}, function (data) {
@@ -23,10 +31,10 @@ function CreateFacilityApprovedProductController($scope, ProgramProductsFilter) 
     var productType = productData[4].trim();
 
     if (productType.toLowerCase() === "true") {
-      productType = "Full supply";
+      productType = messageService.get('label.full.supply');
     }
     if (productType.toLowerCase() === "false") {
-      productType = "Non full supply";
+      productType = messageService.get('label.non.full.supply');
     }
     return "<div class='row-fluid'>" +
         "<div class='span2'>" + productData[0] + "</div>" +

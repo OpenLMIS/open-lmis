@@ -12,14 +12,15 @@ describe("Create Facility Approved Product Controller", function () {
 
   beforeEach(module('openlmis'));
 
-  var scope, parentScope, ctrl, supplyLine, $httpBackend, location, programs, facilityTypeList;
+  var scope, parentScope, ctrl, supplyLine, $httpBackend, location, programs, facilityTypeList, messageService;
 
-  beforeEach(inject(function ($rootScope, _$httpBackend_, $controller, $location) {
+  beforeEach(inject(function ($rootScope, _$httpBackend_, $controller, $location, _messageService_) {
     scope = $rootScope.$new();
     parentScope = $rootScope.$new();
     scope.$parent = parentScope;
     $httpBackend = _$httpBackend_;
     location = $location;
+    messageService = _messageService_;
     scope.query = "P10";
     supplyLine = {"program": {"name": "TB"}, "supplyingFacility": {"name": "supplying"}};
 
@@ -32,7 +33,7 @@ describe("Create Facility Approved Product Controller", function () {
       {"id": 1, "name": "district1"},
       {"id": 2, "name": "district2"}
     ];
-    ctrl = $controller('CreateFacilityApprovedProductController', {$scope: scope, facilityTypes: facilityTypeList, programs: programs});
+    ctrl = $controller('CreateFacilityApprovedProductController', {$scope: scope, facilityTypes: facilityTypeList, programs: programs, messageService: messageService});
   }));
 
 
@@ -73,14 +74,30 @@ describe("Create Facility Approved Product Controller", function () {
     expect(httpBackendSpy).not.toHaveBeenCalled();
   });
 
+  it("should return headers", function () {
+    spyOn(messageService, 'get');
+
+    var header = scope.getHeader();
+    expect(messageService.get).toHaveBeenCalledWith('header.code');
+    expect(messageService.get).toHaveBeenCalledWith('header.name');
+    expect(messageService.get).toHaveBeenCalledWith('header.strength');
+    expect(messageService.get).toHaveBeenCalledWith('header.unit.of.measure');
+    expect(messageService.get).toHaveBeenCalledWith('header.template.type');
+    expect(header).toEqual("");
+  });
+
   describe("Format Result and Selection", function () {
     it("should format results for full supply product", function () {
+      spyOn(messageService, 'get').andReturn('Full supply');
+
       var product = {text: "productCode | productName | productStrength | productUnitOfMeasure | true"};
       var result = scope.formatResult(product);
       expect(result).toEqual("<div class='row-fluid'><div class='span2'>productCode </div><div class='span4'> productName </div><div class='span2'> productStrength </div><div class='span2'> productUnitOfMeasure </div><div class='span2'>Full supply</div></div>");
     });
 
     it("should format results for non full supply product", function () {
+      spyOn(messageService, 'get').andReturn('Non full supply');
+
       var product = {text: "productCode | productName | productStrength | productUnitOfMeasure | false"};
       var result = scope.formatResult(product);
       expect(result).toEqual("<div class='row-fluid'><div class='span2'>productCode </div><div class='span4'> productName </div><div class='span2'> productStrength </div><div class='span2'> productUnitOfMeasure </div><div class='span2'>Non full supply</div></div>");
