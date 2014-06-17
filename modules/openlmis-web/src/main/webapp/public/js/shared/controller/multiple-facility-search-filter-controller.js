@@ -10,7 +10,6 @@
 
 function MultipleFacilitySearchFilterController($scope, Facilities) {
 
-  $scope.showResults = false;
   $scope.type = {};
   $scope.zone = {};
   $scope.disableAddFacility = true;
@@ -18,23 +17,29 @@ function MultipleFacilitySearchFilterController($scope, Facilities) {
 
 //TODO: write specs for this function.
   $scope.showFacilitySearchResults = function () {
-    if (!$scope.facilitySearchParam) return;
+    if (!$scope.multipleFacilitiesSearchParam) return;
     $scope.tempFacilities = [];
     $scope.$parent.$parent.duplicateFacilityName = undefined;
     $scope.disableAddFacility = true;
-    $scope.facilityQuery = $scope.facilitySearchParam.trim();
-    Facilities.get({"searchParam": $scope.facilityQuery, "facilityTypeId": $scope.type.id, "geoZoneId": $scope.zone.id}, function (data) {
-      $scope.facilityList = data.facilityList;
-      $scope.facilityResultCount = isUndefined($scope.facilityList) ? 0 : $scope.facilityList.length;
-      $scope.message = data.message;
+    $scope.multipleFacilitiesQuery = $scope.multipleFacilitiesSearchParam.trim();
+    Facilities.get({"searchParam": $scope.multipleFacilitiesQuery, "facilityTypeId": $scope.type.id, "geoZoneId": $scope.zone.id}, function (data) {
+      $scope.multipleFacilities = data.facilityList;
+      $scope.multipleFacilitiesResultCount = isUndefined($scope.multipleFacilities) ? 0 : $scope.multipleFacilities.length;
+      $scope.multipleFacilitiesMessage = data.message;
     });
   };
 
-  $scope.clearFacilitySearch = function () {
-    angular.element("#search .search-list").slideUp("slow", function () {
-      $scope.facilitySearchParam = undefined;
-      $scope.facilityList = undefined;
-      $scope.facilityResultCount = undefined;
+  $scope.triggerSearch = function (event) {
+    if (event.keyCode === 13) {
+      $scope.showFacilitySearchResults();
+    }
+  };
+
+  $scope.clearMultipleFacilitiesSearch = function () {
+    angular.element("#searchMultipleFacilities .search-list").slideUp("slow", function () {
+      $scope.multipleFacilitiesSearchParam = undefined;
+      $scope.multipleFacilities = undefined;
+      $scope.multipleFacilitiesResultCount = undefined;
       $scope.$apply();
       angular.element('#searchFacility').focus();
     });
@@ -42,7 +47,7 @@ function MultipleFacilitySearchFilterController($scope, Facilities) {
     $scope.tempFacilities = [];
   };
 
-  $scope.associate = function (facility) {
+  $scope.addToFacilityList = function (facility) {
     facility.selected = !facility.selected;
     if (facility.selected) {
       $scope.tempFacilities.push(facility);
@@ -52,17 +57,12 @@ function MultipleFacilitySearchFilterController($scope, Facilities) {
         return tempFacility.id != facility.id;
       });
     }
-    if($scope.tempFacilities.length > 0){
-      $scope.disableAddFacility = false;
-    }
-    else{
-      $scope.disableAddFacility = true;
-    }
+    $scope.disableAddFacility = $scope.tempFacilities.length <= 0;
   };
 
-  $scope.addMembers = function(){
-    if($scope.$parent.$parent.addMembers($scope.tempFacilities)){
-      $scope.clearFacilitySearch();
+  $scope.addMembers = function () {
+    if ($scope.$parent.$parent.addMembers($scope.tempFacilities)) {
+      $scope.clearMultipleFacilitiesSearch();
     }
   };
 }

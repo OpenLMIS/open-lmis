@@ -23,7 +23,7 @@ describe("Multiple Facility Search Filter Controller", function () {
 
     var facility = {"selected": false, "name": "fac1"};
 
-    scope.associate(facility);
+    scope.addToFacilityList(facility);
 
     expect(scope.tempFacilities[0]).toEqual(facility);
     expect(facility.selected).toBeTruthy();
@@ -36,7 +36,7 @@ describe("Multiple Facility Search Filter Controller", function () {
     scope.tempFacilities = [facility];
     scope.disableAddFacility = true;
 
-    scope.associate(facility);
+    scope.addToFacilityList(facility);
 
     expect(scope.tempFacilities).toEqual([]);
     expect(facility.selected).toBeFalsy();
@@ -53,7 +53,7 @@ describe("Multiple Facility Search Filter Controller", function () {
     scope.tempFacilities = [facility];
 
     var spyAddMembers = spyOn(scope.$parent.$parent, "addMembers").andReturn(true);
-    var spyClearFacilitySearch = spyOn(scope, "clearFacilitySearch");
+    var spyClearFacilitySearch = spyOn(scope, "clearMultipleFacilitiesSearch");
 
     scope.addMembers();
 
@@ -63,7 +63,7 @@ describe("Multiple Facility Search Filter Controller", function () {
 
   it('should not search results if query is undefined', function () {
     spyOn(httpBackend, 'expectGET');
-    scope.facilitySearchParam = undefined;
+    scope.multipleFacilitiesSearchParam = undefined;
 
     scope.showFacilitySearchResults();
 
@@ -72,18 +72,18 @@ describe("Multiple Facility Search Filter Controller", function () {
   });
 
   it('should clear facility search results', function () {
-    scope.facilitySearchParam = "searchParam";
-    scope.facilityList = [];
-    scope.facilityResultCount = 3;
+    scope.multipleFacilitiesSearchParam = "searchParam";
+    scope.multipleFacilities = [];
+    scope.multipleFacilitiesResultCount = 3;
     var element = angular.element('<div id="search" class="search-list"></div>');
-    var spy = spyOn(angular, "element").andReturn(element);
+    spyOn(angular, "element").andReturn(element);
 
-    scope.clearFacilitySearch();
+    scope.clearMultipleFacilitiesSearch();
     element.trigger('slideUp');
 
-    expect(scope.facilityResultCount).toBeUndefined();
-    expect(scope.facilityList).toBeUndefined();
-    expect(scope.facilitySearchParam).toBeUndefined();
+    expect(scope.multipleFacilitiesResultCount).toBeUndefined();
+    expect(scope.multipleFacilities).toBeUndefined();
+    expect(scope.multipleFacilitiesSearchParam).toBeUndefined();
     expect(scope.disableAddFacility).toBeTruthy();
     expect(scope.tempFacilities).toEqual([]);
   });

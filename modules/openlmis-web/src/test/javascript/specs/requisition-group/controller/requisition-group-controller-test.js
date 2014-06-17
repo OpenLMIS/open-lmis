@@ -3,7 +3,7 @@
  * Copyright © 2013 VillageReach
  *
  *  This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
- *   
+ *
  *  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
  *  You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
  */
@@ -11,7 +11,7 @@
 describe("Requisition Group Controller", function () {
 
   var scope, ctrl, requisitionGroup, element, $httpBackend, location, requisitionGroupData, requisitionGroupMembers, compile;
-  var controller;
+  var controller, schedules, programs, requisitionGroupProgramSchedules;
   beforeEach(module('openlmis'));
 
   beforeEach(inject(function ($rootScope, _$httpBackend_, $controller, $location, $compile) {
@@ -24,9 +24,19 @@ describe("Requisition Group Controller", function () {
     controller = $controller;
     requisitionGroup = {code: "RG1", name: "Group 1"};
     requisitionGroupMembers = [];
-    requisitionGroupData = {"requisitionGroup": requisitionGroup, "requisitionGroupMembers": requisitionGroupMembers};
-//    compile(element)(scope);
-    ctrl = $controller('RequisitionGroupController', {$scope: scope, requisitionGroupData: requisitionGroupData});
+    requisitionGroupProgramSchedules = [];
+    programs = [
+      {"name": "TB", "id": 1},
+      {"name": "MALARIA", "id": 2}
+    ];
+
+    schedules = [
+      {"name": "SCH1", "code": "Monthly"},
+      {"name": "SCH2", "code": "Yearly"}
+    ];
+
+    requisitionGroupData = {"requisitionGroup": requisitionGroup, "requisitionGroupMembers": requisitionGroupMembers, "requisitionGroupProgramSchedules": requisitionGroupProgramSchedules};
+    ctrl = $controller('RequisitionGroupController', {$scope: scope, requisitionGroupData: requisitionGroupData, programs: programs, schedules: schedules});
   }));
 
   afterEach(function () {
@@ -36,15 +46,16 @@ describe("Requisition Group Controller", function () {
   it('should set requisition group data in scope', function () {
     expect(scope.requisitionGroup).toEqual(requisitionGroup);
     expect(scope.requisitionGroupMembers).toEqual(requisitionGroupMembers);
+    expect(scope.requisitionGroupProgramSchedules).toEqual(requisitionGroupProgramSchedules);
   });
 
-  it('should set requisition group and members undefined in scope when requisition group data not present',
-    function () {
-      ctrl = controller('RequisitionGroupController', {$scope: scope, requisitionGroupData: undefined});
+  it('should set requisition group data as empty in scope when requisition group data not present', function () {
+    ctrl = controller('RequisitionGroupController', {$scope: scope, requisitionGroupData: undefined, programs: programs, schedules: schedules});
 
-      expect(scope.requisitionGroup).toEqual({});
-      expect(scope.requisitionGroupMembers).toEqual([]);
-    });
+    expect(scope.requisitionGroup).toEqual({});
+    expect(scope.requisitionGroupMembers).toEqual([]);
+    expect(scope.requisitionGroupProgramSchedules).toEqual([]);
+  });
 
   it('should get all supervisory nodes in scope if query length is greater than 3', function () {
     scope.query = "Nod";
@@ -132,10 +143,10 @@ describe("Requisition Group Controller", function () {
     scope.requisitionGroup = {"code": "N100", "name": "group 100", "supervisoryNode": {"facility": {"code": "F10", "name": "village dispensary"}}};
     scope.requisitionGroupForm = {"$error": {"required": false}};
 
-    requisitionGroupData = {"requisitionGroup": scope.requisitionGroup, "requisitionGroupMembers": []};
+    requisitionGroupData = {"requisitionGroup": scope.requisitionGroup, "requisitionGroupMembers": [], "requisitionGroupProgramSchedules": []};
 
-    $httpBackend.expectPOST('/requisitionGroups.json', scope.requisitionGroupData).respond(200,
-      {"success": "Saved successfully", "requisitionGroupId": scope.requisitionGroup.id});
+    $httpBackend.expectPOST('/requisitionGroups.json', requisitionGroupData).respond(200,
+        {"success": "Saved successfully", "requisitionGroupId": scope.requisitionGroup.id});
     scope.save();
     $httpBackend.flush();
 
@@ -150,10 +161,10 @@ describe("Requisition Group Controller", function () {
     requisitionGroup.id = 4;
     requisitionGroup.supervisoryNode = {"facility": {"code": "F10", "name": "village dispensary"}};
 
-    requisitionGroupData = {"requisitionGroup": scope.requisitionGroup, "requisitionGroupMembers": []};
+    requisitionGroupData = {"requisitionGroup": scope.requisitionGroup, "requisitionGroupMembers": [], "requisitionGroupProgramSchedules": []};
 
     $httpBackend.expectPUT('/requisitionGroups/' + requisitionGroup.id + '.json', requisitionGroupData).respond(200,
-      {"success": "Saved successfully", "requisitionGroupId": requisitionGroup.id});
+        {"success": "Saved successfully", "requisitionGroupId": requisitionGroup.id});
     scope.save();
     $httpBackend.flush();
 
@@ -182,7 +193,7 @@ describe("Requisition Group Controller", function () {
     var tempFacilities = [
       {"name": "fac1", "id": 1, "code": "code2"},
       {"name": "fac2", "id": 2, "code": "code1"}
-    ]
+    ];
     scope.showSlider = false;
     expect(element.css('display')).toEqual('none');
 
@@ -193,15 +204,15 @@ describe("Requisition Group Controller", function () {
     var spyFadeIn = spyOn(element, 'fadeIn').andCallThrough();
     var spyFadeOut = spyOn(element, "fadeOut").andCallThrough();
 
-    ctrl = controller('RequisitionGroupController', {$scope: scope, requisitionGroupData: requisitionGroupData});
+    ctrl = controller('RequisitionGroupController', {$scope: scope, requisitionGroupData: requisitionGroupData, programs: programs, schedules: schedules});
     expect(spyFadeOut).toHaveBeenCalledWith("fast");
 
     var result = scope.addMembers(tempFacilities);
 
     expect(scope.requisitionGroupMembers.length).toEqual(2);
     expect(scope.requisitionGroupMembers[0].facility).toEqual(tempFacilities[1]);
-    expect(scope.requisitionGroupMembers[0].facility).toEqual(tempFacilities[1]);
-    expect(scope.showSlider).toBeTruthy();
+    expect(scope.requisitionGroupMembers[1].facility).toEqual(tempFacilities[0]);
+    expect(scope.showMultipleFacilitiesSlider).toBeTruthy();
     expect(scope.duplicateFacilityName).toBeUndefined();
     expect(result).toBeTruthy();
     expect(spyElement).toHaveBeenCalledWith('.facility-add-success');
@@ -212,10 +223,10 @@ describe("Requisition Group Controller", function () {
     var tempFacilities = [
       {"name": "fac1", "id": 1, "code": "code2"},
       {"name": "fac2", "id": 2, "code": "code1"}
-    ]
+    ];
     scope.requisitionGroupMembers = [
       { facility: { name: 'fac2', id: 2, code: 'code1' }, requisitionGroup: { code: 'RG1', name: 'Group 1' } }
-    ]
+    ];
 
     var result = scope.addMembers(tempFacilities);
 
@@ -235,3 +246,4 @@ describe("Requisition Group Controller", function () {
     expect(scope.duplicateFacilityName).toBeUndefined();
   });
 });
+

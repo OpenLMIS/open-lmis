@@ -10,7 +10,6 @@
 
 function FacilitySearchFilterController($scope, Facilities) {
 
-  $scope.showResults = false;
   $scope.type = {};
   $scope.zone = {};
 
@@ -23,6 +22,12 @@ function FacilitySearchFilterController($scope, Facilities) {
       $scope.facilityResultCount = isUndefined($scope.facilityList) ? 0 : $scope.facilityList.length;
       $scope.message = data.message;
     });
+  };
+
+  $scope.triggerSearch = function (event) {
+    if (event.keyCode === 13) {
+      $scope.showFacilitySearchResults();
+    }
   };
 
   $scope.clearFacilitySearch = function () {

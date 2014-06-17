@@ -14,6 +14,7 @@ app.directive('slider', function ($timeout) {
     link: function (scope, element, attrs) {
 
       scope.$parent.$parent.showSlider = false;
+      scope.$parent.$parent.showMultipleFacilitySlider = false;
 
       var progressFunc = function () {
         var bufferHeight = 200;
@@ -35,12 +36,27 @@ app.directive('slider', function ($timeout) {
         }
       });
 
+      scope.$watch("multipleFacilitiesResultCount", function () {
+        if (scope.multipleFacilitiesResultCount >= 0) {
+          angular.element("#searchMultipleFacilities .search-list").slideDown({duration: "slow", progress: progressFunc});
+        }
+      });
+
       scope.$parent.$parent.$watch('showSlider', function () {
         if (scope.showSlider) {
           angular.element(".searchAndFilter").slideDown({duration: "slow", progress: progressFunc});
         }
         else {
           angular.element(".searchAndFilter").slideUp("slow");
+        }
+      });
+
+      scope.$parent.$parent.$watch("showMultipleFacilitiesSlider", function () {
+        if (scope.showMultipleFacilitiesSlider) {
+          angular.element(".searchAndFilterMultipleFacilities").slideDown({duration: "slow", progress: progressFunc});
+        }
+        else {
+          angular.element(".searchAndFilterMultipleFacilities").slideUp("slow");
         }
       });
     }
