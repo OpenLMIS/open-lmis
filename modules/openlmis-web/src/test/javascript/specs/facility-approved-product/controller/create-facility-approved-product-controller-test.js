@@ -83,7 +83,6 @@ describe("Create Facility Approved Product Controller", function () {
     expect(messageService.get).toHaveBeenCalledWith('header.strength');
     expect(messageService.get).toHaveBeenCalledWith('header.unit.of.measure');
     expect(messageService.get).toHaveBeenCalledWith('header.template.type');
-    expect(header).toEqual("");
   });
 
   describe("Format Result and Selection", function () {
