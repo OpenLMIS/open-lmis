@@ -11,6 +11,7 @@
 package org.openlmis.report.util;
 
 import lombok.NoArgsConstructor;
+import org.openlmis.core.domain.Product;
 import org.openlmis.core.repository.ProcessingPeriodRepository;
 import org.openlmis.core.repository.ProductRepository;
 import org.openlmis.core.service.ProgramService;
@@ -50,7 +51,10 @@ public class SelectedFilterHelper {
     }else if(product.equalsIgnoreCase("0")){
       filterSummary += "\nProduct: Indicator / Tracer Commodities" ;
     }else{
-      filterSummary += "Product: " + productService.getById(Long.parseLong(product)).getFullName();
+      Product productObject = productService.getById(Long.parseLong( product ));
+      if(productObject != null) {
+        filterSummary += "Product: " + productObject.getFullName();
+      }
     }
 
     return filterSummary;
