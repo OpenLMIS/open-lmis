@@ -36,7 +36,7 @@ function RnRFeedbackController($scope, ngTableParams, $filter, RnRFeedbackReport
 
     $scope.exportReport   = function (type){
         $scope.filter.pdformat =1;
-        var params = jQuery.param($scope.filterObject);
+        var params = jQuery.param($scope.filter);
         var url = '/reports/download/rnr_feedback/' + type +'?' + params;
         window.open(url);
 
