@@ -523,6 +523,7 @@ public class PODPagination extends TestCaseHelper {
 
     updatePodPage.clickSubmitButton();
     updatePodPage.clickOkButton();
+    testWebDriver.waitForAjax();
     assertTrue(updatePodPage.isPodSuccessMessageDisplayed());
     testWebDriver.sleep(500);
 
