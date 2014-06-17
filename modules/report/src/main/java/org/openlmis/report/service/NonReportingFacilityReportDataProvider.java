@@ -12,6 +12,7 @@ package org.openlmis.report.service;
 
 import lombok.NoArgsConstructor;
 import org.apache.ibatis.session.RowBounds;
+import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.report.mapper.NonReportingFacilityReportMapper;
 import org.openlmis.report.mapper.lookup.RequisitionGroupReportMapper;
 import org.openlmis.report.model.ReportData;
@@ -113,8 +114,10 @@ public class NonReportingFacilityReportDataProvider extends ReportDataProvider {
       header += "\nFacility Type : All Facility Types";
     }
 
+    ProcessingPeriod periodObject = this.reportMapper.getPeriodId(Integer.parseInt(period));
+
     if (period != "" && !period.endsWith("undefined")) {
-      header += "\nPeriod : " + this.reportMapper.getPeriodId(Integer.parseInt(period)).get(0).getName();
+      header += "\nPeriod : " + periodObject.getName() + " - " + periodObject.getStringYear();
     }
 
     result.put("REPORT_FILTER_PARAM_VALUES", header);
