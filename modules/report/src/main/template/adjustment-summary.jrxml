@@ -185,7 +185,7 @@ order by product, adjustment_type]]>
 			</staticText>
 			<staticText>
 				<reportElement mode="Transparent" x="730" y="0" width="71" height="29" forecolor="#000000" backcolor="#333333" uuid="4998a212-6dac-4cb7-a1fe-2bffa9f01b65"/>
-				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
+				<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
 					<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
@@ -200,7 +200,9 @@ order by product, adjustment_type]]>
 				<text><![CDATA[Facility Name]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Transparent" x="660" y="0" width="70" height="29" forecolor="#000000" backcolor="#333333" uuid="90a40154-356e-4ba6-b40c-8b452f06c307"/>
+				<reportElement mode="Transparent" x="660" y="0" width="70" height="29" forecolor="#000000" backcolor="#333333" uuid="90a40154-356e-4ba6-b40c-8b452f06c307">
+					<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() == "XLS"]]></printWhenExpression>
+				</reportElement>
 				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
 					<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 					<paragraph lineSpacing="Single"/>
@@ -302,7 +304,9 @@ order by product, adjustment_type]]>
 				<textFieldExpression><![CDATA[($F{productDescription}=="NULL"?" ":$F{productDescription})]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="660" y="0" width="70" height="20" uuid="8c47ad48-f832-4e85-8c7e-4d35d686d50b"/>
+				<reportElement x="660" y="0" width="70" height="20" uuid="8c47ad48-f832-4e85-8c7e-4d35d686d50b">
+					<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() == "XLS"]]></printWhenExpression>
+				</reportElement>
 				<textElement verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{period}]]></textFieldExpression>
 			</textField>
