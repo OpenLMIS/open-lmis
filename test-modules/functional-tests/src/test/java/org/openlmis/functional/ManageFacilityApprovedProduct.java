@@ -211,6 +211,7 @@ public class ManageFacilityApprovedProduct extends TestCaseHelper {
     verifyCodeOrderOnPage(asList("AP12", "AP14", "AP16", "AP18", "AP19", "AP10", "AP11", "AP13", "AP15", "AP17"));
 
     facilityApprovedProductPage.clickClearSearchButton();
+    testWebDriver.sleep(500);
     assertFalse(facilityApprovedProductPage.isNResultsMessageDisplayed());
     assertTrue(facilityApprovedProductPage.isNRecordsMessageDisplayed());
     verifyNumberOFPageLinksDisplayed(21, 10);
