@@ -44,8 +44,8 @@
 
   <h2 ng-show="showResults">
     <span id="searchFacilityApprovedProductLabel" openlmis-message="label.search.products"></span>
-    <a href="#/create" class="pull-right btn btn-primary">
-      <span id="facilityApprovedProductAddNew" openlmis-message="button.add.new"></span>
+    <a href="" class="pull-right btn btn-primary" ng-click="facilityApprovedProductsModal = true;">
+    <span id="facilityApprovedProductAddNew" openlmis-message="button.add.new"></span>
     </a>
   </h2>
 
@@ -136,4 +136,6 @@
 
   <pagination total-items="totalItems" page="currentPage" max-size="5" items-per-page="pagination.limit"
               direction-links="false" ng-show="facilityApprovedProducts.length" class="pagination-sm"></pagination>
+
+  <ng-include src="'/public/pages/admin/facility-approved-product/partials/create.html'"></ng-include>
 </div>
