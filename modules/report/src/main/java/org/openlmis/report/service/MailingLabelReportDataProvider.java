@@ -19,6 +19,7 @@ import org.openlmis.report.model.params.MailingLabelReportParam;
 import org.openlmis.report.model.report.MailingLabelReport;
 import org.openlmis.report.model.ReportData;
 import org.openlmis.report.model.sorter.MailingLabelReportSorter;
+import org.openlmis.report.util.StringHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -82,8 +83,8 @@ public class MailingLabelReportDataProvider extends ReportDataProvider {
   public MailingLabelReportParam getReportFilterData(Map<String, String[]> filterCriteria) {
     if (filterCriteria != null) {
       mailingLabelReportParam = new MailingLabelReportParam();
-      mailingLabelReportParam.setFacilityTypeId((filterCriteria.get("facilityTypeId") == null ? 0 : Integer.parseInt(filterCriteria.get("facilityTypeId")[0])));
-      mailingLabelReportParam.setRgroupId((filterCriteria.get("rgroupId") == null ? 0 : Integer.parseInt(filterCriteria.get("rgroupId")[0])));
+      mailingLabelReportParam.setFacilityTypeId((StringHelper.isBlank(filterCriteria,"facilityTypeId") ? 0 : Integer.parseInt(filterCriteria.get("facilityTypeId")[0])));
+      mailingLabelReportParam.setRgroupId((StringHelper.isBlank(filterCriteria,"rgroupId") ? 0 : Integer.parseInt(filterCriteria.get("rgroupId")[0])));
     }
     return mailingLabelReportParam;
   }
