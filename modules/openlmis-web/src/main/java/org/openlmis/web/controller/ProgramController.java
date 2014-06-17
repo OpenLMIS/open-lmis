@@ -75,7 +75,7 @@ public class ProgramController extends BaseController {
   }
 
   @RequestMapping(value = "/programs/pull", method = GET, headers = ACCEPT_JSON)
-  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_USER, CONFIGURE_RNR, MANAGE_SUPPLY_LINE, MANAGE_FACILITY_APPROVED_PRODUCT')")
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_USER, CONFIGURE_RNR, MANAGE_SUPPLY_LINE, MANAGE_FACILITY_APPROVED_PRODUCT, MANAGE_REQUISITION_GROUP')")
   public ResponseEntity<OpenLmisResponse> getAllPullPrograms() {
     return OpenLmisResponse.response(PROGRAMS, programService.getAllPullPrograms());
   }
