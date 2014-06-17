@@ -55,7 +55,8 @@ public enum Right {
   MANAGE_GEOGRAPHIC_ZONE("right.manage.geo.zone", ADMIN, "Permission to manage geographic zones", 23),
   MANAGE_REQUISITION_GROUP("right.manage.requisition.group", ADMIN, "Permission to manage requisition groups", 24),
   MANAGE_SUPPLY_LINE("right.manage.supply.line", ADMIN, "Permission to manage supply lines", 25),
-  MANAGE_FACILITY_APPROVED_PRODUCT("right.manage.facility.approved.products", ADMIN, "Permission to manage facility approved products", 26);
+  MANAGE_FACILITY_APPROVED_PRODUCT("right.manage.facility.approved.products", ADMIN, "Permission to manage facility approved products", 26),
+  MANAGE_PRODUCT("right.manage.products", ADMIN, "Permission to manage products", 27);
 
   @Getter
   private final String rightName;

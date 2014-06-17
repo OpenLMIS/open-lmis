@@ -88,21 +88,19 @@ public interface ProductMapper {
       one = @One(select = "org.openlmis.core.repository.mapper.DosageUnitMapper.getById"))})
   Product getByCode(String code);
 
-  @Update(
-    {"UPDATE products SET  alternateItemCode=#{alternateItemCode}, ", "manufacturer =#{manufacturer},manufacturerCode=#{manufacturerCode},manufacturerBarcode=#{manufacturerBarCode}, mohBarcode=#{mohBarCode}, ", "gtin=#{gtin},type=#{type}, ",
-      "primaryName=#{primaryName},fullName=#{fullName}, genericName=#{genericName},alternateName=#{alternateName},description=#{description}, ", "strength=#{strength}, formId=#{form.id}, ", "dosageUnitId=#{dosageUnit.id}, dispensingUnit=#{dispensingUnit}, ",
-      "dosesPerDispensingUnit=#{dosesPerDispensingUnit}, ", "packSize=#{packSize},alternatePackSize=#{alternatePackSize}, ", "storeRefrigerated=#{storeRefrigerated},storeRoomTemperature=#{storeRoomTemperature}, ", "hazardous=#{hazardous},",
-      "flammable=#{flammable},controlledSubstance=#{controlledSubstance},lightSensitive=#{lightSensitive},approvedByWHO=#{approvedByWHO}, ", "contraceptiveCYP=#{contraceptiveCYP},", "packLength=#{packLength},packWidth=#{packWidth},packHeight=#{packHeight},",
-      "packWeight=#{packWeight},packsPerCarton=#{packsPerCarton},", "cartonLength=#{cartonLength},cartonWidth=#{cartonWidth},cartonHeight=#{cartonHeight},cartonsPerPallet=#{cartonsPerPallet},", "expectedShelfLife=#{expectedShelfLife},",
-      "specialStorageInstructions=#{specialStorageInstructions},specialTransportInstructions=#{specialTransportInstructions},", "active=#{active},fullSupply=#{fullSupply},tracer=#{tracer},roundToZero=#{roundToZero},archived=#{archived},",
-      "packRoundingThreshold=#{packRoundingThreshold}, productGroupId = #{productGroup.id},", "modifiedBy=#{modifiedBy}, modifiedDate=#{modifiedDate} WHERE id=#{id}"})
+  @Update({"UPDATE products SET alternateItemCode=#{alternateItemCode}, ", "manufacturer =#{manufacturer},manufacturerCode=#{manufacturerCode},manufacturerBarcode=#{manufacturerBarCode}, mohBarcode=#{mohBarCode}, ", "gtin=#{gtin},type=#{type}, ",
+    "primaryName=#{primaryName},fullName=#{fullName}, genericName=#{genericName},alternateName=#{alternateName},description=#{description}, ", "strength=#{strength}, formId=#{form.id}, ", "dosageUnitId=#{dosageUnit.id}, dispensingUnit=#{dispensingUnit}, ",
+    "dosesPerDispensingUnit=#{dosesPerDispensingUnit}, ", "packSize=#{packSize},alternatePackSize=#{alternatePackSize}, ", "storeRefrigerated=#{storeRefrigerated},storeRoomTemperature=#{storeRoomTemperature}, ", "hazardous=#{hazardous},",
+    "flammable=#{flammable},controlledSubstance=#{controlledSubstance},lightSensitive=#{lightSensitive},approvedByWHO=#{approvedByWHO}, ", "contraceptiveCYP=#{contraceptiveCYP},", "packLength=#{packLength},packWidth=#{packWidth},packHeight=#{packHeight},",
+    "packWeight=#{packWeight},packsPerCarton=#{packsPerCarton},", "cartonLength=#{cartonLength},cartonWidth=#{cartonWidth},cartonHeight=#{cartonHeight},cartonsPerPallet=#{cartonsPerPallet},", "expectedShelfLife=#{expectedShelfLife},",
+    "specialStorageInstructions=#{specialStorageInstructions},specialTransportInstructions=#{specialTransportInstructions},", "active=#{active},fullSupply=#{fullSupply},tracer=#{tracer},roundToZero=#{roundToZero},archived=#{archived},",
+    "packRoundingThreshold=#{packRoundingThreshold}, productGroupId = #{productGroup.id},", "modifiedBy=#{modifiedBy}, modifiedDate=#{modifiedDate} WHERE id=#{id}"})
   void update(Product product);
 
   @Select("SELECT * FROM products WHERE id=#{id}")
   @Results({@Result(property = "productGroup", column = "productGroupId", javaType = ProductGroup.class,
     one = @One(select = "org.openlmis.core.repository.mapper.ProductGroupMapper.getById"))})
   Product getById(Long id);
-
 
   @Select("SELECT active FROM products WHERE code = #{code}")
   boolean isActive(String code);

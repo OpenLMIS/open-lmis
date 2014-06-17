@@ -89,7 +89,8 @@ public class RoleRightsServiceTest {
       MANAGE_GEOGRAPHIC_ZONE,
       MANAGE_REQUISITION_GROUP,
       MANAGE_SUPPLY_LINE,
-      MANAGE_FACILITY_APPROVED_PRODUCT);
+      MANAGE_FACILITY_APPROVED_PRODUCT,
+      MANAGE_PRODUCT);
 
     assertThat(allRights, is(alphabeticalRights));
   }
