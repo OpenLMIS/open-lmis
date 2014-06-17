@@ -246,6 +246,7 @@ public class ManageFacilityApprovedProduct extends TestCaseHelper {
     verifyNumberOFPageLinksDisplayed(21, 10);
     navigateToLastPage();
     verifyPageNumberSelected(3);
+    testWebDriver.sleep(500);
     verifyNextAndLastPageLinksDisabled();
     verifyPreviousAndFirstPageLinksEnabled();
 

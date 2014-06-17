@@ -349,6 +349,7 @@ public class ManageRequisitionGroups extends TestCaseHelper {
     requisitionGroupPage.clickMembersAccordionLink();
     requisitionGroupPage.clickAddMembersButton();
     requisitionGroupPage.searchFacility("F11");
+    testWebDriver.waitForAjax();
     assertEquals("9 matches found for 'F11'", requisitionGroupPage.getNFacilityResultsMessage());
     requisitionGroupPage.clickFilterButton();
     testWebDriver.waitForAjax();
@@ -419,6 +420,7 @@ public class ManageRequisitionGroups extends TestCaseHelper {
     requisitionGroupPage.searchFacility("Village Dispensary");
     requisitionGroupPage.checkFacilityToBeAssociated(2);
     requisitionGroupPage.clickOnAddSelectedFacilityButton();
+    testWebDriver.sleep(500);
     assertFalse(requisitionGroupPage.isSearchFacilityIconDisplayed());
     assertNotEquals("F12A", requisitionGroupPage.getMemberFacilityCode(1));
     assertNotEquals("F12A", requisitionGroupPage.getMemberFacilityCode(2));
@@ -493,28 +495,28 @@ public class ManageRequisitionGroups extends TestCaseHelper {
     assertEquals("Members", requisitionGroupPage.getMembersLabel());
 
     requisitionGroupPage.clickMembersAccordionLink();
-    testWebDriver.sleep(100);
+    testWebDriver.sleep(500);
     assertTrue(requisitionGroupPage.isAddMembersButtonDisplayed());
     assertFalse(requisitionGroupPage.isSearchFacilityIconDisplayed());
 
     requisitionGroupPage.clickCollapseAll();
-    testWebDriver.sleep(100);
+    testWebDriver.sleep(500);
     assertFalse(requisitionGroupPage.isAddMembersButtonDisplayed());
     assertFalse(requisitionGroupPage.isSearchFacilityIconDisplayed());
 
     requisitionGroupPage.clickExpandAll();
-    testWebDriver.sleep(100);
+    testWebDriver.sleep(500);
     assertTrue(requisitionGroupPage.isAddMembersButtonDisplayed());
     assertFalse(requisitionGroupPage.isSearchFacilityIconDisplayed());
 
     requisitionGroupPage.clickMembersAccordionLink();
-    testWebDriver.sleep(100);
+    testWebDriver.sleep(500);
     assertFalse(requisitionGroupPage.isAddMembersButtonDisplayed());
 
     requisitionGroupPage.clickMembersAccordionLink();
-    testWebDriver.sleep(100);
+    testWebDriver.sleep(500);
     requisitionGroupPage.clickAddMembersButton();
-    testWebDriver.sleep(100);
+    testWebDriver.sleep(500);
     assertTrue(requisitionGroupPage.isSearchFacilityIconDisplayed());
     assertFalse(requisitionGroupPage.isAddSelectedFacilityButtonEnabled());
     requisitionGroupPage.searchFacility("F1");
