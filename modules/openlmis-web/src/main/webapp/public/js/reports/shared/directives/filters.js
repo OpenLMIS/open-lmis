@@ -118,11 +118,17 @@ app.directive('facilityTypeFilter', ['ReportFacilityTypes','ReportFacilityTypesB
 
     var onCascadedPVarsChanged = function($scope, newValue){
 
-      ReportFacilityTypesByProgram.get({program: $scope.filter.program}, function(data){
-        $scope.facilityTypes = data.facilityTypes;
-        $scope.facilityTypes.unshift({ 'name': '-- All Facility Types --', id: 0});
-      });
-
+      if($scope.filter.program !== undefined){
+        ReportFacilityTypesByProgram.get({program: $scope.filter.program}, function(data){
+          $scope.facilityTypes = data.facilityTypes;
+          $scope.facilityTypes.unshift({ 'name': '-- All Facility Types --', id: 0});
+        });
+      }else{
+        ReportFacilityTypes.get(function(data){
+            $scope.facilityTypes = data.facilityTypes;
+            $scope.facilityTypes.unshift({ 'name': '-- All Facility Types --', id: 0});
+        });
+      }
     };
 
     return {

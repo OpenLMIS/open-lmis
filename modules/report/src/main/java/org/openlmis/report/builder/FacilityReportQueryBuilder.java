@@ -9,6 +9,7 @@
  */
 package org.openlmis.report.builder;
 
+import org.openlmis.report.model.ReportData;
 import org.openlmis.report.model.params.FacilityReportParam;
 import org.openlmis.report.model.sorter.FacilityReportSorter;
 
@@ -18,13 +19,12 @@ import static org.apache.ibatis.jdbc.SqlBuilder.*;
 
 public class FacilityReportQueryBuilder {
 
-    public static String SelectFilteredSortedPagedFacilitiesSql(Map params){//ReportData filterCriteria,ReportData SortCriteria ,int page,int pageSize) {
+    public static String SelectFilteredSortedPagedFacilitiesSql(Map params) {
 
-        FacilityReportParam filter  = (FacilityReportParam)params.get("filterCriteria");
-        FacilityReportSorter sorter = (FacilityReportSorter)params.get("SortCriteria");
+        FacilityReportParam filter  = (FacilityReportParam) params.get("filterCriteria");
+
         BEGIN();
         SELECT("F.id, F.code, F.name, F.active as active, FT.name as facilityType, GZ.name as region, FO.code as owner,F.latitude::text ||',' ||  F.longitude::text  ||', ' || F.altitude::text gpsCoordinates,F.mainphone as phoneNumber, F.fax as fax, U.firstName || ' ' || U.lastName contact ");
-        //FROM("facility_types FT");
         FROM("facilities F");
         JOIN("facility_types FT on FT.id = F.typeid");
         LEFT_OUTER_JOIN("geographic_zones GZ on GZ.id = F.geographiczoneid");
@@ -42,36 +42,7 @@ public class FacilityReportQueryBuilder {
             if (filter.getFacilityTypeId() != 0) {
                 WHERE("F.typeid = " + filter.getFacilityTypeId());
             }
-            if(filter.getRgId() != 0){
-                WHERE("requisition_groups.id = "+ filter.getRgId());
-            }
         }
-
-        if(sorter != null){
-
-            if(sorter.getFacilityName().equalsIgnoreCase("asc")){
-                ORDER_BY("F.name asc");
-            }
-            if(sorter.getFacilityName().equalsIgnoreCase("desc")){
-                ORDER_BY("F.name desc");
-            }
-
-            if(sorter.getCode().equalsIgnoreCase("asc")){
-                ORDER_BY("F.code asc");
-            }
-            if(sorter.getCode().equalsIgnoreCase("desc")){
-                ORDER_BY("F.code desc");
-            }
-
-            if(sorter.getFacilityType().equalsIgnoreCase("asc")){
-                ORDER_BY("F.typeid asc");
-            }
-            if(sorter.getFacilityType().equalsIgnoreCase("desc")){
-                ORDER_BY("F.typeid desc");
-            }
-        }
-
-
         return SQL();
     }
 
