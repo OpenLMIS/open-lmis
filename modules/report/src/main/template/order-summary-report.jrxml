@@ -323,7 +323,7 @@
 					<text><![CDATA[Explain any discrepancies or Damages]]></text>
 				</staticText>
 				<rectangle>
-					<reportElement stretchType="RelativeToBandHeight" x="82" y="26" width="555" height="65" uuid="e6c64017-5880-40ea-b9b7-6e6a2b84acc9">
+					<reportElement stretchType="RelativeToBandHeight" x="82" y="26" width="472" height="65" forecolor="#C1C1C1" uuid="e6c64017-5880-40ea-b9b7-6e6a2b84acc9">
 						<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() != "XLS" && $P{SHOW_DISCREPANCY_SECTION}.toUpperCase().equals("TRUE")]]></printWhenExpression>
 					</reportElement>
 				</rectangle>
@@ -764,7 +764,7 @@
 				<textFieldExpression><![CDATA[$V{REPORT_COUNT}]]></textFieldExpression>
 			</textField>
 			<line>
-				<reportElement x="0" y="20" width="554" height="1" forecolor="#3D9297" uuid="83a87452-92e8-46d4-bcdd-314f90e18dc7">
+				<reportElement x="0" y="20" width="554" height="1" forecolor="#C1C1C1" uuid="83a87452-92e8-46d4-bcdd-314f90e18dc7">
 					<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() != "XLS"]]></printWhenExpression>
 				</reportElement>
 				<graphicElement>
