@@ -36,31 +36,124 @@ describe("Create Facility Approved Product Controller", function () {
     ctrl = $controller('CreateFacilityApprovedProductController', {$scope: scope, facilityTypes: facilityTypeList, programs: programs, messageService: messageService});
   }));
 
+  describe("ProgramProducts", function () {
+    var product1, product2, product3, productCategory1, productCategory2, programProductList;
 
-  it("should load facility approved product", function () {
-    parentScope.program = {"id": 2};
-    parentScope.facilityType = {"id": 1};
-    parentScope.facilityApprovedProductsModal = false;
-    var product1 = {name: "n", code: "2 "};
-    var product2 = {name: "a", code: "5 "};
-    var product3 = {name: "n", code: "1 "};
-    var productCategory1 = {name: "second product category", id: 1};
-    var productCategory2 = {name: "first product category", id: 2};
-    var programProductList = [
-      {"product": product1, "productCategory": productCategory1},
-      {"product": product2, "productCategory": productCategory2},
-      {"product": product3, "productCategory": productCategory1}
-    ];
-    var data = {"programProductList": programProductList};
-
-    $httpBackend.when("GET", '/programProducts/filter/programId/2/facilityTypeId/1.json').respond(data);
-    scope.$parent.$apply(function () {
-      scope.$parent.facilityApprovedProductsModal = true;
+    beforeEach(function () {
+      product1 = {name: "product1", code: "1"};
+      product2 = {name: "product2", code: "2"};
+      product3 = {name: "product3", code: "3"};
+      productCategory1 = {name: "second product category", id: 1};
+      productCategory2 = {name: "first product category", id: 2};
+      programProductList = [
+        {"product": product1, "productCategory": productCategory1},
+        {"product": product2, "productCategory": productCategory2},
+        {"product": product3, "productCategory": productCategory1}
+      ];
     });
 
-    $httpBackend.flush();
-    expect(scope.programProductList).toEqual(programProductList);
-    expect(scope.productCategories).toEqual([productCategory1, productCategory2]);
+    it("should load facility approved product", function () {
+      parentScope.program = {"id": 2};
+      parentScope.facilityType = {"id": 1};
+      parentScope.facilityApprovedProductsModal = false;
+
+      var data = {"programProductList": programProductList};
+
+      $httpBackend.when("GET", '/programProducts/filter/programId/2/facilityTypeId/1.json').respond(data);
+      scope.$parent.$apply(function () {
+        scope.$parent.facilityApprovedProductsModal = true;
+      });
+
+      $httpBackend.flush();
+      expect(scope.programProductList).toEqual(programProductList);
+      expect(scope.productCategories).toEqual([productCategory1, productCategory2]);
+    });
+
+    it("should filter products by category", function () {
+      scope.programProductList = programProductList;
+      scope.productCategorySelected = productCategory1;
+
+      scope.filterProductsByCategory();
+
+      expect(scope.products).toEqual([product1, product3]);
+    });
+
+    describe('Add and remove facility type approved product', function () {
+      var facilityType, program, productSelectedString;
+
+      beforeEach(function () {
+        facilityType = {name: "facility type"};
+        program = {name: "program"};
+        productSelectedString = "{\"name\": \"product1\", \"code\": \"1\"}";
+
+        parentScope.facilityType = facilityType;
+        parentScope.program = program;
+        scope.productSelected = productSelectedString;
+        scope.newFacilityTypeApprovedProduct = {maxMonthsOfStock: 1, minMonthsOfStock: 13, eop: 12};
+        scope.programProductList = programProductList;
+      });
+
+      it('should add a new filled product to the added products list and clear modal data', function () {
+
+        scope.addFacilityTypeApprovedProduct();
+
+        expect(scope.addedFacilityTypeApprovedProducts).toEqual([
+          {
+            facilityType: facilityType,
+            programProduct: {program: program, product: product1},
+            maxMonthsOfStock: 1,
+            minMonthsOfStock: 13,
+            eop: 12
+          }
+        ]);
+        expect(scope.programProductList).toEqual([
+          {"product": product2, "productCategory": productCategory2},
+          {"product": product3, "productCategory": productCategory1}
+        ]);
+        expect(scope.selectedProgramProductList).toEqual([
+          {"product": product1, "productCategory": productCategory1}
+        ]);
+        expect(scope.productCategorySelected).toBeUndefined();
+        expect(scope.productSelected).toBeUndefined();
+        expect(scope.products).toBeUndefined();
+        expect(scope.newFacilityTypeApprovedProduct).toBeUndefined();
+      });
+
+      it('should remove product from list', function () {
+        scope.programProductList = [
+          {"product": product3, "productCategory": productCategory1}
+        ];
+        scope.selectedProgramProductList = [
+          {"product": product1, "productCategory": productCategory1},
+          {"product": product2, "productCategory": productCategory2}
+        ];
+        var facilityTypeApprovedProduct1 = {
+          facilityType: facilityType,
+          programProduct: {program: program, product: product1},
+          maxMonthsOfStock: 1,
+          minMonthsOfStock: 13,
+          eop: 12
+        };
+        var facilityTypeApprovedProduct2 = {
+          facilityType: facilityType,
+          programProduct: {program: program, product: product2},
+          maxMonthsOfStock: 10,
+          minMonthsOfStock: 12,
+          eop: 18
+        };
+        scope.addedFacilityTypeApprovedProducts = [facilityTypeApprovedProduct1, facilityTypeApprovedProduct2];
+        scope.removeFacilityTypeApprovedProduct(1);
+
+        expect(scope.addedFacilityTypeApprovedProducts).toEqual([facilityTypeApprovedProduct1]);
+        expect(scope.programProductList).toEqual([
+          {"product": product3, "productCategory": productCategory1},
+          {"product": product2, "productCategory": productCategory2}
+        ]);
+        expect(scope.selectedProgramProductList).toEqual([
+          {"product": product1, "productCategory": productCategory1}
+        ]);
+      });
+    });
   });
 
   it("should not load facility approved product if modal window is closed", function () {
@@ -127,23 +220,6 @@ describe("Create Facility Approved Product Controller", function () {
     });
   });
 
-  it("should filter products by category", function () {
-    var product1 = {name: "n", code: "2 "};
-    var product2 = {name: "a", code: "5 "};
-    var product3 = {name: "n", code: "1 "};
-    var productCategory1 = {name: "second product category", id: 1};
-    var productCategory2 = {name: "first product category", id: 2};
-    scope.programProductList = [
-      {"product": product1, "productCategory": productCategory1},
-      {"product": product2, "productCategory": productCategory2},
-      {"product": product3, "productCategory": productCategory1}
-    ];
-    scope.productCategorySelected = productCategory1;
-
-    scope.filterProductsByCategory();
-
-    expect(scope.products).toEqual([product1, product3]);
-  });
 
   describe("Add facility approved products button", function () {
 
@@ -185,56 +261,6 @@ describe("Create Facility Approved Product Controller", function () {
       scope.productSelected = undefined;
 
       expect(scope.isAddDisabled()).toBeTruthy();
-    });
-  });
-
-  describe('Add facility type approved product', function () {
-    var facilityType, program, productSelectedString, product1, product2, product3, productCategory1, productCategory2;
-
-    beforeEach(function () {
-      product1 = {name: "n", code: "2"};
-      product2 = {name: "a", code: "5"};
-      product3 = {name: "n", code: "1"};
-      productCategory1 = {name: "second product category", id: 1};
-      productCategory2 = {name: "first product category", id: 2};
-
-      facilityType = {name: "facility type"};
-      program = {name: "program"};
-      productSelectedString = "{\"name\": \"n\", \"code\": \"2\"}";
-
-      parentScope.facilityType = facilityType;
-      parentScope.program = program;
-      scope.productSelected = productSelectedString;
-      scope.newFacilityTypeApprovedProduct = {maxMonthsOfStock: 1, minMonthsOfStock: 13, eop: 12};
-      scope.programProductList = [
-        {"product": product1, "productCategory": productCategory1},
-        {"product": product2, "productCategory": productCategory2},
-        {"product": product3, "productCategory": productCategory1}
-      ];
-
-    });
-
-    it('should add a new filled product to the added products list and clear modal data', function () {
-
-      scope.addFacilityTypeApprovedProduct();
-
-      expect(scope.addedFacilityTypeApprovedProducts).toEqual([
-        {
-          facilityType: facilityType,
-          programProduct: {program: program, product: product1},
-          maxMonthsOfStock: 1,
-          minMonthsOfStock: 13,
-          eop: 12
-        }
-      ]);
-      expect(scope.programProductList).toEqual([
-        {"product": product2, "productCategory": productCategory2},
-        {"product": product3, "productCategory": productCategory1}
-      ]);
-      expect(scope.productCategorySelected).toBeUndefined();
-      expect(scope.productSelected).toBeUndefined();
-      expect(scope.products).toBeUndefined();
-      expect(scope.newFacilityTypeApprovedProduct).toBeUndefined();
     });
   });
 });

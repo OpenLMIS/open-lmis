@@ -108,14 +108,13 @@
           <div class="span2">
             <div class="fluid-grid-cell">
               <input id="facilityTypeApprovedProduct.maxMonthsOfStock{{$index}}" type="text"
-                     ng-class="highlightRequiredFieldInModal(nonFullSupplyProduct.quantityRequested)"
+                     ng-class="{'required-error' : (facilityTypeApprovedProduct && !facilityTypeApprovedProduct.maxMonthsOfStock)}"
                      class="right-justified"
-                     name="maxMonthsOfStock{{$index}}"
-                     numeric-validator="positiveInteger"
-                     ng-required="true" maxlength="8" ng-model="facilityTypeApprovedProduct.maxMonthsOfStock"
-                     openlmis-message="placeholder.quantity"/>
+                     name="addedMaxMonthsOfStock{{$index}}"
+                     numeric-validator="positiveNumericValue,2,2" maxlength="5"
+                     ng-required="true" ng-model="facilityTypeApprovedProduct.maxMonthsOfStock"/>
                 <span class="rnr-form-error" style="display:none;"
-                      id="maxMonthsOfStock{{$index}}" openlmis-message="error.number.only">
+                      id="addedMaxMonthsOfStock{{$index}}" openlmis-message="error.number.only">
                 </span>
             </div>
           </div>
@@ -123,14 +122,12 @@
           <div class="span2">
             <div class="fluid-grid-cell">
               <input id="facilityTypeApprovedProduct.minMonthsOfStock{{$index}}" type="text"
-                     ng-class="highlightRequiredFieldInModal(nonFullSupplyProduct.quantityRequested)"
                      class="right-justified"
-                     name="minMonthsOfStock{{$index}}"
-                     numeric-validator="positiveInteger"
-                     ng-required="true" maxlength="8" ng-model="facilityTypeApprovedProduct.minMonthsOfStock"
-                     openlmis-message="placeholder.quantity"/>
+                     name="addedMinMonthsOfStock{{$index}}"
+                     numeric-validator="positiveNumericValue,2,2" maxlength="5"
+                     ng-model="facilityTypeApprovedProduct.minMonthsOfStock"/>
                 <span class="rnr-form-error" style="display:none;"
-                      id="minMonthsOfStock{{$index}}" openlmis-message="error.number.only">
+                      id="addedMinMonthsOfStock{{$index}}" openlmis-message="error.number.only">
                 </span>
             </div>
           </div>
@@ -138,14 +135,12 @@
           <div class="span2">
             <div class="fluid-grid-cell">
               <input id="facilityTypeApprovedProduct.eop{{$index}}" type="text"
-                     ng-class="highlightRequiredFieldInModal(nonFullSupplyProduct.quantityRequested)"
                      class="right-justified"
-                     name="eop{{$index}}"
-                     numeric-validator="positiveInteger"
-                     ng-required="true" maxlength="8" ng-model="facilityTypeApprovedProduct.eop"
-                     openlmis-message="placeholder.quantity"/>
+                     name="addedEop{{$index}}"
+                     numeric-validator="positiveNumericValue,2,2" maxlength="5"
+                     ng-model="facilityTypeApprovedProduct.eop"/>
                 <span class="rnr-form-error" style="display:none;"
-                      id="eop{{$index}}" openlmis-message="error.number.only">
+                      id="addedEop{{$index}}" openlmis-message="error.number.only">
                 </span>
             </div>
           </div>
@@ -153,7 +148,7 @@
           <div class="span1">
             <div class="fluid-grid-cell delete-role">
               <a href="" class="close" value="delete"
-                 ng-click="deleteCurrentFacilityTypeApprovedProduct($index)">&times;</a>
+                 ng-click="removeFacilityTypeApprovedProduct($index)">&times;</a>
             </div>
           </div>
 

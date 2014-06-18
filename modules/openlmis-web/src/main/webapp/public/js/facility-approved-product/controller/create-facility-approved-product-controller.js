@@ -1,6 +1,6 @@
 function CreateFacilityApprovedProductController($scope, ProgramProductsFilter, messageService) {
   $scope.addedFacilityTypeApprovedProducts = [];
-  $scope.facilityApprovedProducts = [];
+  $scope.selectedProgramProductList = [];
 
   $scope.getHeader = function () {
     return messageService.get('header.code') + " | " +
@@ -81,10 +81,19 @@ function CreateFacilityApprovedProductController($scope, ProgramProductsFilter, 
     $scope.newFacilityTypeApprovedProduct = undefined;
   };
 
-  var filterProductsToDisplay = function (selectedProduct) {
-    $scope.programProductList = _.reject($scope.programProductList, function (programProduct) {
-      return  programProduct.product.code == selectedProduct.code;
+  var addAndRemoveFromProgramProductList = function (listToBeFiltered, listToBeAdded, value) {
+    listToBeAdded.push(_.find(listToBeFiltered, function (programProduct) {
+      return  programProduct.product.code == value;
+    }));
+
+    listToBeFiltered = _.reject(listToBeFiltered, function (programProduct) {
+      return  programProduct.product.code == value;
     });
+    return listToBeFiltered;
+  };
+
+  var filterProductsToDisplay = function (selectedProduct) {
+    $scope.programProductList = addAndRemoveFromProgramProductList($scope.programProductList, $scope.selectedProgramProductList, selectedProduct.code);
   };
 
   $scope.addFacilityTypeApprovedProduct = function () {
@@ -92,6 +101,13 @@ function CreateFacilityApprovedProductController($scope, ProgramProductsFilter, 
     var facilityApprovedProgramProduct = fillFacilityTypeApprovedProduct(selectedProduct);
     $scope.addedFacilityTypeApprovedProducts.push(facilityApprovedProgramProduct);
     filterProductsToDisplay(selectedProduct);
+    clearFacilityApprovedProductModalData();
+  };
+
+  $scope.removeFacilityTypeApprovedProduct = function (index) {
+    var removedFTAProduct = $scope.addedFacilityTypeApprovedProducts[index];
+    $scope.addedFacilityTypeApprovedProducts.splice(index, 1);
+    $scope.selectedProgramProductList = addAndRemoveFromProgramProductList($scope.selectedProgramProductList, $scope.programProductList, removedFTAProduct.programProduct.product.code);
     clearFacilityApprovedProductModalData();
   };
 }
