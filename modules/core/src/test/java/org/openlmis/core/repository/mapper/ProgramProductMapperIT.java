@@ -17,7 +17,14 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.openlmis.core.builder.ProductBuilder;
-import org.openlmis.core.domain.*;
+import org.openlmis.core.domain.FacilityType;
+import org.openlmis.core.domain.FacilityTypeApprovedProduct;
+import org.openlmis.core.domain.Money;
+import org.openlmis.core.domain.Product;
+import org.openlmis.core.domain.ProductCategory;
+import org.openlmis.core.domain.Program;
+import org.openlmis.core.domain.ProgramProduct;
+import org.openlmis.core.domain.ProgramProductISA;
 import org.openlmis.core.query.QueryExecutor;
 import org.openlmis.db.categories.IntegrationTests;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -249,6 +256,7 @@ public class ProgramProductMapperIT {
 
     facilityTypeApprovedProduct.setFacilityType(facilityType);
     facilityTypeApprovedProduct.setProgramProduct(programProduct);
+    facilityTypeApprovedProduct.setMaxMonthsOfStock(33.22f);
 
     facilityApprovedProductMapper.insert(facilityTypeApprovedProduct);
 

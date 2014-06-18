@@ -26,6 +26,7 @@ import org.openlmis.db.categories.UnitTests;
 
 import static com.natpryce.makeiteasy.MakeItEasy.a;
 import static com.natpryce.makeiteasy.MakeItEasy.make;
+import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.rules.ExpectedException.none;
@@ -37,7 +38,7 @@ import static org.openlmis.core.builder.FacilityApprovedProductBuilder.*;
 public class FacilityApprovedProductServiceTest {
 
   @Mock
-  private FacilityApprovedProductRepository facilityApprovedProductRepository;
+  private FacilityApprovedProductRepository repository;
 
   @Mock
   private ProgramService programService;
@@ -55,7 +56,7 @@ public class FacilityApprovedProductServiceTest {
   public ExpectedException expectedException = none();
 
   @InjectMocks
-  FacilityApprovedProductService facilityApprovedProductService;
+  FacilityApprovedProductService service;
 
   @Test
   public void shouldSaveFacilityApprovedProduct() throws Exception {
@@ -68,12 +69,12 @@ public class FacilityApprovedProductServiceTest {
     when(programProductService.getIdByProgramIdAndProductId(programId, productId)).thenReturn(100L);
     when(facilityService.getFacilityTypeByCode(facilityTypeApprovedProduct.getFacilityType())).thenReturn(new FacilityType());
 
-    facilityApprovedProductService.save(facilityTypeApprovedProduct);
+    service.save(facilityTypeApprovedProduct);
 
     verify(programService).getIdForCode(defaultProgramCode);
     verify(productService).getIdForCode(defaultProductCode);
     verify(programProductService).getIdByProgramIdAndProductId(programId, productId);
-    verify(facilityApprovedProductRepository).insert(facilityTypeApprovedProduct);
+    verify(repository).insert(facilityTypeApprovedProduct);
 
     assertThat(facilityTypeApprovedProduct.getProgramProduct().getProgram().getId(), is(programId));
     assertThat(facilityTypeApprovedProduct.getProgramProduct().getProduct().getId(), is(productId));
@@ -89,10 +90,10 @@ public class FacilityApprovedProductServiceTest {
     expectedException.expect(DataException.class);
     expectedException.expectMessage("abc");
 
-    facilityApprovedProductService.save(facilityTypeApprovedProduct);
+    service.save(facilityTypeApprovedProduct);
     verify(programService).getIdForCode(defaultProgramCode);
 
-    verify(facilityApprovedProductRepository, never()).insert(facilityTypeApprovedProduct);
+    verify(repository, never()).insert(facilityTypeApprovedProduct);
   }
 
   @Test
@@ -104,10 +105,10 @@ public class FacilityApprovedProductServiceTest {
     expectedException.expect(DataException.class);
     expectedException.expectMessage("abc");
 
-    facilityApprovedProductService.save(facilityTypeApprovedProduct);
+    service.save(facilityTypeApprovedProduct);
 
     verify(productService).getIdForCode(defaultProgramCode);
-    verify(facilityApprovedProductRepository, never()).insert(facilityTypeApprovedProduct);
+    verify(repository, never()).insert(facilityTypeApprovedProduct);
   }
 
   @Test
@@ -125,9 +126,37 @@ public class FacilityApprovedProductServiceTest {
     expectedException.expect(DataException.class);
     expectedException.expectMessage("abc");
 
-    facilityApprovedProductService.save(facilityTypeApprovedProduct);
+    service.save(facilityTypeApprovedProduct);
 
     verify(programProductService).getIdByProgramIdAndProductId(programId, productId);
-    verify(facilityApprovedProductRepository, never()).insert(facilityTypeApprovedProduct);
+    verify(repository, never()).insert(facilityTypeApprovedProduct);
+  }
+
+  @Test
+  public void shouldGetTotalSearchResultCount() throws Exception {
+    when(repository.getTotalSearchResultCount(1l, 2l, "f10")).thenReturn(10);
+    Integer result = service.getTotalSearchResultCount(1l, 2l, "f10");
+    assertThat(result, is(10));
+  }
+
+  @Test
+  public void shouldSaveAll() throws Exception {
+    FacilityTypeApprovedProduct facilityTypeApprovedProduct1 = new FacilityTypeApprovedProduct("FT code 1", null, 2.3f);
+
+
+    FacilityTypeApprovedProduct facilityTypeApprovedProduct2 = new FacilityTypeApprovedProduct("FT code 2", null, 21.5f);
+
+    FacilityApprovedProductService spyService = spy(service);
+    doNothing().when(spyService).save(facilityTypeApprovedProduct1);
+    doNothing().when(spyService).save(facilityTypeApprovedProduct2);
+
+    spyService.saveAll(asList(facilityTypeApprovedProduct1, facilityTypeApprovedProduct2), 1L);
+    assertThat(facilityTypeApprovedProduct1.getCreatedBy(), is(1L));
+    assertThat(facilityTypeApprovedProduct1.getModifiedBy(), is(1L));
+    assertThat(facilityTypeApprovedProduct2.getCreatedBy(), is(1L));
+    assertThat(facilityTypeApprovedProduct2.getModifiedBy(), is(1L));
+
+    verify(spyService).save(facilityTypeApprovedProduct1);
+    verify(spyService).save(facilityTypeApprovedProduct1);
   }
 }

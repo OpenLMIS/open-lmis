@@ -15,7 +15,12 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
-import org.openlmis.core.domain.*;
+import org.openlmis.core.domain.FacilityTypeApprovedProduct;
+import org.openlmis.core.domain.Money;
+import org.openlmis.core.domain.Product;
+import org.openlmis.core.domain.ProductCategory;
+import org.openlmis.core.domain.Program;
+import org.openlmis.core.domain.ProgramProduct;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.rnr.builder.RnrLineItemBuilder;
@@ -115,10 +120,10 @@ public class RnrLineItemTest {
     programProduct.setDisplayOrder(9);
     programProduct.setProductCategory(category);
 
-    RnrLineItem rnrLineItem = new RnrLineItem(1L, new FacilityTypeApprovedProduct("warehouse", programProduct, 3), 1L, 1L);
+    RnrLineItem rnrLineItem = new RnrLineItem(1L, new FacilityTypeApprovedProduct("warehouse", programProduct, 3.2f), 1L, 1L);
 
     assertThat(rnrLineItem.getFullSupply(), is(product.getFullSupply()));
-    assertThat(rnrLineItem.getMaxMonthsOfStock(), is(3));
+    assertThat(rnrLineItem.getMaxMonthsOfStock(), is(3.2f));
     assertThat(rnrLineItem.getRnrId(), is(1L));
     assertThat(rnrLineItem.getDispensingUnit(), is("Strip"));
     assertThat(rnrLineItem.getProductCode(), is("ASPIRIN"));
@@ -596,12 +601,12 @@ public class RnrLineItemTest {
   @Test
   public void shouldCalculateMaxStockQuantity() throws Exception {
     RnrLineItem lineItem = new RnrLineItem();
-    lineItem.setMaxMonthsOfStock(2);
+    lineItem.setMaxMonthsOfStock(2.4f);
     lineItem.setAmc(5);
 
     lineItem.calculateMaxStockQuantity();
 
-    assertThat(lineItem.getMaxStockQuantity(), is(10));
+    assertThat(lineItem.getMaxStockQuantity(), is(12));
   }
 
   @Test

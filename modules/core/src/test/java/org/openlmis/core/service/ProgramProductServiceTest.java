@@ -372,11 +372,11 @@ public class ProgramProductServiceTest {
     when(programProductRepository.getByProgram(any(Program.class))).thenReturn(allProgramProducts);
 
     FacilityTypeApprovedProduct facilityTypeApprovedProduct1 = new FacilityTypeApprovedProduct("code1", programProduct1,
-      3);
+      3.2f);
     FacilityTypeApprovedProduct facilityTypeApprovedProduct2 = new FacilityTypeApprovedProduct("code1", programProduct4,
-      3);
+      3.2f);
     FacilityTypeApprovedProduct facilityTypeApprovedProduct3 = new FacilityTypeApprovedProduct("code1", programProduct3,
-      3);
+      3.2f);
 
     List<FacilityTypeApprovedProduct> approvedProducts = asList(facilityTypeApprovedProduct1,
       facilityTypeApprovedProduct2, facilityTypeApprovedProduct3);

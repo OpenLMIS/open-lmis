@@ -39,16 +39,22 @@ public class FacilityTypeApprovedProduct extends BaseModel implements Importable
     @ImportField(name = "Product Code", nested = "product.code", mandatory = true)})
   private ProgramProduct programProduct;
 
-  @ImportField(name = "Max months of stock", mandatory = true, type = "int")
-  private Integer maxMonthsOfStock = 0;
+  @ImportField(name = "Max months of stock", mandatory = true, type = "float")
+  private Float maxMonthsOfStock;
 
-  public FacilityTypeApprovedProduct(FacilityType facilityType, ProgramProduct programProduct, Integer maxMonthsOfStock) {
+  @ImportField(name = "Min months of stock", type = "float")
+  private Float minMonthsOfStock;
+
+  @ImportField(name = "Emergency order point", type = "float")
+  private Float eop;
+
+  public FacilityTypeApprovedProduct(FacilityType facilityType, ProgramProduct programProduct, Float maxMonthsOfStock) {
     this.facilityType = facilityType;
     this.maxMonthsOfStock = maxMonthsOfStock;
     this.setProgramProduct(programProduct);
   }
 
-  public FacilityTypeApprovedProduct(String facilityTypeCode, ProgramProduct programProduct, Integer maxMonthsOfStock) {
+  public FacilityTypeApprovedProduct(String facilityTypeCode, ProgramProduct programProduct, Float maxMonthsOfStock) {
     this(new FacilityType(facilityTypeCode), programProduct, maxMonthsOfStock);
   }
 }

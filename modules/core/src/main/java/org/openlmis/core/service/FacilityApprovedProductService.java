@@ -11,6 +11,8 @@
 package org.openlmis.core.service;
 
 import lombok.NoArgsConstructor;
+import org.apache.commons.collections.Closure;
+import org.apache.commons.collections.CollectionUtils;
 import org.openlmis.core.domain.FacilityType;
 import org.openlmis.core.domain.FacilityTypeApprovedProduct;
 import org.openlmis.core.domain.Pagination;
@@ -88,5 +90,17 @@ public class FacilityApprovedProductService {
     facilityTypeApprovedProduct.getProgramProduct().getProgram().setId(programId);
     facilityTypeApprovedProduct.getProgramProduct().getProduct().setId(productId);
     facilityTypeApprovedProduct.getProgramProduct().setId(programProductId);
+  }
+
+  public void saveAll(List<FacilityTypeApprovedProduct> facilityTypeApprovedProducts, final Long userId) {
+    CollectionUtils.forAllDo(facilityTypeApprovedProducts, new Closure() {
+      @Override
+      public void execute(Object o) {
+        FacilityTypeApprovedProduct facilityTypeApprovedProduct = (FacilityTypeApprovedProduct) o;
+        facilityTypeApprovedProduct.setCreatedBy(userId);
+        facilityTypeApprovedProduct.setModifiedBy(userId);
+        save(facilityTypeApprovedProduct);
+      }
+    });
   }
 }

@@ -91,7 +91,7 @@ public class RnrLineItemBuilder {
       rnrLineItem.setQuantityDispensed(lookup.valueOf(quantityDispensed, DEFAULT_QUANTITY_DISPENSED));
 
       rnrLineItem.setDispensingUnit("tablet");
-      rnrLineItem.setMaxMonthsOfStock(1);
+      rnrLineItem.setMaxMonthsOfStock(1.2f);
       rnrLineItem.setPrice(new Money("2"));
       rnrLineItem.setQuantityApproved(lookup.valueOf(quantityApproved, QUANTITY_APPROVED));
 
@@ -102,7 +102,7 @@ public class RnrLineItemBuilder {
       rnrLineItem.setDosesPerDispensingUnit(10);
       rnrLineItem.setNormalizedConsumption(37);
       rnrLineItem.setAmc(37);
-      rnrLineItem.setMaxMonthsOfStock(2);
+      rnrLineItem.setMaxMonthsOfStock(2.3f);
       rnrLineItem.setMaxStockQuantity(74);
       rnrLineItem.setCalculatedOrderQuantity(70);
       rnrLineItem.setPackSize(lookup.valueOf(packSize, 6));

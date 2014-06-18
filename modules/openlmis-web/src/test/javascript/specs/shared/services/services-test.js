@@ -130,4 +130,45 @@ describe("Services", function () {
       expect(failureStub).toHaveBeenCalled();
     });
   });
+
+  describe("facility type approved products", function () {
+
+    var facilityTypeApprovedProducts;
+
+    beforeEach(inject(function (FacilityTypeApprovedProducts) {
+      facilityTypeApprovedProducts = FacilityTypeApprovedProducts;
+    }));
+
+    it('should add facility type approved products', function () {
+      var successMessage = "Saved successfully";
+      httpMock.expectPOST('/facilityApprovedProducts.json').respond(200, {"success": successMessage});
+
+      facilityTypeApprovedProducts.save({}, {},
+          function (data) {
+            successStub();
+            expect(data.success).toEqual(successMessage);
+          },
+          function () {
+            failureStub();
+          });
+      httpMock.flush();
+      expect(successStub).toHaveBeenCalled();
+      expect(failureStub).not.toHaveBeenCalled();
+    });
+
+    it('should raise error if server does not respond with OK status', function () {
+      httpMock.expectPOST('/facilityApprovedProducts.json').respond(404);
+
+      facilityTypeApprovedProducts.save({}, {},
+          function () {
+            successStub();
+          },
+          function () {
+            failureStub();
+          });
+      httpMock.flush();
+      expect(successStub).not.toHaveBeenCalled();
+      expect(failureStub).toHaveBeenCalled();
+    });
+  });
 });

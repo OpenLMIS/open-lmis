@@ -14,7 +14,11 @@ import lombok.NoArgsConstructor;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.lang3.StringUtils;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
-import org.openlmis.core.domain.*;
+import org.openlmis.core.domain.FacilityTypeApprovedProduct;
+import org.openlmis.core.domain.Money;
+import org.openlmis.core.domain.Product;
+import org.openlmis.core.domain.ProductCategory;
+import org.openlmis.core.domain.ProgramProduct;
 import org.openlmis.core.exception.DataException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -62,7 +66,7 @@ public class RnrLineItem extends LineItem {
   private Integer dosesPerMonth;
   private Integer dosesPerDispensingUnit;
   private String dispensingUnit;
-  private Integer maxMonthsOfStock;
+  private Float maxMonthsOfStock;
   private Boolean fullSupply;
   private Integer quantityReceived;
   private Integer quantityDispensed;
@@ -227,7 +231,7 @@ public class RnrLineItem extends LineItem {
   }
 
   public void calculateMaxStockQuantity() {
-    maxStockQuantity = maxMonthsOfStock * amc;
+    maxStockQuantity = Math.round(maxMonthsOfStock * amc);
   }
 
   public void calculateOrderQuantity() {

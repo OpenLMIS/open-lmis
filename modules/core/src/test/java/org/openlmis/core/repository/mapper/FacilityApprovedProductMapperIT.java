@@ -18,7 +18,14 @@ import org.junit.runner.RunWith;
 import org.openlmis.core.builder.FacilityBuilder;
 import org.openlmis.core.builder.ProductBuilder;
 import org.openlmis.core.builder.ProgramBuilder;
-import org.openlmis.core.domain.*;
+import org.openlmis.core.domain.Facility;
+import org.openlmis.core.domain.FacilityType;
+import org.openlmis.core.domain.FacilityTypeApprovedProduct;
+import org.openlmis.core.domain.Pagination;
+import org.openlmis.core.domain.Product;
+import org.openlmis.core.domain.ProductCategory;
+import org.openlmis.core.domain.Program;
+import org.openlmis.core.domain.ProgramProduct;
 import org.openlmis.db.categories.IntegrationTests;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -45,7 +52,7 @@ import static org.openlmis.core.builder.ProgramBuilder.programCode;
 @Category(IntegrationTests.class)
 public class FacilityApprovedProductMapperIT {
 
-  public static final Integer MAX_MONTHS_OF_STOCK = 3;
+  public static final Float MAX_MONTHS_OF_STOCK = 3.3f;
 
   @Autowired
   ProductMapper productMapper;

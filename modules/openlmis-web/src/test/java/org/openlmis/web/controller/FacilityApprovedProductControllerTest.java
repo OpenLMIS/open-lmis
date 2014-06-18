@@ -18,33 +18,45 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.openlmis.core.domain.FacilityTypeApprovedProduct;
 import org.openlmis.core.domain.Pagination;
+import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.FacilityApprovedProductService;
+import org.openlmis.core.service.MessageService;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mock.web.MockHttpServletRequest;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static java.lang.Integer.parseInt;
+import static java.util.Arrays.asList;
 import static java.util.Collections.EMPTY_LIST;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
 import static org.openlmis.web.controller.FacilityApprovedProductController.FACILITY_APPROVED_PRODUCTS;
 import static org.openlmis.web.controller.FacilityApprovedProductController.PAGINATION;
 import static org.powermock.api.mockito.PowerMockito.when;
 import static org.powermock.api.mockito.PowerMockito.whenNew;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
 @Category(UnitTests.class)
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(FacilityApprovedProductController.class)
 public class FacilityApprovedProductControllerTest {
 
+  private static final String USER_ID = "USER_ID";
+  private MockHttpServletRequest request;
+
   @Mock
   FacilityApprovedProductService service;
+
+  @Mock
+  private MessageService messageService;
 
   @InjectMocks
   FacilityApprovedProductController controller;
@@ -52,10 +64,12 @@ public class FacilityApprovedProductControllerTest {
   @Before
   public void setUp() throws Exception {
     initMocks(this);
+    request = new MockHttpServletRequest();
+    request.getSession().setAttribute(USER_ID, 1L);
   }
 
   @Test
-  public void shouldGetAllNonFullSupplyProductsByFacilityAndProgram() throws Exception {
+  public void shouldGetAllNonFullSupplyProductsByFacilityAndProgram() {
     Long facilityId = 1L;
     Long programId = 1L;
     ArrayList<FacilityTypeApprovedProduct> nonFullSupplyProducts = new ArrayList<>();
@@ -86,5 +100,27 @@ public class FacilityApprovedProductControllerTest {
     assertThat(pagination.getTotalRecords(), is(count));
     verify(service).getAllBy(facilityTypeId, programId, searchParam, pagination);
     verify(service).getTotalSearchResultCount(facilityTypeId, programId, searchParam);
+  }
+
+  @Test
+  public void shouldSave() {
+    List<FacilityTypeApprovedProduct> facilityTypeApprovedProducts = asList(new FacilityTypeApprovedProduct());
+    doNothing().when(service).saveAll(facilityTypeApprovedProducts, 1L);
+    when(messageService.message("message.facility.type.approved.products.added.successfully", facilityTypeApprovedProducts.size())).thenReturn("1 product(s) added successfully");
+
+    ResponseEntity<OpenLmisResponse> response = controller.save(facilityTypeApprovedProducts, request);
+
+    assertThat(response.getBody().getSuccessMsg(), is("1 product(s) added successfully"));
+  }
+
+  @Test
+  public void shouldThrowException() throws Exception {
+    List<FacilityTypeApprovedProduct> facilityTypeApprovedProducts = asList(new FacilityTypeApprovedProduct());
+    doThrow(new DataException("error")).when(service).saveAll(facilityTypeApprovedProducts, 1l);
+
+    ResponseEntity<OpenLmisResponse> errorResponse = controller.save(facilityTypeApprovedProducts, request);
+
+    assertThat(errorResponse.getBody().getErrorMsg(), is("error"));
+    assertThat(errorResponse.getStatusCode(), is(BAD_REQUEST));
   }
 }
