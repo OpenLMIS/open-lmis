@@ -112,8 +112,7 @@ public class RegimenSummaryQueryBuilder {
         query = "SELECT DISTINCT\n" +
                 " regimens.name regimen,sum(li.patientsontreatment) patientsontreatment, SUM(li.patientstoinitiatetreatment)\n" +
                 "patientstoinitiatetreatment, \n" +
-                "SUM(li.patientsstoppedtreatment) patientsstoppedtreatment,(patientsstoppedtreatment * 100 )/sum(patientsstoppedtreatment) over () as " +
-                "totalOnTreatmentPercentage\n" +
+                "SUM(li.patientsstoppedtreatment) patientsstoppedtreatment" +
                 "   FROM regimen_line_items li\n" +
                 "   JOIN requisitions r ON r.id = li.rnrid\n" +
                 "   JOIN facilities f ON r.facilityid = f.id\n" +
