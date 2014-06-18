@@ -17,6 +17,8 @@ import org.openlmis.report.mapper.OrderFillRateReportMapper;
 import org.openlmis.report.model.ReportData;
 import org.openlmis.report.model.ReportParameter;
 import org.openlmis.report.model.params.OrderFillRateReportParam;
+import org.openlmis.report.model.report.MasterReport;
+import org.openlmis.report.model.report.OrderFillRateReport;
 import org.openlmis.report.util.Constants;
 import org.openlmis.report.util.StringHelper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,15 +49,37 @@ public class OrderFillRateReportDataProvider extends ReportDataProvider {
   @Override
   public List<? extends ReportData> getMainReportData(Map<String, String[]> filterCriteria, Map<String, String[]> SortCriteria, int page, int pageSize) {
     RowBounds rowBounds = new RowBounds((page - 1) * pageSize, pageSize);
-    return reportMapper.getReport(getReportFilterData(filterCriteria), SortCriteria, rowBounds);
+      List<MasterReport> reportList = new ArrayList<MasterReport>();
+      MasterReport report = new MasterReport();
+      report.details = reportMapper.getReport(getReportFilterData(filterCriteria),SortCriteria,rowBounds);
+
+      List<OrderFillRateReport> summary = reportMapper.getReportData(getReportFilterData(filterCriteria),SortCriteria,rowBounds);
+/*
+      OrderFillRateReport  percentage = new OrderFillRateReport();
+      percentage.setORDER_FILL_RATE("Percentage Order-Fill-Rate");
+      String totalQuantityApproved = reportMapper.getReportTotalQuantityOrdered(filterCriteria).get(0).toString();
+      String totalQuantityReceived = reportMapper.getReportTotalQuantityReceived(filterCriteria).get(0).toString();
+
+      Long percent = Long.parseLong("100");
+      if (totalQuantityApproved != "0") {
+          percent = Math.round((Double.parseDouble(totalQuantityReceived) / Double.parseDouble(totalQuantityApproved)) * 100);
+      }
+
+      percentage.setORDER_FILL_RATE(percent.toString()+"%");
+
+      summary.add(0, percentage);*/
+      report.summary = summary;
+      reportList.add(report);
+
+      List<? extends ReportData> list;
+      list = reportList;
+      return list;
   }
 
   public ReportParameter getReportFilterData(Map<String, String[]> filterCriteria) {
     OrderFillRateReportParam orderFillRateReportParam = null;
 
     if (filterCriteria != null) {
-
-
       orderFillRateReportParam = new OrderFillRateReportParam();
 
         orderFillRateReportParam.setProductCategoryId(StringHelper.isBlank(filterCriteria, "productCategory") ? 0L : Long.parseLong(filterCriteria.get("productCategory")[0]));
@@ -116,24 +140,25 @@ public class OrderFillRateReportDataProvider extends ReportDataProvider {
     return getReportFilterData(params).toString();
   }
 
-   /* @Override
+   @Override
    public HashMap<String, String> getAdditionalReportData(Map params){
 
         HashMap<String, String> result = new HashMap<String, String>() ;
 
         // spit out the summary section on the report.
 
-        String totalQuantityReceived = reportMapper.getTotalQuantityReceived(params).get(0).toString();
-        String totalQuantityApproved = reportMapper.getTotalQuantityApproved(params).get(0).toString();
-        result.put("total",totalQuantityApproved);
+       String totalQuantityApproved = reportMapper.getReportTotalQuantityOrdered(params).get(0).toString();
+       String totalQuantityReceived = reportMapper.getReportTotalQuantityReceived(params).get(0).toString();
+
+       result.put("total",totalQuantityApproved);
         // Assume by default that the 100% of facilities didn't report
         Long percent = Long.parseLong("100");
-        if(totalQuantityApproved != "0"){
-            percent = Math.round((Double.parseDouble(totalQuantityReceived)) /  (Double.parseDouble(totalQuantityApproved)) * 100);
-        }
+       if (totalQuantityApproved != "0") {
+           percent = Math.round((Double.parseDouble(totalQuantityReceived) / Double.parseDouble(totalQuantityApproved)) * 100);
+       }
 
         result.put("ORDER_FILL_RATE",percent.toString());
         return result;
     }
-      */
+
 }
