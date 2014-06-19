@@ -47,8 +47,8 @@ public class RequisitionGroupService {
                                           List<RequisitionGroupMember> requisitionGroupMembers,
                                           List<RequisitionGroupProgramSchedule> requisitionGroupProgramSchedules) {
     save(requisitionGroup);
-    saveRequisitionGroupMembers(requisitionGroupMembers, requisitionGroup);
     saveRequisitionGroupProgramSchedules(requisitionGroupProgramSchedules, requisitionGroup);
+    saveRequisitionGroupMembers(requisitionGroupMembers, requisitionGroup);
   }
 
   public void save(RequisitionGroup requisitionGroup) {
@@ -103,8 +103,8 @@ public class RequisitionGroupService {
                                             List<RequisitionGroupMember> requisitionGroupMembers,
                                             List<RequisitionGroupProgramSchedule> requisitionGroupProgramSchedules) {
     save(requisitionGroup);
-    deleteAndInsertRequisitionGroupMembers(requisitionGroup, requisitionGroupMembers);
     deleteAndInsertRequisitionGroupProgramSchedules(requisitionGroup, requisitionGroupProgramSchedules);
+    deleteAndInsertRequisitionGroupMembers(requisitionGroup, requisitionGroupMembers);
   }
 
   private void deleteAndInsertRequisitionGroupMembers(RequisitionGroup requisitionGroup, List<RequisitionGroupMember> requisitionGroupMembers) {
