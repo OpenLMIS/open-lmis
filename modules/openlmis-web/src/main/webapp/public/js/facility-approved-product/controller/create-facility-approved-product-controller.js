@@ -112,16 +112,18 @@ function CreateFacilityApprovedProductController($scope, ProgramProductsFilter, 
   };
 
   $scope.addFacilityTypeApprovedProducts = function () {
-    FacilityTypeApprovedProducts.save({}, $scope.addedFacilityTypeApprovedProducts, function (data) {
-      $scope.$parent.$parent.message = data.success;
-      $scope.$parent.$parent.facilityApprovedProductsModal = false;
-      $scope.$parent.$parent.loadProducts(1);
-      $scope.addedFacilityTypeApprovedProducts = [];
-      clearFacilityApprovedProductModalData();
-    }, function (data) {
-      $scope.$parent.$parent.message = undefined;
-      $scope.modalError = data.data.error;
-    });
+    if ($scope.addedFacilityTypeApprovedProducts.length > 0) {
+      FacilityTypeApprovedProducts.save({}, $scope.addedFacilityTypeApprovedProducts, function (data) {
+        $scope.$parent.$parent.message = data.success;
+        $scope.$parent.$parent.facilityApprovedProductsModal = false;
+        $scope.$parent.$parent.loadProducts(1);
+        $scope.addedFacilityTypeApprovedProducts = [];
+        clearFacilityApprovedProductModalData();
+      }, function (data) {
+        $scope.$parent.$parent.message = undefined;
+        $scope.modalError = data.data.error;
+      });
+    }
   };
 
   $scope.cancelFacilityTypeApprovedProducts = function () {

@@ -294,6 +294,15 @@ describe("Create Facility Approved Product Controller", function () {
 
   it("should set error message when error returned", function () {
     var errorMessage = "An error occurred. Please contact system administrator.";
+    scope.addedFacilityTypeApprovedProducts = [
+      {
+        facilityType: {name: "facility type"},
+        programProduct: {program: {name: "program1", code: "1"}, product: {name: "product1", code: "1"}},
+        maxMonthsOfStock: 1,
+        minMonthsOfStock: 13,
+        eop: 12
+      }
+    ];
     $httpBackend.when("POST", '/facilityApprovedProducts.json').respond(404, {"error": errorMessage});
 
     scope.addFacilityTypeApprovedProducts();
