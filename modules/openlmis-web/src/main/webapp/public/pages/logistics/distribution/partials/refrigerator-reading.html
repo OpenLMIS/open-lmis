@@ -80,10 +80,10 @@
                             <label class="radio-label" for="problemSinceLastVisitDontKnow{{ $index }}"
                                    openlmis-message="label.dont.know"></label>
 
-                            <input id="problemSinceLastVisit{{$index}}" type="checkbox"
+                            <input id="problemSinceLastVisitNR{{$index}}" type="checkbox"
                                    ng-model="refrigeratorReading.problemSinceLastTime.notRecorded"
                                    not-recorded ng-click="refrigeratorReading.problems=undefined"/>
-                            <label class="checkbox-label" for="problemSinceLastVisit{{$index}}"
+                            <label class="checkbox-label" for="problemSinceLastVisitNR{{$index}}"
                                    openlmis-message="label.not.recorded"></label>
                         </div>
                     </div>
