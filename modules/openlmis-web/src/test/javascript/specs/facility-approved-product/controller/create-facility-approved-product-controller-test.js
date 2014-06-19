@@ -12,12 +12,16 @@ describe("Create Facility Approved Product Controller", function () {
 
   beforeEach(module('openlmis'));
 
-  var scope, parentScope, ctrl, supplyLine, $httpBackend, location, programs, facilityTypeList, messageService;
+  var scope, parentScope, grandParentScope, ctrl, supplyLine, $httpBackend, location, programs, facilityTypeList, messageService;
 
   beforeEach(inject(function ($rootScope, _$httpBackend_, $controller, $location, _messageService_) {
     scope = $rootScope.$new();
     parentScope = $rootScope.$new();
+    grandParentScope = $rootScope.$new();
+    grandParentScope.loadProducts = function () {
+    };
     scope.$parent = parentScope;
+    parentScope.$parent = grandParentScope;
     $httpBackend = _$httpBackend_;
     location = $location;
     messageService = _messageService_;
@@ -43,8 +47,8 @@ describe("Create Facility Approved Product Controller", function () {
       product1 = {name: "product1", code: "1"};
       product2 = {name: "product2", code: "2"};
       product3 = {name: "product3", code: "3"};
-      productCategory1 = {name: "second product category", id: 1};
-      productCategory2 = {name: "first product category", id: 2};
+      productCategory1 = {name: "second product category", id: 1, code: 1};
+      productCategory2 = {name: "first product category", id: 2, code: 2};
       programProductList = [
         {"product": product1, "productCategory": productCategory1},
         {"product": product2, "productCategory": productCategory2},
@@ -53,15 +57,15 @@ describe("Create Facility Approved Product Controller", function () {
     });
 
     it("should load facility approved product", function () {
-      parentScope.program = {"id": 2};
-      parentScope.facilityType = {"id": 1};
-      parentScope.facilityApprovedProductsModal = false;
+      grandParentScope.program = {"id": 2};
+      grandParentScope.facilityType = {"id": 1};
+      grandParentScope.facilityApprovedProductsModal = false;
 
       var data = {"programProductList": programProductList};
 
       $httpBackend.when("GET", '/programProducts/filter/programId/2/facilityTypeId/1.json').respond(data);
-      scope.$parent.$apply(function () {
-        scope.$parent.facilityApprovedProductsModal = true;
+      scope.$parent.$parent.$apply(function () {
+        scope.$parent.$parent.facilityApprovedProductsModal = true;
       });
 
       $httpBackend.flush();
@@ -86,8 +90,8 @@ describe("Create Facility Approved Product Controller", function () {
         program = {name: "program"};
         productSelectedString = "{\"name\": \"product1\", \"code\": \"1\"}";
 
-        parentScope.facilityType = facilityType;
-        parentScope.program = program;
+        grandParentScope.facilityType = facilityType;
+        grandParentScope.program = program;
         scope.productSelected = productSelectedString;
         scope.newFacilityTypeApprovedProduct = {maxMonthsOfStock: 1, minMonthsOfStock: 13, eop: 12};
         scope.programProductList = programProductList;
@@ -158,10 +162,10 @@ describe("Create Facility Approved Product Controller", function () {
 
   it("should not load facility approved product if modal window is closed", function () {
     var httpBackendSpy = spyOn($httpBackend, 'expectGET');
-    parentScope.facilityApprovedProductsModal = true;
+    grandParentScope.facilityApprovedProductsModal = true;
 
-    scope.$parent.$apply(function () {
-      scope.$parent.facilityApprovedProductsModal = false;
+    scope.$parent.$parent.$apply(function () {
+      scope.$parent.$parent.facilityApprovedProductsModal = false;
     });
 
     expect(httpBackendSpy).not.toHaveBeenCalled();
@@ -265,14 +269,26 @@ describe("Create Facility Approved Product Controller", function () {
 
   it("should save facility type approved products", function () {
     var successMessage = "Saved successfully";
-    $httpBackend.when("POST", '/facilityApprovedProducts.json').respond(200, {"success": successMessage});
+    scope.addedFacilityTypeApprovedProducts = [
+      {
+        facilityType: {name: "facility type"},
+        programProduct: {program: {name: "program1", code: "1"}, product: {name: "product1", code: "1"}},
+        maxMonthsOfStock: 1,
+        minMonthsOfStock: 13,
+        eop: 12
+      }
+    ];
+    spyOn(scope.$parent.$parent, 'loadProducts');
+    $httpBackend.expectPOST('/facilityApprovedProducts.json').respond(200, {"success": successMessage});
 
     scope.addFacilityTypeApprovedProducts();
 
     $httpBackend.flush();
 
-    expect(scope.$parent.message).toEqual(successMessage);
-    expect(scope.$parent.facilityApprovedProductsModal).toBeFalsy();
+    expect(grandParentScope.message).toEqual(successMessage);
+    expect(grandParentScope.facilityApprovedProductsModal).toBeFalsy();
+    expect(grandParentScope.loadProducts).toHaveBeenCalledWith(1);
+    expect(scope.addedFacilityTypeApprovedProducts).toEqual([]);
 
   });
 
@@ -284,7 +300,14 @@ describe("Create Facility Approved Product Controller", function () {
 
     $httpBackend.flush();
 
-    expect(scope.$parent.message).toBeUndefined();
+    expect(scope.$parent.$parent.message).toBeUndefined();
     expect(scope.modalError).toEqual(errorMessage);
+  });
+
+  it("should cancel save action", function () {
+
+    scope.cancelFacilityTypeApprovedProducts();
+    expect(grandParentScope.facilityApprovedProductsModal).toBeFalsy();
+    expect(scope.addedFacilityTypeApprovedProducts).toEqual([]);
   });
 });

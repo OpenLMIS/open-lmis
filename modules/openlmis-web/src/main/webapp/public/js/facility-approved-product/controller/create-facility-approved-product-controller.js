@@ -3,7 +3,7 @@ function CreateFacilityApprovedProductController($scope, ProgramProductsFilter, 
   $scope.selectedProgramProductList = [];
 
   var loadProductsWithCategory = function () {
-    ProgramProductsFilter.get({programId: $scope.$parent.program.id, facilityTypeId: $scope.$parent.facilityType.id}, function (data) {
+    ProgramProductsFilter.get({programId: $scope.$parent.$parent.program.id, facilityTypeId: $scope.$parent.$parent.facilityType.id}, function (data) {
       $scope.programProductList = data.programProductList;
       var productCategories = _.pluck(data.programProductList, "productCategory");
       $scope.productCategories = _.uniq(productCategories, function (category) {
@@ -14,8 +14,8 @@ function CreateFacilityApprovedProductController($scope, ProgramProductsFilter, 
 
   var fillFacilityTypeApprovedProduct = function (selectedProduct) {
     return {
-      "facilityType": $scope.$parent.facilityType,
-      "programProduct": {"program": $scope.$parent.program, "product": selectedProduct},
+      "facilityType": $scope.$parent.$parent.facilityType,
+      "programProduct": {"program": $scope.$parent.$parent.program, "product": selectedProduct},
       "maxMonthsOfStock": $scope.newFacilityTypeApprovedProduct.maxMonthsOfStock,
       "minMonthsOfStock": $scope.newFacilityTypeApprovedProduct.minMonthsOfStock,
       "eop": $scope.newFacilityTypeApprovedProduct.eop
@@ -27,7 +27,6 @@ function CreateFacilityApprovedProductController($scope, ProgramProductsFilter, 
     $scope.productSelected = undefined;
     $scope.products = undefined;
     $scope.newFacilityTypeApprovedProduct = undefined;
-
   };
 
   var addAndRemoveFromProgramProductList = function (listToBeFiltered, listToBeAdded, value) {
@@ -53,8 +52,8 @@ function CreateFacilityApprovedProductController($scope, ProgramProductsFilter, 
         messageService.get('header.template.type');
   };
 
-  $scope.$parent.$watch('facilityApprovedProductsModal', function () {
-    if ($scope.$parent.facilityApprovedProductsModal)
+  $scope.$parent.$parent.$watch('facilityApprovedProductsModal', function () {
+    if ($scope.$parent.$parent.facilityApprovedProductsModal)
       loadProductsWithCategory();
   });
 
@@ -86,7 +85,7 @@ function CreateFacilityApprovedProductController($scope, ProgramProductsFilter, 
 
   $scope.filterProductsByCategory = function () {
     var filteredProducts = _.filter($scope.programProductList, function (programProduct) {
-      return programProduct.productCategory === $scope.productCategorySelected;
+      return programProduct.productCategory.code === $scope.productCategorySelected.code;
     });
 
     $scope.products = _.pluck(filteredProducts, "product");
@@ -114,12 +113,13 @@ function CreateFacilityApprovedProductController($scope, ProgramProductsFilter, 
 
   $scope.addFacilityTypeApprovedProducts = function () {
     FacilityTypeApprovedProducts.save({}, $scope.addedFacilityTypeApprovedProducts, function (data) {
-      $scope.$parent.message = data.success;
+      $scope.$parent.$parent.message = data.success;
       $scope.$parent.$parent.facilityApprovedProductsModal = false;
-      $scope.$parent.loadProducts(1);
+      $scope.$parent.$parent.loadProducts(1);
       $scope.addedFacilityTypeApprovedProducts = [];
+      clearFacilityApprovedProductModalData();
     }, function (data) {
-      $scope.$parent.message = undefined;
+      $scope.$parent.$parent.message = undefined;
       $scope.modalError = data.data.error;
     });
   };
@@ -127,5 +127,7 @@ function CreateFacilityApprovedProductController($scope, ProgramProductsFilter, 
   $scope.cancelFacilityTypeApprovedProducts = function () {
     $scope.$parent.$parent.facilityApprovedProductsModal = false;
     $scope.addedFacilityTypeApprovedProducts = [];
-  };
+    $scope.$parent.$parent.message = undefined;
+    clearFacilityApprovedProductModalData();
+  }
 }
