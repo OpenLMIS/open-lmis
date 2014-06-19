@@ -75,6 +75,9 @@ app.directive('programFilter', ['ReportPrograms',
       require: '^filterContainer',
       link: function (scope, elm, attr) {
 
+        if (attr.required) {
+           scope.requiredFilters.program = 'program';
+        }
 
         scope.$evalAsync(function(){
           ReportPrograms.get(function (data) {
