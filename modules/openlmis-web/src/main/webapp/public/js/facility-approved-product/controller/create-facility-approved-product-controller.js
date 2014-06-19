@@ -113,6 +113,21 @@ function CreateFacilityApprovedProductController($scope, ProgramProductsFilter, 
 
   $scope.addFacilityTypeApprovedProducts = function () {
     if ($scope.addedFacilityTypeApprovedProducts && $scope.addedFacilityTypeApprovedProducts.length > 0) {
+      var invalid = false;
+
+      _.each($scope.addedFacilityTypeApprovedProducts, function (facilityTypeApprovedProduct) {
+        if (isUndefined(facilityTypeApprovedProduct.maxMonthsOfStock) || isUndefined(facilityTypeApprovedProduct.facilityType) || isUndefined(facilityTypeApprovedProduct.programProduct)) {
+          invalid = true;
+          return false;
+        }
+        return true;
+      });
+      if (invalid) {
+        $scope.modalError = 'error.correct.highlighted';
+        return;
+      }
+      $scope.modalError = undefined;
+
       FacilityTypeApprovedProducts.save({}, $scope.addedFacilityTypeApprovedProducts, function (data) {
         $scope.$parent.$parent.message = data.success;
         $scope.$parent.$parent.facilityApprovedProductsModal = false;

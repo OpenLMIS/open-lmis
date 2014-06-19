@@ -292,6 +292,70 @@ describe("Create Facility Approved Product Controller", function () {
 
   });
 
+  it("should not save facility type approved products if maxMonthStock is missing", function () {
+    var errorMessage = "error.correct.highlighted";
+    scope.addedFacilityTypeApprovedProducts = [
+      {
+        facilityType: {name: "facility type"},
+        programProduct: {program: {name: "program1", code: "1"}, product: {name: "product1", code: "1"}},
+        maxMonthsOfStock: 1,
+        minMonthsOfStock: 13,
+        eop: 12
+      },
+      {
+        facilityType: {name: "facility type"},
+        programProduct: {program: {name: "program1", code: "1"}, product: {name: "product1", code: "1"}},
+        minMonthsOfStock: 13,
+        eop: 12
+      }
+    ];
+    scope.addFacilityTypeApprovedProducts();
+
+    expect(scope.modalError).toEqual(errorMessage);
+  });
+
+  it("should not save facility type approved products if facilityType is missing", function () {
+    var errorMessage = "error.correct.highlighted";
+    scope.addedFacilityTypeApprovedProducts = [
+      {
+        facilityType: {name: "facility type"},
+        programProduct: {program: {name: "program1", code: "1"}, product: {name: "product1", code: "1"}},
+        maxMonthsOfStock: 1,
+        minMonthsOfStock: 13,
+        eop: 12
+      },
+      {
+        programProduct: {program: {name: "program1", code: "1"}, product: {name: "product1", code: "1"}},
+        minMonthsOfStock: 13,
+        eop: 12
+      }
+    ];
+    scope.addFacilityTypeApprovedProducts();
+
+    expect(scope.modalError).toEqual(errorMessage);
+  });
+
+  it("should not save facility type approved products if programProduct is missing", function () {
+    var errorMessage = "error.correct.highlighted";
+    scope.addedFacilityTypeApprovedProducts = [
+      {
+        facilityType: {name: "facility type"},
+        maxMonthsOfStock: 1,
+        minMonthsOfStock: 13,
+        eop: 12
+      },
+      {
+        facilityType: {name: "facility type"},
+        programProduct: {program: {name: "program1", code: "1"}, product: {name: "product1", code: "1"}},
+        minMonthsOfStock: 13,
+        eop: 12
+      }
+    ];
+    scope.addFacilityTypeApprovedProducts();
+
+    expect(scope.modalError).toEqual(errorMessage);
+  });
+
   it("should set error message when error returned", function () {
     var errorMessage = "An error occurred. Please contact system administrator.";
     scope.addedFacilityTypeApprovedProducts = [
