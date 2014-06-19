@@ -23,9 +23,6 @@ function ListFacilitiesController($scope, FacilityList) {
         {'name': 'Inactive', 'value': "FALSE"}
     ];
 
-    // default to all status
-    $scope.filter.status = '';
-
     $scope.exportReport   = function (type){
 
       var params = jQuery.param($scope.filter);
