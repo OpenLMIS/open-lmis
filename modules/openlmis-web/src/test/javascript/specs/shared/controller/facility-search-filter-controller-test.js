@@ -26,15 +26,14 @@ describe("Facility Search Filter Controller", function () {
   }));
 
   it("should associate a facility", function () {
-    scope.$parent = {"$parent": {"associate": function () {
-    }}};
+    scope.$parent = {"associate": function () { }};
 
-    spyOn(scope.$parent.$parent, "associate");
+    spyOn(scope.$parent, "associate");
     var facility = {code: "F10", name: "Village Dispensary"};
 
     scope.associate(facility);
 
-    expect(scope.$parent.$parent.associate).toHaveBeenCalledWith(facility);
+    expect(scope.$parent.associate).toHaveBeenCalledWith(facility);
   });
 
   it('should not search results if query is undefined', function () {

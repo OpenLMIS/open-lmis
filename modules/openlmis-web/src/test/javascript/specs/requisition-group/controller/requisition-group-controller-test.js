@@ -31,8 +31,8 @@ describe("Requisition Group Controller", function () {
     ];
 
     schedules = [
-      {"name": "SCH1", "code": "Monthly"},
-      {"name": "SCH2", "code": "Yearly"}
+      {"id":1, "name": "SCH1", "code": "Monthly"},
+      {"id":2, "name": "SCH2", "code": "Yearly"}
     ];
 
     requisitionGroupData = {"requisitionGroup": requisitionGroup, "requisitionGroupMembers": requisitionGroupMembers, "requisitionGroupProgramSchedules": requisitionGroupProgramSchedules};
@@ -244,6 +244,49 @@ describe("Requisition Group Controller", function () {
     });
 
     expect(scope.duplicateFacilityName).toBeUndefined();
+  });
+
+  it('should add new row',function(){
+    scope.addNew = false;
+
+    scope.addNewRow();
+
+    expect(scope.addNew).toBeTruthy();
+  });
+
+  it('should update processing schedule',function(){
+    scope.schedules = [
+      {"id":2, "name": "SCH2", "code": "Yearly"},
+      {"id":1, "name": "SCH1", "code": "Monthly"}
+    ];
+    var index = 0;
+    scope.requisitionGroupProgramSchedules = [{"processingSchedule":{"id":1,"name":"SCH2","code":"Yearly"}}];
+
+    scope.updateSchedule(index);
+
+    expect(scope.requisitionGroupProgramSchedules[index].processingSchedule.id).toEqual(1);
+    expect(scope.requisitionGroupProgramSchedules[index].processingSchedule.name).toEqual("SCH1");
+    expect(scope.requisitionGroupProgramSchedules[index].processingSchedule.code).toEqual("Monthly");
+  });
+
+  it('should set under edit and make a copy during edit',function(){
+    scope.requisitionGroupProgramSchedules = [{"underEdit":false}];
+    var index = 0;
+    var copySpy = spyOn(angular,"copy");
+
+    scope.edit(index);
+
+    expect(scope.requisitionGroupProgramSchedules[index].underEdit).toBeTruthy();
+    expect(copySpy).toHaveBeenCalledWith(scope.requisitionGroupProgramSchedules[index]);
+  });
+
+  it('should clear drop off facility', function(){
+    var index = 0;
+    scope.requisitionGroupProgramSchedules = [{"dropOffFacility":{"name":"FC1"}}];
+
+    scope.clearDropOffFacility(index);
+
+    expect(scope.requisitionGroupProgramSchedules[index].dropOffFacility).toBeUndefined();
   });
 });
 

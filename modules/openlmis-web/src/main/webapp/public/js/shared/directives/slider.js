@@ -13,9 +13,6 @@ app.directive('slider', function ($timeout) {
     restrict: 'A',
     link: function (scope, element, attrs) {
 
-      scope.$parent.$parent.showSlider = false;
-      scope.$parent.$parent.showMultipleFacilitySlider = false;
-
       var progressFunc = function () {
         var bufferHeight = 200;
         var searchFilterBoxHeight = $(this).height();
@@ -42,7 +39,7 @@ app.directive('slider', function ($timeout) {
         }
       });
 
-      scope.$parent.$parent.$watch('showSlider', function () {
+      scope.$watch('showSlider', function () {
         if (scope.showSlider) {
           angular.element(".searchAndFilter").slideDown({duration: "slow", progress: progressFunc});
         }
@@ -51,7 +48,7 @@ app.directive('slider', function ($timeout) {
         }
       });
 
-      scope.$parent.$parent.$watch("showMultipleFacilitiesSlider", function () {
+      scope.$watch("showMultipleFacilitiesSlider", function () {
         if (scope.showMultipleFacilitiesSlider) {
           angular.element(".searchAndFilterMultipleFacilities").slideDown({duration: "slow", progress: progressFunc});
         }

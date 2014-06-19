@@ -40,6 +40,8 @@ function MultipleFacilitySearchFilterController($scope, Facilities) {
       $scope.multipleFacilitiesSearchParam = undefined;
       $scope.multipleFacilities = undefined;
       $scope.multipleFacilitiesResultCount = undefined;
+      $scope.type = {};
+      $scope.zone = {};
       $scope.$apply();
       angular.element('#searchFacility').focus();
     });
@@ -63,6 +65,7 @@ function MultipleFacilitySearchFilterController($scope, Facilities) {
   $scope.addMembers = function () {
     if ($scope.$parent.$parent.addMembers($scope.tempFacilities)) {
       $scope.clearMultipleFacilitiesSearch();
+      $scope.$broadcast('clearMultipleFilters');
     }
   };
 }

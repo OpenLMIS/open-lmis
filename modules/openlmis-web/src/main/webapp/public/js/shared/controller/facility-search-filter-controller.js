@@ -35,12 +35,16 @@ function FacilitySearchFilterController($scope, Facilities) {
       $scope.facilitySearchParam = undefined;
       $scope.facilityList = undefined;
       $scope.facilityResultCount = undefined;
+      $scope.type = {};
+      $scope.zone = {};
       $scope.$apply();
       angular.element('#searchFacility').focus();
     });
   };
 
   $scope.associate = function (facility) {
-    $scope.$parent.$parent.associate(facility);
+    $scope.$parent.associate(facility);
+    $scope.clearFacilitySearch();
+    $scope.$broadcast('clearFilters');
   };
 }

@@ -76,4 +76,12 @@ function FacilitySubFiltersController($scope, GeographicZoneSearch, FacilityType
   $scope.showLevel = function (index) {
     return !((index > 0 ) && ($scope.geoZoneList[index].level.name === $scope.geoZoneList[index - 1].level.name));
   };
+
+  function clearFilters() {
+    $scope.selectedFacilityType = undefined;
+    $scope.selectedGeoZone = undefined;
+  }
+
+  $scope.$on('clearFilters', clearFilters);
+  $scope.$on('clearMultipleFilters', clearFilters);
 }
