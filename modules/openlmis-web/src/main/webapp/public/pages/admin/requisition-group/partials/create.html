@@ -99,15 +99,15 @@
           <div class="row-fluid">
             <div class="accordion">
               <div class="pull-right control-accordion">
-                <a id="expandAll" href="javascript:void(0);" onClick="expandCollapse('expand')"
+                <a id="expandAll" href="javascript:void(0);" onClick="accordion.expandCollapse('expand')"
                    openlmis-message="label.expand.all"></a> / <a
                 id="collapseAll"
                 href="javascript:void(0);"
-                onClick="expandCollapse('collapse')" openlmis-message="label.collapse.all"></a>
+                onClick="accordion.expandCollapse('collapse')" openlmis-message="label.collapse.all"></a>
               </div>
               <div class="clearfix"></div>
               <div class="accordion-section">
-                <div class="accordion-heading" onClick="expandCollapseToggle(this)">
+                <div class="accordion-heading" onClick="accordion.expandCollapseToggle(this)">
                     <span><b>+</b><a
                       id="programSchedules"
                       href="javascript:void(0);" openlmis-message='label.program.and.schedules'></a></span>
@@ -117,7 +117,7 @@
                 </div>
               </div>
               <div class="accordion-section">
-                <div class="accordion-heading" onClick="expandCollapseToggle(this)">
+                <div class="accordion-heading" onClick="accordion.expandCollapseToggle(this)">
                     <span><b>+</b><a
                       id="Members"
                       href="javascript:void(0);" openlmis-message='label.members'></a></span>

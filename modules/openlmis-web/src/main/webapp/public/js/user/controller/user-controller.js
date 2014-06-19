@@ -270,7 +270,7 @@ function UserController($scope, $location, $dialog, Users, Facility, messageServ
   };
 
   $timeout(function () {
-    expandCollapseToggle($('.accordion-section:first .heading'));
+    accordion.expandCollapseToggle($('.accordion-section:first .heading'));
   });
 }
 
@@ -353,44 +353,4 @@ UserController.resolve = {
 
     return deferred.promise;
   }
-
 };
-
-function expandCollapse(trigger) {
-  var accordion = $('.accordion');
-  if (trigger == 'expand') {
-    accordion.find('.accordion-section').each(function () {
-      $(this).find('.accordion-body').slideDown();
-      $(this).find('b').text('-');
-    });
-    var offsetTop = accordion.offset().top;
-    $('body, html').animate({
-      scrollTop: utils.parseIntWithBaseTen(offsetTop) + 'px'
-    });
-  } else {
-    accordion.find('.accordion-section').each(function () {
-      $(this).find('.accordion-body').slideUp();
-      $(this).find('b').text('+');
-    });
-  }
-}
-
-function expandCollapseToggle(element) {
-  $(element).parents('.accordion-section').siblings('.accordion-section').each(function () {
-    $(this).find('.accordion-body').slideUp();
-    $(this).find('.accordion-heading b').text('+');
-  });
-  $(element).siblings('.accordion-body').stop().slideToggle(function () {
-    if ($(element).siblings('.accordion-body').is(':visible')) {
-      $(element).find('b').text('-');
-    } else {
-      $(element).find('b').text('+');
-    }
-  });
-  var offset = $(element).offset();
-  var offsetTop = offset ? offset.top : undefined;
-  $('body, html').animate({
-    scrollTop: utils.parseIntWithBaseTen(offsetTop) + 'px'
-  });
-}
-

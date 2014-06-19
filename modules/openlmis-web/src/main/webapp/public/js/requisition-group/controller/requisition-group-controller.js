@@ -39,7 +39,7 @@ function RequisitionGroupController($scope, requisitionGroupData, $location, Req
     });
   }
 
-  $scope.addNewRow = function(){
+  $scope.addNewRow = function () {
     $scope.addNew = true;
   };
 
@@ -54,7 +54,7 @@ function RequisitionGroupController($scope, requisitionGroupData, $location, Req
     $scope.requisitionGroupProgramSchedules[index].underEdit = true;
   };
 
-  $scope.clearDropOffFacility = function(index){
+  $scope.clearDropOffFacility = function (index) {
     $scope.requisitionGroupProgramSchedules[index].dropOffFacility = undefined;
   };
 
@@ -111,7 +111,7 @@ function RequisitionGroupController($scope, requisitionGroupData, $location, Req
     }
   };
 
-  $scope.toggleSlider = function(){
+  $scope.toggleSlider = function () {
     $scope.showSlider = !$scope.showSlider;
   };
 
@@ -172,7 +172,7 @@ function RequisitionGroupController($scope, requisitionGroupData, $location, Req
 
   $scope.remove = function (programId) {
     $scope.requisitionGroupProgramSchedules = _.reject($scope.requisitionGroupProgramSchedules, function (programSchedule) {
-      return programSchedule.program.id == programId;
+      return programSchedule.program.id === programId;
     });
     refreshAndSortPrograms();
   };
@@ -230,9 +230,9 @@ function RequisitionGroupController($scope, requisitionGroupData, $location, Req
   };
 
   function loadSupervisoryNode() {
-    if (!$scope.requisitionGroup) return;
-
-    $scope.nodeSelected = $scope.requisitionGroup.supervisoryNode;
+    if ($scope.requisitionGroup) {
+      $scope.nodeSelected = $scope.requisitionGroup.supervisoryNode;
+    }
   }
 }
 
@@ -273,41 +273,3 @@ RequisitionGroupController.resolve = {
     return deferred.promise;
   }
 };
-
-function expandCollapseToggle(element) {
-  $(element).parents('.accordion-section').siblings('.accordion-section').each(function () {
-    $(this).find('.accordion-body').slideUp();
-    $(this).find('.accordion-heading b').text('+');
-  });
-  $(element).siblings('.accordion-body').stop().slideToggle(function () {
-    if ($(element).siblings('.accordion-body').is(':visible')) {
-      $(element).find('b').text('-');
-    } else {
-      $(element).find('b').text('+');
-    }
-  });
-  var offset = $(element).offset();
-  var offsetTop = offset ? offset.top : undefined;
-  $('body, html').animate({
-    scrollTop: utils.parseIntWithBaseTen(offsetTop) + 'px'
-  });
-}
-
-function expandCollapse(trigger) {
-  var accordion = $('.accordion');
-  if (trigger == 'expand') {
-    accordion.find('.accordion-section').each(function () {
-      $(this).find('.accordion-body').slideDown();
-      $(this).find('b').text('-');
-    });
-    var offsetTop = accordion.offset().top;
-    $('body, html').animate({
-      scrollTop: utils.parseIntWithBaseTen(offsetTop) + 'px'
-    });
-  } else {
-    accordion.find('.accordion-section').each(function () {
-      $(this).find('.accordion-body').slideUp();
-      $(this).find('b').text('+');
-    });
-  }
-}

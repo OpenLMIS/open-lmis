@@ -8,19 +8,6 @@
   ~ You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
   -->
 
-<!--<script id="template/accordion/accordion.html" type="text/ng-template">-->
-<!--<div class="accordion" ng-transclude></div>-->
-<!--</script>-->
-
-<!--<script id="template/accordion/accordion-group.html" type="text/ng-template">-->
-<!--<div class="accordion-group">-->
-<!--<div class="accordion-heading"><a class="accordion-toggle" ng-click="isOpen = !isOpen">{{heading}}</a></div>-->
-<!--<div class="accordion-body" collapse="!isOpen">-->
-<!--<div class="accordion-inner" ng-transclude></div>-->
-<!--</div>-->
-<!--</div>-->
-<!--</script>-->
-
 <div xmlns="http://www.w3.org/1999/html" tab-scroll>
 <div ng-hide="user.id"><h2 openlmis-message="create.user.label"></h2></div>
 <div ng-show="user.id">
@@ -220,14 +207,14 @@
   <div class="row-fluid">
     <div class="accordion">
       <div class="pull-right control-accordion">
-        <a id="expandAll" href="javascript:void(0);" onClick="expandCollapse('expand')"
+        <a id="expandAll" href="javascript:void(0);" onClick="accordion.expandCollapse('expand')"
            openlmis-message="label.expand.all"></a>
-        <a id="collapseAll" href="javascript:void(0);" onClick="expandCollapse('collapse')"
+        <a id="collapseAll" href="javascript:void(0);" onClick="accordion.expandCollapse('collapse')"
            openlmis-message="label.collapse.all"></a>
       </div>
       <div class="clearfix"></div>
       <div class="accordion-section" ng-show='facilitySelected'>
-        <div class="accordion-heading" onClick="expandCollapseToggle(this)">
+        <div class="accordion-heading" onClick="accordion.expandCollapseToggle(this)">
                     <span><b>+</b><a
                       id="homeFacilityRoles"
                       href="javascript:void(0);">{{getMessage('create.user.homeFacility.roles')}}</a></span>
@@ -237,7 +224,7 @@
         </div>
       </div>
       <div class="accordion-section">
-        <div class="accordion-heading" onClick="expandCollapseToggle(this)">
+        <div class="accordion-heading" onClick="accordion.expandCollapseToggle(this)">
                     <span><b>+</b><a
                       id="supervisoryRoles"
                       href="javascript:void(0);">{{getMessage('create.user.superVisoryRoles')}}</a></span>
@@ -248,7 +235,7 @@
         </div>
       </div>
       <div class="accordion-section">
-        <div class="accordion-heading" onClick="expandCollapseToggle(this)">
+        <div class="accordion-heading" onClick="accordion.expandCollapseToggle(this)">
                     <span><b>+</b><a
                       id="orderFulfillmentRoles" href="javascript:void(0);">{{getMessage('create.user.order.fulfillment.roles')}}</a></span>
         </div>
@@ -257,7 +244,7 @@
         </div>
       </div>
       <div class="accordion-section">
-        <div class="accordion-heading" onClick="expandCollapseToggle(this)">
+        <div class="accordion-heading" onClick="accordion.expandCollapseToggle(this)">
                     <span><b>+</b><a
                       id="allocationRoles"
                       href="javascript:void(0);">{{getMessage('create.user.allocationRoles')}}</a></span>
@@ -268,7 +255,7 @@
         </div>
       </div>
       <div class="accordion-section">
-        <div class="accordion-heading" onClick="expandCollapseToggle(this)">
+        <div class="accordion-heading" onClick="accordion.expandCollapseToggle(this)">
                     <span><b>+</b><a
                       id="adminRoles"
                       href="javascript:void(0);">{{getMessage('create.user.adminRoles')}}</a></span>
