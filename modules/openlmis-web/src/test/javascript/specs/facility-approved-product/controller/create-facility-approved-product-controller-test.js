@@ -313,6 +313,25 @@ describe("Create Facility Approved Product Controller", function () {
     expect(scope.modalError).toEqual(errorMessage);
   });
 
+  it("should not save facility type approved products if undefined", function () {
+    var httpBackendSpy = spyOn($httpBackend, 'expectPOST');
+    scope.addedFacilityTypeApprovedProducts = undefined;
+
+    scope.addFacilityTypeApprovedProducts();
+
+    expect(httpBackendSpy).not.toHaveBeenCalled();
+  });
+
+  it("should not save facility type approved products if empty", function () {
+    var httpBackendSpy = spyOn($httpBackend, 'expectPOST');
+    scope.addedFacilityTypeApprovedProducts = [];
+
+    scope.addFacilityTypeApprovedProducts();
+
+    expect(httpBackendSpy).not.toHaveBeenCalled();
+  });
+
+
   it("should cancel save action", function () {
 
     scope.cancelFacilityTypeApprovedProducts();

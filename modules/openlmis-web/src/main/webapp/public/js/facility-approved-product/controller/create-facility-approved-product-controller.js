@@ -112,7 +112,7 @@ function CreateFacilityApprovedProductController($scope, ProgramProductsFilter, 
   };
 
   $scope.addFacilityTypeApprovedProducts = function () {
-    if ($scope.addedFacilityTypeApprovedProducts.length > 0) {
+    if ($scope.addedFacilityTypeApprovedProducts && $scope.addedFacilityTypeApprovedProducts.length > 0) {
       FacilityTypeApprovedProducts.save({}, $scope.addedFacilityTypeApprovedProducts, function (data) {
         $scope.$parent.$parent.message = data.success;
         $scope.$parent.$parent.facilityApprovedProductsModal = false;
