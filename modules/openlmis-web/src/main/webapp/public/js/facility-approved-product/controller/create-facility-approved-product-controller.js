@@ -27,6 +27,7 @@ function CreateFacilityApprovedProductController($scope, ProgramProductsFilter, 
     $scope.productSelected = undefined;
     $scope.products = undefined;
     $scope.newFacilityTypeApprovedProduct = undefined;
+
   };
 
   var addAndRemoveFromProgramProductList = function (listToBeFiltered, listToBeAdded, value) {
@@ -114,10 +115,17 @@ function CreateFacilityApprovedProductController($scope, ProgramProductsFilter, 
   $scope.addFacilityTypeApprovedProducts = function () {
     FacilityTypeApprovedProducts.save({}, $scope.addedFacilityTypeApprovedProducts, function (data) {
       $scope.$parent.message = data.success;
-      $scope.$parent.facilityApprovedProductsModal = false;
+      $scope.$parent.$parent.facilityApprovedProductsModal = false;
+      $scope.$parent.loadProducts(1);
+      $scope.addedFacilityTypeApprovedProducts = [];
     }, function (data) {
       $scope.$parent.message = undefined;
       $scope.modalError = data.data.error;
     });
+  };
+
+  $scope.cancelFacilityTypeApprovedProducts = function () {
+    $scope.$parent.$parent.facilityApprovedProductsModal = false;
+    $scope.addedFacilityTypeApprovedProducts = [];
   };
 }
