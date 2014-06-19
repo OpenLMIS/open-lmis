@@ -95,7 +95,25 @@
 
       <hr/>
 
-      <div class="non-full-supply-product-list" ng-show="addedFacilityTypeApprovedProducts.length">
+      <div class="product-list" ng-show="addedFacilityTypeApprovedProducts.length">
+        <div class="row-fluid product-list-header">
+          <div class="span5 fluid-grid-cell">
+            <span openlmis-message="header.product.code"></span>&nbsp;|&nbsp;
+            <span openlmis-message="label.name"></span>
+          </div>
+          <div class="span2 fluid-grid-cell">
+            <label>
+              <span openlmis-message="header.max.months.of.stock"></span>
+              <span class="label-required">*</span>
+            </label>
+          </div>
+          <div class="span2 fluid-grid-cell">
+            <label openlmis-message="header.min.months.of.stock"></label>
+          </div>
+          <div class="span2 fluid-grid-cell">
+            <label openlmis-message="label.emergency.order.point"></label>
+          </div>
+        </div>
         <div class="row-fluid" ng-repeat="facilityTypeApprovedProduct in addedFacilityTypeApprovedProducts">
 
           <div class="span5">

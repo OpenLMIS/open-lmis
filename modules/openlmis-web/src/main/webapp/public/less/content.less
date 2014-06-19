@@ -297,7 +297,8 @@ span[class^="tpl-"] {
       position: relative;
       border: 1px solid #DDD;
       border-top: 0;
-      border-color: transparent #BBB #DDD;
+      border-color: transparent #BBB #DDD
+    ;
       background: #FCFCFC;
       font-size: 0.9em;
 
@@ -2031,7 +2032,7 @@ input[placeholder].placeholder {
   }
 }
 
-.non-full-supply-product-list {
+.product-list {
   max-height: 175px;
   overflow: auto;
   border: 1px solid #CCC;
@@ -2047,6 +2048,15 @@ input[placeholder].placeholder {
       font-size: 1.8em;
     }
   }
+}
+
+.product-list-header {
+  span, label {
+    margin-bottom: 0;
+    font-weight: bold;
+    line-height: 16px;
+  }
+  border-bottom: 1px solid #ccc !important;
 }
 
 .page-errors {
