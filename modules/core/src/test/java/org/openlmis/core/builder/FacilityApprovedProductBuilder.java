@@ -13,11 +13,7 @@ package org.openlmis.core.builder;
 import com.natpryce.makeiteasy.Instantiator;
 import com.natpryce.makeiteasy.Property;
 import com.natpryce.makeiteasy.PropertyLookup;
-import org.openlmis.core.domain.FacilityType;
-import org.openlmis.core.domain.FacilityTypeApprovedProduct;
-import org.openlmis.core.domain.Product;
-import org.openlmis.core.domain.Program;
-import org.openlmis.core.domain.ProgramProduct;
+import org.openlmis.core.domain.*;
 
 import static com.natpryce.makeiteasy.Property.newProperty;
 
@@ -27,13 +23,13 @@ public class FacilityApprovedProductBuilder {
   public static final Property<FacilityTypeApprovedProduct, Long> facilityTypeId = newProperty();
   public static final Property<FacilityTypeApprovedProduct, String> programCode = newProperty();
   public static final Property<FacilityTypeApprovedProduct, String> productCode = newProperty();
-  public static final Property<FacilityTypeApprovedProduct, Float> maxMonthsOfStock = newProperty();
+  public static final Property<FacilityTypeApprovedProduct, Double> maxMonthsOfStock = newProperty();
 
   public static final String defaultFacilityTypeCode = "code";
   public static final Long defaultFacilityTypeId = 1L;
   public static final String defaultProgramCode = "YELL_FVR";
   public static final String defaultProductCode = "P999";
-  public static final Float defaultMaxMonthsOfStock = 3.2f;
+  public static final Double defaultMaxMonthsOfStock = 3.2;
 
   public static final Instantiator<FacilityTypeApprovedProduct> defaultFacilityApprovedProduct = new Instantiator<FacilityTypeApprovedProduct>() {
 

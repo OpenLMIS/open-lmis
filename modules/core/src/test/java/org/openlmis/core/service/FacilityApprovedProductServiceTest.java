@@ -67,7 +67,8 @@ public class FacilityApprovedProductServiceTest {
     when(programService.getIdForCode(defaultProgramCode)).thenReturn(programId);
     when(productService.getIdForCode(defaultProductCode)).thenReturn(productId);
     when(programProductService.getIdByProgramIdAndProductId(programId, productId)).thenReturn(100L);
-    when(facilityService.getFacilityTypeByCode(facilityTypeApprovedProduct.getFacilityType())).thenReturn(new FacilityType());
+    when(facilityService.getFacilityTypeByCode(facilityTypeApprovedProduct.getFacilityType())).thenReturn(
+      new FacilityType());
 
     service.save(facilityTypeApprovedProduct);
 
@@ -141,10 +142,10 @@ public class FacilityApprovedProductServiceTest {
 
   @Test
   public void shouldSaveAll() throws Exception {
-    FacilityTypeApprovedProduct facilityTypeApprovedProduct1 = new FacilityTypeApprovedProduct("FT code 1", null, 2.3f);
+    FacilityTypeApprovedProduct facilityTypeApprovedProduct1 = new FacilityTypeApprovedProduct("FT code 1", null, 2.3);
 
 
-    FacilityTypeApprovedProduct facilityTypeApprovedProduct2 = new FacilityTypeApprovedProduct("FT code 2", null, 21.5f);
+    FacilityTypeApprovedProduct facilityTypeApprovedProduct2 = new FacilityTypeApprovedProduct("FT code 2", null, 21.5);
 
     FacilityApprovedProductService spyService = spy(service);
     doNothing().when(spyService).save(facilityTypeApprovedProduct1);

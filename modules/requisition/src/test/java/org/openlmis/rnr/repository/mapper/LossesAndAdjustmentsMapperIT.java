@@ -18,22 +18,8 @@ import org.openlmis.core.builder.FacilityBuilder;
 import org.openlmis.core.builder.ProcessingScheduleBuilder;
 import org.openlmis.core.builder.ProductBuilder;
 import org.openlmis.core.builder.ProgramBuilder;
-import org.openlmis.core.domain.Facility;
-import org.openlmis.core.domain.FacilityTypeApprovedProduct;
-import org.openlmis.core.domain.Money;
-import org.openlmis.core.domain.ProcessingPeriod;
-import org.openlmis.core.domain.ProcessingSchedule;
-import org.openlmis.core.domain.Product;
-import org.openlmis.core.domain.ProductCategory;
-import org.openlmis.core.domain.Program;
-import org.openlmis.core.domain.ProgramProduct;
-import org.openlmis.core.repository.mapper.FacilityMapper;
-import org.openlmis.core.repository.mapper.ProcessingPeriodMapper;
-import org.openlmis.core.repository.mapper.ProcessingScheduleMapper;
-import org.openlmis.core.repository.mapper.ProductCategoryMapper;
-import org.openlmis.core.repository.mapper.ProductMapper;
-import org.openlmis.core.repository.mapper.ProgramMapper;
-import org.openlmis.core.repository.mapper.ProgramProductMapper;
+import org.openlmis.core.domain.*;
+import org.openlmis.core.repository.mapper.*;
 import org.openlmis.db.categories.IntegrationTests;
 import org.openlmis.rnr.domain.LossesAndAdjustments;
 import org.openlmis.rnr.domain.LossesAndAdjustmentsType;
@@ -103,7 +89,8 @@ public class LossesAndAdjustmentsMapperIT {
     programProduct.setProductCategory(category);
     programProductMapper.insert(programProduct);
 
-    FacilityTypeApprovedProduct facilityTypeApprovedProduct = new FacilityTypeApprovedProduct("warehouse", programProduct, 3.3f);
+    FacilityTypeApprovedProduct facilityTypeApprovedProduct = new FacilityTypeApprovedProduct("warehouse",
+      programProduct, 3.3);
     Facility facility = make(a(FacilityBuilder.defaultFacility));
     facilityMapper.insert(facility);
 
@@ -130,7 +117,8 @@ public class LossesAndAdjustmentsMapperIT {
   public void shouldInsertLossesAndAdjustments() {
     lossesAndAdjustmentsMapper.insert(rnrLineItem, lossAndAdjustment);
 
-    List<LossesAndAdjustments> lossesAndAdjustmentsList = lossesAndAdjustmentsMapper.getByRnrLineItem(rnrLineItem.getId());
+    List<LossesAndAdjustments> lossesAndAdjustmentsList = lossesAndAdjustmentsMapper.getByRnrLineItem(
+      rnrLineItem.getId());
     LossesAndAdjustments lineItemLossAndAdjustment = lossesAndAdjustmentsList.get(0);
 
     assertThat(lossesAndAdjustmentsList.size(), is(1));

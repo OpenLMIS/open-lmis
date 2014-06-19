@@ -91,7 +91,7 @@ public class RnrLineItemBuilder {
       rnrLineItem.setQuantityDispensed(lookup.valueOf(quantityDispensed, DEFAULT_QUANTITY_DISPENSED));
 
       rnrLineItem.setDispensingUnit("tablet");
-      rnrLineItem.setMaxMonthsOfStock(1.2f);
+      rnrLineItem.setMaxMonthsOfStock(1.2);
       rnrLineItem.setPrice(new Money("2"));
       rnrLineItem.setQuantityApproved(lookup.valueOf(quantityApproved, QUANTITY_APPROVED));
 
@@ -102,7 +102,7 @@ public class RnrLineItemBuilder {
       rnrLineItem.setDosesPerDispensingUnit(10);
       rnrLineItem.setNormalizedConsumption(37);
       rnrLineItem.setAmc(37);
-      rnrLineItem.setMaxMonthsOfStock(2.3f);
+      rnrLineItem.setMaxMonthsOfStock(2.3);
       rnrLineItem.setMaxStockQuantity(74);
       rnrLineItem.setCalculatedOrderQuantity(70);
       rnrLineItem.setPackSize(lookup.valueOf(packSize, 6));
@@ -111,10 +111,12 @@ public class RnrLineItemBuilder {
       rnrLineItem.setRoundToZero(lookup.valueOf(roundToZero, ROUND_To_ZERO));
       rnrLineItem.setPrice(new Money("4"));
       rnrLineItem.setQuantityRequested(lookup.valueOf(quantityRequested, QUANTITY_REQUESTED));
-      rnrLineItem.setReasonForRequestedQuantity(lookup.valueOf(reasonForRequestedQuantity, REASON_FOR_REQUESTED_QUANTITY));
+      rnrLineItem.setReasonForRequestedQuantity(
+        lookup.valueOf(reasonForRequestedQuantity, REASON_FOR_REQUESTED_QUANTITY));
       rnrLineItem.setPacksToShip(lookup.valueOf(packsToShip, PACKS_TO_SHIP));
       rnrLineItem.setRemarks(lookup.valueOf(remarks, REMARKS));
-      rnrLineItem.setProductCategoryDisplayOrder(lookup.valueOf(productCategoryDisplayOrder, PRODUCT_CATEGORY_DISPLAY_ORDER));
+      rnrLineItem.setProductCategoryDisplayOrder(
+        lookup.valueOf(productCategoryDisplayOrder, PRODUCT_CATEGORY_DISPLAY_ORDER));
       rnrLineItem.setProductDisplayOrder(lookup.valueOf(productDisplayOrder, PRODUCT_DISPLAY_ORDER));
       rnrLineItem.setSkipped(lookup.valueOf(skipped, SKIPPED));
       return rnrLineItem;
