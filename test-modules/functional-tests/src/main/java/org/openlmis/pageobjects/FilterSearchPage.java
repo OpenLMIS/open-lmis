@@ -19,6 +19,7 @@ import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 
 import java.util.NoSuchElementException;
 
+import static org.openqa.selenium.By.cssSelector;
 import static org.openqa.selenium.support.How.ID;
 
 public class FilterSearchPage extends Page {
@@ -88,9 +89,6 @@ public class FilterSearchPage extends Page {
 
   @FindBy(how = ID, using = "tooManyGeoZoneResults")
   private static WebElement tooManyGeoZoneResultsMessage = null;
-
-  @FindBy(how = ID, using = "searchFacility")
-  private static WebElement searchFacility = null;
 
   @FindBy(how = ID, using = "searchFacilityIcon")
   private static WebElement searchFacilityIcon = null;
@@ -293,20 +291,15 @@ public class FilterSearchPage extends Page {
   }
 
   public String getSearchFacilityText() {
-    testWebDriver.waitForElementToAppear(searchFacility);
-    return searchFacility.getText();
+    WebElement facilitySearch = testWebDriver.findElement(cssSelector("input[ng-model='multipleFacilitiesSearchParam']"));
+    testWebDriver.waitForElementToAppear(facilitySearch);
+    return facilitySearch.getText();
   }
 
   public void selectFacility(int rowNumber) {
     WebElement facilityResult = testWebDriver.getElementById("facilityResult" + (rowNumber - 1));
     testWebDriver.waitForElementToAppear(facilityResult);
     facilityResult.click();
-  }
-
-  public void searchFacility(String facilityCodeOrName) {
-    testWebDriver.waitForElementToAppear(searchFacility);
-    sendKeys(searchFacility, facilityCodeOrName);
-    searchFacilityIcon.click();
   }
 
   public boolean isSearchFacilityIconDisplayed() {
@@ -320,13 +313,17 @@ public class FilterSearchPage extends Page {
     return searchFacilityIcon.isDisplayed();
   }
 
-  public void enterSearchFacilityParameter(String facilityCode) {
-    testWebDriver.waitForElementToAppear(searchFacility);
-    sendKeys(searchFacility, facilityCode);
+  public void enterSearchMultipleFacilitiesParameter(String facilityCode) {
+    WebElement multipleFacilitiesSearch = testWebDriver.findElement(cssSelector("input[ng-model='multipleFacilitiesSearchParam']"));
+    testWebDriver.waitForElementToAppear(multipleFacilitiesSearch);
+    sendKeys(multipleFacilitiesSearch, facilityCode);
+    searchFacilityIcon.click();
   }
 
-  public void clickSearchFacilityIcon() {
-    testWebDriver.waitForElementToAppear(searchFacilityIcon);
+  public void enterSearchFacilityParameter(String facilityCode) {
+    WebElement facilitySearch = testWebDriver.findElement(cssSelector("input[ng-model='facilitySearchParam']"));
+    testWebDriver.waitForElementToAppear(facilitySearch);
+    sendKeys(facilitySearch, facilityCode);
     searchFacilityIcon.click();
   }
 }
