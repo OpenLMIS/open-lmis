@@ -13,10 +13,12 @@ function OrderFillRateController($scope, $window,OrderFillRateReport) {
 
     $scope.OnFilterChanged = function(){
         // clear old data if there was any
-        $scope.data = $scope.datarows = [];
+        $scope.data = $scope.datarows = $scope.summaries=[];
         OrderFillRateReport.get($scope.filter, function (data) {
             if (data.pages !== undefined && data.pages.rows !== undefined) {
-                $scope.data = data.pages.rows;
+                $scope.summaries    =  data.pages.rows[0].summary;
+                $scope.data = data.pages.rows[0].details;
+               // $scope.data = data.pages.rows;
                 $scope.paramsChanged($scope.tableParams);
             }
         });

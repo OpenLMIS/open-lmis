@@ -63,7 +63,7 @@
                                 <th style="font-size:12px">No. of Patients To <br> Initiate Treatment</th>
 
                                 <th style="font-size:12px">No. of Patients <br>Stopped Treatment</th>
-                                <th style="font-size:12px">% of Total</th>
+
                             </tr>
                             </thead>
                             <tbody>
@@ -85,10 +85,7 @@
                                     sortable="patientsstoppedtreatment">{{ row.patientsstoppedtreatment | number}}
                                 </td>
 
-                                <td class="number" style="width:20px;text-align:center"
-                                    sortable="totalOnTreatmentPercentage ">{{ row.totalOnTreatmentPercentage | number
-                                    }}%
-                                </td>
+
                             </tr>
                             </tbody>
                         </table>

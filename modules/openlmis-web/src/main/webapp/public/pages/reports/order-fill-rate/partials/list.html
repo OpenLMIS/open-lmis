@@ -57,13 +57,18 @@
                         </tr>
                     </table>
 
-                    <div ng-show="datarows.length > 0">
-                       <div class="pull-left legend" >Order Fill Rate: {{orderFillRate}}</div> <div class="pull-right legend" >Page: {{tableParams.page}}, Showing records {{ ((tableParams.page - 1) * tableParams.count) + 1 }} to {{ (tableParams.page ) * tableParams.count }} of {{tableParams.total}} </div>
+                    <div ng-show="datarows.length>0">
+                       <div></div>
+                       <div class="pull-left legend" style="height: 30px; text-align:justify; font-weight: bold;font-size: 20px; vertical-align: bottom;" ng-repeat="summary in summaries" ng-show="summaries.length > 0"> Order Fill Rate:{{summary.order_FILL_RATE}}% </div>
+
+                        <div class="pull-right legend"  >Page: {{tableParams.page}}, Showing records {{ ((tableParams.page - 1) * tableParams.count) + 1 }} to {{ (tableParams.page ) * tableParams.count }} of {{tableParams.total}} </div>
+
                         <table ng-show="datarows.length > 0" class="table-bordered table table-striped pull-right" ng-table="tableParams">
                             <tbody>
                             <tr ng-repeat="row in datarows">
+
                                 <td data-title="'#'" class="number" style="width:20px" >{{ row.no }}</td>
-                                <td data-title="'Facility Name'" style="width:80px" sortable="facility" >{{ row.facility }}</td>
+                                <td data-title="'Facility Name'" style="width:25%" sortable="facility" >{{ row.facility }}</td>
                                 <td data-title="'Product Code'" style="width:80px" sortable="productcode" >{{ row.productcode }}</td>
                                 <td data-title="'Product Name'" style="width:30%" sortable="product"  >{{ row.product }}</td>
                                 <td data-title="'Quantity Ordered'" class="number" style="width:80px" sortable="approved"  >{{ row.approved | number }}</td>
