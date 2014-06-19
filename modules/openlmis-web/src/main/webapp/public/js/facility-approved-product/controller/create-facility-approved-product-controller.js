@@ -129,5 +129,5 @@ function CreateFacilityApprovedProductController($scope, ProgramProductsFilter, 
     $scope.addedFacilityTypeApprovedProducts = [];
     $scope.$parent.$parent.message = undefined;
     clearFacilityApprovedProductModalData();
-  }
+  };
 }
