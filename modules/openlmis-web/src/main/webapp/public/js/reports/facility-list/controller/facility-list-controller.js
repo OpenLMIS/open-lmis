@@ -8,7 +8,7 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-function ListFacilitiesController($scope,$filter, FacilityList, ReportFacilityTypes, GeographicZones, RequisitionGroups, $http, $routeParams, $location) {
+function ListFacilitiesController($scope, FacilityList) {
 
 
     $scope.OnFilterChanged = function(){
@@ -27,8 +27,15 @@ function ListFacilitiesController($scope,$filter, FacilityList, ReportFacilityTy
 
 
     $scope.exportReport   = function (type){
-        var url = '/reports/download/facilities/' + type +'?zoneId=' +  $scope.filterObject.zoneId + '&facilityTypeId=' +  $scope.filterObject.facilityTypeId + '&status=' +  $scope.filterObject.statusId;
-        window.open(url);
+
+      var params = jQuery.param($scope.filter);
+
+      var url = '/reports/download/mailinglabels/' + type +'?' + params ;
+      if(type == "mailing-list"){
+        url = '/reports/download/mailinglabels/list/' + "pdf" +'?' + params ;
+      }
+
+      window.open(url);
     };
 
 

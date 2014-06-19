@@ -13,8 +13,10 @@ package org.openlmis.report.service;
 import lombok.NoArgsConstructor;
 import org.apache.ibatis.session.RowBounds;
 import org.openlmis.core.domain.Facility;
+import org.openlmis.core.repository.mapper.GeographicZoneMapper;
 import org.openlmis.core.service.FacilityService;
 import org.openlmis.report.mapper.MailingLabelReportMapper;
+import org.openlmis.report.mapper.lookup.FacilityTypeReportMapper;
 import org.openlmis.report.model.params.MailingLabelReportParam;
 import org.openlmis.report.model.report.MailingLabelReport;
 import org.openlmis.report.model.ReportData;
@@ -36,6 +38,13 @@ public class MailingLabelReportDataProvider extends ReportDataProvider {
 
   @Autowired
   private MailingLabelReportMapper mailingLabelReportMapper;
+
+  @Autowired
+  private FacilityTypeReportMapper facilityTypeMapper;
+
+  @Autowired
+  private GeographicZoneMapper geographicZoneMapper;
+
 
   private MailingLabelReportParam mailingLabelReportParam = null;
 
@@ -83,8 +92,18 @@ public class MailingLabelReportDataProvider extends ReportDataProvider {
   public MailingLabelReportParam getReportFilterData(Map<String, String[]> filterCriteria) {
     if (filterCriteria != null) {
       mailingLabelReportParam = new MailingLabelReportParam();
-      mailingLabelReportParam.setFacilityTypeId((StringHelper.isBlank(filterCriteria,"facilityTypeId") ? 0 : Integer.parseInt(filterCriteria.get("facilityTypeId")[0])));
-      mailingLabelReportParam.setRgroupId((StringHelper.isBlank(filterCriteria,"rgroupId") ? 0 : Integer.parseInt(filterCriteria.get("rgroupId")[0])));
+      mailingLabelReportParam.setFacilityType((StringHelper.isBlank(filterCriteria, "facilityType") ? 0 : Long.parseLong(filterCriteria.get("facilityType")[0])));
+      mailingLabelReportParam.setZone((StringHelper.isBlank(filterCriteria, "zone") ? 0 : Long.parseLong(filterCriteria.get("zone")[0])));
+      mailingLabelReportParam.setStatus((StringHelper.isBlank(filterCriteria, "status") ? null : Boolean.parseBoolean(filterCriteria.get("status")[0])));
+
+      String header = "Geographic Zone: National";
+      if(mailingLabelReportParam.getZone() != 0){
+        header = "Geographic Zone: " + geographicZoneMapper.getWithParentById(mailingLabelReportParam.getZone()).getName();
+      }
+      if(mailingLabelReportParam.getFacilityType() != 0){
+        header = header + "\nFacility Type: " + facilityTypeMapper.getById(mailingLabelReportParam.getFacilityType()).getName();
+      }
+      mailingLabelReportParam.setHeader(header);
     }
     return mailingLabelReportParam;
   }
