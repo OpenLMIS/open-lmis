@@ -10,21 +10,21 @@
 
 function ListFacilitiesController($scope, FacilityList) {
 
-
     $scope.OnFilterChanged = function(){
         FacilityList.get($scope.filter, function(data) {
             $scope.data = data.pages.rows;
             $scope.paramsChanged($scope.tableParams);
         });
-    }
-
+    };
 
     $scope.statuses = [
-        {'name': 'All Statuses'},
+        {'name': 'All', value: ''},
         {'name': 'Active', 'value': "TRUE"},
         {'name': 'Inactive', 'value': "FALSE"}
     ];
 
+    // default to all status
+    $scope.filter.status = '';
 
     $scope.exportReport   = function (type){
 

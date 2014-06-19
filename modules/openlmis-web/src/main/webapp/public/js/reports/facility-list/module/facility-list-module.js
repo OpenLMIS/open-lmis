@@ -17,4 +17,4 @@ angular.module('facilitylist', ['openlmis' , 'angularCombine', 'ngTable', 'ui.bo
         AuthorizationService.preAuthorize('VIEW_FACILITY_REPORT');
     }).config(function(angularCombineConfigProvider) {
     angularCombineConfigProvider.addConf(/filter-/, '/public/pages/reports/shared/filters.html');
-  });;
+  });
