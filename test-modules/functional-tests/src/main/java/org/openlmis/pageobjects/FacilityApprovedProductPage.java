@@ -99,23 +99,57 @@ public class FacilityApprovedProductPage extends Page {
   @FindBy(how = ID, using = "searchIcon")
   private static WebElement searchIcon = null;
 
-  @FindBy(how = ID, using = "saveButton")
-  private static WebElement saveButton = null;
-
-  @FindBy(how = ID, using = "saveErrorMsgDiv")
-  private static WebElement saveErrorMsg = null;
-
-  @FindBy(how = ID, using = "cancelButton")
-  private static WebElement cancelButton = null;
-
-  @FindBy(how = ID, using = "successMessage")
-  private static WebElement successMessage = null;
-
-  @FindBy(how = ID, using = "viewHereLink")
-  private static WebElement viewHereLink = null;
-
   @FindBy(how = ID, using = "clearProductSearch")
   private static WebElement clearProductSearchButton = null;
+
+
+  @FindBy(how = ID, using = "addFacilityApprovedProductHeader")
+  private static WebElement addFacilityApprovedProductHeader = null;
+
+  @FindBy(how = ID, using = "categoryLabel")
+  private static WebElement categoryLabel = null;
+
+  @FindBy(how = ID, using = "productLabel")
+  private static WebElement productLabel = null;
+
+  @FindBy(how = ID, using = "maxMonthsOfStockLabel")
+  private static WebElement maxMonthsOfStockLabel = null;
+
+  @FindBy(how = ID, using = "minMonthsOfStockLabel")
+  private static WebElement minMonthsOfStockLabel = null;
+
+  @FindBy(how = ID, using = "eopLabel")
+  private static WebElement eopLabel = null;
+
+  @FindBy(how = ID, using = "s2id_productCategory")
+  private static WebElement productCategoryDropDown = null;
+
+  @FindBy(how = ID, using = "s2id_product")
+  private static WebElement productDropDown = null;
+
+  @FindBy(how = ID, using = "facilityTypeApprovedProduct.maxMonthsOfStock")
+  private static WebElement maxMonthsOfStock = null;
+
+  @FindBy(how = ID, using = "facilityTypeApprovedProduct.minMonthsOfStock")
+  private static WebElement minMonthsOfStock = null;
+
+  @FindBy(how = ID, using = "facilityTypeApprovedProduct.eop")
+  private static WebElement eop = null;
+
+  @FindBy(how = ID, using = "addFacilityTypeApprovedProduct")
+  private static WebElement addFacilityTypeApprovedProductButton = null;
+
+  @FindBy(how = ID, using = "doneFacilityApprovedProductAdd")
+  private static WebElement doneFacilityApprovedProductAdd = null;
+
+  @FindBy(how = ID, using = "cancelFacilityApprovedProductAdd")
+  private static WebElement cancelFacilityApprovedProductAdd = null;
+
+  @FindBy(how = ID, using = "saveSuccessMsgDiv")
+  private static WebElement saveSuccessMsg = null;
+
+  @FindBy(how = ID, using = "modalErrorMessage")
+  private static WebElement addModalErrorMessage = null;
 
   public FacilityApprovedProductPage(TestWebDriver driver) {
     super(driver);
@@ -418,38 +452,8 @@ public class FacilityApprovedProductPage extends Page {
     return searchIcon.isDisplayed();
   }
 
-  public void clickSaveButton() {
-    testWebDriver.waitForElementToAppear(saveButton);
-    saveButton.click();
-  }
-
-  public void clickCancelButton() {
-    testWebDriver.waitForElementToAppear(cancelButton);
-    cancelButton.click();
-  }
-
-  public String getSaveErrorMessage() {
-    testWebDriver.waitForElementToAppear(saveErrorMsg);
-    return saveErrorMsg.getText();
-  }
-
-  public String getSuccessMessage() {
-    testWebDriver.waitForElementToAppear(successMessage);
-    return successMessage.getText();
-  }
-
-  public void clickViewHereLink() {
-    testWebDriver.waitForElementToAppear(viewHereLink);
-    viewHereLink.click();
-  }
-
   public int getSizeOfResultsTable() {
     return testWebDriver.getElementsSizeByXpath("//*[@id='facilityApprovedProductTable']/tbody");
-  }
-
-  public List<String> getListOfPrograms() {
-    testWebDriver.waitForElementToAppear(programDropDown);
-    return testWebDriver.getListOfOptions(programDropDown);
   }
 
   public List<String> getListOfFacilityTypes() {
@@ -470,5 +474,131 @@ public class FacilityApprovedProductPage extends Page {
   public String getCategory(int rowNumber) {
     WebElement category = testWebDriver.getElementById("category" + (rowNumber - 1));
     return category.getText();
+  }
+
+
+  public String getAddFacilityApprovedProductHeader() {
+    testWebDriver.waitForElementToAppear(addFacilityApprovedProductHeader);
+    return addFacilityApprovedProductHeader.getText();
+  }
+
+  public String getAddCategoryLabel() {
+    testWebDriver.waitForElementToAppear(categoryLabel);
+    return categoryLabel.getText();
+  }
+
+  public String getAddProductLabel() {
+    testWebDriver.waitForElementToAppear(productLabel);
+    return productLabel.getText();
+  }
+
+  public String getAddMaxMonthsOfStockLabel() {
+    testWebDriver.waitForElementToAppear(maxMonthsOfStockLabel);
+    return maxMonthsOfStockLabel.getText();
+  }
+
+  public String getAddMinMonthsOfStockLabel() {
+    testWebDriver.waitForElementToAppear(minMonthsOfStockLabel);
+    return minMonthsOfStockLabel.getText();
+  }
+
+  public String getAddEopLabel() {
+    testWebDriver.waitForElementToAppear(eopLabel);
+    return eopLabel.getText();
+  }
+
+  public List<String> getListOfCategories() {
+    testWebDriver.waitForElementToAppear(productCategoryDropDown);
+    return testWebDriver.getListOfOptions(productCategoryDropDown);
+  }
+
+  public List<String> getListOfProducts() {
+    testWebDriver.waitForElementToAppear(productDropDown);
+    return testWebDriver.getListOfOptionGroupsWithOptions(productDropDown);
+  }
+
+  public void selectCategory(String category) {
+    testWebDriver.waitForElementToAppear(productCategoryDropDown);
+    testWebDriver.selectByVisibleText(productCategoryDropDown, category);
+  }
+
+  public void selectProduct(String product) {
+    testWebDriver.waitForElementToAppear(productDropDown);
+    testWebDriver.selectByVisibleText(productDropDown, product);
+  }
+
+  public void enterMaxMonthsOfStock(String maxMonthsInput) {
+    testWebDriver.waitForElementToAppear(maxMonthsOfStock);
+    sendKeys(maxMonthsOfStock, maxMonthsInput);
+  }
+
+  public void enterMinMonthsOfStock(String minMonthsInput) {
+    testWebDriver.waitForElementToAppear(minMonthsOfStock);
+    sendKeys(minMonthsOfStock, minMonthsInput);
+  }
+
+  public void enterEop(String eopInput) {
+    testWebDriver.waitForElementToAppear(eop);
+    sendKeys(eop, eopInput);
+  }
+
+  public String getAddedFacilityTypeApprovedProductNameLabel(int rowNumber) {
+    WebElement productName = testWebDriver.getElementById("facilityTypeApprovedProductNameLabel" + (rowNumber - 1));
+    testWebDriver.waitForElementToAppear(productName);
+    return productName.getText();
+  }
+
+  public String getAddedMaxMonthsOfStock(int rowNumber) {
+    WebElement maxMonthsOfStock = testWebDriver.getElementById("facilityTypeApprovedProduct.maxMonthsOfStock" + (rowNumber - 1));
+    testWebDriver.waitForElementToAppear(maxMonthsOfStock);
+    return maxMonthsOfStock.getText();
+  }
+
+  public String getAddedMinMonthsOfStock(int rowNumber) {
+    WebElement minMonthsOfStock = testWebDriver.getElementById("facilityTypeApprovedProduct.minMonthsOfStock" + (rowNumber - 1));
+    testWebDriver.waitForElementToAppear(minMonthsOfStock);
+    return minMonthsOfStock.getText();
+  }
+
+  public String getAddedEop(int rowNumber) {
+    WebElement eop = testWebDriver.getElementById("facilityTypeApprovedProduct.eop" + (rowNumber - 1));
+    testWebDriver.waitForElementToAppear(eop);
+    return eop.getText();
+  }
+
+  public void clickCrossButtonForAddedRow(int rowNumber) {
+    WebElement crossButton = testWebDriver.getElementById("crossButton" + (rowNumber - 1));
+    testWebDriver.waitForElementToAppear(crossButton);
+    crossButton.click();
+  }
+
+  public void clickAddProductButton() {
+    testWebDriver.waitForElementToAppear(addFacilityTypeApprovedProductButton);
+    addFacilityTypeApprovedProductButton.click();
+  }
+
+  public boolean isAddProductButtonEnabled() {
+    testWebDriver.waitForElementToAppear(addFacilityTypeApprovedProductButton);
+    return addFacilityTypeApprovedProductButton.isEnabled();
+  }
+
+  public void clickAddDoneButton() {
+    testWebDriver.waitForElementToAppear(doneFacilityApprovedProductAdd);
+    doneFacilityApprovedProductAdd.click();
+  }
+
+  public void clickAddCancelButton() {
+    testWebDriver.waitForElementToAppear(cancelFacilityApprovedProductAdd);
+    cancelFacilityApprovedProductAdd.click();
+  }
+
+  public String getAddModalErrorMessage() {
+    testWebDriver.waitForElementToAppear(addModalErrorMessage);
+    return addModalErrorMessage.getText();
+  }
+
+  public String getSaveSuccessMessage() {
+    testWebDriver.waitForElementToAppear(saveSuccessMsg);
+    return saveSuccessMsg.getText();
   }
 }

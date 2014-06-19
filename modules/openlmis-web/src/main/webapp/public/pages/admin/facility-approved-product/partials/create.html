@@ -11,11 +11,14 @@
   <div id="facilityApprovedProductsModal" modal="facilityApprovedProductsModal"
        options="{ backdrop: 'static', escape: false}">
     <div class="modal-header">
-      <h3 openlmis-message="label.add.facility.approved.products|program.name|facilityType.name"></h3>
+      <h3 id="addFacilityApprovedProductHeader"
+          openlmis-message="label.add.facility.approved.products|program.name|facilityType.name"></h3>
     </div>
 
     <div class="modal-body">
       <div class="row-fluid">
+        <div class="span7">
+          <label id="categoryLabel" for="productCategory" openlmis-message="label.category"></label>
         <div class="span11">
           <label for="productCategory" openlmis-message="label.category"></label>
           <select ui-select2 class="span11 bottom-spacer" id="productCategory"
@@ -30,7 +33,7 @@
 
       <div class="row-fluid">
         <div class="span11">
-          <label for="product" openlmis-message="label.product.code"></label>
+          <label id="productLabel" for="product" openlmis-message="label.product.code"></label>
           <select ui-select2="{formatResult: formatResult, formatSelection: formatSelection}"
                   class="span11 bottom-spacer"
                   id="product"
@@ -49,8 +52,8 @@
 
       <div class="row-fluid">
         <div class="span3">
-          <label for="facilityTypeApprovedProduct.maxMonthsOfStock">
-            <span openlmis-message="header.max.months.of.stock"></span>
+          <label id="maxMonthsOfStockLabel" for="facilityTypeApprovedProduct.maxMonthsOfStock">
+          <span openlmis-message="header.max.months.of.stock"></span>
             <span class="label-required">*</span>
           </label>
           <input type="text" class="span12 right-justified" name="maxMonthsOfStock"
@@ -63,7 +66,7 @@
         </div>
 
         <div class="span3">
-          <label for="facilityTypeApprovedProduct.minMonthsOfStock"
+          <label id="minMonthsOfStockLabel" for="facilityTypeApprovedProduct.minMonthsOfStock"
                  openlmis-message="header.min.months.of.stock"></label>
           <input type="text" class="span12 right-justified" name="minMonthsOfStock"
                  ng-model="newFacilityTypeApprovedProduct.minMonthsOfStock"
@@ -75,7 +78,8 @@
         </div>
 
         <div class="span3">
-          <label for="facilityTypeApprovedProduct.eop" openlmis-message="label.emergency.order.point"></label>
+          <label id="eopLabel" for="facilityTypeApprovedProduct.eop"
+                 openlmis-message="label.emergency.order.point"></label>
           <input type="text" class="span12 right-justified" name="emergencyOrderPoint"
                  ng-model="newFacilityTypeApprovedProduct.eop"
                  id="facilityTypeApprovedProduct.eop"
@@ -184,11 +188,11 @@
     <div class="alert alert-danger" id="modalErrorMessage" ng-show="modalError" openlmis-message="modalError"></div>
 
     <div class="modal-footer">
-      <input type="button" id="doneNonFullSupply" class="btn btn-primary"
+      <input type="button" id="doneFacilityApprovedProductAdd" class="btn btn-primary"
              ng-click="addFacilityTypeApprovedProducts()"
              openlmis-message="button.done"/>
 
-      <input type="button" id="cancelNonFullSupply" class="btn btn-cancel"
+      <input type="button" id="cancelFacilityApprovedProductAdd" class="btn btn-cancel"
              ng-click="cancelFacilityTypeApprovedProducts();modalError=''"
              openlmis-message="button.cancel"/>
     </div>
