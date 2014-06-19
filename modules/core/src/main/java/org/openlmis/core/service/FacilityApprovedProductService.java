@@ -12,7 +12,6 @@ package org.openlmis.core.service;
 
 import lombok.NoArgsConstructor;
 import org.apache.commons.collections.Closure;
-import org.apache.commons.collections.CollectionUtils;
 import org.openlmis.core.domain.FacilityType;
 import org.openlmis.core.domain.FacilityTypeApprovedProduct;
 import org.openlmis.core.domain.Pagination;
@@ -22,6 +21,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+
+import static org.apache.commons.collections.CollectionUtils.forAllDo;
 
 /**
  * Exposes the services for handling FacilityApprovedProduct entity.
@@ -93,7 +94,7 @@ public class FacilityApprovedProductService {
   }
 
   public void saveAll(List<FacilityTypeApprovedProduct> facilityTypeApprovedProducts, final Long userId) {
-    CollectionUtils.forAllDo(facilityTypeApprovedProducts, new Closure() {
+    forAllDo(facilityTypeApprovedProducts, new Closure() {
       @Override
       public void execute(Object o) {
         FacilityTypeApprovedProduct facilityTypeApprovedProduct = (FacilityTypeApprovedProduct) o;

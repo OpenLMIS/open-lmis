@@ -1,4 +1,4 @@
-function CreateFacilityApprovedProductController($scope, ProgramProductsFilter, messageService) {
+function CreateFacilityApprovedProductController($scope, ProgramProductsFilter, FacilityTypeApprovedProducts, messageService) {
   $scope.addedFacilityTypeApprovedProducts = [];
   $scope.selectedProgramProductList = [];
 
@@ -14,11 +14,11 @@ function CreateFacilityApprovedProductController($scope, ProgramProductsFilter, 
 
   var fillFacilityTypeApprovedProduct = function (selectedProduct) {
     return {
-      facilityType: $scope.$parent.facilityType,
-      programProduct: {program: $scope.$parent.program, product: selectedProduct},
-      maxMonthsOfStock: $scope.newFacilityTypeApprovedProduct.maxMonthsOfStock,
-      minMonthsOfStock: $scope.newFacilityTypeApprovedProduct.minMonthsOfStock,
-      eop: $scope.newFacilityTypeApprovedProduct.eop
+      "facilityType": $scope.$parent.facilityType,
+      "programProduct": {"program": $scope.$parent.program, "product": selectedProduct},
+      "maxMonthsOfStock": $scope.newFacilityTypeApprovedProduct.maxMonthsOfStock,
+      "minMonthsOfStock": $scope.newFacilityTypeApprovedProduct.minMonthsOfStock,
+      "eop": $scope.newFacilityTypeApprovedProduct.eop
     };
   };
 
@@ -112,5 +112,12 @@ function CreateFacilityApprovedProductController($scope, ProgramProductsFilter, 
   };
 
   $scope.addFacilityTypeApprovedProducts = function () {
+    FacilityTypeApprovedProducts.save({}, $scope.addedFacilityTypeApprovedProducts, function (data) {
+      $scope.$parent.message = data.success;
+      $scope.$parent.facilityApprovedProductsModal = false;
+    }, function (data) {
+      $scope.$parent.message = undefined;
+      $scope.modalError = data.data.error;
+    });
   };
 }

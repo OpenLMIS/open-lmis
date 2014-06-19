@@ -15,6 +15,7 @@ import org.openlmis.core.domain.FacilityTypeApprovedProduct;
 import org.openlmis.core.domain.Pagination;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.FacilityApprovedProductService;
+import org.openlmis.web.form.FacilityTypeApprovedProductList;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -76,7 +77,7 @@ public class FacilityApprovedProductController extends BaseController {
 
   @RequestMapping(method = POST, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_FACILITY_APPROVED_PRODUCT')")
-  public ResponseEntity<OpenLmisResponse> save(@RequestBody List<FacilityTypeApprovedProduct> facilityTypeApprovedProducts, HttpServletRequest request) {
+  public ResponseEntity<OpenLmisResponse> save(@RequestBody FacilityTypeApprovedProductList facilityTypeApprovedProducts, HttpServletRequest request) {
     try {
       service.saveAll(facilityTypeApprovedProducts, loggedInUserId(request));
     } catch (DataException e) {

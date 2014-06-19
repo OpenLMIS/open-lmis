@@ -220,7 +220,6 @@ describe("Create Facility Approved Product Controller", function () {
     });
   });
 
-
   describe("Add facility approved products button", function () {
 
     it("should enable when required fields are present", function () {
@@ -262,5 +261,30 @@ describe("Create Facility Approved Product Controller", function () {
 
       expect(scope.isAddDisabled()).toBeTruthy();
     });
+  });
+
+  it("should save facility type approved products", function () {
+    var successMessage = "Saved successfully";
+    $httpBackend.when("POST", '/facilityApprovedProducts.json').respond(200, {"success": successMessage});
+
+    scope.addFacilityTypeApprovedProducts();
+
+    $httpBackend.flush();
+
+    expect(scope.$parent.message).toEqual(successMessage);
+    expect(scope.$parent.facilityApprovedProductsModal).toBeFalsy();
+
+  });
+
+  it("should set error message when error returned", function () {
+    var errorMessage = "An error occurred. Please contact system administrator.";
+    $httpBackend.when("POST", '/facilityApprovedProducts.json').respond(404, {"error": errorMessage});
+
+    scope.addFacilityTypeApprovedProducts();
+
+    $httpBackend.flush();
+
+    expect(scope.$parent.message).toBeUndefined();
+    expect(scope.modalError).toEqual(errorMessage);
   });
 });

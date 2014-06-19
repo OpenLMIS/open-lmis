@@ -22,6 +22,7 @@ import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.FacilityApprovedProductService;
 import org.openlmis.core.service.MessageService;
 import org.openlmis.db.categories.UnitTests;
+import org.openlmis.web.form.FacilityTypeApprovedProductList;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
@@ -29,10 +30,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpServletRequest;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import static java.lang.Integer.parseInt;
-import static java.util.Arrays.asList;
 import static java.util.Collections.EMPTY_LIST;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -104,7 +103,7 @@ public class FacilityApprovedProductControllerTest {
 
   @Test
   public void shouldSave() {
-    List<FacilityTypeApprovedProduct> facilityTypeApprovedProducts = asList(new FacilityTypeApprovedProduct());
+    FacilityTypeApprovedProductList facilityTypeApprovedProducts = new FacilityTypeApprovedProductList();
     doNothing().when(service).saveAll(facilityTypeApprovedProducts, 1L);
     when(messageService.message("message.facility.type.approved.products.added.successfully", facilityTypeApprovedProducts.size())).thenReturn("1 product(s) added successfully");
 
@@ -115,7 +114,7 @@ public class FacilityApprovedProductControllerTest {
 
   @Test
   public void shouldThrowException() throws Exception {
-    List<FacilityTypeApprovedProduct> facilityTypeApprovedProducts = asList(new FacilityTypeApprovedProduct());
+    FacilityTypeApprovedProductList facilityTypeApprovedProducts = new FacilityTypeApprovedProductList();
     doThrow(new DataException("error")).when(service).saveAll(facilityTypeApprovedProducts, 1l);
 
     ResponseEntity<OpenLmisResponse> errorResponse = controller.save(facilityTypeApprovedProducts, request);
