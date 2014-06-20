@@ -13,6 +13,7 @@ package org.openlmis.core.service;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
+import org.mockito.InOrder;
 import org.mockito.InjectMocks;
 import org.mockito.Matchers;
 import org.mockito.Mock;
@@ -196,5 +197,24 @@ public class RequisitionGroupServiceTest {
     assertThat(member1.getModifiedBy(), is(requisitionGroup.getModifiedBy()));
     assertThat(member2.getRequisitionGroup(), is(requisitionGroup));
     assertThat(member2.getModifiedBy(), is(requisitionGroup.getModifiedBy()));
+  }
+
+  @Test
+  public void shouldSaveWithMembersAndSchedules(){
+    RequisitionGroup requisitionGroup = new RequisitionGroup();
+    ArrayList<RequisitionGroupMember> requisitionGroupMembers = new ArrayList<>();
+    ArrayList<RequisitionGroupProgramSchedule> requisitionGroupProgramSchedules = new ArrayList<>();
+
+    RequisitionGroupService spyRequisitionGroupService = PowerMockito.spy(requisitionGroupService);
+    doNothing().when(spyRequisitionGroupService).save(requisitionGroup);
+    doNothing().when(spyRequisitionGroupService).saveRequisitionGroupProgramSchedules(requisitionGroupProgramSchedules,requisitionGroup);
+    doNothing().when(spyRequisitionGroupService).saveRequisitionGroupMembers(requisitionGroupMembers,requisitionGroup);
+    InOrder order = inOrder(spyRequisitionGroupService);
+
+    spyRequisitionGroupService.saveWithMembersAndSchedules(requisitionGroup, requisitionGroupMembers, requisitionGroupProgramSchedules);
+
+    order.verify(spyRequisitionGroupService).save(requisitionGroup);
+    order.verify(spyRequisitionGroupService).saveRequisitionGroupProgramSchedules(requisitionGroupProgramSchedules, requisitionGroup);
+    order.verify(spyRequisitionGroupService).saveRequisitionGroupMembers(requisitionGroupMembers, requisitionGroup);
   }
 }
